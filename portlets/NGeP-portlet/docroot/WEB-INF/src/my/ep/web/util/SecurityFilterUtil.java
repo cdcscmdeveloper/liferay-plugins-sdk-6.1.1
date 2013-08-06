@@ -12,7 +12,7 @@ import javax.faces.component.UIViewRoot;
 import javax.faces.context.FacesContext;
 
 import my.ep.biz.service.aut.mergerules.IMergeRulesSO;
-import my.ep.biz.type.aut.ScreenAuthority;
+import my.ep.type.aut.ScreenAuthority;
 import my.ep.dto.aut.mergerules.MergeRulesReqDTO;
 import my.ep.dto.aut.mergerules.MergeRulesResDTO;
 import my.ep.factory.EpLogger;

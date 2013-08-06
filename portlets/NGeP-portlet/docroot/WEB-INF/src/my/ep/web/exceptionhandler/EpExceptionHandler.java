@@ -14,7 +14,7 @@ import javax.faces.context.ExceptionHandlerWrapper;
 import javax.faces.context.FacesContext;
 import javax.faces.event.ExceptionQueuedEvent;
 
-import my.ep.biz.constant.MessageConst;
+import my.ep.constant.MessageConst;
 import my.ep.exception.EpException;
 import my.ep.util.MessageUtils;
 

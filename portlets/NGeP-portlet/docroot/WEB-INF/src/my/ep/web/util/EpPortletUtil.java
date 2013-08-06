@@ -12,7 +12,7 @@ import javax.faces.context.FacesContext;
 import javax.portlet.PortletContext;
 import javax.portlet.PortletRequest;
 
-import my.ep.biz.constant.MessageConst;
+import my.ep.constant.MessageConst;
 import my.ep.exception.EpException;
 import my.ep.factory.EpLogger;
 import my.ep.web.bean.MenuBean;

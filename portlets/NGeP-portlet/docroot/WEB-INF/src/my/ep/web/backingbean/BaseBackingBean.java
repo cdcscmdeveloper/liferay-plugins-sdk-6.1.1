@@ -14,7 +14,7 @@ import javax.faces.context.FacesContext;
 
 import my.ep.biz.bean.search.ISearchBean;
 import my.ep.biz.bean.search.SearchBean;
-import my.ep.biz.type.IEnumType;
+import my.ep.type.IEnumType;
 import my.ep.persistence.entity.BaseEntity;
 import my.ep.web.bean.DataValueBean;
 import my.ep.web.bean.ValueBean;
