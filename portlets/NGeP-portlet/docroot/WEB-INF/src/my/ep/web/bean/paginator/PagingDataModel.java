@@ -1,0 +1,234 @@
+package my.ep.web.bean.paginator;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+
+import javax.faces.component.UIComponent;
+import javax.faces.context.FacesContext;
+
+import my.ep.biz.bean.search.ISearchBean;
+import my.ep.biz.bean.search.ISearchResultBean;
+import my.ep.biz.bean.search.SearchBean;
+import my.ep.biz.bean.search.SearchOrderBean;
+import my.ep.web.util.EpPortletUtil;
+import my.ep.web.util.FacesScopes;
+import my.ep.web.util.SecurityFilterUtil;
+
+import org.apache.commons.lang.StringUtils;
+import org.apache.log4j.Logger;
+import org.primefaces.component.datatable.DataTable;
+import org.primefaces.model.LazyDataModel;
+import org.primefaces.model.SortOrder;
+
+/**
+ * The data model for Lazy loaded DataTable from database.
+ * 
+ * @author Kenny
+ *
+ * @param <T>
+ * 		the object type of the data.
+ */
+public abstract class PagingDataModel<T> extends LazyDataModel<T> implements IPagingDataModel<T> {
+	private static final long serialVersionUID = 1L;
+	private static Logger log = Logger.getLogger(PagingDataModel.class);
+	
+	private int pageNo;
+	private String componentId;
+	private String sortField;
+	private SortOrder sortOrder;
+
+	public PagingDataModel(String componentId) {
+		this.componentId = componentId;
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see org.primefaces.model.LazyDataModel#getRowData(java.lang.String)
+	 */
+	@Override
+	public final T getRowData(String rowKey) {
+		@SuppressWarnings("unchecked")
+		List<T> list = (List<T>)getWrappedData();
+		
+		for (T obj : list) {
+			if (obj.toString().equals(rowKey))
+				return obj;
+		}
+
+		return null;
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see org.primefaces.model.LazyDataModel#getRowKey(java.lang.Object)
+	 */
+	@Override
+	public final Object getRowKey(T key) {
+		return key.toString();
+	}
+
+	/*
+	 * Load the data from database.
+	 * 
+	 * @see org.primefaces.model.LazyDataModel#load(int, int, java.lang.String, org.primefaces.model.SortOrder, java.util.Map)
+	 */
+	@Override
+	public final List<T> load(int first, int pageSize, String sortField,
+			SortOrder sortOrder, Map<String, String> filters) {
+		debugLogger("load");
+		
+		int pageNo = (int)(first / pageSize) + 1;
+		
+		this.pageNo = pageNo;
+		this.sortField = sortField;
+		this.sortOrder = sortOrder;
+		
+		ISearchBean<T> searchBean = createSearchBean();
+		ISearchResultBean<T> resultBean = pageChangeListener(searchBean);
+		
+		return updatePagingResults(resultBean);
+	}
+	
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see my.ep.web.bean.paginator.IPagingDataModel#reloadData()
+	 */
+	@Override
+	public final void reloadData() {
+		debugLogger("reloadData");
+		
+		UIComponent component = new FacesScopes().findComponentById(
+				FacesContext.getCurrentInstance().getViewRoot(), 
+				componentId);
+		
+		if (component instanceof DataTable) {
+			DataTable dataTable = (DataTable)component;
+			
+			dataTable.reset();
+			dataTable.loadLazyData();
+		}
+	}
+	
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see my.ep.web.bean.paginator.IPagingDataModel#createSearchBean()
+	 */
+	@Override
+	public final ISearchBean<T> createSearchBean() {
+		String componentId = this.getComponentId();
+		SearchBean<T> searchBean = new SearchBean<T>(EpPortletUtil.getLoginUserId(FacesContext.getCurrentInstance()),
+				SecurityFilterUtil.getDataFilterScreenMetadatas(componentId));
+		
+		int pageNo = this.getPageNo();
+		int pageSize = this.getPageSize();
+		String sortField = this.getSortField();
+		SortOrder sortOrder = this.getSortOrder();
+		
+		debugLogger("pageNo:" + pageNo);
+		debugLogger("pageSize:" + pageSize);
+		debugLogger("sortField:" + sortField);
+		debugLogger("sortOrder:" + sortOrder);
+		
+		searchBean.setPageNo(pageNo);
+		searchBean.setNoOfRowsPerPage(pageSize);
+		
+		if (StringUtils.isNotBlank(sortField)) {
+			List<SearchOrderBean> sortColumns = new ArrayList<SearchOrderBean>();
+			sortColumns.add(new SearchOrderBean(sortField, !SortOrder.DESCENDING.equals(sortOrder)));
+			searchBean.setSortColumns(sortColumns);
+		}
+		
+		return searchBean;
+	}
+	
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see my.ep.web.bean.paginator.IPagingDataModel#updatePagingResults(my.ep.biz.bean.search.ISearchResultBean)
+	 */
+	@Override
+	public final List<T> updatePagingResults(ISearchResultBean<T> resultBean) {
+		List<T> list = resultBean.getResultList();
+		
+		setRowCount(resultBean.getTotalRecord());
+		setWrappedData(list);
+		
+		return list;
+	}
+	
+	/**
+	 * This method will invoke when there is page change event.
+	 * 
+	 * @param searchBean
+	 * 		the search bean.
+	 * @return	ISearchResultBean instance.
+	 */
+	protected abstract ISearchResultBean<T> pageChangeListener(ISearchBean<T> searchBean);
+	
+	private void debugLogger(Object message) {
+        if(log.isDebugEnabled()) {
+            log.debug(message);
+        }
+    }
+
+	/**
+	 * @return the pageNo
+	 */
+	public int getPageNo() {
+		return pageNo;
+	}
+
+	/**
+	 * @param pageNo the pageNo to set
+	 */
+	public void setPageNo(int pageNo) {
+		this.pageNo = pageNo;
+	}
+
+	/**
+	 * @return the componentId
+	 */
+	public String getComponentId() {
+		return componentId;
+	}
+
+	/**
+	 * @param componentId the componentId to set
+	 */
+	public void setComponentId(String componentId) {
+		this.componentId = componentId;
+	}
+
+	/**
+	 * @return the sortField
+	 */
+	public String getSortField() {
+		return sortField;
+	}
+
+	/**
+	 * @param sortField the sortField to set
+	 */
+	public void setSortField(String sortField) {
+		this.sortField = sortField;
+	}
+
+	/**
+	 * @return the sortOrder
+	 */
+	public SortOrder getSortOrder() {
+		return sortOrder;
+	}
+
+	/**
+	 * @param sortOrder the sortOrder to set
+	 */
+	public void setSortOrder(SortOrder sortOrder) {
+		this.sortOrder = sortOrder;
+	}
+}
