@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <classpath>
 	<classpathentry kind="src" path="docroot/WEB-INF/src"/>
+	<classpathentry kind="src" path="docroot/WEB-INF/config"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/jre7">
 		<attributes>
 			<attribute name="owner.project.facets" value="java"/>
@@ -21,5 +22,6 @@
 	<classpathentry combineaccessrules="false" kind="src" path="/NGeP-jpa"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/NGeP-bizBaseClient"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/NGeP-bizRemoteClient"/>
+	<classpathentry kind="lib" path="C:/JBoss Liferay/jboss-7.1.1/modules/wlfullclient/main/wlfullclient.jar"/>
 	<classpathentry kind="output" path="docroot/WEB-INF/classes"/>
 </classpath>
