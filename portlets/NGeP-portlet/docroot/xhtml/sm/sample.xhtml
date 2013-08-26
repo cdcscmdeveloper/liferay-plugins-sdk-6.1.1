@@ -1,5 +1,5 @@
 <ui:composition
-	template="/WEB-INF/facelets/sm_templates/sm_template.xhtml"
+	template="/WEB-INF/facelets/templates/sidemenu_template.xhtml"
 	xmlns="http://www.w3.org/1999/xhtml"
 	xmlns:f="http://java.sun.com/jsf/core"
 	xmlns:h="http://java.sun.com/jsf/html"
@@ -10,11 +10,11 @@
 	<ui:define name="resourceSection">
 	</ui:define>
 
-	<ui:define name="smSideMenu">
+	<ui:define name="sideMenu">
 		<ui:include
-			src="/WEB-INF/facelets/sm_templates/sideMenu/registrationsidemenu.xhtml" />
+			src="/xhtml/sm/shared/sidemenu/registrationsidemenu.xhtml" />
 	</ui:define>
-	<ui:define name="smContent">
+	<ui:define name="content">
 		<h:outputLabel value="Testing New Template" />
 	</ui:define>
 </ui:composition>
