@@ -11,14 +11,12 @@
 	</ui:define>
 
 	<ui:define name="contentSection">
-		<div id="leftcolumn"
-			style="background: white; width: 200px; float: left;">
-			<ui:insert name="sideMenu" />
-		</div>
+		<table border="0">
+			<tr>
+				<td width="200px"><ui:insert name="sideMenu"/></td>
+				<td width="800px"><ui:insert name="content"/></td>
+			</tr>
+		</table>
 
-		<div id="content"
-			style="float: left; background: #FFFFFF; width: 800px;">
-			<ui:insert name="content" />
-		</div>
 	</ui:define>
 </ui:composition>
