@@ -13,25 +13,25 @@
 		</div>
 		<br />
 		<p:dataTable>
-			<p:column headerText="Model">
-				<h:outputText value="test" />
+			<p:column headerText="No.">
+				<h:outputText />
 			</p:column>
 
-			<p:column headerText="Year">
-				<h:outputText value="test" />
+			<p:column headerText="Branch Name">
+				<h:outputText />
 			</p:column>
 
-			<p:column headerText="Manufacturer">
-				<h:outputText value="test" />
+			<p:column headerText="Address">
+				<h:outputText />
 			</p:column>
 
-			<p:column headerText="Color">
-				<h:outputText value="test" />
+			<p:column headerText="Action">
+				<h:outputText />
 			</p:column>
 		</p:dataTable>
 		<div align="right">
-			<p:commandButton value="Add Branch"
-				action="/xhtml/sm/NewMofApplication/step3CaptialAndEquityStatusInfo.xhtml" />
+			<p:commandButton value="Add Branch" onclick="banchDialog.show();" />
+
 		</div>
 		<table style="width: 100%">
 			<tr>
@@ -42,4 +42,69 @@
 			</tr>
 		</table>
 	</p:panel>
+	<p:dialog header="Branch Page" widgetVar="banchDialog"
+		resizable="false" showEffect="fade" hideEffect="fade" modal="true"
+		width="400px">
+		<p:panel header="Branch Details">
+
+			<table style="width: 100%">
+				<tr>
+					<td><p:outputLabel value="Branch Name *" /></td>
+					<td><p:inputText /></td>
+				</tr>
+				<tr>
+					<td><p:outputLabel value="Address" /></td>
+					<td><p:inputText /></td>
+				</tr>
+
+				<tr>
+					<td></td>
+					<td><p:inputText /></td>
+				</tr>
+				<tr>
+					<td></td>
+					<td><p:inputText /></td>
+				</tr>
+				<tr>
+					<td><p:outputLabel value="Country *" /></td>
+					<td><p:selectOneMenu>
+							<f:selectItem itemLabel="-- Select One -- " itemValue="" />
+							<f:selectItem itemLabel="Malaysia" itemValue="1" />
+						</p:selectOneMenu></td>
+				</tr>
+				<tr>
+					<td><p:outputLabel value="#{lbl['lbl.sm.postcode']}" /></td>
+					<td><p:inputText /></td>
+				</tr>
+				<tr>
+					<td><p:outputLabel value="#{lbl['lbl.sm.state']}" /></td>
+					<td><p:inputText /></td>
+				</tr>
+
+				<tr>
+					<td><p:outputLabel value="#{lbl['lbl.sm.district']}" /></td>
+					<td><p:inputText /></td>
+				</tr>
+				<tr>
+					<td><p:outputLabel value="#{lbl['lbl.sm.towncity']}" /></td>
+					<td><p:inputText /></td>
+				</tr>
+				<tr>
+					<td><p:outputLabel value="Phone No." /></td>
+					<td><p:inputText /></td>
+				</tr>
+				<tr>
+					<td><p:outputLabel value="Fax No." /></td>
+					<td><p:inputText /></td>
+				</tr>
+
+			</table>
+		</p:panel>
+		<br />
+		<div align="center">
+			<p:commandButton value="Save" onclick="banchDialog.hide();" />
+			<p:commandButton value="Cancel" onclick="banchDialog.hide();" />
+		</div>
+	</p:dialog>
+
 </ui:composition>

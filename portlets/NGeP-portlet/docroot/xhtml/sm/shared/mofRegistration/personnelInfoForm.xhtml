@@ -1,0 +1,85 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:c="http://java.sun.com/jsp/jstl/core">
+
+	<p:panel
+		header="Composition of the Board of Directors / Management / Staff Company"
+		toggleable="true">
+		<div>
+			<p:outputLabel value=" Section Verified : " title="For PO / Approver highlight the verified section "/>
+			<p:selectBooleanCheckbox />
+		</div>
+		<br/>
+		<table style="width: 100%">
+
+			
+			<tr>
+				<td><p:outputLabel value="PO Remarks" /></td>
+				<td><p:inputTextarea autoResize="true" /></td>
+				<td><p:outputLabel value="Approver Remarks" /></td>
+				<td><p:inputTextarea autoResize="true" /></td>
+			</tr>
+		</table>
+	</p:panel>
+	<p:panel
+		header=" List of Company's Board of Directors / Management / Staff"
+		toggleable="true">
+		<div>
+			<p:outputLabel value=" Section Verified : " title="For PO / Approver highlight the verified section "/>
+			<p:selectBooleanCheckbox />
+		</div>
+		<br/>
+		<p:dataTable>
+			<p:column headerText="Model">
+				<h:outputText value="test" />
+			</p:column>
+
+			<p:column headerText="Year">
+				<h:outputText value="test" />
+			</p:column>
+
+			<p:column headerText="Manufacturer">
+				<h:outputText value="test" />
+			</p:column>
+
+			<p:column headerText="Color">
+				<h:outputText value="test" />
+			</p:column>
+		</p:dataTable>
+		<div align="right">
+			<p:commandButton value="Add Personnel"
+				action="/xhtml/sm/NewMofApplication/step3CaptialAndEquityStatusInfo.xhtml" />
+		</div>
+		<p:fieldset legend="List of Authorized Perssonel">  
+	 		<p:dataTable>
+				<p:column headerText="Model">
+					<h:outputText value="test" />
+				</p:column>
+	
+				<p:column headerText="Year">
+					<h:outputText value="test" />
+				</p:column>
+	
+				<p:column headerText="Manufacturer">
+					<h:outputText value="test" />
+				</p:column>
+	
+				<p:column headerText="Color">
+					<h:outputText value="test" />
+				</p:column>
+			</p:dataTable>
+		</p:fieldset>  
+		<br/>
+		<table style="width: 100%">
+			<tr>
+				<td><p:outputLabel value="PO Remarks" /></td>
+				<td><p:inputTextarea autoResize="true" /></td>
+				<td><p:outputLabel value="Approver Remarks" /></td>
+				<td><p:inputTextarea autoResize="true" /></td>
+			</tr>
+		</table>
+	</p:panel>
+</ui:composition>

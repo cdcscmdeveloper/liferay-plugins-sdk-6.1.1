@@ -9,13 +9,34 @@
 		header="Associated Companies (Read Only For ROC - i.e. data auto pop up by SSM and can perform add /edit/delete operations)"
 		toggleable="true">
 		<div>
-			<p:outputLabel value=" Section Verified : " title="For PO / Approver highlight the verified section "/>
+			<p:outputLabel value=" Section Verified : "
+				title="For PO / Approver highlight the verified section " />
 			<p:selectBooleanCheckbox />
 		</div>
-		<br/>
-		<table style="width: 100%">
+		<br />
+		<p:dataTable>
+			<p:column headerText="No.">
+				<h:outputText />
+			</p:column>
 
-			
+			<p:column headerText="Company Name">
+				<h:outputText />
+			</p:column>
+
+			<p:column headerText="Address">
+				<h:outputText />
+			</p:column>
+
+			<p:column headerText="Action">
+				<h:outputText />
+			</p:column>
+		</p:dataTable>
+		<div align="right">
+			<p:commandButton value="Add Associated Company"
+				onclick="assocDialog.show();" />
+
+		</div>
+		<table style="width: 100%">
 			<tr>
 				<td><p:outputLabel value="PO Remarks" /></td>
 				<td><p:inputTextarea autoResize="true" /></td>
@@ -24,4 +45,83 @@
 			</tr>
 		</table>
 	</p:panel>
+	<p:dialog header="Associated Company Page" widgetVar="assocDialog"
+		resizable="false" showEffect="fade" hideEffect="fade" modal="true"
+		width="400px">
+		<p:panel header="Associated Company Details">
+
+			<table style="width: 100%">
+				<tr>
+					<td><p:outputLabel value="Company Name *" /></td>
+					<td><p:inputText /></td>
+				</tr>
+				<tr>
+					<td><p:outputLabel value="ROC/ROB/ROS No. *" /></td>
+					<td><p:inputText /></td>
+				</tr>
+				<tr>
+					<td><p:outputLabel value="MOF Registration No. *" /></td>
+					<td><p:inputText readonly="true"
+							value="Read Only  - Autopopulated as per ROC/ROB/ROS No."
+							title="This field TBC" /></td>
+				</tr>
+				<tr>
+					<td><p:outputLabel value="Share Holding *" /></td>
+					<td><p:inputText />
+						<p:outputLabel value="%" /></td>
+				</tr>
+				<tr>
+					<td><p:outputLabel value="Address" /></td>
+					<td><p:inputText /></td>
+				</tr>
+
+				<tr>
+					<td></td>
+					<td><p:inputText /></td>
+				</tr>
+				<tr>
+					<td></td>
+					<td><p:inputText /></td>
+				</tr>
+				<tr>
+					<td><p:outputLabel value="Country *" /></td>
+					<td><p:selectOneMenu>
+							<f:selectItem itemLabel="-- Select One -- " itemValue="" />
+							<f:selectItem itemLabel="Malaysia" itemValue="1" />
+						</p:selectOneMenu></td>
+				</tr>
+				<tr>
+					<td><p:outputLabel value="#{lbl['lbl.sm.postcode']}" /></td>
+					<td><p:inputText /></td>
+				</tr>
+				<tr>
+					<td><p:outputLabel value="#{lbl['lbl.sm.state']}" /></td>
+					<td><p:inputText /></td>
+				</tr>
+
+				<tr>
+					<td><p:outputLabel value="#{lbl['lbl.sm.district']}" /></td>
+					<td><p:inputText /></td>
+				</tr>
+				<tr>
+					<td><p:outputLabel value="#{lbl['lbl.sm.towncity']}" /></td>
+					<td><p:inputText /></td>
+				</tr>
+				<tr>
+					<td><p:outputLabel value="Phone No." /></td>
+					<td><p:inputText /></td>
+				</tr>
+				<tr>
+					<td><p:outputLabel value="Fax No." /></td>
+					<td><p:inputText /></td>
+				</tr>
+
+			</table>
+		</p:panel>
+		<br />
+		<div align="center">
+			<p:commandButton value="Save" onclick="assocDialog.hide();" />
+			<p:commandButton value="Cancel" onclick="assocDialog.hide();" />
+		</div>
+	</p:dialog>
 </ui:composition>

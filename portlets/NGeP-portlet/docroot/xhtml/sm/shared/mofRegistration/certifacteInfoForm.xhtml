@@ -5,23 +5,93 @@
 	xmlns:p="http://primefaces.org/ui"
 	xmlns:c="http://java.sun.com/jsp/jstl/core">
 
-	<p:panel
-		header="Certificate of Recognition"
-		toggleable="true">
+	<p:panel header="Certificate of Recognition" toggleable="true">
 		<div>
-			<p:outputLabel value=" Section Verified : " title="For PO / Approver highlight the verified section "/>
+			<p:outputLabel value=" Section Verified : "
+				title="For PO / Approver highlight the verified section " />
 			<p:selectBooleanCheckbox />
 		</div>
-		<br/>
+		<br />
+		<p:dataTable>
+			<p:column headerText="No.">
+				<h:outputText />
+			</p:column>
+
+			<p:column headerText="Cert Name">
+				<h:outputText />
+			</p:column>
+
+			<p:column headerText="Cert Type">
+				<h:outputText />
+			</p:column>
+
+			<p:column headerText="Issue Date">
+				<h:outputText />
+			</p:column>
+
+			<p:column headerText="Expiry Date">
+				<h:outputText />
+			</p:column>
+
+			<p:column headerText="Action">
+				<h:outputText />
+			</p:column>
+		</p:dataTable>
+		<div align="right">
+			<p:commandButton value="Add Certificate" onclick="certDialog.show();" />
+
+		</div>
 		<table style="width: 100%">
 
-			
 			<tr>
-				<td><p:outputLabel value="PO Remarks"/></td>
-				<td><p:inputTextarea autoResize="true"/></td>
-				<td><p:outputLabel value="Approver Remarks"/></td>
+				<td><p:outputLabel value="PO Remarks" /></td>
+				<td><p:inputTextarea autoResize="true" /></td>
+				<td><p:outputLabel value="Approver Remarks" /></td>
 				<td><p:inputTextarea autoResize="true" /></td>
 			</tr>
 		</table>
 	</p:panel>
+	<p:dialog header="Company Certificate Page" widgetVar="certDialog"
+		resizable="false" showEffect="fade" hideEffect="fade" modal="true"
+		width="400px">
+		<p:panel header="Certificate Details">
+
+			<table style="width: 100%">
+				<tr>
+					<td><p:outputLabel value="Certificate Type *" /></td>
+					<td><p:selectOneMenu>
+							<f:selectItem itemLabel="-- Select One -- " itemValue="" />
+							<f:selectItem itemLabel="Type1" itemValue="1" />
+							<f:selectItem itemLabel="Type2" itemValue="1" />
+							<f:selectItem itemLabel="Type3" itemValue="1" />
+						</p:selectOneMenu></td>
+				</tr>
+				<tr>
+					<td><p:outputLabel value="Certificate Name *" /></td>
+					<td><p:inputText /></td>
+				</tr>
+				<tr>
+					<td><p:outputLabel value="Certificate Body *" /></td>
+					<td><p:inputTextarea readonly="true"
+							value="-- Auto populated based on the Certificate Type , 
+							can key the body for type - Others only ----" /></td>
+				</tr>
+				<tr>
+					<td><p:outputLabel value="Start Date *" /></td>
+					<td><p:calendar showOn="button" /></td>
+				</tr>
+				<tr>
+					<td><p:outputLabel value="Expiry Date *" /></td>
+					<td><p:calendar showOn="button" /></td>
+				</tr>
+
+			</table>
+		</p:panel>
+		<br />
+			<div align="center">
+				<p:commandButton value="Save" onclick="certDialog.hide();" />
+				<p:commandButton value="Cancel" onclick="certDialog.hide();" />
+			</div>
+		
+	</p:dialog>
 </ui:composition>
