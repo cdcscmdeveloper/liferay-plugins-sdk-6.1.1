@@ -1,0 +1,48 @@
+<ui:composition
+	template="/WEB-INF/facelets/templates/sidemenu_template.xhtml"
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:c="http://java.sun.com/jsp/jstl/core">
+
+	<ui:define name="resourceSection">
+
+	</ui:define>
+
+	<ui:define name="sideMenu">
+		<ui:include
+			src="/xhtml/sm/shared/sidemenu/mofNewRegistrationSideMenu.xhtml" />
+	</ui:define>
+	<ui:define name="content">
+		<table style="width: 800px;">
+			<tr>
+				<td><h4 style="color: blue;">
+						<p:outputLabel value="#{lbl['lbl.sm.applnTypeLbl']}" />
+						<p:outputLabel value="#{lbl['lbl.sm.newMofAppln']}" />
+					</h4></td>
+			</tr>
+			<tr>
+				<td><p:outputLabel value="#{lbl['lbl.sm.step2Lbl']}" /> <p:outputLabel
+						value="#{lbl['lbl.sm.branchStepLbl']}" /></td>
+				<td align="right"><p:commandButton
+						value="#{lbl['lbl.sm.saveAsDraft']}" /></td>
+			</tr>
+		</table>
+		<ui:include src="/xhtml/sm/shared/mofRegistration/branchCompanyInfoForm.xhtml" />
+		<ui:include src="/xhtml/sm/shared/mofRegistration/associatedCompanyInfoForm.xhtml" />
+		<ui:include src="/xhtml/sm/shared/mofRegistration/certifacteInfoForm.xhtml" />
+		<ui:include src="/xhtml/sm/shared/mofRegistration/companyProjectsExperienceInfoForm.xhtml" />
+		<table style="width: 800px;">
+			<tr>
+				<td align="left"><p:commandButton
+						value="#{lbl['lbl.sm.prev']}" /></td>
+				<td align="right"><p:commandButton
+						value="#{lbl['lbl.sm.next']}" /></td>
+			</tr>
+		</table>
+		
+
+	</ui:define>
+</ui:composition>

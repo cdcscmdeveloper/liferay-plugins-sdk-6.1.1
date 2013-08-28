@@ -16,28 +16,41 @@
 			src="/xhtml/sm/shared/sidemenu/mofNewRegistrationSideMenu.xhtml" />
 	</ui:define>
 	<ui:define name="content">
-		<table style="width: 800px;">
+		<table style="width: 100%">
 			<tr>
-				<td><h4 style="color: blue;">
+				<td><h4
+						style="color: blue; text-decoration: underline; text-align: center;">
 						<p:outputLabel value="#{lbl['lbl.sm.applnTypeLbl']}" />
 						<p:outputLabel value="#{lbl['lbl.sm.newMofAppln']}" />
 					</h4></td>
 			</tr>
 			<tr>
-				<td><p:outputLabel value="#{lbl['lbl.sm.step2Lbl']}" /> <p:outputLabel
-						value="#{lbl['lbl.sm.branchStepLbl']}" /></td>
+				<td><h6 style="color: blue;">
+						<p:outputLabel value="#{lbl['lbl.sm.step2Lbl']}" />
+						<p:outputLabel value="#{lbl['lbl.sm.branchStepLbl']}" />
+					</h6></td>
 				<td align="right"><p:commandButton
 						value="#{lbl['lbl.sm.saveAsDraft']}" /></td>
 			</tr>
 		</table>
-		<table style="width: 800px;">
+		<ui:include
+			src="/xhtml/sm/shared/mofRegistration/branchCompanyInfoForm.xhtml" />
+		<ui:include
+			src="/xhtml/sm/shared/mofRegistration/associatedCompanyInfoForm.xhtml" />
+		<ui:include
+			src="/xhtml/sm/shared/mofRegistration/certifacteInfoForm.xhtml" />
+		<ui:include
+			src="/xhtml/sm/shared/mofRegistration/companyProjectsExperienceInfoForm.xhtml" />
+		<table style="width: 100%">
 			<tr>
-				<td></td>
+				<td align="left"><p:commandButton value="#{lbl['lbl.sm.prev']}"
+						action="/xhtml/sm/NewMofApplication/step1CompanyInfo.xhtml" /></td>
 				<td align="right"><p:commandButton
-						value="#{lbl['lbl.sm.next']}" /></td>
+						value="#{lbl['lbl.sm.next']}"
+						action="/xhtml/sm/NewMofApplication/step3CaptialAndEquityStatusInfo.xhtml" /></td>
 			</tr>
 		</table>
-		<ui:include src="/xhtml/sm/shared/companyBasicInfoForm.xhtml" />
+
 
 	</ui:define>
 </ui:composition>
