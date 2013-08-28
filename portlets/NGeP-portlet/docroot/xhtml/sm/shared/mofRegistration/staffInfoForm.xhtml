@@ -1,0 +1,75 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:c="http://java.sun.com/jsp/jstl/core">
+
+	<p:panel
+		header="Staff Information ( The input in this section depends on type of MOF i.e Contractor or Consultant)"
+		toggleable="true">
+		<div>
+			<p:outputLabel value=" Section Verified : "
+				title="For PO / Approver highlight the verified section " />
+			<p:selectBooleanCheckbox />
+		</div>
+		<br />
+		<table>
+
+			<tr>
+				<td><h6>
+						<p:outputLabel value="For Contractor" />
+					</h6></td>
+
+			</tr>
+			<tr>
+				<td width="150"><p:outputLabel value="Total No. Of Staff : " /></td>
+				<td width="150"><p:outputLabel value="Bumi* " /> <p:inputText
+						size="5" /></td>
+				<td width="150"><p:outputLabel value="Non-Bumi* " /> <p:inputText
+						size="5" /></td>
+				<td width="150"><p:outputLabel value="Non-Malaysian* " /> <p:inputText
+						size="5" /></td>
+			</tr>
+			<tr>
+				<td><h6>
+						<p:outputLabel value="For Consultant" />
+					</h6></td>
+
+			</tr>
+			<tr>
+				<td><p:outputLabel value="Total Professional Staff : " /></td>
+				<td><p:outputLabel value="Bumi* " />
+					<p:inputText size="5" /></td>
+				<td><p:outputLabel value="Non-Bumi* " />
+					<p:inputText size="5" /></td>
+				<td><p:outputLabel value="Non-Malaysian* " />
+					<p:inputText size="5" /></td>
+			</tr>
+			<tr>
+				<td><p:outputLabel value="Total Professional Staff : " /></td>
+				<td><p:outputLabel value="Bumi* " />
+					<p:inputText size="5" /></td>
+				<td><p:outputLabel value="Non-Bumi* " />
+					<p:inputText size="5" /></td>
+				<td><p:outputLabel value="Non-Malaysian* " />
+					<p:inputText size="5" /></td>
+			</tr>
+			<tr>
+				<td><p:outputLabel value="Total Clerical Staff : " /></td>
+				<td><p:outputLabel value="Bumi* " />
+					<p:inputText size="5" /></td>
+				<td><p:outputLabel value="Non-Bumi* " />
+					<p:inputText size="5" /></td>
+				<td><p:outputLabel value="Non-Malaysian* " />
+					<p:inputText size="5" /></td>
+			</tr>
+			<tr>
+				<td id="tdTitle"><p:outputLabel value="PO Remarks" /></td>
+				<td><p:inputTextarea autoResize="true" /></td>
+				<td id="tdTitle"><p:outputLabel value="Approver Remarks" /></td>
+				<td><p:inputTextarea autoResize="true" /></td>
+			</tr>
+		</table>
+	</p:panel>
+</ui:composition>

@@ -1,0 +1,62 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:c="http://java.sun.com/jsp/jstl/core">
+
+	<p:panel header="Office Facility Type " toggleable="true">
+		<div>
+			<p:outputLabel value=" Section Verified : "
+				title="For PO / Approver highlight the verified section " />
+			<p:selectBooleanCheckbox />
+		</div>
+		<br />
+		<table class="test">
+
+			<tr>
+				<td><h6>
+						<p:outputLabel value="For Rented" />
+					</h6></td>
+
+			</tr>
+			<tr>
+				<td id="tdTitle"><p:outputLabel value="Landlord's Name *" /></td>
+				<td><p:inputText /></td>
+				<td id="tdTitle"><p:outputLabel value="Monthly Rental*" /></td>
+				<td><p:inputText /> <p:selectOneMenu >
+						<f:selectItem itemLabel="MYR" itemValue="1" />
+					</p:selectOneMenu></td>
+			</tr>
+			<tr>
+				<td id="tdTitle"><p:outputLabel value="Landlord's Address *" /></td>
+				<td><p:inputTextarea /></td>
+			</tr>
+			<tr>
+				<td><h6>
+						<p:outputLabel value="For Owned" />
+					</h6></td>
+
+			</tr>
+			<tr>
+				<td id="tdTitle"><p:outputLabel value="Owner Name *" /></td>
+				<td><p:inputText /></td>
+				<td id="tdTitle"><p:outputLabel value="Purchase Price*" /></td>
+				<td><p:inputText />
+					<p:selectOneMenu >
+						<f:selectItem itemLabel="MYR" itemValue="1" />
+					</p:selectOneMenu></td>
+			</tr>
+			<tr>
+				<td id="tdTitle"><p:outputLabel value="Purchase Date *" /></td>
+				<td><p:calendar showOn="button" /></td>
+			</tr>
+			<tr>
+				<td id="tdTitle"><p:outputLabel value="PO Remarks" /></td>
+				<td><p:inputTextarea autoResize="true" /></td>
+				<td id="tdTitle"><p:outputLabel value="Approver Remarks" /></td>
+				<td><p:inputTextarea autoResize="true" /></td>
+			</tr>
+		</table>
+	</p:panel>
+</ui:composition>
