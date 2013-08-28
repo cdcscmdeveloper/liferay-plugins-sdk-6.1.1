@@ -15,14 +15,14 @@
 	 
 	 <lifecycle>
 		<phase-listener>my.ep.web.phaselistener.EpPhaseListener</phase-listener>
-		<phase-listener>my.ep.web.phaselistener.EpSecurityPhaseListener</phase-listener>
+		<!-- <phase-listener>my.ep.web.phaselistener.EpSecurityPhaseListener</phase-listener> -->
 	</lifecycle>
 	<factory>
 		<exception-handler-factory>my.ep.web.factory.EpExceptionHandlerFactory</exception-handler-factory>
 	</factory>
 	
 	 <application>
-	  <view-handler>my.ep.web.handler.EpViewHandlerWrapper</view-handler>
+	 <!--  <view-handler>my.ep.web.handler.EpViewHandlerWrapper</view-handler> -->
 	  <resource-bundle>
 		<base-name>messageprovider-config.bundles.labels.labels</base-name>
 		<var>lbl</var>
