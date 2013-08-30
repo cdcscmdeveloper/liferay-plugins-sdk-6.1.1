@@ -5,7 +5,8 @@
 	xmlns:p="http://primefaces.org/ui"
 	xmlns:c="http://java.sun.com/jsp/jstl/core">
 
-	<p:panel header="Manufacturing / Assembly Information" toggleable="true">
+	<p:panel header="Manufacturing / Assembly Information"
+		toggleable="true">
 		<div>
 			<p:outputLabel value=" Section Verified : "
 				title="For PO / Approver highlight the verified section " />
@@ -13,25 +14,31 @@
 		</div>
 		<br />
 		<p:dataTable>
-			<p:column headerText="Model">
-				<h:outputText value="test" />
+			<p:column headerText="No.">
+				<p:outputLabel />
 			</p:column>
 
-			<p:column headerText="Year">
-				<h:outputText value="test" />
+			<p:column headerText="Type Of Product (s)">
+				<p:outputLabel />
 			</p:column>
 
-			<p:column headerText="Manufacturer">
-				<h:outputText value="test" />
+			<p:column headerText="Brand">
+				<p:outputLabel />
+			</p:column>
+			<p:column headerText="Production Capability / Month">
+				<p:outputLabel />
 			</p:column>
 
-			<p:column headerText="Color">
-				<h:outputText value="test" />
+			<p:column headerText="Measurement Unit">
+				<p:outputLabel />
+			</p:column>
+
+			<p:column headerText="Action">
+				<p:outputLabel />
 			</p:column>
 		</p:dataTable>
 		<div align="right">
-			<p:commandButton value="Add"
-				action="/xhtml/sm/NewMofApplication/step3CaptialAndEquityStatusInfo.xhtml" />
+			<p:commandButton value="Add" onclick="manufactorDialog.show();" />
 		</div>
 		<table style="width: 100%">
 			<tr>
@@ -42,4 +49,44 @@
 			</tr>
 		</table>
 	</p:panel>
+	<p:dialog width="400px" header="Manufacturing / Assembly Page"
+		widgetVar="manufactorDialog" resizable="false" showEffect="fade"
+		hideEffect="fade" modal="true">
+		<p:panel header="Manufacturing / Assembly Information">
+
+			<table style="width: 100%">
+				<tr>
+					<td><p:outputLabel value="Type Of Product(s)" /></td>
+					<td><p:inputText /></td>
+				</tr>
+
+				<tr>
+					<td><p:outputLabel value="Brand" /></td>
+					<td><p:inputText /></td>
+				</tr>
+				<tr>
+					<td><p:outputLabel value="Type Of Product(s) *" /></td>
+					<td><p:inputText /></td>
+				</tr>
+				<tr>
+					<td><p:outputLabel value="Production Capacity *" /></td>
+					<td><p:inputText /> <p:outputLabel value=" / Month" /></td>
+				</tr>
+
+				<tr>
+					<td><p:outputLabel value="Measurement *" /></td>
+					<td><p:inputText /> <p:selectOneMenu>
+							<f:selectItem itemLabel="Unit " itemValue="" />
+							<f:selectItem itemLabel="Volume" itemValue="1" />
+						</p:selectOneMenu></td>
+				</tr>
+
+			</table>
+		</p:panel>
+		<br />
+		<div align="center">
+			<p:commandButton value="Save" onclick="manufactorDialog.hide();" />
+			<p:commandButton value="Cancel" onclick="manufactorDialog.hide();" />
+		</div>
+	</p:dialog>
 </ui:composition>

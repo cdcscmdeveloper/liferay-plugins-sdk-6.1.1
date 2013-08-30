@@ -5,37 +5,61 @@
 	xmlns:p="http://primefaces.org/ui"
 	xmlns:c="http://java.sun.com/jsp/jstl/core">
 
-	<p:panel
-		header=" Category Cpdes"
-		toggleable="true">
+	<p:panel header=" Category Cpdes" toggleable="true">
 		<div>
-			<p:outputLabel value=" Section Verified : " title="For PO / Approver highlight the verified section "/>
+			<p:outputLabel value=" Section Verified : "
+				title="For PO / Approver highlight the verified section " />
 			<p:selectBooleanCheckbox />
 		</div>
-		<br/>
+		<br />
 		<p:dataTable>
-			<p:column headerText="Model">
-				<h:outputText value="test" />
-			</p:column>
+			<p:columnGroup type="header">
+				<p:row>
+					<p:column rowspan="2" headerText="No." />
+					<p:column rowspan="2" headerText="Code" />
+					<p:column colspan="3" headerText="Category" />
+					<p:column rowspan="2" headerText="Business Type" />
+					<p:column rowspan="2" headerText="Category Type" />
+					<p:column rowspan="2" headerText="Action" />
+				</p:row>
 
-			<p:column headerText="Year">
-				<h:outputText value="test" />
+				<p:row>
+					<p:column headerText="Parent Category" />
+					<p:column headerText="Child Category" />
+					<p:column headerText="Sub-Child Category" />
+				</p:row>
+			</p:columnGroup>
+			<p:column>
+				<p:outputLabel />
 			</p:column>
-
-			<p:column headerText="Manufacturer">
-				<h:outputText value="test" />
+			<p:column>
+				<p:outputLabel />
 			</p:column>
-
-			<p:column headerText="Color">
-				<h:outputText value="test" />
+			<p:column>
+				<p:outputLabel />
+			</p:column>
+			<p:column>
+				<p:outputLabel />
+			</p:column>
+			<p:column>
+				<p:outputLabel />
+			</p:column>
+			<p:column>
+				<p:outputLabel />
+			</p:column>
+			<p:column>
+				<p:outputLabel />
+			</p:column>
+			<p:column>
+				<p:outputLabel />
 			</p:column>
 		</p:dataTable>
 		<div align="right">
-			<p:commandButton value="Add Account"
-				action="/xhtml/sm/NewMofApplication/step3CaptialAndEquityStatusInfo.xhtml" />
+			<p:commandButton value="Add Category Code"
+				onclick="regCatDialog.show();" />
 		</div>
-		
-		<br/>
+
+		<br />
 		<table style="width: 100%">
 			<tr>
 				<td><p:outputLabel value="PO Remarks" /></td>
@@ -45,4 +69,68 @@
 			</tr>
 		</table>
 	</p:panel>
+
+	<p:dialog width="400px" header="Branch Page" widgetVar="regCatDialog"
+		resizable="false" showEffect="fade" hideEffect="fade" modal="true">
+		<p:panel header="Branch Details">
+
+			<table style="width: 100%">
+				<tr>
+					<td><p:outputLabel value="Category Type *" /></td>
+					<td><p:selectOneMenu>
+							<f:selectItem itemLabel="-- Select One -- " itemValue="" />
+							<f:selectItem itemLabel="Normal" itemValue="1" />
+							<f:selectItem itemLabel="Special" itemValue="1" />
+						</p:selectOneMenu></td>
+				</tr>
+				<tr>
+					<td><p:outputLabel value="Choose code entry mode" /></td>
+					<td><p:selectOneRadio>
+							<f:selectItem itemLabel="Enter Code" itemValue="1" />
+							<f:selectItem itemLabel="Select Code" itemValue="1" />
+						</p:selectOneRadio></td>
+				</tr>
+
+				<tr>
+					<td><p:outputLabel value="Enter Category Code" /></td>
+					<td><p:inputText /></td>
+				</tr>
+				<tr>
+					<td><p:outputLabel value="Parent Category *" /></td>
+					<td><p:selectOneMenu>
+							<f:selectItem itemLabel="-- Select One -- " itemValue="" />
+							<f:selectItem itemLabel="Category1" itemValue="1" />
+							<f:selectItem itemLabel="Category2" itemValue="1" />
+						</p:selectOneMenu></td>
+				</tr>
+				<tr>
+					<td><p:outputLabel value="Sub-Category *" /></td>
+					<td><p:selectOneMenu>
+							<f:selectItem itemLabel="-- Select One -- " itemValue="" />
+							<f:selectItem itemLabel="Sub-Category1" itemValue="1" />
+							<f:selectItem itemLabel="Sub-Category1" itemValue="1" />
+						</p:selectOneMenu></td>
+				</tr>
+				<tr>
+					<td><p:outputLabel value="Sub-Sub-Category *" /></td>
+					<td><p:selectOneMenu>
+							<f:selectItem itemLabel="-- Select One -- " itemValue="" />
+							<f:selectItem itemLabel="Sub-Sub-Category1" itemValue="1" />
+							<f:selectItem itemLabel="Sub-Sub-Category1" itemValue="1" />
+						</p:selectOneMenu></td>
+				</tr>
+				<tr>
+					<td><p:outputLabel value="Business Type" /></td>
+					<td><p:inputText readonly="true"
+							title="Auto populated based on the category code enterd/selected" /></td>
+				</tr>
+			</table>
+		</p:panel>
+		<br />
+		<div align="center">
+			<p:commandButton value="Save" onclick="regCatDialog.hide();" />
+			<p:commandButton value="Cancel" onclick="regCatDialog.hide();" />
+		</div>
+	</p:dialog>
+
 </ui:composition>

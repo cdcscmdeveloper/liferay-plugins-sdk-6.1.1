@@ -51,9 +51,9 @@
 			</tr>
 		</table>
 	</p:panel>
-	<p:dialog header="Company Certificate Page" widgetVar="certDialog"
-		resizable="false" showEffect="fade" hideEffect="fade" modal="true"
-		width="400px">
+	<p:dialog width="400px" header="Company Certificate Page"
+		widgetVar="certDialog" resizable="false" showEffect="fade"
+		hideEffect="fade" modal="true">
 		<p:panel header="Certificate Details">
 
 			<table style="width: 100%">
@@ -88,10 +88,10 @@
 			</table>
 		</p:panel>
 		<br />
-			<div align="center">
-				<p:commandButton value="Save" onclick="certDialog.hide();" />
-				<p:commandButton value="Cancel" onclick="certDialog.hide();" />
-			</div>
-		
+		<div align="center">
+			<p:commandButton value="Save" onclick="certDialog.hide();" />
+			<p:commandButton value="Cancel" onclick="certDialog.hide();" />
+		</div>
+
 	</p:dialog>
 </ui:composition>

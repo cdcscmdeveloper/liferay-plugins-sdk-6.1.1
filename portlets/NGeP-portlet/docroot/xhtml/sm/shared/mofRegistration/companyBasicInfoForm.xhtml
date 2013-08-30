@@ -9,88 +9,91 @@
 		header="Company Information  ( Auto displayed info - Non editable for SSM registered companies)"
 		toggleable="true">
 		<div>
-			<p:outputLabel value=" Section Verified : " title="For PO / Approver highlight the verified section "/>
-			<p:selectBooleanCheckbox />
+			<p:outputLabel value=" Section Verified : "
+				title="For PO / Approver highlight the verified section " />
+			<p:selectBooleanCheckbox onchange="bui.show();" />
+			<!-- <p:blockUI block="basicInfoTable" widgetVar="bui" /> -->
 		</div>
-		<br/>
-		<table style="width: 100%">
+		<br />
+			<table style="width: 100%">
 
-			<tr>
-				<td><p:outputLabel value="Company Name *" /></td>
-				<td colspan="3"><p:inputText readonly="true"
-						value="XYZ Sdn Bhd" size="100" /></td>
-			</tr>
-			<tr>
-				<td ><p:outputLabel value="Registration Type *" /></td>
-				<td><p:selectOneMenu >
-						<f:selectItem itemLabel="-- Select One -- " itemValue="" />
-						<f:selectItem itemLabel="ROB - PERSATUAN" itemValue="1" />
-						<f:selectItem itemLabel="ROC - BERHAD" itemValue="2" />
-						<f:selectItem itemLabel="ROS - PERKONGSIAN" itemValue="3" />
-					</p:selectOneMenu></td>
-				<td ><p:outputLabel value="ROC/ROB/ROS No. *" /></td>
-				<td><p:inputText /></td>
-			</tr>
-			<tr>
-				<td ><p:outputLabel value="Income Tax Ref No. *" /></td>
-				<td><p:inputText /></td>
-				<td ><p:outputLabel value="Established Date *" /></td>
-				<td><p:calendar showOn="button" /></td>
-			</tr>
-			<tr>
-				<td ><p:outputLabel value="Annual Income *" /></td>
-				<td><p:selectOneMenu >
-						<f:selectItem itemLabel="-- Select One -- " itemValue="" />
-						<f:selectItem itemLabel="Kuarang Daripada RM 100,000"
-							itemValue="1" />
-					</p:selectOneMenu></td>
-				<td ><p:outputLabel value="Country *" /></td>
-				<td><p:selectOneMenu >
-						<f:selectItem itemLabel="-- Select One -- " itemValue="" />
-						<f:selectItem itemLabel="Malaysia" itemValue="1" />
-					</p:selectOneMenu></td>
-			</tr>
-			<tr>
-				<td ><p:outputLabel value="#{lbl['lbl.sm.companyaddress']}" /></td>
-				<td><p:inputText size="50" colspan="3" /></td>
-			</tr>
-			<tr>
-				<td></td>
-				<td><p:inputText size="50" colspan="3" /></td>
-			</tr>
-			<tr>
-				<td></td>
-				<td><p:inputText size="50" colspan="3" /></td>
-			</tr>
-			<tr>
-				<td ><p:outputLabel value="#{lbl['lbl.sm.postcode']}" /></td>
-				<td><p:inputText /></td>
-				<td ><p:outputLabel value="#{lbl['lbl.sm.state']}" /></td>
-				<td><p:inputText /></td>
-			</tr>
+				<tr>
+					<td><p:outputLabel value="Company Name *" /></td>
+					<td colspan="3"><p:inputText readonly="true"
+							value="XYZ Sdn Bhd" size="100" /></td>
+				</tr>
+				<tr>
+					<td><p:outputLabel value="Registration Type *" /></td>
+					<td><p:selectOneMenu>
+							<f:selectItem itemLabel="-- Select One -- " itemValue="" />
+							<f:selectItem itemLabel="ROB - PERSATUAN" itemValue="1" />
+							<f:selectItem itemLabel="ROC - BERHAD" itemValue="2" />
+							<f:selectItem itemLabel="ROS - PERKONGSIAN" itemValue="3" />
+						</p:selectOneMenu></td>
+					<td><p:outputLabel value="ROC/ROB/ROS No. *" /></td>
+					<td><p:inputText /></td>
+				</tr>
+				<tr>
+					<td><p:outputLabel value="Income Tax Ref No. *" /></td>
+					<td><p:inputText /></td>
+					<td><p:outputLabel value="Established Date *" /></td>
+					<td><p:calendar showOn="button" /></td>
+				</tr>
+				<tr>
+					<td><p:outputLabel value="Annual Income *" /></td>
+					<td><p:selectOneMenu>
+							<f:selectItem itemLabel="-- Select One -- " itemValue="" />
+							<f:selectItem itemLabel="Kuarang Daripada RM 100,000"
+								itemValue="1" />
+						</p:selectOneMenu></td>
+					<td><p:outputLabel value="Country *" /></td>
+					<td><p:selectOneMenu>
+							<f:selectItem itemLabel="-- Select One -- " itemValue="" />
+							<f:selectItem itemLabel="Malaysia" itemValue="1" />
+						</p:selectOneMenu></td>
+				</tr>
+				<tr>
+					<td><p:outputLabel value="#{lbl['lbl.sm.companyaddress']}" /></td>
+					<td><p:inputText size="50" colspan="3" /></td>
+				</tr>
+				<tr>
+					<td></td>
+					<td><p:inputText size="50" colspan="3" /></td>
+				</tr>
+				<tr>
+					<td></td>
+					<td><p:inputText size="50" colspan="3" /></td>
+				</tr>
+				<tr>
+					<td><p:outputLabel value="#{lbl['lbl.sm.postcode']}" /></td>
+					<td><p:inputText /></td>
+					<td><p:outputLabel value="#{lbl['lbl.sm.state']}" /></td>
+					<td><p:inputText /></td>
+				</tr>
 
-			<tr>
-				<td ><p:outputLabel value="#{lbl['lbl.sm.district']}" /></td>
-				<td><p:inputText /></td>
-				<td ><p:outputLabel value="#{lbl['lbl.sm.towncity']}" /></td>
-				<td><p:inputText /></td>
-			</tr>
-			<tr>
-				<td ><p:outputLabel value="Phone No." /></td>
-				<td><p:inputText /></td>
-				<td ><p:outputLabel value="Fax No." /></td>
-				<td><p:inputText /></td>
-			</tr>
-			<tr>
-				<td ><p:outputLabel value="Website" /></td>
-				<td colspan="3"><p:inputText size="100" /></td>
-			</tr>
-			<tr>
-				<td><p:outputLabel value="PO Remarks" /></td>
-				<td><p:inputTextarea autoResize="true" /></td>
-				<td><p:outputLabel value="Approver Remarks" /></td>
-				<td><p:inputTextarea autoResize="true" /></td>
-			</tr>
-		</table>
+				<tr>
+					<td><p:outputLabel value="#{lbl['lbl.sm.district']}" /></td>
+					<td><p:inputText /></td>
+					<td><p:outputLabel value="#{lbl['lbl.sm.towncity']}" /></td>
+					<td><p:inputText /></td>
+				</tr>
+				<tr>
+					<td><p:outputLabel value="Phone No." /></td>
+					<td><p:inputText /></td>
+					<td><p:outputLabel value="Fax No." /></td>
+					<td><p:inputText /></td>
+				</tr>
+				<tr>
+					<td><p:outputLabel value="Website" /></td>
+					<td colspan="3"><p:inputText size="100" /></td>
+				</tr>
+				<tr>
+					<td><p:outputLabel value="PO Remarks" /></td>
+					<td><p:inputTextarea autoResize="true" /></td>
+					<td><p:outputLabel value="Approver Remarks" /></td>
+					<td><p:inputTextarea autoResize="true" /></td>
+				</tr>
+			</table>
+		
 	</p:panel>
 </ui:composition>

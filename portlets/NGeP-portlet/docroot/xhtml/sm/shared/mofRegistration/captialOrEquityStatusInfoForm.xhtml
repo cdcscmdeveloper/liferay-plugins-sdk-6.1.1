@@ -5,17 +5,167 @@
 	xmlns:p="http://primefaces.org/ui"
 	xmlns:c="http://java.sun.com/jsp/jstl/core">
 
-	<p:panel
-		header="Capital / Equity Status"
-		toggleable="true">
+	<p:panel header="Capital / Equity Status" toggleable="true">
 		<div>
-			<p:outputLabel value=" Section Verified : " title="For PO / Approver highlight the verified section "/>
+			<p:outputLabel value=" Section Verified : "
+				title="For PO / Approver highlight the verified section " />
 			<p:selectBooleanCheckbox />
 		</div>
-		<br/>
+		<br />
 		<table style="width: 100%">
+			<tr>
+				<td><p:outputLabel value="Authorized Capital *" /></td>
+				<td><p:inputText
+						title="This field is applicable for companies of type ROC Only" />
+					<p:selectOneMenu>
+						<f:selectItem itemLabel="MYR" itemValue="1" />
+					</p:selectOneMenu></td>
+				<td><p:outputLabel value=" Paid-Up Capital *" /></td>
+				<td><p:inputText
+						title="This field is applicable for companies of type ROC Only" />
+					<p:selectOneMenu>
+						<f:selectItem itemLabel="MYR" itemValue="1" />
+					</p:selectOneMenu></td>
+			</tr>
+			<tr>
+				<td><p:outputLabel value=" Accumulated Capital *" /></td>
+				<td><p:inputText readonly="true"
+						title=" This field is applicable and 
+						data is auto populated for companies other than ROC" />
+					<p:selectOneMenu>
+						<f:selectItem itemLabel="MYR" itemValue="1" />
+					</p:selectOneMenu></td>
+				<td><p:outputLabel value=" /  Accumulated Share *" /></td>
+				<td><p:inputText readonly="true"
+						title=" This field is applicable and
+						data is auto populated for companies of type ROS" />
+					<p:selectOneMenu>
+						<f:selectItem itemLabel="MYR" itemValue="1" />
+					</p:selectOneMenu></td>
+			</tr>
+			<tr>
+				<td colspan="4" align="center"><p:panelGrid>
+						<f:facet name="header">
+							<p:row>
+								<p:column>Composition of Capital Distribution</p:column>
+								<p:column>No. Of Members</p:column>
+								<p:column>Value (MYR)</p:column>
+								<p:column>%</p:column>
+							</p:row>
+						</f:facet>
+						<p:row>
+							<p:column>Bumiputera</p:column>
+							<p:column>
+								<p:inputText id="bumiMem" />
+								<p:watermark for="bumiMem" value="0"></p:watermark>
+							</p:column>
+							<p:column>
+								<p:inputText id="bumiAmt" />
+								<p:watermark for="bumiAmt" value="0.00"></p:watermark>
+							</p:column>
+							<p:column>
+								<p:inputText label="0.00" readonly="true" id="bumiPerc"
+									title="Auto calculated / populated value" />
+								<p:watermark for="bumiPerc" value="0.00"></p:watermark>
+							</p:column>
+						</p:row>
+						<p:row>
+							<p:column>Bumiputera</p:column>
+							<p:column>
+								<p:inputText />
+							</p:column>
+							<p:column>
+								<p:inputText label="0.00" />
+							</p:column>
+							<p:column>
+								<p:inputText label="0.00" readonly="true"
+									title="Auto calculated / populated value" />
+							</p:column>
+						</p:row>
+						<p:row>
+							<p:column>Non Bumiputera</p:column>
+							<p:column>
+								<p:inputText />
+							</p:column>
+							<p:column>
+								<p:inputText label="0.00" />
+							</p:column>
+							<p:column>
+								<p:inputText label="0.00" readonly="true"
+									title="Auto calculated / populated value" />
+							</p:column>
+						</p:row>
+						<p:row>
+							<p:column>Non - Malaysian</p:column>
+							<p:column>
+								<p:inputText />
+							</p:column>
+							<p:column>
+								<p:inputText label="0.00" />
+							</p:column>
+							<p:column>
+								<p:inputText label="0.00" readonly="true"
+									title="Auto calculated / populated value" />
+							</p:column>
+						</p:row>
+						<p:row>
+							<p:column>Equity Government / UT Agency</p:column>
+							<p:column>
+								<p:inputText />
+							</p:column>
+							<p:column>
+								<p:inputText label="0.00" />
+							</p:column>
+							<p:column>
+								<p:inputText label="0.00" readonly="true"
+									title="Auto calculated / populated value" />
+							</p:column>
+						</p:row>
+						<p:row>
+							<p:column>Government equity</p:column>
+							<p:column>
+								<p:inputText />
+							</p:column>
+							<p:column>
+								<p:inputText label="0.00" />
+							</p:column>
+							<p:column>
+								<p:inputText label="0.00" readonly="true"
+									title="Auto calculated / populated value" />
+							</p:column>
+						</p:row>
+						<p:row>
+							<p:column>Local Company</p:column>
+							<p:column>
+								<p:inputText />
+							</p:column>
+							<p:column>
+								<p:inputText label="0.00" />
+							</p:column>
+							<p:column>
+								<p:inputText label="0.00" readonly="true"
+									title="Auto calculated / populated value" />
+							</p:column>
+						</p:row>
+						<p:row>
+							<p:column>Foreign Company</p:column>
+							<p:column>
+								<p:inputText />
+							</p:column>
+							<p:column>
+								<p:inputText label="0.00" />
+							</p:column>
+							<p:column>
+								<p:inputText label="0.00" readonly="true"
+									title="Auto calculated / populated value" />
+							</p:column>
+						</p:row>
+					</p:panelGrid></td>
 
-			
+			</tr>
+			<tr>
+				<td><br/></td>
+			</tr>
 			<tr>
 				<td><p:outputLabel value="PO Remarks" /></td>
 				<td><p:inputTextarea autoResize="true" /></td>

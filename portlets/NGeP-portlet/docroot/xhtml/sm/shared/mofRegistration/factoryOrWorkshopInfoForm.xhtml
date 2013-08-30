@@ -5,7 +5,8 @@
 	xmlns:p="http://primefaces.org/ui"
 	xmlns:c="http://java.sun.com/jsp/jstl/core">
 
-	<p:panel header="Factory / Workshop / Store / Dockyard Facilities" toggleable="true">
+	<p:panel header="Factory / Workshop / Store / Dockyard Facilities"
+		toggleable="true">
 		<div>
 			<p:outputLabel value=" Section Verified : "
 				title="For PO / Approver highlight the verified section " />
@@ -13,25 +14,20 @@
 		</div>
 		<br />
 		<p:dataTable>
-			<p:column headerText="Model">
-				<h:outputText value="test" />
+			<p:column headerText="No.">
+				<p:outputLabel />
 			</p:column>
 
-			<p:column headerText="Year">
-				<h:outputText value="test" />
+			<p:column headerText="Factory / Workshop / Store / Dockyard Address">
+				<p:outputLabel />
 			</p:column>
 
-			<p:column headerText="Manufacturer">
-				<h:outputText value="test" />
-			</p:column>
-
-			<p:column headerText="Color">
-				<h:outputText value="test" />
+			<p:column headerText="Action">
+				<p:outputLabel />
 			</p:column>
 		</p:dataTable>
 		<div align="right">
-			<p:commandButton value="Add"
-				action="/xhtml/sm/NewMofApplication/step3CaptialAndEquityStatusInfo.xhtml" />
+			<p:commandButton value="Add" onclick="factoryDialog.show();" />
 		</div>
 		<table style="width: 100%">
 			<tr>
@@ -42,4 +38,82 @@
 			</tr>
 		</table>
 	</p:panel>
+	<p:dialog width="400px"
+		header="Factory / Workshop / Store / Shipyard Page"
+		widgetVar="factoryDialog" resizable="false" showEffect="fade"
+		hideEffect="fade" modal="true">
+		<p:panel header="Factory / Workshop / Store / Shipyard Details">
+
+			<table style="width: 100%">
+				<tr>
+					<td><p:outputLabel value="Address" /></td>
+					<td><p:inputText /></td>
+				</tr>
+
+				<tr>
+					<td></td>
+					<td><p:inputText /></td>
+				</tr>
+				<tr>
+					<td></td>
+					<td><p:inputText /></td>
+				</tr>
+				<tr>
+					<td><p:outputLabel value="Country *" /></td>
+					<td><p:selectOneMenu>
+							<f:selectItem itemLabel="-- Select One -- " itemValue="" />
+							<f:selectItem itemLabel="Malaysia" itemValue="1" />
+						</p:selectOneMenu></td>
+				</tr>
+				<tr>
+					<td><p:outputLabel value="#{lbl['lbl.sm.postcode']}" /></td>
+					<td><p:inputText /></td>
+				</tr>
+				<tr>
+					<td><p:outputLabel value="#{lbl['lbl.sm.state']}" /></td>
+					<td><p:inputText /></td>
+				</tr>
+
+				<tr>
+					<td><p:outputLabel value="#{lbl['lbl.sm.district']}" /></td>
+					<td><p:inputText /></td>
+				</tr>
+				<tr>
+					<td><p:outputLabel value="#{lbl['lbl.sm.towncity']}" /></td>
+					<td><p:inputText /></td>
+				</tr>
+				<tr>
+					<td><p:outputLabel value="Phone No." /></td>
+					<td><p:inputText /></td>
+				</tr>
+				<tr>
+					<td><p:outputLabel value="Area *" /></td>
+					<td><p:inputText /> <p:outputLabel value="(Sq Ft)" /></td>
+				</tr>
+				<tr>
+					<td><p:outputLabel value="Ownership Type" /></td>
+					<td><p:selectOneRadio>
+							<f:selectItem itemLabel="Rented " itemValue="" />
+							<f:selectItem itemLabel="Owned" itemValue="1" />
+						</p:selectOneRadio></td>
+				</tr>
+				<tr>
+					<td><p:outputLabel value="Purchase Price/Rent *" /></td>
+					<td><p:inputText /> <p:selectOneMenu>
+							<f:selectItem itemLabel="MYR" itemValue="1" />
+						</p:selectOneMenu></td>
+				</tr>
+				<tr>
+					<td><p:outputLabel value="Owner Name *" /></td>
+					<td><p:inputText /></td>
+				</tr>
+
+			</table>
+		</p:panel>
+		<br />
+		<div align="center">
+			<p:commandButton value="Save" onclick="factoryDialog.hide();" />
+			<p:commandButton value="Cancel" onclick="factoryDialog.hide();" />
+		</div>
+	</p:dialog>
 </ui:composition>

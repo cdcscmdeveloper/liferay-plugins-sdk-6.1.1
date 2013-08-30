@@ -13,25 +13,35 @@
 		</div>
 		<br />
 		<p:dataTable>
-			<p:column headerText="Model">
-				<h:outputText value="test" />
+			<p:column headerText="No.">
+				<p:outputLabel />
 			</p:column>
 
-			<p:column headerText="Year">
-				<h:outputText value="test" />
+			<p:column headerText="Equipment Type">
+				<p:outputLabel />
 			</p:column>
 
-			<p:column headerText="Manufacturer">
-				<h:outputText value="test" />
+			<p:column headerText="Brand">
+				<p:outputLabel />
+			</p:column>
+			<p:column headerText="Function">
+				<p:outputLabel />
 			</p:column>
 
-			<p:column headerText="Color">
-				<h:outputText value="test" />
+			<p:column headerText="Quantity">
+				<p:outputLabel />
+			</p:column>
+
+			<p:column headerText="Value">
+				<p:outputLabel />
+			</p:column>
+
+			<p:column headerText="Action">
+				<p:outputLabel />
 			</p:column>
 		</p:dataTable>
 		<div align="right">
-			<p:commandButton value="Add"
-				action="/xhtml/sm/NewMofApplication/step3CaptialAndEquityStatusInfo.xhtml" />
+			<p:commandButton value="Add" onclick="equipmentDialog.show();" />
 		</div>
 		<table style="width: 100%">
 			<tr>
@@ -42,4 +52,58 @@
 			</tr>
 		</table>
 	</p:panel>
+	<p:dialog width="400px" header="Manufacturing / Assembly Page"
+		widgetVar="equipmentDialog" resizable="false" showEffect="fade"
+		hideEffect="fade" modal="true">
+		<p:panel header="Manufacturing / Assembly Information">
+
+			<table style="width: 100%">
+				<tr>
+					<td><p:outputLabel value="Type Machinery / Equipment(s)" /></td>
+					<td><p:inputText /></td>
+				</tr>
+
+				<tr>
+					<td><p:outputLabel value="Brand" /></td>
+					<td><p:inputText /></td>
+				</tr>
+				<tr>
+					<td><p:outputLabel value="Type Of Product(s) *" /></td>
+					<td><p:inputText /></td>
+				</tr>
+				<tr>
+					<td><p:outputLabel value="Funtion *" /></td>
+					<td><p:inputText /></td>
+				</tr>
+				<tr>
+					<td><p:outputLabel value="Quantity *" /></td>
+					<td><p:inputText /></td>
+				</tr>
+
+				<tr>
+					<td><p:outputLabel value="Value *" /></td>
+					<td><p:inputText /> <p:selectOneMenu>
+							<f:selectItem itemLabel="MYR" itemValue="1" />
+						</p:selectOneMenu></td>
+				</tr>
+				<tr>
+					<td><p:outputLabel value="Purchase Method *" /></td>
+					<td><p:selectOneMenu>
+							<f:selectItem itemLabel="Cash" itemValue="1" />
+							<f:selectItem itemLabel="Credit Card" itemValue="1" />
+						</p:selectOneMenu></td>
+				</tr>
+				<tr>
+					<td><p:outputLabel value="Guarantor Name" /></td>
+					<td><p:inputText /></td>
+				</tr>
+
+			</table>
+		</p:panel>
+		<br />
+		<div align="center">
+			<p:commandButton value="Save" onclick="equipmentDialog.hide();" />
+			<p:commandButton value="Cancel" onclick="equipmentDialog.hide();" />
+		</div>
+	</p:dialog>
 </ui:composition>

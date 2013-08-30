@@ -5,17 +5,43 @@
 	xmlns:p="http://primefaces.org/ui"
 	xmlns:c="http://java.sun.com/jsp/jstl/core">
 
-	<p:panel
-		header="Capital / Equity Shareholders' ( Personnel)"
+	<p:panel header="Capital / Equity Shareholders' ( Personnel)"
 		toggleable="true">
 		<div>
-			<p:outputLabel value=" Section Verified : " title="For PO / Approver highlight the verified section "/>
+			<p:outputLabel value=" Section Verified : "
+				title="For PO / Approver highlight the verified section " />
 			<p:selectBooleanCheckbox />
 		</div>
-		<br/>
-		<table style="width: 100%">
+		<br />
+		<p:dataTable>
+			<p:column headerText="No.">
+				<h:outputText />
+			</p:column>
 
-			
+			<p:column headerText="Name">
+				<h:outputText />
+			</p:column>
+			<p:column headerText="IC/Passport Num">
+				<h:outputText />
+			</p:column>
+			<p:column headerText="Share Holding(%)">
+				<h:outputText />
+			</p:column>
+			<p:column headerText="Value(MYR)">
+				<h:outputText />
+			</p:column>
+			<p:column headerText="Equity Owner?">
+				<h:outputText />
+			</p:column>
+			<p:column headerText="Action">
+				<h:outputText />
+			</p:column>
+		</p:dataTable>
+		<div align="right">
+			<p:commandButton value="Add Share Holder"
+				onclick="shareHolderDialog.show();" />
+		</div>
+		<table style="width: 100%">
 			<tr>
 				<td><p:outputLabel value="PO Remarks" /></td>
 				<td><p:inputTextarea autoResize="true" /></td>
@@ -24,4 +50,16 @@
 			</tr>
 		</table>
 	</p:panel>
+	<p:dialog width="800px" height="500px" header="Share Holder Details" widgetVar="shareHolderDialog"
+		resizable="false" showEffect="fade"
+		hideEffect="fade" modal="true">
+
+		<ui:include
+			src="/xhtml/sm/shared/mofRegistration/personnelInfoPopUpForm.xhtml" />
+		<div align="center">
+			<p:commandButton value="Save" onclick="shareHolderDialog.hide();" />
+			<p:commandButton value="Cancel" onclick="shareHolderDialog.hide();" />
+		</div>
+	</p:dialog>
+
 </ui:composition>

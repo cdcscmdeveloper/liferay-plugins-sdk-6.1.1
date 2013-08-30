@@ -9,13 +9,68 @@
 		header="Composition of the Board of Directors / Management / Staff Company"
 		toggleable="true">
 		<div>
-			<p:outputLabel value=" Section Verified : " title="For PO / Approver highlight the verified section "/>
+			<p:outputLabel value=" Section Verified : "
+				title="For PO / Approver highlight the verified section " />
 			<p:selectBooleanCheckbox />
 		</div>
-		<br/>
-		<table style="width: 100%">
 
-			
+		<br />
+		<table style="width: 100%">
+			<tr>
+				<td colspan="4" align="center"><p:panelGrid>
+						<f:facet name="header">
+							<p:row>
+								<p:column rowspan="2"></p:column>
+								<p:column rowspan="2">Management</p:column>
+								<p:column colspan="2">Personnel</p:column>
+							</p:row>
+							<p:row>
+								<p:column>No. Of Actual Personnel</p:column>
+								<p:column colspan="2">No. Of Personnel Entered</p:column>
+							</p:row>
+						</f:facet>
+						<p:row>
+							<p:column>Bumiputera</p:column>
+							<p:column>
+								<p:outputLabel />
+							</p:column>
+							<p:column>
+								<p:outputLabel />
+							</p:column>
+							<p:column>
+								<p:outputLabel />
+							</p:column>
+						</p:row>
+						<p:row>
+							<p:column>Non Bumiputera</p:column>
+							<p:column>
+								<p:outputLabel />
+							</p:column>
+							<p:column>
+								<p:outputLabel />
+							</p:column>
+							<p:column>
+								<p:outputLabel />
+							</p:column>
+						</p:row>
+						<p:row>
+							<p:column>Non - Malaysian</p:column>
+							<p:column>
+								<p:outputLabel />
+							</p:column>
+							<p:column>
+								<p:outputLabel />
+							</p:column>
+							<p:column>
+								<p:outputLabel />
+							</p:column>
+						</p:row>
+					</p:panelGrid></td>
+
+			</tr>
+			<tr>
+				<td><br /></td>
+			</tr>
 			<tr>
 				<td><p:outputLabel value="PO Remarks" /></td>
 				<td><p:inputTextarea autoResize="true" /></td>
@@ -28,51 +83,74 @@
 		header=" List of Company's Board of Directors / Management / Staff"
 		toggleable="true">
 		<div>
-			<p:outputLabel value=" Section Verified : " title="For PO / Approver highlight the verified section "/>
+			<p:outputLabel value=" Section Verified : "
+				title="For PO / Approver highlight the verified section " />
 			<p:selectBooleanCheckbox />
 		</div>
-		<br/>
+		<br />
 		<p:dataTable>
-			<p:column headerText="Model">
-				<h:outputText value="test" />
+			<p:column headerText="No.">
+				<p:outputLabel />
 			</p:column>
 
-			<p:column headerText="Year">
-				<h:outputText value="test" />
+			<p:column headerText="Name">
+				<p:outputLabel />
 			</p:column>
 
-			<p:column headerText="Manufacturer">
-				<h:outputText value="test" />
+			<p:column headerText="Roles In Company">
+				<p:outputLabel />
 			</p:column>
 
-			<p:column headerText="Color">
-				<h:outputText value="test" />
+			<p:column headerText="Is Authorized ?">
+				<p:selectBooleanCheckbox />
+			</p:column>
+			<p:column headerText="Is Online ?">
+				<p:selectBooleanCheckbox />
+			</p:column>
+			<p:column headerText="epRole">
+				<p:selectOneMenu>
+					<f:selectItem itemLabel="Catalogue User" itemValue="cat"></f:selectItem>
+					<f:selectItem itemLabel="Supplier User" itemValue="sup"></f:selectItem>
+					<f:selectItem itemLabel="Supplier Admin" itemValue="admn"></f:selectItem>
+				</p:selectOneMenu>
+			</p:column>
+			<p:column headerText="Issue Soft Cert ?">
+				<p:selectBooleanCheckbox />
+			</p:column>
+			<p:column headerText="Action">
+				<p:outputLabel />
 			</p:column>
 		</p:dataTable>
 		<div align="right">
 			<p:commandButton value="Add Personnel"
-				action="/xhtml/sm/NewMofApplication/step3CaptialAndEquityStatusInfo.xhtml" />
+				onclick="personnelDialog.show();" />
 		</div>
-		<p:fieldset legend="List of Authorized Perssonel">  
-	 		<p:dataTable>
-				<p:column headerText="Model">
-					<h:outputText value="test" />
+		<p:fieldset legend="List of Authorized Personnel">
+			<p:dataTable>
+				<p:column headerText="No.">
+					<p:outputLabel />
 				</p:column>
-	
-				<p:column headerText="Year">
-					<h:outputText value="test" />
+
+				<p:column headerText="Name">
+					<p:outputLabel />
 				</p:column>
-	
-				<p:column headerText="Manufacturer">
-					<h:outputText value="test" />
+
+				<p:column headerText="Roles In Company">
+					<p:outputLabel />
 				</p:column>
-	
-				<p:column headerText="Color">
-					<h:outputText value="test" />
+				<p:column headerText="Is Online ?">
+					<p:selectBooleanCheckbox />
+				</p:column>
+				<p:column headerText="epRole">
+					<p:outputLabel />
+				</p:column>
+				<p:column headerText="Soft Cert Issued?">
+					<p:outputLabel value="N" />
 				</p:column>
 			</p:dataTable>
-		</p:fieldset>  
-		<br/>
+		</p:fieldset>
+
+		<br />
 		<table style="width: 100%">
 			<tr>
 				<td><p:outputLabel value="PO Remarks" /></td>
@@ -82,4 +160,15 @@
 			</tr>
 		</table>
 	</p:panel>
+	<p:dialog width="800px" height="500px" header="Personnel Details" widgetVar="personnelDialog"
+		resizable="false" showEffect="fade"
+		hideEffect="fade" modal="true">
+
+		<ui:include
+			src="/xhtml/sm/shared/mofRegistration/personnelInfoPopUpForm.xhtml" />
+		<div align="center">
+			<p:commandButton value="Save" onclick="personnelDialog.hide();" />
+			<p:commandButton value="Cancel" onclick="personnelDialog.hide();" />
+		</div>
+	</p:dialog>
 </ui:composition>
