@@ -1,0 +1,28 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:c="http://java.sun.com/jsp/jstl/core">
+
+	<p:menu>
+		<p:submenu label="MOF Account Maintenance">
+			<p:menuitem value="Apply Bumiputera Status"
+				outcome="/xhtml/sm/bumiPuteraApplication/defaultBumiApplicationPage.xhtml" />
+			<p:menuitem value="Add Additional Category Codes" />
+			<p:menuitem value="Update MOF Account Details" />
+			<p:menuitem value="Delete Pending MOF Application" />
+			<p:menuitem value="Cancel Registered Category Code" />
+			<p:menuitem value="Cancel Registration With MOF" />
+		</p:submenu>
+		<p:submenu label="User Profile Maintenance">
+			<p:menuitem value="Manage User(s)" />
+			<p:menuitem value="Update Profile" />
+			<p:menuitem value="Change Password" />
+		</p:submenu>
+		<p:submenu label="Monitoring">
+			<p:menuitem value="Transaction Monitoring" />
+			<p:menuitem value="Supplier Performance" />
+		</p:submenu>
+	</p:menu>
+</ui:composition>

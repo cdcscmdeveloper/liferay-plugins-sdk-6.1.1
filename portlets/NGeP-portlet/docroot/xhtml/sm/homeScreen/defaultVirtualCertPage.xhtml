@@ -1,0 +1,51 @@
+<ui:composition
+	template="/WEB-INF/facelets/templates/sidemenu_template.xhtml"
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:c="http://java.sun.com/jsp/jstl/core">
+
+	<ui:define name="resourceSection">
+	</ui:define>
+
+	<ui:define name="sideMenu">
+		<ui:include src="/xhtml/sm/shared/sidemenu/smMainPageSideMenu.xhtml" />
+	</ui:define>
+	<ui:define name="content">
+		<p:panel header="MOF Account : Virtual Certficate" id="virtualCert">
+			<table style="width: 100%; float: center">
+				<tr>
+					<td colspan="3"><h4
+							style="color: blue; text-decoration: underline; text-align: center;">
+							<p:outputLabel value="SlJIL AKUAN PENDAFTARAN SYARIKAT " />
+						</h4></td>
+				</tr>
+				<tr>
+					<td><p:outputLabel value="NO SIJIL" /></td>
+					<td><p:outputLabel value="   : " /></td>
+					<td><p:outputLabel value="325919 " /></td>
+
+				</tr>
+				<tr>
+					<td><p:outputLabel value="NO RUIUKAN PENDAFTARAN" /></td>
+					<td><p:outputLabel value="   : " /></td>
+					<td><p:outputLabel value="357-00024948 " /></td>
+
+				</tr>
+				<tr>
+					<td><p:outputLabel value="TEMPOH SAH LAKU :" /></td>
+					<td><p:outputLabel value="   : " /></td>
+					<td><p:outputLabel value="07/l2/2009 - 06/l2/20l2 " /></td>
+
+				</tr>
+			</table>
+		</p:panel>
+		<div align="right">
+			<p:commandButton value="Print" type="button">
+				<p:printer target="virtualCert" />
+			</p:commandButton>
+		</div>
+	</ui:define>
+</ui:composition>
