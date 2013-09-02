@@ -1,0 +1,58 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:c="http://java.sun.com/jsp/jstl/core">
+	<p:panel header="Complaint Details" toggleable="true">
+		<p:panelGrid columns="2" styleClass="noBorders">
+			<f:facet name="header">Suppliers Search Block</f:facet>
+			<h:outputLabel for="firstname" value="Supplier Name:* " />
+			<p:inputText id="firstname" value="" label="Firstname" />
+			<h:outputLabel for="surname" value="Supplier Number:* " />
+			<p:inputText id="surname" value="" required="true" label="Surname" />
+			<h:outputLabel for="" value="" />
+			<p:commandButton value="Search" />
+		</p:panelGrid>
+
+		<p:dataTable>
+			<p:column headerText="No.">
+				<h:outputText />
+			</p:column>
+			<p:column headerText="Supplier Name">
+				<h:outputText />
+			</p:column>
+			<p:column headerText="Supplier Id">
+				<h:outputText />
+			</p:column>
+		</p:dataTable>
+
+		<p:commandButton value="Add/Select Supplier" style="float:right;"></p:commandButton>
+		<table style="width: 100%">
+			<tr>
+				<td><p:outputLabel value="Complaint Against Supplier* " /></td>
+				<td><p:inputText readonly="true" value="XYZ Sdn Bhd" size="50" /></td>
+			</tr>
+			<tr>
+				<td><p:outputLabel value="Complaint Type* " /></td>
+				<td><p:selectOneMenu>
+						<f:selectItem itemLabel="-- Select One -- " itemValue="" />
+						<f:selectItem itemLabel="Type1" itemValue="1" />
+						<f:selectItem itemLabel="Type2" itemValue="2" />
+						<f:selectItem itemLabel="Type3" itemValue="3" />
+					</p:selectOneMenu></td>
+			</tr>
+			<tr>
+				<td><p:outputLabel value="Complaint Details* " /></td>
+				<td><p:inputTextarea rows="4" cols="33" /></td>
+			</tr>
+			<tr style="text-align: center;">
+				<td><p:outputLabel value="Upload Complaint / Proof Doc (If Any) " /></td>
+				<td><p:fileUpload value="#{testBean.file}" mode="simple" /></td>
+			</tr>
+			<tr>
+				<td><p:commandButton value="Lodge Complaint"></p:commandButton></td>
+			</tr>
+		</table>
+	</p:panel>
+</ui:composition>
