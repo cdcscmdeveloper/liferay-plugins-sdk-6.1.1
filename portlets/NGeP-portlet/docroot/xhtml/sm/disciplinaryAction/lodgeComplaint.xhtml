@@ -10,30 +10,23 @@
 	<ui:define name="resourceSection">
 	</ui:define>
 	<ui:define name="sideMenu">
-		<!-- <ui:include
-			src="/xhtml/sm/shared/sidemenu/mofNewRegistrationSideMenu.xhtml" /> -->
-	</ui:define>	
+		<ui:include src="/xhtml/sm/shared/sidemenu/smMainPageSideMenu.xhtml" />
+	</ui:define>
 	<ui:define name="content">
 		<table style="width: 100%">
 			<tr>
 				<td colspan="2"><h4
-						style="color: blue; text-align: center; text-align: justify;">						
+						style="color: blue; text-align: center; text-align: justify;">
 						<p:outputLabel value="Lodge Complaint" />
 					</h4></td>
-			</tr>			
-		</table>
-		
-		<ui:include src="/xhtml/sm/shared/complaintRegistration/complainantDetails.xhtml" />
-		<ui:include src="/xhtml/sm/shared/complaintRegistration/complaintDetails.xhtml" />
-	
-		<table style="width: 100%">
-			<tr>
-				<td></td>
-				<td align="right"><p:commandButton
-						value="#{lbl['lbl.sm.next']}"
-						action="/xhtml/sm/NewMofApplication/step2BranchCompanyInfo.xhtml" /></td>
 			</tr>
 		</table>
+
+		<ui:include
+			src="/xhtml/sm/shared/complaintRegistration/complainantDetails.xhtml" />
+		<ui:include
+			src="/xhtml/sm/shared/complaintRegistration/complaintDetails.xhtml" />
+
 
 	</ui:define>
 </ui:composition>
