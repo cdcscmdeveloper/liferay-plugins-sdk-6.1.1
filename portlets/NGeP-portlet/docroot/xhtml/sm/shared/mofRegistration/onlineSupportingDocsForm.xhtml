@@ -18,7 +18,7 @@
 						<p:outputLabel
 							value="* The system can only accommodate files in Word format and PDF:" />
 						<br />
-											
+
 					</h6></td>
 
 			</tr>
@@ -26,12 +26,12 @@
 		</table>
 
 
-		
+
 
 		<p:panel
 			header="Online Documents Check List - Application No. - 12374837"
 			toggleable="true">
-			<p:dataTable id="cars" var="table"
+			<p:dataTable var="table"
 				value="#{mofRegistrationBackingBean.dataList}">
 				<p:column headerText="No.">  
                    #{table.no}  
@@ -44,13 +44,13 @@
 		            #{table.documentdescription} 
 		        </p:column>
 				<p:column headerText="Upload Document?">
-				
-				
-				
-				<p:fileUpload value="#{testBean.file}" mode="simple" />
-			
-				
-					
+
+
+
+					<p:fileUpload value="#{testBean.file}" mode="simple" />
+
+
+
 				</p:column>
 				<p:column headerText="Added Document Name">  
                    #{table.addedDocumentName}  
@@ -65,8 +65,8 @@
 
 		<table>
 			<tr>
-				<td><p:commandButton value="Previous"></p:commandButton></td>			
-				<td><p:commandButton value="Print list"></p:commandButton></td>			
+				<td><p:commandButton value="Previous"></p:commandButton></td>
+				<td><p:commandButton value="Print list"></p:commandButton></td>
 				<td><p:commandButton value="Proceed"></p:commandButton></td>
 			</tr>
 		</table>

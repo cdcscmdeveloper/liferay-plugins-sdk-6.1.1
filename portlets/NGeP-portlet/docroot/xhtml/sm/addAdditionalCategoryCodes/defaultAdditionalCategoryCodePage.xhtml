@@ -1,0 +1,42 @@
+<ui:composition
+	template="/WEB-INF/facelets/templates/sidemenu_template.xhtml"
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:c="http://java.sun.com/jsp/jstl/core">
+
+	<ui:define name="resourceSection">
+	</ui:define>
+
+	<ui:define name="sideMenu">
+		<ui:include src="/xhtml/sm/shared/sidemenu/smMainPageSideMenu.xhtml" />
+	</ui:define>
+	<ui:define name="content">
+		<p:panel header="Apply Bumiputera Status">
+			<table style="width: 100%">
+				<tr>
+					<td><p:outputPanel>
+							<p>
+								To Add new category codes,the following data needs to be
+								accurate and updated : <br /> 1. Company Information<br /> 2.
+								2. Bank - Associated Company Info <br /> 3.Capital - Equity
+								Status<br /> 4. Personnel Information<br /> 5.Register
+								Category Codes<br /> 5.1. Factory / Equipment Details ( If
+								necessary )<br /> 6. Provide Necessary Supporting Documents.<br />
+								Please fill in the necessary information and submit the
+								application for further processing.
+							</p>
+						</p:outputPanel></td>
+				</tr>
+			</table>
+		</p:panel>
+		<div align="center">
+			<p:commandButton value="Proceed"
+				action="/xhtml/sm/addAdditionalCategoryCodes/step1AddnlCatCode_CompanyInfo.xhtml" />
+			<p:commandButton value="Cancel"
+				action="/xhtml/sm/homeScreen/defaultVirtualCertPage.xhtml" />
+		</div>
+	</ui:define>
+</ui:composition>
