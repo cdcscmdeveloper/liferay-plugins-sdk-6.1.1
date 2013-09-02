@@ -14,29 +14,27 @@
 		<ui:include src="/xhtml/sm/shared/sidemenu/smMainPageSideMenu.xhtml" />
 	</ui:define>
 	<ui:define name="content">
-		<p:panel header="Answer Questionnaire" id="virtualCert">
+		<p:panel header="Answer Questionnaire" id="questionPanel">
 
 			<table style="width: 100%">
 				<tr>
-					<td>BORANG MAKLUM BALAS KEPUASAN PELANGGAN KEMENTERIAN
-						KEWANGAN MALAYSIA <BR />(SYARAKIT BEKALAN DAN PERKHIDMATAN)
+					<td>CUSTOMER SATISFACTION FEEDBACK FORM MALAYSIAN MINISTRY OF
+						FINANCE <BR />(SYARAKIT BEKALAN DAN PERKHIDMATAN)
 					</td>
 				</tr>
 				<tr>
-					<td><p:separator id="separator" /></td>
+					<td><p:separator /></td>
 				</tr>
 				<tr>
-					<td>Maklum balas ini hanya mengambil masa 2-3 minit, kami
-						mohon kerjasama anda untuk menyertainya.<br />
-					<br />
-					<br /> Kerjasama Yang diberakan amat dihargai dan selaga maklum
-						balas akan digunakan dalam meningkatkan mutu perkhidmatan
-						Kontraktor Bekalan dan pekhidmatan Kementerian Kewangan. Segala
-						maklumat yang diberikan akan dirahsiakan.
+					<td>This feedback takes only 2-3 minutes, we request your
+						cooperation to participate.<br /> Your cooperation is greatly
+						appreciated and your valuable feedback will be used in improving
+						the quality of service and supply contractor MOF service. All
+						information provided will be kept confidential.
 					</td>
 				</tr>
 				<tr>
-					<td><p:separator id="separator" /></td>
+					<td><p:separator /></td>
 				</tr>
 
 			</table>
@@ -44,20 +42,19 @@
 
 			<table style="width: 100%">
 				<tr>
-					<td><p:outputLabel
-							value="No. Pendaftaran Kementerian Kewangan:" /></td>
+					<td><p:outputLabel value="MOF NO. :" /></td>
 					<td><p:outputLabel value="357-00024948 " /></td>
 				</tr>
 				<tr>
-					<td><p:outputLabel value="Nama Syarikat:" /></td>
+					<td><p:outputLabel value="Company Name :" /></td>
 					<td><p:outputLabel value="KOP AVITATION SDN. BHD. " /></td>
 				</tr>
 				<tr>
-					<td><p:outputLabel value="No. Rujukan Permohonan:" /></td>
+					<td><p:outputLabel value="Application Reference NO. :" /></td>
 					<td><p:outputLabel value="K-24102011-1498 " /></td>
 				</tr>
 				<tr>
-					<td><p:outputLabel value="Jenis Permohonan:" /></td>
+					<td><p:outputLabel value="Type Of Application:" /></td>
 					<td><p:outputLabel value="Permohonan Tambahan Bidang " /></td>
 				</tr>
 				<tr>
@@ -65,7 +62,7 @@
 					<td><p:outputLabel value="ROLSI BIN ABU SAMAH " /></td>
 				</tr>
 				<tr>
-					<td><p:separator id="separator" /></td>
+					<td colspan="2"><p:separator /></td>
 				</tr>
 
 			</table>
@@ -73,139 +70,140 @@
 
 			<table style="width: 100%">
 				<tr>
-					<td><p:outputLabel value="Nama*" /></td>
+					<td><p:outputLabel value="Name*" /></td>
 					<td><p:outputLabel value=":" /></td>
 					<td><p:inputText /></td>
 
 				</tr>
 				<tr>
-					<td><p:outputLabel value="No. Telefon*" /></td>
+					<td><p:outputLabel value="Telephone NO." /></td>
 					<td><p:outputLabel value=":" /></td>
 					<td><p:inputText /></td>
 				</tr>
 				<tr>
-					<td><p:separator id="separator" /></td>
+					<td colspan="3"><p:separator /></td>
 				</tr>
 
 			</table>
 
 			<table style="width: 100%">
 				<tr>
-					<td>1. Adakah permohonan pendaftaran dilakukan sendiri oleh
-						syarikat?*<br /> <p:selectOneRadio id="options" value="">
-							<f:selectItem itemLabel="Ya" itemValue="1" />
-							<f:selectItem itemLabel="Tidak" itemValue="2" />
-						</p:selectOneRadio>
-					</td>
+					<td><p:outputLabel
+							value="1. Is the application for registration made by the
+						company?*" /><br />
+						<p:selectOneRadio value="">
+							<f:selectItem itemLabel="Yes" itemValue="1" />
+							<f:selectItem itemLabel="No" itemValue="2" />
+						</p:selectOneRadio></td>
 				</tr>
 
 
 				<tr>
-					<td>2. Jenis permohonan*<br /> <p:selectOneRadio id="options"
-							value="">
+					<td><p:outputLabel value="2. Type Of Application*" /><br />
+						<p:selectOneRadio value="">
 							<f:selectItem itemLabel="Permohonan Baru " itemValue="1" />
 							<f:selectItem itemLabel="Permohonan Pembaharuan" itemValue="2" />
 							<f:selectItem itemLabel="Permohonan Tambahan Bidang "
 								itemValue="3" />
 							<f:selectItem itemLabel="Permohonan Kemaskini Profil "
 								itemValue="4" />
-						</p:selectOneRadio>
-					</td>
+						</p:selectOneRadio></td>
 				</tr>
 
 
 				<tr>
-					<td>3. Status Permohonan Tuan*<br /> <p:selectOneRadio
-							id="options" value="">
-							<f:selectItem itemLabel="Lulus " itemValue="1" />
-							<f:selectItem itemLabel="Tolak" itemValue="2" />
+					<td><p:outputLabel value="3. Application Status Of
+						Mr*" /><br />
+						<p:selectOneRadio value="">
+							<f:selectItem itemLabel="Pass " itemValue="1" />
+							<f:selectItem itemLabel="Decline" itemValue="2" />
 
-						</p:selectOneRadio>
-					</td>
+						</p:selectOneRadio></td>
 				</tr>
 				<tr>
-					<td>4.Adakah permohonan tuan telah diproses dalam tempoh yang
-						ditetapkan?*<br /> <p:selectOneRadio id="options" value="">
-							<f:selectItem itemLabel="Ya " itemValue="1" />
-							<f:selectItem itemLabel="tidak" itemValue="2" />
+					<td><p:outputLabel
+							value="4.Adakah permohonan tuan
+						telah diproses dalam tempoh yang ditetapkan?*" /><br />
+						<p:selectOneRadio value="">
+							<f:selectItem itemLabel="Yes " itemValue="1" />
+							<f:selectItem itemLabel="No" itemValue="2" />
 
-						</p:selectOneRadio>
-					</td>
+						</p:selectOneRadio></td>
 				</tr>
 				<tr>
-					<td>5. Proses pendaftaran*<br /> a.Adakah syarat / peraturan
-						senang difahami dan memudahkan proses pendaftaran?*<br /> <p:selectOneRadio
-							id="options" value="">
-							<f:selectItem itemLabel="Ya " itemValue="1" />
-							<f:selectItem itemLabel="tidak" itemValue="2" />
+					<td><p:outputLabel value="5. Registration Process*" /><br />
+						<p:outputLabel
+							value="a.Are there any
+						requirements / regulations easy to understand and facilitate the
+						registration process ?*" />
+						<p:selectOneRadio value="">
+							<f:selectItem itemLabel="Yes " itemValue="1" />
+							<f:selectItem itemLabel="No" itemValue="2" />
 							<br />
-						</p:selectOneRadio> b.Adakah anda berpuas hati dengan kualiti perkhidmatan yang
-						diberikan?* <br /> <p:selectOneRadio id="options" value="">
-							<f:selectItem itemLabel="Ya " itemValue="1" />
-							<f:selectItem itemLabel="tidak" itemValue="2" />
+						</p:selectOneRadio> <p:outputLabel
+							value="b.Are you satisfied with the quality of service be given?*" />
+						<br /> <p:selectOneRadio value="">
+							<f:selectItem itemLabel="Yes " itemValue="1" />
+							<f:selectItem itemLabel="NO" itemValue="2" />
 							<br />
-						</p:selectOneRadio>
-					</td>
+						</p:selectOneRadio></td>
 				</tr>
 
 
 				<tr>
-					<td>6.Masalah yang sering dihadapi semasa proses pendaftaran *<br />
-						a.Adakah syarat disebabkan oleh syarat / peraturan pendaftran?*<br />
-						<p:selectOneRadio id="options" value="">
-							<f:selectItem itemLabel="Ya " itemValue="1" />
-							<f:selectItem itemLabel="tidak" itemValue="2" />
-							<br />
-						</p:selectOneRadio> b.Adakah disebabkan oleh dokumen sokongan?*<br /> <p:selectOneRadio
-							id="options" value="">
-							<f:selectItem itemLabel="Ya " itemValue="1" />
-							<f:selectItem itemLabel="tidak" itemValue="2" />
-							<br />
-						</p:selectOneRadio> c.Adakah disebabkan oleh aplikasi penggunaan sistem eP?*<br /> <p:selectOneRadio
-							id="options" value="">
-							<f:selectItem itemLabel="Ya " itemValue="1" />
-							<f:selectItem itemLabel="tidak" itemValue="2" />
-							<br />
-						</p:selectOneRadio> d.Adakah disebabkan oleh masalah talian?*<br /> <p:selectOneRadio
-							id="options" value="">
-							<f:selectItem itemLabel="Ya " itemValue="1" />
-							<f:selectItem itemLabel="tidak" itemValue="2" />
-							<br />
-						</p:selectOneRadio>
-					</td>
+					<td><p:outputLabel
+							value="6.Problem often encountered during the registration
+						process *" /><br />
+						<p:outputLabel
+							value="a.Is there a condition caused by the requirements / regulations
+						the registration?*" />
+						<br /> <p:selectOneRadio value="">
+							<f:selectItem itemLabel="Yes " itemValue="1" />
+							<f:selectItem itemLabel="No" itemValue="2" />
+						</p:selectOneRadio> <br /> <p:outputLabel
+							value="b.Is there a problem due to supporting documents?*" /> <br />
+						<p:selectOneRadio value="">
+							<f:selectItem itemLabel="Yes" itemValue="1" />
+							<f:selectItem itemLabel="No" itemValue="2" />
+						</p:selectOneRadio> <br /> <p:outputLabel
+							value="c.Have you faced problems using the application eP?*" />
+						<br /> <p:selectOneRadio value="">
+							<f:selectItem itemLabel="Yes" itemValue="1" />
+							<f:selectItem itemLabel="No" itemValue="2" />
+						</p:selectOneRadio> <br /> <p:outputLabel
+							value="d.Have you faced any online problems?*" /> <br /> <p:selectOneRadio
+							value="">
+							<f:selectItem itemLabel="Yes" itemValue="1" />
+							<f:selectItem itemLabel="No" itemValue="2" />
+						</p:selectOneRadio> <br /></td>
+
 				</tr>
 				<tr>
-					<td>7. Sistem ePerolehan*<br /> <p:selectOneRadio
-							id="options" value="">
-							<f:selectItem itemLabel="Ya " itemValue="1" />
-							<f:selectItem itemLabel="tidak" itemValue="2" />
+					<td><p:outputLabel value="7. eProcurement system*" /><br />
+						<p:selectOneRadio value="">
+							<f:selectItem itemLabel="Yes " itemValue="1" />
+							<f:selectItem itemLabel="No" itemValue="2" />
 							<br />
-						</p:selectOneRadio>
-					</td>
+						</p:selectOneRadio></td>
 				</tr>
 				<tr>
-					<td>8. Cadangan penambahbaikan:<br /> <p:inputTextarea
-							rows="6" cols="33" />
-					</td>
+					<td><p:outputLabel value="8.Suggestions For Improvement:" /><br />
+						<p:inputTextarea rows="6" cols="33" /></td>
 				</tr>
 			</table>
 
 		</p:panel>
 		<div>
-			<p:commandButton value="Simpan" type="button">
-				<p:printer target="virtualCert" />
+			<p:commandButton value="Save As Draft" type="button">
 			</p:commandButton>
-			<p:commandButton value="Padam" type="button">
-				<p:printer target="virtualCert" />
+			<p:commandButton value="Clear" type="button">
 			</p:commandButton>
-			<p:commandButton value="Batal" type="button">
-				<p:printer target="virtualCert" />
+			<p:commandButton value="Cancel" type="button">
 			</p:commandButton>
-			<p:commandButton value="Cetak" type="button">
-				<p:printer target="virtualCert" />
+			<p:commandButton value="Print" type="button">
+				<p:printer target="questionPanel" />
 			</p:commandButton>
-			<p:commandButton value="Serah" type="button">
-				<p:printer target="virtualCert" />
+			<p:commandButton value="Submit" type="button">
 			</p:commandButton>
 		</div>
 	</ui:define>
