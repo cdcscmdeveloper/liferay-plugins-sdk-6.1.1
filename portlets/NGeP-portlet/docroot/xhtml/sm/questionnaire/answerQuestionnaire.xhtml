@@ -1,0 +1,212 @@
+<ui:composition
+	template="/WEB-INF/facelets/templates/sidemenu_template.xhtml"
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:c="http://java.sun.com/jsp/jstl/core">
+
+	<ui:define name="resourceSection">
+	</ui:define>
+
+	<ui:define name="sideMenu">
+		<ui:include src="/xhtml/sm/shared/sidemenu/smMainPageSideMenu.xhtml" />
+	</ui:define>
+	<ui:define name="content">
+		<p:panel header="Answer Questionnaire" id="virtualCert">
+
+			<table style="width: 100%">
+				<tr>
+					<td>BORANG MAKLUM BALAS KEPUASAN PELANGGAN KEMENTERIAN
+						KEWANGAN MALAYSIA <BR />(SYARAKIT BEKALAN DAN PERKHIDMATAN)
+					</td>
+				</tr>
+				<tr>
+					<td><p:separator id="separator" /></td>
+				</tr>
+				<tr>
+					<td>Maklum balas ini hanya mengambil masa 2-3 minit, kami
+						mohon kerjasama anda untuk menyertainya.<br />
+					<br />
+					<br /> Kerjasama Yang diberakan amat dihargai dan selaga maklum
+						balas akan digunakan dalam meningkatkan mutu perkhidmatan
+						Kontraktor Bekalan dan pekhidmatan Kementerian Kewangan. Segala
+						maklumat yang diberikan akan dirahsiakan.
+					</td>
+				</tr>
+				<tr>
+					<td><p:separator id="separator" /></td>
+				</tr>
+
+			</table>
+
+
+			<table style="width: 100%">
+				<tr>
+					<td><p:outputLabel
+							value="No. Pendaftaran Kementerian Kewangan:" /></td>
+					<td><p:outputLabel value="357-00024948 " /></td>
+				</tr>
+				<tr>
+					<td><p:outputLabel value="Nama Syarikat:" /></td>
+					<td><p:outputLabel value="KOP AVITATION SDN. BHD. " /></td>
+				</tr>
+				<tr>
+					<td><p:outputLabel value="No. Rujukan Permohonan:" /></td>
+					<td><p:outputLabel value="K-24102011-1498 " /></td>
+				</tr>
+				<tr>
+					<td><p:outputLabel value="Jenis Permohonan:" /></td>
+					<td><p:outputLabel value="Permohonan Tambahan Bidang " /></td>
+				</tr>
+				<tr>
+					<td><p:outputLabel value="Nama Pegawai Pemproses:" /></td>
+					<td><p:outputLabel value="ROLSI BIN ABU SAMAH " /></td>
+				</tr>
+				<tr>
+					<td><p:separator id="separator" /></td>
+				</tr>
+
+			</table>
+
+
+			<table style="width: 100%">
+				<tr>
+					<td><p:outputLabel value="Nama*" /></td>
+					<td><p:outputLabel value=":" /></td>
+					<td><p:inputText /></td>
+
+				</tr>
+				<tr>
+					<td><p:outputLabel value="No. Telefon*" /></td>
+					<td><p:outputLabel value=":" /></td>
+					<td><p:inputText /></td>
+				</tr>
+				<tr>
+					<td><p:separator id="separator" /></td>
+				</tr>
+
+			</table>
+
+			<table style="width: 100%">
+				<tr>
+					<td>1. Adakah permohonan pendaftaran dilakukan sendiri oleh
+						syarikat?*<br /> <p:selectOneRadio id="options" value="">
+							<f:selectItem itemLabel="Ya" itemValue="1" />
+							<f:selectItem itemLabel="Tidak" itemValue="2" />
+						</p:selectOneRadio>
+					</td>
+				</tr>
+
+
+				<tr>
+					<td>2. Jenis permohonan*<br /> <p:selectOneRadio id="options"
+							value="">
+							<f:selectItem itemLabel="Permohonan Baru " itemValue="1" />
+							<f:selectItem itemLabel="Permohonan Pembaharuan" itemValue="2" />
+							<f:selectItem itemLabel="Permohonan Tambahan Bidang "
+								itemValue="3" />
+							<f:selectItem itemLabel="Permohonan Kemaskini Profil "
+								itemValue="4" />
+						</p:selectOneRadio>
+					</td>
+				</tr>
+
+
+				<tr>
+					<td>3. Status Permohonan Tuan*<br /> <p:selectOneRadio
+							id="options" value="">
+							<f:selectItem itemLabel="Lulus " itemValue="1" />
+							<f:selectItem itemLabel="Tolak" itemValue="2" />
+
+						</p:selectOneRadio>
+					</td>
+				</tr>
+				<tr>
+					<td>4.Adakah permohonan tuan telah diproses dalam tempoh yang
+						ditetapkan?*<br /> <p:selectOneRadio id="options" value="">
+							<f:selectItem itemLabel="Ya " itemValue="1" />
+							<f:selectItem itemLabel="tidak" itemValue="2" />
+
+						</p:selectOneRadio>
+					</td>
+				</tr>
+				<tr>
+					<td>5. Proses pendaftaran*<br /> a.Adakah syarat / peraturan
+						senang difahami dan memudahkan proses pendaftaran?*<br /> <p:selectOneRadio
+							id="options" value="">
+							<f:selectItem itemLabel="Ya " itemValue="1" />
+							<f:selectItem itemLabel="tidak" itemValue="2" />
+							<br />
+						</p:selectOneRadio> b.Adakah anda berpuas hati dengan kualiti perkhidmatan yang
+						diberikan?* <br /> <p:selectOneRadio id="options" value="">
+							<f:selectItem itemLabel="Ya " itemValue="1" />
+							<f:selectItem itemLabel="tidak" itemValue="2" />
+							<br />
+						</p:selectOneRadio>
+					</td>
+				</tr>
+
+
+				<tr>
+					<td>6.Masalah yang sering dihadapi semasa proses pendaftaran *<br />
+						a.Adakah syarat disebabkan oleh syarat / peraturan pendaftran?*<br />
+						<p:selectOneRadio id="options" value="">
+							<f:selectItem itemLabel="Ya " itemValue="1" />
+							<f:selectItem itemLabel="tidak" itemValue="2" />
+							<br />
+						</p:selectOneRadio> b.Adakah disebabkan oleh dokumen sokongan?*<br /> <p:selectOneRadio
+							id="options" value="">
+							<f:selectItem itemLabel="Ya " itemValue="1" />
+							<f:selectItem itemLabel="tidak" itemValue="2" />
+							<br />
+						</p:selectOneRadio> c.Adakah disebabkan oleh aplikasi penggunaan sistem eP?*<br /> <p:selectOneRadio
+							id="options" value="">
+							<f:selectItem itemLabel="Ya " itemValue="1" />
+							<f:selectItem itemLabel="tidak" itemValue="2" />
+							<br />
+						</p:selectOneRadio> d.Adakah disebabkan oleh masalah talian?*<br /> <p:selectOneRadio
+							id="options" value="">
+							<f:selectItem itemLabel="Ya " itemValue="1" />
+							<f:selectItem itemLabel="tidak" itemValue="2" />
+							<br />
+						</p:selectOneRadio>
+					</td>
+				</tr>
+				<tr>
+					<td>7. Sistem ePerolehan*<br /> <p:selectOneRadio
+							id="options" value="">
+							<f:selectItem itemLabel="Ya " itemValue="1" />
+							<f:selectItem itemLabel="tidak" itemValue="2" />
+							<br />
+						</p:selectOneRadio>
+					</td>
+				</tr>
+				<tr>
+					<td>8. Cadangan penambahbaikan:<br /> <p:inputTextarea
+							rows="6" cols="33" />
+					</td>
+				</tr>
+			</table>
+
+		</p:panel>
+		<div>
+			<p:commandButton value="Simpan" type="button">
+				<p:printer target="virtualCert" />
+			</p:commandButton>
+			<p:commandButton value="Padam" type="button">
+				<p:printer target="virtualCert" />
+			</p:commandButton>
+			<p:commandButton value="Batal" type="button">
+				<p:printer target="virtualCert" />
+			</p:commandButton>
+			<p:commandButton value="Cetak" type="button">
+				<p:printer target="virtualCert" />
+			</p:commandButton>
+			<p:commandButton value="Serah" type="button">
+				<p:printer target="virtualCert" />
+			</p:commandButton>
+		</div>
+	</ui:define>
+</ui:composition>
