@@ -13,6 +13,12 @@
 		</div>
 		<br />
 		<p:dataTable>
+		<!-- 	<p:column selectionMode="multiple">
+			</p:column> -->
+
+			<p:column headerText="NO.">
+				<h:outputText />
+			</p:column>
 			<p:column headerText="Bank Name">
 				<p:outputLabel />
 			</p:column>
@@ -34,6 +40,7 @@
 		</p:dataTable>
 		<div align="right">
 			<p:commandButton value="Add Account" onclick="bankDialog.show();" />
+			<p:commandButton value="Delete Account(s)" />
 		</div>
 		<p:fieldset
 			legend="Cheque Signatories Composition For Account No.  :  123456">

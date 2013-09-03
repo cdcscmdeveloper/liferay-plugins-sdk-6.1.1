@@ -14,20 +14,21 @@
 		</div>
 		<br />
 		<p:dataTable>
-			<p:column headerText="No.">
-				<p:outputLabel />
+			<!-- <p:column selectionMode="multiple">
+			</p:column> -->
+
+			<p:column headerText="NO.">
+				<h:outputText />
 			</p:column>
 
 			<p:column headerText="Factory / Workshop / Store / Dockyard Address">
 				<p:outputLabel />
 			</p:column>
 
-			<p:column headerText="Action">
-				<p:outputLabel />
-			</p:column>
 		</p:dataTable>
 		<div align="right">
-			<p:commandButton value="Add" onclick="factoryDialog.show();" />
+			<p:commandButton value="Add Workshop" onclick="factoryDialog.show();" />
+			<p:commandButton value="Delete Workshop(s)"/>
 		</div>
 		<table style="width: 100%">
 			<tr>

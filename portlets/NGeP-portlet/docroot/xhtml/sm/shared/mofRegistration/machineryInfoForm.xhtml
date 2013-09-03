@@ -13,8 +13,11 @@
 		</div>
 		<br />
 		<p:dataTable>
-			<p:column headerText="No.">
-				<p:outputLabel />
+			<!-- <p:column selectionMode="multiple">
+			</p:column> -->
+
+			<p:column headerText="NO.">
+				<h:outputText />
 			</p:column>
 
 			<p:column headerText="Equipment Type">
@@ -41,7 +44,9 @@
 			</p:column>
 		</p:dataTable>
 		<div align="right">
-			<p:commandButton value="Add" onclick="equipmentDialog.show();" />
+			<p:commandButton value="Add Machinery"
+				onclick="equipmentDialog.show();" />
+			<p:commandButton value="Delete Machine(s)" />
 		</div>
 		<table style="width: 100%">
 			<tr>

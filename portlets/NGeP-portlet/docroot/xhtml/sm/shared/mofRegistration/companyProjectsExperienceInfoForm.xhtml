@@ -13,7 +13,10 @@
 		</div>
 		<br />
 		<p:dataTable>
-			<p:column headerText="No.">
+			<!-- <p:column selectionMode="multiple">
+			</p:column> -->
+
+			<p:column headerText="NO.">
 				<h:outputText />
 			</p:column>
 
@@ -33,12 +36,10 @@
 				<h:outputText />
 			</p:column>
 
-			<p:column headerText="Action">
-				<h:outputText />
-			</p:column>
 		</p:dataTable>
 		<div align="right">
 			<p:commandButton value="Add Project" onclick="projDialog.show();" />
+			<p:commandButton value="Delete Project(s)" />
 
 		</div>
 		<table style="width: 100%">

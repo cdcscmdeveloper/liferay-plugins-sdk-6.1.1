@@ -14,7 +14,10 @@
 		</div>
 		<br />
 		<p:dataTable>
-			<p:column headerText="No.">
+			<!-- <p:column selectionMode="multiple">
+			</p:column> -->
+
+			<p:column headerText="NO.">
 				<h:outputText />
 			</p:column>
 
@@ -33,13 +36,12 @@
 			<p:column headerText="Equity Owner?">
 				<h:outputText />
 			</p:column>
-			<p:column headerText="Action">
-				<h:outputText />
-			</p:column>
+
 		</p:dataTable>
 		<div align="right">
 			<p:commandButton value="Add Share Holder"
 				onclick="shareHolderDialog.show();" />
+			<p:commandButton value="Delete Share Holder(s)" />
 		</div>
 		<table style="width: 100%">
 			<tr>
@@ -50,8 +52,8 @@
 			</tr>
 		</table>
 	</p:panel>
-	<p:dialog width="800px" height="500px" header="Share Holder Details" widgetVar="shareHolderDialog"
-		resizable="false" showEffect="fade"
+	<p:dialog width="800px" height="500px" header="Share Holder Details"
+		widgetVar="shareHolderDialog" resizable="false" showEffect="fade"
 		hideEffect="fade" modal="true">
 
 		<ui:include

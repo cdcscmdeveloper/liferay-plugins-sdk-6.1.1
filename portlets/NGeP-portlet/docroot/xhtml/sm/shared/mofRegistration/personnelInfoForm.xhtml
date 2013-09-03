@@ -89,8 +89,11 @@
 		</div>
 		<br />
 		<p:dataTable>
-			<p:column headerText="No.">
-				<p:outputLabel />
+			<!-- <p:column selectionMode="multiple">
+			</p:column> -->
+
+			<p:column headerText="NO.">
+				<h:outputText />
 			</p:column>
 
 			<p:column headerText="Name">
@@ -102,28 +105,17 @@
 			</p:column>
 
 			<p:column headerText="Is Authorized ?">
-				<p:selectBooleanCheckbox />
-			</p:column>
-			<p:column headerText="Is Online ?">
-				<p:selectBooleanCheckbox />
-			</p:column>
-			<p:column headerText="epRole">
-				<p:selectOneMenu>
-					<f:selectItem itemLabel="Catalogue User" itemValue="cat"></f:selectItem>
-					<f:selectItem itemLabel="Supplier User" itemValue="sup"></f:selectItem>
-					<f:selectItem itemLabel="Supplier Admin" itemValue="admn"></f:selectItem>
-				</p:selectOneMenu>
-			</p:column>
-			<p:column headerText="Issue Soft Cert ?">
-				<p:selectBooleanCheckbox />
-			</p:column>
-			<p:column headerText="Action">
 				<p:outputLabel />
 			</p:column>
+			<p:column headerText="Soft Cert Issued?">
+				<p:selectBooleanCheckbox />
+			</p:column>
+
 		</p:dataTable>
 		<div align="right">
 			<p:commandButton value="Add Personnel"
 				onclick="personnelDialog.show();" />
+			<p:commandButton value="Delete Personnel(s)" />
 		</div>
 		<p:fieldset legend="List of Authorized Personnel">
 			<p:dataTable>
@@ -136,12 +128,6 @@
 				</p:column>
 
 				<p:column headerText="Roles In Company">
-					<p:outputLabel />
-				</p:column>
-				<p:column headerText="Is Online ?">
-					<p:selectBooleanCheckbox />
-				</p:column>
-				<p:column headerText="epRole">
 					<p:outputLabel />
 				</p:column>
 				<p:column headerText="Soft Cert Issued?">
@@ -160,8 +146,8 @@
 			</tr>
 		</table>
 	</p:panel>
-	<p:dialog width="800px" height="500px" header="Personnel Details" widgetVar="personnelDialog"
-		resizable="false" showEffect="fade"
+	<p:dialog width="800px" height="500px" header="Personnel Details"
+		widgetVar="personnelDialog" resizable="false" showEffect="fade"
 		hideEffect="fade" modal="true">
 
 		<ui:include

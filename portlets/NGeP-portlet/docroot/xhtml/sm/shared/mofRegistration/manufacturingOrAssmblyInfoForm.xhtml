@@ -14,8 +14,11 @@
 		</div>
 		<br />
 		<p:dataTable>
-			<p:column headerText="No.">
-				<p:outputLabel />
+			<!-- <p:column selectionMode="multiple">
+			</p:column> -->
+
+			<p:column headerText="NO.">
+				<h:outputText />
 			</p:column>
 
 			<p:column headerText="Type Of Product (s)">
@@ -38,7 +41,9 @@
 			</p:column>
 		</p:dataTable>
 		<div align="right">
-			<p:commandButton value="Add" onclick="manufactorDialog.show();" />
+			<p:commandButton value="Add Assembly Info"
+				onclick="manufactorDialog.show();" />
+			<p:commandButton value="Delete Assembly Info(s)" />
 		</div>
 		<table style="width: 100%">
 			<tr>

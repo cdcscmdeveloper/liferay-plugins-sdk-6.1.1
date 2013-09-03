@@ -13,7 +13,9 @@
 		</div>
 		<br />
 		<p:dataTable>
-			<p:column headerText="No.">
+			<!-- <p:column selectionMode="multiple">
+			</p:column> -->
+			<p:column headerText="NO.">
 				<h:outputText />
 			</p:column>
 
@@ -24,13 +26,10 @@
 			<p:column headerText="Address">
 				<h:outputText />
 			</p:column>
-
-			<p:column headerText="Action">
-				<h:outputText />
-			</p:column>
 		</p:dataTable>
 		<div align="right">
 			<p:commandButton value="Add Branch" onclick="banchDialog.show();" />
+			<p:commandButton value="Delete Branch(es)" />
 
 		</div>
 		<table style="width: 100%">

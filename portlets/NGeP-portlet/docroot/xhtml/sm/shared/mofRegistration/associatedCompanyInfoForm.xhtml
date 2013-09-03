@@ -15,10 +15,11 @@
 		</div>
 		<br />
 		<p:dataTable>
-			<p:column headerText="No.">
+		<!-- 	<p:column selectionMode="multiple">
+			</p:column> -->
+			<p:column headerText="NO.">
 				<h:outputText />
 			</p:column>
-
 			<p:column headerText="Company Name">
 				<h:outputText />
 			</p:column>
@@ -27,13 +28,11 @@
 				<h:outputText />
 			</p:column>
 
-			<p:column headerText="Action">
-				<h:outputText />
-			</p:column>
 		</p:dataTable>
 		<div align="right">
 			<p:commandButton value="Add Associated Company"
 				onclick="assocDialog.show();" />
+			<p:commandButton value="Delete Associate(s)" />
 
 		</div>
 		<table style="width: 100%">
