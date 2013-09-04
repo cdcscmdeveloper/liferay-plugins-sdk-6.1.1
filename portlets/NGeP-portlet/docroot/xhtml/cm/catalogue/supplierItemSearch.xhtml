@@ -10,8 +10,8 @@
 
 	<h:panelGroup id="supplierItemViewID">
 
-		<h:outputLabel styleClass="titleFront"
-			value="#{lbl['lbl.cm.catalogue.search']}"></h:outputLabel>
+		<p:outputLabel styleClass="titleFront"
+			value="#{lbl['lbl.cm.catalogue.search']}"></p:outputLabel>
 
 
 		<p:remoteCommand id="searching" name="searching"
@@ -34,9 +34,9 @@
 		</table>
 
 		<h:panelGrid columns="3" columnClasses="cmWidth1">
-			<h:outputLabel value="#{lbl['lbl.cm.item.name']}" />
-			<h:inputText size="50"
-				value="#{catalogueBackingBean.managedBean.itemName}"></h:inputText>
+			<p:outputLabel value="#{lbl['lbl.cm.item.name']}" />
+			<p:inputText size="50"
+				value="#{catalogueBackingBean.managedBean.itemName}"></p:inputText>
 			<p:selectOneMenu>
 				<f:selectItem itemValue="and" itemLabel="And" />
 				<f:selectItem itemValue="or" itemLabel="Or" />
@@ -55,11 +55,11 @@
 					value="#{catalogueBackingBean.managedBean.advanceSearchList}">
 
 					<h:panelGrid columns="2" columnClasses="cmPadding5">
-						<h:selectOneMenu value="#{search.name}">
+						<p:selectOneMenu value="#{search.name}">
 							<f:selectItems
 								value="#{catalogueBackingBean.managedBean.searchCriteria}" />
-						</h:selectOneMenu>
-						<h:inputText size="50" value="#{search.value}" />
+						</p:selectOneMenu>
+						<p:inputText size="50" value="#{search.value}" />
 					</h:panelGrid>
 
 				</ui:repeat>
@@ -83,68 +83,68 @@
 
 			<p:column>
 				<f:facet name="header">
-					<h:outputText value="#{lbl['lbl.cm.item.code']}" />
+					<p:outputLabel value="#{lbl['lbl.cm.item.code']}" />
 				</f:facet>
 
 			</p:column>
 			<p:column>
 				<f:facet name="header">
-					<h:outputText value="#{lbl['lbl.cm.item.name']}" />
+					<p:outputLabel value="#{lbl['lbl.cm.item.name']}" />
 				</f:facet>
-				<h:outputText value="#{supplierItem.currency}" />
+				<p:outputLabel value="#{supplierItem.currency}" />
 			</p:column>
 			<p:column>
 				<f:facet name="header">
-					<h:outputText value="#{lbl['lbl.cm.supplier.name']}" />
-				</f:facet>
-
-			</p:column>
-			<p:column>
-				<f:facet name="header">
-					<h:outputText value="#{lbl['lbl.cm.uom']}" />
+					<p:outputLabel value="#{lbl['lbl.cm.supplier.name']}" />
 				</f:facet>
 
 			</p:column>
 			<p:column>
 				<f:facet name="header">
-					<h:outputText value="#{lbl['lbl.cm.contract.no']}" />
+					<p:outputLabel value="#{lbl['lbl.cm.uom']}" />
 				</f:facet>
 
 			</p:column>
 			<p:column>
 				<f:facet name="header">
-					<h:outputText value="#{lbl['lbl.cm.price']}" />
+					<p:outputLabel value="#{lbl['lbl.cm.contract.no']}" />
 				</f:facet>
 
 			</p:column>
 			<p:column>
 				<f:facet name="header">
-					<h:outputText value="#{lbl['lbl.cm.state']}" />
+					<p:outputLabel value="#{lbl['lbl.cm.price']}" />
 				</f:facet>
 
 			</p:column>
 			<p:column>
 				<f:facet name="header">
-					<h:outputText value="#{lbl['lbl.cm.district']}" />
+					<p:outputLabel value="#{lbl['lbl.cm.state']}" />
 				</f:facet>
 
 			</p:column>
 			<p:column>
 				<f:facet name="header">
-					<h:outputText value="#{lbl['lbl.cm.catalogue.type']}" />
+					<p:outputLabel value="#{lbl['lbl.cm.district']}" />
 				</f:facet>
 
 			</p:column>
 			<p:column>
 				<f:facet name="header">
-					<h:outputText value="#{lbl['lbl.cm.image']}" />
+					<p:outputLabel value="#{lbl['lbl.cm.catalogue.type']}" />
+				</f:facet>
+
+			</p:column>
+			<p:column>
+				<f:facet name="header">
+					<p:outputLabel value="#{lbl['lbl.cm.image']}" />
 				</f:facet>
 
 			</p:column>
 
 			<p:column>
 				<f:facet name="header">
-					<h:outputText value="#{lbl['lbl.cm.action']}" />
+					<p:outputLabel value="#{lbl['lbl.cm.action']}" />
 				</f:facet>
 				<p:commandButton
 					action="#{catalogueBackingBean.navigateToCatalogDet()}"

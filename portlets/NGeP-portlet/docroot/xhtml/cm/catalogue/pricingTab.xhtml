@@ -17,45 +17,45 @@
 
 			<p:column>
 				<f:facet name="header">
-					<h:outputText value="#{lbl['lbl.cm.pricing.type']}" />
+					<p:outputLabel value="#{lbl['lbl.cm.pricing.type']}" />
 				</f:facet>
-				<h:selectOneMenu value="#{price.pricingType}">
+				<p:selectOneMenu value="#{price.pricingType}">
 					<f:selectItems
 						value="#{catalogueBackingBean.managedBean.pricingCriteria}" />
-				</h:selectOneMenu>
+				</p:selectOneMenu>
 
 			</p:column>
 
 
 			<p:column>
 				<f:facet name="header">
-					<h:outputText value="#{lbl['lbl.cm.price']}" />
+					<p:outputLabel value="#{lbl['lbl.cm.price']}" />
 				</f:facet>
-				<h:inputText value="#{price.price}"></h:inputText>
+				<p:inputText value="#{price.price}"></p:inputText>
 			</p:column>
 			<p:column>
 				<f:facet name="header">
-					<h:outputText value="#{lbl['lbl.cm.tier.from']}" />
+					<p:outputLabel value="#{lbl['lbl.cm.tier.from']}" />
 				</f:facet>
-				<h:inputText value="#{price.tierFrom}"></h:inputText>
+				<p:inputText value="#{price.tierFrom}"></p:inputText>
 
 			</p:column>
 			<p:column>
 				<f:facet name="header">
-					<h:outputText value="#{lbl['lbl.cm.tier.to']}" />
+					<p:outputLabel value="#{lbl['lbl.cm.tier.to']}" />
 				</f:facet>
-				<h:inputText value="#{price.tierTo}"></h:inputText>
+				<p:inputText value="#{price.tierTo}"></p:inputText>
 			</p:column>
 			<p:column>
 				<f:facet name="header">
-					<h:outputText value="#{lbl['lbl.cm.start.date']}" />
+					<p:outputLabel value="#{lbl['lbl.cm.start.date']}" />
 				</f:facet>
 				<p:calendar value="#{price.startDate}"></p:calendar>
 
 			</p:column>
 			<p:column>
 				<f:facet name="header">
-					<h:outputText value="#{lbl['lbl.cm.end.date']}" />
+					<p:outputLabel value="#{lbl['lbl.cm.end.date']}" />
 				</f:facet>
 				<p:calendar value="#{price.endDate}"></p:calendar>
 

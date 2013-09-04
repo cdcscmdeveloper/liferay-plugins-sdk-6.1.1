@@ -16,8 +16,8 @@
 		<p:commandButton value="#{lbl['lbl.cm.cancel']}" action="#{catalogueBackingBean.cancelToMaintenanceFile()}"></p:commandButton>
 
 		<div style="border-bottom: 1px solid;">
-			<h:outputLabel styleClass="labelCss"
-				value="#{lbl['lbl.cm.item.details']}"></h:outputLabel>
+			<p:outputLabel styleClass="labelCss"
+				value="#{lbl['lbl.cm.item.details']}"></p:outputLabel>
 		</div>
 
 
@@ -30,18 +30,18 @@
 							<p:graphicImage height="100" width="100" />
 						</p:galleria>
 					</h:panelGrid> <p:commandButton value="#{lbl['lbl.cm.upload']}" /></td>
-				<td><h:outputLabel value="#{lbl['lbl.cm.item.code']}" /></td>
-				<td><h:outputText></h:outputText>
+				<td><p:outputLabel value="#{lbl['lbl.cm.item.code']}" /></td>
+				<td><p:outputLabel></p:outputLabel>
 				</td>
-				<td><h:outputLabel value="#{lbl['lbl.cm.item.name']}" /></td>
-				<td><h:outputText></h:outputText></td>
+				<td><p:outputLabel value="#{lbl['lbl.cm.item.name']}" /></td>
+				<td><p:outputLabel></p:outputLabel></td>
 
 			</tr>
 			<tr style="height: 35px;">
 
-				<td><h:outputLabel value="#{lbl['lbl.cm.price']}" /></td>
+				<td><p:outputLabel value="#{lbl['lbl.cm.price']}" /></td>
 				<td></td>
-				<td><h:outputLabel value="#{lbl['lbl.cm.currency']}" /></td>
+				<td><p:outputLabel value="#{lbl['lbl.cm.currency']}" /></td>
 				<td colspan="1">
 				</td>
 			</tr>
@@ -51,38 +51,38 @@
 
 			<tr style="height: 35px;">
 
-				<td><h:outputLabel value="#{lbl['lbl.cm.payment.term']}" /></td>
-				<td><h:selectOneMenu></h:selectOneMenu></td>
-				<td><h:outputLabel value="#{lbl['lbl.cm.sku']}" /></td>
-				<td><h:inputText></h:inputText></td>
+				<td><p:outputLabel value="#{lbl['lbl.cm.payment.term']}" /></td>
+				<td><p:selectOneMenu></p:selectOneMenu></td>
+				<td><p:outputLabel value="#{lbl['lbl.cm.sku']}" /></td>
+				<td><p:inputText></p:inputText></td>
 				<td></td>
 			</tr>
 			<tr style="height: 35px;">
 
-				<td><h:outputLabel value="#{lbl['lbl.cm.manufacturing.part.no']}" /></td>
-				<td><h:inputText></h:inputText></td>
-				<td><h:outputLabel value="#{lbl['lbl.cm.model']}" /></td>
-				<td colspan="1"><h:inputText></h:inputText>
+				<td><p:outputLabel value="#{lbl['lbl.cm.manufacturing.part.no']}" /></td>
+				<td><p:inputText></p:inputText></td>
+				<td><p:outputLabel value="#{lbl['lbl.cm.model']}" /></td>
+				<td colspan="1"><p:inputText></p:inputText>
 				</td>
 			</tr>
 			<tr style="height: 35px;">
-				<td rowspan="2"><h:outputLabel
+				<td rowspan="2"><p:outputLabel
 						value="#{lbl['lbl.cm.additional.item.description']}" /></td>
 				<td rowspan="2"><p:inputTextarea /></td>
-				<td><h:outputLabel value="#{lbl['lbl.cm.lead.time']}" /></td>
-				<td colspan="1"><h:selectOneMenu></h:selectOneMenu></td>
+				<td><p:outputLabel value="#{lbl['lbl.cm.lead.time']}" /></td>
+				<td colspan="1"><p:selectOneMenu></p:selectOneMenu></td>
 			</tr>
 			<tr style="height: 35px;">
 
-				<td><h:outputLabel value="#{lbl['lbl.cm.unit.of.measurement']}" /></td>
-				<td colspan="1"><h:selectOneMenu></h:selectOneMenu></td>
+				<td><p:outputLabel value="#{lbl['lbl.cm.unit.of.measurement']}" /></td>
+				<td colspan="1"><p:selectOneMenu></p:selectOneMenu></td>
 			</tr>
 			<tr style="height: 35px;">
 
-				<td><h:outputLabel value="#{lbl['lbl.cm.item.status']}" /></td>
-				<td><h:selectOneMenu></h:selectOneMenu></td>
-				<td><h:outputLabel value="#{lbl['lbl.cm.frequency']}" /></td>
-				<td><h:inputText></h:inputText></td>
+				<td><p:outputLabel value="#{lbl['lbl.cm.item.status']}" /></td>
+				<td><p:selectOneMenu></p:selectOneMenu></td>
+				<td><p:outputLabel value="#{lbl['lbl.cm.frequency']}" /></td>
+				<td><p:inputText></p:inputText></td>
 				<td></td>
 			</tr>
 			

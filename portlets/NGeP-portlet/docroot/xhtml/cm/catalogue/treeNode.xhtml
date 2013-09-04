@@ -21,14 +21,14 @@
 				id="tree">
 
 				<p:treeNode type="segment">
-					<h:outputText value="#{node}" />
+					<p:outputLabel value="#{node}" />
 				</p:treeNode>
 
 				<p:treeNode type="families">
 
 					<table>
 						<tr>
-							<td><h:outputText value="#{node}" /></td>
+							<td><p:outputLabel value="#{node}" /></td>
 							<td><p:commandLink value="delete"
 									onclick="deleteNode([{name:'name1',value:'#{node}'}]);" /></td>
 						</tr>
@@ -47,7 +47,7 @@
 			<p:tree styleClass="border0" value="#{catalogueBackingBean.root1}"
 				var="node1">
 				<p:treeNode>
-					<h:outputText value="#{node1}" />
+					<p:outputLabel value="#{node1}" />
 				</p:treeNode>
 			</p:tree>
 
@@ -60,7 +60,7 @@
 			<p:tree styleClass="border0" value="#{catalogueBackingBean.root2}"
 				var="node2">
 				<p:treeNode>
-					<h:outputText value="#{node2}" />
+					<p:outputLabel value="#{node2}" />
 				</p:treeNode>
 			</p:tree>
 

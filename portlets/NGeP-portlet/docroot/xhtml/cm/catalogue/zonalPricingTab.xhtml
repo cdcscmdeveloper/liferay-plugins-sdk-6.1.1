@@ -21,18 +21,18 @@
 						update=":form:pricingTabID:zonalPricePageID"></p:ajax>
 			<p:column>
 				<f:facet name="header">
-					<h:outputText value="#{lbl['lbl.cm.state']}" />
+					<p:outputLabel value="#{lbl['lbl.cm.state']}" />
 				</f:facet>
-				<h:selectOneMenu></h:selectOneMenu>
+				<p:selectOneMenu></p:selectOneMenu>
 
 			</p:column>
 			<p:column>
 				<f:facet name="header">
-					<h:outputText value="#{lbl['lbl.cm.district']}" />
+					<p:outputLabel value="#{lbl['lbl.cm.district']}" />
 				</f:facet>
-				<h:selectBooleanCheckbox value="#{zonal.selected}">
+				<p:selectBooleanCheckbox value="#{zonal.selected}">
 
-				</h:selectBooleanCheckbox>
+				</p:selectBooleanCheckbox>
 
 			</p:column>
 
@@ -40,45 +40,45 @@
 
 			<p:column>
 				<f:facet name="header">
-					<h:outputText value="#{lbl['lbl.cm.pricing.type']}" />
+					<p:outputLabel value="#{lbl['lbl.cm.pricing.type']}" />
 				</f:facet>
-				<h:selectOneMenu value="#{zonal.pricingType}">
+				<p:selectOneMenu value="#{zonal.pricingType}">
 					<f:selectItems
 						value="#{catalogueBackingBean.managedBean.pricingCriteria}" />
-				</h:selectOneMenu>
+				</p:selectOneMenu>
 
 			</p:column>
 
 
 			<p:column>
 				<f:facet name="header">
-					<h:outputText value="#{lbl['lbl.cm.price']}" />
+					<p:outputLabel value="#{lbl['lbl.cm.price']}" />
 				</f:facet>
 				<h:inputText value="#{zonal.price}"></h:inputText>
 			</p:column>
 			<p:column>
 				<f:facet name="header">
-					<h:outputText value="#{lbl['lbl.cm.tier.from']}" />
+					<p:outputLabel value="#{lbl['lbl.cm.tier.from']}" />
 				</f:facet>
 				<h:inputText value="#{zonal.tierFrom}"></h:inputText>
 
 			</p:column>
 			<p:column>
 				<f:facet name="header">
-					<h:outputText value="#{lbl['lbl.cm.tier.to']}" />
+					<p:outputLabel value="#{lbl['lbl.cm.tier.to']}" />
 				</f:facet>
 				<h:inputText value="#{zonal.tierTo}"></h:inputText>
 			</p:column>
 			<p:column>
 				<f:facet name="header">
-					<h:outputText value="#{lbl['lbl.cm.start.date']}" />
+					<p:outputLabel value="#{lbl['lbl.cm.start.date']}" />
 				</f:facet>
 				<p:calendar value="#{zonal.startDate}"></p:calendar>
 
 			</p:column>
 			<p:column>
 				<f:facet name="header">
-					<h:outputText value="#{lbl['lbl.cm.end.date']}" />
+					<p:outputLabel value="#{lbl['lbl.cm.end.date']}" />
 				</f:facet>
 				<p:calendar value="#{zonal.endDate}"></p:calendar>
 
@@ -101,9 +101,9 @@
 
 			<p:column>
 				<f:facet name="header">
-					<h:outputText value="#{lbl['lbl.cm.district']}" />
+					<p:outputLabel value="#{lbl['lbl.cm.district']}" />
 				</f:facet>
-				<h:selectOneMenu></h:selectOneMenu>
+				<p:selectOneMenu></p:selectOneMenu>
 
 			</p:column>
 
@@ -111,46 +111,46 @@
 
 			<p:column>
 				<f:facet name="header">
-					<h:outputText value="#{lbl['lbl.cm.pricing.type']}" />
+					<p:outputLabel value="#{lbl['lbl.cm.pricing.type']}" />
 				</f:facet>
-				<h:selectOneMenu value="#{districtObj.pricingType}">
+				<p:selectOneMenu value="#{districtObj.pricingType}">
 					<f:selectItems
 						value="#{catalogueBackingBean.managedBean.pricingCriteria}" />
-				</h:selectOneMenu>
+				</p:selectOneMenu>
 
 			</p:column>
 
 
 			<p:column>
 				<f:facet name="header">
-					<h:outputText value="#{lbl['lbl.cm.price']}" />
+					<p:outputLabel value="#{lbl['lbl.cm.price']}" />
 				</f:facet>
-				<h:inputText value="#{districtObj.price}"></h:inputText>
+				<p:inputText value="#{districtObj.price}"></p:inputText>
 			</p:column>
 
 			<p:column>
 				<f:facet name="header">
-					<h:outputText value="#{lbl['lbl.cm.tier.from']}" />
+					<p:outputLabel value="#{lbl['lbl.cm.tier.from']}" />
 				</f:facet>
-				<h:inputText value="#{districtObj.tierFrom}"></h:inputText>
+				<p:inputText value="#{districtObj.tierFrom}"></p:inputText>
 
 			</p:column>
 			<p:column>
 				<f:facet name="header">
-					<h:outputText value="#{lbl['lbl.cm.tier.to']}" />
+					<p:outputLabel value="#{lbl['lbl.cm.tier.to']}" />
 				</f:facet>
-				<h:inputText value="#{districtObj.tierTo}"></h:inputText>
+				<p:inputText value="#{districtObj.tierTo}"></p:inputText>
 			</p:column>
 			<p:column>
 				<f:facet name="header">
-					<h:outputText value="#{lbl['lbl.cm.start.date']}" />
+					<p:outputLabel value="#{lbl['lbl.cm.start.date']}" />
 				</f:facet>
 				<p:calendar value="#{districtObj.startDate}"></p:calendar>
 
 			</p:column>
 			<p:column>
 				<f:facet name="header">
-					<h:outputText value="#{lbl['lbl.cm.end.date']}" />
+					<p:outputLabel value="#{lbl['lbl.cm.end.date']}" />
 				</f:facet>
 				<p:calendar value="#{districtObj.endDate}"></p:calendar>
 

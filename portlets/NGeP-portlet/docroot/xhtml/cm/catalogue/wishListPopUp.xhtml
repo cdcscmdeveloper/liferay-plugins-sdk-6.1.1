@@ -15,7 +15,7 @@
 
 					<h:panelGrid columns="2" columnClasses="columnLeft, columnRight">
 
-						<h:outputText value="Item 1" />
+						<p:outputLabel value="Item 1" />
 						<p:graphicImage height="100px" width="100px" />
 					</h:panelGrid>
 
@@ -31,16 +31,16 @@
 
 					<p:column>
 						<f:facet name="header">
-							<h:selectBooleanCheckbox />
+							 <p:selectBooleanCheckbox></p:selectBooleanCheckbox>
 						</f:facet>
 
 					</p:column>
 
 					<p:column>
 						<f:facet name="header">
-							<h:outputText value="#{lbl['lbl.cm.wish.list']}" />
+							<p:outputLabel value="#{lbl['lbl.cm.wish.list']}" />
 						</f:facet>
-						<h:outputText value="wishList1" />
+						<p:outputLabel value="wishList1" />
 					</p:column>
 
 				</p:dataTable> <p:commandButton value="#{lbl['lbl.cm.ok']}"
