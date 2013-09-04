@@ -20,98 +20,103 @@
 
 
 			<h:panelGroup id="cmExtensionSearchID">
-				<h:outputLabel styleClass="titleFront"
-					value="#{lbl['lbl.cm.extension.search']}"></h:outputLabel>
+				<p:outputLabel styleClass="titleFront"
+					value="#{lbl['lbl.cm.extension.search']}"></p:outputLabel>
 
 				<table>
 					<tr>
-						<td><h:outputLabel value="#{lbl['lbl.cm.unspsc.code']}"></h:outputLabel></td>
-						<td colspan="1"><h:inputText
+						<td><p:outputLabel value="#{lbl['lbl.cm.unspsc.code']}"></p:outputLabel></td>
+						<td colspan="1"><p:inputText
 								value="#{unspscCodeBackingBean.managedBean.selectedUNSPSCObj.unspscCode}" /></td>
 					</tr>
 
 					<tr>
-						<td><h:outputLabel value="#{lbl['lbl.cm.unspsc.title']}"></h:outputLabel></td>
-						<td colspan="1"><h:inputText
+						<td><p:outputLabel value="#{lbl['lbl.cm.unspsc.title']}"></p:outputLabel></td>
+						<td colspan="1"><p:inputText
 								value="#{unspscCodeBackingBean.managedBean.selectedUNSPSCObj.unspscTitle}" /></td>
 					</tr>
 					<tr>
-						<td><h:outputLabel value="#{lbl['lbl.cm.type']}"></h:outputLabel></td>
-						<td colspan="1"><h:selectOneMenu>
+						<td><p:outputLabel value="#{lbl['lbl.cm.type']}"></p:outputLabel></td>
+						<td colspan="1"><p:selectOneMenu>
 								<f:selectItem itemLabel="Sedan" itemValue="A"></f:selectItem>
 								<f:selectItem itemLabel="4wd" itemValue="I"></f:selectItem>
-							</h:selectOneMenu></td>
+							</p:selectOneMenu></td>
 					</tr>
 					<tr>
-						<td><h:outputLabel value="#{lbl['lbl.cm.brand']}"></h:outputLabel></td>
-						<td colspan="1"><h:selectOneMenu>
+						<td><p:outputLabel value="#{lbl['lbl.cm.brand']}"></p:outputLabel></td>
+						<td colspan="1"><p:selectOneMenu>
 								<f:selectItem itemLabel="Toyota" itemValue=""></f:selectItem>
 								<f:selectItem itemLabel="Honda" itemValue=""></f:selectItem>
 
-							</h:selectOneMenu></td>
+							</p:selectOneMenu></td>
 					</tr>
 					<tr>
-						<td><h:outputLabel value="#{lbl['lbl.cm.measurement']}"></h:outputLabel></td>
-						<td colspan="1"><h:selectOneMenu>
+						<td><p:outputLabel value="#{lbl['lbl.cm.measurement']}"></p:outputLabel></td>
+						<td colspan="1"><p:selectOneMenu>
 								<f:selectItem itemLabel="1.6" itemValue=""></f:selectItem>
 								<f:selectItem itemLabel="2.0" itemValue=""></f:selectItem>
 
-							</h:selectOneMenu></td>
+							</p:selectOneMenu></td>
 					</tr>
 
 					<tr>
-						<td><h:outputLabel value="#{lbl['lbl.cm.color']}"></h:outputLabel></td>
-						<td><h:selectOneMenu>
+						<td><p:outputLabel value="#{lbl['lbl.cm.color']}"></p:outputLabel></td>
+						<td><p:selectOneMenu>
 								<f:selectItem itemLabel="Yellow" itemValue=""></f:selectItem>
 								<f:selectItem itemLabel="Blue" itemValue=""></f:selectItem>
 
-							</h:selectOneMenu></td>
+							</p:selectOneMenu></td>
 						<td><p:commandButton value="search" /></td>
 					</tr>
 
 				</table>
 
-				<p:dataTable value="#{unspscCodeBackingBean.managedBean.unspscList}" var="extension">
+				<p:dataTable value="#{unspscCodeBackingBean.managedBean.unspscList}"
+					var="extension">
 					<p:column>
 						<f:facet name="header">
-							<h:outputText value="#{lbl['lbl.cm.type']}" />
+							<p:outputLabel value="#{lbl['lbl.cm.type']}" />
 						</f:facet>
 
 					</p:column>
 					<p:column>
 						<f:facet name="header">
-							<h:outputText value="#{lbl['lbl.cm.brand']}" />
+							<p:outputLabel value="#{lbl['lbl.cm.brand']}" />
 						</f:facet>
 					</p:column>
 					<p:column>
 						<f:facet name="header">
-							<h:outputText value="#{lbl['lbl.cm.measurement']}" />
+							<p:outputLabel value="#{lbl['lbl.cm.measurement']}" />
 						</f:facet>
 
 					</p:column>
 					<p:column>
 						<f:facet name="header">
-							<h:outputText value="#{lbl['lbl.cm.color']}" />
+							<p:outputLabel value="#{lbl['lbl.cm.color']}" />
 						</f:facet>
 
 					</p:column>
 					<p:column>
 						<f:facet name="header">
-							<h:outputText value="#{lbl['lbl.cm.action']}" />
+							<p:outputLabel value="#{lbl['lbl.cm.action']}" />
 						</f:facet>
-						<p:commandButton value="edit" action="#{unspscCodeBackingBean.editExtension()}"/>
-						<p:commandButton value="delete" action="#{unspscCodeBackingBean.deleteExtension()}"/>
-						<p:commandButton value="move"/>
+						<p:commandButton value="edit"
+							action="#{unspscCodeBackingBean.editExtension()}" />
+						<p:commandButton value="delete"
+							action="#{unspscCodeBackingBean.deleteExtension()}" />
+						<p:commandButton value="move" />
 
 					</p:column>
 				</p:dataTable>
 
-				<h:panelGrid columns="2" styleClass="pagingCss">
-					<p:commandButton value="Maintenance FIle"
-						action="#{catalogueBackingBean.GoToMaintain()}" />
-					<p:commandButton value="Add" />
-
-				</h:panelGrid>
+				<table>
+					<tr>
+						<td><p:commandButton value="Maintenance FIle"
+								action="#{catalogueBackingBean.GoToMaintain()}" /></td>
+						<td><p:commandButton value="Add" /></td>
+					</tr>
+				</table>
+				
 			</h:panelGroup>
 
 

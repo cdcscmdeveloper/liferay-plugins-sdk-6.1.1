@@ -9,17 +9,17 @@
 
 
 	<h:panelGroup id="cmUNSPSCsearchID">
-		<h:outputLabel styleClass="titleFront"
-			value="#{lbl['lbl.cm.codification.search']}"></h:outputLabel>
+		<p:outputLabel styleClass="titleFront"
+			value="#{lbl['lbl.cm.codification.search']}"></p:outputLabel>
 
 		<table>
 			<tr>
-				<td><h:outputLabel value="#{lbl['lbl.cm.unspsc.code']}"></h:outputLabel></td>
-				<td colspan="1"><h:inputText /></td>
+				<td><p:outputLabel value="#{lbl['lbl.cm.unspsc.code']}"></p:outputLabel></td>
+				<td colspan="1"><p:inputText /></td>
 			</tr>
 			<tr>
-				<td><h:outputLabel value="#{lbl['lbl.cm.unspsc.title']}"></h:outputLabel></td>
-				<td><h:inputText /></td>
+				<td><p:outputLabel value="#{lbl['lbl.cm.unspsc.title']}"></p:outputLabel></td>
+				<td><p:inputText /></td>
 				<td><p:commandButton value="search" /></td>
 			</tr>
 
@@ -38,15 +38,15 @@
 
 			<p:column>
 				<f:facet name="header">
-					<h:outputText value="#{lbl['lbl.cm.unspsc.code']}" />
+					<p:outputLabel value="#{lbl['lbl.cm.unspsc.code']}" />
 				</f:facet>
-				<h:outputText value="#{unspscObj.unspscCode}" />
+				<p:outputLabel value="#{unspscObj.unspscCode}" />
 			</p:column>
 			<p:column>
 				<f:facet name="header">
-					<h:outputText value="#{lbl['lbl.cm.unspsc.title']}" />
+					<p:outputLabel value="#{lbl['lbl.cm.unspsc.title']}" />
 				</f:facet>
-				<h:outputText value="#{unspscObj.unspscTitle}" />
+				<p:outputLabel value="#{unspscObj.unspscTitle}" />
 			</p:column>
 		</p:dataTable>
 

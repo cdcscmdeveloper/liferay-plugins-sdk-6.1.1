@@ -16,57 +16,57 @@
 
 			<h:panelGroup id="cmExtensionRequestFormID">
 
-				<h:outputLabel styleClass="titleFront"
-					value="#{lbl['lbl.cm.extension.code.request.form']}"></h:outputLabel>
+				<p:outputLabel styleClass="titleFront"
+					value="#{lbl['lbl.cm.extension.code.request.form']}"></p:outputLabel>
 
 
 
 				<table>
 					<tr>
-						<td><h:outputLabel value="#{lbl['lbl.cm.unspsc.code']}" /></td>
-						<td><h:inputText /></td>
+						<td><p:outputLabel value="#{lbl['lbl.cm.unspsc.code']}" /></td>
+						<td><p:inputText /></td>
 						<td><p:commandButton value="Find" /></td>
 					</tr>
 					<tr>
-						<td><h:outputLabel value="#{lbl['lbl.cm.unspsc.title']}"></h:outputLabel></td>
-						<td cosplan="1"><h:outputLabel
-								value="Display After click find"></h:outputLabel></td>
+						<td><p:outputLabel value="#{lbl['lbl.cm.unspsc.title']}"></p:outputLabel></td>
+						<td cosplan="1"><p:outputLabel
+								value="Display After click find"></p:outputLabel></td>
 					</tr>
 				</table>
 
 				<p:dataTable>
 					<p:column>
 						<f:facet name="header">
-							<h:outputText value="#{lbl['lbl.cm.type']}" />
+							<p:outputLabel value="#{lbl['lbl.cm.type']}" />
 						</f:facet>
 
 					</p:column>
 					<p:column>
 						<f:facet name="header">
-							<h:outputText value="#{lbl['lbl.cm.brand']}" />
+							<p:outputLabel value="#{lbl['lbl.cm.brand']}" />
 						</f:facet>
 					</p:column>
 					<p:column>
 						<f:facet name="header">
-							<h:outputText value="#{lbl['lbl.cm.measurement']}" />
-						</f:facet>
-
-					</p:column>
-					<p:column>
-						<f:facet name="header">
-							<h:outputText value="#{lbl['lbl.cm.color']}" />
+							<p:outputLabel value="#{lbl['lbl.cm.measurement']}" />
 						</f:facet>
 
 					</p:column>
 					<p:column>
 						<f:facet name="header">
-							<h:outputText value="#{lbl['lbl.cm.item.name']}" />
+							<p:outputLabel value="#{lbl['lbl.cm.color']}" />
 						</f:facet>
 
 					</p:column>
 					<p:column>
 						<f:facet name="header">
-							<h:outputText value="#{lbl['lbl.cm.item.description']}" />
+							<p:outputLabel value="#{lbl['lbl.cm.item.name']}" />
+						</f:facet>
+
+					</p:column>
+					<p:column>
+						<f:facet name="header">
+							<p:outputLabel value="#{lbl['lbl.cm.item.description']}" />
 						</f:facet>
 
 					</p:column>

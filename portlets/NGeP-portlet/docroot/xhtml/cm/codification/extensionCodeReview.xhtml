@@ -18,16 +18,16 @@
 			<ui:include src="itemMenu.xhtml"></ui:include>
 
 			<h:panelGroup id="extensionReviewID">
-				<h:outputLabel styleClass="titleFront" value="Extension Code Review"></h:outputLabel>
+				<p:outputLabel styleClass="titleFront" value="Extension Code Review"></p:outputLabel>
 
 				<table>
 					<tr>
-						<td><h:outputLabel value="#{lbl['lbl.cm.unspsc.code']}"></h:outputLabel></td>
-						<td><h:inputText /></td>
+						<td><p:outputLabel value="#{lbl['lbl.cm.unspsc.code']}"></p:outputLabel></td>
+						<td><p:inputText /></td>
 					</tr>
 					<tr>
-						<td><h:outputLabel value="#{lbl['lbl.cm.unspsc.title']}"></h:outputLabel></td>
-						<td><h:inputText /></td>
+						<td><p:outputLabel value="#{lbl['lbl.cm.unspsc.title']}"></p:outputLabel></td>
+						<td><p:inputText /></td>
 					</tr>
 				</table>
 
@@ -35,7 +35,7 @@
 					var="test">
 					<p:column>
 						<f:facet name="header">
-							<h:outputText value="#{lbl['lbl.cm.type']}" />
+							<p:outputLabel value="#{lbl['lbl.cm.type']}" />
 						</f:facet>
 						<h:panelGrid columns="2" columnClasses="border0, border0">
 							<p:inputText></p:inputText>
@@ -44,7 +44,7 @@
 					</p:column>
 					<p:column>
 						<f:facet name="header">
-							<h:outputText value="#{lbl['lbl.cm.brand']}" />
+							<p:outputLabel value="#{lbl['lbl.cm.brand']}" />
 						</f:facet>
 
 						<h:panelGrid columns="2" columnClasses="border0, border0">
@@ -55,7 +55,7 @@
 					</p:column>
 					<p:column>
 						<f:facet name="header">
-							<h:outputText value="#{lbl['lbl.cm.measurement']}" />
+							<p:outputLabel value="#{lbl['lbl.cm.measurement']}" />
 						</f:facet>
 
 						<h:panelGrid columns="2" columnClasses="border0, border0">
@@ -67,7 +67,7 @@
 					</p:column>
 					<p:column>
 						<f:facet name="header">
-							<h:outputText value="#{lbl['lbl.cm.color']}" />
+							<p:outputLabel value="#{lbl['lbl.cm.color']}" />
 						</f:facet>
 						<h:panelGrid columns="2" columnClasses="border0, border0">
 							<p:inputText></p:inputText>
@@ -77,13 +77,13 @@
 					</p:column>
 					<p:column>
 						<f:facet name="header">
-							<h:outputText value="#{lbl['lbl.cm.item.name']}" />
+							<p:outputLabel value="#{lbl['lbl.cm.item.name']}" />
 						</f:facet>
 
 					</p:column>
 					<p:column>
 						<f:facet name="header">
-							<h:outputText value="#{lbl['lbl.cm.item.description']}" />
+							<p:outputLabel value="#{lbl['lbl.cm.item.description']}" />
 						</f:facet>
 
 					</p:column>

@@ -15,35 +15,35 @@
 			<ui:include src="itemMenu.xhtml"></ui:include>
 
 			<h:panelGroup id="cmUNSPSCrequestID">
-				<h:outputLabel styleClass="titleFront"
-					value="#{lbl['lbl.cm.unspsc.code.request.form']}"></h:outputLabel>
+				<p:outputLabel styleClass="titleFront"
+					value="#{lbl['lbl.cm.unspsc.code.request.form']}"></p:outputLabel>
 
-				<h:selectOneRadio>
+				<p:selectOneRadio>
 					<f:selectItem itemValue="P" itemLabel="Product " />
 					<f:selectItem itemValue="S" itemLabel="Service" />
-				</h:selectOneRadio>
+				</p:selectOneRadio>
 
 				<h:panelGrid columns="2">
 
-					<h:outputLabel value="* #{lbl['lbl.cm.item.name']}"></h:outputLabel>
-					<h:inputText></h:inputText>
+					<p:outputLabel value="* #{lbl['lbl.cm.item.name']}"></p:outputLabel>
+					<p:inputText></p:inputText>
 
-					<h:outputLabel value="* #{lbl['lbl.cm.item.details']}"></h:outputLabel>
-					<h:inputText></h:inputText>
+					<p:outputLabel value="* #{lbl['lbl.cm.item.details']}"></p:outputLabel>
+					<p:inputText></p:inputText>
 
-					<h:outputLabel value="* #{lbl['lbl.cm.type']}"></h:outputLabel>
-					<h:inputText></h:inputText>
+					<p:outputLabel value="* #{lbl['lbl.cm.type']}"></p:outputLabel>
+					<p:inputText></p:inputText>
 
-					<h:outputLabel value="* #{lbl['lbl.cm.brand']}"></h:outputLabel>
-					<h:inputText></h:inputText>
+					<p:outputLabel value="* #{lbl['lbl.cm.brand']}"></p:outputLabel>
+					<p:inputText></p:inputText>
 
-					<h:outputLabel value="* #{lbl['lbl.cm.measurement']}"></h:outputLabel>
-					<h:inputText></h:inputText>
+					<p:outputLabel value="* #{lbl['lbl.cm.measurement']}"></p:outputLabel>
+					<p:inputText></p:inputText>
 
-					<h:outputLabel value="* #{lbl['lbl.cm.color']}"></h:outputLabel>
-					<h:inputText></h:inputText>
+					<p:outputLabel value="* #{lbl['lbl.cm.color']}"></p:outputLabel>
+					<p:inputText></p:inputText>
 
-					<h:outputLabel></h:outputLabel>
+					<p:outputLabel></p:outputLabel>
 					<p:commandButton value="#{lbl['lbl.cm.submit']}"></p:commandButton>
 
 
