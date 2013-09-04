@@ -14,6 +14,13 @@ public class RemarksVO {
 	private String createdUserId;
 	private Timestamp createdDate;
 	private String remark;
+	
+	private Long unspscID;
+	private String unspscCode;
+	private String unspscTitle;
+	
+	
+	
 	/**
 	 * @return the createdUserId
 	 */
@@ -50,5 +57,27 @@ public class RemarksVO {
 	public void setRemark(String remark) {
 		this.remark = remark;
 	}
+	public String getUnspscCode() {
+		return unspscCode;
+	}
+	public void setUnspscCode(String unspscCode) {
+		this.unspscCode = unspscCode;
+	}
+	public String getUnspscTitle() {
+		return unspscTitle;
+	}
+	public void setUnspscTitle(String unspscTitle) {
+		this.unspscTitle = unspscTitle;
+	}
+	public Long getUnspscID() {
+		return unspscID;
+	}
+	public void setUnspscID(Long unspscID) {
+		this.unspscID = unspscID;
+	}
+	
+	
+	
+	
 	
 }
