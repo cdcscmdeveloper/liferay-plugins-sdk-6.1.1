@@ -1,0 +1,99 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:c="http://java.sun.com/jsp/jstl/core">
+
+		<p:panel header="Normal Qtn/Tender  (for Qtn/Tender Type is Open/Bumiputra)" toggleable="true">
+
+<h:panelGroup id="table-wrapper" style="width:100%;">
+    <p:dataTable value="" var="tenders" resizableColumns="true" editable="true" >
+        
+        <p:column headerText="No.">  
+            <h:outputText value="1" />   
+        </p:column>  
+  
+        <p:column headerText="Category Code">
+        <h:outputText value="1" />  
+        
+             
+        </p:column>  
+  
+        <p:column headerText="Mandatory" >  
+            <h:outputText value="1" />  
+        </p:column>  
+         <p:column headerText="Action" >  
+            <h:outputText value="1" />  
+        </p:column>  
+        
+        </p:dataTable>
+        
+    
+
+
+</h:panelGroup>
+
+  <p:commandButton value="Add" style="float:right;" onclick="ccdlg.show();" />  
+
+ <h:panelGrid columns="4" style="width:100%;" styleClass="noBorders tr,noBorders td">  
+  
+        <h:outputText value="MulitipleLocality: " />  
+        <p:selectOneRadio id="options" value="#{searchQtnTenderBB.managedBean.selectOption}">  
+            <f:selectItem itemLabel="yes" itemValue="1" />  
+            <f:selectItem itemLabel="No" itemValue="2" />  
+             <p:ajax event="click" update="panelId" />
+        </p:selectOneRadio>  
+  
+   <h:outputText value="AllStates: " />  
+        <p:selectBooleanCheckbox 
+        value="#{searchQtnTenderBB.checked}"  />  
+         <p:ajax event="click" update="panelId" />
+  
+    </h:panelGrid>  
+    
+    <h:panelGrid id="panelId" >
+    <h:outputLabel rendered="#{searchQtnTenderBB.checked}">some text</h:outputLabel>
+    <h:outputLabel></h:outputLabel>
+</h:panelGrid>
+
+<p:panel header="Search Qtn/Tender Result" toggleable="true">
+			<h:panelGroup style="width:100%;">
+				<p:dataTable id="dtusers" value="#{searchQtnTenderBB.managedBean.locations}" var="tenders" >
+
+					<p:column headerText="#{lbl['lbl.so.no']}">
+						<h:outputText value="#{tenders.state}" />
+					</p:column>
+
+					       
+				</p:dataTable>
+				<p:commandButton value="ADD"  style="float:right;" onclick="dlg.show();"></p:commandButton>
+			</h:panelGroup>
+
+	</p:panel>
+		
+		</p:panel>
+		
+	<p:dialog widgetVar="dlg" modal="true">
+<p:panel header="Clone Qtn/Tender" toggleable="true">
+
+			<p:panelGrid columns="2" style="width:100%;" styleClass="noBorders tr,noBorders td">
+<p:outputLabel value="States"></p:outputLabel>
+<p:selectOneMenu value="#{searchQtnTenderBB.managedBean.state}" valueChangeListener="#{searchQtnTenderBB.managedBean.stateChangeListener}">  
+            <f:selectItem itemLabel="Select One" itemValue="" />  
+            <f:selectItems value="#{searchQtnTenderBB.managedBean.stateList}" />  
+            <p:ajax event="change" update="cities"/> 
+        </p:selectOneMenu> 
+<p:fieldset legend="Locations">
+  <p:selectManyCheckbox id="cities" value="#{searchQtnTenderBB.managedBean.location}"  
+            layout="pageDirection">  
+            <f:selectItems value="#{searchQtnTenderBB.managedBean.cities}" />  
+        </p:selectManyCheckbox>  
+     </p:fieldset>
+ <p:commandButton  action="#{searchQtnTenderBB.managedBean.addAction}"
+                        update="dtusers" value="Add"   
+                      oncomplete="dlg.hide()" style="margin:0"/> 
+</p:panelGrid>
+</p:panel>
+	</p:dialog>
+		</ui:composition>

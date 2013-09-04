@@ -1,0 +1,88 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:c="http://java.sun.com/jsp/jstl/core">
+
+
+	<p:dialog widgetVar="dlg" modal="true">
+		<p:panel header="Clone Qtn/Tender" toggleable="true">
+
+			<p:panelGrid columns="4" style="width:100%;" styleClass="noBorders tr,noBorders td">
+				
+
+				<h:outputLabel for="qttitle" value="Title" />
+				<p:inputText id="qttitle" value="" />
+
+
+				<h:outputLabel for="qttenno" value="Title" />
+				<p:inputText id="qttenno" value="" />
+
+			
+					 <h:outputText value="#{lbl['lbl.so.procmode']}" />  
+        <p:selectOneMenu value="">  
+            <f:selectItem itemLabel="Select One" itemValue="" />  
+            <f:selectItem itemLabel="Quotation" itemValue="Quotation" />  
+            <f:selectItem itemLabel="Tender" itemValue="Tender" />  
+            <f:selectItem itemLabel="Direct Negotiation" itemValue="Direct Negotiation" />  
+        </p:selectOneMenu> 
+
+				<h:outputText value="#{lbl['lbl.so.creatdtfrom']}" />
+				<p:calendar value="#{searchQtnTenderBB.managedBean.tenderBean.crtDateFrom}" id="crdateFrm1"
+					showOn="button" />
+
+				<h:outputText value="#{lbl['lbl.so.creatdtto']}" />
+				<p:calendar value="#{searchQtnTenderBB.managedBean.tenderBean.crtDateFrom}" id="crdateTo1" showOn="button" />
+
+				<h:outputText value="#{lbl['lbl.so.status']}" />
+				<p:selectOneMenu value="">
+					<f:selectItem itemLabel="Select One" itemValue="" />
+					<f:selectItem itemLabel="Option 1" itemValue="1" />
+					<f:selectItem itemLabel="Option 2" itemValue="2" />
+					<f:selectItem itemLabel="Option 3" itemValue="3" />
+				</p:selectOneMenu>
+
+			</p:panelGrid>
+
+		<p:commandButton value="#{lbl['lbl.so.searchbtn']}"
+			styleClass="apply_button" style="float:right;">
+
+		</p:commandButton>
+		
+		<br/>
+
+		</p:panel>
+<br/>
+
+		<p:panel header="Search Qtn/Tender Result" toggleable="true">
+			<h:panelGroup id="table-wrapper" style="width:100%;">
+				<p:dataTable value="#{searchQtnTenderBB.managedBean.qtnTenders}" var="tenders" >
+
+					<p:column headerText="#{lbl['lbl.so.no']}">
+						<h:outputText value="1" />
+					</p:column>
+
+					<p:column headerText="Qtn/Tender No">
+						 <p:commandLink  actionListener="#{pprBean.savePerson}" style="margin-right:20px;" ajax="false">  
+        <h:outputText value="#{tenders.qtnTenderNum}" /> 
+        </p:commandLink>
+					</p:column>
+
+					 <p:column headerText="#{lbl['lbl.so.title']}" >  
+            <h:outputText value="#{tenders.title}" />  
+        </p:column>  
+         <p:column headerText="#{lbl['lbl.so.procmode']}" >  
+            <h:outputText value="#{tenders.procumentMode}" />  
+        </p:column>  
+        
+         <p:column headerText="#{lbl['lbl.so.crtdt']}" >  
+            <h:outputText value="#{tenders.crtdDateTo}" />  
+        </p:column>  
+       
+				</p:dataTable>
+				<p:commandButton value="Clone Qtn"  style="float:right;" onclick="dlg.hide();"></p:commandButton>
+			</h:panelGroup>
+		</p:panel>
+	</p:dialog>
+</ui:composition>

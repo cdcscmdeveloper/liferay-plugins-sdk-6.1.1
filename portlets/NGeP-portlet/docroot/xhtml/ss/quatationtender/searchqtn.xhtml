@@ -1,0 +1,128 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:c="http://java.sun.com/jsp/jstl/core">
+
+	<p:panel>
+		<p:panelGrid ></p:panelGrid>
+</p:panel>
+
+
+
+<p:panel header="Search Quotation/Tender Screen" toggleable="true">
+
+
+		<p:panelGrid columns="4" style="width:100%;" styleClass="noBorders tr,noBorders td">
+			
+			<h:outputLabel for="qtnno" value="#{lbl['lbl.so.qtnno']}" />
+			<p:inputText id="qtnno" value="#{searchQtnTenderBB.managedBean.qtno}"/>
+
+			 <h:outputText value="#{lbl['lbl.so.procmode']}" />  
+        <p:selectOneMenu value="#{searchQtnTenderBB.managedBean.selectOption}">  
+            <f:selectItem itemLabel="Select One" itemValue="" />  
+            <f:selectItem itemLabel="Quotation" itemValue="Quotation" />  
+            <f:selectItem itemLabel="Tender" itemValue="Tender" />  
+            <f:selectItem itemLabel="Direct Negotiation" itemValue="Direct Negotiation" />  
+        </p:selectOneMenu>  
+    
+ <h:outputText value="#{lbl['lbl.so.creatdtfrom']}" /> 
+    <p:calendar value="#{searchQtnTenderBB.managedBean.tenderBean}" id="crdateFrm" showOn="button" />  
+  
+  <h:outputText value="#{lbl['lbl.so.creatdtto']}" /> 
+    <p:calendar value="#{searchQtnTenderBB.managedBean.tenderBean}" id="crdateTo" showOn="button" />  
+ 
+ <h:outputText value="#{lbl['lbl.so.pbldtfrom']}" /> 
+    <p:calendar value="#{searchQtnTenderBB.managedBean.tenderBean}" id="pbdateFrom" showOn="button" />  
+ 
+ <h:outputText value="#{lbl['lbl.so.pbldtto']}" /> 
+    <p:calendar value="#{searchQtnTenderBB.managedBean.tenderBean}" id="pbdateTo" showOn="button" />  
+ 
+ <h:outputText value="#{lbl['lbl.so.clsdtfrom']}" /> 
+    <p:calendar value="#{searchQtnTenderBB.managedBean.tenderBean}" id="cldateFrom" showOn="button" />  
+ 
+ <h:outputText value="#{lbl['lbl.so.clsdtto']}" /> 
+    <p:calendar value="#{searchQtnTenderBB.managedBean.tenderBean}" id="cldateTo" showOn="button" />  
+ 
+ <h:outputText value="#{lbl['lbl.so.status']}" />  
+        <p:selectOneMenu value="#{searchQtnTenderBB.managedBean.selectOption}">  
+            <f:selectItem itemLabel="Select One" itemValue="" />  
+            <f:selectItem itemLabel="Option 1" itemValue="" />  
+            <f:selectItem itemLabel="Option 2" itemValue="" />  
+            <f:selectItem itemLabel="Option 3" itemValue="" />  
+        </p:selectOneMenu>  
+  
+  
+  		</p:panelGrid>
+
+<p:commandButton value="#{lbl['lbl.so.searchbtn']}" style="float:right;">
+    
+</p:commandButton>
+
+<br/>
+<br/>
+<br/>
+
+		</p:panel>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<p:panel header="Qtn/Tender List" toggleable="true">
+<h:panelGroup id="table-wrapper" style="width:100%;" >
+    <p:dataTable value="#{searchQtnTenderBB.managedBean.qtnTenders}" var="tenders" resizableColumns="true">
+        
+        <p:column headerText="#{lbl['lbl.so.no']}">  
+            <h:outputText value="1" />  
+        </p:column>  
+  
+        <p:column headerText="Qtn/Tender No"> <p:commandLink  actionListener="#{pprBean.savePerson}" style="margin-right:20px;" ajax="false">  
+        <h:outputText value="#{tenders.qtnTenderNum}" />  
+    </p:commandLink>  
+     
+             
+        </p:column>  
+  
+        <p:column headerText="#{lbl['lbl.so.title']}" >  
+            <h:outputText value="#{tenders.title}" />  
+        </p:column>  
+         <p:column headerText="#{lbl['lbl.so.procmode']}" >  
+            <h:outputText value="#{tenders.procumentMode}" />  
+        </p:column>  
+        
+         <p:column headerText="#{lbl['lbl.so.crtdt']}" >  
+            <h:outputText value="#{tenders.crtdDateTo}" />  
+        </p:column>  
+        
+         <p:column headerText="#{lbl['lbl.so.pbdt']}" >  
+            <h:outputText value="#{tenders.pubDateTo}" />  
+        </p:column>  
+        
+         <p:column headerText="#{lbl['lbl.so.clsdt']}" >  
+            <h:outputText value="#{tenders.clsDateTo}" />  
+        </p:column>  
+       
+    </p:dataTable>
+</h:panelGroup>
+
+<p:commandButton value="#{lbl['lbl.so.qtmscreen']}" style="float:right;" action="quatationtendercreation?faces-redirect=true">
+    
+</p:commandButton>
+
+<br/>
+<br/>
+		</p:panel>
+</ui:composition>

@@ -1,0 +1,21 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:c="http://java.sun.com/jsp/jstl/core">
+
+		<p:panel header="Supplier Qualification Criteria" toggleable="true">
+<p:panelGrid columns="2" style="width:100%;" styleClass="noBorders tr,noBorders td">
+<h:outputText value="Qtn/Tender Type*" />  
+        <p:selectOneMenu value="#{searchQtnTenderBB.managedBean.selectOption}" >  
+            <f:selectItem itemLabel="Select One" itemValue="" />  
+            <f:selectItem itemLabel="Open" itemValue="1" />  
+            <f:selectItem itemLabel="Bumiputra" itemValue="2" />  
+            <f:selectItem itemLabel="Panel" itemValue="3" />  
+            <f:selectItem itemLabel="Restricted Tender" itemValue="3" />
+        </p:selectOneMenu>  
+   
+   </p:panelGrid>
+		</p:panel>
+		</ui:composition>
