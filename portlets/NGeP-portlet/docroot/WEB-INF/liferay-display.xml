@@ -2,8 +2,9 @@
 <!DOCTYPE display PUBLIC "-//Liferay//DTD Display 6.1.0//EN" "http://www.liferay.com/dtd/liferay-display_6_1_0.dtd">
 
 <display>
-	<category name="category.sample">
+	<category name="NGeP">
 		<portlet id="NGeP" />
+		<portlet id="sm" />
 		<portlet id="codification"></portlet>
 		<portlet id="Catalogue"></portlet>
 	</category>
