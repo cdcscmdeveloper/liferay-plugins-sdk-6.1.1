@@ -12,19 +12,24 @@
 			<p:selectBooleanCheckbox />
 		</div>
 		<br />
-		<p:dataTable>
-			<!-- <p:column selectionMode="multiple">
-			</p:column> -->
+		<p:dataTable var="utilBean"
+			value="#{mofRegistrationBackingBean.utilList}"
+			selection="#{mofRegistrationBackingBean.managedBean.selectedUtilList}"
+			rowKey="#{utilBean.seqNo}" rowIndexVar="index">
+
+			<p:column selectionMode="multiple" width="5%" />
 			<p:column headerText="NO.">
-				<h:outputText />
+				<p:outputLabel value="1" />
 			</p:column>
 
 			<p:column headerText="Branch Name">
-				<h:outputText />
+				<p:commandLink value="Maybank - PJ Branch"
+					onclick="banchDialog.show();" />
 			</p:column>
 
 			<p:column headerText="Address">
-				<h:outputText />
+				<p:outputLabel
+					value="Block Belatuk,Cyber View Garden,Cyber Jaya, Selangor,Malaysia" />
 			</p:column>
 		</p:dataTable>
 		<div align="right">
