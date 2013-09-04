@@ -9,7 +9,8 @@
 
 	<context-param>
   		<param-name>javax.faces.CONFIG_FILES</param-name>
-  		<param-value>/WEB-INF/config/faces-config/faces-config-common.xml
+  		<param-value>/WEB-INF/config/faces-config/faces-config-common.xml,
+  		/WEB-INF/config/faces-config/cm/faces-config-codification.xml,		
 		</param-value>
 	</context-param>
 	<context-param>

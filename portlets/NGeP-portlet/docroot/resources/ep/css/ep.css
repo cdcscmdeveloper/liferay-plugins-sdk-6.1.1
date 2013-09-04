@@ -1385,3 +1385,50 @@ border-color: #FFDADA;
  background: none !important;
  border: none !important;
 }
+
+
+
+/*------------------------------catalogue-------------------------*/
+.cmLeft {
+	width: 25%;
+	vertical-align: top;
+}
+
+.cmRight {
+	width: 75%;
+	vertical-align: top;
+	padding: 10px;
+}
+
+.cmPadding {
+	padding: 10px;
+	width: 20%;
+}
+
+.cmPadding5 {
+	padding: 5px;
+}
+
+.marginLeftbutton {
+	margin-left: 90px;
+}
+
+.cmWidth1 {
+	width: 102px;
+	padding: 5px;
+}
+
+.border0 {
+	border: 0px !important;
+}
+
+td {
+	padding: 5px !important;
+}
+
+#autoScroll{
+	width:180px;
+	height:200px; 
+	overflow:auto !important;
+	border:1px solid #d1d1d1;
+}

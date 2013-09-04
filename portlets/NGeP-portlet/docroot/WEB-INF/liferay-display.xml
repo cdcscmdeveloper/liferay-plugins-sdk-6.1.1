@@ -4,5 +4,7 @@
 <display>
 	<category name="category.sample">
 		<portlet id="NGeP" />
+		<portlet id="codification"></portlet>
+		<portlet id="Catalogue"></portlet>
 	</category>
 </display>
