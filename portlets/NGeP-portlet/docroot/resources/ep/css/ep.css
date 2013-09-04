@@ -1381,3 +1381,7 @@ border-color: #FFDADA;
 
 /* --------------------------       Ends  Menu Button       ------------------------------ */
 
+.noBorders tr, .noBorders td {
+ background: none !important;
+ border: none !important;
+}
