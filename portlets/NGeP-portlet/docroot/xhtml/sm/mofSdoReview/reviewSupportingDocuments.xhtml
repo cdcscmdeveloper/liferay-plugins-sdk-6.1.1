@@ -10,7 +10,7 @@
 	<ui:define name="resourceSection">
 	</ui:define>
 	<ui:define name="sideMenu">
-		<ui:include src="/xhtml/sm/shared/sidemenu/smMainPageSideMenu.xhtml" />
+		<ui:include src="/xhtml/sm/shared/sidemenu/sdoReviewSideMenu.xhtml" />
 	</ui:define>
 	<ui:define name="content">
 		<p:panel header="Supporting Document">
@@ -122,7 +122,7 @@
 						<td><p:outputLabel value="N/A" /></td>
 					</tr>
 				</table>
-                   <p:separator />
+				<p:separator />
 				<table style="font-size: 12px;">
 					<tr>
 						<td><p:outputLabel value="Nama pegawai Yang boleh dihubungi " /></td>
@@ -151,6 +151,11 @@
 				src="/xhtml/sm/shared/mofSdoSharedPages/offlineSupportingDocsForm.xhtml" />
 			<ui:include
 				src="/xhtml/sm/shared/mofSdoSharedPages/onlineSupportingDocsForm.xhtml" />
+			<div align="Center">
+				<p:commandButton
+					action="/xhtml/sm/mofSdoReview/sdoDescisionPage.xhtml"
+					value="Proceed" />
+			</div>
 		</p:panel>
 	</ui:define>
 </ui:composition>

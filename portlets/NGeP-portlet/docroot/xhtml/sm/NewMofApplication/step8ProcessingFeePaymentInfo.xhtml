@@ -31,26 +31,15 @@
 						<p:outputLabel value="Processing Fee Payment Page" />
 					</h6>
 				</td>
-				<td align="right"><p:commandButton
-						value="#{lbl['lbl.sm.saveAsDraft']}" /></td>
 			</tr>
 		</table>
-		<p:panel header="Payment Note :">
-			<p:outputPanel>
-				<p>Provide the notes or information for payment process........
-				</p>
-			</p:outputPanel>
+		<p:panel header="Processing Fee Payment">
+			<ui:include
+				src="/xhtml/sm/shared/paymentProcess/makePaymentForm.xhtml" />
+			<div align="center">
+				<p:commandButton value="Make Payment" />
+				<p:commandButton value="Cancel" />
+			</div>
 		</p:panel>
-		<table style="width: 100%">
-			<tr>
-				<td align="left"><p:commandButton value="#{lbl['lbl.sm.prev']}"
-						action="/xhtml/sm/NewMofApplication/step6RegisterCategoryCodesInfo.xhtml" /></td>
-				<td align="right"><p:commandButton
-						value="#{lbl['lbl.sm.next']}"
-						action="/xhtml/sm/NewMofApplication/step7SupportingDocumentsInfo.xhtml" /></td>
-			</tr>
-		</table>
-
-
 	</ui:define>
 </ui:composition>

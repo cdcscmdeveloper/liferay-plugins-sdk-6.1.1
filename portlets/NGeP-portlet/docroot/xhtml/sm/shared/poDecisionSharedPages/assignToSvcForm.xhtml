@@ -1,0 +1,114 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:c="http://java.sun.com/jsp/jstl/core">
+
+	<p:panel
+		header=" Assign Site Visit For - For Application No. - 12343535 ">
+		<br />
+		<table>
+
+			<tr>
+				<td><p:outputLabel value="Site Visit To Be Peformed *" /></td>
+				<td><p:selectOneMenu>
+						<f:selectItem itemLabel="-- Select Value --" itemValue="0" />
+						<f:selectItem itemLabel="Before Approval" itemValue="1" />
+						<f:selectItem itemLabel="After Approval" itemValue="2" />
+					</p:selectOneMenu></td>
+
+			</tr>
+
+		</table>
+		<p:dataTable var="headOff"
+			value="#{poAssignToSvcBackingBean.headOfficeList}"
+			selection="#{poAssignToSvcBackingBean.managedBean.selectedHeadOfficeList}"
+			rowKey="#{headOff.headOffSeq}" rowIndexVar="index">
+			<p:column selectionMode="multiple" width="5%" />
+			<p:column headerText="No.">  
+                   #{headOff.headOffSeq}  
+      		    </p:column>
+			<p:column headerText="Head Office Address">  
+		            #{headOff.headOffAddress} 
+		        </p:column>
+		</p:dataTable>
+		<br />
+		<p:dataTable var="branch"
+			value="#{poAssignToSvcBackingBean.branchList}"
+			selection="#{poAssignToSvcBackingBean.managedBean.selectedBranchList}"
+			rowKey="#{branch.branchSeq}" rowIndexVar="index">
+			<p:column selectionMode="multiple" width="5%" />
+			<p:column headerText="No.">  
+                   #{branch.branchSeq}  
+      		    </p:column>
+			<p:column headerText="Branch Address">  
+		            #{branch.branchName} <p:outputLabel value="-- " /> #{branch.branchAddress} 
+		        </p:column>
+		</p:dataTable>
+		<br />
+		<p:dataTable var="facility"
+			value="#{poAssignToSvcBackingBean.facilityList}"
+			selection="#{poAssignToSvcBackingBean.managedBean.selectedFacilityList}"
+			rowKey="#{facility.facilitySeq}" rowIndexVar="index">
+			<p:column selectionMode="multiple" width="5%" />
+			<p:column headerText="No.">  
+                   #{facility.facilitySeq}  
+      		    </p:column>
+			<p:column headerText="Facility Address">  
+		            #{facility.facilityAddress} 
+		        </p:column>
+
+		</p:dataTable>
+		<br />
+		<p:separator />
+		<p:dataTable var="category"
+			value="#{poAssignToSvcBackingBean.catCodeList}"
+			selection="#{poAssignToSvcBackingBean.managedBean.selectedCatCodeList}"
+			rowKey="#{category.catCodeSeq}" rowIndexVar="index">
+			<p:column selectionMode="multiple" width="5%" />
+			<p:column headerText="No.">  
+                   #{category.catCodeSeq}  
+      		    </p:column>
+			<p:column headerText="Category">  
+		            #{category.catCodeId} <p:outputLabel value="-- " /> #{category.catName}
+		        </p:column>
+
+		</p:dataTable>
+		<br />
+		<p:separator />
+		<p:dataTable var="template"
+			value="#{poAssignToSvcBackingBean.templateList}"
+			selection="#{poAssignToSvcBackingBean.managedBean.selectedTemplateList}"
+			rowKey="#{template.templateSeq}" rowIndexVar="index">
+			<p:column selectionMode="multiple" width="5%" />
+			<p:column headerText="No.">  
+                   #{template.templateSeq}  
+      		    </p:column>
+			<p:column headerText="Category">  
+		            #{template.templateName}
+		        </p:column>
+
+		</p:dataTable>
+		<br />
+		<table style="width: 100%">
+
+			<tr>
+				<td><p:outputLabel value="Remarks For SVC" /></td>
+				<td><p:inputTextarea cols="70" /></td>
+			</tr>
+			<tr>
+				<td><p:outputLabel value="Remarks For Approver" /></td>
+				<td><p:inputTextarea cols="70" /></td>
+			</tr>
+			<tr>
+				<td><p:outputLabel value="Recommendation For Approver" /></td>
+				<td><p:selectOneRadio>
+						<f:selectItem itemLabel="Approve" />
+						<f:selectItem itemLabel="Reject" />
+					</p:selectOneRadio></td>
+			</tr>
+
+		</table>
+	</p:panel>
+</ui:composition>

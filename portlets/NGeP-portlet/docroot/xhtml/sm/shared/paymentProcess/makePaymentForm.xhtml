@@ -1,0 +1,68 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:c="http://java.sun.com/jsp/jstl/core">
+
+	<p:panel header="Payment Note :">
+		<p:outputPanel>
+			<p>TO Include any special note if applicable or get more details
+				on payment ways like via online bank / credit card .....</p>
+		</p:outputPanel>
+	</p:panel>
+	<p:panel header="Payment Summary :">
+	<p:dataTable>
+			<p:columnGroup type="header">
+				<p:row>
+					<p:column headerText="Include" />
+					<p:column headerText="NO." />
+					<p:column headerText="Process / Description" />
+					<p:column headerText="Quantity / No. Of Applications" />
+					<p:column headerText="Amount (RM.)" />
+
+				</p:row>
+			</p:columnGroup>
+
+			<p:column>
+				<p:outputLabel />
+			</p:column>
+
+			<p:column>
+				<p:outputLabel />
+			</p:column>
+			<p:column>
+				<p:outputLabel />
+			</p:column>
+			<p:column>
+				<p:outputLabel />
+			</p:column>
+			<p:column>
+				<p:outputLabel />
+			</p:column>
+
+			<p:columnGroup type="footer">
+				<p:row>
+					<p:column colspan="4" footerText=" Sub Total :"
+						style="text-align:right" />
+					<p:column footerText="" />
+
+				</p:row>
+				<p:row>
+					<p:column colspan="4" footerText=" Service Tax :"
+						style="text-align:right" />
+					<p:column footerText="" />
+
+				</p:row>
+				<p:row>
+					<p:column colspan="4" footerText=" Grand Total :"
+						style="text-align:right" />
+					<p:column footerText="" />
+
+				</p:row>
+			</p:columnGroup>
+		</p:dataTable>
+	</p:panel>
+	<br />
+
+</ui:composition>
