@@ -1,0 +1,88 @@
+<ui:composition
+	template="/WEB-INF/facelets/templates/basic_template.xhtml"
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:c="http://java.sun.com/jsp/jstl/core">
+
+	<ui:define name="contentSection">
+
+		<h:panelGrid columns="2" columnClasses="cmLeft,cmRight" width="100%">
+
+
+			<ui:include src="itemMenu.xhtml"></ui:include>
+
+
+			<h:panelGroup id="contractedItemID">
+				<h:outputLabel styleClass="titleFront"
+					value="#{lbl['lbl.cm.assign.contracted.product.code']}"></h:outputLabel>
+
+				<h:panelGrid columns="2">
+
+					<p:outputLabel value="#{lbl['lbl.cm.loa.number']}"></p:outputLabel>
+					<p:inputText></p:inputText>
+
+					<p:outputLabel value="#{lbl['lbl.cm.mof.number']}"></p:outputLabel>
+					<p:inputText></p:inputText>
+
+					<p:outputLabel value="#{lbl['lbl.cm.company.name']}"></p:outputLabel>
+					<p:inputText></p:inputText>
+
+					<p:outputLabel value="#{lbl['lbl.cm.uom']}"></p:outputLabel>
+					<p:inputText></p:inputText>
+
+					<p:outputLabel value="#{lbl['lbl.cm.unit.price']}"></p:outputLabel>
+					<p:inputText></p:inputText>
+
+				</h:panelGrid>
+
+				<p:dataTable value="#{unspscCodeBackingBean.managedBean.unspscList}"
+					var="contract">
+					<p:column>
+						<f:facet name="header">
+							<h:outputText value="#{lbl['lbl.cm.item.name']}" />
+						</f:facet>
+					</p:column>
+					<p:column>
+						<f:facet name="header">
+							<h:outputText value="#{lbl['lbl.cm.item.description']}" />
+						</f:facet>
+					</p:column>
+					<p:column>
+						<f:facet name="header">
+							<h:outputText value="#{lbl['lbl.cm.system.code']}" />
+						</f:facet>
+					</p:column>
+					<p:column>
+						<f:facet name="header">
+							<h:outputText value="#{lbl['lbl.cm.unspsc.code']}" />
+						</f:facet>
+					</p:column>
+					<p:column>
+						<f:facet name="header">
+							<h:outputText value="#{lbl['lbl.cm.extension.code']}" />
+						</f:facet>
+					</p:column>
+					<p:column>
+						<f:facet name="header">
+							<h:outputText value="#{lbl['lbl.cm.action']}" />
+						</f:facet>
+						<p:commandButton value="#{lbl['lbl.cm.assign']}" onclick="contractedItemPopUp.show()"></p:commandButton>
+					</p:column>
+				</p:dataTable>
+
+				<p:dialog id="contractedItemDialog" widgetVar="contractedItemPopUp"
+					width="600" height="500">
+
+					<ui:include src="assignContractedCodePopUp.xhtml" />
+
+				</p:dialog>
+
+
+			</h:panelGroup>
+		</h:panelGrid>
+
+	</ui:define>
+</ui:composition>

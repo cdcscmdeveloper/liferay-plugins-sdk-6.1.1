@@ -1,0 +1,75 @@
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns="http://www.w3.org/1999/xhtml">
+
+
+	<table width="100%">
+		<tr>
+			<td width="30%"><p:dataGrid id="selectWishList"
+					value="#{catalogBackingBean.managedBean.selectedSupplierItems}"
+					var="selected" columns="1" rows="4">
+
+					<h:panelGrid columns="2" columnClasses="columnLeft, columnRight">
+
+						<h:outputText value="Item 1" />
+						<p:graphicImage height="100px" width="100px" />
+					</h:panelGrid>
+
+				</p:dataGrid></td>
+
+
+
+
+			<td width="70%"><p:dataTable
+					value="#{catalogBackingBean.managedBean.cartList}" id="cartListID"
+					var="cart" width="100%">
+
+
+					<p:column>
+						<f:facet name="header">
+							<h:selectBooleanCheckbox />
+						</f:facet>
+
+					</p:column>
+
+					<p:column>
+						<f:facet name="header">
+							<h:outputText value="#{lbl['lbl.cm.wish.list']}" />
+						</f:facet>
+						<h:outputText value="wishList1" />
+					</p:column>
+
+				</p:dataTable> <p:commandButton value="#{lbl['lbl.cm.ok']}"
+					onclick="wishListPopUp.hide()"></p:commandButton></td>
+
+
+
+		</tr>
+	</table>
+
+
+
+	<table>
+		<tr>
+			<td><p:outputLabel value="#{lbl['lbl.cm.wish.list']}"></p:outputLabel></td>
+			<td><p:inputText></p:inputText></td>
+			<td><p:commandButton value="create"></p:commandButton></td>
+		</tr>
+	</table>
+
+
+
+
+
+
+
+
+
+
+
+
+</ui:composition>

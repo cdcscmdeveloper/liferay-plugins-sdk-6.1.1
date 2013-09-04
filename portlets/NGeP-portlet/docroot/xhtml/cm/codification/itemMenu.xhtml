@@ -1,0 +1,37 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:c="http://java.sun.com/jsp/jstl/core">
+
+
+
+	<h:panelGroup id="itemMenuID">
+
+
+		<p:menu>
+			<p:submenu label="Menuitems">
+				<p:menuitem value="#{lbl['lbl.cm.codification.search']}"
+					action="#{unspscCodeBackingBean.codificationSearch}"></p:menuitem>
+				<p:menuitem value="#{lbl['lbl.cm.request.unspsc.code']}"
+					action="#{unspscCodeBackingBean.requestUNSPSCcode}"></p:menuitem>
+				<p:menuitem value="#{lbl['lbl.cm.request.extension.code']}"
+					action="#{unspscCodeBackingBean.requestExtensioncode}"></p:menuitem>
+				<p:menuitem value="#{lbl['lbl.cm.unspsc.single.upload']}"
+					action="#{unspscCodeBackingBean.singleUpload}"></p:menuitem>
+				<p:menuitem value="#{lbl['lbl.cm.unspsc.bulk.upload']}"
+					action="#{unspscCodeBackingBean.bulkUpload}"></p:menuitem>
+				<p:menuitem value="Extension Review"
+					action="#{unspscCodeBackingBean.extensionReview}"></p:menuitem>
+				<p:menuitem value="Contracted Item"
+					action="#{unspscCodeBackingBean.AssignContractedItem}"></p:menuitem>
+			</p:submenu>
+		</p:menu>
+
+
+	</h:panelGroup>
+
+
+
+</ui:composition>

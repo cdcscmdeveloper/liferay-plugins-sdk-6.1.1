@@ -1,0 +1,106 @@
+<ui:composition
+	template="/WEB-INF/facelets/templates/basic_template.xhtml"
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:fn="http://java.sun.com/jsp/jstl/functions">
+
+
+
+	<ui:define name="contentSection">
+
+		<h:panelGrid columns="2" columnClasses="cmLeft,cmRight" width="100%">
+
+
+			<ui:include src="itemMenu.xhtml"></ui:include>
+
+			<h:panelGroup id="extensionReviewID">
+				<h:outputLabel styleClass="titleFront" value="Extension Code Review"></h:outputLabel>
+
+				<table>
+					<tr>
+						<td><h:outputLabel value="#{lbl['lbl.cm.unspsc.code']}"></h:outputLabel></td>
+						<td><h:inputText /></td>
+					</tr>
+					<tr>
+						<td><h:outputLabel value="#{lbl['lbl.cm.unspsc.title']}"></h:outputLabel></td>
+						<td><h:inputText /></td>
+					</tr>
+				</table>
+
+				<p:dataTable value="#{unspscCodeBackingBean.managedBean.unspscList}"
+					var="test">
+					<p:column>
+						<f:facet name="header">
+							<h:outputText value="#{lbl['lbl.cm.type']}" />
+						</f:facet>
+						<h:panelGrid columns="2" columnClasses="border0, border0">
+							<p:inputText></p:inputText>
+							<p:selectOneMenu></p:selectOneMenu>
+						</h:panelGrid>
+					</p:column>
+					<p:column>
+						<f:facet name="header">
+							<h:outputText value="#{lbl['lbl.cm.brand']}" />
+						</f:facet>
+
+						<h:panelGrid columns="2" columnClasses="border0, border0">
+							<p:inputText></p:inputText>
+							<p:selectOneMenu></p:selectOneMenu>
+						</h:panelGrid>
+
+					</p:column>
+					<p:column>
+						<f:facet name="header">
+							<h:outputText value="#{lbl['lbl.cm.measurement']}" />
+						</f:facet>
+
+						<h:panelGrid columns="2" columnClasses="border0, border0">
+							<p:inputText></p:inputText>
+							<p:selectOneMenu></p:selectOneMenu>
+						</h:panelGrid>
+
+
+					</p:column>
+					<p:column>
+						<f:facet name="header">
+							<h:outputText value="#{lbl['lbl.cm.color']}" />
+						</f:facet>
+						<h:panelGrid columns="2" columnClasses="border0, border0">
+							<p:inputText></p:inputText>
+							<p:selectOneMenu></p:selectOneMenu>
+						</h:panelGrid>
+
+					</p:column>
+					<p:column>
+						<f:facet name="header">
+							<h:outputText value="#{lbl['lbl.cm.item.name']}" />
+						</f:facet>
+
+					</p:column>
+					<p:column>
+						<f:facet name="header">
+							<h:outputText value="#{lbl['lbl.cm.item.description']}" />
+						</f:facet>
+
+					</p:column>
+
+				</p:dataTable>
+
+				<div style="text-align: right;">
+					<p:commandButton value="Submit"></p:commandButton>
+				</div>
+
+
+
+			</h:panelGroup>
+
+		</h:panelGrid>
+
+
+	</ui:define>
+
+</ui:composition>

@@ -1,0 +1,74 @@
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns:p="http://primefaces.org/ui"
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:fn="http://java.sun.com/jsp/jstl/functions"
+	xmlns:c="http://java.sun.com/jsp/jstl/core">
+
+
+
+	<p:outputPanel id="pricePageID">
+		<p:dataTable id="pricingID"
+			value="#{catalogueBackingBean.managedBean.pricingList}" width="100%"
+			var="price">
+
+			<p:column>
+				<f:facet name="header">
+					<h:outputText value="#{lbl['lbl.cm.pricing.type']}" />
+				</f:facet>
+				<h:selectOneMenu value="#{price.pricingType}">
+					<f:selectItems
+						value="#{catalogueBackingBean.managedBean.pricingCriteria}" />
+				</h:selectOneMenu>
+
+			</p:column>
+
+
+			<p:column>
+				<f:facet name="header">
+					<h:outputText value="#{lbl['lbl.cm.price']}" />
+				</f:facet>
+				<h:inputText value="#{price.price}"></h:inputText>
+			</p:column>
+			<p:column>
+				<f:facet name="header">
+					<h:outputText value="#{lbl['lbl.cm.tier.from']}" />
+				</f:facet>
+				<h:inputText value="#{price.tierFrom}"></h:inputText>
+
+			</p:column>
+			<p:column>
+				<f:facet name="header">
+					<h:outputText value="#{lbl['lbl.cm.tier.to']}" />
+				</f:facet>
+				<h:inputText value="#{price.tierTo}"></h:inputText>
+			</p:column>
+			<p:column>
+				<f:facet name="header">
+					<h:outputText value="#{lbl['lbl.cm.start.date']}" />
+				</f:facet>
+				<p:calendar value="#{price.startDate}"></p:calendar>
+
+			</p:column>
+			<p:column>
+				<f:facet name="header">
+					<h:outputText value="#{lbl['lbl.cm.end.date']}" />
+				</f:facet>
+				<p:calendar value="#{price.endDate}"></p:calendar>
+
+			</p:column>
+
+		</p:dataTable>
+		<div align="right">
+			<p:commandButton value="#{lbl['lbl.cm.add']}"
+				action="#{catalogueBackingBean.addNewPricing()}" update="pricePageID"
+				process="@this"></p:commandButton>
+		</div>
+
+	</p:outputPanel>
+
+
+</ui:composition>

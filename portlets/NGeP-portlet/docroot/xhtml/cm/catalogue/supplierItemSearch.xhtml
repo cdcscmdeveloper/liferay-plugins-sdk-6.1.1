@@ -1,0 +1,182 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:fn="http://java.sun.com/jsp/jstl/functions">
+
+
+
+	<h:panelGroup id="supplierItemViewID">
+
+		<h:outputLabel styleClass="titleFront"
+			value="#{lbl['lbl.cm.catalogue.search']}"></h:outputLabel>
+
+
+		<p:remoteCommand id="searching" name="searching"
+			update="advanceSearchID" process="@this searchRadio"
+			action="#{catalogueBackingBean.advanceSearch()}">
+		</p:remoteCommand>
+
+
+		<table>
+			<tr>
+				<td><p:selectOneRadio id="searchRadio"
+						value="#{catalogueBackingBean.managedBean.searchType}">
+						<f:selectItem itemValue="S" itemLabel="Search " />
+						<f:selectItem itemValue="A" itemLabel="Advance Search" />
+						<p:ajax event="click"
+							listener="#{catalogueBackingBean.advanceSearch()}"
+							update="advanceSearchID"></p:ajax>
+					</p:selectOneRadio></td>
+			</tr>
+		</table>
+
+		<h:panelGrid columns="3" columnClasses="cmWidth1">
+			<h:outputLabel value="#{lbl['lbl.cm.item.name']}" />
+			<h:inputText size="50"
+				value="#{catalogueBackingBean.managedBean.itemName}"></h:inputText>
+			<p:selectOneMenu>
+				<f:selectItem itemValue="and" itemLabel="And" />
+				<f:selectItem itemValue="or" itemLabel="Or" />
+			</p:selectOneMenu>
+		</h:panelGrid>
+
+
+
+		<p:outputPanel id="advanceSearchID" style="width:100%">
+
+
+
+			<c:if test="#{catalogueBackingBean.managedBean.advanceSearchInd}">
+
+				<ui:repeat var="search"
+					value="#{catalogueBackingBean.managedBean.advanceSearchList}">
+
+					<h:panelGrid columns="2" columnClasses="cmPadding5">
+						<h:selectOneMenu value="#{search.name}">
+							<f:selectItems
+								value="#{catalogueBackingBean.managedBean.searchCriteria}" />
+						</h:selectOneMenu>
+						<h:inputText size="50" value="#{search.value}" />
+					</h:panelGrid>
+
+				</ui:repeat>
+			</c:if>
+
+		</p:outputPanel>
+
+		<p:commandButton value="search" />
+
+
+
+
+
+		<p:dataTable
+			value="#{catalogueBackingBean.managedBean.supplierItemList}"
+			id="supplierItemID" var="supplierItem"
+			rowKey="#{supplierItem.pricingSeq}" width="100%"
+			selection="#{catalogueBackingBean.managedBean.selectedSupplierItems}">
+
+			<p:column selectionMode="multiple" style="width:2%" />
+
+			<p:column>
+				<f:facet name="header">
+					<h:outputText value="#{lbl['lbl.cm.item.code']}" />
+				</f:facet>
+
+			</p:column>
+			<p:column>
+				<f:facet name="header">
+					<h:outputText value="#{lbl['lbl.cm.item.name']}" />
+				</f:facet>
+				<h:outputText value="#{supplierItem.currency}" />
+			</p:column>
+			<p:column>
+				<f:facet name="header">
+					<h:outputText value="#{lbl['lbl.cm.supplier.name']}" />
+				</f:facet>
+
+			</p:column>
+			<p:column>
+				<f:facet name="header">
+					<h:outputText value="#{lbl['lbl.cm.uom']}" />
+				</f:facet>
+
+			</p:column>
+			<p:column>
+				<f:facet name="header">
+					<h:outputText value="#{lbl['lbl.cm.contract.no']}" />
+				</f:facet>
+
+			</p:column>
+			<p:column>
+				<f:facet name="header">
+					<h:outputText value="#{lbl['lbl.cm.price']}" />
+				</f:facet>
+
+			</p:column>
+			<p:column>
+				<f:facet name="header">
+					<h:outputText value="#{lbl['lbl.cm.state']}" />
+				</f:facet>
+
+			</p:column>
+			<p:column>
+				<f:facet name="header">
+					<h:outputText value="#{lbl['lbl.cm.district']}" />
+				</f:facet>
+
+			</p:column>
+			<p:column>
+				<f:facet name="header">
+					<h:outputText value="#{lbl['lbl.cm.catalogue.type']}" />
+				</f:facet>
+
+			</p:column>
+			<p:column>
+				<f:facet name="header">
+					<h:outputText value="#{lbl['lbl.cm.image']}" />
+				</f:facet>
+
+			</p:column>
+
+			<p:column>
+				<f:facet name="header">
+					<h:outputText value="#{lbl['lbl.cm.action']}" />
+				</f:facet>
+				<p:commandButton
+					action="#{catalogueBackingBean.navigateToCatalogDet()}"
+					value="Detail"></p:commandButton>
+
+			</p:column>
+
+
+		</p:dataTable>
+
+		<h:panelGrid columns="4">
+			<p:commandButton
+				value="#{lbl['lbl.cm.compare']} ( #{fn:length(catalogueBackingBean.managedBean.selectedSupplierItemList)} )" />
+			<p:commandButton value="Add To Cart (0)" />
+			<p:commandButton value="Wishlist"
+				action="#{catalogueBackingBean.addIntoWishList()}"
+				onclick="wishListPopUp.show()" process="@this supplierItemID"
+				update="selectWishList" />
+			<p:commandButton value="Favorite Supplier (0)" />
+
+		</h:panelGrid>
+
+	</h:panelGroup>
+
+	<p:dialog id="wishListDialog" widgetVar="wishListPopUp" width="500"
+		height="500">
+
+		<ui:include src="wishListPopUp.xhtml" />
+
+	</p:dialog>
+
+
+
+
+</ui:composition>

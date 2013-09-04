@@ -1,0 +1,115 @@
+<ui:composition
+	template="/WEB-INF/facelets/templates/basic_template.xhtml"
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:c="http://java.sun.com/jsp/jstl/core">
+
+	<ui:define name="contentSection">
+
+		<h:panelGrid columns="2" columnClasses="cmLeft,cmRight" width="100%">
+
+
+			<ui:include src="itemMenu.xhtml"></ui:include>
+
+
+			<h:panelGroup id="editExtensionID">
+				<h:outputLabel styleClass="titleFront"
+					value="#{lbl['lbl.cm.edit.extension.code']}"></h:outputLabel>
+
+
+				<table>
+					<tr>
+						<td><h:outputLabel value="#{lbl['lbl.cm.unspsc.code']}"></h:outputLabel></td>
+						<td><h:inputText /></td>
+					</tr>
+					<tr>
+						<td><h:outputLabel value="#{lbl['lbl.cm.unspsc.title']}"></h:outputLabel></td>
+						<td><h:inputText /></td>
+
+					</tr>
+					<tr>
+						<td><h:outputLabel value="#{lbl['lbl.cm.item.name']}"></h:outputLabel></td>
+						<td></td>
+					</tr>
+				</table>
+
+				<p:panelGrid>
+					<f:facet name="header">
+						<p:row>
+							<p:column>
+								<p:outputLabel value="#{lbl['lbl.cm.extension.type']}" />
+							</p:column>
+							<p:column>
+								<p:outputLabel value="#{lbl['lbl.cm.old.description']}" />
+							</p:column>
+							<p:column>
+								<p:outputLabel value="#{lbl['lbl.cm.new.description']}" />
+							</p:column>
+						</p:row>
+
+					</f:facet>
+
+					<p:row>
+						<p:column>
+							<p:outputLabel value="#{lbl['lbl.cm.type']}" />
+						</p:column>
+						<p:column>
+							<p:inputText></p:inputText>
+						</p:column>
+						<p:column>
+							<p:inputText></p:inputText>
+						</p:column>
+					</p:row>
+
+					<p:row>
+						<p:column>
+							<p:outputLabel value="#{lbl['lbl.cm.brand']}" />
+						</p:column>
+						<p:column>
+							<p:inputText></p:inputText>
+						</p:column>
+						<p:column>
+							<p:inputText></p:inputText>
+						</p:column>
+					</p:row>
+
+					<p:row>
+						<p:column>
+							<p:outputLabel value="#{lbl['lbl.cm.measurement']}" />
+						</p:column>
+						<p:column>
+							<p:inputText></p:inputText>
+						</p:column>
+						<p:column>
+							<p:inputText></p:inputText>
+						</p:column>
+					</p:row>
+
+
+					<p:row>
+						<p:column>
+							<p:outputLabel value="#{lbl['lbl.cm.color']}" />
+						</p:column>
+						<p:column>
+							<p:inputText></p:inputText>
+						</p:column>
+						<p:column>
+							<p:inputText></p:inputText>
+						</p:column>
+					</p:row>
+
+				</p:panelGrid>
+				
+				<p:commandButton value="cancel"></p:commandButton>
+				<p:commandButton value="save"></p:commandButton>
+
+
+
+			</h:panelGroup>
+		</h:panelGrid>
+
+	</ui:define>
+</ui:composition>

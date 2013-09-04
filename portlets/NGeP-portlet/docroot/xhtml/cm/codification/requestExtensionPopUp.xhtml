@@ -1,0 +1,70 @@
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns="http://www.w3.org/1999/xhtml">
+
+
+	<table>
+		<tr>
+			<td><h:outputLabel value="#{lbl['lbl.cm.unspsc.code']}" /></td>
+			<td colspan="3"><h:inputText></h:inputText></td>
+		</tr>
+		<tr>
+			<td><h:outputLabel value="#{lbl['lbl.cm.unspsc.title']}" /></td>
+			<td colspan="3"><h:inputText></h:inputText></td>
+		</tr>
+		<tr>
+			<td><h:outputLabel value="#{lbl['lbl.cm.item.name']}" /></td>
+			<td colspan="3"><h:inputText></h:inputText></td>
+		</tr>
+		<tr>
+			<td><h:outputLabel value="#{lbl['lbl.cm.item.description']}" /></td>
+			<td colspan="3"><h:inputText></h:inputText></td>
+		</tr>
+		<tr>
+			<td><p:outputLabel value="* #{lbl['lbl.cm.type']}" /></td>
+			<td><p:selectOneMenu><f:selectItem itemLabel="Type1" itemValue="Type"></f:selectItem> </p:selectOneMenu></td>
+			<td><p:selectBooleanCheckbox></p:selectBooleanCheckbox></td>
+			<td><p:outputLabel value="Request New"></p:outputLabel></td>
+			<td><p:inputText></p:inputText> </td>
+		</tr>
+		<tr>
+			<td><p:outputLabel value="* #{lbl['lbl.cm.brand']}" /></td>
+			<td><p:selectOneMenu><f:selectItem itemLabel="brand1"></f:selectItem> </p:selectOneMenu></td>
+			<td><p:selectBooleanCheckbox></p:selectBooleanCheckbox></td>
+			<td><p:outputLabel value="Request New"></p:outputLabel></td>
+			<td><p:inputText></p:inputText> </td>
+		</tr>
+		<tr>
+			<td><p:outputLabel value="* #{lbl['lbl.cm.measurement']}" /></td>
+			<td><p:selectOneMenu><f:selectItem itemLabel="measurement1"></f:selectItem> </p:selectOneMenu></td>
+			<td><p:selectBooleanCheckbox></p:selectBooleanCheckbox></td>
+			<td><p:outputLabel value="Request New"></p:outputLabel></td>
+			<td><p:inputText></p:inputText> </td>
+		</tr>
+		<tr>
+			<td><p:outputLabel value="* #{lbl['lbl.cm.color']}" /></td>
+			<td><p:selectOneMenu><f:selectItem itemLabel="color1"></f:selectItem> </p:selectOneMenu></td>
+			<td><p:selectBooleanCheckbox></p:selectBooleanCheckbox></td>
+			<td><p:outputLabel value="Request New"></p:outputLabel></td>
+			<td><p:inputText></p:inputText> </td>
+		</tr>
+
+	</table>
+
+
+
+
+	<p:commandButton value="#{lbl['lbl.cm.ok']}"
+		onclick="extensionPopUp.hide()"></p:commandButton>
+
+
+
+
+
+
+
+</ui:composition>
