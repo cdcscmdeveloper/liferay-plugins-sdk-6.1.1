@@ -1,10 +1,20 @@
 package my.ep.web.backingbean.ss.quatationtender;
 
+import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.RequestScoped;
 
+import org.primefaces.event.RowEditEvent;
+
 import my.ep.web.backingbean.BaseBackingBean;
+import my.ep.web.bean.ss.quatationtender.QtnTenderBean;
 import my.ep.web.managedbean.BaseManagedBean;
+import java.io.Serializable;  
+import java.util.ArrayList;  
+import java.util.List;  
+import java.util.UUID;  
+  
+import javax.faces.context.FacesContext; 
 import my.ep.web.managedbean.ss.quationtender.SearchQtnTenderManagedBean;
 
 @ManagedBean(name="searchQtnTenderBB")
@@ -28,5 +38,19 @@ public class SearchQtnTenderBackingBean extends BaseBackingBean<SearchQtnTenderM
 	}
 	
 	
-	}
+	 public void onEdit(RowEditEvent event) {  
+	        FacesMessage msg = new FacesMessage("Car Edited", ((QtnTenderBean) event.getObject()).getDeptCode());  
+	  
+	        FacesContext.getCurrentInstance().addMessage(null, msg);  
+	    }  
+	      
+	    public void onCancel(RowEditEvent event) {  
+	        FacesMessage msg = new FacesMessage("Car Cancelled", ((QtnTenderBean) event.getObject()).getDeptCode());  
+	  
+	        FacesContext.getCurrentInstance().addMessage(null, msg);  
+	    }  
+	}  
+	
+	
+	
 
