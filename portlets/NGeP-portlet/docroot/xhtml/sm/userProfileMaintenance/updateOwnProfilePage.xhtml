@@ -9,7 +9,6 @@
 
 	<ui:define name="resourceSection">
 	</ui:define>
-
 	<ui:define name="sideMenu">
 		<ui:include src="/xhtml/sm/shared/sidemenu/smMainPageSideMenu.xhtml" />
 	</ui:define>
@@ -20,79 +19,67 @@
 				<table style="width: 100%">
 					<tr>
 						<td><p:outputLabel value=" Name *" /></td>
+						<td><p:inputText readonly="true" disabled="true" value="sample name" /></td>
+						<td><p:outputLabel value="Company Branch Assicated To" /></td>
 						<td><p:inputText /></td>
-						<td><p:outputLabel value="Nationality *" /></td>
-						<td><p:selectOneMenu>
-								<f:selectItem itemLabel="-- Select One--" itemValue="1" />
-								<f:selectItem itemLabel="Malaysian" itemValue="1" />
-								<f:selectItem itemLabel="Chinese" itemValue="1" />
-								<f:selectItem itemLabel="Indian" itemValue="1" />
-							</p:selectOneMenu></td>
-						<td><p:outputLabel value="Race*" title="For Malaysian Only" /></td>
-						<td><p:selectOneMenu>
-								<f:selectItem itemLabel="-- Others--" itemValue="1" />
-								<f:selectItem itemLabel="Melayu" itemValue="1" />
-								<f:selectItem itemLabel="Chinese" itemValue="1" />
-								<f:selectItem itemLabel="Indian" itemValue="1" />
-							</p:selectOneMenu></td>
+						<td><h:form enctype="multipart/form-data">
+						    <p:fileUpload
+						        mode="advanced" fileUploadListener="#{uploaderBB.handleFileUpload}"
+						        allowTypes="/(\.|\/)(gif|jpg|jpeg|gif|png|PNG|GIF|JPG|JPEG)$/" 
+						        auto="true"/>
+						    </h:form>
+						    <p:outputLabel value="upload picture" style="text-decoration:underline; color:blue; font-size:12px;"></p:outputLabel>
+						</td>
+						
 					</tr>
 					<tr>
-						<td><p:outputLabel value=" New IC/Pspt No. *" /></td>
-						<td><p:inputText /></td>
-						<td><p:outputLabel value=" Old IC/Pspt No. *" /></td>
-						<td><p:inputText /></td>
-						<td><p:outputLabel value=" DOB *" /></td>
-						<td><p:calendar showOn="button" /></td>
+						<td><p:outputLabel value="Roles in company" /></td>
+						<td><p:inputText readonly="true" disabled="true" value="sample name" /></td>
+						<td><p:outputLabel value="eP Role" /></td>
+						<td><p:inputText readonly="true" disabled="true" value="sample name" /></td>
+						
 					</tr>
 
 					<tr>
-						<td><p:outputLabel value=" Bumi *" title="For Malaysian Only" /></td>
-						<td><p:selectOneRadio>
-								<f:selectItem itemLabel="Yes" itemValue="1" />
-								<f:selectItem itemLabel="No" itemValue="2" />
-							</p:selectOneRadio></td>
-						<td><p:outputLabel value=" Religion *"
-								title="For Malaysian Only" /></td>
-						<td><p:selectOneRadio>
-								<f:selectItem itemLabel="Islam" itemValue="1" />
-								<f:selectItem itemLabel="Non-Islam" itemValue="2" />
-							</p:selectOneRadio></td>
-						<td><p:outputLabel value=" EPF No." /></td>
-						<td><p:inputText title="For Malaysian Only" /></td>
+						<td><p:outputLabel value="Nationality *" /></td>
+						<td><p:inputText readonly="true" disabled="true" value="Malaysia" /></td>
+						<td><p:outputLabel value="Race *" /></td>
+						<td><p:inputText readonly="true" disabled="true" value="Malay" /></td>
+					</tr>
+					<tr> 
+						<td><p:outputLabel value="Old IC/Passport No. *" /></td>
+						<td><p:inputText readonly="true" disabled="true" value="G4109988" /></td>
+						<td><p:outputLabel value="New IC/Passport No. *" /></td>
+						<td><p:inputText readonly="true" disabled="true" value="G4109987" /></td>
 					</tr>
 					<tr>
-						<td><p:outputLabel value="Branch Associated *" /></td>
-						<td><p:selectOneMenu>
-								<f:selectItem itemLabel="-- Select One--" itemValue="1" />
-								<f:selectItem itemLabel="Branch1" itemValue="1" />
-								<f:selectItem itemLabel="Branch2" itemValue="1" />
-								<f:selectItem itemLabel="Branch3" itemValue="1" />
-							</p:selectOneMenu></td>
-						<td><p:outputLabel value=" Designation *" /></td>
-						<td><p:inputText /></td>
-						<td><p:outputLabel value=" Eperience" /></td>
-						<td><p:inputText /></td>
+						<td><p:outputLabel value=" Bumiputera *" /></td>
+						<td><p:inputText readonly="true" disabled="true" value="For Malaysian" /></td>
+						<td><p:outputLabel value=" Religion *" /></td>
+						<td><p:selectOneRadio id="options" value="#{formBean.number}">  
+				            <f:selectItem itemLabel="Islam" itemValue="1" />  
+				            <f:selectItem itemLabel="Non-Islam" itemValue="2" />  
+				        </p:selectOneRadio></td>
 					</tr>
-					<tr>
-						<td><p:outputLabel value="Roles In Company *" /></td>
-						<!-- <td><p:pickList  /></td> -->
-						<td><p:selectManyMenu>
-								<f:selectItem itemLabel="-- Select One--" itemValue="1" />
-								<f:selectItem itemLabel="Manager" itemValue="1" />
-								<f:selectItem itemLabel="Clerk" itemValue="1" />
-								<f:selectItem itemLabel="Director" itemValue="1" />
-							</p:selectManyMenu></td>
-						<td><p:outputLabel value=" Phn No. *" /></td>
-						<td><p:inputText /></td>
-						<td><p:outputLabel value=" Email " /></td>
-						<td><p:inputText /></td>
+					<tr> 
+						<td><p:outputLabel value="DOB *" /></td>
+						<td><p:inputText readonly="true" disabled="true" value="G4109988" /></td>
+						<td><p:outputLabel value="Designation *" /></td>
+						<td><p:inputText/></td>
 					</tr>
-					<tr>
-						<td align="right"><p:selectBooleanCheckbox /></td>
-						<td><p:outputLabel value="Authorized User" /></td>
-						<td align="right"><p:selectBooleanCheckbox /></td>
-						<td><p:outputLabel value="Issue Soft Cert" /></td>
+					<tr> 
+						<td><p:outputLabel value="Work Experience *" /></td>
+						<td><p:inputText/></td>
+						<td><p:outputLabel value="EPF No *" /></td>
+						<td><p:inputText value="For Malaysian only"/></td>
 					</tr>
+					<tr> 
+						<td><p:outputLabel value="Email*" /></td>
+						<td><p:inputText/></td>
+						<td><p:outputLabel value="Phone No *" /></td>
+						<td><p:inputText/></td>
+					</tr>
+					
 
 				</table>
 
@@ -102,8 +89,9 @@
 				toggleable="true">
 
 				<table style="width: 100%">
-					<tr>
-						<td><p:outputLabel value=" Institution *" /></td>
+				
+				   <tr>
+						<td><p:outputLabel value="Institution *" /></td>
 						<td><p:inputText /></td>
 						<td><p:outputLabel value="Year *" /></td>
 						<td><p:selectOneMenu>
@@ -111,27 +99,27 @@
 								<f:selectItem itemLabel="2013" itemValue="1" />
 								<f:selectItem itemLabel="2012" itemValue="1" />
 								<f:selectItem itemLabel="2011" itemValue="1" />
-							</p:selectOneMenu></td>
-						<td><p:outputLabel value="Qualification"
-								title="For Malaysian Only" /></td>
-						<td><p:selectOneMenu>
-								<f:selectItem itemLabel="-- Others--" itemValue="1" />
-								<f:selectItem itemLabel="Graduate" itemValue="1" />
-								<f:selectItem itemLabel="Post Graduate" itemValue="1" />
-							</p:selectOneMenu></td>
+							</p:selectOneMenu>
+						</td>
 					</tr>
+					
 					<tr>
-						<td><p:outputLabel value="Educational Field *" /></td>
+						<td><p:outputLabel value="Qualification Level *" /></td>
 						<td><p:selectOneMenu>
 								<f:selectItem itemLabel="-- Select One--" itemValue="1" />
-								<f:selectItem itemLabel="Computers" itemValue="1" />
-								<f:selectItem itemLabel="Mechanical" itemValue="1" />
-								<f:selectItem itemLabel="Civil" itemValue="1" />
-							</p:selectOneMenu></td>
+								<f:selectItem itemLabel="masters" itemValue="1" />
+								<f:selectItem itemLabel="PG" itemValue="1" />
+								<f:selectItem itemLabel="others" itemValue="1" />
+							</p:selectOneMenu>
+						</td>
+						<td><p:outputLabel value="Education Field *" /></td>
+						<td><p:selectOneMenu>
+								<f:selectItem itemLabel="-- Select One--" itemValue="1" />
+								<f:selectItem itemLabel="mechanical" itemValue="1" />
+								<f:selectItem itemLabel="Electrical" itemValue="1" />
+							</p:selectOneMenu>
+						</td>
 					</tr>
-
-
-
 				</table>
 
 			</p:panel>
@@ -143,22 +131,21 @@
 
 							<table style="width: 100%">
 								<tr>
-									<td><u><b> <p:outputLabel
-													value="Mailing Address : " /></b></u></td>
+									<td><p:outputLabel value="Permanent Address for Malaysians : " /></td>
 									<td></td>
 								</tr>
 								<tr>
 									<td><p:outputLabel value="Address" /></td>
-									<td><p:inputText /></td>
+									<td><p:inputText readonly="true" disabled="true" value="No.3/99" /></td>
 								</tr>
 
 								<tr>
 									<td></td>
-									<td><p:inputText /></td>
+									<td><p:inputText readonly="true" disabled="true" value="Sripetaling" /></td>
 								</tr>
 								<tr>
 									<td></td>
-									<td><p:inputText /></td>
+									<td><p:inputText readonly="true" disabled="true" value="KL" /></td>
 								</tr>
 								<tr>
 									<td><p:outputLabel value="Country *" /></td>
@@ -191,8 +178,7 @@
 
 							<table style="width: 100%">
 								<tr>
-									<td><u><b><p:outputLabel
-													value="Mailing Address : " /></b></u> <p:selectBooleanCheckbox />
+									<td><p:outputLabel value="Mailing Address : " /><p:selectBooleanCheckbox />
 										<p:outputLabel value=" Same as permenant: " /></td>
 									<td></td>
 								</tr>
@@ -240,7 +226,28 @@
 
 				</table>
 			</p:panel>
-
+			
+		<p:panel header="Address Info" toggleable="true">
+		
+		 <table style="width: 100%;">
+		 <tr>
+			<td><p:outputLabel value="Question *" /></td>
+			<td><p:selectOneMenu>
+				<f:selectItem itemLabel="-- Select One -- " itemValue="" />
+				<f:selectItem itemLabel="Question one" itemValue="1" />
+				<f:selectItem itemLabel="Question two" itemValue="1" />
+				<f:selectItem itemLabel="Question three" itemValue="1" />
+				</p:selectOneMenu>
+			</td>
+		</tr>
+		    <tr> 
+		      <td><p:outputLabel value="Answer" /></td>
+			  <td><p:inputText/></td>
+			</tr>
+		 </table>
+		
+		</p:panel>
+          
 		</p:panel>
 		<div align="center">
 			<p:commandButton value="Save" />
