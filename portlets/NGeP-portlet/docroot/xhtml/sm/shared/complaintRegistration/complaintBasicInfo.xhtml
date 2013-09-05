@@ -1,0 +1,32 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:c="http://java.sun.com/jsp/jstl/core">
+
+
+	<table style="width: 100%">
+		<tr>
+			<td><p:outputLabel value="Supplier Name" /></td>
+			<td><p:inputText readonly="true" disabled="true"
+					value="-- Read Only --" /></td>
+			<td><p:outputLabel value="Complaint Type" /></td>
+			<td><p:inputText readonly="true" disabled="true"
+					value="-- Read Only --" /></td>
+		</tr>
+		<tr>
+			<td><p:outputLabel value="Lodged On" /></td>
+			<td><p:inputText readonly="true" disabled="true"
+					value="-- Read Only --" /></td>
+			<td><p:outputLabel value="Complaint Stage /Status" /></td>
+			<td><p:inputText readonly="true" disabled="true"
+					value="-- Read Only --" /></td>
+		</tr>
+		<tr>
+			<td><p:outputLabel value="Complaint Details" /></td>
+			<td colspan="3"><p:inputTextarea readonly="true" cols="70"
+					disabled="true" value="-- Read Only --" /></td>
+		</tr>
+	</table>
+</ui:composition>

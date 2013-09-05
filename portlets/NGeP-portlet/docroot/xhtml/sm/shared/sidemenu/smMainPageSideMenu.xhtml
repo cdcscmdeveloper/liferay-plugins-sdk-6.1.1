@@ -25,13 +25,21 @@
 			<p:menuitem value="Change Password"
 				outcome="/xhtml/sm/userProfileMaintenance/changePassword.xhtml" />
 		</p:submenu>
-		<p:submenu label="Monitoring">
-			<p:menuitem value="Transaction Monitoring" />
-			<p:menuitem value="Supplier Performance" />
-		</p:submenu>
 		<p:submenu label="Disciplinary Action">
 			<p:menuitem value="Lodge Complaint"
 				outcome="/xhtml/sm/disciplinaryAction/lodgeComplaint.xhtml" />
+			<p:menuitem value="Send PTPK Review1"
+				outcome="/xhtml/sm/disciplinaryAction/step1UrusTo_PtpkFirstReview.xhtml" />
+			<p:menuitem value="Update PTPK Resposne1"
+				outcome="/xhtml/sm/disciplinaryAction/step2UrusUpdate_PtpkFirstResponse.xhtml" />
+			<p:menuitem value="Send PTPK Review2"
+				outcome="/xhtml/sm/disciplinaryAction/step3UrusTo_PtpkSecondReview.xhtml" />
+			<p:menuitem value="Update PTPK Resposne2"
+				outcome="/xhtml/sm/disciplinaryAction/step4UrusUpdate_PtpkSendResponse.xhtml" />
+			<p:menuitem value="Send JTKK-Final Review"
+				outcome="/xhtml/sm/disciplinaryAction/step5UrusTo_JkttFinalReview.xhtml" />
+			<p:menuitem value="Impose Final Decision"
+				outcome="/xhtml/sm/disciplinaryAction/step6UrusImpose_JkttFinalDecision.xhtml" />
 		</p:submenu>
 		<p:submenu label="Decision Pages">
 			<p:menuitem value="SDO Review"
@@ -42,6 +50,10 @@
 		<p:submenu label="General">
 			<p:menuitem value="Answer Questionnaire"
 				outcome="/xhtml/sm/questionnaire/answerQuestionnaire.xhtml" />
+		</p:submenu>
+		<p:submenu label="Monitoring">
+			<p:menuitem value="Transaction Monitoring" />
+			<p:menuitem value="Supplier Performance" />
 		</p:submenu>
 	</p:menu>
 </ui:composition>
