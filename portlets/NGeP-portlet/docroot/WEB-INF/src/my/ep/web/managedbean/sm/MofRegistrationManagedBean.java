@@ -9,6 +9,7 @@ import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
 
 import my.ep.web.bean.sm.MofRegistrationUtilBean;
+import my.ep.web.bean.sm.PersonnelBean;
 import my.ep.web.managedbean.BaseManagedBean;
 
 @ManagedBean
@@ -24,6 +25,15 @@ public class MofRegistrationManagedBean extends BaseManagedBean {
 	}
 
 	private List<MofRegistrationUtilBean> selectedUtilList;
+	private List<PersonnelBean> selectedPersonList;
+
+	public List<PersonnelBean> getSelectedPersonList() {
+		return selectedPersonList;
+	}
+
+	public void setSelectedPersonList(List<PersonnelBean> selectedPersonList) {
+		this.selectedPersonList = selectedPersonList;
+	}
 
 	public List<MofRegistrationUtilBean> getSelectedUtilList() {
 		return selectedUtilList;
