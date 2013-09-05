@@ -13,32 +13,33 @@
 			<p:selectBooleanCheckbox />
 		</div>
 		<br />
-		<p:dataTable>
-			<!-- <p:column selectionMode="multiple">
-			</p:column> -->
+		<p:dataTable var="utilBean"
+			value="#{mofRegistrationBackingBean.utilList}"
+			selection="#{mofRegistrationBackingBean.managedBean.selectedUtilList}"
+			rowKey="#{utilBean.seqNo}" rowIndexVar="index">
+
+			<p:column selectionMode="multiple" width="5%" />
 
 			<p:column headerText="NO.">
-				<h:outputText />
+				<p:outputLabel value="1" />
 			</p:column>
 
 			<p:column headerText="Type Of Product (s)">
-				<p:outputLabel />
+				<p:commandLink value="Tables,Chairs"
+					onclick="manufactorDialog.show();" />
 			</p:column>
 
 			<p:column headerText="Brand">
-				<p:outputLabel />
+				<p:outputLabel value="Stanley" />
 			</p:column>
 			<p:column headerText="Production Capability / Month">
-				<p:outputLabel />
+				<p:outputLabel value="100" />
 			</p:column>
 
 			<p:column headerText="Measurement Unit">
-				<p:outputLabel />
+				<p:outputLabel value="Unit" />
 			</p:column>
 
-			<p:column headerText="Action">
-				<p:outputLabel />
-			</p:column>
 		</p:dataTable>
 		<div align="right">
 			<p:commandButton value="Add Assembly Info"
@@ -61,16 +62,12 @@
 
 			<table style="width: 100%">
 				<tr>
-					<td><p:outputLabel value="Type Of Product(s)" /></td>
+					<td><p:outputLabel value="Type Of Product(s) *" /></td>
 					<td><p:inputText /></td>
 				</tr>
 
 				<tr>
 					<td><p:outputLabel value="Brand" /></td>
-					<td><p:inputText /></td>
-				</tr>
-				<tr>
-					<td><p:outputLabel value="Type Of Product(s) *" /></td>
 					<td><p:inputText /></td>
 				</tr>
 				<tr>

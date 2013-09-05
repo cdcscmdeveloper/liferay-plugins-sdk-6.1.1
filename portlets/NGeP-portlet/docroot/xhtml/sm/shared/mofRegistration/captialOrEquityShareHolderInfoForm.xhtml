@@ -13,28 +13,31 @@
 			<p:selectBooleanCheckbox />
 		</div>
 		<br />
-		<p:dataTable>
-			<!-- <p:column selectionMode="multiple">
-			</p:column> -->
+		<p:dataTable var="utilBean"
+			value="#{mofRegistrationBackingBean.utilList}"
+			selection="#{mofRegistrationBackingBean.managedBean.selectedUtilList}"
+			rowKey="#{utilBean.seqNo}" rowIndexVar="index">
+
+			<p:column selectionMode="multiple" width="5%" />
 
 			<p:column headerText="NO.">
-				<h:outputText />
+				<p:outputLabel value="1" />
 			</p:column>
 
 			<p:column headerText="Name">
-				<h:outputText />
+				<p:commandLink value="Venkat" onclick="shareHolderDialog.show();" />
 			</p:column>
 			<p:column headerText="IC/Passport Num">
-				<h:outputText />
+				<p:outputLabel value="F383864837" />
 			</p:column>
 			<p:column headerText="Share Holding(%)">
-				<h:outputText />
+				<p:outputLabel value="10" />
 			</p:column>
 			<p:column headerText="Value(MYR)">
-				<h:outputText />
+				<p:outputLabel value="1,000.00" />
 			</p:column>
 			<p:column headerText="Equity Owner?">
-				<h:outputText />
+				<p:outputLabel value="Yes" />
 			</p:column>
 
 		</p:dataTable>

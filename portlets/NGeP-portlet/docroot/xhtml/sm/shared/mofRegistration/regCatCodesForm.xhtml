@@ -12,7 +12,10 @@
 			<p:selectBooleanCheckbox />
 		</div>
 		<br />
-		<p:dataTable>
+		<p:dataTable var="utilBean"
+			value="#{mofRegistrationBackingBean.utilList}"
+			selection="#{mofRegistrationBackingBean.managedBean.selectedUtilList}"
+			rowKey="#{utilBean.seqNo}" rowIndexVar="index">
 			<p:columnGroup type="header">
 				<p:row>
 					<p:column rowspan="2" headerText="No." />
@@ -24,34 +27,37 @@
 				</p:row>
 
 				<p:row>
-					<p:column headerText="Parent Category" />
-					<p:column headerText="Child Category" />
-					<p:column headerText="Sub-Child Category" />
+					<p:column headerText="Parent" />
+					<p:column headerText="Child" />
+					<p:column headerText="Sub-Child" />
 				</p:row>
 			</p:columnGroup>
 			<p:column>
-				<p:outputLabel />
+				<p:outputLabel value="1" />
 			</p:column>
 			<p:column>
-				<p:outputLabel />
+				<p:outputLabel value="101099" />
 			</p:column>
 			<p:column>
-				<p:outputLabel />
+				<p:outputLabel value="10" />
 			</p:column>
 			<p:column>
-				<p:outputLabel />
+				<p:outputLabel value="10" />
 			</p:column>
 			<p:column>
-				<p:outputLabel />
+				<p:outputLabel value="99" />
 			</p:column>
 			<p:column>
-				<p:outputLabel />
+				<p:outputLabel value="Normal" />
 			</p:column>
 			<p:column>
-				<p:outputLabel />
+				<p:outputLabel value="Category Type" />
 			</p:column>
 			<p:column>
-				<p:outputLabel />
+				<p:selectOneRadio>
+					<f:selectItem itemLabel="Approve" itemValue="1" />
+					<f:selectItem itemLabel="Reject" itemValue="2" />
+				</p:selectOneRadio>
 			</p:column>
 		</p:dataTable>
 		<div align="right">

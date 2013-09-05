@@ -88,27 +88,36 @@
 			<p:selectBooleanCheckbox />
 		</div>
 		<br />
-		<p:dataTable>
-			<!-- <p:column selectionMode="multiple">
-			</p:column> -->
+		<p:dataTable var="person"
+			value="#{mofRegistrationBackingBean.personList}"
+			selection="#{mofRegistrationBackingBean.managedBean.selectedPersonList}"
+			rowKey="#{person.personelSeq}" rowIndexVar="index">
+
+			<p:column selectionMode="multiple" width="5%" />
 
 			<p:column headerText="NO.">
-				<h:outputText />
+				<p:outputLabel value="#{index+1}" />
 			</p:column>
 
 			<p:column headerText="Name">
-				<p:outputLabel />
+				<p:commandLink value="#{person.name}"
+					onclick="personnelDialog.show();" />
 			</p:column>
 
 			<p:column headerText="Roles In Company">
-				<p:outputLabel />
+				<p:outputLabel
+					value="Role#{person.personelSeq}, Role#{person.personelSeq} , Role#{person.personelSeq} " />
 			</p:column>
 
 			<p:column headerText="Is Authorized ?">
-				<p:outputLabel />
+				<p:outputLabel value="Yes" rendered="#{person.auth == true}" />
+				<p:outputLabel value="No" rendered="#{person.auth == false}" />
 			</p:column>
 			<p:column headerText="Soft Cert Issued?">
-				<p:selectBooleanCheckbox />
+				<p:outputLabel value="Yes"
+					rendered="#{person.softCertIssued == true}" />
+				<p:outputLabel value="No"
+					rendered="#{person.softCertIssued == false}" />
 			</p:column>
 
 		</p:dataTable>
@@ -118,20 +127,29 @@
 			<p:commandButton value="Delete Personnel(s)" />
 		</div>
 		<p:fieldset legend="List of Authorized Personnel">
-			<p:dataTable>
+			<p:dataTable var="auth"
+				value="#{mofRegistrationBackingBean.authList}"
+				selection="#{mofRegistrationBackingBean.managedBean.selectedPersonList}"
+				rowKey="#{auth.personelSeq}" rowIndexVar="index">
+
+				<p:column selectionMode="multiple" width="5%" />
 				<p:column headerText="No.">
-					<p:outputLabel />
+					<p:outputLabel value="#{index+1}" />
 				</p:column>
 
 				<p:column headerText="Name">
-					<p:outputLabel />
+					<p:outputLabel value="#{auth.name}" />
 				</p:column>
 
 				<p:column headerText="Roles In Company">
-					<p:outputLabel />
+					<p:outputLabel
+						value="Role#{auth.personelSeq}, Role#{auth.personelSeq} , Role#{auth.personelSeq} " />
 				</p:column>
 				<p:column headerText="Soft Cert Issued?">
-					<p:outputLabel value="N" />
+					<p:outputLabel value="Yes"
+						rendered="#{auth.softCertIssued == true}" />
+					<p:outputLabel value="No"
+						rendered="#{auth.softCertIssued == false}" />
 				</p:column>
 			</p:dataTable>
 		</p:fieldset>

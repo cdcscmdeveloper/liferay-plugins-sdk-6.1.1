@@ -16,24 +16,29 @@
 			<p:selectBooleanCheckbox />
 		</div>
 		<br />
-		<p:dataTable>
-			<p:column headerText="No.">
-				<h:outputText />
+		<p:dataTable var="utilBean"
+			value="#{mofRegistrationBackingBean.utilList}"
+			rowKey="#{utilBean.seqNo}" rowIndexVar="index">
+
+
+			<p:column headerText="NO.">
+				<p:outputLabel value="1" />
 			</p:column>
 
 			<p:column headerText="Company Name">
-				<h:outputText />
+				<p:outputLabel value="CDC Sdn Bhd" />
 			</p:column>
 
 			<p:column headerText="Address">
-				<h:outputText />
+				<p:outputLabel
+					value="Block Belatuk,Cyber View Garden,Cyber Jaya, Selangor,Malaysia" />
 			</p:column>
 
 			<p:column headerText="Value(MYR)">
-				<h:outputText />
+				<p:outputLabel value="1,000.00" />
 			</p:column>
 			<p:column headerText="Share holding(%)">
-				<h:outputText />
+				<p:outputLabel value="21" />
 			</p:column>
 		</p:dataTable>
 		<br />

@@ -12,36 +12,37 @@
 			<p:selectBooleanCheckbox />
 		</div>
 		<br />
-		<p:dataTable>
-			<!-- <p:column selectionMode="multiple">
-			</p:column> -->
+		<p:dataTable var="utilBean"
+			value="#{mofRegistrationBackingBean.utilList}"
+			selection="#{mofRegistrationBackingBean.managedBean.selectedUtilList}"
+			rowKey="#{utilBean.seqNo}" rowIndexVar="index">
+
+			<p:column selectionMode="multiple" width="5%" />
 
 			<p:column headerText="NO.">
-				<h:outputText />
+				<p:outputLabel value="1" />
 			</p:column>
 
 			<p:column headerText="Equipment Type">
-				<p:outputLabel />
+				<p:commandLink value="Screwdrivers"
+					onclick="equipmentDialog.show();" />
 			</p:column>
 
 			<p:column headerText="Brand">
-				<p:outputLabel />
+				<p:outputLabel value="Stanley's" />
 			</p:column>
 			<p:column headerText="Function">
-				<p:outputLabel />
+				<p:outputLabel value="Fixing" />
 			</p:column>
 
 			<p:column headerText="Quantity">
-				<p:outputLabel />
+				<p:outputLabel value="10" />
 			</p:column>
 
 			<p:column headerText="Value">
-				<p:outputLabel />
+				<p:outputLabel value="RM.150.00" />
 			</p:column>
 
-			<p:column headerText="Action">
-				<p:outputLabel />
-			</p:column>
 		</p:dataTable>
 		<div align="right">
 			<p:commandButton value="Add Machinery"
@@ -60,7 +61,7 @@
 	<p:dialog width="400px" header="Manufacturing / Assembly Page"
 		widgetVar="equipmentDialog" resizable="false" showEffect="fade"
 		hideEffect="fade" modal="true">
-		<p:panel header="Manufacturing / Assembly Information">
+		<p:panel header="Machinery / Equipment Information">
 
 			<table style="width: 100%">
 				<tr>
@@ -70,10 +71,6 @@
 
 				<tr>
 					<td><p:outputLabel value="Brand" /></td>
-					<td><p:inputText /></td>
-				</tr>
-				<tr>
-					<td><p:outputLabel value="Type Of Product(s) *" /></td>
 					<td><p:inputText /></td>
 				</tr>
 				<tr>

@@ -12,28 +12,32 @@
 			<p:selectBooleanCheckbox />
 		</div>
 		<br />
-		<p:dataTable>
-			<!-- <p:column selectionMode="multiple">
-			</p:column> -->
+		<p:dataTable var="utilBean"
+			value="#{mofRegistrationBackingBean.utilList}"
+			selection="#{mofRegistrationBackingBean.managedBean.selectedUtilList}"
+			rowKey="#{utilBean.seqNo}" rowIndexVar="index">
+
+			<p:column selectionMode="multiple" width="5%" />
 
 			<p:column headerText="NO.">
-				<h:outputText />
+				<p:outputLabel value="1" />
 			</p:column>
 
 			<p:column headerText="Cert Name">
-				<h:outputText />
+				<p:commandLink value="Registration Cert"
+					onclick="certDialog.show();" />
 			</p:column>
 
 			<p:column headerText="Cert Type">
-				<h:outputText />
+				<p:outputLabel value="Registration Description" />
 			</p:column>
 
 			<p:column headerText="Issue Date">
-				<h:outputText />
+				<p:outputLabel value="20-Aug-2010" />
 			</p:column>
 
 			<p:column headerText="Expiry Date">
-				<h:outputText />
+				<p:outputLabel value="20-Aug-2020" />
 			</p:column>
 
 		</p:dataTable>

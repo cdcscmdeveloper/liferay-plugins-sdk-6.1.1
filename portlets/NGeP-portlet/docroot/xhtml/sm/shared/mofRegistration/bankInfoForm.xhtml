@@ -12,53 +12,67 @@
 			<p:selectBooleanCheckbox />
 		</div>
 		<br />
-		<p:dataTable>
-		<!-- 	<p:column selectionMode="multiple">
-			</p:column> -->
+		<p:dataTable var="utilBean"
+			value="#{mofRegistrationBackingBean.utilList}"
+			selection="#{mofRegistrationBackingBean.managedBean.selectedUtilList}"
+			rowKey="#{utilBean.seqNo}" rowIndexVar="index">
+
+			<p:column selectionMode="multiple" width="5%" />
 
 			<p:column headerText="NO.">
-				<h:outputText />
+				<p:outputLabel value="1" />
 			</p:column>
 			<p:column headerText="Bank Name">
-				<p:outputLabel />
+				<p:outputLabel value="Maybank" />
 			</p:column>
 
 			<p:column headerText="Bank Branch">
-				<p:outputLabel />
+				<p:outputLabel value="Maybank - PJ Branch" />
 			</p:column>
 
 			<p:column headerText="Account No.">
-				<p:outputLabel />
+				<p:commandLink value="127637373938" onclick="bankDialog.show();" />
 			</p:column>
 
 			<p:column headerText="Designated Bank">
-				<p:outputLabel />
+				<p:outputLabel value="Yes" />
 			</p:column>
 			<p:column headerText="Action">
-				<p:outputLabel />
+				<p:commandLink value="View Signatories"
+					action="#{mofRegistrationBackingBean.getSignatoryList}"
+					update=":form:signatory" />
+				<!-- oncomplete="updateSignatory();" /> -->
 			</p:column>
 		</p:dataTable>
 		<div align="right">
 			<p:commandButton value="Add Account" onclick="bankDialog.show();" />
 			<p:commandButton value="Delete Account(s)" />
 		</div>
-		<p:fieldset
+		<p:fieldset id="sfieldset"
 			legend="Cheque Signatories Composition For Account No.  :  123456">
-			<p:dataTable>
+			<!-- <p:remoteCommand name="updateSignatory" update="signatory" /> -->
+			<p:dataTable id="signatory" var="auth"
+				value="#{mofRegistrationBackingBean.signList}"
+				rowKey="#{auth.personelSeq}" rowIndexVar="index"
+				styleClass="updateSignatory">
+				<p:column headerText="NO.">
+					<p:outputLabel value="#{index+1}" />
+				</p:column>
+
 				<p:column headerText="Name">
-					<p:outputLabel />
+					<p:outputLabel value="XXXX#{index+1}" />
 				</p:column>
 
 				<p:column headerText="IC/Passport No.">
-					<p:outputLabel />
+					<p:outputLabel value="F738382#{index+1}" />
 				</p:column>
 
 				<p:column headerText="Bumiputera?">
-					<p:outputLabel />
+					<p:outputLabel value="Y" />
 				</p:column>
 
 				<p:column headerText="Position">
-					<p:outputLabel />
+					<p:outputLabel value="Role#{index+1}" />
 				</p:column>
 			</p:dataTable>
 		</p:fieldset>

@@ -13,22 +13,29 @@
 			<p:selectBooleanCheckbox />
 		</div>
 		<br />
-		<p:dataTable>
-			<!-- <p:column selectionMode="multiple">
-			</p:column> -->
+		<p:dataTable var="utilBean"
+			value="#{mofRegistrationBackingBean.utilList}"
+			selection="#{mofRegistrationBackingBean.managedBean.selectedUtilList}"
+			rowKey="#{utilBean.seqNo}" rowIndexVar="index">
+
+			<p:column selectionMode="multiple" width="5%" />
 
 			<p:column headerText="NO.">
-				<h:outputText />
+				<p:outputLabel value="1" />
 			</p:column>
 
-			<p:column headerText="Factory / Workshop / Store / Dockyard Address">
-				<p:outputLabel />
+			<p:column headerText="Factory Name">
+				<p:commandLink value="FactoryName" onclick="factoryDialog.show();" />
+			</p:column>
+
+			<p:column headerText="Factory/ Workshop/Dockyard Address">
+				<p:outputLabel value="Jalan Jeti Jelutong 11600 Penang, Malaysia." />
 			</p:column>
 
 		</p:dataTable>
 		<div align="right">
 			<p:commandButton value="Add Workshop" onclick="factoryDialog.show();" />
-			<p:commandButton value="Delete Workshop(s)"/>
+			<p:commandButton value="Delete Workshop(s)" />
 		</div>
 		<table style="width: 100%">
 			<tr>
@@ -46,6 +53,10 @@
 		<p:panel header="Factory / Workshop / Store / Shipyard Details">
 
 			<table style="width: 100%">
+				<tr>
+					<td><p:outputLabel value="Name" /></td>
+					<td><p:inputText /></td>
+				</tr>
 				<tr>
 					<td><p:outputLabel value="Address" /></td>
 					<td><p:inputText /></td>

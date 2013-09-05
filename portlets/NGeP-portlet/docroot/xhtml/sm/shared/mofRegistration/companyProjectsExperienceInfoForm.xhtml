@@ -12,28 +12,31 @@
 			<p:selectBooleanCheckbox />
 		</div>
 		<br />
-		<p:dataTable>
-			<!-- <p:column selectionMode="multiple">
-			</p:column> -->
+		<p:dataTable var="utilBean"
+			value="#{mofRegistrationBackingBean.utilList}"
+			selection="#{mofRegistrationBackingBean.managedBean.selectedUtilList}"
+			rowKey="#{utilBean.seqNo}" rowIndexVar="index">
+
+			<p:column selectionMode="multiple" width="5%" />
 
 			<p:column headerText="NO.">
-				<h:outputText />
+				<p:outputLabel value="1" />
 			</p:column>
 
 			<p:column headerText="Project Title">
-				<h:outputText />
+				<p:commandLink value="Next-Gen eP" onclick="projDialog.show();" />
 			</p:column>
 
 			<p:column headerText="Project Value">
-				<h:outputText />
+				<p:outputLabel value="RM.1,000.00" />
 			</p:column>
 
 			<p:column headerText="Procurement Date">
-				<h:outputText />
+				<p:outputLabel value="15-Jan-2012" />
 			</p:column>
 
 			<p:column headerText="Result / Progress">
-				<h:outputText />
+				<p:outputLabel value="In Progress" />
 			</p:column>
 
 		</p:dataTable>
