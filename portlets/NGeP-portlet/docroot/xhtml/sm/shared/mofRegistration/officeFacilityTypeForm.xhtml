@@ -21,15 +21,23 @@
 
 			</tr>
 			<tr>
-				<td ><p:outputLabel value="Landlord's Name *" /></td>
+				<td><p:outputLabel value="Landlord's Name *" /></td>
 				<td><p:inputText /></td>
-				<td ><p:outputLabel value="Monthly Rental*" /></td>
-				<td><p:inputText /> <p:selectOneMenu >
-						<f:selectItem itemLabel="MYR" itemValue="1" />
-					</p:selectOneMenu></td>
+				<td><p:outputLabel value="Monthly Rental*" /></td>
+				<td><p:panelGrid columns="2"
+						styleClass="noBorders tr,noBorders td">
+						<p:column>
+							<p:inputText />
+						</p:column>
+						<p:column>
+							<p:selectOneMenu>
+								<f:selectItem itemLabel="MYR" itemValue="1" />
+							</p:selectOneMenu>
+						</p:column>
+					</p:panelGrid></td>
 			</tr>
 			<tr>
-				<td ><p:outputLabel value="Landlord's Address *" /></td>
+				<td><p:outputLabel value="Landlord's Address *" /></td>
 				<td><p:inputTextarea /></td>
 			</tr>
 			<tr>
@@ -39,16 +47,23 @@
 
 			</tr>
 			<tr>
-				<td ><p:outputLabel value="Owner Name *" /></td>
+				<td><p:outputLabel value="Owner Name *" /></td>
 				<td><p:inputText /></td>
-				<td ><p:outputLabel value="Purchase Price*" /></td>
-				<td><p:inputText />
-					<p:selectOneMenu >
-						<f:selectItem itemLabel="MYR" itemValue="1" />
-					</p:selectOneMenu></td>
+				<td><p:outputLabel value="Purchase Price*" /></td>
+				<td><p:panelGrid columns="2"
+						styleClass="noBorders tr,noBorders td">
+						<p:column>
+							<p:inputText />
+						</p:column>
+						<p:column>
+							<p:selectOneMenu>
+								<f:selectItem itemLabel="MYR" itemValue="1" />
+							</p:selectOneMenu>
+						</p:column>
+					</p:panelGrid></td>
 			</tr>
 			<tr>
-				<td ><p:outputLabel value="Purchase Date *" /></td>
+				<td><p:outputLabel value="Purchase Date *" /></td>
 				<td><p:calendar showOn="button" /></td>
 			</tr>
 			<tr>

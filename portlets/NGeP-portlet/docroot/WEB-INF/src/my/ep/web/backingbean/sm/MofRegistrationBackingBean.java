@@ -81,10 +81,9 @@ public class MofRegistrationBackingBean extends
 		dataList.add(new SupportingDocumentBean(1, "Document2",
 				"BORANG PENGISYTIHARAN KEMENTERIAN KEWANGAN YANG  ",
 				Boolean.FALSE, "Document1", "Document1", "Y", "d",
-				Boolean.FALSE, "w", 1104, "PERALATAN KOMUNIKASI",
-				"ALAT-ALAT KOMUNIKASI", "ALAT PERHUBUNGAN", "DISTRIBUTOR",
-				"Normal", Boolean.FALSE, "Normal", "New Case Received ",
-				"20 -02-2013"));
+				Boolean.FALSE, "w", 101099, "PERALATAN KOMUNIKASI",
+				"ALAT-ALAT", "ALAT", "DISTRIBUTOR", "Normal", Boolean.FALSE,
+				"Normal", "New Case Received ", "20 -02-2013"));
 		return dataList;
 
 	}

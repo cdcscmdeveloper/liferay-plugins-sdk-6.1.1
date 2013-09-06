@@ -77,10 +77,18 @@
 
 				<tr>
 					<td><p:outputLabel value="Measurement *" /></td>
-					<td><p:inputText /> <p:selectOneMenu>
-							<f:selectItem itemLabel="Unit " itemValue="" />
-							<f:selectItem itemLabel="Volume" itemValue="1" />
-						</p:selectOneMenu></td>
+					<td><p:panelGrid columns="2"
+							styleClass="noBorders tr,noBorders td">
+							<p:column>
+								<p:inputText />
+							</p:column>
+							<p:column>
+								<p:selectOneMenu>
+									<f:selectItem itemLabel="Unit " itemValue="" />
+									<f:selectItem itemLabel="Volume" itemValue="" />
+								</p:selectOneMenu>
+							</p:column>
+						</p:panelGrid></td>
 				</tr>
 
 			</table>

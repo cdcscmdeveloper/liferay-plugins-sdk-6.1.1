@@ -46,7 +46,7 @@
 			</tr>
 		</table>
 	</p:panel>
-	<p:dialog width="400px"
+	<p:dialog width="400px" height="500px"
 		header="Factory / Workshop / Store / Shipyard Page"
 		widgetVar="factoryDialog" resizable="false" showEffect="fade"
 		hideEffect="fade" modal="true">
@@ -111,9 +111,17 @@
 				</tr>
 				<tr>
 					<td><p:outputLabel value="Purchase Price/Rent *" /></td>
-					<td><p:inputText /> <p:selectOneMenu>
-							<f:selectItem itemLabel="MYR" itemValue="1" />
-						</p:selectOneMenu></td>
+					<td><p:panelGrid columns="2"
+							styleClass="noBorders tr,noBorders td">
+							<p:column>
+								<p:inputText />
+							</p:column>
+							<p:column>
+								<p:selectOneMenu>
+									<f:selectItem itemLabel="MYR" itemValue="1" />
+								</p:selectOneMenu>
+							</p:column>
+						</p:panelGrid></td>
 				</tr>
 				<tr>
 					<td><p:outputLabel value="Owner Name *" /></td>

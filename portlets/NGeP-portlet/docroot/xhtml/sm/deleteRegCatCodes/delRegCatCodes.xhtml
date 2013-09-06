@@ -12,38 +12,62 @@
 		<ui:include src="/xhtml/sm/shared/sidemenu/smMainPageSideMenu.xhtml" />
 	</ui:define>
 	<ui:define name="content">
-	<p:panel header="Cancel / Delete Registered Category Code(s)" toggleable="true">
+		<p:panel header="Cancel / Delete Registered Category Code(s)"
+			toggleable="true">
 			<p:dataTable var="table"
-				value="#{mofRegistrationBackingBean.dataList}">
-				<p:column headerText="No.">  
-                   #{table.no}  
-      		    </p:column>
-      		    <p:column headerText="Code">  
-                   #{table.code}  
-      		    </p:column>
-      		    <p:column headerText="Parent Category">  
-                   #{table.parentCategory}  
-      		    </p:column>
-      		    <p:column headerText="Child Category">  
-                   #{table.childCategory}    
-      		    </p:column>
-				<p:column headerText="Sub Child Category">  
-		            #{table.subChildCategory}  
-		        </p:column>
-				<p:column headerText="Business Nature">  
-		            #{table.businessNature} 
-		        </p:column>
-				<p:column headerText="Type">
-					#{table.type}
+				value="#{mofRegistrationBackingBean.dataList}"
+				selection="#{mofRegistrationBackingBean.managedBean.selecteDataList}"
+				rowKey="#{table.no}" rowIndexVar="index" style="width : 780px">
+				<p:columnGroup type="header">
+					<p:row>
+						<p:column selectionMode="multiple" rowspan="2" width="5%" />
+						<p:column rowspan="2" headerText="No." />
+						<p:column rowspan="2" headerText="Code" />
+						<p:column colspan="3" headerText="Category" />
+						<p:column rowspan="2" headerText="Business Type" />
+						<p:column rowspan="2" headerText="Category Type" />
+						<p:column rowspan="2" headerText="Remarks" />
+					</p:row>
+
+					<p:row>
+						<p:column headerText="Parent" />
+						<p:column headerText="Child" />
+						<p:column headerText="Sub-Child" />
+					</p:row>
+				</p:columnGroup>
+				<p:column selectionMode="multiple" rowspan="2" width="5%" />
+
+
+				<p:column>
+					<p:outputLabel value="#{table.no}" />
 				</p:column>
-				<p:column headerText="Action">
-					 <p:selectBooleanCheckbox value="#{table.action}" /> 
+				<p:column>
+					<p:outputLabel value="#{table.code}" />
 				</p:column>
-				<p:column headerText="Remarks">
+				<p:column>
+					<p:outputLabel value="#{table.parentCategory}" />
+				</p:column>
+				<p:column>
+					<p:outputLabel value="#{table.childCategory}" />
+				</p:column>
+				<p:column>
+					<p:outputLabel value="#{table.subChildCategory}" />
+				</p:column>
+				<p:column>
+					<p:outputLabel value="#{table.businessNature}" />
+				</p:column>
+				<p:column>
+					<p:outputLabel value="#{table.type}" />
+				</p:column>
+				<p:column>
 					<p:inputText readonly="true" disabled="true" value="" />
 				</p:column>
-					</p:dataTable>
-					<br />
-				</p:panel>
+			</p:dataTable>
+			<br />
+			<div align="center">
+				<p:commandButton value="Delete Code(s)" />
+				<p:commandButton value="Cancel" />
+			</div>
+		</p:panel>
 	</ui:define>
 </ui:composition>

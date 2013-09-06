@@ -86,9 +86,17 @@
 							</tr>
 							<tr>
 								<td><p:outputLabel value="Project Cost *" /></td>
-								<td><p:inputText /> <p:selectOneMenu>
-										<f:selectItem itemLabel="MYR" itemValue="1" />
-									</p:selectOneMenu></td>
+								<td><p:panelGrid columns="2"
+										styleClass="noBorders tr,noBorders td">
+										<p:column>
+											<p:inputText></p:inputText>
+										</p:column>
+										<p:column>
+											<p:selectOneMenu>
+												<f:selectItem itemLabel="MYR" itemValue="1"></f:selectItem>
+											</p:selectOneMenu>
+										</p:column>
+									</p:panelGrid></td>
 							</tr>
 							<tr>
 								<td><p:outputLabel value="Service Provided *" /></td>
@@ -105,9 +113,17 @@
 							</tr>
 							<tr>
 								<td><p:outputLabel value="Consultant Fee *" /></td>
-								<td><p:inputText /> <p:selectOneMenu>
-										<f:selectItem itemLabel="MYR" itemValue="1" />
-									</p:selectOneMenu></td>
+								<td><p:panelGrid columns="2"
+										styleClass="noBorders tr,noBorders td">
+										<p:column>
+											<p:inputText></p:inputText>
+										</p:column>
+										<p:column>
+											<p:selectOneMenu>
+												<f:selectItem itemLabel="MYR" itemValue="1"></f:selectItem>
+											</p:selectOneMenu>
+										</p:column>
+									</p:panelGrid></td>
 							</tr>
 						</table>
 
@@ -126,18 +142,35 @@
 							</tr>
 							<tr>
 								<td><p:outputLabel value="Contract Value *" /></td>
-								<td><p:inputText /> <p:selectOneMenu>
-										<f:selectItem itemLabel="MYR" itemValue="1" />
-									</p:selectOneMenu></td>
+
+								<td><p:panelGrid columns="2"
+										styleClass="noBorders tr,noBorders td">
+										<p:column>
+											<p:inputText></p:inputText>
+										</p:column>
+										<p:column>
+											<p:selectOneMenu>
+												<f:selectItem itemLabel="MYR" itemValue="1"></f:selectItem>
+											</p:selectOneMenu>
+										</p:column>
+									</p:panelGrid></td>
 							</tr>
 							<tr>
 								<td><p:outputLabel value="Procurement Mode *" /></td>
-								<td><p:inputText /> <p:selectOneMenu>
-										<f:selectItem itemLabel="-- Select One--" itemValue="1" />
-										<f:selectItem itemLabel="Tender" itemValue="1" />
-										<f:selectItem itemLabel="eBidding" itemValue="1" />
-										<f:selectItem itemLabel="SebutHarga" itemValue="1" />
-									</p:selectOneMenu></td>
+								<td><p:panelGrid columns="2"
+										styleClass="noBorders tr,noBorders td">
+										<p:column>
+											<p:inputText></p:inputText>
+										</p:column>
+										<p:column>
+											<p:selectOneMenu>
+												<f:selectItem itemLabel="-- Select One--" itemValue="1" />
+												<f:selectItem itemLabel="Tender" itemValue="1" />
+												<f:selectItem itemLabel="eBidding" itemValue="1" />
+												<f:selectItem itemLabel="SebutHarga" itemValue="1" />
+											</p:selectOneMenu>
+										</p:column>
+									</p:panelGrid></td>
 							</tr>
 							<tr>
 								<td><p:outputLabel value="Project Ref No. *" /></td>

@@ -84,9 +84,17 @@
 
 				<tr>
 					<td><p:outputLabel value="Value *" /></td>
-					<td><p:inputText /> <p:selectOneMenu>
-							<f:selectItem itemLabel="MYR" itemValue="1" />
-						</p:selectOneMenu></td>
+					<td><p:panelGrid columns="2"
+							styleClass="noBorders tr,noBorders td">
+							<p:column>
+								<p:inputText />
+							</p:column>
+							<p:column>
+								<p:selectOneMenu>
+									<f:selectItem itemLabel="MYR" itemValue="1" />
+								</p:selectOneMenu>
+							</p:column>
+						</p:panelGrid></td>
 				</tr>
 				<tr>
 					<td><p:outputLabel value="Purchase Method *" /></td>

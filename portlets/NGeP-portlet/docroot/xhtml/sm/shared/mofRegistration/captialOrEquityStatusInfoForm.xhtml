@@ -15,33 +15,63 @@
 		<table style="width: 100%">
 			<tr>
 				<td><p:outputLabel value="Authorized Capital *" /></td>
-				<td><p:inputText
-						title="This field is applicable for companies of type ROC Only" />
-					<p:selectOneMenu>
-						<f:selectItem itemLabel="MYR" itemValue="1" />
-					</p:selectOneMenu></td>
+				<td><p:panelGrid columns="2"
+						styleClass="noBorders tr,noBorders td">
+						<p:column>
+							<p:inputText
+								title="This field is applicable for companies of type ROC Only" />
+						</p:column>
+						<p:column>
+							<p:selectOneMenu>
+								<f:selectItem itemLabel="MYR" itemValue="1" />
+							</p:selectOneMenu>
+						</p:column>
+					</p:panelGrid></td>
 				<td><p:outputLabel value=" Paid-Up Capital *" /></td>
-				<td><p:inputText
-						title="This field is applicable for companies of type ROC Only" />
-					<p:selectOneMenu>
-						<f:selectItem itemLabel="MYR" itemValue="1" />
-					</p:selectOneMenu></td>
+				<td><p:panelGrid columns="2"
+						styleClass="noBorders tr,noBorders td">
+						<p:column>
+							<p:inputText
+								title="This field is applicable for companies of type ROC Only" />
+						</p:column>
+						<p:column>
+							<p:selectOneMenu>
+								<f:selectItem itemLabel="MYR" itemValue="1" />
+							</p:selectOneMenu>
+						</p:column>
+					</p:panelGrid></td>
 			</tr>
 			<tr>
 				<td><p:outputLabel value=" Accumulated Capital *" /></td>
-				<td><p:inputText readonly="true"
-						title=" This field is applicable and 
-						data is auto populated for companies other than ROC" />
-					<p:selectOneMenu>
-						<f:selectItem itemLabel="MYR" itemValue="1" />
-					</p:selectOneMenu></td>
+				<td><p:panelGrid columns="2"
+						styleClass="noBorders tr,noBorders td">
+						<p:column>
+							<p:inputText
+								title="This field is applicable and 
+						data is auto populated for companies other than ROC"
+								readonly="true" />
+						</p:column>
+						<p:column>
+							<p:selectOneMenu>
+								<f:selectItem itemLabel="MYR" itemValue="1" />
+							</p:selectOneMenu>
+						</p:column>
+					</p:panelGrid></td>
 				<td><p:outputLabel value=" /  Accumulated Share *" /></td>
-				<td><p:inputText readonly="true"
-						title=" This field is applicable and
-						data is auto populated for companies of type ROS" />
-					<p:selectOneMenu>
-						<f:selectItem itemLabel="MYR" itemValue="1" />
-					</p:selectOneMenu></td>
+				<td><p:panelGrid columns="2"
+						styleClass="noBorders tr,noBorders td">
+						<p:column>
+							<p:inputText
+								title=" This field is applicable and
+						data is auto populated for companies of type ROS"
+								readonly="true" />
+						</p:column>
+						<p:column>
+							<p:selectOneMenu>
+								<f:selectItem itemLabel="MYR" itemValue="1" />
+							</p:selectOneMenu>
+						</p:column>
+					</p:panelGrid></td>
 			</tr>
 			<tr>
 				<td colspan="4" align="center"><p:panelGrid>
@@ -164,7 +194,7 @@
 
 			</tr>
 			<tr>
-				<td><br/></td>
+				<td><br /></td>
 			</tr>
 			<tr>
 				<td><p:outputLabel value="PO Remarks" /></td>
