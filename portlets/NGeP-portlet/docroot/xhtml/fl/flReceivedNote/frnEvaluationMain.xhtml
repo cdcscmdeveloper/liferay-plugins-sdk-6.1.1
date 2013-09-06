@@ -1,0 +1,55 @@
+<ui:composition
+	template="/WEB-INF/facelets/templates/sidemenu_template.xhtml"
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:c="http://java.sun.com/jsp/jstl/core">
+
+	<ui:define name="resourceSection">
+	</ui:define>
+	<ui:define name="sideMenu">
+		<ui:include src="/xhtml/fl/shared/sidemenu/flFrnSideMenu.xhtml" />
+	</ui:define>
+	<ui:define name="content">
+		<table style="width: 800px;">
+			<tr>
+				<td colspan="4" align="right"><p:commandButton value="SAVE" />
+					<p:commandButton value="ACKNOWLEDGE" /> <p:commandButton
+						value="REJECT" /> <p:commandButton value="PRINT" /></td>
+			</tr>
+		</table>
+
+		<p:panel header="SUPPLIER EVALUATION" toggleable="false">
+			<br />
+			<h:outputText value="Supplier Evaluation: " />
+			<h:outputLink id="slide" value="#">
+				<h:outputText value="?" />
+			</h:outputLink>
+			<br/>
+			<br/>
+			<p:tooltip for="slide"
+				value="Rating Tips
+						1 - 2 Non Satisfactory
+						3 - 4 Satisfactory
+						5      Very Satisfactory"
+				showEffect="slide" hideEffect="slide" showEffectLength="1"
+				hideEffectLength="1" />
+			<table style="width: 400px;">
+				<tr>
+					<td colspan="2"><p:dataTable id="dataTable" var="sv" value=""
+							paginator="false">
+							<p:column style="width:200px" headerText="Criteria">
+								<h:outputText value="" />
+							</p:column>
+							<p:column style="width:150px" headerText="Score">
+								<h:outputText value="" />
+							</p:column>
+						</p:dataTable></td>
+				</tr>
+			</table>
+			
+		</p:panel>
+	</ui:define>
+</ui:composition>

@@ -1,0 +1,48 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:c="http://java.sun.com/jsp/jstl/core">
+
+	<p:panel header=" FULFILMENT DETAIL (TO)" toggleable="true">
+
+		<br />
+
+		<table>
+			<tr>
+				<td><p:outputLabel value="Ministry" /></td>
+				<td><p:inputText style="width: 260px;" value="KEMENTERIAN KEWANGAN" disabled="true"/></td>
+				<td><p:outputLabel value="Delivery (Start)" /></td>
+				<td><p:calendar mode="popup"  showOn="button"/></td>
+			</tr>
+			<tr>
+				<td><p:outputLabel value="Jabatan" /></td>
+				<td><p:inputText style="width: 260px;" value="JABATAN KASTAM DAN EKSAIS DIRAJA" disabled="true"/></td>
+				<td><p:outputLabel value="Delivery (End)" /></td>
+				<td><p:calendar mode="popup"  showOn="button"/></td>
+			</tr>
+			<tr>
+				<td><p:outputLabel value="Received PTJ" /></td>
+				<td><p:inputText style="width: 260px;" value="IBU PEJABAT KASTAM (RECEIVING PTJ) " disabled="true"/></td>
+				<td colspan="3"></td>
+				<td colspan="4"></td>
+			</tr>
+			<tr>
+				<td><p:outputLabel value="Delivery Address" /></td>
+				<td><p:inputText style="width: 260px; height:90px; "
+										value="PTJ Receiving Addres " disabled="true" /></td>
+				<td colspan="3"></td>
+				<td colspan="4"></td>
+			</tr>
+			<tr>
+				<td><p:outputLabel value="Charge Account" /></td>
+				<td><p:inputText style="width: 260px;" value="0001010" disabled="true"/></td>
+				<td colspan="3"></td>
+				<td colspan="4"></td>
+			</tr>
+		</table>
+
+
+	</p:panel>
+</ui:composition>

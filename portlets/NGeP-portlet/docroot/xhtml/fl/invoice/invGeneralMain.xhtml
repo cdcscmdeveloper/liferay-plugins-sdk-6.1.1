@@ -1,0 +1,219 @@
+<ui:composition
+	template="/WEB-INF/facelets/templates/sidemenu_template.xhtml"
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:c="http://java.sun.com/jsp/jstl/core">
+
+	<ui:define name="resourceSection">
+	</ui:define>
+	<ui:define name="sideMenu">
+		<ui:include src="/xhtml/fl/shared/sidemenu/flInvSideMenu.xhtml" />
+	</ui:define>
+	<ui:define name="content">
+		<table style="width: 800px;">
+			<tr>
+				<td colspan="4" align="right"><p:commandButton value="SAVE" />
+					<p:commandButton value="SUBMIT" /> <p:commandButton value="PRINT" /></td>
+			</tr>
+		</table>
+		<p:panel header="SUPPLIER DETAIL">
+			<table>
+				<tr>
+					<td>
+						<table>
+							<tr>
+								<td><p:outputLabel value="Supplier ID" /></td>
+								<td><p:inputText style="width: 120px;" value=""
+										disabled="true" /></td>
+							</tr>
+							<tr>
+								<td><p:outputLabel value="Supplier Name" /></td>
+								<td><p:inputText style="width: 260px;" value=""
+										disabled="true" /></td>
+							</tr>
+							<tr>
+								<td><p:outputLabel value="Address" /></td>
+								<td><p:inputText style="width: 260px; height:90px; "
+										value=" " disabled="true" /></td>
+							</tr>
+							<tr>
+								<td><p:outputLabel value="Email" /></td>
+								<td><p:inputText style="width: 260px;"
+										value="KBB.XY@gmail.com" disabled="true" /></td>
+							</tr>
+							<tr>
+								<td><p:outputLabel value="Telephone NO." /></td>
+								<td><p:inputText style="width: 120px;" value="02-7324800 "
+										disabled="true" /></td>
+							</tr>
+						</table>
+					</td>
+					<td>
+						<table>
+							<tr>
+								<td><p:outputLabel value="Invoice NO." /></td>
+								<td><p:inputText style="width: 260px;"
+										value="- SYSTEM GENERATED - " disabled="true" /></td>
+							</tr>
+							<tr>
+								<td><p:outputLabel value="Invoice Date" /></td>
+								<td><p:inputText style="width: 260px;"
+										value=" - SYSTEM DATE - " disabled="true" /></td>
+
+							</tr>
+							<tr>
+								<td><p:outputLabel value="Invoice Recv. Date" /></td>
+								<td><p:calendar mode="popup" showOn="button" /></td>
+
+							</tr>
+							<tr>
+								<td><p:outputLabel value="Supplier Inv. NO." /></td>
+								<td><p:inputText style="width: 260px;" value=" " /></td>
+							</tr>
+							<tr>
+								<td><p:outputLabel value="Ori. Invoice Amt." /></td>
+								<td><p:inputText style="width: 260px;" value="20,000.00"
+										disabled="true" />MYR</td>
+							</tr>
+							<tr>
+								<td><p:outputLabel value="New Invoice Amt." /></td>
+								<td><p:inputText style="width: 260px;" value="18,500.00"
+										disabled="true" />MYR</td>
+							</tr>
+							<tr>
+								<td><p:outputLabel value="Status" /></td>
+								<td><p:inputText style="width: 260px;" value=""
+										disabled="true" /></td>
+							</tr>
+
+						</table>
+					</td>
+				</tr>
+			</table>
+
+		</p:panel>
+		<p:panel header="FULFILMENT DETAIL">
+			<table>
+				<tr>
+					<td><p:outputLabel value="Ministry" /></td>
+					<td><p:inputText style="width: 260px;"
+							value="KEMENTERIAN KEWANGAN" disabled="true" /></td>
+					<td><p:outputLabel value="Contract NO." /></td>
+					<td><p:inputText style="width: 260px;" value=""
+							disabled="true" /></td>
+				</tr>
+				<tr>
+					<td><p:outputLabel value="Jabatan" /></td>
+					<td><p:inputText style="width: 260px;"
+							value="JABATAN KASTAM DAN EKSAIS DIRAJA" disabled="true" /></td>
+					<td><p:outputLabel value="Order NO." /></td>
+					<td><p:inputText style="width: 260px;" value=""
+							disabled="true" /></td>
+				</tr>
+				<tr>
+					<td><p:outputLabel value="Issued PTJ" /></td>
+					<td><p:inputText style="width: 260px;"
+							value="IBU PEJABAT KASTAM (CHARGE PTJ)" disabled="true" /></td>
+					<td><p:outputLabel value="Maksud Code" /></td>
+					<td><p:inputText style="width: 260px;" value=" "
+							disabled="true" /></td>
+				</tr>
+				<tr>
+					<td><p:outputLabel value="Received PTJ" /></td>
+					<td><p:inputText style="width: 260px;"
+							value="IBU PEJABAT KASTAM (RECEIVING PTJ)" disabled="true" /></td>
+					<td><p:outputLabel value="Charge Account" /></td>
+					<td><p:inputText style="width: 260px;" value="0001010"
+							disabled="true" /></td>
+				</tr>
+				<tr>
+					<td><p:outputLabel value="Title" /></td>
+					<td colspan="3"><p:inputText
+							style="width: 260px; height:90px; " value="Request Description"
+							disabled="true" /></td>
+				</tr>
+
+
+			</table>
+
+		</p:panel>
+
+		<p:panel header="PAYMENT INSTRUCTION">
+			<table>
+				<tr>
+					<td><p:separator id="customSeparator"
+							style="width:40px;height:0px" /></td>
+					<td>Supplier / Factoring Company</td>
+					<td><p:separator id="customSeparator"
+							style="width:500px;height:0px" /></td>
+				</tr>
+			</table>
+
+			<table>
+				<tr>
+					<td><p:outputLabel value="Factored?" /></td>
+					<td><p:selectBooleanCheckbox />
+						<p:inputText style="width: 260px;" value="" disabled="true" /></td>
+					<td><p:outputLabel value="Bank Address" /></td>
+					<td><p:inputText style="width: 260px; height:90px; "
+							value="Bank Address" disabled="true" /></td>
+				</tr>
+				<tr>
+					<td><p:outputLabel value="Bank Code" /></td>
+					<td><p:selectOneMenu value="" style="width: 260px;">
+							<f:selectItem itemLabel="Select One" itemValue="" />
+
+						</p:selectOneMenu></td>
+					<td></td>
+					<td></td>
+				</tr>
+				<tr>
+					<td><p:outputLabel value="Account NO" /></td>
+					<td><p:selectOneMenu value="" style="width: 260px;">
+							<f:selectItem itemLabel="Select One" itemValue="" />
+
+						</p:selectOneMenu></td>
+					<td></td>
+					<td></td>
+				</tr>
+				<tr>
+					<td><p:outputLabel value="Pay Amt (MYR)" /></td>
+					<td><p:inputText style="width: 260px;" value=""
+							disabled="true" /></td>
+					<td></td>
+					<td></td>
+				</tr>
+			</table>
+			<br />
+			<table>
+				<tr>
+					<td><p:separator id="customSeparator"
+							style="width:40px;height:0px" /></td>
+					<td> Commerce Dot Com </td>
+					<td><p:separator id="customSeparator"
+							style="width:500px;height:0px" /></td>
+				</tr>
+			</table>
+			<br />
+			<br />
+			<p:outputLabel value="Pay Amt (MYR)" />
+			<p:inputText style="width: 260px;" value="" disabled="true" />
+
+		</p:panel>
+
+
+		<p:panel header="REMARKS AND ATTACHMENT">
+			<table>
+				<tr>
+					<td><p:outputLabel value="* Remarks    " /></td>
+					<td><p:inputTextarea rows="7" style="width: 260px;" /></td>
+					<td><p:outputLabel value="Attachment" /></td>
+					<td><p:commandButton value="Attach Files" /></td>
+				</tr>
+			</table>
+		</p:panel>
+	</ui:define>
+</ui:composition>
