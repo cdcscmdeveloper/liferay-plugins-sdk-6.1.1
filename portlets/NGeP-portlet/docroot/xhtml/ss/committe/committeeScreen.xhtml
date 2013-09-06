@@ -7,43 +7,6 @@
 	xmlns:p="http://primefaces.org/ui"
 	xmlns:c="http://java.sun.com/jsp/jstl/core">
 
-	
-
-
-	
-	<div align="right">
-	    <p:commandButton actionListener="#{CommitteeCodeManagedBean.save}" value="Submit" style="margin-right:-1px;" /> 
-    </div>
-	<p:panel header="Header" toggleable="true">
-           	  	
-		<p:panelGrid columns="4" style="width:100%;" styleClass="noBorders tr,noBorders td">
-			
-			<h:outputLabel for="qtno" value="Qtn/Tender No:" />
-			<p:inputText id="qtno" value="#{CommitteeCodeManagedBean.qtno}"/>
-
-			<h:outputText value="Ministry Code/Name:" />  
-            <p:outputLabel value ="M98" id="minCode" />
-    
-            <h:outputText value="Status:" /> 
-            <p:outputLabel value ="Active" id="stat" />  
-  
-            <h:outputText value="Department Code/Name:" /> 
-            <p:outputLabel value="D12" id="deptCode" />  
- 
-            <h:outputText value="Created Date:" /> 
-            <p:outputLabel value="11/04/2013" id="CreatedDate" /> 
-    
-            <h:outputText value="PTJ Code/Name:" /> 
-            <p:outputLabel value="P001" id="PTFCode" />       
- 
- 
-  		</p:panelGrid>
-       <br/>
-       <br/>
-       <br/>  		
-	
-  </p:panel>
-	
   <p:panel header="TSC Selected List" toggleable="true">
   <h:panelGroup id="table-wrapper" style="width:100%;" >
     <p:dataTable value="#{committeeMB.committeelist}" var="committeeObj" resizableColumns="true">
@@ -94,7 +57,7 @@
 
   		<h:panelGrid columns="2" style="margin-bottom:10px" cellpadding="3"> 		
         <h:outputText style="bold" value="Procurement Mode:&#160; &#160; &#160; " />  
-        <p:selectOneMenu value="#{buttonBean.mode}" style="width: 120px;">  
+        <p:selectOneMenu value="#{searchQtnTenderBB.managedBean.qtno}" style="width: 120px;">  
             <f:selectItem itemLabel="Select Mode" itemValue="" />  
             <f:selectItem itemLabel="name 1" itemValue="1" />  
             <f:selectItem itemLabel="name 2" itemValue="2" />  
@@ -108,7 +71,7 @@
            <p:outputLabel value="10/8/13"></p:outputLabel>
            
         <h:outputText style="bold" value="Approver Action:&#160; &#160; &#160; " />  
-        <p:selectOneMenu value="#{buttonBean.mode}" style="width: 120px;">  
+        <p:selectOneMenu value="#{searchQtnTenderBB.managedBean.qtno}" style="width: 120px;">  
             <f:selectItem itemLabel="Select Mode" itemValue="" />  
             <f:selectItem itemLabel="approve" itemValue="1" />  
             <f:selectItem itemLabel="revise" itemValue="2" />   
@@ -122,36 +85,36 @@
         </h:panelGrid>          
   </p:panel>
 
-  <p:panel header="Approval Details" toggleable="true">
+  <p:panel header="QC/PB/FPB Secretary List" toggleable="true">
   
     <h:panelGroup id="table-wrapper" style="width:100%;" >
-    <p:dataTable value="#{CommitteeList.managedBean.SecList}" var="committeeObj" resizableColumns="true">
+    <p:dataTable value="#{committeeMB.committeelist}" var="committeeappObj" resizableColumns="true">
         
         <p:column headerText="No">  
-            <h:outputText value="#{committeeObj.secno}" />  
+           <h:outputText value="#{committeeappObj.appno}" />  
         </p:column>  
   
-        <p:column headerText="Group"> <p:commandLink  actionListener="#{pprBean.savePerson}" style="margin-right:20px;" ajax="false">  
-        <h:outputText value="Danny" />  
-         </p:commandLink>  
+        <p:column headerText="Group">
+          <h:outputText value="#{committeeappObj.appgroup}" />   
        </p:column>  
   
         <p:column headerText="Secretary Name" >  
-            <p:outputLabel value="#{committeeObj.ic}"></p:outputLabel>  
+            <p:outputLabel value="#{committeeappObj.secname}" />  
         </p:column> 
         
         <p:column headerText="Action" >  
-           <p:selectOneMenu value="#{buttonBean.mode}" style="width: 120px;">  
-                    <f:selectItem itemLabel="Select Mode" itemValue="" />  
-                    <f:selectItem itemLabel="approve" itemValue="1" />  
-                 <f:selectItem itemLabel="revise" itemValue="2" />   
-           </p:selectOneMenu> 
         </p:column>         
        
     </p:dataTable>
+   
   </h:panelGroup>
-  
   </p:panel>
+  
+  	<div align="right">
+	    <p:commandButton value="Add" ></p:commandButton>  
+	      
+    </div>
+   <br/>
    <br/>
    
   <p:panel header="QC/PBB/PBA/FPB Sabah/FPB Sarawak/MOF List" toggleable="true">
@@ -159,7 +122,7 @@
 
   		<h:panelGrid columns="2" style="margin-bottom:10px" cellpadding="3"> 		
         <h:outputText style="bold" value="Member Type:&#160; &#160; &#160; " />  
-        <p:selectOneMenu value="#{buttonBean.mode}" style="width: 120px;">  
+        <p:selectOneMenu value="#{searchQtnTenderBB.managedBean.qtno}" style="width: 120px;">  
             <f:selectItem itemLabel="Select Mode" itemValue="" />  
             <f:selectItem itemLabel="Others" itemValue="1" />  
             <f:selectItem itemLabel="JKR" itemValue="2" />  
