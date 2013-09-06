@@ -66,7 +66,7 @@
 	</portlet>
 	<portlet>
 		<portlet-name>so</portlet-name>
-		<display-name>SOURCING</display-name>
+		<display-name>QuatationTender</display-name>
 		<portlet-class>
 			org.portletfaces.bridge.GenericFacesPortlet
 		</portlet-class>
@@ -80,8 +80,41 @@
 			<portlet-mode>view</portlet-mode>
 		</supports>
 		<portlet-info>
-			<title>SOURCING</title>
-			<short-title>SOURCING</short-title>
+			<title>QuatationTender</title>
+			<short-title>QuatationTender</short-title>
+			<keywords></keywords>
+		</portlet-info>
+		<security-role-ref>
+			<role-name>administrator</role-name>
+		</security-role-ref>
+		<security-role-ref>
+			<role-name>guest</role-name>
+		</security-role-ref>
+		<security-role-ref>
+			<role-name>power-user</role-name>
+		</security-role-ref>
+		<security-role-ref>
+			<role-name>user</role-name>
+		</security-role-ref>
+	</portlet>
+	<portlet>
+		<portlet-name>ssCom</portlet-name>
+		<display-name>Committe</display-name>
+		<portlet-class>
+			org.portletfaces.bridge.GenericFacesPortlet
+		</portlet-class>
+		<init-param>
+			<name>javax.portlet.faces.defaultViewId.view</name>
+			<value>/xhtml/ss/committe/committemain.xhtml</value>
+		</init-param>
+		<expiration-cache>0</expiration-cache>
+		<supports>
+			<mime-type>text/html</mime-type>
+			<portlet-mode>view</portlet-mode>
+		</supports>
+		<portlet-info>
+			<title>Committe</title>
+			<short-title>Committe</short-title>
 			<keywords></keywords>
 		</portlet-info>
 		<security-role-ref>
