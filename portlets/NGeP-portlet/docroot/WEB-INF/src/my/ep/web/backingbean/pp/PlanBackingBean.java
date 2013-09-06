@@ -183,11 +183,11 @@ public class PlanBackingBean extends BaseBackingBean<PlanManagedBean>{
 	
 	public List<SelectItem> procurementModeOptions() {
 		List<SelectItem>procurementModeOptions = new ArrayList<SelectItem>();
-		procurementModeOptions.add(new SelectItem(ProcurementMode.QUOTATION.value(), "Quotation"));
-		procurementModeOptions.add(new SelectItem(ProcurementMode.SELECTIVETEMDER.value(), "Direct Negotiation"));
-		procurementModeOptions.add(new SelectItem(ProcurementMode.TENDER.value(), "Tender"));
-		procurementModeOptions.add(new SelectItem(ProcurementMode.EXISTINTCONTRACT.value(), "Existing Contract"));
-		procurementModeOptions.add(new SelectItem(ProcurementMode.DIRECTPURCHASE.value(), "Direct Purchase"));
+		procurementModeOptions.add(new SelectItem("QT", "Quotation"));
+		procurementModeOptions.add(new SelectItem("ST", "Direct Negotiation"));
+		procurementModeOptions.add(new SelectItem("TD", "Tender"));
+		procurementModeOptions.add(new SelectItem("EC", "Existing Contract"));
+		procurementModeOptions.add(new SelectItem("DP", "Direct Purchase"));
 		return procurementModeOptions;
 	}
 
