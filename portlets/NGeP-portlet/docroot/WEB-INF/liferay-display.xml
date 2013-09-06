@@ -8,4 +8,18 @@
 		<portlet id="codification"></portlet>
 		<portlet id="Catalogue"></portlet>
 	</category>
+<!-- Fulfilment Start Added by Giri -->		
+	<category name="FL_DIS">
+		<portlet id="fl" />
+		<portlet id="FLDeliveryOrder" />
+		<portlet id="FLContractRequestOrder" />
+		<portlet id="FLFulfilmentReceivedNote" />
+		<portlet id="FLCreatInvoice" />
+		<portlet id="FLPaymentMatch" />
+		<portlet id="FLStopInstruction" />
+		<portlet id="FLPurchaseOrder" />
+		<portlet id="FLPurchaseRequest" />
+		<portlet id="FLShippingInstruction" />
+	</category>
+<!-- Fulfilment End  Added by Giri -->		
 </display>

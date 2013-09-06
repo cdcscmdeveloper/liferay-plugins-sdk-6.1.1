@@ -40,6 +40,78 @@
 		</footer-portlet-javascript>
 		<css-class-wrapper>catalogue-portlet</css-class-wrapper>
 	</portlet>
+<!-- Fulfilment Start Added by Giri -->	
+	<portlet>
+		<portlet-name>fl</portlet-name>
+		<icon>/icon.png</icon>
+		<instanceable>false</instanceable>
+		<header-portlet-css>/css/main.css</header-portlet-css>
+		<css-class-wrapper>fl-portlet</css-class-wrapper>
+	</portlet>
+	<portlet>
+		<portlet-name>FLDeliveryOrder</portlet-name>
+		<icon>/icon.png</icon>
+		<instanceable>false</instanceable>
+		<header-portlet-css>/css/main.css</header-portlet-css>
+		<css-class-wrapper>fldo-portlet</css-class-wrapper>
+	</portlet>
+	<portlet>
+		<portlet-name>FLContractRequestOrder</portlet-name>
+		<icon>/icon.png</icon>
+		<instanceable>false</instanceable>
+		<header-portlet-css>/css/main.css</header-portlet-css>
+		<css-class-wrapper>flcr-portlet</css-class-wrapper>
+	</portlet>
+	<portlet>
+		<portlet-name>FLFulfilmentReceivedNote</portlet-name>
+		<icon>/icon.png</icon>
+		<instanceable>false</instanceable>
+		<header-portlet-css>/css/main.css</header-portlet-css>
+		<css-class-wrapper>flfrn-portlet</css-class-wrapper>
+	</portlet>
+	<portlet>
+		<portlet-name>FLCreatInvoice</portlet-name>
+		<icon>/icon.png</icon>
+		<instanceable>false</instanceable>
+		<header-portlet-css>/css/main.css</header-portlet-css>
+		<css-class-wrapper>flinv-portlet</css-class-wrapper>
+	</portlet>
+	<portlet>
+		<portlet-name>FLPaymentMatch</portlet-name>
+		<icon>/icon.png</icon>
+		<instanceable>false</instanceable>
+		<header-portlet-css>/css/main.css</header-portlet-css>
+		<css-class-wrapper>flpm-portlet</css-class-wrapper>
+	</portlet>
+	<portlet>
+		<portlet-name>FLStopInstruction</portlet-name>
+		<icon>/icon.png</icon>
+		<instanceable>false</instanceable>
+		<header-portlet-css>/css/main.css</header-portlet-css>
+		<css-class-wrapper>flsi-portlet</css-class-wrapper>
+	</portlet>
+	<portlet>
+		<portlet-name>FLPurchaseOrder</portlet-name>
+		<icon>/icon.png</icon>
+		<instanceable>false</instanceable>
+		<header-portlet-css>/css/main.css</header-portlet-css>
+		<css-class-wrapper>flpo-portlet</css-class-wrapper>
+	</portlet>
+	<portlet>
+		<portlet-name>FLPurchaseRequest</portlet-name>
+		<icon>/icon.png</icon>
+		<instanceable>false</instanceable>
+		<header-portlet-css>/css/main.css</header-portlet-css>
+		<css-class-wrapper>flpr-portlet</css-class-wrapper>
+	</portlet>
+	<portlet>
+		<portlet-name>FLShippingInstruction</portlet-name>
+		<icon>/icon.png</icon>
+		<instanceable>false</instanceable>
+		<header-portlet-css>/css/main.css</header-portlet-css>
+		<css-class-wrapper>flshippingInst-portlet</css-class-wrapper>
+	</portlet>
+<!-- Fulfilment End  Added by Giri -->	
 	<role-mapper>
 		<role-name>administrator</role-name>
 		<role-link>Administrator</role-link>
