@@ -1,0 +1,154 @@
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition
+xmlns="http://www.w3.org/1999/xhtml"
+xmlns:f="http://java.sun.com/jsf/core"
+xmlns:h="http://java.sun.com/jsf/html"
+xmlns:ui="http://java.sun.com/jsf/facelets"
+xmlns:p="http://primefaces.org/ui"
+xmlns:c="http://java.sun.com/jsp/jstl/core">
+
+	<p:outputPanel id="opEpExistingContract">
+		  
+			<!-- Top Button -->
+			<div class="ppRightBtn">
+				<p:commandButton id="cbConfirm" value="#{lbl['lbl.pp.confirm']}" action="#{planBackingBean.redirectToViewPlan}"   />&nbsp; 
+				<p:commandButton id="cbCancel" value="#{lbl['lbl.pp.cancel']}" onclick="dlItemDetailsModal.hide();"   />&nbsp;
+				
+			</div>
+			<!-- Sub Header -->
+			<p:panel id="pSubDetailsContract" header="#{lbl['lbl.pp.sub.header']}" toggleable="true">
+				<table width="70%" class="ppTwoPartsTable">
+					<tr>
+						<th>#{lbl['lbl.pp.contract.class']}</th>
+						<td class="ppSmallTd">:</td>
+						<td>
+							<p:outputPanel rendered="#{planBackingBean.managedBean.periodicType=='AW'}">
+								<p:selectOneMenu id="somContractClass1" value="#{planBackingBean.managedBean.documentType}" >
+									<f:selectItem itemLabel="- Select -" itemValue="XX" />
+									<f:selectItem itemLabel="#{lbl['lbl.pp.contract.class.pkp']}" itemValue="P" />
+									<f:selectItem itemLabel="#{lbl['lbl.pp.contract.class.sst']}" itemValue="S" />
+									<f:selectItem itemLabel="#{lbl['lbl.pp.contract.class.contract']}" itemValue="C" />
+									<p:ajax event="change" update="pSubDetailsContract somContractType" />
+								</p:selectOneMenu>
+							</p:outputPanel>
+							<p:outputPanel rendered="#{planBackingBean.managedBean.periodicType!='AW'}">
+								<p:selectOneMenu id="somContractClass2" value="#{planBackingBean.managedBean.documentType}" >
+									<f:selectItem itemLabel="#{lbl['lbl.select']}" />
+									<f:selectItem itemLabel="#{lbl['lbl.pp.contract.class.sst']}" itemValue="S" />
+									<f:selectItem itemLabel="#{lbl['lbl.pp.contract.class.contract']}" itemValue="C" />
+									<p:ajax event="change" update="pSubDetailsContract somContractType" />
+								</p:selectOneMenu>
+							</p:outputPanel>
+						</td>
+					</tr>
+					<tr>
+						<th>#{lbl['lbl.pp.contract.type']}</th>
+						<td class="ppSmallTd">:</td>
+						<td>
+							<p:selectOneMenu id="somContractType" value="#{planBackingBean.managedBean.contractType}" disabled="#{planBackingBean.managedBean.documentType!='C'}">
+								<f:selectItem itemLabel="#{lbl['lbl.select']}" />
+								<f:selectItem itemLabel="Central Contract" itemValue="C" />
+								<f:selectItem itemLabel="Ministry Contract" itemValue="M" />
+							</p:selectOneMenu>
+						</td>
+					</tr>
+					<tr>
+						<th>#{lbl['lbl.pp.pkp.number']}</th>
+						<td class="ppSmallTd">:</td>
+						<td>
+							<p:inputText disabled="#{planBackingBean.managedBean.documentType !='P'}"  value="xxx" />
+						</td>
+					</tr>
+					<tr>
+						<th>#{lbl['lbl.pp.contract.number']}</th>
+						<td class="ppSmallTd">:</td>
+						<td>
+							<p:inputText disabled="#{planBackingBean.managedBean.documentType =='S'}" value="xxx" />
+						</td>
+					</tr>
+					<tr>
+						<th>#{lbl['lbl.pp.sst.number']}</th>
+						<td class="ppSmallTd">:</td>
+						<td>
+							<p:inputText disabled="#{planBackingBean.managedBean.documentType !='S'}" value="xxx" />
+						</td>
+					</tr>
+					<tr>
+						<th>#{lbl['lbl.pp.duration']}</th>
+						<td class="ppSmallTd">:</td>
+						<td>
+							<p:inputText disabled="true" value="xxx" />
+						</td>
+					</tr>
+					<p:outputPanel rendered="#{planBackingBean.managedBean.periodicType =='SF'}">
+						<tr>
+							<th>#{lbl['lbl.pp.planned.activities.startdate']}</th>
+							<td class="ppSmallTd">:</td>
+							<td>
+								<p:inputText value="xxx" />
+							</td>
+						</tr>
+						<tr>
+							<th>#{lbl['lbl.pp.planned.activities.enddate']}</th>
+							<td class="ppSmallTd">:</td>
+							<td>
+								<p:inputText value="xxx" />
+							</td>
+						</tr>
+					</p:outputPanel>
+					<p:outputPanel rendered="#{planBackingBean.managedBean.periodicType !='SF'}">
+						<tr>
+							<th>#{lbl['lbl.pp.planned.activities.startmonth']}</th>
+							<td class="ppSmallTd">:</td>
+							<td>
+								<p:calendar showOn="button" /> 
+							</td>
+						</tr>
+						<tr>
+							<th>#{lbl['lbl.pp.planned.activities.endmonth']}</th>
+							<td class="ppSmallTd">:</td>
+							<td>
+								<p:calendar showOn="button" /> 
+							</td>
+						</tr>
+					</p:outputPanel>
+					<tr>
+						<th>#{lbl['lbl.pp.supplier.id']}</th>
+						<td class="ppSmallTd">:</td>
+						<td>
+							<p:inputText disabled="true" value="xxx" />
+						</td>
+					</tr>
+					<tr>
+						<th>#{lbl['lbl.pp.supplier.name']}</th>
+						<td class="ppSmallTd">:</td>
+						<td>
+							<p:inputText disabled="true" value="xxx" />
+						</td>
+					</tr>
+					<tr>
+						<th>#{lbl['lbl.pp.item.remarks']}</th>
+						<td class="ppSmallTd">:</td>
+						<td>
+							<p:inputTextarea cols="20" rows="3" value="xxx" />
+						</td>
+					</tr>
+				</table>
+			</p:panel>
+			<!-- Details -->
+			<p:panel id="pItemDetailsContract" header="#{lbl['lbl.pp.details']}" toggleable="true">
+				<!-- Item List -->
+				<p:outputPanel>
+					<ui:include src="itemList.xhtml"/>
+				</p:outputPanel>
+		    	<br/>
+		    	<br/>
+				<!-- Item Details -->
+				<p:outputPanel>
+					<ui:include src="itemDetails.xhtml"/>
+				</p:outputPanel>
+			</p:panel>	
+	</p:outputPanel>
+
+</ui:composition>

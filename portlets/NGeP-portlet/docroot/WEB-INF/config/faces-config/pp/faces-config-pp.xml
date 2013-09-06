@@ -1,0 +1,68 @@
+<?xml version="1.0"?>
+
+<faces-config
+    version="2.0"
+    xmlns="http://java.sun.com/xml/ns/javaee"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-facesconfig_2_0.xsd"
+>
+	<navigation-rule>
+		<from-view-id>*</from-view-id>
+       
+        <navigation-case>
+            <from-outcome>main</from-outcome>
+            <to-view-id>/xhtml/pp/portletViewMode.xhtml</to-view-id>
+            
+        </navigation-case>
+        <navigation-case>
+            <from-outcome>listBudgetAllocation</from-outcome>
+            <to-view-id>/xhtml/pp/budget/listBudget.xhtml</to-view-id>
+            
+        </navigation-case>
+         <navigation-case>
+            <from-outcome>createBudgetAllocation</from-outcome>
+            <to-view-id>/xhtml/pp/budget/createBudgetAllocation.xhtml</to-view-id>
+            
+        </navigation-case>
+        <navigation-case>
+            <from-outcome>viewBudgetAllocation</from-outcome>
+            <to-view-id>/xhtml/pp/budget/viewBudgetAllocation.xhtml</to-view-id>
+            
+        </navigation-case>
+        <navigation-case>
+            <from-outcome>reviewBudgetAllocation</from-outcome>
+            <to-view-id>/xhtml/pp/budget/reviewBudgetAllocation.xhtml</to-view-id>
+            
+        </navigation-case>
+        <navigation-case>
+            <from-outcome>listPlan</from-outcome>
+            <to-view-id>/xhtml/pp/plan/listPlan.xhtml</to-view-id>
+            
+        </navigation-case>
+        <navigation-case>
+            <from-outcome>reviewPlan</from-outcome>
+            <to-view-id>/xhtml/pp/plan/reviewPlan.xhtml</to-view-id>
+            
+        </navigation-case>
+        <navigation-case>
+            <from-outcome>verifyPlan</from-outcome>
+            <to-view-id>/xhtml/pp/plan/verifyPlan.xhtml</to-view-id>
+            
+        </navigation-case>
+        <navigation-case>
+            <from-outcome>viewPlan</from-outcome>
+            <to-view-id>/xhtml/pp/plan/viewPlan.xhtml</to-view-id>
+            
+        </navigation-case>
+        <navigation-case>
+            <from-outcome>createPlan</from-outcome>
+            <to-view-id>/xhtml/pp/plan/createPlan.xhtml</to-view-id>
+            
+        </navigation-case>
+        <navigation-case>
+            <from-outcome>revisePlan</from-outcome>
+            <to-view-id>/xhtml/pp/plan/revisePlan.xhtml</to-view-id>
+            
+        </navigation-case>
+	</navigation-rule>
+</faces-config>

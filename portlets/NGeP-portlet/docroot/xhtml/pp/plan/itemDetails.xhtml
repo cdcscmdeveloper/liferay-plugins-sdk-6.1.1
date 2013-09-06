@@ -1,0 +1,197 @@
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition
+xmlns="http://www.w3.org/1999/xhtml"
+xmlns:f="http://java.sun.com/jsf/core"
+xmlns:h="http://java.sun.com/jsf/html"
+xmlns:ui="http://java.sun.com/jsf/facelets"
+xmlns:p="http://primefaces.org/ui"
+xmlns:c="http://java.sun.com/jsp/jstl/core">
+	<p:panel id="pItemDetails" header="#{lbl['lbl.pp.item.details.form']}">
+		<table class="ppTwoPartsTable">
+			<tr>
+				<th>* #{lbl['lbl.pp.gosodo.code']}</th>
+				<td class="ppSmallTd">:</td>
+				<td>
+					<p:outputPanel>
+						<p:selectOneMenu disabled="#{!planBackingBean.managedBean.brandNew}">
+							<f:selectItem itemLabel="- Select -" itemValue="XX" />
+						</p:selectOneMenu>
+						<p:selectOneMenu disabled="#{!planBackingBean.managedBean.brandNew}">>
+							<f:selectItem itemLabel="- Select -" itemValue="XX" />
+						</p:selectOneMenu>
+						<p:selectOneMenu disabled="#{!planBackingBean.managedBean.brandNew}">>
+							<f:selectItem itemLabel="- Select -" itemValue="XX" />
+						</p:selectOneMenu>
+					</p:outputPanel>
+				</td>
+			</tr>
+			<tr>
+				<th>#{lbl['lbl.pp.activity.description']}</th>
+				<td class="ppSmallTd">:</td>
+				<td>
+					 <p:outputLabel value="" />  
+				</td>
+			</tr>
+			<!-- 
+			<tr>
+				<th>* #{lbl['lbl.pp.abm.type']}</th>
+				<td class="ppSmallTd">:</td>
+				<td>
+					<p:outputPanel>
+						<p:selectOneMenu disabled="#{!planBackingBean.managedBean.brandNew}">>
+							<f:selectItem itemLabel="- Select -" itemValue="XX" />
+						</p:selectOneMenu>
+					</p:outputPanel>
+				</td>
+			</tr>
+			 -->
+			<tr>
+				<th>* #{lbl['lbl.pp.financial.year']}</th>
+				<td class="ppSmallTd">:</td>
+				<td>
+					<p:outputPanel>
+						<p:selectOneMenu disabled="#{!planBackingBean.managedBean.brandNew}">>
+							<f:selectItem itemLabel="- Select -" itemValue="XX" />
+						</p:selectOneMenu>
+					</p:outputPanel>
+				</td>
+			</tr>
+			<tr>
+				<th>#{lbl['lbl.pp.available.budgeted.amount']}</th>
+				<td class="ppSmallTd">:</td>
+				<td>
+					 <p:inputText disabled="true" value="xx" />  
+				</td>
+			</tr>
+			<tr>
+				<th>* #{lbl['lbl.pp.estimated.amount']}</th>
+				<td class="ppSmallTd">:</td>
+				<td>
+					 <p:inputText value="xx" readonly="#{!planBackingBean.managedBean.brandNew}" />  
+				</td>
+			</tr>
+			<tr>
+				<th>* #{lbl['lbl.pp.product.code']}</th>
+				<td class="ppSmallTd">:</td>
+				<td>
+					<p:outputPanel>
+						<p:selectOneMenu disabled="#{!planBackingBean.managedBean.brandNew}">
+							<f:selectItem itemLabel="- Select -" itemValue="XX" />
+						</p:selectOneMenu>
+					</p:outputPanel>
+				</td>
+			</tr>
+			<c:if id="opFavItem" test="#{planBackingBean.managedBean.procurementMode=='EC'}">
+				<tr>
+					<th>#{lbl['lbl.pp.supplier.id']}</th>
+					<td class="ppSmallTd">:</td>
+					<td>
+						<p:inputText value="xx" disabled="true"/>  
+					</td>
+				</tr>
+				<tr>
+					<th>#{lbl['lbl.pp.supplier.name']}</th>
+					<td class="ppSmallTd">:</td>
+					<td>
+						<p:inputText value="xx" disabled="true"/>  
+					</td>
+				</tr>
+			</c:if>
+			<tr>
+				<th>#{lbl['lbl.pp.program.activiti.code']}</th>
+				<td class="ppSmallTd">:</td>
+				<td>
+					<p:outputPanel>
+						<p:selectOneMenu id="somProgAct" disabled="#{planBackingBean.managedBean.maksudCode==null || !planBackingBean.managedBean.brandNew}">
+							<f:selectItem itemLabel="- Select -" itemValue="XX" />
+						</p:selectOneMenu>
+					</p:outputPanel>
+					<p:tooltip for="somProgAct" value="Fade effect is used by default" showEffect="fade" hideEffect="fade" />
+				</td>
+			</tr>
+			<tr>
+				<th>#{lbl['lbl.pp.projek.setia.code']}</th>
+				<td class="ppSmallTd">:</td>
+				<td>
+					<p:outputPanel>
+						<p:selectOneMenu id="somProjSetia" disabled="#{planBackingBean.managedBean.maksudCode==null || !planBackingBean.managedBean.brandNew}">
+							<f:selectItem itemLabel="- Select -" itemValue="XX" />
+						</p:selectOneMenu>
+					</p:outputPanel>
+					<p:tooltip for="somProjSetia" value="Fade effect is used by default" showEffect="fade" hideEffect="fade" />
+				</td>
+			</tr>
+			<tr>
+				<th>#{lbl['lbl.pp.amanah.code']}</th>
+				<td class="ppSmallTd">:</td>
+				<td>
+					<p:outputPanel>
+						<p:selectOneMenu disabled="#{!planBackingBean.managedBean.brandNew}">
+							<f:selectItem itemLabel="- Select -" itemValue="XX" />
+						</p:selectOneMenu>
+					</p:outputPanel>
+				</td>
+			</tr>
+			<c:if id="opFavItem" test="#{planBackingBean.managedBean.favouriteOption=='I'}">
+				<tr><td colspan="3">&nbsp;</td></tr>
+				<tr>
+					<th colspan="2">#{lbl['lbl.pp.favourite.item']}</th>
+					<td>&nbsp;</td>
+				</tr>
+				<tr><td colspan="3">&nbsp;</td></tr>
+				<tr>
+					<th>* #{lbl['lbl.pp.plan.name']}</th>
+					<td class="ppSmallTd">:</td>
+					<td>
+						<p:inputText value="xxx" readonly="#{!planBackingBean.managedBean.brandNew}"/>
+					</td>
+				</tr>
+				<tr>
+					<th>* #{lbl['lbl.pp.recurring.frequency']}</th>
+					<td class="ppSmallTd">:</td>
+					<td>
+						<p:inputText value="#{planBackingBean.managedBean.recurringFreq}" readonly="#{!planBackingBean.managedBean.brandNew}">
+						    <p:ajax event="change" update="pItemDetails" />
+						</p:inputText>
+					</td>
+				</tr>
+				<c:if id="recurFreq" test="#{planBackingBean.managedBean.recurringFreq &gt; 1}">
+					<!-- Repeat this based on recurring frequency -->
+					<c:forEach begin="0" end="#{planBackingBean.managedBean.recurringFreq-1}" varStatus="loop">
+						<tr>
+							<th>* #{lbl['lbl.pp.planned.activities.start.end.month']} ${loop.index+1}</th>
+							<td class="ppSmallTd">:</td>
+							<td>
+								<p:calendar showOn="button" readonly="#{!planBackingBean.managedBean.brandNew}" />  <p:calendar readonly="#{!planBackingBean.managedBean.brandNew}" showOn="button" />  
+							</td>
+						</tr>
+					</c:forEach>
+				</c:if>
+				<c:if id="recurFreq" test="#{planBackingBean.managedBean.recurringFreq &lt; 1}">
+					<tr>
+						<th>* #{lbl['lbl.pp.planned.activities.start.end.month']}</th>
+						<td class="ppSmallTd">:</td>
+						<td>
+							 <p:calendar showOn="button" readonly="#{!planBackingBean.managedBean.brandNew}" />  <p:calendar showOn="button" readonly="#{!planBackingBean.managedBean.brandNew}"/>  
+						</td>
+					</tr>
+				</c:if>
+			</c:if>
+			<tr>
+				<th>#{lbl['lbl.pp.item.remarks']}</th>
+				<td class="ppSmallTd">:</td>
+				<td>
+					<p:inputTextarea cols="20" rows="3" value="xxx" readonly="#{!planBackingBean.managedBean.brandNew}"/>
+				</td>
+			</tr>
+			<tr>
+	   			<td colspan="2">&nbsp;</td>
+				<td>
+					<p:commandButton type="button" value="#{lbl['lbl.pp.save']}" onclick="dlItemDetailsModal.hide();"/>
+				</td>
+	   		</tr>
+		</table>
+	</p:panel>
+
+</ui:composition>

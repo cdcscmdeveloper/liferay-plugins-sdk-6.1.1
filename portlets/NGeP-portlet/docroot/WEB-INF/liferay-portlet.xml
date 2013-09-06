@@ -10,6 +10,28 @@
 		<header-portlet-css>/css/ep/main.css</header-portlet-css>
 		<css-class-wrapper>ep-portlet</css-class-wrapper>
 	</portlet>
+<!-- Procurement Plan - START -->
+	<portlet>
+		<portlet-name>ppBudget</portlet-name>
+		<icon>/icon.png</icon>
+		<instanceable>false</instanceable>
+		<header-portlet-css>/css/ep/main.css</header-portlet-css>
+		<footer-portlet-javascript>
+			/js/main.js
+		</footer-portlet-javascript>
+		<css-class-wrapper>pp-bud-portlet</css-class-wrapper>
+	</portlet>
+	<portlet>
+		<portlet-name>ppPlan</portlet-name>
+		<icon>/icon.png</icon>
+		<instanceable>false</instanceable>
+		<header-portlet-css>/css/ep/main.css</header-portlet-css>
+		<footer-portlet-javascript>
+			/js/main.js
+		</footer-portlet-javascript>
+		<css-class-wrapper>pp-plan-portlet</css-class-wrapper>
+	</portlet>
+<!-- Procurement Plan - END -->
 	<portlet>
 		<portlet-name>sm</portlet-name>
 		<icon>/icon.png</icon>

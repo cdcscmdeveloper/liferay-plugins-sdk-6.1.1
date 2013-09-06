@@ -8,6 +8,12 @@
 		<portlet id="codification"></portlet>
 		<portlet id="Catalogue"></portlet>
 	</category>
+	<!-- Procurement Plan - START -->
+	<category name="PP">
+		<portlet id="ppBudget"></portlet>
+		<portlet id="ppPlan"></portlet>
+	</category>
+	<!-- Procurement Plan - END -->
 <!-- Fulfilment Start Added by Giri -->		
 	<category name="FL_DIS">
 		<portlet id="fl" />
