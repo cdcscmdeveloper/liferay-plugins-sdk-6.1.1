@@ -7,7 +7,7 @@ import javax.faces.bean.ManagedBean;
 import javax.faces.bean.RequestScoped;
 import javax.faces.model.SelectItem;
 
-import my.ep.type.pp.ProcurementMode;
+
 import my.ep.web.backingbean.BaseBackingBean;
 import my.ep.web.managedbean.pp.PlanManagedBean;
 import my.ep.web.util.FacesScopes;
@@ -79,13 +79,13 @@ public class PlanBackingBean extends BaseBackingBean<PlanManagedBean>{
 	public void updateViewMode(){
 		if(this.getManagedBean().getProcurementMode()!=null && !this.getManagedBean().getProcurementMode().isEmpty()){
 			String procurementMode = this.getManagedBean().getProcurementMode();
-			if(ProcurementMode.QUOTATION.value().equals(procurementMode) || ProcurementMode.SELECTIVETEMDER.value().equals(procurementMode)
-					|| ProcurementMode.TENDER.value().equals(procurementMode)){
+			if("QT".equals(procurementMode) || "ST".equals(procurementMode)
+					|| "TD".equals(procurementMode)){
 				this.getManagedBean().setFavouriteOption(null);
 				this.getManagedBean().setFulfillmentType(null);
 				this.getManagedBean().setPeriodicType(null);
 				this.getManagedBean().setPlanType(PROCUREMENT);
-			}else if(ProcurementMode.EXISTINTCONTRACT.value().equals(procurementMode) || ProcurementMode.DIRECTPURCHASE.value().equals(procurementMode)){
+			}else if("EX".equals(procurementMode) || "DP".equals(procurementMode)){
 				this.getManagedBean().setFavouriteOption(null);
 				this.getManagedBean().setFulfillmentType(null);
 				this.getManagedBean().setPeriodicType(null);
