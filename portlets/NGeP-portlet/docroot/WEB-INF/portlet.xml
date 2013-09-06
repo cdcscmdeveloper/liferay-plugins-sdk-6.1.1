@@ -133,8 +133,8 @@
 		</security-role-ref>
 	</portlet>
 	<portlet>
-		<portlet-name>quatation</portlet-name>
-		<display-name>quatation</display-name>
+		<portlet-name>Quatation</portlet-name>
+		<display-name>Quatation</display-name>
 		<portlet-class>
 			org.portletfaces.bridge.GenericFacesPortlet
 		</portlet-class>
@@ -166,7 +166,7 @@
 		</security-role-ref>
 	</portlet>
 	<portlet>
-		<portlet-name>committee</portlet-name>
+		<portlet-name>Committee</portlet-name>
 		<display-name>committee</display-name>
 		<portlet-class>
 			org.portletfaces.bridge.GenericFacesPortlet
@@ -599,7 +599,7 @@
 	</portlet>
 <!-- Fulfilment End  Added by Giri -->
 	<portlet>
-		<portlet-name>procure</portlet-name>
+		<portlet-name>Procure</portlet-name>
 		<display-name>Procurement</display-name>
 		<portlet-class>
 			org.portletfaces.bridge.GenericFacesPortlet

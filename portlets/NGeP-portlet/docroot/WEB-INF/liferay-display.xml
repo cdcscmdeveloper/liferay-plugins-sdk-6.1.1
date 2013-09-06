@@ -28,9 +28,9 @@
 		<portlet id="FLShippingInstruction" />
 	</category>
 <!-- Fulfilment End  Added by Giri -->		
-<category name="SS">
-<portlet id="quatation"></portlet>
-<portlet id="committee"></portlet>
-<portlet id="procure"></portlet>
+<category name="Sourcing">
+<portlet id="Quatation"></portlet>
+<portlet id="Committee"></portlet>
+<portlet id="Procure"></portlet>
 </category>
 </display>
