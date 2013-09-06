@@ -22,6 +22,6 @@
 	<classpathentry combineaccessrules="false" kind="src" path="/NGeP-jpa"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/NGeP-bizBaseClient"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/NGeP-bizRemoteClient"/>
-	<classpathentry kind="lib" path="C:/JBoss Liferay/jboss-7.1.1/modules/wlfullclient/main/wlfullclient.jar"/>
+	<classpathentry kind="lib" path="C:/ePerolehanDemo/liferay-portal-6.1.1-ce-ga2/jboss-7.1.1/modules/wlfullclient/main/wlfullclient.jar"/>
 	<classpathentry kind="output" path="docroot/WEB-INF/classes"/>
 </classpath>
