@@ -15,11 +15,11 @@
 	<p:panelGrid columns="2" style="width:100%;" styleClass="noBorders tr,noBorders td">
 	
 	<h:outputText value="Qtn/Tender No"></h:outputText>
-	<h:inputText value=""></h:inputText>
+	<h:inputText value="#{searchQtnTenderBB.managedBean.qtno}"></h:inputText>
 	
 	<h:outputText value="Committe Type"></h:outputText>
 
-	 <p:selectOneMenu value="">  
+	 <p:selectOneMenu value="#{searchQtnTenderBB.managedBean.selectOption}">  
             <f:selectItem itemLabel="Select One" itemValue="" />  
             <f:selectItem itemLabel="TSC- prepare specification" itemValue="1" />  
             <f:selectItem itemLabel="DOAA- briefing/site visit" itemValue="2" />  
@@ -60,7 +60,7 @@
                    <h:outputText value="TSC- prepare specification" />  
                 </f:facet>  
                 <f:facet name="input">  
-                   <p:selectOneMenu value="">  
+                   <p:selectOneMenu value="#{searchQtnTenderBB.managedBean.selectOption}">  
             <f:selectItem itemLabel="Select One" itemValue="" />  
             <f:selectItem itemLabel="TSC- prepare specification" itemValue="1" />  
             <f:selectItem itemLabel="DOAA- briefing/site visit" itemValue="2" />  
@@ -107,7 +107,7 @@
 <p:panel>
 <p:panelGrid columns="2" style="width:100%;" styleClass="noBorders tr,noBorders td">
 <h:outputText></h:outputText>
-<p:commandButton value="Add" style="float:right;" action="quatationtendercreation?faces-redirect=true">
+<p:commandButton value="Add" style="float:right;" action="committeemaintanancepage?faces-redirect=true">
     
 </p:commandButton>
 </p:panelGrid>
