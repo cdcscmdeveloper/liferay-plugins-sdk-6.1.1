@@ -9,19 +9,37 @@
 
 	<ui:define name="resourceSection">
 	</ui:define>
-
 	<ui:define name="sideMenu">
 		<ui:include src="/xhtml/sm/shared/sidemenu/smMainPageSideMenu.xhtml" />
 	</ui:define>
 	<ui:define name="content">
-		<p:panel header="Step4-xxx --update this part">
+		<p:panel header="Update Complaint Details - Update PTPK Round2 Review Response">
 			<ui:include
 				src="/xhtml/sm/shared/complaintRegistration/complaintBasicInfo.xhtml" />
-			<p:panel header=" set some headding -----" toggleable="true">
+			<p:panel header=" Received Round2 Review Report From PTPK" toggleable="true">
 				<table style="width: 100%">
 					<tr>
-						<td>---- Update the content ---</td>
+					<!-- <td><p:outputLabel value="Phone No." /></td>
+					<td><p:inputText /></td> -->
+                    <td><p:outputLabel value=" Date Round 2 Report Received *" /></td>
+					<td><p:calendar showOn="button" /></td>
+					<td><p:outputLabel value="Decesion Taken *" /></td>
+						<td><p:selectOneMenu>
+								<f:selectItem itemLabel="-- Select One--" itemValue="1" />
+								<f:selectItem itemLabel="Issue Showcause Letter to Supplier" itemValue="1" />
+								<f:selectItem itemLabel="Close Case" itemValue="1" />
+							</p:selectOneMenu>
+						</td>
 					</tr>
+					<tr>
+                    <td><p:outputLabel value=" Date Closed / Issued Accusation Letter *" /></td>
+					<td><p:calendar showOn="button" /></td>
+					<td><p:outputLabel value="Remarks For Closed Case *" /></td>
+					<td><p:inputTextarea /></td>
+					</tr>
+					<tr>
+					  <td>Click Here to Download Show Cause Letter Template</td>
+					 </tr>
 				</table>
 			</p:panel>
 			<ui:include

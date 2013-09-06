@@ -14,13 +14,27 @@
 		<ui:include src="/xhtml/sm/shared/sidemenu/smMainPageSideMenu.xhtml" />
 	</ui:define>
 	<ui:define name="content">
-		<p:panel header="Step6-xxx --update this part">
+		<p:panel header="Update Complaint Details - Update JKTT FINAL DECISION">
 			<ui:include
 				src="/xhtml/sm/shared/complaintRegistration/complaintBasicInfo.xhtml" />
-			<p:panel header=" set some headding -----" toggleable="true">
+			<p:panel header=" Received Final Decision Report From JKTT" toggleable="true">
 				<table style="width: 100%">
 					<tr>
-						<td>---- Update the content ---</td>
+					<!-- <td><p:outputLabel value="Phone No." /></td>
+					<td><p:inputText /></td> -->
+                    <td><p:outputLabel value=" Date JKTT Report Received *" /></td>
+					<td><p:calendar showOn="button" /></td>
+					</tr>
+					<tr>
+                    <td><p:outputLabel value="Decesion Taken *" /></td>
+						<td><p:selectOneMenu>
+								<f:selectItem itemLabel="-- Select One--" itemValue="1" />
+								<f:selectItem itemLabel="Issue Showcause Letter to Supplier" itemValue="1" />
+								<f:selectItem itemLabel="Close Case" itemValue="1" />
+							</p:selectOneMenu>
+						</td>
+					<td><p:outputLabel value="Remarks For Closed Case/Disciplinary Action taken *" /></td>
+					<td><p:inputTextarea /></td>
 					</tr>
 				</table>
 			</p:panel>

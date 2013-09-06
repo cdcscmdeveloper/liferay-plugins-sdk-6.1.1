@@ -9,18 +9,22 @@
 
 	<ui:define name="resourceSection">
 	</ui:define>
-
 	<ui:define name="sideMenu">
 		<ui:include src="/xhtml/sm/shared/sidemenu/smMainPageSideMenu.xhtml" />
 	</ui:define>
 	<ui:define name="content">
-		<p:panel header="Step3-xxx --update this part">
+		<p:panel header="Update Complaint Details - Send to PTPK For Round 2 Validation">
 			<ui:include
 				src="/xhtml/sm/shared/complaintRegistration/complaintBasicInfo.xhtml" />
-			<p:panel header=" set some headding -----" toggleable="true">
+			<p:panel header="Received Supplier Response For Show Cause Letter" toggleable="true">
 				<table style="width: 100%">
 					<tr>
-						<td>---- Update the content ---</td>
+						<td><p:outputLabel value="  Date Show Cause Response Received *" /></td>
+					    <td><p:calendar showOn="button" /></td>
+					</tr>
+					<tr>
+						<td><p:outputLabel value="  Date Report Sent For Round2 PTPK Validation *" /></td>
+					    <td><p:calendar showOn="button" /></td>
 					</tr>
 				</table>
 			</p:panel>

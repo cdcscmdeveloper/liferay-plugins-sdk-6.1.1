@@ -9,19 +9,28 @@
 
 	<ui:define name="resourceSection">
 	</ui:define>
-
 	<ui:define name="sideMenu">
 		<ui:include src="/xhtml/sm/shared/sidemenu/smMainPageSideMenu.xhtml" />
 	</ui:define>
 	<ui:define name="content">
-		<p:panel header="Step1 -xxx --update this part">
+		<p:panel header="Update Complaint Details - Send Report For Initial Review By PTPK">
 			<ui:include
 				src="/xhtml/sm/shared/complaintRegistration/complaintBasicInfo.xhtml" />
-			<p:panel header=" set some headding -----" toggleable="true">
+			<p:panel header=" Click Here to Dowload Complaint Supporting / Proof Documents ( Applicable Only If Uploaded By Complainant)" toggleable="true">
 				<table style="width: 100%">
 					<tr>
-						<td>---- Update the content ---</td>
+						<td>
+						<h:form>
+                          <p:outputLabel value="Upload Initial Invesitgation Report*"></p:outputLabel>
+                          <p:fileUpload fileUploadListener="#{fileUploadController.handleFileUpload}" mode="simple" />
+						</h:form>
+                    </td>
+                    </tr>
+                    <tr>
+                    <td><p:outputLabel value="Date Report Sent For Initial PTPK Validation *" /></td>
+					<td><p:calendar showOn="button" /></td>
 					</tr>
+					
 				</table>
 			</p:panel>
 			<ui:include
