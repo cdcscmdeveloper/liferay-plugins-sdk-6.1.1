@@ -7,7 +7,7 @@ import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
 import javax.faces.model.SelectItem;
 
-import my.ep.type.pp.ProcurementMode;
+
 import my.ep.web.managedbean.BaseManagedBean;
 
 @ManagedBean(name = "planManagedBean")
