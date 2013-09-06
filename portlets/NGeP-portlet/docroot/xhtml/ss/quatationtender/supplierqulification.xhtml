@@ -14,18 +14,21 @@
             <f:selectItem itemLabel="Bumiputra" itemValue="2" />  
             <f:selectItem itemLabel="Panel" itemValue="3" />  
             <f:selectItem itemLabel="Restricted Tender" itemValue="4" />
-            <!-- <f:ajax render="@form" /> -->
+                       
+             <!-- <f:ajax render="groups" /> -->
         </p:selectOneMenu>  
    
    </p:panelGrid>
-   <!-- <h:panelGroup rendered="#{searchQtnTenderBB.managedBean.tenderSelction eq '1' || searchQtnTenderBB.managedBean.tenderSelction eq '2'}">
+   <!-- <h:panelGroup id="groups">
+   <h:panelGroup rendered="#{searchQtnTenderBB.managedBean.tenderSelction eq '1' || searchQtnTenderBB.managedBean.tenderSelction eq '2'}">
     <ui:insert src="/xhtml/ss/quatationtender/nrmqtntender.xhtml" />
     </h:panelGroup>
     <h:panelGroup rendered="#{searchQtnTenderBB.managedBean.tenderSelction eq '3'}">
        <ui:insert src="/xhtml/ss/quatationtender/panelqtntender.xhtml"/>
        </h:panelGroup>
        <h:panelGroup rendered="#{searchQtnTenderBB.managedBean.tenderSelction eq '4'}">
-     
+     <ui:insert src="/xhtml/ss/quatationtender/restictedtender.xhtml"/>
+   </h:panelGroup>
    </h:panelGroup>
 	 -->	</p:panel>
 		</ui:composition>

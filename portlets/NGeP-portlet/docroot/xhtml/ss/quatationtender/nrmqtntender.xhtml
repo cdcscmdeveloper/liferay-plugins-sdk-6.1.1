@@ -117,31 +117,34 @@
 				<f:selectItem itemLabel="No" itemValue="2" />
 				<p:ajax update="@form" />
 			</p:selectOneRadio>
-		</h:panelGrid>
+		
 
-		<h:panelGrid columns="2"
-			rendered="#{searchQtnTenderBB.managedBean.selectOption eq '1'}">
+
+		<h:panelGroup rendered="#{searchQtnTenderBB.managedBean.selectOption eq '1'}">
+
 
 			<h:outputText value="AllStates: " />
 			<p:selectBooleanCheckbox value="#{searchQtnTenderBB.checked}" />
 
+	
+</h:panelGroup>
+</h:panelGrid>
 
-		</h:panelGrid>
-
+<h:panelGroup rendered="#{searchQtnTenderBB.managedBean.selectOption eq '2'}">
 		<p:panel header="Location List" toggleable="true">
 
 			<p:dataTable id="dtusers"
-				value="#{searchQtnTenderBB.managedBean.locations}" var="tenders"
+				value="#{searchQtnTenderBB.managedBean.locations}" var="tender"
 				editable="true">
 				<p:ajax event="rowEdit" />
 				<p:ajax event="rowEditCancel" />
 				<p:column headerText="States" style="width:30%">
 					<p:cellEditor>
 						<f:facet name="output">
-							<h:outputText value="#{tenders.state}" />
+							<h:outputText value="#{tender.state}" />
 						</f:facet>
 						<f:facet name="input">
-							<h:selectOneMenu value="#{tenders.state}">
+							<h:selectOneMenu value="#{tender.state}">
 								<f:selectItems
 									value="#{searchQtnTenderBB.managedBean.stateList}" var="state"
 									itemLabel="#{state}" itemValue="#{state}" />
@@ -153,13 +156,13 @@
 				<p:column headerText="Districts">
 					<p:cellEditor>
 						<f:facet name="output">
-							<ui:repeat var="loccity" value="#{tenders.location}">
+							<ui:repeat var="loccity" value="#{tender.location}">
 								<h:outputText value="#{loccity}"  />
 							</ui:repeat>
 
 						</f:facet>
 						<f:facet name="input">
-							<p:selectManyCheckbox value="#{tenders.city}"
+							<p:selectManyCheckbox value="#{tender.location}"
 								layout="pageDirection">
 								<f:selectItems value="#{searchQtnTenderBB.managedBean.cities}" />
 							</p:selectManyCheckbox>
@@ -182,14 +185,14 @@
 			<br />
 
 		</p:panel>
+</h:panelGroup>
 
-
-
+<h:panelGroup rendered="#{searchQtnTenderBB.managedBean.selectOption eq '1'}">
 
 		<p:panel header="Location List" toggleable="true">
 			<h:panelGroup style="width:100%;">
 				<p:dataTable id="zones"
-					value="#{searchQtnTenderBB.managedBean.locations}" var="tenders"
+					value="#{searchQtnTenderBB.managedBean.zoneList}" var="zoneTen"
 					editable="true">
 					<p:ajax event="rowEdit" />
 					<p:ajax event="rowEditCancel" />
@@ -197,10 +200,10 @@
 					<p:column headerText="Zones">
 						<p:cellEditor>
 							<f:facet name="output">
-								<h:outputText value="#{tenders.zone}" />
+								<h:outputText value="#{zoneTen.zone}" />
 							</f:facet>
 							<f:facet name="input">
-								<h:selectOneMenu value="#{tenders.zone}">
+								<h:selectOneMenu value="#{zoneTen.zone}">
 									<f:selectItems value="#{searchQtnTenderBB.managedBean.zones}"
 										var="state" itemLabel="#{state}" itemValue="#{state}" />
 								</h:selectOneMenu>
@@ -211,10 +214,10 @@
 					<p:column headerText="States" style="width:30%">
 						<p:cellEditor>
 							<f:facet name="output">
-								<h:outputText value="#{tenders.state}" />
+								<h:outputText value="#{zoneTen.zoneSt}" />
 							</f:facet>
 							<f:facet name="input">
-								<h:selectOneMenu value="#{tenders.state}">
+								<h:selectOneMenu value="#{zoneTen.zoneSt}">
 									<f:selectItems
 										value="#{searchQtnTenderBB.managedBean.zoneState}" var="state"
 										itemLabel="#{state}" itemValue="#{state}" />
@@ -227,12 +230,12 @@
 					<p:column headerText="Districts">
 						<p:cellEditor>
 							<f:facet name="output">
-								<ui:repeat var="loccity" value="#{tenders.location}">
+								<ui:repeat var="loccity" value="#{zoneTen.zoneLoc}">
 								<h:outputText value="#{loccity}"  />
 							</ui:repeat>
 							</f:facet>
 							<f:facet name="input">
-								<p:selectManyCheckbox value="#{tenders.city}"
+								<p:selectManyCheckbox value="#{zoneTen.zoneLoc}"
 									layout="pageDirection">
 									<f:selectItems
 										value="#{searchQtnTenderBB.managedBean.zoneCities}" />
@@ -256,7 +259,7 @@
 			<br />
 
 		</p:panel>
-
+</h:panelGroup>
 
 		<p:panelGrid columns="2" style="width:100%;"
 			styleClass="noBorders tr,noBorders td">
