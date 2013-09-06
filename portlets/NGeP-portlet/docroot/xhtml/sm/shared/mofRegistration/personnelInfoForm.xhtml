@@ -129,10 +129,8 @@
 		<p:fieldset legend="List of Authorized Personnel">
 			<p:dataTable var="auth"
 				value="#{mofRegistrationBackingBean.authList}"
-				selection="#{mofRegistrationBackingBean.managedBean.selectedPersonList}"
 				rowKey="#{auth.personelSeq}" rowIndexVar="index">
 
-				<p:column selectionMode="multiple" width="5%" />
 				<p:column headerText="No.">
 					<p:outputLabel value="#{index+1}" />
 				</p:column>
