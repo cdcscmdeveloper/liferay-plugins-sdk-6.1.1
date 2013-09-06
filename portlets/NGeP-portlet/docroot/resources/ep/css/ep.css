@@ -2070,6 +2070,107 @@ td {
 	padding: 5px !important;
 }
 
+<<<<<<< ep.css
+
+
+
+
+/* --------------------------       PP Related     ------------------------------ */
+
+.ppProfileInfo{
+	width: 50%;
+}
+
+table.ppRmkTable td {
+	border: medium none;
+	vertical-align: top;
+	padding: 2px;
+}
+
+table.ppTwoPartsTable, .ppThreePartsTable, .ppRmkTable{
+	width:100%;
+}
+
+table.ppTwoPartsTable th {
+ 	text-align: right;
+	width: 30%;
+	vertical-align: top;
+	padding: 2px;
+}
+table.ppTwoPartsTable td {
+	border: medium none;
+	vertical-align: top;
+	padding: 2px;
+}
+
+table.ppThreePartsTable th {
+ 	text-align: right;
+	width: 20%;
+	vertical-align: top;
+	padding: 2px;
+}
+table.ppThreePartsTable td {
+	border: medium none;
+	vertical-align: top;
+	padding: 2px;
+}
+
+.ppRight{
+    float:left;
+    width:800px;
+}
+.ppLeft{
+	float:left;
+   	width:200px;
+}
+
+.ppRightBtn{
+	text-align:right;
+}
+
+.ppSmallTd{
+	width:5%;
+	text-align:center;
+}
+
+
+.ppProfileInfo{
+	align: left;
+}
+
+.ui-datatable.ppTableFull table {
+   /* table-layout:fixed;*/
+    width:100% !important;
+}
+
+.ui-datatable.ppFixTdWidth table {
+   /* table-layout:fixed;*/
+    width:90% !important;
+}
+
+.ui-dialog.ppDiaglogBg{
+	background: #FFFFFF;
+}
+
+.ui-dialog.ppDiaglogBigBg{
+	background: #FFFFFF;
+	height:90% !important;
+	width: 90% !important;
+	overflow-y: scroll;
+}
+
+.ppMenu{
+ 	width: 200px;	
+ 	border: 0px;
+}
+
+
+.ui-selectonemenu, .ui-inputtext{
+	
+	min-width:100px !important;
+}
+/*--------------------------       End PP Related      ------------------------------ */
+
 #autoScroll {
 	width: 180px;
 	height: 200px;
