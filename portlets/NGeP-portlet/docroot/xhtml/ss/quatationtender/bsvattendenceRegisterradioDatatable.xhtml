@@ -27,15 +27,17 @@
 <p:panel header="BriefingDetails" toggleable="true">
 <p:dataTable  id="attendancebrief" var="attendancetenderbrief" value="#{searchQtnTenderBB.managedBean.qtnTenders}"  rows="10"  >
 				
-				<p:column headerText="checkBox" >
-				 <h:selectBooleanCheckbox value="1" style="width:200px" /> 
+				<p:column headerText="checkBox" style="width:6%" >
+				 <h:selectBooleanCheckbox value="1"  > 
+				  <f:selectItem  /> 
+				  </h:selectBooleanCheckbox>
 				</p:column>
 					<p:column headerText="No">
 						<h:outputText value="1"></h:outputText>
 				</p:column>
-				   <p:column headerText="Description">              
-                <p:commandLink value="Register" action="attendenceRegistrationList.xhtml?faces-redirect=true">
-                  <h:outputText value="Register" />  
+				   <p:column headerText="Description" style="width:100%">              
+                <p:commandLink  action="attendenceRegistrationList.xhtml?faces-redirect=true">
+                  <h:outputText value="Register"  style="width:100%"/>  
                  </p:commandLink> 
         </p:column>
            <p:column headerText="Date">              
@@ -68,15 +70,17 @@
 <p:dataTable  id="attendencesite" var="attendancetender" value="#{searchQtnTenderBB.managedBean.qtnTenders}"  rows="10"  >
                 
 				
-				<p:column headerText="checkBox" >
-				 <h:selectBooleanCheckbox value="1" style="width:200px" /> 
+				<p:column headerText="checkBox" style="width:6%">
+				 <h:selectBooleanCheckbox value="1"  > 
+				  <f:selectItem  /> 
+				  </h:selectBooleanCheckbox>
 				</p:column>
 					<p:column headerText="No">
 						<h:outputText value="1"></h:outputText>
 				</p:column>
-				   <p:column headerText="Description">
-				     <p:commandLink value="Register" action="attendenceRegistrationList.xhtml?faces-redirect=true">
-                  <h:outputText value="Register" />  
+				   <p:column headerText="Description" style="width:100%">
+				     <p:commandLink  action="attendenceRegistrationList.xhtml?faces-redirect=true">
+                  <h:outputText value="Register"  style="width:100%" />  
                  </p:commandLink>
         </p:column>
            <p:column headerText="Date">              
