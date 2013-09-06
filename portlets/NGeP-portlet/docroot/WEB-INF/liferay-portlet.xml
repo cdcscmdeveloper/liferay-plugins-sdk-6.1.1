@@ -112,6 +112,31 @@
 		<css-class-wrapper>flshippingInst-portlet</css-class-wrapper>
 	</portlet>
 <!-- Fulfilment End  Added by Giri -->	
+
+<portlet>
+		<portlet-name>procure</portlet-name>
+		<icon>/icon.png</icon>
+		<instanceable>false</instanceable>
+		<ajaxable>false</ajaxable>
+		<header-portlet-css>/css/ep/main.css</header-portlet-css>
+		<css-class-wrapper>procure-portlet</css-class-wrapper>
+	</portlet>	
+	<portlet>
+		<portlet-name>committee</portlet-name>
+		<icon>/icon.png</icon>
+		<instanceable>false</instanceable>
+		<ajaxable>false</ajaxable>
+		<header-portlet-css>/css/ep/main.css</header-portlet-css>
+		<css-class-wrapper>committee-portlet</css-class-wrapper>
+	</portlet>
+	<portlet>
+		<portlet-name>quatation</portlet-name>
+		<icon>/icon.png</icon>
+		<instanceable>false</instanceable>
+		<ajaxable>false</ajaxable>
+		<header-portlet-css>/css/ep/main.css</header-portlet-css>
+		<css-class-wrapper>committee-portlet</css-class-wrapper>
+	</portlet>
 	<role-mapper>
 		<role-name>administrator</role-name>
 		<role-link>Administrator</role-link>
