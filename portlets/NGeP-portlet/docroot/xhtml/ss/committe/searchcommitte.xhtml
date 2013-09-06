@@ -1,0 +1,116 @@
+<ui:composition	
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:c="http://java.sun.com/jsp/jstl/core">
+	
+	<p:panel>
+		<p:panelGrid style="width:100%;" styleClass="noBorders tr,noBorders td" ></p:panelGrid>
+</p:panel>
+	
+	<p:panel header="Search Committe" toggleable="true">
+	
+	<p:panelGrid columns="2" style="width:100%;" styleClass="noBorders tr,noBorders td">
+	
+	<h:outputText value="Qtn/Tender No"></h:outputText>
+	<h:inputText value=""></h:inputText>
+	
+	<h:outputText value="Committe Type"></h:outputText>
+
+	 <p:selectOneMenu value="">  
+            <f:selectItem itemLabel="Select One" itemValue="" />  
+            <f:selectItem itemLabel="TSC- prepare specification" itemValue="1" />  
+            <f:selectItem itemLabel="DOAA- briefing/site visit" itemValue="2" />  
+            <f:selectItem itemLabel="Ministry Committee Specification-spec" itemValue="3" /> 
+            <f:selectItem itemLabel="OC-check manual submission" itemValue="1" />  
+            <f:selectItem itemLabel="EC-one envelope-evaluate proposal" itemValue="2" />  
+            <f:selectItem itemLabel="TEC/FEC - two envelopes - evaluate proposal" itemValue="3" />
+            <f:selectItem itemLabel="QC/PB/FPB/MOF Secretary - supplier finalization" itemValue="2" />  
+            <f:selectItem itemLabel="QC/PB/FPB/MOF - appoint by secretary" itemValue="3" />
+             
+        </p:selectOneMenu>  
+	
+
+	</p:panelGrid>
+	
+	<p:commandButton value="#{lbl['lbl.so.searchbtn']}" style="float:right;">
+    
+</p:commandButton>
+	<br/>
+	<br/>
+	</p:panel>
+	
+	<p:panel header="Results" toggleable="true">
+	<p:dataTable value="" var="" resizableColumns="true" editable="true">
+        
+   <p:ajax event="rowEdit" />  
+        <p:ajax event="rowEditCancel" />  
+  
+        <p:column headerText="Qtn/Tender No"> 
+             <h:outputText value="QT001" />  
+        </p:column>  
+  
+        <p:column headerText="CommitteType" > 
+        
+        
+        <p:cellEditor>  
+                <f:facet name="output">  
+                   <h:outputText value="TSC- prepare specification" />  
+                </f:facet>  
+                <f:facet name="input">  
+                   <p:selectOneMenu value="">  
+            <f:selectItem itemLabel="Select One" itemValue="" />  
+            <f:selectItem itemLabel="TSC- prepare specification" itemValue="1" />  
+            <f:selectItem itemLabel="DOAA- briefing/site visit" itemValue="2" />  
+            <f:selectItem itemLabel="Ministry Committee Specification-spec" itemValue="3" /> 
+            <f:selectItem itemLabel="OC-check manual submission" itemValue="1" />  
+            <f:selectItem itemLabel="EC-one envelope-evaluate proposal" itemValue="2" />  
+            <f:selectItem itemLabel="TEC/FEC - two envelopes - evaluate proposal" itemValue="3" />
+            <f:selectItem itemLabel="QC/PB/FPB/MOF Secretary - supplier finalization" itemValue="2" />  
+            <f:selectItem itemLabel="QC/PB/FPB/MOF - appoint by secretary" itemValue="3" />
+             
+        </p:selectOneMenu>  
+	
+  
+                </f:facet>  
+            </p:cellEditor>  
+              
+        </p:column>  
+         <p:column headerText="ApprovalRequired" >  
+         <p:cellEditor>
+         <f:facet name="output">
+            <h:outputText value="Yes" /> 
+            </f:facet>
+            <f:facet name="input">
+            <p:selectOneRadio value="">
+            <f:selectItem itemLabel="yes" itemValue="1"></f:selectItem>
+<f:selectItem itemLabel="No" itemValue="2"></f:selectItem>
+            </p:selectOneRadio>
+            </f:facet> 
+            
+            </p:cellEditor>
+        </p:column>  
+        
+         <p:column headerText="Approval Status" >  
+            <h:outputText value="Active" />  
+        </p:column>  
+        
+        
+       <p:column style="width:6%">  
+            <p:rowEditor />  
+        </p:column> 
+        
+    </p:dataTable>
+</p:panel>
+<p:panel>
+<p:panelGrid columns="2" style="width:100%;" styleClass="noBorders tr,noBorders td">
+<h:outputText></h:outputText>
+<p:commandButton value="Add" style="float:right;" action="quatationtendercreation?faces-redirect=true">
+    
+</p:commandButton>
+</p:panelGrid>
+</p:panel>
+
+</ui:composition>
