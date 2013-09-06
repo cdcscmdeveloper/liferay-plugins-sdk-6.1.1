@@ -1,0 +1,74 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:c="http://java.sun.com/jsp/jstl/core">
+
+	<p:panel header="Office Location" toggleable="true">
+		<table class="test">
+			<tr>
+				<td id="tdTitle"><p:outputLabel value="Office Ownership" /></td>
+				<td id="tdContent"><p:selectOneMenu>
+						<f:selectItem itemLabel="Select" itemValue="" />
+						<f:selectItem itemLabel="Private" itemValue="private"></f:selectItem>
+						<f:selectItem itemLabel="Rent" itemValue="rent"></f:selectItem>
+					</p:selectOneMenu></td>
+
+				<td id="tdTitle"><p:outputLabel
+						value="Purchase Price/Monthly Rate (RM)" /></td>
+				<td id="tdContent"><p:inputText /></td>
+			</tr>
+
+			<tr>
+				<td id="tdTitle"><p:outputLabel value="Sign Board" /></td>
+				<td id="tdContent"><p:outputLabel value="????????" /></td>
+			</tr>
+		</table>
+	</p:panel>
+
+	<p:panel header="Comment" toggleable="true">
+		<p:outputLabel value="Operation Stage" />
+		<br />
+		<p:inputTextarea rows="10" cols="100" />
+		<br />
+		<p:outputLabel value="Production Capability" />
+		<br />
+		<p:inputTextarea rows="10" cols="100" />
+		<br />
+		<p:outputLabel value="Factory/Machine Ownership and Ownership Method" />
+		<br />
+		<p:inputTextarea rows="10" cols="100" />
+		<br />
+	</p:panel>
+
+	<p:panel header="Company Information Update (If any changes)"
+		toggleable="true">
+		<p:inputTextarea rows="10" cols="150" />
+	</p:panel>
+	<p:panel header="Recommendation/Declaration" toggleable="true">
+		<p:inputTextarea rows="10" cols="150" />
+	</p:panel>
+
+	<p:panel>
+		<table class="test">
+			<tr>
+				<td id="tdTitle"><p:outputLabel value="Name" /></td>
+				<td id="tdContent"><p:inputText /></td>
+				<td id="tdTitle"><p:outputLabel value="Date" /></td>
+				<td id="tdContent"><p:calendar id="cal" navigator="true"
+						display="inline" /></td>
+			</tr>
+
+			<tr>
+				<td id="tdTitle"><p:outputLabel value="Name" /></td>
+				<td id="tdContent"><p:inputText /></td>
+
+				<td id="tdTitle"><p:outputLabel value="Date" /></td>
+				<td id="tdContent"><p:calendar id="cal1" navigator="true"
+						display="inline" /></td>
+			</tr>
+		</table>
+	</p:panel>
+
+</ui:composition>

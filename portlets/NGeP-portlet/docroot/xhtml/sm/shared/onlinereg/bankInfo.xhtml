@@ -1,0 +1,25 @@
+
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:c="http://java.sun.com/jsp/jstl/core">
+
+	<p:panel header="Bank Information">
+		<table class="test">
+
+			<tr>
+				<td id="tdTitle"><h:outputLabel
+						value="#{lbl['lbl.sm.bankname']}" /></td>
+				<td id="tdContent"><p:selectOneMenu>
+						<f:selectItem itemLabel="Select" itemValue="0" />
+						<f:selectItem itemLabel="CIMB" itemValue="1" />
+					</p:selectOneMenu></td>
+				<td id="tdTitle"><h:outputLabel
+						value="#{lbl['lbl.sm.bankaccnumber']}" /></td>
+				<td id="tdContent"><h:inputText /></td>
+			</tr>
+		</table>
+	</p:panel>
+</ui:composition>

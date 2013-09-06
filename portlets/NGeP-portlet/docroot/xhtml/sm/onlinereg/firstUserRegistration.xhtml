@@ -1,0 +1,223 @@
+<ui:composition
+	template="/WEB-INF/facelets/templates/sidemenu_template.xhtml"
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:c="http://java.sun.com/jsp/jstl/core">
+
+	<ui:define name="resourceSection">
+		<style type="text/css">
+.test {
+	
+}
+
+table.test {
+	width: 100%;
+}
+
+.test td {
+	padding: 5px;
+}
+
+#tdContent {
+	text-align: left;
+}
+
+#tdTitle {
+	width: 20%;
+	text-align: right;
+}
+</style>
+
+	</ui:define>
+
+	<ui:define name="sideMenu">
+
+		<ui:include src="/xhtml/sm/shared/sidemenu/registrationSideMenu.xhtml">
+		</ui:include>
+	</ui:define>
+
+	<ui:define name="content">
+		<h:outputLabel value="First User Registration"
+			style="font-weight:bold;font-size:15px;" />
+		<p:panel header="First User Information">
+			<table class="test">
+				<tr>
+					<td id="tdTitle"><h:outputLabel
+							value="#{lbl['lbl.sm.fullname']}" readonly="1" /></td>
+					<td id="tdContent" colspan="3"><h:inputText size="50" /></td>
+				</tr>
+				<tr>
+					<td id="tdTitle"><h:outputLabel
+							value="#{lbl['lbl.sm.nationality']}" /></td>
+					<td id="tdContent"><h:selectOneMenu readonly="true"
+							value="#{registrationBackingBean.managedBean.userNationality}">
+							<f:selectItem itemLabel="Select" itemValue="" />
+							<f:selectItem itemLabel="Malaysian" itemValue="0" />
+							<f:selectItem itemLabel="Non Malaysian" itemValue="1" />
+							<p:ajax event="change" update="cmbUsrIdenType"
+								listener="#{registrationBackingBean.nationalityOnChange}" />
+						</h:selectOneMenu></td>
+				</tr>
+
+				<tr>
+					<td id="tdTitle"><h:outputLabel
+							value="#{lbl['lbl.sm.identificationtype']}" /></td>
+					<td id="tdContent"><p:selectOneMenu id="cmbUsrIdenType"
+							value="#{registrationBackingBean.managedBean.userIdentificationType}"
+							read-only="true">
+							<f:selectItem itemLabel="Select" itemValue="" />
+							<f:selectItem itemLabel="New NRIC" itemValue="0" />
+							<f:selectItem itemLabel="Passport" itemValue="1" />
+							<p:ajax event="change" update="txtIdNumber"
+								listener="#{registrationBackingBean.identificationTypeOnChange}" />
+						</p:selectOneMenu></td>
+
+					<td id="tdTitle"><h:outputLabel
+							value="#{lbl['lbl.sm.identificationno']}" /></td>
+					<td id="tdContent">
+						<!-- <h:inputText id="txtIdNumber" mask="999999999999" /> --> <p:inputMask
+							id="txtIdNumber"
+							mask="#{registrationBackingBean.managedBean.idTypeMasking}" />
+					</td>
+				</tr>
+				<p:outputPanel
+					rendered="#{registrationBackingBean.managedBean.businessType != 'Ind'}">
+					<tr>
+						<td id="tdTitle"><h:outputLabel
+								value="#{lbl['lbl.sm.permenantaddress']}" /></td>
+						<td id="tdContent" colspan="2"><h:inputText size="50" /></td>
+					</tr>
+
+					<tr>
+						<td id="tdTitle"></td>
+						<td id="tdContent" colspan="2"><h:inputText size="50" /></td>
+					</tr>
+
+					<tr>
+						<td id="tdTitle"></td>
+						<td id="tdContent" colspan="2"><h:inputText size="50" /></td>
+					</tr>
+					<tr>
+						<td id="tdTitle"><h:outputLabel
+								value="#{lbl['lbl.sm.postcode']}" /></td>
+						<td id="tdContent"><h:inputText /></td>
+						<td id="tdTitle"><h:outputLabel
+								value="#{lbl['lbl.sm.state']}" /></td>
+						<td id="tdContent"><h:inputText /></td>
+					</tr>
+
+					<tr>
+						<td id="tdTitle"><h:outputLabel
+								value="#{lbl['lbl.sm.district']}" /></td>
+						<td id="tdContent"><h:inputText /></td>
+						<td id="tdTitle"><h:outputLabel
+								value="#{lbl['lbl.sm.towncity']}" /></td>
+						<td id="tdContent"><h:inputText /></td>
+					</tr>
+					<tr>
+						<td id="tdTitle"><h:outputLabel
+								value="#{lbl['lbl.sm.positionincomp']}" /></td>
+						<td id="tdContent" colspan="3"><p:selectManyCheckbox>
+								<f:selectItem itemLabel="Equity Owner" itemValue="0" />
+								<f:selectItem itemLabel="BOD" itemValue="1" />
+								<f:selectItem itemLabel="Management" itemValue="2" />
+								<f:selectItem itemLabel="Staff" itemValue="2" />
+							</p:selectManyCheckbox></td>
+					</tr>
+
+					<tr>
+						<td>Passport Attachment</td>
+						<td><p:fileUpload mode="basic" update="messages" auto="true"
+								sizeLimit="100000" allowTypes="/(\.|\/)(gif|jpe?g|png)$/" /> <p:growl
+								id="messages" showDetail="true" /></td>
+					</tr>
+				</p:outputPanel>
+			</table>
+		</p:panel>
+
+		<c:if
+			test="${registrationBackingBean.managedBean.businessType == 'Ind'}">
+			<ui:include src="/xhtml/sm/shared/onlinereg/bankInfo.xhtml" />
+		</c:if>
+
+		<p:panel header="Contact Information">
+			<table class="test">
+				<tr>
+					<td id="tdTitle"><h:outputLabel
+							value="#{lbl['lbl.sm.correspondenceadd']}" /></td>
+					<td id="tdContent"><p:selectOneRadio>
+							<f:selectItem itemLabel="Permenant Address" itemValue="perm" />
+							<f:selectItem itemLabel="Different Address" itemValue="diff" />
+							<p:ajax event="change" update="@form" />
+						</p:selectOneRadio></td>
+				</tr>
+
+				<tr>
+					<td id="tdTitle"></td>
+					<td id="tdContent" colspan="2"><h:inputText size="50" /></td>
+				</tr>
+
+				<tr>
+					<td id="tdTitle"></td>
+					<td id="tdContent" colspan="2"><h:inputText size="50" /></td>
+				</tr>
+
+				<tr>
+					<td id="tdTitle"></td>
+					<td id="tdContent" colspan="2"><h:inputText size="50" /></td>
+				</tr>
+				<tr>
+					<td id="tdTitle"><h:outputLabel
+							value="#{lbl['lbl.sm.postcode']}" /></td>
+					<td id="tdContent"><h:inputText /></td>
+					<td id="tdTitle"><h:outputLabel value="#{lbl['lbl.sm.state']}" /></td>
+					<td id="tdContent"><h:inputText /></td>
+				</tr>
+
+				<tr>
+					<td id="tdTitle"><h:outputLabel
+							value="#{lbl['lbl.sm.district']}" /></td>
+					<td id="tdContent"><h:inputText /></td>
+					<td id="tdTitle"><h:outputLabel
+							value="#{lbl['lbl.sm.towncity']}" /></td>
+					<td id="tdContent"><h:inputText /></td>
+				</tr>
+				<tr>
+					<td id="tdTitle"><h:outputLabel
+							value="#{lbl['lbl.sm.mobilenumber']}" /></td>
+					<td id="tdContent"><h:inputText /></td>
+				</tr>
+
+				<tr>
+					<td id="tdTitle"><h:outputLabel value="#{lbl['lbl.sm.email']}" /></td>
+					<td id="tdContent"><h:inputText /></td>
+				</tr>
+
+				<tr>
+					<td id="tdTitle"><h:outputLabel
+							value="#{lbl['lbl.sm.confirmemail']}" /></td>
+					<td id="tdContent"><h:inputText /></td>
+				</tr>
+
+				<tr>
+					<td id="tdTitle"><h:outputLabel
+							value="#{lbl['lbl.sm.notificationmode']}" /></td>
+					<td id="tdContent"><p:selectOneRadio>
+							<f:selectItem itemLabel="Email" itemValue="0" />
+							<f:selectItem itemLabel="SMS" itemValue="1" />
+						</p:selectOneRadio></td>
+				</tr>
+
+
+			</table>
+		</p:panel>
+
+		<div align="right">
+			<p:commandButton value="Submit" />
+		</div>
+	</ui:define>
+
+</ui:composition>

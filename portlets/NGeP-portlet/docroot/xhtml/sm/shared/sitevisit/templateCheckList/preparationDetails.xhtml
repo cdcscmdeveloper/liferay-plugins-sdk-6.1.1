@@ -1,0 +1,72 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:c="http://java.sun.com/jsp/jstl/core">
+
+	<p:panel header="Preparation Details">
+		<table class="test">
+			<tr>
+				<td id="tdTitle"><p:outputLabel
+						value="Application Reference No." /></td>
+				<td id="tdContent"><p:inputText /></td>
+
+				<td id="tdTitle"><p:outputLabel value="Company Name" /></td>
+				<td id="tdContent"><p:inputText /></td>
+			</tr>
+
+			<tr>
+				<td id="tdTitle"><p:outputLabel value="ROC/ROB/ROS No." /></td>
+				<td id="tdContent"><p:inputText /></td>
+
+				<td id="tdTitle"><p:outputLabel value="Site Visit Address" /></td>
+				<td id="tdContent"><p:inputText /></td>
+			</tr>
+
+
+			<tr>
+				<td id="tdTitle"><p:outputLabel value="Postal Code" /></td>
+				<td id="tdContent"><p:inputText /></td>
+
+				<td id="tdTitle"><p:outputLabel value="Town/City" /></td>
+				<td id="tdContent"><p:inputText /></td>
+			</tr>
+
+
+			<tr>
+				<td id="tdTitle"><p:outputLabel value="State" /></td>
+				<td id="tdContent"><p:inputText /></td>
+
+				<td id="tdTitle"><p:outputLabel value="Telephone No." /></td>
+				<td id="tdContent"><p:inputText /></td>
+			</tr>
+
+
+			<tr>
+				<td id="tdTitle"><p:outputLabel value="Visiting Purpose" /></td>
+				<td id="tdContent"><p:inputText /></td>
+			</tr>
+
+
+			<tr>
+				<td id="tdTitle"><p:outputLabel value="Contact Person Name" /></td>
+				<td id="tdContent"><p:inputText /></td>
+
+				<td id="tdTitle"><p:outputLabel
+						value="Contact Person Designation" /></td>
+				<td id="tdContent"><p:inputText /></td>
+			</tr>
+		</table>
+	</p:panel>
+
+	<p:panel>
+		<p:dataTable>
+			<p:column headerText="Category Description">
+			</p:column>
+
+			<p:column headerText="Category Remarks">
+			</p:column>
+		</p:dataTable>
+	</p:panel>
+</ui:composition>

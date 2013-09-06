@@ -1,0 +1,72 @@
+<ui:composition
+	template="/WEB-INF/facelets/templates/sidemenu_template.xhtml"
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:c="http://java.sun.com/jsp/jstl/core">
+
+	<ui:define name="sideMenu">
+	</ui:define>
+
+	<ui:define name="content">
+		<!--<p:panel header="Site Visit Search" toggleable="true">
+			<table class="test">
+				<tr>
+					<td id="tdTitle">Supplier Name</td>
+					<td id="tdContent"><p:inputText /></td>
+
+					<td id="tdTitle">Application No</td>
+					<td id="tdContent"><p:inputText /></td>
+				</tr>
+
+				<tr>
+					<td id="tdTitle">Account Stage</td>
+					<td id="tdContent"><p:selectOneMenu>
+							<f:selectItem itemLabel="Select" itemValue="" />
+							<f:selectItem itemLabel="Pending SVO Report" itemValue="0" />
+							<f:selectItem itemLabel="Pending Review" itemValue="1" />
+						</p:selectOneMenu></td>
+
+					<td id="tdTitle">Expected Site Visit Date</td>
+					<td id="tdContent"><p:inputText /></td>
+				</tr>
+			</table>
+			<div align="right">
+				<p:commandButton value="Submit" />
+			</div>
+		</p:panel>  -->
+
+		<p:panel header="Site Visit List" toggleable="true">
+			<p:dataTable var="svlist"
+				value="#{siteVisitViewBackingBean.managedBean.svDetailList}">
+				<p:column headerText="Supplier Name">
+					<p:outputLabel value="#{svlist.suppName}" />
+				</p:column>
+
+				<p:column headerText="Application No.">
+					<p:outputLabel value="#{svlist.appNo}" />
+				</p:column>
+
+				<p:column headerText="Account Stage">
+					<p:outputLabel value="#{svlist.accStage}" />
+				</p:column>
+
+				<p:column headerText="Expected Site Visit Date">
+					<p:outputLabel value="#{svlist.expSvDate}" />
+				</p:column>
+
+				<p:column headerText="Report Uploaded Date">
+					<p:outputLabel value="#{svlist.rptUploadDate}" />
+				</p:column>
+
+				<p:column headerText="Action">
+					<p:panelGrid columns="3">
+					<p:commandButton value="View" action="#{siteVisitViewBackingBean.proceedToView}" />
+					</p:panelGrid>
+				</p:column>
+			</p:dataTable>
+		</p:panel>
+	</ui:define>
+</ui:composition>

@@ -1,0 +1,75 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:c="http://java.sun.com/jsp/jstl/core">
+	<p:panel header="Business Registration Information">
+		<table class="test">
+			<tr>
+				<td id="tdTitle"><h:outputLabel
+						value="#{lbl['lbl.sm.businessregno']}" /></td>
+				<td id="tdContent"><h:inputText /></td>
+			</tr>
+			<tr>
+				<td id="tdTitle"><h:outputLabel
+						value="#{lbl['lbl.sm.ownername']}" /></td>
+				<td id="tdContent"><h:inputText /></td>
+			</tr>
+
+			<tr>
+				<td id="tdTitle"><h:outputLabel
+						value="#{lbl['lbl.sm.companyaddress']}" /></td>
+				<td id="tdContent"><h:inputText size="50" colspan="3" /></td>
+			</tr>
+
+			<tr>
+				<td id="tdTitle"></td>
+				<td id="tdContent"><h:inputText size="50" colspan="3" /></td>
+			</tr>
+			<tr>
+				<td id="tdTitle"></td>
+				<td id="tdContent"><h:inputText size="50" colspan="3" /></td>
+			</tr>
+			<tr>
+				<td id="tdTitle"><h:outputLabel
+						value="#{lbl['lbl.sm.postcode']}" /></td>
+				<td id="tdContent"><h:inputText /></td>
+				<td id="tdTitle"><h:outputLabel value="#{lbl['lbl.sm.state']}" /></td>
+				<td id="tdContent"><h:inputText /></td>
+			</tr>
+
+			<tr>
+				<td id="tdTitle"><h:outputLabel
+						value="#{lbl['lbl.sm.district']}" /></td>
+				<td id="tdContent"><h:inputText /></td>
+				<td id="tdTitle"><h:outputLabel
+						value="#{lbl['lbl.sm.towncity']}" /></td>
+				<td id="tdContent"><h:inputText /></td>
+			</tr>
+		</table>
+	</p:panel>
+
+	<c:if test="#{registrationBackingBean.managedBean.businessType == 'PB'}">
+		<p:panel header="Professional Body Information">
+			<p:dataTable>
+				<p:column headerText="Professional Body">
+
+				</p:column>
+
+				<p:column headerText="Registration No">
+
+				</p:column>
+
+				<p:column headerText="End Date">
+
+				</p:column>
+			</p:dataTable>
+
+			<div align="right">
+				<p:commandButton value="Add" />
+				<p:commandButton value="Remove" />
+			</div>
+		</p:panel>
+	</c:if>
+</ui:composition>

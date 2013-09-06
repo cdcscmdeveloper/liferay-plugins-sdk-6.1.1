@@ -1,0 +1,26 @@
+<ui:composition
+	template="/WEB-INF/facelets/templates/sidemenu_template.xhtml"
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:c="http://java.sun.com/jsp/jstl/core">
+	<ui:define name="sideMenu">
+		<ui:include
+			src="/xhtml/sm/shared/sidemenu/siteVisitTemplateMenu.xhtml"></ui:include>
+	</ui:define>
+	<ui:define name="content">
+
+		<h:outputLabel value="Section A"
+			style="font-weight:bold;font-size:15px;" />
+
+		<ui:include
+			src="/xhtml/sm/shared/sitevisit/templateCheckList/sectionA.xhtml"></ui:include>
+
+		<div align="right">
+			<p:commandButton value="Next"
+				action="submitOnlineRptSectionB.xhtml" />
+		</div>
+	</ui:define>
+</ui:composition>

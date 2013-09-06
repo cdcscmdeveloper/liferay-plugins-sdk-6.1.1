@@ -1,0 +1,60 @@
+<ui:composition
+	template="/WEB-INF/facelets/templates/sidemenu_template.xhtml"
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:c="http://java.sun.com/jsp/jstl/core">
+
+	<ui:define name="content">
+		<p:panel header="Report Submission">
+			<table class="test">
+				<tr>
+					<td id="tdTitle"><p:outputLabel value="Report Submit" /></td>
+					<td id="tdContent"><p:selectOneRadio id="rdoMethod"
+							value="#{siteVisitViewBackingBean.managedBean.rptSubsMethod}">
+							<f:selectItem itemLabel="Report Upload" itemValue="Upload" />
+							<f:selectItem itemLabel="Online Submit" itemValue="Online" />
+						</p:selectOneRadio></td>
+
+					<td><p:commandButton value="Submit"
+							action="#{siteVisitViewBackingBean.rptSubmitMethod}" /></td>
+					<td id="tdContent"></td>
+				</tr>
+			</table>
+		</p:panel>
+
+		<p:panel header="Report Upload" id="pnlUpload"
+			visible="#{siteVisitViewBackingBean.managedBean.rptSubsMethod == 'Upload'}">
+
+			<table class="test">
+				<tr>
+					<td id="tdTitle"><p:outputLabel value="Report" /></td>
+					<td id="tdContent"><p:fileUpload mode="advanced"
+							update="messages" auto="true" sizeLimit="100000"
+							allowTypes="/(\.|\/)(xls|xlsx)$/" /> <p:growl id="messages"
+							showDetail="true" /></td>
+				</tr>
+			</table>
+
+			<div align="right">
+				<p:commandButton value="Submit" />
+			</div>
+		</p:panel>
+
+
+		<!--  <table>
+		
+			<tr class="test">
+				<td><p:outputLabel value="Report Submit" /></td>
+				<td><p:selectOneRadio>
+						<f:selectItem itemLabel="Report Upload" itemValue="Upload" />
+						<f:selectItem itemLabel="Online Submit" itemValue="Online" />
+					</p:selectOneRadio></td>
+				<td><p:commandButton value="Submit" /></td>
+			</tr>
+		</table>-->
+
+	</ui:define>
+</ui:composition>

@@ -1,0 +1,130 @@
+<ui:composition
+	template="/WEB-INF/facelets/templates/sidemenu_template.xhtml"
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:c="http://java.sun.com/jsp/jstl/core">
+
+	<ui:define name="sideMenu">
+	</ui:define>
+
+	<ui:define name="content">
+		<h:outputLabel value="Site Visit Information"
+			style="font-weight:bold;font-size:15px;" />
+		<p:panel header="Site Visit Details" toggleable="true">
+			<table class="test">
+				<tr>
+					<td id="tdTitle"><p:outputLabel value="Area" /></td>
+					<td id="tdContent" colspan="3"><p:outputLabel
+							value="Lembah Klang" /> <!-- <p:selectOneRadio>
+							<f:selectItem itemLabel="Lembah Klang" itemValue="lk" />
+							<f:selectItem itemLabel="Luar Lembah Klang" itemValue="llk" />
+						</p:selectOneRadio> --></td>
+				</tr>
+				<tr>
+					<td id="tdTitle"><p:outputLabel value="Company Name" /></td>
+					<td id="tdContent"><p:outputLabel value="Demo" /></td>
+
+					<td id="tdTitle"><p:outputLabel value="MOF Registration No." /></td>
+					<td id="tdContent"><p:outputLabel value="Demo" /></td>
+				</tr>
+
+				<tr>
+					<td id="tdTitle"><p:outputLabel value="Application Reference" /></td>
+					<td id="tdContent"><p:outputLabel value="Demo" /></td>
+
+					<td id="tdTitle"><p:outputLabel value="Processing Officer" /></td>
+					<td id="tdContent"><p:outputLabel value="Demo" /></td>
+				</tr>
+
+				<!-- 
+				<tr>
+					<td id="tdTitle"><p:outputLabel value="Site Address" /></td>
+					<td id="tdContent" colspan="3"><p:inputText size="50"
+							value="Demo" readonly="true" /></td>
+				</tr>
+
+				<tr>
+					<td id="tdTitle"></td>
+					<td id="tdContent" colspan="3"><p:inputText size="50"
+							value="Demo" readonly="true" /></td>
+				</tr>
+
+				<tr>
+					<td id="tdTitle"></td>
+					<td id="tdContent" colspan="3"><p:inputText size="50"
+							value="Demo" readonly="true" /></td>
+				</tr>
+
+				<tr>
+					<td id="tdTitle"><p:outputLabel value="Post Code" /></td>
+					<td id="tdContent"><p:inputText value="Demo" readonly="true" /></td>
+
+					<td id="tdTitle"><p:outputLabel value="Town/City" /></td>
+					<td id="tdContent"><p:inputText value="Demo" readonly="true" /></td>
+				</tr>
+
+				<tr>
+					<td id="tdTitle"><p:outputLabel value="State" /></td>
+					<td id="tdContent"><p:inputText value="Demo" readonly="true" /></td>
+					<td id="tdTitle"><p:outputLabel value="District" /></td>
+					<td id="tdContent"><p:inputText value="Demo" readonly="true" /></td>
+				</tr>
+
+				
+				<tr>
+					<td id="tdTitle"><p:outputLabel value="Application Type" /></td>
+					<td id="tdContent"><p:inputText value="Demo" readonly="true" /></td>
+
+					<td id="tdTitle"><p:outputLabel value="Site Visit No" /></td>
+					<td id="tdContent"><p:inputText value="Demo" readonly="true" /></td>
+				</tr> -->
+			</table>
+		</p:panel>
+
+		<p:panel header="Site(s)">
+			<p:dataTable var="svDetList"
+				value="#{siteVisitViewBackingBean.managedBean.svDetInfoList}">
+				<p:column headerText="Site Visit No">
+				</p:column>
+
+				<p:column headerText="Site Visit Address">
+					<h:outputLabel value="#{svDetList.svAddress}" />
+				</p:column>
+
+				<p:column headerText="Postcode">
+					<h:outputLabel value="#{svDetList.svPostcode}" />
+				</p:column>
+
+				<p:column headerText="Town/City">
+					<h:outputLabel value="#{svDetList.svTownCity}" />
+				</p:column>
+
+				<p:column headerText="State">
+					<h:outputLabel value="#{svDetList.svState}" />
+				</p:column>
+
+				<p:column headerText="District">
+					<h:outputLabel value="#{svDetList.svDistrict}" />
+				</p:column>
+
+				<p:column headerText="Application Type">
+				</p:column>
+
+				<p:column headerText="Action">
+					<p:commandButton value="Download Template" />
+					<p:commandButton value="Submit Report"
+						action="/xhtml/sm/svositevisit/siteVisitRptSubmission.xhtml" />
+				</p:column>
+			</p:dataTable>
+		</p:panel>
+
+		<div align="right">
+			<p:commandButton value="Back"
+				action="/xhtml/sm/svositevisit/siteVisitView.xhtml" />
+
+		</div>
+	</ui:define>
+</ui:composition>

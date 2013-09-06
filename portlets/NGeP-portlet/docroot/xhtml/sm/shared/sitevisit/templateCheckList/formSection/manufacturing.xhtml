@@ -1,0 +1,93 @@
+<ui:composition
+
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:c="http://java.sun.com/jsp/jstl/core">
+
+		<p:panel header="Financial">
+			<p:dataTable var="manuList"
+				value="#{siteVisitViewBackingBean.managedBean.manuFactList}">
+				<p:column headerText="No.">
+					<p:outputLabel value="#{manuList.manuNo}" />
+				</p:column>
+				<p:column headerText="Documents">
+					<p:outputLabel value="#{manuList.manuDoc}" />
+				</p:column>
+				<p:column headerText="Referee">
+					<p:outputLabel />
+				</p:column>
+				<p:column headerText="Date Issued">
+					<p:outputLabel />
+				</p:column>
+				<p:column headerText="Notes">
+					<p:outputLabel />
+				</p:column>
+			</p:dataTable>
+		</p:panel>
+
+		<p:panel header="Additional Documents">
+			<p:dataTable>
+				<p:column headerText="No.">
+					<p:outputLabel />
+				</p:column>
+				<p:column headerText="Documents">
+					<p:outputLabel />
+				</p:column>
+				<p:column headerText="Referee">
+					<p:outputLabel />
+				</p:column>
+				<p:column headerText="Date Issued">
+					<p:outputLabel />
+				</p:column>
+				<p:column headerText="Notes">
+					<p:outputLabel />
+				</p:column>
+			</p:dataTable>
+
+			<div align="right">
+				<p:commandButton value="Add" />
+
+				<p:commandButton value="Edit" />
+
+				<p:commandButton value="Delete" />
+			</div>
+		</p:panel>
+
+		<p:panel header="Machine/Equipment List">
+			<p:dataTable>
+				<p:column headerText="No.">
+					<p:outputLabel />
+				</p:column>
+				<p:column headerText="Type of Machine/ Equipment">
+					<p:outputLabel />
+				</p:column>
+				<p:column headerText="Brand">
+					<p:outputLabel />
+				</p:column>
+				<p:column headerText="Function">
+					<p:outputLabel />
+				</p:column>
+				<p:column headerText="Qty">
+					<p:outputLabel />
+				</p:column>
+				<p:column headerText="Value(RM)">
+					<p:outputLabel />
+				</p:column>
+				<p:column headerText="Purchasing Method">
+					<p:outputLabel />
+				</p:column>
+				<p:column headerText="Guarantor Name">
+					<p:outputLabel />
+				</p:column>
+			</p:dataTable>
+			<div align="right">
+				<p:commandButton value="Add" />
+				<p:commandButton value="Edit" />
+				<p:commandButton value="Delete" />
+			</div>
+		</p:panel>
+
+</ui:composition>

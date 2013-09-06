@@ -1,0 +1,109 @@
+<ui:composition
+	template="/WEB-INF/facelets/templates/sidemenu_template.xhtml"
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:c="http://java.sun.com/jsp/jstl/core">
+
+	<ui:define name="resourceSection">
+		<style type="text/css">
+.test {
+	
+}
+
+table.test {
+	width: 100%;
+}
+
+.test td {
+	padding: 5px;
+}
+
+#tdContent {
+	text-align: left;
+}
+
+#tdTitle {
+	width: 20%;
+	text-align: right;
+}
+</style>
+	</ui:define>
+		<ui:define name="sideMenu">
+			<ui:include src="/xhtml/sm/shared/sidemenu/registrationSideMenu.xhtml"></ui:include>
+		</ui:define>
+
+		<ui:define name="content">
+			<h:outputLabel value="Sign Up New Account"
+				style="font-weight:bold;font-size:15px;" />
+			<p:panel header="Sign Up">
+				<table class="test">
+					<tr>
+						<td id="tdTitle"><h:outputLabel
+								value="#{lbl['lbl.sm.regtype']}" /></td>
+						<td id="tdContent"><p:selectOneRadio
+								value="#{registrationBackingBean.managedBean.regType}">
+								<f:selectItem itemLabel="Register Online Account"
+									itemValue="Basic" />
+								<f:selectItem itemLabel="MOF Registeration" itemValue="MOF" />
+								<p:ajax event="change" update="@form" />
+							</p:selectOneRadio></td>
+					</tr>
+
+					<p:outputPanel
+						rendered="#{registrationBackingBean.managedBean.regType == 'MOF'}">
+						<tr>
+							<td id="tdTitle"><h:outputLabel
+									value="#{lbl['lbl.sm.mofsuppliertype']}" /></td>
+							<td id="tdContent"><p:selectOneMenu 
+									value="#{registrationBackingBean.managedBean.mofSuppType}">
+									<f:selectItem itemLabel="Select" itemValue="" />
+									<f:selectItem itemLabel="Consultant" itemValue="Consultant" />
+									<f:selectItem itemLabel="Contractor" itemValue="Contractor" />
+									<p:ajax event="change" update="@form" />
+								</p:selectOneMenu></td>
+						</tr>
+					</p:outputPanel>
+
+					<tr>
+						<td id="tdTitle"><h:outputLabel
+								value="#{lbl['lbl.sm.businesscomptype']}" /></td>
+						<td id="tdContent">				<p:selectOneMenu id="somId"
+								value="#{registrationBackingBean.managedBean.businessType}">
+								<f:selectItem itemLabel="Select" itemValue="" />
+								<f:selectItem itemLabel="ROB-Semenanjung" itemValue="ROB" />
+								<f:selectItem itemLabel="ROB-Sabah" itemValue="ROBSabah" />
+								<f:selectItem itemLabel="ROB-Sarawak" itemValue="ROBSarawak" />
+								<f:selectItem itemLabel="ROC" itemValue="ROC" />
+								<f:selectItem itemLabel="LLP" itemValue="LLP" />
+								<f:selectItem itemLabel="Individual" itemValue="Ind" />
+								<f:selectItem itemLabel="Society(ROS)" itemValue="ROS" />
+								<f:selectItem itemLabel="Professional Body" itemValue="PB" />
+								<p:ajax event="change" update="@form" />
+							</p:selectOneMenu></td>
+					</tr>
+				</table>
+			</p:panel>
+
+				<c:if
+					test="${registrationBackingBean.managedBean.businessType == 'Ind'}">
+					<ui:include
+						src="/xhtml/sm/shared/onlinereg/individualregform.xhtml">
+					</ui:include>
+				</c:if>
+				<c:if
+					test="${registrationBackingBean.managedBean.businessType != 'Ind'}">
+					<ui:include
+						src="/xhtml/sm/shared/onlinereg/corporateregform.xhtml">
+					</ui:include>
+				</c:if>
+
+
+			<div align="right">
+				<p:commandButton value="Next"
+					action="#{registrationBackingBean.proceedToCompanyInfo}" />
+			</div>
+		</ui:define>
+</ui:composition>
