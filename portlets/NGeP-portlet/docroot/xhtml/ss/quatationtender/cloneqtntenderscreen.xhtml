@@ -12,16 +12,16 @@
 			<p:panelGrid columns="4" style="width:100%;" styleClass="noBorders tr,noBorders td">
 				
 
-				<h:outputLabel for="qttitle" value="Title" />
-				<p:inputText id="qttitle" value="" />
+				<h:outputText value="Title" />
+				<p:inputText  value="#{searchQtnTenderBB.managedBean.qtno}" />
 
 
-				<h:outputLabel for="qttenno" value="Title" />
-				<p:inputText id="qttenno" value="" />
+				<h:outputText  value="Title" />
+				<p:inputText value="#{searchQtnTenderBB.managedBean.qtno}" />
 
 			
 					 <h:outputText value="#{lbl['lbl.so.procmode']}" />  
-        <p:selectOneMenu value="">  
+        <p:selectOneMenu value="#{searchQtnTenderBB.managedBean.selectOption}">  
             <f:selectItem itemLabel="Select One" itemValue="" />  
             <f:selectItem itemLabel="Quotation" itemValue="Quotation" />  
             <f:selectItem itemLabel="Tender" itemValue="Tender" />  
@@ -29,14 +29,14 @@
         </p:selectOneMenu> 
 
 				<h:outputText value="#{lbl['lbl.so.creatdtfrom']}" />
-				<p:calendar value="#{searchQtnTenderBB.managedBean.tenderBean.crtDateFrom}" id="crdateFrm1"
+				<p:calendar value="#{searchQtnTenderBB.managedBean.date}"
 					showOn="button" />
 
 				<h:outputText value="#{lbl['lbl.so.creatdtto']}" />
-				<p:calendar value="#{searchQtnTenderBB.managedBean.tenderBean.crtDateFrom}" id="crdateTo1" showOn="button" />
+				<p:calendar value="#{searchQtnTenderBB.managedBean.date}"  showOn="button" />
 
 				<h:outputText value="#{lbl['lbl.so.status']}" />
-				<p:selectOneMenu value="">
+				<p:selectOneMenu value="#{searchQtnTenderBB.managedBean.selectOption}">
 					<f:selectItem itemLabel="Select One" itemValue="" />
 					<f:selectItem itemLabel="Option 1" itemValue="1" />
 					<f:selectItem itemLabel="Option 2" itemValue="2" />

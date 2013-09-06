@@ -6,7 +6,128 @@
 	xmlns:p="http://primefaces.org/ui"
 	xmlns:c="http://java.sun.com/jsp/jstl/core">
 
-		<p:panel header="Restricted Tender/Direct Negotiation  (for Qtn/Tender Type is Restricted Tender, OR Direct Negotiation)" toggleable="true">
+		<p:panel header="Restricted Tender/Direct Negotiation (for Qtn/Tender Type is Restricted Tender, OR Direct Negotiation)" toggleable="true">
 
+<p:panelGrid columns="2" style="width:100%;"
+				styleClass="noBorders tr,noBorders td">
+		<h:outputText value="Paid Up Capital RM (More than)" />  
+            <p:inputText value="#{searchQtnTenderBB.managedBean.qtno}"/> 
+            </p:panelGrid>
+            <p:panelGrid columns="1" style="width:100%;"
+				styleClass="noBorders tr,noBorders td">
+<p:commandButton value="Search" style="float:right;"
+					onclick="suppdlg.show();"></p:commandButton>
+				
+				</p:panelGrid>
+    
+			
+
+<h:panelGroup  style="width:100%;">
+			<p:dataTable value="#{searchQtnTenderBB.managedBean.categories}" var="ccode" resizableColumns="true"
+				editable="true">
+<p:ajax event="rowEdit" />  
+        <p:ajax event="rowEditCancel" />  
+  
+				<p:column headerText="No.">
+				
+				<p:cellEditor>  
+                <f:facet name="output">  
+                    <h:outputText value="#{ccode.num}" />
+                </f:facet>  
+                <f:facet name="input">  
+                    <p:inputText value="#{ccode.num}" style="width:100%"/>  
+                </f:facet>  
+            </p:cellEditor> 
+					
+				</p:column>
+
+				<p:column headerText="Category Code">
+				
+				<p:cellEditor>  
+                <f:facet name="output">  
+                   <h:outputText value="#{ccode.mainCCode}" />,
+                </f:facet>  
+                <f:facet name="input">  
+                    <p:selectOneMenu value="#{searchQtnTenderBB.managedBean.qtno}" effect="fold" editable="true">  
+            <f:selectItem itemLabel="Select One" itemValue="" />  
+            <f:selectItems value="#{searchQtnTenderBB.managedBean.mainCcode}" />  
+        </p:selectOneMenu>
+                </f:facet>  
+            </p:cellEditor> 
+				<p:cellEditor>
+				<f:facet name="output">  
+                  <h:outputText value="#{ccode.subCCode}" />,
+                </f:facet>  
+                <f:facet name="input">  
+                   <p:selectOneMenu value="#{searchQtnTenderBB.managedBean.qtno}" effect="fold" editable="true">  
+            <f:selectItem itemLabel="Select One" itemValue="" />  
+            <f:selectItem itemLabel="sub1" itemValue="1" />  
+            <f:selectItem itemLabel="sub2" itemValue="2" />  
+            <f:selectItem itemLabel="sub3" itemValue="3" />  
+        </p:selectOneMenu> 
+                </f:facet>  
+            </p:cellEditor> 
+            <p:cellEditor>
+            <f:facet name="output">  
+                  <h:outputText value="#{ccode.subCDevison}"/>
+                </f:facet>  
+                <f:facet name="input">  
+                    <p:selectOneMenu value="#{searchQtnTenderBB.managedBean.qtno}" effect="fold" editable="true">  
+            <f:selectItem itemLabel="Select One" itemValue="" />  
+            <f:selectItem itemLabel="Subcc1" itemValue="1" />  
+            <f:selectItem itemLabel="Subcc2" itemValue="2" />  
+            <f:selectItem itemLabel="Subcc3" itemValue="3" />  
+        </p:selectOneMenu> 
+                </f:facet>  
+            </p:cellEditor> 
+					
+					
+
+				</p:column>
+
+				<p:column headerText="Mandatory">
+				
+				
+				<p:cellEditor>  
+                <f:facet name="output">  
+                    <h:outputText value="#{ccode.manditory}" />
+                </f:facet>  
+                <f:facet name="input">  
+                    
+              <p:selectManyCheckbox value="#{searchQtnTenderBB.managedBean.selectOptions}">  
+            <f:selectItem itemLabel="yes"/>  
+            <f:selectItem itemLabel="no" />  
+           
+        </p:selectManyCheckbox>  
+                </f:facet>  
+            </p:cellEditor> 
+					
+				</p:column>
+				 <p:column style="width:6%">  
+            <p:rowEditor />  
+        </p:column>
+
+			</p:dataTable>
+
+
+
+
+		</h:panelGroup>
+
+		<p:commandButton value="Add" style="float:right;"
+			onclick="ccdlg.show();" />
+
+	<ui:include src="/xhtml/ss/quatationtender/supplierlist.xhtml"></ui:include>	
+	
+	 <p:panelGrid columns="3" style="width:100%;"
+				styleClass="noBorders tr,noBorders td">
+		<h:outputText value="TotalSuppliers" />  
+            <p:inputText  value="1" readonly="true"/> 
+            
+            
+<p:commandButton value="CreateQtn/Tender" style="float:right;" action="quatationtendercreation?faces-redirect=true">
+    
+</p:commandButton>
+		</p:panelGrid>
 		</p:panel>
 		</ui:composition>

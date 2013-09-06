@@ -28,24 +28,24 @@
         </p:selectOneMenu>  
     
  <h:outputText value="#{lbl['lbl.so.creatdtfrom']}" /> 
-    <p:calendar value="#{searchQtnTenderBB.managedBean.tenderBean}" id="crdateFrm" showOn="button" />  
+    <p:calendar value="#{searchQtnTenderBB.managedBean.date}" id="crdateFrm" showOn="button" />  
   
   <h:outputText value="#{lbl['lbl.so.creatdtto']}" /> 
-    <p:calendar value="#{searchQtnTenderBB.managedBean.tenderBean}" id="crdateTo" showOn="button" />  
+    <p:calendar value="#{searchQtnTenderBB.managedBean.date}" id="crdateTo" showOn="button" />  
  
  <h:outputText value="#{lbl['lbl.so.pbldtfrom']}" /> 
-    <p:calendar value="#{searchQtnTenderBB.managedBean.tenderBean}" id="pbdateFrom" showOn="button" />  
+    <p:calendar value="#{searchQtnTenderBB.managedBean.date}" id="pbdateFrom" showOn="button" />  
  
  <h:outputText value="#{lbl['lbl.so.pbldtto']}" /> 
-    <p:calendar value="#{searchQtnTenderBB.managedBean.tenderBean}" id="pbdateTo" showOn="button" />  
+    <p:calendar value="#{searchQtnTenderBB.managedBean.date}" id="pbdateTo" showOn="button" />  
  
  <h:outputText value="#{lbl['lbl.so.clsdtfrom']}" /> 
-    <p:calendar value="#{searchQtnTenderBB.managedBean.tenderBean}" id="cldateFrom" showOn="button" />  
+    <p:calendar value="#{searchQtnTenderBB.managedBean.date}" id="cldateFrom" showOn="button" />  
  
  <h:outputText value="#{lbl['lbl.so.clsdtto']}" /> 
-    <p:calendar value="#{searchQtnTenderBB.managedBean.tenderBean}" id="cldateTo" showOn="button" />  
+    <p:calendar value="#{searchQtnTenderBB.managedBean.date}" id="cldateTo" showOn="button" />  
  
- <h:outputText value="#{lbl['lbl.so.status']}" />  
+ <h:outputText value="#{lbl['lbl.so.status']}" /> 
         <p:selectOneMenu value="#{searchQtnTenderBB.managedBean.selectOption}">  
             <f:selectItem itemLabel="Select One" itemValue="" />  
             <f:selectItem itemLabel="Option 1" itemValue="" />  
@@ -65,20 +65,6 @@
 <br/>
 
 		</p:panel>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 <p:panel header="Qtn/Tender List" toggleable="true">
