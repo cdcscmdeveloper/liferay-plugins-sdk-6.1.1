@@ -2070,9 +2070,12 @@ td {
 	padding: 5px !important;
 }
 
-<<<<<<< ep.css
-
-
+#autoScroll {
+	width: 180px;
+	height: 200px;
+	overflow: auto !important;
+	border: 1px solid #d1d1d1;
+}
 
 
 /* --------------------------       PP Related     ------------------------------ */
@@ -2171,9 +2174,4 @@ table.ppThreePartsTable td {
 }
 /*--------------------------       End PP Related      ------------------------------ */
 
-#autoScroll {
-	width: 180px;
-	height: 200px;
-	overflow: auto !important;
-	border: 1px solid #d1d1d1;
-}
+
