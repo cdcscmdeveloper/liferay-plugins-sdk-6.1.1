@@ -16,7 +16,7 @@
 				</td>
 			</tr>
 		</table>
-		<p:panel header="GENERAL INFORMATION">
+		<p:panel header="GENERAL INFORMATION" toggleable="true">
 			<table>
 				<tr>
 					<td>
@@ -96,7 +96,7 @@
 		</p:panel>
 		<br />
 		<br />
-		<p:panel header="ROUTE AND OVERSEA AGENT">
+		<p:panel header="ROUTE AND OVERSEA AGENT" toggleable="true">
 			<table>
 				<tr>
 					<td><p:outputLabel value="Country of Origin" /></td>
@@ -134,7 +134,7 @@
 				</tr>
 			</table>
 		</p:panel>
-		<p:panel header="SUPPLIER DETAIL">
+		<p:panel header="SUPPLIER DETAIL" toggleable="true">
 		<table>
 				<tr>
 					<td><p:separator id="customSeparator"
@@ -192,7 +192,7 @@
 				</tr>
 			</table>
 		</p:panel>
-		<p:panel header="PACKAGE DETAIL">
+		<p:panel header="PACKAGE DETAIL" toggleable="true">
 			<table>
 				<tr>
 					<td><p:outputLabel value="Special Instruction" /></td>
@@ -202,7 +202,7 @@
 
 				</tr>
 			</table>
-			<p:dataTable id="dataTable" var="item" value="" paginator="true"
+			<p:dataTable id="packageDataTable" var="item" value="" paginator="true"
 				rows="10"
 				paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
 				rowsPerPageTemplate="5,10,15" paginatorPosition="bottom">

@@ -19,83 +19,62 @@
 					<p:commandButton value="SUBMIT" /> <p:commandButton value="PRINT" /></td>
 			</tr>
 		</table>
-		<p:panel header="SUPPLIER DETAIL">
+		<p:panel header="SUPPLIER DETAIL" toggleable="true">
 			<table>
 				<tr>
-					<td>
-						<table>
-							<tr>
-								<td><p:outputLabel value="Supplier ID" /></td>
-								<td><p:inputText style="width: 120px;" value=""
-										disabled="true" /></td>
-							</tr>
-							<tr>
-								<td><p:outputLabel value="Supplier Name" /></td>
-								<td><p:inputText style="width: 260px;" value=""
-										disabled="true" /></td>
-							</tr>
-							<tr>
-								<td><p:outputLabel value="Address" /></td>
-								<td><p:inputText style="width: 260px; height:90px; "
-										value=" " disabled="true" /></td>
-							</tr>
-							<tr>
-								<td><p:outputLabel value="Email" /></td>
-								<td><p:inputText style="width: 260px;"
-										value="KBB.XY@gmail.com" disabled="true" /></td>
-							</tr>
-							<tr>
-								<td><p:outputLabel value="Telephone NO." /></td>
-								<td><p:inputText style="width: 120px;" value="02-7324800 "
-										disabled="true" /></td>
-							</tr>
-						</table>
-					</td>
-					<td>
-						<table>
-							<tr>
-								<td><p:outputLabel value="Invoice NO." /></td>
-								<td><p:inputText style="width: 260px;"
-										value="- SYSTEM GENERATED - " disabled="true" /></td>
-							</tr>
-							<tr>
-								<td><p:outputLabel value="Invoice Date" /></td>
-								<td><p:inputText style="width: 260px;"
-										value=" - SYSTEM DATE - " disabled="true" /></td>
+					<td><p:outputLabel value="Supplier ID" /></td>
+					<td><p:inputText style="width: 120px;" value=""
+							disabled="true" /></td>
+					<td><p:outputLabel value="Invoice NO." /></td>
+					<td><p:inputText style="width: 260px;"
+							value="- SYSTEM GENERATED - " disabled="true" /></td>
+				</tr>
+				<tr>
+					<td><p:outputLabel value="Supplier Name" /></td>
+					<td><p:inputText style="width: 260px;" value=""
+							disabled="true" /></td>
+					<td><p:outputLabel value="Invoice Date" /></td>
+					<td><p:inputText style="width: 260px;"
+							value=" - SYSTEM DATE - " disabled="true" /></td>
+				</tr>
+				<tr>
+					<td rowspan="4"><p:outputLabel value="Address" /></td>
+					<td rowspan="4"><p:inputText
+							style="width: 260px; height:100px; " value=" " disabled="true" /></td>
+					<td><p:outputLabel value="Invoice Recv. Date" /></td>
+					<td><p:calendar mode="popup" showOn="button" /></td>
+				</tr>
+				<tr>
+					<td><p:outputLabel value="Supplier Inv. NO." /></td>
+					<td><p:inputText style="width: 260px;" value=" " /></td>
+				</tr>
+				<tr>
+					<td><p:outputLabel value="Ori. Invoice Amt." /></td>
+					<td><p:inputText style="width: 260px;" value="20,000.00"
+							disabled="true" />MYR</td>
+				</tr>
+				<tr>
+					<td><p:outputLabel value="New Invoice Amt." /></td>
+					<td><p:inputText style="width: 260px;" value="18,500.00"
+							disabled="true" />MYR</td>
+				</tr>
+				<tr>
+					<td><p:outputLabel value="Email" /></td>
+					<td><p:inputText style="width: 260px;"
+							value="KBB.XY@gmail.com" disabled="true" /></td>
+					<td><p:outputLabel value="Status" /></td>
+					<td><p:inputText style="width: 260px;" value=""
+							disabled="true" /></td>
+				</tr>
 
-							</tr>
-							<tr>
-								<td><p:outputLabel value="Invoice Recv. Date" /></td>
-								<td><p:calendar mode="popup" showOn="button" /></td>
-
-							</tr>
-							<tr>
-								<td><p:outputLabel value="Supplier Inv. NO." /></td>
-								<td><p:inputText style="width: 260px;" value=" " /></td>
-							</tr>
-							<tr>
-								<td><p:outputLabel value="Ori. Invoice Amt." /></td>
-								<td><p:inputText style="width: 260px;" value="20,000.00"
-										disabled="true" />MYR</td>
-							</tr>
-							<tr>
-								<td><p:outputLabel value="New Invoice Amt." /></td>
-								<td><p:inputText style="width: 260px;" value="18,500.00"
-										disabled="true" />MYR</td>
-							</tr>
-							<tr>
-								<td><p:outputLabel value="Status" /></td>
-								<td><p:inputText style="width: 260px;" value=""
-										disabled="true" /></td>
-							</tr>
-
-						</table>
-					</td>
+				<tr>
+					<td><p:outputLabel value="Telephone NO." /></td>
+					<td><p:inputText style="width: 120px;" value="02-7324800 "
+							disabled="true" /></td>
 				</tr>
 			</table>
-
 		</p:panel>
-		<p:panel header="FULFILMENT DETAIL">
+		<p:panel header="FULFILMENT DETAIL" toggleable="true">
 			<table>
 				<tr>
 					<td><p:outputLabel value="Ministry" /></td>
@@ -141,7 +120,7 @@
 
 		</p:panel>
 
-		<p:panel header="PAYMENT INSTRUCTION">
+		<p:panel header="PAYMENT INSTRUCTION" toggleable="true">
 			<table>
 				<tr>
 					<td><p:separator id="customSeparator"
@@ -155,8 +134,8 @@
 			<table>
 				<tr>
 					<td><p:outputLabel value="Factored?" /></td>
-					<td><p:selectBooleanCheckbox />
-						<p:inputText style="width: 260px;" value="" disabled="true" /></td>
+					<td><p:selectBooleanCheckbox /> <p:inputText
+							style="width: 260px;" value="" disabled="true" /></td>
 					<td><p:outputLabel value="Bank Address" /></td>
 					<td><p:inputText style="width: 260px; height:90px; "
 							value="Bank Address" disabled="true" /></td>
@@ -192,7 +171,7 @@
 				<tr>
 					<td><p:separator id="customSeparator"
 							style="width:40px;height:0px" /></td>
-					<td> Commerce Dot Com </td>
+					<td>Commerce Dot Com</td>
 					<td><p:separator id="customSeparator"
 							style="width:500px;height:0px" /></td>
 				</tr>
@@ -205,7 +184,7 @@
 		</p:panel>
 
 
-		<p:panel header="REMARKS AND ATTACHMENT">
+		<p:panel header="REMARKS AND ATTACHMENT" toggleable="true">
 			<table>
 				<tr>
 					<td><p:outputLabel value="* Remarks    " /></td>

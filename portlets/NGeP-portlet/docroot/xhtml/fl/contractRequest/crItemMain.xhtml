@@ -20,7 +20,7 @@
 			</tr>
 		</table>
 
-		<p:panel header="DELIVERY ADDRESS" toggleable="false">
+		<p:panel header="DELIVERY ADDRESS" toggleable="true">
 
 			<table style="width: 775px;">
 
@@ -30,7 +30,7 @@
 
 				</tr>
 			</table>
-			<p:dataTable id="dataTable" var="address" value="" paginator="true"
+			<p:dataTable id="addressDataTable" var="address" value="" paginator="true"
 				rows="10"
 				paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
 				rowsPerPageTemplate="5,10,15" paginatorPosition="bottom">
@@ -51,14 +51,14 @@
 				</p:column>
 			</p:dataTable>
 		</p:panel>
-		<p:panel header="ITEM DETAIL" toggleable="false">
+		<p:panel header="ITEM DETAIL" toggleable="true">
 			<table style="width: 775px;">
 				<tr>
 					<td colspan="6" align="right"><p:commandButton value="ACTION" />
 					</td>
 				</tr>
 			</table>
-			<p:dataTable id="dataTable" var="item" value="" paginator="true"
+			<p:dataTable id="itemDataTable" var="item" value="" paginator="true"
 				rows="10"
 				paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
 				rowsPerPageTemplate="5,10,15" paginatorPosition="bottom">

@@ -10,8 +10,7 @@
 	<ui:define name="resourceSection">
 	</ui:define>
 	<ui:define name="sideMenu">
-		<ui:include
-			src="/xhtml/fl/shared/sidemenu/flCoSideMenu.xhtml" />
+		<ui:include src="/xhtml/fl/shared/sidemenu/flCoSideMenu.xhtml" />
 	</ui:define>
 	<ui:define name="content">
 		<table style="width: 800px;">
@@ -21,16 +20,131 @@
 						value="PRINT" /></td>
 			</tr>
 		</table>
-		<ui:include src="/xhtml/fl/contractOrder/fulfilmentDetail.xhtml" />
-		<ui:include src="/xhtml/fl/contractOrder/supplierDetail.xhtml" />
-		<ui:include src="/xhtml/fl/contractOrder/remarksAttachment.xhtml" />
-		<table style="width: 800px;">
-			<tr>
-				<td></td>
-				<td></td>
-				<td></td>
-				<td></td>
-			</tr>
-		</table>
+
+		<p:panel header="FULFILMENT DETAIL" toggleable="true">
+			<table>
+				<tr>
+					<td><p:outputLabel value="Ministry" /></td>
+					<td><p:inputText style="width: 260px;"
+							value="KEMENTERIAN KEWANGAN" disabled="true" /></td>
+					<td><p:outputLabel value="Contract Req. NO." /></td>
+					<td><p:inputText style="width: 260px;" value="CR10202-0202"
+							disabled="true" /></td>
+				</tr>
+				<tr>
+					<td><p:outputLabel value="Jabatan" /></td>
+					<td><p:inputText style="width: 260px;"
+							value="JABATAN KASTAM DAN EKSAIS DIRAJA" disabled="true" /></td>
+					<td><p:outputLabel value="MTO?" /></td>
+					<td><p:selectBooleanCheckbox /></td>
+				</tr>
+				<tr>
+					<td><p:outputLabel value="Issued PTJ" /></td>
+					<td><p:inputText style="width: 260px;"
+							value="IBU PEJABAT KASTAM" disabled="true" /></td>
+					<td><p:outputLabel value="Contract NO." /></td>
+					<td><p:inputText style="width: 260px;" value=""
+							disabled="true" /></td>
+				</tr>
+				<tr>
+					<td><p:outputLabel value="Received PTJ" /></td>
+					<td><p:inputText style="width: 260px;"
+							value="IBU PEJABAT KASTAM" disabled="true" /></td>
+					<td><p:outputLabel value="Contract Type" /></td>
+					<td><p:inputText style="width: 260px;"
+							value="MINISTRY CONTRACT" disabled="true" /></td>
+				</tr>
+
+				<tr>
+					<td rowspan="4"><p:outputLabel value="Title" /></td>
+					<td rowspan="4"><p:inputText
+							style="width: 260px; height:100px; " value="Request Description "
+							disabled="true" /></td>
+					<td><p:outputLabel value="Fulfillment Type" /></td>
+					<td><p:inputText style="width: 260px;"
+							value="FULFILMENT SCHEDULE" disabled="true" /></td>
+				</tr>
+				<tr>
+					<td><p:outputLabel value="Plan NO." /></td>
+					<td><p:inputText style="width: 260px;" value="PL_FL_003"
+							disabled="true" /></td>
+				</tr>
+				<tr>
+					<td><p:outputLabel value="FS. NO." /></td>
+					<td><p:inputText style="width: 260px;" value="FS0053"
+							disabled="true" /></td>
+				</tr>
+				<tr>
+					<td><p:outputLabel value="Creation Date" /></td>
+					<td><p:inputText style="width: 260px;"
+							value="12/10/2012 10:45 AM" disabled="true" /></td>
+				</tr>
+				<tr>
+					<td><p:outputLabel value="Maksud  Code" /></td>
+					<td><p:inputText style="width: 260px;"
+							value="KEMENTERIAN KEWANGAN" disabled="true" /></td>
+					<td><p:outputLabel value="Status" /></td>
+					<td><p:inputText style="width: 260px;" value="NEW REQUEST"
+							disabled="true" /></td>
+				</tr>
+				<tr>
+					<td><p:outputLabel value="Charge PTJ" /></td>
+					<td><p:inputText style="width: 260px;"
+							value="IBU PEJABAT KASTAM (RECEIVING PTJ)" disabled="true" /></td>
+					<td><p:outputLabel value="Financial Year" /></td>
+					<td><p:inputText style="width: 260px;" value="2013"
+							disabled="true" /></td>
+				</tr>
+				<tr>
+					<td><p:outputLabel value="AG Office" /></td>
+					<td><p:inputText style="width: 260px;" value="002 CAWANGAN KL"
+							disabled="true" /></td>
+					<td><p:outputLabel value="Financing?" /></td>
+					<td><p:selectBooleanCheckbox /></td>
+				</tr>
+			</table>
+		</p:panel>
+		<p:panel header="SUPPLIER DETAIL" toggleable="true">
+			<br />
+			<table>
+				<tr>
+					<td><p:outputLabel value="Supplier ID" /></td>
+					<td><p:inputText style="width: 120px;" value="02-7324800"
+							disabled="true" /></td>
+				</tr>
+				<tr>
+					<td><p:outputLabel value="Supplier Name" /></td>
+					<td><p:inputText style="width: 260px;" value="KBB SDN BHD"
+							disabled="true" /></td>
+				</tr>
+				<tr>
+					<td><p:outputLabel value="Address" /></td>
+					<td><p:inputText style="width: 260px; height:90px; "
+							value="Supplier Address " disabled="true" /></td>
+				</tr>
+				<tr>
+					<td><p:outputLabel value="Email" /></td>
+					<td><p:inputText style="width: 260px;"
+							value="KBB.XY@gmail.com" disabled="true" /></td>
+				</tr>
+				<tr>
+					<td><p:outputLabel value="Telephone NO." /></td>
+					<td><p:inputText style="width: 260px;" value="02-7324800 "
+							disabled="true" /></td>
+				</tr>
+			</table>
+		</p:panel>
+		<p:panel header="REMARKS And ATTACHMENT" toggleable="true">
+			<br />
+			<table>
+				<tr>
+					<td><p:outputLabel value="* Remarks    " /></td>
+					<td><p:inputTextarea rows="7" style="width: 260px;" /></td>
+					<td><p:outputLabel value="Attachment" /></td>
+					<td><p:commandButton value="Attach Files" /></td>
+				</tr>
+			</table>
+		</p:panel>
+
 	</ui:define>
 </ui:composition>

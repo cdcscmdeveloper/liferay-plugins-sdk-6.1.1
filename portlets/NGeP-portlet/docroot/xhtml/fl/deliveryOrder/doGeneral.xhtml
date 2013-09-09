@@ -10,8 +10,7 @@
 	<ui:define name="resourceSection">
 	</ui:define>
 	<ui:define name="sideMenu">
-		<ui:include
-			src="/xhtml/fl/shared/sidemenu/flDoSideMenu.xhtml" />
+		<ui:include src="/xhtml/fl/shared/sidemenu/flDoSideMenu.xhtml" />
 	</ui:define>
 	<ui:define name="content">
 
@@ -19,22 +18,108 @@
 
 			<tr>
 				<td colspan="4" align="right"><p:commandButton value="SAVE" />
-					<p:commandButton value="SUBMIT" />
-					<p:commandButton value="PRINT" /></td>
+					<p:commandButton value="SUBMIT" /> <p:commandButton value="PRINT" /></td>
+			</tr>
+		</table>
+		<p:panel header="SUPPLIER DETAIL (FROM)" toggleable="true">
+			<table>
+				<tr>
+					<td><p:outputLabel value="Supplier ID" /></td>
+					<td><p:inputText style="width: 260px;" value=""
+							disabled="true" /></td>
+					<td><p:outputLabel value="Delivery Order NO." /></td>
+					<td><p:inputText style="width: 260px;"
+							value="- system generated -" disabled="true" /></td>
+				</tr>
+				<tr>
+					<td><p:outputLabel value="Supplier Name" /></td>
+					<td><p:inputText style="width: 260px;" value="KBB SDN BHD"
+							disabled="true" /></td>
+					<td><p:outputLabel value="Delivery Order Date" /></td>
+					<td><p:inputText style="width: 260px;" value=""
+							disabled="true" /></td>
+				</tr>
+				<tr>
+					<td rowspan="4"><p:outputLabel value="Address" /></td>
+					<td rowspan="4"><p:inputText
+							style="width: 260px; height:100px; " value="Request Description "
+							disabled="true" /></td>
+					<td><p:outputLabel value="Supp. Del. Order NO." /></td>
+					<td><p:inputText style="width: 260px;" value="" /></td>
+				</tr>
+				<tr>
+					<td><p:outputLabel value="Order NO." /></td>
+					<td><p:inputText style="width: 260px;" value=""
+							disabled="true" /></td>
+				</tr>
+				<tr>
+					<td><p:outputLabel value="Status" /></td>
+					<td><p:inputText style="width: 260px;" value=""
+							disabled="true" /></td>
+				</tr>
+				<tr>
+					<td><p:outputLabel value="Email" /></td>
+					<td><p:inputText style="width: 260px;"
+							value="KBB.XY@gmail.com" disabled="true" /></td>
+				</tr>
+				<tr>
+					<td><p:outputLabel value="Telephone NO." /></td>
+					<td><p:inputText style="width: 260px;" value="02-7324800"
+							disabled="true" /></td>
+				</tr>
+			</table>
+		</p:panel>
+		<p:panel header=" FULFILMENT DETAIL (TO)" toggleable="true">
 
-			</tr>
-		</table>
-		
-		<ui:include src="/xhtml/fl/deliveryOrder/supplierDetailForm.xhtml" />
-		<ui:include src="/xhtml/fl/deliveryOrder/fulfilmentDetailTo.xhtml" />
-		<ui:include src="/xhtml/fl/contractOrder/remarksAttachment.xhtml" />
-		<table style="width: 800px;">
-			<tr>
-				<td></td>
-				<td></td>
-				<td></td>
-				<td></td>
-			</tr>
-		</table>
+			<br />
+			<table>
+				<tr>
+					<td><p:outputLabel value="Ministry" /></td>
+					<td><p:inputText style="width: 260px;"
+							value="KEMENTERIAN KEWANGAN" disabled="true" /></td>
+					<td><p:outputLabel value="Delivery (Start)" /></td>
+					<td><p:calendar mode="popup" showOn="button" /></td>
+				</tr>
+				<tr>
+					<td><p:outputLabel value="Jabatan" /></td>
+					<td><p:inputText style="width: 260px;"
+							value="JABATAN KASTAM DAN EKSAIS DIRAJA" disabled="true" /></td>
+					<td><p:outputLabel value="Delivery (End)" /></td>
+					<td><p:calendar mode="popup" showOn="button" /></td>
+				</tr>
+				<tr>
+					<td><p:outputLabel value="Received PTJ" /></td>
+					<td><p:inputText style="width: 260px;"
+							value="IBU PEJABAT KASTAM (RECEIVING PTJ) " disabled="true" /></td>
+					<td colspan="3"></td>
+					<td colspan="4"></td>
+				</tr>
+				<tr>
+					<td><p:outputLabel value="Delivery Address" /></td>
+					<td><p:inputText style="width: 260px; height:90px; "
+							value="PTJ Receiving Addres " disabled="true" /></td>
+					<td colspan="3"></td>
+					<td colspan="4"></td>
+				</tr>
+				<tr>
+					<td><p:outputLabel value="Charge Account" /></td>
+					<td><p:inputText style="width: 260px;" value="0001010"
+							disabled="true" /></td>
+					<td colspan="3"></td>
+					<td colspan="4"></td>
+				</tr>
+			</table>
+		</p:panel>
+		<p:panel header="REMARKS And ATTACHMENT" toggleable="true">
+			<br />
+			<table>
+				<tr>
+					<td><p:outputLabel value="* Remarks    " /></td>
+					<td><p:inputTextarea rows="7" style="width: 260px;" /></td>
+					<td><p:outputLabel value="Attachment" /></td>
+					<td><p:commandButton value="Attach Files" /></td>
+				</tr>
+			</table>
+		</p:panel>
 	</ui:define>
 </ui:composition>

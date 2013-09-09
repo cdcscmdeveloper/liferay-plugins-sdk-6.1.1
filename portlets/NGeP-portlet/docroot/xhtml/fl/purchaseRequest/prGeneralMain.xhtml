@@ -20,121 +20,97 @@
 				</td>
 			</tr>
 		</table>
-		<p:panel header="FULFILMENT DETAIL">
+		<p:panel header="FULFILMENT DETAIL" toggleable="true">
 			<table>
 				<tr>
-					<td>
-						<table>
-							<tr>
-								<td><p:outputLabel value="Ministry" /></td>
-								<td><p:inputText style="width: 260px;"
-										value="KEMENTERIAN KEWANGAN" disabled="true" /></td>
-							</tr>
-							<tr>
-								<td><p:outputLabel value="* Issued Jabatan" /></td>
-								<td><p:selectOneMenu value="" style="width: 260px;">
-										<f:selectItem itemLabel="JABATAN KASTAM DAN EKSAIS DIRAJA"
-											itemValue="1" />
-									</p:selectOneMenu></td>
-							</tr>
-							<tr>
-								<td><p:outputLabel value="* Issued PTJ" /></td>
-								<td><p:selectOneMenu value="" style="width: 260px;">
-										<f:selectItem itemLabel="IBU PEJABAT KASTAM" itemValue="1" />
-									</p:selectOneMenu></td>
-							</tr>
-							<tr>
-								<td><p:outputLabel value="* Received Jabatan" /></td>
-								<td><p:selectOneMenu value="" style="width: 260px;">
-										<f:selectItem itemLabel="JABATAN KASTAM DAN EKSAIS DIRAJA"
-											itemValue="1" />
-									</p:selectOneMenu></td>
-							</tr>
-							<tr>
-								<td><p:outputLabel value="* Received PTJ" /></td>
-								<td><p:selectOneMenu value="" style="width: 260px;">
-										<f:selectItem itemLabel="IBU PEJABAT KASTAM" itemValue="1" />
-									</p:selectOneMenu></td>
-							</tr>
-							<tr>
-								<td><p:outputLabel value="* Title" /></td>
-								<td><p:inputText style="width: 260px; height:90px; "
-										value="Request Description " /></td>
-							</tr>
-							<tr>
-								<td><p:outputLabel value="*Financial Year" /></td>
-								<td><p:selectOneMenu value="" style="width: 260px;"
-										disabled="true">
-										<f:selectItem itemLabel="2013" itemValue="1" />
-									</p:selectOneMenu></td>
-							</tr>
-							<tr>
-								<td><p:outputLabel value="*AG Office" /></td>
-								<td><p:selectOneMenu value="" style="width: 260px;"
-										disabled="true">
-										<f:selectItem itemLabel="002 KAWANGAN KL" itemValue="1" />
-									</p:selectOneMenu></td>
-							</tr>
-						</table>
-					</td>
-					<td>
-						<table>
-							<tr>
-								<td><p:outputLabel value="Purchase Req. NO." /></td>
-								<td><p:inputText disabled="true" style="width: 260px;"
-										value="PR10202-0202" /></td>
-							</tr>
-							<tr>
-								<td><p:outputLabel value="Req. Note NO" /></td>
-								<td><p:inputText disabled="true" style="width: 260px;"
-										value="10202-0202" /></td>
-							</tr>
-							<tr>
-								<td><p:outputLabel value="Plan NO." /></td>
-								<td><p:inputText disabled="true" style="width: 260px;"
-										value="PL_FL_003" /></td>
-							</tr>
-							<tr>
-								<td><p:outputLabel value="Procurement Type" /></td>
-								<td><p:inputText disabled="true" style="width: 260px;"
-										value="NORMAL" /></td>
-							</tr>
-							<tr>
-								<td><p:outputLabel value="Creation Date" /></td>
-								<td><p:inputText disabled="true" style="width: 260px;"
-										value="12/10/2012 10:45 AM" /></td>
-							</tr>
-							<tr>
-								<td><p:outputLabel value="Status" /></td>
-								<td><p:inputText style="width: 260px;"
-										value="KPENDING ACKNOWLEDGE" disabled="true" /></td>
-							</tr>
-							<tr>
+					<td><p:outputLabel value="Ministry" /></td>
+					<td><p:inputText style="width: 260px;"
+							value="KEMENTERIAN KEWANGAN" disabled="true" /></td>
+					<td><p:outputLabel value="Purchase Req. NO." /></td>
+					<td><p:inputText style="width: 260px;" value="PR10202-0202"
+							disabled="true" /></td>
+				</tr>
+				<tr>
+					<td><p:outputLabel value="* Issued Jabatan" /></td>
+					<td><p:selectOneMenu value="" style="width: 260px;">
+							<f:selectItem itemLabel="JABATAN KASTAM DAN EKSAIS DIRAJA"
+								itemValue="1" />
+						</p:selectOneMenu></td>
+					<td><p:outputLabel value="Req. Note NO" /></td>
+					<td><p:inputText disabled="true" style="width: 260px;"
+							value="10202-0202" /></td>
+				</tr>
+				<tr>
+					<td><p:outputLabel value="* Issued PTJ" /></td>
+					<td><p:selectOneMenu value="" style="width: 260px;">
+							<f:selectItem itemLabel="IBU PEJABAT KASTAM" itemValue="1" />
+						</p:selectOneMenu></td>
+					<td><p:outputLabel value="Plan NO." /></td>
+					<td><p:inputText style="width: 260px;" value="PL_FL_003"
+							disabled="true" /></td>
+				</tr>
+				<tr>
+					<td><p:outputLabel value="* Received Jabatan" /></td>
+					<td><p:selectOneMenu value="" style="width: 260px;">
+							<f:selectItem itemLabel="JABATAN KASTAM DAN EKSAIS DIRAJA"
+								itemValue="1" />
+						</p:selectOneMenu></td>
+					<td><p:outputLabel value="Procurement Type" /></td>
+					<td><p:inputText style="width: 260px;" value="NORMAL"
+							disabled="true" /></td>
+				</tr>
+				<tr>
+					<td><p:outputLabel value="* Received PTJ" /></td>
+					<td><p:selectOneMenu value="" style="width: 260px;">
+							<f:selectItem itemLabel="IBU PEJABAT KASTAM" itemValue="1" />
+						</p:selectOneMenu></td>
+					<td><p:outputLabel value="Creation Date" /></td>
+					<td><p:inputText style="width: 260px;"
+							value="12/10/2012 10:45 AM" disabled="true" /></td>
+				</tr>
+				<tr>
+					<td rowspan="4"><p:outputLabel value="* Title" /></td>
+					<td rowspan="4"><p:inputText
+							style="width: 260px; height:100px; " value="Request Description " /></td>
+					<td><p:outputLabel value="Status" /></td>
+					<td><p:inputText style="width: 260px;" value="NEW REQUEST"
+							disabled="true" /></td>
+				</tr>
 
-								<td><p:outputLabel value=" *Maksud  Code" /></td>
-								<td><p:selectOneMenu value="" style="width: 260px;">
-										<f:selectItem itemLabel="KEMENTERIAN KEWANGAN" itemValue="" />
-									</p:selectOneMenu></td>
-							</tr>
-							<tr>
-								<td><p:outputLabel value="*Charge PTJ" /></td>
-								<td><p:selectOneMenu value="" style="width: 260px;">
+				<tr>
+					<td><p:outputLabel value="*Financial Year" /></td>
+					<td><p:selectOneMenu value="" style="width: 260px;">
+							<f:selectItem itemLabel="2013" itemValue="1" />
+						</p:selectOneMenu></td>
+				</tr>
+				<tr>
+					<td><p:outputLabel value=" *Maksud  Code" /></td>
+					<td><p:selectOneMenu value="" style="width: 260px;">
+							<f:selectItem itemLabel="Select One" itemValue="" />
+						</p:selectOneMenu></td>
+				</tr>
 
-										<f:selectItem itemLabel="IBU PEJABAT KASTAM" itemValue="1" />
-									</p:selectOneMenu></td>
-							</tr>
-							<tr>
-								<td><p:outputLabel value="Financing?" /></td>
-								<td><p:selectBooleanCheckbox /></td>
-							</tr>
-						</table>
-					</td>
+				<tr>
+					<td><p:outputLabel value="*AG Office" /></td>
+					<td><p:selectOneMenu value="" style="width: 260px;">
+							<f:selectItem itemLabel="002 KAWANGAN KL" itemValue="1" />
+						</p:selectOneMenu></td>
+
+				</tr>
+				<tr>
+					<td><p:outputLabel value="*Charge PTJ" /></td>
+					<td><p:selectOneMenu value="" style="width: 260px;">
+							<f:selectItem itemLabel="IBU PEJABAT KASTAM" itemValue="1" />
+						</p:selectOneMenu></td>
+					<td><p:outputLabel value="Financing?" /></td>
+					<td><p:selectBooleanCheckbox /></td>
+
 				</tr>
 			</table>
 		</p:panel>
 		<br />
 		<br />
-		<p:panel header="SUPPLIER DETAIL">
+		<p:panel header="SUPPLIER DETAIL" toggleable="true">
 			<table>
 				<tr>
 					<td><p:outputLabel value="Supplier ID" /></td>
@@ -163,7 +139,7 @@
 				</tr>
 			</table>
 		</p:panel>
-		<p:panel header="APPROVER DETAIL">
+		<p:panel header="APPROVER DETAIL" toggleable="true">
 			<table>
 				<tr>
 					<td colspan="2"><p:pickList id="pickList"
@@ -175,13 +151,15 @@
 							widgetVar="approverDialog">
 							<h:panelGrid id="displayApproverDetails" columns="2">
 								<h:outputText value="Source: " style="font-weight:bold" />
-								<ui:repeat value="#{screenDesignListsBean.approverDetails.source}"
+								<ui:repeat
+									value="#{screenDesignListsBean.approverDetails.source}"
 									var="item">
 									<h:outputText value="#{item}" style="margin-right:5px" />
 								</ui:repeat>
 
 								<h:outputText value="Target: " style="font-weight:bold" />
-								<ui:repeat value="#{screenDesignListsBean.approverDetails.target}"
+								<ui:repeat
+									value="#{screenDesignListsBean.approverDetails.target}"
 									var="item">
 									<h:outputText value="#{item}" style="margin-right:5px" />
 								</ui:repeat>
@@ -192,7 +170,7 @@
 			</table>
 		</p:panel>
 
-		<p:panel header="REMARKS AND ATTACHMENT">
+		<p:panel header="REMARKS AND ATTACHMENT" toggleable="true">
 			<table>
 				<tr>
 					<td><p:outputLabel value="* Remarks    " /></td>

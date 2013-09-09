@@ -16,132 +16,108 @@
 		<table style="width: 800px;">
 			<tr>
 				<td colspan="4" align="right"><p:commandButton value="SAVE" />
-					<p:commandButton value="ACKNOWLEDGE" /> <p:commandButton value="PRINT" />
-				</td>
+					<p:commandButton value="ACKNOWLEDGE" /> <p:commandButton
+						value="PRINT" /></td>
 			</tr>
 		</table>
-		<p:panel header="FULFILMENT DETAIL">
+		<p:panel header="FULFILMENT DETAIL" toggleable="true">
 			<table>
 				<tr>
-					<td>
-						<table>
-							<tr>
-								<td><p:outputLabel value="Ministry" /></td>
-								<td><p:inputText style="width: 260px;" disabled="true"
-										value="KEMENTERIAN KEWANGAN" /></td>
-							</tr>
-							<tr>
-								<td><p:outputLabel value="Jabatan" /></td>
-								<td><p:inputText style="width: 260px;" disabled="true"
-										value="JABATAN KASTAM DAN EKSAIS DIRAJA" /></td>
-							</tr>
-							<tr>
-								<td><p:outputLabel value="Issued PTJ" /></td>
-								<td><p:inputText style="width: 260px;" disabled="true"
-										value="IBU PEJABAT KASTAM (CHARGE PTJ)" /></td>
-							</tr>
-							<tr>
-								<td><p:outputLabel value="Received PTJ" /></td>
-								<td><p:inputText style="width: 260px;" disabled="true"
-										value="IBU PEJABAT KASTAM (RECEIVING PTJ)" /></td>
-							</tr>
-							<tr>
-								<td><p:outputLabel value="Title" /></td>
-								<td><p:inputText style="width: 260px; height:90px; "
-										value="Request Description " disabled="true" /></td>
-							</tr>
-							<tr>
-								<td><p:outputLabel value="Financial Year" /></td>
-								<td><p:inputText style="width: 260px;" value="2013"
-										disabled="true" /></td>
-							</tr>
-							<tr>
-								<td><p:outputLabel value="AG Office" /></td>
-								<td><p:inputText style="width: 260px;"
-										value="002 CAWANGAN KL" disabled="true" /></td>
-							</tr>
+					<td><p:outputLabel value="Ministry" /></td>
+					<td><p:inputText style="width: 260px;"
+							value="KEMENTERIAN KEWANGAN" disabled="true" /></td>
+					<td><p:outputLabel value="Purchase Req. NO." /></td>
+					<td><p:inputText disabled="true" style="width: 260px;"
+							value="PR10202-0202" /></td>
+				</tr>
+				<tr>
+					<td><p:outputLabel value="Jabatan" /></td>
+					<td><p:inputText style="width: 260px;"
+							value="JABATAN KASTAM DAN EKSAIS DIRAJA" disabled="true" /></td>
+					<td><p:outputLabel value="Req. Note NO" /></td>
+					<td><p:inputText disabled="true" style="width: 260px;"
+							value="10202-0202" /></td>
+				</tr>
+				<tr>
+					<td><p:outputLabel value="Issued PTJ" /></td>
+					<td><p:inputText style="width: 260px;"
+							value="IBU PEJABAT KASTAM" disabled="true" /></td>
+					<td><p:outputLabel value="Plan NO." /></td>
+					<td><p:inputText disabled="true" style="width: 260px;"
+							value="PL_FL_003" /></td>
+				</tr>
+				<tr>
+					<td><p:outputLabel value="Received PTJ" /></td>
+					<td><p:inputText style="width: 260px;"
+							value="IBU PEJABAT KASTAM" disabled="true" /></td>
+					<td><p:outputLabel value="Procurement Type" /></td>
+					<td><p:inputText disabled="true" style="width: 260px;"
+							value="NORMAL" /></td>
+				</tr>
+				<tr>
+					<td rowspan="4"><p:outputLabel value="Title" /></td>
+					<td rowspan="4"><p:inputText
+							style="width: 260px; height:100px; " value="Request Description "
+							disabled="true" /></td>
+					<td><p:outputLabel value="Creation Date" /></td>
+					<td><p:inputText disabled="true" style="width: 260px;"
+							value="12/10/2012 10:45 AM" /></td>
+				</tr>
+				<tr>
+					<td><p:outputLabel value="Status" /></td>
+					<td><p:inputText style="width: 260px;"
+							value="KPENDING ACKNOWLEDGE" disabled="true" /></td>
+				</tr>
+				<tr>
+					<td><p:outputLabel value="Maksud  Code" /></td>
+					<td><p:inputText style="width: 260px;"
+							value="KEMENTERIAN KEWANGAN" disabled="true" /></td>
+				</tr>
+				<tr>
+					<td><p:outputLabel value="Charge PTJ" /></td>
+					<td><p:inputText style="width: 260px;"
+							value="IBU PEJABAT KASTAM (RECEIVING PTJ)" disabled="true" /></td>
+				</tr>
 
-						</table>
-					</td>
-					<td>
-						<table>
-							<tr>
-								<td><p:outputLabel value="Purchase Req. NO." /></td>
-								<td><p:inputText disabled="true" style="width: 260px;"
-										value="PR10202-0202" /></td>
-							</tr>
-							<tr>
-								<td><p:outputLabel value="Req. Note NO" /></td>
-								<td><p:inputText disabled="true" style="width: 260px;"
-										value="10202-0202" /></td>
-							</tr>
-							<tr>
-								<td><p:outputLabel value="Plan NO." /></td>
-								<td><p:inputText disabled="true" style="width: 260px;"
-										value="PL_FL_003" /></td>
-							</tr>
-							<tr>
-								<td><p:outputLabel value="Procurement Type" /></td>
-								<td><p:inputText disabled="true" style="width: 260px;"
-										value="NORMAL" /></td>
-							</tr>
-							<tr>
-								<td><p:outputLabel value="Creation Date" /></td>
-								<td><p:inputText disabled="true" style="width: 260px;"
-										value="12/10/2012 10:45 AM" /></td>
-							</tr>
-							<tr>
-								<td><p:outputLabel value="Status" /></td>
-								<td><p:inputText style="width: 260px;"
-										value="KPENDING ACKNOWLEDGE" disabled="true" /></td>
-							</tr>
-							<tr>
-								<td><p:outputLabel value="Maksud  Code" /></td>
-								<td><p:inputText style="width: 260px;"
-										value="KEMENTERIAN KEWANGAN" disabled="true" /></td>
-							</tr>
-							<tr>
-								<td><p:outputLabel value="Charge PTJ" /></td>
-								<td><p:inputText style="width: 260px;"
-										value="IBU PEJABAT KASTAM (RECEIVING PTJ)" disabled="true" /></td>
-							</tr>
-							<tr>
-								<td><p:outputLabel value="Financing?" /></td>
-								<td><p:selectBooleanCheckbox /></td>
-
-							</tr>
-							
-						</table>
-					</td>
+				<tr>
+					<td><p:outputLabel value="Financial Year" /></td>
+					<td><p:inputText style="width: 260px;" value="2013"
+							disabled="true" /></td>
+					<td><p:outputLabel value="AG Office" /></td>
+					<td><p:inputText style="width: 260px;" value="002 CAWANGAN KL"
+							disabled="true" /></td>
+				</tr>
+				<tr>
+					<td><p:outputLabel value="Financing?" /></td>
+					<td><p:selectBooleanCheckbox /></td>
 				</tr>
 			</table>
 		</p:panel>
 		<br />
 		<br />
-		
 
-		<p:panel header="SUPPLIER DETAIL">
+		<p:panel header="SUPPLIER DETAIL" toggleable="true">
 			<table>
 				<tr>
 					<td><p:outputLabel value="Supplier ID" /></td>
 					<td><p:inputText disabled="true" style="width: 120px;"
 							value="02-7324800" /></td>
 					<td><p:outputLabel value="Factoring?" /></td>
-					<td><p:selectBooleanCheckbox /></td>		
+					<td><p:selectBooleanCheckbox /></td>
 				</tr>
 				<tr>
 					<td><p:outputLabel value="Supplier Name" /></td>
 					<td><p:inputText disabled="true" style="width: 260px;"
 							value="KBB SDN BHD" /></td>
-				    <td><p:outputLabel value="Factoring Company" /></td>
+					<td><p:outputLabel value="Factoring Company" /></td>
 					<td><p:selectOneMenu value="" style="width: 260px;">
 							<f:selectItem itemLabel="SYARIKAT ABC" itemValue="1" />
-						</p:selectOneMenu></td>			
+						</p:selectOneMenu></td>
 				</tr>
 				<tr>
 					<td><p:outputLabel value="Address" /></td>
-					<td><p:inputText style="width: 260px; height:90px; " value="Supplier Address "
-							disabled="true" /></td>
+					<td><p:inputText style="width: 260px; height:90px; "
+							value="Supplier Address " disabled="true" /></td>
 				</tr>
 				<tr>
 					<td><p:outputLabel value="Email" /></td>
@@ -155,9 +131,7 @@
 				</tr>
 			</table>
 		</p:panel>
-		
-
-		<p:panel header="REMARKS AND ATTACHMENT">
+		<p:panel header="REMARKS AND ATTACHMENT" toggleable="true">
 			<table>
 				<tr>
 					<td><p:outputLabel value="* Remarks    " /></td>

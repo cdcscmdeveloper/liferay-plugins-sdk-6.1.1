@@ -20,130 +20,99 @@
 				</td>
 			</tr>
 		</table>
-		<p:panel header="FULFILMENT DETAIL">
+
+		<p:panel header="FULFILMENT DETAIL" toggleable="true">
 			<table>
 				<tr>
-					<td>
-						<table>
-							<tr>
-								<td><p:outputLabel value="Ministry" /></td>
-								<td><p:inputText style="width: 260px;" disabled="true"
-										value="KEMENTERIAN KEWANGAN" /></td>
-							</tr>
-							<tr>
-								<td><p:outputLabel value="Jabatan" /></td>
-								<td><p:inputText style="width: 260px;" disabled="true"
-										value="JABATAN KASTAM DAN EKSAIS DIRAJA" /></td>
-							</tr>
-							<tr>
-								<td><p:outputLabel value="Issued PTJ" /></td>
-								<td><p:inputText style="width: 260px;" disabled="true"
-										value="IBU PEJABAT KASTAM (CHARGE PTJ)" /></td>
-							</tr>
-							<tr>
-								<td><p:outputLabel value="Received PTJ" /></td>
-								<td><p:inputText style="width: 260px;" disabled="true"
-										value="IBU PEJABAT KASTAM (RECEIVING PTJ)" /></td>
-							</tr>
-							<tr>
-								<td><p:outputLabel value="Title" /></td>
-								<td><p:inputText style="width: 260px; height:90px; "
-										value="Request Description " disabled="true" /></td>
-							</tr>
-							<tr>
-								<td><p:outputLabel value="AG Office" /></td>
-								<td><p:inputText style="width: 260px;"
-										value="002 CAWANGAN KL" disabled="true" /></td>
-							</tr>
-
-						</table>
-					</td>
-					<td>
-						<table>
-							<tr>
-								<td><p:outputLabel value="Stop Fulfilment NO." /></td>
-								<td><p:inputText disabled="true" style="width: 260px;"
-										value="- system generated -" /></td>
-							</tr>
-							<tr>
-								<td><p:outputLabel value="Created Date" /></td>
-								<td><p:inputText disabled="true" style="width: 260px;"
-										value="- system generated -" /></td>
-							</tr>
-							<tr>
-								<td><p:outputLabel value="Contract NO." /></td>
-								<td><p:inputText disabled="true" style="width: 260px;"
-										value="" /></td>
-							</tr>
-							<tr>
-								<td><p:outputLabel value="Contract Order NO." /></td>
-								<td><p:inputText disabled="true" style="width: 260px;"
-										value="" /></td>
-							</tr>
-							<tr>
-								<td><p:outputLabel value="Stop Fulfilment Status" /></td>
-								<td><p:inputText disabled="true" style="width: 260px;"
-										value="DRAFT" /></td>
-							</tr>
-							<tr>
-								<td><p:outputLabel value="Maksud  Code" /></td>
-								<td><p:inputText style="width: 260px;"
-										value="KEMENTERIAN KEWANGAN" disabled="true" /></td>
-							</tr>
-							<tr>
-								<td><p:outputLabel value="Charge PTJ" /></td>
-								<td><p:inputText style="width: 260px;"
-										value="IBU PEJABAT KASTAM (RECEIVING PTJ)" disabled="true" /></td>
-							</tr>
-							<tr>
-								<td><p:outputLabel value="Financing?" /></td>
-								<td><p:selectBooleanCheckbox /></td>
-
-							</tr>
-							<tr>
-								<td><p:outputLabel value="Financial Year" /></td>
-								<td><p:inputText style="width: 260px;" value="2013"
-										disabled="true" /></td>
-							</tr>
-						</table>
-					</td>
+					<td><p:outputLabel value="Ministry" /></td>
+					<td><p:inputText style="width: 260px;"
+							value="KEMENTERIAN KEWANGAN" disabled="true" /></td>
+					<td><p:outputLabel value="Stop Fulfilment NO." /></td>
+					<td><p:inputText disabled="true" style="width: 260px;"
+							value="- system generated -" /></td>
 				</tr>
+				<tr>
+					<td><p:outputLabel value="Jabatan" /></td>
+					<td><p:inputText style="width: 260px;"
+							value="JABATAN KASTAM DAN EKSAIS DIRAJA" disabled="true" /></td>
+					<td><p:outputLabel value="Created Date" /></td>
+					<td><p:inputText disabled="true" style="width: 260px;"
+							value="- system generated -" /></td>
+				</tr>
+				<tr>
+					<td><p:outputLabel value="Issued PTJ" /></td>
+					<td><p:inputText style="width: 260px;"
+							value="IBU PEJABAT KASTAM" disabled="true" /></td>
+					<td><p:outputLabel value="Contract NO." /></td>
+					<td><p:inputText style="width: 260px;" value=""
+							disabled="true" /></td>
+				</tr>
+				<tr>
+					<td><p:outputLabel value="Received PTJ" /></td>
+					<td><p:inputText style="width: 260px;"
+							value="IBU PEJABAT KASTAM" disabled="true" /></td>
+					<td><p:outputLabel value="Contract Order NO." /></td>
+					<td><p:inputText disabled="true" style="width: 260px;"
+							value="" /></td>
+				</tr>
+				<tr>
+					<td rowspan="4"><p:outputLabel value="Title" /></td>
+					<td rowspan="4"><p:inputText
+							style="width: 260px; height:100px; " value="Request Description "
+							disabled="true" /></td>
+					<td><p:outputLabel value="Stop Fulfilment Status" /></td>
+					<td><p:inputText disabled="true" style="width: 260px;"
+							value="DRAFT" /></td>
+				</tr>
+				<tr>
+					<td><p:outputLabel value="Maksud  Code" /></td>
+					<td><p:inputText style="width: 260px;"
+							value="KEMENTERIAN KEWANGAN" disabled="true" /></td>
+				</tr>
+				<tr>
+					<td><p:outputLabel value="Charge PTJ" /></td>
+					<td><p:inputText style="width: 260px;"
+							value="IBU PEJABAT KASTAM (RECEIVING PTJ)" disabled="true" /></td>
+				</tr>
+				<tr>
+					<td><p:outputLabel value="Financing?" /></td>
+					<td><p:selectBooleanCheckbox /></td>
+
+				</tr>
+				<tr>
+					<td><p:outputLabel value="AG Office" /></td>
+					<td><p:inputText style="width: 260px;" value="002 CAWANGAN KL"
+							disabled="true" /></td>
+					<td><p:outputLabel value="Financial Year" /></td>
+					<td><p:inputText style="width: 260px;" value="2013"
+							disabled="true" /></td>
+				</tr>
+
 			</table>
 		</p:panel>
 		<br />
 		<br />
-		<p:panel header="DELIVERY DETAIL">
+		<p:panel header="DELIVERY DETAIL" toggleable="true">
+
 			<table>
 				<tr>
-					<td>
-						<table>
-							<tr>
-								<td><p:outputLabel value="Delivery Address" /></td>
-								<td><p:inputText style="width: 260px; height:90px; "
-										value=" " disabled="true" /></td>
-							</tr>
-						</table>
-					</td>
-					<td>
-						<table>
-							<tr>
-								<td><p:outputLabel value="Delivery Order NO." /></td>
-								<td><p:inputText style="width: 220px;" value=""
-										disabled="true" /></td>
-							</tr>
-							<tr>
-								<td><p:outputLabel value="Supp. Del. Order NO." /></td>
-								<td><p:inputText style="width: 220px;" value=""
-										disabled="true" /></td>
-							</tr>
-
-						</table>
-					</td>
+					<td rowspan="3"><p:outputLabel value="Delivery Address" /></td>
+					<td rowspan="3"><p:inputText
+							style="width: 260px; height:90px; " value=" " disabled="true" /></td>
+					<td><p:outputLabel value="Delivery Order NO." /></td>
+					<td><p:inputText style="width: 220px;" value=""
+							disabled="true" /></td>
 				</tr>
+				<tr>
+					<td><p:outputLabel value="Supp. Del. Order NO." /></td>
+					<td><p:inputText style="width: 220px;" value=""
+							disabled="true" /></td>
+				</tr>
+
 			</table>
 		</p:panel>
 
-		<p:panel header="SUPPLIER DETAIL">
+		<p:panel header="SUPPLIER DETAIL" toggleable="true">
 			<table>
 				<tr>
 					<td><p:outputLabel value="Supplier ID" /></td>
@@ -172,9 +141,9 @@
 				</tr>
 			</table>
 		</p:panel>
-		
 
-		<p:panel header="REMARKS AND ATTACHMENT">
+
+		<p:panel header="REMARKS AND ATTACHMENT" toggleable="true">
 			<table>
 				<tr>
 					<td><p:outputLabel value="* Remarks    " /></td>
