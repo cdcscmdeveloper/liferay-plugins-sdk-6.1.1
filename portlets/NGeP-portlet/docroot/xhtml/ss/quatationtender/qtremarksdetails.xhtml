@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:ui="http://java.sun.com/jsf/facelets">
+<h:head>
+	<title>Include demo</title>
+</h:head>
+<h:body>
+	<ui:include src="/xhtml/ss/quatationtender/dopublicationbuttons.xhtml" />
+	<ui:include src="/xhtml/ss/quatationtender/qtntenderheader.xhtml" />
+	<p:panel header="Remarks" toggleable="true">
+		<p:panelGrid columns="4" style="width:100%;"
+			styleClass="noBorders tr,noBorders td">
+			<p:dataTable id="attendancecompany" var="attendancecompany"
+				value="#{searchQtnTenderBB.managedBean.qtnTenders}" editable="false">
+
+
+
+
+
+				<p:column headerText="Remarks">
+					<!-- <h:outputText value=""></h:outputText> -->
+					<p:cellEditor>
+						<f:facet name="output">
+							<h:outputText value="xxx"></h:outputText>
+						</f:facet>
+						<f:facet name="input">
+							<p:inputText value="xxxxx" />
+						</f:facet>
+					</p:cellEditor>
+				</p:column>
+
+				<p:column headerText="User">
+					<!-- <h:outputText value=""></h:outputText> -->
+					<p:cellEditor>
+						<f:facet name="output">
+							<h:outputText value="Steve"></h:outputText>
+						</f:facet>
+						<f:facet name="input">
+							<p:inputText value="#####" />
+						</f:facet>
+					</p:cellEditor>
+				</p:column>
+
+				<p:column headerText="Date/Time">
+
+					<!--    <h:outputText value="" />   -->
+					<p:cellEditor>
+						<f:facet name="output">
+							<h:outputText value="sunday"></h:outputText>
+						</f:facet>
+						<f:facet name="input">
+							<p:inputText value="monday" />
+						</f:facet>
+					</p:cellEditor>
+
+				</p:column>
+
+				<p:column headerText="QTN/Tender Status">
+					<!-- <h:outputText value="" />  -->
+
+					<p:cellEditor>
+						<f:facet name="output">
+							<h:outputText value="***"></h:outputText>
+						</f:facet>
+						<f:facet name="input">
+							<p:inputText value="*****" />
+						</f:facet>
+					</p:cellEditor>
+				</p:column>
+
+			</p:dataTable>
+
+		</p:panelGrid>
+	</p:panel>
+</h:body>
+</html>

@@ -1,0 +1,417 @@
+<!DOCTYPE html>
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:ui="http://java.sun.com/jsf/facelets">
+<h:head>
+	<title>Include demo</title>
+</h:head>
+<h:body>
+	<ui:include src="/xhtml/ss/quatationtender/dopublicationbuttons.xhtml" />
+	<ui:include src="/xhtml/ss/quatationtender/qtntenderheader.xhtml" />
+	<p:panel header="Schedule" toggleable="true">
+		<p:panelGrid columns="4" style="width:100%;"
+			styleClass="noBorders tr,noBorders td">
+
+			<h:outputText value="#{lbl['lbl.so.noticepublish']}" />
+			<p:calendar value="#{searchQtnTenderBB.managedBean.tenderBean}"
+				id="noticePublish" showOn="button" />
+
+
+
+			<h:outputText value="Proposal Preparation Start Date/Time " />
+			<p:calendar value="#{searchQtnTenderBB.managedBean.tenderBean}"
+				pattern="MM/dd/yyyy HH:mm a" />
+
+			<h:outputText value="Closing Time/Date "></h:outputText>
+			<p:inputText id="closingtime"
+				value="#{searchQtnTenderBB.managedBean.tenderBean}" />
+
+			<h:outputLabel for="publishingperiod" value="Publishing Period" />
+			<p:inputText id="publishingperiod" value="" />
+
+
+			<h:outputText value="Expected Start Delivery Date" />
+			<p:calendar value="#{searchQtnTenderBB.managedBean.tenderBean}"
+				pattern="MM/dd/yyyy HH:mm a" />
+			<h:outputText value="#{searchQtnTenderBB.managedBean.tenderBean}">
+				<f:convertDateTime pattern="MM/dd/yyyy HH:mm a" />
+			</h:outputText>
+		</p:panelGrid>
+	</p:panel>
+	<p:panel header="Briefing/Site Visit Schedule" toggleable="true">
+		<p:panelGrid columns="2" style="width:100%;"
+			styleClass="noBorders tr,noBorders td">
+
+			<h:outputText value="Briefing/Site Visit Required" />
+			<p:selectOneRadio id="options" value="">
+				<f:selectItem itemLabel="Yes" itemValue="1" />
+				<f:selectItem itemLabel="No" itemValue="2" />
+			</p:selectOneRadio>
+			<h:outputText value="Briefing Same As Site Visit :" />
+			<p:selectOneRadio id="options" value="">
+				<f:selectItem itemLabel="Yes" itemValue="1" />
+				<f:selectItem itemLabel="No" itemValue="2" />
+
+			</p:selectOneRadio>
+
+
+		</p:panelGrid>
+	</p:panel>
+
+	<p:panel header="Briefing Details" toggleable="true">
+		<p:panelGrid columns="2" style="width:100%;"
+			styleClass="noBorders tr,noBorders td">
+
+			<p:dataTable id="attendancecompany" var="attendancecompany"
+				value="#{searchQtnTenderBB.managedBean.qtnTenders}" editable="true">
+
+				<p:ajax event="rowEdit" listener="#{searchQtnTenderBB.onEdit}" />
+				<p:ajax event="rowEditCancel"
+					listener="#{searchQtnTenderBB.onCancel}" />
+
+				<p:column headerText="No">
+					<!-- <h:outputText value="1"></h:outputText> -->
+					<p:cellEditor>
+						<f:facet name="output">
+							<h:outputText value="1"></h:outputText>
+						</f:facet>
+						<f:facet name="input">
+							<p:inputText value="2" />
+						</f:facet>
+					</p:cellEditor>
+				</p:column>
+
+				<p:column headerText="Description">
+					<!-- <h:outputText value="Arjun"></h:outputText> -->
+					<p:cellEditor>
+						<f:facet name="output">
+							<h:outputText value="google"></h:outputText>
+						</f:facet>
+						<f:facet name="input">
+							<p:inputText value="bing" />
+						</f:facet>
+					</p:cellEditor>
+				</p:column>
+
+				<p:column headerText="Date/Time">
+
+					<!--    <h:outputText value="4355446727" />   -->
+					<p:cellEditor>
+						<f:facet name="output">
+							<h:outputText value="sunday"></h:outputText>
+						</f:facet>
+						<f:facet name="input">
+							<p:inputText value="monday" />
+						</f:facet>
+					</p:cellEditor>
+
+				</p:column>
+
+				<p:column headerText="Location">
+					<!-- <h:outputText value="1234555" />  -->
+
+					<p:cellEditor>
+						<f:facet name="output">
+							<h:outputText value="Petaling jaya"></h:outputText>
+						</f:facet>
+						<f:facet name="input">
+							<p:inputText value="cyber jaya" />
+						</f:facet>
+					</p:cellEditor>
+				</p:column>
+
+				<p:column headerText="Coordinating">
+					<!-- <h:outputText value="1234555" />  -->
+
+					<p:cellEditor>
+						<f:facet name="output">
+							<h:outputText value="xxx"></h:outputText>
+						</f:facet>
+						<f:facet name="input">
+							<p:inputText value="xxxxxx" />
+						</f:facet>
+					</p:cellEditor>
+				</p:column>
+
+				<p:column headerText="Attendance">
+					<!-- <h:outputText value="1234555" />  -->
+
+					<p:cellEditor>
+						<f:facet name="output">
+							<h:outputText value="xxxxxxx"></h:outputText>
+						</f:facet>
+						<f:facet name="input">
+							<p:inputText value="xxxxxxxxxxx" />
+						</f:facet>
+					</p:cellEditor>
+				</p:column>
+
+				<p:column headerText="Zone">
+					<!-- <h:outputText value="1234555" />  -->
+
+					<p:cellEditor>
+						<f:facet name="output">
+							<h:outputText value="cyber 6"></h:outputText>
+						</f:facet>
+						<f:facet name="input">
+							<p:inputText value="cyber 8" />
+						</f:facet>
+					</p:cellEditor>
+				</p:column>
+				<p:column headerText="Briefing Status">
+					<!-- <h:outputText value="1234555" />  -->
+
+					<p:cellEditor>
+						<f:facet name="output">
+							<h:outputText value="active"></h:outputText>
+						</f:facet>
+						<f:facet name="input">
+							<p:inputText value="suspend" />
+						</f:facet>
+					</p:cellEditor>
+				</p:column>
+
+				<p:column headerText="Action" style="width:6%">
+					<p:rowEditor />
+					
+				</p:column>
+
+				<f:facet name="footer">
+					<div align="right">
+
+						<p:commandButton id="briefadd" value="Add" onclick="dlg1.show();"></p:commandButton>
+					</div>
+				</f:facet>
+
+
+			</p:dataTable>
+
+		</p:panelGrid>
+	</p:panel>
+	<p:panel header="Site/Visit Details" toggleable="true">
+		<p:panelGrid columns="2" style="width:100%;"
+			styleClass="noBorders tr,noBorders td">
+
+			<p:dataTable id="sitedetails" var="sitevisitdetails"
+				value="#{searchQtnTenderBB.managedBean.qtnTenders}" editable="true">
+
+				<p:ajax event="rowEdit" listener="#{searchQtnTenderBB.onEdit}" />
+				<p:ajax event="rowEditCancel"
+					listener="#{searchQtnTenderBB.onCancel}" />
+
+				<p:column headerText="No">
+					<!-- <h:outputText value="1"></h:outputText> -->
+					<p:cellEditor>
+						<f:facet name="output">
+							<h:outputText value="1"></h:outputText>
+						</f:facet>
+						<f:facet name="input">
+							<p:inputText value="2" />
+						</f:facet>
+					</p:cellEditor>
+				</p:column>
+
+				<p:column headerText="Description">
+					<!-- <h:outputText value="Arjun"></h:outputText> -->
+					<p:cellEditor>
+						<f:facet name="output">
+							<h:outputText value="google"></h:outputText>
+						</f:facet>
+						<f:facet name="input">
+							<p:inputText value="bing" />
+						</f:facet>
+					</p:cellEditor>
+				</p:column>
+
+				<p:column headerText="Date/Time">
+
+					<!--    <h:outputText value="4355446727" />   -->
+					<p:cellEditor>
+						<f:facet name="output">
+							<h:outputText value="sunday"></h:outputText>
+						</f:facet>
+						<f:facet name="input">
+							<p:inputText value="monday" />
+						</f:facet>
+					</p:cellEditor>
+
+				</p:column>
+
+				<p:column headerText="Location">
+					<!-- <h:outputText value="1234555" />  -->
+
+					<p:cellEditor>
+						<f:facet name="output">
+							<h:outputText value="Petaling jaya"></h:outputText>
+						</f:facet>
+						<f:facet name="input">
+							<p:inputText value="cyber jaya" />
+						</f:facet>
+					</p:cellEditor>
+				</p:column>
+
+				<p:column headerText="Coordinating">
+					<!-- <h:outputText value="1234555" />  -->
+
+					<p:cellEditor>
+						<f:facet name="output">
+							<h:outputText value="xxx"></h:outputText>
+						</f:facet>
+						<f:facet name="input">
+							<p:inputText value="xxxxxx" />
+						</f:facet>
+					</p:cellEditor>
+				</p:column>
+
+				<p:column headerText="Attendance">
+					<!-- <h:outputText value="1234555" />  -->
+
+					<p:cellEditor>
+						<f:facet name="output">
+							<h:outputText value="xxxxxxx"></h:outputText>
+						</f:facet>
+						<f:facet name="input">
+							<p:inputText value="xxxxxxxxxxx" />
+						</f:facet>
+					</p:cellEditor>
+				</p:column>
+
+				<p:column headerText="Zone">
+					<!-- <h:outputText value="1234555" />  -->
+
+					<p:cellEditor>
+						<f:facet name="output">
+							<h:outputText value="cyber 6"></h:outputText>
+						</f:facet>
+						<f:facet name="input">
+							<p:inputText value="cyber 8" />
+						</f:facet>
+					</p:cellEditor>
+				</p:column>
+				<p:column headerText="Briefing Status">
+					<!-- <h:outputText value="1234555" />  -->
+
+					<p:cellEditor>
+						<f:facet name="output">
+							<h:outputText value="active"></h:outputText>
+						</f:facet>
+						<f:facet name="input">
+							<p:inputText value="suspend" />
+						</f:facet>
+					</p:cellEditor>
+				</p:column>
+
+				<p:column headerText="Action" style="width:6%">
+					<p:rowEditor />
+					
+				</p:column>
+
+				<f:facet name="footer">
+					<div align="right">
+
+						<p:commandButton id="siteadd" value="Add" onclick="dlg2.show();"></p:commandButton>
+
+					</div>
+				</f:facet>
+
+
+			</p:dataTable>
+		</p:panelGrid>
+	</p:panel>
+
+	<p:panel header="Contact Person Details" toggleable="true">
+		<p:panelGrid columns="2" style="width:100%;"
+			styleClass="noBorders tr,noBorders td">
+			<p:dataTable id="contactdetails" var="contactpersondetails"
+				value="#{searchQtnTenderBB.managedBean.qtnTenders}" editable="true">
+
+				<p:ajax event="rowEdit" listener="#{searchQtnTenderBB.onEdit}" />
+				<p:ajax event="rowEditCancel"
+					listener="#{searchQtnTenderBB.onCancel}" />
+
+				<p:column headerText="No">
+					<!-- <h:outputText value="1"></h:outputText> -->
+					<p:cellEditor>
+						<f:facet name="output">
+							<h:outputText value="1"></h:outputText>
+						</f:facet>
+						<f:facet name="input">
+							<p:inputText value="2" />
+						</f:facet>
+					</p:cellEditor>
+				</p:column>
+
+				<p:column headerText="Name">
+					<!-- <h:outputText value="Arjun"></h:outputText> -->
+					<p:cellEditor>
+						<f:facet name="output">
+							<h:outputText value="Ajay"></h:outputText>
+						</f:facet>
+						<f:facet name="input">
+							<p:inputText value="Vijay" />
+						</f:facet>
+					</p:cellEditor>
+				</p:column>
+
+				<p:column headerText="Tel No">
+
+					<!--    <h:outputText value="355446727" />   -->
+					<p:cellEditor>
+						<f:facet name="output">
+							<h:outputText value="03 355446727"></h:outputText>
+						</f:facet>
+						<f:facet name="input">
+							<p:inputText value="03 3554467271234" />
+						</f:facet>
+					</p:cellEditor>
+
+				</p:column>
+
+				<p:column headerText="Fax No">
+					<!-- <h:outputText value="1234555" />  -->
+
+					<p:cellEditor>
+						<f:facet name="output">
+							<h:outputText value="03-1234567"></h:outputText>
+						</f:facet>
+						<f:facet name="input">
+							<p:inputText value="03-123456789" />
+						</f:facet>
+					</p:cellEditor>
+				</p:column>
+
+				<p:column headerText="Email">
+					<!-- <h:outputText value="1234555" />  -->
+
+					<p:cellEditor>
+						<f:facet name="output">
+							<h:outputText value="kkk@gmail.com"></h:outputText>
+						</f:facet>
+						<f:facet name="input">
+							<p:inputText value="sss@hotmail.com" />
+						</f:facet>
+					</p:cellEditor>
+				</p:column>
+
+				<p:column headerText="Action" style="width:6%">
+					<p:rowEditor />
+					
+
+				</p:column>
+				<f:facet name="footer">
+					<div align="right">
+						<p:commandButton id="add" value="Add" />
+						<p:commandButton value="Clone" onclick="dlg3.show();"></p:commandButton>
+
+					</div>
+				</f:facet>
+
+
+			</p:dataTable>
+		</p:panelGrid>
+	</p:panel>
+
+</h:body>
+</html>
