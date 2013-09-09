@@ -32,12 +32,10 @@
 			<p:inputText id="publishingperiod" value="" />
 
 
-			<h:outputText value="Expected Start Delivery Date" />
+			<h:outputText value="Expected Start Delivery Date " />
 			<p:calendar value="#{searchQtnTenderBB.managedBean.tenderBean}"
 				pattern="MM/dd/yyyy HH:mm a" />
-			<h:outputText value="#{searchQtnTenderBB.managedBean.tenderBean}">
-				<f:convertDateTime pattern="MM/dd/yyyy HH:mm a" />
-			</h:outputText>
+			
 		</p:panelGrid>
 	</p:panel>
 	<p:panel header="Briefing/Site Visit Schedule" toggleable="true">
