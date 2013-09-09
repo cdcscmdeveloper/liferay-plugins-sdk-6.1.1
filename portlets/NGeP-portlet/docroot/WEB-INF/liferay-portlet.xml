@@ -64,7 +64,7 @@
 	</portlet>
 <!-- Fulfilment Start Added by Giri -->	
 	<portlet>
-		<portlet-name>fl</portlet-name>
+		<portlet-name>FLContractOrder</portlet-name>
 		<icon>/icon.png</icon>
 		<instanceable>false</instanceable>
 		<header-portlet-css>/css/main.css</header-portlet-css>
@@ -133,6 +133,7 @@
 		<header-portlet-css>/css/main.css</header-portlet-css>
 		<css-class-wrapper>flshippingInst-portlet</css-class-wrapper>
 	</portlet>
+	
 <!-- Fulfilment End  Added by Giri -->	
 
 <portlet>

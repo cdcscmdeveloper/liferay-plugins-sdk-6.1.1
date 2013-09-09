@@ -16,7 +16,7 @@
 	<!-- Procurement Plan - END -->
 <!-- Fulfilment Start Added by Giri -->		
 	<category name="FL_DIS">
-		<portlet id="fl" />
+		<portlet id="FLContractOrder" />
 		<portlet id="FLDeliveryOrder" />
 		<portlet id="FLContractRequestOrder" />
 		<portlet id="FLFulfilmentReceivedNote" />
@@ -26,6 +26,7 @@
 		<portlet id="FLPurchaseOrder" />
 		<portlet id="FLPurchaseRequest" />
 		<portlet id="FLShippingInstruction" />
+		
 	</category>
 <!-- Fulfilment End  Added by Giri -->		
 <category name="Sourcing">
