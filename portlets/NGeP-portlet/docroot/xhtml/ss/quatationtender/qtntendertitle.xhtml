@@ -34,7 +34,7 @@
         </p:selectOneMenu>  
         
          <h:outputText value="Financial Year * " />  
-        <p:selectOneRadio id="optionradio" value="">  
+        <p:selectOneRadio id="optionradio" value="#{searchQtnTenderBB.managedBean.qtno}">  
             <f:selectItem itemLabel="Current Year" itemValue="1" />  
             <f:selectItem itemLabel="Next Year" itemValue="2" />  
              
@@ -75,7 +75,7 @@
                 </f:facet>  
                 <f:facet name="input">  
                     
-              <p:selectManyCheckbox value="#{searchQtnTenderBB.managedBean.selectOption}">  
+              <p:selectManyCheckbox value="#{searchQtnTenderBB.managedBean.selectOptions}">  
             <f:selectItem itemLabel="yes"/>  
             <f:selectItem itemLabel="no" />  
            
