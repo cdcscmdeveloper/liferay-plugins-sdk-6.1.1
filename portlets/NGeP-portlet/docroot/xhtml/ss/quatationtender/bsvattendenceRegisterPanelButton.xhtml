@@ -6,10 +6,10 @@
 	xmlns:c="http://java.sun.com/jsp/jstl/core">
 
 <p:panel header="Attendance Registration">
-<p:panelGrid  styleClass="noBorders tr,noBorders td">
+<!-- <p:panelGrid  styleClass="noBorders tr,noBorders td">
 	 <p:row >  
    <p:column >
-     <div style="position:absolute;top:200px;right:200px;"   >
+     <div style="position:absolute;top:210px;right:220px;"   >
            <p:commandButton  
 					value="#{lbl['lbl.so.submit']}"/>
 					</div>
@@ -17,6 +17,17 @@
 					</p:row>
 
 </p:panelGrid>
+ -->
+<p:panelGrid style="width:100%;"
+    styleClass="noBorders tr,noBorders td">
+    <p:row>
+     <p:column width="100%" style="text-align:right">
+       <p:commandButton  
+					value="#{lbl['lbl.so.submit']}"/>
+     </p:column>
+
+    </p:row>
+   </p:panelGrid>
 
 </p:panel>
 
