@@ -43,14 +43,16 @@
 			styleClass="noBorders tr,noBorders td">
 
 			<h:outputText value="Briefing/Site Visit Required" />
-			<p:selectOneRadio id="options" value="">
+			<p:selectOneRadio  value="#{searchQtnTenderBB.managedBean.briefDetails}">
 				<f:selectItem itemLabel="Yes" itemValue="1" />
 				<f:selectItem itemLabel="No" itemValue="2" />
+				<p:ajax update="@form" />
 			</p:selectOneRadio>
 			<h:outputText value="Briefing Same As Site Visit :" />
-			<p:selectOneRadio id="options" value="">
+			<p:selectOneRadio  value="#{searchQtnTenderBB.managedBean.visitDetails}">
 				<f:selectItem itemLabel="Yes" itemValue="1" />
 				<f:selectItem itemLabel="No" itemValue="2" />
+				<p:ajax update="@form" />
 
 			</p:selectOneRadio>
 
@@ -58,6 +60,7 @@
 		</p:panelGrid>
 	</p:panel>
 
+<h:panelGroup rendered="#{searchQtnTenderBB.managedBean.briefDetails eq '1'}">
 	<p:panel header="Briefing Details" toggleable="true">
 		<p:panelGrid columns="2" style="width:100%;"
 			styleClass="noBorders tr,noBorders td">
@@ -188,6 +191,11 @@
 
 		</p:panelGrid>
 	</p:panel>
+	
+	</h:panelGroup>
+	<h:panelGroup rendered="#{searchQtnTenderBB.managedBean.visitDetails eq '1'}">
+	
+	
 	<p:panel header="Site/Visit Details" toggleable="true">
 		<p:panelGrid columns="2" style="width:100%;"
 			styleClass="noBorders tr,noBorders td">
@@ -318,7 +326,7 @@
 			</p:dataTable>
 		</p:panelGrid>
 	</p:panel>
-
+</h:panelGroup>
 	<p:panel header="Contact Person Details" toggleable="true">
 		<p:panelGrid columns="2" style="width:100%;"
 			styleClass="noBorders tr,noBorders td">

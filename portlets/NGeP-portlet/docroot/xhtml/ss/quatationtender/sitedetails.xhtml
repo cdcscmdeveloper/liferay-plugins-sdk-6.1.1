@@ -35,7 +35,7 @@
         </p:selectOneMenu> 
         
         <h:outputText value="Attendance" />  
-        <p:selectOneRadio id="options" value="">  
+        <p:selectOneRadio value="">  
             <f:selectItem itemLabel="All Zone" itemValue="1" />  
             <f:selectItem itemLabel="Certain Zone" itemValue="2" />  
            </p:selectOneRadio>    
@@ -48,14 +48,13 @@
             <f:selectItem itemLabel="Central Zone" itemValue="3" />  
         </p:selectOneMenu> 
          </p:panelGrid>  
-         <p:commandButton value="#{lbl['lbl.so.cancelbtn']}"
-			styleClass="apply_button" style="float:right;">
+       	<p:commandButton  value="#{lbl['lbl.so.cancelbtn']}"
+			styleClass="apply_button" style="float:right;" oncomplete="dlg2.hide()">
 		</p:commandButton>	
 			<p:commandButton value="#{lbl['lbl.so.addbtn']}"
-			styleClass="apply_button" style="float:right;">
+			styleClass="apply_button" style="float:right;" oncomplete="dlg2.hide()">
 
 		</p:commandButton>
-
 		
 		
         </p:panel>
