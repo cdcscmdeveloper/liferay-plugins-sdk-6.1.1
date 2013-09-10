@@ -1,0 +1,146 @@
+<ui:composition
+	template="/WEB-INF/facelets/templates/sidemenu_template.xhtml"
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:c="http://java.sun.com/jsp/jstl/core">
+
+	<ui:define name="resourceSection">
+	</ui:define>
+	
+   	       
+	<ui:define name="sideMenu">
+		<ui:include src="/xhtml/ct/fulfilmentDetails/shared/sideMenu/menuAmend.xhtml" />
+	</ui:define>
+
+	<ui:define name="content">
+	 <h:form prependId="false" id="form">
+	   <p:messages showDetail="true" globalOnly="true"/>
+	  
+	  <p:panel id="fd" header="#{lbl['lbl.panel.cfm.name']}" toggleable="true"  toggleSpeed="500" widgetVar="panelfd">
+         <ui:include src="/xhtml/ct/fulfilmentDetails/shared/fulfilment.xhtml"/>
+      </p:panel>
+                              
+                        <p:panel id="amend" header=" Amendment Details"    toggleable="true"  toggleSpeed="500" widgetVar="panelamends">
+                              
+                                 
+                                   <h:panelGrid columns="4" style="width:650px;">  
+                                  
+                                           <h:outputLabel value="Amendment Request No" styleClass="txtsize" />
+                                           <h:panelGrid columns="3">
+                                           <p:inputText value="" disabled="true" style="width:15px;"/>
+                                           <p:spacer width="1"/>
+                                            <p:inputText value="" disabled="true" style="width:125px;"/>
+                                           </h:panelGrid>
+                                           
+                                            <h:outputLabel value="Amendment Request Date" styleClass="txtsize" />
+                                            <p:inputText value=""  disabled="true" style="width:155px;"/>
+                                            
+                                            <h:outputLabel value="Amendment Title/ Name" styleClass="txtsize" />
+                                            <p:inputText value=""  disabled="true" style="width:155px;"/>
+                                            
+                                            <h:outputLabel value="Amendment File Ref. No" styleClass="txtsize" />
+                                            <p:inputText value=""  disabled="true" style="width:155px;"/>
+                                              
+                                            </h:panelGrid>
+                                        
+                                          <h:panelGrid columns="2" style="width:650px;">  
+                                           <h:panelGroup>
+										             <div style="height: 45px;width:140px; vertical-align: top">
+											              <p:outputLabel for="amendmentD" value="Amendment Description" styleClass="txtsize" />
+										             </div>
+								        	      </h:panelGroup>
+									              <h:panelGrid>
+										          <p:inputTextarea id="amendmentD" value="" required="false"  rows="2" cols="74" disabled="true" autoResize="false" />
+											      </h:panelGrid>
+										</h:panelGrid>
+										
+										 
+										 <h:panelGrid columns="4" style="width:650px;">  
+                                  
+                                           <h:outputLabel value="Contract Extension Period" styleClass="txtsize" />
+                                           <h:panelGrid columns="3">
+                                           <p:inputText value="" disabled="true" style="width:30px;"/>
+                                           <p:spacer width="2"/>
+                                             <p:selectOneMenu value=" " style="width:70px;">
+            					                              <f:selectItem itemLabel="Months" itemValue="1" /> 
+            					                              <f:selectItem itemLabel="Years" itemValue="1" /> 
+            					           </p:selectOneMenu>   
+                                           </h:panelGrid>
+                                           
+                                            <h:outputLabel value="Contract Extension Start" styleClass="txtsize" />
+                                            <p:inputText value=""  disabled="true" style="width:155px;"/>
+                                            
+                                            <h:outputLabel value="Contract Extension End" styleClass="txtsize" />
+                                            <p:inputText value=""  disabled="true" style="width:155px;"/>
+                                            
+                                            <h:outputLabel value="Amendment Effective Date" styleClass="txtsize" />
+                                            <p:inputText value=""  disabled="true" style="width:155px;"/>
+                                            
+                                           <h:outputLabel value="Additional Contract Value" styleClass="txtsize" />
+                                           <h:panelGrid columns="3">
+                                           <p:inputText value="" disabled="true" style="width:70px;"/>
+                                           <p:spacer width="2"/>
+                                             <p:selectOneMenu value=" " style="width:60px;">
+            					                              <f:selectItem itemLabel="MYR" itemValue="1" /> 
+            					                              <f:selectItem itemLabel="SGD" itemValue="1" /> 
+            					           </p:selectOneMenu>   
+                                           </h:panelGrid> 
+                                           
+                                            <h:outputLabel value="New Contract Value" styleClass="txtsize" />
+                                            <p:inputText value=""  disabled="true" style="width:155px;"/>
+                                                      
+                                           </h:panelGrid>
+                                     
+                                      <h:panelGrid columns="2" style="width:650px;">  
+                                           <h:panelGroup>
+										             <div style="height: 45px;width:148px; vertical-align: top">
+											              <p:outputLabel for="contractHistory" value="Contract Extension History" styleClass="txtsize" />
+										             </div>
+								        	      </h:panelGroup>
+									              <h:panelGrid id="contractHistory" columns="1">
+                                                  <p:dataTable id="dataTableHistory" var="data"  value=" "   rowIndexVar="index">
+                                                   <p:columnGroup type="header"> 
+								                      <p:row> 
+								                           <p:column rowspan="1" headerText="No."/>
+									                     <p:column rowspan="1" headerText="Amendment Request No." />
+									                     <p:column colspan="1" headerText="Extend Period (Months)"  /> 
+									                     <p:column rowspan="1" headerText="Start Date" />
+									                     <p:column colspan="1" headerText="End Date"  /> 
+									                  </p:row>
+									              
+									              </p:columnGroup>
+							                     <p:column styleClass="column-align-center"  > <h:outputText value="#{index+1}" /></p:column> 						
+							                     <p:column> <h:outputText value=" " /></p:column>
+							                     <p:column><h:outputText value=" " /></p:column>
+							                     <p:column> <h:outputText value=" " /></p:column>
+							                     <p:column><h:outputText value=" " /></p:column>
+									              
+                                                  </p:dataTable>
+                                                  
+                                                </h:panelGrid>
+										</h:panelGrid>
+                				          
+                                        </p:panel>
+                              
+               <p:panel id="sbd" header="#{lbl['lbl.panel.supplier.name']}"  toggleable="true"  toggleSpeed="500" 
+                                widgetVar="panelsbd">
+                     <ui:include src="/xhtml/ct/shared/supplier.xhtml"/>                 
+                  </p:panel>
+                                
+               <p:panel id="factoringId" header="#{lbl['lbl.panel.fc.name']}"    toggleable="true"  toggleSpeed="500" widgetVar="panelfactoring">
+                               
+                   <ui:include src="/xhtml/ct/shared/factoring.xhtml"/>     
+               </p:panel>
+                                         
+               <p:panel id="bondId" header="Performance Bond Details"    toggleable="true"  toggleSpeed="500" widgetVar="panelbond">
+                   <ui:include src="/xhtml/ct/shared/performanceBond.xhtml"/>                         
+               </p:panel>
+                                         
+		</h:form>
+		
+	</ui:define>
+	
+</ui:composition>

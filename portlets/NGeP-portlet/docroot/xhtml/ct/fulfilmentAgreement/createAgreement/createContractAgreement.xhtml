@@ -1,0 +1,129 @@
+<ui:composition
+	template="/WEB-INF/facelets/templates/sidemenu_template.xhtml"
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:c="http://java.sun.com/jsp/jstl/core">
+
+	<ui:define name="resourceSection">
+	</ui:define>
+	
+   	       
+	<ui:define name="sideMenu">
+		<ui:include src="/xhtml/ct/fulfilmentAgreement/shared/sideMenu/menuCreateAgreement.xhtml" />
+	</ui:define>
+
+	<ui:define name="content">
+		      
+        	<h:form prependId="false" id="form">         
+        	    
+        	       <p:messages showDetail="true" globalOnly="true"/> 
+                    
+               
+                               <p:panel id="fd" header="Fulfillment Details"   toggleable="true"  toggleSpeed="500" widgetVar="panelfd">
+                                 <p:messages showDetail="true" globalOnly="true"/>
+                               
+                                         <h:panelGrid columns="4" style="width:800px;" class="formTable">  
+                                      
+                                         <h:outputLabel value="Contract Name"   styleClass="txtsize"/>  
+                                         <p:inputText value=" " style="width:170px;" required="true" disabled="true" />
+                                         
+                                          <h:outputLabel value="Contract No"  styleClass="txtsize"/>  
+                                          <p:inputText value=" "  style="width:170px;" required="true" disabled="true" />
+                                    
+              
+                                         <h:outputLabel value="Ministry Name"  styleClass="txtsize"/>  
+                                        <p:selectOneMenu disabled="false"  value="#{contractDetailsBean.createContractDetails.contractOwnerJabatan}" style="width:140px;">
+            					         <f:selectItems value="#{contractDetailsBean.contractOwnerJabatan}" />
+            					         </p:selectOneMenu>
+            					         
+            					          <h:outputLabel value="Physical Contract No"  style="width:200px;" styleClass="txtsize"/>  
+                                          <p:inputText value=" "  style="width:170px;" required="true" disabled="true" />
+            					         
+            					         <h:outputLabel value="Department Name"  styleClass="txtsize"/>  
+                                        <p:selectOneMenu disabled="false"  value="#{contractDetailsBean.createContractDetails.contractOwnerJabatan}" style="width:140px;">
+            					         <f:selectItems value="#{contractDetailsBean.contractOwnerJabatan}" />
+            					         </p:selectOneMenu>
+            					         
+                				         
+                				         <h:outputLabel value="Company Name"  styleClass="txtsize"/>  
+                                          <p:inputText value=" "  style="width:170px;" required="true" disabled="true" />
+                                          
+                                            <h:outputLabel value="PTJ Name"  styleClass="txtsize"/> 
+                				           <p:selectOneMenu disabled="false"  value="#{contractDetailsBean.createContractDetails.contractOwnerPtj}" style="width:140px;">
+            					         <f:selectItems value="#{contractDetailsBean.contractOwnerPtj}" />
+                				         </p:selectOneMenu>
+                				         
+                				         
+                				           <h:outputLabel value="Supplier Name"   styleClass="txtsize"/>  
+                                         <p:inputText value=" " required="true"  style="width:170px;" disabled="true" />
+                                         
+                                          <h:outputLabel value="Contract Effective Date"  styleClass="txtsize"/>  
+                                          <p:inputText value=" " required="true" disabled="true" />
+                                          
+                                          
+                                          
+                                           <h:outputLabel value="Contract Expiry Date"   styleClass="txtsize"/>  
+                                         <p:inputText value=" " required="true" disabled="true" />
+                                         
+                                          <h:outputLabel value="Contract Period"  styleClass="txtsize"/>  
+                                          <h:panelGrid columns="3">
+                                          <p:inputText value=" " required="true" style="width:100px;"  disabled="true" />
+                                          <p:spacer height="2"/>
+                                            <p:selectOneMenu disabled="false"  value="" style="width:60px;">
+            					     
+            					         <f:selectItem itemLabel="Month" itemValue="Month" /> 
+            					          <f:selectItem itemLabel="Years" itemValue="Years" /> 
+                				         </p:selectOneMenu>
+                                                    
+                                          </h:panelGrid>
+                                          
+                                           <h:outputLabel value="Contract Amount"  styleClass="txtsize"/>  
+                                          <h:panelGrid columns="3">
+                                          <p:inputText value=" " style="width:100px;" required="true" disabled="true" />
+                                          <p:spacer height="2"/>
+                                            <p:selectOneMenu disabled="false"  value="" style="width:60px;">
+            					          <f:selectItem itemLabel="MYR" itemValue="MYR" /> 
+            					          <f:selectItem itemLabel="USD" itemValue="USD" /> 
+                				         </p:selectOneMenu>
+                                                    
+                                          </h:panelGrid>
+                                          
+                                          <h:outputLabel value="Performance Bond Value"  styleClass="txtsize"/>  
+                                          <h:panelGrid columns="3">
+                                          <p:inputText value=" " required="true" disabled="true" style="width:100px;" />
+                                          <p:spacer height="2"/>
+                                            <p:selectOneMenu disabled="false"  value="" style="width:60px;">
+            					  
+            					         <f:selectItem itemLabel="MYR" itemValue="MYR"  /> 
+            					          <f:selectItem itemLabel="USD" itemValue="USD" /> 
+                				         </p:selectOneMenu>
+                                                    
+                                          </h:panelGrid>
+                                          
+                                           <h:outputLabel value="Fulfilment Details No"  styleClass="txtsize"/>  
+                                            <p:commandLink style="margin-right:20px;" sajax="false">  
+                                            <h:outputText value="2348-5674874"  styleClass="linkcommand" />  
+                                          </p:commandLink> 
+                                          
+                                            <h:outputLabel value="Final Agreement"  styleClass="txtsize"/>  
+                                            <p:selectBooleanCheckbox value=""  disabled="false"/> 
+                                            
+                                            <h:outputLabel value="Circular No"  styleClass="txtsize"/>  
+                                            <p:commandLink style="margin-right:20px;" sajax="false">  
+                                            <h:outputText value="CR-2013-PTJ-0001"  styleClass="linkcommand" />  
+                                          </p:commandLink> 
+                                         
+                                         
+                                        </h:panelGrid>
+									
+									</p:panel>
+									
+									 <p:panel id="fa" header="Remarks And Attachements"   toggleable="true"  toggleSpeed="500" widgetVar="panelfa">
+									 </p:panel>
+                        </h:form>
+	  </ui:define>
+	  </ui:composition>
+	  

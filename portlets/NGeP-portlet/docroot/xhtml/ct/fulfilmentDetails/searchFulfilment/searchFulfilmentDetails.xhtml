@@ -1,0 +1,394 @@
+<ui:composition
+	template="/WEB-INF/facelets/templates/sidemenu_template.xhtml"
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:c="http://java.sun.com/jsp/jstl/core">
+	
+	<ui:define name="resourceSection">
+	</ui:define>
+    <ui:define name="content">
+  
+      	<h:form prependId="false" id="form">
+        <p:tabView id="tabView">
+            
+                 <p:tab id="searchTab" title="General" >
+                  <p:panel id="searchId" header="Search"   toggleable="true"  toggleSpeed="500" widgetVar="panelsearch">
+                      
+                      <h:panelGrid  style="width:900px;" cellpadding="1">
+                          <h:panelGrid columns="4" style="width:900px;">
+                           <h:outputLabel value="Contract Number" />
+                           <p:inputText value="#{searchDetailsBean.searchDetails.contractNumber}" style="width:200px;"/>
+                           <h:outputLabel value="Contract Name" />
+                           <p:inputText value="#{searchDetailsBean.searchDetails.contractName}" style="width:200px;"/>
+                           
+                           <h:outputLabel value="Physical Number"/>
+                           <p:inputText value="#{searchDetailsBean.searchDetails.physicalNumber}" style="width:200px;" />
+                           <h:outputLabel value="LOA Number" />
+                           <p:inputText value="#{searchDetailsBean.searchDetails.LOANumber}" style="width:200px;"/>
+                           
+                           <h:outputLabel value="Contract Start"/>
+                           <p:calendar style="width:130px;" value="#{searchDetailsBean.searchDetails.date}" id="popupButtonCal" showOn="button" />
+                           <h:outputLabel value="Contract End" />
+                            <p:calendar style="width:130px;" value="#{searchDetailsBean.searchDetails.date}" id="popupButtonCal1" showOn="button" />
+                           
+                           
+                            <h:outputLabel value="Supplier Id" />
+                           <p:inputText value="#{searchDetailsBean.searchDetails.supplierId}" style="width:200px;"/>
+                           <h:outputLabel value="Supplier Name"/>
+                           <p:inputText value="#{searchDetailsBean.searchDetails.supplierName}" style="width:200px;"/>
+                           
+                            <h:outputLabel value="Circular No" />
+                           <p:inputText value="#{searchDetailsBean.searchDetails.circularNo}" style="width:200px;" />
+                           <h:outputLabel value="Circular Name" />
+                           <p:inputText value="#{searchDetailsBean.searchDetails.circularName}" style="width:200px;"/>
+                           
+                            <h:panelGroup>
+			                <div style="height: 70px; vertical-align: top">
+			                  <p:outputLabel for="productCode" value="Product / Service Code" />
+							 </div>
+						     </h:panelGroup>
+						    <h:panelGroup>
+						      <div style="height: 70px; vertical-align: top">
+							 <p:inputText id="productCode" value="#{searchDetailsBean.searchDetails.productCode}" style="width:200px;" /></div>
+						     </h:panelGroup>
+						
+                            
+                          
+                          
+                            <h:panelGroup>
+			                <div style="height: 70px; vertical-align: top">
+			                  <p:outputLabel for="status" value="Status" />
+							 </div>
+						     </h:panelGroup>
+						     <h:panelGrid styleClass="txtsize">
+                           <p:selectOneListbox id="status" value="#{searchDetailsBean.searchDetails.contractStatus}" style="width:200px;"  >
+                             <f:selectItem itemLabel="Pending Fulfillment Creation" itemValue="1"  />  
+                              <f:selectItem itemLabel="Pending Approval" itemValue="2"  />  
+                              <f:selectItem itemLabel="Approved" itemValue="3" />  
+                              <f:selectItem itemLabel="Cancelled" itemValue="4" />  
+                           </p:selectOneListbox>
+                           </h:panelGrid>
+                           
+                            <f:verbatim></f:verbatim>
+			                 <f:verbatim></f:verbatim>
+                             <f:verbatim></f:verbatim>
+                               
+                             <h:panelGrid columns="2" columnClasses="column-align-right">
+                             <p:commandButton value="Search"  process="@this" partialSubmit="true" icon="ui-icon-add"  update="dataTable"/>
+							   <p:commandButton value="Reset"  process="@this" partialSubmit="true" icon="ui-icon-add"  update="dataTable"/>
+						        </h:panelGrid>
+                           
+                           </h:panelGrid>
+                          
+                             
+                             
+               </h:panelGrid>  
+			</p:panel>
+						      
+						   
+						   <p:panel id="searchResulId" header="Search Result"  toggleable="true"  toggleSpeed="500" widgetVar="panelsearchResul">
+                          
+						     <div style="overflow-x:auto">
+			                               
+			                               <p:dataTable id="dataTable" var="data" value="" rowIndexVar="index"
+							               widgetVar="dataTableObj" lazy="false" dynamic="true" paginator="true" paginatorPosition="bottom"
+							               paginatorAlwaysVisible="true" emptyMessage="No Records!" rows="10" rowsPerPageTemplate="5,10,15,20"
+							               currentPageReportTemplate=" total {totalRecords},  page {currentPage} of {totalPages} "
+							               paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink}
+							                {LastPageLink} {RowsPerPageDropdown}">
+							
+							                <p:columnGroup type="header"> 
+								                <p:row> 
+									                     <p:column rowspan="1" headerText="No." />
+									                     <p:column colspan="1" headerText="Contract Number"   /> 
+									                     <p:column colspan="1" headerText="Contract Name" /> 
+									                     <p:column colspan="1" headerText="Physical Number" /> 	
+									                     <p:column colspan="1" headerText="Circular No" /> 
+									                     <p:column colspan="1" headerText="Supplier Name"  /> 
+									                     <p:column colspan="1" headerText="Contract Start"  /> 	
+									                     <p:column colspan="1" headerText="Contract End"   /> 
+									                     <p:column colspan="1" headerText="LOA Number"  />
+									                      <p:column colspan="1" headerText="Status"  /> 
+									                     <p:column colspan="1" headerText="Action" />
+								               </p:row>							
+								
+							
+							                </p:columnGroup>
+							                     <p:column styleClass="column-align-center" > <h:outputText value="#{index+1}" /></p:column> 							
+							                     <p:column> <h:outputText value="" /></p:column>
+							                     <p:column><h:outputText value="" /></p:column>	
+							                     <p:column><h:outputText value="" /></p:column>	
+							                     <p:column><h:outputText value="" /></p:column>	
+							                     <p:column > <h:outputText value="" /> </p:column> 							
+							                     <p:column> <h:outputText value="" /> </p:column>	
+							                     <p:column><h:outputText value="" /></p:column>	
+							                     <p:column><h:outputText value="" /></p:column>	
+							                      <p:column> <h:outputText value="" /> </p:column>	
+							                      <p:column styleClass="column-align-center">
+								                 <p:commandButton title="Suspended" action="#{fulfilmentBackingBean.gotoSuspendPage}" partialSubmit="true" process="@this" 
+								                 icon="ui-icon-suspend" styleClass="ui-icon-button"/>
+								                 <p:spacer width="2"/>
+								                   <p:commandButton title="Termination" action="#{fulfilmentBackingBean.gotoTerminatePage}" partialSubmit="true" process="@this" 
+								                 icon="ui-icon-terminate" styleClass="ui-icon-button"/>
+								                 
+								                  <p:spacer width="2"/>
+								                   <p:commandButton title="Amendment" action="#{fulfilmentBackingBean.gotoAmendPage}" partialSubmit="true" process="@this" 
+								                 icon="ui-icon-amend" styleClass="ui-icon-button"/>
+								                  </p:column> 
+							                     
+							               </p:dataTable>
+						         
+						   </div>
+						   
+						  
+						    </p:panel>
+                                        
+                 </p:tab>
+                 
+                 <p:tab id="associateSearch" title="Associate Ministry Contract">
+                 
+                  <p:panel id="associatesearchId" header="Search"   toggleable="true"  toggleSpeed="500" widgetVar="panelassociatesearch">
+                          <h:panelGrid  style="width:900px;" cellpadding="1">
+                         
+                          <h:panelGrid columns="4" style="width:900px;">
+                           <h:outputLabel value="Project Name" styleClass="txtsize" />
+                           <p:inputText value="#{searchDetailsBean.searchDetails.projectName}" style="width:200px;"/>
+                           <h:outputLabel value="Contract Name" styleClass="txtsize" />
+                           <p:inputText value="#{searchDetailsBean.searchDetails.contractName}" style="width:200px;"/>
+                           
+                           <h:outputLabel value="Project Description" styleClass="txtsize" />
+                           <p:inputText value="#{searchDetailsBean.searchDetails.projectDescription}" style="width:200px;" />
+                           <h:outputLabel value="Supplier Name" styleClass="txtsize" />
+                           <p:inputText value="#{searchDetailsBean.searchDetails.supplierName}" style="width:200px;"/>
+                           
+                           <h:outputLabel value="Contract Start" styleClass="txtsize" />
+                           <p:calendar style="width:130px;" value="#{searchDetailsBean.searchDetails.date}" id="popupButtonCal2" showOn="button" />
+                           <h:outputLabel value="Contract End" styleClass="txtsize"/>
+                            <p:calendar style="width:130px;" value="#{searchDetailsBean.searchDetails.date}" id="popupButtonCal3" showOn="button" />
+                           
+                           
+                            <h:outputLabel value="Physical Contract Number" styleClass="txtsize" />
+                            <p:inputText value="#{searchDetailsBean.searchDetails.physicalNumber}" style="width:200px;"/>
+                             <f:verbatim></f:verbatim>
+                               <h:panelGrid columns="2" columnClasses="column-align-right">
+                               <p:commandButton value="Search"  process="@this" partialSubmit="true" icon="ui-icon-add"  update="dataTable1"/>
+							   <p:commandButton value="Reset"  process="@this" partialSubmit="true" icon="ui-icon-add"  update="dataTable1"/>
+						        </h:panelGrid>
+                           
+                           
+                           
+                           </h:panelGrid>
+                          
+                             
+                             
+               </h:panelGrid>  
+			</p:panel>
+						      
+						   
+						
+						   
+						   <p:panel id="associateResulId" header="Search Result"   toggleable="true"  toggleSpeed="500" widgetVar="panelassociateResul">
+                          
+						     <div style="overflow-x:auto">
+			                       <h:panelGrid  style="width:950px;">          
+			                               <p:dataTable id="dataTable1" var="data" value=" " rowIndexVar="index"
+							               widgetVar="dataTableObj" lazy="false" dynamic="true" paginator="true" paginatorPosition="bottom"
+							               paginatorAlwaysVisible="false" emptyMessage="No Records!" rows="10" rowsPerPageTemplate="5,10,15,20"
+							               currentPageReportTemplate=" total {totalRecords},  page {currentPage} of {totalPages} "
+							               paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink}
+							                {LastPageLink} {RowsPerPageDropdown}">
+							
+							                <p:columnGroup type="header"> 
+								                <p:row> 
+									                     <p:column rowspan="1" headerText="No." />
+									                     <p:column colspan="1" style="width:200px" headerText="Project Name"   /> 
+									                     <p:column colspan="1" style="width:400px" headerText="Project Description" /> 
+									                     <p:column colspan="1" style="width:80px" headerText="Number of Contract" /> 	
+									                     <p:column colspan="1" style="width:100px" headerText="Action" />
+								               </p:row>							
+								
+							
+							                </p:columnGroup>
+							                     <p:column styleClass="column-align-center" > <h:outputText value="#{index+1}" /></p:column> 							
+							                     <p:column> <h:outputText value="" /></p:column>
+							                     <p:column><h:outputText value="" /></p:column>	
+							                     <p:column><h:outputText value="" /></p:column>	
+							                    
+							                    
+							                     <p:column width="85" styleClass="column-align-center">
+						                         <p:commandButton title="edit"  icon="ui-icon-edit" styleClass="ui-icon-button" process="@this" partialSubmit="true"
+						                          onclick="dlg2.show();" global="true" immediate="true">  
+						                          <p:ajax event="change" update=":form:dataTable" process="@this" /></p:commandButton>
+						                         <p:spacer width="3" />
+								                 <p:commandButton title="delete"  onsuccess="confirmation.show()" partialSubmit="true" process="@this" 
+								                 icon="ui-icon-delete" styleClass="ui-icon-button"/>
+							                     </p:column>
+							                     
+							               </p:dataTable>
+							               
+							               <h:panelGrid style="width:950px" columnClasses="column-align-right">
+							                       <p:commandButton value="Create" styleClass="text-align: right;" process="@this" partialSubmit="true" 
+							                       icon="ui-icon-add"   onclick="dlg2.show();" >
+									               <p:ajax event="change" update=":form:dataTable1" process="@this" />
+							                       </p:commandButton> 
+							              </h:panelGrid>
+							              </h:panelGrid>
+						         
+						   </div>
+					       </p:panel>
+					       
+					       
+					       <p:confirmDialog message="Do you want to delete the record?"
+							closable="true" appendToBody="true" header="Delete Confirmation"
+							severity="alert" widgetVar="confirmation">
+
+							<h:panelGrid columns="2"
+								columnClasses="column-align-right-50,column-align-left">
+								<p:commandButton value="Yes" 
+									update="dataTable" partialSubmit="true" process="@this"
+									onclick="confirmation.hide();"/>
+								<p:commandButton value="No" 
+									onclick="confirmation.hide()" type="button" />
+							</h:panelGrid>
+						</p:confirmDialog>
+
+ 
+                    <p:dialog id="modalDialog" header="Create Associate Contract" widgetVar="dlg2" modal="true" width="900" height="450">
+					<p:panel  id="associateId" toggleable="true"  toggleSpeed="500" >
+                       
+						
+						
+						<h:panelGrid columns="2">
+						<h:outputLabel for="project" value="Project Name" styleClass="txtsize"/>
+            			<p:inputText id="project" value="#{searchDetailsBean.searchDetails.projectName}"></p:inputText>
+						<h:outputLabel for="description" value="Project Description" styleClass="txtsize" />
+            			<p:inputText id="description" style="width:400px;" value="#{searchDetailsBean.searchDetails.projectDescription}"></p:inputText>
+						</h:panelGrid>
+
+			            <div style="overflow-x:auto; display: inline-block;">
+                        <h:panelGrid style="width:910px;" styleClass="txtsize" >
+						<p:dataTable id="dataTable2" var="data" value=" " rowIndexVar="index" widgetVar="dataTableObj"
+                         lazy="false" dynamic="true" paginator="true" paginatorPosition="bottom" paginatorAlwaysVisible="true" 
+                         emptyMessage="No Records!" rows="10"  rowsPerPageTemplate="5,10,15,20" 
+                         currentPageReportTemplate=" total {totalRecords},  page {currentPage} of {totalPages} "
+                         paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}">
+                			
+                			 <p:columnGroup type="header"> 
+								                <p:row> 
+									                     <p:column rowspan="1"  headerText="Contract No"  />
+									                     <p:column colspan="1"  headerText="Supplier Name"  /> 
+									                     <p:column colspan="1"  headerText="Contract Start" /> 
+									                     <p:column colspan="1"  headerText="Contract End"  /> 	
+									                     <p:column colspan="1"  headerText="PTJ Code" />
+									                     <p:column colspan="1"  headerText="PTJ Name"  /> 
+									                     <p:column colspan="1"  headerText="Status" /> 	
+									                     <p:column colspan="1"  headerText="Action" />
+								               </p:row>							
+								
+							
+							                </p:columnGroup>
+							                     <p:column> <h:outputText value="" /></p:column> 							
+							                     <p:column> <h:outputText value="" /></p:column>
+							                     <p:column><h:outputText value="" /></p:column>	
+							                     <p:column><h:outputText value="" /></p:column>	
+							                      <p:column> <h:outputText value="" /></p:column>
+							                     <p:column><h:outputText value="" /></p:column>	
+							                     <p:column><h:outputText value="" /></p:column>	
+							                      <p:column styleClass="column-align-center">
+								<p:commandButton title="delete" onsuccess="confirmation.show()"
+									partialSubmit="true" process="@this" icon="ui-icon-delete"
+									styleClass="ui-icon-button"></p:commandButton></p:column>
+							                    
+							
+						</p:dataTable>
+						<h:panelGrid style="width:910px" columnClasses="column-align-right">
+							                       <p:commandButton value="Add" styleClass="text-align: right;" process="@this" partialSubmit="true" 
+							                       icon="ui-icon-add" onclick="dlg3.show();">
+									<p:ajax event="change" update=":form:dataTable2" process="@this" />
+							</p:commandButton>
+						</h:panelGrid>
+						</h:panelGrid>
+                        </div>
+						<f:facet name="footer">
+							<h:panelGrid columns="2"  style="float:right;height:100px;vertical-align: middle;">
+								<p:commandButton value="Select"   process="modalDialog" update="dataTable1,modalDialog" onclick="dlg2.hide();"/>
+                            	<p:commandButton value="Cancel"   type="button" ajax="false" onclick="dlg2.hide();" />
+						</h:panelGrid>
+						</f:facet>
+
+					</p:panel>
+				</p:dialog>
+				
+				<p:dialog id="modalDialog1" header="Search Contract" widgetVar="dlg3" modal="true" width="1000" height="450">
+					<p:panel  id="associateId1">
+                       
+						<h:panelGrid columns="2" columnClasses="column-align-left,column-align-right" styleClass="search-bar">
+                            <h:outputLabel for="contractNo" value="Contract No" />
+
+                <h:panelGroup id="search">
+                    <p:watermark value="Search..." for="searchCondition"/>
+                    <p:inputText id="searchCondition" title="search" value="" maxlength="50"  onkeypress="return handleSearchEvent(event);"/>
+                    <p:remoteCommand name="remoteBut"  partialSubmit="true" process="searchCondition" update="dataTable3"/>
+                </h:panelGroup>
+            </h:panelGrid>
+						
+						
+					
+						
+
+			            <div style="overflow-x:auto">
+                        <h:panelGrid style="width:910px;" styleClass="txtsize" >
+						<p:dataTable id="dataTable3" var="data" value=" " rowIndexVar="index" widgetVar="dataTableObj"
+                         lazy="false" dynamic="true" paginator="true" paginatorPosition="bottom" paginatorAlwaysVisible="true" 
+                         emptyMessage="No Records!" rows="10"  rowsPerPageTemplate="5,10,15,20" 
+                         currentPageReportTemplate=" total {totalRecords},  page {currentPage} of {totalPages} "
+                         paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}">
+                			
+                			 <p:columnGroup type="header"> 
+								                <p:row> 
+								                         <p:column selectionMode="single" style="width:2%" />
+									                     <p:column rowspan="1"  headerText="Contract No"  />
+									                     <p:column colspan="1"  headerText="Supplier Name"  /> 
+									                     <p:column colspan="1"  headerText="Contract Start" /> 
+									                     <p:column colspan="1"  headerText="Contract End"  /> 	
+									                     <p:column colspan="1"  headerText="PTJ Code" />
+									                     <p:column colspan="1"  headerText="PTJ Name"  /> 
+									                    
+								               </p:row>							
+								
+							
+							                </p:columnGroup>
+							                     <p:column> <h:outputText value="" /></p:column> 							
+							                     <p:column> <h:outputText value="" /></p:column>
+							                     <p:column><h:outputText value="" /></p:column>	
+							                     <p:column><h:outputText value="" /></p:column>	
+							                      <p:column> <h:outputText value="" /></p:column>
+							                     <p:column><h:outputText value="" /></p:column>	
+							                   
+							                    
+							
+						</p:dataTable>
+						</h:panelGrid>
+                        </div>
+						<f:facet name="footer">
+							<h:panelGrid columns="2"  style="float:right;height:100px;vertical-align: middle;">
+								<p:commandButton value="Select"   process="modalDialog1" update="dataTable2,modalDialog1" onclick="dlg3.hide();"/>
+                            	<p:commandButton value="Cancel"   type="button" ajax="false" onclick="dlg3.hide();" />
+						</h:panelGrid>
+						</f:facet>
+
+					</p:panel>
+				</p:dialog>
+				
+				</p:tab>
+				</p:tabView>
+				
+                 
+     
+    </h:form>
+   </ui:define>
+   </ui:composition>
+  

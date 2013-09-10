@@ -1,0 +1,73 @@
+<ui:composition
+	template="/WEB-INF/facelets/templates/sidemenu_template.xhtml"
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:c="http://java.sun.com/jsp/jstl/core">
+
+	<ui:define name="resourceSection">
+	</ui:define>
+	
+  	<ui:define name="sideMenu">
+		<ui:include src="/xhtml/ct/fulfilmentDetails/shared/sideMenu/menuSuspend.xhtml" />
+	</ui:define>
+  
+	<ui:define name="content">
+	 <h:form prependId="false" id="form">
+	   <p:messages showDetail="true" globalOnly="true"/>
+	   
+	     <p:panel id="fd" header="#{lbl['lbl.panel.cfm.name']}" toggleable="true"  toggleSpeed="500" widgetVar="panelfd">
+           <ui:include src="/xhtml/ct/fulfilmentDetails/shared/fulfilment.xhtml"/>
+          </p:panel>
+                              
+        
+         <p:panel id="suspend" header="Activation/Suspension Details"    toggleable="true"  toggleSpeed="500" widgetVar="panelsuspend">
+                              
+                              
+                              
+                               <h:panelGrid columns="4" style="width:600px;" rendered="#{fulfilmentBackingBean.activeSuspension}">  
+                                          <h:outputLabel value="Activate Fulfillment Details"  styleClass="txtsize"/>  
+                                            <p:selectBooleanCheckbox value=""  disabled="false"/> 
+                                              <f:verbatim></f:verbatim>
+                                            <f:verbatim></f:verbatim>
+                                           <h:outputLabel value="Activate Start Date" styleClass="txtsize" />
+                                           <p:calendar style="width:120px;" value="#{searchDetailsBean.searchDetails.date}" id="popupButtonCal4" showOn="button" />
+										</h:panelGrid>
+										
+                                           
+                            
+                                           
+                                          <h:panelGrid columns="2" style="width:600px;" rendered="#{!fulfilmentBackingBean.activeSuspension}">  
+                                           <h:panelGroup>
+										             <div style="height: 45px;width:147px; vertical-align: top">
+											              <p:outputLabel for="suspendes" value="Suspend Description" styleClass="txtsize" />
+										             </div>
+								        	      </h:panelGroup>
+									              <h:panelGrid>
+										          <p:inputTextarea id="suspendes" value="" required="false"  rows="2" cols="62" disabled="true" autoResize="false" />
+											      </h:panelGrid>
+										</h:panelGrid>
+										
+										   
+                                           
+                                 
+                                   <h:panelGrid columns="4" style="width:600px;" rendered="#{!fulfilmentBackingBean.activeSuspension}">  
+                                   
+                                            <h:outputLabel value="Suspend Fulfillment Details"  styleClass="txtsize"/>  
+                                            <p:selectBooleanCheckbox value=""  disabled="false"/> 
+                                              <f:verbatim></f:verbatim>
+                                            <f:verbatim></f:verbatim>
+                                           <h:outputLabel value="Suspend Start Date" styleClass="txtsize" />
+                                           <p:calendar style="width:120px;" value="#{searchDetailsBean.searchDetails.date}" id="popupButtonCal" showOn="button" />
+                                                    
+                                          <h:outputLabel value=" Suspend End Date" styleClass="txtsize" />
+                                           <p:calendar style="width:120px;" value="#{searchDetailsBean.searchDetails.date}" id="popupButtonCal1" showOn="button" />
+                                      
+                                      </h:panelGrid>
+                                       </p:panel>
+                                 
+            </h:form>
+            </ui:define>
+            </ui:composition>

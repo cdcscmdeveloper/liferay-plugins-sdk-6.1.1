@@ -1,0 +1,183 @@
+<ui:composition
+	template="/WEB-INF/facelets/templates/sidemenu_template.xhtml"
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:c="http://java.sun.com/jsp/jstl/core">
+
+	<ui:define name="resourceSection">
+	</ui:define>
+	
+   	       
+	<ui:define name="sideMenu">
+		<ui:include src="/xhtml/ct/panelCircular/shared/sideMenu/menuCreateCircular.xhtml" />
+	</ui:define>
+
+	<ui:define name="content">
+	 <h:form prependId="false" id="form">
+	   <p:messages showDetail="true" globalOnly="true"/>
+               
+                               <p:panel id="pc" header="Panel Circular Details"  toggleable="true"  toggleSpeed="500" widgetVar="panelpc">
+                              
+                            
+                                     <h:panelGrid columns="6" style="width:800px;" >  
+                                          <h:outputLabel  value="Circular Number"   styleClass="txtsize"/>  
+                                         <p:inputText  value="" required="true" label="Circular Number" />  
+                                         
+                                         <h:outputLabel  value="Circular Name" styleClass="txtsize"/>  
+                                         <p:inputText  value="" required="true" disabled="false" label="Circular Name" /> 
+                                          
+                                         <p:outputLabel id="coverage"  value="Circular Coverage" styleClass="txtcheckbox" />
+                                         <h:panelGrid columns="2">
+                                          <p:selectBooleanCheckbox  value=" " disabled="false"/> 
+                                          <p:outputLabel rendered="true"  value="Semenanjung" styleClass="txtcheckbox" />
+                                         </h:panelGrid>
+                                         
+                                         
+                                         <h:outputLabel for="fileNo" value="File Reference No"  styleClass="txtsize"/>  
+                                         <p:inputText id="fileNo" value="" required="true" disabled="false" label="File Reference No" /> 
+                                       
+                                         <h:outputLabel  value="Circular Start Date"   styleClass="txtsize"/>  
+                                          <p:calendar  style="width:40px;" value="#{searchDetailsBean.searchDetails.date}" id="popupButtonCal" showOn="button" />
+                                         
+                                         <f:verbatim></f:verbatim>
+                                          <h:panelGrid columns="2">
+                                         <p:selectBooleanCheckbox value=" " disabled="false"/> 
+                                         <p:outputLabel rendered="true" value="Sabah" styleClass="txtcheckbox"  /> 
+                                         </h:panelGrid>
+                                         
+                                          <h:outputLabel  value="Circular End Date"  styleClass="txtsize"/>  
+                                          <p:calendar style="width:40px;" value="#{searchDetailsBean.searchDetails.date}" id="popupButtonCal1" showOn="button" />
+                                           <f:verbatim></f:verbatim>
+                                           <f:verbatim></f:verbatim>
+                                           
+                                          <f:verbatim></f:verbatim>
+                                          <h:panelGrid columns="2">
+            					           <p:selectBooleanCheckbox value=" "  disabled="false"/> 
+                                         <p:outputLabel rendered="true"  value="Sarawak" styleClass="txtcheckbox" />
+                                          </h:panelGrid>
+                                          
+                                     </h:panelGrid>
+                                 
+                                 
+						</p:panel>
+						
+						<p:panel id="contactPerson" header="Contact Person Details"  toggleable="true"  toggleSpeed="500" widgetVar="panelcontactPerson">
+                              
+                                 
+                                  <h:panelGrid style="width:800px;">  
+                                  <p:dataTable id="dataTable" var="data" value=" " widgetVar="dataTableObj" lazy="false" dynamic="true" rowIndexVar="index"
+			                               paginator="true" paginatorPosition="bottom" paginatorAlwaysVisible="true" emptyMessage="No Records!" rows="10" 
+			                               rowsPerPageTemplate="5,10,15,20" currentPageReportTemplate=" total {totalRecords},  page {currentPage} of {totalPages} "
+							               paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink}
+							                {LastPageLink} {RowsPerPageDropdown}">
+							
+							                <p:columnGroup type="header"> 
+								                <p:row> 
+									                  
+									                     <p:column colspan="1" style="width:30px" headerText="No"  /> 
+									                     <p:column colspan="1"  style="width:150px" headerText="Contact Person Name" /> 
+									                     <p:column colspan="1"  style="width:280px" headerText="Address" /> 	
+									                     <p:column colspan="1" style="width:100px" headerText="Email"  /> 
+									                     <p:column colspan="1" style="width:100px" headerText="Phone No"  /> 
+									                      <p:column colspan="1" style="width:80px" headerText="Action"  />   
+								               </p:row>	
+								               						
+								            </p:columnGroup>
+							                   				
+							              <p:column styleClass="column-align-center" > <h:outputText value="#{index+1}" /></p:column> 							
+							                     <p:column> </p:column>
+							                     <p:column></p:column>	
+							                      <p:column> </p:column>
+							                     <p:column></p:column>	
+							                      <p:column styleClass="column-align-center">
+								                 <p:commandButton title="delete" onsuccess="confirmation.show()" partialSubmit="true" process="@this" 
+								                 icon="ui-icon-delete" styleClass="ui-icon-button"/>
+							                     </p:column> 
+							                    
+						                    </p:dataTable>
+							               </h:panelGrid>
+							               
+						            <h:panelGrid style="width:800px" columnClasses="column-align-right">
+							                       <p:commandButton value="Add" styleClass="text-align: right;" process="@this" partialSubmit="true" icon="ui-icon-add"  update="dataTable"/>
+							
+						                  </h:panelGrid>
+                                  
+                            
+                        
+                        </p:panel>
+                        
+                        <p:panel id="concelCircular" header="Cancel Circular From List"  toggleable="true"  toggleSpeed="500" widgetVar="panelconcelCircular">
+                              
+                                 
+                                  <h:panelGrid style="width:800px;">  
+                                  <p:dataTable id="dataTable1" var="data" value=" " widgetVar="dataTableObj" lazy="false" dynamic="true" 
+                                  rowIndexVar="index"
+			                               paginator="true" paginatorPosition="bottom" paginatorAlwaysVisible="true" emptyMessage="No Records!" rows="10" 
+			                               rowsPerPageTemplate="5,10,15,20" currentPageReportTemplate=" total {totalRecords},  page {currentPage} of {totalPages} "
+							               paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink}
+							                {LastPageLink} {RowsPerPageDropdown}">
+							
+							                <p:columnGroup type="header"> 
+								                <p:row> 
+									                  
+									                     <p:column colspan="1" style="width:30px" headerText="Seq No"  /> 
+									                     <p:column colspan="1"  style="width:100px" headerText="Circular No" /> 
+									                     <p:column colspan="1"  style="width:200px" headerText="Circular Name" /> 	
+									                     <p:column colspan="1" style="width:100px" headerText="File Reference No"  /> 
+									                     <p:column colspan="1" style="width:100px" headerText="Circular Coverage"  /> 
+									                     <p:column colspan="1" style="width:80px" headerText="Contract Start"  />  
+									                     <p:column colspan="1" style="width:80px" headerText="Contract End"  /> 
+									                     <p:column colspan="1" style="width:80px" headerText="Action"  />    
+								               </p:row>	
+								               						
+								            </p:columnGroup>
+							                   				
+							                     <p:column styleClass="column-align-center" > <h:outputText value="#{index+1}" /></p:column> 							
+							                     <p:column> </p:column>
+							                     <p:column></p:column>	
+							                      <p:column> </p:column>
+							                     <p:column></p:column>	
+							                      <p:column></p:column>	
+							                      <p:column> </p:column>
+							                     <p:column styleClass="column-align-center">
+								                 <p:commandButton title="delete" onsuccess="confirmation.show()" partialSubmit="true" process="@this" 
+								                 icon="ui-icon-delete" styleClass="ui-icon-button"/>
+							                     </p:column> 
+						
+							                     
+							                     
+							                     
+							               </p:dataTable>
+							               </h:panelGrid>
+							               
+						            <h:panelGrid style="width:800px" columnClasses="column-align-right">
+							                       <p:commandButton value="Add" styleClass="text-align: right;" process="@this" partialSubmit="true" icon="ui-icon-add"  update="dataTable"/>
+							
+						                  </h:panelGrid>
+                                  
+                            
+                        
+                        </p:panel>
+       
+
+ <p:confirmDialog message="Do you want to delete the record?"
+							closable="true" appendToBody="true" header="Delete Confirmation"
+							severity="alert" widgetVar="confirmation">
+
+							<h:panelGrid columns="2"
+								columnClasses="column-align-right-50,column-align-left">
+								<p:commandButton value="Yes" 
+									update="dataTable" partialSubmit="true" process="@this"
+									onclick="confirmation.hide();"/>
+								<p:commandButton value="No" 
+									onclick="confirmation.hide()" type="button" />
+							</h:panelGrid>
+						</p:confirmDialog>
+						
+						
+		</h:form>
+		</ui:define>
+		</ui:composition>				

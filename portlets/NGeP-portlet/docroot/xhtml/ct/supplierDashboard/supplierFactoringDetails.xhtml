@@ -1,0 +1,227 @@
+<ui:composition
+	template="/WEB-INF/facelets/templates/sidemenu_template.xhtml"
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:c="http://java.sun.com/jsp/jstl/core">
+
+	<ui:define name="resourceSection">
+	</ui:define>
+	
+   	       
+	<ui:define name="sideMenu">
+		<ui:include src="/xhtml/ct/fs/menuSupplierDashboard.xhtml" />
+	</ui:define>
+
+	<ui:define name="content">
+	 <h:form prependId="false" id="form">
+	   <p:messages showDetail="true" globalOnly="true"/>
+	     <p:panel id="fd" header="#{lbl['lbl.panel.cfm.name']}" toggleable="true"  toggleSpeed="500" widgetVar="panelfd">
+                                 <p:messages showDetail="true" globalOnly="true"/>
+                                 
+                                  <h:panelGrid columns="2" style="width:800px;">  
+                                         <h:panelGrid columns="6" style="width:550px;" class="formTable">  
+                                         <h:outputLabel for="soNo" value="#{lbl['lbl.cfm.sno']}"  style="width:200px;" styleClass="txtsize"/>  
+                                         <p:inputText id="soNo" value="#{contractDetailsBean.createContractDetails.sourceNo}" required="true" disabled="true" 
+                                         label="Sourcing No" />  
+                                         <p:message for="soNo" />  
+              
+                                         <h:outputLabel for="soType" value="#{lbl['lbl.cfm.sourcingType']}" style="width:200px;" styleClass="txtsize"/>  
+                                         <p:selectOneMenu id="soType" disabled="false" style="width:145px;" value="#{contractDetailsBean.createContractDetails.sourcingType}"  >
+            					         <f:selectItems value="#{contractDetailsBean.sourcingType}" />
+                				         </p:selectOneMenu>
+                                         <p:message for="soType" />  
+                                         
+                                         
+                                         <h:outputLabel for="coType" value="#{lbl['lbl.cfm.contractType']}" styleClass="txtsize"/>  
+                                         <p:selectOneMenu id="coType" disabled="false"  style="width:100px;" value="#{contractDetailsBean.createContractDetails.contractType}" >
+            					         <f:selectItems value="#{contractDetailsBean.contractType}" />
+                				         </p:selectOneMenu>
+                                         <p:message for="coType" />  
+              
+                                          <h:outputLabel for="soCate" value="#{lbl['lbl.cfm.sourcingCategory']}" styleClass="txtsize" />  
+                                         <p:selectOneMenu id="soCate" disabled="false" style="width:145px;" value="#{contractDetailsBean.createContractDetails.sourcingCategory}">
+            					         <f:selectItems value="#{contractDetailsBean.sourcingCategory}" />
+                				         </p:selectOneMenu>
+                                         <p:message for="soCate" />  
+                                         
+                                          <h:outputLabel for="cdate" value="#{lbl['lbl.cfm.createdDate']}" styleClass="txtsize" />  
+                                         <p:inputText id="cdate" value="#{contractDetailsBean.createContractDetails.createdDate}" required="true" disabled="true" label="Created Date" />  
+                                         <p:message for="cdate" />  
+                                         
+                                          <h:outputLabel for="pdate" value="#{lbl['lbl.cfm.publishingDate']}"  styleClass="txtsize"/>  
+                                         <p:inputText id="pdate" value="#{contractDetailsBean.createContractDetails.publishingDate}" required="true" disabled="true" label="Publishing Date" />  
+                                         <p:message for="pdate" />  
+                                         
+                                          <h:outputLabel for="loNo" value="#{lbl['lbl.cfm.loaNo']}"  styleClass="txtsize"/>  
+                                         <p:inputText id="loNo" value="#{contractDetailsBean.createContractDetails.loaNo}" style="width:100px;" required="true" disabled="true" label="LOA No" />  
+                                         <p:message for="loNo" />  
+                                         
+                                          <h:outputLabel for="lodate" value="#{lbl['lbl.cfm.loaDate']}" styleClass="txtsize"/>  
+                                         <p:inputText id="lodate" value="#{contractDetailsBean.createContractDetails.loaDate}" required="true" disabled="true" label="LOA Date" />  
+                                         <p:message for="lodate" />  
+                                         
+                                          <h:outputLabel for="cAmount" value="#{lbl['lbl.cfm.contractAmount']}" styleClass="txtsize"/>  
+                                          <h:panelGrid columns="2">
+                                          <p:inputText id="cAmount" value="#{contractDetailsBean.createContractDetails.contractAmount}"   size="10" required="true" disabled="true" label="Contract Amount" />  
+                                          <p:selectOneMenu   value="#{contractDetailsBean.createContractDetails.currencyType}" style="width:55px;">
+            					              <f:selectItems value="#{contractDetailsBean.currency}" /></p:selectOneMenu>
+                                              </h:panelGrid>
+                                            <p:message for="cAmount" />
+                                            
+                                            
+                                          <h:outputLabel for="fType" value="#{lbl['lbl.cfm.fulfilmentType']}" styleClass="txtsize" />  
+                                         <p:selectOneMenu id="fType" disabled="false" style="width:145px;" value="#{contractDetailsBean.createContractDetails.fulfilmentType}" >
+            					         <f:selectItems value="#{contractDetailsBean.fulfilmentType}" />
+                				         </p:selectOneMenu>
+                				           <p:message for="fType"/>  
+                				         
+                				           <h:outputLabel for="cPNo" value="#{lbl['lbl.cfm.physicalNo']}"  styleClass="txtsize" style="width:200px;" />  
+                                           <p:commandLink id="cPNo" style="margin-right:20px;" sajax="false">  
+                                          <h:outputText value="2348-5674874"  styleClass="linkcommand" />  
+                                          </p:commandLink> 
+                                         <p:message for="cPNo" />  
+                                         
+                                         
+                                          <h:outputLabel for="lDam" value="#{lbl['lbl.cfm.liquidated']}" style="width:200px;" styleClass="txtsize" />  
+                                           <h:panelGrid columns="2">
+                                          <p:inputText id="lDam" value="#{contractDetailsBean.createContractDetails.liquidatedDamages}" style="width:75px;"  required="true" disabled="true" label="Liquidated Damages" />  
+                                            <p:selectOneMenu  disabled="false"  value="#{contractDetailsBean.createContractDetails.currencyType}" style="width:60px;">
+            					              <f:selectItems value="#{contractDetailsBean.currency}" />
+                				         </p:selectOneMenu>
+                				         </h:panelGrid>
+                				          <p:message for="lDam" />
+                				          
+                				          
+                				       
+                				         
+                				          
+                                        </h:panelGrid>
+                                         <h:panelGrid columns="1" style="width:250px;" >  
+                                         <!-- Implementation of check box  -->
+                                         <h:panelGrid columns="2">
+                                          <p:selectBooleanCheckbox value="#{contractDetailsBean.checkBoxSelections.checkedAgreement}" 
+                                                disabled="#{contractDetailsBean.checkBoxSelections.disabledAgreement}"/> 
+                                          <p:outputLabel rendered="true"  value="#{lbl['lbl.cfm.agreement']}" styleClass="txtcheckbox" />
+                                         
+                                         <p:selectBooleanCheckbox value="#{contractDetailsBean.checkBoxSelections.checkedGood}" 
+                                         disabled="#{contractDetailsBean.checkBoxSelections.disabledGood}"/> 
+                                         <p:outputLabel rendered="true" value="#{lbl['lbl.cfm.localGoods']}" styleClass="txtcheckbox"  />
+                                         
+                                         <p:selectBooleanCheckbox value="#{contractDetailsBean.checkBoxSelections.checkedIGood}" 
+                                         disabled="#{contractDetailsBean.checkBoxSelections.checkedIGood}"/> 
+                                         <p:outputLabel rendered="true"  value="#{lbl['lbl.cfm.Igoods']}" styleClass="txtcheckbox" />
+                                         
+                                         <p:selectBooleanCheckbox value="#{contractDetailsBean.checkBoxSelections.checkedMto}" 
+                                         disabled="#{contractDetailsBean.checkBoxSelections.disabledMto}"/> 
+                                         <p:outputLabel rendered="true" value="#{lbl['lbl.cfm.mto']}" styleClass="txtcheckbox" />
+                				         </h:panelGrid>
+                                        
+                                        
+                                        <h:panelGrid columns="2" class="formTable">
+                                            <h:outputLabel for="edate" value="#{lbl['lbl.cfm.effectiveDate']}"  styleClass="txtsize"/>  
+                                             <p:inputText id="edate" value="#{contractDetailsBean.createContractDetails.efectiveDate}" style="width:80px;" required="true" disabled="true" label="Effective Date" />  
+                                             
+                                              
+                                              
+                                            <h:outputLabel for="exdate" value="#{lbl['lbl.cfm.edate']}" styleClass="txtsize"/>  
+                                             <p:inputText id="exdate" value="#{contractDetailsBean.createContractDetails.expiryDate}" style="width:80px;" required="true" disabled="true" label="Expirey Date" />  
+                                            
+                                              
+                                             
+                                            <h:outputLabel for="sfee" value="#{lbl['lbl.cfm.sfee']}" styleClass="txtsize" />  
+                                             <p:selectOneMenu id="sfee" disabled="true"  value="#{contractDetailsBean.createContractDetails.serviceFee}"
+                                              style="width:90px;">
+            					         <f:selectItems value="#{contractDetailsBean.serviceFee}" />
+                				         </p:selectOneMenu>
+                                             
+                                               
+                                                
+                                            <h:outputLabel for="dPeriod" value="#{lbl['lbl.cfm.dperiod']}" styleClass="txtsize" />  
+                                           
+                                             <p:inputText id="dPeriod" value="#{contractDetailsBean.createContractDetails.deliveryPeriod}" style="width:80px;" required="true" disabled="true" label="Delivery Period" />  
+                                              </h:panelGrid>
+                                               
+                                               
+                                        
+                      </h:panelGrid>  
+                                 
+                            </h:panelGrid>  
+                            
+                             
+                                         <h:panelGrid columns="1" style="width:800px;" class="formTable">  
+                                        <h:panelGrid columns="2">
+                                         <h:panelGroup>
+										             <div style="height: 45px;width:100px; vertical-align: top">
+											              <p:outputLabel for="contractName" value="#{lbl['lbl.cfm.contractName']}" styleClass="txtsize" />
+										             </div>
+								        	      </h:panelGroup>
+									              <h:panelGrid>
+										          <p:inputTextarea id="contractName" value="#{contractDetailsBean.createContractDetails.contractName}" required="false" 
+										          rows="1" cols="60" disabled="true" autoResize="false" />
+											      </h:panelGrid>
+										</h:panelGrid>
+                                         <h:panelGrid columns="5">
+                                          <h:panelGroup>
+                                           <div style="width:100px;">
+                                           <h:outputLabel for="cOwner"  value="#{lbl['lbl.cfm.owner']}" styleClass="txtsize" />  
+                                            </div>
+                                            </h:panelGroup>
+                                         <p:selectOneMenu id="cOwner" disabled="false"  value="#{contractDetailsBean.createContractDetails.contractOwner}" style="width:150px;">
+            					         <f:selectItems value="#{contractDetailsBean.contractOwner}" />
+                				         </p:selectOneMenu>
+                				           <p:message for="cOwner" /> 
+                                         <p:selectOneMenu id="cOwner1" disabled="false"  value="#{contractDetailsBean.createContractDetails.contractOwnerJabatan}" style="width:140px;">
+            					         <f:selectItems value="#{contractDetailsBean.contractOwnerJabatan}" />
+                				         </p:selectOneMenu>
+                                         <p:selectOneMenu id="cOwner2" disabled="false"  value="#{contractDetailsBean.createContractDetails.contractOwnerPtj}" style="width:110px;">
+            					         <f:selectItems value="#{contractDetailsBean.contractOwnerPtj}" />
+                				         </p:selectOneMenu>
+                                       
+                                        </h:panelGrid>   
+                                        </h:panelGrid>
+                                
+                              </p:panel>
+                              
+                               <p:panel id="factoringId" header="#{lbl['lbl.panel.fc.name']}"    toggleable="true"  toggleSpeed="500" widgetVar="panelfactoring">
+                              
+                                 
+                                   <h:panelGrid columns="4" style="width:600px;">  
+                                  
+                                          <h:outputLabel  value="Company Name" style="width:180px;" styleClass="txtsize"/>  
+                                           <p:selectOneMenu value=" " style="width:150px;">
+            					                             <f:selectItem itemLabel="-Please Select--" itemValue="" /> 
+            					                             <f:selectItem itemLabel="RHB Group" itemValue="1" /> 
+            					                             <f:selectItem itemLabel="CIMB Group" itemValue="2" /> 
+                				                    </p:selectOneMenu>    
+                				                    
+                				                    <h:outputLabel value=" Effective Date" styleClass="txtsize" />
+                                                    <p:calendar style="width:140px;" value="#{searchDetailsBean.searchDetails.date}" id="popupButtonCal" showOn="button" />
+                                                    
+                                                    <h:outputLabel  value="Authorized Ref. No"  styleClass="txtsize"/>  
+                                                    <p:inputText  value=" " required="true"   style="width:140px;" />  
+                                                  
+                                                    <h:outputLabel value=" Expiry Date" styleClass="txtsize"/>
+                                                    <p:calendar style="width:140px;" value="#{searchDetailsBean.searchDetails.date}" id="popupButtonCal1" showOn="button" />
+                           
+                                          
+                                              
+                                         
+                                        </h:panelGrid>
+                                        
+                                          <h:panelGrid columns="2" style="width:550px;">  
+                                           <h:panelGroup>
+										             <div style="height: 45px;width:120px; vertical-align: top">
+											              <p:outputLabel for="fcaddress" value="Factoring Company Address" styleClass="txtsize" />
+										             </div>
+								        	      </h:panelGroup>
+									              <h:panelGrid>
+										          <p:inputTextarea id="fcaddress" value="" required="false"  rows="2" cols="62" disabled="true" autoResize="false" />
+											      </h:panelGrid>
+										</h:panelGrid>
+                                        </p:panel>
+	   </h:form>
+	   </ui:define>
+	   </ui:composition>
