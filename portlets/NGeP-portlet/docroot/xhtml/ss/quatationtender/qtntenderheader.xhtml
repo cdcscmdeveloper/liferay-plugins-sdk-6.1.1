@@ -5,25 +5,25 @@
 	xmlns:p="http://primefaces.org/ui"
 	xmlns:c="http://java.sun.com/jsp/jstl/core">
 
-	<p:panel header="Header" toggleable="true">
+	<p:panel toggleable="true">
 <p:panelGrid columns="4" style="width:100%;" styleClass="noBorders tr,noBorders td">
 <h:outputLabel for="qtnno" value="Qtn/Tender No" />  
-            <p:inputText id="qtnno" value="#{searchQtnTenderBB.managedBean.qtno}"/> 
+            <p:inputText id="qtnno" value="AT001" readonly="true"/> 
             
             <h:outputLabel for="minscode" value="Ministry Code/Name" />  
-            <p:inputText id="minscode" value="#{searchQtnTenderBB.managedBean.qtno}"/>  
+            <p:inputText id="minscode" value="J009" readonly="true"/>  
             
             <h:outputLabel for="status" value="Status" />  
-            <p:inputText id="status" value="#{searchQtnTenderBB.managedBean.qtno}"/>  
+            <p:inputText id="status" value="Active" readonly="true" />  
             
              <h:outputLabel for="deptcode" value="Department Code/Name" />  
-            <p:inputText id="deptcode" value="#{searchQtnTenderBB.managedBean.qtno}"/>  
+            <p:inputText id="deptcode" value="101" readonly="true"/>  
            
            <h:outputText value="Created Date" /> 
-    <p:calendar value="#{searchQtnTenderBB.managedBean.date}" id="crdateFrm" showOn="button" />  
+   <p:inputText id="createdDate" value="09/09/2013" readonly="true"/>  
  
             <h:outputLabel for="ptjcode" value="PTJ Code/Name" />  
-            <p:inputText id="ptjcode" value="#{searchQtnTenderBB.managedBean.qtno}"/>  
+            <p:inputText id="ptjcode" value="P001"/>  
            
              
   </p:panelGrid>
