@@ -275,7 +275,7 @@
 		</portlet-class>
 		<init-param>
 			<name>javax.portlet.faces.defaultViewId.view</name>
-			<value>/xhtml/fl/contractOrder/coGeneralMain.xhtml</value>
+			<value>/xhtml/fl/contractOrder/coGeneral.xhtml</value>
 		</init-param>
 		<expiration-cache>0</expiration-cache>
 		<supports>
@@ -341,7 +341,7 @@
 		</portlet-class>
 		<init-param>
 			<name>javax.portlet.faces.defaultViewId.view</name>
-			<value>/xhtml/fl/contractRequest/crGeneralMain.xhtml</value>
+			<value>/xhtml/fl/contractRequest/crGeneral.xhtml</value>
 		</init-param>
 		<expiration-cache>0</expiration-cache>
 		<supports>
@@ -374,7 +374,7 @@
 		</portlet-class>
 		<init-param>
 			<name>javax.portlet.faces.defaultViewId.view</name>
-			<value>/xhtml/fl/flReceivedNote/frnGeneralMain.xhtml</value>
+			<value>/xhtml/fl/flReceivedNote/frnGeneral.xhtml</value>
 		</init-param>
 		<expiration-cache>0</expiration-cache>
 		<supports>
@@ -407,7 +407,7 @@
 		</portlet-class>
 		<init-param>
 			<name>javax.portlet.faces.defaultViewId.view</name>
-			<value>/xhtml/fl/invoice/invGeneralMain.xhtml</value>
+			<value>/xhtml/fl/invoice/invGeneral.xhtml</value>
 		</init-param>
 		<expiration-cache>0</expiration-cache>
 		<supports>
@@ -440,7 +440,7 @@
 		</portlet-class>
 		<init-param>
 			<name>javax.portlet.faces.defaultViewId.view</name>
-			<value>/xhtml/fl/paymentMatch/pmGeneralMain.xhtml</value>
+			<value>/xhtml/fl/paymentMatch/pmGeneral.xhtml</value>
 		</init-param>
 		<expiration-cache>0</expiration-cache>
 		<supports>
@@ -473,7 +473,7 @@
 		</portlet-class>
 		<init-param>
 			<name>javax.portlet.faces.defaultViewId.view</name>
-			<value>/xhtml/fl/stopInstruction/siGeneralMain.xhtml</value>
+			<value>/xhtml/fl/stopInstruction/siGeneral.xhtml</value>
 		</init-param>
 		<expiration-cache>0</expiration-cache>
 		<supports>
@@ -506,7 +506,7 @@
 		</portlet-class>
 		<init-param>
 			<name>javax.portlet.faces.defaultViewId.view</name>
-			<value>/xhtml/fl/purchaseOrder/poGeneralMain.xhtml</value>
+			<value>/xhtml/fl/purchaseOrder/poGeneral.xhtml</value>
 		</init-param>
 		<expiration-cache>0</expiration-cache>
 		<supports>
@@ -539,7 +539,7 @@
 		</portlet-class>
 		<init-param>
 			<name>javax.portlet.faces.defaultViewId.view</name>
-			<value>/xhtml/fl/purchaseRequest/prGeneralMain.xhtml</value>
+			<value>/xhtml/fl/purchaseRequest/prGeneral.xhtml</value>
 		</init-param>
 		<expiration-cache>0</expiration-cache>
 		<supports>
