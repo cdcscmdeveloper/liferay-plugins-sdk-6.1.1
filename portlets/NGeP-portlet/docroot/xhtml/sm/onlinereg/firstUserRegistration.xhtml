@@ -42,7 +42,7 @@ table.test {
 	<ui:define name="content">
 		<h:outputLabel value="First User Registration"
 			style="font-weight:bold;font-size:15px;" />
-		<p:panel header="First User Information">
+		<p:panel header="User Information">
 			<table class="test">
 				<tr>
 					<td id="tdTitle"><h:outputLabel
@@ -129,9 +129,10 @@ table.test {
 					</tr>
 
 					<tr>
-						<td>Passport Attachment</td>
-						<td><p:fileUpload mode="basic" update="messages" auto="true"
-								sizeLimit="100000" allowTypes="/(\.|\/)(gif|jpe?g|png)$/" /> <p:growl
+						<td id="tdTitle">Passport Attachment</td>
+						<td id="tdContent"><p:fileUpload mode="basic"
+								update="messages" auto="true" sizeLimit="100000"
+								allowTypes="/(\.|\/)(gif|jpe?g|png)$/" /> <p:growl
 								id="messages" showDetail="true" /></td>
 					</tr>
 				</p:outputPanel>
@@ -151,7 +152,6 @@ table.test {
 					<td id="tdContent"><p:selectOneRadio>
 							<f:selectItem itemLabel="Permenant Address" itemValue="perm" />
 							<f:selectItem itemLabel="Different Address" itemValue="diff" />
-							<p:ajax event="change" update="@form" />
 						</p:selectOneRadio></td>
 				</tr>
 
@@ -210,8 +210,6 @@ table.test {
 							<f:selectItem itemLabel="SMS" itemValue="1" />
 						</p:selectOneRadio></td>
 				</tr>
-
-
 			</table>
 		</p:panel>
 

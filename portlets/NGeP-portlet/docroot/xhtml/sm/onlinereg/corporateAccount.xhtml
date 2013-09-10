@@ -40,74 +40,7 @@ table.test {
 	<ui:define name="content">
 		<h:outputLabel value="Corporate Information"
 			style="font-weight:bold;font-size:15px;" />
-		<p:panel header="Company Information">
-			<table class="test">
-				<tr>
-					<td id="tdTitle"><h:outputLabel
-							value="#{lbl['lbl.sm.companyname']}" /></td>
-					<td id="tdContent"><h:inputText /></td>
-
-					<td id="tdTitle"><h:outputLabel
-							value="#{lbl['lbl.sm.estdate']}" /></td>
-					<td id="tdContent"><p:calendar id="cal" navigator="true"
-							display="inline" /></td>
-				</tr>
-
-				<tr>
-					<td id="tdTitle"><h:outputLabel
-							value="#{lbl['lbl.sm.companyaddress']}" /></td>
-					<td id="tdContent"><h:inputText size="50" /></td>
-
-				</tr>
-
-				<tr>
-					<td id="tdTitle"></td>
-					<td id="tdContent"><h:inputText size="50" /></td>
-				</tr>
-
-				<tr>
-					<td id="tdTitle"></td>
-					<td id="tdContent"><p:inputText size="50" /></td>
-
-					<td id="tdTitle"><h:outputLabel
-							value="#{lbl['lbl.sm.country']}" /></td>
-					<td id="tdContent"><p:selectOneMenu value="MY">
-							<f:selectItem itemLabel="MY - Malaysia" itemValue="MY" />
-						</p:selectOneMenu></td>
-				</tr>
-				<tr>
-					<td id="tdTitle"><h:outputLabel
-							value="#{lbl['lbl.sm.postcode']}" /></td>
-					<td id="tdContent"><h:inputText /></td>
-					<td id="tdTitle"><h:outputLabel value="#{lbl['lbl.sm.state']}" /></td>
-					<td id="tdContent"><h:inputText /></td>
-				</tr>
-
-				<tr>
-					<td id="tdTitle"><h:outputLabel
-							value="#{lbl['lbl.sm.district']}" /></td>
-					<td id="tdContent"><h:inputText /></td>
-					<td id="tdTitle"><h:outputLabel
-							value="#{lbl['lbl.sm.towncity']}" /></td>
-					<td id="tdContent"><h:inputText /></td>
-				</tr>
-
-				<tr>
-					<td id="tdTitle"><h:outputLabel
-							value="#{lbl['lbl.sm.telnumber']}" /></td>
-					<td id="tdContent"><h:inputText /></td>
-					<td id="tdTitle"><h:outputLabel
-							value="#{lbl['lbl.sm.faxnumber']}" /></td>
-					<td id="tdContent"><h:inputText /></td>
-				</tr>
-
-				<tr>
-					<td id="tdTitle">Nature of Business</td>
-					<td id="tdContent" colspan="3"></td>
-				</tr>
-
-			</table>
-		</p:panel>
+		<ui:include src="/xhtml/sm/shared/onlinereg/companyInfo.xhtml" />
 
 		<ui:include src="/xhtml/sm/shared/onlinereg/bankInfo.xhtml" />
 
