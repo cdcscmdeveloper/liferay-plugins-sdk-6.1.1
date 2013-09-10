@@ -15,6 +15,7 @@ import my.ep.web.bean.ss.quatationtender.CategoryCode;
 import my.ep.web.bean.ss.quatationtender.GoSoDo;
 import my.ep.web.bean.ss.quatationtender.Location;
 import my.ep.web.bean.ss.quatationtender.QtnTenderBean;
+import my.ep.web.bean.ss.quatationtender.TabBean;
 import my.ep.web.managedbean.BaseManagedBean;
 
 @ManagedBean(name = "searchQtnTenderMB")
@@ -24,10 +25,26 @@ public class SearchQtnTenderManagedBean extends BaseManagedBean {
 	/**
 	 * 
 	 */
+
+	
+	
+
 	private List<String> selectOptions;
+
 		private String selectOption;
+
+	public Map<String, TabBean> getTabview() {
+		return tabview;
+	}
+
+	public void setTabview(Map<String, TabBean> tabview) {
+		this.tabview = tabview;
+	}
+
+
 		
 		private String tenderSelction;
+
 	private static final long serialVersionUID = 1L;
 
 	private List<QtnTenderBean> qtnTenders;
@@ -51,6 +68,80 @@ public class SearchQtnTenderManagedBean extends BaseManagedBean {
 	private List<String> location;
 
 	private String state;
+
+	 private boolean selectedBoolean;
+	 
+	 private String  selectedBoolean1;
+	 
+	  private List<String> selectedOptions; 
+	  
+	  private Map<String, TabBean> tabview;
+	  
+	  private List<TabBean> tabBean;
+	  
+	  private List<SelectItem> checkBoxList;
+	  private List<String> checkBoxBPK;
+
+
+	/*public Map<String, List<SelectItem>> getTabview() {
+		return tabview;
+	}
+
+	public void setTabview(Map<String, List<SelectItem>> tabview) {
+		this.tabview = tabview;
+	}*/
+
+	
+
+
+	public List<SelectItem> getCheckBoxList() {
+		return checkBoxList;
+	}
+
+	public List<String> getCheckBoxBPK() {
+		return checkBoxBPK;
+	}
+
+	public void setCheckBoxBPK(List<String> checkBoxBPK) {
+		this.checkBoxBPK = checkBoxBPK;
+	}
+
+	public String getSelectedBoolean1() {
+		return selectedBoolean1;
+	}
+
+	public void setSelectedBoolean1(String selectedBoolean1) {
+		this.selectedBoolean1 = selectedBoolean1;
+	}
+
+	public void setCheckBoxList(List<SelectItem> checkBoxList) {
+		this.checkBoxList = checkBoxList;
+	}
+
+	public List<TabBean> getTabBean() {
+		return tabBean;
+	}
+
+	public void setTabBean(List<TabBean> tabBean) {
+		this.tabBean = tabBean;
+	}
+
+	public List<String> getSelectedOptions() {
+		return selectedOptions;
+	}
+
+	public void setSelectedOptions(List<String> selectedOptions) {
+		this.selectedOptions = selectedOptions;
+	}
+
+	public boolean isSelectedBoolean() {
+		return selectedBoolean;
+	}
+
+	public void setSelectedBoolean(boolean selectedBoolean) {
+		this.selectedBoolean = selectedBoolean;
+	}
+
 	
 	private String zone;
 	
@@ -73,6 +164,7 @@ private List<String> zoneCt;
 	private Map<String, List<SelectItem>> zoneState;
 	
 	private Map<String,List<SelectItem>> zoneCities;
+
 
 	public SearchQtnTenderManagedBean() {
 		locations = new ArrayList<Location>();
@@ -117,6 +209,27 @@ private List<String> zoneCt;
 		icities.add(new SelectItem("Chicago"));
 		icities.add(new SelectItem("Evanston"));
 		cities.put("Illinois", icities);
+
+        tabview=new HashMap<>();
+		tabview.put("BudgetApproval", new TabBean("Budget Approval"));
+		tabview.put("BPKApproval", new TabBean("BPKApproval"));
+		tabview.put("PMSabah", new TabBean("PMSabah"));
+		tabview.put("PMSarawak", new TabBean("PMSarawak"));
+		tabview.put("MITIApproval", new TabBean("MITIApproval"));
+		tabview.put("ICTApproval", new TabBean("ICTApproval"));
+		tabview.put("PBApproval", new TabBean("PBApproval"));
+		tabview.put("PTJApproval", new TabBean("PTJApproval"));
+		checkBoxList=new ArrayList();
+		checkBoxList.add(new SelectItem("BudgetApproval","BudgetApproval"));
+		checkBoxList.add(new SelectItem("BPKApproval","BPKApproval"));
+		checkBoxList.add(new SelectItem("PMSabah","PMSabah"));
+		checkBoxList.add(new SelectItem("PMSarawak","PMSarawak"));
+		checkBoxList.add(new SelectItem("MITIApproval","MITIApproval"));
+		checkBoxList.add(new SelectItem("ICTApproval","ICTApproval"));
+		checkBoxList.add(new SelectItem("PBApproval","ProcurementBoardApproval"));
+		checkBoxList.add(new SelectItem("PTJApproval","PTJApproval"));
+		
+
 		
 		zones= new ArrayList<SelectItem>();
 		zoneState=new HashMap<String,List<SelectItem>>();
@@ -165,6 +278,7 @@ private List<String> zoneCt;
 		jcities.add(new SelectItem("Chicago"));
 		jcities.add(new SelectItem("Evanston"));
 		zoneCities.put("Illinois", jcities);
+
 
 	}
 	
