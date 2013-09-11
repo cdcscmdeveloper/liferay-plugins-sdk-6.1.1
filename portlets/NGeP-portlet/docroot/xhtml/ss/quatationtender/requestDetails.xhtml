@@ -11,7 +11,7 @@
    <p:column >
    <p:outputLabel value="Type Of Approval Request"></p:outputLabel>
    </p:column>
-   <p:column>
+   <p:column  width="20%">
    <p:inputText></p:inputText>
  </p:column>
    </p:row>  
@@ -29,7 +29,7 @@
    <p:column >
    <p:outputLabel value="Type Of Approval Request"></p:outputLabel>
    </p:column>
-   <p:column>
+   <p:column  width="20%">
   
    <p:selectOneRadio   value="#{searchQtnTenderBB.managedBean.checkBoxBPK}" >  
             <f:selectItem itemLabel="RestrictedTender" itemValue="Restricted" />  
@@ -56,7 +56,7 @@
    <p:column >
    <p:outputLabel value="Type Of Approval Request"></p:outputLabel>
    </p:column>
-   <p:column>
+   <p:column  width="20%">
   
     <p:selectManyCheckbox  >  
             <f:selectItem itemLabel="CancellationQtn/Tender" itemValue="Publication" />  
@@ -79,7 +79,7 @@
    <p:column >
    <p:outputLabel value="Type Of Approval Request"></p:outputLabel>
    </p:column>
-   <p:column>
+   <p:column  width="20%">
   
     <p:selectManyCheckbox  >  
             <f:selectItem itemLabel="Publication" itemValue="Publication" />  
@@ -100,7 +100,7 @@
    <p:column >
    <p:outputLabel value="Letter NO"></p:outputLabel>
    </p:column>
-   <p:column>
+   <p:column  width="20%">
    <p:inputText></p:inputText>
  </p:column>
    </p:row>
@@ -109,7 +109,7 @@
    <p:column rowspan="2" >
    <p:outputLabel value="Standard Document"></p:outputLabel>
    </p:column>
-   <p:column>
+   <p:column  width="20%">
    
     <p:fileUpload  mode="simple" dragDropSupport="false"  
                   sizeLimit="100000" fileLimit="3" allowTypes="/(\.|\/)(gif|jpe?g|png)$/" />  
@@ -163,7 +163,7 @@
    <p:column >
    <p:outputLabel value="Required Verification"></p:outputLabel>
    </p:column>
-   <p:column>
+   <p:column  width="20%">
    <p:selectOneRadio   value="#{searchQtnTenderBB.managedBean.checkBoxBPK}" >  
             <f:selectItem itemLabel="Yes" itemValue="0" />  
             <f:selectItem itemLabel="No" itemValue="1" /> 
@@ -177,7 +177,7 @@
    <p:column >
    <p:outputLabel value="Remarks"></p:outputLabel>
    </p:column>
-   <p:column>
+   <p:column  width="20%">
    <p:inputTextarea rows="1"></p:inputTextarea>
             
  </p:column>

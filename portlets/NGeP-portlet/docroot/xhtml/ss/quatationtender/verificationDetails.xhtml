@@ -20,8 +20,8 @@
  <p:row >  
    <p:column >
     <p:outputLabel value="Option Of Verification"></p:outputLabel>
-    </p:column>
-          <p:column>
+    </p:column >
+          <p:column  width="20%">
            <p:selectOneRadio  value="searchQtnTenderBB.managedBean.selectedBoolean1">  
             <f:selectItem itemLabel="Online" itemValue="1" />  
             <f:selectItem itemLabel="Offline" itemValue="2" />  
@@ -37,7 +37,7 @@
    <p:column >
     <p:outputLabel value="Verifier Name"></p:outputLabel>
     </p:column>
-          <p:column>
+          <p:column  width="20%">
           <h:panelGroup  id="sample"  >
           <p:selectOneMenu value="searchQtnTenderBB.managedBean.qtnTenders.planNumber"  rendered="#{searchQtnTenderBB.managedBean.selectedBoolean1 eq '1'}" > 
 	<f:selectItem itemLabel="approve" itemValue="1" />   
@@ -56,7 +56,7 @@
    <p:column >
     <p:outputLabel value="Status"></p:outputLabel>
     </p:column>
-          <p:column>
+          <p:column  width="20%">
           <p:outputLabel value="ReadOnly"></p:outputLabel>
           </p:column>
           </p:row>	
@@ -67,7 +67,7 @@
    <p:column >
     <p:outputLabel value="Verification Date"></p:outputLabel>
     </p:column>
-          <p:column>
+          <p:column  width="20%">
           <p:outputLabel value="10/09/2013 04:45"></p:outputLabel>
           </p:column>
           </p:row>	
@@ -77,7 +77,7 @@
    <p:column >
     <p:outputLabel value="Action"></p:outputLabel>
     </p:column>
-          <p:column>
+          <p:column  width="20%">
            <p:selectOneMenu value="searchQtnTenderBB.managedBean.qtnTenders.planNumber" > 
 	<f:selectItem itemLabel="approve" itemValue="1" />   
 	<f:selectItem itemLabel="reject" itemValue="2" />
@@ -92,7 +92,7 @@
    <p:column >
     <p:outputLabel value="Remarks"></p:outputLabel>
     </p:column>
-          <p:column>
+          <p:column  width="20%">
          <p:inputTextarea rows="1"></p:inputTextarea>
           </p:column>
           </p:row>				
