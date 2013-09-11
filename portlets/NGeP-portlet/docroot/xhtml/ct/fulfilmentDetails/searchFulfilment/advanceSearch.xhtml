@@ -1,0 +1,169 @@
+<ui:composition
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:c="http://java.sun.com/jsp/jstl/core">
+          <p:panel id="associatesearchId" header="Search"   toggleable="true"  toggleSpeed="500" widgetVar="panelassociatesearch">
+              <h:panelGrid  style="width:900px;" cellpadding="1">
+                 <h:panelGrid columns="4" style="width:900px;">
+                     <h:outputLabel value="#{lbl['lbl.ct.asearch.pname']}" styleClass="txtsize" />
+                     <p:inputText value="#{searchDetailsBean.searchDetails.projectName}" style="width:200px;"/>
+                     <h:outputLabel value="#{lbl['lbl.ct.asearch.cname']}" styleClass="txtsize" />
+                     <p:inputText value="#{searchDetailsBean.searchDetails.contractName}" style="width:200px;"/>
+                     <h:outputLabel value="#{lbl['lbl.ct.asearch.pdes']}" styleClass="txtsize" />
+                     <p:inputText value="#{searchDetailsBean.searchDetails.projectDescription}" style="width:200px;" />
+                     <h:outputLabel value="#{lbl['lbl.ct.asearch.sname']}" styleClass="txtsize" />
+                     <p:inputText value="#{searchDetailsBean.searchDetails.supplierName}" style="width:200px;"/>
+                     <h:outputLabel value="#{lbl['lbl.ct.asearch.cstart']}" styleClass="txtsize" />
+                     <p:calendar style="width:130px;" value="#{searchDetailsBean.searchDetails.date}" id="popupButtonCal2" showOn="button" />
+                     <h:outputLabel value="#{lbl['lbl.ct.asearch.cend']}" styleClass="txtsize"/>
+                     <p:calendar style="width:130px;" value="#{searchDetailsBean.searchDetails.date}" id="popupButtonCal3" showOn="button" />
+                     <h:outputLabel value="#{lbl['lbl.ct.asearch.pcno']}" styleClass="txtsize" />
+                     <p:inputText value="#{searchDetailsBean.searchDetails.physicalNumber}" style="width:200px;"/>
+                     <f:verbatim></f:verbatim>
+                     <h:panelGrid columns="2" columnClasses="column-align-right">
+                     <p:commandButton value="#{lbl['lbl.ct.asearch.btn.search']}"  process="@this" partialSubmit="true" icon="ui-icon-add"  update="dTableAdvance"/>
+				     <p:commandButton value="#{lbl['lbl.ct.asearch.btn.reset']}"  process="@this" partialSubmit="true" icon="ui-icon-add"  update="dTableAdvance"/>
+					 </h:panelGrid>
+                </h:panelGrid>
+             </h:panelGrid>  
+		 </p:panel>
+		 <p:panel id="associateResulId" header="#{lbl['lbl.ct.asearch.panel.result']}"   toggleable="true"  toggleSpeed="500" widgetVar="panelassociateResul">
+            <div style="overflow-x:auto">
+			    <h:panelGrid  style="width:950px;">          
+			        <p:dataTable id="dTableAdvance" var="data" value=" " rowIndexVar="index" widgetVar="dataTableObj" lazy="false" dynamic="true" 
+					    paginator="true" paginatorPosition="bottom" paginatorAlwaysVisible="false" emptyMessage="No Records!" rows="10" 
+					    rowsPerPageTemplate="5,10,15,20" currentPageReportTemplate=" total {totalRecords},  page {currentPage} of {totalPages} "
+					    paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}">
+						<p:columnGroup type="header"> 
+							<p:row> 
+							    <p:column  headerText="#{lbl['lbl.ct.asearch.table1.no']}" />
+								<p:column  style="width:200px" headerText="#{lbl['lbl.ct.asearch.table1.pname']}"   /> 
+								<p:column  style="width:400px" headerText="#{lbl['lbl.ct.asearch.table1.pdes']}" /> 
+							    <p:column  style="width:80px" headerText="#{lbl['lbl.ct.asearch.table1.noc']}" /> 	
+							    <p:column  style="width:100px" headerText="#{lbl['lbl.ct.asearch.table1.action']}" />
+					        </p:row>							
+							</p:columnGroup>
+							    <p:column styleClass="column-align-center"> <h:outputText value="#{index+1}" /></p:column> 							
+							    <p:column> <h:outputText value="" /></p:column>
+							    <p:column><h:outputText value="" /></p:column>	
+							    <p:column><h:outputText value="" /></p:column>	
+							    <p:column width="85" styleClass="column-align-center">
+						            <p:commandButton title="edit"  icon="ui-icon-edit"   process="@this" 
+						              partialSubmit="true" onclick="dlg2.show();" immediate="true">  
+						               <p:ajax event="change" update=":form:dTableAdvance" process="@this" /></p:commandButton>
+						             <p:spacer width="3" />
+								     <p:commandButton title="delete"  onsuccess="confirmation.show()" partialSubmit="true" process="@this" 
+								                 icon="ui-icon-delete" />   
+								 </p:column>
+					      </p:dataTable>
+						  <h:panelGrid style="width:950px" columnClasses="column-align-right">
+							  <p:commandButton value="Create"  process="@this" partialSubmit="true" icon="ui-icon-add"   onclick="dlg2.show();" >
+						      <p:ajax event="change" update=":form:dTableAdvance" process="@this" />
+							  </p:commandButton> 
+						   </h:panelGrid>
+				    </h:panelGrid>
+		   	   </div>
+		   </p:panel>
+		   <p:confirmDialog message="#{lbl['lbl.ct.dialong.cofirm.message']}" closable="true" appendToBody="true"
+		      header="#{lbl['lbl.ct.dialong.cofirm.header']}" severity="alert" widgetVar="confirmation">
+               <h:panelGrid columns="2">
+				 <p:commandButton value="#{lbl['lbl.ct.dialong.cofirm.yes']}" update="dTableAdvance" partialSubmit="true" process="@this"
+				    onclick="confirmation.hide();"/>
+				    <p:commandButton value="#{lbl['lbl.ct.dialong.cofirm.no']}" onclick="confirmation.hide()" type="button" />
+			  </h:panelGrid>
+		 </p:confirmDialog>
+           <p:dialog id="modalDialog" header="#{lbl['lbl.ct.asearch.model.header']}" widgetVar="dlg2" modal="true" width="900" height="450">
+			   <p:panel  id="associateId">
+                  <h:panelGrid columns="2">
+				     <h:outputLabel value="#{lbl['lbl.ct.asearch.model.pname']}" styleClass="txtsize"/>
+            	     <p:inputText  value="#{searchDetailsBean.searchDetails.projectName}"></p:inputText>
+					 <h:outputLabel  value="#{lbl['lbl.ct.asearch.model.pdes']}" styleClass="txtsize" />
+            		 <p:inputText    style="width:400px;" value="#{searchDetailsBean.searchDetails.projectDescription}"></p:inputText>
+					 </h:panelGrid>
+                     <div style="overflow-x:auto;">
+                     <p:dataTable id="dTableModel" var="data" value=" " rowIndexVar="index" widgetVar="dataTableObj" emptyMessage="No Records!" rows="10"  
+                       rowsPerPageTemplate="5,10,15,20" currentPageReportTemplate=" total {totalRecords},  page {currentPage} of {totalPages} "
+                       paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}">
+                	   <p:columnGroup type="header"> 
+					      <p:row> 
+						      <p:column rowspan="1"  headerText="#{lbl['lbl.ct.asearch.model.table1.cno']}"  />
+						      <p:column colspan="1"  headerText="#{lbl['lbl.ct.asearch.model.table1.sname']}"  /> 
+							  <p:column colspan="1"  headerText="#{lbl['lbl.ct.asearch.model.table1.cstart']}" /> 
+							  <p:column colspan="1"  headerText="#{lbl['lbl.ct.asearch.model.table1.cend']}"  /> 	
+							  <p:column colspan="1"  headerText="#{lbl['lbl.ct.asearch.model.table1.pcode']}" />
+							  <p:column colspan="1"  headerText="#{lbl['lbl.ct.asearch.model.table1.pname']}"  /> 
+						      <p:column colspan="1"  headerText="#{lbl['lbl.ct.asearch.model.table1.status']}" /> 	
+						      <p:column colspan="1"  headerText="#{lbl['lbl.ct.asearch.model.table1.action']}" />
+						</p:row>							
+						</p:columnGroup>
+						     <p:column> <h:outputText value="" /></p:column> 							
+							 <p:column> <h:outputText value="" /></p:column>
+							 <p:column><h:outputText value="" /></p:column>	
+							 <p:column><h:outputText value="" /></p:column>	
+							 <p:column> <h:outputText value="" /></p:column>
+							 <p:column><h:outputText value="" /></p:column>	
+							 <p:column><h:outputText value="" /></p:column>	
+							 <p:column styleClass="column-align-center">
+							    <p:commandButton title="delete" onsuccess="confirmation.show()" partialSubmit="true" process="@this" icon="ui-icon-delete"
+									styleClass="ui-icon-button"></p:commandButton></p:column>
+					</p:dataTable>
+				    <h:panelGrid style="width:850px" columnClasses="column-align-right">
+				      <p:commandButton value="Add" process="@this" partialSubmit="true"  icon="ui-icon-add" onclick="dlg3.show();">
+						<p:ajax event="change" update=":form:dTableModel" process="@this" />
+					  </p:commandButton>
+				    </h:panelGrid>
+                </div>
+			    <f:facet name="footer">
+					<h:panelGrid columns="2"  style="float:right;height:100px;vertical-align: middle;">
+					   <p:commandButton value="Select"   process="modalDialog" update="dTableAdvance,modalDialog" onclick="dlg2.hide();"/>
+                          <p:commandButton value="Cancel" type="button" ajax="false" onclick="dlg2.hide();" />
+					  </h:panelGrid>
+				</f:facet>
+            </p:panel>
+	    </p:dialog>
+		<p:dialog id="modalDialog1" header="#{lbl['lbl.ct.asearch.model1.header']}" widgetVar="dlg3" modal="true" width="900" height="450">
+		   <p:panel id="associateId1">
+               <h:panelGrid columns="2" columnClasses="column-align-left,column-align-right">
+                  <h:outputLabel value="#{lbl['lbl.ct.asearch.model.table2.cno']}" />
+                    <h:panelGroup id="search">
+                        <p:watermark value="Search..." for="searchCondition"/>
+                        <p:inputText id="searchCondition" title="search" value="" maxlength="50"  onkeypress="return handleSearchEvent(event);"/>
+                        <p:remoteCommand name="remoteBut"  partialSubmit="true" process="searchCondition" update="dTableModel"/>
+                    </h:panelGroup>
+              </h:panelGrid>
+		      <div style="overflow-x:auto">
+                   <p:dataTable id="dTableModel1" var="data" value=" " rowIndexVar="index" widgetVar="dataTableObj"  lazy="false" dynamic="true" 
+                       paginator="true" paginatorPosition="bottom" paginatorAlwaysVisible="true"  emptyMessage="No Records!" rows="10"  
+                       rowsPerPageTemplate="5,10,15,20"   currentPageReportTemplate=" total {totalRecords},  page {currentPage} of {totalPages} "
+                       paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}">
+                	   <p:columnGroup type="header"> 
+		               <p:row> 
+					       <p:column selectionMode="single" style="width:2%" />
+						   <p:column rowspan="1"  headerText="#{lbl['lbl.ct.asearch.model.table2.cno']}"  />
+						   <p:column colspan="1"  headerText="#{lbl['lbl.ct.asearch.model.table2.sname']}"  /> 
+						   <p:column colspan="1"  headerText="#{lbl['lbl.ct.asearch.model.table2.cstart']}" /> 
+						   <p:column colspan="1"  headerText="#{lbl['lbl.ct.asearch.model.table2.cend']}"  /> 	
+					       <p:column colspan="1"  headerText="#{lbl['lbl.ct.asearch.model.table2.pcode']}" />
+					       <p:column colspan="1"  headerText="#{lbl['lbl.ct.asearch.model.table2.pname']}"  /> 
+					  </p:row>							
+					  </p:columnGroup>
+						 <p:column> <h:outputText value="" /></p:column> 							
+						 <p:column> <h:outputText value="" /></p:column>
+					     <p:column><h:outputText value="" /></p:column>	
+					     <p:column><h:outputText value="" /></p:column>	
+						 <p:column> <h:outputText value="" /></p:column>
+						 <p:column><h:outputText value="" /></p:column>	
+			  	 </p:dataTable>
+		     </div>
+			 <f:facet name="footer">
+			   <h:panelGrid columns="2"  style="float:right;height:100px;vertical-align: middle;">
+				  <p:commandButton value="Select" process="modalDialog1" update="dTableModel,modalDialog1" onclick="dlg3.hide();"/>
+                    <p:commandButton value="Cancel" type="button" ajax="false" onclick="dlg3.hide();" />
+			    </h:panelGrid>
+		    </f:facet>
+         </p:panel>
+	 </p:dialog>
+</ui:composition>
