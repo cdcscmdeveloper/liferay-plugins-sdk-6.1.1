@@ -1,0 +1,91 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:c="http://java.sun.com/jsp/jstl/core">
+
+<p:panel header="Approval Details" toggleable="true">
+<p:panelGrid style="width:100%;"
+    styleClass="noBorders tr,noBorders td">
+    <p:row>
+     <p:column width="100%" style="text-align:right">
+      <p:commandButton value="Submit"   style="float:right;" />
+					<p:commandButton value="SendReminder" style="float:right;">
+        </p:commandButton>
+     </p:column>
+     </p:row>
+     </p:panelGrid>
+     </p:panel>
+     <p:panel>
+<p:panelGrid   styleClass="noBorders tr,noBorders td">
+ 
+<p:row >  
+   <p:column >
+    <p:outputLabel value="Approver Name"></p:outputLabel>
+    </p:column>
+          <p:column>
+          <h:panelGroup  id="sample2"  >
+          <p:selectOneMenu value="searchQtnTenderBB.managedBean.qtnTenders.planNumber"  rendered="#{searchQtnTenderBB.managedBean.selectedBoolean1 eq '1'}" > 
+	<f:selectItem itemLabel="approve" itemValue="1" />   
+	<f:selectItem itemLabel="reject" itemValue="2" />
+	<f:selectItem itemLabel="revise" itemValue="2" />
+	</p:selectOneMenu> 
+	 
+          <p:inputText  rendered="#{searchQtnTenderBB.managedBean.selectedBoolean1 eq '2'}"></p:inputText>
+          </h:panelGroup>
+          </p:column>
+          </p:row>	
+          
+          
+             
+           <p:row >  
+   <p:column >
+    <p:outputLabel value="Status"></p:outputLabel>
+    </p:column>
+          <p:column>
+          <p:outputLabel value="ReadOnly"></p:outputLabel>
+          </p:column>
+          </p:row>	
+          
+          
+               
+           <p:row >  
+   <p:column >
+    <p:outputLabel value="Approver Date"></p:outputLabel>
+    </p:column>
+          <p:column>
+          <p:outputLabel value="10/09/2013 04:45"></p:outputLabel>
+          </p:column>
+          </p:row>	
+          
+                    
+           <p:row >  
+   <p:column >
+    <p:outputLabel value="Action"></p:outputLabel>
+    </p:column>
+          <p:column>
+           <p:selectOneMenu value="#{searchQtnTenderBB.managedBean.selectOption}" > 
+	<f:selectItem itemLabel="Approver" itemValue="1" />   
+	<f:selectItem itemLabel="Reject" itemValue="2" />
+	
+	</p:selectOneMenu> 
+          </p:column>
+          </p:row>	
+          
+          
+                 
+           <p:row >  
+   <p:column >
+    <p:outputLabel value="Remarks"></p:outputLabel>
+    </p:column>
+          <p:column>
+      <p:inputText></p:inputText>
+          </p:column>
+          </p:row>				
+
+</p:panelGrid>
+
+</p:panel>
+
+	</ui:composition>
