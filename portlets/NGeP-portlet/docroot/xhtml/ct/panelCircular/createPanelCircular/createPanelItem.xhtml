@@ -6,244 +6,83 @@
 	xmlns:ui="http://java.sun.com/jsf/facelets"
 	xmlns:p="http://primefaces.org/ui"
 	xmlns:c="http://java.sun.com/jsp/jstl/core">
-
-	<ui:define name="resourceSection">
+    <ui:define name="resourceSection">
 	</ui:define>
-	
-   	       
 	<ui:define name="sideMenu">
 		<ui:include src="/xhtml/ct/panelCircular/shared/sideMenu/menuCreateCircular.xhtml" />
 	</ui:define>
-
-	<ui:define name="content">
-	 <h:form prependId="false" id="form">
+    <ui:define name="content">
 	   <p:messages showDetail="true" globalOnly="true"/>
-		 
-		             <p:panel id="itemId" header="Item Details"   toggleable="true"  toggleSpeed="500" widgetVar="panelitem">
-                                           
-                                       
-			                                <h:panelGrid style="width:800px">
-			                               <p:dataTable id="dataTable" var="data" value=" " widgetVar="dataTableObj" lazy="false" dynamic="true" 
-			                               paginator="true" paginatorPosition="bottom" paginatorAlwaysVisible="true" emptyMessage="No Records!" rows="10" 
-			                               rowsPerPageTemplate="5,10,15,20" currentPageReportTemplate=" total {totalRecords},  page {currentPage} of {totalPages} "
-							               paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink}
-							                {LastPageLink} {RowsPerPageDropdown}">
-							
-							                <p:columnGroup type="header"> 
-								                <p:row> 
-									                  
-									                     <p:column colspan="1" style="width:30px" headerText="No"  /> 
-									                     <p:column colspan="1"  style="width:120px" headerText="Item Code" /> 
-									                     <p:column colspan="1"  style="width:230px" headerText="Item Name" /> 	
-									                     <p:column colspan="1" style="width:70px" headerText="Zonal?"  /> 
-									                     <p:column colspan="1" style="width:230px" headerText="Specifcation"  /> 
-									                     <p:column colspan="1" style="width:100px" headerText="Action"  /> 
-									                    
-								               </p:row>							
-								
-							
-							                </p:columnGroup>
-							                   				
-							               <p:column styleClass="column-align-center" > <h:outputText value="#{index+1}" /></p:column> 	   
-							               <p:column> <p:inputText style="width:120px;" value="EP 308X3120P"/> </p:column>
-						                   <p:column> <p:inputText style="width:200px;" value="DESKTOP"/> </p:column>
-							               <p:column>  <p:selectBooleanCheckbox value="" disabled="false"/></p:column>  
-                                          
-                                           <p:column> 
-                                            <h:panelGrid rendered="true" columns="2" id="itemSpeci">
-                                              <p:selectBooleanCheckbox value="#{panelContractBean.checkBoxSelections.checkSpecification}" >
-                                              <p:ajax update="itemSpeci" listener="#{panelContractBean.specificationField}" process="@this"/>
-                                              </p:selectBooleanCheckbox> 
-                                                     <p:commandLink id="speci" rendered="#{panelContractBean.checkBoxSelections.checkSpecification}" style="margin-right:20px;" process="@this" partialSubmit="true" onclick="dlg2.show();">    
-                                                      <h:outputText value="Specification" styleClass="linkcommand1"/>  
-                                                       </p:commandLink> 
-                                           </h:panelGrid>
-                                         </p:column>
-                                          
-							               <p:column width="85" styleClass="column-align-center">
-						                         <p:commandButton title="edit" icon="ui-icon-edit" styleClass="ui-icon-button" onclick="dlg2.show();" process="@this" partialSubmit="true">
-						                           <p:ajax event="change" update=":form:dataTable" process="@this" /></p:commandButton>
-						                         <p:spacer width="3" />
-								                 <p:commandButton title="delete" onsuccess="confirmation.show()" partialSubmit="true" process="@this" 
-								                 icon="ui-icon-delete" styleClass="ui-icon-button"/>
-							                     </p:column> 
-							                     
-							                     
-							               </p:dataTable>
-							               </h:panelGrid>
-							               
-						            <h:panelGrid style="width:800px" columnClasses="column-align-right">
-							                       <p:commandButton value="Add" styleClass="text-align: right;" process="@this" partialSubmit="true" icon="ui-icon-add"  update="dataTable"/>
-							
-						                  </h:panelGrid>
-						            
-						   
-						</p:panel>    
-						
-						 <p:panel id="zoneId" header="Zone Details"   toggleable="true"  toggleSpeed="500" widgetVar="panelzone">
-                                           
-                                 
-                                        
-			                                <h:panelGrid style="width:800px">
-			                               <p:dataTable id="dataTable1" var="data" value=" " widgetVar="dataTableObj" lazy="false" dynamic="true" 
-			                               paginator="true" paginatorPosition="bottom" paginatorAlwaysVisible="true" emptyMessage="No Records!" rows="10" 
-			                               rowsPerPageTemplate="5,10,15,20" currentPageReportTemplate=" total {totalRecords},  page {currentPage} of {totalPages} "
-							               paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink}
-							                {LastPageLink} {RowsPerPageDropdown}">
-							
-							                <p:columnGroup type="header"> 
-								                <p:row> 
-									                  
-									                     <p:column colspan="1" style="width:250px" headerText="Zone Name"  /> 
-									                     <p:column colspan="1"  style="width:350px" headerText="State" /> 
-									                     <p:column colspan="1" style="width:100px" headerText="Action"  /> 
-									                    
-								               </p:row>							
-								
-							
-							                </p:columnGroup>
-							                   				
-							               
-							               <p:column></p:column>
-						                   <p:column> </p:column>
-							               <p:column styleClass="column-align-center"> <p:commandButton title="delete" onsuccess="confirmation.show()" partialSubmit="true" process="@this" 
-								                 icon="ui-icon-delete" styleClass="ui-icon-button"/> </p:column>  
-                                                    
-							               </p:dataTable>
-							               </h:panelGrid>
-							               
-						            <h:panelGrid style="width:800px" columnClasses="column-align-right">
-							                       <p:commandButton value="Add" styleClass="text-align: right;" process="@this" partialSubmit="true" icon="ui-icon-add"  update="dataTable1"/>
-							
-						                  </h:panelGrid>
-						            
-						   
-						</p:panel>
-						
-						 <p:panel id="supplierId" header="Supplier Details"   toggleable="true"  toggleSpeed="500" widgetVar="panelsupplier">
-                                           
-                                      
-                                        
-			                                <h:panelGrid style="width:800px">
-			                               <p:dataTable id="dataTable2" var="data" value=" " widgetVar="dataTableObj" lazy="false" dynamic="true" 
-			                               paginator="true" paginatorPosition="bottom" paginatorAlwaysVisible="true" emptyMessage="No Records!" rows="10" 
-			                               rowsPerPageTemplate="5,10,15,20" currentPageReportTemplate=" total {totalRecords},  page {currentPage} of {totalPages} "
-							               paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink}
-							                {LastPageLink} {RowsPerPageDropdown}">
-							
-							                <p:columnGroup type="header"> 
-								                <p:row> 
-									                  
-									                     <p:column colspan="1" style="width:80px" headerText="Supplier Id"  /> 
-									                     <p:column colspan="1"  style="width:120px" headerText="Supplier Name" /> 
-									                     <p:column colspan="1" style="width:80px" headerText="Phone No"  /> 
-									                     <p:column colspan="1" style="width:80px" headerText="Email Id"  /> 
-									                     <p:column colspan="1"  style="width:100px" headerText="Zone" /> 
-									                     <p:column colspan="1" style="width:100px" headerText="State/District"  /> 
-									                     <p:column colspan="1" style="width:100px" headerText="Bank Name"  /> 
-									                     <p:column colspan="1"  style="width:100px" headerText="Bank Acoount No" /> 
-									                     <p:column colspan="1" style="width:100px" headerText="Action"  /> 
-									                    
-								               </p:row>							
-								
-							
-							                </p:columnGroup>
-							                   				
-							               
-							               <p:column></p:column>
-						                   <p:column> </p:column>
-						                    <p:column></p:column>
-						                   <p:column> </p:column>
-						                    <p:column></p:column>
-						                   <p:column> </p:column>
-						                    <p:column></p:column>
-						                   <p:column> </p:column>
-							               <p:column styleClass="column-align-center"> <p:commandButton title="delete" onsuccess="confirmation.show()"
-							                partialSubmit="true" process="@this"  icon="ui-icon-delete" styleClass="ui-icon-button"/> </p:column>  
-                                                    
-							               </p:dataTable>
-							               </h:panelGrid>
-							               
-						            <h:panelGrid style="width:800px" columnClasses="column-align-right">
-							                       <p:commandButton value="Add" styleClass="text-align: right;" process="@this" partialSubmit="true" 
-							                       icon="ui-icon-add"  update="dataTable2"/>
-							
-						                  </h:panelGrid>
-						            
-						   
-						</p:panel>                
-	   
-    
-     <p:confirmDialog message="Do you want to delete the record?"
-							closable="true" appendToBody="true" header="Delete Confirmation"
+		  <p:panel id="itemId" header="#{lbl['lbl.ct.pc.panel.item']}"   toggleable="true"  toggleSpeed="500" widgetVar="panelitem">
+              <h:panelGrid style="width:800px">
+			     <p:dataTable id="dTableItem" var="data" value=" " widgetVar="dataTableObj" lazy="false" dynamic="true" 
+			        paginator="true" paginatorPosition="bottom" paginatorAlwaysVisible="true" emptyMessage="No Records!" rows="10" 
+			        rowsPerPageTemplate="5,10,15,20" currentPageReportTemplate=" total {totalRecords},  page {currentPage} of {totalPages} "
+				    paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}">
+					<p:columnGroup type="header"> 
+					   <p:row> 
+					       <p:column style="width:30px" headerText="#{lbl['lbl.ct.pc.no']}"  /> 
+	                       <p:column style="width:150px" headerText="#{lbl['lbl.ct.pc.item.code']}" /> 
+	                       <p:column style="width:450px" headerText="#{lbl['lbl.ct.pc.item.name']}" /> 	 
+	                    </p:row>							
+					 </p:columnGroup>
+					 <p:column styleClass="column-align-center" > <h:outputText value="#{index+1}" /></p:column> 	   
+				     <p:column> </p:column>
+				     <p:column> </p:column>
+				  </p:dataTable>
+			  </h:panelGrid>
+			</p:panel>    
+			<p:panel id="supplierId" header="#{lbl['lbl.ct.pc.panel.sd']}"   toggleable="true"  toggleSpeed="500" widgetVar="panelsupplier">
+              <h:panelGrid style="width:800px">
+			    <p:dataTable id="dTableSupplier" var="data" value=" " widgetVar="dataTableObj" lazy="false" dynamic="true" 
+			       paginator="true" paginatorPosition="bottom" paginatorAlwaysVisible="true" emptyMessage="No Records!" rows="10" 
+			       rowsPerPageTemplate="5,10,15,20" currentPageReportTemplate=" total {totalRecords},  page {currentPage} of {totalPages} "
+			       paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}">
+				   <p:columnGroup type="header"> 
+				      <p:row> 
+					     <p:column style="width:60px" headerText="#{lbl['lbl.ct.pc.item.sid']}"  /> 
+						 <p:column style="width:100px" headerText="#{lbl['lbl.ct.pc.item.sname']}" /> 
+						 <p:column style="width:60px" headerText="#{lbl['lbl.ct.pc.item.pno']}"  /> 
+						 <p:column style="width:100px" headerText="#{lbl['lbl.ct.pc.item.zone']}" /> 
+						 <p:column style="width:100px" headerText="#{lbl['lbl.ct.pc.item.state']}"  /> 
+						 <p:column style="width:100px" headerText="#{lbl['lbl.ct.pc.item.bname']}"  /> 
+						 <p:column style="width:80px" headerText="#{lbl['lbl.ct.pc.item.acno']}" /> 
+						 <p:column style="width:60px" headerText="#{lbl['lbl.ct.pc.item.action']}"  /> 
+					  </p:row>							
+				   </p:columnGroup>
+				   <p:column></p:column>
+				   <p:column> </p:column>
+				   <p:column> </p:column>
+				   <p:column>
+				   <p:selectOneMenu disabled="false"  value=""  style="width:100px">
+            			 <f:selectItem itemLabel="Utara" itemValue="Utara" /> 
+            					 <f:selectItem itemLabel="Sabah" itemValue="Sabah" />
+                		</p:selectOneMenu>
+                   </p:column>
+				   <p:column> </p:column>
+				   <p:column></p:column>
+				   <p:column> </p:column>
+				   <p:column styleClass="column-align-center"> <p:commandButton title="delete" onsuccess="confirmation.show()"
+					   partialSubmit="true" process="@this"  icon="ui-icon-delete" styleClass="ui-icon-button"/> </p:column>  
+                    </p:dataTable>
+					</h:panelGrid>
+					<h:panelGrid style="width:800px" columnClasses="column-align-right">
+					   <p:commandButton value="Add" styleClass="text-align: right;" process="@this" partialSubmit="true" icon="ui-icon-add"  update="dTableSupplier"/>
+					</h:panelGrid>
+			</p:panel>                
+	       <p:confirmDialog message="#{lbl['lbl.ct.dialong.cofirm.message']}"
+							closable="true" appendToBody="true" header="#{lbl['lbl.ct.dialong.cofirm.header']}"
 							severity="alert" widgetVar="confirmation">
-
-							<h:panelGrid columns="2"
+                          	<h:panelGrid columns="2"
 								columnClasses="column-align-right-50,column-align-left">
-								<p:commandButton value="Yes" 
-									update="dataTable" partialSubmit="true" process="@this"
+								<p:commandButton value="#{lbl['lbl.ct.dialong.cofirm.yes']}" 
+									update="dTableSupplier" partialSubmit="true" process="@this"
 									onclick="confirmation.hide();"/>
-								<p:commandButton value="No" 
+								<p:commandButton value="#{lbl['lbl.ct.dialong.cofirm.no']}" 
 									onclick="confirmation.hide()" type="button" />
 							</h:panelGrid>
-						</p:confirmDialog>
+			</p:confirmDialog>
 						
-			<p:dialog id="modalDialog" header="Item Specification" widgetVar="dlg2" modal="true" width="800" height="500">
-					<p:panel  id="agencyies">
-
-						
-
 			
-
-						<p:dataTable id="dataTable3" var="data" value="" rowIndexVar="index" widgetVar="dataTableObj" 
-                         lazy="false" dynamic="true" paginator="true" paginatorPosition="bottom" paginatorAlwaysVisible="true" 
-                         emptyMessage="No Records!" rows="10"  rowsPerPageTemplate="5,10,15,20" 
-                         currentPageReportTemplate=" total {totalRecords},  page {currentPage} of {totalPages} "
-                         paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}">
-                			
-                			
-							<p:column headerText="No.">
-								<h:outputText value="#{index+1}" />
-							</p:column>
-
-	                         <p:column  headerText="Header1">
-								<p:inputText value="" style="width:100px;" /> 
-							</p:column>
-
-							 <p:column  headerText="Header2">
-								<p:inputText value="" style="width:100px;" /> 
-							</p:column>
-							
-							 <p:column  headerText="Header3">
-								<p:inputText value="" style="width:100px;" /> 
-							</p:column>
-							
-							 <p:column  headerText="Header4">
-								<p:inputText value="" style="width:100px;" /> 
-							</p:column>
-							
-							 <p:column  headerText="Header5">
-								<p:inputText value="" style="width:100px;" /> 
-							</p:column>
-							
-							 <p:column  headerText="Action" style="width:100px;">
-								 <p:commandButton title="delete" onsuccess="confirmation.show()" partialSubmit="true" process="@this" 
-								                 icon="ui-icon-delete" />
-							</p:column>
-							
-							
-							
-						</p:dataTable>
-
-						<f:facet name="footer">
-							<h:panelGrid columns="2"  style="height: 40px;vertical-align: middle;">
-								<p:commandButton value="Select"  actionListener="#{agencyDetailsBean.addAgencyToProcess}" process="modalDialog" update="dataTable,modalDialog" onclick="dlg2.hide();"/>
-                            	<p:commandButton value="Cancel"  type="button" ajax="false" onclick="dlg2.hide();" />
-						</h:panelGrid>
-						</f:facet>
-
-					</p:panel>
-				</p:dialog>
-  </h:form>
   </ui:define>
   </ui:composition>
