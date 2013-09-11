@@ -84,6 +84,12 @@ public class MofRegistrationBackingBean extends
 				Boolean.FALSE, "w", 101099, "PERALATAN KOMUNIKASI",
 				"ALAT-ALAT", "ALAT", "DISTRIBUTOR", "Normal", Boolean.FALSE,
 				"Normal", "New Case Received ", "20 -02-2013"));
+		dataList.add(new SupportingDocumentBean(2, "Document2",
+				"BORANG PENGISYTIHARAN KEMENTERIAN KEWANGAN YANG  ",
+				Boolean.FALSE, "Document1", "Document1", "Y", "d",
+				Boolean.FALSE, "w", 101099, "PERALATAN KOMUNIKASI",
+				"ALAT-ALAT", "ALAT", "DISTRIBUTOR", "Normal", Boolean.FALSE,
+				"", "New Case Received ", "20 -02-2013"));
 		return dataList;
 
 	}
@@ -121,6 +127,15 @@ public class MofRegistrationBackingBean extends
 		System.out.println("ENTER THE ACTION CLASS");
 		System.out.println("****** LIST ******" + signList.size());
 		return signList;
+
+	}
+
+	public void sendEnquiry(SupportingDocumentBean data) {
+		if (!data.isDocumentValid()) {
+			System.out.println("**** Select Value ***" + data.getRemarks());
+			data.setRemarks(null);
+
+		}
 
 	}
 

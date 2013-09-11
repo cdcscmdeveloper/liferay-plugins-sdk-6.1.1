@@ -18,13 +18,23 @@
 			<p:column headerText="Document Description">  
 		            #{table.documentdescription} 
 		        </p:column>
-			<p:column headerText="Missing / Incomplete">
-				<p:selectBooleanCheckbox value="#{table.docSent}" />
-			</p:column>
-			<p:column headerText="Remarks By SDO">
-				<h:outputLabel value="Remarks: " />
-				<p:inputTextarea />
 
+			<p:column headerText="Missing / Incomplete">
+				<p:panelGrid columns="1" styleClass="noBorders tr,noBorders td">
+					<p:selectBooleanCheckbox value="#{table.documentValid}">
+						<p:ajax
+							listener="#{mofRegistrationBackingBean.sendEnquiry(table)}"
+							update="panelId" />
+					</p:selectBooleanCheckbox>
+				</p:panelGrid>
+			</p:column>
+
+			<p:column headerText="Remarks By SDO">
+				<p:panelGrid id="panelId" columns="1"
+					styleClass="noBorders tr,noBorders td">
+					<p:inputText rendered="#{table.documentValid}"
+						value="#{table.remarks}" />
+				</p:panelGrid>
 			</p:column>
 		</p:dataTable>
 	</p:panel>
