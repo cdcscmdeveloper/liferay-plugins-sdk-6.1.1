@@ -18,12 +18,12 @@
      </p:panelGrid>
      
 
-<p:panelGrid  styleClass="noBorders tr,noBorders td">
+<p:panelGrid style="width:40%;"  styleClass="noBorders tr,noBorders td">
  <p:row >  
    <p:column >
     <p:outputLabel value="Approver Name"></p:outputLabel>
     </p:column>
-           <p:column width="20%">
+           <p:column >
              <h:panelGroup  id="sample1"  >
          <c:if test="${searchQtnTenderBB.managedBean.selectedBoolean1 eq '1'}">
           <p:selectOneMenu value="#{searchQtnTenderBB.managedBean.selectedBoolean1}"   > 
@@ -45,7 +45,7 @@
    <p:column >
     <p:outputLabel value="Status"></p:outputLabel>
     </p:column>
-          <p:column  width="20%">
+          <p:column  >
           <p:outputLabel value="ReadOnly"></p:outputLabel>
           </p:column>
           </p:row>	
