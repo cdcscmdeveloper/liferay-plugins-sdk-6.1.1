@@ -80,8 +80,8 @@ public class SearchQtnTenderManagedBean extends BaseManagedBean {
 	  private List<TabBean> tabBean;
 	  
 	  private List<SelectItem> checkBoxList;
-	  private List<String> checkBoxBPK;
-
+	  private String checkBoxBPK;
+	  private List<String> checkBoxBPK1;
 
 	/*public Map<String, List<SelectItem>> getTabview() {
 		return tabview;
@@ -94,16 +94,27 @@ public class SearchQtnTenderManagedBean extends BaseManagedBean {
 	
 
 
-	public List<SelectItem> getCheckBoxList() {
-		return checkBoxList;
+	
+
+
+	public List<String> getCheckBoxBPK1() {
+		return checkBoxBPK1;
 	}
 
-	public List<String> getCheckBoxBPK() {
+	public void setCheckBoxBPK1(List<String> checkBoxBPK1) {
+		this.checkBoxBPK1 = checkBoxBPK1;
+	}
+
+	public String getCheckBoxBPK() {
 		return checkBoxBPK;
 	}
 
-	public void setCheckBoxBPK(List<String> checkBoxBPK) {
+	public void setCheckBoxBPK(String checkBoxBPK) {
 		this.checkBoxBPK = checkBoxBPK;
+	}
+
+	public List<SelectItem> getCheckBoxList() {
+		return checkBoxList;
 	}
 
 	public String getSelectedBoolean1() {
