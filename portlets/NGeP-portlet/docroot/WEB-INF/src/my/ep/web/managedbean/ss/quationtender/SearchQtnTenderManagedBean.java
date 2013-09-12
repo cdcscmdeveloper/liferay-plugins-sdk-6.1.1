@@ -26,12 +26,9 @@ public class SearchQtnTenderManagedBean extends BaseManagedBean {
 	 * 
 	 */
 
-	
-	
-
 	private List<String> selectOptions;
 
-		private String selectOption;
+	private String selectOption;
 
 	public Map<String, TabBean> getTabview() {
 		return tabview;
@@ -41,24 +38,22 @@ public class SearchQtnTenderManagedBean extends BaseManagedBean {
 		this.tabview = tabview;
 	}
 
-
-		
-		private String tenderSelction;
+	private String tenderSelction;
 
 	private static final long serialVersionUID = 1L;
 
 	private List<QtnTenderBean> qtnTenders;
-	
+
 	private List<GoSoDo> goSodo;
-	
+
 	private List<Location> locations;
 	private List<Location> zoneList;
 
 	private String qtno;
-	private Date tenderBean= new Date();
-	
+	private Date tenderBean = new Date();
+
 	private Date date;
-	
+
 	private boolean checked;
 
 	private List<SelectItem> stateList;
@@ -69,33 +64,30 @@ public class SearchQtnTenderManagedBean extends BaseManagedBean {
 
 	private String state;
 
-	 private boolean selectedBoolean;
-	 
-	 private String  selectedBoolean1;
-	 
-	  private List<String> selectedOptions; 
-	  
-	  private Map<String, TabBean> tabview;
-	  
-	  private List<TabBean> tabBean;
-	  
-	  private List<SelectItem> checkBoxList;
-	  private String checkBoxBPK;
-	  private List<String> checkBoxBPK1;
+	private boolean selectedBoolean;
 
-	/*public Map<String, List<SelectItem>> getTabview() {
-		return tabview;
-	}
+	private String selectedBoolean1;
 
-	public void setTabview(Map<String, List<SelectItem>> tabview) {
-		this.tabview = tabview;
-	}*/
+	private List<String> selectedOptions;
 
+	private Map<String, TabBean> tabview;
+
+	private List<TabBean> tabBean;
+
+	private List<SelectItem> checkBoxList;
+	private String checkBoxBPK;
+	private List<String> checkBoxBPK1;
 	
-
-
+	private String briefDetails;
 	
+	private String visitDetails;
 
+	/*
+	 * public Map<String, List<SelectItem>> getTabview() { return tabview; }
+	 * 
+	 * public void setTabview(Map<String, List<SelectItem>> tabview) {
+	 * this.tabview = tabview; }
+	 */
 
 	public List<String> getCheckBoxBPK1() {
 		return checkBoxBPK1;
@@ -153,41 +145,39 @@ public class SearchQtnTenderManagedBean extends BaseManagedBean {
 		this.selectedBoolean = selectedBoolean;
 	}
 
-	
 	private String zone;
-	
+
 	private String zoneSt;
 
-private List<String> zoneCt;
-	
-	private List<CategoryCode> categories;
-	
-	private CategoryCode categoryCode;
-	
-	private List<String> mainCcode;
-	
-	private List<String> subCcode;
-	
-	private List<String> sucCate;
-	
-	private List<SelectItem> zones;
-	
-	private Map<String, List<SelectItem>> zoneState;
-	
-	private Map<String,List<SelectItem>> zoneCities;
+	private List<String> zoneCt;
 
+	private List<CategoryCode> categories;
+
+	private CategoryCode categoryCode;
+
+	private List<String> mainCcode;
+
+	private List<String> subCcode;
+
+	private List<String> sucCate;
+
+	private List<SelectItem> zones;
+
+	private Map<String, List<SelectItem>> zoneState;
+
+	private Map<String, List<SelectItem>> zoneCities;
 
 	public SearchQtnTenderManagedBean() {
 		locations = new ArrayList<Location>();
-		zoneList= new ArrayList<Location>();
+		zoneList = new ArrayList<Location>();
 		qtnTenders = populateSearchQtnBean();
-		
-		categories= populateCategory();
-		
-		mainCcode= populateMainCodes();
-		subCcode= populateSubCodes();
-		sucCate= populateSucCate();
-	goSodo=populateGosodo();
+
+		categories = populateCategory();
+
+		mainCcode = populateMainCodes();
+		subCcode = populateSubCodes();
+		sucCate = populateSucCate();
+		goSodo = populateGosodo();
 		stateList = new ArrayList<SelectItem>();
 
 		cities = new HashMap<String, List<SelectItem>>();
@@ -221,7 +211,7 @@ private List<String> zoneCt;
 		icities.add(new SelectItem("Evanston"));
 		cities.put("Illinois", icities);
 
-        tabview=new HashMap<>();
+		tabview = new HashMap<>();
 		tabview.put("BudgetApproval", new TabBean("Budget Approval"));
 		tabview.put("BPKApproval", new TabBean("BPKApproval"));
 		tabview.put("PMSabah", new TabBean("PMSabah"));
@@ -230,36 +220,35 @@ private List<String> zoneCt;
 		tabview.put("ICTApproval", new TabBean("ICTApproval"));
 		tabview.put("PBApproval", new TabBean("PBApproval"));
 		tabview.put("PTJApproval", new TabBean("PTJApproval"));
-		checkBoxList=new ArrayList();
-		checkBoxList.add(new SelectItem("BudgetApproval","BudgetApproval"));
-		checkBoxList.add(new SelectItem("BPKApproval","BPKApproval"));
-		checkBoxList.add(new SelectItem("PMSabah","PMSabah"));
-		checkBoxList.add(new SelectItem("PMSarawak","PMSarawak"));
-		checkBoxList.add(new SelectItem("MITIApproval","MITIApproval"));
-		checkBoxList.add(new SelectItem("ICTApproval","ICTApproval"));
-		checkBoxList.add(new SelectItem("PBApproval","ProcurementBoardApproval"));
-		checkBoxList.add(new SelectItem("PTJApproval","PTJApproval"));
-		
+		checkBoxList = new ArrayList();
+		checkBoxList.add(new SelectItem("BudgetApproval", "BudgetApproval"));
+		checkBoxList.add(new SelectItem("BPKApproval", "BPKApproval"));
+		checkBoxList.add(new SelectItem("PMSabah", "PMSabah"));
+		checkBoxList.add(new SelectItem("PMSarawak", "PMSarawak"));
+		checkBoxList.add(new SelectItem("MITIApproval", "MITIApproval"));
+		checkBoxList.add(new SelectItem("ICTApproval", "ICTApproval"));
+		checkBoxList.add(new SelectItem("PBApproval",
+				"ProcurementBoardApproval"));
+		checkBoxList.add(new SelectItem("PTJApproval", "PTJApproval"));
 
-		
-		zones= new ArrayList<SelectItem>();
-		zoneState=new HashMap<String,List<SelectItem>>();
-		zoneCities= new HashMap<String,List<SelectItem>>();
+		zones = new ArrayList<SelectItem>();
+		zoneState = new HashMap<String, List<SelectItem>>();
+		zoneCities = new HashMap<String, List<SelectItem>>();
 		zones.add(new SelectItem("South"));
 		zones.add(new SelectItem("North"));
 		zones.add(new SelectItem("East"));
 
-		List<SelectItem> mstates= new ArrayList<SelectItem>();
+		List<SelectItem> mstates = new ArrayList<SelectItem>();
 		mstates.add(new SelectItem("Maine"));
 		mstates.add(new SelectItem("South Carolina"));
 		mstates.add(new SelectItem("Illinois"));
 		zoneState.put("South", mstates);
-		List<SelectItem> istates= new ArrayList<SelectItem>();
+		List<SelectItem> istates = new ArrayList<SelectItem>();
 		istates.add(new SelectItem("Maine"));
 		istates.add(new SelectItem("South Carolina"));
 		istates.add(new SelectItem("Illinois"));
 		zoneState.put("North", istates);
-		List<SelectItem> cstates= new ArrayList<SelectItem>();
+		List<SelectItem> cstates = new ArrayList<SelectItem>();
 		cstates.add(new SelectItem("Maine"));
 		cstates.add(new SelectItem("South Carolina"));
 		cstates.add(new SelectItem("Illinois"));
@@ -290,9 +279,8 @@ private List<String> zoneCt;
 		jcities.add(new SelectItem("Evanston"));
 		zoneCities.put("Illinois", jcities);
 
-
 	}
-	
+
 	private List<String> populateSucCate() {
 		// TODO Auto-generated method stub
 		return null;
@@ -304,23 +292,23 @@ private List<String> zoneCt;
 	}
 
 	private List<String> populateMainCodes() {
-	 List<String> mainCodes= new ArrayList();
-	 mainCodes.add("11");
-	 mainCodes.add("22");
-	 
+		List<String> mainCodes = new ArrayList();
+		mainCodes.add("11");
+		mainCodes.add("22");
+
 		return mainCodes;
 	}
 
 	private List<CategoryCode> populateCategory() {
-		List<CategoryCode> ccodes= new ArrayList();
-		CategoryCode categoryCode= new CategoryCode();
+		List<CategoryCode> ccodes = new ArrayList();
+		CategoryCode categoryCode = new CategoryCode();
 		categoryCode.setNum(1);
 		categoryCode.setMainCCode("11");
 		categoryCode.setSubCCode("22");
 		categoryCode.setSubCDevison("33");
 		categoryCode.setManditory(true);
 		ccodes.add(categoryCode);
-		CategoryCode _categoryCode= new CategoryCode();
+		CategoryCode _categoryCode = new CategoryCode();
 		_categoryCode.setNum(2);
 		_categoryCode.setMainCCode("44");
 		_categoryCode.setSubCCode("55");
@@ -331,33 +319,32 @@ private List<String> zoneCt;
 	}
 
 	public String addAction() {
-		 
-		Location order = new Location(state,location);
- 
+
+		Location order = new Location(state, location);
+
 		locations.add(order);
 		return null;
 	}
-	
+
 	public String addZoneAction() {
-		 
-		Location order = new Location(zone,zoneSt,zoneCt);
- 
+
+		Location order = new Location(zone, zoneSt, zoneCt);
+
 		zoneList.add(order);
 		return null;
 	}
 
-
 	private List<GoSoDo> populateGosodo() {
-		List<GoSoDo> gsdList= new ArrayList<GoSoDo>();
-		GoSoDo goSoDo= new GoSoDo();
+		List<GoSoDo> gsdList = new ArrayList<GoSoDo>();
+		GoSoDo goSoDo = new GoSoDo();
 		goSoDo.setBdgAvail("1000");
 		goSoDo.setType("Test");
 		gsdList.add(goSoDo);
-		GoSoDo goSoDo1= new GoSoDo();
+		GoSoDo goSoDo1 = new GoSoDo();
 		goSoDo1.setBdgAvail("2000");
 		goSoDo1.setType("User");
 		gsdList.add(goSoDo1);
-	
+
 		return gsdList;
 	}
 
@@ -375,13 +362,10 @@ private List<String> zoneCt;
 
 		qtnTender.setProcumentMode("Tender");
 
-		
 		qtnTender.setStatus("Active");
 		qtnTenderList.add(qtnTender);
 		return qtnTenderList;
 	}
-
-	
 
 	/**
 	 * @return the qtnTenders
@@ -397,7 +381,6 @@ private List<String> zoneCt;
 	public void setQtnTenders(List<QtnTenderBean> qtnTenders) {
 		this.qtnTenders = qtnTenders;
 	}
-
 
 	/**
 	 * @return the checked
@@ -454,12 +437,13 @@ private List<String> zoneCt;
 			zoneSt = null;
 		}
 	}
+
 	public void zoneStChangeListener(ValueChangeEvent event) {
 		if (event.getNewValue() != zoneSt) {
 			zoneCt = null;
 		}
 	}
-	
+
 	/**
 	 * @return the stateList
 	 */
@@ -468,7 +452,7 @@ private List<String> zoneCt;
 	}
 
 	/**
-	 
+	 * 
 	 * @param stateList
 	 *            the stateList to set
 	 */
@@ -491,7 +475,6 @@ private List<String> zoneCt;
 		this.location = location;
 	}
 
-	
 	/**
 	 * @return the selectOption
 	 */
@@ -500,7 +483,8 @@ private List<String> zoneCt;
 	}
 
 	/**
-	 * @param selectOption the selectOption to set
+	 * @param selectOption
+	 *            the selectOption to set
 	 */
 	public void setSelectOption(String selectOption) {
 		this.selectOption = selectOption;
@@ -514,7 +498,8 @@ private List<String> zoneCt;
 	}
 
 	/**
-	 * @param tenderBean the tenderBean to set
+	 * @param tenderBean
+	 *            the tenderBean to set
 	 */
 	public void setTenderBean(Date tenderBean) {
 		this.tenderBean = tenderBean;
@@ -528,7 +513,8 @@ private List<String> zoneCt;
 	}
 
 	/**
-	 * @param qtno the qtno to set
+	 * @param qtno
+	 *            the qtno to set
 	 */
 	public void setQtno(String qtno) {
 		this.qtno = qtno;
@@ -542,7 +528,8 @@ private List<String> zoneCt;
 	}
 
 	/**
-	 * @param goSodo the goSodo to set
+	 * @param goSodo
+	 *            the goSodo to set
 	 */
 	public void setGoSodo(List<GoSoDo> goSodo) {
 		this.goSodo = goSodo;
@@ -556,7 +543,8 @@ private List<String> zoneCt;
 	}
 
 	/**
-	 * @param locations the locations to set
+	 * @param locations
+	 *            the locations to set
 	 */
 	public void setLocations(List<Location> locations) {
 		this.locations = locations;
@@ -570,7 +558,8 @@ private List<String> zoneCt;
 	}
 
 	/**
-	 * @param categories the categories to set
+	 * @param categories
+	 *            the categories to set
 	 */
 	public void setCategories(List<CategoryCode> categories) {
 		this.categories = categories;
@@ -584,7 +573,8 @@ private List<String> zoneCt;
 	}
 
 	/**
-	 * @param selectOptions the selectOptions to set
+	 * @param selectOptions
+	 *            the selectOptions to set
 	 */
 	public void setSelectOptions(List<String> selectOptions) {
 		this.selectOptions = selectOptions;
@@ -598,7 +588,8 @@ private List<String> zoneCt;
 	}
 
 	/**
-	 * @param categoryCode the categoryCode to set
+	 * @param categoryCode
+	 *            the categoryCode to set
 	 */
 	public void setCategoryCode(CategoryCode categoryCode) {
 		this.categoryCode = categoryCode;
@@ -612,7 +603,8 @@ private List<String> zoneCt;
 	}
 
 	/**
-	 * @param mainCcode the mainCcode to set
+	 * @param mainCcode
+	 *            the mainCcode to set
 	 */
 	public void setMainCcode(List<String> mainCcode) {
 		this.mainCcode = mainCcode;
@@ -626,7 +618,8 @@ private List<String> zoneCt;
 	}
 
 	/**
-	 * @param subCcode the subCcode to set
+	 * @param subCcode
+	 *            the subCcode to set
 	 */
 	public void setSubCcode(List<String> subCcode) {
 		this.subCcode = subCcode;
@@ -640,7 +633,8 @@ private List<String> zoneCt;
 	}
 
 	/**
-	 * @param sucCate the sucCate to set
+	 * @param sucCate
+	 *            the sucCate to set
 	 */
 	public void setSucCate(List<String> sucCate) {
 		this.sucCate = sucCate;
@@ -654,7 +648,8 @@ private List<String> zoneCt;
 	}
 
 	/**
-	 * @param zones the zones to set
+	 * @param zones
+	 *            the zones to set
 	 */
 	public void setZones(List<SelectItem> zones) {
 		this.zones = zones;
@@ -663,27 +658,25 @@ private List<String> zoneCt;
 	/**
 	 * @return the zoneState
 	 */
-	public  List<SelectItem> getZoneState() {
-		if(zone != null){
+	public List<SelectItem> getZoneState() {
+		if (zone != null) {
 			return zoneState.get(zone);
-		}else{
-				return new ArrayList<SelectItem>();
+		} else {
+			return new ArrayList<SelectItem>();
 		}
 	}
 
-	
 	/**
 	 * @return the zoneCities
 	 */
 	public List<SelectItem> getZoneCities() {
-		if(zoneSt !=null){
+		if (zoneSt != null) {
 			return zoneCities.get(zoneSt);
-		}else{
-		return new ArrayList<SelectItem>();
+		} else {
+			return new ArrayList<SelectItem>();
 		}
 	}
 
-	
 	/**
 	 * @return the zone
 	 */
@@ -692,7 +685,8 @@ private List<String> zoneCt;
 	}
 
 	/**
-	 * @param zone the zone to set
+	 * @param zone
+	 *            the zone to set
 	 */
 	public void setZone(String zone) {
 		this.zone = zone;
@@ -706,7 +700,8 @@ private List<String> zoneCt;
 	}
 
 	/**
-	 * @param zoneSt the zoneSt to set
+	 * @param zoneSt
+	 *            the zoneSt to set
 	 */
 	public void setZoneSt(String zoneSt) {
 		this.zoneSt = zoneSt;
@@ -720,28 +715,32 @@ private List<String> zoneCt;
 	}
 
 	/**
-	 * @param zoneCt the zoneCt to set
+	 * @param zoneCt
+	 *            the zoneCt to set
 	 */
 	public void setZoneCt(List<String> zoneCt) {
 		this.zoneCt = zoneCt;
 	}
 
 	/**
-	 * @param cities the cities to set
+	 * @param cities
+	 *            the cities to set
 	 */
 	public void setCities(Map<String, List<SelectItem>> cities) {
 		this.cities = cities;
 	}
 
 	/**
-	 * @param zoneState the zoneState to set
+	 * @param zoneState
+	 *            the zoneState to set
 	 */
 	public void setZoneState(Map<String, List<SelectItem>> zoneState) {
 		this.zoneState = zoneState;
 	}
 
 	/**
-	 * @param zoneCities the zoneCities to set
+	 * @param zoneCities
+	 *            the zoneCities to set
 	 */
 	public void setZoneCities(Map<String, List<SelectItem>> zoneCities) {
 		this.zoneCities = zoneCities;
@@ -755,7 +754,8 @@ private List<String> zoneCt;
 	}
 
 	/**
-	 * @param tenderSelction the tenderSelction to set
+	 * @param tenderSelction
+	 *            the tenderSelction to set
 	 */
 	public void setTenderSelction(String tenderSelction) {
 		this.tenderSelction = tenderSelction;
@@ -769,7 +769,8 @@ private List<String> zoneCt;
 	}
 
 	/**
-	 * @param zoneList the zoneList to set
+	 * @param zoneList
+	 *            the zoneList to set
 	 */
 	public void setZoneList(List<Location> zoneList) {
 		this.zoneList = zoneList;
@@ -783,12 +784,40 @@ private List<String> zoneCt;
 	}
 
 	/**
-	 * @param date the date to set
+	 * @param date
+	 *            the date to set
 	 */
 	public void setDate(Date date) {
 		this.date = date;
 	}
 
-	
-	
+	/**
+	 * @return the briefDetails
+	 */
+	public String getBriefDetails() {
+		return briefDetails;
+	}
+
+	/**
+	 * @param briefDetails the briefDetails to set
+	 */
+	public void setBriefDetails(String briefDetails) {
+		this.briefDetails = briefDetails;
+	}
+
+	/**
+	 * @return the visitDetails
+	 */
+	public String getVisitDetails() {
+		return visitDetails;
+	}
+
+	/**
+	 * @param visitDetails the visitDetails to set
+	 */
+	public void setVisitDetails(String visitDetails) {
+		this.visitDetails = visitDetails;
+	}
+
+
 }
