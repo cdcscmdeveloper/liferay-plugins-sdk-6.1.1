@@ -7,7 +7,7 @@
 	xmlns:p="http://primefaces.org/ui"
 	xmlns:c="http://java.sun.com/jsp/jstl/core">
 
-  <p:panel header="TSC Selected List" toggleable="true">
+  <p:panel header="Technical Specification Committee" toggleable="true">
   <h:panelGroup id="table-wrapper" style="width:100%;" >
     <p:dataTable value="#{committeeMB.committeelist}" var="committeeObj" resizableColumns="true" editable="true">
    
@@ -85,10 +85,10 @@
         </p:selectOneMenu>  
         
         <h:outputText style="bold" value="Approval Status:&#160; &#160; &#160; " />  
-           <p:outputLabel value="Ok"></p:outputLabel>
+           <p:inputText value="Ok" readonly="true"></p:inputText>
         
         <h:outputText style="bold" value="Approval Date:&#160; &#160; &#160; " />  
-           <p:outputLabel value="10/8/13"></p:outputLabel>
+           <p:inputText value="10/8/13" readonly="true"></p:inputText>
            
         <h:outputText style="bold" value="Approver Action:&#160; &#160; &#160; " />  
         <p:selectOneMenu value="#{searchQtnTenderBB.managedBean.qtno}" style="width: 120px;">  
@@ -99,7 +99,7 @@
         
         <h:outputText style="bold" value="Approval Remarks:&#160; &#160; &#160; " />  
            <p:inputText id="appRemark" required="true" label="remarks"  
-                    value="#{CommitteeCodeManagedBean.remarks}" >  
+                    value="#{CommitteeCodeManagedBean.remarks}" readonly="true" >  
            </p:inputText>                    
            
         </h:panelGrid>          
