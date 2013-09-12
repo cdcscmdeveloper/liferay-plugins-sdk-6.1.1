@@ -7,36 +7,51 @@
 
 
 	<p:dialog widgetVar="clonedlg" modal="true">
-		<p:panel header="Clone Qtn/Tender" toggleable="true">
+		
+		<p:commandButton value="#{lbl['lbl.so.searchbtn']}"
+				styleClass="apply_button" style="float:right;">
 
-			<p:panelGrid columns="4" style="width:100%;" styleClass="noBorders tr,noBorders td">
-				
+			</p:commandButton>
+			<br/>
+			<br/>
+		<p:panel header="Search Qtn/Tender" toggleable="true">
+			<p:panelGrid columns="2" style="width:100%;"
+				styleClass="noBorders tr,noBorders td">
+
+
 
 				<h:outputText value="Title" />
-				<p:inputText  value="#{searchQtnTenderBB.managedBean.qtno}" />
+				<p:inputText value="#{searchQtnTenderBB.managedBean.qtno}" size="100"/>
 
 
-				<h:outputText  value="Title" />
+				<h:outputText value="QTN/Tender No" />
 				<p:inputText value="#{searchQtnTenderBB.managedBean.qtno}" />
 
-			
-					 <h:outputText value="#{lbl['lbl.so.procmode']}" />  
-        <p:selectOneMenu value="#{searchQtnTenderBB.managedBean.selectOption}">  
-            <f:selectItem itemLabel="Select One" itemValue="" />  
-            <f:selectItem itemLabel="Quotation" itemValue="Quotation" />  
-            <f:selectItem itemLabel="Tender" itemValue="Tender" />  
-            <f:selectItem itemLabel="Direct Negotiation" itemValue="Direct Negotiation" />  
-        </p:selectOneMenu> 
 
+				<h:outputText value="#{lbl['lbl.so.procmode']}" />
+				<p:selectOneMenu
+					value="#{searchQtnTenderBB.managedBean.selectOption}">
+					<f:selectItem itemLabel="Select One" itemValue="" />
+					<f:selectItem itemLabel="Quotation" itemValue="Quotation" />
+					<f:selectItem itemLabel="Tender" itemValue="Tender" />
+					<f:selectItem itemLabel="Direct Negotiation"
+						itemValue="Direct Negotiation" />
+				</p:selectOneMenu>
+			</p:panelGrid>
+			
+			<p:panelGrid columns="4" style="width:100%;"
+				styleClass="noBorders tr,noBorders td">
 				<h:outputText value="#{lbl['lbl.so.creatdtfrom']}" />
 				<p:calendar value="#{searchQtnTenderBB.managedBean.date}"
 					showOn="button" />
 
 				<h:outputText value="#{lbl['lbl.so.creatdtto']}" />
-				<p:calendar value="#{searchQtnTenderBB.managedBean.date}"  showOn="button" />
+				<p:calendar value="#{searchQtnTenderBB.managedBean.date}"
+					showOn="button" />
 
 				<h:outputText value="#{lbl['lbl.so.status']}" />
-				<p:selectOneMenu value="#{searchQtnTenderBB.managedBean.selectOption}">
+				<p:selectOneMenu
+					value="#{searchQtnTenderBB.managedBean.selectOption}">
 					<f:selectItem itemLabel="Select One" itemValue="" />
 					<f:selectItem itemLabel="Option 1" itemValue="1" />
 					<f:selectItem itemLabel="Option 2" itemValue="2" />
@@ -45,44 +60,60 @@
 
 			</p:panelGrid>
 
-		<p:commandButton value="#{lbl['lbl.so.searchbtn']}"
-			styleClass="apply_button" style="float:right;">
+			
 
-		</p:commandButton>
 		
-		<br/>
 
 		</p:panel>
-<br/>
+		<br />
 
 		<p:panel header="Search Qtn/Tender Result" toggleable="true">
 			<h:panelGroup id="table-wrapper" style="width:100%;">
-				<p:dataTable value="#{searchQtnTenderBB.managedBean.qtnTenders}" var="tenders" >
+				<p:dataTable value="#{searchQtnTenderBB.managedBean.qtnTenders}"
+					var="tenders">
 
 					<p:column headerText="#{lbl['lbl.so.no']}">
 						<h:outputText value="1" />
 					</p:column>
 
 					<p:column headerText="Qtn/Tender No">
-						 <p:commandLink  actionListener="#{pprBean.savePerson}" style="margin-right:20px;" ajax="false">  
-        <h:outputText value="#{tenders.qtnTenderNum}" /> 
-        </p:commandLink>
+						<p:commandLink actionListener="#{pprBean.savePerson}"
+							style="margin-right:20px;" ajax="false">
+							<h:outputText value="#{tenders.qtnTenderNum}" />
+						</p:commandLink>
 					</p:column>
 
-					 <p:column headerText="#{lbl['lbl.so.title']}" >  
-            <h:outputText value="#{tenders.title}" />  
-        </p:column>  
-         <p:column headerText="#{lbl['lbl.so.procmode']}" >  
-            <h:outputText value="#{tenders.procumentMode}" />  
-        </p:column>  
-        
-         <p:column headerText="#{lbl['lbl.so.crtdt']}" >  
-            <h:outputText value="#{tenders.crtdDateTo}" />  
-        </p:column>  
-       
+					<p:column headerText="#{lbl['lbl.so.title']}">
+						<h:outputText value="#{tenders.title}" />
+					</p:column>
+					<p:column headerText="#{lbl['lbl.so.procmode']}">
+						<h:outputText value="#{tenders.procumentMode}" />
+					</p:column>
+
+					<p:column headerText="#{lbl['lbl.so.crtdt']}">
+						<h:outputText value="#{tenders.crtdDateTo}" />
+					</p:column>
+
 				</p:dataTable>
-				<p:commandButton value="Clone Qtn"  style="float:right;" onclick="dlg.hide();"></p:commandButton>
+				<p:commandButton value="Clone" style="float:right;"
+					onclick="dlg.hide();"></p:commandButton>
 			</h:panelGroup>
-		</p:panel>
+	</p:panel>
+	<br/>
+	<br/>
+	<p:panel header="Clone Qtn/Tender Sections" toggleable="true">
+	 <h:panelGrid columns="2" style="margin-bottom:10px" cellpadding="5">  
+	 
+	</h:panelGrid>
+	
+	
+		<p:commandButton  value="#{lbl['lbl.so.cancelbtn']}"
+			styleClass="apply_button" style="float:right;" oncomplete="dlg.hide()">
+		</p:commandButton>	
+			<p:commandButton value="ok"
+			styleClass="apply_button" style="float:right;" oncomplete="dlg.hide()">
+
+		</p:commandButton>
+	</p:panel>
 	</p:dialog>
 </ui:composition>
