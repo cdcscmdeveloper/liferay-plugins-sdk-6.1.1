@@ -11,31 +11,60 @@
 	<ui:include src="/xhtml/ss/quatationtender/dopublicationbuttons.xhtml" />
 	<ui:include src="/xhtml/ss/quatationtender/qtntenderheader.xhtml" />
 	<p:panel header="Schedule" toggleable="true">
-		<p:panelGrid columns="4" style="width:100%;"
+		<p:panelGrid columns="2" style="width:100%;"
 			styleClass="noBorders tr,noBorders td">
 
 			<h:outputText value="#{lbl['lbl.so.noticepublish']}" />
 			<p:calendar value="#{searchQtnTenderBB.managedBean.tenderBean}"
 				id="noticePublish" showOn="button" />
+		</p:panelGrid>
 
 
 
+		
+<p:panelGrid columns="2" style="width:100%;"
+			styleClass="noBorders tr,noBorders td">
 			<h:outputText value="Proposal Preparation Start Date/Time " />
+			<h:panelGroup >
 			<p:calendar value="#{searchQtnTenderBB.managedBean.tenderBean}"
-				pattern="MM/dd/yyyy HH:mm a" />
-
-			<h:outputText value="Closing Time/Date "></h:outputText>
-			<p:inputText id="closingtime"
-				value="#{searchQtnTenderBB.managedBean.tenderBean}" />
-
-			<h:outputLabel for="publishingperiod" value="Publishing Period" />
-			<p:inputText id="publishingperiod" value="" />
-
-
-			<h:outputText value="Expected Start Delivery Date " />
+				id="proposalPreparation" showOn="button" />
 			<p:calendar value="#{searchQtnTenderBB.managedBean.tenderBean}"
-				pattern="MM/dd/yyyy HH:mm a" />
+				pattern="HH:mm a" timeOnly="true" />
+			</h:panelGroup>
 			
+				
+		</p:panelGrid>
+			
+			
+			<p:panelGrid columns="2" style="width:100%;"
+			styleClass="noBorders tr,noBorders td">
+
+			<h:outputText value="Closing Date "></h:outputText>
+			<h:panelGroup>
+			<p:calendar value="#{searchQtnTenderBB.managedBean.tenderBean}"
+				id="closingDate" showOn="button" />
+
+			<p:calendar value="#{searchQtnTenderBB.managedBean.tenderBean}"
+				pattern="HH:mm a" timeOnly="true" />
+
+		</h:panelGroup>
+		</p:panelGrid>
+		<p:panelGrid columns="2" style="width:100%;"
+			styleClass="noBorders tr,noBorders td">
+
+			<h:outputText
+				value="Difference Between the Proposal Preparation Start and Closing Days " />
+			<p:inputText id="diffDays" readonly="true" />
+		</p:panelGrid>
+		<p:panelGrid columns="3" style="width:100%;"
+			styleClass="noBorders tr,noBorders td">
+			<h:outputText value="Expected Start Delivery Date "></h:outputText>
+			<p:calendar value="#{searchQtnTenderBB.managedBean.tenderBean}"
+				id="deliveryDate" showOn="button" />
+
+			<p:calendar value="#{searchQtnTenderBB.managedBean.tenderBean}"
+				pattern="HH:mm a" timeOnly="true" />
+
 		</p:panelGrid>
 	</p:panel>
 	<p:panel header="Briefing/Site Visit Schedule" toggleable="true">
@@ -43,13 +72,15 @@
 			styleClass="noBorders tr,noBorders td">
 
 			<h:outputText value="Briefing/Site Visit Required" />
-			<p:selectOneRadio  value="#{searchQtnTenderBB.managedBean.briefDetails}">
+			<p:selectOneRadio
+				value="#{searchQtnTenderBB.managedBean.briefDetails}">
 				<f:selectItem itemLabel="Yes" itemValue="1" />
 				<f:selectItem itemLabel="No" itemValue="2" />
 				<p:ajax update="@form" />
 			</p:selectOneRadio>
 			<h:outputText value="Briefing Same As Site Visit :" />
-			<p:selectOneRadio  value="#{searchQtnTenderBB.managedBean.visitDetails}">
+			<p:selectOneRadio
+				value="#{searchQtnTenderBB.managedBean.visitDetails}">
 				<f:selectItem itemLabel="Yes" itemValue="1" />
 				<f:selectItem itemLabel="No" itemValue="2" />
 				<p:ajax update="@form" />
@@ -60,273 +91,275 @@
 		</p:panelGrid>
 	</p:panel>
 
-<h:panelGroup rendered="#{searchQtnTenderBB.managedBean.briefDetails eq '1'}">
-	<p:panel header="Briefing Details" toggleable="true">
-		<p:panelGrid columns="2" style="width:100%;"
-			styleClass="noBorders tr,noBorders td">
+	<h:panelGroup
+		rendered="#{searchQtnTenderBB.managedBean.briefDetails eq '1'}">
+		<p:panel header="Briefing Details" toggleable="true">
+			<p:panelGrid columns="2" style="width:100%;"
+				styleClass="noBorders tr,noBorders td">
 
-			<p:dataTable id="attendancecompany" var="attendancecompany"
-				value="#{searchQtnTenderBB.managedBean.qtnTenders}" editable="true">
+				<p:dataTable id="attendancecompany" var="attendancecompany"
+					value="#{searchQtnTenderBB.managedBean.qtnTenders}" editable="true">
 
-				<p:ajax event="rowEdit" listener="#{searchQtnTenderBB.onEdit}" />
-				<p:ajax event="rowEditCancel"
-					listener="#{searchQtnTenderBB.onCancel}" />
+					<p:ajax event="rowEdit" listener="#{searchQtnTenderBB.onEdit}" />
+					<p:ajax event="rowEditCancel"
+						listener="#{searchQtnTenderBB.onCancel}" />
 
-				<p:column headerText="No">
-					<!-- <h:outputText value="1"></h:outputText> -->
-					<p:cellEditor>
-						<f:facet name="output">
-							<h:outputText value="1"></h:outputText>
-						</f:facet>
-						<f:facet name="input">
-							<p:inputText value="2" />
-						</f:facet>
-					</p:cellEditor>
-				</p:column>
+					<p:column headerText="No">
+						<!-- <h:outputText value="1"></h:outputText> -->
+						<p:cellEditor>
+							<f:facet name="output">
+								<h:outputText value="1"></h:outputText>
+							</f:facet>
+							<f:facet name="input">
+								<p:inputText value="2" />
+							</f:facet>
+						</p:cellEditor>
+					</p:column>
 
-				<p:column headerText="Description">
-					<!-- <h:outputText value="Arjun"></h:outputText> -->
-					<p:cellEditor>
-						<f:facet name="output">
-							<h:outputText value="google"></h:outputText>
-						</f:facet>
-						<f:facet name="input">
-							<p:inputText value="bing" />
-						</f:facet>
-					</p:cellEditor>
-				</p:column>
+					<p:column headerText="Description">
+						<!-- <h:outputText value="Arjun"></h:outputText> -->
+						<p:cellEditor>
+							<f:facet name="output">
+								<h:outputText value="google"></h:outputText>
+							</f:facet>
+							<f:facet name="input">
+								<p:inputText value="bing" />
+							</f:facet>
+						</p:cellEditor>
+					</p:column>
 
-				<p:column headerText="Date/Time">
+					<p:column headerText="Date/Time">
 
-					<!--    <h:outputText value="4355446727" />   -->
-					<p:cellEditor>
-						<f:facet name="output">
-							<h:outputText value="sunday"></h:outputText>
-						</f:facet>
-						<f:facet name="input">
-							<p:inputText value="monday" />
-						</f:facet>
-					</p:cellEditor>
+						<!--    <h:outputText value="4355446727" />   -->
+						<p:cellEditor>
+							<f:facet name="output">
+								<h:outputText value="sunday"></h:outputText>
+							</f:facet>
+							<f:facet name="input">
+								<p:inputText value="monday" />
+							</f:facet>
+						</p:cellEditor>
 
-				</p:column>
+					</p:column>
 
-				<p:column headerText="Location">
-					<!-- <h:outputText value="1234555" />  -->
+					<p:column headerText="Location">
+						<!-- <h:outputText value="1234555" />  -->
 
-					<p:cellEditor>
-						<f:facet name="output">
-							<h:outputText value="Petaling jaya"></h:outputText>
-						</f:facet>
-						<f:facet name="input">
-							<p:inputText value="cyber jaya" />
-						</f:facet>
-					</p:cellEditor>
-				</p:column>
+						<p:cellEditor>
+							<f:facet name="output">
+								<h:outputText value="Petaling jaya"></h:outputText>
+							</f:facet>
+							<f:facet name="input">
+								<p:inputText value="cyber jaya" />
+							</f:facet>
+						</p:cellEditor>
+					</p:column>
 
-				<p:column headerText="Coordinating">
-					<!-- <h:outputText value="1234555" />  -->
+					<p:column headerText="Coordinating">
+						<!-- <h:outputText value="1234555" />  -->
 
-					<p:cellEditor>
-						<f:facet name="output">
-							<h:outputText value="xxx"></h:outputText>
-						</f:facet>
-						<f:facet name="input">
-							<p:inputText value="xxxxxx" />
-						</f:facet>
-					</p:cellEditor>
-				</p:column>
+						<p:cellEditor>
+							<f:facet name="output">
+								<h:outputText value="xxx"></h:outputText>
+							</f:facet>
+							<f:facet name="input">
+								<p:inputText value="xxxxxx" />
+							</f:facet>
+						</p:cellEditor>
+					</p:column>
 
-				<p:column headerText="Attendance">
-					<!-- <h:outputText value="1234555" />  -->
+					<p:column headerText="Attendance">
+						<!-- <h:outputText value="1234555" />  -->
 
-					<p:cellEditor>
-						<f:facet name="output">
-							<h:outputText value="xxxxxxx"></h:outputText>
-						</f:facet>
-						<f:facet name="input">
-							<p:inputText value="xxxxxxxxxxx" />
-						</f:facet>
-					</p:cellEditor>
-				</p:column>
+						<p:cellEditor>
+							<f:facet name="output">
+								<h:outputText value="xxxxxxx"></h:outputText>
+							</f:facet>
+							<f:facet name="input">
+								<p:inputText value="xxxxxxxxxxx" />
+							</f:facet>
+						</p:cellEditor>
+					</p:column>
 
-				<p:column headerText="Zone">
-					<!-- <h:outputText value="1234555" />  -->
+					<p:column headerText="Zone">
+						<!-- <h:outputText value="1234555" />  -->
 
-					<p:cellEditor>
-						<f:facet name="output">
-							<h:outputText value="cyber 6"></h:outputText>
-						</f:facet>
-						<f:facet name="input">
-							<p:inputText value="cyber 8" />
-						</f:facet>
-					</p:cellEditor>
-				</p:column>
-				<p:column headerText="Briefing Status">
-					<!-- <h:outputText value="1234555" />  -->
+						<p:cellEditor>
+							<f:facet name="output">
+								<h:outputText value="cyber 6"></h:outputText>
+							</f:facet>
+							<f:facet name="input">
+								<p:inputText value="cyber 8" />
+							</f:facet>
+						</p:cellEditor>
+					</p:column>
+					<p:column headerText="Briefing Status">
+						<!-- <h:outputText value="1234555" />  -->
 
-					<p:cellEditor>
-						<f:facet name="output">
-							<h:outputText value="active"></h:outputText>
-						</f:facet>
-						<f:facet name="input">
-							<p:inputText value="suspend" />
-						</f:facet>
-					</p:cellEditor>
-				</p:column>
+						<p:cellEditor>
+							<f:facet name="output">
+								<h:outputText value="active"></h:outputText>
+							</f:facet>
+							<f:facet name="input">
+								<p:inputText value="suspend" />
+							</f:facet>
+						</p:cellEditor>
+					</p:column>
 
-				<p:column headerText="Action" style="width:6%">
-					<p:rowEditor />
-					
-				</p:column>
+					<p:column headerText="Action" style="width:6%">
+						<p:rowEditor />
 
-				<f:facet name="footer">
-					<div align="right">
+					</p:column>
 
-						<p:commandButton id="briefadd" value="Add" onclick="dlg1.show();"></p:commandButton>
-					</div>
-				</f:facet>
+					<f:facet name="footer">
+						<div align="right">
+
+							<p:commandButton id="briefadd" value="Add" onclick="dlg1.show();"></p:commandButton>
+						</div>
+					</f:facet>
 
 
-			</p:dataTable>
+				</p:dataTable>
 
-		</p:panelGrid>
-	</p:panel>
-	
+			</p:panelGrid>
+		</p:panel>
+
 	</h:panelGroup>
-	<h:panelGroup rendered="#{searchQtnTenderBB.managedBean.visitDetails eq '1'}">
-	
-	
-	<p:panel header="Site/Visit Details" toggleable="true">
-		<p:panelGrid columns="2" style="width:100%;"
-			styleClass="noBorders tr,noBorders td">
-
-			<p:dataTable id="sitedetails" var="sitevisitdetails"
-				value="#{searchQtnTenderBB.managedBean.qtnTenders}" editable="true">
-
-				<p:ajax event="rowEdit" listener="#{searchQtnTenderBB.onEdit}" />
-				<p:ajax event="rowEditCancel"
-					listener="#{searchQtnTenderBB.onCancel}" />
-
-				<p:column headerText="No">
-					<!-- <h:outputText value="1"></h:outputText> -->
-					<p:cellEditor>
-						<f:facet name="output">
-							<h:outputText value="1"></h:outputText>
-						</f:facet>
-						<f:facet name="input">
-							<p:inputText value="2" />
-						</f:facet>
-					</p:cellEditor>
-				</p:column>
-
-				<p:column headerText="Description">
-					<!-- <h:outputText value="Arjun"></h:outputText> -->
-					<p:cellEditor>
-						<f:facet name="output">
-							<h:outputText value="google"></h:outputText>
-						</f:facet>
-						<f:facet name="input">
-							<p:inputText value="bing" />
-						</f:facet>
-					</p:cellEditor>
-				</p:column>
-
-				<p:column headerText="Date/Time">
-
-					<!--    <h:outputText value="4355446727" />   -->
-					<p:cellEditor>
-						<f:facet name="output">
-							<h:outputText value="sunday"></h:outputText>
-						</f:facet>
-						<f:facet name="input">
-							<p:inputText value="monday" />
-						</f:facet>
-					</p:cellEditor>
-
-				</p:column>
-
-				<p:column headerText="Location">
-					<!-- <h:outputText value="1234555" />  -->
-
-					<p:cellEditor>
-						<f:facet name="output">
-							<h:outputText value="Petaling jaya"></h:outputText>
-						</f:facet>
-						<f:facet name="input">
-							<p:inputText value="cyber jaya" />
-						</f:facet>
-					</p:cellEditor>
-				</p:column>
-
-				<p:column headerText="Coordinating">
-					<!-- <h:outputText value="1234555" />  -->
-
-					<p:cellEditor>
-						<f:facet name="output">
-							<h:outputText value="xxx"></h:outputText>
-						</f:facet>
-						<f:facet name="input">
-							<p:inputText value="xxxxxx" />
-						</f:facet>
-					</p:cellEditor>
-				</p:column>
-
-				<p:column headerText="Attendance">
-					<!-- <h:outputText value="1234555" />  -->
-
-					<p:cellEditor>
-						<f:facet name="output">
-							<h:outputText value="xxxxxxx"></h:outputText>
-						</f:facet>
-						<f:facet name="input">
-							<p:inputText value="xxxxxxxxxxx" />
-						</f:facet>
-					</p:cellEditor>
-				</p:column>
-
-				<p:column headerText="Zone">
-					<!-- <h:outputText value="1234555" />  -->
-
-					<p:cellEditor>
-						<f:facet name="output">
-							<h:outputText value="cyber 6"></h:outputText>
-						</f:facet>
-						<f:facet name="input">
-							<p:inputText value="cyber 8" />
-						</f:facet>
-					</p:cellEditor>
-				</p:column>
-				<p:column headerText="Briefing Status">
-					<!-- <h:outputText value="1234555" />  -->
-
-					<p:cellEditor>
-						<f:facet name="output">
-							<h:outputText value="active"></h:outputText>
-						</f:facet>
-						<f:facet name="input">
-							<p:inputText value="suspend" />
-						</f:facet>
-					</p:cellEditor>
-				</p:column>
-
-				<p:column headerText="Action" style="width:6%">
-					<p:rowEditor />
-					
-				</p:column>
-
-				<f:facet name="footer">
-					<div align="right">
-
-						<p:commandButton id="siteadd" value="Add" onclick="dlg2.show();"></p:commandButton>
-
-					</div>
-				</f:facet>
+	<h:panelGroup
+		rendered="#{searchQtnTenderBB.managedBean.visitDetails eq '1'}">
 
 
-			</p:dataTable>
-		</p:panelGrid>
-	</p:panel>
-</h:panelGroup>
+		<p:panel header="Site/Visit Details" toggleable="true">
+			<p:panelGrid columns="2" style="width:100%;"
+				styleClass="noBorders tr,noBorders td">
+
+				<p:dataTable id="sitedetails" var="sitevisitdetails"
+					value="#{searchQtnTenderBB.managedBean.qtnTenders}" editable="true">
+
+					<p:ajax event="rowEdit" listener="#{searchQtnTenderBB.onEdit}" />
+					<p:ajax event="rowEditCancel"
+						listener="#{searchQtnTenderBB.onCancel}" />
+
+					<p:column headerText="No">
+						<!-- <h:outputText value="1"></h:outputText> -->
+						<p:cellEditor>
+							<f:facet name="output">
+								<h:outputText value="1"></h:outputText>
+							</f:facet>
+							<f:facet name="input">
+								<p:inputText value="2" />
+							</f:facet>
+						</p:cellEditor>
+					</p:column>
+
+					<p:column headerText="Description">
+						<!-- <h:outputText value="Arjun"></h:outputText> -->
+						<p:cellEditor>
+							<f:facet name="output">
+								<h:outputText value="google"></h:outputText>
+							</f:facet>
+							<f:facet name="input">
+								<p:inputText value="bing" />
+							</f:facet>
+						</p:cellEditor>
+					</p:column>
+
+					<p:column headerText="Date/Time">
+
+						<!--    <h:outputText value="4355446727" />   -->
+						<p:cellEditor>
+							<f:facet name="output">
+								<h:outputText value="sunday"></h:outputText>
+							</f:facet>
+							<f:facet name="input">
+								<p:inputText value="monday" />
+							</f:facet>
+						</p:cellEditor>
+
+					</p:column>
+
+					<p:column headerText="Location">
+						<!-- <h:outputText value="1234555" />  -->
+
+						<p:cellEditor>
+							<f:facet name="output">
+								<h:outputText value="Petaling jaya"></h:outputText>
+							</f:facet>
+							<f:facet name="input">
+								<p:inputText value="cyber jaya" />
+							</f:facet>
+						</p:cellEditor>
+					</p:column>
+
+					<p:column headerText="Coordinating">
+						<!-- <h:outputText value="1234555" />  -->
+
+						<p:cellEditor>
+							<f:facet name="output">
+								<h:outputText value="xxx"></h:outputText>
+							</f:facet>
+							<f:facet name="input">
+								<p:inputText value="xxxxxx" />
+							</f:facet>
+						</p:cellEditor>
+					</p:column>
+
+					<p:column headerText="Attendance">
+						<!-- <h:outputText value="1234555" />  -->
+
+						<p:cellEditor>
+							<f:facet name="output">
+								<h:outputText value="xxxxxxx"></h:outputText>
+							</f:facet>
+							<f:facet name="input">
+								<p:inputText value="xxxxxxxxxxx" />
+							</f:facet>
+						</p:cellEditor>
+					</p:column>
+
+					<p:column headerText="Zone">
+						<!-- <h:outputText value="1234555" />  -->
+
+						<p:cellEditor>
+							<f:facet name="output">
+								<h:outputText value="cyber 6"></h:outputText>
+							</f:facet>
+							<f:facet name="input">
+								<p:inputText value="cyber 8" />
+							</f:facet>
+						</p:cellEditor>
+					</p:column>
+					<p:column headerText="Briefing Status">
+						<!-- <h:outputText value="1234555" />  -->
+
+						<p:cellEditor>
+							<f:facet name="output">
+								<h:outputText value="active"></h:outputText>
+							</f:facet>
+							<f:facet name="input">
+								<p:inputText value="suspend" />
+							</f:facet>
+						</p:cellEditor>
+					</p:column>
+
+					<p:column headerText="Action" style="width:6%">
+						<p:rowEditor />
+
+					</p:column>
+
+					<f:facet name="footer">
+						<div align="right">
+
+							<p:commandButton id="siteadd" value="Add" onclick="dlg2.show();"></p:commandButton>
+
+						</div>
+					</f:facet>
+
+
+				</p:dataTable>
+			</p:panelGrid>
+		</p:panel>
+	</h:panelGroup>
 	<p:panel header="Contact Person Details" toggleable="true">
 		<p:panelGrid columns="2" style="width:100%;"
 			styleClass="noBorders tr,noBorders td">
@@ -403,7 +436,7 @@
 
 				<p:column headerText="Action" style="width:6%">
 					<p:rowEditor />
-					
+
 
 				</p:column>
 				<f:facet name="footer">

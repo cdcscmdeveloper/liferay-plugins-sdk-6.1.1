@@ -47,7 +47,7 @@
 				
 			
 				<p:column headerText="Status">
-				<h:outputText value="Active"></h:outputText>
+				<h:outputText value="Active/Expired"></h:outputText>
 				</p:column>
 				
 			</p:dataTable>
@@ -57,11 +57,13 @@
 	
 		</p:panel>
 		
-		<p:dialog widgetVar="suppdlg" modal="true">
+		<p:dialog widgetVar="suppdlg" modal="true" width="800" height="400">
 		<p:panel header="Search Supplier" toggleable="true">
-
+<p:commandButton  value="#{lbl['lbl.so.searchbtn']}"
+			styleClass="apply_button" style="float:right;" >
+		</p:commandButton>
 				<p:panelGrid columns="2" style="width:100%;" styleClass="noBorders tr,noBorders td">
-			
+				
 			<h:outputText  value="PKP No" />
 			<p:inputText  value="#{searchQtnTenderBB.managedBean.qtno}"/>
 
@@ -70,6 +72,11 @@
 
 <h:outputText value="Item Name " />
 			<p:inputText  value="#{searchQtnTenderBB.managedBean.qtno}"/>
+<p:commandButton  value="#{lbl['lbl.so.addbtn']}"
+			styleClass="apply_button" style="float:right;">
+		</p:commandButton>
+		<br/>
+		<br/>
 
 				 <h:outputText value="Circular Coverage" />  
         <p:selectOneMenu value="#{searchQtnTenderBB.managedBean.selectOption}">  
@@ -80,11 +87,13 @@
             <f:selectItem itemLabel="Sarawak" itemValue="Sarawak" />  
         </p:selectOneMenu>  
     
-				<p:commandButton  value="Search"
-					style="margin:0" />
+				
 			</p:panelGrid>
 		
 		
+			<p:panel header="Supplier List" toggleable="true">
+		<p:panelGrid columns="2" style="width:100%;"
+			styleClass="noBorders tr,noBorders td">
 			
 			<p:dataTable value="#{searchQtnTenderBB.managedBean.categories}" var="ccode" resizableColumns="true"
 				>
@@ -124,11 +133,12 @@
 				
 				
 				<p:column headerText="Status">
-				<h:outputText value="Active"></h:outputText>
+				<h:outputText value="Active/Expired"></h:outputText>
 				</p:column>
 				
 			</p:dataTable>
-
+</p:panelGrid>
+</p:panel>
 
 	
 
@@ -136,18 +146,20 @@
 				styleClass="noBorders tr,noBorders td">
 		<h:outputText value="TotalSuppliers" />  
             <p:inputText  value="1" readonly="true"/> 
-            
-            
-<p:commandButton value="Ok" style="float:right;" oncomplete="suppdlg.hide()">
-    
-</p:commandButton>
-
-<p:commandButton value="Cancel" style="float:right;" oncomplete="suppdlg.hide()">
-    
-</p:commandButton>
-		</p:panelGrid>
+ 
+ </p:panelGrid>
 	
- </p:panel>
+ </p:panel>           
+
+<p:panel toggleable="true">
+<div>           
+<p:commandButton value="Cancel" style="float:right;" oncomplete="suppdlg.hide()">
+</p:commandButton>
+<p:commandButton value="Ok" style="float:right;" oncomplete="suppdlg.hide()">
+</p:commandButton>
+</div> 
+</p:panel>
+		
 		
 	</p:dialog>
 	

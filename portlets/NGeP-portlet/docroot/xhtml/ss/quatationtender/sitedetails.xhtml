@@ -8,15 +8,21 @@
 	<p:dialog widgetVar="dlg2" modal="true">
 		<p:panel header="Site Details" toggleable="true">
 
-			<p:panelGrid columns="4" style="width:100%;" styleClass="noBorders tr,noBorders td">
+			<p:panelGrid columns="2" style="width:100%;" styleClass="noBorders tr,noBorders td">
 		
 		<h:outputLabel for="sitedesc" value="Site Description" />
-				<p:inputText id="sitedesc" value="" />	
+				<p:inputTextarea id="sitedesc" value="" columns="50"/>	
 				
-				 
-			<h:outputText value="Site Visit Date/Time"/>
+			<h:outputText value="Site Visit Date "></h:outputText>
 			<p:calendar value="#{searchQtnTenderBB.managedBean.tenderBean}"
-				pattern="MM/dd/yyyy HH:mm a" /> 
+				id="visitDate" showOn="button" />
+				
+					<h:outputText value="Site Visit Time" />
+			<p:calendar value="#{searchQtnTenderBB.managedBean.tenderBean}"
+				pattern="MM/dd/yyyy HH:mm a" />
+			
+				 
+			 
             
              <h:outputText value="#{lbl['lbl.so.visitlocation']}" />  
         <p:selectOneMenu value="">  
@@ -51,7 +57,7 @@
        	<p:commandButton  value="#{lbl['lbl.so.cancelbtn']}"
 			styleClass="apply_button" style="float:right;" oncomplete="dlg2.hide()">
 		</p:commandButton>	
-			<p:commandButton value="#{lbl['lbl.so.addbtn']}"
+			<p:commandButton value="ok"
 			styleClass="apply_button" style="float:right;" oncomplete="dlg2.hide()">
 
 		</p:commandButton>

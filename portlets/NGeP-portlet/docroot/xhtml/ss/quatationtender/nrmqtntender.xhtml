@@ -6,11 +6,11 @@
 	xmlns:c="http://java.sun.com/jsp/jstl/core">
 
 	<p:panel
-		header="Normal Qtn/Tender  (for Qtn/Tender Type is Open/Bumiputra)"
+		header="Category Code List"
 		toggleable="true">
-
-
-		<p:dataTable value="#{searchQtnTenderBB.managedBean.categories}"
+<p:commandButton value="Search" style="float:right;"
+			onclick="suppdlg.show();"></p:commandButton><br/><br/><br/>
+			<p:dataTable value="#{searchQtnTenderBB.managedBean.categories}"
 			var="ccode" resizableColumns="true" editable="true">
 			<p:ajax event="rowEdit" />
 			<p:ajax event="rowEditCancel" />
@@ -41,8 +41,7 @@
 							<f:selectItems value="#{searchQtnTenderBB.managedBean.mainCcode}" />
 						</p:selectOneMenu>
 					</f:facet>
-				</p:cellEditor>
-				<p:cellEditor>
+				
 					<f:facet name="output">
 						<h:outputText value="#{ccode.subCCode}" />,
                 </f:facet>
@@ -55,8 +54,7 @@
 							<f:selectItem itemLabel="sub3" itemValue="3" />
 						</p:selectOneMenu>
 					</f:facet>
-				</p:cellEditor>
-				<p:cellEditor>
+				
 					<f:facet name="output">
 						<h:outputText value="#{ccode.subCDevison}" />
 					</f:facet>
@@ -264,29 +262,22 @@
 
 		<p:panelGrid columns="2" style="width:100%;"
 			styleClass="noBorders tr,noBorders td">
-			<h:outputText value="Paid Up Capital RM (More than)" />
+			<h:outputText value="Paid Up Capital (MYR)" />
 			<p:inputText value="#{searchQtnTenderBB.managedBean.qtno}" />
 
 
 		</p:panelGrid>
 
-		<p:commandButton value="Search" style="float:right;"
-			onclick="suppdlg.show();"></p:commandButton>
-
-		<br />
-		<br />
+		
 		<ui:include src="/xhtml/ss/quatationtender/supplierlist.xhtml"></ui:include>
 
 		<p:panelGrid columns="3" style="width:100%;"
 			styleClass="noBorders tr,noBorders td">
-			<h:outputText value="TotalSuppliers" />
+			<h:outputText value="Total Suppliers(s)" />
 			<p:inputText value="1" readonly="true" />
 
 
-			<p:commandButton value="CreateQtn/Tender" style="float:right;"
-				action="quatationtendercreation?faces-redirect=true">
-
-			</p:commandButton>
+			
 		</p:panelGrid>
 	</p:panel>
 
