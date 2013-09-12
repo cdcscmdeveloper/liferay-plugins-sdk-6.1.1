@@ -28,30 +28,40 @@ public class CommitteeManagedBean {
 	    CommitteeList c = new CommitteeList();
 		
 		a.setComno(1);
-		a.setComname("Abcdef");
-		a.setIc("urgent");
+		a.setComname("Ng");
+		a.setIc("a8753");
 		a.setPass("dsf");
 		a.setRoles("Activate");
 		a.setAppno("No1");
 		a.setSecname("Mani");
-
+		a.setListaccess("Approve");
+		a.setTypemem("Other");
+		a.setSecgroup("Other");
+	
 		
-		b.setComno(1);
-		b.setComname("Abcdef");
-		b.setIc("urgent");
+		b.setComno(2);
+		b.setComname("Yp");
+		b.setIc("a4431");
 		b.setPass("dsf");
 		b.setRoles("Activate");
 		b.setAppno("No2");
 		b.setSecname("Noni");
+		b.setListaccess("Approve");
+		b.setTypemem("Other");
+		b.setSecgroup("Other");
+		
 
-
-		c.setComno(1);
-		c.setComname("Abcdef");
-		c.setIc("urgent");
+		c.setComno(3);
+		c.setComname("Danny");
+		c.setIc("a7653");
 		c.setPass("dsf");
 		c.setRoles("Activate");
 		c.setAppno("No3");
 		c.setSecname("Manny");
+		c.setListaccess("Approve");
+		c.setTypemem("Other");
+		c.setSecgroup("Other");
+		
 		
 		committeelists.add(a);
 		committeelists.add(b);
@@ -65,5 +75,7 @@ public class CommitteeManagedBean {
 	public void setCommitteelist(List<CommitteeList> committeelists) {
 		this.committeelists = committeelists;
 	}
+	
+	
 
 } 
