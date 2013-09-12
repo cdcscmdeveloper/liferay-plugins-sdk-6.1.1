@@ -436,13 +436,13 @@
 
 				<p:column headerText="Action" style="width:6%">
 					<p:rowEditor />
-
+            <ui:include src="/xhtml/ss/committe/clonecommitteescreen.xhtml" />
 
 				</p:column>
 				<f:facet name="footer">
 					<div align="right">
 						<p:commandButton id="add" value="Add" />
-						<p:commandButton value="Clone" onclick="dlg3.show();"></p:commandButton>
+						<p:commandButton value="Clone" onclick="screen2.show();"></p:commandButton>
 
 					</div>
 				</f:facet>
