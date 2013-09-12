@@ -33,5 +33,8 @@
 <portlet id="Quatation"></portlet>
 <portlet id="Committee"></portlet>
 <portlet id="Procure"></portlet>
+<portlet id="NoticeBoard"></portlet>
+<portlet id="SupplierReview"></portlet>
+
 </category>
 </display>
