@@ -9,8 +9,11 @@
 
   <p:panel header="TSC Selected List" toggleable="true">
   <h:panelGroup id="table-wrapper" style="width:100%;" >
-    <p:dataTable value="#{committeeMB.committeelist}" var="committeeObj" resizableColumns="true">
-        
+    <p:dataTable value="#{committeeMB.committeelist}" var="committeeObj" resizableColumns="true" editable="true">
+   
+	    <p:ajax event="rowEdit" />  
+        <p:ajax event="rowEditCancel" />
+                             
         <p:column headerText="No">  
           <h:outputText value="#{committeeObj.comno}" />  
         </p:column>  
@@ -27,36 +30,53 @@
         </p:column>  
          <p:column headerText="Passport No." >  
             <p:outputLabel value="#{committeeObj.pass}"></p:outputLabel>  
+         </p:column>  
+        
+        <p:column headerText="Role" > 
+           <p:cellEditor>
+            <f:facet name="output">  
+              <h:outputText value="#{committeeObj.roles}" />
+             </f:facet>  
+            <f:facet name="input">  
+         <p:selectOneMenu value="#{searchQtnTenderBB.managedBean.qtno}" >
+            <f:selectItem itemLabel="Select One" itemValue="" /> 
+            <f:selectItem itemLabel="Chairperson" itemValue="" />  
+            <f:selectItem itemLabel="Secretary" itemValue="1" />  
+            <f:selectItem itemLabel="Member" itemValue="2" />   
+         </p:selectOneMenu> 
+                </f:facet>  
+            </p:cellEditor>            
         </p:column>  
         
-         <p:column headerText="Role" >  
-            <p:outputLabel value="#{committeeObj.roles}"></p:outputLabel>  
-        </p:column>  
-        
+        <p:column headerText="Member Type" > 
+           <h:outputText value="Gold" />       
+        </p:column>                  
+              
          <p:column headerText="Access" >  
-             
-        </p:column>  
+           <h:outputText value="#{committeeObj.roles}" />
+         </p:column>  
         
-         <p:column headerText="Action" >  
-             
-        </p:column>  
+       <p:column headerText="Action">  
+            <p:rowEditor />  
+        </p:column> 
+          
        
     </p:dataTable>
   </h:panelGroup>
-
-  </p:panel>
 
 	<div align="right">
 	    <p:commandButton value="Add" onclick="screen1.show();" ></p:commandButton>  
 	    <p:commandButton value="Clone" onclick="screen2.show();"></p:commandButton>  
     </div>
    <br/>
+  </p:panel>
+
 
   <p:panel header="Approval Details" toggleable="true">
   <br/>
 
   		<h:panelGrid columns="2" style="margin-bottom:10px" cellpadding="3"> 		
-        <h:outputText style="bold" value="Procurement Mode:&#160; &#160; &#160; " />  
+        <h:outputText style="bold" value="Approver Name:&#160; &#160; &#160; " />  
         <p:selectOneMenu value="#{searchQtnTenderBB.managedBean.qtno}" style="width: 120px;">  
             <f:selectItem itemLabel="Select Mode" itemValue="" />  
             <f:selectItem itemLabel="name 1" itemValue="1" />  
@@ -88,34 +108,46 @@
   <p:panel header="QC/PB/FPB Secretary List" toggleable="true">
   
     <h:panelGroup id="table-wrapper" style="width:100%;" >
-    <p:dataTable value="#{committeeMB.committeelist}" var="committeeappObj" resizableColumns="true">
+    <p:dataTable value="#{committeeMB.committeelist}" var="committeeappObj" resizableColumns="true" editable="true">
+    
+        <p:ajax event="rowEdit" />  
+        <p:ajax event="rowEditCancel" />
         
         <p:column headerText="No">  
            <h:outputText value="#{committeeappObj.appno}" />  
         </p:column>  
   
         <p:column headerText="Group">
-          <h:outputText value="#{committeeappObj.appgroup}" />   
+           <h:outputText value="group 1" /> 
        </p:column>  
   
         <p:column headerText="Secretary Name" >  
-            <p:outputLabel value="#{committeeappObj.secname}" />  
+           <p:cellEditor>
+            <f:facet name="output">  
+              <h:outputText value="#{committeeappObj.secname}" />
+             </f:facet>  
+            <f:facet name="input">  
+                    <p:selectOneMenu value="#{searchQtnTenderBB.managedBean.qtno}" >  
+            <f:selectItem itemLabel="Select One" itemValue="" />  
+            <f:selectItem itemLabel="Existing record" itemValue="1" />  
+            <f:selectItem itemLabel="New record" itemValue="2" />   
+        </p:selectOneMenu> 
+                </f:facet>  
+            </p:cellEditor>     
         </p:column> 
         
-        <p:column headerText="Action" >  
-        </p:column>         
+       <p:column headerText="Action" style="width:10%">  
+            <p:rowEditor />  
+        </p:column>        
        
     </p:dataTable>
    
   </h:panelGroup>
-  </p:panel>
-  
-  	<div align="right">
+   
+   <div align="right">
 	    <p:commandButton value="Add" ></p:commandButton>  
-	      
-    </div>
-   <br/>
-   <br/>
+   </div>
+  </p:panel>	      
    
   <p:panel header="QC/PBB/PBA/FPB Sabah/FPB Sarawak/MOF List" toggleable="true">
   <br/>

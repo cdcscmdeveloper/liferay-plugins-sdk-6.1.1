@@ -17,7 +17,7 @@
 
 		
 			    <h:outputText value="Sourcing Type" />  
-                  <p:selectOneMenu value="#{searchQtnTenderBB.managedBean.qtno}">  
+                  <p:selectOneMenu value="">  
            			<f:selectItem itemLabel="Source 1" itemValue="1" />  
             		<f:selectItem itemLabel="Source 2" itemValue="2" />  
             	    <f:selectItem itemLabel="Source 3" itemValue="3" />  
@@ -53,23 +53,33 @@
 
 		<p:panel header="Search Sourcing Result" toggleable="true">
 		   <h:panelGroup id="table-wrapper" style="width:100%;">
-				<p:dataTable value="" var="committeeObj" >
+				<p:dataTable value="" var="" editable="true">
+				
+				  <p:ajax event="rowEdit" />  
+                  <p:ajax event="rowEditCancel" /> 
 
-					<p:column headerText="No">
-					  <h:outputText value="" />
+					<p:column headerText="No" style="width:10%">
+					  <p:outputLabel value="1" />
 					</p:column>
 
 					<p:column headerText="Title">
-					   <h:outputText value="" />
+				      <p:cellEditor>  
+                       <f:facet name="output">  
+                        <h:outputText value="Title A" />
+                     </f:facet>  
+                      <f:facet name="input">  
+                       <p:inputText value=""/>  
+                     </f:facet>  
+                    </p:cellEditor>   
 					</p:column>
 
-					 <p:column headerText="Date Created" >  
-                        <h:outputText value="" />  
-                     </p:column>  
-                      
-                    <p:column headerText="Action" >  
-                       <h:outputText value="" />  
+					<p:column headerText="Date Created" style="width:20%">  
+                        <h:outputText value="11/12/13" />  
                     </p:column>  
+                      
+                    <p:column headerText="Action" style="width:10%">  
+                       <p:rowEditor />  
+                    </p:column> 
             
 		       </p:dataTable>	
 			</h:panelGroup>	
@@ -78,29 +88,30 @@
 		
 		<p:panel header="Clone Committee Result" toggleable="true">
 		   <h:panelGroup id="table-wrapper" style="width:100%;">
-				<p:dataTable value="" var="committeeObj" >
+				<p:dataTable value="" var="" >
 
 					<p:column headerText="(CheckBox)">
+					   <h:outputText value="Value 1" />
 					</p:column>
 
 					<p:column headerText="Name">
-					   <h:outputText value="" />
+					   <h:outputText value="John" />
 					</p:column>
 
 					 <p:column headerText="Ministry" >  
-                        <h:outputText value="" />  
+                        <h:outputText value="Finance" />  
                      </p:column>  
                       
                     <p:column headerText="Division" >  
-                       <h:outputText value="" />  
+                       <h:outputText value="Div 2" />  
                     </p:column>  
                     
                     <p:column headerText="Designation" >  
-                       <h:outputText value="" />  
+                       <h:outputText value="Head" />  
                     </p:column>  
                     
                     <p:column headerText="Role" >  
-                       <h:outputText value="" />  
+                       <h:outputText value="Management" />  
                     </p:column>                                          
             
 		       </p:dataTable>			       				
