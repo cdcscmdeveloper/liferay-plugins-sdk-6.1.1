@@ -35,11 +35,9 @@ public class CatalogueManagedBean extends BaseManagedBean {
 	private PricingVO selectedPricing;
 	private boolean districtIND = false;
 	
-	
-	
-	
-	
 
+	
+	
 
 	public List<PricingVO> getSupplierItemList() {
 		if(supplierItemList==null)

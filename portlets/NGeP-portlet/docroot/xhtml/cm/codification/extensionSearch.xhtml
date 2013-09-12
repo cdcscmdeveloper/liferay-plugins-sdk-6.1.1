@@ -27,13 +27,13 @@
 					<tr>
 						<td><p:outputLabel value="#{lbl['lbl.cm.unspsc.code']}"></p:outputLabel></td>
 						<td colspan="1"><p:inputText
-								value="#{unspscCodeBackingBean.managedBean.selectedUNSPSCObj.unspscCode}" /></td>
+								value="#{codificationBackingBean.managedBean.selectedUNSPSCObj.unspscCode}" /></td>
 					</tr>
 
 					<tr>
 						<td><p:outputLabel value="#{lbl['lbl.cm.unspsc.title']}"></p:outputLabel></td>
 						<td colspan="1"><p:inputText
-								value="#{unspscCodeBackingBean.managedBean.selectedUNSPSCObj.unspscTitle}" /></td>
+								value="#{codificationBackingBean.managedBean.selectedUNSPSCObj.unspscTitle}" /></td>
 					</tr>
 					<tr>
 						<td><p:outputLabel value="#{lbl['lbl.cm.type']}"></p:outputLabel></td>
@@ -71,7 +71,7 @@
 
 				</table>
 
-				<p:dataTable value="#{unspscCodeBackingBean.managedBean.unspscList}"
+				<p:dataTable value="#{codificationBackingBean.managedBean.unspscList}"
 					var="extension">
 					<p:column>
 						<f:facet name="header">
@@ -101,9 +101,9 @@
 							<p:outputLabel value="#{lbl['lbl.cm.action']}" />
 						</f:facet>
 						<p:commandButton value="edit"
-							action="#{unspscCodeBackingBean.editExtension()}" />
+							action="#{codificationBackingBean.editExtension()}" />
 						<p:commandButton value="delete"
-							action="#{unspscCodeBackingBean.deleteExtension()}" />
+							action="#{codificationBackingBean.deleteExtension()}" />
 						<p:commandButton value="move" />
 
 					</p:column>

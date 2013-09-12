@@ -13,15 +13,16 @@
 
 		<h:panelGroup id="catMainFileID">
 
-			<p:tabView id="catMainFileTabID">
+			<p:tabView id="catMainFileTabID" dynamic="true" cache="true" >
 				<p:tab id="tab1" title="#{lbl['lbl.cm.draft']}">
 
 
-					<p:commandButton value="#{lbl['lbl.cm.upload.to.draft']}"></p:commandButton>
+					<p:commandButton value="#{lbl['lbl.cm.upload.to.draft']}"
+						onclick="excelDialog.show()"></p:commandButton>
 
 					<p:commandButton id="downloadLink"
 						value="#{lbl['lbl.cm.download.from.draft']}" ajax="false">
-						<p:fileDownload value="#{catalogBackingBean.file}" />
+						<p:fileDownload value="#{catalogueBackingBean.file}" />
 					</p:commandButton>
 
 					<p:commandButton value="#{lbl['lbl.cm.save.draft']}"
@@ -29,7 +30,9 @@
 
 					<p:commandButton value="#{lbl['lbl.cm.submit']}"></p:commandButton>
 
-					<p:dataTable value="#{unspscCodeBackingBean.managedBean.unspscList}" var="selectedSuppCat" rowKey="#{selectedSuppCat.unspscID}">
+					<p:dataTable
+						value="#{codificationBackingBean.managedBean.unspscList}"
+						var="selectedSuppCat" rowKey="#{selectedSuppCat.unspscID}">
 
 						<p:column selectionMode="multiple" style="width:2%" />
 
@@ -64,7 +67,9 @@
 							<f:facet name="header">
 								<p:outputLabel value="#{lbl['lbl.cm.action']}" />
 							</f:facet>
-							<p:commandButton action="#{catalogueBackingBean.navigateToCatalogDet()}" value="Details"></p:commandButton>
+							<p:commandButton
+								action="#{catalogueBackingBean.navigateToCatalogDet()}"
+								value="Details"></p:commandButton>
 
 						</p:column>
 
@@ -73,16 +78,38 @@
 
 					</p:dataTable>
 
+					<p:dialog id="excelDialog" widgetVar="excelDialog" modal="true"
+						resizable="false" appendToBody="true">
+
+
+						<p:fileUpload
+							fileUploadListener="#{catalogueBackingBean.uploadExcel}"
+							mode="advanced" id="upload" allowTypes="/(\.|\/)(xls|flv|xlsx)$/"
+							invalidFileMessage="Only XLS files are accepted">
+						</p:fileUpload>
+
+					</p:dialog>
+
+
+
 				</p:tab>
 				<p:tab id="tab2" title="#{lbl['lbl.cm.published']}">
+
 				</p:tab>
 				<p:tab id="tab3" title="#{lbl['lbl.cm.approval']}">
+
 				</p:tab>
 				<p:tab id="tab4" title="#{lbl['lbl.cm.approved']}">
 				</p:tab>
 				<p:tab id="tab5" title="#{lbl['lbl.cm.reject.revise']}">
 				</p:tab>
+
+
+
+
 			</p:tabView>
+
+
 
 
 		</h:panelGroup>

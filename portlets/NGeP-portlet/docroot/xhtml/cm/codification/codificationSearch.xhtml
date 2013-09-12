@@ -26,12 +26,12 @@
 		</table>
 
 		<p:remoteCommand name="extensionSearch"
-			action="#{unspscCodeBackingBean.goToExtensionSearch}" />
+			action="#{codificationBackingBean.goToExtensionSearch}" />
 
 		<p:dataTable id="unspscTableID"
-			value="#{unspscCodeBackingBean.managedBean.unspscList}"
+			value="#{codificationBackingBean.managedBean.unspscList}"
 			var="unspscObj" rowKey="#{unspscObj.unspscID}"
-			selection="#{unspscCodeBackingBean.managedBean.selectedUNSPSCObj}"
+			selection="#{codificationBackingBean.managedBean.selectedUNSPSCObj}"
 			width="100%" selectionMode="single">
 
 			<p:ajax event="rowSelect" oncomplete="extensionSearch();" />

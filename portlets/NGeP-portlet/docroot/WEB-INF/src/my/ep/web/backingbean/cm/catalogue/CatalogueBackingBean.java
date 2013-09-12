@@ -1,11 +1,25 @@
 package my.ep.web.backingbean.cm.catalogue;
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.math.BigDecimal;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.List;
 import java.util.Map;
+import java.util.Vector;
 
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.RequestScoped;
 import javax.faces.context.FacesContext;
+import javax.portlet.PortletResponse;
+import javax.servlet.http.HttpServletResponse;
 
 import my.ep.web.backingbean.BaseBackingBean;
 import my.ep.web.managedbean.cm.catalogue.CatalogueManagedBean;
@@ -13,9 +27,20 @@ import my.ep.web.vo.AdvanceSearchVO;
 import my.ep.web.vo.PricingVO;
 
 import org.apache.log4j.Logger;
+import org.apache.poi.hssf.usermodel.HSSFSheet;
+import org.apache.poi.hssf.usermodel.HSSFWorkbook;
+import org.apache.poi.ss.usermodel.Cell;
+import org.apache.poi.ss.usermodel.CellStyle;
+import org.apache.poi.ss.usermodel.Row;
+import org.apache.poi.xssf.usermodel.XSSFSheet;
+import org.apache.poi.xssf.usermodel.XSSFWorkbook;
+import org.primefaces.event.FileUploadEvent;
 import org.primefaces.model.DefaultTreeNode;
+import org.primefaces.model.StreamedContent;
 import org.primefaces.model.TreeNode;
+import org.primefaces.model.UploadedFile;
 
+import com.liferay.portal.util.PortalUtil;
 
 @ManagedBean(name="catalogueBackingBean")
 @RequestScoped
@@ -77,7 +102,7 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean>{
 
 
 
-		return "../catalogue/catalogMaintenanceFile.xhtml";
+		return "catalogueMaintenanceFile";
 	}
 
 
@@ -249,6 +274,183 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean>{
 
 		log.debug("***event.getTreeNode()*****:"+newCodes);
 	}
+
+
+
+	public void uploadExcel(FileUploadEvent event) throws Exception {
+		try {
+			log.debug("uploadExcel");
+			UploadedFile item = event.getFile();
+
+
+			log.debug("item.getFileName()"+item.getFileName());
+
+
+			SimpleDateFormat formater = new SimpleDateFormat("dd/MM/yyyy");
+
+			FileInputStream file = (FileInputStream)item.getInputstream();
+
+			//Get the workbook instance for XLS file 
+			XSSFWorkbook workbook = new XSSFWorkbook(file);
+
+			//Get first sheet from the workbook
+			XSSFSheet sheet = workbook.getSheetAt(0);
+
+
+			//Iterate through each rows from first sheet
+			Iterator<Row> rowIterator = sheet.iterator();
+
+			long name = 0;
+			String desc = null;
+			Map map = new HashMap();
+
+
+
+			while(rowIterator.hasNext()) {
+				Row row = rowIterator.next();
+
+				if(row.getCell(0)!=null){
+					name =  (long) row.getCell(0).getNumericCellValue();
+					log.debug("name:"+name);
+
+
+
+				}
+
+				if(row.getCell(1)!=null){
+					desc = row.getCell(1).getStringCellValue();
+					log.debug("desc:"+desc);
+
+				}
+				map.put(name, desc);
+			}
+
+
+
+
+
+
+
+			log.debug("********sheet2**********");
+
+			file.close();
+			//FileOutputStream out = 
+			//    new FileOutputStream(new File("C"));
+			// workbook.write(out);
+			//  out.close();
+
+		} catch (FileNotFoundException e) {
+			e.printStackTrace();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
+
+	private StreamedContent file;  
+
+	public StreamedContent getFile() throws Exception {
+
+		log.debug("***write***");
+		PortletResponse resp = (PortletResponse) FacesContext.getCurrentInstance().getExternalContext().getResponse();
+		HttpServletResponse response = PortalUtil.getHttpServletResponse(resp);
+
+		response.setHeader("Pragma", "no-cache");
+		response.setDateHeader("Expires", 0);
+		response.setContentType("application/vnd.ms-excel");
+		response.setHeader("Content-Disposition", "attachment; filename="+"testing22.xlsx");
+		response.flushBuffer();
+		
+		
+		//Read Excel document first
+		FileInputStream input_document = new FileInputStream(new File("C:\\excel1\\Catalogue-offline-template.xlsx"));
+		// convert it into a POI object
+		XSSFWorkbook my_xlsx_workbook = new XSSFWorkbook(input_document); 
+		// Read excel sheet that needs to be updated
+		XSSFSheet sheet = my_xlsx_workbook.getSheetAt(1);
+
+
+		
+
+
+
+
+		//sheet.protectSheet("welcome1"); 
+
+		CellStyle catalogCellStyle = my_xlsx_workbook.createCellStyle();
+
+		//add the 1st title row
+		List labelList = new Vector();
+
+		labelList.add("Extension Code");
+		labelList.add("Extension Name");
+		labelList.add("Frequency");
+		labelList.add("Item Description");
+		labelList.add("SKU Number");
+		labelList.add("UOM");
+		labelList.add("Lead Time");
+		labelList.add("Payment Term");
+		labelList.add("Model Number");
+		labelList.add("Manufacturer ID");
+
+
+		addCellToRow(sheet, 10, labelList, catalogCellStyle);
+
+		List rowLs = new Vector();
+		int no = 11;
+
+
+		rowLs = new Vector();
+
+		rowLs.add("testing");
+		rowLs.add("");
+		addCellToRow(sheet, no++, rowLs, catalogCellStyle);
+
+		input_document.close();
+		
+		my_xlsx_workbook.write(response.getOutputStream());
+		
+		//close the stream
+		
+
+		return null;
+	}
+
+	public void setFile(StreamedContent file) {
+		this.file = file;
+	}
+
+	public void addCellToRow(XSSFSheet sheet, int count, List colValList, CellStyle catalogCellStyle) throws Exception {  
+
+		Row row = sheet.createRow(count);
+
+		for(int i = 0; i < colValList.size(); i++){
+			Object colVal = (Object)colValList.get(i);
+
+			Cell cell = row.createCell(i);
+			if(i==0){
+				catalogCellStyle.setLocked(false);
+				cell.setCellStyle(catalogCellStyle);
+			}
+			if(i==1){
+				catalogCellStyle.setLocked(false);
+				cell.setCellStyle(catalogCellStyle);
+			}
+			if(colVal==null) colVal = new String("");
+
+			if(colVal instanceof String){
+				cell.setCellValue((String)colVal);
+			}else if (colVal instanceof java.lang.Boolean){
+				cell.setCellValue(((java.lang.Boolean)colVal).booleanValue());
+			}else if (colVal instanceof BigDecimal){ 
+				cell.setCellValue(((BigDecimal)colVal).doubleValue());
+			}else if (colVal instanceof Date){
+				cell.setCellValue((Date)colVal);
+			}
+
+		}
+
+	}
+
 
 
 
