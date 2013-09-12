@@ -11,7 +11,7 @@
 	<ui:include src="/xhtml/ss/quatationtender/dopublicationbuttons.xhtml" />
 	<ui:include src="/xhtml/ss/quatationtender/qtntenderheader.xhtml" />
 	<p:panel header="Schedule" toggleable="true">
-		<p:panelGrid columns="2" style="width:100%;"
+		<p:panelGrid columns="2" style="width:140%;"
 			styleClass="noBorders tr,noBorders td">
 
 			<h:outputText value="#{lbl['lbl.so.noticepublish']}" />
@@ -22,7 +22,7 @@
 
 
 		
-<p:panelGrid columns="2" style="width:100%;"
+<p:panelGrid columns="2" style="width:113%;"
 			styleClass="noBorders tr,noBorders td">
 			<h:outputText value="Proposal Preparation Start Date/Time " />
 			<h:panelGroup >
@@ -36,7 +36,7 @@
 		</p:panelGrid>
 			
 			
-			<p:panelGrid columns="2" style="width:100%;"
+			<p:panelGrid columns="2" style="width:230%;"
 			styleClass="noBorders tr,noBorders td">
 
 			<h:outputText value="Closing Date "></h:outputText>
@@ -49,22 +49,28 @@
 
 		</h:panelGroup>
 		</p:panelGrid>
-		<p:panelGrid columns="2" style="width:100%;"
+		<p:panelGrid columns="2" style="width:90%;"
 			styleClass="noBorders tr,noBorders td">
-
-			<h:outputText
+             <p:row>
+             <p:column style="width: 20px; height: 30px;" rowspan="2">
+			<h:outputText  
 				value="Difference Between the Proposal Preparation Start and Closing Days " />
+				</p:column>
+				<p:column>
 			<p:inputText id="diffDays" readonly="true" />
+			</p:column>
+			</p:row>
 		</p:panelGrid>
-		<p:panelGrid columns="3" style="width:100%;"
+		<p:panelGrid columns="3" style="width:135%;"
 			styleClass="noBorders tr,noBorders td">
 			<h:outputText value="Expected Start Delivery Date "></h:outputText>
+			<h:panelGroup>
 			<p:calendar value="#{searchQtnTenderBB.managedBean.tenderBean}"
 				id="deliveryDate" showOn="button" />
 
 			<p:calendar value="#{searchQtnTenderBB.managedBean.tenderBean}"
 				pattern="HH:mm a" timeOnly="true" />
-
+</h:panelGroup>
 		</p:panelGrid>
 	</p:panel>
 	<p:panel header="Briefing/Site Visit Schedule" toggleable="true">
@@ -120,7 +126,9 @@
 						<!-- <h:outputText value="Arjun"></h:outputText> -->
 						<p:cellEditor>
 							<f:facet name="output">
+							<p:commandLink value="google">
 								<h:outputText value="google"></h:outputText>
+								</p:commandLink>
 							</f:facet>
 							<f:facet name="input">
 								<p:inputText value="bing" />
@@ -256,7 +264,9 @@
 						<!-- <h:outputText value="Arjun"></h:outputText> -->
 						<p:cellEditor>
 							<f:facet name="output">
+							<p:commandLink>
 								<h:outputText value="google"></h:outputText>
+								</p:commandLink>
 							</f:facet>
 							<f:facet name="input">
 								<p:inputText value="bing" />
