@@ -9,12 +9,18 @@
 	<p:dialog widgetVar="dlg1" modal="true">
 		<p:panel header="Briefing Details" toggleable="true">
 
-			<p:panelGrid columns="4" style="width:100%;" styleClass="noBorders tr,noBorders td">
+			<p:panelGrid columns="2" style="width:100%;" styleClass="noBorders tr,noBorders td">
 		
 		<h:outputLabel for="briefdesc" value="Briefing Description" />
-				<p:inputText id="briefdesc" value="" />		
+				<p:inputTextarea id="briefdesc" value="" coulumns="50"/>		
 				
-				<h:outputText value="Briefing Date/Time " />
+				
+				
+				<h:outputText value="Briefing Date "></h:outputText>
+			<p:calendar value="#{searchQtnTenderBB.managedBean.tenderBean}"
+				id="briefingDate" showOn="button" />
+				
+					<h:outputText value="Briefing Time" />
 			<p:calendar value="#{searchQtnTenderBB.managedBean.tenderBean}"
 				pattern="MM/dd/yyyy HH:mm a" />
             
@@ -52,7 +58,7 @@
 		<p:commandButton  value="#{lbl['lbl.so.cancelbtn']}"
 			styleClass="apply_button" style="float:right;" oncomplete="dlg1.hide()">
 		</p:commandButton>	
-			<p:commandButton value="#{lbl['lbl.so.addbtn']}"
+			<p:commandButton value="ok"
 			styleClass="apply_button" style="float:right;" oncomplete="dlg1.hide()">
 
 		</p:commandButton>
