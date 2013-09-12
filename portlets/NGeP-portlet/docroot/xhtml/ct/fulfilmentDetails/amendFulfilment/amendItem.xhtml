@@ -36,15 +36,13 @@
 							                <p:columnGroup type="header"> 
 								                <p:row> 
 									                  
-									                     <p:column colspan="1" style="width:70px" headerText="Item Type"  /> 
+									                   
 									                     <p:column colspan="1"  style="width:80px" headerText="Item Code" /> 
-									                     <p:column colspan="1"  style="width:120px" headerText="Item Name" /> 	
-									                     <p:column colspan="1" style="width:120px" headerText="Supplier's SKU"  /> 
+									                     <p:column colspan="1"  style="width:320px" headerText="Item Name" /> 	
 									                     <p:column colspan="1" style="width:100px" headerText="Origin Country"  /> 
-									                     <p:column colspan="1"  style="width:70px" headerText="Currency" /> 
-									                     <p:column colspan="1"  style="width:70px" headerText="Price" /> 	
-									                     <p:column colspan="1" style="width:70px" headerText="UOM"  /> 
-									                     <p:column colspan="1" style="width:70px" headerText="Minimum Order"  /> 
+									                     <p:column colspan="1"  style="width:70px" headerText="Price UOM" /> 	
+									                     <p:column colspan="1" style="width:50px" headerText="Exempted"  /> 
+									                     <p:column colspan="1" style="width:70px" headerText="Action"  /> 
 									                    
 								               </p:row>							
 								
@@ -52,21 +50,32 @@
 							                </p:columnGroup>
 							                   				
 							             <p:column></p:column>       
-						
-							                     
-							                     
+						                   <p:column></p:column>       
+						                    <p:column></p:column>       
+						                      <p:column></p:column>       
+						                      <p:column styleClass="column-align-center">
+						                       <p:selectBooleanCheckbox value=""/> 
+                                              </p:column>       
+						                      <p:column styleClass="column-align-center">
+						                         <p:commandButton title="Edit" partialSubmit="true" process="@this" 
+								                 icon="ui-icon-edit" styleClass="ui-icon-button"/>
+								                 <p:spacer width="2"></p:spacer>
+								                 <p:commandButton title="delete" onsuccess="confirmation.show()" partialSubmit="true" process="@this" 
+								                 icon="ui-icon-delete" styleClass="ui-icon-button"/>
+							                     </p:column>  
+						       
 							                     
 							               </p:dataTable>
 							               
-							               
+							       
 						           
 						            
 						    <h:panelGrid columns="2" style="height:100px;text-align:bottom;">
 							  <h:outputLabel for="show" value="Show" style="width:100px;" styleClass="txtsize"/>  
-                                         <p:selectOneMenu id="show" disabled="false"  value="#{contractDetailsBean.createContractDetails.zoneType}"  style="width:200px;">
+                                         <p:selectOneMenu id="show" disabled="false"  value="#{fulfilmentBackingBean.createContractDetails.zoneType}"  style="width:200px;">
             					        <f:selectItem itemLabel="--Please Select--" itemValue="--Please Select--" /> 
-            					         <f:selectItems value="#{contractDetailsBean.itemDetailsMethod}" />
-            					         <p:ajax event="change" update="changeField" listener="#{contractDetailsBean.changeField}" process="@this"/>  
+            					         <f:selectItems value="#{fulfilmentBackingBean.itemDetailsMethod}" />
+            					         <p:ajax event="change" update="changeField" listener="#{fulfilmentBackingBean.changeField}" process="@this"/>  
 	                               </p:selectOneMenu>         
 	                        <p:message for="show"/>  
                 				      
@@ -77,8 +86,8 @@
 						    <p:outputPanel id="changeField"> 
 						  
 						         <h:panelGrid columns="1" style="width:800px"
-						          rendered="#{contractDetailsBean.itemZonal or contractDetailsBean.itemTier or contractDetailsBean.itemZonalTier or contractDetailsBean.itemCeilingQuantity}">
-						         <p:panel id="itemZoneId"  header="#{contractDetailsBean.createContractDetails.zoneType}"  toggleable="true"  toggleSpeed="500" widgetVar="panelitemzone">
+						          rendered="#{fulfilmentBackingBean.itemZonal or fulfilmentBackingBean.itemTier or fulfilmentBackingBean.itemZonalTier or fulfilmentBackingBean.itemCeilingQuantity}">
+						         <p:panel id="itemZoneId"  header="#{fulfilmentBackingBean.createContractDetails.zoneType}"  toggleable="true"  toggleSpeed="500" widgetVar="panelitemzone">
 						  
 						          <p:dataTable id="dataTable1"  var="data" value=" " widgetVar="dataTableObj" lazy="false" dynamic="true" 
 			                               paginator="true" paginatorPosition="bottom" paginatorAlwaysVisible="true" emptyMessage="No Records!" rows="10" 
@@ -86,35 +95,41 @@
 							               paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink}
 							                {LastPageLink} {RowsPerPageDropdown}">
 							
-							                <p:columnGroup type="header"> 
-								                <p:row  rendered="#{contractDetailsBean.itemZonal}"> 
+							                <p:columnGroup type="header">
+								<p:row rendered="#{fulfilmentBackingBean.itemZonal}">
+
+									<p:column colspan="1" style="width:100px" headerText="Zone" />
+									<p:column colspan="1" style="width:50px" headerText="From Qty" />
+									<p:column colspan="1" style="width:50px" headerText="To Qty" />
+									<p:column colspan="1" style="width:100px" headerText="Price (MYR)" />
+									<p:column colspan="1" style="width:150px" headerText="Effective Date" />
+									<p:column colspan="1" style="width:150px" headerText="Expirey Date" />
+									<p:column colspan="1" style="width:100px" headerText="Action" />
+								</p:row>
+
+								<p:row  rendered="#{fulfilmentBackingBean.itemTier}"> 
 									                  
-									                     <p:column colspan="1" style="width:100px" headerText="Zone"   /> 
-									                     <p:column colspan="1"  style="width:100px" headerText="Currency" /> 
-									                     <p:column colspan="1"  style="width:200px" headerText="Price Effective Date" /> 	
-									                     <p:column colspan="1" style="width:150px" headerText="Expirey Date"  /> 
+									                    <p:column colspan="1" style="width:100px" headerText="Zone" />
+									<p:column colspan="1" style="width:50px" headerText="From Qty" />
+									<p:column colspan="1" style="width:50px" headerText="To Qty" />
+									<p:column colspan="1" style="width:100px" headerText="Price (MYR)" />
+									<p:column colspan="1" style="width:150px" headerText="Effective Date" />
+									<p:column colspan="1" style="width:150px" headerText="Expirey Date" />
+									<p:column colspan="1" style="width:100px" headerText="Action" />
 									           </p:row>	
 									           
-									           <p:row  rendered="#{contractDetailsBean.itemTier}"> 
+									            <p:row  rendered="#{fulfilmentBackingBean.itemZonalTier}"> 
 									                  
-									                     <p:column colspan="1" style="width:100px" headerText="Quantity From"   /> 
-									                     <p:column colspan="1"  style="width:100px" headerText="Quantity To" /> 
-									                      <p:column colspan="1"  style="width:100px" headerText="Currency" /> 
-									                     <p:column colspan="1"  style="width:200px" headerText="Price Effective Date" /> 	
-									                     <p:column colspan="1" style="width:150px" headerText="Expirey Date"  /> 
-									           </p:row>	
-									           
-									            <p:row  rendered="#{contractDetailsBean.itemZonalTier}"> 
-									                  
-									                     <p:column colspan="1" style="width:100px" headerText="Zone"   /> 
-									                     <p:column colspan="1"  style="width:100px" headerText="Quantity From" /> 
-									                        <p:column colspan="1"  style="width:100px" headerText="Quantity To" /> 
-									                      <p:column colspan="1"  style="width:100px" headerText="Currency" /> 
-									                     <p:column colspan="1"  style="width:200px" headerText="Price Effective Date" /> 	
-									                     <p:column colspan="1" style="width:150px" headerText="Expirey Date"  /> 
+									                   <p:column colspan="1" style="width:100px" headerText="Zone" />
+									<p:column colspan="1" style="width:50px" headerText="From Qty" />
+									<p:column colspan="1" style="width:50px" headerText="To Qty" />
+									<p:column colspan="1" style="width:100px" headerText="Price (MYR)" />
+									<p:column colspan="1" style="width:150px" headerText="Effective Date" />
+									<p:column colspan="1" style="width:150px" headerText="Expirey Date" />
+									<p:column colspan="1" style="width:100px" headerText="Action" />
 									           </p:row>		
 									           
-									           <p:row  rendered="#{contractDetailsBean.itemCeilingQuantity}"> 
+									           <p:row  rendered="#{fulfilmentBackingBean.itemCeilingQuantity}"> 
 									                  
 									                     <p:column colspan="1" style="width:100px" headerText="Ministry Name"   /> 
 									                     <p:column colspan="1"  style="width:100px" headerText="Jabatan Name" /> 
@@ -126,11 +141,26 @@
 							
 							                </p:columnGroup>
 							                   				
-							             <p:column ></p:column>       
-						
-							                     
-							                     
-							                     
+							             <p:column rendered="#{!fulfilmentBackingBean.itemCeilingQuantity}"></p:column>       
+						                  <p:column rendered="#{!fulfilmentBackingBean.itemCeilingQuantity}"></p:column>       
+							               <p:column rendered="#{!fulfilmentBackingBean.itemCeilingQuantity}"></p:column>              
+							                 <p:column rendered="#{!fulfilmentBackingBean.itemCeilingQuantity}"></p:column>            
+							                  <p:column rendered="#{!fulfilmentBackingBean.itemCeilingQuantity}">
+							                    <p:calendar style="width:130px;" value="#{searchDetailsBean.searchDetails.date}" id="popupButtonCal" showOn="button" />
+							                    </p:column>       
+							                   <p:column rendered="#{!fulfilmentBackingBean.itemCeilingQuantity}">
+							                     <p:calendar style="width:130px;" value="#{searchDetailsBean.searchDetails.date}" id="popupButtonCal1" showOn="button" />
+							                     </p:column>       
+							                     <p:column styleClass="column-align-center" rendered="#{!fulfilmentBackingBean.itemCeilingQuantity}">
+							                    <p:commandButton title="Add" partialSubmit="true" process="@this" 
+								                 icon="ui-icon-add1" styleClass="ui-icon-button"/>
+								                 <p:spacer width="2"></p:spacer>
+						                         <p:commandButton title="Edit" partialSubmit="true" process="@this" 
+								                 icon="ui-icon-edit" styleClass="ui-icon-button"/>
+								                 <p:spacer width="2"></p:spacer>
+								                 <p:commandButton title="delete" onsuccess="confirmation.show()" partialSubmit="true" process="@this" 
+								                 icon="ui-icon-delete" styleClass="ui-icon-button"/>
+							                     </p:column>          
 							               </p:dataTable>
 							                </p:panel>
 		                        
@@ -140,7 +170,19 @@
 						    
 						    </p:outputPanel>
                                     
-                                    
+                  <p:confirmDialog message="Do you want to delete the record?"
+							closable="true" appendToBody="true" header="Delete Confirmation"
+							severity="alert" widgetVar="confirmation">
+
+							<h:panelGrid columns="2"
+								columnClasses="column-align-right-50,column-align-left">
+								<p:commandButton value="Yes" 
+									update="dataTable" partialSubmit="true" process="@this"
+									onclick="confirmation.hide();"/>
+								<p:commandButton value="No" 
+									onclick="confirmation.hide()" type="button" />
+							</h:panelGrid>
+						</p:confirmDialog>                          
                
               
 	</h:form>

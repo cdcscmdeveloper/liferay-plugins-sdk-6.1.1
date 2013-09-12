@@ -17,7 +17,7 @@
 
 	<ui:define name="content">
 		      
-        	<h:form prependId="false" id="form">         
+           
         	    
         	       <p:messages showDetail="true" globalOnly="true"/> 
                
@@ -69,7 +69,7 @@
 						<p:panel id="contactPerson" header="Contact Person Details"  toggleable="true"  toggleSpeed="500" widgetVar="panelcontactPerson">
                               
                                  
-                                  <h:panelGrid style="width:800px;">  
+                            
                                   <p:dataTable id="dataTable" var="data" value=" " widgetVar="dataTableObj" lazy="false" dynamic="true" rowIndexVar="index"
 			                               paginator="true" paginatorPosition="bottom" paginatorAlwaysVisible="true" emptyMessage="No Records!" rows="10" 
 			                               rowsPerPageTemplate="5,10,15,20" currentPageReportTemplate=" total {totalRecords},  page {currentPage} of {totalPages} "
@@ -100,9 +100,8 @@
 							                     </p:column> 
 							                    
 						                    </p:dataTable>
-							               </h:panelGrid>
-							               
-						            <h:panelGrid style="width:800px" columnClasses="column-align-right">
+							            
+						            <h:panelGrid style="width:750px" columnClasses="column-align-right">
 							                       <p:commandButton value="Add" styleClass="text-align: right;" process="@this" partialSubmit="true" icon="ui-icon-add"  update="dataTable"/>
 							
 						                  </h:panelGrid>
@@ -114,7 +113,7 @@
                          <p:panel id="centralContractList" header="Contract List"  toggleable="true"  toggleSpeed="500" widgetVar="panelcentralCircular">
                               
                                  
-                                  <h:panelGrid style="width:800px;">  
+                               
                                   <p:dataTable id="dataTable1" var="data" value=" " widgetVar="dataTableObj" lazy="false" dynamic="true" 
                                   rowIndexVar="index"
 			                               paginator="true" paginatorPosition="bottom" paginatorAlwaysVisible="true" emptyMessage="No Records!" rows="10" 
@@ -155,9 +154,8 @@
 							                     
 							                     
 							               </p:dataTable>
-							               </h:panelGrid>
-							               
-						            <h:panelGrid style="width:800px" columnClasses="column-align-right">
+							             
+						            <h:panelGrid style="width:750px" columnClasses="column-align-right">
 							                       <p:commandButton value="Add" styleClass="text-align: right;" process="@this" partialSubmit="true" icon="ui-icon-add" 
 							                       onclick="dlg2.show();"/>
 							
@@ -170,7 +168,7 @@
                         <p:panel id="concelCircular" header="Cancel Circular From List"  toggleable="true"  toggleSpeed="500" widgetVar="panelconcelCircular">
                               
                                  
-                                  <h:panelGrid style="width:800px;">  
+                              
                                   <p:dataTable id="dataTable2" var="data" value=" " widgetVar="dataTableObj" lazy="false" dynamic="true" 
                                   rowIndexVar="index"
 			                               paginator="true" paginatorPosition="bottom" paginatorAlwaysVisible="true" emptyMessage="No Records!" rows="10" 
@@ -209,9 +207,9 @@
 							                     
 							                     
 							               </p:dataTable>
-							               </h:panelGrid>
+							           
 							               
-						            <h:panelGrid style="width:800px" columnClasses="column-align-right">
+						            <h:panelGrid style="width:750px" columnClasses="column-align-right">
 							                       <p:commandButton value="Add" styleClass="text-align: right;" process="@this" partialSubmit="true" icon="ui-icon-add" 
 							                       onclick="dlg3.show();"/>
 							
@@ -346,13 +344,12 @@
 						<f:facet name="footer">
 							<h:panelGrid columns="2"  style="height: 40px;vertical-align: middle;">
 								<p:commandButton value="Select" icon="ui-icon-select"  process="modalDialog1" update="dataTable2" onclick="dlg3.hide();"/>
-								<p:commandButton value="Cancel"  type="button" ajax="false" onclick="dlg2.hide();" />
+								<p:commandButton value="Cancel"  type="button" ajax="false" onclick="dlg3.hide();" />
                             			</h:panelGrid>
 						</f:facet>
 
 					</p:panel>
 				</p:dialog>
 				
-		</h:form>
 		</ui:define>
 		</ui:composition>

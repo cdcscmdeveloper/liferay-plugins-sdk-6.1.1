@@ -103,17 +103,17 @@
 									                  
 									                     <p:column colspan="1" style="width:30px" headerText="No"  /> 
 									                     <p:column colspan="1"  style="width:100px" headerText="Supplier Company Name" /> 
-									                     <p:column colspan="1"  style="width:120px" headerText="Officer Name" /> 	
+									                     <p:column colspan="1"  style="width:150px" headerText="Officer Name" /> 	
 									                     <p:column colspan="1" style="width:100px" headerText="IC No"  /> 
 									                     <p:column colspan="1" style="width:100px" headerText="Officer Position"  />  
-									                     <p:column colspan="1" style="width:80px" headerText="Action"  />    
+									                     <p:column colspan="1" style="width:50px" headerText="Action"  />    
 								               </p:row>	
 								               						
 								            </p:columnGroup>
 							                   				
 							                     <p:column styleClass="column-align-center" > <h:outputText value="#{index+1}" /></p:column> 							
 							                     <p:column><h:outputLabel value="640433-03-6843"/> </p:column>
-							                     <p:column><p:selectOneMenu disabled="false"  value="" style="width:120px;">
+							                     <p:column><p:selectOneMenu disabled="false"  value="" style="width:150px;">
             					                             <f:selectItem itemLabel="Alam" itemValue="khan" /> 
             					                              </p:selectOneMenu></p:column>	
 							                      <p:column><h:outputLabel value="640433-03-6843"/> </p:column>
@@ -138,6 +138,20 @@
                             
                         
                         </p:panel>
+                        
+                         <p:confirmDialog message="Do you want to delete the record?"
+							closable="true" appendToBody="true" header="Delete Confirmation"
+							severity="alert" widgetVar="confirmation">
+
+							<h:panelGrid columns="2"
+								columnClasses="column-align-right,column-align-left">
+								<p:commandButton value="Yes" icon="ui-icon-accept"
+									update="dataTable" partialSubmit="true" process="@this"
+									onclick="confirmation.hide();"/>
+								    <p:commandButton value="No" icon="ui-icon-reject"
+									onclick="confirmation.hide()" type="button" />
+							</h:panelGrid>
+						</p:confirmDialog>
                       </h:form>
                       </ui:define>
                       </ui:composition>
