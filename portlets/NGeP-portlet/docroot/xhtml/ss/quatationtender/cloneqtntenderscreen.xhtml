@@ -94,26 +94,41 @@
 						<h:outputText value="#{tenders.crtdDateTo}" />
 					</p:column>
 
-				</p:dataTable>
-				<p:commandButton value="Clone" style="float:right;"
-					onclick="dlg.hide();"></p:commandButton>
+				
+				
+					</p:dataTable>
+					
 			</h:panelGroup>
+			
+			<p:commandButton value="Clone" style="float:right;"
+					onclick="clonebtn.show();"></p:commandButton>
+				
 	</p:panel>
-	<br/>
-	<br/>
-	<p:panel header="Clone Qtn/Tender Sections" toggleable="true">
+		</p:dialog>
+		
+		<p:dialog widgetVar="clonebtn" modal="true">
+		
+		<p:panel header="Clone Qtn/Tender Sections" toggleable="true">
 	 <h:panelGrid columns="2" style="margin-bottom:10px" cellpadding="5">  
-	 
+	   
+         <p:selectManyCheckbox value="#{searchQtnTenderBB.managedBean.selectOptions}" layout="pageDirection">  
+            <f:selectItem itemLabel="Qtn/Tender Title" itemValue="Qtn/Tender Title" />  
+            <f:selectItem itemLabel="Qtn/Tender Details" itemValue="Qtn/Tender Details" />  
+            <f:selectItem itemLabel="ApprovalWorkFlow" itemValue="ApprovalWorkFlow" />
+            <f:selectItem itemLabel="Supplier Qualification Criteria" itemValue="Supplier Qualification Criteria" />  
+            <f:selectItem itemLabel="Schedule" itemValue="Schedule" />  
+            <f:selectItem itemLabel="Documents" itemValue="Documents" />  
+        </p:selectManyCheckbox>  
 	</h:panelGrid>
 	
 	
-		<p:commandButton  value="#{lbl['lbl.so.cancelbtn']}"
-			styleClass="apply_button" style="float:right;" onclick="dlg.hide()">
+		<p:commandButton  value="CANCEL"
+			styleClass="apply_button" style="float:right;" onclick="clonebtn.hide()">
 		</p:commandButton>	
-			<p:commandButton value="ok"
-			styleClass="apply_button" style="float:right;" onclick="dlg.hide()">
+			<p:commandButton value="OK"
+			styleClass="apply_button" style="float:right;" onclick="clonebtn.hide()">
 
 		</p:commandButton>
 	</p:panel>
-	</p:dialog>
+		</p:dialog>
 </ui:composition>
