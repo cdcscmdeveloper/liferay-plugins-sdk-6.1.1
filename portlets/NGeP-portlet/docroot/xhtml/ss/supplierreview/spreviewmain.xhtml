@@ -28,16 +28,42 @@
 						<h:panelGroup
 							rendered="#{searchQtnTenderBB.managedBean.tenderSelction eq '1' or searchQtnTenderBB.managedBean.tenderSelction eq '2'}">
 							<ui:include src="/xhtml/ss/quatationtender/nrmqtntender.xhtml" />
+							 <p:panel>
+ <p:panelGrid columns="1" style="width:100%;"
+				styleClass="noBorders tr,noBorders td">
+<p:commandButton value="CREATE QT" style="float:right;"></p:commandButton>
+				
+				</p:panelGrid>
+ 
+                        </p:panel> 
 						</h:panelGroup>
 						<h:panelGroup
 							rendered="#{searchQtnTenderBB.managedBean.tenderSelction eq '3' }">
 
 							<ui:include src="/xhtml/ss/quatationtender/panelqtntender.xhtml" />
+							 <p:panel>
+ <p:panelGrid columns="1" style="width:100%;"
+				styleClass="noBorders tr,noBorders td">
+<p:commandButton value="CREATE QT" style="float:right;"
+					></p:commandButton>
+				
+				</p:panelGrid>
+ 
+                        </p:panel> 
+							
 						</h:panelGroup>
 
 						<h:panelGroup
 							rendered="#{searchQtnTenderBB.managedBean.tenderSelction eq '4' }">
 							<ui:include src="/xhtml/ss/quatationtender/restictedtender.xhtml" />
+						 <p:panel>
+ <p:panelGrid columns="1" style="width:100%;"
+				styleClass="noBorders tr,noBorders td">
+<p:commandButton value="CREATE QT" style="float:right;"></p:commandButton>
+				
+				</p:panelGrid>
+ 
+                        </p:panel> 	
 						</h:panelGroup>
 
 					</h:panelGroup> <ui:include
