@@ -17,6 +17,8 @@ import javax.faces.bean.SessionScoped;
 public class CommitteeManagedBean {
 
 	private List<CommitteeList> committeelists;
+	
+	private String selectedCommitte;
 
 	public List<CommitteeList> getCommitteelist() {
 		
@@ -74,6 +76,20 @@ public class CommitteeManagedBean {
 
 	public void setCommitteelist(List<CommitteeList> committeelists) {
 		this.committeelists = committeelists;
+	}
+
+	/**
+	 * @return the selectedCommitte
+	 */
+	public String getSelectedCommitte() {
+		return selectedCommitte;
+	}
+
+	/**
+	 * @param selectedCommitte the selectedCommitte to set
+	 */
+	public void setSelectedCommitte(String selectedCommitte) {
+		this.selectedCommitte = selectedCommitte;
 	}
 	
 	
