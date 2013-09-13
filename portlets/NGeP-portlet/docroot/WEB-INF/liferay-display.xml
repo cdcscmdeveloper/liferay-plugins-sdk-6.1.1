@@ -35,6 +35,7 @@
 <portlet id="Procure"></portlet>
 <portlet id="NoticeBoard"></portlet>
 <portlet id="SupplierReview"></portlet>
+<portlet id="Specification"></portlet>
 
 </category>
 </display>
