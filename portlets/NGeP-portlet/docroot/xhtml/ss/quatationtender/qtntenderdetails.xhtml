@@ -55,7 +55,32 @@
 
 			</p:selectOneRadio>
 </p:panelGrid>
+<p:panelGrid columns="4" styleClass="noBorders tr,noBorders td">
+<h:panelGroup>
+  
+  <h:outputLabel for="contractperiod"
+				value="* Contract Period" />
+			<p:inputText id="contractperiod"
+				value="#{searchQtnTenderBB.managedBean.qtno}" />
+				<h:outputText value="(Year)" />
+				<p:inputText id="contractperiod"
+				value="#{searchQtnTenderBB.managedBean.qtno}" />
+				<h:outputText value="(Month)" />
+</h:panelGroup>
 
+<h:panelGroup>
+  
+  <h:outputLabel for="completionperiod"
+				value="* Completion Period" />
+			<p:inputText id="completionperiod"
+				value="#{searchQtnTenderBB.managedBean.qtno}" />
+				<h:outputText value="(Year)" />
+				<p:inputText id="completionperiod"
+				value="#{searchQtnTenderBB.managedBean.qtno}" />
+				<h:outputText value="(Month)" />
+</h:panelGroup>
+
+</p:panelGrid>
 
 
 <p:panelGrid columns="4" styleClass="noBorders tr,noBorders td">
