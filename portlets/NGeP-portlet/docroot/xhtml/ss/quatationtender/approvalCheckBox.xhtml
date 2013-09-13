@@ -5,23 +5,23 @@
 	xmlns:p="http://primefaces.org/ui"
 	xmlns:c="http://java.sun.com/jsp/jstl/core">
 
-	<p:panel header="Approval Workflow" toggleable="true">
-		<p:panelGrid styleClass="noBorders tr,noBorders td">
-			<p:row>
-				<p:column>
+	<p:panel header="Approval Workflow" toggleable="true" >
+		<p:panelGrid columns="3"  styleClass="noBorders tr,noBorders td" >
+			
+				
 					<p:outputLabel value="Approval Category"></p:outputLabel>
-				</p:column>
-				<p:column>
+				
+		
 					<p:selectManyCheckbox
-						value="#{searchQtnTenderBB.managedBean.selectedOptions}">
+						value="#{searchQtnTenderBB.managedBean.selectedOptions}" layout="pageDirection">
 
 						<f:selectItems
 							value="#{searchQtnTenderBB.managedBean.checkBoxList}"></f:selectItems>
 						<p:ajax event="change" update="tabView12345"
 							listener="#{searchQtnTenderBB.addMessage}" />
 					</p:selectManyCheckbox>
-				</p:column>
-			</p:row>
+			
+			
 
 
 		</p:panelGrid>
@@ -41,21 +41,7 @@
 				<ui:include
 					src="/xhtml/ss/quatationtender/approvalDetailSection.xhtml" />
 			</ui:fragment>
-			<!-- <c:choose>
-				<c:when test="${player.titleName =='PTJApproval'}">
-					<ui:include src="/xhtml/ss/quatationtender/requestDetails.xhtml" />
-					<ui:include
-						src="/xhtml/ss/quatationtender/approvalDetailsPTJ.xhtml" />
-				</c:when>
-
-				<c:otherwise>
-					<ui:include src="/xhtml/ss/quatationtender/requestDetails.xhtml" />
-					<ui:include
-						src="/xhtml/ss/quatationtender/verificationDetails.xhtml" />
-					<ui:include
-						src="/xhtml/ss/quatationtender/approvalDetailSection.xhtml" />
-				</c:otherwise>
-			</c:choose> -->
+			
 		</p:tab>
 	</p:tabView>
 
