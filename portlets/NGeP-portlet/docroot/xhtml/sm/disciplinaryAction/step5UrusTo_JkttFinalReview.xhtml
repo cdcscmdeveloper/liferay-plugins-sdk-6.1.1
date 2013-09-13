@@ -13,20 +13,29 @@
 		<ui:include src="/xhtml/sm/shared/sidemenu/smMainPageSideMenu.xhtml" />
 	</ui:define>
 	<ui:define name="content">
-		<p:panel header="Update Complaint Details - Send to JKTT For Final Decesion">
+		<p:panel
+			header="Update Complaint Details - Send to JKTT For Final Decesion">
 			<ui:include
 				src="/xhtml/sm/shared/complaintRegistration/complaintBasicInfo.xhtml" />
-			<p:panel header=" Received Supplier Response For Accusation Letter" toggleable="true">
+			<p:panel header=" Received Supplier Response For Accusation Letter"
+				toggleable="true">
 				<table style="width: 100%">
 					<tr>
-					<!-- <td><p:outputLabel value="Phone No." /></td>
-					<td><p:inputText /></td> -->
-                    <td><p:outputLabel value="  Date Accusation Letter Response Received *" /></td>
-					<td><p:calendar showOn="button" /></td>
+						<td><p:outputLabel
+								value="  Date Acquisition Received By Supplier*" /></td>
+						<td><p:calendar showOn="button" /></td>
+						<td><p:outputLabel
+								value="  Date Acquisition Letter Response Received *" /></td>
+						<td><p:calendar showOn="button" /></td>
+
 					</tr>
 					<tr>
-                    <td><p:outputLabel value=" Date Report Sent For JKTT Final Review *" /></td>
-					<td><p:calendar showOn="button" /></td>
+						<td><p:outputLabel
+								value="  Expected Convene Date For JKTT Final *" /></td>
+						<td><p:calendar showOn="button" /></td>
+						<td><p:outputLabel
+								value="Upload Acquisition Letter Response*"></p:outputLabel></td>
+						<td><p:fileUpload mode="simple" /></td>
 					</tr>
 				</table>
 			</p:panel>

@@ -12,33 +12,45 @@
 		<ui:include src="/xhtml/sm/shared/sidemenu/smMainPageSideMenu.xhtml" />
 	</ui:define>
 	<ui:define name="content">
-		<p:panel header="Update Complaint Details - Update PTPK Intial Review Response">
+		<p:panel
+			header="Update Complaint Details - Update PTPK Intial Review Response">
 			<ui:include
 				src="/xhtml/sm/shared/complaintRegistration/complaintBasicInfo.xhtml" />
-			<p:panel header="Received Initial Review Report From PTPK" toggleable="true">
+			<p:panel header="Received Initial Review Report From PTPK"
+				toggleable="true">
 				<table style="width: 100%">
 					<tr>
-					<!-- <td><p:outputLabel value="Phone No." /></td>
-					<td><p:inputText /></td> -->
-                    <td><p:outputLabel value=" Date Round 1 Report Received *" /></td>
-					<td><p:calendar showOn="button" /></td>
-					<td><p:outputLabel value="Decesion Taken *" /></td>
+						<td><p:outputLabel value=" Actual Meeting Date *" /></td>
+						<td><p:calendar showOn="button" /></td>
+						<td><p:outputLabel value="Meeting Minutes Ref NO.*" /></td>
+						<td><p:inputText /></td>
+					</tr>
+					<tr>
+						<td><p:outputLabel value=" Date Round 1 Report Received *" /></td>
+						<td><p:calendar showOn="button" /></td>
+						<td><p:outputLabel value="Decesion Taken *" /></td>
 						<td><p:selectOneMenu>
 								<f:selectItem itemLabel="-- Select One--" itemValue="1" />
-								<f:selectItem itemLabel="Issue Showcause Letter to Supplier" itemValue="1" />
+								<f:selectItem itemLabel="Issue Showcause Letter to Supplier"
+									itemValue="1" />
 								<f:selectItem itemLabel="Close Case" itemValue="1" />
-							</p:selectOneMenu>
+							</p:selectOneMenu></td>
+					</tr>
+					<tr>
+						<td><p:outputLabel
+								value=" Date Closed / Issued ShowCause Letter *" /></td>
+						<td><p:calendar showOn="button" /></td>
+						<td><p:outputLabel value="Remarks For Closed Case *" /></td>
+						<td><p:inputTextarea /></td>
+					</tr>
+					<tr>
+						<td><p:outputLabel value="Upload Decision Signed By PTPK*"></p:outputLabel></td>
+						<td><p:fileUpload mode="simple" /></td>
+						<td><p:commandLink value="Click Here" /></td>
+						<td><p:outputLabel
+								value="To download Show Cause Letter Template"></p:outputLabel>
 						</td>
 					</tr>
-					<tr>
-                    <td><p:outputLabel value=" Date Closed / Issued ShowCause Letter *" /></td>
-					<td><p:calendar showOn="button" /></td>
-					<td><p:outputLabel value="Remarks For Closed Case *" /></td>
-					<td><p:inputTextarea /></td>
-					</tr>
-					<tr>
-					  <td>Click Here to Download Show Cause Letter Template</td>
-					 </tr>
 				</table>
 			</p:panel>
 			<ui:include

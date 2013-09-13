@@ -13,18 +13,28 @@
 		<ui:include src="/xhtml/sm/shared/sidemenu/smMainPageSideMenu.xhtml" />
 	</ui:define>
 	<ui:define name="content">
-		<p:panel header="Update Complaint Details - Send to PTPK For Round 2 Validation">
+		<p:panel
+			header="Update Complaint Details - Send to PTPK For Round 2 Validation">
 			<ui:include
 				src="/xhtml/sm/shared/complaintRegistration/complaintBasicInfo.xhtml" />
-			<p:panel header="Received Supplier Response For Show Cause Letter" toggleable="true">
+			<p:panel header="Received Supplier Response For Show Cause Letter"
+				toggleable="true">
 				<table style="width: 100%">
 					<tr>
-						<td><p:outputLabel value="  Date Show Cause Response Received *" /></td>
-					    <td><p:calendar showOn="button" /></td>
+						<td><p:outputLabel
+								value="  Date Show Cause Received By Supplier*" /></td>
+						<td><p:calendar showOn="button" /></td>
+						<td><p:outputLabel
+								value="  Date Show Cause Letter Response Received *" /></td>
+						<td><p:calendar showOn="button" /></td>
+
 					</tr>
 					<tr>
-						<td><p:outputLabel value="  Date Report Sent For Round2 PTPK Validation *" /></td>
-					    <td><p:calendar showOn="button" /></td>
+						<td><p:outputLabel
+								value="  Expected Convene Date For Round2 PTPK Validation *" /></td>
+						<td><p:calendar showOn="button" /></td>
+						<td><p:outputLabel value="Upload Show Cause Letter Response*"></p:outputLabel></td>
+						<td><p:fileUpload mode="simple" /></td>
 					</tr>
 				</table>
 			</p:panel>

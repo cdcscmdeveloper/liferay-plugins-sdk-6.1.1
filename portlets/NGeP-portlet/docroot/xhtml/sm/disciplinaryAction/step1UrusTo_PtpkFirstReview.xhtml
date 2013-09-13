@@ -13,24 +13,32 @@
 		<ui:include src="/xhtml/sm/shared/sidemenu/smMainPageSideMenu.xhtml" />
 	</ui:define>
 	<ui:define name="content">
-		<p:panel header="Update Complaint Details - Send Report For Initial Review By PTPK">
+		<p:panel
+			header="Update Complaint Details - Send Report For Initial Review By PTPK">
 			<ui:include
 				src="/xhtml/sm/shared/complaintRegistration/complaintBasicInfo.xhtml" />
-			<p:panel header=" Click Here to Dowload Complaint Supporting / Proof Documents ( Applicable Only If Uploaded By Complainant)" toggleable="true">
+			<p:panel header=" Send To PTPK For Review -1 " toggleable="true">
 				<table style="width: 100%">
 					<tr>
-						<td>
-						<h:form>
-                          <p:outputLabel value="Upload Initial Invesitgation Report*"></p:outputLabel>
-                          <p:fileUpload fileUploadListener="#{fileUploadController.handleFileUpload}" mode="simple" />
-						</h:form>
-                    </td>
-                    </tr>
-                    <tr>
-                    <td><p:outputLabel value="Date Report Sent For Initial PTPK Validation *" /></td>
-					<td><p:calendar showOn="button" /></td>
+						<td><p:outputLabel
+								value="Report Sent For Initial PTPK Validation *" /></td>
+						<td><p:calendar showOn="button" /></td>
+						<td><p:outputLabel value="Expected Conven Date *" /></td>
+						<td><p:calendar showOn="button" /></td>
 					</tr>
-					
+					<tr>
+						<td><p:outputLabel value="Initial Invesitgation Report*"></p:outputLabel></td>
+						<td><p:fileUpload mode="simple" /></td>
+						<td><p:commandLink value="Click Here" /></td>
+						<td><p:outputLabel
+								value="To download investigation report template"></p:outputLabel>
+						</td>
+					</tr>
+					<tr>
+						<td><p:outputLabel value="Supplier MOF NO. *"></p:outputLabel></td>
+						<td><p:inputText /></td>
+					</tr>
+
 				</table>
 			</p:panel>
 			<ui:include

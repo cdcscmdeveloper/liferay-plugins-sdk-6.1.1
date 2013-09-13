@@ -21,26 +21,36 @@
 				toggleable="true">
 				<table style="width: 100%">
 					<tr>
-						<!-- <td><p:outputLabel value="Phone No." /></td>
-					<td><p:inputText /></td> -->
+						<td><p:outputLabel value=" Actual Meeting Date *" /></td>
+						<td><p:calendar showOn="button" /></td>
+						<td><p:outputLabel value="Meeting Minutes Ref NO.*" /></td>
+						<td><p:inputText /></td>
+					</tr>
+					<tr>
 						<td><p:outputLabel value=" Date Round 2 Report Received *" /></td>
 						<td><p:calendar showOn="button" /></td>
 						<td><p:outputLabel value="Decesion Taken *" /></td>
 						<td><p:selectOneMenu>
 								<f:selectItem itemLabel="-- Select One--" itemValue="1" />
-								<f:selectItem itemLabel="Issue Acquisition Letter" itemValue="1" />
+								<f:selectItem itemLabel="Issue Acquisition Letter to Supplier"
+									itemValue="1" />
 								<f:selectItem itemLabel="Close Case" itemValue="1" />
 							</p:selectOneMenu></td>
 					</tr>
 					<tr>
 						<td><p:outputLabel
-								value=" Date Closed / Issued Accusation Letter *" /></td>
+								value=" Date Closed / Issued Acquisition Letter *" /></td>
 						<td><p:calendar showOn="button" /></td>
 						<td><p:outputLabel value="Remarks For Closed Case *" /></td>
 						<td><p:inputTextarea /></td>
 					</tr>
 					<tr>
-						<td>Click Here to Download Show Cause Letter Template</td>
+						<td><p:outputLabel value="Upload Decision Signed By PTPK*"></p:outputLabel></td>
+						<td><p:fileUpload mode="simple" /></td>
+						<td><p:commandLink value="Click Here" /></td>
+						<td><p:outputLabel
+								value="To download Acquisition Letter Template"></p:outputLabel>
+						</td>
 					</tr>
 				</table>
 			</p:panel>
