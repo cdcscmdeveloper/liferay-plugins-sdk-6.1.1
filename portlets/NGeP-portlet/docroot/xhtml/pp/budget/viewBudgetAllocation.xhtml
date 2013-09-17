@@ -14,7 +14,7 @@ xmlns:c="http://java.sun.com/jsp/jstl/core"
    		<ui:include src="menuBudget.xhtml"/>
     </ui:define>
     <ui:define name="content">
-		<p:panel id="pRightPanel" header="#{budgetAllocationBackingBean.generateHeader('M')}">
+		<p:panel id="pRightPanel" header="#{budgetAllocationBackingBean.generateHeader(budgetAllocationBackingBean.managedBean.viewMode)}">
 			<ui:include src="budgetAllocationContent.xhtml"/>
 		</p:panel>
 		<br/>

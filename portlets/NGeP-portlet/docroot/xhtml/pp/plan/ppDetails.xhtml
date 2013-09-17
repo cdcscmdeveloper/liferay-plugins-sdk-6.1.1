@@ -30,11 +30,7 @@ xmlns:c="http://java.sun.com/jsp/jstl/core">
 	            <p:outputLabel value="PembelianBekalanPejabat" />
 	        </p:column> 
 	        <!--  
-	        <p:column headerText="#{lbl['lbl.pp.abm.type']}">  
-	            <p:selectOneMenu disabled="#{!planBackingBean.managedBean.brandNew}">
-					<f:selectItem itemLabel="Dasar Baru" itemValue="Dasar Baru" />
-				</p:selectOneMenu>
-	        </p:column>  
+	      
 	        <p:column headerText="#{lbl['lbl.pp.financial.year']}">  
 	           	<p:selectOneMenu disabled="#{!planBackingBean.managedBean.brandNew}">
 					<f:selectItem itemLabel="2013" itemValue="2013" />
@@ -62,14 +58,14 @@ xmlns:c="http://java.sun.com/jsp/jstl/core">
     	<c:if test="#{planBackingBean.managedBean.brandNew}">
     		<div class="ppRightBtn">
 				<p:commandButton id="addPpItemDet" value="#{lbl['lbl.pp.add.item']}" 
-					onclick="dlItemDetailsModal.show();" />  
+					onclick="dlItemDetailsPpModal.show();" />  
 		 		<br/>
 		 		<br/>
 	 		</div>
  		</c:if>
  		
- 		<p:dialog id="dlItemDetails" header="#{lbl['lbl.pp.item.details']}" widgetVar="dlItemDetailsModal" 
-	              	 modal="true" resizable="false" styleClass="ppDiaglogBg" dynamic="true">  
+ 		<p:dialog id="dlItemDetailsPp" header="#{lbl['lbl.pp.item.details']}" widgetVar="dlItemDetailsPpModal" 
+	              	 modal="true" resizable="false" styleClass="ppDiaglogBg" dynamic="true" appendToBody="true">  
 	 		<p:panel id="pItemDetails" header="#{lbl['lbl.pp.item.details.form']}">
 				<table class="ppTwoPartsTable">
 					<tr>

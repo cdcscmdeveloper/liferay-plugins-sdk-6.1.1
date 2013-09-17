@@ -1,0 +1,49 @@
+<?xml version="1.0"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<ui:composition
+template="/WEB-INF/facelets/templates/basic_template.xhtml"
+xmlns="http://www.w3.org/1999/xhtml"
+xmlns:f="http://java.sun.com/jsf/core"
+xmlns:h="http://java.sun.com/jsf/html"
+xmlns:ui="http://java.sun.com/jsf/facelets"
+xmlns:p="http://primefaces.org/ui"
+xmlns:c="http://java.sun.com/jsp/jstl/core"
+>
+
+    <ui:define name="contentSection">
+    	
+		<p:tabView id="tvPlan" dynamic="true" cache="false" orientation="left">  
+			<p:ajax event="tabChange" listener="#{planBackingBean.updateCurrent}" update="tvPlan"/>  
+		    <p:tab id="tabN" title="#{planBackingBean.generateHeader(planBackingBean.managedBean.viewMode)}"> 
+		    	<c:if test="#{planBackingBean.managedBean.viewMode == 'N' &amp;&amp;  planBackingBean.managedBean.current=='N'}">
+		    		<ui:include src="planContent.xhtml"/>
+		    	</c:if>
+		    </p:tab>
+		    <p:tab  id="tabT" title="#{lbl['lbl.pp.plan.title.mto.plan']}" rendered="#{planBackingBean.managedBean.mtoRequired==1 &amp;&amp;
+          		planBackingBean.managedBean.typeOfGoodsServices=='I' || planBackingBean.managedBean.typeOfGoodsServices=='B' }" 
+          		action="#{planBackingBean.redirectToCreateMtoPlan}" >  
+          		<br/>
+          		<c:if test="#{planBackingBean.managedBean.current == 'T'}">
+		    		<ui:include src="planContent.xhtml"/>
+		    	</c:if>
+		    </p:tab>
+		    <p:tab id="tabB" title="#{lbl['lbl.pp.budget.title.allocated.gosodo']}">  
+		    	<br/>
+		    	<p:panel header="#{lbl['lbl.pp.budget.title.allocated.gosodo']}">
+		    		<ui:include src="../budget/listAllocatedBudget.xhtml"/>
+		    	</p:panel>
+		    </p:tab>
+		    <p:tab id="tabL" title="#{lbl['lbl.pp.plan.title.list']}"> 
+		    	<br/>
+		    	<p:panel header="#{planBackingBean.generateHeader('L')}"> 
+		    		<ui:include src="listPlanContent.xhtml"/>
+		    	</p:panel>
+		    </p:tab>
+		    <p:tab id="tabA" title="#{lbl['lbl.pp.title.audit.trail']}">  
+		    	Coming Soon
+		    </p:tab>
+	    </p:tabView>
+	</ui:define>
+</ui:composition>
+

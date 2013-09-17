@@ -15,7 +15,7 @@ xmlns:c="http://java.sun.com/jsp/jstl/core"
    		<ui:include src="menuPlan.xhtml"/>
     </ui:define>
     <ui:define name="content">
-		<p:panel id="pRightPanel" header="#{planBackingBean.generateHeader('M')}">
+		<p:panel id="pRightPanel" header="#{planBackingBean.generateHeader(planBackingBean.managedBean.viewMode)}">
 			<!-- Top Button -->
 			<div class="ppRightBtn">
 				<p:commandButton id="cbSubmit" value="#{lbl['lbl.pp.submit']}" action="#{planBackingBean.redirectToViewPlan}"   />&nbsp;

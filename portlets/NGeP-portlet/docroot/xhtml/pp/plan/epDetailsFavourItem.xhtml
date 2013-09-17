@@ -21,12 +21,12 @@ xmlns:c="http://java.sun.com/jsp/jstl/core">
 				<div class="ppRightBtn">
 			    	<br/>
 			    	<br/>
-					<p:commandButton id="cbAddItemDet" value="#{lbl['lbl.pp.add.item']}"  onclick="dlItemDetailsModal.show();" />
+					<p:commandButton id="cbAddItemDet" value="#{lbl['lbl.pp.add.item']}"  onclick="dlItemDetailsFiModal.show();" />
 				</div>
 			</c:if>
 	 		<!-- Sub Item Details -->
-	 		<p:dialog id="dlItemDetails" header="#{lbl['lbl.pp.item.details']}" widgetVar="dlItemDetailsModal" 
-		              	 modal="true" resizable="false" styleClass="ppDiaglogBg" dynamic="true">  
+	 		<p:dialog id="dlItemDetailsFi" header="#{lbl['lbl.pp.item.details']}" widgetVar="dlItemDetailsFiModal" 
+		              	 modal="true" resizable="false" styleClass="ppDiaglogBg" dynamic="true" appendToBody="true">  
 	      			<ui:include src="itemDetails.xhtml"/>
 			</p:dialog>  
 		</p:panel>

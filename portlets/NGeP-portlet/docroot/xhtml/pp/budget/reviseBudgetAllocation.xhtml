@@ -14,7 +14,7 @@ xmlns:c="http://java.sun.com/jsp/jstl/core"
    		<ui:include src="menuBudget.xhtml"/>
     </ui:define>
     <ui:define name="content">
-		<p:panel id="pRightPanel" header="#{budgetAllocationBackingBean.generateHeader('S')}">
+		<p:panel id="pRightPanel" header="#{budgetAllocationBackingBean.generateHeader(budgetAllocationBackingBean.managedBean.viewMode)}">
 			<!-- Top Button -->
 			<div class="ppRightBtn">
 				<p:commandButton id="cbSave" value="#{lbl['lbl.pp.reserve']}" action="#{budgetAllocationBackingBean.redirectToListBudgetAllocation}"   />&nbsp; 

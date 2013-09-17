@@ -21,10 +21,10 @@ xmlns:c="http://java.sun.com/jsp/jstl/core">
             <p:column styleClass="ppSmallTd" headerText="#{lbl['lbl.pp.seq']}">  
                 <p:outputLabel value="" />  
             </p:column>   
-	        <p:column headerText="#{lbl['lbl.pp.planned.activities.startmonth']}">  
+	        <p:column headerText="#{lbl['lbl.pp.startmonth']}">  
 	            <p:outputLabel value="75,000.00" /> 
 	        </p:column>  
-	        <p:column headerText="#{lbl['lbl.pp.planned.activities.endmonth']}">  
+	        <p:column headerText="#{lbl['lbl.pp.endmonth']}">  
 	            <p:outputLabel value="" /> 
 	        </p:column>	      
 	        <p:column headerText="#{lbl['lbl.pp.item.remarks']}">  
@@ -43,10 +43,7 @@ xmlns:c="http://java.sun.com/jsp/jstl/core">
 			        </p:column>   
 			        <p:column headerText="#{lbl['lbl.pp.activity.description']}">  
 			            <p:outputLabel value="PembelianBekalanPejabat" />
-			        </p:column>  
-			        <p:column headerText="#{lbl['lbl.pp.abm.type']}">  
-			            <p:outputLabel value="Dasar Baru" />     
-			        </p:column>  
+			        </p:column> 
 			        <p:column headerText="#{lbl['lbl.pp.financial.year']}">  
 			            <p:outputLabel value="2013" />     
 			        </p:column>  
@@ -72,15 +69,15 @@ xmlns:c="http://java.sun.com/jsp/jstl/core">
     	<!-- Button(s) -->
     	<c:if test="#{planBackingBean.managedBean.brandNew}">
 	    	<div class="ppRightBtn">
-				<p:commandButton id="cbAddItemDet" value="#{lbl['lbl.pp.add.item']}"  onclick="dlItemDetailsModal.show();" />
+				<p:commandButton id="cbAddItemDet" value="#{lbl['lbl.pp.add.item']}"  onclick="dlItemDetailsDpModal.show();" />
 				<br/>
 				<br/>
 			</div>
 		</c:if>
 		
  		<!-- Sub Item Details -->
- 		<p:dialog id="dlItemDetails" header="#{lbl['lbl.pp.item.details']}" widgetVar="dlItemDetailsModal" 
-	              	 modal="true" resizable="false" styleClass="ppDiaglogBigBg" dynamic="true">  
+ 		<p:dialog id="dlItemDetailsDp" header="#{lbl['lbl.pp.item.details']}" widgetVar="dlItemDetailsDpModal" 
+	              	 modal="true" resizable="false" styleClass="ppDiaglogBigBg" dynamic="true" appendToBody="true">  
       			<ui:include src="directPurchaseDet.xhtml"/>
 		</p:dialog>  
 	</p:outputPanel>

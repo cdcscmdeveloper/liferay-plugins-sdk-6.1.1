@@ -14,11 +14,11 @@ xmlns:c="http://java.sun.com/jsp/jstl/core"
    		<ui:include src="menuPlan.xhtml"/>
     </ui:define>
     <ui:define name="content">
-   		<p:panel id="pRightPanel" header="#{planBackingBean.generateHeader('V')}">
+   		<p:panel id="pRightPanel" header="#{planBackingBean.generateHeader(planBackingBean.managedBean.viewMode)}">
    			<!-- Top Button -->
 			<div class="ppRightBtn">
 				<c:if id="opVerifyButtons" test="#{planBackingBean.managedBean.viewMode == 'V'}">
-					<p:commandButton id="cbSubmit" value="#{lbl['lbl.pp.submit']}" action="#{planBackingBean.redirectToViewPlan}"   />&nbsp;
+					<p:commandButton id="cbRevise" value="#{lbl['lbl.pp.revise']}" action="#{planBackingBean.redirectToViewPlan}"   />&nbsp;
 					<p:commandButton id="cbAcknowledge" value="#{lbl['lbl.pp.acknowledge']}" action="#{planBackingBean.redirectToViewPlan}"   />&nbsp;
 					<p:commandButton id="cbVerify" value="#{lbl['lbl.pp.verify']}" action="#{planBackingBean.redirectToViewPlan}"   />&nbsp;
 					<p:commandButton id="cbReject" value="#{lbl['lbl.pp.reject']}" action="#{planBackingBean.redirectToViewPlan}"   />&nbsp;

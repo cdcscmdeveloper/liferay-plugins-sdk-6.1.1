@@ -10,218 +10,231 @@ xmlns:p="http://primefaces.org/ui"
 xmlns:c="http://java.sun.com/jsp/jstl/core"
 >
 	<p:outputPanel id="opBudgetAllocationContent">
-		<!-- Header -->
-		<p:panel header="#{lbl['lbl.pp.header']}"  toggleable="true">
-			<table class="ppTwoPartsTable">
-				<tr>
-					<th>#{lbl['lbl.pp.ministry.code.name']}</th>
-					<td class="ppSmallTd">:</td>
-					<td>
-						<p:selectOneMenu disabled="#{!budgetAllocationBackingBean.managedBean.brandNew}">
-							<f:selectItem itemLabel="#{lbl['lbl.select']}" />
-						</p:selectOneMenu>
-					</td>
-				</tr>
-				<tr>
-					<th>#{lbl['lbl.pp.jabatan.code.name']}</th>
-					<td class="ppSmallTd">:</td>
-					<td>
-						<p:selectOneMenu disabled="#{!budgetAllocationBackingBean.managedBean.brandNew}">
-							<f:selectItem itemLabel="#{lbl['lbl.select']}" />
-						</p:selectOneMenu>
-					</td>
-				</tr>
-				<tr>
-					<th>#{lbl['lbl.pp.ptj.code.name']}</th>
-					<td class="ppSmallTd">:</td>
-					<td>
-						<p:selectOneMenu disabled="#{!budgetAllocationBackingBean.managedBean.brandNew}">
-							<f:selectItem itemLabel="#{lbl['lbl.select']}" />
-						</p:selectOneMenu>
-					</td>
-				</tr>
-				<tr>
-					<th>#{lbl['lbl.pp.status']}</th>
-					<td class="ppSmallTd">:</td>
-					<td>
-						<p:inputText value="-" disabled="true"/>
-					</td>
-				</tr>
-				<tr>
-					<th>* #{lbl['lbl.pp.plan.approver']}</th>
-					<td class="ppSmallTd">:</td>
-					<td>
-						<p:selectOneMenu disabled="#{!budgetAllocationBackingBean.managedBean.brandNew}">
-							<f:selectItem itemLabel="#{lbl['lbl.select']}" />
-						</p:selectOneMenu>
-					</td>
-				</tr>
-			</table>
-		</p:panel>
-		<br/>
-		<!-- Remarks -->
-		<p:panel header="#{lbl['lbl.pp.remarks']}"  toggleable="true">
-			<table class="ppRmkTable">
-				<tr>
-					<th>#{lbl['lbl.pp.remarks']}</th>
-					<td class="ppSmallTd">:</td>
-					<td>
-						<p:dataTable id="dtRemark" 
-							value="#{budgetAllocationBackingBean.managedBean.remarkList}"
-							emptyMessage="#{lbl['lbl.pp.pls.add.item']}">  
-	                        <p:column headerText="#{lbl['lbl.pp.seq']}">  
-	                            <p:outputLabel value="" />  
-	                        </p:column>   
-	                        <p:column headerText="#{lbl['lbl.pp.comment']}">  
-	                            <p:inputTextarea value="-" rows="2" cols="50"></p:inputTextarea>
-	                        </p:column>  
-	                        <p:column headerText="#{lbl['lbl.pp.created.date']}">  
-	                            <p:outputLabel value="" />  
-	                        </p:column>  
-	                        <p:column headerText="#{lbl['lbl.pp.created.by']}">  
-	                            <p:outputLabel value="" />  
-	                        </p:column> 
-	                     
-	                </p:dataTable>  
-					</td>
-				</tr>
-				<tr>
-					<th>&nbsp;</th>
-					<td class="ppSmallTd">&nbsp;</td>
-					<td>
-						<div class="ppRightBtn">
-							<p:commandButton id="cbAddRemark" value="#{lbl['lbl.pp.add']}" update="dtRemark"
-								action="#{budgetAllocationBackingBean.addRemark()}" />
-						</div>
-					</td>
-				</tr>
-			</table>
-		</p:panel>
-		<br/>
+		<ui:include src="headerSection.xhtml"/>
 		
-		<!-- Details -->
-		<p:panel header="#{lbl['lbl.pp.details']}"  toggleable="true">
-			<p:dataTable id="dtBudgetDet" var="budgetAllocationDet" 
-				value="#{budgetAllocationBackingBean.managedBean.budgetAllocationDetList}">
-			 		<p:column headerText="#{lbl['lbl.pp.seq']}">  
-                        <p:outputLabel value="" />  
-                    </p:column>    
-                    <p:column headerText="#{lbl['lbl.pp.gosodo.code']}">  
-                        <p:outputLabel value="" />  
-                    </p:column>  
-                    <p:column headerText="#{lbl['lbl.pp.gosodo.name']}">  
-                        <p:outputLabel value="" />  
-                    </p:column>  
-
-                    <p:column headerText="#{lbl['lbl.pp.activity.description']}">  
-                        <p:outputLabel value="" />  
-                    </p:column>  
-                    
-                    <p:column headerText="#{lbl['lbl.pp.financial.year']}">  
-                      <p:outputLabel value="" />  
-                    </p:column> 
-                    <!-- 
-                    <p:column headerText="#{lbl['lbl.pp.budgeted.amount']}">  
-                        <p:outputLabel value="" />  
-                    </p:column> 
-                    <p:column headerText="#{lbl['lbl.pp.available.amount']}">  
-                        <p:outputLabel value="" />  
-                    </p:column>  -->
-                    <p:column headerText="#{lbl['lbl.pp.allocate.balance.amount']}">  
-                        <p:outputLabel value="" />  
-                    </p:column> 
-                    <!-- 
-                    <p:column headerText="#{lbl['lbl.pp.remarks']}">  
-                        <p:outputLabel value="" />  
-                    </p:column>   -->
-                    <p:column headerText="#{lbl['lbl.pp.action']}">  
-                        <p:outputLabel value="" />  
-                    </p:column>  
-               </p:dataTable>  
-               <br/>
-			   <!-- Button(s) -->
-			   <div class="ppRightBtn">
-					<c:if test="#{budgetAllocationBackingBean.managedBean.brandNew}">
-						<p:commandButton type="button" value="#{lbl['lbl.pp.add.item']}" onclick="dlItemDetailsModal.show();"/> 
-					</c:if>
-				</div>
+		<br/>
+		<p:tabView id="tvBudgetContent" dynamic="true" cache="true" orientation="top"> 
+			<br/>
+			<!-- Header -->
+			<p:tab id="tBudgetHeader" title="#{lbl['lbl.pp.header']}">  
+				<p:panel id="pTabBudgetHeader">
+					<table class="ppTwoPartsTable">
+						<tr>
+							<th>#{lbl['lbl.pp.ministry.code.name']}</th>
+							<td class="ppSmallTd">:</td>
+							<td>
+								<p:selectOneMenu disabled="#{!budgetAllocationBackingBean.managedBean.brandNew}">
+									<f:selectItem itemLabel="#{lbl['lbl.select']}" />
+								</p:selectOneMenu>
+							</td>
+						</tr>
+						<tr>
+							<th>#{lbl['lbl.pp.jabatan.code.name']}</th>
+							<td class="ppSmallTd">:</td>
+							<td>
+								<p:selectOneMenu disabled="#{!budgetAllocationBackingBean.managedBean.brandNew}">
+									<f:selectItem itemLabel="#{lbl['lbl.select']}" />
+								</p:selectOneMenu>
+							</td>
+						</tr>
+						<tr>
+							<th>#{lbl['lbl.pp.ptj.code.name']}</th>
+							<td class="ppSmallTd">:</td>
+							<td>
+								<p:selectOneMenu disabled="#{!budgetAllocationBackingBean.managedBean.brandNew}">
+									<f:selectItem itemLabel="#{lbl['lbl.select']}" />
+								</p:selectOneMenu>
+							</td>
+						</tr>
+						<tr>
+							<th>#{lbl['lbl.pp.status']}</th>
+							<td class="ppSmallTd">:</td>
+							<td>
+								<p:inputText value="-" disabled="true"/>
+							</td>
+						</tr>
+						<tr>
+							<th>* #{lbl['lbl.pp.plan.approver']}</th>
+							<td class="ppSmallTd">:</td>
+							<td>
+								<p:selectOneMenu disabled="#{!budgetAllocationBackingBean.managedBean.brandNew}">
+									<f:selectItem itemLabel="#{lbl['lbl.select']}" />
+								</p:selectOneMenu>
+							</td>
+						</tr>
+					</table>
+				</p:panel>
+			</p:tab>
+			<!-- Details -->
+			<p:tab id="tBudgetDetails" title="#{lbl['lbl.pp.details']}">  
+				<p:panel id="pTabBudgetDetails">
+				<br/>
+				<p:dataTable id="dtBudgetDet" var="budgetAllocationDet" 
+					value="#{budgetAllocationBackingBean.managedBean.budgetAllocationDetList}">
+				 		<p:column headerText="#{lbl['lbl.pp.seq']}">  
+	                        <p:outputLabel value="" />  
+	                    </p:column>    
+	                    <p:column headerText="#{lbl['lbl.pp.gosodo.code']}">  
+	                        <p:outputLabel value="" />  
+	                    </p:column>  
+	                    <p:column headerText="#{lbl['lbl.pp.gosodo.name']}">  
+	                        <p:outputLabel value="" />  
+	                    </p:column>  
+	
+	                    <p:column headerText="#{lbl['lbl.pp.activity.description']}">  
+	                        <p:outputLabel value="" />  
+	                    </p:column>  
+	                    
+	                    <p:column headerText="#{lbl['lbl.pp.financial.year']}">  
+	                      <p:outputLabel value="" />  
+	                    </p:column> 
+	                    <!-- 
+	                    <p:column headerText="#{lbl['lbl.pp.budgeted.amount']}">  
+	                        <p:outputLabel value="" />  
+	                    </p:column> 
+	                    <p:column headerText="#{lbl['lbl.pp.available.amount']}">  
+	                        <p:outputLabel value="" />  
+	                    </p:column>  -->
+	                    <p:column headerText="#{lbl['lbl.pp.allocate.balance.amount']}">  
+	                        <p:outputLabel value="" />  
+	                    </p:column> 
+	                    <!-- 
+	                    <p:column headerText="#{lbl['lbl.pp.remarks']}">  
+	                        <p:outputLabel value="" />  
+	                    </p:column>   -->
+	                    <p:column headerText="#{lbl['lbl.pp.action']}">  
+	                        <p:outputLabel value="" />  
+	                    </p:column>  
+	               </p:dataTable>  
+	               <br/>
+				   <!-- Button(s) -->
+				   <div class="ppRightBtn">
+						<c:if test="#{budgetAllocationBackingBean.managedBean.brandNew}">
+							<p:commandButton type="button" value="#{lbl['lbl.pp.add.item']}" onclick="dlItemDetailsBudgetModal.show();"/> 
+						</c:if>
+					</div>
+				</p:panel>
+			</p:tab>
+			<!-- Remarks -->
+			<p:tab id="tBudgetRmk" title="#{lbl['lbl.pp.remarks']}">
+				<br/>  
+				<p:panel id="pTabBudgetRmk">
+					<table class="ppRmkTable">
+						<tr>
+							<th>#{lbl['lbl.pp.remarks']}</th>
+							<td class="ppSmallTd">:</td>
+							<td>
+								<p:dataTable id="dtRemark" 
+									value="#{budgetAllocationBackingBean.managedBean.remarkList}"
+									emptyMessage="#{lbl['lbl.pp.pls.add.item']}">  
+			                        <p:column headerText="#{lbl['lbl.pp.seq']}">  
+			                            <p:outputLabel value="" />  
+			                        </p:column>   
+			                        <p:column headerText="#{lbl['lbl.pp.comment']}">  
+			                            <p:inputTextarea value="-" rows="2" cols="50"></p:inputTextarea>
+			                        </p:column>  
+			                        <p:column headerText="#{lbl['lbl.pp.created.date']}">  
+			                            <p:outputLabel value="" />  
+			                        </p:column>  
+			                        <p:column headerText="#{lbl['lbl.pp.created.by']}">  
+			                            <p:outputLabel value="" />  
+			                        </p:column> 
+			                     
+			                </p:dataTable>  
+							</td>
+						</tr>
+						<tr>
+							<th>&nbsp;</th>
+							<td class="ppSmallTd">&nbsp;</td>
+							<td>
+								<div class="ppRightBtn">
+									<p:commandButton id="cbAddRemark" value="#{lbl['lbl.pp.add']}" update="dtRemark"
+										action="#{budgetAllocationBackingBean.addRemark()}" />
+								</div>
+							</td>
+						</tr>
+					</table>
+				</p:panel>
+			</p:tab>
+		</p:tabView>
+		
 				
-				<!-- Item Detail Form -->
-               <p:dialog id="dlItemDetails" header="#{lbl['lbl.pp.item.details']}" widgetVar="dlItemDetailsModal" 
-               		modal="true" resizable="false" styleClass="ppDiaglogBg">  
-				    <p:panel header="#{lbl['lbl.pp.item.details']}">
-				    	<table class="ppTwoPartsTable">
-				    		<tr>
-				    			<th>* #{lbl['lbl.pp.gosodo.code']}</th>
-								<td class="ppSmallTd">:</td>
-								<td>
-								    <p:selectOneMenu disabled="#{!budgetAllocationBackingBean.managedBean.brandNew}">
-										<f:selectItem itemLabel="#{lbl['lbl.select']}" />
-									</p:selectOneMenu>
-									<p:selectOneMenu disabled="#{!budgetAllocationBackingBean.managedBean.brandNew}">
-										<f:selectItem itemLabel="#{lbl['lbl.select']}" />
-									</p:selectOneMenu>
-									<p:selectOneMenu disabled="#{!budgetAllocationBackingBean.managedBean.brandNew}">
-										<f:selectItem itemLabel="#{lbl['lbl.select']}" />
-									</p:selectOneMenu>
-								</td>
-				    		</tr>
-				    		<tr>
-				    			<th>#{lbl['lbl.pp.gosodo.name']}</th>
-								<td class="ppSmallTd">:</td>
-								<td>
-									<p:inputText value="" disabled="true"/>  
-								</td>
-				    		</tr>
-				    		
-				    		<tr>
-				    			<th>* #{lbl['lbl.pp.financial.year']}</th>
-								<td class="ppSmallTd">:</td>
-								<td>
-									<p:selectOneMenu disabled="#{!budgetAllocationBackingBean.managedBean.brandNew}">
-										<f:selectItem itemLabel="#{lbl['lbl.select']}" />
-									</p:selectOneMenu>
-								</td>
-				    		</tr>
-				    		<tr>
-				    			<th>#{lbl['lbl.pp.budgeted.amount']}</th>
-								<td class="ppSmallTd">:</td>
-								<td>
-									<p:inputText value="" disabled="true"/>
-								</td>
-				    		</tr>
-				    		<tr>
-				    			<th>#{lbl['lbl.pp.available.amount']}</th>
-								<td class="ppSmallTd">:</td>
-								<td>
-									<p:inputText value="" disabled="true"/>
-								</td>
-				    		</tr>
-				    		<tr>
-				    			<th>* #{lbl['lbl.pp.allocate.balance.amount']}</th>
-								<td class="ppSmallTd">:</td>
-								<td>
-									<p:inputText value="-" readonly="#{!budgetAllocationBackingBean.managedBean.brandNew}"/>
-								</td>
-				    		</tr>
-				    		<tr>
-				    			<th>#{lbl['lbl.pp.remarks']}</th>
-								<td class="ppSmallTd">:</td>
-								<td>
-									<p:inputTextarea value="-" rows="3" cols="70" readonly="#{!budgetAllocationBackingBean.managedBean.brandNew}"/>
-								</td>
-				    		</tr>
-				    		<tr>
-				    			<td>&nbsp;</td>
-								<td colspan="2">
-									<p:commandButton type="button" value="#{lbl['lbl.pp.save']}" onclick="dlItemDetailsModal.hide()"/>
-									<p:commandButton type="button" value="#{lbl['lbl.pp.cancel']}" onclick="dlItemDetailsModal.hide()"/>
-								</td>
-				    		</tr>
-				    	</table> 
-            		</p:panel>  
-				</p:dialog>  
-               <br/>
-		</p:panel>
+		<!-- Item Detail Form -->
+        <p:dialog id="dlItemDetailsBudget" header="#{lbl['lbl.pp.item.details']}" widgetVar="dlItemDetailsBudgetModal" 
+             		modal="true" resizable="false" styleClass="ppDiaglogBg" appendToBody="true">  
+		    <p:panel header="#{lbl['lbl.pp.item.details']}">
+		    	<table class="ppTwoPartsTable">
+		    		<tr>
+		    			<th>* #{lbl['lbl.pp.gosodo.code']}</th>
+						<td class="ppSmallTd">:</td>
+						<td>
+						    <p:selectOneMenu disabled="#{!budgetAllocationBackingBean.managedBean.brandNew}">
+								<f:selectItem itemLabel="#{lbl['lbl.select']}" />
+							</p:selectOneMenu>
+							<p:selectOneMenu disabled="#{!budgetAllocationBackingBean.managedBean.brandNew}">
+								<f:selectItem itemLabel="#{lbl['lbl.select']}" />
+							</p:selectOneMenu>
+							<p:selectOneMenu disabled="#{!budgetAllocationBackingBean.managedBean.brandNew}">
+								<f:selectItem itemLabel="#{lbl['lbl.select']}" />
+							</p:selectOneMenu>
+						</td>
+		    		</tr>
+		    		<tr>
+		    			<th>#{lbl['lbl.pp.gosodo.name']}</th>
+						<td class="ppSmallTd">:</td>
+						<td>
+							<p:inputText value="" disabled="true"/>  
+						</td>
+		    		</tr>
+		    		
+		    		<tr>
+		    			<th>* #{lbl['lbl.pp.financial.year']}</th>
+						<td class="ppSmallTd">:</td>
+						<td>
+							<p:selectOneMenu disabled="#{!budgetAllocationBackingBean.managedBean.brandNew}">
+								<f:selectItem itemLabel="#{lbl['lbl.select']}" />
+							</p:selectOneMenu>
+						</td>
+		    		</tr>
+		    		<tr>
+		    			<th>#{lbl['lbl.pp.budgeted.amount']}</th>
+						<td class="ppSmallTd">:</td>
+						<td>
+							<p:inputText value="" disabled="true"/>
+						</td>
+		    		</tr>
+		    		<tr>
+		    			<th>#{lbl['lbl.pp.available.amount']}</th>
+						<td class="ppSmallTd">:</td>
+						<td>
+							<p:inputText value="" disabled="true"/>
+						</td>
+		    		</tr>
+		    		<tr>
+		    			<th>* #{lbl['lbl.pp.allocate.balance.amount']}</th>
+						<td class="ppSmallTd">:</td>
+						<td>
+							<p:inputText value="-" readonly="#{!budgetAllocationBackingBean.managedBean.brandNew}"/>
+						</td>
+		    		</tr>
+		    		<tr>
+		    			<th>#{lbl['lbl.pp.remarks']}</th>
+						<td class="ppSmallTd">:</td>
+						<td>
+							<p:inputTextarea value="-" rows="3" cols="70" readonly="#{!budgetAllocationBackingBean.managedBean.brandNew}"/>
+						</td>
+		    		</tr>
+		    		<tr>
+		    			<td>&nbsp;</td>
+						<td colspan="2">
+							<p:commandButton type="button" value="#{lbl['lbl.pp.save']}" onclick="dlItemDetailsModal.hide()"/>
+							<p:commandButton type="button" value="#{lbl['lbl.pp.cancel']}" onclick="dlItemDetailsModal.hide()"/>
+						</td>
+		    		</tr>
+		    	</table> 
+         		</p:panel>  
+		</p:dialog>  
+        <br/>
+
 	</p:outputPanel>
 </ui:composition>

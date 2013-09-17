@@ -13,98 +13,55 @@ xmlns:c="http://java.sun.com/jsp/jstl/core">
 				<th>* #{lbl['lbl.pp.gosodo.code']}</th>
 				<td class="ppSmallTd">:</td>
 				<td>
-					<p:outputPanel>
-						<p:selectOneMenu disabled="#{!planBackingBean.managedBean.brandNew}">
-							<f:selectItem itemLabel="- Select -" itemValue="XX" />
-						</p:selectOneMenu>
-						<p:selectOneMenu disabled="#{!planBackingBean.managedBean.brandNew}">>
-							<f:selectItem itemLabel="- Select -" itemValue="XX" />
-						</p:selectOneMenu>
-						<p:selectOneMenu disabled="#{!planBackingBean.managedBean.brandNew}">>
-							<f:selectItem itemLabel="- Select -" itemValue="XX" />
-						</p:selectOneMenu>
-					</p:outputPanel>
+					<p:selectOneMenu disabled="#{!planBackingBean.managedBean.brandNew}">
+						<f:selectItem itemLabel="#{lbl['lbl.select']}" />
+					</p:selectOneMenu>
+					<p:selectOneMenu disabled="#{!planBackingBean.managedBean.brandNew}">>
+						<f:selectItem itemLabel="#{lbl['lbl.select']}" />
+					</p:selectOneMenu>
+					<p:selectOneMenu disabled="#{!planBackingBean.managedBean.brandNew}">>
+						<f:selectItem itemLabel="#{lbl['lbl.select']}" />
+					</p:selectOneMenu>
 				</td>
 			</tr>
 			<tr>
 				<th>#{lbl['lbl.pp.activity.description']}</th>
 				<td class="ppSmallTd">:</td>
 				<td>
-					 <p:outputLabel value="" />  
+					 <p:inputText value="-" disabled="true" />  
 				</td>
 			</tr>
-			<!-- 
-			<tr>
-				<th>* #{lbl['lbl.pp.abm.type']}</th>
-				<td class="ppSmallTd">:</td>
-				<td>
-					<p:outputPanel>
-						<p:selectOneMenu disabled="#{!planBackingBean.managedBean.brandNew}">>
-							<f:selectItem itemLabel="- Select -" itemValue="XX" />
-						</p:selectOneMenu>
-					</p:outputPanel>
-				</td>
-			</tr>
-			 -->
+			
 			<tr>
 				<th>* #{lbl['lbl.pp.financial.year']}</th>
 				<td class="ppSmallTd">:</td>
 				<td>
-					<p:outputPanel>
-						<p:selectOneMenu disabled="#{!planBackingBean.managedBean.brandNew}">>
-							<f:selectItem itemLabel="- Select -" itemValue="XX" />
-						</p:selectOneMenu>
-					</p:outputPanel>
+					<p:selectOneMenu disabled="#{!planBackingBean.managedBean.brandNew}">>
+						<f:selectItem itemLabel="#{lbl['lbl.select']}" />
+					</p:selectOneMenu>
 				</td>
 			</tr>
 			<tr>
 				<th>#{lbl['lbl.pp.available.budgeted.amount']}</th>
 				<td class="ppSmallTd">:</td>
 				<td>
-					 <p:inputText disabled="true" value="xx" />  
+					 <p:inputText disabled="true" value="-" />  
 				</td>
 			</tr>
 			<tr>
 				<th>* #{lbl['lbl.pp.estimated.amount']}</th>
 				<td class="ppSmallTd">:</td>
 				<td>
-					 <p:inputText value="xx" readonly="#{!planBackingBean.managedBean.brandNew}" />  
+					 <p:inputText value="-" readonly="#{!planBackingBean.managedBean.brandNew}" />  
 				</td>
 			</tr>
-			<tr>
-				<th>* #{lbl['lbl.pp.product.code']}</th>
-				<td class="ppSmallTd">:</td>
-				<td>
-					<p:outputPanel>
-						<p:selectOneMenu disabled="#{!planBackingBean.managedBean.brandNew}">
-							<f:selectItem itemLabel="- Select -" itemValue="XX" />
-						</p:selectOneMenu>
-					</p:outputPanel>
-				</td>
-			</tr>
-			<c:if id="opFavItem" test="#{planBackingBean.managedBean.procurementMode=='EC'}">
-				<tr>
-					<th>#{lbl['lbl.pp.supplier.id']}</th>
-					<td class="ppSmallTd">:</td>
-					<td>
-						<p:inputText value="xx" disabled="true"/>  
-					</td>
-				</tr>
-				<tr>
-					<th>#{lbl['lbl.pp.supplier.name']}</th>
-					<td class="ppSmallTd">:</td>
-					<td>
-						<p:inputText value="xx" disabled="true"/>  
-					</td>
-				</tr>
-			</c:if>
 			<tr>
 				<th>#{lbl['lbl.pp.program.activiti.code']}</th>
 				<td class="ppSmallTd">:</td>
 				<td>
 					<p:outputPanel>
 						<p:selectOneMenu id="somProgAct" disabled="#{planBackingBean.managedBean.maksudCode==null || !planBackingBean.managedBean.brandNew}">
-							<f:selectItem itemLabel="- Select -" itemValue="XX" />
+							<f:selectItem itemLabel="#{lbl['lbl.select']}" />
 						</p:selectOneMenu>
 					</p:outputPanel>
 					<p:tooltip for="somProgAct" value="Fade effect is used by default" showEffect="fade" hideEffect="fade" />
@@ -116,7 +73,7 @@ xmlns:c="http://java.sun.com/jsp/jstl/core">
 				<td>
 					<p:outputPanel>
 						<p:selectOneMenu id="somProjSetia" disabled="#{planBackingBean.managedBean.maksudCode==null || !planBackingBean.managedBean.brandNew}">
-							<f:selectItem itemLabel="- Select -" itemValue="XX" />
+							<f:selectItem itemLabel="#{lbl['lbl.select']}" />
 						</p:selectOneMenu>
 					</p:outputPanel>
 					<p:tooltip for="somProjSetia" value="Fade effect is used by default" showEffect="fade" hideEffect="fade" />
@@ -128,23 +85,112 @@ xmlns:c="http://java.sun.com/jsp/jstl/core">
 				<td>
 					<p:outputPanel>
 						<p:selectOneMenu disabled="#{!planBackingBean.managedBean.brandNew}">
-							<f:selectItem itemLabel="- Select -" itemValue="XX" />
+							<f:selectItem itemLabel="#{lbl['lbl.select']}" />
 						</p:selectOneMenu>
 					</p:outputPanel>
 				</td>
 			</tr>
-			<c:if id="opFavItem" test="#{planBackingBean.managedBean.favouriteOption=='I'}">
-				<tr><td colspan="3">&nbsp;</td></tr>
+			<tr>
+				<th>#{lbl['lbl.pp.item.remarks']}</th>
+				<td class="ppSmallTd">:</td>
+				<td>
+					<p:inputTextarea cols="20" rows="3" value="-" readonly="#{!planBackingBean.managedBean.brandNew}"/>
+				</td>
+			</tr>
+			<!-- PRODUCT UNSPSC -->
+			<tr>
+				<th colspan="2">
+					#{lbl['lbl.pp.product.unspec.code']}
+					<hr/>
+				</th>
+				<td>&nbsp;<hr/></td>
+			</tr>
+			<tr>
+				<th>* #{lbl['lbl.pp.product.family']}</th>
+				<td class="ppSmallTd">:</td>
+				<td>
+					<p:selectOneMenu disabled="#{!planBackingBean.managedBean.brandNew}">
+						<f:selectItem itemLabel="#{lbl['lbl.select']}" />
+					</p:selectOneMenu>
+				</td>
+			</tr>
+			<tr>
+				<th>* #{lbl['lbl.pp.product.class']}</th>
+				<td class="ppSmallTd">:</td>
+				<td>
+					<p:selectOneMenu disabled="#{!planBackingBean.managedBean.brandNew}">
+						<f:selectItem itemLabel="#{lbl['lbl.select']}" />
+					</p:selectOneMenu>
+				</td>
+			</tr>
+			
+		
+			<c:if test="#{planBackingBean.managedBean.favouriteOption=='I' 
+				|| planBackingBean.managedBean.favouriteOption=='P' 
+				|| planBackingBean.managedBean.procurementMode=='EC'}">
 				<tr>
-					<th colspan="2">#{lbl['lbl.pp.favourite.item']}</th>
-					<td>&nbsp;</td>
+					<th>* #{lbl['lbl.pp.product.supplier.item']}</th>
+					<td class="ppSmallTd">:</td>
+					<td>
+						<p:selectOneMenu disabled="#{!planBackingBean.managedBean.brandNew}">
+							<f:selectItem itemLabel="#{lbl['lbl.select']}" />
+						</p:selectOneMenu>
+					</td>
 				</tr>
-				<tr><td colspan="3">&nbsp;</td></tr>
+			</c:if>
+			
+			
+			<c:if test="#{planBackingBean.managedBean.procurementMode=='EC'}">
+				<tr>
+					<th>* #{lbl['lbl.pp.product.item']}</th>
+					<td class="ppSmallTd">:</td>
+					<td>
+						<p:selectOneMenu disabled="#{!planBackingBean.managedBean.brandNew}">
+							<f:selectItem itemLabel="#{lbl['lbl.select']}" />
+						</p:selectOneMenu>
+					</td>
+				</tr>
+			</c:if>
+			
+			<!-- SUPPLIER INFO -->
+			<c:if id="opFavItem" test="#{planBackingBean.managedBean.favouriteOption=='I' || planBackingBean.managedBean.favouriteOption=='P' }">
+				<tr>
+					<th colspan="2">
+						#{lbl['lbl.pp.supplier.details']}
+						<hr/>
+					</th>
+					<td>&nbsp;<hr/></td>
+				</tr>
+				<tr>
+					<th>#{lbl['lbl.pp.supplier.id']}</th>
+					<td class="ppSmallTd">:</td>
+					<td>
+						<p:inputText value="-" disabled="true"/>  
+					</td>
+				</tr>
+				<tr>
+					<th>#{lbl['lbl.pp.supplier.name']}</th>
+					<td class="ppSmallTd">:</td>
+					<td>
+						<p:inputText value="-" disabled="true"/>  
+					</td>
+				</tr>
+			</c:if>
+			
+			<!-- FAVOURITE DETAILS -->
+			<c:if id="opFavItem" test="#{planBackingBean.managedBean.favouriteOption=='I'}">
+				<tr>
+					<th colspan="2">
+						#{lbl['lbl.pp.favourite.activities']}
+						<hr/>
+					</th>
+					<td>&nbsp;<hr/></td>
+				</tr>
 				<tr>
 					<th>* #{lbl['lbl.pp.plan.name']}</th>
 					<td class="ppSmallTd">:</td>
 					<td>
-						<p:inputText value="xxx" readonly="#{!planBackingBean.managedBean.brandNew}"/>
+						<p:inputText value="-" readonly="#{!planBackingBean.managedBean.brandNew}"/>
 					</td>
 				</tr>
 				<tr>
@@ -177,14 +223,11 @@ xmlns:c="http://java.sun.com/jsp/jstl/core">
 						</td>
 					</tr>
 				</c:if>
+				<tr>
+					<td colspan="3"><hr/></td>
+				</tr>
 			</c:if>
-			<tr>
-				<th>#{lbl['lbl.pp.item.remarks']}</th>
-				<td class="ppSmallTd">:</td>
-				<td>
-					<p:inputTextarea cols="20" rows="3" value="xxx" readonly="#{!planBackingBean.managedBean.brandNew}"/>
-				</td>
-			</tr>
+			
 			<tr>
 	   			<td colspan="2">&nbsp;</td>
 				<td>

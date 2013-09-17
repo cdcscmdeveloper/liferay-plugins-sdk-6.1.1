@@ -14,12 +14,11 @@ xmlns:c="http://java.sun.com/jsp/jstl/core"
    		<ui:include src="menuBudget.xhtml"/>
     </ui:define>
     <ui:define name="content">
-		<p:panel id="pRightPanel" header="#{budgetAllocationBackingBean.generateHeader('A')}">
+		<p:panel id="pRightPanel" header="#{budgetAllocationBackingBean.generateHeader(budgetAllocationBackingBean.managedBean.viewMode)}">
 			<!-- Top Button -->
 			<div class="ppRightBtn">
 				<p:commandButton id="cbRevise" value="#{lbl['lbl.pp.revise']}" action="#{budgetAllocationBackingBean.redirectToListBudgetAllocation}"   />&nbsp;
 		 		<p:commandButton id="cbApprove" value="#{lbl['lbl.pp.approve']}" action="#{budgetAllocationBackingBean.redirectToListBudgetAllocation}"   />&nbsp; 
-		 		<p:commandButton id="cbBack" value="#{lbl['lbl.pp.back']}" action="#{budgetAllocationBackingBean.redirectToListBudgetAllocation}"   />&nbsp;
 			</div>
 			<ui:include src="budgetAllocationContent.xhtml"/>
 		</p:panel>

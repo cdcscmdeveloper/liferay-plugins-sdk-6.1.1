@@ -10,26 +10,29 @@ xmlns:p="http://primefaces.org/ui"
 xmlns:c="http://java.sun.com/jsp/jstl/core">
 
 		<!-- Item List -->
-		<p:dataTable id="dtEpItemDetails" styleClass="ppFixTdWidth" var="" value="" emptyMessage="#{lbl['lbl.pp.noRecordFound']}">  
+		<p:dataTable id="dtEpItemDetails" styleClass="ppFixTdWidth " var="" value="" emptyMessage="#{lbl['lbl.pp.noRecordFound']}">  
 	    	<p:column styleClass="ppSmallTd" headerText="#{lbl['lbl.pp.seq']}">  
 	            <p:outputLabel value="" />  
 	        </p:column>   
 	        <p:column headerText="#{lbl['lbl.pp.gosodo.code']}">  
 	            <p:outputLabel value="27199" /> 
-	        </p:column>   
+	        </p:column>  
+	        <!--  
 	        <p:column headerText="#{lbl['lbl.pp.activity.description']}">  
 	            <p:outputLabel value="PembelianBekalanPejabat" />
 	        </p:column>  
-	        <!-- 
+	        
 	        <p:column headerText="#{lbl['lbl.pp.abm.type']}">  
 	            <p:outputLabel value="Dasar Baru" />     
 	        </p:column>   -->
 	        <p:column headerText="#{lbl['lbl.pp.financial.year']}">  
 	            <p:outputLabel value="2013" />     
 	        </p:column>  
+	        <!--  
 	        <p:column headerText="#{lbl['lbl.pp.available.budgeted.amount']}">  
 	            <p:outputLabel value="75,000.00" /> 
 	        </p:column>  
+	        -->
 	        <p:column headerText="#{lbl['lbl.pp.estimated.amount']}">  
 	            <p:outputLabel value="75,000.00" /> 
 	        </p:column>  
