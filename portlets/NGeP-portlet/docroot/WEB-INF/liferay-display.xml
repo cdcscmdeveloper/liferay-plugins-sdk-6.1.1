@@ -1,13 +1,47 @@
 <?xml version="1.0"?>
 <!DOCTYPE display PUBLIC "-//Liferay//DTD Display 6.1.0//EN" "http://www.liferay.com/dtd/liferay-display_6_1_0.dtd">
-
 <display>
-	<category name="NGeP">
+
+<category name="category.ep.ct">
+            <category name="category.ep.fd">
+               <portlet id="search"></portlet>	
+               <portlet id="fd"></portlet>	
+           </category>
+           <category name="category.ep.pc">
+                <portlet id="pcSearch"></portlet>	
+           <portlet id="pc"></portlet>	
+           </category>
+           <category name="category.ep.cc">
+                 <portlet id="ccSearch"></portlet>	
+            <portlet id="cc"></portlet>	
+             </category>
+           <category name="category.ep.ag">
+               <portlet id="ag"></portlet>	
+           <portlet id="supag"></portlet>	
+           </category>
+
+            <category name="category.ep.fs">
+               <portlet id="supplierSearch"></portlet>	
+             </category>
+         <category name="category.ep.pb">
+                   <portlet id="pbTermination"></portlet>	
+                <portlet id="pbReview"></portlet>	
+              </category>
+              <category name="category.ep.bpk">
+                <portlet id="bpkTermination"></portlet>	
+                <portlet id="bpkReview"></portlet>	
+                </category>
+			</category>
+
+
+<category name="NGeP">
 		<portlet id="NGeP" />
 		<portlet id="sm" />
 		<portlet id="codification"></portlet>
 		<portlet id="Catalogue"></portlet>
-	</category>
+</category>
+	
+	
 	<!-- Procurement Plan - START -->
 	<category name="PP">
 		<portlet id="ppBudget"></portlet>

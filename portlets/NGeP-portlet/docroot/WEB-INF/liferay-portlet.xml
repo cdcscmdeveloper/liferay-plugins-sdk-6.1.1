@@ -1,15 +1,122 @@
 <?xml version="1.0"?>
 <!DOCTYPE liferay-portlet-app PUBLIC "-//Liferay//DTD Portlet Application 6.1.0//EN" "http://www.liferay.com/dtd/liferay-portlet-app_6_1_0.dtd">
-
 <liferay-portlet-app>
 	<portlet>
-		<portlet-name>NGeP</portlet-name>
+		<portlet-name>search</portlet-name>
 		<icon>/icon.png</icon>
 		<instanceable>false</instanceable>
-		<ajaxable>false</ajaxable>
-		<header-portlet-css>/css/ep/main.css</header-portlet-css>
-		<css-class-wrapper>ep-portlet</css-class-wrapper>
+		<header-portlet-css>/css/main.css</header-portlet-css>
+		<footer-portlet-javascript>/js/main.js</footer-portlet-javascript>
+		<css-class-wrapper>ct-portlet</css-class-wrapper>
 	</portlet>
+	
+	<portlet>
+		<portlet-name>fd</portlet-name>
+		<icon>/icon.png</icon>
+		<instanceable>false</instanceable>
+		<header-portlet-css>/css/main.css</header-portlet-css>
+		<footer-portlet-javascript>/js/main.js</footer-portlet-javascript>
+		<css-class-wrapper>ct-portlet</css-class-wrapper>
+	</portlet>
+	
+	<portlet>
+		<portlet-name>pc</portlet-name>
+		<icon>/icon.png</icon>
+		<instanceable>false</instanceable>
+		<header-portlet-css>/css/main.css</header-portlet-css>
+		<footer-portlet-javascript>/js/main.js</footer-portlet-javascript>
+		<css-class-wrapper>ct-portlet</css-class-wrapper>
+	</portlet>
+	
+	<portlet>
+		<portlet-name>pcSearch</portlet-name>
+		<icon>/icon.png</icon>
+		<instanceable>false</instanceable>
+		<header-portlet-css>/css/main.css</header-portlet-css>
+		<footer-portlet-javascript>/js/main.js</footer-portlet-javascript>
+		<css-class-wrapper>ct-portlet</css-class-wrapper>
+	</portlet>
+	<portlet>
+		<portlet-name>bpkTermination</portlet-name>
+		<icon>/icon.png</icon>
+		<instanceable>false</instanceable>
+		<header-portlet-css>/css/main.css</header-portlet-css>
+		<footer-portlet-javascript>/js/main.js</footer-portlet-javascript>
+		<css-class-wrapper>ct-portlet</css-class-wrapper>
+	</portlet>
+	
+	<portlet>
+		<portlet-name>pbTermination</portlet-name>
+		<icon>/icon.png</icon>
+		<instanceable>false</instanceable>
+		<header-portlet-css>/css/main.css</header-portlet-css>
+		<footer-portlet-javascript>/js/main.js</footer-portlet-javascript>
+		<css-class-wrapper>ct-portlet</css-class-wrapper>
+	</portlet>
+	
+	<portlet>
+		<portlet-name>cc</portlet-name>
+		<icon>/icon.png</icon>
+		<instanceable>false</instanceable>
+		<header-portlet-css>/css/main.css</header-portlet-css>
+		<footer-portlet-javascript>/js/main.js</footer-portlet-javascript>
+		<css-class-wrapper>ct-portlet</css-class-wrapper>
+	</portlet>
+	
+	<portlet>
+		<portlet-name>ccSearch</portlet-name>
+		<icon>/icon.png</icon>
+		<instanceable>false</instanceable>
+		<header-portlet-css>/css/main.css</header-portlet-css>
+		<footer-portlet-javascript>/js/main.js</footer-portlet-javascript>
+		<css-class-wrapper>ct-portlet</css-class-wrapper>
+	</portlet>
+	
+	<portlet>
+		<portlet-name>ag</portlet-name>
+		<icon>/icon.png</icon>
+		<instanceable>false</instanceable>
+		<header-portlet-css>/css/main.css</header-portlet-css>
+		<footer-portlet-javascript>/js/main.js</footer-portlet-javascript>
+		<css-class-wrapper>ct-portlet</css-class-wrapper>
+	</portlet>
+	
+	<portlet>
+		<portlet-name>supag</portlet-name>
+		<icon>/icon.png</icon>
+		<instanceable>false</instanceable>
+		<header-portlet-css>/css/main.css</header-portlet-css>
+		<footer-portlet-javascript>/js/main.js</footer-portlet-javascript>
+		<css-class-wrapper>ct-portlet</css-class-wrapper>
+	</portlet>
+	
+	<portlet>
+		<portlet-name>supplierSearch</portlet-name>
+		<icon>/icon.png</icon>
+		<instanceable>false</instanceable>
+		<header-portlet-css>/css/main.css</header-portlet-css>
+		<footer-portlet-javascript>/js/main.js</footer-portlet-javascript>
+		<css-class-wrapper>ct-portlet</css-class-wrapper>
+	</portlet>
+	
+	<portlet>
+		<portlet-name>pbReview</portlet-name>
+		<icon>/icon.png</icon>
+		<instanceable>false</instanceable>
+		<header-portlet-css>/css/main.css</header-portlet-css>
+		<footer-portlet-javascript>/js/main.js</footer-portlet-javascript>
+		<css-class-wrapper>ct-portlet</css-class-wrapper>
+	</portlet>
+	
+	<portlet>
+		<portlet-name>bpkReview</portlet-name>
+		<icon>/icon.png</icon>
+		<instanceable>false</instanceable>
+		<header-portlet-css>/css/main.css</header-portlet-css>
+		<footer-portlet-javascript>/js/main.js</footer-portlet-javascript>
+		<css-class-wrapper>ct-portlet</css-class-wrapper>
+	</portlet>
+
 <!-- Procurement Plan - START -->
 	<portlet>
 		<portlet-name>ppBudget</portlet-name>
@@ -32,16 +139,8 @@
 		<css-class-wrapper>pp-plan-portlet</css-class-wrapper>
 	</portlet>
 <!-- Procurement Plan - END -->
-	<portlet>
-		<portlet-name>sm</portlet-name>
-		<icon>/icon.png</icon>
-		<instanceable>false</instanceable>
-		<header-portlet-css>/css/main.css</header-portlet-css>
-		<footer-portlet-javascript>
-			/js/main.js
-		</footer-portlet-javascript>
-		<css-class-wrapper>sm-portlet</css-class-wrapper>
-	</portlet>
+	
+
 	<portlet>
 		<portlet-name>codification</portlet-name>
 		<icon>/icon.png</icon>
