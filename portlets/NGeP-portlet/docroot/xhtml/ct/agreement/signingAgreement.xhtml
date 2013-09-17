@@ -1,0 +1,113 @@
+<ui:composition
+	template="/WEB-INF/facelets/templates/sidemenu_template.xhtml"
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:c="http://java.sun.com/jsp/jstl/core">
+	<ui:define name="resourceSection">
+	</ui:define>    
+	<ui:define name="sideMenu">
+		<ui:include src="/xhtml/ct/agreement/shared/sidemenu/agreement.xhtml" />
+	</ui:define>
+	<ui:define name="content">
+	  <p:messages showDetail="true" globalOnly="true"/> 
+        <p:panel id="signingAgreements" header="Signing Agreement Details"  toggleable="true"  toggleSpeed="500" widgetVar="signingAgreements">
+          <div style="overflow-x:auto">
+			<p:dataTable id="dataTable" var="data" value=" " rowIndexVar="index"
+			   widgetVar="dataTableObj" lazy="false" dynamic="true" paginator="true" paginatorPosition="bottom"
+			   paginatorAlwaysVisible="false" emptyMessage="No Records!" rows="10" rowsPerPageTemplate="5,10,15,20"
+			   currentPageReportTemplate=" total {totalRecords},  page {currentPage} of {totalPages} "
+			   paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}">
+			   <p:columnGroup type="header"> 
+				<p:row> 
+				   <p:column colspan="1"  headerText="No"  /> 
+                   <p:column colspan="1"  headerText="Ministry" /> 
+                   <p:column colspan="1"  headerText="Department" /> 	
+                   <p:column colspan="1" headerText="PTJ"  /> 
+                   <p:column colspan="1" headerText="Officer Name"  /> 
+                   <p:column colspan="1" headerText="IC No"  />   
+                   <p:column colspan="1" headerText="Officer Position"  /> 
+                   <p:column colspan="1" headerText="Action"  />   
+               </p:row>	
+			  </p:columnGroup>
+			  <p:column styleClass="column-align-center" > <h:outputText value="#{index+1}" /></p:column> 							
+			  <p:column>  <p:selectOneMenu disabled="false"  value="">
+            	         <f:selectItem itemLabel="MOF" itemValue="MOF" /> 
+            		     <f:selectItem itemLabel="PJT" itemValue="PTJ" /> 
+            			 <f:selectItem itemLabel="JABATAN" itemValue="JABATAN" /> 
+                         </p:selectOneMenu>
+               </p:column>
+			   <p:column> <p:selectOneMenu disabled="false"  value="">
+            			  <f:selectItem itemLabel="Ministry" itemValue="ministry" /> 
+					      <f:selectItem itemLabel="PTJ" itemValue="ptj" /> 
+					      <f:selectItem itemLabel="Kewangan" itemValue="kewanngan" /> 
+    				     </p:selectOneMenu></p:column>	
+                <p:column> <p:selectOneMenu disabled="false"  value="">
+                            <f:selectItem itemLabel="PJT" itemValue="PTJ" /> 
+                            <f:selectItem itemLabel="JABATAN" itemValue="JABATAN" />
+			                </p:selectOneMenu> </p:column>
+                 <p:column><p:selectOneMenu disabled="false"  value="" >
+					       <f:selectItem itemLabel="Khan" itemValue="khan" /> 
+				           </p:selectOneMenu>
+                </p:column>	
+                <p:column> <h:outputLabel value="640433-03-6843"/> </p:column>
+                <p:column><h:outputLabel value="PTJ Head"/></p:column>	
+                 <p:column styleClass="column-align-center">
+             <p:commandButton title="delete" onsuccess="confirmation.show()" partialSubmit="true" process="@this" 
+             icon="ui-icon-delete" styleClass="ui-icon-button"/>
+                </p:column> 
+           </p:dataTable>
+		</div>
+		 <h:panelGrid style="width:800px" columnClasses="column-align-right">
+		    <p:commandButton value="Add" styleClass="text-align: right;" process="@this" partialSubmit="true" icon="ui-icon-add" />
+		</h:panelGrid>
+	     <p:spacer width="15"/>
+         <h:panelGrid style="width:800px;">  
+           <p:dataTable id="dataTable1" var="data" value=" " widgetVar="dataTableObj" lazy="false" dynamic="true" 
+              rowIndexVar="index" paginator="true" paginatorPosition="bottom" paginatorAlwaysVisible="true" emptyMessage="No Records!" rows="10" 
+			  rowsPerPageTemplate="5,10,15,20" currentPageReportTemplate=" total {totalRecords},  page {currentPage} of {totalPages} "
+		      paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}">
+			  <p:columnGroup type="header"> 
+               <p:row> 
+			       <p:column colspan="1" style="width:30px" headerText="No"  /> 
+                   <p:column colspan="1"  style="width:100px" headerText="Supplier Company Name" /> 
+                   <p:column colspan="1"  style="width:150px" headerText="Officer Name" /> 	
+                   <p:column colspan="1" style="width:100px" headerText="IC No"  /> 
+                   <p:column colspan="1" style="width:100px" headerText="Officer Position"  />  
+                   <p:column colspan="1" style="width:50px" headerText="Action"  />    
+			  </p:row>	
+		    </p:columnGroup>
+			   <p:column styleClass="column-align-center" > <h:outputText value="#{index+1}" /></p:column> 							
+                <p:column><h:outputLabel value="640433-03-6843"/> </p:column>
+                <p:column><p:selectOneMenu disabled="false"  value="" style="width:150px;">
+					                             <f:selectItem itemLabel="Alam" itemValue="khan" /> 
+					                              </p:selectOneMenu></p:column>	
+                 <p:column><h:outputLabel value="640433-03-6843"/> </p:column>
+                <p:column><h:outputLabel value="Sales Manager"/></p:column>	
+               <p:column styleClass="column-align-center">
+             <p:commandButton title="delete" onsuccess="confirmation.show()" partialSubmit="true" process="@this" 
+             icon="ui-icon-delete" styleClass="ui-icon-button"/>
+                </p:column> 
+             </p:dataTable>
+		</h:panelGrid>
+		<h:panelGrid style="width:800px" columnClasses="column-align-right">
+		  <p:commandButton value="Add" styleClass="text-align: right;" process="@this" partialSubmit="true" icon="ui-icon-add"  />
+	   </h:panelGrid>
+      </p:panel>
+       <p:confirmDialog message="Do you want to delete the record?"
+							closable="true" appendToBody="true" header="Delete Confirmation"
+							severity="alert" widgetVar="confirmation">
+
+							<h:panelGrid columns="2"
+								columnClasses="column-align-right,column-align-left">
+								<p:commandButton value="Yes" icon="ui-icon-accept"
+									update="dataTable" partialSubmit="true" process="@this"
+									onclick="confirmation.hide();"/>
+								    <p:commandButton value="No" icon="ui-icon-reject"
+									onclick="confirmation.hide()" type="button" />
+							</h:panelGrid>
+						</p:confirmDialog>
+                      </ui:define>
+                      </ui:composition>

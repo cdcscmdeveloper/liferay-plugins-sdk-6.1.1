@@ -1,0 +1,17 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:c="http://java.sun.com/jsp/jstl/core">
+	
+	<p:menu>
+        <p:submenu label="Suspension Menu">
+           <p:menuitem value="Fulfillment Details" outcome="/xhtml/ct/fulfilmentdetails/suspension/suspend.xhtml" />
+            <p:menuitem value="Item"  outcome="/xhtml/ct/fulfilmentdetails/suspension/suspendItem.xhtml"/>
+            <p:menuitem value="Location" outcome="/xhtml/ct/fulfilmentdetails/suspension/suspendLocation.xhtml"/>
+            <p:menuitem value="Remarks And Attachements" outcome="/xhtml/ct/fulfilmentdetails/suspension/attachements.xhtml"/>
+      
+        </p:submenu>
+    </p:menu>
+</ui:composition>

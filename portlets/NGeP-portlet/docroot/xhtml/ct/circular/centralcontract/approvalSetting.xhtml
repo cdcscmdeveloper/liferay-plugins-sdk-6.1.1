@@ -1,0 +1,55 @@
+<ui:composition
+	template="/WEB-INF/facelets/templates/sidemenu_template.xhtml"
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:c="http://java.sun.com/jsp/jstl/core">
+
+	<ui:define name="resourceSection">
+	</ui:define>
+	
+   	       
+	<ui:define name="sideMenu">
+		<ui:include src="/xhtml/ct/circular/shared/sidemenu/central.xhtml" />
+	</ui:define>
+
+	<ui:define name="content">
+		      
+        	<h:form prependId="false" id="form">         
+        	    
+        	       <p:messages showDetail="true" globalOnly="true"/> 
+                      <p:panel id="settingId" header="Approver Setting"  toggleable="true"  toggleSpeed="500" widgetVar="panelsetting">
+                              
+                                 
+                                   <h:panelGrid columns="2">
+                                          
+                                           <h:outputLabel for="days" value="Days To Approved" styleClass="txtsize" />
+                                            <h:panelGrid columns="2">
+                                           <p:inputText id="days" value="" style="width:140px"/>  
+                                           <h:outputLabel value="Days" styleClass="txtsize" /></h:panelGrid>
+                                            <h:panelGroup>
+										             <div style="height: 200px; width:150px; vertical-align: top; text-align: left">
+                                             <h:outputLabel for="approver" value="Select Approver" styleClass="txtsize"/>
+                                             </div>
+                                             </h:panelGroup>
+			                                <h:panelGrid style="width:500px">
+			                                   <p:pickList id="approverpickList" value="#{centralBackingBean.approverSetting.settingDetails}" var="data"  
+                                                 itemValue="#{data}" itemLabel="#{data.aproverName}" 
+                                                 showTargetControls="true"  filterMatchMode="contains" >  
+                                                 <p:ajax event="transfer" listener="#{centralBackingBean.approverSetting.onTransfer}"  />  
+                                                  <p:column style="width:75%;">  
+                                                  <h:outputText value="#{data.aproverName}" styleClass="txtsize" />
+                                                  </p:column>  
+  
+                                            </p:pickList>  
+                                            </h:panelGrid>
+						                   </h:panelGrid>
+                        
+                        </p:panel>
+                        
+                        </h:form>
+                        </ui:define>
+                        </ui:composition>
+	    

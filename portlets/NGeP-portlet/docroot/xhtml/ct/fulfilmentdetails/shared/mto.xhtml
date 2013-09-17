@@ -1,0 +1,174 @@
+<ui:composition
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:c="http://java.sun.com/jsp/jstl/core">
+  
+   
+   
+             <h:panelGrid columns="2" style="width:800px;">  
+                                         <h:panelGrid columns="2" style="width:350px;">  
+                                              
+                                                <h:outputLabel  value="#{lbl['lbl.mto.description']}"  />  
+                                                <p:inputText  value=""   disabled="true" style="width:200px;" />  
+                                               
+                                                <h:outputLabel value="#{lbl['lbl.mto.department']}" styleClass="txtsize"/>  
+                                                <p:inputText  value=" " disabled="true" style="width:200px;" />
+                                                
+                                                 
+                                                <h:outputLabel  value="#{lbl['lbl.mto.quantity']}"  styleClass="txtsize"/>  
+                                                <p:inputText  value=" "   disabled="true" style="width:120px;" />
+                                                        
+                                                <h:outputLabel  value="#{lbl['lbl.mto.packaging']}" styleClass="txtsize"/>  
+                                                 <p:selectOneMenu  disabled="false"  value=" " style="width:150px;">
+            					                 <f:selectItem itemLabel="--Please Select--" itemValue="--Please Select--" /> 
+            					                  </p:selectOneMenu>
+                                          
+                                                  
+                                                 <h:outputLabel value="#{lbl['lbl.mto.weight']}"   styleClass="txtsize"/>  
+                                                 <p:inputText  value=" " required="true" disabled="true" style="width:140px;" />  
+                                                
+                                                         
+                                                <h:outputLabel  value="#{lbl['lbl.mto.dimension']}"  styleClass="txtsize"/>  
+                                                <p:inputText  value=" " required="true"  disabled="true" style="width:150px;" />
+                                             
+                                               
+                                                <f:verbatim></f:verbatim>
+                                                <h:panelGrid columns="1">
+                                                  <p:dataTable id="dataTable1" var="data"  value=" "   rowIndexVar="index">
+                                                   <p:columnGroup type="header"> 
+								                      <p:row> 
+								                           <p:column rowspan="1" headerText="No."/>
+									                     <p:column rowspan="1" headerText="Quantity" />
+									                     <p:column colspan="1" headerText="Delivery Date"  /> 
+									                  </p:row>
+									              
+									              </p:columnGroup>
+							                     <p:column styleClass="column-align-center"  > <h:outputText value="#{index+1}" /></p:column> 						
+							                     <p:column> <h:outputText value=" " /></p:column>
+							                     <p:column><h:outputText value=" " /></p:column>
+									              
+                                                  </p:dataTable>
+                                                </h:panelGrid>
+                                               
+                                                  <h:outputLabel  value="#{lbl['lbl.mto.agentInformation']}" style="width:150px;" styleClass="txtsize"/>  
+                                                <p:inputText  value=" "  disabled="true"  style="width:200px;" />  
+                                             
+                                             
+                                                
+                                                 <h:panelGroup>
+										             <div style="height: 55px; vertical-align: top">
+											              <p:outputLabel for="address" value="#{lbl['lbl.mto.address']}" styleClass="txtsize" />
+										             </div>
+								        	      </h:panelGroup>
+									
+									              <h:panelGrid>
+										          <p:inputTextarea id="address" value=" " required="false" 
+										          rows="2" cols="27"  disabled="true" autoResize="false" />
+											      </h:panelGrid>
+											   
+                                                
+                                                 <h:outputLabel  value="#{lbl['lbl.mto.transportation']}" style="width:150px;" styleClass="txtsize"/>  
+                                                 <p:selectOneMenu   disabled="false"  value=" " style="width:160px;">
+            					                 <f:selectItem itemLabel="--Please Select--" itemValue="--Please Select--" /> 
+            					                </p:selectOneMenu>
+                                             
+                                            
+                                                 <h:outputLabel value="#{lbl['lbl.mto.base']}"  style="width:150px;" styleClass="txtsize"/>  
+                                                 <p:inputText   value=" " required="true" disabled="true" style="width:150px;" />  
+                                                
+                                            
+                                                 <h:outputLabel  value="#{lbl['lbl.mto.dLocation']}"  styleClass="txtsize"/>  
+                                                   <p:inputText  value=" " required="true" disabled="true" 
+                                                   style="width:200px;" /> 
+                                                
+                                             
+                                               </h:panelGrid>  
+                                               
+                                          <h:panelGrid columns="2" style="width:350px;">  
+                                      
+                                                  <h:outputLabel   value="#{lbl['lbl.mto.idescription']}"  styleClass="txtsize"/>  
+                                                  <p:inputText  value=" "  disabled="true" style="width:200px;" />  
+                                                
+                                           <h:panelGroup>
+										             <div style="height: 70px; vertical-align: top">
+											              <p:outputLabel for="goodsName" value="Goods Name/Description" styleClass="txtsize" />
+										             </div>
+								        	      </h:panelGroup>
+                                                    <h:panelGrid>
+                                                   
+								                  <p:inputTextarea id="goodsName" value=" " required="false" 
+								                  rows="4" cols="27" maxlength="100"  disabled="true" autoResize="false" />
+										          </h:panelGrid>
+										        
+										          
+										           <h:outputLabel  value="#{lbl['lbl.mto.tgoods']}"  styleClass="txtsize"/>  
+                                                   <h:panelGrid columns="4" >
+                                                       <p:selectOneMenu  disabled="false"  value=""  style="width:120px;" styleClass="column-align-left">
+            					                        <f:selectItem itemLabel="-Please Select--" itemValue="" /> 
+            					                       </p:selectOneMenu>
+            					                       <p:spacer width="2"/>
+            					                       <h:outputLabel  value="#{lbl['lbl.mto.heights']}" style="width:50px;" styleClass="txtsize"/>  
+                                                       <p:inputText  value=" " disabled="true"   style="width:30px;" />
+                                                 </h:panelGrid>
+                                                  <f:verbatim></f:verbatim>
+                                                  <h:panelGrid columns="4">
+                                                   <p:inputText   value=""  disabled="true" style="width:110px;" />
+                                                    <p:spacer width="16"/>
+                                                   <h:outputLabel  value="#{lbl['lbl.mto.width']}" style="width:50px;" styleClass="txtsize"/>  
+                                                  <p:inputText    value=" "  disabled="true" style="width:30px;" />
+                                                 </h:panelGrid>
+                                                 
+                                                  
+                                                   <f:verbatim></f:verbatim>
+                                                  <h:panelGrid columns="5">
+                                                    <p:selectBooleanCheckbox  value="" disabled="true"/> 
+                                                   <p:outputLabel rendered="true" value="#{lbl['lbl.mto.rexport']}" />
+                                                    <p:spacer width="17"/>
+                                                   <h:outputLabel  value="#{lbl['lbl.mto.length']}" style="width:70px;" styleClass="txtsize"/>  
+                                                  <p:inputText  value=""  disabled="true" style="width:30px;" />
+                                                 </h:panelGrid>
+                                                
+                                                
+									              <h:panelGroup>
+										             <div style="height: 70px; vertical-align: top">
+											              <p:outputLabel for="otherdetail" value="#{lbl['lbl.mto.oinformation']}" styleClass="txtsize" />
+										             </div>
+								        	      </h:panelGroup>
+									              <h:panelGrid>
+										          <p:inputTextarea id="otherdetail" value=" " required="false" 
+										          rows="4" cols="27" disabled="true" autoResize="false" />
+											      </h:panelGrid>
+										       
+										        
+										         
+											       <h:outputLabel   value="#{lbl['lbl.mto.officer']}" style="width:200px;" styleClass="txtsize"/>  
+                                                   <p:inputText     value=" "  disabled="true"
+                                                    style="width:200px;" />
+                                                   
+                                                    <h:outputLabel  value="#{lbl['lbl.mto.phone']}" style="width:140px;" styleClass="txtsize"/>  
+                                                    <p:inputText  value=" "  disabled="true"
+                                                     style="width:150px;" />
+                                                  
+                                                   
+                                                   <h:outputLabel value="#{lbl['lbl.mto.fax']}" style="width:140px;" styleClass="txtsize"/>  
+                                                   <p:inputText   value=" "  disabled="true" 
+                                                   style="width:150px;" />
+                                                    
+                                                      
+                                                       <h:outputLabel  value="#{lbl['lbl.mto.pmethod']}" style="width:150px;" styleClass="txtsize"/>  
+                                                    <p:selectOneMenu  disabled="false"  value=" " style="width:160px;">
+            					                    <f:selectItem itemLabel="--Please Select--" itemValue="--Please Select--" /> 
+            					                  </p:selectOneMenu>
+                                               
+                                                   </h:panelGrid>
+                                                   </h:panelGrid>
+</ui:composition>
+
+
+
+
+                                       
+                                       

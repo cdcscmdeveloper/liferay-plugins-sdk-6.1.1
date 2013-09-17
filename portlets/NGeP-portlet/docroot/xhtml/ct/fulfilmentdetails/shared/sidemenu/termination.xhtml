@@ -1,0 +1,22 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:c="http://java.sun.com/jsp/jstl/core">
+	
+	<p:menu>
+        <p:submenu label="Menu Termination">
+            <p:menuitem value="Fulfilment Details" outcome="/xhtml/ct/fulfilmentdetails/termination/termination.xhtml" />
+            <p:menuitem value="Supplier Details"  outcome="/xhtml/ct/fulfilmentdetails/termination/supplierDetails.xhtml"/>
+            <p:menuitem value="Warning Letter" rendered="#{contractDetailsBackingBean.checkBoxSelections.terminationWarningLetter}"
+            outcome="/xhtml/ct/fulfilmentdetails/termination/warningLetter.xhtml"/>
+            <p:menuitem value="Termination Notice" rendered="#{contractDetailsBackingBean.checkBoxSelections.terminationNotice}"
+             outcome="/xhtml/ct/fulfilmentdetails/termination/terminationNotice.xhtml"/>
+             <p:menuitem value="Rejection Letter" rendered="#{contractDetailsBackingBean.checkBoxSelections.terminationRejectLetter}"
+              outcome="/xhtml/ct/fulfilmentdetails/termination/rejectionLetter.xhtml"/>
+            <p:menuitem value="Remarks And Attachments"  outcome="/xhtml/ct/fulfilmentdetails/termination/attachements.xhtml"/>
+            
+        </p:submenu>
+    </p:menu>
+</ui:composition>

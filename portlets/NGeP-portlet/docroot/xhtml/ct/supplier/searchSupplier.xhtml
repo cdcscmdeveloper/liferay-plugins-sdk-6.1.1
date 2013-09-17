@@ -1,0 +1,115 @@
+<ui:composition
+	template="/WEB-INF/facelets/templates/sidemenu_template.xhtml"
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:c="http://java.sun.com/jsp/jstl/core">
+
+	<ui:define name="resourceSection">
+	</ui:define>
+	
+  
+	<ui:define name="content">
+	 <h:form prependId="false" id="form">
+	    
+            <p:tabView id="tabView" dynamic="true" cache="false">
+              
+                 <p:tab id="searchTab" title="General">
+                 <p:growl id="msg" showDetail="true"/>
+                  <p:panel id="searchId" header="Supplier Search" toggleable="true"  toggleSpeed="500" widgetVar="panelsearch">
+                      
+                       <h:panelGrid columns="4" style="width:900px;" >
+                          
+                           <h:outputLabel value="Contract Number" styleClass="txtsize" />
+                           <p:inputText value="" style="width:200px;"/>
+                          
+                           <h:outputLabel value="Contract Name" styleClass="txtsize" />
+                           <p:inputText value="" style="width:200px;"/>
+                           
+                         
+                           
+                           <h:outputLabel value="Contract Start Date" />
+                           <p:calendar style="width:150px;" value="#{supplierDetailsBean.date}" id="popupButtonCal" showOn="button" />
+                          
+                           <h:outputLabel value="Contract End Date" />
+                           <p:calendar style="width:150px;" value="#{supplierDetailsBean.date}" id="popupButtonCal1" showOn="button" />
+                           
+                             <h:outputLabel value="LOA No" styleClass="txtsize" />
+                             <p:inputText value="" style="width:200px;"/>
+                             <f:verbatim></f:verbatim>
+                              <f:verbatim></f:verbatim>
+                              
+                              <f:verbatim></f:verbatim>
+                              <f:verbatim></f:verbatim>
+                                <f:verbatim></f:verbatim>
+                               <h:panelGrid columns="2" style="width:200px;" columnClasses="column-align-right">
+                               
+                                 <p:commandButton value="Search" styleClass="text-align: right;" process="@this" partialSubmit="true" icon="ui-icon-search">
+                                 </p:commandButton>
+								 <p:commandButton value="Reset" styleClass="text-align: right;" process="@this" partialSubmit="true" icon="ui-icon-reset">
+								 </p:commandButton>
+                           </h:panelGrid>
+                           </h:panelGrid>
+                       
+                          	</p:panel>
+						      
+						   
+						   <p:panel id="searchResulId" header="Search Result"   toggleable="true"  toggleSpeed="500" widgetVar="panelsearchResul">
+                          
+						     <div style="overflow-x:auto">
+			                               
+			                               <p:dataTable id="dataTable" var="data" value="" rowIndexVar="index"
+							               widgetVar="dataTableObj" lazy="false" dynamic="true" paginator="true" paginatorPosition="bottom"
+							               paginatorAlwaysVisible="true" emptyMessage="No Records!" rows="10" rowsPerPageTemplate="5,10,15,20"
+							               currentPageReportTemplate=" total {totalRecords},  page {currentPage} of {totalPages} "
+							               paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink}
+							                {LastPageLink} {RowsPerPageDropdown}">
+							
+							                <p:columnGroup type="header"> 
+								                <p:row> 
+									                     <p:column rowspan="1" headerText="No." />
+									                     <p:column colspan="1" headerText=" Contact  No"   /> 
+									                     <p:column colspan="1" headerText="Contract Name" /> 
+									                     <p:column colspan="1" headerText="LOA No" /> 	
+									                     <p:column colspan="1" headerText="Supplier Id" /> 
+									                     <p:column colspan="1" headerText="Supplier Name"  /> 
+									                     <p:column colspan="1" headerText="Circular Start"  /> 	
+									                     <p:column colspan="1" headerText="Circular End"   /> 
+									                     <p:column colspan="1" headerText="Action" />
+								               </p:row>							
+								
+							
+							                </p:columnGroup>
+							                     <p:column styleClass="column-align-center" > <h:outputText value="#{index+1}" /></p:column> 							
+							                     <p:column> <h:outputText value="" /></p:column>
+							                     <p:column><h:outputText value="" /></p:column>	
+							                     <p:column><h:outputText value="" /></p:column>	
+							                     <p:column><h:outputText value="" /></p:column>	
+							                     <p:column > <h:outputText value="" /> </p:column> 							
+							                     <p:column> <h:outputText value="" /> </p:column>	
+							                     <p:column><h:outputText value="" /></p:column>	
+							                       <p:column styleClass="column-align-center">
+								                 <p:commandButton title="change Bank" action="#{supplierBackingBean.gotoBankPage}" partialSubmit="true" process="@this" 
+								                 icon="ui-icon-bank" styleClass="ui-icon-bank"/>
+								                 <p:spacer width="3"/>
+								                   <p:commandButton title="Change Factory" action="#{supplierBackingBean.gotoFactoringPage}" partialSubmit="true" process="@this" 
+								                 icon="ui-icon-factory" styleClass="ui-icon-button"/>
+								                 <p:spacer width="3"/>
+								                   <p:commandButton title="Terminate Contract" action="#{supplierBackingBean.gotoTerminationPage}" partialSubmit="true" process="@this" 
+								                 icon="ui-icon-terminate" styleClass="ui-icon-button"/>
+							                     </p:column> 
+							                     
+							               </p:dataTable>
+				
+						   </div>
+						  
+						    </p:panel>
+                                        
+                 </p:tab>
+                 
+            </p:tabView>
+            </h:form>
+            </ui:define>
+            </ui:composition>

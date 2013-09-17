@@ -1,0 +1,127 @@
+<ui:composition
+	template="/WEB-INF/facelets/templates/sidemenu_template.xhtml"
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:c="http://java.sun.com/jsp/jstl/core">
+
+	<ui:define name="resourceSection">
+	</ui:define>
+	
+   	       
+	<ui:define name="sideMenu">
+		<ui:include src="/xhtml/ct/fulfilmentdetails/shared/sidemenu/creation.xhtml" />
+	</ui:define>
+
+	<ui:define name="content">
+		      
+        	<h:form prependId="false" id="form">         
+        	       <p:messages showDetail="true" globalOnly="true"/> 
+                     <p:panel id="approverId" header="Approver Setting"  toggleable="true"  toggleSpeed="500" widgetVar="panelapprover">
+                                           
+                            <ui:include src="/xhtml/ct/fulfilmentdetails/shared/setting.xhtml"/>             
+                                          
+						    
+						</p:panel>
+						
+						
+                    <p:panel id="fulilmentSetingId" header=" Fulfillment Setting"  toggleable="true"  toggleSpeed="500" widgetVar="panelfulilmentSeting">
+                                           
+                                    
+                                          
+                                     
+                                         <h:panelGrid columns="2" style="width:800px;" class="formTable">  
+                                               
+                                                <h:outputLabel  value="Contract Notification"  style="width:150px;" styleClass="txtsize"/> 
+                                                <h:panelGrid columns="4">
+                                                <p:spacer width="15"/> 
+                                                         <p:inputText  value="" required="true" disabled="false" style="width:60px;" />
+                                                           <p:spacer width="15"/>   
+                                                          <h:outputLabel value="Days before contract expiry date" styleClass="txtsize"/>
+                                                </h:panelGrid>
+                                           
+                                                
+                                                <h:outputLabel for="an" value="Agreement Notification"  style="width:150px;" 
+                                                styleClass="txtsize"/>  
+                                                
+                                                <h:panelGrid columns="4">
+                                                  <p:spacer width="15"/> 
+                                                         <p:inputText  value="" required="true" disabled="false" style="width:60px;" />  
+                                                           <p:spacer width="15"/> 
+                                                          <h:outputLabel value="Days before complete agreement (4 month calculate after supplier acknowledge LOA)" styleClass="txtsize"/>
+                                                </h:panelGrid>
+                                                
+                                                
+                                                
+                                                 <h:outputLabel for="an1" value="Agreement Notification"  style="width:150px;" 
+                                                styleClass="txtsize"/>  
+                                                
+                                                <h:panelGrid columns="4">
+                                                  <p:spacer width="15"/> 
+                                                         <p:inputText  value="" required="true" disabled="false" style="width:60px;" />  
+                                                           <p:spacer width="15"/> 
+                                                          <h:outputLabel value="Days before contract expiry date" styleClass="txtsize"/>
+                                                </h:panelGrid>
+                                                
+                                                
+                                                 <h:outputLabel for="pbn" value="Performance Bond Notification"  style="width:150px;" 
+                                                styleClass="txtsize"/>  
+                                             
+                                                <h:panelGrid columns="4">
+                                                  <p:spacer width="15"/> 
+                                                         <p:inputText  value="" required="true" disabled="false" style="width:60px;" />  
+                                                           <p:spacer width="15"/> 
+                                                          <h:outputLabel value="Days before performance bond expiry date" styleClass="txtsize"/>
+                                                </h:panelGrid>
+                                                
+                                                
+                                                <h:outputLabel for="tn" value="Termination Notification"  style="width:150px;" 
+                                                styleClass="txtsize"/>  
+                                                
+                                                <h:panelGrid columns="4">
+                                                  <p:spacer width="15"/> 
+                                                         <p:inputText  value="" required="true" disabled="false" style="width:60px;" />  
+                                                           <p:spacer width="15"/> 
+                                                          <h:outputLabel value="Days before termination date" styleClass="txtsize"/>
+                                                </h:panelGrid>
+                                                
+                                                
+                                                
+                                                 <h:outputLabel for="srt" value="Supplier Receives Task/Notification"  style="width:150px;" 
+                                                styleClass="txtsize"/>  
+                                              
+                                                <h:panelGrid columns="4">
+                                                    <p:spacer width="15"/> 
+                                                         <p:inputText  value="" required="true" disabled="false" style="width:60px;" />  
+                                                           <p:spacer width="15"/> 
+                                                          <h:outputLabel value="Days before the setting date" styleClass="txtsize"/>
+                                                </h:panelGrid>
+                                                
+                                                
+                                                 <h:outputLabel for="an3" value="Approver Notification"  style="width:150px;" 
+                                                styleClass="txtsize"/>  
+                                                 
+                                                <h:panelGrid columns="4">
+                                                 <p:spacer width="15"/> 
+                                                         <p:inputText  value="" required="true" disabled="false" style="width:60px;" />  
+                                                           <p:spacer width="15"/> 
+                                                          <h:outputLabel value="Days before MTO delivery start date" styleClass="txtsize"/>
+                                                </h:panelGrid>
+                                                
+                                                
+                                                
+                                                </h:panelGrid>
+                                            
+                                                
+                                                
+                                          
+                                            
+                                             
+                                             
+                        </p:panel>
+       </h:form>
+       </ui:define>
+       </ui:composition>
+       

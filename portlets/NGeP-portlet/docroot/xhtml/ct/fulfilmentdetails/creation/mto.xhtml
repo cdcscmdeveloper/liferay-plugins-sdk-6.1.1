@@ -1,0 +1,33 @@
+<ui:composition
+	template="/WEB-INF/facelets/templates/sidemenu_template.xhtml"
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:c="http://java.sun.com/jsp/jstl/core">
+
+	<ui:define name="resourceSection">
+	</ui:define>
+	
+   	       
+	<ui:define name="sideMenu">
+		<ui:include src="/xhtml/ct/fulfilmentdetails/shared/sidemenu/creation.xhtml" />
+	</ui:define>
+
+	<ui:define name="content">
+		      
+        	<h:form prependId="false" id="form">         
+        	       <p:messages showDetail="true" globalOnly="true"/>  
+        	       
+                     <p:panel id="mtoId" header="#{lbl['lbl.panel.mto.name']}"  toggleable="true" 
+                     rendered="#{contractDetailsBackingBean.checkBoxSelections.checkedIGood}" toggleSpeed="500" widgetVar="panelmto">
+                                       
+                                          <ui:include src="/xhtml/ct/fulfilmentdetails/shared/mto.xhtml"/>      
+									
+									</p:panel>
+                        
+	   </h:form>
+	   </ui:define>
+	   </ui:composition>
+	   
