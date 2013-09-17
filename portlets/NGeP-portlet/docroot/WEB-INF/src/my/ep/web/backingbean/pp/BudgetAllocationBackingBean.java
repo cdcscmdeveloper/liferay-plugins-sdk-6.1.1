@@ -39,17 +39,7 @@ public class BudgetAllocationBackingBean extends BaseBackingBean<BudgetAllocatio
 		return this.getManagedBean().getBudgetAllocationList();
 	}
 	
-	
-	
-	
-//	public void addBudgetAllocationDet() {
-//		System.out.println("------------addNewBudgetAllocationDet");
-//		if(this.getManagedBean().getBudgetAllocationDetList()==null){
-//			this.getManagedBean().setBudgetAllocationDetList(new ArrayList());
-//		}
-//		this.getManagedBean().getBudgetAllocationDetList().add(new Object());
-//	}
-//	
+
 	public void addRemark() {
 		System.out.println("------------addRemark");
 		if(this.getManagedBean().getRemarkList()==null){

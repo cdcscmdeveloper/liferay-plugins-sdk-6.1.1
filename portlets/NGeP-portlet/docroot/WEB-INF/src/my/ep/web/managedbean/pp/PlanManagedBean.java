@@ -19,6 +19,8 @@ private static final long serialVersionUID = 1L;
 
 	private String pageTitle;
 	
+	private String current;
+	
 	private boolean brandNew;
 	private String pageInd;
 	private String procurementMode;
@@ -37,11 +39,11 @@ private static final long serialVersionUID = 1L;
 	//temp
 	private String documentType;
 	//temp
-	private Integer verification =0;
+	private Boolean verification  = false;
 	//temp
 	private Integer multipleLevel= 0;
 	//temp
-	private String favouriteOption;
+	private String favouriteOption = "N";
 	//temp
 	private String quotationTenderType;
 	//temp
@@ -179,6 +181,12 @@ private static final long serialVersionUID = 1L;
 		this.popup = popup;
 	}
 
+	public Boolean getVerification() {
+		return verification;
+	}
+	public void setVerification(Boolean verification) {
+		this.verification = verification;
+	}
 	public List getPlanList() {
 		return planList;
 	}
@@ -198,25 +206,20 @@ private static final long serialVersionUID = 1L;
 		this.setPopup(false);
 		this.setPlanList(null);
 		this.setDocumentType(null);
-		this.setFavouriteOption(null);
+		this.setFavouriteOption("N");
 		this.setFulfillmentType(null);
 		this.setMultipleLevel(0);
 		this.setPeriodicType(null);
 		this.setProcurementMode(null);
 		this.setQuotationTenderType(null);
-		this.setVerification(0);
+		this.setVerification(false);
 		this.setViewMode(null);
 		this.setTypeOfGoodsServices(null);
 		this.setMtoRequired(0);
 		this.setRecurringFreq(0);
 		this.setContractType(null);
 		this.setBrandNew(false);
-	}
-	public Integer getVerification() {
-		return verification;
-	}
-	public void setVerification(Integer verification) {
-		this.verification = verification;
+		this.setCurrent(null);
 	}
 	public Integer getMultipleLevel() {
 		return multipleLevel;
@@ -237,23 +240,12 @@ private static final long serialVersionUID = 1L;
 		this.pageTitle = pageTitle;
 	}
 	
-	
-	class test{
-		public String value1 ="1";
-		public String value2 ="2";
-		public String getValue1() {
-			return value1;
-		}
-		public void setValue1(String value1) {
-			this.value1 = value1;
-		}
-		public String getValue2() {
-			return value2;
-		}
-		public void setValue2(String value2) {
-			this.value2 = value2;
-		}
-	}
 
+	public String getCurrent() {
+		return current;
+	}
+	public void setCurrent(String current) {
+		this.current = current;
+	}
 }
 

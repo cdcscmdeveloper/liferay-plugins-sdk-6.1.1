@@ -7,26 +7,17 @@ import javax.faces.bean.ManagedBean;
 import javax.faces.bean.RequestScoped;
 import javax.faces.model.SelectItem;
 
-
 import my.ep.web.backingbean.BaseBackingBean;
+import my.ep.web.constant.pp.ProcurementPlanConst;
 import my.ep.web.managedbean.pp.PlanManagedBean;
 import my.ep.web.util.FacesScopes;
 import my.ep.web.util.ResourceBundleUtils;
 
+import org.primefaces.event.TabChangeEvent;
+
 @ManagedBean(name="planBackingBean")
 @RequestScoped
 public class PlanBackingBean extends BaseBackingBean<PlanManagedBean>{
-	private static final String NAV_TO_VIEW_PLAN = "viewPlan";
-	private static final String NAV_TO_CREATE_PLAN = "createPlan";
-	public static final String NEW = "N";
-	public static final String REVISION = "S";
-	public static final String VERIFICATION = "V";
-	public static final String APPROVAL = "A";
-	public static final String PROCUREMENT = "P";
-	public static final String EXPENDITURE = "E";
-	public static final String MAINTAIN = "M";
-	public static final String VIEW = "R";
-	public static final String LIST = "L";
 
 	public PlanBackingBean() {
 		System.out.println("---------->>>>>>>>>>>>>>>>>>>>>>>>>>>");
@@ -36,10 +27,10 @@ public class PlanBackingBean extends BaseBackingBean<PlanManagedBean>{
 
 	
 	public String getNavToViewPlan(){
-		return NAV_TO_VIEW_PLAN;
+		return ProcurementPlanConst.NAV_TO_VIEW_PLAN;
 	}
 	public String getNavToCreatePlan(){
-		return NAV_TO_CREATE_PLAN;
+		return ProcurementPlanConst.NAV_TO_CREATE_PLAN;
 	}
 	
 	public void searchPlan(boolean popup) {
@@ -60,8 +51,9 @@ public class PlanBackingBean extends BaseBackingBean<PlanManagedBean>{
 	public String redirectToCreatePlan(){
 		this.getManagedBean().setBrandNew(true);
 		//populateAutFuncAreaDetails(new AutFuncArea(), null);
-		this.getManagedBean().setViewMode(NEW);
-		return NAV_TO_CREATE_PLAN+"?faces-redirect=true";
+		this.getManagedBean().setViewMode(ProcurementPlanConst.MODE_NEW);
+		this.getManagedBean().setCurrent(ProcurementPlanConst.MODE_NEW);
+		return ProcurementPlanConst.NAV_TO_CREATE_PLAN;
     } 
 	
 	public String redirectToListBudgetAllocation(){
@@ -79,21 +71,22 @@ public class PlanBackingBean extends BaseBackingBean<PlanManagedBean>{
 	public void updateViewMode(){
 		if(this.getManagedBean().getProcurementMode()!=null && !this.getManagedBean().getProcurementMode().isEmpty()){
 			String procurementMode = this.getManagedBean().getProcurementMode();
-			if("QT".equals(procurementMode) || "ST".equals(procurementMode)
-					|| "TD".equals(procurementMode)){
-				this.getManagedBean().setFavouriteOption(null);
+			if(ProcurementPlanConst.PROCURMENET_QUOTATION.equals(procurementMode) || ProcurementPlanConst.PROCURMENET_DIRECT_NEGO.equals(procurementMode)
+					|| ProcurementPlanConst.PROCURMENET_TENDER.equals(procurementMode)){
+				this.getManagedBean().setFavouriteOption(ProcurementPlanConst.FAVOURITE_TYPE_NONE);
 				this.getManagedBean().setFulfillmentType(null);
 				this.getManagedBean().setPeriodicType(null);
-				this.getManagedBean().setPlanType(PROCUREMENT);
-			}else if("EX".equals(procurementMode) || "DP".equals(procurementMode)){
-				this.getManagedBean().setFavouriteOption(null);
+				this.getManagedBean().setPlanType(ProcurementPlanConst.TYPE_PROCUREMENT);
+			}else if(ProcurementPlanConst.PROCURMENET_EXISTING_CONTRACT.equals(procurementMode) 
+					|| ProcurementPlanConst.PROCURMENET_DIRECT_PURCHASE.equals(procurementMode)){
+				this.getManagedBean().setFavouriteOption(ProcurementPlanConst.FAVOURITE_TYPE_NONE);
 				this.getManagedBean().setFulfillmentType(null);
 				this.getManagedBean().setPeriodicType(null);
 				this.getManagedBean().setMtoRequired(0);
 				this.getManagedBean().setQuotationTenderType(null);
 				this.getManagedBean().setTypeOfGoodsServices(null);
 				this.getManagedBean().setRecurringFreq(0);
-				this.getManagedBean().setPlanType(EXPENDITURE);
+				this.getManagedBean().setPlanType(ProcurementPlanConst.TYPE_EXPENDITURE);
 			}else{
 				clearViewMode();
 			}
@@ -104,14 +97,14 @@ public class PlanBackingBean extends BaseBackingBean<PlanManagedBean>{
     }
 	
 	private void clearViewMode(){
-		this.getManagedBean().setFavouriteOption(null);
+		this.getManagedBean().setFavouriteOption(ProcurementPlanConst.FAVOURITE_TYPE_NONE);
 		this.getManagedBean().setFulfillmentType(null);
 		this.getManagedBean().setPeriodicType(null);
 		this.getManagedBean().setMtoRequired(0);
 		this.getManagedBean().setQuotationTenderType(null);
 		this.getManagedBean().setTypeOfGoodsServices(null);
 		this.getManagedBean().setRecurringFreq(0);
-		this.getManagedBean().setViewMode(NEW);
+		this.getManagedBean().setViewMode(ProcurementPlanConst.MODE_NEW);
 	}
 	
 	public void showMtoPlanDetails(){
@@ -127,26 +120,28 @@ public class PlanBackingBean extends BaseBackingBean<PlanManagedBean>{
 	}
 	
 	public String redirectToViewPlan(){
-		this.getManagedBean().setViewMode(MAINTAIN);
+		this.getManagedBean().setViewMode(ProcurementPlanConst.MODE_MAINTAIN);
 		this.getManagedBean().setBrandNew(false);
-		return NAV_TO_VIEW_PLAN;
+		return ProcurementPlanConst.NAV_TO_VIEW_PLAN;
     } 
 	
 	public String generateHeader(String viewMode){
 		String pageTitle = "";
 		
-		if(NEW.equals(viewMode)){
+		if(ProcurementPlanConst.MODE_NEW.equals(viewMode)){
 			pageTitle = "lbl.pp.plan.title.new";
-		}else if(LIST.equals(viewMode)){
+		}else if(ProcurementPlanConst.MODE_LIST.equals(viewMode)){
 			pageTitle = "lbl.pp.plan.title.list";
-		}else if(APPROVAL.equals(viewMode)){
+		}else if(ProcurementPlanConst.MODE_APPROVAL.equals(viewMode)){
 			pageTitle = "lbl.pp.plan.title.approval";
-		}else if(VERIFICATION.equals(viewMode)){
+		}else if(ProcurementPlanConst.MODE_VERIFICATION.equals(viewMode)){
 			pageTitle = "lbl.pp.plan.title.verification";
-		}else if(REVISION.equals(viewMode)){
+		}else if(ProcurementPlanConst.MODE_REVISION.equals(viewMode)){
 			pageTitle = "lbl.pp.plan.title.revision";
-		}else if(MAINTAIN.equals(viewMode)){
+		}else if(ProcurementPlanConst.MODE_MAINTAIN.equals(viewMode)){
 			pageTitle = "lbl.pp.plan.title.maintain";
+		}else if(ProcurementPlanConst.MODE_NEW_MTO.equals(viewMode)){
+			pageTitle = "lbl.pp.plan.title.mto.plan";
 		}
 		return getMessageCommon(pageTitle);
 	}
@@ -184,19 +179,11 @@ public class PlanBackingBean extends BaseBackingBean<PlanManagedBean>{
 	public List<SelectItem> procurementModeOptions() {
 		List<SelectItem>procurementModeOptions = new ArrayList<SelectItem>();
 		procurementModeOptions.add(new SelectItem("QT", "Quotation"));
-		procurementModeOptions.add(new SelectItem("ST", "Direct Negotiation"));
+		procurementModeOptions.add(new SelectItem("DN", "Direct Negotiation"));
 		procurementModeOptions.add(new SelectItem("TD", "Tender"));
 		procurementModeOptions.add(new SelectItem("EC", "Existing Contract"));
 		procurementModeOptions.add(new SelectItem("DP", "Direct Purchase"));
 		return procurementModeOptions;
-	}
-
-	public void addPpItemDet() {
-		System.out.println("------------addPpItemDet");
-		if(this.getManagedBean().getPpItemList()==null){
-			this.getManagedBean().setPpItemList(new ArrayList());
-		}
-		this.getManagedBean().getPpItemList().add(new Object());
 	}
 	
 	public void addRemark() {
@@ -207,4 +194,28 @@ public class PlanBackingBean extends BaseBackingBean<PlanManagedBean>{
 		this.getManagedBean().getRemarkList().add(new Object());
 	}
 	
+	public String redirectToCreateMtoPlan(){
+		System.out.println("----------NAV_TO_CREATE_MTO_PLAN");
+		this.getManagedBean().cleanAll();
+		this.getManagedBean().setPlanType(ProcurementPlanConst.TYPE_PROCUREMENT);
+		this.getManagedBean().setProcurementMode(ProcurementPlanConst.PROCURMENET_TENDER);//as per main plan
+		this.getManagedBean().setViewMode(ProcurementPlanConst.MODE_NEW_MTO);
+		this.getManagedBean().setBrandNew(true);
+		this.getManagedBean().setTypeOfGoodsServices(ProcurementPlanConst.GOOD_SERVICE_TYPE_IMPORTED);
+		this.getManagedBean().setMtoRequired(1);
+		return ProcurementPlanConst.NAV_TO_CREATE_MTO_PLAN;
+    }
+	public void updateCurrent(TabChangeEvent val){
+		
+		if("tabN".equals(val.getTab().getId())){
+			this.getManagedBean().setCurrent(ProcurementPlanConst.CURRENT_NEW);
+			this.getManagedBean().setViewMode(ProcurementPlanConst.MODE_NEW);
+		}else if("tabT".equals(val.getTab().getId())){
+			this.getManagedBean().setCurrent(ProcurementPlanConst.CURRENT_MTO);
+			this.getManagedBean().setViewMode(ProcurementPlanConst.MODE_NEW);
+		}
+		
+		System.out.println("viewMode, Current >>>>>>>>>>>>>> " + 	
+		this.getManagedBean().getCurrent() + ", " + 	this.getManagedBean().getViewMode());
+	}
 }
