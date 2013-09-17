@@ -23,10 +23,10 @@
 				
 					<h:outputText value="Briefing Time" />
 			<p:calendar value="#{searchQtnTenderBB.managedBean.tenderBean}"
-				pattern="MM/dd/yyyy HH:mm a" />
+				pattern="HH:mm a" timeOnly="true"/>
             
              <h:outputText value="#{lbl['lbl.so.location']}" />  
-        <p:selectOneMenu value="">  
+        <p:selectOneMenu >  
             <f:selectItem itemLabel="Location Name" itemValue="" />  
             <f:selectItem itemLabel="Adress Line1" itemValue="1" />  
             <f:selectItem itemLabel="Address Line2" itemValue="2" />  
@@ -34,7 +34,7 @@
         </p:selectOneMenu> 
         
           <h:outputText value="#{lbl['lbl.so.coordinateofficer']}" />  
-        <p:selectOneMenu value="">  
+        <p:selectOneMenu >  
             <f:selectItem itemLabel="Coordinate Officer" itemValue="" />  
             <f:selectItem itemLabel="Officer 1" itemValue="1" />  
             <f:selectItem itemLabel="Officer 2" itemValue="2" />  
@@ -42,13 +42,13 @@
         </p:selectOneMenu> 
         
         <h:outputText value="Attendance" />  
-        <p:selectOneRadio value="">  
+        <p:selectOneRadio >  
             <f:selectItem itemLabel="All Zone" itemValue="1" />  
             <f:selectItem itemLabel="Certain Zone" itemValue="2" />  
            </p:selectOneRadio>    
            
            <h:outputText value="#{lbl['lbl.so.zone']}" />  
-        <p:selectOneMenu value="">  
+        <p:selectOneMenu >  
             <f:selectItem itemLabel="Zone" itemValue="" />  
             <f:selectItem itemLabel="East Zone" itemValue="1" />  
             <f:selectItem itemLabel="West Zone" itemValue="2" />  

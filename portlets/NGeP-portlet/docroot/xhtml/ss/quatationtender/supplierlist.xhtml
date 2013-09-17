@@ -10,7 +10,7 @@
 		toggleable="true">
 				<p:dataTable value="#{searchQtnTenderBB.managedBean.categories}" var="ccode" resizableColumns="true"
 				>
-				<p:column headerText="No.">
+				<p:column headerText="No." style="width: 100px;">
 				<h:outputText value="S001"></h:outputText>
 					
 				</p:column>
@@ -25,7 +25,7 @@
         <h:panelGrid columns="2">  
             <h:outputText value="Address: " />  
             <h:outputText id="txt1" value="CyberJaya" />               
-            <h:outputText value="PhNo" />  
+            <h:outputText value="Tel" />  
             <h:outputText id="txt2" value="1111111111111111" />  
              <h:outputText value="Fax" />  
             <h:outputText id="txt3" value="01-25-3456" />
@@ -58,11 +58,8 @@
 		</p:panel>
 		
 		<p:dialog widgetVar="suppdlg" modal="true" width="800" height="400">
-		<p:panel header="Search Supplier" toggleable="true">
-<p:commandButton  value="#{lbl['lbl.so.searchbtn']}"
-			styleClass="apply_button" style="float:right;" >
-		</p:commandButton>
-				<p:panelGrid columns="2" style="width:100%;" styleClass="noBorders tr,noBorders td">
+		<p:panel header="Search Supplier" toggleable="true" size="100">
+				<p:panelGrid columns="2" style="width:50%;" styleClass="noBorders tr,noBorders td">
 				
 			<h:outputText  value="PKP No" />
 			<p:inputText  value="#{searchQtnTenderBB.managedBean.qtno}"/>
@@ -74,7 +71,7 @@
 			<p:inputText  value="#{searchQtnTenderBB.managedBean.qtno}"/>
 	</p:panelGrid>
 		
-	<p:panelGrid style="width:50%;"
+	<p:panelGrid style="width:33%;"
     styleClass="noBorders tr,noBorders td">
     <p:row>
      <p:column width="100%" style="text-align:right">
@@ -82,13 +79,11 @@
 			styleClass="apply_button">
 		</p:commandButton>
      </p:column>
-
-    </p:row>
+   </p:row>
    </p:panelGrid>		
 
-		<br/>
-		<br/>
-<p:panelGrid columns="2" style="width:100%;" styleClass="noBorders tr,noBorders td">
+		
+<p:panelGrid columns="2" style="width:32%;" styleClass="noBorders tr,noBorders td">
 				 <h:outputText value="Circular Coverage" />  
         <p:selectOneMenu value="#{searchQtnTenderBB.managedBean.selectOption}">  
             <f:selectItem itemLabel="Select One" itemValue="" />  
@@ -100,15 +95,19 @@
     
 				
 			</p:panelGrid>
-		
-		
+		<p:panelGrid columns="1" style="width:100%;"
+			styleClass="noBorders tr,noBorders td">
+<p:commandButton  value="#{lbl['lbl.so.searchbtn']}"
+			styleClass="apply_button" style="float:right;" >
+		</p:commandButton>
+		</p:panelGrid>
 			<p:panel header="Supplier List" toggleable="true">
 		<p:panelGrid columns="2" style="width:100%;"
 			styleClass="noBorders tr,noBorders td">
 			
 			<p:dataTable value="#{searchQtnTenderBB.managedBean.categories}" var="ccode" resizableColumns="true"
 				>
-				<p:column headerText="No.">
+				<p:column headerText="No." style="width: 100px;">
 				<h:outputText value="S001"></h:outputText>
 					
 				</p:column>
@@ -123,7 +122,7 @@
         <h:panelGrid columns="2">  
             <h:outputText value="Address: " />  
             <h:outputText  value="CyberJaya" />               
-            <h:outputText value="PhNo" />  
+            <h:outputText value="Tel" />  
             <h:outputText value="1111111111111111" />  
              <h:outputText value="Fax" />  
             <h:outputText  value="01-25-3456" />
@@ -153,7 +152,7 @@
 
 	
 
- <p:panelGrid columns="2" style="width:100%;"
+ <p:panelGrid columns="2" style="width:42%;"
 				styleClass="noBorders tr,noBorders td">
 		<h:outputText value="TotalSuppliers" />  
             <p:inputText  value="1" readonly="true"/> 
@@ -164,9 +163,9 @@
 
 <p:panel toggleable="true">
 <div>           
-<p:commandButton value="Cancel" style="float:right;" oncomplete="suppdlg.hide()">
+<p:commandButton value="CANCEL" style="float:right;" oncomplete="suppdlg.hide()">
 </p:commandButton>
-<p:commandButton value="Ok" style="float:right;" oncomplete="suppdlg.hide()">
+<p:commandButton value="OK" style="float:right;" oncomplete="suppdlg.hide()">
 </p:commandButton>
 </div> 
 </p:panel>
