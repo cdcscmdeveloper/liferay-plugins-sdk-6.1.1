@@ -1,0 +1,182 @@
+<ui:composition
+	template="/WEB-INF/facelets/templates/sidemenu_template.xhtml"
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:c="http://java.sun.com/jsp/jstl/core">
+
+	<ui:define name="resourceSection">
+	</ui:define>
+	<ui:define name="sideMenu">
+		<ui:include src="/xhtml/fl/shared/sidemenu/flPrSideMenu.xhtml" />
+	</ui:define>
+	<ui:define name="content">
+		<table style="width: 800px;">
+			<tr>
+				<td colspan="4" align="right"><p:commandButton value="SAVE" />
+					<p:commandButton value="SUBMIT" /> <p:commandButton value="PRINT" />
+				</td>
+			</tr>
+		</table>
+		<p:panel header="FULFILMENT DETAIL" toggleable="true">
+			<table>
+				<tr>
+					<td><p:outputLabel value="Ministry" /></td>
+					<td><p:inputText style="width: 260px;"
+							value="KEMENTERIAN KEWANGAN" disabled="true" /></td>
+					<td><p:outputLabel value="Purchase Req. NO." /></td>
+					<td><p:inputText style="width: 260px;" value="PR10202-0202"
+							disabled="true" /></td>
+				</tr>
+				<tr>
+					<td><p:outputLabel value="* Issued Jabatan" /></td>
+					<td><p:selectOneMenu value="" style="width: 260px;">
+							<f:selectItem itemLabel="JABATAN KASTAM DAN EKSAIS DIRAJA"
+								itemValue="1" />
+						</p:selectOneMenu></td>
+					<td><p:outputLabel value="Req. Note NO" /></td>
+					<td><p:inputText disabled="true" style="width: 260px;"
+							value="10202-0202" /></td>
+				</tr>
+				<tr>
+					<td><p:outputLabel value="* Issued PTJ" /></td>
+					<td><p:selectOneMenu value="" style="width: 260px;">
+							<f:selectItem itemLabel="IBU PEJABAT KASTAM" itemValue="1" />
+						</p:selectOneMenu></td>
+					<td><p:outputLabel value="Plan NO." /></td>
+					<td><p:inputText style="width: 260px;" value="PL_FL_003"
+							disabled="true" /></td>
+				</tr>
+				<tr>
+					<td><p:outputLabel value="* Received Jabatan" /></td>
+					<td><p:selectOneMenu value="" style="width: 260px;">
+							<f:selectItem itemLabel="JABATAN KASTAM DAN EKSAIS DIRAJA"
+								itemValue="1" />
+						</p:selectOneMenu></td>
+					<td><p:outputLabel value="Procurement Type" /></td>
+					<td><p:inputText style="width: 260px;" value="NORMAL"
+							disabled="true" /></td>
+				</tr>
+				<tr>
+					<td><p:outputLabel value="* Received PTJ" /></td>
+					<td><p:selectOneMenu value="" style="width: 260px;">
+							<f:selectItem itemLabel="IBU PEJABAT KASTAM" itemValue="1" />
+						</p:selectOneMenu></td>
+					<td><p:outputLabel value="Creation Date" /></td>
+					<td><p:inputText style="width: 260px;"
+							value="12/10/2012 10:45 AM" disabled="true" /></td>
+				</tr>
+				<tr>
+					<td rowspan="4"><p:outputLabel value="* Title" /></td>
+					<td rowspan="4"><p:inputTextarea rows="8" style="width: 260px;"  /></td>
+					<td><p:outputLabel value="Status" /></td>
+					<td><p:inputText style="width: 260px;" value="NEW REQUEST"
+							disabled="true" /></td>
+				</tr>
+
+				<tr>
+					<td><p:outputLabel value="*Financial Year" /></td>
+					<td><p:selectOneMenu value="" style="width: 260px;">
+							<f:selectItem itemLabel="2013" itemValue="1" />
+						</p:selectOneMenu></td>
+				</tr>
+				<tr>
+					<td><p:outputLabel value=" *Maksud  Code" /></td>
+					<td><p:selectOneMenu value="" style="width: 260px;">
+							<f:selectItem itemLabel="Select One" itemValue="" />
+						</p:selectOneMenu></td>
+				</tr>
+
+				<tr>
+					<td><p:outputLabel value="*AG Office" /></td>
+					<td><p:selectOneMenu value="" style="width: 260px;">
+							<f:selectItem itemLabel="002 KAWANGAN KL" itemValue="1" />
+						</p:selectOneMenu></td>
+
+				</tr>
+				<tr>
+					<td><p:outputLabel value="*Charge PTJ" /></td>
+					<td><p:selectOneMenu value="" style="width: 260px;">
+							<f:selectItem itemLabel="IBU PEJABAT KASTAM" itemValue="1" />
+						</p:selectOneMenu></td>
+					<td><p:outputLabel value="Financing?" /></td>
+					<td><p:selectBooleanCheckbox /></td>
+
+				</tr>
+			</table>
+		</p:panel>
+		<br />
+		<br />
+		<p:panel header="SUPPLIER DETAIL" toggleable="true">
+			<table>
+				<tr>
+					<td><p:outputLabel value="Supplier ID" /></td>
+					<td><p:inputText disabled="true" style="width: 120px;"
+							value="02-7324800" /></td>
+				</tr>
+				<tr>
+					<td><p:outputLabel value="Supplier Name" /></td>
+					<td><p:inputText disabled="true" style="width: 260px;"
+							value="KBB SDN BHD" /></td>
+				</tr>
+				<tr>
+					<td><p:outputLabel value="Address" /></td>
+					<td><p:inputTextarea rows="8" style="width: 260px;"  disabled="true"/></td>
+				</tr>
+				<tr>
+					<td><p:outputLabel value="Email" /></td>
+					<td><p:inputText disabled="true" style="width: 260px;"
+							value="KBB.XY@gmail.com" /></td>
+				</tr>
+				<tr>
+					<td><p:outputLabel value="Telephone NO." /></td>
+					<td><p:inputText disabled="true" style="width: 120px;"
+							value="02-7324800" /></td>
+				</tr>
+			</table>
+		</p:panel>
+		<p:panel header="APPROVER DETAIL" toggleable="true">
+			<table>
+				<tr>
+					<td colspan="2"><p:pickList id="pickList"
+							value="#{screenDesignListsBean.approverDetails}" var="approver"
+							itemLabel="#{approver}" itemValue="#{approver}">
+							<f:facet name="sourceCaption">Available</f:facet>
+							<f:facet name="targetCaption">Selected</f:facet>
+						</p:pickList> <p:dialog modal="true" showEffect="fade" hideEffect="fade"
+							widgetVar="approverDialog">
+							<h:panelGrid id="displayApproverDetails" columns="2">
+								<h:outputText value="Source: " style="font-weight:bold" />
+								<ui:repeat
+									value="#{screenDesignListsBean.approverDetails.source}"
+									var="item">
+									<h:outputText value="#{item}" style="margin-right:5px" />
+								</ui:repeat>
+
+								<h:outputText value="Target: " style="font-weight:bold" />
+								<ui:repeat
+									value="#{screenDesignListsBean.approverDetails.target}"
+									var="item">
+									<h:outputText value="#{item}" style="margin-right:5px" />
+								</ui:repeat>
+							</h:panelGrid>
+
+						</p:dialog></td>
+				</tr>
+			</table>
+		</p:panel>
+
+		<p:panel header="REMARKS AND ATTACHMENT" toggleable="true">
+			<table>
+				<tr>
+					<td><p:outputLabel value="* Remarks    " /></td>
+					<td><p:inputTextarea rows="8" style="width: 260px;"  /></td>
+					<td><p:outputLabel value="Attachment" /></td>
+					<td><p:commandButton value="Attach Files" /></td>
+				</tr>
+			</table>
+		</p:panel>
+	</ui:define>
+</ui:composition>
