@@ -8,6 +8,7 @@ import java.util.List;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
 
+import my.ep.web.bean.sm.CompanyBranchesBean;
 import my.ep.web.bean.sm.MofRegistrationUtilBean;
 import my.ep.web.bean.sm.PersonnelBean;
 import my.ep.web.bean.sm.SupportingDocumentBean;
@@ -28,6 +29,7 @@ public class MofRegistrationManagedBean extends BaseManagedBean {
 	private List<MofRegistrationUtilBean> selectedUtilList;
 	private List<PersonnelBean> selectedPersonList;
 	private List<SupportingDocumentBean> selecteDataList;
+	private List<CompanyBranchesBean> selectedBranches;
 
 	public List<PersonnelBean> getSelectedPersonList() {
 		return selectedPersonList;
@@ -52,6 +54,14 @@ public class MofRegistrationManagedBean extends BaseManagedBean {
 
 	public void setSelecteDataList(List<SupportingDocumentBean> selecteDataList) {
 		this.selecteDataList = selecteDataList;
+	}
+
+	public List<CompanyBranchesBean> getSelectedBranches() {
+		return selectedBranches;
+	}
+
+	public void setSelectedBranches(List<CompanyBranchesBean> selectedBranches) {
+		this.selectedBranches = selectedBranches;
 	}
 
 	/*

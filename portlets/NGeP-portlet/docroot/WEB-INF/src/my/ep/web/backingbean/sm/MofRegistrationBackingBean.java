@@ -10,10 +10,13 @@ import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
 
 import my.ep.web.backingbean.BaseBackingBean;
+import my.ep.web.bean.sm.CompanyBranchesBean;
 import my.ep.web.bean.sm.MofRegistrationUtilBean;
 import my.ep.web.bean.sm.PersonnelBean;
 import my.ep.web.bean.sm.SupportingDocumentBean;
 import my.ep.web.managedbean.sm.MofRegistrationManagedBean;
+
+import org.primefaces.event.SelectEvent;
 
 @ManagedBean
 @SessionScoped
@@ -25,16 +28,21 @@ public class MofRegistrationBackingBean extends
 	private List<PersonnelBean> personList;
 	private List<PersonnelBean> authList;
 	private List<PersonnelBean> signList;
+	private List<CompanyBranchesBean> branchList;
+	private CompanyBranchesBean selectedBranch;
 
 	public MofRegistrationBackingBean() {
+		selectedBranch = new CompanyBranchesBean();
 		dataList = new ArrayList<SupportingDocumentBean>();
 		utilList = new ArrayList<MofRegistrationUtilBean>();
 		personList = new ArrayList<PersonnelBean>();
 		authList = new ArrayList<PersonnelBean>();
+		branchList = new ArrayList<CompanyBranchesBean>();
 		prepareDataList();
 		prepareUtilList();
 		preparePersonList();
 		preparAuthList();
+		preapreBranches();
 	}
 
 	public List<SupportingDocumentBean> getDataList() {
@@ -75,6 +83,22 @@ public class MofRegistrationBackingBean extends
 
 	public void setSignList(List<PersonnelBean> signList) {
 		this.signList = signList;
+	}
+
+	public List<CompanyBranchesBean> getBranchList() {
+		return branchList;
+	}
+
+	public void setBranchList(List<CompanyBranchesBean> branchList) {
+		this.branchList = branchList;
+	}
+
+	public CompanyBranchesBean getSelectedBranch() {
+		return selectedBranch;
+	}
+
+	public void setSelectedBranch(CompanyBranchesBean selectedBranch) {
+		this.selectedBranch = selectedBranch;
 	}
 
 	private List<SupportingDocumentBean> prepareDataList() {
@@ -127,6 +151,29 @@ public class MofRegistrationBackingBean extends
 		System.out.println("ENTER THE ACTION CLASS");
 		System.out.println("****** LIST ******" + signList.size());
 		return signList;
+
+	}
+
+	public void onRowSelect(SelectEvent event) {
+		System.out
+				.println("*********** Enterd THE RoW SELECT METHOD ***********"
+						+ getManagedBean().getSelecteDataList().size());
+	}
+
+	public List<CompanyBranchesBean> preapreBranches() {
+		branchList.add(new CompanyBranchesBean(1, "Branch1", "Addr1"));
+		branchList.add(new CompanyBranchesBean(2, "Branch2", "Addr2"));
+		branchList.add(new CompanyBranchesBean(3, "Branch3", "Addr3"));
+		branchList.add(new CompanyBranchesBean(4, "Branch4", "Addr4"));
+
+		return branchList;
+	}
+
+	public void setSelectedBranchValue(CompanyBranchesBean branch) {
+
+		System.out.println("****** Selected Bean Value *******"
+				+ branch.getBranchName());
+		setSelectedBranch(branch);
 
 	}
 

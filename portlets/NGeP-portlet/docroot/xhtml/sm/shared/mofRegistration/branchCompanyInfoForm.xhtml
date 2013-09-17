@@ -5,31 +5,34 @@
 	xmlns:p="http://primefaces.org/ui"
 	xmlns:c="http://java.sun.com/jsp/jstl/core">
 
-	<p:panel header="Company Branches" toggleable="true">
+	<p:panel header="Company Branches" toggleable="true" id="sample">
 		<div>
 			<p:outputLabel value=" Section Verified : "
 				title="For PO / Approver highlight the verified section " />
 			<p:selectBooleanCheckbox />
 		</div>
 		<br />
-		<p:dataTable var="utilBean"
-			value="#{mofRegistrationBackingBean.utilList}"
-			selection="#{mofRegistrationBackingBean.managedBean.selectedUtilList}"
-			rowKey="#{utilBean.seqNo}" rowIndexVar="index">
+		<p:dataTable var="branchBean"
+			value="#{mofRegistrationBackingBean.branchList}"
+			selection="#{mofRegistrationBackingBean.managedBean.selectedBranches}"
+			rowKey="#{branchBean.branchSeq}" rowIndexVar="index">
 
 			<p:column selectionMode="multiple" width="5%" />
 			<p:column headerText="NO.">
-				<p:outputLabel value="1" />
+				<p:outputLabel value="#{branchBean.branchSeq}" />
 			</p:column>
 
 			<p:column headerText="Branch Name">
-				<p:commandLink value="Maybank - PJ Branch"
-					onclick="banchDialog.show();" />
+				<p:commandLink id="selectButton" update=":form:display"
+					oncomplete="banchDialog.show();" process="@this"
+					value="#{branchBean.branchName}">
+					<f:setPropertyActionListener value="#{branchBean}"
+						target="#{mofRegistrationBackingBean.selectedBranch}" />
+				</p:commandLink>
 			</p:column>
 
 			<p:column headerText="Address">
-				<p:outputLabel
-					value="Block Belatuk,Cyber View Garden,Cyber Jaya, Selangor,Malaysia" />
+				<p:outputLabel value="#{branchBean.branchAddress}" />
 			</p:column>
 		</p:dataTable>
 		<div align="right">
@@ -47,17 +50,20 @@
 		</table>
 	</p:panel>
 	<p:dialog width="400px" header="Branch Page" widgetVar="banchDialog"
-		resizable="false" showEffect="fade" hideEffect="fade" modal="true">
+		id="display" resizable="false" showEffect="fade" hideEffect="fade"
+		modal="true">
 		<p:panel header="Branch Details">
 
 			<table style="width: 100%">
 				<tr>
 					<td><p:outputLabel value="Branch Name *" /></td>
-					<td><p:inputText /></td>
+					<td><p:inputText
+							value="#{mofRegistrationBackingBean.selectedBranch.branchName}" /></td>
 				</tr>
 				<tr>
 					<td><p:outputLabel value="Address" /></td>
-					<td><p:inputText /></td>
+					<td><p:inputText
+							value="#{mofRegistrationBackingBean.selectedBranch.branchAddress}" /></td>
 				</tr>
 
 				<tr>
@@ -70,7 +76,7 @@
 				</tr>
 				<tr>
 					<td><p:outputLabel value="Country *" /></td>
-					<td><p:selectOneMenu>
+					<td><p:selectOneMenu value="">
 							<f:selectItem itemLabel="-- Select One -- " itemValue="" />
 							<f:selectItem itemLabel="Malaysia" itemValue="1" />
 						</p:selectOneMenu></td>
@@ -105,7 +111,8 @@
 		</p:panel>
 		<br />
 		<div align="center">
-			<p:commandButton value="Save" onclick="banchDialog.hide();" />
+			<p:commandButton value="Save" onclick="banchDialog.hide();"
+				update=":form:sample" />
 			<p:commandButton value="Cancel" onclick="banchDialog.hide();" />
 		</div>
 	</p:dialog>
