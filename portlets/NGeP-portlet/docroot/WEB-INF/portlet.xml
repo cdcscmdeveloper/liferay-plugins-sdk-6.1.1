@@ -657,7 +657,7 @@
 		</portlet-class>
 		<init-param>
 			<name>javax.portlet.faces.defaultViewId.view</name>
-			<value>/xhtml/fl/contractOrder/coGeneral.xhtml</value>
+			<value>/xhtml/fl/contractorder/coGeneral.xhtml</value>
 		</init-param>
 		<expiration-cache>0</expiration-cache>
 		<supports>
@@ -690,7 +690,7 @@
 		</portlet-class>
 		<init-param>
 			<name>javax.portlet.faces.defaultViewId.view</name>
-			<value>/xhtml/fl/deliveryOrder/doGeneral.xhtml</value>
+			<value>/xhtml/fl/deliveryorder/doGeneral.xhtml</value>
 		</init-param>
 		<expiration-cache>0</expiration-cache>
 		<supports>
@@ -723,7 +723,7 @@
 		</portlet-class>
 		<init-param>
 			<name>javax.portlet.faces.defaultViewId.view</name>
-			<value>/xhtml/fl/contractRequest/crGeneral.xhtml</value>
+			<value>/xhtml/fl/contractrequest/crGeneral.xhtml</value>
 		</init-param>
 		<expiration-cache>0</expiration-cache>
 		<supports>
@@ -756,7 +756,7 @@
 		</portlet-class>
 		<init-param>
 			<name>javax.portlet.faces.defaultViewId.view</name>
-			<value>/xhtml/fl/flReceivedNote/frnGeneral.xhtml</value>
+			<value>/xhtml/fl/receivednote/frnGeneral.xhtml</value>
 		</init-param>
 		<expiration-cache>0</expiration-cache>
 		<supports>
@@ -822,7 +822,7 @@
 		</portlet-class>
 		<init-param>
 			<name>javax.portlet.faces.defaultViewId.view</name>
-			<value>/xhtml/fl/paymentMatch/pmGeneral.xhtml</value>
+			<value>/xhtml/fl/paymentmatch/pmGeneral.xhtml</value>
 		</init-param>
 		<expiration-cache>0</expiration-cache>
 		<supports>
@@ -888,7 +888,7 @@
 		</portlet-class>
 		<init-param>
 			<name>javax.portlet.faces.defaultViewId.view</name>
-			<value>/xhtml/fl/purchaseOrder/poGeneral.xhtml</value>
+			<value>/xhtml/fl/purchaseorder/poGeneral.xhtml</value>
 		</init-param>
 		<expiration-cache>0</expiration-cache>
 		<supports>
@@ -921,7 +921,7 @@
 		</portlet-class>
 		<init-param>
 			<name>javax.portlet.faces.defaultViewId.view</name>
-			<value>/xhtml/fl/purchaseRequest/prGeneral.xhtml</value>
+			<value>/xhtml/fl/purchaserequest/prGeneral.xhtml</value>
 		</init-param>
 		<expiration-cache>0</expiration-cache>
 		<supports>
