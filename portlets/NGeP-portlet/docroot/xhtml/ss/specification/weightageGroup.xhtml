@@ -1,0 +1,195 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:c="http://java.sun.com/jsp/jstl/core">
+
+
+	
+		
+		
+		<p:panel header="TECHNICAL EVALUATION" toggleable="true">
+<p:dataTable var="specificationdetails" value="#{searchQtnTenderBB.managedBean.qtnTenders}" editable="true">
+
+<p:ajax event="rowEdit" listener="#{searchQtnTenderBB.onEdit}"  />  
+ <p:ajax event="rowEditCancel" listener="#{searchQtnTenderBB.onCancel}"  /> 
+
+<p:column headerText="No" >
+<!-- <h:outputText value="1"></h:outputText> -->
+ <p:cellEditor>  
+                <f:facet name="output">  
+                   <h:outputText value="1"></h:outputText> 
+                </f:facet>  
+                <f:facet name="input">  
+                    <p:inputText value="2" />  
+                </f:facet>  
+            </p:cellEditor> 
+</p:column>
+
+<p:column headerText="Weightage Group" style="width:100%">
+						<!-- <h:outputText value="Arjun"></h:outputText> -->
+						 <p:cellEditor>  
+                <f:facet name="output">  
+                   <h:outputText value="Weightage 123456789062 Group"></h:outputText> 
+                </f:facet>  
+                <f:facet name="input">  
+                    <p:inputText value="Weightage 12345 Group" />  
+                </f:facet>  
+            </p:cellEditor> 
+				</p:column>
+				  
+				   <p:column headerText="Weight">              
+                
+               <!--    <h:outputText value="4355446727" />   -->
+                <p:cellEditor>  
+                <f:facet name="output">  
+                   <h:outputText value="435"></h:outputText> 
+                </f:facet>  
+                <f:facet name="input">  
+                    <p:inputText value="4355446" />  
+                </f:facet>  
+            </p:cellEditor> 
+                
+        </p:column>
+         
+        
+         <p:column headerText="Action" style="width:10%">  
+            <p:rowEditor />  
+           
+                
+        </p:column>  
+
+</p:dataTable>
+       
+       
+        <div align="right"  >
+					<p:commandButton  value="ADD" />
+					
+					</div>
+</p:panel>
+	      
+					
+					
+
+	
+		<p:panel >
+
+			<p:panelGrid  style="width:50%;" styleClass="noBorders tr,noBorders td">
+				
+				<p:row>
+                <p:column>
+				<h:outputLabel  value="Total " />
+				</p:column>
+				 <p:column>
+				  <p:inputText value="123456789" readonly="true"></p:inputText>
+	          </p:column>
+	        
+	           </p:row>
+                
+                  
+</p:panelGrid>
+
+</p:panel>					
+					
+
+
+
+		<p:panel header="FINANCIAL EVALUATION" toggleable="true">
+<p:dataTable var="specificationdetails" value="#{searchQtnTenderBB.managedBean.qtnTenders}" editable="true">
+
+<p:ajax event="rowEdit" listener="#{searchQtnTenderBB.onEdit}"  />  
+ <p:ajax event="rowEditCancel" listener="#{searchQtnTenderBB.onCancel}"  /> 
+
+<p:column headerText="No" >
+<!-- <h:outputText value="1"></h:outputText> -->
+ <p:cellEditor>  
+                <f:facet name="output">  
+                   <h:outputText value="1"></h:outputText> 
+                </f:facet>  
+                <f:facet name="input">  
+                    <p:inputText value="2" />  
+                </f:facet>  
+            </p:cellEditor> 
+</p:column>
+
+<p:column headerText="Weightage Group" style="width:100%">
+						<!-- <h:outputText value="Arjun"></h:outputText> -->
+						 <p:cellEditor>  
+                <f:facet name="output">  
+                   <h:outputText value="Weightage 1234567890622344 Group"></h:outputText> 
+                </f:facet>  
+                <f:facet name="input">  
+                    <p:inputText value="Weightage 1234523443234 Group" />  
+                </f:facet>  
+            </p:cellEditor> 
+				</p:column>
+				  
+				   <p:column headerText="Weight">              
+                
+               <!--    <h:outputText value="4355446727" />   -->
+                <p:cellEditor>  
+                <f:facet name="output">  
+                   <h:outputText value="435345543"></h:outputText> 
+                </f:facet>  
+                <f:facet name="input">  
+                    <p:inputText value="43554461233" />  
+                </f:facet>  
+            </p:cellEditor> 
+                
+        </p:column>
+         
+        
+         <p:column headerText="Action" style="width:10%">  
+            <p:rowEditor />  
+           
+                
+        </p:column>  
+
+</p:dataTable>
+    <div align="right"  >
+					<p:commandButton  value="ADD" />
+					
+					</div>   
+</p:panel>
+	       
+					
+					
+
+	
+		<p:panel >
+
+			<p:panelGrid  style="width:50%;" styleClass="noBorders tr,noBorders td">
+				
+				<p:row>
+                <p:column>
+				<h:outputLabel  value="Total " />
+				</p:column>
+				 <p:column>
+				  <p:inputText value="123456789123" readonly="true"></p:inputText>
+	          </p:column>
+	        
+	           </p:row>
+                
+                
+                
+                <p:row>
+                <p:column>
+				<h:outputLabel  value="Total Weightage " />
+				</p:column>
+				 <p:column>
+				  <p:inputText value="1234567894567890" readonly="true"></p:inputText>
+	          </p:column>
+	        
+	           </p:row>
+                  
+</p:panelGrid>
+
+</p:panel>					
+									
+				
+				
+				
+				
+					
+</ui:composition>

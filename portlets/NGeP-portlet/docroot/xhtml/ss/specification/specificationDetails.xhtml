@@ -1,0 +1,277 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:c="http://java.sun.com/jsp/jstl/core">
+
+
+	
+		<p:panel header="SPECIFICATION DETAILS" toggleable="true">
+
+			<p:panelGrid  style="width:100%;" styleClass="noBorders tr,noBorders td">
+				
+				<p:row>
+                <p:column>
+				<h:outputLabel  value="* Fulfillment TYpe : " />
+				</p:column>
+				 <p:column>
+				  <p:selectOneMenu> 
+	                 <f:selectItem itemLabel="One-Off" itemValue="1" />   
+	                 <f:selectItem itemLabel="Periodic" itemValue="2" />
+	                  <f:selectItem itemLabel="Periodic(Schedule)" itemValue="3" />
+	          </p:selectOneMenu>
+	          </p:column>
+	        
+	          
+	        
+                <p:column>
+				<h:outputLabel  value="* Evaluation TYpe : " />
+				</p:column>
+	           <p:column>
+				  <p:selectOneRadio  >  
+                     <f:selectItem itemLabel="One Tier" itemValue="1" />  
+                     <f:selectItem itemLabel="Two Tier" itemValue="2" />  
+                      
+                  </p:selectOneRadio> 
+                  </p:column>
+                  </p:row> 
+                  
+                  <p:row>
+                <p:column>
+				<h:outputLabel  value=" Approval Letter : " />
+				</p:column>
+				 <p:column>
+				 <h:panelGroup>
+				 <p:inputText></p:inputText>
+				 <p:commandButton value="UPLOAD"></p:commandButton>
+				 </h:panelGroup>
+	          </p:column>
+                  
+                   <p:column>
+				<h:outputLabel  value=" Justification : " />
+				</p:column>
+				 <p:column>
+				 <p:inputText></p:inputText>
+				 </p:column>
+	          </p:row>
+	          
+	          
+	          	<p:row>
+                <p:column>
+				<h:outputLabel  value=" Currency : " />
+				</p:column>
+				 <p:column>
+				  <p:selectOneMenu> 
+	                 <f:selectItem itemLabel="Malaysia" itemValue="1" />   
+	                 <f:selectItem itemLabel="Singapore" itemValue="2" />
+	          </p:selectOneMenu>
+	          </p:column>
+	        
+	          
+	        
+                <p:column>
+				<h:outputLabel  value="Award Type : " />
+				</p:column>
+	           <p:column>
+				  <p:selectOneRadio  >  
+                     <f:selectItem itemLabel="By Line Item" itemValue="1" />  
+                     <f:selectItem itemLabel="By Package" itemValue="2" />  
+                      
+                  </p:selectOneRadio> 
+                  </p:column>
+                  </p:row> 
+                  
+                  
+                  <p:row>
+                  
+                    <p:column>
+				<h:outputLabel  value="Sample Product Required : " />
+				</p:column>
+	           <p:column>
+				  <p:selectOneRadio  >  
+                     <f:selectItem itemLabel="Yes" itemValue="1" />  
+                     <f:selectItem itemLabel="No" itemValue="2" />  
+                      
+                  </p:selectOneRadio> 
+                  </p:column>
+                  
+                  
+                    <p:column>
+				<h:outputLabel  value=" Max.Proposaal : " />
+				</p:column>
+				 <p:column>
+				 <p:inputText value="1"></p:inputText>
+				 </p:column>
+                  
+                  </p:row>
+                  
+                  
+                   <p:row>
+                  
+                    <p:column>
+				<h:outputLabel  value="Required Approval : " />
+				</p:column>
+	           <p:column>
+				  <p:selectOneRadio  >  
+                     <f:selectItem itemLabel="Yes" itemValue="1" />  
+                     <f:selectItem itemLabel="No" itemValue="2" />  
+                      
+                  </p:selectOneRadio> 
+                  </p:column>
+                  </p:row>
+                  
+</p:panelGrid>
+
+</p:panel>
+		
+		
+		
+		<p:panel header="Line Item" toggleable="true">
+<p:dataTable var="specificationdetails" value="#{searchQtnTenderBB.managedBean.qtnTenders}" editable="true">
+
+<p:ajax event="rowEdit" listener="#{searchQtnTenderBB.onEdit}"  />  
+ <p:ajax event="rowEditCancel" listener="#{searchQtnTenderBB.onCancel}"  /> 
+
+<p:column headerText="No" >
+<!-- <h:outputText value="1"></h:outputText> -->
+ <p:cellEditor>  
+                <f:facet name="output">  
+                   <h:outputText value="1"></h:outputText> 
+                </f:facet>  
+                <f:facet name="input">  
+                    <p:inputText value="2" />  
+                </f:facet>  
+            </p:cellEditor> 
+</p:column>
+
+<p:column headerText="Line Item">
+						<!-- <h:outputText value="Arjun"></h:outputText> -->
+						 <p:cellEditor>  
+                <f:facet name="output">  
+                   <h:outputText value="Line Item"></h:outputText> 
+                </f:facet>  
+                <f:facet name="input">  
+                    <p:inputText value="Line Item1" />  
+                </f:facet>  
+            </p:cellEditor> 
+				</p:column>
+				  
+				   <p:column headerText="Qty.">              
+                
+               <!--    <h:outputText value="4355446727" />   -->
+                <p:cellEditor>  
+                <f:facet name="output">  
+                   <h:outputText value="4355446727"></h:outputText> 
+                </f:facet>  
+                <f:facet name="input">  
+                    <p:inputText value="43554467271234" />  
+                </f:facet>  
+            </p:cellEditor> 
+                
+        </p:column>
+         
+         <p:column headerText="UOM" >
+				<!-- <h:outputText value="1234555" />  -->
+				
+				   <p:cellEditor>  
+                <f:facet name="output">  
+                   <h:outputText value="12345"></h:outputText> 
+                </f:facet>  
+                <f:facet name="input">  
+                    <p:inputText value="123455" />  
+                </f:facet>  
+            </p:cellEditor>  
+		</p:column>
+         <p:column headerText="Action" style="width:10%">  
+            <p:rowEditor />  
+           
+                
+        </p:column>  
+
+</p:dataTable>
+         <div align="right"  >
+					<p:commandButton  value="ADD" />
+					
+					</div>
+					
+</p:panel>
+	     
+					
+
+	
+		<p:panel header="APPROVAL DETAILS SECTION" toggleable="true">
+
+			<p:panelGrid  style="width:100%;" styleClass="noBorders tr,noBorders td">
+				
+				<p:row>
+                <p:column>
+				<h:outputLabel  value="Approver Name: " />
+				</p:column>
+				 <p:column>
+				  <p:selectOneMenu> 
+	                 <f:selectItem itemLabel="Approver" itemValue="1" />   
+	                 <f:selectItem itemLabel="Reject" itemValue="2" />
+	          </p:selectOneMenu>
+	          </p:column>
+	        
+	          
+	        
+                <p:column>
+				<h:outputLabel  value="Approval Status : " />
+				</p:column>
+	           <p:column>
+				  <p:inputText value="Readonly" readonly="true"></p:inputText>
+                  </p:column>
+                  </p:row> 
+                  
+                  <p:row>
+                <p:column>
+				<h:outputLabel  value=" Approval Date : " />
+				</p:column>
+				 <p:column>
+				 
+				 <p:inputText value="17/09/2013 10:44" readonly="true"></p:inputText>
+				
+	          </p:column>
+                  
+                   <p:column>
+				<h:outputLabel  value=" Approver Action : " />
+				</p:column>
+				 <p:column>
+				 <p:selectOneMenu> 
+	                 <f:selectItem itemLabel="Approver" itemValue="1" />   
+	                 <f:selectItem itemLabel="Revise" itemValue="2" />
+	          </p:selectOneMenu>
+				 </p:column>
+	          </p:row>
+	          
+	          
+	          
+	        
+                  
+                  
+           
+                  
+                  
+                   <p:row>
+                  
+                    <p:column>
+				<h:outputLabel  value=" Approval  Remarks : " />
+				</p:column>
+	           <p:column>
+				<p:inputTextarea rows="1" value="Remarks ReadOnly" readonly="true"></p:inputTextarea> 
+                  </p:column>
+                  </p:row>
+                  
+</p:panelGrid>
+
+</p:panel>					
+					
+					
+				
+				
+				
+				
+					
+</ui:composition>

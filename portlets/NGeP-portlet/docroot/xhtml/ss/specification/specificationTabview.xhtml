@@ -1,0 +1,35 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:c="http://java.sun.com/jsp/jstl/core">
+
+	
+	<p:panel>
+	<p:tabView id="SpecificationtabView" dynamic="true">  
+  
+    <p:tab id="tab1" title="Specification Details" styleClass="noBorders tr,noBorders td">  
+         <ui:include src="/xhtml/ss/specification/specificationDetails.xhtml" /> 
+    </p:tab>  
+  
+    <p:tab id="tab2" title="Weightage Group" styleClass="noBorders tr,noBorders td">  
+          <ui:include src="/xhtml/ss/specification/weightageGroup.xhtml" />  
+    </p:tab>  
+  
+    <p:tab id="tab3" title="Stage One" styleClass="noBorders tr,noBorders td">  
+       <ui:include src="/xhtml/ss/specification/stageOne.xhtml" />
+         <ui:include src="/xhtml/ss/specification/compilenceliststageone.xhtml" /> 
+    </p:tab>  
+    
+    <p:tab id="tab4" title="Stage Two" styleClass="noBorders tr,noBorders td">  
+           <ui:include src="/xhtml/ss/specification/stageTwo.xhtml" />
+           <ui:include src="/xhtml/ss/specification/stageTwoQtnTender.xhtml" /> 
+    </p:tab> 
+    
+    
+    
+</p:tabView> 
+</p:panel>
+
+</ui:composition>

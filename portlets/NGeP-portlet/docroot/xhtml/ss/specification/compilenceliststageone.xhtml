@@ -1,0 +1,31 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:c="http://java.sun.com/jsp/jstl/core">
+
+
+	<p:dialog  header="Compilance" widgetVar="compliance" modal="true" width="500" height="250">
+		<p:panel header="Compilance Checklist" toggleable="true">
+      
+   <p:selectManyCheckbox value="#{searchQtnTenderBB.managedBean.selectedOptions}"    layout="pageDirection">
+   <f:selectItem itemLabel="Sijil MOF" itemValue="1"></f:selectItem>
+   <f:selectItem itemLabel="Sijil 29" itemValue="2"></f:selectItem>
+   <f:selectItem itemLabel="Sijil 49" itemValue="3"></f:selectItem>
+   <f:selectItem itemLabel="Sijil KDN" itemValue="4"></f:selectItem>
+   <f:selectItem itemLabel="Sijil Bumiputera" itemValue="5"></f:selectItem>
+   </p:selectManyCheckbox>
+    
+    
+   
+				  
+				  
+	</p:panel>			       				
+				<p:commandButton value="OK"  style="float:right;" onclick="compliance.hide();"></p:commandButton>
+				&#160;
+				<p:commandButton value="CANCEL"  style="float:right;" onclick="compliance.hide();"></p:commandButton>
+			
+				
+	</p:dialog>
+</ui:composition>
