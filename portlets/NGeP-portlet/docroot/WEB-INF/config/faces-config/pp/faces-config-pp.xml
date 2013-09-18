@@ -16,57 +16,57 @@
         </navigation-case>
         <navigation-case>
             <from-outcome>listBudgetAllocation</from-outcome>
-            <to-view-id>/xhtml/pp/budget/listBudget.xhtml</to-view-id>
+            <to-view-id>/xhtml/pp/budgetallocation/listBudget.xhtml</to-view-id>
             
         </navigation-case>
          <navigation-case>
             <from-outcome>createBudgetAllocation</from-outcome>
-            <to-view-id>/xhtml/pp/budget/budget.xhtml</to-view-id>
+            <to-view-id>/xhtml/pp/budgetallocation/budget.xhtml</to-view-id>
             
         </navigation-case>
         <navigation-case>
             <from-outcome>viewBudgetAllocation</from-outcome>
-            <to-view-id>/xhtml/pp/budget/viewBudgetAllocation.xhtml</to-view-id>
+            <to-view-id>/xhtml/pp/budgetallocation/viewBudgetAllocation.xhtml</to-view-id>
             
         </navigation-case>
         <navigation-case>
             <from-outcome>reviewBudgetAllocation</from-outcome>
-            <to-view-id>/xhtml/pp/budget/reviewBudgetAllocation.xhtml</to-view-id>
+            <to-view-id>/xhtml/pp/budgetallocation/reviewBudgetAllocation.xhtml</to-view-id>
             
         </navigation-case>
         <navigation-case>
             <from-outcome>listPlan</from-outcome>
-            <to-view-id>/xhtml/pp/plan/listPlan.xhtml</to-view-id>
+            <to-view-id>/xhtml/pp/procurementplan/listPlan.xhtml</to-view-id>
             
         </navigation-case>
         <navigation-case>
             <from-outcome>reviewPlan</from-outcome>
-            <to-view-id>/xhtml/pp/plan/reviewPlan.xhtml</to-view-id>
+            <to-view-id>/xhtml/pp/procurementplan/reviewPlan.xhtml</to-view-id>
             
         </navigation-case>
         <navigation-case>
             <from-outcome>verifyPlan</from-outcome>
-            <to-view-id>/xhtml/pp/plan/verifyPlan.xhtml</to-view-id>
+            <to-view-id>/xhtml/pp/procurementplan/verifyPlan.xhtml</to-view-id>
             
         </navigation-case>
         <navigation-case>
             <from-outcome>viewPlan</from-outcome>
-            <to-view-id>/xhtml/pp/plan/viewPlan.xhtml</to-view-id>
+            <to-view-id>/xhtml/pp/procurementplan/viewPlan.xhtml</to-view-id>
             
         </navigation-case>
         <navigation-case>
             <from-outcome>createPlan</from-outcome>
-            <to-view-id>/xhtml/pp/plan/plan.xhtml</to-view-id>
+            <to-view-id>/xhtml/pp/procurementplan/plan.xhtml</to-view-id>
             
         </navigation-case>
         <navigation-case>
             <from-outcome>createMtoPlan</from-outcome>
-            <to-view-id>/xhtml/pp/plan/createPlan.xhtml</to-view-id>
+            <to-view-id>/xhtml/pp/procurementplan/createPlan.xhtml</to-view-id>
             
         </navigation-case>
         <navigation-case>
             <from-outcome>revisePlan</from-outcome>
-            <to-view-id>/xhtml/pp/plan/revisePlan.xhtml</to-view-id>
+            <to-view-id>/xhtml/pp/procurementplan/revisePlan.xhtml</to-view-id>
             
         </navigation-case>
 	</navigation-rule>
