@@ -111,8 +111,10 @@
    </p:column>
    <p:column  width="20%">
    
-    <p:fileUpload  mode="advanced" dragDropSupport="false"  
-                  sizeLimit="100000" fileLimit="3" allowTypes="/(\.|\/)(gif|jpe?g|png)$/"  />  
+    <h:panelGroup>
+				 <p:inputText></p:inputText>
+				 <p:commandButton value="UPLOAD"></p:commandButton>
+				 </h:panelGroup> 
  </p:column>
    </p:row>
 
@@ -133,8 +135,9 @@
 				     <p:graphicImage    library="ep/images/design" name="delete.png" value="/resources/ep/images/design/delete.png" />
                   
                  </p:commandLink>
-                    <p:fileUpload  mode="advanced" label="Upload" dragDropSupport="false" style="width:50%"
-                  sizeLimit="100000" fileLimit="3" allowTypes="/(\.|\/)(gif|jpe?g|png)$/" />  
+               
+				 <p:commandButton value="UPLOAD"></p:commandButton>
+				
         </p:column>
         </p:dataTable>
   </p:panel>
