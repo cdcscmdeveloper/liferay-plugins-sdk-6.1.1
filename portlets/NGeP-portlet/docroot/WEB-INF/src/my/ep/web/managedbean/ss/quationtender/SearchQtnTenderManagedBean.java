@@ -15,6 +15,7 @@ import my.ep.web.bean.ss.quatationtender.CategoryCode;
 import my.ep.web.bean.ss.quatationtender.GoSoDo;
 import my.ep.web.bean.ss.quatationtender.Location;
 import my.ep.web.bean.ss.quatationtender.QtnTenderBean;
+import my.ep.web.bean.ss.quatationtender.QtnTenderDataBean;
 import my.ep.web.bean.ss.quatationtender.TabBean;
 import my.ep.web.managedbean.BaseManagedBean;
 
@@ -29,6 +30,8 @@ public class SearchQtnTenderManagedBean extends BaseManagedBean {
 	private List<String> selectOptions;
 
 	private String selectOption;
+	
+	private QtnTenderDataBean dataBean;
 
 	public Map<String, TabBean> getTabview() {
 		return tabview;
@@ -43,7 +46,8 @@ public class SearchQtnTenderManagedBean extends BaseManagedBean {
 	private static final long serialVersionUID = 1L;
 
 	private List<QtnTenderBean> qtnTenders;
-
+	private QtnTenderBean selectableBean;
+ 
 	private List<GoSoDo> goSodo;
 
 	private List<Location> locations;
@@ -171,7 +175,7 @@ public class SearchQtnTenderManagedBean extends BaseManagedBean {
 		locations = new ArrayList<Location>();
 		zoneList = new ArrayList<Location>();
 		qtnTenders = populateSearchQtnBean();
-
+		dataBean= new QtnTenderDataBean(qtnTenders);
 		categories = populateCategory();
 
 		mainCcode = populateMainCodes();
@@ -337,11 +341,11 @@ public class SearchQtnTenderManagedBean extends BaseManagedBean {
 	private List<GoSoDo> populateGosodo() {
 		List<GoSoDo> gsdList = new ArrayList<GoSoDo>();
 		GoSoDo goSoDo = new GoSoDo();
-		goSoDo.setBdgAvail("1000");
+		goSoDo.setBdgAvail("Yes");
 		goSoDo.setType("Test");
 		gsdList.add(goSoDo);
 		GoSoDo goSoDo1 = new GoSoDo();
-		goSoDo1.setBdgAvail("2000");
+		goSoDo1.setBdgAvail("No");
 		goSoDo1.setType("User");
 		gsdList.add(goSoDo1);
 
@@ -817,6 +821,34 @@ public class SearchQtnTenderManagedBean extends BaseManagedBean {
 	 */
 	public void setVisitDetails(String visitDetails) {
 		this.visitDetails = visitDetails;
+	}
+
+	/**
+	 * @return the selectableBean
+	 */
+	public QtnTenderBean getSelectableBean() {
+		return selectableBean;
+	}
+
+	/**
+	 * @param selectableBean the selectableBean to set
+	 */
+	public void setSelectableBean(QtnTenderBean selectableBean) {
+		this.selectableBean = selectableBean;
+	}
+
+	/**
+	 * @return the dataBean
+	 */
+	public QtnTenderDataBean getDataBean() {
+		return dataBean;
+	}
+
+	/**
+	 * @param dataBean the dataBean to set
+	 */
+	public void setDataBean(QtnTenderDataBean dataBean) {
+		this.dataBean = dataBean;
 	}
 
 
