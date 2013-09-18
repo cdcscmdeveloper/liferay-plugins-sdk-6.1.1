@@ -11,67 +11,47 @@
 	<ui:include src="/xhtml/ss/quatationtender/dopublicationbuttons.xhtml" />
 	<ui:include src="/xhtml/ss/quatationtender/qtntenderheader.xhtml" />
 	<p:panel header="Schedule" toggleable="true">
-		<p:panelGrid columns="2" style="width:140%;"
+		<p:panelGrid columns="2" 
 			styleClass="noBorders tr,noBorders td">
 
 			<h:outputText value="#{lbl['lbl.so.noticepublish']}" />
 			<p:calendar value="#{searchQtnTenderBB.managedBean.tenderBean}"
 				id="noticePublish" showOn="button" />
-		</p:panelGrid>
+	
 
 
 
-		
-<p:panelGrid columns="2" style="width:113%;"
-			styleClass="noBorders tr,noBorders td">
+
 			<h:outputText value="Proposal Preparation Start Date/Time " />
-			<h:panelGroup >
-			<p:calendar value="#{searchQtnTenderBB.managedBean.tenderBean}"
-				id="proposalPreparation" showOn="button" />
-			<p:calendar value="#{searchQtnTenderBB.managedBean.tenderBean}"
-				pattern="HH:mm a" timeOnly="true" />
-			</h:panelGroup>
+	
+			 <p:calendar value="#{searchQtnTenderBB.managedBean.tenderBean}" pattern="MM/dd/yyyy HH:mm a" id="proposalPreparation" showOn="button"/> 
+			
+			
+			<h:outputText value="Closing Date "></h:outputText>
+			
+			 <p:calendar value="#{searchQtnTenderBB.managedBean.tenderBean}" pattern="MM/dd/yyyy HH:mm a" id="closingDate" showOn="button"/>
+			
 			
 				
-		</p:panelGrid>
+		
+
 			
+
 			
-			<p:panelGrid columns="2" style="width:230%;"
-			styleClass="noBorders tr,noBorders td">
-
-			<h:outputText value="Closing Date "></h:outputText>
-			<h:panelGroup>
-			<p:calendar value="#{searchQtnTenderBB.managedBean.tenderBean}"
-				id="closingDate" showOn="button" />
-
-			<p:calendar value="#{searchQtnTenderBB.managedBean.tenderBean}"
-				pattern="HH:mm a" timeOnly="true" />
-
-		</h:panelGroup>
-		</p:panelGrid>
-		<p:panelGrid columns="2" style="width:90%;"
-			styleClass="noBorders tr,noBorders td">
-             <p:row>
-             <p:column style="width: 20px; height: 30px;" rowspan="2" >
+		
 			<h:outputText  
 				value="Difference Between the Proposal Preparation &lt;br /&gt; Start and Closing Days " escape="false" />
-				</p:column>
-				<p:column>
+				
+				
 			<p:inputText id="diffDays" readonly="true" />
-			</p:column>
-			</p:row>
-		</p:panelGrid>
-		<p:panelGrid columns="3" style="width:135%;"
-			styleClass="noBorders tr,noBorders td">
+		
+		
 			<h:outputText value="Expected Start Delivery Date "></h:outputText>
-			<h:panelGroup>
-			<p:calendar value="#{searchQtnTenderBB.managedBean.tenderBean}"
-				id="deliveryDate" showOn="button" />
+			
+			<p:calendar value="#{searchQtnTenderBB.managedBean.tenderBean}" pattern="MM/dd/yyyy HH:mm a" id="deliveryDate" showOn="button"/>
+				
 
-			<p:calendar value="#{searchQtnTenderBB.managedBean.tenderBean}"
-				pattern="HH:mm a" timeOnly="true" />
-</h:panelGroup>
-		</p:panelGrid>
+	</p:panelGrid>
 	</p:panel>
 	<p:panel header="Briefing/Site Visit Schedule" toggleable="true">
 		<p:panelGrid columns="2" style="width:100%;"
@@ -219,16 +199,19 @@
 
 					</p:column>
 
-					<f:facet name="footer">
+					
+
+				</p:dataTable>
+
+			</p:panelGrid>
+				<p:panelGrid columns="2" style="width:100%;"
+				styleClass="noBorders tr,noBorders td">
+			<f:facet name="footer">
 						<div align="right">
 
 							<p:commandButton id="briefadd" value="Add" onclick="dlg1.show();"></p:commandButton>
 						</div>
 					</f:facet>
-
-
-				</p:dataTable>
-
 			</p:panelGrid>
 		</p:panel>
 
@@ -357,16 +340,19 @@
 
 					</p:column>
 
-					<f:facet name="footer">
+					
+
+				</p:dataTable>
+			</p:panelGrid>
+				<p:panelGrid columns="2" style="width:100%;"
+			styleClass="noBorders tr,noBorders td">
+			<f:facet name="footer">
 						<div align="right">
 
 							<p:commandButton id="siteadd" value="Add" onclick="dlg2.show();"></p:commandButton>
 
 						</div>
 					</f:facet>
-
-
-				</p:dataTable>
 			</p:panelGrid>
 		</p:panel>
 	</h:panelGroup>
@@ -449,17 +435,20 @@
             <ui:include src="/xhtml/ss/committe/clonecommitteescreen.xhtml" />
 
 				</p:column>
-				<f:facet name="footer">
+				
+
+			</p:dataTable>
+		</p:panelGrid>
+			<p:panelGrid columns="2" style="width:100%;"
+			styleClass="noBorders tr,noBorders td">
+			<f:facet name="footer">
 					<div align="right">
 						<p:commandButton id="add" value="Add" />
 						<p:commandButton value="Clone" onclick="screen2.show();"></p:commandButton>
 
 					</div>
 				</f:facet>
-
-
-			</p:dataTable>
-		</p:panelGrid>
+			</p:panelGrid>
 	</p:panel>
 
 </h:body>
