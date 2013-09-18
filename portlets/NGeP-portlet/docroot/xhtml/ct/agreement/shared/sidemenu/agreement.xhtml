@@ -7,9 +7,9 @@
 	
 	<p:menu>
         <p:submenu label="Agreement Menu">
-          <p:menuitem rendered="#{!agreementBackingBean.viewAgreement}" value="Fulfilment Details"  
+          <p:menuitem rendered="#{!agreementBackingBean.agreements}" value="Fulfilment Details"  
              outcome="/xhtml/ct/agreement/fulfilmentDetails.xhtml"/>
-              <p:menuitem  rendered="#{agreementBackingBean.viewAgreement}" value="Fulfilment Details" 
+              <p:menuitem  rendered="#{agreementBackingBean.agreements}" value="Fulfilment Details" 
              outcome="/xhtml/ct/agreement/viewAgreement.xhtml"/>
           <p:menuitem value="Signing Agreement" outcome="/xhtml/ct/agreement/signingAgreement.xhtml" />
           <p:menuitem value="Create Agreement" outcome="/xhtml/ct/agreement/createAgreement.xhtml" />

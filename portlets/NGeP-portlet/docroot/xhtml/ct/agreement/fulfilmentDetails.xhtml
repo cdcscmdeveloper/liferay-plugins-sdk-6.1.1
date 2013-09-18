@@ -25,7 +25,7 @@
                             </p:commandLink> 
                       <p:outputLabel value="#{lbl['lbl.ct.ministry']}" />  
                       <p:selectOneMenu disabled="false"  value="" style="width:150px;">
-			              <f:selectItems value="#{contractDetailsBean.contractOwnerJabatan}" />
+			              <f:selectItems value="#{agreementBackingBean.contractListItem.contractOwnerJabatan}" />
 			           </p:selectOneMenu>
 			          <p:outputLabel value="#{lbl['lbl.ct.phyno']}" />  
                       <p:inputText value=" "  style="width:200px;" required="true" disabled="true" />
