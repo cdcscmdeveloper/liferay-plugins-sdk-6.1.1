@@ -319,17 +319,18 @@
 			<p:panelGrid columns="2" style="width:100%;"
 				styleClass="noBorders tr,noBorders td">
 				<p:outputLabel value="Zones"></p:outputLabel>
-				<p:selectOneMenu value="#{searchQtnTenderBB.managedBean.zone}"
-					valueChangeListener="#{searchQtnTenderBB.managedBean.zoneChangeListener}">
-					<f:selectItem itemLabel="Select One" itemValue="" />
-					<f:selectItems value="#{searchQtnTenderBB.managedBean.zones}" />
-					<p:ajax event="change" update="zstates" />
-				</p:selectOneMenu>
+		
 
+ <p:inputText value="#{searchQtnTenderBB.managedBean.zone}" >
+ 
+ <p:ajax event="blur" update="zstates"></p:ajax>
+ 
+ </p:inputText>
+ 
 				<p:outputLabel value="States"></p:outputLabel>
 				<p:selectOneMenu id="zstates"
-					value="#{searchQtnTenderBB.managedBean.zoneSt}"
-					valueChangeListener="#{searchQtnTenderBB.managedBean.zoneStChangeListener}">
+					value="#{searchQtnTenderBB.managedBean.zoneSt}" 
+				valueChangeListener="#{searchQtnTenderBB.managedBean.zoneStChangeListener}"	>
 					<f:selectItem itemLabel="Select One" itemValue="" />
 					<f:selectItems value="#{searchQtnTenderBB.managedBean.zoneState}" />
 					<p:ajax event="change" update="zcities" />
