@@ -6,8 +6,8 @@
 	xmlns:c="http://java.sun.com/jsp/jstl/core">
 
 	<p:panel header="Approval Workflow" toggleable="true" >
-		<p:panelGrid columns="3"  styleClass="noBorders tr,noBorders td" >
-			
+		<p:panelGrid columns="3"  style="width:100%; height:10px;border:1px;" styleClass="noBorders tr,noBorders td" >
+			<div style="height:10px; width: 100%; border:1px;">
 				
 					<p:outputLabel value="Approval Category"></p:outputLabel>
 				
@@ -20,7 +20,7 @@
 						<p:ajax event="change" update="tabView12345"
 							listener="#{searchQtnTenderBB.addMessage}" />
 					</p:selectManyCheckbox>
-			
+			</div>
 			
 
 

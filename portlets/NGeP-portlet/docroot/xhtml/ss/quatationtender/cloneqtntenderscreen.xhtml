@@ -7,22 +7,20 @@
 
 
 	<p:dialog widgetVar="clonedlg" modal="true">
-		
-		<p:commandButton value="#{lbl['lbl.so.searchbtn']}"
-				styleClass="apply_button" style="float:right;">
 
-			</p:commandButton>
-			<br/>
-			<br/>
+
 		<p:panel header="Search Qtn/Tender" toggleable="true">
 			<p:panelGrid columns="2" style="width:100%;"
 				styleClass="noBorders tr,noBorders td">
 
-
-
 				<h:outputText value="Title" />
-				<p:inputText value="#{searchQtnTenderBB.managedBean.qtno}" size="100"/>
+				<p:inputText value="#{searchQtnTenderBB.managedBean.qtno}"
+					size="100" />
 
+			</p:panelGrid>
+
+			<p:panelGrid columns="4" style="width:100%;"
+				styleClass="noBorders tr,noBorders td">
 
 				<h:outputText value="QTN/Tender No" />
 				<p:inputText value="#{searchQtnTenderBB.managedBean.qtno}" />
@@ -37,10 +35,8 @@
 					<f:selectItem itemLabel="Direct Negotiation"
 						itemValue="Direct Negotiation" />
 				</p:selectOneMenu>
-			</p:panelGrid>
-			
-			<p:panelGrid columns="4" style="width:100%;"
-				styleClass="noBorders tr,noBorders td">
+
+
 				<h:outputText value="#{lbl['lbl.so.creatdtfrom']}" />
 				<p:calendar value="#{searchQtnTenderBB.managedBean.date}"
 					showOn="button" />
@@ -57,83 +53,90 @@
 					<f:selectItem itemLabel="Option 2" itemValue="2" />
 					<f:selectItem itemLabel="Option 3" itemValue="3" />
 				</p:selectOneMenu>
-
 			</p:panelGrid>
+<p:commandButton value="SEARCH" styleClass="apply_button"
+				style="float:right;">
 
+			</p:commandButton>
+			<br/>
 			
 
-		
-
-		</p:panel>
+					</p:panel>
 		<br />
 
 		<p:panel header="Search Qtn/Tender Result" toggleable="true">
-			<h:panelGroup id="table-wrapper" style="width:100%;">
-				<p:dataTable value="#{searchQtnTenderBB.managedBean.qtnTenders}"
-					var="tenders">
+			<h:panelGroup  style="width:100%;">
+				<p:dataTable value="#{searchQtnTenderBB.managedBean.dataBean}"
+					var="tenders" selection="#{searchQtnTenderBB.managedBean.selectableBean}">
 
-					<p:column headerText="#{lbl['lbl.so.no']}">
+
+					<p:column headerText="#{lbl['lbl.so.no']}" style="width:3%">
 						<h:outputText value="1" />
 					</p:column>
 
-					<p:column headerText="Qtn/Tender No">
-						<p:commandLink actionListener="#{pprBean.savePerson}"
-							style="margin-right:20px;" ajax="false">
-							<h:outputText value="#{tenders.qtnTenderNum}" />
-						</p:commandLink>
+					<p:column headerText="Qtn/Tender No" style="width:5%">
+
+						<h:outputText value="#{tenders.qtnTenderNum}" />
+
 					</p:column>
 
-					<p:column headerText="#{lbl['lbl.so.title']}">
+					<p:column headerText="#{lbl['lbl.so.title']}" style="width:60%">
 						<h:outputText value="#{tenders.title}" />
 					</p:column>
-					<p:column headerText="#{lbl['lbl.so.procmode']}">
+					<p:column headerText="#{lbl['lbl.so.procmode']}" style="width:10%">
 						<h:outputText value="#{tenders.procumentMode}" />
 					</p:column>
 
-					<p:column headerText="#{lbl['lbl.so.crtdt']}">
+					<p:column headerText="#{lbl['lbl.so.crtdt']}" style="width:20%">
 						<h:outputText value="#{tenders.crtdDateTo}" />
 					</p:column>
 
-				
-				
-					</p:dataTable>
-					
-			</h:panelGroup>
-			
-			<p:commandButton value="Clone" style="float:right;"
-					onclick="clonebtn.show();"></p:commandButton>
-				
-	</p:panel>
-		</p:dialog>
-		
-		<p:dialog widgetVar="clonebtn" modal="true">
-		
-		<p:panel header="Clone Qtn/Tender Sections" toggleable="true">
-	 <h:panelGrid columns="2" style="margin-bottom:10px" cellpadding="5">  
-	   
-         <p:selectManyCheckbox value="#{searchQtnTenderBB.managedBean.selectOptions}" layout="pageDirection">  
-            <f:selectItem itemLabel="Qtn/Tender Title" itemValue="Qtn/Tender Title" />  
-            <f:selectItem itemLabel="Qtn/Tender Details" itemValue="Qtn/Tender Details" />  
-            <f:selectItem itemLabel="ApprovalWorkFlow" itemValue="ApprovalWorkFlow" />
-            <f:selectItem itemLabel="Supplier Qualification Criteria" itemValue="Supplier Qualification Criteria" />  
-            <f:selectItem itemLabel="Schedule" itemValue="Schedule" />  
-            <f:selectItem itemLabel="Documents" itemValue="Documents" />  
-        </p:selectManyCheckbox>  
-	</h:panelGrid>
-	
-	
+<p:column selectionMode="single" style="width:2%" /> 
 
-		<!-- <p:commandButton  value="Cancel"
+				</p:dataTable>
+
+			</h:panelGroup>
+
+			<p:commandButton value="CLONE" style="float:right;"
+				onclick="clonebtn.show();"></p:commandButton>
+
+		</p:panel>
+	</p:dialog>
+
+	<p:dialog widgetVar="clonebtn" modal="true">
+
+		<p:panel header="Clone Qtn/Tender Sections" toggleable="true">
+			<h:panelGrid columns="2" style="margin-bottom:10px" cellpadding="5">
+
+				<p:selectManyCheckbox
+					value="#{searchQtnTenderBB.managedBean.selectOptions}"
+					layout="pageDirection">
+					<f:selectItem itemLabel="Qtn/Tender Title"
+						itemValue="Qtn/Tender Title" />
+					<f:selectItem itemLabel="Qtn/Tender Details"
+						itemValue="Qtn/Tender Details" />
+					<f:selectItem itemLabel="ApprovalWorkFlow"
+						itemValue="ApprovalWorkFlow" />
+					<f:selectItem itemLabel="Supplier Qualification Criteria"
+						itemValue="Supplier Qualification Criteria" />
+					<f:selectItem itemLabel="Schedule" itemValue="Schedule" />
+					<f:selectItem itemLabel="Documents" itemValue="Documents" />
+				</p:selectManyCheckbox>
+			</h:panelGrid>
+
+
+
+			<!-- <p:commandButton  value="Cancel"
 			styleClass="apply_button" style="float:right;" onclick="dlg.hide()" />
  -->
-		<p:commandButton  value="CANCEL"
-			styleClass="apply_button" style="float:right;" onclick="clonebtn.hide()">
+			<p:commandButton value="CANCEL" styleClass="apply_button"
+				style="float:right;" onclick="clonebtn.hide()">
 
-		</p:commandButton>	
-			<p:commandButton value="OK"
-			styleClass="apply_button" style="float:right;" onclick="clonebtn.hide()">
+			</p:commandButton>
+			<p:commandButton value="OK" styleClass="apply_button"
+				style="float:right;" onclick="clonebtn.hide()">
 
-		</p:commandButton>
-	</p:panel>
-		</p:dialog>
+			</p:commandButton>
+		</p:panel>
+	</p:dialog>
 </ui:composition>
