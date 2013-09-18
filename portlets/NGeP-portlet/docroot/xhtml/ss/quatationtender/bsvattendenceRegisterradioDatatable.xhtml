@@ -27,7 +27,7 @@
 <p:panel header="BriefingDetails" toggleable="true">
 <p:dataTable  id="attendancebrief" var="attendancetenderbrief" value="#{searchQtnTenderBB.managedBean.qtnTenders}"  rows="10"  >
 				
-				<p:column headerText="checkBox" style="width:6%" >
+				<p:column  style="width:6%" >
 				 <h:selectBooleanCheckbox value="1"  > 
 				  <f:selectItem  /> 
 				  </h:selectBooleanCheckbox>
@@ -70,7 +70,7 @@
 <p:dataTable  id="attendencesite" var="attendancetender" value="#{searchQtnTenderBB.managedBean.qtnTenders}"  rows="10"  >
                 
 				
-				<p:column headerText="checkBox" style="width:6%">
+				<p:column style="width:6%">
 				 <h:selectBooleanCheckbox value="1"  > 
 				  <f:selectItem  /> 
 				  </h:selectBooleanCheckbox>
@@ -104,13 +104,13 @@
 	<f:selectItem itemLabel="siteMaintain" itemValue="2" />
 	</p:selectOneMenu>
         </p:column>
-        
-          <f:facet name="footer">
-         <div align="right"  >
-					<p:commandButton id="addAttendance" value="#{lbl['lbl.so.attendence']}" />
+      </p:dataTable>  
+      
+          <div align="right"  >
+					<p:commandButton id="addAttendance" value="#{lbl['lbl.so.attendance']}" />
 					</div>
-			</f:facet>
-			</p:dataTable>
+			
+			
 
 
 </p:panel>

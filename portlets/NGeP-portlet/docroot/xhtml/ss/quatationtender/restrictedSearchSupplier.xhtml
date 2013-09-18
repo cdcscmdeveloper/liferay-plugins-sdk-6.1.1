@@ -8,6 +8,8 @@
 	<p:panel
 		header="Supplier List"
 		toggleable="true">
+		
+		
 				<p:dataTable value="#{searchQtnTenderBB.managedBean.categories}" var="ccode" resizableColumns="true"
 				>
 				<p:column headerText="No.">
@@ -58,13 +60,10 @@
 		</p:panel>
 		
 		<p:dialog widgetVar="suppdlg" modal="true" width="800" height="400">
+		
 		<p:panel header="Search Supplier" toggleable="true">
-<p:commandButton  value="#{lbl['lbl.so.searchbtn']}"
-			styleClass="apply_button" style="float:right;" >
-		</p:commandButton>
-				<br/>
-				<br/>
-				
+
+			</p:panel>	
 				
 			<p:panel header="Category Code List" toggleable="true">	
 				<p:dataTable value="#{searchQtnTenderBB.managedBean.categories}"
@@ -177,6 +176,11 @@
 			<p:inputText  value="#{searchQtnTenderBB.managedBean.qtno}"/>
 				
 			</p:panelGrid>
+			<p:commandButton  value="#{lbl['lbl.so.searchbtn']}"
+			styleClass="apply_button" style="float:right;" >
+		</p:commandButton>
+				<br/>
+				<br/>
 		
 		
 			<p:panel header="Supplier List" toggleable="true">
@@ -231,14 +235,14 @@
 	
 
 
- </p:panel>    
+   
       
 
 <p:panel toggleable="true">
 <div>           
-<p:commandButton value="Cancel" style="float:right;" oncomplete="suppdlg.hide()">
+<p:commandButton value="CANCEL" style="float:right;" oncomplete="suppdlg.hide()">
 </p:commandButton>
-<p:commandButton value="Ok" style="float:right;" oncomplete="suppdlg.hide()">
+<p:commandButton value="OK" style="float:right;" oncomplete="suppdlg.hide()">
 </p:commandButton>
 </div> 
 </p:panel>

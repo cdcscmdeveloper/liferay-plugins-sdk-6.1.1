@@ -209,7 +209,7 @@
 			<f:facet name="footer">
 						<div align="right">
 
-							<p:commandButton id="briefadd" value="Add" onclick="dlg1.show();"></p:commandButton>
+							<p:commandButton id="briefadd" value="#{lbl['lbl.so.addbtn']}" onclick="dlg1.show();"></p:commandButton>
 						</div>
 					</f:facet>
 			</p:panelGrid>
@@ -349,7 +349,7 @@
 			<f:facet name="footer">
 						<div align="right">
 
-							<p:commandButton id="siteadd" value="Add" onclick="dlg2.show();"></p:commandButton>
+							<p:commandButton id="siteadd" value="#{lbl['lbl.so.addbtn']}" onclick="dlg2.show();"></p:commandButton>
 
 						</div>
 					</f:facet>
@@ -443,8 +443,8 @@
 			styleClass="noBorders tr,noBorders td">
 			<f:facet name="footer">
 					<div align="right">
-						<p:commandButton id="add" value="Add" />
-						<p:commandButton value="Clone" onclick="screen2.show();"></p:commandButton>
+						<p:commandButton id="add" value="#{lbl['lbl.so.addbtn']}" />
+						<p:commandButton value="CLONE" onclick="screen2.show();"></p:commandButton>
 
 					</div>
 				</f:facet>
