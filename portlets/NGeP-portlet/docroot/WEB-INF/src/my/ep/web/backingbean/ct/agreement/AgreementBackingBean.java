@@ -24,8 +24,9 @@ import my.ep.web.managedbean.ct.agreement.AgreementManagedBean;
 @RequestScoped
 public class AgreementBackingBean extends BaseBackingBean<AgreementManagedBean> {
 
-	private static final String PROCESS_VIEW_PAGE="/xhtml/ct/agreement/viewAgreement.xhtml";
+
 	private static boolean menuAgreement;
+	
 	private AgreementDetails agreementDetails;
 	private List<AgreementDetails> agreementList;
 	private boolean systemDefined;
@@ -34,18 +35,16 @@ public class AgreementBackingBean extends BaseBackingBean<AgreementManagedBean> 
 	private ContractListItem contractListItem;
 	private boolean supplementValue = true; 
 	
-	private static boolean viewAgreement;
+	private String agreements;
+	
 
-	public boolean isViewAgreement() {
-		if(contractListItem.viewAgreement.equalsIgnoreCase("view")){
-			viewAgreement = true;
-		}
-		
-		return viewAgreement;
+	public String getAgreements() {
+		setAgreements(this.getManagedBean().getAgreement());
+		return agreements;
 	}
 
-	public void setViewAgreement(boolean viewAgreement) {
-		this.viewAgreement = viewAgreement;
+	public void setAgreements(String agreements) {
+		this.agreements = agreements;
 	}
 
 	public boolean isSupplementValue() {
@@ -56,8 +55,8 @@ public class AgreementBackingBean extends BaseBackingBean<AgreementManagedBean> 
 		agreementDetails = new AgreementDetails();
 		contractListItem = new ContractListItem();
 		menuAgreement = false;
-		
-
+		System.out.println("===========101====================="+contractListItem.getViewAgreement());
+	 
 	}
 	
 	
@@ -203,8 +202,5 @@ public void changeApendexType(){
 			this.userUploaded = userUploaded;
 		}
 		
-		public String gotoViewPage(){
-			viewAgreement = true;
-			return PROCESS_VIEW_PAGE;
-		}
+		
 }
