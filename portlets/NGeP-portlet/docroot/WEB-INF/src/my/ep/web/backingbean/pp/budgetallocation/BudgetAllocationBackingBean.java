@@ -6,19 +6,13 @@ import java.util.List;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.RequestScoped;
 
-import my.ep.biz.dto.pp.budgetallocation.BudgetAllocationReqDTO;
-import my.ep.biz.dto.pp.budgetallocation.BudgetAllocationResDTO;
-import my.ep.biz.service.pp.budgetallocation.IBudgetAllocationSO;
 import my.ep.web.backingbean.BaseBackingBean;
 import my.ep.web.constant.pp.ProcurementPlanConst;
 import my.ep.web.managedbean.pp.budgetallocation.BudgetAllocationManagedBean;
 import my.ep.web.util.FacesScopes;
 import my.ep.web.util.ResourceBundleUtils;
-import my.ep.web.util.lookupservice.BusinessDelegate;
 
 import org.apache.log4j.Logger;
-
-import com.sun.org.apache.bcel.internal.generic.NEW;
 
 @ManagedBean(name="budgetAllocationBackingBean")
 @RequestScoped
@@ -50,9 +44,9 @@ public class BudgetAllocationBackingBean extends BaseBackingBean<BudgetAllocatio
 	}
 	
 	
-	private void initializeListing(BudgetAllocationResDTO resDTO){
-		this.getManagedBean().setBudgetList(resDTO.getBudgetList());
-	}
+//	private void initializeListing(BudgetAllocationResDTO resDTO){
+//		this.getManagedBean().setBudgetList(resDTO.getBudgetList());
+//	}
 	
 	public String redirectToCreateBudgetAllocation(){
 		System.out.println("----------NAV_TO_BUDGET_ALLOCATION");
