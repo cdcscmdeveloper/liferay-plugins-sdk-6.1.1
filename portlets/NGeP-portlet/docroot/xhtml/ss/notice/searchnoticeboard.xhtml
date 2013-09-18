@@ -1,0 +1,164 @@
+<ui:composition	
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:c="http://java.sun.com/jsp/jstl/core">
+	
+	<p:panel>
+		<p:panelGrid style="width:100%;" styleClass="noBorders tr,noBorders td" ></p:panelGrid>
+</p:panel>
+	
+	<p:panel header="Search Qtn/Tender" toggleable="true">
+	
+	<p:panelGrid columns="4" style="width:100%;" styleClass="noBorders tr,noBorders td">
+	
+	<h:outputText value="Ministry: "></h:outputText>
+
+	 <p:selectOneMenu style ="width:40%;" value="#{searchQtnTenderBB.managedBean.selectOption}">  
+            <f:selectItem itemLabel="Select One" itemValue="" />  
+            <f:selectItem itemLabel="Defence minister" itemValue="1" />  
+            <f:selectItem itemLabel="Education minister" itemValue="2" />  
+            <f:selectItem itemLabel="Environment minister" itemValue="3" /> 
+            <f:selectItem itemLabel="Finance minister" itemValue="1" />               
+     </p:selectOneMenu>
+     
+	<h:outputText value="Jabatan: "></h:outputText>
+
+	 <p:selectOneMenu style ="width:40%;" value="#{searchQtnTenderBB.managedBean.selectOption}">  
+            <f:selectItem itemLabel="Select One" itemValue="" />  
+            <f:selectItem itemLabel="JPJ" itemValue="1" />  
+            <f:selectItem itemLabel="JKR" itemValue="2" />  
+            <f:selectItem itemLabel="JPN" itemValue="3" /> 
+            <f:selectItem itemLabel="JPA" itemValue="4" />               
+     </p:selectOneMenu>       
+     
+	<h:outputText value="PTJ: "></h:outputText>
+
+	 <p:selectOneMenu style ="width:40%;" value="#{searchQtnTenderBB.managedBean.selectOption}">  
+            <f:selectItem itemLabel="Select One" itemValue="" />  
+            <f:selectItem itemLabel="Team 1" itemValue="1" />  
+            <f:selectItem itemLabel="Team 2" itemValue="2" />  
+            <f:selectItem itemLabel="Team 3" itemValue="3" /> 
+            <f:selectItem itemLabel="Team 4" itemValue="4" />               
+     </p:selectOneMenu> 
+     
+	<h:outputText value="Title: "></h:outputText>
+	<h:inputText value="#{searchQtnTenderBB.managedBean.qtno}"></h:inputText>
+	
+    <h:outputText value="Notice Publish Date: "></h:outputText>
+	<p:calendar value="#{searchQtnTenderBB.managedBean.date}" id="notdate" showOn="button" />
+	
+    <h:outputText value="Closing Date"></h:outputText>
+	<p:calendar value="#{searchQtnTenderBB.managedBean.date}" id="closedate" showOn="button" />     
+     
+    <h:outputText value="Category Code: " />  
+    <p:selectOneMenu style ="width:40%;" value="#{searchQtnTenderBB.managedBean.selectOption}" effect="fold" editable="true">  
+      <f:selectItem itemLabel="Select One" itemValue="" />  
+      <f:selectItems value="Code 1" />  
+      <f:selectItems value="Code 2" />
+      <f:selectItems value="Code 3" />
+    </p:selectOneMenu> 
+             
+	<h:outputText value="State: "></h:outputText>
+
+	 <p:selectOneMenu style ="width:40%;" value="#{searchQtnTenderBB.managedBean.selectOption}">  
+            <f:selectItem itemLabel="Select One" itemValue="" />  
+            <f:selectItem itemLabel="WP" itemValue="1" />  
+            <f:selectItem itemLabel="Selangor" itemValue="2" />  
+            <f:selectItem itemLabel="Perak" itemValue="3" /> 
+            <f:selectItem itemLabel="Pahang" itemValue="4" />               
+     </p:selectOneMenu>
+     
+	<h:outputText value="District: "></h:outputText>
+
+	 <p:selectOneMenu style ="width:40%;" value="#{searchQtnTenderBB.managedBean.selectOption}">  
+            <f:selectItem itemLabel="Select One" itemValue="" />  
+            <f:selectItem itemLabel="District 1" itemValue="1" />  
+            <f:selectItem itemLabel="District 2" itemValue="2" />  
+            <f:selectItem itemLabel="District 3" itemValue="3" /> 
+            <f:selectItem itemLabel="District 4" itemValue="4" />               
+     </p:selectOneMenu>                  
+	
+     </p:panelGrid>
+	
+	<p:commandButton value="SEARCH" style="float:right;">
+    
+</p:commandButton>
+	<br/>
+	<br/>
+	    <p:tabView id="tabView" dynamic="true" cache="true">  
+  
+        <p:tab id="tba1" title="Publish">  
+            <h:panelGrid columns="2" cellpadding="10">    
+            </h:panelGrid>  
+        </p:tab>  
+  
+        <p:tab id="tab2" title="Changes">  
+            <h:panelGrid columns="2" cellpadding="10">    
+            </h:panelGrid>  
+        </p:tab>  
+  
+        <p:tab id="tab3" title="Closed">  
+            <h:panelGrid columns="2" cellpadding="10">    
+            </h:panelGrid>  
+        </p:tab>
+        
+        <p:tab id="tab4" title="Price Schedule">  
+            <h:panelGrid columns="2" cellpadding="10">   
+            </h:panelGrid>  
+        </p:tab> 
+        
+        <p:tab id="tab5" title="Awarded">  
+            <h:panelGrid columns="2" cellpadding="10">    
+            </h:panelGrid>  
+        </p:tab>                   
+  
+    </p:tabView> 
+	</p:panel>
+	
+<ui:include src="/xhtml/ss/notice/tenderSubCategory.xhtml" />
+
+	<p:panel header="Qtn/Tender Summary" toggleable="true">
+	<p:dataTable value="" var="" resizableColumns="true" editable="true">
+        
+   <p:ajax event="rowEdit" />  
+        <p:ajax event="rowEditCancel" />  
+  
+        <p:column headerText="No." style="width:10%"> 
+             <h:outputText value="QT001" />  
+        </p:column>
+       
+        <p:column headerText="Title">              
+           <p:commandLink action="tenderNoticeDetail.xhtml?faces-redirect=true">
+             <h:outputText value="Title A" />  
+           </p:commandLink> 
+        </p:column>          
+         
+         <p:column headerText="Publishing Date" >  
+           <p:calendar value="#{searchQtnTenderBB.managedBean.date}" id="publdate" showOn="button" />
+        </p:column>
+        
+         <p:column headerText="Closing Date" >  
+           <p:calendar value="#{searchQtnTenderBB.managedBean.date}" id="closdate" showOn="button" />
+        </p:column>
+        
+         <p:column headerText="Countdown" >  
+            <h:outputText value="21" />  
+        </p:column>  
+        
+         <p:column headerText="Briefing / Site Visit If Yes, Self Register" style="width:20%" >  
+           <p:commandLink action="tenderSelfRegistration.xhtml?faces-redirect=true">
+            <h:outputText value="[Self-Register] " /> 
+            </p:commandLink> 
+        </p:column>                             
+        
+         <p:column headerText="Document : View Details" >  
+            <h:outputText value="[View Qtn/Tender Documents]" />  
+        </p:column>  
+                
+    </p:dataTable>
+</p:panel>
+
+</ui:composition>

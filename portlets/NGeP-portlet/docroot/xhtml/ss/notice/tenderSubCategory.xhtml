@@ -1,0 +1,30 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:c="http://java.sun.com/jsp/jstl/core">
+
+<p:panel>
+<p:panelGrid columns="3" style="width:100%;" styleClass="noBorders tr,noBorders td">
+<h:outputText value="View Notice Publish&#160;&#160;&#160;&#160;&#160;&#160;&#160;" /><h:outputText value="View Briefing / Site Visit " /><h:outputText value="View By Category Code" />
+</p:panelGrid> 
+
+<p:panelGrid columns="3" style="width:84%;" styleClass="noBorders tr,noBorders td">
+<h:outputText value="Today | Yesterday | Pass" /><h:outputText value="Today | Yesterday | Tomorrow | Next" /><h:outputText value="" />
+</p:panelGrid>
+
+<p:panelGrid style="width:100%;" columns="3" styleClass="noBorders tr,noBorders td">
+<h:inputText /><h:inputText /><h:inputText />
+</p:panelGrid>
+
+<p:panelGrid columns="3" style="width:100%;" styleClass="noBorders tr,noBorders td"> 
+<h:commandLink value="View" /><h:commandLink value="View" /><h:commandLink value="View" />
+</p:panelGrid> 
+
+</p:panel>	
+		
+	
+	
+	
+	</ui:composition>	

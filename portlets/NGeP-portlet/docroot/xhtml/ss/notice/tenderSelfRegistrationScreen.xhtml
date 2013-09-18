@@ -1,0 +1,128 @@
+<ui:composition	
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:c="http://java.sun.com/jsp/jstl/core">
+	
+	<p:panel>
+		<p:panelGrid style="width:100%;" styleClass="noBorders tr,noBorders td" ></p:panelGrid>
+</p:panel>
+	
+	<p:panel header="Supplier Self Registration" toggleable="true">
+	
+	<p:panelGrid columns="2" style="width:50%;" styleClass="noBorders tr,noBorders td">
+	
+	<h:outputText value="Briefing Same As Site Visit : "></h:outputText>
+	  <h:inputText value="Yes" />
+
+    </p:panelGrid>
+	</p:panel>
+	
+ 
+ 	
+	
+	<p:panel header="Briefing Details" toggleable="true">
+	<p:dataTable value="" var="" resizableColumns="true">
+        
+		<p:column headerText="CheckBox" style="width:10%" >
+			<h:selectBooleanCheckbox value="1"  > 
+		    </h:selectBooleanCheckbox>
+	    </p:column>
+       
+        <p:column headerText="No" style="width:10%"> 
+             <h:outputText value="1" />  
+        </p:column>          
+         
+        <p:column headerText="Briefing Description" style="width:20%"> 
+             <h:outputText value="abcdefghi" />  
+        </p:column>
+        
+        <p:column headerText="Date/Time" style="width:10%"> 
+             <h:outputText value="4/7/13 / 11.15am" />  
+        </p:column>
+        
+        <p:column headerText="Location" style="width:10%"> 
+             <h:outputText value="Location B" />  
+        </p:column>
+        
+        <p:column headerText="Coordinating Officer" style="width:10%"> 
+             <h:outputText value="Officer A" />  
+        </p:column>
+        
+        <p:column headerText="Attendance" style="width:10%"> 
+             <h:outputText value="Attend" />  
+        </p:column>   
+                
+    </p:dataTable>
+  </p:panel>
+<br/>
+
+	<p:panel header="Site Details" toggleable="true">
+	<p:dataTable value="" var="" resizableColumns="true">
+        
+		<p:column headerText="CheckBox" style="width:10%" >
+			<h:selectBooleanCheckbox value="1"  > 
+		    </h:selectBooleanCheckbox>
+	    </p:column>
+       
+        <p:column headerText="No" style="width:10%"> 
+             <h:outputText value="1" />  
+        </p:column>          
+         
+        <p:column headerText="Site Description" style="width:20%"> 
+             <h:outputText value="abcdefghi" />  
+        </p:column>
+        
+        <p:column headerText="Date/Time" style="width:10%"> 
+             <h:outputText value="4/7/13 / 11.15am" />  
+        </p:column>
+        
+        <p:column headerText="Location" style="width:10%"> 
+             <h:outputText value="Location B" />  
+        </p:column>
+        
+        <p:column headerText="Coordinating Officer" style="width:10%"> 
+             <h:outputText value="Officer A" />  
+        </p:column>
+        
+        <p:column headerText="Attendance" style="width:10%"> 
+             <h:outputText value="Attend" />  
+        </p:column>   
+                
+    </p:dataTable>
+   </p:panel>
+<br/>
+
+	<p:panel header="Supplier Details" toggleable="true">
+	
+	<p:panelGrid columns="4" style="width:75%;" styleClass="noBorders tr,noBorders td">
+	
+	<h:outputText value="MOF Registration No: * "></h:outputText>
+      <h:inputText />  
+     
+	<h:outputText value="Company Name: "></h:outputText>
+      <h:inputText />        
+     
+	<h:outputText value="Attedandee's IC No: * "></h:outputText>
+      <h:inputText />   
+     
+	<h:outputText value="Attedandee's Name: * "></h:outputText>
+	  <h:inputText />     
+     
+    <h:outputText value="Hp. No: * " />  
+      <h:inputText />   
+             
+	<h:outputText value="Email: * "></h:outputText>
+      <h:inputText />                   
+	
+     </p:panelGrid>
+     
+     <p:commandButton value="BACK" action="noticeboardmain.xhtml?faces-redirect=true" style="float:right;">
+    </p:commandButton> 
+    <br/>
+    <br/>    
+     </p:panel>
+
+</ui:composition>
