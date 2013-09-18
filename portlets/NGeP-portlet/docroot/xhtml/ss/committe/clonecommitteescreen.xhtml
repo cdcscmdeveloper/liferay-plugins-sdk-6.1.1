@@ -13,7 +13,7 @@
 				
 
 				<h:outputLabel for="clonetitle" value="Title" />
-				<p:inputText id="clonetitle" size="100"   />
+				<p:inputText id="clonetitle" size="71"   />
 				</p:panelGrid>
     
      <p:panelGrid columns="4"  styleClass="noBorders tr,noBorders td">
@@ -22,7 +22,7 @@
 				<p:inputText id="tenderNo" />
 				
 				<h:outputLabel for="clonetitle" value="Qtn/Tender Type" />
-				<p:selectOneMenu value="#{searchQtnTenderBB.managedBean.qtno}">  
+				<p:selectOneMenu style="width:125px" value="#{searchQtnTenderBB.managedBean.qtno}">  
            			<f:selectItem itemLabel="No 1" itemValue="1" />  
             		<f:selectItem itemLabel="No 2" itemValue="2" />  
             	    <f:selectItem itemLabel="No 3" itemValue="3" />  
@@ -40,7 +40,7 @@
                 
 			</p:panelGrid>
 
-		<p:commandButton value="#{lbl['lbl.so.searchbtn']}"
+		<p:commandButton value="SEARCH"
 			styleClass="apply_button" style="float:right;">
 
 		</p:commandButton>
@@ -76,9 +76,9 @@
                         <h:outputText value="11/12/13" />  
                     </p:column>  
                       
-                    <p:column headerText="Action" style="width:10%">  
-                     <p:commandButton value="Clone"  style="float:right;"></p:commandButton> 
-                    </p:column> 
+                    <p:column style="width:6%">  
+                        <p:rowEditor />  
+                     </p:column>  
             
 		       </p:dataTable>	
 			</h:panelGroup>	
@@ -114,8 +114,7 @@
                     </p:column>                                          
             
 		       </p:dataTable>			       				
-				<p:commandButton value="Cancel"  style="float:right;" onclick="dlg.hide();"></p:commandButton>
-				<p:commandButton value="Clone"  style="float:right;" onclick="dlg.hide();"></p:commandButton>
+				<p:commandButton value="CLONE"  style="float:right;" onclick="dlg.hide();"></p:commandButton>
 			</h:panelGroup>
 		</p:panel>		
 	</p:dialog>
