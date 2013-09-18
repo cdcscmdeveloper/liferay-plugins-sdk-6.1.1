@@ -10,18 +10,18 @@
 		<p:panelGrid style="width:100%;" styleClass="noBorders tr,noBorders td" ></p:panelGrid>
      </p:panel>
      		<div align="right">
-	    <p:commandButton actionListener="#{procureCodeManagedBean.save}" value="Save" ajax="false" style="margin-right:30px;" /> 
+	    <p:commandButton actionListener="#{procureCodeManagedBean.save}" value="SAVE" ajax="false" style="margin-right:30px;" /> 
     </div>
 	<p:panel header="Search Procurement" toggleable="true">
 	
-	<p:panelGrid columns="2" style="width:100%;" styleClass="noBorders tr,noBorders td">
+	<p:panelGrid columns="2" style="width:25%;" styleClass="noBorders tr,noBorders td">
 	
 	<h:outputText value="Plan Number:"></h:outputText>
 	<h:inputText value="#{procureCodeManagedBean.plannumber}"></h:inputText>
 	
 	<h:outputText value="Procurement Mode:"></h:outputText>
 
-	 <p:selectOneMenu value="#{searchQtnTenderBB.managedBean.selectOption}">  
+	 <p:selectOneMenu value="#{searchQtnTenderBB.managedBean.selectOption}" style="width:80%;">  
             <f:selectItem itemLabel="Select One" itemValue="" />  
             <f:selectItem itemLabel="Mode 1" itemValue="1" />  
             <f:selectItem itemLabel="Mode 2" itemValue="2" />  
@@ -30,7 +30,7 @@
         
 	<h:outputText value="Plan Status:"></h:outputText>
 
-	 <p:selectOneMenu value="#{searchQtnTenderBB.managedBean.selectOption}">  
+	 <p:selectOneMenu value="#{searchQtnTenderBB.managedBean.selectOption}" style="width:80%;">  
             <f:selectItem itemLabel="Select One" itemValue="" />  
             <f:selectItem itemLabel="Status 1" itemValue="1" />  
             <f:selectItem itemLabel="Status 2" itemValue="2" /> 
@@ -40,7 +40,7 @@
 
 	</p:panelGrid>
 	
-	<p:commandButton value="#{lbl['lbl.so.searchbtn']}" style="float:right;">
+	<p:commandButton value="SEARCH" style="float:right;">
     
 </p:commandButton>
 	<br/>
@@ -99,7 +99,7 @@
 <p:panel>
 <p:panelGrid columns="2" style="width:100%;" styleClass="noBorders tr,noBorders td">
 <h:outputText></h:outputText>
-<p:commandButton value="Create" style="float:right;">
+<p:commandButton value="CREATE" style="float:right;">
     
 </p:commandButton>
 </p:panelGrid>
