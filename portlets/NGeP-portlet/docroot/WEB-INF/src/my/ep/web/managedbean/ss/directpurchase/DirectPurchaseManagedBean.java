@@ -1,14 +1,8 @@
 package my.ep.web.managedbean.ss.directpurchase;
 
-import java.util.List;
-
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
-import javax.faces.context.FacesContext;
-import javax.portlet.PortletRequest;
 
-import my.ep.persistence.entity.ss.directpurchase.ReqNoteCatItem;
-import my.ep.persistence.entity.ss.directpurchase.RequestNote;
 import my.ep.web.constant.SourcingConst;
 import my.ep.web.managedbean.BaseManagedBean;
 
