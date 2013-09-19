@@ -10,65 +10,77 @@
 	</ui:define>
 
 	<ui:define name="sideMenu">
-		<ui:include src="/xhtml/ss/directpurchase/sc_sidemenu.xhtml" />
+		<ui:include src="/xhtml/ss/directpurchase/common/ss_directpurchase_sidemenu.xhtml" />
 	</ui:define>
 	<ui:define name="content">
 		<h:form>
-			<table style="width: 100%">
-				<tr>
-					<td width="100%" align="right"><p:commandButton
-							value="#{lbl['lbl.sc.save']}" /> <p:commandButton
-							value="#{lbl['lbl.sc.submit']}" /></td>
-				</tr>
-				<p:spacer height="10" />
-			</table>
-			<table style="width: 100%">
-				<tr>
-					<td width="100%" align="left"><p:commandButton
-							value="#{lbl['lbl.sc.save']}" /> <p:commandButton
-							value="#{lbl['lbl.sc.submit']}" /></td>
-				</tr>
-				<p:spacer height="10" />
-			</table>
-			<p:panel label="#{lbl['lbl.sc.item.detail']}"
-				header="#{lbl['lbl.sc.item.detail']}" toggleable="true">
+			<p:panel label="#{lbl['lbl.ss.simple.quote.general']}" header="#{lbl['lbl.ss.simple.quote.general']}" toggleable="true"  toggleSpeed="500">
 				<div align="right">
-					<p:button value="#{lbl['lbl.sc.action.search.catelogue']}" />
+					<p:commandButton value="#{lbl['lbl.ss.save']}" /> 
+					<p:commandButton value="#{lbl['lbl.ss.submit']}" />
+				</div>
+				<p:spacer height="10" />
+				<table style="width: 100%">
+					<tr>
+						<td width="20%" align="left">
+							<p:outputLabel value="#{lbl['lbl.sc.purchase.procurement.type']}" />
+						</td>
+						<TD>
+							<h:selectOneMenu id="procurementType" style="width: auto; min-width: 200px;" required="false" disabled="false">
+								<!--TODO hardcode  option value because later will replace by the list in backing bean -->
+								<f:selectItem id="adHoc" itemLabel="Ad Hoc procurement" itemValue="1" />
+								<f:selectItem id="emergency" itemLabel="Emergency Procurement" itemValue="2" />
+								<f:selectItem id="g2g" itemLabel="G2G" itemValue="3" />
+							</h:selectOneMenu>
+						</TD>
+					</tr>
+					<TR>
+						<TD width="20%" align="left">
+							<p:outputLabel value="#{lbl['lbl.sc.purchase.justification']}" />
+						</TD>
+						<TD>
+							<h:selectOneMenu id="justification" style="width: auto; min-width: 100px;" required="false" disabled="false">
+								<!--TODO hardcode  option value because later will replace by the list in backing bean -->
+								<f:selectItem id="flood" itemLabel="Flood" itemValue="1" />
+								<f:selectItem id="fire" itemLabel="Fire" itemValue="2" />
+								<f:selectItem id="epidemic" itemLabel="Epidemic" itemValue="3" />
+								<f:selectItem id="other" itemLabel="Others" itemValue="4" />
+							</h:selectOneMenu>
+							<h:inputText id="justificationTextId" style="width:450px;" required="false" />
+						</TD>
+					</TR>
+				</table>
+			</p:panel>
+			<p:panel label="#{lbl['lbl.ss.market.research']}" header="#{lbl['lbl.ss.market.research']}" toggleable="true"  toggleSpeed="500">
+				<div align="right">
+					<p:button value="#{lbl['lbl.ss.action.search.catelogue']}" />
 					<p:button value="#{lbl['lbl.sc.action.simple.quote']}"
 						outcome="/xhtml/ss/directpurchase/simpleQuote.xhtml" />
 					<p:button value="#{lbl['lbl.sc.action.simple.bid']}" />
 					<p:button value="#{lbl['lbl.sc.action.clone']}" />
 				</div>
 				<h:panelGrid columns="1" width="100%">
-					<p:dataTable id="itemdataTable"
-						value="#{directPurchaseBackingBean.managedBean.requestNote.reqNoteItems}"
-						var="reqNoteItem" width="100%" cellpadding="1"
+					<p:dataTable id="itemdataTable" width="100%" cellpadding="1"
 						columnClasses="at-dataTable-columnClass">
-						<p:column width="15%" rendered="true"
-							style="white-space:nowrap; text-align:center; vertical-align:top;">
-							<f:facet name="header">
-								<h:outputText value="#{lbl['lbl.sc.item.detail.category']}" />
-							</f:facet>
-						</p:column>
-						<p:column width="15%" rendered="true"
-							style="white-space:nowrap; text-align:center; vertical-align:top;">
-							<f:facet name="header">
-								<h:outputText value="#{lbl['lbl.sc.item.detail.minqty']}" />
-							</f:facet>
-						</p:column>
-						<p:column width="10%" rendered="true"
-							style="white-space:nowrap; text-align:center; vertical-align:top;">
-							<f:facet name="header">
-								<h:outputText value="#{lbl['lbl.sc.item.detail.uom']}" />
-							</f:facet>
-						</p:column>
 						<p:column width="15%" rendered="true"
 							style="white-space:nowrap; text-align:center; vertical-align:top;">
 							<f:facet name="header">
 								<h:outputText value="#{lbl['lbl.sc.item.detail.supplier']}" />
 							</f:facet>
 						</p:column>
+						<p:column width="15%" rendered="true"
+							style="white-space:nowrap; text-align:center; vertical-align:top;">
+							<f:facet name="header">
+								<h:outputText value="#{lbl['lbl.ss.item.detail.desc']}" />
+							</f:facet>
+						</p:column>
 						<p:column width="10%" rendered="true"
+							style="white-space:nowrap; text-align:center; vertical-align:top;">
+							<f:facet name="header">
+								<h:outputText value="#{lbl['lbl.sc.item.detail.minqty']}" />
+							</f:facet>
+						</p:column>
+						<p:column width="15%" rendered="true"
 							style="white-space:nowrap; text-align:center; vertical-align:top;">
 							<f:facet name="header">
 								<h:outputText value="#{lbl['lbl.sc.item.detail.unitPerPrice']}" />
@@ -83,13 +95,7 @@
 						<p:column width="10%" rendered="true"
 							style="white-space:nowrap; text-align:center; vertical-align:top;">
 							<f:facet name="header">
-								<h:outputText value="#{lbl['lbl.sc.item.detail.quotebid']}" />
-							</f:facet>
-						</p:column>
-						<p:column width="10%" rendered="true"
-							style="white-space:nowrap; text-align:center; vertical-align:top;">
-							<f:facet name="header">
-								<h:outputText value="#{lbl['lbl.sc.item.detail.recentPrice']}" />
+								<h:outputText value="#{lbl['lbl.ss.item.detail.view']}" />
 							</f:facet>
 						</p:column>
 						<p:column width="10%" rendered="true"
@@ -97,136 +103,11 @@
 
 						</p:column>
 					</p:dataTable>
-					<div style="text-align: right !important;">
-						<p:button value="ADD" />
-					</div>
 				</h:panelGrid>
-			</p:panel>
-			<p:spacer height="20" />
-			<p:panel label="#{lbl['lbl.sc.supplier.recommend']}"
-				header="#{lbl['lbl.sc.supplier.recommend']}" toggleable="true">
-				<h:panelGrid columns="1" width="100%">
-					<p:dataTable id="supplierdataTable" width="100%" cellpadding="1"
-						columnClasses="at-dataTable-columnClass">
-						<p:column width="15%" rendered="true"
-							style="white-space:nowrap; text-align:center; vertical-align:top;">
-							<f:facet name="header">
-								<h:outputText value="#{lbl['lbl.sc.item.detail.category']}" />
-							</f:facet>
-						</p:column>
-						<p:column width="15%" rendered="true"
-							style="white-space:nowrap; text-align:center; vertical-align:top;">
-							<f:facet name="header">
-								<h:outputText value="#{lbl['lbl.sc.supplier.supplier']}" />
-							</f:facet>
-						</p:column>
-						<p:column width="10%" rendered="true"
-							style="white-space:nowrap; text-align:center; vertical-align:top;">
-							<f:facet name="header">
-								<h:outputText value="#{lbl['lbl.sc.supplier.district']}" />
-							</f:facet>
-						</p:column>
-						<p:column width="15%" rendered="true"
-							style="white-space:nowrap; text-align:center; vertical-align:top;">
-							<f:facet name="header">
-								<h:outputText value="#{lbl['lbl.sc.supplier.postcode']}" />
-							</f:facet>
-						</p:column>
-						<p:column width="10%" rendered="true"
-							style="white-space:nowrap; text-align:center; vertical-align:top;">
-							<f:facet name="header">
-								<h:outputText value="#{lbl['lbl.sc.supplier.quote.detail']}" />
-							</f:facet>
-						</p:column>
-						<p:column width="10%" rendered="true"
-							style="white-space:nowrap; text-align:center; vertical-align:top;">
-							<f:facet name="header">
-								<h:outputText value="#{lbl['lbl.sc.supplier.price.offer']}" />
-							</f:facet>
-						</p:column>
-						<p:column width="10%" rendered="true"
-							style="white-space:nowrap; text-align:center; vertical-align:top;">
-							<f:facet name="header">
-								<h:outputText value="#{lbl['lbl.sc.supplier.recommend']}" />
-							</f:facet>
-						</p:column>
-					</p:dataTable>
-				</h:panelGrid>
-			</p:panel>
-			<p:spacer height="20" />
-			<p:panel label="#{lbl['lbl.sc.purchase.detail']}"
-				header="#{lbl['lbl.sc.purchase.detail']}" toggleable="true">
-				<h:panelGrid columns="4" width="100%">
-					<p:column>
-						<p:outputLabel value="#{lbl['lbl.sc.purchase.procurement.type']}" />
-					</p:column>
-					<p:column>
-						<h:selectOneMenu id="procurementType"
-							style="width: auto; min-width: 200px;" required="false"
-							disabled="false">
-						</h:selectOneMenu>
-					</p:column>
-					<p:column>
-						<p:outputLabel value="#{lbl['lbl.sc.purchase.fulfillment.type']}" />
-					</p:column>
-					<p:column>
-						<h:selectOneMenu id="fulfillmentType"
-							style="width: auto; min-width: 200px;" required="false"
-							disabled="false">
-						</h:selectOneMenu>
-					</p:column>
-					<p:column>
-						<p:outputLabel value="#{lbl['lbl.sc.purchase.justification']}" />
-					</p:column>
-					<p:column>
-						<h:selectOneMenu id="justification"
-							style="width: auto; min-width: 100px;" required="false"
-							disabled="false">
-						</h:selectOneMenu>
-						<h:inputText id="justificationTextId" style="width:100px;"
-							required="false" />
-					</p:column>
-					<p:column>
-					</p:column>
-					<p:column />
-					<p:column>
-						<p:outputLabel value="#{lbl['lbl.sc.purchase.start.date']}" />
-					</p:column>
-					<p:column>
-						<p:calendar id="startdatePopupButtonCal22" showOn="button">
-							<p:ajax process="startdatePopupButtonCal22" partialSubmit="true"
-								event="change" />
-						</p:calendar>
-					</p:column>
-
-					<p:column>
-						<p:outputLabel value="#{lbl['lbl.sc.purchase.end.date']}" />
-					</p:column>
-					<p:column>
-						<p:calendar id="enddatePopupButtonCal22" showOn="button">
-							<p:ajax process="enddatePopupButtonCal22" partialSubmit="true"
-								event="change" />
-						</p:calendar>
-					</p:column>
-					<p:column>
-						<p:outputLabel value="#{lbl['lbl.sc.purchase.approval.list']}" />
-					</p:column>
-					<p:column>
-						<h:selectOneMenu id="approvalId"
-							style="width: auto; min-width: 200px;" required="false"
-							disabled="false">
-						</h:selectOneMenu>
-					</p:column>
-					<p:column>
-						<p:outputLabel value="#{lbl['lbl.sc.purchase.prepare.loiloa']}" />
-					</p:column>
-					<p:column>
-						<h:selectOneMenu id="prepareLOILOAId"
-							style="width: auto; min-width: 200px;" required="false"
-							disabled="false">
-						</h:selectOneMenu>
-					</p:column>
-				</h:panelGrid>
+				<div align="right">
+					<p:button value="#{lbl['lbl.ss.action.group']}" />
+					<p:button value="#{lbl['lbl.ss.action.recommend']}" />
+				</div>
 			</p:panel>
 		</h:form>
 	</ui:define>
