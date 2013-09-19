@@ -1,0 +1,251 @@
+<ui:composition
+	template="/WEB-INF/facelets/templates/sidemenu_template.xhtml"
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:c="http://java.sun.com/jsp/jstl/core">
+	<ui:define name="resourceSection">
+	</ui:define>
+	<ui:define name="content">
+		<h:form>
+			<table style="width: 100%">
+				<tr>
+					<td width="100%" align="right"><p:commandButton
+							value="#{lbl['lbl.sc.save']}" /> <p:commandButton
+							value="#{lbl['lbl.sc.submit']}" /></td>
+				</tr>
+				<p:spacer height="10" />
+			</table>
+			<p:panel label="#{lbl['lbl.ss.simple.quote.general']}"
+				header="#{lbl['lbl.ss.simple.quote.general']}" toggleable="true">
+				<p:panelGrid
+					style="border-style: none; wiwth: 100%; border: 0 solid #FFFFFF !important;">
+					<p:row>
+						<p:column width="25%">
+							<p:outputLabel
+								value="#{lbl['lbl.ss.simple.quote.ministry.code']}" />
+						</p:column>
+						<p:column width="25%">
+							<p:inputText readonly="true" />
+						</p:column>
+						<p:column width="25%">
+							<p:outputLabel value="#{lbl['lbl.ss.simple.quote.department']}" />
+						</p:column>
+						<p:column width="25%">
+							<p:inputText readonly="true" />
+						</p:column>
+					</p:row>
+					<p:row>
+						<p:column>
+							<p:outputLabel value="#{lbl['lbl.ss.simple.quote.devision']}" />
+						</p:column>
+						<p:column>
+							<p:inputText readonly="true" />
+						</p:column>
+						<p:column>
+							<p:outputLabel
+								value="#{lbl['lbl.ss.simple.quote.requisitioner']}" />
+						</p:column>
+						<p:column>
+							<p:inputText readonly="true" />
+						</p:column>
+					</p:row>
+					<p:row>
+						<p:column>
+							<p:outputLabel
+								value="#{lbl['lbl.ss.simple.quote.requisitioner.title']}" />
+						</p:column>
+						<p:column colspan="3">
+							<p:inputText readonly="true" />
+						</p:column>
+					</p:row>
+					<p:row>
+						<p:column>
+							<p:outputLabel value="#{lbl['lbl.ss.simple.quote.remark']}" />
+						</p:column>
+						<p:column colspan="3">
+							<p:inputTextarea />
+						</p:column>
+					</p:row>
+				</p:panelGrid>
+			</p:panel>
+			<p:panel label="#{lbl['lbl.ss.simple.quote.item.specs']}"
+				header="#{lbl['lbl.ss.simple.quote.item.specs']}" toggleable="true">
+				<p:panelGrid
+					style="border-style: none; wiwth: 100%; border: 0 solid #FFFFFF !important;">
+					<p:row>
+						<p:column width="25%">
+							<p:outputLabel
+								value="#{lbl['lbl.ss.simple.quote.procurement.type']}" />
+						</p:column>
+						<p:column width="75%" colspan="3">
+							<h:selectOneMenu id="procurementType"
+								style="width: auto; min-width: 200px;" required="false"
+								disabled="false">
+							</h:selectOneMenu>
+						</p:column>
+					</p:row>
+					<p:row>
+						<p:column width="25%">
+							<p:outputLabel value="#{lbl['lbl.ss.simple.quote.item.detail']}" />
+						</p:column>
+						<p:column colspan="3" width="75%">
+							<p:dataTable id="itemspecsdataTable" width="100%" cellpadding="1"
+								columnClasses="at-dataTable-columnClass">
+								<p:column width="15%" rendered="true"
+									style="white-space:nowrap; text-align:center; vertical-align:top;">
+									<f:facet name="header">
+										<h:outputText value="#{lbl['lbl.ss.simple.quote.item.name']}" />
+									</f:facet>
+								</p:column>
+								<p:column width="15%" rendered="true"
+									style="white-space:nowrap; text-align:center; vertical-align:top;">
+									<f:facet name="header">
+										<h:outputText
+											value="#{lbl['lbl.ss.simple.quote.item.description']}" />
+									</f:facet>
+								</p:column>
+								<p:column width="10%" rendered="true"
+									style="white-space:nowrap; text-align:center; vertical-align:top;">
+									<f:facet name="header">
+										<h:outputText
+											value="#{lbl['lbl.ss.simple.quote.item.product.code']}" />
+									</f:facet>
+								</p:column>
+								<p:column width="15%" rendered="true"
+									style="white-space:nowrap; text-align:center; vertical-align:top;">
+									<f:facet name="header">
+										<h:outputText
+											value="#{lbl['lbl.ss.simple.quote.item.quantity']}" />
+									</f:facet>
+								</p:column>
+								<p:column width="10%" rendered="true"
+									style="white-space:nowrap; text-align:center; vertical-align:top;">
+									<f:facet name="header">
+										<h:outputText value="#{lbl['lbl.ss.simple.quote.item.uom']}" />
+									</f:facet>
+								</p:column>
+								<p:column width="10%" rendered="true"
+									style="white-space:nowrap; text-align:center; vertical-align:top;">
+									<f:facet name="header">
+										<h:outputText
+											value="#{lbl['lbl.ss.simple.quote.item.action']}" />
+									</f:facet>
+								</p:column>
+							</p:dataTable>
+							<div style="text-align: right !important;">
+								<p:button value="ADD" />
+							</div>
+						</p:column>
+					</p:row>
+					<p:row>
+						<p:column width="25%">
+							<p:outputLabel value="#{lbl['lbl.ss.simple.quote.quote.price']}" />
+						</p:column>
+						<p:column width="25%">
+							<p:inputText id="quotePrice" />
+						</p:column>
+						<p:column width="25%">
+							<p:outputLabel value="#{lbl['lbl.ss.simple.quote.panel']}" />
+						</p:column>
+						<p:column width="25%">
+							<p:selectOneRadio id="panel">
+								<f:selectItem
+									itemLabel="#{lbl['lbl.ss.simple.quote.panel.yes']}"
+									itemValue="1" />
+								<f:selectItem itemLabel="#{lbl['lbl.ss.simple.quote.panel.no']}"
+									itemValue="0" />
+							</p:selectOneRadio>
+						</p:column>
+					</p:row>
+					<p:row>
+						<p:column width="25%">
+							<p:outputLabel value="#{lbl['lbl.ss.simple.quote.startdate']}" />
+						</p:column>
+						<p:column width="25%">
+							<p:calendar id="startdatePopupButtonCal22" showOn="button">
+								<p:ajax process="startdatePopupButtonCal22" partialSubmit="true"
+									event="change" />
+							</p:calendar>
+						</p:column>
+						<p:column width="25%">
+							<p:outputLabel value="#{lbl['lbl.ss.simple.quote.enddate']}" />
+						</p:column>
+						<p:column width="25%">
+							<p:calendar id="enddatePopupButtonCal22" showOn="button">
+								<p:ajax process="enddatePopupButtonCal22" partialSubmit="true"
+									event="change" />
+							</p:calendar>
+						</p:column>
+					</p:row>
+				</p:panelGrid>
+			</p:panel>
+			<p:spacer height="20" />
+			<p:panel label="#{lbl['lbl.ss.simple.quote.invitation.criteria']}"
+				header="#{lbl['lbl.ss.simple.quote.invitation.criteria']}"
+				toggleable="true">
+				<p:panelGrid
+					style="border-style: none; wiwth: 100%; border: 0 solid #FFFFFF !important;">
+					<p:row>
+						<p:column>
+							<p:selectBooleanCheckbox id="byLocality" />
+							<p:outputLabel
+								value="#{lbl['lbl.ss.simple.quote.criteria.locality']}" />
+						</p:column>
+						<p:column>
+							<h:selectOneMenu id="locality"
+								style="width: auto; min-width: 150px;" required="false"
+								disabled="false">
+							</h:selectOneMenu>
+						</p:column>
+						<p:column>
+							<p:selectBooleanCheckbox id="byMOF" />
+							<p:outputLabel value="#{lbl['lbl.ss.simple.quote.criteria.mof']}" />
+						</p:column>
+					</p:row>
+					<p:row>
+						<p:column>
+							<p:outputLabel
+								value="#{lbl['lbl.ss.simple.quote.criteria.justification']}" />
+						</p:column>
+						<p:column>
+							<p:inputText id="justification" />
+						</p:column>
+						<p:column>
+							<p:outputLabel
+								value="#{lbl['lbl.ss.simple.quote.criteria.supplier.id']}" />
+						</p:column>
+						<p:column>
+							<h:selectOneMenu id="supplierIdSelectBoxId"
+								style="width: auto; min-width: 100px;" required="false"
+								disabled="false">
+							</h:selectOneMenu>
+							<h:inputText id="supplierIdTextId" style="width:100px;"
+								required="false" />
+						</p:column>
+					</p:row>
+					<p:row>
+						<p:column>
+							<p:selectBooleanCheckbox id="bySupplierName" />
+							<p:outputLabel
+								value="#{lbl['lbl.ss.simple.quote.criteria.supplier.name']}" />
+						</p:column>
+						<p:column>
+							<h:inputText id="supplierNameTextId" />
+						</p:column>
+						<p:column>
+							<p:selectBooleanCheckbox id="byNatureBusiness" />
+							<p:outputLabel
+								value="#{lbl['lbl.ss.simple.quote.criteria.nature.business']}" />
+						</p:column>
+						<p:column rowspan="2">
+
+						</p:column>
+					</p:row>
+				</p:panelGrid>
+			</p:panel>
+		</h:form>
+	</ui:define>
+</ui:composition>
