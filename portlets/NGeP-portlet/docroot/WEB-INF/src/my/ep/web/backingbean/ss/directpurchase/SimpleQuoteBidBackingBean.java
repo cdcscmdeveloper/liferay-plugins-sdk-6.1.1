@@ -3,11 +3,16 @@ package my.ep.web.backingbean.ss.directpurchase;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
+import javax.faces.context.FacesContext;
+
+import org.primefaces.event.RowEditEvent;
 
 import my.ep.web.managedbean.ss.directpurchase.SimpleQuoteBidManagedBean;
 import my.ep.web.backingbean.BaseBackingBean;
+import my.ep.web.bean.ss.quatationtender.QtnTenderBean;
 
 @ManagedBean
 @SessionScoped
@@ -46,4 +51,18 @@ public class SimpleQuoteBidBackingBean extends
 		return utilList;
 	}
 
+	
+	public void onEdit(RowEditEvent event) {
+		FacesMessage msg = new FacesMessage("Car Edited",
+				((QtnTenderBean) event.getObject()).getDeptCode());
+
+		FacesContext.getCurrentInstance().addMessage(null, msg);
+	}
+
+	public void onCancel(RowEditEvent event) {
+		FacesMessage msg = new FacesMessage("Car Cancelled",
+				((QtnTenderBean) event.getObject()).getDeptCode());
+
+		FacesContext.getCurrentInstance().addMessage(null, msg);
+	}
 }
