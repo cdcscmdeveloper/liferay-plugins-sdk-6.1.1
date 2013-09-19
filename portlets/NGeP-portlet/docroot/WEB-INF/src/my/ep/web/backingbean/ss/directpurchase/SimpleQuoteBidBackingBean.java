@@ -13,6 +13,8 @@ import org.primefaces.event.RowEditEvent;
 import my.ep.web.managedbean.ss.directpurchase.SimpleQuoteBidManagedBean;
 import my.ep.web.backingbean.BaseBackingBean;
 import my.ep.web.bean.ss.quatationtender.QtnTenderBean;
+import org.primefaces.model.DualListModel; 
+
 
 @ManagedBean
 @SessionScoped
@@ -20,11 +22,20 @@ public class SimpleQuoteBidBackingBean extends
 		BaseBackingBean<SimpleQuoteBidManagedBean> {
 
 	private List<SimpleQuoteBidBean> utilList;
-
+	private DualListModel<String> cities;
 	public SimpleQuoteBidBackingBean() {
 
 		utilList = new ArrayList<SimpleQuoteBidBean>();
-
+		List<String> citiesSource = new ArrayList<String>();  
+        List<String> citiesTarget = new ArrayList<String>();  
+          
+        citiesSource.add("Item1");  
+        citiesSource.add("Item2");  
+        citiesSource.add("Item3");  
+        citiesSource.add("Item4");  
+        citiesSource.add("Item5");  
+          
+        cities = new DualListModel<String>(citiesSource, citiesTarget); 
 		prepareUtilList();
 	}
 
@@ -34,6 +45,16 @@ public class SimpleQuoteBidBackingBean extends
 
 	public void setUtilList(List<SimpleQuoteBidBean> utilList) {
 		this.utilList = utilList;
+	}
+	
+	
+
+	public DualListModel<String> getCities() {
+		return cities;
+	}
+
+	public void setCities(DualListModel<String> cities) {
+		this.cities = cities;
 	}
 
 	private List<SimpleQuoteBidBean> prepareUtilList() {
@@ -54,14 +75,14 @@ public class SimpleQuoteBidBackingBean extends
 	
 	public void onEdit(RowEditEvent event) {
 		FacesMessage msg = new FacesMessage("Car Edited",
-				((QtnTenderBean) event.getObject()).getDeptCode());
+				((SimpleQuoteBidBean) event.getObject()).getDescription());
 
 		FacesContext.getCurrentInstance().addMessage(null, msg);
 	}
 
 	public void onCancel(RowEditEvent event) {
 		FacesMessage msg = new FacesMessage("Car Cancelled",
-				((QtnTenderBean) event.getObject()).getDeptCode());
+				((SimpleQuoteBidBean) event.getObject()).getDescription());
 
 		FacesContext.getCurrentInstance().addMessage(null, msg);
 	}
