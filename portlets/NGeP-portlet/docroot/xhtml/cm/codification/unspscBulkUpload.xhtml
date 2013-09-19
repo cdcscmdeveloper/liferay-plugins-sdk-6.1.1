@@ -17,15 +17,23 @@
 			<h:panelGroup id="cmUNSPSCBulkUploadID">
 				<h:outputLabel styleClass="titleFront"
 					value="#{lbl['lbl.cm.unspsc.code.bulk.upload']}"></h:outputLabel>
-					
-			
-			<p:commandButton value="upload"></p:commandButton>
 
 
-				
-
+				<p:commandButton value="upload" onclick="unspscUploadDialog.show()"></p:commandButton>
 
 			</h:panelGroup>
+
+			<p:dialog id="unspscUploadDialog" widgetVar="unspscUploadDialog"
+				modal="false" resizable="false">
+
+
+				<p:fileUpload
+					fileUploadListener="#{codificationBackingBean.uploadUNSPSC}"
+					mode="advanced" id="upload" allowTypes="/(\.|\/)(xls|flv|xlsx)$/"
+					invalidFileMessage="Only XLS files are accepted">
+				</p:fileUpload>
+
+			</p:dialog>
 
 
 		</h:panelGrid>
