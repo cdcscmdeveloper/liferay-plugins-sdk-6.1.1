@@ -451,7 +451,7 @@
 		</portlet-class>
 		<init-param>
 			<name>javax.portlet.faces.defaultViewId.view</name>
-			<value>/xhtml/pp/budget/listBudget.xhtml</value>
+			<value>/xhtml/pp/budgetallocation/listBudget.xhtml</value>
 		</init-param>
 		<expiration-cache>0</expiration-cache>
 		<supports>
@@ -484,7 +484,7 @@
 		</portlet-class>
 		<init-param>
 			<name>javax.portlet.faces.defaultViewId.view</name>
-			<value>/xhtml/pp/plan/listPlan.xhtml</value>
+			<value>/xhtml/pp/procurementplan/listPlan.xhtml</value>
 		</init-param>
 		<expiration-cache>0</expiration-cache>
 		<supports>
