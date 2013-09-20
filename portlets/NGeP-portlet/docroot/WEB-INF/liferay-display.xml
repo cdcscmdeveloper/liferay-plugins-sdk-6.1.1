@@ -59,6 +59,7 @@
 	</category>
 	<!-- Procurement Plan - END -->
 	
+	
 	<category name="Sourcing">
 		<portlet id="Quatation"></portlet>
 		<portlet id="Committee"></portlet>
