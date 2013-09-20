@@ -3,10 +3,13 @@ package my.ep.web.backingbean.ct;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.RequestScoped;
+import javax.faces.context.FacesContext;
 import javax.faces.model.SelectItem;
 
+import org.primefaces.event.CellEditEvent;
 import org.primefaces.event.TabChangeEvent;
 import org.primefaces.model.DefaultTreeNode;
 import org.primefaces.model.TreeNode;
@@ -36,7 +39,20 @@ public class contractDetailsBackingBean extends BaseBackingBean<ContractDetailsM
 	 private CheckBoxSelections checkBoxSelections;
 	 private ApproverSetting approverSetting;
 	 
-	 
+	 private final static String[] deductions;   
+		
+	 public String[] getDeductions() {
+		return deductions;
+	}
+
+		static {  
+	  
+			deductions = new String[4];  
+			deductions[0] = "Royalty";  
+			deductions[1] = "Penalty";  
+			deductions[2] = "Advanced Payment";  
+			deductions[3] = "Others";  
+	    }  
 	
 
 	private boolean activeSuspension;
@@ -296,4 +312,14 @@ public class contractDetailsBackingBean extends BaseBackingBean<ContractDetailsM
 			    	System.out.println(e);
 			    }
 			}
+			
+			public void onCellEdit(CellEditEvent event) {  
+		        Object oldValue = event.getOldValue();  
+		        Object newValue = event.getNewValue();  
+		          
+		        if(newValue != null && !newValue.equals(oldValue)) {  
+		            FacesMessage msg = new FacesMessage(FacesMessage.SEVERITY_INFO, "Cell Changed", "Old: " + oldValue + ", New:" + newValue);  
+		            FacesContext.getCurrentInstance().addMessage(null, msg);  
+		        }  
+		    }  
 }

@@ -18,10 +18,12 @@
 
 	<ui:define name="content">
 
-		<h:form prependId="false" id="form">
-			<p:messages showDetail="true" globalOnly="true" />
-
-
+		<p:panel id="pRightPanel">
+			<div class="ppRightBtn">
+				<p:commandButton id="ctSave" value="#{lbl['lbl.ct.btn.save']}"/>
+				<p:commandButton id="ctSubmit" value="#{lbl['lbl.ct.btn.submit']}"/>
+			</div>
+		</p:panel>
 
 			<p:panel id="itemId" header="Item Details" toggleable="true"
 				toggleSpeed="500" widgetVar="panelitem">
@@ -166,14 +168,6 @@
 					</p:panel>
 
 				</h:panelGrid>
-
-
-
-			</p:outputPanel>
-
-
-
-
-		</h:form>
+		</p:outputPanel>
 	</ui:define>
 </ui:composition>

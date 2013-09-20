@@ -16,10 +16,13 @@
 	</ui:define>
 
 	<ui:define name="content">
-	 <h:form prependId="false" id="form">
-	   <p:messages showDetail="true" globalOnly="true"/>
+	 <p:panel id="pRightPanel">
+			<div class="ppRightBtn">
+				<p:commandButton id="ctSave" value="#{lbl['lbl.ct.btn.save']}"/>
+				<p:commandButton id="ctSubmit" value="#{lbl['lbl.ct.btn.submit']}"/>
+			</div>
+		</p:panel>
 	   <ui:include src="/xhtml/ct/fulfilmentdetails/shared/remarks.xhtml" />
-	   </h:form>
 	   </ui:define>
 	   </ui:composition>
 	   

@@ -12,7 +12,12 @@
 		<ui:include src="/xhtml/ct/circular/shared/sidemenu/central.xhtml" />
 	</ui:define>
     <ui:define name="content">
-	   <p:messages showDetail="true" globalOnly="true"/>
+	   <p:panel id="pRightPanel">
+			<div class="ppRightBtn">
+				<p:commandButton id="ctSave" value="#{lbl['lbl.ct.btn.save']}"/>
+				<p:commandButton id="ctSubmit" value="#{lbl['lbl.ct.btn.submit']}"/>
+			</div>
+		</p:panel>
         <p:panel id="concelCircular" header="Cancel Circular"  toggleable="true"  toggleSpeed="500" widgetVar="panelconcelCircular">
            <h:panelGrid style="width:800px;">  
                                   <p:dataTable id="dataTable" var="data" value=" " widgetVar="dataTableObj" lazy="false" dynamic="true" 

@@ -12,7 +12,12 @@
 		<ui:include src="/xhtml/ct/agreement/shared/sidemenu/agreement.xhtml" />
 	</ui:define>
     <ui:define name="content">
-	   <p:messages showDetail="true" globalOnly="true"/> 
+	 <p:panel id="pRightPanel">
+			<div class="ppRightBtn">
+				<p:commandButton id="ctSave" value="#{lbl['lbl.ct.btn.save']}"/>
+				<p:commandButton id="ctSubmit" value="#{lbl['lbl.ct.btn.submit']}"/>
+			</div>
+		</p:panel>
 		  <p:panel id="createAgreement" header="#{lbl['lbl.ct.ag.panel.header']}"  toggleable="true"  toggleSpeed="500" widgetVar="agreement">
            <h:panelGrid style="width:800px;">  
              <p:spacer height="5"/>
@@ -40,8 +45,9 @@
 				</p:dataTable>
 			 </h:panelGrid>
 			 <h:panelGrid style="width:800px" columnClasses="column-align-right">
-			    <p:commandButton value="#{lbl['lbl.ct.ag.btn.export']}" process="@this" partialSubmit="true" 
-			    icon="ui-icon-add" /> 
+			 <p:commandButton value="#{lbl['lbl.ct.ag.btn.export']}" ajax="false">  
+                     <p:fileDownload value="#{agreementBackingBean.file}" />  
+             </p:commandButton>  
 			 </h:panelGrid>
 			 <h:panelGrid style="width:800px;">  
                <p:spacer height="5"/>

@@ -17,10 +17,12 @@
 
 	<ui:define name="content">
 		      
-        	<h:form prependId="false" id="form">         
-        	       <p:messages showDetail="true" globalOnly="true"/> 
-		      
-        	        
+        <p:panel id="pRightPanel">
+			<div class="ppRightBtn">
+				<p:commandButton id="ctSave" value="#{lbl['lbl.ct.btn.save']}"/>
+				<p:commandButton id="ctSubmit" value="#{lbl['lbl.ct.btn.submit']}"/>
+			</div>
+		</p:panel> 
         	       
                      <p:panel id="itemId" header="Item Details"   toggleable="true"  toggleSpeed="500" widgetVar="panelitem">
                                            
@@ -38,8 +40,8 @@
 									                  
 									                      <p:column colspan="1"  style="width:80px" headerText="Item Code" /> 
 									                     <p:column colspan="1"  style="width:320px" headerText="Item Name" /> 	
-									                     <p:column colspan="1" style="width:100px" headerText="Origin Country"  /> 
-									                     <p:column colspan="1"  style="width:70px" headerText="Price UOM" /> 	
+									                     <p:column colspan="1" style="width:100px" headerText="UOM"  /> 
+									                     <p:column colspan="1"  style="width:70px" headerText="Minimum Order" /> 	
 									                     <p:column colspan="1" style="width:50px" headerText="Exempted"  /> 
 									                 
 									                    
@@ -48,9 +50,11 @@
 							
 							                </p:columnGroup>
 							                   				
-							             <p:column></p:column>       
-						
-							                     
+							             <p:column><p:outputLabel value="EP 308X3120P"/></p:column>       
+						                  <p:column><p:outputLabel value="DESKTOP"/></p:column>       
+						                   <p:column><p:outputLabel value="UNIT"/></p:column>       
+						                    <p:column><p:outputLabel value="5"/></p:column>       
+							                  <p:column> <p:selectBooleanCheckbox value=""/></p:column>     
 							                     
 							                     
 							               </p:dataTable>
@@ -125,7 +129,6 @@
                                     
                                     
                
-              
-	</h:form>
+   
 	</ui:define>
 	</ui:composition>

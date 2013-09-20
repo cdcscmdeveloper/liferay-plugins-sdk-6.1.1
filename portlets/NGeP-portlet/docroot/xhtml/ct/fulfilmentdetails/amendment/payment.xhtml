@@ -17,7 +17,12 @@
 
 	<ui:define name="content">
 		      
-        	       <p:messages showDetail="true" globalOnly="true"/> 
+        	      <p:panel id="pRightPanel">
+			<div class="ppRightBtn">
+				<p:commandButton id="ctSave" value="#{lbl['lbl.ct.btn.save']}"/>
+				<p:commandButton id="ctSubmit" value="#{lbl['lbl.ct.btn.submit']}"/>
+			</div>
+		</p:panel>
         	       
                      <p:panel id="paymentId" header="Payment History"  toggleable="true"  toggleSpeed="500" widgetVar="panelpayment">
                       <ui:include src="/xhtml/ct/fulfilmentdetails/shared/payment.xhtml" />

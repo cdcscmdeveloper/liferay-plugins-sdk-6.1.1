@@ -12,7 +12,11 @@ import javax.faces.bean.RequestScoped;
 import javax.faces.context.ExternalContext;
 import javax.faces.context.FacesContext;
 import javax.faces.model.SelectItem;
+import javax.portlet.ResourceRequest;
+import javax.portlet.ResourceResponse;
+
 import org.primefaces.model.DefaultStreamedContent;
+import org.primefaces.model.StreamedContent;
 
 import my.ep.web.backingbean.BaseBackingBean;
 import my.ep.web.bean.ct.AgreementDetails;
@@ -34,7 +38,7 @@ public class AgreementBackingBean extends BaseBackingBean<AgreementManagedBean> 
 	private DefaultStreamedContent download;
 	private ContractListItem contractListItem;
 	private boolean supplementValue = true; 
-	
+	private StreamedContent file;  
 	private String agreements;
 	
 
@@ -54,11 +58,23 @@ public class AgreementBackingBean extends BaseBackingBean<AgreementManagedBean> 
 	public AgreementBackingBean(){
 		agreementDetails = new AgreementDetails();
 		contractListItem = new ContractListItem();
-		menuAgreement = false;
-		System.out.println("===========101====================="+contractListItem.getViewAgreement());
-	 
+		menuAgreement = false; 
+	    InputStream stream = this.getClass().getResourceAsStream("C:/Users/HP/Desktop/CT.pdf");  
+	    file = new DefaultStreamedContent(stream, "application/pdf", "C:/Users/HP/Desktop/CT.pdf");  
 	}
 	
+	public void serveResource(ResourceRequest req, ResourceResponse res) {
+		
+	}
+  
+	
+	public StreamedContent getFile() {  
+        return file;  
+    }  
+  
+    public void setFile(StreamedContent file) {  
+        this.file = file;  
+    }  
 	
 
 	public void setSupplementValue(boolean supplementValue) {

@@ -15,9 +15,12 @@
 	</ui:define>
   
 	<ui:define name="content">
-	 <h:form prependId="false" id="form">
-	   <p:messages showDetail="true" globalOnly="true"/>
-	   
+	<p:panel id="pRightPanel">
+			<div class="ppRightBtn">
+				<p:commandButton id="ctSave" value="#{lbl['lbl.ct.btn.save']}"/>
+				<p:commandButton id="ctSubmit" value="#{lbl['lbl.ct.btn.submit']}"/>
+			</div>
+		</p:panel>
 	     <p:panel id="fd" header="#{lbl['lbl.ct.panel.name']}" toggleable="true"  toggleSpeed="500" widgetVar="panelfd">
             <ui:include src="/xhtml/ct/fulfilmentdetails/shared/fulfilment.xhtml"/>
          </p:panel>
@@ -184,7 +187,5 @@
 					</p:panel>
 				</p:dialog>
                                         
-                               
-            </h:form>
             </ui:define>
             </ui:composition>

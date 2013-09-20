@@ -6,68 +6,62 @@
 	xmlns:p="http://primefaces.org/ui"
 	xmlns:c="http://java.sun.com/jsp/jstl/core">
   
-  
+   <p:panel id="deductionId" header="Deduction Details"   toggleable="true"  toggleSpeed="500" widgetVar="paneldeduction">
+   
        <h:panelGrid columns="1">
-			                               
-			                               <p:dataTable id="dataTable" var="data" value=" " widgetVar="dataTableObj" lazy="false" dynamic="true" 
-			                               paginator="true" paginatorPosition="bottom" paginatorAlwaysVisible="true" emptyMessage="No Records!" rows="10" 
-			                               rowsPerPageTemplate="5,10,15,20" currentPageReportTemplate=" total {totalRecords},  page {currentPage} of {totalPages} "
-							               paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink}
-							                {LastPageLink} {RowsPerPageDropdown}">
-							
-							                <p:columnGroup type="header"> 
-								                <p:row> 
-									                  
-									                     <p:column colspan="1" style="width:130px" styleClass="text-align: left" headerText="Type"  /> 
-									                     <p:column colspan="1"  style="width:300px" styleClass="text-align: left" headerText="Description" /> 
-									                     <p:column colspan="1"  style="width:100px" styleClass="text-align: left" headerText="Currency" /> 	
-									                     <p:column colspan="1" style="width:120px" styleClass="text-align: left" headerText="Amount Recieved"  /> 
-									                     <p:column colspan="1" style="width:60px" styleClass="text-align: left" headerText="Action"  /> 
-									                    
-									                    
-								               </p:row>							
-								
-							
-							                </p:columnGroup>
-							                   				
-							             <p:column><p:selectOneMenu value=" " style="width:130px;">
-                                                               <f:selectItem itemLabel="--Please Select--" itemValue="--Please Select--" /> 
-            					                             <f:selectItem itemLabel="Royalty" itemValue="Royalty" /> 
-            					                              <f:selectItem itemLabel="Penalty" itemValue="Penalty" /> 
-            					                               <f:selectItem itemLabel="Advanced Payment" itemValue="Advanced Payment" /> 
-            					                                <f:selectItem itemLabel="Others" itemValue="Others" /> 
-            					     
-            					           </p:selectOneMenu>   
-            					           </p:column>       
-						                   <p:column><h:inputText value="Supplier request for advanced payment 20% of the contract value" 
-						                   style="width:290px;"/></p:column>
-							               <p:column> <p:selectOneMenu value=" " style="width:70px;">
-                                                            
-            					                             <f:selectItem itemLabel="MYR" itemValue="MYR" /> 
-            					                              <f:selectItem itemLabel="USD" itemValue="USD" /> 
-            					        
-            					           </p:selectOneMenu>   
-							               
-							               </p:column>      
-							                 <p:column><h:inputText value="50000.00"   style="width:100px;"/></p:column>  
-						                     <p:column styleClass="column-align-center">
-								                 <p:commandButton title="delete" onsuccess="confirmation.show()" partialSubmit="true" process="@this" 
-								                 icon="ui-icon-delete" styleClass="ui-icon-button"/>
-							                     </p:column>     
-							                     
-							               </p:dataTable>
-							               </h:panelGrid> 
-							               <h:panelGrid style="width:750px" columnClasses="column-align-right">
-							                       <p:commandButton value="Add" styleClass="text-align: right;" process="@this" partialSubmit="true" icon="ui-icon-add"  update="dataTable"/>
-							
-						                  </h:panelGrid>
-							              
-							               
-						           
-						            
+		<p:dataTable id="dataTable" var="data" value=" " widgetVar="dataTableObj"	editable="true" editMode="cell"
+		 paginator="true" paginatorPosition="bottom" paginatorAlwaysVisible="true" emptyMessage="No Records!" rows="10" 
+		  rowsPerPageTemplate="5,10,15,20" currentPageReportTemplate=" total {totalRecords},  page {currentPage} of {totalPages} "
+		  paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink}
+		  {LastPageLink} {RowsPerPageDropdown}">
 			
-						
-						  <p:panel id="clauseId" header="Deduction Clause"    toggleable="true"  toggleSpeed="500" widgetVar="panelclause">
+		  <p:ajax event="cellEdit" listener="#{contractDetailsBackingBean.onCellEdit}" />  
+           <p:column headerText="Type" style="width:130px;">  
+               <p:cellEditor>  
+                    <f:facet name="output"><h:outputText value="#{contractDetailsBackingBean.createContractDetails.deductionType}" /></f:facet>  
+                <f:facet name="input">  
+                    <h:selectOneMenu value="#{contractDetailsBackingBean.createContractDetails.deductionType}" style="width:100%">  
+                        <f:selectItems value="#{contractDetailsBackingBean.deductions}" var="type" itemLabel="#{type}" itemValue="#{type}" />  
+                    </h:selectOneMenu>  
+                </f:facet>   
+               </p:cellEditor>  
+           </p:column>  
+           
+           <p:column headerText="Description" style="width:300px;">  
+               <p:cellEditor>  
+                   <f:facet name="output"><h:outputText value="#{contractDetailsBackingBean.createContractDetails.deductionDesc}" /></f:facet>  
+                   <f:facet name="input"><p:inputText id="desInput" value="#{contractDetailsBackingBean.createContractDetails.deductionDesc}" style="width:96%"/></f:facet>  
+               </p:cellEditor>  
+           </p:column>  
+			
+			 <p:column headerText="Currency" style="width:100px;">  
+               <p:cellEditor>  
+                    <f:facet name="output"><h:outputText value="#{contractDetailsBackingBean.createContractDetails.deductionCur}" /></f:facet>  
+                <f:facet name="input">  
+                    <h:selectOneMenu value="#{contractDetailsBackingBean.createContractDetails.deductionType}" style="width:100%">  
+                        <f:selectItems value="#{contractDetailsBackingBean.contractListItem.currency}"  />  
+                    </h:selectOneMenu>  
+                </f:facet>   
+               </p:cellEditor>  
+           </p:column>  
+			
+			<p:column headerText="Amount Recieved" style="width:120px;">  
+               <p:cellEditor>  
+                   <f:facet name="output"><h:outputText value="#{contractDetailsBackingBean.createContractDetails.deductionAmtRecv}" /></f:facet>  
+                   <f:facet name="input"><p:inputText id="amtInput" value="#{contractDetailsBackingBean.createContractDetails.deductionAmtRecv}" style="width:96%"/></f:facet>  
+               </p:cellEditor>  
+           </p:column>  
+			 <p:column styleClass="column-align-center">
+			  <p:commandButton title="delete" onsuccess="confirmation.show()" partialSubmit="true" process="@this" 
+			   icon="ui-icon-delete"/>
+			 </p:column>     
+			</p:dataTable>
+		</h:panelGrid> 
+		 <h:panelGrid style="width:750px" columnClasses="column-align-right">
+			<p:commandButton value="Add" styleClass="text-align: right;" process="@this" partialSubmit="true" icon="ui-icon-add"  update="dataTable"/>
+		</h:panelGrid>
+	 </p:panel>          
+	 <p:panel id="clauseId" header="Deduction Clause"    toggleable="true"  toggleSpeed="500" widgetVar="panelclause">
                                            
                                           <p:messages showDetail="true" globalOnly="true"/>
                                          <h:panelGrid columns="1" >

@@ -12,7 +12,12 @@
 		<ui:include src="/xhtml/ct/circular/shared/sidemenu/panel.xhtml" />
 	</ui:define>
     <ui:define name="content">
-	   <p:messages showDetail="true" globalOnly="true"/>
+	 <p:panel id="pRightPanel">
+			<div class="ppRightBtn">
+				<p:commandButton id="ctSave" value="#{lbl['lbl.ct.btn.save']}"/>
+				<p:commandButton id="ctSubmit" value="#{lbl['lbl.ct.btn.submit']}"/>
+			</div>
+		</p:panel>
          <p:panel id="pc" header="#{lbl['lbl.ct.pc.panel.pcd']}"  toggleable="true"  toggleSpeed="500" 
                widgetVar="panelpc">
            <ui:include src="/xhtml/ct/circular/shared/create.xhtml" />

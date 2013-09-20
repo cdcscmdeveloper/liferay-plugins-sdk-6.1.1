@@ -12,7 +12,12 @@
 		<ui:include src="/xhtml/ct/agreement/shared/sidemenu/agreement.xhtml" />
 	</ui:define>
 	<ui:define name="content">      
-      <p:messages showDetail="true" globalOnly="true"/> 
+     <p:panel id="pRightPanel">
+			<div class="ppRightBtn">
+				<p:commandButton id="ctSave" value="#{lbl['lbl.ct.btn.save']}"/>
+				<p:commandButton id="ctSubmit" value="#{lbl['lbl.ct.btn.submit']}"/>
+			</div>
+		</p:panel>
         <p:panel id="fd" header="#{lbl['lbl.ct.panel.name']}"   toggleable="true"  toggleSpeed="500" widgetVar="panelfd">
            <p:messages showDetail="true" globalOnly="true"/>
               <h:panelGrid columns="4" style="width:800px;">  
