@@ -62,13 +62,13 @@
 				<h:panelGrid columns="1" width="100%">
 					<p:dataTable id="itemdataTable" width="100%" cellpadding="1"
 						columnClasses="at-dataTable-columnClass">
-						<p:column width="15%" rendered="true"
+						<p:column width="20%" rendered="true"
 							style="white-space:nowrap; text-align:center; vertical-align:top;">
 							<f:facet name="header">
 								<h:outputText value="#{lbl['lbl.sc.item.detail.supplier']}" />
 							</f:facet>
 						</p:column>
-						<p:column width="15%" rendered="true"
+						<p:column width="20%" rendered="true"
 							style="white-space:nowrap; text-align:center; vertical-align:top;">
 							<f:facet name="header">
 								<h:outputText value="#{lbl['lbl.ss.item.detail.desc']}" />
@@ -80,7 +80,7 @@
 								<h:outputText value="#{lbl['lbl.sc.item.detail.minqty']}" />
 							</f:facet>
 						</p:column>
-						<p:column width="15%" rendered="true"
+						<p:column width="10%" rendered="true"
 							style="white-space:nowrap; text-align:center; vertical-align:top;">
 							<f:facet name="header">
 								<h:outputText value="#{lbl['lbl.sc.item.detail.unitPerPrice']}" />
@@ -105,9 +105,10 @@
 					</p:dataTable>
 				</h:panelGrid>
 				<div align="right">
-					<p:button value="#{lbl['lbl.ss.action.group']}" />
+					<p:commandButton value="#{lbl['lbl.ss.action.group']}" onclick="groupItem.show();" />
 					<p:button value="#{lbl['lbl.ss.action.recommend']}" />
 				</div>
+					<ui:include src="/xhtml/ss/directpurchase/groupItem.xhtml" />
 			</p:panel>
 		</h:form>
 	</ui:define>
