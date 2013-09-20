@@ -17,6 +17,7 @@ public class SimpleQuoteBidManagedBean extends BaseManagedBean{
 	public SimpleQuoteBidManagedBean() {
 	}
 
+	
 	private List<SimpleQuoteBidBean> selectedUtilList;
 
 	public List<SimpleQuoteBidBean> getSelectedUtilList() {

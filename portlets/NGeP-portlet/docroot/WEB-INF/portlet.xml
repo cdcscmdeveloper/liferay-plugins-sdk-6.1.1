@@ -476,6 +476,7 @@
 			<role-name>user</role-name>
 		</security-role-ref>
 	</portlet>
+	
 	<portlet>
 		<portlet-name>ppPlan</portlet-name>
 		<display-name>ProcurementPlan</display-name>

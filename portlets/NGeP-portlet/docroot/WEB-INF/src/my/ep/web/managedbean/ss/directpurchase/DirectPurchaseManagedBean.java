@@ -17,6 +17,7 @@ import org.apache.log4j.Logger;
 public class DirectPurchaseManagedBean extends BaseManagedBean{
 	private static Logger log = Logger.getLogger(DirectPurchaseManagedBean.class);
 	
+	
 	private	String	action	=	SourcingConst.CREATE_DIRECT_PURCHASE;
 
 	public String getAction() {

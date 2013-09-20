@@ -13,6 +13,7 @@ import my.ep.web.managedbean.ss.directpurchase.DirectPurchaseManagedBean;
  */
 @ManagedBean(name="directPurchaseBackingBean")
 @RequestScoped
+
 public class DirectPurchaseBackingBean extends BaseBackingBean<DirectPurchaseManagedBean>{
 
 }
