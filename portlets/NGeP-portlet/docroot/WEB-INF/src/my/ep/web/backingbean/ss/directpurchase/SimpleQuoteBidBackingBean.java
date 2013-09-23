@@ -22,7 +22,7 @@ public class SimpleQuoteBidBackingBean extends
 		BaseBackingBean<SimpleQuoteBidManagedBean> {
 
 	private List<SimpleQuoteBidBean> utilList;
-	private DualListModel<String> cities;
+	private DualListModel<String> items;
 	public SimpleQuoteBidBackingBean() {
 
 		utilList = new ArrayList<SimpleQuoteBidBean>();
@@ -35,7 +35,7 @@ public class SimpleQuoteBidBackingBean extends
         citiesSource.add("Item4");  
         citiesSource.add("Item5");  
           
-        cities = new DualListModel<String>(citiesSource, citiesTarget); 
+        items = new DualListModel<String>(citiesSource, citiesTarget); 
 		prepareUtilList();
 	}
 
@@ -49,12 +49,14 @@ public class SimpleQuoteBidBackingBean extends
 	
 	
 
-	public DualListModel<String> getCities() {
-		return cities;
+	
+
+	public DualListModel<String> getItems() {
+		return items;
 	}
 
-	public void setCities(DualListModel<String> cities) {
-		this.cities = cities;
+	public void setItems(DualListModel<String> items) {
+		this.items = items;
 	}
 
 	private List<SimpleQuoteBidBean> prepareUtilList() {
