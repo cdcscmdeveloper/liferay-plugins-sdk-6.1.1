@@ -8,12 +8,12 @@ public class SupportingDocumentBean {
 	private boolean docSent;
 	private String uploadDocument;
 	private String addedDocumentName;
-	/*private String Databeanbean;*/
+	/* private String Databeanbean; */
 	private String isSentBySupplier;
 	private String documentDownload;
 	private boolean documentValid;
 	private String remarksBySdo;
-//cancelRegisteredCategory
+	// cancelRegisteredCategory
 	private int code;
 	private String parentCategory;
 	private String childCategory;
@@ -22,16 +22,22 @@ public class SupportingDocumentBean {
 	private String type;
 	private boolean action;
 	private String remarks;
-//DisciplinaryAction
+	// DisciplinaryAction
 	private String actionPerformed;
 	private String dateActionPerformed;
+	private boolean recordSelected;
 
 	public SupportingDocumentBean() {
 	}
 
-	public SupportingDocumentBean(int no, String documentname, String documentDescription,
-			boolean sent, String uploadDocument, String addedDocumentName, String isSentBySupplier,
-			String documentDownload, boolean documentValid, String remarksBySdo, int code, String parentCategory, String childCategory, String subChildCategory, String businessNature, String type, boolean action, String remarks, String actionPerformed, String dateactionPerformed ) {
+	public SupportingDocumentBean(int no, String documentname,
+			String documentDescription, boolean sent, String uploadDocument,
+			String addedDocumentName, String isSentBySupplier,
+			String documentDownload, boolean documentValid,
+			String remarksBySdo, int code, String parentCategory,
+			String childCategory, String subChildCategory,
+			String businessNature, String type, boolean action, String remarks,
+			String actionPerformed, String dateactionPerformed) {
 		this.no = no;
 		this.documentName = documentname;
 		this.documentdescription = documentDescription;
@@ -43,7 +49,7 @@ public class SupportingDocumentBean {
 		this.documentValid = documentValid;
 		this.remarksBySdo = remarksBySdo;
 		this.code = code;
-		this.parentCategory= parentCategory;
+		this.parentCategory = parentCategory;
 		this.childCategory = childCategory;
 		this.subChildCategory = subChildCategory;
 		this.businessNature = businessNature;
@@ -54,7 +60,6 @@ public class SupportingDocumentBean {
 		this.dateActionPerformed = dateactionPerformed;
 	}
 
-	
 	public String getDocumentName() {
 		return documentName;
 	}
@@ -79,13 +84,12 @@ public class SupportingDocumentBean {
 		this.docSent = docSent;
 	}
 
-	/*public String getDatabeanbean() {
-		return Databeanbean;
-	}
-
-	public void setDatabeanbean(String databeanbean) {
-		Databeanbean = databeanbean;
-	}*/
+	/*
+	 * public String getDatabeanbean() { return Databeanbean; }
+	 * 
+	 * public void setDatabeanbean(String databeanbean) { Databeanbean =
+	 * databeanbean; }
+	 */
 
 	public String getUploadDocument() {
 		return uploadDocument;
@@ -134,8 +138,6 @@ public class SupportingDocumentBean {
 	public void setRemarksBySdo(String remarksBySdo) {
 		this.remarksBySdo = remarksBySdo;
 	}
-
-	
 
 	public String getParentCategory() {
 		return parentCategory;
@@ -225,6 +227,12 @@ public class SupportingDocumentBean {
 		this.dateActionPerformed = dateActionPerformed;
 	}
 
-	
+	public boolean isRecordSelected() {
+		return recordSelected;
+	}
+
+	public void setRecordSelected(boolean recordSelected) {
+		this.recordSelected = recordSelected;
+	}
 
 }

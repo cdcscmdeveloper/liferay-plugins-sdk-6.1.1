@@ -14,10 +14,16 @@
 	<ui:define name="content">
 		<p:panel header="Cancel / Delete Registered Category Code(s)"
 			toggleable="true">
-			<p:dataTable var="table"
+			<p:dataTable var="table" id="panelId"
 				value="#{mofRegistrationBackingBean.dataList}"
 				selection="#{mofRegistrationBackingBean.managedBean.selecteDataList}"
 				rowKey="#{table.no}" rowIndexVar="index" style="width : 780px">
+				<p:ajax event="rowSelect"
+					listener="#{mofRegistrationBackingBean.onRowSelect}"
+					update=":form:panelId" />
+				<p:ajax event="rowUnselect"
+					listener="#{mofRegistrationBackingBean.onRowUnSelect}"
+					update=":form:panelId" />
 				<p:columnGroup type="header">
 					<p:row>
 						<p:column selectionMode="multiple" rowspan="2" width="5%" />
@@ -60,7 +66,8 @@
 					<p:outputLabel value="#{table.type}" />
 				</p:column>
 				<p:column>
-					<p:inputText readonly="true" disabled="true" value="" />
+					<p:inputText rendered="#{table.recordSelected}"
+						value="#{table.remarks}" />
 				</p:column>
 			</p:dataTable>
 			<br />

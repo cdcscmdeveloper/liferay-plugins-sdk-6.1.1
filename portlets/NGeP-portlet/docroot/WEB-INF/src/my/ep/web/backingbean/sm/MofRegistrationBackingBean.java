@@ -9,14 +9,19 @@ import java.util.List;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
 
+import my.ep.biz.dto.sm.mofRegistration.MofRegistrationReqDTO;
+import my.ep.biz.dto.sm.mofRegistration.MofRegistrationResDTO;
+import my.ep.biz.service.sm.mofRegistration.IMofRegistrationSO;
 import my.ep.web.backingbean.BaseBackingBean;
 import my.ep.web.bean.sm.CompanyBranchesBean;
 import my.ep.web.bean.sm.MofRegistrationUtilBean;
 import my.ep.web.bean.sm.PersonnelBean;
 import my.ep.web.bean.sm.SupportingDocumentBean;
 import my.ep.web.managedbean.sm.MofRegistrationManagedBean;
+import my.ep.web.util.lookupservice.BusinessDelegate;
 
 import org.primefaces.event.SelectEvent;
+import org.primefaces.event.UnselectEvent;
 
 @ManagedBean
 @SessionScoped
@@ -30,8 +35,20 @@ public class MofRegistrationBackingBean extends
 	private List<PersonnelBean> signList;
 	private List<CompanyBranchesBean> branchList;
 	private CompanyBranchesBean selectedBranch;
+	private String sampleText;
+
+	public String getSampleText() {
+		return sampleText;
+	}
+
+	public void setSampleText(String sampleText) {
+		this.sampleText = sampleText;
+	}
 
 	public MofRegistrationBackingBean() {
+		/**
+		 * Sample Code For UI Purpose -start
+		 */
 		selectedBranch = new CompanyBranchesBean();
 		dataList = new ArrayList<SupportingDocumentBean>();
 		utilList = new ArrayList<MofRegistrationUtilBean>();
@@ -43,8 +60,15 @@ public class MofRegistrationBackingBean extends
 		preparePersonList();
 		preparAuthList();
 		preapreBranches();
+		/**
+		 * Sample Code For UI Purpose -End
+		 */
+
 	}
 
+	/**
+	 * Sample Code For UI Purpose -start
+	 */
 	public List<SupportingDocumentBean> getDataList() {
 		return dataList;
 	}
@@ -158,6 +182,66 @@ public class MofRegistrationBackingBean extends
 		System.out
 				.println("*********** Enterd THE RoW SELECT METHOD ***********"
 						+ getManagedBean().getSelecteDataList().size());
+		if (getManagedBean().getSelecteDataList().size() != 0) {
+			for (int i = 0; i < getDataList().size(); i++) {
+				SupportingDocumentBean sdbTemp = getDataList().get(i);
+				for (SupportingDocumentBean sdb : getManagedBean()
+						.getSelecteDataList()) {
+					if (sdbTemp.equals(sdb)) {
+						sdbTemp.setRecordSelected(Boolean.TRUE);
+						System.out.println("*** ENTER *****");
+						break;
+					} else {
+						sdbTemp.setRemarks("");
+						sdbTemp.setRecordSelected(Boolean.FALSE);
+					}
+				}
+				getDataList().set(i, sdbTemp);
+				System.out.println("Data List For Index = " + i + "  is "
+						+ getDataList().get(i).isRecordSelected());
+			}
+
+		} else {
+			for (int i = 0; i < getDataList().size(); i++) {
+				SupportingDocumentBean sdbTemp = getDataList().get(i);
+				sdbTemp.setRemarks("");
+				sdbTemp.setRecordSelected(Boolean.FALSE);
+				getDataList().set(i, sdbTemp);
+			}
+		}
+	}
+
+	public void onRowUnSelect(UnselectEvent event) {
+		System.out
+				.println("*********** Enterd THE RoW SELECT METHOD ***********"
+						+ getManagedBean().getSelecteDataList().size());
+		if (getManagedBean().getSelecteDataList().size() != 0) {
+			for (int i = 0; i < getDataList().size(); i++) {
+				SupportingDocumentBean sdbTemp = getDataList().get(i);
+				for (SupportingDocumentBean sdb : getManagedBean()
+						.getSelecteDataList()) {
+					if (sdbTemp.equals(sdb)) {
+						sdbTemp.setRecordSelected(Boolean.TRUE);
+						System.out.println("*** ENTER *****");
+						break;
+					} else {
+						sdbTemp.setRemarks("");
+						sdbTemp.setRecordSelected(Boolean.FALSE);
+					}
+				}
+				getDataList().set(i, sdbTemp);
+				System.out.println("Data List For Index = " + i + "  is "
+						+ getDataList().get(i).isRecordSelected());
+			}
+
+		} else {
+			for (int i = 0; i < getDataList().size(); i++) {
+				SupportingDocumentBean sdbTemp = getDataList().get(i);
+				sdbTemp.setRemarks("");
+				sdbTemp.setRecordSelected(Boolean.FALSE);
+				getDataList().set(i, sdbTemp);
+			}
+		}
 	}
 
 	public List<CompanyBranchesBean> preapreBranches() {
@@ -185,5 +269,231 @@ public class MofRegistrationBackingBean extends
 		}
 
 	}
+
+	/**
+	 * Sample Code For UI Purpose -End
+	 */
+
+	/**
+	 * 
+	 * Sample Connect To SOs - Start
+	 * 
+	 */
+
+	public void retrieveSupplierProfile() {
+		IMofRegistrationSO mofRegistrationSO = null;
+		try {
+			mofRegistrationSO = BusinessDelegate.getInstance()
+					.getServiceObject(IMofRegistrationSO.class);
+			MofRegistrationReqDTO mofReqDTO = new MofRegistrationReqDTO();
+			MofRegistrationResDTO mofResDTO = mofRegistrationSO
+					.retrieveSupplierProfile(mofReqDTO);
+
+		} finally {
+			mofRegistrationSO = null;
+		}
+	}
+
+	public void createApplication() {
+		IMofRegistrationSO mofRegistrationSO = null;
+		try {
+			mofRegistrationSO = BusinessDelegate.getInstance()
+					.getServiceObject(IMofRegistrationSO.class);
+			MofRegistrationReqDTO mofReqDTO = new MofRegistrationReqDTO();
+			MofRegistrationResDTO mofResDTO = mofRegistrationSO
+					.createApplication(mofReqDTO);
+
+		} finally {
+			mofRegistrationSO = null;
+		}
+	}
+
+	public void updateApplication() {
+		IMofRegistrationSO mofRegistrationSO = null;
+		try {
+			mofRegistrationSO = BusinessDelegate.getInstance()
+					.getServiceObject(IMofRegistrationSO.class);
+			MofRegistrationReqDTO mofReqDTO = new MofRegistrationReqDTO();
+			MofRegistrationResDTO mofResDTO = mofRegistrationSO
+					.updateApplication(mofReqDTO);
+
+		} finally {
+			mofRegistrationSO = null;
+		}
+	}
+
+	public void submitApplication() {
+		IMofRegistrationSO mofRegistrationSO = null;
+		try {
+			mofRegistrationSO = BusinessDelegate.getInstance()
+					.getServiceObject(IMofRegistrationSO.class);
+			MofRegistrationReqDTO mofReqDTO = new MofRegistrationReqDTO();
+			MofRegistrationResDTO mofResDTO = mofRegistrationSO
+					.submitApplication(mofReqDTO);
+
+		} finally {
+			mofRegistrationSO = null;
+		}
+	}
+
+	public void updatePaymentStatus() {
+		IMofRegistrationSO mofRegistrationSO = null;
+		try {
+			mofRegistrationSO = BusinessDelegate.getInstance()
+					.getServiceObject(IMofRegistrationSO.class);
+			MofRegistrationReqDTO mofReqDTO = new MofRegistrationReqDTO();
+			MofRegistrationResDTO mofResDTO = mofRegistrationSO
+					.updatePaymentStatus(mofReqDTO);
+
+		} finally {
+			mofRegistrationSO = null;
+		}
+	}
+
+	public void createSMApplication() {
+		IMofRegistrationSO mofRegistrationSO = null;
+		try {
+			mofRegistrationSO = BusinessDelegate.getInstance()
+					.getServiceObject(IMofRegistrationSO.class);
+			MofRegistrationReqDTO mofReqDTO = new MofRegistrationReqDTO();
+			MofRegistrationResDTO mofResDTO = mofRegistrationSO
+					.createSMApplication(mofReqDTO);
+
+		} finally {
+			mofRegistrationSO = null;
+		}
+	}
+
+	public void retrieveLatestSupplierDetails() {
+		IMofRegistrationSO mofRegistrationSO = null;
+		try {
+			mofRegistrationSO = BusinessDelegate.getInstance()
+					.getServiceObject(IMofRegistrationSO.class);
+			MofRegistrationReqDTO mofReqDTO = new MofRegistrationReqDTO();
+			MofRegistrationResDTO mofResDTO = mofRegistrationSO
+					.retrieveLatestSupplierDetails(mofReqDTO);
+
+		} finally {
+			mofRegistrationSO = null;
+		}
+	}
+
+	public void retrieveQuestionList() {
+		IMofRegistrationSO mofRegistrationSO = null;
+		try {
+			mofRegistrationSO = BusinessDelegate.getInstance()
+					.getServiceObject(IMofRegistrationSO.class);
+			MofRegistrationReqDTO mofReqDTO = new MofRegistrationReqDTO();
+			MofRegistrationResDTO mofResDTO = mofRegistrationSO
+					.retrieveQuestionList(mofReqDTO);
+
+		} finally {
+			mofRegistrationSO = null;
+		}
+	}
+
+	public void submitAnswers() {
+		IMofRegistrationSO mofRegistrationSO = null;
+		try {
+			mofRegistrationSO = BusinessDelegate.getInstance()
+					.getServiceObject(IMofRegistrationSO.class);
+			MofRegistrationReqDTO mofReqDTO = new MofRegistrationReqDTO();
+			MofRegistrationResDTO mofResDTO = mofRegistrationSO
+					.submitAnswers(mofReqDTO);
+
+		} finally {
+			mofRegistrationSO = null;
+		}
+	}
+
+	public void retrieveCategoryCodes() {
+		IMofRegistrationSO mofRegistrationSO = null;
+		try {
+			mofRegistrationSO = BusinessDelegate.getInstance()
+					.getServiceObject(IMofRegistrationSO.class);
+			MofRegistrationReqDTO mofReqDTO = new MofRegistrationReqDTO();
+			MofRegistrationResDTO mofResDTO = mofRegistrationSO
+					.retrieveCategoryCodes(mofReqDTO);
+
+		} finally {
+			mofRegistrationSO = null;
+		}
+	}
+
+	public void deleteCategoryCodes() {
+		IMofRegistrationSO mofRegistrationSO = null;
+		try {
+			mofRegistrationSO = BusinessDelegate.getInstance()
+					.getServiceObject(IMofRegistrationSO.class);
+			MofRegistrationReqDTO mofReqDTO = new MofRegistrationReqDTO();
+			MofRegistrationResDTO mofResDTO = mofRegistrationSO
+					.deleteCategoryCodes(mofReqDTO);
+
+		} finally {
+			mofRegistrationSO = null;
+		}
+	}
+
+	public void retrievePendingApplicationDetails() {
+		IMofRegistrationSO mofRegistrationSO = null;
+		try {
+			mofRegistrationSO = BusinessDelegate.getInstance()
+					.getServiceObject(IMofRegistrationSO.class);
+			MofRegistrationReqDTO mofReqDTO = new MofRegistrationReqDTO();
+			MofRegistrationResDTO mofResDTO = mofRegistrationSO
+					.retrievePendingApplicationDetails(mofReqDTO);
+
+		} finally {
+			mofRegistrationSO = null;
+		}
+	}
+
+	public void deletePendingApplicationDetails() {
+		IMofRegistrationSO mofRegistrationSO = null;
+		try {
+			mofRegistrationSO = BusinessDelegate.getInstance()
+					.getServiceObject(IMofRegistrationSO.class);
+			MofRegistrationReqDTO mofReqDTO = new MofRegistrationReqDTO();
+			MofRegistrationResDTO mofResDTO = mofRegistrationSO
+					.deletePendingApplicationDetails(mofReqDTO);
+
+		} finally {
+			mofRegistrationSO = null;
+		}
+	}
+
+	public void submitForApproval() {
+		IMofRegistrationSO mofRegistrationSO = null;
+		try {
+			mofRegistrationSO = BusinessDelegate.getInstance()
+					.getServiceObject(IMofRegistrationSO.class);
+			MofRegistrationReqDTO mofReqDTO = new MofRegistrationReqDTO();
+			MofRegistrationResDTO mofResDTO = mofRegistrationSO
+					.submitForApproval(mofReqDTO);
+
+		} finally {
+			mofRegistrationSO = null;
+		}
+	}
+
+	public void submitCancellationRequest() {
+		IMofRegistrationSO mofRegistrationSO = null;
+		try {
+			mofRegistrationSO = BusinessDelegate.getInstance()
+					.getServiceObject(IMofRegistrationSO.class);
+			MofRegistrationReqDTO mofReqDTO = new MofRegistrationReqDTO();
+			MofRegistrationResDTO mofResDTO = mofRegistrationSO
+					.submitCancellationRequest(mofReqDTO);
+
+		} finally {
+			mofRegistrationSO = null;
+		}
+	}
+
+	/**
+	 * 
+	 * Sample Connect To SOs - End
+	 * 
+	 */
 
 }
