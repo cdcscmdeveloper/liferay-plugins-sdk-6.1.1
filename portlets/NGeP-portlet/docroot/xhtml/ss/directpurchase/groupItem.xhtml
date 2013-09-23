@@ -7,7 +7,7 @@
 
 
 	<p:dialog header="GroupItem" widgetVar="groupItem"
-		modal="true" width="800" height="250">
+		modal="true" width="800" height="500">
 		<p:panel header="#{lbl['lbl.ss.simple.quote.purchase.group.panel']}">
 
 			<p:dataTable  var="simpleQuote"
@@ -20,25 +20,15 @@
 
 				<p:column headerText="#{lbl['lbl.ss.simple.quote.purchase.group.seq.no']}" style="width:10%">
 					
-				<p:cellEditor>  
-                <f:facet name="output">  
+				
                 <h:outputText value="#{index+1}"></h:outputText>
-                </f:facet>  
-                <f:facet name="input">  
-                    <p:inputText value="#{index+1}"></p:inputText>
-                </f:facet>  
-            </p:cellEditor>  
+                 
 		</p:column>
 				<p:column headerText=" #{lbl['lbl.ss.simple.quote.purchase.group.item.name']}" style="width:70%">
 					
-			 <p:cellEditor>  
-                <f:facet name="output">  
+			
                  <h:outputText value="#{simpleQuote.description}"></h:outputText> 
-                </f:facet>  
-                <f:facet name="input">  
-                    <p:inputText value="#{simpleQuote.description}"></p:inputText>
-                </f:facet>  
-            </p:cellEditor>  
+                
 		</p:column>
          <p:column headerText="#{lbl['lbl.ss.simple.quote.item.action']}" style="width:20%">  
             <p:rowEditor />  
@@ -49,13 +39,13 @@
 						               />
 					
 					</div>
-              
+                <p:separator style="width:100%;height:1%"></p:separator>
 		</p:panel>
 
 
 <p:panel>
       
-   <p:panelGrid  style="width:100%;" styleClass="noBorders tr,noBorders td">
+   <p:panelGrid  style="width:50%;" styleClass="noBorders tr,noBorders td">
 				
 				<p:row>
                 <p:column>
@@ -68,18 +58,19 @@
 	          
     </p:row>
     </p:panelGrid>
-     <p:pickList id="pickList" value="#{simpleQuoteBidBackingBean.cities}" var="city"   
-                itemLabel="#{city}" itemValue="#{city}" style="width:100%"/> 
+  
+     <p:pickList id="pickList" value="#{simpleQuoteBidBackingBean.items}" var="city"   
+                itemLabel="#{city}" itemValue="#{city}" style="width:70%;height:30%" /> 
                 
                  <div align="right"  >
 					<p:commandButton  value="#{lbl['lbl.ss.simple.quote.purchase.group.btn.add']}" 
 						               />
 					
 					</div> 
+		<p:separator style="width:100%;height:1%"></p:separator>
 				  
 	</p:panel>	
 	
-
 		<p:commandButton value="#{lbl['lbl.ss.simple.quote.purchase.group.btn.confirm']}" style="float:right;"
 			onclick="groupItem.hide();"></p:commandButton>
 				&#160;&#160;
