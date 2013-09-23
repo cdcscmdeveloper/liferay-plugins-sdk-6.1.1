@@ -31,6 +31,10 @@
 				<portlet id="bpkReview"></portlet>
 			</category>
 		</category>
+		<!-- sourcing	-->
+		<category name="category.ep.ss">
+			<portlet id="ss-directPurchase" />
+		</category>
 		<!-- Fulfilment Start Added by Giri -->
 		<category name="FL_DIS">
 			<portlet id="FLContractOrder" />
@@ -49,6 +53,7 @@
 	    <portlet id="sm" />
 	    <portlet id="codification"></portlet>
 		<portlet id="Catalogue"></portlet>
+		
 	</category>
 
 

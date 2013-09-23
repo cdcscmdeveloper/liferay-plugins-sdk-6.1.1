@@ -1122,7 +1122,7 @@
 	</portlet>
 
 	<portlet>
-		<portlet-name>Direct Purchase</portlet-name>
+		<portlet-name>ss-directPurchase</portlet-name>
 		<display-name>Direct Purchase</display-name>
 		<portlet-class>
 			org.portletfaces.bridge.GenericFacesPortlet
