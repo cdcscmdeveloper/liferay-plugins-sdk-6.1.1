@@ -40,7 +40,7 @@
 
 		<p:panel header="Site Visit List" toggleable="true">
 			<p:dataTable var="svlist"
-				value="#{siteVisitViewBackingBean.managedBean.svDetailList}">
+				value="#{svoSiteVisitBackingBean.managedBean.svDetailList}">
 				<p:column headerText="Supplier Name">
 					<p:outputLabel value="#{svlist.suppName}" />
 				</p:column>
@@ -63,7 +63,7 @@
 
 				<p:column headerText="Action">
 					<p:panelGrid columns="3">
-					<p:commandButton value="View" action="#{siteVisitViewBackingBean.proceedToView}" />
+					<p:commandButton value="View" action="#{svoSiteVisitBackingBean.proceedToView}" />
 					</p:panelGrid>
 				</p:column>
 			</p:dataTable>

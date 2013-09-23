@@ -13,20 +13,20 @@
 				<tr>
 					<td id="tdTitle"><p:outputLabel value="Report Submit" /></td>
 					<td id="tdContent"><p:selectOneRadio id="rdoMethod"
-							value="#{siteVisitViewBackingBean.managedBean.rptSubsMethod}">
+							value="#{svoSiteVisitBackingBean.managedBean.rptSubsMethod}">
 							<f:selectItem itemLabel="Report Upload" itemValue="Upload" />
 							<f:selectItem itemLabel="Online Submit" itemValue="Online" />
 						</p:selectOneRadio></td>
 
 					<td><p:commandButton value="Submit"
-							action="#{siteVisitViewBackingBean.rptSubmitMethod}" /></td>
+							action="#{svoSiteVisitBackingBean.rptSubmitMethod}" /></td>
 					<td id="tdContent"></td>
 				</tr>
 			</table>
 		</p:panel>
 
 		<p:panel header="Report Upload" id="pnlUpload"
-			visible="#{siteVisitViewBackingBean.managedBean.rptSubsMethod == 'Upload'}">
+			visible="#{svoSiteVisitBackingBean.managedBean.rptSubsMethod == 'Upload'}">
 
 			<table class="test">
 				<tr>

@@ -9,9 +9,9 @@ import javax.faces.bean.SessionScoped;
 
 import my.ep.web.managedbean.BaseManagedBean;
 
-@ManagedBean(name = "siteVisitViewMB")
+@ManagedBean(name = "svoSiteVisitMB")
 @SessionScoped
-public class SvcSiteVisitManagedBean extends BaseManagedBean {
+public class SvoSiteVisitManagedBean extends BaseManagedBean {
 	private static final long serialVersionUID = 1L;
 
 	private List<SiteVisitDetails> svDetailList;
@@ -79,7 +79,7 @@ public class SvcSiteVisitManagedBean extends BaseManagedBean {
 		this.rptSubsMethod = rptSubsMethod;
 	}
 
-	public SvcSiteVisitManagedBean() {
+	public SvoSiteVisitManagedBean() {
 		svDetailList = new ArrayList<SiteVisitDetails>();
 		svDetailList.add(new SiteVisitDetails("Test Sdn Bhd", "Abc123",
 				"Pending Review", new Date(), new Date()));
@@ -122,9 +122,10 @@ public class SvcSiteVisitManagedBean extends BaseManagedBean {
 				"CyberJaya", "Selangor", "Sepang", ""));
 		svDetInfoList.add(new SiteVisitDetInfoList("Jalan cyber 456", "47000",
 				"CyberJaya", "Selangor", "Sepang", ""));
-		
+
 		svReportList = new ArrayList<SiteVisitReportList>();
-		svReportList.add(new SiteVisitReportList("1","Manufacturing","Uploaded","2013-01-04"));
+		svReportList.add(new SiteVisitReportList("1", "Manufacturing",
+				"Uploaded", "2013-01-04"));
 	}
 
 	public class SiteVisitDetails {
@@ -341,31 +342,35 @@ public class SvcSiteVisitManagedBean extends BaseManagedBean {
 		private String category;
 		private String uploadDate;
 		private String currStatus;
-		
-		
-		public SiteVisitReportList(String siteID,String category, String currStatus,String uploadDate){
+
+		public SiteVisitReportList(String siteID, String category,
+				String currStatus, String uploadDate) {
 			this.siteID = siteID;
 			this.category = category;
 			this.uploadDate = uploadDate;
 			this.currStatus = currStatus;
 		}
-		
+
 		public String getSiteID() {
 			return siteID;
 		}
+
 		public void setSiteID(String siteID) {
 			this.siteID = siteID;
 		}
-		
+
 		public String getCategory() {
 			return category;
 		}
+
 		public void setCategory(String category) {
 			this.category = category;
 		}
+
 		public String getUploadDate() {
 			return uploadDate;
 		}
+
 		public void setUploadDate(String uploadDate) {
 			this.uploadDate = uploadDate;
 		}

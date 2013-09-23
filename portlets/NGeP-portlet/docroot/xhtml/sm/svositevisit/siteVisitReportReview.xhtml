@@ -29,55 +29,55 @@
 			</p:menu>
 
 			<p:remoteCommand name="rmtCall" update="pnlSideVisitReview"
-				action="#{siteVisitViewBackingBean.siteVisitReviewNavi}" />
+				action="#{svoSiteVisitBackingBean.siteVisitReviewNavi}" />
 		</div>
 
 		<div id="content" style="float: left; width: auto;">
 			<p:panel id="pnlSideVisitReview">
 				<c:if
-					test="#{siteVisitViewBackingBean.managedBean.svReviewNavi == 'checkList'}">
+					test="#{svoSiteVisitBackingBean.managedBean.svReviewNavi == 'checkList'}">
 					<ui:include
 						src="/xhtml/sm/shared/sitevisit/templateCheckList/siteVisitCheckList.xhtml" />
 				</c:if>
 
 				<c:if
-					test="#{siteVisitViewBackingBean.managedBean.svReviewNavi == 'preDetails'}">
+					test="#{svoSiteVisitBackingBean.managedBean.svReviewNavi == 'preDetails'}">
 					<ui:include
 						src="/xhtml/sm/shared/sitevisit/templateCheckList/preparationDetails.xhtml" />
 				</c:if>
 
 				<c:if
-					test="#{siteVisitViewBackingBean.managedBean.svReviewNavi == 'compInfo'}">
+					test="#{svoSiteVisitBackingBean.managedBean.svReviewNavi == 'compInfo'}">
 					<ui:include
 						src="/xhtml/sm/shared/sitevisit/templateCheckList/companyInformation.xhtml" />
 				</c:if>
 
 				<c:if
-					test="#{siteVisitViewBackingBean.managedBean.svReviewNavi == 'sectionA'}">
+					test="#{svoSiteVisitBackingBean.managedBean.svReviewNavi == 'sectionA'}">
 					<ui:include
 						src="/xhtml/sm/shared/sitevisit/templateCheckList/sectionA.xhtml" />
 				</c:if>
 
 				<c:if
-					test="#{siteVisitViewBackingBean.managedBean.svReviewNavi == 'sectionB'}">
+					test="#{svoSiteVisitBackingBean.managedBean.svReviewNavi == 'sectionB'}">
 					<ui:include
 						src="/xhtml/sm/shared/sitevisit/templateCheckList/sectionB.xhtml" />
 				</c:if>
 				
 				<c:if
-					test="#{siteVisitViewBackingBean.managedBean.svReviewNavi == 'sectionC'}">
+					test="#{svoSiteVisitBackingBean.managedBean.svReviewNavi == 'sectionC'}">
 					<ui:include
 						src="/xhtml/sm/shared/sitevisit/templateCheckList/formSection/manufacturing.xhtml" />
 				</c:if>
 				
 				<c:if
-					test="#{siteVisitViewBackingBean.managedBean.svReviewNavi == 'sectionD'}">
+					test="#{svoSiteVisitBackingBean.managedBean.svReviewNavi == 'sectionD'}">
 					<ui:include
 						src="/xhtml/sm/shared/sitevisit/templateCheckList/categoryApplicable.xhtml" />
 				</c:if>
 				
 				<c:if
-					test="#{siteVisitViewBackingBean.managedBean.svReviewNavi == 'sectionE'}">
+					test="#{svoSiteVisitBackingBean.managedBean.svReviewNavi == 'sectionE'}">
 					<ui:include
 						src="/xhtml/sm/shared/sitevisit/templateCheckList/formSection/updatesAndRecommendation.xhtml" />
 				</c:if>

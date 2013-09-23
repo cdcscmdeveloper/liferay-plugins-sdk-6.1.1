@@ -11,13 +11,13 @@
 		<p:menu>
 			<p:submenu label="Site Visit Report">
 				<p:menuitem value="Check List"
-					onclick="#{siteVisitViewBackingBean.siteVisitReviewNavi('checkList')}"
+					onclick="#{svoSiteVisitBackingBean.siteVisitReviewNavi('checkList')}"
 					update="pnlSideVisitReview" />
 				<p:menuitem value="Preparation Details"
-					onclick="#{siteVisitViewBackingBean.siteVisitReviewNavi('preDetails')}"
+					onclick="#{svoSiteVisitBackingBean.siteVisitReviewNavi('preDetails')}"
 					update="pnlSideVisitReview" />
 				<p:menuitem value="Company Information"
-					onclick="#{siteVisitViewBackingBean.siteVisitReviewNavi('compInfo')}"
+					onclick="#{svoSiteVisitBackingBean.siteVisitReviewNavi('compInfo')}"
 					update="pnlSideVisitReview" />
 					
 				<!--<p:menuitem value="Check List"
@@ -27,25 +27,25 @@
 	</ui:define>
 
 
-	<p:remoteCommand name="rmtCall" update="pnlSideVisitReview" action="#{siteVisitViewBackingBean.siteVisitReviewNavi}" />
+	<p:remoteCommand name="rmtCall" update="pnlSideVisitReview" action="#{svoSiteVisitBackingBean.siteVisitReviewNavi}" />
 
 
 	<ui:define name="content">
 		<p:panel id="pnlSideVisitReview">
 			<c:if
-				test="#{siteVisitViewBackingBean.managedBean.svReviewNavi == 'checkList'}">
+				test="#{svoSiteVisitBackingBean.managedBean.svReviewNavi == 'checkList'}">
 				<ui:include
 					src="/xhtml/sm/shared/sitevisit/templateCheckList/siteVisitCheckList.xhtml" />
 			</c:if>
 
 			<c:if
-				test="#{siteVisitViewBackingBean.managedBean.svReviewNavi == 'preDetails'}">
+				test="#{svoSiteVisitBackingBean.managedBean.svReviewNavi == 'preDetails'}">
 				<ui:include
 					src="/xhtml/sm/shared/sitevisit/templateCheckList/preparationDetails.xhtml" />
 			</c:if>
 
 			<c:if
-				test="#{siteVisitViewBackingBean.managedBean.svReviewNavi == 'compInfo'}">
+				test="#{svoSiteVisitBackingBean.managedBean.svReviewNavi == 'compInfo'}">
 				<ui:include
 					src="/xhtml/sm/shared/sitevisit/templateCheckList/companyInformation.xhtml" />
 			</c:if>
