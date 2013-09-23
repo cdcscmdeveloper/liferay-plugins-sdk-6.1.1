@@ -38,10 +38,10 @@
                                              </div>
                                              </h:panelGroup>
 			                                <h:panelGrid style="width:500px">
-			                                   <p:pickList id="approverpickList" value="#{centralBackingBean.approverSetting.settingDetails}" var="data"  
+			                                   <p:pickList id="approverpickList" value="#{centralBackingBean.managedBean.approverSetting.settingDetails}" var="data"  
                                                  itemValue="#{data}" itemLabel="#{data.aproverName}" 
                                                  showTargetControls="true"  filterMatchMode="contains" >  
-                                                 <p:ajax event="transfer" listener="#{centralBackingBean.approverSetting.onTransfer}"  />  
+                                                 <p:ajax event="transfer" listener="#{centralBackingBean.managedBean.approverSetting.onTransfer}"  />  
                                                   <p:column style="width:75%;">  
                                                   <h:outputText value="#{data.aproverName}" styleClass="txtsize" />
                                                   </p:column>  

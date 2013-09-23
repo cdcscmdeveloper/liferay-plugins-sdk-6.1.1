@@ -4,12 +4,19 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.RequestScoped;
+import javax.faces.context.FacesContext;
+
+import org.apache.log4j.Logger;
+import org.primefaces.event.CellEditEvent;
 
 import my.ep.web.backingbean.BaseBackingBean;
+import my.ep.web.backingbean.ct.circular.panel.PanelBackingBean;
 import my.ep.web.bean.ct.ApproverSetting;
 import my.ep.web.bean.ct.CentralContract;
+import my.ep.web.bean.ct.ContractPerson;
 import my.ep.web.managedbean.ct.circular.central.CentralManagedBean;
 
 
@@ -19,6 +26,7 @@ import my.ep.web.managedbean.ct.circular.central.CentralManagedBean;
 public class CentralBackingBean extends BaseBackingBean<CentralManagedBean>{
 
 	
+	private static Logger log = Logger.getLogger(PanelBackingBean.class);
 	public static final String FACE_BEAN_NAME = "centralBackingBean";
 	private static final String PROCESS_EDIT_PAGE="/xhtml/ct/circular/centralcontract/updateCircular.xhtml";
 	private static final String PROCESS_CANCEL_PAGE="/xhtml/ct/circular/centralcontract/cancelCircular.xhtml";
@@ -27,13 +35,10 @@ public class CentralBackingBean extends BaseBackingBean<CentralManagedBean>{
 	private static boolean editCircular;
 	private static boolean cancelCircular;
 	private static boolean viewCircular;
-	private ApproverSetting approverSetting;
-	private CentralContract centralContract;
-	private CentralContract[] selectedCentralContractList;
+	
 	
 	public CentralBackingBean(){
-		centralContract= new CentralContract();
-		approverSetting = new ApproverSetting();
+		
 		
 	}
 	
@@ -82,33 +87,32 @@ public class CentralBackingBean extends BaseBackingBean<CentralManagedBean>{
 		this.cancelCircular = cancelCircular;
 	}
 	
-	public ApproverSetting getApproverSetting() {
-		return approverSetting;
-	}
-	public void setApproverSetting(ApproverSetting approverSetting) {
-		this.approverSetting = approverSetting;
-	}
+	
+	public void addNewPerson(){
 
-	
-	
-	public CentralContract[] getSelectedCentralContractList() {
-		return selectedCentralContractList;
-	}
-	public void setSelectedCentralContractList(
-			CentralContract[] selectedCentralContractList) {
-		this.selectedCentralContractList = selectedCentralContractList;
-	}
-	public CentralContract getCentralContract() {
-		return centralContract;
-	}
-	public void setCentralContract(CentralContract centralContract) {
-		this.centralContract = centralContract;
+		log.debug("*****addNewContractPerson*****");
+		ContractPerson contractPerson = new ContractPerson();
+        this.getManagedBean().getContractPerson().add(contractPerson);
 	}
 	
+	public void deletePersonList(){			
+		this.getManagedBean().getContractPerson().remove(this.getManagedBean().getDeleteContractPerson());
+	}
 	
-	public List<CentralContract> getCentralContract1(){
-		List<CentralContract> centralContract1 = new ArrayList<CentralContract>(); 
-		   return centralContract1;
+	public void onCellEdit(CellEditEvent event) {  
+        Object oldValue = event.getOldValue();  
+        Object newValue = event.getNewValue();  
+          
+        if(newValue != null && !newValue.equals(oldValue)) {  
+            FacesMessage msg = new FacesMessage(FacesMessage.SEVERITY_INFO, "Cell Changed", "Old: " + oldValue + ", New:" + newValue);  
+            FacesContext.getCurrentInstance().addMessage(null, msg);  
+        }  
+    }  
+	
+	
+	public List<CentralContract> getCentralContract(){
+		List<CentralContract> centralContract = new ArrayList<CentralContract>(); 
+		   return centralContract;
 	   }
 	
 	public List<CentralContract> getCentralCircularContract(){

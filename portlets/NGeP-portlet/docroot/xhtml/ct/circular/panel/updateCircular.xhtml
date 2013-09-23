@@ -24,34 +24,58 @@
 			  <p:panel id="contactPerson" header="#{lbl['lbl.ct.pc.cpd']}"  toggleable="true"  toggleSpeed="500" widgetVar="panelcontactPerson">
                   <div style="overflow-x:auto">
                       <h:panelGrid style="width:800px;" styleClass="txtsize">  
-                           <p:dataTable id="dataTable" var="data" value=" " widgetVar="dataTableObj" lazy="false" dynamic="true" rowIndexVar="index"
-			                  paginator="true" paginatorPosition="bottom" paginatorAlwaysVisible="true" emptyMessage="No Records!" rows="10" 
-			                  rowsPerPageTemplate="5,10,15,20" currentPageReportTemplate=" total {totalRecords},  page {currentPage} of {totalPages} "
-							  paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink}
-							                {LastPageLink} {RowsPerPageDropdown}">
+                           <p:dataTable id="updatePerson" var="data" value="#{panelBackingBean.managedBean.contractPerson}" widgetVar="dataTableObj" lazy="false" 
+                             dynamic="true" rowIndexVar="index" paginator="flase" editable="true" editMode="cell">
+							  <p:ajax event="cellEdit" listener="#{panelBackingBean.onCellEdit}" />  
 							  <p:columnGroup type="header"> 
 								 <p:row> 
-								    <p:column style="width:30px" headerText="#{lbl['lbl.ct.pc.no']}"  /> 
-					                <p:column style="width:150px" headerText="#{lbl['lbl.ct.pc.cperson']}" /> 
-						            <p:column style="width:280px" headerText="#{lbl['lbl.ct.pc.caddress']}" /> 	
-						            <p:column style="width:100px" headerText="#{lbl['lbl.ct.pc.cemail']}"  /> 
-					                <p:column style="width:100px" headerText="#{lbl['lbl.ct.pc.pno']}"  /> 
-						            <p:column style="width:80px" headerText="#{lbl['lbl.ct.pc.action']}"  />  
+								    <p:column style="width:30px;" headerText="#{lbl['lbl.ct.pc.no']}"  /> 
+					                <p:column style="width:150px;" headerText="#{lbl['lbl.ct.pc.cperson']}" /> 
+						            <p:column style="width:250px;" headerText="#{lbl['lbl.ct.pc.caddress']}" /> 	
+						            <p:column style="width:100px;" headerText="#{lbl['lbl.ct.pc.cemail']}"  /> 
+					                <p:column style="width:100px;" headerText="#{lbl['lbl.ct.pc.pno']}"  /> 
+						            <p:column style="width:60px;" headerText="#{lbl['lbl.ct.pc.action']}"  />      
 								 </p:row>	
 							 </p:columnGroup>
-							 <p:column styleClass="column-align-center" > <h:outputText value="#{index+1}" /></p:column> 							
-							    <p:column> </p:column>
-							    <p:column></p:column>	
-							    <p:column> </p:column>
-							    <p:column></p:column>	
-							    <p:column styleClass="column-align-center">
-								<p:commandButton title="delete" onsuccess="confirmation.show()" partialSubmit="true" process="@this"   icon="ui-icon-delete" styleClass="ui-icon-button"/>
-							    </p:column> 
+							<p:column styleClass="column-align-center" >
+				            <h:outputText value="#{index+1}" /></p:column> 														                   
+					             <p:column><p:inputText value="#{data.contractPersonName}" style="width:140px;" rendered="#{data.contractPersonName == null}"/>
+					             <p:cellEditor rendered="#{!data.contractPersonName == null}">  
+                                     <f:facet name="output"><h:outputText value="#{data.contractPersonName}"/></f:facet>  
+                                      <f:facet name="input"><p:inputText id="cperson" value="#{data.contractPersonName}" style="width:140px;"/></f:facet>  
+                                 </p:cellEditor>  
+					             </p:column>	
+					           
+					             <p:column> <p:inputText value="#{data.contractAddress}" rendered="#{data.contractAddress == null}" style="width:240px;"/> 
+					             <p:cellEditor rendered="#{!data.contractAddress == null}">  
+                                     <f:facet name="output"><h:outputText value="#{data.contractAddress}"/></f:facet>  
+                                      <f:facet name="input"><p:inputText id="caddress" value="#{data.contractAddress}" style="width:240px;"/></f:facet>  
+                                 </p:cellEditor>  
+					             </p:column>
+				                 <p:column><p:inputText value="#{data.contractEmail}" rendered="#{data.contractEmail == null}" style="width:90px;"/>
+				                  <p:cellEditor rendered="#{!data.contractEmail == null}">  
+                                     <f:facet name="output"><h:outputText value="#{data.contractEmail}"/></f:facet>  
+                                      <f:facet name="input"><p:inputText id="cemail" value="#{data.contractEmail}" style="width:90px;"/></f:facet>  
+                                 </p:cellEditor>  
+				                 </p:column>	
+				                 <p:column><p:inputText value="#{data.contractPhone}" rendered="#{data.contractPhone == null}" style="width:90px;"/>
+				                  <p:cellEditor rendered="#{!data.contractPhone == null}">  
+                                     <f:facet name="output"><h:outputText value="#{data.contractPhone}"/></f:facet>  
+                                      <f:facet name="input"><p:inputText id="cphone" value="#{data.contractPhone}" style="width:90px;"/></f:facet>  
+                                 </p:cellEditor> 
+				                 </p:column>	
+					             <p:column styleClass="column-align-center">
+					             <p:commandButton title="delete" onsuccess="confirmation.show()"
+									partialSubmit="true" process="@this" icon="ui-icon-delete">
+					    <f:setPropertyActionListener value="#{data}" target="#{panelBackingBean.managedBean.deleteContractPerson}" />
+					  </p:commandButton>
+					  </p:column> 
 							</p:dataTable>
 						</h:panelGrid>
 					 </div>
 					<h:panelGrid style="width:800px" columnClasses="column-align-right">
-					   <p:commandButton value="Add" styleClass="text-align: right;" process="@this" partialSubmit="true" icon="ui-icon-add"  update="dataTable"/>
+					   <p:commandButton value="Add" styleClass="text-align: right;" process="@this" partialSubmit="true" icon="ui-icon-add" action="#{panelBackingBean.addNewPerson()}"
+					    update="updatePerson"/>
 					</h:panelGrid>
                  </p:panel>
                 <p:confirmDialog message="#{lbl['lbl.ct.dialong.cofirm.message']}"
@@ -60,8 +84,8 @@
                           	<h:panelGrid columns="2"
 								columnClasses="column-align-right-50,column-align-left">
 								<p:commandButton value="#{lbl['lbl.ct.dialong.cofirm.yes']}" 
-									update="dataTable" partialSubmit="true" process="@this"
-									onclick="confirmation.hide();"/>
+									update="updatePerson" partialSubmit="true" process="@this"
+									onclick="confirmation.hide();" actionListener="#{panelBackingBean.deletePersonList()}"/>
 								<p:commandButton value="#{lbl['lbl.ct.dialong.cofirm.no']}" 
 									onclick="confirmation.hide()" type="button" />
 							</h:panelGrid>
