@@ -34,6 +34,7 @@
 		<!-- sourcing	-->
 		<category name="category.ep.ss">
 			<portlet id="ss-directPurchase" />
+			<portlet id="ss-defaultPurchase" />
 		</category>
 		<!-- Fulfilment Start Added by Giri -->
 		<category name="FL_DIS">
