@@ -54,11 +54,13 @@
 			<p:panel label="#{lbl['lbl.ss.market.research']}" header="#{lbl['lbl.ss.market.research']}" toggleable="true"  toggleSpeed="500">
 				<div align="right">
 					<p:button value="#{lbl['lbl.ss.action.search.catelogue']}" />
-					<p:button value="#{lbl['lbl.sc.action.simple.quote']}"
-						outcome="/xhtml/ss/directpurchase/simpleQuote.xhtml" />
-					<p:button value="#{lbl['lbl.sc.action.simple.bid']}" />
+					<p:commandButton value="#{lbl['lbl.sc.action.simple.quote']}"
+						onclick="simpleQuoteBid.show();" />
+					<p:commandButton value="#{lbl['lbl.sc.action.simple.bid']}" onclick="recommendSupplier.show();" />
 					<p:button value="#{lbl['lbl.sc.action.clone']}" />
 				</div>
+				<ui:include src="/xhtml/ss/directpurchase/simpleQuoteBid.xhtml" />
+				<ui:include src="/xhtml/ss/directpurchase/common/recommendSupplier.xhtml" />
 				<h:panelGrid columns="1" width="100%">
 					<p:dataTable id="itemdataTable" width="100%" cellpadding="1"
 						value="#{directPurchaseBackingBean.managedBean.requestListItems}" var="item" rowKey="#{supplierItem.supplierId}">
