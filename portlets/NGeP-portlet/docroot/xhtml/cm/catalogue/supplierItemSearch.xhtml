@@ -10,6 +10,7 @@
 
 	<h:panelGroup id="supplierItemViewID">
 
+
 		<p:outputLabel styleClass="titleFront"
 			value="#{lbl['lbl.cm.catalogue.search']}"></p:outputLabel>
 
@@ -161,20 +162,22 @@
 			<p:commandButton value="Add To Cart (0)" />
 			<p:commandButton value="Wishlist"
 				action="#{catalogueBackingBean.addIntoWishList()}"
-				onclick="wishListPopUp.show()" process="@this supplierItemID"
-				update="selectWishList" />
+				onclick="wishListPopUp.show()" />
 			<p:commandButton value="Favorite Supplier (0)" />
 
 		</h:panelGrid>
 
+
+		<p:dialog id="wishListDialog" widgetVar="wishListPopUp" width="500"
+			height="500">
+
+			<ui:include src="wishListPopUp.xhtml" />
+
+		</p:dialog>
+
 	</h:panelGroup>
 
-	<p:dialog id="wishListDialog" widgetVar="wishListPopUp" width="500"
-		height="500">
 
-		<ui:include src="wishListPopUp.xhtml" />
-
-	</p:dialog>
 
 
 

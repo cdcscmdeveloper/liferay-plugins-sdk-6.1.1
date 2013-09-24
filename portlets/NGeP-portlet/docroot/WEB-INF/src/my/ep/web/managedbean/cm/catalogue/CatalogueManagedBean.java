@@ -35,9 +35,21 @@ public class CatalogueManagedBean extends BaseManagedBean {
 	private PricingVO selectedPricing;
 	private boolean districtIND = false;
 	
+	private String test;
+	
+	
+	
 
 	
 	
+
+	public String getTest() {
+		return test;
+	}
+
+	public void setTest(String test) {
+		this.test = test;
+	}
 
 	public List<PricingVO> getSupplierItemList() {
 		if(supplierItemList==null)
@@ -66,6 +78,8 @@ public class CatalogueManagedBean extends BaseManagedBean {
 	}
 
 	public PricingVO getSelectedPricing() {
+		if(selectedPricing==null)
+			selectedPricing = new PricingVO();
 		return selectedPricing;
 	}
 

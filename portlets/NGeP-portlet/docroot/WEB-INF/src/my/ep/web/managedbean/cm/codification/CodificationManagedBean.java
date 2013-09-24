@@ -1,31 +1,49 @@
 package my.ep.web.managedbean.cm.codification;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
 
+import my.ep.persistence.entity.cm.catalog.CmUnspsc;
 import my.ep.web.managedbean.BaseManagedBean;
-import my.ep.web.vo.RemarksVO;
 
 @ManagedBean(name = "unspscCodeMB")
 @SessionScoped
 public class CodificationManagedBean extends BaseManagedBean {
-	
-	
+
+
 	private String cmNavigationURL;
+
+	private List<CmUnspsc> unspscList;
+	private CmUnspsc selectedUNSPSCObj;
 	
-	private List<RemarksVO> unspscList;
-	private RemarksVO selectedUNSPSCObj;
-	
-	
-	
-	
-	
-	
+	private String unspscCode;
+	private String unspscTitle;
+
+
 
 	
+
+
+
+
+
+	public String getUnspscCode() {
+		return unspscCode;
+	}
+
+	public void setUnspscCode(String unspscCode) {
+		this.unspscCode = unspscCode;
+	}
+
+	public String getUnspscTitle() {
+		return unspscTitle;
+	}
+
+	public void setUnspscTitle(String unspscTitle) {
+		this.unspscTitle = unspscTitle;
+	}
 
 	public String getCmNavigationURL() {
 		return cmNavigationURL;
@@ -35,29 +53,28 @@ public class CodificationManagedBean extends BaseManagedBean {
 		this.cmNavigationURL = cmNavigationURL;
 	}
 
-	public List<RemarksVO> getUnspscList() {
-		if(unspscList==null){
-			unspscList = new ArrayList<RemarksVO>();
-		}
+	public List<CmUnspsc> getUnspscList() {
 		return unspscList;
 	}
 
-	public void setUnspscList(List<RemarksVO> unspscList) {
+	public void setUnspscList(List<CmUnspsc> unspscList) {
 		this.unspscList = unspscList;
 	}
 
-	public RemarksVO getSelectedUNSPSCObj() {
+	public CmUnspsc getSelectedUNSPSCObj() {
 		if(selectedUNSPSCObj==null)
-			selectedUNSPSCObj = new RemarksVO();
+			selectedUNSPSCObj = new CmUnspsc();
 		return selectedUNSPSCObj;
 	}
 
-	public void setSelectedUNSPSCObj(RemarksVO selectedUNSPSCObj) {
+	public void setSelectedUNSPSCObj(CmUnspsc selectedUNSPSCObj) {
 		this.selectedUNSPSCObj = selectedUNSPSCObj;
 	}
+
 	
-	
-	
-	
+
+
+
+
 
 }

@@ -23,8 +23,6 @@ import org.apache.poi.ss.usermodel.Row;
 import org.primefaces.event.FileUploadEvent;
 import org.primefaces.model.UploadedFile;
 
-import utils.system;
-
 @ManagedBean(name="codificationBackingBean")
 @RequestScoped
 public class CodificationBackingBean extends BaseBackingBean<CodificationManagedBean>{
@@ -45,15 +43,36 @@ public class CodificationBackingBean extends BaseBackingBean<CodificationManaged
 
 	public CodificationBackingBean(){
 
-		this.getManagedBean().setUnspscList(null);
-		RemarksVO vo = new RemarksVO();
-		vo.setUnspscID(new Long(1));
-		vo.setUnspscCode("11223344");
-		vo.setUnspscTitle("Car");
 
-		this.getManagedBean().getUnspscList().add(vo);
+
+
+
+
 
 	}
+
+	public void unspscSearch(){
+
+		ICodificationSO unspscSO = (ICodificationSO) BusinessDelegate.getInstance().getServiceObject(ICodificationSO.class);
+
+		log.info("unspscCode:"+this.getManagedBean().getUnspscCode());
+		System.out.println("********getUnspscTitle*******"+this.getManagedBean().getUnspscTitle());
+		
+		CodificationReqDTO reqDTO = new CodificationReqDTO();
+
+		if(this.getManagedBean().getUnspscCode()!=null){
+			reqDTO.setUnspscCode(this.getManagedBean().getUnspscCode());
+		}
+		if(this.getManagedBean().getUnspscTitle()!=null){
+			reqDTO.setUnspscTitle(this.getManagedBean().getUnspscTitle());
+		}
+		
+		CodificationResDTO resDTO = unspscSO.findUnspsc(reqDTO);
+		this.getManagedBean().setUnspscList(resDTO.getUnspscList());
+
+	}
+
+
 
 	public String codificationSearch(){
 
@@ -122,7 +141,7 @@ public class CodificationBackingBean extends BaseBackingBean<CodificationManaged
 
 		PortletRequest request = (PortletRequest)FacesContext.getCurrentInstance().getExternalContext().getRequest();
 
-		String loginUserId = request.getRemoteUser();
+		Long loginUserId = new Long(1);
 
 		UploadedFile item = event.getFile();
 
@@ -141,7 +160,7 @@ public class CodificationBackingBean extends BaseBackingBean<CodificationManaged
 		long code =0;
 		String title =null;
 		String desc = null;
-		
+
 
 
 		int lastRowNum = segment.getLastRowNum()+1;
@@ -234,8 +253,6 @@ public class CodificationBackingBean extends BaseBackingBean<CodificationManaged
 			reqDTO.getFamilyList().add(reqDTO.getCmUnspsc());
 
 
-
-
 		}
 		resDTO = unspscSO.saveFamilyList(reqDTO);
 
@@ -304,7 +321,7 @@ public class CodificationBackingBean extends BaseBackingBean<CodificationManaged
 			Row row = commodity.getRow(i);
 
 			if(row.getCell(6)!=null && row.getCell(6).toString().trim().length()>0){
-			
+
 				commodityKey = (long) row.getCell(6).getNumericCellValue();
 
 				unspsc.setUnspscKey(commodityKey);
@@ -314,7 +331,7 @@ public class CodificationBackingBean extends BaseBackingBean<CodificationManaged
 			if(row.getCell(7)!=null && row.getCell(7).toString().trim().length()>0){
 
 				commodityCode = (long) row.getCell(7).getNumericCellValue();
-				
+
 				String parentCode = getParentCode(commodityCode);
 
 				unspsc.setUnspscCode(String.valueOf(commodityCode));
@@ -338,12 +355,12 @@ public class CodificationBackingBean extends BaseBackingBean<CodificationManaged
 			unspsc.setUnspscLevel(3);
 			reqDTO.setCmUnspsc(unspsc);
 			reqDTO.getCommodityList().add(reqDTO.getCmUnspsc());
-		
+
 
 		}
-		
-		
-		 resDTO = unspscSO.saveCommodityList(reqDTO);
+
+
+		resDTO = unspscSO.saveCommodityList(reqDTO);
 
 
 
@@ -412,8 +429,6 @@ public class CodificationBackingBean extends BaseBackingBean<CodificationManaged
 			}
 
 		}
-
-
 
 		return level;
 	}

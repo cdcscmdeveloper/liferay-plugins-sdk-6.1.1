@@ -15,12 +15,12 @@
 		<table>
 			<tr>
 				<td><p:outputLabel value="#{lbl['lbl.cm.unspsc.code']}"></p:outputLabel></td>
-				<td colspan="1"><p:inputText /></td>
+				<td colspan="1" ><p:inputText value="#{codificationBackingBean.managedBean.unspscCode}" /></td>
 			</tr>
 			<tr>
 				<td><p:outputLabel value="#{lbl['lbl.cm.unspsc.title']}"></p:outputLabel></td>
-				<td><p:inputText /></td>
-				<td><p:commandButton value="search" /></td>
+				<td><p:inputText value="#{codificationBackingBean.managedBean.unspscTitle}" /></td>
+				<td><p:commandButton value="search" action="#{codificationBackingBean.unspscSearch}" update="cmUNSPSCsearchID"/></td>
 			</tr>
 
 		</table>
@@ -30,7 +30,7 @@
 
 		<p:dataTable id="unspscTableID"
 			value="#{codificationBackingBean.managedBean.unspscList}"
-			var="unspscObj" rowKey="#{unspscObj.unspscID}"
+			var="unspscObj" rowKey="#{unspscObj.unspscId}"
 			selection="#{codificationBackingBean.managedBean.selectedUNSPSCObj}"
 			width="100%" selectionMode="single">
 

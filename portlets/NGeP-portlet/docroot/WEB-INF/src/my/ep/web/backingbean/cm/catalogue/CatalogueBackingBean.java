@@ -3,7 +3,6 @@ package my.ep.web.backingbean.cm.catalogue;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
 import java.io.IOException;
 import java.math.BigDecimal;
 import java.text.SimpleDateFormat;
@@ -27,8 +26,6 @@ import my.ep.web.vo.AdvanceSearchVO;
 import my.ep.web.vo.PricingVO;
 
 import org.apache.log4j.Logger;
-import org.apache.poi.hssf.usermodel.HSSFSheet;
-import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.CellStyle;
 import org.apache.poi.ss.usermodel.Row;
@@ -449,6 +446,17 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean>{
 
 		}
 
+	}
+	
+	
+	public void RainTest(){
+		
+		log.info("**********rain***************"+this.getManagedBean().getSelectedPricing().getPrice());
+		this.getManagedBean().getSelectedPricing().setPricingSeq(new Long(1234));
+		this.getManagedBean().getSelectedPricing().setPrice(this.getManagedBean().getSelectedPricing().getPrice());
+		
+		this.getManagedBean().getSupplierItemList().add(this.getManagedBean().getSelectedPricing());
+		
 	}
 
 
