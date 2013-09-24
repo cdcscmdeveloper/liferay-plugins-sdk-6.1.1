@@ -15,7 +15,7 @@
 	<ui:define name="content">
 		<table style="width: 800px;">
 			<tr>
-				<td colspan="4" align="right"><p:commandButton value="SAVE" />
+				<td colspan="4" align="right"><p:commandButton value="SAVE" action="#{remarksBackingBean.createFulfillmentRequest}"/>
 					<p:commandButton value="SUBMIT" /> <p:commandButton value="PRINT" /></td>
 			</tr>
 		</table>
@@ -31,7 +31,7 @@
 				</tr>
 				<tr>
 					<td><p:outputLabel value="* Issued Jabatan" /></td>
-					<td><p:selectOneMenu value="" style="width: 260px;">
+					<td><p:selectOneMenu value="a" style="width: 260px;">
 							<f:selectItem itemLabel="JABATAN KASTAM DAN EKSAIS DIRAJA"
 								itemValue="1" />
 						</p:selectOneMenu></td>
@@ -40,7 +40,7 @@
 				</tr>
 				<tr>
 					<td><p:outputLabel value="* Issued PTJ" /></td>
-					<td><p:selectOneMenu value="" style="width: 260px;">
+					<td><p:selectOneMenu value="a" style="width: 260px;">
 							<f:selectItem itemLabel="IBU PEJABAT KASTAM" itemValue="1" />
 						</p:selectOneMenu></td>
 					<td><p:outputLabel value="Contract NO." /></td>
@@ -49,7 +49,7 @@
 				</tr>
 				<tr>
 					<td><p:outputLabel value="* Received Jabatan" /></td>
-					<td><p:selectOneMenu value="" style="width: 260px;">
+					<td><p:selectOneMenu value="a" style="width: 260px;">
 							<f:selectItem itemLabel="JABATAN KASTAM DAN EKSAIS DIRAJA"
 								itemValue="1" />
 						</p:selectOneMenu></td>
@@ -59,7 +59,7 @@
 				</tr>
 				<tr>
 					<td><p:outputLabel value="* Received PTJ" /></td>
-					<td><p:selectOneMenu value="" style="width: 260px;">
+					<td><p:selectOneMenu value="a" style="width: 260px;">
 							<f:selectItem itemLabel="IBU PEJABAT KASTAM" itemValue="1" />
 						</p:selectOneMenu></td>
 					<td><p:outputLabel value="Fulfillment Type" /></td>
@@ -90,21 +90,21 @@
 				</tr>
 				<tr>
 					<td><p:outputLabel value="*Financial Year" /></td>
-					<td><p:selectOneMenu value="" style="width: 260px;">
+					<td><p:selectOneMenu value="a" style="width: 260px;">
 							<f:selectItem itemLabel="2013" itemValue="1" />
 						</p:selectOneMenu></td>
 					<td><p:outputLabel value=" *Maksud  Code" /></td>
-					<td><p:selectOneMenu value="" style="width: 260px;">
-							<f:selectItem itemLabel="Select One" itemValue="" />
+					<td><p:selectOneMenu value="a" style="width: 260px;">
+							<f:selectItem itemLabel="Select One" itemvalue="a" />
 						</p:selectOneMenu></td>
 				</tr>
 				<tr>
 					<td><p:outputLabel value="*AG Office" /></td>
-					<td><p:selectOneMenu value="" style="width: 260px;">
+					<td><p:selectOneMenu value="a" style="width: 260px;">
 							<f:selectItem itemLabel="002 KAWANGAN KL" itemValue="1" />
 						</p:selectOneMenu></td>
 					<td><p:outputLabel value="*Charge PTJ" /></td>
-					<td><p:selectOneMenu value="" style="width: 260px;">
+					<td><p:selectOneMenu value="a" style="width: 260px;">
 							<f:selectItem itemLabel="IBU PEJABAT KASTAM" itemValue="1" />
 						</p:selectOneMenu></td>
 				</tr>
@@ -177,9 +177,12 @@
 			<table>
 				<tr>
 					<td><p:outputLabel value="* Remarks    " /></td>
-					<td><p:inputTextarea rows="8" style="width: 260px;"  /></td>
+					<td><p:inputTextarea rows="8" style="width: 260px;" value="#{remarksBackingBean.managedBean.flRemark.remark}" /></td>
 					<td><p:outputLabel value="Attachment" /></td>
-					<td><p:commandButton value="Attach Files" /></td>
+					<td> <p:fileUpload fileUploadListener="#{remarksBackingBean.fileUpload}" mode="advanced" dragDropSupport="false"  
+                   sizeLimit="100000" multiple="false" allowTypes="/(\.|\/)(doc|docx|xls|xlsx|pdf)$/" /></td>
+                                  
+                                   
 				</tr>
 			</table>
 		</p:panel>
