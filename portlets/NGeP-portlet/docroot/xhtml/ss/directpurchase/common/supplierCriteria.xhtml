@@ -1,0 +1,205 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:c="http://java.sun.com/jsp/jstl/core">
+
+
+	
+		<p:panel header="INVITATION BY SUPPLIER CRITERIA">
+
+			<p:panelGrid  style="width:100%;" styleClass="noBorders tr,noBorders td">
+				
+				<p:row>
+                <p:column>
+                <h:panelGroup>
+                 <p:selectBooleanCheckbox  />
+              <h:outputLabel  value="By Locality : " />
+				</h:panelGroup>
+				</p:column>
+				 <p:column>
+				  <p:selectOneMenu> 
+				  <f:selectItem itemLabel=" " itemValue="1" />
+	                 <f:selectItem itemLabel="One-Off" itemValue="1" />   
+	                 <f:selectItem itemLabel="Periodic" itemValue="2" />
+	                  <f:selectItem itemLabel="Periodic(Schedule)" itemValue="3" />
+	          </p:selectOneMenu>
+	          </p:column>
+	        
+	          
+	        
+                <p:column>
+				<h:panelGroup>
+               <p:selectBooleanCheckbox  />
+				<h:outputLabel  value="By MoF No./Basic Act Reg : " />
+				</h:panelGroup>
+				</p:column>
+	          
+                  </p:row> 
+                  
+                <p:row>
+                <p:column>
+               
+                
+              <h:outputLabel  value="Justification : " />
+				
+				</p:column>
+				 <p:column>
+				  <p:inputText></p:inputText>
+	          </p:column>
+	        
+	          
+	        
+                <p:column colspan="2">
+                
+                <p:panelGrid columns="2">
+                
+				 <p:column>
+				 
+               <p:selectOneMenu> 
+				  <f:selectItem itemLabel=" " itemValue="1" />
+	                 <f:selectItem itemLabel="One-Off" itemValue="1" />   
+	                 <f:selectItem itemLabel="Periodic" itemValue="2" />
+	                  <f:selectItem itemLabel="Periodic(Schedule)" itemValue="3" />
+	          </p:selectOneMenu>
+	         </p:column>
+	           <p:column>
+	          <p:inputText></p:inputText>
+	         </p:column>
+				</p:panelGrid>
+				</p:column>
+	          
+                  </p:row> 
+                  
+                  
+         <p:row>
+                <p:column>
+                <h:panelGroup>
+                 <p:selectBooleanCheckbox  />
+              <h:outputLabel  value="By SupplierName : " />
+				</h:panelGroup>
+				</p:column>
+				 <p:column>
+				  <p:inputText></p:inputText>
+	          </p:column>
+	        
+	          
+	        
+                <p:column>
+				<h:panelGroup>
+               <p:selectBooleanCheckbox  />
+				<h:outputLabel  value="By Nature Of Business : " />
+				</h:panelGroup>
+				</p:column>
+	          
+                  </p:row>          
+                  
+</p:panelGrid>
+<div align="right">
+<p:dataTable style="width:50%" var="stageoneTechnical" value="#{searchQtnTenderBB.managedBean.qtnTenders}" editable="true">
+
+
+
+<p:column headerText="No" style="width:10%">
+
+  
+                   <h:outputText value="1"></h:outputText> 
+               
+</p:column>
+
+<p:column headerText="Buss.Code" style="width:30%" >
+ <p:panelGrid columns="2" styleClass="noBorders tr,noBorders td">
+                
+				 
+					<p:selectOneMenu> 
+				  <f:selectItem itemLabel=" " itemValue="1" />
+	                 <f:selectItem itemLabel="One-Off" itemValue="1" />   
+	                 <f:selectItem itemLabel="Periodic" itemValue="2" />
+	                  <f:selectItem itemLabel="Periodic(Schedule)" itemValue="3" />
+	          </p:selectOneMenu>
+	        
+	          <p:inputText></p:inputText>				
+	          
+				</p:panelGrid>
+				</p:column>
+				  
+				  
+        
+      
+        
+         <p:column headerText="Action" style="width:10%">  
+            <p:commandLink >
+				     <p:graphicImage    library="ep/images/design" name="delete.png" value="/resources/ep/images/design/delete.png" />
+                  
+                 </p:commandLink>
+           
+                
+        </p:column>  
+
+</p:dataTable>
+       
+
+	      
+</div>
+  <div align="right"  >
+					<p:commandButton  value="ADD"/>
+					
+					</div>
+					
+					
+	
+		<p:panelGrid  style="width:100%;" styleClass="noBorders tr,noBorders td">
+				
+				<p:row>
+                <p:column>
+                <h:panelGroup>
+                 <p:selectBooleanCheckbox  />
+              <h:outputLabel  value="By ProductCode : " />
+				</h:panelGroup>
+				</p:column>			
+				</p:row>
+				</p:panelGrid>	
+				
+				<div align="right"  >
+					<p:commandButton  value="SEARCH"/>
+					
+					</div>
+</p:panel>
+		
+	<p:panel header="SUPPLIER" toggleable="true">
+
+			<p:dataTable  var="simpleQuote"
+				value="#{simpleQuoteBidBackingBean.utilList}"
+				selection="#{simpleQuoteBidBackingBean.managedBean.selectedUtilList}"
+				rowKey="#{simpleQuote.seqNo}" rowIndexVar="index">
+
+				<p:column selectionMode="multiple" style="width:2%" />
+
+				<p:column headerText="#{lbl['lbl.ss.simple.quote.purchase.group.seq.no']}" style="width:10%">
+					<h:outputText value="#{index+1}"></h:outputText>
+				</p:column>
+
+				<p:column headerText="Company Name" style="width:50%">
+					<h:outputText value="Commerce Dot Com"></h:outputText>
+				</p:column>
+
+				<p:column headerText="Supplier Status" style="width:38%">
+					<h:outputText value="Active"></h:outputText>
+				</p:column>
+
+				
+
+			</p:dataTable>
+
+		</p:panel>	
+		
+		
+					
+					
+				
+				
+				
+				
+					
+</ui:composition>
