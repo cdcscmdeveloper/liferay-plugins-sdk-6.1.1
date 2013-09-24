@@ -11,26 +11,21 @@ import org.apache.log4j.Logger;
 import my.ep.persistence.entity.fl.FlRemark;
 import my.ep.persistence.entity.fl.FlAttachment;
 import my.ep.web.managedbean.BaseManagedBean;
+
 /**
  * Managed Bean for Create Contract Order
  * 
  * @author Giribabu
  * @since 20/9/2013
- * 
  */
 @ManagedBean
 @SessionScoped
-public class CreateContractManagedBean extends BaseManagedBean {
-	private static Logger log = Logger.getLogger(CreateContractManagedBean.class);
+public class FulfilmentRequestManagedBean extends BaseManagedBean {
+	private static Logger log = Logger.getLogger(FulfilmentRequestManagedBean.class);
 	private static final long serialVersionUID = 1L;
 
 	private FlRemark flRemark = new FlRemark();
 	private FlAttachment flAttachment = new FlAttachment();
-
-	private String fileName;
-	private String fileDesc;
-	private String filePath;
-	private String filedesc;
 
 	/**
 	 * @return the flRemark
@@ -45,63 +40,6 @@ public class CreateContractManagedBean extends BaseManagedBean {
 	 */
 	public void setFlRemark(FlRemark flRemark) {
 		this.flRemark = flRemark;
-	}
-
-	public String getFileName() {
-		return fileName;
-	}
-
-	/**
-	 * @param fileName
-	 *            the fileName to set
-	 */
-	public void setFileName(String fileName) {
-		this.fileName = fileName;
-	}
-
-	/**
-	 * @return the fileDesc
-	 */
-	public String getFileDesc() {
-		return fileDesc;
-	}
-
-	/**
-	 * @param fileDesc
-	 *            the fileDesc to set
-	 */
-	public void setFileDesc(String fileDesc) {
-		this.fileDesc = fileDesc;
-	}
-
-	/**
-	 * @return the filePath
-	 */
-	public String getFilePath() {
-		return filePath;
-	}
-
-	/**
-	 * @param filePath
-	 *            the filePath to set
-	 */
-	public void setFilePath(String filePath) {
-		this.filePath = filePath;
-	}
-
-	/**
-	 * @return the filedesc
-	 */
-	public String getFiledesc() {
-		return filedesc;
-	}
-
-	/**
-	 * @param filedesc
-	 *            the filedesc to set
-	 */
-	public void setFiledesc(String filedesc) {
-		this.filedesc = filedesc;
 	}
 
 	/**
