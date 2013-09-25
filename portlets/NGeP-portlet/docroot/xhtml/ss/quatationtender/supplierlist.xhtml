@@ -10,28 +10,17 @@
 		toggleable="true">
 				<p:dataTable value="#{searchQtnTenderBB.managedBean.categories}" var="ccode" resizableColumns="true"
 				>
-				<p:column headerText="No." style="width: 100px;">
-				<h:outputText value="S001"></h:outputText>
-					
-				</p:column>
-
-				<p:column headerText="CompanyName">
+			
+				<p:column headerText="CompanyName" >
 				
-				<h:outputLink id="lnk" value="#">  
-        <h:outputText value="XXXX"></h:outputText>  
-    </h:outputLink>  
-    <p:tooltip for="lnk"> 
-     <p:panel id="display" header="CompanyAddress" style="margin-top:10px;">  
-        <h:panelGrid columns="2">  
-            <h:outputText value="Address: " />  
-            <h:outputText id="txt1" value="CyberJaya" />               
-            <h:outputText value="Tel" />  
-            <h:outputText id="txt2" value="1111111111111111" />  
-             <h:outputText value="Fax" />  
-            <h:outputText id="txt3" value="01-25-3456" />
-        </h:panelGrid>  
-    </p:panel>  </p:tooltip> 
-							
+				 <p:tree value="#{companyBean.root2}" var="node"
+            selectionMode="checkbox"
+            selection="#{companyBean.selectedNodes}" style="border:none;">
+
+        <p:treeNode>
+            <h:outputText value="#{node}" />
+        </p:treeNode>
+    </p:tree>
 
 				</p:column>
 
@@ -58,6 +47,14 @@
 		</p:panel>
 		
 		<p:dialog widgetVar="suppdlg" modal="true" width="800" height="400">
+		<p:panelGrid columns="1" style="width:100%;"
+			styleClass="noBorders tr,noBorders td">
+<p:commandButton  value="#{lbl['lbl.so.searchbtn']}"
+			styleClass="apply_button" style="float:right;" >
+		</p:commandButton>
+		</p:panelGrid>
+		
+		
 		<p:panel header="Search Supplier" toggleable="true" size="100">
 				<p:panelGrid columns="2" style="width:50%;" styleClass="noBorders tr,noBorders td">
 				
@@ -69,6 +66,8 @@
 
 <h:outputText value="Item Name " />
 			<p:inputText  value="#{searchQtnTenderBB.managedBean.qtno}"/>
+	
+		
 	</p:panelGrid>
 		
 	<p:panelGrid style="width:33%;"
@@ -83,7 +82,7 @@
    </p:panelGrid>		
 
 		
-<p:panelGrid columns="2" style="width:32%;" styleClass="noBorders tr,noBorders td">
+<p:panelGrid columns="2" style="width:35%;" styleClass="noBorders tr,noBorders td">
 				 <h:outputText value="Circular Coverage" />  
         <p:selectOneMenu value="#{searchQtnTenderBB.managedBean.selectOption}">  
             <f:selectItem itemLabel="Select One" itemValue="" />  
@@ -95,40 +94,26 @@
     
 				
 			</p:panelGrid>
-		<p:panelGrid columns="1" style="width:100%;"
-			styleClass="noBorders tr,noBorders td">
-<p:commandButton  value="#{lbl['lbl.so.searchbtn']}"
-			styleClass="apply_button" style="float:right;" >
-		</p:commandButton>
-		</p:panelGrid>
+		
 			<p:panel header="Supplier List" toggleable="true">
 		<p:panelGrid columns="2" style="width:100%;"
 			styleClass="noBorders tr,noBorders td">
 			
 			<p:dataTable value="#{searchQtnTenderBB.managedBean.categories}" var="ccode" resizableColumns="true"
 				>
-				<p:column headerText="No." style="width: 100px;">
-				<h:outputText value="S001"></h:outputText>
-					
-				</p:column>
+				
 
 				<p:column headerText="CompanyName">
 				
-				<h:outputLink id="lnk1" value="#">  
-        <h:outputText value="XXXX"></h:outputText>  
-    </h:outputLink>  
-    <p:tooltip for="lnk1"> 
-     <p:panel header="CompanyAddress" style="margin-top:10px;">  
-        <h:panelGrid columns="2">  
-            <h:outputText value="Address: " />  
-            <h:outputText  value="CyberJaya" />               
-            <h:outputText value="Tel" />  
-            <h:outputText value="1111111111111111" />  
-             <h:outputText value="Fax" />  
-            <h:outputText  value="01-25-3456" />
-        </h:panelGrid>  
-    </p:panel>  </p:tooltip> 
-							
+				
+       <p:tree value="#{companyBean.root2}" var="node"
+            selectionMode="checkbox"
+            selection="#{companyBean.selectedNodes}" style="border:none;">
+
+        <p:treeNode>
+            <h:outputText value="#{node}" />
+        </p:treeNode>
+    </p:tree>
 
 				</p:column>
 
