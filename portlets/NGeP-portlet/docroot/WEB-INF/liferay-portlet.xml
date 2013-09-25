@@ -1,11 +1,20 @@
 <?xml version="1.0"?>
 <!DOCTYPE liferay-portlet-app PUBLIC "-//Liferay//DTD Portlet Application 6.1.0//EN" "http://www.liferay.com/dtd/liferay-portlet-app_6_1_0.dtd">
 <liferay-portlet-app>
+
+<portlet>
+		<portlet-name>ctTemplate</portlet-name>
+		<icon>/icon.png</icon>
+		<instanceable>false</instanceable>
+		<header-portlet-css>/css/ep/ct.css</header-portlet-css>
+		<footer-portlet-javascript>/js/main.js</footer-portlet-javascript>
+		<css-class-wrapper>ct-portlet</css-class-wrapper>
+	</portlet>
 	<portlet>
 		<portlet-name>search</portlet-name>
 		<icon>/icon.png</icon>
 		<instanceable>false</instanceable>
-		<header-portlet-css>/css/main.css</header-portlet-css>
+		<header-portlet-css>/css/ep/ct.css</header-portlet-css>
 		<footer-portlet-javascript>/js/main.js</footer-portlet-javascript>
 		<css-class-wrapper>ct-portlet</css-class-wrapper>
 	</portlet>
@@ -14,7 +23,7 @@
 		<portlet-name>fd</portlet-name>
 		<icon>/icon.png</icon>
 		<instanceable>false</instanceable>
-		<header-portlet-css>/css/main.css</header-portlet-css>
+		<header-portlet-css>/css/ep/ct.css</header-portlet-css>
 		<footer-portlet-javascript>/js/main.js</footer-portlet-javascript>
 		<css-class-wrapper>ct-portlet</css-class-wrapper>
 	</portlet>
@@ -23,7 +32,7 @@
 		<portlet-name>pc</portlet-name>
 		<icon>/icon.png</icon>
 		<instanceable>false</instanceable>
-		<header-portlet-css>/css/main.css</header-portlet-css>
+		<header-portlet-css>/css/ep/ct.css</header-portlet-css>
 		<footer-portlet-javascript>/js/main.js</footer-portlet-javascript>
 		<css-class-wrapper>ct-portlet</css-class-wrapper>
 	</portlet>
@@ -32,7 +41,7 @@
 		<portlet-name>pcSearch</portlet-name>
 		<icon>/icon.png</icon>
 		<instanceable>false</instanceable>
-		<header-portlet-css>/css/main.css</header-portlet-css>
+		<header-portlet-css>/css/ep/ct.css</header-portlet-css>
 		<footer-portlet-javascript>/js/main.js</footer-portlet-javascript>
 		<css-class-wrapper>ct-portlet</css-class-wrapper>
 	</portlet>
@@ -40,7 +49,7 @@
 		<portlet-name>bpkTermination</portlet-name>
 		<icon>/icon.png</icon>
 		<instanceable>false</instanceable>
-		<header-portlet-css>/css/main.css</header-portlet-css>
+		<header-portlet-css>/css/ep/ct.css</header-portlet-css>
 		<footer-portlet-javascript>/js/main.js</footer-portlet-javascript>
 		<css-class-wrapper>ct-portlet</css-class-wrapper>
 	</portlet>
@@ -49,7 +58,7 @@
 		<portlet-name>pbTermination</portlet-name>
 		<icon>/icon.png</icon>
 		<instanceable>false</instanceable>
-		<header-portlet-css>/css/main.css</header-portlet-css>
+		<header-portlet-css>/css/ep/ct.css</header-portlet-css>
 		<footer-portlet-javascript>/js/main.js</footer-portlet-javascript>
 		<css-class-wrapper>ct-portlet</css-class-wrapper>
 	</portlet>
@@ -58,7 +67,7 @@
 		<portlet-name>cc</portlet-name>
 		<icon>/icon.png</icon>
 		<instanceable>false</instanceable>
-		<header-portlet-css>/css/main.css</header-portlet-css>
+		<header-portlet-css>/css/ep/ct.css</header-portlet-css>
 		<footer-portlet-javascript>/js/main.js</footer-portlet-javascript>
 		<css-class-wrapper>ct-portlet</css-class-wrapper>
 	</portlet>
@@ -67,7 +76,7 @@
 		<portlet-name>ccSearch</portlet-name>
 		<icon>/icon.png</icon>
 		<instanceable>false</instanceable>
-		<header-portlet-css>/css/main.css</header-portlet-css>
+		<header-portlet-css>/css/ep/ct.css</header-portlet-css>
 		<footer-portlet-javascript>/js/main.js</footer-portlet-javascript>
 		<css-class-wrapper>ct-portlet</css-class-wrapper>
 	</portlet>
@@ -76,7 +85,7 @@
 		<portlet-name>ag</portlet-name>
 		<icon>/icon.png</icon>
 		<instanceable>false</instanceable>
-		<header-portlet-css>/css/main.css</header-portlet-css>
+		<header-portlet-css>/css/ep/ct.css</header-portlet-css>
 		<footer-portlet-javascript>/js/main.js</footer-portlet-javascript>
 		<css-class-wrapper>ct-portlet</css-class-wrapper>
 	</portlet>
@@ -85,7 +94,7 @@
 		<portlet-name>supag</portlet-name>
 		<icon>/icon.png</icon>
 		<instanceable>false</instanceable>
-		<header-portlet-css>/css/main.css</header-portlet-css>
+		<header-portlet-css>/css/ep/ct.css</header-portlet-css>
 		<footer-portlet-javascript>/js/main.js</footer-portlet-javascript>
 		<css-class-wrapper>ct-portlet</css-class-wrapper>
 	</portlet>
@@ -94,7 +103,7 @@
 		<portlet-name>supplierSearch</portlet-name>
 		<icon>/icon.png</icon>
 		<instanceable>false</instanceable>
-		<header-portlet-css>/css/main.css</header-portlet-css>
+		<header-portlet-css>/css/ep/ct.css</header-portlet-css>
 		<footer-portlet-javascript>/js/main.js</footer-portlet-javascript>
 		<css-class-wrapper>ct-portlet</css-class-wrapper>
 	</portlet>
@@ -103,7 +112,7 @@
 		<portlet-name>pbReview</portlet-name>
 		<icon>/icon.png</icon>
 		<instanceable>false</instanceable>
-		<header-portlet-css>/css/main.css</header-portlet-css>
+		<header-portlet-css>/css/ep/ct.css</header-portlet-css>
 		<footer-portlet-javascript>/js/main.js</footer-portlet-javascript>
 		<css-class-wrapper>ct-portlet</css-class-wrapper>
 	</portlet>
@@ -112,7 +121,7 @@
 		<portlet-name>bpkReview</portlet-name>
 		<icon>/icon.png</icon>
 		<instanceable>false</instanceable>
-		<header-portlet-css>/css/main.css</header-portlet-css>
+		<header-portlet-css>/css/ep/ct.css</header-portlet-css>
 		<footer-portlet-javascript>/js/main.js</footer-portlet-javascript>
 		<css-class-wrapper>ct-portlet</css-class-wrapper>
 	</portlet>

@@ -30,6 +30,9 @@
 				<portlet id="bpkTermination"></portlet>
 				<portlet id="bpkReview"></portlet>
 			</category>
+			<category name="category.ep.tpl">
+				<portlet id="ctTemplate"></portlet>
+			</category>
 		</category>
 		<!-- sourcing	-->
 		<category name="category.ep.ss">
