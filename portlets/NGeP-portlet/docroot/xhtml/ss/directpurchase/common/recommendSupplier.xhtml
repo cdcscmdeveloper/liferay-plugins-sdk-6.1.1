@@ -1,0 +1,68 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:c="http://java.sun.com/jsp/jstl/core">
+
+
+	<p:dialog header="Recommend Supplier" widgetVar="recommendSupplier"
+		modal="true" width="800" height="250">
+		<p:panel header="RECOMMEND SUPPLIER">
+
+			<p:dataTable id="simpleQuote" var="simpleQuote"
+				value="#{simpleQuoteBidBackingBean.utilList}"
+				selection="#{simpleQuoteBidBackingBean.managedBean.selectedUtilList}"
+				rowKey="#{simpleQuote.seqNo}" rowIndexVar="index">
+
+			
+
+				<p:column headerText="#{lbl['lbl.ss.simple.quote.purchase.supplier']}" style="width:10%">
+					<h:outputText value="#{simpleQuote.supplier}"></h:outputText>
+				</p:column>
+
+				<p:column headerText="#{lbl['lbl.ss.simple.quote.purchase.description']}" style="width:20%">
+					<h:outputText value="#{simpleQuote.description}"></h:outputText>
+				</p:column>
+
+				<p:column headerText="#{lbl['lbl.ss.simple.quote.purchase.qty.order']}" style="width:20%">
+					<h:outputText value="#{simpleQuote.qtyOrder}"></h:outputText>
+				</p:column>
+
+				<p:column headerText="#{lbl['lbl.ss.simple.quote.item.uom']}" style="width:5%">
+					<h:outputText value="#{simpleQuote.uom}"></h:outputText>
+				</p:column>
+
+				<p:column headerText="#{lbl['lbl.ss.simple.quote.purchase.unit.price']}" style="width:10%">
+					<h:outputText value="#{simpleQuote.unitPerPrice}"></h:outputText>
+				</p:column>
+
+				<p:column headerText="#{lbl['lbl.ss.simple.quote.purchase.amount']}" style="width:13%">
+					<h:outputText value="#{simpleQuote.amount}"></h:outputText>
+				</p:column>
+				
+				<p:column headerText="Quote/Bid dtl." style="width:10%">
+					<p:commandLink value="hyperLink"></p:commandLink>
+				</p:column>
+ 
+                	<p:column headerText="Recent Price" style="width:10%">
+					<p:commandLink value="hyperLink"></p:commandLink>
+				</p:column>
+              
+              <p:column headerText="Recommend" selectionMode="single"  style="width:2%"/>
+						
+              
+			</p:dataTable>
+
+		</p:panel>
+
+ <ui:include src="/xhtml/ss/directpurchase/common/simpleQuoteGroupTab.xhtml" />
+		<p:commandButton value="#{lbl['lbl.ss.simple.quote.purchase.btn.ok']}" style="float:right;"
+			onclick="recommendSupplier.hide();"></p:commandButton>
+				&#160;&#160;
+				<p:commandButton value="#{lbl['lbl.ss.simple.quote.purchase.btn.cancel']}" style="float:right;"
+			onclick="recommendSupplier.hide();"></p:commandButton>
+
+
+	</p:dialog>
+</ui:composition>
