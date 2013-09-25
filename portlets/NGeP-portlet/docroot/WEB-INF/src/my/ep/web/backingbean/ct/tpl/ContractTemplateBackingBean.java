@@ -66,7 +66,7 @@ public class ContractTemplateBackingBean extends BaseBackingBean<ContractTemplat
 		 IContractTemplateSO iContractTemplateSO = null;
 		  try{
 		      
-			   ContractTemplateReqDTO ReqDTO = new ContractTemplateReqDTO();
+			   ContractTemplateReqDTO reqDTO = new ContractTemplateReqDTO();
 		       CtTemplate ctTemplate = this.getManagedBean().getCtTemplate();
 		      
 	    	   Date d1=new Date();
@@ -86,8 +86,8 @@ public class ContractTemplateBackingBean extends BaseBackingBean<ContractTemplat
 		       
 		       ctTemplate.setContent(content);
 		       iContractTemplateSO = (IContractTemplateSO)BusinessDelegate.getInstance().getServiceObject(IContractTemplateSO.class);
-		       ReqDTO.setCtTemplate(ctTemplate);
-	           iContractTemplateSO.createTemplate(ReqDTO);
+		       reqDTO.setCtTemplate(ctTemplate);
+	           iContractTemplateSO.createTemplate(reqDTO);
 	           if(this.getManagedBean().getSearchFilterBean().getSearchField() == null){
 	        	   this.getManagedBean().getSearchFilterBean().setSearchField("name");
 	           }
@@ -138,13 +138,13 @@ public class ContractTemplateBackingBean extends BaseBackingBean<ContractTemplat
 			 SearchFilterBean searchFilterBean = this.getManagedBean().getSearchFilterBean();	
 			
 			 iContractTemplateSO = (IContractTemplateSO)BusinessDelegate.getInstance().getServiceObject(IContractTemplateSO.class);
-			 ContractTemplateReqDTO ReqDTO = new ContractTemplateReqDTO();
-			 ReqDTO.setTemplatesSearchBean(super.createSearchBean(CtTemplate.class, "dataTable"));
+			 ContractTemplateReqDTO reqDTO = new ContractTemplateReqDTO();
+			 reqDTO.setTemplatesSearchBean(super.createSearchBean(CtTemplate.class, "dataTable"));
 			 
 			 if (StringUtils.isNotBlank((String) searchFilterBean.getSearchValue())) 
-			    ReqDTO.getTemplatesSearchBean().getDataFilterBeans().add(searchFilterBean);
+			    reqDTO.getTemplatesSearchBean().getDataFilterBeans().add(searchFilterBean);
 				
-			 ContractTemplateResDTO ResDTO = iContractTemplateSO.retrieveTemplate(ReqDTO);
+			 ContractTemplateResDTO ResDTO = iContractTemplateSO.retrieveTemplate(reqDTO);
 			 this.getManagedBean().setCtTemplatesList(ResDTO.getTemplateResultBean().getResultList());
 			 this.getManagedBean().setSelectedIndex(0);
 
