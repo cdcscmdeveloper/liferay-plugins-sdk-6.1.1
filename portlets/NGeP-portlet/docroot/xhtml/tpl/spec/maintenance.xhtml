@@ -1,0 +1,337 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition
+	template="/WEB-INF/facelets/templates/basic_template.xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:ac="http://ac.my/jsf/composite/cc"
+	xmlns:p="http://primefaces.org/ui">
+
+	<ui:define name="resourceSection">
+		<script>
+			$(document).ready(function() {
+				updateColspan = function() {
+					$(".colspan2").attr('colspan', 2);
+					$(".colspan3").attr('colspan', 3);
+					$(".colspan4").attr('colspan', 4);
+					$(".colspan5").attr('colspan', 5);
+					$(".colspan6").attr('colspan', 6);
+					$(".colspan7").attr('colspan', 7);
+				};
+				updateColspan();
+			});
+		</script>
+	</ui:define>
+
+	<ui:define name="contentSection">
+		<p:commandButton value="Save"
+			action="#{templateSpecBackingBean.saveAction}" update="spg"
+			oncomplete="updateColspan();" />
+		<p:commandButton value="New Table" onclick="pp1.show();return false;" />
+
+		<p:spacer height="10px"></p:spacer>
+
+		<p:panel id="smpg" header="Detail" toggleable="true">
+			<table style="width: 100%">
+				<tr>
+					<td class="TableFieldLeft" style="width: 120px"><h:outputLabel
+							value="#{lbl['lbl.template.doc.category']}" /></td>
+					<td class="TableFieldRight"><p:selectOneMenu
+							value="#{templateSpecBackingBean.managedBean.selectedTemplate.tplCategory.categoryId}"
+							id="templateCategory">
+							<f:selectItems
+								value="#{templateSpecBackingBean.templateCategoryList}" />
+						</p:selectOneMenu></td>
+					<td class="TableFieldLeft" style="width: 120px"><h:outputLabel
+							value="*Process Type" /></td>
+					<td class="TableFieldRight"><p:inputText style="width:280px"
+							value="#{templateSpecBackingBean.managedBean.selectedTemplate.specName}" /></td>
+				</tr>
+				<tr>
+					<td class="TableFieldLeft" style="width: 120px"><h:outputLabel
+							value="Name" /></td>
+					<td class="TableFieldRight"><p:inputText style="width:280px"
+							value="#{templateSpecBackingBean.managedBean.selectedTemplate.specName}" /></td>
+					<td class="TableFieldLeft" style="width: 120px"><h:outputLabel
+							value="Decription" /></td>
+					<td class="TableFieldRight"><p:inputTextarea
+							style="width:280px" cols="33" rows="2"
+							value="#{templateSpecBackingBean.managedBean.selectedTemplate.specDesc}" /></td>
+				</tr>
+			</table>
+		</p:panel>
+
+		<p:spacer height="10px" />
+		<p:panel id="spg" header="Contents" toggleable="true">
+			<p:commandButton value="Re-Numbering"
+				action="#{templateSpecBackingBean.renumberingQuestionTable}"
+				process="@this spg" update="spg" oncomplete="updateColspan()" />
+			<p:commandButton value="Generate Excel"
+				action="#{templateSpecBackingBean.generateExcel}"
+				process="@this spg" update="spg" oncomplete="updateColspan()" />
+
+			<ac:templateDt index="1" />
+
+			<br />
+
+			<ac:templateDt index="2" />
+
+			<br />
+
+			<ac:templateDt index="3" />
+
+			<br />
+
+			<ac:templateDt index="4" />
+
+			<br />
+
+			<ac:templateDt index="5" />
+			
+
+		</p:panel>
+
+		<p:dialog header="Create New Section" widgetVar="pp1"
+			showEffect="fade" hideEffect="fade" modal="true" height="100"
+			width="350" resizable="false">
+
+			<h:panelGrid id="cspg" columns="2">
+
+				<h:outputLabel value="Number Of columns: " />
+				<h:inputText value="#{templateSpecBackingBean.numberOfColumns}" />
+				<h:outputLabel value="Answer: " />
+				<h:selectBooleanCheckbox value="#{templateSpecBackingBean.answer}" />
+				<h:outputLabel value="Additional Answer: " />
+				<h:selectBooleanCheckbox
+					value="#{templateSpecBackingBean.lastAnswer}" />
+
+			</h:panelGrid>
+
+			<p:commandButton value="Create"
+				action="#{templateSpecBackingBean.createTemplateTbl}"
+				onclick="pp1.hide();" process="@this,cspg" update="spg"
+				oncomplete="updateColspan()" />
+
+		</p:dialog>
+
+		<p:dialog header="Delete Confirmation" widgetVar="pp2"
+			showEffect="fade" hideEffect="fade" modal="true" height="100"
+			width="350" resizable="false">
+
+			<f:facet name="header">
+				<h:outputLabel value="Delete Confirmation" />
+			</f:facet>
+			<h:outputText value="Confirm delete?" />
+			<br />
+			<h:outputText
+				value="All child nodes belong to this node will be deleted as well" />
+			<br />
+
+			<p:commandButton value="Yes" onclick="pp2.hide();"
+				action="#{templateSpecBackingBean.deleteQuestion}"
+				process="@this,spg" update="spg" oncomplete="updateColspan()" />
+			<p:commandButton value="Cancel" onclick="pp2.hide();return false" />
+		</p:dialog>
+
+		<p:dialog id="asID" header="Answer Settings" widgetVar="answerSetting"
+			showEffect="fade" hideEffect="fade" modal="true" height="350"
+			width="550" resizable="false">
+			<br/>
+			<p:panel id="panelOcl">
+				<table>
+					<tr>
+						<td><p:outputLabel value="Answer Type:" /></td>
+						<td><p:selectOneMenu
+								value="#{templateSpecBackingBean.managedBean.selectedAnswerType}"
+								id="answerType">
+								<f:selectItems value="#{templateSpecBackingBean.answerTypes}" />
+								<p:ajax event="change" update="panelOcl"
+									listener="#{templateSpecBackingBean.clearAnswerTable}" />
+							</p:selectOneMenu></td>
+					</tr>
+					<tr>
+						<td><p:outputLabel value="Scoring:"
+								rendered="#{templateSpecBackingBean.managedBean.selectedAnswerType != 1}" /></td>
+						<td><p:selectBooleanCheckbox id="checkScore"
+								value="#{templateSpecBackingBean.managedBean.checkScore}"
+								rendered="#{templateSpecBackingBean.managedBean.selectedAnswerType != 1}">
+								<p:ajax update="panelOcl" />
+							</p:selectBooleanCheckbox></td>
+					</tr>
+					<tr>
+						<td><p:outputLabel
+								rendered="#{templateSpecBackingBean.managedBean.selectedAnswerType == 3}"
+								value="Option Choice" /></td>
+						<td><p:inputText
+								rendered="#{templateSpecBackingBean.managedBean.selectedAnswerType == 3}"
+								value="#{templateSpecBackingBean.managedBean.optionGroupName}"
+								id="optGroupName" />
+							<p:spacer width="3px" /> 
+							<p:commandLink
+								rendered="#{templateSpecBackingBean.managedBean.selectedAnswerType == 3}"
+								action="#{templateSpecBackingBean.searchOptionGroupList}"
+								process="@this optGroupName" update="ogn"
+								oncomplete="optionGroupName.show();">
+								<h:graphicImage library="ep/images/design"
+									name="icon_search.png" />
+							</p:commandLink>
+							<p:spacer width="3px" /> 
+							<p:commandLink
+								rendered="#{templateSpecBackingBean.managedBean.selectedAnswerType == 3}"
+								onclick="createGroup.show();" process="@this">
+								<h:graphicImage library="ep/images/design" name="btn_add.png" />
+							</p:commandLink></td>
+					</tr>
+					<tr>
+						<td colspan="2"><p:dataTable id="ocl"
+								value="#{templateSpecBackingBean.managedBean.ansOptionChoiceList2}"
+								var="options" style="width:100%"
+								rendered="#{templateSpecBackingBean.managedBean.selectedAnswerType == 3}">
+								<p:columnGroup type="header">
+									<p:row>
+										<p:column
+											headerText="#{templateSpecBackingBean.managedBean.optionGroupName}" />
+										<p:column
+											rendered="#{templateSpecBackingBean.managedBean.checkScore}"
+											headerText="Score" style="width:30%" />
+									</p:row>
+								</p:columnGroup>
+								<p:column>
+									<h:outputText value="#{options.choiceName}" />
+								</p:column>
+								<p:column
+									rendered="#{templateSpecBackingBean.managedBean.checkScore}">
+									<p:inputText value="#{options.score}" />
+								</p:column>
+							</p:dataTable></td>
+					</tr>
+					<tr>
+						<td colspan="2"><p:dataTable id="ocl2"
+								value="#{templateSpecBackingBean.managedBean.specScoringList}"
+								var="specScore" style="width:100%"
+								rendered="#{templateSpecBackingBean.managedBean.selectedAnswerType == 2 and templateSpecBackingBean.managedBean.checkScore}">
+
+								<p:columnGroup type="header">
+									<p:row>
+										<p:column headerText="From" />
+										<p:column headerText="To" />
+										<p:column headerText="Score" />
+										<p:column headerText="Action" />
+									</p:row>
+								</p:columnGroup>
+								<p:column>
+									<p:inputText value="#{specScore.rangeFrom}" />
+								</p:column>
+								<p:column>
+									<p:inputText value="#{specScore.rangeTo}" />
+								</p:column>
+								<p:column>
+									<p:inputText value="#{specScore.score}" />
+								</p:column>
+								<p:column>
+									<p:commandLink
+										action="#{templateSpecBackingBean.deleteScoringOption}"
+										update="ocl2">
+										<h:graphicImage library="ep/images/design"
+											name="icon_trash.png" />
+										<f:setPropertyActionListener value="#{specScore}"
+											target="#{templateSpecBackingBean.managedBean.selectedScore}" />
+									</p:commandLink>
+								</p:column>
+							</p:dataTable></td>
+					</tr>
+					<tr>
+						<td><p:commandButton
+								rendered="#{templateSpecBackingBean.managedBean.selectedAnswerType == 2 and templateSpecBackingBean.managedBean.checkScore}"
+								process="@this ocl2" value="Add"
+								action="#{templateSpecBackingBean.addScoringValue}"
+								update="ocl2" /></td>
+					</tr>
+					<tr>
+						<td><p:commandButton value="OK"
+								actionListener="#{templateSpecBackingBean.storeChoiceId}"
+								process="@this"
+								oncomplete="answerSetting.hide();updateColspan();return false;"
+								update="spg" /></td>
+					</tr>
+				</table>
+			</p:panel>
+
+
+		</p:dialog>
+
+		<p:dialog id="optGroupID" widgetVar="optionGroupName"
+			header="Option Group Name" showEffect="fade" hideEffect="fade"
+			modal="true" resizable="false">
+			<p:dataTable id="ogn"
+				value="#{templateSpecBackingBean.managedBean.ansOptionGroupList}"
+				var="options"
+				selection="#{templateSpecBackingBean.managedBean.selectedAnsGroup}"
+				selectionMode="single" rowKey="#{options.optionGroupId}">
+				<p:columnGroup type="header">
+					<p:row>
+						<p:column
+							headerText="#{templateSpecBackingBean.managedBean.optionGroupName}" />
+					</p:row>
+				</p:columnGroup>
+				<p:column>
+					<h:outputText value="#{options.groupName}" />
+				</p:column>
+			</p:dataTable>
+
+			<p:commandButton value="Select"
+				action="#{templateSpecBackingBean.searchOptionChoiceList}"
+				update="panelOcl" oncomplete="optionGroupName.hide();return false;" />
+		</p:dialog>
+
+		<p:dialog id="createOptID" widgetVar="createGroup"
+			header="Create Option Choice (DropDown)" showEffect="fade"
+			hideEffect="fade" modal="true" resizable="false">
+
+			<p:outputLabel value="Option Group Name: " />
+			<p:inputText
+				value="#{templateSpecBackingBean.managedBean.newOptGroupName}" />
+
+			<p:dataTable id="createOptChoiceID"
+				value="#{templateSpecBackingBean.managedBean.newOptChoiceList}"
+				var="options"
+				selection="#{templateSpecBackingBean.managedBean.selectedChoice}"
+				selectionMode="single" rowKey="#{options.optionChoiceId}">
+				<p:columnGroup type="header">
+					<p:row>
+						<p:column headerText="Option Choice" />
+						<p:column
+							rendered="#{templateSpecBackingBean.managedBean.selectedSpecQuestion.scoring}"
+							headerText="Score" />
+						<p:column headerText="Action" />
+					</p:row>
+				</p:columnGroup>
+				<p:column>
+					<h:inputText value="#{options.choiceName}" />
+				</p:column>
+				<p:column
+					rendered="#{templateSpecBackingBean.managedBean.selectedSpecQuestion.scoring}">
+					<h:inputText value="#{options.score}" />
+				</p:column>
+				<p:column>
+					<p:commandLink action="#{templateSpecBackingBean.deleteOptChoice}"
+						update="createOptChoiceID">
+						<h:graphicImage library="ep/images/design" name="icon_trash.png" />
+						<f:setPropertyActionListener value="#{options}"
+							target="#{templateSpecBackingBean.managedBean.selectedChoice}" />
+					</p:commandLink>
+				</p:column>
+			</p:dataTable>
+			<p:commandButton value="Add"
+				action="#{templateSpecBackingBean.addNewChoiceRow}"
+				update="createOptChoiceID" />
+			<p:commandButton value="Save and Select"
+				action="#{templateSpecBackingBean.saveNewOptChoice}" update="ocl"
+				oncomplete="createGroup.hide();return false;" />
+
+		</p:dialog>
+
+	</ui:define>
+
+	<ui:define name="footerSection" />
+</ui:composition>

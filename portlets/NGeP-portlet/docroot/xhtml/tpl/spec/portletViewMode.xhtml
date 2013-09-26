@@ -1,0 +1,453 @@
+<ui:composition
+	template="/WEB-INF/facelets/templates/basic_template.xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:a4j="http://richfaces.org/a4j"
+	xmlns:rich="http://richfaces.org/rich"
+	xmlns:c="http://java.sun.com/jstl/core"
+	xmlns:p="http://primefaces.org/ui">
+	
+	<ui:define name="resourceSection">
+	
+	</ui:define>
+	
+	<ui:define name="contentSection">
+
+	<script type="text/javascript">
+
+		
+
+
+	</script>
+
+	<p>
+		#{i18n['templateSpec-hello-world']} in view mode.
+	</p>
+		<p:commandButton value="findQuestionsBySection" 
+			action="#{templateSpecBackingBean.findQuestionsBySectionSeq}"
+			render="spg"
+			limitRender="true"></p:commandButton>
+		<a4j:commandButton 
+			value="findQuestionsBySection" 
+			action="#{templateSpecBackingBean.findQuestionsBySectionSeq}"
+			render="spg"
+			limitRender="true" />
+		
+		<a4j:commandButton 
+			value="Save"
+			action="#{templateSpecBackingBean.saveAction}"
+			render="spg"
+			limitRender="true">
+		</a4j:commandButton>
+	
+		<br />
+	
+		<h:panelGroup id="spg">
+		
+			<a4j:jsFunction name="radionOnchange" action="#{templateSpecBackingBean.radionOnchange}">
+				<a4j:param assignTo="#{templateSpecBackingBean.questionSeq}" name="questionSeq" />
+				<a4j:param assignTo="#{templateSpecBackingBean.tableId}" name="tableId" />
+			</a4j:jsFunction>
+		
+		<a4j:outputPanel id="spg1" >
+
+			<rich:dataTable 
+				id="sec1" 
+				value="#{templateSpecBackingBean.managedBean.questionListMap['1']}"
+				var="question"
+				rowKeyVar="row"
+				style="width:100%;">
+				
+				<!-- <rich:column style="width:15px;">
+					<input 
+						type="radio" 
+						name="sec1sel" 
+						value="#{row}" />
+				</rich:column> -->
+				
+				<rich:column style="width:30px; #{(question.questionType == 2 or question.questionType == 1) ? 'background-color:#dddddd;' : ''}">
+					<h:inputText value="#{question.questionNumber}" style="width:95%; #{(question.questionType == 2 or question.questionType == 1) ? 'background:#dddddd;' : ''}" />
+				</rich:column>
+				
+				<rich:column 
+					colspan="#{(question.questionType == 2) ? templateSpecBackingBean.managedBean.colspanMap['sec1'] : 1}"
+					style="#{(question.questionType == 2 or question.questionType == 1) ? 'background-color:#dddddd;' : ''}">
+					<h:inputText value="#{question.question1}" style="width:99%;#{(question.questionType == 2 or question.questionType == 1) ? 'background:#dddddd;' : ''}" />
+				</rich:column>
+
+				<rich:column 
+					rendered="#{templateSpecBackingBean.managedBean.colnoMap['sec1'] >= 2 and !(question.questionType == 2)}"
+					style="#{(question.questionType == 2 or question.questionType == 1) ? 'background-color:#dddddd;' : ''}">
+					<h:inputText 
+						value="#{question.question2}" 
+						style="width:99%;#{(question.questionType == 2 or question.questionType == 1) ? 'background:#dddddd;' : ''}" />
+				</rich:column>
+			
+				<rich:column 
+					rendered="#{templateSpecBackingBean.managedBean.colnoMap['sec1'] >= 3 and !(question.questionType == 2)}"
+					style="#{(question.questionType == 2 or question.questionType == 1) ? 'background-color:#dddddd;' : ''}">
+					<h:inputText value="#{question.question3}" 
+						style="width:99%;#{(question.questionType == 2 or question.questionType == 1) ? 'background:#dddddd;' : ''}" />
+				</rich:column>
+				
+				<rich:column 
+					rendered="#{templateSpecBackingBean.managedBean.colnoMap['sec1'] >= 4 and !(question.questionType == 2)}"
+					style="#{(question.questionType == 2 or question.questionType == 1) ? 'background-color:#dddddd;' : ''}">
+					<h:inputText value="#{question.question4}" 
+						style="width:99%;#{(question.questionType == 2 or question.questionType == 1) ? 'background:#dddddd;' : ''}" />
+				</rich:column>
+			
+				<rich:column 
+					rendered="#{templateSpecBackingBean.managedBean.colnoMap['sec1'] >= 5 and !(question.questionType == 2)}"
+					style="#{(question.questionType == 2 or question.questionType == 1) ? 'background-color:#dddddd;' : ''}">
+					<h:inputText value="#{question.question5}" 
+						style="width:99%;#{(question.questionType == 2 or question.questionType == 1) ? 'background:#dddddd;' : ''}" />
+				</rich:column>
+
+				<rich:column
+					rendered="#{templateSpecBackingBean.managedBean.questionListMap['1'][0].answerFlg == 'Y'and !(question.questionType == 2)}"
+					style="#{(question.questionType == 2 or question.questionType == 1) ? 'background-color:#dddddd;' : ''}">
+					<h:inputText 
+						value="#{question.answerHeader}"
+						style="width:99%;#{(question.questionType == 2 or question.questionType == 1) ? 'background:#dddddd;' : ''}" 
+						rendered="#{!(question.questionType == 3)}" />
+				</rich:column>
+
+				<rich:column
+					rendered="#{templateSpecBackingBean.managedBean.questionListMap['1'][0].lastAnswerFlg == 'Y'and !(question.questionType == 2)}"
+					style="#{(question.questionType == 2 or question.questionType == 1) ? 'background-color:#dddddd;' : ''}">
+					<h:inputText 
+						value="#{question.lastAnswerHeader}"
+						style="width:99%;#{(question.questionType == 2 or question.questionType == 1) ? 'background:#dddddd;' : ''}"
+						rendered="#{!(question.questionType == 3)}" />
+				</rich:column>
+				
+				<rich:column width="50px">
+					<a4j:commandLink action="#{templateSpecBackingBean.addQuestion2}" render="sec1">
+						<h:graphicImage library="ep/images" name="icon_plus.gif" />
+						<a4j:param assignTo="#{templateSpecBackingBean.tableId}" value="sec1" />
+						<a4j:param assignTo="#{templateSpecBackingBean.rowSeq}" value="#{row}" />
+						<a4j:param assignTo="#{templateSpecBackingBean.sectionSeq}" value="1" />
+						<a4j:param assignTo="#{templateSpecBackingBean.questionType}" value="#{question.questionType}" />
+					</a4j:commandLink>
+					<a4j:commandLink>
+						<h:graphicImage library="ep/images" name="icon_delete.png" />
+					</a4j:commandLink>					
+					
+				</rich:column>
+
+				<!-- <f:facet name="footer">
+					<h:panelGroup style="width=100%;">
+						<table width="100%" >
+							<tr>
+								<td width="33%"></td>
+								<td width="34%"></td>
+								<td width="33%" align="right">
+									<a4j:commandButton 
+										value="Add Sub Section" 
+										action="#{templateSpecBackingBean.addSubSection1}" 
+										render="sec1">
+										<a4j:param assignTo="#{templateSpecBackingBean.tableId}" value="sec1" />
+									</a4j:commandButton>
+									<a4j:commandButton 
+										value="Add Question" 
+										action="#{templateSpecBackingBean.addQuestion1}" 
+										render="spg1">
+										<a4j:param assignTo="#{templateSpecBackingBean.tableId}" value="sec1" />
+									</a4j:commandButton>
+								</td>
+							</tr>
+						</table> 
+					</h:panelGroup>
+				</f:facet> -->
+			</rich:dataTable>
+			
+		</a4j:outputPanel>
+		<br />
+		<a4j:outputPanel id="spg2" >
+		
+			<rich:dataTable 
+				id="sec2" 
+				value="#{templateSpecBackingBean.managedBean.questionListMap['2']}"
+				var="question"
+				rowKeyVar="row"
+				style="width:100%;">
+				
+				<rich:column style="width:30px; #{(question.questionType == 2 or question.questionType == 1) ? 'background-color:#dddddd;' : ''}">
+					<h:inputText value="#{question.questionNumber}" style="width:95%; #{(question.questionType == 2 or question.questionType == 1) ? 'background:#dddddd;' : ''}" />
+				</rich:column>
+				
+				<rich:column 
+					colspan="#{(question.questionType == 2) ? templateSpecBackingBean.managedBean.colspanMap['sec2'] : 1}"
+					style="#{(question.questionType == 2 or question.questionType == 1) ? 'background-color:#dddddd;' : ''}">
+					<h:inputText value="#{question.question1}" style="width:99%;#{(question.questionType == 2 or question.questionType == 1) ? 'background:#dddddd;' : ''}" />
+				</rich:column>
+
+				<rich:column 
+					rendered="#{templateSpecBackingBean.managedBean.colnoMap['sec2'] >= 2 and !(question.questionType == 2)}"
+					style="#{(question.questionType == 2 or question.questionType == 1) ? 'background-color:#dddddd;' : ''}">
+					<h:inputText 
+						value="#{question.question2}" 
+						style="width:99%;#{(question.questionType == 2 or question.questionType == 1) ? 'background:#dddddd;' : ''}" />
+				</rich:column>
+			
+				<rich:column 
+					rendered="#{templateSpecBackingBean.managedBean.colnoMap['sec2'] >= 3 and !(question.questionType == 2)}"
+					style="#{(question.questionType == 2 or question.questionType == 1) ? 'background-color:#dddddd;' : ''}">
+					<h:inputText value="#{question.question3}" 
+						style="width:99%;#{(question.questionType == 2 or question.questionType == 1) ? 'background:#dddddd;' : ''}" />
+				</rich:column>
+				
+				<rich:column 
+					rendered="#{templateSpecBackingBean.managedBean.colnoMap['sec2'] >= 4 and !(question.questionType == 2)}"
+					style="#{(question.questionType == 2 or question.questionType == 1) ? 'background-color:#dddddd;' : ''}">
+					<h:inputText value="#{question.question4}" 
+						style="width:99%;#{(question.questionType == 2 or question.questionType == 1) ? 'background:#dddddd;' : ''}" />
+				</rich:column>
+			
+				<rich:column 
+					rendered="#{templateSpecBackingBean.managedBean.colnoMap['sec2'] >= 5 and !(question.questionType == 2)}"
+					style="#{(question.questionType == 2 or question.questionType == 1) ? 'background-color:#dddddd;' : ''}">
+					<h:inputText value="#{question.question5}" 
+						style="width:99%;#{(question.questionType == 2 or question.questionType == 1) ? 'background:#dddddd;' : ''}" />
+				</rich:column>
+
+				<rich:column
+					rendered="#{templateSpecBackingBean.managedBean.questionListMap['2'][0].answerFlg == 'Y'and !(question.questionType == 2)}"
+					style="#{(question.questionType == 2 or question.questionType == 1) ? 'background-color:#dddddd;' : ''}">
+					<h:inputText 
+						value="#{question.answerHeader}"
+						style="width:99%;#{(question.questionType == 2 or question.questionType == 1) ? 'background:#dddddd;' : ''}" 
+						rendered="#{!(question.questionType == 3)}" />
+				</rich:column>
+
+				<rich:column
+					rendered="#{templateSpecBackingBean.managedBean.questionListMap['2'][0].lastAnswerFlg == 'Y'and !(question.questionType == 2)}"
+					style="#{(question.questionType == 2 or question.questionType == 1) ? 'background-color:#dddddd;' : ''}">
+					<h:inputText 
+						value="#{question.lastAnswerHeader}"
+						style="width:99%;#{(question.questionType == 2 or question.questionType == 1) ? 'background:#dddddd;' : ''}"
+						rendered="#{!(question.questionType == 3)}" />
+				</rich:column>
+
+			</rich:dataTable>
+			
+		</a4j:outputPanel>
+<br />
+		<a4j:outputPanel id="spg3" >
+		
+			<rich:dataTable 
+				id="sec3" 
+				value="#{templateSpecBackingBean.managedBean.questionListMap['3']}"
+				var="question"
+				rowKeyVar="row"
+				style="width:100%;">
+				
+				<rich:column style="width:30px; #{(question.questionType == 2 or question.questionType == 1) ? 'background-color:#dddddd;' : ''}">
+					<h:inputText value="#{question.questionNumber}" style="width:95%; #{(question.questionType == 2 or question.questionType == 1) ? 'background:#dddddd;' : ''}" />
+				</rich:column>
+				
+				<rich:column 
+					colspan="#{(question.questionType == 2) ? templateSpecBackingBean.managedBean.colspanMap['sec3'] : 1}"
+					style="#{(question.questionType == 2 or question.questionType == 1) ? 'background-color:#dddddd;' : ''}">
+					<h:inputText value="#{question.question1}" style="width:99%;#{(question.questionType == 2 or question.questionType == 1) ? 'background:#dddddd;' : ''}" />
+				</rich:column>
+
+				<rich:column 
+					rendered="#{templateSpecBackingBean.managedBean.colnoMap['sec3'] >= 2 and !(question.questionType == 2)}"
+					style="#{(question.questionType == 2 or question.questionType == 1) ? 'background-color:#dddddd;' : ''}">
+					<h:inputText 
+						value="#{question.question2}" 
+						style="width:99%;#{(question.questionType == 2 or question.questionType == 1) ? 'background:#dddddd;' : ''}" />
+				</rich:column>
+			
+				<rich:column 
+					rendered="#{templateSpecBackingBean.managedBean.colnoMap['sec3'] >= 3 and !(question.questionType == 2)}"
+					style="#{(question.questionType == 2 or question.questionType == 1) ? 'background-color:#dddddd;' : ''}">
+					<h:inputText value="#{question.question3}" 
+						style="width:99%;#{(question.questionType == 2 or question.questionType == 1) ? 'background:#dddddd;' : ''}" />
+				</rich:column>
+				
+				<rich:column 
+					rendered="#{templateSpecBackingBean.managedBean.colnoMap['sec3'] >= 4 and !(question.questionType == 2)}"
+					style="#{(question.questionType == 2 or question.questionType == 1) ? 'background-color:#dddddd;' : ''}">
+					<h:inputText value="#{question.question4}" 
+						style="width:99%;#{(question.questionType == 2 or question.questionType == 1) ? 'background:#dddddd;' : ''}" />
+				</rich:column>
+			
+				<rich:column 
+					rendered="#{templateSpecBackingBean.managedBean.colnoMap['sec3'] >= 5 and !(question.questionType == 2)}"
+					style="#{(question.questionType == 2 or question.questionType == 1) ? 'background-color:#dddddd;' : ''}">
+					<h:inputText value="#{question.question5}" 
+						style="width:99%;#{(question.questionType == 2 or question.questionType == 1) ? 'background:#dddddd;' : ''}" />
+				</rich:column>
+
+				<rich:column
+					rendered="#{templateSpecBackingBean.managedBean.questionListMap['3'][0].answerFlg == 'Y'and !(question.questionType == 2)}"
+					style="#{(question.questionType == 2 or question.questionType == 1) ? 'background-color:#dddddd;' : ''}">
+					<h:inputText 
+						value="#{question.answerHeader}"
+						style="width:99%;#{(question.questionType == 2 or question.questionType == 1) ? 'background:#dddddd;' : ''}" 
+						rendered="#{!(question.questionType == 3)}" />
+				</rich:column>
+
+				<rich:column
+					rendered="#{templateSpecBackingBean.managedBean.questionListMap['3'][0].lastAnswerFlg == 'Y'and !(question.questionType == 2)}"
+					style="#{(question.questionType == 2 or question.questionType == 1) ? 'background-color:#dddddd;' : ''}">
+					<h:inputText 
+						value="#{question.lastAnswerHeader}"
+						style="width:99%;#{(question.questionType == 2 or question.questionType == 1) ? 'background:#dddddd;' : ''}"
+						rendered="#{!(question.questionType == 3)}" />
+				</rich:column>
+
+			</rich:dataTable>
+			
+		</a4j:outputPanel>
+		<br />
+		<a4j:outputPanel id="spg4" >
+		
+			<rich:dataTable 
+				id="sec4" 
+				value="#{templateSpecBackingBean.managedBean.questionListMap['4']}"
+				var="question"
+				rowKeyVar="row"
+				style="width:100%;">
+				
+				<rich:column style="width:30px; #{(question.questionType == 2 or question.questionType == 1) ? 'background-color:#dddddd;' : ''}">
+					<h:inputText value="#{question.questionNumber}" style="width:95%; #{(question.questionType == 2 or question.questionType == 1) ? 'background:#dddddd;' : ''}" />
+				</rich:column>
+				
+				<rich:column 
+					colspan="#{(question.questionType == 2) ? templateSpecBackingBean.managedBean.colspanMap['sec4'] : 1}"
+					style="#{(question.questionType == 2 or question.questionType == 1) ? 'background-color:#dddddd;' : ''}">
+					<h:inputText value="#{question.question1}" style="width:99%;#{(question.questionType == 2 or question.questionType == 1) ? 'background:#dddddd;' : ''}" />
+				</rich:column>
+
+				<rich:column 
+					rendered="#{templateSpecBackingBean.managedBean.colnoMap['sec4'] >= 2 and !(question.questionType == 2)}"
+					style="#{(question.questionType == 2 or question.questionType == 1) ? 'background-color:#dddddd;' : ''}">
+					<h:inputText 
+						value="#{question.question2}" 
+						style="width:99%;#{(question.questionType == 2 or question.questionType == 1) ? 'background:#dddddd;' : ''}" />
+				</rich:column>
+			
+				<rich:column 
+					rendered="#{templateSpecBackingBean.managedBean.colnoMap['sec4'] >= 3 and !(question.questionType == 2)}"
+					style="#{(question.questionType == 2 or question.questionType == 1) ? 'background-color:#dddddd;' : ''}">
+					<h:inputText value="#{question.question3}" 
+						style="width:99%;#{(question.questionType == 2 or question.questionType == 1) ? 'background:#dddddd;' : ''}" />
+				</rich:column>
+				
+				<rich:column 
+					rendered="#{templateSpecBackingBean.managedBean.colnoMap['sec4'] >= 4 and !(question.questionType == 2)}"
+					style="#{(question.questionType == 2 or question.questionType == 1) ? 'background-color:#dddddd;' : ''}">
+					<h:inputText value="#{question.question4}" 
+						style="width:99%;#{(question.questionType == 2 or question.questionType == 1) ? 'background:#dddddd;' : ''}" />
+				</rich:column>
+			
+				<rich:column 
+					rendered="#{templateSpecBackingBean.managedBean.colnoMap['sec4'] >= 5 and !(question.questionType == 2)}"
+					style="#{(question.questionType == 2 or question.questionType == 1) ? 'background-color:#dddddd;' : ''}">
+					<h:inputText value="#{question.question5}" 
+						style="width:99%;#{(question.questionType == 2 or question.questionType == 1) ? 'background:#dddddd;' : ''}" />
+				</rich:column>
+
+				<rich:column
+					rendered="#{templateSpecBackingBean.managedBean.questionListMap['4'][0].answerFlg == 'Y'and !(question.questionType == 2)}"
+					style="#{(question.questionType == 2 or question.questionType == 1) ? 'background-color:#dddddd;' : ''}">
+					<h:inputText 
+						value="#{question.answerHeader}"
+						style="width:99%;#{(question.questionType == 2 or question.questionType == 1) ? 'background:#dddddd;' : ''}" 
+						rendered="#{!(question.questionType == 3)}" />
+				</rich:column>
+
+				<rich:column
+					rendered="#{templateSpecBackingBean.managedBean.questionListMap['4'][0].lastAnswerFlg == 'Y'and !(question.questionType == 2)}"
+					style="#{(question.questionType == 2 or question.questionType == 1) ? 'background-color:#dddddd;' : ''}">
+					<h:inputText 
+						value="#{question.lastAnswerHeader}"
+						style="width:99%;#{(question.questionType == 2 or question.questionType == 1) ? 'background:#dddddd;' : ''}"
+						rendered="#{!(question.questionType == 3)}" />
+				</rich:column>
+
+			</rich:dataTable>
+			
+		</a4j:outputPanel>
+		<br />
+		<a4j:outputPanel id="spg5" >
+		
+			<rich:dataTable 
+				id="sec5" 
+				value="#{templateSpecBackingBean.managedBean.questionListMap['5']}"
+				var="question"
+				rowKeyVar="row"
+				style="width:100%;">
+				
+				<rich:column style="width:30px; #{(question.questionType == 2 or question.questionType == 1) ? 'background-color:#dddddd;' : ''}">
+					<h:inputText value="#{question.questionNumber}" style="width:95%; #{(question.questionType == 2 or question.questionType == 1) ? 'background:#dddddd;' : ''}" />
+				</rich:column>
+				
+				<rich:column 
+					colspan="#{(question.questionType == 2) ? templateSpecBackingBean.managedBean.colspanMap['sec5'] : 1}"
+					style="#{(question.questionType == 2 or question.questionType == 1) ? 'background-color:#dddddd;' : ''}">
+					<h:inputText value="#{question.question1}" style="width:99%;#{(question.questionType == 2 or question.questionType == 1) ? 'background:#dddddd;' : ''}" />
+				</rich:column>
+
+				<rich:column 
+					rendered="#{templateSpecBackingBean.managedBean.colnoMap['sec5'] >= 2 and !(question.questionType == 2)}"
+					style="#{(question.questionType == 2 or question.questionType == 1) ? 'background-color:#dddddd;' : ''}">
+					<h:inputText 
+						value="#{question.question2}" 
+						style="width:99%;#{(question.questionType == 2 or question.questionType == 1) ? 'background:#dddddd;' : ''}" />
+				</rich:column>
+			
+				<rich:column 
+					rendered="#{templateSpecBackingBean.managedBean.colnoMap['sec5'] >= 3 and !(question.questionType == 2)}"
+					style="#{(question.questionType == 2 or question.questionType == 1) ? 'background-color:#dddddd;' : ''}">
+					<h:inputText value="#{question.question3}" 
+						style="width:99%;#{(question.questionType == 2 or question.questionType == 1) ? 'background:#dddddd;' : ''}" />
+				</rich:column>
+				
+				<rich:column 
+					rendered="#{templateSpecBackingBean.managedBean.colnoMap['sec5'] >= 4 and !(question.questionType == 2)}"
+					style="#{(question.questionType == 2 or question.questionType == 1) ? 'background-color:#dddddd;' : ''}">
+					<h:inputText value="#{question.question4}" 
+						style="width:99%;#{(question.questionType == 2 or question.questionType == 1) ? 'background:#dddddd;' : ''}" />
+				</rich:column>
+			
+				<rich:column 
+					rendered="#{templateSpecBackingBean.managedBean.colnoMap['sec5'] >= 5 and !(question.questionType == 2)}"
+					style="#{(question.questionType == 2 or question.questionType == 1) ? 'background-color:#dddddd;' : ''}">
+					<h:inputText value="#{question.question5}" 
+						style="width:99%;#{(question.questionType == 2 or question.questionType == 1) ? 'background:#dddddd;' : ''}" />
+				</rich:column>
+
+				<rich:column
+					rendered="#{templateSpecBackingBean.managedBean.questionListMap['5'][0].answerFlg == 'Y'and !(question.questionType == 2)}"
+					style="#{(question.questionType == 2 or question.questionType == 1) ? 'background-color:#dddddd;' : ''}">
+					<h:inputText 
+						value="#{question.answerHeader}"
+						style="width:99%;#{(question.questionType == 2 or question.questionType == 1) ? 'background:#dddddd;' : ''}" 
+						rendered="#{!(question.questionType == 3)}" />
+				</rich:column>
+
+				<rich:column
+					rendered="#{templateSpecBackingBean.managedBean.questionListMap['5'][0].lastAnswerFlg == 'Y'and !(question.questionType == 2)}"
+					style="#{(question.questionType == 2 or question.questionType == 1) ? 'background-color:#dddddd;' : ''}">
+					<h:inputText 
+						value="#{question.lastAnswerHeader}"
+						style="width:99%;#{(question.questionType == 2 or question.questionType == 1) ? 'background:#dddddd;' : ''}"
+						rendered="#{!(question.questionType == 3)}" />
+				</rich:column>
+
+			</rich:dataTable>
+			
+		</a4j:outputPanel>
+
+		</h:panelGroup>
+	
+	
+	</ui:define>
+
+</ui:composition>

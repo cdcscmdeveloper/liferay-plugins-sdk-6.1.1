@@ -201,7 +201,7 @@
 		<css-class-wrapper>flfrn-portlet</css-class-wrapper>
 	</portlet>
 	<portlet>
-		<portlet-name>FLCreatInvoice</portlet-name>
+		<portlet-name>FLCreateInvoice</portlet-name>
 		<icon>/icon.png</icon>
 		<instanceable>false</instanceable>
 		<header-portlet-css>/css/main.css</header-portlet-css>
@@ -244,7 +244,6 @@
 	</portlet>
 	
 <!-- Fulfilment End  Added by Giri -->	
-
 <portlet>
 		<portlet-name>Procure</portlet-name>
 		<icon>/icon.png</icon>
@@ -316,6 +315,40 @@
 			/js/main.js
 		</footer-portlet-javascript>
 		<css-class-wrapper>ss- defaultPurchaseportlet</css-class-wrapper>
+	</portlet>
+	<portlet>
+		<portlet-name>ShippingInstruction</portlet-name>
+		<icon>/icon.png</icon>
+		<instanceable>false</instanceable>
+		<ajaxable>false</ajaxable>
+		<header-portlet-css>/css/ep/main.css</header-portlet-css>
+		<css-class-wrapper>fl-portlet</css-class-wrapper>
+	</portlet>
+	<portlet>
+		<portlet-name>StopInstruction</portlet-name>
+		<icon>/icon.png</icon>
+		<instanceable>false</instanceable>
+		<ajaxable>false</ajaxable>
+		<header-portlet-css>/css/ep/main.css</header-portlet-css>
+		<css-class-wrapper>fl-portlet</css-class-wrapper>
+	</portlet>
+	<portlet>
+		<portlet-name>templateSpec</portlet-name>
+		<icon>/icon.png</icon>
+		<instanceable>false</instanceable>
+		<header-portlet-css>/css/ep/main.css</header-portlet-css>
+		<footer-portlet-javascript>
+			/js/main.js
+		</footer-portlet-javascript>
+		<css-class-wrapper>ep-portlet</css-class-wrapper>
+	</portlet>
+	<portlet>
+		<portlet-name>templateDoc</portlet-name>
+		<icon>/icon.png</icon>
+		<instanceable>false</instanceable>
+		<ajaxable>false</ajaxable>
+		<header-portlet-css>/css/ep/main.css</header-portlet-css>
+		<css-class-wrapper>ep-portlet</css-class-wrapper>
 	</portlet>
 	
 	<role-mapper>
