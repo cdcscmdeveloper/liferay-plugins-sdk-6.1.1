@@ -18,7 +18,7 @@
 				<p:commandButton id="ctSubmit" value="#{lbl['lbl.ct.btn.submit']}"/>
 			</div>
 		</p:panel> 
-        <p:panel id="mtoId" header="#{lbl['lbl.panel.mto.name']}"  toggleable="true" 
+        <p:panel id="mtoId" header="#{lbl['lbl.ct.mto.panel.name']}"  toggleable="true" 
            rendered="#{contractDetailsBackingBean.managedBean.checkBoxSelections.checkedIGood}" toggleSpeed="500" widgetVar="panelmto">
             <ui:include src="/xhtml/ct/fulfilmentdetails/shared/mto.xhtml"/>      
 		</p:panel>
