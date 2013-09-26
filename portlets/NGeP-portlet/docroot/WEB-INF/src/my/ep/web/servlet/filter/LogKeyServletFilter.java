@@ -40,7 +40,8 @@ public class LogKeyServletFilter implements RenderFilter{
 		}
 		User user = (User)request.getAttribute(WebKeys.USER);
 		if (user != null){
-			String userName = user.getScreenName();
+			//String userName = user.getScreenName();
+			Long userName = user.getUserId();
 			new LogKey(userName);
 			if (log.isDebugEnabled()){
 				log.debug("userName: " + userName);
