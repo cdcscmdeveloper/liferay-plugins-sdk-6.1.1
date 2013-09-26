@@ -24,33 +24,35 @@ xmlns:c="http://java.sun.com/jsp/jstl/core">
 		</div>
 		<br/> 
 		<br/> 
-	 	<p:dataTable styleClass="ppTableFull" var="" value="" emptyMessage="#{lbl['lbl.pp.no.record.found']}">  
+	 	<p:dataTable styleClass="ppTableFull" var="budget" rowIndexVar="rowIndex"
+		 	value="#{budgetAllocationBackingBean.managedBean.budgetList}" 
+		 	emptyMessage="#{lbl['lbl.pp.no.record.found']}">  
 	    	<p:column styleClass="ppSmallTd" headerText="#{lbl['lbl.pp.seq']}">  
-                         <p:outputLabel value="" />  
-                     </p:column>   
+                #{rowIndex+1}
+            </p:column>   
 	        <p:column headerText="#{lbl['lbl.pp.go.code']}">  
-	            <p:outputLabel value="" /> 
+	            #{budget.pmGo.goCode}
 	        </p:column>  
 	        <p:column headerText="#{lbl['lbl.pp.go.name']}">  
-	            <p:outputLabel value="" /> 
+	             #{budget.pmGo.goName}
 	        </p:column> 
 	        <p:column headerText="#{lbl['lbl.pp.activity.description']}">  
 	            <p:outputLabel value="" /> 
 	        </p:column>  
 	        <p:column headerText="#{lbl['lbl.pp.financial.year']}">  
-	            <p:outputLabel value="" />      
+	            #{budget.financialYear}   
 	        </p:column>  
 	        <p:column headerText="#{lbl['lbl.pp.budgeted.amount']}">  
-	            <p:outputLabel value="" />    
+	            #{budget.budgetAmount}    
 	        </p:column>  
-	        <p:column headerText="#{lbl['lbl.pp.available.amount']}">  
-	            <p:outputLabel value="" />  
+	        <p:column headerText="#{lbl['lbl.pp.used.amount']}">  
+	            #{budget.usedAmount}    
 	        </p:column>  
          	<p:column headerText="#{lbl['lbl.pp.created.date']}">  
-	            <p:outputLabel value="" />  
+	            #{budget.createdDate}     
 	        </p:column>  
 	        <p:column headerText="#{lbl['lbl.pp.flag']}">  
-				<p:outputLabel value="" />  
+				#{budget.budgetType}   
 	        </p:column>  
     	</p:dataTable> 
     	<br/>

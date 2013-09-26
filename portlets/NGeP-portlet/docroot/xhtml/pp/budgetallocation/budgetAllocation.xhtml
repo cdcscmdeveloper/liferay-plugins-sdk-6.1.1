@@ -1,5 +1,3 @@
-<?xml version="1.0"?>
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 
 <ui:composition
 template="/WEB-INF/facelets/templates/basic_template.xhtml"
@@ -12,13 +10,12 @@ xmlns:c="http://java.sun.com/jsp/jstl/core"
 >
 
     <ui:define name="contentSection">
-    	
-		<p:tabView id="tvBudget" dynamic="true" cache="false" orientation="left">  
-		    <p:tab title="#{budgetAllocationBackingBean.generateHeader(budgetAllocationBackingBean.managedBean.viewMode)}"> 
+		<p:tabView id="tvBudgetAlloc" dynamic="true" orientation="left">  
+		    <p:tab id="tBudgetAlloc" title="#{budgetAllocationBackingBean.generateHeader(budgetAllocationBackingBean.managedBean.viewMode)}"> 
 	    		<ui:include src="budgetAllocationContent.xhtml"/>
 		    </p:tab>
 		    <p:tab title="#{lbl['lbl.pp.title.audit.trail']}">  
-		   	 	Coming Soon
+		   	 	Coming Soon.
 		    </p:tab>
 	    </p:tabView>
 	</ui:define>

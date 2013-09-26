@@ -11,17 +11,16 @@ xmlns:c="http://java.sun.com/jsp/jstl/core">
 	<div class="ppRightBtn">
 		<c:choose>
 			<c:when test="#{budgetAllocationBackingBean.managedBean.viewMode=='A'}">
-				<p:commandButton id="cbRevise" value="#{lbl['lbl.pp.revise']}" action="#{budgetAllocationBackingBean.redirectToListBudgetAllocation}"   />&nbsp;
+				<p:commandButton id="cbRevise" value="#{lbl['lbl.pp.revise']}" action="#{budgetAllocationBackingBean.submitBudgetAllocation}"   />&nbsp;
 		 		<p:commandButton id="cbApprove" value="#{lbl['lbl.pp.approve']}" action="#{budgetAllocationBackingBean.redirectToListBudgetAllocation}"   />&nbsp;
 			</c:when>
 			<c:when test="#{budgetAllocationBackingBean.managedBean.viewMode=='N'}">
-				<p:commandButton id="cbSave" value="#{lbl['lbl.pp.save']}" action="#{budgetAllocationBackingBean.redirectToListBudgetAllocation}"   />&nbsp; 
-				<p:commandButton id="cbSubmit" value="#{lbl['lbl.pp.submit']}" action="#{budgetAllocationBackingBean.redirectToListBudgetAllocation}"   />&nbsp;
-	 			<p:commandButton id="cbBack" value="#{lbl['lbl.pp.back']}" action="#{budgetAllocationBackingBean.redirectToListBudgetAllocation}"   />&nbsp;
+				<p:commandButton id="cbSave" value="#{lbl['lbl.pp.save']}" action="#{budgetAllocationBackingBean.saveBudgetAllocation}"   />&nbsp; 
+				<p:commandButton id="cbSubmit" value="#{lbl['lbl.pp.submit']}" action="#{budgetAllocationBackingBean.submitBudgetAllocation}"   />&nbsp;
 			</c:when>
 			<c:when test="#{budgetAllocationBackingBean.managedBean.viewMode=='S'}">
-				<p:commandButton id="cbSave" value="#{lbl['lbl.pp.reserve']}" action="#{budgetAllocationBackingBean.redirectToListBudgetAllocation}"   />&nbsp; 
-				<p:commandButton id="cbSubmit" value="#{lbl['lbl.pp.submit']}" action="#{budgetAllocationBackingBean.redirectToListBudgetAllocation}"   />&nbsp;
+				<p:commandButton id="cbSave" value="#{lbl['lbl.pp.save']}" action="#{budgetAllocationBackingBean.saveBudgetAllocation}"   />&nbsp; 
+				<p:commandButton id="cbSubmit" value="#{lbl['lbl.pp.submit']}" action="#{budgetAllocationBackingBean.submitBudgetAllocation}"   />&nbsp;
 			</c:when>
 		</c:choose>
 	</div>
