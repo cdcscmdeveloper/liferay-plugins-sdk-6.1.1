@@ -1,10 +1,15 @@
 package my.ep.web.managedbean.pp.budgetallocation;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
 
+import my.ep.persistence.entity.pp.budgetallocation.PpBudget;
+import my.ep.persistence.entity.pp.budgetallocation.PpBudgetAlloc;
+import my.ep.persistence.entity.pp.budgetallocation.PpBudgetAllocDtl;
+import my.ep.persistence.entity.pp.budgetallocation.PpBudgetAllocDtlRemark;
 import my.ep.web.managedbean.BaseManagedBean;
 
 @ManagedBean(name = "budgetAllocationManagedBean")
@@ -12,31 +17,53 @@ import my.ep.web.managedbean.BaseManagedBean;
 public class BudgetAllocationManagedBean extends BaseManagedBean{
 	private static final long serialVersionUID = 1L;
 	
-	private List budgetList = null;
+	private List <PpBudget> budgetList;
+
+	private PpBudgetAlloc selectedBudgetAllocation;
 	
-	public List getBudgetList() {
+	private PpBudgetAllocDtl selectedBudgetAllocItem;
+	
+	private PpBudgetAllocDtlRemark selectedBudgetAllocItemRmk;
+
+	private List <PpBudgetAlloc> budgetAllocationList;
+	
+	private String viewMode;
+
+	public List<PpBudget> getBudgetList() {
+		if(budgetList==null){
+			budgetList = new ArrayList<PpBudget>();
+		}
 		return budgetList;
 	}
 
-	public void setBudgetList(List budgetList) {
+	public void setBudgetList(List<PpBudget> budgetList) {
 		this.budgetList = budgetList;
 	}
+	
+	public PpBudgetAlloc getSelectedBudgetAllocation() {
+		return selectedBudgetAllocation;
+	}
 
-	private String pageInd;
-	private List budgetAllocationList = null;
-	//temp
-	private List budgetAllocationDetList = null;
-	//temp
-	private List remarkList = null;
-	
-	private boolean popup = false;
+	public void setSelectedBudgetAllocation(PpBudgetAlloc selectedBudgetAllocation) {
+		this.selectedBudgetAllocation = selectedBudgetAllocation;
+	}
 
-	private String viewMode;
-	
-	//temp
-	private boolean brandNew;
-	
-	
+	public PpBudgetAllocDtl getSelectedBudgetAllocItem() {
+		return selectedBudgetAllocItem;
+	}
+
+	public void setSelectedBudgetAllocItem(PpBudgetAllocDtl selectedBudgetAllocItem) {
+		this.selectedBudgetAllocItem = selectedBudgetAllocItem;
+	}
+
+	public List<PpBudgetAlloc> getBudgetAllocationList() {
+		return budgetAllocationList;
+	}
+
+	public void setBudgetAllocationList(List<PpBudgetAlloc> budgetAllocationList) {
+		this.budgetAllocationList = budgetAllocationList;
+	}
+
 	public String getViewMode() {
 		return viewMode;
 	}
@@ -44,6 +71,55 @@ public class BudgetAllocationManagedBean extends BaseManagedBean{
 	public void setViewMode(String viewMode) {
 		this.viewMode = viewMode;
 	}
+	
+	public PpBudgetAllocDtlRemark getSelectedBudgetAllocItemRmk() {
+		return selectedBudgetAllocItemRmk;
+	}
+
+	public void setSelectedBudgetAllocItemRmk(
+			PpBudgetAllocDtlRemark selectedBudgetAllocItemRmk) {
+		this.selectedBudgetAllocItemRmk = selectedBudgetAllocItemRmk;
+	}
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	private PpBudgetAlloc budgetAllocation = null;
+	public PpBudgetAlloc getBudgetAllocation() {
+		return budgetAllocation;
+	}
+
+	public void setBudgetAllocation(PpBudgetAlloc budgetAllocation) {
+		this.budgetAllocation = budgetAllocation;
+	}
+
+
+	
+	
+	private String pageInd;
+
+	//temp
+	private List budgetAllocationDetList = null;
+	//temp
+	private List remarkList = null;
+	
+	private boolean popup = false;
+
+	//temp
+	private boolean brandNew;
+	
+	
+	
 
 	public boolean isBrandNew() {
 		return brandNew;
@@ -69,9 +145,6 @@ public class BudgetAllocationManagedBean extends BaseManagedBean{
 		this.remarkList = remarkList;
 	}
 
-	public List getBudgetAllocationList() {
-		return budgetAllocationList;
-	}
 
 	public List getBudgetAllocationDetList() {
 		return budgetAllocationDetList;
@@ -81,9 +154,7 @@ public class BudgetAllocationManagedBean extends BaseManagedBean{
 		this.budgetAllocationDetList = budgetAllocationDetList;
 	}
 
-	public void setBudgetAllocationList(List budgetAllocationList) {
-		this.budgetAllocationList = budgetAllocationList;
-	}
+
 	public String getPageInd() {
 		if(this.pageInd == null){
 			pageInd = "V";

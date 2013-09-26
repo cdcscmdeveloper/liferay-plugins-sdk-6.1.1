@@ -3,15 +3,18 @@ package my.ep.web.constant.pp;
 public class ProcurementPlanConst {
 
 	//Navigation
-	public static final String NAV_TO_LIST_BUDGET_ALLOCATION = "listBudgetAllocation";
+	public static final String NAV_TO_LIST_BUDGET_ALLOCATION = "listBudget";
 	public static final String NAV_TO_REVIEW_BUDGET_ALLOCATION = "reviewBudgetAllocation";
+	public static final String NAV_TO_CREATE_BUDGET_ALLOCATION = "budgetAllocation";
+	
+	
 	public static final String NAV_TO_LIST_PLAN = "listPlan";
+	public static final String NAV_TO_CREATE_PLAN = "procurementPlan";
+	
 	public static final String NAV_TO_REVIEW_PLAN = "reviewPlan";
 	public static final String NAV_TO_VERIFY_PLAN = "verifyPlan";
-	public static final String NAV_TO_CREATE_BUDGET_ALLOCATION = "createBudgetAllocation";
 	public static final String NAV_TO_VIEW_PLAN = "viewPlan";
-	public static final String NAV_TO_CREATE_PLAN = "createPlan";
-	public static final String NAV_TO_CREATE_MTO_PLAN = "createMtoPlan";
+	public static final String NAV_TO_CREATE_MTO_PLAN = "createPlan";
 	
 	//View Mode
 	public static final String MODE_NEW = "N";
