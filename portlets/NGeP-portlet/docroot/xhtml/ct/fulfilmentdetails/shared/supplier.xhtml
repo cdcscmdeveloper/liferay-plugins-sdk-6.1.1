@@ -5,65 +5,47 @@
 	xmlns:ui="http://java.sun.com/jsf/facelets"
 	xmlns:p="http://primefaces.org/ui"
 	xmlns:c="http://java.sun.com/jsp/jstl/core">
-  
-   
-   
-            <h:panelGrid columns="4" style="width:700px;">  
-            <p:outputLabel value="#{lbl['lbl.supplier.id']}" />  
-             <h:panelGrid columns="2">
-                  <p:inputText value="" disabled="true" style="width:30px;"/>
-                  <p:inputText value="" disabled="true" style="width:100px;"/>
-             </h:panelGrid>
-             <h:outputLabel  value="#{lbl['lbl.supplier.email']}"/>  
-             <p:inputText  value="" required="true" disabled="true"  style="width:170px;"/>
-           
-           
-             <h:outputLabel  value="#{lbl['lbl.supplier.tel.hp']}"/>  
-             <p:inputText  value="" required="true" disabled="true" style="width:170px;"/>  
-               <h:outputLabel  value="#{lbl['lbl.bank.name']}"/>  
-              <p:inputText  value="" required="true"  disabled="true" style="width:170px;"/> 
-          
-              <h:outputLabel  value="#{lbl['lbl.supplier.fax']}"/>
-             <p:inputText  value="" required="true" disabled="true" style="width:170px;"/>  
-             
-             <h:outputLabel  value="#{lbl['lbl.bank.branch']}"/>  
-            <p:inputText  value="" required="true" disabled="true" style="width:170px;"/>
-            
-             <h:outputLabel  value="#{lbl['lbl.supplier.tel.office']}"/>  
-             <p:inputText  value="" required="true" disabled="true"  style="width:170px;"  />
-                                                 
-                                                 
-               <h:outputLabel  value="#{lbl['lbl.bank.acc.no']}" />  
-               <p:inputText  value="" required="true" disabled="true" style="width:170px;"/>
-  
-               <h:panelGroup>
-			     <div style="height: 60px; vertical-align: top">
-			      <p:outputLabel for="supplierAddress" value="#{lbl['lbl.supplier.address']}" />
-                   </div>
-				 </h:panelGroup>
-				  <h:panelGrid>
-				  <p:inputTextarea id="supplierAddress" disabled="true" value="" required="false" 
-					rows="2" cols="23"   maxlength="100"  autoResize="false" />
-				</h:panelGrid>
-              
-            
-              <h:panelGroup>
-	            <div style="height: 60px; vertical-align: top">
-		             <p:outputLabel for="bankAddress" value="#{lbl['lbl.bank.address']}" styleClass="txtsize" />
-			    </div>
-			</h:panelGroup>
-				<h:panelGrid>
-			<p:inputTextarea id="bankAddress" 
-											value="" disabled="true" required="false" rows="2" cols="23" 
-											 maxlength="100"  autoResize="false" />
-										
-									</h:panelGrid>
-                                                
-                                                
-									
-                                         </h:panelGrid>
-                                         
-</ui:composition>
+    <h:panelGrid columns="4" style="width:700px;">  
+      <p:outputLabel value="#{lbl['lbl.ct.su.id']}" />  
+      <h:panelGrid columns="2">
+         <p:inputText value="" disabled="true" style="width:30px;"/>
+         <p:inputText value="" disabled="true" style="width:100px;"/>
+       </h:panelGrid>
+       <h:outputLabel  value="#{lbl['lbl.ct.su.email']}"/>  
+       <p:inputText  value="" required="true" disabled="true"  style="width:170px;"/>
+       <h:outputLabel  value="#{lbl['lbl.ct.su.tel.hp']}"/>  
+       <p:inputText  value="" required="true" disabled="true" style="width:170px;"/>  
+       <h:outputLabel  value="#{lbl['lbl.ct.bank.name']}"/>  
+       <p:inputText  value="" required="true"  disabled="true" style="width:170px;"/> 
+       <h:outputLabel  value="#{lbl['lbl.ct.su.fax']}"/>
+       <p:inputText  value="" required="true" disabled="true" style="width:170px;"/>  
+       <h:outputLabel  value="#{lbl['lbl.ct.bank.branch']}"/>  
+       <p:inputText  value="" required="true" disabled="true" style="width:170px;"/>
+       <h:outputLabel  value="#{lbl['lbl.ct.su.tel.office']}"/>  
+       <p:inputText  value="" required="true" disabled="true"  style="width:170px;"  />
+       <h:outputLabel  value="#{lbl['lbl.ct.bank.acc.no']}" />  
+       <p:inputText  value="" required="true" disabled="true" style="width:170px;"/>
+       <h:panelGroup>
+          <div style="height: 60px; vertical-align: top">
+            <p:outputLabel for="supplierAddress" value="#{lbl['lbl.ct.su.address']}" />
+          </div>
+       </h:panelGroup>
+       <h:panelGrid>
+          <p:inputTextarea id="supplierAddress" disabled="true" value="" required="false" 
+          rows="2" cols="23"   maxlength="100"  autoResize="false" />
+       </h:panelGrid>
+       <h:panelGroup>
+         <div style="height: 60px; vertical-align: top">
+            <p:outputLabel for="bankAddress" value="#{lbl['lbl.ct.bank.address']}" styleClass="txtsize" />
+         </div>
+       </h:panelGroup>
+	 <h:panelGrid>
+       <p:inputTextarea id="bankAddress" 
+		  value="" disabled="true" required="false" rows="2" cols="23" 
+		   maxlength="100"  autoResize="false" />
+	   </h:panelGrid>
+     </h:panelGrid>
+ </ui:composition>
 
 
 

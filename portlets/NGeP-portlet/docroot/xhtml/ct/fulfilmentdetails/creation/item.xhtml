@@ -6,129 +6,78 @@
 	xmlns:ui="http://java.sun.com/jsf/facelets"
 	xmlns:p="http://primefaces.org/ui"
 	xmlns:c="http://java.sun.com/jsp/jstl/core">
-
 	<ui:define name="resourceSection">
 	</ui:define>
-	
-   	       
 	<ui:define name="sideMenu">
 		<ui:include src="/xhtml/ct/fulfilmentdetails/shared/sidemenu/creation.xhtml" />
 	</ui:define>
-
 	<ui:define name="content">
-		      
-        <p:panel id="pRightPanel">
+	    <p:panel id="pRightPanel">
 			<div class="ppRightBtn">
 				<p:commandButton id="ctSave" value="#{lbl['lbl.ct.btn.save']}"/>
 				<p:commandButton id="ctSubmit" value="#{lbl['lbl.ct.btn.submit']}"/>
 			</div>
 		</p:panel> 
-        	       
-                     <p:panel id="itemId" header="Item Details"   toggleable="true"  toggleSpeed="500" widgetVar="panelitem">
-                                           
-                                          <p:messages showDetail="true" globalOnly="true"/>
-                                        
-			                               
-			                               <p:dataTable id="dataTable" var="data" value=" " widgetVar="dataTableObj" lazy="false" dynamic="true" 
-			                               paginator="true" paginatorPosition="bottom" paginatorAlwaysVisible="true" emptyMessage="No Records!" rows="10" 
-			                               rowsPerPageTemplate="5,10,15,20" currentPageReportTemplate=" total {totalRecords},  page {currentPage} of {totalPages} "
-							               paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink}
-							                {LastPageLink} {RowsPerPageDropdown}">
-							
-							                <p:columnGroup type="header"> 
-								                <p:row> 
-									                  
-									                      <p:column colspan="1"  style="width:80px" headerText="Item Code" /> 
-									                     <p:column colspan="1"  style="width:320px" headerText="Item Name" /> 	
-									                     <p:column colspan="1" style="width:100px" headerText="UOM"  /> 
-									                     <p:column colspan="1"  style="width:70px" headerText="Minimum Order" /> 	
-									                     <p:column colspan="1" style="width:50px" headerText="Exempted"  /> 
-									                 
-									                    
-								               </p:row>							
-								
-							
-							                </p:columnGroup>
-							                   				
-							             <p:column><p:outputLabel value="EP 308X3120P"/></p:column>       
-						                  <p:column><p:outputLabel value="DESKTOP"/></p:column>       
-						                   <p:column><p:outputLabel value="UNIT"/></p:column>       
-						                    <p:column><p:outputLabel value="5"/></p:column>       
-							                  <p:column> <p:selectBooleanCheckbox value=""/></p:column>     
-							                     
-							                     
-							               </p:dataTable>
-							               
-							               
-						           
-						            
-						    <h:panelGrid columns="2" style="height:70px;text-align:bottom;">
-							  <h:outputLabel for="show" value="Show" style="width:100px;" styleClass="txtsize"/>  
-                                         <p:selectOneMenu id="show" disabled="false"  value="#{contractDetailsBackingBean.createContractDetails.zoneType}"  style="width:200px;">
-            					        <f:selectItem itemLabel="--Please Select--" itemValue="--Please Select--" /> 
-            					         <f:selectItems value="#{contractDetailsBackingBean.itemDetailsMethod}" />
-            					         <p:ajax event="change" update="changeField" listener="#{contractDetailsBackingBean.changeField}" process="@this"/>  
-	                               </p:selectOneMenu>         
-	                        <p:message for="show"/>  
-                				      
-						</h:panelGrid>
-						</p:panel>
-						
-						
-						    <p:outputPanel id="changeField"> 
-						  
-						         <h:panelGrid columns="1" style="width:800px"
-						          rendered="#{contractDetailsBackingBean.itemPricing or contractDetailsBackingBean.itemCeilingQuantity}">
-						         <p:panel id="itemZoneId"  header="#{contractDetailsBackingBean.createContractDetails.zoneType}"  toggleable="true"  toggleSpeed="500" 
-						         widgetVar="panelitemzone">
-						  
-						          <p:dataTable id="dataTable1"  var="data" value=" " widgetVar="dataTableObj" lazy="false" dynamic="true" 
-			                               paginator="true" paginatorPosition="bottom" paginatorAlwaysVisible="true" emptyMessage="No Records!" rows="10" 
-			                               rowsPerPageTemplate="5,10,15,20" currentPageReportTemplate=" total {totalRecords},  page {currentPage} of {totalPages} "
-							               paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink}
-							                {LastPageLink} {RowsPerPageDropdown}">
-							
-							                <p:columnGroup type="header"> 
-								                <p:row  rendered="#{contractDetailsBackingBean.itemPricing}"> 
-									                  
-									                   <p:column colspan="1" style="width:100px" headerText="Zone" />
-									<p:column colspan="1" style="width:50px" headerText="From Qty" />
-									<p:column colspan="1" style="width:50px" headerText="To Qty" />
-									<p:column colspan="1" style="width:100px" headerText="Price (MYR)" />
-									<p:column colspan="1" style="width:150px" headerText="Effective Date" />
-									<p:column colspan="1" style="width:150px" headerText="Expirey Date" />
-									           </p:row>	
-									           
-									         
-									           
-									           <p:row  rendered="#{contractDetailsBackingBean.itemCeilingQuantity}"> 
-									                  
-									                     <p:column colspan="1" style="width:100px" headerText="Ministry Name"   /> 
-									                     <p:column colspan="1"  style="width:100px" headerText="Jabatan Name" /> 
-									                        <p:column colspan="1"  style="width:100px" headerText="PTJ Name" /> 
-									                      <p:column colspan="1"  style="width:100px" headerText="Ceiling Quantity" /> 
-									                    
-									           </p:row>								
-								
-							
-							                </p:columnGroup>
-							                   				
-							             <p:column ></p:column>       
-						
-							                     
-							                     
-							                     
-							               </p:dataTable>
-							                </p:panel>
-		                        
-	                        </h:panelGrid>  
-	                        
-	                        
-						    
-						    </p:outputPanel>
-                                    
-                                    
-               
-   
-	</ui:define>
-	</ui:composition>
+        <p:panel id="itemId" header="#{lbl['lbl.ct.item.panel.name']}"   toggleable="true"  toggleSpeed="500" widgetVar="panelitem">
+            <p:messages showDetail="true" globalOnly="true"/>
+            <p:dataTable id="dataTable" var="data" value=" " widgetVar="dataTableObj" lazy="false" dynamic="true" 
+			 paginator="true" paginatorPosition="bottom" paginatorAlwaysVisible="true" emptyMessage="No Records!" rows="10" 
+			 rowsPerPageTemplate="5,10,15,20" currentPageReportTemplate=" total {totalRecords},  page {currentPage} of {totalPages} "
+             paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink}  {LastPageLink} {RowsPerPageDropdown}">
+			 <p:columnGroup type="header"> 
+			  <p:row> 
+				 <p:column style="width:80px" headerText="#{lbl['lbl.ct.item.table.code']}" /> 
+				 <p:column style="width:320px" headerText="#{lbl['lbl.ct.item.table.name']}" /> 	
+				 <p:column style="width:100px" headerText="#{lbl['lbl.ct.item.table.uom']}"  /> 
+				 <p:column style="width:70px" headerText="#{lbl['lbl.ct.item.table.morder']}" /> 	
+				 <p:column style="width:50px" headerText="#{lbl['lbl.ct.item.table.exmtd']}"  /> 
+			  </p:row>							
+			 </p:columnGroup>
+			 <p:column><p:outputLabel value="EP 308X3120P"/></p:column>       
+			 <p:column><p:outputLabel value="DESKTOP"/></p:column>       
+			 <p:column><p:outputLabel value="UNIT"/></p:column>       
+			 <p:column><p:outputLabel value="5"/></p:column>       
+			 <p:column styleClass=""> <p:selectBooleanCheckbox value=""/></p:column>     
+			</p:dataTable>
+			<h:panelGrid columns="2" style="height:70px;text-align:bottom;">
+			  <h:outputLabel for="show" value="#{lbl['lbl.ct.item.show']}" style="width:100px;" styleClass="txtsize"/>  
+               <p:selectOneMenu id="show" disabled="false"  value="#{contractDetailsBackingBean.managedBean.createContractDetails.zoneType}"  style="width:200px;">
+            	 <f:selectItem itemLabel="--Please Select--" itemValue="--Please Select--" /> 
+            	    <f:selectItems value="#{contractDetailsBackingBean.itemDetailsMethod}" />
+            	 <p:ajax event="change" update="changeField" listener="#{contractDetailsBackingBean.changeField}" process="@this"/>  
+	            </p:selectOneMenu>         
+	            <p:message for="show"/>  
+              </h:panelGrid>
+		   </p:panel>
+		   <p:outputPanel id="changeField"> 
+		     <h:panelGrid columns="1" style="width:800px"
+			    rendered="#{contractDetailsBackingBean.itemPricing or contractDetailsBackingBean.itemCeilingQuantity}">
+				<p:panel id="itemZoneId"  header="#{contractDetailsBackingBean.managedBean.createContractDetails.zoneType}"  toggleable="true"  toggleSpeed="500" 
+				 widgetVar="panelitemzone">
+				 <p:dataTable id="dataTable1"  var="data" value=" " widgetVar="dataTableObj" lazy="false" dynamic="true" 
+			       paginator="true" paginatorPosition="bottom" paginatorAlwaysVisible="true" emptyMessage="No Records!" rows="10" 
+			       rowsPerPageTemplate="5,10,15,20" currentPageReportTemplate=" total {totalRecords},  page {currentPage} of {totalPages} "
+			       paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink}  {LastPageLink} {RowsPerPageDropdown}">
+				   <p:columnGroup type="header"> 
+				   <p:row  rendered="#{contractDetailsBackingBean.itemPricing}"> 
+				      <p:column style="width:100px" headerText="#{lbl['lbl.ct.item.table1.price.zone']}" />
+					  <p:column style="width:50px" headerText="#{lbl['lbl.ct.item.table1.price.toqty']}" />
+					  <p:column style="width:50px" headerText="#{lbl['lbl.ct.item.table1.price.fqty']}" />
+					  <p:column style="width:100px" headerText="#{lbl['lbl.ct.item.table1.price.price']}" />
+					  <p:column style="width:150px" headerText="#{lbl['lbl.ct.item.table1.price.efdate']}" />
+					  <p:column style="width:150px" headerText="#{lbl['lbl.ct.item.table1.price.edate']}" />
+					</p:row>	
+					<p:row  rendered="#{contractDetailsBackingBean.itemCeilingQuantity}"> 
+					   <p:column style="width:100px" headerText="#{lbl['lbl.ct.item.table2.ceil.min']}"   /> 
+					   <p:column style="width:100px" headerText="#{lbl['lbl.ct.item.table2.ceil.jabatan']}" /> 
+					   <p:column style="width:100px" headerText="#{lbl['lbl.ct.item.table2.ceil.ptj']}" /> 
+					   <p:column style="width:100px" headerText="#{lbl['lbl.ct.item.table2.ceil.quan']}" /> 
+					</p:row>								
+			       </p:columnGroup>
+				  <p:column ></p:column>       
+				  </p:dataTable>
+			     </p:panel>
+		       </h:panelGrid>  
+	         </p:outputPanel>
+       </ui:define>
+</ui:composition>

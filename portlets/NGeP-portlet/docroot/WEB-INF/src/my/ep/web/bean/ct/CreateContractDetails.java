@@ -33,6 +33,15 @@ public class CreateContractDetails implements Serializable {
 	private String circularNo;
 	private String agreementNo;
 	private Date date;
+	private String ministryName;
+	private String departmentName;
+	private String ptjCode;
+	private String ptjName;
+	private String selingAmount;
+	private String currencyType;
+	private String ZoneType;
+	
+	
 	public Date getDate() {
 		return date;
 	}
@@ -51,7 +60,7 @@ public class CreateContractDetails implements Serializable {
 	public void setAgreementNo(String agreementNo) {
 		this.agreementNo = agreementNo;
 	}
-	private String currencyType;
+	
 	
 	
 	
@@ -184,9 +193,7 @@ public class CreateContractDetails implements Serializable {
 		this.contractOwnerPtj = contractOwnerPtj;
 	}
 	
-	private String ptjCode;
-	private String ptjName;
-	private String selingAmount;
+	
 	public String getSelingAmount() {
 		return selingAmount;
 	}
@@ -206,7 +213,7 @@ public class CreateContractDetails implements Serializable {
 		this.ptjName = ptjName;
 	}
 	
-private String ZoneType;
+
 	
 	public String getZoneType() {
 		
@@ -217,8 +224,7 @@ private String ZoneType;
 	}
 	
 	
-	private String ministryName;
-	private String departmentName;
+	
 	
 	public String getMinistryName() {
 		return ministryName;

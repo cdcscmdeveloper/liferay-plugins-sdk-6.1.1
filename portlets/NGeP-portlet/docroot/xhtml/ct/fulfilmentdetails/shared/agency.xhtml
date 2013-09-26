@@ -5,159 +5,80 @@
 	xmlns:ui="http://java.sun.com/jsf/facelets"
 	xmlns:p="http://primefaces.org/ui"
 	xmlns:c="http://java.sun.com/jsp/jstl/core">
-  
-     <p:treeTable id="treetable" value="#{contractDetailsBackingBean.rootNodeAgency}" var="data"  
-                         selection="#{contractDetailsBackingBean.selectedNode}"   selectionMode="single" >
-                      
-                        
-                         
-                           
-                            <p:column style="width:150">  
-                                  <f:facet name="header"> Name  </f:facet>  
-                                     <h:outputText value="#{data.ministryName}" />  
-                                </p:column>  
-                            
-                             <p:column style="width:150">  
-                                  <f:facet name="header"> PTJ Code  </f:facet>  
-                                     <h:outputText value="#{data.ptjCode}" />  
-                                </p:column>  
-                                
-                                <p:column style="width:300">  
-                                  <f:facet name="header"> PTJ Name  </f:facet>  
-                                     <h:outputText value="#{data.ptjName}" />  
-                                </p:column>  
-                                
-                                <p:column style="width:80">  
-                                  <f:facet name="header"> Ceiling Amount (MYR)  </f:facet>  
-                                   <p:inputText value="#{data.selingAmount}" rendered="#{data.selingAmount !=null}"></p:inputText>  
-                                </p:column>  
-                                
-                                <p:column style="width:50"  styleClass="column-align-center">  
-                                  <f:facet name="header"> Action </f:facet>  
-                                       <p:commandButton title="delete"  onsuccess="confirmation.show()"
-									                     partialSubmit="true" process="@this" icon="ui-icon-delete">
-			                                 			</p:commandButton>
-                                </p:column>  
-                       
-                         </p:treeTable>
-                        
-                    
-                          <h:panelGrid style="width:780px" columnClasses="column-align-right">
-							                       <p:commandButton value="Add" styleClass="text-align:right;" process="@this" partialSubmit="true" 
-							                       icon="ui-icon-add"   onclick="dlg2.show();">
-											</p:commandButton>
-					                  	   </h:panelGrid>
-					                  	   
-					          <p:spacer height="20"/>  
-					                  	    <p:dataTable id="dataTable" var="data" value=" " widgetVar="dataTableObj" lazy="false" dynamic="true" 
-			                               paginator="true" paginatorPosition="bottom" paginatorAlwaysVisible="true" emptyMessage="No Records!" rows="10" 
-			                               rowsPerPageTemplate="5,10,15,20" currentPageReportTemplate=" total {totalRecords},  page {currentPage} of {totalPages} "
-							               paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink}
-							                {LastPageLink} {RowsPerPageDropdown}">
-							
-							                <p:columnGroup type="header"> 
-								                <p:row> 
-									                  
-									                     <p:column colspan="1" style="width:100px" headerText="Distric"  /> 
-									                     <p:column colspan="1"  style="width:100px"  headerText="State" /> 
-									                     <p:column colspan="1"  style="width:400px"  headerText="Delivery Address" /> 	
-									                     <p:column colspan="1" style="width:100px"  headerText="Action"  /> 
-									                    
-									                    
-								               </p:row>							
-								
-							
-							                </p:columnGroup>
-							                   				
-							             <p:column></p:column>	
-							                     <p:column></p:column>	
-							                     <p:column > </p:column> 							
-							                     <p:column styleClass="column-align-center">
-								                       <p:commandButton title="delete" onsuccess="confirmation.show()"
-									                     partialSubmit="true" process="@this" icon="ui-icon-delete">
-			                                 			</p:commandButton>
-							                    </p:column>  
-						
-							                     
-							                     
-							                     
-							               </p:dataTable>
-							               
-							                  <h:panelGrid style="width:780px" columnClasses="column-align-right">
-							                       <p:commandButton value="Add" styleClass="text-align:right;" process="@this" partialSubmit="true" 
-							                       icon="ui-icon-add">
-											</p:commandButton>
-					                  	   </h:panelGrid>
-             
-              
-                       <p:confirmDialog message="Do you want to delete the record?" 
-							closable="true" appendToBody="true" header="Delete Confirmation"
-							severity="alert" widgetVar="confirmation">
-
-							<h:panelGrid columns="2"
-								columnClasses="column-align-right,column-align-left">
-								<p:commandButton value="Yes" icon="ui-icon-accept"
-									update="treetable" partialSubmit="true" process="@this"
-									onclick="confirmation.hide();"/>
-								    <p:commandButton value="No" icon="ui-icon-reject"
-									onclick="confirmation.hide()" type="button" />
-							</h:panelGrid>
-						</p:confirmDialog>
-
-                   <p:dialog id="modalDialog"  header="Add PTJ" widgetVar="dlg2" modal="true" width="600" height="400">
-					<p:panel  id="agencyies">
-
-						<h:panelGrid columns="2">
-						
-							<h:outputLabel  value="Ministry" />
-            				<p:selectOneMenu  value=" " style="width:210px">
-            				   <f:selectItem itemLabel="--Please Select--" itemValue="" /> 
-                				<f:selectItems value="" />
-                			</p:selectOneMenu>
-							
-							<h:outputLabel  value="Department" />
-            				<p:selectOneMenu   value="" style="width:210px" >
-            					<f:selectItem itemLabel="--Please Select--" itemValue="" /> 
-                				<f:selectItems value="" />
-                			</p:selectOneMenu>
-						</h:panelGrid>
-
-			
-
-						<p:dataTable id="dataTable2" var="data" value="#{contractDetailsBackingBean.agencyLists}" rowIndexVar="index" widgetVar="dataTableObj"
-                         lazy="false" dynamic="true" paginator="true" paginatorPosition="bottom" paginatorAlwaysVisible="true" 
-                         emptyMessage="No Records!" rows="10"  rowsPerPageTemplate="5,10,15,20" 
-                         selection="#{agencyDetailsBean.selectedAgencyList}" rowKey="#{data.ptjCode}"
-                         currentPageReportTemplate=" total {totalRecords},  page {currentPage} of {totalPages} "
-                         paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}">
-                			
-                			<p:column selectionMode="multiple" style="width:18px" />
-							
-							
-							<p:column headerText="No.">
-								<h:outputText value="#{index+1}" />
-							</p:column>
-
-	                         <p:column headerText="PTJ Code">
-								
-							</p:column>
-
-							<p:column headerText="PTJ Name" >
-								
-							</p:column>
-							
-							
-						</p:dataTable>
-
-						<f:facet name="footer">
-							<h:panelGrid columns="2"  style="height: 40px;vertical-align: middle;">
-								<p:commandButton value="Select"   process="modalDialog" update="treetable,modalDialog" onclick="dlg2.hide();"/>
-                            	<p:commandButton value="Cancel"  type="button" ajax="false" onclick="dlg2.hide();" />
-						</h:panelGrid>
-						</f:facet>
-
-					</p:panel>
-				</p:dialog>
+    <p:treeTable id="treetable" value="#{contractDetailsBackingBean.rootNodeAgency}" var="data"  
+       selection="#{contractDetailsBackingBean.selectedNode}"  selectionMode="single" >
+          <p:column style="width:150">  
+            <f:facet name="header"> #{lbl['lbl.ct.agn.tree.name']} </f:facet>  
+             <h:outputText value="#{data.ministryName}" />  
+          </p:column>  
+          <p:column style="width:150">  
+           <f:facet name="header"> #{lbl['lbl.ct.agn.tree.ptj.code']} </f:facet>  
+           <h:outputText value="#{data.ptjCode}" />  
+          </p:column>  
+          <p:column style="width:300">  
+            <f:facet name="header"> #{lbl['lbl.ct.agn.tree.ptj.name']}  </f:facet>  
+            <h:outputText value="#{data.ptjName}" />  
+          </p:column>  
+          <p:column style="width:80">  
+            <f:facet name="header"> #{lbl['lbl.ct.agn.tree.ptj.amount']}  </f:facet>  
+            <p:inputText value="#{data.selingAmount}" rendered="#{data.selingAmount !=null}"></p:inputText>  
+          </p:column>  
+          <p:column style="width:50"  styleClass="column-align-center">  
+            <f:facet name="header"> #{lbl['lbl.ct.agn.tree.ptj.action']} </f:facet>  
+            <p:commandButton title="delete"  onsuccess="confirmation.show()"
+			  partialSubmit="true" process="@this" icon="ui-icon-delete">
+		    </p:commandButton>
+          </p:column>  
+       </p:treeTable>
+       <h:panelGrid style="width:780px" columnClasses="column-align-right">
+		 <p:commandButton value="#{lbl['lbl.ct.agn.btn.add']}" styleClass="text-align:right;" process="@this" partialSubmit="true" 
+		     icon="ui-icon-add"   onclick="dlg2.show();">
+		 </p:commandButton>
+	   </h:panelGrid>	  
+        <p:confirmDialog message="Do you want to delete the record?" 
+		  closable="true" appendToBody="true" header="Delete Confirmation" severity="alert" widgetVar="confirmation">
+             <h:panelGrid columns="2" columnClasses="column-align-right,column-align-left">
+				<p:commandButton value="Yes" icon="ui-icon-accept"
+					update="treetable" partialSubmit="true" process="@this"	onclick="confirmation.hide();"/>
+				<p:commandButton value="No" icon="ui-icon-reject" onclick="confirmation.hide()" type="button" />
+			</h:panelGrid>
+		</p:confirmDialog>
+		<p:dialog id="modalDialog"  header="#{lbl['lbl.ct.agn.btn.add']}" widgetVar="dlg2" modal="true" width="600" height="400">
+		   <p:panel  id="agencyies">
+              <h:panelGrid columns="2">
+				<h:outputLabel  value="#{lbl['lbl.ct.agn.model.min']}" />
+            	<p:selectOneMenu  value=" " style="width:210px">
+            	  <f:selectItem itemLabel="--Please Select--" itemValue="" /> 
+                  <f:selectItems value="" />
+                </p:selectOneMenu>
+				<h:outputLabel  value="#{lbl['lbl.ct.agn.model.dep']}" />
+            	<p:selectOneMenu   value="" style="width:210px" >
+            	  <f:selectItem itemLabel="--Please Select--" itemValue="" /> 
+                  <f:selectItems value="" />
+                </p:selectOneMenu>
+			 </h:panelGrid>
+             <p:dataTable id="dataTable2" var="data" value="#{contractDetailsBackingBean.agencyLists}" rowIndexVar="index" widgetVar="dataTableObj"
+                lazy="false" dynamic="true" paginator="true" paginatorPosition="bottom" paginatorAlwaysVisible="true"  emptyMessage="No Records!" rows="10" 
+                rowsPerPageTemplate="5,10,15,20"  selection="#{agencyDetailsBean.selectedAgencyList}" rowKey="#{data.ptjCode}"
+                currentPageReportTemplate=" total {totalRecords},  page {currentPage} of {totalPages} "   paginatorTemplate="{CurrentPageReport}
+                {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}">
+                <p:column selectionMode="multiple" style="width:18px" />
+			        <p:column headerText="#{lbl['lbl.ct.agn.model.table.no']}">
+						<h:outputText value="#{index+1}" />
+					</p:column>
+                    <p:column headerText="#{lbl['lbl.ct.agn.model.table.code']}">
+					</p:column>
+                    <p:column headerText="#{lbl['lbl.ct.agn.model.table.name']}" >
+					</p:column>
+			 </p:dataTable>
+             <f:facet name="footer">
+			  <h:panelGrid columns="2"  style="height: 40px;vertical-align: middle;">
+				<p:commandButton value="#{lbl['lbl.ct.agn.btn.select']}"   process="modalDialog" update="treetable,modalDialog" onclick="dlg2.hide();"/>
+                <p:commandButton value="#{lbl['lbl.ct.agn.btn.cancel']}"  type="button" ajax="false" onclick="dlg2.hide();" />
+			  </h:panelGrid>
+			</f:facet>
+           </p:panel>
+	 </p:dialog>
 </ui:composition>
 
 

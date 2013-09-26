@@ -1,9 +1,11 @@
 package my.ep.web.bean.ct;
-public class CheckBoxSelections {
 
-	private boolean checkedAgreement;
-    private boolean disabledAgreement;
+import java.io.Serializable;
 
+public class CheckBoxSelections implements Serializable {
+
+	private static final long serialVersionUID = 1L;
+	
     private boolean checkedGood;
     private boolean disabledGood;
     
@@ -13,83 +15,24 @@ public class CheckBoxSelections {
     private boolean checkedMto;
     private boolean disabledMto;
     
+    private boolean CheckedExempted;
+    private boolean disabledExempted;
+    
+    private boolean checkedAgreement;
+    private boolean disabledAgreement;
+    
     private boolean CheckedConcession;
     private boolean disabledConcession;
     
-    private boolean CheckedExempted;
-    public boolean isCheckedConcession() {
-		return CheckedConcession;
-	}
-
-
-
-
-
-	
-
-	private boolean disabledExempted;
-    
-    private boolean checkedSemenanjung;
-   	private boolean checkedSabah;
+    private boolean checkedSabah;
     private boolean checkedSarawak;
-    
-    private boolean checkSpecification;
+    private boolean checkedSemenanjung;
    
-   private boolean terminationWarningLetter;
-   private boolean terminationNotice;
-   private boolean terminationRejectLetter;
+    private boolean terminationNotice;
+    private boolean terminationRejectLetter;
+    private boolean terminationWarningLetter;
    
-
-
-	public boolean isTerminationWarningLetter() {
-	return terminationWarningLetter;
-}
-
-
-
-
-
-public void setTerminationWarningLetter(boolean terminationWarningLetter) {
-	this.terminationWarningLetter = terminationWarningLetter;
-}
-
-
-
-
-
-public boolean isTerminationNotice() {
-	return terminationNotice;
-}
-
-
-
-
-
-public void setTerminationNotice(boolean terminationNotice) {
-	this.terminationNotice = terminationNotice;
-}
-
-
-
-
-
-public boolean isTerminationRejectLetter() {
-	return terminationRejectLetter;
-}
-
-
-
-
-
-public void setTerminationRejectLetter(boolean terminationRejectLetter) {
-	this.terminationRejectLetter = terminationRejectLetter;
-}
-
-
-
-
-
-	public CheckBoxSelections(){
+    public CheckBoxSelections(){
     	
     	if(!checkedGood){
     		checkedGood=true;
@@ -107,54 +50,13 @@ public void setTerminationRejectLetter(boolean terminationRejectLetter) {
     		checkedIGood=true;
     		disabledIGood=true;
     		
-    	}
-    	
-    	
+    	}	
     	
     }
-
-
-
-
-
-	public boolean isCheckedAgreement() {
-		return checkedAgreement;
-	}
-
-
-
-
-
-	public void setCheckedAgreement(boolean checkedAgreement) {
-		this.checkedAgreement = checkedAgreement;
-	}
-
-
-
-
-
-	public boolean isDisabledAgreement() {
-		return disabledAgreement;
-	}
-
-
-
-
-
-	public void setDisabledAgreement(boolean disabledAgreement) {
-		this.disabledAgreement = disabledAgreement;
-	}
-
-
-
-
-
+   
 	public boolean isCheckedGood() {
 		return checkedGood;
 	}
-
-
-
 
 
 	public void setCheckedGood(boolean checkedGood) {
@@ -162,15 +64,9 @@ public void setTerminationRejectLetter(boolean terminationRejectLetter) {
 	}
 
 
-
-
-
 	public boolean isDisabledGood() {
 		return disabledGood;
 	}
-
-
-
 
 
 	public void setDisabledGood(boolean disabledGood) {
@@ -178,15 +74,9 @@ public void setTerminationRejectLetter(boolean terminationRejectLetter) {
 	}
 
 
-
-
-
 	public boolean isCheckedIGood() {
 		return checkedIGood;
 	}
-
-
-
 
 
 	public void setCheckedIGood(boolean checkedIGood) {
@@ -194,15 +84,9 @@ public void setTerminationRejectLetter(boolean terminationRejectLetter) {
 	}
 
 
-
-
-
 	public boolean isDisabledIGood() {
 		return disabledIGood;
 	}
-
-
-
 
 
 	public void setDisabledIGood(boolean disabledIGood) {
@@ -210,15 +94,9 @@ public void setTerminationRejectLetter(boolean terminationRejectLetter) {
 	}
 
 
-
-
-
 	public boolean isCheckedMto() {
 		return checkedMto;
 	}
-
-
-
 
 
 	public void setCheckedMto(boolean checkedMto) {
@@ -226,15 +104,9 @@ public void setTerminationRejectLetter(boolean terminationRejectLetter) {
 	}
 
 
-
-
-
 	public boolean isDisabledMto() {
 		return disabledMto;
 	}
-
-
-
 
 
 	public void setDisabledMto(boolean disabledMto) {
@@ -242,99 +114,9 @@ public void setTerminationRejectLetter(boolean terminationRejectLetter) {
 	}
 
 
-
-
-
-	public boolean isCheckedSemenanjung() {
-		return checkedSemenanjung;
-	}
-
-
-
-
-
-	public void setCheckedSemenanjung(boolean checkedSemenanjung) {
-		this.checkedSemenanjung = checkedSemenanjung;
-	}
-
-
-
-
-
-	public boolean isCheckedSabah() {
-		return checkedSabah;
-	}
-
-
-
-
-
-	public void setCheckedSabah(boolean checkedSabah) {
-		this.checkedSabah = checkedSabah;
-	}
-
-
-
-
-
-	public boolean isCheckedSarawak() {
-		return checkedSarawak;
-	}
-
-
-
-
-
-	public void setCheckedSarawak(boolean checkedSarawak) {
-		this.checkedSarawak = checkedSarawak;
-	}
-
-
-
-
-
-	public boolean isCheckSpecification() {
-		return checkSpecification;
-	}
-
-
-
-
-
-	public void setCheckSpecification(boolean checkSpecification) {
-		this.checkSpecification = checkSpecification;
-	}
-	
-	public void setCheckedConcession(boolean checkedConcession) {
-		CheckedConcession = checkedConcession;
-	}
-
-
-
-
-
-	public boolean isDisabledConcession() {
-		return disabledConcession;
-	}
-
-
-
-
-
-	public void setDisabledConcession(boolean disabledConcession) {
-		this.disabledConcession = disabledConcession;
-	}
-
-
-
-
-
 	public boolean isCheckedExempted() {
 		return CheckedExempted;
 	}
-
-
-
 
 
 	public void setCheckedExempted(boolean checkedExempted) {
@@ -342,15 +124,9 @@ public void setTerminationRejectLetter(boolean terminationRejectLetter) {
 	}
 
 
-
-
-
 	public boolean isDisabledExempted() {
 		return disabledExempted;
 	}
-
-
-
 
 
 	public void setDisabledExempted(boolean disabledExempted) {
@@ -358,8 +134,103 @@ public void setTerminationRejectLetter(boolean terminationRejectLetter) {
 	}
 
 
+	public boolean isCheckedAgreement() {
+		return checkedAgreement;
+	}
 
 
-    
-    
+	public void setCheckedAgreement(boolean checkedAgreement) {
+		this.checkedAgreement = checkedAgreement;
+	}
+
+
+	public boolean isDisabledAgreement() {
+		return disabledAgreement;
+	}
+
+
+	public void setDisabledAgreement(boolean disabledAgreement) {
+		this.disabledAgreement = disabledAgreement;
+	}
+
+
+	public boolean isCheckedConcession() {
+		return CheckedConcession;
+	}
+
+
+	public void setCheckedConcession(boolean checkedConcession) {
+		CheckedConcession = checkedConcession;
+	}
+
+
+	public boolean isDisabledConcession() {
+		return disabledConcession;
+	}
+
+
+	public void setDisabledConcession(boolean disabledConcession) {
+		this.disabledConcession = disabledConcession;
+	}
+
+
+	public boolean isCheckedSabah() {
+		return checkedSabah;
+	}
+
+
+	public void setCheckedSabah(boolean checkedSabah) {
+		this.checkedSabah = checkedSabah;
+	}
+
+
+	public boolean isCheckedSarawak() {
+		return checkedSarawak;
+	}
+
+
+	public void setCheckedSarawak(boolean checkedSarawak) {
+		this.checkedSarawak = checkedSarawak;
+	}
+
+
+	public boolean isCheckedSemenanjung() {
+		return checkedSemenanjung;
+	}
+
+
+	public void setCheckedSemenanjung(boolean checkedSemenanjung) {
+		this.checkedSemenanjung = checkedSemenanjung;
+	}
+
+
+	public boolean isTerminationNotice() {
+		return terminationNotice;
+	}
+
+
+	public void setTerminationNotice(boolean terminationNotice) {
+		this.terminationNotice = terminationNotice;
+	}
+
+
+	public boolean isTerminationRejectLetter() {
+		return terminationRejectLetter;
+	}
+
+
+	public void setTerminationRejectLetter(boolean terminationRejectLetter) {
+		this.terminationRejectLetter = terminationRejectLetter;
+	}
+
+
+	public boolean isTerminationWarningLetter() {
+		return terminationWarningLetter;
+	}
+
+
+	public void setTerminationWarningLetter(boolean terminationWarningLetter) {
+		this.terminationWarningLetter = terminationWarningLetter;
+	}
+
 }
