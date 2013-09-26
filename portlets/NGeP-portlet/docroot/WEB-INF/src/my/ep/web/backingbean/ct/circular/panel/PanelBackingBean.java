@@ -75,14 +75,6 @@ public class PanelBackingBean extends BaseBackingBean<PanelManagedBean>{
 	public void setCancelCircular(boolean cancelCircular) {
 		this.cancelCircular = cancelCircular;
 	}
-
-	
-	
-	public void specificationField(){
-		if(!checkBoxSelections.isCheckSpecification()){
-			
-		}
-	}
 	
 	
 	public ApproverSetting getApproverSetting() {
