@@ -7,8 +7,9 @@
     xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-facesconfig_2_0.xsd"
 >
 	<managed-bean>
-	    <managed-bean-name>PPConst</managed-bean-name>
-	    <managed-bean-class>my.ep.web.constant.pp.ProcurementPlanConst</managed-bean-class>
-	    <managed-bean-scope>request</managed-bean-scope>
-	</managed-bean>
+		  <description>Procurement Plan Common Constants</description>
+		  <managed-bean-name>PPConst</managed-bean-name>
+		  <managed-bean-class>my.ep.web.constant.pp.ProcurementPlanConst</managed-bean-class>
+		  <managed-bean-scope>application</managed-bean-scope>
+ 	</managed-bean>
 </faces-config>
