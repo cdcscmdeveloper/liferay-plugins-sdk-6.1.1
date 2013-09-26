@@ -50,5 +50,12 @@ public class ProcurementPlanConst {
 	public static final String GOOD_SERVICE_TYPE_IMPORTED = "I";
 	public static final String GOOD_SERVICE_TYPE_LOCAL = "L";
 	public static final String GOOD_SERVICE_TYPE_BOTH = "B";
+	
+	
+	
+	public String getNavToListBudgetAllocation() {
+		return NAV_TO_LIST_BUDGET_ALLOCATION;
+	}
 
+	
 }

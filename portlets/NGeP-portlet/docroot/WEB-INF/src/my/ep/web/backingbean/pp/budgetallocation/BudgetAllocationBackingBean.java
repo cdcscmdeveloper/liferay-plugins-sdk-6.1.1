@@ -48,7 +48,7 @@ public class BudgetAllocationBackingBean extends BaseBackingBean<BudgetAllocatio
 	private void getAllBudgets(){
 		log.info("getAllBudgets - Start");
 		BudgetAllocationReqDTO reqDTO = new BudgetAllocationReqDTO();
-		reqDTO.setMinistryId(1);	// TODO dynamic
+		reqDTO.setMinistryId(1L);	// TODO dynamic
 
 		IBudgetAllocationSO reqSO = (IBudgetAllocationSO) BusinessDelegate.getInstance().getServiceObject(IBudgetAllocationSO.class);
 		BudgetAllocationResDTO resDTO = reqSO.retrieveBudgetList(reqDTO);
@@ -82,9 +82,9 @@ public class BudgetAllocationBackingBean extends BaseBackingBean<BudgetAllocatio
 		if(item==null){
 			this.getManagedBean().setSelectedBudgetAllocItemRmk(new PpBudgetAllocDtlRemark());
 			//TODO: Temp & To be removed
-			this.getManagedBean().getSelectedBudgetAllocItemRmk().setCreatedBy("1");
+			this.getManagedBean().getSelectedBudgetAllocItemRmk().setCreatedBy(1L);
 			this.getManagedBean().getSelectedBudgetAllocItemRmk().setCreatedDate(new Timestamp(new Date().getTime()));
-			this.getManagedBean().getSelectedBudgetAllocItemRmk().setChangedBy("1");
+			this.getManagedBean().getSelectedBudgetAllocItemRmk().setChangedBy(1L);
 			this.getManagedBean().getSelectedBudgetAllocItemRmk().setChangedDate(new Timestamp(new Date().getTime()));
 			
 			this.getManagedBean().setSelectedBudgetAllocItem(new PpBudgetAllocDtl());
@@ -102,9 +102,9 @@ public class BudgetAllocationBackingBean extends BaseBackingBean<BudgetAllocatio
 			this.getManagedBean().getSelectedBudgetAllocation().setPpBudgetAllocDtls(new ArrayList<PpBudgetAllocDtl>());
 		}
 		//TODO: Temp & To be removed
-		this.getManagedBean().getSelectedBudgetAllocItem().setCreatedBy("1");
+		this.getManagedBean().getSelectedBudgetAllocItem().setCreatedBy(1L);
 		this.getManagedBean().getSelectedBudgetAllocItem().setCreatedDate(new Timestamp(new Date().getTime()));
-		this.getManagedBean().getSelectedBudgetAllocItem().setChangedBy("1");
+		this.getManagedBean().getSelectedBudgetAllocItem().setChangedBy(1L);
 		this.getManagedBean().getSelectedBudgetAllocItem().setChangedDate(new Timestamp(new Date().getTime()));
 		
 		//Add the item remark to the list
@@ -136,9 +136,9 @@ public class BudgetAllocationBackingBean extends BaseBackingBean<BudgetAllocatio
 		PpBudgetAllocRemark remark = new PpBudgetAllocRemark();
 		
 		//TODO: Temp & To be removed
-		remark.setCreatedBy("1");
+		remark.setCreatedBy(1L);
 		remark.setCreatedDate(new Timestamp(new Date().getTime()));
-		remark.setChangedBy("1");
+		remark.setChangedBy(1L);
 		remark.setChangedDate(new Timestamp(new Date().getTime()));
 		
 		
@@ -217,9 +217,9 @@ public class BudgetAllocationBackingBean extends BaseBackingBean<BudgetAllocatio
 			result = updateBudgetAllocation();
 		} else {
 			//TODO: Temp & To be removed
-			this.getManagedBean().getSelectedBudgetAllocation().setCreatedBy("1");
+			this.getManagedBean().getSelectedBudgetAllocation().setCreatedBy(1L);
 			this.getManagedBean().getSelectedBudgetAllocation().setCreatedDate(new Timestamp(new Date().getTime()));
-			this.getManagedBean().getSelectedBudgetAllocation().setChangedBy("1");
+			this.getManagedBean().getSelectedBudgetAllocation().setChangedBy(1L);
 			this.getManagedBean().getSelectedBudgetAllocation().setChangedDate(new Timestamp(new Date().getTime()));
 			result = addBudgetAllocation();
 		}
