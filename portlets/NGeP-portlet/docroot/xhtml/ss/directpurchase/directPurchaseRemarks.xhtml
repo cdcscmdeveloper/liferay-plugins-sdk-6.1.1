@@ -11,24 +11,14 @@
 	</ui:define>
 
 	<ui:define name="sideMenu">
-		<ui:include src="/xhtml/ss/directpurchase/sc_sidemenu.xhtml" />
+		<ui:include src="/xhtml/ss/directpurchase/sc_directpurchase_sidemenu.xhtml" />
 	</ui:define>
 	<ui:define name="content">
 		<h:form>
-		<table style="width: 100%">
-			<tr>
-				<td width="100%" align="right">
-					<p:commandButton value="#{lbl['lbl.ss.save']}" />
-					<p:commandButton value="#{lbl['lbl.ss.submit']}" />
-				</td>
-			</tr>
-			<p:spacer height="10" />
-			<tr>
-				<td width="100%" align="right">
-					
-				</td>
-			</tr>
-		</table>
+		<div align="right">
+			<p:commandButton value="#{lbl['lbl.ss.save']}" /> 
+			<p:commandButton value="#{lbl['lbl.ss.submit']}" />
+		</div>
 		<p:panel label="#{lbl['lbl.sc.item.detail']}" header="#{lbl['lbl.sc.item.detail']}" toggleable="true">
 			<h:panelGrid columns="1" width="100%">
 				<p:dataTable id="itemdataTable"
@@ -50,7 +40,6 @@
 					<p:column width="15%" rendered="true" style="white-space:nowrap; text-align:center; vertical-align:top;">
 					</p:column>
 				</p:dataTable>
-				
 			</h:panelGrid>
 		</p:panel>
 		<div align="right">

@@ -1,9 +1,7 @@
 package my.ep.web.managedbean.ss.directpurchase;
 
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
@@ -27,6 +25,7 @@ public class DirectPurchaseManagedBean extends BaseManagedBean{
 	
 	private	String	action	=	SourcingConst.CREATE_DIRECT_PURCHASE;
 	private	List<RequestListItem> requestListItems;
+	private	List<RequestListSupplierItem> recommendRequestListSupplierItems;
 	
 	public DirectPurchaseManagedBean() {
 		super();
@@ -49,9 +48,18 @@ public class DirectPurchaseManagedBean extends BaseManagedBean{
 		this.requestListItems = requestListItems;
 	}
 	
+	public List<RequestListSupplierItem> getRecommendRequestListSupplierItems() {
+		return recommendRequestListSupplierItems;
+	}
+
+	public void setRecommendRequestListSupplierItems(List<RequestListSupplierItem> recommendRequestListSupplierItems) {
+		this.recommendRequestListSupplierItems = recommendRequestListSupplierItems;
+	}
+
 	private	void prepareDummyData(){
 		requestListItems	=	new ArrayList<RequestListItem>();
-		RequestListItem requestListItem1 = new RequestListItem("Item1",1000,"KG");
+		recommendRequestListSupplierItems = new ArrayList<RequestListSupplierItem>();
+		RequestListItem requestListItem1 = new RequestListItem(1L,"Item1",1000,"KG");
 		List<RequestListSupplierItem> supplierItems1 = new ArrayList<RequestListSupplierItem>();
 		supplierItems1.add(new RequestListSupplierItem(1L,1L,1000,new Double(4.5)));
 		supplierItems1.add(new RequestListSupplierItem(2L,2L,1000,new Double(4.6)));
@@ -59,12 +67,15 @@ public class DirectPurchaseManagedBean extends BaseManagedBean{
 		requestListItem1.setSupplierItems(supplierItems1);
 		requestListItems.add(requestListItem1);
 		
-		RequestListItem requestListItem2 = new RequestListItem("Item2",1000,"KG");
+		RequestListItem requestListItem2 = new RequestListItem(2L,"Item2",1000,"KG");
 		List<RequestListSupplierItem> supplierItems2 = new ArrayList<RequestListSupplierItem>();
 		supplierItems2.add(new RequestListSupplierItem(4L,1L,1000,new Double(4.5)));
 		supplierItems2.add(new RequestListSupplierItem(5L,2L,1000,new Double(4.6)));
 		supplierItems2.add(new RequestListSupplierItem(6L,3L,1000,new Double(4.4)));
 		requestListItem2.setSupplierItems(supplierItems2);
 		requestListItems.add(requestListItem2);
+		
+		recommendRequestListSupplierItems.add(new RequestListSupplierItem(1L,1L,1000,new Double(4.5)));
+		recommendRequestListSupplierItems.add(new RequestListSupplierItem(5L,2L,1000,new Double(4.6)));
 	}
 }

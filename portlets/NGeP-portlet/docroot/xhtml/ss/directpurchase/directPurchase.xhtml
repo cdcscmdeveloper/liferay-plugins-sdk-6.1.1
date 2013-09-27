@@ -14,16 +14,16 @@
 	</ui:define>
 	<ui:define name="content">
 		<h:form>
-			<div align="right">
+			<div align="right" id="div_globe_11">
 				<p:commandButton value="#{lbl['lbl.ss.save']}" /> 
 				<p:commandButton value="#{lbl['lbl.ss.submit']}" />
 			</div>
-			<p:panel label="#{lbl['lbl.ss.simple.quote.general']}" header="#{lbl['lbl.ss.simple.quote.general']}" toggleable="true"  toggleSpeed="500">
+			<p:panel label="#{lbl['lbl.ss.panel.title.general']}" header="#{lbl['lbl.ss.panel.title.general']}" toggleable="true"  toggleSpeed="500">
 				<p:spacer height="10" />
 				<table style="width: 100%">
 					<tr>
 						<td width="20%" align="left">
-							<p:outputLabel value="#{lbl['lbl.sc.purchase.procurement.type']}" />
+							<p:outputLabel value="#{lbl['lbl.sc.purchase.procurement.type']}" id="lbl_11"/>
 						</td>
 						<TD>
 							<h:selectOneMenu id="procurementType" style="width: auto; min-width: 200px;" required="false" disabled="false">
@@ -36,7 +36,7 @@
 					</tr>
 					<TR>
 						<TD width="20%" align="left">
-							<p:outputLabel value="#{lbl['lbl.sc.purchase.justification']}" />
+							<p:outputLabel value="#{lbl['lbl.sc.purchase.justification']}" id="lbl_22"/>
 						</TD>
 						<TD>
 							<h:selectOneMenu id="justification" style="width: auto; min-width: 100px;" required="false" disabled="false">
@@ -51,28 +51,24 @@
 					</TR>
 				</table>
 			</p:panel>
-			<p:panel label="#{lbl['lbl.ss.market.research']}" header="#{lbl['lbl.ss.market.research']}" toggleable="true"  toggleSpeed="500">
-				<div align="right">
+			<p:panel label="#{lbl['lbl.ss.panel.title.market.research']}" header="#{lbl['lbl.ss.panel.title.market.research']}" toggleable="true"  toggleSpeed="500">
+				<div align="right" id="div_j111">
 					<p:button value="#{lbl['lbl.ss.action.search.catelogue']}" />
-					<p:commandButton value="#{lbl['lbl.sc.action.simple.quote']}"
+					<p:commandButton value="#{lbl['lbl.ss.action.simple.quote']}"
 						onclick="simpleQuoteBid.show();" />
-					<p:commandButton value="#{lbl['lbl.sc.action.simple.bid']}" onclick="recommendSupplier.show();" />
-					<p:button value="#{lbl['lbl.sc.action.clone']}" />
+					<p:commandButton value="#{lbl['lbl.ss.action.simple.bid']}" onclick="simpleQuoteBid.show();" />
+					<p:button value="#{lbl['lbl.ss.action.clone']}" />
 				</div>
 				<ui:include src="/xhtml/ss/directpurchase/simpleQuoteBid.xhtml" />
-				<ui:include src="/xhtml/ss/directpurchase/common/recommendSupplier.xhtml" />
-				<h:panelGrid columns="1" width="100%">
-					<p:dataTable id="itemdataTable" width="100%" cellpadding="1"
-						value="#{directPurchaseBackingBean.managedBean.requestListItems}" var="item" rowKey="#{supplierItem.supplierId}">
+				<h:panelGrid width="100%" style="margin-top:20px">
+					<p:dataTable id="itemdataTable" width="100%" cellpadding="1" rowIndexVar="rowIndex" 
+						value="#{directPurchaseBackingBean.managedBean.requestListItems}" var="item">
 						<p:columnGroup type="header">  
 				            <p:row>  
 				                <p:column colspan="1" width="20%" rendered="true"
 									style="text-align:center; vertical-align:top;" headerText="#{lbl['lbl.sc.item.detail.supplier']}">
 								</p:column>
-				                <p:column colspan="1" width="20%" rendered="true"
-									style="text-align:center; vertical-align:top;" headerText="#{lbl['lbl.ss.item.detail.desc']}">
-								</p:column>
-								<p:column colspan="1" width="20%" rendered="true"
+				                <p:column colspan="1" width="35%" rendered="true"
 									style="text-align:center; vertical-align:top;" headerText="#{lbl['lbl.ss.item.detail.desc']}">
 								</p:column>
 								<p:column colspan="1" width="10%" rendered="true"
@@ -85,22 +81,18 @@
 									style="text-align:center; vertical-align:top;" headerText="#{lbl['lbl.sc.item.detail.amount']}">
 								</p:column>
 								<p:column colspan="1" width="10%" rendered="true"
-									style="text-align:center; vertical-align:top;" headerText="#{lbl['lbl.ss.item.detail.view']}">
+									style="text-align:center; vertical-align:top;" headerText="#{lbl['lbl.ss.item.detail.action']}">
 								</p:column>
-								<p:column colspan="1" width="10%" rendered="true"
-									style="white-space:nowrap; text-align:center; vertical-align:top;">
-		
+								<p:column colspan="1" width="5%" rendered="true" headerText="#{lbl['lbl.ss.item.detail.recommend']}"
+									style="text-align:center; vertical-align:top;">
 								</p:column>
 				            </p:row>  
 				        </p:columnGroup>
-						<p:subTable var="supplierItem" value="#{item.supplierItems}" >
-							<!--  p:selectOneRadio id="radioFor#{supplierItem.supplierItemId}" value="#{supplierItem.selected}" layout="custom">  
-						        <f:selectItem itemLabel="Option 1" itemValue="1" />  
-						        <f:selectItem itemLabel="Option 2" itemValue="2" />  
-						        <f:selectItem itemLabel="Option 3" itemValue="3" />  
-						    </p:selectOneRadio>  -->
-							<f:facet name="header">  
-				            	#{item.itemName}   
+				       	<p:subTable id="supplierItemTable#{rowIndex}" var="supplierItem" value="#{item.supplierItems}">
+							<f:facet name="header"> 
+				            	<p:outputLabel value="#{lbl['lbl.ss.item.detail.item.name']}" /> :#{item.itemName}   <p:spacer width="10px" />
+				            	<p:outputLabel value="#{lbl['lbl.ss.item.detail.quantity']}" /> :#{item.quantity}   <p:spacer width="10px" />
+				            	<p:outputLabel value="#{lbl['lbl.ss.item.detail.uom']}" /> :#{item.uom}
 				            </f:facet> 
 				            <p:column>  
 				                #{supplierItem.supplierId}  
@@ -119,14 +111,14 @@
 				            <p:column>
 				            </p:column>
 				            <p:column>
+				            	<input type="radio" id="supplierItemId#{supplierItem.supplierItemId}" name="itemId#{rowIndex}"/>
 				            </p:column>
-				            <p:column selectionMode="single" />
 						</p:subTable>
 					</p:dataTable>
 				</h:panelGrid>
-				<div align="right">
+				<div align="right" id="divGroupBtnAction">
 					<p:commandButton value="#{lbl['lbl.ss.action.group']}" onclick="groupItem.show();" />
-					<p:button value="#{lbl['lbl.ss.action.recommend']}" />
+					<p:button value="#{lbl['lbl.ss.action.recommend']}" outcome="/xhtml/ss/directpurchase/requestList.xhtml"/>
 				</div>
 					<ui:include src="/xhtml/ss/directpurchase/groupItem.xhtml" />
 			</p:panel>
