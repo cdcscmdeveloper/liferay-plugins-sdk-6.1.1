@@ -1,0 +1,112 @@
+<ui:composition
+	template="/WEB-INF/facelets/templates/sidemenu_template.xhtml"
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:c="http://java.sun.com/jsp/jstl/core">
+	<ui:define name="resourceSection">
+	</ui:define>
+
+	<ui:define name="sideMenu">
+		<ui:include
+			src="/xhtml/ss/proposal/ss_proposal_sidemenu.xhtml" />
+	</ui:define>
+	<ui:define name="content">
+		
+			<div align="right">
+				<p:commandButton value="#{lbl['lbl.ss.save']}" />
+				&#160;
+				<p:commandButton value="#{lbl['lbl.ss.submit']}" />
+			</div>
+       <ui:include src="/xhtml/ss/quatationtender/qtntenderheader.xhtml" /> 
+
+<p:panel header="Manual Submission" toggleable="true">
+
+			<p:dataTable  var="simpleQuote"
+				value="#{simpleQuoteBidBackingBean.utilList}"
+				selection="#{simpleQuoteBidBackingBean.managedBean.selectedUtilList}"
+				rowKey="#{simpleQuote.seqNo}" rowIndexVar="index" editable="true">
+
+			<p:ajax event="rowEdit" listener="#{searchQtnTenderBB.onEdit}"  />  
+            <p:ajax event="rowEditCancel" listener="#{searchQtnTenderBB.onCancel}"  /> 
+
+				<p:column headerText="Proposal No" style="width:20%">
+					
+				<p:cellEditor>  
+                <f:facet name="output">  
+                <h:outputText value="121#{index+1}"></h:outputText>
+                </f:facet>  
+                <f:facet name="input">  
+                    <p:inputText value="121#{index+1}"></p:inputText>
+                </f:facet>  
+            </p:cellEditor>  
+		</p:column>
+				<p:column headerText=" Label No" style="width:20%">
+					
+			 <p:cellEditor>  
+                <f:facet name="output">  
+                 <h:outputText value="121#{index+1}"></h:outputText> 
+                </f:facet>  
+                <f:facet name="input">  
+                    <p:inputText value="121#{index+1}"></p:inputText>
+                </f:facet>  
+            </p:cellEditor>  
+		</p:column>
+		
+		
+				<p:column headerText=" Submission" style="width:20%">
+					
+			 <p:cellEditor>  
+                <f:facet name="output">  
+                <p:selectOneMenu> 
+				 
+	                 <f:selectItem itemLabel="M" itemValue="1" />   
+	                 <f:selectItem itemLabel="F" itemValue="2" />
+	                 
+	          </p:selectOneMenu> 
+                </f:facet>  
+                <f:facet name="input">  
+                    <p:selectOneMenu> 
+				 
+	                 <f:selectItem itemLabel="M" itemValue="1" />   
+	                 <f:selectItem itemLabel="F" itemValue="2" />
+	                 
+	          </p:selectOneMenu>
+                </f:facet>  
+            </p:cellEditor>  
+		</p:column>
+		
+		
+				<p:column headerText=" Remarks" style="width:30%">
+					
+			 <p:cellEditor>  
+                <f:facet name="output">  
+                 <h:outputText value="Remarks#{simpleQuote.description}"></h:outputText>
+                </f:facet>  
+                <f:facet name="input">  
+                   <p:inputText value="Remarks#{simpleQuote.description}"></p:inputText>
+                </f:facet>  
+            </p:cellEditor>  
+		</p:column>
+		
+         <p:column headerText="#{lbl['lbl.ss.simple.quote.item.action']}" style="width:10%">  
+            <p:rowEditor />  
+            </p:column>  
+</p:dataTable>
+               <div align="right"  >
+					<p:commandButton  value="ADD" 
+						               />
+					
+					</div>
+              
+		</p:panel>
+
+
+
+	
+			
+		
+	</ui:define>
+</ui:composition>
