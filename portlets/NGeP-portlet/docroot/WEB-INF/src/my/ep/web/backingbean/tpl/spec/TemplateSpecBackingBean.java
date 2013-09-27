@@ -12,11 +12,8 @@ import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
 import javax.faces.model.SelectItem;
 
-import my.ep.biz.dto.fl.FulfilmentReqDTO;
-import my.ep.biz.dto.fl.FulfilmentResDTO;
 import my.ep.biz.dto.tpl.spec.TemplateSpecReqDTO;
 import my.ep.biz.dto.tpl.spec.TemplateSpecResDTO;
-import my.ep.biz.service.fl.IFulfilmentRequestSO;
 import my.ep.biz.service.tpl.spec.ITemplateSpecSO;
 import my.ep.persistence.entity.tpl.TplCategory;
 import my.ep.persistence.entity.tpl.spec.TplOptionChoice;
@@ -68,11 +65,11 @@ public class TemplateSpecBackingBean extends BaseBackingBean<TemplateSpecManaged
 //		}
 //	}
 	public TemplateSpecBackingBean(){
-		   if(MDC.get(LogKey.USER_ID)==null) {
+		  if(MDC.get(LogKey.USER_ID)==null) {
 			    MDC.put(LogKey.USER_ID, 1L);
 			   }
 	}
-
+	
 	public String findQuestionsBySectionId() {
 		ITemplateSpecSO templateSpecSO = null;
 		TplSpecMaster specMaster = this.getManagedBean().getSelectedTemplate();
@@ -365,11 +362,9 @@ public class TemplateSpecBackingBean extends BaseBackingBean<TemplateSpecManaged
 		header.setQuestionType(1);
 		header.setRecordStatus(true);
 		header.setBrandNew(true);
-		header.setCreatedBy(1l);
 		header.setTableSeq(newSectionId);
 		header.setQuestionColumnNo(numberOfColumns);
 		header.setQuestionOrder(0);
-		header.setCreatedDate(new Timestamp(System.currentTimeMillis()));
 
 		// set default text
 		header.setQuestionNumber("[No.]");
