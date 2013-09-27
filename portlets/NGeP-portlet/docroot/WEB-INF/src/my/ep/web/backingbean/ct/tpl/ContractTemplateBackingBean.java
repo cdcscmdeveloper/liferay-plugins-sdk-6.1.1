@@ -17,14 +17,12 @@ import my.ep.biz.service.ct.tpl.IContractTemplateSO;
 import my.ep.dto.ct.tpl.ContractTemplateReqDTO;
 import my.ep.dto.ct.tpl.ContractTemplateResDTO;
 import my.ep.persistence.entity.ct.CtTemplate;
-import my.ep.persistence.logging.LogKey;
 import my.ep.web.backingbean.BaseBackingBean;
 import my.ep.web.managedbean.ct.tpl.ContractTemplateManagedBean;
 import my.ep.web.util.lookupservice.BusinessDelegate;
 
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
-import org.apache.log4j.MDC;
 
 /**
  * Backing Bean For Contract Template
@@ -52,12 +50,6 @@ public class ContractTemplateBackingBean extends BaseBackingBean<ContractTemplat
 
 	 public void setEditorValue(String editorValue) {
 		this.editorValue = editorValue;
-	 }
-
-	 public ContractTemplateBackingBean(){
-		 if(MDC.get(LogKey.USER_ID)==null) {
-			 MDC.put(LogKey.USER_ID, 1L);
-		 }
 	 }
 
      public String createTemplate() throws ParseException{

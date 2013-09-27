@@ -9,10 +9,12 @@ import javax.faces.component.UIViewRoot;
 import javax.faces.context.FacesContext;
 
 import my.ep.factory.EpLogger;
+import my.ep.persistence.logging.LogKey;
 import my.ep.web.util.EpPortletUtil;
 import my.ep.web.util.SecurityFilterUtil;
 
 import org.apache.log4j.Logger;
+import org.apache.log4j.MDC;
 
 public class EpViewHandlerWrapper extends ViewHandlerWrapper {
 	private static Logger log = EpLogger.getLogger(EpViewHandlerWrapper.class);
@@ -39,10 +41,14 @@ public class EpViewHandlerWrapper extends ViewHandlerWrapper {
 			throws IOException, FacesException {		
 
 		// apply security filters.
-		SecurityFilterUtil.applyScreenFilters(viewToRender, 
-				EpPortletUtil.getLoginUserId(context), 
-				EpPortletUtil.getDisplayPortletId());
+//		SecurityFilterUtil.applyScreenFilters(viewToRender, 
+//				EpPortletUtil.getLoginUserId(context), 
+//				EpPortletUtil.getDisplayPortletId());
         
+		if(MDC.get(LogKey.USER_ID)==null) {
+			new LogKey(new Long(context.getExternalContext().getRemoteUser()));
+		}
+		
 		super.renderView(context, viewToRender);
 	}
 }

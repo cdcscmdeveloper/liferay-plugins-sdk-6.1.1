@@ -22,7 +22,7 @@
 	</factory>
 	
 	 <application>
-	 <!--  <view-handler>my.ep.web.handler.EpViewHandlerWrapper</view-handler> -->
+	   <view-handler>my.ep.web.handler.EpViewHandlerWrapper</view-handler> 
 	  <resource-bundle>
 		<base-name>messageprovider-config.bundles.labels.labels</base-name>
 		<var>lbl</var>
