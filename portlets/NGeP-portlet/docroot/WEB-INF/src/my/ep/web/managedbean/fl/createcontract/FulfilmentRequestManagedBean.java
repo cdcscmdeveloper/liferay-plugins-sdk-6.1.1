@@ -3,6 +3,8 @@
  */
 package my.ep.web.managedbean.fl.createcontract;
 
+import java.util.List;
+
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
 
@@ -26,6 +28,22 @@ public class FulfilmentRequestManagedBean extends BaseManagedBean {
 
 	private FlRemark flRemark = new FlRemark();
 	private FlAttachment flAttachment = new FlAttachment();
+	private List<FlRemark> allremarksList;
+	private List<FlAttachment> allAttachmentsList;
+
+	/**
+	 * @return the allAttachmentsList
+	 */
+	public List<FlAttachment> getAllAttachmentsList() {
+		return allAttachmentsList;
+	}
+
+	/**
+	 * @param allAttachmentsList the allAttachmentsList to set
+	 */
+	public void setAllAttachmentsList(List<FlAttachment> allAttachmentsList) {
+		this.allAttachmentsList = allAttachmentsList;
+	}
 
 	/**
 	 * @return the flRemark
@@ -55,6 +73,20 @@ public class FulfilmentRequestManagedBean extends BaseManagedBean {
 	 */
 	public void setFlAttachment(FlAttachment flAttachment) {
 		this.flAttachment = flAttachment;
+	}
+
+	/**
+	 * @return the allremarksList
+	 */
+	public List<FlRemark> getAllremarksList() {
+		return allremarksList;
+	}
+
+	/**
+	 * @param allremarksList the allremarksList to set
+	 */
+	public void setAllremarksList(List<FlRemark> allremarksList) {
+		this.allremarksList = allremarksList;
 	}
 
 }

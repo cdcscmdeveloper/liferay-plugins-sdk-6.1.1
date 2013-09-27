@@ -15,7 +15,7 @@
 	<ui:define name="content">
 		<table style="width: 800px;">
 			<tr>
-				<td colspan="4" align="right"><p:commandButton value="SAVE" action="#{remarksBackingBean.createFulfillmentRequest}"/>
+				<td colspan="4" align="right"><p:commandButton value="SAVE" action="#{fulfilmentRequestBackingBean.createFulfillmentRequest}"/>
 					<p:commandButton value="SUBMIT" /> <p:commandButton value="PRINT" /></td>
 			</tr>
 		</table>
@@ -177,14 +177,14 @@
 			<table>
 				<tr>
 					<td><p:outputLabel value="* Remarks    " /></td>
-					<td><p:inputTextarea rows="8" style="width: 260px;" value="#{remarksBackingBean.managedBean.flRemark.remark}" /></td>
+					<td><p:inputTextarea rows="8" style="width: 260px;" value="#{fulfilmentRequestBackingBean.managedBean.flRemark.remark}" /></td>
 					<td><p:outputLabel value="Attachment" /></td>
-					<td> <p:fileUpload fileUploadListener="#{remarksBackingBean.fileUpload}" mode="advanced" dragDropSupport="false"  
-                   sizeLimit="100000" multiple="false" allowTypes="/(\.|\/)(doc|docx|xls|xlsx|pdf)$/" /></td>
-                                  
-                                   
+					<td> <p:fileUpload fileUploadListener="#{fulfilmentRequestBackingBean.fileUpload}" mode="advanced" dragDropSupport="false"  
+                   sizeLimit="100000" multiple="true" allowTypes="/(\.|\/)(doc|docx|xls|xlsx|pdf)$/" /></td>
 				</tr>
 			</table>
+			
 		</p:panel>
+			
 	</ui:define>
 </ui:composition>
