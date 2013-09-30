@@ -40,6 +40,7 @@
 		<category name="category.ep.ss">
 			<portlet id="ss-directPurchase" />
 			<portlet id="ss-defaultPurchase" />
+			<portlet id="bidding"></portlet>
 		</category>
 		<!-- Fulfilment Start Added by Giri -->
 		<category name="FL_DIS">
