@@ -79,6 +79,7 @@
 		<portlet id="SupplierReview"></portlet>
 		<portlet id="Specification"></portlet>
 		<portlet id="proposal"></portlet>
+		<portlet id="Evaluation"></portlet>
 
 	</category>
 	<category name="Template">
