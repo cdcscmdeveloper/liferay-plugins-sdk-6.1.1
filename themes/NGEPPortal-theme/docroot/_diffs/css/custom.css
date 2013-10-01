@@ -1,0 +1,17 @@
+/* This file allows you to override default styles in one central location for easier upgrade and maintenance. */
+
+body{margin:0 auto;}
+
+.portlet-title{background:url(../images/general/234-bg-title.png) no-repeat top right; background-color:#1a5b33; padding:2px 0 2px 5px; border-top-left-radius: 5px; border-top-right-radius: 5px;}
+.portlet-title-text{font-family:'notosans-bold', Arial, Helvetica, sans-serif; font-size:16px; color:#FFF;}
+.portlet-content{background-color:#FFF; border-bottom-left-radius: 5px; border-bottom-right-radius: 5px; box-shadow: 0px 4px 5px #888888; margin:0 0 10px 0;}
+.icon{margin:0 0 5px 0;}
+
+nav#navigation ul li{padding:6px 0 6px 0;}
+nav#navigation ul li:hover{background-color:#5ba218; text-decoration:none;}
+nav#navigation ul li.selected{background-color:#5ba218;}
+nav#navigation ul li a{font-family:'notosans-bold', Arial, Helvetica, sans-serif; font-size:16px; color:#FFF; padding:0 20px 0 20px; margin:10px 0 0 0;}
+
+.navi-text{text-align:center;}
+
+ul.child-menu{list-style-type: none;}
