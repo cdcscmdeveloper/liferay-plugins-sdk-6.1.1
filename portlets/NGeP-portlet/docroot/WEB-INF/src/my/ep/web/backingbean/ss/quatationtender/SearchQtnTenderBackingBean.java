@@ -1,34 +1,27 @@
 package my.ep.web.backingbean.ss.quatationtender;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.RequestScoped;
-
-import org.primefaces.event.RowEditEvent;
-import org.primefaces.event.SelectEvent;
+import javax.faces.context.FacesContext;
+import javax.faces.event.AjaxBehaviorEvent;
 
 import my.ep.web.backingbean.BaseBackingBean;
 import my.ep.web.bean.ss.quatationtender.QtnTenderBean;
 import my.ep.web.bean.ss.quatationtender.TabBean;
-import my.ep.web.managedbean.BaseManagedBean;
-import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.UUID;
-
-import javax.faces.context.FacesContext;
-import javax.faces.event.AjaxBehaviorEvent;
-import javax.faces.model.SelectItem;
-
 import my.ep.web.managedbean.ss.quationtender.SearchQtnTenderManagedBean;
+
+import org.primefaces.event.RowEditEvent;
 
 @ManagedBean(name = "searchQtnTenderBB")
 @RequestScoped
 public class SearchQtnTenderBackingBean extends
 		BaseBackingBean<SearchQtnTenderManagedBean> {
 
+	
 	private boolean checked;
 
 	/**
@@ -64,36 +57,22 @@ public class SearchQtnTenderBackingBean extends
 		List<String> summary = getManagedBean().getSelectedOptions();
 		System.out.println("===add summary value=====" + summary.size());
 
-		/*
-		 * List<SelectItem> mcities1 = new ArrayList<SelectItem>(); Map cities =
-		 * new HashMap<String, List<SelectItem>>(); mcities1.add(new
-		 * SelectItem("Budget Approval")); String[] strarray = (String[])
-		 * summary.toArray(); String value=""; for(int
-		 * i=0;i<strarray.length;i++){ value=strarray[i];
-		 * System.out.println("=====selected tab values===="+value); }
-		 */
-		// getManagedBean().setTabview(cities.put(value,mcities1));
-		// mcities1.add(new SelectItem("Budget Approval"));
 		String[] strarray = (String[]) summary.toArray(new String[0]);
 		String value = "";
-		List<TabBean> tabs = new ArrayList();
+		List<TabBean> tabs = new ArrayList<TabBean>();
 		for (int i = 0; i < strarray.length; i++) {
 			value = strarray[i];
-			System.out.println("=====selected tab values====" + value);
+			
 			TabBean mcities1 = getManagedBean().getTabview().get(value);
-			System.out.println("=======mcities1===" + mcities1.getTitleName());
+			
 			tabs.add(mcities1);
-			System.out.println("=======tabs size value=====" + tabs.size());
+		
 			getManagedBean().setTabBean(tabs);
-			System.out.println("========getMangaed bean===="
-					+ getManagedBean().getTabBean().size());
-		}
+					}
 		if(summary.isEmpty()){
 			getManagedBean().setTabBean(new ArrayList());
 		}
 
-		FacesContext.getCurrentInstance().addMessage(null,
-				new FacesMessage(value));
 	}
 	
 	
