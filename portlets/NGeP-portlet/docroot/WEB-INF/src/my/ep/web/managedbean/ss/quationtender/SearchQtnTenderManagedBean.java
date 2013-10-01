@@ -32,6 +32,8 @@ public class SearchQtnTenderManagedBean extends BaseManagedBean {
 	private String selectOption;
 	
 	private QtnTenderDataBean dataBean;
+	
+	private List<String> supplierList;
 
 	public Map<String, TabBean> getTabview() {
 		return tabview;
@@ -246,17 +248,17 @@ public class SearchQtnTenderManagedBean extends BaseManagedBean {
 		mstates.add(new SelectItem("Maine"));
 		mstates.add(new SelectItem("South Carolina"));
 		mstates.add(new SelectItem("Illinois"));
-		zoneState.put("South", mstates);
+		zoneState.put("SOUTH", mstates);
 		List<SelectItem> istates = new ArrayList<SelectItem>();
 		istates.add(new SelectItem("Maine"));
 		istates.add(new SelectItem("South Carolina"));
 		istates.add(new SelectItem("Illinois"));
-		zoneState.put("North", istates);
+		zoneState.put("NORTH", istates);
 		List<SelectItem> cstates = new ArrayList<SelectItem>();
 		cstates.add(new SelectItem("Maine"));
 		cstates.add(new SelectItem("South Carolina"));
 		cstates.add(new SelectItem("Illinois"));
-		zoneState.put("East", cstates);
+		zoneState.put("EAST", cstates);
 		List<SelectItem> kcities = new ArrayList<SelectItem>();
 		kcities.add(new SelectItem("Augusta"));
 		kcities.add(new SelectItem("Bangor"));
@@ -664,7 +666,11 @@ public class SearchQtnTenderManagedBean extends BaseManagedBean {
 	 */
 	public List<SelectItem> getZoneState() {
 		if (zone != null) {
-			return zoneState.get(zone);
+			
+			String selectedZone=zone.toUpperCase();
+			
+			return zoneState.get(selectedZone);
+						
 		} else {
 			return new ArrayList<SelectItem>();
 		}
@@ -849,6 +855,20 @@ public class SearchQtnTenderManagedBean extends BaseManagedBean {
 	 */
 	public void setDataBean(QtnTenderDataBean dataBean) {
 		this.dataBean = dataBean;
+	}
+
+	/**
+	 * @return the supplierList
+	 */
+	public List<String> getSupplierList() {
+		return supplierList;
+	}
+
+	/**
+	 * @param supplierList the supplierList to set
+	 */
+	public void setSupplierList(List<String> supplierList) {
+		this.supplierList = supplierList;
 	}
 
 
