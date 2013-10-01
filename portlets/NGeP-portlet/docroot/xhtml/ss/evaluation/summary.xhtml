@@ -1,0 +1,100 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:c="http://java.sun.com/jsp/jstl/core">
+	
+	<div align="right">
+				<p:commandButton value="SUBMIT" />
+				
+			</div>
+
+   <ui:include src="/xhtml/ss/quatationtender/qtntenderheader.xhtml" /> 
+	
+
+<p:panel header="SUMMARY" toggleable="true">
+<p:commandLink value="Qualified Supplier List"></p:commandLink>
+			<p:dataTable  var="simpleQuote"
+				value="#{simpleQuoteBidBackingBean.utilList}"
+				selection="#{simpleQuoteBidBackingBean.managedBean.selectedUtilList}"
+				rowKey="#{simpleQuote.seqNo}" rowIndexVar="index">
+
+			 
+				<p:column headerText="Ranking" style="width:20%">
+					<h:outputText value="101#{index+1}"></h:outputText>
+				</p:column>
+	             <p:column headerText="Supplier No" style="width:20%">
+					<h:outputText value="60#{index+1}"></h:outputText>
+				</p:column>
+
+
+				
+				<p:column headerText="Total Score" style="width:25%">
+					<h:outputText value="30#{index+1}"></h:outputText>
+				</p:column>
+              
+				<p:column headerText="Prefarable Supplier" style="width:35%">
+					<p:selectOneMenu>
+					<f:selectItem itemLabel="" itemValue=""></f:selectItem>
+					<f:selectItem itemLabel="Supplier" itemValue="S"></f:selectItem>
+					</p:selectOneMenu>
+				</p:column>
+            
+						</p:dataTable>
+
+		 <p:panelGrid columns="2" styleClass="noBorders tr,noBorders td">
+                
+				 
+					<p:outputLabel value="Total"></p:outputLabel>
+           <p:inputText></p:inputText> 
+	        
+	        				
+	          
+				</p:panelGrid>
+				
+				<p:commandLink value="Disqualified Supplier List"></p:commandLink>
+
+			<p:dataTable  var="simpleQuote2"
+				value="#{simpleQuoteBidBackingBean.utilList}"
+				selection="#{simpleQuoteBidBackingBean.managedBean.selectedUtilList}"
+				rowKey="#{simpleQuote2.seqNo}" rowIndexVar="index">
+
+			<p:column headerText="Ranking" style="width:35%">
+					<h:outputText value="101#{index+1}"></h:outputText>
+				</p:column>
+	             <p:column headerText="Supplier No" style="width:30%">
+					<h:outputText value="60#{index+1}"></h:outputText>
+				</p:column>
+
+
+				
+				<p:column headerText="Total Score" style="width:35%">
+					<h:outputText value="30#{index+1}"></h:outputText>
+				</p:column>
+              
+			
+
+			</p:dataTable>
+			
+			<p:panelGrid columns="2" styleClass="noBorders tr,noBorders td">
+                
+				 
+					<p:outputLabel value="Total"></p:outputLabel>
+           <p:inputText></p:inputText> 
+	        
+	        				
+	          
+				</p:panelGrid>
+				
+
+		</p:panel>
+		
+					
+					
+				
+				
+				
+				
+					
+</ui:composition>

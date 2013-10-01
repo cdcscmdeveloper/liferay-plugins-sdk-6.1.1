@@ -1,0 +1,106 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:c="http://java.sun.com/jsp/jstl/core">
+
+
+	<p:dialog header="Evaluation" widgetVar="evaluation"
+		modal="true" width="800" height="250">
+		<p:panel header="stage1-compliance checklist" toggleable="true">
+		
+		<p:panelGrid  style="width:50%" styleClass="noBorders tr,noBorders td">
+                <p:row>
+                <p:column>
+                <p:outputLabel value="Supplier No"></p:outputLabel>
+                </p:column>
+                
+                <p:column>
+               
+                <p:inputText value="Readonly" readonly="true"></p:inputText>
+                
+                </p:column>
+                
+                
+                </p:row>
+				 
+					
+					
+					  <p:row>
+                <p:column>
+                <p:outputLabel value="Overall Result" />
+                </p:column>
+                
+                <p:column>
+               
+                <p:inputText value="Readonly" readonly="true"></p:inputText>
+                
+                </p:column>
+                
+                
+                </p:row> 
+	        
+	        </p:panelGrid>
+		
+
+			<p:dataTable  var="simpleQuote5"
+				value="#{simpleQuoteBidBackingBean.utilList}"
+				selection="#{simpleQuoteBidBackingBean.managedBean.selectedUtilList}"
+				rowKey="#{simpleQuote5.seqNo}" rowIndexVar="index">
+
+				<p:column headerText=" No" style="width:5%">
+					<h:outputText value="#{index+1}"></h:outputText>
+				</p:column>
+
+				<p:column headerText="Title" style="width:35%">
+					<h:outputText value="Title#{index+1}"></h:outputText>
+				</p:column>
+
+				<p:column headerText="System Score" style="width:20%">
+					<h:outputText value="90#{index+1}"></h:outputText>
+				</p:column>
+				
+				<p:column headerText="User Score" style="width:20%">
+					<h:outputText value="10t#{index+1}@"></h:outputText>
+				</p:column>
+				
+				<p:column headerText="Remarks" style="width:20%">
+					<h:outputText value="Remark#{index+1}"></h:outputText>
+				</p:column>
+
+				</p:dataTable>
+            <p:commandButton value="SHOW RESULT" style="float:right;"></p:commandButton>
+		
+
+
+		 <p:panelGrid  style="width:50%" styleClass="noBorders tr,noBorders td">
+                <p:row>
+                <p:column>
+                <p:outputLabel value="Overall Result"></p:outputLabel>
+                </p:column>
+                
+                <p:column>
+               
+                <p:inputText value="500" readonly="true"></p:inputText>
+                
+                </p:column>
+                
+                </p:row>
+                
+	        				
+	          
+				</p:panelGrid>
+		
+		</p:panel>
+
+ 
+		<p:commandButton value="OK" style="float:right;"
+			onclick="evaluation.hide();" oncomplete="simpleQuoteBid.hide();"></p:commandButton>
+				&#160;;
+				<p:commandButton value="CANCEL" style="float:right;"
+			onclick="evaluation.hide();"></p:commandButton>
+
+
+	</p:dialog>
+</ui:composition>
