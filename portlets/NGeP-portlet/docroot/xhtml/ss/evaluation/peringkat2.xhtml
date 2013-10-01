@@ -46,7 +46,13 @@
 
 		
 		</p:panel>
+  <p:panel header="Pengrit" styleClass="centerPanel" id="centerPanel">
+       <p:dataTable styleClass="DataTable" style="width:100%;" liveScroll="true" value="#{simpleQuoteBidBackingBean.utilList}}" var="GridPanel" scrollable="true"  rows="5">
+               <p:column>
 
+               </p:column>
+       </p:dataTable>
+   </p:panel>
  
 		<p:commandButton value="SAVE" style="float:right;"
 			onclick="peringkat2.hide();" oncomplete="simpleQuoteBid.hide();"></p:commandButton>
