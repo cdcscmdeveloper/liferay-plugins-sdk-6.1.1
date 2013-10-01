@@ -7,13 +7,15 @@
 		        <portlet id="search"></portlet>
 				<portlet id="fd"></portlet>
 			</category>
-			<category name="category.ep.pc">
+			<category name="category.ep.cr">
+			<category name="category.ep.cr.pc">
 				<portlet id="pcSearch"></portlet>
 				<portlet id="pc"></portlet>
 			</category>
-			<category name="category.ep.cc">
+			<category name="category.ep.cr.cc">
 				<portlet id="ccSearch"></portlet>
 				<portlet id="cc"></portlet>
+			</category>
 			</category>
 			<category name="category.ep.ag">
 				<portlet id="ag"></portlet>
