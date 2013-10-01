@@ -7,21 +7,31 @@
 	xmlns:c="http://java.sun.com/jsp/jstl/core">
     <p:treeTable id="treetable" value="#{contractDetailsBackingBean.rootNodeAgency}" var="data"  
        selection="#{contractDetailsBackingBean.selectedNode}"  selectionMode="single" >
-          <p:column style="width:150">  
+          <p:column>  
             <f:facet name="header"> #{lbl['lbl.ct.agn.tree.name']} </f:facet>  
              <h:outputText value="#{data.ministryName}" />  
           </p:column>  
-          <p:column style="width:150">  
+          <p:column>  
            <f:facet name="header"> #{lbl['lbl.ct.agn.tree.ptj.code']} </f:facet>  
            <h:outputText value="#{data.ptjCode}" />  
           </p:column>  
-          <p:column style="width:300">  
+          <p:column >  
             <f:facet name="header"> #{lbl['lbl.ct.agn.tree.ptj.name']}  </f:facet>  
             <h:outputText value="#{data.ptjName}" />  
           </p:column>  
-          <p:column style="width:80">  
+          <p:column>  
             <f:facet name="header"> #{lbl['lbl.ct.agn.tree.ptj.amount']}  </f:facet>  
-            <p:inputText value="#{data.selingAmount}" rendered="#{data.selingAmount !=null}"></p:inputText>  
+            <p:inputText value="#{data.selingAmount}" style="width:40" rendered="#{data.selingAmount !=null}"></p:inputText>  
+          </p:column>  
+          <p:column>  
+            <f:facet name="header"> #{lbl['lbl.ct.agn.tree.ptj.efdate']}  </f:facet>  
+            <p:calendar value="#{contractDetailsBackingBean.managedBean.createContractDetails.efdate}" 
+              id="popupButtonCal" showOn="button" rendered="#{data.efdate != null}"/> 
+          </p:column>  
+          <p:column>  
+            <f:facet name="header"> #{lbl['lbl.ct.agn.tree.ptj.exdate']}  </f:facet>  
+              <p:calendar value="#{contractDetailsBackingBean.managedBean.createContractDetails.exdate}" 
+              id="popupButtonCal1" showOn="button" rendered="#{data.exdate != null}"/>
           </p:column>  
           <p:column style="width:50"  styleClass="column-align-center">  
             <f:facet name="header"> #{lbl['lbl.ct.agn.tree.ptj.action']} </f:facet>  

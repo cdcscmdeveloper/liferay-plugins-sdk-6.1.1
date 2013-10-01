@@ -6,101 +6,69 @@
 	xmlns:ui="http://java.sun.com/jsf/facelets"
 	xmlns:p="http://primefaces.org/ui"
 	xmlns:c="http://java.sun.com/jsp/jstl/core">
-
-	<ui:define name="resourceSection">
+    <ui:define name="resourceSection">
 	</ui:define>
-	
-   	       
 	<ui:define name="sideMenu">
 		<ui:include src="/xhtml/ct/supplier/shared/sidemenu/supplier.xhtml" />
 	</ui:define>
-
-	<ui:define name="content">
+    <ui:define name="content">
 	  <p:panel id="pRightPanel">
 			<div class="ppRightBtn">
 				<p:commandButton id="ctSave" value="#{lbl['lbl.ct.btn.save']}"/>
 				<p:commandButton id="ctSubmit" value="#{lbl['lbl.ct.btn.submit']}"/>
 			</div>
 		</p:panel>
-	     <p:panel id="fd" header="#{lbl['lbl.ct.panel.name']}" toggleable="true"  toggleSpeed="500" widgetVar="panelfd">
-                                
-                                  <ui:include src="/xhtml/ct/supplier/shared/fulfilment.xhtml"/>
-                                
-                              </p:panel>
-                              
-                              <p:panel id="sbd" header="#{lbl['lbl.panel.supplier.name']}"  toggleable="true"  toggleSpeed="500" 
-                                widgetVar="panelsbd">
-                                 <p:messages showDetail="true" globalOnly="true"/>
-                                 
-                                   <h:panelGrid columns="2" style="width:700px;">  
-                                         <h:panelGrid columns="2" style="width:350px;" class="formTable">  
-                                               
-                                                <p:outputLabel value="#{lbl['lbl.supplier.id']}" />  
-                                                <p:inputText  value="" required="true"   disabled="true" style="width:170px;" />  
-                                                        
-                                               
-                                                
-                                                <p:outputLabel  value="#{lbl['lbl.supplier.email']}"/>  
-                                                <p:inputText  value="" required="true" disabled="true"   style="width:170px;" />
-                                                   
-                                               <p:outputLabel  value="#{lbl['lbl.supplier.tel.hp']}"/>  
-                                               <p:inputText  value="" required="true" disabled="true" style="width:170px;" />  
-                                               
-                                               <h:outputLabel  value="#{lbl['lbl.supplier.fax']}"/>
-                                               <p:inputText  value="" required="true" disabled="true" style="width:170px;" />  
-                                              
-                                                <h:outputLabel  value="#{lbl['lbl.supplier.tel.office']}" />  
-                                                <p:inputText  value="" required="true" disabled="true"  style="width:170px;" />
-                                                 
-                                                   <h:panelGroup>
-										             <div style="height: 60px; vertical-align: top">
-											              <p:outputLabel for="supplierAddress" value="#{lbl['lbl.supplier.address']}" />
-										             </div>
-									            </h:panelGroup>
-									           <h:panelGrid>
-										       <p:inputTextarea id="supplierAddress"  value=""  rows="2" cols="23"   maxlength="150"  autoResize="false" />
-										        
-									           </h:panelGrid>
-                                                 
-                                          
-                                               </h:panelGrid>  
-                                               
-                                          <h:panelGrid columns="2" style="width:350px;">  
-                                          
-                                                   <h:outputLabel for="sName" value="#{lbl['lbl.supplier.name']}" />  
-                                                  <p:inputText  value="" required="true" disabled="true" style="width:180px;" />  
-                                                         
-                                                   <h:outputLabel  value="Bank A/C" />  
-                                                    <p:selectOneMenu value=" " style="width:140px;">
-            					                             <f:selectItem itemLabel="-Please Select--" itemValue="" /> 
-            					                             <f:selectItem itemLabel="011234560987" itemValue="1" /> 
-            					                             <f:selectItem itemLabel="011234560986" itemValue="2" /> 
-                				                    </p:selectOneMenu>     
-                                      
-                                                  <h:outputLabel  value="#{lbl['lbl.bank.name']}"/>  
-                                                  <p:inputText  value="" required="true" disabled="true" style="width:180px;" />  
-                                         
-                                                  <h:outputLabel  value="#{lbl['lbl.bank.branch']}" />  
-                                                  <p:inputText  value="" required="true" disabled="true" style="width:180px;" />
-                                         
-                                                  <h:outputLabel  value="Bank Tel No" />  
-                                                  <p:inputText  value=" " required="true" disabled="true"  style="width:180px;" />
-                                         
-									              <h:panelGroup>
-										             <div style="height: 60px; vertical-align: top">
-											              <p:outputLabel for="bankAddress" value="#{lbl['lbl.bank.address']}" />
-										             </div>
-									</h:panelGroup>
-									<h:panelGrid>
-										<p:inputTextarea id="bankAddress" value="" rows="2" cols="23"  maxlength="50"  autoResize="false" />
-										
-									</h:panelGrid>
-                                                
-                                                
-											
-                                         </h:panelGrid>
-                                         </h:panelGrid> 
-                              
-                                </p:panel>
+	   <p:panel id="fd" header="#{lbl['lbl.ct.panel.name']}" toggleable="true"  toggleSpeed="500" widgetVar="panelfd">
+         <ui:include src="/xhtml/ct/supplier/shared/fulfilment.xhtml"/>
+       </p:panel>
+       <p:panel id="sbd" header="#{lbl['lbl.panel.supplier.name']}"  toggleable="true"  toggleSpeed="500" 
+          widgetVar="panelsbd">
+         <h:panelGrid columns="2" style="width:700px;">  
+           <h:panelGrid columns="2" style="width:350px;">  
+              <p:outputLabel value="#{lbl['lbl.supplier.id']}" />  
+              <p:inputText  value="" required="true"   disabled="true" style="width:170px;" />  
+              <p:outputLabel  value="#{lbl['lbl.supplier.email']}"/>  
+              <p:inputText  value="" required="true" disabled="true"   style="width:170px;" />
+              <p:outputLabel  value="#{lbl['lbl.supplier.tel.hp']}"/>  
+              <p:inputText  value="" required="true" disabled="true" style="width:170px;" />  
+              <h:outputLabel  value="#{lbl['lbl.supplier.fax']}"/>
+              <p:inputText  value="" required="true" disabled="true" style="width:170px;" />  
+              <h:outputLabel  value="#{lbl['lbl.supplier.tel.office']}" />  
+              <p:inputText  value="" required="true" disabled="true"  style="width:170px;" />
+              <h:panelGroup>
+				<div style="height: 60px; vertical-align: top">
+					<p:outputLabel for="supplierAddress" value="#{lbl['lbl.supplier.address']}" />
+			    </div>
+			  </h:panelGroup>
+			  <h:panelGrid>
+				<p:inputTextarea id="supplierAddress"  value=""  rows="2" cols="23"   maxlength="150"  autoResize="false" />
+			  </h:panelGrid>
+            </h:panelGrid>  
+            <h:panelGrid columns="2" style="width:350px;">  
+              <h:outputLabel for="sName" value="#{lbl['lbl.supplier.name']}" />  
+              <p:inputText  value="" required="true" disabled="true" style="width:180px;" />  
+              <h:outputLabel  value="Bank A/C" />  
+                <p:selectOneMenu value=" " style="width:140px;">
+            	   <f:selectItem itemLabel="-Please Select--" itemValue="" /> 
+            	   <f:selectItem itemLabel="011234560987" itemValue="1" /> 
+            	   <f:selectItem itemLabel="011234560986" itemValue="2" /> 
+                </p:selectOneMenu>     
+               <h:outputLabel  value="#{lbl['lbl.bank.name']}"/>  
+               <p:inputText  value="" required="true" disabled="true" style="width:180px;" />  
+               <h:outputLabel  value="#{lbl['lbl.bank.branch']}" />  
+               <p:inputText  value="" required="true" disabled="true" style="width:180px;" />
+               <h:outputLabel  value="Bank Tel No" />  
+               <p:inputText  value=" " required="true" disabled="true"  style="width:180px;" />
+               <h:panelGroup>
+				  <div style="height: 60px; vertical-align: top">
+					 <p:outputLabel for="bankAddress" value="#{lbl['lbl.bank.address']}" />
+				  </div>
+			   </h:panelGroup>
+			   <h:panelGrid>
+				  <p:inputTextarea id="bankAddress" value="" rows="2" cols="23"  maxlength="50"  autoResize="false" />
+			   </h:panelGrid>
+             </h:panelGrid>
+           </h:panelGrid> 
+       </p:panel>
 	</ui:define>
-	</ui:composition>
+</ui:composition>

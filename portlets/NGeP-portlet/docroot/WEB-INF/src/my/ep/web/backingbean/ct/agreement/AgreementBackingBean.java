@@ -12,9 +12,8 @@ import javax.faces.bean.RequestScoped;
 import javax.faces.context.ExternalContext;
 import javax.faces.context.FacesContext;
 import javax.faces.model.SelectItem;
-import javax.portlet.ResourceRequest;
-import javax.portlet.ResourceResponse;
 
+import org.apache.log4j.Logger;
 import org.primefaces.model.DefaultStreamedContent;
 import org.primefaces.model.StreamedContent;
 
@@ -28,7 +27,7 @@ import my.ep.web.managedbean.ct.agreement.AgreementManagedBean;
 @RequestScoped
 public class AgreementBackingBean extends BaseBackingBean<AgreementManagedBean> {
 
-
+	private static Logger log = Logger.getLogger(AgreementBackingBean.class);
 	private static boolean menuAgreement;
 	
 	private AgreementDetails agreementDetails;
@@ -37,140 +36,60 @@ public class AgreementBackingBean extends BaseBackingBean<AgreementManagedBean> 
 	private boolean userUploaded;
 	private DefaultStreamedContent download;
 	private ContractListItem contractListItem;
+	private StreamedContent file;
 	private boolean supplementValue = true; 
-	private StreamedContent file;  
 	private String agreements;
-	
 
-	public String getAgreements() {
-		setAgreements(this.getManagedBean().getAgreement());
-		return agreements;
-	}
-
-	public void setAgreements(String agreements) {
-		this.agreements = agreements;
-	}
-
-	public boolean isSupplementValue() {
-		return supplementValue;
-	}
-
-	public AgreementBackingBean(){
+	public AgreementBackingBean() throws FileNotFoundException{
 		agreementDetails = new AgreementDetails();
 		contractListItem = new ContractListItem();
 		menuAgreement = false; 
-	    InputStream stream = this.getClass().getResourceAsStream("C:/Users/HP/Desktop/CT.pdf");  
-	    file = new DefaultStreamedContent(stream, "application/pdf", "C:/Users/HP/Desktop/CT.pdf");  
+	    changeFileDownload();
 	}
 	
-	public void serveResource(ResourceRequest req, ResourceResponse res) {
-		
-	}
-  
-	
-	public StreamedContent getFile() {  
-        return file;  
-    }  
-  
-    public void setFile(StreamedContent file) {  
-        this.file = file;  
-    }  
-	
-
-	public void setSupplementValue(boolean supplementValue) {
-		this.supplementValue = supplementValue;
-	}
-
-	public boolean isMenuAgreement() {
-		return menuAgreement;
-	}
-
-
-
-	public void setMenuAgreement(boolean menuAgreement) {
-		this.menuAgreement = menuAgreement;
-	}
-
-
-
-
-	public ContractListItem getContractListItem() {
-		return contractListItem;
-	}
-
-
-
-	public void setContractListItem(ContractListItem contractListItem) {
-		this.contractListItem = contractListItem;
-	}
-
-
-
-	
-	
-
-	public void setDownload(DefaultStreamedContent download) {
-	    this.download = download;
-	}
-
-	public DefaultStreamedContent getDownload() throws Exception {
-	    System.out.println("GET 1024 =>>>>>>>>>>>>>>>>>> " + download.getName());
-	    return download;
-	}
-	
-	public void preFileDownload(){
-		
-		return;
-	}
-
 	public void changeFileDownload() {
-	    File file = new File("C:/Users/HP/Desktop/Time1.docx");
+	    File file1 = new File("C:/Users/HP/Desktop/Time1.docx");
 	    InputStream input;
 		try {
-			input = new FileInputStream(file);
+			input = new FileInputStream(file1);
 			ExternalContext externalContext = FacesContext.getCurrentInstance().getExternalContext();
-		    setDownload(new DefaultStreamedContent(input, externalContext.getMimeType(file.getName()), file.getName()));
-		    System.out.println("PREP 1024 =>>>>>>>>>>>>>>>>>>>>>>> " + download.getName());
+			String ext = getExtension(file1);
+			 System.out.println("PREP 1024 =>>>ext>>> " + ext);
+		    setDownload(new DefaultStreamedContent(input, ext, file1.getName()));
+		    System.out.println("PREP 1024 =>>>>>>>>>>>>>>>>>>>>>> " + file1.getName());
 		} catch (FileNotFoundException e) {
 			e.printStackTrace();
 		}
-	    
-	}
+	 }
 	
-public List<SelectItem> getAgreementApendex() {	
+     public List<SelectItem> getAgreementApendex() {	
 		
 		List<SelectItem> list = new ArrayList<SelectItem>();
 		list.add(new SelectItem("System Defined","System Defined"));
 		list.add(new SelectItem("User Uploaded","User Uploaded"));
 		return list;
-	}
+	 }
 
-private void flush(){
-	systemDefined = false;
-	userUploaded = false;
-}
+     private void flush(){
+	   systemDefined = false;
+	   userUploaded = false;
+     }
 	
-public void changeApendexType(){  
-    try{	
-    	flush();    	
-    	
-    
-			if(agreementDetails.getAppendexType().equalsIgnoreCase("System Defined")){			
+     public void changeApendexType(){  
+       try{	
+    	   flush();    	
+    	   if(agreementDetails.getAppendexType().equalsIgnoreCase("System Defined")){			
 				systemDefined = true;
 			}
 			else if(agreementDetails.getAppendexType().equalsIgnoreCase("User Uploaded")){
 				userUploaded = true;
 			}
-			
-    			
-    	
-		
-    }catch(Exception e){
-    	System.out.println(e);
-    }
-}
+	     }catch(Exception e){
+    	     System.out.println(e);
+         }
+      }
 	
-	public List<AgreementDetails> getAgreementList() {
+	  public List<AgreementDetails> getAgreementList() {
 		agreementList = new ArrayList<AgreementDetails>();
 		
 		agreementDetails.setAgrementTitle("Agreement Cover Page");
@@ -193,30 +112,100 @@ public void changeApendexType(){
 		agreementList.add(agreementDetails3);
 		return agreementList;
 	}
-	public void setAgreementList(List<AgreementDetails> agreementList) {
-		this.agreementList = agreementList;
-	}
-	public AgreementDetails getAgreementDetails() {
-		return agreementDetails;
-	}
-	public void setAgreementDetails(AgreementDetails agreementDetails) {
-		this.agreementDetails = agreementDetails;
-	}
-	 public boolean isSystemDefined() {
-			return systemDefined;
+	
+		
+	public static String getExtension(File f) {
+		    String ext = null;
+		    String result = "";
+		    String s = f.getName();
+		    int i = s.lastIndexOf('.');
+
+		    if (i > 0 &&  i < s.length() - 1) {
+		        ext = s.substring(i+1).toLowerCase();
+		    }
+		    if(ext.matches("doc")) result = "application/msword";
+		    else if(ext.matches("docx")) result = "application/vnd.openxmlformats-officedocument.wordprocessingml.document";
+		    else if(ext.matches("xls")) result = "application/vnd.ms-excel";
+		    else if(ext.matches("xlsx")) result = "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet";
+		    else if(ext.matches("odt")) result = "application/vnd.oasis.opendocument.text";
+		    else if(ext.matches("ods")) result = "application/vnd.oasis.opendocument.spreadsheet";
+
+		    return result;
+	  }
+		
+	   public StreamedContent getFile() {
+		    return file;
+		}
+		
+		public String getAgreements() {
+			setAgreements(this.getManagedBean().getAgreement());
+			return agreements;
+		}
+
+		public void setAgreements(String agreements) {
+			this.agreements = agreements;
+		}
+
+		public boolean isSupplementValue() {
+			return supplementValue;
+		}
+		
+		public void setFile(StreamedContent file) {  
+		       this.file = file;  
+		}  
+			
+		public void setSupplementValue(boolean supplementValue) {
+				this.supplementValue = supplementValue;
+	    }
+
+		public boolean isMenuAgreement() {
+				return menuAgreement;
+		}
+
+		public void setMenuAgreement(boolean menuAgreement) {
+				this.menuAgreement = menuAgreement;
+		}
+
+        public ContractListItem getContractListItem() {
+				return contractListItem;
+		}
+
+		public void setContractListItem(ContractListItem contractListItem) {
+				this.contractListItem = contractListItem;
+		}
+
+		public void setDownload(DefaultStreamedContent download) {
+			    this.download = download;
+		}
+
+		public DefaultStreamedContent getDownload() throws Exception {
+			    System.out.println("GET 1024 =>>>>>>>>>>>>>>>>>> " + download.getName());
+			    return download;
+		}	
+		
+		public void setAgreementList(List<AgreementDetails> agreementList) {
+			this.agreementList = agreementList;
+		}
+		public AgreementDetails getAgreementDetails() {
+			return agreementDetails;
+		}
+		public void setAgreementDetails(AgreementDetails agreementDetails) {
+			this.agreementDetails = agreementDetails;
+		}
+		 
+		public boolean isSystemDefined() {
+				return systemDefined;
 		}
 
 		public void setSystemDefined(boolean systemDefined) {
-			this.systemDefined = systemDefined;
+				this.systemDefined = systemDefined;
 		}
 
 		public boolean isUserUploaded() {
-			return userUploaded;
+				return userUploaded;
 		}
 
 		public void setUserUploaded(boolean userUploaded) {
-			this.userUploaded = userUploaded;
+				this.userUploaded = userUploaded;
 		}
-		
-		
 }

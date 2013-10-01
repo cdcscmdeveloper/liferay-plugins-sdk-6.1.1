@@ -1,0 +1,21 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:c="http://java.sun.com/jsp/jstl/core">
+	
+	<p:menu>
+        <p:submenu label="Menu PQ/QCC">
+            <p:menuitem value="#{lbl['lbl.ct.menu.fd']}" outcome="/xhtml/ct/pbqcc/review/amendment/fulfilment.xhtml" />
+            <p:menuitem value="#{lbl['lbl.ct.menu.agency']}"  outcome="/xhtml/ct/pbqcc/review/amendment/agency.xhtml"/>
+            <p:menuitem value="#{lbl['lbl.ct.menu.item']}" outcome="/xhtml/ct/pbqcc/review/amendment/item.xhtml"/>
+            <p:menuitem value="#{lbl['lbl.ct.menu.dedu']}" outcome="/xhtml/ct/pbqcc/review/amendment/deduction.xhtml"/>
+            <p:menuitem value="#{lbl['lbl.ct.menu.sched']}"  outcome="/xhtml/ct/pbqcc/review/amendment/schedule.xhtml"/>
+            <p:menuitem value="#{lbl['lbl.ct.menu.pay']}" outcome="/xhtml/ct/pbqcc/review/amendment/payment.xhtml"/>
+            <p:menuitem value="#{lbl['lbl.ct.menu.zone']}" outcome="/xhtml/ct/pbqcc/review/amendment/zone.xhtml"/>
+            <p:menuitem value="#{lbl['lbl.ct.menu.aletter']}" outcome="/xhtml/ct/pbqcc/review/amendment/approvalLetter.xhtml"/>
+            <p:menuitem value="#{lbl['lbl.ct.menu.remark']}" outcome="/xhtml/ct/pbqcc/review/amendment/attachements.xhtml" />
+        </p:submenu>   
+    </p:menu>
+</ui:composition>

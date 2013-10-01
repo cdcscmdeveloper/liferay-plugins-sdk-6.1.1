@@ -61,17 +61,15 @@
                             <h:outputLabel value="#{lbl['lbl.ct.camount']}"  styleClass="txtsize"/>  
                             <h:panelGrid columns="2">
                             <p:inputText value=" " style="width:90px;" required="true" disabled="true" />
-                           
-                              <p:selectOneMenu disabled="false"  value="" style="width:40px;">
-			          <f:selectItem itemLabel="MYR" itemValue="MYR" /> 
-			          <f:selectItem itemLabel="USD" itemValue="USD" /> 
+                            <p:selectOneMenu disabled="false"  value="" style="width:40px;">
+			          <f:selectItem itemLabel="MYR" itemValue="MYR"/> 
+			          <f:selectItem itemLabel="USD" itemValue="USD"/> 
   				         </p:selectOneMenu>
                           </h:panelGrid>
                            <p:outputLabel value="#{lbl['lbl.ct.bond.value']}"  styleClass="txtsize"/>  
                             <h:panelGrid columns="2">
                             <p:inputText value=" " required="true" disabled="true" style="width:90px;" />
-                         
-                              <p:selectOneMenu disabled="false"  value="" style="width:40px;">
+                            <p:selectOneMenu disabled="false"  value="" style="width:40px;">
 			                     <f:selectItem itemLabel="MYR" itemValue="MYR"  /> 
 			          <f:selectItem itemLabel="USD" itemValue="USD" /> 
   				         </p:selectOneMenu>
@@ -88,45 +86,35 @@
                             </p:commandLink> 
                          </h:panelGrid>
 					</p:panel>
-					
-					<p:panel id="suplementDetails" header="Amendment Details"  rendered="#{agreementBackingBean.supplementValue}" toggleable="true"  toggleSpeed="500" widgetVar="panelsuplementDetails">
-									 
-									 <h:panelGrid columns="4" style="width:800px;" class="formTable">  
-                                      
-                                         <h:outputLabel value="Amended Request No"  styleClass="txtsize"/>  
-                                           <p:commandLink style="margin-right:20px;" sajax="false">  
-                                            <h:outputText value="FA00099234242"  styleClass="linkcommand" />  
-                                          </p:commandLink> 
-                                          
-                                          
-                                         <h:outputLabel value="Amended Request Date"   styleClass="txtsize"/>  
-                                         <p:inputText value=" " style="width:200px;" required="true" disabled="true" />
-                                         
-                                          <h:outputLabel value="Amended Title / Name"   styleClass="txtsize"/>  
-                                         <p:inputText value=" " style="width:200px;" required="true" disabled="true" />
-                                         
-                                          <h:outputLabel value="Amended File Ref No"   styleClass="txtsize"/>  
-                                          <p:inputText value=" " style="width:200px;" required="true" disabled="true" /> 
-                                         
-                                          </h:panelGrid>
-                                          
-                                           <h:panelGrid columns="1" style="width:800px;" class="formTable">  
-                                        <h:panelGrid columns="2">
-                                         <h:panelGroup>
-										             <div style="height: 55px;width:125px; vertical-align: top">
-											              <p:outputLabel for="amendmentD" value="Amended Description" styleClass="txtsize" />
-										             </div>
-								        	      </h:panelGroup>
-									              <h:panelGrid>
-										          <p:inputTextarea id="amendmentD" value=" " required="false" 
-										          rows="2" cols="60" disabled="true" autoResize="false" />
-											      </h:panelGrid>
-										</h:panelGrid>
-                                         </h:panelGrid> 
-									 </p:panel>
+	                <p:panel id="suplementDetails" header="Amendment Details"  rendered="#{agreementBackingBean.supplementValue}" toggleable="true"  toggleSpeed="500" widgetVar="panelsuplementDetails">
+		             <h:panelGrid columns="4" style="width:800px;" class="formTable">  
+                        <h:outputLabel value="Amended Request No"  styleClass="txtsize"/>  
+                        <p:commandLink style="margin-right:20px;" sajax="false">  
+                        <h:outputText value="FA00099234242"  styleClass="linkcommand" />  
+                        </p:commandLink> 
+                        <h:outputLabel value="Amended Request Date"   styleClass="txtsize"/>  
+                        <p:inputText value=" " style="width:200px;" required="true" disabled="true" />
+                        <h:outputLabel value="Amended Title / Name"   styleClass="txtsize"/>  
+                        <p:inputText value=" " style="width:200px;" required="true" disabled="true" />
+                        <h:outputLabel value="Amended File Ref No"   styleClass="txtsize"/>  
+                        <p:inputText value=" " style="width:200px;" required="true" disabled="true" /> 
+                        </h:panelGrid>
+                        <h:panelGrid columns="1" style="width:800px;" class="formTable">  
+                        <h:panelGrid columns="2">
+                        <h:panelGroup>
+						<div style="height: 55px;width:125px; vertical-align: top">
+						<p:outputLabel for="amendmentD" value="Amended Description" styleClass="txtsize" />
+						</div>
+						</h:panelGroup>
+						<h:panelGrid>
+						<p:inputTextarea id="amendmentD" value=" " required="false" 
+						   rows="2" cols="60" disabled="true" autoResize="false" />
+					    </h:panelGrid>
+						</h:panelGrid>
+                        </h:panelGrid> 
+					</p:panel>
 			    <p:panel id="fa" header="Remarks And Attachements"   toggleable="true"  toggleSpeed="500" widgetVar="panelfa">
            </p:panel>
-                      
-	  </ui:define>
-	  </ui:composition>
+      </ui:define>
+</ui:composition>
 	  

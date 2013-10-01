@@ -4,6 +4,7 @@
 package my.ep.web.backingbean.ct;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import javax.faces.application.FacesMessage;
@@ -86,7 +87,7 @@ public class contractDetailsBackingBean extends BaseBackingBean<ContractDetailsM
 		 TreeNode agencyOne = new DefaultTreeNode(new CreateContractDetails("KEMENTERIAN PELAJARAN"), rootNodeAgency);  
 		 TreeNode agencytwo = new DefaultTreeNode(new CreateContractDetails("BAHAGIAN MATRIKULASI"), agencyOne); 
 		    
-		 new DefaultTreeNode(new CreateContractDetails("0211780401","KOLEJ MATRIKULASI NEGERI SEMBILAN","5000.00"), agencytwo);  
+		 new DefaultTreeNode(new CreateContractDetails("0211780401","NEGERI SEMBILAN","5000.00", new Date(),  new Date()), agencytwo);  
 	 }
 	
 	public void addDeductionDetails(){

@@ -40,8 +40,21 @@ public class CreateContractDetails implements Serializable {
 	private String selingAmount;
 	private String currencyType;
 	private String ZoneType;
+	private Date efdate;
+	private Date exdate;
 	
-	
+	public Date getEfdate() {
+		return efdate;
+	}
+	public void setEfdate(Date efdate) {
+		this.efdate = efdate;
+	}
+	public Date getExdate() {
+		return exdate;
+	}
+	public void setExdate(Date exdate) {
+		this.exdate = exdate;
+	}
 	public Date getDate() {
 		return date;
 	}
@@ -247,9 +260,11 @@ public class CreateContractDetails implements Serializable {
 		this.ministryName=ministryName;
 	}
 	
-	public CreateContractDetails(String ptjCode,String ptjName,String selingAmount ){
+	public CreateContractDetails(String ptjCode,String ptjName,String selingAmount, Date efdate, Date exdate ){
 		this.ptjCode=ptjCode;
 		this.ptjName=ptjName;
 		this.selingAmount = selingAmount;
+		this.efdate = efdate;
+		this.exdate = exdate;
 	}
 }

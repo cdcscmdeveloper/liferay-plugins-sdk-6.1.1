@@ -45,7 +45,6 @@
                                       <f:facet name="input"><p:inputText id="cperson" value="#{data.contractPersonName}" style="width:140px;"/></f:facet>  
                                  </p:cellEditor>  
 					             </p:column>	
-					           
 					             <p:column> <p:inputText value="#{data.contractAddress}" rendered="#{data.contractAddress == null}" style="width:240px;"/> 
 					             <p:cellEditor rendered="#{!data.contractAddress == null}">  
                                      <f:facet name="output"><h:outputText value="#{data.contractAddress}"/></f:facet>  

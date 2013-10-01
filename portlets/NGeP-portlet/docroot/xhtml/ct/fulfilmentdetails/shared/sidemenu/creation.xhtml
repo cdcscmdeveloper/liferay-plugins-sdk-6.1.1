@@ -4,20 +4,19 @@
 	xmlns:ui="http://java.sun.com/jsf/facelets"
 	xmlns:p="http://primefaces.org/ui"
 	xmlns:c="http://java.sun.com/jsp/jstl/core">
-	
 	<p:menu>
         <p:submenu label="#{lbl['lbl.ct.menu.cre']}">
-            <p:menuitem value="#{lbl['lbl.ct.menu.cre.fd']}" outcome="/xhtml/ct/fulfilmentdetails/creation/fulfilment.xhtml" />
-            <p:menuitem value="#{lbl['lbl.ct.menu.cre.agency']}"  outcome="/xhtml/ct/fulfilmentdetails/creation/agency.xhtml"/>
-            <p:menuitem value="#{lbl['lbl.ct.menu.cre.item']}" outcome="/xhtml/ct/fulfilmentdetails/creation/item.xhtml"/>
-            <p:menuitem value="#{lbl['lbl.ct.menu.cre.ded']}" outcome="/xhtml/ct/fulfilmentdetails/creation/deduction.xhtml"/>
-            <p:menuitem value="#{lbl['lbl.ct.menu.cre.sched']}"  outcome="/xhtml/ct/fulfilmentdetails/creation/schedule.xhtml"/>
-            <p:menuitem value="#{lbl['lbl.ct.menu.cre.set']}" outcome="/xhtml/ct/fulfilmentdetails/creation/setting.xhtml"/>
-            <p:menuitem value="#{lbl['lbl.ct.menu.cre.pay']}" outcome="/xhtml/ct/fulfilmentdetails/creation/payment.xhtml"/>
-            <p:menuitem value="#{lbl['lbl.ct.menu.cre.zone']}" outcome="/xhtml/ct/fulfilmentdetails/creation/zone.xhtml"/>
-            <p:menuitem value="#{lbl['lbl.ct.menu.cre.mto']}" outcome="/xhtml/ct/fulfilmentdetails/creation/mto.xhtml" 
+            <p:menuitem value="#{lbl['lbl.ct.menu.fd']}" outcome="/xhtml/ct/fulfilmentdetails/creation/fulfilment.xhtml" />
+            <p:menuitem value="#{lbl['lbl.ct.menu.agency']}"  outcome="/xhtml/ct/fulfilmentdetails/creation/agency.xhtml"/>
+            <p:menuitem value="#{lbl['lbl.ct.menu.item']}" outcome="/xhtml/ct/fulfilmentdetails/creation/item.xhtml"/>
+            <p:menuitem value="#{lbl['lbl.ct.menu.dedu']}" outcome="/xhtml/ct/fulfilmentdetails/creation/deduction.xhtml"/>
+            <p:menuitem value="#{lbl['lbl.ct.menu.sched']}"  outcome="/xhtml/ct/fulfilmentdetails/creation/schedule.xhtml"/>
+            <p:menuitem value="#{lbl['lbl.ct.menu.sett']}" outcome="/xhtml/ct/fulfilmentdetails/creation/setting.xhtml"/>
+            <p:menuitem value="#{lbl['lbl.ct.menu.pay']}" outcome="/xhtml/ct/fulfilmentdetails/creation/payment.xhtml"/>
+            <p:menuitem value="#{lbl['lbl.ct.menu.zone']}" outcome="/xhtml/ct/fulfilmentdetails/creation/zone.xhtml"/>
+            <p:menuitem value="#{lbl['lbl.ct.menu.mto']}" outcome="/xhtml/ct/fulfilmentdetails/creation/mto.xhtml" 
             rendered="#{contractDetailsBackingBean.managedBean.checkBoxSelections.checkedIGood}"/>
-             <p:menuitem value="#{lbl['lbl.ct.menu.cre.remark']}" outcome="/xhtml/ct/fulfilmentdetails/creation/attachements.xhtml"/>
+             <p:menuitem value="#{lbl['lbl.ct.menu.remark']}" outcome="/xhtml/ct/fulfilmentdetails/creation/attachements.xhtml"/>
         </p:submenu>
     </p:menu>
 </ui:composition>

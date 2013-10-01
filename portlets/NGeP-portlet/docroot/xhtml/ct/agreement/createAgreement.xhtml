@@ -45,9 +45,10 @@
 				</p:dataTable>
 			 </h:panelGrid>
 			 <h:panelGrid style="width:800px" columnClasses="column-align-right">
-			 <p:commandButton value="#{lbl['lbl.ct.ag.btn.export']}" ajax="false">  
-                     <p:fileDownload value="#{agreementBackingBean.file}" />  
-             </p:commandButton>  
+			<p:commandButton id="downloadLink" value="Download" ajax="false" onclick="PrimeFaces.monitorDownload(start, stop)"   
+                      icon="ui-icon-arrowthichk-s">  
+                <p:fileDownload value="#{agreementBackingBean.download}" />  
+            </p:commandButton>  
 			 </h:panelGrid>
 			 <h:panelGrid style="width:800px;">  
                <p:spacer height="5"/>
@@ -167,6 +168,17 @@
 						</f:facet>
 					</p:panel>
 				</p:dialog>
-           </ui:define>
-   </ui:composition>
+				<p:dialog modal="true" widgetVar="statusDialog" header="Status" draggable="false" closable="false" resizable="false">  
+                         <p:graphicImage value="/design/ajaxloadingbar.gif" />  
+                </p:dialog> 
+				 <script type="text/javascript">  
+                 function start() {  
+                     PF('statusDialog').show();  
+                 }  
+                 function stop() {  
+                     PF('statusDialog').hide();  
+                }  
+        </script>  
+     </ui:define>          
+</ui:composition>
                        

@@ -6,16 +6,12 @@
 	xmlns:ui="http://java.sun.com/jsf/facelets"
 	xmlns:p="http://primefaces.org/ui"
 	xmlns:c="http://java.sun.com/jsp/jstl/core">
-
-	<ui:define name="resourceSection">
+    <ui:define name="resourceSection">
 	</ui:define>
-	
-   	       
 	<ui:define name="sideMenu">
 		<ui:include src="/xhtml/ct/supplier/shared/sidemenu/supplier.xhtml" />
 	</ui:define>
-
-	<ui:define name="content">
+    <ui:define name="content">
 	   <p:panel id="pRightPanel">
 			<div class="ppRightBtn">
 				<p:commandButton id="ctSave" value="#{lbl['lbl.ct.btn.save']}"/>
@@ -23,47 +19,33 @@
 			</div>
 		</p:panel>
 	     <p:panel id="fd" header="#{lbl['lbl.ct.panel.name']}" toggleable="true"  toggleSpeed="500" widgetVar="panelfd">
-                                
-                                 <ui:include src="/xhtml/ct/supplier/shared/fulfilment.xhtml"/>
-                                
-                              </p:panel>
-                              
-                               <p:panel id="factoringId" header="#{lbl['lbl.panel.fc.name']}"    toggleable="true"  toggleSpeed="500" widgetVar="panelfactoring">
-                              
-                                 
-                                   <h:panelGrid columns="4" style="width:600px;">  
-                                  
-                                          <h:outputLabel  value="Company Name" style="width:180px;" styleClass="txtsize"/>  
-                                           <p:selectOneMenu value=" " style="width:150px;">
-            					                             <f:selectItem itemLabel="-Please Select--" itemValue="" /> 
-            					                             <f:selectItem itemLabel="RHB Group" itemValue="1" /> 
-            					                             <f:selectItem itemLabel="CIMB Group" itemValue="2" /> 
-                				                    </p:selectOneMenu>    
-                				                    
-                				                    <h:outputLabel value=" Effective Date" styleClass="txtsize" />
-                                                    <p:calendar style="width:140px;" value="#{searchDetailsBean.searchDetails.date}" id="popupButtonCal" showOn="button" />
-                                                    
-                                                    <h:outputLabel  value="Authorized Ref. No"  styleClass="txtsize"/>  
-                                                    <p:inputText  value=" " required="true"   style="width:140px;" />  
-                                                  
-                                                    <h:outputLabel value=" Expiry Date" styleClass="txtsize"/>
-                                                    <p:calendar style="width:140px;" value="#{searchDetailsBean.searchDetails.date}" id="popupButtonCal1" showOn="button" />
-                           
-                                          
-                                              
-                                         
-                                        </h:panelGrid>
-                                        
-                                          <h:panelGrid columns="2" style="width:550px;">  
-                                           <h:panelGroup>
-										             <div style="height: 45px;width:100px; vertical-align: top">
-											              <p:outputLabel for="fcaddress" value="Factoring Company Address"  />
-										             </div>
-								        	      </h:panelGroup>
-									              <h:panelGrid>
-										          <p:inputTextarea id="fcaddress" value="" rows="2" cols="62"  autoResize="false" />
-											      </h:panelGrid>
-										</h:panelGrid>
-                                        </p:panel>
-	   </ui:define>
-	   </ui:composition>
+            <ui:include src="/xhtml/ct/supplier/shared/fulfilment.xhtml"/>
+         </p:panel>
+         <p:panel id="factoringId" header="#{lbl['lbl.panel.fc.name']}"    toggleable="true"  toggleSpeed="500" widgetVar="panelfactoring">
+         <h:panelGrid columns="4" style="width:600px;">  
+         <h:outputLabel  value="Company Name" style="width:180px;"/>  
+            <p:selectOneMenu value=" " style="width:150px;">
+               <f:selectItem itemLabel="-Please Select--" itemValue="" /> 
+               <f:selectItem itemLabel="RHB Group" itemValue="1" /> 
+               <f:selectItem itemLabel="CIMB Group" itemValue="2" /> 
+            </p:selectOneMenu>    
+            <h:outputLabel value=" Effective Date"/>
+            <p:calendar style="width:140px;" value="#{searchDetailsBean.searchDetails.date}" id="popupButtonCal" showOn="button" />
+            <h:outputLabel  value="Authorized Ref. No"/>  
+            <p:inputText  value=" " required="true"   style="width:140px;" />  
+            <h:outputLabel value=" Expiry Date"/>
+            <p:calendar style="width:140px;" value="#{searchDetailsBean.searchDetails.date}" id="popupButtonCal1" showOn="button" />
+           </h:panelGrid>
+           <h:panelGrid columns="2" style="width:550px;">  
+           <h:panelGroup>
+			<div style="height: 45px;width:100px; vertical-align: top">
+				<p:outputLabel for="fcaddress" value="Factoring Company Address"  />
+			</div>
+		   </h:panelGroup>
+		   <h:panelGrid>
+		   <p:inputTextarea id="fcaddress" value="" rows="2" cols="62"  autoResize="false" />
+	       </h:panelGrid>
+	       </h:panelGrid>
+       </p:panel>
+	 </ui:define>
+</ui:composition>

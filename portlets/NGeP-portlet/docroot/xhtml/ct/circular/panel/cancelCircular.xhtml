@@ -42,12 +42,13 @@
 				 <p:column></p:column>	
 				 <p:column></p:column>
 				 <p:column styleClass="column-align-center">
-				 <p:commandButton title="delete" onsuccess="confirmation.show()" partialSubmit="true" process="@this"  icon="ui-icon-delete" />
+				 <p:commandButton title="delete" onsuccess="confirmation.show()" partialSubmit="true" process="@this"  
+				 icon="ui-icon-delete" />
 				 </p:column> 
 			 </p:dataTable>
 		 </h:panelGrid>
 		 <h:panelGrid style="width:800px" columnClasses="column-align-right">
-			<p:commandButton value="Add" styleClass="text-align: right;" process="@this" partialSubmit="true" icon="ui-icon-add"  update="dataTable"/>
+			<p:commandButton value="Add" styleClass="text-align:right;" process="@this" partialSubmit="true" icon="ui-icon-add"  update="dataTable"/>
 		 </h:panelGrid>
         </p:panel>
        <p:panel id="attachementid" header="Remarks And Attachements"  toggleable="true"  toggleSpeed="500" widgetVar="panelattachements">

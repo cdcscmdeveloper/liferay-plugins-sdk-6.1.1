@@ -29,30 +29,33 @@
 					       <p:column style="width:30px" headerText="#{lbl['lbl.ct.pc.no']}"  /> 
 	                       <p:column style="width:150px" headerText="#{lbl['lbl.ct.pc.item.code']}" /> 
 	                       <p:column style="width:450px" headerText="#{lbl['lbl.ct.pc.item.name']}" /> 	 
+	                         <p:column style="width:150px" headerText="Minimum quantity" /> 	 
 	                    </p:row>							
 					 </p:columnGroup>
 					 <p:column styleClass="column-align-center" > <h:outputText value="#{index+1}" /></p:column> 	   
+				     <p:column> </p:column>
 				     <p:column> </p:column>
 				     <p:column> </p:column>
 				  </p:dataTable>
 			  </h:panelGrid>
 			</p:panel>    
 			<p:panel id="supplierId" header="#{lbl['lbl.ct.pc.panel.sd']}"   toggleable="true"  toggleSpeed="500" widgetVar="panelsupplier">
-              <h:panelGrid style="width:800px">
+              <div style="overflow-x:auto">
 			    <p:dataTable id="dTableSupplier" var="data" value=" " widgetVar="dataTableObj" lazy="false" dynamic="true" 
 			       paginator="true" paginatorPosition="bottom" paginatorAlwaysVisible="true" emptyMessage="No Records!" rows="10" 
 			       rowsPerPageTemplate="5,10,15,20" currentPageReportTemplate=" total {totalRecords},  page {currentPage} of {totalPages} "
 			       paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}">
 				   <p:columnGroup type="header"> 
 				      <p:row> 
-					     <p:column style="width:60px" headerText="#{lbl['lbl.ct.pc.item.sid']}"  /> 
-						 <p:column style="width:100px" headerText="#{lbl['lbl.ct.pc.item.sname']}" /> 
-						 <p:column style="width:60px" headerText="#{lbl['lbl.ct.pc.item.pno']}"  /> 
-						 <p:column style="width:100px" headerText="#{lbl['lbl.ct.pc.item.zone']}" /> 
-						 <p:column style="width:100px" headerText="#{lbl['lbl.ct.pc.item.state']}"  /> 
-						 <p:column style="width:100px" headerText="#{lbl['lbl.ct.pc.item.bname']}"  /> 
-						 <p:column style="width:80px" headerText="#{lbl['lbl.ct.pc.item.acno']}" /> 
-						 <p:column style="width:60px" headerText="#{lbl['lbl.ct.pc.item.action']}"  /> 
+					     <p:column headerText="#{lbl['lbl.ct.pc.item.sid']}"  /> 
+						 <p:column headerText="#{lbl['lbl.ct.pc.item.sname']}" /> 
+						 <p:column headerText="#{lbl['lbl.ct.pc.item.pno']}"  /> 
+						 <p:column headerText="#{lbl['lbl.ct.pc.item.zone']}" /> 
+						 <p:column headerText="#{lbl['lbl.ct.pc.item.state']}"  /> 
+						  <p:column headerText="#{lbl['lbl.ct.pc.item.fc']}"  /> 
+						 <p:column headerText="#{lbl['lbl.ct.pc.item.bname']}"  /> 
+						 <p:column headerText="#{lbl['lbl.ct.pc.item.acno']}" /> 
+						 <p:column headerText="#{lbl['lbl.ct.pc.item.action']}"  /> 
 					  </p:row>							
 				   </p:columnGroup>
 				   <p:column></p:column>
@@ -66,11 +69,12 @@
                    </p:column>
 				   <p:column> </p:column>
 				   <p:column></p:column>
+				     <p:column></p:column>
 				   <p:column> </p:column>
 				   <p:column styleClass="column-align-center"> <p:commandButton title="delete" onsuccess="confirmation.show()"
 					   partialSubmit="true" process="@this"  icon="ui-icon-delete" styleClass="ui-icon-button"/> </p:column>  
                     </p:dataTable>
-					</h:panelGrid>
+					</div>
 					<h:panelGrid style="width:800px" columnClasses="column-align-right">
 					   <p:commandButton value="Add" styleClass="text-align: right;" process="@this" partialSubmit="true" icon="ui-icon-add"  update="dTableSupplier"/>
 					</h:panelGrid>

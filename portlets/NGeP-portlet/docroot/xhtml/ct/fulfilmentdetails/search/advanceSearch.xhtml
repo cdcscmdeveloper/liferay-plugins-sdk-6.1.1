@@ -17,9 +17,9 @@
                      <h:outputLabel value="#{lbl['lbl.ct.asearch.sname']}"  />
                      <p:inputText value="" style="width:200px;"/>
                      <h:outputLabel value="#{lbl['lbl.ct.asearch.cstart']}"  />
-                     <p:calendar style="width:130px;" value="#{contractDetailsBackingBean.createContractDetails.date}" id="popupButtonCal2" showOn="button" />
+                     <p:calendar style="width:130px;" value="#{contractDetailsBackingBean.managedBean.createContractDetails.date}" id="popupButtonCal2" showOn="button" />
                      <h:outputLabel value="#{lbl['lbl.ct.asearch.cend']}" />
-                     <p:calendar style="width:130px;" value="#{contractDetailsBackingBean.createContractDetails.date}" id="popupButtonCal3" showOn="button" />
+                     <p:calendar style="width:130px;" value="#{contractDetailsBackingBean.managedBean.createContractDetails.date}" id="popupButtonCal3" showOn="button" />
                      <h:outputLabel value="#{lbl['lbl.ct.asearch.pcno']}" styleClass="txtsize" />
                      <p:inputText value="" style="width:200px;"/>
                      <f:verbatim></f:verbatim>
@@ -78,9 +78,9 @@
            <p:dialog id="modalDialog" header="#{lbl['lbl.ct.asearch.model.header']}" widgetVar="dlg2" modal="true" width="900" height="450">
 			   <p:panel  id="associateId">
                   <h:panelGrid columns="2">
-				     <h:outputLabel value="#{lbl['lbl.ct.asearch.model.pname']}" styleClass="txtsize"/>
+				     <h:outputLabel value="#{lbl['lbl.ct.asearch.model.pname']}" />
             	     <p:inputText  value=""></p:inputText>
-					 <h:outputLabel  value="#{lbl['lbl.ct.asearch.model.pdes']}" styleClass="txtsize" />
+					 <h:outputLabel  value="#{lbl['lbl.ct.asearch.model.pdes']}" />
             		 <p:inputText    style="width:400px;" value=""></p:inputText>
 					 </h:panelGrid>
                      <div style="overflow-x:auto;">
@@ -89,14 +89,14 @@
                        paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}">
                 	   <p:columnGroup type="header"> 
 					      <p:row> 
-						      <p:column rowspan="1"  headerText="#{lbl['lbl.ct.asearch.model.table1.cno']}"  />
-						      <p:column colspan="1"  headerText="#{lbl['lbl.ct.asearch.model.table1.sname']}"  /> 
-							  <p:column colspan="1"  headerText="#{lbl['lbl.ct.asearch.model.table1.cstart']}" /> 
-							  <p:column colspan="1"  headerText="#{lbl['lbl.ct.asearch.model.table1.cend']}"  /> 	
-							  <p:column colspan="1"  headerText="#{lbl['lbl.ct.asearch.model.table1.pcode']}" />
-							  <p:column colspan="1"  headerText="#{lbl['lbl.ct.asearch.model.table1.pname']}"  /> 
-						      <p:column colspan="1"  headerText="#{lbl['lbl.ct.asearch.model.table1.status']}" /> 	
-						      <p:column colspan="1"  headerText="#{lbl['lbl.ct.asearch.model.table1.action']}" />
+						      <p:column headerText="#{lbl['lbl.ct.asearch.model.table1.cno']}"  />
+						      <p:column headerText="#{lbl['lbl.ct.asearch.model.table1.sname']}"  /> 
+							  <p:column headerText="#{lbl['lbl.ct.asearch.model.table1.cstart']}" /> 
+							  <p:column headerText="#{lbl['lbl.ct.asearch.model.table1.cend']}"  /> 	
+							  <p:column headerText="#{lbl['lbl.ct.asearch.model.table1.pcode']}" />
+							  <p:column headerText="#{lbl['lbl.ct.asearch.model.table1.pname']}"  /> 
+						      <p:column headerText="#{lbl['lbl.ct.asearch.model.table1.status']}" /> 	
+						      <p:column headerText="#{lbl['lbl.ct.asearch.model.table1.action']}" />
 						</p:row>							
 						</p:columnGroup>
 						     <p:column> <h:outputText value="" /></p:column> 							
@@ -142,12 +142,12 @@
                 	   <p:columnGroup type="header"> 
 		               <p:row> 
 					       <p:column selectionMode="single" style="width:2%" />
-						   <p:column rowspan="1"  headerText="#{lbl['lbl.ct.asearch.model.table2.cno']}"  />
-						   <p:column colspan="1"  headerText="#{lbl['lbl.ct.asearch.model.table2.sname']}"  /> 
-						   <p:column colspan="1"  headerText="#{lbl['lbl.ct.asearch.model.table2.cstart']}" /> 
-						   <p:column colspan="1"  headerText="#{lbl['lbl.ct.asearch.model.table2.cend']}"  /> 	
-					       <p:column colspan="1"  headerText="#{lbl['lbl.ct.asearch.model.table2.pcode']}" />
-					       <p:column colspan="1"  headerText="#{lbl['lbl.ct.asearch.model.table2.pname']}"  /> 
+						   <p:column headerText="#{lbl['lbl.ct.asearch.model.table2.cno']}"  />
+						   <p:column headerText="#{lbl['lbl.ct.asearch.model.table2.sname']}"  /> 
+						   <p:column headerText="#{lbl['lbl.ct.asearch.model.table2.cstart']}" /> 
+						   <p:column headerText="#{lbl['lbl.ct.asearch.model.table2.cend']}"  /> 	
+					       <p:column headerText="#{lbl['lbl.ct.asearch.model.table2.pcode']}" />
+					       <p:column headerText="#{lbl['lbl.ct.asearch.model.table2.pname']}"  /> 
 					  </p:row>							
 					  </p:columnGroup>
 						 <p:column> <h:outputText value="" /></p:column> 							

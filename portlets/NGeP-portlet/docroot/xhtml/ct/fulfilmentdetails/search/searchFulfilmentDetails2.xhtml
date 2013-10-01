@@ -10,8 +10,6 @@
          <p:tabView id="tabview"   tabChangeListener="#{searchBackingBean.onChange}" onTabChangeUpdate="growl">
             <p:tab id="searchTab" title="General" >
                   <p:panel id="searchId" header="#{lbl['lbl.ct.search.panel.name']}" toggleable="true"  toggleSpeed="500" widgetVar="panelsearch">
-                   
-                 
                    <h:panelGrid columns="4" style="width:800px;">
                     <h:panelGroup>
                      <div style="height: 30px; width:48px; vertical-align: top" >
@@ -31,48 +29,32 @@
 	                  <f:verbatim></f:verbatim>                 
                       <f:verbatim></f:verbatim>
                       </h:panelGrid> 
-                    
-                    <p:outputPanel id="changeSearchField" > 
+                      <p:outputPanel id="changeSearchField" > 
                      <h:panelGrid columns="4" style="width:900px;">
-                   
-			             <p:outputLabel for="cno" value="Contract Number" styleClass="a"  rendered="#{searchBackingBean.contractNumber or searchBackingBean.showAll}" />
+                      <p:outputLabel for="cno" value="Contract Number" styleClass="a"  rendered="#{searchBackingBean.contractNumber or searchBackingBean.showAll}" />
 			             <p:inputText id="cno" value=""    rendered="#{searchBackingBean.contractNumber or searchBackingBean.showAll}"/> 		                                        
-		            
-		              
-			              <p:outputLabel for="cname"  value="Contract Name" styleClass="a"  rendered="#{searchBackingBean.contractName or searchBackingBean.showAll}"  />
+		                 <p:outputLabel for="cname"  value="Contract Name" styleClass="a"  rendered="#{searchBackingBean.contractName or searchBackingBean.showAll}"  />
 			              <p:inputText id="cname" value=""  rendered="#{searchBackingBean.contractName or searchBackingBean.showAll}"/> 		                                        
-		              
-			            <p:outputLabel value="Physical Contract No" styleClass="a"  rendered="#{searchBackingBean.physicalNumber or searchBackingBean.showAll}"/>
+		                 <p:outputLabel value="Physical Contract No" styleClass="a"  rendered="#{searchBackingBean.physicalNumber or searchBackingBean.showAll}"/>
 			            <p:inputText value=""  rendered="#{searchBackingBean.physicalNumber or searchBackingBean.showAll}"/> 		                                        
-		               
-			              <p:outputLabel value="LOA No" styleClass="a"  rendered="#{searchBackingBean.loaNumber or searchBackingBean.showAll}" />
+		                 <p:outputLabel value="LOA No" styleClass="a"  rendered="#{searchBackingBean.loaNumber or searchBackingBean.showAll}" />
 			              <p:inputText value="" style="width:200px;" rendered="#{searchBackingBean.loaNumber or searchBackingBean.showAll}"/> 		                                        
-		                
-			             <p:outputLabel value="Contract Start" styleClass="a"  rendered="#{searchBackingBean.contractStart or searchBackingBean.showAll}" />
+		                 <p:outputLabel value="Contract Start" styleClass="a"  rendered="#{searchBackingBean.contractStart or searchBackingBean.showAll}" />
 			               <p:calendar style="width:150px;" value="#{searchBackingBean.searchDetails.date}" id="popupButton1" showOn="button" 
 			               rendered="#{searchBackingBean.contractStart or searchBackingBean.showAll}"  />
-                                                                
-		                
-			              <p:outputLabel value="Contract End"  styleClass="a"  rendered="#{searchBackingBean.contractEnd or searchBackingBean.showAll}" />
+                        <p:outputLabel value="Contract End"  styleClass="a"  rendered="#{searchBackingBean.contractEnd or searchBackingBean.showAll}" />
 			               <p:calendar style="width:150px;" value="#{searchBackingBean.searchDetails.date}" id="popupButton2" showOn="button"
 			                rendered="#{searchBackingBean.contractEnd or searchBackingBean.showAll}"/>                                     
-		              
-			            <p:outputLabel value="Supplier Id" styleClass="a"  rendered="#{searchBackingBean.supplierId or searchBackingBean.showAll}" />
+		                <p:outputLabel value="Supplier Id" styleClass="a"  rendered="#{searchBackingBean.supplierId or searchBackingBean.showAll}" />
 			               <p:inputText value="" style="width:200px;"  rendered="#{searchBackingBean.supplierId or searchBackingBean.showAll}"/> 		                                        
-		              
-			              <p:outputLabel value="Supplier Name"  rendered="#{searchBackingBean.supplierName or searchBackingBean.showAll}" />
+		                  <p:outputLabel value="Supplier Name"  rendered="#{searchBackingBean.supplierName or searchBackingBean.showAll}" />
 			              <p:inputText value="" style="width:200px;"  rendered="#{searchBackingBean.supplierName or searchBackingBean.showAll}"/> 		                                        
-		                  
-			            <p:outputLabel value="Circular No" rendered="#{searchBackingBean.circularNo or searchBackingBean.showAll}" />
-			               <p:inputText value="" style="width:200px;"  rendered="#{searchBackingBean.circularNo or searchBackingBean.showAll}"/> 		                                        
-		                
-			            <p:outputLabel value="Circular Name"  rendered="#{searchBackingBean.circularName or searchBackingBean.showAll}" />
-			               <p:inputText value="" style="width:200px;"  rendered="#{searchBackingBean.circularName or searchBackingBean.showAll}"/> 		                                        
-		               
-		                 
-		              
-			            <h:panelGroup  rendered="#{searchBackingBean.poductCode or searchBackingBean.showAll}">
-			            <div style="height: 70px; vertical-align: top" >
+		                  <p:outputLabel value="Circular No" rendered="#{searchBackingBean.circularNo or searchBackingBean.showAll}" />
+			              <p:inputText value="" style="width:200px;"  rendered="#{searchBackingBean.circularNo or searchBackingBean.showAll}"/> 		                                        
+		                  <p:outputLabel value="Circular Name"  rendered="#{searchBackingBean.circularName or searchBackingBean.showAll}" />
+			              <p:inputText value="" style="width:200px;"  rendered="#{searchBackingBean.circularName or searchBackingBean.showAll}"/> 		                                        
+		                  <h:panelGroup  rendered="#{searchBackingBean.poductCode or searchBackingBean.showAll}">
+			              <div style="height: 70px; vertical-align: top" >
 			                  <p:outputLabel for="productCode" value="Product / Service Code" 
 			                   rendered="#{searchBackingBean.poductCode or searchBackingBean.showAll}"/>
 							 </div>
@@ -81,9 +63,7 @@
 						      <div style="height: 70px; vertical-align: top">
 							 <p:inputText id="productCode" value="" style="width:200px;" rendered="#{searchBackingBean.poductCode or searchBackingBean.showAll}"/></div>
 						     </h:panelGroup>	                                        
-		               
-		              
-			               <h:panelGroup  rendered="#{searchBackingBean.status or searchBackingBean.showAll}">
+		                     <h:panelGroup  rendered="#{searchBackingBean.status or searchBackingBean.showAll}">
 			                <div style="height: 70px; vertical-align: top">
 			                  <p:outputLabel for="status" value="Status"   />
 							 </div>
@@ -96,8 +76,7 @@
                               <f:selectItem itemLabel="Cancelled" itemValue="4" />  
                            </p:selectOneListbox>
                            </h:panelGrid>   
-                           
-                             <h:panelGrid rendered="#{!searchBackingBean.showAll}">
+                           <h:panelGrid rendered="#{!searchBackingBean.showAll}">
                              <f:verbatim></f:verbatim>
                              </h:panelGrid>     
                              <h:panelGrid rendered="#{!searchBackingBean.showAll}">
@@ -105,18 +84,17 @@
                              </h:panelGrid>                                  	
 		              </h:panelGrid>
 		              <h:panelGrid style="width:800px" columnClasses="column-align-right" rendered="#{searchBackingBean.showAll}">
-							                       <p:commandButton value="Search" styleClass="text-align:right;" process="@this" partialSubmit="true" 
-							                       icon="ui-icon-add">
-											</p:commandButton>
-					                  	   </h:panelGrid>
+						<p:commandButton value="Search" styleClass="text-align:right;" process="@this" partialSubmit="true" 
+						   icon="ui-icon-add">
+						</p:commandButton>
+					  </h:panelGrid>
 					    <h:panelGrid style="width:350px" columnClasses="column-align-right" rendered="#{!searchBackingBean.showAll}">
-							                       <p:commandButton value="Search" styleClass="text-align:right;" process="@this" partialSubmit="true" 
-							                       icon="ui-icon-add">
-											</p:commandButton>
-					                  	   </h:panelGrid>
+						  <p:commandButton value="Search" styleClass="text-align:right;" process="@this" partialSubmit="true" 
+							 icon="ui-icon-add">
+							</p:commandButton>
+					    </h:panelGrid>
 		              </p:outputPanel>
-		             
-			    </p:panel>
+	    		    </p:panel>
 				   <p:panel id="searchResulId" header="#{lbl['lbl.ct.search.panel.result']}"  toggleable="true"  toggleSpeed="500" widgetVar="panelsearchResul">
                        <div style="overflow-x:auto">
 			                     <p:dataTable id="dataTable" var="data" value="" rowIndexVar="index"
