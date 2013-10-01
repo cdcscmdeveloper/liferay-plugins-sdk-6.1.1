@@ -1,0 +1,46 @@
+package my.ep.web.managedbean.bpm.tasklist;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import javax.faces.bean.ManagedBean;
+import javax.faces.bean.SessionScoped;
+import javax.faces.model.SelectItem;
+
+import my.ep.bpm.vo.WorklistItemVO;
+import my.ep.persistence.entity.cm.catalog.CmUnspsc;
+import my.ep.web.managedbean.BaseManagedBean;
+import my.ep.web.vo.AdvanceSearchVO;
+import my.ep.web.vo.PricingVO;
+
+@ManagedBean(name = "tasklistMB")
+@SessionScoped
+public class TaskListManagedBean extends BaseManagedBean {
+	
+	private List<WorklistItemVO> taskList;
+	
+	private Map bpmMap = new HashMap();
+	
+	public Map getBpmMap() {
+		return bpmMap;
+	}
+
+	public void setBpmMap(Map bpmMap) {
+		this.bpmMap = bpmMap;
+	}
+	
+	
+
+	public List<WorklistItemVO> getTaskList() {
+		if(taskList==null)
+			taskList = new ArrayList<WorklistItemVO>();
+		return taskList;
+	}
+
+	public void setTaskList(List<WorklistItemVO> taskList) {
+		this.taskList = taskList;
+	}
+	
+}

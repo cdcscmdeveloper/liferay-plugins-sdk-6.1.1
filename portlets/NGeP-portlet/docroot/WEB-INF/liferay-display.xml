@@ -85,8 +85,14 @@
 		<portlet id="Evaluation"></portlet>
 
 	</category>
+
+	<category name="category.sample">
+		<portlet id="TaskList"></portlet>
+	</category>
+
 	<category name="Template">
 		<portlet id="templateDoc"></portlet>
 		<portlet id="templateSpec"></portlet>
 		</category>
+
 </display>
