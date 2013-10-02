@@ -81,23 +81,35 @@
 				selection="#{simpleQuoteBidBackingBean.managedBean.selectedUtilList}"
 				rowKey="#{simpleQuote2.seqNo}" rowIndexVar="index">
 
+				<p:columnGroup type="header">
+						<p:row>
+
+							<p:column colspan="1" headerText="Name" style="width:48%" />
+							<p:column colspan="1" headerText="Member Type" style="width:25%" />
+							<p:column colspan="1" headerText="Role" style="width:25%" />
+							<p:column colspan="1" headerText="Attendance" style="width:2%"  />
+							
+						</p:row>
+						
+					</p:columnGroup>
 				
 
-				<p:column headerText="Name" style="width:48%">
+				<p:column >
 					<h:outputText value="Hari#{index+1}"></h:outputText>
 				</p:column>
 
-				<p:column headerText="Member Type" style="width:25%">
+				<p:column >
 					<h:outputText value="Member#{index+1}"></h:outputText>
 				</p:column>
 
 				
-				<p:column headerText="Role" style="width:25%">
+				<p:column >
 					<h:outputText value="Supplier#{index+1}"></h:outputText>
 				</p:column>
 
-				<p:column headerText="Attendance" selectionMode="multiple" style="width:2%" />
-
+				<p:column  selectionMode="multiple"/>
+				
+           
 			</p:dataTable>
 
 		</p:panel>
