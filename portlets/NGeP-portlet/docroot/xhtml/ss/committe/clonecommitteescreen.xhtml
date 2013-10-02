@@ -7,27 +7,20 @@
 
 
 	<p:dialog id="Clone" header="Clone XXXX" widgetVar="screen2" modal="true">
-		<p:panel header="Search Sourcing" toggleable="true">
+		<p:panel header="Search Qtn/Tender" toggleable="true">
 
-			<p:panelGrid columns="2" style="width:300%;" styleClass="noBorders tr,noBorders td">
+			<p:panelGrid columns="4" style="width:46%;" styleClass="noBorders tr,noBorders td">
 				
 
-				<h:outputLabel for="clonetitle" value="Title" />
-				<p:inputText id="clonetitle" size="71"   />
+				<h:outputText value="Qtn/Tender No" ></h:outputText>
+					<p:selectOneMenu>  
+    	             <f:selectItem itemLabel="Select One" itemValue="" />  
+                     <f:selectItem itemLabel="no 1" itemValue="1" /> 
+                     <f:selectItem itemLabel="no 2" itemValue="1" />  
+    			    </p:selectOneMenu> 
 				</p:panelGrid>
     
-     <p:panelGrid columns="4"  styleClass="noBorders tr,noBorders td">
-		
-			   <h:outputLabel for="tenderNo" value="Qtn/Tender No" />
-				<p:inputText id="tenderNo" />
-				
-				<h:outputLabel for="clonetitle" value="Qtn/Tender Type" />
-				<p:selectOneMenu style="width:125px" value="#{searchQtnTenderBB.managedBean.qtno}">  
-           			<f:selectItem itemLabel="No 1" itemValue="1" />  
-            		<f:selectItem itemLabel="No 2" itemValue="2" />  
-            	    <f:selectItem itemLabel="No 3" itemValue="3" />  
-            		<f:selectItem itemLabel="No 4" itemValue="4" />  
-                </p:selectOneMenu>
+     <p:panelGrid columns="4"  style="width:100%;"  styleClass="noBorders tr,noBorders td">
 				 
 				 <h:outputText value="Created Date (From)" />
 				<p:calendar value="#{searchQtnTenderBB.managedBean.date}" id="createdateFrom"
@@ -36,6 +29,12 @@
 				<h:outputText value="Created Date (To)" />
 				<p:calendar value="#{searchQtnTenderBB.managedBean.date}" id="createdateTo" showOn="button" />                
 
+				<h:outputText value="Record Status"></h:outputText>
+					<p:selectOneMenu>  
+    	             <f:selectItem itemLabel="Select One" itemValue="" />  
+                     <f:selectItem itemLabel="Active" itemValue="1" /> 
+                     <f:selectItem itemLabel="Non-Active" itemValue="1" />  
+    			    </p:selectOneMenu> 
 			   
                 
 			</p:panelGrid>
@@ -50,21 +49,21 @@
 		</p:panel>
 <br/>
 
-		<p:panel header="Search Sourcing Result" toggleable="true">
+		<p:panel header="Search Committee" toggleable="true">
 		   <h:panelGroup  style="width:100%;">
 				<p:dataTable value="" var="" editable="true">
 				
 				  <p:ajax event="rowEdit" />  
                   <p:ajax event="rowEditCancel" /> 
 
-					<p:column headerText="No" style="width:10%">
-					  <p:outputLabel value="1" />
+					<p:column headerText="Committee Type" style="width:130px">
+					  <p:outputLabel value="Type1 " />
 					</p:column>
 
-					<p:column headerText="Title">
+					<p:column headerText="Qtn/Tender No" style="width:5px;">
 				      <p:cellEditor>  
                        <f:facet name="output">  
-                        <h:outputText value="Title A" />
+                        <h:outputText value="No 1" />
                      </f:facet>  
                       <f:facet name="input">  
                        <p:inputText value=""/>  
@@ -72,11 +71,15 @@
                     </p:cellEditor>   
 					</p:column>
 
-					<p:column headerText="Date Created" style="width:20%">  
+					<p:column headerText="Date Created" style="width:5px">  
                         <h:outputText value="11/12/13" />  
-                    </p:column>  
+                    </p:column>
+                    
+					<p:column headerText="Record Status" style="width:5px">  
+                        <h:outputText value="Active" />  
+                    </p:column>                       
                       
-                    <p:column style="width:6%">  
+                    <p:column style="width:5px">  
                         <p:rowEditor />  
                      </p:column>  
             
@@ -89,8 +92,8 @@
 		   <h:panelGroup style="width:100%;">
 				<p:dataTable value="" var="" >
 
-					<p:column headerText="(CheckBox)">
-					   <h:outputText value="Value 1" />
+					<p:column>
+					   <p:selectBooleanCheckbox />
 					</p:column>
 
 					<p:column headerText="Name">
