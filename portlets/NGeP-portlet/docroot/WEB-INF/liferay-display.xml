@@ -4,24 +4,24 @@
 	<category name="NGeP">
 		<category name="category.ep.ct">
 			<category name="category.ep.fd">
-		        <portlet id="search"></portlet>
+				<portlet id="search"></portlet>
 				<portlet id="fd"></portlet>
 			</category>
 			<category name="category.ep.cr">
-			<category name="category.ep.cr.pc">
-				<portlet id="pcSearch"></portlet>
-				<portlet id="pc"></portlet>
-			</category>
-			<category name="category.ep.cr.cc">
-				<portlet id="ccSearch"></portlet>
-				<portlet id="cc"></portlet>
-			</category>
+				<category name="category.ep.cr.pc">
+					<portlet id="pcSearch"></portlet>
+					<portlet id="pc"></portlet>
+				</category>
+				<category name="category.ep.cr.cc">
+					<portlet id="ccSearch"></portlet>
+					<portlet id="cc"></portlet>
+				</category>
 			</category>
 			<category name="category.ep.ag">
 				<portlet id="ag"></portlet>
 				<portlet id="supag"></portlet>
 			</category>
-            <category name="category.ep.fs">
+			<category name="category.ep.fs">
 				<portlet id="supplierSearch"></portlet>
 			</category>
 			<category name="category.ep.pb">
@@ -38,7 +38,7 @@
 				<portlet id="StopInstruction" />
 			</category>
 		</category>
-		<!-- sourcing	-->
+		<!-- sourcing -->
 		<category name="category.ep.ss">
 			<portlet id="ss-directPurchase" />
 			<portlet id="ss-defaultPurchase" />
@@ -58,11 +58,11 @@
 			<portlet id="FLShippingInstruction" />
 		</category>
 		<!-- Fulfilment End Added by Giri -->
-	    <portlet id="NGeP" />
-	    <portlet id="sm" />
-	    <portlet id="codification"></portlet>
+		<portlet id="NGeP" />
+		<portlet id="sm" />
+		<portlet id="codification"></portlet>
 		<portlet id="Catalogue"></portlet>
-		
+
 	</category>
 
 
@@ -72,8 +72,8 @@
 		<portlet id="ppPlan"></portlet>
 	</category>
 	<!-- Procurement Plan - END -->
-	
-	
+
+
 	<category name="Sourcing">
 		<portlet id="Quatation"></portlet>
 		<portlet id="Committee"></portlet>
@@ -83,7 +83,7 @@
 		<portlet id="Specification"></portlet>
 		<portlet id="proposal"></portlet>
 		<portlet id="Evaluation"></portlet>
-
+		<portlet id="Maintenance"></portlet>
 	</category>
 
 	<category name="category.sample">
@@ -93,6 +93,6 @@
 	<category name="Template">
 		<portlet id="templateDoc"></portlet>
 		<portlet id="templateSpec"></portlet>
-		</category>
+	</category>
 
 </display>
