@@ -14,6 +14,7 @@
  */
 --%>
 
+<%@page import="com.liferay.portal.model.Layout"%>
 <%@ include file="/html/portlet/dockbar/init.jsp" %>
 
 <%
@@ -41,27 +42,28 @@ for (String portletId : PropsValues.DOCKBAR_ADD_PORTLETS) {
 		
 		<c:if test="<%= !group.isControlPanel() && (!group.hasStagingGroup() || group.isStagingGroup()) && (GroupPermissionUtil.contains(permissionChecker, group.getGroupId(), ActionKeys.ADD_LAYOUT) || LayoutPermissionUtil.contains(permissionChecker, layout, ActionKeys.UPDATE) || (layoutTypePortlet.isCustomizable() && layoutTypePortlet.isCustomizedView() && LayoutPermissionUtil.contains(permissionChecker, layout, ActionKeys.CUSTOMIZE))) %>">
 			<li class="add-content has-submenu" id="<portlet:namespace />addContent">
-				<%if (request.isUserInRole("Administrator")) { %>
+				
 				<a class="menu-button" href="javascript:;">
 					<span>
 						<liferay-ui:message key="add" />
 					</span>
 				</a>
-				<%} %>
+				
 
 				<div class="aui-menu add-content-menu aui-overlaycontext-hidden" id="<portlet:namespace />addContentContainer">
 					<div class="aui-menu-content">
 						<ul>
-							<%if (request.isUserInRole("Administrator")) { %>
+														
 							<c:if test="<%= GroupPermissionUtil.contains(permissionChecker, scopeGroupId, ActionKeys.ADD_LAYOUT) && !group.isLayoutPrototype() %>">
+								
 								<li class="first add-page">
 									<a href="javascript:;" id="addPage">
 										<liferay-ui:message key="page" />
 									</a>
 								</li>
+								
 							</c:if>
-							<%} %>
-							
+														 
 							<c:if test="<%= !themeDisplay.isStateMaximized() && layout.isTypePortlet() && !layout.isLayoutPrototypeLinkActive() %>">
 								<li class="last common-items">
 									<div class="aui-menugroup">
