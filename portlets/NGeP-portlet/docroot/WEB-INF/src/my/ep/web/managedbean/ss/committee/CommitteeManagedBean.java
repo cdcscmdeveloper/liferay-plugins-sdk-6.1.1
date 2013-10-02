@@ -18,8 +18,10 @@ public class CommitteeManagedBean {
 
 	private List<CommitteeList> committeelists;
 	
+	
 	private String selectedCommitte;
-
+	
+	
 	public List<CommitteeList> getCommitteelist() {
 		
 		if(committeelists==null){
