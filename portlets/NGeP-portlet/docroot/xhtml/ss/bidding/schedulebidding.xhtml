@@ -1,0 +1,135 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:c="http://java.sun.com/jsp/jstl/core">
+
+<p:panel toggleable="true">
+<div>
+<p:button value="SUBMIT" style="float:right;margin-right: 12px;"></p:button>
+<p:button value="SAVE" style="float:right;margin-right: 12px;"></p:button>
+<br/>
+<br/>
+</div>
+
+</p:panel>
+<ui:include src="/xhtml/ss/quatationtender/qtntenderheader.xhtml" />
+	<p:panel header="Supplier List" toggleable="true">
+	
+	
+	
+	<p:dataTable id="supplist"  value="" style="width:100%;">
+<p:column headerText="No" style="width:2%;" >
+<h:outputText value="1"></h:outputText>
+
+</p:column>	
+<p:column headerText="Proposal No." >
+						<h:outputText value="003"></h:outputText>
+				</p:column>	
+	<p:column headerText="Company Name" >
+						<h:outputText value="Archisoft"></h:outputText>
+				</p:column>	
+				
+				<p:column headerText="Total Price (RM)" >
+						<h:outputText value="2000"></h:outputText>
+				</p:column>	
+				
+				<p:column headerText="Decision" >
+						<h:outputText value="Approved"></h:outputText>
+				</p:column>	
+				
+				
+				</p:dataTable>
+				</p:panel>
+	<p:panel header="Bidding Schedule (Item)" toggleable="true">		
+	
+		<p:panelGrid columns="2" style="width:100%;"
+			styleClass="noBorders tr,noBorders td">	
+			
+          <h:outputText value="Award Type" />
+		
+				<p:inputText id="Item" value="" readonly="true"/>  
+				
+					<h:outputText value="Bidding Start" />
+	
+			 <p:calendar value="#{searchQtnTenderBB.managedBean.tenderBean}" pattern="MM/dd/yyyy " id="biddingstart" showOn="button"/>
+				
+				<h:outputText value="Bidding End" />
+	
+			 <p:calendar value="#{searchQtnTenderBB.managedBean.tenderBean}" pattern="MM/dd/yyyy" id="biddingend" showOn="button"/>	
+			 
+			<h:outputText value="Decrement Block" />
+		
+				<p:inputText id="Decrment" value="" />  
+      </p:panelGrid>
+      
+      <p:dataTable id="itemlist"  value="" style="width:100%;">
+<p:column headerText="No" style="width:2%;" >
+<h:outputText value="1"></h:outputText>
+
+</p:column>	
+<p:column headerText="Item Name" >
+						<h:outputText value="Ipad"></h:outputText>
+				</p:column>	
+	<p:column headerText="Item Description" >
+						<h:outputText value="Electronic"></h:outputText>
+				</p:column>	
+				
+				<p:column headerText="Quantity" >
+						<h:outputText value="1"></h:outputText>
+				</p:column>	
+				
+				<p:column headerText="UOM" >
+						<h:outputText value="Number"></h:outputText>
+				</p:column>	
+				
+				
+				</p:dataTable>
+				</p:panel>
+				<p:panel header="Bidding Schedule (Package)" toggleable="true">		
+	
+		<p:panelGrid columns="2" style="width:100%;"
+			styleClass="noBorders tr,noBorders td">	
+			
+          <h:outputText value="Award Type" />
+		
+				<p:inputText id="Item" value="" readonly="true"/>  
+				
+					<h:outputText value="Bidding Start" />
+	
+			 <p:calendar value="#{searchQtnTenderBB.managedBean.tenderBean}" pattern="MM/dd/yyyy " id="biddingstart" showOn="button"/>
+				
+				<h:outputText value="Bidding End" />
+	
+			 <p:calendar value="#{searchQtnTenderBB.managedBean.tenderBean}" pattern="MM/dd/yyyy" id="biddingend" showOn="button"/>	
+			 
+			<h:outputText value="Decrement Block" />
+		
+				<p:inputText id="Decrment" value="" />  
+      </p:panelGrid>
+      
+      <p:dataTable id="packagelist"  value="" style="width:100%;">
+<p:column headerText="No" style="width:2%;" >
+<h:outputText value="1"></h:outputText>
+
+</p:column>	
+<p:column headerText="Item Name" >
+						<h:outputText value="Ipod"></h:outputText>
+				</p:column>	
+	<p:column headerText="Item Description" >
+						<h:outputText value="Electronic"></h:outputText>
+				</p:column>	
+				
+				<p:column headerText="Quantity" >
+						<h:outputText value="2"></h:outputText>
+				</p:column>	
+				
+				<p:column headerText="UOM" >
+						<h:outputText value="number"></h:outputText>
+				</p:column>	
+				
+				
+				</p:dataTable>
+				</p:panel>
+				</ui:composition>

@@ -1,0 +1,215 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:c="http://java.sun.com/jsp/jstl/core">
+
+<p:panel header="Bid Detail" toggleable="true" style="width:97%;">
+	
+	<p:panelGrid columns="2" style="width:100%;"
+			styleClass="noBorders tr,noBorders td">
+			
+		<h:outputText value="Title" />
+		
+				<p:inputText id="Title" value="" readonly="true"/>
+				
+		<h:outputText value="Document No." />
+		
+				<p:inputText id="DocNo" value=""   readonly="true"/>
+				
+				</p:panelGrid>
+				
+	
+<p:dataTable id="biddetail"  value="#{searchQtnTenderBB.managedBean.qtnTenders}" style="width:100%;">
+
+<p:column headerText="No"  >
+<h:outputText value="1"></h:outputText>
+
+</p:column>	
+<p:column headerText="Bid No">
+						<h:outputText value="123456"></h:outputText>
+				</p:column>	
+	<p:column headerText="Item Name">
+						<h:outputText value="Item1"></h:outputText>
+				</p:column>	
+				<p:column headerText="Item Description">
+						<h:outputText value="xxx"></h:outputText>
+				</p:column>		
+				<p:column headerText="Bid Start Date">
+						<h:outputText value="DD/MM/YYYY"></h:outputText>
+				</p:column>
+				<p:column headerText="Bid End Date">
+						<h:outputText value="DD/MM/YYYY"></h:outputText>
+				</p:column>
+				<p:column headerText="Quantity">
+						<h:outputText value="1"></h:outputText>
+				</p:column>
+				<p:column headerText="UOM">
+						<h:outputText value="1"></h:outputText>
+				</p:column>
+				<p:column headerText="Award Type">
+						<h:outputText value="Item/Package"></h:outputText>
+				</p:column>
+				<p:column headerText="Status">
+						<h:outputText value="In Progress/Pause"></h:outputText>
+				</p:column>
+					<p:column headerText="Action">
+						 <p:commandButton  
+					value="#{lbl['lbl.so.pause']}" onclick="dlg1.show();"/>
+				/
+						 <p:commandButton  
+					value="#{lbl['lbl.so.resume']}" onclick="dlg2.show();"/>
+				</p:column>
+				
+</p:dataTable>
+</p:panel>
+
+
+<p:panel header="Bid Summary" toggleable="true" style="width:97%;">
+
+ <p:poll interval="3" update="votes" />  
+  
+    <p:pieChart id="votes" value="#{bidChartBean.livePieModel}" title="Live Chart"  
+                legendPosition="nw" style="width:400px;height:300px"/> 
+       
+           <p:panelGrid columns="2" style="width:100%;"
+			styleClass="noBorders tr,noBorders td">   
+          <h:outputText value="Reamining Time" />
+		
+				<p:inputText id="RemainingTime" value="HH:MM:SS" readonly="true"/>
+				</p:panelGrid>
+			<br/>
+           <br/>
+             <br/>
+       <p:dataTable id="bidgraph" var="bidgraphdetail"  scrollable="false" value="#{searchQtnTenderBB.managedBean.qtnTenders}" style="width:60%;">
+<p:column headerText="No" >
+<h:outputText value="1"></h:outputText>
+
+</p:column>	
+	
+	<p:column headerText="Ranking">
+						<h:outputText value="1"></h:outputText>
+				</p:column>	
+					
+				<p:column headerText="Supplier Code">
+				  <p:commandLink  action="historylist.xhtml?faces-redirect=true">
+						<h:outputText value="01"></h:outputText>
+				</p:commandLink>
+				</p:column>
+				<p:column headerText="Bumiputera Status">
+						<h:outputText value="Local/Non-Local"></h:outputText>
+				</p:column>
+				<p:column headerText="Starting price(RM)">
+						<h:outputText value="1000"></h:outputText>
+				</p:column>
+				<p:column headerText="New Bidding Price(RM)">
+						<h:outputText value="1200"></h:outputText>
+				</p:column>
+				<p:column headerText="No.of Bidding">
+						<h:outputText value="00"></h:outputText>
+				</p:column>
+				<p:column headerText="% Pref.Margin">
+						<h:outputText value="10%"></h:outputText>
+				</p:column>
+					<p:column headerText="% Diff.Total Cost Saving" >
+						 <h:outputText value="25%"></h:outputText>
+				</p:column>
+				
+</p:dataTable>
+
+
+           
+        <p:dialog widgetVar="dlg1" modal="true">
+		<p:panel header="Pause/Cancel Bid" toggleable="true">
+		
+		<p:panelGrid columns="2" style="width:100%;"
+			styleClass="noBorders tr,noBorders td">
+			
+		 <h:outputText value="Reamining Time" />
+		
+				<p:inputText id="RemainTime" value="HH:MM:SS" readonly="true"/>
+				
+		<h:outputText value="* Notes to Supplier" />
+		
+				<p:inputTextarea id="NotetoSupplier" value=""   readonly="true"/>
+				
+				</p:panelGrid>
+				<p:commandButton value="CANCEL" styleClass="apply_button"
+				style="float:right;" onclick="clonebtn.hide()">
+
+			</p:commandButton>
+			<p:commandButton value="OK" styleClass="apply_button"
+				style="float:right;" onclick="clonebtn.hide()">
+
+			</p:commandButton>
+				</p:panel>
+				</p:dialog>
+				
+				 <p:dialog widgetVar="dlg2" modal="true">
+		<p:panel header="Reschedule/Resume Bid" toggleable="true">
+		
+		<p:panelGrid columns="2" style="width:100%;"
+			styleClass="noBorders tr,noBorders td">
+			
+			  <h:outputText  value="Action" /> 
+			 <p:selectOneRadio id="optionradio" value="#{searchQtnTenderBB.managedBean.qtno}">  
+            <f:selectItem itemLabel="Re-Bidding" itemValue="1" />  
+            <f:selectItem itemLabel="Resume on Same Date" itemValue="2" /> 
+              <f:selectItem itemLabel="Resume on Different Date" itemValue="3" /> 
+             
+             
+        </p:selectOneRadio> 
+        </p:panelGrid> 
+        
+        	<p:panelGrid columns="4" style="width:100%;"
+			styleClass="noBorders tr,noBorders td">
+        
+					<h:outputText value="Original Bidding Start" />
+	
+			 <p:calendar value="#{searchQtnTenderBB.managedBean.tenderBean}" pattern="MM/dd/yyyy " id="orgbiddingstart" showOn="button"/>
+				
+				<h:outputText value="Original Bidding End" />
+	
+			 <p:calendar value="#{searchQtnTenderBB.managedBean.tenderBean}" pattern="MM/dd/yyyy" id="orgbiddingend" showOn="button"/>	
+			
+			<h:outputText value="Bidding Paused Time" />
+	
+			 <p:calendar value="#{searchQtnTenderBB.managedBean.tenderBean}" pattern="HH:MM:SS" id="biddingpaused" readonly="true"/>
+				
+				<h:outputText value="Remaining Time" />
+	
+			 <p:calendar value="#{searchQtnTenderBB.managedBean.tenderBean}" pattern="HH:MM:SS" id="reaminingtime" readonly="true"/>	
+		
+		 
+				
+					<h:outputText value="New Bidding Start" />
+	
+			 <p:calendar value="#{searchQtnTenderBB.managedBean.tenderBean}" pattern="MM/dd/yyyy " id="biddingstart" showOn="button"/>
+				
+				<h:outputText value="New Bidding End" />
+	
+			 <p:calendar value="#{searchQtnTenderBB.managedBean.tenderBean}" pattern="MM/dd/yyyy" id="biddingend" showOn="button"/>	
+		</p:panelGrid>
+		<p:panelGrid columns="2" style="width:100%;"
+			styleClass="noBorders tr,noBorders td">		
+		<h:outputText value="* Notes to Supplier" />
+		
+				<p:inputTextarea id="NotestoSupplier" value=""   readonly="true"/>
+				
+				</p:panelGrid>
+				<p:commandButton value="CANCEL" styleClass="apply_button"
+				style="float:right;" onclick="clonebtn.hide()">
+
+			</p:commandButton>
+			<p:commandButton value="OK" styleClass="apply_button"
+				style="float:right;" onclick="clonebtn.hide()">
+
+			</p:commandButton>
+			</p:panel>
+				</p:dialog>
+				            
+              
+            
+</p:panel>
+	</ui:composition>
