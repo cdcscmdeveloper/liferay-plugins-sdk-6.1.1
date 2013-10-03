@@ -9,7 +9,7 @@ import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
 
 import my.ep.biz.bean.search.SearchFilterBean;
-import my.ep.persistence.entity.ct.CtTemplate;
+import my.ep.persistence.entity.ct.template.CtTemplate;
 import my.ep.type.aut.SearchOperator;
 import my.ep.web.managedbean.BaseManagedBean;
 

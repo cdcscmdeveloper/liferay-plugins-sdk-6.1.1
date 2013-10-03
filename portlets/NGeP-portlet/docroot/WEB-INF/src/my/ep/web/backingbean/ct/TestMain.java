@@ -10,7 +10,7 @@ import com.liferay.portal.kernel.search.ParseException;
 import my.ep.biz.service.ct.tpl.IContractTemplateSO;
 import my.ep.dto.ct.tpl.ContractTemplateReqDTO;
 import my.ep.dto.ct.tpl.ContractTemplateResDTO;
-import my.ep.persistence.entity.ct.CtTemplate;
+import my.ep.persistence.entity.ct.template.CtTemplate;
 import my.ep.web.util.lookupservice.BusinessDelegate;
 
 public class TestMain {
