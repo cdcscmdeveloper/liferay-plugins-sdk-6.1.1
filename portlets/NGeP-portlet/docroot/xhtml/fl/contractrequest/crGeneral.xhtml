@@ -1,5 +1,5 @@
 <ui:composition
-	template="/WEB-INF/facelets/templates/sidemenu_template.xhtml"
+	
 	xmlns="http://www.w3.org/1999/xhtml"
 	xmlns:f="http://java.sun.com/jsf/core"
 	xmlns:h="http://java.sun.com/jsf/html"
@@ -9,16 +9,18 @@
 
 	<ui:define name="resourceSection">
 	</ui:define>
-	<ui:define name="sideMenu">
+	<!-- <ui:define name="sideMenu">
 		<ui:include src="/xhtml/fl/shared/sidemenu/flCrSideMenu.xhtml" />
 	</ui:define>
-	<ui:define name="content">
+	<ui:define name="content"> -->
 		<table style="width: 800px;">
 			<tr>
-				<td colspan="4" align="right"><p:commandButton value="SAVE" action="#{fulfilmentRequestBackingBean.createFulfillmentRequest}"/>
+				<td colspan="4" align="right"><p:commandButton value="SAVE" ajax='false'
+						action="#{fulfilmentRequestBackingBean.createFulfillmentRequest}" />
 					<p:commandButton value="SUBMIT" /> <p:commandButton value="PRINT" /></td>
 			</tr>
 		</table>
+		 <p:messages id="msgs"/>
 		<p:panel header="FULFILMENT DETAIL" toggleable="true">
 			<table>
 				<tr>
@@ -68,7 +70,8 @@
 				</tr>
 				<tr>
 					<td rowspan="4"><p:outputLabel value="* Title" /></td>
-					<td rowspan="4"><p:inputTextarea rows="8" style="width: 260px;"  /></td>
+					<td rowspan="4"><p:inputTextarea rows="8"
+							style="width: 260px;" /></td>
 					<td><p:outputLabel value="Plan NO." /></td>
 					<td><p:inputText style="width: 260px;" value="PL_FL_003"
 							disabled="true" /></td>
@@ -129,7 +132,8 @@
 				</tr>
 				<tr>
 					<td><p:outputLabel value="Address" /></td>
-					<td><p:inputTextarea rows="8" style="width: 260px;"  disabled="true"/></td>
+					<td><p:inputTextarea rows="8" style="width: 260px;"
+							disabled="true" /></td>
 				</tr>
 				<tr>
 					<td><p:outputLabel value="Email" /></td>
@@ -177,14 +181,20 @@
 			<table>
 				<tr>
 					<td><p:outputLabel value="* Remarks    " /></td>
-					<td><p:inputTextarea rows="8" style="width: 260px;" value="#{fulfilmentRequestBackingBean.managedBean.flRemark.remark}" /></td>
+					<td><p:inputTextarea rows="8" style="width: 260px;" required="true" id="remark"
+							requiredMessage="Please enter remarks."
+							value="#{fulfilmentRequestBackingBean.managedBean.flRemark.remark}" maxlength="200"       
+    						counterTemplate="{0} characters remaining." autoResize="false"/>
+    						<p:message for="remark" /></td>
 					<td><p:outputLabel value="Attachment" /></td>
-					<td> <p:fileUpload fileUploadListener="#{fulfilmentRequestBackingBean.fileUpload}" mode="advanced" dragDropSupport="false"  
-                   sizeLimit="100000" multiple="true" allowTypes="/(\.|\/)(doc|docx|xls|xlsx|pdf)$/" /></td>
+					<td><p:fileUpload
+							fileUploadListener="#{fulfilmentRequestBackingBean.fileUpload}"
+							 update="messages" mode="advanced" dragDropSupport="false" sizeLimit="100000"
+							multiple="true" allowTypes="/(\.|\/)(doc|docx|xls|xlsx|pdf)$/" />
+							 <p:growl id="messages" showDetail="true"/></td>
 				</tr>
 			</table>
-			
+
 		</p:panel>
-			
-	</ui:define>
+	<!-- </ui:define> -->
 </ui:composition>
