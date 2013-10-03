@@ -58,7 +58,7 @@ public class DefaultLandingPageAction extends Action {
 		String path = PrefsPropsUtil.getString(
 			companyId, PropsKeys.DEFAULT_LANDING_PAGE_PATH);
 
-		// Eg. Path=http://ngepdevwps01.ngep.com:8080/user/test/dashboard
+		// Eg. Path=/user/test/dashboard
 		// Custom Landing page URL set to user's private page if detected USERID in URL
 		// Edited 20131003
 		if(path.contains("USERID")){
@@ -67,10 +67,10 @@ public class DefaultLandingPageAction extends Action {
 			String screenName=usr.getScreenName();
 			path = path.replace("USERID", screenName);
 		}
-		else
-		{
-			path = "/user/error/home";
-		}
+		//else
+		//{
+		//	path = "/user/error/home";
+		//}
 		
 		if (_log.isInfoEnabled()) {
 			_log.info(
