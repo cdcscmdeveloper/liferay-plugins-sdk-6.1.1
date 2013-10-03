@@ -64,7 +64,8 @@ xmlns:c="http://java.sun.com/jsp/jstl/core"
 								<p:selectOneMenu value="#{budgetAllocationBackingBean.managedBean.selectedBudgetAllocation.approverId}" 
 									disabled="#{!budgetAllocationBackingBean.managedBean.selectedBudgetAllocation.editable}">
 									<f:selectItem itemLabel="#{lbl['lbl.select']}" />
-									<f:selectItem itemLabel="010102 - KEM PROGRAM SEKTOR" itemValue="1"/>
+									<f:selectItem itemLabel="Lailah" itemValue="1"/>
+									<f:selectItem itemLabel="Khai" itemValue="2"/>
 								</p:selectOneMenu>
 							</td>
 						</tr>
@@ -77,6 +78,10 @@ xmlns:c="http://java.sun.com/jsp/jstl/core"
 				<br/>
 				<p:dataTable id="dtBudgetaAllocDet" var="budgetAllocationDet"  rowIndexVar="rowIndex"
 					value="#{budgetAllocationBackingBean.managedBean.selectedBudgetAllocation.ppBudgetAllocDtls}">
+						<p:column rendered="#{budgetAllocationBackingBean.managedBean.viewMode==PPConst.modeApproval}" 
+							headerText="#{lbl['lbl.pp.revise']}">  
+							<p:selectBooleanCheckbox value="#{budgetAllocationBackingBean.managedBean.selectedBudgetAllocItem.revisionRequire}" />   
+						</p:column>
 				 		<p:column headerText="#{lbl['lbl.pp.seq']}">  
 	                        #{rowIndex+1}
 	                    </p:column>    
@@ -94,15 +99,29 @@ xmlns:c="http://java.sun.com/jsp/jstl/core"
 	                    </p:column> 
 	                    <p:column headerText="#{lbl['lbl.pp.allocate.budget.amount']}">  
 	                        #{budgetAllocationDet.allocationAmount} 
-	                    </p:column>        
+	                    </p:column>
+	                     <p:column headerText="#{lbl['lbl.pp.status']}" rendered="#{budgetAllocationBackingBean.managedBean.viewMode==PPConst.modeRevision}">  
+	                        #{budgetAllocationDet.deleted} 
+	                    </p:column>                
 	                    <p:column headerText="#{lbl['lbl.pp.action']}">  
-	                         <p:commandLink id="clEdit" value="#{lbl['lbl.pp.edit']}"
-	                         	action="#{budgetAllocationBackingBean.showBudgetAllocationItem(budgetAllocationDet)}" 
-	                         	oncomplete="dlItemDetailsBudgetModal.show();" update=":form:tvBudgetAlloc:dlItemDetailsBudget"/>
-	                          &nbsp;&nbsp;
-	                         <p:commandLink id="clDelete" value="#{lbl['lbl.pp.delete']}"
-	                         	action="#{budgetAllocationBackingBean.deleteBudgetAllocItem(budgetAllocationDet)}" 
-	                          	update="dtBudgetaAllocDet"/>
+		                    <c:choose>
+		                    	<c:when test="#{budgetAllocationBackingBean.managedBean.selectedBudgetAllocation.brandNew ||
+		                    		 budgetAllocationDet.revisionRequire}">
+		                    		 <p:commandLink id="clEdit" value="#{lbl['lbl.pp.edit']}"
+			                         	action="#{budgetAllocationBackingBean.showBudgetAllocationItem(budgetAllocationDet)}" 
+			                         	oncomplete="dlItemDetailsBudgetModal.show();" update=":form:tvBudgetAlloc:dlItemDetailsBudget"/>
+			                          &nbsp;&nbsp;
+			                         <p:commandLink id="clDelete" value="#{lbl['lbl.pp.delete']}"
+			                         	action="#{budgetAllocationBackingBean.deleteBudgetAllocItem(budgetAllocationDet)}" 
+			                          	update="dtBudgetaAllocDet"/>
+		                    	</c:when>
+	                    		<c:otherwise>
+		                    		 <p:commandLink id="clView" value="#{lbl['lbl.pp.view']}"
+			                         	action="#{budgetAllocationBackingBean.showBudgetAllocationItem(budgetAllocationDet)}" 
+			                         	oncomplete="dlItemDetailsBudgetModal.show();" update=":form:tvBudgetAlloc:dlItemDetailsBudget"/>
+			                          &nbsp;&nbsp;
+	                    		</c:otherwise>
+		                    </c:choose>
 	                    </p:column>  
 	               </p:dataTable>  
 	               <br/>
@@ -132,7 +151,8 @@ xmlns:c="http://java.sun.com/jsp/jstl/core"
 			                            #{rowIndex+1}
 			                        </p:column>   
 			                        <p:column headerText="#{lbl['lbl.pp.comment']}">  
-			                            <p:inputTextarea value="#{budgetAllocRemark.remark}" rows="2" cols="50"></p:inputTextarea>
+			                            <p:inputTextarea value="#{budgetAllocRemark.remark}" rows="2" cols="50" 
+			                            	 />
 			                        </p:column>  
 			                        <p:column headerText="#{lbl['lbl.pp.created.by']}">  
 			                            <p:inputText value="#{budgetAllocRemark.createdBy}" disabled="true" />  
@@ -164,6 +184,15 @@ xmlns:c="http://java.sun.com/jsp/jstl/core"
      		<h:form id="itemDetForm">
 			    <p:panel id="pItemDet" header="#{lbl['lbl.pp.item.details']}">
 			    	<table class="ppTwoPartsTable">
+			    		<c:if test="#{budgetAllocationBackingBean.managedBean.viewMode==PPConst.modeApproval}">
+				    		<tr>
+				    			<th>#{lbl['lbl.pp.require.revision']}</th>
+								<td class="ppSmallTd">:</td>
+								<td>
+									<p:selectBooleanCheckbox value="#{budgetAllocationBackingBean.managedBean.selectedBudgetAllocItem.revisionRequire}" /> 
+								</td>
+				    		</tr>
+			    		</c:if>
 			    		<tr>
 			    			<th>* #{lbl['lbl.pp.gosodo.code']}</th>
 							<td class="ppSmallTd">:</td>
@@ -232,8 +261,8 @@ xmlns:c="http://java.sun.com/jsp/jstl/core"
 							<td class="ppSmallTd">:</td>
 							<td>
 								<p:inputText value="#{budgetAllocationBackingBean.managedBean.selectedBudgetAllocItem.allocationAmount}" 
-									update="itAvailableAmt"
-									readonly="#{!budgetAllocationBackingBean.managedBean.selectedBudgetAllocation.editable}"/>
+									readonly="#{!budgetAllocationBackingBean.managedBean.selectedBudgetAllocation.editable}">
+								</p:inputText>
 							</td>
 			    		</tr>
 			    		<tr>

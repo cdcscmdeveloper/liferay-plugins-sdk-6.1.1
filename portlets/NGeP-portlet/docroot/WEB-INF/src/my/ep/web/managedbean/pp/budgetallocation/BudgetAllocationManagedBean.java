@@ -1,7 +1,9 @@
 package my.ep.web.managedbean.pp.budgetallocation;
 
-import java.util.ArrayList;
+import java.math.BigDecimal;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
@@ -17,6 +19,9 @@ import my.ep.web.managedbean.BaseManagedBean;
 public class BudgetAllocationManagedBean extends BaseManagedBean{
 	private static final long serialVersionUID = 1L;
 	
+	
+	private Map<Long, BigDecimal> selectedGoMapper = new HashMap<Long, BigDecimal>();
+
 	private List <PpBudget> budgetList;
 
 	private PpBudgetAlloc selectedBudgetAllocation;
@@ -27,12 +32,30 @@ public class BudgetAllocationManagedBean extends BaseManagedBean{
 
 	private List <PpBudgetAlloc> budgetAllocationList;
 	
+	private String[] actions;
+
 	private String viewMode;
+	
+	private String bpmTaskId; 
+
+	/**
+	 * @return the bpmTaskId
+	 */
+	public String getBpmTaskId() {
+		return bpmTaskId;
+	}
+
+	/**
+	 * @param bpmTaskId the bpmTaskId to set
+	 */
+	public void setBpmTaskId(String bpmTaskId) {
+		this.bpmTaskId = bpmTaskId;
+	}
 
 	public List<PpBudget> getBudgetList() {
-		if(budgetList==null){
-			budgetList = new ArrayList<PpBudget>();
-		}
+//		if(budgetList==null){
+//			budgetList = new ArrayList<PpBudget>();
+//		}
 		return budgetList;
 	}
 
@@ -80,101 +103,118 @@ public class BudgetAllocationManagedBean extends BaseManagedBean{
 			PpBudgetAllocDtlRemark selectedBudgetAllocItemRmk) {
 		this.selectedBudgetAllocItemRmk = selectedBudgetAllocItemRmk;
 	}
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	private PpBudgetAlloc budgetAllocation = null;
-	public PpBudgetAlloc getBudgetAllocation() {
-		return budgetAllocation;
+
+	/**
+	 * @return the actions
+	 */
+	public String[] getActions() {
+		return actions;
 	}
 
-	public void setBudgetAllocation(PpBudgetAlloc budgetAllocation) {
-		this.budgetAllocation = budgetAllocation;
+	/**
+	 * @param actions the actions to set
+	 */
+	public void setActions(String[] actions) {
+		this.actions = actions;
 	}
-
 
 	
 	
-	private String pageInd;
-
-	//temp
-	private List budgetAllocationDetList = null;
-	//temp
-	private List remarkList = null;
 	
-	private boolean popup = false;
-
-	//temp
-	private boolean brandNew;
-	
-	
-	
-
-	public boolean isBrandNew() {
-		return brandNew;
+	/**
+	 * @return the selectedGoMapper
+	 */
+	public Map<Long, BigDecimal> getSelectedGoMapper() {
+		return selectedGoMapper;
 	}
 
-	public void setBrandNew(boolean brandNew) {
-		this.brandNew = brandNew;
-	}
-
-	public boolean isPopup() {
-		return popup;
-	}
-
-	public void setPopup(boolean popup) {
-		this.popup = popup;
-	}
-
-	public List getRemarkList() {
-		return remarkList;
-	}
-
-	public void setRemarkList(List remarkList) {
-		this.remarkList = remarkList;
-	}
-
-
-	public List getBudgetAllocationDetList() {
-		return budgetAllocationDetList;
-	}
-
-	public void setBudgetAllocationDetList(List budgetAllocationDetList) {
-		this.budgetAllocationDetList = budgetAllocationDetList;
-	}
-
-
-	public String getPageInd() {
-		if(this.pageInd == null){
-			pageInd = "V";
-		}
-		return pageInd;
-	}
-
-	public void setPageInd(String pageInd) {
-		this.pageInd = pageInd;
+	/**
+	 * @param selectedGoMapper the selectedGoMapper to set
+	 */
+	public void setSelectedGoMapper(Map<Long, BigDecimal> selectedGoMapper) {
+		this.selectedGoMapper = selectedGoMapper;
 	}
 	
-	public void cleanAll(){
-		this.setBudgetAllocationDetList(null);
-		this.setBudgetAllocationList(null);
-		this.setPopup(false);
-		this.setPageInd(null);
-		this.setRemarkList(null);
-		this.setViewMode(null);
-		this.setBrandNew(false);
-		
-	}
-
+	
+	
+	
+	
+	
+//	
+//	private PpBudgetAlloc budgetAllocation = null;
+//	
+//	public PpBudgetAlloc getBudgetAllocation() {
+//		return budgetAllocation;
+//	}
+//
+//	public void setBudgetAllocation(PpBudgetAlloc budgetAllocation) {
+//		this.budgetAllocation = budgetAllocation;
+//	}
+//
+//
+//	
+//	
+//	
+//	private String pageInd;
+//
+//	//temp
+//	private List budgetAllocationDetList = null;
+//	//temp
+//	private List remarkList = null;
+//	
+//	private boolean popup = false;
+//
+//	//temp
+//	private boolean brandNew;
+//	
+//	
+//	
+//	
+//	public boolean isBrandNew() {
+//		return brandNew;
+//	}
+//
+//	public void setBrandNew(boolean brandNew) {
+//		this.brandNew = brandNew;
+//	}
+//
+//	public boolean isPopup() {
+//		return popup;
+//	}
+//
+//	public void setPopup(boolean popup) {
+//		this.popup = popup;
+//	}
+//
+//	public List getRemarkList() {
+//		return remarkList;
+//	}
+//
+//	public void setRemarkList(List remarkList) {
+//		this.remarkList = remarkList;
+//	}
+//
+//
+//	public List getBudgetAllocationDetList() {
+//		return budgetAllocationDetList;
+//	}
+//
+//	public void setBudgetAllocationDetList(List budgetAllocationDetList) {
+//		this.budgetAllocationDetList = budgetAllocationDetList;
+//	}
+//
+//
+//	public String getPageInd() {
+//		if(this.pageInd == null){
+//			pageInd = "V";
+//		}
+//		return pageInd;
+//	}
+//
+//	public void setPageInd(String pageInd) {
+//		this.pageInd = pageInd;
+//	}
+//
+//
+//
 }
