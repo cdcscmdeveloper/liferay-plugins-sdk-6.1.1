@@ -45,10 +45,10 @@
 			<portlet id="bidding"></portlet>
 		</category>
 		<!-- Fulfilment Start Added by Giri -->
-		<category name="FL_DIS">
+		<category name="category.ep.fl">
 			<portlet id="FLContractOrder" />
 			<portlet id="FLDeliveryOrder" />
-			<portlet id="FLContractRequestOrder" />
+			<portlet id="FLContractRequest" />
 			<portlet id="FLFulfilmentReceivedNote" />
 			<portlet id="FLCreateInvoice" />
 			<portlet id="FLPaymentMatch" />

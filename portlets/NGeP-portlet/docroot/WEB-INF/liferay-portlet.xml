@@ -187,7 +187,7 @@
 		<css-class-wrapper>fldo-portlet</css-class-wrapper>
 	</portlet>
 	<portlet>
-		<portlet-name>FLContractRequestOrder</portlet-name>
+		<portlet-name>FLContractRequest</portlet-name>
 		<icon>/icon.png</icon>
 		<instanceable>false</instanceable>
 		<header-portlet-css>/css/main.css</header-portlet-css>
