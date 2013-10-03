@@ -7,8 +7,6 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.text.ParseException;
-import java.util.Date;
-import java.util.List;
 
 import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
@@ -20,7 +18,6 @@ import my.ep.biz.dto.fl.FulfilmentResDTO;
 import my.ep.biz.service.fl.request.IFulfilmentRequestSO;
 import my.ep.persistence.entity.fl.FlAttachment;
 import my.ep.persistence.entity.fl.FlRemark;
-import my.ep.persistence.entity.fl.FlRemark_;
 import my.ep.persistence.logging.LogKey;
 import my.ep.web.backingbean.BaseBackingBean;
 import my.ep.web.managedbean.fl.createcontract.FulfilmentRequestManagedBean;
@@ -44,12 +41,11 @@ public class FulfilmentRequestBackingBean extends BaseBackingBean<FulfilmentRequ
 	private static Logger log = Logger.getLogger(FulfilmentRequestBackingBean.class);
 	
 	public FulfilmentRequestBackingBean(){
-		   if(MDC.get(LogKey.USER_ID)==null) {
-			    MDC.put(LogKey.USER_ID, 1L);
-		   }
+		if(MDC.get(LogKey.USER_ID)==null) {
+		    MDC.put(LogKey.USER_ID, 1L);
+		}
 	}
 	public void createFulfillmentRequest() throws ParseException {
-
 		IFulfilmentRequestSO iFulfilmentRequestSO = null;
 		try {
 			FulfilmentReqDTO reqDTO = new FulfilmentReqDTO();
@@ -86,6 +82,8 @@ public class FulfilmentRequestBackingBean extends BaseBackingBean<FulfilmentRequ
 		this.getManagedBean().getFlAttachment().setFileDescription("File uploded for Contract Req Order");
 		this.getManagedBean().getFlAttachment().setFilePath("D:\\upload");
 		FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_INFO,"The file was uploaded successfully.", null);
+		FacesMessage msg = new FacesMessage("Succesful", event.getFile().getFileName() + " is uploaded.");  
+        FacesContext.getCurrentInstance().addMessage(null, msg);  
 		FileOutputStream fos;
 		try {
 			fos = new FileOutputStream("D:\\upload\\" + fileName);

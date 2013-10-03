@@ -3,16 +3,14 @@
  */
 package my.ep.web.managedbean.fl.createcontract;
 
-import java.util.List;
-
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
 
-import org.apache.log4j.Logger;
-
-import my.ep.persistence.entity.fl.FlRemark;
 import my.ep.persistence.entity.fl.FlAttachment;
+import my.ep.persistence.entity.fl.FlRemark;
 import my.ep.web.managedbean.BaseManagedBean;
+
+import org.apache.log4j.Logger;
 
 /**
  * Managed Bean for Create Contract Order
@@ -28,22 +26,11 @@ public class FulfilmentRequestManagedBean extends BaseManagedBean {
 
 	private FlRemark flRemark = new FlRemark();
 	private FlAttachment flAttachment = new FlAttachment();
-	private List<FlRemark> allremarksList;
-	private List<FlAttachment> allAttachmentsList;
-
-	/**
-	 * @return the allAttachmentsList
-	 */
-	public List<FlAttachment> getAllAttachmentsList() {
-		return allAttachmentsList;
+	
+	public FulfilmentRequestManagedBean(){
+		
 	}
-
-	/**
-	 * @param allAttachmentsList the allAttachmentsList to set
-	 */
-	public void setAllAttachmentsList(List<FlAttachment> allAttachmentsList) {
-		this.allAttachmentsList = allAttachmentsList;
-	}
+	
 
 	/**
 	 * @return the flRemark
@@ -75,18 +62,5 @@ public class FulfilmentRequestManagedBean extends BaseManagedBean {
 		this.flAttachment = flAttachment;
 	}
 
-	/**
-	 * @return the allremarksList
-	 */
-	public List<FlRemark> getAllremarksList() {
-		return allremarksList;
-	}
-
-	/**
-	 * @param allremarksList the allremarksList to set
-	 */
-	public void setAllremarksList(List<FlRemark> allremarksList) {
-		this.allremarksList = allremarksList;
-	}
 
 }
