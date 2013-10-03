@@ -786,7 +786,7 @@
 	</portlet>
 	<portlet>
 		<portlet-name>FLContractRequest</portlet-name>
-		<display-name>FLContractRequestr</display-name>
+		<display-name>FLContractRequest</display-name>
 		<portlet-class>
 			org.portletfaces.bridge.GenericFacesPortlet
 		</portlet-class>
