@@ -34,6 +34,10 @@ public class BusinessDelegate{
 	public <T extends IGenericSO> T getServiceObject(Class<T> clazz){
 		return EpEjbBusinessDelegate.getInstance().getServiceObject(clazz);
 	}
+
+	public <T extends IGenericSO> T getServiceObject(String moduleCode, Class<T> clazz){
+		return EpEjbBusinessDelegate.getInstance().getServiceObject(moduleCode, clazz);
+	}
 	
 /*	@SuppressWarnings("unchecked")
 	public <T extends my.ep.bpm.service.IGenericSO> T getBpmServiceObject(Class<T> clazz){

@@ -3,6 +3,9 @@
 	<name>NGeP-portlet</name>
 	<comment></comment>
 	<projects>
+		<project>NGeP-bizRemoteClient</project>
+		<project>NGeP-bizBaseClient</project>
+		<project>NGeP-jpa</project>
 	</projects>
 	<buildSpec>
 		<buildCommand>
