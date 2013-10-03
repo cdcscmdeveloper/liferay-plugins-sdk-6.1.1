@@ -726,7 +726,7 @@
 		</portlet-class>
 		<init-param>
 			<name>javax.portlet.faces.defaultViewId.view</name>
-			<value>/xhtml/fl/contractorder/coGeneral.xhtml</value>
+			<value>/xhtml/fl/contractorder/coBasePage.xhtml</value>
 		</init-param>
 		<expiration-cache>0</expiration-cache>
 		<supports>
@@ -759,7 +759,7 @@
 		</portlet-class>
 		<init-param>
 			<name>javax.portlet.faces.defaultViewId.view</name>
-			<value>/xhtml/fl/deliveryorder/doGeneral.xhtml</value>
+			<value>/xhtml/fl/deliveryorder/doBasePage.xhtml</value>
 		</init-param>
 		<expiration-cache>0</expiration-cache>
 		<supports>
@@ -785,14 +785,14 @@
 		</security-role-ref>
 	</portlet>
 	<portlet>
-		<portlet-name>FLContractRequestOrder</portlet-name>
-		<display-name>FLContractRequestOrder</display-name>
+		<portlet-name>FLContractRequest</portlet-name>
+		<display-name>FLContractRequestr</display-name>
 		<portlet-class>
 			org.portletfaces.bridge.GenericFacesPortlet
 		</portlet-class>
 		<init-param>
 			<name>javax.portlet.faces.defaultViewId.view</name>
-			<value>/xhtml/fl/contractrequest/crGeneral.xhtml</value>
+			<value>/xhtml/fl/contractrequest/crBasePage.xhtml</value>
 		</init-param>
 		<expiration-cache>0</expiration-cache>
 		<supports>
@@ -800,8 +800,8 @@
 			<portlet-mode>view</portlet-mode>
 		</supports>
 		<portlet-info>
-			<title>FLContractRequestOrder</title>
-			<short-title>FLContractRequestOrder</short-title>
+			<title>FLContractRequest</title>
+			<short-title>FLContractRequest</short-title>
 			<keywords></keywords>
 		</portlet-info>
 		<security-role-ref>
@@ -825,7 +825,7 @@
 		</portlet-class>
 		<init-param>
 			<name>javax.portlet.faces.defaultViewId.view</name>
-			<value>/xhtml/fl/receivednote/frnGeneral.xhtml</value>
+			<value>/xhtml/fl/receivednote/frnBasePage.xhtml</value>
 		</init-param>
 		<expiration-cache>0</expiration-cache>
 		<supports>
@@ -858,7 +858,7 @@
 		</portlet-class>
 		<init-param>
 			<name>javax.portlet.faces.defaultViewId.view</name>
-			<value>/xhtml/fl/invoice/invGeneral.xhtml</value>
+			<value>/xhtml/fl/invoice/invBasePage.xhtml</value>
 		</init-param>
 		<expiration-cache>0</expiration-cache>
 		<supports>
@@ -891,7 +891,7 @@
 		</portlet-class>
 		<init-param>
 			<name>javax.portlet.faces.defaultViewId.view</name>
-			<value>/xhtml/fl/paymentmatch/pmGeneral.xhtml</value>
+			<value>/xhtml/fl/paymentmatch/pmBasePage.xhtml</value>
 		</init-param>
 		<expiration-cache>0</expiration-cache>
 		<supports>
@@ -924,7 +924,7 @@
 		</portlet-class>
 		<init-param>
 			<name>javax.portlet.faces.defaultViewId.view</name>
-			<value>/xhtml/fl/stopInstruction/siGeneral.xhtml</value>
+			<value>/xhtml/fl/stopInstruction/siBasePage.xhtml</value>
 		</init-param>
 		<expiration-cache>0</expiration-cache>
 		<supports>
@@ -957,7 +957,7 @@
 		</portlet-class>
 		<init-param>
 			<name>javax.portlet.faces.defaultViewId.view</name>
-			<value>/xhtml/fl/purchaseorder/poGeneral.xhtml</value>
+			<value>/xhtml/fl/purchaseorder/poBasePage.xhtml</value>
 		</init-param>
 		<expiration-cache>0</expiration-cache>
 		<supports>
@@ -990,7 +990,7 @@
 		</portlet-class>
 		<init-param>
 			<name>javax.portlet.faces.defaultViewId.view</name>
-			<value>/xhtml/fl/purchaserequest/prGeneral.xhtml</value>
+			<value>/xhtml/fl/purchaserequest/prBasePage.xhtml</value>
 		</init-param>
 		<expiration-cache>0</expiration-cache>
 		<supports>
