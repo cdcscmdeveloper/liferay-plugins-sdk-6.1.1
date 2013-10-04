@@ -7,6 +7,9 @@ import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
 import javax.faces.model.SelectItem;
 
+import my.ep.persistence.entity.cm.catalog.CmItem;
+import my.ep.persistence.entity.cm.catalog.CmSupplierItem;
+import my.ep.persistence.entity.cm.catalog.CmUnspsc;
 import my.ep.web.managedbean.BaseManagedBean;
 import my.ep.web.vo.AdvanceSearchVO;
 import my.ep.web.vo.PricingVO;
@@ -14,9 +17,9 @@ import my.ep.web.vo.PricingVO;
 @ManagedBean(name = "catalogueMB")
 @SessionScoped
 public class CatalogueManagedBean extends BaseManagedBean {
-	
-	
-	
+
+
+
 	private String itemName;
 	private String searchType="S";
 	private String searchInd="and";
@@ -27,28 +30,59 @@ public class CatalogueManagedBean extends BaseManagedBean {
 	private List<PricingVO> selectedSupplierItemList;
 	private PricingVO[] selectedSupplierItems;
 	private String navigationURL;
-	
+
 	private List<SelectItem> pricingCriteria;
 	private List<PricingVO> pricingList;
 	private List<PricingVO> zonalPricingList;
 	private List<PricingVO> districtPricingList;
 	private PricingVO selectedPricing;
 	private boolean districtIND = false;
-	
-	private String test;
-	
-	
-	
 
-	
-	
+	private CmUnspsc unspsc;
 
-	public String getTest() {
-		return test;
+	private List<CmSupplierItem> maintainItemList;
+	private CmSupplierItem selectedMaintainItem;
+	private CmSupplierItem[] selectedMaintainItems;
+
+
+
+
+
+
+	public List<CmSupplierItem> getMaintainItemList() {
+		if(maintainItemList==null)
+			maintainItemList = new ArrayList<CmSupplierItem>();
+		return maintainItemList;
 	}
 
-	public void setTest(String test) {
-		this.test = test;
+	public void setMaintainItemList(List<CmSupplierItem> maintainItemList) {
+		this.maintainItemList = maintainItemList;
+	}
+
+	public CmSupplierItem getSelectedMaintainItem() {
+		return selectedMaintainItem;
+	}
+
+	public void setSelectedMaintainItem(CmSupplierItem selectedMaintainItem) {
+		this.selectedMaintainItem = selectedMaintainItem;
+	}
+
+	public CmSupplierItem[] getSelectedMaintainItems() {
+		return selectedMaintainItems;
+	}
+
+	public void setSelectedMaintainItems(CmSupplierItem[] selectedMaintainItems) {
+		this.selectedMaintainItems = selectedMaintainItems;
+	}
+
+	public CmUnspsc getUnspsc() {
+		if(unspsc==null)
+			unspsc = new CmUnspsc();
+		return unspsc;
+	}
+
+	public void setUnspsc(CmUnspsc unspsc) {
+		this.unspsc = unspsc;
 	}
 
 	public List<PricingVO> getSupplierItemList() {
@@ -98,7 +132,7 @@ public class CatalogueManagedBean extends BaseManagedBean {
 	}
 
 	public List<PricingVO> getPricingList() {
-		
+
 		if(pricingList==null)
 			pricingList = new ArrayList<PricingVO>();
 		return pricingList;
@@ -178,7 +212,7 @@ public class CatalogueManagedBean extends BaseManagedBean {
 		searchCriteria.add(new SelectItem("Item", "Item Code"));
 		searchCriteria.add(new SelectItem("State", "State"));
 		searchCriteria.add(new SelectItem("District", "District"));
-		
+
 		return searchCriteria;
 	}
 
@@ -203,7 +237,7 @@ public class CatalogueManagedBean extends BaseManagedBean {
 	public void setNavigationURL(String navigationURL) {
 		this.navigationURL = navigationURL;
 	}
-	
-	
-	
+
+
+
 }

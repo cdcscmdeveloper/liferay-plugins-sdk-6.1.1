@@ -1,21 +1,46 @@
 package my.ep.web.backingbean.cm.codification;
 
 import java.io.FileInputStream;
+import java.io.IOException;
+import java.io.Serializable;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.Map;
 
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.RequestScoped;
+import javax.faces.bean.ViewScoped;
+import javax.faces.context.ExternalContext;
 import javax.faces.context.FacesContext;
+import javax.faces.model.SelectItem;
 import javax.portlet.PortletRequest;
 
+import my.ep.biz.bean.search.ISearchBean;
+import my.ep.biz.bean.search.ISearchResultBean;
+import my.ep.biz.bean.search.SearchBean;
+import my.ep.biz.bean.search.SearchFilterBean;
+import my.ep.biz.bean.search.SearchResultBean;
 import my.ep.biz.dto.cm.codification.CodificationReqDTO;
 import my.ep.biz.dto.cm.codification.CodificationResDTO;
 import my.ep.biz.service.cm.codification.ICodificationSO;
+import my.ep.bpm.dto.BpmRequestDTO;
+import my.ep.bpm.dto.BpmResponseDTO;
+import my.ep.bpm.service.IBpmSO;
+import my.ep.persistence.entity.cm.catalog.CmBrand;
+import my.ep.persistence.entity.cm.catalog.CmColor;
+import my.ep.persistence.entity.cm.catalog.CmItem;
+import my.ep.persistence.entity.cm.catalog.CmMeasurement;
+import my.ep.persistence.entity.cm.catalog.CmType;
 import my.ep.persistence.entity.cm.catalog.CmUnspsc;
+import my.ep.type.aut.SearchOperator;
 import my.ep.web.backingbean.BaseBackingBean;
+import my.ep.web.bean.paginator.IPagingDataModel;
+import my.ep.web.bean.paginator.PagingDataModel;
+import my.ep.web.constant.PagingConst;
 import my.ep.web.managedbean.cm.codification.CodificationManagedBean;
 import my.ep.web.util.lookupservice.BusinessDelegate;
-import my.ep.web.vo.RemarksVO;
 
+import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.apache.poi.hssf.usermodel.HSSFSheet;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
@@ -27,6 +52,8 @@ import org.primefaces.model.UploadedFile;
 @RequestScoped
 public class CodificationBackingBean extends BaseBackingBean<CodificationManagedBean>{
 
+
+	
 	public static final String NAV_TO_CODIFICATION_VIEW = "codificationView";
 	public static final String NAV_TO_EXTENSION_SEARCH = "extensionSearch";
 	public static final String NAV_TO_UNSPSC_REQUEST_FORM = "unspscRequestForm";
@@ -41,38 +68,214 @@ public class CodificationBackingBean extends BaseBackingBean<CodificationManaged
 
 	private static Logger log = Logger.getLogger(CodificationBackingBean.class);
 
+
+	private SearchFilterBean codeFilterBean = new SearchFilterBean(SearchOperator.OPERATOR_LIKE.value());
+	private SearchFilterBean titleFilterBean = new SearchFilterBean(SearchOperator.OPERATOR_LIKE.value());
+	private SearchFilterBean levelFilterBean = new SearchFilterBean(SearchOperator.OPERATOR_EQUALS.value());
+	//private IPagingDataModel<CmUnspsc> searchDataModel = new SearchPagingDataModel();
+
+	private SearchFilterBean colorFilterBean = new SearchFilterBean(SearchOperator.OPERATOR_EQUALS.value());
+	private SearchFilterBean typeFilterBean = new SearchFilterBean(SearchOperator.OPERATOR_EQUALS.value());
+	private SearchFilterBean brandFilterBean = new SearchFilterBean(SearchOperator.OPERATOR_EQUALS.value());
+	private SearchFilterBean measurementFilterBean = new SearchFilterBean(SearchOperator.OPERATOR_EQUALS.value());
+	//private IPagingDataModel<CmItem> searchItemDataModel = new SearchItemPagingDataModel();
+
+
 	public CodificationBackingBean(){
 
+		
+
+	}
 
 
 
+	public void itemSearch(){
+		
+		ICodificationSO codificationSO = (ICodificationSO) BusinessDelegate.getInstance().getServiceObject("cm",ICodificationSO.class);
+
+		ISearchBean<CmItem> searchBean = new SearchBean<CmItem>();
+		colorFilterBean.setSearchField("cmColor.colorCode");
+		searchBean.getDataFilterBeans().add(colorFilterBean);
+		
+		typeFilterBean.setSearchField("cmType.typeCode");
+		searchBean.getDataFilterBeans().add(typeFilterBean);
+		
+		brandFilterBean.setSearchField("cmBrand.brandCode");
+		searchBean.getDataFilterBeans().add(brandFilterBean);
+		
+		measurementFilterBean.setSearchField("cmMeasurement.measurementCode");
+		searchBean.getDataFilterBeans().add(measurementFilterBean);
+		
+		CodificationReqDTO reqDTO = new CodificationReqDTO();
+		reqDTO.setItemSearchBean(searchBean);
+
+		CodificationResDTO resDTO = codificationSO.searchItem(reqDTO);
+		this.getManagedBean().setItemList(resDTO.getItemList());
+	}
+
+	/*private class SearchItemPagingDataModel extends PagingDataModel<CmItem> {
+
+		private static final long serialVersionUID = 1L;
+
+		public SearchItemPagingDataModel() {
+			super("itemTableID");
+			// TODO Auto-generated constructor stub
+		}
+
+		@Override
+		protected ISearchResultBean<CmItem> pageChangeListener(
+				ISearchBean<CmItem> searchBean) {
+
+
+//			if(StringUtils.isBlank((String)colorFilterBean.getSearchValue()) 
+//					&& StringUtils.isBlank((String)typeFilterBean.getSearchValue())
+//					&& StringUtils.isBlank((String)brandFilterBean.getSearchValue())
+//					&& StringUtils.isBlank((String)measurementFilterBean.getSearchValue())) {
+//				return new SearchResultBean();
+//			}
+
+			ICodificationSO unspscSO = null;
+			try {				
+				unspscSO = (ICodificationSO) BusinessDelegate.getInstance().getServiceObject(ICodificationSO.class);
 
 
 
+				CodificationReqDTO reqDTO = new CodificationReqDTO();
+				reqDTO.setItemSearchBean(searchBean);
+
+				CodificationResDTO resDTO = unspscSO.searchItem(reqDTO);
+
+				return resDTO.getItemResultBean();
+
+			} finally {
+				unspscSO = null;
+			}
+		}
+
+	}*/
+
+	/*public IPagingDataModel<CmItem> getSearchItemDataModel() {
+		return searchItemDataModel;
+	}
+
+	public void setSearchItemDataModel(IPagingDataModel<CmItem> searchItemDataModel) {
+		this.searchItemDataModel = searchItemDataModel;
+	}*/
+
+/*	private class SearchPagingDataModel extends PagingDataModel<CmUnspsc> {
+
+		private static final long serialVersionUID = 1L;
+
+		public SearchPagingDataModel() {
+			super("unspscTableID");
+			// TODO Auto-generated constructor stub
+		}
+
+		@Override
+		protected ISearchResultBean<CmUnspsc> pageChangeListener(
+				ISearchBean<CmUnspsc> searchBean) {
+			if(StringUtils.isBlank((String)codeFilterBean.getSearchValue()) 
+					&& StringUtils.isBlank((String)titleFilterBean.getSearchValue())) {
+				return new SearchResultBean();
+			}
+
+			ICodificationSO unspscSO = null;
+			try {				
+				unspscSO = (ICodificationSO) BusinessDelegate.getInstance().getServiceObject(ICodificationSO.class);
+
+				if (StringUtils.isNotBlank((String)codeFilterBean.getSearchValue())) {
+					codeFilterBean.setSearchField("unspscCode");
+					searchBean.getDataFilterBeans().add(codeFilterBean);
+				}
+
+				if (StringUtils.isNotBlank((String)titleFilterBean.getSearchValue())) {
+					titleFilterBean.setSearchField("unspscTitle");
+					searchBean.getDataFilterBeans().add(titleFilterBean);
+				}
+
+
+				levelFilterBean.setSearchField("unspscLevel");
+				levelFilterBean.setSearchValue(3);
+				searchBean.getDataFilterBeans().add(levelFilterBean);
+
+
+				CodificationReqDTO reqDTO = new CodificationReqDTO();
+				reqDTO.setSearchBean(searchBean);
+
+				CodificationResDTO resDTO = unspscSO.searchUNSPSC(reqDTO);
+
+				return resDTO.getResultBean();
+
+			} finally {
+				unspscSO = null;
+			}
+		}
+
+	}*/
+
+	public SearchFilterBean getCodeFilterBean() {
+		return codeFilterBean;
+	}
+
+	public void setCodeFilterBean(SearchFilterBean codeFilterBean) {
+		this.codeFilterBean = codeFilterBean;
+	}
+
+	public SearchFilterBean getTitleFilterBean() {
+		return titleFilterBean;
+	}
+
+	public void setTitleFilterBean(SearchFilterBean titleFilterBean) {
+		this.titleFilterBean = titleFilterBean;
+	}
+
+	public SearchFilterBean getLevelFilterBean() {
+		return levelFilterBean;
+	}
+
+	public void setLevelFilterBean(SearchFilterBean levelFilterBean) {
+		this.levelFilterBean = levelFilterBean;
+	}
+	/*
+	public IPagingDataModel<CmUnspsc> getSearchDataModel() {
+		return searchDataModel;
+	}
+
+	public void setSearchDataModel(IPagingDataModel<CmUnspsc> searchDataModel) {
+		this.searchDataModel = searchDataModel;
 	}
 
 	public void unspscSearch(){
+		searchDataModel.reloadData();
+	}*/
 
-		ICodificationSO unspscSO = (ICodificationSO) BusinessDelegate.getInstance().getServiceObject(ICodificationSO.class);
-
-		log.info("unspscCode:"+this.getManagedBean().getUnspscCode());
-		System.out.println("********getUnspscTitle*******"+this.getManagedBean().getUnspscTitle());
+	
+	public void unspscSearch2() {
 		
-		CodificationReqDTO reqDTO = new CodificationReqDTO();
-
-		if(this.getManagedBean().getUnspscCode()!=null){
-			reqDTO.setUnspscCode(this.getManagedBean().getUnspscCode());
-		}
-		if(this.getManagedBean().getUnspscTitle()!=null){
-			reqDTO.setUnspscTitle(this.getManagedBean().getUnspscTitle());
-		}
+		System.out.println(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>unspscSearch");
 		
-		CodificationResDTO resDTO = unspscSO.findUnspsc(reqDTO);
-		this.getManagedBean().setUnspscList(resDTO.getUnspscList());
-
+		ICodificationSO codificationSO = null;
+		try {				
+			codificationSO = (ICodificationSO) BusinessDelegate.getInstance().getServiceObject("cm", ICodificationSO.class);
+			
+			ISearchBean<CmUnspsc> searchBean = new SearchBean<CmUnspsc>();
+			codeFilterBean.setSearchField("unspscCode");
+			searchBean.getDataFilterBeans().add(codeFilterBean);
+			titleFilterBean.setSearchField("unspscTitle");
+			searchBean.getDataFilterBeans().add(titleFilterBean);
+			levelFilterBean.setSearchField("unspscLevel");
+			levelFilterBean.setSearchValue(3);
+			searchBean.getDataFilterBeans().add(levelFilterBean);			
+			
+			CodificationReqDTO reqDTO = new CodificationReqDTO();
+			reqDTO.setSearchBean(searchBean);
+			
+			CodificationResDTO resDTO = codificationSO.searchUNSPSC(reqDTO);
+			this.getManagedBean().setUnspscList(resDTO.getUnspscList());
+		} finally {
+			codificationSO = null;
+		}
 	}
-
-
 
 	public String codificationSearch(){
 
@@ -80,31 +283,56 @@ public class CodificationBackingBean extends BaseBackingBean<CodificationManaged
 	}
 
 
-
 	public String goToExtensionSearch(){
 
-		log.debug("*****************************"+this.getManagedBean().getSelectedUNSPSCObj().getUnspscCode());
+		this.getManagedBean().setMeasurementCriteria(null);
+		this.getManagedBean().setColorCriteria(null);
+		this.getManagedBean().setBrandCriteria(null);
+		this.getManagedBean().setTypeCriteria(null);
 
-		return NAV_TO_EXTENSION_SEARCH;
+		ICodificationSO unspscSO =  (ICodificationSO) BusinessDelegate.getInstance().getServiceObject("cm",ICodificationSO.class);
+		CodificationReqDTO reqDTO = new CodificationReqDTO();
+
+		CodificationResDTO resDTO = unspscSO.searchColor(reqDTO);
+
+		log.info("*****************************"+this.getManagedBean().getSelectedUNSPSCObj().getUnspscCode());
+
+		for(CmColor color:resDTO.getColorList()){
+			log.info("color:"+color);
+			log.info("color:"+color.getColorId());
+			this.getManagedBean().getColorCriteria().add(new SelectItem(color.getColorCode(), color.getColorName()));
+		}
+
+		for(CmBrand brand:this.getManagedBean().getSelectedUNSPSCObj().getCmBrand()){
+			this.getManagedBean().getBrandCriteria().add(new SelectItem(brand.getBrandCode(), brand.getBrandName()));
+		}
+
+		for(CmType type:this.getManagedBean().getSelectedUNSPSCObj().getCmType()){
+			this.getManagedBean().getTypeCriteria().add(new SelectItem(type.getTypeCode(), type.getTypeName()));
+		}
+
+		for(CmMeasurement measurement:this.getManagedBean().getSelectedUNSPSCObj().getCmMeasurement()){
+			this.getManagedBean().getMeasurementCriteria().add(new SelectItem(measurement.getMeasurementCode(), measurement.getMeasurementName()));
+		}
+
+
+
+
+
+		return NAV_TO_EXTENSION_SEARCH+"?faces-redirect=true";
 	}
 
 	public String requestUNSPSCcode(){
-
 
 		return NAV_TO_UNSPSC_REQUEST_FORM;
 	}
 
 	public String singleUpload(){
 
-
-
 		return NAV_TO_UNSPSC_SINGLE_UPLOAD;
-
 	}
 
 	public String requestExtensioncode(){
-
-
 
 		return NAV_TO_EXTENSION_REQUEST_FORM;
 
@@ -137,7 +365,7 @@ public class CodificationBackingBean extends BaseBackingBean<CodificationManaged
 
 	public void uploadUNSPSC(FileUploadEvent event) throws Exception{
 
-		ICodificationSO unspscSO = (ICodificationSO) BusinessDelegate.getInstance().getServiceObject(ICodificationSO.class);
+		ICodificationSO unspscSO = (ICodificationSO) BusinessDelegate.getInstance().getServiceObject("cm",ICodificationSO.class);
 
 		PortletRequest request = (PortletRequest)FacesContext.getCurrentInstance().getExternalContext().getRequest();
 
@@ -152,9 +380,6 @@ public class CodificationBackingBean extends BaseBackingBean<CodificationManaged
 
 
 		log.debug("*******segment***********");
-
-
-
 
 		long key = 0;
 		long code =0;
@@ -172,21 +397,17 @@ public class CodificationBackingBean extends BaseBackingBean<CodificationManaged
 				key = (long) row.getCell(0).getNumericCellValue();
 				unspsc.setUnspscKey(key);
 
-
 			}
 
 			if(row.getCell(1)!=null){
 				code = (long) row.getCell(1).getNumericCellValue();
 
 				unspsc.setUnspscCode(String.valueOf(code));
-
-
 			}
 
 			if(row.getCell(2)!=null){
 				title =  row.getCell(2).getStringCellValue();
 				unspsc.setUnspscTitle(title);
-
 
 			}
 
@@ -432,6 +653,62 @@ public class CodificationBackingBean extends BaseBackingBean<CodificationManaged
 
 		return level;
 	}
+
+
+
+
+
+
+
+	public SearchFilterBean getColorFilterBean() {
+		return colorFilterBean;
+	}
+
+
+
+	public void setColorFilterBean(SearchFilterBean colorFilterBean) {
+		this.colorFilterBean = colorFilterBean;
+	}
+
+
+
+	public SearchFilterBean getTypeFilterBean() {
+		return typeFilterBean;
+	}
+
+
+
+	public void setTypeFilterBean(SearchFilterBean typeFilterBean) {
+		this.typeFilterBean = typeFilterBean;
+	}
+
+
+
+	public SearchFilterBean getBrandFilterBean() {
+		return brandFilterBean;
+	}
+
+
+
+	public void setBrandFilterBean(SearchFilterBean brandFilterBean) {
+		this.brandFilterBean = brandFilterBean;
+	}
+
+
+
+	public SearchFilterBean getMeasurementFilterBean() {
+		return measurementFilterBean;
+	}
+
+
+
+	public void setMeasurementFilterBean(SearchFilterBean measurementFilterBean) {
+		this.measurementFilterBean = measurementFilterBean;
+	}
+
+
+
+
 
 
 }
