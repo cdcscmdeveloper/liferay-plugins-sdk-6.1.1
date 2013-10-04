@@ -1,6 +1,7 @@
 package my.ep.web.backingbean.bpm.tasklist;
 
 import java.io.IOException;
+import java.text.SimpleDateFormat;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
@@ -15,6 +16,7 @@ import org.apache.log4j.Logger;
 import my.ep.bpm.dto.BpmRequestDTO;
 import my.ep.bpm.dto.BpmResponseDTO;
 import my.ep.bpm.service.IBpmSO;
+import my.ep.util.lookupservice.EpBpmBusinessDelegate;
 import my.ep.web.backingbean.BaseBackingBean;
 import my.ep.web.backingbean.cm.codification.CodificationBackingBean;
 import my.ep.web.constant.PagingConst;
@@ -26,6 +28,7 @@ import my.ep.web.util.lookupservice.BusinessDelegate;
 public class TaskListBackingBean extends BaseBackingBean<TaskListManagedBean>{
 	
 	private static Logger log = Logger.getLogger(TaskListBackingBean.class);
+	public static final SimpleDateFormat DATE_FORMAT = new SimpleDateFormat( "MM/dd/yy hh:mm a" );
 	
 	
 	
@@ -45,16 +48,34 @@ public class TaskListBackingBean extends BaseBackingBean<TaskListManagedBean>{
 
 		System.out.println("testing BPM******");
 		BpmResponseDTO responseDTO = retrieveWorklistItems();
-		
+		//BpmResponseDTO responseDTO = initiateTask();
 	}
 
+	public BpmResponseDTO initiateTask(){
+		System.out.println("initiateTask******");
+	IBpmSO bpmSO = (IBpmSO) EpBpmBusinessDelegate.getInstance().getServiceObject(IBpmSO.class);
+	  String ctx = bpmSO.authenticate("roslan","welcome1");
+	  BpmRequestDTO reqDTO = new BpmRequestDTO();
+	  reqDTO.setCtxToken(ctx);
 
+	//  reqDTO.setProcessId("Procurement_Strategy.EndorseBudget");
+	  reqDTO.setProcessId("Codification.RequestUNSPSC");
+	  reqDTO.setOutcome("");
+	//  PSBudgetDataType obj = new PSBudgetDataType();
+	//  obj.setApprover("Asdqwe");
+	//  obj.setBudgetId("Asdqwe");
+	//  obj.setPtj("Asdqwe");
+	//  reqDTO.setPojo(obj);
+	  BpmResponseDTO res = bpmSO.initiateAndUpdateTask(reqDTO);
+	  return res;
+	}
 
 	public BpmResponseDTO retrieveWorklistItems(){
 
 
 
-		IBpmSO bpmSO= BusinessDelegate.getInstance().getBpmServiceObject(IBpmSO.class);
+		IBpmSO bpmSO = (IBpmSO) EpBpmBusinessDelegate.getInstance().getServiceObject(IBpmSO.class);
+
 		String token = bpmSO.authenticate("roslan", "welcome1");
 		System.out.println("testing BPM auth******"+token);
 		BpmRequestDTO reqDTO = new BpmRequestDTO();
@@ -66,8 +87,12 @@ public class TaskListBackingBean extends BaseBackingBean<TaskListManagedBean>{
 		BpmResponseDTO responseDTO = bpmSO.getWorklistItems(reqDTO);
 
 		System.out.println("testing BPM******"+responseDTO.getWorklistVO().getWorklistItem());
+		
+		
 
 		this.getManagedBean().setTaskList(responseDTO.getWorklistVO().getWorklistItem());
+		
+		
 
 
 		return responseDTO;
@@ -88,7 +113,7 @@ public class TaskListBackingBean extends BaseBackingBean<TaskListManagedBean>{
 					Map.Entry entry = (Map.Entry)itMap.next();
 					String key = (String)entry.getKey();
 					log.info("mapKey:"+key);
-					if(key.equalsIgnoreCase("key")){
+					if(key.equalsIgnoreCase("key1")){
 						url = (String)entry.getValue();
 
 					}
