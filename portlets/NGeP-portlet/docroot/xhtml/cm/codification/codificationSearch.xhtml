@@ -4,7 +4,8 @@
 	xmlns:h="http://java.sun.com/jsf/html"
 	xmlns:ui="http://java.sun.com/jsf/facelets"
 	xmlns:p="http://primefaces.org/ui"
-	xmlns:c="http://java.sun.com/jsp/jstl/core">
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:ac="http://ac.my/jsf/composite/cc">
 
 
 
@@ -15,12 +16,12 @@
 		<table>
 			<tr>
 				<td><p:outputLabel value="#{lbl['lbl.cm.unspsc.code']}"></p:outputLabel></td>
-				<td colspan="1" ><p:inputText value="#{codificationBackingBean.managedBean.unspscCode}" /></td>
+				<td colspan="1" ><p:inputText value="#{codificationBackingBean.codeFilterBean.searchValue}" /></td>
 			</tr>
 			<tr>
 				<td><p:outputLabel value="#{lbl['lbl.cm.unspsc.title']}"></p:outputLabel></td>
-				<td><p:inputText value="#{codificationBackingBean.managedBean.unspscTitle}" /></td>
-				<td><p:commandButton value="search" action="#{codificationBackingBean.unspscSearch}" update="cmUNSPSCsearchID"/></td>
+				<td><p:inputText value="#{codificationBackingBean.titleFilterBean.searchValue}" /></td>
+				<td><p:commandButton value="search" action="#{codificationBackingBean.unspscSearch2}" update="cmUNSPSCsearchID"/></td>
 			</tr>
 
 		</table>
@@ -33,6 +34,8 @@
 			var="unspscObj" rowKey="#{unspscObj.unspscId}"
 			selection="#{codificationBackingBean.managedBean.selectedUNSPSCObj}"
 			width="100%" selectionMode="single">
+
+			<ac:paginator for="unspscTableID" />
 
 			<p:ajax event="rowSelect" oncomplete="extensionSearch();" />
 
