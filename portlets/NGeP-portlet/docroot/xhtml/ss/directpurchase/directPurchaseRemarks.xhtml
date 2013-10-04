@@ -11,7 +11,7 @@
 	</ui:define>
 
 	<ui:define name="sideMenu">
-		<ui:include src="/xhtml/ss/directpurchase/sc_directpurchase_sidemenu.xhtml" />
+		<ui:include src="/xhtml/ss/directpurchase/common/ss_directpurchase_sidemenu.xhtml" />
 	</ui:define>
 	<ui:define name="content">
 		<h:form>
@@ -19,7 +19,7 @@
 			<p:commandButton value="#{lbl['lbl.ss.save']}" /> 
 			<p:commandButton value="#{lbl['lbl.ss.submit']}" />
 		</div>
-		<p:panel label="#{lbl['lbl.sc.item.detail']}" header="#{lbl['lbl.sc.item.detail']}" toggleable="true">
+		<p:panel label="#{lbl['lbl.ss.panel.title.remarks']}" header="#{lbl['lbl.ss.panel.title.remarks']}" toggleable="true">
 			<h:panelGrid columns="1" width="100%">
 				<p:dataTable id="itemdataTable"
 			        width="100%"

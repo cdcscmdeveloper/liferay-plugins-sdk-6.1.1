@@ -41,6 +41,7 @@
 		<!-- sourcing -->
 		<category name="category.ep.ss">
 			<portlet id="ss-directPurchase" />
+			<portlet id="ss-procurementlist" />
 			<portlet id="ss-defaultPurchase" />
 			<portlet id="bidding"></portlet>
 		</category>

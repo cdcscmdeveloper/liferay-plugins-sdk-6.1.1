@@ -6,13 +6,7 @@
 	xmlns:p="http://primefaces.org/ui"
 	xmlns:c="http://java.sun.com/jsp/jstl/core">
 		
-    <p:panel>
-		<p:panelGrid style="width:100%;" styleClass="noBorders tr,noBorders td" ></p:panelGrid>
-     </p:panel>
-     		<div align="right">
-	    <p:commandButton actionListener="#{procureCodeManagedBean.save}" value="SAVE" ajax="false" style="margin-right:30px;" /> 
-    </div>
-	<p:panel header="Search Procurement" toggleable="true">
+    <p:panel header="Search Procurement" toggleable="true">
 	
 	<p:panelGrid columns="2" style="width:25%;" styleClass="noBorders tr,noBorders td">
 	
@@ -48,61 +42,52 @@
 	</p:panel>
 	
 	<p:panel header="Results" toggleable="true">
-	<p:dataTable value="#{procureMB.procurementlist}" var="procurementObj" id="procureList" resizableColumns="true" editable="true">
+	<p:dataTable value="#{procureMB.procurementPlanList}" var="procurementObj" id="procureList" resizableColumns="true" editable="true">
         
    <p:ajax event="rowEdit" />  
         <p:ajax event="rowEditCancel" />  
   
-        <p:column headerText="Plan Number" style="width:12%">  
-           <p:outputLabel value="#{procurementObj.number}"></p:outputLabel>
+        <p:column headerText="Planned Number" style="width:12%">  
+           <p:outputLabel value="#{procurementObj.planNo}"></p:outputLabel>
         </p:column>
           
         <p:column headerText="Plan Description" style="width:20%">  
-           <p:outputLabel value="#{procurementObj.descript}"></p:outputLabel>
+           <p:outputLabel value="#{procurementObj.planDescription}"></p:outputLabel>
         </p:column>  
   
         <p:column headerText="Procurement Mode" style="width:17%">  
-           <p:outputLabel value="#{procurementObj.modes}"></p:outputLabel>			   
+           <p:outputLabel value="#{procurementObj.ppPlanMaster.procurementMode}"></p:outputLabel>			   
         </p:column>  
   
         <p:column headerText="Planned Amount" style="width:15%">  
-           <p:outputLabel value="#{procurementObj.amount}"></p:outputLabel>    
+           <p:outputLabel value="#{procurementObj.actualAmount}"></p:outputLabel>    
         </p:column>  
-  
-        <p:column headerText="Plan Status" style="width:15%">  
-        	<p:outputLabel value="#{procurementObj.planstatus}"></p:outputLabel>   
-        </p:column> 
+  		
+  		<p:column headerText="Purchase Request Date" style="width:22%">  
+           <p:outputLabel id="arr_date" value="#{procurementObj.createdDate}" /> 	 
+        </p:column>
         
-        <p:column headerText="Qtn/Tender Creation Date" style="width:22%">  
-           <p:outputLabel id="arr_date" value="#{procurementObj.creations}" /> 	 
-        </p:column> 
-        	
         <p:column headerText="Notification Date" style="width:25%">  
 		   <p:calendar value="#{calendarBean.date3}" id="popupButtonCal" showOn="button" /> 	
         </p:column> 
 
         <p:column headerText="Notification Days" style="width:15%">  
-           <p:outputLabel value="#{procurementObj.days}"></p:outputLabel>
+           <p:outputLabel value="#{procurementObj.notificationDays}"></p:outputLabel>
+        </p:column> 
+        
+        <p:column headerText="Plan Status" style="width:15%">  
+        	<p:outputLabel value="#{procurementObj.statusCode}"></p:outputLabel>   
         </p:column> 
         	
-        <p:column headerText="Qtn/Tender Status" style="width:17%">  
-           <p:outputLabel value="#{procurementObj.tender}"></p:outputLabel> 
-        </p:column>  
-        
-        
-       <p:column style="width:6%">  
+       <p:column headerText="Action" style="width:6%">  
             <p:rowEditor />  
+            <p:commandLink value="createBPMTask" actionListener="#{procurementListBackingBean.createBPMTask(procurementObj)}" 
+            	rendered="true" update="procureList" process="@this">
+            	<h:outputText value="create" /> 
+            </p:commandLink>
         </p:column> 
         
     </p:dataTable>
-</p:panel>
-<p:panel>
-<p:panelGrid columns="2" style="width:100%;" styleClass="noBorders tr,noBorders td">
-<h:outputText></h:outputText>
-<p:commandButton value="CREATE" style="float:right;">
-    
-</p:commandButton>
-</p:panelGrid>
 </p:panel>
 
 </ui:composition>

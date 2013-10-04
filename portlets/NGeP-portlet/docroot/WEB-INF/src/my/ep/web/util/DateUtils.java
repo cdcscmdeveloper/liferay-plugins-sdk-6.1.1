@@ -125,7 +125,7 @@ public class DateUtils {
 	 * 
 	 * @throws Exception the exception
 	 */
-	public Date convertStringToDate(String argPattern, String argValue) throws Exception{
+	public static Date convertStringToDate(String argPattern, String argValue) throws Exception{
 		SimpleDateFormat sdf = new SimpleDateFormat(argPattern);
 		Date tmpDate = null;
 		tmpDate = sdf.parse(argValue);
@@ -142,7 +142,7 @@ public class DateUtils {
 	 * 
 	 * @throws Exception the exception
 	 */
-	public Timestamp convertStringToTimestamp(String argPattern, String argValue) throws Exception{
+	public static Timestamp convertStringToTimestamp(String argPattern, String argValue) throws Exception{
 		SimpleDateFormat sdf = new SimpleDateFormat(argPattern);
 		Date tmpDate = null;
 		tmpDate = sdf.parse(argValue);
