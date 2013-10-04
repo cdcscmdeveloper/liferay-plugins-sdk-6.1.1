@@ -4,7 +4,7 @@
   <deployment>  
     <dependencies>  
     	<module name="com.liferay.portal"/>
-        <!-- module name="wlfullclient" / -->  
+        <module name="wlfullclient" /> 
         <module name="baseejb" />
         <module name="org.jboss.modules" />
         <!-- module name="ngep-biz-client" / -->        
