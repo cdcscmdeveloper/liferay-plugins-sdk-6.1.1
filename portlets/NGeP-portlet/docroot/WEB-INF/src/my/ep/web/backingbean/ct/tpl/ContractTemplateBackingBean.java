@@ -51,12 +51,11 @@ public class ContractTemplateBackingBean extends BaseBackingBean<ContractTemplat
 	 public void setEditorValue(String editorValue) {
 		this.editorValue = editorValue;
 	 }
-
+	 
      public String createTemplate() throws ParseException{
-	     
-		 IContractTemplateSO iContractTemplateSO = null;
-		  try{
-		      
+    	 
+    	 IContractTemplateSO contractTemplateSO = null;
+		 try{
 			   ContractTemplateReqDTO reqDTO = new ContractTemplateReqDTO();
 		       CtTemplate ctTemplate = this.getManagedBean().getCtTemplate();
 			
@@ -64,9 +63,9 @@ public class ContractTemplateBackingBean extends BaseBackingBean<ContractTemplat
 		       byte[] content = value.getBytes();
 		       ctTemplate.setContent(content);
 		       
-		       iContractTemplateSO = (IContractTemplateSO)BusinessDelegate.getInstance().getServiceObject(IContractTemplateSO.class);
+		       contractTemplateSO = (IContractTemplateSO)BusinessDelegate.getInstance().getServiceObject("ct",IContractTemplateSO.class);
 		       reqDTO.setCtTemplate(ctTemplate);
-	           iContractTemplateSO.createTemplate(reqDTO);
+		       contractTemplateSO.createTemplate(reqDTO);
 	           if(this.getManagedBean().getSearchFilterBean().getSearchField() == null){
 	        	   this.getManagedBean().getSearchFilterBean().setSearchField("name");
 	           }
@@ -75,22 +74,22 @@ public class ContractTemplateBackingBean extends BaseBackingBean<ContractTemplat
 		  } catch (Exception ex) {
 				log.error("Exception>>", ex);
 		  }finally {
-			  iContractTemplateSO = null;
+			  contractTemplateSO = null;
 	      }
 		return TEMPLATE_RETURN_PAGE;
 	}
 	
 	public String updateTemplate() throws ParseException{
-		 IContractTemplateSO iContractTemplateSO = null;
+		 IContractTemplateSO contractTemplateSO = null;
 		 try{
 			   ContractTemplateReqDTO reqDTO = new ContractTemplateReqDTO();
 		       String value = this.getEditorValue();
 		       byte[] content = value.getBytes();
 		       this.getManagedBean().getCtTemplate().setContent(content);
 		       
-		       iContractTemplateSO = (IContractTemplateSO)BusinessDelegate.getInstance().getServiceObject(IContractTemplateSO.class);
+		       contractTemplateSO = (IContractTemplateSO)BusinessDelegate.getInstance().getServiceObject("ct",IContractTemplateSO.class);
 		       reqDTO.setCtTemplate(this.getManagedBean().getCtTemplate());
-	           iContractTemplateSO.updateTemplate(reqDTO);
+		       contractTemplateSO.updateTemplate(reqDTO);
 	           
 	           if(this.getManagedBean().getSearchFilterBean().getSearchField() == null){
 	        	   this.getManagedBean().getSearchFilterBean().setSearchField("name");
@@ -99,42 +98,42 @@ public class ContractTemplateBackingBean extends BaseBackingBean<ContractTemplat
 		  } catch (Exception ex) {
 				log.error("Exception>>", ex);
 		  }finally {
-			  iContractTemplateSO = null;
+			  contractTemplateSO = null;
 	      }
 		return TEMPLATE_RETURN_PAGE;
 	}
 	 
 	public void searchActionListener() {
 		 log.info("searchAction starts");
-		 IContractTemplateSO iContractTemplateSO = null;
+		 IContractTemplateSO contractTemplateSO = null;
 		 try {
 			 this.getManagedBean().getSearchFilterBean().setSearchValue(this.getSearchValue());
 			 SearchFilterBean searchFilterBean = this.getManagedBean().getSearchFilterBean();	
 			
-			 iContractTemplateSO = (IContractTemplateSO)BusinessDelegate.getInstance().getServiceObject(IContractTemplateSO.class);
+			 contractTemplateSO = (IContractTemplateSO)BusinessDelegate.getInstance().getServiceObject("ct",IContractTemplateSO.class);
 			 ContractTemplateReqDTO reqDTO = new ContractTemplateReqDTO();
 			 reqDTO.setTemplatesSearchBean(super.createSearchBean(CtTemplate.class, "dataTable"));
 			 
 			 if (StringUtils.isNotBlank((String) searchFilterBean.getSearchValue())) 
 			    reqDTO.getTemplatesSearchBean().getDataFilterBeans().add(searchFilterBean);
 				
-			 ContractTemplateResDTO ResDTO = iContractTemplateSO.retrieveTemplate(reqDTO);
+			 ContractTemplateResDTO ResDTO = contractTemplateSO.retrieveTemplate(reqDTO);
 			 this.getManagedBean().setCtTemplatesList(ResDTO.getTemplateResultBean().getResultList());
 			 this.getManagedBean().setSelectedIndex(0);
 
 		 } catch (Exception ex) {
 			log.error("Exception>>", ex);
 		 } finally {
-			iContractTemplateSO = null;
+			 contractTemplateSO = null;
 		 }
 	}
 	
 	public void deleteTemplate(){
-		 IContractTemplateSO iContractTemplateSO = null;
-		 iContractTemplateSO = (IContractTemplateSO)BusinessDelegate.getInstance().getServiceObject(IContractTemplateSO.class);
+		 IContractTemplateSO contractTemplateSO = null;
+		 contractTemplateSO = (IContractTemplateSO)BusinessDelegate.getInstance().getServiceObject("ct",IContractTemplateSO.class);
 		 ContractTemplateReqDTO reqDTO = new ContractTemplateReqDTO();
 		 reqDTO.setTemplateId(this.getManagedBean().getCtTemplate().getTemplateId());
-		 iContractTemplateSO.deleteTemplate(reqDTO);
+		 contractTemplateSO.deleteTemplate(reqDTO);
 		 searchActionListener();
 	}
 
