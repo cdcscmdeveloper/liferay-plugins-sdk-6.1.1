@@ -2081,7 +2081,7 @@ td {
 /* --------------------------       PP Related     ------------------------------ */
 
 .ppProfileInfo{
-	width: 50%;
+	width: 60%;
 }
 
 table.ppRmkTable td {
@@ -2090,6 +2090,16 @@ table.ppRmkTable td {
 	padding: 2px;
 }
 
+table.ppRmkTable th {
+	text-align: right;
+	width: 10%;
+	vertical-align: top;
+	padding: 2px;
+}
+
+.ui-datatable.ppRmkList th{
+	text-align:center;
+}
 table.ppTwoPartsTable, .ppThreePartsTable, .ppRmkTable{
 	width:100%;
 }
@@ -2129,6 +2139,7 @@ table.ppThreePartsTable td {
 
 .ppRightBtn{
 	text-align:right;
+	align:right;
 }
 
 .ppSmallTd{
@@ -2153,12 +2164,13 @@ table.ppThreePartsTable td {
 
 .ui-dialog.ppDiaglogBg{
 	background: #FFFFFF;
+	height:80% !important;
 }
 
 .ui-dialog.ppDiaglogBigBg{
 	background: #FFFFFF;
-	height:90% !important;
-	width: 90% !important;
+	height:80% !important;
+	width: 70% !important;
 	overflow-y: scroll;
 }
 
@@ -2169,9 +2181,36 @@ table.ppThreePartsTable td {
 
 
 .ui-selectonemenu, .ui-inputtext{
-	
 	min-width:100px !important;
 }
-/*--------------------------       End PP Related      ------------------------------ */
 
+.ui-menu.ppMenuLink .ui-menuitem-text{
+ 	text-decoration:underline;
+}
+
+.ppMenuLink{
+ 	border: 0px;
+}
+
+.ppSmallTitle{
+	text-decoration:underline;
+	text-align: left;
+
+}
+
+.ppItemDetails{
+	width: 60%;
+}
+
+table.ppMedWidth{
+	width:80%;
+}
+
+table.ppSmallWidth{
+	width:50%;
+}
+
+
+
+/*--------------------------       End PP Related      ------------------------------ */
 
