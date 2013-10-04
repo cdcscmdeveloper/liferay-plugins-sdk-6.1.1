@@ -1,37 +1,130 @@
 package my.ep.web.managedbean.pp.procurementplan;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
-import javax.faces.model.SelectItem;
 
-
+import my.ep.persistence.entity.pp.procurementplan.PpPlan;
+import my.ep.persistence.entity.pp.procurementplan.PpPlanActor;
+import my.ep.persistence.entity.pp.procurementplan.PpPlanMaster;
 import my.ep.web.managedbean.BaseManagedBean;
 
 @ManagedBean(name = "planManagedBean")
 @SessionScoped
 public class PlanManagedBean extends BaseManagedBean{
 
+	private static final long serialVersionUID = 1L;
 
-private static final long serialVersionUID = 1L;
-
-	private String pageTitle;
+	private boolean searchPlan;
+	
+	private List <PpPlanMaster> planList;
+	
+	private PpPlanMaster selectedPlanMaster;
+	
+	private PpPlan selectedPlan;
 	
 	private String current;
+
+	private String viewMode;
+	
+	private PpPlanActor selectedPlanApprover;
+
+	/**
+	 * @return the selectedPlanApprover
+	 */
+	public PpPlanActor getSelectedPlanApprover() {
+		return selectedPlanApprover;
+	}
+	/**
+	 * @param selectedPlanApprover the selectedPlanApprover to set
+	 */
+	public void setSelectedPlanApprover(PpPlanActor selectedPlanApprover) {
+		this.selectedPlanApprover = selectedPlanApprover;
+	}
+	/**
+	 * @return the selectedPlanMaster
+	 */
+	public PpPlanMaster getSelectedPlanMaster() {
+		return selectedPlanMaster;
+	}
+	/**
+	 * @param selectedPlanMaster the selectedPlanMaster to set
+	 */
+	public void setSelectedPlanMaster(PpPlanMaster selectedPlanMaster) {
+		this.selectedPlanMaster = selectedPlanMaster;
+	}
+	/**
+	 * @return the planList
+	 */
+	public List<PpPlanMaster> getPlanList() {
+		return planList;
+	}
+	/**
+	 * @param planList the planList to set
+	 */
+	public void setPlanList(List<PpPlanMaster> planList) {
+		this.planList = planList;
+	}
+
+	/**
+	 * @return the searchPlan
+	 */
+	public boolean isSearchPlan() {
+		return searchPlan;
+	}
+	/**
+	 * @param searchPlan the searchPlan to set
+	 */
+	public void setSearchPlan(boolean searchPlan) {
+		this.searchPlan = searchPlan;
+	}
+	
+	/**
+	 * @return the selectedPlan
+	 */
+	public PpPlan getSelectedPlan() {
+		return selectedPlan;
+	}
+	/**
+	 * @param selectedPlan the selectedPlan to set
+	 */
+	public void setSelectedPlan(PpPlan selectedPlan) {
+		this.selectedPlan = selectedPlan;
+	}
+
+	public String getCurrent() {
+		return current;
+	}
+	public void setCurrent(String current) {
+		this.current = current;
+	}
+	
+	public String getViewMode() {
+		return viewMode;
+	}
+	public void setViewMode(String viewMode) {
+		this.viewMode = viewMode;
+	}
+
+	
+	
+	
+	
+	private String pageTitle;
+	
+	
 	
 	private boolean brandNew;
 	private String pageInd;
 	private String procurementMode;
-	private String viewMode;
+	
 	private boolean popup = false;
 	private String planType;
 
 	//temp
 	private boolean approve;
-	//temp
-	private List planList = null;
+
 	//temp
 	private String fulfillmentType;
 	//temp
@@ -159,12 +252,7 @@ private static final long serialVersionUID = 1L;
 	public void setFulfillmentType(String fulfillmentType) {
 		this.fulfillmentType = fulfillmentType;
 	}
-	public String getViewMode() {
-		return viewMode;
-	}
-	public void setViewMode(String viewMode) {
-		this.viewMode = viewMode;
-	}
+
 	public String getProcurementMode() {
 		return procurementMode;
 	}
@@ -187,12 +275,7 @@ private static final long serialVersionUID = 1L;
 	public void setVerification(Boolean verification) {
 		this.verification = verification;
 	}
-	public List getPlanList() {
-		return planList;
-	}
-	public void setPlanList(List planList) {
-		this.planList = planList;
-	}
+
 	
 	public String getPageInd() {
 		return pageInd;
@@ -201,26 +284,7 @@ private static final long serialVersionUID = 1L;
 		this.pageInd = pageInd;
 	}
 	
-	public void cleanAll(){
-		this.setPageInd(null);
-		this.setPopup(false);
-		this.setPlanList(null);
-		this.setDocumentType(null);
-		this.setFavouriteOption("N");
-		this.setFulfillmentType(null);
-		this.setMultipleLevel(0);
-		this.setPeriodicType(null);
-		this.setProcurementMode(null);
-		this.setQuotationTenderType(null);
-		this.setVerification(false);
-		this.setViewMode(null);
-		this.setTypeOfGoodsServices(null);
-		this.setMtoRequired(0);
-		this.setRecurringFreq(0);
-		this.setContractType(null);
-		this.setBrandNew(false);
-		this.setCurrent(null);
-	}
+	
 	public Integer getMultipleLevel() {
 		return multipleLevel;
 	}
@@ -239,13 +303,9 @@ private static final long serialVersionUID = 1L;
 	public void setPageTitle(String pageTitle) {
 		this.pageTitle = pageTitle;
 	}
+
 	
 
-	public String getCurrent() {
-		return current;
-	}
-	public void setCurrent(String current) {
-		this.current = current;
-	}
+
 }
 

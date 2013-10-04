@@ -5,8 +5,13 @@ import java.util.List;
 
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.RequestScoped;
+import javax.faces.context.FacesContext;
 import javax.faces.model.SelectItem;
+import javax.portlet.PortletRequest;
 
+import my.ep.persistence.entity.pp.procurementplan.PpPlan;
+import my.ep.persistence.entity.pp.procurementplan.PpPlanActor;
+import my.ep.persistence.entity.pp.procurementplan.PpPlanMaster;
 import my.ep.web.backingbean.BaseBackingBean;
 import my.ep.web.backingbean.pp.budgetallocation.BudgetAllocationBackingBean;
 import my.ep.web.constant.pp.ProcurementPlanConst;
@@ -14,18 +19,46 @@ import my.ep.web.managedbean.pp.procurementplan.PlanManagedBean;
 import my.ep.web.util.FacesScopes;
 import my.ep.web.util.ResourceBundleUtils;
 
+import org.apache.log4j.Logger;
 import org.primefaces.event.TabChangeEvent;
 
 @ManagedBean(name="planBackingBean")
 @RequestScoped
 public class PlanBackingBean extends BaseBackingBean<PlanManagedBean>{
-
+	private static Logger log = Logger.getLogger(BudgetAllocationBackingBean.class);
+	
+	private PortletRequest getPortletRequest() {
+		return (PortletRequest)FacesContext.getCurrentInstance().getExternalContext().getRequest();
+	}
+	
 	public PlanBackingBean() {
 		System.out.println("---------->>>>>>>>>>>>>>>>>>>>>>>>>>>");
-		
-
 	}
 
+	public String redirectToCreatePlan(){
+		log.info("redirectToCreatePlan - Start");
+		this.getManagedBean().setViewMode(ProcurementPlanConst.MODE_NEW);
+		this.getManagedBean().setCurrent(ProcurementPlanConst.MODE_NEW);
+		this.getManagedBean().setSelectedPlanMaster(new PpPlanMaster());
+		this.getManagedBean().setSelectedPlan(new PpPlan());
+		this.getManagedBean().getSelectedPlan().setEditable(true);
+		this.getManagedBean().getSelectedPlan().setStatusCode("New");
+		
+		//Plan Approver
+		PpPlanActor approver = new PpPlanActor();
+		approver.setActorType("A");
+		approver.setSeqNo(1);
+		this.getManagedBean().setSelectedPlanApprover(approver);
+		
+		log.info("redirectToCreatePlan - End");
+		return ProcurementPlanConst.NAV_TO_CREATE_PLAN;
+    } 
+	
+	
+	
+	
+	
+	
 	
 	public String getNavToViewPlan(){
 		return ProcurementPlanConst.NAV_TO_VIEW_PLAN;
@@ -36,26 +69,19 @@ public class PlanBackingBean extends BaseBackingBean<PlanManagedBean>{
 	
 	public void searchPlan(boolean popup) {
 		//Retrieve related plans only
-		this.getManagedBean().setPopup(popup);
+		this.getManagedBean().setSearchPlan(true);
 		if(this.getManagedBean().getPlanList()==null){
-			this.getManagedBean().setPlanList(new ArrayList());
+			this.getManagedBean().setPlanList(new <PpPlanMaster> ArrayList());
 		}
-		this.getManagedBean().getPlanList().add(new Object());
+		this.getManagedBean().getPlanList().add(new PpPlanMaster());
 	}
 	
 	public void viewBudget(boolean popup) {
 		//Retrieve allocated budget only
 		BudgetAllocationBackingBean budgetAllocationbb = new BudgetAllocationBackingBean();
-		budgetAllocationbb.getManagedBean().setPopup(popup);
+		
 	}
 	
-	public String redirectToCreatePlan(){
-		this.getManagedBean().setBrandNew(true);
-		//populateAutFuncAreaDetails(new AutFuncArea(), null);
-		this.getManagedBean().setViewMode(ProcurementPlanConst.MODE_NEW);
-		this.getManagedBean().setCurrent(ProcurementPlanConst.MODE_NEW);
-		return ProcurementPlanConst.NAV_TO_CREATE_PLAN;
-    } 
 	
 //	public String redirectToListBudgetAllocation(){
 //		System.out.println("----------NAV_TO_VIEW_BUDGET_ALLOCATION");
@@ -197,7 +223,6 @@ public class PlanBackingBean extends BaseBackingBean<PlanManagedBean>{
 	
 	public String redirectToCreateMtoPlan(){
 		System.out.println("----------NAV_TO_CREATE_MTO_PLAN");
-		this.getManagedBean().cleanAll();
 		this.getManagedBean().setPlanType(ProcurementPlanConst.TYPE_PROCUREMENT);
 		this.getManagedBean().setProcurementMode(ProcurementPlanConst.PROCURMENET_TENDER);//as per main plan
 		this.getManagedBean().setViewMode(ProcurementPlanConst.MODE_NEW_MTO);
