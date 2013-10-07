@@ -12,6 +12,12 @@
         <dependent-module archiveName="NGeP-jpa.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/NGeP-jpa/NGeP-jpa">
             <dependency-type>uses</dependency-type>
         </dependent-module>
+        <dependent-module archiveName="NGeP-bpmRemoteClient.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/NGeP-bpmRemoteClient/NGeP-bpmRemoteClient">
+            <dependency-type>uses</dependency-type>
+        </dependent-module>
+        <dependent-module archiveName="NGeP-bpmBaseClient.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/NGeP-bpmBaseClient/NGeP-bpmBaseClient">
+            <dependency-type>uses</dependency-type>
+        </dependent-module>
         <property name="context-root" value="NGeP-portlet"/>
         <property name="java-output-path" value="/NGeP-portlet/docroot/WEB-INF/classes"/>
     </wb-module>
