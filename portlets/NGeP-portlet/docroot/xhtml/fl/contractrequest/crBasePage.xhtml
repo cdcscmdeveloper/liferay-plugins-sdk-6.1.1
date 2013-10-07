@@ -11,12 +11,11 @@
 	</ui:define>
 
 	<ui:define name="contentSection">
-		<p:tabView id="tt" orientation="left" widgetVar="tt">
-			<h:outputText value="Create Contract"/>
-			<p:tab title="GENERAL">
-				<ui:include src="crGeneral.xhtml" />
+		<p:tabView id="cotabs" orientation="left" dynamic="true" cache="false">
+			<p:tab id="tab1" title="GENERAL" >
+				<ui:include src="crGeneral.xhtml"/>
 			</p:tab>
-			<p:tab title="ITEM">
+			<p:tab id="tab2" title="ITEM">
 				<ui:include src="crItem.xhtml" />
 			</p:tab>
 		</p:tabView>
