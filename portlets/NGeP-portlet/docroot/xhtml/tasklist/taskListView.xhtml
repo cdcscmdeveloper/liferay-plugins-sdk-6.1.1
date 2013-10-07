@@ -21,17 +21,35 @@
 
 				<p:column>
 					<f:facet name="header">
-						<p:outputLabel value="ID" />
+						<p:outputLabel value="#{lbl['lbl.bpm.task.number']}" />
 					</f:facet>
-					<p:commandLink value="#{tasks.taskId}" action="#{tasklistBackingBean.navigateToURL}">
+					<p:commandLink value="#{tasks.taskNumber}" action="#{tasklistBackingBean.navigateToURL}">
 						<f:param name="key" value="key" />
 					</p:commandLink>
 				</p:column>
 				<p:column>
 					<f:facet name="header">
-						<p:outputLabel value="Number" />
+						<p:outputLabel value="#{lbl['lbl.bpm.task.title']}" />
 					</f:facet>
-					<p:outputLabel value="#{tasks.taskNumber}" />
+					<p:outputLabel value="#{tasks.title}" />
+				</p:column>
+				<p:column>
+					<f:facet name="header">
+						<p:outputLabel value="#{lbl['lbl.bpm.created.date']}" />
+					</f:facet>
+					<p:outputLabel value="#{tasks.createDate.time}" />
+				</p:column>
+				<p:column>
+					<f:facet name="header">
+						<p:outputLabel value="#{lbl['lbl.bpm.state']}" />
+					</f:facet>
+					<p:outputLabel value="#{tasks.state}" />
+				</p:column>
+				<p:column>
+					<f:facet name="header">
+						<p:outputLabel value="#{lbl['lbl.bpm.process']}" />
+					</f:facet>
+					<p:outputLabel value="#{tasks.process}" />
 				</p:column>
 
 
