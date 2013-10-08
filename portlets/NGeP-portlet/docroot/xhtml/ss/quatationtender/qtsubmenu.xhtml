@@ -5,29 +5,42 @@
 	xmlns:p="http://primefaces.org/ui"
 	xmlns:c="http://java.sun.com/jsp/jstl/core">
 
-	<p:menu>
-		<p:submenu label="Menu">
-			<p:menuitem value="Quotation Details"
-				outcome="/xhtml/ss/quatationtender/quatationtendercreation.xhtml" />
-			<p:menuitem value="Supplier Qualification Criteria"
-				outcome="/xhtml/ss/quatationtender/qtsupplierqualfcriteria.xhtml" />
-			<p:menuitem value="Approval"
-				outcome="/xhtml/ss/quatationtender/approvalWorkFlow.xhtml" />
+	<p:tabView orientation="left">
 
-			<p:menuitem value="Schedule"
-				outcome="/xhtml/ss/quatationtender/qtschedule.xhtml" />
+		<p:tab title="Quotation Details">
+			 <ui:include
+				src="/xhtml/ss/quatationtender/qtdetails.xhtml"></ui:include>
+		</p:tab>
+
+		<p:tab title="Supplier Qualification Criteria">
+			 <ui:include
+				src="/xhtml/ss/quatationtender/qtsupplierqualfcriteria.xhtml"></ui:include> 
+		</p:tab>
+
+		<p:tab title="Approval">
+		<ui:include src="/xhtml/ss/quatationtender/approvalWorkFlowMain.xhtml"></ui:include>
+		</p:tab>
+
+		<p:tab title="Schedule">
+			<ui:include src="/xhtml/ss/quatationtender/qtschedule.xhtml"></ui:include>
+ 	</p:tab>
 
 
-			<p:menuitem value="Bsv Attandance"
-				outcome="/xhtml/ss/quatationtender/qtbsvAttendanceRegister.xhtml" />
+		<p:tab title="Bsv Attandance">
+	<ui:include
+				src="/xhtml/ss/quatationtender/qtbsvAttendanceRegister.xhtml"></ui:include>
+		</p:tab>
 
-			<p:menuitem value="Documents" />
+		<p:tab title="Document">
 
-			<p:menuitem value="Remarks"
-				outcome="/xhtml/ss/quatationtender/qtremarks.xhtml" />
-				
-				/> 
-            
-        </p:submenu>
-	</p:menu>
+		</p:tab>
+
+		<p:tab title="Remarks">
+			 <ui:include src="/xhtml/ss/quatationtender/qtremarks.xhtml"></ui:include> 
+		</p:tab>
+
+	</p:tabView>
+
+
+
 </ui:composition>

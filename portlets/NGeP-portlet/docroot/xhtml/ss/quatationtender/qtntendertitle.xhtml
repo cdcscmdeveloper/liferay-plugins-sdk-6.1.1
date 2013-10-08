@@ -9,10 +9,10 @@
 <p:panelGrid columns="2" style="width:100%;" styleClass="noBorders tr,noBorders td">
 
  <h:outputText value="* Title" />
-<p:inputText value="" size="130"/>  
+<p:inputText value="#{searchQtnTenderBB.managedBean.qtno}" size="130"/>  
 
 <h:outputLabel for="fileno" value=" * File No." />  
-            <p:inputText id="fileno" value="" size="130"/> 
+            <p:inputText id="fileno" value="#{searchQtnTenderBB.managedBean.selectOption}" size="130"/> 
             
             </p:panelGrid>
             <p:panelGrid columns="4" style="width:100%;" styleClass="noBorders tr,noBorders td">
@@ -20,19 +20,19 @@
             <h:outputLabel for="planno" value="Plan No." />  
             </p:column>
             <p:column>
-            <p:inputText id="planno" value=""/>  
+            <p:inputText id="planno" value="#{searchQtnTenderBB.managedBean.selectOption}"/>  
             </p:column>
             <p:column>
             <h:outputLabel for="estprice" value="* Estimated Price/Planned Amount" />
             </p:column>  
             <p:column>
-            <p:inputText id="estprice" value=""/>  
+            <p:inputText id="estprice" value="#{searchQtnTenderBB.managedBean.qtno}"/>  
             </p:column>
             
            
          
            <p:column>
-          <h:outputText value="* #{lbl['lbl.so.procmode']}" />  
+          <h:outputText value="* ProcurementMode" />  
           </p:column>
           <p:column>
         <p:selectOneMenu  value="#{searchQtnTenderBB.managedBean.selectOption}" >  

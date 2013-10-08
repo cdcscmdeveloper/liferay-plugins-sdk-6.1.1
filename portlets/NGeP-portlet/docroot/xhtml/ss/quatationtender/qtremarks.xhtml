@@ -1,5 +1,4 @@
 <ui:composition xmlns="http://www.w3.org/1999/xhtml"
-	template="/WEB-INF/facelets/templates/sidemenu_template.xhtml"
 	xmlns:f="http://java.sun.com/jsf/core"
 	xmlns:h="http://java.sun.com/jsf/html"
 	xmlns:ui="http://java.sun.com/jsf/facelets"
@@ -7,21 +6,6 @@
 	xmlns:c="http://java.sun.com/jsp/jstl/core">
 
 
-	<ui:define name="contentSection">
-		<table style="border: 0px; width: 100%">
-			<tr>
-				<td width="20%" valign="top"><ui:include
-						src="/xhtml/ss/quatationtender/qtsubmenu.xhtml"></ui:include></td>
-				<td width="80%" align="left" valign="top"><ui:include
-						src="/xhtml/ss/quatationtender/qtremarksdetails.xhtml" /></td>
-				<td width="80%" align="left" valign="top"><ui:include
-						src="/xhtml/ss/quatationtender/cloneqtntenderscreen.xhtml" /></td>
-
-			</tr>
-		</table>
-
-
-
-	</ui:define>
-
+	<ui:include src="/xhtml/ss/quatationtender/qtremarksdetails.xhtml" />
+	<ui:include src="/xhtml/ss/quatationtender/cloneqtntenderscreen.xhtml" />
 </ui:composition>

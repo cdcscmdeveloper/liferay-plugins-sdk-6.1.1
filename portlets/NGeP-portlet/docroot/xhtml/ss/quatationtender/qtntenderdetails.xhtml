@@ -72,44 +72,43 @@
 				</p:selectOneRadio>
 			</p:column>
 		</p:panelGrid>
-		<p:panelGrid columns="5" style="width:84%;" styleClass="noBorders tr,noBorders td">
+		<p:panelGrid columns="10" style="width:100%;" styleClass="noBorders tr,noBorders td">
 
 			<p:column>
 				<h:outputText value="* Contract Period" />
 			</p:column>
 			<p:column>
-				<p:inputText id="contractperiod"
-					value="#{searchQtnTenderBB.managedBean.qtno}" size="15" />
+				<h:inputText 
+					value="#{searchQtnTenderBB.managedBean.qtno}" size="4" />
 					</p:column>
 					<p:column>
-				<h:outputLabel value="(Year)" />
+				<h:outputLabel value="(Year)" style="margin-right:30px;" />
 </p:column>
 <p:column>
-				<p:inputText id="contractperiod"
-					value="#{searchQtnTenderBB.managedBean.qtno}" size="0"/>
+				<h:inputText 
+					value="#{searchQtnTenderBB.managedBean.qtno}" size="2"/>
 					</p:column>
 					<p:column>
-				<h:outputText value="(Month)" />
+				<h:outputText value="(Month)" style="margin-right:30px;"/>
 			</p:column>
-</p:panelGrid>
 
-<p:panelGrid columns="5" style="width:72%;" styleClass="noBorders tr,noBorders td">
+
 			<p:column>
 				<h:outputText value="* Completion Period" />
 			</p:column>
 			<p:column>
-				<p:inputText id="completionperiod"
-					value="#{searchQtnTenderBB.managedBean.qtno}" size="5"/>
+				<h:inputText
+					value="#{searchQtnTenderBB.managedBean.qtno}" size="4"/>
 					</p:column>
 					<p:column>
-				<h:outputText value="(Year)" style="width:10px"  />
+				<h:outputText value="(Year)" style="margin-right:30px;"  />
 </p:column>
 <p:column>
-				<p:inputText id="completionperiod"
-					value="#{searchQtnTenderBB.managedBean.qtno}"  size="10"/>
+				<h:inputText 
+					value="#{searchQtnTenderBB.managedBean.qtno}"  size="2"/>
 					</p:column>
 					<p:column>
-				<h:outputText value="(Month)" style="width:10px" />
+				<h:outputText value="(Month)" style="margin-right:30px;" />
 			</p:column>
 
 

@@ -1,17 +1,3 @@
-<!-- <!DOCTYPE html>
-<html lang="en"
-    xmlns="http://www.w3.org/1999/xhtml"
-    xmlns:f="http://java.sun.com/jsf/core"
-    xmlns:h="http://java.sun.com/jsf/html"
-    xmlns:p="http://primefaces.org/ui"
-    xmlns:ui="http://java.sun.com/jsf/facelets">
-    <h:head>
-        <title>Include demo</title>
-    </h:head>
-    <h:body>
-     <ui:include src="/xhtml/ss/quatationtender/attendenceRegisterListScrn.xhtml" />
-      </h:body>
-</html> -->
 
 
 <ui:composition xmlns="http://www.w3.org/1999/xhtml"
@@ -47,7 +33,7 @@
 
 </p:panel>
 <p:panel header="Attendence" toggleable="true">
-<p:dataTable id="attendancecompany" var="attendancecompany" value="#{searchQtnTenderBB.managedBean.qtnTenders}" editable="true">
+<p:dataTable value="#{searchQtnTenderBB.managedBean.qtnTenders}" editable="true">
 
 <p:ajax event="rowEdit" listener="#{searchQtnTenderBB.onEdit}"  />  
  <p:ajax event="rowEditCancel" listener="#{searchQtnTenderBB.onCancel}"  /> 

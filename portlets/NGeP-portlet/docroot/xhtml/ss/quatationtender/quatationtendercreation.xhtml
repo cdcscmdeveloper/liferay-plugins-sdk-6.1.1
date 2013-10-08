@@ -1,5 +1,5 @@
 <ui:composition
-	template="/WEB-INF/facelets/templates/sidemenu_template.xhtml"
+	template="/WEB-INF/facelets/templates/basic_template.xhtml"
 	xmlns="http://www.w3.org/1999/xhtml"
 	xmlns:f="http://java.sun.com/jsf/core"
 	xmlns:h="http://java.sun.com/jsf/html"
@@ -9,18 +9,10 @@
 
 		
 	<ui:define name="contentSection">
-	<table style="border: 0px;width: 100%">
+	<table style="border: 0px;width: 1000px">
 			<tr>
-				<td width="20%" valign="top"><ui:include src="/xhtml/ss/quatationtender/qtsubmenu.xhtml"></ui:include></td>
-				<td width="80%" align="left" valign="top">
-		<ui:include src="/xhtml/ss/quatationtender/dopublicationbuttons.xhtml" />
-       <ui:include src="/xhtml/ss/quatationtender/qtntenderheader.xhtml" />
-       <ui:include src="/xhtml/ss/quatationtender/qtntendertitle.xhtml" />
-       <ui:include src="/xhtml/ss/quatationtender/qtntenderdetails.xhtml"/>
-     <ui:include src="/xhtml/ss/quatationtender/cloneqtntenderscreen.xhtml"/>
-     
-    
-				</td>
+	<td width="1000px" valign="top"><ui:include src="/xhtml/ss/quatationtender/qtsubmenu.xhtml"></ui:include></td>
+				
 			</tr>
 		</table>
 								

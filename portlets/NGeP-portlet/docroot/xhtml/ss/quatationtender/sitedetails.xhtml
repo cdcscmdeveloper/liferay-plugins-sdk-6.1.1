@@ -12,7 +12,7 @@
 			<p:panelGrid columns="2" style="width:100%;" styleClass="noBorders tr,noBorders td">
 		
 		<h:outputLabel for="sitedesc" value="Site Description" />
-				<p:inputTextarea id="sitedesc" value="" columns="50"/>	
+				<p:inputTextarea id="sitedesc" value="#{searchQtnTenderBB.managedBean.selectOption}" columns="50"/>	
 				
 			<h:outputText value="Site Visit Date "></h:outputText>
 			<p:calendar value="#{searchQtnTenderBB.managedBean.tenderBean}"

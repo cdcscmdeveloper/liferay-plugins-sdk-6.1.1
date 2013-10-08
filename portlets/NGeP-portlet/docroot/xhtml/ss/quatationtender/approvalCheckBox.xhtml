@@ -26,7 +26,7 @@
 
 		</p:panelGrid>
 	</p:panel>
-	<p:tabView id="tabView12345" var="player" dynamic="true" cache="true"
+	<p:tabView id="tabView12345" var="player" dynamic="true"  orientation="top"
 		value="#{searchQtnTenderBB.managedBean.tabBean}">
 		<p:tab title="#{player.titleName}">
 			<ui:fragment rendered="#{player.titleName eq 'PTJApproval'}">

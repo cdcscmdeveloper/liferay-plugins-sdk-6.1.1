@@ -5,25 +5,25 @@
 	xmlns:p="http://primefaces.org/ui"
 	xmlns:c="http://java.sun.com/jsp/jstl/core">
 
-	<p:panel name="Header" toggleable="true">
+	<p:panel header="Header" toggleable="true">
 <p:panelGrid columns="4" style="width:100%;" styleClass="noBorders tr,noBorders td">
-<h:outputLabel for="qtnno" value="Qtn/Tender No" />  
-            <p:inputText id="qtnno" value="AT001" readonly="true"/> 
+<h:outputText value="Qtn/Tender No" />  
+            <p:inputText  value="AT001" readonly="true"/> 
             
-            <h:outputLabel for="minscode" value="Ministry Code/Name" />  
-            <p:inputText id="minscode" value="J009" readonly="true"/>  
+            <h:outputText value="Ministry Code/Name" />  
+            <p:inputText  value="J009" readonly="true"/>  
             
-            <h:outputLabel for="status" value="Status" />  
-            <p:inputText id="status" value="Active" readonly="true" />  
+            <h:outputText value="Status" />  
+            <p:inputText  value="Active" readonly="true" />  
             
-             <h:outputLabel for="deptcode" value="Department Code/Name" />  
-            <p:inputText id="deptcode" value="101" readonly="true"/>  
+             <h:outputText value="Department Code/Name" />  
+            <p:inputText  value="101" readonly="true"/>  
            
            <h:outputText value="Created Date" /> 
-   <p:inputText id="createdDate" value="09/09/2013" readonly="true"/>  
+   <p:inputText value="09/09/2013" readonly="true"/>  
  
-            <h:outputLabel for="ptjcode" value="PTJ Code/Name" />  
-            <p:inputText id="ptjcode" value="P001" readonly="true"/>  
+            <h:outputText value="PTJ Code/Name" />  
+            <p:inputText value="P001" readonly="true"/>  
            
              
   </p:panelGrid>
