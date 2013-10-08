@@ -15,24 +15,26 @@ xmlns:c="http://java.sun.com/jsp/jstl/core"
 		<p:panel header="Temporary Menu List">  
 			<table>
 				<tr>
-					<th colspan="2">From Budget Task List</th>
+					<th colspan="2">Budget Task List</th>
 				</tr>
 				<tr>
 					<td>
 						<p:inputText value="#{budgetAllocationBackingBean.managedBean.bpmTaskId}"/>
+						/ <p:inputText value="#{budgetAllocationBackingBean.managedBean.tempBudgetId}"/>
+						
 					</td>
 					<td>
 						<p:commandButton value="Endorse Budget" 
 	 						action="#{budgetAllocationBackingBean.redirectToEndorseBudgetAllocation(budgetAllocationBackingBean.managedBean.bpmTaskId)}"   /> &nbsp;
 	 					<p:commandButton value="Revise Budget" 
-	 						action="#{budgetAllocationBackingBean.redirectToEndorseBudgetAllocation(budgetAllocationBackingBean.managedBean.bpmTaskId)}"   /> &nbsp;
+	 						action="#{budgetAllocationBackingBean.redirectToReviseBudgetAllocation(budgetAllocationBackingBean.managedBean.bpmTaskId)}"   /> &nbsp;
 					</td>
 				</tr>
 				<tr>
 					<td colspan="2">&nbsp;</td>
 				</tr>
 				<tr>
-					<th colspan="2">From Plan Task List</th>
+					<th colspan="2">Plan Task List</th>
 				</tr>
 				<tr>
 					<td colspan="2">

@@ -113,34 +113,38 @@ public class BudgetAllocationBackingBean extends BaseBackingBean<BudgetAllocatio
 			System.out.println(">>>> taskId " + taskId);
 			if(taskId!=null && taskId.trim().length()>0){
 				
-//				IBpmSO bpmSO = (IBpmSO) EpBpmBusinessDelegate.getInstance().getServiceObject(IBpmSO.class);
-//				String token = bpmSO.authenticate("lailah", "welcome1");
-//				if(token!=null && !token.isEmpty()){
-//					BpmRequestDTO reqBpmDTO = new BpmRequestDTO();
-//					reqBpmDTO.setCtxToken(token);
-//					reqBpmDTO.setTaskId(taskId);
-//					BpmResponseDTO resBpmDTO = bpmSO.getTaskDetails(reqBpmDTO);
-//					if(resBpmDTO!=null){
-//						System.out.println(">>>>>>>>>>>>>>> resBpmDTO not null");
-//						System.out.println(">>>>pojo " + resBpmDTO.getPojo());
-//						System.out.println("actionsss>>>>>>>>>>>> " + resBpmDTO.getAction().length);
-//						PSBudgetDataType taskData = (PSBudgetDataType) resBpmDTO.getPojo();
+				IBpmSO bpmSO = (IBpmSO) EpBpmBusinessDelegate.getInstance().getServiceObject(IBpmSO.class);
+				String token = bpmSO.authenticate("lailah", "welcome1");
+				if(token!=null && !token.isEmpty()){
+					BpmRequestDTO reqBpmDTO = new BpmRequestDTO();
+					reqBpmDTO.setCtxToken(token);
+					reqBpmDTO.setTaskId(taskId);
+					BpmResponseDTO resBpmDTO = bpmSO.getTaskDetails(reqBpmDTO);
+					if(resBpmDTO!=null){
+						System.out.println(">>>>>>>>>>>>>>> resBpmDTO not null");
+						System.out.println(">>>>pojo " + resBpmDTO.getPojo());
+						System.out.println("actionsss>>>>>>>>>>>> " + resBpmDTO.getAction().length);
+						PSBudgetDataType taskData = (PSBudgetDataType) resBpmDTO.getPojo();
 						BudgetAllocationReqDTO reqDTO = new BudgetAllocationReqDTO();
-//						System.out.println(">>>>id " + taskData.getBudgetId());
-						reqDTO.setBudgetAllocId(this.getManagedBean().getTempBudgetId()); //temp
-						//reqDTO.setBudgetAllocId(taskData.getBudgetId());
+						System.out.println(">>>>id " + taskData.getBudgetId());
+						//reqDTO.setBudgetAllocId(this.getManagedBean().getTempBudgetId()); //temp
+						reqDTO.setBudgetAllocId(Long.parseLong(taskData.getBudgetId()));
 						IBudgetAllocationSO reqSO = (IBudgetAllocationSO) BusinessDelegate.getInstance().getServiceObject(IBudgetAllocationSO.class);
 						BudgetAllocationResDTO resDTO = reqSO.retrieveBudgetAllocation(reqDTO);
-						String[] actions = new String[]{"REVISE", "APPROVE"}; //temp
+						//String[] actions = new String[]{"REVISE", "APPROVE"}; //temp
 						if(resDTO!=null && resDTO.isSuccessful()){
-							this.getManagedBean().setActions(actions);
+							//this.getManagedBean().setActions(actions); //temp
+							this.getManagedBean().setActions(resBpmDTO.getAction());
 							this.getManagedBean().setSelectedBudgetAllocation(resDTO.getBudgetAlloc());
 							this.getManagedBean().getSelectedBudgetAllocation().setEditable(false);
 							this.getManagedBean().setSelectedBudgetAllocItemRmk(new PpBudgetAllocDtlRemark()); //avoid null
 							this.getManagedBean().setSelectedBudgetAllocItem(new PpBudgetAllocDtl()); //avoid null
 							returnPage = ProcurementPlanConst.NAV_TO_BUDGET_ALLOCATION;
 						}
+					}
+				}
 			}
+				
 		}catch (Exception e){
 			e.printStackTrace();
 		}
@@ -157,27 +161,28 @@ public class BudgetAllocationBackingBean extends BaseBackingBean<BudgetAllocatio
 			System.out.println(">>>> taskId " + taskId);
 			if(taskId!=null && taskId.trim().length()>0){
 				
-//				IBpmSO bpmSO = (IBpmSO) EpBpmBusinessDelegate.getInstance().getServiceObject(IBpmSO.class);
-//				String token = bpmSO.authenticate("lailah", "welcome1");
-//				if(token!=null && !token.isEmpty()){
-//					BpmRequestDTO reqBpmDTO = new BpmRequestDTO();
-//					reqBpmDTO.setCtxToken(token);
-//					reqBpmDTO.setTaskId(taskId);
-//					BpmResponseDTO resBpmDTO = bpmSO.getTaskDetails(reqBpmDTO);
-//					if(resBpmDTO!=null){
-//						System.out.println(">>>>>>>>>>>>>>> resBpmDTO not null");
-//						System.out.println(">>>>pojo " + resBpmDTO.getPojo());
-//						System.out.println("actionsss>>>>>>>>>>>> " + resBpmDTO.getAction().length);
-//						PSBudgetDataType taskData = (PSBudgetDataType) resBpmDTO.getPojo();
+				IBpmSO bpmSO = (IBpmSO) EpBpmBusinessDelegate.getInstance().getServiceObject(IBpmSO.class);
+				String token = bpmSO.authenticate("lailah", "welcome1");
+				if(token!=null && !token.isEmpty()){
+					BpmRequestDTO reqBpmDTO = new BpmRequestDTO();
+					reqBpmDTO.setCtxToken(token);
+					reqBpmDTO.setTaskId(taskId);
+					BpmResponseDTO resBpmDTO = bpmSO.getTaskDetails(reqBpmDTO);
+					if(resBpmDTO!=null){
+						System.out.println(">>>>>>>>>>>>>>> resBpmDTO not null");
+						System.out.println(">>>>pojo " + resBpmDTO.getPojo());
+						System.out.println("actionsss>>>>>>>>>>>> " + resBpmDTO.getAction().length);
+						PSBudgetDataType taskData = (PSBudgetDataType) resBpmDTO.getPojo();
 						BudgetAllocationReqDTO reqDTO = new BudgetAllocationReqDTO();
-//						System.out.println(">>>>id " + taskData.getBudgetId());
-						//reqDTO.setBudgetAllocId(taskData.getBudgetId());
-						reqDTO.setBudgetAllocId(this.getManagedBean().getTempBudgetId()); //temp
+						System.out.println(">>>>id " + taskData.getBudgetId());
+						reqDTO.setBudgetAllocId(Long.parseLong(taskData.getBudgetId()));
+						//reqDTO.setBudgetAllocId(this.getManagedBean().getTempBudgetId()); //temp
 						IBudgetAllocationSO reqSO = (IBudgetAllocationSO) BusinessDelegate.getInstance().getServiceObject(IBudgetAllocationSO.class);
 						BudgetAllocationResDTO resDTO = reqSO.retrieveBudgetAllocation(reqDTO);
-						String[] actions = new String[]{"SAVE", "SUBMIT"}; //temp
+						//String[] actions = new String[]{"SAVE", "SUBMIT"}; //temp
 						if(resDTO!=null && resDTO.isSuccessful()){
-							this.getManagedBean().setActions(actions);
+							//this.getManagedBean().setActions(actions); //temp
+							this.getManagedBean().setActions(resBpmDTO.getAction());
 							this.getManagedBean().setSelectedBudgetAllocation(resDTO.getBudgetAlloc());
 							System.out.println("new " +resDTO.getBudgetAlloc().isBrandNew());
 							this.getManagedBean().getSelectedBudgetAllocation().setEditable(true);
@@ -190,8 +195,8 @@ public class BudgetAllocationBackingBean extends BaseBackingBean<BudgetAllocatio
 							returnPage = ProcurementPlanConst.NAV_TO_BUDGET_ALLOCATION;
 						}
 						
-//					}
-//				}
+					}
+				}
 			}
 		}catch (Exception e){
 			e.printStackTrace();
