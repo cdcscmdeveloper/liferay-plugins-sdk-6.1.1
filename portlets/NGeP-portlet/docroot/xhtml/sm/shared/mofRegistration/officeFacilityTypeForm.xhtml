@@ -5,7 +5,7 @@
 	xmlns:p="http://primefaces.org/ui"
 	xmlns:c="http://java.sun.com/jsp/jstl/core">
 
-	<p:panel header="Office Facility Type " toggleable="true">
+	<p:panel header="Office Facility Type " id="ofp" toggleable="true">
 		<div>
 			<p:outputLabel value=" Section Verified : "
 				title="For PO / Approver highlight the verified section " />
@@ -15,57 +15,79 @@
 		<table style="width: 100%">
 
 			<tr>
-				<td><h6>
-						<p:outputLabel value="For Rented" />
-					</h6></td>
+				<td><p:outputLabel value="Ownership Type" /></td>
+				<td><p:selectOneRadio id="options"
+						value="#{backingBean.managedBean.officeFacility.ownershipType}">
+						<f:selectItem itemLabel="Owned" itemValue="O" />
+						<f:selectItem itemLabel="Rented" itemValue="R" />
+						<p:ajax update="ofp" event="change"
+							listener="#{backingBean.officeFacilitySelected}" />
+					</p:selectOneRadio></td>
 
 			</tr>
-			<tr>
-				<td><p:outputLabel value="Landlord's Name *" /></td>
-				<td><p:inputText /></td>
-				<td><p:outputLabel value="Monthly Rental*" /></td>
-				<td><p:panelGrid columns="2"
-						styleClass="noBorders tr,noBorders td">
-						<p:column>
-							<p:inputText />
-						</p:column>
-						<p:column>
-							<p:selectOneMenu>
-								<f:selectItem itemLabel="MYR" itemValue="1" />
-							</p:selectOneMenu>
-						</p:column>
-					</p:panelGrid></td>
-			</tr>
-			<tr>
-				<td><p:outputLabel value="Landlord's Address *" /></td>
-				<td><p:inputTextarea /></td>
-			</tr>
-			<tr>
-				<td><h6>
-						<p:outputLabel value="For Owned" />
-					</h6></td>
+			<ui:fragment
+				rendered="#{backingBean.managedBean.officeFacility.ownershipType eq 'R'}">
+				<tr>
+					<td><h6>
+							<p:outputLabel value="For Rented" />
+						</h6></td>
 
-			</tr>
-			<tr>
-				<td><p:outputLabel value="Owner Name *" /></td>
-				<td><p:inputText /></td>
-				<td><p:outputLabel value="Purchase Price*" /></td>
-				<td><p:panelGrid columns="2"
-						styleClass="noBorders tr,noBorders td">
-						<p:column>
-							<p:inputText />
-						</p:column>
-						<p:column>
-							<p:selectOneMenu>
-								<f:selectItem itemLabel="MYR" itemValue="1" />
-							</p:selectOneMenu>
-						</p:column>
-					</p:panelGrid></td>
-			</tr>
-			<tr>
-				<td><p:outputLabel value="Purchase Date *" /></td>
-				<td><p:calendar showOn="button" /></td>
-			</tr>
+				</tr>
+				<tr>
+					<td><p:outputLabel value="Landlord's Name *" /></td>
+					<td><p:inputText
+							value="#{backingBean.managedBean.officeFacility.ownerName}" /></td>
+					<td><p:outputLabel value="Monthly Rental*" /></td>
+					<td><p:panelGrid columns="2"
+							styleClass="noBorders tr,noBorders td">
+							<p:column>
+								<p:inputText
+									value="#{backingBean.managedBean.officeFacility.rentalRate}" />
+							</p:column>
+							<p:column>
+								<p:selectOneMenu>
+									<f:selectItem itemLabel="MYR" itemValue="1" />
+								</p:selectOneMenu>
+							</p:column>
+						</p:panelGrid></td>
+				</tr>
+				<tr>
+					<td><p:outputLabel value="Landlord's Address *" /></td>
+					<td><p:inputTextarea /></td>
+				</tr>
+			</ui:fragment>
+			<ui:fragment
+				rendered="#{backingBean.managedBean.officeFacility.ownershipType eq 'O'}">
+				<tr>
+					<td><h6>
+							<p:outputLabel value="For Owned" />
+						</h6></td>
+
+				</tr>
+				<tr>
+					<td><p:outputLabel value="Owner Name *" /></td>
+					<td><p:inputText
+							value="#{backingBean.managedBean.officeFacility.ownerName}" /></td>
+					<td><p:outputLabel value="Purchase Price*" /></td>
+					<td><p:panelGrid columns="2"
+							styleClass="noBorders tr,noBorders td">
+							<p:column>
+								<p:inputText
+									value="#{backingBean.managedBean.officeFacility.purchasePrice}" />
+							</p:column>
+							<p:column>
+								<p:selectOneMenu>
+									<f:selectItem itemLabel="MYR" itemValue="1" />
+								</p:selectOneMenu>
+							</p:column>
+						</p:panelGrid></td>
+				</tr>
+				<tr>
+					<td><p:outputLabel value="Purchase Date *" /></td>
+					<td><p:calendar showOn="button"
+							value="#{backingBean.managedBean.officeFacility.purchaseDate}" /></td>
+				</tr>
+			</ui:fragment>
 			<tr>
 				<td><p:outputLabel value="PO Remarks" /></td>
 				<td><p:inputTextarea autoResize="true" /></td>

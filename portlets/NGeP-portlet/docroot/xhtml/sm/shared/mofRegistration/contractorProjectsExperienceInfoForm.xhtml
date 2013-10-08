@@ -1,0 +1,147 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:c="http://java.sun.com/jsp/jstl/core">
+
+	<p:panel header="Company Experience Project" toggleable="true">
+		<div>
+			<p:outputLabel value=" Section Verified : "
+				title="For PO / Approver highlight the verified section " />
+			<p:selectBooleanCheckbox />
+		</div>
+		<br />
+		<p:dataTable var="contrBean"
+			value="#{backingBean.managedBean.smAppl.smApplContractExperiences}"
+			selection="#{backingBean.managedBean.selectedContractProjs}"
+			rowKey="#{contrBean.applContractExperienceId}" rowIndexVar="index"
+			id="contDt">
+
+			<p:column selectionMode="multiple" width="5%" />
+
+			<p:column headerText="NO.">
+				<p:outputLabel value="#{index+1}" />
+			</p:column>
+
+			<p:column headerText="Project Title">
+				<p:commandLink value="#{contrBean.title}"
+					action="#{backingBean.assignSelContractProj(contrBean)}"
+					oncomplete="contDialog.show();" update=":form:tt:contDialog" />
+			</p:column>
+
+			<p:column headerText="Contract Value">
+				<p:outputLabel value="#{contrBean.contractValue}" />
+			</p:column>
+
+			<p:column headerText="Procurement Date">
+				<h:outputText value="#{contrBean.procureDate}">
+					<f:convertDateTime type="date" pattern="dd-MMM-yyyy" />
+				</h:outputText>
+			</p:column>
+
+			<p:column headerText="Result / Progress">
+				<p:outputLabel value="In Progress"
+					rendered="#{contrBean.endResult eq '1'}" />
+				<p:outputLabel value="Complete"
+					rendered="#{contrBean.endResult eq '2'}" />
+				<p:outputLabel value="Fail" rendered="#{contrBean.endResult eq '3'}" />
+			</p:column>
+
+		</p:dataTable>
+		<div align="right">
+			<p:commandButton value="Add Project"
+				action="#{backingBean.assignNewContractProj}"
+				oncomplete="contDialog.show();" update=":form:tt:contDialog" />
+			<p:commandButton value="Delete Project(s)" />
+
+		</div>
+		<table style="width: 100%">
+
+
+			<tr>
+				<td><p:outputLabel value="PO Remarks" /></td>
+				<td><p:inputTextarea autoResize="true" /></td>
+				<td><p:outputLabel value="Approver Remarks" /></td>
+				<td><p:inputTextarea autoResize="true" /></td>
+			</tr>
+		</table>
+	</p:panel>
+	<p:dialog header="Company Project Page" widgetVar="contDialog"
+		resizable="false" showEffect="fade" hideEffect="fade" modal="true"
+		id="contDialog">
+		<table style="width: 100%">
+			<tr>
+				<td valign="top"><p:panel
+						header="Project Details - For Contractor">
+
+						<table style="width: 100%">
+							<tr>
+								<td><p:outputLabel value=" Title *" /></td>
+								<td><p:inputText
+										value="#{backingBean.managedBean.selectedContractProj.title}" /></td>
+							</tr>
+							<tr>
+								<td><p:outputLabel value="Procurement Date *" /></td>
+								<td><p:calendar showOn="button"
+										value="#{backingBean.managedBean.selectedContractProj.procureDate}" /></td>
+							</tr>
+							<tr>
+								<td><p:outputLabel value="Contract Value *" /></td>
+
+								<td><p:panelGrid columns="2"
+										styleClass="noBorders tr,noBorders td">
+										<p:column>
+											<p:inputText
+												value="#{backingBean.managedBean.selectedContractProj.contractValue}"></p:inputText>
+										</p:column>
+										<p:column>
+											<p:selectOneMenu>
+												<f:selectItem itemLabel="MYR" itemValue="1"></f:selectItem>
+											</p:selectOneMenu>
+										</p:column>
+									</p:panelGrid></td>
+							</tr>
+							<tr>
+								<td><p:outputLabel value="Procurement Mode *" /></td>
+								<td><p:column>
+										<p:selectOneMenu
+											value="#{backingBean.managedBean.selectedContractProj.procureMode}">
+											<f:selectItem itemLabel="-- Select One--" itemValue="1" />
+											<f:selectItem itemLabel="Tender" itemValue="T" />
+											<f:selectItem itemLabel="eBidding" itemValue="E" />
+											<f:selectItem itemLabel="SebutHarga" itemValue="S" />
+										</p:selectOneMenu>
+									</p:column></td>
+							</tr>
+							<tr>
+								<td><p:outputLabel value="Project Status *" /></td>
+								<td><p:selectOneRadio
+										value="#{backingBean.managedBean.selectedContractProj.endResult}">
+										<f:selectItem itemLabel="In Progress" itemValue="1" />
+										<f:selectItem itemLabel="Complete" itemValue="2" />
+										<f:selectItem itemLabel="Fail" itemValue="3" />
+									</p:selectOneRadio></td>
+							</tr>
+							<tr>
+								<td><p:outputLabel
+										value="Ministry/Statutory Body/Private *" /></td>
+								<td><p:inputTextarea
+										value="#{backingBean.managedBean.selectedContractProj.orgName}" /></td>
+							</tr>
+
+						</table>
+					</p:panel></td>
+			</tr>
+		</table>
+		<br />
+
+		<div align="center">
+			<p:commandButton value="Save"
+				action="#{backingBean.addOrUpdateContractProjsToSmAppl}"
+				oncomplete="contDialog.hide();" update=":form:tt:contDt" />
+			<p:commandButton value="Cancel" onclick="contDialog.hide();" />
+		</div>
+
+	</p:dialog>
+</ui:composition>

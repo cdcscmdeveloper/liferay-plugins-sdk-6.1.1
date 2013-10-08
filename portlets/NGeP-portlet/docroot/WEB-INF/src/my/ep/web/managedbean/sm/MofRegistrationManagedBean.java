@@ -8,6 +8,7 @@ import java.util.List;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
 
+import my.ep.persistence.entity.sm.SmAppl;
 import my.ep.web.bean.sm.CompanyBranchesBean;
 import my.ep.web.bean.sm.MofRegistrationUtilBean;
 import my.ep.web.bean.sm.PersonnelBean;
@@ -22,6 +23,16 @@ public class MofRegistrationManagedBean extends BaseManagedBean {
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;
+
+	private SmAppl smappl;
+
+	public SmAppl getSmappl() {
+		return smappl;
+	}
+
+	public void setSmappl(SmAppl smappl) {
+		this.smappl = smappl;
+	}
 
 	public MofRegistrationManagedBean() {
 	}

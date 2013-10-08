@@ -7,6 +7,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import javax.faces.bean.ManagedBean;
+import javax.faces.bean.RequestScoped;
 import javax.faces.bean.SessionScoped;
 
 import my.ep.biz.dto.sm.mofRegistration.MofRegistrationReqDTO;
@@ -24,7 +25,7 @@ import org.primefaces.event.SelectEvent;
 import org.primefaces.event.UnselectEvent;
 
 @ManagedBean
-@SessionScoped
+@RequestScoped
 public class MofRegistrationBackingBean extends
 		BaseBackingBean<MofRegistrationManagedBean> implements Cloneable {
 

@@ -12,31 +12,33 @@
 			<p:selectBooleanCheckbox />
 		</div>
 		<br />
-		<p:dataTable var="branchBean"
-			value="#{mofRegistrationBackingBean.branchList}"
-			selection="#{mofRegistrationBackingBean.managedBean.selectedBranches}"
-			rowKey="#{branchBean.branchSeq}" rowIndexVar="index">
+		<p:dataTable var="branchBean" id="dt"
+			value="#{backingBean.managedBean.smAppl.smApplSupplierBranches}"
+			selection="#{backingBean.managedBean.selectedBranches}"
+			rowKey="#{branchBean.applSupplierBranchId}" rowIndexVar="index">
 
 			<p:column selectionMode="multiple" width="5%" />
 			<p:column headerText="NO.">
-				<p:outputLabel value="#{branchBean.branchSeq}" />
+				<p:outputLabel value="#{index+1}" />
 			</p:column>
 
 			<p:column headerText="Branch Name">
-				<p:commandLink id="selectButton" update=":form:display"
-					oncomplete="banchDialog.show();" process="@this"
+				<p:commandLink id="selectButton" update=":form:tt:display"
+					oncomplete="banchDialog.show();"
+					action="#{backingBean.assignSelBranch(branchBean)}"
 					value="#{branchBean.branchName}">
-					<f:setPropertyActionListener value="#{branchBean}"
-						target="#{mofRegistrationBackingBean.selectedBranch}" />
+
 				</p:commandLink>
 			</p:column>
 
 			<p:column headerText="Address">
-				<p:outputLabel value="#{branchBean.branchAddress}" />
+				<p:outputLabel value="#{branchBean.phone}" />
 			</p:column>
 		</p:dataTable>
 		<div align="right">
-			<p:commandButton value="Add Branch" onclick="banchDialog.show();" />
+			<p:commandButton value="Add Branch"
+				action="#{backingBean.assignNewBranchBean}"
+				oncomplete="banchDialog.show();" update=":form:tt:display" />
 			<p:commandButton value="Delete Branch(es)" />
 
 		</div>
@@ -53,17 +55,16 @@
 		id="display" resizable="false" showEffect="fade" hideEffect="fade"
 		modal="true">
 		<p:panel header="Branch Details">
-
 			<table style="width: 100%">
 				<tr>
 					<td><p:outputLabel value="Branch Name *" /></td>
 					<td><p:inputText
-							value="#{mofRegistrationBackingBean.selectedBranch.branchName}" /></td>
+							value="#{backingBean.managedBean.selectedBranch.branchName}" /></td>
 				</tr>
 				<tr>
 					<td><p:outputLabel value="Address" /></td>
 					<td><p:inputText
-							value="#{mofRegistrationBackingBean.selectedBranch.branchAddress}" /></td>
+							value="#{backingBean.managedBean.selectedBranch.addressId}" /></td>
 				</tr>
 
 				<tr>
@@ -76,7 +77,7 @@
 				</tr>
 				<tr>
 					<td><p:outputLabel value="Country *" /></td>
-					<td><p:selectOneMenu value="">
+					<td><p:selectOneMenu>
 							<f:selectItem itemLabel="-- Select One -- " itemValue="" />
 							<f:selectItem itemLabel="Malaysia" itemValue="1" />
 						</p:selectOneMenu></td>
@@ -100,19 +101,23 @@
 				</tr>
 				<tr>
 					<td><p:outputLabel value="Phone No." /></td>
-					<td><p:inputText /></td>
+					<td><p:inputText
+							value="#{backingBean.managedBean.selectedBranch.phone}" /></td>
 				</tr>
 				<tr>
 					<td><p:outputLabel value="Fax No." /></td>
-					<td><p:inputText /></td>
+					<td><p:inputText
+							value="#{backingBean.managedBean.selectedBranch.fax}" /></td>
 				</tr>
 
 			</table>
 		</p:panel>
 		<br />
 		<div align="center">
-			<p:commandButton value="Save" onclick="banchDialog.hide();"
-				update=":form:sample" />
+			<p:commandButton value="Save"
+				action="#{backingBean.addOrUpdateBranchToSmAppl}"
+				oncomplete="banchDialog.hide();" type="submit" partialSubmit="true"
+				process="display" update=":form:tt:dt" />
 			<p:commandButton value="Cancel" onclick="banchDialog.hide();" />
 		</div>
 	</p:dialog>

@@ -12,37 +12,46 @@
 			<p:selectBooleanCheckbox />
 		</div>
 		<br />
-		<p:dataTable var="utilBean"
-			value="#{mofRegistrationBackingBean.utilList}"
-			selection="#{mofRegistrationBackingBean.managedBean.selectedUtilList}"
-			rowKey="#{utilBean.seqNo}" rowIndexVar="index">
+		<p:dataTable var="certBean"
+			value="#{backingBean.managedBean.smAppl.smApplSupplierCerts}"
+			selection="#{backingBean.managedBean.selectedCertList}"
+			rowKey="#{certBean.applSupplierCertId}" rowIndexVar="index"
+			id="certDt">
 
 			<p:column selectionMode="multiple" width="5%" />
 
 			<p:column headerText="NO.">
-				<p:outputLabel value="1" />
+				<p:outputLabel value="#{index+1}" />
 			</p:column>
 
 			<p:column headerText="Cert Name">
-				<p:commandLink value="Registration Cert"
-					onclick="certDialog.show();" />
+				<p:commandLink value="#{certBean.certName}"
+					action="#{backingBean.assignSelCert(certBean)}"
+					oncomplete="certDialog.show();" update=":form:tt:certPop" />
 			</p:column>
 
 			<p:column headerText="Cert Type">
-				<p:outputLabel value="Registration Description" />
+				<p:outputLabel value="#{certBean.certType}" />
 			</p:column>
 
 			<p:column headerText="Issue Date">
-				<p:outputLabel value="20-Aug-2010" />
+				<h:outputText value="#{certBean.certStartDate}">
+					<f:convertDateTime type="date" pattern="dd-MMM-yyyy" />
+				</h:outputText>
 			</p:column>
 
 			<p:column headerText="Expiry Date">
-				<p:outputLabel value="20-Aug-2020" />
+				<h:outputText value="#{certBean.certEndDate}">
+					<f:convertDateTime type="date" pattern="dd-MMM-yyyy" />
+				</h:outputText>
+
 			</p:column>
 
 		</p:dataTable>
 		<div align="right">
-			<p:commandButton value="Add Certificate" onclick="certDialog.show();" />
+			<p:commandButton value="Add Certificate"
+				oncomplete="certDialog.show();"
+				action="#{backingBean.assignNewCert}" update=":form:tt:certPop" />
 			<p:commandButton value="Delete Certificate(s)" />
 
 		</div>
@@ -58,43 +67,50 @@
 	</p:panel>
 	<p:dialog width="400px" header="Company Certificate Page"
 		widgetVar="certDialog" resizable="false" showEffect="fade"
-		hideEffect="fade" modal="true">
+		hideEffect="fade" modal="true" id="certPop">
 		<p:panel header="Certificate Details">
 
 			<table style="width: 100%">
 				<tr>
 					<td><p:outputLabel value="Certificate Type *" /></td>
-					<td><p:selectOneMenu>
-							<f:selectItem itemLabel="-- Select One -- " itemValue="" />
-							<f:selectItem itemLabel="Type1" itemValue="1" />
-							<f:selectItem itemLabel="Type2" itemValue="1" />
-							<f:selectItem itemLabel="Type3" itemValue="1" />
+					<td><p:selectOneMenu
+							value="#{backingBean.managedBean.selectedCert.certType}">
+							<f:selectItem itemLabel="-- Select One -- " itemValue="N" />
+							<f:selectItem itemLabel="MOF" itemValue="M" />
+							<f:selectItem itemLabel="BumiPutera" itemValue="B" />
+							<f:selectItem itemLabel="Type3" itemValue="T" />
 						</p:selectOneMenu></td>
 				</tr>
 				<tr>
 					<td><p:outputLabel value="Certificate Name *" /></td>
-					<td><p:inputText /></td>
+					<td><p:inputText
+							value="#{backingBean.managedBean.selectedCert.certName}" /></td>
 				</tr>
 				<tr>
 					<td><p:outputLabel value="Certificate Body *" /></td>
 					<td><p:inputTextarea readonly="true"
-							value="-- Auto populated based on the Certificate Type , 
-							can key the body for type - Others only ----" /></td>
+							title="-- Auto populated based on the Certificate Type , 
+							can key the body for type - Others only ----"
+							value="#{backingBean.managedBean.selectedCert.certBody}" /></td>
 				</tr>
 				<tr>
 					<td><p:outputLabel value="Start Date *" /></td>
-					<td><p:calendar showOn="button" /></td>
+					<td><p:calendar showOn="button"
+							value="#{backingBean.managedBean.selectedCert.certStartDate}" /></td>
 				</tr>
 				<tr>
 					<td><p:outputLabel value="Expiry Date *" /></td>
-					<td><p:calendar showOn="button" /></td>
+					<td><p:calendar showOn="button"
+							value="#{backingBean.managedBean.selectedCert.certEndDate}" /></td>
 				</tr>
 
 			</table>
 		</p:panel>
 		<br />
 		<div align="center">
-			<p:commandButton value="Save" onclick="certDialog.hide();" />
+			<p:commandButton value="Save"
+				action="#{backingBean.addOrUpdateCertsToSmAppl}"
+				oncomplete="certDialog.hide();" update=":form:tt:certDt" />
 			<p:commandButton value="Cancel" onclick="certDialog.hide();" />
 		</div>
 

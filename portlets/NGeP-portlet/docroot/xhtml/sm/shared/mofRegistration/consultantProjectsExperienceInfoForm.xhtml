@@ -1,0 +1,158 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:c="http://java.sun.com/jsp/jstl/core">
+
+	<p:panel header="Company Experience Project" toggleable="true">
+		<div>
+			<p:outputLabel value=" Section Verified : "
+				title="For PO / Approver highlight the verified section " />
+			<p:selectBooleanCheckbox />
+		</div>
+		<br />
+		<p:dataTable var="consBean"
+			value="#{backingBean.managedBean.smAppl.smApplProjectExperiences}"
+			selection="#{backingBean.managedBean.selectedConstProjs}"
+			rowKey="#{consBean.applProjectExperienceId}" rowIndexVar="index"
+			id="consDt">
+
+			<p:column selectionMode="multiple" width="5%" />
+
+			<p:column headerText="NO.">
+				<p:outputLabel value="#{index+1}" />
+			</p:column>
+
+			<p:column headerText="Project Title">
+				<p:commandLink value="#{consBean.projectName}"
+					action="#{backingBean.assignSelConsultantProj(consBean)}"
+					oncomplete="consDialog.show();" update=":form:tt:consDialog" />
+			</p:column>
+
+			<p:column headerText="Project Value">
+				<p:outputLabel value="#{consBean.projectCost}" />
+			</p:column>
+
+			<p:column headerText="Procurement Date">
+				<h:outputText value="#{consBean.appointmentDate}">
+					<f:convertDateTime type="date" pattern="dd-MMM-yyyy" />
+				</h:outputText>
+			</p:column>
+
+			<p:column headerText=" Work Progress">
+				<p:outputLabel value="#{consBean.workStatus} %" />
+			</p:column>
+
+		</p:dataTable>
+		<div align="right">
+			<p:commandButton value="Add Project"
+				action="#{backingBean.assignNewConsultantProj}"
+				oncomplete="consDialog.show();" update=":form:tt:consDialog" />
+			<p:commandButton value="Delete Project(s)" />
+
+		</div>
+		<table style="width: 100%">
+
+
+			<tr>
+				<td><p:outputLabel value="PO Remarks" /></td>
+				<td><p:inputTextarea autoResize="true" /></td>
+				<td><p:outputLabel value="Approver Remarks" /></td>
+				<td><p:inputTextarea autoResize="true" /></td>
+			</tr>
+		</table>
+	</p:panel>
+	<p:dialog header="Company Project Page" widgetVar="consDialog"
+		resizable="false" showEffect="fade" hideEffect="fade" modal="true"
+		id="consDialog">
+		<table style="width: 100%">
+			<tr>
+				<td valign="top"><p:panel
+						header="Project Details - For Consultant">
+
+						<table style="width: 100%">
+							<tr>
+								<td><p:outputLabel value=" Project Name *" /></td>
+								<td><p:inputText
+										value="#{backingBean.managedBean.selectedConstProj.projectName}" /></td>
+							</tr>
+							<tr>
+								<td><p:outputLabel value="Project Ref No. *" /></td>
+								<td><p:inputText
+										value="#{backingBean.managedBean.selectedConstProj.projectRefNo}" /></td>
+							</tr>
+							<tr>
+								<td><p:outputLabel value=" Project Location *" /></td>
+								<td><p:inputText
+										value="#{backingBean.managedBean.selectedConstProj.projectLocation}" /></td>
+							</tr>
+							<tr>
+								<td><p:outputLabel value="Client's Name *" /></td>
+								<td><p:inputText
+										value="#{backingBean.managedBean.selectedConstProj.clientName}" /></td>
+							</tr>
+							<tr>
+								<td><p:outputLabel value="Appointment Date *" /></td>
+								<td><p:calendar showOn="button"
+										value="#{backingBean.managedBean.selectedConstProj.appointmentDate}" /></td>
+							</tr>
+							<tr>
+								<td><p:outputLabel value="Project Cost *" /></td>
+								<td><p:panelGrid columns="2"
+										styleClass="noBorders tr,noBorders td">
+										<p:column>
+											<p:inputText
+												value="#{backingBean.managedBean.selectedConstProj.projectCost}"></p:inputText>
+										</p:column>
+										<p:column>
+											<p:selectOneMenu>
+												<f:selectItem itemLabel="MYR" itemValue="1"></f:selectItem>
+											</p:selectOneMenu>
+										</p:column>
+									</p:panelGrid></td>
+							</tr>
+							<tr>
+								<td><p:outputLabel value="Service Provided *" /></td>
+								<td><p:inputTextarea
+										value="#{backingBean.managedBean.selectedConstProj.serviceDesc}" />
+								</td>
+							</tr>
+							<tr>
+								<td><p:outputLabel value="Work Progress *" /></td>
+								<td><p:inputText
+										value="#{backingBean.managedBean.selectedConstProj.workStatus}" />
+									<p:outputLabel value="%" /></td>
+							</tr>
+							<tr>
+								<td><p:outputLabel value="Consultant Fee *" /></td>
+								<td><p:panelGrid columns="2"
+										styleClass="noBorders tr,noBorders td">
+										<p:column>
+											<p:inputText
+												value="#{backingBean.managedBean.selectedConstProj.consultantFee}"></p:inputText>
+										</p:column>
+										<p:column>
+											<p:selectOneMenu>
+												<f:selectItem itemLabel="MYR" itemValue="1"></f:selectItem>
+											</p:selectOneMenu>
+										</p:column>
+									</p:panelGrid></td>
+							</tr>
+						</table>
+
+					</p:panel></td>
+
+			</tr>
+		</table>
+		<br />
+
+		<div align="center">
+			<p:commandButton value="Save"
+				action="#{backingBean.addOrUpdateConsultantProjsToSmAppl}"
+				oncomplete="consDialog.hide();" update=":form:tt:consDt" />
+			<p:commandButton value="Cancel" onclick="consDialog.hide();" />
+		</div>
+
+	</p:dialog>
+</ui:composition>
