@@ -6,56 +6,27 @@ import java.util.List;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
 
+import my.ep.persistence.entity.cm.catalog.CmRequestCode;
 import my.ep.web.managedbean.BaseManagedBean;
 import my.ep.web.vo.RemarksVO;
 
-@ManagedBean(name = "unspscCodeMB")
+@ManagedBean(name = "requestCodeMB")
 @SessionScoped
 public class UnspscCodeManagedBean extends BaseManagedBean {
 	
 	
-	private String cmNavigationURL;
-	
-	private List<RemarksVO> unspscList;
-	private RemarksVO selectedUNSPSCObj;
-	
-	
-	
-	
-	
-	
+	private CmRequestCode requestCode;
 
-	
-
-	public String getCmNavigationURL() {
-		return cmNavigationURL;
+	public CmRequestCode getRequestCode() {
+		if(requestCode==null)
+			requestCode = new CmRequestCode();
+		return requestCode;
 	}
 
-	public void setCmNavigationURL(String cmNavigationURL) {
-		this.cmNavigationURL = cmNavigationURL;
+	public void setRequestCode(CmRequestCode requestCode) {
+		this.requestCode = requestCode;
 	}
 
-	public List<RemarksVO> getUnspscList() {
-		if(unspscList==null){
-			unspscList = new ArrayList<RemarksVO>();
-		}
-		return unspscList;
-	}
-
-	public void setUnspscList(List<RemarksVO> unspscList) {
-		this.unspscList = unspscList;
-	}
-
-	public RemarksVO getSelectedUNSPSCObj() {
-		if(selectedUNSPSCObj==null)
-			selectedUNSPSCObj = new RemarksVO();
-		return selectedUNSPSCObj;
-	}
-
-	public void setSelectedUNSPSCObj(RemarksVO selectedUNSPSCObj) {
-		this.selectedUNSPSCObj = selectedUNSPSCObj;
-	}
-	
 	
 	
 	

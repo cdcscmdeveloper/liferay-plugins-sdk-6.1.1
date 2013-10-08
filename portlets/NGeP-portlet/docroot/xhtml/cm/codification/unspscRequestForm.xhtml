@@ -26,10 +26,10 @@
 				<h:panelGrid columns="2">
 
 					<p:outputLabel value="* #{lbl['lbl.cm.item.name']}"></p:outputLabel>
-					<p:inputText></p:inputText>
+					<p:inputText value="#{unspscCodeBackingBean.managedBean.requestCode.itemName}"></p:inputText>
 
 					<p:outputLabel value="* #{lbl['lbl.cm.item.details']}"></p:outputLabel>
-					<p:inputText></p:inputText>
+					<p:inputText value="#{unspscCodeBackingBean.managedBean.requestCode.itemDetail}"></p:inputText>
 
 					<p:outputLabel value="* #{lbl['lbl.cm.type']}"></p:outputLabel>
 					<p:inputText></p:inputText>
@@ -44,7 +44,7 @@
 					<p:inputText></p:inputText>
 
 					<p:outputLabel></p:outputLabel>
-					<p:commandButton value="#{lbl['lbl.cm.submit']}"></p:commandButton>
+					<p:commandButton value="#{lbl['lbl.cm.submit']}" action="#{unspscCodeBackingBean.submitForRequest()}"></p:commandButton>
 
 
 

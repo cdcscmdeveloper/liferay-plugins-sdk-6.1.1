@@ -4,8 +4,7 @@
 	xmlns:h="http://java.sun.com/jsf/html"
 	xmlns:ui="http://java.sun.com/jsf/facelets"
 	xmlns:p="http://primefaces.org/ui"
-	xmlns:c="http://java.sun.com/jsp/jstl/core"
-	xmlns:ac="http://ac.my/jsf/composite/cc">
+	xmlns:c="http://java.sun.com/jsp/jstl/core">
 
 
 
@@ -34,8 +33,6 @@
 			var="unspscObj" rowKey="#{unspscObj.unspscId}"
 			selection="#{codificationBackingBean.managedBean.selectedUNSPSCObj}"
 			width="100%" selectionMode="single">
-
-			<ac:paginator for="unspscTableID" />
 
 			<p:ajax event="rowSelect" oncomplete="extensionSearch();" />
 
