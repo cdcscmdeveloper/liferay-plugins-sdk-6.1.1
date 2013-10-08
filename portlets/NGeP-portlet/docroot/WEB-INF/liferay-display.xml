@@ -57,6 +57,8 @@
 			<portlet id="FLPurchaseOrder" />
 			<portlet id="FLPurchaseRequest" />
 			<portlet id="FLShippingInstruction" />
+			<portlet id="FLContractOrderSearch" />
+			
 		</category>
 		<!-- Fulfilment End Added by Giri -->
 		<portlet id="NGeP" />
