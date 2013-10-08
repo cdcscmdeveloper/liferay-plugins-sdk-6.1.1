@@ -18,8 +18,7 @@ import my.ep.web.managedbean.BaseManagedBean;
 @SessionScoped
 public class BudgetAllocationManagedBean extends BaseManagedBean{
 	private static final long serialVersionUID = 1L;
-	
-	
+
 	private Map<Long, BigDecimal> selectedGoMapper = new HashMap<Long, BigDecimal>();
 
 	private List <PpBudget> budgetList;
@@ -37,6 +36,24 @@ public class BudgetAllocationManagedBean extends BaseManagedBean{
 	private String viewMode;
 	
 	private String bpmTaskId; 
+	
+	
+	private Long tempBudgetId; //TODO : temp
+
+
+	/**
+	 * @return the tempBudgetId
+	 */
+	public Long getTempBudgetId() {
+		return tempBudgetId;
+	}
+
+	/**
+	 * @param tempBudgetId the tempBudgetId to set
+	 */
+	public void setTempBudgetId(Long tempBudgetId) {
+		this.tempBudgetId = tempBudgetId;
+	}
 
 	/**
 	 * @return the bpmTaskId

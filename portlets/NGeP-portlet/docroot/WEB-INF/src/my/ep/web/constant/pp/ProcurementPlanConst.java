@@ -4,8 +4,7 @@ public class ProcurementPlanConst {
 
 	//Navigation
 	public static final String NAV_TO_LIST_BUDGET_ALLOCATION = "listBudget";
-	public static final String NAV_TO_REVIEW_BUDGET_ALLOCATION = "budgetAllocation";
-	public static final String NAV_TO_CREATE_BUDGET_ALLOCATION = "budgetAllocation";
+	public static final String NAV_TO_BUDGET_ALLOCATION = "budgetAllocation";
 	
 	public static final String NAV_TO_LIST_PLAN = "listPlan";
 	public static final String NAV_TO_CREATE_PLAN = "procurementPlan";
@@ -84,16 +83,10 @@ public class ProcurementPlanConst {
 		return NAV_TO_LIST_BUDGET_ALLOCATION;
 	}
 	/**
-	 * @return the navToReviewBudgetAllocation
+	 * @return the navToBudgetAllocation
 	 */
-	public String getNavToReviewBudgetAllocation() {
-		return NAV_TO_REVIEW_BUDGET_ALLOCATION;
-	}
-	/**
-	 * @return the navToCreateBudgetAllocation
-	 */
-	public String getNavToCreateBudgetAllocation() {
-		return NAV_TO_CREATE_BUDGET_ALLOCATION;
+	public String getNavToBudgetAllocation() {
+		return NAV_TO_BUDGET_ALLOCATION;
 	}
 	/**
 	 * @return the navToListPlan
