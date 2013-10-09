@@ -7,7 +7,7 @@ public class ProcurementPlanConst {
 	public static final String NAV_TO_BUDGET_ALLOCATION = "budgetAllocation";
 	
 	public static final String NAV_TO_LIST_PLAN = "listPlan";
-	public static final String NAV_TO_CREATE_PLAN = "procurementPlan";
+	public static final String NAV_TO_PLAN_DET = "procurementPlan";
 	
 	public static final String NAV_TO_REVIEW_PLAN = "reviewPlan";
 	public static final String NAV_TO_VERIFY_PLAN = "verifyPlan";
@@ -25,8 +25,8 @@ public class ProcurementPlanConst {
 	public static final String MODE_LIST = "L";
 	
 	//Current Mode
-	public static final String CURRENT_NEW = "N";
-	public static final String CURRENT_MTO = "T";
+	public static final String CURRENT_NEW = "tabN";
+	public static final String CURRENT_MTO = "tabM";
 	
 	//Plan Type
 	public static final String TYPE_PROCUREMENT = "P";
@@ -38,41 +38,40 @@ public class ProcurementPlanConst {
 	public static final String FAVOURITE_TYPE_ITEM = "I";
 	
 	//Procurement Mode
-	public static final String PROCURMENET_QUOTATION = "QT";
-	public static final String PROCURMENET_DIRECT_NEGO = "DN";
-	public static final String PROCURMENET_TENDER = "TD";
-	public static final String PROCURMENET_DIRECT_PURCHASE = "DP";
-	public static final String PROCURMENET_EXISTING_CONTRACT = "EC";
+	public static final String PROCUREMENT_QUOTATION = "QT";
+	public static final String PROCUREMENT_DIRECT_NEGO = "DN";
+	public static final String PROCUREMENT_TENDER = "TD";
+	public static final String PROCUREMENT_DIRECT_PURCHASE = "DP";
+	public static final String PROCUREMENT_EXISTING_CONTRACT = "EC";
+	
+	//Fulfillment Type
+	public static final String FULFILLMENT_ONE_OFF = "OF";
+	public static final String FULFILLMENT_AS_AND_WHEN = "PW";
+	public static final String FULFILLMENT_SCHEDULE = "PS";
+	
 	
 	//Goods or Services Type
 	public static final String GOOD_SERVICE_TYPE_IMPORTED = "I";
 	public static final String GOOD_SERVICE_TYPE_LOCAL = "L";
 	public static final String GOOD_SERVICE_TYPE_BOTH = "B";
 	
-	
 	//BPM
 	public static final String BPM_REVISE = "REVISE";
 	public static final String BPM_APPROVE = "APPROVE";
 	public static final String BPM_SUBMIT = "SUBMIT";
-	
 
-	
-	
 	//General
 	public static final String YES_INT = "1";
-	/**
-	 * @return the yesInt
-	 */
-	public static String getYesInt() {
-		return YES_INT;
-	}
-	/**
-	 * @return the noInt
-	 */
-	public static String getNoInt() {
-		return NO_INT;
-	}
 	public static final String NO_INT = "0";
+	
+	//Contract Ind
+	public static final String CONTRACT_IND_PKP = "P";
+	public static final String CONTRACT_IND_LOA = "S";
+	public static final String CONTRACT_IND_CONTRACT = "C";
+	
+	
+	
+	
 	
 	
 	
@@ -97,8 +96,8 @@ public class ProcurementPlanConst {
 	/**
 	 * @return the navToCreatePlan
 	 */
-	public String getNavToCreatePlan() {
-		return NAV_TO_CREATE_PLAN;
+	public String getNavToPlanDet() {
+		return NAV_TO_PLAN_DET;
 	}
 	/**
 	 * @return the navToReviewPlan
@@ -214,35 +213,55 @@ public class ProcurementPlanConst {
 	public String getFavouriteTypeItem() {
 		return FAVOURITE_TYPE_ITEM;
 	}
+
+	
 	/**
-	 * @return the procurmenetQuotation
+	 * @return the procurementQuotation
 	 */
-	public String getProcurmenetQuotation() {
-		return PROCURMENET_QUOTATION;
+	public static String getProcurementQuotation() {
+		return PROCUREMENT_QUOTATION;
 	}
 	/**
-	 * @return the procurmenetDirectNego
+	 * @return the procurementDirectNego
 	 */
-	public String getProcurmenetDirectNego() {
-		return PROCURMENET_DIRECT_NEGO;
+	public static String getProcurementDirectNego() {
+		return PROCUREMENT_DIRECT_NEGO;
 	}
 	/**
-	 * @return the procurmenetTender
+	 * @return the procurementTender
 	 */
-	public String getProcurmenetTender() {
-		return PROCURMENET_TENDER;
+	public static String getProcurementTender() {
+		return PROCUREMENT_TENDER;
 	}
 	/**
-	 * @return the procurmenetDirectPurchase
+	 * @return the procurementDirectPurchase
 	 */
-	public String getProcurmenetDirectPurchase() {
-		return PROCURMENET_DIRECT_PURCHASE;
+	public static String getProcurementDirectPurchase() {
+		return PROCUREMENT_DIRECT_PURCHASE;
 	}
 	/**
-	 * @return the procurmenetExistingContract
+	 * @return the procurementExistingContract
 	 */
-	public String getProcurmenetExistingContract() {
-		return PROCURMENET_EXISTING_CONTRACT;
+	public static String getProcurementExistingContract() {
+		return PROCUREMENT_EXISTING_CONTRACT;
+	}
+	/**
+	 * @return the bpmRevise
+	 */
+	public static String getBpmRevise() {
+		return BPM_REVISE;
+	}
+	/**
+	 * @return the bpmApprove
+	 */
+	public static String getBpmApprove() {
+		return BPM_APPROVE;
+	}
+	/**
+	 * @return the bpmSubmit
+	 */
+	public static String getBpmSubmit() {
+		return BPM_SUBMIT;
 	}
 	/**
 	 * @return the goodServiceTypeImported
@@ -262,7 +281,53 @@ public class ProcurementPlanConst {
 	public String getGoodServiceTypeBoth() {
 		return GOOD_SERVICE_TYPE_BOTH;
 	}
+	/**
+	 * @return the fulfillmentOneOff
+	 */
+	public static String getFulfillmentOneOff() {
+		return FULFILLMENT_ONE_OFF;
+	}
+	/**
+	 * @return the fulfillmentAsAndWhen
+	 */
+	public static String getFulfillmentAsAndWhen() {
+		return FULFILLMENT_AS_AND_WHEN;
+	}
+	/**
+	 * @return the fulfillmentSchedule
+	 */
+	public static String getFulfillmentSchedule() {
+		return FULFILLMENT_SCHEDULE;
+	}
+	/**
+	 * @return the yesInt
+	 */
+	public static String getYesInt() {
+		return YES_INT;
+	}
+	/**
+	 * @return the noInt
+	 */
+	public static String getNoInt() {
+		return NO_INT;
+	}
 	
-
-	
+	/**
+	 * @return the contractIndPkp
+	 */
+	public static String getContractIndPkp() {
+		return CONTRACT_IND_PKP;
+	}
+	/**
+	 * @return the contractIndLoa
+	 */
+	public static String getContractIndLoa() {
+		return CONTRACT_IND_LOA;
+	}
+	/**
+	 * @return the contractIndContract
+	 */
+	public static String getContractIndContract() {
+		return CONTRACT_IND_CONTRACT;
+	}
 }
