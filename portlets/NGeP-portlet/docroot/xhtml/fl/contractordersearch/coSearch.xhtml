@@ -1,0 +1,76 @@
+<ui:composition
+	template="/WEB-INF/facelets/templates/sidemenu_template.xhtml"
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:c="http://java.sun.com/jsp/jstl/core">
+
+	<ui:define name="resourceSection">
+	</ui:define>
+	<ui:define name="content">
+	<p:tabView id="tabView">  
+  
+    <p:tab id="tab1" title="Contract List">  
+       
+    
+
+		<p:panel header="CONTRACT ORDER" toggleable="true">
+
+			<p:dataTable id="contractListTable" var="contractLict" value="" paginator="true"
+				rows="10"
+				paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+				rowsPerPageTemplate="5,10,15" paginatorPosition="bottom">
+				<p:column headerText="Contract No.">
+					<h:outputText value="10202-0202" />
+				</p:column>
+
+				<p:column headerText="Plan No.">
+					<h:outputText value="PL_FL_003" />
+				</p:column>
+
+				<p:column headerText="Schedule No.">
+					<h:outputText value="SC00992394001" />
+				</p:column>
+				
+				<p:column headerText="Circular No.">
+					<h:outputText value="" />
+				</p:column>
+				
+				<p:column headerText="Period(Start)">
+					<h:outputText value="01-JAN-2012" />
+				</p:column>
+				
+				<p:column headerText="Period(End)">
+					<h:outputText value="31-MAR-2012" />
+				</p:column>
+				
+				<p:column headerText="Fulfillment Type">
+					<h:outputText value="Scheduled" />
+				</p:column>
+				
+				<p:column headerText="Contract Type">
+					<h:outputText value="Ministry" />
+				</p:column>
+				
+				<p:column headerText="Supplier Id">
+					<h:outputText value="SP0053" />
+				</p:column>
+				
+				<p:column headerText="Supplier Name">
+					<h:outputText value="Redah Jaya Sdn Bhd" />
+				</p:column>
+
+				<p:column headerText="Action">
+					<p:commandLink id="crBasepageLink" value="request"  action="/xhtml/fl/contractrequest/crBasePage.xhtml"/>
+				</p:column>
+			</p:dataTable>
+		</p:panel>
+		</p:tab>
+		<p:tab id="tab2" title="Catalogue">
+		</p:tab>
+		</p:tabView>
+		
+	</ui:define>
+</ui:composition>
