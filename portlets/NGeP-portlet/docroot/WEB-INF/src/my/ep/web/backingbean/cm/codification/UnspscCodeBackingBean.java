@@ -8,8 +8,14 @@ import javax.faces.bean.RequestScoped;
 import my.ep.biz.dto.cm.codification.CodificationReqDTO;
 import my.ep.biz.dto.cm.codification.CodificationResDTO;
 import my.ep.biz.service.cm.codification.ICodificationSO;
+import my.ep.bpm.dto.BpmRequestDTO;
+import my.ep.bpm.dto.BpmResponseDTO;
+import my.ep.bpm.service.IBpmSO;
+import my.ep.jaxb.cd.unspscdata.CDUNSPSCDataType;
+import my.ep.persistence.entity.cm.catalog.CmRequestCode;
 import my.ep.persistence.entity.cm.catalog.CmUnspsc;
 import my.ep.persistence.logging.LogKey;
+import my.ep.util.lookupservice.EpBpmBusinessDelegate;
 import my.ep.web.backingbean.BaseBackingBean;
 import my.ep.web.managedbean.cm.codification.UnspscCodeManagedBean;
 import my.ep.web.util.lookupservice.BusinessDelegate;
@@ -33,33 +39,64 @@ public class UnspscCodeBackingBean extends BaseBackingBean<UnspscCodeManagedBean
 		if(MDC.get(LogKey.USER_ID)==null) {
 			MDC.put(LogKey.USER_ID, 1L);
 		}
-		
+
 	}
-	
+
 	public void submitForRequest(){
-		
+
 		ICodificationSO unspscSO = (ICodificationSO) BusinessDelegate.getInstance().getServiceObject("cm",ICodificationSO.class);
-		
+
 		CodificationReqDTO reqDTO = new CodificationReqDTO();
 		log.info("itemName:"+this.getManagedBean().getRequestCode().getItemName());
 		reqDTO.setRequestCode(this.getManagedBean().getRequestCode());
-		
+
 		CodificationResDTO resDTO = unspscSO.addCodificationRequest(reqDTO);
+		
+		BpmResponseDTO responseDTO = initiateTask(resDTO.getRequestCode());
 	}
 
+
+
+	public BpmResponseDTO initiateTask(CmRequestCode request){
+		System.out.println("initiateTask******");
+		IBpmSO bpmSO = (IBpmSO) EpBpmBusinessDelegate.getInstance().getServiceObject(IBpmSO.class);
+		String ctx = bpmSO.authenticate("roslan","welcome1");
+		BpmRequestDTO reqDTO = new BpmRequestDTO();
+		reqDTO.setCtxToken(ctx);
+
+		//  reqDTO.setProcessId("Procurement_Strategy.EndorseBudget");
+		reqDTO.setProcessId("Codification.RequestUNSPSC");
+		reqDTO.setOutcome("");
+		CDUNSPSCDataType obj = new CDUNSPSCDataType();
+		obj.setRequestId(String.valueOf(request.getRequestId()));
+		reqDTO.setPojo(obj);
+		BpmResponseDTO res = bpmSO.initiateAndUpdateTask(reqDTO);
+
+		//--
+		//	  Object asd = res.getPojo();
+		//	  CDUNSPSCDataType qwe = (CDUNSPSCDataType)asd;
+		//	  qwe.getPtj();
+		//--
+		return res;
+	}
+
+
 	public void uploadUNSPSC(FileUploadEvent event) throws Exception{
+
 
 		ICodificationSO unspscSO = (ICodificationSO) BusinessDelegate.getInstance().getServiceObject("cm",ICodificationSO.class);
 
 		UploadedFile item = event.getFile();
 
 		FileInputStream file = (FileInputStream)item.getInputstream();	
+
 		HSSFWorkbook workbook = new HSSFWorkbook(file);	
+
 		CodificationReqDTO reqDTO = new CodificationReqDTO();
 		HSSFSheet segment = workbook.getSheetAt(2);
 
 
-		log.debug("*******segment***********");
+		log.info("*******segment***********");
 
 		long key = 0;
 		long code =0;
@@ -104,7 +141,7 @@ public class UnspscCodeBackingBean extends BaseBackingBean<UnspscCodeManagedBean
 		}
 
 		CodificationResDTO resDTO = unspscSO.saveUnspsc(reqDTO);
-		log.debug("*******end segment***********");
+		log.info("*******end segment***********");
 
 		///////////////////////////////////////////////////////////////////////
 
@@ -266,7 +303,7 @@ public class UnspscCodeBackingBean extends BaseBackingBean<UnspscCodeManagedBean
 
 
 	}
-	
+
 	public String getParentCode(long code){
 
 		String parent = null;
