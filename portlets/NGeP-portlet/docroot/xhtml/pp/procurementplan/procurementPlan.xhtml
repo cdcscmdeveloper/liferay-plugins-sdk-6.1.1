@@ -14,17 +14,17 @@ xmlns:c="http://java.sun.com/jsp/jstl/core"
     <ui:define name="contentSection">
     	
 		<p:tabView id="tvPlan" dynamic="true" cache="false" orientation="left">  
-			<p:ajax event="tabChange" listener="#{planBackingBean.updateCurrent}" update="tvPlan"/>  
-		    <p:tab id="tabN" title="#{planBackingBean.generateHeader(planBackingBean.managedBean.viewMode)}"> 
-		    	<c:if test="#{planBackingBean.managedBean.viewMode == 'N' &amp;&amp;  planBackingBean.managedBean.current=='N'}">
+			<p:ajax event="tabChange" listener="#{planBackingBean.updateCurrentView}" update="tvPlan"/>  
+		    <p:tab id="#{PPConst.currentNew}" title="#{planBackingBean.generateHeader(planBackingBean.managedBean.viewMode)}"> 
+		    	<c:if test="#{planBackingBean.managedBean.current==PPConst.currentNew}">
 		    		<ui:include src="planContent.xhtml"/>
 		    	</c:if>
 		    </p:tab>
-		    <p:tab  id="tabT" title="#{lbl['lbl.pp.plan.title.mto.plan']}" rendered="#{planBackingBean.managedBean.mtoRequired==1 &amp;&amp;
-          		planBackingBean.managedBean.typeOfGoodsServices=='I' || planBackingBean.managedBean.typeOfGoodsServices=='B' }" 
+		    <p:tab id="#{PPConst.currentMto}" title="#{lbl['lbl.pp.plan.title.mto.plan']}" 
+		    	rendered="#{planBackingBean.managedBean.enableMto}" 
           		action="#{planBackingBean.redirectToCreateMtoPlan}" >  
           		<br/>
-          		<c:if test="#{planBackingBean.managedBean.current == 'T'}">
+          		<c:if test="#{planBackingBean.managedBean.current==PPConst.currentMto}">
 		    		<ui:include src="planContent.xhtml"/>
 		    	</c:if>
 		    </p:tab>
@@ -36,7 +36,7 @@ xmlns:c="http://java.sun.com/jsp/jstl/core"
 		    </p:tab>
 		    <p:tab id="tabL" title="#{lbl['lbl.pp.plan.title.list']}"> 
 		    	<br/>
-		    	<p:panel header="#{planBackingBean.generateHeader('L')}"> 
+		    	<p:panel header="#{planBackingBean.generateHeader(PPConst.modeList)}"> 
 		    		<ui:include src="listPlanContent.xhtml"/>
 		    	</p:panel>
 		    </p:tab>
