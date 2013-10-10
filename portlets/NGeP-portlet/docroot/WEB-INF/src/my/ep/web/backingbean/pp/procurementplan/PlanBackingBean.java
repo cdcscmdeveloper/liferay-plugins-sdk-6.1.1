@@ -32,13 +32,14 @@ public class PlanBackingBean extends BaseBackingBean<PlanManagedBean>{
 	}
 	
 	public PlanBackingBean() {
-		System.out.println("---------->>>>>>>>>>>>>>>>>>>>>>>>>>>");
+		log.info("PlanBackingBean - Start");
+		log.info("PlanBackingBean - End");
 	}
 
 	public String redirectToCreatePlan(){
 		log.info("redirectToCreatePlan - Start");
 		this.getManagedBean().setViewMode(ProcurementPlanConst.MODE_NEW);
-		this.getManagedBean().setCurrent(ProcurementPlanConst.MODE_NEW);
+		this.getManagedBean().setCurrent(ProcurementPlanConst.CURRENT_NEW);
 		this.getManagedBean().setSelectedPlanMaster(new PpPlanMaster());
 		this.getManagedBean().setSelectedPlan(new PpPlan());
 		this.getManagedBean().getSelectedPlan().setEditable(true);
@@ -48,24 +49,59 @@ public class PlanBackingBean extends BaseBackingBean<PlanManagedBean>{
 		PpPlanActor approver = new PpPlanActor();
 		approver.setActorType("A");
 		approver.setSeqNo(1);
-		this.getManagedBean().setSelectedPlanApprover(approver);
+		this.getManagedBean().getSelectedPlan().setApprover(approver);
+		
+		//PVO
+		this.getManagedBean().getSelectedPlan().setVerificationOfficers(new ArrayList<PpPlanActor>());
+		for(int i=1; i<=3; i++){
+			PpPlanActor vo = new PpPlanActor();
+			vo.setSeqNo(i);
+			vo.setActorType("V");
+			this.getManagedBean().getSelectedPlan().addVerificationOfficers(vo);
+		}
 		
 		log.info("redirectToCreatePlan - End");
-		return ProcurementPlanConst.NAV_TO_CREATE_PLAN;
+		return ProcurementPlanConst.NAV_TO_PLAN_DET;
+    } 	
+	
+	public String redirectToCreateMtoPlan(){
+		log.info("redirectToCreateMtoPlan - Start");
+		this.getManagedBean().setViewMode(ProcurementPlanConst.MODE_NEW);
+		this.getManagedBean().setCurrent(ProcurementPlanConst.CURRENT_MTO);
+		this.getManagedBean().setSelectedPlanMaster(new PpPlanMaster());
+		this.getManagedBean().setSelectedPlan(new PpPlan());
+		this.getManagedBean().getSelectedPlan().setEditable(true);
+		this.getManagedBean().getSelectedPlan().setStatusCode("New");
+		
+//		//Plan Approver
+//		PpPlanActor approver = new PpPlanActor();
+//		approver.setActorType("A");
+//		approver.setSeqNo(1);
+//		this.getManagedBean().setSelectedPlanApprover(approver);
+		
+		
+//		
+//		this.getManagedBean().setPlanType(ProcurementPlanConst.TYPE_PROCUREMENT);
+//		this.getManagedBean().setProcurementMode(ProcurementPlanConst.PROCUREMENT_TENDER);//as per main plan
+//		this.getManagedBean().setViewMode(ProcurementPlanConst.MODE_NEW_MTO);
+//		this.getManagedBean().setBrandNew(true);
+//		this.getManagedBean().setTypeOfGoodsServices(ProcurementPlanConst.GOOD_SERVICE_TYPE_IMPORTED);
+//		this.getManagedBean().setMtoRequired(1);
+		log.info("redirectToCreateMtoPlan - End");
+		return ProcurementPlanConst.NAV_TO_PLAN_DET;
+    }
+	
+	public String redirectToListPlan(){
+		log.info("getNavToViewPlan");
+		this.getManagedBean().setViewMode(ProcurementPlanConst.MODE_LIST);
+		return ProcurementPlanConst.NAV_TO_LIST_PLAN;
+	}
+
+	public String redirectToViewPlan(){
+		log.info("getNavToViewPlan");
+		this.getManagedBean().setViewMode(ProcurementPlanConst.MODE_MAINTAIN);
+		return ProcurementPlanConst.NAV_TO_PLAN_DET;
     } 
-	
-	
-	
-	
-	
-	
-	
-	public String getNavToViewPlan(){
-		return ProcurementPlanConst.NAV_TO_VIEW_PLAN;
-	}
-	public String getNavToCreatePlan(){
-		return ProcurementPlanConst.NAV_TO_CREATE_PLAN;
-	}
 	
 	public void searchPlan(boolean popup) {
 		//Retrieve related plans only
@@ -81,62 +117,75 @@ public class PlanBackingBean extends BaseBackingBean<PlanManagedBean>{
 		BudgetAllocationBackingBean budgetAllocationbb = new BudgetAllocationBackingBean();
 		
 	}
-	
-	
-//	public String redirectToListBudgetAllocation(){
-//		System.out.println("----------NAV_TO_VIEW_BUDGET_ALLOCATION");
-//		SubMenuBackingBean subMenuBackingBean = new SubMenuBackingBean();
-//		return subMenuBackingBean.getNavToListBudgetAllocation();
-//    }
-//	
-//	public String redirectToListPlan(){
-//		this.getManagedBean().cleanAll();
-//		SubMenuBackingBean subMenuBackingBean = new SubMenuBackingBean();
-//		return subMenuBackingBean.getNavToListPlan();
-//    }
 
+	public void updateMtoFlag(){
+		log.info("updateMtoFlag - Start");
+		if(ProcurementPlanConst.TYPE_PROCUREMENT.equals(this.getManagedBean().getSelectedPlanMaster().getPlanType())
+				&& this.getManagedBean().getSelectedPlanMaster().isRequiredMto()
+				&& (ProcurementPlanConst.GOOD_SERVICE_TYPE_IMPORTED.equals(this.getManagedBean().getSelectedPlanMaster().getTypeOfGoods())
+						|| ProcurementPlanConst.GOOD_SERVICE_TYPE_BOTH.equals(this.getManagedBean().getSelectedPlanMaster().getTypeOfGoods()))){
+			this.getManagedBean().setEnableMto(true);
+		}else{
+			this.getManagedBean().setEnableMto(false);
+		}
+		log.info("updateMtoFlag - End");
+	}
+	
 	public void updateViewMode(){
-		if(this.getManagedBean().getProcurementMode()!=null && !this.getManagedBean().getProcurementMode().isEmpty()){
-			String procurementMode = this.getManagedBean().getProcurementMode();
-			if(ProcurementPlanConst.PROCURMENET_QUOTATION.equals(procurementMode) || ProcurementPlanConst.PROCURMENET_DIRECT_NEGO.equals(procurementMode)
-					|| ProcurementPlanConst.PROCURMENET_TENDER.equals(procurementMode)){
-				this.getManagedBean().setFavouriteOption(ProcurementPlanConst.FAVOURITE_TYPE_NONE);
-				this.getManagedBean().setFulfillmentType(null);
-				this.getManagedBean().setPeriodicType(null);
-				this.getManagedBean().setPlanType(ProcurementPlanConst.TYPE_PROCUREMENT);
-			}else if(ProcurementPlanConst.PROCURMENET_EXISTING_CONTRACT.equals(procurementMode) 
-					|| ProcurementPlanConst.PROCURMENET_DIRECT_PURCHASE.equals(procurementMode)){
-				this.getManagedBean().setFavouriteOption(ProcurementPlanConst.FAVOURITE_TYPE_NONE);
-				this.getManagedBean().setFulfillmentType(null);
-				this.getManagedBean().setPeriodicType(null);
-				this.getManagedBean().setMtoRequired(0);
-				this.getManagedBean().setQuotationTenderType(null);
-				this.getManagedBean().setTypeOfGoodsServices(null);
-				this.getManagedBean().setRecurringFreq(0);
-				this.getManagedBean().setPlanType(ProcurementPlanConst.TYPE_EXPENDITURE);
-			}else{
-				clearViewMode();
+		log.info("updateViewMode - Start");
+		this.getManagedBean().setEnableDetail(false);
+		
+		if(this.getManagedBean().getSelectedPlanMaster().getProcurementMode()!=null && !this.getManagedBean().getSelectedPlanMaster().getProcurementMode().isEmpty()){
+			log.info("1");
+			String procurementMode = this.getManagedBean().getSelectedPlanMaster().getProcurementMode();
+			if(ProcurementPlanConst.PROCUREMENT_QUOTATION.equals(procurementMode) || ProcurementPlanConst.PROCUREMENT_DIRECT_NEGO.equals(procurementMode)
+					|| ProcurementPlanConst.PROCUREMENT_TENDER.equals(procurementMode)){
+				log.info("P");
+				this.getManagedBean().getSelectedPlanMaster().setFavouriteOption(ProcurementPlanConst.FAVOURITE_TYPE_NONE);
+				this.getManagedBean().getSelectedPlanMaster().setFulfillmentType(null);
+				this.getManagedBean().getSelectedPlanMaster().setPlanType(ProcurementPlanConst.TYPE_PROCUREMENT);
+				this.getManagedBean().setEnableDetail(true);
+			}else if(ProcurementPlanConst.PROCUREMENT_EXISTING_CONTRACT.equals(procurementMode) 
+					|| ProcurementPlanConst.PROCUREMENT_DIRECT_PURCHASE.equals(procurementMode)){
+				log.info("E");
+				//rollback PP data
+				this.getManagedBean().getSelectedPlanMaster().setRequiredMto(false);
+				this.getManagedBean().getSelectedPlanMaster().setQtType(null);
+				this.getManagedBean().getSelectedPlanMaster().setTypeOfGoods(null);
+				
+				
+				this.getManagedBean().getSelectedPlanMaster().setFavouriteOption(ProcurementPlanConst.FAVOURITE_TYPE_NONE);
+				this.getManagedBean().getSelectedPlanMaster().setFulfillmentType(null);
+//				this.getManagedBean().setRecurringFreq(0);
+				this.getManagedBean().getSelectedPlanMaster().setPlanType(ProcurementPlanConst.TYPE_EXPENDITURE);
 			}
 		}else{
+			log.info("3");
 			clearViewMode();
-			
 		}
+		updateMtoFlag();
+		
+		log.info("plan type: " +this.getManagedBean().getSelectedPlanMaster().getPlanType());
+		log.info("updateViewMode - End");
     }
 	
 	private void clearViewMode(){
-		this.getManagedBean().setFavouriteOption(ProcurementPlanConst.FAVOURITE_TYPE_NONE);
-		this.getManagedBean().setFulfillmentType(null);
-		this.getManagedBean().setPeriodicType(null);
-		this.getManagedBean().setMtoRequired(0);
-		this.getManagedBean().setQuotationTenderType(null);
-		this.getManagedBean().setTypeOfGoodsServices(null);
-		this.getManagedBean().setRecurringFreq(0);
+		log.info("clearViewMode - Start");
+//		this.getManagedBean().setFavouriteOption(ProcurementPlanConst.FAVOURITE_TYPE_NONE);
+//		this.getManagedBean().setFulfillmentType(null);
+//		this.getManagedBean().setPeriodicType(null);
+//		this.getManagedBean().setMtoRequired(0);
+//		this.getManagedBean().setQuotationTenderType(null);
+//		this.getManagedBean().setTypeOfGoodsServices(null);
+//		this.getManagedBean().setRecurringFreq(0);
 		this.getManagedBean().setViewMode(ProcurementPlanConst.MODE_NEW);
+		log.info("clearViewMode - End");
+		
 	}
 	
 	public void showMtoPlanDetails(){
-		this.getManagedBean().setMtoRequired(1);
-		System.out.println("xxxxxxxxxx mto " + this.getManagedBean().getMtoRequired() + ", " + this.getManagedBean().getViewMode());
+		this.getManagedBean().getSelectedPlanMaster().setRequiredMto(true);
+		System.out.println("xxxxxxxxxx mto " + this.getManagedBean().getSelectedPlanMaster().isRequiredMto() + ", " + this.getManagedBean().getViewMode());
 		System.out.println(this.getManagedBean().getVerification());
 		System.out.println(this.getManagedBean().getProcurementMode());
 	}
@@ -146,11 +195,6 @@ public class PlanBackingBean extends BaseBackingBean<PlanManagedBean>{
 //		return redirectToListPlan();
 //	}
 	
-	public String redirectToViewPlan(){
-		this.getManagedBean().setViewMode(ProcurementPlanConst.MODE_MAINTAIN);
-		this.getManagedBean().setBrandNew(false);
-		return ProcurementPlanConst.NAV_TO_VIEW_PLAN;
-    } 
 	
 	public String generateHeader(String viewMode){
 		String pageTitle = "";
@@ -221,17 +265,8 @@ public class PlanBackingBean extends BaseBackingBean<PlanManagedBean>{
 		this.getManagedBean().getRemarkList().add(new Object());
 	}
 	
-	public String redirectToCreateMtoPlan(){
-		System.out.println("----------NAV_TO_CREATE_MTO_PLAN");
-		this.getManagedBean().setPlanType(ProcurementPlanConst.TYPE_PROCUREMENT);
-		this.getManagedBean().setProcurementMode(ProcurementPlanConst.PROCURMENET_TENDER);//as per main plan
-		this.getManagedBean().setViewMode(ProcurementPlanConst.MODE_NEW_MTO);
-		this.getManagedBean().setBrandNew(true);
-		this.getManagedBean().setTypeOfGoodsServices(ProcurementPlanConst.GOOD_SERVICE_TYPE_IMPORTED);
-		this.getManagedBean().setMtoRequired(1);
-		return ProcurementPlanConst.NAV_TO_CREATE_MTO_PLAN;
-    }
-	public void updateCurrent(TabChangeEvent val){
+
+	public void updateCurrentView(TabChangeEvent val){
 		
 		if("tabN".equals(val.getTab().getId())){
 			this.getManagedBean().setCurrent(ProcurementPlanConst.CURRENT_NEW);
@@ -244,4 +279,20 @@ public class PlanBackingBean extends BaseBackingBean<PlanManagedBean>{
 		System.out.println("viewMode, Current >>>>>>>>>>>>>> " + 	
 		this.getManagedBean().getCurrent() + ", " + 	this.getManagedBean().getViewMode());
 	}
+	
+	public void updateOtherTabs(TabChangeEvent val){
+		
+		if(ProcurementPlanConst.CURRENT_NEW.equals(val.getTab().getId())){
+			this.getManagedBean().setCurrent(ProcurementPlanConst.CURRENT_NEW);
+			this.getManagedBean().setViewMode(ProcurementPlanConst.MODE_NEW);
+		}else if(ProcurementPlanConst.CURRENT_MTO.equals(val.getTab().getId())){
+			this.getManagedBean().setCurrent(ProcurementPlanConst.CURRENT_MTO);
+			this.getManagedBean().setViewMode(ProcurementPlanConst.MODE_NEW);
+		}
+		
+		System.out.println("viewMode, Current >>>>>>>>>>>>>> " + 	
+		this.getManagedBean().getCurrent() + ", " + 	this.getManagedBean().getViewMode());
+	}
+	
+
 }

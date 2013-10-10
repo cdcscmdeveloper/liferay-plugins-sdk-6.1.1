@@ -28,20 +28,48 @@ public class PlanManagedBean extends BaseManagedBean{
 
 	private String viewMode;
 	
-	private PpPlanActor selectedPlanApprover;
+//	private PpPlanActor selectedPlanApprover;
+	
+	private boolean enableDetail;
+	
+	private boolean enableMto;
 
 	/**
-	 * @return the selectedPlanApprover
+	 * @return the enableMto
 	 */
-	public PpPlanActor getSelectedPlanApprover() {
-		return selectedPlanApprover;
+	public boolean isEnableMto() {
+		return enableMto;
 	}
 	/**
-	 * @param selectedPlanApprover the selectedPlanApprover to set
+	 * @param enableMto the enableMto to set
 	 */
-	public void setSelectedPlanApprover(PpPlanActor selectedPlanApprover) {
-		this.selectedPlanApprover = selectedPlanApprover;
+	public void setEnableMto(boolean enableMto) {
+		this.enableMto = enableMto;
 	}
+	/**
+	 * @return the enableDetail
+	 */
+	public boolean isEnableDetail() {
+		return enableDetail;
+	}
+	/**
+	 * @param enableDetail the enableDetail to set
+	 */
+	public void setEnableDetail(boolean enableDetail) {
+		this.enableDetail = enableDetail;
+	}
+//	/**
+//	 * @return the selectedPlanApprover
+//	 */
+//	public PpPlanActor getSelectedPlanApprover() {
+//		return selectedPlanApprover;
+//	}
+//	/**
+//	 * @param selectedPlanApprover the selectedPlanApprover to set
+//	 */
+//	public void setSelectedPlanApprover(PpPlanActor selectedPlanApprover) {
+//		this.selectedPlanApprover = selectedPlanApprover;
+//	}
 	/**
 	 * @return the selectedPlanMaster
 	 */
@@ -122,8 +150,7 @@ public class PlanManagedBean extends BaseManagedBean{
 	private boolean popup = false;
 	private String planType;
 
-	//temp
-	private boolean approve;
+
 
 	//temp
 	private String fulfillmentType;
@@ -133,16 +160,14 @@ public class PlanManagedBean extends BaseManagedBean{
 	private String documentType;
 	//temp
 	private Boolean verification  = false;
-	//temp
-	private Integer multipleLevel= 0;
+
 	//temp
 	private String favouriteOption = "N";
 	//temp
 	private String quotationTenderType;
 	//temp
 	private String typeOfGoodsServices;
-	//temp
-	private Integer mtoRequired = 0;
+
 	//temp
 	private String contractType;
 	//temp
@@ -153,14 +178,6 @@ public class PlanManagedBean extends BaseManagedBean{
 	private List ppItemList = null;
 	//temp
 	private List remarkList = null;
-	
-	
-	public boolean isApprove() {
-		return approve;
-	}
-	public void setApprove(boolean approve) {
-		this.approve = approve;
-	}
 
 
 	public List getPpItemList() {
@@ -283,20 +300,7 @@ public class PlanManagedBean extends BaseManagedBean{
 	public void setPageInd(String pageInd) {
 		this.pageInd = pageInd;
 	}
-	
-	
-	public Integer getMultipleLevel() {
-		return multipleLevel;
-	}
-	public void setMultipleLevel(Integer multipleLevel) {
-		this.multipleLevel = multipleLevel;
-	}
-	public Integer getMtoRequired() {
-		return mtoRequired;
-	}
-	public void setMtoRequired(Integer mtoRequired) {
-		this.mtoRequired = mtoRequired;
-	}
+
 	public String getPageTitle() {
 		return pageTitle;
 	}
