@@ -32,7 +32,7 @@
 			</p:column>
 
 			<p:column headerText="Address">
-				<p:outputLabel value="#{branchBean.phone}" />
+				<p:outputLabel value="#{branchBean.pmAddress.address1},#{branchBean.pmAddress.address2}" />
 			</p:column>
 		</p:dataTable>
 		<div align="right">
@@ -64,50 +64,57 @@
 				<tr>
 					<td><p:outputLabel value="Address" /></td>
 					<td><p:inputText
-							value="#{backingBean.managedBean.selectedBranch.addressId}" /></td>
+							value="#{backingBean.managedBean.selectedBranch.pmAddress.address1}" /></td>
 				</tr>
 
 				<tr>
 					<td></td>
-					<td><p:inputText /></td>
+					<td><p:inputText
+							value="#{backingBean.managedBean.selectedBranch.pmAddress.address2}" /></td>
 				</tr>
 				<tr>
 					<td></td>
-					<td><p:inputText /></td>
+					<td><p:inputText
+							value="#{backingBean.managedBean.selectedBranch.pmAddress.address3}" /></td>
 				</tr>
 				<tr>
 					<td><p:outputLabel value="Country *" /></td>
-					<td><p:selectOneMenu>
+					<td><p:selectOneMenu
+							value="#{backingBean.managedBean.selectedBranch.pmAddress.pmCountry.countryCode}">
 							<f:selectItem itemLabel="-- Select One -- " itemValue="" />
-							<f:selectItem itemLabel="Malaysia" itemValue="1" />
+							<f:selectItem itemLabel="Malaysia" itemValue="MY" />
 						</p:selectOneMenu></td>
 				</tr>
 				<tr>
 					<td><p:outputLabel value="#{lbl['lbl.sm.postcode']}" /></td>
-					<td><p:inputText /></td>
+					<td><p:inputText
+							value="#{backingBean.managedBean.selectedBranch.pmAddress.postcode}" /></td>
 				</tr>
 				<tr>
 					<td><p:outputLabel value="#{lbl['lbl.sm.state']}" /></td>
-					<td><p:inputText /></td>
+					<td><p:inputText
+							value="#{backingBean.managedBean.selectedBranch.pmAddress.pmState.stateCode}" /></td>
 				</tr>
 
 				<tr>
 					<td><p:outputLabel value="#{lbl['lbl.sm.district']}" /></td>
-					<td><p:inputText /></td>
+					<td><p:inputText
+							value="#{backingBean.managedBean.selectedBranch.pmAddress.pmDistrict.districtCode}" /></td>
 				</tr>
 				<tr>
 					<td><p:outputLabel value="#{lbl['lbl.sm.towncity']}" /></td>
-					<td><p:inputText /></td>
+					<td><p:inputText
+							value="#{backingBean.managedBean.selectedBranch.pmAddress.pmCity.cityCode}" /></td>
 				</tr>
 				<tr>
 					<td><p:outputLabel value="Phone No." /></td>
 					<td><p:inputText
-							value="#{backingBean.managedBean.selectedBranch.phone}" /></td>
+							value="#{backingBean.managedBean.selectedBranch.pmAddress.phoneNo}" /></td>
 				</tr>
 				<tr>
 					<td><p:outputLabel value="Fax No." /></td>
 					<td><p:inputText
-							value="#{backingBean.managedBean.selectedBranch.fax}" /></td>
+							value="#{backingBean.managedBean.selectedBranch.pmAddress.faxNo}" /></td>
 				</tr>
 
 			</table>

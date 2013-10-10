@@ -12,9 +12,10 @@
 			<p:selectBooleanCheckbox />
 		</div>
 		<br />
-		<p:dataTable var="utilBean"
-			value="#{mofRegistrationBackingBean.utilList}"
-			rowKey="#{utilBean.seqNo}" rowIndexVar="index">
+		<p:dataTable var="catBean"
+			value="#{backingBean.managedBean.smAppl.smApplSupplierCategories}"
+			rowKey="#{catBean.applSupplierCategoryId}" rowIndexVar="index"
+			id="catDt">
 			<p:columnGroup type="header">
 				<p:row>
 					<p:column rowspan="2" headerText="No." />
@@ -32,25 +33,33 @@
 				</p:row>
 			</p:columnGroup>
 			<p:column>
-				<p:outputLabel value="1" />
+				<p:outputLabel value="#{index+1}" />
 			</p:column>
 			<p:column>
-				<p:outputLabel value="101099" />
+				<p:outputLabel
+					value="#{catBean.pmCategoryL1.cateogryL1Code}#{catBean.pmCategoryL2.cateogryL2Code}#{catBean.pmCategoryL3.cateogryL3Code}" />
 			</p:column>
 			<p:column>
-				<p:outputLabel value="10" />
+				<p:outputLabel
+					value="#{catBean.pmCategoryL1.cateogryL1Code} -  #{catBean.pmCategoryL1.categoryName}" />
 			</p:column>
 			<p:column>
-				<p:outputLabel value="10" />
+				<p:outputLabel
+					value="#{catBean.pmCategoryL2.cateogryL2Code} -  #{catBean.pmCategoryL2.categoryName}" />
 			</p:column>
 			<p:column>
-				<p:outputLabel value="99" />
+				<p:outputLabel
+					value="#{catBean.pmCategoryL3.cateogryL3Code} -  #{catBean.pmCategoryL3.categoryName}" />
 			</p:column>
 			<p:column>
-				<p:outputLabel value="Normal" />
+				<p:outputLabel value=" -- TBC -- " />
 			</p:column>
 			<p:column>
-				<p:outputLabel value="Category Type" />
+				<!-- <p:outputLabel value="#{catBean.categoryType}" /> -->
+				<p:outputLabel value="Normal"
+					rendered="#{catBean.categoryType eq 'N'}" />
+				<p:outputLabel value="Special"
+					rendered="#{catBean.categoryType eq 'S'}" />
 			</p:column>
 			<p:column>
 				<p:selectOneRadio>
@@ -61,7 +70,8 @@
 		</p:dataTable>
 		<div align="right">
 			<p:commandButton value="Add Category Code"
-				onclick="regCatDialog.show();" />
+				action="#{backingBean.assignNewCategoryCode}"
+				oncomplete="regCatDialog.show();" update=":form:tt:regCatDialog" />
 		</div>
 
 		<br />
@@ -75,67 +85,145 @@
 		</table>
 	</p:panel>
 
-	<p:dialog width="400px" header="Branch Page" widgetVar="regCatDialog"
-		resizable="false" showEffect="fade" hideEffect="fade" modal="true">
-		<p:panel header="Branch Details">
+	<p:dialog width="600px" header="Branch Page" widgetVar="regCatDialog"
+		resizable="false" showEffect="fade" hideEffect="fade" modal="true"
+		id="regCatDialog">
+		<p:panel header="Branch Details" id="catPanel">
 
 			<table style="width: 100%">
 				<tr>
-					<td><p:outputLabel value="Category Type *" /></td>
-					<td><p:selectOneMenu>
-							<f:selectItem itemLabel="-- Select One -- " itemValue="" />
-							<f:selectItem itemLabel="Normal" itemValue="1" />
-							<f:selectItem itemLabel="Special" itemValue="1" />
-						</p:selectOneMenu></td>
-				</tr>
-				<tr>
 					<td><p:outputLabel value="Choose code entry mode" /></td>
-					<td><p:selectOneRadio>
-							<f:selectItem itemLabel="Enter Code" itemValue="1" />
-							<f:selectItem itemLabel="Select Code" itemValue="1" />
+					<td><p:selectOneRadio
+							value="#{backingBean.managedBean.selectedCategory.entryMode}">
+							<f:selectItem itemLabel="Enter Code" itemValue="E" />
+							<f:selectItem itemLabel="Select Code" itemValue="S" />
+							<p:ajax event="change"
+								listener="#{backingBean.changeCatEntryModeValues}"
+								update="catPanel" />
 						</p:selectOneRadio></td>
 				</tr>
 
-				<tr>
-					<td><p:outputLabel value="Enter Category Code" /></td>
-					<td><p:inputText /></td>
-				</tr>
-				<tr>
-					<td><p:outputLabel value="Parent Category *" /></td>
-					<td><p:selectOneMenu>
-							<f:selectItem itemLabel="-- Select One -- " itemValue="" />
-							<f:selectItem itemLabel="Category1" itemValue="1" />
-							<f:selectItem itemLabel="Category2" itemValue="1" />
-						</p:selectOneMenu></td>
-				</tr>
-				<tr>
-					<td><p:outputLabel value="Sub-Category *" /></td>
-					<td><p:selectOneMenu>
-							<f:selectItem itemLabel="-- Select One -- " itemValue="" />
-							<f:selectItem itemLabel="Sub-Category1" itemValue="1" />
-							<f:selectItem itemLabel="Sub-Category1" itemValue="1" />
-						</p:selectOneMenu></td>
-				</tr>
-				<tr>
-					<td><p:outputLabel value="Sub-Sub-Category *" /></td>
-					<td><p:selectOneMenu>
-							<f:selectItem itemLabel="-- Select One -- " itemValue="" />
-							<f:selectItem itemLabel="Sub-Sub-Category1" itemValue="1" />
-							<f:selectItem itemLabel="Sub-Sub-Category1" itemValue="1" />
-						</p:selectOneMenu></td>
-				</tr>
-				<tr>
-					<td><p:outputLabel value="Business Type" /></td>
-					<td><p:inputText readonly="true"
-							title="Auto populated based on the category code enterd/selected" /></td>
-				</tr>
+				<ui:fragment
+					rendered="#{backingBean.managedBean.selectedCategory.entryMode eq 'E'}">
+					<tr>
+						<td><p:outputLabel value="Category Type *" /></td>
+						<td><p:selectOneMenu
+								value="#{backingBean.managedBean.selectedCategory.categoryType}">
+								<f:selectItem itemLabel="-- Select One -- " itemValue="O" />
+								<f:selectItem itemLabel="Normal" itemValue="N" />
+								<f:selectItem itemLabel="Special" itemValue="S" />
+							</p:selectOneMenu></td>
+					</tr>
+					<tr>
+						<td><p:outputLabel value="Enter Category Code" /></td>
+						<td>
+							<table style="width: 100%">
+								<tr>
+									<td><p:inputText maxlength="2" size="2"
+											style="width : 30px;"
+											value="#{backingBean.managedBean.selectedParentCat}" /></td>
+									<td>-</td>
+									<td><p:inputText maxlength="2" size="2"
+											value="#{backingBean.managedBean.selectedChildCat}" /> -</td>
+									<td><p:inputText maxlength="2" size="2"
+											value="#{backingBean.managedBean.selectedSubChildCat}" /></td>
+								</tr>
+							</table>
+						</td>
+					</tr>
+					<tr>
+						<td><p:outputLabel value="Business Type" /></td>
+						<td><p:inputText readonly="true"
+								title="Auto populated based on the category code enterd/selected" /></td>
+					</tr>
+					<tr>
+						<td colspan="2">
+							<div align="center">
+								<p:commandButton value="Save"
+									action="#{backingBean.saveEnteredCategory}"
+									oncomplete="regCatDialog.hide();" update=":form:tt:catDt" />
+								<p:commandButton value="Cancel" onclick="regCatDialog.hide();" />
+							</div>
+						</td>
+
+					</tr>
+				</ui:fragment>
+				<ui:fragment
+					rendered="#{backingBean.managedBean.selectedCategory.entryMode eq 'S'}">
+					<tr>
+						<td><p:outputLabel value="Category Type *" /></td>
+						<td><p:selectOneMenu
+								value="#{backingBean.managedBean.selectedCategory.categoryType}">
+								<f:selectItem itemLabel="-- Select One -- " itemValue="O" />
+								<f:selectItem itemLabel="Normal" itemValue="N" />
+								<f:selectItem itemLabel="Special" itemValue="S" />
+							</p:selectOneMenu></td>
+					</tr>
+					<tr>
+						<td><p:outputLabel value="
+										Parent Category *" /></td>
+						<td><p:selectOneMenu
+								value="#{backingBean.managedBean.selectedParentCat}">
+								<f:selectItem itemLabel="-- Select One -- " itemValue="" />
+								<f:selectItems
+									value="#{backingBean.managedBean.defaultParentCatList}"
+									var="parent" itemLabel="#{parent.categoryName}"
+									itemValue="#{parent.cateogryL1Code}" />
+								<p:ajax event="change"
+									listener="#{backingBean.changeParentCategory}"
+									update="child,subChild" />
+							</p:selectOneMenu></td>
+					</tr>
+					<tr>
+						<td><p:outputLabel value="Child Category *" /></td>
+						<td><p:selectOneMenu
+								value="#{backingBean.managedBean.selectedChildCat}" id="child">
+								<f:selectItem itemLabel=" -- Select One -- " itemValue="" />
+								<f:selectItems
+									value="#{backingBean.managedBean.selectedCategory.pmCategoryL1.pmCategoryL2s}"
+									var="child" itemLabel="#{child.categoryName}"
+									itemValue="#{child.cateogryL2Code}" />
+								<p:ajax event="change"
+									listener="#{backingBean.changeChildCategory}" update="subChild" />
+							</p:selectOneMenu></td>
+					</tr>
+					<tr>
+						<td><p:outputLabel value="Sub Child Category *" /></td>
+						<td><p:selectOneMenu
+								value="#{backingBean.managedBean.selectedSubChildCat}"
+								id="subChild">
+								<f:selectItem itemLabel=" -- Select One --  " itemValue="" />
+								<f:selectItems
+									value="#{backingBean.managedBean.selectedCategory.pmCategoryL2.pmCategoryL3s}"
+									var="subChild" itemLabel="#{subChild.categoryName}"
+									itemValue="#{subChild.cateogryL3Code}" />
+								<p:ajax event="change"
+									listener="#{backingBean.changeSubChildCategory}" />
+							</p:selectOneMenu></td>
+					</tr>
+					<tr>
+						<td><p:outputLabel value="Business Type" /></td>
+						<td><p:inputText readonly="true"
+								title="Auto populated based on the category code enterd/selected" /></td>
+					</tr>
+					<tr>
+						<td colspan="2">
+							<div align="center">
+								<p:commandButton value="Save111"
+									action="#{backingBean.saveSelectedCategory}"
+									oncomplete="regCatDialog.hide();" type="submit"
+									partialSubmit="true" process="regCatDialog"
+									update=":form:tt:catDt" />
+								<p:commandButton value="Cancel" onclick="regCatDialog.hide();" />
+							</div>
+						</td>
+
+					</tr>
+				</ui:fragment>
 			</table>
 		</p:panel>
 		<br />
-		<div align="center">
-			<p:commandButton value="Save" onclick="regCatDialog.hide();" />
-			<p:commandButton value="Cancel" onclick="regCatDialog.hide();" />
-		</div>
+
 	</p:dialog>
 
 </ui:composition>
