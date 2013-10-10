@@ -61,8 +61,8 @@ public class ContractListItem {
    public List<SelectItem> getCurrency() {	
 		
 		List<SelectItem> list = new ArrayList<SelectItem>();
-		list.add(new SelectItem("myr","MYR"));
-		list.add(new SelectItem("usd","USD"));
+		list.add(new SelectItem("MYR","MYR"));
+		list.add(new SelectItem("USD","USD"));
 		return list;
 	}
 

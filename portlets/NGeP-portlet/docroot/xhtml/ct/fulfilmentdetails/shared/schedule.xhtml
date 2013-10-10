@@ -10,10 +10,12 @@
        <p:outputLabel value="#{lbl['lbl.ct.sched.fsched']}"/>
        <p:inputText value="" style="width:100px;"/>
        <p:outputLabel value="#{lbl['lbl.ct.sched.progre']}"/>
-       <p:selectBooleanCheckbox value=""/>
+           <p:selectBooleanCheckbox value="">
+            <p:ajax event="change"  listener="#{contractDetailsBackingBean.progressivePayment}" process="@this" update="paymentSchedule"/>
+           </p:selectBooleanCheckbox>
      </h:panelGrid>
-	 <p:dataTable id="dataTable" var="data" value=" " widgetVar="dataTableObj" lazy="false" dynamic="true"   rowIndexVar="index"
-        paginator="true" paginatorPosition="bottom" paginatorAlwaysVisible="true" emptyMessage="No Records!" rows="10" 
+	 <p:dataTable id="tableSchedule" var="data" value="#{contractDetailsBackingBean.managedBean.ctContract.ctSchedules}" widgetVar="dataTableObj" 
+	    rowIndexVar="index" paginator="true" paginatorPosition="bottom" paginatorAlwaysVisible="true" emptyMessage="No Records!" rows="10" 
 		rowsPerPageTemplate="5,10,15,20" currentPageReportTemplate=" total {totalRecords},  page {currentPage} of {totalPages} "
 		paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}">
 		<p:columnGroup type="header"> 
@@ -28,18 +30,19 @@
 		  <h:outputText value="#{index+1}" />
 		</p:column>     
 		<p:column>
-		 <p:outputLabel value="(System generated upon contract approved)"/>
+		 <p:outputLabel value="#{data.scheduleNo}"/>
 		</p:column>
 		<p:column>
-		 <p:calendar style="width:130px;" value="#{contractDetailsBackingBean.managedBean.contractSchedule.toDate}" id="popupButtonCal" showOn="button" />
+		 <p:calendar style="width:130px;" value="#{data.startDate}" id="popupButtonCal" showOn="button" />
         </p:column>   
         <p:column>   
-           <p:calendar style="width:130px;" value="#{contractDetailsBackingBean.managedBean.contractSchedule.fromDate}" id="popupButtonCal1" showOn="button" />
+           <p:calendar style="width:130px;" value="#{data.endDate}" id="popupButtonCal1" showOn="button" />
         </p:column>        
 	  </p:dataTable>
-	</p:panel>	               
-	 <p:panel id="scheduleId1" header="#{lbl['lbl.ct.sched.panel1.name']}"  toggleable="true"  toggleSpeed="500" widgetVar="panelschedule1">
-	    <p:dataTable id="dataTable1" var="data" value="#{contractDetailsBackingBean.managedBean.scheduleList}" widgetVar="dataTableObj" lazy="false" dynamic="true" 
+	</p:panel>	
+	 <p:outputPanel id="paymentSchedule">                
+	 <p:panel header="#{lbl['lbl.ct.sched.panel1.name']}" rendered="#{contractDetailsBackingBean.chkSchedule}"  toggleable="true"  toggleSpeed="500">
+	    <p:dataTable id="tableProgress" var="data" value="#{contractDetailsBackingBean.managedBean.ctContract.ctProgressivePayments}" widgetVar="dataTableObj" 
 		   paginator="true" paginatorPosition="bottom" paginatorAlwaysVisible="true" emptyMessage="No Records!" rows="10" 
 		   rowsPerPageTemplate="5,10,15,20" currentPageReportTemplate=" total {totalRecords},  page {currentPage} of {totalPages} "
 		   paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink}  {LastPageLink} {RowsPerPageDropdown}">
@@ -52,35 +55,36 @@
                 <p:column style="width:100px" headerText="#{lbl['lbl.ct.sched.table1.action']}"  /> 
             </p:row>	
 			</p:columnGroup>
-			<p:column><p:inputText value="#{contractDetailsBackingBean.managedBean.contractSchedule.phase}" style="width:80px;"/> </p:column>      
+			<p:column><p:inputText value="#{data.phase}" style="width:80px;"/> </p:column>      
 			<p:column>
-			   <p:calendar style="width:130px" value="#{contractDetailsBackingBean.managedBean.contractSchedule.toDate}" id="popupButtonCal" showOn="button" />
+			   <p:calendar style="width:130px" value="#{data.toDate}" id="popupButtonCal" showOn="button" />
 		    </p:column>      
 			<p:column>
-			  <p:calendar style="width:130px" value="#{contractDetailsBackingBean.managedBean.contractSchedule.fromDate}" id="popupButtonCal1" showOn="button" />  
+			  <p:calendar style="width:130px" value="#{data.fromDate}" id="popupButtonCal1" showOn="button" />  
 			</p:column>     
 			<p:column>
-			   <p:inputText value="#{contractDetailsBackingBean.managedBean.contractSchedule.percentage}" style="width:60px;"/>
+			   <p:inputText value="#{data.percentage}" style="width:60px;"/>
 			</p:column>
 			<p:column styleClass="column-align-center">
 		        <p:commandButton title="delete" onsuccess="confirmation.show()" partialSubmit="true" process="@this" icon="ui-icon-delete">
-					    <f:setPropertyActionListener value="#{data}" target="#{contractDetailsBackingBean.managedBean.contractSchedule}" />
+					    <f:setPropertyActionListener value="#{data}" target="#{contractDetailsBackingBean.managedBean.ctProgressivePayment}" />
 					  </p:commandButton>
 			</p:column>    
 		</p:dataTable>
 		<p:confirmDialog message="Do you want to delete the record?"  closable="true" appendToBody="true" header="Delete Confirmation"
 			   severity="alert" widgetVar="confirmation">
                  <h:panelGrid columns="2" columnClasses="column-align-right-50,column-align-left">
-				 <p:commandButton value="Yes" update="dataTable1" partialSubmit="true" process="@this"
+				 <p:commandButton value="Yes" update="tableProgress" partialSubmit="true" process="@this"
 				    onclick="confirmation.hide();" actionListener="#{contractDetailsBackingBean.deleteScheduleDetails()}"/>
 				  <p:commandButton value="No" 	onclick="confirmation.hide()" type="button" />
 				</h:panelGrid>
 			</p:confirmDialog>
 	    <h:panelGrid style="width:750px" columnClasses="column-align-right">
-		  <p:commandButton value="#{lbl['lbl.ct.ded.btn.add']}" styleClass="text-align: right;" process="@this" partialSubmit="true" icon="ui-icon-add"  
-		  action="#{contractDetailsBackingBean.addScheduleDetails()}" update="dataTable1"/>
+		  <p:commandButton value="#{lbl['lbl.ct.ded.btn.add']}" process="@this" partialSubmit="true" 
+		  action="#{contractDetailsBackingBean.addScheduleDetails()}" update="tableProgress"/>
 		</h:panelGrid>
    </p:panel>
+   </p:outputPanel>
 </ui:composition>
 
 
