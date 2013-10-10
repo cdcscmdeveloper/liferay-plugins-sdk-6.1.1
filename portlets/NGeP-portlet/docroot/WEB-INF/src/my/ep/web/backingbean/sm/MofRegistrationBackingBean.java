@@ -10,9 +10,9 @@ import javax.faces.bean.ManagedBean;
 import javax.faces.bean.RequestScoped;
 import javax.faces.bean.SessionScoped;
 
-import my.ep.biz.dto.sm.mofRegistration.MofRegistrationReqDTO;
-import my.ep.biz.dto.sm.mofRegistration.MofRegistrationResDTO;
 import my.ep.biz.service.sm.mofRegistration.IMofRegistrationSO;
+import my.ep.dto.sm.mofRegistration.MofRegistrationReqDTO;
+import my.ep.dto.sm.mofRegistration.MofRegistrationResDTO;
 import my.ep.web.backingbean.BaseBackingBean;
 import my.ep.web.bean.sm.CompanyBranchesBean;
 import my.ep.web.bean.sm.MofRegistrationUtilBean;

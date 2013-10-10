@@ -3,9 +3,9 @@ package my.ep.web.backingbean.sm.reviewApplication;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.RequestScoped;
 
-import my.ep.biz.dto.sm.reviewApplication.ReviewApplicationReqDTO;
-import my.ep.biz.dto.sm.reviewApplication.ReviewApplicationResDTO;
 import my.ep.biz.service.sm.reviewApplication.IReviewApplicationSO;
+import my.ep.dto.sm.reviewApplication.ReviewApplicationReqDTO;
+import my.ep.dto.sm.reviewApplication.ReviewApplicationResDTO;
 import my.ep.web.backingbean.BaseBackingBean;
 import my.ep.web.managedbean.sm.reviewApplication.ReviewApplicationManagedBean;
 import my.ep.web.util.lookupservice.BusinessDelegate;

@@ -3,9 +3,9 @@ package my.ep.web.backingbean.sm.sitevisit;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.RequestScoped;
 
-import my.ep.biz.dto.sm.siteVisit.SiteVisitReqDTO;
-import my.ep.biz.dto.sm.siteVisit.SiteVisitResDTO;
 import my.ep.biz.service.sm.siteVisit.ISiteVisitSO;
+import my.ep.dto.sm.siteVisit.SiteVisitReqDTO;
+import my.ep.dto.sm.siteVisit.SiteVisitResDTO;
 import my.ep.web.backingbean.BaseBackingBean;
 import my.ep.web.managedbean.sm.sitevisit.SvoSiteVisitManagedBean;
 import my.ep.web.util.FacesScopes;
