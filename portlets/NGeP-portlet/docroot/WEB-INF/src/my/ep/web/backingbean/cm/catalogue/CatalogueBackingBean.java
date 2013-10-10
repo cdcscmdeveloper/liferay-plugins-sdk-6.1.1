@@ -26,9 +26,9 @@ import javax.servlet.http.HttpServletResponse;
 import my.ep.biz.bean.search.ISearchBean;
 import my.ep.biz.bean.search.SearchBean;
 import my.ep.biz.bean.search.SearchFilterBean;
-import my.ep.biz.dto.cm.catalogue.CatalogueReqDTO;
-import my.ep.biz.dto.cm.catalogue.CatalogueResDTO;
 import my.ep.biz.service.cm.catalogue.ICatalogueSO;
+import my.ep.dto.cm.catalogue.CatalogueReqDTO;
+import my.ep.dto.cm.catalogue.CatalogueResDTO;
 import my.ep.persistence.entity.cm.catalog.CmImage;
 import my.ep.persistence.entity.cm.catalog.CmItem;
 import my.ep.persistence.entity.cm.catalog.CmSupplierItem;
@@ -233,14 +233,17 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean>{
 
 	public String cancelToMaintenanceFile(){
 
-
-		return "catalogMaintenanceFile";
+		log.info("*********cancelToMaintenanceFile*************");
+		
+		return "catalogMaintenanceFile?faces-redirect=true";
 	}
 
 	public String okToMaintenanceFile(){
+		
+		log.info("*********okToMaintenanceFile*************");
 
 
-		return "catalogMaintenanceFile";
+		return "catalogMaintenanceFile?faces-redirect=true";
 	}
 
 	public void advanceSearch(){
@@ -643,7 +646,7 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean>{
 
 		log.info("Exit saveCatalogItem");
 
-		return "catalogMaintenanceFile";
+		return "catalogMaintenanceFile?faces-redirect=true";
 	}
 
 

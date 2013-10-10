@@ -5,12 +5,12 @@ import java.io.FileInputStream;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.RequestScoped;
 
-import my.ep.biz.dto.cm.codification.CodificationReqDTO;
-import my.ep.biz.dto.cm.codification.CodificationResDTO;
 import my.ep.biz.service.cm.codification.ICodificationSO;
 import my.ep.bpm.dto.BpmRequestDTO;
 import my.ep.bpm.dto.BpmResponseDTO;
 import my.ep.bpm.service.IBpmSO;
+import my.ep.dto.cm.codification.CodificationReqDTO;
+import my.ep.dto.cm.codification.CodificationResDTO;
 import my.ep.jaxb.cd.unspscdata.CDUNSPSCDataType;
 import my.ep.persistence.entity.cm.catalog.CmRequestCode;
 import my.ep.persistence.entity.cm.catalog.CmUnspsc;
@@ -51,6 +51,7 @@ public class UnspscCodeBackingBean extends BaseBackingBean<UnspscCodeManagedBean
 		reqDTO.setRequestCode(this.getManagedBean().getRequestCode());
 
 		CodificationResDTO resDTO = unspscSO.addCodificationRequest(reqDTO);
+		log.info("ID:"+resDTO.getRequestCode().getRequestId());
 		
 		BpmResponseDTO responseDTO = initiateTask(resDTO.getRequestCode());
 	}
@@ -71,6 +72,9 @@ public class UnspscCodeBackingBean extends BaseBackingBean<UnspscCodeManagedBean
 		obj.setRequestId(String.valueOf(request.getRequestId()));
 		reqDTO.setPojo(obj);
 		BpmResponseDTO res = bpmSO.initiateAndUpdateTask(reqDTO);
+		log.info("1:"+res.isSuccessful());
+		log.info("2:"+res.getErrorReason());
+		log.info("ID:"+obj.getRequestId());
 
 		//--
 		//	  Object asd = res.getPojo();

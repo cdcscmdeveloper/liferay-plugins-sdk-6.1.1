@@ -20,12 +20,12 @@ import my.ep.biz.bean.search.ISearchResultBean;
 import my.ep.biz.bean.search.SearchBean;
 import my.ep.biz.bean.search.SearchFilterBean;
 import my.ep.biz.bean.search.SearchResultBean;
-import my.ep.biz.dto.cm.codification.CodificationReqDTO;
-import my.ep.biz.dto.cm.codification.CodificationResDTO;
 import my.ep.biz.service.cm.codification.ICodificationSO;
 import my.ep.bpm.dto.BpmRequestDTO;
 import my.ep.bpm.dto.BpmResponseDTO;
 import my.ep.bpm.service.IBpmSO;
+import my.ep.dto.cm.codification.CodificationReqDTO;
+import my.ep.dto.cm.codification.CodificationResDTO;
 import my.ep.persistence.entity.cm.catalog.CmBrand;
 import my.ep.persistence.entity.cm.catalog.CmColor;
 import my.ep.persistence.entity.cm.catalog.CmItem;
@@ -110,6 +110,7 @@ public class CodificationBackingBean extends BaseBackingBean<CodificationManaged
 		reqDTO.setItemSearchBean(searchBean);
 
 		CodificationResDTO resDTO = codificationSO.searchItem(reqDTO);
+		log.info("size:"+resDTO.getItemList().size());
 		this.getManagedBean().setItemList(resDTO.getItemList());
 	}
 
@@ -271,6 +272,13 @@ public class CodificationBackingBean extends BaseBackingBean<CodificationManaged
 			reqDTO.setSearchBean(searchBean);
 			
 			CodificationResDTO resDTO = codificationSO.searchUNSPSC(reqDTO);
+			for(CmUnspsc unspsc :resDTO.getUnspscList()){
+				System.out.println("unspsc:"+unspsc.getUnspscCode());
+				//for(CmBrand brand:unspsc.getCmBrand()){
+					//System.out.println("brand:"+brand.getBrandCode());
+				//}
+			}
+			
 			this.getManagedBean().setUnspscList(resDTO.getUnspscList());
 		} finally {
 			codificationSO = null;
@@ -298,8 +306,8 @@ public class CodificationBackingBean extends BaseBackingBean<CodificationManaged
 		log.info("*****************************"+this.getManagedBean().getSelectedUNSPSCObj().getUnspscCode());
 
 		for(CmColor color:resDTO.getColorList()){
-			log.info("color:"+color);
-			log.info("color:"+color.getColorId());
+			//log.info("color:"+color);
+			//log.info("color:"+color.getColorId());
 			this.getManagedBean().getColorCriteria().add(new SelectItem(color.getColorCode(), color.getColorName()));
 		}
 
