@@ -12,8 +12,8 @@ import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
 import javax.faces.model.SelectItem;
 
-import my.ep.biz.dto.tpl.spec.TemplateSpecReqDTO;
-import my.ep.biz.dto.tpl.spec.TemplateSpecResDTO;
+import my.ep.dto.tpl.spec.TemplateSpecReqDTO;
+import my.ep.dto.tpl.spec.TemplateSpecResDTO;
 import my.ep.biz.service.tpl.spec.ITemplateSpecSO;
 import my.ep.persistence.entity.tpl.TplCategory;
 import my.ep.persistence.entity.tpl.spec.TplOptionChoice;

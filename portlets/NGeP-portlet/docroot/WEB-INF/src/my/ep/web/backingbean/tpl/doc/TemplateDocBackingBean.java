@@ -15,8 +15,8 @@ import javax.faces.bean.RequestScoped;
 import javax.faces.event.ActionEvent;
 import javax.faces.model.SelectItem;
 
-import my.ep.biz.dto.tpl.doc.TemplateDocReqDTO;
-import my.ep.biz.dto.tpl.doc.TemplateDocResDTO;
+import my.ep.dto.tpl.doc.TemplateDocReqDTO;
+import my.ep.dto.tpl.doc.TemplateDocResDTO;
 import my.ep.biz.service.tpl.doc.ITemplateDocSO;
 import my.ep.persistence.entity.tpl.TplCategory;
 import my.ep.persistence.entity.tpl.doc.TplDocMaster;
