@@ -3,9 +3,9 @@ package my.ep.web.backingbean.sm.complaint;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.RequestScoped;
 
-import my.ep.biz.dto.sm.complaint.ComplaintReqDTO;
-import my.ep.biz.dto.sm.complaint.ComplaintResDTO;
 import my.ep.biz.service.sm.complaint.IComplaintSO;
+import my.ep.dto.sm.complaint.ComplaintReqDTO;
+import my.ep.dto.sm.complaint.ComplaintResDTO;
 import my.ep.web.backingbean.BaseBackingBean;
 import my.ep.web.managedbean.sm.complaint.ComplaintManagedBean;
 import my.ep.web.util.lookupservice.BusinessDelegate;
