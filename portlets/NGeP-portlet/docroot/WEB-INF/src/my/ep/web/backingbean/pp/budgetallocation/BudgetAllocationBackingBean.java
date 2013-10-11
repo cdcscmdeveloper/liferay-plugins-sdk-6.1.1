@@ -78,7 +78,7 @@ public class BudgetAllocationBackingBean extends BaseBackingBean<BudgetAllocatio
 		BudgetAllocationReqDTO reqDTO = new BudgetAllocationReqDTO();
 		reqDTO.setMinistryId(1L);	// TODO dynamic
 
-		IBudgetAllocationSO reqSO = (IBudgetAllocationSO) BusinessDelegate.getInstance().getServiceObject(IBudgetAllocationSO.class);
+		IBudgetAllocationSO reqSO = (IBudgetAllocationSO) BusinessDelegate.getInstance().getServiceObject("pp", IBudgetAllocationSO.class);
 		BudgetAllocationResDTO resDTO = reqSO.retrieveBudgetList(reqDTO);
 		
 		if (resDTO.isSuccessful()) {
@@ -129,7 +129,7 @@ public class BudgetAllocationBackingBean extends BaseBackingBean<BudgetAllocatio
 //						System.out.println(">>>>id " + taskData.getBudgetId());
 						reqDTO.setBudgetAllocId(this.getManagedBean().getTempBudgetId()); //temp
 //						reqDTO.setBudgetAllocId(Long.parseLong(taskData.getBudgetId()));
-						IBudgetAllocationSO reqSO = (IBudgetAllocationSO) BusinessDelegate.getInstance().getServiceObject(IBudgetAllocationSO.class);
+						IBudgetAllocationSO reqSO = (IBudgetAllocationSO) BusinessDelegate.getInstance().getServiceObject("pp", IBudgetAllocationSO.class);
 						BudgetAllocationResDTO resDTO = reqSO.retrieveBudgetAllocation(reqDTO);
 						String[] actions = new String[]{"REVISE", "APPROVE"}; //temp
 						if(resDTO!=null && resDTO.isSuccessful()){
@@ -179,7 +179,7 @@ public class BudgetAllocationBackingBean extends BaseBackingBean<BudgetAllocatio
 						System.out.println(">>>>id " + taskData.getBudgetId());
 						reqDTO.setBudgetAllocId(Long.parseLong(taskData.getBudgetId()));
 						//reqDTO.setBudgetAllocId(this.getManagedBean().getTempBudgetId()); //temp
-						IBudgetAllocationSO reqSO = (IBudgetAllocationSO) BusinessDelegate.getInstance().getServiceObject(IBudgetAllocationSO.class);
+						IBudgetAllocationSO reqSO = (IBudgetAllocationSO) BusinessDelegate.getInstance().getServiceObject("pp", IBudgetAllocationSO.class);
 						BudgetAllocationResDTO resDTO = reqSO.retrieveBudgetAllocation(reqDTO);
 						//String[] actions = new String[]{"SAVE", "SUBMIT"}; //temp
 						if(resDTO!=null && resDTO.isSuccessful()){
@@ -477,7 +477,7 @@ public class BudgetAllocationBackingBean extends BaseBackingBean<BudgetAllocatio
 		
 		reqDTO.setBudgetAllocation(this.getManagedBean().getSelectedBudgetAllocation());
 		reqDTO.setSelectedGoMapper(this.getManagedBean().getSelectedGoMapper());
-		IBudgetAllocationSO reqSO = (IBudgetAllocationSO) BusinessDelegate.getInstance().getServiceObject(IBudgetAllocationSO.class);
+		IBudgetAllocationSO reqSO = (IBudgetAllocationSO) BusinessDelegate.getInstance().getServiceObject("pp", IBudgetAllocationSO.class);
 		BudgetAllocationResDTO resDTO = reqSO.updateBudgetAllocation(reqDTO);
 		
 		if(resDTO.isSuccessful()){
@@ -502,7 +502,7 @@ public class BudgetAllocationBackingBean extends BaseBackingBean<BudgetAllocatio
 		BudgetAllocationReqDTO reqDTO = new BudgetAllocationReqDTO();
 		reqDTO.setBudgetAllocation(this.getManagedBean().getSelectedBudgetAllocation());
 		reqDTO.setSelectedGoMapper(this.getManagedBean().getSelectedGoMapper());
-		IBudgetAllocationSO reqSO = (IBudgetAllocationSO) BusinessDelegate.getInstance().getServiceObject(IBudgetAllocationSO.class);
+		IBudgetAllocationSO reqSO = (IBudgetAllocationSO) BusinessDelegate.getInstance().getServiceObject("pp", IBudgetAllocationSO.class);
 		BudgetAllocationResDTO resDTO = reqSO.addBudgetAllocation(reqDTO);
 		
 		if(resDTO.isSuccessful()){
@@ -520,7 +520,7 @@ public class BudgetAllocationBackingBean extends BaseBackingBean<BudgetAllocatio
 		BudgetAllocationReqDTO reqDTO = new BudgetAllocationReqDTO();
 		reqDTO.setBudgetId(this.getManagedBean().getSelectedBudgetAllocItem().getBudgetId());
 
-		IBudgetAllocationSO reqSO = (IBudgetAllocationSO) BusinessDelegate.getInstance().getServiceObject(IBudgetAllocationSO.class);
+		IBudgetAllocationSO reqSO = (IBudgetAllocationSO) BusinessDelegate.getInstance().getServiceObject("pp", IBudgetAllocationSO.class);
 		BudgetAllocationResDTO resDTO = reqSO.retrieveBudget(reqDTO);
 		
 		if (resDTO.isSuccessful()) {
@@ -802,7 +802,7 @@ public class BudgetAllocationBackingBean extends BaseBackingBean<BudgetAllocatio
 //		BudgetAllocationReqDTO reqDTO = new BudgetAllocationReqDTO();
 //		reqDTO.setBudgetAllocId(id);
 //		
-//		IBudgetAllocationSO reqSO = (IBudgetAllocationSO) BusinessDelegate.getInstance().getServiceObject(IBudgetAllocationSO.class);
+//		IBudgetAllocationSO reqSO = (IBudgetAllocationSO) BusinessDelegate.getInstance().getServiceObject("pp", IBudgetAllocationSO.class);
 //		BudgetAllocationResDTO resDTO = reqSO.retrieveBudgetAllocation(reqDTO);
 //
 //
