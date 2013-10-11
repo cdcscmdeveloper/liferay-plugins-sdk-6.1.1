@@ -1761,207 +1761,84 @@ padding-left
 /* --------------------------              end tab view               ------------------------------ */
 
 /* --------------------------          left side tab bar view         ------------------------------ */
-.ui-tabs-left {
+.ui-tabs.ui-tabs-left {
 	padding: 0px !important;
 }
 
-.ui-tabs-left .ui-tabs-panels {
-	width: 800px !important;
+.ui-tabs.ui-tabs-left > .ui-tabs-panels {
+	width: 80% !important;
 }
 
-.ui-tabs-left .ui-tabs-panel {
+.ui-tabs.ui-tabs-left > .ui-tabs-panel {
 	padding: 10px 0px 0px 6px !important;
 }
 
-.ui-tabs-left .ui-tabs-nav {
-	width:200px !important;
-	height:500px !important;
+.ui-tabs.ui-tabs-left > .ui-tabs-nav {
+	background-position: right center;
+	background-image: url(#{resource['ep/images/design:side_menu_gap.png']})!important;
+	background-repeat: repeat-y;
+	background-color: #f9f9f9!important;
+	width: 20%;
+	padding-top:7px!important;
+	padding-left:0px!important;
 	padding-bottom: 8000px;
 	margin-bottom: -8000px;
+	float:left!important;
+	border:0px solid!important;
+	height: 380px!important;
+}
+
+.ui-tabs.ui-tabs-left > .ui-tabs-nav li{
+	border:none!important;
 	background-position: right center;
-	background-image: url(#{ resource [ 'ep/images/design:side_menu_gap.png' ]
-}
-
-)!
-important
-;
-
-	
-background-repeat
-:
- 
-repeat-y
-;
-
-	
-background-color
-:
- 
-#f9f9f9
-!important;
-
-	
-width
-:
- 
-12%;
-padding-top
-:
-7px!important;
-
-	
-padding-left
-:
-0px!important;
-
-	
-float
-:left
-!important;
-
-	
-border
-:
-0px
- 
-solid
-!important;
-
-	
-height
-:
- 
-380
-px
-!important;
-
-
-}
-.ui-tabs.ui-tabs-left>.ui-tabs-nav li {
-	border: none !important;
+	background-image: url(#{resource['ep/images/design:side_menu_gap.png']});
+	background-repeat: repeat-y;
+	background-color: #f9f9f9;
+	margin:0!important;
+	float:left!important;
+	width:100%!important;
 	height:22px !important;
-	background-position: right center;
-	background-image: url(#{ resource [ 'ep/images/design:side_menu_gap.png' ]
 }
 
-);
-background-repeat
-:
- 
-repeat-y
-;
-
-	
-background-color
-:
- 
-#f9f9f9
-;
-
-	
-margin
-:
-0!important;
-
-	
-float
-:left
-!important;
-
-	
-width
-:
-100%!important;
-
-
-}
-.ui-tabs.ui-tabs-left>.ui-tabs-nav li a {
-	color: #333333 !important;
-	margin: 0 !important;
-	padding: 4px 10px 5px 9px !important;
-	white-space: nowrap !important;
+.ui-tabs.ui-tabs-left > .ui-tabs-nav li a{
+	color:#333333!important;
+	margin:0!important;
+	padding: 4px 10px 5px 9px!important;
+	white-space:nowrap!important;
 }
 
-.ui-tabs-left .ui-tabs-nav .ui-tabs-selected {
-	background-position: right center !important;
-	background-image: url(#{ resource [ 'ep/images/design:side_menu_arrow.png' ]
+.ui-tabs.ui-tabs-left > .ui-tabs-nav .ui-tabs-selected {
+	background-position: right center!important;
+	background-image: url(#{resource['ep/images/design:side_menu_arrow.png']})!important;
+	background-repeat: no-repeat;
+	background-color: #43ADFF!important;
+	border:0px!important;
 }
 
-)!
-important
-;
-
-	
-background-repeat
-:
- 
-no-repeat
-;
-
-	
-background-color
-:
- 
-#43ADFF
-!important;
-
-	
-border
-:
-0px!important;
-
-
+.ui-tabs.ui-tabs-left > .ui-tabs-nav li.ui-tabs-selected a{
+	color: white!important;
+	font-weight: bold;
 }
 
-.ui-tabs-left .ui-tabs-nav .ui-state-hover {
-	background-position: right center !important;
-	background-image: url(#{ resource [ 'ep/images/design:side_menu_arrow.png' ]
+.ui-tabs.ui-tabs-left > .ui-helper-reset .ui-tabs-selected a{
+	line-height:1!important;
 }
 
-)!
-important
-;
-
-	
-background-repeat
-:
- 
-no-repeat
-;
-
-	
-background-color
-:
- 
-#43ADFF
-!important;
-
-	
-border
-:
-0px!important;
-
-
+.ui-tabs.ui-tabs-left > .ui-tabs-nav .ui-state-hover {
+	box-shadow:none!important;
+	background-position: right center!important;
+	background-image: url(#{resource['ep/images/design:side_menu_arrow.png']})!important;
+	background-repeat: no-repeat;
+	background-color: #43ADFF!important;
+	border:0px!important;
 }
 
-.ui-tabs-left .ui-tabs-nav li.ui-tabs-selected a {
-	color: white !important;
+.ui-tabs.ui-tabs-left > .ui-tabs-nav .ui-state-default{
+	-webkit-box-shadow:none;
 }
 
-.ui-tabs-left .ui-helper-reset .ui-tabs-selected a {
-	line-height: 1 !important;
-}
-
-.ui-tabs-left .ui-tabs-nav .ui-state-hover {
-	box-shadow: none !important;
-}
-
-.ui-tabs-left .ui-tabs-nav .ui-state-default {
-	-webkit-box-shadow: none;
-}
-
-.ui-tabs-left .ui-tabs-nav .ui-tabs-selected a {
-	text-shadow: none !important;
+.ui-tabs.ui-tabs-left > .ui-tabs-nav .ui-tabs-selected a{
+	text-shadow:none!important;
 }
 
 /* --------------------------        end left side tab bar view       ------------------------------ */
@@ -2229,95 +2106,7 @@ table.ppThreePartsTable td {
 }
 /*--------------------------       End PP Related      ------------------------------ */
 
-/*--------------------------       Custom CSS          ------------------------------ */
-.ui-corner-left {
-	border-bottom-left-radius:0px !important;
-	border-top-left-radius:0px !important;
-}
-
-label {
-	display: inline-block; 
-	text-align: right !important;
-	font-size:12px;
-	font-weight:normal;
-	vertical-align:middle;
-	float:right;
-	padding:0 10px 0 0;
-}
-
-.ui-widget-header {
-	border: none !important;
-	text-shadow: none !important;
-}
-
-.ui-icon {
-	border-radius: 0px;
-}
-
-.ui-widget-content a {
-	color:#0000FF !important;
-}
-
-thead > tr > th.ui-state-default {
-	background:none !important;
-	background-color:#808080 !important;
-	border: 0px !important;
-	color:#e4e4e4 !important;
-	font-size:12px !important;
-	font-weight:bold !important;
-	text-align:left !important;
-}
-
-.ui-state-default {
-	text-shadow:none !important;
-}
-
-.ui-widget-content .ui-datatable-odd {
-	background-color:#eaeae8 !important;
-}
-
-.ui-datatable thead th, .ui-datatable tbody td, .ui-datatable tfoot td {
-	border:none !important;
-}
-
-.ui-selectonemenu label.ui-selectonemenu-label {
-	text-align: left !important;
-}
-
-.ui-state-highlight, .ui-widget-content .ui-state-highlight, .ui-widget-header .ui-state-highlight {
-	text-shadow:none !important;
-}
-
-.ui-menu-list .ui-state-hover,.ui-selectonemenu-item.ui-state-hover
-	{
-	color: #ffffff;
-	font-family: Tahoma, Arial;
-	font-size: 12px;
-	text-decoration: none;
-	background: #97d832 !important;
-	border-radius: 0px;
-}
-
-tbody.ui-datatable-data > tr:hover {
-	background-color:#D4F5B6 !important;
-}
-
-.ui-inputfield {
-	height: 20px !important;
-}
-
-.ui-selectonemenu .ui-selectonemenu-label {
-	padding:2px 0 2px 5px !important;
-}
-
-input[type="text"], input[type="password"], input[type="file"], input[type="submit"], input[type="button"], input[type="reset"], select, textarea, .textarea, button, .aui-field-input-text {
-	padding:0 5px 0 5px !important;
-	height: 20px !important;
-}
-.ui-tabs .ui-tabs-top {
-	overflow:hidden !important;
-}
-
+/*--------------------------       Custom Icons        ------------------------------ */
 .ui-icon-add {
 	background-image: url(#{ resource [ 'ep/images/design:add.png' ]
 }
@@ -2394,29 +2183,6 @@ important
 
 }
 
-li[role=tab] > a {
-	color: #333333 !important;
-	font-size: 12px !important;
-	font-weight: bold !important;
-}
-
-li[role=tab].ui-state-hover > a {
-	color: #333333 !important;
-	font-size: 12px !important;
-	font-weight: bold !important;
-}
-
-li[role=tab].ui-tabs-selected {
-	width: auto !important;
-	border-radius: 3px !important;
-	background-color: #FFFFFF !important;
-}
-
-ul[role=tablist] > .ui-tabs-panels {
-	margin:0 0 0 0 !important;
-	width: auto !important;
-}
-
 .ui-icon-delete {
 	background-image: url(#{ resource [ 'ep/images/design:trash.png' ]
 }
@@ -2454,4 +2220,124 @@ important
 
 
 }
+
+
+
+/*--------------------------       End Custom Icons    ------------------------------ */
+
+/*--------------------------       Custom CSS          ------------------------------ */
+.ui-corner-left {
+	border-bottom-left-radius:0px !important;
+	border-top-left-radius:0px !important;
+}
+
+label {
+	display: inline-block; 
+	text-align: left !important;
+	font-size:12px;
+	font-weight:normal;
+	vertical-align:middle;
+	float:right;
+	padding:0 10px 0 0;
+}
+
+.ui-widget-header {
+	border: none !important;
+	text-shadow: none !important;
+}
+
+.ui-icon {
+	border-radius: 0px;
+}
+
+.ui-widget-content a {
+	color:#0000FF !important;
+}
+
+thead > tr > th.ui-state-default {
+	background:none !important;
+	background-color:#808080 !important;
+	border: 0px !important;
+	color:#e4e4e4 !important;
+	font-size:12px !important;
+	font-weight:bold !important;
+	text-align:left !important;
+}
+
+.ui-state-default {
+	text-shadow:none !important;
+}
+
+.ui-widget-content .ui-datatable-odd {
+	background-color:#eaeae8 !important;
+}
+
+.ui-datatable thead th, .ui-datatable tbody td, .ui-datatable tfoot td {
+	border:none !important;
+}
+
+.ui-selectonemenu label.ui-selectonemenu-label {
+	text-align: left !important;
+}
+
+.ui-state-highlight, .ui-widget-content .ui-state-highlight, .ui-widget-header .ui-state-highlight {
+	text-shadow:none !important;
+}
+
+.ui-menu-list .ui-state-hover,.ui-selectonemenu-item.ui-state-hover
+	{
+	color: #ffffff;
+	font-family: Tahoma, Arial;
+	font-size: 12px;
+	text-decoration: none;
+	background: #97d832 !important;
+	border-radius: 0px;
+}
+
+tbody.ui-datatable-data > tr:hover {
+	background-color:#D4F5B6 !important;
+}
+
+.ui-selectonemenu .ui-selectonemenu-label {
+	padding:2px 0 2px 5px !important;
+}
+
+input[type="text"], input[type="password"], input[type="file"], input[type="submit"], input[type="button"], input[type="reset"], select, textarea, .textarea, button, .aui-field-input-text {
+	padding:0 5px 0 5px !important;
+	height: 20px !important;
+}
+.ui-tabs .ui-tabs-top {
+	overflow:hidden !important;
+}
+
+li[role=tab] > a {
+	color: #333333 !important;
+	font-size: 12px !important;
+}
+
+li[role=tab].ui-state-hover > a {
+	color: #333333 !important;
+	font-size: 12px !important;
+}
+
+li[role=tab].ui-tabs-selected {
+	width: auto !important;
+	border-radius: 3px !important;
+	background-color: #FFFFFF !important;
+}
+
+ul[role=tablist] > .ui-tabs-panels {
+	margin:0 0 0 0 !important;
+	width: auto !important;
+}
+
+.ui-tabs.ui-tabs-top>ul.ui-tabs-nav> li {
+	border-top-left-radius: 3px !important;
+	border-top-right-radius: 3px !important;
+}
+
+.ui-tabs.ui-tabs-top>ul.ui-tabs-nav> li> a {
+	font-weight: bold !important;
+}
+
 /*--------------------------       End Custom CSS       --------------------------- */
