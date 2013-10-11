@@ -8,19 +8,27 @@
 	<p:panel
 		header="Staff Information ( The input in this section depends on type of MOF i.e Contractor or Consultant)"
 		toggleable="true">
-		<div>
-			<p:outputLabel value=" Section Verified : "
-				title="For PO / Approver highlight the verified section " />
-			<p:selectBooleanCheckbox />
-		</div>
+		<table style="width: 250px">
+			<tr>
+				<td width="10px" style="padding-right: 2px;"><p:selectBooleanCheckbox /></td>
+				<td><p:outputLabel value=" Section Verified By PO: "
+						title="For PO to highlight the verified section " /></td>
+
+			</tr>
+			<tr>
+				<td width="10px"><p:selectBooleanCheckbox /></td>
+				<td><p:outputLabel value=" Section Verified By Approver: "
+						title="For Approver to highlight the verified section " /></td>
+			</tr>
+		</table>
 		<br />
 		<p:dataGrid
 			value="#{backingBean.managedBean.smAppl.smApplStaffTotals}"
 			var="staff" columns="1">
 
-			<table style="width: 800px;">
+			<table style="width: 780px;">
 				<tr>
-					<td width="150"><p:outputLabel value="Total No. Of Staff : "
+					<td width="150px"><p:outputLabel value="Total No. Of Staff : "
 							rendered="#{staff.staffCategory eq 'C'}" /> <p:outputLabel
 							value="Total Professional Staff : "
 							rendered="#{staff.staffCategory eq 'P'}" /> <p:outputLabel
@@ -28,74 +36,28 @@
 							rendered="#{staff.staffCategory eq 'S'}" /> <p:outputLabel
 							value="Total Clerical Staff : "
 							rendered="#{staff.staffCategory eq 'L'}" /></td>
-					<td width="150"><p:outputLabel value="Bumi* " /> <p:inputText
-							size="5" value="#{staff.totalBumi}" /></td>
-					<td width="150"><p:outputLabel value="Non-Bumi* " /> <p:inputText
-							size="5" value="#{staff.totalNonBumi}" /></td>
-					<td width="150"><p:outputLabel value="Non-Malaysian* " /> <p:inputText
-							size="5" value="#{staff.totalForeign}" /></td>
+					<td width="50px" align="right"><p:outputLabel value="Bumi* " /></td>
+					<td width="60px"><p:inputText size="5"
+							value="#{staff.totalBumi}" /></td>
+					<td width="60px" align="right"><p:outputLabel
+							value="Non-Bumi* " /></td>
+					<td width="60px"><p:inputText size="5"
+							value="#{staff.totalNonBumi}" /></td>
+					<td width="80px" align="right"><p:outputLabel
+							value="Non-Malaysian* " /></td>
+					<td width="60px"><p:inputText size="5"
+							value="#{staff.totalForeign}" /></td>
 				</tr>
 			</table>
 		</p:dataGrid>
 
-		<!-- <table style="width: 100%">
-			<ui:fragment
-				rendered="#{backingBean.managedBean.smAppl.supplierType eq '1'}">
-				<tr>
-					<td><h6>
-							<p:outputLabel value="For Contractor" />
-						</h6></td>
-
-				</tr>
-				<tr>
-					<td width="150"><p:outputLabel value="Total No. Of Staff : " /></td>
-					<td width="150"><p:outputLabel value="Bumi* " /> <p:inputText
-							size="5" /></td>
-					<td width="150"><p:outputLabel value="Non-Bumi* " /> <p:inputText
-							size="5" /></td>
-					<td width="150"><p:outputLabel value="Non-Malaysian* " /> <p:inputText
-							size="5" /></td>
-				</tr>
-			</ui:fragment>
-			<ui:fragment
-				rendered="#{backingBean.managedBean.smAppl.supplierType eq '2'}">
-				<tr>
-					<td><h6>
-							<p:outputLabel value="For Consultant" />
-						</h6></td>
-
-				</tr>
-				<tr>
-					<td><p:outputLabel value="Total Professional Staff : " /></td>
-					<td><p:outputLabel value="Bumi* " /> <p:inputText size="5" /></td>
-					<td><p:outputLabel value="Non-Bumi* " /> <p:inputText
-							size="5" /></td>
-					<td><p:outputLabel value="Non-Malaysian* " /> <p:inputText
-							size="5" /></td>
-				</tr>
-				<tr>
-					<td><p:outputLabel value="Total Professional Staff : " /></td>
-					<td><p:outputLabel value="Bumi* " /> <p:inputText size="5" /></td>
-					<td><p:outputLabel value="Non-Bumi* " /> <p:inputText
-							size="5" /></td>
-					<td><p:outputLabel value="Non-Malaysian* " /> <p:inputText
-							size="5" /></td>
-				</tr>
-				<tr>
-					<td><p:outputLabel value="Total Clerical Staff : " /></td>
-					<td><p:outputLabel value="Bumi* " /> <p:inputText size="5" /></td>
-					<td><p:outputLabel value="Non-Bumi* " /> <p:inputText
-							size="5" /></td>
-					<td><p:outputLabel value="Non-Malaysian* " /> <p:inputText
-							size="5" /></td>
-				</tr>
-			</ui:fragment>
+		<table style="width: 100%">
 			<tr>
 				<td><p:outputLabel value="PO Remarks" /></td>
 				<td><p:inputTextarea autoResize="true" /></td>
 				<td><p:outputLabel value="Approver Remarks" /></td>
 				<td><p:inputTextarea autoResize="true" /></td>
 			</tr>
-		</table> -->
+		</table>
 	</p:panel>
 </ui:composition>

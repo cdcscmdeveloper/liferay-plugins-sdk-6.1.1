@@ -9,15 +9,16 @@
 		<tr>
 			<td><h4
 					style="color: blue; text-decoration: underline; text-align: center;">
-					<p:outputLabel value="#{lbl['lbl.sm.applnTypeLbl']}" />
-					<p:outputLabel value="#{lbl['lbl.sm.newMofAppln']}" />
+					<h:outputText value="#{lbl['lbl.sm.applnTypeLbl']}" />
+					<h:outputText value="#{lbl['lbl.sm.newMofAppln']}" />
+					<h:outputText value=" - #{backingBean.managedBean.smAppl.applNo}" />
 				</h4></td>
 		</tr>
 		<tr>
 			<td>
 				<h6 style="color: blue;">
-					<p:outputLabel value="Step5 :" />
-					<p:outputLabel value=" Bank Information Page" />
+					<h:outputText value="Step5 :" />
+					<h:outputText value=" Bank Information Page" />
 				</h6>
 			</td>
 			<td align="right"><p:commandButton

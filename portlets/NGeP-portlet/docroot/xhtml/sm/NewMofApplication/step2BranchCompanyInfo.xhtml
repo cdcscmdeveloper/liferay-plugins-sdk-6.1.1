@@ -9,14 +9,15 @@
 		<tr>
 			<td><h4
 					style="color: blue; text-decoration: underline; text-align: center;">
-					<p:outputLabel value="#{lbl['lbl.sm.applnTypeLbl']}" />
-					<p:outputLabel value="#{lbl['lbl.sm.newMofAppln']}" />
+					<h:outputText value="#{lbl['lbl.sm.applnTypeLbl']}" />
+					<h:outputText value="#{lbl['lbl.sm.newMofAppln']}" />
+					<h:outputText value=" - #{backingBean.managedBean.smAppl.applNo}" />
 				</h4></td>
 		</tr>
 		<tr>
 			<td><h6 style="color: blue;">
-					<p:outputLabel value="#{lbl['lbl.sm.step2Lbl']}" />
-					<p:outputLabel value="#{lbl['lbl.sm.branchStepLbl']}" />
+					<h:outputText value="#{lbl['lbl.sm.step2Lbl']}" />
+					<h:outputText value="#{lbl['lbl.sm.branchStepLbl']}" />
 				</h6></td>
 			<td align="right"><p:commandButton
 					value="#{lbl['lbl.sm.saveAsDraft']}" /></td>

@@ -10,14 +10,15 @@
 			<tr>
 				<td><h4
 						style="color: blue; text-decoration: underline; text-align: center;">
-						<p:outputLabel value="#{lbl['lbl.sm.applnTypeLbl']}" />
-						<p:outputLabel value="#{lbl['lbl.sm.newMofAppln']}" />
+						<h:outputText value="#{lbl['lbl.sm.applnTypeLbl']}" />
+						<h:outputText value="#{lbl['lbl.sm.newMofAppln']}" />
+						<h:outputText value=" - #{backingBean.managedBean.smAppl.applNo}" />
 					</h4></td>
 			</tr>
 			<tr>
 				<td><h6 style="color: blue;">
-						<p:outputLabel value="Step 6.1 : " />
-						<p:outputLabel value="Factory  / Equiptment Details" />
+						<h:outputText value="Step 6.1 : " />
+						<h:outputText value="Factory  / Equiptment Details" />
 					</h6></td>
 				<td align="right"><p:commandButton
 						value="#{lbl['lbl.sm.saveAsDraft']}" /></td>
