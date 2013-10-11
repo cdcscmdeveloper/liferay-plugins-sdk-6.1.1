@@ -23,7 +23,7 @@ xmlns:c="http://java.sun.com/jsp/jstl/core">
 						<th>#{lbl['lbl.pp.contract.class']}</th>
 						<td class="ppSmallTd">:</td>
 						<td>
-							<p:outputPanel rendered="#{planBackingBean.managedBean.periodicType=='AW'}">
+							<p:outputPanel rendered="#{planBackingBean.managedBean.selectedPlanMaster.fulfillmentType==PPConst.fulfillmentAsAndWhen}">
 								<p:selectOneMenu id="somContractClass1" value="#{planBackingBean.managedBean.documentType}" >
 									<f:selectItem itemLabel="#{lbl['lbl.select']}" />
 									<f:selectItem itemLabel="#{lbl['lbl.pp.contract.class.pkp']}" itemValue="P" />
@@ -32,7 +32,7 @@ xmlns:c="http://java.sun.com/jsp/jstl/core">
 									<p:ajax event="change" update="pSubDetailsContract somContractType" />
 								</p:selectOneMenu>
 							</p:outputPanel>
-							<p:outputPanel rendered="#{planBackingBean.managedBean.periodicType!='AW'}">
+							<p:outputPanel rendered="#{planBackingBean.managedBean.selectedPlanMaster.fulfillmentType!=PPConst.fulfillmentAsAndWhen}">
 								<p:selectOneMenu id="somContractClass2" value="#{planBackingBean.managedBean.documentType}" >
 									<f:selectItem itemLabel="#{lbl['lbl.select']}" />
 									<f:selectItem itemLabel="#{lbl['lbl.pp.contract.class.loa']}" itemValue="S" />
@@ -85,14 +85,14 @@ xmlns:c="http://java.sun.com/jsp/jstl/core">
 								<f:selectItem itemLabel="#{lbl['lbl.select']}" />
 							</p:selectOneMenu>
 						</td>
-							<p:outputPanel rendered="#{planBackingBean.managedBean.periodicType =='SF'}">
+							<p:outputPanel rendered="#{#{planBackingBean.managedBean.selectedPlanMaster.fulfillmentType==PPConst.fulfillmentSchedule}}">
 							<th>#{lbl['lbl.pp.planned.activities.startdate']}</th>
 							<td class="ppSmallTd">:</td>
 							<td>
 								<p:inputText value="xxx" />
 							</td>
 						</p:outputPanel>
-						<p:outputPanel rendered="#{planBackingBean.managedBean.periodicType !='SF'}">
+						<p:outputPanel rendered="#{planBackingBean.managedBean.selectedPlanMaster.fulfillmentType!=PPConst.fulfillmentSchedule}">
 						
 							<th>#{lbl['lbl.pp.planned.activities.startmonth']}</th>
 							<td class="ppSmallTd">:</td>
@@ -111,14 +111,14 @@ xmlns:c="http://java.sun.com/jsp/jstl/core">
 								<f:selectItem itemLabel="#{lbl['lbl.select']}" />
 							</p:selectOneMenu>
 						</td>
-							<p:outputPanel rendered="#{planBackingBean.managedBean.periodicType =='SF'}">
+							<p:outputPanel rendered="#{planBackingBean.managedBean.selectedPlanMaster.fulfillmentType==PPConst.fulfillmentSchedule}">
 							<th>#{lbl['lbl.pp.planned.activities.enddate']}</th>
 							<td class="ppSmallTd">:</td>
 							<td>
 								<p:inputText value="-" disabled="true" />
 							</td>
 						</p:outputPanel>
-						<p:outputPanel rendered="#{planBackingBean.managedBean.periodicType !='SF'}">
+						<p:outputPanel rendered="#{planBackingBean.managedBean.selectedPlanMaster.fulfillmentType!=PPConst.fulfillmentSchedule}">
 							<th>#{lbl['lbl.pp.planned.activities.endmonth']}</th>
 							<td class="ppSmallTd">:</td>
 							<td>

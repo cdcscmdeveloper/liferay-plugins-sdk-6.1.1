@@ -268,6 +268,10 @@ xmlns:c="http://java.sun.com/jsp/jstl/core"
 			    			<th>#{lbl['lbl.pp.remarks']}</th>
 							<td class="ppSmallTd">:</td>
 							<td>
+								<c:if test="#{budgetAllocationBackingBean.managedBean.viewMode!=PPConst.modeNew}">
+									<p:inputTextarea value="#{budgetAllocationBackingBean.managedBean.selectedBudgetAllocItem.latestRemark.remark}" 
+										rows="3" cols="70" readonly="true"/>
+								</c:if>
 								<p:inputTextarea value="#{budgetAllocationBackingBean.managedBean.selectedBudgetAllocItemRmk.remark}" 
 									rows="3" cols="70"/>
 							</td>

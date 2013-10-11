@@ -127,7 +127,7 @@ xmlns:c="http://java.sun.com/jsp/jstl/core">
 		
 			<c:if test="#{planBackingBean.managedBean.favouriteOption=='I' 
 				|| planBackingBean.managedBean.favouriteOption=='P' 
-				|| planBackingBean.managedBean.procurementMode=='EC'}">
+				|| planBackingBean.managedBean.selectedPlanMaster.procurementMode=='EC'}">
 				<tr>
 					<th>* #{lbl['lbl.pp.product.supplier.item']}</th>
 					<td class="ppSmallTd">:</td>
@@ -140,7 +140,7 @@ xmlns:c="http://java.sun.com/jsp/jstl/core">
 			</c:if>
 			
 			
-			<c:if test="#{planBackingBean.managedBean.procurementMode=='EC'}">
+			<c:if test="#{planBackingBean.managedBean.selectedPlanMaster.procurementMode=='EC'}">
 				<tr>
 					<th>* #{lbl['lbl.pp.product.item']}</th>
 					<td class="ppSmallTd">:</td>
