@@ -1,5 +1,6 @@
 Body {
 	BACKGROUND: #FFFFFF;
+	font-family: Tahoma, Arial !important;
 }
 
 .EpBody {
@@ -958,6 +959,21 @@ px
 
 
 }
+
+.ui-datepicker .ui-datepicker-calendar .ui-state-hover {
+	background-color: #017D9F !important;
+	color: #FFFFFF !important;
+}
+
+.ui-datepicker .ui-datepicker-calendar .ui-state-highlight {
+	background-color: #017D9F !important;
+	color: #FFFFFF !important;
+}
+
+.ui-datepicker-calendar > tbody > tr > td > a {
+	color: #017D9F !important;
+}
+
 /* --------------------------          End Calendar         ------------------------------ */
 .ui-menu-list .ui-state-hover,.ui-selectonemenu-item.ui-state-highlight
 	{
@@ -1826,6 +1842,7 @@ padding-left
 
 .ui-tabs.ui-tabs-left > .ui-tabs-nav .ui-state-hover {
 	box-shadow:none!important;
+	border-radius: 0px !important;
 	background-position: right center!important;
 	background-image: url(#{resource['ep/images/design:side_menu_arrow.png']})!important;
 	background-repeat: no-repeat;
@@ -2221,16 +2238,768 @@ important
 
 }
 
+.ui-icon-accept {
+	background-image: url(#{ resource [ 'ep/images/design:tick.png' ]
+}
+
+)
+!
+important
+;
+
+	
+background-position
+:
+ 
+center
+;
+
+	
+border-radius
+:
+ 
+0
+px
+;
+
+	
+height
+:
+ 
+16
+px
+ 
+!
+important
+;
 
 
+}
+
+.ui-icon-ackno {
+	background-image: url(#{ resource [ 'ep/images/design:ackno.png' ]
+}
+
+)
+!
+important
+;
+
+	
+background-position
+:
+ 
+center
+;
+
+	
+border-radius
+:
+ 
+0
+px
+;
+
+	
+height
+:
+ 
+16
+px
+ 
+!
+important
+;
+
+
+}
+
+.ui-icon-action {
+	background-image: url(#{ resource [ 'ep/images/design:action.png' ]
+}
+
+)
+!
+important
+;
+
+	
+background-position
+:
+ 
+center
+;
+
+	
+border-radius
+:
+ 
+0
+px
+;
+
+	
+height
+:
+ 
+16
+px
+ 
+!
+important
+;
+
+
+}
+
+.ui-icon-approve {
+	background-image: url(#{ resource [ 'ep/images/design:tick.png' ]
+}
+
+)
+!
+important
+;
+
+	
+background-position
+:
+ 
+center
+;
+
+	
+border-radius
+:
+ 
+0
+px
+;
+
+	
+height
+:
+ 
+16
+px
+ 
+!
+important
+;
+
+
+}
+
+.ui-icon-cancel {
+	background-image: url(#{ resource [ 'ep/images/design:cancel.png' ]
+}
+
+)
+!
+important
+;
+
+	
+background-position
+:
+ 
+center
+;
+
+	
+border-radius
+:
+ 
+0
+px
+;
+
+	
+height
+:
+ 
+16
+px
+ 
+!
+important
+;
+
+
+}
+
+.ui-icon-clone {
+	background-image: url(#{ resource [ 'ep/images/design:clone.png' ]
+}
+
+)
+!
+important
+;
+
+	
+background-position
+:
+ 
+center
+;
+
+	
+border-radius
+:
+ 
+0
+px
+;
+
+	
+height
+:
+ 
+16
+px
+ 
+!
+important
+;
+
+
+}
+
+.ui-icon-edit {
+	background-image: url(#{ resource [ 'ep/images/design:edit.png' ]
+}
+
+)
+!
+important
+;
+
+	
+background-position
+:
+ 
+center
+;
+
+	
+border-radius
+:
+ 
+0
+px
+;
+
+	
+height
+:
+ 
+16
+px
+ 
+!
+important
+;
+
+
+}
+
+.ui-icon-evaluate {
+	background-image: url(#{ resource [ 'ep/images/design:evaluate.png' ]
+}
+
+)
+!
+important
+;
+
+	
+background-position
+:
+ 
+center
+;
+
+	
+border-radius
+:
+ 
+0
+px
+;
+
+	
+height
+:
+ 
+16
+px
+ 
+!
+important
+;
+
+
+}
+
+.ui-icon-final {
+	background-image: url(#{ resource [ 'ep/images/design:finalize.png' ]
+}
+
+)
+!
+important
+;
+
+	
+background-position
+:
+ 
+center
+;
+
+	
+border-radius
+:
+ 
+0
+px
+;
+
+	
+height
+:
+ 
+16
+px
+ 
+!
+important
+;
+
+
+}
+
+.ui-icon-next {
+	background-image: url(#{ resource [ 'ep/images/design:next.png' ]
+}
+
+)
+!
+important
+;
+
+	
+background-position
+:
+ 
+center
+;
+
+	
+border-radius
+:
+ 
+0
+px
+;
+
+	
+height
+:
+ 
+16
+px
+ 
+!
+important
+;
+
+
+}
+
+.ui-icon-prev {
+	background-image: url(#{ resource [ 'ep/images/design:previous.png' ]
+}
+
+)
+!
+important
+;
+
+	
+background-position
+:
+ 
+center
+;
+
+	
+border-radius
+:
+ 
+0
+px
+;
+
+	
+height
+:
+ 
+16
+px
+ 
+!
+important
+;
+
+
+}
+
+.ui-icon-print {
+	background-image: url(#{ resource [ 'ep/images/design:print.png' ]
+}
+
+)
+!
+important
+;
+
+	
+background-position
+:
+ 
+center
+;
+
+	
+border-radius
+:
+ 
+0
+px
+;
+
+	
+height
+:
+ 
+16
+px
+ 
+!
+important
+;
+
+
+}
+
+.ui-icon-reject {
+	background-image: url(#{ resource [ 'ep/images/design:reject.png' ]
+}
+
+)
+!
+important
+;
+
+	
+background-position
+:
+ 
+center
+;
+
+	
+border-radius
+:
+ 
+0
+px
+;
+
+	
+height
+:
+ 
+16
+px
+ 
+!
+important
+;
+
+
+}
+
+.ui-icon-reset {
+	background-image: url(#{ resource [ 'ep/images/design:reset.png' ]
+}
+
+)
+!
+important
+;
+
+	
+background-position
+:
+ 
+center
+;
+
+	
+border-radius
+:
+ 
+0
+px
+;
+
+	
+height
+:
+ 
+16
+px
+ 
+!
+important
+;
+
+
+}
+
+.ui-icon-revise {
+	background-image: url(#{ resource [ 'ep/images/design:revise.png' ]
+}
+
+)
+!
+important
+;
+
+	
+background-position
+:
+ 
+center
+;
+
+	
+border-radius
+:
+ 
+0
+px
+;
+
+	
+height
+:
+ 
+16
+px
+ 
+!
+important
+;
+
+
+}
+
+.ui-icon-save {
+	background-image: url(#{ resource [ 'ep/images/design:save.png' ]
+}
+
+)
+!
+important
+;
+
+	
+background-position
+:
+ 
+center
+;
+
+	
+border-radius
+:
+ 
+0
+px
+;
+
+	
+height
+:
+ 
+16
+px
+ 
+!
+important
+;
+
+
+}
+
+.ui-icon-sign {
+	background-image: url(#{ resource [ 'ep/images/design:sign.png' ]
+}
+
+)
+!
+important
+;
+
+	
+background-position
+:
+ 
+center
+;
+
+	
+border-radius
+:
+ 
+0
+px
+;
+
+	
+height
+:
+ 
+16
+px
+ 
+!
+important
+;
+
+
+}
+
+.ui-icon-submit {
+	background-image: url(#{ resource [ 'ep/images/design:submit.png' ]
+}
+
+)
+!
+important
+;
+
+	
+background-position
+:
+ 
+center
+;
+
+	
+border-radius
+:
+ 
+0
+px
+;
+
+	
+height
+:
+ 
+16
+px
+ 
+!
+important
+;
+
+
+}
+
+.ui-icon-upload {
+	background-image: url(#{ resource [ 'ep/images/design:upload.png' ]
+}
+
+)
+!
+important
+;
+
+	
+background-position
+:
+ 
+center
+;
+
+	
+border-radius
+:
+ 
+0
+px
+;
+
+	
+height
+:
+ 
+16
+px
+ 
+!
+important
+;
+
+
+}
+
+.ui-icon-verify {
+	background-image: url(#{ resource [ 'ep/images/design:tick.png' ]
+}
+
+)
+!
+important
+;
+
+	
+background-position
+:
+ 
+center
+;
+
+	
+border-radius
+:
+ 
+0
+px
+;
+
+	
+height
+:
+ 
+16
+px
+ 
+!
+important
+;
+
+
+}
 /*--------------------------       End Custom Icons    ------------------------------ */
 
 /*--------------------------       Custom CSS          ------------------------------ */
-.ui-corner-left {
-	border-bottom-left-radius:0px !important;
-	border-top-left-radius:0px !important;
-}
-
 label {
 	display: inline-block; 
 	text-align: left !important;
@@ -2306,14 +3075,6 @@ input[type="text"], input[type="password"], input[type="file"], input[type="subm
 	padding:0 5px 0 5px !important;
 	height: 20px !important;
 }
-.ui-tabs .ui-tabs-top {
-	overflow:hidden !important;
-}
-
-li[role=tab] > a {
-	color: #333333 !important;
-	font-size: 12px !important;
-}
 
 li[role=tab].ui-state-hover > a {
 	color: #333333 !important;
@@ -2326,11 +3087,6 @@ li[role=tab].ui-tabs-selected {
 	background-color: #FFFFFF !important;
 }
 
-ul[role=tablist] > .ui-tabs-panels {
-	margin:0 0 0 0 !important;
-	width: auto !important;
-}
-
 .ui-tabs.ui-tabs-top>ul.ui-tabs-nav> li {
 	border-top-left-radius: 3px !important;
 	border-top-right-radius: 3px !important;
@@ -2338,6 +3094,8 @@ ul[role=tablist] > .ui-tabs-panels {
 
 .ui-tabs.ui-tabs-top>ul.ui-tabs-nav> li> a {
 	font-weight: bold !important;
+	color: #333333 !important;
+	font-size: 12px !important;
 }
 
 /*--------------------------       End Custom CSS       --------------------------- */
