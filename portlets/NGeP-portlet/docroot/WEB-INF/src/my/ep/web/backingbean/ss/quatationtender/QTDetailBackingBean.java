@@ -9,12 +9,11 @@ import my.ep.web.managedbean.ss.quationtender.QTDetailManagedBean;
 import my.ep.web.util.lookupservice.BusinessDelegate;
 
 
-@ManagedBean(name="qTDetailBackingBean")
+@ManagedBean(name="qtBackingBean")
 @RequestScoped
 public class QTDetailBackingBean extends BaseBackingBean<QTDetailManagedBean>{
 	
 	private static final String MODULE_NAME="ss";
-
 		
 
 	public void prepareQTDetail(){
