@@ -8,12 +8,7 @@
 
 		<p:panel header="Category Code List" toggleable="true">
 
-  <p:panelGrid columns="1" style="width:100%;"
-				styleClass="noBorders tr,noBorders td">
-<p:commandButton value="#{lbl['lbl.so.searchbtn']}" style="float:right;"
-					onclick="suppdlg.show();"></p:commandButton>
-				
-				</p:panelGrid>
+  
 <p:panelGrid columns="2" style="width:38%;"
 				styleClass="noBorders tr,noBorders td">
 		<h:outputText value="Paid Up Capital (MYR)" />  
@@ -29,7 +24,7 @@
 <p:ajax event="rowEdit" />  
         <p:ajax event="rowEditCancel" />  
   
-				<p:column headerText="No.">
+				<p:column headerText="No." style="width:05%">
 				
 				<p:cellEditor>  
                 <f:facet name="output">  
@@ -43,50 +38,51 @@
 				</p:column>
 
 				<p:column headerText="Category Code">
-				
-				<p:cellEditor>  
-                <f:facet name="output">  
-                   <h:outputText value="#{ccode.mainCCode}" />,
-                </f:facet>  
-                <f:facet name="input">  
-                    <p:selectOneMenu value="#{searchQtnTenderBB.managedBean.qtno}" effect="fold" editable="true" style="">  
-            <f:selectItem itemLabel="Select One" itemValue="" />  
-            <f:selectItems value="#{searchQtnTenderBB.managedBean.mainCcode}" />  
-        </p:selectOneMenu>
-                </f:facet>  
-            </p:cellEditor> 
+
 				<p:cellEditor>
-				<f:facet name="output">  
-                  <h:outputText value="#{ccode.subCCode}" />,
-                </f:facet>  
-                <f:facet name="input">  
-                   <p:selectOneMenu value="#{searchQtnTenderBB.managedBean.qtno}" effect="fold" editable="true">  
-            <f:selectItem itemLabel="Select One" itemValue="" />  
-            <f:selectItem itemLabel="sub1" itemValue="1" />  
-            <f:selectItem itemLabel="sub2" itemValue="2" />  
-            <f:selectItem itemLabel="sub3" itemValue="3" />  
-        </p:selectOneMenu> 
-                </f:facet>  
-            </p:cellEditor> 
-            <p:cellEditor>
-            <f:facet name="output">  
-                  <h:outputText value="#{ccode.subCDevison}"/>
-                </f:facet>  
-                <f:facet name="input">  
-                    <p:selectOneMenu value="#{searchQtnTenderBB.managedBean.qtno}" effect="fold" editable="true">  
-            <f:selectItem itemLabel="Select One" itemValue="" />  
-            <f:selectItem itemLabel="Subcc1" itemValue="1" />  
-            <f:selectItem itemLabel="Subcc2" itemValue="2" />  
-            <f:selectItem itemLabel="Subcc3" itemValue="3" />  
-        </p:selectOneMenu> 
-                </f:facet>  
-            </p:cellEditor> 
-					
-					
+					<f:facet name="output">
+						<h:outputText value="#{ccode.mainCCode}" />,
+                </f:facet>
+					<f:facet name="input">
+						<p:selectOneMenu value="#{searchQtnTenderBB.managedBean.qtno}"
+							effect="fold" editable="true">
+							<f:selectItem itemLabel="Select One" itemValue="" />
+							<f:selectItems value="#{searchQtnTenderBB.managedBean.mainCcode}" />
+						</p:selectOneMenu>
+					</f:facet>
+				
+					<f:facet name="output">
+						<h:outputText value="#{ccode.subCCode}" />,
+                </f:facet>
+					<f:facet name="input">
+						<p:selectOneMenu value="#{searchQtnTenderBB.managedBean.qtno}"
+							effect="fold" editable="true">
+							<f:selectItem itemLabel="Select One" itemValue="" />
+							<f:selectItem itemLabel="sub1" itemValue="1" />
+							<f:selectItem itemLabel="sub2" itemValue="2" />
+							<f:selectItem itemLabel="sub3" itemValue="3" />
+						</p:selectOneMenu>
+					</f:facet>
+				
+					<f:facet name="output">
+						<h:outputText value="#{ccode.subCDevison}" />
+					</f:facet>
+					<f:facet name="input">
+						<p:selectOneMenu value="#{searchQtnTenderBB.managedBean.qtno}"
+							effect="fold" editable="true">
+							<f:selectItem itemLabel="Select One" itemValue="" />
+							<f:selectItem itemLabel="Subcc1" itemValue="1" />
+							<f:selectItem itemLabel="Subcc2" itemValue="2" />
+							<f:selectItem itemLabel="Subcc3" itemValue="3" />
+						</p:selectOneMenu>
+					</f:facet>
+				</p:cellEditor>
 
-				</p:column>
 
-				<p:column headerText="Mandatory">
+
+			</p:column>
+
+				<p:column headerText="Mandatory" style="width:30%">
 				
 				
 				<p:cellEditor>  
@@ -117,9 +113,16 @@
 
 		<p:commandButton value="#{lbl['lbl.so.addbtn']}" style="float:right;"
 			onclick="ccdlg.show();" />
+			<p:panelGrid columns="1" style="width:100%;"
+				styleClass="noBorders tr,noBorders td">
+<p:commandButton value="#{lbl['lbl.so.searchbtn']}" style="float:right;"
+					onclick="suppdlg.show();"></p:commandButton>
+				
+				</p:panelGrid>
 			<br/>
 			<br/>
-
+</p:panel>
+<p:panel header="Supplier List" toggleable="true"> 
 	<ui:include src="/xhtml/ss/quatationtender/restrictedSearchSupplier.xhtml"></ui:include>	
 	
 	 <p:panelGrid columns="3" style="width:45%;"

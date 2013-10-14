@@ -5,9 +5,9 @@
 	xmlns:p="http://primefaces.org/ui"
 	xmlns:c="http://java.sun.com/jsp/jstl/core">
 	<p:panel header="Qtn/Tender Details" toggleable="true">
-		<p:panelGrid columns="4" style="width:100%;"
+		<p:panelGrid rows="5" style="width:100%;"
 			styleClass="noBorders tr,noBorders td">
-
+<p:row>
 			<p:column>
 				<h:outputText value="* Qtn/Tender Type" />
 			</p:column>
@@ -22,8 +22,10 @@
 					<f:validateRequired />
 				</p:selectOneMenu>
 			</p:column>
-			<p:column>
-				<h:outputText value="* Type of Goods/Services" />
+		</p:row>
+			<p:row>
+			<p:column >
+				<h:outputText value=" Qtn/Tender Category" />
 			</p:column>
 			<p:column>
 				<p:selectOneMenu
@@ -35,6 +37,24 @@
 
 				</p:selectOneMenu>
 			</p:column>
+			
+			
+			
+			<p:column >
+				<h:outputText value="Item Type" />
+			</p:column>
+			<p:column>
+				<p:selectOneMenu
+					value="#{searchQtnTenderBB.managedBean.tenderSelction}">
+					<f:selectItem itemLabel="Select One" itemValue="" />
+					<f:selectItem itemLabel="Product" itemValue="1" />
+					<f:selectItem itemLabel="Item1" itemValue="2" />
+					<f:selectItem itemLabel="LItem2" itemValue="3" />
+
+				</p:selectOneMenu>
+			</p:column>
+			</p:row>
+			<p:row>
 			<p:column>
 				<h:outputText value="MTO" />
 			</p:column>
@@ -47,19 +67,17 @@
 			<p:column>
 				<p:inputText id="AsnTenderNo" value="QT12345" readonly="true" />
 			</p:column>
-
+</p:row>
+  <p:row>
 			<p:column>
-				<h:outputText value="Fulfillment Type" />
+				<h:outputText for="validityperiod"
+					value="* Proposal Validity Period (days)" />
 			</p:column>
 			<p:column>
-				<p:selectOneMenu value="#{searchQtnTenderBB.managedBean.qtno}"
-					required="true">
-					<f:selectItem itemLabel="Select One" itemValue="null" />
-					<f:selectItem itemLabel="One-Off" itemValue="1" />
-					<f:selectItem itemLabel="Periodic (Schedule)" itemValue="2" />
-					<f:selectItem itemLabel="Periodic (As When)" itemValue="3" />
-				</p:selectOneMenu>
+				<p:inputText id="validityperiod"
+					value="#{searchQtnTenderBB.managedBean.qtno}" />
 			</p:column>
+			
 			<p:column>
 				<h:outputText value="* RFP" />
 			</p:column>
@@ -71,62 +89,13 @@
 
 				</p:selectOneRadio>
 			</p:column>
-		</p:panelGrid>
-		<p:panelGrid columns="10" style="width:100%;" styleClass="noBorders tr,noBorders td">
+			</p:row>
+		<p:row>
+		
 
-			<p:column>
-				<h:outputText value="* Contract Period" />
-			</p:column>
-			<p:column>
-				<h:inputText 
-					value="#{searchQtnTenderBB.managedBean.qtno}" size="4" />
-					</p:column>
-					<p:column>
-				<h:outputLabel value="(Year)" style="margin-right:30px;" />
-</p:column>
+		
+			
 <p:column>
-				<h:inputText 
-					value="#{searchQtnTenderBB.managedBean.qtno}" size="2"/>
-					</p:column>
-					<p:column>
-				<h:outputText value="(Month)" style="margin-right:30px;"/>
-			</p:column>
-
-
-			<p:column>
-				<h:outputText value="* Completion Period" />
-			</p:column>
-			<p:column>
-				<h:inputText
-					value="#{searchQtnTenderBB.managedBean.qtno}" size="4"/>
-					</p:column>
-					<p:column>
-				<h:outputText value="(Year)" style="margin-right:30px;"  />
-</p:column>
-<p:column>
-				<h:inputText 
-					value="#{searchQtnTenderBB.managedBean.qtno}"  size="2"/>
-					</p:column>
-					<p:column>
-				<h:outputText value="(Month)" style="margin-right:30px;" />
-			</p:column>
-
-
-		</p:panelGrid>
-
-
-		<p:panelGrid columns="4" style="width:100%;"
-			styleClass="noBorders tr,noBorders td">
-			<p:column>
-				<h:outputText for="validityperiod"
-					value="* Proposal Validity Period (days)" />
-			</p:column>
-			<p:column>
-				<p:inputText id="validityperiod"
-					value="#{searchQtnTenderBB.managedBean.qtno}" />
-			</p:column>
-			<p:column>
-
 				<h:outputText value="* Response Rules for Line Item / Zone" />
 			</p:column>
 			<p:column>
@@ -143,7 +112,7 @@
 
 				</p:selectOneMenu>
 			</p:column>
-
+            </p:row>
 		</p:panelGrid>
 
 	</p:panel>

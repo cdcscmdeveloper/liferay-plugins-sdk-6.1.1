@@ -6,7 +6,7 @@
 	xmlns:c="http://java.sun.com/jsp/jstl/core">
 
 
-	<p:dialog widgetVar="clonedlg" modal="true">
+	<p:dialog widgetVar="clonedlg" modal="true" appendToBody="true" width="800" height="400">
 
 
 		<p:panel header="Search Qtn/Tender" toggleable="true">
@@ -97,31 +97,22 @@
 
 			</h:panelGroup>
 
-			<p:commandButton value="CLONE" style="float:right;"
-				onclick="clonebtn.show();"></p:commandButton>
+			
 
 		</p:panel>
-	</p:dialog>
-
-	<p:dialog widgetVar="clonebtn" modal="true">
-
+		
 		<p:panel header="Clone Qtn/Tender Sections" toggleable="true">
 			<h:panelGrid columns="2" style="margin-bottom:10px" cellpadding="5">
 
-				<p:selectManyCheckbox
-					value="#{searchQtnTenderBB.managedBean.selectOptions}"
-					layout="pageDirection">
-					<f:selectItem itemLabel="Qtn/Tender Title"
-						itemValue="Qtn/Tender Title" />
-					<f:selectItem itemLabel="Qtn/Tender Details"
-						itemValue="Qtn/Tender Details" />
-					<f:selectItem itemLabel="ApprovalWorkFlow"
-						itemValue="ApprovalWorkFlow" />
-					<f:selectItem itemLabel="Supplier Qualification Criteria"
-						itemValue="Supplier Qualification Criteria" />
-					<f:selectItem itemLabel="Schedule" itemValue="Schedule" />
-					<f:selectItem itemLabel="Documents" itemValue="Documents" />
-				</p:selectManyCheckbox>
+				
+				 <p:tree value="#{cloneBean.root2}" var="node"
+            selectionMode="checkbox"
+            selection="#{cloneBean.selectedNodes}" style="border:none;">
+
+        <p:treeNode>
+            <h:outputText value="#{node}" />
+        </p:treeNode>
+    </p:tree>
 			</h:panelGrid>
 
 
@@ -133,10 +124,10 @@
 				style="float:right;" onclick="clonebtn.hide()">
 
 			</p:commandButton>
-			<p:commandButton value="OK" styleClass="apply_button"
-				style="float:right;" onclick="clonebtn.hide()">
-
-			</p:commandButton>
+			<p:commandButton value="CLONE" style="float:right;"
+				onclick="clonebtn.show();"></p:commandButton>
 		</p:panel>
 	</p:dialog>
+
+	
 </ui:composition>

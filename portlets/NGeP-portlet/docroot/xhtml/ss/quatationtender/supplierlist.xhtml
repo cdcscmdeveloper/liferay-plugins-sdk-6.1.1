@@ -5,9 +5,7 @@
 	xmlns:p="http://primefaces.org/ui"
 	xmlns:c="http://java.sun.com/jsp/jstl/core">
 
-	<p:panel
-		header="Supplier List"
-		toggleable="true">
+	<p:panel toggleable="true">
 				<p:dataTable value="#{searchQtnTenderBB.managedBean.categories}" var="ccode" resizableColumns="true"
 				>
 			
@@ -46,22 +44,15 @@
 	
 		</p:panel>
 		
-		<p:dialog widgetVar="suppdlg" modal="true" width="800" height="400">
-		<p:panelGrid columns="1" style="width:100%;"
-			styleClass="noBorders tr,noBorders td">
-<p:commandButton  value="#{lbl['lbl.so.searchbtn']}"
-			styleClass="apply_button" style="float:right;" >
-		</p:commandButton>
-		</p:panelGrid>
+		<p:dialog widgetVar="suppdlg" modal="true" appendToBody="true" width="800" height="400">
 		
-		
-		<p:panel header="Search Supplier" toggleable="true" size="100">
+          <p:panel header="Search Supplier" toggleable="true" size="100">
 				<p:panelGrid columns="2" style="width:50%;" styleClass="noBorders tr,noBorders td">
 				
-			<h:outputText  value="PKP No" />
+			<h:outputText  value="Circular No" />
 			<p:inputText  value="#{searchQtnTenderBB.managedBean.qtno}"/>
 
-<h:outputText value="PKP Name" />
+<h:outputText value="Circular Name" />
 			<p:inputText value="#{searchQtnTenderBB.managedBean.qtno}"/>
 
 <h:outputText value="Item Name " />
@@ -94,6 +85,13 @@
     
 				
 			</p:panelGrid>
+			
+			<p:panelGrid columns="1" style="width:100%;"
+			styleClass="noBorders tr,noBorders td">
+<p:commandButton  value="#{lbl['lbl.so.searchbtn']}"
+			styleClass="apply_button" style="float:right;" >
+		</p:commandButton>
+		</p:panelGrid>
 		
 			<p:panel header="Supplier List" toggleable="true">
 		<p:panelGrid columns="2" style="width:100%;"

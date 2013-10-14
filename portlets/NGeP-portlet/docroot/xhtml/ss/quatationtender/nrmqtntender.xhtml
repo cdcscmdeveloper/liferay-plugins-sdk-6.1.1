@@ -14,19 +14,6 @@
 			<p:ajax event="rowEdit" />
 			<p:ajax event="rowEditCancel" />
 
-			<p:column headerText="No." style="width: 100px;">
-
-				<p:cellEditor>
-					<f:facet name="output">
-						<h:outputText value="#{ccode.num}" />
-					</f:facet>
-					<f:facet name="input">
-						<p:inputText value="#{ccode.num}" style="width:100%" />
-					</f:facet>
-				</p:cellEditor>
-
-			</p:column>
-
 			<p:column headerText="Category Code">
 
 				<p:cellEditor>
@@ -270,10 +257,12 @@
 		</p:panelGrid>
 		<p:panelGrid columns="1" style="width:100%;"
 			styleClass="noBorders tr,noBorders td">
-		<p:commandButton value="SEARCH" style="float:right;"
-			onclick="suppdlg.show();"></p:commandButton>
+		<p:commandButton value="SEARCH" style="float:right;"></p:commandButton>
 </p:panelGrid>
-		
+</p:panel>
+		<p:panel
+		header="Supplier List"
+		toggleable="true">
 		<ui:include src="/xhtml/ss/quatationtender/opensupplierlist.xhtml"></ui:include>
 
 		<p:panelGrid columns="2" style="width:45%;"

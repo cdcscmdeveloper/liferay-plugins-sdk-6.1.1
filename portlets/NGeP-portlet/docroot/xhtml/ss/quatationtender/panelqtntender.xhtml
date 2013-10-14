@@ -7,28 +7,30 @@
 
 		<p:panel header="Panel Qtn/Tender(for Qtn/Tender Type is Panel)" toggleable="true">
 
-   
-<p:commandButton value="#{lbl['lbl.so.searchbtn']}" style="float:right;"
-					onclick="suppdlg.show();"></p:commandButton>
-			
-<br/>
-<br/>
-
-
- <p:panelGrid columns="3" style="width:75%;"
+   <p:panelGrid columns="3" style="width:75%;"
 				styleClass="noBorders tr,noBorders td">
-		<h:outputLabel value="PKP No." />  
+		<h:outputLabel value="Circular No." />  
             <p:inputText value="1" readonly="true"/> 
            
            <p:commandLink  style="margin-right:20px;">  
-        <h:outputText value="View PKP Attachment" />  
+        <h:outputText value="View Circular Attachment" />  
     </p:commandLink> 
-           <h:outputLabel value="PKP ExpiryDate." />  
+           <h:outputLabel value="Circular ExpiryDate." />  
             <p:inputText value="#{searchQtnTenderBB.managedBean.date}" readonly="true"/> 
          
     
 		</p:panelGrid>
+		<p:panelGrid columns="1" style="width:100%;"
+				styleClass="noBorders tr,noBorders td">
+		<p:commandButton value="#{lbl['lbl.so.searchbtn']}" style="float:right;"
+					onclick="suppdlg.show();"></p:commandButton>
+					</p:panelGrid>
+					</p:panel>
 	
+	
+	<p:panel
+		header="Supplier List"
+		toggleable="true">
 	<ui:include src="/xhtml/ss/quatationtender/supplierlist.xhtml"></ui:include>	
 	 <p:panelGrid columns="3" style="width:42%;"
 				styleClass="noBorders tr,noBorders td">

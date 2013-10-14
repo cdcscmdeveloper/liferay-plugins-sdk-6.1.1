@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:ui="http://java.sun.com/jsf/facelets">
+<h:head>
+	<title>Include demo</title>
+</h:head>
+<h:body>
+	
+	<ui:include src="/xhtml/ss/quatationtender/qtntenderheader.xhtml" />
+	<p:panel header="Documents" toggleable="true">
+	
+	<p:panelGrid columns="4" style="width:100%;"
+			styleClass="noBorders tr,noBorders td">
+			<p:dataTable  var="attendancecompany"
+				value="#{searchQtnTenderBB.managedBean.qtnTenders}" editable="false">
+
+          <p:column headerText="No" style="width:05%">
+					<!-- <h:outputText value=""></h:outputText> -->
+					<p:cellEditor>
+						<f:facet name="output">
+							<h:outputText value="1"></h:outputText>
+						</f:facet>
+						<f:facet name="input">
+							<p:inputText value="1" />
+						</f:facet>
+					</p:cellEditor>
+				</p:column>
+
+				<p:column headerText="Title" readonly="true" style="width:50%">
+					
+					<p:cellEditor>
+						<f:facet name="output">
+							<h:outputText value="Read Only"></h:outputText>
+						</f:facet>
+						<f:facet name="input">
+							<p:inputText value="" />
+						</f:facet>
+					</p:cellEditor>
+				</p:column>
+
+				<p:column headerText="Type">
+
+					
+					<p:cellEditor>
+						<f:facet name="output">
+							<h:outputText value="Upload/Specification/Document/SystemDefined"></h:outputText>
+						</f:facet>
+						<f:facet name="input">
+							<p:inputText value="Upload/Specification/Document/SystemDefined" />
+						</f:facet>
+					</p:cellEditor>
+
+				</p:column>
+
+				<p:column headerText="positioning">
+				
+
+					<p:cellEditor>
+						<f:facet name="output">
+							<h:outputText value=""></h:outputText>
+						</f:facet>
+						<f:facet name="input">
+							<p:inputText value="" />
+						</f:facet>
+					</p:cellEditor>
+				</p:column>
+				
+				
+				   <p:column headerText="Action" >
+				     <p:commandLink >
+				     <p:graphicImage    library="ep/images/design" name="delete.png" value="/resources/ep/images/design/delete.png" />
+                  
+                 </p:commandLink>
+               
+				
+				
+        </p:column>
+
+			</p:dataTable>
+	</p:panelGrid>
+	
+	      <p:commandButton value="ADD" style="float:right;" action="#{searchQtnTenderBB.add}"></p:commandButton>
+  <br/>
+  <br/>
+	
+	</p:panel>
+	</h:body>
+	</html>
+	
