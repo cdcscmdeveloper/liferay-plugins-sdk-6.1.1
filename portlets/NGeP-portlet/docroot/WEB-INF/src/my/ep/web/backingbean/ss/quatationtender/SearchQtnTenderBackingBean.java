@@ -10,6 +10,7 @@ import javax.faces.context.FacesContext;
 import javax.faces.event.AjaxBehaviorEvent;
 
 import my.ep.web.backingbean.BaseBackingBean;
+import my.ep.web.bean.ss.quatationtender.GoSoDo;
 import my.ep.web.bean.ss.quatationtender.QtnTenderBean;
 import my.ep.web.bean.ss.quatationtender.TabBean;
 import my.ep.web.managedbean.ss.quationtender.SearchQtnTenderManagedBean;
@@ -24,6 +25,13 @@ public class SearchQtnTenderBackingBean extends
 	
 	private boolean checked;
 
+	List<GoSoDo> gosodo=this.getManagedBean().getGoSodo();
+	
+	
+	public void add(){
+		System.out.println("inside add method...------------------------------");
+		gosodo.add(new GoSoDo());
+	}
 	/**
 	 * @return the checked
 	 */
