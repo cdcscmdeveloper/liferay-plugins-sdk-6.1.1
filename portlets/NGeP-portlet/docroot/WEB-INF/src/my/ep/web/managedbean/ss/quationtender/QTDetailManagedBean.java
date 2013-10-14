@@ -14,7 +14,7 @@ import my.ep.persistence.entity.pm.common.PmSo;
 import my.ep.persistence.entity.ss.quationtender.ScQt;
 import my.ep.web.managedbean.BaseManagedBean;
 
-@ManagedBean(name="qTDetailManagedBean")
+@ManagedBean(name="qtManagedBean")
 @SessionScoped
 public class QTDetailManagedBean extends BaseManagedBean {
 
