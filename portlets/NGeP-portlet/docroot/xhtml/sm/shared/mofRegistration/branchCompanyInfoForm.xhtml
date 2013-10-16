@@ -48,7 +48,8 @@
 			<p:commandButton value="Add Branch"
 				action="#{backingBean.assignNewBranchBean}"
 				oncomplete="banchDialog.show();" update=":form:tt:display" />
-			<p:commandButton value="Delete Branch(es)" />
+			<p:commandButton value="Delete Branch(es)"
+				action="#{backingBean.deleteSelectedBranches}" />
 
 		</div>
 		<table style="width: 100%">

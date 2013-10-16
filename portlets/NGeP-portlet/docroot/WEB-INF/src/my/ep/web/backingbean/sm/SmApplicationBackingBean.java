@@ -22,6 +22,7 @@ import my.ep.persistence.entity.sm.SmAppl;
 import my.ep.persistence.entity.sm.SmApplAssociateCompany;
 import my.ep.persistence.entity.sm.SmApplContractExperience;
 import my.ep.persistence.entity.sm.SmApplFacility;
+import my.ep.persistence.entity.sm.SmApplManufacturingDtl;
 import my.ep.persistence.entity.sm.SmApplProjectExperience;
 import my.ep.persistence.entity.sm.SmApplStaffTotal;
 import my.ep.persistence.entity.sm.SmApplSupplierBranch;
@@ -98,6 +99,12 @@ public class SmApplicationBackingBean extends
 		if (appl.getSmApplSupplierCategories() == null) {
 			appl.setSmApplSupplierCategories(new ArrayList<SmApplSupplierCategory>());
 		}
+		if (appl.getSmApplFacilities() == null) {
+			appl.setSmApplFacilities(new ArrayList<SmApplFacility>());
+		}
+		if (appl.getSmApplManufacturingDtls() == null) {
+			appl.setSmApplManufacturingDtls(new ArrayList<SmApplManufacturingDtl>());
+		}
 		getManagedBean().setSmAppl(appl);
 		getManagedBean().setTabActiveIndex(0);
 		getManagedBean().setOfficeFacility(new SmApplFacility());
@@ -160,6 +167,18 @@ public class SmApplicationBackingBean extends
 	public void assignNewBranchBean() {
 		getManagedBean().setSelectedBranch(new SmApplSupplierBranch());
 		getManagedBean().getSelectedBranch().setPmAddress((setDefaultAddr()));
+	}
+
+	public void deleteSelectedBranches() {
+		FacesContext.getCurrentInstance()
+				.addMessage(
+						null,
+						new FacesMessage(FacesMessage.SEVERITY_INFO,
+								"Sample info message", "Delete Branch ::: "
+										+ getManagedBean()
+												.getSelectedBranches().size()));
+		System.out.println("*** Delete Branches ******* "
+				+ getManagedBean().getSelectedBranches().size());
 	}
 
 	// -- Process Branches End
@@ -388,6 +407,66 @@ public class SmApplicationBackingBean extends
 	}
 
 	// -- Process Category Codes End
+	// factory start
+	public void addOrUpdateFactoryToSmAppl() {
+
+		if (getManagedBean().getSmAppl().getSmApplFacilities()
+				.contains(getManagedBean().getSelectedFactoryFacility())) {
+
+			System.out.println(" **** THIS IS AN UPDATE For Factoy******"
+					+ getManagedBean().getSelectedFactoryFacility().getPhone());
+		} else {
+			System.out.println("-- Before Save --"
+					+ getManagedBean().getSelectedFactoryFacility()
+							.getPmAddress().getAddress1());
+			getManagedBean().getSmAppl().getSmApplFacilities()
+					.add(getManagedBean().getSelectedFactoryFacility());
+		}
+	}
+
+	public void assignSelFactory(SmApplFacility facilityBean) {
+		getManagedBean().setSelectedFactoryFacility(facilityBean);
+	}
+
+	public void assignNewFactoryBean() {
+		getManagedBean().setSelectedFactoryFacility(new SmApplFacility());
+		getManagedBean().getSelectedFactoryFacility().setPmAddress(
+				(setDefaultAddr()));
+	}
+
+	public void factoryOwnerTypeSel(AjaxBehaviorEvent e) {
+		System.out.println("Selected Owner type === "
+				+ getManagedBean().getSelectedFactoryFacility()
+						.getOwnershipType());
+	}
+
+	// factory end
+
+	// manufacturer start
+	public void addOrUpdateManufacturerToSmAppl() {
+
+		if (getManagedBean().getSmAppl().getSmApplManufacturingDtls()
+				.contains(getManagedBean().getSelectedManufacturer())) {
+
+			System.out.println(" **** THIS IS AN UPDATE For manufacturer******"
+					+ getManagedBean().getSelectedManufacturer().getBrand());
+		} else {
+
+			getManagedBean().getSmAppl().getSmApplManufacturingDtls()
+					.add(getManagedBean().getSelectedManufacturer());
+		}
+	}
+
+	public void assignSelManufacturer(SmApplManufacturingDtl manBean) {
+		getManagedBean().setSelectedManufacturer(manBean);
+	}
+
+	public void assignNewManufacturerBean() {
+		getManagedBean().setSelectedManufacturer(new SmApplManufacturingDtl());
+	}
+
+	// manufacturer end
+
 	private PmAddress setDefaultAddr() {
 		PmAddress addr = new PmAddress();
 		addr.setPmCity(new PmCity());

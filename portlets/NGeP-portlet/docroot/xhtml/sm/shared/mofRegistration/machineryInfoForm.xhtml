@@ -66,7 +66,7 @@
 			</tr>
 		</table>
 	</p:panel>
-	<p:dialog width="400px" header="Manufacturing / Assembly Page"
+	<p:dialog width="600px" header="Manufacturing / Assembly Page"
 		widgetVar="equipmentDialog" resizable="false" showEffect="fade"
 		hideEffect="fade" modal="true">
 		<p:panel header="Machinery / Equipment Information">
@@ -92,17 +92,16 @@
 
 				<tr>
 					<td><p:outputLabel value="Value *" /></td>
-					<td><p:panelGrid columns="2"
-							styleClass="noBorders tr,noBorders td">
-							<p:column>
-								<p:inputText />
-							</p:column>
-							<p:column>
-								<p:selectOneMenu>
-									<f:selectItem itemLabel="MYR" itemValue="1" />
-								</p:selectOneMenu>
-							</p:column>
-						</p:panelGrid></td>
+					<td>
+						<table>
+							<tr>
+								<td style="padding-right: 20px;"><p:inputText /></td>
+								<td valign="top"><p:selectOneMenu>
+										<f:selectItem itemLabel="MYR" itemValue="1" />
+									</p:selectOneMenu></td>
+							</tr>
+						</table>
+					</td>
 				</tr>
 				<tr>
 					<td><p:outputLabel value="Purchase Method *" /></td>

@@ -21,28 +21,35 @@
 			</tr>
 		</table>
 		<br />
-		<p:dataTable var="utilBean"
-			value="#{mofRegistrationBackingBean.utilList}"
-			selection="#{mofRegistrationBackingBean.managedBean.selectedUtilList}"
-			rowKey="#{utilBean.seqNo}" rowIndexVar="index">
+		<p:dataTable var="fac"
+			value="#{backingBean.managedBean.smAppl.smApplFacilities}"
+			selection="#{backingBean.managedBean.selectedFactoryFacilities}"
+			rowKey="#{fac.applFacilityId}" rowIndexVar="index" id="facDt">
 
 			<p:column selectionMode="multiple" width="5%" />
 
 			<p:column headerText="NO.">
-				<p:outputLabel value="1" />
+				<p:outputLabel value="#{index+1}" />
 			</p:column>
 
 			<p:column headerText="Factory Name">
-				<p:commandLink value="FactoryName" onclick="factoryDialog.show();" />
+				<p:commandLink value="#{fac.pmAddress.address1}"
+					oncomplete="factoryDialog.show();"
+					action="#{backingBean.assignSelFactory(fac)}"
+					update=":form:tt:factoryDialog" />
 			</p:column>
 
 			<p:column headerText="Factory/ Workshop/Dockyard Address">
-				<p:outputLabel value="Jalan Jeti Jelutong 11600 Penang, Malaysia." />
+				<p:outputLabel
+					value="#{fac.pmAddress.address2},#{fac.pmAddress.address3},#{fac.pmAddress.address4}" />
 			</p:column>
 
 		</p:dataTable>
 		<div align="right">
-			<p:commandButton value="Add Workshop" onclick="factoryDialog.show();" />
+			<p:commandButton value="Add Workshop"
+				oncomplete="factoryDialog.show();"
+				action="#{backingBean.assignNewFactoryBean}"
+				update=":form:tt:factoryDialog" />
 			<p:commandButton value="Delete Workshop(s)" />
 		</div>
 		<table style="width: 100%">
@@ -54,93 +61,154 @@
 			</tr>
 		</table>
 	</p:panel>
-	<p:dialog width="400px" height="500px"
+	<p:dialog width="600px" height="500px"
 		header="Factory / Workshop / Store / Shipyard Page"
 		widgetVar="factoryDialog" resizable="false" showEffect="fade"
-		hideEffect="fade" modal="true">
+		hideEffect="fade" modal="true" id="factoryDialog">
 		<p:panel header="Factory / Workshop / Store / Shipyard Details">
 
 			<table style="width: 100%">
 				<tr>
+					<td><p:outputLabel value="Facility Type *" /></td>
+					<td><p:selectOneMenu
+							value="#{backingBean.managedBean.selectedFactoryFacility.facilityType}">
+							<f:selectItem itemLabel="-- Select One -- " itemValue="" />
+							<f:selectItem itemLabel="Factory" itemValue="FA" />
+							<f:selectItem itemLabel="Workshop" itemValue="WO" />
+							<f:selectItem itemLabel="Store" itemValue="ST" />
+							<f:selectItem itemLabel="Shipyard" itemValue="SH" />
+						</p:selectOneMenu></td>
+				</tr>
+				<tr>
 					<td><p:outputLabel value="Name" /></td>
-					<td><p:inputText /></td>
+					<td><p:inputText
+							value="#{backingBean.managedBean.selectedFactoryFacility.pmAddress.address1}" /></td>
 				</tr>
 				<tr>
 					<td><p:outputLabel value="Address" /></td>
-					<td><p:inputText /></td>
+					<td><p:inputText
+							value="#{backingBean.managedBean.selectedFactoryFacility.pmAddress.address2}" /></td>
 				</tr>
 
 				<tr>
 					<td></td>
-					<td><p:inputText /></td>
+					<td><p:inputText
+							value="#{backingBean.managedBean.selectedFactoryFacility.pmAddress.address3}" /></td>
 				</tr>
 				<tr>
 					<td></td>
-					<td><p:inputText /></td>
+					<td><p:inputText
+							value="#{backingBean.managedBean.selectedFactoryFacility.pmAddress.address4}" /></td>
 				</tr>
 				<tr>
 					<td><p:outputLabel value="Country *" /></td>
-					<td><p:selectOneMenu>
+					<td><p:selectOneMenu
+							value="#{backingBean.managedBean.selectedFactoryFacility.pmAddress.pmCountry.countryCode}">
 							<f:selectItem itemLabel="-- Select One -- " itemValue="" />
-							<f:selectItem itemLabel="Malaysia" itemValue="1" />
+							<f:selectItem itemLabel="Malaysia" itemValue="MY" />
 						</p:selectOneMenu></td>
 				</tr>
 				<tr>
 					<td><p:outputLabel value="#{lbl['lbl.sm.postcode']}" /></td>
-					<td><p:inputText /></td>
+					<td><p:inputText
+							value="#{backingBean.managedBean.selectedFactoryFacility.pmAddress.postcode}" /></td>
 				</tr>
 				<tr>
 					<td><p:outputLabel value="#{lbl['lbl.sm.state']}" /></td>
-					<td><p:inputText /></td>
+					<td><p:inputText
+							value="#{backingBean.managedBean.selectedFactoryFacility.pmAddress.pmState.stateCode}" /></td>
 				</tr>
 
 				<tr>
 					<td><p:outputLabel value="#{lbl['lbl.sm.district']}" /></td>
-					<td><p:inputText /></td>
+					<td><p:inputText
+							value="#{backingBean.managedBean.selectedFactoryFacility.pmAddress.pmDistrict.districtCode}" /></td>
 				</tr>
 				<tr>
 					<td><p:outputLabel value="#{lbl['lbl.sm.towncity']}" /></td>
-					<td><p:inputText /></td>
+					<td><p:inputText
+							value="#{backingBean.managedBean.selectedFactoryFacility.pmAddress.pmCity.cityCode}" /></td>
 				</tr>
 				<tr>
 					<td><p:outputLabel value="Phone No." /></td>
-					<td><p:inputText /></td>
+					<td><p:inputText
+							value="#{backingBean.managedBean.selectedFactoryFacility.pmAddress.phoneNo}" /></td>
+				</tr>
+				<tr>
+					<td><p:outputLabel value="Fax No." /></td>
+					<td><p:inputText
+							value="#{backingBean.managedBean.selectedFactoryFacility.pmAddress.faxNo}" /></td>
 				</tr>
 				<tr>
 					<td><p:outputLabel value="Area *" /></td>
-					<td><p:inputText /> <p:outputLabel value="(Sq Ft)" /></td>
+					<td><p:inputText
+							value="#{backingBean.managedBean.selectedFactoryFacility.areaSquareFeet}" />
+						<p:outputLabel value="(Sq Ft)" /></td>
 				</tr>
 				<tr>
 					<td><p:outputLabel value="Ownership Type" /></td>
-					<td><p:selectOneRadio>
-							<f:selectItem itemLabel="Rented " itemValue="" />
-							<f:selectItem itemLabel="Owned" itemValue="1" />
+					<td><p:selectOneRadio
+							value="#{backingBean.managedBean.selectedFactoryFacility.ownershipType}">
+							<f:selectItem itemLabel="Rented " itemValue="R" />
+							<f:selectItem itemLabel="Owned" itemValue="O" />
+							<p:ajax event="change"
+								listener="#{backingBean.factoryOwnerTypeSel}"
+								update="facPan,facPanLbl" />
 						</p:selectOneRadio></td>
 				</tr>
 				<tr>
-					<td><p:outputLabel value="Purchase Price/Rent *" /></td>
-					<td><p:panelGrid columns="2"
-							styleClass="noBorders tr,noBorders td">
-							<p:column>
-								<p:inputText />
-							</p:column>
-							<p:column>
-								<p:selectOneMenu>
-									<f:selectItem itemLabel="MYR" itemValue="1" />
-								</p:selectOneMenu>
-							</p:column>
-						</p:panelGrid></td>
+					<td><p:outputPanel id="facPanLbl">
+							<p:outputLabel value="Purchase Price*"
+								rendered="#{backingBean.managedBean.selectedFactoryFacility.ownershipType eq 'O'}"
+								id="oid" />
+							<p:outputLabel value="Rent *"
+								rendered="#{backingBean.managedBean.selectedFactoryFacility.ownershipType eq 'R'}"
+								id="rid" />
+						</p:outputPanel></td>
+					<td><p:outputPanel id="facPan">
+							<ui:fragment
+								rendered="#{backingBean.managedBean.selectedFactoryFacility.ownershipType eq 'O'}">
+								<table>
+									<tr>
+										<td style="padding-right: 20px;"><p:inputText
+												value="#{backingBean.managedBean.selectedFactoryFacility.purchasePrice}" />
+										</td>
+										<td valign="top"><p:selectOneMenu>
+												<f:selectItem itemLabel="MYR" itemValue="1" />
+											</p:selectOneMenu></td>
+									</tr>
+								</table>
+							</ui:fragment>
+							<ui:fragment
+								rendered="#{backingBean.managedBean.selectedFactoryFacility.ownershipType eq 'R'}">
+								<table>
+									<tr>
+										<td style="padding-right: 20px;"><p:inputText
+												value="#{backingBean.managedBean.selectedFactoryFacility.rentalRate}" />
+										</td>
+										<td valign="top"><p:selectOneMenu>
+												<f:selectItem itemLabel="MYR" itemValue="1" />
+											</p:selectOneMenu></td>
+									</tr>
+								</table>
+							</ui:fragment>
+						</p:outputPanel></td>
 				</tr>
+
 				<tr>
-					<td><p:outputLabel value="Owner Name *" /></td>
-					<td><p:inputText /></td>
+					<td><p:outputLabel value="
+								Owner Name *" /></td>
+					<td><p:inputText
+							value="#{backingBean.managedBean.selectedFactoryFacility.ownerName}" /></td>
 				</tr>
 
 			</table>
 		</p:panel>
 		<br />
 		<div align="center">
-			<p:commandButton value="Save" onclick="factoryDialog.hide();" />
+			<p:commandButton value="Save"
+				action="#{backingBean.addOrUpdateFactoryToSmAppl}"
+				oncomplete="factoryDialog.hide();" update=":form:tt:facDt" />
 			<p:commandButton value="Cancel" onclick="factoryDialog.hide();" />
 		</div>
 	</p:dialog>

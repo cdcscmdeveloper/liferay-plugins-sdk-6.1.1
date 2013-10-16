@@ -18,6 +18,7 @@ import my.ep.persistence.entity.sm.SmAppl;
 import my.ep.persistence.entity.sm.SmApplAssociateCompany;
 import my.ep.persistence.entity.sm.SmApplContractExperience;
 import my.ep.persistence.entity.sm.SmApplFacility;
+import my.ep.persistence.entity.sm.SmApplManufacturingDtl;
 import my.ep.persistence.entity.sm.SmApplProjectExperience;
 import my.ep.persistence.entity.sm.SmApplSupplierBranch;
 import my.ep.persistence.entity.sm.SmApplSupplierCategory;
@@ -69,6 +70,16 @@ public class SmApplicationManagedBean extends BaseManagedBean {
 
 	private PmAddress defaultAddr;
 
+	private SmApplFacility officeFacility;
+
+	private SmApplFacility selectedFactoryFacility;
+
+	private List<SmApplFacility> selectedFactoryFacilities;
+
+	private List<SmApplManufacturingDtl> selectedManufacturingList;
+
+	private SmApplManufacturingDtl selectedManufacturer;
+
 	public SmApplicationManagedBean() {
 		defaultAddr = new PmAddress();
 		defaultAddr.setPmCity(new PmCity());
@@ -88,13 +99,17 @@ public class SmApplicationManagedBean extends BaseManagedBean {
 		selectedConstProjs = new ArrayList<SmApplProjectExperience>();
 		selectedConstProj = new SmApplProjectExperience();
 		//
+		selectedFactoryFacility = new SmApplFacility();
+		selectedFactoryFacility.setPmAddress(defaultAddr);
+		selectedFactoryFacilities = new ArrayList<SmApplFacility>();
+		selectedManufacturingList = new ArrayList<SmApplManufacturingDtl>();
+		selectedManufacturer = new SmApplManufacturingDtl();
+
+		// For CategoryCodes
 		selectedCategory = new SmApplSupplierCategory();
 		selectedCategory.setPmCategoryL1(new PmCategoryL1());
 		selectedCategory.setPmCategoryL2(new PmCategoryL2());
 		selectedCategory.setPmCategoryL3(new PmCategoryL3());
-
-		// For CategoryCodes
-
 		// Dummy data start
 		PmCategoryL3 sch1 = new PmCategoryL3();
 		sch1.setCategoryName("Child 1.1.1");
@@ -257,8 +272,6 @@ public class SmApplicationManagedBean extends BaseManagedBean {
 		this.selectedBranches = selectedBranches;
 	}
 
-	private SmApplFacility officeFacility;
-
 	public SmApplFacility getOfficeFacility() {
 		return officeFacility;
 	}
@@ -339,6 +352,41 @@ public class SmApplicationManagedBean extends BaseManagedBean {
 
 	public void setDefaultParentCatList(List<PmCategoryL1> defaultParentCatList) {
 		this.defaultParentCatList = defaultParentCatList;
+	}
+
+	public SmApplFacility getSelectedFactoryFacility() {
+		return selectedFactoryFacility;
+	}
+
+	public void setSelectedFactoryFacility(
+			SmApplFacility selectedFactoryFacility) {
+		this.selectedFactoryFacility = selectedFactoryFacility;
+	}
+
+	public List<SmApplFacility> getSelectedFactoryFacilities() {
+		return selectedFactoryFacilities;
+	}
+
+	public void setSelectedFactoryFacilities(
+			List<SmApplFacility> selectedFactoryFacilities) {
+		this.selectedFactoryFacilities = selectedFactoryFacilities;
+	}
+
+	public List<SmApplManufacturingDtl> getSelectedManufacturingList() {
+		return selectedManufacturingList;
+	}
+
+	public void setSelectedManufacturingList(
+			List<SmApplManufacturingDtl> selectedManufacturingList) {
+		this.selectedManufacturingList = selectedManufacturingList;
+	}
+
+	public SmApplManufacturingDtl getSelectedManufacturer() {
+		return selectedManufacturer;
+	}
+
+	public void setSelectedManufacturer(SmApplManufacturingDtl selectedManufacturer) {
+		this.selectedManufacturer = selectedManufacturer;
 	}
 
 }
