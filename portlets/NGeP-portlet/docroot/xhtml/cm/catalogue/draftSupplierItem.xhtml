@@ -3,8 +3,7 @@
 	xmlns:h="http://java.sun.com/jsf/html"
 	xmlns:ui="http://java.sun.com/jsf/facelets"
 	xmlns:p="http://primefaces.org/ui"
-	xmlns:c="http://java.sun.com/jsp/jstl/core"
-	xmlns:ac="http://ac.my/jsf/composite/cc">
+	xmlns:c="http://java.sun.com/jsp/jstl/core">
 
 	<p:commandButton value="#{lbl['lbl.cm.upload.to.draft']}"
 		onclick="excelDialog.show()"></p:commandButton>
@@ -25,7 +24,7 @@
 		selection="#{catalogueBackingBean.managedBean.selectedMaintainItems}">
 
 		<p:column selectionMode="multiple" style="width:2%" />
-		<ac:paginator for="draftSupplierItemID" />
+		
 		<p:column>
 			<f:facet name="header">
 				<p:outputLabel value="#{lbl['lbl.cm.item.name']}" />
@@ -60,7 +59,7 @@
 			</f:facet>
 			<p:commandButton
 				action="#{catalogueBackingBean.navigateToCatalogDet(rowIndex)}"
-				value="Details"></p:commandButton>
+				value="Details"></p:commandButton>#{rowIndex}
 		</p:column>
 	</p:dataTable>
 	<p:dialog id="excelDialog" widgetVar="excelDialog" modal="true"

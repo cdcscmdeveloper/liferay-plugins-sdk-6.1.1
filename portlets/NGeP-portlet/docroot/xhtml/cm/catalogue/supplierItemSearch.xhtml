@@ -10,6 +10,25 @@
 
 	<h:panelGroup id="supplierItemViewID">
 
+		<div style="text-align: left; float: right;">
+			<p:menubar>
+				<p:submenu label="Wish List ( #{fn:length(catalogueBackingBean.managedBean.wishLists)} )">
+					<p:menuitem value="View WishList" action="#{wishListBackingBean.viewWishListItem}" />
+				</p:submenu>
+				<p:submenu label="Cart List" style=" border-right: 1px;">
+					<p:menuitem value="Your Shopping Cart is empty Give it purpose"></p:menuitem>
+					<p:menuitem>
+						<p:button value="View Cart Items" />
+					</p:menuitem>
+				</p:submenu>
+				<p:submenu label="Supplier List" style=" border-right: 1px;">
+					<p:menuitem>
+						<p:button value="View Supplier" />
+					</p:menuitem>
+				</p:submenu>
+			</p:menubar>
+		</div>
+
 
 		<p:outputLabel styleClass="titleFront"
 			value="#{lbl['lbl.cm.catalogue.search']}"></p:outputLabel>
@@ -68,7 +87,7 @@
 
 		</p:outputPanel>
 
-		<p:commandButton value="search" />
+		<p:commandButton value="search" action="#{catalogueBackingBean.searchCatalogue}" update="supplierItemID"/>
 
 
 
@@ -76,8 +95,8 @@
 
 		<p:dataTable
 			value="#{catalogueBackingBean.managedBean.supplierItemList}"
-			id="supplierItemID" var="supplierItem"
-			rowKey="#{supplierItem.pricingSeq}" width="100%"
+			id="supplierItemID" var="supplierItem" rowIndexVar="rowIndex"
+			rowKey="#{supplierItem.supplierItemId}" width="100%"
 			selection="#{catalogueBackingBean.managedBean.selectedSupplierItems}">
 
 			<p:column selectionMode="multiple" style="width:2%" />
@@ -92,7 +111,7 @@
 				<f:facet name="header">
 					<p:outputLabel value="#{lbl['lbl.cm.item.name']}" />
 				</f:facet>
-				<p:outputLabel value="#{supplierItem.currency}" />
+				#{supplierItem.cmItem.itemName}
 			</p:column>
 			<p:column>
 				<f:facet name="header">
@@ -148,7 +167,7 @@
 					<p:outputLabel value="#{lbl['lbl.cm.action']}" />
 				</f:facet>
 				<p:commandButton
-					action="#{catalogueBackingBean.navigateToCatalogDet()}"
+					action="#{catalogueBackingBean.navigateToSupplierItemDet(rowIndex)}"
 					value="Detail"></p:commandButton>
 
 			</p:column>
@@ -161,8 +180,8 @@
 				value="#{lbl['lbl.cm.compare']} ( #{fn:length(catalogueBackingBean.managedBean.selectedSupplierItemList)} )" />
 			<p:commandButton value="Add To Cart (0)" />
 			<p:commandButton value="Wishlist"
-				action="#{catalogueBackingBean.addIntoWishList()}"
-				onclick="wishListPopUp.show()" />
+				action="#{catalogueBackingBean.addIntoWishList}"
+				onclick="wishListPopUp.show()" update="selectWishList, allWishListId"/>
 			<p:commandButton value="Favorite Supplier (0)" />
 
 		</h:panelGrid>

@@ -1,0 +1,77 @@
+<ui:composition
+	template="/WEB-INF/facelets/templates/basic_template.xhtml"
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:fn="http://java.sun.com/jsp/jstl/functions">
+
+	<ui:define name="contentSection">
+
+		<h:panelGroup id="viewWishListItemId">
+
+			<div style="text-align: left; float: right;">
+				<p:menubar>
+					<p:submenu
+						label="Wish List ( #{fn:length(catalogueBackingBean.managedBean.wishLists)} )">
+						<p:menuitem value="View WishList"
+							action="#{wishListBackingBean.viewWishListItem}" />
+					</p:submenu>
+					<p:submenu label="Cart List" style=" border-right: 1px;">
+						<p:menuitem value="Your Shopping Cart is empty Give it purpose"></p:menuitem>
+						<p:menuitem>
+							<p:button value="View Cart Items" />
+						</p:menuitem>
+					</p:submenu>
+					<p:submenu label="Supplier List" style=" border-right: 1px;">
+						<p:menuitem>
+							<p:button value="View Supplier" />
+						</p:menuitem>
+					</p:submenu>
+				</p:menubar>
+			</div>
+
+			<h:panelGrid columns="2" columnClasses="cmLeft,cmRight" width="100%">
+
+
+				<p:dataGrid var="type"
+					value="#{catalogueBackingBean.managedBean.wishLists}" columns="1"
+					style="width: 100%;">
+					<p:commandLink value="#{type.wishlistDesc}" />
+				</p:dataGrid>
+
+
+				<p:dataGrid var="wishLists" value="#{wishListBackingBean.managedBean.wishListDet}" columns="1" rows="3" id="datagrid">
+
+					<p:panel header="#{wishLists.cmWishlist.wishlistDesc}">
+						<table style="width: 100%;">
+							<tr>
+								<td><p:graphicImage
+										value="#{wishLists.cmSupplierItem.cmImages[0].imageName}" /></td>
+								<td ><p:commandLink
+										value="#{wishLists.cmSupplierItem.cmItem.itemName}"/></td>
+								<td><p:menubar>
+										<p:submenu label="Action">
+											<p:menuitem value="Add To Cart" />
+											<p:menuitem value="Delete" />
+										</p:submenu>
+									</p:menubar></td>
+
+							</tr>
+						</table>
+					</p:panel>
+
+
+				</p:dataGrid>
+
+
+			</h:panelGrid>
+
+
+		</h:panelGroup>
+
+	</ui:define>
+
+</ui:composition>

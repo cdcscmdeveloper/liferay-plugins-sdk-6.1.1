@@ -47,13 +47,49 @@ public class UnspscCodeBackingBean extends BaseBackingBean<UnspscCodeManagedBean
 		ICodificationSO unspscSO = (ICodificationSO) BusinessDelegate.getInstance().getServiceObject("cm",ICodificationSO.class);
 
 		CodificationReqDTO reqDTO = new CodificationReqDTO();
-		log.info("itemName:"+this.getManagedBean().getRequestCode().getItemName());
+		log.info("new:"+this.getManagedBean().getRequestCode().isBrandNew());
 		reqDTO.setRequestCode(this.getManagedBean().getRequestCode());
-
-		CodificationResDTO resDTO = unspscSO.addCodificationRequest(reqDTO);
-		log.info("ID:"+resDTO.getRequestCode().getRequestId());
+		CodificationResDTO resDTO = null;
+		if(this.getManagedBean().getRequestCode().isBrandNew()){
+			 resDTO = unspscSO.addCodificationRequest(reqDTO);
+			 BpmResponseDTO responseDTO = initiateTask(resDTO.getRequestCode());
+		}else{
+			log.info("***update***");
+			 resDTO = unspscSO.updateCodificationRequest(reqDTO);
+			 BpmResponseDTO responseDTO = updateTask(resDTO.getRequestCode());
+		}
 		
-		BpmResponseDTO responseDTO = initiateTask(resDTO.getRequestCode());
+
+	}
+	
+	
+	public BpmResponseDTO updateTask(CmRequestCode request){
+		System.out.println("initiateTask******");
+		IBpmSO bpmSO = (IBpmSO) EpBpmBusinessDelegate.getInstance().getServiceObject(IBpmSO.class);
+		String ctx = bpmSO.authenticate("lailah","welcome1");
+		BpmRequestDTO reqDTO = new BpmRequestDTO();
+		reqDTO.setCtxToken(ctx);
+		log.info("request.getTaskId():"+request.getTaskId());
+	////taskID , reqDTO.setOutcome("SUBMIT"), 	bpmSO.updateTask(reqDTO)
+		reqDTO.setOutcome("SUBMIT");
+		CDUNSPSCDataType obj = new CDUNSPSCDataType();
+		obj.setRequestId(String.valueOf(request.getRequestId()));
+		//obj.setPtj(value);
+		reqDTO.setPojo(obj);
+		
+		reqDTO.setTaskId(request.getTaskId());
+		BpmResponseDTO res = bpmSO.updateTask(reqDTO);
+	
+		log.info("1:"+res.isSuccessful());
+		log.info("2:"+res.getErrorReason());
+		//log.info("ID:"+obj.getRequestId());
+
+		//--
+		//	  Object asd = res.getPojo();
+		//	  CDUNSPSCDataType qwe = (CDUNSPSCDataType)asd;
+		//	  qwe.getPtj();
+		//--
+		return res;
 	}
 
 
@@ -67,11 +103,13 @@ public class UnspscCodeBackingBean extends BaseBackingBean<UnspscCodeManagedBean
 
 		//  reqDTO.setProcessId("Procurement_Strategy.EndorseBudget");
 		reqDTO.setProcessId("Codification.RequestUNSPSC");
-		reqDTO.setOutcome("");
+		reqDTO.setOutcome("SUBMIT");
 		CDUNSPSCDataType obj = new CDUNSPSCDataType();
 		obj.setRequestId(String.valueOf(request.getRequestId()));
+		//obj.setPtj(value);
 		reqDTO.setPojo(obj);
 		BpmResponseDTO res = bpmSO.initiateAndUpdateTask(reqDTO);
+	
 		log.info("1:"+res.isSuccessful());
 		log.info("2:"+res.getErrorReason());
 		log.info("ID:"+obj.getRequestId());
@@ -83,6 +121,10 @@ public class UnspscCodeBackingBean extends BaseBackingBean<UnspscCodeManagedBean
 		//--
 		return res;
 	}
+	
+	
+	
+	
 
 
 	public void uploadUNSPSC(FileUploadEvent event) throws Exception{
@@ -145,7 +187,7 @@ public class UnspscCodeBackingBean extends BaseBackingBean<UnspscCodeManagedBean
 		}
 
 		CodificationResDTO resDTO = unspscSO.saveUnspsc(reqDTO);
-		log.info("*******end segment***********");
+		log.info("*******end Family***********");
 
 		///////////////////////////////////////////////////////////////////////
 
@@ -373,6 +415,103 @@ public class UnspscCodeBackingBean extends BaseBackingBean<UnspscCodeManagedBean
 
 		return level;
 	}
+	
+	public String navigateToSearch(){
+		log.info("*****navigateToSearch******");
+		
+		return "../cm/codification/verifyUnspscSearch.xhtml";
+	}
+	
+	
+	public String createTempCode(){
+		
+		log.info("ID:"+this.getManagedBean().getRequestCode().getRequestId());
+		
+		return "../cm/codification/unspscSingleUpload.xhtml";
+	}
+	
+	public void savetempCode(){
+		
+		ICodificationSO unspscSO = (ICodificationSO) BusinessDelegate.getInstance().getServiceObject("cm",ICodificationSO.class);
+		
+		CodificationReqDTO reqDTO = new CodificationReqDTO();
+		CodificationResDTO resDTO = null;
+		CmUnspsc unspsc = new CmUnspsc();
+		unspsc.setUnspscCode(this.getManagedBean().getSegmentCode());	
+		unspsc.setUnspscKey(this.getManagedBean().getSegmentKey());
+		unspsc.setUnspscTitle(this.getManagedBean().getSegmentTitle());
+		unspsc.setUnspscDescription(this.getManagedBean().getSegmentDesc());
+        unspsc.setUnspscLevel(0);
+		
+		reqDTO.setCmUnspsc(unspsc);
+		reqDTO.getUnspscList().add(reqDTO.getCmUnspsc());
+			
+		//resDTO =  unspscSO.saveUnspsc(reqDTO);
+		////// start family
+		
+		unspsc.setUnspscCode(this.getManagedBean().getFamilyCode());	
+		unspsc.setUnspscKey(this.getManagedBean().getFamilyKey());
+		unspsc.setUnspscTitle(this.getManagedBean().getFamilyTitle());
+		unspsc.setUnspscDescription(this.getManagedBean().getFamilyDesc());
+        unspsc.setUnspscLevel(1);
+        unspsc.setUnspscParentCode(new Long(this.getManagedBean().getSegmentCode()));
+        
+        reqDTO.setCmUnspsc(unspsc);
+        reqDTO.getFamilyList().add(reqDTO.getCmUnspsc());
+		//resDTO = unspscSO.saveFamilyList(reqDTO);
+		
+		/////start class	
+	
+		unspsc.setUnspscCode(this.getManagedBean().getClassCode());	
+		unspsc.setUnspscKey(this.getManagedBean().getClassKey());
+		unspsc.setUnspscTitle(this.getManagedBean().getClassTitle());
+		unspsc.setUnspscDescription(this.getManagedBean().getClassDesc());
+        unspsc.setUnspscLevel(2);
+        unspsc.setUnspscParentCode(new Long(this.getManagedBean().getFamilyCode()));
+        
+        reqDTO.setCmUnspsc(unspsc);
+        reqDTO.getClassList().add(reqDTO.getCmUnspsc());
+        //resDTO = unspscSO.saveClassList(reqDTO);
+        
+        ////start commodity
+		
+    	unspsc.setUnspscCode(this.getManagedBean().getCommodityCode());	
+		unspsc.setUnspscKey(this.getManagedBean().getCommodityKey());
+		unspsc.setUnspscTitle(this.getManagedBean().getCommodityTitle());
+		unspsc.setUnspscDescription(this.getManagedBean().getCommodityDesc());
+        unspsc.setUnspscLevel(3);
+        unspsc.setUnspscParentCode(new Long(this.getManagedBean().getClassCode()));
+        
+        reqDTO.setCmUnspsc(unspsc);
+        reqDTO.getCommodityList().add(reqDTO.getCmUnspsc());
+        
+        //resDTO = unspscSO.saveCommodityList(reqDTO);
+        
+        String check68 = (String)String.valueOf(this.getManagedBean().getCommodityCode()).substring(6, 8);
+		String check46 = (String)String.valueOf(this.getManagedBean().getClassCode()).substring(4, 6);
+		String check24 = (String)String.valueOf(this.getManagedBean().getFamilyCode()).substring(2, 4);
+		String check02 = (String)String.valueOf(this.getManagedBean().getSegmentCode()).substring(0, 2);
+        
+        String tempCode = check02 + check24 +check46 +check68;
+        log.info(tempCode);
+        
+        this.getManagedBean().getRequestCode().setTempCode(tempCode);
+        reqDTO.setRequestCode(this.getManagedBean().getRequestCode());
+        resDTO = unspscSO.updateCodificationRequest(reqDTO);
+        
+
+		BpmResponseDTO responseDTO = updateTask(resDTO.getRequestCode());
+          
+		
+	}
+	
+	public String createExtCode(){
+		
+		return "../cm/codification/extensionCodeSingleCreation.xhtml"; 
+	}
+	
+	
+	
 
 
 

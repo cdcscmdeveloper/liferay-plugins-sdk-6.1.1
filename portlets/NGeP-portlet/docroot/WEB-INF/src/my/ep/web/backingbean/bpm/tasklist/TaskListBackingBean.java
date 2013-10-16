@@ -10,18 +10,29 @@ import javax.faces.bean.ManagedBean;
 import javax.faces.bean.RequestScoped;
 import javax.faces.context.ExternalContext;
 import javax.faces.context.FacesContext;
+import javax.portlet.PortletRequest;
 
+import my.ep.biz.service.cm.codification.ICodificationSO;
+import my.ep.biz.service.cm.codification.IRequestCodeSO;
 import my.ep.bpm.dto.BpmRequestDTO;
 import my.ep.bpm.dto.BpmResponseDTO;
 import my.ep.bpm.service.IBpmSO;
+import my.ep.dto.cm.codification.CodificationReqDTO;
+import my.ep.dto.cm.codification.CodificationResDTO;
 import my.ep.dto.cm.codification.RequestCodeReqDTO;
+import my.ep.dto.cm.codification.RequestCodeResDTO;
 import my.ep.jaxb.cd.unspscdata.CDUNSPSCDataType;
 import my.ep.util.lookupservice.EpBpmBusinessDelegate;
 import my.ep.web.backingbean.BaseBackingBean;
+import my.ep.web.backingbean.cm.codification.UnspscCodeBackingBean;
 import my.ep.web.constant.PagingConst;
 import my.ep.web.managedbean.bpm.tasklist.TaskListManagedBean;
+import my.ep.web.util.FacesScopes;
+import my.ep.web.util.lookupservice.BusinessDelegate;
 
 import org.apache.log4j.Logger;
+
+import com.liferay.portal.util.PortalUtil;
 
 @ManagedBean(name="tasklistBackingBean")
 @RequestScoped
@@ -33,6 +44,12 @@ public class TaskListBackingBean extends BaseBackingBean<TaskListManagedBean>{
 
 
 	public TaskListBackingBean(){
+		
+		
+		
+//		String testtext = PortalUtil.getHttpServletRequest((PortletRequest) FacesContext.getCurrentInstance().getExternalContext().getRequest()).getParameter("testing");
+//		System.out.println("new FacesScopes().getParameter(\"testing\"): " + testtext);
+		
 		this.getManagedBean().setBpmMap(null);
 		Map temp = new HashMap();
 
@@ -60,7 +77,7 @@ public class TaskListBackingBean extends BaseBackingBean<TaskListManagedBean>{
 
 		//  reqDTO.setProcessId("Procurement_Strategy.EndorseBudget");
 		reqDTO.setProcessId("Codification.RequestUNSPSC");
-		reqDTO.setOutcome("");
+		reqDTO.setOutcome("SUBMIT");
 		CDUNSPSCDataType obj = new CDUNSPSCDataType();
 		//  obj.setApprover("Asdqwe");
 		//  obj.setBudgetId("Asdqwe");
@@ -87,7 +104,8 @@ public class TaskListBackingBean extends BaseBackingBean<TaskListManagedBean>{
 
 		IBpmSO bpmSO = (IBpmSO) EpBpmBusinessDelegate.getInstance().getServiceObject(IBpmSO.class);
 
-		String token = bpmSO.authenticate("roslan", "welcome1");
+		//String token = bpmSO.authenticate("roslan", "welcome1");
+		String token = bpmSO.authenticate("khai", "welcome1");
 		System.out.println("testing BPM auth******"+token);
 		BpmRequestDTO reqDTO = new BpmRequestDTO();
 
@@ -110,14 +128,16 @@ public class TaskListBackingBean extends BaseBackingBean<TaskListManagedBean>{
 
 	}
 
-	public void navigateToURL(){
-		try {
-
+	public String navigateToURL(){
+		
 			IBpmSO bpmSO = (IBpmSO) EpBpmBusinessDelegate.getInstance().getServiceObject(IBpmSO.class);
+			IRequestCodeSO requestSO = (IRequestCodeSO) BusinessDelegate.getInstance().getServiceObject("cm",IRequestCodeSO.class);
+			ICodificationSO unspscSO = (ICodificationSO) BusinessDelegate.getInstance().getServiceObject("cm",ICodificationSO.class);
 			String urlKey = FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap().get("key");
 			String taskId = FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap().get("taskId");
 			String ctx = bpmSO.authenticate("roslan","welcome1");
 			BpmRequestDTO reqDTO = new BpmRequestDTO();
+			CodificationReqDTO reqCodeDTO = new CodificationReqDTO();
 			
 			log.info("taskId:"+taskId);
 			reqDTO.setCtxToken(ctx);
@@ -126,11 +146,24 @@ public class TaskListBackingBean extends BaseBackingBean<TaskListManagedBean>{
 			
 			Object obj = res.getPojo();
 			CDUNSPSCDataType unspsc = (CDUNSPSCDataType)obj;
-			
 			log.info("requestID:"+unspsc.getRequestId());
+			
+			//reqCodeDTO.getRequestCode().setTaskId(taskId);
+			
+
 			
 			RequestCodeReqDTO codeDTO = new RequestCodeReqDTO();
 			codeDTO.setRequestId(new Long(unspsc.getRequestId()));
+			
+			RequestCodeResDTO resDTO = requestSO.retrieveUnspscCodeReview(codeDTO);
+			log.info("name:"+resDTO.getRequestCode().getItemName());
+			
+			resDTO.getRequestCode().setTaskId(taskId);
+			reqCodeDTO.setRequestCode(resDTO.getRequestCode());
+			CodificationResDTO resCodeDTO = unspscSO.updateCodificationRequest(reqCodeDTO);
+			
+			UnspscCodeBackingBean unspscBB = new UnspscCodeBackingBean();
+			unspscBB.getManagedBean().setRequestCode(resCodeDTO.getRequestCode());
 			
 			String url = "";
 			log.info("******urlKey***********"+urlKey);
@@ -151,14 +184,14 @@ public class TaskListBackingBean extends BaseBackingBean<TaskListManagedBean>{
 
 			}
 			log.info("url:"+url);
+			
+			
+			return "taskListCommonPage";
+			
+			//ExternalContext externalContext = FacesContext.getCurrentInstance().getExternalContext();
 
-			ExternalContext externalContext = FacesContext.getCurrentInstance().getExternalContext();
-
-			externalContext.redirect("http://localhost:8080/web/guest/" +url +"?faces-redirect=true");
-		} catch (IOException e) {
-
-			e.printStackTrace();
-		}
+			//externalContext.redirect("http://localhost:8080/web/guest/" +url +"?testing=123");
+		
 
 	}
 

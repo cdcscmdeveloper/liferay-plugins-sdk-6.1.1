@@ -22,61 +22,61 @@
 				<h:panelGrid columns="4" columnClasses="cmPadding">
 
 					<p:outputLabel value="* #{lbl['lbl.cm.segment.code']}"></p:outputLabel>
-					<p:inputText></p:inputText>
+					<p:inputText value="#{unspscCodeBackingBean.managedBean.segmentCode}"></p:inputText>
 
 					<p:outputLabel value="* #{lbl['lbl.cm.family.code']}"></p:outputLabel>
-					<p:inputText></p:inputText>
+					<p:inputText value="#{unspscCodeBackingBean.managedBean.familyCode}"></p:inputText>
 
 					<p:outputLabel value="* #{lbl['lbl.cm.segment.title']}"></p:outputLabel>
-					<p:inputText></p:inputText>
+					<p:inputText value="#{unspscCodeBackingBean.managedBean.segmentTitle}"></p:inputText>
 
 					<p:outputLabel value="* #{lbl['lbl.cm.family.title']}"></p:outputLabel>
-					<p:inputText></p:inputText>
+					<p:inputText value="#{unspscCodeBackingBean.managedBean.familyTitle}"></p:inputText>
 
 					<p:outputLabel value="#{lbl['lbl.cm.segment.key']}"></p:outputLabel>
-					<p:inputText></p:inputText>
+					<p:inputText value="#{unspscCodeBackingBean.managedBean.segmentKey}"></p:inputText>
 
 					<p:outputLabel value="#{lbl['lbl.cm.family.key']}"></p:outputLabel>
-					<p:inputText></p:inputText>
+					<p:inputText value="#{unspscCodeBackingBean.managedBean.familyKey}"></p:inputText>
 
 					<p:outputLabel value="#{lbl['lbl.cm.segment.description']}"></p:outputLabel>
-					<p:inputText></p:inputText>
+					<p:inputText value="#{unspscCodeBackingBean.managedBean.segmentDesc}"></p:inputText>
 
 					<p:outputLabel value="#{lbl['lbl.cm.family.description']}"></p:outputLabel>
-					<p:inputText></p:inputText>
+					<p:inputText value="#{unspscCodeBackingBean.managedBean.familyDesc}"></p:inputText>
 
 
 
 
 					<h:outputLabel value="* #{lbl['lbl.cm.class.code']}"></h:outputLabel>
-					<h:inputText></h:inputText>
+					<p:inputText value="#{unspscCodeBackingBean.managedBean.classCode}"></p:inputText>
 
 					<h:outputLabel value="* #{lbl['lbl.cm.commodity.code']}"></h:outputLabel>
-					<h:inputText></h:inputText>
+					<p:inputText value="#{unspscCodeBackingBean.managedBean.commodityCode}"></p:inputText>
 
 					<h:outputLabel value="* #{lbl['lbl.cm.class.title']}"></h:outputLabel>
-					<h:inputText></h:inputText>
+					<p:inputText value="#{unspscCodeBackingBean.managedBean.classTitle}"></p:inputText>
 
 					<h:outputLabel value="* #{lbl['lbl.cm.commodity.title']}"></h:outputLabel>
-					<h:inputText></h:inputText>
+					<p:inputText value="#{unspscCodeBackingBean.managedBean.commodityTitle}"></p:inputText>
 
 					<h:outputLabel value="#{lbl['lbl.cm.class.key']}"></h:outputLabel>
-					<h:inputText></h:inputText>
+					<p:inputText value="#{unspscCodeBackingBean.managedBean.classKey}"></p:inputText>
 
 					<h:outputLabel value="#{lbl['lbl.cm.commodity.key']}"></h:outputLabel>
-					<h:inputText></h:inputText>
+					<p:inputText value="#{unspscCodeBackingBean.managedBean.commodityKey}"></p:inputText>
 
 					<h:outputLabel value="#{lbl['lbl.cm.class.description']}"></h:outputLabel>
-					<h:inputText></h:inputText>
+					<p:inputText value="#{unspscCodeBackingBean.managedBean.classDesc}"></p:inputText>
 
 					<h:outputLabel value="#{lbl['lbl.cm.commodity.description']}"></h:outputLabel>
-					<h:inputText></h:inputText>
+					<p:inputText value="#{unspscCodeBackingBean.managedBean.commodityDesc}"></p:inputText>
 
 
 					<h:outputLabel />
 					<h:outputLabel />
 					<h:outputLabel />
-					<p:commandButton value="#{lbl['lbl.cm.save']}"
+					<p:commandButton value="#{lbl['lbl.cm.save']}" action="#{unspscCodeBackingBean.savetempCode}"
 						styleClass="marginLeftbutton"></p:commandButton>
 
 				</h:panelGrid>

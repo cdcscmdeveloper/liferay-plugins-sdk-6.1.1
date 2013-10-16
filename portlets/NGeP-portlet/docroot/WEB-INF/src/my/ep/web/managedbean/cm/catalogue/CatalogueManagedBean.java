@@ -10,6 +10,7 @@ import javax.faces.model.SelectItem;
 import my.ep.persistence.entity.cm.catalog.CmItem;
 import my.ep.persistence.entity.cm.catalog.CmSupplierItem;
 import my.ep.persistence.entity.cm.catalog.CmUnspsc;
+import my.ep.persistence.entity.cm.catalog.CmWishlist;
 import my.ep.web.managedbean.BaseManagedBean;
 import my.ep.web.vo.AdvanceSearchVO;
 import my.ep.web.vo.PricingVO;
@@ -26,9 +27,9 @@ public class CatalogueManagedBean extends BaseManagedBean {
 	private boolean advanceSearchInd=false;
 	private List<AdvanceSearchVO> advanceSearchList;
 	private List<SelectItem> searchCriteria;
-	private List<PricingVO> supplierItemList;
-	private List<PricingVO> selectedSupplierItemList;
-	private PricingVO[] selectedSupplierItems;
+	//private List<PricingVO> supplierItemList;
+	private List<CmSupplierItem> selectedSupplierItemList;
+	private CmSupplierItem[] selectedSupplierItems;
 	private String navigationURL;
 
 	private List<SelectItem> pricingCriteria;
@@ -43,11 +44,22 @@ public class CatalogueManagedBean extends BaseManagedBean {
 	private List<CmSupplierItem> maintainItemList;
 	private CmSupplierItem selectedMaintainItem;
 	private CmSupplierItem[] selectedMaintainItems;
+	
+	private List<CmSupplierItem> supplierItemList;
+	
+	private List<CmWishlist> wishLists;
+	
+	
 
+	public List<CmWishlist> getWishLists() {
+		if(wishLists==null)
+			wishLists = new ArrayList<CmWishlist>();
+		return wishLists;
+	}
 
-
-
-
+	public void setWishLists(List<CmWishlist> wishLists) {
+		this.wishLists = wishLists;
+	}
 
 	public List<CmSupplierItem> getMaintainItemList() {
 		if(maintainItemList==null)
@@ -85,21 +97,25 @@ public class CatalogueManagedBean extends BaseManagedBean {
 		this.unspsc = unspsc;
 	}
 
-	public List<PricingVO> getSupplierItemList() {
+	
+
+	public List<CmSupplierItem> getSupplierItemList() {
 		if(supplierItemList==null)
-			supplierItemList = new ArrayList<PricingVO>();
+			supplierItemList = new ArrayList<CmSupplierItem>();
 		return supplierItemList;
 	}
 
-	public void setSupplierItemList(List<PricingVO> supplierItemList) {
+	public void setSupplierItemList(List<CmSupplierItem> supplierItemList) {
 		this.supplierItemList = supplierItemList;
 	}
 
-	public PricingVO[] getSelectedSupplierItems() {
+	
+
+	public CmSupplierItem[] getSelectedSupplierItems() {
 		return selectedSupplierItems;
 	}
 
-	public void setSelectedSupplierItems(PricingVO[] selectedSupplierItems) {
+	public void setSelectedSupplierItems(CmSupplierItem[] selectedSupplierItems) {
 		this.selectedSupplierItems = selectedSupplierItems;
 	}
 
@@ -220,13 +236,13 @@ public class CatalogueManagedBean extends BaseManagedBean {
 		this.searchCriteria = searchCriteria;
 	}
 
-	public List<PricingVO> getSelectedSupplierItemList() {
+	public List<CmSupplierItem> getSelectedSupplierItemList() {
 		if(selectedSupplierItemList==null)
-			selectedSupplierItemList = new ArrayList<PricingVO>();
+			selectedSupplierItemList = new ArrayList<CmSupplierItem>();
 		return selectedSupplierItemList;
 	}
 
-	public void setSelectedSupplierItemList(List<PricingVO> selectedSupplierItemList) {
+	public void setSelectedSupplierItemList(List<CmSupplierItem> selectedSupplierItemList) {
 		this.selectedSupplierItemList = selectedSupplierItemList;
 	}
 

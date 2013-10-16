@@ -12,8 +12,10 @@
 
 	<p:outputPanel id="addCatDet">
 
-		<p:commandButton value="#{lbl['lbl.cm.ok']}" action="#{catalogueBackingBean.okToMaintenanceFile()}"></p:commandButton>
-		<p:commandButton value="#{lbl['lbl.cm.cancel']}" action="#{catalogueBackingBean.cancelToMaintenanceFile()}"></p:commandButton>
+		<p:commandButton value="#{lbl['lbl.cm.ok']}"
+			action="#{catalogueBackingBean.okToMaintenanceFile()}"></p:commandButton>
+		<p:commandButton value="#{lbl['lbl.cm.cancel']}"
+			action="#{catalogueBackingBean.cancelToMaintenanceFile()}"></p:commandButton>
 
 		<div style="border-bottom: 1px solid;">
 			<p:outputLabel styleClass="labelCss"
@@ -26,15 +28,19 @@
 			<tr style="height: 35px;">
 				<td rowspan="10" style="width: 250px;"><h:panelGrid
 						styleClass="imageFrame">
-						<p:galleria  panelWidth="200" panelHeight="200">
-							<p:graphicImage height="100" width="100" />
+						<p:galleria id="imageUploadID"
+							value="#{catalogueBackingBean.managedBean.selectedMaintainItem.cmImages}"
+							var="imageObj" panelWidth="200" panelHeight="200">
+							<p:graphicImage height="100" width="100"
+								value="/image?imageName=#{imageObj.imagePath}" />
 						</p:galleria>
-					</h:panelGrid> <p:commandButton value="#{lbl['lbl.cm.upload']}" /></td>
+					</h:panelGrid> <p:commandButton value="#{lbl['lbl.cm.upload']}"
+						onclick="imageDialog.show()" /></td>
 				<td><p:outputLabel value="#{lbl['lbl.cm.item.code']}" /></td>
-				<td><p:outputLabel></p:outputLabel>
-				</td>
+				<td><p:outputLabel value="#{catalogueBackingBean.managedBean.selectedMaintainItem.cmItem.extensionCode}"></p:outputLabel></td>
 				<td><p:outputLabel value="#{lbl['lbl.cm.item.name']}" /></td>
-				<td><p:outputLabel></p:outputLabel></td>
+				<td><p:outputLabel
+						value="#{catalogueBackingBean.managedBean.selectedMaintainItem.cmItem.itemName}"></p:outputLabel></td>
 
 			</tr>
 			<tr style="height: 35px;">
@@ -42,11 +48,10 @@
 				<td><p:outputLabel value="#{lbl['lbl.cm.price']}" /></td>
 				<td></td>
 				<td><p:outputLabel value="#{lbl['lbl.cm.currency']}" /></td>
-				<td colspan="1">
-				</td>
+				<td colspan="1"></td>
 			</tr>
-			
-		
+
+
 
 
 			<tr style="height: 35px;">
@@ -54,21 +59,21 @@
 				<td><p:outputLabel value="#{lbl['lbl.cm.payment.term']}" /></td>
 				<td><p:selectOneMenu></p:selectOneMenu></td>
 				<td><p:outputLabel value="#{lbl['lbl.cm.sku']}" /></td>
-				<td><p:inputText></p:inputText></td>
+				<td><p:inputText value="#{catalogueBackingBean.managedBean.selectedMaintainItem.skuNumber}"></p:inputText></td>
 				<td></td>
 			</tr>
 			<tr style="height: 35px;">
 
-				<td><p:outputLabel value="#{lbl['lbl.cm.manufacturing.part.no']}" /></td>
-				<td><p:inputText></p:inputText></td>
+				<td><p:outputLabel
+						value="#{lbl['lbl.cm.manufacturing.part.no']}" /></td>
+				<td><p:inputText value="#{catalogueBackingBean.managedBean.selectedMaintainItem.manufacturer}"></p:inputText></td>
 				<td><p:outputLabel value="#{lbl['lbl.cm.model']}" /></td>
-				<td colspan="1"><p:inputText></p:inputText>
-				</td>
+				<td colspan="1"><p:inputText value="#{catalogueBackingBean.managedBean.selectedMaintainItem.modelNumber}"></p:inputText></td>
 			</tr>
 			<tr style="height: 35px;">
 				<td rowspan="2"><p:outputLabel
 						value="#{lbl['lbl.cm.additional.item.description']}" /></td>
-				<td rowspan="2"><p:inputTextarea /></td>
+				<td rowspan="2"><p:inputTextarea value="#{catalogueBackingBean.managedBean.selectedMaintainItem.itemDesc}"/></td>
 				<td><p:outputLabel value="#{lbl['lbl.cm.lead.time']}" /></td>
 				<td colspan="1"><p:selectOneMenu></p:selectOneMenu></td>
 			</tr>
@@ -85,11 +90,25 @@
 				<td><p:inputText></p:inputText></td>
 				<td></td>
 			</tr>
-			
+
 
 		</table>
-		
-		
+
+		<p:dialog id="imageDialog" widgetVar="imageDialog" modal="false"
+			resizable="false" styleClass="pop_up_top">
+
+
+			<p:fileUpload
+				fileUploadListener="#{catalogueBackingBean.imageUpload}"
+				mode="advanced" id="upload"
+				allowTypes="/(\.|\/)(gif|jpe?g|png|bmp|txt|xls|xlsx|pdf|doc|docx|csv)$/"
+				invalidFileMessage="Only JPG, GIF, PNG, BMP, TXT, XLS, PDF, DOC, CSV files are accepted"
+				update="imageUploadID">
+			</p:fileUpload>
+
+		</p:dialog>
+
+
 		<p:tabView id="pricingTabID">
 
 			<p:tab id="pricing1" title="#{lbl['lbl.cm.pricing']}">

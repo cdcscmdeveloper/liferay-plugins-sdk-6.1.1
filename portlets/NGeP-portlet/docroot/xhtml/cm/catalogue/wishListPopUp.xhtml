@@ -10,11 +10,12 @@
 	<table width="100%">
 		<tr>
 			<td width="30%"><p:dataGrid id="selectWishList" columns="1"
-					rows="4">
+					value="#{catalogueBackingBean.managedBean.selectedSupplierItemList}"
+					var="obj" rows="4">
 
 					<h:panelGrid columns="2" columnClasses="columnLeft, columnRight">
 
-						<p:outputLabel value="Item 1" />
+						<p:outputLabel value="#{obj.cmItem.itemName}" />
 						<p:graphicImage height="100px" width="100px" />
 					</h:panelGrid>
 
@@ -23,24 +24,22 @@
 
 
 
-			<td width="70%"><p:dataTable>
+			<td width="70%"><p:dataTable id="allWishListId"
+					value="#{catalogueBackingBean.managedBean.wishLists}" 
+					var="wishList" rowKey="#{wishList.wishlistId}" 
+					selection="#{wishListBackingBean.managedBean.selectedWishLists}">
 
+					<p:column selectionMode="multiple" style="width:2%" />
 
-					<p:column>
-						<f:facet name="header">
-							<p:selectBooleanCheckbox></p:selectBooleanCheckbox>
-						</f:facet>
-
-					</p:column>
 
 					<p:column>
 						<f:facet name="header">
 							<p:outputLabel value="#{lbl['lbl.cm.wish.list']}" />
 						</f:facet>
-						<p:outputLabel value="wishList1" />
+						<p:outputLabel value="#{wishList.wishlistDesc}" />
 					</p:column>
 
-				</p:dataTable> <p:commandButton value="#{lbl['lbl.cm.ok']}"
+				</p:dataTable> <p:commandButton value="#{lbl['lbl.cm.ok']}" action="#{wishListBackingBean.addItemIntoWishList}"
 					onclick="wishListPopUp.hide()"></p:commandButton></td>
 
 
@@ -51,21 +50,13 @@
 	<table>
 		<tr>
 			<td><p:outputLabel value="#{lbl['lbl.cm.wish.list']}"></p:outputLabel></td>
-			<td><p:inputText value="#{catalogueBackingBean.managedBean.selectedPricing.price}"></p:inputText></td>
-			<td><p:commandButton value="create" onclick="wishListPopUp.hide()" update="@form"
-					action="#{catalogueBackingBean.RainTest}" ></p:commandButton></td>
+			<td><p:inputText
+					value="#{wishListBackingBean.managedBean.wishList.wishlistDesc}"></p:inputText></td>
+			<td><p:commandButton value="create"
+					onclick="wishListPopUp.hide()" update="supplierItemViewID"
+					action="#{wishListBackingBean.saveWishList}"></p:commandButton></td>
 		</tr>
 	</table>
-
-
-
-
-
-
-
-
-
-
 
 
 

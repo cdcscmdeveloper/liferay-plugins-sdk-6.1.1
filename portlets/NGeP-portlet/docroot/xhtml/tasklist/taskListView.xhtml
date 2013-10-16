@@ -15,7 +15,6 @@
 			<p:commandButton value="BPM"
 				action="#{tasklistBackingBean.taskListAction}" update="taskListID"></p:commandButton>
 
-
 			<p:dataTable value="#{tasklistBackingBean.managedBean.taskList}"
 				var="tasks">
 
@@ -25,6 +24,8 @@
 					</f:facet>
 					<p:commandLink value="#{tasks.taskNumber}" action="#{tasklistBackingBean.navigateToURL}">
 						<f:param name="key" value="key" />
+						<f:param name="taskId" value="#{tasks.taskId}" />
+						
 					</p:commandLink>
 				</p:column>
 				<p:column>

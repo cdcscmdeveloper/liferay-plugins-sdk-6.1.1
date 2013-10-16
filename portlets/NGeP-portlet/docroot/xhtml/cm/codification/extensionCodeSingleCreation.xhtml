@@ -1,0 +1,76 @@
+<ui:composition
+	template="/WEB-INF/facelets/templates/basic_template.xhtml"
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:c="http://java.sun.com/jsp/jstl/core">
+
+	<ui:define name="contentSection">
+
+		<h:panelGrid columns="2" columnClasses="cmLeft,cmRight" width="100%">
+
+
+			<ui:include src="itemMenu.xhtml"></ui:include>
+
+			<h:panelGroup id="cmExtensionCodeCreationID">
+				<p:outputLabel styleClass="titleFront"
+					value="#{lbl['lbl.cm.create.extension.code']}"></p:outputLabel>
+
+				<h:panelGrid columns="4" columnClasses="cmPadding">
+					<p:outputLabel value="#{lbl['lbl.cm.unspsc.code']}"></p:outputLabel>
+					<p:inputText value=""></p:inputText>
+					<h:outputLabel />
+					<h:outputLabel />
+					
+
+					<p:outputLabel value="#{lbl['lbl.cm.unspsc.title']}"></p:outputLabel>
+					<p:inputText value=""></p:inputText>
+					<h:outputLabel />
+					<h:outputLabel />
+
+					<p:outputLabel value="#{lbl['lbl.cm.type.code']}"></p:outputLabel>
+					<p:inputText value=""></p:inputText>
+
+					<p:outputLabel value="#{lbl['lbl.cm.type.name']}"></p:outputLabel>
+					<p:inputText value=""></p:inputText>
+
+					<p:outputLabel value="#{lbl['lbl.cm.brand.code']}"></p:outputLabel>
+					<p:inputText value=""></p:inputText>
+
+					<p:outputLabel value="#{lbl['lbl.cm.brand.name']}"></p:outputLabel>
+					<p:inputText value=""></p:inputText>
+
+					<p:outputLabel value="#{lbl['lbl.cm.measurement.code']}"></p:outputLabel>
+					<p:inputText value=""></p:inputText>
+
+					<p:outputLabel value="#{lbl['lbl.cm.measurement.name']}"></p:outputLabel>
+					<p:inputText value=""></p:inputText>
+
+					<p:outputLabel value="#{lbl['lbl.cm.color.code']}"></p:outputLabel>
+					<p:inputText value=""></p:inputText>
+
+					<p:outputLabel value="#{lbl['lbl.cm.color.name']}"></p:outputLabel>
+					<p:inputText value=""></p:inputText>
+
+					<h:outputLabel />
+					<h:outputLabel />
+					<h:outputLabel />
+					<p:commandButton value="#{lbl['lbl.cm.save']}"
+						action="#{unspscCodeBackingBean.saveExtCode}"
+						styleClass="marginLeftbutton"></p:commandButton>
+
+				</h:panelGrid>
+
+
+			</h:panelGroup>
+
+
+		</h:panelGrid>
+
+
+	</ui:define>
+
+
+</ui:composition>
