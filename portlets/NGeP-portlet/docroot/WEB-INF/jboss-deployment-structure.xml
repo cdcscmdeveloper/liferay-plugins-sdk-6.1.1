@@ -7,8 +7,8 @@
         <module name="wlfullclient" /> 
         <module name="baseejb" />
         <module name="org.jboss.modules" />
-        <module name="ngep-biz-client" />        
-        <!-- 
+        <!-- <module name="ngep-biz-client" />        
+        
         <module name="eperolehan-biz-client" />
         <module name="eperolehan-bpm-client" /> -->
     </dependencies>  
