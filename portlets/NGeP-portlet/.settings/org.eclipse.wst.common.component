@@ -9,9 +9,6 @@
         <dependent-module archiveName="NGeP-bizBaseClient.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/NGeP-bizBaseClient/NGeP-bizBaseClient">
             <dependency-type>uses</dependency-type>
         </dependent-module>
-        <dependent-module archiveName="NGeP-jpa.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/NGeP-jpa/NGeP-jpa">
-            <dependency-type>uses</dependency-type>
-        </dependent-module>
         <dependent-module archiveName="NGeP-bpmRemoteClient.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/NGeP-bpmRemoteClient/NGeP-bpmRemoteClient">
             <dependency-type>uses</dependency-type>
         </dependent-module>
