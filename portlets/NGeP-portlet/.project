@@ -5,7 +5,6 @@
 	<projects>
 		<project>NGeP-bizRemoteClient</project>
 		<project>NGeP-bizBaseClient</project>
-		<project>NGeP-jpa</project>
 		<project>NGeP-bpmRemoteClient</project>
 		<project>NGeP-bpmBaseClient</project>
 		<project>NGeP-bpm-schema</project>
