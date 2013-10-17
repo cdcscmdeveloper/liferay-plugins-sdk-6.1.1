@@ -82,9 +82,10 @@ public class CodificationBackingBean extends BaseBackingBean<CodificationManaged
 
 
 	public CodificationBackingBean(){
-
-		
-
+		this.getManagedBean().setContractedItem(null);
+		CmUnspsc unspsc = new CmUnspsc();
+		unspsc.setUnspscTitle("item");
+		this.getManagedBean().getContractedItem().add(unspsc);
 	}
 
 
@@ -414,6 +415,25 @@ public class CodificationBackingBean extends BaseBackingBean<CodificationManaged
 
 	public void setMeasurementFilterBean(SearchFilterBean measurementFilterBean) {
 		this.measurementFilterBean = measurementFilterBean;
+	}
+	
+	public void assignProductCode(){
+		
+		ICodificationSO codificationSO = (ICodificationSO) BusinessDelegate.getInstance().getServiceObject("cm",ICodificationSO.class);
+		
+		CodificationReqDTO reqDTO = new CodificationReqDTO();
+		
+		CodificationResDTO resDTO = codificationSO.searchSegment(reqDTO);
+		
+		log.info("resDTO.getSegmentList():"+resDTO.getSegmentList().size());
+		for(CmUnspsc segment:resDTO.getSegmentList()){
+
+			this.getManagedBean().getSegmentCriteria().add(new SelectItem(segment.getUnspscCode(), segment.getUnspscTitle()));
+		}
+		
+		log.info("this.getManagedBean().getSegmentCode()"+this.getManagedBean().getSegmentCode());
+		
+		
 	}
 
 

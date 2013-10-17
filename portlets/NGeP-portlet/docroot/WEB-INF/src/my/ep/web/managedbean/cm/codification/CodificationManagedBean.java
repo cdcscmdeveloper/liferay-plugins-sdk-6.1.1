@@ -32,18 +32,161 @@ public class CodificationManagedBean extends BaseManagedBean {
 	private List<SelectItem> brandCriteria;
 	private List<SelectItem> measurementCriteria;
 	private List<SelectItem> colorCriteria;
+	
+	private List<CmUnspsc> contractedItem;
 
 	
 
 	private CmItem selectedItem;
 	private CmItem[] selectedItems;
+	
+	private List<CmUnspsc> segmentList;
+	private List<CmUnspsc> familyList;
+	private List<CmUnspsc> classList;
+	private List<CmUnspsc> commodityList;
 
 
+	private List<SelectItem> segmentCriteria;
+	private List<SelectItem> familyCriteria;
+	private List<SelectItem> classCriteria;
+	private List<SelectItem> commodityCriteria;
+	
+	
+	private String segmentCode;
+	private String familyCode;
+	private String classCode;
+	private String commodityCode;
+	
+	
+	
 
-
+	
 	
 
 
+	public String getSegmentCode() {
+		return segmentCode;
+	}
+
+	public void setSegmentCode(String segmentCode) {
+		this.segmentCode = segmentCode;
+	}
+
+	public String getFamilyCode() {
+		return familyCode;
+	}
+
+	public void setFamilyCode(String familyCode) {
+		this.familyCode = familyCode;
+	}
+
+	public String getClassCode() {
+		return classCode;
+	}
+
+	public void setClassCode(String classCode) {
+		this.classCode = classCode;
+	}
+
+	public String getCommodityCode() {
+		return commodityCode;
+	}
+
+	public void setCommodityCode(String commodityCode) {
+		this.commodityCode = commodityCode;
+	}
+
+	
+
+	public List<SelectItem> getSegmentCriteria() {
+		if(segmentCriteria==null)
+			segmentCriteria = new ArrayList<SelectItem>();
+		return segmentCriteria;
+	}
+
+	public void setSegmentCriteria(List<SelectItem> segmentCriteria) {
+		this.segmentCriteria = segmentCriteria;
+	}
+
+	public List<SelectItem> getFamilyCriteria() {
+		if(familyCriteria==null)
+			familyCriteria = new ArrayList<SelectItem>();
+		return familyCriteria;
+	}
+
+	public void setFamilyCriteria(List<SelectItem> familyCriteria) {
+		this.familyCriteria = familyCriteria;
+	}
+
+	public List<SelectItem> getClassCriteria() {
+		if(classCriteria==null)
+			classCriteria = new ArrayList<SelectItem>();
+		return classCriteria;
+	}
+
+	public void setClassCriteria(List<SelectItem> classCriteria) {
+		this.classCriteria = classCriteria;
+	}
+
+	public List<SelectItem> getCommodityCriteria() {
+		if(commodityCriteria==null)
+			commodityCriteria = new ArrayList<SelectItem>();
+		return commodityCriteria;
+	}
+
+	public void setCommodityCriteria(List<SelectItem> commodityCriteria) {
+		this.commodityCriteria = commodityCriteria;
+	}
+
+	public List<CmUnspsc> getSegmentList() {
+		if(segmentList==null)
+			segmentList= new ArrayList<CmUnspsc>();
+		return segmentList;
+	}
+
+	public void setSegmentList(List<CmUnspsc> segmentList) {
+		this.segmentList = segmentList;
+	}
+
+	public List<CmUnspsc> getFamilyList() {
+		if(familyList==null)
+			familyList= new ArrayList<CmUnspsc>();
+		return familyList;
+	}
+
+	public void setFamilyList(List<CmUnspsc> familyList) {
+		this.familyList = familyList;
+	}
+
+	public List<CmUnspsc> getClassList() {
+		if(classList==null)
+			classList = new ArrayList<CmUnspsc>();
+		return classList;
+	}
+
+	public void setClassList(List<CmUnspsc> classList) {
+		this.classList = classList;
+	}
+
+	public List<CmUnspsc> getCommodityList() {
+		if(commodityList==null)
+			commodityList= new ArrayList<CmUnspsc>();
+		return commodityList;
+	}
+
+	public void setCommodityList(List<CmUnspsc> commodityList) {
+		this.commodityList = commodityList;
+	}
+
+	public List<CmUnspsc> getContractedItem() {
+		if(contractedItem==null)
+			contractedItem = new ArrayList<CmUnspsc>();
+		return contractedItem;
+	}
+
+	public void setContractedItem(List<CmUnspsc> contractedItem) {
+		this.contractedItem = contractedItem;
+	}
 
 	public CmItem[] getSelectedItems() {
 		return selectedItems;

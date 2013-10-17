@@ -25,6 +25,8 @@ public class WishListManagedBean extends BaseManagedBean {
 	private CmWishlist[] selectedWishLists;
 	
 	private List<CmWishlistDtl> wishListDet;
+	
+	private CmWishlist selectedWishList;
 
 
 	
@@ -57,6 +59,14 @@ public class WishListManagedBean extends BaseManagedBean {
 
 	public void setWishList(CmWishlist wishList) {
 		this.wishList = wishList;
+	}
+
+	public CmWishlist getSelectedWishList() {
+		return selectedWishList;
+	}
+
+	public void setSelectedWishList(CmWishlist selectedWishList) {
+		this.selectedWishList = selectedWishList;
 	}
 
 
