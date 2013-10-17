@@ -5,6 +5,12 @@
 	xmlns:p="http://primefaces.org/ui"
 	xmlns:c="http://java.sun.com/jsp/jstl/core">
 
+	<!-- <ui:define name="resourceSection">
+	</ui:define>
+	<ui:define name="sideMenu">
+		<ui:include src="/xhtml/fl/shared/sidemenu/flCrSideMenu.xhtml" />
+	</ui:define>
+	<ui:define name="content"> -->
 	<table style="width: 800px;">
 		<tr>
 			<td colspan="4" align="right"><p:commandButton value="SAVE" />
@@ -14,34 +20,46 @@
 
 	<p:panel header="DELIVERY ADDRESS" toggleable="true">
 
-		<table style="width: 775px;">
-
-			<tr>
-				<td colspan="6" align="right"><p:commandButton value="ADD" />
-				</td>
-
-			</tr>
-		</table>
-		<p:dataTable id="addressDataTable" var="address" value=""
+		<p:dataTable id="addressDataTable" var="address"
+			value="#{fulfilmentRequestBackingBean.managedBean.flRequest.flDeliveryAddresses}"
 			paginator="true" rows="10"
 			paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
-			rowsPerPageTemplate="5,10,15" paginatorPosition="bottom">
+			rowsPerPageTemplate="5,10,15" paginatorPosition="bottom"
+			selection="#{fulfilmentRequestBackingBean.managedBean.selectedDelAddr}" rowKey="#{address.deliveryAddressId}" 
+			selectionMode="single">
+			<p:ajax event="rowSelect" update=":form:cotabs" process="@this" 
+			listener="#{fulfilmentRequestBackingBean.selectedAddrRow()}"/>
+			
 			<p:column headerText="Delivery Address">
-				<h:outputText value=" " />
+				<h:outputText value="#{address.orgAddress.pmAddress.address1}, #{address.orgAddress.pmAddress.address2}, #{address.orgAddress.pmAddress.address3}, #{address.orgAddress.pmAddress.address4}" />
 			</p:column>
 
 			<p:column headerText="Exp. Delivery (Start)">
-				<h:outputText value=" " />
+				 <p:calendar value="#{address.startDate}" id="calStartDate" showOn="button" />  
 			</p:column>
 
 			<p:column headerText="Exp. Delivery (End)">
-				<h:outputText value="" />
+				<p:calendar value="#{address.endDate}" id="calEndDate" showOn="button" />  
 			</p:column>
 
 			<p:column headerText="Action">
-				<p:commandLink id="deleteLink" styleClass="ui-icon ui-icon-trash" />
+				<p:commandLink id="deleteLink" styleClass="ui-icon ui-icon-trash" update="addressDataTable" process="@this"
+					action="#{fulfilmentRequestBackingBean.removeAddRow}" >
+					<f:setPropertyActionListener value="#{address}"
+						target="#{fulfilmentRequestBackingBean.managedBean.selectedAddrRow}" />
+				</p:commandLink>
 			</p:column>
 		</p:dataTable>
+		<table style="width: 775px;">
+
+			<tr>
+				<td colspan="6" align="right"><p:commandButton value="ADD"
+						action="#{fulfilmentRequestBackingBean.flDeliveryAddrList}"
+						update="delAddr" process="@this,delAddr"
+						oncomplete="addDeliveryAddr.show();" /></td>
+
+			</tr>
+		</table>
 	</p:panel>
 	<p:panel header="ITEM DETAIL" toggleable="true">
 		<table style="width: 775px;">
@@ -50,16 +68,19 @@
 				</td>
 			</tr>
 		</table>
-		<p:dataTable id="itemDataTable" var="item" value="" paginator="true"
-			rows="10"
+		
+		<p:dataTable id="itemDataTable" var="item"
+			value="#{fulfilmentRequestBackingBean.managedBean.flRequest.flFulfilmentItems}"
+			paginator="true" rows="10"
 			paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
-			rowsPerPageTemplate="5,10,15" paginatorPosition="bottom">
+			rowsPerPageTemplate="5,10,15" paginatorPosition="bottom"
+			rendered="#{fulfilmentRequestBackingBean.managedBean.selectedRowFlg}">
 			<p:column headerText="Product Code">
 				<h:outputText value="" />
 			</p:column>
 
 			<p:column headerText="Item Name">
-				<h:outputText value="" />
+				<h:outputText value="#{item.contractedItem.itemName}" />
 			</p:column>
 
 			<p:column headerText="GOSODO">
@@ -67,13 +88,17 @@
 			</p:column>
 
 			<p:column headerText="Activity Code">
-				<h:outputText value="" />
+				<p:selectOneMenu value="#{item.pmActivity.activityCode}"
+					style="width: 260px;">
+					<f:selectItems itemLabel="012345" itemValue="1"
+						value="#{fulfilmentRequestBackingBean.activityCode}" />
+				</p:selectOneMenu>
 			</p:column>
 			<p:column headerText="Unit Price (MYR)">
 				<h:outputText value="" />
 			</p:column>
 			<p:column headerText="Ord. Qty.">
-				<h:outputText value="" />
+				<h:outputText value="#{item.flFulfilmentItemAddr.orderedQty}" />
 			</p:column>
 			<p:column headerText="Sub Total">
 				<h:outputText value="" />
@@ -85,38 +110,7 @@
 
 		<br />
 		<br />
-		<table>
-			<tr>
-				<td><p:outputLabel value="Product Code" /></td>
-				<td><p:inputText style="width: 140px;" value="200003"
-						disabled="true" /></td>
-				<td><p:outputLabel value="Unit Price" /></td>
-				<td><p:inputText style="width: 140px;" value="0.50"
-						disabled="true" /></td>
-			</tr>
-			<tr>
-				<td><p:outputLabel value="Item Name" /></td>
-				<td><p:inputText style="width: 140px;" value="Blue Pen"
-						disabled="true" /></td>
-				<td><p:outputLabel value="Ordered Qty" /></td>
-				<td><p:inputText style="width: 140px;" value="200" /></td>
-			</tr>
-			<tr>
-				<td><p:outputLabel value="GOSODO" /></td>
-				<td><p:selectOneMenu value="" style="width: 260px;">
-						<f:selectItem itemLabel="GOSODO001" itemValue="1" />
-					</p:selectOneMenu></td>
-				<td><p:outputLabel value="Total" /></td>
-				<td><p:inputText style="width: 140px;" value="100.00"
-						disabled="true" /></td>
-			</tr>
-			<tr>
-				<td><p:outputLabel value="Activity Code" /></td>
-				<td><p:selectOneMenu value="" style="width: 260px;">
-						<f:selectItem itemLabel="ACTIVITY1" itemValue="1" />
-					</p:selectOneMenu></td>
-			</tr>
-		</table>
+
 		<table style="width: 800px;">
 			<tr>
 				<td colspan="4" align="right"><p:commandButton type="button"
@@ -125,4 +119,39 @@
 			</tr>
 		</table>
 	</p:panel>
+
+	<p:dialog header="Add Delivery Address" widgetVar="addDeliveryAddr"
+		showEffect="fade" hideEffect="fade" modal="true" height="450"
+		width="600" resizable="false">
+		<p:dataTable id="delAddr" var="delAddr"
+			value="#{fulfilmentRequestBackingBean.managedBean.delAddrList}"
+			rowKey="#{delAddr.pmAddress.addressId}" paginator="true" rows="10"
+			selection="#{fulfilmentRequestBackingBean.managedBean.selectedPmDelAddrList}">
+			<p:ajax event="rowSelect" update=":form" process="@this" 
+			listener="#{fulfilmentRequestBackingBean.selectedAddrRow()}"/>
+			<p:columnGroup type="header">
+				<p:row>
+					<p:column rowspan="1" headerText=""></p:column>
+					<p:column rowspan="1" headerText="No"></p:column>
+					<p:column rowspan="1" headerText="Address"></p:column>
+				</p:row>
+			</p:columnGroup>
+			<p:column selectionMode="multiple" />
+			<p:column>
+				<h:outputText value="#{delAddr.pmAddress.addressId}" />
+			</p:column>
+			<p:column>
+				<h:outputText value="#{delAddr.pmAddress.address1}, #{delAddr.pmAddress.address2}, #{delAddr.pmAddress.address3}, #{delAddr.pmAddress.address4}" escape="false"/>
+			</p:column>
+		</p:dataTable>
+
+		<p:commandButton value="Add"
+			action="#{fulfilmentRequestBackingBean.addDeliveryAddr}"
+			oncomplete="addDeliveryAddr.hide();" process="@this,delAddr"
+			update="addressDataTable">
+		</p:commandButton>
+		
+
+	</p:dialog>
+	<!-- </ui:define> -->
 </ui:composition>
