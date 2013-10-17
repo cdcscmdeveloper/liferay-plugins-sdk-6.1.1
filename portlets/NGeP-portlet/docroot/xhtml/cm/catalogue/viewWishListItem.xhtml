@@ -36,26 +36,31 @@
 			<h:panelGrid columns="2" columnClasses="cmLeft,cmRight" width="100%">
 
 
-				<p:dataGrid var="type"
+				<p:dataGrid var="type" rowIndexVar="rowIndex"
 					value="#{catalogueBackingBean.managedBean.wishLists}" columns="1"
 					style="width: 100%;">
-					<p:commandLink value="#{type.wishlistDesc}" />
+					<p:commandLink value="#{type.wishlistDesc}"
+						action="#{wishListBackingBean.filterWishListType(rowIndex)}"
+						update=":form:datagrid" />
 				</p:dataGrid>
 
 
-				<p:dataGrid var="wishLists" value="#{wishListBackingBean.managedBean.wishListDet}" columns="1" rows="3" id="datagrid">
+				<p:dataGrid var="wishLists"
+					value="#{wishListBackingBean.managedBean.selectedWishList.cmWishlistDtls}"
+					rowIndexVar="rowIndex" columns="1" rows="3" id="datagrid">
 
 					<p:panel header="#{wishLists.cmWishlist.wishlistDesc}">
 						<table style="width: 100%;">
 							<tr>
 								<td><p:graphicImage
 										value="#{wishLists.cmSupplierItem.cmImages[0].imageName}" /></td>
-								<td ><p:commandLink
-										value="#{wishLists.cmSupplierItem.cmItem.itemName}"/></td>
+								<td><p:commandLink
+										value="#{wishLists.cmSupplierItem.cmItem.itemName}" /></td>
 								<td><p:menubar>
 										<p:submenu label="Action">
 											<p:menuitem value="Add To Cart" />
-											<p:menuitem value="Delete" />
+											<p:menuitem value="Delete"
+												action="#{wishListBackingBean.deleteWishListItem(rowIndex)}" update="datagrid"/>
 										</p:submenu>
 									</p:menubar></td>
 

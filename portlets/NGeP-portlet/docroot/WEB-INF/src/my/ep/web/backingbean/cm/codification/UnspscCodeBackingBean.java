@@ -216,7 +216,7 @@ public class UnspscCodeBackingBean extends BaseBackingBean<UnspscCodeManagedBean
 				String parentCode = getParentCode(familyCode);
 
 				unspsc.setUnspscCode(String.valueOf(familyCode));
-				unspsc.setUnspscParentCode(new Long(parentCode));
+				unspsc.setUnspscParentCode(parentCode);
 
 			}
 
@@ -267,7 +267,7 @@ public class UnspscCodeBackingBean extends BaseBackingBean<UnspscCodeManagedBean
 				String parentCode = getParentCode(classCode);
 
 				unspsc.setUnspscCode(String.valueOf(classCode));
-				unspsc.setUnspscParentCode(new Long(parentCode));
+				unspsc.setUnspscParentCode(parentCode);
 			}
 
 			if(row.getCell(2)!=null){
@@ -319,7 +319,7 @@ public class UnspscCodeBackingBean extends BaseBackingBean<UnspscCodeManagedBean
 				String parentCode = getParentCode(commodityCode);
 
 				unspsc.setUnspscCode(String.valueOf(commodityCode));
-				unspsc.setUnspscParentCode(new Long(parentCode));
+				unspsc.setUnspscParentCode(parentCode);
 			}
 
 			if(row.getCell(8)!=null && row.getCell(8).toString().trim().length()>0){
@@ -454,7 +454,7 @@ public class UnspscCodeBackingBean extends BaseBackingBean<UnspscCodeManagedBean
 		unspsc.setUnspscTitle(this.getManagedBean().getFamilyTitle());
 		unspsc.setUnspscDescription(this.getManagedBean().getFamilyDesc());
         unspsc.setUnspscLevel(1);
-        unspsc.setUnspscParentCode(new Long(this.getManagedBean().getSegmentCode()));
+        unspsc.setUnspscParentCode(this.getManagedBean().getSegmentCode());
         
         reqDTO.setCmUnspsc(unspsc);
         reqDTO.getFamilyList().add(reqDTO.getCmUnspsc());
@@ -467,7 +467,7 @@ public class UnspscCodeBackingBean extends BaseBackingBean<UnspscCodeManagedBean
 		unspsc.setUnspscTitle(this.getManagedBean().getClassTitle());
 		unspsc.setUnspscDescription(this.getManagedBean().getClassDesc());
         unspsc.setUnspscLevel(2);
-        unspsc.setUnspscParentCode(new Long(this.getManagedBean().getFamilyCode()));
+        unspsc.setUnspscParentCode(this.getManagedBean().getFamilyCode());
         
         reqDTO.setCmUnspsc(unspsc);
         reqDTO.getClassList().add(reqDTO.getCmUnspsc());
@@ -480,7 +480,7 @@ public class UnspscCodeBackingBean extends BaseBackingBean<UnspscCodeManagedBean
 		unspsc.setUnspscTitle(this.getManagedBean().getCommodityTitle());
 		unspsc.setUnspscDescription(this.getManagedBean().getCommodityDesc());
         unspsc.setUnspscLevel(3);
-        unspsc.setUnspscParentCode(new Long(this.getManagedBean().getClassCode()));
+        unspsc.setUnspscParentCode(this.getManagedBean().getClassCode());
         
         reqDTO.setCmUnspsc(unspsc);
         reqDTO.getCommodityList().add(reqDTO.getCmUnspsc());

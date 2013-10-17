@@ -38,12 +38,14 @@
 
 				</h:panelGrid>
 
-				<p:dataTable value="#{codificationBackingBean.managedBean.unspscList}"
-					var="contract">
+				<p:dataTable
+					value="#{codificationBackingBean.managedBean.contractedItem}"
+					var="contract" id="contractedId">
 					<p:column>
 						<f:facet name="header">
 							<p:outputLabel value="#{lbl['lbl.cm.item.name']}" />
 						</f:facet>
+						#{contract.unspscTitle}
 					</p:column>
 					<p:column>
 						<f:facet name="header">
@@ -69,7 +71,8 @@
 						<f:facet name="header">
 							<p:outputLabel value="#{lbl['lbl.cm.action']}" />
 						</f:facet>
-						<p:commandButton value="#{lbl['lbl.cm.assign']}" onclick="contractedItemPopUp.show()"></p:commandButton>
+						<p:commandButton value="#{lbl['lbl.cm.assign']}" action="#{codificationBackingBean.assignProductCode}"
+							onclick="contractedItemPopUp.show()" update=":form:contractedItemPopUpId"></p:commandButton>
 					</p:column>
 				</p:dataTable>
 

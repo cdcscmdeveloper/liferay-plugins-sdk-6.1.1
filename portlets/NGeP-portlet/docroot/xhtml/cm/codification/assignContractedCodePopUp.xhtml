@@ -6,49 +6,71 @@
 	xmlns:ui="http://java.sun.com/jsf/facelets"
 	xmlns="http://www.w3.org/1999/xhtml">
 
+	<h:panelGroup id="contractedItemPopUpId">
 
-	<table>
-		<tr>
-			<td><p:outputLabel value="#{lbl['lbl.cm.item.code']}"></p:outputLabel></td>
-			<td><p:inputText></p:inputText> </td>
-		</tr>
-		<tr>
-			<td><p:outputLabel value="#{lbl['lbl.cm.segment']}"></p:outputLabel></td>
-			<td><p:selectOneMenu></p:selectOneMenu> </td>
-		</tr>
-		<tr>
-			<td><p:outputLabel value="#{lbl['lbl.cm.family']}"></p:outputLabel></td>
-			<td><p:selectOneMenu></p:selectOneMenu> </td>
-		</tr>
-		<tr>
-			<td><p:outputLabel value="#{lbl['lbl.cm.class']}"></p:outputLabel></td>
-			<td><p:selectOneMenu></p:selectOneMenu> </td>
-		</tr>
-		<tr>
-			<td><p:outputLabel value="#{lbl['lbl.cm.commodity']}"></p:outputLabel></td>
-			<td><p:selectOneMenu></p:selectOneMenu> </td>
-		</tr>
-		<tr>
-			<td><p:outputLabel value="#{lbl['lbl.cm.type']}"></p:outputLabel></td>
-			<td><p:selectOneMenu></p:selectOneMenu> </td>
-		</tr>
-		<tr>
-			<td><p:outputLabel value="#{lbl['lbl.cm.brand']}"></p:outputLabel></td>
-			<td><p:selectOneMenu></p:selectOneMenu> </td>
-		</tr>
-		<tr>
-			<td><p:outputLabel value="#{lbl['lbl.cm.measurement']}"></p:outputLabel></td>
-			<td><p:selectOneMenu></p:selectOneMenu> </td>
-		</tr>
-		<tr>
-			<td><p:outputLabel value="#{lbl['lbl.cm.color']}"></p:outputLabel></td>
-			<td><p:selectOneMenu></p:selectOneMenu> </td>
-		</tr>
+		<table>
+			<tr>
+				<td><p:outputLabel value="#{lbl['lbl.cm.segment']}"></p:outputLabel></td>
+				<td><p:selectOneMenu
+						value="#{codificationBackingBean.managedBean.segmentCode}">
+						<f:selectItems
+							value="#{codificationBackingBean.managedBean.segmentCriteria}" />
+						<p:ajax event="change"
+							listener="#{codificationBackingBean.filterFamily()}"
+							update="familyDD"></p:ajax>
+					</p:selectOneMenu></td>
+			</tr>
+			<tr>
+				<td><p:outputLabel value="#{lbl['lbl.cm.family']}"></p:outputLabel></td>
+				<td><p:selectOneMenu id="familyDD"
+						value="#{codificationBackingBean.managedBean.familyCode}">
+						<f:selectItems
+							value="#{codificationBackingBean.managedBean.familyCriteria}" />
+						<p:ajax event="change"
+							listener="#{codificationBackingBean.filterClass()}"
+							update="classDD"></p:ajax>
+					</p:selectOneMenu></td>
+			</tr>
+			<tr>
+				<td><p:outputLabel value="#{lbl['lbl.cm.class']}"></p:outputLabel></td>
+				<td><p:selectOneMenu id="classDD"
+						value="#{codificationBackingBean.managedBean.classCode}">
+						<f:selectItems
+							value="#{codificationBackingBean.managedBean.classCriteria}" />
+						<p:ajax event="change"
+							listener="#{codificationBackingBean.filterCommodity()}"
+							update="commodityDD"></p:ajax>
+					</p:selectOneMenu></td>
+			</tr>
+			<tr>
+				<td><p:outputLabel value="#{lbl['lbl.cm.commodity']}"></p:outputLabel></td>
+				<td><p:selectOneMenu id="commodityDD"
+						value="#{codificationBackingBean.managedBean.commodityCode}">
+						<f:selectItems
+							value="#{codificationBackingBean.managedBean.commodityCriteria}" />
+					</p:selectOneMenu></td>
+			</tr>
+			<tr>
+				<td><p:outputLabel value="#{lbl['lbl.cm.type']}"></p:outputLabel></td>
+				<td><p:selectOneMenu></p:selectOneMenu></td>
+			</tr>
+			<tr>
+				<td><p:outputLabel value="#{lbl['lbl.cm.brand']}"></p:outputLabel></td>
+				<td><p:selectOneMenu></p:selectOneMenu></td>
+			</tr>
+			<tr>
+				<td><p:outputLabel value="#{lbl['lbl.cm.measurement']}"></p:outputLabel></td>
+				<td><p:selectOneMenu></p:selectOneMenu></td>
+			</tr>
+			<tr>
+				<td><p:outputLabel value="#{lbl['lbl.cm.color']}"></p:outputLabel></td>
+				<td><p:selectOneMenu></p:selectOneMenu></td>
+			</tr>
 
-	</table>
+		</table>
 
 
-
+	</h:panelGroup>
 
 	<p:commandButton value="#{lbl['lbl.cm.ok']}"
 		onclick="contractedItemPopUp.hide()"></p:commandButton>
