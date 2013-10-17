@@ -5,6 +5,14 @@
 	<language-properties>
 		content/Language_en.properties
 	</language-properties>
+	<language-properties>
+		content/Language_bm.properties
+	</language-properties>
+	<language-properties>
+		content/Language_ms.properties
+	</language-properties>
 	<custom-jsp-dir>/custom_jsps</custom-jsp-dir>
+
+
 
 </hook>

@@ -127,13 +127,13 @@ for (String portletId : PropsValues.DOCKBAR_ADD_PORTLETS) {
 		<c:if test="<%= !group.isControlPanel() && (themeDisplay.isShowLayoutTemplatesIcon() || themeDisplay.isShowManageSiteMembershipsIcon() || themeDisplay.isShowPageSettingsIcon() || themeDisplay.isShowSiteContentIcon() || themeDisplay.isShowSiteMapSettingsIcon() || themeDisplay.isShowSiteSettingsIcon()) %>">
 			<li class="manage-content has-submenu" id="<portlet:namespace />manageContent">
 				
-				<%if (request.isUserInRole("Administrator")) { %>
+<%-- 				<%if (request.isUserInRole("Administrator")) { %> --%>
 				<a class="menu-button" href="javascript:;">
 					<span>
 						<liferay-ui:message key="manage" />
 					</span>
 				</a>
-				<%} %>
+<%-- 				<%} %> --%>
 				
 				<div class="aui-menu manage-content-menu aui-overlaycontext-hidden" id="<portlet:namespace />manageContentContainer">
 					<div class="aui-menu-content">

@@ -1,0 +1,45 @@
+
+
+.blue .portlet-title {
+    background: none;
+    background-color: #0B88B2;
+    padding:2px 0 2px 5px; 
+    border-top-left-radius: 5px; 
+    border-top-right-radius: 5px;
+}
+
+.blue nav#navigation ul li.selected {
+	background-color: #0BAADF;
+}
+
+.blue nav#navigation ul li:hover {
+	background-color: #0BAADF;
+}
+
+.blue nav {
+	background: url("../../images/color_schemes/blue/navi-bg-blue.jpg") repeat-x; 
+	height:37px; 
+	width:100%; 
+	position:relative;
+}
+
+.blue footer.footer-home {
+	background: url("../../images/color_schemes/blue/footer-home-blue.jpg") repeat-x;
+	bottom: 0;
+    height: 214px;
+    position: relative;
+    width: 100%;
+}
+
+.blue .footer-links ul li a {
+	color: #0BAADF;
+}
+
+.blue .login-top-navi {
+	background: url("../../images/color_schemes/blue/login-top-bar-blue.png") repeat-x;
+	background-color: #FFFFFF;
+}
+
+.blue .middle-navi-right-wrapper ul li.btn-language div.dropdown-language-wrapper a:hover{color:#0BAADF; padding:0; margin:0;}
+
+.blue .middle-navi-right-wrapper ul li.btn-language div.dropdown-language-wrapper a.active{color:#0BAADF; padding:0; margin:0;}

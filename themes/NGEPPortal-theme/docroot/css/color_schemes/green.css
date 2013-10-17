@@ -1,0 +1,43 @@
+.green .portlet-title {
+    background:url("../../images/color_schemes/green/234-bg-title.png") no-repeat top right; 
+    background-color:#1a5b33; 
+    padding:2px 0 2px 5px; 
+    border-top-left-radius: 5px; 
+    border-top-right-radius: 5px;
+}
+
+.green nav#navigation ul li.selected {
+	background-color: #5ba218;
+}
+
+.green nav#navigation ul li:hover {
+	background-color: #5ba218;
+}
+
+.green nav {
+	background:url("../../images/color_schemes/green/navi-bg.jpg") repeat-x; 
+	height:37px; 
+	width:100%; 
+	position:relative;
+}
+
+.green footer.footer-home {
+	background: url("../../images/color_schemes/green/footer-home.jpg") repeat-x;
+	bottom: 0;
+    height: 214px;
+    position: relative;
+    width: 100%;
+}
+
+.green .footer-links ul li a {
+	color: #5ba218;
+}
+
+.green .login-top-navi {
+	background: url("../../images/color_schemes/green/login-top-bar.png") repeat-x;
+	background-color: #FFFFFF;
+}
+
+.green .middle-navi-right-wrapper ul li.btn-language div.dropdown-language-wrapper a:hover{color:#8cc63e; padding:0; margin:0;}
+
+.green .middle-navi-right-wrapper ul li.btn-language div.dropdown-language-wrapper a.active{color:#8cc63e; padding:0; margin:0;}

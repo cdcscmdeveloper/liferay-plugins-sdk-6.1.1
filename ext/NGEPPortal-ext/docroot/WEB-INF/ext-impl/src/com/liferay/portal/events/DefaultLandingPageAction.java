@@ -59,18 +59,14 @@ public class DefaultLandingPageAction extends Action {
 			companyId, PropsKeys.DEFAULT_LANDING_PAGE_PATH);
 
 		// Eg. Path=/user/test/dashboard
-		// Custom Landing page URL set to user's private page if detected USERID in URL
+		// Custom Landing page URL set to user's private page if detected SCREENNAME in URL
 		// Edited 20131003
-		if(path.contains("USERID")){
+		if(path.contains("SCREENNAME")){
 			String uid=request.getRemoteUser();
 			User usr = UserLocalServiceUtil.getUserById(Long.parseLong(uid));
 			String screenName=usr.getScreenName();
-			path = path.replace("USERID", screenName);
+			path = path.replace("SCREENNAME", screenName);	
 		}
-		//else
-		//{
-		//	path = "/user/error/home";
-		//}
 		
 		if (_log.isInfoEnabled()) {
 			_log.info(
