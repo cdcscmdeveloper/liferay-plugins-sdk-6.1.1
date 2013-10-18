@@ -32,42 +32,42 @@ public class ProcureCodeManageBean extends BaseManagedBean{
 		PpPlan dro = new PpPlan();
 		
 		pro.setPlanNo("1");
-		pro.setPlanDescription("Abcdef");
+		pro.setPlanDesc("Abcdef");
 		PpPlanMaster ppPlanMaster = new PpPlanMaster();
 		ppPlanMaster.setProcurementMode("Emergency");
 		pro.setPpPlanMaster(ppPlanMaster);
 		pro.setActualAmount(new BigDecimal("001"));
-		pro.setStatusCode("Activate");
+		pro.setStatusId(1L);
 		pro.setCreatedDate(DateUtils.convertStringToTimestamp(datePatern,"09/02/2013 "));
 		pro.setNotificationDays(5);
 		
 		bro.setPlanNo("2");
-		bro.setPlanDescription("This is plan B");
+		bro.setPlanDesc("This is plan B");
 		PpPlanMaster ppPlanMaster1 = new PpPlanMaster();
 		ppPlanMaster1.setProcurementMode("Emergency");
 		bro.setPpPlanMaster(ppPlanMaster1);
 		bro.setActualAmount(new BigDecimal("001"));
-		bro.setStatusCode("Activate");
+		bro.setStatusId(1L);
 		bro.setCreatedDate(DateUtils.convertStringToTimestamp(datePatern,"09/02/2013 "));
 		bro.setNotificationDays(5);
 
 		cro.setPlanNo("3");
-		cro.setPlanDescription("This is Plan C ");
+		cro.setPlanDesc("This is Plan C ");
 		PpPlanMaster ppPlanMaster2 = new PpPlanMaster();
 		ppPlanMaster2.setProcurementMode("Emergency");
 		cro.setPpPlanMaster(ppPlanMaster2);
 		cro.setActualAmount(new BigDecimal("003"));
-		cro.setStatusCode("Activate");
+		cro.setStatusId(1L);
 		cro.setCreatedDate(DateUtils.convertStringToTimestamp(datePatern,"09/02/2013 "));
 		cro.setNotificationDays(10);
 		
 		dro.setPlanNo("4");
-		dro.setPlanDescription("Abcdef");
+		dro.setPlanDesc("Abcdef");
 		PpPlanMaster ppPlanMaster3 = new PpPlanMaster();
 		ppPlanMaster3.setProcurementMode("Emergency");
 		dro.setPpPlanMaster(ppPlanMaster3);
 		dro.setActualAmount(new BigDecimal("001"));
-		dro.setStatusCode("Activate");
+		dro.setStatusId(1L);
 		dro.setCreatedDate(DateUtils.convertStringToTimestamp(datePatern,"09/02/2013 "));
 		dro.setNotificationDays(5);
 		
