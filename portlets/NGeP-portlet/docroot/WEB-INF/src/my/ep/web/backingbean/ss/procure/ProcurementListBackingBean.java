@@ -25,7 +25,7 @@ import my.ep.web.managedbean.ss.procure.ProcureCodeManageBean;
 public class ProcurementListBackingBean extends BaseBackingBean<ProcureCodeManageBean>{
 	public void createBPMTask(PpPlan ppPlan){
 		//TODO call the Procurement plan SO to update procurement plan status before creating BPM task
-		ppPlan.setPlanDescription("updated");
+		ppPlan.setPlanDesc("updated");
 		IBpmSO bpmSO = (IBpmSO) EpBpmBusinessDelegate.getInstance().getServiceObject(IBpmSO.class);
 		String ctx = bpmSO.authenticate("roslan","welcome1");
 		BpmRequestDTO reqDTO = new BpmRequestDTO();
