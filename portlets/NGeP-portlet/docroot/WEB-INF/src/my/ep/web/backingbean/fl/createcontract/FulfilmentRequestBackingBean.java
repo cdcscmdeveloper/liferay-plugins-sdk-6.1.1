@@ -35,6 +35,7 @@ import my.ep.persistence.entity.fl.request.FlDeliveryAddress;
 import my.ep.persistence.entity.fl.request.FlFulfilmentRequest;
 import my.ep.persistence.entity.pm.authorization.PmOrgAddress;
 import my.ep.persistence.entity.pm.authorization.PmOrgProfile;
+import my.ep.persistence.entity.pm.common.PmCode;
 import my.ep.persistence.entity.pm.common.PmStatus;
 import my.ep.persistence.entity.sm.SmSupplier;
 import my.ep.persistence.logging.LogKey;
@@ -82,6 +83,8 @@ public class FulfilmentRequestBackingBean extends BaseBackingBean<FulfilmentRequ
 			getManagedBean().getFlRequest().setReceivedOrgProfile(new PmOrgProfile());
 			getManagedBean().getFlRequest().setCreatedOrgProfile(new PmOrgProfile());
 			getManagedBean().getFlRequest().setCtContract(new CtContract());
+			getManagedBean().getFlRequest().getCtContract().setContractTypeCode(new PmCode());
+			getManagedBean().getFlRequest().getCtContract().setFulfillmentTypeCode(new PmCode());
 			getManagedBean().getFlRequest().getCtContract().setSmSupplier(new SmSupplier());
 			getManagedBean().getFlRequest().setFlDeliveryAddresses(new ArrayList<FlDeliveryAddress>());
 		}
