@@ -8,10 +8,10 @@ import java.util.Map;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
 
+import my.ep.persistence.entity.pp.PpRemark;
 import my.ep.persistence.entity.pp.budgetallocation.PpBudget;
 import my.ep.persistence.entity.pp.budgetallocation.PpBudgetAlloc;
 import my.ep.persistence.entity.pp.budgetallocation.PpBudgetAllocDtl;
-import my.ep.persistence.entity.pp.budgetallocation.PpBudgetAllocDtlRemark;
 import my.ep.web.managedbean.BaseManagedBean;
 
 @ManagedBean(name = "budgetAllocationManagedBean")
@@ -27,7 +27,7 @@ public class BudgetAllocationManagedBean extends BaseManagedBean{
 	
 	private PpBudgetAllocDtl selectedBudgetAllocItem;
 	
-	private PpBudgetAllocDtlRemark selectedBudgetAllocItemRmk;
+	private PpRemark selectedBudgetAllocItemRmk;
 
 	private List <PpBudgetAlloc> budgetAllocationList;
 	
@@ -37,8 +37,7 @@ public class BudgetAllocationManagedBean extends BaseManagedBean{
 	
 	private String bpmTaskId; 
 	
-	
-	private Long tempBudgetId; //TODO : temp
+	private Long tempBudgetId; //TODO : temp for task retrieving
   
 
 	/**
@@ -69,55 +68,88 @@ public class BudgetAllocationManagedBean extends BaseManagedBean{
 		this.bpmTaskId = bpmTaskId;
 	}
 
+	/**
+	 * @return the budgetList
+	 */
 	public List<PpBudget> getBudgetList() {
-//		if(budgetList==null){
-//			budgetList = new ArrayList<PpBudget>();
-//		}
 		return budgetList;
 	}
 
+	/**
+	 * @param budgetList the budgetList to set
+	 */
 	public void setBudgetList(List<PpBudget> budgetList) {
 		this.budgetList = budgetList;
 	}
 	
+	/**
+	 * @return the selectedBudgetAllocation
+	 */
 	public PpBudgetAlloc getSelectedBudgetAllocation() {
 		return selectedBudgetAllocation;
 	}
 
+	/**
+	 * @param selectedBudgetAllocation the selectedBudgetAllocation to set
+	 */
 	public void setSelectedBudgetAllocation(PpBudgetAlloc selectedBudgetAllocation) {
 		this.selectedBudgetAllocation = selectedBudgetAllocation;
 	}
 
+	/**
+	 * @return the selectedBudgetAllocItem
+	 */
 	public PpBudgetAllocDtl getSelectedBudgetAllocItem() {
 		return selectedBudgetAllocItem;
 	}
 
+	/**
+	 * @param selectedBudgetAllocItem the selectedBudgetAllocItem to set
+	 */
 	public void setSelectedBudgetAllocItem(PpBudgetAllocDtl selectedBudgetAllocItem) {
 		this.selectedBudgetAllocItem = selectedBudgetAllocItem;
 	}
 
+	/**
+	 * @return the budgetAllocationList
+	 */
 	public List<PpBudgetAlloc> getBudgetAllocationList() {
 		return budgetAllocationList;
 	}
 
+	/**
+	 * @param budgetAllocationList the budgetAllocationList to set
+	 */
 	public void setBudgetAllocationList(List<PpBudgetAlloc> budgetAllocationList) {
 		this.budgetAllocationList = budgetAllocationList;
 	}
-
+	
+	/**
+	 * @return the viewMode
+	 */
 	public String getViewMode() {
 		return viewMode;
 	}
 
+	/**
+	 * @param viewMode the viewMode to set
+	 */
 	public void setViewMode(String viewMode) {
 		this.viewMode = viewMode;
 	}
 	
-	public PpBudgetAllocDtlRemark getSelectedBudgetAllocItemRmk() {
+	/**
+	 * @return the selectedBudgetAllocItemRmk
+	 */
+	public PpRemark getSelectedBudgetAllocItemRmk() {
 		return selectedBudgetAllocItemRmk;
 	}
 
+	/**
+	 * @param selectedBudgetAllocItemRmk the selectedBudgetAllocItemRmk to set
+	 */
 	public void setSelectedBudgetAllocItemRmk(
-			PpBudgetAllocDtlRemark selectedBudgetAllocItemRmk) {
+			PpRemark selectedBudgetAllocItemRmk) {
 		this.selectedBudgetAllocItemRmk = selectedBudgetAllocItemRmk;
 	}
 
@@ -135,9 +167,6 @@ public class BudgetAllocationManagedBean extends BaseManagedBean{
 		this.actions = actions;
 	}
 
-	
-	
-	
 	/**
 	 * @return the selectedGoMapper
 	 */
@@ -155,83 +184,4 @@ public class BudgetAllocationManagedBean extends BaseManagedBean{
 	
 	
 	
-	
-	
-//	
-//	private PpBudgetAlloc budgetAllocation = null;
-//	
-//	public PpBudgetAlloc getBudgetAllocation() {
-//		return budgetAllocation;
-//	}
-//
-//	public void setBudgetAllocation(PpBudgetAlloc budgetAllocation) {
-//		this.budgetAllocation = budgetAllocation;
-//	}
-//
-//
-//	
-//	
-//	
-//	private String pageInd;
-//
-//	//temp
-//	private List budgetAllocationDetList = null;
-//	//temp
-//	private List remarkList = null;
-//	
-//	private boolean popup = false;
-//
-//	//temp
-//	private boolean brandNew;
-//	
-//	
-//	
-//	
-//	public boolean isBrandNew() {
-//		return brandNew;
-//	}
-//
-//	public void setBrandNew(boolean brandNew) {
-//		this.brandNew = brandNew;
-//	}
-//
-//	public boolean isPopup() {
-//		return popup;
-//	}
-//
-//	public void setPopup(boolean popup) {
-//		this.popup = popup;
-//	}
-//
-//	public List getRemarkList() {
-//		return remarkList;
-//	}
-//
-//	public void setRemarkList(List remarkList) {
-//		this.remarkList = remarkList;
-//	}
-//
-//
-//	public List getBudgetAllocationDetList() {
-//		return budgetAllocationDetList;
-//	}
-//
-//	public void setBudgetAllocationDetList(List budgetAllocationDetList) {
-//		this.budgetAllocationDetList = budgetAllocationDetList;
-//	}
-//
-//
-//	public String getPageInd() {
-//		if(this.pageInd == null){
-//			pageInd = "V";
-//		}
-//		return pageInd;
-//	}
-//
-//	public void setPageInd(String pageInd) {
-//		this.pageInd = pageInd;
-//	}
-//
-//
-//
 }

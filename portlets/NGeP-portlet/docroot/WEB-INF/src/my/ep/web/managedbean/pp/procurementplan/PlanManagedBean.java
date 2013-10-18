@@ -5,8 +5,9 @@ import java.util.List;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
 
+import my.ep.persistence.entity.pp.PpRemark;
 import my.ep.persistence.entity.pp.procurementplan.PpPlan;
-import my.ep.persistence.entity.pp.procurementplan.PpPlanActor;
+import my.ep.persistence.entity.pp.procurementplan.PpPlanItem;
 import my.ep.persistence.entity.pp.procurementplan.PpPlanMaster;
 import my.ep.web.managedbean.BaseManagedBean;
 
@@ -18,21 +19,44 @@ public class PlanManagedBean extends BaseManagedBean{
 
 	private boolean searchPlan;
 	
+	private boolean withoutVot;
+	
 	private List <PpPlanMaster> planList;
+	
+	
+	private PpPlanMaster mtoPlanMaster;
+	
+	private PpPlan mtoPlan;
+	
+	private PpPlanMaster planMaster;
+
+	private PpPlan plan;
 	
 	private PpPlanMaster selectedPlanMaster;
 	
 	private PpPlan selectedPlan;
 	
+	private PpPlanItem selectedItem;
+	
+	private PpRemark selectedItemRemark;
+	
+//	private List<PpQtActivity> selectedPpQtActivityList;
+
 	private String current;
 
 	private String viewMode;
 	
-//	private PpPlanActor selectedPlanApprover;
-	
 	private boolean enableDetail;
 	
 	private boolean enableMto;
+
+//	public List<PpQtActivity> getSelectedPpQtActivityList() {
+//		return selectedPpQtActivityList;
+//	}
+//	public void setSelectedPpQtActivityList(
+//			List<PpQtActivity> selectedPpQtActivityList) {
+//		this.selectedPpQtActivityList = selectedPpQtActivityList;
+//	}
 
 	/**
 	 * @return the enableMto
@@ -58,18 +82,34 @@ public class PlanManagedBean extends BaseManagedBean{
 	public void setEnableDetail(boolean enableDetail) {
 		this.enableDetail = enableDetail;
 	}
-//	/**
-//	 * @return the selectedPlanApprover
-//	 */
-//	public PpPlanActor getSelectedPlanApprover() {
-//		return selectedPlanApprover;
-//	}
-//	/**
-//	 * @param selectedPlanApprover the selectedPlanApprover to set
-//	 */
-//	public void setSelectedPlanApprover(PpPlanActor selectedPlanApprover) {
-//		this.selectedPlanApprover = selectedPlanApprover;
-//	}
+	
+	/**
+	 * @return the selectedItem
+	 */
+	public PpPlanItem getSelectedItem() {
+		return selectedItem;
+	}
+	/**
+	 * @param selectedItem the selectedItem to set
+	 */
+	public void setSelectedItem(PpPlanItem selectedItem) {
+		this.selectedItem = selectedItem;
+	}
+	
+	/**
+	 * @return the selectedItemRemark
+	 */
+	public PpRemark getSelectedItemRemark() {
+		return selectedItemRemark;
+	}
+	/**
+	 * @param selectedItemRemark the selectedItemRemark to set
+	 */
+	public void setSelectedItemRemark(PpRemark selectedItemRemark) {
+		this.selectedItemRemark = selectedItemRemark;
+	}
+
+
 	/**
 	 * @return the selectedPlanMaster
 	 */
@@ -136,15 +176,75 @@ public class PlanManagedBean extends BaseManagedBean{
 	}
 
 	
+	/**
+	 * @return the withoutVot
+	 */
+	public boolean isWithoutVot() {
+		return withoutVot;
+	}
+	/**
+	 * @param withoutVot the withoutVot to set
+	 */
+	public void setWithoutVot(boolean withoutVot) {
+		this.withoutVot = withoutVot;
+	}
+	/**
+	 * @return the mtoPlanMaster
+	 */
+	public PpPlanMaster getMtoPlanMaster() {
+		return mtoPlanMaster;
+	}
+	/**
+	 * @param mtoPlanMaster the mtoPlanMaster to set
+	 */
+	public void setMtoPlanMaster(PpPlanMaster mtoPlanMaster) {
+		this.mtoPlanMaster = mtoPlanMaster;
+	}
+	/**
+	 * @return the mtoPlan
+	 */
+	public PpPlan getMtoPlan() {
+		return mtoPlan;
+	}
+	/**
+	 * @param mtoPlan the mtoPlan to set
+	 */
+	public void setMtoPlan(PpPlan mtoPlan) {
+		this.mtoPlan = mtoPlan;
+	}
+	/**
+	 * @return the planMaster
+	 */
+	public PpPlanMaster getPlanMaster() {
+		return planMaster;
+	}
+	/**
+	 * @param planMaster the planMaster to set
+	 */
+	public void setPlanMaster(PpPlanMaster planMaster) {
+		this.planMaster = planMaster;
+	}
+	/**
+	 * @return the plan
+	 */
+	public PpPlan getPlan() {
+		return plan;
+	}
+	/**
+	 * @param plan the plan to set
+	 */
+	public void setPlan(PpPlan plan) {
+		this.plan = plan;
+	}
+
+
+
 	
 	
-	
-	private String pageTitle;
 	
 	
 	
 	private boolean brandNew;
-	private String pageInd;
 	private String procurementMode;
 	
 	private boolean popup = false;
@@ -294,19 +394,6 @@ public class PlanManagedBean extends BaseManagedBean{
 	}
 
 	
-	public String getPageInd() {
-		return pageInd;
-	}
-	public void setPageInd(String pageInd) {
-		this.pageInd = pageInd;
-	}
-
-	public String getPageTitle() {
-		return pageTitle;
-	}
-	public void setPageTitle(String pageTitle) {
-		this.pageTitle = pageTitle;
-	}
 
 	
 
