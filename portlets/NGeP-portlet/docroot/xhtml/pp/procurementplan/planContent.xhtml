@@ -10,10 +10,6 @@ xmlns:p="http://primefaces.org/ui"
 xmlns:c="http://java.sun.com/jsp/jstl/core"
 >
 	<p:outputPanel id="opPlanDetailsContent">
-		<br/>
-		<br/>
-		<!-- Top Button -->
-		<ui:include src="headerSection.xhtml"/>
 		<div class="ppRightBtn">
 			<c:if id="opApprovalButtons" test="#{planBackingBean.managedBean.viewMode == PPConst.modeApproval}">
 				<p:commandButton id="cbRevise" value="#{lbl['lbl.pp.revise']}" action="#{planBackingBean.redirectToViewPlan}"   />&nbsp;
@@ -22,10 +18,8 @@ xmlns:c="http://java.sun.com/jsp/jstl/core"
 				<br/>
 			</c:if>
 		</div>
-		
-		<br/>
+		#{planBackingBean.managedBean.current}
 		<p:tabView id="tvPlanContent" styleClass="ppPlanContent" dynamic="true" cache="true" orientation="top">
-			<p:ajax event="tabChange" listener="#{planBackingBean.updateOTher}"/>   
 			<p:tab id="tPlanHeader" title="#{lbl['lbl.pp.header']}">  
 				<p:panel id="pTabPlanHeader">
 				<table width="100%" class="ppThreePartsTable">
@@ -63,7 +57,7 @@ xmlns:c="http://java.sun.com/jsp/jstl/core"
 					<tr>
 						<th>#{lbl['lbl.pp.jabatan.code.name']}</th>
 						<td class="ppSmallTd">:</td>
-						<td><p:inputText disabled="true" value="#{planBackingBean.managedBean.selectedPlanMaster.divisionId}" /></td>
+						<td><p:inputText disabled="true" value="#{planBackingBean.managedBean.selectedPlanMaster.departmentId}" /></td>
 						<th>#{lbl['lbl.pp.project.name']}</th>
 						<td class="ppSmallTd">:</td>
 						<td>
@@ -85,7 +79,8 @@ xmlns:c="http://java.sun.com/jsp/jstl/core"
 						<td class="ppSmallTd">:</td>
 						<td>
 							<p:inputText value="#{planBackingBean.managedBean.selectedPlan.planDescription}" 
-								readonly="#{!planBackingBean.managedBean.selectedPlan.editable}"/>
+								disabled="#{!planBackingBean.managedBean.selectedPlanMaster.brandNew || 
+									!planBackingBean.managedBean.selectedPlan.editable}"/>
 						</td>
 						<td>&nbsp;</td>
 					</tr>
@@ -111,10 +106,8 @@ xmlns:c="http://java.sun.com/jsp/jstl/core"
 									disabled="#{planBackingBean.managedBean.selectedPlanMaster.procurementMode==PPConst.procurementDirectPurchase || 
 									!planBackingBean.managedBean.selectedPlanMaster.brandNew}">
 									<f:selectItem itemLabel="#{lbl['lbl.select']}" />
-									<f:selectItem itemLabel="One-Off" itemValue="#{PPConst.fulfillmentOneOff}" />
-									<f:selectItem itemLabel="Periodic - As and When" itemValue="#{PPConst.fulfillmentAsAndWhen}" />
-									<f:selectItem itemLabel="Periodic - Schedule" itemValue="#{PPConst.fulfillmentSchedule}" />
-									<p:ajax event="change" update="pTabPlanDetails" />
+									<f:selectItems value="#{planBackingBean.fulfillmentTypeOptions()}"/>
+									<p:ajax event="change" listener="#{planBackingBean.enableDetailTab}" update=":form:tvPlan, pTabPlanDetails" />
 								</p:selectOneMenu>
 								<p:tooltip for="somFulfillment" value="Fade effect is used by default" showEffect="fade" hideEffect="fade" />
 							</td>
@@ -129,20 +122,16 @@ xmlns:c="http://java.sun.com/jsp/jstl/core"
 						</tr>
 						
 						<tr>
-							<th>* #{lbl['lbl.pp.periodic.type']}</th>
+							<th>* #{lbl['lbl.pp.favourite.options']}</th>
 							<td class="ppSmallTd">:</td>
 							<td>
-							<!-- 
-								<p:selectOneMenu id="somPeriodic" disabled="#{planBackingBean.managedBean.selectedPlanMaster.procurementMode==PPConst.procurementDirectPurchase
-									|| planBackingBean.managedBean.selectedPlanMaster.fulfillmentType==PPConst.fulfillmentOneOff || !planBackingBean.managedBean.brandNew}" 
-									value="#{planBackingBean.managedBean.periodicType}">
-									<f:selectItem itemLabel="#{lbl['lbl.select']}" />
-									<f:selectItem itemLabel="Schedule Fulfillment" itemValue="SF" />
-									<f:selectItem itemLabel="As &amp; When" itemValue="AW" />
-									<p:ajax event="change" update="pTabPlanDetails" />
-								</p:selectOneMenu>
-								<p:tooltip for="somPeriodic" value="Fade effect is used by default" showEffect="fade" hideEffect="fade" />
-								 -->  
+								<p:selectOneRadio id="sorFavOpt" value="#{planBackingBean.managedBean.selectedPlanMaster.favouriteOption}" 
+									disabled="#{planBackingBean.managedBean.selectedPlanMaster.procurementMode==PPConst.procurementExistingContract 
+									|| !planBackingBean.managedBean.selectedPlanMaster.brandNew}">  
+						            <f:selectItems value="#{planBackingBean.favouriteOptions()}"/>
+						            <p:ajax event="change" listener="#{planBackingBean.enableDetailTab}" update=":form:tvPlan, pTabPlanDetails" />
+						        </p:selectOneRadio>  
+						        <p:tooltip for="sorFavOpt" value="Fade effect is used by default" showEffect="fade" hideEffect="fade" />
 							</td>
 							<th>* #{lbl['lbl.pp.received.ptj']}</th>
 							<td class="ppSmallTd">:</td>
@@ -150,31 +139,6 @@ xmlns:c="http://java.sun.com/jsp/jstl/core"
 								<p:selectOneMenu value="#{planBackingBean.managedBean.selectedPlanMaster.receiveDivisionId}"
 									disabled="#{!planBackingBean.managedBean.selectedPlanMaster.brandNew}">
 									<f:selectItem itemLabel="#{lbl['lbl.select']}" />
-								</p:selectOneMenu>
-							</td>
-							<td>&nbsp;</td>
-						</tr>
-						<tr>
-							<th>* #{lbl['lbl.pp.favourite.options']}</th>
-							<td class="ppSmallTd">:</td>
-							<td>
-								<p:selectOneRadio id="sorFavOpt" value="#{planBackingBean.managedBean.selectedPlanMaster.favouriteOption}" 
-									disabled="#{planBackingBean.managedBean.selectedPlanMaster.procurementMode==PPConst.procurementExistingContract 
-									|| !planBackingBean.managedBean.selectedPlanMaster.brandNew}">  
-						            <f:selectItem itemLabel="#{lbl['lbl.pp.favourite.options.none']}" itemValue="N" /> &nbsp;
-						            <f:selectItem itemLabel="#{lbl['lbl.pp.favourite.options.plan']}" itemValue="P" /> &nbsp;
-						            <f:selectItem itemLabel="#{lbl['lbl.pp.favourite.options.item']}" itemValue="I" /> &nbsp;
-						            <p:ajax event="change" update="pTabPlanDetails" />
-						        </p:selectOneRadio>  
-						        <p:tooltip for="sorFavOpt" value="Fade effect is used by default" showEffect="fade" hideEffect="fade" />
-							</td>
-							<th>* #{lbl['lbl.pp.charge.ptj']}</th>
-							<td class="ppSmallTd">:</td>
-							<td>
-								<p:selectOneMenu value="#{planBackingBean.managedBean.selectedPlanMaster.chargeDivisionId}"
-									disabled="#{!planBackingBean.managedBean.selectedPlanMaster.brandNew}">
-									<f:selectItem itemLabel="#{lbl['lbl.select']}" />
-									<f:selectItem itemLabel="PTJ - Rain Poh" itemValue="PTJ - Rain Poh" />
 								</p:selectOneMenu>
 							</td>
 							<td>&nbsp;</td>
@@ -189,9 +153,15 @@ xmlns:c="http://java.sun.com/jsp/jstl/core"
 									<p:ajax event="change" update="pTabPlanDetails" />
 								</p:selectOneMenu>
 							</td>
-							<th>&nbsp;</th>
-							<td class="ppSmallTd">&nbsp;</td>
-							<td>&nbsp;</td>
+							<th>* #{lbl['lbl.pp.charge.ptj']}</th>
+							<td class="ppSmallTd">:</td>
+							<td>
+								<p:selectOneMenu value="#{planBackingBean.managedBean.selectedPlanMaster.chargeDivisionId}"
+									disabled="#{!planBackingBean.managedBean.selectedPlanMaster.brandNew}">
+									<f:selectItem itemLabel="#{lbl['lbl.select']}" />
+									<f:selectItem itemLabel="PTJ - Rain Poh" itemValue="PTJ - Rain Poh" />
+								</p:selectOneMenu>
+							</td>
 							<td>&nbsp;</td>
 						</tr>
 					</p:outputPanel>
@@ -203,10 +173,7 @@ xmlns:c="http://java.sun.com/jsp/jstl/core"
 								<p:selectOneMenu value="#{planBackingBean.managedBean.selectedPlanMaster.qtType}" 
 									disabled="#{!planBackingBean.managedBean.selectedPlanMaster.brandNew}" >
 									<f:selectItem itemLabel="#{lbl['lbl.select']}" />
-									<f:selectItem itemLabel="Bumiputera" itemValue="BP" />
-									<f:selectItem itemLabel="Open" itemValue="OP" />
-									<f:selectItem itemLabel="Panel" itemValue="PN" />
-									<f:selectItem itemLabel="Restricted" itemValue="RT" />
+									<f:selectItems value="#{planBackingBean.qtTypeOptions()}" />
 								</p:selectOneMenu>
 							</td>
 							<th>#{lbl['lbl.pp.type.of.goods.services']}</th>
@@ -215,9 +182,7 @@ xmlns:c="http://java.sun.com/jsp/jstl/core"
 								<p:selectOneMenu id="somTypeGoodService" value="#{planBackingBean.managedBean.selectedPlanMaster.typeOfGoods}" 
 									disabled="#{!planBackingBean.managedBean.selectedPlanMaster.brandNew}">
 									<f:selectItem itemLabel="#{lbl['lbl.select']}" itemValue=""/>
-									<f:selectItem itemLabel="Local" itemValue="L" />
-									<f:selectItem itemLabel="Imported" itemValue="I" />
-									<f:selectItem itemLabel="Local &amp; Imported" itemValue="B" />
+									<f:selectItems value="#{planBackingBean.goodsTypeOptions()}" />
 									<p:ajax event="change" listener="#{planBackingBean.updateMtoFlag}" update=":form:tvPlan, sorMto" />
 								</p:selectOneMenu>
 							</td>
@@ -301,30 +266,22 @@ xmlns:c="http://java.sun.com/jsp/jstl/core"
 						<td class="ppSmallTd">:</td>
 						<td>
 							<p:outputPanel id="opPvo">	
-							<c:when test="'a'=='a'">ddsdsdsdssdsdsdsd
-											<p:selectOneMenu value="#{vo.planActorId}"
-												disabled="#{!planBackingBean.managedBean.selectedPlan.submissionType 
-													|| !planBackingBean.managedBean.selectedPlan.brandNew}">
-												<f:selectItem itemLabel="#{lbl['lbl.select']}" />
-											</p:selectOneMenu>
-										</c:when>
 								<ui:repeat var="vo" value="#{planBackingBean.managedBean.selectedPlan.verificationOfficers}" varStatus="status">
-									<c:choose>
-										<c:when test="'a'=='a'">vvvvvvvvvvvvvvvv
-											<p:selectOneMenu value="#{vo.planActorId}"
-												disabled="#{!planBackingBean.managedBean.selectedPlan.submissionType 
-													|| !planBackingBean.managedBean.selectedPlan.brandNew}">
-												<f:selectItem itemLabel="#{lbl['lbl.select']}" />
-											</p:selectOneMenu>
-										</c:when>
-										<c:otherwise>b     ${status.index}
-											<p:selectOneMenu value="#{vo.planActorId}"
-												disabled="#{!planBackingBean.managedBean.selectedPlan.submissionType
-													|| !planBackingBean.managedBean.selectedPlan.multiLevel || !planBackingBean.managedBean.selectedPlan.brandNew}">
-												<f:selectItem itemLabel="#{lbl['lbl.select']}" />
-											</p:selectOneMenu>
-										</c:otherwise>
-									</c:choose>
+									<ui:fragment rendered="#{status.index==0}">
+										<p:selectOneMenu value="#{vo.planActorId}"
+											disabled="#{!planBackingBean.managedBean.selectedPlan.submissionType
+												|| !planBackingBean.managedBean.selectedPlan.brandNew}">
+											<f:selectItem itemLabel="#{lbl['lbl.select']}" />
+										</p:selectOneMenu>
+									</ui:fragment>
+									<ui:fragment rendered="#{status.index&gt;0}">
+										<p:selectOneMenu value="#{vo.planActorId}"
+											disabled="#{!planBackingBean.managedBean.selectedPlan.submissionType
+												|| !planBackingBean.managedBean.selectedPlan.multiLevel
+												|| !planBackingBean.managedBean.selectedPlan.brandNew}">
+											<f:selectItem itemLabel="#{lbl['lbl.select']}" />
+										</p:selectOneMenu>
+									</ui:fragment>
 									<br/>
 								</ui:repeat>
 							</p:outputPanel>

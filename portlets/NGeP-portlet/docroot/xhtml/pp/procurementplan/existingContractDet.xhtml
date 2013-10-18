@@ -85,7 +85,7 @@ xmlns:c="http://java.sun.com/jsp/jstl/core">
 								<f:selectItem itemLabel="#{lbl['lbl.select']}" />
 							</p:selectOneMenu>
 						</td>
-							<p:outputPanel rendered="#{#{planBackingBean.managedBean.selectedPlanMaster.fulfillmentType==PPConst.fulfillmentSchedule}}">
+							<p:outputPanel rendered="#{planBackingBean.managedBean.selectedPlanMaster.fulfillmentType==PPConst.fulfillmentSchedule}">
 							<th>#{lbl['lbl.pp.planned.activities.startdate']}</th>
 							<td class="ppSmallTd">:</td>
 							<td>

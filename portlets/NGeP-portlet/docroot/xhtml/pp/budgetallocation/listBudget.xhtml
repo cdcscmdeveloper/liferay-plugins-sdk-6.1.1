@@ -25,9 +25,9 @@ xmlns:c="http://java.sun.com/jsp/jstl/core"
 					</td>
 					<td>
 						<p:commandButton value="Endorse Budget" 
-	 						action="#{budgetAllocationBackingBean.redirectToEndorseBudgetAllocation(budgetAllocationBackingBean.managedBean.bpmTaskId)}"   /> &nbsp;
+	 						action="#{budgetAllocationBackingBean.redirectToBudgetAllocation(budgetAllocationBackingBean.managedBean.bpmTaskId, 'A')}"   /> &nbsp;
 	 					<p:commandButton value="Revise Budget" 
-	 						action="#{budgetAllocationBackingBean.redirectToReviseBudgetAllocation(budgetAllocationBackingBean.managedBean.bpmTaskId)}"   /> &nbsp;
+	 						action="#{budgetAllocationBackingBean.redirectToBudgetAllocation(budgetAllocationBackingBean.managedBean.bpmTaskId, 'S')}"   /> &nbsp;
 					</td>
 				</tr>
 				<tr>
@@ -53,7 +53,7 @@ xmlns:c="http://java.sun.com/jsp/jstl/core"
 			<!-- Bottom Button(s) -->
 			<div class="ppRightBtn">
 				<p:commandButton value="#{lbl['lbl.pp.new.budget.allocation']}" id="cbNewBudgetAlloc"
-			 		action="#{budgetAllocationBackingBean.redirectToCreateBudgetAllocation}"   /> 
+			 		action="#{budgetAllocationBackingBean.redirectToBudgetAllocation(null)}"   /> 
 			</div>
 			
 			<br/>
