@@ -20,11 +20,14 @@ import javax.portlet.PortletRequest;
 
 import my.ep.biz.service.ct.maintain.IContractAmendmentSO;
 import my.ep.biz.service.fl.request.IFulfilmentRequestSO;
+import my.ep.biz.service.pm.common.maksud.IMaksudSO;
 import my.ep.dto.ct.ContractResDTO;
 import my.ep.dto.ct.maintain.ContractAmendmentReqDTO;
 import my.ep.dto.ct.maintain.ContractAmendmentResDTO;
 import my.ep.dto.fl.FulfilmentReqDTO;
 import my.ep.dto.fl.FulfilmentResDTO;
+import my.ep.dto.pm.common.maksud.MaksudReqDTO;
+import my.ep.dto.pm.common.maksud.MaksudResDTO;
 import my.ep.persistence.entity.ct.CtContract;
 import my.ep.persistence.entity.fl.FlAttachment;
 import my.ep.persistence.entity.fl.FlRemark;
@@ -203,10 +206,7 @@ public class FulfilmentRequestBackingBean extends BaseBackingBean<FulfilmentRequ
 	public String procureContract(){
 		System.out.println("--start procureCotract--");
 		System.out.println("ct name: "+getManagedBean().getSelectedContract().getContractName());
-		getManagedBean().getFlRequest().getCtContract().setContractName(getManagedBean().getSelectedContract().getContractName());
-		getManagedBean().getFlRequest().getCtContract().setFulfillmentType(getManagedBean().getSelectedContract().getFulfillmentType());
-		getManagedBean().getFlRequest().getCtContract().setContractType(getManagedBean().getSelectedContract().getContractType());
-		getManagedBean().getFlRequest().getCtContract().getSmSupplier().setSupplierId(getManagedBean().getSelectedContract().getSmSupplier().getSupplierId());
+		getManagedBean().getFlRequest().setCtContract(getManagedBean().getSelectedContract());
 		
 		return NAV_TO_CREATE_CONTRACT_REQUEST;
 	}
@@ -216,6 +216,29 @@ public class FulfilmentRequestBackingBean extends BaseBackingBean<FulfilmentRequ
 		getManagedBean().setSelectedRowFlg(true);
 		System.out.println("selectedRow: "+getManagedBean().isSelectedRowFlg());
 	}
+	
+	
+	public void flDeliveryItemList(){
+		ContractAmendmentReqDTO ctReqDTO = new ContractAmendmentReqDTO();
+		ctReqDTO.setOrgProfileId(1L);
+		IContractAmendmentSO ctAmendmentSO = (IContractAmendmentSO)BusinessDelegate.getInstance().getServiceObject("ct",IContractAmendmentSO.class);	
+		ContractAmendmentResDTO resDTO = ctAmendmentSO.getActiveLocation(ctReqDTO);
+		getManagedBean().setDelAddrList(resDTO.getOrgAddresses());
+		
+	}
+	
+	public void getMaksudCodeList(){
+//		System.out.println("-- get maksud List --");
+		
+//		MaksudReqDTO maksudDTO = new MaksudReqDTO();
+//		maksudDTO.setOrgProfileId(1L);
+//		
+//		IMaksudSO maksudSO = (IMaksudSO)BusinessDelegate.getInstance().getServiceObject("pm",IMaksudSO.class);	
+//		MaksudResDTO resDTO = maksudSO.retrieveMaksudCodeList(maksudDTO);
+//		getManagedBean().setMaksudCodeList(resDTO.getMaksudCodeList());
+//		System.out.println("-- end maksud List --");
+	}
+
 
 	
 }
