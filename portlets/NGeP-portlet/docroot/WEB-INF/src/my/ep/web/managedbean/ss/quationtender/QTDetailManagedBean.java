@@ -5,6 +5,7 @@ import java.util.List;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
 
+import my.ep.factory.EpLogger;
 import my.ep.persistence.entity.pm.common.PmCategoryL1;
 import my.ep.persistence.entity.pm.common.PmCategoryL2;
 import my.ep.persistence.entity.pm.common.PmCategoryL3;
@@ -14,14 +15,22 @@ import my.ep.persistence.entity.pm.common.PmSo;
 import my.ep.persistence.entity.ss.quationtender.ScQt;
 import my.ep.web.managedbean.BaseManagedBean;
 
-@ManagedBean(name="qtManagedBean")
+import org.apache.log4j.Logger;
+
+
+/**
+ * @Author VidyasagarReddy
+ */
+
+@ManagedBean(name="qTDetailMB")
 @SessionScoped
 public class QTDetailManagedBean extends BaseManagedBean {
 
 	
 	private static final long serialVersionUID = 1L;
+	private static final Logger log= EpLogger.getLogger(QTDetailManagedBean.class);
 	
-	private ScQt scQt;
+	private ScQt qt= new ScQt();
 	
 	private List<PmSo> soList;
 	
@@ -35,19 +44,16 @@ public class QTDetailManagedBean extends BaseManagedBean {
 	
 	private List<PmCategoryL3> categoryL3s;
 	
+	
+	
 	private String qtNumber;
 	
-	private QTDetailManagedBean(){
 		
+	public QTDetailManagedBean(){
+		log.info("inside ");
 	}
 
-	public ScQt getScQt() {
-		return scQt;
-	}
-
-	public void setScQt(ScQt scQt) {
-		this.scQt = scQt;
-	}
+	
 
 	public List<PmSo> getSoList() {
 		return soList;
@@ -104,5 +110,19 @@ public class QTDetailManagedBean extends BaseManagedBean {
 	public void setQtNumber(String qtNumber) {
 		this.qtNumber = qtNumber;
 	}
+
+
+
+	public ScQt getQt() {
+		return qt;
+	}
+
+
+
+	public void setQt(ScQt qt) {
+		this.qt = qt;
+	}
+
+
 
 }
