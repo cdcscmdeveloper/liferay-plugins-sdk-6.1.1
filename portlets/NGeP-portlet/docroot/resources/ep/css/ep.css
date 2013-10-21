@@ -4,7 +4,7 @@ Body {
 }
 
 .EpBody {
-	font-family: Tahoma, Arial, Helvetica;
+	font-family: Tahoma, Arial;
 	font-size: 20px;
 }
 
@@ -466,12 +466,6 @@ a:hover.linkButton {
 	vertical-align: top;
 }
 
-textarea[disabled],input[type="text"][disabled],input[type="password"][disabled],select[disabled]
-	{
-	color: #000000;
-	cursor: default;
-}
-
 .TableFieldLeft {
 	vertical-align: top;
 	padding-top: 6px;
@@ -527,21 +521,6 @@ textarea[disabled],input[type="text"][disabled],input[type="password"][disabled]
 
 .pop_up_top {
 	background: #6d84b4;
-}
-
-input[type="submit"],input[type="button"],input[type="reset"],button {
-	font-family: Tahoma, Arial;
-	font-size: 11px;
-	font-weight: bold;
-	color: #000000;
-	border: 1px solid #405e9b;
-	text-decoration: none;
-	background-color: #d9deea;
-	padding: 2px 10px;
-	cursor: pointer;
-	box-shadow: 0 1px 0 rgba(0, 0, 0, 0.1);
-	background-image: none;
-	-webkit-border-radius: 0px;
 }
 
 .TableHeader {
@@ -776,20 +755,7 @@ a:visited.menuItemLink-selected {
 	margin-top: 2px;
 	border-radius: 5px !important;
 	background: #017D9F !important; /* Old browsers */
-	background: -moz-linear-gradient(top, #f9f9f9 30%, #ebebeb 100%);
-	/* FF3.6+ */
-	background: -webkit-gradient(linear, left top, left bottom, color-stop(30%, #f9f9f9),
-		color-stop(100%, #ebebeb) ); /* Chrome,Safari4+ */
-	background: -webkit-linear-gradient(top, #f9f9f9 30%, #ebebeb 100%);
-	/* Chrome10+,Safari5.1+ */
-	background: -o-linear-gradient(top, #f9f9f9 30%, #ebebeb 100%);
-	/* Opera 11.10+ */
-	background: -ms-linear-gradient(top, #f9f9f9 30%, #ebebeb 100%);
-	/* IE10+ */
-	background: linear-gradient(to bottom, #f9f9f9 30%, #ebebeb 100%);
-	/* W3C */
-	filter: progid:DXImageTransform.Microsoft.gradient(  startColorstr='#f9f9f9',
-		endColorstr='#ebebeb', GradientType=0 ); /* IE6-8 */
+
 }
 
 .ui-button.ui-state-hover,.ui-button.ui-state-focus,.ui-button.ui-state-active
@@ -800,21 +766,7 @@ a:visited.menuItemLink-selected {
 	box-shadow: 0px 0px 8px #B4DFF8, inset 0px 1px 0px white;
 	color: #77be08;
 	background-color:#1AA1C6 !important;
-	background: #fdfdfd; /* Old browsers */
-	background: -moz-linear-gradient(top, #ffffff 30%, #f4f4f4 100%);
-	/* FF3.6+ */
-	background: -webkit-gradient(linear, left top, left bottom, color-stop(30%, #ffffff),
-		color-stop(100%, #f4f4f4) ); /* Chrome,Safari4+ */
-	background: -webkit-linear-gradient(top, #ffffff 30%, #f4f4f4 100%);
-	/* Chrome10+,Safari5.1+ */
-	background: -o-linear-gradient(top, #ffffff 30%, #f4f4f4 100%);
-	/* Opera 11.10+ */
-	background: -ms-linear-gradient(top, #ffffff 30%, #f4f4f4 100%);
-	/* IE10+ */
-	background: linear-gradient(to bottom, #ffffff 30%, #f4f4f4 100%);
-	/* W3C */
-	filter: progid:DXImageTransform.Microsoft.gradient(  startColorstr='#ffffff',
-		endColorstr='#f4f4f4', GradientType=0 ); /* IE6-8 */
+
 }
 
 .ui-button-text-icon-left .ui-button-text {
@@ -852,8 +804,9 @@ a:hover.blue_font {
 	position: fixed;
 	padding: 0;
 	overflow: hidden;
-	border: 5px solid #CCCCCC;
-	border-radius: 5px;
+	border: 10px solid #000000;
+	border-radius: 10px;
+	background-color: #000000;
 }
 
 .ui-dialog .ui-dialog-titlebar {
@@ -862,11 +815,13 @@ a:hover.blue_font {
 	font-family: Tahoma, Arial;
 	font-size: 14px;
 	font-weight: bold;
-	color: #333333;
-	background-color: #CCCCCC;
+	color: #666666;
+	background-color: #FFFFFF;
 	padding-left: 15px;
 	height: 30px;
 	padding: 0 0 0 1em;
+	border-top-left-radius: 5px;
+	border-top-right-radius: 5px;
 }
 
 .ui-dialog .ui-dialog-titlebar-close {
@@ -885,6 +840,16 @@ a:hover.blue_font {
 	box-shadow: 0px 5px 10px #888888;
 }
 
+.ui-dialog .ui-dialog-content {
+	background-color: #FFFFFF !important;
+	border-bottom-left-radius: 5px;
+	border-bottom-right-radius: 5px;
+}
+
+.ui-widget-overlay {
+	background: #000000 !important;
+	opacity: 0.5 !important;
+}
 /* --------------------------          Calendar         ------------------------------ */
 .ui-inputfield.hasDatepicker {
 	margin-top: 2px;
@@ -1842,6 +1807,7 @@ padding-left
 
 .ui-tabs.ui-tabs-left > .ui-tabs-nav .ui-state-hover {
 	box-shadow:none!important;
+	cursor: pointer !important;
 	border-radius: 0px !important;
 	background-position: right center!important;
 	background-image: url(#{resource['ep/images/design:side_menu_arrow.png']})!important;
@@ -3071,7 +3037,7 @@ tbody.ui-datatable-data > tr:hover {
 	padding:2px 0 2px 5px !important;
 }
 
-input[type="text"], input[type="password"], input[type="file"], input[type="submit"], input[type="button"], input[type="reset"], select, textarea, .textarea, button, .aui-field-input-text {
+input[type="text"], input[type="password"], input[type="file"], input[type="submit"], input[type="button"], input[type="reset"], select, button, .aui-field-input-text {
 	padding:0 5px 0 5px !important;
 	height: 20px !important;
 }
@@ -3083,7 +3049,6 @@ li[role=tab].ui-state-hover > a {
 
 li[role=tab].ui-tabs-selected {
 	width: auto !important;
-	border-radius: 3px !important;
 	background-color: #FFFFFF !important;
 }
 
@@ -3098,4 +3063,20 @@ li[role=tab].ui-tabs-selected {
 	font-size: 12px !important;
 }
 
+textarea {
+	text-align: left !important;
+	padding-left: 5px !important;
+	vertical-align: middle !important;
+	color: #333333 !important;
+	border: 1px solid #959595 !important;
+}
+
+textarea[disabled],input[type="text"][disabled],input[type="password"][disabled],select[disabled]
+	{
+	cursor: default;
+	color: #333333 !important;
+	background-color: #F4F4F4 !important;
+	opacity: 1 !important;
+	border: 1px solid #959595 !important;
+}
 /*--------------------------       End Custom CSS       --------------------------- */
