@@ -9,10 +9,10 @@
 <p:panelGrid columns="2" style="width:100%;" styleClass="noBorders tr,noBorders td">
 
  <h:outputText value="* Title" />
-<p:inputText value="#{searchQtnTenderBB.managedBean.qtno}" size="130"/>  
+<p:inputText value="#{qTDetailBB.managedBean.qt.qtTitle}" size="130"/>  
 
 <h:outputLabel for="fileno" value=" * File No." />  
-            <p:inputText id="fileno" value="#{searchQtnTenderBB.managedBean.selectOption}" size="130"/> 
+            <p:inputText id="fileno" value="#{qTDetailBB.managedBean.qt.fileNo}" size="130"/> 
             
             </p:panelGrid>
             <p:panelGrid columns="4" style="width:100%;" styleClass="noBorders tr,noBorders td">
@@ -20,13 +20,13 @@
             <h:outputLabel for="planno" value="Plan No." />  
             </p:column>
             <p:column>
-            <p:inputText id="planno" value="#{searchQtnTenderBB.managedBean.selectOption}"/>  
+            <p:inputText id="planno" value="#{qTDetailBB.managedBean.qt.planId}"/>  
             </p:column>
             <p:column>
             <h:outputLabel for="estprice" value="* Estimated Price/Planned Amount" />
             </p:column>  
             <p:column>
-            <p:inputText id="estprice" value="#{searchQtnTenderBB.managedBean.qtno}"/>  
+            <p:inputText id="estprice" value="#{qTDetailBB.managedBean.qt.qtAmount}"/>  
             </p:column>
             
            
@@ -35,7 +35,7 @@
           <h:outputText value="* ProcurementMode" />  
           </p:column>
           <p:column>
-        <p:selectOneMenu  value="#{searchQtnTenderBB.managedBean.selectOption}" >  
+        <p:selectOneMenu  value="#{qTDetailBB.managedBean.qt.procurementMode}" >  
             <f:selectItem itemLabel="Select One" itemValue="" />  
             <f:selectItem itemLabel="Quotation" itemValue="1" />  
             <f:selectItem itemLabel="Tender" itemValue="2" />  
@@ -46,7 +46,7 @@
          <h:outputText  value="* Financial Year" /> 
          </p:column>
          <p:column> 
-        <p:selectOneRadio id="optionradio" value="#{searchQtnTenderBB.managedBean.qtno}">  
+        <p:selectOneRadio id="optionradio" value="#{qTDetailBB.managedBean.qt.financialYear}">  
             <f:selectItem itemLabel="Current Year" itemValue="1" />  
             <f:selectItem itemLabel="Next Year" itemValue="2" />  
              
@@ -59,45 +59,45 @@
 	</p:panel>
 	<p:panel header="GOSODO List" toggleable="true">
 	<p:panelGrid columns="3" style="width:100%;" styleClass="noBorders tr,noBorders td">
-	<p:dataTable value="#{searchQtnTenderBB.managedBean.goSodo}" var="gosodo" editable="true">
+	<p:dataTable id="gosodoList" value="#{qTDetailBB.managedBean.qt.scQtGosodoBudgets}" var="gosodo" editable="true">
 	
 	<p:ajax event="rowEdit" />  
         <p:ajax event="rowEditCancel" /> 
 	<p:column headerText="GOSODO">  
-           
-            
+                     
              <p:cellEditor>
             <f:facet name="output">  
-                  <h:outputText value="#{gosodo.type}" />
+                  <h:outputText value="#{gosodo.pmGo.goCode}" />
                 </f:facet>  
                 <f:facet name="input">  
-                    <p:selectOneMenu value="#{searchQtnTenderBB.managedBean.qtno}" >  
-            <f:selectItem itemLabel="Select One" itemValue="" />  
-            <f:selectItem itemLabel="gosodo1" itemValue="1" />  
-            <f:selectItem itemLabel="gosodo2" itemValue="2" />  
-            <f:selectItem itemLabel="gosodo3" itemValue="3" />  
+                    <p:selectOneMenu value="#{gosodo.pmGo}" valueChangeListener="#{qTDetailBB.handleGoChange()}">  
+           <f:selectItem itemLabel="Select One" itemValue="#{null}"/>
+                            <f:selectItems value="#{qTDetailBB.managedBean.goList}" var="go" 
+                                       itemLabel="#{go.goCode}" itemValue="#{go}" />
+
+<p:ajax event="change" update="solist"/>
         </p:selectOneMenu> 
                 </f:facet> 
                 <f:facet name="output">  
-                  <h:outputText value="#{gosodo.type}" />
+                  <h:outputText value="#{gosodo.pmSo.soCode}" />
                 </f:facet>  
                 <f:facet name="input">  
-                    <p:selectOneMenu value="#{searchQtnTenderBB.managedBean.qtno}" >  
-            <f:selectItem itemLabel="Select One" itemValue="" />  
-            <f:selectItem itemLabel="gosodo3" itemValue="3" />  
-            <f:selectItem itemLabel="gosodo4" itemValue="4" />  
-            <f:selectItem itemLabel="gosodo5" itemValue="5" />  
+                    <p:selectOneMenu id="solist"  value="#{gosodo.pmSo}" valueChangeListener="#{qTDetailBB.handleSoChange()}" >  
+           <f:selectItem itemLabel="Select One" itemValue="#{null}"/>
+                            <f:selectItems value="#{qTDetailBB.managedBean.soList}" var="so" 
+                                       itemLabel="#{so.soCode}" itemValue="#{so}" />
+<p:ajax event="change" update="dolist"/>
         </p:selectOneMenu> 
                 </f:facet>
                 <f:facet name="output">  
-                  <h:outputText value="#{gosodo.type}" />
+                  <h:outputText value="#{gosodo.pmDo.doCode}" />
                 </f:facet>  
                 <f:facet name="input">  
-                    <p:selectOneMenu value="#{searchQtnTenderBB.managedBean.qtno}" >  
-            <f:selectItem itemLabel="Select One" itemValue="" />  
-            <f:selectItem itemLabel="gosodo6" itemValue="6" />  
-            <f:selectItem itemLabel="gosodo7" itemValue="7" />  
-            <f:selectItem itemLabel="gosodo8" itemValue="8" />  
+                     <p:selectOneMenu id="dolist" value="#{gosodo.pmDo}" >  
+           <f:selectItem itemLabel="Select One" itemValue="#{null}"/>
+                            <f:selectItems value="#{qTDetailBB.managedBean.doList}" var="do" 
+                                       itemLabel="#{do.doCode}" itemValue="#{do}" />
+
         </p:selectOneMenu> 
                 </f:facet>     
             </p:cellEditor>   
@@ -106,11 +106,11 @@
   <p:column headerText="Budget Availability"> 
   <p:cellEditor>  
                 <f:facet name="output">  
-                   <h:outputText value="#{gosodo.bdgAvail}" /> 
+                   <h:outputText value="#{gosodo.isBudgetAvailable}" /> 
                 </f:facet>  
                 <f:facet name="input">  
                     
-              <p:selectBooleanCheckbox value="#{searchQtnTenderBB.managedBean.selectOption}">  
+              <p:selectBooleanCheckbox value="#{gosodo.isBudgetAvailable}">  
             <f:selectItem itemLabel="yes" itemValue="yes"/>  
             <f:selectItem itemLabel="no" itemValue="no"/>  
            
@@ -134,8 +134,13 @@
 	
 	</p:dataTable>
 	</p:panelGrid>
-	      <p:commandButton value="ADD" style="float:right;" action="#{searchQtnTenderBB.add}"></p:commandButton>
-  <br/>
+	
+	    <p:commandButton value="ADD" 
+                                actionListener="#{qTDetailBB.addNewGoSoDoItem}"
+                                update="gosodoList">
+                               
+                            </p:commandButton>
+	       <br/>
   <br/>
 	</p:panel>
 	

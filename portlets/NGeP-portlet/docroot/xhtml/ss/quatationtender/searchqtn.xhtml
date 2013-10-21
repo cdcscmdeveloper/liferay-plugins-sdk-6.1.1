@@ -13,11 +13,11 @@
 			styleClass="noBorders tr,noBorders td">
 
 			<h:outputLabel for="qtnno" value="#{lbl['lbl.so.qtnno']}" />
-			<p:inputText id="qtnno" value="#{searchQtnTenderBB.managedBean.qtno}" />
+			<p:inputText id="qtnno" value="#{qTDetailBB.managedBean.qt.qtNo}" />
 
 			<h:outputText value="#{lbl['lbl.so.procmode']}" />
 			<p:selectOneMenu
-				value="#{searchQtnTenderBB.managedBean.selectOption}">
+				value="#{qTDetailBB.managedBean.qt.procurementMode}">
 				<f:selectItem itemLabel="Select One" itemValue="" />
 				<f:selectItem itemLabel="Quotation" itemValue="Quotation" />
 				<f:selectItem itemLabel="Tender" itemValue="Tender" />
@@ -26,27 +26,27 @@
 			</p:selectOneMenu>
 
 			<h:outputText value="#{lbl['lbl.so.creatdtfrom']}" />
-			<p:calendar value="#{searchQtnTenderBB.managedBean.date}"
+			<p:calendar value="#{qTDetailBB.managedBean.qt.createdDate}"
 				id="crdateFrm" showOn="button" />
 
 			<h:outputText value="#{lbl['lbl.so.creatdtto']}" />
-			<p:calendar value="#{searchQtnTenderBB.managedBean.date}"
+			<p:calendar value="#{qTDetailBB.managedBean.qt.createdDate}"
 				id="crdateTo" showOn="button" />
 
 			<h:outputText value="#{lbl['lbl.so.pbldtfrom']}" />
-			<p:calendar value="#{searchQtnTenderBB.managedBean.date}"
+			<p:calendar value="#{qTDetailBB.managedBean.qt.createdDate}"
 				id="pbdateFrom" showOn="button" />
 
 			<h:outputText value="#{lbl['lbl.so.pbldtto']}" />
-			<p:calendar value="#{searchQtnTenderBB.managedBean.date}"
+			<p:calendar value="#{qTDetailBB.managedBean.qt.createdDate}"
 				id="pbdateTo" showOn="button" />
 
 			<h:outputText value="#{lbl['lbl.so.clsdtfrom']}" />
-			<p:calendar value="#{searchQtnTenderBB.managedBean.date}"
+			<p:calendar value="#{qTDetailBB.managedBean.qt.createdDate}"
 				id="cldateFrom" showOn="button" />
 
 			<h:outputText value="#{lbl['lbl.so.clsdtto']}" />
-			<p:calendar value="#{searchQtnTenderBB.managedBean.date}"
+			<p:calendar value="#{qTDetailBB.managedBean.qt.createdDate}"
 				id="cldateTo" showOn="button" />
 
 			<h:outputText value="#{lbl['lbl.so.status']}" />
