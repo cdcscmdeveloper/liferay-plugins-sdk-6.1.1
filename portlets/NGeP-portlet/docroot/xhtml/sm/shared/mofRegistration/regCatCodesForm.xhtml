@@ -21,8 +21,8 @@
 		</table>
 		<br />
 		<p:dataTable var="catBean"
-			value="#{backingBean.managedBean.smAppl.smApplSupplierCategories}"
-			rowKey="#{catBean.applSupplierCategoryId}" rowIndexVar="index"
+			value="#{backingBean.managedBean.smAppl.smSupplierCategories}"
+			rowKey="#{catBean.supplierCategoryId}" rowIndexVar="index"
 			id="catDt">
 			<p:columnGroup type="header">
 				<p:row>
@@ -41,32 +41,32 @@
 				</p:row>
 			</p:columnGroup>
 			<p:column>
-				<p:outputLabel value="#{index+1}" />
+				<h:outputText value="#{index+1}" />
 			</p:column>
 			<p:column>
-				<p:outputLabel
+				<h:outputText
 					value="#{catBean.pmCategoryL1.cateogryL1Code}#{catBean.pmCategoryL2.cateogryL2Code}#{catBean.pmCategoryL3.cateogryL3Code}" />
 			</p:column>
 			<p:column>
-				<p:outputLabel
+				<h:outputText
 					value="#{catBean.pmCategoryL1.cateogryL1Code} -  #{catBean.pmCategoryL1.categoryName}" />
 			</p:column>
 			<p:column>
-				<p:outputLabel
+				<h:outputText
 					value="#{catBean.pmCategoryL2.cateogryL2Code} -  #{catBean.pmCategoryL2.categoryName}" />
 			</p:column>
 			<p:column>
-				<p:outputLabel
+				<h:outputText
 					value="#{catBean.pmCategoryL3.cateogryL3Code} -  #{catBean.pmCategoryL3.categoryName}" />
 			</p:column>
 			<p:column>
-				<p:outputLabel value=" -- TBC -- " />
+				<h:outputText value=" -- TBC -- " />
 			</p:column>
 			<p:column>
 				<!-- <p:outputLabel value="#{catBean.categoryType}" /> -->
-				<p:outputLabel value="Normal"
+				<h:outputText value="Normal"
 					rendered="#{catBean.categoryType eq 'N'}" />
-				<p:outputLabel value="Special"
+				<h:outputText value="Special"
 					rendered="#{catBean.categoryType eq 'S'}" />
 			</p:column>
 			<p:column>

@@ -21,13 +21,13 @@
 		</table>
 		<br />
 		<p:dataTable var="branchBean" id="dt"
-			value="#{backingBean.managedBean.smAppl.smApplSupplierBranches}"
+			value="#{backingBean.managedBean.smAppl.smSupplierBranches}"
 			selection="#{backingBean.managedBean.selectedBranches}"
-			rowKey="#{branchBean.applSupplierBranchId}" rowIndexVar="index">
+			rowKey="#{branchBean.supplierBranchId}" rowIndexVar="index">
 
 			<p:column selectionMode="multiple" width="5%" />
 			<p:column headerText="NO.">
-				<p:outputLabel value="#{index+1}" />
+				<h:outputText value="#{index+1}" />
 			</p:column>
 
 			<p:column headerText="Branch Name">
@@ -40,8 +40,8 @@
 			</p:column>
 
 			<p:column headerText="Address">
-				<p:outputLabel
-					value="#{branchBean.pmAddress.address1},#{branchBean.pmAddress.address2}" />
+				<h:outputText
+					value="#{branchBean.smAddress.address1},#{branchBean.smAddress.address2}" />
 			</p:column>
 		</p:dataTable>
 		<div align="right">
@@ -74,23 +74,23 @@
 				<tr>
 					<td><p:outputLabel value="Address" /></td>
 					<td><p:inputText
-							value="#{backingBean.managedBean.selectedBranch.pmAddress.address1}" /></td>
+							value="#{backingBean.managedBean.selectedBranch.smAddress.address1}" /></td>
 				</tr>
 
 				<tr>
 					<td></td>
 					<td><p:inputText
-							value="#{backingBean.managedBean.selectedBranch.pmAddress.address2}" /></td>
+							value="#{backingBean.managedBean.selectedBranch.smAddress.address2}" /></td>
 				</tr>
 				<tr>
 					<td></td>
 					<td><p:inputText
-							value="#{backingBean.managedBean.selectedBranch.pmAddress.address3}" /></td>
+							value="#{backingBean.managedBean.selectedBranch.smAddress.address3}" /></td>
 				</tr>
 				<tr>
 					<td><p:outputLabel value="Country *" /></td>
 					<td><p:selectOneMenu
-							value="#{backingBean.managedBean.selectedBranch.pmAddress.pmCountry.countryCode}">
+							value="#{backingBean.managedBean.selectedBranch.smAddress.pmCountry.countryCode}">
 							<f:selectItem itemLabel="-- Select One -- " itemValue="" />
 							<f:selectItem itemLabel="Malaysia" itemValue="MY" />
 						</p:selectOneMenu></td>
@@ -98,33 +98,33 @@
 				<tr>
 					<td><p:outputLabel value="#{lbl['lbl.sm.postcode']}" /></td>
 					<td><p:inputText
-							value="#{backingBean.managedBean.selectedBranch.pmAddress.postcode}" /></td>
+							value="#{backingBean.managedBean.selectedBranch.smAddress.postcode}" /></td>
 				</tr>
 				<tr>
 					<td><p:outputLabel value="#{lbl['lbl.sm.state']}" /></td>
 					<td><p:inputText
-							value="#{backingBean.managedBean.selectedBranch.pmAddress.pmState.stateCode}" /></td>
+							value="#{backingBean.managedBean.selectedBranch.smAddress.pmState.stateCode}" /></td>
 				</tr>
 
 				<tr>
 					<td><p:outputLabel value="#{lbl['lbl.sm.district']}" /></td>
 					<td><p:inputText
-							value="#{backingBean.managedBean.selectedBranch.pmAddress.pmDistrict.districtCode}" /></td>
+							value="#{backingBean.managedBean.selectedBranch.smAddress.pmDistrict.districtCode}" /></td>
 				</tr>
 				<tr>
 					<td><p:outputLabel value="#{lbl['lbl.sm.towncity']}" /></td>
 					<td><p:inputText
-							value="#{backingBean.managedBean.selectedBranch.pmAddress.pmCity.cityCode}" /></td>
+							value="#{backingBean.managedBean.selectedBranch.smAddress.pmCity.cityCode}" /></td>
 				</tr>
 				<tr>
 					<td><p:outputLabel value="Phone No." /></td>
 					<td><p:inputText
-							value="#{backingBean.managedBean.selectedBranch.pmAddress.phoneNo}" /></td>
+							value="#{backingBean.managedBean.selectedBranch.smAddress.phoneNo}" /></td>
 				</tr>
 				<tr>
 					<td><p:outputLabel value="Fax No." /></td>
 					<td><p:inputText
-							value="#{backingBean.managedBean.selectedBranch.pmAddress.faxNo}" /></td>
+							value="#{backingBean.managedBean.selectedBranch.smAddress.faxNo}" /></td>
 				</tr>
 
 			</table>

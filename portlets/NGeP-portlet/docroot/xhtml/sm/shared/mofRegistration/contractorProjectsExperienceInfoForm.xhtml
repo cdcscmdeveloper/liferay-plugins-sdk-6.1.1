@@ -21,15 +21,15 @@
 		</table>
 		<br />
 		<p:dataTable var="contrBean"
-			value="#{backingBean.managedBean.smAppl.smApplContractExperiences}"
+			value="#{backingBean.managedBean.smAppl.smContractExperiences}"
 			selection="#{backingBean.managedBean.selectedContractProjs}"
-			rowKey="#{contrBean.applContractExperienceId}" rowIndexVar="index"
+			rowKey="#{contrBean.contractExperienceId}" rowIndexVar="index"
 			id="contDt">
 
 			<p:column selectionMode="multiple" width="5%" />
 
 			<p:column headerText="NO.">
-				<p:outputLabel value="#{index+1}" />
+				<h:outputText value="#{index+1}" />
 			</p:column>
 
 			<p:column headerText="Project Title">
@@ -39,7 +39,7 @@
 			</p:column>
 
 			<p:column headerText="Contract Value">
-				<p:outputLabel value="#{contrBean.contractValue}" />
+				<h:outputText value="#{contrBean.contractValue}" />
 			</p:column>
 
 			<p:column headerText="Procurement Date">
@@ -97,30 +97,26 @@
 							<tr>
 								<td><p:outputLabel value="Contract Value *" /></td>
 
-								<td><p:panelGrid columns="2"
-										styleClass="noBorders tr,noBorders td">
-										<p:column>
-											<p:inputText
-												value="#{backingBean.managedBean.selectedContractProj.contractValue}"></p:inputText>
-										</p:column>
-										<p:column>
-											<p:selectOneMenu>
-												<f:selectItem itemLabel="MYR" itemValue="1"></f:selectItem>
-											</p:selectOneMenu>
-										</p:column>
-									</p:panelGrid></td>
+								<td><table>
+										<tr>
+											<td style="padding-right: 20px;"><p:inputText
+													value="#{backingBean.managedBean.selectedContractProj.contractValue}" />
+											</td>
+											<td valign="top"><p:selectOneMenu>
+													<f:selectItem itemLabel="MYR" itemValue="1"></f:selectItem>
+												</p:selectOneMenu></td>
+										</tr>
+									</table></td>
 							</tr>
 							<tr>
 								<td><p:outputLabel value="Procurement Mode *" /></td>
-								<td><p:column>
-										<p:selectOneMenu
-											value="#{backingBean.managedBean.selectedContractProj.procureMode}">
-											<f:selectItem itemLabel="-- Select One--" itemValue="1" />
-											<f:selectItem itemLabel="Tender" itemValue="T" />
-											<f:selectItem itemLabel="eBidding" itemValue="E" />
-											<f:selectItem itemLabel="SebutHarga" itemValue="S" />
-										</p:selectOneMenu>
-									</p:column></td>
+								<td><p:selectOneMenu
+										value="#{backingBean.managedBean.selectedContractProj.procureMode}">
+										<f:selectItem itemLabel="-- Select One--" itemValue="1" />
+										<f:selectItem itemLabel="Tender" itemValue="T" />
+										<f:selectItem itemLabel="eBidding" itemValue="E" />
+										<f:selectItem itemLabel="SebutHarga" itemValue="S" />
+									</p:selectOneMenu></td>
 							</tr>
 							<tr>
 								<td><p:outputLabel value="Project Status *" /></td>

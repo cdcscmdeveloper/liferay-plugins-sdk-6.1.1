@@ -21,15 +21,14 @@
 		</table>
 		<br />
 		<p:dataTable var="certBean"
-			value="#{backingBean.managedBean.smAppl.smApplSupplierCerts}"
+			value="#{backingBean.managedBean.smAppl.smSupplierCerts}"
 			selection="#{backingBean.managedBean.selectedCertList}"
-			rowKey="#{certBean.applSupplierCertId}" rowIndexVar="index"
-			id="certDt">
+			rowKey="#{certBean.supplierCertId}" rowIndexVar="index" id="certDt">
 
 			<p:column selectionMode="multiple" width="5%" />
 
 			<p:column headerText="NO.">
-				<p:outputLabel value="#{index+1}" />
+				<h:outputText value="#{index+1}" />
 			</p:column>
 
 			<p:column headerText="Cert Name">
@@ -39,7 +38,7 @@
 			</p:column>
 
 			<p:column headerText="Cert Type">
-				<p:outputLabel value="#{certBean.certType}" />
+				<h:outputText value="-- TBC --" />
 			</p:column>
 
 			<p:column headerText="Issue Date">
@@ -118,6 +117,7 @@
 		<div align="center">
 			<p:commandButton value="Save"
 				action="#{backingBean.addOrUpdateCertsToSmAppl}"
+				partialSubmit="true" process="certPop"
 				oncomplete="certDialog.hide();" update=":form:tt:certDt" />
 			<p:commandButton value="Cancel" onclick="certDialog.hide();" />
 		</div>

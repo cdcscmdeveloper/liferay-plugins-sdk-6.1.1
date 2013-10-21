@@ -59,20 +59,15 @@
 					</p:selectOneMenu></td>
 				<td><p:outputLabel value=" Designation *" /></td>
 				<td><p:inputText /></td>
-				<td><p:outputLabel value=" Eperience" /></td>
+				<td><p:outputLabel value=" Experience" /></td>
 				<td><p:inputText /></td>
 			</tr>
 			<tr>
 				<td><p:outputLabel value="Roles In Company *" /></td>
 				<!-- <td><p:pickList  /></td> -->
-				<td><p:selectManyMenu>
-						<f:selectItem itemLabel="-- Select One--" itemValue="1" />
-						<f:selectItem itemLabel="Manager" itemValue="1" />
-						<f:selectItem itemLabel="Clerk" itemValue="1" />
-						<f:selectItem itemLabel="Director" itemValue="1" />
-					</p:selectManyMenu></td>
-				<td><p:outputLabel value=" Phn No. *" /></td>
 				<td><p:inputText /></td>
+				<td><p:outputLabel value=" Job Function *" /></td>
+				<td><p:inputTextarea /></td>
 				<td><p:outputLabel value=" Email " /></td>
 				<td><p:inputText /></td>
 			</tr>
@@ -132,7 +127,7 @@
 
 					<table style="width: 100%">
 						<tr>
-							<td><u><b> <p:outputLabel
+							<td><u><b> <h:outputText
 											value="Permenant Address : " /></b></u></td>
 							<td></td>
 						</tr>
@@ -173,6 +168,10 @@
 							<td><p:outputLabel value="#{lbl['lbl.sm.towncity']}" /></td>
 							<td><p:inputText /></td>
 						</tr>
+						<tr>
+							<td><p:outputLabel value=" Phn No. *" /></td>
+							<td><p:inputText /></td>
+						</tr>
 					</table>
 
 				</td>
@@ -180,8 +179,8 @@
 
 					<table style="width: 100%">
 						<tr>
-							<td><u><b><p:outputLabel value="Mailing Address : " /></b></u>
-								<p:selectBooleanCheckbox /> <p:outputLabel
+							<td><u><b><h:outputText value="Mailing Address : " /></b></u>
+								<p:selectBooleanCheckbox /> <h:outputText
 									value=" Same as permenant: " /></td>
 							<td></td>
 						</tr>
@@ -222,6 +221,10 @@
 							<td><p:outputLabel value="#{lbl['lbl.sm.towncity']}" /></td>
 							<td><p:inputText /></td>
 						</tr>
+						<tr>
+							<td><p:outputLabel value=" Phn No. *" /></td>
+							<td><p:inputText /></td>
+						</tr>
 					</table>
 
 				</td>
@@ -229,20 +232,5 @@
 
 		</table>
 	</p:panel>
-	<p:panel header="Shareholding In Current Company ( Equity Users Only)"
-		toggleable="true">
 
-		<table style="width: 100%">
-			<tr>
-				<td><p:outputLabel value=" Amount *" /></td>
-				<td><p:inputText /> <p:outputLabel value="MYR" /></td>
-				<td><p:outputLabel value="Percentage *" /></td>
-				<td><p:inputText readonly="true" title="Auto Populated Value" />
-					<p:outputLabel value="%" /></td>
-				<td><p:selectBooleanCheckbox>
-					</p:selectBooleanCheckbox></td>
-				<td><p:outputLabel value="Is Equity Owner?" /></td>
-			</tr>
-		</table>
-	</p:panel>
 </ui:composition>

@@ -22,26 +22,26 @@
 		</table>
 		<br />
 		<p:dataTable var="fac"
-			value="#{backingBean.managedBean.smAppl.smApplFacilities}"
+			value="#{backingBean.managedBean.smAppl.smFacilities}"
 			selection="#{backingBean.managedBean.selectedFactoryFacilities}"
-			rowKey="#{fac.applFacilityId}" rowIndexVar="index" id="facDt">
+			rowKey="#{fac.facilityId}" rowIndexVar="index" id="facDt">
 
 			<p:column selectionMode="multiple" width="5%" />
 
 			<p:column headerText="NO.">
-				<p:outputLabel value="#{index+1}" />
+				<h:outputText value="#{index+1}" />
 			</p:column>
 
 			<p:column headerText="Factory Name">
-				<p:commandLink value="#{fac.pmAddress.address1}"
+				<p:commandLink value="#{fac.smAddress.address1}"
 					oncomplete="factoryDialog.show();"
 					action="#{backingBean.assignSelFactory(fac)}"
 					update=":form:tt:factoryDialog" />
 			</p:column>
 
 			<p:column headerText="Factory/ Workshop/Dockyard Address">
-				<p:outputLabel
-					value="#{fac.pmAddress.address2},#{fac.pmAddress.address3},#{fac.pmAddress.address4}" />
+				<h:outputText
+					value="#{fac.smAddress.address2},#{fac.smAddress.address3},#{fac.smAddress.address4}" />
 			</p:column>
 
 		</p:dataTable>
@@ -82,28 +82,28 @@
 				<tr>
 					<td><p:outputLabel value="Name" /></td>
 					<td><p:inputText
-							value="#{backingBean.managedBean.selectedFactoryFacility.pmAddress.address1}" /></td>
+							value="#{backingBean.managedBean.selectedFactoryFacility.smAddress.address1}" /></td>
 				</tr>
 				<tr>
 					<td><p:outputLabel value="Address" /></td>
 					<td><p:inputText
-							value="#{backingBean.managedBean.selectedFactoryFacility.pmAddress.address2}" /></td>
+							value="#{backingBean.managedBean.selectedFactoryFacility.smAddress.address2}" /></td>
 				</tr>
 
 				<tr>
 					<td></td>
 					<td><p:inputText
-							value="#{backingBean.managedBean.selectedFactoryFacility.pmAddress.address3}" /></td>
+							value="#{backingBean.managedBean.selectedFactoryFacility.smAddress.address3}" /></td>
 				</tr>
 				<tr>
 					<td></td>
 					<td><p:inputText
-							value="#{backingBean.managedBean.selectedFactoryFacility.pmAddress.address4}" /></td>
+							value="#{backingBean.managedBean.selectedFactoryFacility.smAddress.address4}" /></td>
 				</tr>
 				<tr>
 					<td><p:outputLabel value="Country *" /></td>
 					<td><p:selectOneMenu
-							value="#{backingBean.managedBean.selectedFactoryFacility.pmAddress.pmCountry.countryCode}">
+							value="#{backingBean.managedBean.selectedFactoryFacility.smAddress.pmCountry.countryCode}">
 							<f:selectItem itemLabel="-- Select One -- " itemValue="" />
 							<f:selectItem itemLabel="Malaysia" itemValue="MY" />
 						</p:selectOneMenu></td>
@@ -111,33 +111,33 @@
 				<tr>
 					<td><p:outputLabel value="#{lbl['lbl.sm.postcode']}" /></td>
 					<td><p:inputText
-							value="#{backingBean.managedBean.selectedFactoryFacility.pmAddress.postcode}" /></td>
+							value="#{backingBean.managedBean.selectedFactoryFacility.smAddress.postcode}" /></td>
 				</tr>
 				<tr>
 					<td><p:outputLabel value="#{lbl['lbl.sm.state']}" /></td>
 					<td><p:inputText
-							value="#{backingBean.managedBean.selectedFactoryFacility.pmAddress.pmState.stateCode}" /></td>
+							value="#{backingBean.managedBean.selectedFactoryFacility.smAddress.pmState.stateCode}" /></td>
 				</tr>
 
 				<tr>
 					<td><p:outputLabel value="#{lbl['lbl.sm.district']}" /></td>
 					<td><p:inputText
-							value="#{backingBean.managedBean.selectedFactoryFacility.pmAddress.pmDistrict.districtCode}" /></td>
+							value="#{backingBean.managedBean.selectedFactoryFacility.smAddress.pmDistrict.districtCode}" /></td>
 				</tr>
 				<tr>
 					<td><p:outputLabel value="#{lbl['lbl.sm.towncity']}" /></td>
 					<td><p:inputText
-							value="#{backingBean.managedBean.selectedFactoryFacility.pmAddress.pmCity.cityCode}" /></td>
+							value="#{backingBean.managedBean.selectedFactoryFacility.smAddress.pmCity.cityCode}" /></td>
 				</tr>
 				<tr>
 					<td><p:outputLabel value="Phone No." /></td>
 					<td><p:inputText
-							value="#{backingBean.managedBean.selectedFactoryFacility.pmAddress.phoneNo}" /></td>
+							value="#{backingBean.managedBean.selectedFactoryFacility.smAddress.phoneNo}" /></td>
 				</tr>
 				<tr>
 					<td><p:outputLabel value="Fax No." /></td>
 					<td><p:inputText
-							value="#{backingBean.managedBean.selectedFactoryFacility.pmAddress.faxNo}" /></td>
+							value="#{backingBean.managedBean.selectedFactoryFacility.smAddress.faxNo}" /></td>
 				</tr>
 				<tr>
 					<td><p:outputLabel value="Area *" /></td>

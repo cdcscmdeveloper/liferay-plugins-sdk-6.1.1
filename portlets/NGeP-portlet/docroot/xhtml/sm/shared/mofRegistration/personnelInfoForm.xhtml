@@ -83,9 +83,9 @@
 		</table>
 		<br />
 		<p:dataTable var="person"
-			value="#{mofRegistrationBackingBean.personList}"
+			value="#{backingBean.managedBean.smAppl.smPersonnels}"
 			selection="#{mofRegistrationBackingBean.managedBean.selectedPersonList}"
-			rowKey="#{person.personelSeq}" rowIndexVar="index">
+			rowKey="#{person.personnelId}" rowIndexVar="index">
 
 			<p:column selectionMode="multiple" width="5%" />
 
@@ -100,18 +100,18 @@
 
 			<p:column headerText="Roles In Company">
 				<p:outputLabel
-					value="Role#{person.personelSeq}, Role#{person.personelSeq} , Role#{person.personelSeq} " />
+					value="#{person.designation}" />
 			</p:column>
 
 			<p:column headerText="Is Authorized ?">
-				<p:outputLabel value="Yes" rendered="#{person.auth == true}" />
-				<p:outputLabel value="No" rendered="#{person.auth == false}" />
+				<p:outputLabel value="Yes" rendered="#{person.authorized == true}" />
+				<p:outputLabel value="No" rendered="#{person.authorized == false}" />
 			</p:column>
 			<p:column headerText="Soft Cert Issued?">
 				<p:outputLabel value="Yes"
-					rendered="#{person.softCertIssued == true}" />
+					rendered="#{person.softcert == true}" />
 				<p:outputLabel value="No"
-					rendered="#{person.softCertIssued == false}" />
+					rendered="#{person.softcert == false}" />
 			</p:column>
 
 		</p:dataTable>
@@ -156,7 +156,7 @@
 			</tr>
 		</table>
 	</p:panel>
-	<p:dialog width="800px" height="500px" header="Personnel Details"
+	<p:dialog width="1000px" height="500px" header="Personnel Details"
 		widgetVar="personnelDialog" resizable="false" showEffect="fade"
 		hideEffect="fade" modal="true">
 

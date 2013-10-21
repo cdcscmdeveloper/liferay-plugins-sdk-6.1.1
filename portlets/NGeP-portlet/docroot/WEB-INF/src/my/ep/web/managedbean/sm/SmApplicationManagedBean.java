@@ -6,7 +6,7 @@ import java.util.List;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
 
-import my.ep.persistence.entity.pm.common.PmAddress;
+import my.ep.persistence.entity.pm.common.PmBank;
 import my.ep.persistence.entity.pm.common.PmCategoryL1;
 import my.ep.persistence.entity.pm.common.PmCategoryL2;
 import my.ep.persistence.entity.pm.common.PmCategoryL3;
@@ -14,16 +14,26 @@ import my.ep.persistence.entity.pm.common.PmCity;
 import my.ep.persistence.entity.pm.common.PmCountry;
 import my.ep.persistence.entity.pm.common.PmDistrict;
 import my.ep.persistence.entity.pm.common.PmState;
+import my.ep.persistence.entity.sm.SmAddress;
 import my.ep.persistence.entity.sm.SmAppl;
-import my.ep.persistence.entity.sm.SmApplAssociateCompany;
-import my.ep.persistence.entity.sm.SmApplContractExperience;
-import my.ep.persistence.entity.sm.SmApplFacility;
-import my.ep.persistence.entity.sm.SmApplManufacturingDtl;
-import my.ep.persistence.entity.sm.SmApplProjectExperience;
-import my.ep.persistence.entity.sm.SmApplSupplierBranch;
-import my.ep.persistence.entity.sm.SmApplSupplierCategory;
-import my.ep.persistence.entity.sm.SmApplSupplierCert;
+import my.ep.persistence.entity.sm.SmAssociateCompany;
+import my.ep.persistence.entity.sm.SmChequeSignatory;
+import my.ep.persistence.entity.sm.SmContractExperience;
+import my.ep.persistence.entity.sm.SmEquityCompany;
+import my.ep.persistence.entity.sm.SmFacility;
+import my.ep.persistence.entity.sm.SmMachineDtl;
+import my.ep.persistence.entity.sm.SmManufacturingDtl;
+import my.ep.persistence.entity.sm.SmPersonnel;
+import my.ep.persistence.entity.sm.SmPersonnelAddress;
+import my.ep.persistence.entity.sm.SmProjectExperience;
+import my.ep.persistence.entity.sm.SmStaffAcademic;
+import my.ep.persistence.entity.sm.SmSupplierBank;
+import my.ep.persistence.entity.sm.SmSupplierBranch;
+import my.ep.persistence.entity.sm.SmSupplierCategory;
+import my.ep.persistence.entity.sm.SmSupplierCert;
 import my.ep.web.managedbean.BaseManagedBean;
+
+import org.primefaces.model.DualListModel;
 
 @ManagedBean(name = "smApplMB")
 @SessionScoped
@@ -38,25 +48,25 @@ public class SmApplicationManagedBean extends BaseManagedBean {
 
 	private int tabActiveIndex;
 
-	private SmApplSupplierBranch selectedBranch;
+	private SmSupplierBranch selectedBranch;
 
-	private List<SmApplSupplierBranch> selectedBranches;
+	private List<SmSupplierBranch> selectedBranches;
 
-	private SmApplAssociateCompany selectedAssocCompany;
+	private SmAssociateCompany selectedAssocCompany;
 
-	private List<SmApplAssociateCompany> selectedAssocCompanies;
+	private List<SmAssociateCompany> selectedAssocCompanies;
 
-	private List<SmApplSupplierCert> selectedCertList;
+	private List<SmSupplierCert> selectedCertList;
 
-	private SmApplSupplierCert selectedCert;
+	private SmSupplierCert selectedCert;
 
-	private List<SmApplContractExperience> selectedContractProjs;
+	private List<SmContractExperience> selectedContractProjs;
 
-	private SmApplContractExperience selectedContractProj;
+	private SmContractExperience selectedContractProj;
 
-	private List<SmApplProjectExperience> selectedConstProjs;
+	private List<SmProjectExperience> selectedConstProjs;
 
-	private SmApplProjectExperience selectedConstProj;
+	private SmProjectExperience selectedConstProj;
 
 	private String selectedParentCat;
 
@@ -66,47 +76,113 @@ public class SmApplicationManagedBean extends BaseManagedBean {
 
 	private List<PmCategoryL1> defaultParentCatList;
 
-	private SmApplSupplierCategory selectedCategory;
+	private SmSupplierCategory selectedCategory;
 
-	private PmAddress defaultAddr;
+	private SmAddress defaultAddr;
 
-	private SmApplFacility officeFacility;
+	private SmFacility officeFacility;
 
-	private SmApplFacility selectedFactoryFacility;
+	private SmFacility selectedFactoryFacility;
 
-	private List<SmApplFacility> selectedFactoryFacilities;
+	private List<SmFacility> selectedFactoryFacilities;
 
-	private List<SmApplManufacturingDtl> selectedManufacturingList;
+	private List<SmManufacturingDtl> selectedManufacturingList;
 
-	private SmApplManufacturingDtl selectedManufacturer;
+	private SmManufacturingDtl selectedManufacturer;
+
+	private List<SmMachineDtl> selectedMachineList;
+
+	private SmMachineDtl selectedMachine;
+
+	private SmEquityCompany selectedEquityCompany;
+
+	private List<SmEquityCompany> selectedEquityCompanies;
+
+	private List<SmPersonnel> smapplShareHolders;
+
+	private List<SmPersonnel> selectedShareHolders;
+
+	private SmPersonnel selectedShareHolder;
+
+	private SmPersonnelAddress shareHolderPermAddr;
+
+	private SmPersonnelAddress shareHolderMailAddr;
+
+	private SmStaffAcademic shareHolderAcademics;
+
+	private DualListModel<SmPersonnel> chequeSings;
+
+	private List<SmPersonnel> sourceChequeList;
+
+	private List<SmPersonnel> targetChequeList;
+
+	private SmSupplierBank selectedBank;
+
+	private List<SmSupplierBank> selectedBanks;
 
 	public SmApplicationManagedBean() {
-		defaultAddr = new PmAddress();
+		defaultAddr = new SmAddress();
 		defaultAddr.setPmCity(new PmCity());
 		defaultAddr.setPmDistrict(new PmDistrict());
 		defaultAddr.setPmCountry(new PmCountry());
 		defaultAddr.setPmState(new PmState());
 
-		selectedBranch = new SmApplSupplierBranch();
-		selectedBranch.setPmAddress(defaultAddr);
-		selectedBranches = new ArrayList<SmApplSupplierBranch>();
-		selectedAssocCompany = new SmApplAssociateCompany();
-		selectedAssocCompanies = new ArrayList<SmApplAssociateCompany>();
-		selectedCertList = new ArrayList<SmApplSupplierCert>();
-		selectedCert = new SmApplSupplierCert();
-		selectedContractProjs = new ArrayList<SmApplContractExperience>();
-		selectedContractProj = new SmApplContractExperience();
-		selectedConstProjs = new ArrayList<SmApplProjectExperience>();
-		selectedConstProj = new SmApplProjectExperience();
+		selectedBranch = new SmSupplierBranch();
+		selectedBranch.setSmAddress(defaultAddr);
+		selectedBranches = new ArrayList<SmSupplierBranch>();
+		selectedAssocCompany = new SmAssociateCompany();
+		selectedAssocCompany.setSmAddress(defaultAddr);
+		selectedAssocCompanies = new ArrayList<SmAssociateCompany>();
+		selectedEquityCompany = new SmEquityCompany();
+		selectedEquityCompany.setSmAddress(defaultAddr);
+		selectedEquityCompanies = new ArrayList<SmEquityCompany>();
+		selectedCertList = new ArrayList<SmSupplierCert>();
+		selectedCert = new SmSupplierCert();
+		selectedContractProjs = new ArrayList<SmContractExperience>();
+		selectedContractProj = new SmContractExperience();
+		selectedConstProjs = new ArrayList<SmProjectExperience>();
+		selectedConstProj = new SmProjectExperience();
+		// For share holder personell
+		selectedShareHolder = new SmPersonnel();
+		smapplShareHolders = new ArrayList<SmPersonnel>();
+		selectedShareHolders = new ArrayList<SmPersonnel>();
+		shareHolderMailAddr = new SmPersonnelAddress();
+		shareHolderMailAddr.setSmAddress(defaultAddr);
+		shareHolderPermAddr = new SmPersonnelAddress();
+		shareHolderPermAddr.setSmAddress(defaultAddr);
+		selectedShareHolder
+				.setSmPersonnelAddresses(new ArrayList<SmPersonnelAddress>());
+		selectedShareHolder.getSmPersonnelAddresses().add(shareHolderMailAddr);
+		selectedShareHolder.getSmPersonnelAddresses().add(shareHolderPermAddr);
+		selectedShareHolder
+				.setSmStaffAcademics(new ArrayList<SmStaffAcademic>());
+		shareHolderAcademics = new SmStaffAcademic();
+		selectedShareHolder.getSmStaffAcademics().add(shareHolderAcademics);
+
 		//
-		selectedFactoryFacility = new SmApplFacility();
-		selectedFactoryFacility.setPmAddress(defaultAddr);
-		selectedFactoryFacilities = new ArrayList<SmApplFacility>();
-		selectedManufacturingList = new ArrayList<SmApplManufacturingDtl>();
-		selectedManufacturer = new SmApplManufacturingDtl();
+		selectedFactoryFacility = new SmFacility();
+		selectedFactoryFacility.setSmAddress(defaultAddr);
+		selectedFactoryFacilities = new ArrayList<SmFacility>();
+		selectedManufacturingList = new ArrayList<SmManufacturingDtl>();
+		selectedManufacturer = new SmManufacturingDtl();
+		selectedMachine = new SmMachineDtl();
+		selectedMachineList = new ArrayList<SmMachineDtl>();
+
+		//
+		sourceChequeList = new ArrayList<SmPersonnel>();
+		smAppl = new SmAppl();
+		smAppl.setSmPersonnels(new ArrayList<SmPersonnel>());
+		sourceChequeList.addAll(getSmAppl().getSmPersonnels());
+		targetChequeList = new ArrayList<SmPersonnel>();
+		chequeSings = new DualListModel<>(sourceChequeList, targetChequeList);
+		selectedBank = new SmSupplierBank();
+		selectedBank.setPmbank(new PmBank());
+		selectedBank.setSmAddress(defaultAddr);
+		selectedBank.setSmChequeSignatories(new ArrayList<SmChequeSignatory>());
+		selectedBanks = new ArrayList<SmSupplierBank>();
 
 		// For CategoryCodes
-		selectedCategory = new SmApplSupplierCategory();
+		selectedCategory = new SmSupplierCategory();
 		selectedCategory.setPmCategoryL1(new PmCategoryL1());
 		selectedCategory.setPmCategoryL2(new PmCategoryL2());
 		selectedCategory.setPmCategoryL3(new PmCategoryL3());
@@ -197,86 +273,86 @@ public class SmApplicationManagedBean extends BaseManagedBean {
 		// For CategoryCodes End
 	}
 
-	public SmApplSupplierCategory getSelectedCategory() {
+	public SmSupplierCategory getSelectedCategory() {
 		return selectedCategory;
 	}
 
-	public void setSelectedCategory(SmApplSupplierCategory selectedCategory) {
+	public void setSelectedCategory(SmSupplierCategory selectedCategory) {
 		this.selectedCategory = selectedCategory;
 	}
 
-	public List<SmApplProjectExperience> getSelectedConstProjs() {
+	public List<SmProjectExperience> getSelectedConstProjs() {
 		return selectedConstProjs;
 	}
 
 	public void setSelectedConstProjs(
-			List<SmApplProjectExperience> selectedConstProjs) {
+			List<SmProjectExperience> selectedConstProjs) {
 		this.selectedConstProjs = selectedConstProjs;
 	}
 
-	public SmApplProjectExperience getSelectedConstProj() {
+	public SmProjectExperience getSelectedConstProj() {
 		return selectedConstProj;
 	}
 
-	public void setSelectedConstProj(SmApplProjectExperience selectedConstProj) {
+	public void setSelectedConstProj(SmProjectExperience selectedConstProj) {
 		this.selectedConstProj = selectedConstProj;
 	}
 
-	public List<SmApplContractExperience> getSelectedContractProjs() {
+	public List<SmContractExperience> getSelectedContractProjs() {
 		return selectedContractProjs;
 	}
 
 	public void setSelectedContractProjs(
-			List<SmApplContractExperience> selectedContractProjs) {
+			List<SmContractExperience> selectedContractProjs) {
 		this.selectedContractProjs = selectedContractProjs;
 	}
 
-	public SmApplContractExperience getSelectedContractProj() {
+	public SmContractExperience getSelectedContractProj() {
 		return selectedContractProj;
 	}
 
 	public void setSelectedContractProj(
-			SmApplContractExperience selectedContractProj) {
+			SmContractExperience selectedContractProj) {
 		this.selectedContractProj = selectedContractProj;
 	}
 
-	public List<SmApplSupplierCert> getSelectedCertList() {
+	public List<SmSupplierCert> getSelectedCertList() {
 		return selectedCertList;
 	}
 
-	public void setSelectedCertList(List<SmApplSupplierCert> selectedCertList) {
+	public void setSelectedCertList(List<SmSupplierCert> selectedCertList) {
 		this.selectedCertList = selectedCertList;
 	}
 
-	public SmApplSupplierCert getSelectedCert() {
+	public SmSupplierCert getSelectedCert() {
 		return selectedCert;
 	}
 
-	public void setSelectedCert(SmApplSupplierCert selectedCert) {
+	public void setSelectedCert(SmSupplierCert selectedCert) {
 		this.selectedCert = selectedCert;
 	}
 
-	public SmApplSupplierBranch getSelectedBranch() {
+	public SmSupplierBranch getSelectedBranch() {
 		return selectedBranch;
 	}
 
-	public void setSelectedBranch(SmApplSupplierBranch selectedBranch) {
+	public void setSelectedBranch(SmSupplierBranch selectedBranch) {
 		this.selectedBranch = selectedBranch;
 	}
 
-	public List<SmApplSupplierBranch> getSelectedBranches() {
+	public List<SmSupplierBranch> getSelectedBranches() {
 		return selectedBranches;
 	}
 
-	public void setSelectedBranches(List<SmApplSupplierBranch> selectedBranches) {
+	public void setSelectedBranches(List<SmSupplierBranch> selectedBranches) {
 		this.selectedBranches = selectedBranches;
 	}
 
-	public SmApplFacility getOfficeFacility() {
+	public SmFacility getOfficeFacility() {
 		return officeFacility;
 	}
 
-	public void setOfficeFacility(SmApplFacility officeFacility) {
+	public void setOfficeFacility(SmFacility officeFacility) {
 		this.officeFacility = officeFacility;
 	}
 
@@ -296,29 +372,28 @@ public class SmApplicationManagedBean extends BaseManagedBean {
 		this.smAppl = smAppl;
 	}
 
-	public SmApplAssociateCompany getSelectedAssocCompany() {
+	public SmAssociateCompany getSelectedAssocCompany() {
 		return selectedAssocCompany;
 	}
 
-	public void setSelectedAssocCompany(
-			SmApplAssociateCompany selectedAssocCompany) {
+	public void setSelectedAssocCompany(SmAssociateCompany selectedAssocCompany) {
 		this.selectedAssocCompany = selectedAssocCompany;
 	}
 
-	public List<SmApplAssociateCompany> getSelectedAssocCompanies() {
+	public List<SmAssociateCompany> getSelectedAssocCompanies() {
 		return selectedAssocCompanies;
 	}
 
 	public void setSelectedAssocCompanies(
-			List<SmApplAssociateCompany> selectedAssocCompanies) {
+			List<SmAssociateCompany> selectedAssocCompanies) {
 		this.selectedAssocCompanies = selectedAssocCompanies;
 	}
 
-	public PmAddress getDefaultAddr() {
+	public SmAddress getDefaultAddr() {
 		return defaultAddr;
 	}
 
-	public void setDefaultAddr(PmAddress defaultAddr) {
+	public void setDefaultAddr(SmAddress defaultAddr) {
 		this.defaultAddr = defaultAddr;
 	}
 
@@ -354,39 +429,159 @@ public class SmApplicationManagedBean extends BaseManagedBean {
 		this.defaultParentCatList = defaultParentCatList;
 	}
 
-	public SmApplFacility getSelectedFactoryFacility() {
+	public SmFacility getSelectedFactoryFacility() {
 		return selectedFactoryFacility;
 	}
 
-	public void setSelectedFactoryFacility(
-			SmApplFacility selectedFactoryFacility) {
+	public void setSelectedFactoryFacility(SmFacility selectedFactoryFacility) {
 		this.selectedFactoryFacility = selectedFactoryFacility;
 	}
 
-	public List<SmApplFacility> getSelectedFactoryFacilities() {
+	public List<SmFacility> getSelectedFactoryFacilities() {
 		return selectedFactoryFacilities;
 	}
 
 	public void setSelectedFactoryFacilities(
-			List<SmApplFacility> selectedFactoryFacilities) {
+			List<SmFacility> selectedFactoryFacilities) {
 		this.selectedFactoryFacilities = selectedFactoryFacilities;
 	}
 
-	public List<SmApplManufacturingDtl> getSelectedManufacturingList() {
+	public List<SmManufacturingDtl> getSelectedManufacturingList() {
 		return selectedManufacturingList;
 	}
 
 	public void setSelectedManufacturingList(
-			List<SmApplManufacturingDtl> selectedManufacturingList) {
+			List<SmManufacturingDtl> selectedManufacturingList) {
 		this.selectedManufacturingList = selectedManufacturingList;
 	}
 
-	public SmApplManufacturingDtl getSelectedManufacturer() {
+	public SmManufacturingDtl getSelectedManufacturer() {
 		return selectedManufacturer;
 	}
 
-	public void setSelectedManufacturer(SmApplManufacturingDtl selectedManufacturer) {
+	public void setSelectedManufacturer(SmManufacturingDtl selectedManufacturer) {
 		this.selectedManufacturer = selectedManufacturer;
+	}
+
+	public List<SmMachineDtl> getSelectedMachineList() {
+		return selectedMachineList;
+	}
+
+	public void setSelectedMachineList(List<SmMachineDtl> selectedMachineList) {
+		this.selectedMachineList = selectedMachineList;
+	}
+
+	public SmMachineDtl getSelectedMachine() {
+		return selectedMachine;
+	}
+
+	public void setSelectedMachine(SmMachineDtl selectedMachine) {
+		this.selectedMachine = selectedMachine;
+	}
+
+	public SmEquityCompany getSelectedEquityCompany() {
+		return selectedEquityCompany;
+	}
+
+	public void setSelectedEquityCompany(SmEquityCompany selectedEquityCompany) {
+		this.selectedEquityCompany = selectedEquityCompany;
+	}
+
+	public List<SmEquityCompany> getSelectedEquityCompanies() {
+		return selectedEquityCompanies;
+	}
+
+	public void setSelectedEquityCompanies(
+			List<SmEquityCompany> selectedEquityCompanies) {
+		this.selectedEquityCompanies = selectedEquityCompanies;
+	}
+
+	public List<SmPersonnel> getSmapplShareHolders() {
+		return smapplShareHolders;
+	}
+
+	public void setSmapplShareHolders(List<SmPersonnel> smapplShareHolders) {
+		this.smapplShareHolders = smapplShareHolders;
+	}
+
+	public List<SmPersonnel> getSelectedShareHolders() {
+		return selectedShareHolders;
+	}
+
+	public void setSelectedShareHolders(List<SmPersonnel> selectedShareHolders) {
+		this.selectedShareHolders = selectedShareHolders;
+	}
+
+	public SmPersonnel getSelectedShareHolder() {
+		return selectedShareHolder;
+	}
+
+	public void setSelectedShareHolder(SmPersonnel selectedShareHolder) {
+		this.selectedShareHolder = selectedShareHolder;
+	}
+
+	public SmPersonnelAddress getShareHolderPermAddr() {
+		return shareHolderPermAddr;
+	}
+
+	public void setShareHolderPermAddr(SmPersonnelAddress shareHolderPermAddr) {
+		this.shareHolderPermAddr = shareHolderPermAddr;
+	}
+
+	public SmPersonnelAddress getShareHolderMailAddr() {
+		return shareHolderMailAddr;
+	}
+
+	public void setShareHolderMailAddr(SmPersonnelAddress shareHolderMailAddr) {
+		this.shareHolderMailAddr = shareHolderMailAddr;
+	}
+
+	public SmStaffAcademic getShareHolderAcademics() {
+		return shareHolderAcademics;
+	}
+
+	public void setShareHolderAcademics(SmStaffAcademic shareHolderAcademics) {
+		this.shareHolderAcademics = shareHolderAcademics;
+	}
+
+	public DualListModel<SmPersonnel> getChequeSings() {
+		return chequeSings;
+	}
+
+	public void setChequeSings(DualListModel<SmPersonnel> chequeSings) {
+		this.chequeSings = chequeSings;
+	}
+
+	public List<SmPersonnel> getSourceChequeList() {
+		return sourceChequeList;
+	}
+
+	public void setSourceChequeList(List<SmPersonnel> sourceChequeList) {
+		this.sourceChequeList = sourceChequeList;
+	}
+
+	public List<SmPersonnel> getTargetChequeList() {
+		return targetChequeList;
+	}
+
+	public void setTargetChequeList(List<SmPersonnel> targetChequeList) {
+		this.targetChequeList = targetChequeList;
+	}
+
+	public SmSupplierBank getSelectedBank() {
+		return selectedBank;
+	}
+
+	public void setSelectedBank(SmSupplierBank selectedBank) {
+		this.selectedBank = selectedBank;
+	}
+
+	public List<SmSupplierBank> getSelectedBanks() {
+		return selectedBanks;
+	}
+
+	public void setSelectedBanks(List<SmSupplierBank> selectedBanks) {
+		this.selectedBanks = selectedBanks;
 	}
 
 }

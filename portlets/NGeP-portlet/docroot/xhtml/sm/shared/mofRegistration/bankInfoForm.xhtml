@@ -20,30 +20,32 @@
 			</tr>
 		</table>
 		<br />
-		<p:dataTable var="utilBean"
-			value="#{mofRegistrationBackingBean.utilList}"
-			selection="#{mofRegistrationBackingBean.managedBean.selectedUtilList}"
-			rowKey="#{utilBean.seqNo}" rowIndexVar="index">
+		<p:dataTable var="bankBean"
+			value="#{backingBean.managedBean.smAppl.smSupplierBanks}"
+			selection="#{backingBean.managedBean.selectedBanks}"
+			rowKey="#{bankBean.supplierBankId}" rowIndexVar="index" id="bankDt">
 
 			<p:column selectionMode="multiple" width="5%" />
 
 			<p:column headerText="NO.">
-				<p:outputLabel value="1" />
-			</p:column>
-			<p:column headerText="Bank Name">
-				<p:outputLabel value="Maybank" />
-			</p:column>
-
-			<p:column headerText="Bank Branch">
-				<p:outputLabel value="Maybank - PJ Branch" />
+				<h:outputText value="#{index+1}" />
 			</p:column>
 
 			<p:column headerText="Account No.">
-				<p:commandLink value="127637373938" onclick="bankDialog.show();" />
+				<p:commandLink value="#{bankBean.accountNo}"
+					oncomplete="bankDialog.show();"
+					action="#{backingBean.assignSelBank(bankBean)}"
+					update=":form:tt:bankDialog" />
+			</p:column>
+			<p:column headerText="Bank Name">
+				<h:outputText value="#{bankBean.pmbank.bankCode}" />
 			</p:column>
 
 			<p:column headerText="Designated Bank">
-				<p:outputLabel value="Yes" />
+				<h:outputText value="Yes"
+					rendered="#{bankBean.defaultAccount == true}" />
+				<h:outputText value="No"
+					rendered="#{bankBean.defaultAccount == false}" />
 			</p:column>
 			<p:column headerText="Action">
 				<p:commandLink value="View Signatories"
@@ -53,7 +55,8 @@
 			</p:column>
 		</p:dataTable>
 		<div align="right">
-			<p:commandButton value="Add Account" onclick="bankDialog.show();" />
+			<p:commandButton value="Add Account" oncomplete="bankDialog.show();"
+				action="#{backingBean.assignNewBank}" update=":form:tt:bankDialog" />
 			<p:commandButton value="Delete Account(s)" />
 		</div>
 		<p:fieldset id="sfieldset"
@@ -64,7 +67,7 @@
 				rowKey="#{auth.personelSeq}" rowIndexVar="index"
 				styleClass="updateSignatory">
 				<p:column headerText="NO.">
-					<p:outputLabel value="#{index+1}" />
+					<h:outputText value="#{index+1}" />
 				</p:column>
 
 				<p:column headerText="Name">
@@ -94,60 +97,71 @@
 			</tr>
 		</table>
 	</p:panel>
-	<p:dialog width="400px" height="500px" header="Bank Info Page"
+	<p:dialog width="800px" height="500px" header="Bank Info Page"
 		widgetVar="bankDialog" resizable="false" showEffect="fade"
-		hideEffect="fade" modal="true">
+		hideEffect="fade" modal="true" id="bankDialog">
 		<p:panel header="Bank Details">
 
 			<table style="width: 100%">
 				<tr>
 					<td><p:outputLabel value="Bank Name *" /></td>
-					<td><p:selectOneMenu>
+					<td><p:selectOneMenu
+							value="#{backingBean.managedBean.selectedBank.pmbank.bankCode}">
 							<f:selectItem itemLabel="-- Select One -- " itemValue="" />
-							<f:selectItem itemLabel="Maybank" itemValue="1" />
-							<f:selectItem itemLabel="CIMB" itemValue="1" />
+							<f:selectItem itemLabel="Maybank" itemValue="MY" />
+							<f:selectItem itemLabel="CIMB" itemValue="CIMB" />
+							<f:selectItem itemLabel="BSN" itemValue="BSN" />
 						</p:selectOneMenu></td>
 				</tr>
 				<tr>
-					<td><p:outputLabel value="Branch Name *" /></td>
-					<td><p:inputText /></td>
+					<td><p:outputLabel value="Account No. *" /></td>
+					<td><p:inputText
+							value="#{backingBean.managedBean.selectedBank.accountNo}" /></td>
 				</tr>
 				<tr>
 					<td><p:outputLabel value="Address *" /></td>
-					<td><p:inputText /></td>
+					<td><p:inputText
+							value="#{backingBean.managedBean.selectedBank.smAddress.address1}" /></td>
 				</tr>
 
 				<tr>
 					<td></td>
-					<td><p:inputText /></td>
+					<td><p:inputText
+							value="#{backingBean.managedBean.selectedBank.smAddress.address2}" /></td>
 				</tr>
 				<tr>
 					<td></td>
-					<td><p:inputText /></td>
+					<td><p:inputText
+							value="#{backingBean.managedBean.selectedBank.smAddress.address3}" /></td>
 				</tr>
 				<tr>
 					<td><p:outputLabel value="Country *" /></td>
-					<td><p:selectOneMenu>
+					<td><p:selectOneMenu
+							value="#{backingBean.managedBean.selectedBank.smAddress.pmCountry.countryCode}">
 							<f:selectItem itemLabel="-- Select One -- " itemValue="" />
 							<f:selectItem itemLabel="Malaysia" itemValue="1" />
 						</p:selectOneMenu></td>
 				</tr>
 				<tr>
 					<td><p:outputLabel value="#{lbl['lbl.sm.postcode']}" /></td>
-					<td><p:inputText /></td>
+					<td><p:inputText
+							value="#{backingBean.managedBean.selectedBank.smAddress.postcode}" /></td>
 				</tr>
 				<tr>
 					<td><p:outputLabel value="#{lbl['lbl.sm.state']}" /></td>
-					<td><p:inputText /></td>
+					<td><p:inputText
+							value="#{backingBean.managedBean.selectedBank.smAddress.pmState.stateCode}" /></td>
 				</tr>
 
 				<tr>
 					<td><p:outputLabel value="#{lbl['lbl.sm.district']}" /></td>
-					<td><p:inputText /></td>
+					<td><p:inputText
+							value="#{backingBean.managedBean.selectedBank.smAddress.pmDistrict.districtCode}" /></td>
 				</tr>
 				<tr>
 					<td><p:outputLabel value="#{lbl['lbl.sm.towncity']}" /></td>
-					<td><p:inputText /></td>
+					<td><p:inputText
+							value="#{backingBean.managedBean.selectedBank.smAddress.pmCity.cityCode}" /></td>
 				</tr>
 				<tr>
 					<td><p:outputLabel value="Purpose Of Account/Branch *" /></td>
@@ -159,36 +173,39 @@
 				</tr>
 				<tr>
 					<td><p:outputLabel value="Cheque Signatories *" /></td>
-					<!-- <td><p:pickList  /></td> -->
-					<td><p:selectManyMenu>
-							<f:selectItem itemLabel="-- Select One--" itemValue="1" />
-							<f:selectItem itemLabel="User1" itemValue="1" />
-							<f:selectItem itemLabel="User2" itemValue="1" />
-							<f:selectItem itemLabel="User2" itemValue="1" />
-						</p:selectManyMenu></td>
+					<!-- <td><p:pickList id="pickList"
+							value="#{backingBean.managedBean.chequeSings}" var="per"
+							itemLabel="#{per.name}" itemValue="#{per}" converter="signa"/></td> -->
+
 				</tr>
 				<tr>
-					<td align="right"><p:selectBooleanCheckbox /></td>
-					<td><p:outputLabel value="Designated Bank Account" /></td>
+					<td style="float: right; padding-right: 20px;"><p:selectBooleanCheckbox
+							value="#{backingBean.managedBean.selectedBank.defaultAccount}" /></td>
+					<td><h:outputText value="Designated Bank Account" /></td>
 				</tr>
 				<tr>
 					<td><p:outputLabel value="Associated Company Branch *" /></td>
 					<td><p:selectOneMenu>
-							<f:selectItem itemLabel="-- Select One -- " itemValue="" />
-							<f:selectItem itemLabel="Branch1" itemValue="1" />
-							<f:selectItem itemLabel="Branch2" itemValue="1" />
+							<f:selectItem itemLabel="-- Select One--" itemValue="1" />
+							<f:selectItems
+								value="#{backingBean.managedBean.smAppl.smSupplierBranches}"
+								var="supBean" itemLabel="#{supBean.branchName}"
+								itemValue="#{supBean.branchName}" />
 						</p:selectOneMenu></td>
 				</tr>
 				<tr>
 					<td><p:outputLabel value="Fax No." /></td>
-					<td><p:inputText /></td>
+					<td><p:inputText
+							value="#{backingBean.managedBean.selectedBank.smAddress.faxNo}" /></td>
 				</tr>
 
 			</table>
 		</p:panel>
 		<br />
 		<div align="center">
-			<p:commandButton value="Save" onclick="bankDialog.hide();" />
+			<p:commandButton value="Save" oncomplete="bankDialog.hide();"
+				action="#{backingBean.addOrUpdateBankInfoToSmAppl}"
+				update=":form:tt:bankDt" />
 			<p:commandButton value="Cancel" onclick="bankDialog.hide();" />
 		</div>
 	</p:dialog>

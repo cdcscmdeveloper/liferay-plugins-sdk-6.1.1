@@ -21,37 +21,42 @@
 			</tr>
 		</table>
 		<br />
-		<p:dataTable var="utilBean"
-			value="#{mofRegistrationBackingBean.utilList}"
-			selection="#{mofRegistrationBackingBean.managedBean.selectedUtilList}"
-			rowKey="#{utilBean.seqNo}" rowIndexVar="index">
+		<p:dataTable var="shareBean"
+			value="#{backingBean.managedBean.smapplShareHolders}"
+			selection="#{backingBean.managedBean.selectedShareHolders}"
+			rowKey="#{shareBean.personnelId}" rowIndexVar="index" id="shrPerDt">
 
 			<p:column selectionMode="multiple" width="5%" />
 
 			<p:column headerText="NO.">
-				<p:outputLabel value="1" />
+				<h:outputText value="#{index+1}" />
 			</p:column>
 
 			<p:column headerText="Name">
-				<p:commandLink value="Venkat" onclick="shareHolderDialog.show();" />
+				<p:commandLink value="#{shareBean.name}"
+					oncomplete="shareHolderDialog.show();"
+					action="#{backingBean.assignSelShareHolder(shareBean)}"
+					update=":form:tt:shareHolderDialog" />
 			</p:column>
 			<p:column headerText="IC/Passport Num">
-				<p:outputLabel value="F383864837" />
+				<h:outputText value="#{shareBean.identificationNo}" />
 			</p:column>
 			<p:column headerText="Share Holding(%)">
-				<p:outputLabel value="10" />
+				<h:outputText value="#{shareBean.sharePercentage}" />
 			</p:column>
 			<p:column headerText="Value(MYR)">
-				<p:outputLabel value="1,000.00" />
+				<h:outputText value="#{shareBean.shareAmount}" />
 			</p:column>
 			<p:column headerText="Equity Owner?">
-				<p:outputLabel value="Yes" />
+				<h:outputText value="Yes" />
 			</p:column>
 
 		</p:dataTable>
 		<div align="right">
 			<p:commandButton value="Add Share Holder"
-				onclick="shareHolderDialog.show();" />
+				oncomplete="shareHolderDialog.show();"
+				action="#{backingBean.assignNewShareHolder}"
+				update=":form:tt:shareHolderDialog" />
 			<p:commandButton value="Delete Share Holder(s)" />
 		</div>
 		<table style="width: 100%">
@@ -63,14 +68,16 @@
 			</tr>
 		</table>
 	</p:panel>
-	<p:dialog width="800px" height="500px" header="Share Holder Details"
+	<p:dialog width="1000px" height="500px" header="Share Holder Details"
 		widgetVar="shareHolderDialog" resizable="false" showEffect="fade"
-		hideEffect="fade" modal="true">
+		hideEffect="fade" modal="true" id="shareHolderDialog">
 
 		<ui:include
-			src="/xhtml/sm/shared/mofRegistration/personnelInfoPopUpForm.xhtml" />
+			src="/xhtml/sm/shared/mofRegistration/shareHolderInfoPopUpForm.xhtml" />
 		<div align="center">
-			<p:commandButton value="Save" onclick="shareHolderDialog.hide();" />
+			<p:commandButton value="Save" oncomplete="shareHolderDialog.hide();"
+				action="#{backingBean.addOrUpdateShareHolderToSmAppl}"
+				update=":form:tt:shrPerDt" />
 			<p:commandButton value="Cancel" onclick="shareHolderDialog.hide();" />
 		</div>
 	</p:dialog>

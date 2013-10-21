@@ -36,28 +36,22 @@
 			<ui:fragment
 				rendered="#{backingBean.managedBean.officeFacility.ownershipType eq 'R'}">
 				<tr>
-					<td><h6>
-							<p:outputLabel value="For Rented" />
-						</h6></td>
-
-				</tr>
-				<tr>
 					<td><p:outputLabel value="Landlord's Name *" /></td>
 					<td><p:inputText
 							value="#{backingBean.managedBean.officeFacility.ownerName}" /></td>
 					<td><p:outputLabel value="Monthly Rental*" /></td>
-					<td><p:panelGrid columns="2"
-							styleClass="noBorders tr,noBorders td">
-							<p:column>
-								<p:inputText
-									value="#{backingBean.managedBean.officeFacility.rentalRate}" />
-							</p:column>
-							<p:column>
-								<p:selectOneMenu>
-									<f:selectItem itemLabel="MYR" itemValue="1" />
-								</p:selectOneMenu>
-							</p:column>
-						</p:panelGrid></td>
+					<td>
+						<table>
+							<tr>
+								<td style="padding-right: 20px;"><p:inputText
+										value="#{backingBean.managedBean.officeFacility.rentalRate}" />
+								</td>
+								<td valign="top"><p:selectOneMenu>
+										<f:selectItem itemLabel="MYR" itemValue="1" />
+									</p:selectOneMenu></td>
+							</tr>
+						</table>
+					</td>
 				</tr>
 				<tr>
 					<td><p:outputLabel value="Landlord's Address *" /></td>
@@ -67,28 +61,22 @@
 			<ui:fragment
 				rendered="#{backingBean.managedBean.officeFacility.ownershipType eq 'O'}">
 				<tr>
-					<td><h6>
-							<p:outputLabel value="For Owned" />
-						</h6></td>
-
-				</tr>
-				<tr>
 					<td><p:outputLabel value="Owner Name *" /></td>
 					<td><p:inputText
 							value="#{backingBean.managedBean.officeFacility.ownerName}" /></td>
 					<td><p:outputLabel value="Purchase Price*" /></td>
-					<td><p:panelGrid columns="2"
-							styleClass="noBorders tr,noBorders td">
-							<p:column>
-								<p:inputText
-									value="#{backingBean.managedBean.officeFacility.purchasePrice}" />
-							</p:column>
-							<p:column>
-								<p:selectOneMenu>
-									<f:selectItem itemLabel="MYR" itemValue="1" />
-								</p:selectOneMenu>
-							</p:column>
-						</p:panelGrid></td>
+					<td>
+						<table>
+							<tr>
+								<td style="padding-right: 20px;"><p:inputText
+										value="#{backingBean.managedBean.officeFacility.purchasePrice}" />
+								</td>
+								<td valign="top"><p:selectOneMenu>
+										<f:selectItem itemLabel="MYR" itemValue="1" />
+									</p:selectOneMenu></td>
+							</tr>
+						</table>
+					</td>
 				</tr>
 				<tr>
 					<td><p:outputLabel value="Purchase Date *" /></td>
