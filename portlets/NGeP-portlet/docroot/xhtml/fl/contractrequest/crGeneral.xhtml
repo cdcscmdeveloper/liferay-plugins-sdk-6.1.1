@@ -21,12 +21,12 @@
 			</tr>
 		</table>
 		 <p:messages id="msgs"/>
-		<p:panel header="FULFILMENT DETAIL" toggleable="true">
+		<p:panel header="FULFILMENT DETAIL" toggleable="true" id="flDetails">
 			<table>
 				<tr>
 					<td><p:outputLabel value="Ministry" /></td>
 					<td><p:inputText style="width: 260px;"
-							value="#{fulfilmentRequestBackingBean.managedBean.flRequest.createdOrgProfile.orgProfileId}" disabled="true" /></td>
+							value="#{fulfilmentRequestBackingBean.managedBean.flRequest.createdOrgProfile.pmOrgProfile.pmOrgProfile.orgName}" disabled="true" /></td>
 					<td><p:outputLabel value="Contract Req. NO." /></td>
 					<td><p:inputText style="width: 260px;" 
 							disabled="true" /></td>
@@ -34,16 +34,21 @@
 				<tr>
 					<td><p:outputLabel value="* Issued Jabatan" /></td>
 					<td><p:selectOneMenu value="#{fulfilmentRequestBackingBean.managedBean.flRequest.issuedOrgProfile.orgProfileId}" style="width: 260px;">
-							<f:selectItems value="#{fulfilmentRequestBackingBean.PTJ}" />
+							<f:selectItems value="#{fulfilmentRequestBackingBean.divisionProfileList}" />
+							<p:ajax event="change" update="flDetails" process="@this"
+								listener="#{fulfilmentRequestBackingBean.checkPtjFlg}" />
 						</p:selectOneMenu></td>
 					<td><p:outputLabel value="MTO?" /></td>
 					<td><p:selectBooleanCheckbox value="#{fulfilmentRequestBackingBean.managedBean.flRequest.mto}"/></td>
 				</tr>
 				<tr>
 					<td><p:outputLabel value="* Issued PTJ" /></td>
-					<td><p:selectOneMenu value="#{fulfilmentRequestBackingBean.managedBean.flRequest.issuedOrgProfile.orgProfileId}" style="width: 260px;">
-							<f:selectItems value="#{fulfilmentRequestBackingBean.PTJ}"/>
-						</p:selectOneMenu></td>
+					<td><p:selectOneMenu
+						disabled="#{fulfilmentRequestBackingBean.managedBean.checkPtjFlg}"
+						value="#{fulfilmentRequestBackingBean.managedBean.flRequest.issuedOrgProfile.orgProfileId}"
+						style="width: 260px;">
+						<f:selectItems value="#{fulfilmentRequestBackingBean.PTJList}" />
+					</p:selectOneMenu></td>
 					<td><p:outputLabel value="Contract NO." /></td>
 					<td><p:inputText style="width: 260px;" value="#{fulfilmentRequestBackingBean.managedBean.flRequest.ctContract.contractName}"
 							disabled="true" /></td>
@@ -51,7 +56,7 @@
 				<tr>
 					<td><p:outputLabel value="* Received Jabatan" /></td>
 					<td><p:selectOneMenu value="#{fulfilmentRequestBackingBean.managedBean.flRequest.receivedOrgProfile.orgProfileId}" style="width: 260px;">
-							<f:selectItems value="#{fulfilmentRequestBackingBean.PTJ}"/>
+							<f:selectItems value="#{fulfilmentRequestBackingBean.divisionProfileList}"/>
 						</p:selectOneMenu></td>
 					<td><p:outputLabel value="Contract Type" /></td>
 					<td><p:inputText style="width: 260px;"
@@ -59,8 +64,8 @@
 				</tr>
 				<tr>
 					<td><p:outputLabel value="* Received PTJ" /></td>
-					<td><p:selectOneMenu value="#{fulfilmentRequestBackingBean.managedBean.flRequest.receivedOrgProfile.orgProfileId}" style="width: 260px;">
-							<f:selectItems value="#{fulfilmentRequestBackingBean.PTJ}" />
+					<td><p:selectOneMenu disabled="#{fulfilmentRequestBackingBean.managedBean.checkPtjFlg}" value="#{fulfilmentRequestBackingBean.managedBean.flRequest.receivedOrgProfile.orgProfileId}" style="width: 260px;">
+							<f:selectItems value="#{fulfilmentRequestBackingBean.PTJList}" />
 						</p:selectOneMenu></td>
 					<td><p:outputLabel value="Fulfillment Type" /></td>
 					<td><p:inputText style="width: 260px;"
@@ -105,8 +110,8 @@
 							<f:selectItems itemLabel="002 KAWANGAN KL" itemValue="1" />
 						</p:selectOneMenu></td>
 					<td><p:outputLabel value="*Charge PTJ" /></td>
-					<td><p:selectOneMenu  style="width: 260px;">
-							<f:selectItems value="#{fulfilmentRequestBackingBean.PTJ}" />
+					<td><p:selectOneMenu disabled="#{fulfilmentRequestBackingBean.managedBean.checkPtjFlg}" style="width: 260px;">
+							<f:selectItems value="#{fulfilmentRequestBackingBean.PTJList}" />
 						</p:selectOneMenu></td>
 				</tr>
 				<tr>

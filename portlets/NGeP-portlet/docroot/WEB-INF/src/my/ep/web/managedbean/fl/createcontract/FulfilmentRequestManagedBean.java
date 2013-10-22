@@ -14,6 +14,7 @@ import my.ep.persistence.entity.fl.FlRemark;
 import my.ep.persistence.entity.fl.request.FlDeliveryAddress;
 import my.ep.persistence.entity.fl.request.FlFulfilmentRequest;
 import my.ep.persistence.entity.pm.authorization.PmOrgAddress;
+import my.ep.persistence.entity.pm.common.PmMaksud;
 import my.ep.web.managedbean.BaseManagedBean;
 
 import org.apache.log4j.Logger;
@@ -37,6 +38,8 @@ public class FulfilmentRequestManagedBean extends BaseManagedBean {
 	private List<PmOrgAddress> selectedPmDelAddrList;
 	private List<PmOrgAddress> delAddrList;
 	private FlDeliveryAddress selectedDelAddr;
+	private List<PmMaksud> maksudCodeList;
+	private boolean checkPtjFlg = true;
 	
 	//getcontract
 	private CtContract ctContract = new CtContract();
@@ -215,6 +218,38 @@ public class FulfilmentRequestManagedBean extends BaseManagedBean {
 	 */
 	public void setSelectedRowFlg(boolean selectedRowFlg) {
 		this.selectedRowFlg = selectedRowFlg;
+	}
+
+
+	/**
+	 * @return the maksudCodeList
+	 */
+	public List<PmMaksud> getMaksudCodeList() {
+		return maksudCodeList;
+	}
+
+
+	/**
+	 * @param maksudCodeList the maksudCodeList to set
+	 */
+	public void setMaksudCodeList(List<PmMaksud> maksudCodeList) {
+		this.maksudCodeList = maksudCodeList;
+	}
+
+
+	/**
+	 * @return the checkPtjFlg
+	 */
+	public boolean isCheckPtjFlg() {
+		return checkPtjFlg;
+	}
+
+
+	/**
+	 * @param checkPtjFlg the checkPtjFlg to set
+	 */
+	public void setCheckPtjFlg(boolean checkPtjFlg) {
+		this.checkPtjFlg = checkPtjFlg;
 	}
 
 }
