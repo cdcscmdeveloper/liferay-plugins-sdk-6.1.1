@@ -9,10 +9,13 @@ import my.ep.factory.EpLogger;
 import my.ep.persistence.entity.pm.common.PmCategoryL1;
 import my.ep.persistence.entity.pm.common.PmCategoryL2;
 import my.ep.persistence.entity.pm.common.PmCategoryL3;
+import my.ep.persistence.entity.pm.common.PmDistrict;
 import my.ep.persistence.entity.pm.common.PmDo;
 import my.ep.persistence.entity.pm.common.PmGo;
 import my.ep.persistence.entity.pm.common.PmSo;
+import my.ep.persistence.entity.pm.common.PmState;
 import my.ep.persistence.entity.ss.quationtender.ScQt;
+import my.ep.persistence.entity.ss.quationtender.ScQtGosodoBudget;
 import my.ep.web.managedbean.BaseManagedBean;
 
 import org.apache.log4j.Logger;
@@ -44,7 +47,11 @@ public class QTDetailManagedBean extends BaseManagedBean {
 	
 	private List<PmCategoryL3> categoryL3s;
 	
+	private List<PmState> states;
 	
+	private List<PmDistrict> districts;
+	
+	public List<ScQtGosodoBudget> gosodos;
 	
 	private String qtNumber;
 	
@@ -121,6 +128,42 @@ public class QTDetailManagedBean extends BaseManagedBean {
 
 	public void setQt(ScQt qt) {
 		this.qt = qt;
+	}
+
+
+
+	public List<PmState> getStates() {
+		return states;
+	}
+
+
+
+	public void setStates(List<PmState> states) {
+		this.states = states;
+	}
+
+
+
+	public List<PmDistrict> getDistricts() {
+		return districts;
+	}
+
+
+
+	public void setDistricts(List<PmDistrict> districts) {
+		this.districts = districts;
+	}
+
+
+
+	public List<ScQtGosodoBudget> getGosodos() {
+		return gosodos;
+	}
+
+
+
+	public void setGosodos(List<ScQtGosodoBudget> gosodos) {
+		this.gosodos = gosodos;
 	}
 
 
