@@ -1,24 +1,17 @@
 package my.ep.web.backingbean.bpm.tasklist;
 
-import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.Map;
 
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.RequestScoped;
-import javax.faces.context.ExternalContext;
 import javax.faces.context.FacesContext;
-import javax.portlet.PortletRequest;
 
-import my.ep.biz.service.cm.codification.ICodificationSO;
 import my.ep.biz.service.cm.codification.IRequestCodeSO;
 import my.ep.bpm.dto.BpmRequestDTO;
 import my.ep.bpm.dto.BpmResponseDTO;
 import my.ep.bpm.service.IBpmSO;
-import my.ep.dto.cm.codification.CodificationReqDTO;
-import my.ep.dto.cm.codification.CodificationResDTO;
 import my.ep.dto.cm.codification.RequestCodeReqDTO;
 import my.ep.dto.cm.codification.RequestCodeResDTO;
 import my.ep.jaxb.cd.unspscdata.CDUNSPSCDataType;
@@ -27,12 +20,10 @@ import my.ep.web.backingbean.BaseBackingBean;
 import my.ep.web.backingbean.cm.codification.UnspscCodeBackingBean;
 import my.ep.web.constant.PagingConst;
 import my.ep.web.managedbean.bpm.tasklist.TaskListManagedBean;
-import my.ep.web.util.FacesScopes;
+import my.ep.web.managedbean.cm.codification.UnspscCodeManagedBean;
 import my.ep.web.util.lookupservice.BusinessDelegate;
 
 import org.apache.log4j.Logger;
-
-import com.liferay.portal.util.PortalUtil;
 
 @ManagedBean(name="tasklistBackingBean")
 @RequestScoped
@@ -105,7 +96,7 @@ public class TaskListBackingBean extends BaseBackingBean<TaskListManagedBean>{
 		IBpmSO bpmSO = (IBpmSO) EpBpmBusinessDelegate.getInstance().getServiceObject(IBpmSO.class);
 
 		//String token = bpmSO.authenticate("roslan", "welcome1");
-		String token = bpmSO.authenticate("roslan", "welcome1");
+		String token = bpmSO.authenticate("khai", "welcome1");
 		System.out.println("testing BPM auth******"+token);
 		BpmRequestDTO reqDTO = new BpmRequestDTO();
 
@@ -144,62 +135,29 @@ public class TaskListBackingBean extends BaseBackingBean<TaskListManagedBean>{
 		BpmResponseDTO res = bpmSO.getTaskDetails(reqDTO);
 		System.out.println("********getProcessName********"+res.getProcessName());
 		this.getManagedBean().setProcessName(res.getProcessName());
+		
+		Object obj = res.getPojo();
+		this.getManagedBean().setTaskId(taskId);
+		
 		if(res.getProcessName().equalsIgnoreCase("Request UNSPSC")){
-			IRequestCodeSO requestSO = (IRequestCodeSO) BusinessDelegate.getInstance().getServiceObject("cm",IRequestCodeSO.class);
-			ICodificationSO unspscSO = (ICodificationSO) BusinessDelegate.getInstance().getServiceObject("cm",ICodificationSO.class);
 			
-			
-			CodificationReqDTO reqCodeDTO = new CodificationReqDTO();
-			Object obj = res.getPojo();
 			CDUNSPSCDataType unspsc = (CDUNSPSCDataType)obj;
-			log.info("requestID:"+unspsc.getRequestId());
 
-			//reqCodeDTO.getRequestCode().setTaskId(taskId);
-
-
-
+			IRequestCodeSO requestSO = (IRequestCodeSO) BusinessDelegate.getInstance().getServiceObject("cm",IRequestCodeSO.class);
 			RequestCodeReqDTO codeDTO = new RequestCodeReqDTO();
 			codeDTO.setRequestId(new Long(unspsc.getRequestId()));
-
 			RequestCodeResDTO resDTO = requestSO.retrieveUnspscCodeReview(codeDTO);
-			log.info("name:"+resDTO.getRequestCode().getItemName());
-
-			resDTO.getRequestCode().setTaskId(taskId);
-			reqCodeDTO.setRequestCode(resDTO.getRequestCode());
-			CodificationResDTO resCodeDTO = unspscSO.updateCodificationRequest(reqCodeDTO);
 
 			UnspscCodeBackingBean unspscBB = new UnspscCodeBackingBean();
-			unspscBB.getManagedBean().setRequestCode(resCodeDTO.getRequestCode());
+			unspscBB.getManagedBean().setRequestCode(resDTO.getRequestCode());
 
-			String url = "";
-			log.info("******urlKey***********"+urlKey);
-			if(!this.getManagedBean().getBpmMap().isEmpty() && this.getManagedBean().getBpmMap().size() > 0 ){ 
-
-
-				Iterator itMap = this.getManagedBean().getBpmMap().entrySet().iterator();
-
-				while(itMap.hasNext()) {
-					Map.Entry entry = (Map.Entry)itMap.next();
-					String key = (String)entry.getKey();
-					log.info("mapKey:"+key);
-					if(key.equalsIgnoreCase("key1")){
-						url = (String)entry.getValue();
-
-					}
-				}
-
-			}
-			log.info("url:"+url);
 		}
+		
+		
+		
 
 
 		return "taskListCommonPage";
-
-		//ExternalContext externalContext = FacesContext.getCurrentInstance().getExternalContext();
-
-		//externalContext.redirect("http://localhost:8080/web/guest/" +url +"?testing=123");
-
-
 	}
 
 
