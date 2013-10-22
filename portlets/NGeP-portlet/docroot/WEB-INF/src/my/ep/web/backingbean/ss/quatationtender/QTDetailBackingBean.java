@@ -202,10 +202,10 @@ public class QTDetailBackingBean extends BaseBackingBean<QTDetailManagedBean> {
 			// get the so list and set it to managed bean property
 			ObjectReqDTO reqDTO = new ObjectReqDTO();
 			reqDTO.setGoId(pmGo.getGoId());
-			List<PmSo> solist = objectSO.retrieveSOListByGOCode(pmGo.getGoId());
+			ObjectResDTO objResDTO = objectSO.retrieveSOListByGOCode(reqDTO);
 			List<PmSo> oldsolist = this.getManagedBean().getSoList();
 			oldsolist.clear();
-			this.getManagedBean().setSoList(solist);
+			this.getManagedBean().setSoList(objResDTO.getPmSoList());
 		}
 		log.info("end of handle go change method");
 	}
@@ -218,10 +218,12 @@ public class QTDetailBackingBean extends BaseBackingBean<QTDetailManagedBean> {
 		PmSo pmSo = (PmSo) changeEvent.getNewValue();
 		if (pmSo != null && pmSo.getSoId() != null) {
 			// get the do list and set it to managed bean property
-			List<PmDo> dolist = objectSO.retrieveDOListBySOCode(pmSo.getSoId());
+			ObjectReqDTO reqDTO = new ObjectReqDTO();
+			reqDTO.setGoId(pmSo.getSoId());
+			ObjectResDTO objResDTO = objectSO.retrieveDOListBySOCode(reqDTO);
 			List<PmDo> olddolist = this.getManagedBean().getDoList();
 			olddolist.clear();
-			this.getManagedBean().setDoList(dolist);
+			this.getManagedBean().setDoList(objResDTO.getPmDoList());
 		}
 		log.info("end  of handle go change method");
 	}
