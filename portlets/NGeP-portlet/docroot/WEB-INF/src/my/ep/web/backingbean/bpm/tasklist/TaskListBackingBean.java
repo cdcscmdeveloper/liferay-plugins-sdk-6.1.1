@@ -44,12 +44,12 @@ public class TaskListBackingBean extends BaseBackingBean<TaskListManagedBean>{
 
 
 	public TaskListBackingBean(){
-		
-		
-		
-//		String testtext = PortalUtil.getHttpServletRequest((PortletRequest) FacesContext.getCurrentInstance().getExternalContext().getRequest()).getParameter("testing");
-//		System.out.println("new FacesScopes().getParameter(\"testing\"): " + testtext);
-		
+
+
+
+		//		String testtext = PortalUtil.getHttpServletRequest((PortletRequest) FacesContext.getCurrentInstance().getExternalContext().getRequest()).getParameter("testing");
+		//		System.out.println("new FacesScopes().getParameter(\"testing\"): " + testtext);
+
 		this.getManagedBean().setBpmMap(null);
 		Map temp = new HashMap();
 
@@ -105,7 +105,7 @@ public class TaskListBackingBean extends BaseBackingBean<TaskListManagedBean>{
 		IBpmSO bpmSO = (IBpmSO) EpBpmBusinessDelegate.getInstance().getServiceObject(IBpmSO.class);
 
 		//String token = bpmSO.authenticate("roslan", "welcome1");
-		String token = bpmSO.authenticate("khai", "welcome1");
+		String token = bpmSO.authenticate("roslan", "welcome1");
 		System.out.println("testing BPM auth******"+token);
 		BpmRequestDTO reqDTO = new BpmRequestDTO();
 
@@ -129,42 +129,48 @@ public class TaskListBackingBean extends BaseBackingBean<TaskListManagedBean>{
 	}
 
 	public String navigateToURL(){
+
+		IBpmSO bpmSO = (IBpmSO) EpBpmBusinessDelegate.getInstance().getServiceObject(IBpmSO.class);
+
+		String urlKey = FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap().get("key");
+		String taskId = FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap().get("taskId");
+		String ctx = bpmSO.authenticate("roslan","welcome1");
+		BpmRequestDTO reqDTO = new BpmRequestDTO();
 		
-			IBpmSO bpmSO = (IBpmSO) EpBpmBusinessDelegate.getInstance().getServiceObject(IBpmSO.class);
+
+		log.info("taskId:"+taskId);
+		reqDTO.setCtxToken(ctx);
+		reqDTO.setTaskId(taskId);
+		BpmResponseDTO res = bpmSO.getTaskDetails(reqDTO);
+		System.out.println("********getProcessName********"+res.getProcessName());
+		this.getManagedBean().setProcessName(res.getProcessName());
+		if(res.getProcessName().equalsIgnoreCase("Request UNSPSC")){
 			IRequestCodeSO requestSO = (IRequestCodeSO) BusinessDelegate.getInstance().getServiceObject("cm",IRequestCodeSO.class);
 			ICodificationSO unspscSO = (ICodificationSO) BusinessDelegate.getInstance().getServiceObject("cm",ICodificationSO.class);
-			String urlKey = FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap().get("key");
-			String taskId = FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap().get("taskId");
-			String ctx = bpmSO.authenticate("roslan","welcome1");
-			BpmRequestDTO reqDTO = new BpmRequestDTO();
+			
+			
 			CodificationReqDTO reqCodeDTO = new CodificationReqDTO();
-			
-			log.info("taskId:"+taskId);
-			reqDTO.setCtxToken(ctx);
-			reqDTO.setTaskId(taskId);
-			BpmResponseDTO res = bpmSO.getTaskDetails(reqDTO);
-			
 			Object obj = res.getPojo();
 			CDUNSPSCDataType unspsc = (CDUNSPSCDataType)obj;
 			log.info("requestID:"+unspsc.getRequestId());
-			
-			//reqCodeDTO.getRequestCode().setTaskId(taskId);
-			
 
-			
+			//reqCodeDTO.getRequestCode().setTaskId(taskId);
+
+
+
 			RequestCodeReqDTO codeDTO = new RequestCodeReqDTO();
 			codeDTO.setRequestId(new Long(unspsc.getRequestId()));
-			
+
 			RequestCodeResDTO resDTO = requestSO.retrieveUnspscCodeReview(codeDTO);
 			log.info("name:"+resDTO.getRequestCode().getItemName());
-			
+
 			resDTO.getRequestCode().setTaskId(taskId);
 			reqCodeDTO.setRequestCode(resDTO.getRequestCode());
 			CodificationResDTO resCodeDTO = unspscSO.updateCodificationRequest(reqCodeDTO);
-			
+
 			UnspscCodeBackingBean unspscBB = new UnspscCodeBackingBean();
 			unspscBB.getManagedBean().setRequestCode(resCodeDTO.getRequestCode());
-			
+
 			String url = "";
 			log.info("******urlKey***********"+urlKey);
 			if(!this.getManagedBean().getBpmMap().isEmpty() && this.getManagedBean().getBpmMap().size() > 0 ){ 
@@ -184,14 +190,15 @@ public class TaskListBackingBean extends BaseBackingBean<TaskListManagedBean>{
 
 			}
 			log.info("url:"+url);
-			
-			
-			return "taskListCommonPage";
-			
-			//ExternalContext externalContext = FacesContext.getCurrentInstance().getExternalContext();
+		}
 
-			//externalContext.redirect("http://localhost:8080/web/guest/" +url +"?testing=123");
-		
+
+		return "taskListCommonPage";
+
+		//ExternalContext externalContext = FacesContext.getCurrentInstance().getExternalContext();
+
+		//externalContext.redirect("http://localhost:8080/web/guest/" +url +"?testing=123");
+
 
 	}
 

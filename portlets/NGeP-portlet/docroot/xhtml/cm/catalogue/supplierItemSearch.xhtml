@@ -100,6 +100,17 @@
 			selection="#{catalogueBackingBean.managedBean.selectedSupplierItems}">
 
 			<p:column selectionMode="multiple" style="width:2%" />
+			
+			<p:ajax event="rowSelectCheckbox"
+				listener="#{catalogueBackingBean.compareSupplierItem()}" process="@this "
+				update=":form:compareButton" />
+			<p:ajax event="rowUnselectCheckbox"
+				listener="#{catalogueBackingBean.compareSupplierItem()}" process="@this "
+				update=":form:compareButton" />
+
+			<p:ajax event="toggleSelect"
+				listener="#{catalogueBackingBean.compareSupplierItem()}" process="@this "
+				update=":form:compareButton" />
 
 			<p:column>
 				<f:facet name="header">
@@ -176,8 +187,9 @@
 		</p:dataTable>
 
 		<h:panelGrid columns="4">
-			<p:commandButton
-				value="#{lbl['lbl.cm.compare']} ( #{fn:length(catalogueBackingBean.managedBean.selectedSupplierItemList)} )" />
+			<p:commandButton id="compareButton" action="#{catalogueBackingBean.compareSupplierItem}" 
+				value="#{lbl['lbl.cm.compare']} ( #{fn:length(catalogueBackingBean.managedBean.selectedSupplierItemList)} )" 
+				disabled="#{2 > fn:length(catalogueBackingBean.managedBean.selectedSupplierItemList)}" />
 			<p:commandButton value="Add To Cart (0)" />
 			<p:commandButton value="Wishlist"
 				action="#{catalogueBackingBean.addIntoWishList}"

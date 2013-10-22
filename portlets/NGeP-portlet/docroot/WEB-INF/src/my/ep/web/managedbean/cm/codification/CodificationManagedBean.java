@@ -56,6 +56,10 @@ public class CodificationManagedBean extends BaseManagedBean {
 	private String familyCode;
 	private String classCode;
 	private String commodityCode;
+	private String brandCode;
+	private String typeCode;
+	private String colorCode;
+	private String measurementCode;
 	
 	
 	
@@ -63,6 +67,38 @@ public class CodificationManagedBean extends BaseManagedBean {
 	
 	
 
+
+	public String getBrandCode() {
+		return brandCode;
+	}
+
+	public void setBrandCode(String brandCode) {
+		this.brandCode = brandCode;
+	}
+
+	public String getTypeCode() {
+		return typeCode;
+	}
+
+	public void setTypeCode(String typeCode) {
+		this.typeCode = typeCode;
+	}
+
+	public String getColorCode() {
+		return colorCode;
+	}
+
+	public void setColorCode(String colorCode) {
+		this.colorCode = colorCode;
+	}
+
+	public String getMeasurementCode() {
+		return measurementCode;
+	}
+
+	public void setMeasurementCode(String measurementCode) {
+		this.measurementCode = measurementCode;
+	}
 
 	public String getSegmentCode() {
 		return segmentCode;

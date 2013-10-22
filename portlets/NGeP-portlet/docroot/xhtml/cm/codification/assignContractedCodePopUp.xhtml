@@ -48,23 +48,42 @@
 						value="#{codificationBackingBean.managedBean.commodityCode}">
 						<f:selectItems
 							value="#{codificationBackingBean.managedBean.commodityCriteria}" />
+						<p:ajax event="change"
+							listener="#{codificationBackingBean.filterExtType()}"
+							update="typeDD, brandDD, measurementDD,colorDD "></p:ajax>
 					</p:selectOneMenu></td>
 			</tr>
 			<tr>
 				<td><p:outputLabel value="#{lbl['lbl.cm.type']}"></p:outputLabel></td>
-				<td><p:selectOneMenu></p:selectOneMenu></td>
+				<td><p:selectOneMenu id="typeDD"
+						value="#{codificationBackingBean.managedBean.typeCode}">
+						<f:selectItems
+							value="#{codificationBackingBean.managedBean.typeCriteria}" />
+					</p:selectOneMenu></td>
 			</tr>
 			<tr>
 				<td><p:outputLabel value="#{lbl['lbl.cm.brand']}"></p:outputLabel></td>
-				<td><p:selectOneMenu></p:selectOneMenu></td>
+				<td><p:selectOneMenu id="brandDD"
+						value="#{codificationBackingBean.managedBean.brandCode}">
+						<f:selectItems
+							value="#{codificationBackingBean.managedBean.brandCriteria}" />
+					</p:selectOneMenu></td>
 			</tr>
 			<tr>
 				<td><p:outputLabel value="#{lbl['lbl.cm.measurement']}"></p:outputLabel></td>
-				<td><p:selectOneMenu></p:selectOneMenu></td>
+				<td><p:selectOneMenu id="measurementDD"
+						value="#{codificationBackingBean.managedBean.measurementCode}">
+						<f:selectItems
+							value="#{codificationBackingBean.managedBean.measurementCriteria}" />
+					</p:selectOneMenu></td>
 			</tr>
 			<tr>
 				<td><p:outputLabel value="#{lbl['lbl.cm.color']}"></p:outputLabel></td>
-				<td><p:selectOneMenu></p:selectOneMenu></td>
+				<td><p:selectOneMenu id="colorDD"
+						value="#{codificationBackingBean.managedBean.colorCode}">
+						<f:selectItems
+							value="#{codificationBackingBean.managedBean.colorCriteria}" />
+					</p:selectOneMenu></td>
 			</tr>
 
 		</table>
@@ -72,7 +91,7 @@
 
 	</h:panelGroup>
 
-	<p:commandButton value="#{lbl['lbl.cm.ok']}"
+	<p:commandButton value="#{lbl['lbl.cm.ok']}" action="#{codificationBackingBean.insertContractedItemCode}"
 		onclick="contractedItemPopUp.hide()"></p:commandButton>
 
 

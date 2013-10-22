@@ -12,7 +12,7 @@
 
 	<p:outputPanel id="pricePageID">
 		<p:dataTable id="pricingID"
-			value="#{catalogueBackingBean.managedBean.pricingList}" width="100%"
+			value="#{catalogueBackingBean.managedBean.selectedMaintainItem.cmPricings}" width="100%"
 			var="price">
 
 			<p:column>
@@ -37,14 +37,14 @@
 				<f:facet name="header">
 					<p:outputLabel value="#{lbl['lbl.cm.tier.from']}" />
 				</f:facet>
-				<p:inputText value="#{price.tierFrom}"></p:inputText>
+				<p:inputText value="#{price.fromQty}"></p:inputText>
 
 			</p:column>
 			<p:column>
 				<f:facet name="header">
 					<p:outputLabel value="#{lbl['lbl.cm.tier.to']}" />
 				</f:facet>
-				<p:inputText value="#{price.tierTo}"></p:inputText>
+				<p:inputText value="#{price.toQty}"></p:inputText>
 			</p:column>
 			<p:column>
 				<f:facet name="header">

@@ -22,9 +22,18 @@ public class TaskListManagedBean extends BaseManagedBean {
 
 	private List<WorklistItemVO> taskList;
 	private Map bpmMap = new HashMap();
+	private String processName;
 	
 	
 	
+
+	public String getProcessName() {
+		return processName;
+	}
+
+	public void setProcessName(String processName) {
+		this.processName = processName;
+	}
 
 	public Map getBpmMap() {
 		return bpmMap;

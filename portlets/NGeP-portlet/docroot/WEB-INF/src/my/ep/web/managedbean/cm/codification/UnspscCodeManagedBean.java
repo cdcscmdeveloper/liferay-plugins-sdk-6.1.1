@@ -6,7 +6,11 @@ import java.util.List;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
 
+import my.ep.persistence.entity.cm.catalog.CmBrand;
+import my.ep.persistence.entity.cm.catalog.CmColor;
+import my.ep.persistence.entity.cm.catalog.CmMeasurement;
 import my.ep.persistence.entity.cm.catalog.CmRequestCode;
+import my.ep.persistence.entity.cm.catalog.CmType;
 import my.ep.web.managedbean.BaseManagedBean;
 import my.ep.web.vo.RemarksVO;
 
@@ -36,7 +40,52 @@ public class UnspscCodeManagedBean extends BaseManagedBean {
 	private long commodityKey;
 	private String commodityCode;
 	
+	private CmBrand cmBrand;
+	private CmColor cmColor;
+	private CmMeasurement cmMeasurement;
+	private CmType cmType;
 	
+	
+
+	public CmBrand getCmBrand() {
+		if(cmBrand==null)
+			cmBrand = new CmBrand();
+		return cmBrand;
+	}
+
+	public void setCmBrand(CmBrand cmBrand) {
+		this.cmBrand = cmBrand;
+	}
+
+	public CmColor getCmColor() {
+		if(cmColor==null)
+			cmColor = new CmColor();
+		return cmColor;
+	}
+
+	public void setCmColor(CmColor cmColor) {
+		this.cmColor = cmColor;
+	}
+
+	public CmMeasurement getCmMeasurement() {
+		if(cmMeasurement==null)
+			cmMeasurement = new CmMeasurement();
+		return cmMeasurement;
+	}
+
+	public void setCmMeasurement(CmMeasurement cmMeasurement) {
+		this.cmMeasurement = cmMeasurement;
+	}
+
+	public CmType getCmType() {
+		if(cmType==null)
+			cmType = new CmType();
+		return cmType;
+	}
+
+	public void setCmType(CmType cmType) {
+		this.cmType = cmType;
+	}
 
 	public CmRequestCode getRequestCode() {
 		if(requestCode==null)

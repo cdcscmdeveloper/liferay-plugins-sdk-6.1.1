@@ -34,6 +34,7 @@ import my.ep.dto.cm.catalogue.WishListReqDTO;
 import my.ep.dto.cm.catalogue.WishListResDTO;
 import my.ep.persistence.entity.cm.catalog.CmImage;
 import my.ep.persistence.entity.cm.catalog.CmItem;
+import my.ep.persistence.entity.cm.catalog.CmPricing;
 import my.ep.persistence.entity.cm.catalog.CmSupplierItem;
 import my.ep.persistence.logging.LogKey;
 import my.ep.type.aut.SearchOperator;
@@ -77,16 +78,16 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean>{
 		if(MDC.get(LogKey.USER_ID)==null) {
 			MDC.put(LogKey.USER_ID, 1L);
 		}
-		
+
 		this.getManagedBean().setWishLists(null);
 		IWishListSO wishListSO = (IWishListSO)BusinessDelegate.getInstance().getServiceObject("cm",IWishListSO.class);
 		WishListReqDTO reqDTO = new WishListReqDTO();
-		
+
 		WishListResDTO resDTO = wishListSO.retrieveWishList(reqDTO);
-		
+
 		this.getManagedBean().setWishLists(resDTO.getWishLists());
-		
-	
+
+
 		log.info("*********CatalogueBackingBean**********");
 
 
@@ -125,7 +126,7 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean>{
 
 
 
-	public String addToMaintain(){
+	public void addToMaintain(){
 
 		ICatalogueSO catalogueSO = (ICatalogueSO)BusinessDelegate.getInstance().getServiceObject("cm",ICatalogueSO.class);
 		CodificationBackingBean bb = new CodificationBackingBean();
@@ -152,7 +153,7 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean>{
 
 
 
-		return "catalogueMaintenanceFile";
+		//return "catalogueMaintenanceFile";
 	}
 
 
@@ -209,9 +210,9 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean>{
 	public void addNewPricing(){
 
 		log.debug("*****addNewPricing*****");
-		PricingVO price = new PricingVO();
+		CmPricing price = new CmPricing();
 
-		this.getManagedBean().getPricingList().add(price);
+		this.getManagedBean().getSelectedMaintainItem().getCmPricings().add(price);
 
 	}
 
@@ -261,6 +262,10 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean>{
 
 		log.info("*********okToMaintenanceFile*************");
 
+		for(CmPricing price : this.getManagedBean().getSelectedMaintainItem().getCmPricings()){
+			System.out.println("price.getPrice()"+price.getPrice());
+		}
+
 
 		return "catalogMaintenanceFile?faces-redirect=true";
 	}
@@ -279,8 +284,8 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean>{
 	}
 
 	public void addIntoWishList() {
-		
-		
+
+
 
 		log.info("==============hktan========================"+this.getManagedBean().getSelectedSupplierItems().length);
 
@@ -292,7 +297,7 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean>{
 				this.getManagedBean().getSelectedSupplierItemList().add(catalog);
 			}			
 		}
-		
+
 		log.info("size:"+this.getManagedBean().getSelectedSupplierItemList().size());
 
 		//genTempImages(this.getManagedBean().getSelectedCatalogList());
@@ -647,17 +652,15 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean>{
 
 			log.info("length:"+this.getManagedBean().getSelectedMaintainItems().length);
 			log.info("length:"+this.getManagedBean().getSelectedMaintainItem().getCmImages().size());
+			//this.getM
 
-			//for(CmSupplierItem catalog : this.getManagedBean().getSelectedMaintainItems()){
-
-			//log.info("size:"+catalog.getCmImages().size());
-
+			for(CmSupplierItem catalog : this.getManagedBean().getMaintainItemList()){
 
 
-			reqDTO.getSaveSupplierItems().add(this.getManagedBean().getSelectedMaintainItem());
+				reqDTO.getSaveSupplierItems().add(catalog);
 
 
-			//}
+			}
 
 			catalogueSO.updateSupplierItem(reqDTO);
 
@@ -693,6 +696,52 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean>{
 
 		this.getManagedBean().setSupplierItemList(resDTO.getSupplierItemList());
 
+	}
+	
+	
+	public String compareSupplierItem(){
+		
+		log.info("==============hktan========================"+this.getManagedBean().getSelectedSupplierItems().length);
+
+		this.getManagedBean().setSelectedSupplierItemList(null);
+
+		if(this.getManagedBean().getSelectedSupplierItems() != null && this.getManagedBean().getSelectedSupplierItems().length > 0) {
+			for(int i = 0; i < this.getManagedBean().getSelectedSupplierItems().length; i++) {
+				CmSupplierItem catalog = this.getManagedBean().getSelectedSupplierItems()[i];
+				this.getManagedBean().getSelectedSupplierItemList().add(catalog);
+			}			
+		}
+
+		log.info("size:"+this.getManagedBean().getSelectedSupplierItemList().size());
+		this.getManagedBean().setCompareIndex(0);
+		CmSupplierItem catalog = this.getManagedBean().getSelectedSupplierItemList().get(0);
+
+		this.getManagedBean().setCatalogueObj(catalog);
+		
+		
+		return "compareCatalogue";
+	}
+	
+	public void compareIndxeAction(){
+
+		log.debug("****index***"+this.getManagedBean().getCompareIndex());
+
+		FacesContext context = FacesContext.getCurrentInstance();
+		Map map = context.getExternalContext().getRequestParameterMap();
+		String name1 = (String) map.get("name1");
+		Integer index = Integer.parseInt(name1);
+
+		CmSupplierItem catalog = this.getManagedBean().getSelectedSupplierItemList().get(index);
+
+		this.getManagedBean().setCatalogueObj(catalog);
+		this.getManagedBean().setCompareIndex(index);
+
+
+	} 
+	
+	public String backToPervious(){
+		
+		return "supplierItemView";
 	}
 
 

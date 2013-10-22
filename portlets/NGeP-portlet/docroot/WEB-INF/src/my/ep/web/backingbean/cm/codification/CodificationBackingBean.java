@@ -443,50 +443,91 @@ public class CodificationBackingBean extends BaseBackingBean<CodificationManaged
 		log.info("this.getManagedBean().getSegmentCode()"+this.getManagedBean().getSegmentCode());
 		CodificationReqDTO reqDTO = new CodificationReqDTO();
 		reqDTO.setParentCode(this.getManagedBean().getSegmentCode());
-		
+
 		CodificationResDTO resDTO = codificationSO.searchFamily(reqDTO);
-		
+
 		for(CmUnspsc family:resDTO.getFamilyList()){
 
 			this.getManagedBean().getFamilyCriteria().add(new SelectItem(family.getUnspscCode(), family.getUnspscTitle()));
 		}
-		
+
 	}
-	
+
 	public void filterClass(){
 		ICodificationSO codificationSO = (ICodificationSO) BusinessDelegate.getInstance().getServiceObject("cm",ICodificationSO.class);
 		log.info("this.getManagedBean().getFamilyCode()"+this.getManagedBean().getFamilyCode());
 		CodificationReqDTO reqDTO = new CodificationReqDTO();
 		reqDTO.setParentCode(this.getManagedBean().getFamilyCode());
-		
+
 		CodificationResDTO resDTO = codificationSO.searchClass(reqDTO);
-		
+
 		for(CmUnspsc classes :resDTO.getClassList()){
 
 			this.getManagedBean().getClassCriteria().add(new SelectItem(classes.getUnspscCode(), classes.getUnspscTitle()));
 		}
-		
+
 	}
-	
-	
+
+
 	public void filterCommodity(){
 		ICodificationSO codificationSO = (ICodificationSO) BusinessDelegate.getInstance().getServiceObject("cm",ICodificationSO.class);
 		log.info("this.getManagedBean().getClassCode()"+this.getManagedBean().getClassCode());
 		CodificationReqDTO reqDTO = new CodificationReqDTO();
 		reqDTO.setParentCode(this.getManagedBean().getClassCode());
-		
+
 		CodificationResDTO resDTO = codificationSO.searchCommodity(reqDTO);
-		
+
 		for(CmUnspsc commodity :resDTO.getCommodityList()){
 
 			this.getManagedBean().getCommodityCriteria().add(new SelectItem(commodity.getUnspscCode(), commodity.getUnspscTitle()));
-		}
-		
+		}	
+
+
 	}
-	
-	
-	
-	
+
+	public void filterExtType(){
+		log.info("this.getManagedBean().getCommodityCode()"+this.getManagedBean().getCommodityCode());
+		ICodificationSO codificationSO = (ICodificationSO) BusinessDelegate.getInstance().getServiceObject("cm",ICodificationSO.class);
+
+		CodificationReqDTO reqDTO = new CodificationReqDTO();
+		reqDTO.setParentCode(this.getManagedBean().getCommodityCode());
+
+		CodificationResDTO resDTO = codificationSO.searchCommodityObj(reqDTO);
+
+		for(CmBrand brand:resDTO.getCommodityObj().getCmBrand()){
+			log.info("code:"+brand.getBrandCode());
+			this.getManagedBean().getBrandCriteria().add(new SelectItem(brand.getBrandCode(), brand.getBrandName()));
+		}
+
+		for(CmType type:resDTO.getCommodityObj().getCmType()){
+			this.getManagedBean().getTypeCriteria().add(new SelectItem(type.getTypeCode(), type.getTypeName()));
+		}
+
+		for(CmMeasurement measurement:resDTO.getCommodityObj().getCmMeasurement()){
+			this.getManagedBean().getMeasurementCriteria().add(new SelectItem(measurement.getMeasurementCode(), measurement.getMeasurementName()));
+		}
+
+		resDTO = codificationSO.searchColor(reqDTO);
+		for(CmColor color:resDTO.getColorList()){
+			this.getManagedBean().getColorCriteria().add(new SelectItem(color.getColorCode(), color.getColorName()));
+		}
+
+
+	}
+
+
+	public void insertContractedItemCode(){
+
+	}
+
+
+	public String createExtCode(){
+
+		return "extensionCodeSingleCreation";
+	}
+
+
+
 
 
 

@@ -12,6 +12,8 @@ import my.ep.bpm.service.IBpmSO;
 import my.ep.dto.cm.codification.CodificationReqDTO;
 import my.ep.dto.cm.codification.CodificationResDTO;
 import my.ep.jaxb.cd.unspscdata.CDUNSPSCDataType;
+import my.ep.persistence.entity.cm.catalog.CmBrand;
+import my.ep.persistence.entity.cm.catalog.CmItem;
 import my.ep.persistence.entity.cm.catalog.CmRequestCode;
 import my.ep.persistence.entity.cm.catalog.CmUnspsc;
 import my.ep.persistence.logging.LogKey;
@@ -20,6 +22,7 @@ import my.ep.web.backingbean.BaseBackingBean;
 import my.ep.web.managedbean.cm.codification.UnspscCodeManagedBean;
 import my.ep.web.util.lookupservice.BusinessDelegate;
 
+import org.apache.commons.id.serial.AlphanumericGenerator;
 import org.apache.log4j.Logger;
 import org.apache.log4j.MDC;
 import org.apache.poi.hssf.usermodel.HSSFSheet;
@@ -51,35 +54,35 @@ public class UnspscCodeBackingBean extends BaseBackingBean<UnspscCodeManagedBean
 		reqDTO.setRequestCode(this.getManagedBean().getRequestCode());
 		CodificationResDTO resDTO = null;
 		if(this.getManagedBean().getRequestCode().isBrandNew()){
-			 resDTO = unspscSO.addCodificationRequest(reqDTO);
-			 BpmResponseDTO responseDTO = initiateTask(resDTO.getRequestCode());
+			resDTO = unspscSO.addCodificationRequest(reqDTO);
+			BpmResponseDTO responseDTO = initiateTask(resDTO.getRequestCode());
 		}else{
 			log.info("***update***");
-			 resDTO = unspscSO.updateCodificationRequest(reqDTO);
-			 BpmResponseDTO responseDTO = updateTask(resDTO.getRequestCode());
+			resDTO = unspscSO.updateCodificationRequest(reqDTO);
+			BpmResponseDTO responseDTO = updateTask(resDTO.getRequestCode());
 		}
-		
+
 
 	}
-	
-	
+
+
 	public BpmResponseDTO updateTask(CmRequestCode request){
 		System.out.println("initiateTask******");
 		IBpmSO bpmSO = (IBpmSO) EpBpmBusinessDelegate.getInstance().getServiceObject(IBpmSO.class);
-		String ctx = bpmSO.authenticate("lailah","welcome1");
+		String ctx = bpmSO.authenticate("khai","welcome1");
 		BpmRequestDTO reqDTO = new BpmRequestDTO();
 		reqDTO.setCtxToken(ctx);
 		log.info("request.getTaskId():"+request.getTaskId());
-	////taskID , reqDTO.setOutcome("SUBMIT"), 	bpmSO.updateTask(reqDTO)
+		////taskID , reqDTO.setOutcome("SUBMIT"), 	bpmSO.updateTask(reqDTO)
 		reqDTO.setOutcome("SUBMIT");
 		CDUNSPSCDataType obj = new CDUNSPSCDataType();
 		obj.setRequestId(String.valueOf(request.getRequestId()));
 		//obj.setPtj(value);
 		reqDTO.setPojo(obj);
-		
+
 		reqDTO.setTaskId(request.getTaskId());
 		BpmResponseDTO res = bpmSO.updateTask(reqDTO);
-	
+
 		log.info("1:"+res.isSuccessful());
 		log.info("2:"+res.getErrorReason());
 		//log.info("ID:"+obj.getRequestId());
@@ -109,7 +112,7 @@ public class UnspscCodeBackingBean extends BaseBackingBean<UnspscCodeManagedBean
 		//obj.setPtj(value);
 		reqDTO.setPojo(obj);
 		BpmResponseDTO res = bpmSO.initiateAndUpdateTask(reqDTO);
-	
+
 		log.info("1:"+res.isSuccessful());
 		log.info("2:"+res.getErrorReason());
 		log.info("ID:"+obj.getRequestId());
@@ -121,10 +124,10 @@ public class UnspscCodeBackingBean extends BaseBackingBean<UnspscCodeManagedBean
 		//--
 		return res;
 	}
-	
-	
-	
-	
+
+
+
+
 
 
 	public void uploadUNSPSC(FileUploadEvent event) throws Exception{
@@ -415,25 +418,25 @@ public class UnspscCodeBackingBean extends BaseBackingBean<UnspscCodeManagedBean
 
 		return level;
 	}
-	
+
 	public String navigateToSearch(){
 		log.info("*****navigateToSearch******");
-		
+
 		return "../cm/codification/verifyUnspscSearch.xhtml";
 	}
-	
-	
+
+
 	public String createTempCode(){
-		
+
 		log.info("ID:"+this.getManagedBean().getRequestCode().getRequestId());
-		
+
 		return "../cm/codification/unspscSingleUpload.xhtml";
 	}
-	
+
 	public void savetempCode(){
-		
+
 		ICodificationSO unspscSO = (ICodificationSO) BusinessDelegate.getInstance().getServiceObject("cm",ICodificationSO.class);
-		
+
 		CodificationReqDTO reqDTO = new CodificationReqDTO();
 		CodificationResDTO resDTO = null;
 		CmUnspsc unspsc = new CmUnspsc();
@@ -441,77 +444,163 @@ public class UnspscCodeBackingBean extends BaseBackingBean<UnspscCodeManagedBean
 		unspsc.setUnspscKey(this.getManagedBean().getSegmentKey());
 		unspsc.setUnspscTitle(this.getManagedBean().getSegmentTitle());
 		unspsc.setUnspscDescription(this.getManagedBean().getSegmentDesc());
-        unspsc.setUnspscLevel(0);
-		
+		unspsc.setUnspscLevel(0);
+
 		reqDTO.setCmUnspsc(unspsc);
 		reqDTO.getUnspscList().add(reqDTO.getCmUnspsc());
-			
-		//resDTO =  unspscSO.saveUnspsc(reqDTO);
+
+		resDTO =  unspscSO.saveUnspsc(reqDTO);
 		////// start family
-		
+
 		unspsc.setUnspscCode(this.getManagedBean().getFamilyCode());	
 		unspsc.setUnspscKey(this.getManagedBean().getFamilyKey());
 		unspsc.setUnspscTitle(this.getManagedBean().getFamilyTitle());
 		unspsc.setUnspscDescription(this.getManagedBean().getFamilyDesc());
-        unspsc.setUnspscLevel(1);
-        unspsc.setUnspscParentCode(this.getManagedBean().getSegmentCode());
-        
-        reqDTO.setCmUnspsc(unspsc);
-        reqDTO.getFamilyList().add(reqDTO.getCmUnspsc());
-		//resDTO = unspscSO.saveFamilyList(reqDTO);
-		
+		unspsc.setUnspscLevel(1);
+		unspsc.setUnspscParentCode(this.getManagedBean().getSegmentCode());
+
+		reqDTO.setCmUnspsc(unspsc);
+		reqDTO.getFamilyList().add(reqDTO.getCmUnspsc());
+		resDTO = unspscSO.saveFamilyList(reqDTO);
+
 		/////start class	
-	
+
 		unspsc.setUnspscCode(this.getManagedBean().getClassCode());	
 		unspsc.setUnspscKey(this.getManagedBean().getClassKey());
 		unspsc.setUnspscTitle(this.getManagedBean().getClassTitle());
 		unspsc.setUnspscDescription(this.getManagedBean().getClassDesc());
-        unspsc.setUnspscLevel(2);
-        unspsc.setUnspscParentCode(this.getManagedBean().getFamilyCode());
-        
-        reqDTO.setCmUnspsc(unspsc);
-        reqDTO.getClassList().add(reqDTO.getCmUnspsc());
-        //resDTO = unspscSO.saveClassList(reqDTO);
-        
-        ////start commodity
-		
-    	unspsc.setUnspscCode(this.getManagedBean().getCommodityCode());	
+		unspsc.setUnspscLevel(2);
+		unspsc.setUnspscParentCode(this.getManagedBean().getFamilyCode());
+
+		reqDTO.setCmUnspsc(unspsc);
+		reqDTO.getClassList().add(reqDTO.getCmUnspsc());
+		resDTO = unspscSO.saveClassList(reqDTO);
+
+		////start commodity
+
+		unspsc.setUnspscCode(this.getManagedBean().getCommodityCode());	
 		unspsc.setUnspscKey(this.getManagedBean().getCommodityKey());
 		unspsc.setUnspscTitle(this.getManagedBean().getCommodityTitle());
 		unspsc.setUnspscDescription(this.getManagedBean().getCommodityDesc());
-        unspsc.setUnspscLevel(3);
-        unspsc.setUnspscParentCode(this.getManagedBean().getClassCode());
-        
-        reqDTO.setCmUnspsc(unspsc);
-        reqDTO.getCommodityList().add(reqDTO.getCmUnspsc());
-        
-        //resDTO = unspscSO.saveCommodityList(reqDTO);
-        
-        String check68 = (String)String.valueOf(this.getManagedBean().getCommodityCode()).substring(6, 8);
+		unspsc.setUnspscLevel(3);
+		unspsc.setUnspscParentCode(this.getManagedBean().getClassCode());
+
+		reqDTO.setCmUnspsc(unspsc);
+		reqDTO.getCommodityList().add(reqDTO.getCmUnspsc());
+
+		resDTO = unspscSO.saveCommodityList(reqDTO);
+
+		String check68 = (String)String.valueOf(this.getManagedBean().getCommodityCode()).substring(6, 8);
 		String check46 = (String)String.valueOf(this.getManagedBean().getClassCode()).substring(4, 6);
 		String check24 = (String)String.valueOf(this.getManagedBean().getFamilyCode()).substring(2, 4);
 		String check02 = (String)String.valueOf(this.getManagedBean().getSegmentCode()).substring(0, 2);
-        
-        String tempCode = check02 + check24 +check46 +check68;
-        log.info(tempCode);
-        
-        this.getManagedBean().getRequestCode().setTempCode(tempCode);
-        reqDTO.setRequestCode(this.getManagedBean().getRequestCode());
-        resDTO = unspscSO.updateCodificationRequest(reqDTO);
-        
+
+		String tempCode = check02 + check24 +check46 +check68;
+		log.info(tempCode);
+
+		this.getManagedBean().getRequestCode().setTempCode(tempCode);
+		reqDTO.setRequestCode(this.getManagedBean().getRequestCode());
+		resDTO = unspscSO.updateCodificationRequest(reqDTO);
+
 
 		BpmResponseDTO responseDTO = updateTask(resDTO.getRequestCode());
-          
-		
+
+
 	}
-	
+
 	public String createExtCode(){
-		
+
+		log.info("**************************");
+		//this.getManagedBean().getRequestCode()
+
 		return "../cm/codification/extensionCodeSingleCreation.xhtml"; 
 	}
-	
-	
-	
+
+
+	public void saveExtCode(){
+
+		ICodificationSO unspscSO = (ICodificationSO) BusinessDelegate.getInstance().getServiceObject("cm",ICodificationSO.class);
+
+		CodificationReqDTO reqDTO = new CodificationReqDTO();
+		CodificationResDTO resDTO = null;
+		CmItem item = new CmItem();
+
+		System.out.println("this.getManagedBean().getRequestCode().getTempCode():"+this.getManagedBean().getRequestCode().getTempCode());
+		reqDTO.setParentCode(this.getManagedBean().getRequestCode().getTempCode());
+		resDTO = unspscSO.searchCommodityObj(reqDTO);
+		
+
+
+		AlphanumericGenerator brandCode = new AlphanumericGenerator(false, "000");
+		AlphanumericGenerator typeCode = new AlphanumericGenerator(false, "00");
+		AlphanumericGenerator measurementCode = new AlphanumericGenerator(false, "000");
+		AlphanumericGenerator colorCode = new AlphanumericGenerator(false, "00");
+		
+		String brand = brandCode.nextStringIdentifier();
+		String type = typeCode.nextStringIdentifier();
+		String measurement = measurementCode.nextStringIdentifier();
+		String color = colorCode.nextStringIdentifier();
+		log.info("brand:"+brand);
+		
+		//////////brand//////////
+		System.out.println("getUnspscCode:"+resDTO.getCommodityObj().getUnspscCode());
+		
+		log.info("****************************************************");
+		this.getManagedBean().getCmBrand().setBrandCode(brand);
+		this.getManagedBean().getCmBrand().setUnspscId(resDTO.getCommodityObj());
+		this.getManagedBean().getCmBrand().setRecordStatus(true);
+		reqDTO.setCmBrand(this.getManagedBean().getCmBrand());
+
+		//CodificationResDTO resBrandDTO = unspscSO.addNewBrand(reqDTO);
+		//item.setCmBrand(resBrandDTO.getCmBrand());
+		/////////////type//////////////////
+		
+		this.getManagedBean().getCmType().setTypeCode(type);
+		this.getManagedBean().getCmType().setUnspscId(resDTO.getCommodityObj());
+		this.getManagedBean().getCmType().setRecordStatus(true);
+
+		reqDTO.setCmType(this.getManagedBean().getCmType());
+		//CodificationResDTO resTypeDTO = unspscSO.addNewType(reqDTO);
+		//item.setCmType(resTypeDTO.getCmType());
+		/////////////measurement///////////////////////////
+		
+		this.getManagedBean().getCmMeasurement().setMeasurementCode(measurement);
+		this.getManagedBean().getCmMeasurement().setUnspscId(resDTO.getCommodityObj());
+		this.getManagedBean().getCmMeasurement().setRecordStatus(true);
+
+		reqDTO.setCmMeasurement(this.getManagedBean().getCmMeasurement());
+		//CodificationResDTO resMeasurementDTO = unspscSO.addNewMeasurement(reqDTO);
+		//item.setCmMeasurement(resMeasurementDTO.getCmMeasurement());
+		//////////////////////////////////////
+		
+		this.getManagedBean().getCmColor().setColorCode(color);
+		this.getManagedBean().getCmColor().setRecordStatus(true);
+		reqDTO.setCmColor(this.getManagedBean().getCmColor());
+
+		//CodificationResDTO resColorDTO = unspscSO.addNewColor(reqDTO);
+		//item.setCmColor(resColorDTO.getCmColor());
+		System.out.println("************New Extension End***************");
+
+		String extensionCode = type+brand+measurement+color;
+
+		log.info("extensionCode:"+extensionCode);
+		
+		
+		item.setRecordStatus(true);
+		item.setUnspscId(resDTO.getCommodityObj());
+		item.setExtensionCode(extensionCode);
+		reqDTO.setCmItem(item);
+		
+		resDTO = unspscSO.addNewItem(reqDTO);
+		
+		System.out.println("****************save Item End******************");
+		
+		
+		BpmResponseDTO responseDTO = updateTask(this.getManagedBean().getRequestCode());
+
+	}
+
+
 
 
 

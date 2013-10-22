@@ -7,7 +7,7 @@ import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
 import javax.faces.model.SelectItem;
 
-import my.ep.persistence.entity.cm.catalog.CmItem;
+import my.ep.persistence.entity.cm.catalog.CmPricing;
 import my.ep.persistence.entity.cm.catalog.CmSupplierItem;
 import my.ep.persistence.entity.cm.catalog.CmUnspsc;
 import my.ep.persistence.entity.cm.catalog.CmWishlist;
@@ -33,7 +33,7 @@ public class CatalogueManagedBean extends BaseManagedBean {
 	private String navigationURL;
 
 	private List<SelectItem> pricingCriteria;
-	private List<PricingVO> pricingList;
+	private List<CmPricing> pricingList;
 	private List<PricingVO> zonalPricingList;
 	private List<PricingVO> districtPricingList;
 	private PricingVO selectedPricing;
@@ -49,7 +49,30 @@ public class CatalogueManagedBean extends BaseManagedBean {
 	
 	private List<CmWishlist> wishLists;
 	
+	private Integer compareIndex;
 	
+	private CmSupplierItem catalogueObj;
+	
+	
+	
+	
+	
+
+	public CmSupplierItem getCatalogueObj() {
+		return catalogueObj;
+	}
+
+	public void setCatalogueObj(CmSupplierItem catalogueObj) {
+		this.catalogueObj = catalogueObj;
+	}
+
+	public Integer getCompareIndex() {
+		return compareIndex;
+	}
+
+	public void setCompareIndex(Integer compareIndex) {
+		this.compareIndex = compareIndex;
+	}
 
 	public List<CmWishlist> getWishLists() {
 		if(wishLists==null)
@@ -147,24 +170,24 @@ public class CatalogueManagedBean extends BaseManagedBean {
 		this.districtPricingList = districtPricingList;
 	}
 
-	public List<PricingVO> getPricingList() {
+	public List<CmPricing> getPricingList() {
 
 		if(pricingList==null)
-			pricingList = new ArrayList<PricingVO>();
+			pricingList = new ArrayList<CmPricing>();
 		return pricingList;
 	}
 
-	public void setPricingList(List<PricingVO> pricingList) {
+	public void setPricingList(List<CmPricing> pricingList) {
 		this.pricingList = pricingList;
 	}
 
 
 	public List<SelectItem> getPricingCriteria() {
 		pricingCriteria = new ArrayList<SelectItem>();
-		pricingCriteria.add(new SelectItem("normal", "Normal"));
-		pricingCriteria.add(new SelectItem("promotion", "Promotion"));
-		pricingCriteria.add(new SelectItem("tier", "Tier"));
-		pricingCriteria.add(new SelectItem("promotionTier", "Promotion Tier"));
+		pricingCriteria.add(new SelectItem("01", "NORMAL"));
+		pricingCriteria.add(new SelectItem("02", "PROMOTION"));
+		pricingCriteria.add(new SelectItem("03", "TIER"));
+		pricingCriteria.add(new SelectItem("04", "PROMOTION TIER"));
 		return pricingCriteria;
 	}
 
