@@ -27,8 +27,8 @@ import org.apache.log4j.Logger;
  */
 @ManagedBean
 @SessionScoped
-public class FulfilmentRequestManagedBean extends BaseManagedBean {
-	private static Logger log = Logger.getLogger(FulfilmentRequestManagedBean.class);
+public class ContractRequestManagedBean extends BaseManagedBean {
+	private static Logger log = Logger.getLogger(ContractRequestManagedBean.class);
 	private static final long serialVersionUID = 1L;
 
 	private FlRemark flRemark = new FlRemark();
@@ -48,7 +48,7 @@ public class FulfilmentRequestManagedBean extends BaseManagedBean {
 	
 	private boolean selectedRowFlg;
 		
-	public FulfilmentRequestManagedBean(){
+	public ContractRequestManagedBean(){
 		
 	}
 	
