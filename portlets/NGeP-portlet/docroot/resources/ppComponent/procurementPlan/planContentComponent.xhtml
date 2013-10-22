@@ -318,6 +318,13 @@ xmlns:composite="http://java.sun.com/jsf/composite">
 				</p:tab>
 				<p:tab id="tPlanDetails" title="#{lbl['lbl.pp.details']}" disabled="#{!planBackingBean.managedBean.enableDetail}">  
 					<p:panel id="pTabPlanDetails">
+						<c:choose>
+							<!-- For Procurement Mode: Quotation, Tender, Selective Tender -->
+							<c:when test="#{planBackingBean.managedBean.selectedPlanMaster.planType==PPConst.typeProcurement}">
+								<ui:include src="ppDetails.xhtml"/>
+							</c:when>
+							<!-- For Procurement Mode: Existing Contract, Direct Purchase -->
+						</c:choose>
 					</p:panel>
 				</p:tab>
 				<p:tab id="tPlanRmk" title="#{lbl['lbl.pp.remarks']}">  
