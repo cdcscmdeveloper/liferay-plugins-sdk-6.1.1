@@ -11,58 +11,46 @@
 	</ui:define>
 	<ui:define name="content">
 		<p:tabView id="tabView">
-
 			<p:tab id="tab1" title="Contract List">
-
-
-
 				<p:panel header="CONTRACT ORDER" toggleable="true">
-
 					<p:dataTable id="contractListTable" var="contract"
 						value="#{fulfilmentRequestBackingBean.managedBean.contractList}"
-						paginator="true" rows="10"
 						paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
 						rowsPerPageTemplate="5,10,15" paginatorPosition="bottom">
 						<p:column headerText="Contract No.">
-							<h:outputText value="#{contract.contractId}" />
+							<h:outputText value="#{contract.contractValue.contractNo}" />
 						</p:column>
-
 						<p:column headerText="Plan No.">
-							<h:outputText value="#{contract.contractName}" />
+							<h:outputText value="#{contract.plan.planNo}" />
 						</p:column>
-
 						<p:column headerText="Schedule No.">
-							<h:outputText value="SC00992394001" />
+							<h:outputText value="#{contract.schedule.scheduleNo}" />
 						</p:column>
-
 						<p:column headerText="Circular No.">
-							<h:outputText value="" />
+							<h:outputText value="#{contract.circular.circularNo}" />
 						</p:column>
-
 						<p:column headerText="Period(Start)">
-							<h:outputText value="01-JAN-2012" />
+							<h:outputText value="#{contract.schedule.startDate}">
+								<f:convertDateTime type="date" pattern="dd-MM-yyyy"/>
+							</h:outputText>
 						</p:column>
-
 						<p:column headerText="Period(End)">
-							<h:outputText value="31-MAR-2012" />
+							<h:outputText value="#{contract.schedule.endDate}" >
+								<f:convertDateTime type="date" pattern="dd-MM-yyyy"/>
+							</h:outputText>
 						</p:column>
-
 						<p:column headerText="Fulfillment Type">
 							<h:outputText value="#{contract.fulfillmentTypeCode.code}" />
 						</p:column>
-
 						<p:column headerText="Contract Type">
 							<h:outputText value="#{contract.contractTypeCode.code}" />
 						</p:column>
-
 						<p:column headerText="Supplier Id">
 							<h:outputText value="#{contract.smSupplier.supplierId}" />
 						</p:column>
-
 						<p:column headerText="Supplier Name">
-							<h:outputText value="Redah Jaya Sdn Bhd" />
+							<h:outputText value="#{contract.smSupplier.supplierName}" />
 						</p:column>
-
 						<p:column headerText="Action">
 							<p:commandLink id="crBasepageLink" value="request"
 								action="#{fulfilmentRequestBackingBean.procureContract}">
@@ -75,7 +63,5 @@
 			<p:tab id="tab2" title="Catalogue">
 			</p:tab>
 		</p:tabView>
-
-
 	</ui:define>
 </ui:composition>
