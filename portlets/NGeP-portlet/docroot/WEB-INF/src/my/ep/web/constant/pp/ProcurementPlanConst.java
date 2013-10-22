@@ -88,6 +88,12 @@ public class ProcurementPlanConst {
 	public static final Long STATUS_PBA_PENDING_APPROVAL = 10002L;
 	public static final Long STATUS_PBD_NEW = 10005L;
 	
+	//PM Profile Types
+	public static final Long TYPE_MINISTRY = 38L;
+	public static final Long TYPE_JABATAN = 37L;
+	public static final Long TYPE_PTJ = 1L;
+	
+	
 	public static final Long STATUS_PENDING_APPROVAL = 2L;
 	public static final Long STATUS_PENDING_REVISION = 3L;
 	

@@ -15,7 +15,9 @@ xmlns:c="http://java.sun.com/jsp/jstl/core">
 					<tr>
 						<th>#{lbl['lbl.pp.ministry.code.name']}</th>
 						<td class="ppSmallTd">:</td>
-						<td><p:inputText value="-" disabled="true"/></td>
+						<td>
+							<p:inputText value="#{budgetAllocationBackingBean.managedBean.currentUser.orgName}" disabled="true"/>
+						</td>
 					</tr>
 					<tr>
 						<td colspan="3">&nbsp;</td>

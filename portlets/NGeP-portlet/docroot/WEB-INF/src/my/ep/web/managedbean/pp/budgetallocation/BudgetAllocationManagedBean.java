@@ -8,6 +8,7 @@ import java.util.Map;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
 
+import my.ep.persistence.entity.pm.authorization.PmOrgProfile;
 import my.ep.persistence.entity.pp.PpRemark;
 import my.ep.persistence.entity.pp.budgetallocation.PpBudget;
 import my.ep.persistence.entity.pp.budgetallocation.PpBudgetAlloc;
@@ -36,6 +37,8 @@ public class BudgetAllocationManagedBean extends BaseManagedBean{
 	private String viewMode;
 	
 	private String bpmTaskId; 
+	
+	private PmOrgProfile currentUser;
 	
 	private Long tempBudgetId; //TODO : temp for task retrieving
   
@@ -181,7 +184,20 @@ public class BudgetAllocationManagedBean extends BaseManagedBean{
 		this.selectedGoMapper = selectedGoMapper;
 	}
 	
-	
+	/**
+	 * @return the currentUser
+	 */
+	public PmOrgProfile getCurrentUser() {
+		return currentUser;
+	}
+
+	/**
+	 * @param currentUser the currentUser to set
+	 */
+	public void setCurrentUser(PmOrgProfile currentUser) {
+		this.currentUser = currentUser;
+	}
+
 	
 	
 }

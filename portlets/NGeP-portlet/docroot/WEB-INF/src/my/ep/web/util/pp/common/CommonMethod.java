@@ -1,6 +1,8 @@
 package my.ep.web.util.pp.common;
 
 import java.math.BigDecimal;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -73,5 +75,15 @@ public class CommonMethod {
     	approverMap.put(1L, "lailah");
     	approverMap.put(2L, "khai");
     }
+    
+    public static int getYear(int index){
+		log.info("getYear - Start");
+	    Calendar cal = Calendar.getInstance();
+	    cal.setTime(new Date());
+	    int year = cal.get(Calendar.YEAR)+index;
+	    log.info("getYear - End");
+	    return year;
+	}
+	
 		
 }

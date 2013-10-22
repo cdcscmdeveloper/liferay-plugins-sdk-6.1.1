@@ -18,11 +18,12 @@ xmlns:c="http://java.sun.com/jsp/jstl/core"
 							<th>#{lbl['lbl.pp.ministry.code.name']}</th>
 							<td class="ppSmallTd">:</td>
 							<td>
-								<p:selectOneMenu value="#{budgetAllocationBackingBean.managedBean.selectedBudgetAllocation.orgProfileId}"
+								<p:selectOneMenu value="#{budgetAllocationBackingBean.managedBean.selectedBudgetAllocation.ministryOrgProfileId}"
 									disabled="#{!budgetAllocationBackingBean.managedBean.selectedBudgetAllocation.editable}">
-									<f:selectItem itemLabel="#{lbl['lbl.select']}" />
-									<f:selectItem itemLabel="23 - KEM KEWANGAN" itemValue="1"/>
-									<f:selectItem itemLabel="24 - KEM KEWANGAN 2" itemValue="2"/>
+									<f:selectItem itemLabel="#{lbl['lbl.select']}" itemValue="0"/>
+									<f:selectItems value="#{budgetAllocationBackingBean.ministryOptions()}" 
+										var="orgProf" itemLabel="#{orgProf.orgName}" itemValue="#{orgProf.orgProfileId}" />
+									<p:ajax event="change" update="somJbt, somPtj"  />
 								</p:selectOneMenu>
 							</td>
 						</tr>
@@ -30,10 +31,12 @@ xmlns:c="http://java.sun.com/jsp/jstl/core"
 							<th>#{lbl['lbl.pp.jabatan.code.name']}</th>
 							<td class="ppSmallTd">:</td>
 							<td>
-								<p:selectOneMenu value="#{budgetAllocationBackingBean.managedBean.selectedBudgetAllocation.orgProfileId}"
+								<p:selectOneMenu id="somJbt" value="#{budgetAllocationBackingBean.managedBean.selectedBudgetAllocation.jabatanOrgProfileId}"
 									disabled="#{!budgetAllocationBackingBean.managedBean.selectedBudgetAllocation.editable}">
-									<f:selectItem itemLabel="#{lbl['lbl.select']}" />
-									<f:selectItem itemLabel="0231 - KEM KEWANGAN" itemValue="1"/>
+									<f:selectItem itemLabel="#{lbl['lbl.select']}" itemValue="0"/>
+									<f:selectItems value="#{budgetAllocationBackingBean.populateJabatan()}" 
+										var="orgProf" itemLabel="#{orgProf.orgName}" itemValue="#{orgProf.orgProfileId}" />
+									<p:ajax event="change" update="somPtj"  />
 								</p:selectOneMenu>
 							</td>
 						</tr>
@@ -41,10 +44,11 @@ xmlns:c="http://java.sun.com/jsp/jstl/core"
 							<th>#{lbl['lbl.pp.ptj.code.name']}</th>
 							<td class="ppSmallTd">:</td>
 							<td>
-								<p:selectOneMenu value="#{budgetAllocationBackingBean.managedBean.selectedBudgetAllocation.orgProfileId}" 
+								<p:selectOneMenu id="somPtj" value="#{budgetAllocationBackingBean.managedBean.selectedBudgetAllocation.orgProfileId}" 
 									disabled="#{!budgetAllocationBackingBean.managedBean.selectedBudgetAllocation.editable}">
-									<f:selectItem itemLabel="#{lbl['lbl.select']}" />
-									<f:selectItem itemLabel="010101 - BHG PENTADBIRAN - CAW KEW" itemValue="1"/>
+									<f:selectItem itemLabel="#{lbl['lbl.select']}" itemValue="0"/>
+									<f:selectItems value="#{budgetAllocationBackingBean.populatePtj()}" 
+										var="orgProf" itemLabel="#{orgProf.orgName}" itemValue="#{orgProf.orgProfileId}" />
 								</p:selectOneMenu>
 							</td>
 						</tr>
@@ -60,8 +64,8 @@ xmlns:c="http://java.sun.com/jsp/jstl/core"
 							<td class="ppSmallTd">:</td>
 							<td>
 								<p:selectOneMenu value="#{budgetAllocationBackingBean.managedBean.selectedBudgetAllocation.approverId}" 
-									disabled="#{!budgetAllocationBackingBean.managedBean.selectedBudgetAllocation.editable}">
-									<f:selectItem itemLabel="#{lbl['lbl.select']}" />
+								disabled="#{!budgetAllocationBackingBean.managedBean.selectedBudgetAllocation.editable}">
+									<f:selectItem itemLabel="#{lbl['lbl.select']}" itemValue="0"/>
 									<f:selectItem itemLabel="Lailah" itemValue="1"/>
 									<f:selectItem itemLabel="Khai" itemValue="2"/>
 								</p:selectOneMenu>
@@ -88,12 +92,7 @@ xmlns:c="http://java.sun.com/jsp/jstl/core"
 	                    </p:column>  
 	                    <p:column headerText="#{lbl['lbl.pp.gosodo.name']}">  
 	                        #{budgetAllocationDet.ppBudget.pmGo.goName}
-	                    </p:column>  
-	                    <!-- 
-	                    <p:column headerText="#{lbl['lbl.pp.activity.description']}">  
-	                        <p:outputLabel value="" />  
-	                    </p:column>          
-	                     -->           
+	                    </p:column>      
 	                    <p:column headerText="#{lbl['lbl.pp.financial.year']}">  
 	                        #{budgetAllocationDet.ovrFinancialYear}  
 	                    </p:column> 
@@ -173,6 +172,8 @@ xmlns:c="http://java.sun.com/jsp/jstl/core"
 		<!-- Item Detail Form -->
         <p:dialog id="dlItemDetailsBudget" header="#{lbl['lbl.pp.item.details']}" widgetVar="dlItemDetailsBudgetModal"
      		 resizable="false" styleClass="ppDiaglogBg" dynamic="true">  
+     		 #{budgetAllocationBackingBean.managedBean.selectedBudgetAllocItem.brandNew}
+     		 #{budgetAllocationBackingBean.managedBean.selectedBudgetAllocItem.editable}
 			    <p:panel id="pItemDet" header="#{lbl['lbl.pp.item.details']}">
 			    	<table class="ppTwoPartsTable">
 			    		<c:if test="#{budgetAllocationBackingBean.managedBean.viewMode==PPConst.modeApproval}">
@@ -193,33 +194,41 @@ xmlns:c="http://java.sun.com/jsp/jstl/core"
 							    	disabled="#{!budgetAllocationBackingBean.managedBean.selectedBudgetAllocItem.brandNew &amp;&amp; 
 							    		!budgetAllocationBackingBean.managedBean.selectedBudgetAllocItem.editable}">
 									<f:selectItem itemLabel="#{lbl['lbl.select']}" />
-									<f:selectItems value="#{budgetAllocationBackingBean.managedBean.budgetList}" 
+									<f:selectItems value="#{budgetAllocationBackingBean.populateGo()}" 
 										var="budget" itemLabel="#{budget.pmGo.goCode}" itemValue="#{budget.budgetId}" />
-									<p:ajax event="change" listener="#{budgetAllocationBackingBean.selectedGo}" update="pItemDet"  />
+									<p:ajax event="change" listener="#{budgetAllocationBackingBean.selectedGo}" update="pItemDet, somDo, opGosodo"  />
 								</p:selectOneMenu>
 								<p:selectOneMenu 
 									value="#{budgetAllocationBackingBean.managedBean.selectedBudgetAllocItem.soId}"
-									disabled="#{!budgetAllocationBackingBean.managedBean.selectedBudgetAllocItem.brandNew &amp;&amp; 
-										!budgetAllocationBackingBean.managedBean.selectedBudgetAllocItem.editable}">
+								disabled="#{!budgetAllocationBackingBean.managedBean.selectedBudgetAllocItem.brandNew &amp;&amp; 
+							    		!budgetAllocationBackingBean.managedBean.selectedBudgetAllocItem.editable}">
 									<f:selectItem itemLabel="#{lbl['lbl.select']}" />
-									<f:selectItem itemLabel="01" itemValue="1"/>
+									<f:selectItems value="#{budgetAllocationBackingBean.populateSo()}" 
+										var="pmSo" itemLabel="#{pmSo.soCode}" itemValue="#{pmSo.soId}" />
+									<p:ajax event="change" listener="#{budgetAllocationBackingBean.selectedSo}" update="somDo, opGosodo"  />
 								</p:selectOneMenu>
-								<p:selectOneMenu
+								<p:selectOneMenu id="somDo"
 									value="#{budgetAllocationBackingBean.managedBean.selectedBudgetAllocItem.doId}"
 									disabled="#{!budgetAllocationBackingBean.managedBean.selectedBudgetAllocItem.brandNew &amp;&amp; 
-										!budgetAllocationBackingBean.managedBean.selectedBudgetAllocItem.editable}">
+							    		!budgetAllocationBackingBean.managedBean.selectedBudgetAllocItem.editable}">
 									<f:selectItem itemLabel="#{lbl['lbl.select']}" />
-									<f:selectItem itemLabel="6" itemValue="6"/>
-									
+									<f:selectItems value="#{budgetAllocationBackingBean.populateDo()}" 
+										var="pmDo" itemLabel="#{pmDo.doCode}" itemValue="#{pmDo.doId}" />
+									<p:ajax event="change" listener="#{budgetAllocationBackingBean.selectedDo}" update="opGosodo" />
 								</p:selectOneMenu>
 							</td>
 			    		</tr>
 			    		<tr>
 			    			<th>#{lbl['lbl.pp.gosodo.name']}</th>
 							<td class="ppSmallTd">:</td>
-							<td>
-								<p:inputText value="#{budgetAllocationBackingBean.managedBean.selectedBudgetAllocItem.ppBudget.pmGo.goName}" 
-									disabled="true"/>  
+							<td> <p:outputPanel id="opGosodo">
+								<p:inputText disabled="true"
+									value="#{budgetAllocationBackingBean.managedBean.selectedBudgetAllocItem.ppBudget.pmGo.goName}"/>
+								<p:inputText disabled="true"
+									value="#{budgetAllocationBackingBean.managedBean.selectedBudgetAllocItem.pmSo.soName}"/>  
+								<p:inputText disabled="true"
+									value="#{budgetAllocationBackingBean.managedBean.selectedBudgetAllocItem.pmDo.doName}"/>
+									</p:outputPanel>    
 							</td>
 			    		</tr>
 			    		
@@ -229,7 +238,7 @@ xmlns:c="http://java.sun.com/jsp/jstl/core"
 							<td>
 								<p:selectOneMenu value="#{budgetAllocationBackingBean.managedBean.selectedBudgetAllocItem.ovrFinancialYear}"
 									disabled="#{!budgetAllocationBackingBean.managedBean.selectedBudgetAllocItem.brandNew &amp;&amp; 
-										!budgetAllocationBackingBean.managedBean.selectedBudgetAllocItem.editable}">
+							    		!budgetAllocationBackingBean.managedBean.selectedBudgetAllocItem.editable}">
 									<f:selectItem itemLabel="#{lbl['lbl.select']}" />
 									<f:selectItems value="#{budgetAllocationBackingBean.financialYearOptions()}"/>
 								</p:selectOneMenu>
@@ -256,7 +265,7 @@ xmlns:c="http://java.sun.com/jsp/jstl/core"
 							<td>
 								<p:inputText value="#{budgetAllocationBackingBean.managedBean.selectedBudgetAllocItem.allocAmount}" 
 									disabled="#{!budgetAllocationBackingBean.managedBean.selectedBudgetAllocItem.brandNew &amp;&amp; 
-										!budgetAllocationBackingBean.managedBean.selectedBudgetAllocItem.editable}">
+							    		!budgetAllocationBackingBean.managedBean.selectedBudgetAllocItem.editable}">
 								</p:inputText>
 							</td>
 			    		</tr>
