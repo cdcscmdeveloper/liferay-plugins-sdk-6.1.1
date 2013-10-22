@@ -1,5 +1,6 @@
 package my.ep.web.backingbean.ss.quatationtender;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.annotation.PostConstruct;
@@ -8,12 +9,18 @@ import javax.faces.bean.RequestScoped;
 import javax.faces.event.ValueChangeEvent;
 
 import my.ep.biz.service.pm.common.categorys.ICategorysSO;
+import my.ep.biz.service.pm.common.district.IDistrictSO;
 import my.ep.biz.service.pm.common.object.IObjectSO;
+import my.ep.biz.service.pm.common.state.IStateSO;
 import my.ep.biz.service.ss.quationtender.IQTDetailSO;
 import my.ep.dto.pm.common.categorys.CategorysReqDTO;
 import my.ep.dto.pm.common.categorys.CategorysResDTO;
+import my.ep.dto.pm.common.district.DistrictReqDTO;
+import my.ep.dto.pm.common.district.DistrictResDTO;
 import my.ep.dto.pm.common.object.ObjectReqDTO;
 import my.ep.dto.pm.common.object.ObjectResDTO;
+import my.ep.dto.pm.common.state.StateReqDTO;
+import my.ep.dto.pm.common.state.StateResDTO;
 import my.ep.factory.EpLogger;
 import my.ep.persistence.entity.pm.common.PmCategoryL1;
 import my.ep.persistence.entity.pm.common.PmCategoryL2;
@@ -21,6 +28,9 @@ import my.ep.persistence.entity.pm.common.PmCategoryL3;
 import my.ep.persistence.entity.pm.common.PmDo;
 import my.ep.persistence.entity.pm.common.PmGo;
 import my.ep.persistence.entity.pm.common.PmSo;
+import my.ep.persistence.entity.pm.common.PmState;
+import my.ep.persistence.entity.ss.quationtender.ScQtCategory;
+import my.ep.persistence.entity.ss.quationtender.ScQtGosodoBudget;
 import my.ep.web.backingbean.BaseBackingBean;
 import my.ep.web.managedbean.ss.quationtender.QTDetailManagedBean;
 import my.ep.web.util.lookupservice.BusinessDelegate;
@@ -42,6 +52,8 @@ public class QTDetailBackingBean extends BaseBackingBean<QTDetailManagedBean> {
 	private IQTDetailSO detailSO = null;
 	private IObjectSO objectSO = null;
 	private ICategorysSO categorysSO = null;
+	private IStateSO stateSo = null;
+	private IDistrictSO districtSO = null;
 
 	public QTDetailBackingBean() {
 
@@ -55,15 +67,24 @@ public class QTDetailBackingBean extends BaseBackingBean<QTDetailManagedBean> {
 	 */
 	@PostConstruct
 	public void initializeObejcts() {
+
 		IQTDetailSO detailSO = BusinessDelegate.getInstance().getServiceObject(
 				MODULE_NAME, IQTDetailSO.class);
 		IObjectSO objectSO = BusinessDelegate.getInstance().getServiceObject(
 				"pm", IObjectSO.class);
 		ICategorysSO categorysSO = BusinessDelegate.getInstance()
 				.getServiceObject("pm", ICategorysSO.class);
+
+		IStateSO stateSO = BusinessDelegate.getInstance().getServiceObject(
+				"pm", IStateSO.class);
+		IDistrictSO districtSO = BusinessDelegate.getInstance()
+				.getServiceObject("pm", IDistrictSO.class);
+
 		this.detailSO = detailSO;
 		this.objectSO = objectSO;
 		this.categorysSO = categorysSO;
+		this.stateSo = stateSO;
+		this.districtSO = districtSO;
 		log.info("successfully look up the so object" + detailSO);
 	}
 
@@ -84,14 +105,30 @@ public class QTDetailBackingBean extends BaseBackingBean<QTDetailManagedBean> {
 	 * Method to load the categorieslist for suppliers screen
 	 */
 	public void retriveQtCriteria() {
+
+		// Retrive categoryL1 and set to managedbean for firsttime other wise
+		// skip
 		List<PmCategoryL1> l1categoryList = this.getManagedBean()
 				.getCategoryL1s();
-		if (l1categoryList != null && !l1categoryList.isEmpty()) {
+		if (l1categoryList == null || !l1categoryList.isEmpty()) {
 			CategorysResDTO catResDTO = categorysSO.retiveCategoryL1List();
 			if (catResDTO.getCategoryL1List() != null
 					&& !catResDTO.getCategoryL1List().isEmpty()) {
 				this.getManagedBean().setCategoryL1s(
 						catResDTO.getCategoryL1List());
+			}
+			// Retrive states and set to managedbean for firsttime otherwise
+			// skip
+			List<PmState> stateList = this.getManagedBean().getStates();
+			if (stateList == null || !stateList.isEmpty()) {
+				StateReqDTO reqDTO = new StateReqDTO();
+				reqDTO.setCountryId(new Long(1));
+				StateResDTO resDTO = stateSo
+						.retriveStatesListByCountryID(reqDTO);
+				List<PmState> states = resDTO.getStateList();
+				if (states != null && !states.isEmpty()) {
+					this.getManagedBean().setStates(states);
+				}
 			}
 		}
 	}
@@ -101,8 +138,58 @@ public class QTDetailBackingBean extends BaseBackingBean<QTDetailManagedBean> {
 	 */
 	public void addNewGoSoDoItem() {
 		log.info("begin add gosodo item method");
+		List<ScQtGosodoBudget> gosodos = this.getManagedBean().getQt()
+				.getScQtGosodoBudgets();
+		if (gosodos == null) {
+			gosodos = new ArrayList<ScQtGosodoBudget>();
 
+		} else {
+			ScQtGosodoBudget budget = new ScQtGosodoBudget();
+			gosodos.add(budget);
+		}
+		this.getManagedBean().getQt().setScQtGosodoBudgets(gosodos);
 		log.info("End of add gosodo item method");
+	}
+
+	/*
+	 * Method to delete gosodo from table
+	 */
+	public void deleteGoSoDoItem(ValueChangeEvent changeEvent) {
+		ScQtGosodoBudget gosodoBudget = (ScQtGosodoBudget) changeEvent
+				.getNewValue();
+		List<ScQtGosodoBudget> gosodos = this.getManagedBean().getGosodos();
+		if (gosodos.contains(gosodoBudget)) {
+			gosodos.remove(gosodoBudget);
+		}
+	}
+
+	/*
+	 * To add empty row to category code data table
+	 */
+	public void addNewCategoryItem() {
+		List<ScQtCategory> categories = this.getManagedBean().getQt()
+				.getScQtCategorys();
+		if (categories == null) {
+			categories = new ArrayList<ScQtCategory>();
+
+		} else {
+			ScQtCategory category = new ScQtCategory();
+			categories.add(category);
+		}
+		this.getManagedBean().getQt().setScQtCategorys(categories);
+	}
+
+	/*
+	 * To remove categoryCode from data table
+	 */
+	public void deleteCategoryCode(ValueChangeEvent changeEvent) {
+		ScQtCategory category = (ScQtCategory) changeEvent.getNewValue();
+		List<ScQtCategory> categories = this.getManagedBean().getQt()
+				.getScQtCategorys();
+		if (categories.contains(category)) {
+			categories.remove(category);
+		}
+
 	}
 
 	/*
@@ -154,6 +241,7 @@ public class QTDetailBackingBean extends BaseBackingBean<QTDetailManagedBean> {
 			this.getManagedBean().setCategoryL2s(catL2List);
 		}
 	}
+
 	/*
 	 * Method to call onchange of L2category
 	 */
@@ -168,6 +256,23 @@ public class QTDetailBackingBean extends BaseBackingBean<QTDetailManagedBean> {
 			List<PmCategoryL3> catL3List = categorysResDTO.getCategoryL3List();
 			this.getManagedBean().getCategoryL3s().clear();
 			this.getManagedBean().setCategoryL3s(catL3List);
+		}
+	}
+
+	/*
+	 * To retrive districts based on state value changes.
+	 */
+	public void handleStateChange(ValueChangeEvent changeEvent) {
+		PmState state = (PmState) changeEvent.getNewValue();
+		if (state != null && state.getStateId() != null) {
+			DistrictReqDTO reqDTO = new DistrictReqDTO();
+			reqDTO.setStateId(state.getStateId());
+			DistrictResDTO resDTO = districtSO
+					.retriveDistrictListByStateID(reqDTO);
+			if (resDTO != null && !resDTO.getDistrictList().isEmpty()) {
+				this.getManagedBean().getDistricts().clear();
+				this.getManagedBean().setDistricts(resDTO.getDistrictList());
+			}
 		}
 	}
 }
