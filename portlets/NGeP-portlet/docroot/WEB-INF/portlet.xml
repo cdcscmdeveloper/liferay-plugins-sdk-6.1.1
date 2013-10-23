@@ -1,13 +1,14 @@
 <?xml version="1.0"?>
 
-<portlet-app xmlns="http://java.sun.com/xml/ns/portlet/portlet-app_2_0.xsd" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://java.sun.com/xml/ns/portlet/portlet-app_2_0.xsd http://java.sun.com/xml/ns/portlet/portlet-app_2_0.xsd" version="2.0">
+<portlet-app xmlns="http://java.sun.com/xml/ns/portlet/portlet-app_2_0.xsd"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://java.sun.com/xml/ns/portlet/portlet-app_2_0.xsd http://java.sun.com/xml/ns/portlet/portlet-app_2_0.xsd"
+	version="2.0">
 
-<portlet>
+	<portlet>
 		<portlet-name>ctTemplate</portlet-name>
 		<display-name>Contract Templates</display-name>
-		<portlet-class>
-			org.portletfaces.bridge.GenericFacesPortlet
-		</portlet-class>
+		<portlet-class>org.portletfaces.bridge.GenericFacesPortlet</portlet-class>
 		<init-param>
 			<name>javax.portlet.faces.defaultViewId.view</name>
 			<value>/xhtml/ct/templates/ctTemplates.xhtml</value>
@@ -37,12 +38,10 @@
 	</portlet>
 
 
-<portlet>
+	<portlet>
 		<portlet-name>search</portlet-name>
 		<display-name>Search Fulfilment</display-name>
-		<portlet-class>
-			org.portletfaces.bridge.GenericFacesPortlet
-		</portlet-class>
+		<portlet-class>org.portletfaces.bridge.GenericFacesPortlet</portlet-class>
 		<init-param>
 			<name>javax.portlet.faces.defaultViewId.view</name>
 			<value>/xhtml/ct/fulfilmentdetails/search/search.xhtml</value>
@@ -70,13 +69,11 @@
 			<role-name>user</role-name>
 		</security-role-ref>
 	</portlet>
-	
+
 	<portlet>
 		<portlet-name>fd</portlet-name>
 		<display-name>Create Fulfilment</display-name>
-		<portlet-class>
-			org.portletfaces.bridge.GenericFacesPortlet
-		</portlet-class>
+		<portlet-class>org.portletfaces.bridge.GenericFacesPortlet</portlet-class>
 		<init-param>
 			<name>javax.portlet.faces.defaultViewId.view</name>
 			<value>/xhtml/ct/fulfilmentdetails/creation/fulfilment.xhtml</value>
@@ -104,13 +101,11 @@
 			<role-name>user</role-name>
 		</security-role-ref>
 	</portlet>
-	
+
 	<portlet>
 		<portlet-name>pc</portlet-name>
 		<display-name>Create Panel Circular</display-name>
-		<portlet-class>
-			org.portletfaces.bridge.GenericFacesPortlet
-		</portlet-class>
+		<portlet-class>org.portletfaces.bridge.GenericFacesPortlet</portlet-class>
 		<init-param>
 			<name>javax.portlet.faces.defaultViewId.view</name>
 			<value>/xhtml/ct/circular/panel/createCircular.xhtml</value>
@@ -138,13 +133,11 @@
 			<role-name>user</role-name>
 		</security-role-ref>
 	</portlet>
-	
+
 	<portlet>
 		<portlet-name>pcSearch</portlet-name>
 		<display-name>search Panel Circular</display-name>
-		<portlet-class>
-			org.portletfaces.bridge.GenericFacesPortlet
-		</portlet-class>
+		<portlet-class>org.portletfaces.bridge.GenericFacesPortlet</portlet-class>
 		<init-param>
 			<name>javax.portlet.faces.defaultViewId.view</name>
 			<value>/xhtml/ct/circular/panel/search.xhtml</value>
@@ -172,13 +165,11 @@
 			<role-name>user</role-name>
 		</security-role-ref>
 	</portlet>
-	
+
 	<portlet>
 		<portlet-name>cc</portlet-name>
 		<display-name>Create Central Circular</display-name>
-		<portlet-class>
-			org.portletfaces.bridge.GenericFacesPortlet
-		</portlet-class>
+		<portlet-class>org.portletfaces.bridge.GenericFacesPortlet</portlet-class>
 		<init-param>
 			<name>javax.portlet.faces.defaultViewId.view</name>
 			<value>/xhtml/ct/circular/centralcontract/createCircular.xhtml</value>
@@ -206,13 +197,11 @@
 			<role-name>user</role-name>
 		</security-role-ref>
 	</portlet>
-	
+
 	<portlet>
 		<portlet-name>ccSearch</portlet-name>
 		<display-name>Search Central Circular</display-name>
-		<portlet-class>
-			org.portletfaces.bridge.GenericFacesPortlet
-		</portlet-class>
+		<portlet-class>org.portletfaces.bridge.GenericFacesPortlet</portlet-class>
 		<init-param>
 			<name>javax.portlet.faces.defaultViewId.view</name>
 			<value>/xhtml/ct/circular/centralcontract/search.xhtml</value>
@@ -240,13 +229,11 @@
 			<role-name>user</role-name>
 		</security-role-ref>
 	</portlet>
-	
+
 	<portlet>
 		<portlet-name>ag</portlet-name>
 		<display-name>Create Agreement</display-name>
-		<portlet-class>
-			org.portletfaces.bridge.GenericFacesPortlet
-		</portlet-class>
+		<portlet-class>org.portletfaces.bridge.GenericFacesPortlet</portlet-class>
 		<init-param>
 			<name>javax.portlet.faces.defaultViewId.view</name>
 			<value>/xhtml/ct/agreement/fulfilmentDetails.xhtml</value>
@@ -274,13 +261,11 @@
 			<role-name>user</role-name>
 		</security-role-ref>
 	</portlet>
-	
+
 	<portlet>
 		<portlet-name>supag</portlet-name>
 		<display-name>Create Suplemental Agreement</display-name>
-		<portlet-class>
-			org.portletfaces.bridge.GenericFacesPortlet
-		</portlet-class>
+		<portlet-class>org.portletfaces.bridge.GenericFacesPortlet</portlet-class>
 		<init-param>
 			<name>javax.portlet.faces.defaultViewId.view</name>
 			<value>/xhtml/ct/agreement/fulfilmentDetails.xhtml</value>
@@ -308,13 +293,11 @@
 			<role-name>user</role-name>
 		</security-role-ref>
 	</portlet>
-	
+
 	<portlet>
 		<portlet-name>supplierSearch</portlet-name>
 		<display-name>Search</display-name>
-		<portlet-class>
-			org.portletfaces.bridge.GenericFacesPortlet
-		</portlet-class>
+		<portlet-class>org.portletfaces.bridge.GenericFacesPortlet</portlet-class>
 		<init-param>
 			<name>javax.portlet.faces.defaultViewId.view</name>
 			<value>/xhtml/ct/supplier/search.xhtml</value>
@@ -342,13 +325,11 @@
 			<role-name>user</role-name>
 		</security-role-ref>
 	</portlet>
-	
+
 	<portlet>
 		<portlet-name>pbTermination</portlet-name>
 		<display-name>Review Termination</display-name>
-		<portlet-class>
-			org.portletfaces.bridge.GenericFacesPortlet
-		</portlet-class>
+		<portlet-class>org.portletfaces.bridge.GenericFacesPortlet</portlet-class>
 		<init-param>
 			<name>javax.portlet.faces.defaultViewId.view</name>
 			<value>/xhtml/ct/pbqcc/review/termination/pbtermination.xhtml</value>
@@ -376,13 +357,11 @@
 			<role-name>user</role-name>
 		</security-role-ref>
 	</portlet>
-	
+
 	<portlet>
 		<portlet-name>pbReview</portlet-name>
 		<display-name>Review Fulfilment</display-name>
-		<portlet-class>
-			org.portletfaces.bridge.GenericFacesPortlet
-		</portlet-class>
+		<portlet-class>org.portletfaces.bridge.GenericFacesPortlet</portlet-class>
 		<init-param>
 			<name>javax.portlet.faces.defaultViewId.view</name>
 			<value>/xhtml/ct/pbqcc/review/amendment/fulfilment.xhtml</value>
@@ -410,13 +389,11 @@
 			<role-name>user</role-name>
 		</security-role-ref>
 	</portlet>
-	
+
 	<portlet>
 		<portlet-name>bpkReview</portlet-name>
 		<display-name>Review Fulfilment</display-name>
-		<portlet-class>
-			org.portletfaces.bridge.GenericFacesPortlet
-		</portlet-class>
+		<portlet-class>org.portletfaces.bridge.GenericFacesPortlet</portlet-class>
 		<init-param>
 			<name>javax.portlet.faces.defaultViewId.view</name>
 			<value>/xhtml/ct/pbqcc/review/amendment/fulfilment.xhtml</value>
@@ -444,13 +421,11 @@
 			<role-name>user</role-name>
 		</security-role-ref>
 	</portlet>
-	
+
 	<portlet>
 		<portlet-name>bpkTermination</portlet-name>
 		<display-name>Review Termination</display-name>
-		<portlet-class>
-			org.portletfaces.bridge.GenericFacesPortlet
-		</portlet-class>
+		<portlet-class>org.portletfaces.bridge.GenericFacesPortlet</portlet-class>
 		<init-param>
 			<name>javax.portlet.faces.defaultViewId.view</name>
 			<value>/xhtml/ct/pbqcc/review/termination/bpktermination.xhtml</value>
@@ -482,9 +457,7 @@
 	<portlet>
 		<portlet-name>ppBudget</portlet-name>
 		<display-name>ProcurementPlanBudget</display-name>
-		<portlet-class>
-			org.portletfaces.bridge.GenericFacesPortlet
-		</portlet-class>
+		<portlet-class>org.portletfaces.bridge.GenericFacesPortlet</portlet-class>
 		<init-param>
 			<name>javax.portlet.faces.defaultViewId.view</name>
 			<value>/xhtml/pp/budgetallocation/listBudget.xhtml</value>
@@ -515,9 +488,7 @@
 	<portlet>
 		<portlet-name>ppPlan</portlet-name>
 		<display-name>ProcurementPlan</display-name>
-		<portlet-class>
-			org.portletfaces.bridge.GenericFacesPortlet
-		</portlet-class>
+		<portlet-class>org.portletfaces.bridge.GenericFacesPortlet</portlet-class>
 		<init-param>
 			<name>javax.portlet.faces.defaultViewId.view</name>
 			<value>/xhtml/pp/procurementplan/listPlan.xhtml</value>
@@ -547,15 +518,13 @@
 	</portlet>
 	<!-- Procurement Plan - END -->
 
-	
-	
+
+
 
 	<portlet>
 		<portlet-name>Quatation</portlet-name>
 		<display-name>Quatation</display-name>
-		<portlet-class>
-			org.portletfaces.bridge.GenericFacesPortlet
-		</portlet-class>
+		<portlet-class>org.portletfaces.bridge.GenericFacesPortlet</portlet-class>
 		<init-param>
 			<name>javax.portlet.faces.defaultViewId.view</name>
 			<value>/xhtml/ss/quatationtender/qtntendermain.xhtml</value>
@@ -586,9 +555,7 @@
 	<portlet>
 		<portlet-name>Committee</portlet-name>
 		<display-name>committee</display-name>
-		<portlet-class>
-			org.portletfaces.bridge.GenericFacesPortlet
-		</portlet-class>
+		<portlet-class>org.portletfaces.bridge.GenericFacesPortlet</portlet-class>
 		<init-param>
 			<name>javax.portlet.faces.defaultViewId.view</name>
 			<value>/xhtml/ss/committe/committemain.xhtml</value>
@@ -619,9 +586,7 @@
 	<portlet>
 		<portlet-name>Bidding</portlet-name>
 		<display-name>Bidding</display-name>
-		<portlet-class>
-			org.portletfaces.bridge.GenericFacesPortlet
-		</portlet-class>
+		<portlet-class>org.portletfaces.bridge.GenericFacesPortlet</portlet-class>
 		<init-param>
 			<name>javax.portlet.faces.defaultViewId.view</name>
 			<value>/xhtml/ss/bidding/biddingmain.xhtml</value>
@@ -652,9 +617,7 @@
 	<portlet>
 		<portlet-name>codification</portlet-name>
 		<display-name>Codification</display-name>
-		<portlet-class>
-			org.portletfaces.bridge.GenericFacesPortlet
-		</portlet-class>
+		<portlet-class>org.portletfaces.bridge.GenericFacesPortlet</portlet-class>
 		<init-param>
 			<name>javax.portlet.faces.defaultViewId.view</name>
 			<value>/xhtml/cm/codification/codificationView.xhtml</value>
@@ -685,14 +648,10 @@
 	<portlet>
 		<portlet-name>Catalogue</portlet-name>
 		<display-name>Catalogue</display-name>
-		<portlet-class>
-			org.portletfaces.bridge.GenericFacesPortlet
-		</portlet-class>
+		<portlet-class>org.portletfaces.bridge.GenericFacesPortlet</portlet-class>
 		<init-param>
 			<name>javax.portlet.faces.defaultViewId.view</name>
-			<value>
-				/xhtml/cm/catalogue/supplierItemView.xhtml
-			</value>
+			<value>/xhtml/cm/catalogue/supplierItemView.xhtml</value>
 		</init-param>
 		<expiration-cache>0</expiration-cache>
 		<supports>
@@ -717,13 +676,11 @@
 			<role-name>user</role-name>
 		</security-role-ref>
 	</portlet>
-<!-- Fulfilment Start Added by Giri -->
+	<!-- Fulfilment Start Added by Giri -->
 	<portlet>
 		<portlet-name>FLContractOrder</portlet-name>
 		<display-name>FLContractOrder</display-name>
-		<portlet-class>
-			org.portletfaces.bridge.GenericFacesPortlet
-		</portlet-class>
+		<portlet-class>org.portletfaces.bridge.GenericFacesPortlet</portlet-class>
 		<init-param>
 			<name>javax.portlet.faces.defaultViewId.view</name>
 			<value>/xhtml/fl/contractorder/coBasePage.xhtml</value>
@@ -754,9 +711,7 @@
 	<portlet>
 		<portlet-name>FLDeliveryOrder</portlet-name>
 		<display-name>FLDeliveryOrder</display-name>
-		<portlet-class>
-			org.portletfaces.bridge.GenericFacesPortlet
-		</portlet-class>
+		<portlet-class>org.portletfaces.bridge.GenericFacesPortlet</portlet-class>
 		<init-param>
 			<name>javax.portlet.faces.defaultViewId.view</name>
 			<value>/xhtml/fl/deliveryorder/doBasePage.xhtml</value>
@@ -787,9 +742,7 @@
 	<portlet>
 		<portlet-name>FLContractRequest</portlet-name>
 		<display-name>FLContractRequest</display-name>
-		<portlet-class>
-			org.portletfaces.bridge.GenericFacesPortlet
-		</portlet-class>
+		<portlet-class>org.portletfaces.bridge.GenericFacesPortlet</portlet-class>
 		<init-param>
 			<name>javax.portlet.faces.defaultViewId.view</name>
 			<value>/xhtml/fl/contractrequest/crBasePage.xhtml</value>
@@ -820,9 +773,7 @@
 	<portlet>
 		<portlet-name>FLFulfilmentReceivedNote</portlet-name>
 		<display-name>FLFulfilmentReceivedNote</display-name>
-		<portlet-class>
-			org.portletfaces.bridge.GenericFacesPortlet
-		</portlet-class>
+		<portlet-class>org.portletfaces.bridge.GenericFacesPortlet</portlet-class>
 		<init-param>
 			<name>javax.portlet.faces.defaultViewId.view</name>
 			<value>/xhtml/fl/receivednote/frnBasePage.xhtml</value>
@@ -853,9 +804,7 @@
 	<portlet>
 		<portlet-name>FLCreateInvoice</portlet-name>
 		<display-name>FLCreateInvoice</display-name>
-		<portlet-class>
-			org.portletfaces.bridge.GenericFacesPortlet
-		</portlet-class>
+		<portlet-class>org.portletfaces.bridge.GenericFacesPortlet</portlet-class>
 		<init-param>
 			<name>javax.portlet.faces.defaultViewId.view</name>
 			<value>/xhtml/fl/invoice/invBasePage.xhtml</value>
@@ -886,9 +835,7 @@
 	<portlet>
 		<portlet-name>FLPaymentMatch</portlet-name>
 		<display-name>FLPaymentMatch</display-name>
-		<portlet-class>
-			org.portletfaces.bridge.GenericFacesPortlet
-		</portlet-class>
+		<portlet-class>org.portletfaces.bridge.GenericFacesPortlet</portlet-class>
 		<init-param>
 			<name>javax.portlet.faces.defaultViewId.view</name>
 			<value>/xhtml/fl/paymentmatch/pmBasePage.xhtml</value>
@@ -919,9 +866,7 @@
 	<portlet>
 		<portlet-name>FLStopInstruction</portlet-name>
 		<display-name>FLStopInstruction</display-name>
-		<portlet-class>
-			org.portletfaces.bridge.GenericFacesPortlet
-		</portlet-class>
+		<portlet-class>org.portletfaces.bridge.GenericFacesPortlet</portlet-class>
 		<init-param>
 			<name>javax.portlet.faces.defaultViewId.view</name>
 			<value>/xhtml/fl/stopInstruction/siBasePage.xhtml</value>
@@ -952,9 +897,7 @@
 	<portlet>
 		<portlet-name>FLPurchaseOrder</portlet-name>
 		<display-name>FLPurchaseOrder</display-name>
-		<portlet-class>
-			org.portletfaces.bridge.GenericFacesPortlet
-		</portlet-class>
+		<portlet-class>org.portletfaces.bridge.GenericFacesPortlet</portlet-class>
 		<init-param>
 			<name>javax.portlet.faces.defaultViewId.view</name>
 			<value>/xhtml/fl/purchaseorder/poBasePage.xhtml</value>
@@ -985,9 +928,7 @@
 	<portlet>
 		<portlet-name>FLPurchaseRequest</portlet-name>
 		<display-name>FLPurchaseRequest</display-name>
-		<portlet-class>
-			org.portletfaces.bridge.GenericFacesPortlet
-		</portlet-class>
+		<portlet-class>org.portletfaces.bridge.GenericFacesPortlet</portlet-class>
 		<init-param>
 			<name>javax.portlet.faces.defaultViewId.view</name>
 			<value>/xhtml/fl/purchaserequest/prBasePage.xhtml</value>
@@ -1018,9 +959,7 @@
 	<portlet>
 		<portlet-name>FLShippingInstruction</portlet-name>
 		<display-name>FLShippingInstruction</display-name>
-		<portlet-class>
-			org.portletfaces.bridge.GenericFacesPortlet
-		</portlet-class>
+		<portlet-class>org.portletfaces.bridge.GenericFacesPortlet</portlet-class>
 		<init-param>
 			<name>javax.portlet.faces.defaultViewId.view</name>
 			<value>/xhtml/fl/shippingInstruction/shippingInstruction.xhtml</value>
@@ -1051,9 +990,7 @@
 	<portlet>
 		<portlet-name>FLContractOrderSearch</portlet-name>
 		<display-name>FLContractOrderSearch</display-name>
-		<portlet-class>
-			org.portletfaces.bridge.GenericFacesPortlet
-		</portlet-class>
+		<portlet-class>org.portletfaces.bridge.GenericFacesPortlet</portlet-class>
 		<init-param>
 			<name>javax.portlet.faces.defaultViewId.view</name>
 			<value>/xhtml/fl/contractordersearch/coSearch.xhtml</value>
@@ -1081,14 +1018,12 @@
 			<role-name>user</role-name>
 		</security-role-ref>
 	</portlet>
-	
-<!-- Fulfilment End  Added by Giri -->
+
+	<!-- Fulfilment End Added by Giri -->
 	<portlet>
 		<portlet-name>Procure</portlet-name>
 		<display-name>Procurement</display-name>
-		<portlet-class>
-			org.portletfaces.bridge.GenericFacesPortlet
-		</portlet-class>
+		<portlet-class>org.portletfaces.bridge.GenericFacesPortlet</portlet-class>
 		<init-param>
 			<name>javax.portlet.faces.defaultViewId.view</name>
 			<value>/xhtml/procure/procurePlan.xhtml</value>
@@ -1119,9 +1054,7 @@
 	<portlet>
 		<portlet-name>NoticeBoard</portlet-name>
 		<display-name>NoticeBoard</display-name>
-		<portlet-class>
-			org.portletfaces.bridge.GenericFacesPortlet
-		</portlet-class>
+		<portlet-class>org.portletfaces.bridge.GenericFacesPortlet</portlet-class>
 		<init-param>
 			<name>javax.portlet.faces.defaultViewId.view</name>
 			<value>/xhtml/ss/notice/noticeboardmain.xhtml</value>
@@ -1134,7 +1067,7 @@
 		<portlet-info>
 			<title>NoticeBoard</title>
 			<short-title>NoticeBoard</short-title>
-			
+
 			<keywords></keywords>
 		</portlet-info>
 		<security-role-ref>
@@ -1153,9 +1086,7 @@
 	<portlet>
 		<portlet-name>SupplierReview</portlet-name>
 		<display-name>SupplierReview</display-name>
-		<portlet-class>
-			org.portletfaces.bridge.GenericFacesPortlet
-		</portlet-class>
+		<portlet-class>org.portletfaces.bridge.GenericFacesPortlet</portlet-class>
 		<init-param>
 			<name>javax.portlet.faces.defaultViewId.view</name>
 			<value>/xhtml/ss/supplierreview/spreview.xhtml</value>
@@ -1168,44 +1099,7 @@
 		<portlet-info>
 			<title>SupplierReview</title>
 			<short-title>SupplierReview</short-title>
-			
-			<keywords></keywords>
-		</portlet-info>
-		<security-role-ref>
-			<role-name>administrator</role-name>
-		</security-role-ref>
-		<security-role-ref>
-			<role-name>guest</role-name>
-		</security-role-ref>
-		<security-role-ref>
-			<role-name>power-user</role-name>
-		</security-role-ref>
-		<security-role-ref>
-			<role-name>user</role-name>
-		</security-role-ref>
-	</portlet>
-		
-		
-		
-		<portlet>
-		<portlet-name>Specification</portlet-name>
-		<display-name>Specification</display-name>
-		<portlet-class>
-			org.portletfaces.bridge.GenericFacesPortlet
-		</portlet-class>
-		<init-param>
-			<name>javax.portlet.faces.defaultViewId.view</name>
-			<value>/xhtml/ss/specification/specificationview.xhtml</value>
-		</init-param>
-		<expiration-cache>0</expiration-cache>
-		<supports>
-			<mime-type>text/html</mime-type>
-			<portlet-mode>view</portlet-mode>
-		</supports>
-		<portlet-info>
-			<title>Specification</title>
-			<short-title>Specification</short-title>
-			
+
 			<keywords></keywords>
 		</portlet-info>
 		<security-role-ref>
@@ -1222,12 +1116,45 @@
 		</security-role-ref>
 	</portlet>
 
-		<portlet>
+
+
+	<portlet>
+		<portlet-name>Specification</portlet-name>
+		<display-name>Specification</display-name>
+		<portlet-class>org.portletfaces.bridge.GenericFacesPortlet</portlet-class>
+		<init-param>
+			<name>javax.portlet.faces.defaultViewId.view</name>
+			<value>/xhtml/ss/specification/specificationview.xhtml</value>
+		</init-param>
+		<expiration-cache>0</expiration-cache>
+		<supports>
+			<mime-type>text/html</mime-type>
+			<portlet-mode>view</portlet-mode>
+		</supports>
+		<portlet-info>
+			<title>Specification</title>
+			<short-title>Specification</short-title>
+
+			<keywords></keywords>
+		</portlet-info>
+		<security-role-ref>
+			<role-name>administrator</role-name>
+		</security-role-ref>
+		<security-role-ref>
+			<role-name>guest</role-name>
+		</security-role-ref>
+		<security-role-ref>
+			<role-name>power-user</role-name>
+		</security-role-ref>
+		<security-role-ref>
+			<role-name>user</role-name>
+		</security-role-ref>
+	</portlet>
+
+	<portlet>
 		<portlet-name>Maintenance</portlet-name>
 		<display-name>Maintenance</display-name>
-		<portlet-class>
-			org.portletfaces.bridge.GenericFacesPortlet
-		</portlet-class>
+		<portlet-class>org.portletfaces.bridge.GenericFacesPortlet</portlet-class>
 		<init-param>
 			<name>javax.portlet.faces.defaultViewId.view</name>
 			<value>/xhtml/ss/main/maintenancemain.xhtml</value>
@@ -1240,7 +1167,7 @@
 		<portlet-info>
 			<title>Maintenance</title>
 			<short-title>Maintenance</short-title>
-			
+
 			<keywords></keywords>
 		</portlet-info>
 		<security-role-ref>
@@ -1259,9 +1186,7 @@
 	<portlet>
 		<portlet-name>ss-procurementlist</portlet-name>
 		<display-name>Procurement List</display-name>
-		<portlet-class>
-			org.portletfaces.bridge.GenericFacesPortlet
-		</portlet-class>
+		<portlet-class>org.portletfaces.bridge.GenericFacesPortlet</portlet-class>
 		<init-param>
 			<name>javax.portlet.faces.defaultViewId.view</name>
 			<value>/xhtml/ss/procure/procuremain.xhtml</value>
@@ -1292,9 +1217,7 @@
 	<portlet>
 		<portlet-name>ss-directPurchase</portlet-name>
 		<display-name>Direct Purchase</display-name>
-		<portlet-class>
-			org.portletfaces.bridge.GenericFacesPortlet
-		</portlet-class>
+		<portlet-class>org.portletfaces.bridge.GenericFacesPortlet</portlet-class>
 		<init-param>
 			<name>javax.portlet.faces.defaultViewId.view</name>
 			<value>/xhtml/ss/directpurchase/directPurchase.xhtml</value>
@@ -1322,14 +1245,12 @@
 			<role-name>user</role-name>
 		</security-role-ref>
 	</portlet>
-	
-	
+
+
 	<portlet>
 		<portlet-name>ss-defaultPurchase</portlet-name>
 		<display-name>Default Purchase</display-name>
-		<portlet-class>
-			org.portletfaces.bridge.GenericFacesPortlet
-		</portlet-class>
+		<portlet-class>org.portletfaces.bridge.GenericFacesPortlet</portlet-class>
 		<init-param>
 			<name>javax.portlet.faces.defaultViewId.view</name>
 			<value>/xhtml/ss/directpurchase/common/defaultPurchase.xhtml</value>
@@ -1357,7 +1278,7 @@
 			<role-name>user</role-name>
 		</security-role-ref>
 	</portlet>
-		<portlet>
+	<portlet>
 		<portlet-name>ShippingInstruction</portlet-name>
 		<display-name>ShippingInstruction</display-name>
 		<portlet-class>javax.portlet.faces.GenericFacesPortlet</portlet-class>
@@ -1420,9 +1341,7 @@
 	<portlet>
 		<portlet-name>templateDoc</portlet-name>
 		<display-name>templateDoc</display-name>
-		<portlet-class>
-			org.portletfaces.bridge.GenericFacesPortlet
-		</portlet-class>
+		<portlet-class>org.portletfaces.bridge.GenericFacesPortlet</portlet-class>
 		<init-param>
 			<name>javax.portlet.faces.defaultViewId.view</name>
 			<value>/xhtml/tpl/doc/templateDocSearch.xhtml</value>
@@ -1453,9 +1372,7 @@
 	<portlet>
 		<portlet-name>templateSpec</portlet-name>
 		<display-name>templateSpec</display-name>
-		<portlet-class>
-			org.portletfaces.bridge.GenericFacesPortlet
-		</portlet-class>
+		<portlet-class>org.portletfaces.bridge.GenericFacesPortlet</portlet-class>
 		<init-param>
 			<name>javax.portlet.faces.defaultViewId.view</name>
 			<value>/xhtml/tpl/spec/templateSpecSearch.xhtml</value>
@@ -1483,14 +1400,12 @@
 			<role-name>user</role-name>
 		</security-role-ref>
 	</portlet>
-	
-	
+
+
 	<portlet>
 		<portlet-name>proposal</portlet-name>
 		<display-name>proposal</display-name>
-		<portlet-class>
-			org.portletfaces.bridge.GenericFacesPortlet
-		</portlet-class>
+		<portlet-class>org.portletfaces.bridge.GenericFacesPortlet</portlet-class>
 		<init-param>
 			<name>javax.portlet.faces.defaultViewId.view</name>
 			<value>/xhtml/ss/proposal/proposalview.xhtml</value>
@@ -1518,14 +1433,12 @@
 			<role-name>user</role-name>
 		</security-role-ref>
 	</portlet>
-	
-		
-		<portlet>
+
+
+	<portlet>
 		<portlet-name>Evaluation</portlet-name>
 		<display-name>Evaluation</display-name>
-		<portlet-class>
-			org.portletfaces.bridge.GenericFacesPortlet
-		</portlet-class>
+		<portlet-class>org.portletfaces.bridge.GenericFacesPortlet</portlet-class>
 		<init-param>
 			<name>javax.portlet.faces.defaultViewId.view</name>
 			<value>/xhtml/ss/evaluation/evaluationview.xhtml</value>
@@ -1553,14 +1466,12 @@
 			<role-name>user</role-name>
 		</security-role-ref>
 	</portlet>
-	
-	
-		<portlet>
+
+
+	<portlet>
 		<portlet-name>TaskList</portlet-name>
 		<display-name>TaskList</display-name>
-		<portlet-class>
-			org.portletfaces.bridge.GenericFacesPortlet
-		</portlet-class>
+		<portlet-class>org.portletfaces.bridge.GenericFacesPortlet</portlet-class>
 		<init-param>
 			<name>javax.portlet.faces.defaultViewId.view</name>
 			<value>/xhtml/tasklist/taskListView.xhtml</value>
@@ -1588,7 +1499,72 @@
 			<role-name>user</role-name>
 		</security-role-ref>
 	</portlet>
-	
-	
-		
+	<!-- Supplier Management Start venkat -->
+	<portlet>
+		<portlet-name>sm</portlet-name>
+		<display-name>Supplier Management</display-name>
+		<portlet-class>org.portletfaces.bridge.GenericFacesPortlet</portlet-class>
+		<init-param>
+			<name>javax.portlet.faces.defaultViewId.view</name>
+			<value>/xhtml/sm/NewMofApplication/defaultNewMofApplPage.xhtml</value>
+			<!-- <value>/xhtml/sample/treeBean.xhtml</value> -->
+		</init-param>
+		<expiration-cache>0</expiration-cache>
+		<supports>
+			<mime-type>text/html</mime-type>
+			<portlet-mode>view</portlet-mode>
+		</supports>
+		<portlet-info>
+			<title>Supplier Management</title>
+			<short-title>NewJSFPortlet</short-title>
+			<keywords></keywords>
+		</portlet-info>
+		<security-role-ref>
+			<role-name>administrator</role-name>
+		</security-role-ref>
+		<security-role-ref>
+			<role-name>guest</role-name>
+		</security-role-ref>
+		<security-role-ref>
+			<role-name>power-user</role-name>
+		</security-role-ref>
+		<security-role-ref>
+			<role-name>user</role-name>
+		</security-role-ref>
+	</portlet>
+
+	<portlet>
+		<portlet-name>smApplyBumi</portlet-name>
+		<display-name>Apply Bumi Status</display-name>
+		<portlet-class>org.portletfaces.bridge.GenericFacesPortlet</portlet-class>
+		<init-param>
+			<name>javax.portlet.faces.defaultViewId.view</name>
+			<value>/xhtml/sm/bumiPuteraApplication/defaultBumiApplicationPage.xhtml</value>
+		</init-param>
+		<expiration-cache>0</expiration-cache>
+		<supports>
+			<mime-type>text/html</mime-type>
+			<portlet-mode>view</portlet-mode>
+		</supports>
+		<portlet-info>
+			<title>Apply Bumi Status</title>
+			<short-title>NewJSFPortlet</short-title>
+			<keywords></keywords>
+		</portlet-info>
+		<security-role-ref>
+			<role-name>administrator</role-name>
+		</security-role-ref>
+		<security-role-ref>
+			<role-name>guest</role-name>
+		</security-role-ref>
+		<security-role-ref>
+			<role-name>power-user</role-name>
+		</security-role-ref>
+		<security-role-ref>
+			<role-name>user</role-name>
+		</security-role-ref>
+	</portlet>
+<!-- Supplier Management End venkat -->
+
+
 </portlet-app>

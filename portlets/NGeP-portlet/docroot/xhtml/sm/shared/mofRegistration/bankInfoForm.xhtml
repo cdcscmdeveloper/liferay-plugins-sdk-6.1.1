@@ -49,8 +49,8 @@
 			</p:column>
 			<p:column headerText="Action">
 				<p:commandLink value="View Signatories"
-					action="#{mofRegistrationBackingBean.getSignatoryList}"
-					update=":form:tt:signatory" />
+					action="#{backingBean.viewSignatories(bankBean)}"
+					update=":form:tt:sfieldset" />
 				<!-- oncomplete="updateSignatory();" /> -->
 			</p:column>
 		</p:dataTable>
@@ -60,30 +60,32 @@
 			<p:commandButton value="Delete Account(s)" />
 		</div>
 		<p:fieldset id="sfieldset"
-			legend="Cheque Signatories Composition For Account No.  :  123456">
+			legend="Cheque Signatories Composition For Account No.  :  
+			#{backingBean.managedBean.selectedSignatoryBankAcct.accountNo}">
 			<!-- <p:remoteCommand name="updateSignatory" update="signatory" /> -->
 			<p:dataTable id="signatory" var="auth"
-				value="#{mofRegistrationBackingBean.signList}"
-				rowKey="#{auth.personelSeq}" rowIndexVar="index"
-				styleClass="updateSignatory">
+				value="#{backingBean.managedBean.selectedSignatoryBankAcct.smChequeSignatories}"
+				rowKey="#{auth.chequeSignatoryId}" rowIndexVar="index">
 				<p:column headerText="NO.">
 					<h:outputText value="#{index+1}" />
 				</p:column>
 
 				<p:column headerText="Name">
-					<p:outputLabel value="XXXX#{index+1}" />
+					<h:outputText value="#{auth.smPersonnel.name}" />
 				</p:column>
 
 				<p:column headerText="IC/Passport No.">
-					<p:outputLabel value="F738382#{index+1}" />
+					<h:outputText value="#{auth.smPersonnel.identificationNo}" />
 				</p:column>
 
 				<p:column headerText="Bumiputera?">
-					<p:outputLabel value="Y" />
+					<h:outputText value="Yes"
+						rendered="#{auth.smPersonnel.isBumi == 1}" />
+					<h:outputText value="No" rendered="#{auth.smPersonnel.isBumi != 1}" />
 				</p:column>
 
 				<p:column headerText="Position">
-					<p:outputLabel value="Role#{index+1}" />
+					<h:outputText value="#{auth.smPersonnel.designation}" />
 				</p:column>
 			</p:dataTable>
 		</p:fieldset>
@@ -173,9 +175,13 @@
 				</tr>
 				<tr>
 					<td><p:outputLabel value="Cheque Signatories *" /></td>
-					<!-- <td><p:pickList id="pickList"
-							value="#{backingBean.managedBean.chequeSings}" var="per"
-							itemLabel="#{per.name}" itemValue="#{per}" converter="signa"/></td> -->
+
+					<td><p:selectManyMenu showCheckbox="true"
+							value="#{backingBean.managedBean.chequeSingNames}">
+							<f:selectItems
+								value="#{backingBean.managedBean.smAppl.smPersonnels}" var="per"
+								itemLabel="#{per.name}" itemValue="#{per.name}" />
+						</p:selectManyMenu></td>
 
 				</tr>
 				<tr>
@@ -205,7 +211,7 @@
 		<div align="center">
 			<p:commandButton value="Save" oncomplete="bankDialog.hide();"
 				action="#{backingBean.addOrUpdateBankInfoToSmAppl}"
-				update=":form:tt:bankDt" />
+				update=":form:tt:bankDt , :form:tt:sfieldset" />
 			<p:commandButton value="Cancel" onclick="bankDialog.hide();" />
 		</div>
 	</p:dialog>

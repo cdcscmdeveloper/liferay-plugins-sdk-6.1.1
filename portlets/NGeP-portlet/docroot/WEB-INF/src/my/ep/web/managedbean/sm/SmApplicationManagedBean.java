@@ -33,8 +33,6 @@ import my.ep.persistence.entity.sm.SmSupplierCategory;
 import my.ep.persistence.entity.sm.SmSupplierCert;
 import my.ep.web.managedbean.BaseManagedBean;
 
-import org.primefaces.model.DualListModel;
-
 @ManagedBean(name = "smApplMB")
 @SessionScoped
 public class SmApplicationManagedBean extends BaseManagedBean {
@@ -109,14 +107,24 @@ public class SmApplicationManagedBean extends BaseManagedBean {
 	private SmPersonnelAddress shareHolderMailAddr;
 
 	private SmStaffAcademic shareHolderAcademics;
+	// Personnel Info
+	private List<SmPersonnel> smapplAuthPersonnels;
 
-	private DualListModel<SmPersonnel> chequeSings;
+	private List<SmPersonnel> selectedPersonnels;
 
-	private List<SmPersonnel> sourceChequeList;
+	private SmPersonnel selectedPersonnel;
 
-	private List<SmPersonnel> targetChequeList;
+	private SmPersonnelAddress personnelPermAddr;
+
+	private SmPersonnelAddress personnelMailAddr;
+
+	private SmStaffAcademic personnelAcademics;
+	// Bank Info
+	private List<String> chequeSingNames;
 
 	private SmSupplierBank selectedBank;
+
+	private SmSupplierBank selectedSignatoryBankAcct;
 
 	private List<SmSupplierBank> selectedBanks;
 
@@ -159,6 +167,22 @@ public class SmApplicationManagedBean extends BaseManagedBean {
 		shareHolderAcademics = new SmStaffAcademic();
 		selectedShareHolder.getSmStaffAcademics().add(shareHolderAcademics);
 
+		// For share personell
+		selectedPersonnel = new SmPersonnel();
+		smapplAuthPersonnels = new ArrayList<SmPersonnel>();
+		selectedPersonnels = new ArrayList<SmPersonnel>();
+		personnelMailAddr = new SmPersonnelAddress();
+		personnelMailAddr.setSmAddress(defaultAddr);
+		personnelPermAddr = new SmPersonnelAddress();
+		personnelPermAddr.setSmAddress(defaultAddr);
+		selectedPersonnel
+				.setSmPersonnelAddresses(new ArrayList<SmPersonnelAddress>());
+		selectedPersonnel.getSmPersonnelAddresses().add(shareHolderMailAddr);
+		selectedPersonnel.getSmPersonnelAddresses().add(shareHolderPermAddr);
+		selectedPersonnel.setSmStaffAcademics(new ArrayList<SmStaffAcademic>());
+		personnelAcademics = new SmStaffAcademic();
+		selectedPersonnel.getSmStaffAcademics().add(personnelAcademics);
+
 		//
 		selectedFactoryFacility = new SmFacility();
 		selectedFactoryFacility.setSmAddress(defaultAddr);
@@ -169,12 +193,10 @@ public class SmApplicationManagedBean extends BaseManagedBean {
 		selectedMachineList = new ArrayList<SmMachineDtl>();
 
 		//
-		sourceChequeList = new ArrayList<SmPersonnel>();
+		selectedSignatoryBankAcct = new SmSupplierBank();
 		smAppl = new SmAppl();
 		smAppl.setSmPersonnels(new ArrayList<SmPersonnel>());
-		sourceChequeList.addAll(getSmAppl().getSmPersonnels());
-		targetChequeList = new ArrayList<SmPersonnel>();
-		chequeSings = new DualListModel<>(sourceChequeList, targetChequeList);
+		chequeSingNames = new ArrayList<String>();
 		selectedBank = new SmSupplierBank();
 		selectedBank.setPmbank(new PmBank());
 		selectedBank.setSmAddress(defaultAddr);
@@ -544,28 +566,21 @@ public class SmApplicationManagedBean extends BaseManagedBean {
 		this.shareHolderAcademics = shareHolderAcademics;
 	}
 
-	public DualListModel<SmPersonnel> getChequeSings() {
-		return chequeSings;
+	public List<String> getChequeSingNames() {
+		return chequeSingNames;
 	}
 
-	public void setChequeSings(DualListModel<SmPersonnel> chequeSings) {
-		this.chequeSings = chequeSings;
+	public void setChequeSingNames(List<String> chequeSingNames) {
+		this.chequeSingNames = chequeSingNames;
 	}
 
-	public List<SmPersonnel> getSourceChequeList() {
-		return sourceChequeList;
+	public SmSupplierBank getSelectedSignatoryBankAcct() {
+		return selectedSignatoryBankAcct;
 	}
 
-	public void setSourceChequeList(List<SmPersonnel> sourceChequeList) {
-		this.sourceChequeList = sourceChequeList;
-	}
-
-	public List<SmPersonnel> getTargetChequeList() {
-		return targetChequeList;
-	}
-
-	public void setTargetChequeList(List<SmPersonnel> targetChequeList) {
-		this.targetChequeList = targetChequeList;
+	public void setSelectedSignatoryBankAcct(
+			SmSupplierBank selectedSignatoryBankAcct) {
+		this.selectedSignatoryBankAcct = selectedSignatoryBankAcct;
 	}
 
 	public SmSupplierBank getSelectedBank() {
@@ -582,6 +597,54 @@ public class SmApplicationManagedBean extends BaseManagedBean {
 
 	public void setSelectedBanks(List<SmSupplierBank> selectedBanks) {
 		this.selectedBanks = selectedBanks;
+	}
+
+	public List<SmPersonnel> getSmapplAuthPersonnels() {
+		return smapplAuthPersonnels;
+	}
+
+	public void setSmapplAuthPersonnels(List<SmPersonnel> smapplAuthPersonnels) {
+		this.smapplAuthPersonnels = smapplAuthPersonnels;
+	}
+
+	public List<SmPersonnel> getSelectedPersonnels() {
+		return selectedPersonnels;
+	}
+
+	public void setSelectedPersonnels(List<SmPersonnel> selectedPersonnels) {
+		this.selectedPersonnels = selectedPersonnels;
+	}
+
+	public SmPersonnel getSelectedPersonnel() {
+		return selectedPersonnel;
+	}
+
+	public void setSelectedPersonnel(SmPersonnel selectedPersonnel) {
+		this.selectedPersonnel = selectedPersonnel;
+	}
+
+	public SmPersonnelAddress getPersonnelPermAddr() {
+		return personnelPermAddr;
+	}
+
+	public void setPersonnelPermAddr(SmPersonnelAddress personnelPermAddr) {
+		this.personnelPermAddr = personnelPermAddr;
+	}
+
+	public SmPersonnelAddress getPersonnelMailAddr() {
+		return personnelMailAddr;
+	}
+
+	public void setPersonnelMailAddr(SmPersonnelAddress personnelMailAddr) {
+		this.personnelMailAddr = personnelMailAddr;
+	}
+
+	public SmStaffAcademic getPersonnelAcademics() {
+		return personnelAcademics;
+	}
+
+	public void setPersonnelAcademics(SmStaffAcademic personnelAcademics) {
+		this.personnelAcademics = personnelAcademics;
 	}
 
 }

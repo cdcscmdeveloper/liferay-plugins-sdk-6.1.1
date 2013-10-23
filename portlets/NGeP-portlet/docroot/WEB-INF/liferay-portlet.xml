@@ -416,7 +416,30 @@
 		<header-portlet-css>/css/ep/main.css</header-portlet-css>
 		<css-class-wrapper>Maintenance-portlet</css-class-wrapper>
 	</portlet>	
+	<!-- Supplier Management Start venkat -->
+	<portlet>
+		<portlet-name>sm</portlet-name>
+		<icon>/icon.png</icon>
+		<instanceable>false</instanceable>
+		<header-portlet-css>/css/main.css</header-portlet-css>
+		<footer-portlet-javascript>
+			/js/main.js
+		</footer-portlet-javascript>
+		<css-class-wrapper>sm-portlet</css-class-wrapper>
+	</portlet>
 	
+
+	<portlet>
+		<portlet-name>smApplyBumi</portlet-name>
+		<icon>/icon.png</icon>
+		<instanceable>false</instanceable>
+		<header-portlet-css>/css/main.css</header-portlet-css>
+		<footer-portlet-javascript>
+			/js/main.js
+		</footer-portlet-javascript>
+		<css-class-wrapper>smapplybumi-portlet</css-class-wrapper>
+	</portlet>
+	<!-- Supplier Management End venkat -->
 	<role-mapper>
 		<role-name>administrator</role-name>
 		<role-link>Administrator</role-link>

@@ -65,7 +65,7 @@
 		<portlet id="sm" />
 		<portlet id="codification"></portlet>
 		<portlet id="Catalogue"></portlet>
-
+        <portlet id="smApplyBumi"></portlet>
 	</category>
 
 

@@ -2,15 +2,13 @@ package my.ep.web.backingbean.sm;
 
 import java.text.ParseException;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.RequestScoped;
-import javax.faces.component.UIComponent;
 import javax.faces.context.FacesContext;
-import javax.faces.convert.Converter;
-import javax.faces.convert.FacesConverter;
 import javax.faces.event.AjaxBehaviorEvent;
 
 import my.ep.persistence.entity.pm.common.PmBank;
@@ -35,6 +33,7 @@ import my.ep.persistence.entity.sm.SmPersonnelAddress;
 import my.ep.persistence.entity.sm.SmProjectExperience;
 import my.ep.persistence.entity.sm.SmStaffAcademic;
 import my.ep.persistence.entity.sm.SmStaffTotal;
+import my.ep.persistence.entity.sm.SmSupplier;
 import my.ep.persistence.entity.sm.SmSupplierBank;
 import my.ep.persistence.entity.sm.SmSupplierBranch;
 import my.ep.persistence.entity.sm.SmSupplierCategory;
@@ -43,14 +42,11 @@ import my.ep.web.backingbean.BaseBackingBean;
 import my.ep.web.managedbean.sm.SmApplicationManagedBean;
 
 import org.apache.log4j.Logger;
-import org.primefaces.model.DualListModel;
 
 @ManagedBean(name = "backingBean")
-@FacesConverter("signa")
 @RequestScoped
 public class SmApplicationBackingBean extends
-		BaseBackingBean<SmApplicationManagedBean> implements
-		Converter{
+		BaseBackingBean<SmApplicationManagedBean> {
 
 	public static Logger log = Logger.getLogger(SmApplicationBackingBean.class);
 
@@ -63,78 +59,27 @@ public class SmApplicationBackingBean extends
 
 	}
 
-	SmAppl sm;
-
 	public String proceedMofRegistration() {
-		System.out.println("**** ENTER BACKIN BEAN *************");
-		System.out.println("--- test ---"
-				+ getManagedBean().getSelectedCategory().getPmCategoryL1()
-						.getCategoryName());
-		SmAppl appl = new SmAppl();
-		appl.setApplId(12727);
-		appl.setApplNo(" KN-01102013-0011");
+		System.out
+				.println("**** ENTER Create New MOF Application BACKIN BEAN Method *************");
+		SmAddress smAddress = setDefaultAddr();
+		SmSupplier smSupplier = new SmSupplier();
+		smSupplier.setSupplierName("My Sample Supplier");
+		smSupplier.setBusinessType("1");
+		smSupplier.setRegNo("12345");
+		smSupplier.setEstablishDate(new Date());
+		smSupplier.setWebSite("www.samplecompany.com");
+		SmAppl mofRegAppl = defaultSmAppl();
+		mofRegAppl.setApplId(12727);
+		mofRegAppl.setApplNo(" KN-01102013-0011");
+		mofRegAppl.setSmAddress(smAddress);
+		mofRegAppl.setSmSupplier(smSupplier);
 		// 1- For Contractor
 		// 2 - For Consultant
-		appl.setSupplierType("2");
-		List<SmStaffTotal> staffList = new ArrayList<SmStaffTotal>();
-		if (appl.getSupplierType().equals("1")) {
-			SmStaffTotal stf = new SmStaffTotal();
-			stf.setStaffCategory("C");
-			staffList.add(stf);
-		} else if (appl.getSupplierType().equals("2")) {
-			SmStaffTotal stf1 = new SmStaffTotal();
-			stf1.setStaffCategory("P");
-			staffList.add(stf1);
-			SmStaffTotal stf2 = new SmStaffTotal();
-			stf2.setStaffCategory("S");
-			staffList.add(stf2);
-			SmStaffTotal stf3 = new SmStaffTotal();
-			stf3.setStaffCategory("L");
-			staffList.add(stf3);
-		}
-		appl.setSmStaffTotals(staffList);
-		appl.setApplType("NM");
-		if (appl.getSmSupplierBranches() == null) {
-			appl.setSmSupplierBranches(new ArrayList<SmSupplierBranch>());
-		}
-		if (appl.getSmAssociateCompanies() == null) {
-			appl.setSmAssociateCompanies(new ArrayList<SmAssociateCompany>());
-		}
-		if (appl.getSmSupplierCerts() == null) {
-			appl.setSmSupplierCerts(new ArrayList<SmSupplierCert>());
-		}
-		if (appl.getSmContractExperiences() == null) {
-			appl.setSmContractExperiences(new ArrayList<SmContractExperience>());
-		}
-		if (appl.getSmProjectExperiences() == null) {
-			appl.setSmProjectExperiences(new ArrayList<SmProjectExperience>());
-		}
-		if (appl.getSmEquityCompanies() == null) {
-			appl.setSmEquityCompanies(new ArrayList<SmEquityCompany>());
-		}
-		if (appl.getSmSupplierCategories() == null) {
-			appl.setSmSupplierCategories(new ArrayList<SmSupplierCategory>());
-		}
-		if (appl.getSmFacilities() == null) {
-			appl.setSmFacilities(new ArrayList<SmFacility>());
-		}
-		if (appl.getSmManufacturingDtls() == null) {
-			appl.setSmManufacturingDtls(new ArrayList<SmManufacturingDtl>());
-		}
-		if (appl.getSmMachineDtls() == null) {
-			appl.setSmMachineDtls(new ArrayList<SmMachineDtl>());
-		}
-		if (appl.getSmPersonnels() == null) {
-			appl.setSmPersonnels(new ArrayList<SmPersonnel>());
-		}
-		if (appl.getSmSupplierBanks() == null) {
-			appl.setSmSupplierBanks(new ArrayList<SmSupplierBank>());
-		}
-		getManagedBean().setSmAppl(appl);
-		getManagedBean().setTabActiveIndex(0);
-		getManagedBean().setOfficeFacility(new SmFacility());
-		System.out.println("**** ENTER BACKIN BEAN *************"
-				+ getManagedBean().getSmAppl().getApplType());
+		mofRegAppl.setSupplierType("2");
+		mofRegAppl.setSmStaffTotals(getStaffList(mofRegAppl.getSupplierType()));
+		mofRegAppl.setApplType("NM");
+
 		return PROCEED_MOF_REG;
 	}
 
@@ -142,8 +87,7 @@ public class SmApplicationBackingBean extends
 		try {
 			System.out.println("**** ENTER ACTION METHOD BEAN *************"
 					+ currentTab + "  " + outputTab);
-
-			// sm.setApplId(13131);
+			// TODO to be confirmed whether reqd to save the appln as draft
 			getManagedBean().setTabActiveIndex(outputTab);
 
 		} catch (Exception e) {
@@ -549,10 +493,24 @@ public class SmApplicationBackingBean extends
 
 	// -- Process Share Holder Personnel Start
 	public void addOrUpdateShareHolderToSmAppl() throws ParseException {
+
+		if (getManagedBean().getSmapplAuthPersonnels().contains(
+				getManagedBean().getSelectedShareHolder())) {
+			System.out.println(" *** ALREADY EXIST ******");
+			if (!getManagedBean().getSelectedShareHolder().isAuthorized())
+				getManagedBean().getSmapplAuthPersonnels().remove(
+						getManagedBean().getSelectedShareHolder());
+		} else {
+			System.out.println(" *** NOT EXIST ******");
+			if (getManagedBean().getSelectedShareHolder().isAuthorized())
+				getManagedBean().getSmapplAuthPersonnels().add(
+						getManagedBean().getSelectedShareHolder());
+		}
+
 		if (getManagedBean().getSmAppl().getSmPersonnels()
 				.contains(getManagedBean().getSelectedShareHolder())) {
 
-			System.out.println(" **** THIS IS AN UPDATE Certs******");
+			System.out.println(" **** THIS IS AN UPDATE Personnel ******");
 		} else {
 			// TODO Staff academics and addr settings start
 			getManagedBean().getSelectedShareHolder().getSmPersonnelAddresses()
@@ -613,37 +571,118 @@ public class SmApplicationBackingBean extends
 
 	// -- Process Share Holder Personnel End
 
+	// -- Process Personnel Start
+	public void addOrUpdatePersonnelToSmAppl() throws ParseException {
+		// if (getManagedBean().getSmapplAuthPersonnels().contains(
+		// getManagedBean().getSelectedPersonnel())
+		// && !getManagedBean().getSelectedPersonnel().isAuthorized()) {
+		// getManagedBean().getSmapplAuthPersonnels().remove(
+		// getManagedBean().getSelectedPersonnel());
+		// } else if (!getManagedBean().getSmapplAuthPersonnels().contains(
+		// getManagedBean().getSelectedPersonnel())
+		// && getManagedBean().getSelectedPersonnel().isAuthorized()) {
+		// getManagedBean().getSmapplAuthPersonnels().add(
+		// getManagedBean().getSelectedPersonnel());
+		// }
+		if (getManagedBean().getSmapplAuthPersonnels().contains(
+				getManagedBean().getSelectedPersonnel())) {
+			System.out.println(" *** ALREADY EXIST ******");
+			if (!getManagedBean().getSelectedPersonnel().isAuthorized())
+				getManagedBean().getSmapplAuthPersonnels().remove(
+						getManagedBean().getSelectedPersonnel());
+		} else {
+			System.out.println(" *** NOT EXIST ******");
+			if (getManagedBean().getSelectedPersonnel().isAuthorized())
+				getManagedBean().getSmapplAuthPersonnels().add(
+						getManagedBean().getSelectedPersonnel());
+		}
+
+		if (getManagedBean().getSmAppl().getSmPersonnels()
+				.contains(getManagedBean().getSelectedPersonnel())) {
+
+			System.out.println(" **** THIS IS AN UPDATE Certs******");
+		} else {
+			// TODO Staff academics and addr settings start
+			getManagedBean().getSelectedPersonnel().getSmPersonnelAddresses()
+					.clear();
+			getManagedBean().getSelectedPersonnel().getSmPersonnelAddresses()
+					.add(getManagedBean().getPersonnelMailAddr());
+			getManagedBean().getSelectedPersonnel().getSmPersonnelAddresses()
+					.add(getManagedBean().getPersonnelPermAddr());
+			getManagedBean().getSelectedPersonnel().getSmStaffAcademics()
+					.clear();
+			getManagedBean().getSelectedPersonnel().getSmStaffAcademics()
+					.add(getManagedBean().getPersonnelAcademics());
+			// TODO Staff academics and addr settings end
+
+			getManagedBean().getSmAppl().getSmPersonnels()
+					.add(getManagedBean().getSelectedPersonnel());
+		}
+	}
+
+	public void assignSelPersonnel(SmPersonnel personnelBean) {
+		for (SmPersonnelAddress addr : personnelBean.getSmPersonnelAddresses()) {
+			if (addr.getAddressType().equalsIgnoreCase("I")) {
+				getManagedBean().setPersonnelPermAddr(addr);
+			}
+			if (addr.getAddressType().equalsIgnoreCase("R")) {
+				getManagedBean().setPersonnelMailAddr(addr);
+			}
+		}
+		for (SmStaffAcademic stf : personnelBean.getSmStaffAcademics()) {
+			getManagedBean().setPersonnelAcademics(stf);
+		}
+		getManagedBean().setSelectedPersonnel(personnelBean);
+	}
+
+	public void assignNewPersonnel() {
+		System.out.println("******* ADD NEW Personnel *************");
+		SmPersonnelAddress perm = new SmPersonnelAddress();
+		perm.setAddressType("I");
+		perm.setSmAddress(setDefaultAddr());
+		getManagedBean().setPersonnelPermAddr(perm);
+
+		SmPersonnelAddress mail = new SmPersonnelAddress();
+		mail.setAddressType("R");
+		mail.setSmAddress(setDefaultAddr());
+		getManagedBean().setPersonnelMailAddr(mail);
+
+		getManagedBean().setPersonnelAcademics(new SmStaffAcademic());
+
+		SmPersonnel shr = new SmPersonnel();
+		shr.setEquityOwner(false);
+		shr.setSmPersonnelAddresses(new ArrayList<SmPersonnelAddress>());
+		shr.setSmStaffAcademics(new ArrayList<SmStaffAcademic>());
+		getManagedBean().setSelectedPersonnel(shr);
+	}
+
+	// -- Process Personnel End
+
 	// Process Bank Info Start
 	public void addOrUpdateBankInfoToSmAppl() {
 		// TODO tobe changed later
-		getManagedBean().getTargetChequeList().clear();
-		getManagedBean().getTargetChequeList().addAll(
-				getManagedBean().getChequeSings().getTarget());
-		System.out.println(" ***** AFTER SETTING TO TARGET ***********"
-				+ getManagedBean().getChequeSings().getTarget().size());
-		// for (SmPersonnel sm : getManagedBean().getTargetChequeList()) {
-		// SmChequeSignatory ch = new SmChequeSignatory();
-		// ch.setSmPersonnel(sm);
-		// ch.setSmSupplierBank(getManagedBean().getSelectedBank());
-		// getManagedBean().getSelectedBank().getSmChequeSignatories().add(ch);
-		// }
+		getManagedBean().getSelectedBank().getSmChequeSignatories().clear();
+		getManagedBean().setSelectedSignatoryBankAcct(new SmSupplierBank());
+		for (String str : getManagedBean().getChequeSingNames()) {
+			for (SmPersonnel sm : getManagedBean().getSmAppl()
+					.getSmPersonnels()) {
+				if (sm.getName().equals(str)) {
+					SmChequeSignatory ch = new SmChequeSignatory();
+					ch.setSmPersonnel(sm);
 
-		for (int i = 0; i < getManagedBean().getChequeSings().getTarget()
-				.size(); i++) {
-			SmChequeSignatory ch = new SmChequeSignatory();
-			String sm = (getManagedBean().getChequeSings().getTarget().get(i)
-					.getName());
-			System.out.println(" *** AFTER SETTING IN LOOP " + i
-					+ "   name == " + sm);
-			ch.setSmSupplierBank(getManagedBean().getSelectedBank());
-			getManagedBean().getSelectedBank().getSmChequeSignatories().add(ch);
-
+					getManagedBean().getSelectedBank().getSmChequeSignatories()
+							.add(ch);
+				}
+			}
 		}
-		System.out.println("** After Loop ** ");
+
 		if (getManagedBean().getSmAppl().getSmSupplierBanks()
 				.contains(getManagedBean().getSelectedBank())) {
 
 			System.out.println(" **** THIS IS AN UPDATE Bank******");
+			System.out.println("Before Update ===== "
+					+ getManagedBean().getSelectedBank()
+							.getSmChequeSignatories().size());
 		} else {
 			System.out.println("Before add ===== "
 					+ getManagedBean().getSelectedBank()
@@ -654,44 +693,26 @@ public class SmApplicationBackingBean extends
 	}
 
 	public void assignSelBank(SmSupplierBank shareBankBean) {
-
-		getManagedBean().getTargetChequeList().clear();
-		getManagedBean().setTargetChequeList(new ArrayList<SmPersonnel>());
-		getManagedBean().getSourceChequeList().clear();
-		getManagedBean().setSourceChequeList(
-				getManagedBean().getSmAppl().getSmPersonnels());
-		System.out.println("Before Loop source size ===== "
-				+ getManagedBean().getSourceChequeList().size());
-		System.out.println("Before Loop target size ===== "
-				+ getManagedBean().getTargetChequeList().size());
-
+		getManagedBean().getChequeSingNames().clear();
 		System.out.println("******* SIZE ********** "
 				+ shareBankBean.getSmChequeSignatories().size());
 		for (SmChequeSignatory ch : shareBankBean.getSmChequeSignatories()) {
 			SmPersonnel pr = ch.getSmPersonnel();
-			getManagedBean().getSourceChequeList().remove(pr);
-			getManagedBean().getTargetChequeList().add(pr);
+			getManagedBean().getChequeSingNames().add(pr.getName());
 
 		}
 		shareBankBean.getSmChequeSignatories().clear();
-		System.out.println("After Loop source size ===== "
-				+ getManagedBean().getSourceChequeList().size());
-		System.out.println("After Loop target size ===== "
-				+ getManagedBean().getTargetChequeList().size());
-		getManagedBean().setChequeSings(
-				new DualListModel<>(getManagedBean().getSourceChequeList(),
-						getManagedBean().getTargetChequeList()));
+
 		getManagedBean().setSelectedBank(shareBankBean);
+	}
+
+	public void viewSignatories(SmSupplierBank signAcctBean) {
+		getManagedBean().setSelectedSignatoryBankAcct(signAcctBean);
 	}
 
 	public void assignNewBank() {
 		System.out.println("******* ADD NEW Bank Info *************");
-		getManagedBean().setTargetChequeList(new ArrayList<SmPersonnel>());
-		getManagedBean().setSourceChequeList(
-				getManagedBean().getSmAppl().getSmPersonnels());
-		getManagedBean().setChequeSings(
-				new DualListModel<>(getManagedBean().getSourceChequeList(),
-						getManagedBean().getTargetChequeList()));
+		getManagedBean().setChequeSingNames(new ArrayList<String>());
 		SmSupplierBank bank = new SmSupplierBank();
 		bank.setSmAddress(setDefaultAddr());
 		bank.setPmbank(new PmBank());
@@ -710,15 +731,69 @@ public class SmApplicationBackingBean extends
 
 		return addr;
 	}
-	@Override
-	public Object getAsObject(FacesContext arg0, UIComponent arg1, String arg2) {
-		// TODO Auto-generated method stub
-		return null;
+
+	private List<SmStaffTotal> getStaffList(String supplierType) {
+		List<SmStaffTotal> staffList = new ArrayList<SmStaffTotal>();
+		if (supplierType.equals("1")) {
+			SmStaffTotal stf = new SmStaffTotal();
+			stf.setStaffCategory("C");
+			staffList.add(stf);
+		} else if (supplierType.equals("2")) {
+			SmStaffTotal stf1 = new SmStaffTotal();
+			stf1.setStaffCategory("P");
+			staffList.add(stf1);
+			SmStaffTotal stf2 = new SmStaffTotal();
+			stf2.setStaffCategory("S");
+			staffList.add(stf2);
+			SmStaffTotal stf3 = new SmStaffTotal();
+			stf3.setStaffCategory("L");
+			staffList.add(stf3);
+		}
+		return staffList;
 	}
 
-	@Override
-	public String getAsString(FacesContext arg0, UIComponent arg1, Object arg2) {
-		// TODO Auto-generated method stub
-		return ((SmPersonnel) arg2).getName();
+	private SmAppl defaultSmAppl() {
+		SmAppl appl = new SmAppl();
+		if (appl.getSmSupplierBranches() == null) {
+			appl.setSmSupplierBranches(new ArrayList<SmSupplierBranch>());
+		}
+		if (appl.getSmAssociateCompanies() == null) {
+			appl.setSmAssociateCompanies(new ArrayList<SmAssociateCompany>());
+		}
+		if (appl.getSmSupplierCerts() == null) {
+			appl.setSmSupplierCerts(new ArrayList<SmSupplierCert>());
+		}
+		if (appl.getSmContractExperiences() == null) {
+			appl.setSmContractExperiences(new ArrayList<SmContractExperience>());
+		}
+		if (appl.getSmProjectExperiences() == null) {
+			appl.setSmProjectExperiences(new ArrayList<SmProjectExperience>());
+		}
+		if (appl.getSmEquityCompanies() == null) {
+			appl.setSmEquityCompanies(new ArrayList<SmEquityCompany>());
+		}
+		if (appl.getSmSupplierCategories() == null) {
+			appl.setSmSupplierCategories(new ArrayList<SmSupplierCategory>());
+		}
+		if (appl.getSmFacilities() == null) {
+			appl.setSmFacilities(new ArrayList<SmFacility>());
+		}
+		if (appl.getSmManufacturingDtls() == null) {
+			appl.setSmManufacturingDtls(new ArrayList<SmManufacturingDtl>());
+		}
+		if (appl.getSmMachineDtls() == null) {
+			appl.setSmMachineDtls(new ArrayList<SmMachineDtl>());
+		}
+		if (appl.getSmPersonnels() == null) {
+			appl.setSmPersonnels(new ArrayList<SmPersonnel>());
+		}
+		if (appl.getSmSupplierBanks() == null) {
+			appl.setSmSupplierBanks(new ArrayList<SmSupplierBank>());
+		}
+		getManagedBean().setSmAppl(appl);
+		getManagedBean().setTabActiveIndex(0);
+		getManagedBean().setOfficeFacility(new SmFacility());
+		return appl;
 	}
+
 }
