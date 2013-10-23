@@ -15,9 +15,12 @@
 	<ui:define name="content"> -->
 		<table style="width: 800px;">
 			<tr>
-				<td colspan="4" align="right"><p:commandButton value="SAVE" ajax='false'
-						action="#{fulfilmentRequestBackingBean.createFulfillmentRequest}" />
-					<p:commandButton value="SUBMIT" /> <p:commandButton value="PRINT" /></td>
+				<td colspan="4" align="right">
+				<ui:repeat var="bpmAction"
+					value="#{fulfilmentRequestBackingBean.managedBean.actions}">
+					<p:commandButton value="#{bpmAction}" action="#{fulfilmentRequestBackingBean.submitAction(bpmAction)}" process="@this"/>
+				</ui:repeat> 
+				</td>
 			</tr>
 		</table>
 		 <p:messages id="msgs"/>

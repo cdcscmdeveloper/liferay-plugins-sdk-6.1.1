@@ -41,6 +41,10 @@ public class ContractRequestManagedBean extends BaseManagedBean {
 	private List<PmMaksud> maksudCodeList;
 	private boolean checkPtjFlg = true;
 	
+	//getbpm
+	private String bpmTaskId;
+	private String[] actions;
+	
 	//getcontract
 	private CtContract ctContract = new CtContract();
 	private List <CtContract> contractList;
@@ -250,6 +254,37 @@ public class ContractRequestManagedBean extends BaseManagedBean {
 	 */
 	public void setCheckPtjFlg(boolean checkPtjFlg) {
 		this.checkPtjFlg = checkPtjFlg;
+	}
+
+	/**
+	 * @return the bpmTaskId
+	 */
+	public String getBpmTaskId() {
+		return bpmTaskId;
+	}
+
+
+	/**
+	 * @param bpmTaskId the bpmTaskId to set
+	 */
+	public void setBpmTaskId(String bpmTaskId) {
+		this.bpmTaskId = bpmTaskId;
+	}
+
+
+	/**
+	 * @return the actions
+	 */
+	public String[] getActions() {
+		return actions;
+	}
+
+
+	/**
+	 * @param actions the actions to set
+	 */
+	public void setActions(String[] actions) {
+		this.actions = actions;
 	}
 
 }

@@ -18,7 +18,6 @@ import javax.faces.context.FacesContext;
 import javax.faces.model.SelectItem;
 import javax.portlet.PortletRequest;
 
-import my.ep.biz.service.IPmSO;
 import my.ep.biz.service.ct.maintain.IContractAmendmentSO;
 import my.ep.biz.service.fl.request.IFulfilmentRequestSO;
 import my.ep.biz.service.pm.authorization.orgunit.IOrgUnitSO;
@@ -35,16 +34,11 @@ import my.ep.dto.pm.authorization.orgunit.OrgUnitReqDTO;
 import my.ep.dto.pm.authorization.orgunit.OrgUnitResDTO;
 import my.ep.dto.pm.common.maksud.MaksudReqDTO;
 import my.ep.dto.pm.common.maksud.MaksudResDTO;
-import my.ep.jaxb.fl.codata.FLContractOrderDataType;
-import my.ep.jaxb.fl.podata.FLPurchaseOrderDataType;
 import my.ep.persistence.entity.ct.CtContract;
-import my.ep.persistence.entity.fl.FlAttachment;
-import my.ep.persistence.entity.fl.FlRemark;
 import my.ep.persistence.entity.fl.request.FlDeliveryAddress;
 import my.ep.persistence.entity.fl.request.FlFulfilmentRequest;
 import my.ep.persistence.entity.pm.authorization.PmOrgAddress;
 import my.ep.persistence.entity.pm.authorization.PmOrgProfile;
-import my.ep.persistence.entity.pm.authorization.PmUserOrg;
 import my.ep.persistence.entity.pm.common.PmCode;
 import my.ep.persistence.entity.pm.common.PmMaksud;
 import my.ep.persistence.entity.pm.common.PmStatus;
@@ -52,6 +46,7 @@ import my.ep.persistence.entity.sm.SmSupplier;
 import my.ep.persistence.logging.LogKey;
 import my.ep.util.lookupservice.EpBpmBusinessDelegate;
 import my.ep.web.backingbean.BaseBackingBean;
+import my.ep.web.constant.pp.ProcurementPlanConst;
 import my.ep.web.managedbean.fl.createcontract.ContractRequestManagedBean;
 import my.ep.web.util.lookupservice.BusinessDelegate;
 
@@ -142,29 +137,10 @@ public class ContractRequestBackingBean extends BaseBackingBean<ContractRequestM
 			//			reqDTO.setFlRemark(flRemark);
 			//			reqDTO.setFlAttachment(flAttachment);
 			reqDTO.setFlFulfilmentRequest(flRequest);
+			reqDTO.setContractRequest(true);
 			FulfilmentResDTO resDTO = iFulfilmentRequestSO.createFulfillmentRequest(reqDTO);
 
-			// calling BPM After Data Inserted
-
-			IBpmSO bpmSO = (IBpmSO) EpBpmBusinessDelegate.getInstance().getServiceObject(IBpmSO.class);
-			String ctx = bpmSO.authenticate("roslan", "welcome1");
-			System.out.println("ctx:::: " + ctx);
-			BpmRequestDTO reqBpmDTO = new BpmRequestDTO();
-
-
-			FLContractOrderDataType contractOrder = getContractOrder();
-
-			reqBpmDTO.setCtxToken(ctx);
-			reqBpmDTO.setProcessId("Order_Fullfillment.IntiateNormalContractOrder");
-			reqBpmDTO.setOutcome("");
-			reqBpmDTO.setPojo(contractOrder);
-
-			//BpmResponseDTO res = bpmSO.initiateAndUpdateTask(reqBpmDTO);
-			BpmResponseDTO res = bpmSO.getInitiableTasks(reqBpmDTO);
-			System.out.println("res.isSuccessful()::: " + res.isSuccessful());
-			System.out.println("res.getErrorReason()::: "+ res.getErrorReason());
-			System.out.println("Task Id:: " + res.getTaskId());
-			System.out.println("Task Name::: " + res.getTaskName());
+			
 
 		}catch(Exception e){
 			log.error("Exception>>", e);
@@ -226,7 +202,6 @@ public class ContractRequestBackingBean extends BaseBackingBean<ContractRequestM
 		List<SelectItem> retrieveDivisionList = new ArrayList<SelectItem>();
 		IOrgUnitSO orgProfileSO = (IOrgUnitSO)BusinessDelegate.getInstance().getServiceObject("pm",IOrgUnitSO.class);
 		OrgUnitReqDTO orgProfileReqDTO = new OrgUnitReqDTO();
-		System.out.println("getPmOrgProfile().getOrgProfileId(: "+getManagedBean().getFlRequest().getCreatedOrgProfile().getPmOrgProfile().getPmOrgProfile().getOrgProfileId());
 		orgProfileReqDTO.setOrgProfileId(getManagedBean().getFlRequest().getCreatedOrgProfile().getPmOrgProfile().getPmOrgProfile().getOrgProfileId());
 		OrgUnitResDTO resDTO = orgProfileSO.retrieveDivisionByMinistryId(orgProfileReqDTO);
 		if(resDTO.getPmOrgProfileByMinistryList() != null && !resDTO.getPmOrgProfileByMinistryList().isEmpty()){
@@ -245,7 +220,6 @@ public class ContractRequestBackingBean extends BaseBackingBean<ContractRequestM
 	}
 
 	public void addDeliveryAddr(){
-		System.out.println("--in--");
 		for(PmOrgAddress pmOrgAddr : getManagedBean().getSelectedPmDelAddrList()){
 			FlDeliveryAddress deliveryAddr = new FlDeliveryAddress();
 			deliveryAddr.setFlFulfilmentRequest(getManagedBean().getFlRequest());
@@ -269,8 +243,6 @@ public class ContractRequestBackingBean extends BaseBackingBean<ContractRequestM
 	}
 
 	public String procureContract(){
-		System.out.println("--start procureCotract--");
-		System.out.println("ct name: "+getManagedBean().getSelectedContract().getContractName());
 		getManagedBean().getFlRequest().setCtContract(getManagedBean().getSelectedContract());
 
 		IOrgUnitSO orgProfileSO = (IOrgUnitSO)BusinessDelegate.getInstance().getServiceObject("pm",IOrgUnitSO.class);
@@ -279,7 +251,8 @@ public class ContractRequestBackingBean extends BaseBackingBean<ContractRequestM
 		OrgUnitResDTO resDTO = orgProfileSO.retrieveOrgProfileByProfileId(orgProfileReqDTO);
 		if(resDTO.getPmOrgProfileById() != null){
 			getManagedBean().getFlRequest().setCreatedOrgProfile(resDTO.getPmOrgProfileById());
-		}		
+		}
+		this.getManagedBean().setActions(new String[]{"SAVE", "SUBMIT"}); 
 
 		return NAV_TO_CREATE_CONTRACT_REQUEST;
 	}
@@ -287,7 +260,6 @@ public class ContractRequestBackingBean extends BaseBackingBean<ContractRequestM
 	public void selectedAddrRow(){
 
 		getManagedBean().setSelectedRowFlg(true);
-		System.out.println("selectedRow: "+getManagedBean().isSelectedRowFlg());
 	}
 
 
@@ -322,23 +294,41 @@ public class ContractRequestBackingBean extends BaseBackingBean<ContractRequestM
 		getManagedBean().setCheckPtjFlg(false);
 	}
 
-	public static FLContractOrderDataType getContractOrder(){
-		FLContractOrderDataType contractOrder = new FLContractOrderDataType();
-		contractOrder.setContractRequestId(1001);
-		contractOrder.setContractOrderId(1001);
-		contractOrder.setIsMTO(false);
-		contractOrder.setIsFactoring(false);
-		contractOrder.setFactroringCompanyId(1);
-		contractOrder.setApprover("lailah");
-		contractOrder.setContractOrderName("ContractOrder");
-		// flp.setPurchaseOrderId("11");
-		contractOrder.setRequisitioner("roslan");
-		contractOrder.getApproverList().add("lailah");
-		contractOrder.getApproverList().add("siti");
-		contractOrder.setSupplier("khai");
+	public void submitFlRequest(){
+		IBpmSO bpmSO = (IBpmSO) EpBpmBusinessDelegate.getInstance().getServiceObject(IBpmSO.class);
+		String ctx = bpmSO.authenticate("roslan", "welcome1");
+		BpmRequestDTO reqDTO = new BpmRequestDTO();
+		System.out.println("taskid bb: "+getManagedBean().getBpmTaskId());
+		reqDTO.setTaskId(getManagedBean().getBpmTaskId());
 		
+		reqDTO.setCtxToken(ctx);
 
-		return contractOrder;
+		reqDTO.setOutcome("SUBMIT");
+
+		BpmResponseDTO res = bpmSO.updateTask(reqDTO);
+		System.out.println(res.isSuccessful());
+		System.out.println(res.getTaskId());
+	}
+	
+	/**
+	 * execute actions when button is clicked
+	 * @param action
+	 * 
+	 */
+	public void submitAction(String action) {
+		if(ProcurementPlanConst.BPM_SUBMIT.equals(action)){
+			submitFlRequest();
+		}else if (ProcurementPlanConst.BPM_REVISE.equals(action)){
+			
+		}else if (ProcurementPlanConst.BPM_APPROVE.equals(action)){
+			
+		}else if (ProcurementPlanConst.BPM_SAVE.equals(action)){
+			try {
+				createFulfillmentRequest();
+			} catch (ParseException e) {
+				e.printStackTrace();
+			}
+		}
 
 	}
 
