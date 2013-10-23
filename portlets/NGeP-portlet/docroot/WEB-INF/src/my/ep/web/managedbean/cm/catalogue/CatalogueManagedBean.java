@@ -27,7 +27,6 @@ public class CatalogueManagedBean extends BaseManagedBean {
 	private boolean advanceSearchInd=false;
 	private List<AdvanceSearchVO> advanceSearchList;
 	private List<SelectItem> searchCriteria;
-	//private List<PricingVO> supplierItemList;
 	private List<CmSupplierItem> selectedSupplierItemList;
 	private CmSupplierItem[] selectedSupplierItems;
 	private String navigationURL;
@@ -53,10 +52,91 @@ public class CatalogueManagedBean extends BaseManagedBean {
 	
 	private CmSupplierItem catalogueObj;
 	
+	private List<CmSupplierItem> rejectedItemList;
+	private List<CmSupplierItem> approvalItemList;
+	private List<CmSupplierItem> approvedItemList;
+	private List<CmSupplierItem> publishedItemList;
+	
+	private CmSupplierItem[] selectedRejectedItems;
+	private CmSupplierItem[] selectedApprovalItems;
+	private CmSupplierItem[] selectedApprovedItems;
+	private CmSupplierItem[] selectedPublishedItems;
 	
 	
 	
 	
+
+	public CmSupplierItem[] getSelectedRejectedItems() {
+		return selectedRejectedItems;
+	}
+
+	public void setSelectedRejectedItems(CmSupplierItem[] selectedRejectedItems) {
+		this.selectedRejectedItems = selectedRejectedItems;
+	}
+
+	public CmSupplierItem[] getSelectedApprovalItems() {
+		return selectedApprovalItems;
+	}
+
+	public void setSelectedApprovalItems(CmSupplierItem[] selectedApprovalItems) {
+		this.selectedApprovalItems = selectedApprovalItems;
+	}
+
+	public CmSupplierItem[] getSelectedApprovedItems() {
+		return selectedApprovedItems;
+	}
+
+	public void setSelectedApprovedItems(CmSupplierItem[] selectedApprovedItems) {
+		this.selectedApprovedItems = selectedApprovedItems;
+	}
+
+	public CmSupplierItem[] getSelectedPublishedItems() {
+		return selectedPublishedItems;
+	}
+
+	public void setSelectedPublishedItems(CmSupplierItem[] selectedPublishedItems) {
+		this.selectedPublishedItems = selectedPublishedItems;
+	}
+
+	public List<CmSupplierItem> getRejectedItemList() {
+		if(rejectedItemList==null)
+			rejectedItemList = new ArrayList<CmSupplierItem>();
+		return rejectedItemList;
+	}
+
+	public void setRejectedItemList(List<CmSupplierItem> rejectedItemList) {
+		this.rejectedItemList = rejectedItemList;
+	}
+
+	public List<CmSupplierItem> getApprovalItemList() {
+		if(approvalItemList==null)
+			approvalItemList = new ArrayList<CmSupplierItem>();
+		return approvalItemList;
+	}
+
+	public void setApprovalItemList(List<CmSupplierItem> approvalItemList) {
+		this.approvalItemList = approvalItemList;
+	}
+
+	public List<CmSupplierItem> getApprovedItemList() {
+		if(approvedItemList==null)
+			approvedItemList = new ArrayList<CmSupplierItem>();
+		return approvedItemList;
+	}
+
+	public void setApprovedItemList(List<CmSupplierItem> approvedItemList) {
+		this.approvedItemList = approvedItemList;
+	}
+
+	public List<CmSupplierItem> getPublishedItemList() {
+		if(publishedItemList==null)
+			publishedItemList = new ArrayList<CmSupplierItem>();
+		return publishedItemList;
+	}
+
+	public void setPublishedItemList(List<CmSupplierItem> publishedItemList) {
+		this.publishedItemList = publishedItemList;
+	}
 
 	public CmSupplierItem getCatalogueObj() {
 		return catalogueObj;

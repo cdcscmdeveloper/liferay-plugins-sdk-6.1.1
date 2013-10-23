@@ -53,6 +53,7 @@ import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.primefaces.event.FileUploadEvent;
+import org.primefaces.event.TabChangeEvent;
 import org.primefaces.model.DefaultTreeNode;
 import org.primefaces.model.StreamedContent;
 import org.primefaces.model.TreeNode;
@@ -197,6 +198,42 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean>{
 
 	}
 
+	public String navigateToPublishedItemDet(int index){
+
+
+		this.getManagedBean().setSelectedMaintainItem(this.getManagedBean().getPublishedItemList().get(index));
+
+		return "addCatalogItem";
+
+	}
+
+	public String navigateToApprovalItemDet(int index){
+
+
+		this.getManagedBean().setSelectedMaintainItem(this.getManagedBean().getApprovalItemList().get(index));
+
+		return "addCatalogItem";
+
+	}
+
+	public String navigateToApprovedItemDet(int index){
+
+
+		this.getManagedBean().setSelectedMaintainItem(this.getManagedBean().getApprovedItemList().get(index));
+
+		return "addCatalogItem";
+
+	}
+	
+	public String navigateToRejectedItemDet(int index){
+
+
+		this.getManagedBean().setSelectedMaintainItem(this.getManagedBean().getRejectedItemList().get(index));
+
+		return "addCatalogItem";
+
+	}
+
 
 	public String navigateToSupplierItemDet(int index){
 
@@ -318,10 +355,6 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean>{
 
 	}
 
-
-
-
-
 	public TreeNode getRoot() {
 		return root;
 	}
@@ -429,12 +462,6 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean>{
 				map.put(name, desc);
 			}
 
-
-
-
-
-
-
 			log.debug("********sheet2**********");
 
 			file.close();
@@ -471,12 +498,6 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean>{
 		XSSFWorkbook my_xlsx_workbook = new XSSFWorkbook(input_document); 
 		// Read excel sheet that needs to be updated
 		XSSFSheet sheet = my_xlsx_workbook.getSheetAt(1);
-
-
-
-
-
-
 
 		//sheet.protectSheet("welcome1"); 
 
@@ -685,8 +706,6 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean>{
 		statusFilterBean.setSearchValue("D");
 		searchBean.getDataFilterBeans().add(statusFilterBean);
 
-
-
 		CatalogueReqDTO reqDTO = new CatalogueReqDTO();
 
 		reqDTO.setSearchBean(searchBean);
@@ -697,10 +716,10 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean>{
 		this.getManagedBean().setSupplierItemList(resDTO.getSupplierItemList());
 
 	}
-	
-	
+
+
 	public String compareSupplierItem(){
-		
+
 		log.info("==============hktan========================"+this.getManagedBean().getSelectedSupplierItems().length);
 
 		this.getManagedBean().setSelectedSupplierItemList(null);
@@ -717,11 +736,11 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean>{
 		CmSupplierItem catalog = this.getManagedBean().getSelectedSupplierItemList().get(0);
 
 		this.getManagedBean().setCatalogueObj(catalog);
-		
-		
+
+
 		return "compareCatalogue";
 	}
-	
+
 	public void compareIndxeAction(){
 
 		log.debug("****index***"+this.getManagedBean().getCompareIndex());
@@ -738,11 +757,78 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean>{
 
 
 	} 
-	
+
 	public String backToPervious(){
-		
+
 		return "supplierItemView";
 	}
+
+
+	public void onTabChange(TabChangeEvent event) {  
+		System.out.println("title"+event.getTab().getTitle());
+
+		ICatalogueSO catalogueSO = (ICatalogueSO) BusinessDelegate.getInstance().getServiceObject("cm",ICatalogueSO.class);
+		CatalogueReqDTO reqDTO = new CatalogueReqDTO();
+		ISearchBean<CmSupplierItem> searchBean = new SearchBean<CmSupplierItem>();
+
+
+		if(event.getTab().getTitle().equalsIgnoreCase("Draft")){
+
+			statusFilterBean.setSearchField("itemStatus");
+			statusFilterBean.setSearchValue("D");
+			searchBean.getDataFilterBeans().add(statusFilterBean);
+
+			reqDTO.setSearchBean(searchBean);
+			CatalogueResDTO resDTO = catalogueSO.searchSupplierItemByStatus(reqDTO);
+
+			this.getManagedBean().setMaintainItemList(resDTO.getSupplierItemList());
+
+		}else if(event.getTab().getTitle().equalsIgnoreCase("Published")){
+			statusFilterBean.setSearchField("itemStatus");
+			statusFilterBean.setSearchValue("U");
+			searchBean.getDataFilterBeans().add(statusFilterBean);
+
+			reqDTO.setSearchBean(searchBean);
+			CatalogueResDTO resDTO = catalogueSO.searchSupplierItemByStatus(reqDTO);
+
+			this.getManagedBean().setPublishedItemList(resDTO.getSupplierItemList());
+
+		}else if(event.getTab().getTitle().equalsIgnoreCase("Approval")){
+
+			statusFilterBean.setSearchField("itemStatus");
+			statusFilterBean.setSearchValue("P");
+			searchBean.getDataFilterBeans().add(statusFilterBean);
+
+			reqDTO.setSearchBean(searchBean);
+			CatalogueResDTO resDTO = catalogueSO.searchSupplierItemByStatus(reqDTO);
+
+			this.getManagedBean().setApprovalItemList(resDTO.getSupplierItemList());
+
+		}else if(event.getTab().getTitle().equalsIgnoreCase("Approved")){
+
+			statusFilterBean.setSearchField("itemStatus");
+			statusFilterBean.setSearchValue("A");
+			searchBean.getDataFilterBeans().add(statusFilterBean);
+
+			reqDTO.setSearchBean(searchBean);
+			CatalogueResDTO resDTO = catalogueSO.searchSupplierItemByStatus(reqDTO);
+
+			this.getManagedBean().setApprovedItemList(resDTO.getSupplierItemList());
+
+		}else if(event.getTab().getTitle().equalsIgnoreCase("Rejected or Revise")){
+			statusFilterBean.setSearchField("itemStatus");
+			statusFilterBean.setSearchValue("R");
+			searchBean.getDataFilterBeans().add(statusFilterBean);
+
+			reqDTO.setSearchBean(searchBean);
+			CatalogueResDTO resDTO = catalogueSO.searchSupplierItemByStatus(reqDTO);
+
+			this.getManagedBean().setRejectedItemList(resDTO.getSupplierItemList());
+
+		}
+
+	}  
+
 
 
 

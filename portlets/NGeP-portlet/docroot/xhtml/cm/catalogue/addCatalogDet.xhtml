@@ -15,7 +15,12 @@
 		<p:commandButton value="#{lbl['lbl.cm.ok']}"
 			action="#{catalogueBackingBean.okToMaintenanceFile()}"></p:commandButton>
 		<p:commandButton value="#{lbl['lbl.cm.cancel']}"
-			action="#{catalogueBackingBean.cancelToMaintenanceFile()}" immediate="true"></p:commandButton>
+			action="#{catalogueBackingBean.cancelToMaintenanceFile()}"
+			immediate="true"></p:commandButton>
+		<p:commandButton value="Approve"
+			action="#{reviewCatBackingBean.approveCatalogueItem}"></p:commandButton>
+		<p:commandButton value="Reject"
+			action="#{reviewCatBackingBean.rejectCatalogueItem}"></p:commandButton>
 
 		<div style="border-bottom: 1px solid;">
 			<p:outputLabel styleClass="labelCss"
@@ -37,7 +42,8 @@
 					</h:panelGrid> <p:commandButton value="#{lbl['lbl.cm.upload']}"
 						onclick="imageDialog.show()" /></td>
 				<td><p:outputLabel value="#{lbl['lbl.cm.item.code']}" /></td>
-				<td><p:outputLabel value="#{catalogueBackingBean.managedBean.selectedMaintainItem.cmItem.extensionCode}"></p:outputLabel></td>
+				<td><p:outputLabel
+						value="#{catalogueBackingBean.managedBean.selectedMaintainItem.cmItem.extensionCode}"></p:outputLabel></td>
 				<td><p:outputLabel value="#{lbl['lbl.cm.item.name']}" /></td>
 				<td><p:outputLabel
 						value="#{catalogueBackingBean.managedBean.selectedMaintainItem.cmItem.itemName}"></p:outputLabel></td>
@@ -59,21 +65,25 @@
 				<td><p:outputLabel value="#{lbl['lbl.cm.payment.term']}" /></td>
 				<td><p:selectOneMenu></p:selectOneMenu></td>
 				<td><p:outputLabel value="#{lbl['lbl.cm.sku']}" /></td>
-				<td><p:inputText value="#{catalogueBackingBean.managedBean.selectedMaintainItem.skuNumber}"></p:inputText></td>
+				<td><p:inputText
+						value="#{catalogueBackingBean.managedBean.selectedMaintainItem.skuNumber}"></p:inputText></td>
 				<td></td>
 			</tr>
 			<tr style="height: 35px;">
 
 				<td><p:outputLabel
 						value="#{lbl['lbl.cm.manufacturing.part.no']}" /></td>
-				<td><p:inputText value="#{catalogueBackingBean.managedBean.selectedMaintainItem.manufacturer}"></p:inputText></td>
+				<td><p:inputText
+						value="#{catalogueBackingBean.managedBean.selectedMaintainItem.manufacturer}"></p:inputText></td>
 				<td><p:outputLabel value="#{lbl['lbl.cm.model']}" /></td>
-				<td colspan="1"><p:inputText value="#{catalogueBackingBean.managedBean.selectedMaintainItem.modelNumber}"></p:inputText></td>
+				<td colspan="1"><p:inputText
+						value="#{catalogueBackingBean.managedBean.selectedMaintainItem.modelNumber}"></p:inputText></td>
 			</tr>
 			<tr style="height: 35px;">
 				<td rowspan="2"><p:outputLabel
 						value="#{lbl['lbl.cm.additional.item.description']}" /></td>
-				<td rowspan="2"><p:inputTextarea value="#{catalogueBackingBean.managedBean.selectedMaintainItem.itemDesc}"/></td>
+				<td rowspan="2"><p:inputTextarea
+						value="#{catalogueBackingBean.managedBean.selectedMaintainItem.itemDesc}" /></td>
 				<td><p:outputLabel value="#{lbl['lbl.cm.lead.time']}" /></td>
 				<td colspan="1"><p:selectOneMenu></p:selectOneMenu></td>
 			</tr>

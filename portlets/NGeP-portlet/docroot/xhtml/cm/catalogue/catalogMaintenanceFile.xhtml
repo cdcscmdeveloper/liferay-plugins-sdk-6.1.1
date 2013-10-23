@@ -13,20 +13,23 @@
 
 		<h:panelGroup>
 			<p:tabView dynamic="true" cache="true">
+
+				<p:ajax event="tabChange" listener="#{catalogueBackingBean.onTabChange}" />
+					
 				<p:tab id="tab1" title="#{lbl['lbl.cm.draft']}">
 					<ui:include src="draftSupplierItem.xhtml" />
 				</p:tab>
 				<p:tab id="tab2" title="#{lbl['lbl.cm.published']}">
-					 <ui:include src="publishedSupplierItem.xhtml"/> 
+					<ui:include src="publishedSupplierItem.xhtml" />
 				</p:tab>
 				<p:tab id="tab3" title="#{lbl['lbl.cm.approval']}">
-					<ui:include src="approvalSupplierItem.xhtml"/> 
+					<ui:include src="approvalSupplierItem.xhtml" />
 				</p:tab>
 				<p:tab id="tab4" title="#{lbl['lbl.cm.approved']}">
 					<ui:include src="approvedSupplierItem.xhtml" />
 				</p:tab>
 				<p:tab id="tab5" title="#{lbl['lbl.cm.reject.revise']}">
-					 <ui:include src="rejectedOrReviseSupplierItem.xhtml"/>
+					<ui:include src="rejectedOrReviseSupplierItem.xhtml" />
 				</p:tab>
 			</p:tabView>
 		</h:panelGroup>

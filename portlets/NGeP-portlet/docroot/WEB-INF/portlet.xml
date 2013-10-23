@@ -1499,6 +1499,79 @@
 			<role-name>user</role-name>
 		</security-role-ref>
 	</portlet>
+
+	
+	
+		
+		<portlet>
+			<portlet-name>ReviewUNSPSC</portlet-name>
+			<display-name>ReviewUNSPSC</display-name>
+			<portlet-class>
+				org.portletfaces.bridge.GenericFacesPortlet
+			</portlet-class>
+			<init-param>
+				<name>javax.portlet.faces.defaultViewId.view</name>
+				<value>/xhtml/cm/codification/reviewUnspscCode.xhtml</value>
+			</init-param>
+			<expiration-cache>0</expiration-cache>
+			<supports>
+				<mime-type>text/html</mime-type>
+				<portlet-mode>view</portlet-mode>
+			</supports>
+			<portlet-info>
+				<title>ReviewUNSPSC</title>
+				<short-title>NewJSFPortlet</short-title>
+				<keywords></keywords>
+			</portlet-info>
+			<security-role-ref>
+				<role-name>administrator</role-name>
+			</security-role-ref>
+			<security-role-ref>
+				<role-name>guest</role-name>
+			</security-role-ref>
+			<security-role-ref>
+				<role-name>power-user</role-name>
+			</security-role-ref>
+			<security-role-ref>
+				<role-name>user</role-name>
+			</security-role-ref>
+		</portlet>
+		<portlet>
+			<portlet-name>catalogueTaskList</portlet-name>
+			<display-name>catalogueTaskList</display-name>
+			<portlet-class>
+				org.portletfaces.bridge.GenericFacesPortlet
+			</portlet-class>
+			<init-param>
+				<name>javax.portlet.faces.defaultViewId.view</name>
+				<value>
+					/xhtml/cm/catalogue/catalogueTaskList.xhtml
+				</value>
+			</init-param>
+			<expiration-cache>0</expiration-cache>
+			<supports>
+				<mime-type>text/html</mime-type>
+				<portlet-mode>view</portlet-mode>
+			</supports>
+			<portlet-info>
+				<title>catalogueTaskList</title>
+				<short-title>NewJSFPortlet</short-title>
+				<keywords></keywords>
+			</portlet-info>
+			<security-role-ref>
+				<role-name>administrator</role-name>
+			</security-role-ref>
+			<security-role-ref>
+				<role-name>guest</role-name>
+			</security-role-ref>
+			<security-role-ref>
+				<role-name>power-user</role-name>
+			</security-role-ref>
+			<security-role-ref>
+				<role-name>user</role-name>
+			</security-role-ref>
+		</portlet>
+
 	<!-- Supplier Management Start venkat -->
 	<portlet>
 		<portlet-name>sm</portlet-name>
@@ -1565,6 +1638,7 @@
 		</security-role-ref>
 	</portlet>
 <!-- Supplier Management End venkat -->
+
 
 
 </portlet-app>
