@@ -23,11 +23,20 @@ public class TaskListManagedBean extends BaseManagedBean {
 	private List<WorklistItemVO> taskList;
 	private Map bpmMap = new HashMap();
 	private String processName;
+	private String[] action;
 	
 	private String taskId;
 	
 	
 	
+
+	public String[] getAction() {
+		return action;
+	}
+
+	public void setAction(String[] action) {
+		this.action = action;
+	}
 
 	public String getTaskId() {
 		return taskId;

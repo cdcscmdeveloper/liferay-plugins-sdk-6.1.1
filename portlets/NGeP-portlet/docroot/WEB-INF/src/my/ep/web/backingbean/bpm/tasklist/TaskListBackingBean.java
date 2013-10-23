@@ -14,13 +14,12 @@ import my.ep.bpm.dto.BpmResponseDTO;
 import my.ep.bpm.service.IBpmSO;
 import my.ep.dto.cm.codification.RequestCodeReqDTO;
 import my.ep.dto.cm.codification.RequestCodeResDTO;
-import my.ep.jaxb.cd.unspscdata.CDUNSPSCDataType;
+import my.ep.jaxb.cd.requestdata.CDRequestDataType;
 import my.ep.util.lookupservice.EpBpmBusinessDelegate;
 import my.ep.web.backingbean.BaseBackingBean;
 import my.ep.web.backingbean.cm.codification.UnspscCodeBackingBean;
 import my.ep.web.constant.PagingConst;
 import my.ep.web.managedbean.bpm.tasklist.TaskListManagedBean;
-import my.ep.web.managedbean.cm.codification.UnspscCodeManagedBean;
 import my.ep.web.util.lookupservice.BusinessDelegate;
 
 import org.apache.log4j.Logger;
@@ -69,7 +68,7 @@ public class TaskListBackingBean extends BaseBackingBean<TaskListManagedBean>{
 		//  reqDTO.setProcessId("Procurement_Strategy.EndorseBudget");
 		reqDTO.setProcessId("Codification.RequestUNSPSC");
 		reqDTO.setOutcome("SUBMIT");
-		CDUNSPSCDataType obj = new CDUNSPSCDataType();
+		CDRequestDataType obj = new CDRequestDataType();
 		//  obj.setApprover("Asdqwe");
 		//  obj.setBudgetId("Asdqwe");
 		//  obj.setPtj("Asdqwe");
@@ -96,7 +95,7 @@ public class TaskListBackingBean extends BaseBackingBean<TaskListManagedBean>{
 		IBpmSO bpmSO = (IBpmSO) EpBpmBusinessDelegate.getInstance().getServiceObject(IBpmSO.class);
 
 		//String token = bpmSO.authenticate("roslan", "welcome1");
-		String token = bpmSO.authenticate("khai", "welcome1");
+		String token = bpmSO.authenticate("roslan", "welcome1");
 		System.out.println("testing BPM auth******"+token);
 		BpmRequestDTO reqDTO = new BpmRequestDTO();
 
@@ -134,14 +133,15 @@ public class TaskListBackingBean extends BaseBackingBean<TaskListManagedBean>{
 		reqDTO.setTaskId(taskId);
 		BpmResponseDTO res = bpmSO.getTaskDetails(reqDTO);
 		System.out.println("********getProcessName********"+res.getProcessName());
+		System.out.println("********res.getAction()********"+res.getAction());
 		this.getManagedBean().setProcessName(res.getProcessName());
-		
+		this.getManagedBean().setAction(res.getAction());
 		Object obj = res.getPojo();
 		this.getManagedBean().setTaskId(taskId);
 		
-		if(res.getProcessName().equalsIgnoreCase("Request UNSPSC")){
+		if(res.getProcessName().equalsIgnoreCase("UNSPSC Request")){
 			
-			CDUNSPSCDataType unspsc = (CDUNSPSCDataType)obj;
+			CDRequestDataType unspsc = (CDRequestDataType)obj;
 
 			IRequestCodeSO requestSO = (IRequestCodeSO) BusinessDelegate.getInstance().getServiceObject("cm",IRequestCodeSO.class);
 			RequestCodeReqDTO codeDTO = new RequestCodeReqDTO();
@@ -150,6 +150,7 @@ public class TaskListBackingBean extends BaseBackingBean<TaskListManagedBean>{
 
 			UnspscCodeBackingBean unspscBB = new UnspscCodeBackingBean();
 			unspscBB.getManagedBean().setRequestCode(resDTO.getRequestCode());
+			
 
 		}
 		

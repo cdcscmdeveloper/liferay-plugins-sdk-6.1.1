@@ -50,6 +50,10 @@
 					action="#{unspscCodeBackingBean.createTempCode}"></p:commandButton>
 					<p:commandButton value="#{lbl['lbl.cm.create.ext.code']}"
 					action="#{unspscCodeBackingBean.createExtCode}"></p:commandButton>
+					
+				<ui:repeat var="action" value="#{tasklistBackingBean.managedBean.action}">
+					<p:commandButton value="#{action}"></p:commandButton>
+				</ui:repeat>
 
 			</h:panelGrid>
 
