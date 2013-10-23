@@ -17,6 +17,8 @@
 <%@page import="com.liferay.portal.model.Layout"%>
 <%@ include file="/html/portlet/dockbar/init.jsp" %>
 
+<link rel="stylesheet" href="<%=themeDisplay.getPathThemeCss()%>/ePerolehan.css"/>
+
 <%
 Group group = null;
 LayoutSet layoutSet = null;
@@ -127,13 +129,13 @@ for (String portletId : PropsValues.DOCKBAR_ADD_PORTLETS) {
 		<c:if test="<%= !group.isControlPanel() && (themeDisplay.isShowLayoutTemplatesIcon() || themeDisplay.isShowManageSiteMembershipsIcon() || themeDisplay.isShowPageSettingsIcon() || themeDisplay.isShowSiteContentIcon() || themeDisplay.isShowSiteMapSettingsIcon() || themeDisplay.isShowSiteSettingsIcon()) %>">
 			<li class="manage-content has-submenu" id="<portlet:namespace />manageContent">
 				
-<%-- 				<%if (request.isUserInRole("Administrator")) { %> --%>
+ 				<%if (request.isUserInRole("Administrator")) { %> 
 				<a class="menu-button" href="javascript:;">
 					<span>
 						<liferay-ui:message key="manage" />
 					</span>
 				</a>
-<%-- 				<%} %> --%>
+ 				<%} %> 
 				
 				<div class="aui-menu manage-content-menu aui-overlaycontext-hidden" id="<portlet:namespace />manageContentContainer">
 					<div class="aui-menu-content">
@@ -289,7 +291,18 @@ for (String portletId : PropsValues.DOCKBAR_ADD_PORTLETS) {
 					<img alt="<%= HtmlUtil.escape(user.getFullName()) %>" src="<%= HtmlUtil.escape(user.getPortraitURL(themeDisplay)) %>" />
 				</aui:a>
 
-				<aui:a cssClass="user-fullname use-dialog" data-controlPanelCategory="<%= PortletCategoryKeys.MY %>" href="<%= themeDisplay.getURLMyAccount().toString() %>" title="manage-my-account"><%= HtmlUtil.escape(user.getFullName()) %></aui:a>
+				<aui:a cssClass="user-fullname use-dialog" data-controlPanelCategory="<%= PortletCategoryKeys.MY %>" href="#" title="Personalize">
+					<%= HtmlUtil.escape(user.getFullName()) %>
+					
+				</aui:a>
+				
+
+<!-- 				<li class="user-link"> -->
+<!--                             <a href="#">Aida</a> -->
+<!--                             <div class="dropdown-user-wrapper"> -->
+<%-- 								<a href="#"><img src="<%=themeDisplay.getPathThemeImages() %>/navi/btn-gear.jpg" /><p>Personalize</p></a>                             --%>
+<!--                             </div> -->
+<!--                 </li> -->
 
 				<c:if test="<%= themeDisplay.isShowSignOutIcon() %>">
 					<span class="sign-out">(<aui:a href="<%= themeDisplay.getURLSignOut() %>" label="sign-out" />)</span>

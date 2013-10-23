@@ -134,18 +134,11 @@ ul.btn-section li a:hover{background-position:bottom;}
 
 nav{background:url(../images/navi/navi-bg.jpg) repeat-x; height:37px; width:100%; position:relative;}
 nav ul{width:1000px; margin:0 auto;}
-nav ul.child-menu{width:100%; margin:0 auto; display:none; text-decoration:none;}
+nav ul.child-menu{width:100%; display:none; text-decoration:none;}
 ul.child-menu li{float: none; width:100%;}
 ul.child-menu li a{text-decoration:none;}
-#navigation ul li:hover > ul.child-menu {border-width: 0 0 1px; display: block; float: none; margin: 0; background-color:#5BA218; position:absolute; z-index:50; width:350px;}
+#navigation ul li:hover > ul.child-menu {display: block; float: none; margin: 0; background-color:#3B3B3B; position:absolute; z-index:50; width:200px; top: 35px; border-radius: 10px;}
 nav ul li{float:left;}
-nav ul li a.home{background:url(../images/navi/home.jpg) no-repeat top left; height:51px; width:77px; overflow:hidden; display:block;}
-nav ul li a.tasks{background:url(../images/navi/tasks.jpg) no-repeat top left; height:51px; width:88px; overflow:hidden; display:block;}
-nav ul li a.catalogues{background:url(../images/navi/catalogues.jpg) no-repeat top left; height:51px; width:124px; overflow:hidden; display:block;}
-nav ul li a.sourcing{background:url(../images/navi/sourcing.jpg) no-repeat top left; height:51px; width:113px; overflow:hidden; display:block;}
-nav ul li a.community{background:url(../images/navi/community.jpg) no-repeat top left; height:51px; width:128px; overflow:hidden; display:block;}
-nav ul li a.active{background-position:bottom;}
-nav ul li a:hover{background-position:bottom;}
 
 .dropdown-wrapper{display:none; position:absolute; z-index:20; background:#000; padding:10px; top:39px; left:0; width:130px; -webkit-border-bottom-right-radius:10px; -webkit-border-bottom-left-radius:10px; -moz-border-radius-bottomright:10px; -moz-border-radius-bottomleft:10px; border-bottom-right-radius:10px; border-bottom-left-radius:10px;}
 .dropdown-wrapper a{color:#fff; text-decoration:none; cursor:pointer;}

@@ -6,14 +6,6 @@
     border-top-right-radius: 5px;
 }
 
-.green nav#navigation ul li.selected {
-	background-color: #5ba218;
-}
-
-.green nav#navigation ul li:hover {
-	background-color: #5ba218;
-}
-
 .green nav {
 	background:url("../../images/color_schemes/green/navi-bg.jpg") repeat-x; 
 	height:37px; 
@@ -29,15 +21,20 @@
     width: 100%;
 }
 
-.green .footer-links ul li a {
-	color: #5ba218;
-}
-
 .green .login-top-navi {
 	background: url("../../images/color_schemes/green/login-top-bar.png") repeat-x;
 	background-color: #FFFFFF;
 }
 
-.green .middle-navi-right-wrapper ul li.btn-language div.dropdown-language-wrapper a:hover{color:#8cc63e; padding:0; margin:0;}
+.green .dockbar .menu-button-active {
+	background: none;
+	background-color: #8CC63E;
+}
 
-.green .middle-navi-right-wrapper ul li.btn-language div.dropdown-language-wrapper a.active{color:#8cc63e; padding:0; margin:0;}
+.green #sign-in, .green nav#navigation ul li:hover ,.green nav#navigation ul li.selected ,.green #navigation .child-menu li a:hover,.green #navigation li a.active ,.green .my-sites-menu .current-site a {
+	background-color:#5BA218; 
+}
+
+.green #dockbar .aui-menu a:HOVER ,.green .middle-navi-wrapper a:HOVER ,.green .middle-navi-right-wrapper ul li.btn-language div.dropdown-language-wrapper a:hover ,.green .middle-navi-right-wrapper ul li.btn-language div.dropdown-language-wrapper a.active{
+	color: #8CC63E;
+}

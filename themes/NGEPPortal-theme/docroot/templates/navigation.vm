@@ -17,6 +17,45 @@
 								<li>
 							#end
 								<a href="$nav_child.getURL()" $nav_child.getTarget()>$nav_child.getName()</a>
+								
+								###test Second-level
+								#if ($nav_child.hasChildren())
+															
+									<ul class="child-menu">
+										#foreach ($nav_child_1 in $nav_child.getChildren())
+											#if ($nav_child_1.isSelected())
+												<li class="selected">
+											#else
+												<li>
+											#end
+												<a href="$nav_child_1.getURL()" $nav_child_1.getTarget()>$nav_child_1.getName()</a>	
+												
+												###test Third-level
+												
+												#if ($nav_child_1.hasChildren())
+													<ul class="child-menu">
+														#foreach ($nav_child_2 in $nav_child_1.getChildren())
+															#if ($nav_child_2.isSelected())
+																<li class="selected">
+															#else
+																<li>
+															#end
+																<a href="$nav_child_2.getURL()" $nav_child_2.getTarget()>$nav_child_2.getName()</a>	
+																
+																</li>
+														#end
+													</ul>
+												#end
+																				
+												###test Third-level
+												
+												</li>
+										#end
+									</ul>
+								#end
+								###test Second-Level
+							
+								
 							</li>
 						#end
 					</ul>
