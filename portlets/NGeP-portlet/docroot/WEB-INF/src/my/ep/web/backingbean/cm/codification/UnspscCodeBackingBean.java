@@ -599,6 +599,36 @@ public class UnspscCodeBackingBean extends BaseBackingBean<UnspscCodeManagedBean
 		BpmResponseDTO responseDTO = updateTask(this.getManagedBean().getRequestCode(),taskListBB.getManagedBean().getTaskId());
 
 	}
+	
+	
+	public void addNewRequest(){
+		System.out.println("isRequestType:"+this.getManagedBean().getRequestExtCode().isRequestType());
+		
+		System.out.println("brand:"+this.getManagedBean().getBrandName());
+		System.out.println("type:"+this.getManagedBean().getTypeName());
+		System.out.println("measurement:"+this.getManagedBean().getMeasurementName());
+		System.out.println("color:"+this.getManagedBean().getColorName());
+		
+	}
+	
+	public void addMoreRequest(){
+		
+		ICodificationSO codificationSO = (ICodificationSO) BusinessDelegate.getInstance().getServiceObject("cm",ICodificationSO.class);
+
+		CodificationReqDTO reqDTO = new CodificationReqDTO();
+		//reqDTO.setParentCode(this.getManagedBean().getUnspscCode());
+		reqDTO.setParentCode("10161509");
+		
+		CodificationResDTO resDTO = codificationSO.searchCommodityObj(reqDTO);
+		
+		this.getManagedBean().setTypeList(resDTO.getCommodityObj().getCmType());
+		this.getManagedBean().setBrandList(resDTO.getCommodityObj().getCmBrand());		
+		this.getManagedBean().setMeasurementList(resDTO.getCommodityObj().getCmMeasurement());
+		resDTO = codificationSO.searchColor(reqDTO);
+		this.getManagedBean().setColorList(resDTO.getColorList());
+		
+		
+	}
 
 
 

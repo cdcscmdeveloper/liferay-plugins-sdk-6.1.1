@@ -8,55 +8,22 @@
 	xmlns:c="http://java.sun.com/jsp/jstl/core">
 
 	<ui:define name="contentSection">
-
-		<h:panelGroup id="taskListID">
-
-
-			<p:commandButton value="BPM"
-				action="#{tasklistBackingBean.taskListAction}" update="taskListID"></p:commandButton>
-
-			<p:dataTable value="#{tasklistBackingBean.managedBean.taskList}"
-				var="tasks">
-
-				<p:column>
-					<f:facet name="header">
-						<p:outputLabel value="#{lbl['lbl.bpm.task.number']}" />
-					</f:facet>
-					<p:commandLink value="#{tasks.taskNumber}" action="#{tasklistBackingBean.navigateToURL}">
-						<f:param name="key" value="key" />
-						<f:param name="taskId" value="#{tasks.taskId}" />
-						
-					</p:commandLink>
-				</p:column>
-				<p:column>
-					<f:facet name="header">
-						<p:outputLabel value="#{lbl['lbl.bpm.task.title']}" />
-					</f:facet>
-					<p:outputLabel value="#{tasks.title}" />
-				</p:column>
-				<p:column>
-					<f:facet name="header">
-						<p:outputLabel value="#{lbl['lbl.bpm.created.date']}" />
-					</f:facet>
-					<p:outputLabel value="#{tasks.createDate.time}" />
-				</p:column>
-				<p:column>
-					<f:facet name="header">
-						<p:outputLabel value="#{lbl['lbl.bpm.state']}" />
-					</f:facet>
-					<p:outputLabel value="#{tasks.state}" />
-				</p:column>
-				<p:column>
-					<f:facet name="header">
-						<p:outputLabel value="#{lbl['lbl.bpm.process']}" />
-					</f:facet>
-					<p:outputLabel value="#{tasks.process}" />
-				</p:column>
+	
+	
+	<h:panelGrid columns="2" columnClasses="cmLeft,cmRight" width="100%">
 
 
-			</p:dataTable>
+			<ui:include src="taskListMenu.xhtml"></ui:include>
 
-		</h:panelGroup>
+			
+
+			<ui:include src="taskListTable.xhtml"></ui:include>
+
+
+
+		</h:panelGrid>
+
+		
 
 	</ui:define>
 

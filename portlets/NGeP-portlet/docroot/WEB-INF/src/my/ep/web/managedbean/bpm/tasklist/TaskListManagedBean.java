@@ -27,6 +27,8 @@ public class TaskListManagedBean extends BaseManagedBean {
 	
 	private String taskId;
 	
+	private String status;
+	
 	
 	
 
@@ -73,5 +75,15 @@ public class TaskListManagedBean extends BaseManagedBean {
 	public void setTaskList(List<WorklistItemVO> taskList) {
 		this.taskList = taskList;
 	}
+
+	public String getStatus() {
+		return status;
+	}
+
+	public void setStatus(String status) {
+		this.status = status;
+	}
+	
+	
 
 }

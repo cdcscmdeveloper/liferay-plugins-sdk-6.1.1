@@ -1,8 +1,6 @@
 package my.ep.web.backingbean.bpm.tasklist;
 
 import java.text.SimpleDateFormat;
-import java.util.HashMap;
-import java.util.Map;
 
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.RequestScoped;
@@ -36,25 +34,15 @@ public class TaskListBackingBean extends BaseBackingBean<TaskListManagedBean>{
 	public TaskListBackingBean(){
 
 
-
-		//		String testtext = PortalUtil.getHttpServletRequest((PortletRequest) FacesContext.getCurrentInstance().getExternalContext().getRequest()).getParameter("testing");
-		//		System.out.println("new FacesScopes().getParameter(\"testing\"): " + testtext);
-
-		this.getManagedBean().setBpmMap(null);
-		Map temp = new HashMap();
-
-
-		temp.put("key", "master-catalogue");
-		temp.put("key1", "unspsc");
-
-		this.getManagedBean().setBpmMap(temp);
 	}
 
 
 	public void taskListAction(){
 
 		System.out.println("testing BPM******");
-		BpmResponseDTO responseDTO = retrieveWorklistItems();
+		
+		String viewBy = "";
+		BpmResponseDTO responseDTO = retrieveWorklistItems(this.getManagedBean().getStatus(), viewBy);
 		//BpmResponseDTO responseDTO = initiateTask();
 	}
 
@@ -88,7 +76,7 @@ public class TaskListBackingBean extends BaseBackingBean<TaskListManagedBean>{
 		return res;
 	}
 
-	public BpmResponseDTO retrieveWorklistItems(){
+	public BpmResponseDTO retrieveWorklistItems(String status, String viewBy){
 
 
 
@@ -101,11 +89,12 @@ public class TaskListBackingBean extends BaseBackingBean<TaskListManagedBean>{
 
 		reqDTO.setLimit(PagingConst.ROWS_PER_PAGE);
 		reqDTO.setOffset(calculateFinalOffSet(1));
-		reqDTO.setState("ASSIGNED");
+		reqDTO.setState(status);
+		reqDTO.setViewBy(viewBy);
 		reqDTO.setCtxToken(token);
 		BpmResponseDTO responseDTO = bpmSO.getWorklistItems(reqDTO);
 
-		System.out.println("testing BPM******"+responseDTO.getWorklistVO().getWorklistItem());
+		System.out.println("testing BPM******"+responseDTO.getWorklistVO().getWorklistItem().size());
 
 
 
@@ -161,14 +150,24 @@ public class TaskListBackingBean extends BaseBackingBean<TaskListManagedBean>{
 		return "taskListCommonPage";
 	}
 
-
-
-
 	private int calculateFinalOffSet(int currentPage){
 
 		int offSet = (currentPage-1) *PagingConst.ROWS_PER_PAGE;
 
 		return offSet;
+	}
+	
+	public void viewby(String viewBy){
+		System.out.println("viewBy:"+viewBy);
+		
+		BpmResponseDTO responseDTO = retrieveWorklistItems(this.getManagedBean().getStatus(), viewBy);
+		
+		
+	}
+	
+	public void filterStatus(){
+		
+		BpmResponseDTO responseDTO = retrieveWorklistItems(this.getManagedBean().getStatus(), "");
 	}
 
 
