@@ -45,7 +45,132 @@ public class UnspscCodeManagedBean extends BaseManagedBean {
 	private CmMeasurement cmMeasurement;
 	private CmType cmType;
 	
+	private String unspscCode;
+	private String unspscTitle;
 	
+	private CmRequestCode requestExtCode;
+	private List<CmRequestCode> requestExtCodeList;
+	private List<CmBrand> brandList;
+	private List<CmColor> colorList;
+	private List<CmType> typeList;
+	private List<CmMeasurement> measurementList;
+	
+	private String typeName;
+	private String colorName;
+	private String measurementName;
+	private String brandName;
+	
+	
+	
+	
+	
+	public String getTypeName() {
+		return typeName;
+	}
+
+	public void setTypeName(String typeName) {
+		this.typeName = typeName;
+	}
+
+	public String getColorName() {
+		return colorName;
+	}
+
+	public void setColorName(String colorName) {
+		this.colorName = colorName;
+	}
+
+	public String getMeasurementName() {
+		return measurementName;
+	}
+
+	public void setMeasurementName(String measurementName) {
+		this.measurementName = measurementName;
+	}
+
+	public String getBrandName() {
+		return brandName;
+	}
+
+	public void setBrandName(String brandName) {
+		this.brandName = brandName;
+	}
+
+	public List<CmBrand> getBrandList() {
+		if(brandList==null)
+			brandList = new ArrayList<CmBrand>();
+		return brandList;
+	}
+
+	public void setBrandList(List<CmBrand> brandList) {
+		this.brandList = brandList;
+	}
+
+	public List<CmColor> getColorList() {
+		if(colorList==null)
+			colorList = new ArrayList<CmColor>();
+		return colorList;
+	}
+
+	public void setColorList(List<CmColor> colorList) {
+		this.colorList = colorList;
+	}
+
+	public List<CmType> getTypeList() {
+		if(typeList==null)
+			typeList = new ArrayList<CmType>();
+		return typeList;
+	}
+
+	public void setTypeList(List<CmType> typeList) {
+		this.typeList = typeList;
+	}
+
+	public List<CmMeasurement> getMeasurementList() {
+		if(measurementList==null)
+			measurementList = new ArrayList<CmMeasurement>();
+		return measurementList;
+	}
+
+	public void setMeasurementList(List<CmMeasurement> measurementList) {
+		this.measurementList = measurementList;
+	}
+
+	public List<CmRequestCode> getRequestExtCodeList() {
+		if(requestExtCodeList==null)
+			requestExtCodeList = new ArrayList<CmRequestCode>();
+		return requestExtCodeList;
+	}
+
+	public void setRequestExtCodeList(List<CmRequestCode> requestExtCodeList) {
+		this.requestExtCodeList = requestExtCodeList;
+	}
+
+	public CmRequestCode getRequestExtCode() {
+		if(requestExtCode==null)
+			requestExtCode = new CmRequestCode();
+		return requestExtCode;
+	}
+
+	public void setRequestExtCode(CmRequestCode requestExtCode) {
+		this.requestExtCode = requestExtCode;
+	}
+
+	public String getUnspscCode() {
+		return unspscCode;
+	}
+
+	public void setUnspscCode(String unspscCode) {
+		this.unspscCode = unspscCode;
+	}
+
+	public String getUnspscTitle() {
+		return unspscTitle;
+	}
+
+	public void setUnspscTitle(String unspscTitle) {
+		this.unspscTitle = unspscTitle;
+	}
 
 	public CmBrand getCmBrand() {
 		if(cmBrand==null)
