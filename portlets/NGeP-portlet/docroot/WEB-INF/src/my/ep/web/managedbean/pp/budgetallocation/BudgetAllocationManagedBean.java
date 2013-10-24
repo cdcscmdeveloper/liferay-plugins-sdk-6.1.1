@@ -1,3 +1,6 @@
+/*
+ * Copyright © 2012 Archisoft Consulting Sdn Bhd. All rights reserved.
+ */
 package my.ep.web.managedbean.pp.budgetallocation;
 
 import java.math.BigDecimal;
@@ -41,7 +44,24 @@ public class BudgetAllocationManagedBean extends BaseManagedBean{
 	private PmOrgProfile currentUser;
 	
 	private Long tempBudgetId; //TODO : temp for task retrieving
+	
+	private String systemMsg;
+	
   
+
+	/**
+	 * @return the systemMsg
+	 */
+	public String getSystemMsg() {
+		return systemMsg;
+	}
+
+	/**
+	 * @param systemMsg the systemMsg to set
+	 */
+	public void setSystemMsg(String systemMsg) {
+		this.systemMsg = systemMsg;
+	}
 
 	/**
 	 * @return the tempBudgetId

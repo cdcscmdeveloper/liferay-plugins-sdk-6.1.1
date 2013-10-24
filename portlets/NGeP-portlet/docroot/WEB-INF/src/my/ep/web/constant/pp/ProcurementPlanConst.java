@@ -1,3 +1,6 @@
+/*
+ * Copyright © 2012 Archisoft Consulting Sdn Bhd. All rights reserved.
+ */
 package my.ep.web.constant.pp;
 
 public class ProcurementPlanConst {
@@ -29,8 +32,8 @@ public class ProcurementPlanConst {
 	public static final String CURRENT_MTO = "tabM";
 	
 	//Plan Type
-	public static final String TYPE_PROCUREMENT = "P";
-	public static final String TYPE_EXPENDITURE = "E";
+	public static final String PLAN_TYPE_PROCUREMENT = "P";
+	public static final String PLAN_TYPE_EXPENDITURE = "E";
 	
 	//Favourite Type
 	public static final String FAVOURITE_TYPE_NONE = "N";
@@ -55,10 +58,15 @@ public class ProcurementPlanConst {
 	public static final String QT_TYPE_PANEL = "PN";
 	public static final String QT_TYPE_RESTRICTED = "RT";
 
-	//Goods or Services Type
-	public static final String GOOD_SERVICE_TYPE_IMPORTED = "I";
-	public static final String GOOD_SERVICE_TYPE_LOCAL = "L";
-	public static final String GOOD_SERVICE_TYPE_BOTH = "B";
+	//Item Origin Type
+	public static final String ITEM_ORIGIN_TYPE_IMPORTED = "I";
+	public static final String ITEM_ORIGIN_TYPE_LOCAL = "L";
+	public static final String ITEM_ORIGIN_TYPE_BOTH = "B";
+	
+	//Verification Level
+	public static final boolean LEVEL_SINGLE = false;
+	public static final boolean LEVEL_MULTIPLE = true;
+	
 	
 	//BPM
 	public static final String BPM_REVISE = "REVISE";
@@ -108,108 +116,111 @@ public class ProcurementPlanConst {
 	public static final String PROG_PLAN = "plan";
 	public static final String PROG_BUDGET = "budget";
 	
+	
+	
+	
 	/**
 	 * @return the bpmSave
 	 */
-	public static String getBpmSave() {
+	public String getBpmSave() {
 		return BPM_SAVE;
 	}
 	/**
 	 * @return the soPp
 	 */
-	public static String getSoPp() {
+	public String getSoPp() {
 		return SO_PP;
 	}
 	
 	/**
 	 * @return the statusPbaNew
 	 */
-	public static Long getStatusPbaNew() {
+	public Long getStatusPbaNew() {
 		return STATUS_PBA_NEW;
 	}
 	/**
 	 * @return the statusPbaPendingApproval
 	 */
-	public static Long getStatusPbaPendingApproval() {
+	public Long getStatusPbaPendingApproval() {
 		return STATUS_PBA_PENDING_APPROVAL;
 	}
 	/**
 	 * @return the statusPbdNew
 	 */
-	public static Long getStatusPbdNew() {
+	public Long getStatusPbdNew() {
 		return STATUS_PBD_NEW;
 	}
 	/**
 	 * @return the progPlan
 	 */
-	public static String getProgPlan() {
+	public String getProgPlan() {
 		return PROG_PLAN;
 	}
 	/**
 	 * @return the progBudget
 	 */
-	public static String getProgBudget() {
+	public String getProgBudget() {
 		return PROG_BUDGET;
 	}
 	/**
 	 * @return the statusPendingApproval
 	 */
-	public static Long getStatusPendingApproval() {
+	public Long getStatusPendingApproval() {
 		return STATUS_PENDING_APPROVAL;
 	}
 	/**
 	 * @return the statusPendingRevision
 	 */
-	public static Long getStatusPendingRevision() {
+	public Long getStatusPendingRevision() {
 		return STATUS_PENDING_REVISION;
 	}
 	/**
 	 * @return the doctypePlan
 	 */
-	public static String getDoctypePlan() {
+	public String getDoctypePlan() {
 		return DOCTYPE_PLAN;
 	}
 	/**
 	 * @return the doctypePlanItem
 	 */
-	public static String getDoctypePlanItem() {
+	public String getDoctypePlanItem() {
 		return DOCTYPE_PLAN_ITEM;
 	}
 	/**
 	 * @return the doctypeBudgetAlloc
 	 */
-	public static String getDoctypeBudgetAlloc() {
+	public String getDoctypeBudgetAlloc() {
 		return DOCTYPE_BUDGET_ALLOC;
 	}
 	/**
 	 * @return the doctypeBudgetAllocItem
 	 */
-	public static String getDoctypeBudgetAllocItem() {
+	public String getDoctypeBudgetAllocItem() {
 		return DOCTYPE_BUDGET_ALLOC_ITEM;
 	}
 	
 	/**
 	 * @return the unspscSegment
 	 */
-	public static Integer getUnspscSegment() {
+	public Integer getUnspscSegment() {
 		return UNSPSC_SEGMENT;
 	}
 	/**
 	 * @return the unspscFamily
 	 */
-	public static Integer getUnspscFamily() {
+	public Integer getUnspscFamily() {
 		return UNSPSC_FAMILY;
 	}
 	/**
 	 * @return the unspscClass
 	 */
-	public static Integer getUnspscClass() {
+	public Integer getUnspscClass() {
 		return UNSPSC_CLASS;
 	}
 	/**
 	 * @return the unspscCommodity
 	 */
-	public static Integer getUnspscCommodity() {
+	public Integer getUnspscCommodity() {
 		return UNSPSC_COMMODITY;
 	}
 	/**
@@ -321,16 +332,16 @@ public class ProcurementPlanConst {
 		return CURRENT_MTO;
 	}
 	/**
-	 * @return the typeProcurement
+	 * @return the planTypeProcurement
 	 */
-	public String getTypeProcurement() {
-		return TYPE_PROCUREMENT;
+	public String getPlanTypeProcurement() {
+		return PLAN_TYPE_PROCUREMENT;
 	}
 	/**
-	 * @return the typeExpenditure
+	 * @return the planTypeExpenditure
 	 */
-	public String getTypeExpenditure() {
-		return TYPE_EXPENDITURE;
+	public String getPlanTypeExpenditure() {
+		return PLAN_TYPE_EXPENDITURE;
 	}
 	/**
 	 * @return the favouriteTypeNone
@@ -425,23 +436,42 @@ public class ProcurementPlanConst {
 	public String getBpmSubmit() {
 		return BPM_SUBMIT;
 	}
+	
 	/**
-	 * @return the goodServiceTypeImported
+	 * @return the itemOriginTypeImported
 	 */
-	public String getGoodServiceTypeImported() {
-		return GOOD_SERVICE_TYPE_IMPORTED;
+	public String getItemOriginTypeImported() {
+		return ITEM_ORIGIN_TYPE_IMPORTED;
 	}
 	/**
-	 * @return the goodServiceTypeLocal
+	 * @return the itemOriginTypeLocal
 	 */
-	public String getGoodServiceTypeLocal() {
-		return GOOD_SERVICE_TYPE_LOCAL;
+	public String getItemOriginTypeLocal() {
+		return ITEM_ORIGIN_TYPE_LOCAL;
 	}
 	/**
-	 * @return the goodServiceTypeBoth
+	 * @return the itemOriginTypeBoth
 	 */
-	public String getGoodServiceTypeBoth() {
-		return GOOD_SERVICE_TYPE_BOTH;
+	public String getItemOriginTypeBoth() {
+		return ITEM_ORIGIN_TYPE_BOTH;
+	}
+	/**
+	 * @return the typeMinistry
+	 */
+	public Long getTypeMinistry() {
+		return TYPE_MINISTRY;
+	}
+	/**
+	 * @return the typeJabatan
+	 */
+	public Long getTypeJabatan() {
+		return TYPE_JABATAN;
+	}
+	/**
+	 * @return the typePtj
+	 */
+	public Long getTypePtj() {
+		return TYPE_PTJ;
 	}
 	/**
 	 * @return the fulfillmentOneOff
@@ -491,5 +521,18 @@ public class ProcurementPlanConst {
 	 */
 	public String getContractIndContract() {
 		return CONTRACT_IND_CONTRACT;
+	}
+	
+	/**
+	 * @return the levelSingle
+	 */
+	public boolean isLevelSingle() {
+		return LEVEL_SINGLE;
+	}
+	/**
+	 * @return the levelMultiple
+	 */
+	public boolean isLevelMultiple() {
+		return LEVEL_MULTIPLE;
 	}
 }

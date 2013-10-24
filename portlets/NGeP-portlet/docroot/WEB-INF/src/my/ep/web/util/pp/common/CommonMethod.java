@@ -1,3 +1,6 @@
+/*
+ * Copyright © 2012 Archisoft Consulting Sdn Bhd. All rights reserved.
+ */
 package my.ep.web.util.pp.common;
 
 import java.math.BigDecimal;
@@ -85,5 +88,20 @@ public class CommonMethod {
 	    return year;
 	}
 	
+    public static boolean isSelected(String value){
+    	boolean result = false;
+    	if(value!=null && value.trim().length()>0 && !"0".equals(value)){
+    		result = true;
+    	}
+    	return result;
+    }
+    
+    public static boolean isSelected(Long value){
+    	boolean result = false;
+    	if(value!=null && value>0L){
+    		result = true;
+    	}
+    	return result;
+    }
 		
 }

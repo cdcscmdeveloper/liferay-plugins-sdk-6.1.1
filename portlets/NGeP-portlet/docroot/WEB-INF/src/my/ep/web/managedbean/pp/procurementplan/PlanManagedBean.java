@@ -1,3 +1,6 @@
+/*
+ * Copyright © 2012 Archisoft Consulting Sdn Bhd. All rights reserved.
+ */
 package my.ep.web.managedbean.pp.procurementplan;
 
 import java.util.List;
@@ -5,6 +8,7 @@ import java.util.List;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
 
+import my.ep.persistence.entity.pm.authorization.PmOrgProfile;
 import my.ep.persistence.entity.pp.PpRemark;
 import my.ep.persistence.entity.pp.procurementplan.PpPlan;
 import my.ep.persistence.entity.pp.procurementplan.PpPlanItem;
@@ -23,7 +27,6 @@ public class PlanManagedBean extends BaseManagedBean{
 	
 	private List <PpPlanMaster> planList;
 	
-	
 	private PpPlanMaster mtoPlanMaster;
 	
 	private PpPlan mtoPlan;
@@ -32,6 +35,8 @@ public class PlanManagedBean extends BaseManagedBean{
 
 	private PpPlan plan;
 	
+	private PmOrgProfile currentUser;
+
 	private PpPlanMaster selectedPlanMaster;
 	
 	private PpPlan selectedPlan;
@@ -40,23 +45,30 @@ public class PlanManagedBean extends BaseManagedBean{
 	
 	private PpRemark selectedItemRemark;
 	
-//	private List<PpQtActivity> selectedPpQtActivityList;
-
-	private String current;
-
 	private String viewMode;
 	
 	private boolean enableDetail;
 	
 	private boolean enableMto;
 
-//	public List<PpQtActivity> getSelectedPpQtActivityList() {
-//		return selectedPpQtActivityList;
-//	}
-//	public void setSelectedPpQtActivityList(
-//			List<PpQtActivity> selectedPpQtActivityList) {
-//		this.selectedPpQtActivityList = selectedPpQtActivityList;
-//	}
+	private String current;
+	
+	private String systemMsg;
+
+
+	
+	/**
+	 * @return the systemMsg
+	 */
+	public String getSystemMsg() {
+		return systemMsg;
+	}
+	/**
+	 * @param systemMsg the systemMsg to set
+	 */
+	public void setSystemMsg(String systemMsg) {
+		this.systemMsg = systemMsg;
+	}
 
 	/**
 	 * @return the enableMto
@@ -236,6 +248,23 @@ public class PlanManagedBean extends BaseManagedBean{
 	public void setPlan(PpPlan plan) {
 		this.plan = plan;
 	}
+
+	/**
+	 * @return the currentUser
+	 */
+	public PmOrgProfile getCurrentUser() {
+		return currentUser;
+	}
+	/**
+	 * @param currentUser the currentUser to set
+	 */
+	public void setCurrentUser(PmOrgProfile currentUser) {
+		this.currentUser = currentUser;
+	}
+
+
+
+
 
 
 
