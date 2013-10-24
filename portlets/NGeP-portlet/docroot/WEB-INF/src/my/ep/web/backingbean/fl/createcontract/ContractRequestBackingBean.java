@@ -46,7 +46,7 @@ import my.ep.persistence.entity.sm.SmSupplier;
 import my.ep.persistence.logging.LogKey;
 import my.ep.util.lookupservice.EpBpmBusinessDelegate;
 import my.ep.web.backingbean.BaseBackingBean;
-import my.ep.web.constant.pp.ProcurementPlanConst;
+import my.ep.web.constant.BpmOutcomeConst;
 import my.ep.web.managedbean.fl.createcontract.ContractRequestManagedBean;
 import my.ep.web.util.lookupservice.BusinessDelegate;
 
@@ -74,9 +74,9 @@ public class ContractRequestBackingBean extends BaseBackingBean<ContractRequestM
 
 
 	public ContractRequestBackingBean(){
-		if(MDC.get(LogKey.USER_ID)==null) {
-			MDC.put(LogKey.USER_ID, 1L);
-		}
+//		if(MDC.get(LogKey.USER_ID)==null) {
+//			MDC.put(LogKey.USER_ID, 1L);
+//		}
 	}
 
 	@PostConstruct
@@ -114,17 +114,16 @@ public class ContractRequestBackingBean extends BaseBackingBean<ContractRequestM
 		}
 	}
 
-	public void createFulfillmentRequest() throws ParseException {
+	public void submitAction(String action) throws ParseException {
 		IFulfilmentRequestSO iFulfilmentRequestSO = null;
 		try {
 			FulfilmentReqDTO reqDTO = new FulfilmentReqDTO();
+			FlFulfilmentRequest flRequest = getManagedBean().getFlRequest();
 			//			FlRemark flRemark = this.getManagedBean().getFlRemark();
 			//			FlAttachment flAttachment = this.getManagedBean().getFlAttachment();
-			FlFulfilmentRequest flRequest = getManagedBean().getFlRequest();
-			String fileName = this.getManagedBean().getFlAttachment().getFileName();
-			String fileDesc = this.getManagedBean().getFlAttachment().getFileDescription();
-			String filePath = this.getManagedBean().getFlAttachment().getFilePath();
-			log.info("fileName in save Action::: " + fileName);
+//			String fileName = this.getManagedBean().getFlAttachment().getFileName();
+//			String fileDesc = this.getManagedBean().getFlAttachment().getFileDescription();
+//			String filePath = this.getManagedBean().getFlAttachment().getFilePath();
 			//			flAttachment.setDocType("txt");
 			//			flAttachment.setDocId(Long.valueOf(44));
 			//			flAttachment.setFileName(fileName);
@@ -133,14 +132,17 @@ public class ContractRequestBackingBean extends BaseBackingBean<ContractRequestM
 			//			log.info("flRemark.getRemark() in backing beans::"+ flRemark.getRemark());
 			//			flRemark.setDocId(Long.valueOf(1));
 			//			flRemark.setDocType("tex");
-			iFulfilmentRequestSO = (IFulfilmentRequestSO) BusinessDelegate.getInstance().getServiceObject(IFulfilmentRequestSO.class);
 			//			reqDTO.setFlRemark(flRemark);
 			//			reqDTO.setFlAttachment(flAttachment);
+			iFulfilmentRequestSO = (IFulfilmentRequestSO) BusinessDelegate.getInstance().getServiceObject(IFulfilmentRequestSO.class);
 			reqDTO.setFlFulfilmentRequest(flRequest);
 			reqDTO.setContractRequest(true);
-			FulfilmentResDTO resDTO = iFulfilmentRequestSO.createFulfillmentRequest(reqDTO);
-
-			
+			if(action.equalsIgnoreCase(BpmOutcomeConst.BPM_SAVE)){
+				action = "";
+			}
+			reqDTO.setOutcome(action);
+			reqDTO.setTaskId(getManagedBean().getBpmTaskId());
+			iFulfilmentRequestSO.saveFulfillmentRequest(reqDTO);
 
 		}catch(Exception e){
 			log.error("Exception>>", e);
@@ -253,12 +255,12 @@ public class ContractRequestBackingBean extends BaseBackingBean<ContractRequestM
 			getManagedBean().getFlRequest().setCreatedOrgProfile(resDTO.getPmOrgProfileById());
 		}
 		this.getManagedBean().setActions(new String[]{"SAVE", "SUBMIT"}); 
+		
 
 		return NAV_TO_CREATE_CONTRACT_REQUEST;
 	}
 
 	public void selectedAddrRow(){
-
 		getManagedBean().setSelectedRowFlg(true);
 	}
 
@@ -292,44 +294,6 @@ public class ContractRequestBackingBean extends BaseBackingBean<ContractRequestM
 
 	public void checkPtjFlg(){
 		getManagedBean().setCheckPtjFlg(false);
-	}
-
-	public void submitFlRequest(){
-		IBpmSO bpmSO = (IBpmSO) EpBpmBusinessDelegate.getInstance().getServiceObject(IBpmSO.class);
-		String ctx = bpmSO.authenticate("roslan", "welcome1");
-		BpmRequestDTO reqDTO = new BpmRequestDTO();
-		System.out.println("taskid bb: "+getManagedBean().getBpmTaskId());
-		reqDTO.setTaskId(getManagedBean().getBpmTaskId());
-		
-		reqDTO.setCtxToken(ctx);
-
-		reqDTO.setOutcome("SUBMIT");
-
-		BpmResponseDTO res = bpmSO.updateTask(reqDTO);
-		System.out.println(res.isSuccessful());
-		System.out.println(res.getTaskId());
-	}
-	
-	/**
-	 * execute actions when button is clicked
-	 * @param action
-	 * 
-	 */
-	public void submitAction(String action) {
-		if(ProcurementPlanConst.BPM_SUBMIT.equals(action)){
-			submitFlRequest();
-		}else if (ProcurementPlanConst.BPM_REVISE.equals(action)){
-			
-		}else if (ProcurementPlanConst.BPM_APPROVE.equals(action)){
-			
-		}else if (ProcurementPlanConst.BPM_SAVE.equals(action)){
-			try {
-				createFulfillmentRequest();
-			} catch (ParseException e) {
-				e.printStackTrace();
-			}
-		}
-
 	}
 
 }
