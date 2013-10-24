@@ -11,33 +11,34 @@ xmlns:c="http://java.sun.com/jsp/jstl/core">
 	<p:outputPanel id="opPlanPp">
 		<!-- Item List -->
 		<p:dataTable id="dtPpItem" styleClass="ppFixTdWidth" var="ppItem" 
-			value="#{cc.attrs.selectedPlan.ppItems}"  rowIndexVar="rowIndex"
+			value="#{cc.attrs.selectedPlan.ppPlanItems}"  rowIndexVar="rowIndex"
 			emptyMessage="#{lbl['lbl.pp.no.record.found']}">  
 	    	<p:column styleClass="ppSmallTd" headerText="#{lbl['lbl.pp.seq']}">  
-               #{rowIndex+1}
+               	#{rowIndex+1}
             </p:column>   
 	        <p:column headerText="#{lbl['lbl.pp.gosodo.code']}">  
+	        	#{ppItem.ppBudgetAllocDtl.pmDo.pmSo.pmGo.goCode}
+	        	#{ppItem.ppBudgetAllocDtl.pmDo.pmSo.soCode}
                 #{ppItem.ppBudgetAllocDtl.pmDo.doCode}
 	        </p:column>   
 	        <p:column headerText="#{lbl['lbl.pp.estimated.amount']}">  
 	            #{ppItem.estimatedAmount}
 	        </p:column>  
 	        <p:column headerText="#{lbl['lbl.pp.product.code']}">  
-	             #{ppItem.productClassId}
-	             #{ppItem.productItemId}
-	             #{ppItem.productSupplierItemId}
+	             #{ppItem.cmUnspsc.unspscCode}
+	             #{ppItem.cmUnspsc.unspscTitle}
 	        </p:column>
 	        <p:column headerText="#{lbl['lbl.pp.action']}">  
-                <p:commandLink id="clEdit" value="#{lbl['lbl.pp.edit']}" />
+                <p:commandLink id="clEdit" value="#{lbl['lbl.pp.edit']}"
+					action="#{planBackingBean.showPpItem(ppItem)}" 
+                    oncomplete="dlItemDetailsPpModal.show();" update=":form:tvPlan:dlItemDetailsPp"/>
                  &nbsp;&nbsp;
                 <p:commandLink id="clDelete" value="#{lbl['lbl.pp.delete']}"
-                	update="dtBudgetaAllocDet" rendered="#{ppItem.brandNew || 
-                		cc.attrs.viewMode==PPConst.modeRevision}"  />
-                 &nbsp;&nbsp;
+                  	update="dtPpItem" rendered="#{ppItem.brandNew || cc.attrs.viewMode==PPConst.modeRevision}"
+                  	action="#{planBackingBean.deletePpItem(ppItem)}" />
             </p:column>  
     	</p:dataTable>  
     	<br/>
-    	
     	<!-- Button(s) -->
     	<c:if test="#{cc.attrs.viewMode==PPConst.modeNew || cc.attrs.viewMode==PPConst.modeRevision}">
     		<div class="ppRightBtn">
@@ -93,8 +94,9 @@ xmlns:c="http://java.sun.com/jsp/jstl/core">
 						<th>#{lbl['lbl.pp.estimated.amount']}</th>
 						<td class="ppSmallTd">:</td>
 						<td>
-							 <p:inputText value="#{planBackingBean.managedBean.selectedItem.estimatedAmount}" disabled="#{!planBackingBean.managedBean.selectedItem.brandNew &amp;&amp; 
-									!planBackingBean.managedBean.selectedItem.editable}">
+							 <p:inputText value="#{planBackingBean.managedBean.selectedItem.estimatedAmount}" 
+							 	disabled="#{!planBackingBean.managedBean.selectedItem.brandNew &amp;&amp; 
+									!planBackingBean.managedBean.selectedItem.editable}"/>
 						</td>
 					</tr>
 					<tr>
@@ -112,12 +114,11 @@ xmlns:c="http://java.sun.com/jsp/jstl/core">
 					<tr>
 			   			<td colspan="2">&nbsp;</td>
 						<td>
-							<p:commandButton value="#{lbl['lbl.pp.save']}" action="#{planBackingBean.addItemToList}"
-									onclick="dlItemDetailsPpModal.hide()" oncomplete="dlItemDetailsPpModal.hide()" 
-									update=":form:tvPlan:tvPlanContent" 
-									process="pItemDetails"/>
+							<p:commandButton value="#{lbl['lbl.pp.save']}" action="#{planBackingBean.addItemToList()}"
+								onclick="dlItemDetailsPpModal.hide()" oncomplete="dlItemDetailsPpModal.hide()" 
+								update="tvPlanContent"  process="pItemDetails"/>
 							<p:commandButton value="#{lbl['lbl.pp.cancel']}" 
-								onclick="dlItemDetailsPpModal.hide()"/>
+								onclick="dlItemDetailsPpModal.hide()" immediate="true"/>
 						</td>
 			   		</tr>
 				</table>
@@ -126,19 +127,24 @@ xmlns:c="http://java.sun.com/jsp/jstl/core">
  		
 		<!-- Item Detail Form -->
 		<!-- Sourcing Activities -->
-		<p:dataTable id="dtSrcAct" styleClass="ppFixTdWidth" var="srcAct" value="#{planBackingBean.pmTaskActivities()}"
+		<p:dataTable id="dtSrcAct" styleClass="ppFixTdWidth" var="qtActivity" rowIndexVar="rowIndex"
+			value="#{planBackingBean.pmTaskActivities()}"
 			emptyMessage="..">   
+			<p:column styleClass="ppSmallTd" headerText="#{lbl['lbl.pp.seq']}">  
+               	#{rowIndex+1}
+            </p:column>   
             <p:column headerText="#{lbl['lbl.pp.sourcing.activities']}">  
-	             #{srcAct}
+	            #{qtActivity.pmBusinessActivity.activityName}
             </p:column>     
            	<p:column headerText="#{lbl['lbl.pp.kpi.sla']}">  
-	       
+	       		#{qtActivity.pmBusinessActivity.slaDay}
             </p:column>   
             <p:column headerText="#{lbl['lbl.pp.planned.activities.startdate']}">  
-	             <p:calendar showOn="button" disabled="#{!cc.attrs.selectedPlan.brandNew}"/> 
+	             <p:calendar showOn="button" value="#{qtActivity.planStartDate}"
+	             	disabled="#{!cc.attrs.selectedPlan.brandNew &amp;&amp; !cc.attrs.viewMode==PPConst.modeRevision}"/> 
             </p:column>  
             <p:column headerText="#{lbl['lbl.pp.planned.activities.enddate']}">  
-	          	<p:inputText disabled="true" value="xxx"/>
+	          	<p:inputText disabled="true" value="#{qtActivity.planEndDate}"/>
             </p:column>   
        	</p:dataTable>  
 	</p:outputPanel>
