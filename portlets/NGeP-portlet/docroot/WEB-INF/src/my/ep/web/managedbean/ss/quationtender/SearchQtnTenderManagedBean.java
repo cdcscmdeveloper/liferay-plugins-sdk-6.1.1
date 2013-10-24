@@ -11,6 +11,8 @@ import javax.faces.bean.SessionScoped;
 import javax.faces.event.ValueChangeEvent;
 import javax.faces.model.SelectItem;
 
+import my.ep.persistence.entity.ss.quationtender.ScQtApproval;
+import my.ep.persistence.entity.ss.quationtender.ScQtApprovalDtl;
 import my.ep.web.bean.ss.quatationtender.CategoryCode;
 import my.ep.web.bean.ss.quatationtender.GoSoDo;
 import my.ep.web.bean.ss.quatationtender.Location;
@@ -87,6 +89,9 @@ public class SearchQtnTenderManagedBean extends BaseManagedBean {
 	private String briefDetails;
 	
 	private String visitDetails;
+	private ScQtApproval scQtApproval=new ScQtApproval();
+	
+	private List<String> approvalTypelist=new ArrayList<String>();
 
 	/*
 	 * public Map<String, List<SelectItem>> getTabview() { return tabview; }
@@ -871,5 +876,34 @@ public class SearchQtnTenderManagedBean extends BaseManagedBean {
 		this.supplierList = supplierList;
 	}
 
+	/**
+	 * @return the scQtApproval
+	 */
+	public ScQtApproval getScQtApproval() {
+		return scQtApproval;
+	}
+
+	/**
+	 * @param scQtApproval the scQtApproval to set
+	 */
+	public void setScQtApproval(ScQtApproval scQtApproval) {
+		this.scQtApproval = scQtApproval;
+	}
+
+	/**
+	 * @return the approvalTypelist
+	 */
+	public List<String> getApprovalTypelist() {
+		return approvalTypelist;
+	}
+
+	/**
+	 * @param approvalTypelist the approvalTypelist to set
+	 */
+	public void setApprovalTypelist(List<String> approvalTypelist) {
+		this.approvalTypelist = approvalTypelist;
+	}
+
+	
 
 }
