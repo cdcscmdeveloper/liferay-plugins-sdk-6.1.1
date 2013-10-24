@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<module xmlns="urn:jboss:module:1.0" name="wlfullclient">
+        <resources>
+                <resource-root path="wlfullclient.jar" />
+        </resources>
+        <dependencies>
+                <module name="org.omg.api" />
+                <module name="javax.api" />
+                <module name="sun.jdk" />
+        </dependencies>
+</module>
+
+ 
