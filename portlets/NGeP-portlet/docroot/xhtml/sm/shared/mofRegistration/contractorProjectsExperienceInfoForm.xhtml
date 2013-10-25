@@ -49,11 +49,11 @@
 			</p:column>
 
 			<p:column headerText="Result / Progress">
-				<p:outputLabel value="In Progress"
+				<h:outputText value="In Progress"
 					rendered="#{contrBean.endResult eq '1'}" />
-				<p:outputLabel value="Complete"
+				<h:outputText value="Complete"
 					rendered="#{contrBean.endResult eq '2'}" />
-				<p:outputLabel value="Fail" rendered="#{contrBean.endResult eq '3'}" />
+				<h:outputText value="Fail" rendered="#{contrBean.endResult eq '3'}" />
 			</p:column>
 
 		</p:dataTable>

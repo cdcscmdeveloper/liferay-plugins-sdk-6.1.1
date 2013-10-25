@@ -27,7 +27,7 @@
 		<ui:include
 			src="/xhtml/sm/shared/paymentProcess/makePaymentForm.xhtml" />
 		<div align="center">
-			<p:commandButton value="Make Payment" />
+			<p:commandButton value="Make Payment" action="#{backingBean.submitMofApplToBpm}" />
 			<p:commandButton value="Cancel" />
 		</div>
 	</p:panel>

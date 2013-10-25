@@ -43,6 +43,7 @@ import my.ep.persistence.entity.sm.SmSupplierBranch;
 import my.ep.persistence.entity.sm.SmSupplierCategory;
 import my.ep.persistence.entity.sm.SmSupplierCert;
 import my.ep.web.backingbean.BaseBackingBean;
+import my.ep.web.constant.sm.SupplierManagementConst;
 import my.ep.web.managedbean.sm.SmApplicationManagedBean;
 import my.ep.web.util.lookupservice.BusinessDelegate;
 
@@ -54,9 +55,6 @@ public class SmApplicationBackingBean extends
 		BaseBackingBean<SmApplicationManagedBean> {
 
 	public static Logger log = Logger.getLogger(SmApplicationBackingBean.class);
-
-	private static final String PROCEED_MOF_REG = "mofRegBasePage";
-	private static final String DEFAULT_MOF_REG = "defaultNewMofApplPage";
 
 	private int currentTab;
 	private int outputTab;
@@ -75,25 +73,20 @@ public class SmApplicationBackingBean extends
 					.getInstance().getServiceObject("sm",
 							IMofRegistrationSO.class);
 			MofRegistrationReqDTO reqDto = new MofRegistrationReqDTO();
-			reqDto.setSupplierId((long) 2);
-			MofRegistrationResDTO resDTO = mofRegistrationSO
-					.retrieveSupplierProfile(reqDto);
-			SmSupplier smSupplier = new SmSupplier();
-			if (resDTO.getSmSupplier() == null) {
+			SmSupplier smSupplier = retriveSupplierById((long) 2)
+					.getSmSupplier();
+			if (smSupplier == null) {
 				smSupplier = new SmSupplier();
 				smSupplier.setSupplierName("My Sample Supplier");
 				smSupplier.setBusinessType("1");
 				smSupplier.setRegNo("12345");
 				smSupplier.setEstablishDate(new Date());
 				smSupplier.setWebSite("www.samplecompany.com");
-			} else {
-				smSupplier = resDTO.getSmSupplier();
-				System.out.println("Retrieved Value ==="
-						+ smSupplier.getSupplierName() + " ==== tax num == "
-						+ smSupplier.getIncomeTaxNo() + " === EST DATE ==== "
-						+ smSupplier.getEstablishDate());
 			}
-			// SmAddress smAddress = setDefaultAddr();
+			System.out.println("Retrieved Value ==="
+					+ smSupplier.getSupplierName() + " ==== tax num == "
+					+ smSupplier.getIncomeTaxNo() + " === EST DATE ==== "
+					+ smSupplier.getEstablishDate());
 			System.out.println("******** SIZE ********** "
 					+ smSupplier.getSmAppls().size());
 			SmAppl mofRegAppl = new SmAppl();
@@ -110,14 +103,8 @@ public class SmApplicationBackingBean extends
 
 			// TODO Set default not null values -- Start insert appl ---
 			mofRegAppl.setStatusId(new BigDecimal(20001));
-			// mofRegAppl.setRecordStatus(true);
-			// mofRegAppl.setChangedBy((long) 2);
-			// mofRegAppl.setCreatedBy((long) 2);
-			// mofRegAppl.setCreatedDate(new Timestamp(new Date().getTime()));
-			// mofRegAppl.setChangedDate(new Timestamp(new Date().getTime()));
-			System.out.println(" Supplier Id === >>> "
-					+ smSupplier.getSupplierId());
 			// sm.setSmAddress(new SmAddress());
+			// SmAddress smAddress = setDefaultAddr();
 			// getManagedBean().getSmSupplier().setSmAppl(mofRegAppl);
 			smSupplier.getSmAppls().add(mofRegAppl);
 
@@ -130,19 +117,85 @@ public class SmApplicationBackingBean extends
 			// TODO Set default not null values -- Start insert appl ---
 
 			mofRegAppl = defaultSmAppl(mofRegAppl);
-			System.out.println("******** AFTER SET ******"
-					+ mofRegAppl.getApplNo());
 			mofRegAppl.setSmStaffTotals(getStaffList(mofRegAppl
 					.getSupplierType()));
 			getManagedBean().setSmAppl(mofRegAppl);
 			getManagedBean().setTabActiveIndex(0);
 			getManagedBean().setOfficeFacility(new SmFacility());
-			return PROCEED_MOF_REG;
+			return SupplierManagementConst.PROCEED_MOF_REG;
+
+		} catch (Exception e) {
+			e.printStackTrace();
+			return SupplierManagementConst.DEFAULT_MOF_REG;
+		} finally {
+			mofRegistrationSO = null;
+		}
+
+	}
+
+	public String proceedApplyBumiApplication() {
+		System.out
+				.println("**** ENTER Create New Bumi Application BACKIN BEAN Method *************");
+		IMofRegistrationSO mofRegistrationSO = null;
+
+		try {
+			mofRegistrationSO = (IMofRegistrationSO) BusinessDelegate
+					.getInstance().getServiceObject("sm",
+							IMofRegistrationSO.class);
+			MofRegistrationReqDTO reqDto = new MofRegistrationReqDTO();
+			SmSupplier smBumiSupplier = retriveSupplierById((long) 3)
+					.getSmSupplier();
+			if (smBumiSupplier == null) {
+				smBumiSupplier = new SmSupplier();
+				smBumiSupplier.setSupplierName("My Sample Supplier");
+				smBumiSupplier.setBusinessType("1");
+				smBumiSupplier.setRegNo("12345");
+				smBumiSupplier.setEstablishDate(new Date());
+				smBumiSupplier.setWebSite("www.samplecompany.com");
+			}
+			System.out.println("Retrieved Value ==="
+					+ smBumiSupplier.getSupplierName() + " ==== tax num == "
+					+ smBumiSupplier.getIncomeTaxNo() + " === EST DATE ==== "
+					+ smBumiSupplier.getEstablishDate());
+			System.out.println("******** SIZE ********** "
+					+ smBumiSupplier.getSmAppls().size());
+			SmAppl bumiStatusAppl = new SmAppl();
+
+			bumiStatusAppl.setApplNo("KB-25102013-2345");
+			bumiStatusAppl.setSmSupplier(smBumiSupplier);
+			// mofRegAppl.setSmAddress(smAddress);
+
+			// 1- For Contractor
+			// 2 - For Consultant
+			bumiStatusAppl.setSupplierType("1");
+
+			bumiStatusAppl.setApplType("B");
+
+			// TODO Set default not null values -- Start insert appl ---
+			bumiStatusAppl.setStatusId(new BigDecimal(20001));
+			// sm.setSmAddress(new SmAddress());
+			// SmAddress smAddress = setDefaultAddr();
+			// getManagedBean().getSmSupplier().setSmAppl(mofRegAppl);
+			smBumiSupplier.getSmAppls().add(bumiStatusAppl);
+
+			// reqDto.setSmSupplier(smSupplier);
+			// MofRegistrationResDTO smResDTO = new MofRegistrationResDTO();
+			// smResDTO = mofRegistrationSO.updateSupplierProfile(reqDto);
+			// smSupplier = smResDTO.getSmSupplier();
+			getManagedBean().setSmSupplier(smBumiSupplier);
+			// TODO Set default not null values -- Start insert appl ---
+
+			bumiStatusAppl = defaultSmAppl(bumiStatusAppl);
+			bumiStatusAppl.setSmStaffTotals(getStaffList(bumiStatusAppl
+					.getSupplierType()));
+			getManagedBean().setSmAppl(bumiStatusAppl);
+			getManagedBean().setTabActiveIndex(0);
+			getManagedBean().setOfficeFacility(new SmFacility());
+			return SupplierManagementConst.PROCEED_BUMI_APPLN;
 
 		} catch (Exception e) {
 			System.out.println(" **** Unknown Expection ******* ");
-			e.printStackTrace();
-			return DEFAULT_MOF_REG;
+			return SupplierManagementConst.DEFAULT_BUMI_APPLN;
 		} finally {
 			mofRegistrationSO = null;
 		}
@@ -197,6 +250,7 @@ public class SmApplicationBackingBean extends
 	}
 
 	public void setTabValue(int currentTab, int outputTab) {
+		System.out.println(" ***** Tab Values *** " + currentTab + outputTab);
 		this.currentTab = currentTab;
 		this.outputTab = outputTab;
 	}
@@ -835,18 +889,27 @@ public class SmApplicationBackingBean extends
 	/**
 	 * Make a call to the BPM for MofRegistration
 	 */
-	public void initiateMofRegistrationTask() {
+	public void initiateSmApplicationTask() {
 		IMofRegistrationSO regSo = null;
 		try {
-			SmAppl bpmAppl = getManagedBean().getSmSupplier().getSmAppls()
-					.get(0);
+			// TODO to be used while doing the iteration2
+			// SmAppl bpmAppl = getManagedBean().getSmSupplier().getSmAppls()
+			// .get(0);
+			SmAppl bpmAppl = getManagedBean().getSmAppl();
+			if (bpmAppl.getApplType().equalsIgnoreCase("N")) {
+				bpmAppl.setApplId((long) 123);
+			} else if (bpmAppl.getApplType().equalsIgnoreCase("B")) {
+				bpmAppl.setApplId((long) 456);
+			} else {
+				bpmAppl.setApplId((long) 789);
+			}
 			bpmAppl.setSupportingDocMode("O");
 			System.out.println(" ***** VALUE OF SELECTED OBJECT ***** "
 					+ getManagedBean().getSmSupplier().getSmAppls().size()
 					+ "  ---  " + bpmAppl.getApplId());
 			regSo = (IMofRegistrationSO) BusinessDelegate.getInstance()
 					.getServiceObject("sm", IMofRegistrationSO.class);
-			regSo.initiateMofRegistrationTask(bpmAppl);
+			regSo.initiateSmApplicationTask(bpmAppl);
 		} catch (Exception e) {
 			e.printStackTrace();
 
@@ -854,6 +917,24 @@ public class SmApplicationBackingBean extends
 			regSo = null;
 		}
 
+	}
+
+	public String submitBumiApplToBpm() {
+		try {
+			initiateSmApplicationTask();
+			return SupplierManagementConst.BUMI_APPL_SUCCESS;
+		} catch (Exception e) {
+			return SupplierManagementConst.BUMI_APPL_FAIL;
+		}
+	}
+
+	public String submitMofApplToBpm() {
+		try {
+			initiateSmApplicationTask();
+			return SupplierManagementConst.MOF_APPL_SUCCESS;
+		} catch (Exception e) {
+			return SupplierManagementConst.MOF_APPL_FAIL;
+		}
 	}
 
 	private SmAddress setDefaultAddr() {
@@ -933,4 +1014,23 @@ public class SmApplicationBackingBean extends
 		return appl;
 	}
 
+	private MofRegistrationResDTO retriveSupplierById(long id) {
+		IMofRegistrationSO mofRegistrationSO = null;
+
+		try {
+			mofRegistrationSO = (IMofRegistrationSO) BusinessDelegate
+					.getInstance().getServiceObject("sm",
+							IMofRegistrationSO.class);
+			MofRegistrationReqDTO reqDto = new MofRegistrationReqDTO();
+			reqDto.setSupplierId(id);
+			MofRegistrationResDTO resDTO = mofRegistrationSO
+					.retrieveSupplierProfile(reqDto);
+			return resDTO;
+
+		} catch (Exception e) {
+			return new MofRegistrationResDTO();
+		} finally {
+
+		}
+	}
 }

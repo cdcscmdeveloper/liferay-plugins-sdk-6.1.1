@@ -25,12 +25,8 @@
 
 		</table>
 
-
-
-
 		<p:panel
-			header="Online Documents Check List - Application No. - 12374837"
-			toggleable="true">
+			header="Online Documents Check List - Application No. - 12374837">
 			<p:dataTable var="table"
 				value="#{mofRegistrationBackingBean.dataList}"
 				style="width : 800px;">
@@ -44,27 +40,17 @@
 				<p:column headerText="Document Description">  
 		            #{table.documentdescription} 
 		        </p:column>
-				<p:column headerText="Upload Document?">
+				<p:column headerText="Upload Document ">
 					<p:fileUpload value="#{testBean.file}" mode="simple" />
 				</p:column>
-				<p:column headerText="Added Document Name">  
+				<!-- 	<p:column headerText="Added Document Name">  
                    #{table.addedDocumentName}  
-      		    </p:column>
-
+      		    </p:column>-->
 			</p:dataTable>
 
 			<br />
 
 		</p:panel>
-
-
-		<table>
-			<tr>
-				<td><p:commandButton value="Previous"></p:commandButton></td>
-				<td><p:commandButton value="Declare"></p:commandButton></td>
-			</tr>
-		</table>
-
 
 	</p:panel>
 </ui:composition>

@@ -41,11 +41,38 @@
 			rendered="#{backingBean.managedBean.smAppl.supportingDocMode eq 'F'}">
 			<ui:include
 				src="/xhtml/sm/shared/mofRegistration/offlineSupportingDocsForm.xhtml" />
+			<table>
+				<tr>
+					<td><p:commandButton value="Previous"
+							actionListener="#{backingBean.setTabValue('7','6')}"
+							action="#{backingBean.updateSmAppl}" update=":form:tt" /></td>
+					<td><p:commandButton value="Print List">
+							<p:printer target="supDocPan" />
+						</p:commandButton></td>
+					<td><p:commandButton value="Declare MOF Application"
+							actionListener="#{backingBean.setTabValue('7','8')}"
+							action="#{backingBean.updateSmAppl}" update=":form:tt" /></td>
+				</tr>
+			</table>
 		</ui:fragment>
 		<ui:fragment
 			rendered="#{backingBean.managedBean.smAppl.supportingDocMode eq 'O'}">
 			<ui:include
 				src="/xhtml/sm/shared/mofRegistration/onlineSupportingDocsForm.xhtml" />
+			<table>
+				<tr>
+					<td><p:commandButton value="Previous"
+							actionListener="#{backingBean.setTabValue('7','6')}"
+							action="#{backingBean.updateSmAppl}" update=":form:tt" /></td>
+					<td><p:commandButton value="Print List">
+							<p:printer target="supDocPan" />
+						</p:commandButton></td>
+					<td><p:commandButton value="Declare MOF Application"
+							actionListener="#{backingBean.setTabValue('7','8')}"
+							action="#{backingBean.updateSmAppl}" update=":form:tt" /></td>
+				</tr>
+			</table>
 		</ui:fragment>
+
 	</p:outputPanel>
 </ui:composition>
