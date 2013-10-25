@@ -252,15 +252,7 @@
 
 	<!-- Fulfilment End Added by Giri -->
 	<portlet>
-		<portlet-name>Procure</portlet-name>
-		<icon>/icon.png</icon>
-		<instanceable>false</instanceable>
-		<ajaxable>false</ajaxable>
-		<header-portlet-css>/css/ep/main.css</header-portlet-css>
-		<css-class-wrapper>procure-portlet</css-class-wrapper>
-	</portlet>
-	<portlet>
-		<portlet-name>Committee</portlet-name>
+		<portlet-name>scCommittee</portlet-name>
 		<icon>/icon.png</icon>
 		<instanceable>false</instanceable>
 		<ajaxable>false</ajaxable>
@@ -268,7 +260,7 @@
 		<css-class-wrapper>committee-portlet</css-class-wrapper>
 	</portlet>
 	<portlet>
-		<portlet-name>Bidding</portlet-name>
+		<portlet-name>scBidding</portlet-name>
 		<icon>/icon.png</icon>
 		<instanceable>false</instanceable>
 		<ajaxable>false</ajaxable>
@@ -276,7 +268,7 @@
 		<css-class-wrapper>bidding-portlet</css-class-wrapper>
 	</portlet>
 	<portlet>
-		<portlet-name>Quatation</portlet-name>
+		<portlet-name>scQuotationTender</portlet-name>
 		<icon>/icon.png</icon>
 		<instanceable>false</instanceable>
 		<ajaxable>false</ajaxable>
@@ -284,7 +276,7 @@
 		<css-class-wrapper>quatation-portlet</css-class-wrapper>
 	</portlet>
 	<portlet>
-		<portlet-name>NoticeBoard</portlet-name>
+		<portlet-name>scNoticeBoard</portlet-name>
 		<icon>/icon.png</icon>
 		<instanceable>false</instanceable>
 		<ajaxable>false</ajaxable>
@@ -292,7 +284,7 @@
 		<css-class-wrapper>noticeBoard-portlet</css-class-wrapper>
 	</portlet>
 	<portlet>
-		<portlet-name>SupplierReview</portlet-name>
+		<portlet-name>scSupplierReview</portlet-name>
 		<icon>/icon.png</icon>
 		<instanceable>false</instanceable>
 		<ajaxable>false</ajaxable>
@@ -301,7 +293,7 @@
 	</portlet>
 
 	<portlet>
-		<portlet-name>Specification</portlet-name>
+		<portlet-name>scSpecification</portlet-name>
 		<icon>/icon.png</icon>
 		<instanceable>false</instanceable>
 		<ajaxable>false</ajaxable>
@@ -310,7 +302,7 @@
 	</portlet>
 
 	<portlet>
-		<portlet-name>ss-procurementlist</portlet-name>
+		<portlet-name>scProcurementList</portlet-name>
 		<icon>/icon.png</icon>
 		<instanceable>false</instanceable>
 		<header-portlet-css>/css/main.css</header-portlet-css>
@@ -321,7 +313,7 @@
 	</portlet>
 
 	<portlet>
-		<portlet-name>ss-directPurchase</portlet-name>
+		<portlet-name>scDirectPurchase</portlet-name>
 		<icon>/icon.png</icon>
 		<instanceable>false</instanceable>
 		<header-portlet-css>/css/main.css</header-portlet-css>
@@ -332,7 +324,7 @@
 	</portlet>
 
 	<portlet>
-		<portlet-name>ss-defaultPurchase</portlet-name>
+		<portlet-name>scPurchaseInDefault</portlet-name>
 		<icon>/icon.png</icon>
 		<instanceable>false</instanceable>
 		<header-portlet-css>/css/main.css</header-portlet-css>
@@ -378,7 +370,7 @@
 
 
 	<portlet>
-		<portlet-name>proposal</portlet-name>
+		<portlet-name>scProposal</portlet-name>
 		<icon>/icon.png</icon>
 		<instanceable>false</instanceable>
 		<ajaxable>false</ajaxable>
@@ -389,7 +381,7 @@
 
 
 	<portlet>
-		<portlet-name>Evaluation</portlet-name>
+		<portlet-name>scEvaluation</portlet-name>
 		<icon>/icon.png</icon>
 		<instanceable>false</instanceable>
 		<ajaxable>false</ajaxable>
@@ -409,7 +401,7 @@
 	</portlet>
 
 	<portlet>
-		<portlet-name>Maintenance</portlet-name>
+		<portlet-name>scTemplateMaint</portlet-name>
 		<icon>/icon.png</icon>
 		<instanceable>false</instanceable>
 		<ajaxable>false</ajaxable>
