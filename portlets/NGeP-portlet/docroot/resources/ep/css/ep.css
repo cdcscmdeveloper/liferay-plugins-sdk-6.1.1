@@ -1949,6 +1949,7 @@ important
 .cmLeft {
 	width: 25%;
 	vertical-align: top;
+	background-color: #F9F9F9;
 }
 
 .cmRight {
@@ -3078,5 +3079,22 @@ textarea[disabled],input[type="text"][disabled],input[type="password"][disabled]
 	background-color: #F4F4F4 !important;
 	opacity: 1 !important;
 	border: 1px solid #959595 !important;
+}
+
+.screen-title {
+	float: left;
+	margin-left: 20px;
+	font-weight: bold;
+	font-size: 14px;
+}
+
+.ui-panelmenu-header {
+	background: none !important;
+	background-color: #017D9F !important;
+}
+
+.ui-panelmenu-header > a {
+	color: #FFFFFF !important;
+	text-shadow: none !important;
 }
 /*--------------------------       End Custom CSS       --------------------------- */
