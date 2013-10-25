@@ -225,7 +225,7 @@ ul.promotion li.no-margin-right{margin-right:0;}
 
 table.task-list-table{width:750px; margin:11px 0 0 -12px; font-size:11px;}
 table tr.table-header{background:#b3d1a1; font-family:'notosans-bold', Arial, Helvetica, sans-serif;}
-table tr td{padding:9px 3px;}
+table tr td{padding:0;}
 table tr td.task-no{width:55px; padding-left:12px;}
 table tr td.doc-no{width:115px;}
 table tr td.description{width:164px;}
