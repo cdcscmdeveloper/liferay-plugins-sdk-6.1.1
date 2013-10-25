@@ -172,8 +172,6 @@ xmlns:c="http://java.sun.com/jsp/jstl/core"
 		<!-- Item Detail Form -->
         <p:dialog id="dlItemDetailsBudget" header="#{lbl['lbl.pp.item.details']}" widgetVar="dlItemDetailsBudgetModal"
      		 resizable="false" styleClass="ppDiaglogBg" dynamic="true">  
-     		 #{budgetAllocationBackingBean.managedBean.selectedBudgetAllocItem.brandNew}
-     		 #{budgetAllocationBackingBean.managedBean.selectedBudgetAllocItem.editable}
 			    <p:panel id="pItemDet" header="#{lbl['lbl.pp.item.details']}">
 			    	<table class="ppTwoPartsTable">
 			    		<c:if test="#{budgetAllocationBackingBean.managedBean.viewMode==PPConst.modeApproval}">
@@ -193,16 +191,16 @@ xmlns:c="http://java.sun.com/jsp/jstl/core"
 							    	value="#{budgetAllocationBackingBean.managedBean.selectedBudgetAllocItem.budgetId}"
 							    	disabled="#{!budgetAllocationBackingBean.managedBean.selectedBudgetAllocItem.brandNew &amp;&amp; 
 							    		!budgetAllocationBackingBean.managedBean.selectedBudgetAllocItem.editable}">
-									<f:selectItem itemLabel="#{lbl['lbl.select']}" />
+									<f:selectItem itemLabel="#{lbl['lbl.select']}" itemValue="0" />
 									<f:selectItems value="#{budgetAllocationBackingBean.populateGo()}" 
 										var="budget" itemLabel="#{budget.pmGo.goCode}" itemValue="#{budget.budgetId}" />
 									<p:ajax event="change" listener="#{budgetAllocationBackingBean.selectedGo}" update="pItemDet, somDo, opGosodo"  />
 								</p:selectOneMenu>
 								<p:selectOneMenu 
 									value="#{budgetAllocationBackingBean.managedBean.selectedBudgetAllocItem.soId}"
-								disabled="#{!budgetAllocationBackingBean.managedBean.selectedBudgetAllocItem.brandNew &amp;&amp; 
+									disabled="#{!budgetAllocationBackingBean.managedBean.selectedBudgetAllocItem.brandNew &amp;&amp; 
 							    		!budgetAllocationBackingBean.managedBean.selectedBudgetAllocItem.editable}">
-									<f:selectItem itemLabel="#{lbl['lbl.select']}" />
+									<f:selectItem itemLabel="#{lbl['lbl.select']}" itemValue="0" />
 									<f:selectItems value="#{budgetAllocationBackingBean.populateSo()}" 
 										var="pmSo" itemLabel="#{pmSo.soCode}" itemValue="#{pmSo.soId}" />
 									<p:ajax event="change" listener="#{budgetAllocationBackingBean.selectedSo}" update="somDo, opGosodo"  />
@@ -211,7 +209,7 @@ xmlns:c="http://java.sun.com/jsp/jstl/core"
 									value="#{budgetAllocationBackingBean.managedBean.selectedBudgetAllocItem.doId}"
 									disabled="#{!budgetAllocationBackingBean.managedBean.selectedBudgetAllocItem.brandNew &amp;&amp; 
 							    		!budgetAllocationBackingBean.managedBean.selectedBudgetAllocItem.editable}">
-									<f:selectItem itemLabel="#{lbl['lbl.select']}" />
+									<f:selectItem itemLabel="#{lbl['lbl.select']}" itemValue="0" />
 									<f:selectItems value="#{budgetAllocationBackingBean.populateDo()}" 
 										var="pmDo" itemLabel="#{pmDo.doCode}" itemValue="#{pmDo.doId}" />
 									<p:ajax event="change" listener="#{budgetAllocationBackingBean.selectedDo}" update="opGosodo" />
@@ -221,14 +219,15 @@ xmlns:c="http://java.sun.com/jsp/jstl/core"
 			    		<tr>
 			    			<th>#{lbl['lbl.pp.gosodo.name']}</th>
 							<td class="ppSmallTd">:</td>
-							<td> <p:outputPanel id="opGosodo">
-								<p:inputText disabled="true"
-									value="#{budgetAllocationBackingBean.managedBean.selectedBudgetAllocItem.ppBudget.pmGo.goName}"/>
-								<p:inputText disabled="true"
-									value="#{budgetAllocationBackingBean.managedBean.selectedBudgetAllocItem.pmSo.soName}"/>  
-								<p:inputText disabled="true"
-									value="#{budgetAllocationBackingBean.managedBean.selectedBudgetAllocItem.pmDo.doName}"/>
-									</p:outputPanel>    
+							<td>
+								<p:outputPanel id="opGosodo">
+									<p:inputText disabled="true"
+										value="#{budgetAllocationBackingBean.managedBean.selectedBudgetAllocItem.ppBudget.pmGo.goName}"/>
+									<p:inputText disabled="true"
+										value="#{budgetAllocationBackingBean.managedBean.selectedBudgetAllocItem.pmSo.soName}"/>  
+									<p:inputText disabled="true"
+										value="#{budgetAllocationBackingBean.managedBean.selectedBudgetAllocItem.pmDo.doName}"/>
+								</p:outputPanel>    
 							</td>
 			    		</tr>
 			    		
@@ -239,7 +238,7 @@ xmlns:c="http://java.sun.com/jsp/jstl/core"
 								<p:selectOneMenu value="#{budgetAllocationBackingBean.managedBean.selectedBudgetAllocItem.ovrFinancialYear}"
 									disabled="#{!budgetAllocationBackingBean.managedBean.selectedBudgetAllocItem.brandNew &amp;&amp; 
 							    		!budgetAllocationBackingBean.managedBean.selectedBudgetAllocItem.editable}">
-									<f:selectItem itemLabel="#{lbl['lbl.select']}" />
+									<f:selectItem itemLabel="#{lbl['lbl.select']}" itemValue="0" />
 									<f:selectItems value="#{budgetAllocationBackingBean.financialYearOptions()}"/>
 								</p:selectOneMenu>
 							</td>
@@ -288,11 +287,11 @@ xmlns:c="http://java.sun.com/jsp/jstl/core"
 									onclick="dlItemDetailsBudgetModal.hide()" oncomplete="dlItemDetailsBudgetModal.hide()" update=":form:tvBudgetAlloc:tvBudgetAllocContent" 
 									process="pItemDet"/>
 								<p:commandButton value="#{lbl['lbl.pp.cancel']}" 
-									onclick="dlItemDetailsBudgetModal.hide()"/>
+									onclick="dlItemDetailsBudgetModal.hide()" immediate="true"/>
 							</td>
 			    		</tr>
 			    	</table> 
-	    			</p:panel>  
+    			</p:panel>  
 		</p:dialog>  		
 		
         <br/>

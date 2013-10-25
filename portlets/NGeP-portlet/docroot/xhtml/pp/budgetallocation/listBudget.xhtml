@@ -12,6 +12,8 @@ xmlns:c="http://java.sun.com/jsp/jstl/core"
 >
 	
 	<ui:define name="contentSection">
+		<p:outputLabel id="itSysMsg" rendered="#{budgetAllocationBackingBean.managedBean.systemMsg!=''}" disabled="true"
+			value="#{budgetAllocationBackingBean.managedBean.systemMsg}"/><br />
 		<p:panel header="Temporary Menu List">  
 			<table>
 				<tr>

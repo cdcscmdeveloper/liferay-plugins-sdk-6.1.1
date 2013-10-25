@@ -3,7 +3,10 @@
  */
 package my.ep.web.managedbean.pp.procurementplan;
 
+import java.math.BigDecimal;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
@@ -13,6 +16,7 @@ import my.ep.persistence.entity.pp.PpRemark;
 import my.ep.persistence.entity.pp.procurementplan.PpPlan;
 import my.ep.persistence.entity.pp.procurementplan.PpPlanItem;
 import my.ep.persistence.entity.pp.procurementplan.PpPlanMaster;
+import my.ep.persistence.entity.pp.procurementplan.PpQtActivity;
 import my.ep.web.managedbean.BaseManagedBean;
 
 @ManagedBean(name = "planManagedBean")
@@ -53,9 +57,75 @@ public class PlanManagedBean extends BaseManagedBean{
 
 	private String current;
 	
-	private String systemMsg;
+	private String systemMsg = "";
+	
+	private Map<Long, BigDecimal> selectedGoMapper = new HashMap<Long, BigDecimal>();
 
+	private String[] actions;
+	
+	private String bpmTaskId; 
+	
+	private List <PpQtActivity> allTaskActivity;
+	
+	private String dynamicDialogName;
+	
 
+	/**
+	 * @return the dynamicDialogName
+	 */
+	public String getDynamicDialogName() {
+		return dynamicDialogName;
+	}
+
+	/**
+	 * @param dynamicDialogName the dynamicDialogName to set
+	 */
+	public void setDynamicDialogName(String dynamicDialogName) {
+		this.dynamicDialogName = dynamicDialogName;
+	}
+
+	/**
+	 * @return the allTaskActivity
+	 */
+	public List<PpQtActivity> getAllTaskActivity() {
+		return allTaskActivity;
+	}
+
+	/**
+	 * @param allTaskActivity the allTaskActivity to set
+	 */
+	public void setAllTaskActivity(List<PpQtActivity> allTaskActivity) {
+		this.allTaskActivity = allTaskActivity;
+	}
+
+	/**
+	 * @return the bpmTaskId
+	 */
+	public String getBpmTaskId() {
+		return bpmTaskId;
+	}
+
+	/**
+	 * @param bpmTaskId the bpmTaskId to set
+	 */
+	public void setBpmTaskId(String bpmTaskId) {
+		this.bpmTaskId = bpmTaskId;
+	}
+
+	/**
+	 * @return the selectedGoMapper
+	 */
+	public Map<Long, BigDecimal> getSelectedGoMapper() {
+		return selectedGoMapper;
+	}
+
+	/**
+	 * @param selectedGoMapper the selectedGoMapper to set
+	 */
+	public void setSelectedGoMapper(Map<Long, BigDecimal> selectedGoMapper) {
+		this.selectedGoMapper = selectedGoMapper;
+	}
+	
 	
 	/**
 	 * @return the systemMsg
@@ -172,17 +242,27 @@ public class PlanManagedBean extends BaseManagedBean{
 	public void setSelectedPlan(PpPlan selectedPlan) {
 		this.selectedPlan = selectedPlan;
 	}
-
+	/**
+	 * @return the current
+	 */
 	public String getCurrent() {
 		return current;
 	}
+	/**
+	 * @param selectedPlan the selectedPlan to set
+	 */
 	public void setCurrent(String current) {
 		this.current = current;
 	}
-	
+	/**
+	 * @return the viewMode
+	 */
 	public String getViewMode() {
 		return viewMode;
 	}
+	/**
+	 * @param selectedPlan the selectedPlan to set
+	 */
 	public void setViewMode(String viewMode) {
 		this.viewMode = viewMode;
 	}
@@ -262,7 +342,19 @@ public class PlanManagedBean extends BaseManagedBean{
 		this.currentUser = currentUser;
 	}
 
+	/**
+	 * @return the actions
+	 */
+	public String[] getActions() {
+		return actions;
+	}
 
+	/**
+	 * @param actions the actions to set
+	 */
+	public void setActions(String[] actions) {
+		this.actions = actions;
+	}
 
 
 

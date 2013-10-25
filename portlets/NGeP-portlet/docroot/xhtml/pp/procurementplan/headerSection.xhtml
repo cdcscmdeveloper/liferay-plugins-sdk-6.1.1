@@ -8,35 +8,13 @@ xmlns:ui="http://java.sun.com/jsf/facelets"
 xmlns:p="http://primefaces.org/ui"
 xmlns:c="http://java.sun.com/jsp/jstl/core">
 
-
-
-
 	<div class="ppRightBtn">
-		<c:choose>
-			<c:when test="#{planBackingBean.managedBean.viewMode==PPConst.modeApproval}">
-				<p:commandButton id="cbSubConfirm" value="#{lbl['lbl.pp.confirm']}" action="#{planBackingBean.redirectToViewPlan}"   />&nbsp; 
-				<p:commandButton id="cbSubCancel" value="#{lbl['lbl.pp.cancel']}" onclick="dlItemDetailsModal.hide();"  />&nbsp;
-			</c:when>
-			<c:when test="#{planBackingBean.managedBean.viewMode==PPConst.modeNew}">
-				<p:commandButton id="cbSave" value="#{lbl['lbl.pp.save']}" action="#{planBackingBean.redirectToViewPlan}"   />&nbsp; 
-				<p:commandButton id="cbSubmit" value="#{lbl['lbl.pp.submit']}" partialSubmit="true" action="#{planBackingBean.submitNewPlan()}"   />&nbsp;
-				<p:commandButton id="cbBack" value="#{lbl['lbl.pp.back']}" action="#{planBackingBean.redirectToViewPlan()}"   />&nbsp;
-			</c:when>
-			<c:when test="#{planBackingBean.managedBean.viewMode==PPConst.modeVerification}">
-				<p:commandButton id="cbRevise" value="#{lbl['lbl.pp.revise']}" action="#{planBackingBean.redirectToViewPlan}"   />&nbsp;
-				<p:commandButton id="cbAcknowledge" value="#{lbl['lbl.pp.acknowledge']}" action="#{planBackingBean.redirectToViewPlan}"   />&nbsp;
-				<p:commandButton id="cbVerify" value="#{lbl['lbl.pp.verify']}" action="#{planBackingBean.redirectToViewPlan}"   />&nbsp;
-				<p:commandButton id="cbReject" value="#{lbl['lbl.pp.reject']}" action="#{planBackingBean.redirectToViewPlan}"   />&nbsp;
-			</c:when>
-			<c:when test="#{planBackingBean.managedBean.viewMode==PPConst.modeMaintain}">
-				<p:commandButton id="cbSubmit" value="#{lbl['lbl.pp.submit']}" action="#{planBackingBean.redirectToViewPlan}"   />&nbsp;
-				<p:commandButton id="cbCancel" value="#{lbl['lbl.pp.cancel']}" action="#{planBackingBean.redirectToViewPlan}"   />&nbsp;
-				<p:commandButton id="cbReject" value="#{lbl['lbl.pp.reject']}" action="#{planBackingBean.redirectToViewPlan}"   />&nbsp;
-			</c:when>
-			<c:when test="#{planBackingBean.managedBean.viewMode==PPConst.modeRevision}">
-				<p:commandButton id="cbSubmit" value="#{lbl['lbl.pp.submit']}" action="#{planBackingBean.redirectToViewPlan}"   />&nbsp;
-			</c:when>
-		</c:choose>
+		<p:outputLabel id="itSysMsg" rendered="#{planBackingBean.managedBean.systemMsg!=''}" disabled="true"
+			value="#{planBackingBean.managedBean.systemMsg}"/><br />
+		<ui:repeat var="bpmAction" value="#{planBackingBean.managedBean.actions}">
+			<p:commandButton value="#{bpmAction}" action="#{planBackingBean.submitPlan(bpmAction)}" 
+				update=":form:itSysMsg" />&nbsp;
+		</ui:repeat>	
 	</div>
 	
 		

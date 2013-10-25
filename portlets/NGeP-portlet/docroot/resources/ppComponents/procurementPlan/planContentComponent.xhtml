@@ -19,9 +19,9 @@ xmlns:composite="http://java.sun.com/jsf/composite">
 		<p:outputPanel id="opPlanDetailsContent">
 			<div class="ppRightBtn">
 				<c:if id="opApprovalButtons" test="#{cc.attrs.viewMode==PPConst.modeApproval}">
-					<p:commandButton id="cbRevise" value="#{lbl['lbl.pp.revise']}" action="#{planBackingBean.redirectToViewPlan}"   />&nbsp;
-					<p:commandButton id="cbSubmitApproval" value="#{lbl['lbl.pp.approve']}" action="#{planBackingBean.redirectToViewPlan}"   />&nbsp;
-					<p:commandButton id="cbReject" value="#{lbl['lbl.pp.reject']}" action="#{planBackingBean.redirectToViewPlan}"   />&nbsp;
+					<p:commandButton id="cbRevise" value="#{lbl['lbl.pp.revise']}" action="#{planBackingBean.redirectToListPlan}"   />&nbsp;
+					<p:commandButton id="cbSubmitApproval" value="#{lbl['lbl.pp.approve']}" action="#{planBackingBean.redirectToListPlan}"   />&nbsp;
+					<p:commandButton id="cbReject" value="#{lbl['lbl.pp.reject']}" action="#{planBackingBean.rredirectToListPlan}"   />&nbsp;
 					<br/>
 				</c:if>
 			</div>
@@ -55,7 +55,7 @@ xmlns:composite="http://java.sun.com/jsf/composite">
 									<f:selectItem itemLabel="#{lbl['lbl.select']}" itemValue="0" />
 									<f:selectItems value="#{planBackingBean.procurementModeOptions()}"/>
 									<p:ajax event="change" update=":form:tvPlan, pTabPlanHeader, pTabPlanDetails" 
-										listener="#{planBackingBean.updateViewMode}"  />
+										listener="#{planBackingBean.updateViewMode}"  /> <!--  update=":form:tvPlan" -->
 								</p:selectOneMenu>
 							</td>
 							<td>&nbsp;</td>
@@ -84,8 +84,7 @@ xmlns:composite="http://java.sun.com/jsf/composite">
 							<th>* #{lbl['lbl.pp.plan.description']}</th>
 							<td class="ppSmallTd">:</td>
 							<td>
-								<p:inputText value="#{cc.attrs.selectedPlan.planDesc}" 
-									disabled="#{!cc.attrs.selectedPlan.editable}"/>
+								<p:inputText value="#{cc.attrs.selectedPlan.planDesc}" disabled="#{!cc.attrs.selectedPlan.editable}"/>
 							</td>
 							<td>&nbsp;</td>
 						</tr>
@@ -103,7 +102,7 @@ xmlns:composite="http://java.sun.com/jsf/composite">
 							<td>&nbsp;</td>
 						</tr>
 
-						<p:outputPanel rendered="#{planBackingBean.isExpenditure()}">
+						<p:outputPanel rendered="#{cc.attrs.selectedPlanMaster.planType==PPConst.planTypeExpenditure}">
 							<tr><td colspan="7"><hr/></td></tr>
 							<tr>
 								<th>* #{lbl['lbl.pp.fulfillment.type']}</th>
@@ -114,7 +113,7 @@ xmlns:composite="http://java.sun.com/jsf/composite">
 										!cc.attrs.selectedPlanMaster.brandNew}">
 										<f:selectItem itemLabel="#{lbl['lbl.select']}" itemValue="0" />
 										<f:selectItems value="#{planBackingBean.fulfillmentTypeOptions()}"/>
-										<p:ajax event="change" update=":form:tvPlan, pTabPlanDetails" />
+										<p:ajax event="change" update="pTabPlanDetails" /> <!-- :form:tvPlan,  -->
 									</p:selectOneMenu>
 									<p:tooltip for="somFulfillment" value="Fade effect is used by default" showEffect="fade" hideEffect="fade" />
 								</td>
@@ -125,7 +124,7 @@ xmlns:composite="http://java.sun.com/jsf/composite">
 										disabled="#{cc.attrs.selectedPlanMaster.procurementMode==PPConst.procurementExistingContract 
 										|| !cc.attrs.selectedPlanMaster.brandNew}">  
 							            <f:selectItems value="#{planBackingBean.favouriteOptions()}"/>
-							            <p:ajax event="change" update=":form:tvPlan, pTabPlanDetails" />
+							            <p:ajax event="change" update="pTabPlanDetails" /><!-- :form:tvPlan,  -->
 							        </p:selectOneRadio>  
 							        <p:tooltip for="sorFavOpt" value="Fade effect is used by default" showEffect="fade" hideEffect="fade" />
 								</td>
@@ -148,7 +147,7 @@ xmlns:composite="http://java.sun.com/jsf/composite">
 							</tr>
 						</p:outputPanel>
 
-						<p:outputPanel rendered="#{planBackingBean.isProcurement()}">
+						<p:outputPanel rendered="#{cc.attrs.selectedPlanMaster.planType==PPConst.planTypeProcurement}">
 							<tr><td colspan="7"><hr/></td></tr>
 							<tr>
 								<th>* #{lbl['lbl.pp.quotation.tender.type']}</th>
@@ -167,7 +166,7 @@ xmlns:composite="http://java.sun.com/jsf/composite">
 										disabled="#{!cc.attrs.selectedPlanMaster.brandNew || cc.attrs.selectedPlanMaster.mtoPlan}">
 										<f:selectItem itemLabel="#{lbl['lbl.select']}" itemValue=""/>
 										<f:selectItems value="#{planBackingBean.itemOriginTypeOptions()}" />
-										<p:ajax event="change" listener="#{planBackingBean.updateMtoFlag}" update=":form:tvPlan, sorMto" />
+										<p:ajax event="change" listener="#{planBackingBean.updateMtoFlag}" update="sorMto" /><!-- :form:tvPlan,  -->
 									</p:selectOneMenu>
 								</td>
 								<td>&nbsp;</td>
@@ -183,7 +182,7 @@ xmlns:composite="http://java.sun.com/jsf/composite">
 										disabled="#{planBackingBean.lockMto()}" >  
 						            	<f:selectItem itemLabel="Yes" itemValue="true" />
 										<f:selectItem itemLabel="No" itemValue="false" />
-										<p:ajax event="change" listener="#{planBackingBean.updateMtoFlag}" update=":form:tvPlan"/>
+										<p:ajax event="change" listener="#{planBackingBean.updateMtoFlag}"/><!--  update=":form:tvPlan" -->
 							        </p:selectOneRadio>  
 								</td>
 								<td>&nbsp;</td>
@@ -215,7 +214,7 @@ xmlns:composite="http://java.sun.com/jsf/composite">
 							</td>
 							<td>&nbsp;</td>
 						</tr>
-						<p:outputPanel rendered="#{planBackingBean.isExpenditure()}">
+						<p:outputPanel rendered="#{cc.attrs.selectedPlanMaster.planType==PPConst.planTypeExpenditure}">
 							<tr>
 								<th>* #{lbl['lbl.pp.received.ptj']}</th>
 								<td class="ppSmallTd">:</td>
@@ -314,6 +313,7 @@ xmlns:composite="http://java.sun.com/jsf/composite">
 												disabled="#{!cc.attrs.selectedPlan.submissionType
 													|| !cc.attrs.selectedPlan.brandNew}">
 												<f:selectItem itemLabel="#{lbl['lbl.select']}" itemValue="0" />
+												<f:selectItem itemLabel="Lailah" itemValue="1" />
 											</p:selectOneMenu>
 										</ui:fragment>
 										<ui:fragment rendered="#{status.index&gt;0}">
@@ -322,6 +322,7 @@ xmlns:composite="http://java.sun.com/jsf/composite">
 													|| !cc.attrs.selectedPlan.multiLevel
 													|| !cc.attrs.selectedPlan.brandNew}">
 												<f:selectItem itemLabel="#{lbl['lbl.select']}" itemValue="0" />
+												<f:selectItem itemLabel="Lailah" itemValue="1" />
 											</p:selectOneMenu>
 										</ui:fragment>
 										<br/>
@@ -353,18 +354,20 @@ xmlns:composite="http://java.sun.com/jsf/composite">
 					
 					<br/>
 				</p:tab>
+				<!-- Details -->
 				<p:tab id="tPlanDetails" title="#{lbl['lbl.pp.details']}" disabled="#{planBackingBean.disableDetailTab()}">  
 					<p:panel id="pTabPlanDetails">
 						<c:choose>
 							<!-- For Procurement Mode: Quotation, Tender, Selective Tender -->
-							<c:when test="#{planBackingBean.isProcurement()}">
+							<c:when test="#{cc.attrs.selectedPlanMaster.planType==PPConst.planTypeProcurement}">
 								<ui:include src="details/ppDetails.xhtml"/>
 							</c:when>
-							<c:when test="#{planBackingBean.isExpenditure()}">
+							<c:when test="#{cc.attrs.selectedPlanMaster.planType==PPConst.planTypeExpenditure}">
 								Expenditure details coming soon
 							</c:when>
 							<!-- For Procurement Mode: Existing Contract, Direct Purchase -->
 						</c:choose>
+					
 					</p:panel>
 				</p:tab>
 				<!-- Remarks -->
@@ -409,6 +412,7 @@ xmlns:composite="http://java.sun.com/jsf/composite">
 					</p:panel>
 				</p:tab>
 			</p:tabView>
+			
 		</p:outputPanel>
 	</composite:implementation>
 </ui:composition>

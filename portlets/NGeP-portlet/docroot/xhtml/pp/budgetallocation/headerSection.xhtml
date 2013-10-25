@@ -9,8 +9,11 @@ xmlns:p="http://primefaces.org/ui"
 xmlns:c="http://java.sun.com/jsp/jstl/core">
  
 	<div class="ppRightBtn">
+		<p:outputLabel id="itSysMsg" rendered="#{budgetAllocationBackingBean.managedBean.systemMsg!=''}" disabled="true"
+			value="#{budgetAllocationBackingBean.managedBean.systemMsg}"/><br />
 		<ui:repeat var="bpmAction" value="#{budgetAllocationBackingBean.managedBean.actions}">
-			<p:commandButton value="#{bpmAction}" action="#{budgetAllocationBackingBean.submitBudgetAllocation(bpmAction)}" />&nbsp;
+			<p:commandButton value="#{bpmAction}" action="#{budgetAllocationBackingBean.submitBudgetAllocation(bpmAction)}" 
+				update=":form:itSysMsg" />&nbsp;
 		</ui:repeat>
 	</div>
 </ui:composition>

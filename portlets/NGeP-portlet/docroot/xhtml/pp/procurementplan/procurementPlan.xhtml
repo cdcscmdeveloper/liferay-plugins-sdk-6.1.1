@@ -19,8 +19,8 @@ xmlns:tp="http://java.sun.com/jsf/composite/ppComponents/procurementPlan"
 			<p:ajax event="tabChange" listener="#{planBackingBean.updateCurrentView}" update="tvPlan"/>  
 		    <p:tab id="#{PPConst.currentNew}" title="#{planBackingBean.generateHeader(planBackingBean.managedBean.viewMode)}">
     		  	<tp:planContentComponent 
-		            selectedPlan="#{planBackingBean.managedBean.selectedPlan}" 
-		            selectedPlanMaster="#{planBackingBean.managedBean.selectedPlanMaster}" 
+		            selectedPlan="#{planBackingBean.managedBean.plan}" 
+		            selectedPlanMaster="#{planBackingBean.managedBean.planMaster}" 
 		            viewMode="#{planBackingBean.managedBean.viewMode}"/>
 		    </p:tab>
 		    <p:tab id="#{PPConst.currentMto}" title="#{lbl['lbl.pp.plan.title.mto.plan']}" rendered="#{planBackingBean.managedBean.enableMto}" >
