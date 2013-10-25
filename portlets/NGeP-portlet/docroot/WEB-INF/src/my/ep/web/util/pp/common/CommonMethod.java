@@ -103,5 +103,11 @@ public class CommonMethod {
     	}
     	return result;
     }
-		
+    
+    public static Calendar convertDateToCalender(Date date){
+    	Calendar cal = Calendar.getInstance();
+		cal.setTime(date);
+		return cal;
+    }
+//    public static Calendar date
 }

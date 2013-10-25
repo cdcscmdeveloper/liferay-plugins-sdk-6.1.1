@@ -12,10 +12,10 @@ public class ProcurementPlanConst {
 	public static final String NAV_TO_LIST_PLAN = "listPlan";
 	public static final String NAV_TO_PLAN_DET = "procurementPlan";
 	
-	public static final String NAV_TO_REVIEW_PLAN = "reviewPlan";
-	public static final String NAV_TO_VERIFY_PLAN = "verifyPlan";
-	public static final String NAV_TO_VIEW_PLAN = "viewPlan";
-	public static final String NAV_TO_CREATE_MTO_PLAN = "createPlan";
+//	public static final String NAV_TO_REVIEW_PLAN = "reviewPlan";
+//	public static final String NAV_TO_VERIFY_PLAN = "verifyPlan";
+//	public static final String NAV_TO_VIEW_PLAN = "viewPlan";
+//	public static final String NAV_TO_CREATE_MTO_PLAN = "createPlan";
 	
 	//View Mode
 	public static final String MODE_NEW = "N";
@@ -41,22 +41,23 @@ public class ProcurementPlanConst {
 	public static final String FAVOURITE_TYPE_ITEM = "I";
 	
 	//Procurement Mode
-	public static final String PROCUREMENT_QUOTATION = "QT";
-	public static final String PROCUREMENT_DIRECT_NEGO = "DN";
-	public static final String PROCUREMENT_TENDER = "TD";
-	public static final String PROCUREMENT_DIRECT_PURCHASE = "DP";
-	public static final String PROCUREMENT_EXISTING_CONTRACT = "EC";
+	public static final String PROCUREMENT_QUOTATION = "Q";
+	public static final String PROCUREMENT_DIRECT_NEGO = "N";
+	public static final String PROCUREMENT_TENDER = "T";
+	public static final String PROCUREMENT_DIRECT_PURCHASE = "D";
+	public static final String PROCUREMENT_EXISTING_CONTRACT = "E";
 	
 	//Fulfillment Type
-	public static final String FULFILLMENT_ONE_OFF = "OF";
-	public static final String FULFILLMENT_AS_AND_WHEN = "PW";
-	public static final String FULFILLMENT_SCHEDULE = "PS";
+	public static final String FULFILLMENT_ONE_OFF = "O";
+	public static final String FULFILLMENT_AS_AND_WHEN = "P";
+	public static final String FULFILLMENT_SCHEDULE = "S";
 	
 	//QT Type
-	public static final String QT_TYPE_BUMIPUTERA = "BP";
-	public static final String QT_TYPE_OPEN = "OP";
-	public static final String QT_TYPE_PANEL = "PN";
-	public static final String QT_TYPE_RESTRICTED = "RT";
+	public static final String QT_TYPE_BUMIPUTERA = "B";
+	public static final String QT_TYPE_OPEN = "O";
+	public static final String QT_TYPE_PANEL = "P";
+	public static final String QT_TYPE_RESTRICTED = "R";
+	public static final String QT_TYPE_INTERNATIONAL = "I";
 
 	//Item Origin Type
 	public static final String ITEM_ORIGIN_TYPE_IMPORTED = "I";
@@ -74,6 +75,8 @@ public class ProcurementPlanConst {
 	public static final String BPM_SUBMIT = "SUBMIT";
 	public static final String BPM_SAVE = "SAVE";
 
+	//Default BPM Actions
+	public static final String[] BPM_DEFAULT_ACTIONS = new String[]{BPM_SAVE, BPM_SUBMIT};
 	
 	//General
 	public static final String YES_INT = "1";
@@ -91,10 +94,20 @@ public class ProcurementPlanConst {
 	public static final Integer UNSPSC_CLASS = 2;
 	public static final Integer UNSPSC_COMMODITY = 3;
 	
-	//PM Status
+	//PM Status Budget Allocation
 	public static final Long STATUS_PBA_NEW = 10001L;
 	public static final Long STATUS_PBA_PENDING_APPROVAL = 10002L;
+	public static final Long STATUS_PBA_SAVED = 10003L;
+	
+	//PM Status Budget Allocation Dtl
 	public static final Long STATUS_PBD_NEW = 10005L;
+	
+	//PM Status Plan
+	public static final Long STATUS_PPL_NEW = 10005L;
+	
+	//PM Status Plan Item
+	public static final Long STATUS_PPI_NEW = 10005L;
+	
 	
 	//PM Profile Types
 	public static final Long TYPE_MINISTRY = 38L;
@@ -247,30 +260,30 @@ public class ProcurementPlanConst {
 	public String getNavToPlanDet() {
 		return NAV_TO_PLAN_DET;
 	}
-	/**
-	 * @return the navToReviewPlan
-	 */
-	public String getNavToReviewPlan() {
-		return NAV_TO_REVIEW_PLAN;
-	}
-	/**
-	 * @return the navToVerifyPlan
-	 */
-	public String getNavToVerifyPlan() {
-		return NAV_TO_VERIFY_PLAN;
-	}
-	/**
-	 * @return the navToViewPlan
-	 */
-	public String getNavToViewPlan() {
-		return NAV_TO_VIEW_PLAN;
-	}
-	/**
-	 * @return the navToCreateMtoPlan
-	 */
-	public String getNavToCreateMtoPlan() {
-		return NAV_TO_CREATE_MTO_PLAN;
-	}
+//	/**
+//	 * @return the navToReviewPlan
+//	 */
+//	public String getNavToReviewPlan() {
+//		return NAV_TO_REVIEW_PLAN;
+//	}
+//	/**
+//	 * @return the navToVerifyPlan
+//	 */
+//	public String getNavToVerifyPlan() {
+//		return NAV_TO_VERIFY_PLAN;
+//	}
+//	/**
+//	 * @return the navToViewPlan
+//	 */
+//	public String getNavToViewPlan() {
+//		return NAV_TO_VIEW_PLAN;
+//	}
+//	/**
+//	 * @return the navToCreateMtoPlan
+//	 */
+//	public String getNavToCreateMtoPlan() {
+//		return NAV_TO_CREATE_MTO_PLAN;
+//	}
 	/**
 	 * @return the modeNew
 	 */
@@ -534,5 +547,35 @@ public class ProcurementPlanConst {
 	 */
 	public boolean isLevelMultiple() {
 		return LEVEL_MULTIPLE;
+	}
+	/**
+	 * @return the qtTypeInternational
+	 */
+	public String getQtTypeInternational() {
+		return QT_TYPE_INTERNATIONAL;
+	}
+	/**
+	 * @return the bpmDefaultActions
+	 */
+	public String[] getBpmDefaultActions() {
+		return BPM_DEFAULT_ACTIONS;
+	}
+	/**
+	 * @return the statusPbaSaved
+	 */
+	public Long getStatusPbaSaved() {
+		return STATUS_PBA_SAVED;
+	}
+	/**
+	 * @return the statusPplNew
+	 */
+	public Long getStatusPplNew() {
+		return STATUS_PPL_NEW;
+	}
+	/**
+	 * @return the statusPpiNew
+	 */
+	public Long getStatusPpiNew() {
+		return STATUS_PPI_NEW;
 	}
 }
