@@ -215,10 +215,7 @@ $theme.include($body_top_include)
                     Maintained by Commerce Dot Com Sdn Bhd.
                 </p>
                 <h3>Visitor Counter</h3>
-                <div class="visitor-counter-wrapper">
-<style type="text/css">.count {font-size:10px;font-family:Arial, Helvetica, sans-serif;margin:0px}.ct img{border:0} .ct a,.ct a:visited{color:#999999;text-decoration:none}.ct a:hover{color:gray;text-decoration:underline}</style>
-<div class="count"><img src="http://web-design-tools.org/counter.php?id=objpBK94mub1s3z3twJLkDOOs9zmiB7DNC2mrpcON0EfadbsJOsH6jrJcaIKu7Fbh5012z&amp;style=139&amp;count=0&amp;min_len=6" alt="Implied By Design" /></div>
-                </div>
+
             </div>
             
             <div class="clear"></div>
