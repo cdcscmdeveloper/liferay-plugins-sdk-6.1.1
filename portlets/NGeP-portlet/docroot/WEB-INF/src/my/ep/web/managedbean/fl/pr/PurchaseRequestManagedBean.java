@@ -14,6 +14,7 @@ import my.ep.persistence.entity.fl.FlRemark;
 import my.ep.persistence.entity.fl.request.FlDeliveryAddress;
 import my.ep.persistence.entity.fl.request.FlFulfilmentRequest;
 import my.ep.persistence.entity.pm.authorization.PmOrgAddress;
+import my.ep.persistence.entity.pm.common.PmMaksud;
 import my.ep.web.managedbean.BaseManagedBean;
 
 import org.apache.log4j.Logger;
@@ -27,21 +28,26 @@ import org.apache.log4j.Logger;
 @ManagedBean
 @SessionScoped
 public class PurchaseRequestManagedBean extends BaseManagedBean {
-	private static Logger log = Logger
-			.getLogger(PurchaseRequestManagedBean.class);
+	private static Logger log = Logger.getLogger(PurchaseRequestManagedBean.class);
 	private static final long serialVersionUID = 1L;
 
 	private FlRemark flRemark = new FlRemark();
 	private FlAttachment flAttachment = new FlAttachment();
 	private FlFulfilmentRequest fulfilmentRequest;
 
-	private List<DeliveryAddressPopup> daPopupList;
+	//private List<DeliveryAddressPopup> daPopupList;
 	//private List<DeliveryAddressPopup> selectedPopupAddress;
 	
 	private FlDeliveryAddress selectedAddrRow;
 	private List<PmOrgAddress> selectedPmDelAddrList;
 	private List<PmOrgAddress> delAddrList;
 	private FlDeliveryAddress selectedDelAddr;
+	private List<PmMaksud> maksudCodeList;
+	private boolean checkPtjFlg = true;
+	
+	private String fulfillmentReqId;
+	private String taskId;
+	private String[] actions;
 	
 
 	/**
@@ -88,106 +94,11 @@ public class PurchaseRequestManagedBean extends BaseManagedBean {
 	}
 	
 
-	/**
-	 * @return the daPopupList
-	 */
-	public List<DeliveryAddressPopup> getDaPopupList() {
-		return daPopupList;
-	}
+	
 
-	/**
-	 * @param daPopupList
-	 *            the daPopupList to set
-	 */
-	public void setDaPopupList(List<DeliveryAddressPopup> daPopupList) {
-		this.daPopupList = daPopupList;
-	}
+	public PurchaseRequestManagedBean() {}
 
-	public PurchaseRequestManagedBean() {
-		daPopupList = new ArrayList<DeliveryAddressPopup>();
-		daPopupList.add(new DeliveryAddressPopup("Delivery Address1",
-				"12/02/2012", "12/02/2013"));
-		daPopupList.add(new DeliveryAddressPopup("Delivery Address2",
-				"11/02/2012", "11/02/2013"));
-		daPopupList.add(new DeliveryAddressPopup("Delivery Address3",
-				"10/02/2012", "10/02/2013"));
-	}
-
-	public class DeliveryAddressPopup {
-		private int seqNo;
-		public String deliveryAddress;
-		public String endDate;
-		public String startDate;
-
-		public DeliveryAddressPopup(String deliveryAddress, String endDate,
-				String startDate) {
-			// TODO Auto-generated constructor stub
-			this.deliveryAddress = deliveryAddress;
-			this.endDate = endDate;
-			this.startDate = startDate;
-		}
-
-		/**
-		 * @return the deliveryAddress
-		 */
-		public String getDeliveryAddress() {
-			return deliveryAddress;
-		}
-
-		/**
-		 * @param deliveryAddress
-		 *            the deliveryAddress to set
-		 */
-		public void setDeliveryAddress(String deliveryAddress) {
-			this.deliveryAddress = deliveryAddress;
-		}
-
-		/**
-		 * @return the endDate
-		 */
-		public String getEndDate() {
-			return endDate;
-		}
-
-		/**
-		 * @param endDate
-		 *            the endDate to set
-		 */
-		public void setEndDate(String endDate) {
-			this.endDate = endDate;
-		}
-
-		/**
-		 * @return the startDate
-		 */
-		public String getStartDate() {
-			return startDate;
-		}
-
-		/**
-		 * @param startDate
-		 *            the startDate to set
-		 */
-		public void setStartDate(String startDate) {
-			this.startDate = startDate;
-		}
-
-		/**
-		 * @return the seqNo
-		 */
-		public int getSeqNo() {
-			return seqNo;
-		}
-
-		/**
-		 * @param seqNo
-		 *            the seqNo to set
-		 */
-		public void setSeqNo(int seqNo) {
-			this.seqNo = seqNo;
-		}
-
-	}
+	
 
 	/**
 	 * @return the selectedAddrRow
@@ -243,6 +154,76 @@ public class PurchaseRequestManagedBean extends BaseManagedBean {
 	 */
 	public void setSelectedDelAddr(FlDeliveryAddress selectedDelAddr) {
 		this.selectedDelAddr = selectedDelAddr;
+	}
+
+	/**
+	 * @return the fulfillmentReqId
+	 */
+	public String getFulfillmentReqId() {
+		return fulfillmentReqId;
+	}
+
+	/**
+	 * @param fulfillmentReqId the fulfillmentReqId to set
+	 */
+	public void setFulfillmentReqId(String fulfillmentReqId) {
+		this.fulfillmentReqId = fulfillmentReqId;
+	}
+
+	/**
+	 * @return the maksudCodeList
+	 */
+	public List<PmMaksud> getMaksudCodeList() {
+		return maksudCodeList;
+	}
+
+	/**
+	 * @param maksudCodeList the maksudCodeList to set
+	 */
+	public void setMaksudCodeList(List<PmMaksud> maksudCodeList) {
+		this.maksudCodeList = maksudCodeList;
+	}
+
+	/**
+	 * @return the checkPtjFlg
+	 */
+	public boolean isCheckPtjFlg() {
+		return checkPtjFlg;
+	}
+
+	/**
+	 * @param checkPtjFlg the checkPtjFlg to set
+	 */
+	public void setCheckPtjFlg(boolean checkPtjFlg) {
+		this.checkPtjFlg = checkPtjFlg;
+	}
+
+	/**
+	 * @return the taskId
+	 */
+	public String getTaskId() {
+		return taskId;
+	}
+
+	/**
+	 * @param taskId the taskId to set
+	 */
+	public void setTaskId(String taskId) {
+		this.taskId = taskId;
+	}
+
+	/**
+	 * @return the actions
+	 */
+	public String[] getActions() {
+		return actions;
+	}
+
+	/**
+	 * @param actions the actions to set
+	 */
+	public void setActions(String[] actions) {
+		this.actions = actions;
 	}
 
 }

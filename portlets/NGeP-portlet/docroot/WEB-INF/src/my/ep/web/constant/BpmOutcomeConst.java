@@ -7,6 +7,5 @@ public class BpmOutcomeConst {
 	public static final String BPM_SUBMIT = "SUBMIT";
 	public static final String BPM_SAVE = "SAVE";
 	public static final String BPM_REJECT = "REJECT";
-	
-	
+	public static final String BPM_ACKNOWLEDGE = "ACKNOWLEDGE";
 }
