@@ -38,13 +38,30 @@
 				<portlet id="StopInstruction" />
 			</category>
 		</category>
-		<!-- sourcing -->
-		<category name="category.ep.ss">
-			<portlet id="ss-directPurchase" />
-			<portlet id="ss-procurementlist" />
-			<portlet id="ss-defaultPurchase" />
-			<portlet id="bidding"></portlet>
+			
+		<!-- Procurement Plan - START -->
+		<category name="category.ep.pp">
+			<portlet id="ppBudget"></portlet>
+			<portlet id="ppPlan"></portlet>
 		</category>
+		<!-- Procurement Plan - END -->
+		
+		<!-- sourcing -->
+		<category name="category.ep.sc">
+			<portlet id="scProcurementList" />
+			<portlet id="scDirectPurchase" />
+			<portlet id="scPurchaseInDefault" />
+			<portlet id="scSupplierReview" />
+			<portlet id="scQuotationTender" />
+			<portlet id="scCommittee" />
+			<portlet id="scSpecification" />
+			<portlet id="scNoticeBoard" />
+			<portlet id="scProposal" />
+			<portlet id="scEvaluation" />
+			<portlet id="scBidding" />
+			<portlet id="scTemplateMaint" />
+		</category>
+		
 		<!-- Fulfilment Start Added by Giri -->
 		<category name="category.ep.fl">
 			<portlet id="FLContractOrder" />
@@ -68,27 +85,6 @@
 		<portlet id="smApplyBumi"></portlet>
 		<portlet id="ReviewUNSPSC"></portlet>
 		<portlet id="catalogueTaskList"></portlet>
-	</category>
-
-
-	<!-- Procurement Plan - START -->
-	<category name="PP">
-		<portlet id="ppBudget"></portlet>
-		<portlet id="ppPlan"></portlet>
-	</category>
-	<!-- Procurement Plan - END -->
-
-
-	<category name="Sourcing">
-		<portlet id="Quatation"></portlet>
-		<portlet id="Committee"></portlet>
-		<portlet id="Procure"></portlet>
-		<portlet id="NoticeBoard"></portlet>
-		<portlet id="SupplierReview"></portlet>
-		<portlet id="Specification"></portlet>
-		<portlet id="proposal"></portlet>
-		<portlet id="Evaluation"></portlet>
-		<portlet id="Maintenance"></portlet>
 	</category>
 
 	<category name="category.sample">

@@ -456,7 +456,7 @@
 	<!-- Procurement Plan - START -->
 	<portlet>
 		<portlet-name>ppBudget</portlet-name>
-		<display-name>ProcurementPlanBudget</display-name>
+		<display-name>Budget Allocation</display-name>
 		<portlet-class>org.portletfaces.bridge.GenericFacesPortlet</portlet-class>
 		<init-param>
 			<name>javax.portlet.faces.defaultViewId.view</name>
@@ -487,7 +487,7 @@
 	</portlet>
 	<portlet>
 		<portlet-name>ppPlan</portlet-name>
-		<display-name>ProcurementPlan</display-name>
+		<display-name>Procurement Plan</display-name>
 		<portlet-class>org.portletfaces.bridge.GenericFacesPortlet</portlet-class>
 		<init-param>
 			<name>javax.portlet.faces.defaultViewId.view</name>
@@ -522,8 +522,8 @@
 
 
 	<portlet>
-		<portlet-name>Quatation</portlet-name>
-		<display-name>Quatation</display-name>
+		<portlet-name>scQuotationTender</portlet-name>
+		<display-name>Quotation / Tender</display-name>
 		<portlet-class>org.portletfaces.bridge.GenericFacesPortlet</portlet-class>
 		<init-param>
 			<name>javax.portlet.faces.defaultViewId.view</name>
@@ -535,8 +535,8 @@
 			<portlet-mode>view</portlet-mode>
 		</supports>
 		<portlet-info>
-			<title>QuatationTender</title>
-			<short-title>QuatationTender</short-title>
+			<title>Quotation / Tender</title>
+			<short-title>Quotation / Tender</short-title>
 			<keywords></keywords>
 		</portlet-info>
 		<security-role-ref>
@@ -553,8 +553,8 @@
 		</security-role-ref>
 	</portlet>
 	<portlet>
-		<portlet-name>Committee</portlet-name>
-		<display-name>committee</display-name>
+		<portlet-name>scCommittee</portlet-name>
+		<display-name>Committee</display-name>
 		<portlet-class>org.portletfaces.bridge.GenericFacesPortlet</portlet-class>
 		<init-param>
 			<name>javax.portlet.faces.defaultViewId.view</name>
@@ -584,7 +584,7 @@
 		</security-role-ref>
 	</portlet>
 	<portlet>
-		<portlet-name>Bidding</portlet-name>
+		<portlet-name>scBidding</portlet-name>
 		<display-name>Bidding</display-name>
 		<portlet-class>org.portletfaces.bridge.GenericFacesPortlet</portlet-class>
 		<init-param>
@@ -1021,39 +1021,8 @@
 
 	<!-- Fulfilment End Added by Giri -->
 	<portlet>
-		<portlet-name>Procure</portlet-name>
-		<display-name>Procurement</display-name>
-		<portlet-class>org.portletfaces.bridge.GenericFacesPortlet</portlet-class>
-		<init-param>
-			<name>javax.portlet.faces.defaultViewId.view</name>
-			<value>/xhtml/procure/procurePlan.xhtml</value>
-		</init-param>
-		<expiration-cache>0</expiration-cache>
-		<supports>
-			<mime-type>text/html</mime-type>
-			<portlet-mode>view</portlet-mode>
-		</supports>
-		<portlet-info>
-			<title>Procurement</title>
-			<short-title>NewJSFPortlet</short-title>
-			<keywords></keywords>
-		</portlet-info>
-		<security-role-ref>
-			<role-name>administrator</role-name>
-		</security-role-ref>
-		<security-role-ref>
-			<role-name>guest</role-name>
-		</security-role-ref>
-		<security-role-ref>
-			<role-name>power-user</role-name>
-		</security-role-ref>
-		<security-role-ref>
-			<role-name>user</role-name>
-		</security-role-ref>
-	</portlet>
-	<portlet>
-		<portlet-name>NoticeBoard</portlet-name>
-		<display-name>NoticeBoard</display-name>
+		<portlet-name>scNoticeBoard</portlet-name>
+		<display-name>Notice Board</display-name>
 		<portlet-class>org.portletfaces.bridge.GenericFacesPortlet</portlet-class>
 		<init-param>
 			<name>javax.portlet.faces.defaultViewId.view</name>
@@ -1065,8 +1034,8 @@
 			<portlet-mode>view</portlet-mode>
 		</supports>
 		<portlet-info>
-			<title>NoticeBoard</title>
-			<short-title>NoticeBoard</short-title>
+			<title>Notice Board</title>
+			<short-title>Notice Board</short-title>
 
 			<keywords></keywords>
 		</portlet-info>
@@ -1084,8 +1053,8 @@
 		</security-role-ref>
 	</portlet>
 	<portlet>
-		<portlet-name>SupplierReview</portlet-name>
-		<display-name>SupplierReview</display-name>
+		<portlet-name>scSupplierReview</portlet-name>
+		<display-name>Supplier Review</display-name>
 		<portlet-class>org.portletfaces.bridge.GenericFacesPortlet</portlet-class>
 		<init-param>
 			<name>javax.portlet.faces.defaultViewId.view</name>
@@ -1097,8 +1066,8 @@
 			<portlet-mode>view</portlet-mode>
 		</supports>
 		<portlet-info>
-			<title>SupplierReview</title>
-			<short-title>SupplierReview</short-title>
+			<title>Supplier Review</title>
+			<short-title>Supplier Review</short-title>
 
 			<keywords></keywords>
 		</portlet-info>
@@ -1119,7 +1088,7 @@
 
 
 	<portlet>
-		<portlet-name>Specification</portlet-name>
+		<portlet-name>scSpecification</portlet-name>
 		<display-name>Specification</display-name>
 		<portlet-class>org.portletfaces.bridge.GenericFacesPortlet</portlet-class>
 		<init-param>
@@ -1152,8 +1121,8 @@
 	</portlet>
 
 	<portlet>
-		<portlet-name>Maintenance</portlet-name>
-		<display-name>Maintenance</display-name>
+		<portlet-name>scTemplateMaint</portlet-name>
+		<display-name>Template Maintenance</display-name>
 		<portlet-class>org.portletfaces.bridge.GenericFacesPortlet</portlet-class>
 		<init-param>
 			<name>javax.portlet.faces.defaultViewId.view</name>
@@ -1165,8 +1134,8 @@
 			<portlet-mode>view</portlet-mode>
 		</supports>
 		<portlet-info>
-			<title>Maintenance</title>
-			<short-title>Maintenance</short-title>
+			<title>Template Maintenance</title>
+			<short-title>Template Maintenance</short-title>
 
 			<keywords></keywords>
 		</portlet-info>
@@ -1184,7 +1153,7 @@
 		</security-role-ref>
 	</portlet>
 	<portlet>
-		<portlet-name>ss-procurementlist</portlet-name>
+		<portlet-name>scProcurementList</portlet-name>
 		<display-name>Procurement List</display-name>
 		<portlet-class>org.portletfaces.bridge.GenericFacesPortlet</portlet-class>
 		<init-param>
@@ -1215,7 +1184,7 @@
 		</security-role-ref>
 	</portlet>
 	<portlet>
-		<portlet-name>ss-directPurchase</portlet-name>
+		<portlet-name>scDirectPurchase</portlet-name>
 		<display-name>Direct Purchase</display-name>
 		<portlet-class>org.portletfaces.bridge.GenericFacesPortlet</portlet-class>
 		<init-param>
@@ -1248,8 +1217,8 @@
 
 
 	<portlet>
-		<portlet-name>ss-defaultPurchase</portlet-name>
-		<display-name>Default Purchase</display-name>
+		<portlet-name>scPurchaseInDefault</portlet-name>
+		<display-name>Purchase In Default</display-name>
 		<portlet-class>org.portletfaces.bridge.GenericFacesPortlet</portlet-class>
 		<init-param>
 			<name>javax.portlet.faces.defaultViewId.view</name>
@@ -1403,8 +1372,8 @@
 
 
 	<portlet>
-		<portlet-name>proposal</portlet-name>
-		<display-name>proposal</display-name>
+		<portlet-name>scProposal</portlet-name>
+		<display-name>Proposal</display-name>
 		<portlet-class>org.portletfaces.bridge.GenericFacesPortlet</portlet-class>
 		<init-param>
 			<name>javax.portlet.faces.defaultViewId.view</name>
@@ -1416,8 +1385,8 @@
 			<portlet-mode>view</portlet-mode>
 		</supports>
 		<portlet-info>
-			<title>proposal</title>
-			<short-title>proposal</short-title>
+			<title>Proposal</title>
+			<short-title>Proposal</short-title>
 			<keywords></keywords>
 		</portlet-info>
 		<security-role-ref>
@@ -1436,7 +1405,7 @@
 
 
 	<portlet>
-		<portlet-name>Evaluation</portlet-name>
+		<portlet-name>scEvaluation</portlet-name>
 		<display-name>Evaluation</display-name>
 		<portlet-class>org.portletfaces.bridge.GenericFacesPortlet</portlet-class>
 		<init-param>
@@ -1449,8 +1418,8 @@
 			<portlet-mode>view</portlet-mode>
 		</supports>
 		<portlet-info>
-			<title>evaluation</title>
-			<short-title>evaluation</short-title>
+			<title>Evaluation</title>
+			<short-title>Evaluation</short-title>
 			<keywords></keywords>
 		</portlet-info>
 		<security-role-ref>
