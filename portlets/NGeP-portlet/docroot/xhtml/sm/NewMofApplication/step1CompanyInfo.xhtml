@@ -20,7 +20,8 @@
 					<h:outputText value="#{lbl['lbl.sm.companyStepLbl']}" />
 				</h6></td>
 			<td align="right"><p:commandButton
-					value="#{lbl['lbl.sm.saveAsDraft']}" /></td>
+					value="#{lbl['lbl.sm.saveAsDraft']}"
+					action="#{backingBean.initiateMofRegistrationTask}" /></td>
 		</tr>
 	</table>
 	<ui:include
@@ -38,5 +39,4 @@
 					action="#{backingBean.updateSmAppl}" update=":form:tt" /></td>
 		</tr>
 	</table>
-
 </ui:composition>

@@ -26,33 +26,32 @@
 			<tr>
 				<td><p:outputLabel value="Company Name *" /></td>
 				<td colspan="3"><p:inputText disabled="true" readonly="true"
-						value="#{backingBean.managedBean.smAppl.smSupplier.supplierName}"
+						value="#{backingBean.managedBean.smSupplier.supplierName}"
 						size="100" /></td>
 			</tr>
 			<tr>
 				<td><p:outputLabel value="Registration Type *" /></td>
 				<td><p:inputText disabled="true" readonly="true"
-						value="ROB - PERSATUAN"
-						rendered="#{backingBean.managedBean.smAppl.smSupplier.businessType == 1}" />
+						value="#{backingBean.managedBean.smSupplier.businessType}" /> <!-- rendered="#{backingBean.managedBean.smSupplier.businessType == 1}" />
 					<p:inputText disabled="true" readonly="true" value="ROC - BERHAD"
-						rendered="#{backingBean.managedBean.smAppl.smSupplier.businessType == 2}" />
+						rendered="#{backingBean.managedBean.smSupplier.businessType == 2}" />
 					<p:inputText disabled="true" readonly="true"
 						value="ROS - PERKONGSIAN"
-						rendered="#{backingBean.managedBean.smAppl.smSupplier.businessType == 3}" />
+						rendered="#{backingBean.managedBean.smSupplier.businessType == 3}" /> -->
 				</td>
 				<td><p:outputLabel value="ROC/ROB/ROS No. *" /></td>
 				<td><p:inputText
-						value="#{backingBean.managedBean.smAppl.smSupplier.regNo}"
+						value="#{backingBean.managedBean.smSupplier.regNo}"
 						disabled="true" readonly="true" /></td>
 			</tr>
 			<tr>
 				<td><p:outputLabel value="Income Tax Ref No. *" /></td>
 				<td><p:inputText
-						value="#{backingBean.managedBean.smAppl.smSupplier.incomeTaxNo}"
+						value="#{backingBean.managedBean.smSupplier.incomeTaxNo}"
 						disabled="true" readonly="true" /></td>
 				<td><p:outputLabel value="Established Date *" /></td>
 				<td><p:inputText
-						value="#{backingBean.managedBean.smAppl.smSupplier.establishDate}"
+						value="#{backingBean.managedBean.smSupplier.establishDate}"
 						readonly="true">
 						<f:convertDateTime type="date" pattern="dd-MMM-yyyy" />
 					</p:inputText></td>
@@ -65,56 +64,46 @@
 							itemValue="1" />
 					</p:selectOneMenu></td>
 				<td><p:outputLabel value="Country *" /></td>
-				<td><p:selectOneMenu
-						value="#{backingBean.managedBean.smAppl.smAddress.pmCountry.countryCode}">
+				<td><p:selectOneMenu>
 						<f:selectItem itemLabel="-- Select One -- " itemValue="" />
 						<f:selectItem itemLabel="Malaysia" itemValue="MY" />
 					</p:selectOneMenu></td>
 			</tr>
 			<tr>
 				<td><p:outputLabel value="#{lbl['lbl.sm.companyaddress']}" /></td>
-				<td><p:inputText size="50" colspan="3"
-						value="#{backingBean.managedBean.smAppl.smAddress.address1}" /></td>
+				<td><p:inputText size="50" colspan="3" /></td>
 			</tr>
 			<tr>
 				<td></td>
-				<td><p:inputText size="50" colspan="3"
-						value="#{backingBean.managedBean.smAppl.smAddress.address1}" /></td>
+				<td><p:inputText size="50" colspan="3" /></td>
 			</tr>
 			<tr>
 				<td></td>
-				<td><p:inputText size="50" colspan="3"
-						value="#{backingBean.managedBean.smAppl.smAddress.address1}" /></td>
+				<td><p:inputText size="50" colspan="3" /></td>
 			</tr>
 			<tr>
 				<td><p:outputLabel value="#{lbl['lbl.sm.postcode']}" /></td>
-				<td><p:inputText
-						value="#{backingBean.managedBean.smAppl.smAddress.postcode}" /></td>
+				<td><p:inputText /></td>
 				<td><p:outputLabel value="#{lbl['lbl.sm.state']}" /></td>
-				<td><p:inputText
-						value="#{backingBean.managedBean.smAppl.smAddress.pmState.stateCode}" /></td>
+				<td><p:inputText /></td>
 			</tr>
 
 			<tr>
 				<td><p:outputLabel value="#{lbl['lbl.sm.district']}" /></td>
-				<td><p:inputText
-						value="#{backingBean.managedBean.smAppl.smAddress.pmDistrict.districtCode}" /></td>
+				<td><p:inputText /></td>
 				<td><p:outputLabel value="#{lbl['lbl.sm.towncity']}" /></td>
-				<td><p:inputText
-						value="#{backingBean.managedBean.smAppl.smAddress.pmCity.cityCode}" /></td>
+				<td><p:inputText /></td>
 			</tr>
 			<tr>
 				<td><p:outputLabel value="Phone No." /></td>
-				<td><p:inputText
-						value="#{backingBean.managedBean.smAppl.smAddress.phoneNo}" /></td>
+				<td><p:inputText /></td>
 				<td><p:outputLabel value="Fax No." /></td>
-				<td><p:inputText
-						value="#{backingBean.managedBean.smAppl.smAddress.faxNo}" /></td>
+				<td><p:inputText /></td>
 			</tr>
 			<tr>
 				<td><p:outputLabel value="Website" /></td>
 				<td colspan="3"><p:inputText size="100"
-						value="#{backingBean.managedBean.smAppl.smSupplier.webSite}" /></td>
+						value="#{backingBean.managedBean.smSupplier.webSite}" /></td>
 			</tr>
 			<tr>
 				<td><p:outputLabel value="PO Remarks" /></td>

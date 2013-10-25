@@ -27,6 +27,7 @@ import my.ep.persistence.entity.sm.SmPersonnel;
 import my.ep.persistence.entity.sm.SmPersonnelAddress;
 import my.ep.persistence.entity.sm.SmProjectExperience;
 import my.ep.persistence.entity.sm.SmStaffAcademic;
+import my.ep.persistence.entity.sm.SmSupplier;
 import my.ep.persistence.entity.sm.SmSupplierBank;
 import my.ep.persistence.entity.sm.SmSupplierBranch;
 import my.ep.persistence.entity.sm.SmSupplierCategory;
@@ -43,6 +44,8 @@ public class SmApplicationManagedBean extends BaseManagedBean {
 	private static final long serialVersionUID = 1L;
 
 	private SmAppl smAppl;
+
+	private SmSupplier smSupplier;
 
 	private int tabActiveIndex;
 
@@ -645,6 +648,14 @@ public class SmApplicationManagedBean extends BaseManagedBean {
 
 	public void setPersonnelAcademics(SmStaffAcademic personnelAcademics) {
 		this.personnelAcademics = personnelAcademics;
+	}
+
+	public SmSupplier getSmSupplier() {
+		return smSupplier;
+	}
+
+	public void setSmSupplier(SmSupplier smSupplier) {
+		this.smSupplier = smSupplier;
 	}
 
 }

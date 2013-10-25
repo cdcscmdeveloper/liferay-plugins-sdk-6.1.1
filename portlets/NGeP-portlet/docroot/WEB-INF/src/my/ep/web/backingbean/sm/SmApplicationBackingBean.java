@@ -1,5 +1,6 @@
 package my.ep.web.backingbean.sm;
 
+import java.math.BigDecimal;
 import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.Date;
@@ -11,6 +12,9 @@ import javax.faces.bean.RequestScoped;
 import javax.faces.context.FacesContext;
 import javax.faces.event.AjaxBehaviorEvent;
 
+import my.ep.biz.service.sm.mofRegistration.IMofRegistrationSO;
+import my.ep.dto.sm.mofRegistration.MofRegistrationReqDTO;
+import my.ep.dto.sm.mofRegistration.MofRegistrationResDTO;
 import my.ep.persistence.entity.pm.common.PmBank;
 import my.ep.persistence.entity.pm.common.PmCategoryL1;
 import my.ep.persistence.entity.pm.common.PmCategoryL2;
@@ -40,6 +44,7 @@ import my.ep.persistence.entity.sm.SmSupplierCategory;
 import my.ep.persistence.entity.sm.SmSupplierCert;
 import my.ep.web.backingbean.BaseBackingBean;
 import my.ep.web.managedbean.sm.SmApplicationManagedBean;
+import my.ep.web.util.lookupservice.BusinessDelegate;
 
 import org.apache.log4j.Logger;
 
@@ -51,6 +56,7 @@ public class SmApplicationBackingBean extends
 	public static Logger log = Logger.getLogger(SmApplicationBackingBean.class);
 
 	private static final String PROCEED_MOF_REG = "mofRegBasePage";
+	private static final String DEFAULT_MOF_REG = "defaultNewMofApplPage";
 
 	private int currentTab;
 	private int outputTab;
@@ -62,31 +68,118 @@ public class SmApplicationBackingBean extends
 	public String proceedMofRegistration() {
 		System.out
 				.println("**** ENTER Create New MOF Application BACKIN BEAN Method *************");
-		SmAddress smAddress = setDefaultAddr();
-		SmSupplier smSupplier = new SmSupplier();
-		smSupplier.setSupplierName("My Sample Supplier");
-		smSupplier.setBusinessType("1");
-		smSupplier.setRegNo("12345");
-		smSupplier.setEstablishDate(new Date());
-		smSupplier.setWebSite("www.samplecompany.com");
-		SmAppl mofRegAppl = defaultSmAppl();
-		mofRegAppl.setApplId(12727);
-		mofRegAppl.setApplNo(" KN-01102013-0011");
-		mofRegAppl.setSmAddress(smAddress);
-		mofRegAppl.setSmSupplier(smSupplier);
-		// 1- For Contractor
-		// 2 - For Consultant
-		mofRegAppl.setSupplierType("2");
-		mofRegAppl.setSmStaffTotals(getStaffList(mofRegAppl.getSupplierType()));
-		mofRegAppl.setApplType("NM");
+		IMofRegistrationSO mofRegistrationSO = null;
 
-		return PROCEED_MOF_REG;
+		try {
+			mofRegistrationSO = (IMofRegistrationSO) BusinessDelegate
+					.getInstance().getServiceObject("sm",
+							IMofRegistrationSO.class);
+			MofRegistrationReqDTO reqDto = new MofRegistrationReqDTO();
+			reqDto.setSupplierId((long) 2);
+			MofRegistrationResDTO resDTO = mofRegistrationSO
+					.retrieveSupplierProfile(reqDto);
+			SmSupplier smSupplier = new SmSupplier();
+			if (resDTO.getSmSupplier() == null) {
+				smSupplier = new SmSupplier();
+				smSupplier.setSupplierName("My Sample Supplier");
+				smSupplier.setBusinessType("1");
+				smSupplier.setRegNo("12345");
+				smSupplier.setEstablishDate(new Date());
+				smSupplier.setWebSite("www.samplecompany.com");
+			} else {
+				smSupplier = resDTO.getSmSupplier();
+				System.out.println("Retrieved Value ==="
+						+ smSupplier.getSupplierName() + " ==== tax num == "
+						+ smSupplier.getIncomeTaxNo() + " === EST DATE ==== "
+						+ smSupplier.getEstablishDate());
+			}
+			// SmAddress smAddress = setDefaultAddr();
+			System.out.println("******** SIZE ********** "
+					+ smSupplier.getSmAppls().size());
+			SmAppl mofRegAppl = new SmAppl();
+
+			mofRegAppl.setApplNo("KN-01102013-0011");
+			mofRegAppl.setSmSupplier(smSupplier);
+			// mofRegAppl.setSmAddress(smAddress);
+
+			// 1- For Contractor
+			// 2 - For Consultant
+			mofRegAppl.setSupplierType("2");
+
+			mofRegAppl.setApplType("N");
+
+			// TODO Set default not null values -- Start insert appl ---
+			mofRegAppl.setStatusId(new BigDecimal(20001));
+			// mofRegAppl.setRecordStatus(true);
+			// mofRegAppl.setChangedBy((long) 2);
+			// mofRegAppl.setCreatedBy((long) 2);
+			// mofRegAppl.setCreatedDate(new Timestamp(new Date().getTime()));
+			// mofRegAppl.setChangedDate(new Timestamp(new Date().getTime()));
+			System.out.println(" Supplier Id === >>> "
+					+ smSupplier.getSupplierId());
+			// sm.setSmAddress(new SmAddress());
+			// getManagedBean().getSmSupplier().setSmAppl(mofRegAppl);
+			smSupplier.getSmAppls().add(mofRegAppl);
+
+			reqDto.setSmSupplier(smSupplier);
+			MofRegistrationResDTO smResDTO = new MofRegistrationResDTO();
+			smResDTO = mofRegistrationSO.updateSupplierProfile(reqDto);
+
+			smSupplier = smResDTO.getSmSupplier();
+			getManagedBean().setSmSupplier(smSupplier);
+			// TODO Set default not null values -- Start insert appl ---
+
+			mofRegAppl = defaultSmAppl(mofRegAppl);
+			System.out.println("******** AFTER SET ******"
+					+ mofRegAppl.getApplNo());
+			mofRegAppl.setSmStaffTotals(getStaffList(mofRegAppl
+					.getSupplierType()));
+			getManagedBean().setSmAppl(mofRegAppl);
+			getManagedBean().setTabActiveIndex(0);
+			getManagedBean().setOfficeFacility(new SmFacility());
+			return PROCEED_MOF_REG;
+
+		} catch (Exception e) {
+			System.out.println(" **** Unknown Expection ******* ");
+			e.printStackTrace();
+			return DEFAULT_MOF_REG;
+		} finally {
+			mofRegistrationSO = null;
+		}
+
 	}
 
 	public void updateSmAppl() throws Exception {
 		try {
 			System.out.println("**** ENTER ACTION METHOD BEAN *************"
 					+ currentTab + "  " + outputTab);
+			// TODO to be confirmed whether reqd to save the appln as draft
+			getManagedBean().setTabActiveIndex(outputTab);
+
+		} catch (Exception e) {
+			System.out.println("this is error");
+			e.printStackTrace();
+			FacesContext.getCurrentInstance().addMessage(
+					null,
+					new FacesMessage(FacesMessage.SEVERITY_ERROR,
+							"Sample error message",
+							"PrimeFaces makes no mistakes"));
+			getManagedBean().setTabActiveIndex(currentTab);
+		}
+
+	}
+
+	public void createNewApplication() throws Exception {
+		try {
+			System.out.println("**** New BEAN  *************"
+					+ getManagedBean().getSmSupplier().getSmAppls().size());
+			System.out.println("**** Latest Appl Id   *************"
+					+ getManagedBean().getSmSupplier().getSmAppls().get(0)
+							.getApplId());
+			SmAppl app = getManagedBean().getSmSupplier().getSmAppls().get(0);
+			System.out.println(" ******* New Objectr == >> " + app.getApplId()
+					+ " Name == " + app.getApplNo());
+			getManagedBean().setSmAppl(app);
 			// TODO to be confirmed whether reqd to save the appln as draft
 			getManagedBean().setTabActiveIndex(outputTab);
 
@@ -721,6 +814,47 @@ public class SmApplicationBackingBean extends
 	}
 
 	// -- Process Bank Info End
+	/**
+	 * Test BPM Connect
+	 */
+	public boolean initialBpmTask() {
+		IMofRegistrationSO regSo = null;
+		try {
+			regSo = (IMofRegistrationSO) BusinessDelegate.getInstance()
+					.getServiceObject("sm", IMofRegistrationSO.class);
+			return regSo.initialBpmTask();
+		} catch (Exception e) {
+			e.printStackTrace();
+			return false;
+		} finally {
+			regSo = null;
+		}
+
+	}
+
+	/**
+	 * Make a call to the BPM for MofRegistration
+	 */
+	public void initiateMofRegistrationTask() {
+		IMofRegistrationSO regSo = null;
+		try {
+			SmAppl bpmAppl = getManagedBean().getSmSupplier().getSmAppls()
+					.get(0);
+			bpmAppl.setSupportingDocMode("O");
+			System.out.println(" ***** VALUE OF SELECTED OBJECT ***** "
+					+ getManagedBean().getSmSupplier().getSmAppls().size()
+					+ "  ---  " + bpmAppl.getApplId());
+			regSo = (IMofRegistrationSO) BusinessDelegate.getInstance()
+					.getServiceObject("sm", IMofRegistrationSO.class);
+			regSo.initiateMofRegistrationTask(bpmAppl);
+		} catch (Exception e) {
+			e.printStackTrace();
+
+		} finally {
+			regSo = null;
+		}
+
+	}
 
 	private SmAddress setDefaultAddr() {
 		SmAddress addr = new SmAddress();
@@ -734,26 +868,31 @@ public class SmApplicationBackingBean extends
 
 	private List<SmStaffTotal> getStaffList(String supplierType) {
 		List<SmStaffTotal> staffList = new ArrayList<SmStaffTotal>();
+		SmAppl app = getManagedBean().getSmAppl();
 		if (supplierType.equals("1")) {
 			SmStaffTotal stf = new SmStaffTotal();
 			stf.setStaffCategory("C");
+			stf.setSmAppl(app);
 			staffList.add(stf);
 		} else if (supplierType.equals("2")) {
 			SmStaffTotal stf1 = new SmStaffTotal();
 			stf1.setStaffCategory("P");
+			stf1.setSmAppl(app);
 			staffList.add(stf1);
 			SmStaffTotal stf2 = new SmStaffTotal();
 			stf2.setStaffCategory("S");
+			stf2.setSmAppl(app);
 			staffList.add(stf2);
 			SmStaffTotal stf3 = new SmStaffTotal();
 			stf3.setStaffCategory("L");
+			stf3.setSmAppl(app);
 			staffList.add(stf3);
 		}
 		return staffList;
 	}
 
-	private SmAppl defaultSmAppl() {
-		SmAppl appl = new SmAppl();
+	private SmAppl defaultSmAppl(SmAppl appl) {
+		// = new SmAppl();
 		if (appl.getSmSupplierBranches() == null) {
 			appl.setSmSupplierBranches(new ArrayList<SmSupplierBranch>());
 		}
@@ -790,9 +929,7 @@ public class SmApplicationBackingBean extends
 		if (appl.getSmSupplierBanks() == null) {
 			appl.setSmSupplierBanks(new ArrayList<SmSupplierBank>());
 		}
-		getManagedBean().setSmAppl(appl);
-		getManagedBean().setTabActiveIndex(0);
-		getManagedBean().setOfficeFacility(new SmFacility());
+
 		return appl;
 	}
 

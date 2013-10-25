@@ -128,13 +128,13 @@ public class MofRegistrationBackingBean extends
 
 	private List<SupportingDocumentBean> prepareDataList() {
 		dataList.add(new SupportingDocumentBean(1, "Document2",
-				"BORANG PENGISYTIHARAN KEMENTERIAN KEWANGAN YANG  ",
+				"Desc1",
 				Boolean.FALSE, "Document1", "Document1", "Y", "d",
 				Boolean.FALSE, "w", 101099, "PERALATAN KOMUNIKASI",
 				"ALAT-ALAT", "ALAT", "DISTRIBUTOR", "Normal", Boolean.FALSE,
 				"Normal", "New Case Received ", "20 -02-2013"));
 		dataList.add(new SupportingDocumentBean(2, "Document2",
-				"BORANG PENGISYTIHARAN KEMENTERIAN KEWANGAN YANG  ",
+				"Desc2  ",
 				Boolean.FALSE, "Document1", "Document1", "Y", "d",
 				Boolean.FALSE, "w", 101099, "PERALATAN KOMUNIKASI",
 				"ALAT-ALAT", "ALAT", "DISTRIBUTOR", "Normal", Boolean.FALSE,
