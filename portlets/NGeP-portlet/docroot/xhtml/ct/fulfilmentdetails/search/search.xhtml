@@ -10,44 +10,41 @@
          <p:tabView id="tabview"   tabChangeListener="#{contractDetailsBackingBean.onChange}" onTabChangeUpdate="growl">
             <p:tab id="searchTab" title="General" >
                   <p:panel id="searchId" header="#{lbl['lbl.ct.search.panel.name']}" toggleable="true"  toggleSpeed="500" widgetVar="panelsearch">
-                      <h:panelGrid  style="width:900px;" cellpadding="1">
-                          <h:panelGrid columns="4" style="width:900px;">
+                           <h:panelGrid columns="4" style="width:900px;">
                                 <h:outputLabel value="#{lbl['lbl.ct.search.cno']}" />
-                                <p:inputText value="" style="width:200px;"/>
+                                <p:inputText value="#{contractDetailsBackingBean.managedBean.contractNo}"  style="width:200px;"/>
                                 <h:outputLabel value="#{lbl['lbl.ct.search.cname']}" />
-                                <p:inputText value="" style="width:200px;"/>
-                                <h:outputLabel value="#{lbl['lbl.ct.search.pno']}"/>
-                                <p:inputText value="" style="width:200px;" />
+                                <p:inputText value="#{contractDetailsBackingBean.managedBean.contractName}"  style="width:200px;"/>
                                 <h:outputLabel value="#{lbl['lbl.ct.search.lno']}" />
-                                <p:inputText value="" style="width:200px;"/>
+                                <p:inputText value="#{contractDetailsBackingBean.managedBean.qtLoaNo}" style="width:200px;"/>
                                 <h:outputLabel value="#{lbl['lbl.ct.search.cstart']}"/>
-                                <p:calendar style="width:130px;" value="#{contractDetailsBackingBean.managedBean.createContractDetails.date}" id="popupButtonCal" showOn="button" />
+                                <p:calendar style="width:130px;" value="#{contractDetailsBackingBean.managedBean.effDate}" id="popupButtonCal" showOn="button" />
                                 <h:outputLabel value="#{lbl['lbl.ct.search.cend']}" />
-                                <p:calendar style="width:130px;" value="#{contractDetailsBackingBean.managedBean.createContractDetails.date}" id="popupButtonCal1" showOn="button" />
+                                <p:calendar style="width:130px;" value="#{contractDetailsBackingBean.managedBean.expDate}" id="popupButtonCal1" showOn="button" />
                                 <h:outputLabel value="#{lbl['lbl.ct.search.sid']}" />
-                                <p:inputText value="" style="width:200px;"/>
+                                <p:inputText  style="width:200px;"/>
                                 <h:outputLabel value="#{lbl['lbl.ct.search.sname']}"/>
-                                <p:inputText value="" style="width:200px;"/>
+                                <p:inputText  style="width:200px;"/>
                                 <h:outputLabel value="#{lbl['lbl.ct.search.clno']}" />
-                                <p:inputText value="" style="width:200px;" />
+                                <p:inputText  style="width:200px;" />
                                 <h:outputLabel value="#{lbl['lbl.ct.search.clname']}" />
-                                <p:inputText value="" style="width:200px;"/>
+                                <p:inputText  style="width:200px;"/>
                                 <h:panelGroup>
-			                       <div style="height: 70px; vertical-align: top">
+			                       <div style="height: 30px; vertical-align: top">
 			                       <p:outputLabel for="productCode" value="#{lbl['lbl.ct.search.pcode']}" />
 							       </div>
 						        </h:panelGroup>
 						        <h:panelGroup>
-						           <div style="height: 70px; vertical-align: top">
-							       <p:inputText id="productCode" value="" style="width:200px;" /></div>
+						           <div style="height: 10px; vertical-align: top">
+							       <p:inputText id="productCode"  style="width:200px;" /></div>
 						        </h:panelGroup>
 						        <h:panelGroup>
-			                    <div style="height: 60px; vertical-align: top">
+			                    <div style="height: 30px; vertical-align: top">
 			                     <p:outputLabel for="status" value="#{lbl['lbl.ct.search.status']}" />
 							    </div>
 						        </h:panelGroup>
 						          <h:panelGrid styleClass="txtsize">
-                                <p:selectOneListbox id="status" value=""  style="width:200px;"  >
+                                <p:selectOneListbox id="status"  style="width:200px;"  >
                                    <f:selectItem itemLabel="Pending Fulfillment Creation" itemValue="1"  />  
                                    <f:selectItem itemLabel="Pending Approval" itemValue="2"  />  
                                    <f:selectItem itemLabel="Approved" itemValue="3" />  
@@ -58,25 +55,21 @@
                                 <f:verbatim></f:verbatim>
                                 <h:panelGrid columns="3" columnClasses="column-align-right">
                                  <f:verbatim></f:verbatim>
-                                    <p:commandButton value="#{lbl['lbl.ct.search.btn.search']}"  process="@this" partialSubmit="true" icon="ui-icon-add"  update="dataTable"/>
+                                  <p:commandButton value="#{lbl['lbl.ct.search.btn.search']}" actionListener="#{contractDetailsBackingBean.searchContract()}"
+                                    process="@form" partialSubmit="true"  icon="ui-icon-add"  update="@form"/>
 							        <p:commandButton value="#{lbl['lbl.ct.search.btn.reset']}"  process="@this" partialSubmit="true" icon="ui-icon-add"  update="dataTable"/>
 						        </h:panelGrid>
                            </h:panelGrid>
-                        </h:panelGrid>  
 			       </p:panel>
 				   <p:panel id="searchResulId" header="#{lbl['lbl.ct.search.panel.result']}"  toggleable="true"  toggleSpeed="500" widgetVar="panelsearchResul">
                        <div style="overflow-x:auto">
-			                     <p:dataTable id="dataTable" var="data" value="" rowIndexVar="index"
+			                     <p:dataTable id="dataTable" var="data" value="#{contractDetailsBackingBean.managedBean.contractList}" rowIndexVar="index"
 							               widgetVar="dataTableObj" lazy="false" dynamic="true" paginator="true" paginatorPosition="bottom"
-							               paginatorAlwaysVisible="true" emptyMessage="No Records!" rows="10" rowsPerPageTemplate="5,10,15,20"
-							               currentPageReportTemplate=" total {totalRecords},  page {currentPage} of {totalPages} "
-							               paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink}
-							                {LastPageLink} {RowsPerPageDropdown}">
+							               paginatorAlwaysVisible="true" emptyMessage="No Records!" rows="5">
 							               <p:columnGroup type="header"> 
 								                <p:row> 
 									                     <p:column headerText="#{lbl['lbl.ct.search.table.no']}" />
-									                     <p:column headerText="#{lbl['lbl.ct.search.table.cno']}"   /> 
-									                     <p:column headerText="#{lbl['lbl.ct.search.table.pno']}" /> 	
+									                     <p:column headerText="#{lbl['lbl.ct.search.table.cname']}"   /> 
 									                     <p:column headerText="#{lbl['lbl.ct.search.table.clno']}" /> 
 									                     <p:column headerText="#{lbl['lbl.ct.search.table.sname']}"  /> 
 									                     <p:column headerText="#{lbl['lbl.ct.search.table.cstart']}"  /> 	
@@ -87,14 +80,13 @@
 								               </p:row>							
 								               </p:columnGroup>
 							                            <p:column styleClass="column-align-center" > <h:outputText value="#{index+1}" /></p:column> 							
-							                            <p:column> <h:outputText value="" /></p:column>
-							                            <p:column><h:outputText value="" /></p:column>	
-							                            <p:column><h:outputText value="" /></p:column>	
-							                            <p:column><h:outputText value="" /></p:column>					
-							                            <p:column> <h:outputText value="" /> </p:column>	
-							                            <p:column><h:outputText value="" /></p:column>	
-							                            <p:column><h:outputText value="" /></p:column>	
-							                            <p:column> <h:outputText value="" /> </p:column>	
+							                            <p:column> <h:outputText value="#{data.contractName}" /></p:column>
+							                            <p:column><h:outputText  /></p:column>	
+							                            <p:column><h:outputText /></p:column>					
+							                            <p:column> <h:outputText  /> </p:column>	
+							                            <p:column><h:outputText  /></p:column>	
+							                            <p:column><h:outputText value="#{data.qtLoaNo}" /></p:column>	
+							                            <p:column> <h:outputText value="#{data.recordStatus}" /> </p:column>	
 							                            <p:column styleClass="column-align-center">
 								                          <p:commandButton title="Suspended" action="#{contractDetailsBackingBean.gotoSuspendPage}" 
 								                               partialSubmit="true" process="@this" icon="ui-icon-suspend"/>
@@ -112,7 +104,7 @@
 						       </div>
 						</p:panel>
                   </p:tab>
-                  <p:tab id="associateSearch" title="Associate Ministry Contract">
+                  <p:tab title="Associate Ministry Contract">
                        <ui:include src="/xhtml/ct/fulfilmentdetails/search/advanceSearch.xhtml" />
                 </p:tab>
 	     </p:tabView>
