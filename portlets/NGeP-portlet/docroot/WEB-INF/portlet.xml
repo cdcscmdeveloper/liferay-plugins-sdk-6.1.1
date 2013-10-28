@@ -1230,8 +1230,8 @@
 			<portlet-mode>view</portlet-mode>
 		</supports>
 		<portlet-info>
-			<title>Default Purchase</title>
-			<short-title>Default Purchase Portlet</short-title>
+			<title>Purchase In Default</title>
+			<short-title>Purchase In Default</short-title>
 			<keywords></keywords>
 		</portlet-info>
 		<security-role-ref>
