@@ -1,21 +1,35 @@
 package my.ep.web.backingbean.bpm.tasklist;
 
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.RequestScoped;
 import javax.faces.context.FacesContext;
 
 import my.ep.biz.service.cm.codification.IRequestCodeSO;
+import my.ep.biz.service.fl.request.IFulfilmentRequestSO;
+import my.ep.biz.service.fl.request.IShippingInstructionSO;
+import my.ep.biz.service.pm.authorization.orgunit.IOrgUnitSO;
 import my.ep.bpm.dto.BpmRequestDTO;
 import my.ep.bpm.dto.BpmResponseDTO;
 import my.ep.bpm.service.IBpmSO;
 import my.ep.dto.cm.codification.RequestCodeReqDTO;
 import my.ep.dto.cm.codification.RequestCodeResDTO;
+import my.ep.dto.fl.FulfilmentReqDTO;
+import my.ep.dto.fl.FulfilmentResDTO;
+import my.ep.dto.pm.authorization.orgunit.OrgUnitReqDTO;
+import my.ep.dto.pm.authorization.orgunit.OrgUnitResDTO;
 import my.ep.jaxb.cd.requestdata.CDRequestDataType;
+import my.ep.jaxb.fl.codata.FLContractOrderDataType;
+import my.ep.persistence.entity.fl.request.FlDeliveryAddress;
+import my.ep.persistence.entity.fl.request.FlFulfilmentRequest;
+import my.ep.persistence.entity.pm.authorization.PmOrgProfile;
+import my.ep.persistence.entity.pm.common.PmStatus;
 import my.ep.util.lookupservice.EpBpmBusinessDelegate;
 import my.ep.web.backingbean.BaseBackingBean;
 import my.ep.web.backingbean.cm.codification.UnspscCodeBackingBean;
+import my.ep.web.backingbean.fl.createcontract.ContractRequestBackingBean;
 import my.ep.web.constant.PagingConst;
 import my.ep.web.managedbean.bpm.tasklist.TaskListManagedBean;
 import my.ep.web.util.lookupservice.BusinessDelegate;
@@ -136,6 +150,83 @@ public class TaskListBackingBean extends BaseBackingBean<TaskListManagedBean>{
 			}
 
 
+		}else if(res.getProcessName().equalsIgnoreCase("Intiate Normal Contract Order")|| res.getProcessName().equalsIgnoreCase("Create MTO Contract Order")){
+			IFulfilmentRequestSO requestSO = (IFulfilmentRequestSO) BusinessDelegate.getInstance().getServiceObject("fl",IFulfilmentRequestSO.class);
+			IShippingInstructionSO shippingSO = (IShippingInstructionSO) BusinessDelegate.getInstance().getServiceObject("fl", IShippingInstructionSO.class);
+			FulfilmentReqDTO flReqDTO = new FulfilmentReqDTO();
+			FulfilmentResDTO resDTO = new FulfilmentResDTO();
+
+			FLContractOrderDataType coObj = (FLContractOrderDataType)obj;
+			System.out.println("coObj.getContractRequestId(): "+coObj.getContractRequestId());
+			flReqDTO.setFlRequestId(coObj.getContractRequestId());
+			if(getManagedBean().getTaskName().equalsIgnoreCase("Create Shipping Instructions") || getManagedBean().getTaskName().equalsIgnoreCase("Review Shipping Instrctions")){
+				resDTO = shippingSO.retrieveShippingInstruction(flReqDTO);
+			}else{
+				resDTO = requestSO.retrieveFulfilmentRequest(flReqDTO);
+			}
+
+			ContractRequestBackingBean crBB = new ContractRequestBackingBean();
+			if(getManagedBean().getTaskName().equalsIgnoreCase("Create Shipping Instructions") || getManagedBean().getTaskName().equalsIgnoreCase("Review Shipping Instrctions")){
+			crBB.getManagedBean().setShippingInstr(resDTO.getShippingInstr());
+			}else{
+				crBB.getManagedBean().setFlRequest(resDTO.getFlFulfilmentRequest());
+				
+				IOrgUnitSO orgProfileSO = (IOrgUnitSO)BusinessDelegate.getInstance().getServiceObject("pm",IOrgUnitSO.class);
+				OrgUnitReqDTO orgProfileReqDTO = new OrgUnitReqDTO();
+				orgProfileReqDTO.setOrgProfileId(4L);// set current login user org profile ID
+				OrgUnitResDTO pmResDTO = orgProfileSO.retrieveOrgProfileByProfileId(orgProfileReqDTO);
+				if(pmResDTO.getPmOrgProfile() != null){
+					crBB.getManagedBean().getFlRequest().setCreatedOrgProfile(pmResDTO.getPmOrgProfile());
+				}	
+			}
+			
+			crBB.getManagedBean().setBpmTaskId(taskId);
+			crBB.getManagedBean().setActions(res.getAction());
+				
+		}else if(res.getProcessName().equalsIgnoreCase("Create Contract Order")){
+			IFulfilmentRequestSO requestSO = (IFulfilmentRequestSO) BusinessDelegate.getInstance().getServiceObject("fl",IFulfilmentRequestSO.class);
+			FulfilmentReqDTO flReqDTO = new FulfilmentReqDTO();
+			FulfilmentResDTO resDTO = new FulfilmentResDTO();
+			FLContractOrderDataType coObj = (FLContractOrderDataType)obj;
+			if(coObj.getContractRequestId().intValue() == 0){
+				flReqDTO.setFlRequestId(coObj.getParentContractRequestId());
+			}else{
+				flReqDTO.setFlRequestId(coObj.getContractRequestId());
+			}
+			
+			resDTO = requestSO.retrieveFulfilmentRequest(flReqDTO);
+			ContractRequestBackingBean crBB = new ContractRequestBackingBean();
+			IOrgUnitSO orgProfileSO = (IOrgUnitSO)BusinessDelegate.getInstance().getServiceObject("pm",IOrgUnitSO.class);
+			OrgUnitReqDTO orgProfileReqDTO = new OrgUnitReqDTO();
+			orgProfileReqDTO.setOrgProfileId(4L);// set current login user org profile ID
+			OrgUnitResDTO pmResDTO = orgProfileSO.retrieveOrgProfileByProfileId(orgProfileReqDTO);
+			
+			if(coObj.getContractRequestId().intValue() == 0){
+					FlFulfilmentRequest flRequest = new FlFulfilmentRequest();
+					System.out.println("contractid: "+resDTO.getFlFulfilmentRequest().getCtContract().getParentContract().getContractId());
+					flRequest.setCtContract(resDTO.getFlFulfilmentRequest().getCtContract().getParentContract());
+					
+					crBB.getManagedBean().setFlRequest(flRequest);
+					if(pmResDTO.getPmOrgProfile() != null){
+						crBB.getManagedBean().getFlRequest().setCreatedOrgProfile(pmResDTO.getPmOrgProfile());
+					}
+					crBB.getManagedBean().getFlRequest().setPmDocStatus(new PmStatus());
+					crBB.getManagedBean().getFlRequest().setIssuedOrgProfile(new PmOrgProfile());
+					crBB.getManagedBean().getFlRequest().setChargeOrgProfile(new PmOrgProfile());
+					crBB.getManagedBean().getFlRequest().setReceivedOrgProfile(new PmOrgProfile());
+					crBB.getManagedBean().getFlRequest().setFlDeliveryAddresses(new ArrayList<FlDeliveryAddress>());
+			} else{
+				crBB.getManagedBean().setFlRequest(resDTO.getFlFulfilmentRequest());
+			}
+			
+			crBB.getManagedBean().setBpmTaskId(taskId);
+			crBB.getManagedBean().setActions(res.getAction());
+			
+			if(pmResDTO.getPmOrgProfile() != null){
+				crBB.getManagedBean().getFlRequest().setCreatedOrgProfile(pmResDTO.getPmOrgProfile());
+			}	
+			
+			
 		}
 
 
