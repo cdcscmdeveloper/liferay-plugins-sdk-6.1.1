@@ -135,8 +135,8 @@ ul.btn-section li a:hover{background-position:bottom;}
 nav{background:url(../images/navi/navi-bg.jpg) repeat-x; height:37px; width:100%; position:relative;}
 nav ul{width:1000px; margin:0 auto;}
 nav ul.child-menu{width:100%; display:none; text-decoration:none;}
-ul.child-menu li{float: none; width:100%;}
-ul.child-menu li a{text-decoration:none;}
+ul.child-menu li{float: none; width:90%; margin: auto; padding: 3px 10px !important;}
+ul.child-menu li a{text-decoration:none; padding: 0 !important;}
 #navigation ul li:hover > ul.child-menu {display: block; float: none; margin: 0; background-color:#3B3B3B; position:absolute; z-index:50; width:200px; top: 35px; border-radius: 10px;}
 nav ul li{float:left;}
 
