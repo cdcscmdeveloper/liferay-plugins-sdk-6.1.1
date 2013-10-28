@@ -12,22 +12,23 @@
 
 
 	<ui:define name="contentSection">
-		<p:panel header="Apply Bumiputera Status">
-			<table style="width: 100%">
-				<tr>
-					<td><p:outputPanel>
-							<p>
-								To Application for MOF Registration is submitted successfully. <br />
-								Please wait for further notification.
-							</p>
-						</p:outputPanel></td>
-				</tr>
-			</table>
+		<p:panel header="NEW MOF APPLICATION">
+			<div align="left" style="margin: 10px;">
+				<p:outputPanel>
+					<p>
+						The MOF Registration Application No :
+						<h:outputText value="#{backingBean.managedBean.smAppl.applNo}"
+							style="color: blue; font-weight: bold;" />
+						is submitted successfully. <br /> Please wait for further
+						notification.
+					</p>
+				</p:outputPanel>
+			</div>
+			<div align="center">
+				<p:commandButton value="OK"
+					action="/xhtml/sm/homeScreen/defaultVirtualCertPage.xhtml" />
+			</div>
 		</p:panel>
-		<div align="center">
 
-			<p:commandButton value="OK"
-				action="/xhtml/sm/homeScreen/defaultVirtualCertPage.xhtml" />
-		</div>
 	</ui:define>
 </ui:composition>
