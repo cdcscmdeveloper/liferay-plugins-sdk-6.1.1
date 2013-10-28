@@ -11,8 +11,11 @@
 	<ui:define name="content">
 		<table style="width: 800px;">
 			<tr>
-				<td colspan="4" align="right"><p:commandButton value="SAVE" />
-					<p:commandButton value="SUBMIT" /> <p:commandButton value="PRINT" />
+				<td colspan="4" align="right">
+				<ui:repeat var="bpmAction"
+					value="#{fulfilmentRequestBackingBean.managedBean.actions}">
+					<p:commandButton value="#{bpmAction}" action="#{fulfilmentRequestBackingBean.submitShippingAction(bpmAction)}" process="@this"/>
+				</ui:repeat> 
 				</td>
 			</tr>
 		</table>
@@ -23,7 +26,7 @@
 						<table>
 							<tr>
 								<td><p:outputLabel value="SI NO." /></td>
-								<td><p:inputText style="width: 130px;" value="CR10202-0202"
+								<td><p:inputText style="width: 130px;" value="#{fulfilmentRequestBackingBean.managedBean.shippingInstr.shippingInstrNo}"
 										disabled="true" /> <p:outputLabel value="NO. of SI Issued" />
 									<p:inputText style="width: 30px;" value="" disabled="true" /></td>
 							</tr>
@@ -48,7 +51,7 @@
 							</tr>
 							<tr>
 								<td><p:outputLabel value="Contact NO." /></td>
-								<td><p:inputText style="width: 260px; " value=" " /></td>
+								<td><p:inputText style="width: 260px; " value="" /></td>
 							</tr>
 						</table>
 					</td>
@@ -57,12 +60,12 @@
 							<tr>
 								<td><p:outputLabel value="MTO Contr. NO." /></td>
 								<td><p:inputText disabled="true" style="width: 260px;"
-										value="" /></td>
+										value="#{fulfilmentRequestBackingBean.managedBean.shippingInstr.flFulfilmentRequest.ctContract.contractName}" /></td>
 							</tr>
 							<tr>
 								<td><p:outputLabel value="Main Contr. NO." /></td>
 								<td><p:inputText disabled="true" style="width: 260px;"
-										value="" /></td>
+										value="#{fulfilmentRequestBackingBean.managedBean.shippingInstr.flFulfilmentRequest.ctContract.parentContract.contractName}" /></td>
 							</tr>
 							<tr>
 								<td><p:outputLabel value="MTO Contr. Order NO." /></td>
@@ -117,7 +120,7 @@
 				<tr>
 					<td><p:outputLabel value="Port of Discharge" /></td>
 					<td><p:inputText disabled="true" style="width: 260px;"
-							value="" /></td>
+							value="#{fulfilmentRequestBackingBean.managedBean.shippingInstr.portDischarge}" /></td>
 					<td><p:outputLabel value="Contact NO." /></td>
 					<td><p:inputText style="width: 260px; " value=""
 							disabled="true" /></td>
@@ -137,15 +140,15 @@
 		<p:panel header="SUPPLIER DETAIL" toggleable="true">
 		<table>
 				<tr>
-					<td><p:separator id="customSeparator"
+					<td><p:separator id="customSeparator1"
 							style="width:40px;height:0px" /></td>
 					<td>Transport Operator </td>
-					<td><p:separator id="customSeparator"
+					<td><p:separator id="customSeparator2"
 							style="width:200px;height:0px" /></td>
 					<td align="left"><p:separator id="customSeparator"
 							style="width:40px;height:0px" /></td>
 					<td>Goods / Service Supplier </td>
-					<td><p:separator id="customSeparator"
+					<td><p:separator id="customSeparator3"
 							style="width:100px;height:0px" /></td>		
 				</tr>
 			</table>
@@ -155,7 +158,7 @@
 					<td><p:inputText style="width: 120px;" value="02-7324800"
 							disabled="true" /></td>
 					<td><p:outputLabel value="Supplier ID" /></td>
-					<td><p:inputText style="width: 120px;" value="02-7324800"
+					<td><p:inputText style="width: 120px;" value="#{fulfilmentRequestBackingBean.managedBean.shippingInstr.flFulfilmentRequest.ctContract.smSupplier.supplierId}"
 							disabled="true" /></td>
 				</tr>
 				<tr>
@@ -196,7 +199,7 @@
 			<table>
 				<tr>
 					<td><p:outputLabel value="Special Instruction" /></td>
-					<td><p:inputTextarea rows="7" style="width: 260px;" /></td>
+					<td><p:inputTextarea rows="7" style="width: 260px;" value="#{fulfilmentRequestBackingBean.managedBean.shippingInstr.specialInstruction}"/></td>
 					<td><p:outputLabel value="Marks And Numbers" /></td>
 					<td><p:inputTextarea rows="7" style="width: 260px;" /></td>
 

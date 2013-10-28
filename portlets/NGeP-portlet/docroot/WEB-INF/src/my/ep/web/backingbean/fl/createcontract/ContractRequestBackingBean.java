@@ -37,6 +37,7 @@ import my.ep.dto.pm.common.maksud.MaksudResDTO;
 import my.ep.persistence.entity.ct.CtContract;
 import my.ep.persistence.entity.fl.request.FlDeliveryAddress;
 import my.ep.persistence.entity.fl.request.FlFulfilmentRequest;
+import my.ep.persistence.entity.fl.request.FlShippingInstr;
 import my.ep.persistence.entity.pm.authorization.PmOrgAddress;
 import my.ep.persistence.entity.pm.authorization.PmOrgProfile;
 import my.ep.persistence.entity.pm.common.PmCode;
@@ -251,8 +252,8 @@ public class ContractRequestBackingBean extends BaseBackingBean<ContractRequestM
 		OrgUnitReqDTO orgProfileReqDTO = new OrgUnitReqDTO();
 		orgProfileReqDTO.setOrgProfileId(4L);// set current login user org profile ID
 		OrgUnitResDTO resDTO = orgProfileSO.retrieveOrgProfileByProfileId(orgProfileReqDTO);
-		if(resDTO.getPmOrgProfileById() != null){
-			getManagedBean().getFlRequest().setCreatedOrgProfile(resDTO.getPmOrgProfileById());
+		if(resDTO.getPmOrgProfile() != null){
+			getManagedBean().getFlRequest().setCreatedOrgProfile(resDTO.getPmOrgProfile());
 		}
 		this.getManagedBean().setActions(new String[]{"SAVE", "SUBMIT"}); 
 		
@@ -294,6 +295,30 @@ public class ContractRequestBackingBean extends BaseBackingBean<ContractRequestM
 
 	public void checkPtjFlg(){
 		getManagedBean().setCheckPtjFlg(false);
+	}
+	
+	public void submitShippingAction(String action) throws ParseException {
+		IFulfilmentRequestSO iFulfilmentRequestSO = null;
+		try {
+			FulfilmentReqDTO reqDTO = new FulfilmentReqDTO();
+			FlShippingInstr shippingInstr = getManagedBean().getShippingInstr();
+			iFulfilmentRequestSO = (IFulfilmentRequestSO) BusinessDelegate.getInstance().getServiceObject(IFulfilmentRequestSO.class);
+			
+			System.out.println("shipInstr: "+shippingInstr.getShippingInstrId());
+			reqDTO.setShippingInstr(shippingInstr);
+			reqDTO.setFlFulfilmentRequest(getManagedBean().getShippingInstr().getFlFulfilmentRequest());
+			if(action.equalsIgnoreCase(BpmOutcomeConst.BPM_SAVE)){
+				action = "";
+			}
+			reqDTO.setOutcome(action);
+			reqDTO.setTaskId(getManagedBean().getBpmTaskId());
+			iFulfilmentRequestSO.saveShippingInstr(reqDTO);
+
+		}catch(Exception e){
+			log.error("Exception>>", e);
+		}finally {
+			iFulfilmentRequestSO = null;
+		}
 	}
 
 }

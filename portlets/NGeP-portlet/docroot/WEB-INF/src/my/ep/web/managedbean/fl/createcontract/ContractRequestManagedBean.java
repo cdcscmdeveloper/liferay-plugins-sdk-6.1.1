@@ -13,6 +13,7 @@ import my.ep.persistence.entity.fl.FlAttachment;
 import my.ep.persistence.entity.fl.FlRemark;
 import my.ep.persistence.entity.fl.request.FlDeliveryAddress;
 import my.ep.persistence.entity.fl.request.FlFulfilmentRequest;
+import my.ep.persistence.entity.fl.request.FlShippingInstr;
 import my.ep.persistence.entity.pm.authorization.PmOrgAddress;
 import my.ep.persistence.entity.pm.common.PmMaksud;
 import my.ep.web.managedbean.BaseManagedBean;
@@ -49,6 +50,9 @@ public class ContractRequestManagedBean extends BaseManagedBean {
 	private CtContract ctContract = new CtContract();
 	private List <CtContract> contractList;
 	private CtContract selectedContract;
+	
+	//getSI
+	private FlShippingInstr shippingInstr;
 	
 	private boolean selectedRowFlg;
 		
@@ -285,6 +289,22 @@ public class ContractRequestManagedBean extends BaseManagedBean {
 	 */
 	public void setActions(String[] actions) {
 		this.actions = actions;
+	}
+
+
+	/**
+	 * @return the shippingInstr
+	 */
+	public FlShippingInstr getShippingInstr() {
+		return shippingInstr;
+	}
+
+
+	/**
+	 * @param shippingInstr the shippingInstr to set
+	 */
+	public void setShippingInstr(FlShippingInstr shippingInstr) {
+		this.shippingInstr = shippingInstr;
 	}
 
 }
