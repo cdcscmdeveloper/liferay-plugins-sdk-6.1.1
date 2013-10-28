@@ -3097,4 +3097,22 @@ textarea[disabled],input[type="text"][disabled],input[type="password"][disabled]
 	color: #FFFFFF !important;
 	text-shadow: none !important;
 }
+
+.ui-panelmenu .ui-panelmenu-content {
+	background-color: #F9F9F9;
+}
+
+.ui-panelmenu .ui-menuitem-text {
+	color: #333333;
+}
+
+.ui-menuitem > a:hover > span {
+	color: #FFFFFF !important;
+}
+
+.ui-menuitem .ui-state-hover {
+	background-color: #97D832 !important;
+	font-weight: bold;
+	border-radius: 0;
+}
 /*--------------------------       End Custom CSS       --------------------------- */
