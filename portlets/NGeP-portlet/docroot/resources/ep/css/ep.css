@@ -3091,6 +3091,7 @@ textarea[disabled],input[type="text"][disabled],input[type="password"][disabled]
 .ui-panelmenu-header {
 	background: none !important;
 	background-color: #017D9F !important;
+	height: 25px;
 }
 
 .ui-panelmenu-header > a {
