@@ -85,6 +85,7 @@ public abstract class PagingDataModel<T> extends LazyDataModel<T> implements IPa
 		this.pageNo = pageNo;
 		this.sortField = sortField;
 		this.sortOrder = sortOrder;
+		super.setPageSize(pageSize);
 		
 		ISearchBean<T> searchBean = createSearchBean();
 		ISearchResultBean<T> resultBean = pageChangeListener(searchBean);
@@ -153,9 +154,15 @@ public abstract class PagingDataModel<T> extends LazyDataModel<T> implements IPa
 	 */
 	@Override
 	public final List<T> updatePagingResults(ISearchResultBean<T> resultBean) {
-		List<T> list = resultBean.getResultList();
+		int totalRecord = 0;
+		List<T> list = null;
 		
-		setRowCount(resultBean.getTotalRecord());
+		if (resultBean != null) {
+			totalRecord = resultBean.getTotalRecord();
+			list = resultBean.getResultList();
+		}
+		
+		setRowCount(totalRecord);
 		setWrappedData(list);
 		
 		return list;
@@ -174,6 +181,7 @@ public abstract class PagingDataModel<T> extends LazyDataModel<T> implements IPa
         if(log.isDebugEnabled()) {
             log.debug(message);
         }
+        log.info(message);
     }
 
 	/**
