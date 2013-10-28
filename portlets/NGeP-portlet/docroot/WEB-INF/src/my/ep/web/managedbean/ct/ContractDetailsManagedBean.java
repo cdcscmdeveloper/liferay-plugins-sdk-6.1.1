@@ -4,6 +4,7 @@
 package my.ep.web.managedbean.ct;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import javax.faces.bean.ManagedBean;
@@ -12,6 +13,7 @@ import javax.faces.bean.SessionScoped;
 import org.apache.log4j.Logger;
 import org.primefaces.model.DualListModel;
 
+import my.ep.biz.bean.search.SearchFilterBean;
 import my.ep.persistence.entity.ct.CtApprover;
 import my.ep.persistence.entity.ct.CtContract;
 import my.ep.persistence.entity.ct.bank.CtSupplierBank;
@@ -33,6 +35,7 @@ import my.ep.web.bean.ct.FactoringCompany;
 import my.ep.web.bean.ct.MtoDetails;
 import my.ep.web.bean.ct.SettingDetails;
 import my.ep.persistence.entity.ct.agreement.CtAgreement;
+import my.ep.persistence.entity.ct.assoc.CtAssociation;
 
 /**
  * Managed Bean For Contract Details
@@ -49,6 +52,9 @@ public class ContractDetailsManagedBean extends BaseManagedBean{
 	
 	private String viewAgreement;
 	
+	private String taskId;
+	private String[] outComes;
+	private int selectedIndex;
 	private boolean chkSchedule;
 	private boolean itemPricing = true;
 	private boolean itemCeilingQuantity;
@@ -87,6 +93,20 @@ public class ContractDetailsManagedBean extends BaseManagedBean{
 	private List<CtDeductionClause> ctDeductionClause;
 	private List<CtDeductionClause> addDeductionClause;
 	private CtDeductionClause deductionClause = new CtDeductionClause();
+	
+	/*Field For Search Value*/
+	private Date effDate;
+	private Date expDate;
+	private String qtLoaNo;
+	private String contractNo;
+	private String projectName;
+	private String contractName;
+	private String projectDescription;
+	private CtAssociation association = new CtAssociation();
+	private SearchFilterBean searchFilterBean = new SearchFilterBean();
+	private List<CtContract> contractList = new ArrayList<CtContract>();
+	private List<CtContract> associateSearchList = new ArrayList<CtContract>();
+	private List<CtAssociation> associationList = new ArrayList<CtAssociation>();
 	
 	public  ContractDetailsManagedBean(){
 		source.add(new SettingDetails("Khan", 10));  
@@ -337,5 +357,127 @@ public class ContractDetailsManagedBean extends BaseManagedBean{
 	public void setChkSchedule(boolean chkSchedule) {
 		this.chkSchedule = chkSchedule;
 	}
+
+	public String[] getOutComes() {
+		return outComes;
+	}
+
+	public void setOutComes(String[] outComes) {
+		this.outComes = outComes;
+	}
+
+	public String getTaskId() {
+		return taskId;
+	}
+
+	public void setTaskId(String taskId) {
+		this.taskId = taskId;
+	}
+
+	public SearchFilterBean getSearchFilterBean() {
+		return searchFilterBean;
+	}
+
+	public void setSearchFilterBean(SearchFilterBean searchFilterBean) {
+		this.searchFilterBean = searchFilterBean;
+	}
+
+	public List<CtContract> getContractList() {
+		return contractList;
+	}
+
+	public void setContractList(List<CtContract> contractList) {
+		this.contractList = contractList;
+	}
+
+	public int getSelectedIndex() {
+		return selectedIndex;
+	}
+
+	public void setSelectedIndex(int selectedIndex) {
+		this.selectedIndex = selectedIndex;
+	}
+
+	public String getQtLoaNo() {
+		return qtLoaNo;
+	}
+
+	public void setQtLoaNo(String qtLoaNo) {
+		this.qtLoaNo = qtLoaNo;
+	}
+
+	public String getContractName() {
+		return contractName;
+	}
+
+	public void setContractName(String contractName) {
+		this.contractName = contractName;
+	}
+
+	public String getContractNo() {
+		return contractNo;
+	}
+
+	public void setContractNo(String contractNo) {
+		this.contractNo = contractNo;
+	}
+
+	public Date getEffDate() {
+		return effDate;
+	}
+
+	public void setEffDate(Date effDate) {
+		this.effDate = effDate;
+	}
+
+	public Date getExpDate() {
+		return expDate;
+	}
+
+	public void setExpDate(Date expDate) {
+		this.expDate = expDate;
+	}
+
+	public List<CtContract> getAssociateSearchList() {
+		return associateSearchList;
+	}
+
+	public void setAssociateSearchList(List<CtContract> associateSearchList) {
+		this.associateSearchList = associateSearchList;
+	}
+
+	public String getProjectName() {
+		return projectName;
+	}
+
+	public void setProjectName(String projectName) {
+		this.projectName = projectName;
+	}
+
+	public String getProjectDescription() {
+		return projectDescription;
+	}
+
+	public void setProjectDescription(String projectDescription) {
+		this.projectDescription = projectDescription;
+	}
+
+	public CtAssociation getAssociation() {
+		return association;
+	}
+
+	public void setAssociation(CtAssociation association) {
+		this.association = association;
+	}
+
+	public List<CtAssociation> getAssociationList() {
+		return associationList;
+	}
+
+	public void setAssociationList(List<CtAssociation> associationList) {
+		this.associationList = associationList;
+	}
+	
+	
 	/*Testing Start*/	
 }
