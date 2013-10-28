@@ -83,6 +83,7 @@
 		<portlet id="codification"></portlet>
 		<portlet id="Catalogue"></portlet>
 		<portlet id="smApplyBumi"></portlet>
+		<portlet id="smUpdateMofDetails"></portlet>
 		<portlet id="ReviewUNSPSC"></portlet>
 		<portlet id="catalogueTaskList"></portlet>
 	</category>
@@ -90,6 +91,7 @@
 	<category name="category.sample">
 		<portlet id="TaskList"></portlet>
 		<portlet id="sm"></portlet>
+				
 	</category>
 
 	<category name="Template">

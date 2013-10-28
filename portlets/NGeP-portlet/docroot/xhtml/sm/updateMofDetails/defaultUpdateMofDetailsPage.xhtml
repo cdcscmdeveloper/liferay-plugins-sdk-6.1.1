@@ -1,5 +1,5 @@
 <ui:composition
-	template="/WEB-INF/facelets/templates/sidemenu_template.xhtml"
+	template="/WEB-INF/facelets/templates/basic_template.xhtml"
 	xmlns="http://www.w3.org/1999/xhtml"
 	xmlns:f="http://java.sun.com/jsf/core"
 	xmlns:h="http://java.sun.com/jsf/html"
@@ -10,10 +10,7 @@
 	<ui:define name="resourceSection">
 	</ui:define>
 
-	<ui:define name="sideMenu">
-		<ui:include src="/xhtml/sm/shared/sidemenu/smMainPageSideMenu.xhtml" />
-	</ui:define>
-	<ui:define name="content">
+	<ui:define name="contentSection">
 		<p:panel header="Update MOF Details">
 			<table style="width: 100%">
 				<tr>
@@ -33,7 +30,7 @@
 		</p:panel>
 		<div align="center">
 			<p:commandButton value="Proceed"
-				action="/xhtml/sm/updateMofDetails/step1UpdateMof_CompanyInfo.xhtml" />
+				action="#{backingBean.proceedToApplication('U')}" />
 			<p:commandButton value="Cancel"
 				action="/xhtml/sm/homeScreen/defaultVirtualCertPage.xhtml" />
 		</div>

@@ -80,13 +80,14 @@
 			<table style="width: 100%">
 				<tr>
 					<td><p:outputLabel value="Certificate Type *" /></td>
-					<td><p:selectOneMenu
-							value="#{backingBean.managedBean.selectedCert.certType}">
+					<td>
+						 <p:selectOneMenu>
 							<f:selectItem itemLabel="-- Select One -- " itemValue="N" />
 							<f:selectItem itemLabel="MOF" itemValue="M" />
 							<f:selectItem itemLabel="BumiPutera" itemValue="B" />
 							<f:selectItem itemLabel="Type3" itemValue="T" />
-						</p:selectOneMenu></td>
+						</p:selectOneMenu>
+					</td>
 				</tr>
 				<tr>
 					<td><p:outputLabel value="Certificate Name *" /></td>

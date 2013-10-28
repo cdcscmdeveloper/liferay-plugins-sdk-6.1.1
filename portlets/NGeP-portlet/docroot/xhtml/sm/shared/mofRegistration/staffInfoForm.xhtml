@@ -22,11 +22,10 @@
 			</tr>
 		</table>
 		<br />
-		<p:dataGrid
-			value="#{backingBean.managedBean.smAppl.smStaffTotals}"
+		<p:dataGrid value="#{backingBean.managedBean.smAppl.smStaffTotals}"
 			var="staff" columns="1">
 
-			<table style="width: 780px;">
+			<table style="width: 800px;">
 				<tr>
 					<td width="150px"><p:outputLabel value="Total No. Of Staff : "
 							rendered="#{staff.staffCategory eq 'C'}" /> <p:outputLabel
