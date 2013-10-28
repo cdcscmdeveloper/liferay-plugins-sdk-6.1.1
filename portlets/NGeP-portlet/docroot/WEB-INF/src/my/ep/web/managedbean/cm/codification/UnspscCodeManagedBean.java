@@ -60,10 +60,24 @@ public class UnspscCodeManagedBean extends BaseManagedBean {
 	private String measurementName;
 	private String brandName;
 	
+	private List<CmRequestCode> reviewExtCodeList;
 	
 	
 	
 	
+	
+	
+	
+	public List<CmRequestCode> getReviewExtCodeList() {
+		if(reviewExtCodeList==null)
+			reviewExtCodeList = new ArrayList<CmRequestCode>();
+		return reviewExtCodeList;
+	}
+
+	public void setReviewExtCodeList(List<CmRequestCode> reviewExtCodeList) {
+		this.reviewExtCodeList = reviewExtCodeList;
+	}
+
 	public String getTypeName() {
 		return typeName;
 	}
