@@ -114,6 +114,25 @@ public abstract class PagingDataModel<T> extends LazyDataModel<T> implements IPa
 		}
 	}
 	
+	/**
+	 * Temporary fix 
+	 * Primefaces Issue 6081: java.lang.ArithmeticException: / by zero.
+	 * 
+	 * @see org.primefaces.model.LazyDataModel#setRowIndex(int)
+	 */
+	@Override
+	public void setRowIndex(int rowIndex) {
+		int newRowIndex = -1;
+		int pageSize = super.getPageSize();
+		
+        if(rowIndex == -1 || pageSize == 0)
+        	newRowIndex = -1;
+        else
+        	newRowIndex = (rowIndex % pageSize);
+        
+        super.setRowIndex(newRowIndex);
+    }
+	
 	/*
 	 * (non-Javadoc)
 	 * 
