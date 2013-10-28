@@ -8,6 +8,9 @@
 	<c:if test='#{tasklistBackingBean.managedBean.processName eq "UNSPSC Request"}'>
 		<ui:include src="reviewUnspscCode.xhtml"></ui:include>
 	</c:if>
+	<c:if test='#{tasklistBackingBean.managedBean.processName eq "Extension Code Request"}'>
+		<ui:include src="extensionCodeReview.xhtml"></ui:include>
+	</c:if>
 	
 
 

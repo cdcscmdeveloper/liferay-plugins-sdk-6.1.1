@@ -21,8 +21,7 @@
 		</div>
 
 
-		<p:commandButton value="TaskList"
-			action="#{tasklistBackingBean.taskListAction}" update="taskListID"></p:commandButton>
+		<p:outputLabel styleClass="screen-title" value="TaskList"></p:outputLabel>
 
 		<p:dataTable value="#{tasklistBackingBean.managedBean.taskList}"
 			var="tasks" paginator="true" rows="10"
