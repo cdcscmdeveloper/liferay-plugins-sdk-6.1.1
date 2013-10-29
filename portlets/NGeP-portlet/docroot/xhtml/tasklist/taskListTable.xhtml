@@ -30,7 +30,7 @@
 
 			<p:column>
 				<f:facet name="header">
-					<p:outputLabel value="#{lbl['lbl.bpm.task.number']}" />
+					#{lbl['lbl.bpm.task.number']}
 				</f:facet>
 				<p:commandLink value="#{tasks.taskNumber}"
 					action="#{tasklistBackingBean.navigateToURL}">
@@ -41,25 +41,25 @@
 			</p:column>
 			<p:column>
 				<f:facet name="header">
-					<p:outputLabel value="#{lbl['lbl.bpm.task.title']}" />
+					#{lbl['lbl.bpm.task.title']}
 				</f:facet>
 				<p:outputLabel value="#{tasks.title}" />
 			</p:column>
 			<p:column>
 				<f:facet name="header">
-					<p:outputLabel value="#{lbl['lbl.bpm.created.date']}" />
+					#{lbl['lbl.bpm.created.date']}
 				</f:facet>
 				<p:outputLabel value="#{tasks.createDate.time}" />
 			</p:column>
 			<p:column>
 				<f:facet name="header">
-					<p:outputLabel value="#{lbl['lbl.bpm.state']}" />
+					#{lbl['lbl.bpm.state']}
 				</f:facet>
 				<p:outputLabel value="#{tasks.state}" />
 			</p:column>
 			<p:column>
 				<f:facet name="header">
-					<p:outputLabel value="#{lbl['lbl.bpm.process']}" />
+					#{lbl['lbl.bpm.process']}
 				</f:facet>
 				<p:outputLabel value="#{tasks.process}" />
 			</p:column>
