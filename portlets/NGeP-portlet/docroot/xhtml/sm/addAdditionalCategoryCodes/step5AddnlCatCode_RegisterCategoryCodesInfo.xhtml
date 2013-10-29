@@ -1,53 +1,42 @@
-<ui:composition
-	template="/WEB-INF/facelets/templates/sidemenu_template.xhtml"
-	xmlns="http://www.w3.org/1999/xhtml"
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
 	xmlns:f="http://java.sun.com/jsf/core"
 	xmlns:h="http://java.sun.com/jsf/html"
 	xmlns:ui="http://java.sun.com/jsf/facelets"
 	xmlns:p="http://primefaces.org/ui"
 	xmlns:c="http://java.sun.com/jsp/jstl/core">
 
-	<ui:define name="resourceSection">
-
-	</ui:define>
-
-	<ui:define name="sideMenu">
-		<ui:include
-			src="/xhtml/sm/shared/sidemenu/addAdditionalCategoryCodesSideMenu.xhtml" />
-	</ui:define>
-	<ui:define name="content">
-		<table style="width: 100%">
-			<tr>
-				<td><h4
-						style="color: blue; text-decoration: underline; text-align: center;">
-						<p:outputLabel value="#{lbl['lbl.sm.applnTypeLbl']}" />
-						<p:outputLabel
-							value="Add Additional Category Code(s) - Application NO. ADCC-123224" />
-					</h4></td>
-			</tr>
-			<tr>
-				<td>
-					<h6 style="color: blue;">
-						<p:outputLabel value="Step 5 :" />
-						<p:outputLabel value=" Register Category Code(s)Page" />
-					</h6>
-				</td>
-				<td align="right"><p:commandButton
-						value="#{lbl['lbl.sm.saveAsDraft']}" /></td>
-			</tr>
-		</table>
-		<ui:include
-			src="/xhtml/sm/shared/mofRegistration/regCatCodesForm.xhtml" />
-		<table style="width: 100%">
-			<tr>
-				<td align="left"><p:commandButton value="#{lbl['lbl.sm.prev']}"
-						action="/xhtml/sm/addAdditionalCategoryCodes/step4AddnlCatCode_PersonnelInfo.xhtml" /></td>
-				<td align="right"><p:commandButton
-						value="#{lbl['lbl.sm.next']}"
-						action="/xhtml/sm/addAdditionalCategoryCodes/step5.1AddnlCatCode_FactoryInfo.xhtml" /></td>
-			</tr>
-		</table>
+	<table style="width: 100%">
+		<tr>
+			<td><h4
+					style="color: blue; text-decoration: underline; text-align: center;">
+					<h:outputText value="#{lbl['lbl.sm.applnTypeLbl']}" />
+					<h:outputText value="Add Additional Category Code(s) " />
+					<h:outputText value=" - #{backingBean.managedBean.smAppl.applNo}" />
+				</h4></td>
+		</tr>
+		<tr>
+			<td>
+				<h6 style="color: blue;">
+					<h:outputText value="Step 5 :" />
+					<h:outputText value=" Register Category Code(s)Page" />
+				</h6>
+			</td>
+			<td align="right"><p:commandButton
+					value="#{lbl['lbl.sm.saveAsDraft']}" /></td>
+		</tr>
+	</table>
+	<ui:include
+		src="/xhtml/sm/shared/mofRegistration/regCatCodesForm.xhtml" />
+	<table style="width: 100%">
+		<tr>
+			<td align="left"><p:commandButton value="#{lbl['lbl.sm.prev']}"
+					actionListener="#{backingBean.setTabValue('4','3')}"
+					action="#{backingBean.updateSmAppl}" update=":form:tt" /></td>
+			<td align="right"><p:commandButton value="#{lbl['lbl.sm.next']}"
+					actionListener="#{backingBean.setTabValue('4','5')}"
+					action="#{backingBean.updateSmAppl}" update=":form:tt" /></td>
+		</tr>
+	</table>
 
 
-	</ui:define>
 </ui:composition>

@@ -8,7 +8,6 @@ import java.util.List;
 
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.RequestScoped;
-import javax.faces.bean.SessionScoped;
 
 import my.ep.biz.service.sm.mofRegistration.IMofRegistrationSO;
 import my.ep.dto.sm.mofRegistration.MofRegistrationReqDTO;
