@@ -7,56 +7,49 @@
 
 <p:panel header="Approval Details Section" toggleable="true">
 
-<p:panelGrid style="width:40%;"   styleClass="noBorders tr,noBorders td">
+<p:panelGrid columnClasses="30,20,30,20" styleClass="noBorders tr,noBorders td">
  
 <p:row >  
    <p:column >
     <p:outputLabel value="Approver Name"></p:outputLabel>
     </p:column>
-          <p:column  width="20%">
+          <p:column  >
           <h:panelGroup  id="sample2"  >
-          <p:selectOneMenu value="searchQtnTenderBB.managedBean.qtnTenders.planNumber"  rendered="#{searchQtnTenderBB.managedBean.selectedBoolean1 eq '1'}" > 
+          <p:selectOneMenu value="#{approvalBackingBean.managedBean.scQtApproval.approverUserId}"  rendered="#{approvalBackingBean.managedBean.selectedBoolean1 eq '1'}" > 
 	<f:selectItem itemLabel="approve" itemValue="1" />   
 	<f:selectItem itemLabel="reject" itemValue="2" />
-	<f:selectItem itemLabel="revise" itemValue="2" />
+	<f:selectItem itemLabel="revise" itemValue="3" />
 	</p:selectOneMenu> 
 	 
-          <p:inputText  rendered="#{searchQtnTenderBB.managedBean.selectedBoolean1 eq '2'}"></p:inputText>
+          <p:inputText value="#{approvalBackingBean.managedBean.scQtApproval.approverUserId}"  rendered="#{approvalBackingBean.managedBean.selectedBoolean1 eq '2'}"></p:inputText>
           </h:panelGroup>
           </p:column>
-          </p:row>	
-          </p:panelGrid>
-       <p:panelGrid columns="4" style="width:40%;"   styleClass="noBorders tr,noBorders td">   
-             
-           
-   <p:column >
-    <p:outputLabel value="Status"></p:outputLabel>
-    </p:column>
-          <p:column  width="20%">
-          <p:outputLabel value="ReadOnly"></p:outputLabel>
-          </p:column>
-         
           
-          
-               
-             
-   <p:column >
+             <p:column  style="width:35%;">
     <p:outputLabel value="Approver Date"></p:outputLabel>
     </p:column  >
-          <p:column width="20%">
-          <p:outputLabel value="10/09/2013 04:45"></p:outputLabel>
+          <p:column >
+      <p:inputText value="#{approvalBackingBean.managedBean.approvalDate}"></p:inputText>
           </p:column>
          	
+          </p:row>	
+        
+           
+ 
           
-                    
+               
+
+         	
+          
+       <p:row>             
            
    <p:column >
     <p:outputLabel value="Action"></p:outputLabel>
     </p:column>
-          <p:column  width="20%">
-           <p:selectOneMenu value="#{searchQtnTenderBB.managedBean.selectOption}" > 
-	<f:selectItem itemLabel="Approver" itemValue="1" />   
-	<f:selectItem itemLabel="Reject" itemValue="2" />
+          <p:column  >
+           <p:selectOneMenu value="#{approvalBackingBean.managedBean.scQtApproval.approvalAction}" > 
+	<f:selectItem itemLabel="Approver" itemValue="ar" />   
+	<f:selectItem itemLabel="Reject" itemValue="rj" />
 	
 	</p:selectOneMenu> 
           </p:column>
@@ -65,9 +58,9 @@
     <p:outputLabel value="Remarks"></p:outputLabel>
     </p:column>
           <p:column  width="20%">
-      <p:inputText></p:inputText>
+      <p:inputText value="#{approvalBackingBean.managedBean.scQtApproval.approvalRemark}"></p:inputText>
           </p:column>
-      			
+      		  </p:row>   	
 
 </p:panelGrid>
 
