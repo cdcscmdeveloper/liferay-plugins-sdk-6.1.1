@@ -18,6 +18,7 @@ import javax.faces.context.FacesContext;
 import javax.faces.model.SelectItem;
 
 import my.ep.biz.service.ct.maintain.IContractAmendmentSO;
+import my.ep.biz.service.fl.order.IFulfilmentOrderSO;
 import my.ep.biz.service.fl.request.IFulfilmentRequestSO;
 import my.ep.biz.service.pm.authorization.orgunit.IOrgUnitSO;
 import my.ep.bpm.dto.BpmRequestDTO;
@@ -64,7 +65,6 @@ public class PurchaseRequestBackingBean extends BaseBackingBean<PurchaseRequestM
 	private static Logger log = Logger.getLogger(PurchaseRequestBackingBean.class);
 	
 	public PurchaseRequestBackingBean(){
-		System.out.println("11111111111111");
 		if(MDC.get(LogKey.USER_ID)==null) {
 			MDC.put(LogKey.USER_ID, 1L);
 		}
@@ -109,7 +109,7 @@ public class PurchaseRequestBackingBean extends BaseBackingBean<PurchaseRequestM
 			//log.info("flRemark.getRemark() in backing beans::"+ flRemark.getRemark());
 			flRemark.setDocId(Long.valueOf(1));
 			flRemark.setDocType("tex");
-			fulfilmentRequestSO = (IFulfilmentRequestSO) BusinessDelegate.getInstance().getServiceObject(IFulfilmentRequestSO.class);
+			fulfilmentRequestSO = (IFulfilmentRequestSO) BusinessDelegate.getInstance().getServiceObject("fl",IFulfilmentRequestSO.class);
 			reqDTO.setFlRemark(flRemark);
 			reqDTO.setFlAttachment(flAttachment);
 			reqDTO.setFlFulfilmentRequest(flFulfilmentRequest);
@@ -125,49 +125,37 @@ public class PurchaseRequestBackingBean extends BaseBackingBean<PurchaseRequestM
 			fulfilmentRequestSO = null;
 		}
 	}
-	
-	public void approveFulfillmentRequest(String action){
-		System.out.println("We are in approveFulfillmentRequest");
+	public void createFulfillment() throws ParseException {
 		IFulfilmentRequestSO fulfilmentRequestSO = null;
 		try {
 			FulfilmentReqDTO reqDTO = new FulfilmentReqDTO();
-			FlFulfilmentRequest flFulfilmentRequest = this.getManagedBean().getFulfilmentRequest();
-			flFulfilmentRequest.getIssuedOrgProfile().setOrgProfileId(1L);
-			flFulfilmentRequest.getChargeOrgProfile().setOrgProfileId(1L);
-			flFulfilmentRequest.getReceivedOrgProfile().setOrgProfileId(1L);
-			flFulfilmentRequest.getCreatedOrgProfile().setOrgProfileId(1L);
-			flFulfilmentRequest.getSmSupplier().setSupplierId(27L);
-			fulfilmentRequestSO = (IFulfilmentRequestSO) BusinessDelegate.getInstance().getServiceObject(IFulfilmentRequestSO.class);
-			reqDTO.setTaskId(this.getManagedBean().getTaskId());
-			reqDTO.setOutcome(action);
-			//reqDTO.setProcessId("Order_Fullfillment.ReviewPurchaseRequest");
-			reqDTO.setFlFulfilmentRequest(flFulfilmentRequest);
-			fulfilmentRequestSO.saveFulfillmentRequest(reqDTO);
-		} catch (Exception e) {
-			log.error("Exception>>", e);
-		} finally {
-			fulfilmentRequestSO = null;
-		}
-	}
-	
-	public void reviseFulfillmentRequest(String action){
-		System.out.println("in reviseFulfillmentRequest");
-		IFulfilmentRequestSO fulfilmentRequestSO = null;
-		try {
-			FulfilmentReqDTO reqDTO = new FulfilmentReqDTO();
-			FlFulfilmentRequest flFulfilmentRequest = this.getManagedBean().getFulfilmentRequest();
-			flFulfilmentRequest.getIssuedOrgProfile().setOrgProfileId(1L);
-			flFulfilmentRequest.getChargeOrgProfile().setOrgProfileId(1L);
-			flFulfilmentRequest.getReceivedOrgProfile().setOrgProfileId(1L);
-			flFulfilmentRequest.getCreatedOrgProfile().setOrgProfileId(1L);
-			flFulfilmentRequest.getSmSupplier().setSupplierId(27L);
+			FlRemark flRemark = getManagedBean().getFlRemark();
+			FlAttachment flAttachment = this.getManagedBean().getFlAttachment();
+			FlFulfilmentRequest flFulfilmentRequest = getManagedBean().getFulfilmentRequest();
+			SmSupplier smSupplier = new SmSupplier();
+			smSupplier.setSupplierId(27);
+			flFulfilmentRequest.setSmSupplier(smSupplier);
+			String fileName = this.getManagedBean().getFlAttachment().getFileName();
+			String fileDesc = this.getManagedBean().getFlAttachment().getFileDescription();
+			String filePath = this.getManagedBean().getFlAttachment().getFilePath();
+			flAttachment.setDocType("txt");
+			flAttachment.setDocId(Long.valueOf(44));
+			flAttachment.setFileName(fileName);
+			flAttachment.setFileDescription(fileDesc);
+			flAttachment.setFilePath(filePath);
+			//log.info("flRemark.getRemark() in backing beans::"+ flRemark.getRemark());
+			flRemark.setDocId(Long.valueOf(1));
+			flRemark.setDocType("tex");
 			fulfilmentRequestSO = (IFulfilmentRequestSO) BusinessDelegate.getInstance().getServiceObject("fl",IFulfilmentRequestSO.class);
-			System.out.println("Action In Revise:: "+action);
-			reqDTO.setTaskId(this.getManagedBean().getTaskId());
-			reqDTO.setOutcome(action);
-			//reqDTO.setProcessId("Order_Fullfillment.ReviewPurchaseRequest");
+			reqDTO.setFlRemark(flRemark);
+			reqDTO.setFlAttachment(flAttachment);
 			reqDTO.setFlFulfilmentRequest(flFulfilmentRequest);
-			fulfilmentRequestSO.saveFulfillmentRequest(reqDTO);
+			reqDTO.setContractRequest(false);
+			reqDTO.setTaskId(this.getManagedBean().getTaskId());
+			reqDTO.setOutcome("SUBMIT");
+			//reqDTO.setProcessId("Order_Fullfillment.CreatePurchaseOrder");
+			FulfilmentResDTO resDTO = fulfilmentRequestSO.saveFulfillmentRequest(reqDTO);
+			//System.out.println("resDTO.isSuccessful() in backing bean:: "+ resDTO.isSuccessful());
 		} catch (Exception e) {
 			log.error("Exception>>", e);
 		} finally {
@@ -175,32 +163,11 @@ public class PurchaseRequestBackingBean extends BaseBackingBean<PurchaseRequestM
 		}
 	}
 	
-	public void rejectFulfillmentRequest(String action){
-		System.out.println("in rejectFulfillmentRequest");
-		IFulfilmentRequestSO fulfilmentRequestSO = null;
-		try {
-			FulfilmentReqDTO reqDTO = new FulfilmentReqDTO();
-			FlFulfilmentRequest flFulfilmentRequest = this.getManagedBean().getFulfilmentRequest();
-			flFulfilmentRequest.getIssuedOrgProfile().setOrgProfileId(1L);
-			flFulfilmentRequest.getChargeOrgProfile().setOrgProfileId(1L);
-			flFulfilmentRequest.getReceivedOrgProfile().setOrgProfileId(1L);
-			flFulfilmentRequest.getCreatedOrgProfile().setOrgProfileId(1L);
-			flFulfilmentRequest.getSmSupplier().setSupplierId(27L);
-			fulfilmentRequestSO = (IFulfilmentRequestSO) BusinessDelegate.getInstance().getServiceObject("fl",IFulfilmentRequestSO.class);
-			reqDTO.setTaskId(this.getManagedBean().getTaskId());
-			reqDTO.setOutcome(action);
-			//reqDTO.setProcessId("Order_Fullfillment.ReviewPurchaseRequest");
-			reqDTO.setFlFulfilmentRequest(flFulfilmentRequest);
-			fulfilmentRequestSO.saveFulfillmentRequest(reqDTO);
-		} catch (Exception e) {
-			log.error("Exception>>", e);
-		} finally {
-			fulfilmentRequestSO = null;
-		}
-	}
 	public void acknowledgeFulfillmentRequest(String action){
 		System.out.println("in acknowledgeFulfillmentRequest");
 		IFulfilmentRequestSO fulfilmentRequestSO = null;
+		IFulfilmentOrderSO fulfilmentOrderSO=null;
+		String taskName=this.getManagedBean().getTaskName();
 		try {
 			FulfilmentReqDTO reqDTO = new FulfilmentReqDTO();
 			FlFulfilmentRequest flFulfilmentRequest = this.getManagedBean().getFulfilmentRequest();
@@ -210,19 +177,24 @@ public class PurchaseRequestBackingBean extends BaseBackingBean<PurchaseRequestM
 			flFulfilmentRequest.getCreatedOrgProfile().setOrgProfileId(1L);
 			flFulfilmentRequest.getSmSupplier().setSupplierId(27L);
 			fulfilmentRequestSO = (IFulfilmentRequestSO) BusinessDelegate.getInstance().getServiceObject("fl",IFulfilmentRequestSO.class);
+			fulfilmentOrderSO = (IFulfilmentOrderSO) BusinessDelegate.getInstance().getServiceObject("fl",IFulfilmentOrderSO.class);
 			reqDTO.setTaskId(this.getManagedBean().getTaskId());
 			reqDTO.setOutcome(action);
 			//reqDTO.setProcessId("Order_Fullfillment.ReviewRejectedPOAcknowledgement");
 			reqDTO.setFlFulfilmentRequest(flFulfilmentRequest);
-			//fulfilmentRequestSO.rejectFulfillmentRequest(reqDTO);
+			if(taskName.equals("Acknowledge the Purchase Request")){
+				System.out.println("Ackowledgw::::::");
+				fulfilmentOrderSO.acknowledgeFulfillmentOrder(reqDTO);
+			}else{
+				fulfilmentRequestSO.saveFulfillmentRequest(reqDTO);
+			}
+			//fulfilmentRequestSO.saveFulfillmentRequest(reqDTO);
 		} catch (Exception e) {
 			log.error("Exception>>", e);
 		} finally {
 			fulfilmentRequestSO = null;
 		}
 	}
-
-	
 	
 	public FulfilmentResDTO retrieveFulfilmentRequest(String action) throws ParseException {
 		IFulfilmentRequestSO fulfilmentRequestSO = null;
@@ -384,12 +356,30 @@ public class PurchaseRequestBackingBean extends BaseBackingBean<PurchaseRequestM
 				e.printStackTrace();
 			}
 		}else if (BpmOutcomeConst.BPM_REVISE.equals(action)){
-			reviseFulfillmentRequest(action);
+			try {
+				System.out.println("in revise action");
+				createFulfillmentRequest(action);
+			} catch (ParseException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 		}else if (BpmOutcomeConst.BPM_APPROVE.equals(action)){
 			System.out.println("we are in app method::: ");
-			approveFulfillmentRequest(action);
+			try {
+				System.out.println("in approve action");
+				createFulfillmentRequest(action);
+			} catch (ParseException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 		}else if (BpmOutcomeConst.BPM_REJECT.equals(action)){
-			rejectFulfillmentRequest(action);
+			try {
+				System.out.println("in reject action");
+				createFulfillmentRequest(action);
+			} catch (ParseException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 		}else if (BpmOutcomeConst.BPM_ACKNOWLEDGE.equals(action)){
 				acknowledgeFulfillmentRequest(action);
 		}else if (BpmOutcomeConst.BPM_SAVE.equals(action)){

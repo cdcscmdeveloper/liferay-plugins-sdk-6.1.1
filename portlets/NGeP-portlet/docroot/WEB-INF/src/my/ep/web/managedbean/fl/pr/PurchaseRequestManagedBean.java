@@ -48,8 +48,8 @@ public class PurchaseRequestManagedBean extends BaseManagedBean {
 	private String fulfillmentReqId;
 	private String taskId;
 	private String[] actions;
+	private String taskName;
 	
-
 	/**
 	 * @return the flRemark
 	 */
@@ -224,6 +224,20 @@ public class PurchaseRequestManagedBean extends BaseManagedBean {
 	 */
 	public void setActions(String[] actions) {
 		this.actions = actions;
+	}
+
+	/**
+	 * @return the taskName
+	 */
+	public String getTaskName() {
+		return taskName;
+	}
+
+	/**
+	 * @param taskName the taskName to set
+	 */
+	public void setTaskName(String taskName) {
+		this.taskName = taskName;
 	}
 
 }

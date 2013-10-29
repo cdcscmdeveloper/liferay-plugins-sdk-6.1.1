@@ -34,6 +34,20 @@
 			</c:otherwise>
 		</c:choose>
 	</c:if>
+	<c:if test='#{tasklistBackingBean.managedBean.processName eq "Delvery Order Fullfillment"}'>
+		<ui:include src="/xhtml/fl/receivednote/frnBasePage.xhtml"></ui:include>
+	</c:if>
+	<c:if test='#{tasklistBackingBean.managedBean.processName eq "Create Purchase Order"}'>
+		<c:choose>
+			<c:when
+				test='#{tasklistBackingBean.managedBean.taskName eq "Acknowledge the Purchase Request"}'>
+				<ui:include src="/xhtml/fl/purchaseorder/poBasePage.xhtml"></ui:include>
+			</c:when>
+			<c:otherwise>
+				<ui:include src="/xhtml/fl/purchaserequest/prBasePage.xhtml"></ui:include>
+			</c:otherwise>
+		</c:choose>
+	</c:if>
 
 
 
