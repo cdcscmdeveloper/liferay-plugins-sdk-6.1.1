@@ -444,6 +444,19 @@
 			smupdatemofdetails-portlet
 		</css-class-wrapper>
 	</portlet>
+	
+	<portlet>
+		<portlet-name>smAddtionalCatCodes</portlet-name>
+		<icon>/icon.png</icon>
+		<instanceable>false</instanceable>
+		<header-portlet-css>/css/main.css</header-portlet-css>
+		<footer-portlet-javascript>
+			/js/main.js
+		</footer-portlet-javascript>
+		<css-class-wrapper>
+			smaddtionalcatcodes-portlet
+		</css-class-wrapper>
+	</portlet>
 	<!-- Supplier Management End venkat -->
 
 	<portlet>
@@ -467,6 +480,7 @@
 		<css-class-wrapper>cataloguetasklist-portlet</css-class-wrapper>
 	</portlet>
 
+	
 	<role-mapper>
 		<role-name>administrator</role-name>
 		<role-link>Administrator</role-link>

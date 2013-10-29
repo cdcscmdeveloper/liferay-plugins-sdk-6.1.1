@@ -86,12 +86,14 @@
 		<portlet id="smUpdateMofDetails"></portlet>
 		<portlet id="ReviewUNSPSC"></portlet>
 		<portlet id="catalogueTaskList"></portlet>
+		<portlet id="smAddtionalCatCodes"></portlet>
 	</category>
 
 	<category name="category.sample">
 		<portlet id="TaskList"></portlet>
 		<portlet id="sm"></portlet>
-				
+
+		
 	</category>
 
 	<category name="Template">
