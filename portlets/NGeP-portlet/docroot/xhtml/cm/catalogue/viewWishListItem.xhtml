@@ -12,27 +12,11 @@
 
 		<h:panelGroup id="viewWishListItemId">
 
-			<div style="text-align: left; float: right;">
-				<p:menubar>
-					<p:submenu
-						label="Wish List ( #{fn:length(catalogueBackingBean.managedBean.wishLists)} )">
-						<p:menuitem value="View WishList"
-							action="#{wishListBackingBean.viewWishListItem}" />
-					</p:submenu>
-					<p:submenu label="Cart List" style=" border-right: 1px;">
-						<p:menuitem value="Your Shopping Cart is empty Give it purpose"></p:menuitem>
-						<p:menuitem>
-							<p:button value="View Cart Items" />
-						</p:menuitem>
-					</p:submenu>
-					<p:submenu label="Supplier List" style=" border-right: 1px;">
-						<p:menuitem>
-							<p:button value="View Supplier" />
-						</p:menuitem>
-					</p:submenu>
-				</p:menubar>
-			</div>
+			
 
+			<ui:include src="catalogueMenuBar.xhtml"></ui:include>
+
+			
 			<h:panelGrid columns="2" columnClasses="cmLeft,cmRight" width="100%">
 
 
@@ -52,15 +36,15 @@
 					<p:panel header="#{wishLists.cmWishlist.wishlistDesc}">
 						<table style="width: 100%;">
 							<tr>
-								<td><p:graphicImage
-										value="#{wishLists.cmSupplierItem.cmImages[0].imageName}" /></td>
+								<td><p:graphicImage height="50" width="50" /></td>
 								<td><p:commandLink
 										value="#{wishLists.cmSupplierItem.cmItem.itemName}" /></td>
 								<td><p:menubar>
 										<p:submenu label="Action">
 											<p:menuitem value="Add To Cart" />
 											<p:menuitem value="Delete"
-												action="#{wishListBackingBean.deleteWishListItem(rowIndex)}" update="datagrid"/>
+												action="#{wishListBackingBean.deleteWishListItem(rowIndex)}"
+												update="datagrid" />
 										</p:submenu>
 									</p:menubar></td>
 

@@ -5,7 +5,8 @@
 	xmlns:p="http://primefaces.org/ui"
 	xmlns:c="http://java.sun.com/jsp/jstl/core">
 
-
+	<p:commandButton value="#{lbl['lbl.cm.publish']}"
+		action="#{catalogueBackingBean.publishCatalogItem}" update="approvedSupplierItemID"></p:commandButton>
 
 	<p:dataTable id="approvedSupplierItemID"
 		value="#{catalogueBackingBean.managedBean.approvedItemList}" rowIndexVar="rowIndex"

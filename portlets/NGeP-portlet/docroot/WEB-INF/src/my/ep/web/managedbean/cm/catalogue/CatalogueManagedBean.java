@@ -1,12 +1,15 @@
 package my.ep.web.managedbean.cm.catalogue;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
 import javax.faces.model.SelectItem;
 
+import my.ep.persistence.entity.cm.catalog.CmFavoriteSupplier;
 import my.ep.persistence.entity.cm.catalog.CmPricing;
 import my.ep.persistence.entity.cm.catalog.CmSupplierItem;
 import my.ep.persistence.entity.cm.catalog.CmUnspsc;
@@ -62,9 +65,57 @@ public class CatalogueManagedBean extends BaseManagedBean {
 	private CmSupplierItem[] selectedApprovedItems;
 	private CmSupplierItem[] selectedPublishedItems;
 	
+	private List<CmSupplierItem> cartList;
+	private List<CmSupplierItem> tempList;
+	
+	private List<CmFavoriteSupplier>favoriteSupplierList;
+	
+	private Map tempMap = new HashMap();
 	
 	
 	
+	
+	
+	
+
+	public List<CmFavoriteSupplier> getFavoriteSupplierList() {
+		if(favoriteSupplierList==null)
+			favoriteSupplierList = new ArrayList<CmFavoriteSupplier>();
+		return favoriteSupplierList;
+	}
+
+	public void setFavoriteSupplierList(
+			List<CmFavoriteSupplier> favoriteSupplierList) {
+		this.favoriteSupplierList = favoriteSupplierList;
+	}
+
+	public Map getTempMap() {
+		return tempMap;
+	}
+
+	public void setTempMap(Map tempMap) {
+		this.tempMap = tempMap;
+	}
+
+	public List<CmSupplierItem> getTempList() {
+		if(tempList==null)
+			tempList = new ArrayList<CmSupplierItem>();
+		return tempList;
+	}
+
+	public void setTempList(List<CmSupplierItem> tempList) {
+		this.tempList = tempList;
+	}
+
+	public List<CmSupplierItem> getCartList() {
+		if(cartList==null)
+			cartList = new ArrayList<CmSupplierItem>();
+		return cartList;
+	}
+
+	public void setCartList(List<CmSupplierItem> cartList) {
+		this.cartList = cartList;
+	}
 
 	public CmSupplierItem[] getSelectedRejectedItems() {
 		return selectedRejectedItems;

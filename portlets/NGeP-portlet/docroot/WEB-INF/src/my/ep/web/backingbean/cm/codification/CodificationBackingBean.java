@@ -490,7 +490,7 @@ public class CodificationBackingBean extends BaseBackingBean<CodificationManaged
 		ICodificationSO codificationSO = (ICodificationSO) BusinessDelegate.getInstance().getServiceObject("cm",ICodificationSO.class);
 
 		CodificationReqDTO reqDTO = new CodificationReqDTO();
-		reqDTO.setParentCode(this.getManagedBean().getCommodityCode());
+		reqDTO.setUnspscCode(this.getManagedBean().getCommodityCode());
 
 		CodificationResDTO resDTO = codificationSO.searchCommodityObj(reqDTO);
 

@@ -16,6 +16,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Vector;
 
+import javax.annotation.PostConstruct;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.RequestScoped;
 import javax.faces.context.FacesContext;
@@ -27,9 +28,12 @@ import my.ep.biz.bean.search.ISearchBean;
 import my.ep.biz.bean.search.SearchBean;
 import my.ep.biz.bean.search.SearchFilterBean;
 import my.ep.biz.service.cm.catalogue.ICatalogueSO;
+import my.ep.biz.service.cm.catalogue.IFavoriteSupplierSO;
 import my.ep.biz.service.cm.catalogue.IWishListSO;
 import my.ep.dto.cm.catalogue.CatalogueReqDTO;
 import my.ep.dto.cm.catalogue.CatalogueResDTO;
+import my.ep.dto.cm.catalogue.FavoriteSupplierReqDTO;
+import my.ep.dto.cm.catalogue.FavoriteSupplierResDTO;
 import my.ep.dto.cm.catalogue.WishListReqDTO;
 import my.ep.dto.cm.catalogue.WishListResDTO;
 import my.ep.persistence.entity.cm.catalog.CmImage;
@@ -54,11 +58,13 @@ import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.primefaces.event.FileUploadEvent;
 import org.primefaces.event.TabChangeEvent;
-import org.primefaces.model.DefaultTreeNode;
 import org.primefaces.model.StreamedContent;
 import org.primefaces.model.TreeNode;
 import org.primefaces.model.UploadedFile;
 
+import com.liferay.portal.kernel.util.WebKeys;
+import com.liferay.portal.model.Layout;
+import com.liferay.portal.theme.ThemeDisplay;
 import com.liferay.portal.util.PortalUtil;
 
 @ManagedBean(name="catalogueBackingBean")
@@ -75,49 +81,27 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean>{
 
 
 	public CatalogueBackingBean(){
-
+		
+		
+		IFavoriteSupplierSO favorSO = (IFavoriteSupplierSO)BusinessDelegate.getInstance().getServiceObject("cm",IFavoriteSupplierSO.class);
+		IWishListSO wishListSO = (IWishListSO)BusinessDelegate.getInstance().getServiceObject("cm",IWishListSO.class);
+		
 		if(MDC.get(LogKey.USER_ID)==null) {
 			MDC.put(LogKey.USER_ID, 1L);
 		}
 
 		this.getManagedBean().setWishLists(null);
-		IWishListSO wishListSO = (IWishListSO)BusinessDelegate.getInstance().getServiceObject("cm",IWishListSO.class);
+		
 		WishListReqDTO reqDTO = new WishListReqDTO();
 
 		WishListResDTO resDTO = wishListSO.retrieveWishList(reqDTO);
-
 		this.getManagedBean().setWishLists(resDTO.getWishLists());
+		
+		FavoriteSupplierReqDTO favorReqDTO = new FavoriteSupplierReqDTO();
+		this.getManagedBean().setFavoriteSupplierList(null);	
+		FavoriteSupplierResDTO favorResDTO =  favorSO.retrieveFavoriteSupplierList(favorReqDTO);
+		this.getManagedBean().setFavoriteSupplierList(favorResDTO.getFavoriteSupplier());
 
-
-		log.info("*********CatalogueBackingBean**********");
-
-
-		root = new DefaultTreeNode("Root", null);  
-
-
-		TreeNode segment = new DefaultTreeNode("segment", "WishList 1", root);
-		TreeNode segment1 = new DefaultTreeNode("segment", "WishList 2", root);
-		TreeNode segment2 = new DefaultTreeNode("segment", "WishList 3", root);
-
-
-		TreeNode families = new DefaultTreeNode("families","whishlist1.1", segment);
-		TreeNode families1 = new DefaultTreeNode("families","whishlist1.2", segment1);
-		TreeNode families2 = new DefaultTreeNode("families","whishlist1.3", segment2);
-
-
-		root1 = new DefaultTreeNode("Root1", null);  
-		TreeNode CartList = new DefaultTreeNode("CartList", root1);  
-
-		TreeNode CartList00 = new DefaultTreeNode("Node 0.0", CartList);  
-		TreeNode CartList01 = new DefaultTreeNode("Node 0.1", CartList); 
-
-
-		root2 = new DefaultTreeNode("Root2", null);  
-
-		TreeNode SupplierList = new DefaultTreeNode("SupplierList", root2);  
-
-		TreeNode SupplierList01 = new DefaultTreeNode("Node 0.0", SupplierList);  
-		TreeNode SupplierList02 = new DefaultTreeNode("Node 0.1", SupplierList); 
 
 		this.getManagedBean().setAdvanceSearchList(new ArrayList<AdvanceSearchVO>());
 		for(int i=0; i<3; i++){
@@ -224,7 +208,7 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean>{
 		return "addCatalogItem";
 
 	}
-	
+
 	public String navigateToRejectedItemDet(int index){
 
 
@@ -829,6 +813,98 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean>{
 
 	}  
 
+
+	public void addToCart(){
+
+		for(int i=0; i<this.getManagedBean().getSelectedSupplierItems().length; i++){
+			CmSupplierItem item = this.getManagedBean().getSelectedSupplierItems()[i];
+
+			this.getManagedBean().getTempList().add(item);
+
+		}
+
+		for(CmSupplierItem temp:this.getManagedBean().getTempList()){
+			if(!this.getManagedBean().getTempMap().containsKey(temp.getSupplierItemId())){
+				this.getManagedBean().getCartList().add(temp);
+				this.getManagedBean().getTempMap().put(temp.getSupplierItemId(), temp.getSupplierItemId());
+			}
+		}
+	}
+
+	public String viewCartListItem(){
+
+		return "cartListItemView";
+	}
+
+	public void deleteCartItem(int index){
+
+		this.getManagedBean().getCartList().remove(index);
+	}
+
+
+	@PostConstruct
+	public void init() {
+
+
+		FacesContext fCtx = FacesContext.getCurrentInstance();
+		PortletRequest req = (PortletRequest) fCtx.getExternalContext()
+				.getRequest();
+		ThemeDisplay themeDisplay = (ThemeDisplay) req
+				.getAttribute(WebKeys.THEME_DISPLAY);
+		Layout layout = themeDisplay.getLayout();
+		System.out.println("layout.getFriendlyURL():"+layout.getFriendlyURL());
+		if (layout.getFriendlyURL().equals("/maintain-catalogue")) {
+
+			ICatalogueSO catalogueSO = (ICatalogueSO) BusinessDelegate.getInstance().getServiceObject("cm",ICatalogueSO.class);
+
+			ISearchBean<CmSupplierItem> searchBean = new SearchBean<CmSupplierItem>();
+			statusFilterBean.setSearchField("itemStatus");
+			statusFilterBean.setSearchValue("D");
+			searchBean.getDataFilterBeans().add(statusFilterBean);
+
+
+
+			CatalogueReqDTO reqDTO = new CatalogueReqDTO();
+
+			reqDTO.setSearchBean(searchBean);
+			log.info("catalogueSO:"+catalogueSO);
+
+			CatalogueResDTO resDTO = catalogueSO.searchSupplierItemByStatus(reqDTO);
+
+			this.getManagedBean().setMaintainItemList(resDTO.getSupplierItemList());
+
+		}
+	}
+	
+	
+	public void publishCatalogItem(){
+		ICatalogueSO catalogueSO = (ICatalogueSO) BusinessDelegate.getInstance().getServiceObject("cm",ICatalogueSO.class);
+		
+		CatalogueReqDTO reqDTO = new CatalogueReqDTO();
+		
+		System.out.println("this.getManagedBean().getSelectedApprovedItems().length:"+this.getManagedBean().getSelectedApprovedItems().length);
+		for(int i=0; i<this.getManagedBean().getSelectedApprovedItems().length; i++){
+			CmSupplierItem catalog = this.getManagedBean().getSelectedApprovedItems()[i];
+			catalog.setItemStatus("U");
+			reqDTO.getSaveSupplierItems().add(catalog);
+		}
+		
+
+		CatalogueResDTO resDTO =  catalogueSO.updateSupplierItem(reqDTO);
+		System.out.println("resDTO.isSuccessful():"+resDTO.isSuccessful());
+		if(resDTO.isSuccessful()){
+			ISearchBean<CmSupplierItem> searchBean = new SearchBean<CmSupplierItem>();
+			statusFilterBean.setSearchField("itemStatus");
+			statusFilterBean.setSearchValue("A");
+			searchBean.getDataFilterBeans().add(statusFilterBean);
+
+			reqDTO.setSearchBean(searchBean);
+			resDTO = catalogueSO.searchSupplierItemByStatus(reqDTO);
+
+			this.getManagedBean().setApprovedItemList(resDTO.getSupplierItemList());
+			
+		}
+	}
 
 
 

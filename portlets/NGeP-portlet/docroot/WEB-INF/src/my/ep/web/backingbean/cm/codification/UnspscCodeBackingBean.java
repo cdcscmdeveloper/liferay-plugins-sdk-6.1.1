@@ -124,6 +124,31 @@ public class UnspscCodeBackingBean extends BaseBackingBean<UnspscCodeManagedBean
 		//--
 		return res;
 	}
+	
+	public BpmResponseDTO initiateExtensionTask(CmRequestCode request){
+		System.out.println("initiateTask******");
+		IBpmSO bpmSO = (IBpmSO) EpBpmBusinessDelegate.getInstance().getServiceObject(IBpmSO.class);
+		String ctx = bpmSO.authenticate("roslan","welcome1");
+		BpmRequestDTO reqDTO = new BpmRequestDTO();
+		reqDTO.setCtxToken(ctx);
+
+		//  reqDTO.setProcessId("Procurement_Strategy.EndorseBudget");
+		reqDTO.setProcessId("Codification.ExtensionCodeRequest");
+		reqDTO.setOutcome("SUBMIT");
+		CDRequestDataType obj = new CDRequestDataType();
+		obj.setRequestId(String.valueOf(request.getRequestId()));
+		//obj.setPtj(value);
+		reqDTO.setPojo(obj);
+		BpmResponseDTO res = bpmSO.initiateAndUpdateTask(reqDTO);
+
+		log.info("1:"+res.isSuccessful());
+		log.info("2:"+res.getErrorReason());
+		log.info("ID:"+obj.getRequestId());
+
+		return res;
+	}
+	
+	
 
 
 
@@ -131,7 +156,6 @@ public class UnspscCodeBackingBean extends BaseBackingBean<UnspscCodeManagedBean
 
 
 	public void uploadUNSPSC(FileUploadEvent event) throws Exception{
-
 
 		ICodificationSO unspscSO = (ICodificationSO) BusinessDelegate.getInstance().getServiceObject("cm",ICodificationSO.class);
 
@@ -526,7 +550,7 @@ public class UnspscCodeBackingBean extends BaseBackingBean<UnspscCodeManagedBean
 		CmItem item = new CmItem();
 
 		System.out.println("this.getManagedBean().getRequestCode().getTempCode():"+this.getManagedBean().getRequestCode().getTempCode());
-		reqDTO.setParentCode(this.getManagedBean().getRequestCode().getTempCode());
+		reqDTO.setUnspscCode(this.getManagedBean().getRequestCode().getTempCode());
 		resDTO = unspscSO.searchCommodityObj(reqDTO);
 		
 
@@ -602,12 +626,29 @@ public class UnspscCodeBackingBean extends BaseBackingBean<UnspscCodeManagedBean
 	
 	
 	public void addNewRequest(){
-		System.out.println("isRequestType:"+this.getManagedBean().getRequestExtCode().isRequestType());
 		
-		System.out.println("brand:"+this.getManagedBean().getBrandName());
-		System.out.println("type:"+this.getManagedBean().getTypeName());
-		System.out.println("measurement:"+this.getManagedBean().getMeasurementName());
-		System.out.println("color:"+this.getManagedBean().getColorName());
+		
+
+		
+		
+		
+		if(!this.getManagedBean().getRequestExtCode().isRequestType()){
+			this.getManagedBean().getRequestExtCode().setTypeName(this.getManagedBean().getTypeName());
+		}
+		
+		if(!this.getManagedBean().getRequestExtCode().isRequestBrand()){
+			this.getManagedBean().getRequestExtCode().setBrandName(this.getManagedBean().getBrandName());
+		}
+		
+		if(!this.getManagedBean().getRequestExtCode().isRequestColor()){
+			this.getManagedBean().getRequestExtCode().setColorName(this.getManagedBean().getColorName());
+		}
+		
+		if(!this.getManagedBean().getRequestExtCode().isRequestMeasurement()){
+			this.getManagedBean().getRequestExtCode().setMeasurementName(this.getManagedBean().getMeasurementName());
+		}
+				
+		this.getManagedBean().getRequestExtCodeList().add(this.getManagedBean().getRequestExtCode());
 		
 	}
 	
@@ -617,7 +658,7 @@ public class UnspscCodeBackingBean extends BaseBackingBean<UnspscCodeManagedBean
 
 		CodificationReqDTO reqDTO = new CodificationReqDTO();
 		//reqDTO.setParentCode(this.getManagedBean().getUnspscCode());
-		reqDTO.setParentCode("10161509");
+		reqDTO.setUnspscCode("10161509");
 		
 		CodificationResDTO resDTO = codificationSO.searchCommodityObj(reqDTO);
 		
@@ -627,8 +668,24 @@ public class UnspscCodeBackingBean extends BaseBackingBean<UnspscCodeManagedBean
 		resDTO = codificationSO.searchColor(reqDTO);
 		this.getManagedBean().setColorList(resDTO.getColorList());
 		
+		this.getManagedBean().setRequestExtCode(new CmRequestCode());
+		
 		
 	}
+	
+	public void submitToBPM(){
+		
+		ICodificationSO unspscSO = (ICodificationSO) BusinessDelegate.getInstance().getServiceObject("cm",ICodificationSO.class);
+		CodificationReqDTO reqDTO = new CodificationReqDTO();
+		
+		reqDTO.setRequestExtList(this.getManagedBean().getRequestExtCodeList());
+		
+		
+		CodificationResDTO resDTO = unspscSO.addExtensionRequest(reqDTO);
+		
+	}
+	
+	
 
 
 

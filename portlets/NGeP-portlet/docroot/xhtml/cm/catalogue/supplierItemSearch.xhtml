@@ -10,34 +10,13 @@
 
 	<h:panelGroup id="supplierItemViewID">
 
-		<div style="text-align: left; float: right;">
-			<p:menubar>
-				<p:submenu label="Wish List ( #{fn:length(catalogueBackingBean.managedBean.wishLists)} )">
-					<p:menuitem value="View WishList" action="#{wishListBackingBean.viewWishListItem}" />
-				</p:submenu>
-				<p:submenu label="Cart List" style=" border-right: 1px;">
-					<p:menuitem value="Your Shopping Cart is empty Give it purpose"></p:menuitem>
-					<p:menuitem>
-						<p:button value="View Cart Items" />
-					</p:menuitem>
-				</p:submenu>
-				<p:submenu label="Supplier List" style=" border-right: 1px;">
-					<p:menuitem>
-						<p:button value="View Supplier" />
-					</p:menuitem>
-				</p:submenu>
-			</p:menubar>
-		</div>
+	
+		<ui:include src="catalogueMenuBar.xhtml"></ui:include>
 
 
 		<p:outputLabel styleClass="titleFront"
 			value="#{lbl['lbl.cm.catalogue.search']}"></p:outputLabel>
 
-
-		<p:remoteCommand id="searching" name="searching"
-			update="advanceSearchID" process="@this searchRadio"
-			action="#{catalogueBackingBean.advanceSearch()}">
-		</p:remoteCommand>
 
 
 		<table>
@@ -48,7 +27,7 @@
 						<f:selectItem itemValue="A" itemLabel="Advance Search" />
 						<p:ajax event="click"
 							listener="#{catalogueBackingBean.advanceSearch()}"
-							update="advanceSearchID"></p:ajax>
+							update="advanceSearchId"></p:ajax>
 					</p:selectOneRadio></td>
 			</tr>
 		</table>
@@ -65,7 +44,7 @@
 
 
 
-		<p:outputPanel id="advanceSearchID" style="width:100%">
+		<h:panelGroup id="advanceSearchId" style="width:100%">
 
 
 
@@ -85,9 +64,11 @@
 				</ui:repeat>
 			</c:if>
 
-		</p:outputPanel>
+		</h:panelGroup>
 
-		<p:commandButton value="search" action="#{catalogueBackingBean.searchCatalogue}" update="supplierItemID"/>
+		<p:commandButton value="search"
+			action="#{catalogueBackingBean.searchCatalogue}"
+			update="supplierItemID" />
 
 
 
@@ -100,17 +81,17 @@
 			selection="#{catalogueBackingBean.managedBean.selectedSupplierItems}">
 
 			<p:column selectionMode="multiple" style="width:2%" />
-			
+
 			<p:ajax event="rowSelectCheckbox"
-				listener="#{catalogueBackingBean.compareSupplierItem()}" process="@this "
-				update=":form:compareButton" />
+				listener="#{catalogueBackingBean.compareSupplierItem()}"
+				process="@this " update=":form:compareButton" />
 			<p:ajax event="rowUnselectCheckbox"
-				listener="#{catalogueBackingBean.compareSupplierItem()}" process="@this "
-				update=":form:compareButton" />
+				listener="#{catalogueBackingBean.compareSupplierItem()}"
+				process="@this " update=":form:compareButton" />
 
 			<p:ajax event="toggleSelect"
-				listener="#{catalogueBackingBean.compareSupplierItem()}" process="@this "
-				update=":form:compareButton" />
+				listener="#{catalogueBackingBean.compareSupplierItem()}"
+				process="@this " update=":form:compareButton" />
 
 			<p:column>
 				<f:facet name="header">
@@ -187,14 +168,20 @@
 		</p:dataTable>
 
 		<h:panelGrid columns="4">
-			<p:commandButton id="compareButton" action="#{catalogueBackingBean.compareSupplierItem}" 
-				value="#{lbl['lbl.cm.compare']} ( #{fn:length(catalogueBackingBean.managedBean.selectedSupplierItemList)} )" 
+			<p:commandButton id="compareButton"
+				action="#{catalogueBackingBean.compareSupplierItem}"
+				value="#{lbl['lbl.cm.compare']} ( #{fn:length(catalogueBackingBean.managedBean.selectedSupplierItemList)} )"
 				disabled="#{2 > fn:length(catalogueBackingBean.managedBean.selectedSupplierItemList)}" />
-			<p:commandButton value="Add To Cart (0)" />
+			<p:commandButton value="Add To Cart"
+				action="#{catalogueBackingBean.addToCart}"
+				update="supplierItemViewID" />
 			<p:commandButton value="Wishlist"
 				action="#{catalogueBackingBean.addIntoWishList}"
-				onclick="wishListPopUp.show()" update="selectWishList, allWishListId"/>
-			<p:commandButton value="Favorite Supplier (0)" />
+				onclick="wishListPopUp.show()"
+				update="selectWishList, allWishListId" />
+			<p:commandButton value="Favorite Supplier"
+				action="#{favoriteSupplierBackingBean.addToFavoriteSupplier}"
+				update="supplierItemViewID" />
 
 		</h:panelGrid>
 
