@@ -11,8 +11,8 @@ import javax.faces.bean.SessionScoped;
 import javax.faces.event.ValueChangeEvent;
 import javax.faces.model.SelectItem;
 
+import my.ep.persistence.entity.ss.quationtender.ScAttachment;
 import my.ep.persistence.entity.ss.quationtender.ScQtApproval;
-import my.ep.persistence.entity.ss.quationtender.ScQtApprovalDtl;
 import my.ep.web.bean.ss.quatationtender.CategoryCode;
 import my.ep.web.bean.ss.quatationtender.GoSoDo;
 import my.ep.web.bean.ss.quatationtender.Location;
@@ -32,9 +32,9 @@ public class SearchQtnTenderManagedBean extends BaseManagedBean {
 	private List<String> selectOptions;
 
 	private String selectOption;
-	
+
 	private QtnTenderDataBean dataBean;
-	
+
 	private List<String> supplierList;
 
 	public Map<String, TabBean> getTabview() {
@@ -51,7 +51,7 @@ public class SearchQtnTenderManagedBean extends BaseManagedBean {
 
 	private List<QtnTenderBean> qtnTenders;
 	private QtnTenderBean selectableBean;
- 
+
 	private List<GoSoDo> goSodo;
 
 	private List<Location> locations;
@@ -85,14 +85,30 @@ public class SearchQtnTenderManagedBean extends BaseManagedBean {
 	private List<SelectItem> checkBoxList;
 	private String checkBoxBPK;
 	private List<String> checkBoxBPK1;
-	
-	private String briefDetails;
-	
-	private String visitDetails;
-	private ScQtApproval scQtApproval=new ScQtApproval();
-	
-	private List<String> approvalTypelist=new ArrayList<String>();
 
+	private String briefDetails;
+
+	private String visitDetails;
+	private ScQtApproval scQtApproval = new ScQtApproval();
+
+	private List<String> approvalTypelist = new ArrayList<String>();
+
+	List<TabBean> tabList = new ArrayList<TabBean>();
+
+	private String approvalAction;
+	private String approvalDate;
+	private String verifyDate;
+	private String standardDocument;
+	private String verifyAction;
+	private String approverName;
+	private String approverstatus;
+	private String verifierName;
+	private String verifierStatus;
+	private ScAttachment scAttachment = new ScAttachment();
+
+	private int previousTab = 0;
+	private Map<Integer, ScQtApproval> tabSelection = new HashMap<Integer, ScQtApproval>();
+	private List<ScQtApproval>	sampleList=new ArrayList<ScQtApproval>();
 	/*
 	 * public Map<String, List<SelectItem>> getTabview() { return tabview; }
 	 * 
@@ -182,7 +198,7 @@ public class SearchQtnTenderManagedBean extends BaseManagedBean {
 		locations = new ArrayList<Location>();
 		zoneList = new ArrayList<Location>();
 		qtnTenders = populateSearchQtnBean();
-		dataBean= new QtnTenderDataBean(qtnTenders);
+		dataBean = new QtnTenderDataBean(qtnTenders);
 		categories = populateCategory();
 
 		mainCcode = populateMainCodes();
@@ -223,14 +239,17 @@ public class SearchQtnTenderManagedBean extends BaseManagedBean {
 		cities.put("Illinois", icities);
 
 		tabview = new HashMap<>();
-		tabview.put("BudgetApproval", new TabBean("Budget Approval"));
-		tabview.put("BPKApproval", new TabBean("BPKApproval"));
-		tabview.put("PMSabah", new TabBean("PMSabah"));
-		tabview.put("PMSarawak", new TabBean("PMSarawak"));
-		tabview.put("MITIApproval", new TabBean("MITIApproval"));
-		tabview.put("ICTApproval", new TabBean("ICTApproval"));
-		tabview.put("PBApproval", new TabBean("PBApproval"));
-		tabview.put("PTJApproval", new TabBean("PTJApproval"));
+
+		/*
+		 * tabview.put("BudgetApproval", new TabBean("Budget Approval"));
+		 * tabview.put("BPKApproval", new TabBean("BPKApproval"));
+		 * tabview.put("PMSabah", new TabBean("PMSabah"));
+		 * tabview.put("PMSarawak", new TabBean("PMSarawak"));
+		 * tabview.put("MITIApproval", new TabBean("MITIApproval"));
+		 * tabview.put("ICTApproval", new TabBean("ICTApproval"));
+		 * tabview.put("PBApproval", new TabBean("PBApproval"));
+		 * tabview.put("PTJApproval", new TabBean("PTJApproval"));
+		 */
 		checkBoxList = new ArrayList();
 		checkBoxList.add(new SelectItem("BudgetApproval", "BudgetApproval"));
 		checkBoxList.add(new SelectItem("BPKApproval", "BPKApproval"));
@@ -290,6 +309,27 @@ public class SearchQtnTenderManagedBean extends BaseManagedBean {
 		jcities.add(new SelectItem("Evanston"));
 		zoneCities.put("Illinois", jcities);
 
+		// TODO Tabview start
+
+		tabList.add(new TabBean("Budget Approval", 1));
+		tabList.add(new TabBean("BPK Approval", 2));
+		tabList.add(new TabBean("MITI Approval", 3));
+		tabList.add(new TabBean("ICT Approval", 4));
+		tabList.add(new TabBean("Procurement Board", 5));
+		tabList.add(new TabBean("Division Approval", 6));
+		// this.setTabList(tabList);
+		for (int i = 0; i < getTabList().size(); i++) {
+
+			tabSelection.put(i, new ScQtApproval());
+			//sampleList.add(new ScQtApproval());
+
+		}
+		scQtApproval = tabSelection.get(0);
+		
+		// Tabview end
+		System.out.println(" ************ MANAGED BEAN CONST *******"
+				+ getTabList().size() + "-----  MAP ---- "
+				+ getTabSelection().size());
 	}
 
 	private List<String> populateSucCate() {
@@ -671,11 +711,11 @@ public class SearchQtnTenderManagedBean extends BaseManagedBean {
 	 */
 	public List<SelectItem> getZoneState() {
 		if (zone != null) {
-			
-			String selectedZone=zone.toUpperCase();
-			
+
+			String selectedZone = zone.toUpperCase();
+
 			return zoneState.get(selectedZone);
-						
+
 		} else {
 			return new ArrayList<SelectItem>();
 		}
@@ -814,7 +854,8 @@ public class SearchQtnTenderManagedBean extends BaseManagedBean {
 	}
 
 	/**
-	 * @param briefDetails the briefDetails to set
+	 * @param briefDetails
+	 *            the briefDetails to set
 	 */
 	public void setBriefDetails(String briefDetails) {
 		this.briefDetails = briefDetails;
@@ -828,7 +869,8 @@ public class SearchQtnTenderManagedBean extends BaseManagedBean {
 	}
 
 	/**
-	 * @param visitDetails the visitDetails to set
+	 * @param visitDetails
+	 *            the visitDetails to set
 	 */
 	public void setVisitDetails(String visitDetails) {
 		this.visitDetails = visitDetails;
@@ -842,7 +884,8 @@ public class SearchQtnTenderManagedBean extends BaseManagedBean {
 	}
 
 	/**
-	 * @param selectableBean the selectableBean to set
+	 * @param selectableBean
+	 *            the selectableBean to set
 	 */
 	public void setSelectableBean(QtnTenderBean selectableBean) {
 		this.selectableBean = selectableBean;
@@ -856,7 +899,8 @@ public class SearchQtnTenderManagedBean extends BaseManagedBean {
 	}
 
 	/**
-	 * @param dataBean the dataBean to set
+	 * @param dataBean
+	 *            the dataBean to set
 	 */
 	public void setDataBean(QtnTenderDataBean dataBean) {
 		this.dataBean = dataBean;
@@ -870,7 +914,8 @@ public class SearchQtnTenderManagedBean extends BaseManagedBean {
 	}
 
 	/**
-	 * @param supplierList the supplierList to set
+	 * @param supplierList
+	 *            the supplierList to set
 	 */
 	public void setSupplierList(List<String> supplierList) {
 		this.supplierList = supplierList;
@@ -884,7 +929,8 @@ public class SearchQtnTenderManagedBean extends BaseManagedBean {
 	}
 
 	/**
-	 * @param scQtApproval the scQtApproval to set
+	 * @param scQtApproval
+	 *            the scQtApproval to set
 	 */
 	public void setScQtApproval(ScQtApproval scQtApproval) {
 		this.scQtApproval = scQtApproval;
@@ -898,12 +944,220 @@ public class SearchQtnTenderManagedBean extends BaseManagedBean {
 	}
 
 	/**
-	 * @param approvalTypelist the approvalTypelist to set
+	 * @param approvalTypelist
+	 *            the approvalTypelist to set
 	 */
 	public void setApprovalTypelist(List<String> approvalTypelist) {
 		this.approvalTypelist = approvalTypelist;
 	}
 
-	
+	/**
+	 * @return the approvalAction
+	 */
+	public String getApprovalAction() {
+		return approvalAction;
+	}
+
+	/**
+	 * @param approvalAction
+	 *            the approvalAction to set
+	 */
+	public void setApprovalAction(String approvalAction) {
+		this.approvalAction = approvalAction;
+	}
+
+	/**
+	 * @return the approvalDate
+	 */
+	public String getApprovalDate() {
+		return approvalDate;
+	}
+
+	/**
+	 * @param approvalDate
+	 *            the approvalDate to set
+	 */
+	public void setApprovalDate(String approvalDate) {
+		this.approvalDate = approvalDate;
+	}
+
+	/**
+	 * @return the verifyDate
+	 */
+	public String getVerifyDate() {
+		return verifyDate;
+	}
+
+	/**
+	 * @param verifyDate
+	 *            the verifyDate to set
+	 */
+	public void setVerifyDate(String verifyDate) {
+		this.verifyDate = verifyDate;
+	}
+
+	/**
+	 * @return the standardDocument
+	 */
+	public String getStandardDocument() {
+		return standardDocument;
+	}
+
+	/**
+	 * @param standardDocument
+	 *            the standardDocument to set
+	 */
+	public void setStandardDocument(String standardDocument) {
+		this.standardDocument = standardDocument;
+	}
+
+	/**
+	 * @return the verifyAction
+	 */
+	public String getVerifyAction() {
+		return verifyAction;
+	}
+
+	/**
+	 * @param verifyAction
+	 *            the verifyAction to set
+	 */
+	public void setVerifyAction(String verifyAction) {
+		this.verifyAction = verifyAction;
+	}
+
+	/**
+	 * @return the approverName
+	 */
+	public String getApproverName() {
+		return approverName;
+	}
+
+	/**
+	 * @param approverName
+	 *            the approverName to set
+	 */
+	public void setApproverName(String approverName) {
+		this.approverName = approverName;
+	}
+
+	/**
+	 * @return the approverstatus
+	 */
+	public String getApproverstatus() {
+		return approverstatus;
+	}
+
+	/**
+	 * @param approverstatus
+	 *            the approverstatus to set
+	 */
+	public void setApproverstatus(String approverstatus) {
+		this.approverstatus = approverstatus;
+	}
+
+	/**
+	 * @return the verifierName
+	 */
+	public String getVerifierName() {
+		return verifierName;
+	}
+
+	/**
+	 * @param verifierName
+	 *            the verifierName to set
+	 */
+	public void setVerifierName(String verifierName) {
+		this.verifierName = verifierName;
+	}
+
+	/**
+	 * @return the verifierStatus
+	 */
+	public String getVerifierStatus() {
+		return verifierStatus;
+	}
+
+	/**
+	 * @param verifierStatus
+	 *            the verifierStatus to set
+	 */
+	public void setVerifierStatus(String verifierStatus) {
+		this.verifierStatus = verifierStatus;
+	}
+
+	/**
+	 * @return the scAttachment
+	 */
+	public ScAttachment getScAttachment() {
+		return scAttachment;
+	}
+
+	/**
+	 * @param scAttachment
+	 *            the scAttachment to set
+	 */
+	public void setScAttachment(ScAttachment scAttachment) {
+		this.scAttachment = scAttachment;
+	}
+
+	/**
+	 * @return the previousTab
+	 */
+	public int getPreviousTab() {
+		return previousTab;
+	}
+
+	/**
+	 * @param previousTab
+	 *            the previousTab to set
+	 */
+	public void setPreviousTab(int previousTab) {
+		this.previousTab = previousTab;
+	}
+
+	/**
+	 * @return the tabSelection
+	 */
+	public Map<Integer, ScQtApproval> getTabSelection() {
+		return tabSelection;
+	}
+
+	/**
+	 * @param tabSelection
+	 *            the tabSelection to set
+	 */
+	public void setTabSelection(Map<Integer, ScQtApproval> tabSelection) {
+		this.tabSelection = tabSelection;
+	}
+
+	/**
+	 * @return the tabList
+	 */
+	public List<TabBean> getTabList() {
+		return tabList;
+	}
+
+	/**
+	 * @param tabList
+	 *            the tabList to set
+	 */
+	public void setTabList(List<TabBean> tabList) {
+		this.tabList = tabList;
+	}
+
+	/**
+	 * @return the sampleList
+	 */
+	public List<ScQtApproval> getSampleList() {
+		return sampleList;
+	}
+
+	/**
+	 * @param sampleList the sampleList to set
+	 */
+	public void setSampleList(List<ScQtApproval> sampleList) {
+		this.sampleList = sampleList;
+	}
 
 }
