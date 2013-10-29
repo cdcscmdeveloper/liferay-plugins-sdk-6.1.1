@@ -11,7 +11,9 @@
   		<param-name>javax.faces.CONFIG_FILES</param-name>
   		<param-value>/WEB-INF/config/faces-config/faces-config-common.xml,
   		/WEB-INF/config/faces-config/cm/faces-config-codification.xml,
-  		/WEB-INF/config/faces-config/pp/faces-config-pp.xml
+  		/WEB-INF/config/faces-config/pp/faces-config-pp.xml,
+  		/WEB-INF/config/faces-config/pm/faces-config-pm.xml,
+  		/WEB-INF/config/faces-config/tpl/faces-config-tpl.xml
 		</param-value>
 	</context-param>
 	<context-param>
