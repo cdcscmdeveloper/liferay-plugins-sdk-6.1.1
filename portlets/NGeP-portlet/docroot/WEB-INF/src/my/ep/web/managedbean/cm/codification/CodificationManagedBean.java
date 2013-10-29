@@ -14,7 +14,7 @@ import my.ep.persistence.entity.cm.catalog.CmItem;
 import my.ep.persistence.entity.cm.catalog.CmUnspsc;
 import my.ep.web.managedbean.BaseManagedBean;
 
-@ManagedBean(name = "unspscCodeMB")
+@ManagedBean(name = "codificationMB")
 @SessionScoped
 public class CodificationManagedBean extends BaseManagedBean {
 

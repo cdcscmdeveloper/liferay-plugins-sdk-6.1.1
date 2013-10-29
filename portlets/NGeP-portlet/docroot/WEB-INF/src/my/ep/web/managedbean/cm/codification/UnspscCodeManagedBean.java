@@ -14,7 +14,7 @@ import my.ep.persistence.entity.cm.catalog.CmType;
 import my.ep.web.managedbean.BaseManagedBean;
 import my.ep.web.vo.RemarksVO;
 
-@ManagedBean(name = "requestCodeMB")
+@ManagedBean(name = "unspscCodeMB")
 @SessionScoped
 public class UnspscCodeManagedBean extends BaseManagedBean {
 	
