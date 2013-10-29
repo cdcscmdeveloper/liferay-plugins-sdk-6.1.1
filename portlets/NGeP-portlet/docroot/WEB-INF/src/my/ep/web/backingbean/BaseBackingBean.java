@@ -9,13 +9,19 @@ import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
 import javax.faces.context.FacesContext;
+import javax.faces.model.SelectItem;
 
 import my.ep.biz.bean.search.ISearchBean;
 import my.ep.biz.bean.search.SearchBean;
+import my.ep.biz.service.pm.common.object.IObjectSO;
+import my.ep.dto.pm.common.object.ObjectReqDTO;
+import my.ep.dto.pm.common.object.ObjectResDTO;
 import my.ep.type.IEnumType;
 import my.ep.persistence.entity.BaseEntity;
+import my.ep.persistence.entity.pm.common.PmCode;
 import my.ep.web.bean.DataValueBean;
 import my.ep.web.bean.ValueBean;
 import my.ep.web.managedbean.BaseManagedBean;
@@ -23,6 +29,7 @@ import my.ep.web.util.EpPortletUtil;
 import my.ep.web.util.FacesScopes;
 import my.ep.web.util.ResourceBundleUtils;
 import my.ep.web.util.SecurityFilterUtil;
+import my.ep.web.util.lookupservice.BusinessDelegate;
 
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
@@ -254,5 +261,26 @@ public abstract class BaseBackingBean<T extends BaseManagedBean> {
 		}
 		
 		return null;
+	}
+	
+	public SelectItem[] getDropdownValues(String category) {
+		SelectItem[] items = null;
+		try {
+			IObjectSO objectSO = (IObjectSO)BusinessDelegate.getInstance().getServiceObject("pm",IObjectSO.class);
+			ObjectReqDTO reqDTO = new ObjectReqDTO();
+			reqDTO.setCategory(category);
+			ObjectResDTO resDTO = objectSO.retrieveCodeByCategory(reqDTO);
+			
+		    items = new SelectItem[resDTO.getPmCodeList().size()+1];
+		    items[0] = new SelectItem(null, "- Select One -");
+		    int i = 1;
+		    for(PmCode code: resDTO.getPmCodeList()) {
+		    	items[i++] = new SelectItem(code.getCodeId(), code.getPmCodeDescs().get(0).getCodeName());
+		    }
+		} catch (Exception e) {
+			e.printStackTrace();
+			FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR,e.toString(), e.getMessage()));
+		}
+	    return items;
 	}
 }
