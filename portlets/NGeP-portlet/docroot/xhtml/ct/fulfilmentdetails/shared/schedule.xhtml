@@ -10,14 +10,12 @@
        <p:outputLabel value="#{lbl['lbl.ct.sched.fsched']}"/>
        <p:inputText value="" style="width:100px;"/>
        <p:outputLabel value="#{lbl['lbl.ct.sched.progre']}"/>
-           <p:selectBooleanCheckbox value="">
-            <p:ajax event="change"  listener="#{contractDetailsBackingBean.progressivePayment}" process="@this" update="paymentSchedule"/>
+           <p:selectBooleanCheckbox value="#{contractDetailsBackingBean.managedBean.contractValues.progressivePayment}">
+            <p:ajax event="change"  listener="#{contractDetailsBackingBean.progressivePayment}" process="@this" update=":form:tabview:paymentSchedule"/>
            </p:selectBooleanCheckbox>
      </h:panelGrid>
-	 <p:dataTable id="tableSchedule" var="data" value="#{contractDetailsBackingBean.managedBean.ctContract.ctSchedules}" widgetVar="dataTableObj" 
-	    rowIndexVar="index" paginator="true" paginatorPosition="bottom" paginatorAlwaysVisible="true" emptyMessage="No Records!" rows="10" 
-		rowsPerPageTemplate="5,10,15,20" currentPageReportTemplate=" total {totalRecords},  page {currentPage} of {totalPages} "
-		paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}">
+	 <p:dataTable id="tableSchedule" var="data" value="" widgetVar="dataTableObj" 
+	    rowIndexVar="index" paginator="true" paginatorPosition="bottom" paginatorAlwaysVisible="true" emptyMessage="No Records!">
 		<p:columnGroup type="header"> 
 		 <p:row> 
 		  <p:column style="width:150px" headerText="#{lbl['lbl.ct.sched.table.no']}"  /> 
@@ -30,22 +28,20 @@
 		  <h:outputText value="#{index+1}" />
 		</p:column>     
 		<p:column>
-		 <p:outputLabel value="#{data.scheduleNo}"/>
+		 <p:outputLabel value=""/>
 		</p:column>
 		<p:column>
-		 <p:calendar style="width:130px;" value="#{data.startDate}" id="popupButtonCal" showOn="button" />
+		
         </p:column>   
         <p:column>   
-           <p:calendar style="width:130px;" value="#{data.endDate}" id="popupButtonCal1" showOn="button" />
+         
         </p:column>        
 	  </p:dataTable>
 	</p:panel>	
 	 <p:outputPanel id="paymentSchedule">                
-	 <p:panel header="#{lbl['lbl.ct.sched.panel1.name']}" rendered="#{contractDetailsBackingBean.chkSchedule}"  toggleable="true"  toggleSpeed="500">
-	    <p:dataTable id="tableProgress" var="data" value="#{contractDetailsBackingBean.managedBean.ctContract.ctProgressivePayments}" widgetVar="dataTableObj" 
-		   paginator="true" paginatorPosition="bottom" paginatorAlwaysVisible="true" emptyMessage="No Records!" rows="10" 
-		   rowsPerPageTemplate="5,10,15,20" currentPageReportTemplate=" total {totalRecords},  page {currentPage} of {totalPages} "
-		   paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink}  {LastPageLink} {RowsPerPageDropdown}">
+	 <p:panel header="#{lbl['lbl.ct.sched.panel1.name']}" rendered="#{contractDetailsBackingBean.managedBean.chkSchedule}"  toggleable="true"  toggleSpeed="500">
+	    <p:dataTable id="tableProgress" var="data" value="#{contractDetailsBackingBean.managedBean.ctProgressivePaymentList}" widgetVar="dataTableObj" 
+		   paginator="true" paginatorPosition="bottom" paginatorAlwaysVisible="true" emptyMessage="No Records!">
 		   <p:columnGroup type="header"> 
 			 <p:row> 
 		        <p:column style="width:100px" headerText="#{lbl['lbl.ct.sched.table1.phase']}"  />

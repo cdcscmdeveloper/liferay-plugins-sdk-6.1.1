@@ -10,19 +10,19 @@
     <h:panelGrid columns="2" style="width:800px;">  
          <h:panelGrid columns="2" style="width:350px;">  
               <h:outputLabel  value="#{lbl['lbl.ct.mto.description']}"  />  
-              <p:inputText  value="#{contractDetailsBackingBean.managedBean.mtoDetails.mtoDescription}" style="width:200px;" />  
+              <p:inputText  value="" />  
               <h:outputLabel value="#{lbl['lbl.ct.mto.department']}"/>  
-              <p:inputText  value="#{contractDetailsBackingBean.managedBean.mtoDetails.mtoDepartment}" style="width:200px;" />
+              <p:inputText  value="" />
               <h:outputLabel  value="#{lbl['lbl.ct.mto.quantity']}"/>  
-              <p:inputText  value="#{contractDetailsBackingBean.managedBean.mtoDetails.mtoQuantity}"   disabled="false" style="width:120px;" />
+              <p:inputText  value=""   disabled="false" />
               <h:outputLabel  value="#{lbl['lbl.ct.mto.packaging']}"/>  
-              <p:selectOneMenu  disabled="false"  value="#{contractDetailsBackingBean.managedBean.mtoDetails.mtoPackagingMethod}" style="width:150px;">
+              <p:selectOneMenu  disabled="false"  value="">
                    <f:selectItem itemLabel="--Please Select--" itemValue="--Please Select--" /> 
               </p:selectOneMenu>
               <h:outputLabel value="#{lbl['lbl.ct.mto.weight']}" />  
-              <p:inputText  value="#{contractDetailsBackingBean.managedBean.mtoDetails.mtoWidth}" required="true" disabled="false" style="width:140px;" />  
+              <p:inputText  value="" required="true" disabled="false" />  
               <h:outputLabel  value="#{lbl['lbl.ct.mto.dimension']}" />  
-              <p:inputText  value="#{contractDetailsBackingBean.managedBean.mtoDetails.mtoTotalDimension}" disabled="false" style="width:150px;" />
+              <p:inputText  value="" disabled="false" />
               <f:verbatim></f:verbatim>
               <h:panelGrid columns="1">
                  <p:dataTable var="data"  value=" "   rowIndexVar="index">
@@ -38,59 +38,59 @@
                    <p:column><h:outputText value=" " /></p:column>
                  </p:dataTable>
                 </h:panelGrid>
-                <h:outputLabel  value="#{lbl['lbl.ct.mto.agentInformation']}" style="width:150px;" />  
-                <p:inputText  value="#{contractDetailsBackingBean.managedBean.mtoDetails.mtoSIAgentInformation}"  disabled="false"  style="width:200px;" />  
+                <h:outputLabel  value="#{lbl['lbl.ct.mto.agentInformation']}" />  
+                <p:inputText  value=""  disabled="false"  />  
                <h:panelGroup>
-               <div style="height: 55px; vertical-align: top">
+               <div style="height: 20px; vertical-align: top">
                 <p:outputLabel value="#{lbl['lbl.ct.mto.address']}" />
                </div>
               </h:panelGroup>
               <h:panelGrid>
-                 <p:inputTextarea  value="#{contractDetailsBackingBean.managedBean.mtoDetails.mtoAddress}" required="false" rows="2" cols="27"  disabled="false" autoResize="false" />
+                 <p:inputTextarea  value="" required="false" rows="2" cols="27"  disabled="false" autoResize="false" />
               </h:panelGrid>
-              <h:outputLabel  value="#{lbl['lbl.ct.mto.transportation']}" style="width:150px;"/>  
-                 <p:selectOneMenu   disabled="false"  value="#{contractDetailsBackingBean.managedBean.mtoDetails.transportationMethod} " style="width:160px;">
+              <h:outputLabel  value="#{lbl['lbl.ct.mto.transportation']}" />  
+                 <p:selectOneMenu   disabled="false"  value="" >
                     <f:selectItem itemLabel="--Please Select--" itemValue="--Please Select--" /> 
                  </p:selectOneMenu>
-             <h:outputLabel value="#{lbl['lbl.ct.mto.base']}"  style="width:150px;"/>  
-             <p:inputText   value=" #{contractDetailsBackingBean.managedBean.mtoDetails.mtoUploadBase}" required="true" disabled="false" style="width:150px;" />  
-             <h:outputLabel  value="#{lbl['lbl.ct.mto.dLocation']}"  styleClass="txtsize"/>  
-             <p:inputText  value="#{contractDetailsBackingBean.managedBean.mtoDetails.mtoLocation}" required="true" disabled="false" style="width:200px;" /> 
+             <h:outputLabel value="#{lbl['lbl.ct.mto.base']}"  />  
+             <p:inputText   value="" required="true" disabled="false" />  
+             <h:outputLabel  value="#{lbl['lbl.ct.mto.dLocation']}"  />  
+             <p:inputText  value="" required="true" disabled="false" /> 
          </h:panelGrid>  
          <h:panelGrid columns="2" style="width:350px;">  
            <h:outputLabel   value="#{lbl['lbl.ct.mto.idescription']}"  />  
-           <p:inputText  value="#{contractDetailsBackingBean.managedBean.mtoDetails.mtoItemDescription}"  disabled="false" style="width:200px;" />  
+           <p:inputText  value=""  disabled="false" />  
            <h:panelGroup>
            <div style="height: 70px; vertical-align: top">
                <p:outputLabel  value="Goods Name/Description" />
             </div>
            </h:panelGroup>
            <h:panelGrid>
-             <p:inputTextarea value="#{contractDetailsBackingBean.managedBean.mtoDetails.mtoItemDescription}" required="false"  rows="4" cols="27" maxlength="100"  disabled="false" autoResize="false" />
+             <p:inputTextarea value="" required="false"  rows="4" cols="27" maxlength="100"  disabled="false" autoResize="false" />
            </h:panelGrid>
             <h:outputLabel  value="#{lbl['lbl.ct.mto.tgoods']}"  />  
             <h:panelGrid columns="4" >
-              <p:selectOneMenu  disabled="false"  value="#{contractDetailsBackingBean.managedBean.mtoDetails.mtoItemDescription}"  style="width:120px;" styleClass="column-align-left">
+              <p:selectOneMenu  disabled="false"  value="" >
                 <f:selectItem itemLabel="-Please Select--" itemValue="" /> 
               </p:selectOneMenu>
               <p:spacer width="2"/>
               <h:outputLabel  value="#{lbl['lbl.ct.mto.heights']}" style="width:50px;" />  
-               <p:inputText  value="#{contractDetailsBackingBean.managedBean.mtoDetails.mtoHeight}" disabled="false"   style="width:30px;" />
+               <p:inputText  value="" disabled="false"   style="width:30px;" />
              </h:panelGrid>
              <f:verbatim></f:verbatim>
              <h:panelGrid columns="4">
-             <p:inputText   value="#{contractDetailsBackingBean.managedBean.mtoDetails.mtoItemDescription}"  disabled="false" style="width:110px;" />
+             <p:inputText   value=""  disabled="false" style="width:110px;" />
               <p:spacer width="16"/>
               <h:outputLabel  value="#{lbl['lbl.ct.mto.width']}" style="width:50px;" />  
-              <p:inputText    value="#{contractDetailsBackingBean.managedBean.mtoDetails.mtoWidth} "  disabled="false" style="width:30px;" />
+              <p:inputText    value=""  disabled="false" style="width:30px;" />
               </h:panelGrid>
               <f:verbatim></f:verbatim>
               <h:panelGrid columns="5">
-              <p:selectBooleanCheckbox  value="#{contractDetailsBackingBean.managedBean.mtoDetails.mtoLicenceReq}" disabled="false"/> 
+              <p:selectBooleanCheckbox  value="" disabled="false"/> 
               <p:outputLabel rendered="true" value="#{lbl['lbl.ct.mto.rexport']}" />
               <p:spacer width="17"/>
               <h:outputLabel  value="#{lbl['lbl.ct.mto.length']}" style="width:70px;" />  
-              <p:inputText  value="#{contractDetailsBackingBean.managedBean.mtoDetails.mtoLength}"  disabled="false" style="width:30px;" />
+              <p:inputText  value=""  disabled="false" style="width:30px;" />
              </h:panelGrid>
               <h:panelGroup>
               <div style="height: 70px; vertical-align: top">
@@ -98,17 +98,17 @@
               </div>
               </h:panelGroup>
               <h:panelGrid>
-              <p:inputTextarea  value="#{contractDetailsBackingBean.managedBean.mtoDetails.mtoORDInformation} " required="false" 
+              <p:inputTextarea  value="" required="false" 
                   rows="4" cols="27" disabled="false" autoResize="false" />
               </h:panelGrid>
-              <h:outputLabel   value="#{lbl['lbl.ct.mto.officer']}" style="width:200px;"/>  
-              <p:inputText     value="#{contractDetailsBackingBean.managedBean.mtoDetails.mtoInChargeOfficer} "  disabled="false" style="width:200px;" />
-              <h:outputLabel  value="#{lbl['lbl.ct.mto.phone']}" style="width:140px;"/>  
-              <p:inputText  value="#{contractDetailsBackingBean.managedBean.mtoDetails.mtoPhone}"  disabled="false"  style="width:150px;" />
+              <h:outputLabel   value="#{lbl['lbl.ct.mto.officer']}" />  
+              <p:inputText     value=""  disabled="false"  />
+              <h:outputLabel  value="#{lbl['lbl.ct.mto.phone']}" />  
+              <p:inputText  value=""  disabled="false"   />
               <h:outputLabel value="#{lbl['lbl.ct.mto.fax']}" style="width:140px;" />  
-              <p:inputText   value=" #{contractDetailsBackingBean.managedBean.mtoDetails.mtoFax}"  disabled="false" style="width:150px;" />
-              <h:outputLabel  value="#{lbl['lbl.ct.mto.pmethod']}" style="width:150px;" />  
-              <p:selectOneMenu  disabled="false"  value="#{contractDetailsBackingBean.managedBean.mtoDetails.mtoPurchaseMethod} " style="width:160px;">
+              <p:inputText   value=""  disabled="false" />
+              <h:outputLabel  value="#{lbl['lbl.ct.mto.pmethod']}" />  
+              <p:selectOneMenu  disabled="false"  value="" >
                  <f:selectItem itemLabel="--Please Select--" itemValue="--Please Select--" /> 
               </p:selectOneMenu>
            </h:panelGrid>

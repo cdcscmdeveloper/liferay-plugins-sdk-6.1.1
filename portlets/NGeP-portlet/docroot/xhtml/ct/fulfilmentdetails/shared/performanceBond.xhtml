@@ -7,7 +7,7 @@
 	xmlns:c="http://java.sun.com/jsp/jstl/core">
 	<p:panel id="bondId" header="#{lbl['lbl.ct.pbd.panel.name']}" toggleable="true"  toggleSpeed="500" widgetVar="panelbond">
     <div style="overflow-x:auto">
-	<p:dataTable id="tableBond" var="data" value="#{contractDetailsBackingBean.managedBean.ctContract.ctPerformanceBonds}" rowIndexVar="index"
+	<p:dataTable id="tableBond" var="data" value="" rowIndexVar="index"
        widgetVar="dataTableObj" lazy="false" dynamic="true" paginator="true" paginatorPosition="bottom"
 	   paginatorAlwaysVisible="false" emptyMessage="No Records!" rows="10">
 	   <p:columnGroup type="header"> 
@@ -24,13 +24,13 @@
 	  </p:columnGroup>
 	  <p:column styleClass="column-align-center" > 
 	      <h:outputText value="#{index+1}" /></p:column> 							
-	      <p:column><p:outputLabel value="#{data.bondType}"/></p:column>
-          <p:column><p:outputLabel value="#{data.refNo}"/></p:column>	
-          <p:column><p:outputLabel value="#{data.financialOrgProfileId.orgName}"/></p:column>	
+	      <p:column><p:outputLabel value=""/></p:column>
+          <p:column><p:outputLabel value=""/></p:column>	
+          <p:column><p:outputLabel value=""/></p:column>	
           <p:column > <p:outputLabel value=""/></p:column> 							
-          <p:column><p:outputLabel value="#{data.bondAmount}"/>  </p:column>	
-          <p:column><p:outputLabel value="#{data.effDate}"/></p:column>	
-          <p:column><p:outputLabel value="#{data.expDate}"/></p:column>	
+          <p:column><p:outputLabel value=""/>  </p:column>	
+          <p:column><p:outputLabel value=""/></p:column>	
+          <p:column><p:outputLabel value=""/></p:column>	
 	</p:dataTable>
    </div>
   </p:panel>

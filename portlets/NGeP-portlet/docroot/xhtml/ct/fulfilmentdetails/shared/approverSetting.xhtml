@@ -9,23 +9,23 @@
     <h:panelGrid columns="2">
      <h:panelGroup>
 	   <div style="height: 200px; width:150px; vertical-align: top; text-align: left">
-        <h:outputLabel for="approver" value="#{lbl['lbl.ct.set.app.name']}"/>
+        <h:outputLabel value="#{lbl['lbl.ct.set.app.name']}"/>
        </div>
        </h:panelGroup>
 	   <h:panelGrid style="width:500px">
-		 <p:pickList id="approverpickList" value="#{contractDetailsBackingBean.managedBean.approverSetting.settingDetails}" var="data"   
-           itemValue="#{data}" itemLabel="#{data.aproverName}" 
-           showTargetControls="true"  filterMatchMode="contains" >  
-           <p:ajax event="transfer" listener="#{contractDetailsBean.managedBean.approverSetting.onTransfer}"  />  
-           <p:column style="width:75%;">  
-           <h:outputText value="#{data.aproverName}"/>
-           </p:column>  
+		 <p:pickList id="approverpickList" value="#{contractDetailsBackingBean.managedBean.settingDetails}" var="data"   
+           itemValue="#{data}" itemLabel="#{data}" showSourceControls="true" showTargetControls="true" filterMatchMode="contains" >  
+             <f:facet name="sourceCaption">Approver List</f:facet>  
+             <f:facet name="targetCaption">Selected Approver</f:facet>  
+             <p:ajax event="transfer" listener="#{contractDetailsBackingBean.onTransfer}"  />  
+               <p:column style="width:75%;">  
+            #{data}
+          </p:column>  
          </p:pickList>  
        </h:panelGrid>
 	</h:panelGrid>
    </p:panel>
 </ui:composition>
-
 
 
 

@@ -7,26 +7,26 @@
 	xmlns:c="http://java.sun.com/jsp/jstl/core">
 		<p:panel  header="#{lbl['lbl.ct.set.panel.name']}"  toggleable="true"  toggleSpeed="500" widgetVar="panelfulilmentSeting">
          <h:panelGrid columns="3" style="width:800px;">  
-             <p:outputLabel value="#{lbl['lbl.ct.set.ct.notify']}"  style="width:150px;"/>
-             <p:inputText   value="#{contractDetailsBackingBean.managedBean.ctSetting.ctNotifyDays}"  style="width:60px;" />
-             <p:outputLabel value="#{lbl['lbl.ct.set.ct.desc']}"/>
-             <p:outputLabel value="#{lbl['lbl.ct.set.ag.notify']}"  style="width:150px;"/>  
-             <p:inputText   value="#{contractDetailsBackingBean.managedBean.ctSetting.agNotifyDaysB4Ag}"  style="width:60px;" />  
+             <p:outputLabel value="#{lbl['lbl.ct.set.ct.notify']}"  />
+             <p:inputText   value="#{contractDetailsBackingBean.managedBean.ctSetting.ctNotifyDays}"   />
+             <p:outputLabel value="#{lbl['lbl.ct.set.ct.desc']}" style="float:left;"/>
+             <p:outputLabel value="#{lbl['lbl.ct.set.ag.notify']}"  />  
+             <p:inputText   value="#{contractDetailsBackingBean.managedBean.ctSetting.agNotifyDaysB4Ag}"  />  
              <p:outputLabel value="#{lbl['lbl.ct.set.ag.desc']}"/>
-             <p:outputLabel value="#{lbl['lbl.ct.set.agg.notify']}"  style="width:150px;"/>  
-             <p:inputText   value="#{contractDetailsBackingBean.managedBean.ctSetting.agNotifyDayB4Ct}" style="width:60px;" />  
+             <p:outputLabel value="#{lbl['lbl.ct.set.agg.notify']}"  />  
+             <p:inputText   value="#{contractDetailsBackingBean.managedBean.ctSetting.agNotifyDayB4Ct}" />  
              <p:outputLabel value="#{lbl['lbl.ct.set.agg.desc']}"/>
-             <p:outputLabel value="#{lbl['lbl.ct.set.pb.notify']}"  style="width:150px;"/>  
-             <p:inputText   value="#{contractDetailsBackingBean.managedBean.ctSetting.bondNotifyDays}" style="width:60px;" />  
+             <p:outputLabel value="#{lbl['lbl.ct.set.pb.notify']}" />  
+             <p:inputText   value="#{contractDetailsBackingBean.managedBean.ctSetting.bondNotifyDays}" />  
              <p:outputLabel value="#{lbl['lbl.ct.set.pb.desc']}"/>
-             <h:outputLabel value="#{lbl['lbl.ct.set.ter.notify']}"  style="width:150px;" />  
-             <p:inputText   value="#{contractDetailsBackingBean.managedBean.ctSetting.terminationNotifyDays}" style="width:60px;" />  
+             <h:outputLabel value="#{lbl['lbl.ct.set.ter.notify']}"  />  
+             <p:inputText   value="#{contractDetailsBackingBean.managedBean.ctSetting.terminationNotifyDays}" />  
              <p:outputLabel value="#{lbl['lbl.ct.set.ter.desc']}"/>
-             <p:outputLabel value="#{lbl['lbl.ct.set.sup.notify']}"  style="width:150px;" />  
-             <p:inputText   value="#{contractDetailsBackingBean.managedBean.ctSetting.supplierActionDays}" style="width:60px;" />  
+             <p:outputLabel value="#{lbl['lbl.ct.set.sup.notify']}" />  
+             <p:inputText   value="#{contractDetailsBackingBean.managedBean.ctSetting.supplierActionDays}"  />  
              <p:outputLabel value="#{lbl['lbl.ct.set.sup.desc']}"/>
-             <p:outputLabel value="#{lbl['lbl.ct.set.mto.notify']}"  style="width:150px;" />  
-             <p:inputText   value="#{contractDetailsBackingBean.managedBean.ctSetting.approverMtoDays}" style="width:60px;" />  
+             <p:outputLabel value="#{lbl['lbl.ct.set.mto.notify']}"  />  
+             <p:inputText   value="#{contractDetailsBackingBean.managedBean.ctSetting.approverMtoDays}" />  
              <h:outputLabel value="#{lbl['lbl.ct.set.mto.desc']}"/>
            </h:panelGrid>
          </p:panel>
