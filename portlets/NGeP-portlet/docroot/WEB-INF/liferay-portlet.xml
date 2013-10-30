@@ -249,6 +249,13 @@
 		<header-portlet-css>/css/main.css</header-portlet-css>
 		<css-class-wrapper>flcos-portlet</css-class-wrapper>
 	</portlet>
+	<portlet>
+		<portlet-name>FLDocumentSearch</portlet-name>
+		<icon>/icon.png</icon>
+		<instanceable>false</instanceable>
+		<header-portlet-css>/css/main.css</header-portlet-css>
+		<css-class-wrapper>fldocs-portlet</css-class-wrapper>
+	</portlet>
 
 	<!-- Fulfilment End Added by Giri -->
 	<portlet>
