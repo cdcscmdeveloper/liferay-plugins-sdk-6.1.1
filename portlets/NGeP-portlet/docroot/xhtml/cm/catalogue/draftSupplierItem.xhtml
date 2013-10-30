@@ -16,7 +16,7 @@
 	<p:commandButton value="#{lbl['lbl.cm.save.draft']}"
 		action="#{catalogueBackingBean.saveCatalogItem}"></p:commandButton>
 
-	<p:commandButton value="#{lbl['lbl.cm.submit']}"></p:commandButton>
+	<p:commandButton value="#{lbl['lbl.cm.submit']}" action="#{catalogueBackingBean.submitToReviewItems}" update="draftSupplierItemID"></p:commandButton>
 
 	<p:dataTable id="draftSupplierItemID"
 		value="#{catalogueBackingBean.managedBean.maintainItemList}" rowIndexVar="rowIndex"
