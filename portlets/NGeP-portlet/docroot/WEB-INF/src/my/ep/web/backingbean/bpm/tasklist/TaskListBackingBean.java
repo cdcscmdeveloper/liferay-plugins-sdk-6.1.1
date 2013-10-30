@@ -22,6 +22,7 @@ import my.ep.dto.pm.authorization.orgunit.OrgUnitReqDTO;
 import my.ep.dto.pm.authorization.orgunit.OrgUnitResDTO;
 import my.ep.jaxb.cd.requestdata.CDRequestDataType;
 import my.ep.jaxb.fl.codata.FLContractOrderDataType;
+import my.ep.jaxb.fl.podata.FLPurchaseOrderDataType;
 import my.ep.persistence.entity.fl.request.FlDeliveryAddress;
 import my.ep.persistence.entity.fl.request.FlFulfilmentRequest;
 import my.ep.persistence.entity.pm.authorization.PmOrgProfile;
@@ -30,6 +31,8 @@ import my.ep.util.lookupservice.EpBpmBusinessDelegate;
 import my.ep.web.backingbean.BaseBackingBean;
 import my.ep.web.backingbean.cm.codification.UnspscCodeBackingBean;
 import my.ep.web.backingbean.fl.createcontract.ContractRequestBackingBean;
+import my.ep.web.backingbean.fl.frn.CreateFRNBackingBean;
+import my.ep.web.backingbean.fl.pr.PurchaseRequestBackingBean;
 import my.ep.web.constant.PagingConst;
 import my.ep.web.managedbean.bpm.tasklist.TaskListManagedBean;
 import my.ep.web.util.lookupservice.BusinessDelegate;
@@ -226,6 +229,44 @@ public class TaskListBackingBean extends BaseBackingBean<TaskListManagedBean>{
 				crBB.getManagedBean().getFlRequest().setCreatedOrgProfile(pmResDTO.getPmOrgProfile());
 			}	
 			
+			
+		}
+		else if(res.getProcessName().equalsIgnoreCase("Create Purchase Order")){
+			System.out.println("in Task List Create Purchase Order");
+			IFulfilmentRequestSO fulfilmentSO = (IFulfilmentRequestSO) BusinessDelegate.getInstance().getServiceObject("fl",IFulfilmentRequestSO.class);
+			FulfilmentReqDTO fulfilmentReqDTO = new FulfilmentReqDTO();
+			FulfilmentResDTO resDTO = new FulfilmentResDTO();
+			PurchaseRequestBackingBean purchaseRequestBackingBean=new PurchaseRequestBackingBean();  
+			FLPurchaseOrderDataType flPurchaseOrd = (FLPurchaseOrderDataType)obj;
+			System.out.println("Id in Task List:: "+flPurchaseOrd.getPurchaseRequestId());
+			FlFulfilmentRequest flFulfilmentRequest=new FlFulfilmentRequest();
+			flFulfilmentRequest.setFulfilmentReqId(Long.valueOf(flPurchaseOrd.getPurchaseRequestId()));
+//			fulfilmentReqDTO.setFlFulfilmentRequest(flFulfilmentRequest);
+			fulfilmentReqDTO.setFlRequestId(flPurchaseOrd.getPurchaseRequestId());
+			resDTO=fulfilmentSO.retrieveFulfilmentRequest(fulfilmentReqDTO);
+			purchaseRequestBackingBean.getManagedBean().setFulfilmentRequest(resDTO.getFlFulfilmentRequest());
+			purchaseRequestBackingBean.getManagedBean().setTaskId(taskId);
+			purchaseRequestBackingBean.getManagedBean().setActions(res.getAction());
+			purchaseRequestBackingBean.getManagedBean().setTaskName(res.getTaskName());
+			
+		}
+		else if(res.getProcessName().equalsIgnoreCase("Delvery Order Fullfillment")){
+			System.out.println("in Task List Delvery Order");
+			//IDeliveryOrderSO deliveryOrderSO = (IDeliveryOrderSO) BusinessDelegate.getInstance().getServiceObject("fl",IDeliveryOrderSO.class);
+			//FulfilmentReqDTO fulfilmentReqDTO = new FulfilmentReqDTO();
+			FulfilmentResDTO resDTO = new FulfilmentResDTO();
+			CreateFRNBackingBean createFRNBackingBean=new CreateFRNBackingBean();  
+			//FLDOFullfillmentDataType flDeliveryOrder = (FLDOFullfillmentDataType)obj;
+			//System.out.println("del order Id in Task List:: "+flDeliveryOrder.getDeliveryOrderId());
+			//FlDeliveryOrder deliveryOrder=new FlDeliveryOrder();
+			//deliveryOrder.setDeliveryOrderId(Long.valueOf(flDeliveryOrder.getDeliveryOrderId()));
+//			fulfilmentReqDTO.setFlFulfilmentRequest(flFulfilmentRequest);
+			//fulfilmentReqDTO.setDeliveryOrderId(flDeliveryOrder.getDeliveryOrderId());
+			//resDTO=deliveryOrderSO.retrieveDeliveryOrder(fulfilmentReqDTO);
+			//System.out.println("resDTO del ord no "+resDTO.getFlDeliveryOrder().getDeliveryOrderNo());
+			//createFRNBackingBean.getManagedBean().setFulfilmentNote(fulfilmentNote)
+			createFRNBackingBean.getManagedBean().setTaskId(taskId);
+			createFRNBackingBean.getManagedBean().setActions(res.getAction());
 			
 		}
 
