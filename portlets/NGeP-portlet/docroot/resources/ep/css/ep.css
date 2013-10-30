@@ -1030,6 +1030,10 @@ px
 	text-decoration: none;
 }
 
+.ui-datatable-tablewrapper {
+	overflow: auto;	
+}
+
 .ui-datatable-tablewrapper th {
 	background-color:#808080;
 }
@@ -1037,7 +1041,7 @@ px
 .ui-datatable-header.ui-widget-header,.ui-datatable th.ui-state-default
 	{
 	font-family: Tahoma, Arial;
-	font-weight: bold;
+	font-weight: normal !important;
 	font-size: 11px;
 	color: #333333;
 	text-decoration: none;
@@ -1809,9 +1813,6 @@ padding-left
 	box-shadow:none!important;
 	cursor: pointer !important;
 	border-radius: 0px !important;
-	background-position: right center!important;
-	background-image: url(#{resource['ep/images/design:side_menu_arrow.png']})!important;
-	background-repeat: no-repeat;
 	background-color: #43ADFF!important;
 	border:0px!important;
 }
@@ -1947,13 +1948,16 @@ important
 }
 
 .cmLeft {
-	width: 25%;
+	width: 200px;
 	vertical-align: top;
 	background-color: #F9F9F9;
+	display: block;
+	padding-bottom:8000px;
+	margin-bottom:-8000px;
 }
 
 .cmRight {
-	width: 75%;
+	width: 100%;
 	vertical-align: top;
 	padding: 10px;
 	background-color: #FFF;
@@ -2964,6 +2968,120 @@ important
 
 
 }
+
+.ui-icon-agree {
+	background-image: url(#{ resource [ 'ep/images/design:document.png' ]
+}
+
+)
+!
+important
+;
+
+	
+background-position
+:
+ 
+center
+;
+
+	
+border-radius
+:
+ 
+0
+px
+;
+
+	
+height
+:
+ 
+16
+px
+ 
+!
+important
+;
+
+
+}
+
+.ui-icon-suspension {
+	background-image: url(#{ resource [ 'ep/images/design:pause.png' ]
+}
+
+)
+!
+important
+;
+
+	
+background-position
+:
+ 
+center
+;
+
+	
+border-radius
+:
+ 
+0
+px
+;
+
+	
+height
+:
+ 
+16
+px
+ 
+!
+important
+;
+
+
+}
+
+.ui-icon-terminate {
+	background-image: url(#{ resource [ 'ep/images/design:terminate.png' ]
+}
+
+)
+!
+important
+;
+
+	
+background-position
+:
+ 
+center
+;
+
+	
+border-radius
+:
+ 
+0
+px
+;
+
+	
+height
+:
+ 
+16
+px
+ 
+!
+important
+;
+
+
+}
 /*--------------------------       End Custom Icons    ------------------------------ */
 
 /*--------------------------       Custom CSS          ------------------------------ */
@@ -3115,5 +3233,9 @@ textarea[disabled],input[type="text"][disabled],input[type="password"][disabled]
 	background-color: #97D832 !important;
 	font-weight: bold;
 	border-radius: 0;
+}
+
+.ui-state-default {
+	box-shadow: none !important;
 }
 /*--------------------------       End Custom CSS       --------------------------- */
