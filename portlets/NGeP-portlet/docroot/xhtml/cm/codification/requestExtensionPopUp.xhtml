@@ -98,8 +98,8 @@
 
 
 		<p:commandButton value="#{lbl['lbl.cm.ok']}"
-			action="#{unspscCodeBackingBean.addNewRequest}" update=":form:extCodeId"
-			onclick="extensionPopUp.hide()"></p:commandButton>
+			action="#{unspscCodeBackingBean.addNewRequest}" update=":form:extCodeId :form:requestExtPopUpId"
+			oncomplete="extensionPopUp.hide()"></p:commandButton>
 
 		<p:commandButton value="#{lbl['lbl.cm.cancel']}" immediate="true"
 			onclick="extensionPopUp.hide()"></p:commandButton>

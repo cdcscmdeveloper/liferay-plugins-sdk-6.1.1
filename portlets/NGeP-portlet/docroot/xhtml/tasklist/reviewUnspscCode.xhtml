@@ -13,9 +13,22 @@
 
 		<h:panelGroup id="cmReviewUnspsc">
 
-			<p:outputLabel styleClass="titleFront"
+			<p:outputLabel styleClass="screen-title"
 				value="#{lbl['lbl.cm.unspsc.code.request.form']}"></p:outputLabel>
 
+			<div style="text-align: right;">
+				<p:commandButton value="#{lbl['lbl.cm.search']}"
+					action="#{unspscCodeBackingBean.navigateToSearch}"></p:commandButton>
+				<ui:repeat var="action"
+					value="#{tasklistBackingBean.managedBean.action}">
+					<p:commandButton value="#{action}"
+						action="#{unspscCodeBackingBean.submitForRequest}"></p:commandButton>
+				</ui:repeat>
+				<p:commandButton value="#{lbl['lbl.cm.create.unspsc.code']}"
+					action="#{unspscCodeBackingBean.createTempCode}"></p:commandButton>
+				<p:commandButton value="#{lbl['lbl.cm.create.ext.code']}"
+					action="#{unspscCodeBackingBean.createExtCode}"></p:commandButton>
+			</div>
 			<p:selectOneRadio>
 				<f:selectItem itemValue="P" itemLabel="Product " />
 				<f:selectItem itemValue="S" itemLabel="Service" />
@@ -42,18 +55,6 @@
 				<p:outputLabel value="* #{lbl['lbl.cm.color']}"></p:outputLabel>
 				<p:inputText></p:inputText>
 
-				<p:commandButton value="#{lbl['lbl.cm.search']}"
-					action="#{unspscCodeBackingBean.navigateToSearch}"></p:commandButton>
-				<p:commandButton value="#{lbl['lbl.cm.submit']}"
-					action="#{unspscCodeBackingBean.submitForRequest}"></p:commandButton>
-				<p:commandButton value="#{lbl['lbl.cm.create.unspsc.code']}"
-					action="#{unspscCodeBackingBean.createTempCode}"></p:commandButton>
-					<p:commandButton value="#{lbl['lbl.cm.create.ext.code']}"
-					action="#{unspscCodeBackingBean.createExtCode}"></p:commandButton>
-					
-				<ui:repeat var="action" value="#{tasklistBackingBean.managedBean.action}">
-					<p:commandButton value="#{action}"></p:commandButton>
-				</ui:repeat>
 
 			</h:panelGrid>
 

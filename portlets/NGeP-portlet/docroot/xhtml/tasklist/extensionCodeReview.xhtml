@@ -16,6 +16,14 @@
 		<h:panelGroup id="extensionReviewID">
 			<p:outputLabel styleClass="screen-title"
 				value="Extension Code Review"></p:outputLabel>
+				
+			<div style="text-align: right;">
+				<ui:repeat var="action"
+					value="#{tasklistBackingBean.managedBean.action}">
+					<p:commandButton value="#{action}"
+						action="#{unspscCodeBackingBean.submitToReviewExt}"></p:commandButton>
+				</ui:repeat>
+			</div>
 
 			<table>
 				<tr>
@@ -118,17 +126,9 @@
 					</h:panelGrid>
 
 				</p:column>
-				
+
 
 			</p:dataTable>
-
-			<div style="text-align: right;">
-				<ui:repeat var="action"
-					value="#{tasklistBackingBean.managedBean.action}">
-					<p:commandButton value="#{action}" action="#{unspscCodeBackingBean.submitToReviewExt}"></p:commandButton>
-				</ui:repeat>
-			</div>
-
 
 
 		</h:panelGroup>

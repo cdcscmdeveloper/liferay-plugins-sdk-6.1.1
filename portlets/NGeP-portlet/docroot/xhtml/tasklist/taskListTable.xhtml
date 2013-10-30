@@ -23,8 +23,8 @@
 
 		<p:outputLabel styleClass="screen-title" value="TaskList"></p:outputLabel><div class="clear"></div>
 
-		<p:dataTable value="#{tasklistBackingBean.managedBean.taskList}"
-			var="tasks" paginator="true" rows="10"
+		<p:dataTable value="#{tasklistBackingBean.managedBean.taskList}" style="width:780px;"
+			var="tasks" paginator="true" rows="10" paginatorPosition="bottom"
 			paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
 			rowsPerPageTemplate="5,10,15">
 
