@@ -11,6 +11,7 @@ import my.ep.biz.service.cm.codification.IRequestCodeSO;
 import my.ep.biz.service.fl.request.IFulfilmentRequestSO;
 import my.ep.biz.service.fl.request.IShippingInstructionSO;
 import my.ep.biz.service.pm.authorization.orgunit.IOrgUnitSO;
+import my.ep.biz.service.pp.budgetallocation.IBudgetAllocationSO;
 import my.ep.bpm.dto.BpmRequestDTO;
 import my.ep.bpm.dto.BpmResponseDTO;
 import my.ep.bpm.service.IBpmSO;
@@ -20,9 +21,12 @@ import my.ep.dto.fl.FulfilmentReqDTO;
 import my.ep.dto.fl.FulfilmentResDTO;
 import my.ep.dto.pm.authorization.orgunit.OrgUnitReqDTO;
 import my.ep.dto.pm.authorization.orgunit.OrgUnitResDTO;
+import my.ep.dto.pp.budgetallocation.BudgetAllocationReqDTO;
+import my.ep.dto.pp.budgetallocation.BudgetAllocationResDTO;
 import my.ep.jaxb.cd.requestdata.CDRequestDataType;
 import my.ep.jaxb.fl.codata.FLContractOrderDataType;
 import my.ep.jaxb.fl.podata.FLPurchaseOrderDataType;
+import my.ep.jaxb.pp.budgetdata.PPBudgetDataType;
 import my.ep.persistence.entity.fl.request.FlDeliveryAddress;
 import my.ep.persistence.entity.fl.request.FlFulfilmentRequest;
 import my.ep.persistence.entity.pm.authorization.PmOrgProfile;
@@ -33,6 +37,7 @@ import my.ep.web.backingbean.cm.codification.UnspscCodeBackingBean;
 import my.ep.web.backingbean.fl.createcontract.ContractRequestBackingBean;
 import my.ep.web.backingbean.fl.frn.CreateFRNBackingBean;
 import my.ep.web.backingbean.fl.pr.PurchaseRequestBackingBean;
+import my.ep.web.backingbean.pp.budgetallocation.BudgetAllocationBackingBean;
 import my.ep.web.constant.PagingConst;
 import my.ep.web.managedbean.bpm.tasklist.TaskListManagedBean;
 import my.ep.web.util.lookupservice.BusinessDelegate;
@@ -81,7 +86,7 @@ public class TaskListBackingBean extends BaseBackingBean<TaskListManagedBean>{
 		IBpmSO bpmSO = (IBpmSO) EpBpmBusinessDelegate.getInstance().getServiceObject(IBpmSO.class);
 
 		//String token = bpmSO.authenticate("roslan", "welcome1");
-		String token = bpmSO.authenticate("roslan", "welcome1");
+		String token = bpmSO.authenticate(this.getManagedBean().getTempLoginId(), "welcome1");
 		System.out.println("testing BPM auth******"+token);
 		BpmRequestDTO reqDTO = new BpmRequestDTO();
 
@@ -111,7 +116,7 @@ public class TaskListBackingBean extends BaseBackingBean<TaskListManagedBean>{
 
 		String urlKey = FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap().get("key");
 		String taskId = FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap().get("taskId");
-		String ctx = bpmSO.authenticate("roslan","welcome1");
+		String ctx = bpmSO.authenticate(this.getManagedBean().getTempLoginId(),"welcome1");
 		BpmRequestDTO reqDTO = new BpmRequestDTO();
 
 
@@ -268,6 +273,22 @@ public class TaskListBackingBean extends BaseBackingBean<TaskListManagedBean>{
 			createFRNBackingBean.getManagedBean().setTaskId(taskId);
 			createFRNBackingBean.getManagedBean().setActions(res.getAction());
 			
+		}else if(res.getProcessName().equalsIgnoreCase("Budget Endorsement")){
+
+				//Procurement Plan
+				PPBudgetDataType budgetObj = (PPBudgetDataType)obj;
+				
+				BudgetAllocationReqDTO budgetReqDTO = new BudgetAllocationReqDTO();
+				budgetReqDTO.setBudgetAllocId(Long.parseLong(budgetObj.getBudgetId()));
+				IBudgetAllocationSO budgetSO = (IBudgetAllocationSO) BusinessDelegate.getInstance().getServiceObject("pp", IBudgetAllocationSO.class);
+				BudgetAllocationResDTO budgetResSO = budgetSO.retrieveBudgetAllocation(budgetReqDTO);
+
+				BudgetAllocationBackingBean budgetBB = new BudgetAllocationBackingBean();
+				budgetBB.getManagedBean().setBpmTaskId(taskId);
+				budgetBB.getManagedBean().setActions(res.getAction());
+				budgetBB.loadTask(budgetResSO.getBudgetAlloc(), res.getTaskName());
+
+			
 		}
 
 
@@ -293,6 +314,11 @@ public class TaskListBackingBean extends BaseBackingBean<TaskListManagedBean>{
 	}
 
 	public void filterStatus(){
+
+		BpmResponseDTO responseDTO = retrieveWorklistItems(this.getManagedBean().getStatus(), "");
+	}
+	
+	public void tempFilterLogin(){
 
 		BpmResponseDTO responseDTO = retrieveWorklistItems(this.getManagedBean().getStatus(), "");
 	}

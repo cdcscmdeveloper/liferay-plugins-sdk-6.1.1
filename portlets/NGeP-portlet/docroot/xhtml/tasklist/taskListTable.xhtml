@@ -10,7 +10,13 @@
 	<h:panelGroup id="taskListID">
 
 		<div style="text-align: left; float: right;">
-
+			<p:selectOneMenu value="#{tasklistBackingBean.managedBean.tempLoginId}">
+				<f:selectItem itemLabel="CURRENT LOGIN" itemValue="0"/>
+				<f:selectItem itemLabel="Lailah" itemValue="lailah"/>
+				<f:selectItem itemLabel="Roslan" itemValue="roslan"/>
+				<f:selectItem itemLabel="Khai" itemValue="khai"/>
+				<p:ajax event="change" update="@form" listener="#{tasklistBackingBean.tempFilterLogin}"/>
+			</p:selectOneMenu>
 			<p:selectOneMenu value="#{tasklistBackingBean.managedBean.status}">
 				<f:selectItem itemLabel="ASSIGNED" itemValue="ASSIGNED"></f:selectItem>
 				<f:selectItem itemLabel="COMPLETED" itemValue="COMPLETED"></f:selectItem>

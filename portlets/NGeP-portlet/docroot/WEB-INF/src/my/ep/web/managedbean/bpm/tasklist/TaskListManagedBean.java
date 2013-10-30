@@ -31,8 +31,22 @@ public class TaskListManagedBean extends BaseManagedBean {
 	
 	private String taskName;
 	
+	private String tempLoginId; //TODO: temp and to be removed
 	
-	
+
+	/**
+	 * @return the tempLoginId
+	 */
+	public String getTempLoginId() {
+		return tempLoginId;
+	}
+
+	/**
+	 * @param tempLoginId the tempLoginId to set
+	 */
+	public void setTempLoginId(String tempLoginId) {
+		this.tempLoginId = tempLoginId;
+	}
 
 	public String getTaskName() {
 		return taskName;
