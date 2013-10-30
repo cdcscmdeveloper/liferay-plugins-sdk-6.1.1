@@ -1,10 +1,9 @@
 Body {
 	BACKGROUND: #FFFFFF;
-	font-family: Tahoma, Arial !important;
 }
 
 .EpBody {
-	font-family: Tahoma, Arial;
+
 	font-size: 20px;
 }
 
@@ -745,8 +744,8 @@ a:visited.menuItemLink-selected {
 	border: 1px solid #CCCCCC;
 	color: #FFFFFF !important;
 	cursor: pointer;
-	font-family: Tahoma, Arial !important;
-	font-size: 12px;
+	font-family: Tahoma;
+	font-size: 11px;
 	font-weight: bold;
 	text-decoration: none;
 	height: 25px !important;
@@ -854,7 +853,7 @@ a:hover.blue_font {
 .ui-inputfield.hasDatepicker {
 	margin-top: 2px;
 	margin-bottom: 2px;
-	border: 1px solid #959595 !important;
+	border: 1px solid #CECECE !important;
 }
 
 .ui-inputfield.hasDatepicker.ui-corner-all {
@@ -952,7 +951,8 @@ px
 }
 
 .ui-menu,.ui-menu .ui-menu-child {
-	background: #fff;
+	background: #F9F9F9;
+	border: none;
 }
 
 .ui-menu,.ui-selectonemenu-items {
@@ -1019,7 +1019,7 @@ px
 }
 /* End selectonemenu */
 .ui-widget .ui-widget {
-	font-size: 12px;
+	font-size: 11px;
 }
 
 /* Start DataTable and Paginator */
@@ -1370,11 +1370,13 @@ important
 }
 
 .ui-inputfield.ui-inputtext {
+	font-size: 11px;
+	font-family: Tahoma;
 	padding-left: 4px;
 	padding-right: 4px;
 	margin-bottom: 5px;
 	height: 20px;
-	border: 1px solid #959595 !important; 
+	border: 1px solid #CECECE !important; 
 }
 
 .ui-inputfield.ui-inputtext.ui-state-focus {
@@ -1710,8 +1712,8 @@ padding-left
 .ui-tabs .ui-tabs-nav li a {
 	font-weight: normal;
 	padding: 5px 15px;
-	font-family: Tahoma, Arial;
-	font-size: 12px;
+	font-family: Tahoma;
+	font-size: 11px;
 	color: #3c8bc2;
 	text-decoration: none;
 }
@@ -3088,11 +3090,12 @@ important
 label {
 	display: inline-block; 
 	text-align: left !important;
-	font-size:12px;
+	font-size:11px;
 	font-weight:normal;
 	vertical-align:middle;
 	float:right;
 	padding:0 10px 0 0;
+	font-family: Tahoma;
 }
 
 .ui-widget-header {
@@ -3153,7 +3156,7 @@ tbody.ui-datatable-data > tr:hover {
 }
 
 .ui-selectonemenu .ui-selectonemenu-label {
-	padding:2px 0 2px 5px !important;
+	padding:3px 0 3px 5px !important;
 }
 
 input[type="text"], input[type="password"], input[type="file"], input[type="submit"], input[type="button"], input[type="reset"], select, button, .aui-field-input-text {
@@ -3179,7 +3182,7 @@ li[role=tab].ui-tabs-selected {
 .ui-tabs.ui-tabs-top>ul.ui-tabs-nav> li> a {
 	font-weight: bold !important;
 	color: #333333 !important;
-	font-size: 12px !important;
+	font-size: 11px;
 }
 
 textarea {
@@ -3196,7 +3199,7 @@ textarea[disabled],input[type="text"][disabled],input[type="password"][disabled]
 	color: #333333 !important;
 	background-color: #F4F4F4 !important;
 	opacity: 1 !important;
-	border: 1px solid #959595 !important;
+	border: 1px solid #CECECE !important;
 }
 
 .screen-title {
@@ -3221,21 +3224,39 @@ textarea[disabled],input[type="text"][disabled],input[type="password"][disabled]
 	background-color: #F9F9F9;
 }
 
-.ui-panelmenu .ui-menuitem-text {
+.ui-menuitem-text {
 	color: #333333;
+	font-weight: bold;
 }
 
 .ui-menuitem > a:hover > span {
 	color: #FFFFFF !important;
+	font-family: Tahoma;
+	font-size: 11px;
 }
 
 .ui-menuitem .ui-state-hover {
 	background-color: #97D832 !important;
 	font-weight: bold;
 	border-radius: 0;
+	font-size: 11px;
 }
 
 .ui-state-default {
 	box-shadow: none !important;
+}
+
+.ui-selectonemenu.ui-widget.ui-state-default.ui-corner-all.ui-helper-clearfix {
+	border: 1px solid #CECECE;
+}
+
+.ui-selectonemenu .ui-selectonemenu-trigger {
+	border-left: 1px solid #CECECE;
+}
+
+.catMenu {
+	background-color: #F9F9F9;
+	width: 30%;
+	padding-left: 700px;
 }
 /*--------------------------       End Custom CSS       --------------------------- */
