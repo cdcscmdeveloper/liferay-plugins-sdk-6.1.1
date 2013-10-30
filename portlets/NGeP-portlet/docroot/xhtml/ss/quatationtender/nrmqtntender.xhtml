@@ -9,8 +9,8 @@
 		header="Category Code List"
 		toggleable="true">
 
-			<p:dataTable value="#{searchQtnTenderBB.managedBean.categories}"
-			var="ccode" resizableColumns="true" editable="true">
+			<p:dataTable value="#{qTDetailBB.managedBean.qt.scQtCategorys}"
+			var="ccode" resizableColumns="true" editable="true" id="catList">
 			<p:ajax event="rowEdit" />
 			<p:ajax event="rowEditCancel" />
 
@@ -18,34 +18,33 @@
 
 				<p:cellEditor>
 					<f:facet name="output">
-						<h:outputText value="#{ccode.mainCCode}" />,
+						<h:outputText value="#{ccode.pmCategoryL1.categoryL1Id}" />
                 </f:facet>
 					<f:facet name="input">
-						<p:selectOneMenu value="#{searchQtnTenderBB.managedBean.qtno}"
-							effect="fold" editable="true">
-							<f:selectItem itemLabel="Select One" itemValue="" />
-							<f:selectItems value="#{searchQtnTenderBB.managedBean.mainCcode}" />
+						<p:selectOneMenu value="#{ccode.pmCategoryL1}"
+							effect="fold" converter="pmCategoryl1Convertor">
+							<p:ajax event="change" listener="#{qTDetailBB.handleL2CategoryChange}" />
+							<f:selectItem itemLabel="Select One" itemValue="#{null}" />
+							<f:selectItems value="#{qTDetailBB.managedBean.categoryL1s}" var="catL1Opt" itemLabel="#{catL1Opt.cateogryL1Code}" itemValue="#{catL1Opt}"/>
 						</p:selectOneMenu>
 					</f:facet>
 				
 					<f:facet name="output">
-						<h:outputText value="#{ccode.subCCode}" />,
+						<h:outputText value="#{ccode.pmCategoryL2.categoryL2Id}" />,
                 </f:facet>
 					<f:facet name="input">
-						<p:selectOneMenu value="#{searchQtnTenderBB.managedBean.qtno}"
+						<p:selectOneMenu value="#{ccode.pmCategoryL2.categoryL2Id}"
 							effect="fold" editable="true">
-							<f:selectItem itemLabel="Select One" itemValue="" />
-							<f:selectItem itemLabel="sub1" itemValue="1" />
-							<f:selectItem itemLabel="sub2" itemValue="2" />
-							<f:selectItem itemLabel="sub3" itemValue="3" />
+							<f:selectItem itemLabel="Select One" itemValue="0" />
+							<f:selectItems value="#{qTDetailBB.managedBean.categoryL2s}" var="catL2Opt" itemLabel="#{catL2Opt.cateogryL2Code}" itemValue="#{catL2Opt.categoryL2Id}"/>
 						</p:selectOneMenu>
 					</f:facet>
 				
 					<f:facet name="output">
-						<h:outputText value="#{ccode.subCDevison}" />
+						<h:outputText value="#{ccode.pmCategoryL3.cateogryL3Code}" />
 					</f:facet>
 					<f:facet name="input">
-						<p:selectOneMenu value="#{searchQtnTenderBB.managedBean.qtno}"
+						<p:selectOneMenu value="#{ccode.pmCategoryL3.cateogryL3Code}"
 							effect="fold" editable="true">
 							<f:selectItem itemLabel="Select One" itemValue="" />
 							<f:selectItem itemLabel="Subcc1" itemValue="1" />
@@ -64,7 +63,7 @@
 
 				<p:cellEditor>
 					<f:facet name="output">
-						<h:outputText value="#{ccode.manditory}" />
+						<h:outputText value="#{ccode.isMandatory}" />
 					</f:facet>
 					<f:facet name="input">
 
@@ -89,7 +88,7 @@
 			styleClass="noBorders tr,noBorders td">
 
 			<p:commandButton value="ADD" style="float:right;"
-				onclick="ccdlg.show();" />
+				actionListener="#{qTDetailBB.addNewCategoryItem}" update="catList" />
 		</h:panelGrid>
 		<h:panelGrid columns="2" style="width:40%;"
 			styleClass="noBorders tr,noBorders td">
@@ -187,10 +186,10 @@
 					<p:column headerText="Zones">
 						<p:cellEditor>
 							<f:facet name="output">
-								<h:outputText value="#{zoneTen.zone}" />
+								<h:outputText value="#{zoneTen.zoneName}" />
 							</f:facet>
 							<f:facet name="input">
-								<h:selectOneMenu value="#{zoneTen.zone}">
+								<h:selectOneMenu value="#{zoneTen.zoneId}">
 									<f:selectItems value="#{searchQtnTenderBB.managedBean.zones}"
 										var="state" itemLabel="#{state}" itemValue="#{state}" />
 								</h:selectOneMenu>
@@ -201,7 +200,7 @@
 					<p:column headerText="States" style="width:30%">
 						<p:cellEditor>
 							<f:facet name="output">
-								<h:outputText value="#{zoneTen.zoneSt}" />
+								<h:outputText value="#{zoneTen.stateNameStr}" />
 							</f:facet>
 							<f:facet name="input">
 								<h:selectOneMenu value="#{zoneTen.zoneSt}">
@@ -217,7 +216,7 @@
 					<p:column headerText="Districts">
 						<p:cellEditor>
 							<f:facet name="output">
-								<ui:repeat var="loccity" value="#{zoneTen.zoneLoc}">
+								<ui:repeat var="loccity" value="#{zoneTen.districtStr}">
 								<h:outputText value="#{loccity}"  />
 							</ui:repeat>
 							</f:facet>
@@ -241,7 +240,7 @@
 
 				</p:dataTable>
 				<p:commandButton value="ADDZONES" style="float:right;"
-					onclick="dlg1.show();"></p:commandButton>
+					onclick="zoneDlg.show();"></p:commandButton>
 			</h:panelGroup>
 			<br />
 
@@ -251,7 +250,7 @@
 		<p:panelGrid columns="2" style="width:40%;"
 			styleClass="noBorders tr,noBorders td">
 			<h:outputText value="Paid Up Capital (MYR)" />
-			<p:inputText value="#{searchQtnTenderBB.managedBean.qtno}" />
+			<p:inputText value="#{qTDetailBB.managedBean.qtc.paidUpCaptial}" />
 
 
 		</p:panelGrid>
@@ -273,6 +272,26 @@
 
 			
 		</p:panelGrid>
+		
+		 <p:treeTable id="treetable" value="#{qTDetailBB.managedBean.root3}" var="zone">
+        
+        <p:column style="width:32%">
+            <f:facet name="header">
+               Location Name
+            </f:facet>
+            <h:outputText value="#{zone}" />
+        </p:column>
+
+        <p:column style="width:32%">
+            <f:facet name="header">
+               Action
+            </f:facet>
+            <h:outputText value="btootn" />
+        </p:column>
+
+      
+        
+    </p:treeTable>
 	</p:panel>
 
 	<p:dialog widgetVar="stateDlg" modal="true">
@@ -302,8 +321,8 @@
 		</p:panel>
 	</p:dialog>
 
-	<p:dialog widgetVar="dlg1" modal="true">
-		<p:panel header="Add State" toggleable="true">
+	<p:dialog widgetVar="zoneDlg" modal="true">
+		<p:panel header="Add Zone" toggleable="true">
 
 			<p:panelGrid columns="2" style="width:100%;"
 				styleClass="noBorders tr,noBorders td">
@@ -334,7 +353,7 @@
 			</p:panelGrid>
 			<p:commandButton
 				action="#{searchQtnTenderBB.managedBean.addZoneAction}"
-				update="zones" value="ADD" oncomplete="dlg1.hide()"
+				update="zones" value="ADD" oncomplete="zoneDlg.hide()"
 				style="float:right" />
 
 		</p:panel>

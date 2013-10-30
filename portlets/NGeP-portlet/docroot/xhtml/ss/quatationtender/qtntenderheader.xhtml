@@ -8,19 +8,19 @@
 	<p:panel header="Header" toggleable="true">
 <p:panelGrid columns="4" style="width:100%;" styleClass="noBorders tr,noBorders td">
 <h:outputText value="Qtn/Tender No" />  
-            <p:inputText  value="AT001" readonly="true"/> 
+            <p:inputText  value="#{qTDetailBB.managedBean.qt.qtNo}" readonly="true"/> 
             
             <h:outputText value="Ministry Code/Name" />  
             <p:inputText  value="J009" readonly="true"/>  
             
             <h:outputText value="Status" />  
-            <p:inputText  value="Active" readonly="true" />  
+            <p:inputText  value="#{qTDetailBB.managedBean.qt.pmStatus}" readonly="true" />  
             
              <h:outputText value="Department Code/Name" />  
             <p:inputText  value="101" readonly="true"/>  
            
            <h:outputText value="Created Date" /> 
-   <p:inputText value="09/09/2013" readonly="true"/>  
+           <p:inputText value="#{qTDetailBB.managedBean.qt.createdDate}"  readonly="true"/>  
  
             <h:outputText value="Divison Code/Name" />  
             <p:inputText value="P001" readonly="true"/>  

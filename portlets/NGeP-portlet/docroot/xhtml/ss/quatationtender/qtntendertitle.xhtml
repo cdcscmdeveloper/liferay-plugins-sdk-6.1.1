@@ -6,40 +6,47 @@
 	xmlns:c="http://java.sun.com/jsp/jstl/core">
 
 		<p:panel header="Qtn/Tender Title" toggleable="true">
-<p:panelGrid columns="2" style="width:100%;" styleClass="noBorders tr,noBorders td">
+<p:panelGrid  style="width:100%;" styleClass="noBorders tr,noBorders td">
 
- <h:outputText value="* Title" />
-<p:inputText value="#{qTDetailBB.managedBean.qt.qtTitle}" size="130"/>  
-
-<h:outputLabel for="fileno" value=" * File No." />  
-            <p:inputText id="fileno" value="#{qTDetailBB.managedBean.qt.fileNo}" size="130"/> 
-            
-            </p:panelGrid>
-            <p:panelGrid columns="4" style="width:100%;" styleClass="noBorders tr,noBorders td">
+        <p:row>
+        <p:column>
+        <h:outputText value="* Title" />
+        </p:column>
+        <p:column>
+        <p:inputText value="#{qTDetailBB.managedBean.qt.qtTitle}" />  
+        </p:column>
+        </p:row>
+        <p:row>
+        <p:column>
+        <h:outputText value=" * File No." />
+        </p:column>
+       
+<p:column>
+            <p:inputText id="fileno" value="#{qTDetailBB.managedBean.qt.fileNo}" /> 
+           </p:column> 
+            </p:row>
+            <p:row>
            <p:column>
-            <h:outputLabel for="planno" value="Plan No." />  
+            <h:outputText value="Plan No." />  
             </p:column>
             <p:column>
             <p:inputText id="planno" value="#{qTDetailBB.managedBean.qt.planId}"/>  
             </p:column>
             <p:column>
-            <h:outputLabel for="estprice" value="* Estimated Price/Planned Amount" />
+           <h:outputText value="* Estimated Price/Planned Amount" />
             </p:column>  
             <p:column>
             <p:inputText id="estprice" value="#{qTDetailBB.managedBean.qt.qtAmount}"/>  
             </p:column>
-            
-           
+            </p:row>
+            <p:row>  
          
            <p:column>
           <h:outputText value="* ProcurementMode" />  
           </p:column>
           <p:column>
         <p:selectOneMenu  value="#{qTDetailBB.managedBean.qt.procurementMode}" >  
-            <f:selectItem itemLabel="Select One" itemValue="" />  
-            <f:selectItem itemLabel="Quotation" itemValue="1" />  
-            <f:selectItem itemLabel="Tender" itemValue="2" />  
-            <f:selectItem itemLabel="Direct Negotiation" itemValue="3" />  
+             <f:selectItems value="#{qTDetailBB.managedBean.procurementModeItems}" />
         </p:selectOneMenu>  
         </p:column>
         <p:column>
@@ -53,9 +60,10 @@
         </p:selectOneRadio>  
         
   </p:column>
-  
+  </p:row>
   
 </p:panelGrid>
+
 	</p:panel>
 	<p:panel header="GOSODO List" toggleable="true">
 	<p:panelGrid columns="3" style="width:100%;" styleClass="noBorders tr,noBorders td">
@@ -135,7 +143,7 @@
 	</p:dataTable>
 	</p:panelGrid>
 	
-	    <p:commandButton value="ADD" 
+	    <p:commandButton value="ADD" style="float:right;"
                                 actionListener="#{qTDetailBB.addNewGoSoDoItem}"
                                 update="gosodoList">
                                

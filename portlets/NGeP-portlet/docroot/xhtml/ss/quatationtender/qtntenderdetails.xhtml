@@ -7,60 +7,54 @@
 	<p:panel header="Qtn/Tender Details" toggleable="true">
 		<p:panelGrid rows="5" style="width:100%;"
 			styleClass="noBorders tr,noBorders td">
-
+<p:row>
 			<p:column>
 				<h:outputText value="* Qtn/Tender Type" />
 			</p:column>
 			<p:column>
 				<p:selectOneMenu
 					value="#{qTDetailBB.managedBean.qt.qtType}">
-					<f:selectItem itemLabel="Select One" itemValue="null" />
-					<f:selectItem itemLabel="Open" itemValue="1" />
-					<f:selectItem itemLabel="Bumiputra" itemValue="2" />
-					<f:selectItem itemLabel="Panel" itemValue="3" />
-					<f:selectItem itemLabel="Restricted Tender" itemValue="4" />
-					<f:validateRequired />
+					<p:ajax event="change" listener="#{qTDetailBB.handleQtTypeChange()}" update="parentText"/>
+					<f:selectItems value="#{qTDetailBB.managedBean.tenderTypeList}" />
 				</p:selectOneMenu>
 			</p:column>
 			<p:column>
-				<h:outputText value="* Type of Goods/Services" />
+				<h:outputText value="Item Origin" />
 			</p:column>
 			<p:column>
 				<p:selectOneMenu
 					value="#{qTDetailBB.managedBean.qt.itemOrigin}">
-					<f:selectItem itemLabel="Select One" itemValue="" />
-					<f:selectItem itemLabel="Local" itemValue="1" />
-					<f:selectItem itemLabel="Imported" itemValue="2" />
-					<f:selectItem itemLabel="Local And Imported" itemValue="3" />
-
+					<f:selectItems value="#{qTDetailBB.managedBean.itemOriginList}" />
+					
 				</p:selectOneMenu>
 			</p:column>
-			<p:column>
-				<h:outputText value="MTO" />
+		</p:row>
+			<p:row>
+			<p:column >
+				<h:outputText value="Item Type" />
 			</p:column>
 			<p:column>
-				<p:inputText id="MTO" value="Yes/No" readonly="true" />
+				<p:selectOneMenu
+					value="#{qTDetailBB.managedBean.qt.itemType}">
+					<f:selectItems value="#{qTDetailBB.managedBean.itemTypeList}" />
+
+				</p:selectOneMenu>
 			</p:column>
 			<p:column>
 				<h:outputText value="Associated Qtn/Tender No." />
 			</p:column>
 			<p:column>
-				<p:inputText id="AsnTenderNo" value="QT12345" readonly="true" />
+				<p:inputText id="AsnTenderNo" value="#{qTDetailBB.managedBean.qt.qtNo}" readonly="true" />
 			</p:column>
-
+			</p:row>
+			<p:row>
 			<p:column>
-				<h:outputText value="Fulfillment Type" />
-			</p:column>
-			<p:column>
-				<p:selectOneMenu value="#{qTDetailBB.managedBean.qt.itemOrigin}"
-					required="true">
-					<f:selectItem itemLabel="Select One" itemValue="null" />
-					<f:selectItem itemLabel="One-Off" itemValue="1" />
-					<f:selectItem itemLabel="Periodic (Schedule)" itemValue="2" />
-					<f:selectItem itemLabel="Periodic (As When)" itemValue="3" />
-				</p:selectOneMenu>
+				<h:outputText value="MTO" />
 			</p:column>
 			<p:column>
+				<p:inputText id="MTO" value="#{qTDetailBB.managedBean.qt.isMto}" readonly="true" />
+			</p:column>
+				<p:column>
 				<h:outputText value="* RFP" />
 			</p:column>
 			<p:column>
@@ -71,10 +65,9 @@
 
 				</p:selectOneRadio>
 			</p:column>
-		</p:panelGrid>
-		
-		<p:panelGrid columns="4" style="width:100%;"
-			styleClass="noBorders tr,noBorders td">
+			
+</p:row>
+  <p:row>
 			<p:column>
 				<h:outputText for="validityperiod"
 					value="* Proposal Validity Period (days)" />
@@ -84,24 +77,19 @@
 					value="#{qTDetailBB.managedBean.qt.qtValidityPeriod}" />
 			</p:column>
 			<p:column>
-
 				<h:outputText value="* Response Rules for Line Item / Zone" />
 			</p:column>
 			<p:column>
 				<p:selectOneMenu
 					value="#{qTDetailBB.managedBean.qt.responseRule}">
-					<f:selectItem itemLabel="Select One" itemValue="" />
-					<f:selectItem itemLabel="All Line Item / All Zone" itemValue="1" />
-					<f:selectItem itemLabel="All Line Item / Certain Zone"
-						itemValue="2" />
-					<f:selectItem itemLabel="Certain Line Item / All Zone"
-						itemValue="3" />
-					<f:selectItem itemLabel="Certain Line Item / Certain Zone"
-						itemValue="4" />
+					<f:selectItems value="#{qTDetailBB.managedBean.lineItemList}" />
+					
 
 				</p:selectOneMenu>
 			</p:column>
-
+		
+			</p:row>
+		
 		</p:panelGrid>
 
 	</p:panel>
