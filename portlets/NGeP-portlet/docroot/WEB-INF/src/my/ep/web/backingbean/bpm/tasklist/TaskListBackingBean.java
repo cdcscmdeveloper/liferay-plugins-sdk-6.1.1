@@ -7,6 +7,7 @@ import javax.faces.bean.ManagedBean;
 import javax.faces.bean.RequestScoped;
 import javax.faces.context.FacesContext;
 
+import my.ep.biz.service.cm.codification.ICodificationSO;
 import my.ep.biz.service.cm.codification.IRequestCodeSO;
 import my.ep.biz.service.fl.request.IFulfilmentRequestSO;
 import my.ep.biz.service.fl.request.IShippingInstructionSO;
@@ -15,6 +16,8 @@ import my.ep.biz.service.pp.budgetallocation.IBudgetAllocationSO;
 import my.ep.bpm.dto.BpmRequestDTO;
 import my.ep.bpm.dto.BpmResponseDTO;
 import my.ep.bpm.service.IBpmSO;
+import my.ep.dto.cm.codification.CodificationReqDTO;
+import my.ep.dto.cm.codification.CodificationResDTO;
 import my.ep.dto.cm.codification.RequestCodeReqDTO;
 import my.ep.dto.cm.codification.RequestCodeResDTO;
 import my.ep.dto.fl.FulfilmentReqDTO;
@@ -148,14 +151,27 @@ public class TaskListBackingBean extends BaseBackingBean<TaskListManagedBean>{
 			CDRequestDataType unspsc = (CDRequestDataType)obj;
 
 			IRequestCodeSO requestSO = (IRequestCodeSO) BusinessDelegate.getInstance().getServiceObject("cm",IRequestCodeSO.class);
+			ICodificationSO codificationSO = (ICodificationSO) BusinessDelegate.getInstance().getServiceObject("cm",ICodificationSO.class);
 			RequestCodeReqDTO codeDTO = new RequestCodeReqDTO();
 			UnspscCodeBackingBean unspscBB = new UnspscCodeBackingBean();
+			CodificationReqDTO reqCodeDTO = new CodificationReqDTO();
+			RequestCodeResDTO resDTO = null;
+			unspscBB.getManagedBean().setReviewExtCodeList(null);
 			for(String itemId:unspsc.getItemId()){
 				System.out.println("itemId:"+itemId);
 				codeDTO.setRequestId(new Long(itemId));
-				RequestCodeResDTO resDTO = requestSO.retrieveUnspscCodeReview(codeDTO);
+				resDTO = requestSO.retrieveUnspscCodeReview(codeDTO);
 				unspscBB.getManagedBean().getReviewExtCodeList().add(resDTO.getRequestCode());
 			}
+
+			reqCodeDTO.setUnspscCode(resDTO.getRequestCode().getTempCode());
+			CodificationResDTO resCodeDTO = codificationSO.searchCommodityObj(reqCodeDTO);
+
+			unspscBB.getManagedBean().setTypeList(resCodeDTO.getCommodityObj().getCmType());
+			unspscBB.getManagedBean().setBrandList(resCodeDTO.getCommodityObj().getCmBrand());		
+			unspscBB.getManagedBean().setMeasurementList(resCodeDTO.getCommodityObj().getCmMeasurement());
+			resCodeDTO = codificationSO.searchColor(reqCodeDTO);
+			unspscBB.getManagedBean().setColorList(resCodeDTO.getColorList());
 
 
 		}else if(res.getProcessName().equalsIgnoreCase("Intiate Normal Contract Order")|| res.getProcessName().equalsIgnoreCase("Create MTO Contract Order")){
