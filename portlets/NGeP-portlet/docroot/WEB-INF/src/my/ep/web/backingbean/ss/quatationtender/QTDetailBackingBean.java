@@ -1,5 +1,7 @@
 package my.ep.web.backingbean.ss.quatationtender;
 
+import java.math.BigDecimal;
+import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -8,11 +10,15 @@ import javax.faces.bean.ManagedBean;
 import javax.faces.bean.RequestScoped;
 import javax.faces.event.ValueChangeEvent;
 
+import my.ep.biz.service.pm.authorization.orgunit.IOrgUnitSO;
 import my.ep.biz.service.pm.common.categorys.ICategorysSO;
 import my.ep.biz.service.pm.common.district.IDistrictSO;
 import my.ep.biz.service.pm.common.object.IObjectSO;
 import my.ep.biz.service.pm.common.state.IStateSO;
+import my.ep.biz.service.pm.common.status.IStatusSO;
 import my.ep.biz.service.ss.quationtender.IQTDetailSO;
+import my.ep.dto.pm.authorization.orgunit.OrgUnitReqDTO;
+import my.ep.dto.pm.authorization.orgunit.OrgUnitResDTO;
 import my.ep.dto.pm.common.categorys.CategorysReqDTO;
 import my.ep.dto.pm.common.categorys.CategorysResDTO;
 import my.ep.dto.pm.common.district.DistrictReqDTO;
@@ -21,7 +27,12 @@ import my.ep.dto.pm.common.object.ObjectReqDTO;
 import my.ep.dto.pm.common.object.ObjectResDTO;
 import my.ep.dto.pm.common.state.StateReqDTO;
 import my.ep.dto.pm.common.state.StateResDTO;
+import my.ep.dto.pm.common.status.StatusReqDTO;
+import my.ep.dto.pm.common.status.StatusResDTO;
+import my.ep.dto.ss.quationtender.QuationTenderReqDTO;
+import my.ep.dto.ss.quationtender.QuationTenderResDTO;
 import my.ep.factory.EpLogger;
+import my.ep.persistence.entity.pm.authorization.PmOrgProfile;
 import my.ep.persistence.entity.pm.common.PmCategoryL1;
 import my.ep.persistence.entity.pm.common.PmCategoryL2;
 import my.ep.persistence.entity.pm.common.PmCategoryL3;
@@ -29,8 +40,17 @@ import my.ep.persistence.entity.pm.common.PmDo;
 import my.ep.persistence.entity.pm.common.PmGo;
 import my.ep.persistence.entity.pm.common.PmSo;
 import my.ep.persistence.entity.pm.common.PmState;
+import my.ep.persistence.entity.pm.common.PmStatus;
+import my.ep.persistence.entity.ss.quationtender.ScQt;
+import my.ep.persistence.entity.ss.quationtender.ScQtApproval;
+import my.ep.persistence.entity.ss.quationtender.ScQtBriefing;
 import my.ep.persistence.entity.ss.quationtender.ScQtCategory;
+import my.ep.persistence.entity.ss.quationtender.ScQtCheckList;
+import my.ep.persistence.entity.ss.quationtender.ScQtContactPerson;
+import my.ep.persistence.entity.ss.quationtender.ScQtCriteria;
 import my.ep.persistence.entity.ss.quationtender.ScQtGosodoBudget;
+import my.ep.persistence.entity.ss.quationtender.ScQtRemark;
+import my.ep.persistence.entity.ss.quationtender.ScQtSupplier;
 import my.ep.web.backingbean.BaseBackingBean;
 import my.ep.web.managedbean.ss.quationtender.QTDetailManagedBean;
 import my.ep.web.util.lookupservice.BusinessDelegate;
@@ -54,6 +74,8 @@ public class QTDetailBackingBean extends BaseBackingBean<QTDetailManagedBean> {
 	private ICategorysSO categorysSO = null;
 	private IStateSO stateSo = null;
 	private IDistrictSO districtSO = null;
+	private IOrgUnitSO orgUnitSO = null;
+	private IStatusSO statusSO = null;
 
 	public QTDetailBackingBean() {
 
@@ -79,6 +101,12 @@ public class QTDetailBackingBean extends BaseBackingBean<QTDetailManagedBean> {
 				"pm", IStateSO.class);
 		IDistrictSO districtSO = BusinessDelegate.getInstance()
 				.getServiceObject("pm", IDistrictSO.class);
+
+		IOrgUnitSO orgUnitSO = BusinessDelegate.getInstance().getServiceObject(
+				"pm", IOrgUnitSO.class);
+
+		IStatusSO statusSO = BusinessDelegate.getInstance().getServiceObject(
+				"pm", IStatusSO.class);
 
 		this.detailSO = detailSO;
 		this.objectSO = objectSO;
@@ -276,5 +304,92 @@ public class QTDetailBackingBean extends BaseBackingBean<QTDetailManagedBean> {
 				this.getManagedBean().setDistricts(resDTO.getDistrictList());
 			}
 		}
+	}
+
+	/**
+	 * Method to save the QT details
+	 */
+	public void saveQtDetails() {
+		// TODO need to get the scqt object from managed bean remove the
+		// hotcoded values
+		System.out.println("inside save method+++++++++++++++++++++++++++++++++");
+		ScQt scQt = new ScQt();
+
+		scQt.setFileNo("qt123");
+		scQt.setFinancialYear(new BigDecimal(2014));
+		scQt.setQtNo("SC00122333");
+		scQt.setQtTitle("sourcing");
+		scQt.setProcurementMode("p");
+		scQt.setQtType("q");
+		scQt.setIsPlanned(true);
+		scQt.setQtAmount(new BigDecimal(10000));
+		scQt.setResponseRule("A");
+		scQt.setIsBsvRequired(true);
+		scQt.setIsSameBsv(true);
+		// No need to set the below fields automatically set by listener
+		scQt.setCreatedBy(1l);
+		scQt.setChangedBy(1l);
+		scQt.setCreatedDate(new Timestamp(System.currentTimeMillis()));
+
+		IOrgUnitSO orgUnitSO = BusinessDelegate.getInstance().getServiceObject(
+				"pm", IOrgUnitSO.class);
+
+		IStatusSO statusSO = BusinessDelegate.getInstance().getServiceObject(
+				"pm", IStatusSO.class);
+		// TODO need to get the org profile id by user id and need to set
+		OrgUnitReqDTO orgUnitReqDTO = new OrgUnitReqDTO();
+		orgUnitReqDTO.setOrgProfileId(new Long(1));
+		OrgUnitResDTO unitResDTO = orgUnitSO
+				.retrieveOrgProfileByProfileId(orgUnitReqDTO);
+		PmOrgProfile orgProfile = unitResDTO.getPmOrgProfileById();
+		scQt.setPmOrgProfile(orgProfile);
+		// Setting the pm status for qt details
+		StatusReqDTO reqDTO = new StatusReqDTO();
+		reqDTO.setStatusId(1l);
+		StatusResDTO pmStatus = statusSO.retrieveStatusByStatusId(reqDTO);
+		PmStatus status = pmStatus.getPmStatus();
+		scQt.setPmStatus(status);
+		// Setting the gosodoBudget to qtdetails
+		// TODO need to get it from managed bean and set it.
+		List<ScQtGosodoBudget> bugets = null;
+		scQt.setScQtGosodoBudgets(bugets);
+		// Setting the category codes to qtdetails
+		// TODO need to get it from managed bean and set it.
+		List<ScQtCategory> categorys = null;
+		scQt.setScQtCategorys(categorys);
+		// Setting the suppliers to qtdetails
+		// TODO need to get it form managed bean and set it
+		List<ScQtSupplier> suppliers = null;
+		scQt.setScQtSuppliers(suppliers);
+		// Setting the qtcriteria to qtdetails
+		// TODO need to get it form managed bean and set it.
+		List<ScQtCriteria> criterias = null;
+		scQt.setScQtCriterias(criterias);
+		// Setting the approvalist to Qtdetails
+		// TODO Need to get it from managed bean and set it.
+		List<ScQtApproval> qtApprovals = null;
+		scQt.setScQtApprovals(qtApprovals);
+		// Setting the contact person to qtdetails.
+		// TODO need to get it from managed bean and set it
+		List<ScQtContactPerson> contactPersons = null;
+		scQt.setScQtContactPersons(contactPersons);
+		// Setting the qtBreifing details to Qtdetails
+		// TODO need to get it from managed bean and set it
+		List<ScQtBriefing> scQtBriefings = null;
+		scQt.setScQtBriefings(scQtBriefings);
+		// Setting the qtremarks to qtdetails.
+		// TODO need to get it form managed bean and set it
+		List<ScQtRemark> remarks = null;
+		scQt.setScQtRemarks(remarks);
+		// Setting the qtdocuments to qtdetails
+		// TODO need to get it from mangedbean and set it
+		List<ScQtCheckList> documents = null;
+		scQt.setScQtChecklists(documents);
+		// Creating DTO object setting qtdetail object and making so call to
+		// save.
+		QuationTenderReqDTO quationTenderReqDTO = new QuationTenderReqDTO();
+		quationTenderReqDTO.setQtdetail(scQt);
+		QuationTenderResDTO quationTenderResDTO = detailSO
+				.saveOrUpdateQT(quationTenderReqDTO);
 	}
 }
