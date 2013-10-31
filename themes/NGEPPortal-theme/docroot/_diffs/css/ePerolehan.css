@@ -6,8 +6,8 @@
 ***********************************************************************/
 /*Reset CSS*/
 html,body,div,span,applet,object,iframe,a,abbr,acronym,address,big,cite,code,del,dfn,em,font,img,ins,kbd,q,s,samp,small,strike,strong,sub,sup,tt,var,dl,dt,dd,ol,ul,li,h1,h2,h3,h4,h5,h6,pre,form,fieldset,legend,p,blockquote,table,caption,tbody,tfoot,thead,tr,th,td{margin:0;padding:0;border:0;outline:0;font-weight:inherit;font-style:inherit;font-size:100%;font-family:inherit;vertical-align:baseline;}
-body{font-family:'notosans-regular', Arial, Helvetica, sans-serif; font-size:12px; line-height:auto; color:#333333; background:#EBEDEC no-repeat center top; height:100%; margin:0 auto;}
-table{border-collapse:collapse; border-spacing:0;}
+body{font-family:Tahoma; font-size:11px; line-height:auto; color:#333333; background:#EBEDEC no-repeat center top; height:100%; margin:0 auto;}
+table{border-collapse:collapse; border-spacing:0; font-family:Tahoma; font-size:11px;}
 caption,th,td{text-align:left; font-weight:normal;}
 fieldset,img{border:none;}
 address,caption,cite,code,dfn,em,strong,th,var{font-style:normal; font-weight:normal;}
@@ -132,14 +132,14 @@ ul.btn-section li a:hover{background-position:bottom;}
 .login-top-navi{background:url(../images/login/login-top-bar.png) #FFF repeat-x top center;}
 .login-top-navi .middle-navi-wrapper .middle-navi-right-wrapper{margin-top:7px;}
 
-nav{background:url(../images/navi/navi-bg.jpg) repeat-x; height:37px; width:100%; position:relative;}
+nav{background:url(../images/navi/navi-bg.jpg) repeat-x; height:35px; width:100%; position:relative;}
 nav ul{width:1000px; margin:0 auto;}
-nav ul.child-menu{width:100%; display:none; text-decoration:none;}
-ul.child-menu li{float: none; width:90%; margin: auto; padding: 6px 10px 6px 10px !important;}
+nav ul.child-menu{width:auto !important; display:none; text-decoration:none;}
+ul.child-menu li{float: none; width:auto; margin: auto; padding: 6px 10px 6px 10px !important; white-space:nowrap;}
 ul.child-menu li a{text-decoration:none; padding: 0 !important;}
-#navigation ul li:hover > ul.child-menu {display: block; float: none; margin: 0; background-color:#3B3B3B; position:absolute; z-index:50; width:200px; top: 34px; border-radius: 10px;}
-ul.child-menu li > ul > li {float: none; width:90%; margin: auto; padding: 6px 13px 6px 12px !important;}
-ul.child-menu li > ul > li > ul > li {float: none; width:90%; margin: auto; padding: 6px 7px 6px 6px !important;}
+#navigation ul li:hover > ul.child-menu {display: block; float: none; margin: 0; background-color:#3B3B3B; position:absolute; z-index:50; width:200px; top: 31px; border-radius: 10px;}
+ul.child-menu li > ul > li {float: none; width:auto; margin: auto; padding: 6px 13px 6px 12px !important;}
+ul.child-menu li > ul > li > ul > li {float: none; width:auto; margin: auto; padding: 6px 7px 6px 6px !important;}
 nav ul li{float:left;}
 
 .dropdown-wrapper{display:none; position:absolute; z-index:20; background:#000; padding:10px; top:39px; left:0; width:130px; -webkit-border-bottom-right-radius:10px; -webkit-border-bottom-left-radius:10px; -moz-border-radius-bottomright:10px; -moz-border-radius-bottomleft:10px; border-bottom-right-radius:10px; border-bottom-left-radius:10px;}
