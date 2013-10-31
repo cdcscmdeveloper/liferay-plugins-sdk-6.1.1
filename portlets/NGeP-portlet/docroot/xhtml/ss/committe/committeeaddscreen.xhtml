@@ -7,100 +7,96 @@
 
 
 	<p:dialog id="Add" header="ADD" widgetVar="screen1" modal="true">
-		<p:panel header="New Desk Officer Admin Assistant" toggleable="true">
+		<p:panel header="New Committee" toggleable="true">
 
 			<p:panelGrid columns="2" style="width:100%;" styleClass="noBorders tr,noBorders td">
 				
 
-				<h:outputLabel for="SelReg" value="Selection of New Registration : " />
-				  <p:selectOneRadio id="selreg" value="#{searchQtnTenderBB.managedBean.qtno}">  
+				<h:outputLabel value="* Selection  " />
+				  <p:selectOneRadio  value="#{CommitteBackingBean.managedBean.supplierItemList}">  
                      <f:selectItem itemLabel="Profile" itemValue="1" />  
                      <f:selectItem itemLabel="Existing List" itemValue="2" />  
                      <f:selectItem itemLabel="New" itemValue="3" />  
                   </p:selectOneRadio>  
 </p:panelGrid>
 
-<p:panelGrid style="width:100%;"
-    styleClass="noBorders tr,noBorders td">
-    <p:row>
-     <p:column width="100%" style="text-align:right">
-      <p:commandButton value="SEARCH"   style="float:right;" />
-				
-     </p:column>
-     </p:row>
- </p:panelGrid>
+
      
      <p:panelGrid columns="2" styleClass="noBorders tr,noBorders td">
-				<h:outputLabel for="name" value="Name: " style="width:10%;"/>
-                <p:inputText></p:inputText>
+ 		    	<h:outputLabel value="*Name " />
+				 <p:selectOneMenu value="#{CommitteBackingBean.managedBean.memberName}" > 
+	            	<f:selectItem itemLabel="" itemValue="1" />   
+	           		<f:selectItem itemLabel="" itemValue="2" />
+	                <f:selectItem itemLabel="" itemValue="3" />
+	             </p:selectOneMenu>
 				
-				  <p:selectOneRadio  value="#{searchQtnTenderBB.managedBean.qtno}">  
-                     <f:selectItem itemLabel="GovernmentUser" itemValue="1" />  
-                    </p:selectOneRadio>  
-                    
-                     <p:selectOneRadio value="#{searchQtnTenderBB.managedBean.qtno}">  
-                     <f:selectItem itemLabel="NonGovernmentUser" itemValue="2" />  
-                    </p:selectOneRadio>
+				<h:outputLabel value="Type of User  " />
+				  <p:selectOneRadio value="#{CommitteBackingBean.managedBean.supplierItemList}">  
+                     <f:selectItem itemLabel="Government User" itemValue="1" />  
+                     <f:selectItem itemLabel="Non Government User" itemValue="2" />  
+                  </p:selectOneRadio>  
 </p:panelGrid>
 
  <p:panelGrid columns="4" styleClass="noBorders tr,noBorders td">
  
-            <h:outputLabel for="ICno" value="IC No/Passport: * " />
-				<p:inputText id="ICno" value="#{searchQtnTenderBB.managedBean.qtno}" />
-            
-
-		    	<h:outputLabel for="Ministry" value="Ministry: * " />
-				 <p:selectOneMenu value="#{searchQtnTenderBB.managedBean.qtno}" > 
-	           <f:selectItem itemLabel="approve" itemValue="1" />   
-	            <f:selectItem itemLabel="reject" itemValue="2" />
-	             <f:selectItem itemLabel="revise" itemValue="3" />
+ 		    	<h:outputLabel for="identification" value="Identification Type " />
+				 <p:selectOneMenu value="#{CommitteBackingBean.managedBean.icPassportType}" > 
+	            	<f:selectItem itemLabel="" itemValue="1" />   
+	           		<f:selectItem itemLabel="" itemValue="2" />
+	                <f:selectItem itemLabel="" itemValue="3" />
 	             </p:selectOneMenu>
+ 
+		    	<h:outputLabel value="Ministry: * " />
+				 <p:selectOneMenu value="#{CommitteBackingBean.managedBean.ministry}" > 
+	                <f:selectItem itemLabel="" itemValue="1" />   
+	            <f:selectItem itemLabel="" itemValue="2" />
+	             <f:selectItem itemLabel="" itemValue="3" />
+	             </p:selectOneMenu>
+	             
+                <h:outputLabel value="* Identification No.  " />
+			  <p:inputText value="#{CommitteBackingBean.managedBean.icPassport}" />
+			  
+			<h:outputLabel value="* Department " />
+				 <p:selectOneMenu value="#{CommitteBackingBean.managedBean.isGovtUser}" > 
+	           		<f:selectItem itemLabel="" itemValue="1" />   
+	            	<f:selectItem itemLabel="" itemValue="2" />
+	             	<f:selectItem itemLabel="" itemValue="3" />
+	             </p:selectOneMenu>			  	             
                   
-                   <h:outputLabel for="designation" value="Designation: * " />
-				<p:inputText id="designation" value="ReadOnly" readonly="true"/>
+                   <h:outputLabel value="* Designation " />
+					<p:inputText value="#{CommitteBackingBean.managedBean.designation}" readonly="true"/>
             
 				
-					<h:outputLabel for="Department" value="Department: * " />
-				 <p:selectOneMenu value="#{searchQtnTenderBB.managedBean.qtno}" > 
-	           <f:selectItem itemLabel="approve" itemValue="1" />   
-	            <f:selectItem itemLabel="reject" itemValue="2" />
-	             <f:selectItem itemLabel="revise" itemValue="3" />
-	             </p:selectOneMenu>
-	             
-	                <h:outputLabel for="Grade" value="Grade: * " />
-				<p:inputText id="Grade" value="Readonly" readonly="true" />
-            
+					<h:outputLabel value="* Division " />
+					 <p:selectOneMenu value="#{CommitteBackingBean.managedBean.isEvaluateMember}" > 
+	           		   <f:selectItem itemLabel="" itemValue="1" />   
+	           		   <f:selectItem itemLabel="Div 1" itemValue="2" />
+	           		   <f:selectItem itemLabel="Div 2" itemValue="3" />
+	            	 </p:selectOneMenu>
+	            	 
+	                <h:outputLabel value="* Grade " />
+					  <p:inputText value="#{CommitteBackingBean.managedBean.grade}" readonly="true" />
 				
-					<h:outputLabel for="Division" value="Division: * " />
-				 <p:selectOneMenu value="#{searchQtnTenderBB.managedBean.qtno}" > 
-	           <f:selectItem itemLabel="approve" itemValue="1" />   
-	            <f:selectItem itemLabel="reject" itemValue="2" />
-	             <f:selectItem itemLabel="revise" itemValue="3" />
-	             </p:selectOneMenu>
-				    
-				    
-					<h:outputLabel for="Access" value="Access: * " />
-				 <p:selectOneMenu value="#{searchQtnTenderBB.managedBean.qtno}" > 
-	           <f:selectItem itemLabel="approve" itemValue="1" />   
-	            <f:selectItem itemLabel="reject" itemValue="2" />
-	             <f:selectItem itemLabel="revise" itemValue="3" />
-	             </p:selectOneMenu>  
-	             
-	             
-					<h:outputLabel for="proposal" value="A Member for Evaluate Proposal: " />
-				 <p:selectOneMenu value="#{searchQtnTenderBB.managedBean.qtno}" > 
-	           <f:selectItem itemLabel="ChairPerson" itemValue="1" />   
-	            <f:selectItem itemLabel="reject" itemValue="2" />
-	             <f:selectItem itemLabel="revise" itemValue="3" />
-	             </p:selectOneMenu> 
-	             
-	             
-					<h:outputLabel for="role" value="Role: * " />
-				 <p:selectOneMenu value="#{searchQtnTenderBB.managedBean.qtno}" > 
-	           <f:selectItem itemLabel="approve" itemValue="1" />   
-	            <f:selectItem itemLabel="reject" itemValue="2" />
-	             <f:selectItem itemLabel="revise" itemValue="3" />
-	             </p:selectOneMenu>     
+					<h:outputLabel value="* Role " />
+				 	  <p:selectOneMenu value="#{CommitteBackingBean.managedBean.memberRole}" > 
+	           			<f:selectItem itemLabel="" itemValue="1" />   
+	           			<f:selectItem itemLabel="role 1" itemValue="2" />
+	            	    <f:selectItem itemLabel="role 2" itemValue="3" />
+	            	  </p:selectOneMenu>
+	            	  
+					<h:outputLabel value="* Member Type" />
+				 	  <p:selectOneMenu value="#{CommitteBackingBean.managedBean.memberType}" > 
+	           			<f:selectItem itemLabel="" itemValue="1" />   
+	           			<f:selectItem itemLabel="" itemValue="2" />
+	             		<f:selectItem itemLabel="" itemValue="3" />
+	             	  </p:selectOneMenu>  	            	  				
+				    				    
+					<h:outputLabel value="* Access " />
+					 <p:selectOneMenu value="#{CommitteBackingBean.managedBean.accessRight}" > 
+	           			<f:selectItem itemLabel="" itemValue="1" />   
+	            		<f:selectItem itemLabel="" itemValue="2" />
+	             		<f:selectItem itemLabel="" itemValue="3" />
+	           		 </p:selectOneMenu>      
                 
 	</p:panelGrid>
 

@@ -8,12 +8,12 @@
 	
 	<p:panel>
 		<p:panelGrid style="width:100%;" styleClass="noBorders tr,noBorders td" ></p:panelGrid>
-</p:panel>
+    </p:panel>
 	
 	<p:panel header="SEARCH" toggleable="true">
 	<br/>
 	
-	<p:commandLink value="Search Quotation/Tender" onclick="screen3.show();" />
+	<p:commandLink value="Search Quotation/Tender" onclick="screen5.show();" />
 	<br/>
 	
 	<p:panelGrid columns="4" style="width:100%;" styleClass="noBorders tr,noBorders td">
@@ -27,7 +27,7 @@
 	
 	<h:outputText value="Committe Type" ></h:outputText>
 
-	 <p:selectOneMenu value="#{committeeMB.selectedCommitte}">  
+	 <p:selectOneMenu value="#{committeMbean.selectedCommitte}">  
             <f:selectItem itemLabel="Select One" itemValue="" />  
             <f:selectItem itemLabel="TSC- prepare specification" itemValue="1" />  
             <f:selectItem itemLabel="DOAA- briefing/site visit" itemValue="2" />  
@@ -37,8 +37,7 @@
             <f:selectItem itemLabel="TEC/FEC - two envelopes - evaluate proposal" itemValue="3" />
             <f:selectItem itemLabel="QC/PB/FPB/MOF Secretary - supplier finalization" itemValue="2" />  
             <f:selectItem itemLabel="QC/PB/FPB/MOF - appoint by secretary" itemValue="3" />
-             
-        </p:selectOneMenu> 
+      </p:selectOneMenu> 
         
 	<h:outputText value="Date Created"></h:outputText>
 	<h:inputText size="49"></h:inputText> 
@@ -49,91 +48,79 @@
             <f:selectItem itemLabel="Select One" itemValue="" />  
             <f:selectItem itemLabel="Active" itemValue="1" /> 
             <f:selectItem itemLabel="Non-Active" itemValue="1" />  
-     </p:selectOneMenu> 	 
-		       
-	
-
-	</p:panelGrid>
-	
-	<p:commandButton value="SEARCH" style="float:right;">
-    </p:commandButton>
-	<br/>
+     </p:selectOneMenu> 
+     	 
+    </p:panelGrid>
+	<p:commandButton value="SEARCH" style="float:right;" />
+    <br/>
 	<br/>
 	</p:panel>
 	
 	<p:panel header="Results" toggleable="true">
-	<p:dataTable value="" var="" resizableColumns="true" editable="true">
+	<p:dataTable value="#{CommitteBackingBean.managedBean.supplierItemList}" var="committeresult" resizableColumns="true" editable="true">
         
    <p:ajax event="rowEdit" />  
         <p:ajax event="rowEditCancel" />  
   
-        <p:column headerText="CommitteType" > 
-        
-        
+        <p:column headerText="CommitteType" >     
         <p:cellEditor>  
-                <f:facet name="output">  
-                   <h:outputText value="TSC- prepare specification" />  
-                </f:facet>  
-                <f:facet name="input">  
-                   <p:selectOneMenu value="#{committeeMB.selectedCommitte}">  
-            <f:selectItem itemLabel="Select One" itemValue="" />  
-            <f:selectItem itemLabel="TSC- prepare specification" itemValue="1" />  
-            <f:selectItem itemLabel="DOAA- briefing/site visit" itemValue="2" />  
-            <f:selectItem itemLabel="Ministry Committee Specification-spec" itemValue="3" /> 
-            <f:selectItem itemLabel="OC-check manual submission" itemValue="1" />  
-            <f:selectItem itemLabel="EC-one envelope-evaluate proposal" itemValue="2" />  
-            <f:selectItem itemLabel="TEC/FEC - two envelopes - evaluate proposal" itemValue="3" />
-            <f:selectItem itemLabel="QC/PB/FPB/MOF Secretary - supplier finalization" itemValue="2" />  
-            <f:selectItem itemLabel="QC/PB/FPB/MOF - appoint by secretary" itemValue="3" />
-             
-        </p:selectOneMenu>  
-	
-  
-                </f:facet>  
-            </p:cellEditor>  
-              
-        </p:column>
+          <f:facet name="output">  
+            <h:outputText value="#{committeresult.committeeType}" />  
+           </f:facet>  
+          <f:facet name="input">  
+            <p:selectOneMenu value="#{committeMbean.selectedCommitte}">  
+             <f:selectItem itemLabel="Select One" itemValue="" />  
+             <f:selectItem itemLabel="TSC- prepare specification" itemValue="1" />  
+             <f:selectItem itemLabel="DOAA- briefing/site visit" itemValue="2" />  
+             <f:selectItem itemLabel="Ministry Committee Specification-spec" itemValue="3" /> 
+             <f:selectItem itemLabel="OC-check manual submission" itemValue="1" />  
+             <f:selectItem itemLabel="EC-one envelope-evaluate proposal" itemValue="2" />  
+             <f:selectItem itemLabel="TEC/FEC - two envelopes - evaluate proposal" itemValue="3" />
+             <f:selectItem itemLabel="QC/PB/FPB/MOF Secretary - supplier finalization" itemValue="2" />  
+             <f:selectItem itemLabel="QC/PB/FPB/MOF - appoint by secretary" itemValue="3" />
+            </p:selectOneMenu>  
+	       </f:facet>  
+         </p:cellEditor>  
+         </p:column>
         
         <p:column headerText="Qtn/Tender No"> 
-             <h:outputText value="QT001" />  
+             <h:outputText value="#{committeresult.committeeId}" />  
         </p:column>  
                   
          <p:column headerText="Date Created" >  
          <p:cellEditor>
          <f:facet name="output">
-            <h:outputText value="Yes" /> 
-            </f:facet>
+            <h:outputText value="#{committeresult.approvalDate}" /> 
+         </f:facet>
             <f:facet name="input">
             <p:selectOneRadio value="">
-            <f:selectItem itemLabel="yes" itemValue="1"></f:selectItem>
-<f:selectItem itemLabel="No" itemValue="2"></f:selectItem>
+             <f:selectItem itemLabel="yes" itemValue="1"></f:selectItem>
+			 <f:selectItem itemLabel="No" itemValue="2"></f:selectItem>
             </p:selectOneRadio>
             </f:facet> 
-            
-            </p:cellEditor>
+           </p:cellEditor>
         </p:column>  
         
          <p:column headerText="Approval Status" >  
-            <h:outputText value="Active" />  
+            <h:outputText value="#{committeresult.approvalStatus}" />  
         </p:column>  
         
          <p:column headerText="Record Status" >  
-            <h:outputText value="Active" />  
+            <h:outputText value="#{committeresult.approvalRemark}" />  
         </p:column>          
         
        <p:column style="width:6%">  
             <p:rowEditor />  
         </p:column> 
         
-    </p:dataTable>
-</p:panel>
-<p:panel>
-<p:panelGrid columns="2" style="width:100%;" styleClass="noBorders tr,noBorders td">
+     </p:dataTable>
+	</p:panel>
+	
+	<p:panel>
+	<p:panelGrid columns="2" style="width:100%;" styleClass="noBorders tr,noBorders td">
 
-<p:commandButton value="ADD" style="float:right;" action="committeemaintanancepage?faces-redirect=true">
-    
-</p:commandButton>
-</p:panelGrid>
-</p:panel>
+      <p:commandButton value="ADD" style="float:right;" action="committeemaintanancepage?faces-redirect=true"  />
+	 </p:panelGrid>
+	</p:panel>
 
 </ui:composition>

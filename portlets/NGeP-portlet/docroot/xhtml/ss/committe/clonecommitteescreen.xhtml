@@ -13,27 +13,27 @@
 				
 
 				<h:outputText value="Qtn/Tender No" ></h:outputText>
-					<p:selectOneMenu>  
-    	             <f:selectItem itemLabel="Select One" itemValue="" />  
-                     <f:selectItem itemLabel="no 1" itemValue="1" /> 
-                     <f:selectItem itemLabel="no 2" itemValue="1" />  
+					<p:selectOneMenu value="#{CommitteBackingBean.managedBean.qtno}">  
+    	             <f:selectItem itemLabel="" itemValue="" />  
+                     <f:selectItem itemLabel="" itemValue="1" /> 
+                     <f:selectItem itemLabel="" itemValue="1" />  
     			    </p:selectOneMenu> 
 				</p:panelGrid>
     
      <p:panelGrid columns="4"  style="width:100%;"  styleClass="noBorders tr,noBorders td">
 				 
 				 <h:outputText value="Created Date (From)" />
-				<p:calendar value="#{searchQtnTenderBB.managedBean.date}" id="createdateFrom"
+				<p:calendar value="#{CommitteBackingBean.managedBean.dateCreatedF}" id="createdateFrom"
 					showOn="button" />
 
 				<h:outputText value="Created Date (To)" />
-				<p:calendar value="#{searchQtnTenderBB.managedBean.date}" id="createdateTo" showOn="button" />                
+				<p:calendar value="#{CommitteBackingBean.managedBean.dateCreatedT}" id="createdateTo" showOn="button" />                
 
 				<h:outputText value="Record Status"></h:outputText>
-					<p:selectOneMenu>  
-    	             <f:selectItem itemLabel="Select One" itemValue="" />  
-                     <f:selectItem itemLabel="Active" itemValue="1" /> 
-                     <f:selectItem itemLabel="Non-Active" itemValue="1" />  
+					<p:selectOneMenu value="#{CommitteBackingBean.managedBean.approvalStatus}" >  
+    	             <f:selectItem itemLabel="" itemValue="" />  
+                     <f:selectItem itemLabel="" itemValue="1" /> 
+                     <f:selectItem itemLabel="" itemValue="1" />  
     			    </p:selectOneMenu> 
 			   
                 
@@ -51,19 +51,19 @@
 
 		<p:panel header="Search Committee" toggleable="true">
 		   <h:panelGroup  style="width:100%;">
-				<p:dataTable value="" var="" editable="true">
+				<p:dataTable value="#{CommitteBackingBean.managedBean.supplierItemList}" var="committeclone" editable="true">
 				
 				  <p:ajax event="rowEdit" />  
                   <p:ajax event="rowEditCancel" /> 
 
-					<p:column headerText="Committee Type" style="width:130px">
-					  <p:outputLabel value="Type1 " />
+					<p:column headerText="Committee Type" style="width:10px">
+					  <p:outputLabel value="#{committeclone.committeeType}" />
 					</p:column>
 
 					<p:column headerText="Qtn/Tender No" style="width:5px;">
 				      <p:cellEditor>  
                        <f:facet name="output">  
-                        <h:outputText value="No 1" />
+                        <h:outputText value="#{committeclone.qtno}" />
                      </f:facet>  
                       <f:facet name="input">  
                        <p:inputText value=""/>  
@@ -72,11 +72,11 @@
 					</p:column>
 
 					<p:column headerText="Date Created" style="width:5px">  
-                        <h:outputText value="11/12/13" />  
+                        <h:outputText value="#{committeclone.dateCreated}" />  
                     </p:column>
                     
 					<p:column headerText="Record Status" style="width:5px">  
-                        <h:outputText value="Active" />  
+                        <h:outputText value="#{committeclone.approvalStatus}" />  
                     </p:column>                       
                       
                     <p:column style="width:5px">  
@@ -90,34 +90,35 @@
 		
 		<p:panel header="Clone Committee Result" toggleable="true">
 		   <h:panelGroup style="width:100%;">
-				<p:dataTable value="" var="" >
+				<p:dataTable value="#{CommitteBackingBean.managedBean.supplierItemList}" var="committeclonetwo" editable="true" >
 
 					<p:column>
 					   <p:selectBooleanCheckbox />
 					</p:column>
 
 					<p:column headerText="Name">
-					   <h:outputText value="John" />
+					   <h:outputText value="#{committeclonetwo.memberName}" />
 					</p:column>
 
 					 <p:column headerText="Ministry" >  
-                        <h:outputText value="Finance" />  
+                        <h:outputText value="#{committeclonetwo.ministry}" />  
                      </p:column>  
                       
                     <p:column headerText="Division" >  
-                       <h:outputText value="Div 2" />  
+                       <h:outputText value="#{committeclonetwo.division}" />  
                     </p:column>  
                     
                     <p:column headerText="Designation" >  
-                       <h:outputText value="Head" />  
+                       <h:outputText value="#{committeclonetwo.designation}" />  
                     </p:column>  
                     
                     <p:column headerText="Role" >  
-                       <h:outputText value="Management" />  
+                       <h:outputText value="#{committeclonetwo.memberRole}" />  
                     </p:column>                                          
             
-		       </p:dataTable>			       				
-				<p:commandButton value="CLONE"  style="float:right;" onclick="dlg.hide();"></p:commandButton>
+		       </p:dataTable>	
+				<p:commandButton value="CANCEL"  style="float:right;" onclick="screen2.hide();"></p:commandButton>		       		       				
+				<p:commandButton value="CLONE"  style="float:right;" onclick="screen2.hide();"></p:commandButton>
 			</h:panelGroup>
 		</p:panel>		
 	</p:dialog>

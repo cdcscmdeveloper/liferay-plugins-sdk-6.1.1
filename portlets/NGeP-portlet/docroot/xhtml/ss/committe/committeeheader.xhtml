@@ -6,26 +6,67 @@
 	xmlns:c="http://java.sun.com/jsp/jstl/core">
 
 	<p:panel header="Header" toggleable="true">
-<p:panelGrid columns="4" style="width:100%;" styleClass="noBorders tr,noBorders td">
-<h:outputLabel for="qtnno" value="Qtn/Tender No" />  
-            <p:inputText id="qtnno" value="#{searchQtnTenderBB.managedBean.qtno}"/> 
+		<p:panelGrid columns="4" style="width:100%;" styleClass="noBorders tr,noBorders td">
+			
+			<h:outputText value="Qtn/Tender No" />  
+            <p:inputText  value="" readonly="true"/> 
             
-            <h:outputLabel for="minscode" value="Ministry Code/Name" />  
-            <p:inputText id="minscode" value="#{searchQtnTenderBB.managedBean.qtno}"/>  
+            <h:outputText value="Ministry Code/Name" />  
+            <p:inputText  value="" readonly="true"/>  
             
-            <h:outputLabel for="status" value="Status" />  
-            <p:inputText id="status" value="#{searchQtnTenderBB.managedBean.qtno}"/>  
+            <h:outputText value="Status" />  
+            <p:inputText  value="" readonly="true" />  
             
-             <h:outputLabel for="deptcode" value="Department Code/Name" />  
-            <p:inputText id="deptcode" value="#{searchQtnTenderBB.managedBean.qtno}"/>  
+            <h:outputText value="Department Code/Name" />  
+            <p:inputText  value="" readonly="true"/>  
            
            <h:outputText value="Created Date" /> 
-    <p:calendar value="#{searchQtnTenderBB.managedBean.date}" id="crdateFrm" showOn="button" />  
+   		   <p:inputText value="" readonly="true"/>  
  
-            <h:outputLabel for="ptjcode" value="PTJ Code/Name" />  
-            <p:inputText id="ptjcode" value="#{searchQtnTenderBB.managedBean.qtno}"/>  
-           
-             
-  </p:panelGrid>
-	</p:panel>
+           <h:outputText value="Divison Code/Name" />  
+           <p:inputText value="" readonly="true"/>           
+
+           <h:outputText value="Committee Status" /> 
+   		   <p:inputText value="" readonly="true"/> 
+   		   
+           <h:outputText value="Record Status" /> 
+   		   <p:inputText value="" readonly="true"/>    		                                                                          
+                      
+      </p:panelGrid>
+  	</p:panel>
+	 <p:panel header="Committee Type Search" toggleable="true">
+	   <p:panelGrid columns="2" style="width:40%;"
+		styleClass="noBorders tr,noBorders td">
+		<h:outputText value="Committee Type" />
+		 <p:selectOneMenu value="#{searchQtnTenderBB.managedBean.tenderSelction}">
+			<f:selectItem itemLabel="Select One" itemValue="" />
+		    <f:selectItem itemLabel="TSC- prepare specification" itemValue="1" />
+		    <f:selectItem itemLabel="DOAA- briefing/site visit" itemValue="2" />
+			<f:selectItem itemLabel="Ministry Committee Specification-spec" itemValue="3" />
+			<f:selectItem itemLabel="OC-check manual submission" itemValue="1" />
+			<f:selectItem itemLabel="EC-one envelope-evaluate proposal" itemValue="2" />
+			<f:selectItem itemLabel="TEC/FEC - two envelopes - evaluate proposal" itemValue="1" />
+			<f:selectItem itemLabel="QC/PB/FPB/MOF Secretary - supplier finalization" itemValue="4" />
+			<f:selectItem itemLabel="QC/PB/FPB/MOF - appoint by secretary" itemValue="4" />
+			<p:ajax event="change" update="parentText" />
+         </p:selectOneMenu>
+        </p:panelGrid>
+
+       </p:panel> 
+       
+       <h:panelGroup id="parentText">
+       
+		<h:panelGroup rendered="#{searchQtnTenderBB.managedBean.tenderSelction eq '1' or searchQtnTenderBB.managedBean.tenderSelction eq '2'}">
+		  <ui:include src="/xhtml/ss/committe/committeescselection.xhtml" />
+	    </h:panelGroup>
+	    
+	    <h:panelGroup rendered="#{searchQtnTenderBB.managedBean.tenderSelction eq '3' }">
+          <ui:include src="/xhtml/ss/committe/committeefcselection.xhtml" />
+		</h:panelGroup>
+
+        <h:panelGroup rendered="#{searchQtnTenderBB.managedBean.tenderSelction eq '4' }">
+		  <ui:include src="/xhtml/ss/committe/committeeqcselection.xhtml" />
+	    </h:panelGroup>
+
+	  </h:panelGroup>
 </ui:composition>
