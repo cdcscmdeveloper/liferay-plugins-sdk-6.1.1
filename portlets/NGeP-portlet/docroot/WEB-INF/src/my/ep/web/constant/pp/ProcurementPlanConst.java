@@ -17,6 +17,11 @@ public class ProcurementPlanConst {
 //	public static final String NAV_TO_VIEW_PLAN = "viewPlan";
 //	public static final String NAV_TO_CREATE_MTO_PLAN = "createPlan";
 	
+	public static final String PP_DET = "details/ppDetails.xhtml";
+	public static final String EP_EXISTING_CONTRACT_DET = "details/epDetailsExistingContract.xhtml";
+	public static final String EP_DIRECT_PURCHASE_DET = "details/epDetailsDirectPurchase.xhtml";
+	
+
 	//View Mode
 	public static final String MODE_NEW = "N";
 	public static final String MODE_NEW_MTO = "T";
@@ -30,6 +35,10 @@ public class ProcurementPlanConst {
 	//Current Mode
 	public static final String CURRENT_NEW = "tabN";
 	public static final String CURRENT_MTO = "tabM";
+	public static final String CURRENT_ALLOC_BUDGET = "tabB";
+	public static final String CURRENT_PLAN = "tabL";
+	public static final String CURRENT_AUDIT = "tabA";
+	
 	
 	//Plan Type
 	public static final String PLAN_TYPE_PROCUREMENT = "P";
@@ -88,6 +97,11 @@ public class ProcurementPlanConst {
 	public static final String CONTRACT_IND_LOA = "S";
 	public static final String CONTRACT_IND_CONTRACT = "C";
 	
+	//Contract Type
+	public static final String CONTRACT_TYPE_MINISTRY = "P";
+	public static final String CONTRACT_IND_CENTRAL = "S";
+	
+	
 	//Product Level
 	public static final Integer UNSPSC_SEGMENT = 0;
 	public static final Integer UNSPSC_FAMILY = 1;
@@ -129,6 +143,48 @@ public class ProcurementPlanConst {
 	public static final String PROG_PLAN = "plan";
 	public static final String PROG_BUDGET = "budget";
 	
+	//VOT type
+	public static final String VOT_PS = "PS";
+	public static final String VOT_BT = "BT";
+	public static final String VOT_AMANAH = "AV";
+	public static final String VOT_WITHOUT = "AW";
+	
+	/**
+	 * @return the votPs
+	 */
+	public String getVotPs() {
+		return VOT_PS;
+	}
+	/**
+	 * @return the votBt
+	 */
+	public String getVotBt() {
+		return VOT_BT;
+	}
+	/**
+	 * @return the votAmanah
+	 */
+	public String getVotAmanah() {
+		return VOT_AMANAH;
+	}
+	/**
+	 * @return the votWithout
+	 */
+	public String getVotWithout() {
+		return VOT_WITHOUT;
+	}
+	/**
+	 * @return the contractTypeMinistry
+	 */
+	public String getContractTypeMinistry() {
+		return CONTRACT_TYPE_MINISTRY;
+	}
+	/**
+	 * @return the contractIndCentral
+	 */
+	public String getContractIndCentral() {
+		return CONTRACT_IND_CENTRAL;
+	}
 	
 	
 	
@@ -343,6 +399,24 @@ public class ProcurementPlanConst {
 	 */
 	public String getCurrentMto() {
 		return CURRENT_MTO;
+	}
+	/**
+	 * @return the currentAudit
+	 */
+	public String getCurrentAudit() {
+		return CURRENT_AUDIT;
+	}
+	/**
+	 * @return the currentAllocBudget
+	 */
+	public String getCurrentAllocBudget() {
+		return CURRENT_ALLOC_BUDGET;
+	}
+	/**
+	 * @return the currentPlan
+	 */
+	public String getCurrentPlan() {
+		return CURRENT_PLAN;
 	}
 	/**
 	 * @return the planTypeProcurement
@@ -577,5 +651,26 @@ public class ProcurementPlanConst {
 	 */
 	public Long getStatusPpiNew() {
 		return STATUS_PPI_NEW;
+	}
+	
+	
+	
+	/**
+	 * @return the ppDet
+	 */
+	public String getPpDet() {
+		return PP_DET;
+	}
+	/**
+	 * @return the epExistingContractDet
+	 */
+	public String getEpExistingContractDet() {
+		return EP_EXISTING_CONTRACT_DET;
+	}
+	/**
+	 * @return the epDirectPurchaseDet
+	 */
+	public String getEpDirectPurchaseDet() {
+		return EP_DIRECT_PURCHASE_DET;
 	}
 }

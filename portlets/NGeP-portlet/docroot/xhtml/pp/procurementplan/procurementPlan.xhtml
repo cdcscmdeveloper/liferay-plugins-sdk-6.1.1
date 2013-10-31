@@ -11,11 +11,15 @@ xmlns:p="http://primefaces.org/ui"
 xmlns:c="http://java.sun.com/jsp/jstl/core"
 xmlns:tp="http://java.sun.com/jsf/composite/ppComponents/procurementPlan"
 >
+	
+		
     <ui:define name="contentSection">
+    	
+	
 		<!-- Top Button -->
 		<ui:include src="headerSection.xhtml"/>
 	
-		<p:tabView id="tvPlan" dynamic="true" cache="false" orientation="left">
+		<p:tabView widgetVar="tvPlanVar" id="tvPlan" dynamic="true" cache="true" orientation="left">
 			<p:ajax event="tabChange" listener="#{planBackingBean.updateCurrentView}" update="tvPlan"/>  
 		    <p:tab id="#{PPConst.currentNew}" title="#{planBackingBean.generateHeader(planBackingBean.managedBean.viewMode)}">
     		  	<tp:planContentComponent 
@@ -23,25 +27,25 @@ xmlns:tp="http://java.sun.com/jsf/composite/ppComponents/procurementPlan"
 		            selectedPlanMaster="#{planBackingBean.managedBean.planMaster}" 
 		            viewMode="#{planBackingBean.managedBean.viewMode}"/>
 		    </p:tab>
-		    <p:tab id="#{PPConst.currentMto}" title="#{lbl['lbl.pp.plan.title.mto.plan']}" rendered="#{planBackingBean.managedBean.enableMto}" >
+		    <p:tab id="#{PPConst.currentMto}" title="#{lbl['lbl.pp.plan.title.mto.plan']}" disabled="#{!planBackingBean.managedBean.enableMto}" >
 		      	<tp:planContentComponent 
 		            selectedPlan="#{planBackingBean.managedBean.mtoPlan}" 
 		            selectedPlanMaster="#{planBackingBean.managedBean.mtoPlanMaster}" 
  					viewMode="#{planBackingBean.managedBean.viewMode}"/>
 		    </p:tab>
-		    <p:tab id="tabB" title="#{lbl['lbl.pp.budget.title.allocated.gosodo']}">  
+		    <p:tab id="#{PPConst.currentAllocBudget}" title="#{lbl['lbl.pp.budget.title.allocated.gosodo']}">  
 		    	<br/>
 		    	<p:panel header="#{lbl['lbl.pp.budget.title.allocated.gosodo']}">
 		    		<ui:include src="../budgetallocation/listAllocatedBudget.xhtml"/>
 		    	</p:panel>
 		    </p:tab>
-		    <p:tab id="tabL" title="#{lbl['lbl.pp.plan.title.list']}"> 
+		    <p:tab id="#{PPConst.currentPlan}" title="#{lbl['lbl.pp.plan.title.list']}"> 
 		    	<br/>
 		    	<p:panel header="#{planBackingBean.generateHeader(PPConst.modeList)}"> 
 		    		<ui:include src="listPlanContent.xhtml"/>
 		    	</p:panel>
 		    </p:tab>
-		    <p:tab id="tabA" title="#{lbl['lbl.pp.title.audit.trail']}">  
+		    <p:tab id="#{PPConst.currentAudit}" title="#{lbl['lbl.pp.title.audit.trail']}">  
 		    	Coming Soon
 		    </p:tab>
 		     
