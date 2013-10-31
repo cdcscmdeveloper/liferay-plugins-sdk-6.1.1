@@ -1,5 +1,5 @@
 <ui:composition
-	template="/WEB-INF/facelets/templates/sidemenu_template.xhtml"
+	template="/WEB-INF/facelets/templates/basic_template.xhtml"
 	xmlns="http://www.w3.org/1999/xhtml"
 	xmlns:f="http://java.sun.com/jsf/core"
 	xmlns:h="http://java.sun.com/jsf/html"
@@ -7,23 +7,24 @@
 	xmlns:p="http://primefaces.org/ui"
 	xmlns:c="http://java.sun.com/jsp/jstl/core">
 	<ui:define name="resourceSection">
+
 	</ui:define>
-	<ui:define name="sideMenu">
-		<ui:include src="/xhtml/sm/shared/sidemenu/smMainPageSideMenu.xhtml" />
-	</ui:define>
-	<ui:define name="content">
+
+	<ui:define name="contentSection">
+		<p:messages id="messages" showDetail="true" autoUpdate="true"
+			closable="true" />
 		<p:panel header="Cancel / Delete Registered Category Code(s)"
-			toggleable="true">
-			<p:dataTable var="table" id="panelId"
-				value="#{mofRegistrationBackingBean.dataList}"
-				selection="#{mofRegistrationBackingBean.managedBean.selecteDataList}"
-				rowKey="#{table.no}" rowIndexVar="index" style="width : 780px">
+			toggleable="true" id="catDelPan">
+			<p:dataTable var="catBean" id="delCatDT"
+				value="#{deleteCategoryCodeBB.managedBean.smAppl.smSupplierCategories}"
+				selection="#{deleteCategoryCodeBB.managedBean.selectedCategories}"
+				rowKey="#{catBean.supplierCategoryId}" rowIndexVar="index">
 				<p:ajax event="rowSelect"
-					listener="#{mofRegistrationBackingBean.onRowSelect}"
-					update=":form:panelId" />
+					listener="#{deleteCategoryCodeBB.onRowSelect}"
+					update=":form:catDelPan,:form:catDelConfirm" />
 				<p:ajax event="rowUnselect"
-					listener="#{mofRegistrationBackingBean.onRowUnSelect}"
-					update=":form:panelId" />
+					listener="#{deleteCategoryCodeBB.onRowUnSelect}"
+					update=":form:catDelPan,:form:catDelConfirm" />
 				<p:columnGroup type="header">
 					<p:row>
 						<p:column selectionMode="multiple" rowspan="2" width="5%" />
@@ -42,39 +43,61 @@
 					</p:row>
 				</p:columnGroup>
 				<p:column selectionMode="multiple" rowspan="2" width="5%" />
-
-
 				<p:column>
-					<p:outputLabel value="#{table.no}" />
+					<h:outputText value="#{index+1}" />
 				</p:column>
 				<p:column>
-					<p:outputLabel value="#{table.code}" />
+					<h:outputText
+						value="#{catBean.pmCategoryL1.cateogryL1Code}#{catBean.pmCategoryL2.cateogryL2Code}#{catBean.pmCategoryL3.cateogryL3Code}" />
 				</p:column>
 				<p:column>
-					<p:outputLabel value="#{table.parentCategory}" />
+					<h:outputText
+						value="#{catBean.pmCategoryL1.cateogryL1Code} -  #{catBean.pmCategoryL1.categoryName}" />
 				</p:column>
 				<p:column>
-					<p:outputLabel value="#{table.childCategory}" />
+					<h:outputText
+						value="#{catBean.pmCategoryL2.cateogryL2Code} -  #{catBean.pmCategoryL2.categoryName}" />
 				</p:column>
 				<p:column>
-					<p:outputLabel value="#{table.subChildCategory}" />
+					<h:outputText
+						value="#{catBean.pmCategoryL3.cateogryL3Code} -  #{catBean.pmCategoryL3.categoryName}" />
 				</p:column>
 				<p:column>
-					<p:outputLabel value="#{table.businessNature}" />
+					<h:outputText value=" -- TBC -- " />
 				</p:column>
 				<p:column>
-					<p:outputLabel value="#{table.type}" />
+					<!-- <p:outputLabel value="#{catBean.categoryType}" /> -->
+					<h:outputText value="Normal"
+						rendered="#{catBean.categoryType eq 'N'}" />
+					<h:outputText value="Special"
+						rendered="#{catBean.categoryType eq 'S'}" />
 				</p:column>
 				<p:column>
-					<p:inputText rendered="#{table.recordSelected}"
-						value="#{table.remarks}" />
+					<p:inputText rendered="#{catBean.selected}"
+						value="#{catBean.remarks}" />
 				</p:column>
 			</p:dataTable>
 			<br />
 			<div align="center">
-				<p:commandButton value="Delete Code(s)" />
-				<p:commandButton value="Cancel" />
+				<p:commandButton value="Delete Code(s)" disabled="true"
+					readonly="true"
+					rendered="#{deleteCategoryCodeBB.managedBean.selectedCategories.size() == 0}" />
+				<p:commandButton value="Delete Code(s)"
+					rendered="#{deleteCategoryCodeBB.managedBean.selectedCategories.size() != 0}"
+					onclick="confirmation.show()" type="button" />
 			</div>
 		</p:panel>
+		<p:confirmDialog id="catDelConfirm"
+			message="Are you sure about deleting #{deleteCategoryCodeBB.managedBean.selectedCategories.size()} record(s)?"
+			header="Delete Category Code(s)" severity="alert"
+			widgetVar="confirmation">
+
+			<p:commandButton id="confCatDel" value="Yes" update=":form:catDelPan"
+				oncomplete="confirmation.hide()"
+				action="#{deleteCategoryCodeBB.deleteSelectedCatCodes}" />
+			<p:commandButton id="decline" value="No"
+				onclick="confirmation.hide()" type="button" />
+
+		</p:confirmDialog>
 	</ui:define>
 </ui:composition>

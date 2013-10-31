@@ -9,6 +9,7 @@ import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
 
 import my.ep.persistence.entity.sm.SmAppl;
+import my.ep.persistence.entity.sm.SmSupplierCategory;
 import my.ep.web.bean.sm.CompanyBranchesBean;
 import my.ep.web.bean.sm.MofRegistrationUtilBean;
 import my.ep.web.bean.sm.PersonnelBean;
@@ -41,6 +42,7 @@ public class MofRegistrationManagedBean extends BaseManagedBean {
 	private List<PersonnelBean> selectedPersonList;
 	private List<SupportingDocumentBean> selecteDataList;
 	private List<CompanyBranchesBean> selectedBranches;
+	private List<SmSupplierCategory> selectedCategories;
 
 	public List<PersonnelBean> getSelectedPersonList() {
 		return selectedPersonList;
@@ -73,6 +75,15 @@ public class MofRegistrationManagedBean extends BaseManagedBean {
 
 	public void setSelectedBranches(List<CompanyBranchesBean> selectedBranches) {
 		this.selectedBranches = selectedBranches;
+	}
+
+	public List<SmSupplierCategory> getSelectedCategories() {
+		return selectedCategories;
+	}
+
+	public void setSelectedCategories(
+			List<SmSupplierCategory> selectedCategories) {
+		this.selectedCategories = selectedCategories;
 	}
 
 	/*

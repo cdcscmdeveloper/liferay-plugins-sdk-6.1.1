@@ -10,6 +10,8 @@ public class SupplierManagementConst {
 	public static final String PROCEED_BUMI_APPLN = "applyBumiStatusBasePage";
 	public static final String PROCEED_UPDATE_MOF_APPLN = "updateMofDetailsBasePage";
 	public static final String PROCEED_ADDTNLCAT_MOF_APPLN = "addAdditionalCategoryBasePage";
+	public static final String PROCEED_DELETE_CATCODES_APPLN = "delRegCatCodes";
+	public static final String DEFAULT_DELETE_CATCODES_APPLN = "defaultDeleteCategoryCodePage";
 	public static final String DEFAULT_MOF_REG = "defaultNewMofApplPage";
 	public static final String DEFAULT_BUMI_APPLN = "defaultBumiApplicationPage";
 	public static final String DEFAULT_UPDATE_MOF_APPLN = "defaultUpdateMofDetailsPage";

@@ -1,0 +1,38 @@
+<ui:composition
+	template="/WEB-INF/facelets/templates/basic_template.xhtml"
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:c="http://java.sun.com/jsp/jstl/core">
+
+	<ui:define name="resourceSection">
+	</ui:define>
+
+
+	<ui:define name="contentSection">
+		<p:panel header="Delete Category Code">
+			<table style="width: 100%">
+				<tr>
+					<td><p:outputPanel>
+							<p>
+							<p>
+								To delete category codes select the desired record(s) and
+								remarks /reason for deletion. <br /> Note : Deleted Category
+								cannot be added again
+							</p>
+							</p>
+
+						</p:outputPanel></td>
+				</tr>
+			</table>
+		</p:panel>
+		<div align="center">
+			<p:commandButton value="Proceed"
+				action="#{deleteCategoryCodeBB.getRegCategoryCodes}" />
+			<p:commandButton value="Cancel"
+				action="/xhtml/sm/homeScreen/defaultVirtualCertPage.xhtml" />
+		</div>
+	</ui:define>
+</ui:composition>

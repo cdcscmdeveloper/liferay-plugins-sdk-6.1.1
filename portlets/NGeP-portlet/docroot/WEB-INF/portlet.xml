@@ -1748,7 +1748,7 @@
 		<init-param>
 			<name>javax.portlet.faces.defaultViewId.view</name>
 			<value>
-				/xhtml/sm/deleteRegCatCodes/delRegCatCodes.xhtml
+				/xhtml/sm/deleteRegCatCodes/defaultDeleteCategoryCodePage.xhtml
 			</value>
 		</init-param>
 		<expiration-cache>0</expiration-cache>

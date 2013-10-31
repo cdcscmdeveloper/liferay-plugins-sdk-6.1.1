@@ -12,6 +12,11 @@ import javax.faces.bean.RequestScoped;
 import my.ep.biz.service.sm.mofRegistration.IMofRegistrationSO;
 import my.ep.dto.sm.mofRegistration.MofRegistrationReqDTO;
 import my.ep.dto.sm.mofRegistration.MofRegistrationResDTO;
+import my.ep.persistence.entity.pm.common.PmCategoryL1;
+import my.ep.persistence.entity.pm.common.PmCategoryL2;
+import my.ep.persistence.entity.pm.common.PmCategoryL3;
+import my.ep.persistence.entity.sm.SmAppl;
+import my.ep.persistence.entity.sm.SmSupplierCategory;
 import my.ep.web.backingbean.BaseBackingBean;
 import my.ep.web.bean.sm.CompanyBranchesBean;
 import my.ep.web.bean.sm.MofRegistrationUtilBean;
@@ -60,6 +65,7 @@ public class MofRegistrationBackingBean extends
 		preparePersonList();
 		preparAuthList();
 		preapreBranches();
+		prepareSmAppl();
 		/**
 		 * Sample Code For UI Purpose -End
 		 */
@@ -126,20 +132,50 @@ public class MofRegistrationBackingBean extends
 	}
 
 	private List<SupportingDocumentBean> prepareDataList() {
-		dataList.add(new SupportingDocumentBean(1, "Document2",
-				"Desc1",
+		dataList.add(new SupportingDocumentBean(1, "Document2", "Desc1",
 				Boolean.FALSE, "Document1", "Document1", "Y", "d",
 				Boolean.FALSE, "w", 101099, "PERALATAN KOMUNIKASI",
 				"ALAT-ALAT", "ALAT", "DISTRIBUTOR", "Normal", Boolean.FALSE,
 				"Normal", "New Case Received ", "20 -02-2013"));
-		dataList.add(new SupportingDocumentBean(2, "Document2",
-				"Desc2  ",
+		dataList.add(new SupportingDocumentBean(2, "Document2", "Desc2  ",
 				Boolean.FALSE, "Document1", "Document1", "Y", "d",
 				Boolean.FALSE, "w", 101099, "PERALATAN KOMUNIKASI",
 				"ALAT-ALAT", "ALAT", "DISTRIBUTOR", "Normal", Boolean.FALSE,
 				"", "New Case Received ", "20 -02-2013"));
 		return dataList;
 
+	}
+
+	private void prepareSmAppl() {
+		SmAppl smAppl = new SmAppl();
+		List<SmSupplierCategory> catList = new ArrayList<SmSupplierCategory>();
+		for (int i = 0; i < 3; i++) {
+			PmCategoryL1 parent = new PmCategoryL1();
+			parent.setCateogryL1Code(String.valueOf(i + 1));
+			parent.setCategoryName("Parent" + (i + 1));
+			PmCategoryL2 clvl1 = new PmCategoryL2();
+			clvl1.setCateogryL2Code(String.valueOf(i + 1));
+			clvl1.setCategoryName("Child" + (i + 1));
+			PmCategoryL3 sublvl1 = new PmCategoryL3();
+			sublvl1.setCateogryL3Code(String.valueOf(i + 1));
+			sublvl1.setCategoryName("Sub - Child" + (i + 1));
+			SmSupplierCategory cat = new SmSupplierCategory();
+			if (i % 3 == 0) {
+				cat.setCategoryType("S");
+			} else {
+				cat.setCategoryType("N");
+			}
+
+			cat.setPmCategoryL1(parent);
+			cat.setPmCategoryL2(clvl1);
+			cat.setPmCategoryL3(sublvl1);
+			catList.add(cat);
+
+		}
+
+		smAppl.setSmSupplierCategories(catList);
+		getManagedBean().setSmappl(smAppl);
+		// return smAppl;
 	}
 
 	private List<MofRegistrationUtilBean> prepareUtilList() {
@@ -213,7 +249,7 @@ public class MofRegistrationBackingBean extends
 
 	public void onRowUnSelect(UnselectEvent event) {
 		System.out
-				.println("*********** Enterd THE RoW SELECT METHOD ***********"
+				.println("*********** Enterd THE UN RoW SELECT METHOD ***********"
 						+ getManagedBean().getSelecteDataList().size());
 		if (getManagedBean().getSelecteDataList().size() != 0) {
 			for (int i = 0; i < getDataList().size(); i++) {
