@@ -131,7 +131,7 @@ public class TaskListBackingBean extends BaseBackingBean<TaskListManagedBean>{
 		Object obj = res.getPojo();
 		this.getManagedBean().setTaskId(taskId);
 
-		if(res.getProcessName().equalsIgnoreCase("UNSPSC Request")){
+		if(res.getProcessName().equalsIgnoreCase("UNSPSC Code Request")){
 
 			CDRequestDataType unspsc = (CDRequestDataType)obj;
 
