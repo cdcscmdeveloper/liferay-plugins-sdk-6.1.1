@@ -1,0 +1,288 @@
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition
+xmlns="http://www.w3.org/1999/xhtml"
+xmlns:f="http://java.sun.com/jsf/core"
+xmlns:h="http://java.sun.com/jsf/html"
+xmlns:ui="http://java.sun.com/jsf/facelets"
+xmlns:p="http://primefaces.org/ui"
+xmlns:c="http://java.sun.com/jsp/jstl/core">
+	<p:panel id="pItemDetails" header="#{lbl['lbl.pp.item.details.form']}">
+		<table class="ppThreePartsTable">
+			<tr>
+				<th>* #{lbl['lbl.pp.gosodo.code']}</th>
+				<td class="ppSmallTd">:</td>
+				<td>
+					<p:selectOneMenu value="#{planBackingBean.managedBean.selectedItem.goId}"
+						disabled="#{!planBackingBean.managedBean.selectedItem.brandNew &amp;&amp; 
+							!planBackingBean.managedBean.selectedItem.editable}">
+						<f:selectItem itemLabel="#{lbl['lbl.select']}" itemValue="0" />
+						<f:selectItem itemLabel="1" itemValue="1"/>
+					</p:selectOneMenu>
+					<p:selectOneMenu value="#{planBackingBean.managedBean.selectedItem.soId}"
+						disabled="#{!planBackingBean.managedBean.selectedItem.brandNew &amp;&amp; 
+							!planBackingBean.managedBean.selectedItem.editable}">
+						<f:selectItem itemLabel="#{lbl['lbl.select']}" itemValue="0" />
+						<f:selectItem itemLabel="1" itemValue="1"/>
+					</p:selectOneMenu>
+					<p:selectOneMenu value="#{planBackingBean.managedBean.selectedItem.budgetAllocDtlId}"
+						disabled="#{!planBackingBean.managedBean.selectedItem.brandNew &amp;&amp; 
+							!planBackingBean.managedBean.selectedItem.editable}">
+						<f:selectItem itemLabel="#{lbl['lbl.select']}" itemValue="0" />
+						<f:selectItem itemLabel="197" itemValue="197"/>
+						<p:ajax event="change" listener="#{planBackingBean.selectedDo}" update="pItemDetails, opGosodo"/>
+					</p:selectOneMenu>
+				</td>
+				<th>#{lbl['lbl.pp.available.budgeted.amount']}</th>
+				<td class="ppSmallTd">:</td>
+				<td>
+					 <p:inputText value="#{planBackingBean.generateAvailableBudget()}" disabled="true"/>
+				</td>
+			</tr>
+			<tr>
+	   			<th>#{lbl['lbl.pp.gosodo.name']}</th>
+				<td class="ppSmallTd">:</td>
+				<td> 
+					<p:outputPanel id="opGosodo">
+						<p:inputText disabled="true"
+							value="#{planBackingBean.managedBean.selectedItem.ppBudgetAllocDtl.ppBudget.pmGo.goName}
+							#{planBackingBean.managedBean.selectedItem.ppBudgetAllocDtl.pmDo.pmSo.soName}
+							#{planBackingBean.managedBean.selectedItem.ppBudgetAllocDtl.pmDo.doName}
+							"/>
+					</p:outputPanel>    
+				</td>
+				<th>* #{lbl['lbl.pp.estimated.amount']}</th>
+				<td class="ppSmallTd">:</td>
+				<td>
+					 <p:inputText value="#{planBackingBean.managedBean.selectedItem.estimatedAmount}" 
+					 	disabled="#{!planBackingBean.managedBean.selectedItem.brandNew &amp;&amp; 
+							!planBackingBean.managedBean.selectedItem.editable}"/>
+				</td>
+	   		</tr>
+			<!-- For Amanah Without VOT only -->
+			<tr>
+				<th>#{lbl['lbl.pp.financial.year']}</th>
+				<td class="ppSmallTd">:</td>
+				<td>
+					<p:selectOneMenu id="somYear" value="#{planBackingBean.managedBean.selectedItem.ovrFinancialYear}"
+						disabled="#{planBackingBean.managedBean.votType!=PPConst.votWithout}">
+						<f:selectItem itemLabel="#{lbl['lbl.select']}" itemValue="0" />
+						<f:selectItems value="#{planBackingBean.financialYearOptions()}"/>
+					</p:selectOneMenu>
+				</td>
+				<th>&nbsp;</th>
+				<td class="ppSmallTd">&nbsp;</td>
+				<td>&nbsp;</td>
+			</tr>
+			<tr>
+				<td colspan="6"><hr/></td>
+			</tr>
+			<tr>
+				<th>* #{lbl['lbl.pp.product.segment']}</th>
+				<td class="ppSmallTd">:</td>
+				<td colspan="4">
+					<p:selectOneMenu value="#{planBackingBean.managedBean.selectedItem.unspscSegmentCode}"
+						disabled="#{!planBackingBean.managedBean.selectedItem.brandNew &amp;&amp; 
+						!planBackingBean.managedBean.selectedItem.editable}">
+						<f:selectItem itemLabel="#{lbl['lbl.select']}" itemValue="0"/>
+						<f:selectItems value="#{planBackingBean.unspscSegmentOptions()}" 
+							var="obj" itemLabel="#{obj.unspscTitle}" itemValue="#{obj.unspscCode}"/>
+						<p:ajax event="change" update="somProdFamily" />
+					</p:selectOneMenu>
+				</td>
+			</tr>
+			<tr>
+				<th>* #{lbl['lbl.pp.product.family']}</th>
+				<td class="ppSmallTd">:</td>
+				<td colspan="3">
+					<p:selectOneMenu id="somProdFamily" value="#{planBackingBean.managedBean.selectedItem.unspscFamilyCode}"
+						disabled="#{!planBackingBean.managedBean.selectedItem.brandNew &amp;&amp; 
+						!planBackingBean.managedBean.selectedItem.editable}">
+						<f:selectItem itemLabel="#{lbl['lbl.select']}" itemValue="0"/>
+						<f:selectItems value="#{planBackingBean.unspscFamilyOptions()}" 
+							var="obj" itemLabel="#{obj.unspscTitle}" itemValue="#{obj.unspscCode}"/>
+						<p:ajax event="change" update="somProdClass" />
+					</p:selectOneMenu>
+				</td>	
+				<td class="ppSmallTd">&nbsp;</td>		
+			</tr>
+			<tr>
+				<th>* #{lbl['lbl.pp.product.class']}</th>
+				<td class="ppSmallTd">:</td>
+				<td colspan="3">
+					<p:selectOneMenu id="somProdClass" value="#{planBackingBean.managedBean.selectedItem.unspscClassCode}"
+						disabled="#{!planBackingBean.managedBean.selectedItem.brandNew &amp;&amp; 
+						!planBackingBean.managedBean.selectedItem.editable}">
+						<f:selectItem itemLabel="#{lbl['lbl.select']}" itemValue="0"/>
+						<f:selectItems value="#{planBackingBean.unspscClassOptions()}" 
+							var="obj" itemLabel="#{obj.unspscTitle}" itemValue="#{obj.unspscCode}"/>
+						<p:ajax event="change" listener="#{planBackingBean.selectedProduct()}"/>
+					</p:selectOneMenu>
+				</td>
+				<td class="ppSmallTd">&nbsp;</td>
+			</tr>
+			<c:if test="#{cc.attrs.selectedPlan.favouriteOption==PPConst.favouriteTypeItem 
+						|| cc.attrs.selectedPlan.favouriteOption==PPConst.favouriteTypePlan}">
+				<tr>
+					<th>* #{lbl['lbl.pp.product.commodity']}</th>
+					<td class="ppSmallTd">:</td>
+					<td colspan="3">
+						<p:selectOneMenu disabled="#{!planBackingBean.managedBean.selectedItem.brandNew}">
+							<f:selectItem itemLabel="#{lbl['lbl.select']}" />
+						</p:selectOneMenu>
+					</td>
+					<td class="ppSmallTd">&nbsp;</td> 		
+				</tr>
+			</c:if>
+			<c:if test="#{cc.attrs.selectedPlan.favouriteOption==PPConst.favouriteTypeItem 
+						|| cc.attrs.selectedPlan.favouriteOption==PPConst.favouriteTypePlan}">
+				<tr>
+					<th>* #{lbl['lbl.pp.product.extension']}</th>
+					<td class="ppSmallTd">:</td>
+					<td colspan="3">
+						<p:selectOneMenu disabled="#{!planBackingBean.managedBean.selectedItem.brandNew}">
+							<f:selectItem itemLabel="#{lbl['lbl.select']}" />
+						</p:selectOneMenu>
+					</td>
+					<td class="ppSmallTd">&nbsp;</td>
+				</tr>
+			</c:if>
+			<c:if test="#{cc.attrs.selectedPlan.favouriteOption==PPConst.favouriteTypeItem 
+						|| cc.attrs.selectedPlan.favouriteOption==PPConst.favouriteTypePlan}">
+				<tr>
+					<th>* #{lbl['lbl.pp.product.supp.item']}</th>
+					<td class="ppSmallTd">:</td>
+					<td>
+						<p:selectOneMenu disabled="#{!planBackingBean.managedBean.selectedItem.brandNew}">
+							<f:selectItem itemLabel="#{lbl['lbl.select']}" />
+						</p:selectOneMenu>
+					</td>
+					<td class="ppSmallTd">&nbsp;</td>
+					<td>&nbsp;</td>	   		
+				</tr>
+			</c:if>
+			<tr>
+				<td colspan="6"><hr/></td>
+			</tr>
+			<c:if test="#{cc.attrs.selectedPlan.favouriteOption=='I' 
+				|| cc.attrs.selectedPlan.favouriteOption=='P'}">
+				<tr>
+					<th>#{lbl['lbl.pp.supplier.id']}</th>
+					<td class="ppSmallTd">:</td>
+					<td>
+						<p:inputText value="-" disabled="true"/>  
+					</td>
+					<th>#{lbl['lbl.pp.supplier.name']}</th>
+					<td class="ppSmallTd">:</td>
+					<td>
+						<p:inputText value="-" disabled="true"/>  
+					</td>
+				</tr>
+				<tr>
+					<td colspan="6"><hr/></td>
+				</tr>
+			</c:if>
+			<tr>
+				<c:choose>
+		   			<c:when test="#{planBackingBean.managedBean.votType==PPConst.votBt}">
+						<th>#{lbl['lbl.pp.program.activiti.code']}</th>
+						<td class="ppSmallTd">:</td>
+						<td>
+							<p:selectOneMenu id="somProgAct" disabled="#{cc.attrs.selectedPlanMaster.maksudId==''||!cc.attrs.selectedPlan.brandNew}">
+								<f:selectItem itemLabel="#{lbl['lbl.select']}" />
+							</p:selectOneMenu>
+							<p:tooltip for="somProgAct" value="Fade effect is used by default" showEffect="fade" hideEffect="fade" />
+						</td>
+		   			</c:when>
+		   			<c:when test="#{planBackingBean.managedBean.votType==PPConst.votPs}">
+						<th>#{lbl['lbl.pp.projek.setia.code']}</th>
+						<td class="ppSmallTd">:</td>
+						<td>
+							<p:selectOneMenu id="somProjSetia" disabled="#{planBackingBean.managedBean.maksudCode==null 
+								|| !planBackingBean.managedBean.selectedItem.brandNew}">
+								<f:selectItem itemLabel="#{lbl['lbl.select']}" />
+							</p:selectOneMenu>
+							<p:tooltip for="somProjSetia" value="Fade effect is used by default" showEffect="fade" hideEffect="fade" />
+						</td>
+		   			</c:when>
+		   			<c:when test="#{planBackingBean.managedBean.votType==PPConst.votWithout}">
+						<th>#{lbl['lbl.pp.amanah.code']}</th>
+						<td class="ppSmallTd">:</td>
+						<td>
+							<p:selectOneMenu disabled="#{!planBackingBean.managedBean.selectedItem.brandNew}">
+								<f:selectItem itemLabel="#{lbl['lbl.select']}" />
+							</p:selectOneMenu>
+						</td>
+		   			</c:when>
+		   			<c:otherwise>
+		   				<th>&nbsp;</th>
+						<td class="ppSmallTd">&nbsp;</td>
+						<td>&nbsp;</td>
+		   			</c:otherwise>
+	   			</c:choose>
+	   			<th>&nbsp;</th>
+				<td class="ppSmallTd">&nbsp;</td>
+				<td>&nbsp;</td>
+ 			</tr>
+   			<tr>
+   				<th>#{lbl['lbl.pp.item.remarks']}</th>
+				<td class="ppSmallTd">:</td>
+				<td>
+					<p:inputTextarea value="-" rows="3" cols="70"/>
+				</td>
+				<th>&nbsp;</th>
+				<td class="ppSmallTd">&nbsp;</td>
+				<td>&nbsp;</td>
+   			</tr>
+   			
+
+			<!-- FAVOURITE DETAILS -->
+			<c:if id="opFavItem" test="#{cc.attrs.selectedPlan.favouriteOption==PPConst.favouriteTypeItem}">
+				<tr>
+					<td colspan="6"><hr/></td>
+				</tr>
+				<tr>
+					<th>* #{lbl['lbl.pp.plan.name']}</th>
+					<td class="ppSmallTd">:</td>
+					<td>
+						<p:inputText value="#{planBackingBean.managedBean.selectedItem.ppRecurFreq.planName}" 
+							disabled="#{!planBackingBean.managedBean.selectedItem.brandNew}"/>
+					</td>
+					<th>* #{lbl['lbl.pp.recurring.frequency']}</th>
+					<td class="ppSmallTd">:</td>
+					<td>
+						<p:inputText value="#{planBackingBean.managedBean.selectedItem.ppRecurFreq.recurFreq}" 
+							disabled="#{!planBackingBean.managedBean.selectedItem.brandNew}">
+						    <p:ajax event="change" update="pItemDetails" />
+						</p:inputText>
+					</td>
+				</tr>
+			
+				<!-- Repeat this based on recurring frequency -->
+				<ui:repeat var="obj" value="#{planBackingBean.managedBean.selectedItem.ppRecurFreq.recurFreq}" varStatus="status">
+					<tr>
+						<th>* #{lbl['lbl.pp.planned.activities.startmonth']} #{status.index}</th>
+						<td class="ppSmallTd">:</td>
+						<td>
+							<p:calendar showOn="button" readonly="#{!planBackingBean.managedBean.selectedItem.brandNew}" />    
+						</td>
+						<th>* #{lbl['lbl.pp.planned.activities.endmonth']} #{status.index}</th>
+						<td class="ppSmallTd">&nbsp;</td>
+						<td>
+							<p:calendar readonly="#{!planBackingBean.managedBean.selectedItem.brandNew}" showOn="button" />
+						</td>
+					</tr>
+				</ui:repeat>
+			</c:if>
+			<tr>
+	   			<td colspan="5">&nbsp;</td>
+				<td>
+					<p:commandButton value="#{lbl['lbl.pp.save']}" action="#{planBackingBean.addPpPlanToList()}"
+						onclick="dlItemDetailsModal.hide()" oncomplete="dlItemDetailsModal.hide()" 
+						process="pItemDetails" update="tvPlanContent:dtEpItemDetails" />
+				</td>
+	   		</tr>
+		</table>
+	</p:panel>
+
+</ui:composition>
