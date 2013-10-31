@@ -99,6 +99,8 @@ public class SmApplicationBackingBean extends
 				smAppl.setApplNo(" KU-28102013-7895");
 			} else if (applicationType.equalsIgnoreCase("A")) {
 				smAppl.setApplNo(" KA-28102013-7895");
+			} else if (applicationType.equalsIgnoreCase("R")) {
+				smAppl.setApplNo(" KR-31102013-7895");
 			} else {
 				smAppl.setApplNo("UNKNOWNAPPL");
 			}
@@ -138,6 +140,8 @@ public class SmApplicationBackingBean extends
 				return SupplierManagementConst.PROCEED_UPDATE_MOF_APPLN;
 			} else if (applicationType.equalsIgnoreCase("A")) {
 				return SupplierManagementConst.PROCEED_ADDTNLCAT_MOF_APPLN;
+			} else if (applicationType.equalsIgnoreCase("R")) {
+				return SupplierManagementConst.PROCEED_RENEW_MOF_APPLN;
 			}
 
 			else {
@@ -154,6 +158,8 @@ public class SmApplicationBackingBean extends
 				return SupplierManagementConst.DEFAULT_UPDATE_MOF_APPLN;
 			} else if (applicationType.equalsIgnoreCase("A")) {
 				return SupplierManagementConst.DEFAULT_ADDTNLCAT_MOF_APPLN;
+			} else if (applicationType.equalsIgnoreCase("R")) {
+				return SupplierManagementConst.DEFAULT_RENEW_MOF_APPLN;
 			} else {
 				return null;
 			}
@@ -897,6 +903,15 @@ public class SmApplicationBackingBean extends
 			return SupplierManagementConst.BUMI_APPL_SUCCESS;
 		} catch (Exception e) {
 			return SupplierManagementConst.BUMI_APPL_FAIL;
+		}
+	}
+
+	public String submitRenewMofApplToBpm() {
+		try {
+			initiateSmApplicationTask();
+			return SupplierManagementConst.RENEW_MOF_APPL_SUCCESS;
+		} catch (Exception e) {
+			return SupplierManagementConst.RENEW_MOF_APPL_FAIL;
 		}
 	}
 

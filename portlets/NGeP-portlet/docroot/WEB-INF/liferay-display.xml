@@ -89,6 +89,7 @@
 		<portlet id="catalogueTaskList"></portlet>
 		<portlet id="smAddtionalCatCodes"></portlet>
 		<portlet id="smDeleteCategoryCode"></portlet>
+		<portlet id="smRenewMof"></portlet>
 	</category>
 
 	<category name="category.sample">

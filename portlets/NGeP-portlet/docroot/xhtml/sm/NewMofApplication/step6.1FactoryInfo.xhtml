@@ -8,7 +8,7 @@
 
 		<table style="width: 100%">
 			<tr>
-				<td><h4
+				<td width="100%"><h4
 						style="color: blue; text-decoration: underline; text-align: center;">
 						<h:outputText value="#{lbl['lbl.sm.applnTypeLbl']}" />
 						<h:outputText value="#{lbl['lbl.sm.newMofAppln']}" />
@@ -20,8 +20,8 @@
 						<h:outputText value="Step 6.1 : " />
 						<h:outputText value="Factory  / Equiptment Details" />
 					</h6></td>
-				<td align="right"><p:commandButton
-						value="#{lbl['lbl.sm.saveAsDraft']}" /></td>
+				<td><div align="right" style="width: 100%"><p:commandButton
+						value="#{lbl['lbl.sm.saveAsDraft']}" /></div></td>
 			</tr>
 		</table>
 		<ui:include
@@ -32,13 +32,15 @@
 			src="/xhtml/sm/shared/mofRegistration/machineryInfoForm.xhtml" />
 		<table style="width: 100%">
 			<tr>
-				<td align="left"><p:commandButton value="#{lbl['lbl.sm.prev']}"
+				<td><div align="left" style="width: 100%">
+					<p:commandButton value="#{lbl['lbl.sm.prev']}"
 						actionListener="#{backingBean.setTabValue('6','5')}"
-					action="#{backingBean.updateSmAppl}" update=":form:tt" /></td>
-				<td align="right"><p:commandButton
+						action="#{backingBean.updateSmAppl}" update=":form:tt" />
+				</div></td>
+				<td><div align="right" style="width: 100%"><p:commandButton
 						value="#{lbl['lbl.sm.next']}"
 						actionListener="#{backingBean.setTabValue('6','7')}"
-					action="#{backingBean.updateSmAppl}" update=":form:tt" /></td>
+					action="#{backingBean.updateSmAppl}" update=":form:tt" /></div></td>
 			</tr>
 		</table>
 
