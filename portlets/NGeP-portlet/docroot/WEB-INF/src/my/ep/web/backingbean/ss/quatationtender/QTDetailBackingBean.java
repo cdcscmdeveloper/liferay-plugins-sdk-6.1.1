@@ -341,7 +341,7 @@ public class QTDetailBackingBean extends BaseBackingBean<QTDetailManagedBean> {
 		orgUnitReqDTO.setOrgProfileId(new Long(1));
 		OrgUnitResDTO unitResDTO = orgUnitSO
 				.retrieveOrgProfileByProfileId(orgUnitReqDTO);
-		PmOrgProfile orgProfile = unitResDTO.getPmOrgProfileById();
+		PmOrgProfile orgProfile = unitResDTO.getPmOrgProfile();
 		scQt.setPmOrgProfile(orgProfile);
 		// Setting the pm status for qt details
 		StatusReqDTO reqDTO = new StatusReqDTO();
