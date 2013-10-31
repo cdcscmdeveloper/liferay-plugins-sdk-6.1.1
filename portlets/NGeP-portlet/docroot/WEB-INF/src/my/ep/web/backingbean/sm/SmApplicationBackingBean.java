@@ -878,6 +878,10 @@ public class SmApplicationBackingBean extends
 				System.out
 						.println(" **** BPM FROM ADDITIONAL CATEGORY CODE APPL CALLED ******");
 				bpmAppl.setApplId((long) 999);
+			} else if (bpmAppl.getApplType().equalsIgnoreCase("R")) {
+				System.out
+						.println(" **** BPM FROM RENEWAL APPLICATION IS CALLED ******");
+				bpmAppl.setApplId((long) 666);
 			} else {
 				bpmAppl.setApplId((long) 111);
 			}
