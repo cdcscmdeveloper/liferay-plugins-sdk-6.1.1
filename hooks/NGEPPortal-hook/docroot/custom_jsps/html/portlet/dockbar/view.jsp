@@ -291,7 +291,8 @@ for (String portletId : PropsValues.DOCKBAR_ADD_PORTLETS) {
 					<img alt="<%= HtmlUtil.escape(user.getFullName()) %>" src="<%= HtmlUtil.escape(user.getPortraitURL(themeDisplay)) %>" />
 				</aui:a>
 
-				<aui:a cssClass="user-fullname use-dialog" data-controlPanelCategory="<%= PortletCategoryKeys.MY %>" href='<%= themeDisplay.getURLPageSettings().toString() + "#lookAndFeel" %>' title="Personalize">
+				
+				<aui:a cssClass="user-fullname use-dialog" data-controlPanelCategory="<%= PortletCategoryKeys.MY %>" href='#' title="Personalize">
 					<%= HtmlUtil.escape(user.getFullName()) %>
 					
 				</aui:a>

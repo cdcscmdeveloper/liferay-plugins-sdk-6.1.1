@@ -61,12 +61,16 @@ public class DefaultLandingPageAction extends Action {
 		// Eg. Path=/user/test/dashboard
 		// Custom Landing page URL set to user's private page if detected SCREENNAME in URL
 		// Edited 20131003
-		if(path.contains("SCREENNAME")){
-			String uid=request.getRemoteUser();
-			User usr = UserLocalServiceUtil.getUserById(Long.parseLong(uid));
-			String screenName=usr.getScreenName();
-			path = path.replace("SCREENNAME", screenName);	
+		if (!request.isUserInRole("Administrator"))
+		{
+			if(path.contains("SCREENNAME")){
+				String uid=request.getRemoteUser();
+				User usr = UserLocalServiceUtil.getUserById(Long.parseLong(uid));
+				String screenName=usr.getScreenName();
+				path = path.replace("SCREENNAME", screenName);	
+			}
 		}
+		
 		
 		if (_log.isInfoEnabled()) {
 			_log.info(
