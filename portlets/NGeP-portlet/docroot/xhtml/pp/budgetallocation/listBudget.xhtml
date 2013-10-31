@@ -14,48 +14,13 @@ xmlns:c="http://java.sun.com/jsp/jstl/core"
 	<ui:define name="contentSection">
 		<p:outputLabel id="itSysMsg" rendered="#{budgetAllocationBackingBean.managedBean.systemMsg!=''}" disabled="true"
 			value="#{budgetAllocationBackingBean.managedBean.systemMsg}"/><br />
-		<p:panel header="Temporary Menu List">  
-			<table>
-				<tr>
-					<th colspan="2">Budget Task List</th>
-				</tr>
-				<tr>
-					<td>
-						<p:inputText value="#{budgetAllocationBackingBean.managedBean.bpmTaskId}"/>
-						/ <p:inputText value="#{budgetAllocationBackingBean.managedBean.tempBudgetId}"/>
-						
-					</td>
-					<td>
-						<p:commandButton value="Endorse Budget" 
-	 						action="#{budgetAllocationBackingBean.redirectToBudgetAllocation(budgetAllocationBackingBean.managedBean.bpmTaskId, 'A')}"   /> &nbsp;
-	 					<p:commandButton value="Revise Budget" 
-	 						action="#{budgetAllocationBackingBean.redirectToBudgetAllocation(budgetAllocationBackingBean.managedBean.bpmTaskId, 'S')}"   /> &nbsp;
-					</td>
-				</tr>
-				<tr>
-					<td colspan="2">&nbsp;</td>
-				</tr>
-				<tr>
-					<th colspan="2">Plan Task List</th>
-				</tr>
-				<tr>
-					<td colspan="2">
-						<p:commandButton value="Dummy" action="#{budgetAllocationBackingBean.dummySubmit}"   /> 
-					</td>
-				</tr>
-			</table>
-		</p:panel>
-		<br/>
-		<br/>
-		
-		
 		<p:panel id="pRightPanel" header="#{budgetAllocationBackingBean.generateHeader('L')}">
 			<ui:include src="listBudgetContent.xhtml"/>
 		
 			<!-- Bottom Button(s) -->
 			<div class="ppRightBtn">
 				<p:commandButton value="#{lbl['lbl.pp.new.budget.allocation']}" id="cbNewBudgetAlloc"
-			 		action="#{budgetAllocationBackingBean.redirectToBudgetAllocation(null, null)}"   /> 
+			 		action="#{budgetAllocationBackingBean.redirectToBudgetAllocation}"   /> 
 			</div>
 			
 			<br/>

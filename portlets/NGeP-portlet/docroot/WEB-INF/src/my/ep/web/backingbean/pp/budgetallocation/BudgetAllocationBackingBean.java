@@ -91,30 +91,18 @@ public class BudgetAllocationBackingBean extends BaseBackingBean<BudgetAllocatio
 	 * @param status
 	 * @return xhtml
 	 */
-	public String redirectToBudgetAllocation(String taskId, String status){//temp status
+	public String redirectToBudgetAllocation(){
 		log.info("redirectToBudgetAllocation - Start");
-		boolean isComplete = false;
-	
 		try{
-			if(CommonMethod.isSelected(taskId)){
-				log.info("populate view");
-				isComplete = retrieveTask(taskId, status);
-			}else{
-				log.info("new view");
-				cleanBudgetAllocDetails();
-				isComplete = true;
-			}
+			cleanBudgetAllocDetails();
+	
 		}catch (Exception e){
 			e.printStackTrace();
 			this.getManagedBean().setSystemMsg(e.getMessage());
 		}
 		log.info("redirectToBudgetAllocation - End");
-		
-		if(isComplete){
-			return ProcurementPlanConst.NAV_TO_BUDGET_ALLOCATION;
-		}else{
-			return "";
-		}
+		return ProcurementPlanConst.NAV_TO_BUDGET_ALLOCATION;
+	
 	}
 	
 	/**
@@ -135,194 +123,116 @@ public class BudgetAllocationBackingBean extends BaseBackingBean<BudgetAllocatio
 		log.info("cleanBudgetAllocDetails - End");
 	}
 	
-	
-	
 	/**
-	 * Retrieve task from BPM based on the params
-	 * @param taskId
-	 * @param status
-	 * @return result
+	 * load task from task list
+	 * @param budgetAlloc
+	 * @param taskName
 	 */
-	public boolean retrieveTask(String taskId, String status){
-		log.info("retrieveTask - Start");
-		String[] actions = null;
-		boolean isComplete = false;
-
-		IBpmSO bpmSO = (IBpmSO) EpBpmBusinessDelegate.getInstance().getServiceObject(IBpmSO.class);
-		String token ="";
-		if(ProcurementPlanConst.MODE_REVISION.equals(status)){
-			token = bpmSO.authenticate("roslan", "welcome1");//temp
-			this.getManagedBean().setViewMode(ProcurementPlanConst.MODE_REVISION);
-//			--actions = new String[]{ProcurementPlanConst.BPM_SAVE, ProcurementPlanConst.BPM_SUBMIT}; //temp
-			this.getManagedBean().getSelectedGoMapper().clear();
-		}else if(ProcurementPlanConst.MODE_APPROVAL.equals(status)){
-			token = bpmSO.authenticate("lailah", "welcome1"); //temp
-			this.getManagedBean().setViewMode(ProcurementPlanConst.MODE_APPROVAL);
-//			actions = new String[]{ProcurementPlanConst.BPM_REVISE, ProcurementPlanConst.BPM_APPROVE}; //temp
-		}
-		if(token!=null && !token.isEmpty()){
-			BpmRequestDTO reqBpmDTO = new BpmRequestDTO();
-			reqBpmDTO.setCtxToken(token);
-			reqBpmDTO.setTaskId(taskId);
-			BpmResponseDTO resBpmDTO = bpmSO.getTaskDetails(reqBpmDTO);
-			if(resBpmDTO!=null && resBpmDTO.isSuccessful()){
-				PPBudgetDataType taskData = (PPBudgetDataType) resBpmDTO.getPojo();
-				BudgetAllocationReqDTO reqDTO = new BudgetAllocationReqDTO();
-//--				reqDTO.setBudgetAllocId(this.getManagedBean().getTempBudgetId()); //temp
-				reqDTO.setBudgetAllocId(Long.parseLong(taskData.getBudgetId()));
-				IBudgetAllocationSO reqSO = (IBudgetAllocationSO) BusinessDelegate.getInstance().getServiceObject(ProcurementPlanConst.SO_PP, IBudgetAllocationSO.class);
-				BudgetAllocationResDTO resDTO = reqSO.retrieveBudgetAllocation(reqDTO);
-				if(resDTO!=null && resDTO.isSuccessful()){
-//					--this.getManagedBean().setActions(actions); //temp
-					this.getManagedBean().setActions(resBpmDTO.getAction());
-					this.getManagedBean().setSelectedBudgetAllocation(resDTO.getBudgetAlloc());
-					this.getManagedBean().getSelectedBudgetAllocation().setEditable(false); 
-					this.getManagedBean().setSelectedBudgetAllocItemRmk(new PpRemark()); //avoid null
-					this.getManagedBean().setSelectedBudgetAllocItem(new PpBudgetAllocDtl()); //avoid null
-					if(ProcurementPlanConst.MODE_REVISION.equals(status)){
-						this.getManagedBean().getSelectedBudgetAllocation().setEditable(true); 
-						for(PpBudgetAllocDtl item:resDTO.getBudgetAlloc().getPpBudgetAllocDtls()){
-							updateSelectedGo(item, "INIT");
-						}
-					}
-					loadHeader();
-					isComplete = true;
+	public void loadTask(PpBudgetAlloc budgetAlloc, String taskName){
+		if(budgetAlloc!=null && taskName!=null){
+			if("Review Budget".equalsIgnoreCase(taskName)){
+				this.getManagedBean().setViewMode(ProcurementPlanConst.MODE_APPROVAL);
+				this.getManagedBean().setSelectedBudgetAllocation(budgetAlloc);
+				this.getManagedBean().getSelectedBudgetAllocation().setEditable(false); 
+				this.getManagedBean().setSelectedBudgetAllocItemRmk(new PpRemark()); //avoid null
+				this.getManagedBean().setSelectedBudgetAllocItem(new PpBudgetAllocDtl()); //avoid nul
+			}else if("Revise Budget".equals(taskName)){
+				this.getManagedBean().setViewMode(ProcurementPlanConst.MODE_REVISION);
+				this.getManagedBean().setSelectedBudgetAllocation(budgetAlloc);
+				this.getManagedBean().getSelectedBudgetAllocation().setEditable(true); 
+				this.getManagedBean().setSelectedBudgetAllocItemRmk(new PpRemark()); //avoid null
+				this.getManagedBean().setSelectedBudgetAllocItem(new PpBudgetAllocDtl()); //avoid nul
+				for(PpBudgetAllocDtl item:budgetAlloc.getPpBudgetAllocDtls()){
+					updateSelectedGo(item, "INIT");
 				}
-				
-			}else{
-				log.info("BPM Error Message: (" + resBpmDTO.getErrorCode() + ") " + resBpmDTO.getErrorReason());
 			}
 		}
-		log.info("retrieveTask - End");
-		return isComplete;
 	}
-	
-	
-	/**
-	 * load the drop down id for header
-	 */
-	private void loadHeader(){
-		log.info("loadHeader - Start");
-		//load ministry
-		this.getManagedBean().getSelectedBudgetAllocation().setMinistryOrgProfileId(
-				this.getManagedBean().getSelectedBudgetAllocation().getPtjOrgProfile().getPmOrgProfile().getPmOrgProfile().getOrgProfileId()
-			);
-		//load jabatan
-		this.getManagedBean().getSelectedBudgetAllocation().setJabatanOrgProfileId(
-				this.getManagedBean().getSelectedBudgetAllocation().getPtjOrgProfile().getPmOrgProfile().getOrgProfileId()
-			);
-		//load ptj
-		this.getManagedBean().getSelectedBudgetAllocation().setOrgProfileId(
-				this.getManagedBean().getSelectedBudgetAllocation().getPtjOrgProfile().getOrgProfileId()
-			);
-		
-		log.info("loadHeader - End");
-	}
-	
-	/*
-	public String redirectToEndorseBudgetAllocation(String taskId){
-		log.info("redirectToEndorseBudgetAllocation - Start");
-		String returnPage = "";
-		try{
-			this.getManagedBean().setViewMode(ProcurementPlanConst.MODE_APPROVAL);
-			System.out.println(">>>> taskId " + taskId);
-			if(taskId!=null && taskId.trim().length()>0){
-				
-//				IBpmSO bpmSO = (IBpmSO) EpBpmBusinessDelegate.getInstance().getServiceObject(IBpmSO.class);
-//				String token = bpmSO.authenticate("lailah", "welcome1");
-//				if(token!=null && !token.isEmpty()){
-//					BpmRequestDTO reqBpmDTO = new BpmRequestDTO();
-//					reqBpmDTO.setCtxToken(token);
-//					reqBpmDTO.setTaskId(taskId);
-//					BpmResponseDTO resBpmDTO = bpmSO.getTaskDetails(reqBpmDTO);
-//					if(resBpmDTO!=null && resBpmDTO.isSucessful()){
-//						System.out.println(">>>>>>>>>>>>>>> resBpmDTO not null");
-//						System.out.println(">>>>pojo " + resBpmDTO.getPojo());
-//						System.out.println("actionsss>>>>>>>>>>>> " + resBpmDTO.getAction().length);
-//						PSBudgetDataType taskData = (PSBudgetDataType) resBpmDTO.getPojo();
-						BudgetAllocationReqDTO reqDTO = new BudgetAllocationReqDTO();
-//						System.out.println(">>>>id " + taskData.getBudgetId());
-						reqDTO.setBudgetAllocId(this.getManagedBean().getTempBudgetId()); //temp
-//						reqDTO.setBudgetAllocId(Long.parseLong(taskData.getBudgetId()));
-						IBudgetAllocationSO reqSO = (IBudgetAllocationSO) BusinessDelegate.getInstance().getServiceObject(ProcurementPlanConst.SO_PP, IBudgetAllocationSO.class);
-						BudgetAllocationResDTO resDTO = reqSO.retrieveBudgetAllocation(reqDTO);
-						String[] actions = new String[]{"REVISE", "APPROVE"}; //temp
-						if(resDTO!=null && resDTO.isSuccessful()){
-							this.getManagedBean().setActions(actions); //temp
-//							this.getManagedBean().setActions(resBpmDTO.getAction());
-							this.getManagedBean().setSelectedBudgetAllocation(resDTO.getBudgetAlloc());
-							this.getManagedBean().getSelectedBudgetAllocation().setEditable(false);
-							this.getManagedBean().setSelectedBudgetAllocItemRmk(new PpRemark()); //avoid null
-							this.getManagedBean().setSelectedBudgetAllocItem(new PpBudgetAllocDtl()); //avoid null
-							returnPage = ProcurementPlanConst.NAV_TO_BUDGET_ALLOCATION;
-						}
-//					}else{
-//						System.out.println("BPM Error Message: (" + resBpm.getErrorCode() + ") " + resBpm.getErrorReason());
+//	/**
+//	 * Retrieve task from BPM based on the params
+//	 * @param taskId
+//	 * @param status
+//	 * @return result
+//	 */
+//	public boolean retrieveTask(String taskId, String status){
+//		log.info("retrieveTask - Start");
+//		String[] actions = null;
+//		boolean isComplete = false;
+//
+//		IBpmSO bpmSO = (IBpmSO) EpBpmBusinessDelegate.getInstance().getServiceObject(IBpmSO.class);
+//		String token ="";
+//		if(ProcurementPlanConst.MODE_REVISION.equals(status)){
+//			token = bpmSO.authenticate("roslan", "welcome1");//temp
+//			this.getManagedBean().setViewMode(ProcurementPlanConst.MODE_REVISION);
+////			--actions = new String[]{ProcurementPlanConst.BPM_SAVE, ProcurementPlanConst.BPM_SUBMIT}; //temp
+//			this.getManagedBean().getSelectedGoMapper().clear();
+//		}else if(ProcurementPlanConst.MODE_APPROVAL.equals(status)){
+//			token = bpmSO.authenticate("lailah", "welcome1"); //temp
+//			this.getManagedBean().setViewMode(ProcurementPlanConst.MODE_APPROVAL);
+////			actions = new String[]{ProcurementPlanConst.BPM_REVISE, ProcurementPlanConst.BPM_APPROVE}; //temp
+//		}
+//		if(token!=null && !token.isEmpty()){
+//			BpmRequestDTO reqBpmDTO = new BpmRequestDTO();
+//			reqBpmDTO.setCtxToken(token);
+//			reqBpmDTO.setTaskId(taskId);
+//			BpmResponseDTO resBpmDTO = bpmSO.getTaskDetails(reqBpmDTO);
+//			if(resBpmDTO!=null && resBpmDTO.isSuccessful()){
+//				PPBudgetDataType taskData = (PPBudgetDataType) resBpmDTO.getPojo();
+//				BudgetAllocationReqDTO reqDTO = new BudgetAllocationReqDTO();
+////--				reqDTO.setBudgetAllocId(this.getManagedBean().getTempBudgetId()); //temp
+//				reqDTO.setBudgetAllocId(Long.parseLong(taskData.getBudgetId()));
+//				IBudgetAllocationSO reqSO = (IBudgetAllocationSO) BusinessDelegate.getInstance().getServiceObject(ProcurementPlanConst.SO_PP, IBudgetAllocationSO.class);
+//				BudgetAllocationResDTO resDTO = reqSO.retrieveBudgetAllocation(reqDTO);
+//				if(resDTO!=null && resDTO.isSuccessful()){
+////					--this.getManagedBean().setActions(actions); //temp
+//					this.getManagedBean().setActions(resBpmDTO.getAction());
+//					this.getManagedBean().setSelectedBudgetAllocation(resDTO.getBudgetAlloc());
+//					this.getManagedBean().getSelectedBudgetAllocation().setEditable(false); 
+//					this.getManagedBean().setSelectedBudgetAllocItemRmk(new PpRemark()); //avoid null
+//					this.getManagedBean().setSelectedBudgetAllocItem(new PpBudgetAllocDtl()); //avoid null
+//					if(ProcurementPlanConst.MODE_REVISION.equals(status)){
+//						this.getManagedBean().getSelectedBudgetAllocation().setEditable(true); 
+//						for(PpBudgetAllocDtl item:resDTO.getBudgetAlloc().getPpBudgetAllocDtls()){
+//							updateSelectedGo(item, "INIT");
+//						}
 //					}
+//					loadHeader();
+//					isComplete = true;
 //				}
-			}
-				
-		}catch (Exception e){
-			e.printStackTrace();
-		}
-		log.info("redirectToEndorseBudgetAllocation - End");
-		return returnPage;
-	}
+//				
+//			}else{
+//				log.info("BPM Error Message: (" + resBpmDTO.getErrorCode() + ") " + resBpmDTO.getErrorReason());
+//			}
+//		}
+//		log.info("retrieveTask - End");
+//		return isComplete;
+//	}
+//	
 	
-	public String redirectToReviseBudgetAllocation(String taskId){
-		log.info("redirectToReviseBudgetAllocation - Start");
-		String returnPage = "";
-		try{
-			this.getManagedBean().setViewMode(ProcurementPlanConst.MODE_REVISION);
-			System.out.println(">>>> taskId " + taskId);
-			if(taskId!=null && taskId.trim().length()>0){
-				
-//				IBpmSO bpmSO = (IBpmSO) EpBpmBusinessDelegate.getInstance().getServiceObject(IBpmSO.class);
-//				String token = bpmSO.authenticate("roslan", "welcome1");
-//				if(token!=null && !token.isEmpty()){
-//					BpmRequestDTO reqBpmDTO = new BpmRequestDTO();
-//					reqBpmDTO.setCtxToken(token);
-//					reqBpmDTO.setTaskId(taskId);
-//					BpmResponseDTO resBpmDTO = bpmSO.getTaskDetails(reqBpmDTO);
-//					if(resBpmDTO!=null && resBpmDTO.isSuccessful()){
-//						System.out.println(">>>>>>>>>>>>>>> resBpmDTO not null");
-//						System.out.println(">>>>pojo " + resBpmDTO.getPojo());
-//						System.out.println("actionsss>>>>>>>>>>>> " + resBpmDTO.getAction().length);
-//						PSBudgetDataType taskData = (PSBudgetDataType) resBpmDTO.getPojo();
-						BudgetAllocationReqDTO reqDTO = new BudgetAllocationReqDTO();
-//						System.out.println(">>>>id " + taskData.getBudgetId());
-						reqDTO.setBudgetAllocId(this.getManagedBean().getTempBudgetId()); //temp
-//						reqDTO.setBudgetAllocId(Long.parseLong(taskData.getBudgetId()));
-						IBudgetAllocationSO reqSO = (IBudgetAllocationSO) BusinessDelegate.getInstance().getServiceObject(ProcurementPlanConst.SO_PP, IBudgetAllocationSO.class);
-						BudgetAllocationResDTO resDTO = reqSO.retrieveBudgetAllocation(reqDTO);
-						String[] actions = new String[]{"SAVE", "SUBMIT"}; //temp
-						if(resDTO!=null && resDTO.isSuccessful()){
-							this.getManagedBean().setActions(actions); //temp
-//							this.getManagedBean().setActions(resBpmDTO.getAction());
-							this.getManagedBean().setSelectedBudgetAllocation(resDTO.getBudgetAlloc());
-							System.out.println("new " +resDTO.getBudgetAlloc().isBrandNew());
-							this.getManagedBean().getSelectedBudgetAllocation().setEditable(true);
-							this.getManagedBean().setSelectedBudgetAllocItemRmk(new PpRemark()); //avoid null
-							this.getManagedBean().setSelectedBudgetAllocItem(new PpBudgetAllocDtl()); //avoid null
-							this.getManagedBean().getSelectedGoMapper().clear();
-							for(PpBudgetAllocDtl item:resDTO.getBudgetAlloc().getPpBudgetAllocDtls()){
-								updateSelectedGo(item, "INIT");
-							}
-							returnPage = ProcurementPlanConst.NAV_TO_BUDGET_ALLOCATION;
-						}
-						
-//					}else{
-//						System.out.println("BPM Error Message: (" + resBpmDTO.getErrorCode() + ") " + resBpmDTO.getErrorReason());
-//					}
-//				}
-			}
-		}catch (Exception e){
-			e.printStackTrace();
-		}
-		log.info("redirectToReviseBudgetAllocation - End");
-		return returnPage;
-	}
-	*/
+//	/**
+//	 * load the drop down id for header
+//	 */
+//	public void loadHeader(){
+//		log.info("loadHeader - Start");
+//		try{
+//		//load ministry
+//		this.getManagedBean().getSelectedBudgetAllocation().setMinistryOrgProfileId(
+//				this.getManagedBean().getSelectedBudgetAllocation().getPtjOrgProfile().getPmOrgProfile().getPmOrgProfile().getOrgProfileId()
+//			);
+//		//load jabatan
+//		this.getManagedBean().getSelectedBudgetAllocation().setJabatanOrgProfileId(
+//				this.getManagedBean().getSelectedBudgetAllocation().getPtjOrgProfile().getPmOrgProfile().getOrgProfileId()
+//			);
+//		//load ptj
+//		this.getManagedBean().getSelectedBudgetAllocation().setOrgProfileId(
+//				this.getManagedBean().getSelectedBudgetAllocation().getPtjOrgProfile().getOrgProfileId()
+//			);
+//		}catch(Exception e){
+//			e.printStackTrace();
+//		}
+//		log.info("loadHeader - End");
+//	}
+	
 	
 	
 	/**
@@ -521,14 +431,7 @@ public class BudgetAllocationBackingBean extends BaseBackingBean<BudgetAllocatio
 	 */
 	public List<SelectItem> financialYearOptions() {
 		log.info("financialYearOptions - Start");
-		int currentYear = CommonMethod.getYear(0);
-		int nextYear = CommonMethod.getYear(1);
-		
-		List<SelectItem>financialYearOpt = new ArrayList<SelectItem>();
-		financialYearOpt.add(new SelectItem(currentYear, Integer.toString(currentYear)));
-		financialYearOpt.add(new SelectItem(nextYear, Integer.toString(nextYear)));
-		log.info("financialYearOptions - End");
-		return financialYearOpt;
+		return CommonMethod.financialYearOptions();
 	} 
 	
 	/**
@@ -840,7 +743,7 @@ public class BudgetAllocationBackingBean extends BaseBackingBean<BudgetAllocatio
 				reqBpm = new BpmRequestDTO();
 				reqBpm.setCtxToken(token);
 				reqBpm.setOutcome(action); 
-				reqBpm.setProcessId("Procurement_Plan.EndorseBudget");
+				reqBpm.setProcessId("Procurement_Plan.BudgetEndorsement");
 				
 				PPBudgetDataType obj = new PPBudgetDataType();
 				obj.setApprover(CommonMethod.approverMap.get(ppBudgetAlloc.getApproverId()));
@@ -925,31 +828,31 @@ public class BudgetAllocationBackingBean extends BaseBackingBean<BudgetAllocatio
 		return pmSos;
 		
 	}
-	
-	/**
-	 * retrieve and set the PmSo when PmSo.soId is selected
-	 */
-	public void selectedSo() {
-		log.info("selectedSo - Start");
-		Long soId = this.getManagedBean().getSelectedBudgetAllocItem().getSoId();
-		try{
-			if(CommonMethod.isSelected(soId)){
-				ObjectReqDTO reqDTO = new ObjectReqDTO();
-				reqDTO.setSoId(soId);
-				IObjectSO objectSO = (IObjectSO) BusinessDelegate.getInstance().getServiceObject("pm", IObjectSO.class);
-				ObjectResDTO resDTO = objectSO.retrieveSOBYSOId(reqDTO);
-//				if(resDTO.isSuccessful()){
-					this.getManagedBean().getSelectedBudgetAllocItem().setPmSo(resDTO.getPmSo());
-//				}
-			}
-		}catch (Exception e){
-			e.printStackTrace();
-			this.getManagedBean().setSystemMsg(e.getMessage());
-		}
-		log.info("selectedSo - End");
-	
-	}
-	
+//	
+//	/**
+//	 * retrieve and set the PmSo when PmSo.soId is selected
+//	 */
+//	public void selectedSo() {
+//		log.info("selectedSo - Start");
+//		Long soId = this.getManagedBean().getSelectedBudgetAllocItem().getSoId();
+//		try{
+//			if(CommonMethod.isSelected(soId)){
+//				ObjectReqDTO reqDTO = new ObjectReqDTO();
+//				reqDTO.setSoId(soId);
+//				IObjectSO objectSO = (IObjectSO) BusinessDelegate.getInstance().getServiceObject("pm", IObjectSO.class);
+//				ObjectResDTO resDTO = objectSO.retrieveSOBYSOId(reqDTO);
+////				if(resDTO.isSuccessful()){
+//					this.getManagedBean().getSelectedBudgetAllocItem().setPmSo(resDTO.getPmSo());
+////				}
+//			}
+//		}catch (Exception e){
+//			e.printStackTrace();
+//			this.getManagedBean().setSystemMsg(e.getMessage());
+//		}
+//		log.info("selectedSo - End");
+//	
+//	}
+//	
 	/**
 	 * populate DO list
 	 * @return DO list

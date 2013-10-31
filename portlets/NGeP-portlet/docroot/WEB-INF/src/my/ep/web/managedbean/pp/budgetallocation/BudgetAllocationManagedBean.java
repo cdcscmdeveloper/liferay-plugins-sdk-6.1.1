@@ -43,11 +43,24 @@ public class BudgetAllocationManagedBean extends BaseManagedBean{
 	
 	private PmOrgProfile currentUser;
 	
-	private Long tempBudgetId; //TODO : temp for task retrieving
-	
 	private String systemMsg;
 	
+	private PpBudgetAlloc retrieveBudgetAlloc;
   
+
+	/**
+	 * @return the retrieveBudgetAlloc
+	 */
+	public PpBudgetAlloc getRetrieveBudgetAlloc() {
+		return retrieveBudgetAlloc;
+	}
+
+	/**
+	 * @param retrieveBudgetAlloc the retrieveBudgetAlloc to set
+	 */
+	public void setRetrieveBudgetAlloc(PpBudgetAlloc retrieveBudgetAlloc) {
+		this.retrieveBudgetAlloc = retrieveBudgetAlloc;
+	}
 
 	/**
 	 * @return the systemMsg
@@ -61,20 +74,6 @@ public class BudgetAllocationManagedBean extends BaseManagedBean{
 	 */
 	public void setSystemMsg(String systemMsg) {
 		this.systemMsg = systemMsg;
-	}
-
-	/**
-	 * @return the tempBudgetId
-	 */
-	public Long getTempBudgetId() {
-		return tempBudgetId;
-	}
-
-	/**
-	 * @param tempBudgetId the tempBudgetId to set
-	 */
-	public void setTempBudgetId(Long tempBudgetId) {
-		this.tempBudgetId = tempBudgetId;
 	}
 
 	/**

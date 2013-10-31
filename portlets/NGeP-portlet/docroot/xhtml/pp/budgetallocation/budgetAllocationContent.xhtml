@@ -194,7 +194,7 @@ xmlns:c="http://java.sun.com/jsp/jstl/core"
 									<f:selectItem itemLabel="#{lbl['lbl.select']}" itemValue="0" />
 									<f:selectItems value="#{budgetAllocationBackingBean.populateGo()}" 
 										var="budget" itemLabel="#{budget.pmGo.goCode}" itemValue="#{budget.budgetId}" />
-									<p:ajax event="change" listener="#{budgetAllocationBackingBean.selectedGo}" update="pItemDet, somDo, opGosodo"  />
+									<p:ajax event="change" listener="#{budgetAllocationBackingBean.selectedGo}" update="pItemDet"  />
 								</p:selectOneMenu>
 								<p:selectOneMenu 
 									value="#{budgetAllocationBackingBean.managedBean.selectedBudgetAllocItem.soId}"
@@ -203,7 +203,7 @@ xmlns:c="http://java.sun.com/jsp/jstl/core"
 									<f:selectItem itemLabel="#{lbl['lbl.select']}" itemValue="0" />
 									<f:selectItems value="#{budgetAllocationBackingBean.populateSo()}" 
 										var="pmSo" itemLabel="#{pmSo.soCode}" itemValue="#{pmSo.soId}" />
-									<p:ajax event="change" listener="#{budgetAllocationBackingBean.selectedSo}" update="somDo, opGosodo"  />
+									<p:ajax event="change" update="somDo, opGosodo"  />
 								</p:selectOneMenu>
 								<p:selectOneMenu id="somDo"
 									value="#{budgetAllocationBackingBean.managedBean.selectedBudgetAllocItem.doId}"
@@ -222,9 +222,9 @@ xmlns:c="http://java.sun.com/jsp/jstl/core"
 							<td>
 								<p:outputPanel id="opGosodo">
 									<p:inputText disabled="true"
-										value="#{budgetAllocationBackingBean.managedBean.selectedBudgetAllocItem.ppBudget.pmGo.goName}"/>
+										value="#{budgetAllocationBackingBean.managedBean.selectedBudgetAllocItem.pmDo.pmSo.pmGo.goName}"/>
 									<p:inputText disabled="true"
-										value="#{budgetAllocationBackingBean.managedBean.selectedBudgetAllocItem.pmSo.soName}"/>  
+										value="#{budgetAllocationBackingBean.managedBean.selectedBudgetAllocItem.pmDo.pmSo.soName}"/>  
 									<p:inputText disabled="true"
 										value="#{budgetAllocationBackingBean.managedBean.selectedBudgetAllocItem.pmDo.doName}"/>
 								</p:outputPanel>    
