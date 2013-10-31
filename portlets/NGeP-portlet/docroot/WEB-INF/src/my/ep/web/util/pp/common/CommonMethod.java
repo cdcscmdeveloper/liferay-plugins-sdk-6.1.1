@@ -4,10 +4,14 @@
 package my.ep.web.util.pp.common;
 
 import java.math.BigDecimal;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
+
+import javax.faces.model.SelectItem;
 
 import my.ep.persistence.entity.pm.common.PmStatus;
 import my.ep.web.constant.pp.ProcurementPlanConst;
@@ -109,5 +113,20 @@ public class CommonMethod {
 		cal.setTime(date);
 		return cal;
     }
-//    public static Calendar date
+    
+    /**
+	 * retrieve financial year options for current year & current year +1
+	 * @return financial year options
+	 */
+	public static List<SelectItem> financialYearOptions() {
+		log.info("financialYearOptions - Start");
+		int currentYear = CommonMethod.getYear(0);
+		int nextYear = CommonMethod.getYear(1);
+		
+		List<SelectItem>financialYearOpt = new ArrayList<SelectItem>();
+		financialYearOpt.add(new SelectItem(currentYear, Integer.toString(currentYear)));
+		financialYearOpt.add(new SelectItem(nextYear, Integer.toString(nextYear)));
+		log.info("financialYearOptions - End");
+		return financialYearOpt;
+	} 
 }
