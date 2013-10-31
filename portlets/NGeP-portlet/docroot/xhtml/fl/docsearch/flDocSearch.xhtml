@@ -1,0 +1,162 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:fn="http://java.sun.com/jsp/jstl/functions">
+
+
+
+	<h:panelGroup id="supplierItemViewID">
+
+		<div style="text-align: left; float: right;">
+			<p:menubar>
+				<p:submenu
+					label="Wish List ( #{fn:length(documentBackingBean.managedBean.wishLists)} )">
+					<p:menuitem value="View WishList"
+						action="#{wishListBackingBean.viewWishListItem}" />
+				</p:submenu>
+				<p:submenu label="Cart List" style=" border-right: 1px;">
+					<p:menuitem value="Your Shopping Cart is empty Give it purpose"></p:menuitem>
+					<p:menuitem>
+						<p:button value="View Cart Items" />
+					</p:menuitem>
+				</p:submenu>
+				<p:submenu label="Supplier List" style=" border-right: 1px;">
+					<p:menuitem>
+						<p:button value="View Supplier" />
+					</p:menuitem>
+				</p:submenu>
+			</p:menubar>
+		</div>
+
+
+		<p:outputLabel styleClass="titleFront"
+			value="#{lbl['lbl.cm.catalogue.search']}"></p:outputLabel>
+
+
+		<p:remoteCommand id="searching" name="searching"
+			update="advanceSearchID" process="@this searchRadio"
+			action="#{documentBackingBean.advanceSearch()}">
+		</p:remoteCommand>
+
+
+		<table>
+			<tr>
+				<td><p:selectOneRadio id="searchRadio"
+						value="#{documentBackingBean.managedBean.searchType}">
+						<f:selectItem itemValue="S" itemLabel="Search " />
+						<f:selectItem itemValue="A" itemLabel="Advance Search" />
+						<p:ajax event="click"
+							listener="#{documentBackingBean.advanceSearch()}"
+							update="advanceSearchID"></p:ajax>
+					</p:selectOneRadio></td>
+			</tr>
+		</table>
+
+		<h:panelGrid columns="3" columnClasses="cmWidth1">
+			<p:outputLabel value="Doc Type" />
+			<p:inputText size="50"
+				value="#{documentBackingBean.managedBean.docType}"></p:inputText>
+			<p:selectOneMenu>
+				<f:selectItem itemValue="and" itemLabel="And" />
+				<f:selectItem itemValue="or" itemLabel="Or" />
+			</p:selectOneMenu>
+		</h:panelGrid>
+
+
+
+		<p:outputPanel id="advanceSearchID" style="width:100%">
+
+
+
+			<c:if test="#{documentBackingBean.managedBean.advanceSearchInd}">
+
+				<ui:repeat var="search"
+					value="#{documentBackingBean.managedBean.advanceSearchList}">
+
+					<h:panelGrid columns="2" columnClasses="cmPadding5">
+						<p:selectOneMenu value="#{search.name}">
+							<f:selectItems
+								value="#{documentBackingBean.managedBean.searchCriteria}" />
+						</p:selectOneMenu>
+						<p:inputText size="50" value="#{search.value}" />
+					</h:panelGrid>
+
+				</ui:repeat>
+			</c:if>
+
+		</p:outputPanel>
+
+		<p:commandButton value="search"
+			action="#{documentBackingBean.searchDocument}"
+			update="supplierItemID" />
+		<p:dataTable
+			paginator="true" rows="10"
+			paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+			rowsPerPageTemplate="5,10,15" paginatorPosition="bottom"
+			value="#{documentBackingBean.managedBean.documentItemList}"
+			id="supplierItemID" var="documentItem" rowIndexVar="rowIndex"
+			rowKey="#{documentItem.fulfilmentReqId}" width="100%"
+			selection="#{documentBackingBean.managedBean.selectedSupplierItems}">
+
+			<p:column selectionMode="multiple" style="width:2%" />
+
+			<p:ajax event="rowSelectCheckbox"
+				listener="#{documentBackingBean.compareSupplierItem()}"
+				process="@this " update=":form:compareButton" />
+			<p:ajax event="rowUnselectCheckbox"
+				listener="#{documentBackingBean.compareSupplierItem()}"
+				process="@this " update=":form:compareButton" />
+
+			<p:ajax event="toggleSelect"
+				listener="#{documentBackingBean.compareSupplierItem()}"
+				process="@this " update=":form:compareButton" />
+				
+			<p:column headerText="Doc No">
+				<h:outputText value="#{documentItem.docNo}" />
+			</p:column>
+			<p:column headerText="Title">
+				<h:outputText value="#{documentItem.title}" />
+			</p:column>
+			<p:column headerText="Document Type">
+				<h:outputText value="#{documentItem.docType}" />
+			</p:column>
+			<p:column headerText="Detail">
+				<p:commandButton
+					action="#{documentBackingBean.navigateToFulfillmentDet(rowIndex)}"
+					value="Detail"></p:commandButton>
+			</p:column>		
+		</p:dataTable>
+
+		<h:panelGrid columns="4">
+			<p:commandButton id="compareButton"
+				action="#{documentBackingBean.compareSupplierItem}"
+				value="#{lbl['lbl.cm.compare']} ( #{fn:length(documentBackingBean.managedBean.selectedSupplierItemList)} )"
+				disabled="#{2 > fn:length(documentBackingBean.managedBean.selectedSupplierItemList)}" />
+			<p:commandButton value="Add To Cart (0)" />
+			<p:commandButton value="Wishlist"
+				action="#{documentBackingBean.addIntoWishList}"
+				onclick="wishListPopUp.show()"
+				update="selectWishList, allWishListId" />
+			<p:commandButton value="Favorite Supplier (0)" />
+
+		</h:panelGrid>
+
+
+		<p:dialog id="wishListDialog" widgetVar="wishListPopUp" width="500"
+			height="500">
+
+			<ui:include src="wishListPopUp.xhtml" />
+
+		</p:dialog>
+
+	</h:panelGroup>
+
+
+
+
+
+
+</ui:composition>

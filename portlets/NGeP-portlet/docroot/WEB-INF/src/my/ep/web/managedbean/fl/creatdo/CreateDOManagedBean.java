@@ -11,6 +11,7 @@ import javax.faces.bean.SessionScoped;
 import my.ep.persistence.entity.fl.FlAttachment;
 import my.ep.persistence.entity.fl.FlRemark;
 import my.ep.persistence.entity.fl.order.FlDeliveryOrder;
+import my.ep.persistence.entity.fl.order.FlFulfilmentOrder;
 import my.ep.persistence.entity.fl.request.FlDeliveryAddress;
 import my.ep.persistence.entity.pm.authorization.PmOrgAddress;
 import my.ep.persistence.entity.pm.common.PmMaksud;
@@ -47,7 +48,9 @@ public class CreateDOManagedBean extends BaseManagedBean {
 	private String fulfillmentReqId;
 	private String taskId;
 	private String[] actions;
-	
+	private String fulfilmentOrderId;
+	private String statusId;
+	private List<FlFulfilmentOrder> pendingDoList;
 
 	/**
 	 * @return the flRemark
@@ -219,6 +222,48 @@ public class CreateDOManagedBean extends BaseManagedBean {
 	 */
 	public void setFlDeliveryOrder(FlDeliveryOrder flDeliveryOrder) {
 		this.flDeliveryOrder = flDeliveryOrder;
+	}
+
+	/**
+	 * @return the fulfilmentOrderId
+	 */
+	public String getFulfilmentOrderId() {
+		return fulfilmentOrderId;
+	}
+
+	/**
+	 * @param fulfilmentOrderId the fulfilmentOrderId to set
+	 */
+	public void setFulfilmentOrderId(String fulfilmentOrderId) {
+		this.fulfilmentOrderId = fulfilmentOrderId;
+	}
+
+	/**
+	 * @return the statusId
+	 */
+	public String getStatusId() {
+		return statusId;
+	}
+
+	/**
+	 * @param statusId the statusId to set
+	 */
+	public void setStatusId(String statusId) {
+		this.statusId = statusId;
+	}
+
+	/**
+	 * @return the pendingDoList
+	 */
+	public List<FlFulfilmentOrder> getPendingDoList() {
+		return pendingDoList;
+	}
+
+	/**
+	 * @param pendingDoList the pendingDoList to set
+	 */
+	public void setPendingDoList(List<FlFulfilmentOrder> pendingDoList) {
+		this.pendingDoList = pendingDoList;
 	}
 
 }

@@ -1,0 +1,49 @@
+<ui:composition
+	template="/WEB-INF/facelets/templates/sidemenu_template.xhtml"
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:c="http://java.sun.com/jsp/jstl/core">
+
+	<ui:define name="resourceSection">
+	</ui:define>
+	<ui:define name="content">
+		<p:panel header="ITEM DETAIL" toggleable="true">
+		<br />
+		<p:dataTable value="#{pendingListBackingBean.managedBean.pendingDoList}" var="pending"
+			paginator="true" rows="10" id="pendingTable"
+			paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+			rowsPerPageTemplate="5,10,15" paginatorPosition="bottom"
+			rowIndexVar="rowIndex">
+				
+			<p:column headerText="FL Order Number">
+				<p:commandLink value="#{pending.fulfilmentOrderId}"
+					action="#{pendingListBackingBean.navigateToDO}">
+					<f:param name="fulfilmentOrderId" value="#{pending.fulfilmentOrderId}" />
+					<f:param name="fulfilmentReqId" value="#{pending.flFulfilmentRequest.fulfilmentReqId}" />
+					<f:param name="statusId" value="#{pending.statusId}" />
+
+				</p:commandLink>
+			</p:column>
+			<p:column headerText="Title">
+				<h:outputText  value="#{pending.flFulfilmentRequest.title}"/>
+			</p:column>
+			<p:column headerText="Created Date">
+				<h:outputText  value="#{pending.createdDate}"/>
+			</p:column>
+			<p:column headerText="State">
+				<h:outputText value="PENDING" />
+			</p:column>
+			<p:column headerText="Process">
+				<h:outputText  value="Create Delivery Order"/>
+			</p:column>
+			
+		</p:dataTable>
+
+		
+	</p:panel>
+	</ui:define>
+		
+</ui:composition>

@@ -13,7 +13,8 @@
   		/WEB-INF/config/faces-config/cm/faces-config-codification.xml,
   		/WEB-INF/config/faces-config/pp/faces-config-pp.xml,
   		/WEB-INF/config/faces-config/pm/faces-config-pm.xml,
-  		/WEB-INF/config/faces-config/tpl/faces-config-tpl.xml
+  		/WEB-INF/config/faces-config/tpl/faces-config-tpl.xml,
+  		/WEB-INF/config/faces-config/fl/faces-config-fl.xml
 		</param-value>
 	</context-param>
 	<context-param>

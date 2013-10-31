@@ -75,6 +75,11 @@ public class CreateDOBackingBean extends BaseBackingBean<CreateDOManagedBean> {
 	public void createFulfillmentRequest() throws ParseException {
 		IDeliveryOrderSO deliveryOrderSO = null;
 		try {
+			//fulfilmentOrderId
+			System.out.println("fulfilmentOrderId in CreateDOBackingBean:: "+this.getManagedBean().getFulfilmentOrderId());
+			Long fulfilmentOrderId=Long.valueOf(this.getManagedBean().getFulfilmentOrderId());
+			Long flRequestId=Long.valueOf(this.getManagedBean().getFulfillmentReqId());
+			String  statusId=this.getManagedBean().getStatusId();
 			FulfilmentReqDTO reqDTO = new FulfilmentReqDTO();
 			
 			FlRemark flRemark = getManagedBean().getFlRemark();
@@ -95,6 +100,9 @@ public class CreateDOBackingBean extends BaseBackingBean<CreateDOManagedBean> {
 			deliveryOrderSO = (IDeliveryOrderSO) BusinessDelegate.getInstance().getServiceObject("fl",IDeliveryOrderSO.class);
 			//reqDTO.setFlRemark(flRemark);
 			//reqDTO.setFlAttachment(flAttachment);
+			reqDTO.setFulfilmentOrderId(fulfilmentOrderId);
+			reqDTO.setStatusId(statusId);
+			reqDTO.setFlRequestId(flRequestId);
 			reqDTO.setFlDeliveryOrder(flDeliveryOrder);
 			//reqDTO.setContractRequest(false);
 			//reqDTO.setTaskId(this.getManagedBean().getTaskId());

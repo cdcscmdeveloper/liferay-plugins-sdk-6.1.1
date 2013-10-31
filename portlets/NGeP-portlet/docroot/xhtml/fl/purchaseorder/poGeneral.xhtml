@@ -8,11 +8,15 @@
 
 		<table style="width: 800px;">
 			<tr>
-				<td colspan="4" align="right"><p:commandButton value="SAVE" />
-					<p:commandButton value="ACKNOWLEDGE" /> <p:commandButton
-						value="PRINT" /></td>
+				<td colspan="4" align="right">
+				<ui:repeat var="bpmAction"
+					value="#{purchaseRequestBackingBean.managedBean.actions}">
+					<p:commandButton value="#{bpmAction}" ajax='false' action="#{purchaseRequestBackingBean.submitAction(bpmAction)}" process="@this"/>
+				</ui:repeat> 
+				</td>
 			</tr>
 		</table>
+
 		<p:panel header="FULFILMENT DETAIL" toggleable="true">
 			<table>
 				<tr>
@@ -101,7 +105,7 @@
 					<td><p:inputText disabled="true" style="width: 260px;"
 							value="KBB SDN BHD" /></td>
 					<td><p:outputLabel value="Factoring Company" /></td>
-					<td><p:selectOneMenu value="" style="width: 260px;">
+					<td><p:selectOneMenu  style="width: 260px;">
 							<f:selectItem itemLabel="SYARIKAT ABC" itemValue="1" />
 						</p:selectOneMenu></td>
 				</tr>
