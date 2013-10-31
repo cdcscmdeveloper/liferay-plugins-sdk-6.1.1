@@ -38,14 +38,14 @@
 				<portlet id="StopInstruction" />
 			</category>
 		</category>
-			
+
 		<!-- Procurement Plan - START -->
 		<category name="category.ep.pp">
 			<portlet id="ppBudget"></portlet>
 			<portlet id="ppPlan"></portlet>
 		</category>
 		<!-- Procurement Plan - END -->
-		
+
 		<!-- sourcing -->
 		<category name="category.ep.sc">
 			<portlet id="scProcurementList" />
@@ -61,7 +61,7 @@
 			<portlet id="scBidding" />
 			<portlet id="scTemplateMaint" />
 		</category>
-		
+
 		<!-- Fulfilment Start Added by Giri -->
 		<category name="category.ep.fl">
 			<portlet id="FLContractOrder" />
@@ -75,7 +75,7 @@
 			<portlet id="FLPurchaseRequest" />
 			<portlet id="FLShippingInstruction" />
 			<portlet id="FLContractOrderSearch" />
-			<portlet id="FLDocumentSearch" />	
+			<portlet id="FLDocumentSearch" />
 			<portlet id="FLPendingDoList" />
 		</category>
 		<!-- Fulfilment End Added by Giri -->
@@ -88,6 +88,7 @@
 		<portlet id="ReviewUNSPSC"></portlet>
 		<portlet id="catalogueTaskList"></portlet>
 		<portlet id="smAddtionalCatCodes"></portlet>
+		<portlet id="smDeleteCategoryCode"></portlet>
 	</category>
 
 	<category name="category.sample">
