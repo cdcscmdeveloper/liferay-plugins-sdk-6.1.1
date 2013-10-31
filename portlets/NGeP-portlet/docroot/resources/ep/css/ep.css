@@ -24,8 +24,8 @@ a:hover.cart_menu_price {
 }
 
 a.menu1 {
-	font-family: Tahoma, Arial;
-	font-size: 12px;
+	font-family: Tahoma;
+	font-size: 11px;
 	color: #000000;
 	font-weight: bold;
 	text-decoration: none;
@@ -35,24 +35,24 @@ a.menu1 {
 }
 
 a:visited.menu1 {
-	font-family: Tahoma, Arial;
-	font-size: 12px;
+	font-family: Tahoma;
+	font-size: 11px;
 	color: #000000;
 	font-weight: bold;
 	text-decoration: none;
 }
 
 a:active.menu1 {
-	font-family: Tahoma, Arial;
-	font-size: 12px;
+	font-family: Tahoma;
+	font-size: 11px;
 	color: #000000;
 	font-weight: bold;
 	text-decoration: none;
 }
 
 a:hover.menu1 {
-	font-family: Tahoma, Arial;
-	font-size: 12px;
+	font-family: Tahoma;
+	font-size: 11px;
 	color: #7fb713;
 	font-weight: bold;
 	text-decoration: none;
@@ -152,8 +152,8 @@ a:hover.left_nav3 {
 
 .outputlabel {
 	padding-right: 120px;
-	font-family: Arial, Tahoma;
-	font-size: 12px;
+	font-family: Tahoma;
+	font-size: 11px;
 	color: #555;
 	font-weight: bold;
 }
@@ -179,16 +179,16 @@ a:hover.left_nav3 {
 }
 
 .boldsubLabelgrayText {
-	font-family: Arial, Tahoma;
-	font-size: 12px;
+	font-family: Tahoma;
+	font-size: 11px;
 	color: #7fb713;
 	font-weight: bold;
 	text-decoration: none;
 }
 
 a:hover.boldsubLabelgrayText {
-	font-family: Arial, Tahoma;
-	font-size: 12px;
+	font-family: Tahoma;
+	font-size: 11px;
 	color: #9ecd44;
 	font-weight: bold;
 	text-decoration: none;
@@ -216,8 +216,8 @@ a:hover.boldsubLabelgrayText {
 }
 
 .colFont3 {
-	font-family: Arial, Tahoma;
-	font-size: 12px;
+	font-family: Tahoma;
+	font-size: 11px;
 	color: #777777;
 	font-weight: bold;
 	width: 100%;
@@ -266,8 +266,8 @@ a:hover.cart_menu_price {
 
 /* General */
 .menu_title {
-	font-family: Arial, Tahoma;
-	font-size: 12px;
+	font-family: Tahoma;
+	font-size: 11px;
 	color: #777777;
 	text-decoration: none;
 }
@@ -341,16 +341,16 @@ a:hover.menu2 {
 
 /* Header */
 a:hover.liferay_menu {
-	font-family: Tahoma, Arial;
-	font-size: 12px;
+	font-family: Tahoma;
+	font-size: 11px;
 	color: #828282;
 	font-weight: bold;
 	text-decoration: none;
 }
 
 a.nav_top {
-	font-family: Tahoma, Arial;
-	font-size: 12px;
+	font-family: Tahoma;
+	font-size: 11px;
 	color: #dddddd;
 	font-weight: bold;
 	text-shadow: 1px 1px 1px #000000;
@@ -596,9 +596,9 @@ no-repeat
 
 .menuCategory {
 	color: #333333;
-	font-size: 12px;
+	font-size: 11px;
 	font-weight: bold;
-	font-family: Tahoma, Arial;
+	font-family: Tahoma;
 	white-space: nowrap;
 	border-bottom: 1px solid #DDDDDD;
 	text-align: left;
@@ -629,48 +629,48 @@ no-repeat
 }
 
 a.menuItemLink {
-	font-family: Tahoma, Arial;
-	font-size: 12px;
+	font-family: Tahoma;
+	font-size: 11px;
 	color: #333333;
 	font-weight: normal;
 	text-decoration: none;
 }
 
 a:hover.menuItemLink {
-	font-family: Tahoma, Arial;
-	font-size: 12px;
+	font-family: Tahoma;
+	font-size: 11px;
 	color: #333333;
 	font-weight: normal;
 	text-decoration: none;
 }
 
 a:visited.menuItemLink {
-	font-family: Tahoma, Arial;
-	font-size: 12px;
+	font-family: Tahoma;
+	font-size: 11px;
 	color: #333333;
 	font-weight: normal;
 	text-decoration: none;
 }
 
 a.menuItemLink-selected {
-	font-family: Tahoma, Arial;
-	font-size: 12px;
+	font-family: Tahoma;
+	font-size: 11px;
 	color: #5B69A4;
 	font-weight: bold;
 	text-decoration: none;
 }
 
 a:hover.menuItemLink-selected {
-	font-family: Tahoma, Arial;
-	font-size: 12px;
+	font-family: Tahoma;
+	font-size: 11px;
 	color: #5B69A4;
 	font-weight: bold;
 	text-decoration: none;
 }
 
 a:visited.menuItemLink-selected {
-	font-family: Tahoma, Arial;
-	font-size: 12px;
+	font-family: Tahoma;
+	font-size: 11px;
 	color: #5B69A4;
 	font-weight: bold;
 	text-decoration: none;
@@ -942,8 +942,8 @@ px
 .ui-menu-list .ui-state-hover,.ui-selectonemenu-item.ui-state-highlight
 	{
 	color: #ffffff;
-	font-family: Tahoma, Arial;
-	font-size: 12px;
+	font-family: Tahoma;
+	font-size: 11px;
 	text-decoration: none;
 	background: #97d832 !important;
 	box-shadow: 0px 0px 8px rgb(255, 255, 255);
@@ -1008,10 +1008,9 @@ px
 
 .ui-selectonemenu-item {
 	color: #333333;
-	font-family: Tahoma, Arial;
+	font-family: Tahoma;
 	font-size: 11px;
 	text-decoration: none;
-	font-size:12px;
 }
 
 .ui-selectonemenu-label.ui-inputfield {
@@ -1024,8 +1023,8 @@ px
 
 /* Start DataTable and Paginator */
 .ui-datatable {
-	font-family: Tahoma, Arial;
-	font-size: 12px;
+	font-family: Tahoma;
+	font-size: 11px;
 	color: #333333 !important;
 	text-decoration: none;
 }
@@ -1154,8 +1153,8 @@ center
 	text-align: left !important;
 	padding: 5px 10px 3px 10px !important;
 	background: none !important;
-	font-family: Tahoma, Arial;
-	font-size: 12px;
+	font-family: Tahoma;
+	font-size: 11px;
 	color: #333333;
 	text-decoration: none;
 	border-top: 1px solid #B5D3F4;
@@ -3116,13 +3115,14 @@ thead > tr > th.ui-state-default {
 	background-color:#808080 !important;
 	border: 0px !important;
 	color:#e4e4e4 !important;
-	font-size:12px !important;
+	font-size:11px !important;
 	font-weight:bold !important;
 	text-align:left !important;
 }
 
 .ui-state-default {
 	text-shadow:none !important;
+	box-shadow: none !important;
 }
 
 .ui-widget-content .ui-datatable-odd {
@@ -3144,8 +3144,8 @@ thead > tr > th.ui-state-default {
 .ui-menu-list .ui-state-hover,.ui-selectonemenu-item.ui-state-hover
 	{
 	color: #ffffff;
-	font-family: Tahoma, Arial;
-	font-size: 12px;
+	font-family: Tahoma;
+	font-size: 11px;
 	text-decoration: none;
 	background: #97d832 !important;
 	border-radius: 0px;
@@ -3156,7 +3156,7 @@ tbody.ui-datatable-data > tr:hover {
 }
 
 .ui-selectonemenu .ui-selectonemenu-label {
-	padding:3px 0 3px 5px !important;
+	padding:2px 0 3px 5px !important;
 }
 
 input[type="text"], input[type="password"], input[type="file"], input[type="submit"], input[type="button"], input[type="reset"], select, button, .aui-field-input-text {
@@ -3166,7 +3166,7 @@ input[type="text"], input[type="password"], input[type="file"], input[type="subm
 
 li[role=tab].ui-state-hover > a {
 	color: #333333 !important;
-	font-size: 12px !important;
+	font-size: 11px !important;
 }
 
 li[role=tab].ui-tabs-selected {
@@ -3242,10 +3242,6 @@ textarea[disabled],input[type="text"][disabled],input[type="password"][disabled]
 	font-size: 11px;
 }
 
-.ui-state-default {
-	box-shadow: none !important;
-}
-
 .ui-selectonemenu.ui-widget.ui-state-default.ui-corner-all.ui-helper-clearfix {
 	border: 1px solid #CECECE;
 }
@@ -3256,7 +3252,15 @@ textarea[disabled],input[type="text"][disabled],input[type="password"][disabled]
 
 .catMenu {
 	background-color: #F9F9F9;
-	width: 30%;
-	padding-left: 700px;
+	width: 35%;
+	padding-left: 650px;
+}
+
+.ui-widget input, .ui-widget select, .ui-widget textarea, .ui-widget button {
+	font-family: Tahoma !important;
+}
+
+.ui-state-hover > .ui-menuitem-text {
+	color: #FFFFFF;
 }
 /*--------------------------       End Custom CSS       --------------------------- */
