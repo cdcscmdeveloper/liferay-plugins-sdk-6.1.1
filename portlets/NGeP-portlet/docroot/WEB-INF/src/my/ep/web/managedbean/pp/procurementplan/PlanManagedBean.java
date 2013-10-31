@@ -3,16 +3,14 @@
  */
 package my.ep.web.managedbean.pp.procurementplan;
 
-import java.math.BigDecimal;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
 
 import my.ep.persistence.entity.pm.authorization.PmOrgProfile;
 import my.ep.persistence.entity.pp.PpRemark;
+import my.ep.persistence.entity.pp.budgetallocation.PpBudgetAllocDtl;
 import my.ep.persistence.entity.pp.procurementplan.PpPlan;
 import my.ep.persistence.entity.pp.procurementplan.PpPlanItem;
 import my.ep.persistence.entity.pp.procurementplan.PpPlanMaster;
@@ -45,6 +43,8 @@ public class PlanManagedBean extends BaseManagedBean{
 	
 	private PpPlan selectedPlan;
 	
+	private PpPlan selectedPlanItem;
+
 	private PpPlanItem selectedItem;
 	
 	private PpRemark selectedItemRemark;
@@ -59,7 +59,7 @@ public class PlanManagedBean extends BaseManagedBean{
 	
 	private String systemMsg = "";
 	
-	private Map<Long, BigDecimal> selectedGoMapper = new HashMap<Long, BigDecimal>();
+//	private Map<Long, BigDecimal> selectedGoMapper = new HashMap<Long, BigDecimal>();
 
 	private String[] actions;
 	
@@ -67,22 +67,88 @@ public class PlanManagedBean extends BaseManagedBean{
 	
 	private List <PpQtActivity> allTaskActivity;
 	
-	private String dynamicDialogName;
+//	private String dynamicDialogName;
+	
+	private String dynamicDetailsName;
+
+	private String votType;
+	
+	private List <PpBudgetAllocDtl> budgetAllocDtlList;
 	
 
 	/**
-	 * @return the dynamicDialogName
+	 * @return the dynamicDetailsName
 	 */
-	public String getDynamicDialogName() {
-		return dynamicDialogName;
+	public String getDynamicDetailsName() {
+		return dynamicDetailsName;
 	}
 
 	/**
-	 * @param dynamicDialogName the dynamicDialogName to set
+	 * @param dynamicDetailsName the dynamicDetailsName to set
 	 */
-	public void setDynamicDialogName(String dynamicDialogName) {
-		this.dynamicDialogName = dynamicDialogName;
+	public void setDynamicDetailsName(String dynamicDetailsName) {
+		this.dynamicDetailsName = dynamicDetailsName;
 	}
+
+
+	/**
+	 * @return the budgetAllocDtlList
+	 */
+	public List<PpBudgetAllocDtl> getBudgetAllocDtlList() {
+		return budgetAllocDtlList;
+	}
+
+	/**
+	 * @param budgetAllocDtlList the budgetAllocDtlList to set
+	 */
+	public void setBudgetAllocDtlList(
+			List<PpBudgetAllocDtl> budgetAllocDtlList) {
+		this.budgetAllocDtlList = budgetAllocDtlList;
+	}
+	
+	/**
+	 * @return the votType
+	 */
+	public String getVotType() {
+		return votType;
+	}
+
+	/**
+	 * @param votType the votType to set
+	 */
+	public void setVotType(String votType) {
+		this.votType = votType;
+	}
+
+	/**
+	 * @return the selectedPlanItem
+	 */
+	public PpPlan getSelectedPlanItem() {
+		return selectedPlanItem;
+	}
+
+	/**
+	 * @param selectedPlanItem the selectedPlanItem to set
+	 */
+	public void setSelectedPlanItem(PpPlan selectedPlanItem) {
+		this.selectedPlanItem = selectedPlanItem;
+	}
+
+	
+//
+//	/**
+//	 * @return the dynamicDialogName
+//	 */
+//	public String getDynamicDialogName() {
+//		return dynamicDialogName;
+//	}
+//
+//	/**
+//	 * @param dynamicDialogName the dynamicDialogName to set
+//	 */
+//	public void setDynamicDialogName(String dynamicDialogName) {
+//		this.dynamicDialogName = dynamicDialogName;
+//	}
 
 	/**
 	 * @return the allTaskActivity
@@ -112,21 +178,21 @@ public class PlanManagedBean extends BaseManagedBean{
 		this.bpmTaskId = bpmTaskId;
 	}
 
-	/**
-	 * @return the selectedGoMapper
-	 */
-	public Map<Long, BigDecimal> getSelectedGoMapper() {
-		return selectedGoMapper;
-	}
-
-	/**
-	 * @param selectedGoMapper the selectedGoMapper to set
-	 */
-	public void setSelectedGoMapper(Map<Long, BigDecimal> selectedGoMapper) {
-		this.selectedGoMapper = selectedGoMapper;
-	}
-	
-	
+//	/**
+//	 * @return the selectedGoMapper
+//	 */
+//	public Map<Long, BigDecimal> getSelectedGoMapper() {
+//		return selectedGoMapper;
+//	}
+//
+//	/**
+//	 * @param selectedGoMapper the selectedGoMapper to set
+//	 */
+//	public void setSelectedGoMapper(Map<Long, BigDecimal> selectedGoMapper) {
+//		this.selectedGoMapper = selectedGoMapper;
+//	}
+//	
+//	
 	/**
 	 * @return the systemMsg
 	 */
