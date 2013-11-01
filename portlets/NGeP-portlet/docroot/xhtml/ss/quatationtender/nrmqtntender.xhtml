@@ -22,7 +22,7 @@
                 </f:facet>
 					<f:facet name="input">
 						<p:selectOneMenu value="#{ccode.pmCategoryL1}"
-							effect="fold" converter="pmCategoryl1Convertor">
+							effect="fold" >
 							<p:ajax event="change" listener="#{qTDetailBB.handleL2CategoryChange}" />
 							<f:selectItem itemLabel="Select One" itemValue="#{null}" />
 							<f:selectItems value="#{qTDetailBB.managedBean.categoryL1s}" var="catL1Opt" itemLabel="#{catL1Opt.cateogryL1Code}" itemValue="#{catL1Opt}"/>
@@ -273,25 +273,7 @@
 			
 		</p:panelGrid>
 		
-		 <p:treeTable id="treetable" value="#{qTDetailBB.managedBean.root3}" var="zone">
-        
-        <p:column style="width:32%">
-            <f:facet name="header">
-               Location Name
-            </f:facet>
-            <h:outputText value="#{zone}" />
-        </p:column>
-
-        <p:column style="width:32%">
-            <f:facet name="header">
-               Action
-            </f:facet>
-            <h:outputText value="btootn" />
-        </p:column>
-
-      
-        
-    </p:treeTable>
+	
 	</p:panel>
 
 	<p:dialog widgetVar="stateDlg" modal="true">

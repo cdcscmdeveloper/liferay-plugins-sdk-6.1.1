@@ -16,37 +16,31 @@
 			<p:inputText id="qtnno" value="#{qTDetailBB.managedBean.qt.qtNo}" />
 
 			<h:outputText value="#{lbl['lbl.so.procmode']}" />
-			<p:selectOneMenu
-				value="#{qTDetailBB.managedBean.qt.procurementMode}">
-				<f:selectItem itemLabel="Select One" itemValue="" />
-				<f:selectItem itemLabel="Quotation" itemValue="Quotation" />
-				<f:selectItem itemLabel="Tender" itemValue="Tender" />
-				<f:selectItem itemLabel="Direct Negotiation"
-					itemValue="Direct Negotiation" />
-			</p:selectOneMenu>
+			  <p:selectOneMenu  value="#{qTDetailBB.managedBean.qt.procurementMode}" >  
+             <f:selectItems value="#{qTDetailBB.managedBean.procurementModeItems}" />
+        </p:selectOneMenu>  
 
 			<h:outputText value="#{lbl['lbl.so.creatdtfrom']}" />
-			<p:calendar value="#{qTDetailBB.managedBean.qt.createdDate}"
+			<p:calendar value="#{qTDetailBB.managedBean.qt.createDateFrom}" 
 				id="crdateFrm" showOn="button" />
 
 			<h:outputText value="#{lbl['lbl.so.creatdtto']}" />
-			<p:calendar value="#{qTDetailBB.managedBean.qt.createdDate}"
-				id="crdateTo" showOn="button" />
+			<p:calendar value="#{qTDetailBB.managedBean.qt.createdDateTo}" id="crdateTo" showOn="button" />
 
 			<h:outputText value="#{lbl['lbl.so.pbldtfrom']}" />
-			<p:calendar value="#{qTDetailBB.managedBean.qt.createdDate}"
+			<p:calendar value="#{qTDetailBB.managedBean.qt.pubDateFrom}"
 				id="pbdateFrom" showOn="button" />
 
 			<h:outputText value="#{lbl['lbl.so.pbldtto']}" />
-			<p:calendar value="#{qTDetailBB.managedBean.qt.createdDate}"
+			<p:calendar value="#{qTDetailBB.managedBean.qt.pubDateTo}"
 				id="pbdateTo" showOn="button" />
 
 			<h:outputText value="#{lbl['lbl.so.clsdtfrom']}" />
-			<p:calendar value="#{qTDetailBB.managedBean.qt.createdDate}"
+			<p:calendar value="#{qTDetailBB.managedBean.qt.clsDateFrom}"
 				id="cldateFrom" showOn="button" />
 
 			<h:outputText value="#{lbl['lbl.so.clsdtto']}" />
-			<p:calendar value="#{qTDetailBB.managedBean.qt.createdDate}"
+			<p:calendar value="#{qTDetailBB.managedBean.qt.clsDateTo}"
 				id="cldateTo" showOn="button" />
 
 			<h:outputText value="#{lbl['lbl.so.status']}" />
@@ -62,7 +56,8 @@
 		</p:panelGrid>
 
 		<p:commandButton value="#{lbl['lbl.so.searchbtn']}"
-			style="float:right;">
+			style="float:right;" actionListener="#{qTDetailBB.searchQT()}" update="searchQTs">
+
 
 		</p:commandButton>
 
@@ -75,39 +70,39 @@
 
 	<p:panel header="Qtn/Tender List" toggleable="true">
 		<h:panelGroup id="table-wrapper" style="width:100%;">
-			<p:dataTable value="#{searchQtnTenderBB.managedBean.qtnTenders}"
-				var="tenders" resizableColumns="true">
+			<p:dataTable id="searchQTs" value="#{qTDetailBB.managedBean.qtList}"
+				var="tenders" resizableColumns="true" rowIndexVar="sno">
 
 				<p:column headerText="#{lbl['lbl.so.no']}">
-					<h:outputText value="1" />
+					<h:outputText value="#{sno + 1}" />
 				</p:column>
 
 				<p:column headerText="Qtn/Tender No">
 					<p:commandLink actionListener="#{pprBean.savePerson}"
 						style="margin-right:20px;" ajax="false">
-						<h:outputText value="#{tenders.qtnTenderNum}" />
+						<h:outputText value="#{tenders.qtNo}" />
 					</p:commandLink>
 
 
 				</p:column>
 
 				<p:column headerText="#{lbl['lbl.so.title']}">
-					<h:outputText value="#{tenders.title}" />
+					<h:outputText value="#{tenders.qtTitle}" />
 				</p:column>
 				<p:column headerText="#{lbl['lbl.so.procmode']}">
-					<h:outputText value="#{tenders.procumentMode}" />
+					<h:outputText value="#{tenders.procurementMode}" />
 				</p:column>
 
 				<p:column headerText="#{lbl['lbl.so.crtdt']}">
-					<h:outputText value="#{tenders.crtdDateTo}" />
+					<h:outputText value="#{tenders.createdDate}" />
 				</p:column>
 
 				<p:column headerText="#{lbl['lbl.so.pbdt']}">
-					<h:outputText value="#{tenders.pubDateTo}" />
+					<h:outputText value="#{tenders.publishDate}" />
 				</p:column>
 
 				<p:column headerText="#{lbl['lbl.so.clsdt']}">
-					<h:outputText value="#{tenders.clsDateTo}" />
+					<h:outputText value="#{tenders.closingDate}" />
 				</p:column>
 
 			</p:dataTable>

@@ -13,11 +13,11 @@
 <p:commandButton value="CLONE" onclick="clonedlg.show();" style="float:right;"></p:commandButton>
 <p:button value="CANCEL" style="float:right;margin-right: 12px;"></p:button>
 <p:button value="SUBMIT" style="float:right;margin-right: 12px;"></p:button>
-<p:button value="SAVE" style="float:right;margin-right: 12px;"></p:button>
+<p:commandButton value="SAVE" style="float:right;margin-right: 12px;" action="#{qTDetailBB.saveQtDetails}" ajax="false" process="@all"/>
 <br/>
 <br/>
 </div>
-<ui:include src="/xhtml/ss/quatationtender/cloneqtntenderscreen.xhtml" />
+
 
 </p:panel>
 	</ui:composition>
