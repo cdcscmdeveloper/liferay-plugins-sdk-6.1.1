@@ -516,6 +516,83 @@
 		</footer-portlet-javascript>
 		<css-class-wrapper>cataloguetasklist-portlet</css-class-wrapper>
 	</portlet>
+	
+	<portlet>
+		<portlet-name>CatalogueMaintenance</portlet-name>
+		<icon>/icon.png</icon>
+		<instanceable>false</instanceable>
+		<header-portlet-css>/css/main.css</header-portlet-css>
+		<footer-portlet-javascript>
+			/js/main.js
+		</footer-portlet-javascript>
+		<css-class-wrapper>
+			cataloguemaintenance-portlet
+		</css-class-wrapper>
+	</portlet>
+	<portlet>
+		<portlet-name>UnspscRequestForm</portlet-name>
+		<icon>/icon.png</icon>
+		<instanceable>false</instanceable>
+		<header-portlet-css>/css/main.css</header-portlet-css>
+		<footer-portlet-javascript>
+			/js/main.js
+		</footer-portlet-javascript>
+		<css-class-wrapper>unspscrequestform-portlet</css-class-wrapper>
+	</portlet>
+	<portlet>
+		<portlet-name>ExtensionRequestForm</portlet-name>
+		<icon>/icon.png</icon>
+		<instanceable>false</instanceable>
+		<header-portlet-css>/css/main.css</header-portlet-css>
+		<footer-portlet-javascript>
+			/js/main.js
+		</footer-portlet-javascript>
+		<css-class-wrapper>
+			extensionrequestform-portlet
+		</css-class-wrapper>
+	</portlet>
+	<portlet>
+		<portlet-name>UnspscBulkUpload</portlet-name>
+		<icon>/icon.png</icon>
+		<instanceable>false</instanceable>
+		<header-portlet-css>/css/main.css</header-portlet-css>
+		<footer-portlet-javascript>
+			/js/main.js
+		</footer-portlet-javascript>
+		<css-class-wrapper>unspscbulkupload-portlet</css-class-wrapper>
+	</portlet>
+	<portlet>
+		<portlet-name>ContractedItem</portlet-name>
+		<icon>/icon.png</icon>
+		<instanceable>false</instanceable>
+		<header-portlet-css>/css/main.css</header-portlet-css>
+		<footer-portlet-javascript>
+			/js/main.js
+		</footer-portlet-javascript>
+		<css-class-wrapper>contracteditem-portlet</css-class-wrapper>
+	</portlet>
+	<portlet>
+		<portlet-name>UnspscSingleUpload</portlet-name>
+		<icon>/icon.png</icon>
+		<instanceable>false</instanceable>
+		<header-portlet-css>/css/main.css</header-portlet-css>
+		<footer-portlet-javascript>
+			/js/main.js
+		</footer-portlet-javascript>
+		<css-class-wrapper>
+			unspscsingleupload-portlet
+		</css-class-wrapper>
+	</portlet>
+	<portlet>
+		<portlet-name>reviewUnspsc</portlet-name>
+		<icon>/icon.png</icon>
+		<instanceable>false</instanceable>
+		<header-portlet-css>/css/main.css</header-portlet-css>
+		<footer-portlet-javascript>
+			/js/main.js
+		</footer-portlet-javascript>
+		<css-class-wrapper>reviewunspsc-portlet</css-class-wrapper>
+	</portlet>
 
 	<role-mapper>
 		<role-name>administrator</role-name>
