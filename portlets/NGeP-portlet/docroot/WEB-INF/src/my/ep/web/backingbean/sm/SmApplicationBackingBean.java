@@ -91,15 +91,17 @@ public class SmApplicationBackingBean extends
 					+ smApplSupplier.getSmAppls().size());
 			SmAppl smAppl = new SmAppl();
 			if (applicationType.equalsIgnoreCase("N")) {
-				smAppl.setApplNo("KN-20102013-2345");
+				smAppl.setApplNo("KN-20102013-1111");
 			} else if (applicationType.equalsIgnoreCase("B")) {
-				smAppl.setApplNo("KB-25102013-2345");
+				smAppl.setApplNo("KB-25102013-2222");
 			} else if (applicationType.equalsIgnoreCase("U")) {
-				smAppl.setApplNo(" KU-28102013-7895");
+				smAppl.setApplNo(" KU-28102013-3333");
 			} else if (applicationType.equalsIgnoreCase("A")) {
-				smAppl.setApplNo(" KA-28102013-7895");
+				smAppl.setApplNo(" KA-28102013-4444");
 			} else if (applicationType.equalsIgnoreCase("R")) {
-				smAppl.setApplNo(" KR-31102013-7895");
+				smAppl.setApplNo(" KR-31102013-5555");
+			} else if (applicationType.equalsIgnoreCase("C")) {
+				smAppl.setApplNo(" KC-01112013-6666");
 			} else {
 				smAppl.setApplNo("UNKNOWNAPPL");
 			}
@@ -141,6 +143,8 @@ public class SmApplicationBackingBean extends
 				return SupplierManagementConst.PROCEED_ADDTNLCAT_MOF_APPLN;
 			} else if (applicationType.equalsIgnoreCase("R")) {
 				return SupplierManagementConst.PROCEED_RENEW_MOF_APPLN;
+			} else if (applicationType.equalsIgnoreCase("C")) {
+				return SupplierManagementConst.PROCEED_CANCEL_MOF_APPLN;
 			}
 
 			else {
@@ -149,6 +153,7 @@ public class SmApplicationBackingBean extends
 
 		} catch (Exception e) {
 			System.out.println(" **** Unknown Expection ******* ");
+			e.printStackTrace();
 			if (applicationType.equalsIgnoreCase("B")) {
 				return SupplierManagementConst.DEFAULT_BUMI_APPLN;
 			} else if (applicationType.equalsIgnoreCase("N")) {
@@ -159,6 +164,8 @@ public class SmApplicationBackingBean extends
 				return SupplierManagementConst.DEFAULT_ADDTNLCAT_MOF_APPLN;
 			} else if (applicationType.equalsIgnoreCase("R")) {
 				return SupplierManagementConst.DEFAULT_RENEW_MOF_APPLN;
+			} else if (applicationType.equalsIgnoreCase("C")) {
+				return SupplierManagementConst.DEFAULT_CANCEL_MOF_APPLN;
 			} else {
 				return null;
 			}
@@ -866,23 +873,27 @@ public class SmApplicationBackingBean extends
 					+ bpmAppl.getSupportingDocMode());
 			if (bpmAppl.getApplType().equalsIgnoreCase("N")) {
 				System.out.println(" **** BPM FROM MOF REG CALLED ******");
-				bpmAppl.setApplId((long) 123);
+				bpmAppl.setApplId((long) 111);
 			} else if (bpmAppl.getApplType().equalsIgnoreCase("B")) {
 				System.out.println(" **** BPM FROM BUMI APPL CALLED ******");
-				bpmAppl.setApplId((long) 456);
+				bpmAppl.setApplId((long) 222);
 			} else if (bpmAppl.getApplType().equalsIgnoreCase("U")) {
 				System.out.println(" **** BPM FROM UPDATE APPL CALLED ******");
-				bpmAppl.setApplId((long) 789);
+				bpmAppl.setApplId((long) 333);
 			} else if (bpmAppl.getApplType().equalsIgnoreCase("A")) {
 				System.out
 						.println(" **** BPM FROM ADDITIONAL CATEGORY CODE APPL CALLED ******");
-				bpmAppl.setApplId((long) 999);
+				bpmAppl.setApplId((long) 444);
 			} else if (bpmAppl.getApplType().equalsIgnoreCase("R")) {
 				System.out
 						.println(" **** BPM FROM RENEWAL APPLICATION IS CALLED ******");
+				bpmAppl.setApplId((long) 555);
+			} else if (bpmAppl.getApplType().equalsIgnoreCase("C")) {
+				System.out
+						.println(" **** BPM FROM CANCEL REG APPLICATION IS CALLED ******");
 				bpmAppl.setApplId((long) 666);
 			} else {
-				bpmAppl.setApplId((long) 111);
+				bpmAppl.setApplId((long) 777);
 			}
 			if (bpmAppl.getSupportingDocMode() == null) {
 				bpmAppl.setSupportingDocMode("O");
@@ -932,6 +943,16 @@ public class SmApplicationBackingBean extends
 			return SupplierManagementConst.MOF_APPL_SUCCESS;
 		} catch (Exception e) {
 			return SupplierManagementConst.MOF_APPL_FAIL;
+		}
+	}
+
+	public String submitCancelMofApplToBpm() {
+		System.out.println(" Call Cancel ---------------->>>>>>>>>>");
+		try {
+			initiateSmApplicationTask();
+			return SupplierManagementConst.CANCEL_MOF_APPL_SUCCESS;
+		} catch (Exception e) {
+			return SupplierManagementConst.DEFAULT_CANCEL_MOF_APPLN;
 		}
 	}
 
