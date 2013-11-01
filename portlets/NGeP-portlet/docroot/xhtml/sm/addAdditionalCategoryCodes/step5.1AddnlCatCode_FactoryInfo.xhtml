@@ -7,7 +7,7 @@
 
 	<table style="width: 100%">
 		<tr>
-			<td><h4
+			<td colspan="2"><h4
 					style="color: blue; text-decoration: underline; text-align: center;">
 					<h:outputText value="#{lbl['lbl.sm.applnTypeLbl']}" />
 					<h:outputText value="Add Additional Category Code(s) " />
@@ -19,8 +19,9 @@
 					<h:outputText value="Step 5.1 : " />
 					<h:outputText value="Factory  / Equiptment Details" />
 				</h6></td>
-			<td align="right"><p:commandButton
-					value="#{lbl['lbl.sm.saveAsDraft']}" /></td>
+			<td><div align="right" style="width: 100%">
+					<p:commandButton value="#{lbl['lbl.sm.saveAsDraft']}" />
+				</div></td>
 		</tr>
 	</table>
 	<ui:include
@@ -31,12 +32,16 @@
 		src="/xhtml/sm/shared/mofRegistration/machineryInfoForm.xhtml" />
 	<table style="width: 100%">
 		<tr>
-			<td align="left"><p:commandButton value="#{lbl['lbl.sm.prev']}"
-					actionListener="#{backingBean.setTabValue('5','4')}"
-					action="#{backingBean.updateSmAppl}" update=":form:tt" /></td>
-			<td align="right"><p:commandButton value="#{lbl['lbl.sm.next']}"
-					actionListener="#{backingBean.setTabValue('5','6')}"
-					action="#{backingBean.updateSmAppl}" update=":form:tt" /></td>
+			<td><div align="left" style="width: 100%">
+					<p:commandButton value="#{lbl['lbl.sm.prev']}"
+						actionListener="#{backingBean.setTabValue('5','4')}"
+						action="#{backingBean.updateSmAppl}" update=":form:tt" />
+				</div></td>
+			<td><div align="right" style="width: 100%">
+					<p:commandButton value="#{lbl['lbl.sm.next']}"
+						actionListener="#{backingBean.setTabValue('5','6')}"
+						action="#{backingBean.updateSmAppl}" update=":form:tt" />
+				</div></td>
 		</tr>
 	</table>
 
