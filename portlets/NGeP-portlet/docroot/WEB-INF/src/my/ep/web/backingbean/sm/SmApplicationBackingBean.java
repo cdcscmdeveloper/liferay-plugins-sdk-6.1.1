@@ -1,6 +1,5 @@
 package my.ep.web.backingbean.sm;
 
-import java.math.BigDecimal;
 import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.Date;
@@ -111,7 +110,7 @@ public class SmApplicationBackingBean extends
 			smAppl.setSupplierType("2");
 			smAppl.setApplType(applicationType);
 			// TODO Set default not null values -- Start insert appl ---
-			smAppl.setStatusId(new BigDecimal(20001));
+			smAppl.setStatusId(20001);
 			// sm.setSmAddress(new SmAddress());
 			// SmAddress smAddress = setDefaultAddr();
 			// getManagedBean().getSmSupplier().setSmAppl(mofRegAppl);
@@ -885,16 +884,15 @@ public class SmApplicationBackingBean extends
 			} else {
 				bpmAppl.setApplId((long) 111);
 			}
-			// bpmAppl.setSupportingDocMode("O");
+			if (bpmAppl.getSupportingDocMode() == null) {
+				bpmAppl.setSupportingDocMode("O");
+			}
 			System.out.println(" ***** VALUE OF SELECTED OBJECT ***** "
 					+ getManagedBean().getSmSupplier().getSmAppls().size()
 					+ "  ---  " + bpmAppl.getApplId());
 			regSo = (IMofRegistrationSO) BusinessDelegate.getInstance()
 					.getServiceObject("sm", IMofRegistrationSO.class);
 			regSo.initiateSmApplicationTask(bpmAppl);
-		} catch (Exception e) {
-			e.printStackTrace();
-
 		} finally {
 			regSo = null;
 		}
