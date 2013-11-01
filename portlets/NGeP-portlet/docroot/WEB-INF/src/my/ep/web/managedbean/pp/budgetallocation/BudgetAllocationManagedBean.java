@@ -13,7 +13,6 @@ import javax.faces.bean.SessionScoped;
 
 import my.ep.persistence.entity.pm.authorization.PmOrgProfile;
 import my.ep.persistence.entity.pp.PpRemark;
-import my.ep.persistence.entity.pp.budgetallocation.PpBudget;
 import my.ep.persistence.entity.pp.budgetallocation.PpBudgetAlloc;
 import my.ep.persistence.entity.pp.budgetallocation.PpBudgetAllocDtl;
 import my.ep.web.managedbean.BaseManagedBean;
@@ -24,8 +23,6 @@ public class BudgetAllocationManagedBean extends BaseManagedBean{
 	private static final long serialVersionUID = 1L;
 
 	private Map<Long, BigDecimal> selectedGoMapper = new HashMap<Long, BigDecimal>();
-
-	private List <PpBudget> budgetList;
 
 	private PpBudgetAlloc selectedBudgetAllocation;
 	
@@ -88,20 +85,6 @@ public class BudgetAllocationManagedBean extends BaseManagedBean{
 	 */
 	public void setBpmTaskId(String bpmTaskId) {
 		this.bpmTaskId = bpmTaskId;
-	}
-
-	/**
-	 * @return the budgetList
-	 */
-	public List<PpBudget> getBudgetList() {
-		return budgetList;
-	}
-
-	/**
-	 * @param budgetList the budgetList to set
-	 */
-	public void setBudgetList(List<PpBudget> budgetList) {
-		this.budgetList = budgetList;
 	}
 	
 	/**

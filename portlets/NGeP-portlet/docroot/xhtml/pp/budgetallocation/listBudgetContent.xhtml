@@ -6,7 +6,8 @@ xmlns:f="http://java.sun.com/jsf/core"
 xmlns:h="http://java.sun.com/jsf/html"
 xmlns:ui="http://java.sun.com/jsf/facelets"
 xmlns:p="http://primefaces.org/ui"
-xmlns:c="http://java.sun.com/jsp/jstl/core">
+xmlns:c="http://java.sun.com/jsp/jstl/core"
+xmlns:ac="http://ac.my/jsf/composite/cc">
 	
 	<p:outputPanel id="opViewBudgetAllocationContent">
 		<br/>
@@ -26,9 +27,14 @@ xmlns:c="http://java.sun.com/jsp/jstl/core">
 		</div>
 		<br/> 
 		<br/> 
-	 	<p:dataTable styleClass="ppTableFull" var="budget" rowIndexVar="rowIndex"
-		 	value="#{budgetAllocationBackingBean.managedBean.budgetList}" 
-		 	emptyMessage="#{lbl['lbl.pp.no.record.found']}">  
+		
+	 	<p:dataTable id="tblBudget" styleClass="ppTableFull" var="budget" rowIndexVar="rowIndex"
+		 	emptyMessage="#{lbl['lbl.pp.no.record.found']}"
+		 	value="#{budgetAllocationBackingBean.budgetDataModel}"
+			lazy="true">
+		 	
+		 	<ac:paginator for="tblBudget" />
+		 	  
 	    	<p:column styleClass="ppSmallTd" headerText="#{lbl['lbl.pp.seq']}">  
                 #{rowIndex+1}
             </p:column>   
