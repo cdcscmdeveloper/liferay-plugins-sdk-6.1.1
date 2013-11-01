@@ -11,7 +11,7 @@
 
 	<ui:define name="contentSection">
 
-		<h:panelGrid columns="2" columnClasses="cmLeft,cmRight" width="100%">
+	
 
 			<h:panelGroup id="cmExtensionSearchID">
 				<p:outputLabel styleClass="screen-title"
@@ -79,20 +79,20 @@
 
 					<p:column>
 						<f:facet name="header">
-							<p:outputLabel value="#{lbl['lbl.cm.type']}" />
+							#{lbl['lbl.cm.type']}
 						</f:facet>
 						#{item.cmType.typeName}
 
 					</p:column>
 					<p:column>
 						<f:facet name="header">
-							<p:outputLabel value="#{lbl['lbl.cm.brand']}" />
+							#{lbl['lbl.cm.brand']}
 						</f:facet>
 						#{item.cmBrand.brandName}
 					</p:column>
 					<p:column>
 						<f:facet name="header">
-							<p:outputLabel value="#{lbl['lbl.cm.measurement']}" />
+							#{lbl['lbl.cm.measurement']}
 						</f:facet>
 						
 						#{item.cmMeasurement.measurementName}
@@ -100,20 +100,18 @@
 					</p:column>
 					<p:column>
 						<f:facet name="header">
-							<p:outputLabel value="#{lbl['lbl.cm.color']}" />
+							#{lbl['lbl.cm.color']}
 						</f:facet>
 						#{item.cmColor.colorName}
 					</p:column>
 					<p:column>
 						<f:facet name="header">
-							<p:outputLabel value="#{lbl['lbl.cm.action']}" />
+							#{lbl['lbl.cm.action']}
 						</f:facet>
-						<p:commandButton value="edit"
+						<p:commandButton value="Edit"
 							action="#{codificationBackingBean.editExtension()}" />
-						<p:commandButton value="delete"
+						<p:commandButton value="Delete"
 							action="#{codificationBackingBean.deleteExtension()}" />
-						<p:commandButton value="move" />
-
 					</p:column>
 				</p:dataTable>
 
@@ -127,9 +125,6 @@
 				</table>
 
 			</h:panelGroup>
-
-
-		</h:panelGrid>
 
 
 	</ui:define>
