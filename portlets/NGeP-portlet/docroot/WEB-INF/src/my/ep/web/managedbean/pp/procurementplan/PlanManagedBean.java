@@ -27,7 +27,7 @@ public class PlanManagedBean extends BaseManagedBean{
 	
 	private boolean withoutVot;
 	
-	private List <PpPlanMaster> planList;
+	private List <PpPlanMaster> planMasterList;
 	
 	private PpPlanMaster mtoPlanMaster;
 	
@@ -58,8 +58,6 @@ public class PlanManagedBean extends BaseManagedBean{
 	private String current;
 	
 	private String systemMsg = "";
-	
-//	private Map<Long, BigDecimal> selectedGoMapper = new HashMap<Long, BigDecimal>();
 
 	private String[] actions;
 	
@@ -67,14 +65,44 @@ public class PlanManagedBean extends BaseManagedBean{
 	
 	private List <PpQtActivity> allTaskActivity;
 	
-//	private String dynamicDialogName;
-	
 	private String dynamicDetailsName;
 
 	private String votType;
 	
 	private List <PpBudgetAllocDtl> budgetAllocDtlList;
 	
+	private List<PpPlan> planList;
+	
+	
+	
+
+	/**
+	 * @return the planMasterList
+	 */
+	public List<PpPlanMaster> getPlanMasterList() {
+		return planMasterList;
+	}
+
+	/**
+	 * @param planMasterList the planMasterList to set
+	 */
+	public void setPlanMasterList(List<PpPlanMaster> planMasterList) {
+		this.planMasterList = planMasterList;
+	}
+
+	/**
+	 * @return the planList
+	 */
+	public List<PpPlan> getPlanList() {
+		return planList;
+	}
+
+	/**
+	 * @param planList the planList to set
+	 */
+	public void setPlanList(List<PpPlan> planList) {
+		this.planList = planList;
+	}
 
 	/**
 	 * @return the dynamicDetailsName
@@ -134,21 +162,6 @@ public class PlanManagedBean extends BaseManagedBean{
 		this.selectedPlanItem = selectedPlanItem;
 	}
 
-	
-//
-//	/**
-//	 * @return the dynamicDialogName
-//	 */
-//	public String getDynamicDialogName() {
-//		return dynamicDialogName;
-//	}
-//
-//	/**
-//	 * @param dynamicDialogName the dynamicDialogName to set
-//	 */
-//	public void setDynamicDialogName(String dynamicDialogName) {
-//		this.dynamicDialogName = dynamicDialogName;
-//	}
 
 	/**
 	 * @return the allTaskActivity
@@ -178,21 +191,6 @@ public class PlanManagedBean extends BaseManagedBean{
 		this.bpmTaskId = bpmTaskId;
 	}
 
-//	/**
-//	 * @return the selectedGoMapper
-//	 */
-//	public Map<Long, BigDecimal> getSelectedGoMapper() {
-//		return selectedGoMapper;
-//	}
-//
-//	/**
-//	 * @param selectedGoMapper the selectedGoMapper to set
-//	 */
-//	public void setSelectedGoMapper(Map<Long, BigDecimal> selectedGoMapper) {
-//		this.selectedGoMapper = selectedGoMapper;
-//	}
-//	
-//	
 	/**
 	 * @return the systemMsg
 	 */
@@ -269,18 +267,6 @@ public class PlanManagedBean extends BaseManagedBean{
 	 */
 	public void setSelectedPlanMaster(PpPlanMaster selectedPlanMaster) {
 		this.selectedPlanMaster = selectedPlanMaster;
-	}
-	/**
-	 * @return the planList
-	 */
-	public List<PpPlanMaster> getPlanList() {
-		return planList;
-	}
-	/**
-	 * @param planList the planList to set
-	 */
-	public void setPlanList(List<PpPlanMaster> planList) {
-		this.planList = planList;
 	}
 
 	/**
