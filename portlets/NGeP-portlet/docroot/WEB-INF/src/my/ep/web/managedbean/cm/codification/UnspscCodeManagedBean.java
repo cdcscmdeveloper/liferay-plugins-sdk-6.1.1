@@ -62,12 +62,41 @@ public class UnspscCodeManagedBean extends BaseManagedBean {
 	
 	private List<CmRequestCode> reviewExtCodeList;
 	
+	private String taskId;
+	
+	private String[] action;
+	
+	private String tempUser;
 	
 	
 	
 	
 	
 	
+	public String getTempUser() {
+		return tempUser;
+	}
+
+	public void setTempUser(String tempUser) {
+		this.tempUser = tempUser;
+	}
+
+	public String[] getAction() {
+		return action;
+	}
+
+	public void setAction(String[] action) {
+		this.action = action;
+	}
+
+	public String getTaskId() {
+		return taskId;
+	}
+
+	public void setTaskId(String taskId) {
+		this.taskId = taskId;
+	}
+
 	public List<CmRequestCode> getReviewExtCodeList() {
 		if(reviewExtCodeList==null)
 			reviewExtCodeList = new ArrayList<CmRequestCode>();
