@@ -20,18 +20,14 @@ import javax.portlet.PortletRequest;
 
 import my.ep.biz.service.ct.maintain.IContractAmendmentSO;
 import my.ep.biz.service.fl.request.IFulfilmentRequestSO;
-import my.ep.biz.service.pm.authorization.orgunit.IOrgUnitSO;
+import my.ep.biz.service.pm.authorization.orgprofile.IOrgProfileSO;
 import my.ep.biz.service.pm.common.maksud.IMaksudSO;
-import my.ep.bpm.dto.BpmRequestDTO;
-import my.ep.bpm.dto.BpmResponseDTO;
-import my.ep.bpm.service.IBpmSO;
 import my.ep.dto.ct.ContractResDTO;
 import my.ep.dto.ct.maintain.ContractAmendmentReqDTO;
 import my.ep.dto.ct.maintain.ContractAmendmentResDTO;
 import my.ep.dto.fl.FulfilmentReqDTO;
-import my.ep.dto.fl.FulfilmentResDTO;
-import my.ep.dto.pm.authorization.orgunit.OrgUnitReqDTO;
-import my.ep.dto.pm.authorization.orgunit.OrgUnitResDTO;
+import my.ep.dto.pm.authorization.orgprofile.OrgProfileReqDTO;
+import my.ep.dto.pm.authorization.orgprofile.OrgProfileResDTO;
 import my.ep.dto.pm.common.maksud.MaksudReqDTO;
 import my.ep.dto.pm.common.maksud.MaksudResDTO;
 import my.ep.persistence.entity.ct.CtContract;
@@ -44,15 +40,13 @@ import my.ep.persistence.entity.pm.common.PmCode;
 import my.ep.persistence.entity.pm.common.PmMaksud;
 import my.ep.persistence.entity.pm.common.PmStatus;
 import my.ep.persistence.entity.sm.SmSupplier;
-import my.ep.persistence.logging.LogKey;
-import my.ep.util.lookupservice.EpBpmBusinessDelegate;
+import my.ep.type.pm.OrganizationType;
 import my.ep.web.backingbean.BaseBackingBean;
 import my.ep.web.constant.BpmOutcomeConst;
 import my.ep.web.managedbean.fl.createcontract.ContractRequestManagedBean;
 import my.ep.web.util.lookupservice.BusinessDelegate;
 
 import org.apache.log4j.Logger;
-import org.apache.log4j.MDC;
 import org.primefaces.event.FileUploadEvent;
 import org.primefaces.model.UploadedFile;
 
@@ -180,14 +174,14 @@ public class ContractRequestBackingBean extends BaseBackingBean<ContractRequestM
 
 	public List<SelectItem> getPTJList(){
 		List<SelectItem> retrievePTJList = new ArrayList<SelectItem>();
-		OrgUnitResDTO resDTO = new OrgUnitResDTO();
-		IOrgUnitSO orgProfileSO = (IOrgUnitSO)BusinessDelegate.getInstance().getServiceObject("pm",IOrgUnitSO.class);
-		OrgUnitReqDTO orgProfileReqDTO = new OrgUnitReqDTO();
+		OrgProfileResDTO resDTO = new OrgProfileResDTO();
+		IOrgProfileSO orgProfileSO = (IOrgProfileSO)BusinessDelegate.getInstance().getServiceObject("pm",IOrgProfileSO.class);
+		OrgProfileReqDTO orgProfileReqDTO = new OrgProfileReqDTO();
 
 		if(getManagedBean().getFlRequest().getIssuedOrgProfile().getOrgProfileId() != null){
-			orgProfileReqDTO.setOrgProfileId(getManagedBean().getFlRequest().getIssuedOrgProfile().getOrgProfileId());
-			orgProfileReqDTO.setTypeCodeId(1L);
-			resDTO = orgProfileSO.retrieveOrgProfileByParentIdAndType(orgProfileReqDTO);
+			orgProfileReqDTO.setParentOrgProfileId(getManagedBean().getFlRequest().getIssuedOrgProfile().getOrgProfileId());
+			orgProfileReqDTO.setOrgType(OrganizationType.DIVISION.value());
+			resDTO = orgProfileSO.retrieveOrgProfileListByOrgType(orgProfileReqDTO);
 		}
 
 		if(resDTO.getPmorgProfileByParentList() != null && !resDTO.getPmorgProfileByParentList().isEmpty()){
@@ -203,10 +197,12 @@ public class ContractRequestBackingBean extends BaseBackingBean<ContractRequestM
 
 	public List<SelectItem> getDivisionProfileList(){
 		List<SelectItem> retrieveDivisionList = new ArrayList<SelectItem>();
-		IOrgUnitSO orgProfileSO = (IOrgUnitSO)BusinessDelegate.getInstance().getServiceObject("pm",IOrgUnitSO.class);
-		OrgUnitReqDTO orgProfileReqDTO = new OrgUnitReqDTO();
-		orgProfileReqDTO.setOrgProfileId(getManagedBean().getFlRequest().getCreatedOrgProfile().getPmOrgProfile().getPmOrgProfile().getOrgProfileId());
-		OrgUnitResDTO resDTO = orgProfileSO.retrieveDivisionByMinistryId(orgProfileReqDTO);
+		IOrgProfileSO orgProfileSO = BusinessDelegate.getInstance().getServiceObject("pm",IOrgProfileSO.class);
+		OrgProfileReqDTO orgProfileReqDTO = new OrgProfileReqDTO();
+		orgProfileReqDTO.setParentOrgProfileId(getManagedBean().getFlRequest().getCreatedOrgProfile().getParentOrgProfile().getParentOrgProfile().getOrgProfileId());
+		orgProfileReqDTO.setOrgType(OrganizationType.DEPARTMENT.value());
+		
+		OrgProfileResDTO resDTO = orgProfileSO.retrieveOrgProfileListByOrgType(orgProfileReqDTO);
 		if(resDTO.getPmOrgProfileByMinistryList() != null && !resDTO.getPmOrgProfileByMinistryList().isEmpty()){
 			retrieveDivisionList.add(new SelectItem("", "- Select One -"));
 			List<PmOrgProfile> listDB = resDTO.getPmOrgProfileByMinistryList();
@@ -248,10 +244,10 @@ public class ContractRequestBackingBean extends BaseBackingBean<ContractRequestM
 	public String procureContract(){
 		getManagedBean().getFlRequest().setCtContract(getManagedBean().getSelectedContract());
 
-		IOrgUnitSO orgProfileSO = (IOrgUnitSO)BusinessDelegate.getInstance().getServiceObject("pm",IOrgUnitSO.class);
-		OrgUnitReqDTO orgProfileReqDTO = new OrgUnitReqDTO();
+		IOrgProfileSO orgProfileSO = BusinessDelegate.getInstance().getServiceObject("pm",IOrgProfileSO.class);
+		OrgProfileReqDTO orgProfileReqDTO = new OrgProfileReqDTO();
 		orgProfileReqDTO.setOrgProfileId(4L);// set current login user org profile ID
-		OrgUnitResDTO resDTO = orgProfileSO.retrieveOrgProfileByProfileId(orgProfileReqDTO);
+		OrgProfileResDTO resDTO = orgProfileSO.retrieveOrgProfileByProfileId(orgProfileReqDTO);
 		if(resDTO.getPmOrgProfile() != null){
 			getManagedBean().getFlRequest().setCreatedOrgProfile(resDTO.getPmOrgProfile());
 		}

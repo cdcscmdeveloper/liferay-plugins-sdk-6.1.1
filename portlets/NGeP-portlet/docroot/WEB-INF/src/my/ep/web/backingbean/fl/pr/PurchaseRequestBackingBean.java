@@ -20,7 +20,7 @@ import javax.faces.model.SelectItem;
 import my.ep.biz.service.ct.maintain.IContractAmendmentSO;
 import my.ep.biz.service.fl.order.IFulfilmentOrderSO;
 import my.ep.biz.service.fl.request.IFulfilmentRequestSO;
-import my.ep.biz.service.pm.authorization.orgunit.IOrgUnitSO;
+import my.ep.biz.service.pm.authorization.orgprofile.IOrgProfileSO;
 import my.ep.bpm.dto.BpmRequestDTO;
 import my.ep.bpm.dto.BpmResponseDTO;
 import my.ep.bpm.service.IBpmSO;
@@ -28,9 +28,8 @@ import my.ep.dto.ct.maintain.ContractAmendmentReqDTO;
 import my.ep.dto.ct.maintain.ContractAmendmentResDTO;
 import my.ep.dto.fl.FulfilmentReqDTO;
 import my.ep.dto.fl.FulfilmentResDTO;
-import my.ep.dto.pm.authorization.orgunit.OrgUnitReqDTO;
-import my.ep.dto.pm.authorization.orgunit.OrgUnitResDTO;
-import my.ep.jaxb.fl.podata.FLPurchaseOrderDataType;
+import my.ep.dto.pm.authorization.orgprofile.OrgProfileReqDTO;
+import my.ep.dto.pm.authorization.orgprofile.OrgProfileResDTO;
 import my.ep.persistence.entity.fl.FlAttachment;
 import my.ep.persistence.entity.fl.FlRemark;
 import my.ep.persistence.entity.fl.request.FlDeliveryAddress;
@@ -40,10 +39,10 @@ import my.ep.persistence.entity.pm.authorization.PmOrgProfile;
 import my.ep.persistence.entity.pm.common.PmStatus;
 import my.ep.persistence.entity.sm.SmSupplier;
 import my.ep.persistence.logging.LogKey;
+import my.ep.type.pm.OrganizationType;
 import my.ep.util.lookupservice.EpBpmBusinessDelegate;
 import my.ep.web.backingbean.BaseBackingBean;
 import my.ep.web.constant.BpmOutcomeConst;
-import my.ep.web.constant.pp.ProcurementPlanConst;
 import my.ep.web.managedbean.fl.pr.PurchaseRequestManagedBean;
 import my.ep.web.util.lookupservice.BusinessDelegate;
 
@@ -295,18 +294,18 @@ public class PurchaseRequestBackingBean extends BaseBackingBean<PurchaseRequestM
 
 	public List<SelectItem> getPTJ() {
 		List<SelectItem> retrievePTJList = new ArrayList<SelectItem>();
-		OrgUnitResDTO resDTO = new OrgUnitResDTO();
-		IOrgUnitSO orgProfileSO = (IOrgUnitSO)BusinessDelegate.getInstance().getServiceObject("pm",IOrgUnitSO.class);
-		OrgUnitReqDTO orgProfileReqDTO = new OrgUnitReqDTO();
+		OrgProfileResDTO resDTO = new OrgProfileResDTO();
+		IOrgProfileSO orgProfileSO = BusinessDelegate.getInstance().getServiceObject("pm",IOrgProfileSO.class);
+		OrgProfileReqDTO orgProfileReqDTO = new OrgProfileReqDTO();
 		
 		if(getManagedBean().getFulfilmentRequest().getIssuedOrgProfile() != null){
 			if(getManagedBean().getFulfilmentRequest().getIssuedOrgProfile().getOrgProfileId()==null) {
-				orgProfileReqDTO.setOrgProfileId(1L);
+				orgProfileReqDTO.setParentOrgProfileId(1L);
 			} else {
-				orgProfileReqDTO.setOrgProfileId(getManagedBean().getFulfilmentRequest().getIssuedOrgProfile().getOrgProfileId());
+				orgProfileReqDTO.setParentOrgProfileId(getManagedBean().getFulfilmentRequest().getIssuedOrgProfile().getOrgProfileId());
 			}
-			orgProfileReqDTO.setTypeCodeId(1L);
-			resDTO = orgProfileSO.retrieveOrgProfileByParentIdAndType(orgProfileReqDTO);
+			orgProfileReqDTO.setOrgType(OrganizationType.DIVISION.value());
+			resDTO = orgProfileSO.retrieveOrgProfileListByOrgType(orgProfileReqDTO);
 		}
 		
 		if(resDTO.getPmorgProfileByParentList() != null && !resDTO.getPmorgProfileByParentList().isEmpty()){
