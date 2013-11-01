@@ -684,7 +684,7 @@ public class BudgetAllocationBackingBean extends BaseBackingBean<BudgetAllocatio
 			if(CommonMethod.isSelected(parentOrgProfileId)){
 				OrgProfileReqDTO reqDTO = new OrgProfileReqDTO();
 				reqDTO.setOrgType(orgType);
-				reqDTO.setOrgProfileId(parentOrgProfileId);
+				reqDTO.setParentOrgProfileId(parentOrgProfileId);
 				IOrgProfileSO orgProfileSO = BusinessDelegate.getInstance().getServiceObject("pm", IOrgProfileSO.class);
 				OrgProfileResDTO resDTO = orgProfileSO.retrieveOrgProfileListByOrgType(reqDTO);
 //				if(resDTO.isSuccessful()){
