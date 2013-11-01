@@ -1,0 +1,35 @@
+<ui:composition
+	template="/WEB-INF/facelets/templates/basic_template.xhtml"
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:c="http://java.sun.com/jsp/jstl/core">
+
+	<ui:define name="resourceSection">
+	</ui:define>
+
+
+	<ui:define name="contentSection">
+		<p:panel header="Cancel Registration With MOF">
+			<table style="width: 100%">
+				<tr>
+					<td><p:outputPanel>
+							<p>Please provide a valid reason and attach supporting
+								documents (if any) for canceling the registration with MOF.</p>
+							<br />
+								NOTE : The MOF account will be de-activated / removed once approved by
+								Approver and you can only use the online account.
+						</p:outputPanel></td>
+				</tr>
+			</table>
+		</p:panel>
+		<div align="center">
+			<p:commandButton value="Proceed"
+				action="#{backingBean.proceedToApplication('C')}" />
+			<p:commandButton value="Cancel"
+				action="/xhtml/sm/homeScreen/defaultVirtualCertPage.xhtml" />
+		</div>
+	</ui:define>
+</ui:composition>
