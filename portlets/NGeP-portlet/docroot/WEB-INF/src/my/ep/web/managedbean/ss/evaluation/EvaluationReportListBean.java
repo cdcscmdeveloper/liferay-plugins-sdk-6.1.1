@@ -2,8 +2,6 @@ package my.ep.web.managedbean.ss.evaluation;
 
 import java.util.List;
 
-import my.ep.persistence.entity.ss.directpurchase.RequestListSupplierItem;
-
 public class EvaluationReportListBean {
 	
 	private String itemName;

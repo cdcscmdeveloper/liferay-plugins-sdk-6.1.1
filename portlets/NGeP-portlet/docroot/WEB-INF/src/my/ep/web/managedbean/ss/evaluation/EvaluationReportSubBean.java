@@ -1,11 +1,11 @@
 package my.ep.web.managedbean.ss.evaluation;
 
 public class EvaluationReportSubBean {
-	
+
 	private String remarks;
-	
-	public EvaluationReportSubBean(String remarks){
-		this.remarks=remarks;
+
+	public EvaluationReportSubBean(String remarks) {
+		this.remarks = remarks;
 	}
 
 	public String getRemarks() {
@@ -15,7 +15,5 @@ public class EvaluationReportSubBean {
 	public void setRemarks(String remarks) {
 		this.remarks = remarks;
 	}
-	
-	
 
 }

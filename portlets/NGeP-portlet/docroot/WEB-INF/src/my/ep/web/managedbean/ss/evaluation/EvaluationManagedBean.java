@@ -6,8 +6,6 @@ import java.util.List;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
 
-import my.ep.persistence.entity.ss.directpurchase.RequestListItem;
-import my.ep.persistence.entity.ss.directpurchase.RequestListSupplierItem;
 import my.ep.web.managedbean.BaseManagedBean;
 
 @ManagedBean(name="evaluationMB")
