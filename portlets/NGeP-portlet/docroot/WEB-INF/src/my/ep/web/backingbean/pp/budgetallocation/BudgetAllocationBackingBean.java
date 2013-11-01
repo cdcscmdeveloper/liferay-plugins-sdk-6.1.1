@@ -13,14 +13,17 @@ import javax.faces.context.FacesContext;
 import javax.faces.model.SelectItem;
 import javax.portlet.PortletRequest;
 
-import my.ep.biz.service.pm.authorization.orgunit.IOrgUnitSO;
+import my.ep.biz.bean.search.ISearchBean;
+import my.ep.biz.bean.search.ISearchResultBean;
+import my.ep.biz.bean.search.SearchBean;
+import my.ep.biz.bean.search.SearchFilterBean;
+import my.ep.biz.service.pm.authorization.orgprofile.IOrgProfileSO;
 import my.ep.biz.service.pm.common.object.IObjectSO;
 import my.ep.biz.service.pm.common.status.IStatusSO;
 import my.ep.biz.service.pp.budgetallocation.IBudgetAllocationSO;
 import my.ep.biz.service.pp.budgetallocation.IBudgetSO;
-import my.ep.bpm.dto.BpmResponseDTO;
-import my.ep.dto.pm.authorization.orgunit.OrgUnitReqDTO;
-import my.ep.dto.pm.authorization.orgunit.OrgUnitResDTO;
+import my.ep.dto.pm.authorization.orgprofile.OrgProfileReqDTO;
+import my.ep.dto.pm.authorization.orgprofile.OrgProfileResDTO;
 import my.ep.dto.pm.common.object.ObjectReqDTO;
 import my.ep.dto.pm.common.object.ObjectResDTO;
 import my.ep.dto.pm.common.status.StatusReqDTO;
@@ -37,7 +40,11 @@ import my.ep.persistence.entity.pp.budgetallocation.PpBudget;
 import my.ep.persistence.entity.pp.budgetallocation.PpBudgetAlloc;
 import my.ep.persistence.entity.pp.budgetallocation.PpBudgetAllocDtl;
 import my.ep.persistence.logging.LogKey;
+import my.ep.type.aut.SearchOperator;
+import my.ep.type.pm.OrganizationType;
 import my.ep.web.backingbean.BaseBackingBean;
+import my.ep.web.bean.paginator.IPagingDataModel;
+import my.ep.web.bean.paginator.PagingDataModel;
 import my.ep.web.constant.BpmOutcomeConst;
 import my.ep.web.constant.pp.ProcurementPlanConst;
 import my.ep.web.managedbean.pp.budgetallocation.BudgetAllocationManagedBean;
@@ -53,6 +60,8 @@ public class BudgetAllocationBackingBean extends BaseBackingBean<BudgetAllocatio
 	private static Logger log = Logger.getLogger(BudgetAllocationBackingBean.class);
 	private final static Long USER_ID_MIN = 3L; //TEMP
 	
+	private IPagingDataModel<PpBudget> budgetDataModel = new BudgetPagingDataModel();
+
 	/**
 	 * 
 	 * @return
@@ -67,12 +76,13 @@ public class BudgetAllocationBackingBean extends BaseBackingBean<BudgetAllocatio
 	public BudgetAllocationBackingBean(){
 		log.info("BudgetAllocationBackingBean - Start");
 		if(this.getManagedBean().getViewMode()==null || ProcurementPlanConst.MODE_LIST.equals(this.getManagedBean().getViewMode())){
+			/* Remark-kenny-20131028: Loading data is handle at pagination.
 			//set received budget list
 			List <PpBudget> budgetlist = getAllBudgets(USER_ID_MIN);// TODO dynamic
-			this.getManagedBean().setBudgetList(budgetlist!=null ? budgetlist : new ArrayList<PpBudget>());
+			this.getManagedBean().setBudgetList(budgetlist!=null ? budgetlist : new ArrayList<PpBudget>());*/
 			
 			//set current user profile
-			List <PmOrgProfile> ministryProfiles = getOrgProfiles(USER_ID_MIN, ProcurementPlanConst.TYPE_MINISTRY);// TODO dynamic
+			List <PmOrgProfile> ministryProfiles = getOrgProfiles(USER_ID_MIN, OrganizationType.MINISTRY.value());// TODO dynamic
 			this.getManagedBean().setCurrentUser(ministryProfiles!=null ? ministryProfiles.get(0) : new PmOrgProfile());
 		}
 		//TODO: temp
@@ -634,7 +644,7 @@ public class BudgetAllocationBackingBean extends BaseBackingBean<BudgetAllocatio
 	 */
 	public List<PmOrgProfile> ministryOptions() {
 		log.info("ministryOptions");
-		return getOrgProfiles(USER_ID_MIN, ProcurementPlanConst.TYPE_MINISTRY);
+		return getOrgProfiles(USER_ID_MIN, OrganizationType.MINISTRY.value());
 	}
 	
 	/**
@@ -643,7 +653,9 @@ public class BudgetAllocationBackingBean extends BaseBackingBean<BudgetAllocatio
 	 */
 	public List<PmOrgProfile> populateJabatan(){
 		log.info("populateJabatan");
-		return getParentOrgProfile(this.getManagedBean().getSelectedBudgetAllocation().getMinistryOrgProfileId(), ProcurementPlanConst.TYPE_JABATAN);
+		return getParentOrgProfile(
+				this.getManagedBean().getSelectedBudgetAllocation().getMinistryOrgProfileId(), 
+				OrganizationType.DEPARTMENT.value());
 	}
 	
 	/**
@@ -652,7 +664,9 @@ public class BudgetAllocationBackingBean extends BaseBackingBean<BudgetAllocatio
 	 */
 	public List<PmOrgProfile> populatePtj(){
 		log.info("populatePtj");
-		return getParentOrgProfile(this.getManagedBean().getSelectedBudgetAllocation().getJabatanOrgProfileId(), ProcurementPlanConst.TYPE_PTJ);
+		return getParentOrgProfile(
+				this.getManagedBean().getSelectedBudgetAllocation().getJabatanOrgProfileId(), 
+				OrganizationType.DIVISION.value());
 	}
 
 
@@ -662,17 +676,17 @@ public class BudgetAllocationBackingBean extends BaseBackingBean<BudgetAllocatio
 	 * @param type
 	 * @return list of child
 	 */
-	private List <PmOrgProfile> getParentOrgProfile(Long parentOrgProfileId, Long type){
+	private List <PmOrgProfile> getParentOrgProfile(Long parentOrgProfileId, String orgType){
 		log.info("getParentOrgProfile - Start");
 		log.info("parentOrgProfileId " + parentOrgProfileId);
 		List <PmOrgProfile> profileList =  new ArrayList<PmOrgProfile>();
 		try{
 			if(CommonMethod.isSelected(parentOrgProfileId)){
-				OrgUnitReqDTO reqDTO = new OrgUnitReqDTO();
-				reqDTO.setTypeCodeId(type);
+				OrgProfileReqDTO reqDTO = new OrgProfileReqDTO();
+				reqDTO.setOrgType(orgType);
 				reqDTO.setOrgProfileId(parentOrgProfileId);
-				IOrgUnitSO orgUnitSO = (IOrgUnitSO) BusinessDelegate.getInstance().getServiceObject("pm", IOrgUnitSO.class);
-				OrgUnitResDTO resDTO = orgUnitSO.retrieveOrgProfileByParentIdAndType(reqDTO);
+				IOrgProfileSO orgProfileSO = BusinessDelegate.getInstance().getServiceObject("pm", IOrgProfileSO.class);
+				OrgProfileResDTO resDTO = orgProfileSO.retrieveOrgProfileListByOrgType(reqDTO);
 //				if(resDTO.isSuccessful()){
 					profileList = resDTO.getPmorgProfileByParentList();
 //				}
@@ -691,17 +705,18 @@ public class BudgetAllocationBackingBean extends BaseBackingBean<BudgetAllocatio
 	 * @param type
 	 * @return org profile
 	 */
-	private List <PmOrgProfile> getOrgProfiles(Long userId, Long type){
+	private List <PmOrgProfile> getOrgProfiles(Long userId, String orgType){
 		log.info("getOrgProfiles - Start");
 		log.info("userId " + userId);
 		List <PmOrgProfile> profileList =  new ArrayList<PmOrgProfile>();
 		try{
-			if(CommonMethod.isSelected(userId) && CommonMethod.isSelected(type)){
-				OrgUnitReqDTO reqDTO = new OrgUnitReqDTO();
+			if(CommonMethod.isSelected(userId) && CommonMethod.isSelected(orgType)){
+				OrgProfileReqDTO reqDTO = new OrgProfileReqDTO();
 				reqDTO.setUserId(userId);
-				reqDTO.setTypeCodeId(type);
-				IOrgUnitSO orgUnitSO = (IOrgUnitSO) BusinessDelegate.getInstance().getServiceObject("pm", IOrgUnitSO.class);
-				OrgUnitResDTO resDTO = orgUnitSO.retrieveOrgProfileTypeCode(reqDTO);
+				reqDTO.setOrgType(orgType);
+				
+				IOrgProfileSO orgProfileSO = BusinessDelegate.getInstance().getServiceObject("pm", IOrgProfileSO.class);
+				OrgProfileResDTO resDTO = orgProfileSO.retrieveOrgProfileListByOrgType(reqDTO);
 //				if(resDTO.isSuccessful()){
 					profileList = resDTO.getPmorgProfileTypeCodeList();
 //				}
@@ -724,12 +739,20 @@ public class BudgetAllocationBackingBean extends BaseBackingBean<BudgetAllocatio
 		List <PpBudget> budgetList =  new ArrayList<PpBudget>();
 		try{
 			BudgetReqDTO reqDTO = new BudgetReqDTO();
-			reqDTO.setMinistryId(ministryId);	
+			
+			SearchBean<PpBudget> searchBean = (SearchBean<PpBudget>)super.createSearchBean(PpBudget.class, "");
+			searchBean.getDataFilterBeans().add(new SearchFilterBean(
+					"orgProfileId", 
+					SearchOperator.OPERATOR_EQUALS.value(), 
+					USER_ID_MIN));
+			searchBean.setNavigatable(false);
+			reqDTO.setBudgetSearchBean(searchBean);	
+			
 			IBudgetSO reqSO = (IBudgetSO) BusinessDelegate.getInstance().getServiceObject(ProcurementPlanConst.SO_PP, IBudgetSO.class);
 			BudgetResDTO resDTO = reqSO.retrieveBudgetList(reqDTO);
 			
 			if (resDTO.isSuccessful()) {
-				budgetList = resDTO.getBudgetList();
+				budgetList = resDTO.getBudgetResultBean().getResultList();
 			}
 			
 		}catch (Exception e){
@@ -762,6 +785,75 @@ public class BudgetAllocationBackingBean extends BaseBackingBean<BudgetAllocatio
 		}
 		log.info("getAllBudgets - End");
 		return "";
+	}
+		private class BudgetPagingDataModel extends PagingDataModel<PpBudget> {
+		private static final long serialVersionUID = 1L;
+
+		public BudgetPagingDataModel() {
+			super("tblBudget");
+		}
+		
+		@Override
+		public void saveAction() {
+			System.out.println("saveAction");
+		}
+		
+		/**
+		 * @author ktfong
+		 * @since 28.10.2013
+		 * retrieve default budget by ministry id
+		 * 
+		 * @see my.ep.web.bean.paginator.PagingDataModel#pageChangeListener(my.ep.biz.bean.search.ISearchBean)
+		 */
+		@Override
+		public ISearchResultBean<PpBudget> pageChangeListener(ISearchBean<PpBudget> searchBean) {
+			if (log.isDebugEnabled()) {
+				log.debug("pageChangeListener");
+			}
+			/*if (super.getWrappedData() != null) {
+				SearchResultBean<PpBudget> resultBean = new SearchResultBean<PpBudget>();
+				resultBean.setResultList((List<PpBudget>)super.getWrappedData());
+				resultBean.setTotalRecord(super.getRowCount());
+				
+				return resultBean;
+			}*/
+			
+			try {				
+				BudgetReqDTO reqDTO = new BudgetReqDTO();
+				
+				searchBean.getDataFilterBeans().add(new SearchFilterBean(
+						"orgProfileId", 
+						SearchOperator.OPERATOR_EQUALS.value(), 
+						USER_ID_MIN));
+				reqDTO.setBudgetSearchBean(searchBean);	
+				
+				IBudgetSO reqSO = (IBudgetSO) BusinessDelegate.getInstance().getServiceObject(ProcurementPlanConst.SO_PP, IBudgetSO.class);
+				
+				BudgetResDTO resDTO = reqSO.retrieveBudgetList(reqDTO);
+				
+				if (resDTO.isSuccessful()) {
+					return resDTO.getBudgetResultBean();
+				}
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+
+			return null;
+		}
+	}
+
+	/**
+	 * @return the budgetDataModel
+	 */
+	public IPagingDataModel<PpBudget> getBudgetDataModel() {
+		return budgetDataModel;
+	}
+
+	/**
+	 * @param budgetDataModel the budgetDataModel to set
+	 */
+	public void setBudgetDataModel(IPagingDataModel<PpBudget> budgetDataModel) {
+		this.budgetDataModel = budgetDataModel;
 	}
 
 }
