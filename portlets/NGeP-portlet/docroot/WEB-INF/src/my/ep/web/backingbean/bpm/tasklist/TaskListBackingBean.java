@@ -61,7 +61,7 @@ public class TaskListBackingBean extends BaseBackingBean<TaskListManagedBean>{
 		System.out.println("testing BPM******");
 
 		String viewBy = "";
-		BpmResponseDTO responseDTO = retrieveWorklistItems("ASSIGNED", viewBy);
+		BpmResponseDTO responseDTO = retrieveWorklistItems(this.getManagedBean().getStatus(), viewBy);
 	}
 
 

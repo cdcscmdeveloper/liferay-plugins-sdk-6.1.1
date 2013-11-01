@@ -9,106 +9,123 @@
 
 	<ui:define name="contentSection">
 
-		<h:panelGrid columns="2" columnClasses="cmLeft,cmRight" width="100%">
 
+		<h:panelGroup id="editExtensionID">
+			<p:outputLabel styleClass="screen-title"
+				value="#{lbl['lbl.cm.edit.extension.code']}"></p:outputLabel>
 
-
-
-			<h:panelGroup id="editExtensionID">
-				<p:outputLabel styleClass="screen-title"
-					value="#{lbl['lbl.cm.edit.extension.code']}"></p:outputLabel>
-
-
-				<table>
-					<tr>
-						<td><p:outputLabel value="#{lbl['lbl.cm.unspsc.code']}"></p:outputLabel></td>
-						<td><p:inputText /></td>
-					</tr>
-					<tr>
-						<td><p:outputLabel value="#{lbl['lbl.cm.unspsc.title']}"></p:outputLabel></td>
-						<td><p:inputText /></td>
-
-					</tr>
-					<tr>
-						<td><p:outputLabel value="#{lbl['lbl.cm.item.name']}"></p:outputLabel></td>
-						<td></td>
-					</tr>
-				</table>
-
-				<p:panelGrid>
-					<f:facet name="header">
-						<p:row>
-							<p:column>
-								<p:outputLabel value="#{lbl['lbl.cm.extension.type']}" />
-							</p:column>
-							<p:column>
-								<p:outputLabel value="#{lbl['lbl.cm.old.description']}" />
-							</p:column>
-							<p:column>
-								<p:outputLabel value="#{lbl['lbl.cm.new.description']}" />
-							</p:column>
-						</p:row>
-
-					</f:facet>
-
-					<p:row>
-						<p:column>
-							<p:outputLabel value="#{lbl['lbl.cm.type']}" />
-						</p:column>
-						<p:column>
-							<p:inputText></p:inputText>
-						</p:column>
-						<p:column>
-							<p:inputText></p:inputText>
-						</p:column>
-					</p:row>
-
-					<p:row>
-						<p:column>
-							<p:outputLabel value="#{lbl['lbl.cm.brand']}" />
-						</p:column>
-						<p:column>
-							<p:inputText></p:inputText>
-						</p:column>
-						<p:column>
-							<p:inputText></p:inputText>
-						</p:column>
-					</p:row>
-
-					<p:row>
-						<p:column>
-							<p:outputLabel value="#{lbl['lbl.cm.measurement']}" />
-						</p:column>
-						<p:column>
-							<p:inputText></p:inputText>
-						</p:column>
-						<p:column>
-							<p:inputText></p:inputText>
-						</p:column>
-					</p:row>
-
-
-					<p:row>
-						<p:column>
-							<p:outputLabel value="#{lbl['lbl.cm.color']}" />
-						</p:column>
-						<p:column>
-							<p:inputText></p:inputText>
-						</p:column>
-						<p:column>
-							<p:inputText></p:inputText>
-						</p:column>
-					</p:row>
-
-				</p:panelGrid>
-				
-				<p:commandButton value="cancel"></p:commandButton>
+			<div style="text-align: right;">
+				<p:commandButton value="cancel"
+					action="#{codificationBackingBean.backToPrevious}"></p:commandButton>
 				<p:commandButton value="save"></p:commandButton>
+			</div>
+
+
+			<table>
+				<tr>
+					<td><p:outputLabel value="#{lbl['lbl.cm.unspsc.code']}"></p:outputLabel></td>
+					<td><p:inputText
+							value="#{codificationBackingBean.managedBean.editItem.cmUnspsc.unspscCode}"
+							disabled="true" /></td>
+				</tr>
+				<tr>
+					<td><p:outputLabel value="#{lbl['lbl.cm.unspsc.title']}"></p:outputLabel></td>
+					<td><p:inputText
+							value="#{codificationBackingBean.managedBean.editItem.cmUnspsc.unspscTitle}"
+							disabled="true" /></td>
+
+				</tr>
+				<tr>
+					<td><p:outputLabel value="#{lbl['lbl.cm.item.name']}"></p:outputLabel></td>
+					<td><p:inputText
+							value="#{codificationBackingBean.managedBean.editItem.itemName}"
+							disabled="true" /></td>
+				</tr>
+			</table>
+
+			<p:panelGrid>
+				<f:facet name="header">
+					<p:row>
+						<p:column>
+							<p:outputLabel value="#{lbl['lbl.cm.extension.type']}" />
+						</p:column>
+						<p:column>
+							<p:outputLabel value="#{lbl['lbl.cm.old.description']}" />
+						</p:column>
+						<p:column>
+							<p:outputLabel value="#{lbl['lbl.cm.new.description']}" />
+						</p:column>
+					</p:row>
+
+				</f:facet>
+
+				<p:row>
+					<p:column>
+						<p:outputLabel value="#{lbl['lbl.cm.type']}" />
+					</p:column>
+					<p:column>
+						<p:inputText
+							value="#{codificationBackingBean.managedBean.editItem.cmType.typeName}"
+							disabled="true"></p:inputText>
+					</p:column>
+					<p:column>
+						<p:inputText></p:inputText>
+					</p:column>
+				</p:row>
+
+				<p:row>
+					<p:column>
+						<p:outputLabel value="#{lbl['lbl.cm.brand']}" />
+					</p:column>
+					<p:column>
+						<p:inputText
+							value="#{codificationBackingBean.managedBean.editItem.cmBrand.brandName}"
+							disabled="true"></p:inputText>
+					</p:column>
+					<p:column>
+						<p:inputText></p:inputText>
+					</p:column>
+				</p:row>
+
+				<p:row>
+					<p:column>
+						<p:outputLabel value="#{lbl['lbl.cm.measurement']}" />
+					</p:column>
+					<p:column>
+						<p:inputText
+							value="#{codificationBackingBean.managedBean.editItem.cmMeasurement.measurementName}"
+							disabled="true"></p:inputText>
+					</p:column>
+					<p:column>
+						<p:inputText></p:inputText>
+					</p:column>
+				</p:row>
+
+
+				<p:row>
+					<p:column>
+						<p:outputLabel value="#{lbl['lbl.cm.color']}" />
+					</p:column>
+					<p:column>
+						<p:inputText
+							value="#{codificationBackingBean.managedBean.editItem.cmColor.colorName}"
+							disabled="true"></p:inputText>
+					</p:column>
+					<p:column>
+						<p:inputText></p:inputText>
+					</p:column>
+				</p:row>
+
+			</p:panelGrid>
+
+			<p:commandButton value="cancel"
+				action="#{codificationBackingBean.backToPrevious}"></p:commandButton>
+			<p:commandButton value="save"></p:commandButton>
 
 
 
-			</h:panelGroup>
-		</h:panelGrid>
+		</h:panelGroup>
+
 
 	</ui:define>
 </ui:composition>

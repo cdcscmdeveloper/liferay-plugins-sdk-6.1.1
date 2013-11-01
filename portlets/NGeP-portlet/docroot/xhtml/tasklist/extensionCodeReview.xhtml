@@ -21,7 +21,7 @@
 				<ui:repeat var="action"
 					value="#{tasklistBackingBean.managedBean.action}">
 					<p:commandButton value="#{action}"
-						action="#{unspscCodeBackingBean.submitToReviewExt}"></p:commandButton>
+						action="#{unspscCodeBackingBean.submitToReviewExt(action)}"></p:commandButton>
 				</ui:repeat>
 			</div>
 
@@ -36,9 +36,14 @@
 					<td><p:inputText
 							value="#{unspscCodeBackingBean.managedBean.reviewExtCodeList[0].tempTitle}" /></td>
 				</tr>
+				<tr>
+					<td><p:outputLabel value="User"></p:outputLabel></td>
+					<td><p:inputText
+							value="#{unspscCodeBackingBean.managedBean.tempUser}" /></td>
+				</tr>
 			</table>
 
-			<p:dataTable 
+			<p:dataTable style="width:100%;"
 				value="#{unspscCodeBackingBean.managedBean.reviewExtCodeList}"
 				var="review">
 				<p:column>

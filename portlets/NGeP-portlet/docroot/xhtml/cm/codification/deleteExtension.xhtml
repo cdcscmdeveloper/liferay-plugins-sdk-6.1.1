@@ -9,60 +9,66 @@
 
 	<ui:define name="contentSection">
 
-		<h:panelGrid columns="2" columnClasses="cmLeft,cmRight" width="100%">
+
+		<h:panelGroup id="deleteExtensionID">
+			<h:outputLabel styleClass="screen-title"
+				value="#{lbl['lbl.cm.delete.extension.code']}"></h:outputLabel>
+
+			<div style="text-align: right;">
+				
+			</div>
+
+
+			<table>
+				<tr>
+					<td><p:outputLabel value="#{lbl['lbl.cm.unspsc.code']}"></p:outputLabel></td>
+					<td><p:inputText
+							value="#{codificationBackingBean.managedBean.deleteItem.cmUnspsc.unspscCode}"
+							disabled="true" /></td>
+				</tr>
+				<tr>
+					<td><p:outputLabel value="#{lbl['lbl.cm.unspsc.title']}"></p:outputLabel></td>
+					<td><p:inputText
+							value="#{codificationBackingBean.managedBean.deleteItem.cmUnspsc.unspscTitle}"
+							disabled="true" /></td>
+
+				</tr>
+				<tr>
+					<td><p:outputLabel value="#{lbl['lbl.cm.item.name']}"></p:outputLabel></td>
+					<td><p:inputText
+							value="#{codificationBackingBean.managedBean.deleteItem.itemName}"
+							disabled="true" /></td>
+				</tr>
+				<tr>
+					<td><p:outputLabel value="#{lbl['lbl.cm.type']}"></p:outputLabel></td>
+					<td><p:inputText
+							value="#{codificationBackingBean.managedBean.deleteItem.cmType.typeName}"
+							disabled="true" /></td>
+				</tr>
+				<tr>
+					<td><p:outputLabel value="#{lbl['lbl.cm.brand']}"></p:outputLabel></td>
+					<td><p:inputText
+							value="#{codificationBackingBean.managedBean.deleteItem.cmBrand.brandName}" /></td>
+				</tr>
+				<tr>
+					<td><p:outputLabel value="#{lbl['lbl.cm.measurement']}"></p:outputLabel></td>
+					<td><p:inputText
+							value="#{codificationBackingBean.managedBean.deleteItem.cmMeasurement.measurementName}" /></td>
+				</tr>
+				<tr>
+					<td><p:outputLabel value="#{lbl['lbl.cm.color']}"></p:outputLabel></td>
+					<td><p:inputText
+							value="#{codificationBackingBean.managedBean.deleteItem.cmColor.colorName}" /></td>
+				</tr>
+			</table>
 
 
 
 
 
-			<h:panelGroup id="deleteExtensionID">
-				<h:outputLabel styleClass="screen-title"
-					value="#{lbl['lbl.cm.delete.extension.code']}"></h:outputLabel>
 
+		</h:panelGroup>
 
-				<table>
-					<tr>
-						<td><p:outputLabel value="#{lbl['lbl.cm.unspsc.code']}"></p:outputLabel></td>
-						<td><p:inputText /></td>
-					</tr>
-					<tr>
-						<td><p:outputLabel value="#{lbl['lbl.cm.unspsc.title']}"></p:outputLabel></td>
-						<td><p:inputText /></td>
-
-					</tr>
-					<tr>
-						<td><p:outputLabel value="#{lbl['lbl.cm.item.name']}"></p:outputLabel></td>
-						<td><p:inputText /></td>
-					</tr>
-					<tr>
-						<td><p:outputLabel value="#{lbl['lbl.cm.type']}"></p:outputLabel></td>
-						<td><p:inputText /></td>
-					</tr>
-					<tr>
-						<td><p:outputLabel value="#{lbl['lbl.cm.brand']}"></p:outputLabel></td>
-						<td><p:inputText /></td>
-					</tr>
-					<tr>
-						<td><p:outputLabel value="#{lbl['lbl.cm.measurement']}"></p:outputLabel></td>
-						<td><p:inputText /></td>
-					</tr>
-					<tr>
-						<td><p:outputLabel value="#{lbl['lbl.cm.color']}"></p:outputLabel></td>
-						<td><p:inputText /></td>
-					</tr>
-				</table>
-
-				<h:panelGrid columns="3">
-					<p:commandButton value="cancel"></p:commandButton>
-					<p:commandButton value="submit"></p:commandButton>
-					<p:commandButton value="unPublish"></p:commandButton>
-					<p:commandButton value="reject"></p:commandButton>
-					<p:commandButton value="approve"></p:commandButton>
-				</h:panelGrid>
-
-
-			</h:panelGroup>
-		</h:panelGrid>
 
 	</ui:define>
 </ui:composition>

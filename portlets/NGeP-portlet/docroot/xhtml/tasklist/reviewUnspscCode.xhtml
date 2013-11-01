@@ -10,7 +10,6 @@
 	<ui:define name="contentSection">
 
 
-
 		<h:panelGroup id="cmReviewUnspsc">
 
 			<p:outputLabel styleClass="screen-title"
@@ -29,12 +28,17 @@
 				<p:commandButton value="#{lbl['lbl.cm.create.ext.code']}"
 					action="#{unspscCodeBackingBean.createExtCode}"></p:commandButton>
 			</div>
+
 			<p:selectOneRadio>
 				<f:selectItem itemValue="P" itemLabel="Product " />
 				<f:selectItem itemValue="S" itemLabel="Service" />
 			</p:selectOneRadio>
 
 			<h:panelGrid columns="2">
+
+				<p:outputLabel value="User"></p:outputLabel>
+				<p:inputText value="#{unspscCodeBackingBean.managedBean.tempUser}" />
+
 				<p:outputLabel value="* #{lbl['lbl.cm.item.name']}"></p:outputLabel>
 				<p:inputText
 					value="#{unspscCodeBackingBean.managedBean.requestCode.itemName}"></p:inputText>
@@ -44,16 +48,20 @@
 					value="#{unspscCodeBackingBean.managedBean.requestCode.itemDetail}"></p:inputText>
 
 				<p:outputLabel value="* #{lbl['lbl.cm.type']}"></p:outputLabel>
-				<p:inputText></p:inputText>
+				<p:inputText
+					value="#{unspscCodeBackingBean.managedBean.requestCode.typeName}"></p:inputText>
 
 				<p:outputLabel value="* #{lbl['lbl.cm.brand']}"></p:outputLabel>
-				<p:inputText></p:inputText>
+				<p:inputText
+					value="#{unspscCodeBackingBean.managedBean.requestCode.brandName}"></p:inputText>
 
 				<p:outputLabel value="* #{lbl['lbl.cm.measurement']}"></p:outputLabel>
-				<p:inputText></p:inputText>
+				<p:inputText
+					value="#{unspscCodeBackingBean.managedBean.requestCode.measurementName}"></p:inputText>
 
 				<p:outputLabel value="* #{lbl['lbl.cm.color']}"></p:outputLabel>
-				<p:inputText></p:inputText>
+				<p:inputText
+					value="#{unspscCodeBackingBean.managedBean.requestCode.colorName}"></p:inputText>
 
 
 			</h:panelGrid>

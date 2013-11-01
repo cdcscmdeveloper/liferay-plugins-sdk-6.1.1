@@ -70,7 +70,7 @@
 
 				<p:dataTable id="itemTableID"
 					value="#{codificationBackingBean.managedBean.itemList}"
-					rowKey="#{item.itemId}" var="item"
+					rowKey="#{item.itemId}" var="item" rowIndexVar="rowIndex"
 					selection="#{codificationBackingBean.managedBean.selectedItems}">
 
 					<p:column selectionMode="multiple" style="width:2%" />
@@ -109,9 +109,9 @@
 							#{lbl['lbl.cm.action']}
 						</f:facet>
 						<p:commandButton value="Edit"
-							action="#{codificationBackingBean.editExtension()}" />
+							action="#{codificationBackingBean.editExtension(rowIndex)}" />
 						<p:commandButton value="Delete"
-							action="#{codificationBackingBean.deleteExtension()}" />
+							action="#{codificationBackingBean.deleteExtension(rowIndex)}" />
 					</p:column>
 				</p:dataTable>
 

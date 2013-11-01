@@ -5,26 +5,35 @@
 	xmlns:p="http://primefaces.org/ui"
 	xmlns:c="http://java.sun.com/jsp/jstl/core">
 
-	<p:commandButton value="#{lbl['lbl.cm.upload.to.draft']}"
-		onclick="excelDialog.show()"></p:commandButton>
 
-	<p:commandButton id="downloadLink"
-		value="#{lbl['lbl.cm.download.from.draft']}" ajax="false">
-		<p:fileDownload value="#{catalogueBackingBean.file}" />
-	</p:commandButton>
 
-	<p:commandButton value="#{lbl['lbl.cm.save.draft']}"
-		action="#{catalogueBackingBean.saveCatalogItem}"></p:commandButton>
+	<div style="text-align: right;">
+		<p:commandButton value="#{lbl['lbl.cm.upload.to.draft']}"
+			onclick="excelDialog.show()"></p:commandButton>
 
-	<p:commandButton value="#{lbl['lbl.cm.submit']}" action="#{catalogueBackingBean.submitToReviewItems}" update="draftSupplierItemID"></p:commandButton>
+		<p:commandButton id="downloadLink"
+			value="#{lbl['lbl.cm.download.from.draft']}" ajax="false">
+			<p:fileDownload value="#{catalogueBackingBean.file}" />
+		</p:commandButton>
+
+		<p:commandButton value="#{lbl['lbl.cm.save.draft']}"
+			action="#{catalogueBackingBean.saveCatalogItem}"></p:commandButton>
+
+		<p:commandButton value="#{lbl['lbl.cm.submit']}"
+			action="#{catalogueBackingBean.submitToReviewItems}"
+			update="draftSupplierItemID"></p:commandButton>
+	</div>
+
+
 
 	<p:dataTable id="draftSupplierItemID"
-		value="#{catalogueBackingBean.managedBean.maintainItemList}" rowIndexVar="rowIndex"
-		var="selectedSuppCat" rowKey="#{selectedSuppCat.supplierItemId}"
+		value="#{catalogueBackingBean.managedBean.maintainItemList}"
+		rowIndexVar="rowIndex" var="selectedSuppCat"
+		rowKey="#{selectedSuppCat.supplierItemId}"
 		selection="#{catalogueBackingBean.managedBean.selectedMaintainItems}">
 
 		<p:column selectionMode="multiple" style="width:2%" />
-		
+
 		<p:column>
 			<f:facet name="header">
 				#{lbl['lbl.cm.item.name']}

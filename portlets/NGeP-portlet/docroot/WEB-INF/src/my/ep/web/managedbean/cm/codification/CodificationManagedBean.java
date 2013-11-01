@@ -61,12 +61,30 @@ public class CodificationManagedBean extends BaseManagedBean {
 	private String colorCode;
 	private String measurementCode;
 	
+	private CmItem editItem;
+	private CmItem deleteItem;
 	
 	
 
 	
 	
 
+
+	public CmItem getDeleteItem() {
+		return deleteItem;
+	}
+
+	public void setDeleteItem(CmItem deleteItem) {
+		this.deleteItem = deleteItem;
+	}
+
+	public CmItem getEditItem() {
+		return editItem;
+	}
+
+	public void setEditItem(CmItem editItem) {
+		this.editItem = editItem;
+	}
 
 	public String getBrandCode() {
 		return brandCode;

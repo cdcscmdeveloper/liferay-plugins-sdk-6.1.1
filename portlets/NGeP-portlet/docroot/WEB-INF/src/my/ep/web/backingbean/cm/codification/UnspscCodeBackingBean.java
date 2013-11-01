@@ -60,14 +60,16 @@ public class UnspscCodeBackingBean extends BaseBackingBean<UnspscCodeManagedBean
 		CodificationReqDTO reqDTO = new CodificationReqDTO();
 		log.info("new:"+this.getManagedBean().getRequestCode().isBrandNew());
 		reqDTO.setRequestCode(this.getManagedBean().getRequestCode());
+		reqDTO.setUser(this.getManagedBean().getTempUser());
+		reqDTO.setTaskId(taskListBB.getManagedBean().getTaskId());
 		CodificationResDTO resDTO = null;
 		if(this.getManagedBean().getRequestCode().isBrandNew()){
 			resDTO = unspscSO.addCodificationRequest(reqDTO);
-			BpmResponseDTO responseDTO = initiateTask(resDTO.getRequestCode());
+			//BpmResponseDTO responseDTO = initiateTask(resDTO.getRequestCode());
 		}else{
 			log.info("***update***");
 			resDTO = unspscSO.updateCodificationRequest(reqDTO);
-			BpmResponseDTO responseDTO = updateTask(resDTO.getRequestCode(),taskListBB.getManagedBean().getTaskId() );
+			//BpmResponseDTO responseDTO = updateTask(resDTO.getRequestCode(),taskListBB.getManagedBean().getTaskId() );
 		}
 
 
@@ -77,7 +79,7 @@ public class UnspscCodeBackingBean extends BaseBackingBean<UnspscCodeManagedBean
 	public BpmResponseDTO updateTask(CmRequestCode request, String taskId){
 		System.out.println("initiateTask******");
 		IBpmSO bpmSO = (IBpmSO) EpBpmBusinessDelegate.getInstance().getServiceObject(IBpmSO.class);
-		String ctx = bpmSO.authenticate("roslan","welcome1");
+		String ctx = bpmSO.authenticate(this.getManagedBean().getTempUser(),"welcome1");
 		BpmRequestDTO reqDTO = new BpmRequestDTO();
 		reqDTO.setCtxToken(ctx);
 		log.info("taskId:"+taskId);
@@ -112,7 +114,6 @@ public class UnspscCodeBackingBean extends BaseBackingBean<UnspscCodeManagedBean
 		BpmRequestDTO reqDTO = new BpmRequestDTO();
 		reqDTO.setCtxToken(ctx);
 
-		//  reqDTO.setProcessId("Procurement_Strategy.EndorseBudget");
 		reqDTO.setProcessId("Codification.UNSPSCCodeRequest");
 		reqDTO.setOutcome("SUBMIT");
 		CDRequestDataType obj = new CDRequestDataType();
@@ -125,11 +126,7 @@ public class UnspscCodeBackingBean extends BaseBackingBean<UnspscCodeManagedBean
 		log.info("2:"+res.getErrorReason());
 		log.info("ID:"+obj.getRequestId());
 
-		//--
-		//	  Object asd = res.getPojo();
-		//	  CDRequestDataType qwe = (CDRequestDataType)asd;
-		//	  qwe.getPtj();
-		//--
+
 		return res;
 	}
 
@@ -532,10 +529,12 @@ public class UnspscCodeBackingBean extends BaseBackingBean<UnspscCodeManagedBean
 
 		this.getManagedBean().getRequestCode().setTempCode(tempCode);
 		reqDTO.setRequestCode(this.getManagedBean().getRequestCode());
+		reqDTO.setUser("lailah");
+		reqDTO.setTaskId(taskListBB.getManagedBean().getTaskId());
 		resDTO = unspscSO.updateCodificationRequest(reqDTO);
 
 
-		BpmResponseDTO responseDTO = updateTask(resDTO.getRequestCode(),taskListBB.getManagedBean().getTaskId());
+		//BpmResponseDTO responseDTO = updateTask(resDTO.getRequestCode(),taskListBB.getManagedBean().getTaskId());
 
 
 	}
@@ -622,13 +621,15 @@ public class UnspscCodeBackingBean extends BaseBackingBean<UnspscCodeManagedBean
 		item.setCmUnspsc(resDTO.getCommodityObj());
 		item.setExtensionCode(extensionCode);
 		reqDTO.setCmItem(item);
-
+		reqDTO.setRequestCode(this.getManagedBean().getRequestCode());
+		reqDTO.setTaskId(taskListBB.getManagedBean().getTaskId());
+		reqDTO.setUser("khai");
 		resDTO = unspscSO.addNewItem(reqDTO);
 
 		System.out.println("****************save Item End******************");
 
 
-		BpmResponseDTO responseDTO = updateTask(this.getManagedBean().getRequestCode(),taskListBB.getManagedBean().getTaskId());
+		//BpmResponseDTO responseDTO = updateTask(this.getManagedBean().getRequestCode(),taskListBB.getManagedBean().getTaskId());
 
 	}
 

@@ -58,7 +58,7 @@ public class ReviewCatalogueBackingBean extends BaseBackingBean<ReviewCatalogueM
 	}
 
 
-	public void approveCatalogueItem(){
+	public String approveCatalogueItem(){
 
 		ICatalogueSO catalogueSO = (ICatalogueSO) BusinessDelegate.getInstance().getServiceObject("cm",ICatalogueSO.class);
 
@@ -69,10 +69,12 @@ public class ReviewCatalogueBackingBean extends BaseBackingBean<ReviewCatalogueM
 		reqDTO.getSaveSupplierItems().add(bb.getManagedBean().getSelectedMaintainItem());
 
 		catalogueSO.updateSupplierItem(reqDTO);
+		
+		return "catalogueTaskList?faces-redirect=true";
 
 	}
 
-	public void rejectCatalogueItem(){
+	public String rejectCatalogueItem(){
 
 		ICatalogueSO catalogueSO = (ICatalogueSO) BusinessDelegate.getInstance().getServiceObject("cm",ICatalogueSO.class);
 
@@ -83,6 +85,8 @@ public class ReviewCatalogueBackingBean extends BaseBackingBean<ReviewCatalogueM
 		reqDTO.getSaveSupplierItems().add(bb.getManagedBean().getSelectedMaintainItem());
 
 		catalogueSO.updateSupplierItem(reqDTO);
+		
+		return "catalogueTaskList?faces-redirect=true";
 
 	}
 

@@ -358,12 +358,20 @@ public class CodificationBackingBean extends BaseBackingBean<CodificationManaged
 
 	}
 
-	public String editExtension(){
+	public String editExtension(int index){
+
+		System.out.println("*********"+this.getManagedBean().getItemList().get(index).getItemName());
+
+		this.getManagedBean().setEditItem(this.getManagedBean().getItemList().get(index));
 
 		return NAV_TO_EDIT_EXTENSION;
 	}
 
-	public String deleteExtension(){
+	public String deleteExtension(int index){
+		System.out.println("*********"+this.getManagedBean().getItemList().get(index).getItemName());
+
+		this.getManagedBean().setDeleteItem(this.getManagedBean().getItemList().get(index));
+
 		return NAV_TO_DELETE_EXTENSION;
 	}
 
@@ -524,6 +532,14 @@ public class CodificationBackingBean extends BaseBackingBean<CodificationManaged
 	public String createExtCode(){
 
 		return "extensionCodeSingleCreation";
+	}
+
+
+	public String backToPrevious(){
+
+
+
+		return "extensionSearch";
 	}
 
 
