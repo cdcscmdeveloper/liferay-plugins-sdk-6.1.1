@@ -95,7 +95,13 @@
 	<category name="category.sample">
 		<portlet id="TaskList"></portlet>
 		<portlet id="sm"></portlet>
-
+		<portlet id="CatalogueMaintenance"></portlet>
+		<portlet id="UnspscRequestForm"></portlet>
+		<portlet id="ExtensionRequestForm"></portlet>
+		<portlet id="UnspscBulkUpload"></portlet>
+		<portlet id="ContractedItem"></portlet>
+		<portlet id="UnspscSingleUpload"></portlet>
+		<portlet id="reviewUnspsc"></portlet>
 		
 	</category>
 
