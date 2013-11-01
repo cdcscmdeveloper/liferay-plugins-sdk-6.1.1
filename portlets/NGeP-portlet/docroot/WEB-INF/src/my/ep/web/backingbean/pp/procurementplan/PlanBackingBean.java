@@ -18,14 +18,14 @@ import my.ep.biz.bean.search.ISearchBean;
 import my.ep.biz.bean.search.SearchBean;
 import my.ep.biz.bean.search.SearchFilterBean;
 import my.ep.biz.service.cm.codification.ICodificationSO;
-import my.ep.biz.service.pm.authorization.orgunit.IOrgUnitSO;
+import my.ep.biz.service.pm.authorization.orgprofile.IOrgProfileSO;
 import my.ep.biz.service.pm.common.taskactivity.ITaskActivitySO;
 import my.ep.biz.service.pp.budgetallocation.IBudgetAllocationSO;
 import my.ep.biz.service.pp.procurementplan.IProcurementPlanSO;
 import my.ep.dto.cm.codification.CodificationReqDTO;
 import my.ep.dto.cm.codification.CodificationResDTO;
-import my.ep.dto.pm.authorization.orgunit.OrgUnitReqDTO;
-import my.ep.dto.pm.authorization.orgunit.OrgUnitResDTO;
+import my.ep.dto.pm.authorization.orgprofile.OrgProfileReqDTO;
+import my.ep.dto.pm.authorization.orgprofile.OrgProfileResDTO;
 import my.ep.dto.pm.common.taskactivity.TaskResDTO;
 import my.ep.dto.pp.budgetallocation.BudgetAllocationReqDTO;
 import my.ep.dto.pp.budgetallocation.BudgetAllocationResDTO;
@@ -45,6 +45,7 @@ import my.ep.persistence.entity.pp.procurementplan.PpPlanMaster;
 import my.ep.persistence.entity.pp.procurementplan.PpQtActivity;
 import my.ep.persistence.logging.LogKey;
 import my.ep.type.aut.SearchOperator;
+import my.ep.type.pm.OrganizationType;
 import my.ep.web.backingbean.BaseBackingBean;
 import my.ep.web.constant.pp.ProcurementPlanConst;
 import my.ep.web.managedbean.pp.procurementplan.PlanManagedBean;
@@ -155,7 +156,7 @@ public class PlanBackingBean extends BaseBackingBean<PlanManagedBean>{
 		log.info("PlanBackingBean - Start");
 		if(this.getManagedBean().getViewMode()==null || ProcurementPlanConst.MODE_LIST.equals(this.getManagedBean().getViewMode())){			
 			//set current user profile
-			List <PmOrgProfile> ptjProfiles = getOrgProfiles(USER_ID_PTJ, ProcurementPlanConst.TYPE_PTJ);// TODO dynamic
+			List <PmOrgProfile> ptjProfiles = getOrgProfiles(USER_ID_PTJ, OrganizationType.DIVISION.value());// TODO dynamic
 			this.getManagedBean().setCurrentUser(ptjProfiles!=null ? ptjProfiles.get(0) : new PmOrgProfile());
 		}
 		
@@ -928,11 +929,13 @@ public class PlanBackingBean extends BaseBackingBean<PlanManagedBean>{
 		List<PmOrgProfile> options = new ArrayList<PmOrgProfile>();
 		
 		if(this.getManagedBean().getSelectedPlanMaster().getOrgProfile()!=null){
-			Long orgProfileId = this.getManagedBean().getSelectedPlanMaster().getOrgProfile().getPmOrgProfile().getPmOrgProfile().getOrgProfileId();
-			OrgUnitReqDTO reqDTO = new OrgUnitReqDTO();
-			reqDTO.setOrgProfileId(orgProfileId);
-			IOrgUnitSO orgUnitSO = (IOrgUnitSO) BusinessDelegate.getInstance().getServiceObject("pm", IOrgUnitSO.class);
-			OrgUnitResDTO resDTO = orgUnitSO.retrieveDivisionByMinistryId(reqDTO);
+			Long orgProfileId = this.getManagedBean().getSelectedPlanMaster().getOrgProfile().getParentOrgProfile().getParentOrgProfile().getOrgProfileId();
+			OrgProfileReqDTO reqDTO = new OrgProfileReqDTO();
+			reqDTO.setParentOrgProfileId(orgProfileId);
+			reqDTO.setOrgType(OrganizationType.DEPARTMENT.value());
+			
+			IOrgProfileSO orgProfileSO = BusinessDelegate.getInstance().getServiceObject("pm", IOrgProfileSO.class);
+			OrgProfileResDTO resDTO = orgProfileSO.retrieveOrgProfileListByOrgType(reqDTO);
 	//		if(resDTO.isSuccessful()){
 				options = resDTO.getPmOrgProfileByMinistryList();
 	//		}
@@ -946,21 +949,22 @@ public class PlanBackingBean extends BaseBackingBean<PlanManagedBean>{
 	 * @param divisionId
 	 * @return department list
 	 */
-	public List<PmOrgProfile> divisionOptions(Long divisionId) {
-		log.info("divisionOptions - Start");
+	public List<PmOrgProfile> departmentOptions(Long divisionId) {
+		log.info("departmentOptions - Start");
 		List<PmOrgProfile> options = new ArrayList<PmOrgProfile>();
 
 		if(CommonMethod.isSelected(divisionId)){
-			OrgUnitReqDTO reqDTO = new OrgUnitReqDTO();
-			reqDTO.setOrgProfileId(divisionId);
-			reqDTO.setTypeCodeId(ProcurementPlanConst.TYPE_PTJ);
-			IOrgUnitSO orgUnitSO = (IOrgUnitSO) BusinessDelegate.getInstance().getServiceObject("pm", IOrgUnitSO.class);
-			OrgUnitResDTO resDTO = orgUnitSO.retrieveOrgProfileByParentIdAndType(reqDTO);
+			OrgProfileReqDTO reqDTO = new OrgProfileReqDTO();
+			reqDTO.setParentOrgProfileId(divisionId);
+			reqDTO.setOrgType(OrganizationType.DIVISION.value());
+			
+			IOrgProfileSO orgProfileSO = BusinessDelegate.getInstance().getServiceObject("pm", IOrgProfileSO.class);
+			OrgProfileResDTO resDTO = orgProfileSO.retrieveOrgProfileListByOrgType(reqDTO);
 	//		if(resDTO.isSuccessful()){
 				options = resDTO.getPmorgProfileByParentList();
 	//		}
 		}
-		log.info("divisionOptions - End");
+		log.info("departmentOptions - End");
 		return options;
 	}
 	
@@ -1254,17 +1258,18 @@ public class PlanBackingBean extends BaseBackingBean<PlanManagedBean>{
 	 * @param type
 	 * @return org profile
 	 */
-	private List <PmOrgProfile> getOrgProfiles(Long userId, Long type){
+	private List <PmOrgProfile> getOrgProfiles(Long userId, String orgType){
 		log.info("getOrgProfiles - Start");
 		log.info("userId " + userId);
 		List <PmOrgProfile> profileList =  new ArrayList<PmOrgProfile>();
 		try{
-			if(CommonMethod.isSelected(userId) && CommonMethod.isSelected(type)){
-				OrgUnitReqDTO reqDTO = new OrgUnitReqDTO();
+			if(CommonMethod.isSelected(userId) && CommonMethod.isSelected(orgType)){
+				OrgProfileReqDTO reqDTO = new OrgProfileReqDTO();
 				reqDTO.setUserId(userId);
-				reqDTO.setTypeCodeId(type);
-				IOrgUnitSO orgUnitSO = (IOrgUnitSO) BusinessDelegate.getInstance().getServiceObject("pm", IOrgUnitSO.class);
-				OrgUnitResDTO resDTO = orgUnitSO.retrieveOrgProfileTypeCode(reqDTO);
+				reqDTO.setOrgType(orgType);
+				
+				IOrgProfileSO orgProfileSO = BusinessDelegate.getInstance().getServiceObject("pm", IOrgProfileSO.class);
+				OrgProfileResDTO resDTO = orgProfileSO.retrieveOrgProfileListByOrgType(reqDTO);
 //				if(resDTO.isSuccessful()){
 					profileList = resDTO.getPmorgProfileTypeCodeList();
 //				}

@@ -18,15 +18,15 @@ import javax.faces.model.SelectItem;
 import my.ep.biz.bean.search.SearchBean;
 import my.ep.biz.bean.search.SearchBetweenValue;
 import my.ep.biz.bean.search.SearchFilterBean;
-import my.ep.biz.service.pm.authorization.orgunit.IOrgUnitSO;
+import my.ep.biz.service.pm.authorization.orgprofile.IOrgProfileSO;
 import my.ep.biz.service.pm.common.categorys.ICategorysSO;
 import my.ep.biz.service.pm.common.district.IDistrictSO;
 import my.ep.biz.service.pm.common.object.IObjectSO;
 import my.ep.biz.service.pm.common.state.IStateSO;
 import my.ep.biz.service.pm.common.status.IStatusSO;
 import my.ep.biz.service.ss.quationtender.IQTDetailSO;
-import my.ep.dto.pm.authorization.orgunit.OrgUnitReqDTO;
-import my.ep.dto.pm.authorization.orgunit.OrgUnitResDTO;
+import my.ep.dto.pm.authorization.orgprofile.OrgProfileReqDTO;
+import my.ep.dto.pm.authorization.orgprofile.OrgProfileResDTO;
 import my.ep.dto.pm.common.categorys.CategorysReqDTO;
 import my.ep.dto.pm.common.categorys.CategorysResDTO;
 import my.ep.dto.pm.common.district.DistrictReqDTO;
@@ -94,7 +94,7 @@ public class QTDetailBackingBean extends BaseBackingBean<QTDetailManagedBean> {
 	private ICategorysSO categorysSO = null;
 	private IStateSO stateSo = null;
 	private IDistrictSO districtSO = null;
-	private IOrgUnitSO orgUnitSO = null;
+	private IOrgProfileSO orgProfileSO = null;
 	private IStatusSO statusSO = null;
 
 	public QTDetailBackingBean() {
@@ -132,8 +132,8 @@ public class QTDetailBackingBean extends BaseBackingBean<QTDetailManagedBean> {
 		IDistrictSO districtSO = BusinessDelegate.getInstance()
 				.getServiceObject("pm", IDistrictSO.class);
 
-		IOrgUnitSO orgUnitSO = BusinessDelegate.getInstance().getServiceObject(
-				"pm", IOrgUnitSO.class);
+		IOrgProfileSO orgProfileSO = BusinessDelegate.getInstance().getServiceObject(
+				"pm", IOrgProfileSO.class);
 
 		IStatusSO statusSO = BusinessDelegate.getInstance().getServiceObject(
 				"pm", IStatusSO.class);
@@ -143,7 +143,7 @@ public class QTDetailBackingBean extends BaseBackingBean<QTDetailManagedBean> {
 		this.categorysSO = categorysSO;
 		this.stateSo = stateSO;
 		this.districtSO = districtSO;
-		this.orgUnitSO = orgUnitSO;
+		this.orgProfileSO = orgProfileSO;
 		this.statusSO = statusSO;
 		log.info("successfully look up the so object" + detailSO);
 	}
@@ -353,9 +353,9 @@ public class QTDetailBackingBean extends BaseBackingBean<QTDetailManagedBean> {
 		scQt.setChangedBy(1l);
 		scQt.setCreatedDate(new Timestamp(System.currentTimeMillis()));
 		// TODO need to get the org profile id by user id and need to set
-		OrgUnitReqDTO orgUnitReqDTO = new OrgUnitReqDTO();
+		OrgProfileReqDTO orgUnitReqDTO = new OrgProfileReqDTO();
 		orgUnitReqDTO.setOrgProfileId(new Long(1));
-		OrgUnitResDTO unitResDTO = orgUnitSO
+		OrgProfileResDTO unitResDTO = orgProfileSO
 				.retrieveOrgProfileByProfileId(orgUnitReqDTO);
 		PmOrgProfile orgProfile = unitResDTO.getPmOrgProfile();
 		scQt.setPmOrgProfile(orgProfile);
