@@ -27,7 +27,7 @@
 		</div>
 
 
-		<p:outputLabel styleClass="screen-title" value="TaskList"></p:outputLabel><div class="clear"></div>
+		<p:outputLabel styleClass="screen-title" value="Task List"></p:outputLabel><div class="clear"></div>
 
 		<p:dataTable value="#{tasklistBackingBean.managedBean.taskList}" style="width:780px;"
 			var="tasks" paginator="true" rows="10" paginatorPosition="bottom"
@@ -40,9 +40,7 @@
 				</f:facet>
 				<p:commandLink value="#{tasks.taskNumber}"
 					action="#{tasklistBackingBean.navigateToURL}">
-					<f:param name="key" value="key" />
 					<f:param name="taskId" value="#{tasks.taskId}" />
-
 				</p:commandLink>
 			</p:column>
 			<p:column>
