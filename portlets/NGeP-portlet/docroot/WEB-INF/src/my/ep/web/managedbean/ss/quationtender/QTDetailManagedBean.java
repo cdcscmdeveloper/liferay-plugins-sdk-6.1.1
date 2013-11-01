@@ -1,9 +1,12 @@
+
 package my.ep.web.managedbean.ss.quationtender;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
+import javax.faces.model.SelectItem;
 
 import my.ep.factory.EpLogger;
 import my.ep.persistence.entity.pm.common.PmCategoryL1;
@@ -14,11 +17,16 @@ import my.ep.persistence.entity.pm.common.PmDo;
 import my.ep.persistence.entity.pm.common.PmGo;
 import my.ep.persistence.entity.pm.common.PmSo;
 import my.ep.persistence.entity.pm.common.PmState;
+import my.ep.persistence.entity.pm.common.PmZone;
 import my.ep.persistence.entity.ss.quationtender.ScQt;
+import my.ep.persistence.entity.ss.quationtender.ScQtCategory;
+import my.ep.persistence.entity.ss.quationtender.ScQtCriteria;
 import my.ep.persistence.entity.ss.quationtender.ScQtGosodoBudget;
 import my.ep.web.managedbean.BaseManagedBean;
 
 import org.apache.log4j.Logger;
+import org.primefaces.model.DefaultTreeNode;
+import org.primefaces.model.TreeNode;
 
 
 /**
@@ -33,7 +41,8 @@ public class QTDetailManagedBean extends BaseManagedBean {
 	private static final long serialVersionUID = 1L;
 	private static final Logger log= EpLogger.getLogger(QTDetailManagedBean.class);
 	
-	private ScQt qt= new ScQt();
+	private ScQt qt;
+	private ScQtCriteria qtc;
 	
 	private List<PmSo> soList;
 	
@@ -52,15 +61,158 @@ public class QTDetailManagedBean extends BaseManagedBean {
 	private List<PmDistrict> districts;
 	
 	public List<ScQtGosodoBudget> gosodos;
-	
+	public List<ScQtCategory> categorys;
+   
 	private String qtNumber;
 	
-		
-	public QTDetailManagedBean(){
-		log.info("inside ");
-	}
+	private List<SelectItem> procurementModeItems;
+	List<SelectItem> itemTypeList;
+	List<SelectItem> tenderTypeList;
+	List<SelectItem> lineItemList;
+	List<SelectItem> itemOriginList;
+	
+	
+	private TreeNode root2;
+	private TreeNode root3;
 
 	
+
+	private TreeNode[] selectedNodes; 
+	
+	private List<ScQt> cloneTenderList;
+	private ScQt tenderCriteria=new ScQt();
+	
+	private List<PmZone> zoneList= new ArrayList <PmZone>();
+	private List<PmState> stateList=new ArrayList<PmState>();
+
+	
+	private List<ScQt> qtList= new ArrayList<ScQt>();
+	public QTDetailManagedBean()
+    {
+    	log.info("inside ");
+    	
+	
+    	root2 = new DefaultTreeNode("Root", null);
+		TreeNode node0 = new DefaultTreeNode("Clone All", root2);
+		node0.setExpanded(true);
+
+		TreeNode node1 = new DefaultTreeNode("Qtn/Tender Title", node0);
+		
+		TreeNode node2 = new DefaultTreeNode("Qtn/Tender Details", node0);
+		
+		TreeNode node3 = new DefaultTreeNode("Approval Workflow", node0);
+
+		TreeNode node4 = new DefaultTreeNode("Supplier Qualification Criteria", node0);
+
+		TreeNode node5 = new DefaultTreeNode("Schedule", node0);
+
+		TreeNode node6 = new DefaultTreeNode("Documents", node0);
+		
+		root3 = new DefaultTreeNode("Root", null);   
+        TreeNode documents = new DefaultTreeNode(("Zone1"), root3);  
+        documents.setExpanded(true);  
+        
+          
+        TreeNode states = new DefaultTreeNode(("State1"), documents); 
+        states .setExpanded(true);
+        TreeNode districts = new DefaultTreeNode(("State2"), documents); 
+        districts.setExpanded(true);
+          
+        //Documents  
+        TreeNode d1 = new DefaultTreeNode(("District1"), states);  
+        TreeNode d2 = new DefaultTreeNode(("District2"), states);  
+        TreeNode d = new DefaultTreeNode(("District1"), districts);  
+          
+		
+		
+		
+		
+	}
+
+
+		public List<ScQt> getCloneTenderList() {
+			return cloneTenderList;
+		}
+
+
+
+		public void setCloneTenderList(List<ScQt> cloneTenderList) {
+			this.cloneTenderList = cloneTenderList;
+		}
+
+
+	public TreeNode getRoot2() {
+		return root2;
+	}
+
+
+
+	public void setRoot2(TreeNode root2) {
+		this.root2 = root2;
+	}
+
+	public TreeNode getRoot3() {
+		return root3;
+	}
+
+
+	public void setRoot3(TreeNode root3) {
+		this.root3 = root3;
+	}
+
+	public TreeNode[] getSelectedNodes() {
+		return selectedNodes;
+	}
+
+
+	public void setSelectedNodes(TreeNode[] selectedNodes) {
+		this.selectedNodes = selectedNodes;
+	}
+
+
+	public List<SelectItem> getProcurementModeItems() {
+		return procurementModeItems;
+	}
+
+	public void setProcurementModeItems(List<SelectItem> procurementModeItems) {
+		this.procurementModeItems = procurementModeItems;
+	}
+
+
+	public List<SelectItem> getItemTypeList() {
+		return itemTypeList;
+	}
+
+
+
+	public void setItemTypeList(List<SelectItem> itemTypeList) {
+		this.itemTypeList = itemTypeList;
+	}
+
+
+
+	public List<SelectItem> getTenderTypeList() {
+		return tenderTypeList;
+	}
+
+
+
+	public void setTenderTypeList(List<SelectItem> tenderTypeList) {
+		this.tenderTypeList = tenderTypeList;
+	}
+
+
+
+	public List<SelectItem> getLineItemList() {
+		return lineItemList;
+	}
+
+
+
+	public void setLineItemList(List<SelectItem> lineItemList) {
+		this.lineItemList = lineItemList;
+	}
+
 
 	public List<PmSo> getSoList() {
 		return soList;
@@ -167,5 +319,76 @@ public class QTDetailManagedBean extends BaseManagedBean {
 	}
 
 
+
+	public List<ScQtCategory> getCategorys() {
+		return categorys;
+	}
+
+
+
+	public void setCategorys(List<ScQtCategory> categorys) {
+		this.categorys = categorys;
+	}
+
+	public ScQtCriteria getQtc() {
+		return qtc;
+	}
+
+
+	public void setQtc(ScQtCriteria qtc) {
+		this.qtc = qtc;
+	}
+
+	
+	public List<SelectItem> getItemOriginList() {
+		return itemOriginList;
+	}
+
+	public void setItemOriginList(List<SelectItem> itemOriginList) {
+		this.itemOriginList = itemOriginList;
+	}
+
+	public ScQt getTenderCriteria() {
+		return tenderCriteria;
+	}
+
+	public void setTenderCriteria(ScQt tenderCriteria) {
+		this.tenderCriteria = tenderCriteria;
+	}
+
+
+	public List<PmZone> getZoneList() {
+		return zoneList;
+	}
+
+
+	public void setZoneList(List<PmZone> zoneList) {
+		this.zoneList = zoneList;
+	}
+
+
+	public List<PmState> getStateList() {
+		return stateList;
+	}
+
+
+	public void setStateList(List<PmState> stateList) {
+		this.stateList = stateList;
+	}
+
+
+	public List<ScQt> getQtList() {
+		return qtList;
+	}
+
+
+	public void setQtList(List<ScQt> qtList) {
+		this.qtList = qtList;
+	}
+
+
+	
+	
+	
 
 }
