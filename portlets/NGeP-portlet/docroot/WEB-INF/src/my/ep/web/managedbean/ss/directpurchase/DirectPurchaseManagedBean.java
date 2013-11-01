@@ -2,12 +2,17 @@ package my.ep.web.managedbean.ss.directpurchase;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
 
-import my.ep.persistence.entity.ss.directpurchase.RequestListItem;
-import my.ep.persistence.entity.ss.directpurchase.RequestListSupplierItem;
+import my.ep.persistence.entity.pm.authorization.PmOrgProfile;
+import my.ep.persistence.entity.pm.common.PmStatus;
+import my.ep.persistence.entity.ss.directpurchase.ScPrInquiry;
+import my.ep.persistence.entity.ss.directpurchase.ScRequestList;
+import my.ep.persistence.entity.ss.directpurchase.ScRequestSupplierItem;
+import my.ep.persistence.entity.ss.directpurchase.ScRequestListItem;
 import my.ep.web.constant.SourcingConst;
 import my.ep.web.managedbean.BaseManagedBean;
 
@@ -23,9 +28,13 @@ public class DirectPurchaseManagedBean extends BaseManagedBean{
 	private static Logger log = Logger.getLogger(DirectPurchaseManagedBean.class);
 	
 	
+	
 	private	String	action	=	SourcingConst.CREATE_DIRECT_PURCHASE;
-	private	List<RequestListItem> requestListItems;
-	private	List<RequestListSupplierItem> recommendRequestListSupplierItems;
+	private	ScRequestList	requestList;
+	private	List<ScRequestListItem> requestListItems;
+	private	List<ScRequestSupplierItem> recommendRequestListSupplierItems;
+	private	ScRequestSupplierItem	selectedItem	=	new ScRequestSupplierItem();
+	private	ScPrInquiry	scPrInquiry = new ScPrInquiry();
 	
 	public DirectPurchaseManagedBean() {
 		super();
@@ -40,42 +49,80 @@ public class DirectPurchaseManagedBean extends BaseManagedBean{
 		this.action = action;
 	}
 
-	public List<RequestListItem> getRequestListItems() {
+	public List<ScRequestListItem> getRequestListItems() {
 		return requestListItems;
 	}
 
-	public void setRequestListItems(List<RequestListItem> requestListItems) {
+	public void setRequestListItems(List<ScRequestListItem> requestListItems) {
 		this.requestListItems = requestListItems;
 	}
 	
-	public List<RequestListSupplierItem> getRecommendRequestListSupplierItems() {
+	public List<ScRequestSupplierItem> getRecommendRequestListSupplierItems() {
 		return recommendRequestListSupplierItems;
 	}
 
-	public void setRecommendRequestListSupplierItems(List<RequestListSupplierItem> recommendRequestListSupplierItems) {
+	public void setRecommendRequestListSupplierItems(List<ScRequestSupplierItem> recommendRequestListSupplierItems) {
 		this.recommendRequestListSupplierItems = recommendRequestListSupplierItems;
 	}
 
 	private	void prepareDummyData(){
-		requestListItems	=	new ArrayList<RequestListItem>();
-		recommendRequestListSupplierItems = new ArrayList<RequestListSupplierItem>();
-		RequestListItem requestListItem1 = new RequestListItem(1L,"Item1",1000,"KG");
-		List<RequestListSupplierItem> supplierItems1 = new ArrayList<RequestListSupplierItem>();
-		supplierItems1.add(new RequestListSupplierItem(1L,1L,1000,new Double(4.5)));
-		supplierItems1.add(new RequestListSupplierItem(2L,2L,1000,new Double(4.6)));
-		supplierItems1.add(new RequestListSupplierItem(3L,3L,1000,new Double(4.4)));
+		requestList	=	new	ScRequestList();
+		//TODO hard code org profile first
+		PmOrgProfile	orgProfile	=	new PmOrgProfile();
+		orgProfile.setOrgProfileId(1L);
+		requestList.setPmOrgProfile(orgProfile);
+		
+		PmStatus	status	=	new	PmStatus();
+		status.setStatusId(61000L);
+		requestList.setPmStatus(status);
+		
+		requestListItems	=	new ArrayList<ScRequestListItem>();
+		recommendRequestListSupplierItems = new ArrayList<ScRequestSupplierItem>();
+		
+		ScRequestListItem requestListItem1 = new ScRequestListItem(1L,"Item1",1000,"KG");
+		List<ScRequestSupplierItem> supplierItems1 = new ArrayList<ScRequestSupplierItem>();
+		
+		supplierItems1.add(new ScRequestSupplierItem(3L,1L,1000,new Double(4.5)));
+		supplierItems1.add(new ScRequestSupplierItem(21L,1L,1000,new Double(4.6)));
+		supplierItems1.add(new ScRequestSupplierItem(22L,3L,1000,new Double(4.4)));
 		requestListItem1.setSupplierItems(supplierItems1);
 		requestListItems.add(requestListItem1);
 		
-		RequestListItem requestListItem2 = new RequestListItem(2L,"Item2",1000,"KG");
-		List<RequestListSupplierItem> supplierItems2 = new ArrayList<RequestListSupplierItem>();
-		supplierItems2.add(new RequestListSupplierItem(4L,1L,1000,new Double(4.5)));
-		supplierItems2.add(new RequestListSupplierItem(5L,2L,1000,new Double(4.6)));
-		supplierItems2.add(new RequestListSupplierItem(6L,3L,1000,new Double(4.4)));
+		ScRequestListItem requestListItem2 = new ScRequestListItem(2L,"Item2",1000,"KG");
+		List<ScRequestSupplierItem> supplierItems2 = new ArrayList<ScRequestSupplierItem>();
+		supplierItems2.add(new ScRequestSupplierItem(31L,1L,1000,new Double(4.5)));/*
+		supplierItems2.add(new ScRequestSupplierItem(21L,3L,1000,new Double(4.6)));
+		supplierItems2.add(new ScRequestSupplierItem(33L,3L,1000,new Double(4.4)));*/
 		requestListItem2.setSupplierItems(supplierItems2);
 		requestListItems.add(requestListItem2);
 		
-		recommendRequestListSupplierItems.add(new RequestListSupplierItem(1L,1L,1000,new Double(4.5)));
-		recommendRequestListSupplierItems.add(new RequestListSupplierItem(5L,2L,1000,new Double(4.6)));
+		requestList.setRequestItems(requestListItems);
+		recommendRequestListSupplierItems.add(new ScRequestSupplierItem(1L,1L,1000,new Double(4.5)));
+		recommendRequestListSupplierItems.add(new ScRequestSupplierItem(5L,2L,1000,new Double(4.6)));
 	}
+
+	public ScRequestList getRequestList() {
+		return requestList;
+	}
+
+	public void setRequestList(ScRequestList requestList) {
+		this.requestList = requestList;
+	}
+
+	public ScRequestSupplierItem getSelectedItem() {
+		return selectedItem;
+	}
+
+	public void setSelectedItem(ScRequestSupplierItem selectedItem) {
+		this.selectedItem = selectedItem;
+	}
+
+	public ScPrInquiry getScPrInquiry() {
+		return scPrInquiry;
+	}
+
+	public void setScPrInquiry(ScPrInquiry scPrInquiry) {
+		this.scPrInquiry = scPrInquiry;
+	}
+	
 }

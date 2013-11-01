@@ -1,0 +1,105 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:c="http://java.sun.com/jsp/jstl/core">
+	<p:dialog header="PR Inquiry" widgetVar="prInquiry" modal="true"
+		width="800" height="250">
+		<h:form id="prInquiryform">
+			<div align="right" id="div_globe_11">
+				<p:commandButton value="#{lbl['lbl.ss.submit']}" action="#{directPurchaseBackingBean.savePrInquiry()}"/>
+			</div>
+			<p:panel label="#{lbl['lbl.ss.panel.title.general']}"
+				header="#{lbl['lbl.ss.panel.title.general']}" toggleable="true">
+				<p:panelGrid
+					style="border-style: none; wiwth: 100%; border: 0 solid #FFFFFF !important;">
+					<p:row>
+						<p:column width="25%">
+							<p:outputLabel
+								value="#{lbl['lbl.ss.simple.quote.ministry.code']}" />
+						</p:column>
+						<p:column width="25%">
+							<p:inputText readonly="true" />
+						</p:column>
+						<p:column width="25%">
+							<p:outputLabel value="#{lbl['lbl.ss.simple.quote.department']}" />
+						</p:column>
+						<p:column width="25%">
+							<p:inputText readonly="true" />
+						</p:column>
+					</p:row>
+					<p:row>
+						<p:column>
+							<p:outputLabel value="#{lbl['lbl.ss.simple.quote.devision']}" />
+						</p:column>
+						<p:column>
+							<p:inputText readonly="true" />
+						</p:column>
+						<p:column>
+							<p:outputLabel
+								value="#{lbl['lbl.ss.simple.quote.requisitioner']}" />
+						</p:column>
+						<p:column>
+							<p:inputText readonly="true" />
+						</p:column>
+					</p:row>
+				</p:panelGrid>
+			</p:panel>
+			<p:panel label="#{lbl['lbl.ss.panel.title.detail']}"
+				header="#{lbl['lbl.ss.panel.title.detail']}" toggleable="true">
+				<p:panelGrid
+					style="border-style: none; wiwth: 100%; border: 0 solid #FFFFFF !important;">
+					<p:row>
+						<p:column width="25%">
+							<p:outputLabel
+								value="#{lbl['lbl.ss.item.detail.item.name']}" />
+						</p:column>
+						<p:column width="25%">
+							<p:inputText readonly="true" />
+						</p:column>
+						<p:column width="25%">
+							<p:outputLabel value="#{lbl['lbl.ss.simple.quote.item.product.code']}" />
+						</p:column>
+						<p:column width="25%">
+							<p:inputText readonly="true" />
+						</p:column>
+					</p:row>
+					<p:row>
+						<p:column>
+							<p:outputLabel value="#{lbl['lbl.ss.item.detail.desc']}" />
+						</p:column>
+						<p:column colspan="3">
+							<p:inputTextarea readonly="true" value="#{directPurchaseBackingBean.managedBean.selectedItem.cmSupplierItem.itemDesc}"></p:inputTextarea>
+						</p:column>
+					</p:row>
+					<p:row>
+						<p:column>
+							<p:outputLabel value="#{lbl['lbl.cm.price']}" />
+						</p:column>
+						<p:column colspan="3">
+							<p:inputText readonly="true">
+							</p:inputText>
+						</p:column>
+					</p:row>
+					<p:row>
+						<p:column>
+							<p:outputLabel value="#{lbl['lbl.sc.item.date.deliver']}" />
+						</p:column>
+						<p:column colspan="">
+							<p:calendar value="#{directPurchaseBackingBean.managedBean.scPrInquiry.dateToDeliver}"></p:calendar>
+						</p:column>
+					</p:row>
+					<p:row>
+						<p:column>
+							<p:outputLabel value="#{lbl['lbl.ss.simple.quote.remark']}" />
+						</p:column>
+						<p:column colspan="3">
+							<p:inputTextarea ></p:inputTextarea>
+						</p:column>
+					</p:row>
+				</p:panelGrid>
+			</p:panel>
+		</h:form>
+	</p:dialog>
+</ui:composition>

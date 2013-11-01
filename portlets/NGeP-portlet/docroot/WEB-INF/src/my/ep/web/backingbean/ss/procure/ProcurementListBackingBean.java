@@ -31,7 +31,7 @@ public class ProcurementListBackingBean extends BaseBackingBean<ProcureCodeManag
 		BpmRequestDTO reqDTO = new BpmRequestDTO();
 		reqDTO.setCtxToken(ctx);
 
-		reqDTO.setProcessId("Quotation_Tender.DirectPurchase");
+		reqDTO.setProcessId("Quotation_Tender.DirectPurchaseCreation");
 		reqDTO.setOutcome("");
 		//  PSBudgetDataType obj = new PSBudgetDataType();
 		//  obj.setApprover("Asdqwe");
