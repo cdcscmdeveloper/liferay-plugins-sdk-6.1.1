@@ -90,6 +90,7 @@
 		<portlet id="smAddtionalCatCodes"></portlet>
 		<portlet id="smDeleteCategoryCode"></portlet>
 		<portlet id="smRenewMof"></portlet>
+		<portlet id="smCancelMofReg"></portlet>
 	</category>
 
 	<category name="category.sample">

@@ -422,6 +422,16 @@
 		<header-portlet-css>/css/ep/main.css</header-portlet-css>
 		<css-class-wrapper>Maintenance-portlet</css-class-wrapper>
 	</portlet>
+	<portlet>
+		<portlet-name>smCancelMofReg</portlet-name>
+		<icon>/icon.png</icon>
+		<instanceable>false</instanceable>
+		<header-portlet-css>/css/main.css</header-portlet-css>
+		<footer-portlet-javascript>
+			/js/main.js
+		</footer-portlet-javascript>
+		<css-class-wrapper>smcancelmofreg-portlet</css-class-wrapper>
+	</portlet>
 	<!-- Supplier Management Start venkat -->
 	<portlet>
 		<portlet-name>sm</portlet-name>
@@ -471,7 +481,7 @@
 			smaddtionalcatcodes-portlet
 		</css-class-wrapper>
 	</portlet>
-	
+
 	<portlet>
 		<portlet-name>smDeleteCategoryCode</portlet-name>
 		<icon>/icon.png</icon>
@@ -516,7 +526,7 @@
 		</footer-portlet-javascript>
 		<css-class-wrapper>cataloguetasklist-portlet</css-class-wrapper>
 	</portlet>
-	
+
 	<portlet>
 		<portlet-name>CatalogueMaintenance</portlet-name>
 		<icon>/icon.png</icon>
