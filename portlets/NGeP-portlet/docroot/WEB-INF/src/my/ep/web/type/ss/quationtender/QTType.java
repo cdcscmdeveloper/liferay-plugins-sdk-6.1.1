@@ -17,7 +17,7 @@ public enum QTType implements IEnumType {
 	}
 
 	@Override
-	public Character value() {
+	public Object value() {
 		// TODO Auto-generated method stub
 		return name;
 	}

@@ -11,25 +11,25 @@ import my.ep.type.IEnumType;
  */
 public enum ItemType implements IEnumType{
 
-	PRODUCT('P'),SERVICE('S');
+	PRODUCT(1),SERVICE(2),PRODUCTANDSERVICE(3);
 	
-	private Character item;
+	private Integer item;
 	
-	ItemType(Character ch){
+	ItemType(Integer ch){
 		this.item=ch;
 	}
 
-	public Character getItem() {
+	public Integer getItem() {
 		return item;
 	}
 
-	public void setItem(Character item) {
+	public void setItem(Integer item) {
 		this.item = item;
 	}
 
 	
 	@Override
-	public Object value() {
+	public Integer value() {
 		
 		return item;
 	}

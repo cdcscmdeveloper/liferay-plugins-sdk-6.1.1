@@ -10,18 +10,24 @@ import my.ep.type.IEnumType;
  *
  */
 public enum LineItem implements IEnumType{
-	ALL_LINE_ITEM_ALL_ZONE("ALIAZ"),ALL_LINE_ITEM_CERTAIN_ZONE("ALICZ"),CERTAIN_LINE_ITEM_ALL_ZONE("CLIAZ"),CERTAIN_LINE_ITEM_CERTAIN_ZONE("CLICZ"),
-	ALL_LINE("AL"),CERTAIN_LINE("CL");
+	ALL_LINE_ITEM_ALL_ZONE(1),ALL_LINE_ITEM_CERTAIN_ZONE(2),CERTAIN_LINE_ITEM_ALL_ZONE(3),CERTAIN_LINE_ITEM_CERTAIN_ZONE(4),
+	ALL_LINE(5),CERTAIN_LINE(6);
 
-	private String lineItem;
+	private Integer lineItem;
 	
-	private LineItem(String item) {
+	private LineItem(Integer item) {
 		this.lineItem=item;
 	}
 	@Override
-	public Object value() {
+	public Integer value() {
 		// TODO Auto-generated method stub
 		return lineItem;
+	}
+	public Integer getLineItem() {
+		return lineItem;
+	}
+	public void setLineItem(Integer lineItem) {
+		this.lineItem = lineItem;
 	}
 
 }
