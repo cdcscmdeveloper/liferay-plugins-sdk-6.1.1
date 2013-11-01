@@ -22,9 +22,6 @@ import my.ep.biz.service.pm.authorization.orgunit.IOrgUnitSO;
 import my.ep.biz.service.pm.common.taskactivity.ITaskActivitySO;
 import my.ep.biz.service.pp.budgetallocation.IBudgetAllocationSO;
 import my.ep.biz.service.pp.procurementplan.IProcurementPlanSO;
-import my.ep.bpm.dto.BpmRequestDTO;
-import my.ep.bpm.dto.BpmResponseDTO;
-import my.ep.bpm.service.IBpmSO;
 import my.ep.dto.cm.codification.CodificationReqDTO;
 import my.ep.dto.cm.codification.CodificationResDTO;
 import my.ep.dto.pm.authorization.orgunit.OrgUnitReqDTO;
@@ -34,15 +31,12 @@ import my.ep.dto.pp.budgetallocation.BudgetAllocationReqDTO;
 import my.ep.dto.pp.budgetallocation.BudgetAllocationResDTO;
 import my.ep.dto.pp.procurementplan.ProcurementPlanReqDTO;
 import my.ep.dto.pp.procurementplan.ProcurementPlanResDTO;
-import my.ep.jaxb.pp.plandata.PPPlanDataType;
-import my.ep.persistence.entity.cm.catalog.CmItem;
 import my.ep.persistence.entity.cm.catalog.CmUnspsc;
 import my.ep.persistence.entity.ct.CtContract;
 import my.ep.persistence.entity.ct.circular.CtCircular;
 import my.ep.persistence.entity.pm.authorization.PmBusinessActivity;
 import my.ep.persistence.entity.pm.authorization.PmOrgProfile;
 import my.ep.persistence.entity.pp.PpRemark;
-import my.ep.persistence.entity.pp.budgetallocation.PpBudgetAlloc;
 import my.ep.persistence.entity.pp.budgetallocation.PpBudgetAllocDtl;
 import my.ep.persistence.entity.pp.procurementplan.PpPlan;
 import my.ep.persistence.entity.pp.procurementplan.PpPlanActor;
@@ -51,9 +45,7 @@ import my.ep.persistence.entity.pp.procurementplan.PpPlanMaster;
 import my.ep.persistence.entity.pp.procurementplan.PpQtActivity;
 import my.ep.persistence.logging.LogKey;
 import my.ep.type.aut.SearchOperator;
-import my.ep.util.lookupservice.EpBpmBusinessDelegate;
 import my.ep.web.backingbean.BaseBackingBean;
-import my.ep.web.backingbean.pp.budgetallocation.BudgetAllocationBackingBean;
 import my.ep.web.constant.pp.ProcurementPlanConst;
 import my.ep.web.managedbean.pp.procurementplan.PlanManagedBean;
 import my.ep.web.util.lookupservice.BusinessDelegate;
@@ -71,7 +63,7 @@ public class PlanBackingBean extends BaseBackingBean<PlanManagedBean>{
 	
 	private SearchFilterBean statusFilterBean = new SearchFilterBean(SearchOperator.OPERATOR_EQUALS.value());
 	private SearchFilterBean planNumberFilterBean = new SearchFilterBean(SearchOperator.OPERATOR_LIKE.value());
-	private SearchFilterBean createdDateFilterBean = new SearchFilterBean(SearchOperator.OPERATOR_EQUALS.value());
+	private SearchFilterBean createdDateFilterBean = new SearchFilterBean(SearchOperator.OPERATOR_LIKE.value());
 	
 	/**
 	 * @return the statusFilterBean
@@ -129,21 +121,20 @@ public class PlanBackingBean extends BaseBackingBean<PlanManagedBean>{
 		
 		ISearchBean<PpPlan> searchBean = new SearchBean<PpPlan>();
 		
-		if(statusFilterBean!=null && statusFilterBean.getSearchValue()!=""){
-			log.info("+ statusFilterBean");
+		if(statusFilterBean.getSearchValue()!=null && CommonMethod.isSelected(statusFilterBean.getSearchValue().toString())){
+			log.info("+ statusFilterBean " + statusFilterBean.getSearchValue());
 			statusFilterBean.setSearchField("pmStatus.statusId");
 			searchBean.getDataFilterBeans().add(statusFilterBean);
 		}
 
-		if(planNumberFilterBean!=null && planNumberFilterBean.getSearchValue()!=""){
-			log.info("+ planNumberFilterBean");
+		if(planNumberFilterBean.getSearchValue()!=null && planNumberFilterBean.getSearchValue()!=""){
+			log.info("+ planNumberFilterBean: " + planNumberFilterBean.getSearchValue());
 			planNumberFilterBean.setSearchField("planNo");
 			searchBean.getDataFilterBeans().add(planNumberFilterBean);
 		}
 		
-		if(createdDateFilterBean!=null && createdDateFilterBean.getSearchValue()!=""){
-			log.info("+ createdDateFilterBean");
-			log.debug("+ createdDateFilterBean");
+		if(createdDateFilterBean.getSearchValue()!=null && createdDateFilterBean.getSearchValue()!="" && !"null".equals(createdDateFilterBean.getSearchValue())){
+			log.info("+ createdDateFilterBean: " + createdDateFilterBean.getSearchValue());
 			createdDateFilterBean.setSearchField("createdDate");
 			searchBean.getDataFilterBeans().add(createdDateFilterBean);
 		}
@@ -190,13 +181,35 @@ public class PlanBackingBean extends BaseBackingBean<PlanManagedBean>{
 				this.getManagedBean().setPlanMaster(ppPlan.getPpPlanMaster());
 				this.getManagedBean().setPlan(ppPlan);
 				this.getManagedBean().getPlan().setEditable(false); 
-				System.out.println(">>1org >> " + ppPlan.getPpPlanMaster().getOrgProfileId());
-				System.out.println(">>2org >> " + ppPlan.getPpPlanMaster().getOrgProfile());
+				
+				//initialize task activities
+				List <PmBusinessActivity>taskActivities = initialPmTaskActivities();
+				
+				//initial QT activities list
+				if(this.getManagedBean().getPlan().getAllPpQtActivities()==null){
+					this.getManagedBean().getPlan().setAllPpQtActivities(new ArrayList<PpQtActivity>());
+				}
+				
+				this.getManagedBean().getPlan().setAllPpQtActivities(this.getManagedBean().getPlan().getPpQtActivities());
+							
+				for(PmBusinessActivity task: taskActivities){
+					if(!this.getManagedBean().getPlan().getAllPpQtActivities().contains(task)){
+						PpQtActivity activity = new PpQtActivity();
+						activity.setPmBusinessActivity(task);
+						activity.setBusinessActivityId(task.getBusinessActivityId());
+						this.getManagedBean().getPlan().getAllPpQtActivities().add(activity);
+					}
+				}
+				
+
 				if(ppPlan.getPpPlanMaster().isMtoPlan()){
 					this.getManagedBean().setMtoPlanMaster(ppPlan.getPpPlanMaster().getMtoPlanMaster());
 					PpPlan mtoPlan = ppPlan.getPpPlanMaster().getMtoPlanMaster().getPpPlans().get(0);
 					this.getManagedBean().setMtoPlan(mtoPlan);
 				}
+				
+				
+				
 				//set the default current view obj
 				this.getManagedBean().setSelectedPlanMaster(this.getManagedBean().getPlanMaster());
 				this.getManagedBean().setSelectedPlan(this.getManagedBean().getPlan());
@@ -910,8 +923,8 @@ public class PlanBackingBean extends BaseBackingBean<PlanManagedBean>{
 	 * retrieve division list from PM
 	 * @return division list
 	 */
-	public List<PmOrgProfile> divisionOptions() {
-		log.info("divisionOptions - Start");
+	public List<PmOrgProfile> departmentOptions() {
+		log.info("departmentOptions - Start");
 		List<PmOrgProfile> options = new ArrayList<PmOrgProfile>();
 		
 		if(this.getManagedBean().getSelectedPlanMaster().getOrgProfile()!=null){
@@ -924,7 +937,7 @@ public class PlanBackingBean extends BaseBackingBean<PlanManagedBean>{
 				options = resDTO.getPmOrgProfileByMinistryList();
 	//		}
 		}
-		log.info("divisionOptions - End");
+		log.info("departmentOptions - End");
 		return options;
 	}
 	
@@ -933,8 +946,8 @@ public class PlanBackingBean extends BaseBackingBean<PlanManagedBean>{
 	 * @param divisionId
 	 * @return department list
 	 */
-	public List<PmOrgProfile> departmentOptions(Long divisionId) {
-		log.info("departmentOptions - Start");
+	public List<PmOrgProfile> divisionOptions(Long divisionId) {
+		log.info("divisionOptions - Start");
 		List<PmOrgProfile> options = new ArrayList<PmOrgProfile>();
 
 		if(CommonMethod.isSelected(divisionId)){
@@ -947,7 +960,7 @@ public class PlanBackingBean extends BaseBackingBean<PlanManagedBean>{
 				options = resDTO.getPmorgProfileByParentList();
 	//		}
 		}
-		log.info("departmentOptions - End");
+		log.info("divisionOptions - End");
 		return options;
 	}
 	

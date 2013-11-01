@@ -424,6 +424,7 @@ public class BudgetAllocationBackingBean extends BaseBackingBean<BudgetAllocatio
 			isSuccess = addBudgetAllocation(action);
 		}
 		
+		log.info("completed: " + isSuccess);
 		if(isSuccess){
 			returnPage = redirectToListBudgetAllocation();
 		}
@@ -432,82 +433,6 @@ public class BudgetAllocationBackingBean extends BaseBackingBean<BudgetAllocatio
 		return returnPage;
 	}
 	
-//	/**
-//	 * submit new budget allocation to DB and initial BPM task
-//	 * @param action
-//	 * @return submit result
-//	 */
-//	public boolean submitNewBudgetAlloc(String action){
-//		log.info("submitNewBudgetAlloc - Start");
-//		boolean isSubmitted = false;
-//		try {
-//			PpBudgetAlloc ppBudgetAlloc = saveBudgetAllocation(action);
-////			if(ppBudgetAlloc!=null && ppBudgetAlloc.getBudgetAllocId()>0L){
-////				log.info("calling BPM.......");
-//////				isSubmitted = initialBpmTask(action, ppBudgetAlloc);
-////				IBudgetAllocationSO reqSO = (IBudgetAllocationSO) BusinessDelegate.getInstance().getServiceObject(ProcurementPlanConst.SO_PP, IBudgetAllocationSO.class);
-////				BpmResponseDTO resBpm = reqSO.initialBpmTask(action, ppBudgetAlloc);
-////				isSubmitted = resBpm!=null ? resBpm.isSuccessful() : false;
-////				if(!resBpm.isSuccessful()){
-////					this.getManagedBean().setSystemMsg("BPM Error Message: (" + resBpm.getErrorCode() + ") " + resBpm.getErrorReason());
-////					log.info("BPM Error Message: (" + resBpm.getErrorCode() + ") " + resBpm.getErrorReason());
-////				}
-////			}
-//		} catch (Exception e) {
-//			e.printStackTrace();
-//			this.getManagedBean().setSystemMsg(e.getMessage());
-//		}
-//		log.info("submitNewBudgetAlloc - End");
-//		return isSubmitted;
-//	}
-//	
-//	/**
-//	 * submit update budget allocation to DB and submit BPM task
-//	 * @param action
-//	 * @return submit result
-//	 */
-//	public boolean submitUpdateBudgetAlloc(String action){
-//		log.info("submitUpdateBudgetAlloc - Start");
-//		boolean isSubmitted = false;
-//		try {
-//			PpBudgetAlloc ppBudgetAlloc = saveBudgetAllocation(action);
-////			String taskId = this.getManagedBean().getBpmTaskId();
-////			if(ppBudgetAlloc!=null && CommonMethod.isSelected(taskId)){
-////				System.out.println("call BPM.......");
-//////				isSubmitted = submitBpmTask(taskId, action, ppBudgetAlloc);
-////				IBudgetAllocationSO reqSO = (IBudgetAllocationSO) BusinessDelegate.getInstance().getServiceObject(ProcurementPlanConst.SO_PP, IBudgetAllocationSO.class);
-////				BpmResponseDTO resBpm = reqSO.submitBpmTask(taskId, action, ppBudgetAlloc);
-////				isSubmitted = resBpm!=null ? resBpm.isSuccessful() : false;
-////				if(!resBpm.isSuccessful()){
-////					this.getManagedBean().setSystemMsg("BPM Error Message: (" + resBpm.getErrorCode() + ") " + resBpm.getErrorReason());
-////					log.info("BPM Error Message: (" + resBpm.getErrorCode() + ") " + resBpm.getErrorReason());
-////				}
-////			}
-//		} catch (Exception e) {
-//			e.printStackTrace();
-//			this.getManagedBean().setSystemMsg(e.getMessage());
-//		}
-//		log.info("submitUpdateBudgetAlloc - End");
-//		return isSubmitted;
-//	}
-	
-//	/**
-//	 * Save new/udpate budget allocation to DB
-//	 * @param action
-//	 * @return boolean
-//	 */
-//	public boolean submitBudgetAlloc(String action){
-//		log.info("saveBudgetAllocation - Start");
-//		boolean result = false;
-//		boolean brandNew = this.getManagedBean().getSelectedBudgetAllocation().isBrandNew();
-//		if (!brandNew) {
-//			result = updateBudgetAllocation(action);
-//		} else {
-//			result = addBudgetAllocation(action);
-//		}
-//		log.info("saveBudgetAllocation - End");
-//		return result;
-//	}
 
 	/**
 	 * update budget allocation to DB
@@ -532,8 +457,8 @@ public class BudgetAllocationBackingBean extends BaseBackingBean<BudgetAllocatio
 			reqDTO.setTaskId(this.getManagedBean().getBpmTaskId());
 			reqDTO.setBudgetAllocation(this.getManagedBean().getSelectedBudgetAllocation());
 			reqDTO.setSelectedGoMapper(this.getManagedBean().getSelectedGoMapper());
-			IBudgetAllocationSO reqSO = (IBudgetAllocationSO) BusinessDelegate.getInstance().getServiceObject(ProcurementPlanConst.SO_PP, IBudgetAllocationSO.class);
-			BudgetAllocationResDTO resDTO = reqSO.updateBudgetAllocation(reqDTO);
+			IBudgetAllocationSO budgetSO = (IBudgetAllocationSO) BusinessDelegate.getInstance().getServiceObject(ProcurementPlanConst.SO_PP, IBudgetAllocationSO.class);
+			BudgetAllocationResDTO resDTO = budgetSO.updateBudgetAllocation(reqDTO);
 			
 			result = resDTO.isSuccessful();
 			
