@@ -16,7 +16,7 @@
 		
 		<p:column>
 			<f:facet name="header">
-				<p:outputLabel value="#{lbl['lbl.cm.item.name']}" />
+				#{lbl['lbl.cm.item.name']}
 			</f:facet>
 			
 			#{publish.cmItem.itemName}
@@ -24,27 +24,27 @@
 		</p:column>
 		<p:column>
 			<f:facet name="header">
-				<p:outputLabel value="#{lbl['lbl.cm.price']}" />
+				#{lbl['lbl.cm.price']}
 			</f:facet>
 
 		</p:column>
 		<p:column>
 			<f:facet name="header">
-				<p:outputLabel value="#{lbl['lbl.cm.start.date']}" />
-			</f:facet>
-
-
-		</p:column>
-		<p:column>
-			<f:facet name="header">
-				<p:outputLabel value="#{lbl['lbl.cm.end.date']}" />
+				#{lbl['lbl.cm.start.date']}
 			</f:facet>
 
 
 		</p:column>
 		<p:column>
 			<f:facet name="header">
-				<p:outputLabel value="#{lbl['lbl.cm.action']}" />
+				#{lbl['lbl.cm.end.date']}
+			</f:facet>
+
+
+		</p:column>
+		<p:column>
+			<f:facet name="header">
+				#{lbl['lbl.cm.action']}
 			</f:facet>
 			<p:commandButton
 				action="#{catalogueBackingBean.navigateToPublishedItemDet(rowIndex)}"
