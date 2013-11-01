@@ -688,7 +688,7 @@ public class BudgetAllocationBackingBean extends BaseBackingBean<BudgetAllocatio
 				IOrgProfileSO orgProfileSO = BusinessDelegate.getInstance().getServiceObject("pm", IOrgProfileSO.class);
 				OrgProfileResDTO resDTO = orgProfileSO.retrieveOrgProfileListByOrgType(reqDTO);
 //				if(resDTO.isSuccessful()){
-					profileList = resDTO.getPmorgProfileByParentList();
+					profileList = resDTO.getOrgProfileList();
 //				}
 			}
 		}catch (Exception e){
@@ -718,7 +718,7 @@ public class BudgetAllocationBackingBean extends BaseBackingBean<BudgetAllocatio
 				IOrgProfileSO orgProfileSO = BusinessDelegate.getInstance().getServiceObject("pm", IOrgProfileSO.class);
 				OrgProfileResDTO resDTO = orgProfileSO.retrieveOrgProfileListByOrgType(reqDTO);
 //				if(resDTO.isSuccessful()){
-					profileList = resDTO.getPmorgProfileTypeCodeList();
+					profileList = resDTO.getOrgProfileList();
 //				}
 			}
 		}catch (Exception e){

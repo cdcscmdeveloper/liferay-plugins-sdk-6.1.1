@@ -184,9 +184,9 @@ public class ContractRequestBackingBean extends BaseBackingBean<ContractRequestM
 			resDTO = orgProfileSO.retrieveOrgProfileListByOrgType(orgProfileReqDTO);
 		}
 
-		if(resDTO.getPmorgProfileByParentList() != null && !resDTO.getPmorgProfileByParentList().isEmpty()){
+		if(resDTO.getOrgProfileList() != null && !resDTO.getOrgProfileList().isEmpty()){
 			retrievePTJList.add(new SelectItem("", "- Select One -"));
-			List<PmOrgProfile> listDB = resDTO.getPmorgProfileByParentList();
+			List<PmOrgProfile> listDB = resDTO.getOrgProfileList();
 			for(PmOrgProfile obj : listDB){
 				retrievePTJList.add(new SelectItem(obj.getOrgProfileId(),obj.getOrgName()));
 			}
@@ -203,9 +203,9 @@ public class ContractRequestBackingBean extends BaseBackingBean<ContractRequestM
 		orgProfileReqDTO.setOrgType(OrganizationType.DEPARTMENT.value());
 		
 		OrgProfileResDTO resDTO = orgProfileSO.retrieveOrgProfileListByOrgType(orgProfileReqDTO);
-		if(resDTO.getPmOrgProfileByMinistryList() != null && !resDTO.getPmOrgProfileByMinistryList().isEmpty()){
+		if(resDTO.getOrgProfileList() != null && !resDTO.getOrgProfileList().isEmpty()){
 			retrieveDivisionList.add(new SelectItem("", "- Select One -"));
-			List<PmOrgProfile> listDB = resDTO.getPmOrgProfileByMinistryList();
+			List<PmOrgProfile> listDB = resDTO.getOrgProfileList();
 			for(PmOrgProfile obj : listDB){
 				retrieveDivisionList.add(new SelectItem(obj.getOrgProfileId(),obj.getOrgName()));
 			}

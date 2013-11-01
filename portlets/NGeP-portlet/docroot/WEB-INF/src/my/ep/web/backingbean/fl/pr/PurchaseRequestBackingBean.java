@@ -308,9 +308,9 @@ public class PurchaseRequestBackingBean extends BaseBackingBean<PurchaseRequestM
 			resDTO = orgProfileSO.retrieveOrgProfileListByOrgType(orgProfileReqDTO);
 		}
 		
-		if(resDTO.getPmorgProfileByParentList() != null && !resDTO.getPmorgProfileByParentList().isEmpty()){
+		if(resDTO.getOrgProfileList() != null && !resDTO.getOrgProfileList().isEmpty()){
 			retrievePTJList.add(new SelectItem("", "- Select One -"));
-			List<PmOrgProfile> listDB = resDTO.getPmorgProfileByParentList();
+			List<PmOrgProfile> listDB = resDTO.getOrgProfileList();
 			for(PmOrgProfile obj : listDB){
 				retrievePTJList.add(new SelectItem(obj.getOrgProfileId(),obj.getOrgName()));
 			}
