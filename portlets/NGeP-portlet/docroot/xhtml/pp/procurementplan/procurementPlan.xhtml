@@ -14,7 +14,32 @@ xmlns:tp="http://java.sun.com/jsf/composite/ppComponents/procurementPlan"
 	
 		
     <ui:define name="contentSection">
-    	
+    	<script type="text/javascript">
+   		    /**
+   			 * Disable/enable MTO without refreshing the whole tabs
+   			 */
+   			function updateMtoTab(){
+   			 	var enableTab= $("input[name$='enableMtoFlag']").val();
+   				if(enableTab=='true'){
+	 				tvPlanVar.enable(1);
+	 			}else{
+	 				tvPlanVar.disable(1);
+	 			}
+   				updateDetailTab();
+   		    }
+   		    
+   			/**
+   			 * Disable/enable details tab without refreshing the whole tabs
+   			 */
+   			function updateDetailTab(){
+   			 	var enableTab= $("input[name$='enableDetailFlag']").val();
+   				if(enableTab=='true'){
+   					tvPlanContentVar.enable(1);
+	 			}else{
+	 				tvPlanContentVar.disable(1);
+	 			}
+   		    }
+		</script>
 	
 		<!-- Top Button -->
 		<ui:include src="headerSection.xhtml"/>
@@ -27,7 +52,7 @@ xmlns:tp="http://java.sun.com/jsf/composite/ppComponents/procurementPlan"
 		            selectedPlanMaster="#{planBackingBean.managedBean.planMaster}" 
 		            viewMode="#{planBackingBean.managedBean.viewMode}"/>
 		    </p:tab>
-		    <p:tab id="#{PPConst.currentMto}" title="#{lbl['lbl.pp.plan.title.mto.plan']}" disabled="#{!planBackingBean.managedBean.enableMto}" >
+		    <p:tab id="#{PPConst.currentMto}" title="#{lbl['lbl.pp.plan.title.mto.plan']}" disabled="#{!planBackingBean.managedBean.enableMto}">
 		      	<tp:planContentComponent 
 		            selectedPlan="#{planBackingBean.managedBean.mtoPlan}" 
 		            selectedPlanMaster="#{planBackingBean.managedBean.mtoPlanMaster}" 

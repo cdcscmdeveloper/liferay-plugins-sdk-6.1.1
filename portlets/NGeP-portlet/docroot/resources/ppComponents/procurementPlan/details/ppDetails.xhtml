@@ -28,7 +28,7 @@ xmlns:c="http://java.sun.com/jsp/jstl/core">
 	             #{ppItem.cmUnspsc.unspscTitle}
 	        </p:column>
 	        <p:column headerText="#{lbl['lbl.pp.action']}">  
-                <p:commandLink value="#{lbl['lbl.pp.edit']}" onclick="rmtCall();" />
+                <p:commandLink value="#{lbl['lbl.pp.edit']}" action="#{planBackingBean.showPpItem(ppItem)}" oncomplete="rmtCall();" />
                  &nbsp;&nbsp;
                 <p:commandLink value="#{lbl['lbl.pp.delete']}"
                   	update="dtPpItem" rendered="#{ppItem.brandNew || cc.attrs.viewMode==PPConst.modeRevision}"
@@ -36,8 +36,7 @@ xmlns:c="http://java.sun.com/jsp/jstl/core">
             </p:column>  
     	</p:dataTable>  
     	<br/>
-    	<p:remoteCommand name="rmtCall" update="dlItemDetailsPp" action="#{planBackingBean.showPpItem(ppItem)}"
-               oncomplete="dlItemDetailsPpModal.show()" />
+    	<p:remoteCommand name="rmtCall" update="dlItemDetailsPp"  oncomplete="dlItemDetailsPpModal.show()" />
     	<!-- Button(s) -->
     	<c:if test="#{cc.attrs.viewMode==PPConst.modeNew || cc.attrs.viewMode==PPConst.modeRevision}">
     		<div class="ppRightBtn">
@@ -63,7 +62,7 @@ xmlns:c="http://java.sun.com/jsp/jstl/core">
             </p:column>   
             <p:column headerText="#{lbl['lbl.pp.planned.activities.startdate']}">  
 	             <p:calendar showOn="button" value="#{qtActivity.planStartDate}" pattern="MM/dd/yyyy" 
-	             	disabled="#{!cc.attrs.selectedPlan.brandNew &amp;&amp; !cc.attrs.viewMode==PPConst.modeRevision}">
+	             	disabled="#{!cc.attrs.selectedPlan.brandNew &amp;&amp; cc.attrs.viewMode!=PPConst.modeRevision}">
 	             	<p:ajax event="dateSelect" update="ipEndDate" listener="#{planBackingBean.calculateActEndDate(qtActivity)}"  /> 
 	             	<p:ajax event="change" update="ipEndDate" listener="#{planBackingBean.calculateActEndDate(qtActivity)}"  />
 	             </p:calendar>

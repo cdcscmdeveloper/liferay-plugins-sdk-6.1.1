@@ -52,6 +52,9 @@
 	<c:if test='#{tasklistBackingBean.managedBean.processName eq "Budget Endorsement"}'>
 		<ui:include src="/xhtml/pp/budgetallocation/budgetAllocation.xhtml"></ui:include>
 	</c:if>
+	<c:if test='#{tasklistBackingBean.managedBean.processName eq "Plan Preparation"}'>
+		<ui:include src="/xhtml/pp/procurementplan/procurementPlan.xhtml"></ui:include>
+	</c:if>
 
 
 </ui:composition>

@@ -44,15 +44,15 @@ xmlns:c="http://java.sun.com/jsp/jstl/core">
    						<th>#{lbl['lbl.pp.plan.number']}</th>
    						<td class="ppSmallTd">:</td>
    						<td>
-   							<p:inputText id="txtPlanName" />
+   							<p:inputText value="#{planBackingBean.planNumberFilterBean.searchValue}" />
 						</td>
    						<th>#{lbl['lbl.pp.plan.created.date']}</th>
    						<td class="ppSmallTd">:</td>
    						<td colspan="2">
-   							<p:calendar showOn="button" /> 
+   							<p:calendar showOn="button" pattern="MM/dd/yyyy" value="#{planBackingBean.createdDateFilterBean.searchValue}"/> 
 						</td>
    						<td>
-   							<p:commandButton value="#{lbl['lbl.pp.search']}" id="cbSearchPlanBtn"
+   							<p:commandButton value="#{lbl['lbl.pp.search']}"
 			 					update="dtPlanResult" action="#{planBackingBean.searchPlan()}"   /> 
    						</td>
    					</tr>
@@ -60,8 +60,9 @@ xmlns:c="http://java.sun.com/jsp/jstl/core">
    						<th>#{lbl['lbl.pp.status']}</th>
    						<td class="ppSmallTd">:</td>
    						<td>
-    						<p:selectOneMenu>
-								<f:selectItem itemLabel="#{lbl['lbl.select']}" />
+    						<p:selectOneMenu value="#{planBackingBean.statusFilterBean.searchValue}">
+								<f:selectItem itemLabel="#{lbl['lbl.select']}" itemValue="0"/>
+								<f:selectItem itemLabel="New" itemValue="10005"/>
 							</p:selectOneMenu>
    						</td>
    						<th>&nbsp;</th>
@@ -74,9 +75,11 @@ xmlns:c="http://java.sun.com/jsp/jstl/core">
    			</p:panel>
    			<!-- Result List -->
    			<p:panel header="#{lbl['lbl.pp.result']}"  toggleable="true">
-    			<p:dataTable id="dtPlanResult" styleClass="ppTableFull" var="" value="">
+    			<p:dataTable id="dtPlanResult" styleClass="ppTableFull"  var="ppPlan" 
+					value="#{planBackingBean.managedBean.planList}"  rowIndexVar="rowIndex"
+					emptyMessage="#{lbl['lbl.pp.no.record.found']}">  
 			 		<p:column headerText="#{lbl['lbl.pp.seq']}">  
-                        <p:outputLabel value="" />  
+                       	#{rowIndex+1}
                     </p:column>    
                     <p:column headerText="#{lbl['lbl.pp.details']}">  
                        <p:commandLink id="clPlanDetails" action="#{planBackingBean.redirectToViewPlan()}">  
@@ -84,22 +87,22 @@ xmlns:c="http://java.sun.com/jsp/jstl/core">
 				       </p:commandLink>  
                     </p:column>  
                     <p:column headerText="#{lbl['lbl.pp.procurement.mode']}">  
-                        <p:outputLabel value="" />  
+                		#{ppPlan.ppPlanMaster.procurementMode}
                     </p:column>  
                     <p:column headerText="#{lbl['lbl.pp.plan.description']}">  
-                        <p:outputLabel value="" /> 
+                        #{ppPlan.planDesc}
                     </p:column> 
                     <p:column headerText="#{lbl['lbl.pp.total.estimated.amount']}">  
-                        <p:outputLabel value="" /> 
+                        #{ppPlan.estimatedAmount}
                     </p:column> 
                     <p:column headerText="#{lbl['lbl.pp.status']}">  
-                        <p:outputLabel value="" />
+                        #{ppPlan.statusId}
                     </p:column> 
                     <p:column headerText="#{lbl['lbl.pp.created.by']}">  
-                         <p:outputLabel value="" />
+                        #{ppPlan.createdBy}
                     </p:column>  
                     <p:column headerText="#{lbl['lbl.pp.created.date']}">  
-                         <p:outputLabel value="" />
+                        #{ppPlan.createdDate}
                     </p:column>  
                 </p:dataTable>  
    			</p:panel>
