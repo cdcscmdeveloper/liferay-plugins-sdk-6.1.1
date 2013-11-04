@@ -25,12 +25,19 @@
 			<to-view-id>/xhtml/cm/catalogue/addCatalogView.xhtml</to-view-id>
 			<redirect />
 		</navigation-case>
-		
+
 		<navigation-case>
 			<from-outcome>catalogueMaintenanceFile</from-outcome>
 			<to-view-id>/xhtml/cm/catalogue/catalogMaintenanceFile.xhtml</to-view-id>
 			<redirect />
 		</navigation-case>
+
+		<navigation-case>
+			<from-outcome>taskListView</from-outcome>
+			<to-view-id>/xhtml/tasklist/taskListView.xhtml</to-view-id>
+		</navigation-case>
+
+
 
 
 
