@@ -12,15 +12,17 @@
 
 	<p:outputPanel id="addCatDet">
 
-		<p:commandButton value="#{lbl['lbl.cm.ok']}"
-			action="#{catalogueBackingBean.okToMaintenanceFile()}"></p:commandButton>
-		<p:commandButton value="#{lbl['lbl.cm.cancel']}"
-			action="#{catalogueBackingBean.cancelToMaintenanceFile()}"
-			immediate="true"></p:commandButton>
-		<p:commandButton value="Approve"
-			action="#{reviewCatBackingBean.approveCatalogueItem}"></p:commandButton>
-		<p:commandButton value="Reject"
-			action="#{reviewCatBackingBean.rejectCatalogueItem}"></p:commandButton>
+		<div style="text-align: right;">
+			<p:commandButton value="#{lbl['lbl.cm.ok']}"
+				action="#{catalogueBackingBean.okToMaintenanceFile()}"></p:commandButton>
+			<p:commandButton value="#{lbl['lbl.cm.cancel']}"
+				action="#{catalogueBackingBean.cancelToMaintenanceFile()}"
+				immediate="true"></p:commandButton>
+			<p:commandButton value="Approve"
+				action="#{reviewCatBackingBean.approveCatalogueItem}"></p:commandButton>
+			<p:commandButton value="Reject"
+				action="#{reviewCatBackingBean.rejectCatalogueItem}"></p:commandButton>
+		</div>
 
 		<div style="border-bottom: 1px solid;">
 			<p:outputLabel styleClass="labelCss"
