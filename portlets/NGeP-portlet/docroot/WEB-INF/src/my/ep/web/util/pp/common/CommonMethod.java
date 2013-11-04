@@ -25,10 +25,17 @@ public class CommonMethod {
 	
 	public static PmStatus currentStatus(Long statusId, String docType){
 		//call api to get pm status
-		
 		return new PmStatus();
 	}
 	
+	//temp
+	public static final Map<Long, String> approverMap;
+    static
+    {
+    	approverMap = new HashMap<Long, String>();
+    	approverMap.put(1L, "lailah");
+    	approverMap.put(2L, "khai");
+    }
 
 	public static BigDecimal addBigDecimalNullable(BigDecimal amountOne, BigDecimal amountTwo){
 		BigDecimal amtOne = amountOne!=null ? amountOne : new BigDecimal(0);
@@ -74,14 +81,7 @@ public class CommonMethod {
 		return ResourceBundleUtils.getMessage(name, ResourceBundleUtils.BUNDLE_COMMON_LABELS, new FacesScopes().getUserLocale());
 	}
 
-	//temp
-	public static final Map<Long, String> approverMap;
-    static
-    {
-    	approverMap = new HashMap<Long, String>();
-    	approverMap.put(1L, "lailah");
-    	approverMap.put(2L, "khai");
-    }
+	
     
     public static int getYear(int index){
 		log.info("getYear - Start");

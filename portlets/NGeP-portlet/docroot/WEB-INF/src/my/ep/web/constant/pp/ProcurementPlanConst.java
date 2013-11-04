@@ -12,6 +12,8 @@ public class ProcurementPlanConst {
 	public static final String NAV_TO_LIST_PLAN = "listPlan";
 	public static final String NAV_TO_PLAN_DET = "procurementPlan";
 	
+	public static final String NAV_TO_TASK_LIST = "/xhtml/tasklist/taskListView";
+	
 //	public static final String NAV_TO_REVIEW_PLAN = "reviewPlan";
 //	public static final String NAV_TO_VERIFY_PLAN = "verifyPlan";
 //	public static final String NAV_TO_VIEW_PLAN = "viewPlan";
