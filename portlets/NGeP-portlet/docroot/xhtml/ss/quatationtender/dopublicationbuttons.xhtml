@@ -10,7 +10,7 @@
 	
 	
 <div>
-<p:commandButton value="CLONE" onclick="clonedlg.show();" style="float:right;"></p:commandButton>
+<p:commandButton  action="#{qTDetailBB.clearCloneQT}" value="CLONE" oncomplete="clonedlg.show();" style="float:right;"></p:commandButton>
 <p:button value="CANCEL" style="float:right;margin-right: 12px;"></p:button>
 <p:button value="SUBMIT" style="float:right;margin-right: 12px;"></p:button>
 <p:commandButton value="SAVE" style="float:right;margin-right: 12px;" action="#{qTDetailBB.saveQtDetails}" ajax="false" process="@all"/>
@@ -20,4 +20,5 @@
 
 
 </p:panel>
+<ui:include src="/xhtml/ss/quatationtender/cloneqtntenderscreen.xhtml"></ui:include>
 	</ui:composition>

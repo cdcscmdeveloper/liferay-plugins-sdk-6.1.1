@@ -15,7 +15,7 @@
 							styleClass="noBorders tr,noBorders td">
 							<h:outputText value="* Qtn/Tender Type" />
 							<p:selectOneMenu
-								value="#{searchQtnTenderBB.managedBean.tenderSelction}">
+								value="#{qTDetailBB.managedBean.qt.qtType}">
 								<f:selectItem itemLabel="Select One" itemValue="" />
 								<f:selectItem itemLabel="Open" itemValue="1" />
 								<f:selectItem itemLabel="Bumiputra" itemValue="2" />
@@ -27,20 +27,21 @@
 							</p:selectOneMenu>
 
 						</p:panelGrid>
+						<p:inputText value="#{qTDetailBB.managedBean.qt.qtType}"></p:inputText>
 
 					</p:panel> <h:panelGroup id="parentText">
 						<h:panelGroup
-							rendered="#{searchQtnTenderBB.managedBean.tenderSelction eq '1' or searchQtnTenderBB.managedBean.tenderSelction eq '2'}">
+							rendered="#{qTDetailBB.managedBean.qt.qtType == '1' or qTDetailBB.managedBean.qt.qtType == '2'}">
 							<ui:include src="/xhtml/ss/quatationtender/nrmqtntender.xhtml" />
 						</h:panelGroup>
 						<h:panelGroup
-							rendered="#{searchQtnTenderBB.managedBean.tenderSelction eq '3' }">
+							rendered="#{qTDetailBB.managedBean.qt.qtType == '3' }">
 
 							<ui:include src="/xhtml/ss/quatationtender/panelqtntender.xhtml" />
 						</h:panelGroup>
 
 						<h:panelGroup
-							rendered="#{searchQtnTenderBB.managedBean.tenderSelction eq '4' }">
+							rendered="#{qTDetailBB.managedBean.qt.qtType eq '4' }">
 							<ui:include src="/xhtml/ss/quatationtender/restictedtender.xhtml" />
 						</h:panelGroup>
 

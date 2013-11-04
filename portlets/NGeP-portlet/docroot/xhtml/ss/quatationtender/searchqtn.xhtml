@@ -16,16 +16,18 @@
 			<p:inputText id="qtnno" value="#{qTDetailBB.managedBean.qt.qtNo}" />
 
 			<h:outputText value="#{lbl['lbl.so.procmode']}" />
-			  <p:selectOneMenu  value="#{qTDetailBB.managedBean.qt.procurementMode}" >  
-             <f:selectItems value="#{qTDetailBB.managedBean.procurementModeItems}" />
-        </p:selectOneMenu>  
+			<p:selectOneMenu value="#{qTDetailBB.managedBean.qt.procurementMode}">
+				<f:selectItems
+					value="#{qTDetailBB.managedBean.procurementModeItems}" />
+			</p:selectOneMenu>
 
 			<h:outputText value="#{lbl['lbl.so.creatdtfrom']}" />
-			<p:calendar value="#{qTDetailBB.managedBean.qt.createDateFrom}" 
+			<p:calendar value="#{qTDetailBB.managedBean.qt.createDateFrom}"
 				id="crdateFrm" showOn="button" />
 
 			<h:outputText value="#{lbl['lbl.so.creatdtto']}" />
-			<p:calendar value="#{qTDetailBB.managedBean.qt.createdDateTo}" id="crdateTo" showOn="button" />
+			<p:calendar value="#{qTDetailBB.managedBean.qt.createdDateTo}"
+				id="crdateTo" showOn="button" />
 
 			<h:outputText value="#{lbl['lbl.so.pbldtfrom']}" />
 			<p:calendar value="#{qTDetailBB.managedBean.qt.pubDateFrom}"
@@ -56,7 +58,8 @@
 		</p:panelGrid>
 
 		<p:commandButton value="#{lbl['lbl.so.searchbtn']}"
-			style="float:right;" actionListener="#{qTDetailBB.searchQT()}" update="searchQTs">
+			style="float:right;" action="#{qTDetailBB.searchQT}"
+			update="searchQTs">
 
 
 		</p:commandButton>
@@ -71,14 +74,14 @@
 	<p:panel header="Qtn/Tender List" toggleable="true">
 		<h:panelGroup id="table-wrapper" style="width:100%;">
 			<p:dataTable id="searchQTs" value="#{qTDetailBB.managedBean.qtList}"
-				var="tenders" resizableColumns="true" rowIndexVar="sno">
+				var="tenders" resizableColumns="true" rowIndexVar="index">
 
 				<p:column headerText="#{lbl['lbl.so.no']}">
-					<h:outputText value="#{sno + 1}" />
+					<h:outputText value="#{index + 1}" />
 				</p:column>
 
 				<p:column headerText="Qtn/Tender No">
-					<p:commandLink actionListener="#{pprBean.savePerson}"
+					<p:commandLink action="#{qTDetailBB.showMaintanceQT(tenders.qtId)}"
 						style="margin-right:20px;" ajax="false">
 						<h:outputText value="#{tenders.qtNo}" />
 					</p:commandLink>
