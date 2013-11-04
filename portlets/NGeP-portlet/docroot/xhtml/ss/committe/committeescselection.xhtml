@@ -6,12 +6,15 @@
 	xmlns:c="http://java.sun.com/jsp/jstl/core">
 
   <p:panel header="Committee Details" toggleable="true">
-   <h:panelGrid columns="4" style="width:100%;" cellpadding="3">
+   <h:panelGrid columns="4" style="width:100%;" cellpadding="3" id="committecheckbox" 
+       rendered="#{searchQtnTenderBB.managedBean.tenderSelction eq '3' 
+    	         or searchQtnTenderBB.managedBean.tenderSelction eq '4'
+    	         or searchQtnTenderBB.managedBean.tenderSelction eq '5'}">
    
         <h:outputText value="" />  
         <p:selectManyCheckbox>  
-            <f:selectItem itemLabel="Committee to TEC/FEC" itemValue="Option 1" />  
-            <f:selectItem itemLabel="Change Committee to EC" itemValue="Option 2" />  
+            <f:selectItem itemLabel="&#160;Committee to TEC/FEC" itemValue="Option 1" />  
+            <f:selectItem itemLabel="&#160;Change Committee to EC" itemValue="Option 2" />  
         </p:selectManyCheckbox> 
           
    </h:panelGrid>     
@@ -34,10 +37,11 @@
              
         </p:column>  
   
-        <p:column headerText="IC" >  
+        <p:column headerText="IC No" >  
             <p:outputLabel value="#{committets.icPassport}"></p:outputLabel>  
         </p:column>  
-         <p:column headerText="Passport No." >  
+        
+         <p:column headerText="Passport No" >  
             <p:outputLabel value="#{committets.icPassport}"></p:outputLabel>  
          </p:column>  
         
@@ -85,11 +89,14 @@
   </p:panel>
 
 
-  <p:panel header="Approval Details" toggleable="true">
+  <p:panel header="Approval Details" toggleable="true" id="approvaldetails"
+    rendered="#{searchQtnTenderBB.managedBean.tenderSelction eq '2' or searchQtnTenderBB.managedBean.tenderSelction eq '3' 
+    or searchQtnTenderBB.managedBean.tenderSelction eq '4' or searchQtnTenderBB.managedBean.tenderSelction eq '4' 
+    or searchQtnTenderBB.managedBean.tenderSelction eq '5' or searchQtnTenderBB.managedBean.tenderSelction eq '7'}">
   <br/>
 
   		<h:panelGrid columns="4" style="margin-bottom:10px;width:100%;" cellpadding="3"> 		
-        <h:outputText style="bold" value="Approver Name:&#160; &#160; &#160; " />  
+        <h:outputText style="bold" value="Approver Name: " />  
         <p:selectOneMenu value="#{CommitteBackingBean.managedBean.pmUser}" style="width: 120px;">  
             <f:selectItem itemLabel="" itemValue="" />  
             <f:selectItem itemLabel="" itemValue="1" />  
@@ -97,20 +104,19 @@
             <f:selectItem itemLabel="" itemValue="3" />  
         </p:selectOneMenu>  
               
-        <h:outputText style="bold" value="Approval Date:&#160; &#160; &#160; " />  
-           <p:inputText value="#{CommitteBackingBean.managedBean.approvalDate}" readonly="true"></p:inputText>
+        <h:outputText style="bold" value="Approver Date: " />  
+           <p:inputText value="#{CommitteBackingBean.managedBean.approvalDate}" readonly="true"></p:inputText> 
            
-        <h:outputText style="bold" value="Approver Action:&#160; &#160; &#160; " />  
-        <p:selectOneMenu value="#{CommitteBackingBean.managedBean.approvalStatus}" style="width: 120px;">  
+        <h:outputText style="bold" value="Approver Action: " />  
+        <p:selectOneMenu value="#{CommitteBackingBean.managedBean.approverAction}" style="width: 120px;">  
             <f:selectItem itemLabel="" itemValue="" />  
             <f:selectItem itemLabel="" itemValue="1" />  
-            <f:selectItem itemLabel="" itemValue="2" />   
-        </p:selectOneMenu>
-        
-        <h:outputText style="bold" value="Approval Remarks:&#160; &#160; &#160; " />  
-           <p:inputText id="appRemark" required="true" label="remarks"  
-                    value="#{CommitteBackingBean.managedBean.approvalRemark}" readonly="true" >  
-           </p:inputText>                    
+            <f:selectItem itemLabel="" itemValue="2" />  
+            <f:selectItem itemLabel="" itemValue="3" />  
+        </p:selectOneMenu>              
+     
+        <h:outputText style="bold" value="Approval Remarks: " />  
+           <p:inputText id="appRemark" value="#{CommitteBackingBean.managedBean.approvalRemark}" readonly="true" ></p:inputText>                    
            
         </h:panelGrid>          
   </p:panel>

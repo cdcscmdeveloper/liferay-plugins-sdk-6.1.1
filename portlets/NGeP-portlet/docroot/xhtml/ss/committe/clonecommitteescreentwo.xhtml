@@ -9,10 +9,10 @@
 	<p:dialog id="Clone2" header="Clone XXXX" widgetVar="screen4" modal="true" appendToBody="true">
 		<p:panel header="Search Qtn/Tender" toggleable="true">
 
-			<p:panelGrid columns="4" style="width:46%;" styleClass="noBorders tr,noBorders td">
+			<p:panelGrid columns="4" style="width:245%;" styleClass="noBorders tr,noBorders td">
 				
 				<h:outputText value="Title"></h:outputText>
-            	 <p:inputText value=""  size="80"/>
+            	 <p:inputText size="80"/>
             	 
             </p:panelGrid>
     
@@ -55,13 +55,13 @@
                   <p:ajax event="rowEditCancel" /> 
 
 					<p:column headerText="No" style="width:5px">
-					  <p:outputLabel value="#{committeclonetwo.memberId}" />
+					  <p:outputLabel value="#{committesearch.qtNo}" />
 					</p:column>
 
 					<p:column headerText="Title" style="width:15px;">
 				      <p:cellEditor>  
                        <f:facet name="output">  
-                        <h:outputText value="#{committeclonetwo.title}" />
+                        <h:outputText value="#{committesearch.qtTitle}" />
                      </f:facet>  
                       <f:facet name="input">  
                        <p:inputText value=""/>  
@@ -70,13 +70,13 @@
 					</p:column>
 
 					<p:column headerText="Date Created" style="width:5px">  
-                        <h:outputText value="#{committeclonetwo.dateCreated}" />  
+                        <h:outputText value="#{committesearch.dateCreated}" />  
                     </p:column>
-                                                             
-                    <p:column style="width:5px">  
-                        <p:rowEditor />  
-                     </p:column>  
-            
+                    
+					<p:column headerText="Action" style="width:2px">  
+                       <p:commandButton id="selectButton" update=":form:display" value ="Clone" title="View" />   
+                    </p:column>                    
+                                                           
 		       </p:dataTable>	
 			</h:panelGroup>	
 		</p:panel>
@@ -86,7 +86,7 @@
 		   <h:panelGroup style="width:100%;">
 				<p:dataTable value="#{CommitteBackingBean.managedBean.supplierItemList}" var="committeresult" editable="true" >
 
-					<p:column>
+					<p:column selectionMode="multiple">
 					   <p:selectBooleanCheckbox />
 					</p:column>
 

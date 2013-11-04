@@ -18,28 +18,25 @@
                      <f:selectItem itemLabel="Existing List" itemValue="2" />  
                      <f:selectItem itemLabel="New" itemValue="3" />  
                   </p:selectOneRadio>  
+                  
+				<h:outputLabel value="* Type of User  " />
+				  <p:selectOneRadio value="#{CommitteBackingBean.managedBean.supplierItemList}">  
+                     <f:selectItem itemLabel="Government User" itemValue="1" />  
+                     <f:selectItem itemLabel="Non Government User" itemValue="2" />  
+                  </p:selectOneRadio>  
+                                   
 </p:panelGrid>
 
-
-     
-     <p:panelGrid columns="2" styleClass="noBorders tr,noBorders td">
- 		    	<h:outputLabel value="*Name " />
+ <p:panelGrid columns="4" styleClass="noBorders tr,noBorders td">
+ 
+  		    	<h:outputLabel value="* Name " />
 				 <p:selectOneMenu value="#{CommitteBackingBean.managedBean.memberName}" > 
 	            	<f:selectItem itemLabel="" itemValue="1" />   
 	           		<f:selectItem itemLabel="" itemValue="2" />
 	                <f:selectItem itemLabel="" itemValue="3" />
 	             </p:selectOneMenu>
-				
-				<h:outputLabel value="Type of User  " />
-				  <p:selectOneRadio value="#{CommitteBackingBean.managedBean.supplierItemList}">  
-                     <f:selectItem itemLabel="Government User" itemValue="1" />  
-                     <f:selectItem itemLabel="Non Government User" itemValue="2" />  
-                  </p:selectOneRadio>  
-</p:panelGrid>
-
- <p:panelGrid columns="4" styleClass="noBorders tr,noBorders td">
  
- 		    	<h:outputLabel for="identification" value="Identification Type " />
+ 		    	<h:outputLabel for="identification" value="* Identification Type " />
 				 <p:selectOneMenu value="#{CommitteBackingBean.managedBean.icPassportType}" > 
 	            	<f:selectItem itemLabel="" itemValue="1" />   
 	           		<f:selectItem itemLabel="" itemValue="2" />

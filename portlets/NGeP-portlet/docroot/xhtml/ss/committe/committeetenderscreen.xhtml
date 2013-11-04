@@ -6,13 +6,13 @@
 	xmlns:c="http://java.sun.com/jsp/jstl/core">
 
 
-	<p:dialog id="POP" header="View Quotation/Tender List" widgetVar="screen5" modal="true"> 
+	<p:dialog id="POP" header="Search Qtn/Tender" widgetVar="screen5" modal="true"> 
 	<p:panel>
 		<p:panelGrid style="width:100%;" styleClass="noBorders tr,noBorders td" ></p:panelGrid>
     </p:panel>
     
     <p:panel>
-    <p:commandLink value="Search Quotation/Tender" />
+    <p:commandLink value="View Qtn/Tender" />
     <br/>
 		   <h:panelGroup  style="width:100%;">
 				<p:dataTable value="#{CommitteBackingBean.managedBean.supplierItemList}" var="searchquo" editable="true">
