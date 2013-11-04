@@ -16,11 +16,9 @@ import my.ep.web.managedbean.BaseManagedBean;
 import my.ep.web.vo.AdvanceSearchVO;
 import my.ep.web.vo.PricingVO;
 
-@ManagedBean(name = "catalogueMB")
+@ManagedBean(name = "documentSearchMB")
 @SessionScoped
 public class FlDocumentManagedBean extends BaseManagedBean {
-
-
 
 	/**
 	 * 
@@ -68,10 +66,25 @@ public class FlDocumentManagedBean extends BaseManagedBean {
 	private CmSupplierItem[] selectedApprovedItems;
 	private CmSupplierItem[] selectedPublishedItems;
 	
+	private String tempLoginId;
+	private String tempDocType;
 	
-	
-	
+	/**
+	 * @return the tempLoginId
+	 */
+	public String getTempLoginId() {
+		return tempLoginId;
+	}
 
+	/**
+	 * @param tempLoginId the tempLoginId to set
+	 */
+	public void setTempLoginId(String tempLoginId) {
+		this.tempLoginId = tempLoginId;
+	}
+
+	private FlFulfilmentRequest fulfilmentRequest=new FlFulfilmentRequest();
+	
 	public CmSupplierItem[] getSelectedRejectedItems() {
 		return selectedRejectedItems;
 	}
@@ -204,6 +217,20 @@ public class FlDocumentManagedBean extends BaseManagedBean {
 
 	public CmSupplierItem[] getSelectedMaintainItems() {
 		return selectedMaintainItems;
+	}
+
+	/**
+	 * @return the fulfilmentRequest
+	 */
+	public FlFulfilmentRequest getFulfilmentRequest() {
+		return fulfilmentRequest;
+	}
+
+	/**
+	 * @param fulfilmentRequest the fulfilmentRequest to set
+	 */
+	public void setFulfilmentRequest(FlFulfilmentRequest fulfilmentRequest) {
+		this.fulfilmentRequest = fulfilmentRequest;
 	}
 
 	public void setSelectedMaintainItems(CmSupplierItem[] selectedMaintainItems) {
@@ -379,6 +406,20 @@ public class FlDocumentManagedBean extends BaseManagedBean {
 	 */
 	public void setDocumentItemList(List<FlFulfilmentRequest> documentItemList) {
 		this.documentItemList = documentItemList;
+	}
+
+	/**
+	 * @return the tempDocType
+	 */
+	public String getTempDocType() {
+		return tempDocType;
+	}
+
+	/**
+	 * @param tempDocType the tempDocType to set
+	 */
+	public void setTempDocType(String tempDocType) {
+		this.tempDocType = tempDocType;
 	}
 	
 }
