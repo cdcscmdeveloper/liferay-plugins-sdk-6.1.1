@@ -2,9 +2,11 @@ package my.ep.web.backingbean.cm.codification;
 
 import java.io.FileInputStream;
 
+import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.RequestScoped;
 import javax.faces.context.FacesContext;
+import javax.faces.context.Flash;
 import javax.servlet.http.HttpServletRequest;
 
 import my.ep.biz.service.cm.codification.ICodificationSO;
@@ -53,7 +55,7 @@ public class UnspscCodeBackingBean extends BaseBackingBean<UnspscCodeManagedBean
 
 	}
 
-	public void submitForRequest(){
+	public String submitForRequest(){
 
 		ICodificationSO unspscSO = (ICodificationSO) BusinessDelegate.getInstance().getServiceObject("cm",ICodificationSO.class);
 		TaskListBackingBean taskListBB = new TaskListBackingBean();
@@ -66,11 +68,26 @@ public class UnspscCodeBackingBean extends BaseBackingBean<UnspscCodeManagedBean
 		if(this.getManagedBean().getRequestCode().isBrandNew()){
 			resDTO = unspscSO.addCodificationRequest(reqDTO);
 			//BpmResponseDTO responseDTO = initiateTask(resDTO.getRequestCode());
+			
+			FacesContext facesContext = FacesContext.getCurrentInstance();
+			Flash flash = facesContext.getExternalContext().getFlash();
+			flash.setKeepMessages(true);
+			flash.setRedirect(true);
+			facesContext.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO,"Successfully", ""));
+			
 		}else{
 			log.info("***update***");
 			resDTO = unspscSO.updateCodificationRequest(reqDTO);
 			//BpmResponseDTO responseDTO = updateTask(resDTO.getRequestCode(),taskListBB.getManagedBean().getTaskId() );
+			
+			FacesContext facesContext = FacesContext.getCurrentInstance();
+			Flash flash = facesContext.getExternalContext().getFlash();
+			flash.setKeepMessages(true);
+			flash.setRedirect(true);
+			facesContext.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO,"Successfully", ""));
 		}
+		
+		return "../tasklist/taskListView.xhtml";
 
 
 	}
