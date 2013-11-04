@@ -13,6 +13,7 @@ import my.ep.biz.service.fl.request.IFulfilmentRequestSO;
 import my.ep.biz.service.fl.request.IShippingInstructionSO;
 import my.ep.biz.service.pm.authorization.orgprofile.IOrgProfileSO;
 import my.ep.biz.service.pp.budgetallocation.IBudgetAllocationSO;
+import my.ep.biz.service.pp.procurementplan.IProcurementPlanSO;
 import my.ep.bpm.dto.BpmRequestDTO;
 import my.ep.bpm.dto.BpmResponseDTO;
 import my.ep.bpm.service.IBpmSO;
@@ -26,10 +27,13 @@ import my.ep.dto.pm.authorization.orgprofile.OrgProfileReqDTO;
 import my.ep.dto.pm.authorization.orgprofile.OrgProfileResDTO;
 import my.ep.dto.pp.budgetallocation.BudgetAllocationReqDTO;
 import my.ep.dto.pp.budgetallocation.BudgetAllocationResDTO;
+import my.ep.dto.pp.procurementplan.ProcurementPlanReqDTO;
+import my.ep.dto.pp.procurementplan.ProcurementPlanResDTO;
 import my.ep.jaxb.cd.requestdata.CDRequestDataType;
 import my.ep.jaxb.fl.codata.FLContractOrderDataType;
 import my.ep.jaxb.fl.podata.FLPurchaseOrderDataType;
 import my.ep.jaxb.pp.budgetdata.PPBudgetDataType;
+import my.ep.jaxb.pp.plandata.PPPlanDataType;
 import my.ep.persistence.entity.fl.request.FlDeliveryAddress;
 import my.ep.persistence.entity.fl.request.FlFulfilmentRequest;
 import my.ep.persistence.entity.pm.authorization.PmOrgProfile;
@@ -41,6 +45,7 @@ import my.ep.web.backingbean.fl.createcontract.ContractRequestBackingBean;
 import my.ep.web.backingbean.fl.frn.CreateFRNBackingBean;
 import my.ep.web.backingbean.fl.pr.PurchaseRequestBackingBean;
 import my.ep.web.backingbean.pp.budgetallocation.BudgetAllocationBackingBean;
+import my.ep.web.backingbean.pp.procurementplan.PlanBackingBean;
 import my.ep.web.constant.PagingConst;
 import my.ep.web.managedbean.bpm.tasklist.TaskListManagedBean;
 import my.ep.web.util.lookupservice.BusinessDelegate;
@@ -291,20 +296,33 @@ public class TaskListBackingBean extends BaseBackingBean<TaskListManagedBean>{
 			
 		}else if(res.getProcessName().equalsIgnoreCase("Budget Endorsement")){
 
-				//Procurement Plan
-				PPBudgetDataType budgetObj = (PPBudgetDataType)obj;
-				
-				BudgetAllocationReqDTO budgetReqDTO = new BudgetAllocationReqDTO();
-				budgetReqDTO.setBudgetAllocId(Long.parseLong(budgetObj.getBudgetId()));
-				IBudgetAllocationSO budgetSO = (IBudgetAllocationSO) BusinessDelegate.getInstance().getServiceObject("pp", IBudgetAllocationSO.class);
-				BudgetAllocationResDTO budgetResSO = budgetSO.retrieveBudgetAllocation(budgetReqDTO);
+			//Procurement Plan - Budget
+			PPBudgetDataType budgetObj = (PPBudgetDataType)obj;
+			
+			BudgetAllocationReqDTO budgetReqDTO = new BudgetAllocationReqDTO();
+			budgetReqDTO.setBudgetAllocId(Long.parseLong(budgetObj.getBudgetId()));
+			IBudgetAllocationSO budgetSO = (IBudgetAllocationSO) BusinessDelegate.getInstance().getServiceObject("pp", IBudgetAllocationSO.class);
+			BudgetAllocationResDTO budgetResSO = budgetSO.retrieveBudgetAllocation(budgetReqDTO);
 
-				BudgetAllocationBackingBean budgetBB = new BudgetAllocationBackingBean();
-				budgetBB.getManagedBean().setBpmTaskId(taskId);
-				budgetBB.getManagedBean().setActions(res.getAction());
-				budgetBB.loadTask(budgetResSO.getBudgetAlloc(), res.getTaskName());
+			BudgetAllocationBackingBean budgetBB = new BudgetAllocationBackingBean();
+			budgetBB.getManagedBean().setBpmTaskId(taskId);
+			budgetBB.getManagedBean().setActions(res.getAction());
+			budgetBB.loadTask(budgetResSO.getBudgetAlloc(), res.getTaskName());
 
 			
+		}else if(res.getProcessName().equalsIgnoreCase("Plan Preparation")){
+			//Procurement Plan - Plan
+			PPPlanDataType planObj = (PPPlanDataType)obj;
+			
+			ProcurementPlanReqDTO planReqDTO = new ProcurementPlanReqDTO();
+			planReqDTO.setPlanId(Long.parseLong(planObj.getPlanId()));
+			IProcurementPlanSO planSO = (IProcurementPlanSO) BusinessDelegate.getInstance().getServiceObject("pp", IProcurementPlanSO.class);
+			ProcurementPlanResDTO planResDTO = planSO.retrievePlanById(planReqDTO);
+
+			PlanBackingBean planBB = new PlanBackingBean();
+			planBB.getManagedBean().setBpmTaskId(taskId);
+			planBB.getManagedBean().setActions(res.getAction());
+			planBB.loadTask(planResDTO.getPlan(), res.getTaskName());
 		}
 
 
