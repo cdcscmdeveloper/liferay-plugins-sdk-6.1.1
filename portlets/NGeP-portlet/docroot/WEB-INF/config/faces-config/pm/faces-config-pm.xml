@@ -12,4 +12,11 @@
 		  <managed-bean-class>my.ep.constant.pm.PmCodeCategoryConst</managed-bean-class>
 		  <managed-bean-scope>application</managed-bean-scope>
  	</managed-bean>
+ 	
+	<managed-bean>
+		  <description>Profile Management Code Constants</description>
+		  <managed-bean-name>PmCodeConst</managed-bean-name>
+		  <managed-bean-class>my.ep.constant.pm.PmCodeConst</managed-bean-class>
+		  <managed-bean-scope>application</managed-bean-scope>
+ 	</managed-bean> 	
 </faces-config>

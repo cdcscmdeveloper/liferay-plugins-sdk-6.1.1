@@ -1,0 +1,131 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:ac="http://ac.my/jsf/composite/cc"
+	xmlns:p="http://primefaces.org/ui">
+
+		<script>
+			$(document).ready(function() {
+				updateColspan = function() {
+					$(".colspan2").attr('colspan', 2);
+					$(".colspan3").attr('colspan', 3);
+					$(".colspan4").attr('colspan', 4);
+					$(".colspan5").attr('colspan', 5);
+					$(".colspan6").attr('colspan', 6);
+					$(".colspan7").attr('colspan', 7);
+				};
+				updateColspan();
+			});
+		</script>
+		
+		<p:panel id="spg" header="Specification Content" toggleable="true">
+			<p:commandButton value="Re-Numbering" action="#{templateSpecBackingBean.renumberingQuestionTable}"
+				process="@this spg" update="spg" />
+			<p:dataTable id="questionTbl" var="question" rowIndexVar="row"
+				value="#{templateSpecBackingBean.managedBean.specMaster.tplSpecQuestions}">
+				<p:column style="#{(question.questionType == TplSpecConst.questionTypeHeader) ? 'background-color:#dddddd;' : ''}" >
+					<h:outputLabel value="Numbering" style="float: left" rendered="#{question.questionType == TplSpecConst.questionTypeHeader}" />
+					<p:inputText style="min-width:0px !important" size="5" value="#{question.questionNumber}" rendered="#{question.questionType != TplSpecConst.questionTypeHeader}" />
+				</p:column>
+				<p:column style="#{(question.questionType == TplSpecConst.questionTypeHeader) ? 'background-color:#dddddd;' : ''}" 
+					colspan="#{(question.questionType == TplSpecConst.questionTypeSection) ? 6 : 1}" styleClass="colspan#{(question.questionType == TplSpecConst.questionTypeSection) ? 6 : 1}" >
+					<h:outputLabel value="Item" style="float: left" rendered="#{question.questionType == TplSpecConst.questionTypeHeader}" />	
+					<p:inputText value="#{question.clItem}" rendered="#{question.questionType != TplSpecConst.questionTypeHeader}" />
+				</p:column>
+				<p:column style="#{(question.questionType == TplSpecConst.questionTypeHeader) ? 'background-color:#dddddd;' : ''}" 
+					rendered="#{question.questionType != TplSpecConst.questionTypeSection}">
+					<h:outputLabel value="Specification" style="float: left" rendered="#{question.questionType == TplSpecConst.questionTypeHeader}" />
+					<p:inputText value="#{question.clSpecDetail}" rendered="#{question.questionType != TplSpecConst.questionTypeHeader}" />
+				</p:column>
+				<p:column style="#{(question.questionType == TplSpecConst.questionTypeHeader) ? 'background-color:#dddddd;' : ''}"
+					rendered="#{question.questionType != TplSpecConst.questionTypeSection}">
+					<h:outputLabel value="Uom" style="float: left" rendered="#{question.questionType == TplSpecConst.questionTypeHeader}" />
+					<p:selectOneMenu style="width:100px;" value="#{question.clUom.uomId}" rendered="#{question.questionType != TplSpecConst.questionTypeHeader}">
+						<f:selectItems value="#{templateSpecBackingBean.uomList}" />
+					</p:selectOneMenu>
+				</p:column>
+				<p:column style="#{(question.questionType == TplSpecConst.questionTypeHeader) ? 'background-color:#dddddd;' : ''}"
+					rendered="#{question.questionType != TplSpecConst.questionTypeSection}">
+					<h:outputLabel value="Quantity" rendered="#{question.questionType == TplSpecConst.questionTypeHeader}" />
+					<p:inputText style="min-width:0px !important" size="6" dir="rtl" value="#{question.clQuantity}" 
+						rendered="#{question.questionType != TplSpecConst.questionTypeHeader}" />
+				</p:column>
+				<p:column style="#{(question.questionType == TplSpecConst.questionTypeHeader) ? 'background-color:#dddddd;' : ''}"
+					rendered="#{question.questionType != TplSpecConst.questionTypeSection}">
+					<h:outputLabel value="Mandatory" rendered="#{question.questionType == TplSpecConst.questionTypeHeader}" />
+					<p:selectBooleanCheckbox value="#{question.clAnswerRequired}" rendered="#{question.questionType != TplSpecConst.questionTypeHeader}" />
+				</p:column>
+				<p:column style="#{(question.questionType == TplSpecConst.questionTypeHeader) ? 'background-color:#dddddd;' : ''}"
+					rendered="#{question.questionType != TplSpecConst.questionTypeSection}">
+					<h:outputLabel value="Answer" style="float: left" rendered="#{question.questionType == TplSpecConst.questionTypeHeader}" />
+					<p:selectOneMenu id="answerTypeId" style="width:100px;" rendered="#{question.questionType != TplSpecConst.questionTypeHeader}"
+						value="#{question.answerTypeCode.codeId}" >
+						<f:selectItems value="#{templateSpecBackingBean.getDropdownValues(PmCodeCatConst.answerType)}" />
+						<p:ajax event="change" listener="#{templateSpecBackingBean.answerTypeChange(row)}" update="scoringBtn" />
+					</p:selectOneMenu>			
+					<p:commandButton id="scoringBtn" image="add" style="float:right" 
+						rendered="#{(question.questionType != TplSpecConst.questionTypeHeader)}"
+						disabled="#{(question.answerTypeCode.code == PmCodeConst.answerTypeText)}" 
+						action="#{templateSpecBackingBean.setIndex(row)}" oncomplete="scoringSetting.show();" />
+				</p:column>	
+				<p:column style="#{(question.questionType == TplSpecConst.questionTypeHeader) ? 'background-color:#dddddd;' : ''}">
+					<p:menuButton value="Add" >
+			            <p:menuitem value="Section" action="#{templateSpecBackingBean.addQuestion(row,TplSpecConst.questionTypeSection)}"  
+			            	update="questionTbl" process="@form" oncomplete="updateColspan()">
+			            </p:menuitem>
+			            <p:menuitem value="Question" action="#{templateSpecBackingBean.addQuestion(row,TplSpecConst.questionTypeLineItem)}" 
+			             	update="questionTbl" process="@form" oncomplete="updateColspan()">
+			            </p:menuitem>
+			     	</p:menuButton>
+			     	<p:commandButton icon="remove" rendered="#{question.questionType != TplSpecConst.questionTypeHeader}" process="@form"
+			     		action="#{templateSpecBackingBean.setIndex(row)}" oncomplete="pp2.show();" />
+				</p:column>										
+			</p:dataTable>
+		</p:panel>
+
+		<p:dialog header="Delete Confirmation" widgetVar="pp2" showEffect="fade" hideEffect="fade"
+			 modal="true" height="100" width="350" resizable="false" >
+			<f:facet name="header">
+				<h:outputLabel value="Delete Confirmation" />
+			</f:facet>
+			<h:outputText value="Confirm to delete?" />
+			<br />
+			<h:outputText value="All child nodes belong to this node will be deleted as well" />
+			<br />
+			<p:commandButton value="Ok" onclick="pp2.hide();" immediate="true" action="#{templateSpecBackingBean.deleteQuestion}"
+				process="@this,spg" update="spg" oncomplete="updateColspan();" />
+			<p:commandButton value="Cancel" onclick="pp2.hide();return false" />
+		</p:dialog>
+
+		<p:dialog header="Scoring Settings" widgetVar="scoringSetting"
+			showEffect="fade" hideEffect="fade" modal="true" height="350"
+			width="550" resizable="false">
+			<br/>
+			<p:panel id="panelOcl">
+				<table>
+					<tr>
+						<td>
+							<p:outputLabel value="Scoring:"	/>
+						</td>
+						<td>
+							<p:selectBooleanCheckbox id="checkScore" value="#{templateSpecBackingBean.managedBean.selectedSpecQuestion.scoring}" >
+								<p:ajax update="panelOcl" />
+							</p:selectBooleanCheckbox>
+						</td>
+					</tr>
+					<tr>
+						<td colspan="2"></td>
+					</tr>
+					<tr>
+						<td>
+							<p:commandButton value="OK" actionListener="#{templateSpecBackingBean.storeAnswerSetting}" process="@this"
+								oncomplete="scoringSetting.hide();return false;" update="spg" />
+						</td>
+					</tr>
+				</table>
+			</p:panel>
+		</p:dialog>
+
+</ui:composition>
