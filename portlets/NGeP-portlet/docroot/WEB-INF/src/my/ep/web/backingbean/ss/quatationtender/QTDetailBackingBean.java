@@ -1,8 +1,6 @@
 package my.ep.web.backingbean.ss.quatationtender;
 
 import java.sql.Timestamp;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -61,21 +59,17 @@ import my.ep.persistence.entity.ss.quationtender.ScQtRemark;
 import my.ep.persistence.entity.ss.quationtender.ScQtSupplier;
 import my.ep.type.aut.SearchCondition;
 import my.ep.type.aut.SearchOperator;
-import my.ep.type.pp.ProcurementMode;
 import my.ep.web.backingbean.BaseBackingBean;
 import my.ep.web.managedbean.ss.quationtender.QTDetailManagedBean;
+import my.ep.web.ss.quationtender.common.QTConstants;
 import my.ep.web.type.ss.quationtender.ItemOrigin;
 import my.ep.web.type.ss.quationtender.ItemType;
 import my.ep.web.type.ss.quationtender.LineItem;
 import my.ep.web.type.ss.quationtender.QTType;
-import my.ep.web.type.ss.quationtender.RecordStatus;
 import my.ep.web.type.ss.quationtender.SSProcurmentMode;
 import my.ep.web.util.lookupservice.BusinessDelegate;
 
 import org.apache.log4j.Logger;
-import org.python.modules.newmodule;
-
-import weblogic.management.j2ee.statistics.TimeStat;
 
 /**
  * @Author VidyasagarReddy
@@ -94,7 +88,7 @@ public class QTDetailBackingBean extends BaseBackingBean<QTDetailManagedBean> {
 	private ICategorysSO categorysSO = null;
 	private IStateSO stateSo = null;
 	private IDistrictSO districtSO = null;
-	private IOrgProfileSO orgProfileSO = null;
+	private IOrgProfileSO orgUnitSO = null;
 	private IStatusSO statusSO = null;
 
 	public QTDetailBackingBean() {
@@ -110,10 +104,10 @@ public class QTDetailBackingBean extends BaseBackingBean<QTDetailManagedBean> {
 	@PostConstruct
 	public void initializeObejcts() {
 		ScQt scQt = this.getManagedBean().getQt();
-		if (null == scQt) {
-			scQt = new ScQt();
-			this.getManagedBean().setQt(scQt);
-		}
+
+		scQt = new ScQt();
+		this.getManagedBean().setQt(scQt);
+
 		populateProcurementModeItems();
 		populateItemType();
 		populateTenderType();
@@ -132,7 +126,7 @@ public class QTDetailBackingBean extends BaseBackingBean<QTDetailManagedBean> {
 		IDistrictSO districtSO = BusinessDelegate.getInstance()
 				.getServiceObject("pm", IDistrictSO.class);
 
-		IOrgProfileSO orgProfileSO = BusinessDelegate.getInstance().getServiceObject(
+		IOrgProfileSO orgUnitSO = BusinessDelegate.getInstance().getServiceObject(
 				"pm", IOrgProfileSO.class);
 
 		IStatusSO statusSO = BusinessDelegate.getInstance().getServiceObject(
@@ -143,7 +137,7 @@ public class QTDetailBackingBean extends BaseBackingBean<QTDetailManagedBean> {
 		this.categorysSO = categorysSO;
 		this.stateSo = stateSO;
 		this.districtSO = districtSO;
-		this.orgProfileSO = orgProfileSO;
+		this.orgUnitSO = orgUnitSO;
 		this.statusSO = statusSO;
 		log.info("successfully look up the so object" + detailSO);
 	}
@@ -161,37 +155,7 @@ public class QTDetailBackingBean extends BaseBackingBean<QTDetailManagedBean> {
 		}
 	}
 
-	/*
-	 * Method to load the categorieslist for suppliers screen
-	 */
-	public void retriveQtCriteria() {
-
-		// Retrive categoryL1 and set to managedbean for firsttime other wise
-		// skip
-		List<PmCategoryL1> l1categoryList = this.getManagedBean()
-				.getCategoryL1s();
-		if (l1categoryList == null || !l1categoryList.isEmpty()) {
-			CategorysResDTO catResDTO = categorysSO.retiveCategoryL1List();
-			if (catResDTO.getCategoryL1List() != null
-					&& !catResDTO.getCategoryL1List().isEmpty()) {
-				this.getManagedBean().setCategoryL1s(
-						catResDTO.getCategoryL1List());
-			}
-			// Retrive states and set to managedbean for firsttime otherwise
-			// skip
-			List<PmState> stateList = this.getManagedBean().getStates();
-			if (stateList == null || !stateList.isEmpty()) {
-				StateReqDTO reqDTO = new StateReqDTO();
-				reqDTO.setCountryId(new Long(1));
-				StateResDTO resDTO = stateSo
-						.retriveStatesListByCountryID(reqDTO);
-				List<PmState> states = resDTO.getStateList();
-				if (states != null && !states.isEmpty()) {
-					this.getManagedBean().setStates(states);
-				}
-			}
-		}
-	}
+	
 
 	/*
 	 * To add empty row to gosodo table
@@ -223,35 +187,7 @@ public class QTDetailBackingBean extends BaseBackingBean<QTDetailManagedBean> {
 		}
 	}
 
-	/*
-	 * To add empty row to category code data table
-	 */
-	public void addNewCategoryItem() {
-		List<ScQtCategory> categories = this.getManagedBean().getQt()
-				.getScQtCategorys();
-		if (categories == null) {
-			categories = new ArrayList<ScQtCategory>();
-
-		} else {
-			ScQtCategory category = new ScQtCategory();
-			categories.add(category);
-		}
-		this.getManagedBean().getQt().setScQtCategorys(categories);
-	}
-
-	/*
-	 * To remove categoryCode from data table
-	 */
-	public void deleteCategoryCode(ValueChangeEvent changeEvent) {
-		ScQtCategory category = (ScQtCategory) changeEvent.getNewValue();
-		List<ScQtCategory> categories = this.getManagedBean().getQt()
-				.getScQtCategorys();
-		if (categories.contains(category)) {
-			categories.remove(category);
-		}
-
-	}
-
+	
 	/*
 	 * Onchange of gos to fetch the so's list
 	 */
@@ -288,123 +224,16 @@ public class QTDetailBackingBean extends BaseBackingBean<QTDetailManagedBean> {
 		log.info("end  of handle go change method");
 	}
 
-	/*
-	 * Method to call onchange of L1category
-	 */
-	public void handleL2CategoryChange(ValueChangeEvent changeEvent) {
-		PmCategoryL1 categoryL1 = (PmCategoryL1) changeEvent.getNewValue();
-		if (null != categoryL1 && categoryL1.getCategoryL1Id() != null) {
-			CategorysReqDTO reqDTO = new CategorysReqDTO();
-			reqDTO.setL1CategoryId(categoryL1.getCategoryL1Id());
-			CategorysResDTO categorysResDTO = categorysSO
-					.retiveCategoryL2ListByL1CategoryId(reqDTO);
-			List<PmCategoryL2> catL2List = categorysResDTO.getCategoryL2List();
-			this.getManagedBean().getCategoryL2s().clear();
-			this.getManagedBean().setCategoryL2s(catL2List);
-		}
-	}
 
-	/*
-	 * Method to call onchange of L2category
-	 */
-	public void handleL3CategoryChange(ValueChangeEvent changeEvent) {
 
-		PmCategoryL2 categoryL2 = (PmCategoryL2) changeEvent.getNewValue();
-		if (null != categoryL2 && categoryL2.getCategoryL2Id() != null) {
-			CategorysReqDTO reqDTO = new CategorysReqDTO();
-			reqDTO.setL2CategoryId(categoryL2.getCategoryL2Id());
-			CategorysResDTO categorysResDTO = categorysSO
-					.retiveCategoryL3ListByL2CategoryId(reqDTO);
-			List<PmCategoryL3> catL3List = categorysResDTO.getCategoryL3List();
-			this.getManagedBean().getCategoryL3s().clear();
-			this.getManagedBean().setCategoryL3s(catL3List);
-		}
-	}
-
-	/*
-	 * To retrive districts based on state value changes.
-	 */
-	public void handleStateChange(ValueChangeEvent changeEvent) {
-		PmState state = (PmState) changeEvent.getNewValue();
-		if (state != null && state.getStateId() != null) {
-			DistrictReqDTO reqDTO = new DistrictReqDTO();
-			reqDTO.setStateId(state.getStateId());
-			DistrictResDTO resDTO = districtSO
-					.retriveDistrictListByStateID(reqDTO);
-			if (resDTO != null && !resDTO.getDistrictList().isEmpty()) {
-				this.getManagedBean().getDistricts().clear();
-				this.getManagedBean().setDistricts(resDTO.getDistrictList());
-			}
-		}
-	}
-
+	
 	/**
 	 * Method to save the QT details
 	 */
 	public void saveQtDetails() {
 
-		ScQt scQt = this.getManagedBean().getQt();
+		QuationTenderReqDTO quationTenderReqDTO = prepareQTInfo();
 
-		// TODO QT number need to be generated by code it should be unique
-		scQt.setQtNo("SC031230");
-
-		// No need to set the below fields automatically set by listener
-		scQt.setCreatedBy(1l);
-		scQt.setChangedBy(1l);
-		scQt.setCreatedDate(new Timestamp(System.currentTimeMillis()));
-		// TODO need to get the org profile id by user id and need to set
-		OrgProfileReqDTO orgUnitReqDTO = new OrgProfileReqDTO();
-		orgUnitReqDTO.setOrgProfileId(new Long(1));
-		OrgProfileResDTO unitResDTO = orgProfileSO
-				.retrieveOrgProfileByProfileId(orgUnitReqDTO);
-		PmOrgProfile orgProfile = unitResDTO.getPmOrgProfile();
-		scQt.setPmOrgProfile(orgProfile);
-		// Setting the pm status for qt details
-		StatusReqDTO reqDTO = new StatusReqDTO();
-		reqDTO.setStatusId(1l);
-		StatusResDTO pmStatus = statusSO.retrieveStatusByStatusId(reqDTO);
-		PmStatus status = pmStatus.getPmStatus();
-		scQt.setPmStatus(status);
-		// Setting the gosodoBudget to qtdetails
-		// TODO need to get it from managed bean and set it.
-		List<ScQtGosodoBudget> bugets = null;
-		scQt.setScQtGosodoBudgets(bugets);
-		// Setting the category codes to qtdetails
-		// TODO need to get it from managed bean and set it.
-		List<ScQtCategory> categorys = null;
-		scQt.setScQtCategorys(categorys);
-		// Setting the suppliers to qtdetails
-		// TODO need to get it form managed bean and set it
-		List<ScQtSupplier> suppliers = null;
-		scQt.setScQtSuppliers(suppliers);
-		// Setting the qtcriteria to qtdetails
-		// TODO need to get it form managed bean and set it.
-		List<ScQtCriteria> criterias = null;
-		scQt.setScQtCriterias(criterias);
-		// Setting the approvalist to Qtdetails
-		// TODO Need to get it from managed bean and set it.
-		List<ScQtApproval> qtApprovals = null;
-		scQt.setScQtApprovals(qtApprovals);
-		// Setting the contact person to qtdetails.
-		// TODO need to get it from managed bean and set it
-		List<ScQtContactPerson> contactPersons = null;
-		scQt.setScQtContactPersons(contactPersons);
-		// Setting the qtBreifing details to Qtdetails
-		// TODO need to get it from managed bean and set it
-		List<ScQtBriefing> scQtBriefings = null;
-		scQt.setScQtBriefings(scQtBriefings);
-		// Setting the qtremarks to qtdetails.
-		// TODO need to get it form managed bean and set it
-		List<ScQtRemark> remarks = null;
-		scQt.setScQtRemarks(remarks);
-		// Setting the qtdocuments to qtdetails
-		// TODO need to get it from mangedbean and set it
-		List<ScQtCheckList> documents = null;
-		scQt.setScQtChecklists(documents);
-		// Creating DTO object setting qtdetail object and making so call to
-		// save.
-		QuationTenderReqDTO quationTenderReqDTO = new QuationTenderReqDTO();
-		quationTenderReqDTO.setQtdetail(scQt);
 		try {
 			QuationTenderResDTO quationTenderResDTO = detailSO
 					.saveOrUpdateQT(quationTenderReqDTO);
@@ -422,90 +251,42 @@ public class QTDetailBackingBean extends BaseBackingBean<QTDetailManagedBean> {
 	 * Method to search the quationtenders based on serach date
 	 */
 	public void searchQT() {
-		System.out
-				.println("$$$$$$$$$$$$$$$$inside search qt method$$$$$$$$$$$$$$");
-		ScQt qt = getManagedBean().getQt();
-		if (qt != null) {
-			QuationTenderReqDTO reqDTO = new QuationTenderReqDTO();
-			SearchBean<ScQt> qtSearchBean = new SearchBean<ScQt>();
-			List<SearchFilterBean> searchFilterBean = new ArrayList<SearchFilterBean>();
-			String qtNumber = qt.getQtNo();
-			if (null != qtNumber) {
-				SearchFilterBean bean = new SearchFilterBean();
-				bean.setSearchField("qtNo");
-				bean.setSearchOperator(SearchOperator.OPERATOR_LIKE.value());
-				bean.setSearchValue(qtNumber);
-				searchFilterBean.add(bean);
-			}
-			if (null != qt.getProcurementMode()) {
-				SearchFilterBean bean = new SearchFilterBean();
-				bean.setAndOr(SearchCondition.CONDITION_OR.value());
-				bean.setSearchField("procurementMode");
-				bean.setSearchOperator(SearchOperator.OPERATOR_EQUALS.value());
-				bean.setSearchValue(qt.getProcurementMode());
-				searchFilterBean.add(bean);
-			}
-			if (null != qt.getCreateDateFrom() || qt.getCreatedDateTo() != null) {
-				SearchFilterBean bean = new SearchFilterBean();
-				bean.setSearchField("createdDate");
-				bean.setSearchOperator(SearchOperator.OPERATOR_BETWEEN.value());
 
-				SearchBetweenValue betweenVal = new SearchBetweenValue(
-						qt.getCreateDateFrom(), qt.getCreatedDateTo());
+		System.out.println("inside search******************");
+		List<ScQt> qtList = this.getManagedBean().getQtList();
 
-				bean.setSearchValue(betweenVal);
-				searchFilterBean.add(bean);
-			}
-			if (null != qt.getPubDateFrom() || null != qt.getPubDateTo()) {
-				SearchFilterBean bean = new SearchFilterBean();
-
-				bean.setSearchField("publishDate");
-				bean.setSearchOperator(SearchOperator.OPERATOR_BETWEEN.value());
-				SearchBetweenValue betweenVal = new SearchBetweenValue(
-						qt.getPubDateFrom(), qt.getPubDateTo());
-
-				bean.setSearchValue(betweenVal);
-
-				searchFilterBean.add(bean);
-			}
-
-			if (null != qt.getClsDateFrom() || null != qt.getClsDateTo()) {
-				SearchFilterBean bean = new SearchFilterBean();
-
-				bean.setSearchField("closingDate");
-				bean.setSearchOperator(SearchOperator.OPERATOR_BETWEEN.value());
-				SearchBetweenValue betweenVal = new SearchBetweenValue(
-						qt.getClsDateFrom(), qt.getClsDateTo());
-
-				bean.setSearchValue(betweenVal);
-				searchFilterBean.add(bean);
-			}
-			// TODO Need to add status
-
-			// Adding search filterbeans to searchbean.
-			qtSearchBean.getDataFilterBeans().addAll(searchFilterBean);
-
-			reqDTO.setQtSearchBean(qtSearchBean);
-			QuationTenderResDTO dto = null;
-			try {
-				dto = detailSO.getQuationTenders(reqDTO);
-			} catch (Exception ex) {
-				ex.printStackTrace();
-				FacesContext.getCurrentInstance().addMessage(
-						null,
-						new FacesMessage(FacesMessage.SEVERITY_ERROR, ex
-								.toString(), ex.getMessage()));
-
-			}
-			List<ScQt> qtList = this.getManagedBean().getQtList();
-			if (!qtList.isEmpty()) {
-				qtList.clear();
-			}
-			if (dto != null && dto.getQtResultBean() != null) {
-				this.getManagedBean().getQtList()
-						.addAll(dto.getQtResultBean().getResultList());
-			}
+		if (!qtList.isEmpty()) {
+			qtList.clear();
 		}
+		List<ScQt> searchQt = getSearchQTs();
+
+		if (searchQt != null && !searchQt.isEmpty()) {
+			this.getManagedBean().getQtList().addAll(searchQt);
+		}
+	}
+
+	/**
+	 * Method for clone search qts
+	 */
+	
+	public void cloneSearchQt() {
+
+		
+		List<ScQt> cloneSearchQt = getSearchQTs();
+		if (cloneSearchQt != null && !cloneSearchQt.isEmpty()) {
+			this.getManagedBean().getCloneTenderList().addAll(cloneSearchQt);
+		}
+	}
+	/**
+	 * To clear the clone search result for next time
+	 */
+	public void clearCloneQT(){
+		System.out.println("inside clear cloneQT-------------------");
+		List<ScQt> cloneQtList = this.getManagedBean().getCloneTenderList();
+		if (!cloneQtList.isEmpty()) {
+			this.getManagedBean().getCloneTenderList().clear();
+		}
+		
 	}
 
 	private void populateTenderType() {
@@ -561,6 +342,191 @@ public class QTDetailBackingBean extends BaseBackingBean<QTDetailManagedBean> {
 			items.add(new SelectItem(mode.value(), mode.name()));
 		}
 		this.getManagedBean().setProcurementModeItems(items);
+	}
+
+	/**
+	 * Method to return the maintance page
+	 * 
+	 * @return maintanacepage
+	 */
+	public String showMaintanceQT(Long qtId) {
+
+		QuationTenderReqDTO reqDTO = new QuationTenderReqDTO();
+		reqDTO.setQtDetailId(qtId);
+		QuationTenderResDTO resDTO = detailSO.retriveQtById(reqDTO);
+
+		this.getManagedBean().setQt(resDTO.getQtDetail());
+
+		return QTConstants.MAINTANANCE_PAGE;
+	}
+
+	/**
+	 * Method to prepare scqt object with all dependent object.
+	 * 
+	 * @return QTDetailReq object
+	 */
+	private QuationTenderReqDTO prepareQTInfo() {
+
+		ScQt scQt = this.getManagedBean().getQt();
+
+		// TODO QT number need to be generated by code it should be unique
+		scQt.setQtNo("SC031230");
+
+		// No need to set the below fields automatically set by listener
+		scQt.setCreatedBy(1l);
+		scQt.setChangedBy(1l);
+		scQt.setCreatedDate(new Timestamp(System.currentTimeMillis()));
+		// TODO need to get the org profile id by user id and need to set
+		OrgProfileReqDTO orgUnitReqDTO = new OrgProfileReqDTO();
+		orgUnitReqDTO.setOrgProfileId(new Long(1));
+		OrgProfileResDTO unitResDTO = orgUnitSO
+				.retrieveOrgProfileByProfileId(orgUnitReqDTO);
+		PmOrgProfile orgProfile = unitResDTO.getPmOrgProfile();
+		scQt.setPmOrgProfile(orgProfile);
+		// Setting the pm status for qt details
+		StatusReqDTO reqDTO = new StatusReqDTO();
+		reqDTO.setStatusId(1l);
+		StatusResDTO pmStatus = statusSO.retrieveStatusByStatusId(reqDTO);
+		PmStatus status = pmStatus.getPmStatus();
+		scQt.setPmStatus(status);
+		// Setting the gosodoBudget to qtdetails
+		// TODO need to get it from managed bean and set it.
+		List<ScQtGosodoBudget> bugets = null;
+		scQt.setScQtGosodoBudgets(bugets);
+		// Setting the category codes to qtdetails
+		// TODO need to get it from managed bean and set it.
+		List<ScQtCategory> categorys = null;
+		scQt.setScQtCategorys(categorys);
+		// Setting the suppliers to qtdetails
+		// TODO need to get it form managed bean and set it
+		List<ScQtSupplier> suppliers = null;
+		scQt.setScQtSuppliers(suppliers);
+		// Setting the qtcriteria to qtdetails
+		// TODO need to get it form managed bean and set it.
+		List<ScQtCriteria> criterias = null;
+		scQt.setScQtCriterias(criterias);
+		// Setting the approvalist to Qtdetails
+		// TODO Need to get it from managed bean and set it.
+		List<ScQtApproval> qtApprovals = null;
+		scQt.setScQtApprovals(qtApprovals);
+		// Setting the contact person to qtdetails.
+		// TODO need to get it from managed bean and set it
+		List<ScQtContactPerson> contactPersons = null;
+		scQt.setScQtContactPersons(contactPersons);
+		// Setting the qtBreifing details to Qtdetails
+		// TODO need to get it from managed bean and set it
+		List<ScQtBriefing> scQtBriefings = null;
+		scQt.setScQtBriefings(scQtBriefings);
+		// Setting the qtremarks to qtdetails.
+		// TODO need to get it form managed bean and set it
+		List<ScQtRemark> remarks = null;
+		scQt.setScQtRemarks(remarks);
+		// Setting the qtdocuments to qtdetails
+		// TODO need to get it from mangedbean and set it
+		List<ScQtCheckList> documents = null;
+		scQt.setScQtChecklists(documents);
+		// Creating DTO object setting qtdetail object and making so call to
+		// save.
+		QuationTenderReqDTO quationTenderReqDTO = new QuationTenderReqDTO();
+		quationTenderReqDTO.setQtdetail(scQt);
+
+		return quationTenderReqDTO;
+
+	}
+
+	/**
+	 * Method to prepare qt search criteria.
+	 * 
+	 * @return quatationTenderReq object
+	 */
+	private List<ScQt> getSearchQTs() {
+
+		QuationTenderReqDTO reqDTO = new QuationTenderReqDTO();
+		ScQt qt = getManagedBean().getQt();
+		
+		if (qt != null) {
+
+			SearchBean<ScQt> qtSearchBean = new SearchBean<ScQt>();
+			List<SearchFilterBean> searchFilterBean = new ArrayList<SearchFilterBean>();
+			String qtTitle = qt.getQtTitle();
+			if (null != qtTitle) {
+				SearchFilterBean bean = new SearchFilterBean();
+				bean.setSearchField(QTConstants.QT_TITILE);
+				bean.setSearchOperator(SearchOperator.OPERATOR_LIKE.value());
+				bean.setSearchValue(qtTitle);
+				searchFilterBean.add(bean);
+			}
+			String qtNumber = qt.getQtNo();
+			if (null != qtNumber) {
+				SearchFilterBean bean = new SearchFilterBean();
+				bean.setSearchField(QTConstants.QT_NUMBER);
+				bean.setSearchOperator(SearchOperator.OPERATOR_LIKE.value());
+				bean.setSearchValue(qtNumber);
+				searchFilterBean.add(bean);
+			}
+			if (null != qt.getProcurementMode()) {
+				SearchFilterBean bean = new SearchFilterBean();
+				bean.setAndOr(SearchCondition.CONDITION_OR.value());
+				bean.setSearchField(QTConstants.PROCUREMENT_MODE);
+				bean.setSearchOperator(SearchOperator.OPERATOR_EQUALS.value());
+				bean.setSearchValue(qt.getProcurementMode());
+				searchFilterBean.add(bean);
+			}
+			if (null != qt.getCreateDateFrom() || qt.getCreatedDateTo() != null) {
+				SearchFilterBean bean = new SearchFilterBean();
+				bean.setSearchField(QTConstants.CREATED_DATE);
+				bean.setSearchOperator(SearchOperator.OPERATOR_BETWEEN.value());
+
+				SearchBetweenValue<Date> betweenVal = new SearchBetweenValue<Date>(
+						qt.getCreateDateFrom(), qt.getCreatedDateTo());
+
+				bean.setSearchValue(betweenVal);
+				searchFilterBean.add(bean);
+			}
+			if (null != qt.getPubDateFrom() || null != qt.getPubDateTo()) {
+				SearchFilterBean bean = new SearchFilterBean();
+
+				bean.setSearchField(QTConstants.PUBLISH_DATE);
+				bean.setSearchOperator(SearchOperator.OPERATOR_BETWEEN.value());
+				SearchBetweenValue<Date> betweenVal = new SearchBetweenValue<Date>(
+						qt.getPubDateFrom(), qt.getPubDateTo());
+
+				bean.setSearchValue(betweenVal);
+
+				searchFilterBean.add(bean);
+			}
+
+			if (null != qt.getClsDateFrom() || null != qt.getClsDateTo()) {
+				SearchFilterBean bean = new SearchFilterBean();
+
+				bean.setSearchField(QTConstants.CLOSED_DATE);
+				bean.setSearchOperator(SearchOperator.OPERATOR_BETWEEN.value());
+				SearchBetweenValue<Date> betweenVal = new SearchBetweenValue<Date>(
+						qt.getClsDateFrom(), qt.getClsDateTo());
+
+				bean.setSearchValue(betweenVal);
+				searchFilterBean.add(bean);
+			}
+			// TODO Need to add status
+
+			// Adding search filterbeans to searchbean.
+			qtSearchBean.getDataFilterBeans().addAll(searchFilterBean);
+
+			reqDTO.setQtSearchBean(qtSearchBean);
+		}
+		QuationTenderResDTO dto = null;
+		try {
+			dto = detailSO.getQuationTenders(reqDTO);
+		} catch (Exception ex) {
+			ex.printStackTrace();
+			FacesContext.getCurrentInstance().addMessage(
+					null,
+					new FacesMessage(FacesMessage.SEVERITY_ERROR,
+							ex.toString(), ex.getMessage()));
+
+		}
+
+		return dto.getQtResultBean().getResultList();
 	}
 
 }

@@ -9,6 +9,7 @@ import javax.faces.bean.SessionScoped;
 import javax.faces.model.SelectItem;
 
 import my.ep.factory.EpLogger;
+import my.ep.persistence.entity.ct.circular.panel.CtPanelSupplier;
 import my.ep.persistence.entity.pm.common.PmCategoryL1;
 import my.ep.persistence.entity.pm.common.PmCategoryL2;
 import my.ep.persistence.entity.pm.common.PmCategoryL3;
@@ -79,7 +80,7 @@ public class QTDetailManagedBean extends BaseManagedBean {
 
 	private TreeNode[] selectedNodes; 
 	
-	private List<ScQt> cloneTenderList;
+	private List<ScQt> cloneTenderList= new ArrayList<ScQt>();
 	private ScQt tenderCriteria=new ScQt();
 	
 	private List<PmZone> zoneList= new ArrayList <PmZone>();
@@ -87,6 +88,8 @@ public class QTDetailManagedBean extends BaseManagedBean {
 
 	
 	private List<ScQt> qtList= new ArrayList<ScQt>();
+	
+	private List<CtPanelSupplier> panelSuppliers= new ArrayList<CtPanelSupplier>();
 	public QTDetailManagedBean()
     {
     	log.info("inside ");
@@ -384,6 +387,16 @@ public class QTDetailManagedBean extends BaseManagedBean {
 
 	public void setQtList(List<ScQt> qtList) {
 		this.qtList = qtList;
+	}
+
+
+	public List<CtPanelSupplier> getPanelSuppliers() {
+		return panelSuppliers;
+	}
+
+
+	public void setPanelSuppliers(List<CtPanelSupplier> panelSuppliers) {
+		this.panelSuppliers = panelSuppliers;
 	}
 
 
