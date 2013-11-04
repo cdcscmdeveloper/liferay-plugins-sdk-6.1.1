@@ -9,90 +9,94 @@
 
 	<ui:define name="contentSection">
 
-		
-
-			<h:panelGroup id="cmExtensionRequestFormID">
-
-				<p:outputLabel styleClass="screen-title"
-					value="#{lbl['lbl.cm.extension.code.request.form']}"></p:outputLabel>
 
 
+		<h:panelGroup id="cmExtensionRequestFormID">
 
-				<table>
-					<tr>
-						<td><p:outputLabel value="#{lbl['lbl.cm.unspsc.code']}" /></td>
-						<td><p:inputText
-								value="#{unspscCodeBackingBean.managedBean.unspscCode}" /></td>
-						<td><p:commandButton value="Find" /></td>
-					</tr>
-					<tr>
-						<td><p:outputLabel value="#{lbl['lbl.cm.unspsc.title']}"></p:outputLabel></td>
-						<td cosplan="1"><p:inputText
-								value="#{unspscCodeBackingBean.managedBean.unspscTitle}" /></td>
-					</tr>
-				</table>
+			<p:outputLabel styleClass="screen-title"
+				value="#{lbl['lbl.cm.extension.code.request.form']}"></p:outputLabel>
 
-				<p:dataTable id="extCodeId"
-					value="#{unspscCodeBackingBean.managedBean.requestExtCodeList}"
-					var="ext">
-					<p:column>
-						<f:facet name="header">
-							<p:outputLabel value="#{lbl['lbl.cm.type']}" />
-						</f:facet>
+			<div style="text-align: right;">
+				<p:commandButton value="Submit"
+					action="#{unspscCodeBackingBean.submitToBPM}"></p:commandButton>
+			</div>
+
+
+
+			<table>
+				<tr>
+					<td><p:outputLabel value="#{lbl['lbl.cm.unspsc.code']}" /></td>
+					<td><p:inputText
+							value="#{unspscCodeBackingBean.managedBean.unspscCode}" /></td>
+					<td><p:commandButton value="Find" /></td>
+				</tr>
+				<tr>
+					<td><p:outputLabel value="#{lbl['lbl.cm.unspsc.title']}"></p:outputLabel></td>
+					<td cosplan="1"><p:inputText
+							value="#{unspscCodeBackingBean.managedBean.unspscTitle}" /></td>
+				</tr>
+			</table>
+
+			<p:dataTable id="extCodeId"
+				value="#{unspscCodeBackingBean.managedBean.requestExtCodeList}"
+				var="ext">
+				<p:column>
+					<f:facet name="header">
+						<p:outputLabel value="#{lbl['lbl.cm.type']}" />
+					</f:facet>
 						#{ext.typeName}
 
 					</p:column>
-					<p:column>
-						<f:facet name="header">
-							<p:outputLabel value="#{lbl['lbl.cm.brand']}" />
-						</f:facet>
+				<p:column>
+					<f:facet name="header">
+						<p:outputLabel value="#{lbl['lbl.cm.brand']}" />
+					</f:facet>
 						#{ext.brandName}
 					</p:column>
-					<p:column>
-						<f:facet name="header">
-							<p:outputLabel value="#{lbl['lbl.cm.measurement']}" />
-						</f:facet>
+				<p:column>
+					<f:facet name="header">
+						<p:outputLabel value="#{lbl['lbl.cm.measurement']}" />
+					</f:facet>
 						#{ext.measurementName}
 					</p:column>
-					<p:column>
-						<f:facet name="header">
-							<p:outputLabel value="#{lbl['lbl.cm.color']}" />
-						</f:facet>
+				<p:column>
+					<f:facet name="header">
+						<p:outputLabel value="#{lbl['lbl.cm.color']}" />
+					</f:facet>
 						#{ext.colorName}
 					</p:column>
-					<p:column>
-						<f:facet name="header">
-							<p:outputLabel value="#{lbl['lbl.cm.item.name']}" />
-						</f:facet>
+				<p:column>
+					<f:facet name="header">
+						<p:outputLabel value="#{lbl['lbl.cm.item.name']}" />
+					</f:facet>
 						#{ext.itemName}
 					</p:column>
-					<p:column>
-						<f:facet name="header">
-							<p:outputLabel value="#{lbl['lbl.cm.item.description']}" />
-						</f:facet>
+				<p:column>
+					<f:facet name="header">
+						<p:outputLabel value="#{lbl['lbl.cm.item.description']}" />
+					</f:facet>
 						#{ext.itemDetail}
 					</p:column>
 
-					<f:facet name="footer">
+				<f:facet name="footer">
+					<div style="text-align: right;">
 						<p:commandButton value="Add More"
 							action="#{unspscCodeBackingBean.addMoreRequest}"
 							update=":form:requestExtPopUpId" onclick="extensionPopUp.show()"></p:commandButton>
-					</f:facet>
-				</p:dataTable>
+					</div>
+				</f:facet>
+			</p:dataTable>
 
-				<div style="text-align: right;">
-					<p:commandButton value="Submit"
-						action="#{unspscCodeBackingBean.submitToBPM}"></p:commandButton>
-				</div>
 
-				<p:dialog id="extensionDialog" widgetVar="extensionPopUp" header="Request Extension Code"
-					width="600" height="500">
 
-					<ui:include src="requestExtensionPopUp.xhtml" />
+			<p:dialog id="extensionDialog" widgetVar="extensionPopUp"
+				header="Request Extension Code" width="600" height="500">
 
-				</p:dialog>
+				<ui:include src="requestExtensionPopUp.xhtml" />
 
-			</h:panelGroup>
+			</p:dialog>
+
+		</h:panelGroup>
 
 
 
