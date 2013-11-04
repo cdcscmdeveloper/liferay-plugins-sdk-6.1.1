@@ -436,7 +436,7 @@ public class BudgetAllocationBackingBean extends BaseBackingBean<BudgetAllocatio
 		
 		log.info("completed: " + isSuccess);
 		if(isSuccess){
-			returnPage = redirectToListBudgetAllocation();
+			returnPage = ProcurementPlanConst.NAV_TO_TASK_LIST;
 		}
 
 		log.info("submitBudgetAllocation - End");

@@ -455,7 +455,7 @@ public class PlanBackingBean extends BaseBackingBean<PlanManagedBean>{
 	 */
 	public boolean enableDetailTab(){
 		log.info("enableDetailTab - Start");
-		boolean result = true;
+		boolean result = false;
 		this.getManagedBean().setDynamicDetailsName("");
 		String procurementMode = this.getManagedBean().getSelectedPlanMaster().getProcurementMode();
 		String fulfillmentType = this.getManagedBean().getSelectedPlanMaster().getFulfilmentType();
@@ -468,16 +468,16 @@ public class PlanBackingBean extends BaseBackingBean<PlanManagedBean>{
 		if(ProcurementPlanConst.PROCUREMENT_QUOTATION.equals(procurementMode) || ProcurementPlanConst.PROCUREMENT_DIRECT_NEGO.equals(procurementMode)
 				|| ProcurementPlanConst.PROCUREMENT_TENDER.equals(procurementMode)){
 			this.getManagedBean().setDynamicDetailsName(ProcurementPlanConst.PP_DET);
-			result = false;
+			result = true;
 		}else{
 			if(ProcurementPlanConst.PROCUREMENT_EXISTING_CONTRACT.equals(procurementMode) &&
 					CommonMethod.isSelected(fulfillmentType)){
 				this.getManagedBean().setDynamicDetailsName(ProcurementPlanConst.EP_EXISTING_CONTRACT_DET);
-				result = false;
+				result = true;
 			}else if(ProcurementPlanConst.PROCUREMENT_DIRECT_PURCHASE.equals(procurementMode) && 
 					CommonMethod.isSelected(favoriteOption)){
 				this.getManagedBean().setDynamicDetailsName(ProcurementPlanConst.EP_EXISTING_CONTRACT_DET); //TODO EP_DIRECT_PURCHASE_DET
-				result = false;
+				result = true;
 			}	
 		}
 		this.getManagedBean().setEnableDetail(result);
@@ -1344,10 +1344,12 @@ public class PlanBackingBean extends BaseBackingBean<PlanManagedBean>{
 		} else {
 			getCompletePlanMaster();
 			isSuccess = addPlan(action);
+			
 		}
 		if(isSuccess){
-			returnPage = redirectToListPlan();
+			returnPage = ProcurementPlanConst.NAV_TO_TASK_LIST;
 		}
+		log.info("isSuccess: " + isSuccess + ", returnPage: "+ returnPage);
 		log.info("submitPlan - End");
 		return returnPage;
 	}
@@ -1360,31 +1362,31 @@ public class PlanBackingBean extends BaseBackingBean<PlanManagedBean>{
 	 */
 	public boolean updatePlan(String action){
 		log.info("updatePlan - Start");
-	
 		boolean result  = false;
 		try{
-//			BudgetAllocationReqDTO reqDTO = new BudgetAllocationReqDTO();
-//			if(ProcurementPlanConst.BPM_SUBMIT.equals(action)){
+			ProcurementPlanReqDTO reqDTO = new ProcurementPlanReqDTO();
+//			if(BpmOutcomeConst.BPM_SUBMIT.equals(action)){
 //				//rollback revision flag
 //				PpBudgetAlloc butgetAlloc = this.getManagedBean().getSelectedBudgetAllocation();
 //				for(PpBudgetAllocDtl p :butgetAlloc.getPpBudgetAllocDtls()){
 //					p.setRevisionRequired(false);
-//					p.setStatusId(ProcurementPlanConst.STATUS_PENDING_APPROVAL); //TODO change 
 //				}
 //			}
-//			
-//			reqDTO.setBudgetAllocation(this.getManagedBean().getSelectedBudgetAllocation());
-//			reqDTO.setSelectedGoMapper(this.getManagedBean().getSelectedGoMapper());
-//			IBudgetAllocationSO reqSO = (IBudgetAllocationSO) BusinessDelegate.getInstance().getServiceObject(ProcurementPlanConst.SO_PP, IBudgetAllocationSO.class);
-//			BudgetAllocationResDTO resDTO = reqSO.updateBudgetAllocation(reqDTO);
-//			
-//			if(resDTO.isSuccessful()){
-//				resultObj = resDTO.getBudgetAlloc();
-//			}
+			reqDTO.setAction(action);
+			reqDTO.setWithMto(this.getManagedBean().isEnableMto());
+			reqDTO.setTaskId(this.getManagedBean().getBpmTaskId());
+			reqDTO.setPlanMaster(this.getManagedBean().getPlanMaster());
+			
+			IProcurementPlanSO procurementPlanSO = (IProcurementPlanSO) BusinessDelegate.getInstance().getServiceObject(ProcurementPlanConst.SO_PP, IProcurementPlanSO.class);
+			ProcurementPlanResDTO resDTO = procurementPlanSO.updatePlan(reqDTO);
+			
+			result = resDTO.isSuccessful();
+			log.info("updatePlan: " + result);
 		} catch (Exception e) {
 			e.printStackTrace();
 			this.getManagedBean().setSystemMsg(e.getMessage());
 		}
+		log.info("updateBudgetAllocation - End");
 		log.info("updatePlan - End");
 		return result;
 	}
