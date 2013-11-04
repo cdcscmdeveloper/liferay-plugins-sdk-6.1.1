@@ -64,11 +64,47 @@ public class CodificationManagedBean extends BaseManagedBean {
 	private CmItem editItem;
 	private CmItem deleteItem;
 	
+	private String editTypeName;
+	private String editColorName;
+	private String editMeasurementName;
+	private String editBrandName;
 	
 
 	
 	
+	
 
+	public String getEditTypeName() {
+		return editTypeName;
+	}
+
+	public void setEditTypeName(String editTypeName) {
+		this.editTypeName = editTypeName;
+	}
+
+	public String getEditColorName() {
+		return editColorName;
+	}
+
+	public void setEditColorName(String editColorName) {
+		this.editColorName = editColorName;
+	}
+
+	public String getEditMeasurementName() {
+		return editMeasurementName;
+	}
+
+	public void setEditMeasurementName(String editMeasurementName) {
+		this.editMeasurementName = editMeasurementName;
+	}
+
+	public String getEditBrandName() {
+		return editBrandName;
+	}
+
+	public void setEditBrandName(String editBrandName) {
+		this.editBrandName = editBrandName;
+	}
 
 	public CmItem getDeleteItem() {
 		return deleteItem;

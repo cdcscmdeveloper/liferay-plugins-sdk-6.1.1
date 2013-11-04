@@ -9,7 +9,6 @@
 		<navigation-case>
 			<from-outcome>extensionSearch</from-outcome>
 			<to-view-id>/xhtml/cm/codification/extensionSearch.xhtml</to-view-id>
-			<redirect />
 		</navigation-case>
 
 

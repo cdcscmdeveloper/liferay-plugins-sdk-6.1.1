@@ -7,11 +7,13 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 
+import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.RequestScoped;
 import javax.faces.bean.ViewScoped;
 import javax.faces.context.ExternalContext;
 import javax.faces.context.FacesContext;
+import javax.faces.context.Flash;
 import javax.faces.model.SelectItem;
 import javax.portlet.PortletRequest;
 
@@ -540,6 +542,93 @@ public class CodificationBackingBean extends BaseBackingBean<CodificationManaged
 
 
 		return "extensionSearch";
+	}
+
+	public String saveEditedCode(){
+
+		ICodificationSO codificationSO = (ICodificationSO) BusinessDelegate.getInstance().getServiceObject("cm",ICodificationSO.class);
+		CodificationReqDTO reqDTO = new CodificationReqDTO();
+		CodificationResDTO resDTO = null;
+
+
+
+		ISearchBean<CmBrand> searchBeanBrand = new SearchBean<CmBrand>();
+		brandFilterBean.setSearchField("brandCode");
+		brandFilterBean.setSearchValue(this.getManagedBean().getEditItem().getCmBrand().getBrandCode());
+		searchBeanBrand.getDataFilterBeans().add(brandFilterBean);
+
+		reqDTO.setBrandSearchBean(searchBeanBrand);
+
+		resDTO = codificationSO.searchBrandObj(reqDTO);
+
+		if(!this.getManagedBean().getEditBrandName().isEmpty()){
+			resDTO.getBrandList().get(0).setBrandName(this.getManagedBean().getEditBrandName());
+		}
+		
+		reqDTO.setCmBrand(resDTO.getBrandList().get(0));
+		//////////////////////////////
+
+		ISearchBean<CmColor> searchBeanColor = new SearchBean<CmColor>();
+		colorFilterBean.setSearchField("colorCode");
+		colorFilterBean.setSearchValue(this.getManagedBean().getEditItem().getCmColor().getColorCode());
+		searchBeanColor.getDataFilterBeans().add(colorFilterBean);
+
+		reqDTO.setColorSearchBean(searchBeanColor);
+		
+		resDTO = codificationSO.searchColorObj(reqDTO);
+		
+		if(!this.getManagedBean().getEditColorName().isEmpty()){
+			resDTO.getColorList().get(0).setColorName(this.getManagedBean().getEditColorName());
+		}
+		
+		reqDTO.setCmColor(resDTO.getColorList().get(0));
+		
+		////////////////////
+
+		ISearchBean<CmType> searchBeanType = new SearchBean<CmType>();
+		typeFilterBean.setSearchField("typeCode");
+		typeFilterBean.setSearchValue(this.getManagedBean().getEditItem().getCmType().getTypeCode());
+		searchBeanType.getDataFilterBeans().add(typeFilterBean);
+		
+		reqDTO.setTypeSearchBean(searchBeanType);
+		
+		resDTO = codificationSO.searchTypeObj(reqDTO);
+		if(!this.getManagedBean().getEditTypeName().isEmpty()){
+			resDTO.getTypeList().get(0).setTypeName(this.getManagedBean().getEditTypeName());
+		}
+		
+		reqDTO.setCmType(resDTO.getTypeList().get(0));
+		
+		///////////////////////////
+
+		ISearchBean<CmMeasurement> searchBeanMeasurement = new SearchBean<CmMeasurement>();
+		measurementFilterBean.setSearchField("measurementCode");
+		measurementFilterBean.setSearchValue(this.getManagedBean().getEditItem().getCmMeasurement().getMeasurementCode());
+		searchBeanMeasurement.getDataFilterBeans().add(measurementFilterBean);
+
+		reqDTO.setMeasurementSearchBean(searchBeanMeasurement);
+
+		resDTO = codificationSO.searchMeasurementObj(reqDTO);
+
+		if(!this.getManagedBean().getEditMeasurementName().isEmpty()){
+			resDTO.getMeasurementList().get(0).setMeasurementName(this.getManagedBean().getEditMeasurementName());
+		}
+
+
+		reqDTO.setCmMeasurement(resDTO.getMeasurementList().get(0));
+		////////////////////////////////////////
+
+
+		resDTO = codificationSO.editExtensionCode(reqDTO);
+
+		FacesContext facesContext = FacesContext.getCurrentInstance();
+		/*Flash flash = facesContext.getExternalContext().getFlash();
+		flash.setKeepMessages(true);
+		flash.setRedirect(true);*/
+		facesContext.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO,"Successfully", ""));
+
+		return "extensionSearch";
+
 	}
 
 

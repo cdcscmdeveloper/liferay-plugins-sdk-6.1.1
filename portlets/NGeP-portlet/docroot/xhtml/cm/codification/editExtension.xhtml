@@ -9,6 +9,7 @@
 
 	<ui:define name="contentSection">
 
+		<p:messages globalOnly="true"></p:messages>
 
 		<h:panelGroup id="editExtensionID">
 			<p:outputLabel styleClass="screen-title"
@@ -17,7 +18,7 @@
 			<div style="text-align: right;">
 				<p:commandButton value="cancel"
 					action="#{codificationBackingBean.backToPrevious}"></p:commandButton>
-				<p:commandButton value="save"></p:commandButton>
+				<p:commandButton value="save" action="#{codificationBackingBean.saveEditedCode}" update="@form"></p:commandButton>
 			</div>
 
 
@@ -69,7 +70,7 @@
 							disabled="true"></p:inputText>
 					</p:column>
 					<p:column>
-						<p:inputText></p:inputText>
+						<p:inputText value="#{codificationBackingBean.managedBean.editTypeName}"></p:inputText>
 					</p:column>
 				</p:row>
 
@@ -83,7 +84,7 @@
 							disabled="true"></p:inputText>
 					</p:column>
 					<p:column>
-						<p:inputText></p:inputText>
+						<p:inputText value="#{codificationBackingBean.managedBean.editBrandName}"></p:inputText>
 					</p:column>
 				</p:row>
 
@@ -97,7 +98,7 @@
 							disabled="true"></p:inputText>
 					</p:column>
 					<p:column>
-						<p:inputText></p:inputText>
+						<p:inputText value="#{codificationBackingBean.managedBean.editMeasurementName}"></p:inputText>
 					</p:column>
 				</p:row>
 
@@ -112,18 +113,13 @@
 							disabled="true"></p:inputText>
 					</p:column>
 					<p:column>
-						<p:inputText></p:inputText>
+						<p:inputText value="#{codificationBackingBean.managedBean.editColorName}"></p:inputText>
 					</p:column>
 				</p:row>
 
 			</p:panelGrid>
 
-			<p:commandButton value="cancel"
-				action="#{codificationBackingBean.backToPrevious}"></p:commandButton>
-			<p:commandButton value="save"></p:commandButton>
-
-
-
+		
 		</h:panelGroup>
 
 

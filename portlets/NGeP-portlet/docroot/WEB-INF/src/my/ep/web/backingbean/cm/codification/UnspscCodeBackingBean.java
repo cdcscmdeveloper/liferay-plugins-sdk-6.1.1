@@ -69,25 +69,20 @@ public class UnspscCodeBackingBean extends BaseBackingBean<UnspscCodeManagedBean
 			resDTO = unspscSO.addCodificationRequest(reqDTO);
 			//BpmResponseDTO responseDTO = initiateTask(resDTO.getRequestCode());
 			
-			FacesContext facesContext = FacesContext.getCurrentInstance();
-			Flash flash = facesContext.getExternalContext().getFlash();
-			flash.setKeepMessages(true);
-			flash.setRedirect(true);
-			facesContext.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO,"Successfully", ""));
-			
 		}else{
 			log.info("***update***");
 			resDTO = unspscSO.updateCodificationRequest(reqDTO);
 			//BpmResponseDTO responseDTO = updateTask(resDTO.getRequestCode(),taskListBB.getManagedBean().getTaskId() );
 			
-			FacesContext facesContext = FacesContext.getCurrentInstance();
-			Flash flash = facesContext.getExternalContext().getFlash();
-			flash.setKeepMessages(true);
-			flash.setRedirect(true);
-			facesContext.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO,"Successfully", ""));
 		}
 		
-		return "../tasklist/taskListView.xhtml";
+		FacesContext facesContext = FacesContext.getCurrentInstance();
+		Flash flash = facesContext.getExternalContext().getFlash();
+		flash.setKeepMessages(true);
+		flash.setRedirect(true);
+		facesContext.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO,"Successfully", ""));
+		
+		return "taskListView";
 
 
 	}
