@@ -116,6 +116,7 @@ public class SmApplicationBackingBean extends
 			// sm.setSmAddress(new SmAddress());
 			// SmAddress smAddress = setDefaultAddr();
 			// getManagedBean().getSmSupplier().setSmAppl(mofRegAppl);
+			smAppl.setCreatedBy(1l);
 			smApplSupplier.getSmAppls().add(smAppl);
 			if (applicationType.equals("N")) {
 				System.out
@@ -172,6 +173,40 @@ public class SmApplicationBackingBean extends
 
 		} finally {
 			mofRegistrationSO = null;
+		}
+	}
+
+	public String deletePendingMofApplication() {
+
+		try {
+			SmSupplier smSupplier = retriveSupplierById((long) 3)
+					.getSmSupplier();
+			if (smSupplier == null) {
+				smSupplier = new SmSupplier();
+				smSupplier.setSupplierName("My Sample Supplier");
+				smSupplier.setBusinessType("1");
+				smSupplier.setRegNo("12345");
+				smSupplier.setEstablishDate(new Date());
+				smSupplier.setWebSite("www.samplecompany.com");
+			}
+			// TODO the smappl is supposed to be get the latest application from
+			// sm supplier
+			SmAppl smAppl = new SmAppl();
+			smAppl.setApplNo("KB-25102013-1234");
+			smAppl.setStatusId(2);
+			smAppl.setApplType("B");
+
+			getManagedBean().setSmSupplier(smSupplier);
+			// TODO Set default not null values -- End insert appl ---
+
+			smAppl = defaultSmAppl(smAppl);
+			getManagedBean().setSmAppl(smAppl);
+			return SupplierManagementConst.PROCEED_DEL_PENDING_MOF_APPLN;
+
+		} catch (Exception e) {
+			System.out.println(" **** Unknown Expection ******* ");
+			e.printStackTrace();
+			return SupplierManagementConst.DEFAULT_DEL_PENDING_MOF_APPLN;
 		}
 	}
 

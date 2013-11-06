@@ -12,6 +12,7 @@ public class SupplierManagementConst {
 	public static final String PROCEED_ADDTNLCAT_MOF_APPLN = "addAdditionalCategoryBasePage";
 	public static final String PROCEED_RENEW_MOF_APPLN = "renewMofBasePage";
 	public static final String PROCEED_CANCEL_MOF_APPLN = "cancelRegistrationWithMof";
+	public static final String PROCEED_DEL_PENDING_MOF_APPLN = "deletePendingMofApplication";
 	public static final String PROCEED_DELETE_CATCODES_APPLN = "delRegCatCodes";
 	public static final String DEFAULT_DELETE_CATCODES_APPLN = "defaultDeleteCategoryCodePage";
 	public static final String DEFAULT_MOF_REG = "defaultNewMofApplPage";
@@ -20,6 +21,7 @@ public class SupplierManagementConst {
 	public static final String DEFAULT_ADDTNLCAT_MOF_APPLN = "defaultAdditionalCategoryCodePage";
 	public static final String DEFAULT_RENEW_MOF_APPLN = "defaultRenewMofApplPage";
 	public static final String DEFAULT_CANCEL_MOF_APPLN = "defaultCancelMofApplicationPage";
+	public static final String DEFAULT_DEL_PENDING_MOF_APPLN = "defaultDeletePedingMofApplnPage";
 	public static final String BUMI_APPL_SUCCESS = "bumiApplicationAckPage";
 	public static final String BUMI_APPL_FAIL = "step5BumiAppln_SupportingDocumentsInfo";
 	public static final String MOF_APPL_SUCCESS = "mofRegApplnAckPage";
