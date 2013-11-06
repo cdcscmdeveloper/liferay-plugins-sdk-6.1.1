@@ -10,8 +10,8 @@ import my.ep.type.IEnumType;
  *
  */
 public enum MemberType implements IEnumType {
-	GOVT_USER(1),
-	EXTERNAL_USER(2);
+	GovernmentUser(1),
+	NonGovernmentUser(2);
 	
 	
 	private int memeberType;
@@ -28,7 +28,7 @@ public enum MemberType implements IEnumType {
 	@Override
 	public Object value() {
 		// TODO Auto-generated method stub
-		return null;
+		return memeberType;
 	}
 	public int getMemeberType() {
 		return memeberType;

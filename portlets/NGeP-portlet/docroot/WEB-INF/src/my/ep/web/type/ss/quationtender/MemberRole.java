@@ -32,6 +32,6 @@ public enum MemberRole implements IEnumType {
 	@Override
 	public Object value() {
 		// TODO Auto-generated method stub
-		return null;
+		return memberRole;
 	}
 }
