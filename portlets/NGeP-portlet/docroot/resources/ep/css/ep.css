@@ -3405,4 +3405,24 @@ textarea[disabled],input[type="text"][disabled],input[type="password"][disabled]
 	border-top: 1px solid #A8A8A8 !important;
 	border-bottom: 1px solid #A8A8A8 !important;
 }
+
+.ui-datatable .ui-datatable-footer {
+	border: none;
+	padding: 1px 0 0 0;
+	background: #BCE18A; /* Old browsers */
+	background: -moz-linear-gradient(top, #FFFFFF 0%, #BCE18A 100%);
+	/* FF3.6+ */
+	background: -webkit-gradient(linear, left top, left bottom, color-stop(0%, #FFFFFF),
+		color-stop(100%, #BCE18A) ); /* Chrome,Safari4+ */
+	background: -webkit-linear-gradient(top, #FFFFFF 0%, #BCE18A 100%);
+	/* Chrome10+,Safari5.1+ */
+	background: -o-linear-gradient(top, #FFFFFF 0%, #BCE18A 100%);
+	/* Opera 11.10+ */
+	background: -ms-linear-gradient(top, #FFFFFF 0%, #BCE18A 100%);
+	/* IE10+ */
+	background: linear-gradient(to bottom, #FFFFFF 0%, #BCE18A 100%);
+	/* W3C */
+	filter: progid:DXImageTransform.Microsoft.gradient(  startColorstr='#FFFFFF',
+		endColorstr='#BCE18A', GradientType=0 ); /* IE6-8 */
+}
 /*--------------------------       End Custom CSS       --------------------------- */
