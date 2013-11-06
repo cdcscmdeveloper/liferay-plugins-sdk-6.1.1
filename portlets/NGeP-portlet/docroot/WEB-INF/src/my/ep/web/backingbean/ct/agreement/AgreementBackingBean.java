@@ -1,67 +1,204 @@
 package my.ep.web.backingbean.ct.agreement;
 
-import java.io.File;
-import java.io.FileInputStream;
 import java.io.FileNotFoundException;
-import java.io.InputStream;
+import java.io.FileOutputStream;
+import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
+import javax.annotation.PostConstruct;
+import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.RequestScoped;
-import javax.faces.context.ExternalContext;
 import javax.faces.context.FacesContext;
+import javax.faces.event.ActionEvent;
 import javax.faces.model.SelectItem;
 
 import org.apache.log4j.Logger;
+import org.primefaces.event.FileUploadEvent;
 import org.primefaces.model.DefaultStreamedContent;
 import org.primefaces.model.StreamedContent;
+import org.primefaces.model.UploadedFile;
 
+import my.ep.biz.service.ct.agreement.IAgreementSO;
+import my.ep.dto.ct.agreement.ContractAgreementReqDTO;
+import my.ep.persistence.entity.ct.agreement.CtAgreement;
+import my.ep.persistence.entity.ct.agreement.CtAgreementAppendix;
+import my.ep.persistence.entity.ct.agreement.CtSignParty;
+import my.ep.persistence.entity.ct.amend.CtAmendment;
+import my.ep.persistence.entity.pm.authorization.PmOrgProfile;
+import my.ep.persistence.entity.pm.authorization.PmUser;
+import my.ep.persistence.entity.pm.common.PmCode;
+import my.ep.persistence.entity.pm.common.PmStatus;
 import my.ep.web.backingbean.BaseBackingBean;
 import my.ep.web.bean.ct.AgreementDetails;
 import my.ep.web.bean.ct.ContractListItem;
+import my.ep.web.constant.BpmOutcomeConst;
 import my.ep.web.managedbean.ct.agreement.AgreementManagedBean;
-
+import my.ep.web.util.lookupservice.BusinessDelegate;
 
 @ManagedBean(name="agreementBackingBean")
 @RequestScoped
 public class AgreementBackingBean extends BaseBackingBean<AgreementManagedBean> {
 
 	private static Logger log = Logger.getLogger(AgreementBackingBean.class);
-	private static boolean menuAgreement;
-	
-	private AgreementDetails agreementDetails;
-	private List<AgreementDetails> agreementList;
+
 	private boolean systemDefined;
 	private boolean userUploaded;
 	private DefaultStreamedContent download;
 	private ContractListItem contractListItem;
 	private StreamedContent file;
 	private boolean supplementValue = true; 
-	private String agreements;
-
-	public AgreementBackingBean() throws FileNotFoundException{
+	private AgreementDetails agreementDetails;
+	private List<SelectItem> sourcingFiles;  
+	
+	public AgreementBackingBean(){
 		agreementDetails = new AgreementDetails();
 		contractListItem = new ContractListItem();
-		menuAgreement = false; 
-	    changeFileDownload();
+		if(this.getManagedBean().getOutComes()==null) {
+			this.getManagedBean().setOutComes(new String[]{BpmOutcomeConst.BPM_SAVE, BpmOutcomeConst.BPM_SUBMIT});
+		}
 	}
 	
-	public void changeFileDownload() {
-	    File file1 = new File("C:/Users/HP/Desktop/Time1.docx");
-	    InputStream input;
-		try {
-			input = new FileInputStream(file1);
-			ExternalContext externalContext = FacesContext.getCurrentInstance().getExternalContext();
-			String ext = getExtension(file1);
-			 System.out.println("PREP 1024 =>>>ext>>> " + ext);
-		    setDownload(new DefaultStreamedContent(input, ext, file1.getName()));
-		    System.out.println("PREP 1024 =>>>>>>>>>>>>>>>>>>>>>> " + file1.getName());
-		} catch (FileNotFoundException e) {
-			e.printStackTrace();
+	@PostConstruct
+	public void init(){
+		
+	 if(this.getManagedBean().getAgreement() == null){
+			  
+		System.out.println("Object initialize in post contruct>>>>>>>");
+		this.getManagedBean().setAgreement(new CtAgreement());
+		this.getManagedBean().getAgreement().setCtSignParties(new ArrayList<CtSignParty>());
+		this.getManagedBean().getAgreement().setApprover(new PmUser());
+		this.getManagedBean().getAgreement().setCtAmendment(new CtAmendment());
+		this.getManagedBean().getAgreement().setStatus(new PmStatus());
+		//this.getManagedBean().getAgreement().setCtContract(new CtContract());		
+		this.getManagedBean().getAgreement().getApprover().setUserId(1L);
+		this.getManagedBean().getAgreement().getStatus().setStatusId(1L);
+		//this.getManagedBean().getAgreement().getCtContract().setContractId(2L);
+		this.getManagedBean().getAgreement().setClauseDocMasterId(new Long(101));
+		this.getManagedBean().getAgreement().getCtAmendment().setAmendmentId(new Long(1));
+		this.getManagedBean().getAgreement().setApprovedDate(new Date());
+		this.getManagedBean().getAgreement().setClauseDocMasterId(new Long(1));
+		this.getManagedBean().getAgreement().setCtAgreement(this.getManagedBean().getAgreement());
+		
+		this.getManagedBean().setSignParty(new CtSignParty());
+		this.getManagedBean().getSignParty().setOfficerIc("897452346523");
+		this.getManagedBean().getSignParty().setOfficerName("Khan");
+		this.getManagedBean().getSignParty().setOfficerPosition("PTJ HEAD");
+		this.getManagedBean().getSignParty().setOfficer(new PmUser());
+		this.getManagedBean().getSignParty().getOfficer().setUserId(new Long(1));
+		this.getManagedBean().getSignParty().setOrgProfile(new PmOrgProfile());
+		this.getManagedBean().getSignParty().getOrgProfile().setOrgProfileId(new Long(1));
+		this.getManagedBean().getSignParty().setSignPartyTypeCode(new PmCode());
+		this.getManagedBean().getSignParty().getSignPartyTypeCode().setCodeId(new Long(1));
+		this.getManagedBean().getSignParty().setCtAgreement(this.getManagedBean().getAgreement());
+		
+    	this.getManagedBean().getAgreement().setCtAgreementAppendixs(new ArrayList<CtAgreementAppendix>());
+	  }
+	 
+	  if(sourcingFiles == null){
+		 sourcingFiles = new ArrayList<SelectItem>();  
+		 SelectItem doc = new SelectItem("Scope of Work.docx", "Scope of Work.docx");  
+		 SelectItem doc1 = new SelectItem("Floor_map.docx", "Floor_map.docx");  
+		 SelectItem doc2 = new SelectItem("work_schedule.docx", "work_schedule.docx");  
+		 SelectItem doc3 = new SelectItem("performance_bond.docx", "performance_bond.docx");  
+		 sourcingFiles.add(doc);
+		 sourcingFiles.add(doc1);
+		 sourcingFiles.add(doc2);
+		 sourcingFiles.add(doc3);
+		 
+	  }
+	}
+	
+	public void createAgreement(String outcome){
+	
+		IAgreementSO agreementSO = null;
+		 ContractAgreementReqDTO reqDTO = null;	
+		try{
+			
+			 reqDTO = new ContractAgreementReqDTO();
+		     agreementSO = (IAgreementSO)BusinessDelegate.getInstance().getServiceObject("ct", IAgreementSO.class);
+		     this.getManagedBean().getAgreement().getCtSignParties().add(this.getManagedBean().getSignParty());
+		     this.getManagedBean().getAgreement().getCtAgreementAppendixs().add(this.getManagedBean().getAgreementAppendix());
+			 reqDTO.setAgreement(this.getManagedBean().getAgreement());
+			 agreementSO.createAgreement(reqDTO);
+	   
+		 }catch(Exception ex){
+		   log.error("Exception>>>" +ex);
+		
+		}finally{
+			agreementSO = null;
+			reqDTO = null;
 		}
+	 
+	}
+	
+	public void fileUpload(FileUploadEvent event) {
+		
+		UploadedFile file = event.getFile();
+		String fileName = file.getFileName();
+		byte[] fileBytes = file.getContents();
+		log.info("Processed uploaded file " + fileName + " of size:"+ fileBytes.length);
+		this.getManagedBean().getAgreement().setFileName(fileName);
+		this.getManagedBean().getAgreement().setFilePath("C:\\upload");
+		FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_INFO,"The file was uploaded successfully.", null);
+		FacesMessage msg = new FacesMessage("Succesful", event.getFile().getFileName() + " is uploaded.");
+		FacesContext.getCurrentInstance().addMessage(null, msg); 
+		FileOutputStream fos;
+		try {
+			  fos = new FileOutputStream("C:\\upload\\" + fileName);
+			  fos.write(fileBytes);
+			  fos.close();
+		
+		} catch (FileNotFoundException e) {
+			  e.printStackTrace();
+		
+		} catch (IOException e) {
+			  e.printStackTrace();
+		}
+		FacesContext.getCurrentInstance().addMessage(null, message);
 	 }
 	
+public void fileApexUpload(FileUploadEvent event) {
+		
+	    System.out.println("==============123================================");
+		UploadedFile file = event.getFile();
+		String fileName = file.getFileName();
+		byte[] fileBytes = file.getContents();
+		log.info("Processed uploaded file " + fileName + " of size:"+ fileBytes.length);
+		this.getManagedBean().getAgreementAppendix().setFileName(fileName);
+		this.getManagedBean().getAgreementAppendix().setFilePath("C:\\upload");
+		FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_INFO,"The file was uploaded successfully.", null);
+		FacesMessage msg = new FacesMessage("Succesful", event.getFile().getFileName() + " is uploaded.");
+		FacesContext.getCurrentInstance().addMessage(null, msg); 
+		FileOutputStream fos;
+		try {
+			  fos = new FileOutputStream("C:\\upload\\" + fileName);
+			  fos.write(fileBytes);
+			  fos.close();
+		
+		} catch (FileNotFoundException e) {
+			  e.printStackTrace();
+		
+		} catch (IOException e) {
+			  e.printStackTrace();
+		}
+		FacesContext.getCurrentInstance().addMessage(null, message);
+     }
+
+     public void addAgreementAppendex(ActionEvent event){
+	
+    	if(this.getManagedBean().getAgreementAppendix() != null){
+	        this.getManagedBean().getAppendixList().add(this.getManagedBean().getAgreementAppendix());
+    	}
+     }
+
+     public void deleteAgreementAppendix(){
+    	 if(this.getManagedBean().getAgreementAppendix() != null)
+    		    this.getManagedBean().getAppendixList().remove(this.getManagedBean().getAgreementAppendix());
+     }
+     
      public List<SelectItem> getAgreementApendex() {	
 		
 		List<SelectItem> list = new ArrayList<SelectItem>();
@@ -78,10 +215,10 @@ public class AgreementBackingBean extends BaseBackingBean<AgreementManagedBean> 
      public void changeApendexType(){  
        try{	
     	   flush();    	
-    	   if(agreementDetails.getAppendexType().equalsIgnoreCase("System Defined")){			
+    	   if(this.getManagedBean().getAgreementAppendix().getTitle().equalsIgnoreCase("System Defined")){			
 				systemDefined = true;
 			}
-			else if(agreementDetails.getAppendexType().equalsIgnoreCase("User Uploaded")){
+			else if(this.getManagedBean().getAgreementAppendix().getTitle().equalsIgnoreCase("User Uploaded")){
 				userUploaded = true;
 			}
 	     }catch(Exception e){
@@ -89,8 +226,28 @@ public class AgreementBackingBean extends BaseBackingBean<AgreementManagedBean> 
          }
       }
 	
+     public void addSignParty(){
+ 		CtSignParty signParty = new CtSignParty();
+ 		this.getManagedBean().getSignPartyList().add(signParty);
+ 	}
+ 	
+ 	public void deleteSignParty(){
+ 		System.out.println("-------------------inside delete------------");
+ 		this.getManagedBean().getSignPartyList().remove(this.getManagedBean().getSignParty());
+ 	}
+ 	
+ 	public void addSignSupplier(){
+ 		CtSignParty signParty = new CtSignParty();
+ 		this.getManagedBean().getSignSupplierList().add(signParty);
+ 	}
+ 	
+ 	public void deleteSignSupplier(){
+ 		System.out.println("-------------------inside delete1------------");
+ 		this.getManagedBean().getSignSupplierList().remove(this.getManagedBean().getSignSupplier());
+ 	}
+ 	
 	  public List<AgreementDetails> getAgreementList() {
-		agreementList = new ArrayList<AgreementDetails>();
+		List<AgreementDetails> agreementList = new ArrayList<AgreementDetails>();
 		
 		agreementDetails.setAgrementTitle("Agreement Cover Page");
 		agreementDetails.setAgrementType("System Defined");
@@ -111,39 +268,10 @@ public class AgreementBackingBean extends BaseBackingBean<AgreementManagedBean> 
 		agreementDetails3.setAgrementType("System Defined");
 		agreementList.add(agreementDetails3);
 		return agreementList;
-	}
-	
-		
-	public static String getExtension(File f) {
-		    String ext = null;
-		    String result = "";
-		    String s = f.getName();
-		    int i = s.lastIndexOf('.');
-
-		    if (i > 0 &&  i < s.length() - 1) {
-		        ext = s.substring(i+1).toLowerCase();
-		    }
-		    if(ext.matches("doc")) result = "application/msword";
-		    else if(ext.matches("docx")) result = "application/vnd.openxmlformats-officedocument.wordprocessingml.document";
-		    else if(ext.matches("xls")) result = "application/vnd.ms-excel";
-		    else if(ext.matches("xlsx")) result = "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet";
-		    else if(ext.matches("odt")) result = "application/vnd.oasis.opendocument.text";
-		    else if(ext.matches("ods")) result = "application/vnd.oasis.opendocument.spreadsheet";
-
-		    return result;
 	  }
 		
 	   public StreamedContent getFile() {
 		    return file;
-		}
-		
-		public String getAgreements() {
-			setAgreements(this.getManagedBean().getAgreement());
-			return agreements;
-		}
-
-		public void setAgreements(String agreements) {
-			this.agreements = agreements;
 		}
 
 		public boolean isSupplementValue() {
@@ -158,22 +286,7 @@ public class AgreementBackingBean extends BaseBackingBean<AgreementManagedBean> 
 				this.supplementValue = supplementValue;
 	    }
 
-		public boolean isMenuAgreement() {
-				return menuAgreement;
-		}
-
-		public void setMenuAgreement(boolean menuAgreement) {
-				this.menuAgreement = menuAgreement;
-		}
-
-        public ContractListItem getContractListItem() {
-				return contractListItem;
-		}
-
-		public void setContractListItem(ContractListItem contractListItem) {
-				this.contractListItem = contractListItem;
-		}
-
+	
 		public void setDownload(DefaultStreamedContent download) {
 			    this.download = download;
 		}
@@ -183,16 +296,7 @@ public class AgreementBackingBean extends BaseBackingBean<AgreementManagedBean> 
 			    return download;
 		}	
 		
-		public void setAgreementList(List<AgreementDetails> agreementList) {
-			this.agreementList = agreementList;
-		}
-		public AgreementDetails getAgreementDetails() {
-			return agreementDetails;
-		}
-		public void setAgreementDetails(AgreementDetails agreementDetails) {
-			this.agreementDetails = agreementDetails;
-		}
-		 
+		
 		public boolean isSystemDefined() {
 				return systemDefined;
 		}
@@ -207,5 +311,30 @@ public class AgreementBackingBean extends BaseBackingBean<AgreementManagedBean> 
 
 		public void setUserUploaded(boolean userUploaded) {
 				this.userUploaded = userUploaded;
-		}
+		} 
+
+	public ContractListItem getContractListItem() {
+		return contractListItem;
+	}
+
+	public void setContractListItem(ContractListItem contractListItem) {
+		this.contractListItem = contractListItem;
+	}
+     
+	public AgreementDetails getAgreementDetails() {
+		return agreementDetails;
+	}
+	public void setAgreementDetails(AgreementDetails agreementDetails) {
+		this.agreementDetails = agreementDetails;
+	}
+
+	public List<SelectItem> getSourcingFiles() {
+		return sourcingFiles;
+	}
+
+	public void setSourcingFiles(List<SelectItem> sourcingFiles) {
+		this.sourcingFiles = sourcingFiles;
+	}
+
+	
 }

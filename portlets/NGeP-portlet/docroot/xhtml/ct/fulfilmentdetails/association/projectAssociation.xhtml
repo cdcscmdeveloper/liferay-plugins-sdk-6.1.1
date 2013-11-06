@@ -1,0 +1,72 @@
+<ui:composition
+	template="/WEB-INF/facelets/templates/basic_template.xhtml"
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:c="http://java.sun.com/jsp/jstl/core">
+    <ui:define name="contentSection">
+    <style>
+      .column-align-center { text-align: center !important;}
+    </style>
+          <p:panel id="associatePanelId" header="Project Association"   toggleable="true"  toggleSpeed="500">
+            <h:panelGrid columns="4" style="width:900px;">
+               <h:outputLabel value="#{lbl['lbl.ct.asearch.pname']}"  />
+               <p:inputText value="#{contractDetailsBackingBean.managedBean.projectName}"  style="width:170px;"/>
+               <h:outputLabel value="#{lbl['lbl.ct.asearch.cname']}"  />
+               <p:inputText value="#{contractDetailsBackingBean.managedBean.projectDescription}"  style="width:170px;"/>
+               <h:outputLabel value="#{lbl['lbl.ct.asearch.pdes']}" />
+               <p:inputText  style="width:170px;" />
+               <h:outputLabel value="#{lbl['lbl.ct.asearch.sname']}"  />
+               <p:inputText  style="width:170px;"/>
+               <h:outputLabel value="#{lbl['lbl.ct.asearch.cstart']}"  />
+               <p:calendar style="width:130px;" value="#{contractDetailsBackingBean.managedBean.effDate}" id="calefdate" showOn="button" />
+               <h:outputLabel value="#{lbl['lbl.ct.asearch.cend']}" />
+               <p:calendar style="width:130px;" value="#{contractDetailsBackingBean.managedBean.expDate}" id="calepdate" showOn="button" />
+               <h:outputLabel value="#{lbl['lbl.ct.asearch.pcno']}" styleClass="txtsize" />
+               <p:inputText  style="width:170px;"/>
+               <f:verbatim></f:verbatim>
+               <h:panelGrid columns="2">
+                 <p:commandButton value="#{lbl['lbl.ct.asearch.btn.search']}"  process="@this" icon="ui-icon-search"  
+                    actionListener="#{contractDetailsBackingBean.searchAssociation()}"  update="associateSearch"/>
+                 <p:commandButton value="#{lbl['lbl.ct.asearch.btn.reset']}"  process="@this" partialSubmit="true" icon="ui-icon-reset" />
+               </h:panelGrid>
+              </h:panelGrid>
+		 </p:panel>
+		 <p:panel id="associateResultId" header="#{lbl['lbl.ct.asearch.panel.result']}"   toggleable="true"  toggleSpeed="500">
+            <div style="overflow-x:auto">
+			    <h:panelGrid  style="width:950px;">          
+			        <p:dataTable id="associateSearch" var="data" value="#{contractDetailsBackingBean.managedBean.associationList}" rowIndexVar="index"
+			         widgetVar="dataTableObj" lazy="false" dynamic="true" paginator="true" paginatorPosition="bottom" paginatorAlwaysVisible="false" 
+			         emptyMessage="No Records!" rows="5">
+						<p:columnGroup type="header"> 
+							<p:row> 
+							    <p:column  headerText="#{lbl['lbl.ct.asearch.table1.no']}" />
+								<p:column  style="width:200px" headerText="#{lbl['lbl.ct.asearch.table1.pname']}"   /> 
+								<p:column  style="width:400px" headerText="#{lbl['lbl.ct.asearch.table1.pdes']}" /> 
+							    <p:column  style="width:80px" headerText="#{lbl['lbl.ct.asearch.table1.noc']}" /> 	
+							    <p:column  style="width:100px" headerText="#{lbl['lbl.ct.asearch.table1.action']}" />
+					        </p:row>							
+							</p:columnGroup>
+							    <p:column> <h:outputText value="#{index+1}" /></p:column> 							
+							    <p:column> <h:outputText value="#{data.projectName}"  /></p:column>
+							    <p:column><h:outputText value="#{data.description}" /></p:column>	
+							    <p:column><h:outputText value="1" /></p:column>	
+							    <p:column width="85">
+						           <p:commandButton title="edit"  icon="ui-icon-edit" process="@this" action="#{contractDetailsBackingBean.gotoAssociatePage}" >  
+						            <f:setPropertyActionListener value="#{data}" target="#{contractDetailsBackingBean.managedBean.association}" /></p:commandButton>
+						           <p:spacer width="3" />
+								   <p:commandButton title="delete"  onsuccess="confirmation1.show()" partialSubmit="true" process="@this" icon="ui-icon-delete">
+								   <f:setPropertyActionListener value="#{data}" target="#{contractDetailsBackingBean.managedBean.association}" />
+								   </p:commandButton>   
+								</p:column>
+					      </p:dataTable>
+						    <h:panelGrid style="width:950px;">
+							  <p:commandButton value="Create"  style="float:right;" icon="ui-icon-add" action="#{contractDetailsBackingBean.gotoAssociatePage}"/>
+						    </h:panelGrid>
+				    </h:panelGrid>
+		   	   </div>
+		   </p:panel>
+	 </ui:define>
+</ui:composition>

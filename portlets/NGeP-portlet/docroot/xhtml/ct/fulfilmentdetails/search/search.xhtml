@@ -7,59 +7,53 @@
 	xmlns:p="http://primefaces.org/ui"
 	xmlns:c="http://java.sun.com/jsp/jstl/core">
     <ui:define name="contentSection">
+    <style>
+      .column-align-center { text-align: center !important;}
+    </style>
          <p:tabView id="tabview"   tabChangeListener="#{contractDetailsBackingBean.onChange}" onTabChangeUpdate="growl">
             <p:tab id="searchTab" title="General" >
                   <p:panel id="searchId" header="#{lbl['lbl.ct.search.panel.name']}" toggleable="true"  toggleSpeed="500" widgetVar="panelsearch">
                            <h:panelGrid columns="4" style="width:900px;">
                                 <h:outputLabel value="#{lbl['lbl.ct.search.cno']}" />
-                                <p:inputText value="#{contractDetailsBackingBean.managedBean.contractNo}"  style="width:200px;"/>
+                                <p:inputText value="#{contractDetailsBackingBean.managedBean.contractNo}"  style="width:170px;"/>
                                 <h:outputLabel value="#{lbl['lbl.ct.search.cname']}" />
-                                <p:inputText value="#{contractDetailsBackingBean.managedBean.contractName}"  style="width:200px;"/>
-                                <h:outputLabel value="#{lbl['lbl.ct.search.lno']}" />
-                                <p:inputText value="#{contractDetailsBackingBean.managedBean.qtLoaNo}" style="width:200px;"/>
-                                <h:outputLabel value="#{lbl['lbl.ct.search.cstart']}"/>
+                                <p:inputText value="#{contractDetailsBackingBean.managedBean.contractName}"  style="width:170px;"/>
+                                 <h:outputLabel value="#{lbl['lbl.ct.search.cstart']}"/>
                                 <p:calendar style="width:130px;" value="#{contractDetailsBackingBean.managedBean.effDate}" id="popupButtonCal" showOn="button" />
                                 <h:outputLabel value="#{lbl['lbl.ct.search.cend']}" />
                                 <p:calendar style="width:130px;" value="#{contractDetailsBackingBean.managedBean.expDate}" id="popupButtonCal1" showOn="button" />
+                                <h:outputLabel value="#{lbl['lbl.ct.search.lno']}" />
+                                <p:inputText value="#{contractDetailsBackingBean.managedBean.qtLoaNo}" style="width:170px;"/>
                                 <h:outputLabel value="#{lbl['lbl.ct.search.sid']}" />
-                                <p:inputText  style="width:200px;"/>
+                                <p:inputText  style="width:170px;"/>
                                 <h:outputLabel value="#{lbl['lbl.ct.search.sname']}"/>
-                                <p:inputText  style="width:200px;"/>
+                                <p:inputText  style="width:170px;"/>
                                 <h:outputLabel value="#{lbl['lbl.ct.search.clno']}" />
-                                <p:inputText  style="width:200px;" />
+                                <p:inputText  style="width:170px;" />
                                 <h:outputLabel value="#{lbl['lbl.ct.search.clname']}" />
-                                <p:inputText  style="width:200px;"/>
-                                <h:panelGroup>
-			                       <div style="height: 30px; vertical-align: top">
-			                       <p:outputLabel for="productCode" value="#{lbl['lbl.ct.search.pcode']}" />
-							       </div>
-						        </h:panelGroup>
+                                <p:inputText  style="width:170px;"/>
+                                <p:outputLabel value="#{lbl['lbl.ct.search.pcode']}" />
+							    <p:inputText id="productCode"  style="width:170px;" />
+
 						        <h:panelGroup>
-						           <div style="height: 10px; vertical-align: top">
-							       <p:inputText id="productCode"  style="width:200px;" /></div>
-						        </h:panelGroup>
-						        <h:panelGroup>
-			                    <div style="height: 30px; vertical-align: top">
+			                    <div style="height: 10px; vertical-align: top">
 			                     <p:outputLabel for="status" value="#{lbl['lbl.ct.search.status']}" />
 							    </div>
 						        </h:panelGroup>
-						          <h:panelGrid styleClass="txtsize">
-                                <p:selectOneListbox id="status"  style="width:200px;"  >
+						        <h:panelGrid>
+                                <p:selectOneListbox id="status"   style="width:180px;"  >
                                    <f:selectItem itemLabel="Pending Fulfillment Creation" itemValue="1"  />  
                                    <f:selectItem itemLabel="Pending Approval" itemValue="2"  />  
                                    <f:selectItem itemLabel="Approved" itemValue="3" />  
                                 </p:selectOneListbox>
                                 </h:panelGrid>
                                 <f:verbatim></f:verbatim>
-			                    <f:verbatim></f:verbatim>
-                                <f:verbatim></f:verbatim>
-                                <h:panelGrid columns="3" columnClasses="column-align-right">
-                                 <f:verbatim></f:verbatim>
-                                  <p:commandButton value="#{lbl['lbl.ct.search.btn.search']}" actionListener="#{contractDetailsBackingBean.searchContract()}"
-                                    process="@form" partialSubmit="true"  icon="ui-icon-add"  update="@form"/>
-							        <p:commandButton value="#{lbl['lbl.ct.search.btn.reset']}"  process="@this" partialSubmit="true" icon="ui-icon-add"  update="dataTable"/>
-						        </h:panelGrid>
-                           </h:panelGrid>
+                                <h:panelGrid columns="2">
+			                    <p:commandButton value="#{lbl['lbl.ct.search.btn.search']}" actionListener="#{contractDetailsBackingBean.searchContract()}"
+                                    process="@this" partialSubmit="true"  icon="ui-icon-search"  update="dataTable"/>
+							        <p:commandButton value="#{lbl['lbl.ct.search.btn.reset']}"  process="@this" partialSubmit="true" icon="ui-icon-reset"  update="dataTable"/>
+						       </h:panelGrid>
+						     </h:panelGrid>
 			       </p:panel>
 				   <p:panel id="searchResulId" header="#{lbl['lbl.ct.search.panel.result']}"  toggleable="true"  toggleSpeed="500" widgetVar="panelsearchResul">
                        <div style="overflow-x:auto">
@@ -81,32 +75,32 @@
 								               </p:columnGroup>
 							                            <p:column styleClass="column-align-center" > <h:outputText value="#{index+1}" /></p:column> 							
 							                            <p:column> <h:outputText value="#{data.contractName}" /></p:column>
-							                            <p:column><h:outputText  /></p:column>	
-							                            <p:column><h:outputText /></p:column>					
-							                            <p:column> <h:outputText  /> </p:column>	
-							                            <p:column><h:outputText  /></p:column>	
+							                            <p:column><h:outputText value="CR-2013-0001" /></p:column>	
+							                            <p:column><h:outputText value="Khai Sdn Bhd" /></p:column>					
+							                            <p:column><h:outputText value="04/11/2013" /> </p:column>	
+							                            <p:column><h:outputText value="03/11/2014" /></p:column>	
 							                            <p:column><h:outputText value="#{data.qtLoaNo}" /></p:column>	
-							                            <p:column> <h:outputText value="#{data.recordStatus}" /> </p:column>	
+							                            <p:column> <h:outputText value="Active"/> </p:column>	
 							                            <p:column styleClass="column-align-center">
-								                          <p:commandButton title="Suspended" action="#{contractDetailsBackingBean.gotoSuspendPage}" 
-								                               partialSubmit="true" process="@this" icon="ui-icon-suspend"/>
-								                          <p:spacer width="2"/>
+								                          <p:commandButton title="Suspended"  action="#{contractDetailsBackingBean.gotoSuspendPage}" 
+								                          icon="ui-icon-suspension">
+								                           <f:setPropertyActionListener value="#{data}" target="#{contractDetailsBackingBean.contract}"  />
+								                          </p:commandButton>
+								                     
 								                          <p:commandButton title="Termination" action="#{contractDetailsBackingBean.gotoTerminatePage}"
 								                             partialSubmit="true" process="@this" icon="ui-icon-terminate"/>
-								                          <p:spacer width="2"/>
+								                       
 								                          <p:commandButton title="Amendment" action="#{contractDetailsBackingBean.gotoAmendPage}" 
-								                            partialSubmit="true" process="@this" icon="ui-icon-amend" />
-								                             <p:spacer width="2"/>
-								                          <p:commandButton title="View Agreement" value="view" action="#{contractDetailsBackingBean.gotoViewPage}" 
-								                            partialSubmit="true" process="@this" icon="ui-icon-amend" />
+								                            partialSubmit="true" process="@this" icon="ui-icon-revise" />
+								                            
+								                          <p:commandButton title="View Agreement"  action="#{contractDetailsBackingBean.gotoViewPage}" icon="ui-icon-agree">
+								                              <f:setPropertyActionListener value="#{data}" target="#{contractDetailsBackingBean.contract}"  />
+								                          </p:commandButton>
 								                      </p:column> 
 							              </p:dataTable>
 						       </div>
 						</p:panel>
                   </p:tab>
-                  <p:tab title="Associate Ministry Contract">
-                       <ui:include src="/xhtml/ct/fulfilmentdetails/search/advanceSearch.xhtml" />
-                </p:tab>
 	     </p:tabView>
    </ui:define>
 </ui:composition>

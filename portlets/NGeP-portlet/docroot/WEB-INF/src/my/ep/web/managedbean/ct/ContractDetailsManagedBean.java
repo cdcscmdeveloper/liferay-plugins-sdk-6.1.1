@@ -25,6 +25,8 @@ import my.ep.persistence.entity.ct.dtl.CtSetting;
 import my.ep.persistence.entity.ct.dtl.deduction.CtDeduction;
 import my.ep.persistence.entity.ct.dtl.deduction.CtDeductionClause;
 import my.ep.persistence.entity.ct.factoring.CtFactoring;
+import my.ep.persistence.entity.ct.terminate.CtTerminationClause;
+import my.ep.persistence.entity.ct.terminate.CtTerminationReason;
 import my.ep.persistence.entity.sm.SmSupplier;
 import my.ep.persistence.entity.sm.SmSupplierBank;
 import my.ep.web.managedbean.BaseManagedBean;
@@ -49,8 +51,6 @@ public class ContractDetailsManagedBean extends BaseManagedBean{
 
 	private static Logger log = Logger.getLogger(ContractDetailsManagedBean.class);
 	private static final long serialVersionUID = 1L;
-	
-	private String viewAgreement;
 	
 	private String taskId;
 	private String[] outComes;
@@ -108,6 +108,16 @@ public class ContractDetailsManagedBean extends BaseManagedBean{
 	private List<CtContract> associateSearchList = new ArrayList<CtContract>();
 	private List<CtAssociation> associationList = new ArrayList<CtAssociation>();
 	
+	/*Termination*/
+	private boolean terminateNotice;
+	private String TerminateRecommedType;
+	private boolean terminateWarningLetter;
+	private boolean terminateRejectLetter;
+	private List<CtTerminationClause> terminationClauseList;
+	private List<CtTerminationReason> terminateReasonList;
+	private CtTerminationReason terminationReason = new  CtTerminationReason();
+	private CtTerminationClause terminationClause = new CtTerminationClause();
+	
 	public  ContractDetailsManagedBean(){
 		source.add(new SettingDetails("Khan", 10));  
 	    source.add(new SettingDetails("Alam", 8));  
@@ -140,13 +150,6 @@ public class ContractDetailsManagedBean extends BaseManagedBean{
 		this.itemCeilingQuantity = itemCeilingQuantity;
 	}
 
-	public String getViewAgreement() {
-		return viewAgreement;
-	}
-	public void setViewAgreement(String viewAgreement) {
-		this.viewAgreement = viewAgreement;
-	}
-	
 	public CtContract getCtContract() {
 		return ctContract;
 	}
@@ -477,7 +480,75 @@ public class ContractDetailsManagedBean extends BaseManagedBean{
 	public void setAssociationList(List<CtAssociation> associationList) {
 		this.associationList = associationList;
 	}
-	
+
+	public String getTerminateRecommedType() {
+		return TerminateRecommedType;
+	}
+
+	public void setTerminateRecommedType(String terminateRecommedType) {
+		TerminateRecommedType = terminateRecommedType;
+	}
+
+	public boolean isTerminateWarningLetter() {
+		return terminateWarningLetter;
+	}
+
+	public void setTerminateWarningLetter(boolean terminateWarningLetter) {
+		this.terminateWarningLetter = terminateWarningLetter;
+	}
+
+	public boolean isTerminateNotice() {
+		return terminateNotice;
+	}
+
+	public void setTerminateNotice(boolean terminateNotice) {
+		this.terminateNotice = terminateNotice;
+	}
+
+	public boolean isTerminateRejectLetter() {
+		return terminateRejectLetter;
+	}
+
+	public void setTerminateRejectLetter(boolean terminateRejectLetter) {
+		this.terminateRejectLetter = terminateRejectLetter;
+	}
+
+	public CtTerminationReason getTerminationReason() {
+		return terminationReason;
+	}
+
+	public void setTerminationReason(CtTerminationReason terminationReason) {
+		this.terminationReason = terminationReason;
+	}
+
+	public List<CtTerminationReason> getTerminateReasonList() {
+		if(terminateReasonList == null)
+			terminateReasonList = new ArrayList<CtTerminationReason>();
+		return terminateReasonList;
+	}
+
+	public void setTerminateReasonList(List<CtTerminationReason> terminateReasonList) {
+		this.terminateReasonList = terminateReasonList;
+	}
+
+	public List<CtTerminationClause> getTerminationClauseList() {
+		if(terminationClauseList == null)
+			terminationClauseList = new ArrayList<CtTerminationClause>();
+		return terminationClauseList;
+	}
+
+	public void setTerminationClauseList(
+			List<CtTerminationClause> terminationClauseList) {
+		this.terminationClauseList = terminationClauseList;
+	}
+
+	public CtTerminationClause getTerminationClause() {
+		return terminationClause;
+	}
+
+	public void setTerminationClause(CtTerminationClause terminationClause) {
+		this.terminationClause = terminationClause;
+	}
 	
 	/*Testing Start*/	
 }

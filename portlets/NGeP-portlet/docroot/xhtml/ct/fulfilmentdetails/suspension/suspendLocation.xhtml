@@ -1,20 +1,13 @@
 <ui:composition
-	template="/WEB-INF/facelets/templates/sidemenu_template.xhtml"
 	xmlns="http://www.w3.org/1999/xhtml"
 	xmlns:f="http://java.sun.com/jsf/core"
 	xmlns:h="http://java.sun.com/jsf/html"
 	xmlns:ui="http://java.sun.com/jsf/facelets"
 	xmlns:p="http://primefaces.org/ui"
 	xmlns:c="http://java.sun.com/jsp/jstl/core">
-	<ui:define name="resourceSection">
-	</ui:define>
-	<ui:define name="sideMenu">
-		<ui:include src="/xhtml/ct/fulfilmentdetails/shared/sidemenu/suspension.xhtml" />
-	</ui:define>
-	<ui:define name="content">
-	<p:panel id="locationId" header="Item Details"   toggleable="true"  toggleSpeed="500" widgetVar="panellocation">
-       <p:dataTable id="dataTable1" var="data"  value="" rowIndexVar="index" widgetVar="dataTableObj"
-	      lazy="false" paginator="false"   emptyMessage="No Records!">
+	<p:panel id="locationId" header="Location Details"   toggleable="true"  toggleSpeed="500" widgetVar="panellocation">
+       <p:dataTable id="locationTable" var="data"  value="" rowIndexVar="index" widgetVar="dataTableObj"
+	      lazy="false" paginator="true"  paginatorPosition="bottom" paginatorAlwaysVisible="true" emptyMessage="No Records!">
 		  <p:columnGroup type="header"> 
 		  <p:row> 
 			<p:column rowspan="2" headerText="Location"  />
@@ -24,19 +17,18 @@
 			<p:column colspan="3" headerText="Action" />
 		 </p:row>							
 		 <p:row> 
-		    <p:column headerText="Suspend" />	
-			<p:column headerText="Activate"/>
-			<p:column headerText="Extend" />	
+		    <p:column headerText="S" />	
+			<p:column headerText="A"/>
+			<p:column headerText="E" />	
 		 </p:row>
 		 </p:columnGroup>
-		    <p:column> </p:column> 
-			<p:column> </p:column> 
-			<p:column width="100"> 	</p:column> 
-			<p:column width="100" >	</p:column> 
-			<p:column> </p:column> 
-			<p:column> </p:column>
-			<p:column> 	</p:column>
-	   </p:dataTable>			
+		    <p:column> <h:outputText value="Zone Tengah" />   </p:column> 
+			<p:column> <h:outputText value="Active" />   </p:column> 
+			<p:column width="100"> <p:calendar value="#{contractSuspendBackingBean.managedBean.endDate}" id="calloc1" showOn="button"/>  	</p:column> 
+			<p:column width="100" > <p:calendar value="#{contractSuspendBackingBean.managedBean.endDate}" id="calloc2" showOn="button"/>  	</p:column> 
+			<p:column>  <p:selectBooleanCheckbox value=""  disabled="false"/> </p:column> 
+			<p:column> <p:selectBooleanCheckbox value=""  disabled="false"/> </p:column>
+			<p:column> <p:selectBooleanCheckbox value=""  disabled="false"/> 	</p:column>
+	   </p:dataTable>	
       </p:panel>                
-	</ui:define>
 </ui:composition>

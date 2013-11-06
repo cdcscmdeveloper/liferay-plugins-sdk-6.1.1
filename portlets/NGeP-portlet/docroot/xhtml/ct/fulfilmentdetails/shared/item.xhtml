@@ -6,9 +6,8 @@
 	xmlns:p="http://primefaces.org/ui"
 	xmlns:c="http://java.sun.com/jsp/jstl/core">
          <p:panel id="itemId" header="#{lbl['lbl.ct.item.panel.name']}"   toggleable="true"  toggleSpeed="500" widgetVar="panelitem">
-            <p:dataTable id="tableItem" var="data" value=""
-              paginator="true" paginatorPosition="bottom" paginatorAlwaysVisible="true" emptyMessage="No Records!" rows="10" 
-			  rowsPerPageTemplate="5,10,15,20">
+            <p:dataTable id="tableItem" var="data" value="" paginator="true" paginatorPosition="bottom" paginatorAlwaysVisible="true" 
+            emptyMessage="No Records!" rows="10">
             
               <p:ajax event="rowSelect"   listener="#{contractDetailsBackingBean.onRowSelect}"  process="@this" update=":form:tabview:changeFields"/> 
               <p:ajax event="rowUnselect" listener="#{contractDetailsBackingBean.onRowUnselect}" />  
@@ -29,7 +28,9 @@
 			    <p:selectBooleanCheckbox value=""/></p:column>     
 			</p:dataTable>
 			<h:panelGrid columns="2" style="height:70px;text-align:bottom;">
-			  <h:outputLabel for="show" value="#{lbl['lbl.ct.item.show']}" style="width:100px;"/>  
+			  <p:spacer height="10"/>
+			  <f:verbatim></f:verbatim>
+			  <p:outputLabel for="show" value="#{lbl['lbl.ct.item.show']}"/>  
                <p:selectOneMenu id="show" disabled="false"  value="#{contractDetailsBackingBean.managedBean.showItem}"  style="width:200px;">
             	    <f:selectItems value="#{contractDetailsBackingBean.itemDetailsMethod}" />
             	    <p:ajax event="change" update="changeFields" listener="#{contractDetailsBackingBean.changeField}" process="@this"/>  
@@ -41,8 +42,7 @@
 		 	 <p:panel id="itemZoneId"  header="#{contractDetailsBackingBean.managedBean.showItem}"  toggleable="true"  toggleSpeed="500"  widgetVar="panelitemzone">
 				<h:panelGrid rendered="#{contractDetailsBackingBean.managedBean.itemPricing}">
 				   <p:dataTable id="tableItemZone"  var="data" value="#{contractDetailsBackingBean.ctItemPrice}" widgetVar="dataTableObj"
-                    lazy="false" dynamic="true" paginator="true" paginatorPosition="bottom" paginatorAlwaysVisible="true" emptyMessage="No Records!" rows="10" 
-			        rowsPerPageTemplate="5,10,15,20">
+                    lazy="false" dynamic="true" paginator="true" paginatorPosition="bottom" paginatorAlwaysVisible="true" emptyMessage="No Records!" rows="10">
 				    <p:columnGroup type="header"> 
 				    <p:row> 
 				      <p:column headerText="#{lbl['lbl.ct.item.table1.price.zone']}" />

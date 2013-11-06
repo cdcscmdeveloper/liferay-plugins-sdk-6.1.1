@@ -1,0 +1,46 @@
+<ui:composition
+	template="/WEB-INF/facelets/templates/basic_template.xhtml"
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:c="http://java.sun.com/jsp/jstl/core">  
+	<ui:define name="contentSection">
+	<style>
+      .column-align-center { text-align: center !important;}
+    </style>
+	<p:panel>
+	 <div class="ppRightBtn"> 
+	  			<ui:repeat var="action"	value="#{contractSuspendBackingBean.managedBean.outComes}">
+					<p:commandButton value="#{action}" process="@this" styleClass="ui-button" actionListener="#{contractSuspendBackingBean.createSuspend(action)}" />
+				</ui:repeat>		
+    </div>
+	</p:panel>
+	 <p:tabView id="tabview" orientation="left" onTabShow="handleTabShow(tab)" activeIndex="0">
+     <p:tab title="#{lbl['lbl.ct.menu.fd']}" >
+            <ui:include src="/xhtml/ct/fulfilmentdetails/shared/fulfilment.xhtml"/>
+            <ui:include src="/xhtml/ct/fulfilmentdetails/suspension/suspendDetails.xhtml"/>
+       </p:tab> 
+	   <p:tab title="#{lbl['lbl.ct.menu.item']}" >
+           <ui:include src="/xhtml/ct/fulfilmentdetails/suspension/suspendItem.xhtml"/>
+       </p:tab> 
+        <p:tab id="sLocation" title="#{lbl['lbl.ct.menu.location']}" >
+           <ui:include src="/xhtml/ct/fulfilmentdetails/suspension/suspendLocation.xhtml"/>
+       </p:tab> 
+        <p:tab id="sletter" title="Suspension Letter">
+           <ui:include src="/xhtml/ct/fulfilmentdetails/suspension/suspensionLetter.xhtml"/>
+       </p:tab> 
+       <p:tab title="#{lbl['lbl.ct.menu.remark']}" >
+           <ui:include src="/xhtml/ct/fulfilmentdetails/suspension/attachements.xhtml"/>
+       </p:tab> 
+	</p:tabView>
+	<script type="text/javascript"> 
+	    function handleTabShow(tab) {
+	    if (tab.index() == 4) {
+	        editorWidgetVar.init();
+	    }
+	}
+	</script>
+    </ui:define>
+</ui:composition>

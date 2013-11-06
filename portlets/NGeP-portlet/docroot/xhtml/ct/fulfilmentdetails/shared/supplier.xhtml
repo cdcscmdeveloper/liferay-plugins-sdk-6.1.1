@@ -6,50 +6,51 @@
 	xmlns:p="http://primefaces.org/ui"
 	xmlns:c="http://java.sun.com/jsp/jstl/core">
    <p:panel id="sbd" header="#{lbl['lbl.ct.su.panel.name']}"  toggleable="true"  toggleSpeed="500" widgetVar="panelsbd">
-    <h:panelGrid columns="2" style="width:750px;">  
-     <h:panelGrid columns="2" style="width:430px;">  
+    <h:panelGrid columns="2" style="width:670px;">  
+     <h:panelGrid columns="2" style="width:350px;">  
               <p:outputLabel value="#{lbl['lbl.ct.su.id']}" />  
-              <p:inputText value="" disabled="false" style="width:230px;"/>
+              <p:inputText value="" disabled="false" style="width:170px;"/>
               <p:outputLabel value="Supplier Name" />  
-              <p:inputText value="" disabled="false" style="width:230px;"/> 
+              <p:inputText value="" disabled="false" style="width:170px;"/> 
               <p:outputLabel  value="#{lbl['lbl.ct.su.email']}"/>  
-              <p:inputText  value="" required="true" disabled="false" style="width:200px;" />
+              <p:inputText  value="" required="true" disabled="false" style="width:170px;" />
               <p:outputLabel  value="#{lbl['lbl.ct.su.tel.hp']}"/>  
-              <p:inputText  value="" required="true" disabled="false" style="width:200px;"/>  
+              <p:inputText  value="" required="true" disabled="false" style="width:120px;"/>  
               <p:outputLabel  value="#{lbl['lbl.ct.su.fax']}"/>
-              <p:inputText  value="" required="true" disabled="false" style="width:200px;"/>  
+              <p:inputText  value="" required="true" disabled="false" style="width:120px;"/>  
               <p:outputLabel  value="#{lbl['lbl.ct.su.tel.office']}"/>  
-              <p:inputText  value="" required="true" disabled="false" style="width:200px;" />
+              <p:inputText  value="" required="true" disabled="false" style="width:120px;" />
               <h:panelGroup>
-              <div style="height: 30px; vertical-align: top">
+              <div style="height: 30px; vertical-align:top">
                  <p:outputLabel for="supplierAddress" value="#{lbl['lbl.ct.su.address']}" />
               </div>
               </h:panelGroup>
               <h:panelGrid>
                  <p:inputTextarea id="supplierAddress" disabled="false" value="" required="false" 
-                  rows="3" cols="23"   maxlength="100"  autoResize="false" />
+                  rows="2" cols="28"   maxlength="100"  autoResize="false" />
               </h:panelGrid>
               </h:panelGrid>
-              <h:panelGrid columns="2" style="width:320px; vertical-align: top;">
+              
+              <h:panelGrid columns="1" style="width:320px; vertical-align: top;">
+                 <h:panelGrid columns="2" style="width:300px;">
                   <p:outputLabel  value="#{lbl['lbl.ct.bank.acc.no']}" />  
-                    <p:selectOneMenu disabled="false"  value="">
-            	    <f:selectItems value="" />
-            	    <p:ajax event="change" update="changeAccValue" listener="#{contractDetailsBackingBean.changeAccDetails}" process="@this"/>  
-	              </p:selectOneMenu>
-         
+                    <p:selectOneMenu disabled="false" style="width:170px;">
+                  </p:selectOneMenu>
+                </h:panelGrid>
+                <p:spacer height="1"/>
                 <p:outputPanel id="changeAccValue"> 
-                   <h:panelGrid columns="2">
+                   <h:panelGrid columns="2" style="width:300px;">
                          <p:outputLabel  value="#{lbl['lbl.ct.bank.name']}"/>  
-                         <p:inputText  value="" disabled="false" /> 
+                         <p:inputText  disabled="false" style="width:170px;" /> 
                          <p:outputLabel  value="#{lbl['lbl.ct.bank.branch']}"/>  
-                         <p:inputText  value="" disabled="false" />
+                         <p:inputText   disabled="false" style="width:170px;" />
                          <h:panelGroup>
-                             <div style="height: 40px; vertical-align: top">
+                             <div style="height: 30px; vertical-align: top">
                                <p:outputLabel for="bankAddress" value="#{lbl['lbl.ct.bank.address']}" />
                              </div>
                          </h:panelGroup>
 	                     <h:panelGrid>
-                            <p:inputTextarea id="bankAddress"  value="" disabled="false" rows="1" cols="23"  autoResize="false" />
+                            <p:inputTextarea id="bankAddress"  value="" disabled="false" rows="2" cols="28"  autoResize="false" />
 	                     </h:panelGrid>
 	                     </h:panelGrid>
 	           </p:outputPanel>

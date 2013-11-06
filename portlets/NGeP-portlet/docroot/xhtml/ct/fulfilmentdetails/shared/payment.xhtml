@@ -7,9 +7,7 @@
 	xmlns:c="http://java.sun.com/jsp/jstl/core">
 	<p:panel id="paymentId" header="Payment History"  toggleable="true"  toggleSpeed="500" widgetVar="panelpayment">  
     <p:dataTable id="tablePayment" var="data" value=" " widgetVar="dataTableObj" lazy="false" dynamic="true" 
-	   paginator="true" paginatorPosition="bottom" paginatorAlwaysVisible="true" emptyMessage="No Records!" rows="10" 
-	   rowsPerPageTemplate="5,10,15,20" currentPageReportTemplate=" total {totalRecords},  page {currentPage} of {totalPages} "
-	   paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}">
+	   paginator="true" paginatorPosition="bottom" paginatorAlwaysVisible="true" emptyMessage="No Records!" rows="10">
 	   <p:columnGroup type="header"> 
 		<p:row> 
 		  <p:column style="width:150px" headerText="#{lbl['lbl.ct.pay.table.no']}"  /> 
@@ -27,11 +25,9 @@
 	  </p:dataTable>
       <h:panelGrid style="width:600px">
       <p:spacer height="8"/>
-      <h:outputLabel  value="#{lbl['lbl.ct.pay.summ']}" style="width:100px;font-size:12px;font-weight:bold;"/>  
+      <h:outputLabel  value="#{lbl['lbl.ct.pay.summ']}" style="width:100px;font-size:12px;font-weight:bold;float:left;"/>  
       <p:dataTable id="tablePaySum" var="data" value=" " widgetVar="dataTableObj" lazy="false" dynamic="true" 
-		 paginator="true" paginatorPosition="bottom" paginatorAlwaysVisible="true" emptyMessage="No Records!" rows="10" 
-		 rowsPerPageTemplate="5,10,15,20" currentPageReportTemplate=" total {totalRecords},  page {currentPage} of {totalPages} "
-		 paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}">
+		 paginator="true" paginatorPosition="bottom" paginatorAlwaysVisible="true" emptyMessage="No Records!" rows="10">
 	     <p:columnGroup type="header"> 
 		 <p:row> 
 		   <p:column colspan="1" style="width:200px" headerText="#{lbl['lbl.ct.pay.table1.desc']}"  /> 

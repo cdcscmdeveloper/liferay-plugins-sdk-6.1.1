@@ -1,0 +1,41 @@
+<ui:composition
+	template="/WEB-INF/facelets/templates/basic_template.xhtml"
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:c="http://java.sun.com/jsp/jstl/core">  
+	<ui:define name="contentSection">
+	<style>
+      .column-align-right { text-align: right !important;}
+    </style>
+	 <p:panel>
+	 <div class="ppRightBtn"> 
+	     <ui:repeat var="action" value="#{contractDetailsBackingBean.managedBean.outComes}">
+			<p:commandButton value="#{action}" process="@this" styleClass="ui-button" actionListener="#{contractDetailsBackingBean.saveContract(action)}" />
+		 </ui:repeat>		
+    </div>
+	</p:panel>
+	<p:tabView id="tabview" value="Termination" orientation="left" >
+	   <p:tab title="#{lbl['lbl.ct.menu.fd']}" >
+         <ui:include src="/xhtml/ct/fulfilmentdetails/termination/termination.xhtml"/>
+       </p:tab> 
+       <p:tab title="#{lbl['lbl.ct.menu.sup']}" >
+         <ui:include src="/xhtml/ct/fulfilmentdetails/termination/supplierDetails.xhtml"/>
+       </p:tab> 
+	   <p:tab title="#{lbl['lbl.ct.menu.wletter']}" rendered="#{contractDetailsBackingBean.managedBean.terminateWarningLetter}" >
+         <ui:include src="/xhtml/ct/fulfilmentdetails/termination/warningLetter.xhtml"/>
+       </p:tab>  
+	   <p:tab title="#{lbl['lbl.ct.menu.tnotice']}" rendered="#{contractDetailsBackingBean.managedBean.terminateNotice}" >
+         <ui:include src="/xhtml/ct/fulfilmentdetails/termination/terminationNotice.xhtml" />  
+       </p:tab>   
+	   <p:tab title="#{lbl['lbl.ct.menu.rletter']}" rendered="#{contractDetailsBackingBean.managedBean.terminateRejectLetter}">
+         <ui:include src="/xhtml/ct/fulfilmentdetails/termination/rejectionLetter.xhtml" />    
+       </p:tab>  
+	   <p:tab title="#{lbl['lbl.ct.menu.remark']}">
+         <ui:include src="/xhtml/ct/fulfilmentdetails/termination/attachements.xhtml" />    
+     </p:tab> 
+	</p:tabView>
+   </ui:define>  
+</ui:composition>

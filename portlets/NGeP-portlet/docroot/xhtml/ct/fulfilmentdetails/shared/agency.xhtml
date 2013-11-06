@@ -6,6 +6,7 @@
 	xmlns:p="http://primefaces.org/ui"
 	xmlns:c="http://java.sun.com/jsp/jstl/core">
    <p:panel id="agencyId" header="#{lbl['lbl.ct.agn.panel.name']}"   toggleable="true"  toggleSpeed="500" widgetVar="panelagency">
+     <div style="overflow-x:auto">
     <p:treeTable id="treetableAgency" value="#{contractDetailsBackingBean.rootNodeAgency}" var="data"  
        selection="#{contractDetailsBackingBean.selectedNode}"  selectionMode="single">
           <p:column>  
@@ -41,6 +42,7 @@
 		    </p:commandButton>
           </p:column>  
        </p:treeTable>
+       </div>
        <h:panelGrid style="width:780px" columnClasses="column-align-right">
 		 <p:commandButton value="#{lbl['lbl.ct.agn.btn.add']}" process="@this" partialSubmit="true" 
 		     icon="ui-icon-add"   onclick="dlgAgency.show();">

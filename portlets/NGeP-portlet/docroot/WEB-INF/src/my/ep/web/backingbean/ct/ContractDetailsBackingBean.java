@@ -47,6 +47,8 @@ import my.ep.persistence.entity.sm.SmSupplierBank;
 import my.ep.persistence.logging.LogKey;
 import my.ep.type.aut.SearchOperator;
 import my.ep.web.backingbean.BaseBackingBean;
+import my.ep.web.backingbean.ct.agreement.AgreementBackingBean;
+import my.ep.web.backingbean.ct.suspend.ContractSuspendBackingBean;
 import my.ep.web.bean.ct.ContractListItem;
 import my.ep.web.bean.ct.CreateContractDetails;
 import my.ep.web.bean.ct.SettingDetails;
@@ -76,11 +78,13 @@ import org.primefaces.model.TreeNode;
 public class ContractDetailsBackingBean extends BaseBackingBean<ContractDetailsManagedBean> {
 
 	private static Logger log = Logger.getLogger(ContractDetailsBackingBean.class);
-	private static final String PROCESS_SUSPEND_PAGE="/xhtml/ct/fulfilmentdetails/suspension/suspend.xhtml";
-	private static final String PROCESS_TERMINATE_PAGE="/xhtml/ct/fulfilmentdetails/termination/termination.xhtml";
+	private static final String PROCESS_TERMINATE_PAGE="/xhtml/ct/fulfilmentdetails/termination/terminationTab.xhtml";
 	private static final String PROCESS_AMEND_PAGE="/xhtml/ct/fulfilmentdetails/amendment/amendment.xhtml";
-	private static final String PROCESS_VIEW_PAGE="/xhtml/ct/agreement/viewAgreement.xhtml";
-
+	private static final String PROCESS_VIEW_PAGE="/xhtml/ct/agreement/shared/sidemenu/agreementViewTab.xhtml";
+	private static final String PROCESS_SUSPEND_PAGE="/xhtml/ct/fulfilmentdetails/suspension/suspendTab.xhtml";
+	private static final String PROCESS_ASSOCIATE_PAGE ="/xhtml/ct/fulfilmentdetails/association/projectCreation.xhtml";
+	private static final String PROCESS_ASSOCIATE_CANCEL_PAGE = "/xhtml/ct/fulfilmentdetails/association/projectAssociation.xhtml";
+	
 	private TreeNode rootNode;  
 	private TreeNode selectedNode; 
 	
@@ -105,6 +109,7 @@ public class ContractDetailsBackingBean extends BaseBackingBean<ContractDetailsM
 	private List<CtItemCeilingQty> ctItemCeilingQty;
 	private List<CtPerformanceBond> CtPerformanceBonds;
     private List<CreateContractDetails> agencyDetails = null;
+    private CtContract contract = new CtContract();
 	/*Testing purpose End*/
 
     private CtDeductionClause[] chkDeductionClause;
@@ -117,6 +122,9 @@ public class ContractDetailsBackingBean extends BaseBackingBean<ContractDetailsM
 		  deductions[2] = "Advanced Payment";  
 		  deductions[3] = "Others";  
     }  
+	
+	/*Termination*/
+	 private String editorValue;
 	
 	public String[] getDeductions() {
 		  return deductions;
@@ -330,6 +338,15 @@ public class ContractDetailsBackingBean extends BaseBackingBean<ContractDetailsM
 		 list.add(new SelectItem("Item Ceiling Quantity","Item Ceiling Quantity"));
 		 return list;
 	}
+	
+	public List<SelectItem> getTerminationType() {	
+		   
+	     List<SelectItem> list = new ArrayList<SelectItem>();
+		 list.add(new SelectItem("Warning Letter","Warning Letter"));
+		 list.add(new SelectItem("Termination","Termination"));
+		 list.add(new SelectItem("Reject Termination","Reject Termination"));
+		 return list;
+	}
 			
 	private void flush(){
 		 this.getManagedBean().setItemPricing(false);
@@ -337,6 +354,9 @@ public class ContractDetailsBackingBean extends BaseBackingBean<ContractDetailsM
 	     //this.getManagedBean().setSmSupplierBank(null);
 		 paymentHistory = false;
 		 this.getManagedBean().setChkSchedule(false);
+		 this.getManagedBean().setTerminateNotice(false);
+		 this.getManagedBean().setTerminateRejectLetter(false);
+		 this.getManagedBean().setTerminateWarningLetter(false);
 	}
 
 	public void changeField(){  
@@ -344,10 +364,20 @@ public class ContractDetailsBackingBean extends BaseBackingBean<ContractDetailsM
 	    try{	
 			flush();    	
 			if(this.getManagedBean().getShowItem().equalsIgnoreCase("Item Pricing")){			
-		    this.getManagedBean().setItemPricing(true);
+		      this.getManagedBean().setItemPricing(true);
 			
 		    }else if(this.getManagedBean().getShowItem().equalsIgnoreCase("Item Ceiling Quantity")){
 				  this.getManagedBean().setItemCeilingQuantity(true);
+			
+		    }else if(this.getManagedBean().getTerminateRecommedType().equalsIgnoreCase("Warning Letter")){
+		    	this.getManagedBean().setTerminateWarningLetter(true);
+			
+		    }else if(this.getManagedBean().getTerminateRecommedType().equalsIgnoreCase("Termination")){
+				this.getManagedBean().setTerminateNotice(true);
+			
+		    }else if(this.getManagedBean().getTerminateRecommedType().equalsIgnoreCase("Reject Termination")){
+				this.getManagedBean().setTerminateRejectLetter(true);
+				
 			}
 	     }catch(Exception e){
 		   System.out.println(e);
@@ -389,6 +419,18 @@ public class ContractDetailsBackingBean extends BaseBackingBean<ContractDetailsM
 		this.getManagedBean().getAssociateSearchList().remove(this.getManagedBean().getCtContract());
 	}
 	
+	public void addTerminateReason(){
+		this.getManagedBean().getTerminateReasonList().add(this.getManagedBean().getTerminationReason());
+	}
+	
+	public void deleteTerminateReason(){
+		this.getManagedBean().getTerminateReasonList().remove(this.getManagedBean().getTerminationReason());
+	}
+	
+	public void deleteTerminateCaluse(){
+		this.getManagedBean().getTerminationClauseList().remove(this.getManagedBean().getTerminationClause());
+	}
+	
 	public void createAssociation(){
 	
 		List<CtAssocContract> assocContract = new ArrayList<CtAssocContract>();
@@ -397,6 +439,8 @@ public class ContractDetailsBackingBean extends BaseBackingBean<ContractDetailsM
 			
 		try{
 		  	
+			System.out.println("===============Project Name=============="+this.getManagedBean().getProjectName());
+			System.out.println("===============Project Description=============="+this.getManagedBean().getProjectDescription());
 			this.getManagedBean().getAssociation().setProjectName(this.getManagedBean().getProjectName());
 			this.getManagedBean().getAssociation().setDescription(this.getManagedBean().getProjectDescription());
 			for(CtContract ctContract : this.getManagedBean().getAssociateSearchList()){
@@ -430,7 +474,7 @@ public class ContractDetailsBackingBean extends BaseBackingBean<ContractDetailsM
 		try{
 			
 			SearchFilterBean equalFilterBean = new SearchFilterBean(SearchOperator.OPERATOR_EQUALS.value());
-			SearchFilterBean likeFilterBean = new SearchFilterBean(SearchOperator.OPERATOR_LIKE.value());
+		//	SearchFilterBean likeFilterBean = new SearchFilterBean(SearchOperator.OPERATOR_LIKE.value());
 			
 			if(this.getManagedBean().getProjectName()!=null) {
 			  equalFilterBean.setSearchField("projectName");
@@ -471,7 +515,8 @@ public class ContractDetailsBackingBean extends BaseBackingBean<ContractDetailsM
 			contractAssociationSO = (IContractAssociationSO)BusinessDelegate.getInstance().getServiceObject("ct", IContractAssociationSO.class);
 			reqDTO.setAssociation(this.getManagedBean().getAssociation());
 			log.info("deleteing value>>>>>>>" +this.getManagedBean().getAssociation().getAssociationId());
-			ContractAssociationResDTO resDTO = contractAssociationSO.deleteAssociation(reqDTO);
+		    contractAssociationSO.deleteAssociation(reqDTO);
+			
 			
 		}catch (Exception ex) {
 			log.error("Exception>>", ex);
@@ -639,7 +684,7 @@ public class ContractDetailsBackingBean extends BaseBackingBean<ContractDetailsM
 		
 		ISearchBean<CtContract> searchBean = new SearchBean<CtContract>();
 		SearchFilterBean equalFilterBean = new SearchFilterBean(SearchOperator.OPERATOR_EQUALS.value());
-		SearchFilterBean likeFilterBean = new SearchFilterBean(SearchOperator.OPERATOR_LIKE.value());
+	//	SearchFilterBean likeFilterBean = new SearchFilterBean(SearchOperator.OPERATOR_LIKE.value());
 		if(this.getManagedBean().getQtLoaNo()!=null) {
 		equalFilterBean.setSearchField("qtLoaId");
 		equalFilterBean.setSearchValue(this.getManagedBean().getQtLoaNo());
@@ -650,11 +695,6 @@ public class ContractDetailsBackingBean extends BaseBackingBean<ContractDetailsM
 		equalFilterBean.setSearchValue(getManagedBean().getContractName());
 		searchBean.getDataFilterBeans().add(equalFilterBean);
 		}
-	/*	if(this.getManagedBean().getContractNo()!=null) {
-		equalFilterBean.setSearchField("ctContractValues.contractNo");
-		equalFilterBean.setSearchValue(this.getManagedBean().getContractNo());
-		searchBean.getDataFilterBeans().add(equalFilterBean);
-		} */
 		
 		 log.info("searchAction starts");
 		 IContractSO contractSO = null;
@@ -835,9 +875,6 @@ public class ContractDetailsBackingBean extends BaseBackingBean<ContractDetailsM
 	
 public void onChange(TabChangeEvent event) { }
 	
-	public String gotoSuspendPage() {	
-	     return PROCESS_SUSPEND_PAGE;
-    }
 
 	public String gotoTerminatePage() {	
 		 return PROCESS_TERMINATE_PAGE;
@@ -847,10 +884,6 @@ public void onChange(TabChangeEvent event) { }
 		return PROCESS_AMEND_PAGE;
 	}
 
-	public String gotoViewPage(){
-	    this.getManagedBean().setViewAgreement("view");
-		return PROCESS_VIEW_PAGE;
-	}
 	
 	public boolean isActiveSuspension() {
 		return activeSuspension;
@@ -955,7 +988,44 @@ public void onChange(TabChangeEvent event) { }
 	public void setSelectedContractList(CtContract[] selectedContractList) {
 		this.selectedContractList = selectedContractList;
 	}
+
+	public String gotoSuspendPage() {	
+		ContractSuspendBackingBean ctsBB = new ContractSuspendBackingBean();
+		ctsBB.getManagedBean().setContract(contract);
+		contract = null;
+		return PROCESS_SUSPEND_PAGE;
+   }
 	
+	public String gotoViewPage(){
+		
+		AgreementBackingBean aBB = new AgreementBackingBean();
+		aBB.getManagedBean().setContract(contract);
+	  	return PROCESS_VIEW_PAGE;
+	}
+	
+	public String gotoAssociatePage(){
+		return PROCESS_ASSOCIATE_PAGE;
+	}
+	
+	public String gotoCancelPage(){
+		return PROCESS_ASSOCIATE_CANCEL_PAGE;
+	}
+
+	public CtContract getContract() {
+		return contract;
+	}
+
+	public void setContract(CtContract contract) {
+		this.contract = contract;
+	}
+
+	public String getEditorValue() {
+		return editorValue;
+	}
+
+	public void setEditorValue(String editorValue) {
+		this.editorValue = editorValue;
+	}
 	
 	
 }

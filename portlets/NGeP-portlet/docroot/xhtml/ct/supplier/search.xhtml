@@ -14,36 +14,32 @@
            <p:panel id="searchId" header="Supplier Search" toggleable="true"  toggleSpeed="500" widgetVar="panelsearch">
               <h:panelGrid columns="4" style="width:900px;" >
                  <h:outputLabel value="Contract Number"/>
-                 <p:inputText value="" style="width:200px;"/>
+                 <p:inputText value="#{supplierBackingBean.managedBean.contractNo}" style="width:170px;"/>
                  <h:outputLabel value="Contract Name"/>
-                 <p:inputText value="" style="width:200px;"/>
+                 <p:inputText value="#{supplierBackingBean.managedBean.contractName}" style="width:170px;"/>
                  <h:outputLabel value="Contract Start Date" />
-                 <p:calendar style="width:150px;" value="#{supplierDetailsBean.date}" id="popupButtonCal" showOn="button" />
+                 <p:calendar style="width:150px;" value="#{supplierBackingBean.managedBean.startDate}" id="popupButtonCal" showOn="button" />
                  <h:outputLabel value="Contract End Date" />
-                 <p:calendar style="width:150px;" value="#{supplierDetailsBean.date}" id="popupButtonCal1" showOn="button" />
+                 <p:calendar style="width:150px;" value="#{supplierBackingBean.managedBean.endDate}" id="popupButtonCal1" showOn="button" />
                  <h:outputLabel value="LOA No"/>
-                 <p:inputText value="" style="width:200px;"/>
+                 <p:inputText value="#{supplierBackingBean.managedBean.loaNo}" style="width:170px;"/>
                  <f:verbatim></f:verbatim>
                  <f:verbatim></f:verbatim>
                  <f:verbatim></f:verbatim>
                  <f:verbatim></f:verbatim>
                  <f:verbatim></f:verbatim>
-                 <h:panelGrid columns="2" style="width:200px;" columnClasses="column-align-right">
-                    <p:commandButton value="Search" styleClass="text-align: right;" process="@this" partialSubmit="true" icon="ui-icon-search">
-                    </p:commandButton>
-					<p:commandButton value="Reset" styleClass="text-align: right;" process="@this" partialSubmit="true" icon="ui-icon-reset">
-				    </p:commandButton>
-                 </h:panelGrid>
+                 <h:panelGrid columns="2" style="width:170px;" columnClasses="column-align-right">
+                    <p:commandButton value="Search" styleClass="text-align:right;" actionListener="#{supplierBackingBean.searchContract()}"
+                                    process="@this" partialSubmit="true"  icon="ui-icon-search"  update="supTable"/>
+					<p:commandButton value="Reset" styleClass="text-align:right;" process="@this" partialSubmit="true" icon="ui-icon-reset"/>
+			     </h:panelGrid>
                </h:panelGrid>
             </p:panel>
 			<p:panel id="searchResulId" header="Search Result"   toggleable="true"  toggleSpeed="500" widgetVar="panelsearchResul">
               <div style="overflow-x:auto">
-			     <p:dataTable id="dataTable" var="data" value="" rowIndexVar="index"
+			     <p:dataTable id="supTable" var="data" value="#{supplierBackingBean.managedBean.contractList}" rowIndexVar="index"
 				    widgetVar="dataTableObj" lazy="false" dynamic="true" paginator="true" paginatorPosition="bottom"
-				    paginatorAlwaysVisible="true" emptyMessage="No Records!" rows="10" rowsPerPageTemplate="5,10,15,20"
-					currentPageReportTemplate=" total {totalRecords},  page {currentPage} of {totalPages} "
-				    paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink}
-					{LastPageLink} {RowsPerPageDropdown}">
+				    paginatorAlwaysVisible="true" emptyMessage="No Records!" rows="10">
 				    <p:columnGroup type="header"> 
 					   <p:row> 
 	                     <p:column headerText="No." />
@@ -57,14 +53,14 @@
 	                     <p:column headerText="Action" />
 					  </p:row>							
 					  </p:columnGroup>
-						<p:column styleClass="column-align-center" > <h:outputText value="#{index+1}" /></p:column> 							
-						<p:column> <h:outputText value="" /></p:column>
-						<p:column><h:outputText value="" /></p:column>	
-						<p:column><h:outputText value="" /></p:column>	
-						<p:column><h:outputText value="" /></p:column>	
-						<p:column > <h:outputText value="" /> </p:column> 							
-						<p:column> <h:outputText value="" /> </p:column>	
-						<p:column><h:outputText value="" /></p:column>	
+						<p:column styleClass="column-align-center" > <p:outputLabel value="#{index+1}" /></p:column> 							
+						<p:column> <p:outputLabel value="" /></p:column>
+						<p:column> <p:outputLabel value="#{data.contractName}" /></p:column>	
+						<p:column> <p:outputLabel  value="#{data.qtLoaNo}"  /></p:column>	
+						<p:column> <p:outputLabel value="" /></p:column>	
+						<p:column> <p:outputLabel value="" /> </p:column> 							
+						<p:column> <p:outputLabel value="" /> </p:column>	
+						<p:column> <p:outputLabel value="" /></p:column>	
 						<p:column styleClass="column-align-center">
 						<p:commandButton title="change Bank" action="#{supplierBackingBean.gotoBankPage}" partialSubmit="true" process="@this" 
 						   icon="ui-icon-bank" styleClass="ui-icon-bank"/>

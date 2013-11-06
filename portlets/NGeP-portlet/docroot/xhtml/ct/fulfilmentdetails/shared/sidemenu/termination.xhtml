@@ -1,3 +1,63 @@
+
+<ui:composition
+	template="/WEB-INF/facelets/templates/basic_template.xhtml"
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:c="http://java.sun.com/jsp/jstl/core">  
+	<ui:define name="contentSection">
+	<style>
+      .column-align-right { text-align: right !important;}
+    </style>
+
+	 <p:panel>
+	 <div class="ppRightBtn"> 
+	  			<ui:repeat var="action"	value="#{contractDetailsBackingBean.managedBean.outComes}">
+					<p:commandButton value="#{action}" process="@this" styleClass="ui-button" actionListener="#{contractDetailsBackingBean.saveContract(action)}" />
+				</ui:repeat>		
+    </div>
+	</p:panel>
+	<p:tabView id="tabview" orientation="left" >
+	<p:tab id="tabfd" title="#{lbl['lbl.ct.menu.fd']}" >
+       <ui:include src="/xhtml/ct/fulfilmentdetails/shared/fulfilment.xhtml"/>
+       <ui:include src="/xhtml/ct/fulfilmentdetails/shared/supplier.xhtml"/>
+       <ui:include src="/xhtml/ct/fulfilmentdetails/shared/factoring.xhtml"/>
+       <ui:include src="/xhtml/ct/fulfilmentdetails/shared/performanceBond.xhtml"/>
+       <ui:include src="/xhtml/ct/fulfilmentdetails/shared/mto.xhtml"/>
+       </p:tab> 
+	 <p:tab id="tabAgency" title="#{lbl['lbl.ct.menu.agency']}" >
+       <ui:include src="/xhtml/ct/fulfilmentdetails/shared/agency.xhtml"/>
+       </p:tab> 
+	 <p:tab id="tabItem" title="#{lbl['lbl.ct.menu.item']}" >
+       <ui:include src="/xhtml/ct/fulfilmentdetails/shared/item.xhtml"/>
+       </p:tab>  
+	 <p:tab id="tabDeduction" title="#{lbl['lbl.ct.menu.dedu']}" >
+       <ui:include src="/xhtml/ct/fulfilmentdetails/shared/deduction.xhtml" />  
+       </p:tab>   
+	 <p:tab id="tabSchedule" title="#{lbl['lbl.ct.menu.sched']}" >
+       <ui:include src="/xhtml/ct/fulfilmentdetails/shared/schedule.xhtml" />    
+       </p:tab>  
+	 <p:tab id="tabSetting" title="#{lbl['lbl.ct.menu.sett']}" >
+          <ui:include src="/xhtml/ct/fulfilmentdetails/shared/approverSetting.xhtml" />    
+          <ui:include src="/xhtml/ct/fulfilmentdetails/shared/fulfilmentSetting.xhtml" />   
+       </p:tab> 
+      <p:tab id="tabPayment" title="#{lbl['lbl.ct.menu.pay']}" >
+          <ui:include src="/xhtml/ct/fulfilmentdetails/shared/payment.xhtml" />   
+       </p:tab> 
+      <p:tab id="tabZone" title="#{lbl['lbl.ct.menu.zone']}" >
+         <ui:include src="/xhtml/ct/fulfilmentdetails/shared/zone.xhtml"/>   
+       </p:tab> 
+       <p:tab id="tabRemarks" title="#{lbl['lbl.ct.menu.remark']}" >
+       <ui:include src="/xhtml/ct/fulfilmentdetails/shared/remarks.xhtml" />
+      </p:tab>              
+
+	</p:tabView>
+    </ui:define>
+   
+</ui:composition>
+
 <ui:composition xmlns="http://www.w3.org/1999/xhtml"
 	xmlns:f="http://java.sun.com/jsf/core"
 	xmlns:h="http://java.sun.com/jsf/html"

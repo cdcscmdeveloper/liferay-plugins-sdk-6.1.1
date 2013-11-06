@@ -1,51 +1,32 @@
 <ui:composition
-	template="/WEB-INF/facelets/templates/sidemenu_template.xhtml"
 	xmlns="http://www.w3.org/1999/xhtml"
 	xmlns:f="http://java.sun.com/jsf/core"
 	xmlns:h="http://java.sun.com/jsf/html"
 	xmlns:ui="http://java.sun.com/jsf/facelets"
 	xmlns:p="http://primefaces.org/ui"
 	xmlns:c="http://java.sun.com/jsp/jstl/core">
-	<ui:define name="resourceSection">
-	</ui:define>
-  	<ui:define name="sideMenu">
-		<ui:include src="/xhtml/ct/fulfilmentdetails/shared/sidemenu/termination.xhtml" />
-	</ui:define>
-	<ui:define name="content">
-	<p:panel id="pRightPanel">
-			<div class="ppRightBtn">
-				<p:commandButton id="ctSave" value="#{lbl['lbl.ct.btn.save']}"/>
-				<p:commandButton id="ctSubmit" value="#{lbl['lbl.ct.btn.submit']}"/>
-			</div>
-		</p:panel>
-	     <p:panel id="fd" header="#{lbl['lbl.ct.panel.name']}" toggleable="true"  toggleSpeed="500" widgetVar="panelfd">
-            <ui:include src="/xhtml/ct/fulfilmentdetails/shared/fulfilment.xhtml"/>
-         </p:panel>
-         <p:panel id="sTermination" header="Termination Details"    toggleable="true"  toggleSpeed="500" widgetVar="panelsTermination">
+	       <ui:include src="/xhtml/ct/fulfilmentdetails/shared/fulfilment.xhtml"/>
+           <p:panel id="sTermination" header="Termination Details" toggleable="true"  toggleSpeed="500" widgetVar="panelsTermination">
             <h:panelGrid columns="4" style="width:750px;">  
                <h:outputLabel value="Mutual Termination"/>  
                <p:selectBooleanCheckbox value=""/> 
                <f:verbatim></f:verbatim>
                <f:verbatim></f:verbatim>
-               <h:outputLabel  value="Termination Recommendation" />  
-               <p:selectOneMenu value=" " style="width:150px;">
+               <h:outputLabel  value="Termination Recommendation"/>  
+               <p:selectOneMenu value="#{contractDetailsBackingBean.managedBean.terminateRecommedType}" style="width:150px;">
                   <f:selectItem itemLabel="--Please Select--" itemValue="--Please Select--" /> 
-            	  <f:selectItem itemLabel="Warning Letter" itemValue="Warning Letter" /> 
-            	  <f:selectItem itemLabel="Termination" itemValue="Termination" /> 
-            	  <f:selectItem itemLabel="Reject Termination" itemValue="Reject Termination" /> 
+                   <f:selectItems value="#{contractDetailsBackingBean.terminationType}" />
+            	   <p:ajax event="change" update=":form:tabview" listener="#{contractDetailsBackingBean.changeField}" process="@this"/>  
                </p:selectOneMenu>    
-               <h:outputLabel value="Termination Date" styleClass="txtsize" />
-                  <p:calendar style="width:120px;" value="#{contractDetailsBackingBean.createContractDetails.date}" id="popupButtonCal3" showOn="button" />
+               <h:outputLabel value="Termination Date"/>
+                  <p:calendar style="width:120px;" value="#{contractDetailsBackingBean.managedBean.effDate}" id="popupButtonCal3" showOn="button" />
 	         </h:panelGrid> 
           </p:panel>
-          <p:panel id="rft" header="Reason For Termination"    toggleable="true"  toggleSpeed="500" widgetVar="panelrft">
+          <p:panel id="terminationReason" header="Reason For Termination" toggleable="true"  toggleSpeed="500">
           <h:panelGrid style="width:780px;">
-			<p:dataTable id="dataTable" var="data" value=" " rowIndexVar="index"
-               widgetVar="dataTableObj" lazy="false" dynamic="true" paginator="true" paginatorPosition="bottom"
-			   paginatorAlwaysVisible="true" emptyMessage="No Records!" rows="10" rowsPerPageTemplate="5,10,15,20"
-			   currentPageReportTemplate=" total {totalRecords},  page {currentPage} of {totalPages} "
-			   paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink}
-			   {LastPageLink} {RowsPerPageDropdown}">
+			<p:dataTable id="dataTable" var="data" value="#{contractDetailsBackingBean.managedBean.terminateReasonList}" rowIndexVar="index" 
+			  widgetVar="dataTableObj" lazy="false" dynamic="true" paginator="true" paginatorPosition="bottom" paginatorAlwaysVisible="true"
+			  emptyMessage="No Records!" rows="10">
 			   <p:columnGroup type="header"> 
 				<p:row> 
 				  <p:column style="width:30px;" headerText="No."  />
@@ -55,36 +36,43 @@
 				</p:row>							
 				</p:columnGroup>
 				<p:column styleClass="column-align-center"  > <h:outputText value="#{index+1}" /></p:column>
-				<p:column>  <p:selectOneMenu value="" style="width:150px;">
+				<p:column>  
+				   <p:selectOneMenu  style="width:200px;">
                    <f:selectItem itemLabel="--Please Select--" itemValue="--Please Select--" /> 
             	   <f:selectItem itemLabel="Late Supply" itemValue="Late Supply" /> 
-            	   <f:selectItem itemLabel="  Fail To Supply" itemValue="Fail To Supply" /> 
+            	   <f:selectItem itemLabel="Fail To Supply" itemValue="Fail To Supply" /> 
             	   <f:selectItem itemLabel="Lack Of Quality" itemValue="Lack Of Quality" /> 
             	   <f:selectItem itemLabel="Fail To Comply Term And Condition" itemValue="Fail To Comply Term And Condition" /> 
             	   <f:selectItem itemLabel="Other" itemValue="Other" /> 
-            	</p:selectOneMenu>    
+               	  </p:selectOneMenu> 
             	</p:column>	
-				<p:column> <p:inputText value="More than 2 weeks" style="width:400px;"/>
+				<p:column> <p:inputText value="#{data.description}" style="width:400px;"/>
 				</p:column> 	
 				<p:column styleClass="column-align-center">
-				<p:commandButton title="delete" onsuccess="confirmation.show()"
-				   partialSubmit="true" process="@this" icon="ui-icon-delete">
-			    </p:commandButton>
+				<p:commandButton title="delete" onsuccess="confirmation.show()" partialSubmit="true" process="@this" icon="ui-icon-delete">
+				   <f:setPropertyActionListener value="#{data}" target="#{contractDetailsBackingBean.managedBean.terminationReason}" />
+				</p:commandButton>
 				</p:column>						
 		    </p:dataTable>
 		 </h:panelGrid>
 		 <h:panelGrid style="width:780px" columnClasses="column-align-right">
-			<p:commandButton value="Add" styleClass="text-align: right;" process="@this" partialSubmit="true"   icon="ui-icon-add"/>
+			<p:commandButton value="Add"  process="@this" partialSubmit="true" icon="ui-icon-add"
+			 action="#{contractDetailsBackingBean.addTerminateReason()}"  update="dataTable"/>
 		  </h:panelGrid>
+		  <p:confirmDialog message="Do you want to delete the record?"  closable="true" appendToBody="true" header="Delete Confirmation"
+			   severity="alert" widgetVar="confirmation">
+                 <h:panelGrid columns="2">
+				 <p:commandButton value="Yes" update="dataTable" partialSubmit="true" process="@this"
+				    onclick="confirmation.hide();" actionListener="#{contractDetailsBackingBean.deleteTerminateReason()}"/>
+				  <p:commandButton value="No" 	onclick="confirmation.hide()" type="button" />
+				</h:panelGrid>
+			</p:confirmDialog>
 		</p:panel>
-		<p:panel id="tacg" header="Termination Agreement Clause"  toggleable="true"  toggleSpeed="500" widgetVar="paneltacg">
+		<p:panel id="panelClause" header="Termination Agreement Clause"  toggleable="true"  toggleSpeed="500">
         <h:panelGrid style="width:780px;">
-		<p:dataTable id="dataTable1" var="data" value=" " rowIndexVar="index"
+		<p:dataTable id="clauseTable" var="data" value="#{contractDetailsBackingBean.managedBean.terminationClauseList}" rowIndexVar="index"
 		   widgetVar="dataTableObj" lazy="false" dynamic="true" paginator="true" paginatorPosition="bottom"
-		   paginatorAlwaysVisible="true" emptyMessage="No Records!" rows="10" rowsPerPageTemplate="5,10,15,20"
-		   currentPageReportTemplate=" total {totalRecords},  page {currentPage} of {totalPages} "
-		   paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink}
-		   {LastPageLink} {RowsPerPageDropdown}">
+		   paginatorAlwaysVisible="true" emptyMessage="No Records!" rows="10">
 		   <p:columnGroup type="header"> 
 		    <p:row> 
 			   <p:column style="width:30px;" headerText="No."  />
@@ -93,51 +81,42 @@
 		       <p:column style="width:50px;" headerText="Action" />
 		    </p:row>							
 		   </p:columnGroup>
-		   <p:column styleClass="column-align-center" > <h:outputText value="#{index+1}" /></p:column>
-		   <p:column><h:outputLabel value="CLAUSE 8.1"/></p:column>	
-		   <p:column > <h:outputLabel value="The SERVICE to be provided by the COMPANY shall include,
-			  among other things, the following:"/> </p:column> 	
+		   <p:column styleClass="column-align-center"> <h:outputText value="#{index+1}" /></p:column>
+		   <p:column><h:outputLabel value="#{data.clauseName}" style="float:left;"/></p:column>	
+		   <p:column><h:outputLabel value="#{data.clauseDesc}" style="float:left;"/></p:column> 	
 		   <p:column styleClass="column-align-center">
-		   <p:commandButton title="delete" onsuccess="confirmation.show()"
-						     partialSubmit="true" process="@this" icon="ui-icon-delete">
+		   <p:commandButton title="delete" onsuccess="confirmation.show()" partialSubmit="true" process="@this" icon="ui-icon-delete">
+		      <f:setPropertyActionListener value="#{data}" target="#{contractDetailsBackingBean.managedBean.terminationClause}" />
 		   </p:commandButton>
 		   </p:column>						
 		  </p:dataTable>
 		 </h:panelGrid>
 		 <h:panelGrid style="width:780px" columnClasses="column-align-right">
-			<p:commandButton value="Add" styleClass="text-align: right;" process="@this" partialSubmit="true" 
-			   icon="ui-icon-add"   onclick="dlg2.show();">
+			<p:commandButton value="Add" process="@this" partialSubmit="true" 
+			   icon="ui-icon-add" onclick="dlg2.show();">
 			</p:commandButton>
 		 </h:panelGrid>
+		  <p:confirmDialog message="Do you want to delete the record?"  closable="true" appendToBody="true" header="Delete Confirmation"
+			   severity="alert" widgetVar="confirmation1">
+                 <h:panelGrid columns="2">
+				 <p:commandButton value="Yes" update="clauseTable" partialSubmit="true" process="@this"
+				    onclick="confirmation1.hide();" actionListener="#{contractDetailsBackingBean.deleteTerminateCaluse()}"/>
+				  <p:commandButton value="No" 	onclick="confirmation1.hide()" type="button" />
+				</h:panelGrid>
+			</p:confirmDialog>
 		</p:panel>
-        <p:confirmDialog message="Do you want to delete the record?"
-							closable="true" appendToBody="true" header="Delete Confirmation"
-							severity="alert" widgetVar="confirmation">
-                            <h:panelGrid columns="2"
-								columnClasses="column-align-right,column-align-left">
-								<p:commandButton value="Yes" icon="ui-icon-accept"
-									update="dataTable" partialSubmit="true" process="@this"
-									onclick="confirmation.hide();"/>
-								    <p:commandButton value="No" icon="ui-icon-reject"
-									onclick="confirmation.hide()" type="button" />
-							</h:panelGrid>
-						</p:confirmDialog>
-            <p:dialog id="modalDialog" widgetVar="dlg2" modal="true" width="600" height="400">
-					<p:panel  id="agencyies">
-                    <p:dataTable id="dataTable2" var="data" value="" rowIndexVar="index" widgetVar="dataTableObj"
-                       lazy="false" dynamic="true" paginator="true" paginatorPosition="bottom" paginatorAlwaysVisible="true" 
-                       emptyMessage="No Records!" rows="10"  rowsPerPageTemplate="5,10,15,20" 
-                       currentPageReportTemplate=" total {totalRecords},  page {currentPage} of {totalPages} "
-                       paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}">
+        <p:dialog id="modalDialog" widgetVar="dlg2" modal="true" width="600" height="400">
+		   <p:panel  id="agencyies">
+             <p:dataTable id="dataTable2" var="data" value="" rowIndexVar="index" widgetVar="dataTableObj"
+                paginator="true" paginatorPosition="bottom" paginatorAlwaysVisible="true" emptyMessage="No Records!" rows="10">
                 	   <f:facet name="header">Section</f:facet>
-					 </p:dataTable>
-					 <f:facet name="footer">
-							<h:panelGrid columns="2"  style="height: 40px;vertical-align: middle;">
-								<p:commandButton value="Select"   process="modalDialog" update="dataTable1,modalDialog" onclick="dlg2.hide();"/>
-                            	<p:commandButton value="Cancel"  type="button" ajax="false" onclick="dlg2.hide();" />
-						</h:panelGrid>
-						</f:facet>
-					</p:panel>
-				</p:dialog>                          
-            </ui:define>
+			 </p:dataTable>
+			 <f:facet name="footer">
+			 <h:panelGrid columns="2"  style="height:40px;vertical-align: middle;float:right;">
+			   <p:commandButton value="Select"   process="modalDialog" update="clauseTable,modalDialog" onclick="dlg2.hide();"/>
+               <p:commandButton value="Cancel"  type="button" ajax="false" onclick="dlg2.hide();" />
+			</h:panelGrid>
+			</f:facet>
+		</p:panel>
+	</p:dialog>                          
 </ui:composition>
