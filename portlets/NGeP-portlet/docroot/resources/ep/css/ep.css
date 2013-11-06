@@ -706,7 +706,7 @@ a:visited.menuItemLink-selected {
 }
 
 .comparePanel {
-	height: 50px;
+	height: 30px;
 	width: 230px;
 	border: 0;
 	padding: 0px;
@@ -714,7 +714,7 @@ a:visited.menuItemLink-selected {
 }
 
 .comparePanel1 {
-	height: 50px;
+	height: 30px;
 	width: 230px;
 	border: 0;
 	padding: 0px;
@@ -1933,7 +1933,6 @@ important
 .titleFront {
 	font-size: 14px;
 	font-weight: bold;
-	color:#FFF;
 	margin:0 0 0 10px;
 }
 
@@ -1987,6 +1986,23 @@ td {
 	height: 200px;
 	overflow: auto !important;
 	border: 1px solid #d1d1d1;
+}
+
+.comparePanel {
+	height: 50px;
+	width: 230px;
+	border: 0;
+	padding: 0px;
+	background-color: #f5f5f5;
+}
+
+
+.comparePanel1 {
+	height: 50px;
+	width: 230px;
+	border: 0;
+	padding: 0px;
+	background-color: #edfebf;
 }
 
 
@@ -3199,6 +3215,10 @@ textarea[disabled],input[type="text"][disabled],input[type="password"][disabled]
 	opacity: 1 !important;
 	border: 1px solid #CECECE !important;
 }
+
+/*--------------------------       End Custom CSS       --------------------------- */
+
+
 
 .screen-title {
 	float: left;
