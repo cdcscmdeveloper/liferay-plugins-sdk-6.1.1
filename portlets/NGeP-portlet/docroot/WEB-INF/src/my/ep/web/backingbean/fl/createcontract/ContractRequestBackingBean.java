@@ -18,10 +18,13 @@ import javax.faces.context.FacesContext;
 import javax.faces.model.SelectItem;
 import javax.portlet.PortletRequest;
 
+import my.ep.biz.service.ct.IContractSO;
 import my.ep.biz.service.ct.maintain.IContractAmendmentSO;
+import my.ep.biz.service.fl.order.IFulfilmentOrderSO;
 import my.ep.biz.service.fl.request.IFulfilmentRequestSO;
 import my.ep.biz.service.pm.authorization.orgprofile.IOrgProfileSO;
 import my.ep.biz.service.pm.common.maksud.IMaksudSO;
+import my.ep.dto.ct.ContractReqDTO;
 import my.ep.dto.ct.ContractResDTO;
 import my.ep.dto.ct.maintain.ContractAmendmentReqDTO;
 import my.ep.dto.ct.maintain.ContractAmendmentResDTO;
@@ -33,7 +36,6 @@ import my.ep.dto.pm.common.maksud.MaksudResDTO;
 import my.ep.persistence.entity.ct.CtContract;
 import my.ep.persistence.entity.fl.request.FlDeliveryAddress;
 import my.ep.persistence.entity.fl.request.FlFulfilmentRequest;
-import my.ep.persistence.entity.fl.request.FlShippingInstr;
 import my.ep.persistence.entity.pm.authorization.PmOrgAddress;
 import my.ep.persistence.entity.pm.authorization.PmOrgProfile;
 import my.ep.persistence.entity.pm.common.PmCode;
@@ -69,9 +71,6 @@ public class ContractRequestBackingBean extends BaseBackingBean<ContractRequestM
 
 
 	public ContractRequestBackingBean(){
-//		if(MDC.get(LogKey.USER_ID)==null) {
-//			MDC.put(LogKey.USER_ID, 1L);
-//		}
 	}
 
 	@PostConstruct
@@ -101,16 +100,18 @@ public class ContractRequestBackingBean extends BaseBackingBean<ContractRequestM
 
 		if (layout.getFriendlyURL().equals("/view-contract-list")) {
 			System.out.println("---view-contract-list---");
-			IFulfilmentRequestSO fulfilmentRequestSO = null;
-			fulfilmentRequestSO = (IFulfilmentRequestSO) BusinessDelegate.getInstance().getServiceObject("fl",IFulfilmentRequestSO.class);
-			ContractResDTO resDto = fulfilmentRequestSO.retrieveContractList();
-			List<CtContract> contractList = resDto.getCtContracts();
+			IContractSO contractSO = (IContractSO) BusinessDelegate.getInstance().getServiceObject("ct", IContractSO.class);
+			ContractReqDTO contractReq = new ContractReqDTO();
+			contractReq.setOrgProfileId(4L);
+			ContractResDTO resDTO = contractSO.retrieveActiveContractList(contractReq);
+			List<CtContract> contractList = resDTO.getCtContracts();
 			this.getManagedBean().setContractList(contractList);
 		}
 	}
 
 	public void submitAction(String action) throws ParseException {
 		IFulfilmentRequestSO iFulfilmentRequestSO = null;
+		IFulfilmentOrderSO flOrderSO = null;
 		try {
 			FulfilmentReqDTO reqDTO = new FulfilmentReqDTO();
 			FlFulfilmentRequest flRequest = getManagedBean().getFlRequest();
@@ -129,15 +130,22 @@ public class ContractRequestBackingBean extends BaseBackingBean<ContractRequestM
 			//			flRemark.setDocType("tex");
 			//			reqDTO.setFlRemark(flRemark);
 			//			reqDTO.setFlAttachment(flAttachment);
-			iFulfilmentRequestSO = (IFulfilmentRequestSO) BusinessDelegate.getInstance().getServiceObject(IFulfilmentRequestSO.class);
+			iFulfilmentRequestSO = (IFulfilmentRequestSO) BusinessDelegate.getInstance().getServiceObject("fl", IFulfilmentRequestSO.class);
 			reqDTO.setFlFulfilmentRequest(flRequest);
 			reqDTO.setContractRequest(true);
 			if(action.equalsIgnoreCase(BpmOutcomeConst.BPM_SAVE)){
 				action = "";
 			}
+			
 			reqDTO.setOutcome(action);
 			reqDTO.setTaskId(getManagedBean().getBpmTaskId());
-			iFulfilmentRequestSO.saveFulfillmentRequest(reqDTO);
+			if(action.equalsIgnoreCase(BpmOutcomeConst.BPM_ACKNOWLEDGE)){
+				flOrderSO = (IFulfilmentOrderSO) BusinessDelegate.getInstance().getServiceObject("fl", IFulfilmentOrderSO.class);
+				flOrderSO.acknowledgeFulfillmentOrder(reqDTO);
+			}else{
+				iFulfilmentRequestSO.saveFulfillmentRequest(reqDTO);
+			}
+			
 
 		}catch(Exception e){
 			log.error("Exception>>", e);
@@ -293,28 +301,5 @@ public class ContractRequestBackingBean extends BaseBackingBean<ContractRequestM
 		getManagedBean().setCheckPtjFlg(false);
 	}
 	
-	public void submitShippingAction(String action) throws ParseException {
-		IFulfilmentRequestSO iFulfilmentRequestSO = null;
-		try {
-			FulfilmentReqDTO reqDTO = new FulfilmentReqDTO();
-			FlShippingInstr shippingInstr = getManagedBean().getShippingInstr();
-			iFulfilmentRequestSO = (IFulfilmentRequestSO) BusinessDelegate.getInstance().getServiceObject(IFulfilmentRequestSO.class);
-			
-			System.out.println("shipInstr: "+shippingInstr.getShippingInstrId());
-			reqDTO.setShippingInstr(shippingInstr);
-			reqDTO.setFlFulfilmentRequest(getManagedBean().getShippingInstr().getFlFulfilmentRequest());
-			if(action.equalsIgnoreCase(BpmOutcomeConst.BPM_SAVE)){
-				action = "";
-			}
-			reqDTO.setOutcome(action);
-			reqDTO.setTaskId(getManagedBean().getBpmTaskId());
-			iFulfilmentRequestSO.saveShippingInstr(reqDTO);
-
-		}catch(Exception e){
-			log.error("Exception>>", e);
-		}finally {
-			iFulfilmentRequestSO = null;
-		}
-	}
-
+	
 }

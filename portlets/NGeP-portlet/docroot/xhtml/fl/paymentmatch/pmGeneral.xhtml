@@ -8,8 +8,11 @@
 
 		<table style="width: 800px;">
 			<tr>
-				<td colspan="4" align="right"><p:commandButton value="SAVE" />
-					<p:commandButton value="MATCH" /> <p:commandButton value="PRINT" />
+				<td colspan="4" align="right">
+				<ui:repeat var="bpmAction"
+					value="#{paymentMatchBackingBean.managedBean.actions}">
+					<p:commandButton value="#{bpmAction}" action="#{paymentMatchBackingBean.submitAction(bpmAction)}" process="@this"/>
+				</ui:repeat> 
 				</td>
 			</tr>
 		</table>
@@ -21,7 +24,7 @@
 					<td><p:inputText style="width: 260px;"
 							value="KEMENTERIAN KEWANGAN" disabled="true" /></td>
 					<td><p:outputLabel value="Contract NO." /></td>
-					<td><p:inputText style="width: 260px;" value=""
+					<td><p:inputText style="width: 260px;" value="#{paymentMatchBackingBean.managedBean.paymentAdvice.flInvoice.flFulfilmentOrder.flFulfilmentRequest.ctContract.contractValue.contractNo}"
 							disabled="true" /></td>
 				</tr>
 				<tr>
@@ -59,7 +62,7 @@
 				<tr>
 					<td><p:outputLabel value="Maksud Code" /></td>
 					<td><p:inputText style="width: 160px;" disabled="true"
-							value=" " /></td>
+							value="" /></td>
 					<td><p:outputLabel value="Invoice Amt." /></td>
 					<td><p:inputText disabled="true" style="width: 160px;"
 							value="" />MYR</td>
@@ -100,16 +103,11 @@
 				</tr>
 			</table>
 		</p:panel>
-		<br />
-		<br />
 		<p:panel header="DELIVERY AND FRN DETAIL" toggleable="true">
 			<p:dataTable id="dataTable" var="item" value="" paginator="true"
 				rows="10"
 				paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
 				rowsPerPageTemplate="5,10,15" paginatorPosition="bottom">
-				<f:facet name="header">  
-            DELIVERY AND FRN DETAIL  
-        </f:facet>
 				<p:column headerText="Delivery Order NO.">
 					<h:outputText value="" />
 				</p:column>

@@ -1,0 +1,175 @@
+<ui:composition
+	template="/WEB-INF/facelets/templates/basic_template.xhtml"
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:c="http://java.sun.com/jsp/jstl/core">
+
+	<ui:define name="resourceSection">
+	</ui:define>
+
+	<ui:define name="contentSection">
+		<table style="width: 800px;">
+			<tr>
+				<td colspan="4" align="right"><ui:repeat var="bpmAction"
+						value="#{danBackingBean.managedBean.actions}">
+						<p:commandButton value="#{bpmAction}"
+							action="#{danBackingBean.submitAction(bpmAction)}"
+							process="@this" />
+					</ui:repeat></td>
+			</tr>
+		</table>
+
+		<p:panel header="FULFILMENT DETAIL" toggleable="true">
+			<table>
+				<tr>
+					<td><p:outputLabel value="Ministry" /></td>
+					<td><p:inputText style="width: 260px;"
+							value="KEMENTERIAN KEWANGAN" disabled="true" /></td>
+					<td><p:outputLabel value="Invoice No." /></td>
+					<td><p:inputText style="width: 260px;" value=""
+							disabled="true" /></td>
+					<td><p:outputLabel value="DAN NO." /></td>
+					<td><p:inputText style="width: 260px;"
+							value="#{danBackingBean.managedBean.adjustment.docNo}"
+							disabled="true" /></td>
+				</tr>
+				<tr>
+					<td><p:outputLabel value="Jabatan" /></td>
+					<td><p:inputText style="width: 260px;"
+							value="JABATAN KASTAM DAN EKSAIS DIRAJA" disabled="true" /></td>
+					<td><p:outputLabel value="Invoice Date" /></td>
+					<td><p:inputText style="width: 260px;" value=""
+							disabled="true" /></td>
+					<td><p:outputLabel value="Created Date" /></td>
+					<td><p:inputText style="width: 260px;" value=""
+							disabled="true" /></td>
+				</tr>
+				<tr>
+					<td><p:outputLabel value="Issued PTJ" /></td>
+					<td><p:inputText style="width: 260px;"
+							value="IBU PEJABAT KASTAM (CHARGE PTJ)" disabled="true" /></td>
+					<td><p:outputLabel value="Contract No." /></td>
+					<td><p:inputText style="width: 260px;" value=" "
+							disabled="true" /></td>
+					<td><p:outputLabel value="DAN Amt." /></td>
+					<td><p:inputText style="width: 260px;" value=""
+							disabled="true" /></td>
+				</tr>
+				<tr>
+					<td><p:outputLabel value="Received PTJ" /></td>
+					<td><p:inputText style="width: 260px;"
+							value="IBU PEJABAT KASTAM (RECEIVING PTJ)" disabled="true" /></td>
+					<td><p:outputLabel value="Order No." /></td>
+					<td><p:inputText style="width: 260px;" value="0001010"
+							disabled="true" /></td>
+					<td><p:outputLabel value="Approved By" /></td>
+					<td><p:inputText style="width: 260px;" value=""
+							disabled="true" /></td>
+				</tr>
+				<tr>
+					<td><p:outputLabel value="Charge PTJ" /></td>
+					<td><p:inputText style="width: 260px;"
+							value="IBU PEJABAT KASTAM (Charge PTJ)" disabled="true" /></td>
+					<td><p:outputLabel value="Order Date" /></td>
+					<td><p:inputText style="width: 260px;" value="0001010"
+							disabled="true" /></td>
+					<td><p:outputLabel value="Approved Date" /></td>
+					<td><p:inputText style="width: 260px;" value=""
+							disabled="true" /></td>
+				</tr>
+
+				<tr>
+					<td><p:outputLabel value="Title" /></td>
+					<td><p:inputTextarea rows="8" style="width: 260px;"
+							disabled="true" /></td>
+					<td><p:outputLabel value="Order Amt" /></td>
+					<td colspan="2"><p:inputText style="width: 260px;" value=""
+							disabled="true" /></td>
+				</tr>
+
+
+			</table>
+
+		</p:panel>
+		<p:panel header="SUPPLIER DETAIL" toggleable="true">
+			<table>
+				<tr>
+					<td><p:outputLabel value="Supplier ID" /></td>
+					<td><p:inputText style="width: 120px;" value=""
+							disabled="true" /></td>
+				</tr>
+				<tr>
+					<td><p:outputLabel value="Supplier Name" /></td>
+					<td><p:inputText style="width: 260px;" value=""
+							disabled="true" /></td>
+				</tr>
+				<tr>
+					<td rowspan="4"><p:outputLabel value="Address" /></td>
+					<td rowspan="4"><p:inputTextarea rows="8"
+							style="width: 260px;" disabled="true" /></td>
+				</tr>
+				<tr>
+					<td><p:outputLabel value="Email" /></td>
+					<td><p:inputText style="width: 260px;"
+							value="KBB.XY@gmail.com" disabled="true" /></td>
+				</tr>
+
+				<tr>
+					<td><p:outputLabel value="Telephone NO." /></td>
+					<td><p:inputText style="width: 120px;" value="02-7324800 "
+							disabled="true" /></td>
+				</tr>
+			</table>
+		</p:panel>
+		<p:panel header="ITEMS" toggleable="true">
+			<table>
+				<tr>
+					<td><p:dataTable id="danDataTable" var="dan" value=""
+							paginator="true" rows="10"
+							paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+							rowsPerPageTemplate="5,10,15" paginatorPosition="bottom"
+							style="width:100%">
+
+							<p:columnGroup type="header">
+								<p:row>
+									<p:column headerText="Product Code" rowspan="2" />
+									<p:column headerText="Item Name" rowspan="2" />
+									<p:column headerText="GOSODO" rowspan="2" />
+									<p:column headerText="Activity Code" rowspan="2" />
+									<p:column headerText="Unit Price" rowspan="2" />
+									<p:column headerText="Quantity" rowspan="1" colspan="3" />
+									<p:column headerText="Amount(MYR)" rowspan="1" colspan="2" />
+									<p:column headerText="Subtotal" rowspan="2" />
+								</p:row>
+								<p:row>
+									<p:column headerText="Ord" rowspan="1" />
+									<p:column headerText="Recv." rowspan="1" />
+									<p:column headerText="Recall" rowspan="1" />
+									<p:column headerText="Ordered" rowspan="1" />
+									<p:column headerText="Discount" rowspan="1" />
+								</p:row>
+							</p:columnGroup>
+
+						</p:dataTable></td>
+				</tr>
+
+			</table>
+		</p:panel>
+
+
+
+		<p:panel header="REMARKS AND ATTACHMENT" toggleable="true">
+			<table>
+				<tr>
+					<td><p:outputLabel value="* Remarks    " /></td>
+					<td><p:inputTextarea rows="8" style="width: 260px;" /></td>
+					<td><p:outputLabel value="Attachment" /></td>
+					<td><p:commandButton value="Attach Files" /></td>
+				</tr>
+			</table>
+		</p:panel>
+	</ui:define>
+</ui:composition>

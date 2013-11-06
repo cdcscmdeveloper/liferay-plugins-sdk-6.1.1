@@ -82,6 +82,21 @@
 		test='#{tasklistBackingBean.managedBean.processName eq "Plan Preparation"}'>
 		<ui:include src="/xhtml/pp/procurementplan/procurementPlan.xhtml"></ui:include>
 	</c:if>
+	<c:if test='#{tasklistBackingBean.managedBean.processName eq "Create Invoice and Payment"}'>
+		<c:choose>
+			<c:when
+				test='#{tasklistBackingBean.managedBean.taskName eq "Create Invoice"}'>
+				<ui:include src="/xhtml/fl/invoice/invBasePage.xhtml"></ui:include>
+			</c:when>
+			<c:otherwise>
+				
+				<ui:include src="/xhtml/fl/paymentmatch/pmBasePage.xhtml"></ui:include>
+			</c:otherwise>
+		</c:choose>
+	</c:if>
+	<c:if test='#{tasklistBackingBean.managedBean.processName eq "Perform DAN"}'>
+		<ui:include src="/xhtml/fl/invoice/DAN.xhtml"></ui:include>
+	</c:if>
 
 
 </ui:composition>
