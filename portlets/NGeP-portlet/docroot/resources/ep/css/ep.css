@@ -3213,7 +3213,7 @@ textarea[disabled],input[type="text"][disabled],input[type="password"][disabled]
 	background-color: #017D9F !important;
 	height: 25px;
 	border-radius: 0;
-	box-shadow: 0px 5px 5px #888888 !important;
+	box-shadow: 0px 5px 5px #A8A8A8 !important;
 }
 
 .ui-panelmenu-header > a {
@@ -3223,7 +3223,7 @@ textarea[disabled],input[type="text"][disabled],input[type="password"][disabled]
 
 .ui-panelmenu .ui-panelmenu-content {
 	background-color: #F9F9F9;
-	box-shadow: 0px 5px 5px #888888;
+	box-shadow: 0px 5px 5px #A8A8A8;
 }
 
 .ui-panelmenu .ui-panelmenu-panel {
@@ -3243,7 +3243,7 @@ textarea[disabled],input[type="text"][disabled],input[type="password"][disabled]
 }
 
 .ui-menuitem .ui-state-hover {
-	background-color: #97D832 !important;
+	background-color: #97D832;
 	font-weight: bold;
 	border-radius: 0;
 	font-size: 11px;
@@ -3273,5 +3273,40 @@ textarea[disabled],input[type="text"][disabled],input[type="password"][disabled]
 
 .compare-highlight {
 	background-color: #FFFF66;
+}
+
+.ui-messages-info, .ui-message-info{
+	box-shadow: 0px 3px 4px #888888;
+	border-radius:0;
+	height: 13px;
+	padding: 7px 10px 10px 10px;
+	background-color: #bce18a;
+	color: #333333;
+	border:none;
+}
+
+.fileupload-buttonbar {
+	background-color: #FFFFFF;
+	border: none;
+}
+
+.fileupload-content {
+	border: none;
+}
+
+.template-upload {
+	border-bottom: 1px solid #A8A8A8;
+	border-top: 1px solid #A8A8A8;
+}
+
+.files {
+	width: 100%;
+	margin: 0 0 0 0 !important;
+}
+
+.ui-state-error {
+	border: none !important;
+	border-top: 1px solid #A8A8A8 !important;
+	border-bottom: 1px solid #A8A8A8 !important;
 }
 /*--------------------------       End Custom CSS       --------------------------- */
