@@ -793,11 +793,6 @@ public class BudgetAllocationBackingBean extends BaseBackingBean<BudgetAllocatio
 			super("tblBudget");
 		}
 		
-		@Override
-		public void saveAction() {
-			System.out.println("saveAction");
-		}
-		
 		/**
 		 * @author ktfong
 		 * @since 28.10.2013
