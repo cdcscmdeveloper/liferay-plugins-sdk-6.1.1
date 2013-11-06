@@ -50,6 +50,8 @@ public class CreateFRNManagedBean extends BaseManagedBean {
 	private String taskId;
 	private String[] actions;
 	
+	private long deliveryOrderId;
+	
 
 	/**
 	 * @return the flRemark
@@ -235,6 +237,20 @@ public class CreateFRNManagedBean extends BaseManagedBean {
 	 */
 	public void setFulfilmentNoteItem(FlFulfilmentNoteItem fulfilmentNoteItem) {
 		this.fulfilmentNoteItem = fulfilmentNoteItem;
+	}
+
+	/**
+	 * @return the deliveryOrderId
+	 */
+	public long getDeliveryOrderId() {
+		return deliveryOrderId;
+	}
+
+	/**
+	 * @param deliveryOrderId the deliveryOrderId to set
+	 */
+	public void setDeliveryOrderId(long deliveryOrderId) {
+		this.deliveryOrderId = deliveryOrderId;
 	}
 
 

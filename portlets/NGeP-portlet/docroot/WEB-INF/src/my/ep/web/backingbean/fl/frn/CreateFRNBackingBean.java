@@ -61,7 +61,8 @@ public class CreateFRNBackingBean extends BaseBackingBean<CreateFRNManagedBean> 
 			reqDTO.setTaskId(this.getManagedBean().getTaskId());
             System.out.println("action in BB"+action);
 			reqDTO.setOutcome(action);
-			FulfilmentResDTO resDTO = receivedNoteSO.createReceivedNote(reqDTO);
+			reqDTO.setDeliveryOrderId(getManagedBean().getDeliveryOrderId());
+			receivedNoteSO.createReceivedNote(reqDTO);
 			//System.out.println("resDTO.isSuccessful() in backing bean:: "+ resDTO.isSuccessful());
 		} catch (Exception e) {
 			log.error("Exception>>", e);
