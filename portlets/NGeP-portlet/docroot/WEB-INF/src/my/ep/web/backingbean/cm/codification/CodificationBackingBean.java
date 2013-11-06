@@ -625,7 +625,7 @@ public class CodificationBackingBean extends BaseBackingBean<CodificationManaged
 		/*Flash flash = facesContext.getExternalContext().getFlash();
 		flash.setKeepMessages(true);
 		flash.setRedirect(true);*/
-		facesContext.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO,"Successfully", ""));
+		facesContext.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO,"Submitted Successfully", ""));
 
 		return "extensionSearch";
 

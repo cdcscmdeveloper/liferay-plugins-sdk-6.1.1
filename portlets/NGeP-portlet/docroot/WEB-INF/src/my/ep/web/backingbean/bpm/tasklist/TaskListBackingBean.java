@@ -144,7 +144,10 @@ public class TaskListBackingBean extends BaseBackingBean<TaskListManagedBean>{
 		BpmResponseDTO res = bpmSO.getTaskDetails(reqDTO);
 		System.out.println("********getProcessName********"+res.getProcessName());
 		System.out.println("********res.getAction()********"+res.getAction());
+		System.out.println("********res.getTaskName()()********"+res.getTaskName());
+		
 		this.getManagedBean().setProcessName(res.getProcessName());
+		this.getManagedBean().setTaskName(res.getTaskName());
 		this.getManagedBean().setAction(res.getAction());
 		Object obj = res.getPojo();
 		this.getManagedBean().setTaskId(taskId);
