@@ -16,14 +16,14 @@
 	<p:commandLink value="Search Quotation/Tender" onclick="screen5.show();" />
 	<br/>
 	
-	<p:panelGrid columns="4" style="width:100%;" styleClass="noBorders tr,noBorders td">
+	<p:panelGrid id="search" columns="4" style="width:100%;" styleClass="noBorders tr,noBorders td">
 
 
 	<h:outputText value="Committee No"></h:outputText>
-	<p:inputText size="#{committeBackingBean.managedBean.qtCommittee.commNumber}"></p:inputText>
+	<p:inputText size="#{committeBackingBean.managedBean.committeNo}"></p:inputText>
 		
 	<h:outputText value="Qtn/Tender No"></h:outputText>
-	<p:inputText value="#{committeBackingBean.managedBean.qtCommittee.qtno}" size="49"></p:inputText>
+	<p:inputText value="#{committeBackingBean.managedBean.qtNo}" size="49"></p:inputText>
 	
 	<h:outputText value="Committe Type" ></h:outputText>
 
@@ -32,20 +32,20 @@
       </p:selectOneMenu> 
          
 	<h:outputText value="Date Created"></h:outputText>
-	<p:calendar value="#{committeBackingBean.managedBean.qtCommittee.committeCreatedDate}"
+	<p:calendar value="#{committeBackingBean.managedBean.createdDt}"
 				 showOn="button" />
 	
 	<h:outputText value="Record Status" style="width:104px;"></h:outputText>
 
-	 <p:selectOneMenu style="width:61%;">  
+	<!--  <p:selectOneMenu style="width:61%;" value="#{committeBackingBean.managedBean.status}">  
             <f:selectItem itemLabel="Select One" itemValue="" />  
             <f:selectItem itemLabel="Active" itemValue="1" /> 
             <f:selectItem itemLabel="Non-Active" itemValue="1" />  
-     </p:selectOneMenu> 
+     </p:selectOneMenu>  -->
      	 
     </p:panelGrid>
 	<p:commandButton value="SEARCH" style="float:right;" action="#{committeBackingBean.sarchQtCommitte}"
-			update="searchCommitte" />
+			update="searchCommitte"/>
     <br/>
 	<br/>
 	</p:panel>
@@ -78,7 +78,7 @@
 	<p:panel>
 	<p:panelGrid columns="2" style="width:100%;" styleClass="noBorders tr,noBorders td">
 
-      <p:commandButton value="ADD" style="float:right;" action="committeemaintanancepage?faces-redirect=true"  />
+      <p:commandButton value="ADD" style="float:right;" action="#{committeBackingBean.createCommittee}" ajax="false"/>
 	 </p:panelGrid>
 	</p:panel>
 
