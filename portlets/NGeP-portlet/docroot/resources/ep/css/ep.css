@@ -3091,6 +3091,82 @@ important
 
 
 }
+
+.ui-icon-download {
+	background-image: url(#{ resource [ 'ep/images/design:download.png' ]
+}
+
+)
+!
+important
+;
+
+	
+background-position
+:
+ 
+center
+;
+
+	
+border-radius
+:
+ 
+0
+px
+;
+
+	
+height
+:
+ 
+16
+px
+ 
+!
+important
+;
+
+
+}
+
+.ui-icon-folder {
+	background-image: url(#{ resource [ 'ep/images/design:folder.png' ]
+}
+
+)
+!
+important
+;
+
+	
+background-position
+:
+ 
+center
+;
+
+	
+border-radius
+:
+ 
+0
+px
+;
+
+	
+height
+:
+ 
+16
+px
+ 
+!
+important
+;
+
+
+}
 /*--------------------------       End Custom Icons    ------------------------------ */
 
 /*--------------------------       Custom CSS          ------------------------------ */
