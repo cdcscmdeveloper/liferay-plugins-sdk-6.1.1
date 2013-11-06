@@ -49,6 +49,7 @@ public class PurchaseRequestManagedBean extends BaseManagedBean {
 	private String taskId;
 	private String[] actions;
 	private String taskName;
+	private String docProcess;
 	
 	/**
 	 * @return the flRemark
@@ -238,6 +239,20 @@ public class PurchaseRequestManagedBean extends BaseManagedBean {
 	 */
 	public void setTaskName(String taskName) {
 		this.taskName = taskName;
+	}
+
+	/**
+	 * @return the docProcess
+	 */
+	public String getDocProcess() {
+		return docProcess;
+	}
+
+	/**
+	 * @param docProcess the docProcess to set
+	 */
+	public void setDocProcess(String docProcess) {
+		this.docProcess = docProcess;
 	}
 
 }
