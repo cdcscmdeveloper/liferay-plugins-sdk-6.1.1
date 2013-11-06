@@ -4,6 +4,7 @@
 package my.ep.web.managedbean.ss.committee;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import javax.faces.bean.ManagedBean;
@@ -40,17 +41,43 @@ public class CommitteManagedBean extends BaseManagedBean {
 	
 	private List<SelectItem> committeType;
 	
-	private List<SelectItem> selectionTypes = new ArrayList<SelectItem>();
-	
-	private List<SelectItem> memeberTypes= new ArrayList<SelectItem>();
-	
+		
 	private String profileSelction;
 	
-	private ScCommitteeMember committeMember;
+	private ScCommitteeMember committeMember = new ScCommitteeMember();
 	
 	private List<ScCommitteeMember> committemembers;
 	
-	private ScCommittee scCommittee =new ScCommittee();
+	private List<SelectItem> minstryList;
+	
+	private List<SelectItem> divisionList;
+	
+	private List<SelectItem> deptList;
+	 
+	private ScCommittee scCommittee;
+	
+	private List<SelectItem> selections;
+	
+	private List<SelectItem> userTypes;
+	
+	private List<SelectItem> roles;
+	
+	private String userSelection;
+	
+	private String icType;
+	
+	private List<SelectItem> idTypes;
+	
+	//Search properties
+	
+	private String committeNo;
+	
+	private String qtNo;
+	
+		
+	private Date createdDt;
+	
+	private String status;
 	
 	public CommitteManagedBean(){
 		log.info("inside ");		
@@ -96,24 +123,7 @@ public class CommitteManagedBean extends BaseManagedBean {
 	}
 
 
-	public List<SelectItem> getSelectionTypes() {
-		return selectionTypes;
-	}
-
-
-	public void setSelectionTypes(List<SelectItem> selectionTypes) {
-		this.selectionTypes = selectionTypes;
-	}
-
-
-	public List<SelectItem> getMemeberTypes() {
-		return memeberTypes;
-	}
-
-
-	public void setMemeberTypes(List<SelectItem> memeberTypes) {
-		this.memeberTypes = memeberTypes;
-	}
+	
 
 
 	public String getProfileSelction() {
@@ -153,6 +163,136 @@ public class CommitteManagedBean extends BaseManagedBean {
 
 	public void setScCommittee(ScCommittee scCommittee) {
 		this.scCommittee = scCommittee;
+	}
+
+
+	public List<SelectItem> getMinstryList() {
+		return minstryList;
+	}
+
+
+	public void setMinstryList(List<SelectItem> minstryList) {
+		this.minstryList = minstryList;
+	}
+
+
+	public List<SelectItem> getSelections() {
+		return selections;
+	}
+
+
+	public void setSelections(List<SelectItem> selections) {
+		this.selections = selections;
+	}
+
+
+	public List<SelectItem> getUserTypes() {
+		return userTypes;
+	}
+
+
+	public void setUserTypes(List<SelectItem> userTypes) {
+		this.userTypes = userTypes;
+	}
+
+
+	public List<SelectItem> getRoles() {
+		return roles;
+	}
+
+
+	public void setRoles(List<SelectItem> roles) {
+		this.roles = roles;
+	}
+
+
+	public String getUserSelection() {
+		return userSelection;
+	}
+
+
+	public void setUserSelection(String userSelection) {
+		this.userSelection = userSelection;
+	}
+
+
+	public String getIcType() {
+		return icType;
+	}
+
+
+	public void setIcType(String icType) {
+		this.icType = icType;
+	}
+
+
+	public List<SelectItem> getIdTypes() {
+		return idTypes;
+	}
+
+
+	public void setIdTypes(List<SelectItem> idTypes) {
+		this.idTypes = idTypes;
+	}
+
+
+	public List<SelectItem> getDivisionList() {
+		return divisionList;
+	}
+
+
+	public void setDivisionList(List<SelectItem> divisionList) {
+		this.divisionList = divisionList;
+	}
+
+
+	public List<SelectItem> getDeptList() {
+		return deptList;
+	}
+
+
+	public void setDeptList(List<SelectItem> deptList) {
+		this.deptList = deptList;
+	}
+
+
+	public String getCommitteNo() {
+		return committeNo;
+	}
+
+
+	public void setCommitteNo(String committeNo) {
+		this.committeNo = committeNo;
+	}
+
+
+	public String getQtNo() {
+		return qtNo;
+	}
+
+
+	public void setQtNo(String qtNo) {
+		this.qtNo = qtNo;
+	}
+
+
+	public Date getCreatedDt() {
+		return createdDt;
+	}
+
+
+	public void setCreatedDt(Date createdDt) {
+		this.createdDt = createdDt;
+	}
+
+
+	public String getStatus() {
+		return status;
+	}
+
+
+	public void setStatus(String status) {
+		this.status = status;
 	}
 
 
