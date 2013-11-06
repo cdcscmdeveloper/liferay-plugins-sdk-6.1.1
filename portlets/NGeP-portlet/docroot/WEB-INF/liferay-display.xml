@@ -60,7 +60,7 @@
 			<portlet id="scEvaluation" />
 			<portlet id="scBidding" />
 			<portlet id="scTemplateMaint" />
-			<portlet id="scTemplate" />
+			
 		</category>
 
 		<!-- Fulfilment Start Added by Giri -->
