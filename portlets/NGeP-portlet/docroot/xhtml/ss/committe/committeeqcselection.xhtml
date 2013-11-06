@@ -12,51 +12,36 @@
   </div>
  <br /> 
   <h:panelGroup  style="width:100%;" >
-    <p:dataTable value="#{CommitteBackingBean.managedBean.supplierItemList}"  var="committets" resizableColumns="true" editable="true">
+    <p:dataTable id="committeQc" value="#{committeBackingBean.managedBean.committemembers}"  var="committeqc" resizableColumns="true" editable="true">
    
 	    <p:ajax event="rowEdit" />  
         <p:ajax event="rowEditCancel" />
                              
         <p:column headerText="No">  
-          <h:outputText value="#{committets.committeeMemberId}" />  
+		  <h:outputText value="#{index + 1}" />  
         </p:column>  
   
         <p:column headerText="Name"> <p:commandLink  actionListener="#{pprBean.savePerson}" style="margin-right:20px;" ajax="false">  
-          <h:outputText value="#{committets.memberName}" />  
+          <h:outputText value="#{committeqc.memberName}" />  
         </p:commandLink>  
      
              
         </p:column>  
   
-        <p:column headerText="IC" >  
-            <p:outputLabel value="#{committets.icPassport}"></p:outputLabel>  
-        </p:column>  
-         <p:column headerText="Passport No." >  
-            <p:outputLabel value="#{committets.icPassport}"></p:outputLabel>  
-         </p:column>  
+		<p:column headerText="IC/PassPort No">
+	      <h:outputText value="#{committeqc.icPassport}" />
+		</p:column> 
         
-        <p:column headerText="Role" > 
-           <p:cellEditor>
-            <f:facet name="output">  
-              <h:outputText value="#{committets.memberRole}" />
-             </f:facet>  
-            <f:facet name="input">  
-         <p:selectOneMenu value="#{searchQtnTenderBB.managedBean.qtno}" >
-            <f:selectItem itemLabel="Select One" itemValue="" /> 
-            <f:selectItem itemLabel="Chairperson" itemValue="" />  
-            <f:selectItem itemLabel="Secretary" itemValue="1" />  
-            <f:selectItem itemLabel="Member" itemValue="2" />   
-         </p:selectOneMenu> 
-                </f:facet>  
-            </p:cellEditor>            
-        </p:column>  
+		<p:column headerText="Role">
+		  <h:outputText value="#{committeqc.memberRole}" />
+		</p:column> 
         
         <p:column headerText="Member Type" > 
-           <h:outputText value="#{committets.memberType}" />       
+           <h:outputText value="#{committeqc.memberType}" />       
         </p:column>                  
               
          <p:column headerText="Access" >  
-           <h:outputText value="#{committets.accessRight}" />
+           <h:outputText value="#{committeqc.accessRight}" />
          </p:column>  
         
        <p:column headerText="Action">  

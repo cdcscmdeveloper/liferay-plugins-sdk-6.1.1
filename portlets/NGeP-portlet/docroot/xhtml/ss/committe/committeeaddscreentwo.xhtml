@@ -16,6 +16,7 @@
 					value="#{committeBackingBean.managedBean.committeMember.userSelection}">
 					<f:selectItems
 						value="#{committeBackingBean.managedBean.selections}" />
+				<p:ajax event="change" update="addprofile, addexisting, addnew />		
 				</p:selectOneRadio>
 
 				<h:outputLabel value="* Type of User  " />

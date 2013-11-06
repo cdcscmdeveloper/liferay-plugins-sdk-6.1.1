@@ -8,17 +8,17 @@
   <p:panel header="Committee Details" toggleable="true">
   
     <h:panelGroup style="width:100%;" >
-    <p:dataTable value="#{CommitteBackingBean.managedBean.supplierItemList}" var="committeqc" resizableColumns="true" editable="true">
+    <p:dataTable id ="committeSecretary" value="#{CommitteBackingBean.managedBean.committemembers}" var="committesecretary" resizableColumns="true" editable="true">
     
         <p:ajax event="rowEdit" />  
         <p:ajax event="rowEditCancel" />
         
         <p:column headerText="No">  
-           <h:outputText value="#{committeqc.committeeMemberId}" />  
+		  <h:outputText value="#{index + 1}" /> 
         </p:column>  
   
         <p:column headerText="Group">
-          <p:selectOneMenu value="#{buttonBean.number}">  
+          <p:selectOneMenu value="#{committesecretary.number}">  
             <f:selectItem itemLabel="Select One" itemValue="" />  
             <f:selectItem itemLabel="QC" itemValue="1" />  
             <f:selectItem itemLabel="PBB" itemValue="2" />  
@@ -31,10 +31,10 @@
         <p:column headerText="Secretary Name" >  
            <p:cellEditor>
             <f:facet name="output">  
-              <h:outputText value="#{committeqc.memberName}" />
+              <h:outputText value="#{committesecretary.memberName}" />
              </f:facet>  
             <f:facet name="input">  
-                    <p:selectOneMenu value="#{searchQtnTenderBB.managedBean.qtno}" >  
+                    <p:selectOneMenu value="#{committeBackingBean.managedBean.qtno}" >  
             <f:selectItem itemLabel="Select One" itemValue="" />  
             <f:selectItem itemLabel="Existing record" itemValue="1" />  
             <f:selectItem itemLabel="New record" itemValue="2" />   
