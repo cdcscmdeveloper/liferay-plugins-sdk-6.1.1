@@ -3296,13 +3296,13 @@ textarea[disabled],input[type="text"][disabled],input[type="password"][disabled]
 }
 
 .ui-messages-info, .ui-message-info{
-	box-shadow: 0px 3px 4px #888888;
-	border-radius:0;
 	height: 13px;
 	padding: 7px 10px 10px 10px;
-	background-color: #bce18a;
-	color: #333333;
-	border:none;
+}
+
+.ui-messages-error, .ui-message-error {
+	height: 13px;
+	padding: 7px 10px 10px 10px;	
 }
 
 .fileupload-buttonbar {
