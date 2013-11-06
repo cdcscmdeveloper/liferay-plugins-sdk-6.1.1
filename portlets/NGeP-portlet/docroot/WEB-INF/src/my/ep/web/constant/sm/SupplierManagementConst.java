@@ -33,5 +33,6 @@ public class SupplierManagementConst {
 	public static final String RENEW_MOF_APPL_SUCCESS = "renewMofApplnAckPage";
 	public static final String RENEW_MOF_APPL_FAIL = "step8RenewAppln_ProcessingFeePaymentInfo";
 	public static final String CANCEL_MOF_APPL_SUCCESS = "cancelMofApplicationAckPage";
+	public static final String DELETE_PENDING_MOF_APPL_SUCCESS = "deletePendingMofApplnAckPage";
 
 }

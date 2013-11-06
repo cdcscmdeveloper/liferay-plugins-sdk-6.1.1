@@ -130,6 +130,8 @@ public class SmApplicationManagedBean extends BaseManagedBean {
 	private SmSupplierBank selectedSignatoryBankAcct;
 
 	private List<SmSupplierBank> selectedBanks;
+	
+	private String delPendAckMsg;
 
 	public SmApplicationManagedBean() {
 		defaultAddr = new SmAddress();
@@ -656,6 +658,14 @@ public class SmApplicationManagedBean extends BaseManagedBean {
 
 	public void setSmSupplier(SmSupplier smSupplier) {
 		this.smSupplier = smSupplier;
+	}
+
+	public String getDelPendAckMsg() {
+		return delPendAckMsg;
+	}
+
+	public void setDelPendAckMsg(String delPendAckMsg) {
+		this.delPendAckMsg = delPendAckMsg;
 	}
 
 }

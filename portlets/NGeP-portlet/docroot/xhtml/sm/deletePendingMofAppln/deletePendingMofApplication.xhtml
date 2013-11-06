@@ -9,7 +9,7 @@
 
 
 	<ui:define name="contentSection">
-		<p:panel header="Cancel Registration With MOF">
+		<p:panel header="Delete Pending MOF Application">
 
 			<div>
 
@@ -63,22 +63,20 @@
 				</tr>
 			</table>
 			<div align="center">
-				<p:commandButton value="Submit" onclick="canRegConfirm.show();" />
+				<p:commandButton value="Submit" onclick="delPenRegConfirm.show();" />
 
 			</div>
 		</p:panel>
 
-		<p:confirmDialog id="canRegConfirm" width="350px"
-			message="The MOF account will be de-activated / removed once approved by
-				Approver and you can only you the basic account.Do you still
-				want to proceed with the cancellation process?"
+		<p:confirmDialog id="delPenRegConfirm" width="350px"
+			message="Are you sure to proceed with the cancellation process?"
 			header="Cancel Reg With MOF" severity="alert"
-			widgetVar="canRegConfirm">
+			widgetVar="delPenRegConfirm">
 			<div align="center">
-				<p:commandButton id="confCanDel" value="Yes"
+				<p:commandButton id="confDelPen" value="Yes"
 					onclick="canRegConfirm.hide()"
-					action="#{backingBean.submitCancelMofApplToBpm}" />
-				<p:commandButton id="declineCancDel" value="No"
+					action="#{backingBean.submitDeletePendingMofApplToBpm}" />
+				<p:commandButton id="declineDelPen" value="No"
 					onclick="canRegConfirm.hide()" type="button" />
 			</div>
 		</p:confirmDialog>

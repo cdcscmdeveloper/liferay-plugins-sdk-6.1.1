@@ -16,11 +16,11 @@
 			<div align="left" style="margin: 10px;">
 				<p:outputPanel>
 					<p>
-						The Delete Pending MOF Application - Application No :
+						The Pending MOF Application - Application No :
 						<h:outputText value="#{backingBean.managedBean.smAppl.applNo}"
 							style="color: blue; font-weight: bold;" />
-						is submitted successfully. <br /> Please wait for further
-						notification.
+						<h:outputText
+							value="#{backingBean.managedBean.delPendAckMsg}" />
 					</p>
 
 				</p:outputPanel>

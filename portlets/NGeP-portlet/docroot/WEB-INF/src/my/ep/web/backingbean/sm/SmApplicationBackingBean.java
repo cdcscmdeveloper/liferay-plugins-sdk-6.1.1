@@ -987,7 +987,37 @@ public class SmApplicationBackingBean extends
 			initiateSmApplicationTask();
 			return SupplierManagementConst.CANCEL_MOF_APPL_SUCCESS;
 		} catch (Exception e) {
-			return SupplierManagementConst.DEFAULT_CANCEL_MOF_APPLN;
+			return SupplierManagementConst.PROCEED_CANCEL_MOF_APPLN;
+		}
+	}
+
+	public String submitDeletePendingMofApplToBpm() {
+		IMofRegistrationSO regSo = null;
+		try {
+
+			SmAppl bpmAppl = getManagedBean().getSmAppl();
+			System.out.println("*** DELTE PENDING MOF STATUS === >>> "
+					+ bpmAppl.getStatusId() + " -- CURRENT APPL TYPE --- "
+					+ bpmAppl.getApplType());
+			if (bpmAppl.getStatusId() == 1) {
+				getManagedBean().setDelPendAckMsg(" is delete successfully.");
+				// TODO directly delete the pending record from the DB
+			} else {
+				// TODO remove hard code id later
+				bpmAppl.setApplId(7898);
+				regSo = (IMofRegistrationSO) BusinessDelegate.getInstance()
+						.getServiceObject("sm", IMofRegistrationSO.class);
+				regSo.initiateSmDelPendingApplicationTask(bpmAppl);
+				getManagedBean()
+						.setDelPendAckMsg(
+								" is submitted successfully. Please wait for further notification.");
+			}
+
+			return SupplierManagementConst.DELETE_PENDING_MOF_APPL_SUCCESS;
+		} catch (Exception e) {
+			return SupplierManagementConst.PROCEED_DEL_PENDING_MOF_APPLN;
+		} finally {
+			regSo = null;
 		}
 	}
 
