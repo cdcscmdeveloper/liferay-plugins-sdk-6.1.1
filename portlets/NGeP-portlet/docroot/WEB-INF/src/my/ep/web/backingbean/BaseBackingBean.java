@@ -283,4 +283,25 @@ public abstract class BaseBackingBean<T extends BaseManagedBean> {
 		}
 	    return items;
 	}
+	
+	public SelectItem[] getDropdownCodeValues(String category) {
+		SelectItem[] items = null;
+		try {
+			IObjectSO objectSO = (IObjectSO)BusinessDelegate.getInstance().getServiceObject("pm",IObjectSO.class);
+			ObjectReqDTO reqDTO = new ObjectReqDTO();
+			reqDTO.setCategory(category);
+			ObjectResDTO resDTO = objectSO.retrieveCodeByCategory(reqDTO);
+			
+		    items = new SelectItem[resDTO.getPmCodeList().size()+1];
+		    items[0] = new SelectItem(null, "- Select One -");
+		    int i = 1;
+		    for(PmCode code: resDTO.getPmCodeList()) {
+		    	items[i++] = new SelectItem(code.getCode(), code.getPmCodeDescs().get(0).getCodeName());
+		    }
+		} catch (Exception e) {
+			e.printStackTrace();
+			FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR,e.toString(), e.getMessage()));
+		}
+	    return items;
+	}
 }
