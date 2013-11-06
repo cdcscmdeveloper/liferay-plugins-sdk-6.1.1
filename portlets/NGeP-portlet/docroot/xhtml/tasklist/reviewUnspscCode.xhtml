@@ -21,12 +21,9 @@
 				<ui:repeat var="action"
 					value="#{tasklistBackingBean.managedBean.action}">
 					<p:commandButton value="#{action}"
-						action="#{unspscCodeBackingBean.submitForRequest}"></p:commandButton>
+						action="#{unspscCodeBackingBean.submitForRequest(action)}"></p:commandButton>
 				</ui:repeat>
-				<p:commandButton value="#{lbl['lbl.cm.create.unspsc.code']}"
-					action="#{unspscCodeBackingBean.createTempCode}"></p:commandButton>
-				<p:commandButton value="#{lbl['lbl.cm.create.ext.code']}"
-					action="#{unspscCodeBackingBean.createExtCode}"></p:commandButton>
+			
 			</div>
 
 			<p:selectOneRadio>

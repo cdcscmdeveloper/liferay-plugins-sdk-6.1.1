@@ -12,15 +12,15 @@
 
 		<h:panelGroup id="viewWishListItemId">
 
-			
+
 
 			<ui:include src="catalogueMenuBar.xhtml"></ui:include>
 
-			
+
 			<h:panelGrid columns="2" columnClasses="cmLeft,cmRight" width="100%">
 
 
-				<p:dataGrid var="type" rowIndexVar="rowIndex" 
+				<p:dataGrid var="type" rowIndexVar="rowIndex"
 					value="#{catalogueBackingBean.managedBean.wishLists}" columns="1"
 					style="width: 100%;">
 					<p:commandLink value="#{type.wishlistDesc}"
@@ -36,17 +36,15 @@
 					<p:panel header="#{wishLists.cmWishlist.wishlistDesc}">
 						<table style="width: 100%;">
 							<tr>
-								<td><p:graphicImage height="50" width="50" /></td>
-								<td><p:commandLink
+								<td style="width: 30%;"><p:graphicImage height="50" width="50" /></td>
+								<td style="width: 50%;"><p:commandLink
 										value="#{wishLists.cmSupplierItem.cmItem.itemName}" /></td>
-								<td><p:menubar>
-										<p:submenu label="Action">
-											<p:menuitem value="Add To Cart" />
-											<p:menuitem value="Delete"
-												action="#{wishListBackingBean.deleteWishListItem(rowIndex)}"
-												update="datagrid" />
-										</p:submenu>
-									</p:menubar></td>
+								<td style="width: 20%;"><p:splitButton value="Action" icon="ui-icon-action">
+										<p:menuitem value="Add To Cart" />
+										<p:menuitem value="Delete"
+											action="#{wishListBackingBean.deleteWishListItem(rowIndex)}"
+											icon="ui-icon-delete" update="datagrid" />
+									</p:splitButton></td>
 
 							</tr>
 						</table>

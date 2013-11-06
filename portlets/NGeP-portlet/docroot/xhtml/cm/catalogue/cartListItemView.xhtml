@@ -12,9 +12,9 @@
 
 		<h:panelGroup id="viewCartListId">
 
-			
 
-		<ui:include src="catalogueMenuBar.xhtml"></ui:include>
+
+			<ui:include src="catalogueMenuBar.xhtml"></ui:include>
 
 
 			<p:dataGrid var="cartList"
@@ -24,15 +24,14 @@
 
 				<table style="width: 100%;">
 					<tr>
-						<td><p:graphicImage height="50" width="50" /></td>
-						<td><p:commandLink value="#{cartList.cmItem.itemName}" /></td>
-						<td><p:menubar>
-								<p:submenu label="Action">
-									<p:menuitem value="Delete"
-										action="#{catalogueBackingBean.deleteCartItem(rowIndex)}"
-										update=":form:viewCartListId" />
-								</p:submenu>
-							</p:menubar></td>
+						<td style="width: 30%;"><p:graphicImage height="50" width="50" /></td>
+						<td style="width: 50%;"><p:commandLink value="#{cartList.cmItem.itemName}" /></td>
+						<td style="width: 20%;"> <p:splitButton value="Action" icon="ui-icon-action">
+								<p:menuitem value="Delete"
+									action="#{catalogueBackingBean.deleteCartItem(rowIndex)}"
+									icon="ui-icon-delete" update=":form:viewCartListId" />
+
+							</p:splitButton></td>
 
 					</tr>
 				</table>

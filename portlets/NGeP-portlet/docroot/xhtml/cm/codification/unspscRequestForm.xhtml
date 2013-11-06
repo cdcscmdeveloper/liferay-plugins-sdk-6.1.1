@@ -9,14 +9,14 @@
 
 	<ui:define name="contentSection">
 
-
+	<p:messages globalOnly="true"></p:messages>
 		<h:panelGroup id="cmUNSPSCrequestID">
 			<p:outputLabel styleClass="screen-title"
 				value="#{lbl['lbl.cm.unspsc.code.request.form']}"></p:outputLabel>
 
 			<div style="text-align: right;">
-				<p:commandButton value="#{lbl['lbl.cm.submit']}"
-					action="#{unspscCodeBackingBean.submitForRequest()}"></p:commandButton>
+				<p:commandButton value="#{lbl['lbl.cm.submit']}" icon="ui-icon-submit"
+					action="#{unspscCodeBackingBean.submitForRequest('SUBMIT')}" update="@form"></p:commandButton>
 			</div>
 			<p:selectOneRadio>
 				<f:selectItem itemValue="P" itemLabel="Product " />

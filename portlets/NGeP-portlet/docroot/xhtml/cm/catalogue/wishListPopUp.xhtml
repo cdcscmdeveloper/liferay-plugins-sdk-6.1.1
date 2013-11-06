@@ -7,46 +7,6 @@
 	xmlns="http://www.w3.org/1999/xhtml">
 
 
-	<table width="100%">
-		<tr>
-			<td width="30%"><p:dataGrid id="selectWishList" columns="1"
-					value="#{catalogueBackingBean.managedBean.selectedSupplierItemList}"
-					var="obj" rows="4">
-
-					<h:panelGrid columns="2" columnClasses="columnLeft, columnRight">
-
-						<p:outputLabel value="#{obj.cmItem.itemName}" />
-						<p:graphicImage height="100px" width="100px" />
-					</h:panelGrid>
-
-				</p:dataGrid></td>
-
-
-
-
-			<td width="70%"><p:dataTable id="allWishListId"
-					value="#{catalogueBackingBean.managedBean.wishLists}" 
-					var="wishList" rowKey="#{wishList.wishlistId}" 
-					selection="#{wishListBackingBean.managedBean.selectedWishLists}">
-
-					<p:column selectionMode="multiple" style="width:2%" />
-
-
-					<p:column>
-						<f:facet name="header">
-							<p:outputLabel value="#{lbl['lbl.cm.wish.list']}" />
-						</f:facet>
-						<p:outputLabel value="#{wishList.wishlistDesc}" />
-					</p:column>
-
-				</p:dataTable> <p:commandButton value="#{lbl['lbl.cm.ok']}" action="#{wishListBackingBean.addItemIntoWishList}"
-					onclick="wishListPopUp.hide()"></p:commandButton></td>
-
-
-
-		</tr>
-	</table>
-
 	<table>
 		<tr>
 			<td><p:outputLabel value="#{lbl['lbl.cm.wish.list']}"></p:outputLabel></td>
@@ -57,6 +17,48 @@
 					action="#{wishListBackingBean.saveWishList}"></p:commandButton></td>
 		</tr>
 	</table>
+	<div style="border-bottom: 1px solid;"></div>
+
+	<div style="width: 100%;">
+		<div style="float: left; width: 30%">
+			<p:dataGrid id="selectWishList" columns="1"
+				value="#{catalogueBackingBean.managedBean.selectedSupplierItemList}"
+				var="obj">
+
+				<h:panelGrid columns="2" columnClasses="columnLeft, columnRight">
+
+					<p:outputLabel value="#{obj.cmItem.itemName}" />
+					<p:graphicImage height="100px" width="100px" />
+				</h:panelGrid>
+
+			</p:dataGrid>
+		</div>
+
+		<div style="float: right; width: 65%">
+			<p:dataTable id="allWishListId"
+				value="#{catalogueBackingBean.managedBean.wishLists}" var="wishList"
+				rowKey="#{wishList.wishlistId}"
+				selection="#{wishListBackingBean.managedBean.selectedWishLists}">
+
+				<p:column selectionMode="multiple" style="width:2%" />
+
+
+				<p:column>
+					<f:facet name="header">
+						<p:outputLabel value="#{lbl['lbl.cm.wish.list']}" />
+					</f:facet>
+					<p:outputLabel value="#{wishList.wishlistDesc}" />
+				</p:column>
+
+			</p:dataTable>
+			<p:commandButton value="#{lbl['lbl.cm.ok']}" icon="ui-icon-approve"
+				action="#{wishListBackingBean.addItemIntoWishList}"
+				onclick="wishListPopUp.hide()"></p:commandButton>
+		</div>
+	</div>
+
+
+
 
 
 

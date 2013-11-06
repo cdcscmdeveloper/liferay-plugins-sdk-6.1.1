@@ -61,7 +61,7 @@
 							<f:selectItems
 								value="#{codificationBackingBean.managedBean.colorCriteria}" />
 						</p:selectOneMenu></td>
-					<td><p:commandButton value="search"
+					<td><p:commandButton value="Search" icon="ui-icon-search"
 							action="#{codificationBackingBean.itemSearch}"
 							update="itemTableID" /></td>
 				</tr>
@@ -108,21 +108,23 @@
 					<f:facet name="header">
 							#{lbl['lbl.cm.action']}
 						</f:facet>
-					<p:commandButton value="Edit"
-						action="#{codificationBackingBean.editExtension(rowIndex)}" />
-					<p:commandButton value="Delete"
-						action="#{codificationBackingBean.deleteExtension(rowIndex)}" />
+
+					<p:splitButton value="Action" icon="ui-icon-action">
+						<p:menuitem value="Edit"
+							action="#{codificationBackingBean.editExtension(rowIndex)}"
+							icon="ui-icon-edit" />
+
+					</p:splitButton>
 				</p:column>
 			</p:dataTable>
 
-			<table>
-				<tr>
-					<td><p:commandButton value="Maintenance FIle"
-							action="#{catalogueBackingBean.GoToMaintain()}" /></td>
-					<td><p:commandButton value="Add"
-							action="#{catalogueBackingBean.addToMaintain()}" /></td>
-				</tr>
-			</table>
+
+			<div style="text-align: right;">
+				<p:commandButton value="Maintenance FIle" icon="ui-icon-folder"
+					action="#{catalogueBackingBean.GoToMaintain()}" />
+				<p:commandButton value="Add" icon="ui-icon-add"
+					action="#{catalogueBackingBean.addToMaintain()}" />
+			</div>
 
 		</h:panelGroup>
 

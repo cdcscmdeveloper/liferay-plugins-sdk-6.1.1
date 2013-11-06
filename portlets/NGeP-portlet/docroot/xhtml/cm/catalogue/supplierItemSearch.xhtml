@@ -62,7 +62,7 @@
 
 		</h:panelGroup>
 
-		<p:commandButton value="search"
+		<p:commandButton value="Search" icon="ui-icon-search"
 			action="#{catalogueBackingBean.searchCatalogue}"
 			update="supplierItemID" />
 
@@ -182,8 +182,7 @@
 		</h:panelGrid>
 
 
-		<p:dialog id="wishListDialog" widgetVar="wishListPopUp" width="500"
-			minHeight="300">
+		<p:dialog id="wishListDialog" widgetVar="wishListPopUp" width="500px" >
 
 			<ui:include src="wishListPopUp.xhtml" />
 
