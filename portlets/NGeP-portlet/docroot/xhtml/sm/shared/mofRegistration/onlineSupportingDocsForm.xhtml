@@ -7,26 +7,24 @@
 
 	<p:panel header=" Supporting Document " toggleable="true">
 		<br />
-		<table>
+		<table style="width: 100%">
 
 			<tr>
-				<td
-					style="height: 50px; background-color: aqua; color: black; text-align: left; font-size: 8px;"><h6>
-						<h:outputText
-							value="* You choose to send the documents online. Please send all the necessary documents mentioned in the check list." />
-						<br />
-						<h:outputText
-							value="* The system can only accommodate files in Word format and PDF:" />
-						<br />
+				<td style="background-color: aqua; color: black; text-align: left;">
+					<h:outputText
+						value="* You choose to send the documents online. Please send all the necessary documents mentioned in the check list." />
+					<br /> <h:outputText
+						value="* The system can only accommodate files in Word format and PDF:" />
+					<br />
 
-					</h6></td>
+				</td>
 
 			</tr>
 
 		</table>
 
 		<p:panel
-			header="Online Documents Check List - Application No. - 12374837">
+			header="Online Documents Check List - Application No. - #{backingBean.managedBean.smAppl.applNo}">
 			<p:dataTable var="table"
 				value="#{mofRegistrationBackingBean.dataList}"
 				style="width : 800px;">

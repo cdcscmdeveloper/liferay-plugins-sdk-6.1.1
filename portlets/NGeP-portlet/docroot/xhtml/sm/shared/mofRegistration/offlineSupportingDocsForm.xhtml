@@ -7,11 +7,10 @@
 
 	<p:panel header=" Supporting Document " toggleable="true">
 		<br />
-		<table>
+		<table style="width: 100%;">
 
 			<tr>
-				<td
-					style="height: 50px; background-color: aqua; color: black; text-align: left; font-size: 8px;"><h6>
+				<td style="background-color: aqua; color: black; text-align: left;"><h6>
 						<h:outputText
 							value="* You choose to send the documents offline. Please send all the necessary documents mentioned in the check list." />
 						<br />
@@ -26,43 +25,55 @@
 			</tr>
 
 		</table>
-
-
-		<table style="padding-top: 5px; font-size: 12px;">
+		<br />
+		<table style="width: 100%;">
 			<tr>
-				<td><b>For Peninsular Malaysia:</b><br /> (Contractor only and
-					all Peninsular Malaysian Consultant)</td>
-				<td><b>For Sabah:</b><br /> (Contractors in Sabah only)</td>
-				<td><b>For Sarawak:</b><br /> (Contractors in Sarawak only)</td>
+				<td style="width: 33%">
+					<table>
+						<tr>
+							<td><b>For Peninsular Malaysia:</b><br /> (Contractor only
+								and all Peninsular Malaysian Consultant)</td>
+						</tr>
+						<tr>
+							<td style="padding-top: 10px;">Unit Pendaftaran Syarikat<br />
+								Bahagian Perolehan Kerajaan<br /> Tingkat Bawah Blok Utara<br />
+								Kompleks Kementerian Kewangan<br /> Precint 2, Pusat
+								Pentadbiran Kerajaan Persekutuan<br /> 62592 Putrajay
+							</td>
+						</tr>
+					</table>
+				</td>
+
+				<td style="width: 33%"><table>
+						<tr>
+							<td><b>For Sabah:</b><br /> (Contractors in Sabah only)</td>
+						</tr>
+						<tr>
+							<td style="padding-top: 10px;">Unit Pendaftaran Kontraktor<br />
+								Bahagian Perolehan Kerajaan<br /> Perbendaharaan Malaysia Sabah<br />
+								Tingkat 2 Rumah Persekutuan<br /> Jalan Mat Salleh<br /> 88592
+								Kota Kinabalu Sabah
+							</td>
+						</tr>
+					</table></td>
+				<td style="width: 33%"><table>
+						<tr>
+							<td><b>For Sarawak:</b><br /> (Contractors in Sarawak only)</td>
+						</tr>
+						<tr>
+							<td style="padding-top: 10px;">Unit Pendaftaran Kontraktor<br />
+								Bahagian Perolehan Kerajaan<br /> Perbendaharaan Malaysia
+								Sarawak<br /> Tingkat 16 Bangunan Sultan Iskandar<br /> Jalan
+								Simpang Tiga<br /> 93592 Kuching Sarawak
+							</td>
+						</tr>
+					</table></td>
 			</tr>
-
-
-
-			<tr>
-				<td style="padding-top: 10px;">Unit Pendaftaran Syarikat<br />
-					Bahagian Perolehan Kerajaan<br /> Tingkat Bawah Blok Utara<br />
-					Kompleks Kementerian Kewangan<br /> Precint 2, Pusat Pentadbiran
-					Kerajaan Persekutuan<br /> 62592 Putrajay
-				</td>
-
-				<td style="padding-top: 10px;">Unit Pendaftaran Kontraktor<br />
-					Bahagian Perolehan Kerajaan<br /> Perbendaharaan Malaysia Sabah<br />
-					Tingkat 2 Rumah Persekutuan<br /> Jalan Mat Salleh<br /> 88592
-					Kota Kinabalu Sabah
-				</td>
-
-				<td style="padding-top: 10px;">Unit Pendaftaran Kontraktor<br />
-					Bahagian Perolehan Kerajaan<br /> Perbendaharaan Malaysia Sarawak<br />
-					Tingkat 16 Bangunan Sultan Iskandar<br /> Jalan Simpang Tiga<br />
-					93592 Kuching Sarawak
-				</td>
-			</tr>
-
 		</table>
 
+
 		<p:panel
-			header="Offline Documents Check List - For Application No. - 12343535"
-			toggleable="true">
+			header="Offline Documents Check List - For Application No. - #{backingBean.managedBean.smAppl.applNo}">
 			<p:dataTable var="table"
 				value="#{mofRegistrationBackingBean.dataList}">
 				<p:column headerText="No.">  

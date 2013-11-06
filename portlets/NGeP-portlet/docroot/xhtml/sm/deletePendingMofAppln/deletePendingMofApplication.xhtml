@@ -1,0 +1,86 @@
+<ui:composition
+	template="/WEB-INF/facelets/templates/basic_template.xhtml"
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:c="http://java.sun.com/jsp/jstl/core">
+
+
+	<ui:define name="contentSection">
+		<p:panel header="Cancel Registration With MOF">
+
+			<div>
+
+				<h4
+					style="color: blue; text-decoration: underline; text-align: center;">
+					<h:outputText value="#{lbl['lbl.sm.applnTypeLbl']}" />
+					<h:outputText value="Delete Pending MOF Application" />
+					<h:outputText value=" - #{backingBean.managedBean.smAppl.applNo}" />
+
+				</h4>
+			</div>
+			<br />
+			<table style="width: 100%;">
+				<tr>
+					<td><p:outputLabel value="Application No." /></td>
+					<td><p:inputText
+							value="#{backingBean.managedBean.smAppl.applNo}" readonly="true"
+							disabled="true" /></td>
+
+				</tr>
+				<tr>
+					<td><p:outputLabel value="Application Type." /></td>
+					<td><p:inputText value=" Type Of Application " readonly="true"
+							disabled="true" /></td>
+
+				</tr>
+				<tr>
+					<td><p:outputLabel value="Submitted Date " /></td>
+					<td><p:inputText value="22-10-2013" readonly="true"
+							disabled="true" /></td>
+
+				</tr>
+				<tr>
+					<td><p:outputLabel value="Current Status" /></td>
+					<td><p:inputText value="Pending Supporting Docs"
+							readonly="true" disabled="true"
+							rendered="#{backingBean.managedBean.smAppl.statusId == 1}" /> <p:inputText
+							value="Pending Site Visit Report" readonly="true" disabled="true"
+							rendered="#{backingBean.managedBean.smAppl.statusId == 2}" /></td>
+
+				</tr>
+				<tr>
+					<td><p:outputLabel value="Reason for delete MOF-Registered" /></td>
+					<td><p:inputTextarea cols="60" /></td>
+
+				</tr>
+				<tr>
+					<td><p:outputLabel value="Attach Supporting Doc (If any)" /></td>
+					<td><p:fileUpload mode="simple" /></td>
+
+				</tr>
+			</table>
+			<div align="center">
+				<p:commandButton value="Submit" onclick="canRegConfirm.show();" />
+
+			</div>
+		</p:panel>
+
+		<p:confirmDialog id="canRegConfirm" width="350px"
+			message="The MOF account will be de-activated / removed once approved by
+				Approver and you can only you the basic account.Do you still
+				want to proceed with the cancellation process?"
+			header="Cancel Reg With MOF" severity="alert"
+			widgetVar="canRegConfirm">
+			<div align="center">
+				<p:commandButton id="confCanDel" value="Yes"
+					onclick="canRegConfirm.hide()"
+					action="#{backingBean.submitCancelMofApplToBpm}" />
+				<p:commandButton id="declineCancDel" value="No"
+					onclick="canRegConfirm.hide()" type="button" />
+			</div>
+		</p:confirmDialog>
+	</ui:define>
+</ui:composition>

@@ -10,7 +10,7 @@
 
 	<ui:define name="contentSection">
 		<p:panel header="Cancel Registration With MOF">
-			
+
 			<div>
 
 				<h4
@@ -18,7 +18,7 @@
 					<h:outputText value="#{lbl['lbl.sm.applnTypeLbl']}" />
 					<h:outputText value="Cancel Registration With Mof" />
 					<h:outputText value=" - #{backingBean.managedBean.smAppl.applNo}" />
-					
+
 				</h4>
 			</div>
 			<br />
@@ -49,7 +49,7 @@
 			widgetVar="canRegConfirm">
 			<div align="center">
 				<p:commandButton id="confCanDel" value="Yes"
-					oncomplete="canRegConfirm.hide()"
+					onclick="canRegConfirm.hide()"
 					action="#{backingBean.submitCancelMofApplToBpm}" />
 				<p:commandButton id="declineCancDel" value="No"
 					onclick="canRegConfirm.hide()" type="button" />
