@@ -6,104 +6,37 @@
 	xmlns:c="http://java.sun.com/jsp/jstl/core">
 
 	<p:panel header="Approval Workflow" toggleable="true">
-		<p:panelGrid columns="3" style="width:100%; height:10px;border:1px;"
-			styleClass="noBorders tr,noBorders td">
-			<div style="height: 10px; width: 100%; border: 1px;">
-				<p:row>
-					<p:column>
-						<table>
-							<tr>
-								<td><h:outputText value="Approval Category" /></td>
-
-								<td>
-									<Table>
-										<tr>
-											<td><p:selectManyCheckbox
-													value="#{approvalBackingBean.appCatList}"
-													layout="lineDirection" disabled="true">
-
-													<f:selectItems
-														value="#{approvalBackingBean.favNumber2Value}"></f:selectItems>
-
-												</p:selectManyCheckbox></td>
-										</tr>
-										<tr>
-											<td><p:selectManyCheckbox
-													value="#{approvalBackingBean.appCatList}"
-													layout="lineDirection" disabled="true">
-
-													<f:selectItems
-														value="#{approvalBackingBean.favNumber3Value}"></f:selectItems>
-
-												</p:selectManyCheckbox></td>
-										</tr>
-										<tr>
-											<td><p:selectManyCheckbox
-													value="#{approvalBackingBean.appCatList}"
-													layout="lineDirection" disabled="true">
-
-													<f:selectItems
-														value="#{approvalBackingBean.favNumber4Value}"></f:selectItems>
-
-												</p:selectManyCheckbox></td>
-										</tr>
-
-									</Table>
-								</td>
-							</tr>
-						</table>
-
-					</p:column>
-				</p:row>
-
-				<!-- <p:row>
-					<p:column>
-						<h:outputText value="Approval Category" />
-					</p:column>
-					<p:column>
-						<p:selectManyCheckbox value="#{approvalBackingBean.appCatList}"
+		<table border="0" cellspacing="0" cellpadding="0">
+		<tr>
+			<td width="20%"><h:outputText value="Approval Category" /></td>
+			<td width="80%">
+				<p:panelGrid border="0" cellpadding="0" cellspacing="0" columns="3"
+					styleClass="noBorders tr,noBorders td">
+					<c:forEach var="approvalCategory" items="#{approvalBackingBean.approvalCategories}">
+						<p:selectManyCheckbox
+							value="#{approvalBackingBean.appCatList}"
 							layout="lineDirection" disabled="true">
-
-							<f:selectItems value="#{approvalBackingBean.favNumber2Value}"></f:selectItems>
-
+							<f:selectItem value="#{approvalCategory}" />
 						</p:selectManyCheckbox>
-					</p:column>
-					<p:column>
-						<p:selectManyCheckbox value="#{approvalBackingBean.appCatList}"
-							layout="lineDirection" disabled="true">
-
-							<f:selectItems value="#{approvalBackingBean.favNumber3Value}"></f:selectItems>
-
-						</p:selectManyCheckbox>
-					</p:column>
-					<p:column>
-						<p:selectManyCheckbox value="#{approvalBackingBean.appCatList}"
-							layout="lineDirection" disabled="true">
-
-							<f:selectItems value="#{approvalBackingBean.favNumber4Value}"></f:selectItems>
-
-						</p:selectManyCheckbox>
-					</p:column>
-				</p:row> -->
-			</div>
-
-
-
-		</p:panelGrid>
+					</c:forEach>
+				</p:panelGrid>
+			</td>
+		</tr>
+		</table>
 	</p:panel>
-	<p:tabView var="player" dynamic="true" cache="true"
-		activeIndex="#{approvalBackingBean.activTab}" orientation="top"
+	<p:tabView var="approvalCategory" dynamic="true" cache1="true" orientation="top"
+		activeIndex="#{approvalBackingBean.activeApprovalTab}"
 		value="#{approvalBackingBean.managedBean.tabList}">
-		<p:ajax event="tabChange" process="@all"
-			listener="#{approvalBackingBean.newTabSelected}" />
+		<p:ajax event="tabChange" process="@this"
+			listener="#{approvalBackingBean.approvalTabChanged}" />
 
-		<p:tab title="#{player.titleName}">
-			<ui:fragment rendered="#{player.titleName eq 'Division Approval'}">
+		<p:tab title="#{approvalCategory.titleName}">
+			<ui:fragment rendered="#{approvalCategory.titleName eq 'Division Approval'}">
 
 				<ui:include src="/xhtml/ss/quatationtender/requestDetails.xhtml" />
 				  <ui:include src="/xhtml/ss/quatationtender/approvalDetailsPTJ.xhtml" /> 
 			</ui:fragment>
-			<ui:fragment rendered="#{player.titleName ne 'Division Approval'}">
+			<ui:fragment rendered="#{approvalCategory.titleName ne 'Division Approval'}">
 				<ui:include src="/xhtml/ss/quatationtender/requestDetails.xhtml" />
 				 <ui:include
 					src="/xhtml/ss/quatationtender/verificationDetails.xhtml" />

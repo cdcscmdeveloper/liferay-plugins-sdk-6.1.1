@@ -7,7 +7,7 @@
 
 
 
-	<ui:fragment rendered="#{player.titleName eq 'BPK Approval'}">
+	<ui:fragment rendered="#{approvalCategory.titleName eq 'BPK Approval'}">
 
 
 
@@ -41,7 +41,7 @@
 
 	</ui:fragment>
 
-	<ui:fragment rendered="#{player.titleName eq 'Procurement Board'}">
+	<ui:fragment rendered="#{approvalCategory.titleName eq 'Procurement Board'}">
 
 
 		<p:panelGrid columnClasses="25,25,25,25"
@@ -70,7 +70,7 @@
 
 	</ui:fragment>
 
-	<ui:fragment rendered="#{player.titleName eq 'MITI Approval'}">
+	<ui:fragment rendered="#{approvalCategory.titleName eq 'MITI Approval'}">
 
 
 		<p:panelGrid columnClasses="25,25,25,25"
@@ -96,7 +96,7 @@
 
 	</ui:fragment>
 
-	<ui:fragment rendered="#{player.titleName eq 'Budget Approval'}">
+	<ui:fragment rendered="#{approvalCategory.titleName eq 'Budget Approval'}">
 
 
 		<p:panelGrid columnClasses="25,25,25,25"
@@ -121,7 +121,7 @@
 
 	</ui:fragment>
 
-	<ui:fragment rendered="#{player.titleName eq 'ICT Approval'}">
+	<ui:fragment rendered="#{approvalCategory.titleName eq 'ICT Approval'}">
 
 
 		<p:panelGrid columnClasses="25,25,25,25"
@@ -147,7 +147,7 @@
 	</ui:fragment>
 
 
-	<ui:fragment rendered="#{player.titleName eq 'Division Approval'}">
+	<ui:fragment rendered="#{approvalCategory.titleName eq 'Division Approval'}">
 
 
 		<p:panelGrid columnClasses="25,25,25,25"
@@ -198,7 +198,7 @@
 				</p:column>
 				<p:column width="20%">
 					<p:inputText
-						value="#{approvalBackingBean.managedBean.scQtApproval.approverLetterNo}"></p:inputText>
+						value="#{approvalCategory.scQtApproval.approverLetterNo}"></p:inputText>
 				</p:column>
 
 

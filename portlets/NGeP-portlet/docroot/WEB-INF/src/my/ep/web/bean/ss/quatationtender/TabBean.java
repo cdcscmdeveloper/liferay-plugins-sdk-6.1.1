@@ -1,32 +1,42 @@
 package my.ep.web.bean.ss.quatationtender;
 
+import my.ep.persistence.entity.ss.quationtender.ScQtApproval;
+
 public class TabBean {
 	private String titleName;
-	private int tabid;
+	private ScQtApproval scQtApproval;
 
-	public TabBean(String titleName,int tabid){
-		this.titleName=titleName;
-		this.tabid=tabid;
+	public TabBean(String titleName, ScQtApproval scQtApproval) {
+		this.titleName = titleName;
+		this.scQtApproval = scQtApproval;
 	}
+
+	/**
+	 * @return the titleName
+	 */
 	public String getTitleName() {
 		return titleName;
 	}
 
+	/**
+	 * @param titleName the titleName to set
+	 */
 	public void setTitleName(String titleName) {
 		this.titleName = titleName;
 	}
+
 	/**
-	 * @return the tabid
+	 * @return the scQtApproval
 	 */
-	public int getTabid() {
-		return tabid;
+	public ScQtApproval getScQtApproval() {
+		return scQtApproval;
 	}
+
 	/**
-	 * @param tabid the tabid to set
+	 * @param scQtApproval the scQtApproval to set
 	 */
-	public void setTabid(int tabid) {
-		this.tabid = tabid;
+	public void setScQtApproval(ScQtApproval scQtApproval) {
+		this.scQtApproval = scQtApproval;
 	}
-	
 
 }

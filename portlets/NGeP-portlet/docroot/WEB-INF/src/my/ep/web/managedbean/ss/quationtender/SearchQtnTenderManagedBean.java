@@ -13,6 +13,7 @@ import javax.faces.model.SelectItem;
 
 import my.ep.persistence.entity.ss.quationtender.ScAttachment;
 import my.ep.persistence.entity.ss.quationtender.ScQtApproval;
+import my.ep.type.ss.ApprovalCategory;
 import my.ep.web.bean.ss.quatationtender.CategoryCode;
 import my.ep.web.bean.ss.quatationtender.GoSoDo;
 import my.ep.web.bean.ss.quatationtender.Location;
@@ -105,9 +106,6 @@ public class SearchQtnTenderManagedBean extends BaseManagedBean {
 	private String verifierName;
 	private String verifierStatus;
 	private ScAttachment scAttachment = new ScAttachment();
-
-	private int previousTab = 0;
-	private Map<Integer, ScQtApproval> tabSelection = new HashMap<Integer, ScQtApproval>();
 	private List<ScQtApproval>	sampleList=new ArrayList<ScQtApproval>();
 	/*
 	 * public Map<String, List<SelectItem>> getTabview() { return tabview; }
@@ -311,25 +309,30 @@ public class SearchQtnTenderManagedBean extends BaseManagedBean {
 
 		// TODO Tabview start
 
-		tabList.add(new TabBean("Budget Approval", 1));
-		tabList.add(new TabBean("BPK Approval", 2));
-		tabList.add(new TabBean("MITI Approval", 3));
-		tabList.add(new TabBean("ICT Approval", 4));
-		tabList.add(new TabBean("Procurement Board", 5));
-		tabList.add(new TabBean("Division Approval", 6));
-		// this.setTabList(tabList);
-		for (int i = 0; i < getTabList().size(); i++) {
-
-			tabSelection.put(i, new ScQtApproval());
-			//sampleList.add(new ScQtApproval());
-
-		}
-		scQtApproval = tabSelection.get(0);
+		ScQtApproval scQtApproval = new ScQtApproval();
+		scQtApproval.setApprovalCategory(ApprovalCategory.BUDGET_APPROVAL.value());
+		tabList.add(new TabBean("Budget Approval", scQtApproval));
 		
+		scQtApproval = new ScQtApproval();
+		scQtApproval.setApprovalCategory(ApprovalCategory.BPK_APPROVAL.value());
+		tabList.add(new TabBean("BPK Approval", scQtApproval));
+		
+		scQtApproval = new ScQtApproval();
+		scQtApproval.setApprovalCategory(ApprovalCategory.MITI_APPROVAL.value());
+		//tabList.add(new TabBean("MITI Approval", scQtApproval));
+		
+		scQtApproval = new ScQtApproval();
+		scQtApproval.setApprovalCategory(ApprovalCategory.ICT_APPROVAL.value());
+		tabList.add(new TabBean("ICT Approval", scQtApproval));
+		
+		scQtApproval = new ScQtApproval();
+		scQtApproval.setApprovalCategory(ApprovalCategory.PROCUREMENT_BOARD_APPROVAL.value());
+		//tabList.add(new TabBean("Procurement Board Approval", scQtApproval));
+		
+		scQtApproval = new ScQtApproval();
+		scQtApproval.setApprovalCategory(ApprovalCategory.DIVISION_APPROVAL.value());
+		tabList.add(new TabBean("Division Approval", scQtApproval));
 		// Tabview end
-		System.out.println(" ************ MANAGED BEAN CONST *******"
-				+ getTabList().size() + "-----  MAP ---- "
-				+ getTabSelection().size());
 	}
 
 	private List<String> populateSucCate() {
@@ -1099,36 +1102,6 @@ public class SearchQtnTenderManagedBean extends BaseManagedBean {
 	 */
 	public void setScAttachment(ScAttachment scAttachment) {
 		this.scAttachment = scAttachment;
-	}
-
-	/**
-	 * @return the previousTab
-	 */
-	public int getPreviousTab() {
-		return previousTab;
-	}
-
-	/**
-	 * @param previousTab
-	 *            the previousTab to set
-	 */
-	public void setPreviousTab(int previousTab) {
-		this.previousTab = previousTab;
-	}
-
-	/**
-	 * @return the tabSelection
-	 */
-	public Map<Integer, ScQtApproval> getTabSelection() {
-		return tabSelection;
-	}
-
-	/**
-	 * @param tabSelection
-	 *            the tabSelection to set
-	 */
-	public void setTabSelection(Map<Integer, ScQtApproval> tabSelection) {
-		this.tabSelection = tabSelection;
 	}
 
 	/**

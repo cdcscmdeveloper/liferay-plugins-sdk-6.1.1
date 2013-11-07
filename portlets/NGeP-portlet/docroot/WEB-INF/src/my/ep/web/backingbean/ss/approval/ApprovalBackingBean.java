@@ -4,11 +4,9 @@
 package my.ep.web.backingbean.ss.approval;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Map.Entry;
 
 import javax.annotation.PostConstruct;
 import javax.faces.application.FacesMessage;
@@ -16,8 +14,10 @@ import javax.faces.bean.ManagedBean;
 import javax.faces.bean.RequestScoped;
 import javax.faces.context.FacesContext;
 import javax.faces.event.AjaxBehaviorEvent;
+import javax.faces.model.SelectItem;
 
 import my.ep.persistence.entity.ss.quationtender.ScQtApproval;
+import my.ep.type.ss.ApprovalCategory;
 import my.ep.web.backingbean.BaseBackingBean;
 import my.ep.web.bean.ss.quatationtender.GoSoDo;
 import my.ep.web.bean.ss.quatationtender.QtnTenderBean;
@@ -41,58 +41,32 @@ public class ApprovalBackingBean extends
 	private ScQtApproval scQtApprov = new ScQtApproval();
 
 	List<GoSoDo> gosodo = this.getManagedBean().getGoSodo();
-	List<String> appCatList = new ArrayList<String>();
 	
 	
-	private int activTab;
+	private int activeApprovalTab;
 	public String[] favNumber2;
 	public String[] favNumber3;
 	public String[] favNumber4;
 
 	private String activeTabName;
 
-	public int getActivTab() {
-		return activTab;
-	}
-
-	public void setActivTab(int activTab) {
-		this.activTab = activTab;
-	}
-
 	/**
 	 * @return the appCatList
 	 */
 	public List<String> getAppCatList() {
+		List<String> appCatList = new ArrayList<String>();
+		
+		for (TabBean tabBean : this.getManagedBean().getTabList()) {
+			appCatList.add(tabBean.getScQtApproval().getApprovalCategory());
+		}
+		
 		return appCatList;
-	}
-
-	/**
-	 * @param appCatList
-	 *            the appCatList to set
-	 */
-	public void setAppCatList(List<String> appCatList) {
-		this.appCatList = appCatList;
 	}
 
 	@PostConstruct
 	public void init() {
 		System.out
-				.println("  ********** ENTER BACKING BEAN MAIN **************");
-		List<String> appCatList = new ArrayList<String>();
-
-	
-	
-
-		appCatList.add("Budget Approval");
-		appCatList.add("BPK Approval");
-
-		appCatList.add("MITI Approval");
-		appCatList.add("ICT Approval");
-		// appCatList.add("ProcurementBoard Approval");
-		// appCatList.add("PTJ Approval");
-		this.setAppCatList(appCatList);
-
-	
+				.println("  ********** ENTER BACKING BEAN MAIN **************");	
 
 		System.out.println("===== Initial Tab On Page Load ===== "
 				+ activeTabName + " --- gssh ----"
@@ -183,58 +157,25 @@ public class ApprovalBackingBean extends
 		getManagedBean().setSelectedBoolean1(id);
 
 	}
-
-	public String[] getFavNumber2Value() {
-
-		favNumber2 = new String[2];
-		favNumber2[0] = "Budget Approval";
-
-		favNumber2[1] = "ICT Approval";
-
-		return favNumber2;
-	}
-
 	
-
-	public String getFavNumber2InString() {
-		return Arrays.toString(favNumber2);
-	}
-
-
-
-	public String[] getFavNumber3Value() {
-
-		favNumber3 = new String[2];
-		favNumber3[0] = "BPK Approval";
-
-		favNumber3[1] = "Finalization Committee Approval";
-
-		return favNumber3;
-	}
-
-	public String getFavNumber3InString() {
-		return Arrays.toString(favNumber3);
-	}
-
-	
-
-	public String[] getFavNumber4Value() {
-
-		favNumber4 = new String[2];
-		favNumber3[0] = "MITI Approval";
-
-		favNumber3[1] = "Division Approval ";
-
-		;
-
-		return favNumber3;
-	}
-
-	public String getFavNumber4InString() {
-		return Arrays.toString(favNumber3);
-	}
-
-	
+	public SelectItem[] getApprovalCategories() {
+		SelectItem[] selectItems = new SelectItem[6];
+		
+		selectItems[0] = new SelectItem(
+				ApprovalCategory.BUDGET_APPROVAL.value(), "Budget Approval");
+		selectItems[1] = new SelectItem(
+				ApprovalCategory.BPK_APPROVAL.value(), "BPK Approval");
+		selectItems[2] = new SelectItem(
+				ApprovalCategory.MITI_APPROVAL.value(), "MITI Approval");
+		selectItems[3] = new SelectItem(
+				ApprovalCategory.ICT_APPROVAL.value(), "ICT Approval");
+		selectItems[4] = new SelectItem(
+				ApprovalCategory.PROCUREMENT_BOARD_APPROVAL.value(), "Procurement Board Approval");
+		selectItems[5] = new SelectItem(
+				ApprovalCategory.DIVISION_APPROVAL.value(), "Division Approval");
+		
+		return selectItems;
+	}	
 
 	/*public void onTabChange(TabChangeEvent abe) {
 
@@ -276,30 +217,28 @@ public class ApprovalBackingBean extends
 				+ abe.getTab().getId());
 		System.out.println("=====tab change value======"
 				+ abe.getTab().getTitle());
-		this.getManagedBean().setPreviousTab(getActivTab());
 	}
 */
-	public void newTabSelected(TabChangeEvent ev) {
-		System.out.println("=====previous tab  ==="
-				+ this.getManagedBean().getPreviousTab()
-				+ "===========Active Tab====" + getActivTab());
-		System.out
-				.println(" **** VALUE FROM Prev FORM "
+	public void approvalTabChanged(TabChangeEvent ev) {
+		for (TabBean tabBean : getManagedBean().getTabList()) {
+			ScQtApproval scApproval = tabBean.getScQtApproval();
+			System.out.println(tabBean.getTitleName() + " ::: "
+					+ scApproval.getApproverLetterNo());
+		}
+		
+		/*int activeApprovalTab = getActiveApprovalTab();
+		TabBean tabBean = this.getManagedBean().getTabList().get(activeApprovalTab);
+		System.out.println("title: " + tabBean.getTitleName());
+		System.out.println(" **** VALUE FROM Prev FORM "
 						+ this.getManagedBean().getScQtApproval()
 								.getApproverLetterNo());
 		System.out.println("Object Code "
 				+ this.getManagedBean().getScQtApproval());
-		// this.getManagedBean()
-		// .getTabSelection()
-		// .put(this.getManagedBean().getPreviousTab(),
-		// this.getManagedBean().getScQtApproval());
+		
+		ScQtApproval scQtApproval = this.getManagedBean().getTabSelection().get(tabBean.getTitleName());
 
-		// this.getManagedBean().setScQtApproval(new ScQtApproval());
-		ScQtApproval approval1 = this.getManagedBean().getTabSelection()
-				.get(getActivTab());
-
-		this.getManagedBean().setScQtApproval(approval1);
-		for (Entry<Integer, ScQtApproval> appEntry : getManagedBean()
+		this.getManagedBean().setScQtApproval(scQtApproval);
+		for (Entry<String, ScQtApproval> appEntry : getManagedBean()
 				.getTabSelection().entrySet()) {
 			ScQtApproval app = appEntry.getValue();
 			System.out.println(appEntry.getKey() + " ::: "
@@ -309,16 +248,7 @@ public class ApprovalBackingBean extends
 		System.out
 				.println(" **** VALUE TO Current FORM "
 						+ this.getManagedBean().getScQtApproval()
-								.getApproverLetterNo());
-
-		FacesContext context = FacesContext.getCurrentInstance();
-
-		System.out.println(" ===== Selected Tab Name ===== "
-				+ getManagedBean().getTabList().get(getActivTab())
-						.getTitleName());
-	
-		// this.getManagedBean().setPreviousTab(getActivTab());
-
+								.getApproverLetterNo());*/
 	}
 
 	private ScQtApproval cloneApproval(ScQtApproval app) {
@@ -420,6 +350,20 @@ public class ApprovalBackingBean extends
 	 */
 	public void setScQtApprov(ScQtApproval scQtApprov) {
 		this.scQtApprov = scQtApprov;
+	}
+
+	/**
+	 * @return the activeApprovalTab
+	 */
+	public int getActiveApprovalTab() {
+		return activeApprovalTab;
+	}
+
+	/**
+	 * @param activeApprovalTab the activeApprovalTab to set
+	 */
+	public void setActiveApprovalTab(int activeApprovalTab) {
+		this.activeApprovalTab = activeApprovalTab;
 	}
 
 }
