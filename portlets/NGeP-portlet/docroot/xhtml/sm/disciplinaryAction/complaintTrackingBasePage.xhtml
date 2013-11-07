@@ -1,0 +1,44 @@
+<ui:composition
+	template="/WEB-INF/facelets/templates/basic_template.xhtml"
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:c="http://java.sun.com/jsp/jstl/core">
+
+	<ui:define name="resourceSection">
+	</ui:define>
+
+
+	<ui:define name="contentSection">
+		<p:messages id="messages" showDetail="true" autoUpdate="true"
+			closable="true" />
+		<p:tabView id="tt" orientation="left" widgetVar="tt">
+
+			<p:tab title="Lodge Complaint">
+				<ui:include src="lodgeComplaint.xhtml" />
+			</p:tab>
+			<p:tab title="Send PTPK Review1">
+				<ui:include src="step1UrusTo_PtpkFirstReview.xhtml" />
+			</p:tab>
+			<p:tab title="Update PTPK Response1">
+				<ui:include src="step2UrusUpdate_PtpkFirstResponse.xhtml" />
+			</p:tab>
+			<p:tab title="Send PTPK Review2">
+				<ui:include src="step3UrusTo_PtpkSecondReview.xhtml" />
+			</p:tab>
+			<p:tab title="Update PTPK Response1">
+				<ui:include src="step4UrusUpdate_PtpkSendResponse.xhtml" />
+			</p:tab>
+			<p:tab title="Send JTKK-Final Review">
+				<ui:include src="step5UrusTo_JkttFinalReview.xhtml" />
+			</p:tab>
+			<p:tab title="Impose Final Decision">
+				<ui:include src="step6UrusImpose_JkttFinalDecision.xhtml" />
+			</p:tab>
+
+
+		</p:tabView>
+	</ui:define>
+</ui:composition>

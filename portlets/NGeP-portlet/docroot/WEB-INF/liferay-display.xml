@@ -93,6 +93,7 @@
 		<portlet id="smRenewMof"></portlet>
 		<portlet id="smCancelMofReg"></portlet>
 		<portlet id="smDelPendingAppln"></portlet>
+		<portlet id="smDisciplinary"></portlet>
 	</category>
 
 	<category name="category.sample">
