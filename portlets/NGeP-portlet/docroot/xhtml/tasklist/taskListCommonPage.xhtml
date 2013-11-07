@@ -98,5 +98,15 @@
 		<ui:include src="/xhtml/fl/invoice/DAN.xhtml"></ui:include>
 	</c:if>
 
+	<c:if
+		test='#{tasklistBackingBean.managedBean.processName eq "MOF Supplier Registration"}'>
+		<ui:include src="commonSM.xhtml"></ui:include>
+	</c:if>
+
+	<c:if
+		test='#{tasklistBackingBean.managedBean.processName eq "Site Visit Manage"}'>
+		<ui:include src="commonSM.xhtml"></ui:include>
+	</c:if>
+	
 
 </ui:composition>
