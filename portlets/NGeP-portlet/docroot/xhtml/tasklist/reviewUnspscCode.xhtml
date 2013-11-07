@@ -9,7 +9,7 @@
 
 	<ui:define name="contentSection">
 
-
+		<p:messages globalOnly="true"></p:messages>
 		<h:panelGroup id="cmReviewUnspsc">
 
 			<p:outputLabel styleClass="screen-title"
@@ -21,9 +21,9 @@
 				<ui:repeat var="action"
 					value="#{tasklistBackingBean.managedBean.action}">
 					<p:commandButton value="#{action}"
-						action="#{unspscCodeBackingBean.submitForRequest(action)}"></p:commandButton>
+						action="#{unspscCodeBackingBean.submitForRequest(action)}" update="@form"></p:commandButton>
 				</ui:repeat>
-			
+
 			</div>
 
 			<p:selectOneRadio>

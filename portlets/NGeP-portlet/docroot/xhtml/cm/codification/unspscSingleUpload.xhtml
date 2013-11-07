@@ -14,11 +14,10 @@
 				value="#{lbl['lbl.cm.unspsc.code.single.upload']}"></p:outputLabel>
 
 			<div style="text-align: right;">
-				<p:commandButton value="#{lbl['lbl.cm.save']}"
-					action="#{unspscCodeBackingBean.savetempCode}"
-					styleClass="marginLeftbutton"></p:commandButton>
+				<p:commandButton value="#{lbl['lbl.cm.save']}" icon="ui-icon-save"
+					action="#{unspscCodeBackingBean.savetempCode}"></p:commandButton>
 			</div>
-			<table>
+			<table style="width:100%;">
 				<tr>
 					<td><p:outputLabel value="* #{lbl['lbl.cm.segment.code']}"></p:outputLabel></td>
 					<td><p:inputText
