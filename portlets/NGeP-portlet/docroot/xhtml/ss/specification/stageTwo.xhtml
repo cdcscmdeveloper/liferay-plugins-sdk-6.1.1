@@ -6,316 +6,299 @@
 	xmlns:c="http://java.sun.com/jsp/jstl/core">
 
 
-	
-		
-		
-		<p:panel header="STAGE TWO(TECHNICAL)" toggleable="true">
-<p:commandLink value="Proposal Checklist"></p:commandLink>
-<p:dataTable var="stageoneTechnical" value="#{searchQtnTenderBB.managedBean.qtnTenders}" editable="true">
 
 
 
-<p:column headerText="No" >
-<!-- <h:outputText value="1"></h:outputText> -->
-  
-                   <h:outputText value="1"></h:outputText> 
-               
-</p:column>
+	<p:panel header="STAGE TWO(TECHNICAL)" toggleable="true">
+		<p:commandLink value="Proposal Checklist"></p:commandLink>
+		<p:dataTable id="stageTwotechProposal" var="stageTwoTechnical"
+			value="#{specificationBackingBean.managedBean.scQtCheckSt2techProposal}"
+			editable="true" style="width:100%" rowIndexVar="index">
 
-<p:column headerText="Title" style="width:100%">
-						<!-- <h:outputText value="Arjun"></h:outputText> -->
-						  
-                   <h:outputText value="view template if type=spec"></h:outputText> 
-                
-				</p:column>
-				  
-				   <p:column headerText="Type">              
-                
-               <!--    <h:outputText value="4355446727" />   -->
-                 
-                   <h:outputText value="Upload/Spec/Sys.Def"></h:outputText> 
-                 
-                
-        </p:column>
-        
-        
-           <p:column headerText="Weightage Group">              
-                
-               <!--    <h:outputText value="4355446727" />   -->
-                 
-                   <h:outputText value="1234Group"></h:outputText> 
-                 
-                
-        </p:column>
-        
-        
-          <p:column headerText="Positioning">              
-                
-               <!--    <h:outputText value="4355446727" />   -->
-                 
-                   <p:inputText ></p:inputText>
-         </p:column>
-         
-          <p:column headerText="Supporting Doc">              
-                
-               <!--    <h:outputText value="4355446727" />   -->
-                 
-                   <h:outputText value="Yes/No"></h:outputText> 
-                 
-         </p:column>
-        
-         <p:column headerText="Action" style="width:10%">  
-            <p:commandLink >
-				     <p:graphicImage    library="ep/images/design" name="delete.png" value="/resources/ep/images/design/delete.png" />
-                  
-                 </p:commandLink>
-           
-                
-        </p:column>  
-
-</p:dataTable>
-       
-
-	       <div align="right"  >
-					<p:commandButton  value="ADD" process="@this" 
-						              partialSubmit="true" onclick="qtnTndr.show();"  />
-					
-					</div>
-					
-					
-
-	
-	<p:commandLink value="Proposal Misc. Checklist"></p:commandLink>
-<p:dataTable var="stageoneTechnical" value="#{searchQtnTenderBB.managedBean.qtnTenders}" editable="true">
-
-
-
-<p:column headerText="No" >
-<!-- <h:outputText value="1"></h:outputText> -->
-  
-                   <h:outputText value="1"></h:outputText> 
-               
-</p:column>
-
-<p:column headerText="Title" style="width:100%">
-						<!-- <h:outputText value="Arjun"></h:outputText> -->
-						  
-                   <h:outputText value="view template if type=spec"></h:outputText> 
-                
-				</p:column>
-				  
-				   <p:column headerText="Type">              
-                
-               <!--    <h:outputText value="4355446727" />   -->
-                 
-                   <h:outputText value="Upload/Spec/Sys.Def"></h:outputText> 
-                 
-                
-        </p:column>
-        
-        
-           <p:column headerText="Weightage Group">              
-                
-               <!--    <h:outputText value="4355446727" />   -->
-                 
-                   <h:outputText value="1234Group"></h:outputText> 
-                 
-                
-        </p:column>
-        
-        
-          <p:column headerText="Positioning">              
-                
-               <!--    <h:outputText value="4355446727" />   -->
-                 
-                   <p:inputText ></p:inputText>
-         </p:column>
-         
-          <p:column headerText="Supporting Doc">              
-                
-               <!--    <h:outputText value="4355446727" />   -->
-                 
-                   <h:outputText value="Yes/No"></h:outputText> 
-                 
-         </p:column>
-        
-         <p:column headerText="Action" style="width:10%">  
-            <p:commandLink >
-				     <p:graphicImage    library="ep/images/design" name="delete.png" value="/resources/ep/images/design/delete.png" />
-                  
-                 </p:commandLink>
-           
-                
-        </p:column>    
-
-</p:dataTable>
-       
- <div align="right"  >
-					<p:commandButton  value="ADD" process="@this" 
-						              partialSubmit="true" onclick="qtnTndr.show();" />
-					
-					</div>
-	      
+             <p:column headerText="No">
 				
-       
-</p:panel>
-	      
-					
-				
-									
-	
-	
+             <h:outputText value="#{index+1}"></h:outputText>
+
+			</p:column>
+
+			<p:column headerText="Title" style="width:80%">
+
+				<p:inputText
+					value="#{stageTwoTechnical.title}" size="50"></p:inputText>
+
+			</p:column>
+
+			<p:column headerText="Type" style="width:40%">
+
+				<p:selectOneMenu
+					value="#{stageTwoTechnical.checklistType}">
+					<f:selectItem itemLabel="Select One" itemValue=" " />
+					<f:selectItem itemLabel="Specification" itemValue="1" />
+					<f:selectItem itemLabel="Document" itemValue="2" />
+					<f:selectItem itemLabel="System Defined" itemValue="3" />
+					<f:selectItem itemLabel="Input" itemValue="4" />
+					<p:ajax event="change" update="stageTwotechProposal"  process="@this" listener="#{specificationBackingBean.stageTwotechproposal}" />
+				</p:selectOneMenu>
+
+			</p:column>
+			<p:column headerText="Positioning">
+
+				<p:inputText
+					value="#{stageTwoTechnical.checklistSeq}"></p:inputText>
+			</p:column>
+
+			<p:column headerText="Supporting Doc">
+				<h:outputText value="Yes/No"></h:outputText>
+
+			</p:column>
+			
+		 <!-- 	<h:panelGroup id="selectdrop" rendered="#{specificationBackingBean.selctValue eq '1' or specificationBackingBean.selctValue eq '2'}"> --> 
+			<p:column headerText="Action"  rendered="#{specificationBackingBean.selctValue eq '1' or specificationBackingBean.selctValue eq '2'}">
+				<p:commandButton value="ADD" process="@this" partialSubmit="true"
+				onclick="qtnTndr.show();" />
+            </p:column>
+           <!--  </h:panelGroup> -->
+
+			<p:column headerText="Action" style="width:10%">
+			<p:commandLink>
+					<p:graphicImage library="ep/images/design" name="edit.png"
+						value="/resources/ep/images/design/edit.png" />
+
+				</p:commandLink>
+				<p:commandLink>
+					<p:graphicImage library="ep/images/design" name="delete.png"
+						value="/resources/ep/images/design/delete.png" />
+
+				</p:commandLink>
+
+
+			</p:column>
+
+		</p:dataTable>
+
+
+		<div align="right">
+			<p:commandButton value="ADD" process="@this,stageTwotechProposal" partialSubmit="true"
+				action="#{specificationBackingBean.stageTwoTechnicalAddProposal}" update="stageTwotechProposal"/>
+
+		</div>
+
+
+
+
+		<p:commandLink value="Proposal Misc. Checklist"></p:commandLink>
+		<p:dataTable id="techAdditionaltwo" var="stageTwoTechnicalAdditional"
+			value="#{specificationBackingBean.managedBean.scQtCheckSt2techAdditionalProposalList}"
+			rowIndexVar="index" editable="true" style="width:100%">
+
+			<p:column headerText="No">
+				<h:outputText value="#{index+1}"></h:outputText>
+
+			</p:column>
+
+			<p:column headerText="Title" style="width:80%">
+
+				<p:inputText
+					value="#{stageTwoTechnicalAdditional.title}" size="50"></p:inputText>
+
+			</p:column>
+
+			<p:column headerText="Type" style="width:40%">
+				<p:selectOneMenu
+					value="#{stageTwoTechnicalAdditional.checklistType}">
+					<f:selectItem itemLabel="Select One" itemValue=" " />
+					<f:selectItem itemLabel="Specification" itemValue="1" />
+					<f:selectItem itemLabel="Document" itemValue="2" />
+					<f:selectItem itemLabel="System Defined" itemValue="3" />
+					<f:selectItem itemLabel="Input" itemValue="4" />
+					<p:ajax event="change" update="techAdditionaltwo"  process="@this" listener="#{specificationBackingBean.stageTwotechproposal}" />
+				</p:selectOneMenu>
+			</p:column>
+
+			<p:column headerText="Positioning">
+				<p:inputText
+					value="#{stageTwoTechnicalAdditional.checklistSeq}"></p:inputText>
+			</p:column>
+
+			<p:column headerText="Supporting Doc">
+
+				<h:outputText value="Yes/No"></h:outputText>
+
+			</p:column>
+			<p:column headerText="Action"  rendered="#{specificationBackingBean.selctValue eq '1' or specificationBackingBean.selctValue eq '2'}">
+				<p:commandButton value="ADD" process="@this" partialSubmit="true"
+				onclick="qtnTndr.show();" />
+            </p:column>
+
+			<p:column headerText="Action" style="width:10%">
+			<p:commandLink>
+					<p:graphicImage library="ep/images/design" name="edit.png"
+						value="/resources/ep/images/design/edit.png" />
+
+				</p:commandLink>
+				<p:commandLink>
+					<p:graphicImage library="ep/images/design" name="delete.png"
+						value="/resources/ep/images/design/delete.png" />
+
+				</p:commandLink>
+
+
+			</p:column>
+
+		</p:dataTable>
+
+		<div align="right">
+			<p:commandButton value="ADD" process="@this,techAdditionaltwo" partialSubmit="true"
+				action="#{specificationBackingBean.stageTwoAdditionalAdd}" update="techAdditionaltwo"/>
+
+		</div>
+
+
+
+	</p:panel>
+
+
+
+
+
+
 	<p:panel header="STAGE TWO(FINANCIAL)" toggleable="true">
-<p:commandLink value="Proposal Checklist"></p:commandLink>
-<p:dataTable var="stageoneTechnical" value="#{searchQtnTenderBB.managedBean.qtnTenders}" editable="true">
+		<p:commandLink value="Proposal Checklist"></p:commandLink>
+		<p:dataTable id="financeProposaltwo" var="stageTwofunctional"
+			value="#{specificationBackingBean.managedBean.scQtCheckSt2financeProposalList}"
+			editable="true" style="width:100%" rowIndexVar="index">
+
+			<p:column headerText="No">
+				<h:outputText value="#{index+1}"></h:outputText>
+
+			</p:column>
+
+			<p:column headerText="Title" style="width:80%">
+
+				<p:inputText
+					value="#{stageTwofunctional.title}" size="50"></p:inputText>
+
+			</p:column>
+
+			<p:column headerText="Type" style="width:40%">
+				<p:selectOneMenu
+					value="#{stageTwofunctional.checklistType}">
+					<f:selectItem itemLabel="Select One" itemValue=" " />
+					<f:selectItem itemLabel="Specification" itemValue="1" />
+					<f:selectItem itemLabel="Document" itemValue="2" />
+					<f:selectItem itemLabel="System Defined" itemValue="3" />
+					<f:selectItem itemLabel="Input" itemValue="4" />
+					<p:ajax event="change" update="financeProposaltwo"  process="@this" listener="#{specificationBackingBean.stageTwotechproposal}" />
+				</p:selectOneMenu>
+			</p:column>
+
+			<p:column headerText="Positioning">
+				<p:inputText
+					value="#{stageTwofunctional.checklistSeq}"></p:inputText>
+			</p:column>
+
+			<p:column headerText="Supporting Doc">
+				<h:outputText value="Yes/No"></h:outputText>
+
+			</p:column>
+				<p:column headerText="Action"  rendered="#{specificationBackingBean.selctValue eq '1' or specificationBackingBean.selctValue eq '2'}">
+				<p:commandButton value="ADD" process="@this" partialSubmit="true"
+				onclick="qtnTndr.show();" />
+            </p:column>
+			
+
+			<p:column headerText="Action" style="width:10%">
+			<p:commandLink>
+					<p:graphicImage library="ep/images/design" name="edit.png"
+						value="/resources/ep/images/design/edit.png" />
+
+				</p:commandLink>
+				<p:commandLink>
+					<p:graphicImage library="ep/images/design" name="delete.png"
+						value="/resources/ep/images/design/delete.png" />
+
+				</p:commandLink>
+
+
+			</p:column>
+
+		</p:dataTable>
+
+
+		<div align="right">
+			<p:commandButton value="ADD" process="@this,financeProposaltwo" partialSubmit="true"
+				action="#{specificationBackingBean.stageTwoFiProposalAdd}" update="financeProposaltwo"/>
+
+		</div>
 
 
 
-<p:column headerText="No" >
-<!-- <h:outputText value="1"></h:outputText> -->
-  
-                   <h:outputText value="1"></h:outputText> 
-               
-</p:column>
 
-<p:column headerText="Title" style="width:100%">
-						<!-- <h:outputText value="Arjun"></h:outputText> -->
-						  
-                   <h:outputText value="view template if type=spec"></h:outputText> 
-                
-				</p:column>
-				  
-				   <p:column headerText="Type">              
-                
-               <!--    <h:outputText value="4355446727" />   -->
-                 
-                   <h:outputText value="Upload/Spec/Sys.Def"></h:outputText> 
-                 
-                
-        </p:column>
-        
-        
-           <p:column headerText="Weightage Group">              
-                
-               <!--    <h:outputText value="4355446727" />   -->
-                 
-                   <h:outputText value="1234Group"></h:outputText> 
-                 
-                
-        </p:column>
-        
-        
-          <p:column headerText="Positioning">              
-                
-               <!--    <h:outputText value="4355446727" />   -->
-                 
-                   <p:inputText ></p:inputText>
-         </p:column>
-         
-          <p:column headerText="Supporting Doc">              
-                
-               <!--    <h:outputText value="4355446727" />   -->
-                 
-                   <h:outputText value="Yes/No"></h:outputText> 
-                 
-         </p:column>
-        
-         <p:column headerText="Action" style="width:10%">  
-            <p:commandLink >
-				     <p:graphicImage    library="ep/images/design" name="delete.png" value="/resources/ep/images/design/delete.png" />
-                  
-                 </p:commandLink>
-           
-                
-        </p:column>  
+		<p:commandLink value="Proposal Misc. Checklist"></p:commandLink>
+		<p:dataTable id="financeAdditionaltwo" var="stageTwofunctionalAdditional"
+			value="#{specificationBackingBean.managedBean.scQtCheckSt2financeAdditionalProposalList}"
+			editable="true" style="width:100%" rowIndexVar="index">
 
-</p:dataTable>
-       
+			<p:column headerText="No">
 
-	       <div align="right"  >
-					<p:commandButton  value="ADD" process="@this" 
-						              partialSubmit="true" onclick="qtnTndr.show();" />
-					
-					</div>
-					
-					
+				<h:outputText value="#{index+1}"></h:outputText>
 
-	
-	<p:commandLink value="Proposal Misc. Checklist"></p:commandLink>
-<p:dataTable var="stageoneTechnical" value="#{searchQtnTenderBB.managedBean.qtnTenders}" editable="true">
+			</p:column>
+
+			<p:column headerText="Title" style="width:80%">
 
 
+				<p:inputText
+					value="#{stageTwofunctionalAdditional.title}" size="50"></p:inputText>
 
-<p:column headerText="No" >
-<!-- <h:outputText value="1"></h:outputText> -->
-  
-                   <h:outputText value="1"></h:outputText> 
-               
-</p:column>
+			</p:column>
 
-<p:column headerText="Title" style="width:100%">
-						<!-- <h:outputText value="Arjun"></h:outputText> -->
-						  
-                   <h:outputText value="view template if type=spec"></h:outputText> 
-                
-				</p:column>
-				  
-				   <p:column headerText="Type">              
-                
-               <!--    <h:outputText value="4355446727" />   -->
-                 
-                   <h:outputText value="Upload/Spec/Sys.Def"></h:outputText> 
-                 
-                
-        </p:column>
-        
-        
-           <p:column headerText="Weightage Group">              
-                
-               <!--    <h:outputText value="4355446727" />   -->
-                 
-                   <h:outputText value="1234Group"></h:outputText> 
-                 
-                
-        </p:column>
-        
-        
-          <p:column headerText="Positioning">              
-                
-               <!--    <h:outputText value="4355446727" />   -->
-                 
-                   <p:inputText ></p:inputText>
-         </p:column>
-         
-          <p:column headerText="Supporting Doc">              
-                
-               <!--    <h:outputText value="4355446727" />   -->
-                 
-                   <h:outputText value="Yes/No"></h:outputText> 
-                 
-         </p:column>
-        
-         <p:column headerText="Action" style="width:10%">  
-            <p:commandLink >
-				     <p:graphicImage    library="ep/images/design" name="delete.png" value="/resources/ep/images/design/delete.png" />
-                  
-                 </p:commandLink>
-           
-                
-        </p:column>  
-       </p:dataTable>
-       
-        <div align="right"  >
-					<p:commandButton  value="ADD" process="@this" 
-						              partialSubmit="true" onclick="qtnTndr.show();" />
-					
-					</div>
-</p:panel>
-	      
-					
-							
-				
-				
-				
-					
+			<p:column headerText="Type" style="width:40%">
+				<p:selectOneMenu
+					value="#{stageTwofunctionalAdditional.checklistType}">
+						<f:selectItem itemLabel="Select One" itemValue=" " />
+					<f:selectItem itemLabel="Specification" itemValue="1" />
+					<f:selectItem itemLabel="Document" itemValue="2" />
+					<f:selectItem itemLabel="System Defined" itemValue="3" />
+					<f:selectItem itemLabel="Input" itemValue="4" />
+						<p:ajax event="change" update="financeAdditionaltwo"  process="@this" listener="#{specificationBackingBean.stageTwotechproposal}" />
+				</p:selectOneMenu>
+			</p:column>
+			<p:column headerText="Positioning">
+				<p:inputText
+					value="#{stageTwofunctionalAdditional.checklistSeq}"></p:inputText>
+			</p:column>
+
+			<p:column headerText="Supporting Doc">
+
+				<h:outputText value="Yes/No"></h:outputText>
+
+			</p:column>
+		
+				<p:column headerText="Action"  rendered="#{specificationBackingBean.selctValue eq '1' or specificationBackingBean.selctValue eq '2'}">
+				<p:commandButton value="ADD" process="@this" partialSubmit="true"
+				onclick="qtnTndr.show();" />
+            </p:column>
+
+			<p:column headerText="Action" style="width:10%">
+			<p:commandLink>
+					<p:graphicImage library="ep/images/design" name="edit.png"
+						value="/resources/ep/images/design/edit.png" />
+
+				</p:commandLink>
+				<p:commandLink>
+					<p:graphicImage library="ep/images/design" name="delete.png"
+						value="/resources/ep/images/design/delete.png" />
+
+				</p:commandLink>
+			</p:column>
+		</p:dataTable>
+
+		<div align="right">
+			<p:commandButton value="ADD" process="@this,financeAdditionaltwo" partialSubmit="true"
+				action="#{specificationBackingBean.stageTwoFiAdditioalProposalAdd}" update="financeAdditionaltwo" />
+
+		</div>
+	</p:panel>
+
 </ui:composition>

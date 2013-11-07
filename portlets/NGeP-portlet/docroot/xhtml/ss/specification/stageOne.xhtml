@@ -12,29 +12,29 @@
 		<p:panel header="STAGE ONE(TECHNICAL)" toggleable="true">
 <p:commandLink value="Proposal Checklist"></p:commandLink>
 
-<p:dataTable var="stageoneTechnical" value="#{searchQtnTenderBB.managedBean.qtnTenders}" editable="true">
+<p:dataTable id="compilence"  var="stageoneTechnical" value="#{specificationBackingBean.managedBean.scQtCheckSt1techProposal}" editable="true" rowIndexVar="index" style="width:100%">
 
 
 
 <p:column headerText="No" >
 <!-- <h:outputText value="1"></h:outputText> -->
   
-                   <h:outputText value="1"></h:outputText> 
+                   <h:outputText value="#{index+1}"></h:outputText> 
                
 </p:column>
 
-<p:column headerText="Title" style="width:100%">
+<p:column headerText="Title" style="width:80%">
 						<!-- <h:outputText value="Arjun"></h:outputText> -->
 						  
-                   <h:outputText value="stage one technical"></h:outputText> 
+                   <h:outputText value="#{stageoneTechnical.title}" ></h:outputText> 
                 
 				</p:column>
 				  
-				   <p:column headerText="Type">              
+				   <p:column headerText="Type"  style="width:40%">              
                 
                <!--    <h:outputText value="4355446727" />   -->
                  
-                   <h:outputText value="Upload/Edit"></h:outputText> 
+                   <h:outputText value="Upload"></h:outputText> 
                  
                 
         </p:column>
@@ -44,11 +44,16 @@
                 
                <!--    <h:outputText value="4355446727" />   -->
                  
-                   <p:inputText ></p:inputText>
+                   <p:inputText value="#{stageoneTechnical.checklistSeq}"></p:inputText>
          </p:column>
          
         
          <p:column headerText="Action" style="width:10%">  
+         <p:commandLink>
+					<p:graphicImage library="ep/images/design" name="edit.png"
+						value="/resources/ep/images/design/edit.png" />
+
+				</p:commandLink>
             <p:commandLink >
 				     <p:graphicImage    library="ep/images/design" name="delete.png" value="/resources/ep/images/design/delete.png" />
                   
@@ -56,7 +61,8 @@
            
                 
         </p:column>  
-
+       <p:inputText type="hidden" value="#{specificationBackingBean.managedBean.scQtChecklist.docType}"></p:inputText>
+         <p:inputText type="hidden" value="#{specificationBackingBean.managedBean.scQtChecklist.evaluationStage}"></p:inputText>
 </p:dataTable>
        
 
@@ -70,25 +76,25 @@
 
 	
 	<p:commandLink value="Additional Proposal Checklist"></p:commandLink>
-<p:dataTable var="stageoneTechnical" value="#{searchQtnTenderBB.managedBean.qtnTenders}" editable="true">
+<p:dataTable id="additionaltech" var="stageoneaddTechnical" value="#{specificationBackingBean.managedBean.scQtCheckSt1techAdditionalProposalList}" editable="true" rowIndexVar="index" style="width:100%">
 
 
 
 <p:column headerText="No" >
 <!-- <h:outputText value="1"></h:outputText> -->
   
-                   <h:outputText value="1"></h:outputText> 
+                   <h:outputText value="#{index+1}"></h:outputText> 
                
 </p:column>
 
-<p:column headerText="Title" style="width:100%">
+<p:column headerText="Title" style="width:80%">
 						<!-- <h:outputText value="Arjun"></h:outputText> -->
 						  
-                   <h:outputText value="stage one technical"></h:outputText> 
+                   <p:inputText value="#{stageoneaddTechnical.title}" size="50"></p:inputText> 
                 
 				</p:column>
 				  
-				   <p:column headerText="Type">              
+				   <p:column headerText="Type"  style="width:40%">              
                 
                <!--    <h:outputText value="4355446727" />   -->
                  
@@ -102,11 +108,16 @@
                 
                <!--    <h:outputText value="4355446727" />   -->
                  
-                   <p:inputText ></p:inputText>
+                   <p:inputText value="#{stageoneaddTechnical.checklistSeq}"></p:inputText>
          </p:column>
          
         
-         <p:column headerText="Action" style="width:10%">  
+         <p:column headerText="Action" style="width:10%">
+         <p:commandLink>
+					<p:graphicImage library="ep/images/design" name="edit.png"
+						value="/resources/ep/images/design/edit.png" />
+
+				</p:commandLink>  
             <p:commandLink >
 				     <p:graphicImage    library="ep/images/design" name="delete.png" value="/resources/ep/images/design/delete.png" />
                   
@@ -118,8 +129,8 @@
 </p:dataTable>
       
       <div align="right"  >
-					<p:commandButton  value="ADD" process="@this" 
-						              partialSubmit="true" onclick="compliance.show();"  />
+					<p:commandButton  value="ADD" process="@this,additionaltech" 
+						              partialSubmit="true" action="#{specificationBackingBean.stageOneAdditionalAdd}" update="additionaltech" />
 					
 					</div>
        
@@ -132,83 +143,25 @@
 	
 	<p:panel header="STAGE ONE(FINANCIAL)" toggleable="true">
 <p:commandLink value="Proposal Checklist"></p:commandLink>
-<p:dataTable var="stageoneTechnical" value="#{searchQtnTenderBB.managedBean.qtnTenders}" editable="true">
+<p:dataTable id="financeProposal" var="stageonefinanceProp" value="#{specificationBackingBean.managedBean.scQtCheckSt1financeProposalList}" editable="true" style="width:100%" rowIndexVar="index">
 
 
 
 <p:column headerText="No" >
 <!-- <h:outputText value="1"></h:outputText> -->
   
-                   <h:outputText value="1"></h:outputText> 
+                   <h:outputText value="#{index+1}"></h:outputText> 
                
 </p:column>
 
-<p:column headerText="Title" style="width:100%">
+<p:column headerText="Title" style="width:80%">
 						<!-- <h:outputText value="Arjun"></h:outputText> -->
 						  
-                   <h:outputText value="stage one financial"></h:outputText> 
+                   <p:inputText value="#{stageonefinanceProp.title}" size="50"></p:inputText > 
                 
 				</p:column>
 				  
-				   <p:column headerText="Type">              
-                
-               <!--    <h:outputText value="4355446727" />   -->
-                 
-                   <h:outputText value="Upload/Edit"></h:outputText> 
-                 
-                
-        </p:column>
-        
-        
-          <p:column headerText="Positioning">              
-                
-               <!--    <h:outputText value="4355446727" />   -->
-                 
-                   <p:inputText ></p:inputText>
-         </p:column>
-         
-        
-         <p:column headerText="Action" style="width:10%">  
-            <p:commandLink >
-				     <p:graphicImage    library="ep/images/design" name="delete.png" value="/resources/ep/images/design/delete.png" />
-                  
-                 </p:commandLink>
-           
-                
-        </p:column>  
-
-</p:dataTable>
-       
-
-	       <div align="right"  >
-					<p:commandButton  value="ADD" process="@this" 
-						              partialSubmit="true" onclick="compliance.show();"  />
-					
-					</div>
-					
-					
-
-	
-	<p:commandLink value="Additional Proposal Checklist"></p:commandLink>
-<p:dataTable var="stageoneTechnical" value="#{searchQtnTenderBB.managedBean.qtnTenders}" editable="true">
-
-
-
-<p:column headerText="No" >
-<!-- <h:outputText value="1"></h:outputText> -->
-  
-                   <h:outputText value="1"></h:outputText> 
-               
-</p:column>
-
-<p:column headerText="Title" style="width:100%">
-						<!-- <h:outputText value="Arjun"></h:outputText> -->
-						  
-                   <h:outputText value="stage one financial"></h:outputText> 
-                
-				</p:column>
-				  
-				   <p:column headerText="Type">              
+				   <p:column headerText="Type"  style="width:40%">              
                 
                <!--    <h:outputText value="4355446727" />   -->
                  
@@ -222,11 +175,79 @@
                 
                <!--    <h:outputText value="4355446727" />   -->
                  
-                   <p:inputText ></p:inputText>
+                   <p:inputText value="#{stageonefinanceProp.checklistSeq}"></p:inputText>
          </p:column>
          
         
          <p:column headerText="Action" style="width:10%">  
+         <p:commandLink>
+					<p:graphicImage library="ep/images/design" name="edit.png"
+						value="/resources/ep/images/design/edit.png" />
+
+				</p:commandLink>
+            <p:commandLink >
+				     <p:graphicImage    library="ep/images/design" name="delete.png" value="/resources/ep/images/design/delete.png" />
+                  
+                 </p:commandLink>
+           
+                
+        </p:column>  
+
+</p:dataTable>
+       
+
+	       <div align="right"  >
+					<p:commandButton  value="ADD" process="@this,financeProposal" 
+						              partialSubmit="true" action="#{specificationBackingBean.stageOneFiProposalAdd}" update="financeProposal" />
+					
+					</div>
+					
+					
+
+	
+	<p:commandLink value="Additional Proposal Checklist"></p:commandLink>
+<p:dataTable id="financeAdditional" var="stageonefinanceAdd" value="#{specificationBackingBean.managedBean.scQtCheckSt1financeAdditionalProposalList}" editable="true" style="width:100%" rowIndexVar="index">
+
+
+
+<p:column headerText="No" >
+<!-- <h:outputText value="1"></h:outputText> -->
+  
+                   <h:outputText value="#{index+1}"></h:outputText> 
+               
+</p:column>
+
+<p:column headerText="Title" style="width:80%">
+						<!-- <h:outputText value="Arjun"></h:outputText> -->
+						  
+                   <p:inputText  value="#{stageonefinanceAdd.title}" size="50"></p:inputText > 
+                
+				</p:column>
+				  
+				   <p:column headerText="Type"  style="width:40%">              
+                
+               <!--    <h:outputText value="4355446727" />   -->
+                 
+                   <h:outputText  value="Upload"></h:outputText > 
+                 
+                
+        </p:column>
+        
+        
+          <p:column headerText="Positioning">              
+                
+               <!--    <h:outputText value="4355446727" />   -->
+                 
+                   <p:inputText value="#{stageonefinanceAdd.checklistSeq}"></p:inputText>
+         </p:column>
+         
+        
+         <p:column headerText="Action" style="width:10%">  
+         <p:commandLink>
+					<p:graphicImage library="ep/images/design" name="edit.png"
+						value="/resources/ep/images/design/edit.png" />
+
+				</p:commandLink>
             <p:commandLink >
 				     <p:graphicImage    library="ep/images/design" name="delete.png" value="/resources/ep/images/design/delete.png" />
                   
@@ -238,8 +259,8 @@
 </p:dataTable>
        
         <div align="right"  >
-					<p:commandButton  value="ADD" process="@this" 
-						              partialSubmit="true" onclick="compliance.show();" />
+					<p:commandButton  value="ADD" process="@this,financeAdditional" 
+						              partialSubmit="true" action="#{specificationBackingBean.stageOneFiAdditioalProposalAdd}" update="financeAdditional"/>
 					
 					</div>
        

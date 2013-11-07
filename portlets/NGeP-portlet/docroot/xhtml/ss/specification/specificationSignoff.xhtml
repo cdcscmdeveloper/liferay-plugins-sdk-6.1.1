@@ -1,0 +1,56 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:c="http://java.sun.com/jsp/jstl/core">
+
+
+
+  
+	
+
+<p:panel header="SIGN-OFF" toggleable="true">
+
+			<p:dataTable  var="simpleQuote"
+				value="#{simpleQuoteBidBackingBean.utilList}"
+				selection="#{simpleQuoteBidBackingBean.managedBean.selectedUtilList}"
+				rowKey="#{simpleQuote.seqNo}" rowIndexVar="index" style="width:100%">
+
+			 
+				   <p:column headerText="No" style="width:10%">
+					<h:outputText value="#{index+1}"></h:outputText>
+				</p:column>
+
+	             <p:column headerText="Committee Member" style="width:60%">
+					<h:outputText value="committee member#{index+1}"></h:outputText>
+				</p:column>
+
+
+				
+				<p:column headerText="Sign-Off" style="width:50%">
+					<h:outputText value="signoff#{index+1}"></h:outputText>
+				</p:column>
+              
+				<p:column headerText="Action" style="width:30%">
+					<h:outputText value="(sign#{index+1})"></h:outputText>
+				</p:column>
+            
+						</p:dataTable>
+
+	        <div align="right">
+				<p:commandButton value="SEND REMINDER" onclick="reminder.show();" />
+				
+			</div>
+
+
+		</p:panel>
+		
+					
+					
+				
+				
+				
+				
+					
+</ui:composition>
