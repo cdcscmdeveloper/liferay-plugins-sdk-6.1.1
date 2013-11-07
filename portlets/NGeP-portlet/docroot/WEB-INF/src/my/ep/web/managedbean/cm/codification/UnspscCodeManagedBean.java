@@ -22,22 +22,22 @@ public class UnspscCodeManagedBean extends BaseManagedBean {
 	private CmRequestCode requestCode;
 	private String segmentTitle;
 	private String segmentDesc;
-	private long segmentKey;
+	private Long segmentKey;
 	private String segmentCode;	
 	
 	private String familyTitle;
 	private String familyDesc;
-	private long familyKey;
+	private Long familyKey;
 	private String familyCode;
 	
 	private String classTitle;
 	private String classDesc;
-	private long classKey;
+	private Long classKey;
 	private String classCode;
 	
 	private String commodityTitle;
 	private String commodityDesc;
-	private long commodityKey;
+	private Long commodityKey;
 	private String commodityCode;
 	
 	private CmBrand cmBrand;
@@ -281,14 +281,6 @@ public class UnspscCodeManagedBean extends BaseManagedBean {
 		this.segmentDesc = segmentDesc;
 	}
 
-	public long getSegmentKey() {
-		return segmentKey;
-	}
-
-	public void setSegmentKey(long segmentKey) {
-		this.segmentKey = segmentKey;
-	}
-
 	
 
 	public String getFamilyTitle() {
@@ -307,13 +299,7 @@ public class UnspscCodeManagedBean extends BaseManagedBean {
 		this.familyDesc = familyDesc;
 	}
 
-	public long getFamilyKey() {
-		return familyKey;
-	}
-
-	public void setFamilyKey(long familyKey) {
-		this.familyKey = familyKey;
-	}
+	
 
 	
 	public String getClassTitle() {
@@ -332,14 +318,7 @@ public class UnspscCodeManagedBean extends BaseManagedBean {
 		this.classDesc = classDesc;
 	}
 
-	public long getClassKey() {
-		return classKey;
-	}
-
-	public void setClassKey(long classKey) {
-		this.classKey = classKey;
-	}
-
+	
 
 
 	public String getCommodityTitle() {
@@ -358,13 +337,7 @@ public class UnspscCodeManagedBean extends BaseManagedBean {
 		this.commodityDesc = commodityDesc;
 	}
 
-	public long getCommodityKey() {
-		return commodityKey;
-	}
-
-	public void setCommodityKey(long commodityKey) {
-		this.commodityKey = commodityKey;
-	}
+	
 
 	public String getSegmentCode() {
 		return segmentCode;
@@ -396,6 +369,38 @@ public class UnspscCodeManagedBean extends BaseManagedBean {
 
 	public void setCommodityCode(String commodityCode) {
 		this.commodityCode = commodityCode;
+	}
+
+	public Long getSegmentKey() {
+		return segmentKey;
+	}
+
+	public void setSegmentKey(Long segmentKey) {
+		this.segmentKey = segmentKey;
+	}
+
+	public Long getFamilyKey() {
+		return familyKey;
+	}
+
+	public void setFamilyKey(Long familyKey) {
+		this.familyKey = familyKey;
+	}
+
+	public Long getClassKey() {
+		return classKey;
+	}
+
+	public void setClassKey(Long classKey) {
+		this.classKey = classKey;
+	}
+
+	public Long getCommodityKey() {
+		return commodityKey;
+	}
+
+	public void setCommodityKey(Long commodityKey) {
+		this.commodityKey = commodityKey;
 	}
 
 	

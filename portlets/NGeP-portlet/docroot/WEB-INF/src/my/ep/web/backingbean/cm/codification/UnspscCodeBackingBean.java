@@ -55,41 +55,47 @@ public class UnspscCodeBackingBean extends BaseBackingBean<UnspscCodeManagedBean
 
 	}
 
-	public String submitForRequest(String action){
+	public String submitForRequest(String action)throws Exception{
 
-		System.out.println("action:"+action);
+		try{
+			System.out.println("action:"+action);
 
-		ICodificationSO unspscSO = (ICodificationSO) BusinessDelegate.getInstance().getServiceObject("cm",ICodificationSO.class);
-		TaskListBackingBean taskListBB = new TaskListBackingBean();
-		CodificationReqDTO reqDTO = new CodificationReqDTO();
-		log.info("new:"+this.getManagedBean().getRequestCode().isBrandNew());
-		reqDTO.setRequestCode(this.getManagedBean().getRequestCode());
-		reqDTO.setUser(this.getManagedBean().getTempUser());
-		reqDTO.setTaskId(taskListBB.getManagedBean().getTaskId());
-		reqDTO.setOutCome(action);
-		CodificationResDTO resDTO = null;
+			ICodificationSO unspscSO = (ICodificationSO) BusinessDelegate.getInstance().getServiceObject("cm",ICodificationSO.class);
+			TaskListBackingBean taskListBB = new TaskListBackingBean();
+			CodificationReqDTO reqDTO = new CodificationReqDTO();
+			log.info("new:"+this.getManagedBean().getRequestCode().isBrandNew());
+			reqDTO.setRequestCode(this.getManagedBean().getRequestCode());
+			reqDTO.setUser(this.getManagedBean().getTempUser());
+			reqDTO.setTaskId(taskListBB.getManagedBean().getTaskId());
+			reqDTO.setOutCome(action);
+			CodificationResDTO resDTO = null;
 
-		if(action.equalsIgnoreCase("SUBMIT")){
+			if(action.equalsIgnoreCase("SUBMIT")){
 
-			if(this.getManagedBean().getRequestCode().isBrandNew()){
-				resDTO = unspscSO.addCodificationRequest(reqDTO);
+				if(this.getManagedBean().getRequestCode().isBrandNew()){
+					resDTO = unspscSO.addCodificationRequest(reqDTO);
 
-				FacesContext facesContext = FacesContext.getCurrentInstance();
-				facesContext.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO,"Submitted Successfully", ""));
+					FacesContext facesContext = FacesContext.getCurrentInstance();
+					facesContext.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO,"Submitted Successfully", ""));
 
-				return "unspscRequestForm";
+					return "unspscRequestForm";
 
-			}else{
-				log.info("***update***");
-				resDTO = unspscSO.updateCodificationRequest(reqDTO);
+				}else{
+					log.info("***update***");
+					resDTO = unspscSO.updateCodificationRequest(reqDTO);
+				}
+
 			}
 
-		}else if(action.equalsIgnoreCase("CREATE")){
+			FacesContext facesContext = FacesContext.getCurrentInstance();
+			facesContext.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO," Submitted Successfully", ""));
+		}catch(Exception ex){
+			System.out.println("***************Exception*****************");
+			FacesContext facesContext = FacesContext.getCurrentInstance();
+			facesContext.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR,"BPM  ERROR", ex.getMessage()));
 			
+			return "reviewUnspscCode";
 		}
-
-		FacesContext facesContext = FacesContext.getCurrentInstance();
-		facesContext.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO," Submitted Successfully", ""));
 
 		return "taskListView";
 
@@ -553,7 +559,12 @@ public class UnspscCodeBackingBean extends BaseBackingBean<UnspscCodeManagedBean
 		reqDTO.setUser("lailah");
 		reqDTO.setTaskId(taskListBB.getManagedBean().getTaskId());
 		reqDTO.setOutCome("CREATE");
-		resDTO = unspscSO.updateCodificationRequest(reqDTO);
+		try {
+			resDTO = unspscSO.updateCodificationRequest(reqDTO);
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 
 
 		//BpmResponseDTO responseDTO = updateTask(resDTO.getRequestCode(),taskListBB.getManagedBean().getTaskId());
@@ -561,7 +572,7 @@ public class UnspscCodeBackingBean extends BaseBackingBean<UnspscCodeManagedBean
 		facesContext.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO,"Submitted Successfully", ""));
 
 		return "taskListView";
-		
+
 	}
 
 	public String createExtCode(){
