@@ -81,7 +81,12 @@ public class TaskListBackingBean extends BaseBackingBean<TaskListManagedBean>{
 		System.out.println("testing BPM******");
 
 		String viewBy = "";
-		BpmResponseDTO responseDTO = retrieveWorklistItems(this.getManagedBean().getStatus(), viewBy);
+		try{
+			BpmResponseDTO responseDTO = retrieveWorklistItems(this.getManagedBean().getStatus(), viewBy);
+		}catch(Exception e){
+			log.info("BPM Errors");
+			e.printStackTrace();
+		}
 	}
 
 
@@ -323,6 +328,7 @@ public class TaskListBackingBean extends BaseBackingBean<TaskListManagedBean>{
 			BudgetAllocationResDTO budgetResSO = budgetSO.retrieveBudgetAllocation(budgetReqDTO);
 
 			BudgetAllocationBackingBean budgetBB = new BudgetAllocationBackingBean();
+			budgetBB.getManagedBean().setLoginUser(this.getManagedBean().getTempLoginId());
 			budgetBB.getManagedBean().setBpmTaskId(taskId);
 			budgetBB.getManagedBean().setActions(res.getAction());
 			budgetBB.loadTask(budgetResSO.getBudgetAlloc(), res.getTaskName());
@@ -338,6 +344,7 @@ public class TaskListBackingBean extends BaseBackingBean<TaskListManagedBean>{
 			ProcurementPlanResDTO planResDTO = planSO.retrievePlanById(planReqDTO);
 
 			PlanBackingBean planBB = new PlanBackingBean();
+			planBB.getManagedBean().setLoginUser(this.getManagedBean().getTempLoginId());
 			planBB.getManagedBean().setBpmTaskId(taskId);
 			planBB.getManagedBean().setActions(res.getAction());
 			planBB.loadTask(planResDTO.getPlan(), res.getTaskName());
