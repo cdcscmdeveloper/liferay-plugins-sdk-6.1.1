@@ -11,7 +11,7 @@ xmlns:c="http://java.sun.com/jsp/jstl/core">
 	<p:outputPanel id="opPlanEpExistingContract">
 		 
 		<!-- Item List -->
-		<p:dataTable id="dtEpItem" styleClass="ppFixTdWidth"  rowIndexVar="rowIndex" 
+		<p:dataTable id="dtEpPlanItem" styleClass="ppFixTdWidth"  rowIndexVar="rowIndex" 
 			var="ppPlan" value="#{cc.attrs.selectedPlanMaster.ppPlans}"
 			emptyMessage="#{lbl['lbl.pp.no.record.found']}">  
 	    	<p:column styleClass="ppSmallTd" headerText="#{lbl['lbl.pp.expand']}">
@@ -24,7 +24,7 @@ xmlns:c="http://java.sun.com/jsp/jstl/core">
                	#{rowIndex+1}
             </p:column>   
 	        <p:column headerText="#{lbl['lbl.pp.contract.class']}">  
-            	#{ppPlan.ctContract.contractId}
+            	#{ppPlan.contractInd}
 	        </p:column>   
         	<p:column headerText="#{lbl['lbl.pp.planned.activities.startdate']}">  
 	            #{ppPlan.planStartDate}
@@ -70,14 +70,14 @@ xmlns:c="http://java.sun.com/jsp/jstl/core">
     	<c:if test="#{cc.attrs.viewMode==PPConst.modeNew || cc.attrs.viewMode==PPConst.modeRevision}">
     		<div class="ppRightBtn">
 				<p:commandButton value="#{lbl['lbl.pp.add.item']}" action="#{planBackingBean.showPpPlan(null)}"
-					 oncomplete="dlItemDetailsModal.show()" update="dlItemDetails" /> 
+					 oncomplete="dlItemDetailsEcModal.show()" update="dlItemDetailsEc" /> 
 		 		<br/>
 		 		<br/>
 	 		</div>
  		</c:if>
  		
  		<!-- Sub Item Details -->
- 		<p:dialog id="dlItemDetails" header="#{lbl['lbl.pp.item.details']}" widgetVar="dlItemDetailsModal" 
+ 		<p:dialog id="dlItemDetailsEc" header="#{lbl['lbl.pp.item.details']}" widgetVar="dlItemDetailsEcModal" 
 	              resizable="false" styleClass="ppDiaglogBigBg" dynamic="true">  
       			<ui:include src="existingContractDet.xhtml"/>
 		</p:dialog>  

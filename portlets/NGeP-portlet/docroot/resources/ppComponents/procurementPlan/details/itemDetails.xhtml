@@ -8,6 +8,7 @@ xmlns:ui="http://java.sun.com/jsf/facelets"
 xmlns:p="http://primefaces.org/ui"
 xmlns:c="http://java.sun.com/jsp/jstl/core">
 	<p:panel id="pItemDetails" header="#{lbl['lbl.pp.item.details.form']}">
+
 		<table class="ppThreePartsTable">
 			<tr>
 				<th>* #{lbl['lbl.pp.gosodo.code']}</th>
@@ -25,18 +26,18 @@ xmlns:c="http://java.sun.com/jsp/jstl/core">
 						<f:selectItem itemLabel="#{lbl['lbl.select']}" itemValue="0" />
 						<f:selectItem itemLabel="1" itemValue="1"/>
 					</p:selectOneMenu>
-					<p:selectOneMenu value="#{planBackingBean.managedBean.selectedItem.budgetAllocDtlId}"
+					<p:selectOneMenu value="#{planBackingBean.managedBean.selectedItem.ppBudgetAllocDtl.budgetAllocDtlId}"
 						disabled="#{!planBackingBean.managedBean.selectedItem.brandNew &amp;&amp; 
 							!planBackingBean.managedBean.selectedItem.editable}">
 						<f:selectItem itemLabel="#{lbl['lbl.select']}" itemValue="0" />
 						<f:selectItem itemLabel="197" itemValue="197"/>
-						<p:ajax event="change" listener="#{planBackingBean.selectedDo}" update="pItemDetails, opGosodo"/>
+						<p:ajax event="change" listener="#{planBackingBean.selectedGoSoDo}" update="pItemDetails, opGosodo, itAvailbleBud"/>
 					</p:selectOneMenu>
 				</td>
 				<th>#{lbl['lbl.pp.available.budgeted.amount']}</th>
 				<td class="ppSmallTd">:</td>
 				<td>
-					 <p:inputText value="#{planBackingBean.generateAvailableBudget()}" disabled="true"/>
+					 <p:inputText id="itAvailbleBud" value="#{planBackingBean.generateAvailableBudget()}" disabled="true"/>
 				</td>
 			</tr>
 			<tr>
@@ -47,8 +48,7 @@ xmlns:c="http://java.sun.com/jsp/jstl/core">
 						<p:inputText disabled="true"
 							value="#{planBackingBean.managedBean.selectedItem.ppBudgetAllocDtl.ppBudget.pmGo.goName}
 							#{planBackingBean.managedBean.selectedItem.ppBudgetAllocDtl.pmDo.pmSo.soName}
-							#{planBackingBean.managedBean.selectedItem.ppBudgetAllocDtl.pmDo.doName}
-							"/>
+							#{planBackingBean.managedBean.selectedItem.ppBudgetAllocDtl.pmDo.doName}"/>
 					</p:outputPanel>    
 				</td>
 				<th>* #{lbl['lbl.pp.estimated.amount']}</th>
@@ -140,7 +140,8 @@ xmlns:c="http://java.sun.com/jsp/jstl/core">
 					<th>* #{lbl['lbl.pp.product.extension']}</th>
 					<td class="ppSmallTd">:</td>
 					<td colspan="3">
-						<p:selectOneMenu disabled="#{!planBackingBean.managedBean.selectedItem.brandNew}">
+						<p:selectOneMenu
+							disabled="#{!planBackingBean.managedBean.selectedItem.brandNew}">
 							<f:selectItem itemLabel="#{lbl['lbl.select']}" />
 						</p:selectOneMenu>
 					</td>
@@ -153,7 +154,8 @@ xmlns:c="http://java.sun.com/jsp/jstl/core">
 					<th>* #{lbl['lbl.pp.product.supp.item']}</th>
 					<td class="ppSmallTd">:</td>
 					<td>
-						<p:selectOneMenu disabled="#{!planBackingBean.managedBean.selectedItem.brandNew}">
+						<p:selectOneMenu value="#{planBackingBean.managedBean.selectedItem.cmSupplierItem.supplierItemId}"
+							disabled="#{!planBackingBean.managedBean.selectedItem.brandNew}">
 							<f:selectItem itemLabel="#{lbl['lbl.select']}" />
 						</p:selectOneMenu>
 					</td>
@@ -170,12 +172,12 @@ xmlns:c="http://java.sun.com/jsp/jstl/core">
 					<th>#{lbl['lbl.pp.supplier.id']}</th>
 					<td class="ppSmallTd">:</td>
 					<td>
-						<p:inputText value="-" disabled="true"/>  
+						<p:inputText value="TODO" disabled="true"/>  
 					</td>
 					<th>#{lbl['lbl.pp.supplier.name']}</th>
 					<td class="ppSmallTd">:</td>
 					<td>
-						<p:inputText value="-" disabled="true"/>  
+						<p:inputText value="TODO" disabled="true"/>  
 					</td>
 				</tr>
 				<tr>
@@ -188,8 +190,10 @@ xmlns:c="http://java.sun.com/jsp/jstl/core">
 						<th>#{lbl['lbl.pp.program.activiti.code']}</th>
 						<td class="ppSmallTd">:</td>
 						<td>
-							<p:selectOneMenu id="somProgAct" disabled="#{cc.attrs.selectedPlanMaster.maksudId==''||!cc.attrs.selectedPlan.brandNew}">
-								<f:selectItem itemLabel="#{lbl['lbl.select']}" />
+							<p:selectOneMenu id="somProgAct" value="#{planBackingBean.managedBean.selectedItem.progAct.activityId}"
+								disabled="#{cc.attrs.selectedPlanMaster.maksudId==''||!cc.attrs.selectedPlan.brandNew}">
+								<f:selectItem itemLabel="#{lbl['lbl.select']}" itemValue="0"/>
+								<f:selectItem itemLabel="1" itemValue="1"/>
 							</p:selectOneMenu>
 							<p:tooltip for="somProgAct" value="Fade effect is used by default" showEffect="fade" hideEffect="fade" />
 						</td>
@@ -198,9 +202,11 @@ xmlns:c="http://java.sun.com/jsp/jstl/core">
 						<th>#{lbl['lbl.pp.projek.setia.code']}</th>
 						<td class="ppSmallTd">:</td>
 						<td>
-							<p:selectOneMenu id="somProjSetia" disabled="#{planBackingBean.managedBean.maksudCode==null 
+							<p:selectOneMenu id="somProjSetia" value="#{planBackingBean.managedBean.selectedItem.projSetia.activityId}"
+								disabled="#{planBackingBean.managedBean.maksudCode==null 
 								|| !planBackingBean.managedBean.selectedItem.brandNew}">
-								<f:selectItem itemLabel="#{lbl['lbl.select']}" />
+								<f:selectItem itemLabel="#{lbl['lbl.select']}" itemValue="0"/>
+								<f:selectItem itemLabel="1" itemValue="1"/>
 							</p:selectOneMenu>
 							<p:tooltip for="somProjSetia" value="Fade effect is used by default" showEffect="fade" hideEffect="fade" />
 						</td>
@@ -209,8 +215,10 @@ xmlns:c="http://java.sun.com/jsp/jstl/core">
 						<th>#{lbl['lbl.pp.amanah.code']}</th>
 						<td class="ppSmallTd">:</td>
 						<td>
-							<p:selectOneMenu disabled="#{!planBackingBean.managedBean.selectedItem.brandNew}">
-								<f:selectItem itemLabel="#{lbl['lbl.select']}" />
+							<p:selectOneMenu value="#{planBackingBean.managedBean.selectedItem.amanah.activityId}"
+								disabled="#{!planBackingBean.managedBean.selectedItem.brandNew}">
+								<f:selectItem itemLabel="#{lbl['lbl.select']}" itemValue="0"/>
+								<f:selectItem itemLabel="1" itemValue="1"/>
 							</p:selectOneMenu>
 						</td>
 		   			</c:when>
@@ -228,7 +236,7 @@ xmlns:c="http://java.sun.com/jsp/jstl/core">
    				<th>#{lbl['lbl.pp.item.remarks']}</th>
 				<td class="ppSmallTd">:</td>
 				<td>
-					<p:inputTextarea value="-" rows="3" cols="70"/>
+					<p:inputTextarea value="#{planBackingBean.managedBean.selectedItemRemark.remark}" rows="3" cols="70"/>
 				</td>
 				<th>&nbsp;</th>
 				<td class="ppSmallTd">&nbsp;</td>
@@ -277,9 +285,8 @@ xmlns:c="http://java.sun.com/jsp/jstl/core">
 			<tr>
 	   			<td colspan="5">&nbsp;</td>
 				<td>
-					<p:commandButton value="#{lbl['lbl.pp.save']}" action="#{planBackingBean.addPpPlanToList()}"
-						onclick="dlItemDetailsModal.hide()" oncomplete="dlItemDetailsModal.hide()" 
-						process="pItemDetails" update="tvPlanContent:dtEpItemDetails" />
+					<p:commandButton value="#{lbl['lbl.pp.add']}"  action="#{planBackingBean.addItemToList()}"
+						process="pItemDetails" update="tvPlanContent:pItemDetailsDp" />
 				</td>
 	   		</tr>
 		</table>

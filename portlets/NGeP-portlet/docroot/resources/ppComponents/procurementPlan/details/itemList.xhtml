@@ -8,10 +8,10 @@ xmlns:h="http://java.sun.com/jsf/html"
 xmlns:ui="http://java.sun.com/jsf/facelets"
 xmlns:p="http://primefaces.org/ui"
 xmlns:c="http://java.sun.com/jsp/jstl/core">
-
+	
 		<!-- Item List -->
 		<p:dataTable id="dtEpItemDetails" styleClass="ppFixTdWidth" var="ppItem" 
-				value="#{cc.attrs.selectedPlanItem.ppPlanItems}"  rowIndexVar="rowIndex"
+				value="#{planBackingBean.managedBean.selectedPlanItem.ppPlanItems}"  rowIndexVar="rowIndex"
 				emptyMessage="#{lbl['lbl.pp.no.record.found']}">    
 	    	<p:column styleClass="ppSmallTd" headerText="#{lbl['lbl.pp.seq']}">  
              	#{rowIndex+1} 
@@ -25,17 +25,23 @@ xmlns:c="http://java.sun.com/jsp/jstl/core">
 	            #{ppItem.estimatedAmount}
 	        </p:column>  
 	        <p:column headerText="#{lbl['lbl.pp.product.code']}">  
-	             #{ppItem.unspscClassId}
+	             #{ppItem.cmUnspsc.unspscTitle}
 	        </p:column>
 	        <p:column headerText="#{planBackingBean.managedBean.votType==PPConst.votBt? 
 	        	lbl['lbl.pp.program.activiti.code'] : (planBackingBean.managedBean.votType==PPConst.votPs ?
 	        	lbl['lbl.pp.projek.setia.code'] : lbl['lbl.pp.amanah.code'])}">  
-	             todo 
+	            #{planBackingBean.managedBean.votType==PPConst.votBt? 
+	        	ppItem.progAct.activityId : (planBackingBean.managedBean.votType==PPConst.votPs ?
+	        	ppItem.projSetia.activityId : ppItem.amanah.activityId)}
 	        </p:column>  
 	        <p:column headerText="#{lbl['lbl.pp.action']}">  
-	            <p:commandLink value="#{lbl['lbl.pp.edit']}"/>
-                &nbsp;&nbsp;
-                <p:commandLink value="#{lbl['lbl.pp.delete']}"/>   
+	         	<p:commandLink value="#{lbl['lbl.pp.edit']}" action="#{planBackingBean.showPpItem(ppItem)}" 
+	         		oncomplete="rmtCallEditItem()"/>
+                 &nbsp;&nbsp;
+                <p:commandLink value="#{lbl['lbl.pp.delete']}"
+                  	update="dtEpItemDetails" rendered="#{ppItem.brandNew || cc.attrs.viewMode==PPConst.modeRevision 
+                  		&amp;&amp; ppItem.revisionRequired}" action="#{planBackingBean.deletePpItem(ppItem)}" />
 	        </p:column>
 	   	</p:dataTable>  
+	   	<p:remoteCommand name="rmtCallEditItem" update="pItemDetails"  /><!--  -->
    </ui:composition>

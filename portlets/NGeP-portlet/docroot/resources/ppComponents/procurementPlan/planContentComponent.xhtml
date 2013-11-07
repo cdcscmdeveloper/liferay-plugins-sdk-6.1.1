@@ -18,9 +18,11 @@ xmlns:composite="http://java.sun.com/jsf/composite">
 	
 	<composite:implementation>
 		<p:outputPanel id="opPlanDetailsContent">
+			
 			<p:tabView widgetVar="tvPlanContentVar" id="tvPlanContent" styleClass="ppPlanContent" dynamic="true" cache="true" orientation="top">
 				<p:tab id="tPlanHeader" title="#{lbl['lbl.pp.header']}">  
 					<p:panel id="pTabPlanHeader">
+					<h:inputHidden id="selectedTab" value="#{planBackingBean.managedBean.selectedTab}" />
 					<h:inputHidden id="enableMtoFlag" value="#{planBackingBean.managedBean.enableMto}" />
 					<h:inputHidden id="enableDetailFlag" value="#{planBackingBean.managedBean.enableDetail}" />
 					<table class="ppThreePartsTable">
@@ -328,6 +330,7 @@ xmlns:composite="http://java.sun.com/jsf/composite">
 													|| !cc.attrs.selectedPlan.brandNew}">
 												<f:selectItem itemLabel="#{lbl['lbl.select']}" itemValue="0" />
 												<f:selectItem itemLabel="Khai" itemValue="2" />
+												<p:ajax event="change" listener="#{planBackingBean.test}" />
 											</p:selectOneMenu>
 										</ui:fragment>
 										<ui:fragment rendered="#{status.index&gt;0}">
@@ -416,7 +419,6 @@ xmlns:composite="http://java.sun.com/jsf/composite">
 					</p:panel>
 				</p:tab>
 			</p:tabView>
-	
 			
 		</p:outputPanel>
 	</composite:implementation>
