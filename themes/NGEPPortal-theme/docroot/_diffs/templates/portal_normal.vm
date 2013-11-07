@@ -224,7 +224,7 @@ $theme.include($body_top_include)
             <div class="clear"></div>
         </div>
 	</footer>
-</div>
+
 
 $theme.include($body_bottom_include)
 </body>

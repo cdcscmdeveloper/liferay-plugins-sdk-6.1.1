@@ -5,7 +5,7 @@
 body{margin:0 auto;}
 
 .portlet-title{background:url(../images/general/234-bg-title.png) no-repeat top right; background-color:#1a5b33; padding:2px 0 2px 5px; border-top-left-radius: 5px; border-top-right-radius: 5px;}
-.portlet-title-text{font-family:'notosans-bold', Arial, Helvetica, sans-serif; font-size:16px; color:#FFF;}
+.portlet-title-text{font-family:'notosans-bold', Arial, Helvetica, sans-serif; font-size:14px; color:#FFF;}
 .portlet-content{background-color:#FFF; border-bottom-left-radius: 5px; border-bottom-right-radius: 5px; box-shadow: 0px 4px 5px #888888; margin:0 0 10px 0;}
 .icon{margin:0 0 5px 0;}
 
@@ -17,8 +17,8 @@ nav#navigation ul li a{font-family:'notosans-bold', Arial, Helvetica, sans-serif
 .navi-text{text-align:center;}
 
 ul.child-menu{list-style-type: none; border: 3px solid #5ba218; border-radius: 10px;}
-#navigation ul li:hover > ul.child-menu li:hover > ul.child-menu {border: 3px solid #5ba218; display: block; float: none; margin: 0; background-color:#3B3B3B; position:absolute; z-index:50; width:250px; top: 0; left: 200px;}
-#navigation ul li:hover > ul.child-menu li:hover > ul.child-menu li:hover > ul.child-menu {border: 3px solid #5ba218; width: 130px; top: 0; left: 250px;}
+#navigation ul li:hover > ul.child-menu li:hover > ul.child-menu {border: 3px solid #5ba218; display: block; float: none; margin: 0; background-color:#3B3B3B; position:absolute; z-index:50; top: 0; left: 200px;}
+#navigation ul li:hover > ul.child-menu li:hover > ul.child-menu li:hover > ul.child-menu {border: 3px solid #5ba218; top: 0; left: 250px;}
 
 #navigation ul.child-menu > li:first-child > a:after {
 	content: '';

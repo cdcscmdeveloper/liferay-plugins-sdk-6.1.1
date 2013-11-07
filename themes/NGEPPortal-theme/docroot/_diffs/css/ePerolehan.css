@@ -7,7 +7,7 @@
 /*Reset CSS*/
 html,body,div,span,applet,object,iframe,a,abbr,acronym,address,big,cite,code,del,dfn,em,font,img,ins,kbd,q,s,samp,small,strike,strong,sub,sup,tt,var,dl,dt,dd,ol,ul,li,h1,h2,h3,h4,h5,h6,pre,form,fieldset,legend,p,blockquote,table,caption,tbody,tfoot,thead,tr,th,td{margin:0;padding:0;border:0;outline:0;font-weight:inherit;font-style:inherit;font-size:100%;font-family:inherit;}
 body{font-family:Tahoma; font-size:11px; line-height:auto; color:#333333; background:#EBEDEC no-repeat center top; height:100%; margin:0 auto;}
-table{border-collapse:collapse; border-spacing:0; font-family:Tahoma; font-size:11px;}
+table{border-collapse:collapse; border-spacing:0; font-family:Tahoma; font-size:11px; overflow: hidden;}
 caption,th,td{text-align:left; font-weight:normal;}
 fieldset,img{border:none;}
 address,caption,cite,code,dfn,em,strong,th,var{font-style:normal; font-weight:normal;}
@@ -134,10 +134,10 @@ ul.btn-section li a:hover{background-position:bottom;}
 
 nav{background:url(../images/navi/navi-bg.jpg) repeat-x; height:35px; width:100%; position:relative;}
 nav ul{width:1000px; margin:0 auto;}
-nav ul.child-menu{width:auto !important; display:none; text-decoration:none;}
+nav ul.child-menu{width: auto !important; display:none; text-decoration:none;}
 ul.child-menu li{float: none; width:auto; margin: auto; padding: 6px 10px 6px 10px !important; white-space:nowrap;}
 ul.child-menu li a{text-decoration:none; padding: 0 !important;}
-#navigation ul li:hover > ul.child-menu {display: block; float: none; margin: 0; background-color:#3B3B3B; position:absolute; z-index:50; width: auto; top: 31px; border-radius: 10px;}
+#navigation ul li:hover > ul.child-menu {display: block; float: none; margin: 0; background-color:#3B3B3B; position:absolute; z-index:50; width:auto; top: 31px; border-radius: 10px;}
 ul.child-menu li > ul > li {float: none; width:auto; margin: auto; padding: 6px 13px 6px 12px !important;}
 ul.child-menu li > ul > li > ul > li {float: none; width:auto; margin: auto; padding: 6px 7px 6px 6px !important;}
 nav ul li{float:left;}
