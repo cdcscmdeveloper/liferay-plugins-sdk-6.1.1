@@ -42,6 +42,8 @@ import my.ep.jaxb.fl.codata.FLContractOrderDataType;
 import my.ep.jaxb.fl.podata.FLPurchaseOrderDataType;
 import my.ep.jaxb.pp.budgetdata.PPBudgetDataType;
 import my.ep.jaxb.pp.plandata.PPPlanDataType;
+import my.ep.jaxb.sm.mofregdata.SMMOFRegDataType;
+import my.ep.jaxb.sm.sitevisitdata.SMSiteVisitDataType;
 import my.ep.persistence.entity.fl.request.FlDeliveryAddress;
 import my.ep.persistence.entity.fl.request.FlFulfilmentRequest;
 import my.ep.persistence.entity.pm.authorization.PmOrgProfile;
@@ -56,6 +58,9 @@ import my.ep.web.backingbean.fl.frn.CreateFRNBackingBean;
 import my.ep.web.backingbean.fl.pr.PurchaseRequestBackingBean;
 import my.ep.web.backingbean.pp.budgetallocation.BudgetAllocationBackingBean;
 import my.ep.web.backingbean.pp.procurementplan.PlanBackingBean;
+import my.ep.web.backingbean.sm.sdoreview.SdoReviewBackingBean;
+import my.ep.web.backingbean.sm.sitevisit.SvcSiteAssignBackingBean;
+import my.ep.web.backingbean.sm.sitevisit.SvoSiteVisitBackingBean;
 import my.ep.web.constant.PagingConst;
 import my.ep.web.managedbean.bpm.tasklist.TaskListManagedBean;
 import my.ep.web.util.lookupservice.BusinessDelegate;
@@ -375,6 +380,40 @@ public class TaskListBackingBean extends BaseBackingBean<TaskListManagedBean>{
 				System.out.println("====================task name====================" +res.getTaskName());
 				System.out.println("====================taskId======================="+taskId);
 
+			}else if (res.getProcessName().equalsIgnoreCase(
+					"MOF Supplier Registration")) {
+				SMMOFRegDataType smObj = (SMMOFRegDataType) obj;
+				this.getManagedBean().setTaskName(res.getTaskName());
+				if (res.getTaskName().equalsIgnoreCase(
+						"Verify Supporting Documents")) {
+					System.out.println("********Verify Supporting Documents********");
+					System.out.println("********getTaskId********" + taskId);
+					System.out.println("********getTaskName********" + this.getManagedBean().getTaskName());
+					SdoReviewBackingBean sdoReviewBB = new SdoReviewBackingBean();
+					sdoReviewBB.getManagedBean().setAppId(
+							Long.parseLong(smObj.getAppId()));
+					sdoReviewBB.getManagedBean().setBpmAction(res.getAction());
+					sdoReviewBB.getManagedBean().setTaskId(taskId);
+				}
+			} else if (res.getProcessName().equalsIgnoreCase("Site Visit Manage")) {
+				System.out.println("**********Site Visit Manage***********" + taskId);
+				SMSiteVisitDataType svObj = (SMSiteVisitDataType) obj;
+				this.getManagedBean().setTaskName(res.getTaskName());
+				if (res.getTaskName().equalsIgnoreCase("Assign Site Visit")) {
+					System.out.println("********Assign Site Visit********");
+					System.out.println("********Assign Site Visit APPID********" + svObj.getAppId());
+					SvcSiteAssignBackingBean svcBB = new SvcSiteAssignBackingBean();
+					svcBB.getManagedBean().setAppId(
+							(Long.parseLong(svObj.getAppId())));
+					svcBB.getManagedBean().setBpmAction(res.getAction());
+					svcBB.getManagedBean().setTaskId(taskId);
+				}else if(res.getTaskName().equalsIgnoreCase("Complete Site Visit Report")) {
+					SvoSiteVisitBackingBean svoBB = new SvoSiteVisitBackingBean();
+					svoBB.getManagedBean().setAppId(
+							(Long.parseLong(svObj.getAppId())));
+					svoBB.getManagedBean().setBpmAction(res.getAction());
+					svoBB.getManagedBean().setTaskId(taskId);
+				}
 			}
 			
 
