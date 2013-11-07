@@ -202,6 +202,18 @@ public class TaskListBackingBean extends BaseBackingBean<TaskListManagedBean>{
 			unspscBB.getManagedBean().setColorList(resCodeDTO.getColorList());
 
 
+		}else if(res.getProcessName().equalsIgnoreCase("Extension Code Maintenance")){
+			CDRequestDataType unspsc = (CDRequestDataType)obj;
+
+			IRequestCodeSO requestSO = (IRequestCodeSO) BusinessDelegate.getInstance().getServiceObject("cm",IRequestCodeSO.class);
+			RequestCodeReqDTO codeDTO = new RequestCodeReqDTO();
+			codeDTO.setRequestId(new Long(unspsc.getRequestId()));
+			RequestCodeResDTO resDTO = requestSO.retrieveUnspscCodeReview(codeDTO);
+
+			UnspscCodeBackingBean unspscBB = new UnspscCodeBackingBean();
+			unspscBB.getManagedBean().setRequestCode(resDTO.getRequestCode());
+			
+			
 		}else if(res.getProcessName().equalsIgnoreCase("Intiate Normal Contract Order")|| res.getProcessName().equalsIgnoreCase("Create MTO Contract Order")){
 			IFulfilmentRequestSO requestSO = (IFulfilmentRequestSO) BusinessDelegate.getInstance().getServiceObject("fl",IFulfilmentRequestSO.class);
 			IShippingInstructionSO shippingSO = (IShippingInstructionSO) BusinessDelegate.getInstance().getServiceObject("fl", IShippingInstructionSO.class);
