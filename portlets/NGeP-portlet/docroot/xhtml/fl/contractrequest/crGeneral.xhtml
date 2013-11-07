@@ -1,5 +1,4 @@
 <ui:composition
-	
 	xmlns="http://www.w3.org/1999/xhtml"
 	xmlns:f="http://java.sun.com/jsf/core"
 	xmlns:h="http://java.sun.com/jsf/html"
@@ -7,18 +6,12 @@
 	xmlns:p="http://primefaces.org/ui"
 	xmlns:c="http://java.sun.com/jsp/jstl/core">
 
-	<ui:define name="resourceSection">
-	</ui:define>
-	<!-- <ui:define name="sideMenu">
-		<ui:include src="/xhtml/fl/shared/sidemenu/flCrSideMenu.xhtml" />
-	</ui:define>
-	<ui:define name="content"> -->
 		<table style="width: 800px;">
 			<tr>
 				<td colspan="4" align="right">
 				<ui:repeat var="bpmAction"
-					value="#{fulfilmentRequestBackingBean.managedBean.actions}">
-					<p:commandButton value="#{bpmAction}" action="#{fulfilmentRequestBackingBean.submitAction(bpmAction)}" process="@this"/>
+					value="#{contractRequestBackingBean.managedBean.actions}">
+					<p:commandButton value="#{bpmAction}" action="#{contractRequestBackingBean.submitAction(bpmAction)}" process="@this"/>
 				</ui:repeat> 
 				</td>
 			</tr>
@@ -29,57 +22,57 @@
 				<tr>
 					<td><p:outputLabel value="Ministry" /></td>
 					<td><p:inputText style="width: 260px;"
-							value="#{fulfilmentRequestBackingBean.managedBean.flRequest.createdOrgProfile.parentOrgProfile.parentOrgProfile.orgName}" disabled="true" /></td>
+							value="#{contractRequestBackingBean.managedBean.flRequest.createdOrgProfile.parentOrgProfile.parentOrgProfile.orgName}" disabled="true" /></td>
 					<td><p:outputLabel value="Contract Req. NO." /></td>
 					<td><p:inputText style="width: 260px;" 
 							disabled="true" /></td>
 				</tr>
 				<tr>
 					<td><p:outputLabel value="* Issued Jabatan" /></td>
-					<td><p:selectOneMenu value="#{fulfilmentRequestBackingBean.managedBean.flRequest.issuedOrgProfile.orgProfileId}" style="width: 260px;">
-							<f:selectItems value="#{fulfilmentRequestBackingBean.divisionProfileList}" />
+					<td><p:selectOneMenu value="#{contractRequestBackingBean.managedBean.flRequest.issuedOrgProfile.orgProfileId}" style="width: 260px;">
+							<f:selectItems value="#{contractRequestBackingBean.divisionProfileList}" />
 							<p:ajax event="change" update="flDetails" process="@this"
-								listener="#{fulfilmentRequestBackingBean.checkPtjFlg}" />
+								listener="#{contractRequestBackingBean.checkPtjFlg}" />
 						</p:selectOneMenu></td>
 					<td><p:outputLabel value="MTO?" /></td>
-					<td><p:selectBooleanCheckbox value="#{fulfilmentRequestBackingBean.managedBean.flRequest.mto}"/></td>
+					<td><p:selectBooleanCheckbox value="#{contractRequestBackingBean.managedBean.flRequest.mto}"/></td>
 				</tr>
 				<tr>
 					<td><p:outputLabel value="* Issued PTJ" /></td>
 					<td><p:selectOneMenu
-						disabled="#{fulfilmentRequestBackingBean.managedBean.checkPtjFlg}"
-						value="#{fulfilmentRequestBackingBean.managedBean.flRequest.issuedOrgProfile.orgProfileId}"
+						disabled="#{contractRequestBackingBean.managedBean.checkPtjFlg}"
+						value="#{contractRequestBackingBean.managedBean.flRequest.issuedOrgProfile.orgProfileId}"
 						style="width: 260px;">
-						<f:selectItems value="#{fulfilmentRequestBackingBean.PTJList}" />
+						<f:selectItems value="#{contractRequestBackingBean.PTJList}" />
 					</p:selectOneMenu></td>
 					<td><p:outputLabel value="Contract NO." /></td>
-					<td><p:inputText style="width: 260px;" value="#{fulfilmentRequestBackingBean.managedBean.flRequest.ctContract.contractName}"
+					<td><p:inputText style="width: 260px;" value="#{contractRequestBackingBean.managedBean.flRequest.ctContract.contractName}"
 							disabled="true" /></td>
 				</tr>
 				<tr>
 					<td><p:outputLabel value="* Received Jabatan" /></td>
-					<td><p:selectOneMenu value="#{fulfilmentRequestBackingBean.managedBean.flRequest.receivedOrgProfile.orgProfileId}" style="width: 260px;">
-							<f:selectItems value="#{fulfilmentRequestBackingBean.divisionProfileList}"/>
+					<td><p:selectOneMenu value="#{contractRequestBackingBean.managedBean.flRequest.receivedOrgProfile.orgProfileId}" style="width: 260px;">
+							<f:selectItems value="#{contractRequestBackingBean.divisionProfileList}"/>
 						</p:selectOneMenu></td>
 					<td><p:outputLabel value="Contract Type" /></td>
 					<td><p:inputText style="width: 260px;"
-							value="#{fulfilmentRequestBackingBean.managedBean.flRequest.ctContract.contractTypeCode.code}" disabled="true" /></td>
+							value="#{contractRequestBackingBean.managedBean.flRequest.ctContract.contractTypeCode.code}" disabled="true" /></td>
 				</tr>
 				<tr>
 					<td><p:outputLabel value="* Received PTJ" /></td>
-					<td><p:selectOneMenu disabled="#{fulfilmentRequestBackingBean.managedBean.checkPtjFlg}" value="#{fulfilmentRequestBackingBean.managedBean.flRequest.receivedOrgProfile.orgProfileId}" style="width: 260px;">
-							<f:selectItems value="#{fulfilmentRequestBackingBean.PTJList}" />
+					<td><p:selectOneMenu disabled="#{contractRequestBackingBean.managedBean.checkPtjFlg}" value="#{contractRequestBackingBean.managedBean.flRequest.receivedOrgProfile.orgProfileId}" style="width: 260px;">
+							<f:selectItems value="#{contractRequestBackingBean.PTJList}" />
 						</p:selectOneMenu></td>
 					<td><p:outputLabel value="Fulfillment Type" /></td>
 					<td><p:inputText style="width: 260px;"
-							value="#{fulfilmentRequestBackingBean.managedBean.flRequest.ctContract.fulfillmentTypeCode.code}" disabled="true" /></td>
+							value="#{contractRequestBackingBean.managedBean.flRequest.ctContract.fulfillmentTypeCode.code}" disabled="true" /></td>
 				</tr>
 				<tr>
 					<td rowspan="4"><p:outputLabel value="* Title" /></td>
 					<td rowspan="4"><p:inputTextarea rows="8"
-							style="width: 260px;" value="#{fulfilmentRequestBackingBean.managedBean.flRequest.title}"/></td>
+							style="width: 260px;" value="#{contractRequestBackingBean.managedBean.flRequest.title}"/></td>
 					<td><p:outputLabel value="Plan NO." /></td>
-					<td><p:inputText style="width: 260px;" value="#{fulfilmentRequestBackingBean.managedBean.flRequest.planId}"
+					<td><p:inputText style="width: 260px;" value="#{contractRequestBackingBean.managedBean.flRequest.planId}"
 							disabled="true" /></td>
 				</tr>
 				<tr>
@@ -90,36 +83,36 @@
 				<tr>
 					<td><p:outputLabel value="Creation Date" /></td>
 					<td><p:inputText style="width: 260px;"
-							value="#{fulfilmentRequestBackingBean.managedBean.flRequest.createdDate}" disabled="true" /></td>
+							value="#{contractRequestBackingBean.managedBean.flRequest.createdDate}" disabled="true" /></td>
 				</tr>
 				<tr>
 					<td><p:outputLabel value="Status" /></td>
-					<td><p:inputText style="width: 260px;" value="#{fulfilmentRequestBackingBean.managedBean.flRequest.pmDocStatus.statusId}"
+					<td><p:inputText style="width: 260px;" value="#{contractRequestBackingBean.managedBean.flRequest.pmDocStatus.statusId}"
 							disabled="true" /></td>
 				</tr>
 				<tr>
 					<td><p:outputLabel value="*Financial Year" /></td>
-					<td><p:selectOneMenu value="#{fulfilmentRequestBackingBean.managedBean.flRequest.financialYear}" style="width: 260px;">
+					<td><p:selectOneMenu value="#{contractRequestBackingBean.managedBean.flRequest.financialYear}" style="width: 260px;">
 							<f:selectItems itemLabel="2013" itemValue="1" />
 						</p:selectOneMenu></td>
 					<td><p:outputLabel value=" *Maksud  Code" /></td>
-					<td><p:selectOneMenu value="#{fulfilmentRequestBackingBean.managedBean.flRequest.maksudId}" style="width: 260px;">
-							<f:selectItems value="#{fulfilmentRequestBackingBean.maksudCodeList}" />
+					<td><p:selectOneMenu value="#{contractRequestBackingBean.managedBean.flRequest.maksudId}" style="width: 260px;">
+							<f:selectItems value="#{contractRequestBackingBean.maksudCodeList}" />
 						</p:selectOneMenu></td>
 				</tr>
 				<tr>
 					<td><p:outputLabel value="*AG Office" /></td>
-					<td><p:selectOneMenu value="#{fulfilmentRequestBackingBean.managedBean.flRequest.orgProfileAgoId}" style="width: 260px;">
+					<td><p:selectOneMenu value="#{contractRequestBackingBean.managedBean.flRequest.orgProfileAgoId}" style="width: 260px;">
 							<f:selectItems itemLabel="002 KAWANGAN KL" itemValue="1" />
 						</p:selectOneMenu></td>
 					<td><p:outputLabel value="*Charge PTJ" /></td>
-					<td><p:selectOneMenu disabled="#{fulfilmentRequestBackingBean.managedBean.checkPtjFlg}" style="width: 260px;">
-							<f:selectItems value="#{fulfilmentRequestBackingBean.PTJList}" />
+					<td><p:selectOneMenu disabled="#{contractRequestBackingBean.managedBean.checkPtjFlg}" style="width: 260px;">
+							<f:selectItems value="#{contractRequestBackingBean.PTJList}" />
 						</p:selectOneMenu></td>
 				</tr>
 				<tr>
 					<td><p:outputLabel value="Financing?" /></td>
-					<td><p:selectBooleanCheckbox value="#{fulfilmentRequestBackingBean.managedBean.flRequest.financingLoan}"/></td>
+					<td><p:selectBooleanCheckbox value="#{contractRequestBackingBean.managedBean.flRequest.financingLoan}"/></td>
 
 				</tr>
 			</table>
@@ -128,7 +121,7 @@
 			<table>
 				<tr>
 					<td><p:outputLabel value="Supplier ID" /></td>
-					<td><p:inputText style="width: 120px;" value="#{fulfilmentRequestBackingBean.managedBean.flRequest.ctContract.smSupplier.supplierId}"
+					<td><p:inputText style="width: 120px;" value="#{contractRequestBackingBean.managedBean.flRequest.ctContract.smSupplier.supplierId}"
 							disabled="true" /></td>
 				</tr>
 				<tr>
@@ -190,12 +183,12 @@
 					<td><p:outputLabel value="* Remarks    " /></td>
 					<td><p:inputTextarea rows="8" style="width: 260px;" required="true" id="remark"
 							requiredMessage="Please enter remarks."
-							value="#{fulfilmentRequestBackingBean.managedBean.flRemark.remark}" maxlength="200"       
+							value="#{contractRequestBackingBean.managedBean.flRemark.remark}" maxlength="200"       
     						counterTemplate="{0} characters remaining." autoResize="false"/>
     						<p:message for="remark" /></td>
 					<td><p:outputLabel value="Attachment" /></td>
 					<td><p:fileUpload
-							fileUploadListener="#{fulfilmentRequestBackingBean.fileUpload}"
+							fileUploadListener="#{contractRequestBackingBean.fileUpload}"
 							 update="messages" mode="advanced" dragDropSupport="false" sizeLimit="100000"
 							multiple="true" allowTypes="/(\.|\/)(doc|docx|xls|xlsx|pdf)$/" />
 							 <p:growl id="messages" showDetail="true"/></td>
@@ -203,5 +196,4 @@
 			</table>
 
 		</p:panel>
-	<!-- </ui:define> -->
 </ui:composition>

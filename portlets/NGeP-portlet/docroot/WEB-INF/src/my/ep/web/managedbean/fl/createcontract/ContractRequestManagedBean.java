@@ -55,6 +55,8 @@ public class ContractRequestManagedBean extends BaseManagedBean {
 	private FlShippingInstr shippingInstr;
 	
 	private boolean selectedRowFlg;
+	
+	private String tempLogin; //TODO: temp and to be removed
 		
 	public ContractRequestManagedBean(){
 		
@@ -305,6 +307,22 @@ public class ContractRequestManagedBean extends BaseManagedBean {
 	 */
 	public void setShippingInstr(FlShippingInstr shippingInstr) {
 		this.shippingInstr = shippingInstr;
+	}
+
+
+	/**
+	 * @return the tempLogin
+	 */
+	public String getTempLogin() {
+		return tempLogin;
+	}
+
+
+	/**
+	 * @param tempLogin the tempLogin to set
+	 */
+	public void setTempLogin(String tempLogin) {
+		this.tempLogin = tempLogin;
 	}
 
 }

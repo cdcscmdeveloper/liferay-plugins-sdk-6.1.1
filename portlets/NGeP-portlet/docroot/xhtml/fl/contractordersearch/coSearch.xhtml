@@ -14,7 +14,7 @@
 			<p:tab id="tab1" title="Contract List">
 				<p:panel header="CONTRACT ORDER" toggleable="true">
 					<p:dataTable id="contractListTable" var="contract"
-						value="#{fulfilmentRequestBackingBean.managedBean.contractList}"
+						value="#{contractRequestBackingBean.managedBean.contractList}"
 						paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
 						rowsPerPageTemplate="5,10,15" paginatorPosition="bottom">
 						<p:column headerText="Contract No.">
@@ -53,8 +53,8 @@
 						</p:column>
 						<p:column headerText="Action">
 							<p:commandLink id="crBasepageLink" value="request"
-								action="#{fulfilmentRequestBackingBean.procureContract}">
-								<f:setPropertyActionListener value="#{contract}" target="#{fulfilmentRequestBackingBean.managedBean.selectedContract}" />  
+								action="#{contractRequestBackingBean.procureContract}">
+								<f:setPropertyActionListener value="#{contract}" target="#{contractRequestBackingBean.managedBean.selectedContract}" />  
 								</p:commandLink>
 						</p:column>
 					</p:dataTable>

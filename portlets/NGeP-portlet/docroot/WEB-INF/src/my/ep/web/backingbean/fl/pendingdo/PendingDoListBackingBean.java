@@ -23,7 +23,7 @@ import org.apache.log4j.Logger;
 @RequestScoped
 public class PendingDoListBackingBean extends BaseBackingBean<CreateDOManagedBean> {
 	public static final String NAV_TO_CREATE_DO = "createDo";
-	private static Logger log = Logger.getLogger(PurchaseRequestBackingBean.class);
+	private static Logger log = Logger.getLogger(PendingDoListBackingBean.class);
 
 	public PendingDoListBackingBean() {
 		FulfilmentResDTO resDTO = retrievePendingDoItems();
@@ -54,9 +54,6 @@ public class PendingDoListBackingBean extends BaseBackingBean<CreateDOManagedBea
 		String fulfilmentOrderId = FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap().get("fulfilmentOrderId");
 		String statusId = FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap().get("statusId");
 		String fulfilmentReqId = FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap().get("fulfilmentReqId");
-		System.out.println("fulfilmentOrderId::: " + fulfilmentOrderId);
-		System.out.println("fulfilmentReqId::: " + fulfilmentReqId);
-		System.out.println("statusId::: " + statusId);
 		//CreateDOBackingBean dOBackingBean = new CreateDOBackingBean();
 		this.getManagedBean().setFulfilmentOrderId(fulfilmentOrderId);
 		this.getManagedBean().setStatusId(statusId);

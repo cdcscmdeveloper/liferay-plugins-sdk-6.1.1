@@ -63,7 +63,7 @@ import com.liferay.portal.theme.ThemeDisplay;
  * @since 20/9/2013
  */
 
-@ManagedBean(name = "fulfilmentRequestBackingBean")
+@ManagedBean(name = "contractRequestBackingBean")
 @RequestScoped
 public class ContractRequestBackingBean extends BaseBackingBean<ContractRequestManagedBean>{
 	private static Logger log = Logger.getLogger(ContractRequestBackingBean.class);
@@ -109,13 +109,13 @@ public class ContractRequestBackingBean extends BaseBackingBean<ContractRequestM
 		}
 	}
 
-	public void submitAction(String action) throws ParseException {
+	public void submitAction(String action) {
 		IFulfilmentRequestSO iFulfilmentRequestSO = null;
 		IFulfilmentOrderSO flOrderSO = null;
 		try {
 			FulfilmentReqDTO reqDTO = new FulfilmentReqDTO();
 			FlFulfilmentRequest flRequest = getManagedBean().getFlRequest();
-			//			FlRemark flRemark = this.getManagedBean().getFlRemark();
+			//			FlRemark flRemark = this.getManagedBean().getFlRemark();//temporary comment for attachment n remark
 			//			FlAttachment flAttachment = this.getManagedBean().getFlAttachment();
 //			String fileName = this.getManagedBean().getFlAttachment().getFileName();
 //			String fileDesc = this.getManagedBean().getFlAttachment().getFileDescription();
@@ -132,7 +132,14 @@ public class ContractRequestBackingBean extends BaseBackingBean<ContractRequestM
 			//			reqDTO.setFlAttachment(flAttachment);
 			iFulfilmentRequestSO = (IFulfilmentRequestSO) BusinessDelegate.getInstance().getServiceObject("fl", IFulfilmentRequestSO.class);
 			reqDTO.setFlFulfilmentRequest(flRequest);
-			reqDTO.setContractRequest(true);
+			reqDTO.setContractRequest(Boolean.TRUE);
+			System.out.println("templogin: "+ getManagedBean().getTempLogin());
+			if(getManagedBean().getTempLogin() == null){
+				reqDTO.setTempLogin("roslan");
+			}else{
+				reqDTO.setTempLogin(getManagedBean().getTempLogin());
+			}
+			
 			if(action.equalsIgnoreCase(BpmOutcomeConst.BPM_SAVE)){
 				action = "";
 			}

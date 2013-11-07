@@ -45,7 +45,7 @@ public class InvoiceBackingBean extends BaseBackingBean<InvoiceManagedBean> {
 			}
 			reqDTO.setOutcome(action);
 			reqDTO.setTaskId(getManagedBean().getBpmTaskId());
-			reqDTO.setDanRequired(true);// for current testing DAN purpose in SO
+			reqDTO.setDanRequired(false);// for current testing DAN purpose in SO
 			invoiceSO.saveInvoice(reqDTO);
 
 		}catch(Exception e){
