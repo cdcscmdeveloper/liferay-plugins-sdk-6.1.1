@@ -3,68 +3,121 @@ package my.ep.web.managedbean.sm.registration;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
 
+import my.ep.persistence.entity.sm.SmAddress;
+import my.ep.persistence.entity.sm.SmAppl;
+import my.ep.persistence.entity.sm.SmBusinessNature;
+import my.ep.persistence.entity.sm.SmPersonnel;
+import my.ep.persistence.entity.sm.SmPersonnelAddress;
+import my.ep.persistence.entity.sm.SmSupplier;
+import my.ep.persistence.entity.sm.SmSupplierBank;
+import my.ep.persistence.entity.sm.SmSupplierOwner;
 import my.ep.web.managedbean.BaseManagedBean;
 
-@ManagedBean(name="registrationMB")
+@ManagedBean(name = "registrationMB")
 @SessionScoped
-public class RegistrationManagedBean extends BaseManagedBean{
+public class RegistrationManagedBean extends BaseManagedBean {
 	private static final long serialVersionUID = 1L;
+
+	private SmSupplier smSupp;
+	private SmSupplierBank smSuppBank;
+	private SmBusinessNature smBusNature;
+	private SmPersonnel smPersonnel;
+	private SmSupplierOwner smSuppOwner;
+	private SmPersonnelAddress smPersonnelAdd;
+	private SmAppl smAppl;
+
+	private SmAddress smBusinessAdd;
+	private SmAddress smRegAdd;
+	private SmAddress smResAdd;
 	
-	private String regType;
-	private String businessType;
-	private int userIdentificationType;
-	private int userNationality;
-	private String mofSuppType;
-	
-	private String idTypeMasking;
+	private String applType;
 
-	public String getRegType() {
-		return regType;
+	public SmSupplier getSmSupp() {
+		return smSupp;
 	}
 
-	public String getIdTypeMasking() {
-		return idTypeMasking;
+	public void setSmSupp(SmSupplier smSupp) {
+		this.smSupp = smSupp;
 	}
 
-	public void setIdTypeMasking(String idTypeMasking) {
-		this.idTypeMasking = idTypeMasking;
+	public SmSupplierBank getSmSuppBank() {
+		return smSuppBank;
 	}
 
-	public void setRegType(String regType) {
-		this.regType = regType;
+	public void setSmSuppBank(SmSupplierBank smSuppBank) {
+		this.smSuppBank = smSuppBank;
 	}
 
-	public String getBusinessType() {
-		return businessType;
+	public SmBusinessNature getSmBusNature() {
+		return smBusNature;
 	}
 
-	public void setBusinessType(String businessType) {
-		this.businessType = businessType;
+	public void setSmBusNature(SmBusinessNature smBusNature) {
+		this.smBusNature = smBusNature;
 	}
 
-	public int getUserIdentificationType() {
-		return userIdentificationType;
+	public SmPersonnel getSmPersonnel() {
+		return smPersonnel;
 	}
 
-	public void setUserIdentificationType(int userIdentificationType) {
-		this.userIdentificationType = userIdentificationType;
+	public void setSmPersonnel(SmPersonnel smPersonnel) {
+		this.smPersonnel = smPersonnel;
 	}
 
-	public int getUserNationality() {
-		return userNationality;
+	public SmSupplierOwner getSmSuppOwner() {
+		return smSuppOwner;
 	}
 
-	public void setUserNationality(int userNationality) {
-		this.userNationality = userNationality;
+	public void setSmSuppOwner(SmSupplierOwner smSuppOwner) {
+		this.smSuppOwner = smSuppOwner;
 	}
 
-	public String getMofSuppType() {
-		return mofSuppType;
+	public SmPersonnelAddress getSmPersonnelAdd() {
+		return smPersonnelAdd;
 	}
 
-	public void setMofSuppType(String mofSuppType) {
-		this.mofSuppType = mofSuppType;
+	public void setSmPersonnelAdd(SmPersonnelAddress smPersonnelAdd) {
+		this.smPersonnelAdd = smPersonnelAdd;
 	}
-	
-	
+
+	public SmAddress getSmBusinessAdd() {
+		return smBusinessAdd;
+	}
+
+	public void setSmBusinessAdd(SmAddress smBusinessAdd) {
+		this.smBusinessAdd = smBusinessAdd;
+	}
+
+	public SmAddress getSmRegAdd() {
+		return smRegAdd;
+	}
+
+	public void setSmRegAdd(SmAddress smRegAdd) {
+		this.smRegAdd = smRegAdd;
+	}
+
+	public SmAddress getSmResAdd() {
+		return smResAdd;
+	}
+
+	public void setSmResAdd(SmAddress smResAdd) {
+		this.smResAdd = smResAdd;
+	}
+
+	public SmAppl getSmAppl() {
+		return smAppl;
+	}
+
+	public void setSmAppl(SmAppl smAppl) {
+		this.smAppl = smAppl;
+	}
+
+	public String getApplType() {
+		return applType;
+	}
+
+	public void setApplType(String applType) {
+		this.applType = applType;
+	}
+
 }

@@ -7,6 +7,7 @@ import java.util.List;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
 
+import my.ep.persistence.entity.sm.SmApplSiteVisit;
 import my.ep.web.managedbean.BaseManagedBean;
 
 @ManagedBean(name = "svoSiteVisitMB")
@@ -14,6 +15,35 @@ import my.ep.web.managedbean.BaseManagedBean;
 public class SvoSiteVisitManagedBean extends BaseManagedBean {
 	private static final long serialVersionUID = 1L;
 
+	private long appId;
+	private String[] bpmAction;
+	private String taskId;
+	
+	public long getAppId() {
+		return appId;
+	}
+
+	public void setAppId(long appId) {
+		this.appId = appId;
+	}
+
+	public String[] getBpmAction() {
+		return bpmAction;
+	}
+
+	public void setBpmAction(String[] bpmAction) {
+		this.bpmAction = bpmAction;
+	}
+
+	public String getTaskId() {
+		return taskId;
+	}
+
+	public void setTaskId(String taskId) {
+		this.taskId = taskId;
+	}
+
+	private SmApplSiteVisit smApplSv;
 	private List<SiteVisitDetails> svDetailList;
 	private List<SiteVisitCheckList> svCheckList;
 	private List<ManufacturingFinancialList> manuFactList;
@@ -22,6 +52,14 @@ public class SvoSiteVisitManagedBean extends BaseManagedBean {
 
 	private String svReviewNavi;
 	private String rptSubsMethod;
+
+	public SmApplSiteVisit getSmApplSv() {
+		return smApplSv;
+	}
+
+	public void setSmApplSv(SmApplSiteVisit smApplSv) {
+		this.smApplSv = smApplSv;
+	}
 
 	public String getSvReviewNavi() {
 		return svReviewNavi;
