@@ -39,33 +39,33 @@
 					var="contract" id="contractedId">
 					<p:column>
 						<f:facet name="header">
-							<p:outputLabel value="#{lbl['lbl.cm.item.name']}" />
+							#{lbl['lbl.cm.item.name']}
 						</f:facet>
 						#{contract.unspscTitle}
 					</p:column>
 					<p:column>
 						<f:facet name="header">
-							<p:outputLabel value="#{lbl['lbl.cm.item.description']}" />
+							#{lbl['lbl.cm.item.description']}
 						</f:facet>
 					</p:column>
 					<p:column>
 						<f:facet name="header">
-							<p:outputLabel value="#{lbl['lbl.cm.system.code']}" />
+							#{lbl['lbl.cm.system.code']}
 						</f:facet>
 					</p:column>
 					<p:column>
 						<f:facet name="header">
-							<p:outputLabel value="#{lbl['lbl.cm.unspsc.code']}" />
+							#{lbl['lbl.cm.unspsc.code']}
 						</f:facet>
 					</p:column>
 					<p:column>
 						<f:facet name="header">
-							<p:outputLabel value="#{lbl['lbl.cm.extension.code']}" />
+							#{lbl['lbl.cm.extension.code']}
 						</f:facet>
 					</p:column>
 					<p:column>
 						<f:facet name="header">
-							<p:outputLabel value="#{lbl['lbl.cm.action']}" />
+							#{lbl['lbl.cm.action']}
 						</f:facet>
 						<p:commandButton value="#{lbl['lbl.cm.assign']}" action="#{codificationBackingBean.assignProductCode}"
 							onclick="contractedItemPopUp.show()" update=":form:contractedItemPopUpId"></p:commandButton>

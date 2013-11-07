@@ -11,6 +11,10 @@
 
 		<h:panelGroup id="compareCatalogueId">
 
+			<div style="text-align: right;">
+				<p:commandButton value="#{lbl['lbl.cm.back']}" icon="ui-icon-cancel"
+					action="#{catalogueBackingBean.backToPervious()}" process="@this"></p:commandButton>
+			</div>
 
 
 			<p:remoteCommand id="compareRow" name="compareRow"
@@ -19,7 +23,8 @@
 			</p:remoteCommand>
 
 
-			<p:dataGrid id="compareDataList" rowIndexVar="compareKey" paginator="true"
+			<p:dataGrid id="compareDataList" rowIndexVar="compareKey"
+				paginator="true"
 				value="#{catalogueBackingBean.managedBean.selectedSupplierItemList}"
 				var="compare" columns="4" rows="4" paginatorPosition="bottom">
 
@@ -49,11 +54,6 @@
 
 
 			</p:dataGrid>
-
-			<p:commandButton value="#{lbl['lbl.cm.back']}"
-				action="#{catalogueBackingBean.backToPervious()}" process="@this"></p:commandButton>
-
-
 
 
 		</h:panelGroup>
