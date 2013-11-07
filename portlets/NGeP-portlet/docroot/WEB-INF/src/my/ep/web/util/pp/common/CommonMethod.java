@@ -4,6 +4,7 @@
 package my.ep.web.util.pp.common;
 
 import java.math.BigDecimal;
+import java.text.DateFormatSymbols;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
@@ -129,4 +130,20 @@ public class CommonMethod {
 		log.info("financialYearOptions - End");
 		return financialYearOpt;
 	} 
+	/**
+	 * retrieve list of short month e.g Jul
+	 * @return
+	 */
+	public static List<SelectItem> calendarMonths(){
+		List<SelectItem> months = new ArrayList<SelectItem>();
+		String[] shortMonths = new DateFormatSymbols().getShortMonths();
+		Integer i = 0;
+		for(String month:shortMonths){
+			months.add(new SelectItem(i, month));
+			i++;
+		}
+		return months;
+		
+		
+	}
 }

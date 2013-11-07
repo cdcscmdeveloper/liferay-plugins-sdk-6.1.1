@@ -22,8 +22,14 @@ public class ProcurementPlanConst {
 	public static final String PP_DET = "details/ppDetails.xhtml";
 	public static final String EP_EXISTING_CONTRACT_DET = "details/epDetailsExistingContract.xhtml";
 	public static final String EP_DIRECT_PURCHASE_DET = "details/epDetailsDirectPurchase.xhtml";
+	public static final String EP_FAVOURITE_PLAN_DET = "details/epDetailsFavourPlan.xhtml";
+	public static final String EP_FAVOURITE_ITEM_DET = "details/epDetailsFavourItem.xhtml";
 	
 
+	//Submission Type
+	public static final String SUBMIT_APPROVAL = "A";
+	public static final String SUBMIT_VERIFICATION = "V";
+	
 	//View Mode
 	public static final String MODE_NEW = "N";
 	public static final String MODE_NEW_MTO = "T";
@@ -126,9 +132,9 @@ public class ProcurementPlanConst {
 	
 	
 	//PM Profile Types
-	public static final Long TYPE_MINISTRY = 38L;
-	public static final Long TYPE_JABATAN = 37L;
-	public static final Long TYPE_PTJ = 1L;
+//	public static final Long TYPE_MINISTRY = 38L;
+//	public static final Long TYPE_JABATAN = 37L;
+//	public static final Long TYPE_PTJ = 1L;
 	
 	
 	public static final Long STATUS_PENDING_APPROVAL = 2L;
@@ -544,24 +550,24 @@ public class ProcurementPlanConst {
 	public String getItemOriginTypeBoth() {
 		return ITEM_ORIGIN_TYPE_BOTH;
 	}
-	/**
-	 * @return the typeMinistry
-	 */
-	public Long getTypeMinistry() {
-		return TYPE_MINISTRY;
-	}
-	/**
-	 * @return the typeJabatan
-	 */
-	public Long getTypeJabatan() {
-		return TYPE_JABATAN;
-	}
-	/**
-	 * @return the typePtj
-	 */
-	public Long getTypePtj() {
-		return TYPE_PTJ;
-	}
+//	/**
+//	 * @return the typeMinistry
+//	 */
+//	public Long getTypeMinistry() {
+//		return TYPE_MINISTRY;
+//	}
+//	/**
+//	 * @return the typeJabatan
+//	 */
+//	public Long getTypeJabatan() {
+//		return TYPE_JABATAN;
+//	}
+//	/**
+//	 * @return the typePtj
+//	 */
+//	public Long getTypePtj() {
+//		return TYPE_PTJ;
+//	}
 	/**
 	 * @return the fulfillmentOneOff
 	 */

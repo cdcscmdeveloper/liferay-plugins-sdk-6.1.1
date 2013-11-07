@@ -47,6 +47,53 @@ public class BudgetAllocationManagedBean extends BaseManagedBean{
 	
 	private PpBudgetAlloc retrieveBudgetAlloc;
   
+	private Long tempId; //temp
+	
+	private String actionDesc; // temp
+	
+	private String loginUser;
+	
+	/**
+	 * @return the loginUser
+	 */
+	public String getLoginUser() {
+		return loginUser;
+	}
+
+	/**
+	 * @param loginUser the loginUser to set
+	 */
+	public void setLoginUser(String loginUser) {
+		this.loginUser = loginUser;
+	}
+	
+	/**
+	 * @return the actionDesc
+	 */
+	public String getActionDesc() {
+		return actionDesc;
+	}
+
+	/**
+	 * @param actionDesc the actionDesc to set
+	 */
+	public void setActionDesc(String actionDesc) {
+		this.actionDesc = actionDesc;
+	}
+
+	/**
+	 * @return the tempId
+	 */
+	public Long getTempId() {
+		return tempId;
+	}
+
+	/**
+	 * @param tempId the tempId to set
+	 */
+	public void setTempId(Long tempId) {
+		this.tempId = tempId;
+	}
 
 	/**
 	 * @return the retrieveBudgetAlloc

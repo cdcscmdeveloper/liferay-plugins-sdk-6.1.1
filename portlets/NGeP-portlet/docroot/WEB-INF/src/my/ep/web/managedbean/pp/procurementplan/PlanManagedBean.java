@@ -73,8 +73,70 @@ public class PlanManagedBean extends BaseManagedBean{
 	
 	private List<PpPlan> planList;
 	
+	private String selectedTab;
 	
+	private Long tempId; //temp
 	
+	private String actionDesc; // temp
+	
+	private String loginUser;
+	
+	/**
+	 * @return the loginUser
+	 */
+	public String getLoginUser() {
+		return loginUser;
+	}
+
+	/**
+	 * @param loginUser the loginUser to set
+	 */
+	public void setLoginUser(String loginUser) {
+		this.loginUser = loginUser;
+	}
+
+	/**
+	 * @return the selectedTab
+	 */
+	public String getSelectedTab() {
+		return selectedTab;
+	}
+
+	/**
+	 * @param selectedTab the selectedTab to set
+	 */
+	public void setSelectedTab(String selectedTab) {
+		this.selectedTab = selectedTab;
+	}
+
+
+	/**
+	 * @return the actionDesc
+	 */
+	public String getActionDesc() {
+		return actionDesc;
+	}
+
+	/**
+	 * @param actionDesc the actionDesc to set
+	 */
+	public void setActionDesc(String actionDesc) {
+		this.actionDesc = actionDesc;
+	}
+
+	/**
+	 * @return the tempId
+	 */
+	public Long getTempId() {
+		return tempId;
+	}
+
+	/**
+	 * @param tempId the tempId to set
+	 */
+	public void setTempId(Long tempId) {
+		this.tempId = tempId;
+	}
 
 	/**
 	 * @return the planMasterList
