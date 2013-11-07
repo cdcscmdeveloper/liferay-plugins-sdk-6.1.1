@@ -1,0 +1,160 @@
+<ui:composition
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:c="http://java.sun.com/jsp/jstl/core">
+
+
+		<f:event listener="#{sdoReviewBackingBean.viewSupportingDocument}"
+			type="preRenderView"></f:event>
+		<p:panel>
+			<p>NOTE : The supplier has submitted the documents</p>
+			<p>
+				<b>Online</b> - You may download and review the documents
+			</p>
+			<p>
+				<b>Offline</b> - You will receive a hard copy of all the below
+				documents via post
+			</p>
+		</p:panel>
+
+		<p:panel header="Maklumat Asas Syarikat" toggleable="true">
+			<table>
+				<tr>
+					<td>Status Bayaran</td>
+					<td>:</td>
+					<td>Belum Bayar</td>
+				</tr>
+				<tr>
+					<td>Supplier Name</td>
+					<td>:</td>
+					<td>#{sdoReviewBackingBean.managedBean.smAppl.smSupplier.supplierName}</td>
+				</tr>
+				<tr>
+					<td>Jenis Pendaftaran</td>
+					<td>:</td>
+					<td>#{sdoReviewBackingBean.managedBean.smAppl.smSupplier.businessType}"</td>
+				</tr>
+				<tr>
+					<td>No. ROC/ROBROS</td>
+					<td>:</td>
+					<td>#{sdoReviewBackingBean.managedBean.smAppl.smSupplier.regNo}</td>
+				</tr>
+				<tr>
+					<td>No. Rujukan Cukai Pendapatan</td>
+					<td>:</td>
+					<td>#{sdoReviewBackingBean.managedBean.smAppl.smSupplier.incomeTaxNo}</td>
+				</tr>
+				<tr>
+					<td>Tarikh Penubuhan</td>
+					<td>:</td>
+					<td>#{sdoReviewBackingBean.managedBean.smAppl.smSupplier.establishDate}</td>
+				</tr>
+				<tr>
+					<td>Jumlah Staf Syarikat</td>
+					<td>:</td>
+					<td>Bumiputera   3orang<br />Bukan Bumiputera   3orang" /><br />Bukan Warganegara Malaysia   3orang</td>
+				</tr>
+				<tr>
+					<td>Pendapatan Tahunan</td>
+					<td>:</td>
+					<td>a</td>
+				</tr>
+			</table>
+			<p:separator />
+			<table>
+				<tr>
+					<td>Alamat</td>
+					<td>:</td>
+					<td>a</td>
+				</tr>
+				<tr>
+					<td>Poskod</td>
+					<td>:</td>
+					<td>a</td>
+				</tr>
+				<tr>
+					<td>Bandar</td>
+					<td>:</td>
+					<td>a</td>
+				</tr>
+				<tr>
+					<td>Negeri</td>
+					<td>:</td>
+					<td>a</td>
+				</tr>
+				<tr>
+					<td>Daerah</td>
+					<td>:</td>
+					<td>a</td>
+				</tr>
+				<tr>
+					<td>Negara</td>
+					<td>:</td>
+					<td>a</td>
+				</tr>
+				<tr>
+					<td>No. Telefon</td>
+					<td>:</td>
+					<td>a</td>
+				</tr>
+				<tr>
+					<td>No. Faks</td>
+					<td>:</td>
+					<td>a</td>
+				</tr>
+				<tr>
+					<td>Laman Web</td>
+					<td>:</td>
+					<td>a</td>
+				</tr>
+			</table>
+			<p:separator />
+			<table>
+				<tr>
+					<td>Contact Person</td>
+					<td>:</td>
+					<td>KU MOHD KAMAL BIN KU SHAARI</td>
+				</tr>
+				<tr>
+					<td>Jawatan</td>
+					<td>:</td>
+					<td>MANAGER</td>
+				</tr>
+				<tr>
+					<td>No. Telefon</td>
+					<td>:</td>
+					<td>+6012-4013352</td>
+				</tr>
+
+				<tr>
+					<td>Alamat Emel</td>
+					<td>:</td>
+					<td>mantoyz@hotmail.com</td>
+				</tr>
+			</table>
+		</p:panel>
+
+
+		<c:if
+			test="#{sdoReviewBackingBean.managedBean.smAppl.supportingDocMode == 'H'}">
+			<ui:include
+				src="/xhtml/sm/shared/mofSdoSharedPages/offlineSupportingDocsForm.xhtml" />
+		</c:if>
+		<c:if
+			test="#{sdoReviewBackingBean.managedBean.smAppl.supportingDocMode == 'S'}">
+			<ui:include
+				src="/xhtml/sm/shared/mofSdoSharedPages/onlineSupportingDocsForm.xhtml" />
+		</c:if>
+
+		<div align="right">
+			<ui:repeat value="#{sdoReviewBackingBean.managedBean.bpmAction}" var="item">
+				<p:commandButton
+					action="#{sdoReviewBackingBean.submitSDOReviewAction(item)}"
+					value="#{item}" />
+			</ui:repeat>
+
+		</div>
+</ui:composition>

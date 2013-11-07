@@ -4,71 +4,60 @@
 	xmlns:ui="http://java.sun.com/jsf/facelets"
 	xmlns:p="http://primefaces.org/ui"
 	xmlns:c="http://java.sun.com/jsp/jstl/core">
-	<p:panel header="Business Registration Information">
+
+	<!-- <p:panel header="Business Registration Information">
 		<table class="test">
 			<tr>
-				<td id="tdTitle"><h:outputLabel
+				<td><p:outputLabel
 						value="#{lbl['lbl.sm.businessregno']}" /></td>
-				<td id="tdContent"><h:inputText /></td>
-			</tr>
-			<tr>
-				<td id="tdTitle"><h:outputLabel
+				<td><p:inputText
+						value="#{registrationBackingBean.managedBean.smSupp.regNo}" /></td>
+
+				<td><p:outputLabel
 						value="#{lbl['lbl.sm.ownername']}" /></td>
-				<td id="tdContent"><h:inputText /></td>
-			</tr>
-
-			<tr>
-				<td id="tdTitle"><h:outputLabel
-						value="#{lbl['lbl.sm.companyaddress']}" /></td>
-				<td id="tdContent"><h:inputText size="50" colspan="3" /></td>
-			</tr>
-
-			<tr>
-				<td id="tdTitle"></td>
-				<td id="tdContent"><h:inputText size="50" colspan="3" /></td>
-			</tr>
-			<tr>
-				<td id="tdTitle"></td>
-				<td id="tdContent"><h:inputText size="50" colspan="3" /></td>
-			</tr>
-			<tr>
-				<td id="tdTitle"><h:outputLabel
-						value="#{lbl['lbl.sm.postcode']}" /></td>
-				<td id="tdContent"><h:inputText /></td>
-				<td id="tdTitle"><h:outputLabel value="#{lbl['lbl.sm.state']}" /></td>
-				<td id="tdContent"><h:inputText /></td>
-			</tr>
-
-			<tr>
-				<td id="tdTitle"><h:outputLabel
-						value="#{lbl['lbl.sm.district']}" /></td>
-				<td id="tdContent"><h:inputText /></td>
-				<td id="tdTitle"><h:outputLabel
-						value="#{lbl['lbl.sm.towncity']}" /></td>
-				<td id="tdContent"><h:inputText /></td>
+				<td><p:inputText value="#{registrationBackingBean.managedBean.smSuppOwner.identificationNo}" /></td>
 			</tr>
 		</table>
-	</p:panel>
+	</p:panel> -->
+	
+	<ui:include src="/xhtml/sm/shared/onlinereg/companyInfo.xhtml" />
+	<ui:include src="/xhtml/sm/shared/onlinereg/bankInfo.xhtml" />
 
-	<c:if test="#{registrationBackingBean.managedBean.businessType == 'PB'}">
-		<p:panel header="Professional Body Information">
-			<p:dataTable>
-				<p:column headerText="Professional Body">
-
+	<c:if
+		test="#{registrationBackingBean.managedBean.smSupp.businessType == 'P'}">
+		<p:panel header="Professional Body Information" id="pnlProfCert">
+			<p:dataTable var="suppCert"
+				value="#{registrationBackingBean.managedBean.smSupp.smSupplierCerts}">
+				<p:column headerText="Type of Certification">
+					<p:inputText value="#{suppCert.certType}" />
 				</p:column>
 
-				<p:column headerText="Registration No">
+				<p:column headerText="Certificate Name">
+					<p:inputText value="#{suppCert.certName}" />
+				</p:column>
 
+				<p:column headerText="Certification Body">
+					<p:inputText value="#{suppCert.certBody}" />
+				</p:column>
+
+				<p:column headerText="Start Date">
+					<p:calendar value="#{suppCert.certStartDate}" id="startDateId"
+						showOn="button" />
 				</p:column>
 
 				<p:column headerText="End Date">
-
+					<p:calendar value="#{suppCert.certEndDate}" id="endDateId"
+						showOn="button" />
 				</p:column>
 			</p:dataTable>
 
 			<div align="right">
-				<p:commandButton value="Add" />
-				<p:commandButton value="Remove" />
+				<p:commandButton value="Add"
+					action="#{registrationBackingBean.addProfessionalCert}"
+					update="pnlProfCert" />
+				<p:commandButton value="Remove"
+					action="#{registrationBackingBean.removeProfessionalCert}"
+					update="pnlProfCert" />
 			</div>
 		</p:panel>
 	</c:if>

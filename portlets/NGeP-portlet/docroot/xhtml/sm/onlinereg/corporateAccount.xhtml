@@ -7,37 +7,11 @@
 	xmlns:p="http://primefaces.org/ui"
 	xmlns:c="http://java.sun.com/jsp/jstl/core">
 
-
-	<ui:define name="resourceSection">
-		<style type="text/css">
-.test {
-	
-}
-
-table.test {
-	width: 100%;
-}
-
-.test td {
-	padding: 5px;
-}
-
-#tdContent {
-	text-align: left;
-}
-
-#tdTitle {
-	width: 20%;
-	text-align: right;
-}
-</style>
-
-	</ui:define>
 	<ui:define name="sideMenu">
 		<ui:include src="/xhtml/sm/shared/sidemenu/registrationSideMenu.xhtml" />
 	</ui:define>
 
-	<ui:define name="content">
+	<ui:define name="contentSection">
 		<h:outputLabel value="Corporate Information"
 			style="font-weight:bold;font-size:15px;" />
 		<ui:include src="/xhtml/sm/shared/onlinereg/companyInfo.xhtml" />

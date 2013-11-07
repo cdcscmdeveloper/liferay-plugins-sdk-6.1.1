@@ -5,50 +5,36 @@
 	xmlns:ui="http://java.sun.com/jsf/facelets"
 	xmlns:p="http://primefaces.org/ui"
 	xmlns:c="http://java.sun.com/jsp/jstl/core">
-
 	<p:panel header="Account Information">
-		<table class="test">
-			<tr>
-				<td id="tdTitle"><h:outputLabel
-						value="#{lbl['lbl.sm.regtype']}" /></td>
-				<td id="tdContent"><p:selectOneRadio
-						value="#{registrationBackingBean.managedBean.regType}">
-						<f:selectItem itemLabel="Register Online Account"
-							itemValue="Basic" />
-						<f:selectItem itemLabel="MOF Registeration" itemValue="MOF" />
-						<p:ajax event="change" update="@form" />
-					</p:selectOneRadio></td>
-			</tr>
-
-			<p:outputPanel
-				rendered="#{registrationBackingBean.managedBean.regType == 'MOF'}">
+		<table>
+			<c:if
+				test="#{registrationBackingBean.managedBean.smAppl.applType == 'N'}">
 				<tr>
-					<td id="tdTitle"><h:outputLabel
+					<td><p:outputLabel
 							value="#{lbl['lbl.sm.mofsuppliertype']}" /></td>
-					<td id="tdContent"><p:selectOneMenu
-							value="#{registrationBackingBean.managedBean.mofSuppType}">
+					<td><p:selectOneMenu
+							value="#{registrationBackingBean.managedBean.smAppl.supplierType}">
 							<f:selectItem itemLabel="Select" itemValue="" />
-							<f:selectItem itemLabel="Consultant" itemValue="Consultant" />
-							<f:selectItem itemLabel="Contractor" itemValue="Contractor" />
-							<p:ajax event="change" update="@form" />
+							<f:selectItem itemLabel="Contractor" itemValue="K" />
+							<f:selectItem itemLabel="Consultant" itemValue="P" />
+							<f:selectItem itemLabel="Government Seller" itemValue="G" />
 						</p:selectOneMenu></td>
 				</tr>
-			</p:outputPanel>
-
+			</c:if>
 			<tr>
-				<td id="tdTitle"><h:outputLabel
+				<td><p:outputLabel
 						value="#{lbl['lbl.sm.businesscomptype']}" /></td>
-				<td id="tdContent"><p:selectOneMenu id="somId"
-						value="#{registrationBackingBean.managedBean.businessType}">
+				<td><p:selectOneMenu id="somId"
+						value="#{registrationBackingBean.managedBean.smSupp.businessType}">
 						<f:selectItem itemLabel="Select" itemValue="" />
-						<f:selectItem itemLabel="ROB-Semenanjung" itemValue="ROB" />
-						<f:selectItem itemLabel="ROB-Sabah" itemValue="ROBSabah" />
-						<f:selectItem itemLabel="ROB-Sarawak" itemValue="ROBSarawak" />
-						<f:selectItem itemLabel="ROC" itemValue="ROC" />
-						<f:selectItem itemLabel="LLP" itemValue="LLP" />
-						<f:selectItem itemLabel="Individual" itemValue="Ind" />
-						<f:selectItem itemLabel="Society(ROS)" itemValue="ROS" />
-						<f:selectItem itemLabel="Professional Body" itemValue="PB" />
+						<f:selectItem itemLabel="ROB-Semenanjung" itemValue="G" />
+						<f:selectItem itemLabel="ROB-Sabah" itemValue="H" />
+						<f:selectItem itemLabel="ROB-Sarawak" itemValue="K" />
+						<f:selectItem itemLabel="ROC" itemValue="C" />
+						<f:selectItem itemLabel="LLP" itemValue="L" />
+						<f:selectItem itemLabel="Individual" itemValue="I" />
+						<f:selectItem itemLabel="Society(ROS)" itemValue="S" />
+						<f:selectItem itemLabel="Professional Body" itemValue="P" />
 						<p:ajax event="change" update="@form" />
 					</p:selectOneMenu></td>
 			</tr>

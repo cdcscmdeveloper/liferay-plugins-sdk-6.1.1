@@ -7,21 +7,22 @@
 	xmlns:p="http://primefaces.org/ui"
 	xmlns:c="http://java.sun.com/jsp/jstl/core">
 
-
 	<ui:define name="content">
-		<h:outputLabel value="Online Account"
-			style="font-weight:bold;font-size:15px;" />
-
 		<ui:include src="/xhtml/sm/shared/onlinereg/accountInfo.xhtml" />
 		<c:choose>
 			<c:when
-				test="${registrationBackingBean.managedBean.businessType == 'Ind'}">
+				test="${registrationBackingBean.managedBean.smSupp.businessType == 'I'}">
 				<ui:include src="/xhtml/sm/shared/onlinereg/individualregform.xhtml" />
 			</c:when>
 
 			<c:otherwise>
-				<ui:include src="/xhtml/sm/shared/onlinereg/companyInfo.xhtml" />
+				<ui:include src="/xhtml/sm/shared/onlinereg/corporateregform.xhtml" />
 			</c:otherwise>
 		</c:choose>
+
+		<div align="right">
+			<p:commandButton value="Save"
+				action="#{registrationBackingBean.updateOnlineAccount}" />
+		</div>
 	</ui:define>
 </ui:composition>

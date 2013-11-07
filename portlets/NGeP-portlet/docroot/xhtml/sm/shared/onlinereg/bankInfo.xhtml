@@ -1,4 +1,3 @@
-
 <ui:composition xmlns="http://www.w3.org/1999/xhtml"
 	xmlns:f="http://java.sun.com/jsf/core"
 	xmlns:h="http://java.sun.com/jsf/html"
@@ -8,17 +7,16 @@
 
 	<p:panel header="Bank Information">
 		<table class="test">
-
 			<tr>
-				<td id="tdTitle"><h:outputLabel
+				<td><p:outputLabel
 						value="#{lbl['lbl.sm.bankname']}" /></td>
-				<td id="tdContent"><p:selectOneMenu>
-						<f:selectItem itemLabel="Select" itemValue="0" />
+				<td><p:selectOneMenu value="#{registrationBackingBean.managedBean.smSuppBank.bankId}">
+						<f:selectItem itemLabel="Select" itemValue="" />
 						<f:selectItem itemLabel="CIMB" itemValue="1" />
 					</p:selectOneMenu></td>
-				<td id="tdTitle"><h:outputLabel
+				<td><p:outputLabel
 						value="#{lbl['lbl.sm.bankaccnumber']}" /></td>
-				<td id="tdContent"><h:inputText /></td>
+				<td><p:inputText value="#{registrationBackingBean.managedBean.smSuppBank.accountNo}"/></td>
 			</tr>
 		</table>
 	</p:panel>

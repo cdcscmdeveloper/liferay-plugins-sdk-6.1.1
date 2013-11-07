@@ -7,42 +7,18 @@
 	xmlns:p="http://primefaces.org/ui"
 	xmlns:c="http://java.sun.com/jsp/jstl/core">
 
-	<ui:define name="resourceSection">
-		<style type="text/css">
-.test {
-	
-}
-
-table.test {
-	width: 100%;
-}
-
-.test td {
-	padding: 5px;
-}
-
-#tdContent {
-	text-align: left;
-}
-
-#tdTitle {
-	width: 20%;
-	text-align: right;
-}
-</style>
-	</ui:define>
 	<ui:define name="sideMenu">
 		<ui:include src="/xhtml/sm/shared/sidemenu/registrationSideMenu.xhtml"></ui:include>
 	</ui:define>
 
-	<ui:define name="content">
+	<ui:define name="contentSection">
 		<h:outputLabel value="Sign Up New Account"
 			style="font-weight:bold;font-size:15px;" />
 		<ui:include src="/xhtml/sm/shared/onlinereg/accountInfo.xhtml" />
-
+		
 		<c:choose>
 			<c:when
-				test="${registrationBackingBean.managedBean.businessType == 'Ind'}">
+				test="${registrationBackingBean.managedBean.smSupp.businessType == 'I'}">
 				<ui:include src="/xhtml/sm/shared/onlinereg/individualregform.xhtml" />
 			</c:when>
 
@@ -53,7 +29,7 @@ table.test {
 
 		<div align="right">
 			<p:commandButton value="Next"
-				action="#{registrationBackingBean.proceedToCompanyInfo}" />
+				action="#{registrationBackingBean.proceedToFirstUserRegistration}" />
 		</div>
 	</ui:define>
 </ui:composition>
