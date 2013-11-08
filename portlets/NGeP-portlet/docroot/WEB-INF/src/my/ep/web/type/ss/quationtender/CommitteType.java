@@ -21,8 +21,8 @@ public enum CommitteType implements IEnumType{
 	QuotationCommittee("QC"),
 	ProcurementBoardA("PBA"),
 	ProcurementBoardB("PBB"),
-	MinistryofFinance("MOF") ;
-
+	MinistryofFinance("MOF"),
+	FCSceretary("FCS");
 	private String type;
 	
 	CommitteType(String committeType){

@@ -67,11 +67,18 @@ public class QTDetailManagedBean extends BaseManagedBean {
 	private String qtNumber;
 	
 	private List<SelectItem> procurementModeItems;
-	List<SelectItem> itemTypeList;
-	List<SelectItem> tenderTypeList;
-	List<SelectItem> lineItemList;
-	List<SelectItem> itemOriginList;
+	private List<SelectItem> itemTypeList;
+	private List<SelectItem> tenderTypeList;
+	private List<SelectItem> lineItemList;
+	private List<SelectItem> itemOriginList;
+	private List<SelectItem> minstryList;
+	private List<SelectItem> deptList;
+	private List<SelectItem> divisionList;
 	
+	
+	private String minstryCode;
+	private String deptCode;
+	private String divisionCode;
 	
 	private TreeNode root2;
 	private TreeNode root3;
@@ -397,6 +404,66 @@ public class QTDetailManagedBean extends BaseManagedBean {
 
 	public void setPanelSuppliers(List<CtPanelSupplier> panelSuppliers) {
 		this.panelSuppliers = panelSuppliers;
+	}
+
+
+	public List<SelectItem> getMinstryList() {
+		return minstryList;
+	}
+
+
+	public void setMinstryList(List<SelectItem> minstryList) {
+		this.minstryList = minstryList;
+	}
+
+
+	public String getMinstryCode() {
+		return minstryCode;
+	}
+
+
+	public void setMinstryCode(String minstryCode) {
+		this.minstryCode = minstryCode;
+	}
+
+
+	public List<SelectItem> getDeptList() {
+		return deptList;
+	}
+
+
+	public void setDeptList(List<SelectItem> deptList) {
+		this.deptList = deptList;
+	}
+
+
+	public List<SelectItem> getDivisionList() {
+		return divisionList;
+	}
+
+
+	public void setDivisionList(List<SelectItem> divisionList) {
+		this.divisionList = divisionList;
+	}
+
+
+	public String getDeptCode() {
+		return deptCode;
+	}
+
+
+	public void setDeptCode(String deptCode) {
+		this.deptCode = deptCode;
+	}
+
+
+	public String getDivisionCode() {
+		return divisionCode;
+	}
+
+
+	public void setDivisionCode(String divisionCode) {
+		this.divisionCode = divisionCode;
 	}
 
 

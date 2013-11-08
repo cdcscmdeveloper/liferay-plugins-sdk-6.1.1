@@ -17,5 +17,10 @@ public interface QTConstants {
 	public static final String STATUS="";
 	
 	public static final String MAINTANANCE_PAGE="quatationtendercreation";
+	
+	public static final String CREATE_COMMITTE = "committeemaintanancepage";
+	
+	public static final String PM_MODULE="pm";
+	public static final String SS_MODULE="ss";
 
 }

@@ -25,27 +25,17 @@ import my.ep.biz.service.pm.common.status.IStatusSO;
 import my.ep.biz.service.ss.quationtender.IQTDetailSO;
 import my.ep.dto.pm.authorization.orgprofile.OrgProfileReqDTO;
 import my.ep.dto.pm.authorization.orgprofile.OrgProfileResDTO;
-import my.ep.dto.pm.common.categorys.CategorysReqDTO;
-import my.ep.dto.pm.common.categorys.CategorysResDTO;
-import my.ep.dto.pm.common.district.DistrictReqDTO;
-import my.ep.dto.pm.common.district.DistrictResDTO;
 import my.ep.dto.pm.common.object.ObjectReqDTO;
 import my.ep.dto.pm.common.object.ObjectResDTO;
-import my.ep.dto.pm.common.state.StateReqDTO;
-import my.ep.dto.pm.common.state.StateResDTO;
 import my.ep.dto.pm.common.status.StatusReqDTO;
 import my.ep.dto.pm.common.status.StatusResDTO;
 import my.ep.dto.ss.quationtender.QuationTenderReqDTO;
 import my.ep.dto.ss.quationtender.QuationTenderResDTO;
 import my.ep.factory.EpLogger;
 import my.ep.persistence.entity.pm.authorization.PmOrgProfile;
-import my.ep.persistence.entity.pm.common.PmCategoryL1;
-import my.ep.persistence.entity.pm.common.PmCategoryL2;
-import my.ep.persistence.entity.pm.common.PmCategoryL3;
 import my.ep.persistence.entity.pm.common.PmDo;
 import my.ep.persistence.entity.pm.common.PmGo;
 import my.ep.persistence.entity.pm.common.PmSo;
-import my.ep.persistence.entity.pm.common.PmState;
 import my.ep.persistence.entity.pm.common.PmStatus;
 import my.ep.persistence.entity.ss.quationtender.ScQt;
 import my.ep.persistence.entity.ss.quationtender.ScQtApproval;
@@ -59,6 +49,8 @@ import my.ep.persistence.entity.ss.quationtender.ScQtRemark;
 import my.ep.persistence.entity.ss.quationtender.ScQtSupplier;
 import my.ep.type.aut.SearchCondition;
 import my.ep.type.aut.SearchOperator;
+import my.ep.type.pm.OrganizationType;
+import my.ep.util.lookupservice.EpEjbBusinessDelegate;
 import my.ep.web.backingbean.BaseBackingBean;
 import my.ep.web.managedbean.ss.quationtender.QTDetailManagedBean;
 import my.ep.web.ss.quationtender.common.QTConstants;
@@ -77,7 +69,7 @@ import org.apache.log4j.Logger;
 
 @ManagedBean(name = "qTDetailBB")
 @RequestScoped
-public class QTDetailBackingBean extends BaseBackingBean<QTDetailManagedBean> {
+public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManagedBean> {
 
 	private static final Logger log = EpLogger
 			.getLogger(QTDetailBackingBean.class);
@@ -93,8 +85,32 @@ public class QTDetailBackingBean extends BaseBackingBean<QTDetailManagedBean> {
 
 	public QTDetailBackingBean() {
 
-		log.info("inside constructor");
+		IQTDetailSO detailSO = BusinessDelegate.getInstance().getServiceObject(
+				MODULE_NAME, IQTDetailSO.class);
 
+		ICategorysSO categorysSO = BusinessDelegate.getInstance()
+				.getServiceObject("pm", ICategorysSO.class);
+
+		IStateSO stateSO = BusinessDelegate.getInstance().getServiceObject(
+				"pm", IStateSO.class);
+		IDistrictSO districtSO = BusinessDelegate.getInstance()
+				.getServiceObject("pm", IDistrictSO.class);
+
+		IOrgProfileSO orgUnitSO = BusinessDelegate.getInstance()
+				.getServiceObject("pm", IOrgProfileSO.class);
+
+		IStatusSO statusSO = BusinessDelegate.getInstance().getServiceObject(
+				"pm", IStatusSO.class);
+
+		this.detailSO = detailSO;
+
+		this.categorysSO = categorysSO;
+		this.stateSo = stateSO;
+		this.districtSO = districtSO;
+		this.orgUnitSO = orgUnitSO;
+		this.statusSO = statusSO;
+		log.info("inside constructor");
+		retriveQtDetails();
 	}
 
 	/**
@@ -114,31 +130,6 @@ public class QTDetailBackingBean extends BaseBackingBean<QTDetailManagedBean> {
 		populateResponseRule();
 		populateItemOrigin();
 
-		IQTDetailSO detailSO = BusinessDelegate.getInstance().getServiceObject(
-				MODULE_NAME, IQTDetailSO.class);
-		IObjectSO objectSO = BusinessDelegate.getInstance().getServiceObject(
-				"pm", IObjectSO.class);
-		ICategorysSO categorysSO = BusinessDelegate.getInstance()
-				.getServiceObject("pm", ICategorysSO.class);
-
-		IStateSO stateSO = BusinessDelegate.getInstance().getServiceObject(
-				"pm", IStateSO.class);
-		IDistrictSO districtSO = BusinessDelegate.getInstance()
-				.getServiceObject("pm", IDistrictSO.class);
-
-		IOrgProfileSO orgUnitSO = BusinessDelegate.getInstance().getServiceObject(
-				"pm", IOrgProfileSO.class);
-
-		IStatusSO statusSO = BusinessDelegate.getInstance().getServiceObject(
-				"pm", IStatusSO.class);
-
-		this.detailSO = detailSO;
-		this.objectSO = objectSO;
-		this.categorysSO = categorysSO;
-		this.stateSo = stateSO;
-		this.districtSO = districtSO;
-		this.orgUnitSO = orgUnitSO;
-		this.statusSO = statusSO;
 		log.info("successfully look up the so object" + detailSO);
 	}
 
@@ -149,13 +140,31 @@ public class QTDetailBackingBean extends BaseBackingBean<QTDetailManagedBean> {
 		List<PmGo> goList = this.getManagedBean().getGoList();
 		// Make a SO call only once to get the data if it is empty other wise
 		// skip the so call
-		if (goList == null || goList.isEmpty()) {
-			ObjectResDTO resDTO = objectSO.retrieveGOList();
-			this.getManagedBean().setGoList(resDTO.getPmGoList());
+		try {
+			QuationTenderResDTO resDto = detailSO
+					.retriveQTDetails(new QuationTenderReqDTO());
+			if (goList == null || goList.isEmpty()) {
+
+				this.getManagedBean().setGoList(resDto.getGoList());
+			}
+
+			List<PmOrgProfile> minstryList = resDto.getMinistryList();
+			prepareMinistryList(minstryList);
+		} catch (Exception ex) {
+
 		}
 	}
 
-	
+	private void prepareMinistryList(List<PmOrgProfile> orgProfile) {
+		List<SelectItem> minstryList = new ArrayList<SelectItem>();
+		minstryList.add(new SelectItem("", "Select One"));
+		for (PmOrgProfile pmOrgProfile : orgProfile) {
+			minstryList.add(new SelectItem(pmOrgProfile.getOrgProfileId()
+					.toString(), pmOrgProfile.getOrgCode()));
+		}
+
+		this.getManagedBean().setMinstryList(minstryList);
+	}
 
 	/*
 	 * To add empty row to gosodo table
@@ -181,13 +190,13 @@ public class QTDetailBackingBean extends BaseBackingBean<QTDetailManagedBean> {
 	public void deleteGoSoDoItem(ValueChangeEvent changeEvent) {
 		ScQtGosodoBudget gosodoBudget = (ScQtGosodoBudget) changeEvent
 				.getNewValue();
+		
 		List<ScQtGosodoBudget> gosodos = this.getManagedBean().getGosodos();
 		if (gosodos.contains(gosodoBudget)) {
 			gosodos.remove(gosodoBudget);
 		}
 	}
 
-	
 	/*
 	 * Onchange of gos to fetch the so's list
 	 */
@@ -224,9 +233,6 @@ public class QTDetailBackingBean extends BaseBackingBean<QTDetailManagedBean> {
 		log.info("end  of handle go change method");
 	}
 
-
-
-	
 	/**
 	 * Method to save the QT details
 	 */
@@ -252,41 +258,44 @@ public class QTDetailBackingBean extends BaseBackingBean<QTDetailManagedBean> {
 	 */
 	public void searchQT() {
 
-		System.out.println("inside search******************");
-		List<ScQt> qtList = this.getManagedBean().getQtList();
+		try {
+			List<ScQt> searchQt = getSearchQTs();
 
-		if (!qtList.isEmpty()) {
-			qtList.clear();
-		}
-		List<ScQt> searchQt = getSearchQTs();
-
-		if (searchQt != null && !searchQt.isEmpty()) {
-			this.getManagedBean().getQtList().addAll(searchQt);
+			if (searchQt != null && !searchQt.isEmpty()) {
+				this.getManagedBean().getQtList().addAll(searchQt);
+			}
+		} catch (Exception ex) {
+			ex.printStackTrace();
 		}
 	}
 
 	/**
 	 * Method for clone search qts
 	 */
-	
-	public void cloneSearchQt() {
 
-		
-		List<ScQt> cloneSearchQt = getSearchQTs();
-		if (cloneSearchQt != null && !cloneSearchQt.isEmpty()) {
-			this.getManagedBean().getCloneTenderList().addAll(cloneSearchQt);
+	public void cloneSearchQt() {
+		try {
+			List<ScQt> cloneSearchQt = getSearchQTs();
+			if (cloneSearchQt != null && !cloneSearchQt.isEmpty()) {
+				
+				this.getManagedBean().getCloneTenderList()
+						.addAll(cloneSearchQt);
+			}
+		} catch (Exception ex) {
+			ex.printStackTrace();
 		}
 	}
+
 	/**
 	 * To clear the clone search result for next time
 	 */
-	public void clearCloneQT(){
+	public void clearCloneQT() {
 		System.out.println("inside clear cloneQT-------------------");
 		List<ScQt> cloneQtList = this.getManagedBean().getCloneTenderList();
 		if (!cloneQtList.isEmpty()) {
 			this.getManagedBean().getCloneTenderList().clear();
 		}
-		
+
 	}
 
 	private void populateTenderType() {
@@ -378,7 +387,13 @@ public class QTDetailBackingBean extends BaseBackingBean<QTDetailManagedBean> {
 		scQt.setCreatedDate(new Timestamp(System.currentTimeMillis()));
 		// TODO need to get the org profile id by user id and need to set
 		OrgProfileReqDTO orgUnitReqDTO = new OrgProfileReqDTO();
-		orgUnitReqDTO.setOrgProfileId(new Long(1));
+		String divisonCode = getManagedBean().getDivisionCode();
+		Long profileId = -1l;
+		if (divisonCode != null && !"".equals(divisonCode)) {
+			profileId = new Long(divisonCode);
+			orgUnitReqDTO.setOrgProfileId(profileId);
+		}
+
 		OrgProfileResDTO unitResDTO = orgUnitSO
 				.retrieveOrgProfileByProfileId(orgUnitReqDTO);
 		PmOrgProfile orgProfile = unitResDTO.getPmOrgProfile();
@@ -443,7 +458,7 @@ public class QTDetailBackingBean extends BaseBackingBean<QTDetailManagedBean> {
 
 		QuationTenderReqDTO reqDTO = new QuationTenderReqDTO();
 		ScQt qt = getManagedBean().getQt();
-		
+
 		if (qt != null) {
 
 			SearchBean<ScQt> qtSearchBean = new SearchBean<ScQt>();
@@ -527,6 +542,68 @@ public class QTDetailBackingBean extends BaseBackingBean<QTDetailManagedBean> {
 		}
 
 		return dto.getQtResultBean().getResultList();
+	}
+
+	public void fetchDepartements() {
+		System.out.println("**************inside fetchDepartments"
+				+ getManagedBean().getMinstryCode());
+		String minstrycode = getManagedBean().getMinstryCode();
+		if (null == minstrycode || "".equals(minstrycode)) {
+			throw new IllegalArgumentException();
+		} else {
+			Long parentId = new Long(minstrycode);
+
+			OrgProfileReqDTO reqDTO = new OrgProfileReqDTO();
+			reqDTO.setOrgType(OrganizationType.DEPARTMENT.value());
+			reqDTO.setParentOrgProfileId(parentId);
+			IOrgProfileSO orgProfileSO = EpEjbBusinessDelegate.getInstance()
+					.getServiceObject("pm", IOrgProfileSO.class);
+			OrgProfileResDTO resDTO = orgProfileSO
+					.retrieveOrgProfileListByOrgType(reqDTO);
+
+			prepareDeptList(resDTO.getOrgProfileList());
+		}
+	}
+
+	private void prepareDeptList(List<PmOrgProfile> orgprofiles) {
+		List<SelectItem> deptcodes = new ArrayList<SelectItem>();
+		deptcodes.add(new SelectItem("", "Select One"));
+		for (PmOrgProfile pmOrgProfile : orgprofiles) {
+			deptcodes.add(new SelectItem(pmOrgProfile.getOrgProfileId()
+					.toString(), pmOrgProfile.getOrgCode()));
+		}
+		this.getManagedBean().setDeptList(deptcodes);
+	}
+
+	public void fetchDivisions() {
+		System.out.println("**************inside fetchDepartments"
+				+ getManagedBean().getMinstryCode());
+		String minstrycode = getManagedBean().getDeptCode();
+		if (null == minstrycode || "".equals(minstrycode)) {
+			throw new IllegalArgumentException();
+		} else {
+			Long parentId = new Long(minstrycode);
+
+			OrgProfileReqDTO reqDTO = new OrgProfileReqDTO();
+			reqDTO.setOrgType(OrganizationType.DIVISION.value());
+			reqDTO.setParentOrgProfileId(parentId);
+			IOrgProfileSO orgProfileSO = EpEjbBusinessDelegate.getInstance()
+					.getServiceObject("pm", IOrgProfileSO.class);
+			OrgProfileResDTO resDTO = orgProfileSO
+					.retrieveOrgProfileListByOrgType(reqDTO);
+
+			preparedDivisions(resDTO.getOrgProfileList());
+		}
+	}
+
+	private void preparedDivisions(List<PmOrgProfile> orgprofiles) {
+		List<SelectItem> devisions = new ArrayList<SelectItem>();
+		devisions.add(new SelectItem("", "Select One"));
+		for (PmOrgProfile pmOrgProfile : orgprofiles) {
+			devisions.add(new SelectItem(pmOrgProfile.getOrgProfileId()
+					.toString(), pmOrgProfile.getOrgCode()));
+		}
+		this.getManagedBean().setDivisionList(devisions);
 	}
 
 }

@@ -14,6 +14,7 @@ import javax.faces.model.SelectItem;
 import my.ep.factory.EpLogger;
 import my.ep.persistence.entity.ss.quationtender.ScCommittee;
 import my.ep.persistence.entity.ss.quationtender.ScCommitteeMember;
+import my.ep.persistence.entity.ss.quationtender.ScQt;
 import my.ep.persistence.entity.ss.quationtender.ScQtCommittee;
 import my.ep.web.managedbean.BaseManagedBean;
 
@@ -68,12 +69,22 @@ public class CommitteManagedBean extends BaseManagedBean {
 	
 	private List<SelectItem> idTypes;
 	
+	private List<SelectItem> approvers;
+	
+	private String approverId;
+	
+	private List<SelectItem> govUsers;
+	
+	private List<SelectItem> externalUsers;
+	
+	private String tenderNum;
+	private List<ScQt> scQt;
+	
 	//Search properties
 	
-	private String committeNo;
+	private String committeNo=null;
 	
-	private String qtNo;
-	
+	private String qtNo=null;	
 		
 	private Date createdDt;
 	
@@ -256,15 +267,6 @@ public class CommitteManagedBean extends BaseManagedBean {
 	}
 
 
-	public String getCommitteNo() {
-		return committeNo;
-	}
-
-
-	public void setCommitteNo(String committeNo) {
-		this.committeNo = committeNo;
-	}
-
 
 	public String getQtNo() {
 		return qtNo;
@@ -294,6 +296,76 @@ public class CommitteManagedBean extends BaseManagedBean {
 	public void setStatus(String status) {
 		this.status = status;
 	}
+
+	public List<SelectItem> getApprovers() {
+		return approvers;
+	}
+
+
+	public void setApprovers(List<SelectItem> approvers) {
+		this.approvers = approvers;
+	}
+
+
+	public String getApproverId() {
+		return approverId;
+	}
+
+
+	public void setApproverId(String approverId) {
+		this.approverId = approverId;
+	}
+
+
+	public List<SelectItem> getGovUsers() {
+		return govUsers;
+	}
+
+
+	public void setGovUsers(List<SelectItem> govUsers) {
+		this.govUsers = govUsers;
+	}
+
+
+	public List<SelectItem> getExternalUsers() {
+		return externalUsers;
+	}
+
+
+	public void setExternalUsers(List<SelectItem> externalUsers) {
+		this.externalUsers = externalUsers;
+	}
+
+
+	public String getCommitteNo() {
+		return committeNo;
+	}
+
+
+	public void setCommitteNo(String committeNo) {
+		this.committeNo = committeNo;
+	}
+
+
+	public String getTenderNum() {
+		return tenderNum;
+	}
+
+
+	public void setTenderNum(String tenderNum) {
+		this.tenderNum = tenderNum;
+	}
+
+
+	public List<ScQt> getScQt() {
+		return scQt;
+	}
+
+
+	public void setScQt(List<ScQt> scQt) {
+		this.scQt = scQt;
+	}
+
 
 
 }
