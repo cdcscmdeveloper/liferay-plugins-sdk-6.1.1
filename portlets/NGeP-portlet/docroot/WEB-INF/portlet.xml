@@ -69,6 +69,38 @@
 			<role-name>user</role-name>
 		</security-role-ref>
 	</portlet>
+	
+	<portlet>
+		<portlet-name>associate</portlet-name>
+		<display-name>Project Association</display-name>
+		<portlet-class>org.portletfaces.bridge.GenericFacesPortlet</portlet-class>
+		<init-param>
+			<name>javax.portlet.faces.defaultViewId.view</name>
+			<value>/xhtml/ct/fulfilmentdetails/association/projectAssociation.xhtml</value>
+		</init-param>
+		<expiration-cache>0</expiration-cache>
+		<supports>
+			<mime-type>text/html</mime-type>
+			<portlet-mode>view</portlet-mode>
+		</supports>
+		<portlet-info>
+			<title>Project Association</title>
+			<short-title>NewJSFPortlet</short-title>
+			<keywords></keywords>
+		</portlet-info>
+		<security-role-ref>
+			<role-name>administrator</role-name>
+		</security-role-ref>
+		<security-role-ref>
+			<role-name>guest</role-name>
+		</security-role-ref>
+		<security-role-ref>
+			<role-name>power-user</role-name>
+		</security-role-ref>
+		<security-role-ref>
+			<role-name>user</role-name>
+		</security-role-ref>
+	</portlet>
 
 	<portlet>
 		<portlet-name>fd</portlet-name>
@@ -236,7 +268,7 @@
 		<portlet-class>org.portletfaces.bridge.GenericFacesPortlet</portlet-class>
 		<init-param>
 			<name>javax.portlet.faces.defaultViewId.view</name>
-			<value>/xhtml/ct/agreement/fulfilmentDetails.xhtml</value>
+			<value>/xhtml/ct/agreement/shared/sidemenu/agreementTab.xhtml</value>
 		</init-param>
 		<expiration-cache>0</expiration-cache>
 		<supports>
@@ -268,7 +300,7 @@
 		<portlet-class>org.portletfaces.bridge.GenericFacesPortlet</portlet-class>
 		<init-param>
 			<name>javax.portlet.faces.defaultViewId.view</name>
-			<value>/xhtml/ct/agreement/fulfilmentDetails.xhtml</value>
+			<value>/xhtml/ct/agreement/shared/sidemenu/agreementSupTab.xhtml</value>
 		</init-param>
 		<expiration-cache>0</expiration-cache>
 		<supports>
@@ -327,40 +359,8 @@
 	</portlet>
 
 	<portlet>
-		<portlet-name>pbTermination</portlet-name>
-		<display-name>Review Termination</display-name>
-		<portlet-class>org.portletfaces.bridge.GenericFacesPortlet</portlet-class>
-		<init-param>
-			<name>javax.portlet.faces.defaultViewId.view</name>
-			<value>/xhtml/ct/pbqcc/review/termination/pbtermination.xhtml</value>
-		</init-param>
-		<expiration-cache>0</expiration-cache>
-		<supports>
-			<mime-type>text/html</mime-type>
-			<portlet-mode>view</portlet-mode>
-		</supports>
-		<portlet-info>
-			<title>Review Termination</title>
-			<short-title>NewJSFPortlet</short-title>
-			<keywords></keywords>
-		</portlet-info>
-		<security-role-ref>
-			<role-name>administrator</role-name>
-		</security-role-ref>
-		<security-role-ref>
-			<role-name>guest</role-name>
-		</security-role-ref>
-		<security-role-ref>
-			<role-name>power-user</role-name>
-		</security-role-ref>
-		<security-role-ref>
-			<role-name>user</role-name>
-		</security-role-ref>
-	</portlet>
-
-	<portlet>
 		<portlet-name>pbReview</portlet-name>
-		<display-name>Review Fulfilment</display-name>
+		<display-name>BPK Review Fulfilment</display-name>
 		<portlet-class>org.portletfaces.bridge.GenericFacesPortlet</portlet-class>
 		<init-param>
 			<name>javax.portlet.faces.defaultViewId.view</name>
@@ -392,7 +392,7 @@
 
 	<portlet>
 		<portlet-name>bpkReview</portlet-name>
-		<display-name>Review Fulfilment</display-name>
+		<display-name> PB/QCC Review Fulfilment</display-name>
 		<portlet-class>org.portletfaces.bridge.GenericFacesPortlet</portlet-class>
 		<init-param>
 			<name>javax.portlet.faces.defaultViewId.view</name>
@@ -422,37 +422,6 @@
 		</security-role-ref>
 	</portlet>
 
-	<portlet>
-		<portlet-name>bpkTermination</portlet-name>
-		<display-name>Review Termination</display-name>
-		<portlet-class>org.portletfaces.bridge.GenericFacesPortlet</portlet-class>
-		<init-param>
-			<name>javax.portlet.faces.defaultViewId.view</name>
-			<value>/xhtml/ct/pbqcc/review/termination/bpktermination.xhtml</value>
-		</init-param>
-		<expiration-cache>0</expiration-cache>
-		<supports>
-			<mime-type>text/html</mime-type>
-			<portlet-mode>view</portlet-mode>
-		</supports>
-		<portlet-info>
-			<title>Review Termination</title>
-			<short-title>NewJSFPortlet</short-title>
-			<keywords></keywords>
-		</portlet-info>
-		<security-role-ref>
-			<role-name>administrator</role-name>
-		</security-role-ref>
-		<security-role-ref>
-			<role-name>guest</role-name>
-		</security-role-ref>
-		<security-role-ref>
-			<role-name>power-user</role-name>
-		</security-role-ref>
-		<security-role-ref>
-			<role-name>user</role-name>
-		</security-role-ref>
-	</portlet>
 	<!-- Procurement Plan - START -->
 	<portlet>
 		<portlet-name>ppBudget</portlet-name>

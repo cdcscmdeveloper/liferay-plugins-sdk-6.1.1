@@ -6,6 +6,7 @@
 			<category name="category.ep.fd">
 				<portlet id="search"></portlet>
 				<portlet id="fd"></portlet>
+				<portlet id="associate"></portlet>
 			</category>
 			<category name="category.ep.cr">
 				<category name="category.ep.cr.pc">
@@ -25,11 +26,9 @@
 				<portlet id="supplierSearch"></portlet>
 			</category>
 			<category name="category.ep.pb">
-				<portlet id="pbTermination"></portlet>
 				<portlet id="pbReview"></portlet>
 			</category>
 			<category name="category.ep.bpk">
-				<portlet id="bpkTermination"></portlet>
 				<portlet id="bpkReview"></portlet>
 			</category>
 			<category name="category.ep.tpl">

@@ -6,16 +6,25 @@
 		<portlet-name>ctTemplate</portlet-name>
 		<icon>/icon.png</icon>
 		<instanceable>false</instanceable>
-		<header-portlet-css>/css/ep/ct.css</header-portlet-css>
-		<footer-portlet-javascript>/js/main.js</footer-portlet-javascript>
+		<ajaxable>false</ajaxable>
+		<header-portlet-css>/css/ep/main.css</header-portlet-css>
 		<css-class-wrapper>ct-portlet</css-class-wrapper>
 	</portlet>
+	<portlet>
+		<portlet-name>associate</portlet-name>
+		<icon>/icon.png</icon>
+		<instanceable>false</instanceable>
+		<ajaxable>false</ajaxable>
+		<header-portlet-css>/css/ep/main.css</header-portlet-css>
+		<css-class-wrapper>ct-portlet</css-class-wrapper>
+	</portlet>
+	
 	<portlet>
 		<portlet-name>search</portlet-name>
 		<icon>/icon.png</icon>
 		<instanceable>false</instanceable>
-		<header-portlet-css>/css/ep/ct.css</header-portlet-css>
-		<footer-portlet-javascript>/js/main.js</footer-portlet-javascript>
+		<ajaxable>false</ajaxable>
+		<header-portlet-css>/css/ep/main.css</header-portlet-css>
 		<css-class-wrapper>ct-portlet</css-class-wrapper>
 	</portlet>
 
@@ -23,17 +32,17 @@
 		<portlet-name>fd</portlet-name>
 		<icon>/icon.png</icon>
 		<instanceable>false</instanceable>
-		<header-portlet-css>/css/ep/ct.css</header-portlet-css>
-		<footer-portlet-javascript>/js/main.js</footer-portlet-javascript>
+		<ajaxable>false</ajaxable>
+		<header-portlet-css>/css/ep/main.css</header-portlet-css>
 		<css-class-wrapper>ct-portlet</css-class-wrapper>
 	</portlet>
 
 	<portlet>
 		<portlet-name>pc</portlet-name>
-		<icon>/icon.png</icon>
+	<icon>/icon.png</icon>
 		<instanceable>false</instanceable>
-		<header-portlet-css>/css/ep/ct.css</header-portlet-css>
-		<footer-portlet-javascript>/js/main.js</footer-portlet-javascript>
+		<ajaxable>false</ajaxable>
+		<header-portlet-css>/css/ep/main.css</header-portlet-css>
 		<css-class-wrapper>ct-portlet</css-class-wrapper>
 	</portlet>
 
@@ -41,16 +50,16 @@
 		<portlet-name>pcSearch</portlet-name>
 		<icon>/icon.png</icon>
 		<instanceable>false</instanceable>
-		<header-portlet-css>/css/ep/ct.css</header-portlet-css>
-		<footer-portlet-javascript>/js/main.js</footer-portlet-javascript>
+		<ajaxable>false</ajaxable>
+		<header-portlet-css>/css/ep/main.css</header-portlet-css>
 		<css-class-wrapper>ct-portlet</css-class-wrapper>
 	</portlet>
 	<portlet>
 		<portlet-name>bpkTermination</portlet-name>
 		<icon>/icon.png</icon>
 		<instanceable>false</instanceable>
-		<header-portlet-css>/css/ep/ct.css</header-portlet-css>
-		<footer-portlet-javascript>/js/main.js</footer-portlet-javascript>
+		<ajaxable>false</ajaxable>
+		<header-portlet-css>/css/ep/main.css</header-portlet-css>
 		<css-class-wrapper>ct-portlet</css-class-wrapper>
 	</portlet>
 
@@ -58,8 +67,8 @@
 		<portlet-name>pbTermination</portlet-name>
 		<icon>/icon.png</icon>
 		<instanceable>false</instanceable>
-		<header-portlet-css>/css/ep/ct.css</header-portlet-css>
-		<footer-portlet-javascript>/js/main.js</footer-portlet-javascript>
+		<ajaxable>false</ajaxable>
+		<header-portlet-css>/css/ep/main.css</header-portlet-css>
 		<css-class-wrapper>ct-portlet</css-class-wrapper>
 	</portlet>
 
@@ -67,17 +76,17 @@
 		<portlet-name>cc</portlet-name>
 		<icon>/icon.png</icon>
 		<instanceable>false</instanceable>
-		<header-portlet-css>/css/ep/ct.css</header-portlet-css>
-		<footer-portlet-javascript>/js/main.js</footer-portlet-javascript>
+		<ajaxable>false</ajaxable>
+		<header-portlet-css>/css/ep/main.css</header-portlet-css>
 		<css-class-wrapper>ct-portlet</css-class-wrapper>
 	</portlet>
 
 	<portlet>
 		<portlet-name>ccSearch</portlet-name>
-		<icon>/icon.png</icon>
+	<icon>/icon.png</icon>
 		<instanceable>false</instanceable>
-		<header-portlet-css>/css/ep/ct.css</header-portlet-css>
-		<footer-portlet-javascript>/js/main.js</footer-portlet-javascript>
+		<ajaxable>false</ajaxable>
+		<header-portlet-css>/css/ep/main.css</header-portlet-css>
 		<css-class-wrapper>ct-portlet</css-class-wrapper>
 	</portlet>
 
@@ -85,8 +94,8 @@
 		<portlet-name>ag</portlet-name>
 		<icon>/icon.png</icon>
 		<instanceable>false</instanceable>
-		<header-portlet-css>/css/ep/ct.css</header-portlet-css>
-		<footer-portlet-javascript>/js/main.js</footer-portlet-javascript>
+		<ajaxable>false</ajaxable>
+		<header-portlet-css>/css/ep/main.css</header-portlet-css>
 		<css-class-wrapper>ct-portlet</css-class-wrapper>
 	</portlet>
 
@@ -94,8 +103,8 @@
 		<portlet-name>supag</portlet-name>
 		<icon>/icon.png</icon>
 		<instanceable>false</instanceable>
-		<header-portlet-css>/css/ep/ct.css</header-portlet-css>
-		<footer-portlet-javascript>/js/main.js</footer-portlet-javascript>
+		<ajaxable>false</ajaxable>
+		<header-portlet-css>/css/ep/main.css</header-portlet-css>
 		<css-class-wrapper>ct-portlet</css-class-wrapper>
 	</portlet>
 
@@ -103,8 +112,8 @@
 		<portlet-name>supplierSearch</portlet-name>
 		<icon>/icon.png</icon>
 		<instanceable>false</instanceable>
-		<header-portlet-css>/css/ep/ct.css</header-portlet-css>
-		<footer-portlet-javascript>/js/main.js</footer-portlet-javascript>
+		<ajaxable>false</ajaxable>
+		<header-portlet-css>/css/ep/main.css</header-portlet-css>
 		<css-class-wrapper>ct-portlet</css-class-wrapper>
 	</portlet>
 
@@ -112,8 +121,8 @@
 		<portlet-name>pbReview</portlet-name>
 		<icon>/icon.png</icon>
 		<instanceable>false</instanceable>
-		<header-portlet-css>/css/ep/ct.css</header-portlet-css>
-		<footer-portlet-javascript>/js/main.js</footer-portlet-javascript>
+		<ajaxable>false</ajaxable>
+		<header-portlet-css>/css/ep/main.css</header-portlet-css>
 		<css-class-wrapper>ct-portlet</css-class-wrapper>
 	</portlet>
 
@@ -121,8 +130,8 @@
 		<portlet-name>bpkReview</portlet-name>
 		<icon>/icon.png</icon>
 		<instanceable>false</instanceable>
-		<header-portlet-css>/css/ep/ct.css</header-portlet-css>
-		<footer-portlet-javascript>/js/main.js</footer-portlet-javascript>
+		<ajaxable>false</ajaxable>
+		<header-portlet-css>/css/ep/main.css</header-portlet-css>
 		<css-class-wrapper>ct-portlet</css-class-wrapper>
 	</portlet>
 
