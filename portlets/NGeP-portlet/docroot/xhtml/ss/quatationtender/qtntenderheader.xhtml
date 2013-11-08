@@ -6,26 +6,45 @@
 	xmlns:c="http://java.sun.com/jsp/jstl/core">
 
 	<p:panel header="Header" toggleable="true">
-<p:panelGrid columns="4" style="width:100%;" styleClass="noBorders tr,noBorders td">
-<h:outputText value="Qtn/Tender No" />  
-            <p:inputText  value="#{qTDetailBB.managedBean.qt.qtNo}" readonly="true"/> 
-            
-            <h:outputText value="Ministry Code/Name" />  
-            <p:inputText  value="J009" readonly="true"/>  
-            
-            <h:outputText value="Status" />  
-            <p:inputText  value="#{qTDetailBB.managedBean.qt.pmStatus}" readonly="true" />  
-            
-             <h:outputText value="Department Code/Name" />  
-            <p:inputText  value="101" readonly="true"/>  
-           
-           <h:outputText value="Created Date" /> 
-           <p:inputText value="#{qTDetailBB.managedBean.qt.createdDate}"  readonly="true"/>  
- 
-            <h:outputText value="Divison Code/Name" />  
-            <p:inputText value="P001" readonly="true"/>  
-           
-             
-  </p:panelGrid>
+		<p:panelGrid columns="4" style="width:100%;"
+			styleClass="noBorders tr,noBorders td">
+			<h:outputText value="Qtn/Tender No" />
+			<p:inputText value="#{qTDetailBB.managedBean.qt.qtNo}"
+				readonly="true" />
+
+			<h:outputText value="Ministry Code/Name" />
+			<p:selectOneMenu 
+				value="#{qTDetailBB.managedBean.minstryCode}" styleClass="minstryclass">
+				<f:selectItems value="#{qTDetailBB.managedBean.minstryList}" />
+
+				<p:ajax update="@(.deptclass)" event="change"
+					listener="#{qTDetailBB.fetchDepartements}" />
+
+			</p:selectOneMenu>
+
+			<h:outputText value="Status" />
+			<p:inputText value="#{qTDetailBB.managedBean.qt.pmStatus}"
+				readonly="true" />
+
+			<h:outputText value="Department Code/Name" />
+			<p:selectOneMenu 
+				value="#{qTDetailBB.managedBean.deptCode}" styleClass="deptclass">
+
+				<f:selectItems value="#{qTDetailBB.managedBean.deptList}" />
+					<p:ajax update="@(.divisionclass)" event="change"
+					listener="#{qTDetailBB.fetchDivisions}" />
+				
+			</p:selectOneMenu>
+			<h:outputText value="Created Date" />
+			<p:inputText value="#{qTDetailBB.managedBean.qt.createdDate}"
+				readonly="true" />
+
+			<h:outputText value="Divison Code/Name" />
+			<p:selectOneMenu value="#{qTDetailBB.managedBean.divisionCode}" styleClass="divisionclass">
+				<f:selectItems value="#{qTDetailBB.managedBean.divisionList}" />
+			</p:selectOneMenu>
+
+
+		</p:panelGrid>
 	</p:panel>
 </ui:composition>
