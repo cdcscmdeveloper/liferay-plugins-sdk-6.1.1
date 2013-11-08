@@ -46,6 +46,6 @@
 	color: #8CC63E;
 }
 
-.green .ui-tabs.ui-tabs-left > .ui-tabs-nav .ui-state-hover, .green .ui-tabs.ui-tabs-left > .ui-tabs-nav .ui-tabs-selected {
+.green .ui-tabs.ui-tabs-left > .ui-tabs-nav .ui-tabs-selected {
 	background-color: #8CC63E !important;
 }
