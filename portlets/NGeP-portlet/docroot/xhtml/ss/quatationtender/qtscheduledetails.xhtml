@@ -15,61 +15,50 @@
 			styleClass="noBorders tr,noBorders td">
 
 			<h:outputText value="#{lbl['lbl.so.noticepublish']}" />
-			<p:calendar value="#{searchQtnTenderBB.managedBean.tenderBean}"
+			<p:calendar value="#{qtScheduleDetailBB.managedBean.qt.publishDate}"
 				id="noticePublish" showOn="button" />
 	
-
-
-
-
-			<h:outputText value="Proposal Preparation Start Date/Time " />
+	        <h:outputText value="Proposal Preparation Start Date/Time " />
 	
-			 <p:calendar value="#{searchQtnTenderBB.managedBean.tenderBean}" pattern="MM/dd/yyyy HH:mm a" id="proposalPreparation" showOn="button"/> 
+			 <p:calendar value="#{qtScheduleDetailBB.managedBean.qt.proposalStartDate}"  id="proposalPreparation" showOn="button"/> 
 			
 			
-			<h:outputText value="Closing Date "></h:outputText>
+			<h:outputText value="Closing Date and Time"></h:outputText>
 			
-			 <p:calendar value="#{searchQtnTenderBB.managedBean.tenderBean}" pattern="MM/dd/yyyy HH:mm a" id="closingDate" showOn="button"/>
+			 <p:calendar value="#{qtScheduleDetailBB.managedBean.qt.closingDate}" id="closingDate" showOn="button"/>
 			
+			<h:outputText  value="Publishing Period (Days) " escape="false" />
+					
+			<p:inputText value="#{qtScheduleDetailBB.managedBean.qt.qtValidityPeriod}"  readonly="true" id="publishingperiod" />
 			
-				
-		
-
+			<h:outputText value="Expected LOA Issuance Date "></h:outputText>
 			
-
+			<p:calendar value="#{qtScheduleDetailBB.managedBean.qt.expectedLoaDate}"  id="loaDate" showOn="button"/>
 			
-		
-			<h:outputText  
-				value="Difference Between the Proposal Preparation &lt;br /&gt; Start and Closing Days " escape="false" />
-				
-				
-			<p:inputText id="diffDays" readonly="true" />
-		
-		
 			<h:outputText value="Expected Start Delivery Date "></h:outputText>
 			
-			<p:calendar value="#{searchQtnTenderBB.managedBean.tenderBean}" pattern="MM/dd/yyyy HH:mm a" id="deliveryDate" showOn="button"/>
-				
-
+			<p:calendar value="#{qtScheduleDetailBB.managedBean.qt.expectedDeliveryDate}"  id="deliveryDate" showOn="button"/>
+		
 	</p:panelGrid>
 	</p:panel>
+	
 	<p:panel header="Briefing/Site Visit Schedule" toggleable="true">
 		<p:panelGrid columns="2" style="width:100%;"
 			styleClass="noBorders tr,noBorders td">
 
-			<h:outputText value="Briefing/Site Visit Required" />
-			<p:selectOneRadio
-				value="#{searchQtnTenderBB.managedBean.briefDetails}">
-				<f:selectItem itemLabel="Yes" itemValue="1" />
+		 	<h:outputText value="Briefing/Site Visit Required" />
+		 <p:selectOneRadio
+				value="#{qtScheduleDetailBB.managedBean.qt.isBsvRequired}">
+				<f:selectItem itemLabel="yes" itemValue="1" />
 				<f:selectItem itemLabel="No" itemValue="2" />
-				<p:ajax update="@form" />
+				<p:ajax update="bsvrequire" listener="#{qTSupplierQulCriteriaBackingBean.processChecked}"/>
 			</p:selectOneRadio>
 			<h:outputText value="Briefing Same As Site Visit :" />
 			<p:selectOneRadio
-				value="#{searchQtnTenderBB.managedBean.visitDetails}">
-				<f:selectItem itemLabel="Yes" itemValue="1" />
+				value="#{qtScheduleDetailBB.managedBean.qt.isSameBsv}">
+				<f:selectItem itemLabel="yes" itemValue="1" />
 				<f:selectItem itemLabel="No" itemValue="2" />
-				<p:ajax update="@form"  />
+				<p:ajax update="samebsv" listener="#{qTSupplierQulCriteriaBackingBean.processChecked}"/>
 
 			</p:selectOneRadio>
 
@@ -78,7 +67,7 @@
 	</p:panel>
 
 	<h:panelGroup
-		rendered="#{searchQtnTenderBB.managedBean.briefDetails eq '1'}">
+		rendered="#{qtScheduleDetailBB.managedBean.qt.isBsvRequired eq '1'}" id="bsvrequire">
 		<p:panel header="Briefing Details" toggleable="true">
 			<p:panelGrid columns="2" style="width:100%;"
 				styleClass="noBorders tr,noBorders td">
@@ -217,7 +206,7 @@
 
 	</h:panelGroup>
 	<h:panelGroup
-		rendered="#{searchQtnTenderBB.managedBean.visitDetails eq '1'}">
+		rendered="#{qtScheduleDetailBB.managedBean.qt.isSameBsv eq '1'}" id="samebsv">
 
 
 		<p:panel header="Site/Visit Details" toggleable="true">
@@ -444,8 +433,7 @@
 			<f:facet name="footer">
 					<div align="right">
 						<p:commandButton id="add" value="#{lbl['lbl.so.addbtn']}" />
-						<p:commandButton value="CLONE" onclick="screen2.show();"></p:commandButton>
-
+					
 					</div>
 				</f:facet>
 			</p:panelGrid>
