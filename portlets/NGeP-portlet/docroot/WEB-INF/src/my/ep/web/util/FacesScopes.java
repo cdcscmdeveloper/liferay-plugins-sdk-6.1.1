@@ -12,9 +12,12 @@ import javax.portlet.PortletSession;
 
 import org.apache.log4j.Logger;
 
+import com.liferay.portal.kernel.exception.PortalException;
+import com.liferay.portal.kernel.exception.SystemException;
 import com.liferay.portal.kernel.util.WebKeys;
 import com.liferay.portal.model.Role;
 import com.liferay.portal.model.User;
+import com.liferay.portal.service.RoleServiceUtil;
 import com.liferay.portal.service.UserServiceUtil;
 import com.liferay.portal.theme.ThemeDisplay;
 
@@ -170,13 +173,55 @@ public class FacesScopes {
 	public List<Role> getUserRoleList(){
 		List<Role> userRoleList = null;
 		try{
-			User user = UserServiceUtil.getUserById(Long.valueOf(this.getRequest().getRemoteUser()));
-			userRoleList = user.getRoles();
+//			User user = UserServiceUtil.getUserById(Long.valueOf(this.getRequest().getRemoteUser()));
+//			userRoleList = user.getRoles();
+			userRoleList = RoleServiceUtil.getUserRoles(Long.valueOf(this.getRequest().getRemoteUser()));
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
 		return userRoleList;
 
+	}
+	
+	/**
+	 * check whether the current login user has the passed in role
+	 * @param roleId
+	 * @return
+	 */
+	public boolean hasRoleUser(long roleId) {
+		boolean hasRoleUser = false;
+		try {
+			hasRoleUser = UserServiceUtil.hasRoleUser(roleId, Long.valueOf(this.getRequest().getRemoteUser()));
+		} catch (PortalException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (SystemException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return hasRoleUser;
+	}
+	
+	/**
+	 * check whether the current login user has the passed in role
+	 * @param roleName
+	 * @return
+	 */
+	public boolean hasRoleUser(String roleName) {
+		Role role;
+		boolean hasRoleUser = false;
+		
+		try {
+			role = RoleServiceUtil.getRole(1, roleName);
+			hasRoleUser = this.hasRoleUser(role.getRoleId());
+		} catch (PortalException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (SystemException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return hasRoleUser;
 	}
 	
 	public Locale getUserLocale() {
@@ -196,5 +241,17 @@ public class FacesScopes {
 			component = root;
 		}
 		return component;
+	}
+
+	public static boolean isValueReference(String value) {
+		if (value == null)
+			throw new NullPointerException("value");
+
+		int start = value.indexOf("#{");
+		if (start < 0)
+			return false;
+
+		int end = value.lastIndexOf('}');
+		return (end >= 0 && start < end);
 	}
 }
