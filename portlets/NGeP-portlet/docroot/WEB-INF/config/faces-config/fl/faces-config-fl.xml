@@ -12,8 +12,18 @@
 			<redirect />
 		</navigation-case>
 		<navigation-case>
+			<from-outcome>flOrder</from-outcome>
+			<to-view-id>/xhtml/fl/dopending/flOrder.xhtml</to-view-id>
+			<redirect />
+		</navigation-case>
+		<navigation-case>
 			<from-outcome>MaintainPR</from-outcome>
 			<to-view-id>/xhtml/fl/purchaserequest/prBasePage.xhtml</to-view-id>
+			<redirect />
+		</navigation-case>
+		<navigation-case>
+			<from-outcome>MaintainCR</from-outcome>
+			<to-view-id>/xhtml/fl/contractrequest/crBasePage.xhtml</to-view-id>
 			<redirect />
 		</navigation-case>
 		<navigation-case>
@@ -24,6 +34,16 @@
 		<navigation-case>
 			<from-outcome>MaintainCO</from-outcome>
 			<to-view-id>/xhtml/fl/contractorder/coBasePage.xhtml</to-view-id>
+			<redirect />
+		</navigation-case>
+		<navigation-case>
+			<from-outcome>MaintainDO</from-outcome>
+			<to-view-id>/xhtml/fl/deliveryorder/doBasePage.xhtml</to-view-id>
+			<redirect />
+		</navigation-case>
+		<navigation-case>
+			<from-outcome>MaintainINV</from-outcome>
+			<to-view-id>/xhtml/fl/invoice/invBasePage.xhtml</to-view-id>
 			<redirect />
 		</navigation-case>
 		

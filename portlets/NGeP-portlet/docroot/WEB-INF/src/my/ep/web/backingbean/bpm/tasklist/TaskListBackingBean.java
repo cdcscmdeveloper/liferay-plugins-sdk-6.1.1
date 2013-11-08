@@ -54,7 +54,8 @@ import my.ep.web.backingbean.cm.codification.UnspscCodeBackingBean;
 import my.ep.web.backingbean.ct.ContractDetailsBackingBean;
 import my.ep.web.backingbean.ct.suspend.ContractSuspendBackingBean;
 import my.ep.web.backingbean.fl.createcontract.ContractRequestBackingBean;
-import my.ep.web.backingbean.fl.frn.CreateFRNBackingBean;
+import my.ep.web.backingbean.fl.frn.ReceivedNoteBackingBean;
+import my.ep.web.backingbean.fl.po.FulfilmentOrderBackingBean;
 import my.ep.web.backingbean.fl.pr.PurchaseRequestBackingBean;
 import my.ep.web.backingbean.pp.budgetallocation.BudgetAllocationBackingBean;
 import my.ep.web.backingbean.pp.procurementplan.PlanBackingBean;
@@ -307,8 +308,16 @@ public class TaskListBackingBean extends BaseBackingBean<TaskListManagedBean>{
 			resDTO=fulfilmentSO.retrieveFulfilmentRequest(fulfilmentReqDTO);
 			purchaseRequestBackingBean.getManagedBean().setFulfilmentRequest(resDTO.getFlFulfilmentRequest());
 			purchaseRequestBackingBean.getManagedBean().setTaskId(taskId);
+			System.out.println("Action In task list"+res.getAction());
 			purchaseRequestBackingBean.getManagedBean().setActions(res.getAction());
 			purchaseRequestBackingBean.getManagedBean().setTaskName(res.getTaskName());
+			if(res.getTaskName().equals("Acknowledge the Purchase Request")){
+				FulfilmentOrderBackingBean florderBB=new FulfilmentOrderBackingBean();
+				florderBB.getManagedBean().setFulfilmentRequest(resDTO.getFlFulfilmentRequest());
+				florderBB.getManagedBean().setTaskId(taskId);
+				florderBB.getManagedBean().setActions(res.getAction());
+			}
+			
 			
 		}
 		else if(res.getProcessName().equalsIgnoreCase("Delvery Order Fullfillment")){
@@ -316,7 +325,7 @@ public class TaskListBackingBean extends BaseBackingBean<TaskListManagedBean>{
 			//IDeliveryOrderSO deliveryOrderSO = (IDeliveryOrderSO) BusinessDelegate.getInstance().getServiceObject("fl",IDeliveryOrderSO.class);
 			//FulfilmentReqDTO fulfilmentReqDTO = new FulfilmentReqDTO();
 			FulfilmentResDTO resDTO = new FulfilmentResDTO();
-			CreateFRNBackingBean createFRNBackingBean=new CreateFRNBackingBean();  
+			ReceivedNoteBackingBean createFRNBackingBean=new ReceivedNoteBackingBean();  
 			//FLDOFullfillmentDataType flDeliveryOrder = (FLDOFullfillmentDataType)obj;
 			//System.out.println("del order Id in Task List:: "+flDeliveryOrder.getDeliveryOrderId());
 			//FlDeliveryOrder deliveryOrder=new FlDeliveryOrder();
