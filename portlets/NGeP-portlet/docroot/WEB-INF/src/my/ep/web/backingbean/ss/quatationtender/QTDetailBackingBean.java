@@ -51,7 +51,6 @@ import my.ep.type.aut.SearchCondition;
 import my.ep.type.aut.SearchOperator;
 import my.ep.type.pm.OrganizationType;
 import my.ep.util.lookupservice.EpEjbBusinessDelegate;
-import my.ep.web.backingbean.BaseBackingBean;
 import my.ep.web.managedbean.ss.quationtender.QTDetailManagedBean;
 import my.ep.web.ss.quationtender.common.QTConstants;
 import my.ep.web.type.ss.quationtender.ItemOrigin;
@@ -176,10 +175,13 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 		if (gosodos == null) {
 			gosodos = new ArrayList<ScQtGosodoBudget>();
 
-		} else {
+		} 
+		/*else {
 			ScQtGosodoBudget budget = new ScQtGosodoBudget();
 			gosodos.add(budget);
-		}
+		}*/
+		ScQtGosodoBudget budget = new ScQtGosodoBudget();
+		gosodos.add(budget);
 		this.getManagedBean().getQt().setScQtGosodoBudgets(gosodos);
 		log.info("End of add gosodo item method");
 	}
@@ -540,8 +542,9 @@ public class QTDetailBackingBean extends SourcingBaseBackingBean<QTDetailManaged
 							ex.toString(), ex.getMessage()));
 
 		}
-
+        //After Change Need To Remove
 		return dto.getQtResultBean().getResultList();
+		//return  null != dto.getQtResultBean().getResultList() ? dto.getQtResultBean().getResultList() : new ArrayList<ScQt>();
 	}
 
 	public void fetchDepartements() {
