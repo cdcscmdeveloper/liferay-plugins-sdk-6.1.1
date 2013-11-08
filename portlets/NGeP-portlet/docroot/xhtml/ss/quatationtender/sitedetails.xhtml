@@ -14,27 +14,50 @@
 		<h:outputLabel for="sitedesc" value="Site Description" />
 				<p:inputTextarea id="sitedesc" value="#{searchQtnTenderBB.managedBean.selectOption}" columns="50"/>	
 				
-			<h:outputText value="Site Visit Date "></h:outputText>
+				<h:outputText value="Site Visit Date and Time "></h:outputText>
 			<p:calendar value="#{searchQtnTenderBB.managedBean.tenderBean}"
-				id="visitDate" showOn="button" />
+				id="siteDate" pattern="MM/dd/yyyy HH:mm a" showOn="button" />
 				
-					
-					<h:outputText value="Site Visit Time" />
-			<p:calendar value="#{searchQtnTenderBB.managedBean.tenderBean}"
-				pattern="HH:mm a" timeOnly="true"/>
-			
-				 
-			 
+				 <h:outputText value="#{lbl['lbl.so.location']}" />
+               <p:inputText value="#{qTDetailBB.managedBean.qt.qtTitle}"/>  
+       	
+				 <h:outputText value="Address 1" />
+               <p:inputText value="#{qTDetailBB.managedBean.qt.qtTitle}" />  
+       	 
+       	       <h:outputText value="Address 2" />
+               <p:inputText value="#{qTDetailBB.managedBean.qt.qtTitle}" />  
+               
+                <h:outputText value="Address 3" />
+               <p:inputText value="#{qTDetailBB.managedBean.qt.qtTitle}" />  
+       	
+                <h:outputText value="Address 4" />
+               <p:inputText value="#{qTDetailBB.managedBean.qt.qtTitle}" />  
+       	      	
             
-             <h:outputText value="#{lbl['lbl.so.visitlocation']}" />  
+             <h:outputText value="#{lbl['lbl.so.country']}" />  
         <p:selectOneMenu >  
-            <f:selectItem itemLabel="Location Name" itemValue="" />  
-            <f:selectItem itemLabel="Adress Line1" itemValue="1" />  
-            <f:selectItem itemLabel="Address Line2" itemValue="2" />  
-            <f:selectItem itemLabel="Address Line3" itemValue="3" />  
-        </p:selectOneMenu> 
+            <f:selectItem itemLabel="Malaysia" itemValue="1" />  
+            <f:selectItem itemLabel="Singapore" itemValue="2" />  
+           </p:selectOneMenu> 
+           
+            <h:outputText value="#{lbl['lbl.so.state']}" />  
+        <p:selectOneMenu >  
+            <f:selectItem itemLabel="Selangor" itemValue="1" />  
+            <f:selectItem itemLabel="Kaula lumpur" itemValue="2" />  
+           </p:selectOneMenu> 
+           
+             <h:outputText value="* City" />
+               <p:inputText value="#{qTDetailBB.managedBean.qt.qtTitle}" />  
+               
+                <h:outputText value="District" />
+               <p:inputText value="#{qTDetailBB.managedBean.qt.qtTitle}" />  
+       	
+       	     <h:outputText value="* Postcode" />
+               <p:inputText value="#{qTDetailBB.managedBean.qt.qtTitle}" />  
+       	  
         
-         <h:outputText value="#{lbl['lbl.so.coordinateofficer']}" />  
+        
+          <h:outputText value="#{lbl['lbl.so.coordinateofficer']}" />  
         <p:selectOneMenu >  
             <f:selectItem itemLabel="Coordinate Officer" itemValue="" />  
             <f:selectItem itemLabel="Officer 1" itemValue="1" />  
@@ -42,30 +65,33 @@
             <f:selectItem itemLabel="Officer 3" itemValue="3" />  
         </p:selectOneMenu> 
         
-        <h:outputText value="Attendance" />  
-        <p:selectOneRadio >  
-            <f:selectItem itemLabel="All Zone" itemValue="1" />  
-            <f:selectItem itemLabel="Certain Zone" itemValue="2" />  
-           </p:selectOneRadio>    
            
-           <h:outputText value="#{lbl['lbl.so.zone']}" />  
+           <h:outputText value="Attendance"  />  
         <p:selectOneMenu >  
             <f:selectItem itemLabel="Zone" itemValue="" />  
             <f:selectItem itemLabel="East Zone" itemValue="1" />  
             <f:selectItem itemLabel="West Zone" itemValue="2" />  
             <f:selectItem itemLabel="Central Zone" itemValue="3" />  
         </p:selectOneMenu> 
+        
+        <h:outputText value="#{lbl['lbl.so.zone']}" />  
+        <p:selectOneRadio >  
+            <f:selectItem itemLabel="All Zone" itemValue="1" />  
+            <f:selectItem itemLabel="Certain Zone" itemValue="2" />  
+           </p:selectOneRadio>    
+        
          </p:panelGrid>  
-       	<p:commandButton  value="#{lbl['lbl.so.cancelbtn']}"
-			styleClass="apply_button" style="float:right;" onclick="dlg2.hide()">
+           
+		<p:commandButton  value="#{lbl['lbl.so.cancelbtn']}"
+			styleClass="apply_button" style="float:right;" onclick="dlg1.hide()">
 		</p:commandButton>	
 			<p:commandButton value="OK"
-			styleClass="apply_button" style="float:right;" onclick="dlg2.hide()">
+			styleClass="apply_button" style="float:right;" onclick="dlg1.hide()">
 
 		</p:commandButton>
+
 		
 		
         </p:panel>
         </p:dialog>
 </ui:composition>   
-            	
