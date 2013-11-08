@@ -15,7 +15,7 @@
 				value="#{lbl['lbl.cm.delete.extension.code']}"></h:outputLabel>
 
 			<div style="text-align: right;">
-				
+				<p:commandButton value="Submit" action="#{unspscCodeBackingBean.deleteExtensionCode}" icon="ui-icon-submit"></p:commandButton>
 			</div>
 
 
@@ -48,17 +48,20 @@
 				<tr>
 					<td><p:outputLabel value="#{lbl['lbl.cm.brand']}"></p:outputLabel></td>
 					<td><p:inputText
-							value="#{codificationBackingBean.managedBean.deleteItem.cmBrand.brandName}" /></td>
+							value="#{codificationBackingBean.managedBean.deleteItem.cmBrand.brandName}"
+							disabled="true" /></td>
 				</tr>
 				<tr>
 					<td><p:outputLabel value="#{lbl['lbl.cm.measurement']}"></p:outputLabel></td>
 					<td><p:inputText
-							value="#{codificationBackingBean.managedBean.deleteItem.cmMeasurement.measurementName}" /></td>
+							value="#{codificationBackingBean.managedBean.deleteItem.cmMeasurement.measurementName}"
+							disabled="true" /></td>
 				</tr>
 				<tr>
 					<td><p:outputLabel value="#{lbl['lbl.cm.color']}"></p:outputLabel></td>
 					<td><p:inputText
-							value="#{codificationBackingBean.managedBean.deleteItem.cmColor.colorName}" /></td>
+							value="#{codificationBackingBean.managedBean.deleteItem.cmColor.colorName}"
+							disabled="true" /></td>
 				</tr>
 			</table>
 

@@ -16,42 +16,53 @@
 
 			<div style="text-align: right;">
 				<ui:repeat var="action"
-					value="#{unspscCodeBackingBean.managedBean.action}">
-					<p:commandButton value="#{action}"
-						action="#{unspscCodeBackingBean.submitForRequest}"></p:commandButton>
+					value="#{tasklistBackingBean.managedBean.action}">
+					<p:commandButton value="#{action}" action="#{unspscCodeBackingBean.submitForMaintenanceRequest(action)}"></p:commandButton>
 				</ui:repeat>
 			</div>
 
 
 			<table>
 				<tr>
+					<td><p:outputLabel value="User"></p:outputLabel></td>
+					<td><p:inputText
+							value="#{unspscCodeBackingBean.managedBean.tempUser}" /></td>
+				</tr>
+				<tr>
 					<td><p:outputLabel value="#{lbl['lbl.cm.unspsc.code']}"></p:outputLabel></td>
-					<td><p:inputText /></td>
+					<td><p:inputText
+							value="#{unspscCodeBackingBean.managedBean.requestCode.tempCode}" /></td>
 				</tr>
 				<tr>
 					<td><p:outputLabel value="#{lbl['lbl.cm.unspsc.title']}"></p:outputLabel></td>
-					<td><p:inputText /></td>
+					<td><p:inputText
+							value="#{unspscCodeBackingBean.managedBean.requestCode.tempTitle}" /></td>
 
 				</tr>
 				<tr>
 					<td><p:outputLabel value="#{lbl['lbl.cm.item.name']}"></p:outputLabel></td>
-					<td><p:inputText /></td>
+					<td><p:inputText
+							value="#{unspscCodeBackingBean.managedBean.requestCode.itemName}" /></td>
 				</tr>
 				<tr>
 					<td><p:outputLabel value="#{lbl['lbl.cm.type']}"></p:outputLabel></td>
-					<td><p:inputText /></td>
+					<td><p:inputText
+							value="#{unspscCodeBackingBean.managedBean.requestCode.typeName}" /></td>
 				</tr>
 				<tr>
 					<td><p:outputLabel value="#{lbl['lbl.cm.brand']}"></p:outputLabel></td>
-					<td><p:inputText /></td>
+					<td><p:inputText
+							value="#{unspscCodeBackingBean.managedBean.requestCode.brandName}" /></td>
 				</tr>
 				<tr>
 					<td><p:outputLabel value="#{lbl['lbl.cm.measurement']}"></p:outputLabel></td>
-					<td><p:inputText /></td>
+					<td><p:inputText
+							value="#{unspscCodeBackingBean.managedBean.requestCode.measurementName}" /></td>
 				</tr>
 				<tr>
 					<td><p:outputLabel value="#{lbl['lbl.cm.color']}"></p:outputLabel></td>
-					<td><p:inputText /></td>
+					<td><p:inputText
+							value="#{unspscCodeBackingBean.managedBean.requestCode.colorName}" /></td>
 				</tr>
 			</table>
 

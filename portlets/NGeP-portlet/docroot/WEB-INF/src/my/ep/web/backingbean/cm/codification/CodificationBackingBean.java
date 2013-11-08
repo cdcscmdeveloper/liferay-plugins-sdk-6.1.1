@@ -36,6 +36,7 @@ import my.ep.persistence.entity.cm.catalog.CmType;
 import my.ep.persistence.entity.cm.catalog.CmUnspsc;
 import my.ep.type.aut.SearchOperator;
 import my.ep.web.backingbean.BaseBackingBean;
+import my.ep.web.backingbean.bpm.tasklist.TaskListBackingBean;
 import my.ep.web.bean.paginator.IPagingDataModel;
 import my.ep.web.bean.paginator.PagingDataModel;
 import my.ep.web.constant.PagingConst;
@@ -80,6 +81,7 @@ public class CodificationBackingBean extends BaseBackingBean<CodificationManaged
 	private SearchFilterBean typeFilterBean = new SearchFilterBean(SearchOperator.OPERATOR_EQUALS.value());
 	private SearchFilterBean brandFilterBean = new SearchFilterBean(SearchOperator.OPERATOR_EQUALS.value());
 	private SearchFilterBean measurementFilterBean = new SearchFilterBean(SearchOperator.OPERATOR_EQUALS.value());
+	private SearchFilterBean statusFilterBean = new SearchFilterBean(SearchOperator.OPERATOR_EQUALS.value());
 	//private IPagingDataModel<CmItem> searchItemDataModel = new SearchItemPagingDataModel();
 
 
@@ -108,6 +110,10 @@ public class CodificationBackingBean extends BaseBackingBean<CodificationManaged
 
 		measurementFilterBean.setSearchField("cmMeasurement.measurementCode");
 		searchBean.getDataFilterBeans().add(measurementFilterBean);
+		
+		statusFilterBean.setSearchField("recordStatus");
+		statusFilterBean.setSearchValue(true);
+		searchBean.getDataFilterBeans().add(statusFilterBean);
 
 		CodificationReqDTO reqDTO = new CodificationReqDTO();
 		reqDTO.setItemSearchBean(searchBean);
@@ -305,8 +311,6 @@ public class CodificationBackingBean extends BaseBackingBean<CodificationManaged
 		CodificationReqDTO reqDTO = new CodificationReqDTO();
 
 		CodificationResDTO resDTO = unspscSO.searchColor(reqDTO);
-
-		log.info("*****************************"+this.getManagedBean().getSelectedUNSPSCObj().getUnspscCode());
 
 		for(CmColor color:resDTO.getColorList()){
 			//log.info("color:"+color);
@@ -630,11 +634,26 @@ public class CodificationBackingBean extends BaseBackingBean<CodificationManaged
 		return "extensionSearch";
 
 	}
+	
+	
+	
 
 
 
+	public SearchFilterBean getStatusFilterBean() {
+		return statusFilterBean;
+	}
 
 
+
+	public void setStatusFilterBean(SearchFilterBean statusFilterBean) {
+		this.statusFilterBean = statusFilterBean;
+	}
+
+	
+	
+
+	
 
 
 

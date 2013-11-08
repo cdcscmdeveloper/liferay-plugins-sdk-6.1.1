@@ -113,18 +113,24 @@
 						<p:menuitem value="Edit"
 							action="#{codificationBackingBean.editExtension(rowIndex)}"
 							icon="ui-icon-edit" />
-
+						<p:menuitem value="Delete"
+							action="#{codificationBackingBean.deleteExtension(rowIndex)}"
+							icon="ui-icon-delete" />
 					</p:splitButton>
 				</p:column>
+				<f:facet name="footer">
+					<div style="text-align: right;">
+						<p:commandButton value="Maintenance FIle" icon="ui-icon-folder"
+							action="#{catalogueBackingBean.GoToMaintain()}" />
+						<p:commandButton value="Add" icon="ui-icon-add"
+							action="#{catalogueBackingBean.addToMaintain()}" />
+					</div>
+
+				</f:facet>
 			</p:dataTable>
 
 
-			<div style="text-align: right;">
-				<p:commandButton value="Maintenance FIle" icon="ui-icon-folder"
-					action="#{catalogueBackingBean.GoToMaintain()}" />
-				<p:commandButton value="Add" icon="ui-icon-add"
-					action="#{catalogueBackingBean.addToMaintain()}" />
-			</div>
+
 
 		</h:panelGroup>
 

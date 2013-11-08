@@ -6,18 +6,13 @@ import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.RequestScoped;
 import javax.faces.context.FacesContext;
-import javax.faces.context.Flash;
-import javax.servlet.http.HttpServletRequest;
 
 import my.ep.biz.service.cm.codification.ICodificationSO;
-import my.ep.biz.service.cm.codification.IRequestCodeSO;
 import my.ep.bpm.dto.BpmRequestDTO;
 import my.ep.bpm.dto.BpmResponseDTO;
 import my.ep.bpm.service.IBpmSO;
 import my.ep.dto.cm.codification.CodificationReqDTO;
 import my.ep.dto.cm.codification.CodificationResDTO;
-import my.ep.dto.cm.codification.RequestCodeReqDTO;
-import my.ep.dto.cm.codification.RequestCodeResDTO;
 import my.ep.jaxb.cd.requestdata.CDRequestDataType;
 import my.ep.persistence.entity.cm.catalog.CmItem;
 import my.ep.persistence.entity.cm.catalog.CmRequestCode;
@@ -27,7 +22,6 @@ import my.ep.util.lookupservice.EpBpmBusinessDelegate;
 import my.ep.web.backingbean.BaseBackingBean;
 import my.ep.web.backingbean.bpm.tasklist.TaskListBackingBean;
 import my.ep.web.managedbean.cm.codification.UnspscCodeManagedBean;
-import my.ep.web.util.FacesScopes;
 import my.ep.web.util.lookupservice.BusinessDelegate;
 
 import org.apache.commons.id.serial.AlphanumericGenerator;
@@ -38,8 +32,6 @@ import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.poi.ss.usermodel.Row;
 import org.primefaces.event.FileUploadEvent;
 import org.primefaces.model.UploadedFile;
-
-import com.liferay.portal.util.PortalUtil;
 
 @ManagedBean(name="unspscCodeBackingBean")
 @RequestScoped
@@ -68,11 +60,13 @@ public class UnspscCodeBackingBean extends BaseBackingBean<UnspscCodeManagedBean
 			reqDTO.setUser(this.getManagedBean().getTempUser());
 			reqDTO.setTaskId(taskListBB.getManagedBean().getTaskId());
 			reqDTO.setOutCome(action);
+			reqDTO.setProcessId("Codification.UNSPSCCodeRequest");
 			CodificationResDTO resDTO = null;
 
 			if(action.equalsIgnoreCase("SUBMIT")){
 
 				if(this.getManagedBean().getRequestCode().isBrandNew()){
+					reqDTO.setUser("roslan");
 					resDTO = unspscSO.addCodificationRequest(reqDTO);
 
 					FacesContext facesContext = FacesContext.getCurrentInstance();
@@ -93,7 +87,7 @@ public class UnspscCodeBackingBean extends BaseBackingBean<UnspscCodeManagedBean
 			System.out.println("***************Exception*****************");
 			FacesContext facesContext = FacesContext.getCurrentInstance();
 			facesContext.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR,"BPM  ERROR", ex.getMessage()));
-			
+
 			return "reviewUnspscCode";
 		}
 
@@ -103,81 +97,41 @@ public class UnspscCodeBackingBean extends BaseBackingBean<UnspscCodeManagedBean
 	}
 
 
-	public BpmResponseDTO updateTask(CmRequestCode request, String taskId){
-		System.out.println("initiateTask******");
-		IBpmSO bpmSO = (IBpmSO) EpBpmBusinessDelegate.getInstance().getServiceObject(IBpmSO.class);
-		String ctx = bpmSO.authenticate(this.getManagedBean().getTempUser(),"welcome1");
-		BpmRequestDTO reqDTO = new BpmRequestDTO();
-		reqDTO.setCtxToken(ctx);
-		log.info("taskId:"+taskId);
-		////taskID , reqDTO.setOutcome("SUBMIT"), 	bpmSO.updateTask(reqDTO)
-		reqDTO.setOutcome("SUBMIT");
-		CDRequestDataType obj = new CDRequestDataType();
-		obj.setRequestId(String.valueOf(request.getRequestId()));
-		//obj.setPtj(value);
-		reqDTO.setPojo(obj);
+	public String submitForMaintenanceRequest(String action)throws Exception{
 
-		reqDTO.setTaskId(taskId);
-		BpmResponseDTO res = bpmSO.updateTask(reqDTO);
+		try{
+			System.out.println("action:"+action);
 
-		log.info("1:"+res.isSuccessful());
-		log.info("2:"+res.getErrorReason());
-		//log.info("ID:"+obj.getRequestId());
-
-		//--
-		//	  Object asd = res.getPojo();
-		//	  CDRequestDataType qwe = (CDRequestDataType)asd;
-		//	  qwe.getPtj();
-		//--
-		return res;
-	}
+			ICodificationSO unspscSO = (ICodificationSO) BusinessDelegate.getInstance().getServiceObject("cm",ICodificationSO.class);
+			TaskListBackingBean taskListBB = new TaskListBackingBean();
+			CodificationReqDTO reqDTO = new CodificationReqDTO();
+		
+			reqDTO.setRequestCode(this.getManagedBean().getRequestCode());
+			reqDTO.setUser(this.getManagedBean().getTempUser());
+			reqDTO.setTaskId(taskListBB.getManagedBean().getTaskId());
+			reqDTO.setOutCome(action);
+			CodificationResDTO resDTO = null;
 
 
 
-	public BpmResponseDTO initiateTask(CmRequestCode request){
-		System.out.println("initiateTask******");
-		IBpmSO bpmSO = (IBpmSO) EpBpmBusinessDelegate.getInstance().getServiceObject(IBpmSO.class);
-		String ctx = bpmSO.authenticate("roslan","welcome1");
-		BpmRequestDTO reqDTO = new BpmRequestDTO();
-		reqDTO.setCtxToken(ctx);
-
-		reqDTO.setProcessId("Codification.UNSPSCCodeRequest");
-		reqDTO.setOutcome("SUBMIT");
-		CDRequestDataType obj = new CDRequestDataType();
-		obj.setRequestId(String.valueOf(request.getRequestId()));
-		//obj.setPtj(value);
-		reqDTO.setPojo(obj);
-		BpmResponseDTO res = bpmSO.initiateAndUpdateTask(reqDTO);
-
-		log.info("1:"+res.isSuccessful());
-		log.info("2:"+res.getErrorReason());
-		log.info("ID:"+obj.getRequestId());
+			resDTO = unspscSO.updateCodificationRequest(reqDTO);
 
 
-		return res;
-	}
 
-	public BpmResponseDTO initiateExtensionTask(CmRequestCode request){
-		System.out.println("initiateTask******");
-		IBpmSO bpmSO = (IBpmSO) EpBpmBusinessDelegate.getInstance().getServiceObject(IBpmSO.class);
-		String ctx = bpmSO.authenticate("roslan","welcome1");
-		BpmRequestDTO reqDTO = new BpmRequestDTO();
-		reqDTO.setCtxToken(ctx);
 
-		//  reqDTO.setProcessId("Procurement_Strategy.EndorseBudget");
-		reqDTO.setProcessId("Codification.ExtensionCodeRequest");
-		reqDTO.setOutcome("SUBMIT");
-		CDRequestDataType obj = new CDRequestDataType();
-		obj.setRequestId(String.valueOf(request.getRequestId()));
-		//obj.setPtj(value);
-		reqDTO.setPojo(obj);
-		BpmResponseDTO res = bpmSO.initiateAndUpdateTask(reqDTO);
+			FacesContext facesContext = FacesContext.getCurrentInstance();
+			facesContext.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO," Submitted Successfully", ""));
+		}catch(Exception ex){
+			System.out.println("***************Exception*****************");
+			FacesContext facesContext = FacesContext.getCurrentInstance();
+			facesContext.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR,"BPM  ERROR", ex.getMessage()));
 
-		log.info("1:"+res.isSuccessful());
-		log.info("2:"+res.getErrorReason());
-		log.info("ID:"+obj.getRequestId());
+			return "reviewDeleteExtension";
+		}
 
-		return res;
+		return "taskListView";
+
+
 	}
 
 
@@ -808,6 +762,46 @@ public class UnspscCodeBackingBean extends BaseBackingBean<UnspscCodeManagedBean
 		this.getManagedBean().setAction(res.getAction());
 
 	}*/
+
+
+	public String deleteExtensionCode(){
+
+		ICodificationSO unspscSO = (ICodificationSO) BusinessDelegate.getInstance().getServiceObject("cm",ICodificationSO.class);
+		TaskListBackingBean taskListBB = new TaskListBackingBean();
+		CodificationReqDTO reqDTO = new CodificationReqDTO();
+		CmRequestCode code = new CmRequestCode();
+		CodificationBackingBean cdBB = new CodificationBackingBean();
+		try {
+
+			code.setItemId(cdBB.getManagedBean().getDeleteItem().getItemId());
+			code.setTempCode(cdBB.getManagedBean().getDeleteItem().getCmUnspsc().getUnspscCode());
+			code.setTempTitle(cdBB.getManagedBean().getDeleteItem().getCmUnspsc().getUnspscTitle());
+			code.setBrandName(cdBB.getManagedBean().getDeleteItem().getCmBrand().getBrandName());
+			code.setItemName(cdBB.getManagedBean().getDeleteItem().getItemName());
+			code.setTypeName(cdBB.getManagedBean().getDeleteItem().getCmType().getTypeName());
+			code.setMeasurementName(cdBB.getManagedBean().getDeleteItem().getCmMeasurement().getMeasurementName());
+			code.setColorName(cdBB.getManagedBean().getDeleteItem().getCmColor().getColorName());
+			reqDTO.setUser("lailah");
+			reqDTO.setTaskId(taskListBB.getManagedBean().getTaskId());
+			reqDTO.setOutCome("SUBMIT");
+			reqDTO.setRequestCode(code);
+			reqDTO.setProcessId("Codification.ExtensionCodeMaintenance");
+
+
+
+			CodificationResDTO resDTO = unspscSO.addCodificationRequest(reqDTO);
+
+
+			FacesContext facesContext = FacesContext.getCurrentInstance();
+			facesContext.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO,"Submitted Successfully", ""));
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+
+
+		return "extensionSearch";
+	}
 
 
 
