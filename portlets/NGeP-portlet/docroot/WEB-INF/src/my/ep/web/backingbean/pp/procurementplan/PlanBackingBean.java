@@ -18,12 +18,18 @@ import my.ep.biz.bean.search.ISearchBean;
 import my.ep.biz.bean.search.SearchBean;
 import my.ep.biz.bean.search.SearchFilterBean;
 import my.ep.biz.service.cm.codification.ICodificationSO;
+import my.ep.biz.service.ct.IContractSO;
+import my.ep.biz.service.ct.circular.ICircularSO;
 import my.ep.biz.service.pm.authorization.orgprofile.IOrgProfileSO;
 import my.ep.biz.service.pm.common.taskactivity.ITaskActivitySO;
 import my.ep.biz.service.pp.budgetallocation.IBudgetAllocationSO;
 import my.ep.biz.service.pp.procurementplan.IProcurementPlanSO;
 import my.ep.dto.cm.codification.CodificationReqDTO;
 import my.ep.dto.cm.codification.CodificationResDTO;
+import my.ep.dto.ct.ContractReqDTO;
+import my.ep.dto.ct.ContractResDTO;
+import my.ep.dto.ct.circular.CircularReqDTO;
+import my.ep.dto.ct.circular.CircularResDTO;
 import my.ep.dto.pm.authorization.orgprofile.OrgProfileReqDTO;
 import my.ep.dto.pm.authorization.orgprofile.OrgProfileResDTO;
 import my.ep.dto.pm.common.taskactivity.TaskResDTO;
@@ -34,9 +40,9 @@ import my.ep.dto.pp.procurementplan.ProcurementPlanResDTO;
 import my.ep.persistence.entity.cm.catalog.CmUnspsc;
 import my.ep.persistence.entity.ct.CtContract;
 import my.ep.persistence.entity.ct.circular.CtCircular;
+import my.ep.persistence.entity.ct.circular.cc.CtCircularContract;
 import my.ep.persistence.entity.pm.authorization.PmBusinessActivity;
 import my.ep.persistence.entity.pm.authorization.PmOrgProfile;
-import my.ep.persistence.entity.pm.common.PmDo;
 import my.ep.persistence.entity.pm.common.PmSo;
 import my.ep.persistence.entity.pp.PpRemark;
 import my.ep.persistence.entity.pp.budgetallocation.PpBudget;
@@ -203,7 +209,9 @@ public class PlanBackingBean extends BaseBackingBean<PlanManagedBean>{
 
 			//merge existing task activities to all activities
 			for(PmBusinessActivity task: taskActivities){
-				if(!ppPlan.getAllPpQtActivities().contains(task)){
+				PpQtActivity tempAct = new PpQtActivity();
+				tempAct.setPmBusinessActivity(task);
+				if(!ppPlan.getAllPpQtActivities().contains(tempAct)){
 					PpQtActivity activity = new PpQtActivity();
 					activity.setPmBusinessActivity(task);
 					activity.setBusinessActivityId(task.getBusinessActivityId());
@@ -215,13 +223,22 @@ public class PlanBackingBean extends BaseBackingBean<PlanManagedBean>{
 			for(PpPlanActor actor: ppPlan.getPpPlanActors()){
 				ppPlan.setVerificationOfficers(new ArrayList<PpPlanActor>());
 				if(ProcurementPlanConst.SUBMIT_VERIFICATION.equals(actor.getActorType())){
-					System.out.println("V add");
 					ppPlan.addVerificationOfficers(actor);
 				}else if(ProcurementPlanConst.SUBMIT_APPROVAL.equals(actor.getActorType())){
 					ppPlan.setApprover(actor);
 				}
 			}
 			
+			//set default PVO level
+			int numPvo = ppPlan.getVerificationOfficers().size() + 1;
+			for(int i=numPvo; i<=ProcurementPlanConst.PVO_LEVEL; i++){
+				PpPlanActor vo = new PpPlanActor();
+				vo.setActorSeq(i);
+				vo.setActorType("V");
+				ppPlan.addVerificationOfficers(vo);
+			}
+			
+		
 			//load mto plan
 			if(ppPlan.getPpPlanMaster().isMtoPlan()){
 				
@@ -245,12 +262,21 @@ public class PlanBackingBean extends BaseBackingBean<PlanManagedBean>{
 				for(PpPlanActor actor: mtoPlan.getPpPlanActors()){
 					mtoPlan.setVerificationOfficers(new ArrayList<PpPlanActor>());
 					if(ProcurementPlanConst.SUBMIT_VERIFICATION.equals(actor.getActorType())){
-						System.out.println("V add");
 						mtoPlan.addVerificationOfficers(actor);
 					}else if(ProcurementPlanConst.SUBMIT_APPROVAL.equals(actor.getActorType())){
 						mtoPlan.setApprover(actor);
 					}
 				}
+				//set default PVO level
+				int numPvoMto = ppPlan.getVerificationOfficers().size() + 1;
+				for(int i=numPvoMto; i<=ProcurementPlanConst.PVO_LEVEL; i++){
+					PpPlanActor vo = new PpPlanActor();
+					vo.setActorSeq(i);
+					vo.setActorType("V");
+					mtoPlan.addVerificationOfficers(vo);
+				}
+				
+				
 				//set default mto plan
 				this.getManagedBean().setMtoPlanMaster(mtoPlan.getPpPlanMaster().getMtoPlanMaster());
 				this.getManagedBean().setMtoPlan(mtoPlan);
@@ -281,8 +307,8 @@ public class PlanBackingBean extends BaseBackingBean<PlanManagedBean>{
 				this.getManagedBean().setViewMode(ProcurementPlanConst.MODE_VERIFICATION);
 				this.getManagedBean().getPlan().setEditable(false); 
 			}
-			//enable details view
-			enableDetailTab(); 
+			//enable ep/pp fields, details, mto
+			updateViewMode(false); 
 		}
 		log.info("loadTask - End");
 	}
@@ -367,7 +393,7 @@ public class PlanBackingBean extends BaseBackingBean<PlanManagedBean>{
 		
 		//PVO
 		plan.setVerificationOfficers(new ArrayList<PpPlanActor>());
-		for(int i=1; i<=3; i++){
+		for(int i=1; i<=ProcurementPlanConst.PVO_LEVEL; i++){
 			PpPlanActor vo = new PpPlanActor();
 			vo.setActorSeq(i);
 			vo.setActorType("V");
@@ -381,10 +407,7 @@ public class PlanBackingBean extends BaseBackingBean<PlanManagedBean>{
 		this.getManagedBean().setSystemMsg("");
 		this.getManagedBean().setEnableMto(false);
 		this.getManagedBean().setEnableDetail(false);
-		if(!CommonMethod.isSelected(this.getManagedBean().getVotType())){
-			this.getManagedBean().setVotType("BT"); //TODO temp set
-		}
-		
+	
 		
 		//Set normal plan
 		this.getManagedBean().setPlanMaster(planMaster);
@@ -456,7 +479,7 @@ public class PlanBackingBean extends BaseBackingBean<PlanManagedBean>{
 			
 			//PVO
 			mtoPlan.setVerificationOfficers(new ArrayList<PpPlanActor>());
-			for(int i=1; i<=3; i++){
+			for(int i=1; i<=ProcurementPlanConst.PVO_LEVEL; i++){
 				PpPlanActor vo = new PpPlanActor();
 				vo.setActorSeq(i);
 				vo.setActorType("V");
@@ -488,30 +511,40 @@ public class PlanBackingBean extends BaseBackingBean<PlanManagedBean>{
 		log.info("initialMtoPlan - End");
 	}
 	
-	
+
 	/**
 	 * update view whenever procurement is changed.
+	 * @param reset
 	 */
-	public void updateViewMode(){
+	public void updateViewMode(boolean reset){
 		log.info("updateViewMode - Start");
 		if(CommonMethod.isSelected(this.getManagedBean().getSelectedPlanMaster().getProcurementMode())){
 			String procurementMode = this.getManagedBean().getSelectedPlanMaster().getProcurementMode();
+			String votType = this.getManagedBean().getSelectedPlanMaster().getVotType();
 			if(ProcurementPlanConst.PROCUREMENT_QUOTATION.equals(procurementMode) || ProcurementPlanConst.PROCUREMENT_DIRECT_NEGO.equals(procurementMode)
 					|| ProcurementPlanConst.PROCUREMENT_TENDER.equals(procurementMode)){
-				cleanPlanDetails();
+				if(reset){
+					cleanPlanDetails();	
+				}
 				this.getManagedBean().getSelectedPlanMaster().setPlanType(ProcurementPlanConst.PLAN_TYPE_PROCUREMENT);
 				this.getManagedBean().getSelectedPlanMaster().setProcurementMode(procurementMode);
+				this.getManagedBean().getSelectedPlanMaster().setVotType(votType);
 			}else if(ProcurementPlanConst.PROCUREMENT_EXISTING_CONTRACT.equals(procurementMode) 
 					|| ProcurementPlanConst.PROCUREMENT_DIRECT_PURCHASE.equals(procurementMode)){
-				cleanPlanDetails();
+				if(reset){
+					cleanPlanDetails();	
+				}
 				this.getManagedBean().getSelectedPlanMaster().setPlanType(ProcurementPlanConst.PLAN_TYPE_EXPENDITURE);
 				this.getManagedBean().getSelectedPlanMaster().setProcurementMode(procurementMode);
+				this.getManagedBean().getSelectedPlanMaster().setVotType(votType);
 				if(ProcurementPlanConst.PROCUREMENT_DIRECT_PURCHASE.equals(procurementMode)){
 					//default favorite options to none
 					this.getManagedBean().getSelectedPlan().setFavouriteOption(ProcurementPlanConst.FAVOURITE_TYPE_NONE);
 				}
 			}
+			
 		}
+		
 		enableDetailTab(); //reflect to details tab
 		updateMtoFlag(); //reflect to MTO tab
 		log.info("procurement mode:" + this.getManagedBean().getSelectedPlanMaster().getProcurementMode());
@@ -680,24 +713,22 @@ public class PlanBackingBean extends BaseBackingBean<PlanManagedBean>{
 			}else{
 				item.setEditable(false);
 			}
-//			item.setEditable(false);
-//			item.setBrandNew(false);
+
 			item.setSelected(true);
+			//populate selected GOSODO
 			item.setGoId(item.getPpBudgetAllocDtl().getPpBudget().getBudgetId());
 			item.setSoId(item.getPpBudgetAllocDtl().getSoId());
 			item.setDoId(item.getPpBudgetAllocDtl().getDoId());
+			
+			//populate selected Unspsc level
+			CmUnspsc familyObj = selectParentUnspsc(item.getCmUnspsc().getUnspscParentCode());
+			CmUnspsc segmentObj = selectParentUnspsc(familyObj.getUnspscParentCode());
+			item.setUnspscSegmentCode(segmentObj.getUnspscCode());
+			item.setUnspscFamilyCode(familyObj.getUnspscCode());
 			item.setUnspscClassCode(item.getCmUnspsc().getUnspscCode());
-//			item.setSoId(item.getPpBudgetAllocDtl().getSoId());
 			this.getManagedBean().setSelectedItem(item);
 			this.getManagedBean().setSelectedItemRemark(new PpRemark());
-			
-			System.out.println("item.getPpBudgetAllocDtl() id "  +this.getManagedBean().getSelectedItem().getPpBudgetAllocDtl().getBudgetAllocDtlId());
-			System.out.println("item.getPpBudgetAllocDtl() Budget "  +this.getManagedBean().getSelectedItem().getPpBudgetAllocDtl().getPpBudget().getBudgetId());
-			System.out.println("item.getPpBudgetAllocDtl() Go "  +this.getManagedBean().getSelectedItem().getGoId());
-			System.out.println("item.getPpBudgetAllocDtl() So "  +this.getManagedBean().getSelectedItem().getSoId());
-			System.out.println("item.getPpBudgetAllocDtl() Do "  +this.getManagedBean().getSelectedItem().getDoId());
-			
-		;
+
 			//call populate allocated budget as gosodo
 		}
 		log.info("showPpItem - End");
@@ -935,6 +966,11 @@ public class PlanBackingBean extends BaseBackingBean<PlanManagedBean>{
 		log.info("calculateActEndDate - End");
 	}
 	
+	/**
+	 * update local budget alloc dtl while GOSODO is selected
+	 * @param item
+	 * @param mode
+	 */
 	public void updateSelectedDo(PpPlanItem item, String mode){
 		log.info("updateSelectedDo - Start");
 		
@@ -976,19 +1012,14 @@ public class PlanBackingBean extends BaseBackingBean<PlanManagedBean>{
 								item.getEstimatedAmount())
 				);
 			}else if("ADD".equals(mode)){
-				//add item
-	//			if(this.getManagedBean().getSelectedGoMapper().get(key)==null){
-	//				this.getManagedBean().getSelectedGoMapper().put(key, item.getAllocAmount());
-	//			}else{
-					this.getManagedBean().getSelectedPlanMaster().getSelectedGoMapper().put(
-							key, 
-							CommonMethod.addBigDecimalNullable(
-								this.getManagedBean().getSelectedPlanMaster().getSelectedGoMapper().get(key),
-								item.getEstimatedAmount())
-					);
+				this.getManagedBean().getSelectedPlanMaster().getSelectedGoMapper().put(
+						key, 
+						CommonMethod.addBigDecimalNullable(
+							this.getManagedBean().getSelectedPlanMaster().getSelectedGoMapper().get(key),
+							item.getEstimatedAmount())
+				);
 				item.setOriEstimatedAmount(item.getEstimatedAmount());//initiate ori amount
 				item.setOriPpBudgetAllocDtl(item.getPpBudgetAllocDtl());//initiate ori budget
-	//			}
 			}else if("UPDATE".equals(mode)){
 				//update item with same GO
 				this.getManagedBean().getSelectedPlanMaster().getSelectedGoMapper().put(
@@ -1068,7 +1099,10 @@ public class PlanBackingBean extends BaseBackingBean<PlanManagedBean>{
 		return options;
 	}
 	
-	
+	/**
+	 * retrieve procurement mode options
+	 * @return List<SelectItem>
+	 */
 	public List<SelectItem> procurementModeOptions() {
 		List<SelectItem>options = new ArrayList<SelectItem>();
 		options.add(new SelectItem(ProcurementPlanConst.PROCUREMENT_QUOTATION, "Quotation"));
@@ -1079,6 +1113,10 @@ public class PlanBackingBean extends BaseBackingBean<PlanManagedBean>{
 		return options;
 	}
 	
+	/**
+	 * retrieve fulfillment type options
+	 * @return List<SelectItem>
+	 */
 	public List<SelectItem> fulfillmentTypeOptions() {
 		List<SelectItem>options = new ArrayList<SelectItem>();
 		options.add(new SelectItem(ProcurementPlanConst.FULFILLMENT_ONE_OFF, "One-Off"));
@@ -1087,6 +1125,10 @@ public class PlanBackingBean extends BaseBackingBean<PlanManagedBean>{
 		return options;
 	}
 	
+	/**
+	 * retrieve favourite options
+	 * @return List<SelectItem>
+	 */
 	public List<SelectItem> favouriteOptions() {
 		List<SelectItem>options = new ArrayList<SelectItem>();
 		options.add(new SelectItem(ProcurementPlanConst.FAVOURITE_TYPE_ITEM, "Item"));
@@ -1095,6 +1137,10 @@ public class PlanBackingBean extends BaseBackingBean<PlanManagedBean>{
 		return options;
 	}
 
+	/**
+	 * retrieve qt type options
+	 * @return List<SelectItem>
+	 */
 	public List<SelectItem> qtTypeOptions() {
 		List<SelectItem>options = new ArrayList<SelectItem>();
 		options.add(new SelectItem(ProcurementPlanConst.QT_TYPE_BUMIPUTERA, "Bumiputera"));
@@ -1105,6 +1151,10 @@ public class PlanBackingBean extends BaseBackingBean<PlanManagedBean>{
 		return options;
 	}
 	
+	/**
+	 * retrieve item origin type options
+	 * @return List<SelectItem>
+	 */
 	public List<SelectItem> itemOriginTypeOptions() {
 		List<SelectItem>options = new ArrayList<SelectItem>();
 		options.add(new SelectItem(ProcurementPlanConst.ITEM_ORIGIN_TYPE_IMPORTED, "Imported"));
@@ -1113,6 +1163,10 @@ public class PlanBackingBean extends BaseBackingBean<PlanManagedBean>{
 		return options;
 	}
 	
+	/**
+	 * retrieve verification level options
+	 * @return List<SelectItem>
+	 */
 	public List<SelectItem> verificationLevelOptions() {
 		List<SelectItem>options = new ArrayList<SelectItem>();
 		options.add(new SelectItem(ProcurementPlanConst.LEVEL_SINGLE, "Single"));
@@ -1120,7 +1174,11 @@ public class PlanBackingBean extends BaseBackingBean<PlanManagedBean>{
 		return options;
 	}
 	
-	public List<SelectItem> documentTypeOptions() {
+	/**
+	 * retrieve contract indicator options
+	 * @return List<SelectItem>
+	 */
+	public List<SelectItem> contractIndOptions() {
 		List<SelectItem>options = new ArrayList<SelectItem>();
 		options.add(new SelectItem(ProcurementPlanConst.CONTRACT_IND_PKP, "PKP"));
 		options.add(new SelectItem(ProcurementPlanConst.CONTRACT_IND_LOA, "LOA"));
@@ -1128,6 +1186,10 @@ public class PlanBackingBean extends BaseBackingBean<PlanManagedBean>{
 		return options;
 	}
 	
+	/**
+	 * retrieve Contract Type options
+	 * @return List<SelectItem>
+	 */
 	public List<SelectItem> contractTypeOptions() {
 		List<SelectItem>options = new ArrayList<SelectItem>();
 		options.add(new SelectItem(ProcurementPlanConst.CONTRACT_TYPE_MINISTRY, "Ministry"));
@@ -1135,6 +1197,10 @@ public class PlanBackingBean extends BaseBackingBean<PlanManagedBean>{
 		return options;
 	}
 	
+	/**
+	 * retrieve all short month e.g Jul
+	 * @return List<SelectItem>
+	 */
 	public List<SelectItem> shortMonths() {
 		return CommonMethod.calendarMonths();
 	}
@@ -1200,32 +1266,7 @@ public class PlanBackingBean extends BaseBackingBean<PlanManagedBean>{
 		log.info("getAllBudgetAllocDtls - End");
 		return budgetAllocDtlList;
 	}
-	
-//	/**
-//	 * retrieve and set budget alloc dtl
-//	 */
-//	public void selectedDo(){
-//		log.info("selectedDo - Start");
-//		Long id = this.getManagedBean().getSelectedItem().getBudgetAllocDtlId();
-//		try{
-//			if(CommonMethod.isSelected(id)){
-//				BudgetAllocationReqDTO reqDTO = new BudgetAllocationReqDTO();
-//				reqDTO.setBudgetAllocDtlId(id);
-//				IBudgetAllocationSO reqSO = (IBudgetAllocationSO) BusinessDelegate.getInstance().getServiceObject(ProcurementPlanConst.SO_PP, IBudgetAllocationSO.class);
-//				BudgetAllocationResDTO resDTO = reqSO.retrieveBudgetAllocDtl(reqDTO);
-//				if(resDTO.isSuccessful()){
-//					this.getManagedBean().getSelectedItem().setPpBudgetAllocDtl(resDTO.getBudgetAllocDtl());
-//					this.getManagedBean().getSelectedItem().setOvrFinancialYear(resDTO.getBudgetAllocDtl().getPpBudget().getFinancialYear());
-//				}
-//			}
-//		}catch (Exception e){
-//			e.printStackTrace();
-//			this.getManagedBean().setSystemMsg(e.getMessage());
-//		}
-//		
-//		
-//		log.info("selectedDo - End");		
-//	}
+
 	
 	/**
 	 * retrieve and set unspsc object
@@ -1238,9 +1279,9 @@ public class PlanBackingBean extends BaseBackingBean<PlanManagedBean>{
 				CodificationReqDTO reqDTO = new CodificationReqDTO();
 				reqDTO.setUnspscCode(code);
 				ICodificationSO reqSO = (ICodificationSO) BusinessDelegate.getInstance().getServiceObject("cm", ICodificationSO.class);
-				CodificationResDTO resDTO = reqSO.searchClassObj(reqDTO);
+				CodificationResDTO resDTO = reqSO.searchUnspscObj(reqDTO);
 				if(resDTO.isSuccessful()){
-					this.getManagedBean().getSelectedItem().setCmUnspsc(resDTO.getClassObj());
+					this.getManagedBean().getSelectedItem().setCmUnspsc(resDTO.getUnspscObj());
 				}
 			}
 		}catch (Exception e){
@@ -1250,11 +1291,35 @@ public class PlanBackingBean extends BaseBackingBean<PlanManagedBean>{
 		log.info("selectedProduct - End");		
 	}
 	
+	/**
+	 * select parent unspsc object
+	 */
+	public CmUnspsc selectParentUnspsc(String code){
+		log.info("selectParentUnspsc - Start");
+	
+		CmUnspsc parentUnspsc = new CmUnspsc();
+		try{
+			if(CommonMethod.isSelected(code)){
+				CodificationReqDTO reqDTO = new CodificationReqDTO();
+				reqDTO.setParentCode(code);
+				ICodificationSO reqSO = (ICodificationSO) BusinessDelegate.getInstance().getServiceObject("cm", ICodificationSO.class);
+				CodificationResDTO resDTO = reqSO.searchParentObj(reqDTO);
+				if(resDTO.isSuccessful()){
+					parentUnspsc =resDTO.getParentObj();
+				}
+			}
+		}catch (Exception e){
+			e.printStackTrace();
+			this.getManagedBean().setSystemMsg(e.getMessage());
+		}
+		log.info("selectParentUnspsc - End");		
+		return parentUnspsc;
+	}
 
 	
 	/**
-	 * populate GO list
-	 * @return GO list
+	 * retrieve distinct GO options
+	 * @return List<PpBudget>
 	 */
 	public List<PpBudget> goOptions() {
 		log.info("goOptions - Start");
@@ -1277,12 +1342,11 @@ public class PlanBackingBean extends BaseBackingBean<PlanManagedBean>{
 		return goBudgets;
 		
 	}
-	
-//	private List <PpBudgetAllocDtl> goOptions(){
-//		return getAllBudgetAllocDtls(this.getManagedBean().getCurrentUser().getOrgProfileId());
-//	}
-	
-	
+
+	/**
+	 * retrieve distinct SO options
+	 * @return List<PmSo> 
+	 */
 	public List<PmSo> soOptions() {
 		log.info("soOptions - Start");
 		System.out.println("go "  +this.getManagedBean().getSelectedItem().getGoId());
@@ -1304,11 +1368,14 @@ public class PlanBackingBean extends BaseBackingBean<PlanManagedBean>{
 		return soBudgets;
 		
 	}
-	
-	public List<PmDo> doOptions() {
+	/**
+	 * retrieve all DO options
+	 * @return List<PpBudgetAllocDtl> 
+	 */
+	public List<PpBudgetAllocDtl> doOptions() {
 		log.info("doOptions - Start");
 		System.out.println("so "  +this.getManagedBean().getSelectedItem().getSoId());
-		List<PmDo> doBudgets = new ArrayList<PmDo>();
+		List<PpBudgetAllocDtl> doBudgets = new ArrayList<PpBudgetAllocDtl>();
 		try{
 			BudgetAllocationReqDTO reqDTO = new BudgetAllocationReqDTO();
 			reqDTO.setOrgProfileId(this.getManagedBean().getCurrentUser().getOrgProfileId());	
@@ -1328,6 +1395,9 @@ public class PlanBackingBean extends BaseBackingBean<PlanManagedBean>{
 		
 	}
 	
+	/**
+	 * retrieve and set selected GOSODO
+	 */
 	public void selectedGoSoDo(){
 		log.info("selectedGoSoDo - Start");
 		log.info("id: " + this.getManagedBean().getSelectedItem().getPpBudgetAllocDtl().getBudgetAllocDtlId());
@@ -1456,7 +1526,79 @@ public class PlanBackingBean extends BaseBackingBean<PlanManagedBean>{
 		return profileList;
 	}
 	
+	/**
+	 * retrieve contract list by type
+	 * @return List<CtContract> 
+	 */
+	public List<CtContract> contractOptions(){
+		log.info("contractOptions - Start");
+		List<CtContract> options = new ArrayList<CtContract>();
+		try{
+			ContractReqDTO reqDTO = new ContractReqDTO();
+			reqDTO.setContractTypeCodeId(1L);//TODO
+			IContractSO reqSO = (IContractSO) BusinessDelegate.getInstance().getServiceObject("ct", IContractSO.class);
+			ContractResDTO resDTO = reqSO.retrieveContractByContractType(reqDTO);
+			if(resDTO.isSuccessful()){
+				options = resDTO.getCtContracts();
+			}
+			log.info("result size: " +options.size());
+			
+		}catch (Exception e){
+			e.printStackTrace();
+			this.getManagedBean().setSystemMsg(e.getMessage());
+		}
+		log.info("contractOptions - End");
+		return options;
+	}
 
+	/**
+	 * retrieve circular contract list circular id
+	 * @return  List<CtCircularContract>
+	 */
+	public List<CtCircularContract> cicularContractOptions(){
+		log.info("contractOptions - Start");
+		List<CtCircularContract> options = new ArrayList<CtCircularContract>();
+		try{
+			CircularReqDTO reqDTO = new CircularReqDTO();
+			reqDTO.setCircularId(1L);
+			ICircularSO circularSO = (ICircularSO) BusinessDelegate.getInstance().getServiceObject("ct", ICircularSO.class);
+			CircularResDTO resDTO = circularSO.retrieveCircularContractByCircularId(reqDTO);
+			if(resDTO.isSuccessful()){
+				options = resDTO.getCircularContractList();
+			}
+			log.info("result size: " +options.size());
+			
+		}catch (Exception e){
+			e.printStackTrace();
+			this.getManagedBean().setSystemMsg(e.getMessage());
+		}
+		log.info("contractOptions - End");
+		return options;
+	}
+	
+	/**
+	 * retrieve circular list
+	 * @return List<CtCircular> 
+	 */
+	public List<CtCircular> circularOptions(){
+		log.info("circularOptions - Start");
+		List<CtCircular> options = new ArrayList<CtCircular>();
+		try{
+			CircularReqDTO reqDTO = new CircularReqDTO();
+			reqDTO.setDocType("CCR");
+			ICircularSO circularSO = (ICircularSO) BusinessDelegate.getInstance().getServiceObject("ct", ICircularSO.class);
+			CircularResDTO resDTO = circularSO.retrieveCircularListByType(reqDTO);
+			if(resDTO.isSuccessful()){
+				options = resDTO.getCircularList();
+			}
+			log.info("result size: " +options.size());
+		}catch (Exception e){
+			e.printStackTrace();
+			this.getManagedBean().setSystemMsg(e.getMessage());
+		}
+		log.info("circularOptions - End");
+		return options;
+	}
 	public void test(){
 		System.out.println("sssssssssssssss rain");
 				
@@ -1476,6 +1618,11 @@ public class PlanBackingBean extends BaseBackingBean<PlanManagedBean>{
 			desPlan.setStatusId(sourcePlan.getStatusId());
 			desPlan.setSubmissionType(sourcePlan.getSubmissionType());
 			desPlan.setFavouriteOption(sourcePlan.getFavouriteOption());
+			desPlan.setPpPlanActors(new ArrayList<PpPlanActor>());
+			for(PpPlanActor actor:sourcePlan.getPpPlanActors()){
+				System.out.println("actor " + actor.getUserId());
+				desPlan.addPpPlanActors(actor);
+			}
 		}
 		log.info("clonePlan - end");
 		return desPlan;
@@ -1505,7 +1652,6 @@ public class PlanBackingBean extends BaseBackingBean<PlanManagedBean>{
 		}
 		
 		//getting approver
-		System.out.println("approver " +this.getManagedBean().getSelectedPlan().getApprover());
 		System.out.println("approver " +this.getManagedBean().getSelectedPlan().getApprover().getUserId());
 		this.getManagedBean().getSelectedPlan().addPpPlanActors(this.getManagedBean().getSelectedPlan().getApprover());
 		
