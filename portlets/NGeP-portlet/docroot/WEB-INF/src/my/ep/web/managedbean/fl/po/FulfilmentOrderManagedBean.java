@@ -39,6 +39,7 @@ public class FulfilmentOrderManagedBean extends BaseManagedBean {
 	private String[] actions;
 	
 	private String tempLoginId; //TODO: temp and to be removed
+	private boolean contractRequest;
 	
 	
 	private FlRemark flRemark = new FlRemark();
@@ -265,6 +266,20 @@ public class FulfilmentOrderManagedBean extends BaseManagedBean {
 	 */
 	public void setActions(String[] actions) {
 		this.actions = actions;
+	}
+
+	/**
+	 * @return the contractRequest
+	 */
+	public boolean isContractRequest() {
+		return contractRequest;
+	}
+
+	/**
+	 * @param contractRequest the contractRequest to set
+	 */
+	public void setContractRequest(boolean contractRequest) {
+		this.contractRequest = contractRequest;
 	}
 
 	

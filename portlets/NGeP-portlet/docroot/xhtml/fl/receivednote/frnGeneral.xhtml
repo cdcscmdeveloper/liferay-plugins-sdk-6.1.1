@@ -8,8 +8,8 @@
 			<tr>
 				<td colspan="4" align="right">
 				<ui:repeat var="bpmAction"
-					value="#{createFRNBackingBean.managedBean.actions}">
-					<p:commandButton value="#{bpmAction}" ajax='false' action="#{createFRNBackingBean.submitAction(bpmAction)}" process="@this"/>
+					value="#{recievedNoteBackingBean.managedBean.actions}">
+					<p:commandButton value="#{bpmAction}" ajax='false' action="#{recievedNoteBackingBean.submitAction(bpmAction)}" process="@this"/>
 				</ui:repeat> 
 				</td>
 			</tr>
@@ -103,7 +103,7 @@
 			</tr>
 			<tr>
 				<td><p:outputLabel value="Actual Received Date" /></td>
-				<td><p:calendar mode="popup" showOn="button" value="#{createFRNBackingBean.managedBean.fulfilmentNote.actStartDate}"/></td>
+				<td><p:calendar mode="popup" showOn="button" value="#{recievedNoteBackingBean.managedBean.fulfilmentNote.actStartDate}"/></td>
 				
 			</tr>
 

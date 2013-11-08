@@ -49,6 +49,7 @@ public class ReceivedNoteManagedBean extends BaseManagedBean {
 	private String fulfillmentReqId;
 	private String taskId;
 	private String[] actions;
+	private long deliveryOrderId;
 	
 
 	/**
@@ -235,6 +236,20 @@ public class ReceivedNoteManagedBean extends BaseManagedBean {
 	 */
 	public void setFulfilmentNoteItem(FlFulfilmentNoteItem fulfilmentNoteItem) {
 		this.fulfilmentNoteItem = fulfilmentNoteItem;
+	}
+
+	/**
+	 * @return the deliveryOrderId
+	 */
+	public long getDeliveryOrderId() {
+		return deliveryOrderId;
+	}
+
+	/**
+	 * @param deliveryOrderId the deliveryOrderId to set
+	 */
+	public void setDeliveryOrderId(long deliveryOrderId) {
+		this.deliveryOrderId = deliveryOrderId;
 	}
 
 

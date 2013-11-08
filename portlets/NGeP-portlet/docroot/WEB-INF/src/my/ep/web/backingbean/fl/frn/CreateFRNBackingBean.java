@@ -32,102 +32,102 @@ import org.apache.log4j.Logger;
 @ManagedBean(name = "createFRNBackingBean")
 @RequestScoped
 public class CreateFRNBackingBean extends BaseBackingBean<CreateFRNManagedBean> {
-	private static Logger log = Logger.getLogger(CreateFRNBackingBean.class);
-
-	public void createReceivedNote(String action) throws ParseException {
-		IReceivedNoteSO receivedNoteSO = null;
-		try {
-			FulfilmentReqDTO reqDTO = new FulfilmentReqDTO();
-			
-			FlRemark flRemark = getManagedBean().getFlRemark();
-			flRemark.setDocId(Long.valueOf(1));
-			flRemark.setDocType("tex");
-			
-			FlAttachment flAttachment = this.getManagedBean().getFlAttachment();
-			String fileName = this.getManagedBean().getFlAttachment().getFileName();
-			String fileDesc = this.getManagedBean().getFlAttachment().getFileDescription();
-			String filePath = this.getManagedBean().getFlAttachment().getFilePath();
-			flAttachment.setDocType("txt");
-			flAttachment.setDocId(Long.valueOf(44));
-			flAttachment.setFileName(fileName);
-			flAttachment.setFileDescription(fileDesc);
-			flAttachment.setFilePath(filePath);
-			
-			FlFulfilmentNote fulfilmentNote = getManagedBean().getFulfilmentNote();
-			receivedNoteSO = (IReceivedNoteSO) BusinessDelegate.getInstance().getServiceObject("fl",IReceivedNoteSO.class);
-			//reqDTO.setFlRemark(flRemark);
-			//reqDTO.setFlAttachment(flAttachment);
-			reqDTO.setFulfilmentNote(fulfilmentNote);
-			reqDTO.setTaskId(this.getManagedBean().getTaskId());
-            System.out.println("action in BB"+action);
-			reqDTO.setOutcome(action);
-			reqDTO.setDeliveryOrderId(getManagedBean().getDeliveryOrderId());
-			receivedNoteSO.createReceivedNote(reqDTO);
-			//System.out.println("resDTO.isSuccessful() in backing bean:: "+ resDTO.isSuccessful());
-		} catch (Exception e) {
-			log.error("Exception>>", e);
-		} finally {
-			receivedNoteSO = null;
-		}
-	}
-	public void createItemReceivedNote() throws ParseException {
-		IReceivedNoteSO receivedNoteSO = null;
-		try {
-			FulfilmentReqDTO reqDTO = new FulfilmentReqDTO();
-			
-			FlRemark flRemark = getManagedBean().getFlRemark();
-			flRemark.setDocId(Long.valueOf(1));
-			flRemark.setDocType("tex");
-			
-			FlAttachment flAttachment = this.getManagedBean().getFlAttachment();
-			String fileName = this.getManagedBean().getFlAttachment().getFileName();
-			String fileDesc = this.getManagedBean().getFlAttachment().getFileDescription();
-			String filePath = this.getManagedBean().getFlAttachment().getFilePath();
-			flAttachment.setDocType("txt");
-			flAttachment.setDocId(Long.valueOf(44));
-			flAttachment.setFileName(fileName);
-			flAttachment.setFileDescription(fileDesc);
-			flAttachment.setFilePath(filePath);
-			
-			FlFulfilmentNoteItem fulfilmentNoteItem = getManagedBean().getFulfilmentNoteItem();
-			receivedNoteSO = (IReceivedNoteSO) BusinessDelegate.getInstance().getServiceObject("fl",IReceivedNoteSO.class);
-			//reqDTO.setFlRemark(flRemark);
-			//reqDTO.setFlAttachment(flAttachment);
-			reqDTO.setFulfilmentNoteItem(fulfilmentNoteItem);
-			//reqDTO.setContractRequest(false);
-			//reqDTO.setTaskId(this.getManagedBean().getTaskId());
-			//reqDTO.setOutcome(action);
-			//reqDTO.setProcessId("Order_Fullfillment.CreatePurchaseOrder");
-			FulfilmentResDTO resDTO = receivedNoteSO.createReceivedNote(reqDTO);
-			//System.out.println("resDTO.isSuccessful() in backing bean:: "+ resDTO.isSuccessful());
-		} catch (Exception e) {
-			log.error("Exception>>", e);
-		} finally {
-			receivedNoteSO = null;
-		}
-	}
-	public void submitAction(String action) {
-		if(BpmOutcomeConst.BPM_SUBMIT.equals(action)){
-			try {
-				createReceivedNote(action);
-			} catch (ParseException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-		}else if (BpmOutcomeConst.BPM_REVISE.equals(action)){
-		}else if (BpmOutcomeConst.BPM_APPROVE.equals(action)){
-			System.out.println("we are in app method::: ");
-		}else if (BpmOutcomeConst.BPM_REJECT.equals(action)){
-		}else if (BpmOutcomeConst.BPM_ACKNOWLEDGE.equals(action)){
-		}else if (BpmOutcomeConst.BPM_SAVE.equals(action)){
-		}
-
-	}
-
-	
-	
-
-	
-	
-	
+//	private static Logger log = Logger.getLogger(CreateFRNBackingBean.class);
+//
+//	public void createReceivedNote(String action) throws ParseException {
+//		IReceivedNoteSO receivedNoteSO = null;
+//		try {
+//			FulfilmentReqDTO reqDTO = new FulfilmentReqDTO();
+//			
+//			FlRemark flRemark = getManagedBean().getFlRemark();
+//			flRemark.setDocId(Long.valueOf(1));
+//			flRemark.setDocType("tex");
+//			
+//			FlAttachment flAttachment = this.getManagedBean().getFlAttachment();
+//			String fileName = this.getManagedBean().getFlAttachment().getFileName();
+//			String fileDesc = this.getManagedBean().getFlAttachment().getFileDescription();
+//			String filePath = this.getManagedBean().getFlAttachment().getFilePath();
+//			flAttachment.setDocType("txt");
+//			flAttachment.setDocId(Long.valueOf(44));
+//			flAttachment.setFileName(fileName);
+//			flAttachment.setFileDescription(fileDesc);
+//			flAttachment.setFilePath(filePath);
+//			
+//			FlFulfilmentNote fulfilmentNote = getManagedBean().getFulfilmentNote();
+//			receivedNoteSO = (IReceivedNoteSO) BusinessDelegate.getInstance().getServiceObject("fl",IReceivedNoteSO.class);
+//			//reqDTO.setFlRemark(flRemark);
+//			//reqDTO.setFlAttachment(flAttachment);
+//			reqDTO.setFulfilmentNote(fulfilmentNote);
+//			reqDTO.setTaskId(this.getManagedBean().getTaskId());
+//            System.out.println("action in BB"+action);
+//			reqDTO.setOutcome(action);
+//			reqDTO.setDeliveryOrderId(getManagedBean().getDeliveryOrderId());
+//			receivedNoteSO.createReceivedNote(reqDTO);
+//			//System.out.println("resDTO.isSuccessful() in backing bean:: "+ resDTO.isSuccessful());
+//		} catch (Exception e) {
+//			log.error("Exception>>", e);
+//		} finally {
+//			receivedNoteSO = null;
+//		}
+//	}
+//	public void createItemReceivedNote() throws ParseException {
+//		IReceivedNoteSO receivedNoteSO = null;
+//		try {
+//			FulfilmentReqDTO reqDTO = new FulfilmentReqDTO();
+//			
+//			FlRemark flRemark = getManagedBean().getFlRemark();
+//			flRemark.setDocId(Long.valueOf(1));
+//			flRemark.setDocType("tex");
+//			
+//			FlAttachment flAttachment = this.getManagedBean().getFlAttachment();
+//			String fileName = this.getManagedBean().getFlAttachment().getFileName();
+//			String fileDesc = this.getManagedBean().getFlAttachment().getFileDescription();
+//			String filePath = this.getManagedBean().getFlAttachment().getFilePath();
+//			flAttachment.setDocType("txt");
+//			flAttachment.setDocId(Long.valueOf(44));
+//			flAttachment.setFileName(fileName);
+//			flAttachment.setFileDescription(fileDesc);
+//			flAttachment.setFilePath(filePath);
+//			
+//			FlFulfilmentNoteItem fulfilmentNoteItem = getManagedBean().getFulfilmentNoteItem();
+//			receivedNoteSO = (IReceivedNoteSO) BusinessDelegate.getInstance().getServiceObject("fl",IReceivedNoteSO.class);
+//			//reqDTO.setFlRemark(flRemark);
+//			//reqDTO.setFlAttachment(flAttachment);
+//			reqDTO.setFulfilmentNoteItem(fulfilmentNoteItem);
+//			//reqDTO.setContractRequest(false);
+//			//reqDTO.setTaskId(this.getManagedBean().getTaskId());
+//			//reqDTO.setOutcome(action);
+//			//reqDTO.setProcessId("Order_Fullfillment.CreatePurchaseOrder");
+//			FulfilmentResDTO resDTO = receivedNoteSO.createReceivedNote(reqDTO);
+//			//System.out.println("resDTO.isSuccessful() in backing bean:: "+ resDTO.isSuccessful());
+//		} catch (Exception e) {
+//			log.error("Exception>>", e);
+//		} finally {
+//			receivedNoteSO = null;
+//		}
+//	}
+//	public void submitAction(String action) {
+//		if(BpmOutcomeConst.BPM_SUBMIT.equals(action)){
+//			try {
+//				createReceivedNote(action);
+//			} catch (ParseException e) {
+//				// TODO Auto-generated catch block
+//				e.printStackTrace();
+//			}
+//		}else if (BpmOutcomeConst.BPM_REVISE.equals(action)){
+//		}else if (BpmOutcomeConst.BPM_APPROVE.equals(action)){
+//			System.out.println("we are in app method::: ");
+//		}else if (BpmOutcomeConst.BPM_REJECT.equals(action)){
+//		}else if (BpmOutcomeConst.BPM_ACKNOWLEDGE.equals(action)){
+//		}else if (BpmOutcomeConst.BPM_SAVE.equals(action)){
+//		}
+//
+//	}
+//
+//	
+//	
+//
+//	
+//	
+//	
 }

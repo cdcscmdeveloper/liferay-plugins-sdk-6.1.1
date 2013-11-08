@@ -11,6 +11,16 @@
 	</ui:define>
 
 	<ui:define name="contentSection">
+	<table>
+			<tr>
+				<td colspan="4" style="text-align:right">
+				<ui:repeat var="bpmAction"
+					value="#{contractRequestBackingBean.managedBean.actions}">
+					<p:commandButton value="#{bpmAction}" action="#{contractRequestBackingBean.submitAction(bpmAction)}"/>
+				</ui:repeat> 
+				</td>
+			</tr>
+		</table>
 		<p:tabView id="cotabs" orientation="left" dynamic="true" cache="false">
 			<p:tab id="tab1" title="GENERAL" >
 				<ui:include src="crGeneral.xhtml"/>

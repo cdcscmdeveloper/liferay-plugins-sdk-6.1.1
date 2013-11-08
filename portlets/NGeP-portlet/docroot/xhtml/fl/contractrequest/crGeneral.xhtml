@@ -6,16 +6,7 @@
 	xmlns:p="http://primefaces.org/ui"
 	xmlns:c="http://java.sun.com/jsp/jstl/core">
 
-		<table style="width: 800px;">
-			<tr>
-				<td colspan="4" align="right">
-				<ui:repeat var="bpmAction"
-					value="#{contractRequestBackingBean.managedBean.actions}">
-					<p:commandButton value="#{bpmAction}" action="#{contractRequestBackingBean.submitAction(bpmAction)}" process="@this"/>
-				</ui:repeat> 
-				</td>
-			</tr>
-		</table>
+		
 		 <p:messages id="msgs"/>
 		<p:panel header="FULFILMENT DETAIL" toggleable="true" id="flDetails">
 			<table>
@@ -69,8 +60,7 @@
 				</tr>
 				<tr>
 					<td rowspan="4"><p:outputLabel value="* Title" /></td>
-					<td rowspan="4"><p:inputTextarea rows="8"
-							style="width: 260px;" value="#{contractRequestBackingBean.managedBean.flRequest.title}"/></td>
+					<td rowspan="4"><p:inputTextarea rows="8" style="width: 260px;" value="#{contractRequestBackingBean.managedBean.flRequest.title}"/></td>
 					<td><p:outputLabel value="Plan NO." /></td>
 					<td><p:inputText style="width: 260px;" value="#{contractRequestBackingBean.managedBean.flRequest.planId}"
 							disabled="true" /></td>
@@ -185,11 +175,11 @@
 							requiredMessage="Please enter remarks."
 							value="#{contractRequestBackingBean.managedBean.flRemark.remark}" maxlength="200"       
     						counterTemplate="{0} characters remaining." autoResize="false"/>
-    						<p:message for="remark" /></td>
+    						<p:message for="remark"/></td>
 					<td><p:outputLabel value="Attachment" /></td>
 					<td><p:fileUpload
 							fileUploadListener="#{contractRequestBackingBean.fileUpload}"
-							 update="messages" mode="advanced" dragDropSupport="false" sizeLimit="100000"
+							update="messages" mode="advanced" dragDropSupport="false" sizeLimit="100000"
 							multiple="true" allowTypes="/(\.|\/)(doc|docx|xls|xlsx|pdf)$/" />
 							 <p:growl id="messages" showDetail="true"/></td>
 				</tr>

@@ -115,6 +115,7 @@ public class ContractRequestBackingBean extends BaseBackingBean<ContractRequestM
 		try {
 			FulfilmentReqDTO reqDTO = new FulfilmentReqDTO();
 			FlFulfilmentRequest flRequest = getManagedBean().getFlRequest();
+			System.out.println("title: "+flRequest.getTitle());
 			//			FlRemark flRemark = this.getManagedBean().getFlRemark();//temporary comment for attachment n remark
 			//			FlAttachment flAttachment = this.getManagedBean().getFlAttachment();
 //			String fileName = this.getManagedBean().getFlAttachment().getFileName();
@@ -146,12 +147,7 @@ public class ContractRequestBackingBean extends BaseBackingBean<ContractRequestM
 			
 			reqDTO.setOutcome(action);
 			reqDTO.setTaskId(getManagedBean().getBpmTaskId());
-			if(action.equalsIgnoreCase(BpmOutcomeConst.BPM_ACKNOWLEDGE)){
-				flOrderSO = (IFulfilmentOrderSO) BusinessDelegate.getInstance().getServiceObject("fl", IFulfilmentOrderSO.class);
-				flOrderSO.acknowledgeFulfillmentOrder(reqDTO);
-			}else{
-				iFulfilmentRequestSO.saveFulfillmentRequest(reqDTO);
-			}
+			iFulfilmentRequestSO.saveFulfillmentRequest(reqDTO);
 			
 
 		}catch(Exception e){

@@ -23,7 +23,7 @@
 					action="#{flOrderBB.navigateToFlOrder(rowIndex)}">
 					<f:param name="fulfilmentOrderId" value="#{pending.fulfilmentOrderId}" />
 					<f:param name="fulfilmentReqId" value="#{pending.flFulfilmentRequest.fulfilmentReqId}" />
-					<f:param name="statusId" value="#{pending.statusId}" />
+					<f:param name="statusId" value="#{pending.pmStatus.statusId}" />
 
 				</p:commandLink>
 			</p:column>

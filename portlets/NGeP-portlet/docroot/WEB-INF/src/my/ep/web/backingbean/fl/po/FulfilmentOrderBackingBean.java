@@ -1,70 +1,24 @@
 package my.ep.web.backingbean.fl.po;
 
-import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.List;
 
 import javax.annotation.PostConstruct;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.RequestScoped;
-import javax.faces.context.FacesContext;
 
-import my.ep.biz.service.cm.codification.ICodificationSO;
-import my.ep.biz.service.cm.codification.IRequestCodeSO;
-import my.ep.biz.service.ct.IContractSO;
-import my.ep.biz.service.ct.suspend.ISuspendActiveSO;
 import my.ep.biz.service.fl.order.IFulfilmentOrderSO;
-import my.ep.biz.service.fl.request.IFulfilmentRequestSO;
-import my.ep.biz.service.fl.request.IShippingInstructionSO;
-import my.ep.biz.service.pm.authorization.orgprofile.IOrgProfileSO;
-import my.ep.biz.service.pp.budgetallocation.IBudgetAllocationSO;
-import my.ep.biz.service.pp.procurementplan.IProcurementPlanSO;
-import my.ep.bpm.dto.BpmRequestDTO;
-import my.ep.bpm.dto.BpmResponseDTO;
-import my.ep.bpm.service.IBpmSO;
-import my.ep.dto.cm.codification.CodificationReqDTO;
-import my.ep.dto.cm.codification.CodificationResDTO;
-import my.ep.dto.cm.codification.RequestCodeReqDTO;
-import my.ep.dto.cm.codification.RequestCodeResDTO;
-import my.ep.dto.ct.ContractReqDTO;
-import my.ep.dto.ct.ContractResDTO;
-import my.ep.dto.ct.suspend.ContractSuspendReqDTO;
-import my.ep.dto.ct.suspend.ContractSuspendResDTO;
 import my.ep.dto.fl.FulfilmentReqDTO;
 import my.ep.dto.fl.FulfilmentResDTO;
-import my.ep.dto.pm.authorization.orgprofile.OrgProfileReqDTO;
-import my.ep.dto.pm.authorization.orgprofile.OrgProfileResDTO;
-import my.ep.dto.pp.budgetallocation.BudgetAllocationReqDTO;
-import my.ep.dto.pp.budgetallocation.BudgetAllocationResDTO;
-import my.ep.dto.pp.procurementplan.ProcurementPlanReqDTO;
-import my.ep.dto.pp.procurementplan.ProcurementPlanResDTO;
-import my.ep.jaxb.cd.requestdata.CDRequestDataType;
-import my.ep.jaxb.ct.contract.CTContractDataType;
-import my.ep.jaxb.ct.suspension.CTContractSuspensionDataType;
-import my.ep.jaxb.fl.codata.FLContractOrderDataType;
-import my.ep.jaxb.fl.podata.FLPurchaseOrderDataType;
-import my.ep.jaxb.pp.budgetdata.PPBudgetDataType;
-import my.ep.jaxb.pp.plandata.PPPlanDataType;
 import my.ep.persistence.entity.fl.FlAttachment;
 import my.ep.persistence.entity.fl.FlRemark;
 import my.ep.persistence.entity.fl.order.FlDeliveryOrder;
 import my.ep.persistence.entity.fl.order.FlFulfilmentOrder;
 import my.ep.persistence.entity.fl.request.FlDeliveryAddress;
 import my.ep.persistence.entity.fl.request.FlFulfilmentRequest;
-import my.ep.persistence.entity.pm.authorization.PmOrgProfile;
-import my.ep.persistence.entity.pm.common.PmStatus;
 import my.ep.persistence.entity.sm.SmSupplier;
-import my.ep.util.lookupservice.EpBpmBusinessDelegate;
 import my.ep.web.backingbean.BaseBackingBean;
-import my.ep.web.backingbean.cm.codification.UnspscCodeBackingBean;
-import my.ep.web.backingbean.ct.ContractDetailsBackingBean;
-import my.ep.web.backingbean.ct.suspend.ContractSuspendBackingBean;
-import my.ep.web.backingbean.fl.createcontract.ContractRequestBackingBean;
 import my.ep.web.backingbean.fl.deliveryorder.DeliveryOrderBackingBean;
-import my.ep.web.backingbean.fl.pr.PurchaseRequestBackingBean;
-import my.ep.web.backingbean.pp.budgetallocation.BudgetAllocationBackingBean;
-import my.ep.web.backingbean.pp.procurementplan.PlanBackingBean;
 import my.ep.web.managedbean.fl.po.FulfilmentOrderManagedBean;
 import my.ep.web.util.lookupservice.BusinessDelegate;
 
@@ -89,13 +43,13 @@ public class FulfilmentOrderBackingBean extends BaseBackingBean<FulfilmentOrderM
 	}
 	@PostConstruct
 	public void init() {
-		if (getManagedBean().getFulfilmentRequest() == null) {
-			getManagedBean().setFulfilmentRequest(new FlFulfilmentRequest());
-			getManagedBean().getFulfilmentRequest().getSmSupplier().setSupplierId(27L);
-		}
+//		if (getManagedBean().getFulfilmentRequest() == null) {
+//			getManagedBean().setFulfilmentRequest(new FlFulfilmentRequest());
+//			getManagedBean().getFulfilmentRequest().getSmSupplier().setSupplierId(27L);
+//		}
 	}
-	public void fulfillmentOrderAction(String action) throws ParseException {
-		IFulfilmentOrderSO fulfilmentOrderSO=null;
+	public void fulfillmentOrderAction(String action) {
+		IFulfilmentOrderSO fulfilmentOrderSO = null;
 		try {
 			FulfilmentReqDTO reqDTO = new FulfilmentReqDTO();
 			FlRemark flRemark = getManagedBean().getFlRemark();
@@ -119,7 +73,13 @@ public class FulfilmentOrderBackingBean extends BaseBackingBean<FulfilmentOrderM
 			reqDTO.setFlRemark(flRemark);
 			reqDTO.setFlAttachment(flAttachment);
 			reqDTO.setFlFulfilmentRequest(flFulfilmentRequest);
-			reqDTO.setContractRequest(false);
+			
+			if(getManagedBean().isContractRequest() == Boolean.TRUE){
+				reqDTO.setContractRequest(getManagedBean().isContractRequest());
+			}else{
+				reqDTO.setContractRequest(false);
+			}
+			
 			reqDTO.setTaskId(this.getManagedBean().getTaskId());
 			reqDTO.setOutcome(action);
 			fulfilmentOrderSO.acknowledgeFulfillmentOrder(reqDTO);
@@ -132,7 +92,6 @@ public class FulfilmentOrderBackingBean extends BaseBackingBean<FulfilmentOrderM
 	}
 	public FulfilmentResDTO retrievePendingDoItems() {
 		IFulfilmentOrderSO filmentOrderSO = (IFulfilmentOrderSO) BusinessDelegate.getInstance().getServiceObject("fl", IFulfilmentOrderSO.class);
-		BpmRequestDTO reqDTO = new BpmRequestDTO();
 		FulfilmentResDTO resDTO = new FulfilmentResDTO();
 		List<FlFulfilmentOrder> pendingDoList = filmentOrderSO.getPendingDoList();
 		this.getManagedBean().setPendingDoList(pendingDoList);
@@ -141,7 +100,6 @@ public class FulfilmentOrderBackingBean extends BaseBackingBean<FulfilmentOrderM
 	}
 	public FulfilmentResDTO getDeliveryAddress() {
 		IFulfilmentOrderSO filmentOrderSO = (IFulfilmentOrderSO) BusinessDelegate.getInstance().getServiceObject("fl", IFulfilmentOrderSO.class);
-		BpmRequestDTO reqDTO = new BpmRequestDTO();
 		FulfilmentResDTO resDTO = new FulfilmentResDTO();
 		List<FlDeliveryAddress> deliveryAddressList = filmentOrderSO.getDeliveryAddressList();
 		this.getManagedBean().setDeliveryAddressList(deliveryAddressList);
@@ -150,7 +108,6 @@ public class FulfilmentOrderBackingBean extends BaseBackingBean<FulfilmentOrderM
 	}
 	public FulfilmentResDTO getDeliveryOrderStatus() {
 		IFulfilmentOrderSO filmentOrderSO = (IFulfilmentOrderSO) BusinessDelegate.getInstance().getServiceObject("fl", IFulfilmentOrderSO.class);
-		BpmRequestDTO reqDTO = new BpmRequestDTO();
 		FulfilmentResDTO resDTO = new FulfilmentResDTO();
 		List<FlDeliveryOrder> deliveryOrderStatusList = filmentOrderSO.getDeliveryOrderStatusList();
 		this.getManagedBean().setDeliveryOrderStatusList(deliveryOrderStatusList);

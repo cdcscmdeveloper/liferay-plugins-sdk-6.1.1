@@ -26,12 +26,12 @@ import org.apache.log4j.Logger;
  * @author Giribabu
  * @since 7/10/2013
  */
-@ManagedBean(name = "createFRNBackingBean")
+@ManagedBean(name = "recievedNoteBackingBean")
 @RequestScoped
 public class ReceivedNoteBackingBean extends BaseBackingBean<ReceivedNoteManagedBean> {
 	private static Logger log = Logger.getLogger(ReceivedNoteBackingBean.class);
 
-	public void receivedNoteAction(String action) throws ParseException {
+	public void submitAction(String action) throws ParseException {
 		IReceivedNoteSO receivedNoteSO = null;
 		try {
 			FulfilmentReqDTO reqDTO = new FulfilmentReqDTO();
@@ -57,7 +57,8 @@ public class ReceivedNoteBackingBean extends BaseBackingBean<ReceivedNoteManaged
 			reqDTO.setFulfilmentNote(fulfilmentNote);
 			reqDTO.setTaskId(this.getManagedBean().getTaskId());
 			reqDTO.setOutcome(action);
-			receivedNoteSO.createReceivedNote(reqDTO);
+			reqDTO.setDeliveryOrderId(getManagedBean().getDeliveryOrderId());
+			receivedNoteSO.saveReceivedNote(reqDTO);
 			//System.out.println("resDTO.isSuccessful() in backing bean:: "+ resDTO.isSuccessful());
 		} catch (Exception e) {
 			log.error("Exception>>", e);
