@@ -9,12 +9,16 @@
 	<table style="width: 800px;">
 
 		<tr>
-			<td colspan="4" align="right"><p:commandButton value="SAVE"	 />
+			<td colspan="4" align="right">
 				<p:commandButton value="SUBMIT" ajax='false'
-					action="#{createDOBackingBean.createFulfillmentRequest}" /> <p:commandButton value="PRINT" /></td>
+					action="#{createDOBackingBean.createDeliveryOrder}" /> <p:commandButton value="PRINT" /></td>
 		</tr>
 		
 	</table>
+	<c:if
+		test='#{createDOBackingBean.managedBean.docProcess eq "DO"}'>
+		<p:commandButton value="Cancel" />
+	</c:if>
 
 	<p:panel header="SUPPLIER DETAIL (FROM)" toggleable="true">
 		<table>
@@ -88,7 +92,7 @@
 			<tr>
 				<td><p:outputLabel value="Delivery Address" /></td>
 				<td><p:inputTextarea rows="8" style="width: 260px;"
-						disabled="true" /></td>
+						disabled="true" value="#{createDOBackingBean.managedBean.deliveryAddress.orgAddress.pmAddress.address1}"/></td>
 				<td colspan="3"></td>
 				<td colspan="4"></td>
 			</tr>

@@ -10,8 +10,8 @@
 			<tr>
 				<td colspan="4" align="right">
 				<ui:repeat var="bpmAction"
-					value="#{purchaseRequestBackingBean.managedBean.actions}">
-					<p:commandButton value="#{bpmAction}" ajax='false' action="#{purchaseRequestBackingBean.submitAction(bpmAction)}" process="@this"/>
+					value="#{flOrderBB.managedBean.actions}">
+					<p:commandButton value="#{bpmAction}" ajax='false' action="#{flOrderBB.fulfillmentOrderAction(bpmAction)}" process="@this"/>
 				</ui:repeat> 
 				</td>
 			</tr>
@@ -96,7 +96,7 @@
 				<tr>
 					<td><p:outputLabel value="Supplier ID" /></td>
 					<td><p:inputText disabled="true" style="width: 120px;"
-							value="02-7324800" /></td>
+							value="#{flOrderBB.managedBean.fulfilmentRequest.smSupplier.supplierId}" /></td>
 					<td><p:outputLabel value="Factoring?" /></td>
 					<td><p:selectBooleanCheckbox /></td>
 				</tr>

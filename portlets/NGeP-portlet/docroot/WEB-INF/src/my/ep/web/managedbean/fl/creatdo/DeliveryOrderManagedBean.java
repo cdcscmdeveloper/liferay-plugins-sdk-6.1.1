@@ -13,6 +13,7 @@ import my.ep.persistence.entity.fl.FlRemark;
 import my.ep.persistence.entity.fl.order.FlDeliveryOrder;
 import my.ep.persistence.entity.fl.order.FlFulfilmentOrder;
 import my.ep.persistence.entity.fl.request.FlDeliveryAddress;
+import my.ep.persistence.entity.fl.request.FlFulfilmentRequest;
 import my.ep.persistence.entity.pm.authorization.PmOrgAddress;
 import my.ep.persistence.entity.pm.common.PmMaksud;
 import my.ep.web.managedbean.BaseManagedBean;
@@ -27,14 +28,16 @@ import org.apache.log4j.Logger;
  */
 @ManagedBean
 @SessionScoped
-public class CreateDOManagedBean extends BaseManagedBean {
-	private static Logger log = Logger.getLogger(CreateDOManagedBean.class);
+public class DeliveryOrderManagedBean extends BaseManagedBean {
+	private static Logger log = Logger.getLogger(DeliveryOrderManagedBean.class);
 	private static final long serialVersionUID = 1L;
 
 	private FlRemark flRemark = new FlRemark();
 	private FlAttachment flAttachment = new FlAttachment();
-	private FlDeliveryOrder flDeliveryOrder=new FlDeliveryOrder();
-
+	private FlDeliveryOrder flDeliveryOrder;
+	private FlDeliveryAddress deliveryAddress;
+	private FlFulfilmentOrder fulfilmentOrder;
+    private FlFulfilmentRequest fulfilmentRequest;
 	//private List<DeliveryAddressPopup> daPopupList;
 	//private List<DeliveryAddressPopup> selectedPopupAddress;
 	
@@ -51,6 +54,8 @@ public class CreateDOManagedBean extends BaseManagedBean {
 	private String fulfilmentOrderId;
 	private String statusId;
 	private List<FlFulfilmentOrder> pendingDoList;
+	private List<FlDeliveryAddress>deliveryAddressList;
+	private String docProcess;
 
 	/**
 	 * @return the flRemark
@@ -260,10 +265,80 @@ public class CreateDOManagedBean extends BaseManagedBean {
 	}
 
 	/**
+	 * @return the deliveryAddressList
+	 */
+	public List<FlDeliveryAddress> getDeliveryAddressList() {
+		return deliveryAddressList;
+	}
+
+	/**
+	 * @param deliveryAddressList the deliveryAddressList to set
+	 */
+	public void setDeliveryAddressList(List<FlDeliveryAddress> deliveryAddressList) {
+		this.deliveryAddressList = deliveryAddressList;
+	}
+
+	/**
 	 * @param pendingDoList the pendingDoList to set
 	 */
 	public void setPendingDoList(List<FlFulfilmentOrder> pendingDoList) {
 		this.pendingDoList = pendingDoList;
+	}
+
+	/**
+	 * @return the deliveryAddress
+	 */
+	public FlDeliveryAddress getDeliveryAddress() {
+		return deliveryAddress;
+	}
+
+	/**
+	 * @param deliveryAddress the deliveryAddress to set
+	 */
+	public void setDeliveryAddress(FlDeliveryAddress deliveryAddress) {
+		this.deliveryAddress = deliveryAddress;
+	}
+
+	/**
+	 * @return the fulfilmentOrder
+	 */
+	public FlFulfilmentOrder getFulfilmentOrder() {
+		return fulfilmentOrder;
+	}
+
+	/**
+	 * @param fulfilmentOrder the fulfilmentOrder to set
+	 */
+	public void setFulfilmentOrder(FlFulfilmentOrder fulfilmentOrder) {
+		this.fulfilmentOrder = fulfilmentOrder;
+	}
+
+	/**
+	 * @return the fulfilmentRequest
+	 */
+	public FlFulfilmentRequest getFulfilmentRequest() {
+		return fulfilmentRequest;
+	}
+
+	/**
+	 * @param fulfilmentRequest the fulfilmentRequest to set
+	 */
+	public void setFulfilmentRequest(FlFulfilmentRequest fulfilmentRequest) {
+		this.fulfilmentRequest = fulfilmentRequest;
+	}
+
+	/**
+	 * @return the docProcess
+	 */
+	public String getDocProcess() {
+		return docProcess;
+	}
+
+	/**
+	 * @param docProcess the docProcess to set
+	 */
+	public void setDocProcess(String docProcess) {
+		this.docProcess = docProcess;
 	}
 
 }

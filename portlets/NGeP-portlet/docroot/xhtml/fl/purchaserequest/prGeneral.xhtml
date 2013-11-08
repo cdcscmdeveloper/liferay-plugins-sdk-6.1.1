@@ -8,12 +8,12 @@
 			<tr>
 				<td>
 				<p:commandButton value="SUBMIT" ajax='false'
-					action="#{purchaseRequestBackingBean.createFulfillment}" />
+					action="#{purchaseRequestBackingBean.fulfillmentRequestAction(action)}" />
 				</td>	
 				<td colspan="4" align="right">
 				<ui:repeat var="bpmAction"
 					value="#{purchaseRequestBackingBean.managedBean.actions}">
-					<p:commandButton value="#{bpmAction}" ajax='false' action="#{purchaseRequestBackingBean.submitAction(bpmAction)}" process="@this"/>
+					<p:commandButton value="#{bpmAction}" ajax='false' action="#{purchaseRequestBackingBean.fulfillmentRequestAction(bpmAction)}" process="@this"/>
 				</ui:repeat> 
 				</td>
 			</tr>
@@ -33,7 +33,7 @@
 				<td><p:selectOneMenu
 						value="#{purchaseRequestBackingBean.managedBean.fulfilmentRequest.issuedOrgProfile.orgProfileId}"
 						style="width: 260px;">
-						<f:selectItems value="#{purchaseRequestBackingBean.PTJ}" />
+						<f:selectItems  />
 					</p:selectOneMenu></td>
 				<td><p:outputLabel value="Req. Note NO" /></td>
 				<td><p:inputText disabled="true" style="width: 260px;" /></td>
@@ -43,7 +43,7 @@
 				<td><p:selectOneMenu
 						value="#{purchaseRequestBackingBean.managedBean.fulfilmentRequest.issuedOrgProfile.orgProfileId}"
 						style="width: 260px;">
-						<f:selectItems value="#{purchaseRequestBackingBean.PTJ}" />
+						<f:selectItems  />
 					</p:selectOneMenu></td>
 				<td><p:outputLabel value="Plan NO." /></td>
 				<td><p:inputText style="width: 260px;" disabled="true" /></td>
@@ -53,7 +53,7 @@
 				<td><p:selectOneMenu
 						value="#{purchaseRequestBackingBean.managedBean.fulfilmentRequest.issuedOrgProfile.orgProfileId}"
 						style="width: 260px;">
-						<f:selectItems value="#{purchaseRequestBackingBean.PTJ}" />
+						<f:selectItems  />
 					</p:selectOneMenu></td>
 				<td><p:outputLabel value="Procurement Type" /></td>
 				<td><p:inputText style="width: 260px;" disabled="true" /></td>
@@ -63,7 +63,7 @@
 				<td><p:selectOneMenu
 						value="#{purchaseRequestBackingBean.managedBean.fulfilmentRequest.issuedOrgProfile.orgProfileId}"
 						style="width: 260px;">
-						<f:selectItems value="#{purchaseRequestBackingBean.PTJ}" />
+						<f:selectItems  />
 					</p:selectOneMenu></td>
 				<td><p:outputLabel value="Creation Date" /></td>
 				<td><p:inputText style="width: 260px;" disabled="true" /></td>
@@ -104,7 +104,7 @@
 			<tr>
 				<td><p:outputLabel value="*Charge PTJ" /></td>
 				<td><p:selectOneMenu style="width: 260px;">
-						<f:selectItems value="#{purchaseRequestBackingBean.PTJ}" />
+						<f:selectItems />
 					</p:selectOneMenu></td>
 				<td><p:outputLabel value="Financing?" /></td>
 				<td><p:selectBooleanCheckbox

@@ -10,9 +10,9 @@
 	<ui:define name="resourceSection">
 	</ui:define>
 	<ui:define name="content">
-		<p:panel header="ITEM DETAIL" toggleable="true">
+		<p:panel header="DELIVERY ORDER DETAILS" toggleable="true">
 		<br />
-		<p:dataTable value="#{pendingListBackingBean.managedBean.pendingDoList}" var="pending"
+		<p:dataTable value="#{flOrderBB.managedBean.pendingDoList}" var="pending"
 			paginator="true" rows="10" id="pendingTable"
 			paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
 			rowsPerPageTemplate="5,10,15" paginatorPosition="bottom"
@@ -20,7 +20,7 @@
 				
 			<p:column headerText="FL Order Number">
 				<p:commandLink value="#{pending.fulfilmentOrderId}"
-					action="#{pendingListBackingBean.navigateToDO}">
+					action="#{flOrderBB.navigateToFlOrder(rowIndex)}">
 					<f:param name="fulfilmentOrderId" value="#{pending.fulfilmentOrderId}" />
 					<f:param name="fulfilmentReqId" value="#{pending.flFulfilmentRequest.fulfilmentReqId}" />
 					<f:param name="statusId" value="#{pending.statusId}" />
