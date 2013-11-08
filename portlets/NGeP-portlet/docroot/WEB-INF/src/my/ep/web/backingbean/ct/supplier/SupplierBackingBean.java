@@ -1,97 +1,268 @@
+/**
+ * Copyright © 2013 Archisoft. All rights reserved.
+ */
 package my.ep.web.backingbean.ct.supplier;
 
+import java.util.ArrayList;
 import java.util.Date;
 
+import javax.annotation.PostConstruct;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.RequestScoped;
-
 import org.apache.log4j.Logger;
 
 import my.ep.biz.bean.search.ISearchBean;
 import my.ep.biz.bean.search.SearchBean;
 import my.ep.biz.bean.search.SearchFilterBean;
 import my.ep.biz.service.ct.IContractSO;
+import my.ep.biz.service.ct.supplier.IContractSupplierSO;
 import my.ep.dto.ct.ContractReqDTO;
 import my.ep.dto.ct.ContractResDTO;
+import my.ep.dto.ct.supplier.ContractSupplierReqDTO;
 import my.ep.persistence.entity.ct.CtContract;
+import my.ep.persistence.entity.ct.bank.CtSupplierBank;
+import my.ep.persistence.entity.ct.factoring.CtFactoring;
+import my.ep.persistence.entity.ct.terminate.CtTermination;
+import my.ep.persistence.entity.ct.terminate.CtTerminationReason;
+import my.ep.persistence.entity.pm.authorization.PmOrgProfile;
+import my.ep.persistence.entity.pm.authorization.PmUser;
+import my.ep.persistence.entity.pm.common.PmCode;
+import my.ep.persistence.entity.pm.common.PmStatus;
+import my.ep.persistence.entity.sm.SmSupplier;
+import my.ep.persistence.entity.sm.SmSupplierBank;
 import my.ep.type.aut.SearchOperator;
 import my.ep.web.backingbean.BaseBackingBean;
 import my.ep.web.bean.ct.CheckBoxSelections;
 import my.ep.web.bean.ct.ContractListItem;
+import my.ep.web.constant.BpmOutcomeConst;
 import my.ep.web.managedbean.ct.supplier.SupplierManagedBean;
 import my.ep.web.util.lookupservice.BusinessDelegate;
 
-
-
+/**
+ * Backing Bean For Supplier
+ *  * 
+ * @author Alam
+ * @since 7/11/2013	 
+ */
 @ManagedBean(name = SupplierBackingBean.FACE_BEAN_NAME)
 @RequestScoped
 public class SupplierBackingBean extends BaseBackingBean<SupplierManagedBean> {
 	
-	private static Logger log = Logger.getLogger(SupplierBackingBean.class);
 	public static final String FACE_BEAN_NAME = "supplierBackingBean";
+	private static Logger log = Logger.getLogger(SupplierBackingBean.class);
+
 	private static final String PROCESS_BANK_PAGE="/xhtml/ct/supplier/bank/tabView.xhtml";
 	private static final String PROCESS_FACTORING_PAGE="/xhtml/ct/supplier/factoring/tabView.xhtml";
 	private static final String PROCESS_TERMINATION_PAGE="/xhtml/ct/supplier/termination/tabView.xhtml";
 	
-	private static boolean menuBank;
-	private static boolean menuFactoring;
-	private static boolean menuTerminate;
-	
-    private CheckBoxSelections checkBoxSelections;
+	private Date date;
 	private ContractListItem contractListItem;
+    private CheckBoxSelections checkBoxSelections;
+	
 
 	public SupplierBackingBean(){
+		if(this.getManagedBean().getOutComes()==null) {
+			this.getManagedBean().setOutComes(new String[]{BpmOutcomeConst.BPM_SAVE, BpmOutcomeConst.BPM_SUBMIT});
+		}
+	}
+	
+	@PostConstruct
+	public void init(){
 		checkBoxSelections = new CheckBoxSelections();
 		contractListItem = new ContractListItem();
+		
+		if(this.getManagedBean().getSupplierBank() == null){
+			this.getManagedBean().setSupplierBank(new CtSupplierBank());
+			this.getManagedBean().getSupplierBank().setCtContract(new CtContract());
+			this.getManagedBean().getSupplierBank().setContractAdmin(new PmUser());
+			this.getManagedBean().getSupplierBank().setBankAccount(new SmSupplierBank());
+			this.getManagedBean().getSupplierBank().setStatus(new PmStatus());
+			this.getManagedBean().getSupplierBank().setSupplier(new SmSupplier());
+			
+			this.getManagedBean().getSupplierBank().getCtContract().setContractId(1L);
+			this.getManagedBean().getSupplierBank().getBankAccount().setSupplierBankId(2L);
+			this.getManagedBean().getSupplierBank().getContractAdmin().setUserId(27L);
+			this.getManagedBean().getSupplierBank().getStatus().setStatusId(1L);
+			this.getManagedBean().getSupplierBank().getSupplier().setSupplierId(4L);
+		
+		}if(this.getManagedBean().getFactoring() == null){
+			
+			this.getManagedBean().setFactoring(new CtFactoring());
+			this.getManagedBean().getFactoring().setCtContract(new CtContract());
+			this.getManagedBean().getFactoring().setFactorOrgProfile(new PmOrgProfile());
+			this.getManagedBean().getFactoring().setContractAdmin(new PmUser());
+			this.getManagedBean().getFactoring().setSmSupplier(new SmSupplier());
+			this.getManagedBean().getFactoring().setStatus(new PmStatus());
+			
+			this.getManagedBean().getFactoring().getCtContract().setContractId(1L);
+			this.getManagedBean().getFactoring().getFactorOrgProfile().setOrgProfileId(1L);
+			this.getManagedBean().getFactoring().getContractAdmin().setUserId(27L);
+			this.getManagedBean().getFactoring().getStatus().setStatusId(1L);
+			this.getManagedBean().getFactoring().getSmSupplier().setSupplierId(4L);
+			
+			this.getManagedBean().getFactoring().setAuthRefNo("123-09234-76453");
+			this.getManagedBean().getFactoring().setEffDate(new Date());
+			this.getManagedBean().getFactoring().setExpDate(new Date());
+			this.getManagedBean().getFactoring().setQtLoaId(new Long(123456));
+		
+		}if(this.getManagedBean().getTermination() == null){
+			
+			this.getManagedBean().setTermination(new CtTermination());
+			this.getManagedBean().getTermination().setCtContract(new CtContract());
+			this.getManagedBean().getTermination().setStatus(new PmStatus());
+			
+			this.getManagedBean().getTermination().getCtContract().setContractId(1L);
+			this.getManagedBean().getTermination().getStatus().setStatusId(1L);
+			this.getManagedBean().getTermination().setMutualTerminate(true);
+			
+			if(this.getManagedBean().getCtTerminationReason() == null){
+			   this.getManagedBean().setCtTerminationReason(new CtTerminationReason());
+			   this.getManagedBean().getCtTerminationReason().setTypeCode(new PmCode());
+			   this.getManagedBean().getTermination().setCtTerminationReasons(new ArrayList<CtTerminationReason>());
+			   this.getManagedBean().getCtTerminationReason().setCtTermination(this.getManagedBean().getTermination());
+			   this.getManagedBean().getCtTerminationReason().getTypeCode().setCodeId(1L);
+			}
+		}
 	}
 	
     public void searchContract() {
 		
+    	log.info("searchAction starts");
+    	IContractSO contractSO = null;
 		ISearchBean<CtContract> searchBean = new SearchBean<CtContract>();
 		SearchFilterBean equalFilterBean = new SearchFilterBean(SearchOperator.OPERATOR_EQUALS.value());
-	//	SearchFilterBean likeFilterBean = new SearchFilterBean(SearchOperator.OPERATOR_LIKE.value());
-		if(this.getManagedBean().getLoaNo()!=null) {
-		equalFilterBean.setSearchField("qtLoaNo");
-		equalFilterBean.setSearchValue(this.getManagedBean().getLoaNo());
-		searchBean.getDataFilterBeans().add(equalFilterBean);
-		}
-		if(this.getManagedBean().getContractName()!=null) {
-		equalFilterBean.setSearchField("contractName");
-		equalFilterBean.setSearchValue(getManagedBean().getContractName());
-		searchBean.getDataFilterBeans().add(equalFilterBean);
-		}
 		
-		 log.info("searchAction starts");
-		 IContractSO contractSO = null;
-		 try {
+		if(this.getManagedBean().getLoaNo()!=null) {
+		    equalFilterBean.setSearchField("qtLoaNo");
+		    equalFilterBean.setSearchValue(this.getManagedBean().getLoaNo());
+		    searchBean.getDataFilterBeans().add(equalFilterBean);
+		
+		}else if(this.getManagedBean().getContractName()!=null) {
+		    equalFilterBean.setSearchField("contractName");
+		    equalFilterBean.setSearchValue(getManagedBean().getContractName());
+		    searchBean.getDataFilterBeans().add(equalFilterBean);
+	    }
+
+		try {
 			
-			
-			 
-			 contractSO = (IContractSO)BusinessDelegate.getInstance().getServiceObject("ct",IContractSO.class);
-			 ContractReqDTO reqDTO = new ContractReqDTO();
+	   	    contractSO = (IContractSO)BusinessDelegate.getInstance().getServiceObject("ct",IContractSO.class);
+		    ContractReqDTO reqDTO = new ContractReqDTO();
 			// reqDTO.setContractSearchBean(super.createSearchBean(CtContract.class, "supTable")); 
-			 reqDTO.setContractSearchBean(searchBean);
-			 ContractResDTO ResDTO = contractSO.searchContract(reqDTO);
-			 this.getManagedBean().setContractList(ResDTO.getContractResultBean().getResultList());
-			 this.getManagedBean().setSelectedIndex(0);
+		    reqDTO.setContractSearchBean(searchBean);
+			ContractResDTO ResDTO = contractSO.searchContract(reqDTO);
+			this.getManagedBean().setContractList(ResDTO.getContractResultBean().getResultList());
+			this.getManagedBean().setSelectedIndex(0);
 
-		 } catch (Exception ex) {
+		 }catch (Exception ex) {
 			log.error("Exception>>", ex);
-		 } finally {
-			 contractSO = null;
-		 }
+		
+	     }finally {
+			contractSO = null;
+	     }
 	}
+    
+    public void saveChangeBankRequest(String outcome){
+    	
+    	IContractSupplierSO supplierSO = null;
+		ContractSupplierReqDTO reqDTO = null;	
+		
+		try{
+			
+			 reqDTO = new ContractSupplierReqDTO();
+			 supplierSO = (IContractSupplierSO)BusinessDelegate.getInstance().getServiceObject("ct", IContractSupplierSO.class);
+		   	 reqDTO.setSupplierBank(this.getManagedBean().getSupplierBank());
+			
+		   	 reqDTO.setOutcome(outcome);
+			 reqDTO.setTaskId(this.getManagedBean().getTaskId());
+			 
+			 if(outcome == BpmOutcomeConst.BPM_SAVE){
+			      reqDTO.setOutcome("");
+			  
+			 }else if(outcome == BpmOutcomeConst.BPM_REVISE)
+			      reqDTO.setTaskId(this.getManagedBean().getTaskId());
+			  
+			 supplierSO.saveChangeBankRequest(reqDTO);
+	   
+		 }catch(Exception ex){
+		   log.error("Exception>>>" +ex);
+		
+		}finally{
+			supplierSO = null;
+			reqDTO = null;
+		}	 
+    }
 	
-    public boolean isMenuTerminate() {
-		return menuTerminate;
+    public void saveFactoringRequest(String outcome){
+    	
+
+    	IContractSupplierSO supplierSO = null;
+		ContractSupplierReqDTO reqDTO = null;	
+		try{
+			
+			 reqDTO = new ContractSupplierReqDTO();
+			 supplierSO = (IContractSupplierSO)BusinessDelegate.getInstance().getServiceObject("ct", IContractSupplierSO.class);
+		   	 reqDTO.setFactoring(this.getManagedBean().getFactoring());
+			
+		   	 reqDTO.setOutcome(outcome);
+			 reqDTO.setTaskId(this.getManagedBean().getTaskId());
+			 
+			 if(outcome == BpmOutcomeConst.BPM_SAVE){
+			    reqDTO.setOutcome("");
+			  
+			 }else if(outcome == BpmOutcomeConst.BPM_REVISE)
+			   reqDTO.setTaskId(this.getManagedBean().getTaskId());
+			  
+			 supplierSO.saveFactoringRequest(reqDTO);
+	   
+		 }catch(Exception ex){
+		   log.error("Exception>>>" +ex);
+		
+		}finally{
+			supplierSO = null;
+			reqDTO = null;
+		}
+	}
+    
+    public void saveTerminationRequest(String outcome){
+    	
+    	IContractSupplierSO supplierSO = null;
+		ContractSupplierReqDTO reqDTO = null;	
+		try{
+			
+			 reqDTO = new ContractSupplierReqDTO();
+			 supplierSO = (IContractSupplierSO)BusinessDelegate.getInstance().getServiceObject("ct", IContractSupplierSO.class);
+            
+			 this.getManagedBean().getCtTerminationReason().setDescription(this.getManagedBean().getTerminationReason());
+			 this.getManagedBean().getTermination().setTerminationDate(this.getManagedBean().getTerminationDate());	
+			 this.getManagedBean().getTermination().getCtTerminationReasons().add(this.getManagedBean().getCtTerminationReason());
+			 reqDTO.setTerminationRequest(this.getManagedBean().getTermination());
+			
+		   	 reqDTO.setOutcome(outcome);
+			 reqDTO.setTaskId(this.getManagedBean().getTaskId());
+			 
+			 if(outcome == BpmOutcomeConst.BPM_SAVE)
+			   reqDTO.setOutcome("");
+			 else if(outcome == BpmOutcomeConst.BPM_REVISE)
+			   reqDTO.setTaskId(this.getManagedBean().getTaskId());
+			  
+			 supplierSO.saveTerminationRequest(reqDTO);
+	   
+		 }catch(Exception ex){
+		   log.error("Exception>>>" +ex);
+		
+		}finally{
+		   supplierSO = null;
+		   reqDTO = null;
+		}
+    }
+
+	public Date getDate() {
+		return date;
 	}
 
-
-	public void setMenuTerminate(boolean menuTerminate) {
-		this.menuTerminate = menuTerminate;
+	public void setDate(Date date) {
+		this.date = date;
 	}
-
-	
 	
 	public ContractListItem getContractListItem() {
 		return contractListItem;
@@ -108,40 +279,7 @@ public class SupplierBackingBean extends BaseBackingBean<SupplierManagedBean> {
 	public void setCheckBoxSelections(CheckBoxSelections checkBoxSelections) {
 		this.checkBoxSelections = checkBoxSelections;
 	}
-
 	
-	
-	public boolean isMenuBank() {
-		return menuBank;
-	}
-
-	public void setMenuBank(boolean menuBank) {
-		this.menuBank = menuBank;
-	}
-
-	public boolean isMenuFactoring() {
-		return menuFactoring;
-	}
-
-	public void setMenuFactoring(boolean menuFactoring) {
-		this.menuFactoring = menuFactoring;
-	}
-
-	private Date date;
-
-	public Date getDate() {
-		return date;
-	}
-
-	public void setDate(Date date) {
-		this.date = date;
-	}
-	
-	public void flush(){
-		menuBank = false;
-		menuFactoring = false;
-		menuTerminate = false;
-	}
 	public String gotoBankPage() {	
 		return PROCESS_BANK_PAGE;
 	}

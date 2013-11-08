@@ -21,6 +21,7 @@ public class AgreementManagedBean extends BaseManagedBean {
 	private static final long serialVersionUID = 1L;
 	private static Logger log = Logger.getLogger(AgreementManagedBean.class);
 	
+	private String taskId;
 	private String[] outComes;
 	private List<CtSignParty> signPartyList;
 	private List<CtSignParty> signSupplierList;
@@ -110,6 +111,14 @@ public class AgreementManagedBean extends BaseManagedBean {
 
 	public void setAppendixList(List<CtAgreementAppendix> appendixList) {
 		this.appendixList = appendixList;
+	}
+
+	public String getTaskId() {
+		return taskId;
+	}
+
+	public void setTaskId(String taskId) {
+		this.taskId = taskId;
 	}
 	
 }

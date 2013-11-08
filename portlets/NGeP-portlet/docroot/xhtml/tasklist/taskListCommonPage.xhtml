@@ -26,6 +26,10 @@
 			</c:otherwise>
 		</c:choose>
 	</c:if>
+	<c:if test='#{tasklistBackingBean.managedBean.processName eq "Contract Creation"}'>
+		<ui:include src="/xhtml/ct/fulfilmentdetails/creation/fulfilment.xhtml"></ui:include>
+	</c:if>
+	
 
 	<c:if
 		test='#{tasklistBackingBean.managedBean.processName eq "Extension Code Request"}'>

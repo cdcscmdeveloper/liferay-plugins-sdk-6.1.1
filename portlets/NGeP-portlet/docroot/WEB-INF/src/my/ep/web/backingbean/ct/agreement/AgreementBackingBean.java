@@ -24,13 +24,11 @@ import org.primefaces.model.UploadedFile;
 import my.ep.biz.service.ct.agreement.IAgreementSO;
 import my.ep.dto.ct.agreement.ContractAgreementReqDTO;
 import my.ep.persistence.entity.ct.agreement.CtAgreement;
-import my.ep.persistence.entity.ct.agreement.CtAgreementAppendix;
 import my.ep.persistence.entity.ct.agreement.CtSignParty;
 import my.ep.persistence.entity.ct.amend.CtAmendment;
 import my.ep.persistence.entity.pm.authorization.PmOrgProfile;
 import my.ep.persistence.entity.pm.authorization.PmUser;
 import my.ep.persistence.entity.pm.common.PmCode;
-import my.ep.persistence.entity.pm.common.PmStatus;
 import my.ep.web.backingbean.BaseBackingBean;
 import my.ep.web.bean.ct.AgreementDetails;
 import my.ep.web.bean.ct.ContractListItem;
@@ -68,33 +66,22 @@ public class AgreementBackingBean extends BaseBackingBean<AgreementManagedBean> 
 			  
 		System.out.println("Object initialize in post contruct>>>>>>>");
 		this.getManagedBean().setAgreement(new CtAgreement());
-		this.getManagedBean().getAgreement().setCtSignParties(new ArrayList<CtSignParty>());
-		this.getManagedBean().getAgreement().setApprover(new PmUser());
-		this.getManagedBean().getAgreement().setCtAmendment(new CtAmendment());
-		this.getManagedBean().getAgreement().setStatus(new PmStatus());
-		//this.getManagedBean().getAgreement().setCtContract(new CtContract());		
-		this.getManagedBean().getAgreement().getApprover().setUserId(1L);
-		this.getManagedBean().getAgreement().getStatus().setStatusId(1L);
-		//this.getManagedBean().getAgreement().getCtContract().setContractId(2L);
-		this.getManagedBean().getAgreement().setClauseDocMasterId(new Long(101));
-		this.getManagedBean().getAgreement().getCtAmendment().setAmendmentId(new Long(1));
-		this.getManagedBean().getAgreement().setApprovedDate(new Date());
 		this.getManagedBean().getAgreement().setClauseDocMasterId(new Long(1));
-		this.getManagedBean().getAgreement().setCtAgreement(this.getManagedBean().getAgreement());
+		this.getManagedBean().getAgreement().setApprovedDate(new Date());
+	
 		
-		this.getManagedBean().setSignParty(new CtSignParty());
-		this.getManagedBean().getSignParty().setOfficerIc("897452346523");
-		this.getManagedBean().getSignParty().setOfficerName("Khan");
-		this.getManagedBean().getSignParty().setOfficerPosition("PTJ HEAD");
-		this.getManagedBean().getSignParty().setOfficer(new PmUser());
-		this.getManagedBean().getSignParty().getOfficer().setUserId(new Long(1));
-		this.getManagedBean().getSignParty().setOrgProfile(new PmOrgProfile());
-		this.getManagedBean().getSignParty().getOrgProfile().setOrgProfileId(new Long(1));
-		this.getManagedBean().getSignParty().setSignPartyTypeCode(new PmCode());
-		this.getManagedBean().getSignParty().getSignPartyTypeCode().setCodeId(new Long(1));
-		this.getManagedBean().getSignParty().setCtAgreement(this.getManagedBean().getAgreement());
-		
-    	this.getManagedBean().getAgreement().setCtAgreementAppendixs(new ArrayList<CtAgreementAppendix>());
+		CtSignParty ctSignParty = new CtSignParty();
+		ctSignParty.setOfficerIc("897452346523");
+		ctSignParty.setOfficerName("Khan");
+		ctSignParty.setOfficerPosition("PTJ HEAD");
+		ctSignParty.setOfficer(new PmUser());
+		ctSignParty.getOfficer().setUserId(new Long(1));
+		ctSignParty.setOrgProfile(new PmOrgProfile());
+		ctSignParty.getOrgProfile().setOrgProfileId(new Long(1));
+		ctSignParty.setSignPartyTypeCode(new PmCode());
+		ctSignParty.getSignPartyTypeCode().setCodeId(new Long(1));
+		ctSignParty.setCtAgreement(this.getManagedBean().getAgreement());
+		this.getManagedBean().getAgreement().getCtSignParties().add(ctSignParty);
 	  }
 	 
 	  if(sourcingFiles == null){
@@ -119,9 +106,17 @@ public class AgreementBackingBean extends BaseBackingBean<AgreementManagedBean> 
 			
 			 reqDTO = new ContractAgreementReqDTO();
 		     agreementSO = (IAgreementSO)BusinessDelegate.getInstance().getServiceObject("ct", IAgreementSO.class);
-		     this.getManagedBean().getAgreement().getCtSignParties().add(this.getManagedBean().getSignParty());
-		     this.getManagedBean().getAgreement().getCtAgreementAppendixs().add(this.getManagedBean().getAgreementAppendix());
+		     this.getManagedBean().getAgreement().setCtAgreementAppendixs(this.getManagedBean().getAppendixList());
 			 reqDTO.setAgreement(this.getManagedBean().getAgreement());
+			 reqDTO.setOutcome(outcome);
+			 reqDTO.setTaskId(this.getManagedBean().getTaskId());
+			 
+			 if(outcome == BpmOutcomeConst.BPM_SAVE){
+			    reqDTO.setOutcome("");
+			  
+			 }else if(outcome == BpmOutcomeConst.BPM_REVISE)
+			   reqDTO.setTaskId(this.getManagedBean().getTaskId());
+			  
 			 agreementSO.createAgreement(reqDTO);
 	   
 		 }catch(Exception ex){
@@ -130,8 +125,39 @@ public class AgreementBackingBean extends BaseBackingBean<AgreementManagedBean> 
 		}finally{
 			agreementSO = null;
 			reqDTO = null;
-		}
-	 
+		}	 
+	}
+	
+	public void createSupAgreement(String outcome){
+		
+		IAgreementSO agreementSO = null;
+		 ContractAgreementReqDTO reqDTO = null;	
+		try{
+			
+			 reqDTO = new ContractAgreementReqDTO();
+		     agreementSO = (IAgreementSO)BusinessDelegate.getInstance().getServiceObject("ct", IAgreementSO.class);
+		     this.getManagedBean().getAgreement().setCtAmendment(new CtAmendment());
+		     this.getManagedBean().getAgreement().getCtAmendment().setAmendmentId(1L);
+		     this.getManagedBean().getAgreement().setCtAgreementAppendixs(this.getManagedBean().getAppendixList());
+			 reqDTO.setAgreement(this.getManagedBean().getAgreement());
+			 reqDTO.setOutcome(outcome);
+			 reqDTO.setTaskId(this.getManagedBean().getTaskId());
+			 
+			 if(outcome == BpmOutcomeConst.BPM_SAVE){
+			    reqDTO.setOutcome("");
+			  
+			 }else if(outcome == BpmOutcomeConst.BPM_REVISE)
+			   reqDTO.setTaskId(this.getManagedBean().getTaskId());
+			  
+			 agreementSO.createAgreement(reqDTO);
+	   
+		 }catch(Exception ex){
+		   log.error("Exception>>>" +ex);
+		
+		}finally{
+			agreementSO = null;
+			reqDTO = null;
+		}	 
 	}
 	
 	public void fileUpload(FileUploadEvent event) {
@@ -190,6 +216,8 @@ public void fileApexUpload(FileUploadEvent event) {
      public void addAgreementAppendex(ActionEvent event){
 	
     	if(this.getManagedBean().getAgreementAppendix() != null){
+    		this.getManagedBean().getAgreementAppendix().setFilePath("D://upload");
+    		this.getManagedBean().getAgreementAppendix().setFileName("Doc");
 	        this.getManagedBean().getAppendixList().add(this.getManagedBean().getAgreementAppendix());
     	}
      }
