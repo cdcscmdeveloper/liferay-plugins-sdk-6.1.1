@@ -99,6 +99,7 @@ public class ProcurementPlanConst {
 	public static final String YES_INT = "1";
 	public static final String NO_INT = "0";
 	public static final String SO_PP = "pp";
+	public static final Integer PVO_LEVEL = 3;
 	
 	//Contract Ind
 	public static final String CONTRACT_IND_PKP = "P";
