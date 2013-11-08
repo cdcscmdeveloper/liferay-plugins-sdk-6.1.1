@@ -1,6 +1,10 @@
 package my.ep.web.type.ss.quationtender;
 
 import my.ep.type.IEnumType;
+/**
+ * @author SudheerKumar
+ *
+ */
 
 public enum ItemOrigin implements IEnumType {
 	
