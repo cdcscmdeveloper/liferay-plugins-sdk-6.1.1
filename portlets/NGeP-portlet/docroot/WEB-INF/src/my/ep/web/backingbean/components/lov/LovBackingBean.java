@@ -1,0 +1,322 @@
+package my.ep.web.backingbean.components.lov;
+
+import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.ResourceBundle;
+
+import javax.el.ValueExpression;
+import javax.faces.bean.ManagedBean;
+import javax.faces.bean.ViewScoped;
+import javax.faces.context.FacesContext;
+import javax.faces.model.SelectItem;
+import javax.portlet.PortletRequest;
+import javax.servlet.ServletContext;
+import javax.servlet.http.HttpServletRequest;
+
+import my.ep.biz.bean.search.ISearchBean;
+import my.ep.biz.bean.search.ISearchResultBean;
+import my.ep.biz.bean.search.SearchBean;
+import my.ep.biz.bean.search.SearchFilterBean;
+import my.ep.biz.service.cc.lov.ILovSO;
+import my.ep.dto.cc.lov.LovReqDTO;
+import my.ep.dto.cc.lov.LovResDTO;
+import my.ep.persistence.entity.BaseEntity;
+import my.ep.persistence.entity.aut.AutUser;
+import my.ep.type.aut.SearchOperator;
+import my.ep.util.MessageUtils;
+import my.ep.web.bean.LovBean;
+import my.ep.web.bean.LovColumnBean;
+import my.ep.web.bean.paginator.IPagingDataModel;
+import my.ep.web.bean.paginator.PagingDataModel;
+import my.ep.web.util.FacesScopes;
+import my.ep.web.util.lookupservice.BusinessDelegate;
+
+import org.springframework.web.context.WebApplicationContext;
+import org.springframework.web.context.support.WebApplicationContextUtils;
+
+import com.liferay.portal.util.PortalUtil;
+
+@ManagedBean(name="lovBackingBean")
+@ViewScoped
+public class LovBackingBean implements Serializable {
+
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+
+	WebApplicationContext webApplicationContext = null;
+//	private ILovEvent ?ookupEvent = null;
+	
+	private IPagingDataModel<AutUser> searchDataModel = new SearchPagingDataModel();
+	private SearchFilterBean searchFilterBean = new SearchFilterBean(SearchOperator.OPERATOR_STARTS_WITH.value());
+	private String lovId = null;
+	private ISearchBean lovSearchBean = new SearchBean();
+	private LovBean lovBean = null;
+	private List<SelectItem> searchOptions = new ArrayList<SelectItem>();
+	
+	private List resultList = new ArrayList();
+	private BaseEntity selectedEntity;
+	
+	private class SearchPagingDataModel extends PagingDataModel<AutUser> {
+		private static final long serialVersionUID = 1L;
+
+		public SearchPagingDataModel() {
+			super("lovTb");
+		}
+		
+		@Override
+		public ISearchResultBean pageChangeListener(ISearchBean searchBean) {
+//			debugLogger("pageChangeListener");
+			ILovSO lovSO = null;
+			try {				
+				lovSO = (ILovSO)BusinessDelegate.getInstance().getServiceObject(ILovSO.class);
+				
+//				if (StringUtils.isNotBlank((String)searchFilterBean.getSearchValue())) {
+//					searchBean.getDataFilterBeans().add(searchFilterBean);
+//				}
+//				return lovSO.getUserList(searchBean);
+//				return lovSO.getSearchList(searchBean);
+				return null;
+			} finally {
+				lovSO = null;
+			}
+		}
+	}
+	
+	public static void main(String[] args) {
+//		mergeRuleSO = (IMergeRulesSO)BusinessDelegate.getInstance().getServiceObject(IMergeRulesSO.class);
+		System.out.println(BusinessDelegate.getInstance().getServiceObject(ILovSO.class));
+	}
+	
+/*	public void searchAction() {
+		System.out.println("===============================search action");
+	
+		HttpServletRequest request = PortalUtil.getHttpServletRequest((PortletRequest) FacesContext.getCurrentInstance().getExternalContext().getRequest());
+		ServletContext servletContext = request.getSession().getServletContext();
+		webApplicationContext = WebApplicationContextUtils.getRequiredWebApplicationContext(servletContext);
+		Object object = webApplicationContext.getBean("SCR_NOTIFICATION_LIST");
+		
+		System.out.println(object);
+	}*/
+	
+	public void initLov() {
+
+		FacesScopes facesScopes = new FacesScopes();
+		String headerText = facesScopes.getParameter("headerText");
+		String saveObject = facesScopes.getParameter("saveObject");
+		String componentId = facesScopes.getParameter("componentId");
+		String conditionField = facesScopes.getParameter("conditionField");
+		String clientId = facesScopes.getParameter("clientId");
+		String update = facesScopes.getParameter("update");
+
+		if(lovId != null && lovId.equals(facesScopes.getParameter("lovId"))) {
+			
+		} else if(lovId == null || !lovId.equals(facesScopes.getParameter("lovId"))) {
+			lovId = facesScopes.getParameter("lovId");
+			lovBean = getBeanByLovId(lovId);
+			lovBean.setLovId(lovId);
+			lovBean.setTitle(headerText);
+			lovBean.setSaveObject(saveObject);
+			lovBean.setComponentId(componentId);
+			lovBean.setConditionField(conditionField);
+			lovBean.setUpdate(update);
+			
+			lovBean.setClientId(clientId.substring(clientId.indexOf(":")).concat(":").concat(componentId).concat("lov"));
+			
+			prepareColumnTitle(lovBean);
+			createSearchOptions(lovBean);
+			
+//			constructSearchBean(conditionField);
+//			initSearchBean();
+		}
+		resetAction();
+	}
+	
+	public void searchAction() {
+		
+//		searchDataModel.reloadData();
+		
+		ILovSO lovSO = null;
+		try {
+			LovReqDTO reqDTO = new LovReqDTO();
+			
+			if(lovSearchBean.getDataFilterBeans().size() <= 5) {
+				constructSearchBean(this.getLovBean().getConditionField());
+			}
+			
+			reqDTO.setSearchBean(lovSearchBean);
+			reqDTO.setDaoClass(this.getLovBean().getDaoClass());
+			reqDTO.setSearchMethod(this.getLovBean().getSearchMethod());
+			
+			for(int i = 0; i < lovSearchBean.getDataFilterBeans().size(); i++) {
+				SearchFilterBean filter = (SearchFilterBean)lovSearchBean.getDataFilterBeans().get(i);
+				System.out.println(filter.getSearchField() + " " + filter.getSearchOperator() + " " + filter.getSearchValue());
+			}
+			
+			lovSO = (ILovSO)BusinessDelegate.getInstance().getServiceObject("cc", ILovSO.class);
+//			ISearchResultBean resultBean = lovSO.getSearchList(lovSearchBean);
+			
+			LovResDTO resDTO = lovSO.getSearchList(reqDTO);
+			ISearchResultBean resultBean = resDTO.getResultBean();			
+			
+			this.setResultList(resultBean.getResultList());
+		} finally {
+			lovSO = null;
+		}
+	}
+
+	public void resetAction() {
+		this.setResultList(new ArrayList());
+		this.setLovSearchBean(new SearchBean());
+	}
+	
+	private void constructSearchBean(String conditionField) {
+		String[] conditionFields = conditionField.split("\\|");
+		for(int i = 0; i < conditionFields.length; i++) {
+			String[] fieldMapping = conditionFields[i].split("\\^");
+			SearchFilterBean filterBean = new SearchFilterBean();
+			
+			filterBean.setSearchField(fieldMapping[0]);
+			filterBean.setSearchOperator(SearchOperator.OPERATOR_EQUALS.value());
+			filterBean.setSearchValue(fieldMapping[1]);
+			lovSearchBean.getDataFilterBeans().add(filterBean);
+		}
+	}
+	
+	private void createSearchOptions(LovBean lovBean) {
+		this.setSearchOptions(new ArrayList<SelectItem>());
+		if(lovBean.getColumns() != null && lovBean.getColumns().size() > 0) {
+			for(LovColumnBean column : lovBean.getColumns()) {
+				SelectItem item = new SelectItem(column.getColumnName(), column.getColumnTitle());
+				this.getSearchOptions().add(item);
+			}
+		}
+	}
+	
+	public List<SelectItem> getSearchOperators() {
+		List<SelectItem> operatorList = new ArrayList<SelectItem>();
+		
+		SelectItem item1 = new SelectItem(SearchOperator.OPERATOR_EQUALS.value(), "EQUALS");
+		SelectItem item2 = new SelectItem(SearchOperator.OPERATOR_STARTS_WITH.value(), "STARTS WITH");
+		SelectItem item3 = new SelectItem(SearchOperator.OPERATOR_END_WITH.value(), "END WITH");
+		SelectItem item4 = new SelectItem(SearchOperator.OPERATOR_BETWEEN.value(), "BETWEEN");
+		
+		operatorList.add(item1);
+		operatorList.add(item2);
+		operatorList.add(item3);
+		operatorList.add(item4);
+		
+		return operatorList;
+	}
+	
+/*	private void initSearchBean() {
+		lovSearchBean = new SearchBean();
+		for(int i = 0; i < 4; i++) {
+			SearchFilterBean filterBean = new SearchFilterBean();
+			lovSearchBean.getDataFilterBeans().add(filterBean);
+		}
+	}*/
+	
+	private LovBean getBeanByLovId(String lovId) {
+		HttpServletRequest request = PortalUtil.getHttpServletRequest((PortletRequest) FacesContext.getCurrentInstance().getExternalContext().getRequest());
+		ServletContext servletContext = request.getSession().getServletContext();
+		webApplicationContext = WebApplicationContextUtils.getRequiredWebApplicationContext(servletContext);
+		LovBean lovBean = (LovBean)webApplicationContext.getBean(lovId);
+		
+		return lovBean;
+	}
+	
+	public void populateToSaveObject() {
+		
+		if(selectedEntity != null) {
+			FacesContext context = FacesContext.getCurrentInstance();
+			
+			
+			ValueExpression valueExpression2 = context.getApplication().getExpressionFactory()
+					.createValueExpression(context.getELContext(),
+							"#{codificationBackingBean.managedBean}", Object.class);
+			
+			String expressionString = this.getLovBean().getSaveObject();
+			if(!FacesScopes.isValueReference(expressionString)) {
+				expressionString = "#{" + expressionString + "}";
+			}
+			
+			ValueExpression valueExpression = context.getApplication().getExpressionFactory()
+												.createValueExpression(context.getELContext(),
+														expressionString, BaseEntity.class);
+			
+			if(selectedEntity != null) {
+				valueExpression.setValue(context.getELContext(), selectedEntity);
+			}
+			
+			this.resetAction();
+			
+//			TODO: postUpdateListener(entity)
+		}
+	}
+	
+	private void prepareColumnTitle(LovBean lovBean) {
+		ResourceBundle bundle = null;
+		for(LovColumnBean column : lovBean.getColumns()) {
+			bundle = ResourceBundle.getBundle(column.getBundleFile());
+			column.setColumnTitle(bundle.getString(column.getBundleKey()));
+		}
+	}
+	
+	public IPagingDataModel<AutUser> getSearchDataModel() {
+		return searchDataModel;
+	}
+
+	public void setSearchDataModel(IPagingDataModel<AutUser> searchDataModel) {
+		this.searchDataModel = searchDataModel;
+	}
+	
+	public List<SelectItem> getSearchOptions() {
+		return searchOptions;
+	}
+
+	public void setSearchOptions(List<SelectItem> searchOptions) {
+		this.searchOptions = searchOptions;
+	}
+
+	public ISearchBean getLovSearchBean() {
+		if(lovSearchBean.getDataFilterBeans().size() == 0) {
+			for(int i = 0; i < 5; i++) {
+				SearchFilterBean filterBean = new SearchFilterBean();
+				lovSearchBean.getDataFilterBeans().add(filterBean);
+			}
+		}
+		return lovSearchBean;
+	}
+
+	public void setLovSearchBean(ISearchBean lovSearchBean) {
+		this.lovSearchBean = lovSearchBean;
+	}
+
+	public LovBean getLovBean() {
+		return lovBean;
+	}
+
+	public void setLovBean(LovBean lovBean) {
+		this.lovBean = lovBean;
+	}
+
+	public List getResultList() {
+		return resultList;
+	}
+
+	public void setResultList(List resultList) {
+		this.resultList = resultList;
+	}
+
+	public BaseEntity getSelectedEntity() {
+		return selectedEntity;
+	}
+
+	public void setSelectedEntity(BaseEntity selectedEntity) {
+		this.selectedEntity = selectedEntity;
+	}
+
+}
