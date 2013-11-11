@@ -36,7 +36,69 @@ public enum CloneAll {
 			return "Qtn/Tender Details";
 		}
 
+	},
+	ApprovalWorkflow{
+
+		@Override
+		public String getValue() {
+			// TODO Auto-generated method stub
+			return "APW";
+		}
+
+		@Override
+		public String getDisplayName() {
+			// TODO Auto-generated method stub
+			return "Approval Workflow";
+		}
+		
+	},
+	SupplierQualificationCriteria{
+
+		@Override
+		public String getValue() {
+			// TODO Auto-generated method stub
+			return "SQC";
+		}
+
+		@Override
+		public String getDisplayName() {
+			// TODO Auto-generated method stub
+			return "Supplier Qualification Criteria";
+		}
+	
+	},
+	Schedule{
+
+		@Override
+		public String getValue() {
+			// TODO Auto-generated method stub
+			return "SCH";
+		}
+
+		@Override
+		public String getDisplayName() {
+			// TODO Auto-generated method stub
+			return "Schedule";
+		}
+		
+	},
+	Documents{
+
+		@Override
+		public String getValue() {
+			// TODO Auto-generated method stub
+			return "DOC";
+		}
+
+		@Override
+		public String getDisplayName() {
+			// TODO Auto-generated method stub
+			return "Documents";
+		}
+		
 	};
+		
+	
 	public abstract String getValue();
 
 	public abstract String getDisplayName();
