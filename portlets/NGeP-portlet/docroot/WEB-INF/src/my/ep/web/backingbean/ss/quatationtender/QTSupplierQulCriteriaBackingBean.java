@@ -171,7 +171,7 @@ public class QTSupplierQulCriteriaBackingBean extends BaseBackingBean<QTDetailMa
 	 */
 	public void searchQtPanelSupplier(){
 	
-		List<CtPanelSupplier> panelSupplier = retriverSuppliersForPanelQT();
+		List<SmSupplier> panelSupplier = retriverSuppliersForPanelQT();
 		
 		if(!getManagedBean().getPanelSuppliers().isEmpty()){
 			getManagedBean().getPanelSuppliers().clear();
@@ -184,7 +184,7 @@ public class QTSupplierQulCriteriaBackingBean extends BaseBackingBean<QTDetailMa
 	public void searchNormalQtSupplier(){
 		
 	}
-	private List<CtPanelSupplier> retriverSuppliersForPanelQT(){
+	private List<SmSupplier> retriverSuppliersForPanelQT(){
 		
 		CircularReqDTO reqDTO = new CircularReqDTO();
 		ISearchBean<CtPanelSupplier> searchBean = new SearchBean<CtPanelSupplier>();
@@ -216,7 +216,7 @@ public class QTSupplierQulCriteriaBackingBean extends BaseBackingBean<QTDetailMa
 		}catch(Exception ex){
 			ex.printStackTrace();
 		}
-		return resDTO.getSearchResultBean().getResultList();
+		return resDTO.getSupplierList();
 	}
 
 }
