@@ -10,6 +10,7 @@ import javax.faces.bean.SessionScoped;
 import javax.faces.model.SelectItem;
 
 import my.ep.factory.EpLogger;
+import my.ep.jaxb.sm.useradddata.SMUserAddDataType;
 import my.ep.persistence.entity.ct.circular.panel.CtPanelSupplier;
 import my.ep.persistence.entity.pm.authorization.PmOrgProfile;
 import my.ep.persistence.entity.pm.common.PmCategoryL1;
@@ -21,6 +22,7 @@ import my.ep.persistence.entity.pm.common.PmGo;
 import my.ep.persistence.entity.pm.common.PmSo;
 import my.ep.persistence.entity.pm.common.PmState;
 import my.ep.persistence.entity.pm.common.PmZone;
+import my.ep.persistence.entity.sm.SmSupplier;
 import my.ep.persistence.entity.ss.quationtender.ScQt;
 import my.ep.persistence.entity.ss.quationtender.ScQtBriefing;
 import my.ep.persistence.entity.ss.quationtender.ScQtCategory;
@@ -349,7 +351,7 @@ public class QTDetailManagedBean extends BaseManagedBean {
 
 	private List<ScQt> qtList = new ArrayList<ScQt>();
 
-	private List<CtPanelSupplier> panelSuppliers = new ArrayList<CtPanelSupplier>();
+	private List<SmSupplier> panelSuppliers;
 
 	public QTDetailManagedBean() {
 		log.info("inside ");
@@ -688,11 +690,11 @@ public class QTDetailManagedBean extends BaseManagedBean {
 		this.qtList = qtList;
 	}
 
-	public List<CtPanelSupplier> getPanelSuppliers() {
+	public List<SmSupplier> getPanelSuppliers() {
 		return panelSuppliers;
 	}
 
-	public void setPanelSuppliers(List<CtPanelSupplier> panelSuppliers) {
+	public void setPanelSuppliers(List<SmSupplier> panelSuppliers) {
 		this.panelSuppliers = panelSuppliers;
 	}
 	
