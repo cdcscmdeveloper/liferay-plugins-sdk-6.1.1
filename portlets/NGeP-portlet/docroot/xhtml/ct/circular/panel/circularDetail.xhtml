@@ -19,7 +19,8 @@
 	
 	<p:panel id="contactPerson" header="#{lbl['lbl.ct.pc.cpd']}" toggleable="true" toggleSpeed="500" widgetVar="panelcontactPerson">
 		<p:dataTable id="contactPersonDt" var="data" value="#{panelBackingBean.managedBean.circularVer.ctContactPersons}"
-			rowIndexVar="index" paginator="false">
+			rowIndexVar="index" lazy="true">
+			<ac:paginator for="contactPersonDt" />
 			<p:columnGroup type="header">
 				<p:row>
 					<p:column style="width:30px;" headerText="#{lbl['lbl.ct.pc.no']}" />
@@ -59,6 +60,7 @@
 				<p:commandButton value="No" icon="ui-icon-reject" onclick="delCtPersonDlg.hide()" type="button" />
 			</h:panelGrid>
 		</p:confirmDialog>
+		<p:spacer height="2" />
 		<div class="ppRightBtn"> 
 			<p:commandButton value="Add" process="@form" partialSubmit="true" icon="ui-icon-add"
 				action="#{panelBackingBean.addContactPerson()}" update="contactPersonDt" />
@@ -67,7 +69,8 @@
 	
 	<p:panel id="supplierPnl" header="Supplier Details" toggleable="true" toggleSpeed="500">
 		<p:dataTable id="pnlSupplierDt" var="data" value="#{panelBackingBean.managedBean.circularVer.ctPanelSuppliers}"
-			lazy="false" dynamic="true" rowIndexVar="index">
+			lazy="true" rowIndexVar="index">
+			<ac:paginator for="pnlSupplierDt" />
 			<p:columnGroup type="header">
 				<p:row>
 					<p:column style="width:30px" headerText="No" />
@@ -103,6 +106,7 @@
 				<p:commandButton value="No" icon="ui-icon-reject" onclick="delPnlSupplierDlg.hide()" type="button" />
 			</h:panelGrid>
 		</p:confirmDialog>
+		<p:spacer height="2" />
 		<div class="ppRightBtn"> 
 			<p:commandButton value="Add" process="@form" partialSubmit="true" icon="ui-icon-add"
 				action="#{panelBackingBean.addPanelSupplier()}" update="pnlSupplierDt" />
@@ -112,7 +116,8 @@
 	<p:panel id="concelCircularPnl" header="Related Cancelled Circular" toggleable="true" toggleSpeed="500" 
 		rendered="#{!panelBackingBean.managedBean.updateAction and panelBackingBean.managedBean.circularVer.updateNo == null}" >
 		<p:dataTable id="cancelCircularDt" var="data" value="#{panelBackingBean.managedBean.circularVer.ctCancelCircularList}"
-			lazy="false" dynamic="true" rowIndexVar="index" >
+			lazy="true" rowIndexVar="index" >
+			<ac:paginator for="cancelCircularDt" />
 			<p:columnGroup type="header">
 				<p:row>
 					<p:column style="width:30px" headerText="#{lbl['lbl.ct.pc.no']}" />
@@ -152,6 +157,7 @@
 				<p:commandButton value="No" icon="ui-icon-reject" onclick="delCancelCircularDlg.hide()" type="button" />
 			</h:panelGrid>
 		</p:confirmDialog>
+		<p:spacer height="2" />
 		<div class="ppRightBtn"> 
 			<p:commandButton value="Add" icon="ui-icon-add" onclick="cancelCircularDlg.show();" />
 		</div>		

@@ -19,6 +19,8 @@ import my.ep.biz.bean.search.SearchBetweenValue;
 import my.ep.biz.bean.search.SearchFilterBean;
 import my.ep.biz.service.ct.circular.ICircularSO;
 import my.ep.biz.service.pm.common.state.IStateSO;
+import my.ep.bpm.service.IBpmSO;
+import my.ep.constant.BpmOutcomeConst;
 import my.ep.constant.ct.ContractConst;
 import my.ep.constant.ct.ContractStatusConst;
 import my.ep.dto.ct.circular.CircularReqDTO;
@@ -41,6 +43,7 @@ import my.ep.persistence.entity.pm.common.PmCode;
 import my.ep.persistence.entity.pm.common.PmState;
 import my.ep.persistence.entity.sm.SmSupplier;
 import my.ep.type.aut.SearchOperator;
+import my.ep.util.lookupservice.EpBpmBusinessDelegate;
 import my.ep.web.backingbean.BaseBackingBean;
 import my.ep.web.bean.paginator.IPagingDataModel;
 import my.ep.web.bean.paginator.PagingDataModel;
@@ -90,8 +93,7 @@ public class PanelBackingBean extends BaseBackingBean<PanelManagedBean>{
 	
 	public String saveCircularPanel(String action) {
 		log.debug("PanelBackingBean.saveCircularPanel("+action+")");
-		System.out.println("ACTION : "+action);
-		
+
 		ICircularSO circularSO = null;
 		try {
 			circularSO = (ICircularSO)BusinessDelegate.getInstance().getServiceObject("ct",ICircularSO.class);
@@ -105,18 +107,36 @@ public class PanelBackingBean extends BaseBackingBean<PanelManagedBean>{
 			if(circularLetter!=null) {
 				circularVer.setCircularFileName(circularLetter.getFileName());
 				circularVer.setCircularFilePath(circularLetter.getFileName());
+			} else {
+				// TODO
+				circularVer.setCircularFileName("temp");
+				circularVer.setCircularFilePath("tempPath");
+			}
+			
+			String token = getManagedBean().getToken();
+			if(token==null) {
+				IBpmSO bpmSO = (IBpmSO) EpBpmBusinessDelegate.getInstance().getServiceObject(IBpmSO.class);
+				token = bpmSO.authenticate("roslan", "welcome1");
+				if(token==null) {
+					throw new EpException("BPM token not found");
+				}
 			}
 			
 			CircularReqDTO reqDTO = new CircularReqDTO();
 			reqDTO.setCircular(circular);
 			reqDTO.setCircularVer(circularVer);
+			reqDTO.setOutcome(action);
+			reqDTO.setToken(token);
+			reqDTO.setTaskId(getManagedBean().getTaskId());
 			
 			CircularResDTO resDTO = circularSO.saveCircular(reqDTO);
 			if(resDTO.isSuccessful()) {
 				log.info("Record saved successfully");
 				FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "Record saved successfully.","Circular No. : "+circularVer.getCircularNo()));
-				renewSesionObject();
-				return "/xhtml/shared/acknowledge.xhtml";
+				if(!action.equalsIgnoreCase(BpmOutcomeConst.BPM_SAVE)) { // save action will remain in the same page
+					renewSesionObject();
+					return "/xhtml/shared/acknowledge.xhtml";
+				}
 			} else {
 				throw new EpException("Failed.");
 			}
@@ -336,9 +356,11 @@ public class PanelBackingBean extends BaseBackingBean<PanelManagedBean>{
 			
 			if(action.equalsIgnoreCase("view")) {
 				CircularResDTO resDTO = circularSO.retrieveCircularVerById(reqDTO);
-				PmCode code = new PmCode();
-				code.setCodeId(-1L);
-				resDTO.getCircularVer().setCircularTypeCode(code);
+				if(resDTO.getCircularVer().getCircularTypeCode()==null) {
+					PmCode code = new PmCode();
+					code.setCodeId(-1L);
+					resDTO.getCircularVer().setCircularTypeCode(code);
+				}
 				for(CtPanelItem panelItem : resDTO.getCircularVer().getCtPanelItems()) {
 					for(CtPanelSupplierItem panelSupplierItem : panelItem.getCtPanelSupplierItems()) {
 						if(panelSupplierItem.getCtPanelZone()==null) {
@@ -367,6 +389,37 @@ public class PanelBackingBean extends BaseBackingBean<PanelManagedBean>{
 			circularSO = null;
 		}
 		return null;
+	}
+	
+	public void taskListAction(Long circularVerId) {
+		ICircularSO circularSO = null;
+		try {
+			circularSO = (ICircularSO)BusinessDelegate.getInstance().getServiceObject("ct",ICircularSO.class);
+			
+			CircularReqDTO reqDTO = new CircularReqDTO();
+			reqDTO.setCircularVerId(circularVerId);
+			
+			CircularResDTO resDTO = circularSO.retrieveCircularVerById(reqDTO);
+			if(resDTO.getCircularVer().getCircularTypeCode()==null) {
+				PmCode code = new PmCode();
+				code.setCodeId(-1L);
+				resDTO.getCircularVer().setCircularTypeCode(code);
+			}
+			for(CtPanelItem panelItem : resDTO.getCircularVer().getCtPanelItems()) {
+				for(CtPanelSupplierItem panelSupplierItem : panelItem.getCtPanelSupplierItems()) {
+					if(panelSupplierItem.getCtPanelZone()==null) {
+						panelSupplierItem.setCtPanelZone(new CtPanelZone());
+					}
+				}
+			}
+			getManagedBean().setCircular(resDTO.getCircularVer().getCtCircular());
+			getManagedBean().setCircularVer(resDTO.getCircularVer());
+		} catch (Exception e) {
+			e.printStackTrace();
+			FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR,e.toString(), e.getMessage()));
+		} finally {
+			circularSO = null;
+		}
 	}
 	
 	private class CancelledCircularPagingDataModel extends PagingDataModel<CtCancelCircular> {

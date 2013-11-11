@@ -47,6 +47,7 @@ import my.ep.dto.pp.procurementplan.ProcurementPlanResDTO;
 import my.ep.jaxb.cd.requestdata.CDRequestDataType;
 import my.ep.jaxb.ct.agreement.CTAgreementDataType;
 import my.ep.jaxb.ct.bankaccount.CTBankAccountDataType;
+import my.ep.jaxb.ct.circular.CTCircularContractDataType;
 import my.ep.jaxb.ct.contract.CTContractDataType;
 import my.ep.jaxb.ct.factoring.CTFactoringDataType;
 import my.ep.jaxb.ct.suspension.CTContractSuspensionDataType;
@@ -71,6 +72,7 @@ import my.ep.web.backingbean.BaseBackingBean;
 import my.ep.web.backingbean.cm.codification.UnspscCodeBackingBean;
 import my.ep.web.backingbean.ct.ContractDetailsBackingBean;
 import my.ep.web.backingbean.ct.agreement.AgreementBackingBean;
+import my.ep.web.backingbean.ct.circular.panel.PanelBackingBean;
 import my.ep.web.backingbean.ct.supplier.SupplierBackingBean;
 import my.ep.web.backingbean.ct.suspend.ContractSuspendBackingBean;
 import my.ep.web.backingbean.fl.createcontract.ContractRequestBackingBean;
@@ -569,6 +571,13 @@ public class TaskListBackingBean extends BaseBackingBean<TaskListManagedBean>{
 					svoBB.getManagedBean().setBpmAction(res.getAction());
 					svoBB.getManagedBean().setTaskId(taskId);
 				}
+			} else if(res.getProcessName().equalsIgnoreCase("Circular Contract Maintenance")) {
+				CTCircularContractDataType dataType = (CTCircularContractDataType) obj;
+				PanelBackingBean panelCircularBB = new PanelBackingBean();
+				panelCircularBB.taskListAction(dataType.getCircularId().longValue());
+				panelCircularBB.getManagedBean().setToken(ctx);
+				panelCircularBB.getManagedBean().setOutComes(res.getAction());
+				panelCircularBB.getManagedBean().setTaskId(taskId);
 			}
 			
 

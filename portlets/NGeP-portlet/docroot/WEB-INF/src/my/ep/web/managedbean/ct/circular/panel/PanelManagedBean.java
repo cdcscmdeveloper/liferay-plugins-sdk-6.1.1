@@ -36,7 +36,6 @@ public class PanelManagedBean extends BaseManagedBean {
 	private static final long serialVersionUID = 1L;
 
 	private boolean updateAction;
-	private String[] outComes;
 	
 	private CtCircular circular;
 	private CtCircularVer circularVer;
@@ -61,14 +60,6 @@ public class PanelManagedBean extends BaseManagedBean {
 	private Date searchEndDate;	
 	private Long searchCircularTypeCodeId;
 	private Long searchStatusId;
-	
-	public String[] getOutComes() {
-		return outComes;
-	}
-
-	public void setOutComes(String[] outComes) {
-		this.outComes = outComes;
-	}
 
 	public CtCircular getCircular() {
 		return circular;

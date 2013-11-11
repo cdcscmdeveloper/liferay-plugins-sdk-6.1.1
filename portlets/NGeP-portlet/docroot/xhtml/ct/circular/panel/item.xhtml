@@ -3,12 +3,14 @@
 	xmlns:h="http://java.sun.com/jsf/html"
 	xmlns:ui="http://java.sun.com/jsf/facelets"
 	xmlns:p="http://primefaces.org/ui"
-	xmlns:c="http://java.sun.com/jsp/jstl/core" >
+	xmlns:c="http://java.sun.com/jsp/jstl/core" 
+	xmlns:ac="http://ac.my/jsf/composite/cc" >
 
 	<p:panel id="itemId" header="#{lbl['lbl.ct.pc.panel.item']}" toggleable="true" toggleSpeed="500">
-		<p:dataTable id="panelItemDt" var="data" rowIndexVar="index" rowKey="#{data}"
+		<p:dataTable id="panelItemDt" var="data" rowIndexVar="index" rowKey="#{data}" lazy="true"
 			value="#{panelBackingBean.managedBean.circularVer.ctPanelItems}" selectionMode="single"
 			selection="#{panelBackingBean.managedBean.selectedPanelItem}" >
+			<ac:paginator for="panelItemDt" /> 
 			<p:ajax event="rowSelect" update=":form:tabview:supplierItemPnl" />
 			<p:columnGroup type="header">
 				<p:row>
@@ -52,8 +54,9 @@
 		<p:spacer height="20" />
 		
 		<h:panelGrid id="supplierItemPnl" columnClasses="ppRightBtn" >
-			<p:dataTable id="supplierItemDt" var="data" lazy="false" dynamic="true" rowIndexVar="index"
-				 value="#{panelBackingBean.managedBean.selectedPanelItem.ctPanelSupplierItems}">		
+			<p:dataTable id="supplierItemDt" var="data" lazy="true" rowIndexVar="index"
+				 value="#{panelBackingBean.managedBean.selectedPanelItem.ctPanelSupplierItems}">	
+				<ac:paginator for="supplierItemDt" />  	
 				<p:columnGroup type="header">
 					<p:row>
 						<p:column style="width:30px" headerText="#{lbl['lbl.ct.pc.no']}" />
@@ -89,6 +92,7 @@
 					<p:commandButton value="No" icon="ui-icon-reject" onclick="delSupItemDlg.hide()" type="button" />
 				</h:panelGrid>
 			</p:confirmDialog>	
+			<p:spacer height="2" />
 			<p:commandButton value="Add" process="@form" partialSubmit="true" icon="ui-icon-add"
 				rendered="#{panelBackingBean.managedBean.selectedPanelItem != null}"
 				action="#{panelBackingBean.addPanelSupplierItem()}" update="supplierItemDt" />			
