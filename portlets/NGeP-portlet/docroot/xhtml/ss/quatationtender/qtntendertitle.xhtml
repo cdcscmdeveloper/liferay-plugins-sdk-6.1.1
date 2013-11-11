@@ -109,7 +109,7 @@
 				</p:selectOneMenu>
 			</p:column>
 			<p:column headerText="Budget Availability"> 
-       		#{!empty gosodo.budgetAvailable ? (gosodo.budgetAvailable ? 'Yes' : 'No') : ''}
+       		#{!empty gosodo.isBudgetAvailable ? (gosodo.isBudgetAvailable ? 'Yes' : 'No') : ''}
        	</p:column>
 			<p:column headerText="Action ">
 				<p:commandLink style="margin-right:20px;" ajax="false">
