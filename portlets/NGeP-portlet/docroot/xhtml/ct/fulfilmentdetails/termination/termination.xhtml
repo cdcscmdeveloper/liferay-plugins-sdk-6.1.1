@@ -5,48 +5,41 @@
 	xmlns:ui="http://java.sun.com/jsf/facelets"
 	xmlns:p="http://primefaces.org/ui"
 	xmlns:c="http://java.sun.com/jsp/jstl/core">
-	       <ui:include src="/xhtml/ct/fulfilmentdetails/shared/fulfilment.xhtml"/>
-           <p:panel id="sTermination" header="Termination Details" toggleable="true"  toggleSpeed="500" widgetVar="panelsTermination">
-            <h:panelGrid columns="4" style="width:750px;">  
-               <h:outputLabel value="Mutual Termination"/>  
-               <p:selectBooleanCheckbox value=""/> 
-               <f:verbatim></f:verbatim>
-               <f:verbatim></f:verbatim>
-               <h:outputLabel  value="Termination Recommendation"/>  
-               <p:selectOneMenu value="#{contractDetailsBackingBean.managedBean.terminateRecommedType}" style="width:150px;">
-                  <f:selectItem itemLabel="--Please Select--" itemValue="--Please Select--" /> 
-                   <f:selectItems value="#{contractDetailsBackingBean.terminationType}" />
+	<ui:include src="/xhtml/ct/fulfilmentdetails/shared/fulfilment.xhtml"/>
+    <p:panel id="terCont" header="#{lbl['lbl.ct.tr.panel.header']}" toggleable="true"  toggleSpeed="500">
+            <h:panelGrid columns="4">  
+               <h:outputLabel value="#{lbl['lbl.ct.tr.mutual']}"/>  
+               <p:selectBooleanCheckbox value="#{contractDetailsBackingBean.managedBean.termination.mutualTerminate}"/> 
+               <f:verbatim></f:verbatim> <f:verbatim></f:verbatim>
+               <h:outputLabel  value="#{lbl['lbl.ct.tr.recom']}"/>  
+               <p:selectOneMenu value="#{contractDetailsBackingBean.managedBean.termination.caRecommendationCode.code}" style="width:150px;">
+                  <f:selectItems value="#{contractDetailsBackingBean.getDropdownValues(PmCodeCatConst.ctTerminationRecommendType)}" />
             	   <p:ajax event="change" update=":form:tabview" listener="#{contractDetailsBackingBean.changeField}" process="@this"/>  
                </p:selectOneMenu>    
-               <h:outputLabel value="Termination Date"/>
-                  <p:calendar style="width:120px;" value="#{contractDetailsBackingBean.managedBean.effDate}" id="popupButtonCal3" showOn="button" />
+               <h:outputLabel value="#{lbl['lbl.ct.tr.date']}"/>
+               <p:calendar style="width:120px;" value="#{contractDetailsBackingBean.managedBean.termination.terminationDate}" id="popupButtonCal3" showOn="button" />
 	         </h:panelGrid> 
-          </p:panel>
-          <p:panel id="terminationReason" header="Reason For Termination" toggleable="true"  toggleSpeed="500">
-          <h:panelGrid style="width:780px;">
+     </p:panel>
+     <p:panel id="trReason" header="#{lbl['lbl.ct.tr.reason']}" toggleable="true"  toggleSpeed="500">
+       <h:panelGrid>
 			<p:dataTable id="dataTable" var="data" value="#{contractDetailsBackingBean.managedBean.terminateReasonList}" rowIndexVar="index" 
 			  widgetVar="dataTableObj" lazy="false" dynamic="true" paginator="true" paginatorPosition="bottom" paginatorAlwaysVisible="true"
 			  emptyMessage="No Records!" rows="10">
 			   <p:columnGroup type="header"> 
 				<p:row> 
-				  <p:column style="width:30px;" headerText="No."  />
-				  <p:column style="width:200px;" headerText="Termination Reason"  /> 
-				  <p:column style="width:450px;" headerText="Termination Description" /> 
-				  <p:column style="width:50px;" headerText="Action" /> 
+				  <p:column style="width:30px;" headerText="#{lbl['lbl.ct.tr.table.no']}"  />
+				  <p:column style="width:200px;" headerText="#{lbl['lbl.ct.tr.table.reason']}"  /> 
+				  <p:column style="width:450px;" headerText="#{lbl['lbl.ct.tr.table.descp']}" /> 
+				  <p:column style="width:50px;" headerText="#{lbl['lbl.ct.tr.table.action']}" /> 
 				</p:row>							
 				</p:columnGroup>
-				<p:column styleClass="column-align-center"  > <h:outputText value="#{index+1}" /></p:column>
+				<p:column styleClass="column-align-center"> <h:outputText value="#{index+1}" /></p:column>
 				<p:column>  
-				   <p:selectOneMenu  style="width:200px;">
-                   <f:selectItem itemLabel="--Please Select--" itemValue="--Please Select--" /> 
-            	   <f:selectItem itemLabel="Late Supply" itemValue="Late Supply" /> 
-            	   <f:selectItem itemLabel="Fail To Supply" itemValue="Fail To Supply" /> 
-            	   <f:selectItem itemLabel="Lack Of Quality" itemValue="Lack Of Quality" /> 
-            	   <f:selectItem itemLabel="Fail To Comply Term And Condition" itemValue="Fail To Comply Term And Condition" /> 
-            	   <f:selectItem itemLabel="Other" itemValue="Other" /> 
+				   <p:selectOneMenu   style="width:170px;">
+                    <f:selectItems value="#{contractDetailsBackingBean.getDropdownValues(PmCodeCatConst.ctTerminationReasonType)}" />
                	  </p:selectOneMenu> 
             	</p:column>	
-				<p:column> <p:inputText value="#{data.description}" style="width:400px;"/>
+				<p:column> <p:inputText value="#{data.description}" style="width:430px;"/>
 				</p:column> 	
 				<p:column styleClass="column-align-center">
 				<p:commandButton title="delete" onsuccess="confirmation.show()" partialSubmit="true" process="@this" icon="ui-icon-delete">
@@ -55,9 +48,9 @@
 				</p:column>						
 		    </p:dataTable>
 		 </h:panelGrid>
-		 <h:panelGrid style="width:780px" columnClasses="column-align-right">
-			<p:commandButton value="Add"  process="@this" partialSubmit="true" icon="ui-icon-add"
-			 action="#{contractDetailsBackingBean.addTerminateReason()}"  update="dataTable"/>
+		 <h:panelGrid style="width:770px" columnClasses="column-align-right">
+			<p:commandButton value="Add"  process="@this" partialSubmit="true" icon="ui-icon-add" 
+			   action="#{contractDetailsBackingBean.addTerminateReason()}" update="dataTable"/>
 		  </h:panelGrid>
 		  <p:confirmDialog message="Do you want to delete the record?"  closable="true" appendToBody="true" header="Delete Confirmation"
 			   severity="alert" widgetVar="confirmation">
@@ -68,17 +61,17 @@
 				</h:panelGrid>
 			</p:confirmDialog>
 		</p:panel>
-		<p:panel id="panelClause" header="Termination Agreement Clause"  toggleable="true"  toggleSpeed="500">
+		<p:panel id="panelClause" header="#{lbl['lbl.ct.tr.panel.claus']}"  toggleable="true"  toggleSpeed="500">
         <h:panelGrid style="width:780px;">
 		<p:dataTable id="clauseTable" var="data" value="#{contractDetailsBackingBean.managedBean.terminationClauseList}" rowIndexVar="index"
 		   widgetVar="dataTableObj" lazy="false" dynamic="true" paginator="true" paginatorPosition="bottom"
 		   paginatorAlwaysVisible="true" emptyMessage="No Records!" rows="10">
 		   <p:columnGroup type="header"> 
 		    <p:row> 
-			   <p:column style="width:30px;" headerText="No."  />
-			   <p:column style="width:200px;" headerText="Agreement Clause No"  /> 
-			   <p:column style="width:450px;" headerText="Agreement Clause Description" /> 
-		       <p:column style="width:50px;" headerText="Action" />
+			   <p:column style="width:30px;" headerText="#{lbl['lbl.ct.tr.table1.no']}"  />
+			   <p:column style="width:200px;" headerText="#{lbl['lbl.ct.tr.table1.clausNo']}" /> 
+			   <p:column style="width:450px;" headerText="#{lbl['lbl.ct.tr.table1.clausDesc']}" /> 
+		       <p:column style="width:50px;" headerText="#{lbl['lbl.ct.tr.table1.action']}" />
 		    </p:row>							
 		   </p:columnGroup>
 		   <p:column styleClass="column-align-center"> <h:outputText value="#{index+1}" /></p:column>
@@ -106,7 +99,7 @@
 			</p:confirmDialog>
 		</p:panel>
         <p:dialog id="modalDialog" widgetVar="dlg2" modal="true" width="600" height="400">
-		   <p:panel  id="agencyies">
+		   <p:panel  id="popupTableTr">
              <p:dataTable id="dataTable2" var="data" value="" rowIndexVar="index" widgetVar="dataTableObj"
                 paginator="true" paginatorPosition="bottom" paginatorAlwaysVisible="true" emptyMessage="No Records!" rows="10">
                 	   <f:facet name="header">Section</f:facet>

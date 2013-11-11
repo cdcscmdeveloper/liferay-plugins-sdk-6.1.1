@@ -31,7 +31,7 @@
                  <h:panelGrid columns="2" style="width:170px;" columnClasses="column-align-right">
                     <p:commandButton value="Search" styleClass="text-align:right;" actionListener="#{supplierBackingBean.searchContract()}"
                                     process="@this" partialSubmit="true"  icon="ui-icon-search"  update="supTable"/>
-					<p:commandButton value="Reset" styleClass="text-align:right;" process="@this" partialSubmit="true" icon="ui-icon-reset"/>
+					<p:commandButton value="Reset" process="@this" partialSubmit="true" icon="ui-icon-reset"/>
 			     </h:panelGrid>
                </h:panelGrid>
             </p:panel>
@@ -39,7 +39,7 @@
               <div style="overflow-x:auto">
 			     <p:dataTable id="supTable" var="data" value="#{supplierBackingBean.managedBean.contractList}" rowIndexVar="index"
 				    widgetVar="dataTableObj" lazy="false" dynamic="true" paginator="true" paginatorPosition="bottom"
-				    paginatorAlwaysVisible="true" emptyMessage="No Records!" rows="10">
+				    paginatorAlwaysVisible="true" emptyMessage="No Records!" rows="4">
 				    <p:columnGroup type="header"> 
 					   <p:row> 
 	                     <p:column headerText="No." />
@@ -54,13 +54,13 @@
 					  </p:row>							
 					  </p:columnGroup>
 						<p:column styleClass="column-align-center" > <p:outputLabel value="#{index+1}" /></p:column> 							
-						<p:column> <p:outputLabel value="" /></p:column>
-						<p:column> <p:outputLabel value="#{data.contractName}" /></p:column>	
-						<p:column> <p:outputLabel  value="#{data.qtLoaNo}"  /></p:column>	
-						<p:column> <p:outputLabel value="" /></p:column>	
-						<p:column> <p:outputLabel value="" /> </p:column> 							
-						<p:column> <p:outputLabel value="" /> </p:column>	
-						<p:column> <p:outputLabel value="" /></p:column>	
+						<p:column> <p:outputLabel value="CT102357-456" style="float:left;" /></p:column>
+						<p:column> <p:outputLabel value="#{data.contractName}" style="float:left;" /></p:column>	
+						<p:column> <p:outputLabel  value="#{data.qtLoaNo}" style="float:left;"  /></p:column>	
+						<p:column> <p:outputLabel  value="SU34650-48" style="float:left;" /></p:column>	
+						<p:column> <p:outputLabel  value="Khai Sdn Bhd" style="float:left;" /> </p:column> 							
+						<p:column> <p:outputLabel  value="12/11/2013" style="float:left;"/> </p:column>	
+						<p:column> <p:outputLabel  value="11/11/2014" style="float:left;"/> </p:column>	
 						<p:column styleClass="column-align-center">
 						<p:commandButton title="change Bank" action="#{supplierBackingBean.gotoBankPage}" partialSubmit="true" process="@this" 
 						   icon="ui-icon-bank" styleClass="ui-icon-bank"/>

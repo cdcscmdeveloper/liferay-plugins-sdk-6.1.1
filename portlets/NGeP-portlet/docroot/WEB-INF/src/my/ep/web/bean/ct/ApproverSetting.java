@@ -29,22 +29,7 @@ public class ApproverSetting {
 	     settingDetails = new DualListModel<SettingDetails>(source, target);  
 	     /*End for setting pickuplist*/
     }
-    
-    /*Setting Details Start*/
-    public void onTransfer(TransferEvent event) {  
-        StringBuilder builder = new StringBuilder();  
-        for(Object item : event.getItems()) {  
-            builder.append(((SettingDetails) item).getAproverName()).append("<br />");  
-        }  
-          
-        FacesMessage msg = new FacesMessage();  
-        msg.setSeverity(FacesMessage.SEVERITY_INFO);  
-        msg.setSummary("Items Transferred");  
-        msg.setDetail(builder.toString());  
-          
-        FacesContext.getCurrentInstance().addMessage(null, msg);  
-    }  
-
+  
     public DualListModel<SettingDetails> getSettingDetails() {
     	return settingDetails;
     }

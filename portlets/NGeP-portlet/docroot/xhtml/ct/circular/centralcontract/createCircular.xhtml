@@ -1,220 +1,239 @@
 <ui:composition
-	template="/WEB-INF/facelets/templates/sidemenu_template.xhtml"
 	xmlns="http://www.w3.org/1999/xhtml"
 	xmlns:f="http://java.sun.com/jsf/core"
 	xmlns:h="http://java.sun.com/jsf/html"
 	xmlns:ui="http://java.sun.com/jsf/facelets"
 	xmlns:p="http://primefaces.org/ui"
 	xmlns:c="http://java.sun.com/jsp/jstl/core">
-    <ui:define name="resourceSection">
-	</ui:define>
-	<ui:define name="sideMenu">
-		<ui:include src="/xhtml/ct/circular/shared/sidemenu/central.xhtml" />
-	</ui:define>
-    <ui:define name="content">
-	<p:panel id="pRightPanel">
-			<div class="ppRightBtn">
-				<p:commandButton id="ctSave" value="#{lbl['lbl.ct.btn.save']}"/>
-				<p:commandButton id="ctSubmit" value="#{lbl['lbl.ct.btn.submit']}"/>
-			</div>
-		</p:panel>
-       <p:panel id="cc" header="#{lbl['lbl.ct.cc.panel.ccd']}"  toggleable="true"  toggleSpeed="500" widgetVar="panelcc">
-          <ui:include src="/xhtml/ct/circular/shared/create.xhtml" />
-       </p:panel>
-		<p:panel id="contactPerson" header="Contact Person Details"  toggleable="true"  toggleSpeed="500" widgetVar="panelcontactPerson">
+    <p:panel id="centralCreation" header="#{lbl['lbl.ct.cc.panel.ccd']}"  toggleable="true"  toggleSpeed="500">
+    <h:panelGrid columns="2">  
+       <h:panelGrid columns="4" style="width:600px;">  
+         <p:outputLabel  value="#{lbl['lbl.ct.cc.cno']}" />  
+         <p:inputText  value="#{centralBackingBean.managedBean.circularVer.circularNo}" />    
+         <p:outputLabel  value="#{lbl['lbl.ct.cc.cname']}"/>  
+         <p:inputText  value="#{centralBackingBean.managedBean.circularVer.name}"/> 
+         <p:outputLabel value="#{lbl['lbl.ct.cc.frno']}" />  
+         <p:inputText value="#{centralBackingBean.managedBean.circularVer.circularFileRefNo}"/> 
+          <p:outputLabel  value="#{lbl['lbl.ct.cc.dpl']}" />  
+         <p:inputText  value="#{centralBackingBean.managedBean.circularVer.directPurchaseLimit}"/>    
+         <p:outputLabel  value="#{lbl['lbl.ct.cc.csdate']}" />  
+         <p:calendar value="#{centralBackingBean.managedBean.circularVer.startDate}" id="popupButtonCal" showOn="button" />
+         <p:outputLabel  value="#{lbl['lbl.ct.cc.cedate']}" />  
+         <p:calendar style="width:40px;" value="#{centralBackingBean.managedBean.circularVer.endDate}" id="popupButtonCal1" showOn="button" />   
+           <p:outputLabel  value="#{lbl['lbl.ct.cc.upload']}" />
+           <p:fileUpload id="upload"  fileUploadListener="#{centralBackingBean.fileUpload}"   immediate="true" mode="simple" process="@this"
+		      allowTypes="/(\.|\/)(gif|jpe?g|png|bmp|txt|xls|xlsx|pdf|doc|docx|csv)$/" 
+		   invalidFileMessage="Only JPG, GIF, PNG, BMP, TXT, XLS, PDF, DOC, CSV files are accepted">
+	       </p:fileUpload> 
+           <f:verbatim></f:verbatim> <f:verbatim></f:verbatim>
+       </h:panelGrid>
+       <h:panelGrid columns="1" style="width:150px;">  
+          <p:outputLabel value="#{lbl['lbl.ct.cc.coverage']}" style="float:left;"/>
+             <h:panelGrid columns="3" style="height:70px;">
+                <p:spacer height="13"/>
+                <p:selectBooleanCheckbox  value="#{centralBackingBean.managedBean.circularVer.peninsular}" /> 
+                <p:outputLabel value="#{lbl['lbl.ct.cc.chk']}" style="float:left;"/>
+                 <p:spacer height="13"/>
+                 <p:selectBooleanCheckbox value="#{centralBackingBean.managedBean.circularVer.sabah}"/> 
+                 <p:outputLabel value="#{lbl['lbl.ct.cc.chk.sabah']}" style="float:left;"/> 
+                <p:spacer height="13"/>
+            	<p:selectBooleanCheckbox value="#{centralBackingBean.managedBean.circularVer.sarawak}"/> 
+                <p:outputLabel value="#{lbl['lbl.ct.cc.chk.swak']}" style="float:left;"/>
+              </h:panelGrid>
+            </h:panelGrid>
+         </h:panelGrid>
+      </p:panel>
+		<p:panel id="contactPerson" header="Contact Person Details"  toggleable="true"  toggleSpeed="500">
            <p:dataTable id="tablePerson" var="data" value="#{centralBackingBean.managedBean.contractPerson}"  widgetVar="dataTableObj" 
-           lazy="false" dynamic="true" rowIndexVar="index">
+             lazy="true" dynamic="true" rowIndexVar="index"  paginator="true" paginatorPosition="bottom" paginatorAlwaysVisible="true" 
+             emptyMessage="No Records!" rows="5"    rowsPerPageTemplate="5,10,15,20">
 			  <p:columnGroup type="header"> 
 			  <p:row> 
-				  <p:column style="width:30px;" headerText="#{lbl['lbl.ct.cc.no']}"  /> 
-				  <p:column style="width:150px;" headerText="#{lbl['lbl.ct.cc.cperson']}" /> 
-				  <p:column style="width:280px;" headerText="#{lbl['lbl.ct.cc.caddress']}" /> 	
-				  <p:column style="width:100px;" headerText="#{lbl['lbl.ct.cc.cemail']}"  /> 
-				  <p:column style="width:100px;" headerText="#{lbl['lbl.ct.cc.pno']}"  /> 
-				  <p:column style="width:80px;" headerText="#{lbl['lbl.ct.cc.action']}"  />   
+				  <p:column  headerText="#{lbl['lbl.ct.cc.no']}"  /> 
+				  <p:column  headerText="#{lbl['lbl.ct.cc.cperson']}" /> 
+				  <p:column  headerText="#{lbl['lbl.ct.cc.caddress']}" /> 	
+				  <p:column  headerText="#{lbl['lbl.ct.cc.cemail']}"  /> 
+				  <p:column  headerText="#{lbl['lbl.ct.cc.pno']}"  /> 
+				  <p:column  headerText="#{lbl['lbl.ct.cc.action']}"  />   
 			  </p:row>	
 			 </p:columnGroup>
-			 <p:column styleClass="column-align-center" >
-				       <h:outputText value="#{index+1}" /></p:column> 														                   
-					    <p:column><p:inputText value="#{data.contractPersonName}" style="width:140px;"/></p:column>	
-					  <p:column> <p:inputText value="#{data.contractAddress}"  style="width:240px;"/> </p:column>
-				      <p:column><p:inputText value="#{data.contractEmail}" style="width:90px;"/></p:column>	
-				      <p:column><p:inputText value="#{data.contractPhone}" style="width:90px;"/></p:column>	
-					  <p:column styleClass="column-align-center">
-					  <p:commandButton title="delete" onsuccess="confirmation.show()"
-									partialSubmit="true" process="@this" icon="ui-icon-delete">
-					    <f:setPropertyActionListener value="#{data}" target="#{centralBackingBean.managedBean.deleteContractPerson}" />
-					  </p:commandButton>
-					  </p:column> 
+			 <p:column styleClass="column-align-center" > <h:outputText value="#{index+1}" /></p:column> 														                   
+			 <p:column><p:inputText value="#{data.name}" style="width:120px;"/></p:column>	
+			 <p:column> <p:inputText value="#{data.address}"  style="width:220px;"/> </p:column>
+			 <p:column><p:inputText value="#{data.email}" style="width:80px;"/></p:column>	
+		     <p:column><p:inputText value="#{data.phoneNo}" style="width:80px;"/></p:column>	
+			 <p:column styleClass="column-align-center">
+			   <p:commandButton title="delete" onsuccess="confirmation.show()" partialSubmit="true" process="@this" icon="ui-icon-delete">
+			    <f:setPropertyActionListener value="#{data}" target="#{centralBackingBean.managedBean.deleteContractPerson}" />
+			   </p:commandButton>
+			 </p:column> 
 		</p:dataTable>
-		<p:confirmDialog message="Do you want to delete the record?"
-	     closable="true" appendToBody="true" header="Delete Confirmation"
-							severity="alert" widgetVar="confirmation">
-
-							<h:panelGrid columns="2"
-								columnClasses="column-align-right-50,column-align-left">
-								<p:commandButton value="Yes" 
-									update="tablePerson" partialSubmit="true" process="@this"
-									onclick="confirmation.hide();" actionListener="#{centralBackingBean.deletePersonList()}"/>
-								<p:commandButton value="No" 
-									onclick="confirmation.hide()" type="button" />
-							</h:panelGrid>
-						</p:confirmDialog>
-	   <h:panelGrid style="width:800px" columnClasses="column-align-right">
-		  <p:commandButton value="Add" styleClass="text-align: right;" process="@this" partialSubmit="true" icon="ui-icon-add"  
-		  action="#{centralBackingBean.addNewPerson()}" update="tablePerson"/>
+	   <h:panelGrid style="width:770px" columnClasses="column-align-right">
+		  <p:commandButton value="Add" process="@form" partialSubmit="true" icon="ui-icon-add" action="#{centralBackingBean.addNewPerson()}" update="tablePerson"/>
 	    </h:panelGrid>
+	     <p:confirmDialog message="Do you want to delete the record?" closable="true" appendToBody="true" header="Delete Confirmation"
+		  severity="alert" widgetVar="confirmation">
+		  <h:panelGrid columns="2">
+			<p:commandButton value="Yes" update="tablePerson" partialSubmit="true" process="@this"
+			   onclick="confirmation.hide();" actionListener="#{centralBackingBean.deletePersonList()}"/>
+			<p:commandButton value="No" onclick="confirmation.hide()" type="button" />
+		  </h:panelGrid>
+	   </p:confirmDialog>
       </p:panel>
-      <p:panel id="centralContractList" header="#{lbl['lbl.ct.cc.ct']}"  toggleable="true"  toggleSpeed="500" widgetVar="panelcentralCircular">
-       <p:dataTable id="dataTable1" var="data" value=" " widgetVar="dataTableObj" lazy="false" dynamic="true" rowIndexVar="index"
-		  paginator="true" paginatorPosition="bottom" paginatorAlwaysVisible="true" emptyMessage="No Records!" rows="10" 
-	      rowsPerPageTemplate="5,10,15,20" currentPageReportTemplate=" total {totalRecords},  page {currentPage} of {totalPages} "
-	      paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}">
+      <p:panel id="contractList" header="#{lbl['lbl.ct.cc.ct']}"  toggleable="true"  toggleSpeed="500">
+       <p:dataTable id="tableContractList" var="data" value="#{centralBackingBean.managedBean.centralContractList}" widgetVar="dataTableObj" 
+       lazy="false" dynamic="true" rowIndexVar="index" paginator="true" paginatorPosition="bottom" paginatorAlwaysVisible="true" emptyMessage="No Records!" rows="5" 
+	   rowsPerPageTemplate="5,10,15,20">
 		  <p:columnGroup type="header"> 
 		    <p:row> 
-               <p:column colspan="1" style="width:30px;" headerText="#{lbl['lbl.ct.cc.no']}"  /> 
-               <p:column colspan="1"  style="width:100px;" headerText="#{lbl['lbl.ct.cc.ctno']}" /> 
-               <p:column colspan="1"  style="width:120px;" headerText="#{lbl['lbl.ct.cc.ctname']}" /> 	
-               <p:column colspan="1" style="width:100px;" headerText="#{lbl['lbl.ct.cc.loa']}"  /> 
-               <p:column colspan="1" style="width:100px;" headerText="#{lbl['lbl.ct.cc.sup']}"  /> 
-               <p:column colspan="1" style="width:80px;" headerText="#{lbl['lbl.ct.cc.status']}"  />  
-               <p:column colspan="1" style="width:80px;" headerText="#{lbl['lbl.ct.cc.ctsdate']}"  /> 
-               <p:column colspan="1" style="width:80px;" headerText="#{lbl['lbl.ct.cc.ctedate']}"  /> 
-               <p:column colspan="1" style="width:80px;" headerText="#{lbl['lbl.ct.cc.action']}"  />    
+               <p:column headerText="#{lbl['lbl.ct.cc.no']}"  /> 
+               <p:column headerText="#{lbl['lbl.ct.cc.ctno']}" /> 
+               <p:column headerText="#{lbl['lbl.ct.cc.ctname']}" /> 	
+               <p:column headerText="#{lbl['lbl.ct.cc.loa']}"  /> 
+               <p:column headerText="#{lbl['lbl.ct.cc.sup']}"  /> 
+               <p:column headerText="#{lbl['lbl.ct.cc.status']}"  />  
+               <p:column headerText="#{lbl['lbl.ct.cc.ctsdate']}"  /> 
+               <p:column headerText="#{lbl['lbl.ct.cc.ctedate']}"  /> 
+               <p:column headerText="#{lbl['lbl.ct.cc.action']}"  />    
 		   </p:row>	
 		</p:columnGroup>
 		<p:column styleClass="column-align-center" > <h:outputText value="#{index+1}" /></p:column> 							
-		   <p:column> </p:column>
-		   <p:column></p:column>	
-		   <p:column> </p:column>
-		   <p:column></p:column>	
-		   <p:column></p:column>	
-		   <p:column> </p:column>
-		   <p:column> </p:column>
+		   <p:column><p:outputLabel value="CT023456"/> </p:column>
+		   <p:column><p:outputLabel value="#{data.contractName}"/></p:column>	
+		   <p:column><p:outputLabel value="#{data.qtLoaNo}"/> </p:column>
+		   <p:column><p:outputLabel value="Khai Sdn Bhd"/></p:column>	
+		   <p:column><p:outputLabel value="Active"/></p:column>	
+		   <p:column><p:outputLabel value="01/11/2013"/></p:column>
+		   <p:column><p:outputLabel value="01/11/2014"/></p:column>
 		   <p:column styleClass="column-align-center">
-		   <p:commandButton title="delete" onsuccess="confirmation.show()" partialSubmit="true" process="@this" 
-			  icon="ui-icon-delete" styleClass="ui-icon-button"/>
+		   <p:commandButton title="delete" onsuccess="confirmation1.show()" partialSubmit="true" process="@this" icon="ui-icon-delete">
+		      <f:setPropertyActionListener value="#{data}" target="#{centralBackingBean.managedBean.contract}" />
+		   </p:commandButton>
 		   </p:column> 
 	   </p:dataTable>
-	   <h:panelGrid style="width:800px" columnClasses="column-align-right">
-		  <p:commandButton value="Add" styleClass="text-align: right;" process="@this" partialSubmit="true" icon="ui-icon-add" 
-			 onclick="dlg2.show();"/>
+	   <h:panelGrid style="width:770px" columnClasses="column-align-right">
+		  <p:commandButton value="Add" process="@this" partialSubmit="true" icon="ui-icon-add"  onclick="dlg2.show();"/>
 	   </h:panelGrid>
+	   <p:confirmDialog message="Do you want to delete the record?" closable="true" appendToBody="true" header="Delete Confirmation"
+		  severity="alert" widgetVar="confirmation1">
+		  <h:panelGrid columns="2">
+			<p:commandButton value="Yes" update="tableContractList" partialSubmit="true" process="@this"
+			   onclick="confirmation1.hide();" actionListener="#{centralBackingBean.deleteContractList()}"/>
+			<p:commandButton value="No" onclick="confirmation1.hide()" type="button" />
+		  </h:panelGrid>
+	   </p:confirmDialog>
       </p:panel>
-      <p:panel id="concelCircular" header="Cancel Circular From List"  toggleable="true"  toggleSpeed="500" widgetVar="panelconcelCircular">
-         <p:dataTable id="dataTable2" var="data" value=" " widgetVar="dataTableObj" lazy="false" dynamic="true" rowIndexVar="index">
+      <p:panel id="concelCircular" header="Cancel Circular From List"  toggleable="true"  toggleSpeed="500">
+         <p:dataTable id="tableCancelCircular" var="data" value="#{centralBackingBean.managedBean.cancelCircularList}" widgetVar="dataTableObj" 
+         lazy="false" dynamic="true"  rowIndexVar="index"  paginator="true" paginatorPosition="bottom" paginatorAlwaysVisible="true" emptyMessage="No Records!" rows="10" 
+	      rowsPerPageTemplate="5,10,15,20" >
 		  <p:columnGroup type="header"> 
 			<p:row> 
-			  <p:column colspan="1" style="width:30px;" headerText="#{lbl['lbl.ct.cc.no']}"  /> 
-              <p:column colspan="1"  style="width:100px;" headerText="#{lbl['lbl.ct.cc.cno']}" /> 
-              <p:column colspan="1"  style="width:200px;" headerText="#{lbl['lbl.ct.cc.cname']}" /> 	
-              <p:column colspan="1" style="width:100px;" headerText="#{lbl['lbl.ct.cc.frno']}"  /> 
-              <p:column colspan="1" style="width:100px;" headerText="#{lbl['lbl.ct.cc.coverage']}"  /> 
-              <p:column colspan="1" style="width:80px;" headerText="#{lbl['lbl.ct.cc.csdate']}"  />  
-              <p:column colspan="1" style="width:80px;" headerText="#{lbl['lbl.ct.cc.cedate']}"  /> 
-              <p:column colspan="1" style="width:80px;" headerText="#{lbl['lbl.ct.cc.action']}"  />    
+			  <p:column headerText="#{lbl['lbl.ct.cc.no']}"  /> 
+              <p:column headerText="#{lbl['lbl.ct.cc.cno']}" /> 
+              <p:column headerText="#{lbl['lbl.ct.cc.cname']}" /> 	
+              <p:column headerText="#{lbl['lbl.ct.cc.frno']}"  /> 
+              <p:column headerText="#{lbl['lbl.ct.cc.coverage']}"  /> 
+              <p:column headerText="#{lbl['lbl.ct.cc.csdate']}"  />  
+              <p:column headerText="#{lbl['lbl.ct.cc.cedate']}"  /> 
+              <p:column headerText="#{lbl['lbl.ct.cc.action']}"  />    
 		   </p:row>	
 		 </p:columnGroup>
-		 <p:column styleClass="column-align-center" > <h:outputText value="#{index+1}" /></p:column> 							
-		   <p:column> </p:column>
-		   <p:column></p:column>	
-		   <p:column> </p:column>
-		   <p:column></p:column>	
-		   <p:column></p:column>	
-		   <p:column> </p:column>
-		   <p:column styleClass="column-align-center">
-		   <p:commandButton title="delete" onsuccess="confirmation.show()" partialSubmit="true" process="@this" 
-			  icon="ui-icon-delete" styleClass="ui-icon-button"/>
-		   </p:column> 
+		     <p:column styleClass="column-align-center" > <h:outputText value="#{index+1}" /></p:column> 							
+		     <p:column> <p:outputLabel value="#{data.circularNo}"/> </p:column>
+		     <p:column><p:outputLabel value="#{data.name}"/></p:column>	
+		     <p:column><p:outputLabel value="#{data.circularFileRefNo}"/> </p:column>
+		     <p:column><p:outputLabel value=" "/></p:column>	
+		     <p:column><p:outputLabel value="#{data.startDate}"/></p:column>	
+		     <p:column><p:outputLabel value="#{data.endDate}"/> </p:column>
+		     <p:column styleClass="column-align-center">
+		       <p:commandButton title="delete" onsuccess="confirmation.show()" partialSubmit="true" process="@this"  icon="ui-icon-delete"/>
+		     </p:column> 
 		</p:dataTable>
-		<h:panelGrid style="width:800px" columnClasses="column-align-right">
-		 <p:commandButton value="Add" styleClass="text-align: right;" process="@this" partialSubmit="true" icon="ui-icon-add" 
-		    onclick="dlg3.show();"/>
+		<h:panelGrid style="width:770px" columnClasses="column-align-right">
+		 <p:commandButton value="Add" process="@this" partialSubmit="true" icon="ui-icon-add" onclick="dlg3.show();"/>
 		</h:panelGrid>
       </p:panel>
-      
-		<p:dialog id="modalDialog" header="Contract List" widgetVar="dlg2" modal="true" width="800" height="400">
-		  <p:panel  id="contractList">
-             <h:panelGrid columns="3">
-				<p:selectOneMenu id="contract"  value="" style="width:150px">
-            	   <f:selectItem itemLabel="--Please Select--" itemValue="" /> 
-                	  <f:selectItem itemLabel="contract No" itemValue="contract No" /> 
-                	  <f:selectItem itemLabel="contract Name" itemValue="contract Name" /> 
-               </p:selectOneMenu>
-               <p:inputText value=""></p:inputText>
-               <p:commandButton value="Search" icon="ui-icon-select"  process="modalDialog" update="dataTable3"/>
+      <p:dialog id="modalDialog" header="Contract List" widgetVar="dlg2" modal="true" width="750" height="400">
+		  <p:panel  id="listOfContract">
+           <h:panelGrid columns="4">
+			 <p:selectOneMenu id="contract"  value="#{centralBackingBean.managedBean.searchFilterBean.searchField}" style="width:150px">
+               <f:selectItem itemLabel="--Please Select--" itemValue="" /> 
+               <f:selectItems value="#{centralBackingBean.searchOptions}" />
+             </p:selectOneMenu>
+             <p:spacer width="10"/>
+             <p:inputText id="txtId" value="#{centralBackingBean.managedBean.searchValue}"/>
+               <p:commandButton value="Search" process="modalDialog,contract,txtId" icon="ui-icon-search"
+                    actionListener="#{centralBackingBean.searchContract()}" update="TableOfList"/>
              </h:panelGrid>
-	         <p:dataTable id="dataTable3" var="data" value="#{centralBackingBean.centralContract}" rowIndexVar="index" widgetVar="dataTableObj"
+	         <p:dataTable id="TableOfList" var="data" value="#{centralBackingBean.managedBean.contractList}" rowIndexVar="index" widgetVar="dataTableObj"
                 lazy="false" dynamic="true" paginator="true" paginatorPosition="bottom" paginatorAlwaysVisible="true" emptyMessage="No Records!" rows="10"  
-                rowsPerPageTemplate="5,10,15,20" selection="#{centralBackingBean.managedBean.selectedCentralContractList}" rowKey="#{data.contractNo}"
-                currentPageReportTemplate=" total {totalRecords},  page {currentPage} of {totalPages} " paginatorTemplate="{CurrentPageReport}  
-                {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}">
+                rowsPerPageTemplate="5,10,15,20" selection="#{centralBackingBean.selectedContractList}" rowKey="#{data.contractId}">
                 <p:column selectionMode="multiple" style="width:18px" />
-				<p:column headerText=" Contract No">
-					<h:outputText value="C00992394234" />
+				<p:column headerText="Contract No">
+					<h:outputText value="C00394234" />
 				</p:column>
                 <p:column headerText="Contract Name">
-				   <h:outputText value="Bekalan Pen Bebola" />
+				   <h:outputText value="#{data.contractName}" />
 				</p:column>
                 <p:column headerText="LOA No">
-				   <h:outputText value="LOA 325/2012" />
+				   <h:outputText value="#{data.qtLoaNo}" />
 				</p:column>
 				<p:column headerText="Contract Start">
-				   <h:outputText value="01-DEC-2012" />
+				   <h:outputText value="#{data.qtPublishDate}" />
 				</p:column>
                 <p:column headerText="Contract End">
-				   <h:outputText value="LOA 325/2012" />
+				   <h:outputText value="#{data.qtPublishDate}" />
 				</p:column>
 			</p:dataTable>
             <f:facet name="footer">
-			   <h:panelGrid columns="2"  style="height: 40px;vertical-align: middle;">
-				 <p:commandButton value="Select" icon="ui-icon-select"  process="modalDialog" update="dataTable1" onclick="dlg2.hide();"/>
-				 <p:commandButton value="Cancel"  type="button" ajax="false" onclick="dlg2.hide();" />
+			   <h:panelGrid columns="2"  style="height: 40px;vertical-align: middle;float:right;">
+				 <p:commandButton value="Select" icon="ui-icon-select"  process="modalDialog" actionListener="#{centralBackingBean.addSearchContract}" 
+				     update="tableContractList" onclick="dlg2.hide();"/>
+				 <p:commandButton value="Cancel" icon="ui-icon-cancel" type="button" ajax="false" onclick="dlg2.hide();" />
                </h:panelGrid>
 			</f:facet>
          </p:panel>
 	  </p:dialog>
-	  <p:dialog id="modalDialog1" header="Circular List" widgetVar="dlg3" modal="true" width="800" height="400">
-	  <p:panel  id="contractList1">
-      <h:panelGrid columns="3">
-		 <p:selectOneMenu id="circular"  value="" style="width:150px">
-            <f:selectItem itemLabel="--Please Select--" itemValue="" /> 
-            <f:selectItem itemLabel="Circular No" itemValue="Circular No" /> 
-            <f:selectItem itemLabel="Circular Name" itemValue="Circular Name" /> 
-         </p:selectOneMenu>
-        <p:inputText value=""></p:inputText>
-        <p:commandButton value="Search" icon="ui-icon-select"  process="modalDialog1" update="dataTable4"/>
+	  <p:dialog id="modalDialog1" header="Circular List" widgetVar="dlg3" modal="true" width="750" height="350">
+	  <p:panel  id="panelCircularList">
+      <h:panelGrid columns="4">
+		 <p:selectOneMenu id="circular"  value="#{centralBackingBean.managedBean.searchFilterBean.searchField}" style="width:150px">
+               <f:selectItem itemLabel="--Please Select--" itemValue="" /> 
+               <f:selectItems value="#{centralBackingBean.circularSearchOptions}" />
+             </p:selectOneMenu>
+             <p:spacer width="10"/>
+             <p:inputText id="txtCirId" value="#{centralBackingBean.managedBean.searchValue}"/>
+               <p:commandButton value="Search" process="modalDialog1,circular,txtCirId" icon="ui-icon-search"
+                    actionListener="#{centralBackingBean.searchCircular()}" update="listOfCircular"/>
      </h:panelGrid>
-	 <p:dataTable id="dataTable4" var="data" value="#{centralBackingBean.centralCircularContract}" rowIndexVar="index" widgetVar="dataTableObj"
-      lazy="false" dynamic="true" paginator="true" paginatorPosition="bottom" paginatorAlwaysVisible="true" 
-      emptyMessage="No Records!" rows="10"  rowsPerPageTemplate="5,10,15,20" 
-      selection="#{centralBackingBean.managedBean.selectedCentralContractList}" rowKey="#{data.circularNo}"
-      currentPageReportTemplate=" total {totalRecords},  page {currentPage} of {totalPages} "
-      paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}">
+	 <p:dataTable id="listOfCircular" var="data" value="#{centralBackingBean.managedBean.circularVarList}" rowIndexVar="index" widgetVar="dataTableObj"
+      lazy="false" dynamic="true" paginator="true" paginatorPosition="bottom" paginatorAlwaysVisible="true"   emptyMessage="No Records!" rows="10"
+      rowsPerPageTemplate="5,10,15,20" selection="#{centralBackingBean.selectedContractCircular}" rowKey="#{data.circularVerId}">
       <p:column selectionMode="multiple" style="width:18px" />
 	   <p:column headerText="Circular No">
-	   <h:outputText value="C00992394234" />
+	   <h:outputText value="#{data.circularNo}" />
 	   </p:column>
        <p:column headerText="Circular Name">
-		 <h:outputText value="Bekalan Pen Bebola" />
+		 <h:outputText value="#{data.name}" />
 	   </p:column>
        <p:column headerText="Circular Type">
-			<h:outputText value="LOA 325/2012" />
+			<h:outputText value=" " />
 		</p:column>
 		 <p:column headerText="Period (Start)">
-			<h:outputText value="01-DEC-2012" />
+			<h:outputText value="#{data.startDate}" />
 		</p:column>
         <p:column headerText="Period (End)">
-			<h:outputText value="LOA 325/2012" />
+			<h:outputText value="#{data.endDate}" />
 		</p:column>
 	</p:dataTable>
         <f:facet name="footer">
-		<h:panelGrid columns="2"  style="height: 40px;vertical-align: middle;">
-			<p:commandButton value="Select" icon="ui-icon-select"  process="modalDialog1" update="dataTable2" onclick="dlg3.hide();"/>
-			<p:commandButton value="Cancel"  type="button" ajax="false" onclick="dlg3.hide();" />
+		<h:panelGrid columns="2"  style="height: 40px;vertical-align: middle;float:right;">
+			<p:commandButton value="Select" icon="ui-icon-select"  process="modalDialog1" actionListener="#{centralBackingBean.addSearchCircular}" 
+			update="tableCancelCircular" onclick="dlg3.hide();"/>
+			<p:commandButton value="Cancel" icon="ui-icon-cancel" type="button" ajax="false" onclick="dlg3.hide();" />
            </h:panelGrid>
 		</f:facet>
     </p:panel>
     </p:dialog>
-  </ui:define>
  </ui:composition>

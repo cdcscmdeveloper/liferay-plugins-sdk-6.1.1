@@ -25,6 +25,7 @@ import my.ep.persistence.entity.ct.dtl.CtSetting;
 import my.ep.persistence.entity.ct.dtl.deduction.CtDeduction;
 import my.ep.persistence.entity.ct.dtl.deduction.CtDeductionClause;
 import my.ep.persistence.entity.ct.factoring.CtFactoring;
+import my.ep.persistence.entity.ct.terminate.CtTermination;
 import my.ep.persistence.entity.ct.terminate.CtTerminationClause;
 import my.ep.persistence.entity.ct.terminate.CtTerminationReason;
 import my.ep.persistence.entity.sm.SmSupplier;
@@ -115,8 +116,9 @@ public class ContractDetailsManagedBean extends BaseManagedBean{
 	private boolean terminateRejectLetter;
 	private List<CtTerminationClause> terminationClauseList;
 	private List<CtTerminationReason> terminateReasonList;
-	private CtTerminationReason terminationReason = new  CtTerminationReason();
+	private CtTerminationReason terminationReason;
 	private CtTerminationClause terminationClause = new CtTerminationClause();
+	private CtTermination termination;
 	
 	public  ContractDetailsManagedBean(){
 		source.add(new SettingDetails("Khan", 10));  
@@ -549,6 +551,15 @@ public class ContractDetailsManagedBean extends BaseManagedBean{
 	public void setTerminationClause(CtTerminationClause terminationClause) {
 		this.terminationClause = terminationClause;
 	}
+
+	public CtTermination getTermination() {
+		return termination;
+	}
+
+	public void setTermination(CtTermination termination) {
+		this.termination = termination;
+	}
+	
 	
 	/*Testing Start*/	
 }

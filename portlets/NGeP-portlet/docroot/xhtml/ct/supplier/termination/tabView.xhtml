@@ -9,9 +9,11 @@
 	<ui:define name="contentSection">
 	<p:panel id="pRightPanel">
 	   <div class="ppRightBtn">
-		<p:commandButton value="#{lbl['lbl.ct.btn.save']}" />
-		<p:commandButton id="ctSubmit" value="#{lbl['lbl.ct.btn.submit']}"/>
-	   </div>
+				<ui:repeat var="action"	value="#{supplierBackingBean.managedBean.outComes}">
+					<p:commandButton value="#{action}" process="@this" styleClass="ui-button" 
+					   actionListener="#{supplierBackingBean.saveTerminationRequest(action)}" />
+				</ui:repeat>		
+    </div>
 	</p:panel>
 	 <p:tabView id="tabview" orientation="left">
 	     <p:tab title="Contract Termination">

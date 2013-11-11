@@ -13,11 +13,11 @@
 	 <p:panel>
 	 <div class="ppRightBtn"> 
 	     <ui:repeat var="action" value="#{contractDetailsBackingBean.managedBean.outComes}">
-			<p:commandButton value="#{action}" process="@this" styleClass="ui-button" actionListener="#{contractDetailsBackingBean.saveContract(action)}" />
+			<p:commandButton value="#{action}" process="@this" styleClass="ui-button" actionListener="#{contractDetailsBackingBean.terminateContract(action)}" />
 		 </ui:repeat>		
     </div>
 	</p:panel>
-	<p:tabView id="tabview" value="Termination" orientation="left" >
+	<p:tabView id="tabview" value="Termination" dynamic="true" orientation="left" >
 	   <p:tab title="#{lbl['lbl.ct.menu.fd']}" >
          <ui:include src="/xhtml/ct/fulfilmentdetails/termination/termination.xhtml"/>
        </p:tab> 

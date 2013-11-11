@@ -32,6 +32,7 @@ public class AgreementManagedBean extends BaseManagedBean {
 	
 	private CtContract contract  = new CtContract();
 	private CtAgreement agreement;
+	private Long contractId;
 	
 	public AgreementManagedBean(){
 		
@@ -120,5 +121,15 @@ public class AgreementManagedBean extends BaseManagedBean {
 	public void setTaskId(String taskId) {
 		this.taskId = taskId;
 	}
+
+	public Long getContractId() {
+		return contractId;
+	}
+
+	public void setContractId(Long contractId) {
+		this.contractId = contractId;
+	}
+	
+	
 	
 }

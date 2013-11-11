@@ -38,6 +38,7 @@ public class SupplierManagedBean extends BaseManagedBean {
 	private Date startDate;
 	private Long contractNo;
 	private String contractName;
+	private String loginUser;
 	
 	/*Value for termination*/
 	private Date terminationDate;
@@ -196,5 +197,15 @@ public class SupplierManagedBean extends BaseManagedBean {
 	public static long getSerialversionuid() {
 		return serialVersionUID;
 	}
+
+	public String getLoginUser() {
+		return loginUser;
+	}
+
+	public void setLoginUser(String loginUser) {
+		this.loginUser = loginUser;
+	}
+	
+	
 
 }

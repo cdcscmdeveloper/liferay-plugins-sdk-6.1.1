@@ -22,10 +22,13 @@ import my.ep.biz.bean.search.SearchBean;
 import my.ep.biz.bean.search.SearchFilterBean;
 import my.ep.biz.service.ct.IContractSO;
 import my.ep.biz.service.ct.maintain.IContractAssociationSO;
+import my.ep.biz.service.ct.terminate.IContractTerminationSO;
 import my.ep.dto.ct.ContractReqDTO;
 import my.ep.dto.ct.ContractResDTO;
 import my.ep.dto.ct.maintain.ContractAssociationReqDTO;
 import my.ep.dto.ct.maintain.ContractAssociationResDTO;
+import my.ep.dto.ct.terminate.ContractTerminationReqDTO;
+import my.ep.dto.ct.terminate.ContractTerminationResDTO;
 import my.ep.persistence.entity.ct.CtContract;
 import my.ep.persistence.entity.ct.assoc.CtAssocContract;
 import my.ep.persistence.entity.ct.assoc.CtAssociation;
@@ -42,7 +45,11 @@ import my.ep.persistence.entity.ct.dtl.item.CtItemCeilingQty;
 import my.ep.persistence.entity.ct.dtl.item.CtItemPrice;
 import my.ep.persistence.entity.ct.dtl.zone.CtContractZone;
 import my.ep.persistence.entity.ct.factoring.CtFactoring;
+import my.ep.persistence.entity.ct.terminate.CtTermination;
+import my.ep.persistence.entity.ct.terminate.CtTerminationReason;
 import my.ep.persistence.entity.pm.authorization.PmOrgProfile;
+import my.ep.persistence.entity.pm.common.PmCode;
+import my.ep.persistence.entity.pm.common.PmStatus;
 import my.ep.persistence.entity.sm.SmSupplierBank;
 import my.ep.persistence.logging.LogKey;
 import my.ep.type.aut.SearchOperator;
@@ -153,7 +160,7 @@ public class ContractDetailsBackingBean extends BaseBackingBean<ContractDetailsM
 		    
 		 new DefaultTreeNode(new CreateContractDetails("0211780401","NEGERI SEMBILAN","5000.00", new Date(),  new Date()), agencytwo);  
 		 
-		 this.getManagedBean().getSearchFilterBean().setSearchField("qtLoaId");
+		// this.getManagedBean().getSearchFilterBean().setSearchField("qtLoaId");
 		
 		 if(this.getManagedBean().getOutComes()==null) {
 			this.getManagedBean().setOutComes(new String[]{BpmOutcomeConst.BPM_SAVE, BpmOutcomeConst.BPM_SUBMIT});
@@ -329,6 +336,14 @@ public class ContractDetailsBackingBean extends BaseBackingBean<ContractDetailsM
 		 smSupplier.add(smSupplier2);		
 		 }*/
 		 	 
+	   if(this.getManagedBean().getTermination() == null){
+		   this.getManagedBean().setTermination(new CtTermination());
+		   this.getManagedBean().getTermination().setCaRecommendationCode(new PmCode());
+		   this.getManagedBean().getTermination().setCtContract(new CtContract());
+		   this.getManagedBean().getTermination().setStatus(new PmStatus());
+		   this.getManagedBean().getTermination().getStatus().setStatusId(new Long(1));
+	   }
+	   
 	}
 	
 	public List<SelectItem> getItemDetailsMethod() {	
@@ -369,13 +384,13 @@ public class ContractDetailsBackingBean extends BaseBackingBean<ContractDetailsM
 		    }else if(this.getManagedBean().getShowItem().equalsIgnoreCase("Item Ceiling Quantity")){
 				  this.getManagedBean().setItemCeilingQuantity(true);
 			
-		    }else if(this.getManagedBean().getTerminateRecommedType().equalsIgnoreCase("Warning Letter")){
+		    }else if(this.getManagedBean().getTermination().getCaRecommendationCode().getCode().equalsIgnoreCase("155")){
 		    	this.getManagedBean().setTerminateWarningLetter(true);
 			
-		    }else if(this.getManagedBean().getTerminateRecommedType().equalsIgnoreCase("Termination")){
+		    }else if(this.getManagedBean().getTermination().getCaRecommendationCode().getCode().equalsIgnoreCase("154")){
 				this.getManagedBean().setTerminateNotice(true);
 			
-		    }else if(this.getManagedBean().getTerminateRecommedType().equalsIgnoreCase("Reject Termination")){
+		    }else if(this.getManagedBean().getTermination().getCaRecommendationCode().getCode().equalsIgnoreCase("156")){
 				this.getManagedBean().setTerminateRejectLetter(true);
 				
 			}
@@ -420,7 +435,8 @@ public class ContractDetailsBackingBean extends BaseBackingBean<ContractDetailsM
 	}
 	
 	public void addTerminateReason(){
-		this.getManagedBean().getTerminateReasonList().add(this.getManagedBean().getTerminationReason());
+		CtTerminationReason terminateReason = new CtTerminationReason();
+		this.getManagedBean().getTerminateReasonList().add(terminateReason);
 	}
 	
 	public void deleteTerminateReason(){
@@ -439,8 +455,6 @@ public class ContractDetailsBackingBean extends BaseBackingBean<ContractDetailsM
 			
 		try{
 		  	
-			System.out.println("===============Project Name=============="+this.getManagedBean().getProjectName());
-			System.out.println("===============Project Description=============="+this.getManagedBean().getProjectDescription());
 			this.getManagedBean().getAssociation().setProjectName(this.getManagedBean().getProjectName());
 			this.getManagedBean().getAssociation().setDescription(this.getManagedBean().getProjectDescription());
 			for(CtContract ctContract : this.getManagedBean().getAssociateSearchList()){
@@ -637,7 +651,37 @@ public class ContractDetailsBackingBean extends BaseBackingBean<ContractDetailsM
 		}
 	}
 	
-	 public void onTransfer(TransferEvent event) {  
+	public void terminateContract(String outcome){
+		
+		IContractTerminationSO terminationSO = null;
+		try{
+			
+		  ContractTerminationReqDTO reqDTO = new ContractTerminationReqDTO();
+		  terminationSO = (IContractTerminationSO)BusinessDelegate.getInstance().getServiceObject("ct", IContractTerminationSO.class);
+		  this.getManagedBean().getTermination().getCaRecommendationCode().setCodeId(new Long(155));
+		  this.getManagedBean().getTermination().getCtContract().setContractId(this.getManagedBean().getCtContract().getContractId());
+		  reqDTO.setTerminateContract(this.getManagedBean().getTermination());
+		  reqDTO.setOutcome(outcome);
+		  reqDTO.setTaskId(this.getManagedBean().getTaskId());
+		 
+		  if(outcome == BpmOutcomeConst.BPM_SAVE){
+		  reqDTO.setOutcome("");
+		  
+		  }else if(outcome == BpmOutcomeConst.BPM_REVISE)
+		  reqDTO.setTaskId(this.getManagedBean().getTaskId());
+		 
+		  ContractTerminationResDTO resDTO = terminationSO.terminateContract(reqDTO);
+		  System.out.println("Save Successful>>>:: "+ resDTO.isSuccessful());
+	
+		}catch(Exception ex){
+		   log.error("Exception>>>" +ex);
+		}finally{
+			terminationSO = null;
+		}
+		
+	}
+	
+	public void onTransfer(TransferEvent event) {  
 	        StringBuilder builder = new StringBuilder();  
 	        for(Object item : event.getItems()) {  
 	            builder.append(((SettingDetails) item).getAproverName()).append("<br />");  

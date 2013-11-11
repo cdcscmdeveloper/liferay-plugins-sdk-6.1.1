@@ -15,28 +15,28 @@
                   <p:panel id="searchId" header="Search"   toggleable="true"  toggleSpeed="500" widgetVar="panelsearch">
                      <h:panelGrid columns="4" style="width:900px;" >
                            <h:outputLabel value="Circular No" />
-                           <p:inputText value="" style="width:200px;"/>
+                           <p:inputText value="#{centralBackingBean.managedBean.circularVer.circularNo}" style="width:170px;"/>
                            <h:outputLabel value="Supplier ID"/>
-                           <p:inputText value="" style="width:200px;"/>
+                           <p:inputText value="" style="width:170px;"/>
                            <h:outputLabel value="Circular Name"/>
-                           <p:inputText value="" style="width:200px;" />
+                           <p:inputText value="#{centralBackingBean.managedBean.circularVer.name}" style="width:170px;" />
                            <h:outputLabel value="Supplier Name"/>
-                           <p:inputText value="" style="width:200px;"/>
+                           <p:inputText value="" style="width:170px;"/>
                            <h:outputLabel value="File Reference No"/>
-                           <p:inputText value="" style="width:200px;"/>
+                           <p:inputText value="#{centralBackingBean.managedBean.circularVer.circularFileRefNo}" style="width:170px;"/>
                            <h:outputLabel value="Item Name" />
-                           <p:inputText value="" style="width:200px;"/>
+                           <p:inputText value="" style="width:170px;"/>
                            <h:outputLabel value="Circular Start" />
-                           <p:calendar style="width:150px;" value="#{centralBackingBean.date}" id="popupButtonCal" showOn="button" />
+                           <p:calendar style="width:170px;" value="#{centralBackingBean.managedBean.circularVer.startDate}" id="popupButtonCal" showOn="button" />
                            <h:outputLabel value="Contract End"/>
-                           <p:calendar style="width:150px;" value="#{centralBackingBean.date}" id="popupButtonCal1" showOn="button" />
+                           <p:calendar style="width:170px;" value="#{centralBackingBean.managedBean.circularVer.endDate}" id="popupButtonCal1" showOn="button" />
                            <h:panelGroup>
 			                <div style="height: 70px; vertical-align: top">
 			                  <p:outputLabel for="circularType" value="Circular Type" />
 							 </div>
 						     </h:panelGroup>
 						     <h:panelGrid >
-                           <p:selectOneListbox id="circularType" value="" style="width:200px;"  >
+                           <p:selectOneListbox id="circularType" value="#{centralBackingBean.managedBean.circularVer.circularTypeCode.codeId}" style="width:170px;"  >
                              <f:selectItem itemLabel="Main" itemValue="1"  />  
                               <f:selectItem itemLabel="Pindaan" itemValue="2"  />  
                               <f:selectItem itemLabel="Tambahan" itemValue="3" />  
@@ -49,7 +49,7 @@
 							 </div>
 						     </h:panelGroup>
 						     <h:panelGrid styleClass="txtsize">
-                           <p:selectOneListbox id="status" value="" style="width:200px;"  >
+                           <p:selectOneListbox id="status" value="" style="width:170px;"  >
                                <f:selectItem itemLabel="Pending Approval" itemValue="1"  />  
                               <f:selectItem itemLabel="Approved" itemValue="2" />  
                               <f:selectItem itemLabel="Cancelled" itemValue="3" />
@@ -60,8 +60,10 @@
 						   <f:verbatim></f:verbatim>
                            <f:verbatim></f:verbatim>
                                <h:panelGrid columns="2" columnClasses="column-align-right">
-                               <p:commandButton value="Search"  process="@this" partialSubmit="true" icon="ui-icon-add"  update="dataTable"/>
-							   <p:commandButton value="Reset"  process="@this" partialSubmit="true" icon="ui-icon-add"  update="dataTable"/>
+                                 <p:commandButton value="Search"  process="@this" partialSubmit="true"  actionListener="#{centralBackingBean.searchCircular()}"
+                                   icon="ui-icon-search"  update="dataTable"/>
+				
+							   <p:commandButton value="Reset"  process="@this" partialSubmit="true" icon="ui-icon-reset"  update="dataTable"/>
 						        </h:panelGrid>
                      </h:panelGrid>
                    </p:panel>

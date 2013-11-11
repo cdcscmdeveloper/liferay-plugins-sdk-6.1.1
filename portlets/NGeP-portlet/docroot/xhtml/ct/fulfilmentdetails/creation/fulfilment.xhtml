@@ -13,9 +13,9 @@
 
 	 <p:panel>
 	 <div class="ppRightBtn"> 
-	  			<ui:repeat var="action"	value="#{contractDetailsBackingBean.managedBean.outComes}">
-					<p:commandButton value="#{action}" process="@this" styleClass="ui-button" actionListener="#{contractDetailsBackingBean.saveContract(action)}" />
-				</ui:repeat>		
+	  	<ui:repeat var="action"	value="#{contractDetailsBackingBean.managedBean.outComes}">
+			<p:commandButton value="#{action}" process="@this" styleClass="ui-button" actionListener="#{contractDetailsBackingBean.saveContract(action)}" />
+	    </ui:repeat>		
     </div>
 	</p:panel>
 	<p:tabView id="tabview" orientation="left" >

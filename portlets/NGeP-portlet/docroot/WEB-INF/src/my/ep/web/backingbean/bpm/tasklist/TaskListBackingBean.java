@@ -10,6 +10,8 @@ import javax.faces.context.FacesContext;
 import my.ep.biz.service.cm.codification.ICodificationSO;
 import my.ep.biz.service.cm.codification.IRequestCodeSO;
 import my.ep.biz.service.ct.IContractSO;
+import my.ep.biz.service.ct.agreement.IAgreementSO;
+import my.ep.biz.service.ct.supplier.IContractSupplierSO;
 import my.ep.biz.service.ct.suspend.ISuspendActiveSO;
 import my.ep.biz.service.fl.adjustment.IAdjustmentSO;
 import my.ep.biz.service.fl.invoice.IInvoiceSO;
@@ -28,6 +30,10 @@ import my.ep.dto.cm.codification.RequestCodeReqDTO;
 import my.ep.dto.cm.codification.RequestCodeResDTO;
 import my.ep.dto.ct.ContractReqDTO;
 import my.ep.dto.ct.ContractResDTO;
+import my.ep.dto.ct.agreement.ContractAgreementReqDTO;
+import my.ep.dto.ct.agreement.ContractAgreementResDTO;
+import my.ep.dto.ct.supplier.ContractSupplierReqDTO;
+import my.ep.dto.ct.supplier.ContractSupplierResDTO;
 import my.ep.dto.ct.suspend.ContractSuspendReqDTO;
 import my.ep.dto.ct.suspend.ContractSuspendResDTO;
 import my.ep.dto.fl.FulfilmentReqDTO;
@@ -39,7 +45,10 @@ import my.ep.dto.pp.budgetallocation.BudgetAllocationResDTO;
 import my.ep.dto.pp.procurementplan.ProcurementPlanReqDTO;
 import my.ep.dto.pp.procurementplan.ProcurementPlanResDTO;
 import my.ep.jaxb.cd.requestdata.CDRequestDataType;
+import my.ep.jaxb.ct.agreement.CTAgreementDataType;
+import my.ep.jaxb.ct.bankaccount.CTBankAccountDataType;
 import my.ep.jaxb.ct.contract.CTContractDataType;
+import my.ep.jaxb.ct.factoring.CTFactoringDataType;
 import my.ep.jaxb.ct.suspension.CTContractSuspensionDataType;
 import my.ep.jaxb.fl.codata.FLContractOrderDataType;
 import my.ep.jaxb.fl.dandata.FLDanDataType;
@@ -61,6 +70,8 @@ import my.ep.util.lookupservice.EpBpmBusinessDelegate;
 import my.ep.web.backingbean.BaseBackingBean;
 import my.ep.web.backingbean.cm.codification.UnspscCodeBackingBean;
 import my.ep.web.backingbean.ct.ContractDetailsBackingBean;
+import my.ep.web.backingbean.ct.agreement.AgreementBackingBean;
+import my.ep.web.backingbean.ct.supplier.SupplierBackingBean;
 import my.ep.web.backingbean.ct.suspend.ContractSuspendBackingBean;
 import my.ep.web.backingbean.fl.createcontract.ContractRequestBackingBean;
 import my.ep.web.backingbean.fl.dan.DebitAdjustmentNoteBackingBean;
@@ -446,22 +457,43 @@ public class TaskListBackingBean extends BaseBackingBean<TaskListManagedBean>{
 				
 				ctdBB.getManagedBean().setTaskId(taskId);
 				ctReqDTO.setTaskId(taskId);
-				System.out.println("================Contract Id=================" +ctDataType.getContractId());
-				System.out.println("====================task name====================" +res.getTaskName());
-				System.out.println("====================taskId======================="+taskId);
 
+			}else if(res.getProcessName().equalsIgnoreCase("Agreement Creation")){
+				
+				CTAgreementDataType agDataType = (CTAgreementDataType)obj;
+				
+				IAgreementSO agreementSO = (IAgreementSO) BusinessDelegate.getInstance().getServiceObject("ct",IAgreementSO.class);
+				ContractAgreementReqDTO ctReqDTO = new ContractAgreementReqDTO();
+				
+				ctReqDTO.setContractId(new Long(agDataType.getContractId()));
+				AgreementBackingBean ctaBB = new AgreementBackingBean();
+				ctaBB.getManagedBean().setContractId(new Long(agDataType.getContractId()));
+				ctaBB.getManagedBean().setOutComes(res.getAction());
+			    ctaBB.getManagedBean().setTaskId(taskId);
+			    ctReqDTO.setTaskId(taskId);
+				
+				if(agDataType.getAgreementId().intValue() != 0){
+				     ctReqDTO.setAgreementId(new Long(agDataType.getAgreementId()));
+				     ContractAgreementResDTO resDTO = agreementSO.retrieveAgreement(ctReqDTO);
+				     ctaBB.getManagedBean().setAgreement(resDTO.getAgreement());
+			    }
+			    System.out.println("====================task name====================" +res.getTaskName());
+				System.out.println("====================taskId======================="+taskId);
 			}else if(res.getProcessName().equalsIgnoreCase("Contract Activation Suspension Request")){
 				
 	        	 CTContractSuspensionDataType ctsDataType = (CTContractSuspensionDataType)obj;
 
 	        	ISuspendActiveSO suspendActiveSO = (ISuspendActiveSO) BusinessDelegate.getInstance().getServiceObject("ct",ISuspendActiveSO.class);
+	        	IContractSO contractSO = (IContractSO) BusinessDelegate.getInstance().getServiceObject("ct",IContractSO.class);
 				ContractSuspendReqDTO ctsReqDTO = new ContractSuspendReqDTO();
 				ctsReqDTO.setContractId(new Long(ctsDataType.getContractId()));
+				ctsReqDTO.setSuspendActiveId(new Long(ctsDataType.getSuspendActiveId()));
 				ContractSuspendResDTO resDTO = suspendActiveSO.retrieveSuspension(ctsReqDTO);
 				
 				ContractSuspendBackingBean ctdBB = new ContractSuspendBackingBean();
-				ctdBB.getManagedBean().setContract(resDTO.getContract());
+				ctdBB.getManagedBean().setSuspendActive(resDTO.getSuspendActive());
 				ctdBB.getManagedBean().setOutComes(res.getAction());
+				ctdBB.getManagedBean().getContract().setContractId(new Long(ctsDataType.getContractId()));
 				
 				ctdBB.getManagedBean().setTaskId(taskId);
 				ctsReqDTO.setTaskId(taskId);
@@ -469,6 +501,40 @@ public class TaskListBackingBean extends BaseBackingBean<TaskListManagedBean>{
 				System.out.println("====================task name====================" +res.getTaskName());
 				System.out.println("====================taskId======================="+taskId);
 
+			}else if(res.getProcessName().equalsIgnoreCase("Bank Account Change Request")){
+				
+				CTBankAccountDataType ctsDataType = (CTBankAccountDataType)obj;
+
+	        	IContractSupplierSO supplierSO = (IContractSupplierSO) BusinessDelegate.getInstance().getServiceObject("ct",IContractSupplierSO.class);
+				ContractSupplierReqDTO ctsReqDTO = new ContractSupplierReqDTO();
+				ctsReqDTO.setBankId(new Long(ctsDataType.getBankAccountId()));
+				ctsReqDTO.setContractId(new Long(ctsDataType.getContractId()));
+				ContractSupplierResDTO resDTO = supplierSO.retrieveBankAccRequest(ctsReqDTO);
+				
+				SupplierBackingBean ctSBB = new SupplierBackingBean();
+				ctSBB.getManagedBean().setSupplierBank(resDTO.getSupplierBank());
+				ctSBB.getManagedBean().setOutComes(res.getAction());
+				ctSBB.getManagedBean().setTaskId(taskId);
+				
+				ctsReqDTO.setTaskId(taskId);
+		
+			}else if(res.getProcessName().equalsIgnoreCase("Factoring Company Request")){
+				
+				CTFactoringDataType ctsDataType = (CTFactoringDataType)obj;
+
+	        	IContractSupplierSO factoringSO = (IContractSupplierSO) BusinessDelegate.getInstance().getServiceObject("ct",IContractSupplierSO.class);
+				ContractSupplierReqDTO ctsReqDTO = new ContractSupplierReqDTO();
+				ctsReqDTO.setFactoringId(new Long(ctsDataType.getFactoringId()));
+				ctsReqDTO.setContractId(new Long(ctsDataType.getContractId()));
+				ContractSupplierResDTO resDTO = factoringSO.retrieveFactoringRequest(ctsReqDTO);
+				
+				SupplierBackingBean ctSBB = new SupplierBackingBean();
+				ctSBB.getManagedBean().setFactoring(resDTO.getFactoring());
+				ctSBB.getManagedBean().setOutComes(res.getAction());
+				ctSBB.getManagedBean().setTaskId(taskId);
+				
+				ctsReqDTO.setTaskId(taskId);
+		
 			}else if (res.getProcessName().equalsIgnoreCase(
 					"MOF Supplier Registration")) {
 				SMMOFRegDataType smObj = (SMMOFRegDataType) obj;

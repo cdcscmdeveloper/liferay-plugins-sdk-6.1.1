@@ -8,51 +8,52 @@
          <p:panel id="sTermination" header="Termination Request Details" toggleable="true"  toggleSpeed="500">
             <h:panelGrid columns="4" style="width:600px;">  
               <h:outputLabel value="Termination Start Date"/>
-              <p:calendar style="width:140px;" value="#{supplierBackingBean.managedBean.startDate}" id="popupButtonCal" showOn="button" />
+              <p:calendar style="width:140px;" value="#{supplierBackingBean.managedBean.terminationDate}" id="popupButtonCal" showOn="button" />
               <h:outputLabel  value="Termination Type"/>  
-              <p:selectOneMenu value=" " style="width:140px;">
+              <p:selectOneMenu value="#{supplierBackingBean.managedBean.terminationType}" style="width:140px;">
             	 <f:selectItem itemLabel="-Please Select--" itemValue="" /> 
-            	 <f:selectItem itemLabel="Late Supply" itemValue="1" /> 
-            	 <f:selectItem itemLabel="Fail To Supply" itemValue="2" /> 
-            	 <f:selectItem itemLabel="Lack Of Quality" itemValue="3" /> 
-            	 <f:selectItem itemLabel="Fail To Comply Term And Condition" itemValue="4" /> 
-            	 <f:selectItem itemLabel="Other" itemValue="5" /> 
+            	 <f:selectItem itemLabel="Late Supply" itemValue="Late Supply" /> 
+            	 <f:selectItem itemLabel="Fail To Supply" itemValue="Fail To Supply" /> 
+            	 <f:selectItem itemLabel="Lack Of Quality" itemValue="Lack Of Quality" /> 
+            	 <f:selectItem itemLabel="Fail To Comply Term And Condition" itemValue="Fail To Comply Term And Condition" /> 
+            	 <f:selectItem itemLabel="Other" itemValue="Other" /> 
               </p:selectOneMenu>    
            </h:panelGrid>
            <h:panelGrid columns="2" style="width:500px;">  
              <h:panelGroup>
-				<div style="height: 30px;width:125px; vertical-align: top">
+				<div style="height: 30px;width:135px; vertical-align:top">
                      <p:outputLabel for="rftermination" value="Reason For Termination" />
 			    </div>
 			 </h:panelGroup>
 			 <h:panelGrid>
-                <p:inputTextarea id="rftermination" value="" required="false"  rows="2" cols="66"  autoResize="false" />
+                <p:inputTextarea id="rftermination" value="#{supplierBackingBean.managedBean.terminationReason}"  rows="2" cols="66"  autoResize="false" />
 			 </h:panelGrid>
 	       </h:panelGrid>
 		   </p:panel>
            <p:panel id="sdetails" header="Supplier  Details"    toggleable="true"  toggleSpeed="500">
               <h:panelGrid columns="4" style="width:800px;">  
               <p:outputLabel value="Supplier ID"/>
-              <p:inputText value="" style="width:150px;"/>   
+              <p:inputText value="SU-01145-456" style="width:150px;"/>   
               <p:outputLabel value="Supplier Name" />
-              <p:inputText value="" style="width:150px;"/>   
+              <p:inputText value="CDC Sdn Bhd" style="width:150px;"/>   
               <p:outputLabel value="Email ID" />
-              <p:inputText value="" style="width:150px;"/>   
+              <p:inputText value="abc@yahoo.com" style="width:150px;"/>   
               <p:outputLabel value="Tel No (H.P)" />
-              <p:inputText value="" style="width:110px;"/> 
+              <p:inputText value="60172487465" style="width:110px;"/> 
               <p:outputLabel value="Tel No (Office)"/>
-              <p:inputText value="" style="width:110px;"/>   
+              <p:inputText value="60172487465" style="width:110px;"/>   
               <p:outputLabel value="Fax No" />
-              <p:inputText value="" style="width:110px;"/> 
+              <p:inputText value="60172487465" style="width:110px;"/> 
             </h:panelGrid>
             <h:panelGrid columns="2" style="width:300px;">  
                <h:panelGroup>
-				<div style="height: 30px;width:120px; vertical-align: top">
+				<div style="height:30px;width:130px; vertical-align: top">
 					<p:outputLabel for="spAddress" value="Supplier Address"/>
 				</div>
 			   </h:panelGroup>
 			   <h:panelGrid>
-				 <p:inputTextarea id="spAddress" value="" required="false"  rows="2" cols="20" autoResize="false" />
+				 <p:inputTextarea id="spAddress" value="25, Belatuk Block, CyberView Garden, CyberJaya, Selangor Malaysia"
+				      required="false"  rows="2" cols="20" autoResize="false" />
 			   </h:panelGrid>
 			</h:panelGrid>
 		 </p:panel>

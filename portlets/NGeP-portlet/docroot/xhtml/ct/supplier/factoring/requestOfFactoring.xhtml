@@ -14,11 +14,11 @@
                <f:selectItem itemLabel="CIMB Group" itemValue="2" /> 
             </p:selectOneMenu>    
           <p:outputLabel value=" Effective Date"/>
-          <p:calendar style="width:140px;" value="#{supplierBackingBean.managedBean.startDate}" id="popupButtonCal" showOn="button" />
+          <p:calendar style="width:140px;" value="#{supplierBackingBean.managedBean.factoring.effDate}" id="popupButtonCal" showOn="button" />
           <p:outputLabel  value="Authorized Ref. No"/>  
-          <p:inputText  style="width:140px;" />  
+          <p:inputText value="#{supplierBackingBean.managedBean.factoring.authRefNo}" style="width:140px;" />  
           <p:outputLabel value=" Expiry Date"/>
-          <p:calendar style="width:140px;" value="#{supplierBackingBean.managedBean.endDate}" id="popupButtonCal1" showOn="button" />
+          <p:calendar style="width:140px;" value="#{supplierBackingBean.managedBean.factoring.expDate}" id="popupButtonCal1" showOn="button" />
            </h:panelGrid>
            <h:panelGrid columns="2" style="width:550px;">  
            <h:panelGroup>
@@ -27,7 +27,7 @@
 			</div>
 		   </h:panelGroup>
 		   <h:panelGrid>
-		   <p:inputTextarea id="fcaddress" value="" rows="2" cols="63"  autoResize="false" />
+		   <p:inputTextarea id="fcaddress" value="125, Jalan P RamLee, KL" rows="2" cols="63"  autoResize="false" />
 	       </h:panelGrid>
 	       </h:panelGrid>
        </p:panel>

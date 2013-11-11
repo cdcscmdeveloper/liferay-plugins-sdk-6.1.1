@@ -15,7 +15,10 @@ import org.primefaces.event.TabChangeEvent;
 import my.ep.biz.service.ct.suspend.ISuspendActiveSO;
 import my.ep.dto.ct.suspend.ContractSuspendReqDTO;
 import my.ep.dto.ct.suspend.ContractSuspendResDTO;
+import my.ep.persistence.entity.ct.CtContract;
 import my.ep.persistence.entity.ct.suspend.CtSuspendActive;
+import my.ep.persistence.entity.pm.authorization.PmUser;
+import my.ep.persistence.entity.pm.common.PmStatus;
 import my.ep.web.backingbean.BaseBackingBean;
 import my.ep.web.constant.BpmOutcomeConst;
 import my.ep.web.managedbean.ct.suspend.ContractSuspendManagedBean;
@@ -58,12 +61,19 @@ public class ContractSuspendBackingBean extends BaseBackingBean<ContractSuspendM
 	@PostConstruct
 	public void initializeSuspendValue(){
 		
-		CtSuspendActive suspendActive = new CtSuspendActive();
-		suspendActive.setSuspendActiveDesc("This contract is suspended");
-		suspendActive.setSuspendFrom(new Date());
-		suspendActive.setSuspendTo(new Date());
-		this.getManagedBean().setSuspendActive(suspendActive);
-		
+		if(this.getManagedBean().getSuspendActive() == null){
+			this.getManagedBean().setSuspendActive(new CtSuspendActive());
+			this.getManagedBean().getSuspendActive().setSuspendActiveDesc("This contract is suspended");
+			this.getManagedBean().getSuspendActive().setSuspendFrom(new Date());
+			this.getManagedBean().getSuspendActive().setSuspendTo(new Date());
+			
+			this.getManagedBean().getSuspendActive().setCtContract(new CtContract());
+			this.getManagedBean().getSuspendActive().setApprover(new PmUser());
+			this.getManagedBean().getSuspendActive().setStatus(new PmStatus());
+			this.getManagedBean().getSuspendActive().getApprover().setUserId(new Long(1));
+			this.getManagedBean().getSuspendActive().getStatus().setStatusId(new Long(1));
+			
+		}
 	}
 	
 	public void createSuspend(String outcome){
@@ -73,6 +83,7 @@ public class ContractSuspendBackingBean extends BaseBackingBean<ContractSuspendM
 			
 		  ContractSuspendReqDTO reqDTO = new ContractSuspendReqDTO();
 		  suspendActiveSO = (ISuspendActiveSO)BusinessDelegate.getInstance().getServiceObject("ct", ISuspendActiveSO.class);
+		  this.getManagedBean().getSuspendActive().getCtContract().setContractId(this.getManagedBean().getContract().getContractId());
 		  reqDTO.setSuspendActive(this.getManagedBean().getSuspendActive());
 		  reqDTO.setOutcome(outcome);
 		  reqDTO.setTaskId(this.getManagedBean().getTaskId());

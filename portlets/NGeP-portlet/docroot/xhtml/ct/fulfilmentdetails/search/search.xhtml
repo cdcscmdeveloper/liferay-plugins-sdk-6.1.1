@@ -55,7 +55,7 @@
 						       </h:panelGrid>
 						     </h:panelGrid>
 			       </p:panel>
-				   <p:panel id="searchResulId" header="#{lbl['lbl.ct.search.panel.result']}"  toggleable="true"  toggleSpeed="500" widgetVar="panelsearchResul">
+				   <p:panel id="searchResulId" header="#{lbl['lbl.ct.search.panel.result']}"  toggleable="true"  toggleSpeed="500">
                        <div style="overflow-x:auto">
 			                     <p:dataTable id="dataTable" var="data" value="#{contractDetailsBackingBean.managedBean.contractList}" rowIndexVar="index"
 							               widgetVar="dataTableObj" lazy="false" dynamic="true" paginator="true" paginatorPosition="bottom"
@@ -88,7 +88,9 @@
 								                          </p:commandButton>
 								                     
 								                          <p:commandButton title="Termination" action="#{contractDetailsBackingBean.gotoTerminatePage}"
-								                             partialSubmit="true" process="@this" icon="ui-icon-terminate"/>
+								                             partialSubmit="true" process="@this" icon="ui-icon-terminate">
+								                              <f:setPropertyActionListener target="#{contractDetailsBackingBean.managedBean.ctContract}" value="#{data}" />
+								                              </p:commandButton>
 								                       
 								                          <p:commandButton title="Amendment" action="#{contractDetailsBackingBean.gotoAmendPage}" 
 								                            partialSubmit="true" process="@this" icon="ui-icon-revise" />

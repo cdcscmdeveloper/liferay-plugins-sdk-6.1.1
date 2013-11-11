@@ -39,9 +39,10 @@ public class ContractSuspendManagedBean  extends BaseManagedBean {
 	
 	private TreeNode suspendLocTN;
 	private Map<PmCountry, TreeNode> suspendLocMap;
+	private Long contractId;
 	
 	private CtContract contract = new CtContract();
-	private CtSuspendActive suspendActive = new CtSuspendActive();
+	private CtSuspendActive suspendActive;
 	
 	public ContractSuspendManagedBean(){
 		
@@ -126,5 +127,15 @@ public class ContractSuspendManagedBean  extends BaseManagedBean {
 	public void setOutComes(String[] outComes) {
 		this.outComes = outComes;
 	}
+
+	public Long getContractId() {
+		return contractId;
+	}
+
+	public void setContractId(Long contractId) {
+		this.contractId = contractId;
+	}
+	
+	
 	
 }

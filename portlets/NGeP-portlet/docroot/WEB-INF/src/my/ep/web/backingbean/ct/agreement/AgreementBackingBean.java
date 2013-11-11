@@ -23,6 +23,7 @@ import org.primefaces.model.UploadedFile;
 
 import my.ep.biz.service.ct.agreement.IAgreementSO;
 import my.ep.dto.ct.agreement.ContractAgreementReqDTO;
+import my.ep.persistence.entity.ct.CtContract;
 import my.ep.persistence.entity.ct.agreement.CtAgreement;
 import my.ep.persistence.entity.ct.agreement.CtSignParty;
 import my.ep.persistence.entity.ct.amend.CtAmendment;
@@ -51,6 +52,7 @@ public class AgreementBackingBean extends BaseBackingBean<AgreementManagedBean> 
 	private AgreementDetails agreementDetails;
 	private List<SelectItem> sourcingFiles;  
 	
+	
 	public AgreementBackingBean(){
 		agreementDetails = new AgreementDetails();
 		contractListItem = new ContractListItem();
@@ -68,6 +70,7 @@ public class AgreementBackingBean extends BaseBackingBean<AgreementManagedBean> 
 		this.getManagedBean().setAgreement(new CtAgreement());
 		this.getManagedBean().getAgreement().setClauseDocMasterId(new Long(1));
 		this.getManagedBean().getAgreement().setApprovedDate(new Date());
+		this.getManagedBean().getAgreement().setCtContract(new CtContract());
 	
 		
 		CtSignParty ctSignParty = new CtSignParty();
@@ -106,7 +109,9 @@ public class AgreementBackingBean extends BaseBackingBean<AgreementManagedBean> 
 			
 			 reqDTO = new ContractAgreementReqDTO();
 		     agreementSO = (IAgreementSO)BusinessDelegate.getInstance().getServiceObject("ct", IAgreementSO.class);
+		     this.getManagedBean().getAgreement().getCtContract().setContractId(this.getManagedBean().getContractId());
 		     this.getManagedBean().getAgreement().setCtAgreementAppendixs(this.getManagedBean().getAppendixList());
+		     
 			 reqDTO.setAgreement(this.getManagedBean().getAgreement());
 			 reqDTO.setOutcome(outcome);
 			 reqDTO.setTaskId(this.getManagedBean().getTaskId());

@@ -12,8 +12,9 @@
     </style>
 	 <p:panel>
 	 <div class="ppRightBtn">
-				<p:commandButton id="ctSave" value="#{lbl['lbl.ct.btn.save']}"/>
-				<p:commandButton id="ctSubmit" value="#{lbl['lbl.ct.btn.submit']}"/>
+				<ui:repeat var="action"	value="#{agreementBackingBean.managedBean.outComes}">
+					<p:commandButton value="#{action}" process="@this" styleClass="ui-button" actionListener="#{agreementBackingBean.createSupAgreement(action)}" />
+				</ui:repeat>		
     </div>
 	</p:panel>
 	<p:tabView id="agreementSubTab" orientation="left" >
