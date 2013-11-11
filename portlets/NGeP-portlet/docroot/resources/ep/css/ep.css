@@ -3418,3 +3418,11 @@ textarea[disabled],input[type="text"][disabled],input[type="password"][disabled]
 		endColorstr='#BCE18A', GradientType=0 ); /* IE6-8 */
 }
 /*--------------------------       End Custom CSS       --------------------------- */
+
+.columnWidth20 {
+	width: 20%;
+}
+
+.columnWidth30 {
+	width: 30%;
+}
