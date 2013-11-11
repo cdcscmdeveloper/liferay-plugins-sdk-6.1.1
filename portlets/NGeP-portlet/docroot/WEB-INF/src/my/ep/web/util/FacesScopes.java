@@ -237,18 +237,15 @@ public class FacesScopes {
 	 * @return
 	 */
 	public boolean hasRoleUser(String roleName) {
-		Role role;
+//		Role role;
 		boolean hasRoleUser = false;
 		
-		try {
-			role = RoleServiceUtil.getRole(1, roleName);
-			hasRoleUser = this.hasRoleUser(role.getRoleId());
-		} catch (PortalException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (SystemException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+		List<Role> userRoleList = getUserRoleList();
+		for(Role role : userRoleList) {
+			if(role.getName().equals(roleName)) {
+				hasRoleUser = true;
+				break;
+			}
 		}
 		return hasRoleUser;
 	}
