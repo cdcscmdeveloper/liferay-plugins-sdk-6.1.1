@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:aop="http://www.springframework.org/schema/aop"
+       xmlns:tx="http://www.springframework.org/schema/tx"
+       xmlns:util="http://www.springframework.org/schema/util"
+       xsi:schemaLocation="
+       http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.0.xsd
+       http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx-2.0.xsd
+       http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop-2.0.xsd
+       http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util-2.0.xsd">
+
+<bean id="CM_COLOR" class="my.ep.web.bean.LovBean">
+	<property name="pk" value="colorId" />
+
+	<property name="daoClass" value="my.ep.persistence.dao.cm.catalog.ColorDAO" />
+	<!-- <property name="searchMethod" value="findColor" /> -->
+	<property name="columns">
+		<list>
+			<bean class="my.ep.web.bean.LovColumnBean">
+		        <property name="columnName" 	value="colorName" />
+      			<property name="bundleFile" 	value="messageprovider-config.bundles.labels.labels" />
+      			<property name="bundleKey" 		value="lbl.cm.color.name" />
+      			<property name="columnWidth" 	value="150" />
+      			<!-- <property name="columnTitle" 	value="Color Name" /> -->
+			</bean>
+			<bean class="my.ep.web.bean.LovColumnBean">
+		        <property name="columnName" 	value="colorCode" />
+      			<property name="bundleFile" 	value="messageprovider-config.bundles.labels.labels" />
+      			<property name="bundleKey" 		value="lbl.cm.color.code" />
+      			<property name="columnWidth" 	value="150" />
+      			<!-- <property name="columnTitle" 	value="Color Code" /> -->
+			</bean>
+		</list>
+	</property>
+</bean>
+
+<bean id="CM_UNSPSC" class="my.ep.web.bean.LovBean">
+	<property name="pk" value="unspscId" />
+	<property name="daoClass" value="my.ep.persistence.dao.cm.catalog.CodificationDAO" />
+	<!-- 
+	<property name="searchMethod" value="" />
+	 -->
+	<property name="columns">
+		<list>
+			<bean class="my.ep.web.bean.LovColumnBean">
+		        <property name="columnName" 	value="unspscCode" />
+      			<property name="bundleFile" 	value="messageprovider-config.bundles.labels.labels" />
+      			<property name="bundleKey" 		value="lbl.cm.unspsc.code" />
+      			<property name="columnWidth" 	value="150" />
+      			<!-- <property name="columnTitle" 	value="UNSPSC Code" /> -->
+			</bean>
+			<bean class="my.ep.web.bean.LovColumnBean">
+		        <property name="columnName" 	value="unspscTitle" />
+      			<property name="bundleFile" 	value="messageprovider-config.bundles.labels.labels" />
+      			<property name="bundleKey" 		value="lbl.cm.unspsc.title" />
+      			<property name="columnWidth" 	value="150" />
+      			<!-- <property name="columnTitle" 	value="UNSPSC Title" /> -->
+			</bean>
+		</list>
+	</property>
+</bean>
+
+</beans>
