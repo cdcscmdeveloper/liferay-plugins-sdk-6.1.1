@@ -6,8 +6,6 @@ package my.ep.web.backingbean;
 import java.io.Serializable;
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
-import java.util.ArrayList;
-import java.util.List;
 
 import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
@@ -16,14 +14,15 @@ import javax.faces.model.SelectItem;
 
 import my.ep.biz.bean.search.ISearchBean;
 import my.ep.biz.bean.search.SearchBean;
+import my.ep.biz.service.pm.authorization.user.IUserSO;
 import my.ep.biz.service.pm.common.object.IObjectSO;
+import my.ep.dto.pm.authorization.user.UserReqDTO;
+import my.ep.dto.pm.authorization.user.UserResDTO;
 import my.ep.dto.pm.common.object.ObjectReqDTO;
 import my.ep.dto.pm.common.object.ObjectResDTO;
-import my.ep.type.IEnumType;
-import my.ep.persistence.entity.BaseEntity;
+import my.ep.persistence.entity.pm.authorization.PmUser;
 import my.ep.persistence.entity.pm.common.PmCode;
-import my.ep.web.bean.DataValueBean;
-import my.ep.web.bean.ValueBean;
+import my.ep.type.IEnumType;
 import my.ep.web.managedbean.BaseManagedBean;
 import my.ep.web.util.EpPortletUtil;
 import my.ep.web.util.FacesScopes;
@@ -50,6 +49,8 @@ public abstract class BaseBackingBean<T extends BaseManagedBean> {
 	private Class<T> managedBeanClazz;
 	private String managedBeanName;
 	private T managedBean;
+	
+	public static final String USER_SESSION_BEAN = "USER_SESSION_BEAN"; 
 	
 	public BaseBackingBean(){
 		if (log.isDebugEnabled()){
@@ -186,7 +187,7 @@ public abstract class BaseBackingBean<T extends BaseManagedBean> {
 		}
 	}	
 
-	protected <RETURN_CLASS extends BaseEntity> List<RETURN_CLASS> toEntityBeans(List<? extends ValueBean<RETURN_CLASS>> valueBeans) {
+	/*protected <RETURN_CLASS extends BaseEntity> List<RETURN_CLASS> toEntityBeans(List<? extends ValueBean<RETURN_CLASS>> valueBeans) {
 		List<RETURN_CLASS> list = new ArrayList<RETURN_CLASS>();
 		
 		for (ValueBean<RETURN_CLASS> valueBean : valueBeans) {
@@ -230,7 +231,7 @@ public abstract class BaseBackingBean<T extends BaseManagedBean> {
 		for (ENTITY_CLASS valueBean : list) {
 			valueBean.setSelected(selectAll);
 		}
-    }
+    }*/
 	
 	/**
 	 * Create search bean.
@@ -303,5 +304,33 @@ public abstract class BaseBackingBean<T extends BaseManagedBean> {
 			FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR,e.toString(), e.getMessage()));
 		}
 	    return items;
+	}
+	
+	protected PmUser getCurrentUser() {
+		FacesScopes facesScopes = new FacesScopes();
+		PmUser user = (PmUser)facesScopes.getSessionScope(USER_SESSION_BEAN);
+		System.out.println("user:" + user);
+		if (user == null) {
+			try {
+				IUserSO userSO = BusinessDelegate.getInstance().getServiceObject("pm", IUserSO.class);
+				
+				UserReqDTO reqDTO = new UserReqDTO();
+				reqDTO.setUserName(new FacesScopes().getUserScreenName());
+				
+				UserResDTO resDTO = userSO.retrieveUserByName(reqDTO);
+				
+				user = resDTO.getPmUser();
+				
+				facesScopes.setSessionScope(USER_SESSION_BEAN, user);
+			} catch (Exception e) {
+				e.printStackTrace();
+				
+				FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR,e.toString(), e.getMessage()));
+				
+				user = new PmUser();
+			}
+		}
+		
+		return user;
 	}
 }

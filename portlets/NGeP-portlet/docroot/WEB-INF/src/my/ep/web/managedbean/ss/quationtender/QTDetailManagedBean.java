@@ -1,4 +1,3 @@
-
 package my.ep.web.managedbean.ss.quationtender;
 
 import java.util.ArrayList;
@@ -12,6 +11,7 @@ import javax.faces.model.SelectItem;
 
 import my.ep.factory.EpLogger;
 import my.ep.persistence.entity.ct.circular.panel.CtPanelSupplier;
+import my.ep.persistence.entity.pm.authorization.PmOrgProfile;
 import my.ep.persistence.entity.pm.common.PmCategoryL1;
 import my.ep.persistence.entity.pm.common.PmCategoryL2;
 import my.ep.persistence.entity.pm.common.PmCategoryL3;
@@ -26,6 +26,7 @@ import my.ep.persistence.entity.ss.quationtender.ScQtBriefing;
 import my.ep.persistence.entity.ss.quationtender.ScQtCategory;
 import my.ep.persistence.entity.ss.quationtender.ScQtCriteria;
 import my.ep.persistence.entity.ss.quationtender.ScQtGosodoBudget;
+import my.ep.web.bean.ss.quatationtender.QtnTenderSearchBean;
 import my.ep.web.managedbean.BaseManagedBean;
 import my.ep.web.type.ss.quationtender.CloneAll;
 
@@ -33,67 +34,76 @@ import org.apache.log4j.Logger;
 import org.primefaces.model.DefaultTreeNode;
 import org.primefaces.model.TreeNode;
 
-
 /**
  * @Author VidyasagarReddy
  */
 
-@ManagedBean(name="qTDetailMB")
+@ManagedBean(name = "qTDetailMB")
 @SessionScoped
 public class QTDetailManagedBean extends BaseManagedBean {
 
-	
 	private static final long serialVersionUID = 1L;
-	private static final Logger log= EpLogger.getLogger(QTDetailManagedBean.class);
-	
-	private ScQt qt=new ScQt();
-	private ScQtCriteria qtc = new ScQtCriteria();
+	private static final Logger log = EpLogger
+			.getLogger(QTDetailManagedBean.class);
+
+	private ScQt qt;
+	private ScQtCriteria qtc;
 	private ScQtBriefing qb=new ScQtBriefing();
 	private ScQtCategory qtcategory= new ScQtCategory();
 	private String selectedBoolean1;
-	private List<PmSo> soList;
 	private String multiLoc;
-	
-	private List<PmDo> doList;
-	
-	private List<PmGo> goList;
-	
+
+	/**
+	 * For Search Quotation/Tender Screen
+	 */
+	private QtnTenderSearchBean qtnTenderSearchBean;
+	private QtnTenderSearchBean cloneQtnTenderSearchBean;
+
 	private List<PmCategoryL1> categoryL1s;
-	
+
 	private List<PmCategoryL2> categoryL2s;
-	
+
 	private List<PmCategoryL3> categoryL3s;
-	
+
 	private List<PmState> states;
-	
+
 	private List<PmDistrict> districts;
-	
+
 	public List<ScQtGosodoBudget> gosodos;
 	public List<ScQtCategory> categorys;
-   
+
 	private String qtNumber;
 	
+	private PmOrgProfile selectedUserMinistry;
+	private PmOrgProfile selectedUserDepartment;
+
 	private List<SelectItem> procurementModeItems;
-	List<SelectItem> itemTypeList;
-	List<SelectItem> tenderTypeList;
-	List<SelectItem> lineItemList;
-	List<SelectItem> itemOriginList;
-	List<SelectItem> minstryList;
-    List<SelectItem> deptList;
-    List<SelectItem> divisionList;
+	private List<SelectItem> itemTypeList;
+	private List<SelectItem> tenderTypeList;
+	private List<SelectItem> lineItemList;
+	private List<SelectItem> itemOriginList;
 	
+	private List<PmOrgProfile> userMinistryList;
+	private List<PmOrgProfile> userDepartmentList;
+	private List<PmOrgProfile> userDivisionList;
+
+	private List<PmGo> goList;
+	private List<PmSo> soList;
+	private List<PmDo> doList;
+
 	private String minstryCode;
 	private String deptCode;
 	private String divisionCode;
+
 	private TreeNode root2;
 	private TreeNode root3;
-    private TreeNode[] selectedNodes; 
-	
-	private List<ScQt> cloneTenderList= new ArrayList<ScQt>();
-	private ScQt tenderCriteria=new ScQt();
-	
-	private List<PmZone> zoneList= new ArrayList <PmZone>();
-	private List<PmState> stateList=new ArrayList<PmState>();
+	private TreeNode[] selectedNodes;
+
+	private List<ScQt> cloneTenderList = new ArrayList<ScQt>();
+	private ScQt tenderCriteria = new ScQt();
+
+	private List<PmZone> zoneList = new ArrayList<PmZone>();
+	private List<PmState> stateList = new ArrayList<PmState>();
 	public static List<PmZone> pmZoneList=new ArrayList<PmZone>();
 	public static List<PmState> pmStateList=new ArrayList<PmState>();
 	public static Map<Long, List<PmState>> zoneStateMap=new HashMap<Long, List<PmState>>();
@@ -203,15 +213,11 @@ public class QTDetailManagedBean extends BaseManagedBean {
 	public PmZone getPmZone() {
 		return pmZone;
 	}
-
-
+	
 	public void setPmZone(PmZone pmZone) {
 		this.pmZone = pmZone;
 	}
-
-
 	
-
 	public static Map<Long, List<PmState>> getZoneStateMap() {
 		return zoneStateMap;
 	}
@@ -255,10 +261,7 @@ public class QTDetailManagedBean extends BaseManagedBean {
 
 	public void setSelectedZone(Node selectedZone) {
 		this.selectedZone = selectedZone;
-	}
-
-
-	
+	}	
 
 	public void setSelectedState(Node selectedState) {
 		this.selectedState = selectedState;
@@ -344,63 +347,81 @@ public class QTDetailManagedBean extends BaseManagedBean {
 		this.selectedPmDistricts = selectedPmDistricts;
 	}
 
+	private List<ScQt> qtList = new ArrayList<ScQt>();
 
-	private List<ScQt> qtList= new ArrayList<ScQt>();
-	
-	private List<CtPanelSupplier> panelSuppliers= new ArrayList<CtPanelSupplier>();
-	public QTDetailManagedBean()
-    {
-    	log.info("inside ");
-    	
-	
-    	root2 = new DefaultTreeNode("Root", null);
-    	
-    	
+	private List<CtPanelSupplier> panelSuppliers = new ArrayList<CtPanelSupplier>();
+
+	public QTDetailManagedBean() {
+		log.info("inside ");
+		
+		qtnTenderSearchBean = new QtnTenderSearchBean();
+		cloneQtnTenderSearchBean = new QtnTenderSearchBean();
+
+		root2 = new DefaultTreeNode("Root", null);
 		TreeNode node0 = new DefaultTreeNode("Clone All", root2);
 		node0.setExpanded(true);
+
 		CloneAll[] enumValues=CloneAll.values();
 		for(CloneAll cloneValue:enumValues){
 			TreeNode node1 = new DefaultTreeNode(cloneValue.getDisplayName(), node0);
 		}
-		
-		root3 = new DefaultTreeNode("Root", null);   
-        TreeNode documents = new DefaultTreeNode(("Zone1"), root3);  
-        documents.setExpanded(true);  
-        
-          
-        TreeNode states = new DefaultTreeNode(("State1"), documents); 
-        states .setExpanded(true);
-        TreeNode districts = new DefaultTreeNode(("State2"), documents); 
-        districts.setExpanded(true);
-          
-        //Documents  
-        TreeNode d1 = new DefaultTreeNode(("District1"), states);  
-        TreeNode d2 = new DefaultTreeNode(("District2"), states);  
-        TreeNode d = new DefaultTreeNode(("District1"), districts);  
-          
-		
-		
-		
-		
+
+		root3 = new DefaultTreeNode("Root", null);
+		TreeNode documents = new DefaultTreeNode(("Zone1"), root3);
+		documents.setExpanded(true);
+
+		TreeNode states = new DefaultTreeNode(("State1"), documents);
+		states.setExpanded(true);
+		TreeNode districts = new DefaultTreeNode(("State2"), documents);
+		districts.setExpanded(true);
+
+		// Documents
+		TreeNode d1 = new DefaultTreeNode(("District1"), states);
+		TreeNode d2 = new DefaultTreeNode(("District2"), states);
+		TreeNode d = new DefaultTreeNode(("District1"), districts);
+
 	}
 
+	/**
+	 * @return the qtnTenderSearchBean
+	 */
+	public QtnTenderSearchBean getQtnTenderSearchBean() {
+		return qtnTenderSearchBean;
+	}
 
-		public List<ScQt> getCloneTenderList() {
-			return cloneTenderList;
-		}
+	/**
+	 * @param qtnTenderSearchBean the qtnTenderSearchBean to set
+	 */
+	public void setQtnTenderSearchBean(QtnTenderSearchBean qtnTenderSearchBean) {
+		this.qtnTenderSearchBean = qtnTenderSearchBean;
+	}
 
+	/**
+	 * @return the cloneQtnTenderSearchBean
+	 */
+	public QtnTenderSearchBean getCloneQtnTenderSearchBean() {
+		return cloneQtnTenderSearchBean;
+	}
 
+	/**
+	 * @param cloneQtnTenderSearchBean the cloneQtnTenderSearchBean to set
+	 */
+	public void setCloneQtnTenderSearchBean(
+			QtnTenderSearchBean cloneQtnTenderSearchBean) {
+		this.cloneQtnTenderSearchBean = cloneQtnTenderSearchBean;
+	}
 
-		public void setCloneTenderList(List<ScQt> cloneTenderList) {
-			this.cloneTenderList = cloneTenderList;
-		}
+	public List<ScQt> getCloneTenderList() {
+		return cloneTenderList;
+	}
 
+	public void setCloneTenderList(List<ScQt> cloneTenderList) {
+		this.cloneTenderList = cloneTenderList;
+	}
 
 	public TreeNode getRoot2() {
 		return root2;
 	}
-
-
 
 	public void setRoot2(TreeNode root2) {
 		this.root2 = root2;
@@ -410,7 +431,6 @@ public class QTDetailManagedBean extends BaseManagedBean {
 		return root3;
 	}
 
-
 	public void setRoot3(TreeNode root3) {
 		this.root3 = root3;
 	}
@@ -419,11 +439,9 @@ public class QTDetailManagedBean extends BaseManagedBean {
 		return selectedNodes;
 	}
 
-
 	public void setSelectedNodes(TreeNode[] selectedNodes) {
 		this.selectedNodes = selectedNodes;
 	}
-
 
 	public List<SelectItem> getProcurementModeItems() {
 		return procurementModeItems;
@@ -433,64 +451,28 @@ public class QTDetailManagedBean extends BaseManagedBean {
 		this.procurementModeItems = procurementModeItems;
 	}
 
-
 	public List<SelectItem> getItemTypeList() {
 		return itemTypeList;
 	}
-
-
 
 	public void setItemTypeList(List<SelectItem> itemTypeList) {
 		this.itemTypeList = itemTypeList;
 	}
 
-
-
 	public List<SelectItem> getTenderTypeList() {
 		return tenderTypeList;
 	}
-
-
 
 	public void setTenderTypeList(List<SelectItem> tenderTypeList) {
 		this.tenderTypeList = tenderTypeList;
 	}
 
-
-
 	public List<SelectItem> getLineItemList() {
 		return lineItemList;
 	}
 
-
-
 	public void setLineItemList(List<SelectItem> lineItemList) {
 		this.lineItemList = lineItemList;
-	}
-
-
-	public List<PmSo> getSoList() {
-		return soList;
-	}
-
-	public void setSoList(List<PmSo> soList) {
-		this.soList = soList;
-	}
-
-	public List<PmDo> getDoList() {
-		return doList;
-	}
-
-	public void setDoList(List<PmDo> doList) {
-		this.doList = doList;
-	}
-
-	public List<PmGo> getGoList() {
-		return goList;
-	}
-
-	public void setGoList(List<PmGo> goList) {
-		this.goList = goList;
 	}
 
 	public List<PmCategoryL1> getCategoryL1s() {
@@ -525,61 +507,41 @@ public class QTDetailManagedBean extends BaseManagedBean {
 		this.qtNumber = qtNumber;
 	}
 
-
-
 	public ScQt getQt() {
 		return qt;
 	}
-
-
 
 	public void setQt(ScQt qt) {
 		this.qt = qt;
 	}
 
-
-
 	public List<PmState> getStates() {
 		return states;
 	}
-
-
 
 	public void setStates(List<PmState> states) {
 		this.states = states;
 	}
 
-
-
 	public List<PmDistrict> getDistricts() {
 		return districts;
 	}
-
-
 
 	public void setDistricts(List<PmDistrict> districts) {
 		this.districts = districts;
 	}
 
-
-
 	public List<ScQtGosodoBudget> getGosodos() {
 		return gosodos;
 	}
-
-
 
 	public void setGosodos(List<ScQtGosodoBudget> gosodos) {
 		this.gosodos = gosodos;
 	}
 
-
-
 	public List<ScQtCategory> getCategorys() {
 		return categorys;
 	}
-
-
 
 	public void setCategorys(List<ScQtCategory> categorys) {
 		this.categorys = categorys;
@@ -589,13 +551,9 @@ public class QTDetailManagedBean extends BaseManagedBean {
 		return qtc;
 	}
 
-
 	public void setQtc(ScQtCriteria qtc) {
 		this.qtc = qtc;
 	}
-	
-
-
 	
 	public ScQtBriefing getQb() {
 		return qb;
@@ -606,13 +564,96 @@ public class QTDetailManagedBean extends BaseManagedBean {
 		this.qb = qb;
 	}
 
-
 	public List<SelectItem> getItemOriginList() {
 		return itemOriginList;
 	}
 
 	public void setItemOriginList(List<SelectItem> itemOriginList) {
 		this.itemOriginList = itemOriginList;
+	}
+
+	/**
+	 * @return the userMinistryList
+	 */
+	public List<PmOrgProfile> getUserMinistryList() {
+		return userMinistryList;
+	}
+
+	/**
+	 * @param userMinistryList the userMinistryList to set
+	 */
+	public void setUserMinistryList(List<PmOrgProfile> userMinistryList) {
+		this.userMinistryList = userMinistryList;
+	}
+
+	/**
+	 * @return the userDepartmentList
+	 */
+	public List<PmOrgProfile> getUserDepartmentList() {
+		return userDepartmentList;
+	}
+
+	/**
+	 * @param userDepartmentList the userDepartmentList to set
+	 */
+	public void setUserDepartmentList(List<PmOrgProfile> userDepartmentList) {
+		this.userDepartmentList = userDepartmentList;
+	}
+
+	/**
+	 * @return the userDivisionList
+	 */
+	public List<PmOrgProfile> getUserDivisionList() {
+		return userDivisionList;
+	}
+
+	/**
+	 * @param userDivisionList the userDivisionList to set
+	 */
+	public void setUserDivisionList(List<PmOrgProfile> userDivisionList) {
+		this.userDivisionList = userDivisionList;
+	}
+
+	/**
+	 * @return the goList
+	 */
+	public List<PmGo> getGoList() {
+		return goList;
+	}
+
+	/**
+	 * @param goList the goList to set
+	 */
+	public void setGoList(List<PmGo> goList) {
+		this.goList = goList;
+	}
+
+	/**
+	 * @return the soList
+	 */
+	public List<PmSo> getSoList() {
+		return soList;
+	}
+
+	/**
+	 * @param soList the soList to set
+	 */
+	public void setSoList(List<PmSo> soList) {
+		this.soList = soList;
+	}
+
+	/**
+	 * @return the doList
+	 */
+	public List<PmDo> getDoList() {
+		return doList;
+	}
+
+	/**
+	 * @param doList the doList to set
+	 */
+	public void setDoList(List<PmDo> doList) {
+		this.doList = doList;
 	}
 
 	public ScQt getTenderCriteria() {
@@ -623,51 +664,41 @@ public class QTDetailManagedBean extends BaseManagedBean {
 		this.tenderCriteria = tenderCriteria;
 	}
 
-
 	public List<PmZone> getZoneList() {
 		return zoneList;
 	}
-
 
 	public void setZoneList(List<PmZone> zoneList) {
 		this.zoneList = zoneList;
 	}
 
-
 	public List<PmState> getStateList() {
 		return stateList;
 	}
-
 
 	public void setStateList(List<PmState> stateList) {
 		this.stateList = stateList;
 	}
 
-
 	public List<ScQt> getQtList() {
 		return qtList;
 	}
-
 
 	public void setQtList(List<ScQt> qtList) {
 		this.qtList = qtList;
 	}
 
-
 	public List<CtPanelSupplier> getPanelSuppliers() {
 		return panelSuppliers;
 	}
 
-
 	public void setPanelSuppliers(List<CtPanelSupplier> panelSuppliers) {
 		this.panelSuppliers = panelSuppliers;
 	}
-
-
+	
 	public String getMultiLoc() {
 		return multiLoc;
 	}
-
 
 	public void setMultiLoc(String multiLoc) {
 		this.multiLoc = multiLoc;
@@ -677,85 +708,68 @@ public class QTDetailManagedBean extends BaseManagedBean {
 		return selectedBoolean1;
 	}
 
-
 	public void setSelectedBoolean1(String selectedBoolean1) {
 		this.selectedBoolean1 = selectedBoolean1;
 	}
-
 
 	public ScQtCategory getQtcategory() {
 		return qtcategory;
 	}
 
-
 	public void setQtcategory(ScQtCategory qtcategory) {
 		this.qtcategory = qtcategory;
 	}
 
-
-	public List<SelectItem> getMinstryList() {
-		return minstryList;
+	/**
+	 * @return the selectedUserMinistry
+	 */
+	public PmOrgProfile getSelectedUserMinistry() {
+		return selectedUserMinistry;
 	}
 
-
-	public void setMinstryList(List<SelectItem> minstryList) {
-		this.minstryList = minstryList;
+	/**
+	 * @param selectedUserMinistry the selectedUserMinistry to set
+	 */
+	public void setSelectedUserMinistry(PmOrgProfile selectedUserMinistry) {
+		this.selectedUserMinistry = selectedUserMinistry;
 	}
 
-
-	public List<SelectItem> getDeptList() {
-		return deptList;
+	/**
+	 * @return the selectedUserDepartment
+	 */
+	public PmOrgProfile getSelectedUserDepartment() {
+		return selectedUserDepartment;
 	}
 
-
-	public void setDeptList(List<SelectItem> deptList) {
-		this.deptList = deptList;
+	/**
+	 * @param selectedUserDepartment the selectedUserDepartment to set
+	 */
+	public void setSelectedUserDepartment(PmOrgProfile selectedUserDepartment) {
+		this.selectedUserDepartment = selectedUserDepartment;
 	}
-
-
-	public List<SelectItem> getDivisionList() {
-		return divisionList;
-	}
-
-
-	public void setDivisionList(List<SelectItem> divisionList) {
-		this.divisionList = divisionList;
-	}
-
 
 	public String getMinstryCode() {
 		return minstryCode;
 	}
 
-
 	public void setMinstryCode(String minstryCode) {
 		this.minstryCode = minstryCode;
 	}
-
 
 	public String getDeptCode() {
 		return deptCode;
 	}
 
-
 	public void setDeptCode(String deptCode) {
 		this.deptCode = deptCode;
 	}
-
 
 	public String getDivisionCode() {
 		return divisionCode;
 	}
 
-
 	public void setDivisionCode(String divisionCode) {
 		this.divisionCode = divisionCode;
 	}
-
-
-
-	
-	
-	
 
 }

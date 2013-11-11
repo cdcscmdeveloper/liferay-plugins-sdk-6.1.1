@@ -11,61 +11,56 @@
 
 
 		<p:panel header="Search Qtn/Tender" toggleable="true">
-			<p:panelGrid columns="2" style="width:100%;"
-				styleClass="noBorders tr,noBorders td">
+			<h:panelGrid border="0" cellpadding="0" cellspacing="0" width="100%"
+				columns="2" columnClasses="columnWidth20">
 
-				<h:outputText value="Title" />
-				<p:inputText value="#{qTDetailBB.managedBean.qt.qtTitle}" size="100" />
+				<h:outputLabel value="Title" />
+				<p:inputText value="#{qTDetailBB.managedBean.cloneQtnTenderSearchBean.qtTitle}" size="100" />
 
-			</p:panelGrid>
+			</h:panelGrid>
 
-			<p:panelGrid columns="4" style="width:100%;"
-				styleClass="noBorders tr,noBorders td">
+			<h:panelGrid border="0" cellpadding="0" cellspacing="0" width="100%"
+				columns="4" columnClasses="columnWidth20,columnWidth30,columnWidth20,columnWidth30">
 
 				<h:outputLabel for="qtnno" value="#{lbl['lbl.so.qtnno']}" />
-				<p:inputText id="clnqtnno" value="#{qTDetailBB.managedBean.qt.qtNo}" />
+				<p:inputText id="clnqtnno" value="#{qTDetailBB.managedBean.cloneQtnTenderSearchBean.qtNo}" />
 
 
-				<h:outputText value="#{lbl['lbl.so.procmode']}" />
+				<h:outputLabel value="#{lbl['lbl.so.procmode']}" />
 				<p:selectOneMenu
-					value="#{qTDetailBB.managedBean.qt.procurementMode}">
-					<f:selectItems
-						value="#{qTDetailBB.managedBean.procurementModeItems}" />
+					value="#{qTDetailBB.managedBean.cloneQtnTenderSearchBean.procurementMode}">
+					<f:selectItems value="#{qTDetailBB.procurementModeItems}" />
 				</p:selectOneMenu>
 
 
-				<h:outputText value="#{lbl['lbl.so.creatdtfrom']}" />
-				<p:calendar value="#{qTDetailBB.managedBean.qt.createDateFrom}"
+				<h:outputLabel value="#{lbl['lbl.so.creatdtfrom']}" />
+				<p:calendar value="#{qTDetailBB.managedBean.cloneQtnTenderSearchBean.fromCreatedDate}"
 					id="clncrdateFrm" showOn="button" />
 
-				<h:outputText value="#{lbl['lbl.so.creatdtto']}" />
-				<p:calendar value="#{qTDetailBB.managedBean.qt.createdDateTo}"
+				<h:outputLabel value="#{lbl['lbl.so.creatdtto']}" />
+				<p:calendar value="#{qTDetailBB.managedBean.cloneQtnTenderSearchBean.toCreatedDate}"
 					id="clncrdateTo" showOn="button" />
 
 
-				<h:outputText value="#{lbl['lbl.so.status']}" />
+				<h:outputLabel value="#{lbl['lbl.so.status']}" />
 				<p:selectOneMenu
-					value="#{searchQtnTenderBB.managedBean.selectOption}">
+					value="#{qTDetailBB.managedBean.cloneQtnTenderSearchBean.qtStatus}">
 					<f:selectItem itemLabel="Select One" itemValue="" />
 					<f:selectItem itemLabel="Option 1" itemValue="" />
 					<f:selectItem itemLabel="Option 2" itemValue="" />
 					<f:selectItem itemLabel="Option 3" itemValue="" />
 				</p:selectOneMenu>
 
-			</p:panelGrid>
+			</h:panelGrid>
+			
 			<p:commandButton value="#{lbl['lbl.so.searchbtn']}"
-				style="float:right;" action="#{qTDetailBB.cloneSearchQt}"
+				style="float:right;" action="#{qTDetailBB.cloneSearchQtAction}"
 				update="cloneQtsearch">
-
-
 			</p:commandButton>
 
-
 			<br />
-             <br />
-
+            <br />
 		</p:panel>
-
 
 		<p:panel header="Search Qtn/Tender Result" toggleable="true">
 			<h:panelGroup style="width:100%;">

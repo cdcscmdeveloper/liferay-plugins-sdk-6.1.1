@@ -7,105 +7,98 @@
 
 
 	<p:panel header="Search Quotation/Tender Screen" toggleable="true">
-
-
-		<p:panelGrid columns="4" style="width:100%;"
-			styleClass="noBorders tr,noBorders td">
-
+		<h:panelGrid border="0" cellpadding="0" cellspacing="0" width="100%"
+			columns="4" columnClasses="columnWidth20,columnWidth30,columnWidth20,columnWidth30">
+			
 			<h:outputLabel for="qtnno" value="#{lbl['lbl.so.qtnno']}" />
-			<p:inputText id="qtnno" value="#{qTDetailBB.managedBean.qt.qtNo}" />
+			<p:inputText id="qtnno" value="#{qTDetailBB.managedBean.qtnTenderSearchBean.qtNo}" />
 
-			<h:outputText value="#{lbl['lbl.so.procmode']}" />
-			<p:selectOneMenu value="#{qTDetailBB.managedBean.qt.procurementMode}">
-				<f:selectItems
-					value="#{qTDetailBB.managedBean.procurementModeItems}" />
+			<h:outputLabel value="#{lbl['lbl.so.procmode']}" />
+			<p:selectOneMenu value="#{qTDetailBB.managedBean.qtnTenderSearchBean.procurementMode}">
+				<f:selectItems value="#{qTDetailBB.procurementModeItems}" />
 			</p:selectOneMenu>
 
-			<h:outputText value="#{lbl['lbl.so.creatdtfrom']}" />
-			<p:calendar value="#{qTDetailBB.managedBean.qt.createDateFrom}"
+			<h:outputLabel value="#{lbl['lbl.so.creatdtfrom']}" />
+			<p:calendar value="#{qTDetailBB.managedBean.qtnTenderSearchBean.fromCreatedDate}"
 				id="crdateFrm" showOn="button" />
 
-			<h:outputText value="#{lbl['lbl.so.creatdtto']}" />
-			<p:calendar value="#{qTDetailBB.managedBean.qt.createdDateTo}"
+			<h:outputLabel value="#{lbl['lbl.so.creatdtto']}" />
+			<p:calendar value="#{qTDetailBB.managedBean.qtnTenderSearchBean.toCreatedDate}"
 				id="crdateTo" showOn="button" />
 
-			<h:outputText value="#{lbl['lbl.so.pbldtfrom']}" />
-			<p:calendar value="#{qTDetailBB.managedBean.qt.pubDateFrom}"
+			<h:outputLabel value="#{lbl['lbl.so.pbldtfrom']}" />
+			<p:calendar value="#{qTDetailBB.managedBean.qtnTenderSearchBean.fromPublishDate}"
 				id="pbdateFrom" showOn="button" />
 
-			<h:outputText value="#{lbl['lbl.so.pbldtto']}" />
-			<p:calendar value="#{qTDetailBB.managedBean.qt.pubDateTo}"
+			<h:outputLabel value="#{lbl['lbl.so.pbldtto']}" />
+			<p:calendar value="#{qTDetailBB.managedBean.qtnTenderSearchBean.toPublishDate}"
 				id="pbdateTo" showOn="button" />
 
-			<h:outputText value="#{lbl['lbl.so.clsdtfrom']}" />
-			<p:calendar value="#{qTDetailBB.managedBean.qt.clsDateFrom}"
+			<h:outputLabel value="#{lbl['lbl.so.clsdtfrom']}" />
+			<p:calendar value="#{qTDetailBB.managedBean.qtnTenderSearchBean.fromClosingDate}"
 				id="cldateFrom" showOn="button" />
 
-			<h:outputText value="#{lbl['lbl.so.clsdtto']}" />
-			<p:calendar value="#{qTDetailBB.managedBean.qt.clsDateTo}"
+			<h:outputLabel value="#{lbl['lbl.so.clsdtto']}" />
+			<p:calendar value="#{qTDetailBB.managedBean.qtnTenderSearchBean.toClosingDate}"
 				id="cldateTo" showOn="button" />
 
-			<h:outputText value="#{lbl['lbl.so.status']}" />
+			<h:outputLabel value="#{lbl['lbl.so.status']}" />
 			<p:selectOneMenu
-				value="#{searchQtnTenderBB.managedBean.selectOption}">
+				value="#{qTDetailBB.managedBean.qtnTenderSearchBean.qtStatus}">
 				<f:selectItem itemLabel="Select One" itemValue="" />
 				<f:selectItem itemLabel="Option 1" itemValue="" />
 				<f:selectItem itemLabel="Option 2" itemValue="" />
 				<f:selectItem itemLabel="Option 3" itemValue="" />
 			</p:selectOneMenu>
-
-
-		</p:panelGrid>
+		</h:panelGrid>
 
 		<p:commandButton value="#{lbl['lbl.so.searchbtn']}"
-			style="float:right;" action="#{qTDetailBB.searchQT}"
+			style="float:right;" action="#{qTDetailBB.searchQTAction}"
 			update="searchQTs">
 
 
 		</p:commandButton>
-
+		
 		<br />
 		<br />
-		<br />
-
 	</p:panel>
 
 
 	<p:panel header="Qtn/Tender List" toggleable="true">
 		<h:panelGroup id="table-wrapper" style="width:100%;">
 			<p:dataTable id="searchQTs" value="#{qTDetailBB.managedBean.qtList}"
-				var="tenders" resizableColumns="true" rowIndexVar="index">
+				var="scQt" resizableColumns="true" rowIndexVar="index">
 
 				<p:column headerText="#{lbl['lbl.so.no']}">
 					<h:outputText value="#{index + 1}" />
 				</p:column>
 
 				<p:column headerText="Qtn/Tender No">
-					<p:commandLink action="#{qTDetailBB.showMaintanceQT(tenders.qtId)}"
+					<p:commandLink action="#{qTDetailBB.editAction(scQt)}"
 						style="margin-right:20px;">
-						<h:outputText value="#{tenders.qtNo}" />
+						<h:outputText value="#{scQt.qtNo}" />
 					</p:commandLink>
 
 
 				</p:column>
 
 				<p:column headerText="#{lbl['lbl.so.title']}">
-					<h:outputText value="#{tenders.qtTitle}" />
+					<h:outputText value="#{scQt.qtTitle}" />
 				</p:column>
 				<p:column headerText="#{lbl['lbl.so.procmode']}">
-					<h:outputText value="#{tenders.procurementMode}" />
+					<h:outputText value="#{scQt.procurementMode}" />
 				</p:column>
 
 				<p:column headerText="#{lbl['lbl.so.crtdt']}">
-					<h:outputText value="#{tenders.createdDate}" />
+					<h:outputText value="#{scQt.createdDate}" />
 				</p:column>
 
 				<p:column headerText="#{lbl['lbl.so.pbdt']}">
-					<h:outputText value="#{tenders.publishDate}" />
+					<h:outputText value="#{scQt.publishDate}" />
 				</p:column>
 
 				<p:column headerText="#{lbl['lbl.so.clsdt']}">
-					<h:outputText value="#{tenders.closingDate}" />
+					<h:outputText value="#{scQt.closingDate}" />
 				</p:column>
 
 			</p:dataTable>
@@ -113,7 +106,7 @@
 
 		<p:commandButton value="#{lbl['lbl.so.qtmscreen']}"
 			style="float:right;"
-			action="quatationtendercreation?faces-redirect=true">
+			action="#{qTDetailBB.newAction}">
 
 		</p:commandButton>
 

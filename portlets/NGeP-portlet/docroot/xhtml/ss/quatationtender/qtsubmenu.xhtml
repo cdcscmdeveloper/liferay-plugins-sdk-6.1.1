@@ -5,7 +5,7 @@
 	xmlns:p="http://primefaces.org/ui"
 	xmlns:c="http://java.sun.com/jsp/jstl/core">
 
-	<p:tabView orientation="left">
+	<p:tabView dynamic="true" orientation="left">
 
 		<p:tab title="Quotation Details">
 			 <ui:include
@@ -17,7 +17,7 @@
 				src="/xhtml/ss/quatationtender/qtsupplierqualfcriteria.xhtml"></ui:include> 
 		</p:tab>
 
-		<p:tab title="Approval">
+		<p:tab title="Approval Workflow">
 		<ui:include src="/xhtml/ss/quatationtender/approvalWorkFlowMain.xhtml"></ui:include>
 		</p:tab>
 
@@ -26,7 +26,7 @@
  	</p:tab>
 
 
-		<p:tab title="Document">
+		<p:tab title="Documents">
               <ui:include src="/xhtml/ss/quatationtender/documents.xhtml"></ui:include>
 		</p:tab>
 

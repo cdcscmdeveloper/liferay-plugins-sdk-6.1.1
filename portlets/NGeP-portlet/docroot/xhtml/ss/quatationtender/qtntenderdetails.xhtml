@@ -5,89 +5,72 @@
 	xmlns:p="http://primefaces.org/ui"
 	xmlns:c="http://java.sun.com/jsp/jstl/core">
 	<p:panel header="Qtn/Tender Details" toggleable="true">
-		<p:panelGrid rows="5" style="width:100%;"
-			styleClass="noBorders tr,noBorders td">
-			<p:row>
-				<p:column>
-					<h:outputText value="* Qtn/Tender Type" />
-				</p:column>
-				<p:column>
-					<p:selectOneMenu value="#{qTDetailBB.managedBean.qt.qtType}">
-
-						<f:selectItems value="#{qTDetailBB.managedBean.tenderTypeList}" />
-					</p:selectOneMenu>
-				</p:column>
-				<p:column>
-					<h:outputText value="Item Origin" />
-				</p:column>
-				<p:column>
-					<p:selectOneMenu value="#{qTDetailBB.managedBean.qt.itemOrigin}">
-						<f:selectItems value="#{qTDetailBB.managedBean.itemOriginList}" />
-
-					</p:selectOneMenu>
-				</p:column>
-			</p:row>
-			<p:row>
-				<p:column>
-					<h:outputText value="Item Type" />
-				</p:column>
-				<p:column>
-					<p:selectOneMenu value="#{qTDetailBB.managedBean.qt.itemType}">
-						<f:selectItems value="#{qTDetailBB.managedBean.itemTypeList}" />
-
-					</p:selectOneMenu>
-				</p:column>
-				<p:column>
-					<h:outputText value="Associated Qtn/Tender No." />
-				</p:column>
-				<p:column>
-					<p:inputText id="AsnTenderNo"
-						value="#{qTDetailBB.managedBean.qt.qtNo}" readonly="true" />
-				</p:column>
-			</p:row>
-			<p:row>
-				<p:column>
-					<h:outputText value="MTO" />
-				</p:column>
-				<p:column>
-					<p:inputText id="MTO" value="#{qTDetailBB.managedBean.qt.isMto}"
-						readonly="true" />
-				</p:column>
-				<p:column>
-					<h:outputText value="* RFP" />
-				</p:column>
-				<p:column>
-					<p:selectOneRadio id="rfpType"
-						value="#{qTDetailBB.managedBean.qt.isRfp}">
-						<f:selectItem itemValue="true" itemLabel="Yes"/>
-                        <f:selectItem itemValue="false" itemLabel="No"/>
-					</p:selectOneRadio>
-				</p:column>
-
-			</p:row>
-			<p:row>
-				<p:column>
-					<h:outputText for="validityperiod"
-						value="* Proposal Validity Period (days)" />
-				</p:column>
-				<p:column>
-					<p:inputText id="validityperiod"
-						value="#{qTDetailBB.managedBean.qt.qtValidityPeriod}" />
-				</p:column>
-				<p:column>
-					<h:outputText value="* Response Rules for Line Item / Zone" />
-				</p:column>
-				<p:column>
-					<p:selectOneMenu value="#{qTDetailBB.managedBean.qt.responseRule}">
-						<f:selectItems value="#{qTDetailBB.managedBean.lineItemList}" />
-
-
-					</p:selectOneMenu>
-				</p:column>
-
-			</p:row>
-
-		</p:panelGrid>
-
+		<h:panelGrid border="0" cellpadding="0" cellspacing="0" width="100%"
+			columns="4" columnClasses="columnWidth20,columnWidth30,columnWidth20,columnWidth30">
+			
+			<h:column>
+				<h:outputLabel value="* Qtn/Tender Type" />
+			</h:column>
+			<h:column>
+				<p:selectOneMenu value="#{qTDetailBB.managedBean.qt.qtType}">
+					<f:selectItems value="#{qTDetailBB.managedBean.tenderTypeList}" />
+				</p:selectOneMenu>
+			</h:column>
+			<h:column>
+				<h:outputLabel value="Item Origin" />
+			</h:column>
+			<h:column>
+				<p:selectOneMenu value="#{qTDetailBB.managedBean.qt.itemOrigin}">
+					<f:selectItems value="#{qTDetailBB.managedBean.itemOriginList}" />
+				</p:selectOneMenu>
+			</h:column>
+			<h:column>
+				<h:outputLabel value="Item Type" />
+			</h:column>
+			<h:column>
+				<p:selectOneMenu value="#{qTDetailBB.managedBean.qt.itemType}">
+					<f:selectItems value="#{qTDetailBB.managedBean.itemTypeList}" />
+				</p:selectOneMenu>
+			</h:column>
+			<h:column>
+				<h:outputLabel value="Assoc. Qtn/Tender No." />
+			</h:column>
+			<h:column>
+				<p:inputText id="AsnTenderNo"
+					value="#{qTDetailBB.managedBean.qt.qtNo}" readonly="true" />
+			</h:column>
+			<h:column>
+				<h:outputLabel value="MTO" />
+			</h:column>
+			<h:column>
+				<p:inputText id="MTO" value="#{qTDetailBB.managedBean.qt.mto ? 'Yes' : 'No'}"
+					readonly="true" />
+			</h:column>
+			<h:column>
+				<h:outputLabel value="* RFP" />
+			</h:column>
+			<h:column>
+				<p:selectOneRadio id="rfpType" value="#{qTDetailBB.managedBean.qt.rfp}">
+					<f:selectItem itemLabel="Yes" itemValue="true" />
+					<f:selectItem itemLabel="No" itemValue="false" />
+				</p:selectOneRadio>
+			</h:column>
+			<h:column>
+				<h:outputLabel for="validityperiod"
+					value="* Proposal Validity Periods (Days)" />
+			</h:column>
+			<h:column>
+				<p:inputText id="validityperiod"
+					value="#{qTDetailBB.managedBean.qt.qtValidityPeriod}" />
+			</h:column>
+			<h:column>
+				<h:outputLabel value="* Response Rules for Line Item / Zone" />
+			</h:column>
+			<h:column>
+				<p:selectOneMenu value="#{qTDetailBB.managedBean.qt.responseRule}" style="width:220px;">
+					<f:selectItems value="#{qTDetailBB.managedBean.lineItemList}" />
+				</p:selectOneMenu>
+			</h:column>
+		</h:panelGrid>
 	</p:panel>
 </ui:composition>
