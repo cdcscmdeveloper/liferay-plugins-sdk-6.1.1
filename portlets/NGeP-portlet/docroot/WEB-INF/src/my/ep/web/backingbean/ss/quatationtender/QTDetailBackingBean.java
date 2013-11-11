@@ -32,6 +32,7 @@ import my.ep.dto.ss.quationtender.QuationTenderReqDTO;
 import my.ep.dto.ss.quationtender.QuationTenderResDTO;
 import my.ep.factory.EpLogger;
 import my.ep.persistence.entity.pm.authorization.PmOrgProfile;
+import my.ep.persistence.entity.pm.authorization.PmUser;
 import my.ep.persistence.entity.pm.common.PmDo;
 import my.ep.persistence.entity.pm.common.PmGo;
 import my.ep.persistence.entity.pm.common.PmSo;
@@ -58,6 +59,7 @@ import my.ep.web.type.ss.quationtender.ItemType;
 import my.ep.web.type.ss.quationtender.LineItem;
 import my.ep.web.type.ss.quationtender.QTType;
 import my.ep.web.type.ss.quationtender.SSProcurmentMode;
+import my.ep.web.util.FacesScopes;
 import my.ep.web.util.lookupservice.BusinessDelegate;
 
 import org.apache.commons.lang.StringUtils;
@@ -304,19 +306,22 @@ public class QTDetailBackingBean extends
 				.getMinistryOrgProfile().getOrgProfileId();
 		
 		if (parentOrgProfileId != null) {
-			Long userId = super.getCurrentUser().getUserId();
-			OrgProfileReqDTO reqDTO = new OrgProfileReqDTO();
+			PmUser user = new FacesScopes().getUserSessionBean();
 			
-			reqDTO.setUserId(userId);
-			reqDTO.setOrgType(OrganizationType.DEPARTMENT.value());
-			reqDTO.setParentOrgProfileId(parentOrgProfileId);
+			if (user != null) {
+				OrgProfileReqDTO reqDTO = new OrgProfileReqDTO();
+				
+				reqDTO.setUserId(user.getUserId());
+				reqDTO.setOrgType(OrganizationType.DEPARTMENT.value());
+				reqDTO.setParentOrgProfileId(parentOrgProfileId);
 
-			IOrgProfileSO orgProfileSO = EpEjbBusinessDelegate.getInstance()
-					.getServiceObject("pm", IOrgProfileSO.class);
-			OrgProfileResDTO resDTO = orgProfileSO
-					.retrieveOrgProfileListByOrgType(reqDTO);
+				IOrgProfileSO orgProfileSO = EpEjbBusinessDelegate.getInstance()
+						.getServiceObject("pm", IOrgProfileSO.class);
+				OrgProfileResDTO resDTO = orgProfileSO
+						.retrieveOrgProfileListByOrgType(reqDTO);
 
-			this.getManagedBean().setUserDepartmentList(resDTO.getOrgProfileList());
+				this.getManagedBean().setUserDepartmentList(resDTO.getOrgProfileList());
+			}
 		} else {
 			this.getManagedBean().setUserDepartmentList(new ArrayList<PmOrgProfile>());
 		}
@@ -337,19 +342,22 @@ public class QTDetailBackingBean extends
 				.getDepartmentOrgProfile().getOrgProfileId();
 
 		if (parentOrgProfileId != null) {
-			Long userId = super.getCurrentUser().getUserId();
-			OrgProfileReqDTO reqDTO = new OrgProfileReqDTO();
+			PmUser user = new FacesScopes().getUserSessionBean();
 			
-			reqDTO.setUserId(userId);
-			reqDTO.setOrgType(OrganizationType.DIVISION.value());
-			reqDTO.setParentOrgProfileId(parentOrgProfileId);
+			if (user != null) {
+				OrgProfileReqDTO reqDTO = new OrgProfileReqDTO();
+				
+				reqDTO.setUserId(user.getUserId());
+				reqDTO.setOrgType(OrganizationType.DIVISION.value());
+				reqDTO.setParentOrgProfileId(parentOrgProfileId);
 
-			IOrgProfileSO orgProfileSO = EpEjbBusinessDelegate.getInstance()
-					.getServiceObject("pm", IOrgProfileSO.class);
-			OrgProfileResDTO resDTO = orgProfileSO
-					.retrieveOrgProfileListByOrgType(reqDTO);
+				IOrgProfileSO orgProfileSO = EpEjbBusinessDelegate.getInstance()
+						.getServiceObject("pm", IOrgProfileSO.class);
+				OrgProfileResDTO resDTO = orgProfileSO
+						.retrieveOrgProfileListByOrgType(reqDTO);
 
-			this.getManagedBean().setUserDivisionList(resDTO.getOrgProfileList());
+				this.getManagedBean().setUserDivisionList(resDTO.getOrgProfileList());
+			}
 		} else {
 			this.getManagedBean().setUserDivisionList(new ArrayList<PmOrgProfile>());
 		}
@@ -360,21 +368,23 @@ public class QTDetailBackingBean extends
 	private void populateUserMinistryList() {
 		debugLogger("populateUserMinistryList");
 
-		Long userId = super.getCurrentUser().getUserId();
+		PmUser user = new FacesScopes().getUserSessionBean();
 		
-		OrgProfileReqDTO reqDTO = new OrgProfileReqDTO();
-		
-		reqDTO.setUserId(userId);
-		reqDTO.setOrgType(OrganizationType.MINISTRY.value());
+		if (user != null) {
+			OrgProfileReqDTO reqDTO = new OrgProfileReqDTO();
+			
+			reqDTO.setUserId(user.getUserId());
+			reqDTO.setOrgType(OrganizationType.MINISTRY.value());
 
-		IOrgProfileSO orgProfileSO = EpEjbBusinessDelegate.getInstance()
-				.getServiceObject("pm", IOrgProfileSO.class);
-		OrgProfileResDTO resDTO = orgProfileSO
-				.retrieveOrgProfileListByOrgType(reqDTO);
+			IOrgProfileSO orgProfileSO = EpEjbBusinessDelegate.getInstance()
+					.getServiceObject("pm", IOrgProfileSO.class);
+			OrgProfileResDTO resDTO = orgProfileSO
+					.retrieveOrgProfileListByOrgType(reqDTO);
 
-		List<PmOrgProfile> userMinistryList = resDTO.getOrgProfileList();
+			List<PmOrgProfile> userMinistryList = resDTO.getOrgProfileList();
 
-		this.getManagedBean().setUserMinistryList(userMinistryList);
+			this.getManagedBean().setUserMinistryList(userMinistryList);
+		}
 	}
 
 	private void populateTenderType() {

@@ -5,10 +5,17 @@ import java.util.List;
 import java.util.Locale;
 
 import javax.faces.application.Application;
+import javax.faces.application.FacesMessage;
 import javax.faces.component.UIComponent;
 import javax.faces.context.FacesContext;
 import javax.portlet.PortletRequest;
 import javax.portlet.PortletSession;
+
+import my.ep.biz.service.pm.authorization.user.IUserSO;
+import my.ep.dto.pm.authorization.user.UserReqDTO;
+import my.ep.dto.pm.authorization.user.UserResDTO;
+import my.ep.persistence.entity.pm.authorization.PmUser;
+import my.ep.web.util.lookupservice.BusinessDelegate;
 
 import org.apache.log4j.Logger;
 
@@ -29,6 +36,9 @@ import com.liferay.portal.theme.ThemeDisplay;
  */
 public class FacesScopes {
 	private static Logger log = Logger.getLogger(FacesScopes.class);
+
+	public static final String SESS_USER_SESSION_BEAN = "USER_SESSION_BEAN"; 
+	
 	FacesContext facesContext = null;
 	Application application = null;
 	PortletSession portletSession = null;
@@ -152,11 +162,34 @@ public class FacesScopes {
 	 * 
 	 * @return The UserSessionBean instance
 	 */
-	/*
-	 * public UserSessionBean getUserSessionBean() { return (UserSessionBean)
-	 * getSessionScope(SessionConstants.SESS_USER_SESSION_BEAN); }
-	 */
-
+	public PmUser getUserSessionBean() {
+		FacesScopes facesScopes = new FacesScopes();
+		PmUser user = (PmUser)facesScopes.getSessionScope(SESS_USER_SESSION_BEAN);
+		System.out.println("user:" + user);
+		if (user == null) {
+			try {
+				IUserSO userSO = BusinessDelegate.getInstance().getServiceObject("pm", IUserSO.class);
+				
+				UserReqDTO reqDTO = new UserReqDTO();
+				reqDTO.setUserName(new FacesScopes().getUserScreenName());
+				
+				UserResDTO resDTO = userSO.retrieveUserByName(reqDTO);
+				
+				user = resDTO.getPmUser();
+				
+				facesScopes.setSessionScope(SESS_USER_SESSION_BEAN, user);
+			} catch (Exception e) {
+				e.printStackTrace();
+				
+				FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR,e.toString(), e.getMessage()));
+				
+				user = new PmUser();
+			}
+		}
+		
+		return user;
+	}
+	
 	public String getUserScreenName() {
 		String screenName = "";
 		try {
@@ -192,11 +225,7 @@ public class FacesScopes {
 		boolean hasRoleUser = false;
 		try {
 			hasRoleUser = UserServiceUtil.hasRoleUser(roleId, Long.valueOf(this.getRequest().getRemoteUser()));
-		} catch (PortalException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (SystemException e) {
-			// TODO Auto-generated catch block
+		} catch (Exception e) {
 			e.printStackTrace();
 		}
 		return hasRoleUser;
