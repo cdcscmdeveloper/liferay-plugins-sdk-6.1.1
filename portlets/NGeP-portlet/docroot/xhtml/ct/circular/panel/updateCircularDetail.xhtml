@@ -1,0 +1,69 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:ac="http://ac.my/jsf/composite/cc" >
+
+	<h:panelGrid columns="2" columnClasses="colAlignTop,colAlignTop">
+		<h:panelGrid columns="4" style="width:600px;">
+			<h:outputLabel value="#{lbl['lbl.ct.cc.cno']}" />
+			<p:inputText disabled="true" value="#{panelBackingBean.managedBean.circularVer.circularNo}" />
+			<h:outputLabel value="#{lbl['lbl.ct.cc.cname']}" />
+			<p:inputText disabled="true" value="#{panelBackingBean.managedBean.circularVer.name}" />
+			<h:outputLabel value="#{lbl['lbl.ct.cc.csdate']}" />
+			<p:calendar disabled="true" value="#{panelBackingBean.managedBean.circularVer.startDate}" id="popupButtonCal" showOn="button" />
+			<h:outputLabel value="#{lbl['lbl.ct.cc.cedate']}" />
+			<p:calendar disabled="true" value="#{panelBackingBean.managedBean.circularVer.endDate}" id="popupButtonCal1" showOn="button" />
+			<h:outputLabel value="#{lbl['lbl.ct.cc.upload']}" />
+			<p:fileUpload disabled="true" value="#{panelBackingBean.circularLetter}" mode="simple" cancelLabel="true" />
+			<h:outputLabel value="#{lbl['lbl.ct.cc.frno']}" />
+			<p:inputText disabled="true" value="#{panelBackingBean.managedBean.circularVer.circularFileRefNo}" />			
+			<p:outputLabel value="Circular Type" />
+			<p:selectOneMenu value="#{panelBackingBean.managedBean.circularVer.circularTypeCode.codeId}">
+				<f:selectItems value="#{panelBackingBean.getDropdownValues(PmCodeCatConst.circularType)}" />
+			</p:selectOneMenu>
+			<h:outputLabel value="Update No." />
+			<p:inputText value="#{panelBackingBean.managedBean.circularVer.updateNo}" />
+			<h:outputLabel value="Update Name" />
+			<p:inputText value="#{panelBackingBean.managedBean.circularVer.updateName}" />		
+			<h:outputLabel value="Update Description" />
+			<p:inputText value="#{panelBackingBean.managedBean.circularVer.updateDescription}" />								
+			<h:outputLabel value="Update Letter" />
+			<p:fileUpload value="#{panelBackingBean.circularLetter}" mode="simple" cancelLabel="true" />
+			<h:outputLabel value="Update File Ref. No." />
+			<p:inputText value="#{panelBackingBean.managedBean.circularVer.updateFileRefNo}" />
+			<h:outputLabel value="Extension Period" />
+			<p:inputText value="#{panelBackingBean.managedBean.circularVer.extPeriod}" />
+			<f:verbatim />
+			<f:verbatim />			
+			<h:outputLabel value="Extension Start Date" />
+			<p:calendar style="width:150px;" value="#{panelBackingBean.managedBean.circularVer.extStartDate}" id="popupButtonCal3" showOn="button" />
+			<h:outputLabel value="Extension End Date" />
+			<p:calendar style="width:150px;" value="#{panelBackingBean.managedBean.circularVer.extEndDate}" id="popupButtonCal4" showOn="button" />				
+		</h:panelGrid>
+		<h:panelGrid columns="1" style="width:120px;">
+			<p:outputLabel value="#{lbl['lbl.ct.cc.coverage']}" />
+			<h:panelGrid columns="4">
+				<p:spacer width="20" />
+				<p:selectBooleanCheckbox disabled="true" value="#{panelBackingBean.managedBean.circularVer.peninsular}" />
+				<p:spacer width="5" />
+				<p:outputLabel value="#{lbl['lbl.ct.cc.chk']}" />
+			</h:panelGrid>
+			<h:panelGrid columns="4">
+				<p:spacer width="20" />
+				<p:selectBooleanCheckbox disabled="true" value="#{panelBackingBean.managedBean.circularVer.sabah}" />
+				<p:spacer width="5" />
+				<p:outputLabel value="#{lbl['lbl.ct.cc.chk.sabah']}" />
+			</h:panelGrid>
+			<h:panelGrid columns="4">
+				<p:spacer width="20" />
+				<p:selectBooleanCheckbox disabled="true" value="#{panelBackingBean.managedBean.circularVer.sarawak}" />
+				<p:spacer width="5" />
+				<p:outputLabel value="#{lbl['lbl.ct.cc.chk.swak']}" />
+			</h:panelGrid>
+		</h:panelGrid>
+	</h:panelGrid>
+
+</ui:composition>

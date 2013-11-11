@@ -140,7 +140,7 @@
 		<portlet-class>org.portletfaces.bridge.GenericFacesPortlet</portlet-class>
 		<init-param>
 			<name>javax.portlet.faces.defaultViewId.view</name>
-			<value>/xhtml/ct/circular/panel/createCircular.xhtml</value>
+			<value>/xhtml/ct/circular/panel/circularBase.xhtml</value>
 		</init-param>
 		<expiration-cache>0</expiration-cache>
 		<supports>

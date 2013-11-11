@@ -1,67 +1,242 @@
+/**
+ * Copyright © 2013 Archisoft. All rights reserved.
+ */
 package my.ep.web.managedbean.ct.circular.panel;
 
-import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
 
-import my.ep.web.bean.ct.ApproverSetting;
-import my.ep.web.bean.ct.CheckBoxSelections;
-import my.ep.web.bean.ct.ContractPerson;
+import my.ep.persistence.entity.ct.CtApprover;
+import my.ep.persistence.entity.ct.circular.CtCircular;
+import my.ep.persistence.entity.ct.circular.CtCircularVer;
+import my.ep.persistence.entity.ct.circular.dtl.CtCancelCircular;
+import my.ep.persistence.entity.ct.circular.dtl.CtContactPerson;
+import my.ep.persistence.entity.ct.circular.panel.CtPanelItem;
+import my.ep.persistence.entity.ct.circular.panel.CtPanelState;
+import my.ep.persistence.entity.ct.circular.panel.CtPanelSupplier;
+import my.ep.persistence.entity.ct.circular.panel.CtPanelSupplierItem;
+import my.ep.persistence.entity.ct.circular.panel.CtPanelZone;
 import my.ep.web.managedbean.BaseManagedBean;
 
+import org.primefaces.model.DualListModel;
 
+/**
+ * Circular Panel Managed Bean
+ * 
+ * @author alam
+ * @Created 9/10/2013
+ */
 @ManagedBean
 @SessionScoped
 public class PanelManagedBean extends BaseManagedBean {
 
 	private static final long serialVersionUID = 1L;
 
-	private List<ContractPerson> contractPerson;
-	private ContractPerson deleteContractPerson;
-	private ApproverSetting approverSetting = new ApproverSetting();
-	private CheckBoxSelections checkBoxSelections;
+	private boolean updateAction;
+	private String[] outComes;
 	
+	private CtCircular circular;
+	private CtCircularVer circularVer;
+	private CtContactPerson selectedContactPerson;
+	private CtPanelSupplier selectedPanelSupplier;
+	private CtCancelCircular selectedCancelCircular;
+	private CtPanelZone selectedPanelZone;
+	private CtPanelState selectedPanelState;
+	private CtPanelItem selectedPanelItem;
+	private CtPanelSupplierItem selectedPanelSupplierItem;
+	
+	private List<CtCancelCircular> selectedCancelledCircularList;
+	private DualListModel<CtApprover> approverModel;
 
-	public ApproverSetting getApproverSetting() {
-		return approverSetting;
+	// Search
+	private String searchCircularNo;
+	private String searchCircularName;
+	private String searchFileRefNo;
+	private String searchSupplierName;
+	private String searchItemName;
+	private Date searchStartDate;
+	private Date searchEndDate;	
+	private Long searchCircularTypeCodeId;
+	private Long searchStatusId;
+	
+	public String[] getOutComes() {
+		return outComes;
 	}
 
-
-	public void setApproverSetting(ApproverSetting approverSetting) {
-		this.approverSetting = approverSetting;
+	public void setOutComes(String[] outComes) {
+		this.outComes = outComes;
 	}
 
-
-	public CheckBoxSelections getCheckBoxSelections() {
-		return checkBoxSelections;
+	public CtCircular getCircular() {
+		return circular;
 	}
 
-
-	public void setCheckBoxSelections(CheckBoxSelections checkBoxSelections) {
-		this.checkBoxSelections = checkBoxSelections;
+	public void setCircular(CtCircular circular) {
+		this.circular = circular;
 	}
 
-
-	public ContractPerson getDeleteContractPerson() {
-		return deleteContractPerson;
+	public CtCircularVer getCircularVer() {
+		return circularVer;
 	}
 
-
-	public void setDeleteContractPerson(ContractPerson deleteContractPerson) {
-		this.deleteContractPerson = deleteContractPerson;
+	public void setCircularVer(CtCircularVer circularVer) {
+		this.circularVer = circularVer;
 	}
 
-
-	public List<ContractPerson> getContractPerson() {
-		if(contractPerson==null)
-			contractPerson = new ArrayList<ContractPerson>();
-		return contractPerson;
+	public CtContactPerson getSelectedContactPerson() {
+		return selectedContactPerson;
 	}
-		
 
-	public void setContractPerson(List<ContractPerson> contractPerson) {
-		this.contractPerson = contractPerson;
+	public void setSelectedContactPerson(CtContactPerson selectedContactPerson) {
+		this.selectedContactPerson = selectedContactPerson;
 	}
+
+	public CtPanelSupplier getSelectedPanelSupplier() {
+		return selectedPanelSupplier;
+	}
+
+	public void setSelectedPanelSupplier(CtPanelSupplier selectedPanelSupplier) {
+		this.selectedPanelSupplier = selectedPanelSupplier;
+	}
+
+	public CtCancelCircular getSelectedCancelCircular() {
+		return selectedCancelCircular;
+	}
+
+	public void setSelectedCancelCircular(CtCancelCircular selectedCancelCircular) {
+		this.selectedCancelCircular = selectedCancelCircular;
+	}
+
+	public List<CtCancelCircular> getSelectedCancelledCircularList() {
+		return selectedCancelledCircularList;
+	}
+
+	public void setSelectedCancelledCircularList(
+			List<CtCancelCircular> selectedCancelledCircularList) {
+		this.selectedCancelledCircularList = selectedCancelledCircularList;
+	}
+
+	public CtPanelZone getSelectedPanelZone() {
+		return selectedPanelZone;
+	}
+
+	public void setSelectedPanelZone(CtPanelZone selectedPanelZone) {
+		this.selectedPanelZone = selectedPanelZone;
+	}
+
+	public CtPanelState getSelectedPanelState() {
+		return selectedPanelState;
+	}
+
+	public void setSelectedPanelState(CtPanelState selectedPanelState) {
+		this.selectedPanelState = selectedPanelState;
+	}
+
+	public CtPanelItem getSelectedPanelItem() {
+		return selectedPanelItem;
+	}
+
+	public void setSelectedPanelItem(CtPanelItem selectedPanelItem) {
+		this.selectedPanelItem = selectedPanelItem;
+	}
+
+	public CtPanelSupplierItem getSelectedPanelSupplierItem() {
+		return selectedPanelSupplierItem;
+	}
+
+	public void setSelectedPanelSupplierItem(CtPanelSupplierItem selectedPanelSupplierItem) {
+		this.selectedPanelSupplierItem = selectedPanelSupplierItem;
+	}
+
+	public DualListModel<CtApprover> getApproverModel() {
+		return approverModel;
+	}
+
+	public void setApproverModel(DualListModel<CtApprover> approverModel) {
+		this.approverModel = approverModel;
+	}
+
+	public Date getSearchStartDate() {
+		return searchStartDate;
+	}
+
+	public void setSearchStartDate(Date searchStartDate) {
+		this.searchStartDate = searchStartDate;
+	}
+
+	public Date getSearchEndDate() {
+		return searchEndDate;
+	}
+
+	public void setSearchEndDate(Date searchEndDate) {
+		this.searchEndDate = searchEndDate;
+	}
+
+	public String getSearchCircularNo() {
+		return searchCircularNo;
+	}
+
+	public void setSearchCircularNo(String searchCircularNo) {
+		this.searchCircularNo = searchCircularNo;
+	}
+
+	public String getSearchCircularName() {
+		return searchCircularName;
+	}
+
+	public void setSearchCircularName(String searchCircularName) {
+		this.searchCircularName = searchCircularName;
+	}
+
+	public String getSearchFileRefNo() {
+		return searchFileRefNo;
+	}
+
+	public void setSearchFileRefNo(String searchFileRefNo) {
+		this.searchFileRefNo = searchFileRefNo;
+	}
+
+	public String getSearchSupplierName() {
+		return searchSupplierName;
+	}
+
+	public void setSearchSupplierName(String searchSupplierName) {
+		this.searchSupplierName = searchSupplierName;
+	}
+
+	public String getSearchItemName() {
+		return searchItemName;
+	}
+
+	public void setSearchItemName(String searchItemName) {
+		this.searchItemName = searchItemName;
+	}
+
+	public Long getSearchCircularTypeCodeId() {
+		return searchCircularTypeCodeId;
+	}
+
+	public void setSearchCircularTypeCodeId(Long searchCircularTypeCodeId) {
+		this.searchCircularTypeCodeId = searchCircularTypeCodeId;
+	}
+
+	public Long getSearchStatusId() {
+		return searchStatusId;
+	}
+
+	public void setSearchStatusId(Long searchStatusId) {
+		this.searchStatusId = searchStatusId;
+	}
+
+	public boolean isUpdateAction() {
+		return updateAction;
+	}
+
+	public void setUpdateAction(boolean updateAction) {
+		this.updateAction = updateAction;
+	}
+
 }

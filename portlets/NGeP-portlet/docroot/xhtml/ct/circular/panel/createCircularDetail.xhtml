@@ -1,0 +1,47 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:ac="http://ac.my/jsf/composite/cc" >
+
+	<h:panelGrid columns="2" style="vertical-align=top;">
+		<h:panelGrid columns="4" style="width:600px;">
+			<h:outputLabel value="#{lbl['lbl.ct.cc.cno']}" />
+			<p:inputText value="#{panelBackingBean.managedBean.circularVer.circularNo}" />
+			<h:outputLabel value="#{lbl['lbl.ct.cc.cname']}" />
+			<p:inputText value="#{panelBackingBean.managedBean.circularVer.name}" />
+			<h:outputLabel value="#{lbl['lbl.ct.cc.csdate']}" />
+			<p:calendar value="#{panelBackingBean.managedBean.circularVer.startDate}" id="popupButtonCal" showOn="button" />
+			<h:outputLabel value="#{lbl['lbl.ct.cc.cedate']}" />
+			<p:calendar value="#{panelBackingBean.managedBean.circularVer.endDate}" id="popupButtonCal1" showOn="button" />
+			<h:outputLabel value="#{lbl['lbl.ct.cc.upload']}" />
+			<p:fileUpload value="#{panelBackingBean.circularLetter}" mode="simple" cancelLabel="true" />
+			<h:outputLabel value="#{lbl['lbl.ct.cc.frno']}" />
+			<p:inputText value="#{panelBackingBean.managedBean.circularVer.circularFileRefNo}" />			
+		</h:panelGrid>
+		<h:panelGrid columns="1" style="width:120px;">
+			<p:outputLabel value="#{lbl['lbl.ct.cc.coverage']}" />
+			<h:panelGrid columns="4">
+				<p:spacer width="20" />
+				<p:selectBooleanCheckbox value="#{panelBackingBean.managedBean.circularVer.peninsular}" />
+				<p:spacer width="5" />
+				<p:outputLabel value="#{lbl['lbl.ct.cc.chk']}" />
+			</h:panelGrid>
+			<h:panelGrid columns="4">
+				<p:spacer width="20" />
+				<p:selectBooleanCheckbox value="#{panelBackingBean.managedBean.circularVer.sabah}" />
+				<p:spacer width="5" />
+				<p:outputLabel value="#{lbl['lbl.ct.cc.chk.sabah']}" />
+			</h:panelGrid>
+			<h:panelGrid columns="4">
+				<p:spacer width="20" />
+				<p:selectBooleanCheckbox value="#{panelBackingBean.managedBean.circularVer.sarawak}" />
+				<p:spacer width="5" />
+				<p:outputLabel value="#{lbl['lbl.ct.cc.chk.swak']}" />
+			</h:panelGrid>
+		</h:panelGrid>
+	</h:panelGrid>
+
+</ui:composition>

@@ -1,0 +1,189 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:ac="http://ac.my/jsf/composite/cc" >
+
+	<p:panel id="pc" header="#{lbl['lbl.ct.pc.panel.pcd']}" toggleable="true" toggleSpeed="500" widgetVar="panelpc">
+		<c:choose>
+			<c:when test="#{!panelBackingBean.managedBean.updateAction and panelBackingBean.managedBean.circularVer.updateNo == null}">
+				<ui:include src="createCircularDetail.xhtml" />
+			</c:when>	
+			<c:otherwise>
+				<ui:include src="updateCircularDetail.xhtml" />
+			</c:otherwise>	
+		</c:choose>
+	</p:panel>
+	
+	<p:panel id="contactPerson" header="#{lbl['lbl.ct.pc.cpd']}" toggleable="true" toggleSpeed="500" widgetVar="panelcontactPerson">
+		<p:dataTable id="contactPersonDt" var="data" value="#{panelBackingBean.managedBean.circularVer.ctContactPersons}"
+			rowIndexVar="index" paginator="false">
+			<p:columnGroup type="header">
+				<p:row>
+					<p:column style="width:30px;" headerText="#{lbl['lbl.ct.pc.no']}" />
+					<p:column style="width:150px;" headerText="#{lbl['lbl.ct.pc.cperson']}" />
+					<p:column style="width:250px;" headerText="#{lbl['lbl.ct.pc.caddress']}" />
+					<p:column style="width:100px;" headerText="#{lbl['lbl.ct.pc.cemail']}" />
+					<p:column style="width:100px;" headerText="#{lbl['lbl.ct.pc.pno']}" />
+					<p:column style="width:60px;" headerText="#{lbl['lbl.ct.pc.action']}" />
+				</p:row>
+			</p:columnGroup>
+			<p:column styleClass="column-align-center">
+				<h:outputText value="#{index+1}" />
+			</p:column>
+			<p:column>
+				<p:inputText value="#{data.name}" style="width:120px;" />
+			</p:column>
+			<p:column>
+				<p:inputText value="#{data.address}" style="width:200px;" />
+			</p:column>
+			<p:column>
+				<p:inputText value="#{data.email}" style="width:90px;" />
+			</p:column>
+			<p:column>
+				<p:inputText value="#{data.phoneNo}" style="width:90px;" />
+			</p:column>
+			<p:column styleClass="column-align-center">
+				<p:commandButton title="delete" oncomplete="delCtPersonDlg.show()" partialSubmit="true" process="@form" icon="ui-icon-delete">
+					<f:setPropertyActionListener value="#{data}" target="#{panelBackingBean.managedBean.selectedContactPerson}" />
+				</p:commandButton>
+			</p:column>
+		</p:dataTable>
+		<p:confirmDialog message="Do you want to delete the record?" severity="alert" widgetVar="delCtPersonDlg"
+			closable="true" appendToBody="true" header="Delete Confirmation" >
+			<h:panelGrid columns="2" columnClasses="column-align-right-50,column-align-left">
+				<p:commandButton value="Yes" icon="ui-icon-accept" update="contactPersonDt"
+					 action="#{panelBackingBean.deleteContactPerson()}" oncomplete="delCtPersonDlg.hide();"   /> 
+				<p:commandButton value="No" icon="ui-icon-reject" onclick="delCtPersonDlg.hide()" type="button" />
+			</h:panelGrid>
+		</p:confirmDialog>
+		<div class="ppRightBtn"> 
+			<p:commandButton value="Add" process="@form" partialSubmit="true" icon="ui-icon-add"
+				action="#{panelBackingBean.addContactPerson()}" update="contactPersonDt" />
+		</div>
+	</p:panel>
+	
+	<p:panel id="supplierPnl" header="Supplier Details" toggleable="true" toggleSpeed="500">
+		<p:dataTable id="pnlSupplierDt" var="data" value="#{panelBackingBean.managedBean.circularVer.ctPanelSuppliers}"
+			lazy="false" dynamic="true" rowIndexVar="index">
+			<p:columnGroup type="header">
+				<p:row>
+					<p:column style="width:30px" headerText="No" />
+					<p:column style="width:80px" headerText="LOA Number" />
+					<p:column style="width:150px" headerText="Supplier Name" />
+					<p:column style="width:100px" headerText="Factoring Organization" />
+					<p:column style="width:70px" headerText="Action" />
+				</p:row>
+			</p:columnGroup>
+			<p:column styleClass="column-align-center">
+				<h:outputText value="#{index+1}" />
+			</p:column>
+			<p:column>
+				<p:inputText value="#{data.qtLoaId}"/>
+			</p:column>
+			<p:column>
+				<p:inputText value="#{data.supplier.supplierName}"/>
+			</p:column>
+			<p:column>
+				<p:inputText value="#{data.factoringOrgProfile.orgName}"/>
+			</p:column>
+			<p:column styleClass="column-align-center">
+				<p:commandButton title="delete" oncomplete="delPnlSupplierDlg.show()" partialSubmit="true" process="@form" icon="ui-icon-delete">
+					<f:setPropertyActionListener value="#{data}" target="#{panelBackingBean.managedBean.selectedPanelSupplier}" />
+				</p:commandButton>			
+			</p:column>
+		</p:dataTable>
+		<p:confirmDialog message="Do you want to delete the record?" severity="alert" widgetVar="delPnlSupplierDlg"
+			closable="true" appendToBody="true" header="Delete Confirmation" >
+			<h:panelGrid columns="2" columnClasses="column-align-right-50,column-align-left">
+				<p:commandButton value="Yes" icon="ui-icon-accept" update="pnlSupplierDt"
+					 action="#{panelBackingBean.deletePanelSupplier()}" oncomplete="delPnlSupplierDlg.hide();"   /> 
+				<p:commandButton value="No" icon="ui-icon-reject" onclick="delPnlSupplierDlg.hide()" type="button" />
+			</h:panelGrid>
+		</p:confirmDialog>
+		<div class="ppRightBtn"> 
+			<p:commandButton value="Add" process="@form" partialSubmit="true" icon="ui-icon-add"
+				action="#{panelBackingBean.addPanelSupplier()}" update="pnlSupplierDt" />
+		</div>
+	</p:panel>
+	
+	<p:panel id="concelCircularPnl" header="Related Cancelled Circular" toggleable="true" toggleSpeed="500" 
+		rendered="#{!panelBackingBean.managedBean.updateAction and panelBackingBean.managedBean.circularVer.updateNo == null}" >
+		<p:dataTable id="cancelCircularDt" var="data" value="#{panelBackingBean.managedBean.circularVer.ctCancelCircularList}"
+			lazy="false" dynamic="true" rowIndexVar="index" >
+			<p:columnGroup type="header">
+				<p:row>
+					<p:column style="width:30px" headerText="#{lbl['lbl.ct.pc.no']}" />
+					<p:column style="width:80px" headerText="Circular No." />
+					<p:column style="width:150px" headerText="#{lbl['lbl.ct.pc.cname']}" />
+					<p:column style="width:100px" headerText="Update Type" />
+					<p:column style="width:100px" headerText="Update No" />
+					<p:column style="width:60px" headerText="#{lbl['lbl.ct.pc.action']}" />
+				</p:row>
+			</p:columnGroup>
+			<p:column styleClass="column-align-center">
+				<h:outputText value="#{index+1}" />
+			</p:column>
+			<p:column>
+				<h:outputText value="#{data.ctCancelCircularVer.circularNo}" />
+			</p:column>
+			<p:column>
+				<h:outputText value="#{data.ctCancelCircularVer.name}" />
+			</p:column>
+			<p:column>
+				<h:outputText value="#{data.ctCancelCircularVer.circularTypeCode.code}" />
+			</p:column>
+			<p:column>
+				<h:outputText value="#{data.ctCancelCircularVer.updateNo}" />
+			</p:column>
+			<p:column styleClass="column-align-center">
+				<p:commandButton title="delete" oncomplete="delCancelCircularDlg.show()" partialSubmit="true" process="@form" icon="ui-icon-delete">
+					<f:setPropertyActionListener value="#{data}" target="#{panelBackingBean.managedBean.selectedCancelCircular}" />
+				</p:commandButton>			
+			</p:column>			
+		</p:dataTable>
+		<p:confirmDialog message="Do you want to delete the record?" severity="alert" widgetVar="delCancelCircularDlg"
+			closable="true" appendToBody="true" header="Delete Confirmation" >
+			<h:panelGrid columns="2" columnClasses="column-align-right-50,column-align-left">
+				<p:commandButton value="Yes" icon="ui-icon-accept" update="cancelCircularDt"
+					 action="#{panelBackingBean.deleteCancelCircular()}" oncomplete="delCancelCircularDlg.hide();"   /> 
+				<p:commandButton value="No" icon="ui-icon-reject" onclick="delCancelCircularDlg.hide()" type="button" />
+			</h:panelGrid>
+		</p:confirmDialog>
+		<div class="ppRightBtn"> 
+			<p:commandButton value="Add" icon="ui-icon-add" onclick="cancelCircularDlg.show();" />
+		</div>		
+	</p:panel>
+	
+	<p:dialog id="cancelCircularDlg" header="Cancelled Circulars" widgetVar="cancelCircularDlg" modal="true" width="550" height="350">
+		<p:panel id="circular">
+			<p:dataTable id="cancelledCclDt" var="data" lazy="false" selection="#{panelBackingBean.managedBean.selectedCancelledCircularList}"
+				value="#{panelBackingBean.cancelledCircularDataModel}" rowIndexVar="index" >
+				<ac:paginator for="cancelledCclDt" />
+				<p:column selectionMode="multiple" style="width:18px" />
+				<p:column headerText="No.">
+					<h:outputText value="#{index+1}" />
+				</p:column>
+				<p:column headerText="Circular No.">
+				</p:column>
+				<p:column headerText="Circular Name">
+				</p:column>
+				<p:column headerText="Update Type">
+				</p:column>
+				<p:column headerText="Update No.">
+				</p:column>												
+			</p:dataTable>
+			<f:facet name="footer">
+				<div class="ppRightBtn"> 
+					<p:commandButton value="Select" process="cancelCircularDlg" 
+						action="#{panelBackingBean.addCancelledCircular()}"
+						update="cancelCircularDt" onclick="cancelCircularDlg.hide();" />
+					<p:commandButton value="Cancel" type="button" ajax="false" onclick="cancelCircularDlg.hide();" />
+				</div>
+			</f:facet>
+		</p:panel>
+	</p:dialog>
+
+</ui:composition>
