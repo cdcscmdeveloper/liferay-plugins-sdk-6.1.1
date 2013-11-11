@@ -17,8 +17,9 @@ xmlns:c="http://java.sun.com/jsp/jstl/core">
 	    	<p:column styleClass="ppSmallTd" headerText="#{lbl['lbl.pp.expand']}">
 	    		<p:rowToggler />
     		</p:column>
-	    	<p:column styleClass="ppSmallTd" headerText="#{lbl['lbl.pp.submit']}">  
-                <p:outputLabel value="" />  
+	    	<p:column rendered="#{cc.attrs.viewMode==PPConst.modeNew || cc.attrs.viewMode==PPConst.modeDraft}" 
+	    		styleClass="ppSmallTd" headerText="#{lbl['lbl.pp.submit']}">  
+                <p:selectBooleanCheckbox id="sbcbSubmit" value="#{ppPlan.submitPlan}"/>
             </p:column>   
             <p:column styleClass="ppSmallTd" headerText="#{lbl['lbl.pp.seq']}">  
                	#{rowIndex+1}
@@ -33,16 +34,15 @@ xmlns:c="http://java.sun.com/jsp/jstl/core">
 	            #{ppPlan.planEndDate}
 	        </p:column>	    
 	        <p:column headerText="#{lbl['lbl.pp.action']}">  
-                <p:commandLink value="#{lbl['lbl.pp.edit']}" 
-					action="#{planBackingBean.showPpPlan(ppPlan)}" 
-                    oncomplete="dlItemDetailsModal.show();"/>
+                <p:commandLink value="#{lbl['lbl.pp.edit']}" update="@([id$=dlItemDetailsEc])" 
+					action="#{planBackingBean.showPpPlan(ppPlan)}" oncomplete="dlItemDetailsEcModal.show();"/>
                 &nbsp;&nbsp;
                 <p:commandLink value="#{lbl['lbl.pp.delete']}"
                   	update="dtEpItem" rendered="#{ppPlan.brandNew || cc.attrs.viewMode==PPConst.modeRevision}"
                   	action="#{planBackingBean.deletePpPlan(ppPlan)}" />  
             </p:column>  
             <p:rowExpansion>  
-            	<p:dataTable id="dtEpItem" styleClass="ppFixTdWidth" var="ppItem" value="#{ppPlan.ppItems}" 
+            	<p:dataTable id="dtEpItem" styleClass="ppFixTdWidth" var="ppItem" value="#{ppPlan.ppPlanItems}" 
             		rowIndexVar="rowSubIndex" emptyMessage="#{lbl['lbl.pp.no.record.found']}">  
 			    	<p:column styleClass="ppSmallTd" headerText="#{lbl['lbl.pp.seq']}">  
 			            #{rowSubIndex+1}
@@ -56,10 +56,14 @@ xmlns:c="http://java.sun.com/jsp/jstl/core">
 			            #{ppItem.estimatedAmount}
 			        </p:column>  
 			        <p:column headerText="#{lbl['lbl.pp.product.code']}">  
-			             #{ppItem.unspscClassId}
+			             #{ppItem.cmUnspsc.unspscTitle}
 			        </p:column>
-			        <p:column headerText="#{lbl['lbl.pp.program.activiti.projek.setia.amanah.code']}">  
-			             todo 
+			        <p:column headerText="#{cc.attrs.selectedPlanMaster.votType==PPConst.votBt? 
+			        	lbl['lbl.pp.program.activiti.code'] : (cc.attrs.selectedPlanMaster.votType==PPConst.votPs ?
+			        	lbl['lbl.pp.projek.setia.code'] : lbl['lbl.pp.amanah.code'])}">    
+		                 #{cc.attrs.selectedPlanMaster.votType==PPConst.votBt? 
+				        	ppItem.progAct.activityId : (cc.attrs.selectedPlanMaster.votType==PPConst.votPs ?
+				        	ppItem.projSetia.activityId : ppItem.amanah.activityId)}
 			        </p:column>  
 		    	</p:dataTable>  
             </p:rowExpansion>
@@ -70,14 +74,14 @@ xmlns:c="http://java.sun.com/jsp/jstl/core">
     	<c:if test="#{cc.attrs.viewMode==PPConst.modeNew || cc.attrs.viewMode==PPConst.modeRevision}">
     		<div class="ppRightBtn">
 				<p:commandButton value="#{lbl['lbl.pp.add.item']}" action="#{planBackingBean.showPpPlan(null)}"
-					 oncomplete="dlItemDetailsEcModal.show()" update="dlItemDetailsEc" /> 
+					 oncomplete="dlItemDetailsModal.show()" update="dlItemDetails" /> 
 		 		<br/>
 		 		<br/>
 	 		</div>
  		</c:if>
  		
  		<!-- Sub Item Details -->
- 		<p:dialog id="dlItemDetailsEc" header="#{lbl['lbl.pp.item.details']}" widgetVar="dlItemDetailsEcModal" 
+ 		<p:dialog id="dlItemDetails" header="#{lbl['lbl.pp.item.details']}" widgetVar="dlItemDetailsModal" 
 	              resizable="false" styleClass="ppDiaglogBigBg" dynamic="true">  
       			<ui:include src="existingContractDet.xhtml"/>
 		</p:dialog>  

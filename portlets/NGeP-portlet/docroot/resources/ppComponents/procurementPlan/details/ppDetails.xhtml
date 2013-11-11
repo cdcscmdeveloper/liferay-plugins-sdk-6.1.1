@@ -32,7 +32,7 @@ xmlns:c="http://java.sun.com/jsp/jstl/core">
             </p:column>              
 	        <p:column headerText="#{lbl['lbl.pp.action']}"> 
                 <p:commandLink value="#{lbl['lbl.pp.edit']}" action="#{planBackingBean.showPpItem(ppItem)}" 
-                	oncomplete="rmtCallEdit()" />
+                	update="@([id$=dlItemDetails])" oncomplete="dlItemDetailsModal.show()"/>
                  &nbsp;&nbsp;
                 <p:commandLink value="#{lbl['lbl.pp.delete']}"
                   	update="dtPpItem" rendered="#{ppItem.brandNew || cc.attrs.viewMode==PPConst.modeRevision}" 	 
@@ -40,13 +40,12 @@ xmlns:c="http://java.sun.com/jsp/jstl/core">
             </p:column>  
     	</p:dataTable>  
     	<br/>
-    	<p:remoteCommand name="rmtCallEdit" update="dlItemDetailsPp" oncomplete="dlItemDetailsPpModal.show()" />
     	
     	<!-- Button(s) -->
     	<c:if test="#{cc.attrs.viewMode==PPConst.modeNew || cc.attrs.viewMode==PPConst.modeRevision}">
     		<div class="ppRightBtn">
 				<p:commandButton value="#{lbl['lbl.pp.add.item']}" action="#{planBackingBean.showPpItem(null)}"
-					oncomplete="dlItemDetailsPpModal.show()" update="dlItemDetailsPp" />  
+					oncomplete="dlItemDetailsModal.show()" update="dlItemDetails" />  
 		 		<br/>
 		 		<br/>
 	 		</div>
@@ -81,7 +80,7 @@ xmlns:c="http://java.sun.com/jsp/jstl/core">
 	
 	
 	
-	<p:dialog id="dlItemDetailsPp" header="#{lbl['lbl.pp.item.details']}" widgetVar="dlItemDetailsPpModal" 
+	<p:dialog id="dlItemDetails" header="#{lbl['lbl.pp.item.details']}" widgetVar="dlItemDetailsModal" 
 	              	 resizable="false" styleClass="ppDiaglogBg" dynamic="true">
     	<p:panel id="pItemDetails" header="#{lbl['lbl.pp.item.details.form']}">  
     		<table class="ppTwoPartsTable">
@@ -133,7 +132,7 @@ xmlns:c="http://java.sun.com/jsp/jstl/core">
 					<td class="ppSmallTd">:</td>
 					<td>
 						<p:selectOneMenu id="somYear" value="#{planBackingBean.managedBean.selectedItem.ovrFinancialYear}"
-							disabled="#{planBackingBean.managedBean.votType!=PPConst.votWithout}">
+							disabled="#{cc.attrs.selectedPlanMaster.votType!=PPConst.votWithout}">
 							<f:selectItem itemLabel="#{lbl['lbl.select']}" itemValue="0" />
 							<f:selectItems value="#{planBackingBean.financialYearOptions()}"/>
 						</p:selectOneMenu>
@@ -210,10 +209,11 @@ xmlns:c="http://java.sun.com/jsp/jstl/core">
 		   			<td colspan="2">&nbsp;</td>
 					<td>
 						<p:commandButton value="#{lbl['lbl.pp.save']}" action="#{planBackingBean.addItemToList()}"
-							onclick="dlItemDetailsPpModal.hide()" oncomplete="dlItemDetailsPpModal.hide()" 
-							process="pItemDetails" update="tvPlanContent:dtPpItem" />
+							onclick="dlItemDetailsModal.hide()" oncomplete="dlItemDetailsModal.hide()" 
+							process="pItemDetails" update="@([id$=dtPpItem])"/>
+						&nbsp;
 						<p:commandButton value="#{lbl['lbl.pp.cancel']}" 
-							onclick="dlItemDetailsPpModal.hide()" immediate="true"/>
+							onclick="dlItemDetailsModal.hide()" immediate="true"/>
 					</td>
 		   		</tr>
 				

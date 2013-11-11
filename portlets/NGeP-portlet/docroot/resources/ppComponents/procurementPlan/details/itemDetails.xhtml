@@ -18,20 +18,25 @@ xmlns:c="http://java.sun.com/jsp/jstl/core">
 						disabled="#{!planBackingBean.managedBean.selectedItem.brandNew &amp;&amp; 
 							!planBackingBean.managedBean.selectedItem.editable}">
 						<f:selectItem itemLabel="#{lbl['lbl.select']}" itemValue="0" />
-						<f:selectItem itemLabel="1" itemValue="1"/>
+						<f:selectItems value="#{planBackingBean.goOptions()}" 
+								var="obj" itemLabel="#{obj.pmGo.goCode}" itemValue="#{obj.budgetId}" />
+						<p:ajax event="change" update="somSo"/>
 					</p:selectOneMenu>
-					<p:selectOneMenu value="#{planBackingBean.managedBean.selectedItem.soId}"
+					<p:selectOneMenu id="somSo" value="#{planBackingBean.managedBean.selectedItem.soId}"
 						disabled="#{!planBackingBean.managedBean.selectedItem.brandNew &amp;&amp; 
 							!planBackingBean.managedBean.selectedItem.editable}">
 						<f:selectItem itemLabel="#{lbl['lbl.select']}" itemValue="0" />
-						<f:selectItem itemLabel="1" itemValue="1"/>
+						<f:selectItems value="#{planBackingBean.soOptions()}" 
+								var="obj" itemLabel="#{obj.soCode}" itemValue="#{obj.soId}" />
+						<p:ajax event="change" update="somDo"/>
 					</p:selectOneMenu>
-					<p:selectOneMenu value="#{planBackingBean.managedBean.selectedItem.ppBudgetAllocDtl.budgetAllocDtlId}"
+					<p:selectOneMenu  id="somDo" value="#{planBackingBean.managedBean.selectedItem.ppBudgetAllocDtl.budgetAllocDtlId}"
 						disabled="#{!planBackingBean.managedBean.selectedItem.brandNew &amp;&amp; 
 							!planBackingBean.managedBean.selectedItem.editable}">
 						<f:selectItem itemLabel="#{lbl['lbl.select']}" itemValue="0" />
-						<f:selectItem itemLabel="197" itemValue="197"/>
-						<p:ajax event="change" listener="#{planBackingBean.selectedGoSoDo}" update="pItemDetails, opGosodo, itAvailbleBud"/>
+						<f:selectItems value="#{planBackingBean.doOptions()}" 
+								var="obj" itemLabel="#{obj.pmDo.doCode}" itemValue="#{obj.budgetAllocDtlId}" />
+						<p:ajax event="change" listener="#{planBackingBean.selectedGoSoDo}" update="opGosodo, somYear, itAvailbleBud"/>
 					</p:selectOneMenu>
 				</td>
 				<th>#{lbl['lbl.pp.available.budgeted.amount']}</th>
@@ -65,7 +70,7 @@ xmlns:c="http://java.sun.com/jsp/jstl/core">
 				<td class="ppSmallTd">:</td>
 				<td>
 					<p:selectOneMenu id="somYear" value="#{planBackingBean.managedBean.selectedItem.ovrFinancialYear}"
-						disabled="#{planBackingBean.managedBean.votType!=PPConst.votWithout}">
+						disabled="#{cc.attrs.selectedPlanMaster.votType!=PPConst.votWithout}">
 						<f:selectItem itemLabel="#{lbl['lbl.select']}" itemValue="0" />
 						<f:selectItems value="#{planBackingBean.financialYearOptions()}"/>
 					</p:selectOneMenu>
@@ -116,68 +121,75 @@ xmlns:c="http://java.sun.com/jsp/jstl/core">
 						<f:selectItem itemLabel="#{lbl['lbl.select']}" itemValue="0"/>
 						<f:selectItems value="#{planBackingBean.unspscClassOptions()}" 
 							var="obj" itemLabel="#{obj.unspscTitle}" itemValue="#{obj.unspscCode}"/>
-						<p:ajax event="change" listener="#{planBackingBean.selectedProduct()}"/>
+						<p:ajax event="change" listener="#{planBackingBean.selectedProduct()}" update="somProdCom"/>
 					</p:selectOneMenu>
+					<c:if test="#{cc.attrs.selectedPlan.favouriteOption!=PPConst.favouriteTypeItem 
+						&amp;&amp; cc.attrs.selectedPlan.favouriteOption!=PPConst.favouriteTypePlan}">
+						<p:outputPanel id="somProdCom"></p:outputPanel>
+					</c:if>
 				</td>
 				<td class="ppSmallTd">&nbsp;</td>
 			</tr>
+			
 			<c:if test="#{cc.attrs.selectedPlan.favouriteOption==PPConst.favouriteTypeItem 
 						|| cc.attrs.selectedPlan.favouriteOption==PPConst.favouriteTypePlan}">
 				<tr>
 					<th>* #{lbl['lbl.pp.product.commodity']}</th>
 					<td class="ppSmallTd">:</td>
 					<td colspan="3">
-						<p:selectOneMenu disabled="#{!planBackingBean.managedBean.selectedItem.brandNew}">
-							<f:selectItem itemLabel="#{lbl['lbl.select']}" />
+						<p:selectOneMenu id="somProdCom" value="#{planBackingBean.managedBean.selectedItem.unspscCommodityCode}"
+							disabled="#{!planBackingBean.managedBean.selectedItem.brandNew &amp;&amp; 
+							!planBackingBean.managedBean.selectedItem.editable}">
+							<f:selectItem itemLabel="#{lbl['lbl.select']}" itemValue="0"/>
+							<f:selectItems value="#{planBackingBean.unspscCommodityOptions()}" 
+								var="obj" itemLabel="#{obj.unspscTitle}" itemValue="#{obj.unspscCode}" update="somExt"/>
+							<p:ajax event="change"/>
 						</p:selectOneMenu>
 					</td>
 					<td class="ppSmallTd">&nbsp;</td> 		
 				</tr>
-			</c:if>
-			<c:if test="#{cc.attrs.selectedPlan.favouriteOption==PPConst.favouriteTypeItem 
-						|| cc.attrs.selectedPlan.favouriteOption==PPConst.favouriteTypePlan}">
 				<tr>
 					<th>* #{lbl['lbl.pp.product.extension']}</th>
 					<td class="ppSmallTd">:</td>
 					<td colspan="3">
-						<p:selectOneMenu
+						<p:selectOneMenu id="somExt" value="#{planBackingBean.managedBean.selectedItem.extensionId}"
 							disabled="#{!planBackingBean.managedBean.selectedItem.brandNew}">
-							<f:selectItem itemLabel="#{lbl['lbl.select']}" />
+							<f:selectItem itemLabel="#{lbl['lbl.select']}" itemValue="0"/>
+							<f:selectItems value="#{planBackingBean.extensionItemOptions()}" 
+								var="obj" itemLabel="#{obj.itemName}" itemValue="#{obj.itemId}"/>
+							<p:ajax event="change" update="somSupItem"/>
 						</p:selectOneMenu>
 					</td>
 					<td class="ppSmallTd">&nbsp;</td>
 				</tr>
-			</c:if>
-			<c:if test="#{cc.attrs.selectedPlan.favouriteOption==PPConst.favouriteTypeItem 
-						|| cc.attrs.selectedPlan.favouriteOption==PPConst.favouriteTypePlan}">
 				<tr>
 					<th>* #{lbl['lbl.pp.product.supp.item']}</th>
 					<td class="ppSmallTd">:</td>
 					<td>
-						<p:selectOneMenu value="#{planBackingBean.managedBean.selectedItem.cmSupplierItem.supplierItemId}"
+						<p:selectOneMenu id="somSupItem" value="#{planBackingBean.managedBean.selectedItem.cmSupplierItem.supplierItemId}"
 							disabled="#{!planBackingBean.managedBean.selectedItem.brandNew}">
-							<f:selectItem itemLabel="#{lbl['lbl.select']}" />
+							<f:selectItem itemLabel="#{lbl['lbl.select']}" itemValue="0"/>
+							<f:selectItems value="#{planBackingBean.supplierItemOptions()}" 
+								var="obj" itemLabel="#{obj.itemName}" itemValue="#{obj.itemId}"/> 
+							<p:ajax event="change" listener="#{planBackingBean.selectedSupItem}" update="somSupItem"/>
 						</p:selectOneMenu>
 					</td>
 					<td class="ppSmallTd">&nbsp;</td>
 					<td>&nbsp;</td>	   		
 				</tr>
-			</c:if>
-			<tr>
-				<td colspan="6"><hr/></td>
-			</tr>
-			<c:if test="#{cc.attrs.selectedPlan.favouriteOption=='I' 
-				|| cc.attrs.selectedPlan.favouriteOption=='P'}">
+				<tr>
+					<td colspan="6"><hr/></td>
+				</tr>
 				<tr>
 					<th>#{lbl['lbl.pp.supplier.id']}</th>
 					<td class="ppSmallTd">:</td>
 					<td>
-						<p:inputText value="TODO" disabled="true"/>  
+						<p:inputText value="#{planBackingBean.managedBean.selectedItem.cmSupplierItem.smSupplier.supplierId}"  disabled="true"/>  
 					</td>
 					<th>#{lbl['lbl.pp.supplier.name']}</th>
 					<td class="ppSmallTd">:</td>
 					<td>
-						<p:inputText value="TODO" disabled="true"/>  
+						<p:inputText  value="#{planBackingBean.managedBean.selectedItem.cmSupplierItem.smSupplier.supplierName}"  disabled="true"/>  
 					</td>
 				</tr>
 				<tr>
@@ -186,7 +198,7 @@ xmlns:c="http://java.sun.com/jsp/jstl/core">
 			</c:if>
 			<tr>
 				<c:choose>
-		   			<c:when test="#{planBackingBean.managedBean.votType==PPConst.votBt}">
+		   			<c:when test="#{cc.attrs.selectedPlanMaster.votType==PPConst.votBt}">
 						<th>#{lbl['lbl.pp.program.activiti.code']}</th>
 						<td class="ppSmallTd">:</td>
 						<td>
@@ -198,7 +210,7 @@ xmlns:c="http://java.sun.com/jsp/jstl/core">
 							<p:tooltip for="somProgAct" value="Fade effect is used by default" showEffect="fade" hideEffect="fade" />
 						</td>
 		   			</c:when>
-		   			<c:when test="#{planBackingBean.managedBean.votType==PPConst.votPs}">
+		   			<c:when test="#{cc.attrs.selectedPlanMaster.votType==PPConst.votPs}">
 						<th>#{lbl['lbl.pp.projek.setia.code']}</th>
 						<td class="ppSmallTd">:</td>
 						<td>
@@ -211,7 +223,7 @@ xmlns:c="http://java.sun.com/jsp/jstl/core">
 							<p:tooltip for="somProjSetia" value="Fade effect is used by default" showEffect="fade" hideEffect="fade" />
 						</td>
 		   			</c:when>
-		   			<c:when test="#{planBackingBean.managedBean.votType==PPConst.votWithout}">
+		   			<c:when test="#{cc.attrs.selectedPlanMaster.votType==PPConst.votWithout}">
 						<th>#{lbl['lbl.pp.amanah.code']}</th>
 						<td class="ppSmallTd">:</td>
 						<td>
@@ -260,33 +272,44 @@ xmlns:c="http://java.sun.com/jsp/jstl/core">
 					<td class="ppSmallTd">:</td>
 					<td>
 						<p:inputText value="#{planBackingBean.managedBean.selectedItem.ppRecurFreq.recurFreq}" 
-							disabled="#{!planBackingBean.managedBean.selectedItem.brandNew}">
-						    <p:ajax event="change" update="pItemDetails" />
+							disabled="#{!cc.attrs.selectedPlan.brandNew &amp;&amp; cc.attrs.viewMode!=PPConst.modeRevision}">
+						    <p:ajax event="change" listener="#{planBackingBean.changeRecurFreq}" update="pItemDetails" />
 						</p:inputText>
 					</td>
 				</tr>
 			
 				<!-- Repeat this based on recurring frequency -->
-				<ui:repeat var="obj" value="#{planBackingBean.managedBean.selectedItem.ppRecurFreq.recurFreq}" varStatus="status">
+				<ui:repeat var="fav" value="#{planBackingBean.managedBean.selectedItem.ppRecurFreq.ppRecurFreqDtls}" varStatus="status">
 					<tr>
-						<th>* #{lbl['lbl.pp.planned.activities.startmonth']} #{status.index}</th>
+						<th>#{lbl['lbl.pp.planned.activities.start.end.month']} ${status.index+1}</th>
 						<td class="ppSmallTd">:</td>
-						<td>
-							<p:calendar showOn="button" readonly="#{!planBackingBean.managedBean.selectedItem.brandNew}" />    
-						</td>
-						<th>* #{lbl['lbl.pp.planned.activities.endmonth']} #{status.index}</th>
-						<td class="ppSmallTd">&nbsp;</td>
-						<td>
-							<p:calendar readonly="#{!planBackingBean.managedBean.selectedItem.brandNew}" showOn="button" />
+						<td colspan="4">
+							<p:selectOneMenu value="#{fav.intPlanStartMonth}"
+								disabled="#{!cc.attrs.selectedPlan.brandNew &amp;&amp; cc.attrs.viewMode!=PPConst.modeRevision}">
+								<f:selectItem itemLabel="#{lbl['lbl.select']}" itemValue="12"/>
+								<f:selectItems value="#{planBackingBean.shortMonths()}"/>
+							</p:selectOneMenu>
+							&nbsp;
+							<p:selectOneMenu value="#{fav.intPlanEndMonth}"
+								disabled="#{!cc.attrs.selectedPlan.brandNew &amp;&amp; cc.attrs.viewMode!=PPConst.modeRevision}">
+								<f:selectItem itemLabel="#{lbl['lbl.select']}" itemValue="12"/>
+								<f:selectItems value="#{planBackingBean.shortMonths()}"/>
+							</p:selectOneMenu>
 						</td>
 					</tr>
-				</ui:repeat>
+				</ui:repeat>	
 			</c:if>
 			<tr>
-	   			<td colspan="5">&nbsp;</td>
-				<td>
-					<p:commandButton value="#{lbl['lbl.pp.add']}"  action="#{planBackingBean.addItemToList()}"
-						process="pItemDetails" update="tvPlanContent:pItemDetailsDp" />
+	   			<td colspan="6">
+	   			 	<div class="ppRightBtn">
+						<p:commandButton value="#{lbl['lbl.pp.add']}"  action="#{planBackingBean.addItemToList()}"
+							process="pItemDetails" update="tvPlanContent:pItemDetailsSub" />
+						<c:if test="#{cc.attrs.selectedPlan.favouriteOption==PPConst.favouriteTypeItem}">
+							&nbsp;
+							<p:commandButton value="#{lbl['lbl.pp.cancel']}" 
+								onclick="dlItemDetailsModal.hide()" immediate="true"/>
+						</c:if>	
+					</div>
 				</td>
 	   		</tr>
 		</table>

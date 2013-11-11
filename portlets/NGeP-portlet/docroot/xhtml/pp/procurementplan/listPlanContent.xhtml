@@ -37,6 +37,12 @@ xmlns:c="http://java.sun.com/jsp/jstl/core">
 					</tr>
 				</table>
 			</div>
+		
+			id<p:inputText value="#{planBackingBean.managedBean.tempId}" />, 
+			<p:inputText value="#{planBackingBean.managedBean.actionDesc}" />
+			<p:commandButton value="Load" action="#{planBackingBean.dummyTask(planBackingBean.managedBean.tempId, planBackingBean.managedBean.actionDesc)}" 
+			update="@form"  /> 
+			 
    			<!-- Search -->
    			<p:panel header="#{lbl['lbl.pp.search.plan']}"  toggleable="true">
    				<table class="ppThreePartsTable">

@@ -99,7 +99,7 @@ xmlns:c="http://java.sun.com/jsp/jstl/core"
 	                    <p:column headerText="#{lbl['lbl.pp.allocate.budget.amount']}">  
 	                        #{budgetAllocationDet.allocAmount} 
 	                    </p:column>
-	                     <p:column headerText="#{lbl['lbl.pp.status']}" rendered="#{budgetAllocationBackingBean.managedBean.viewMode==PPConst.modeRevision}">  
+	                    <p:column headerText="#{lbl['lbl.pp.status']}" rendered="#{budgetAllocationBackingBean.managedBean.viewMode==PPConst.modeRevision}">  
 	                         #{budgetAllocationDet.recordStatus?'Active':'Deleted'}
 	                    </p:column>                
 	                    <p:column headerText="#{lbl['lbl.pp.action']}">  

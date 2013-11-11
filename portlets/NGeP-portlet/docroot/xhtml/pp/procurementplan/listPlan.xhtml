@@ -18,11 +18,6 @@ xmlns:tp="http://java.sun.com/jsf/composite/ep"
    			
    			<!-- Bottom Button(s) -->
    			<div class="ppRightBtn">
-   				<p:selectOneMenu value="#{planBackingBean.managedBean.votType}">
-					<f:selectItem itemLabel="#{lbl['lbl.select']}" />
-					<f:selectItems value="#{planBackingBean.votTypeOptions()}"/>
-				</p:selectOneMenu>
-
 				<p:commandButton value="#{lbl['lbl.pp.create.new.plan']}" id="cbNewPlan"
 			 		action="#{planBackingBean.redirectToPlanContent(null,null)}"   /> 
 			</div>

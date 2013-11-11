@@ -25,7 +25,7 @@ public class PlanManagedBean extends BaseManagedBean{
 
 	private boolean searchPlan;
 	
-	private boolean withoutVot;
+//	private boolean withoutVot;
 	
 	private List <PpPlanMaster> planMasterList;
 	
@@ -67,7 +67,7 @@ public class PlanManagedBean extends BaseManagedBean{
 	
 	private String dynamicDetailsName;
 
-	private String votType;
+//	private String votType;
 	
 	private List <PpBudgetAllocDtl> budgetAllocDtlList;
 	
@@ -75,6 +75,10 @@ public class PlanManagedBean extends BaseManagedBean{
 	
 	private String selectedTab;
 	
+	private boolean reasonRejectOther;
+	
+	private String customReason;
+
 	private Long tempId; //temp
 	
 	private String actionDesc; // temp
@@ -196,19 +200,19 @@ public class PlanManagedBean extends BaseManagedBean{
 		this.budgetAllocDtlList = budgetAllocDtlList;
 	}
 	
-	/**
-	 * @return the votType
-	 */
-	public String getVotType() {
-		return votType;
-	}
-
-	/**
-	 * @param votType the votType to set
-	 */
-	public void setVotType(String votType) {
-		this.votType = votType;
-	}
+//	/**
+//	 * @return the votType
+//	 */
+//	public String getVotType() {
+//		return votType;
+//	}
+//
+//	/**
+//	 * @param votType the votType to set
+//	 */
+//	public void setVotType(String votType) {
+//		this.votType = votType;
+//	}
 
 	/**
 	 * @return the selectedPlanItem
@@ -382,18 +386,18 @@ public class PlanManagedBean extends BaseManagedBean{
 	}
 
 	
-	/**
-	 * @return the withoutVot
-	 */
-	public boolean isWithoutVot() {
-		return withoutVot;
-	}
-	/**
-	 * @param withoutVot the withoutVot to set
-	 */
-	public void setWithoutVot(boolean withoutVot) {
-		this.withoutVot = withoutVot;
-	}
+//	/**
+//	 * @return the withoutVot
+//	 */
+//	public boolean isWithoutVot() {
+//		return withoutVot;
+//	}
+//	/**
+//	 * @param withoutVot the withoutVot to set
+//	 */
+//	public void setWithoutVot(boolean withoutVot) {
+//		this.withoutVot = withoutVot;
+//	}
 	/**
 	 * @return the mtoPlanMaster
 	 */
@@ -630,7 +634,36 @@ public class PlanManagedBean extends BaseManagedBean{
 
 	
 
-	
+	/**
+	 * @return the reasonRejectOther
+	 */
+	public boolean isReasonRejectOther() {
+		return reasonRejectOther;
+	}
+
+	/**
+	 * @param reasonRejectOther the reasonRejectOther to set
+	 */
+	public void setReasonRejectOther(boolean reasonRejectOther) {
+		this.reasonRejectOther = reasonRejectOther;
+	}
+
+	/**
+	 * @return the customReason
+	 */
+	public String getCustomReason() {
+		return customReason;
+	}
+
+	/**
+	 * @param customReason the customReason to set
+	 */
+	public void setCustomReason(String customReason) {
+		this.customReason = customReason;
+	}
+
+
+
 
 
 }

@@ -12,6 +12,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import javax.faces.event.ValueChangeEvent;
 import javax.faces.model.SelectItem;
 
 import my.ep.persistence.entity.pm.common.PmStatus;
@@ -143,7 +144,16 @@ public class CommonMethod {
 			i++;
 		}
 		return months;
-		
-		
 	}
+	
+//	public static List<String> selectedCheckBoxValue(ValueChangeEvent event){
+//		List<String> itemList = new ArrayList<String>();
+//		if(event!=null){
+//			Object[] objArr = (Object[])event.getNewValue();
+//		 for (int x = 0; x < objArr.length; x++) { 
+//			 Object obj = objArr[x]; 
+//		 }
+//		}
+//        return itemList;
+//	}
 }

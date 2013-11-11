@@ -31,6 +31,7 @@ public class ProcurementPlanConst {
 	public static final String SUBMIT_VERIFICATION = "V";
 	
 	//View Mode
+	public static final String MODE_DRAFT= "D";
 	public static final String MODE_NEW = "N";
 	public static final String MODE_NEW_MTO = "T";
 	public static final String MODE_REVISION = "S";
@@ -100,6 +101,7 @@ public class ProcurementPlanConst {
 	public static final String NO_INT = "0";
 	public static final String SO_PP = "pp";
 	public static final Integer PVO_LEVEL = 3;
+	public static final String DATE_DISPLAY_PATTERN = "MM/dd/yyyy";
 	
 	//Contract Ind
 	public static final String CONTRACT_IND_PKP = "P";
@@ -107,8 +109,8 @@ public class ProcurementPlanConst {
 	public static final String CONTRACT_IND_CONTRACT = "C";
 	
 	//Contract Type
-	public static final String CONTRACT_TYPE_MINISTRY = "P";
-	public static final String CONTRACT_IND_CENTRAL = "S";
+	public static final String CONTRACT_TYPE_MINISTRY = "168"; //refer to PM_CODE
+	public static final String CONTRACT_IND_CENTRAL = "169"; //refer to PM_CODE
 	
 	
 	//Product Level
@@ -157,6 +159,15 @@ public class ProcurementPlanConst {
 	public static final String VOT_BT = "BT";
 	public static final String VOT_AMANAH = "AV";
 	public static final String VOT_WITHOUT = "AW";
+	
+	
+	//Reason Code
+	public static final String REASON_REJECT = "PPR";
+	public static final String REASON_CANCEL = "PPC";
+	
+	public static final String REASON_REJECT_OTHER = "3";
+	public static final String REASON_CANCEL_OTHER = "3";
+	
 	
 	/**
 	 * @return the votPs
@@ -551,24 +562,7 @@ public class ProcurementPlanConst {
 	public String getItemOriginTypeBoth() {
 		return ITEM_ORIGIN_TYPE_BOTH;
 	}
-//	/**
-//	 * @return the typeMinistry
-//	 */
-//	public Long getTypeMinistry() {
-//		return TYPE_MINISTRY;
-//	}
-//	/**
-//	 * @return the typeJabatan
-//	 */
-//	public Long getTypeJabatan() {
-//		return TYPE_JABATAN;
-//	}
-//	/**
-//	 * @return the typePtj
-//	 */
-//	public Long getTypePtj() {
-//		return TYPE_PTJ;
-//	}
+
 	/**
 	 * @return the fulfillmentOneOff
 	 */
@@ -662,8 +656,6 @@ public class ProcurementPlanConst {
 		return STATUS_PPI_NEW;
 	}
 	
-	
-	
 	/**
 	 * @return the ppDet
 	 */
@@ -682,4 +674,78 @@ public class ProcurementPlanConst {
 	public String getEpDirectPurchaseDet() {
 		return EP_DIRECT_PURCHASE_DET;
 	}
+	/**
+	 * @return the navToTaskList
+	 */
+	public String getNavToTaskList() {
+		return NAV_TO_TASK_LIST;
+	}
+	/**
+	 * @return the epFavouritePlanDet
+	 */
+	public String getEpFavouritePlanDet() {
+		return EP_FAVOURITE_PLAN_DET;
+	}
+	/**
+	 * @return the epFavouriteItemDet
+	 */
+	public String getEpFavouriteItemDet() {
+		return EP_FAVOURITE_ITEM_DET;
+	}
+	/**
+	 * @return the submitApproval
+	 */
+	public String getSubmitApproval() {
+		return SUBMIT_APPROVAL;
+	}
+	/**
+	 * @return the submitVerification
+	 */
+	public String getSubmitVerification() {
+		return SUBMIT_VERIFICATION;
+	}
+	/**
+	 * @return the pvoLevel
+	 */
+	public Integer getPvoLevel() {
+		return PVO_LEVEL;
+	}
+	/**
+	 * @return the dateDisplayPattern
+	 */
+	public String getDateDisplayPattern() {
+		return DATE_DISPLAY_PATTERN;
+	}
+	/**
+	 * @return the reasonReject
+	 */
+	public String getReasonReject() {
+		return REASON_REJECT;
+	}
+	/**
+	 * @return the reasonCancel
+	 */
+	public String getReasonCancel() {
+		return REASON_CANCEL;
+	}
+	/**
+	 * @return the reasonRejectOther
+	 */
+	public String getReasonRejectOther() {
+		return REASON_REJECT_OTHER;
+	}
+	/**
+	 * @return the reasonCancelOther
+	 */
+	public String getReasonCancelOther() {
+		return REASON_CANCEL_OTHER;
+	}
+	/**
+	 * @return the modeDraft
+	 */
+	public String getModeDraft() {
+		return MODE_DRAFT;
+	}
+	
+	
 }

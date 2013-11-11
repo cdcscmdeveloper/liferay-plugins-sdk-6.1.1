@@ -17,9 +17,10 @@ xmlns:c="http://java.sun.com/jsp/jstl/core">
 	    	<p:column styleClass="ppSmallTd" headerText="#{lbl['lbl.pp.expand']}">
 	    		<p:rowToggler />
     		</p:column>
-	    	<p:column styleClass="ppSmallTd" headerText="#{lbl['lbl.pp.submit']}">  
-                <p:outputLabel value="" />  
-            </p:column>   
+	    	<p:column rendered="#{cc.attrs.viewMode==PPConst.modeNew || cc.attrs.viewMode==PPConst.modeDraft}" 
+	    		styleClass="ppSmallTd" headerText="#{lbl['lbl.pp.submit']}">  
+                <p:selectBooleanCheckbox id="sbcbSubmit" value="#{ppPlan.submitPlan}"/>
+            </p:column>    
             <p:column styleClass="ppSmallTd" headerText="#{lbl['lbl.pp.seq']}">  
                	#{rowIndex+1}
             </p:column>   
@@ -38,9 +39,8 @@ xmlns:c="http://java.sun.com/jsp/jstl/core">
 	        </p:column>
 	         -->
 	        <p:column headerText="#{lbl['lbl.pp.action']}">  
-                <p:commandLink value="#{lbl['lbl.pp.edit']}" 
-					action="#{planBackingBean.showPpPlan(ppPlan)}" 
-                    oncomplete="rmtCallEditPlan()"/>
+                <p:commandLink value="#{lbl['lbl.pp.edit']}" update="@([id$=dlItemDetails])" 
+					action="#{planBackingBean.showPpPlan(ppPlan)}" oncomplete="dlItemDetailsModal.show()"/>
                 &nbsp;&nbsp;
                 <p:commandLink value="#{lbl['lbl.pp.delete']}"
                   	update="dtEpItem" rendered="#{ppPlan.brandNew || cc.attrs.viewMode==PPConst.modeRevision}"
@@ -63,11 +63,11 @@ xmlns:c="http://java.sun.com/jsp/jstl/core">
 		            <p:column headerText="#{lbl['lbl.pp.product.code']}">  
 			            #{ppItem.cmUnspsc.unspscTitle}
 			        </p:column>
-			        <p:column headerText="#{planBackingBean.managedBean.votType==PPConst.votBt? 
-			        	lbl['lbl.pp.program.activiti.code'] : (planBackingBean.managedBean.votType==PPConst.votPs ?
+			        <p:column headerText="#{cc.attrs.selectedPlanMaster.votType==PPConst.votBt? 
+			        	lbl['lbl.pp.program.activiti.code'] : (cc.attrs.selectedPlanMaster.votType==PPConst.votPs ?
 			        	lbl['lbl.pp.projek.setia.code'] : lbl['lbl.pp.amanah.code'])}">    
-		                 #{planBackingBean.managedBean.votType==PPConst.votBt? 
-				        	ppItem.progAct.activityId : (planBackingBean.managedBean.votType==PPConst.votPs ?
+		                 #{cc.attrs.selectedPlanMaster.votType==PPConst.votBt? 
+				        	ppItem.progAct.activityId : (cc.attrs.selectedPlanMaster.votType==PPConst.votPs ?
 				        	ppItem.projSetia.activityId : ppItem.amanah.activityId)}
 			        </p:column>  
 		    	</p:dataTable>  
@@ -78,16 +78,16 @@ xmlns:c="http://java.sun.com/jsp/jstl/core">
 		<c:if test="#{cc.attrs.viewMode==PPConst.modeNew || cc.attrs.viewMode==PPConst.modeRevision}">
     		<div class="ppRightBtn">
 				<p:commandButton value="#{lbl['lbl.pp.add.item']}" action="#{planBackingBean.showPpPlan(null)}"
-					 oncomplete="dlItemDetailsDpModal.show()" update="dlItemDetailsDp" /> 
+					 oncomplete="dlItemDetailsModal.show()" update="dlItemDetails" /> 
 		 		<br/>
 		 		<br/>
 	 		</div>
 	 		<br/>
-    		<p:remoteCommand name="rmtCallEditPlan" update="dlItemDetailsDp" oncomplete="dlItemDetailsDpModal.show()" /> 
+    		 
  		</c:if>
  		
  		<!-- Sub Item Details -->
- 		<p:dialog id="dlItemDetailsDp" header="#{lbl['lbl.pp.item.details']}" widgetVar="dlItemDetailsDpModal" 
+ 		<p:dialog id="dlItemDetails" header="#{lbl['lbl.pp.item.details']}" widgetVar="dlItemDetailsModal" 
 	              	resizable="false" styleClass="ppDiaglogBigBg" dynamic="true">  
       			<ui:include src="directPurchaseDet.xhtml"/>
 		</p:dialog>  

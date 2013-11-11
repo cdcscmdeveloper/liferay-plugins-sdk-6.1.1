@@ -604,7 +604,8 @@ public class BudgetAllocationBackingBean extends BaseBackingBean<BudgetAllocatio
 		log.info("populateSo - Start");
 		List<PmSo> pmSos = new ArrayList<PmSo>();
 		
-		if(this.getManagedBean().getSelectedBudgetAllocItem().getPpBudget().getPmGo()!=null){
+		if(this.getManagedBean().getSelectedBudgetAllocItem().getPpBudget().getPmGo().getGoId()!=null){
+			log.info("go id" + this.getManagedBean().getSelectedBudgetAllocItem().getPpBudget().getPmGo().getGoId());
 			ObjectReqDTO reqDTO = new ObjectReqDTO();
 			reqDTO.setGoId(this.getManagedBean().getSelectedBudgetAllocItem().getPpBudget().getPmGo().getGoId());
 			IObjectSO objectSO = (IObjectSO) BusinessDelegate.getInstance().getServiceObject("pm", IObjectSO.class);

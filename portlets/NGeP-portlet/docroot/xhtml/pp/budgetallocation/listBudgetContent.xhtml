@@ -27,7 +27,12 @@ xmlns:ac="http://ac.my/jsf/composite/cc">
 		</div>
 		<br/> 
 		<br/> 
-		
+		<!-- 
+			id<p:inputText value="#{budgetAllocationBackingBean.managedBean.tempId}" />, 
+			<p:inputText value="#{budgetAllocationBackingBean.managedBean.actionDesc}" />
+			<p:commandButton value="Load" action="#{budgetAllocationBackingBean.dummyTask(budgetAllocationBackingBean.managedBean.tempId, budgetAllocationBackingBean.managedBean.actionDesc)}" 
+			update="@form"  />  -->
+			
 	 	<p:dataTable id="tblBudget" styleClass="ppTableFull" var="budget" rowIndexVar="rowIndex"
 		 	emptyMessage="#{lbl['lbl.pp.no.record.found']}"
 		 	value="#{budgetAllocationBackingBean.budgetDataModel}"

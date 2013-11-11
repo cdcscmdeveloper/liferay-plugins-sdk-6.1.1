@@ -11,83 +11,65 @@ xmlns:c="http://java.sun.com/jsp/jstl/core">
 	<p:outputPanel id="opPlanEpFavorPlan">
 		<!-- Favourite Activities -->
 		<p:panel header="#{lbl['lbl.pp.favourite.activities']}">
-			<table width="70%" class="ppTwoPartsTable">
+			<table class="ppTwoPartsTable">
 				<tr>
 					<th>#{lbl['lbl.pp.plan.name']}</th>
 					<td class="ppSmallTd">:</td>
 					<td>
-						<p:inputText value="xxx" />
+						<p:inputText value="#{cc.attrs.selectedPlanItem.favorPlanRecurFreq.planName}" 
+							disabled="#{!cc.attrs.selectedPlanItem.brandNew &amp;&amp; cc.attrs.viewMode!=PPConst.modeRevision}"/>
 					</td>
 				</tr>
 				<tr>
 					<th>#{lbl['lbl.pp.recurring.frequency']}</th>
 					<td class="ppSmallTd">:</td>
 					<td>
-						<p:inputText value="#{planBackingBean.managedBean.recurringFreq}">
-						    <p:ajax event="change" update="opPlanEpFavorPlan" />
+						<p:inputText value="#{cc.attrs.selectedPlanItem.favorPlanRecurFreq.recurFreq}"
+							disabled="#{!cc.attrs.selectedPlanItem.brandNew &amp;&amp; cc.attrs.viewMode!=PPConst.modeRevision}">
+						    <p:ajax event="change" listener="#{planBackingBean.changeRecurFreq}" update="opPlanEpFavorPlan" />
 						</p:inputText>
 					</td>
 				</tr>
 				<!-- Repeat this based on recurring frequency -->
-				<c:if id="recurFreq" test="#{planBackingBean.managedBean.recurringFreq &gt; 1}">
-					<!-- Repeat this based on recurring frequency -->
-					<c:forEach begin="0" end="#{planBackingBean.managedBean.recurringFreq-1}" varStatus="loop">
-						<tr>
-							<th>#{lbl['lbl.pp.planned.activities.start.end.month']} ${loop.index+1}</th>
-							<td class="ppSmallTd">:</td>
-							<td>
-								<p:selectOneMenu disabled="#{!planBackingBean.managedBean.brandNew}">>
-									<f:selectItem itemLabel="#{lbl['lbl.select']}" />
-								</p:selectOneMenu>
-								<p:selectOneMenu disabled="#{!planBackingBean.managedBean.brandNew}">>
-									<f:selectItem itemLabel="#{lbl['lbl.select']}" />
-								</p:selectOneMenu>
-							</td>
-						</tr>
-					</c:forEach>
-				</c:if>
-				<c:if id="recurFreq" test="#{planBackingBean.managedBean.recurringFreq &lt; 1}">
+				<ui:repeat var="fav" value="#{cc.attrs.selectedPlanItem.favorPlanRecurFreq.ppRecurFreqDtls}" varStatus="status">
 					<tr>
-						<th>#{lbl['lbl.pp.planned.activities.start.end.month']}</th>
+						<th>#{lbl['lbl.pp.planned.activities.start.end.month']} ${status.index+1}</th>
 						<td class="ppSmallTd">:</td>
 						<td>
-							<p:selectOneMenu disabled="#{!planBackingBean.managedBean.brandNew}">>
-									<f:selectItem itemLabel="#{lbl['lbl.select']}" />
+							<p:selectOneMenu value="#{fav.intPlanStartMonth}"
+								disabled="#{!cc.attrs.selectedPlanItem.brandNew &amp;&amp; cc.attrs.viewMode!=PPConst.modeRevision}">
+								<f:selectItem itemLabel="#{lbl['lbl.select']}" itemValue="12"/>
+								<f:selectItems value="#{planBackingBean.shortMonths()}"/>
 							</p:selectOneMenu>
-							<p:selectOneMenu disabled="#{!planBackingBean.managedBean.brandNew}">>
-								<f:selectItem itemLabel="#{lbl['lbl.select']}" />
+							&nbsp;
+							<p:selectOneMenu value="#{fav.intPlanEndMonth}"
+								disabled="#{!cc.attrs.selectedPlanItem.brandNew &amp;&amp; cc.attrs.viewMode!=PPConst.modeRevision}">
+								<f:selectItem itemLabel="#{lbl['lbl.select']}" itemValue="12"/>
+								<f:selectItems value="#{planBackingBean.shortMonths()}"/>
 							</p:selectOneMenu>
 						</td>
 					</tr>
-				</c:if>
-				<tr>
-					<th>#{lbl['lbl.pp.item.remarks']}</th>
-					<td class="ppSmallTd">:</td>
-					<td>
-						<p:inputTextarea cols="20" rows="3" value="-" />
-					</td>
-				</tr>
+				</ui:repeat>	
 			</table>
 		</p:panel>
 		<!-- Details -->
-		<p:panel id="pItemDetailsContract" header="#{lbl['lbl.pp.details']}" >
+		<p:panel id="pItemDetailsSub" header="#{lbl['lbl.pp.details']}" >
 			<!-- Item List -->
-			<p:outputPanel>
-				<ui:include src="itemList.xhtml"/>
-			</p:outputPanel>
+	
+			<ui:include src="itemList.xhtml"/>
+
 			
 			<!-- Button(s) -->
 			<c:if test="#{cc.attrs.viewMode==PPConst.modeNew || cc.attrs.viewMode==PPConst.modeRevision}">
 				<div class="ppRightBtn">
-					<p:commandButton value="#{lbl['lbl.pp.add.item']}" action="#{planBackingBean.showPpPlan(null)}"
-					 oncomplete="dlItemDetailsFpModal.show()" update="dlItemDetailsFp" /> 
-					<p:commandButton id="cbAddItemDet" value="#{lbl['lbl.pp.add.item']}"  onclick="dlItemDetailsFpModal.show();" />
+					<p:commandButton value="#{lbl['lbl.pp.add.item']}" action="#{planBackingBean.showPpItem(null)}"
+					 oncomplete="dlItemDetailsModal.show()" update="dlItemDetails" /> 
 				</div>
 			</c:if>
 			
 	 		<!-- Sub Item Details -->
-	 		<p:dialog id="dlItemDetailsFp" header="#{lbl['lbl.pp.item.details']}" widgetVar="dlItemDetailsFpModal" 
-		              	 modal="true" resizable="false" styleClass="ppDiaglogBg" dynamic="true" appendToBody="true">  
+	 		<p:dialog id="dlItemDetails" header="#{lbl['lbl.pp.item.details']}" widgetVar="dlItemDetailsModal" 
+		              	resizable="false" styleClass="ppDiaglogBg" dynamic="true" >  
 	      			<ui:include src="itemDetails.xhtml"/>
 			</p:dialog>  
 		</p:panel>

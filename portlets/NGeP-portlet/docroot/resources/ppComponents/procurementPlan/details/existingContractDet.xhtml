@@ -12,8 +12,12 @@ xmlns:c="http://java.sun.com/jsp/jstl/core">
 		  
 			<!-- Top Button -->
 			<div class="ppRightBtn">
-				<p:commandButton id="cbConfirm" value="#{lbl['lbl.pp.confirm']}"   />&nbsp; 
-				<p:commandButton id="cbCancel" value="#{lbl['lbl.pp.cancel']}" onclick="dlItemDetailsModal.hide()"   />&nbsp;
+				<p:commandButton id="cbConfirm" value="#{lbl['lbl.pp.confirm']}" action="#{planBackingBean.addPpPlanToList()}"
+				  onclick="dlItemDetailsEcModal.hide()" oncomplete="dlItemDetailsEcModal.hide()"  process="opEpExistingContract"
+				  update="dtEpPlanItem"  />
+				&nbsp; 
+				<p:commandButton id="cbCancel" value="#{lbl['lbl.pp.cancel']}" onclick="dlItemDetailsEcModal.hide()" 
+					immediate="true"/>&nbsp;
 			</div>
 			<!-- Sub Header -->
 			<p:panel id="pSubDetailsContract" header="#{lbl['lbl.pp.sub.header']}" toggleable="true">
@@ -22,20 +26,11 @@ xmlns:c="http://java.sun.com/jsp/jstl/core">
 						<th>#{lbl['lbl.pp.contract.class']}</th>
 						<td class="ppSmallTd">:</td>
 						<td>
-							<p:outputPanel rendered="#{cc.attrs.selectedPlanMaster.fulfilmentType==PPConst.fulfillmentAsAndWhen}"> <!-- no pkp -->
-								<p:selectOneMenu id="somContractClass1" value="#{planBackingBean.managedBean.selectedPlanItem.contractInd}" >
-									<f:selectItem itemLabel="#{lbl['lbl.select']}" itemValue="0" />
-									<f:selectItems value="#{planBackingBean.documentTypeOptions()}"/>
-									<p:ajax event="change" update="pSubDetailsContract, somContractType" />
-								</p:selectOneMenu>
-							</p:outputPanel>
-							<p:outputPanel rendered="#{cc.attrs.selectedPlanMaster.fulfilmentType!=PPConst.fulfillmentAsAndWhen}">
-								<p:selectOneMenu id="somContractClass2" value="#{planBackingBean.managedBean.selectedPlanItem.contractInd}" >
-									<f:selectItem itemLabel="#{lbl['lbl.select']}" itemValue="0" />
-									<f:selectItems value="#{planBackingBean.documentTypeOptions()}"/>
-									<p:ajax event="change" update="pSubDetailsContract, somContractType" />
-								</p:selectOneMenu>
-							</p:outputPanel>
+							<p:selectOneMenu id="somContractClass2" value="#{planBackingBean.managedBean.selectedPlanItem.contractInd}" >
+								<f:selectItem itemLabel="#{lbl['lbl.select']}" itemValue="0" />
+								<f:selectItems value="#{planBackingBean.contractIndOptions(cc.attrs.selectedPlanMaster.fulfilmentType)}"/>
+								<p:ajax event="change" update="pSubDetailsContract, somContractType, somPkpContractNum" />
+							</p:selectOneMenu>
 						</td>
 						<!-- based on selected contract -->
 						<th>#{lbl['lbl.pp.supplier.id']}</th>
@@ -52,6 +47,7 @@ xmlns:c="http://java.sun.com/jsp/jstl/core">
 								disabled="#{planBackingBean.managedBean.selectedPlanItem.contractInd!=PPConst.contractIndContract}">
 								<f:selectItem itemLabel="#{lbl['lbl.select']}" itemValue="0"/>
 								<f:selectItems value="#{planBackingBean.contractTypeOptions()}"/>
+								<p:ajax event="change" update="somContractNum" />
 							</p:selectOneMenu>
 						</td>
 						<!-- based on selected contract -->
@@ -69,7 +65,9 @@ xmlns:c="http://java.sun.com/jsp/jstl/core">
 							<p:selectOneMenu value="#{planBackingBean.managedBean.selectedPlanItem.ctCircular.circularId}"
 								disabled="#{planBackingBean.managedBean.selectedPlanItem.contractInd!=PPConst.contractIndPkp}" >
 								<f:selectItem itemLabel="#{lbl['lbl.select']}" itemValue="0"/>
-								<f:selectItem itemLabel="1" itemValue="1"/>
+								<f:selectItems value="#{planBackingBean.circularOptions()}" var="obj" 
+									itemLabel="#{obj.latestCircularVer.circularNo}" itemValue="#{obj.latestCircularVer.circularVerId}"/>
+								<p:ajax event="change" update="somPkpContractNum" />
 							</p:selectOneMenu>
 						</td>
 						<!-- based on selected contract -->
@@ -82,32 +80,47 @@ xmlns:c="http://java.sun.com/jsp/jstl/core">
 					<tr>
 						<th>#{lbl['lbl.pp.contract.number']}</th>
 						<td class="ppSmallTd">:</td>
+						<td>#{planBackingBean.managedBean.selectedPlanItem.ctCircular.circularId}
+							<p:outputPanel rendered="#{planBackingBean.managedBean.selectedPlanItem.contractInd==PPConst.contractIndPkp}"
+								disabled="#{planBackingBean.managedBean.selectedPlanItem.ctCircular.circularId==null 
+									|| planBackingBean.managedBean.selectedPlanItem.ctCircular.circularId==''
+									|| planBackingBean.managedBean.selectedPlanItem.ctCircular.circularId=='0'}">
+								<p:selectOneMenu id="somPkpContractNum" value="#{planBackingBean.managedBean.selectedPlanItem.ctContract.contractId}"
+									disabled="#{planBackingBean.managedBean.selectedPlanItem.contractInd==PPConst.contractIndLoa}" >
+									<f:selectItem itemLabel="#{lbl['lbl.select']}" itemValue="0"/>
+									<f:selectItems value="#{planBackingBean.cicularContractOptions(planBackingBean.managedBean.selectedPlanItem.ctCircular.circularId)}" 
+										var="obj" itemLabel="#{obj.ctContract.contractValue.contractNo}" itemValue="#{obj.ctContract.contractId}"/>
+								</p:selectOneMenu>
+							</p:outputPanel>
+							<p:outputPanel disabled="#{planBackingBean.managedBean.selectedPlanItem.contractType==null 
+								|| planBackingBean.managedBean.selectedPlanItem.contractType==''
+								|| planBackingBean.managedBean.selectedPlanItem.contractType=='0'}" 
+								rendered="#{planBackingBean.managedBean.selectedPlanItem.contractInd!=PPConst.contractIndPkp}">
+								<p:selectOneMenu id="somContractNum" value="#{planBackingBean.managedBean.selectedPlanItem.ctContract.contractId}"
+									disabled="#{planBackingBean.managedBean.selectedPlanItem.contractInd==PPConst.contractIndLoa}" >
+									<f:selectItem itemLabel="#{lbl['lbl.select']}" itemValue="0"/>
+									<f:selectItems value="#{planBackingBean.contractOptions(planBackingBean.managedBean.selectedPlanItem.contractType)}"
+										var="obj" itemLabel="#{obj.contractValue.contractNo}" itemValue="#{obj.contractId}"/>
+								</p:selectOneMenu>
+							</p:outputPanel>
+						</td>
+						<th>
+							#{cc.attrs.selectedPlanMaster.fulfilmentType==PPConst.fulfillmentSchedule ? 
+								lbl['lbl.pp.planned.activities.startdate'] : lbl['lbl.pp.planned.activities.startmonth']}
+						</th>
+						<td class="ppSmallTd">:</td>
 						<td>
-							<p:selectOneMenu value="#{planBackingBean.managedBean.selectedPlanItem.ctContract.contractId}"
-								disabled="#{planBackingBean.managedBean.selectedPlanItem.contractInd==PPConst.contractIndLoa}" >
+							<p:calendar showOn="button" value="#{planBackingBean.managedBean.selectedPlanItem.planStartDate}" 
+								rendered="#{cc.attrs.selectedPlanMaster.fulfilmentType==PPConst.fulfillmentSchedule}" pattern="#{PPConst.dateDisplayPattern}" 
+				             	disabled="#{!planBackingBean.managedBean.selectedPlanItem.brandNew &amp;&amp; !cc.attrs.viewMode==PPConst.modeRevision}">
+				             </p:calendar>
+							<p:selectOneMenu rendered="#{cc.attrs.selectedPlanMaster.fulfilmentType!=PPConst.fulfillmentSchedule}"
+								value="#{planBackingBean.managedBean.selectedPlanItem.planStartMonth}">
 								<f:selectItem itemLabel="#{lbl['lbl.select']}" itemValue="0"/>
-								<f:selectItem itemLabel="1" itemValue="1"/>
+								<f:selectItems value="#{planBackingBean.shortMonths()}"/>
 							</p:selectOneMenu>
 						</td>
-						<p:outputPanel rendered="#{cc.attrs.selectedPlanMaster.fulfilmentType==PPConst.fulfillmentSchedule}">
-							<th>#{lbl['lbl.pp.planned.activities.startdate']}</th>
-							<td class="ppSmallTd">:</td>
-							<td>
-								<p:calendar showOn="button" value="#{planBackingBean.managedBean.selectedPlanItem.planStartDate}" pattern="MM/dd/yyyy" 
-					             	disabled="#{!planBackingBean.managedBean.selectedPlanItem.brandNew &amp;&amp; !cc.attrs.viewMode==PPConst.modeRevision}">
-					             </p:calendar>
-							</td>
-						</p:outputPanel>
-						<p:outputPanel rendered="#{cc.attrs.selectedPlanMaster.fulfilmentType!=PPConst.fulfillmentSchedule}">
-							<th>#{lbl['lbl.pp.planned.activities.startmonth']}</th>
-							<td class="ppSmallTd">:</td>
-							<td>
-								<p:selectOneMenu value="#{planBackingBean.managedBean.selectedPlanItem.planStartMonth}">
-									<f:selectItem itemLabel="#{lbl['lbl.select']}" itemValue="0"/>
-									<f:selectItems value="#{planBackingBean.shortMonths()}"/>
-								</p:selectOneMenu>
-							</td>
-						</p:outputPanel>
+						
 					</tr>
 					<tr>
 						<th>#{lbl['lbl.pp.loa.number']}</th>
@@ -119,25 +132,22 @@ xmlns:c="http://java.sun.com/jsp/jstl/core">
 								<f:selectItem itemLabel="1" itemValue="1"/>
 							</p:selectOneMenu>
 						</td>
-						<p:outputPanel rendered="#{cc.attrs.selectedPlanMaster.fulfilmentType==PPConst.fulfillmentSchedule}">
-							<th>#{lbl['lbl.pp.planned.activities.enddate']}</th>
-							<td class="ppSmallTd">:</td>
-							<td>
-								<p:inputText id="ipEndDate" value="#{planBackingBean.managedBean.selectedPlanItem.planEndDate}" disabled="true" />
-							</td>
-						</p:outputPanel>
-						<p:outputPanel rendered="#{cc.attrs.selectedPlanMaster.fulfilmentType!=PPConst.fulfillmentSchedule}">
-							<th>#{lbl['lbl.pp.planned.activities.endmonth']}</th>
-							<td class="ppSmallTd">:</td>
-							<td>
-								<p:inputText value="#{planBackingBean.managedBean.selectedPlanItem.planEndMonth}" disabled="true" />
-							</td>
-						</p:outputPanel>
+						<th>
+							#{cc.attrs.selectedPlanMaster.fulfilmentType==PPConst.fulfillmentSchedule ? 
+								lbl['lbl.pp.planned.activities.enddate'] : lbl['lbl.pp.planned.activities.endmonth']}
+						</th>
+						<td class="ppSmallTd">:</td>
+						<td>
+							<p:inputText id="ipEndDate" value="#{planBackingBean.managedBean.selectedPlanItem.planEndDate}" 
+								disabled="true" rendered="#{cc.attrs.selectedPlanMaster.fulfilmentType==PPConst.fulfillmentSchedule}" />
+							<p:inputText value="#{planBackingBean.managedBean.selectedPlanItem.planEndMonth}" disabled="true"
+								rendered="#{cc.attrs.selectedPlanMaster.fulfilmentType!=PPConst.fulfillmentSchedule}" />
+						</td>
 					</tr>
 				</table>
 			</p:panel>
 			<!-- Details -->
-			<p:panel id="pItemDetailsEc" header="#{lbl['lbl.pp.details']}" toggleable="true">
+			<p:panel id="pItemDetailsSub" header="#{lbl['lbl.pp.details']}" toggleable="true">
 				<!-- Item List -->
 				<ui:include src="itemList.xhtml"/>
 		    	<br/>
