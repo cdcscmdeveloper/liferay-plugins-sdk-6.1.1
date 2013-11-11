@@ -1,0 +1,52 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:cc="http://java.sun.com/jsf/composite"
+    xmlns:ui="http://java.sun.com/jsf/facelets"
+    xmlns:h="http://java.sun.com/jsf/html"
+    xmlns:f="http://java.sun.com/jsf/core"
+   	xmlns:p="http://primefaces.org/ui">
+    
+<cc:interface>
+	<cc:attribute name="id" />
+	<cc:attribute name="lovId" required="true" />
+	<cc:attribute name="value" />
+	<cc:attribute name="saveObject" required="false" />
+	<cc:attribute name="headerText" />
+	<cc:attribute name="saveObject" required="true" />
+	<cc:attribute name="conditionField" />
+	<cc:attribute name="update" />
+	<cc:attribute name="size" />
+</cc:interface>
+
+<cc:implementation>
+
+<h:panelGroup id="#{cc.attrs.id}">
+
+	<p:inputText id="#{cc.attrs.id}lov" 
+		value="#{cc.attrs.value}"
+		size="#{cc.attrs.size}">
+	</p:inputText>
+	
+	<p:commandButton
+		id="#{cc.attrs.id}lovBtn"
+		value="..."
+		action="#{lovBackingBean.initLov}"
+		oncomplete="updateSearchDialog(); lovPopup.show();"
+		partialSubmit="true">
+		
+		<f:param name="lovId" value="#{cc.attrs.lovId}" />
+		<f:param name="componentId" value="#{cc.attrs.id}" />
+		<f:param name="headerText" value="#{cc.attrs.headerText}" />
+		<f:param name="saveObject" value="#{cc.attrs.saveObject}" />
+		<f:param name="conditionField" value="#{cc.attrs.conditionField}" />
+		<f:param name="clientId" value="#{p:component(cc.attrs.id)}" />
+		<f:param name="update" value="#{cc.attrs.update}" />
+		
+	</p:commandButton>
+	
+</h:panelGroup>
+
+
+	<!-- <p:remoteCommand name="updateLov#{cc.attrs.id}" update="#{cc.attrs.id}" partialSubmit="true" /> -->
+
+</cc:implementation>
+</ui:composition>

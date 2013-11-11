@@ -1,0 +1,90 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:cc="http://java.sun.com/jsf/composite"
+    xmlns:ui="http://java.sun.com/jsf/facelets"
+    xmlns:h="http://java.sun.com/jsf/html"
+    xmlns:f="http://java.sun.com/jsf/core"
+    xmlns:fn="http://java.sun.com/jsp/jstl/functions"
+   	xmlns:p="http://primefaces.org/ui"
+   	xmlns:ac="http://ac.my/jsf/composite/cc"
+   	xmlns:c="http://java.sun.com/jstl/core">
+    
+<cc:interface>
+	<!-- <cc:attribute name="required" />
+	<cc:attribute name="value" /> -->
+</cc:interface>
+
+<cc:implementation>
+	<p:remoteCommand name="updateSearchDialog" update="searchPanel lovTitle resultPanel" partialSubmit="true" />
+	<p:dialog id="lovPopup" widgetVar="lovPopup" modal="true" width="700" position="top">
+	
+		<f:facet name="header">
+			<h:outputLabel id="lovTitle" value="#{lovBackingBean.lovBean.title}" />
+		</f:facet>
+	
+		<h:panelGroup id="searchPanel" style="width:100%;">
+
+		<ui:include src="lovSearchPanel.xhtml" />
+
+		<table style="width:100%;"><tr align="right"><TD align="right">
+			<p:commandButton
+				value="Reset"
+				action="#{lovBackingBean.resetAction}"
+				partialSubmit="true"
+				update="searchPanel resultPanel">
+			</p:commandButton>
+			<p:commandButton 
+				value="Search"
+				action="#{lovBackingBean.searchAction}"
+				partialSubmit="true"
+				process="searchPanel"
+				update="lovTb">
+			</p:commandButton>		
+		</TD></tr></table>
+
+		</h:panelGroup>
+		<br />
+		<h:panelGroup id="resultPanel" style="width:100%;">
+		
+			<p:dataTable id="lovTb"
+				var="entity" 
+				selection="#{lovBackingBean.selectedEntity}"
+				rowIndexVar="rowIndex"
+				rowKey="#{entity[lovBackingBean.lovBean.pk]}"
+				value="#{lovBackingBean.resultList}">
+				
+				<!-- <ac:paginator for="lovTb" /> -->
+				
+				<p:column selectionMode="single" style="width:2%" /> 
+				
+				<p:column width="5%">
+					<f:facet name="header">
+						<p:outputLabel value="No." />
+					</f:facet>
+					<p:outputLabel value="#{rowIndex + 1}" />
+				</p:column>
+				
+				<p:columns var="column" value="#{lovBackingBean.lovBean.columns}">
+				
+					<f:facet name="header">  
+		                <p:outputLabel value="#{column.columnTitle}" />  
+		            </f:facet>
+						<p:outputLabel value="#{entity[column.columnName]}" />
+				</p:columns>
+				
+				<f:facet name="footer">
+					<div align="right">
+						<p:commandButton 
+							value="Select"
+							action="#{lovBackingBean.populateToSaveObject}"
+							update="lovTb #{lovBackingBean.lovBean.clientId}"
+							oncomplete="lovPopup.hide();"
+							partialSubmit="true" />	
+					</div>
+				</f:facet>
+				
+			</p:dataTable>
+			
+		</h:panelGroup>
+	</p:dialog>
+</cc:implementation>
+</ui:composition>
