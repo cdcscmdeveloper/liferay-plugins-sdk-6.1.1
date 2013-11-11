@@ -28,4 +28,11 @@
 		<var>lbl</var>
 	   </resource-bundle>
      </application>
+     <render-kit>
+		<renderer>
+			<component-family>org.primefaces.component</component-family>
+			<renderer-type>my.ep.web.util.taglib.DirectPurchaseDataTableRender</renderer-type>
+			<renderer-class>my.ep.web.util.taglib.DirectPurchaseDataTableRender</renderer-class>
+		</renderer>
+	</render-kit>
 </faces-config>

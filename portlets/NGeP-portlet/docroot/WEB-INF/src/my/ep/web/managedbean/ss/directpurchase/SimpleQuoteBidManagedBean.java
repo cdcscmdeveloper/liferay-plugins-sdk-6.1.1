@@ -5,12 +5,15 @@ import java.util.List;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
 
+import my.ep.persistence.entity.ss.directpurchase.ScQuoteBid;
+import my.ep.persistence.entity.ss.directpurchase.ScRequestList;
 import my.ep.web.backingbean.ss.directpurchase.SimpleQuoteBidBean;
 import my.ep.web.managedbean.BaseManagedBean;
 @ManagedBean
 @SessionScoped
 public class SimpleQuoteBidManagedBean extends BaseManagedBean{
-
+	private	ScRequestList	scRequestList;
+	private	ScQuoteBid		scQuoteBid;
 	
 	private static final long serialVersionUID = 1L;
 

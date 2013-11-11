@@ -1,152 +1,140 @@
 <ui:composition
-	template="/WEB-INF/facelets/templates/sidemenu_template.xhtml"
 	xmlns="http://www.w3.org/1999/xhtml"
 	xmlns:f="http://java.sun.com/jsf/core"
 	xmlns:h="http://java.sun.com/jsf/html"
 	xmlns:ui="http://java.sun.com/jsf/facelets"
 	xmlns:p="http://primefaces.org/ui"
 	xmlns:c="http://java.sun.com/jsp/jstl/core">
-<head>
-    <style type="text/css">
-		.ui-picklist .ui-picklist-list {
-			width: 100% !important;
-		}
-
-    </style>
-</head>
-	<ui:define name="resourceSection">
-	</ui:define>
-
-	<ui:define name="sideMenu">
-		<ui:include src="/xhtml/ss/directpurchase/common/ss_directpurchase_sidemenu.xhtml" />
-	</ui:define>
-	<ui:define name="content">
-		<h:form>
-			<div align="right">
-				<p:commandButton value="#{lbl['lbl.ss.save']}" /> 
-				<p:commandButton value="#{lbl['lbl.ss.submit']}" />
-			</div>
-			<p:panel label="#{lbl['lbl.ss.panel.title.request.list']}" header="#{lbl['lbl.ss.panel.title.request.list']}" toggleable="true"  toggleSpeed="500">
-				<div style="width: 100%">
-					<p:pickList id="pickList" value="#{directPurchaseBackingBean.approveUseritems}" var="approver"
-					 showCheckbox="true" showSourceFilter="true" showTargetControls="true" 
-	                 itemLabel="#{approver}" itemValue="#{approver}">
-	                	<f:facet name="sourceCaption">Available Approver</f:facet>  
-        				<f:facet name="targetCaption">Approver List Name</f:facet>
-	                </p:pickList>
-				</div>
-				<p:separator style="width:100%;height:1%"></p:separator>
-				<h:panelGrid width="100%" columns="4">
-						<p:column>
-							<h:outputLabel  value="#{lbl['lbl.sc.purchase.fulfillment.type']}" />
+	<p:panel label="#{lbl['lbl.ss.panel.title.request.list']}"
+		header="#{lbl['lbl.ss.panel.title.request.list']}" toggleable="true"
+		toggleSpeed="500">
+		<div style="width: 100%">
+			<p:pickList id="approvalPickList"
+				value="#{directPurchaseBackingBean.approveUseritems}" var="approver"
+				showCheckbox="true" showSourceFilter="true"
+				showTargetControls="true" itemLabel="#{approver}"
+				itemValue="#{approver}">
+				<f:facet name="sourceCaption">Available Approver</f:facet>
+				<f:facet name="targetCaption">Approver List Name</f:facet>
+			</p:pickList>
+		</div>
+		<p:separator style="width:100%;height:1%"></p:separator>
+		<br />
+		<table
+			style="border-style: none; wiwth: 100%; border: 0 solid #FFFFFF !important;">
+			<tr>
+				<td width="25%"><h:outputLabel
+						value="#{lbl['lbl.sc.purchase.fulfillment.type']}" /></td>
+				<td width="25%"><h:selectOneMenu id="fulfillmentType"
+						style="width: auto; min-width: 200px;" required="false"
+						disabled="false">
+						<!--TODO hardcode  option value because later will replace by the list in backing bean -->
+						<f:selectItem id="one-off" itemLabel="One Off" itemValue="1" />
+						<f:selectItem id="periodic" itemLabel="Periodic" itemValue="2" />
+					</h:selectOneMenu></td>
+				<td width="25%"><h:outputLabel
+						value="#{lbl['lbl.sc.purchase.prepare']}" /></td>
+				<td width="25%"><h:selectOneMenu id="prepareBy"
+						style="width: auto; min-width: 200px;" required="false"
+						disabled="false">
+						<f:selectItem id="requisitioner1" itemLabel="Requisitioner 1"
+							itemValue="requisitioner1"></f:selectItem>
+						<f:selectItem id="requisitioner2" itemLabel="Requisitioner 2"
+							itemValue="requisitioner2"></f:selectItem>
+					</h:selectOneMenu></td>
+			</tr>
+			<tr>
+				<td><h:outputLabel
+						value="#{lbl['lbl.sc.purchase.deliver.period']}" /></td>
+				<td colspan="3"><p:inputText id="periodId" style="width:10px;"
+						required="false" /> <h:selectOneMenu id="periodMode"
+						style="width: auto;">
+						<f:selectItem itemLabel="Day" itemValue="D"></f:selectItem>
+						<f:selectItem itemLabel="Month" itemValue="M"></f:selectItem>
+						<f:selectItem itemLabel="Year" itemValue="Y"></f:selectItem>
+					</h:selectOneMenu></td>
+			</tr>
+		</table>
+		<div align="right">
+			<p:commandButton value="#{lbl['lbl.ss.action.apply.all']}" />
+		</div>
+		<h:panelGrid width="100%" style="margin-top:20px">
+			<p:dataTable id="requestListDataTable" width="100%" cellpadding="1"
+				rowIndexVar="rowIndex"
+				value="#{directPurchaseBackingBean.managedBean.recommendRequestListSupplierItems}"
+				var="supplierItem">
+				<p:columnGroup type="header">
+					<p:row>
+						<p:column colspan="1" width="15%" rendered="true"
+							style="text-align:center; vertical-align:top;"
+							headerText="#{lbl['lbl.sc.item.detail.supplier']}">
 						</p:column>
-						<p:column>
-							<h:selectOneMenu id="fulfillmentType" style="width: auto; min-width: 200px;" required="false" disabled="false">
-								<!--TODO hardcode  option value because later will replace by the list in backing bean -->
-								<f:selectItem id="one-off" itemLabel="One Off" itemValue="1" />
-								<f:selectItem id="periodic" itemLabel="Periodic" itemValue="2" />
-							</h:selectOneMenu>
+						<p:column colspan="1" width="30%" rendered="true"
+							style="text-align:center; vertical-align:top;"
+							headerText="#{lbl['lbl.ss.item.detail.item.name']}">
 						</p:column>
-						<p:column>
-							<h:outputLabel  value="#{lbl['lbl.sc.purchase.prepare']}" />
+						<p:column colspan="1" width="10%" rendered="true"
+							style="text-align:center; vertical-align:top;"
+							headerText="#{lbl['lbl.ss.item.detail.price.offered']}">
 						</p:column>
-						<p:column>
-							<h:selectOneMenu id="prepareBy" style="width: auto; min-width: 200px;" required="false" disabled="false">
-								<f:selectItem id="requisitioner1" itemLabel="Requisitioner 1" itemValue="requisitioner1"></f:selectItem>
-								<f:selectItem id="requisitioner2" itemLabel="Requisitioner 2" itemValue="requisitioner2"></f:selectItem>
-							</h:selectOneMenu>
+						<p:column colspan="1" width="10%" rendered="true"
+							style="text-align:center; vertical-align:top;"
+							headerText="#{lbl['lbl.ss.item.detail.fulfillment.type']}">
 						</p:column>
-						<p:column>
-							<h:outputLabel  value="#{lbl['lbl.sc.purchase.start.date']}" />
+						<p:column colspan="1" width="10%" rendered="true"
+							style="text-align:center; vertical-align:top;"
+							headerText="#{lbl['lbl.ss.item.detail.prepare.by']}">
 						</p:column>
-						<p:column>
-							<p:calendar id="startDate" showOn="button">
-								<p:ajax process="startDate" partialSubmit="true"
-									event="change" />
-							</p:calendar>
+						<p:column colspan="1" width="20%" rendered="true"
+							style="text-align:center; vertical-align:top;"
+							headerText="#{lbl['lbl.sc.purchase.deliver.period']}">
 						</p:column>
-						<p:column>
-							<h:outputLabel  value="#{lbl['lbl.sc.purchase.end.date']}" />
+						<p:column colspan="1" width="5%" rendered="true"
+							headerText="#{lbl['lbl.ss.item.detail.change.supplier']}"
+							style="text-align:center; vertical-align:top;">
 						</p:column>
-						<p:column>
-							<p:calendar id="endDate" showOn="button">
-								<p:ajax process="endDate" partialSubmit="true"
-									event="change" />
-							</p:calendar>
-						</p:column>
-				</h:panelGrid>
-				<div align="right">
-					<p:commandButton value="#{lbl['lbl.ss.action.apply.all']}" />
-				</div>
-				<h:panelGrid width="100%" style="margin-top:20px">
-					<p:dataTable id="itemdataTable" width="100%" cellpadding="1" rowIndexVar="rowIndex" 
-						value="#{directPurchaseBackingBean.managedBean.recommendRequestListSupplierItems}" var="supplierItem">
-						<p:columnGroup type="header">  
-				            <p:row>  
-				                <p:column colspan="1" width="20%" rendered="true"
-									style="text-align:center; vertical-align:top;" headerText="#{lbl['lbl.sc.item.detail.supplier']}">
-								</p:column>
-				                <p:column colspan="1" width="30%" rendered="true"
-									style="text-align:center; vertical-align:top;" headerText="#{lbl['lbl.ss.item.detail.item.name']}">
-								</p:column>
-								<p:column colspan="1" width="10%" rendered="true"
-									style="text-align:center; vertical-align:top;" headerText="#{lbl['lbl.ss.item.detail.price.offered']}">
-								</p:column>
-								<p:column colspan="1" width="10%" rendered="true"
-									style="text-align:center; vertical-align:top;" headerText="#{lbl['lbl.ss.item.detail.fulfillment.type']}">
-								</p:column>
-								<p:column colspan="1" width="10%" rendered="true"
-									style="text-align:center; vertical-align:top;" headerText="#{lbl['lbl.ss.item.detail.prepare.by']}">
-								</p:column>
-								<p:column colspan="1" width="10%" rendered="true"
-									style="text-align:center; vertical-align:top;" headerText="#{lbl['lbl.ss.item.detail.start.date']}">
-								</p:column>
-								<p:column colspan="1" width="5%" rendered="true" headerText="#{lbl['lbl.ss.item.detail.end.date']}"
-									style="text-align:center; vertical-align:top;">
-								</p:column>
-								<p:column colspan="1" width="5%" rendered="true" headerText="#{lbl['lbl.ss.item.detail.change.supplier']}"
-									style="text-align:center; vertical-align:top;">
-								</p:column>
-				            </p:row>  
-				        </p:columnGroup>
-				        <p:column>  
-			                #{supplierItem.supplierId}  
+					</p:row>
+				</p:columnGroup>
+				<p:column>  
+			                #{supplierItem.smSupplier.supplierName}
 			            </p:column>
-			            <p:column>
-			            	#{supplierItem.supplierItemId}
+				<p:column>
+			            	#{supplierItem.cmSupplierItem.itemDesc} 
 			            </p:column>
-			            <p:column>
-			            	#{supplierItem.priceOffer}
-			            </p:column>
-			            <p:column>
-			            	<h:selectOneMenu id="fulfillmentType#{supplierItem.supplierItemId}" style="width: auto;" required="false" disabled="false">
-								<!--TODO hardcode  option value because later will replace by the list in backing bean -->
-								<f:selectItem id="one-off" itemLabel="One Off" itemValue="1" />
-								<f:selectItem id="periodic" itemLabel="Periodic" itemValue="2" />
-							</h:selectOneMenu>
-			            </p:column>
-			            <p:column>
-			            	<h:selectOneMenu id="approveBy#{supplierItem.supplierItemId}" style="width: auto;" required="false" disabled="false">
-								<!--TODO hardcode  option value because later will replace by the list in backing bean -->
-								<f:selectItem id="approveBy#{supplierItem.supplierItemId}1" itemLabel="user1" itemValue="1" />
-								<f:selectItem id="approveBy#{supplierItem.supplierItemId}2" itemLabel="user2" itemValue="2" />
-							</h:selectOneMenu>
-			            </p:column>
-			            <p:column>
-			            	<p:calendar id="startDate#{supplierItem.supplierItemId}" showOn="button" size="50">
-							</p:calendar>
-			            </p:column>
-			            <p:column>
-			            	<p:calendar id="endDate#{supplierItem.supplierItemId}" showOn="button" size="50">
-							</p:calendar>
-			            </p:column>
-			            <p:column>
-			            	<a href="#" onclick="recommendSupplier.show();">view</a>
-			            </p:column>
-					</p:dataTable>
-					<ui:include src="/xhtml/ss/directpurchase/common/recommendSupplier.xhtml" />
-				</h:panelGrid>
-			</p:panel>
-		</h:form>
-	</ui:define>
+				<p:column>
+				</p:column>
+				<p:column>
+					<h:selectOneMenu id="fulfillmentType#{rowIndex}"
+						style="width: auto;" required="false" disabled="false">
+						<!--TODO hardcode  option value because later will replace by the list in backing bean -->
+						<f:selectItem id="one-off" itemLabel="One Off" itemValue="1" />
+						<f:selectItem id="periodic" itemLabel="Periodic" itemValue="2" />
+					</h:selectOneMenu>
+				</p:column>
+				<p:column>
+					<h:selectOneMenu id="approveBy#{rowIndex}" style="width: auto;"
+						required="false" disabled="false">
+						<!--TODO hardcode  option value because later will replace by the list in backing bean -->
+						<f:selectItem id="approveBy#{rowIndex}1" itemLabel="user1"
+							itemValue="1" />
+						<f:selectItem id="approveBy#{rowIndex}2" itemLabel="user2"
+							itemValue="2" />
+					</h:selectOneMenu>
+				</p:column>
+				<p:column>
+					<p:inputText id="periodId" style="width:10px;" required="false" />
+					<h:selectOneMenu id="periodMode" style="width: auto;">
+						<f:selectItem itemLabel="Day" itemValue="D"></f:selectItem>
+						<f:selectItem itemLabel="Month" itemValue="M"></f:selectItem>
+						<f:selectItem itemLabel="Year" itemValue="Y"></f:selectItem>
+					</h:selectOneMenu>
+				</p:column>
+				<p:column>
+					<a href="#" onclick="recommendSupplier.show();">Change</a>
+				</p:column>
+			</p:dataTable>
+			<ui:include
+				src="/xhtml/ss/directpurchase/common/recommendSupplier.xhtml" />
+		</h:panelGrid>
+	</p:panel>
 </ui:composition>

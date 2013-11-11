@@ -16,6 +16,7 @@
   		/WEB-INF/config/faces-config/tpl/faces-config-tpl.xml,
   		/WEB-INF/config/faces-config/fl/faces-config-fl.xml,
   		/WEB-INF/config/faces-config/ct/faces-config-ct.xml
+  		/WEB-INF/config/faces-config/ss/dptable.xml
 		</param-value>
 	</context-param>
 	<context-param>
@@ -48,6 +49,10 @@
   		<filter-name>PrimeFaces FileUpload Filter</filter-name>
   		<servlet-name>Faces Servlet</servlet-name>
  	</filter-mapping>
+ 	<context-param>
+	    <param-name>javax.faces.FACELETS_LIBRARIES</param-name>
+	    <param-value>/WEB-INF/config/faces-config/ss/dptable.xml</param-value>
+	</context-param>
 	<servlet>
 	    <servlet-name>imageServlet</servlet-name>
 	    <servlet-class>my.ep.web.servlet.ImageServlet</servlet-class>

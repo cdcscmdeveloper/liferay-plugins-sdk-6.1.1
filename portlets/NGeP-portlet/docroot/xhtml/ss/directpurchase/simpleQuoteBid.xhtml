@@ -46,9 +46,8 @@
 
 		</p:panel>
 
- <ui:include src="/xhtml/ss/directpurchase/common/simpleQuoteGroupTab.xhtml" />
 		<p:commandButton value="#{lbl['lbl.ss.simple.quote.purchase.btn.ok']}" style="float:right;"
-			onclick="simpleQuotePTJ.show();" oncomplete="simpleQuoteBid.hide();"></p:commandButton>
+			onclick="simpleQuoteBid.hide();" action="/xhtml/ss/directpurchase/common/simpleQuoteGroupTab.xhtml"></p:commandButton>
 				&#160;&#160;
 				<p:commandButton value="#{lbl['lbl.ss.simple.quote.purchase.btn.cancel']}" style="float:right;"
 			onclick="simpleQuoteBid.hide();"></p:commandButton>

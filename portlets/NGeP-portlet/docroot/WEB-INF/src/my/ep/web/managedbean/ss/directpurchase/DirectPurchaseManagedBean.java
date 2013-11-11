@@ -9,12 +9,15 @@ import javax.faces.bean.SessionScoped;
 
 import my.ep.persistence.entity.pm.authorization.PmOrgProfile;
 import my.ep.persistence.entity.pm.common.PmStatus;
+import my.ep.persistence.entity.ss.directpurchase.ScDpRemark;
 import my.ep.persistence.entity.ss.directpurchase.ScPrInquiry;
 import my.ep.persistence.entity.ss.directpurchase.ScRequestList;
+import my.ep.persistence.entity.ss.directpurchase.ScRequestNote;
 import my.ep.persistence.entity.ss.directpurchase.ScRequestSupplierItem;
 import my.ep.persistence.entity.ss.directpurchase.ScRequestListItem;
 import my.ep.web.constant.SourcingConst;
 import my.ep.web.managedbean.BaseManagedBean;
+import my.ep.web.util.DateUtils;
 
 import org.apache.log4j.Logger;
 /**
@@ -31,9 +34,10 @@ public class DirectPurchaseManagedBean extends BaseManagedBean{
 	
 	private	String	action	=	SourcingConst.CREATE_DIRECT_PURCHASE;
 	private	ScRequestList	requestList;
-	private	List<ScRequestListItem> requestListItems;
-	private	List<ScRequestSupplierItem> recommendRequestListSupplierItems;
+	private	List<ScRequestListItem> requestListItems = new ArrayList<ScRequestListItem>();
+	private	List<ScRequestSupplierItem> recommendRequestListSupplierItems = new ArrayList<ScRequestSupplierItem>();
 	private	ScRequestSupplierItem	selectedItem	=	new ScRequestSupplierItem();
+	private	String	requestListRemark;
 	private	ScPrInquiry	scPrInquiry = new ScPrInquiry();
 	
 	public DirectPurchaseManagedBean() {
@@ -88,7 +92,7 @@ public class DirectPurchaseManagedBean extends BaseManagedBean{
 		requestListItem1.setSupplierItems(supplierItems1);
 		requestListItems.add(requestListItem1);
 		
-		ScRequestListItem requestListItem2 = new ScRequestListItem(2L,"Item2",1000,"KG");
+		ScRequestListItem requestListItem2 = new ScRequestListItem(2L,"Item2",2000,"KG");
 		List<ScRequestSupplierItem> supplierItems2 = new ArrayList<ScRequestSupplierItem>();
 		supplierItems2.add(new ScRequestSupplierItem(31L,1L,1000,new Double(4.5)));/*
 		supplierItems2.add(new ScRequestSupplierItem(21L,3L,1000,new Double(4.6)));
@@ -100,7 +104,10 @@ public class DirectPurchaseManagedBean extends BaseManagedBean{
 		recommendRequestListSupplierItems.add(new ScRequestSupplierItem(1L,1L,1000,new Double(4.5)));
 		recommendRequestListSupplierItems.add(new ScRequestSupplierItem(5L,2L,1000,new Double(4.6)));
 	}
-
+	public void prepareRequestNoteDtl(){
+		List<ScRequestNote>		requestNotes	=	new ArrayList<ScRequestNote>();
+	}
+	
 	public ScRequestList getRequestList() {
 		return requestList;
 	}
@@ -123,6 +130,14 @@ public class DirectPurchaseManagedBean extends BaseManagedBean{
 
 	public void setScPrInquiry(ScPrInquiry scPrInquiry) {
 		this.scPrInquiry = scPrInquiry;
+	}
+
+	public String getRequestListRemark() {
+		return requestListRemark;
+	}
+
+	public void setRequestListRemark(String requestListRemark) {
+		this.requestListRemark = requestListRemark;
 	}
 	
 }

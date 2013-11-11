@@ -17,7 +17,9 @@ import my.ep.dto.ss.directpurchase.RequestListReqDTO;
 import my.ep.dto.ss.directpurchase.RequestListResDTO;
 import my.ep.dto.ss.directpurchase.SelectOptionDTO;
 import my.ep.jaxb.sc.directpurchasedata.SCDirectPurchaseDataType;
+import my.ep.persistence.entity.pm.common.PmStatus;
 import my.ep.persistence.entity.sm.SmSupplier;
+import my.ep.persistence.entity.ss.directpurchase.ScDpRemark;
 import my.ep.persistence.entity.ss.directpurchase.ScPrInquiry;
 import my.ep.persistence.entity.ss.directpurchase.ScRequestList;
 import my.ep.persistence.entity.ss.directpurchase.ScRequestSupplierItem;
@@ -26,6 +28,7 @@ import my.ep.util.lookupservice.EpBpmBusinessDelegate;
 import my.ep.web.backingbean.BaseBackingBean;
 import my.ep.web.constant.SourcingConst;
 import my.ep.web.managedbean.ss.directpurchase.DirectPurchaseManagedBean;
+import my.ep.web.util.DateUtils;
 import my.ep.web.util.lookupservice.BusinessDelegate;
 
 import org.apache.commons.collections.map.HashedMap;
@@ -92,41 +95,28 @@ public class DirectPurchaseBackingBean extends BaseBackingBean<DirectPurchaseMan
 		
 	}
 	
-	public void saveRequestList(){
+	public void saveRequestList(String action){
 		IDirectPurchaseSO directPurchaseSO	=	(IDirectPurchaseSO)BusinessDelegate.getInstance().getServiceObject(SourcingConst.SOURCING_MODULE, IDirectPurchaseSO.class);
 		RequestListReqDTO	requestListReqDTO	=	new	RequestListReqDTO();
 		requestListReqDTO.setRequestListDetail(this.getManagedBean().getRequestList());
 		RequestListResDTO	requestListResDTO	=	directPurchaseSO.saveRequestList(requestListReqDTO);
 		
-		
+		// Create BPM task
 		IBpmSO bpmSO = (IBpmSO) EpBpmBusinessDelegate.getInstance().getServiceObject(IBpmSO.class);
+		
 		String ctx = bpmSO.authenticate("roslan","welcome1");
 		BpmRequestDTO reqDTO = new BpmRequestDTO();
 		reqDTO.setCtxToken(ctx);
-
 		reqDTO.setProcessId("Quotation_Tender.DirectPurchaseCreation");
-		reqDTO.setOutcome("SUBMIT");
+		//reqDTO.setOutcome("SUBMIT");
 		SCDirectPurchaseDataType obj = new SCDirectPurchaseDataType();
-		  /*obj.setApprover("Asdqwe");
-		  obj.setBudgetId("Asdqwe");*/
-		  obj.setPtj("Asdqwe");
-		  obj.getSuppliers().add(String.valueOf( this.getManagedBean().getSelectedItem().getSmSupplier().getSupplierId()));
-		  reqDTO.setPojo(obj);
+		obj.setRequestId(String.valueOf(requestListResDTO.getRequestListDetail().getRequestListId()));
+		 obj.setPtj("Asdqwe");
+		 //obj.getSuppliers().add(String.valueOf( this.getManagedBean().getSelectedItem().getSmSupplier().getSupplierId()));
+		 reqDTO.setPojo(obj);
 		BpmResponseDTO res = bpmSO.initiateAndUpdateTask(reqDTO);
 		
 		//
-		
-//		bpmSO = (IBpmSO) EpBpmBusinessDelegate.getInstance().getServiceObject(IBpmSO.class);
-//		ctx = bpmSO.authenticate("roslan","welcome1");
-//		reqDTO = new BpmRequestDTO();
-//		reqDTO.setCtxToken(ctx);
-//		reqDTO.setTaskId("91a880f2-5d6f-4447-90aa-89e4966b8e93");
-//		
-//		res = bpmSO.getTaskDetails(reqDTO);
-//		Object a = res.getPojo();
-//		obj = (PPBudgetDataType)a;
-//		obj.getBudgetId();
-		
 		
 		this.getManagedBean().setRequestList(requestListResDTO.getRequestListDetail());
 		log.info("test test test");
@@ -218,6 +208,9 @@ public class DirectPurchaseBackingBean extends BaseBackingBean<DirectPurchaseMan
 			justificationMap.put("A", adhocJustifications);
 		}
 		this.justificationTypes = justificationMap.get(this.getManagedBean().getRequestList().getProcurementType());
+		if(this.justificationTypes != null && this.justificationTypes.size() > 0){
+			this.getManagedBean().getRequestList().setJustificationType(justificationTypes.get(0).getOptionValue());
+		}
 	}
 	
 	public void setProcumentList(List<SelectOptionDTO> procumentList) {
@@ -238,5 +231,20 @@ public class DirectPurchaseBackingBean extends BaseBackingBean<DirectPurchaseMan
 	public void setJustificationMap(Map<String, List<SelectOptionDTO>> justificationMap) {
 		DirectPurchaseBackingBean.justificationMap = justificationMap;
 	}
-	
+	public void addRemark(){
+		ScDpRemark	scDpRemark	=	new ScDpRemark();
+		scDpRemark.setChangedDate(DateUtils.getCurrentDate());
+		scDpRemark.setRemark(getManagedBean().getRequestListRemark());
+		//TODO hard code pmstatus
+		PmStatus	status	=	new	PmStatus();
+		status.setStatusId(61000L);
+		scDpRemark.setPmStatus(status);
+		getManagedBean().setRequestListRemark("");
+		this.getManagedBean().getRequestList().getScDpRemarks().add(scDpRemark);
+	}
+	public void deleteRemark(ScDpRemark scDpRemark){
+		if(getManagedBean().getRequestList().getScDpRemarks().contains(scDpRemark)){
+			getManagedBean().getRequestList().getScDpRemarks().remove(scDpRemark);
+		}
+	}
 }
