@@ -18,22 +18,24 @@
             	<h:outputLabel value="Ministry Code/Name" />
             </h:column>
             <h:column>
-            	<c:if test="#{qTDetailBB.managedBean.qt.brandNew and isDetailTab}">
-            		<p:selectOneMenu id="userMinDD" 
-            			value="#{qTDetailBB.managedBean.qt.ministryOrgProfile.orgProfileId}">
-            			<f:selectItem itemLabel="Select One" itemValue="#{null}" />
+            	<c:if test="#{qTDetailBB.managedBean.qt.brandNew}">
+            		<p:selectOneMenu 
+            			value="#{qTDetailBB.managedBean.qt.ministryOrgProfile.orgProfileId}"
+	            		styleClass="minstryclass"
+    	        		style="width: 220px;">
+        	    		<f:selectItem itemLabel="Select One" itemValue="#{null}" />
             			<f:selectItems value="#{qTDetailBB.managedBean.userMinistryList}"
             				var="pmOrgProfile" itemLabel="#{pmOrgProfile.orgCode} - #{pmOrgProfile.orgName}" itemValue="#{pmOrgProfile.orgProfileId}" />
             			<p:ajax event="change" listener="#{qTDetailBB.handleMinistryProfileChanged}"
-            				partialSubmit="true" process="@this" update="userDepDD, userDivDD" />
-            		</p:selectOneMenu>
-            	</c:if>
-            	<c:if test="#{!qTDetailBB.managedBean.qt.brandNew or !isDetailTab}">
+            				partialSubmit="true" process="@this" update="@(.minstryclass, .deptclass, .divisionclass)" />
+	            	</p:selectOneMenu>
+	            </c:if>
+	            <c:if test="#{!qTDetailBB.managedBean.qt.brandNew}">
             		<p:inputText 
             			value="#{qTDetailBB.managedBean.qt.ministryOrgProfile.orgCode} - #{qTDetailBB.managedBean.qt.ministryOrgProfile.orgName}" 
             			readonly="true" 
             			size="35" />
-            	</c:if>  
+            	</c:if>
             </h:column>
             <h:column>
             	<h:outputLabel value="Status" />  
@@ -45,17 +47,19 @@
              	<h:outputLabel value="Department Code/Name" />  
             </h:column>
             <h:column>
-            	<c:if test="#{qTDetailBB.managedBean.qt.brandNew and isDetailTab}">
-            		<p:selectOneMenu id="userDepDD" 
-            			value="#{qTDetailBB.managedBean.qt.departmentOrgProfile.orgProfileId}">
-            			<f:selectItem itemLabel="Select One" itemValue="#{null}" />
+            	<c:if test="#{qTDetailBB.managedBean.qt.brandNew}">
+            		<p:selectOneMenu
+            			value="#{qTDetailBB.managedBean.qt.departmentOrgProfile.orgProfileId}"
+	            		styleClass="deptclass"
+    	        		style="width: 220px;">
+        	    		<f:selectItem itemLabel="Select One" itemValue="#{null}" />
             			<f:selectItems value="#{qTDetailBB.managedBean.userDepartmentList}"
             				var="pmOrgProfile" itemLabel="#{pmOrgProfile.orgCode} - #{pmOrgProfile.orgName}" itemValue="#{pmOrgProfile.orgProfileId}" />
             			<p:ajax event="change" listener="#{qTDetailBB.handleDepartmentProfileChanged}"
-            				partialSubmit="true" process="@this" update="userDivDD" />
-            		</p:selectOneMenu>
-            	</c:if>
-            	<c:if test="#{!qTDetailBB.managedBean.qt.brandNew or !isDetailTab}">
+            				partialSubmit="true" process="@this" update="@(.deptclass, .divisionclass)" />
+	            	</p:selectOneMenu>
+	            </c:if>
+	            <c:if test="#{!qTDetailBB.managedBean.qt.brandNew}">
             		<p:inputText 
             			value="#{qTDetailBB.managedBean.qt.departmentOrgProfile.orgCode} - #{qTDetailBB.managedBean.qt.departmentOrgProfile.orgName}" 
             			readonly="true"
@@ -72,14 +76,19 @@
             	<h:outputLabel value="Divison Code/Name" />  
             </h:column>
             <h:column>
-            	<c:if test="#{qTDetailBB.managedBean.qt.brandNew and isDetailTab}">
-            		<p:selectOneMenu id="userDivDD" value="#{qTDetailBB.managedBean.qt.pmOrgProfile.orgProfileId}">
-            			<f:selectItem itemLabel="Select One" itemValue="#{null}" />
-            			<f:selectItems value="#{qTDetailBB.managedBean.userDivisionList}"
-            				var="pmOrgProfile" itemLabel="#{pmOrgProfile.orgCode} - #{pmOrgProfile.orgName}" itemValue="#{pmOrgProfile.orgProfileId}" />
-            		</p:selectOneMenu>
-            	</c:if>
-            	<c:if test="#{!qTDetailBB.managedBean.qt.brandNew or !isDetailTab}">
+            	<c:if test="#{qTDetailBB.managedBean.qt.brandNew}">
+            		<p:selectOneMenu 
+           				value="#{qTDetailBB.managedBean.qt.pmOrgProfile.orgProfileId}"
+	           			styleClass="divisionclass"
+    	        		style="width: 220px;">
+        	   			<f:selectItem itemLabel="Select One" itemValue="#{null}" />
+           				<f:selectItems value="#{qTDetailBB.managedBean.userDivisionList}"
+           					var="pmOrgProfile" itemLabel="#{pmOrgProfile.orgCode} - #{pmOrgProfile.orgName}" itemValue="#{pmOrgProfile.orgProfileId}" />
+           				<p:ajax event="change" 
+            				partialSubmit="true" process="@this" update="@(.divisionclass)" />
+	           		</p:selectOneMenu>
+	           	</c:if>
+	           	<c:if test="#{!qTDetailBB.managedBean.qt.brandNew}">
             		<p:inputText 
             			value="#{qTDetailBB.managedBean.qt.pmOrgProfile.orgCode} - #{qTDetailBB.managedBean.qt.pmOrgProfile.orgName}" 
             			readonly="true"
