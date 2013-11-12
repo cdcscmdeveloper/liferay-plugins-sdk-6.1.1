@@ -25,7 +25,7 @@ import org.apache.log4j.Logger;
  * @author Giribabu
  * @since 7/10/2013
  */
-@ManagedBean
+@ManagedBean(name = "prMB")
 @SessionScoped
 public class PurchaseRequestManagedBean extends BaseManagedBean {
 	private static Logger log = Logger.getLogger(PurchaseRequestManagedBean.class);
@@ -50,6 +50,8 @@ public class PurchaseRequestManagedBean extends BaseManagedBean {
 	private String[] actions;
 	private String taskName;
 	private String docProcess;
+	private String flDocId;
+	private String buttonVal;
 	
 	/**
 	 * @return the flRemark
@@ -255,4 +257,33 @@ public class PurchaseRequestManagedBean extends BaseManagedBean {
 		this.docProcess = docProcess;
 	}
 
+	/**
+	 * @return the flDocId
+	 */
+	public String getFlDocId() {
+		return flDocId;
+	}
+
+	/**
+	 * @param flDocId the flDocId to set
+	 */
+	public void setFlDocId(String flDocId) {
+		this.flDocId = flDocId;
+	}
+
+	/**
+	 * @return the buttonVal
+	 */
+	public String getButtonVal() {
+		return buttonVal;
+	}
+
+	/**
+	 * @param buttonVal the buttonVal to set
+	 */
+	public void setButtonVal(String buttonVal) {
+		this.buttonVal = buttonVal;
+	}
+
+	
 }

@@ -10,6 +10,7 @@ import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
 
 import my.ep.persistence.entity.fl.VFlDocument;
+import my.ep.persistence.entity.fl.request.FlFulfilmentRequest;
 import my.ep.web.managedbean.BaseManagedBean;
 
 /**
@@ -18,7 +19,7 @@ import my.ep.web.managedbean.BaseManagedBean;
  * @author Giribabu
  * @since 2/11/2013
  */
-@ManagedBean
+@ManagedBean(name = "flDocumentManagedBean")
 @SessionScoped
 public class FlDocumentManagedBean extends BaseManagedBean {
 
@@ -37,6 +38,7 @@ public class FlDocumentManagedBean extends BaseManagedBean {
 	private Date searchEndDate;
 	private String searchProcurementType;
 	private Long searchStatusId; 
+	private FlFulfilmentRequest fulfilmentRequest;
 	
 	private List<VFlDocument> flDocumentList;
 
@@ -150,6 +152,20 @@ public class FlDocumentManagedBean extends BaseManagedBean {
 
 	public void setSearchProcurementType(String searchProcurementType) {
 		this.searchProcurementType = searchProcurementType;
+	}
+
+	/**
+	 * @return the fulfilmentRequest
+	 */
+	public FlFulfilmentRequest getFulfilmentRequest() {
+		return fulfilmentRequest;
+	}
+
+	/**
+	 * @param fulfilmentRequest the fulfilmentRequest to set
+	 */
+	public void setFulfilmentRequest(FlFulfilmentRequest fulfilmentRequest) {
+		this.fulfilmentRequest = fulfilmentRequest;
 	}
 	
 }

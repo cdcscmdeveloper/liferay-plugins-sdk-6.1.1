@@ -13,6 +13,30 @@
 					value="PRINT" /></td>
 		</tr>
 	</table>
+	<table style="width: 800px;">
+		<tr>
+			<c:if
+				test='#{flOrderBB.managedBean.buttonVal eq "Update"}'>
+				<td colspan="4">
+					<div align="right">
+						<p:commandButton value="UPDATE"
+							action="#{flOrderBB.fulfillmentOrderAction('UPDATE')}">
+							<f:param name="actionName" value="UPDATE" />
+						</p:commandButton>
+					</div>
+				</td>
+			</c:if>
+			<c:if
+				test='#{flOrderBB.managedBean.buttonVal eq "Cancel"}'>
+				<td colspan="4" align="right"><div align="right">
+						<p:commandButton value="CANCEL"
+							action="#{flOrderBB.fulfillmentOrderAction('CANCEL')}">
+							<f:param name="actionName" value="CANCEL" />
+						</p:commandButton>
+					</div></td>
+			</c:if>
+		</tr>
+	</table>
 
 	<p:panel header="FULFILMENT DETAIL" toggleable="true">
 		<table>

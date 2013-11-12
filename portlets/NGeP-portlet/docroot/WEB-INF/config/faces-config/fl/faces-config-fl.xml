@@ -46,7 +46,11 @@
 			<to-view-id>/xhtml/fl/invoice/invBasePage.xhtml</to-view-id>
 			<redirect />
 		</navigation-case>
-		
+		<navigation-case>
+			<from-outcome>MaintainFRN</from-outcome>
+			<to-view-id>/xhtml/fl/receivednote/frnBasePage.xhtml</to-view-id>
+			<redirect />
+		</navigation-case>
 	</navigation-rule>
 </faces-config>
 

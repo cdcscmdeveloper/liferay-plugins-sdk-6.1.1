@@ -16,7 +16,7 @@ import my.ep.web.managedbean.BaseManagedBean;
  * @since 30/10/2013
  *
  */
-@ManagedBean
+@ManagedBean(name = "invMB")
 @SessionScoped
 public class InvoiceManagedBean extends BaseManagedBean {
 
@@ -29,6 +29,8 @@ public class InvoiceManagedBean extends BaseManagedBean {
 	
 	private String bpmTaskId;
 	private String[] actions;
+	private String DocProcess;
+	private String buttonVal;
 	
 	
 	/**
@@ -66,5 +68,29 @@ public class InvoiceManagedBean extends BaseManagedBean {
 	 */
 	public void setActions(String[] actions) {
 		this.actions = actions;
+	}
+	/**
+	 * @return the docProcess
+	 */
+	public String getDocProcess() {
+		return DocProcess;
+	}
+	/**
+	 * @param docProcess the docProcess to set
+	 */
+	public void setDocProcess(String docProcess) {
+		DocProcess = docProcess;
+	}
+	/**
+	 * @return the buttonVal
+	 */
+	public String getButtonVal() {
+		return buttonVal;
+	}
+	/**
+	 * @param buttonVal the buttonVal to set
+	 */
+	public void setButtonVal(String buttonVal) {
+		this.buttonVal = buttonVal;
 	}
 }

@@ -6,6 +6,7 @@ import java.util.List;
 import javax.annotation.PostConstruct;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.RequestScoped;
+import javax.faces.context.FacesContext;
 
 import my.ep.biz.service.fl.order.IFulfilmentOrderSO;
 import my.ep.dto.fl.FulfilmentReqDTO;
@@ -51,6 +52,10 @@ public class FulfilmentOrderBackingBean extends BaseBackingBean<FulfilmentOrderM
 	public void fulfillmentOrderAction(String action) {
 		IFulfilmentOrderSO fulfilmentOrderSO = null;
 		try {
+			
+			String actionName=FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap().get("actionName");
+			System.out.println("action name in BB "+actionName);
+			System.out.println("action in BB "+action);
 			FulfilmentReqDTO reqDTO = new FulfilmentReqDTO();
 			FlRemark flRemark = getManagedBean().getFlRemark();
 			FlAttachment flAttachment = this.getManagedBean().getFlAttachment();

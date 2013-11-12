@@ -102,11 +102,7 @@ public class PurchaseRequestBackingBean extends BaseBackingBean<PurchaseRequestM
 			reqDTO.setFlFulfilmentRequest(flFulfilmentRequest);
 			reqDTO.setContractRequest(false);
 			reqDTO.setTaskId(this.getManagedBean().getTaskId());
-			if(action==null || action==""){
-				reqDTO.setOutcome(BpmOutcomeConst.BPM_SUBMIT);
-			}else{
-				reqDTO.setOutcome(action);
-			}
+			reqDTO.setOutcome(action);
 			fulfilmentRequestSO.saveFulfillmentRequest(reqDTO);
 		} catch (Exception e) {
 			log.error("Exception>>", e);

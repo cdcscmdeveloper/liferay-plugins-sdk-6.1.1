@@ -6,13 +6,14 @@
 	xmlns:ui="http://java.sun.com/jsf/facelets"
 	xmlns:p="http://primefaces.org/ui"
 	xmlns:c="http://java.sun.com/jsp/jstl/core"
-	xmlns:ac="http://ac.my/jsf/composite/cc" >
+	xmlns:ac="http://ac.my/jsf/composite/cc">
 
 	<ui:define name="resourceSection">
 	</ui:define>
 
 	<ui:define name="contentSection">
-		<p:messages id="messages" showDetail="true" autoUpdate="true" closable="true" severity="error, info" />		
+		<p:messages id="messages" showDetail="true" autoUpdate="true"
+			closable="true" severity="error, info" />
 		<p:selectOneMenu
 			value="#{flDocumentBackingBean.managedBean.tempLoginId}">
 			<f:selectItem itemLabel="CURRENT LOGIN" itemValue="0" />
@@ -20,47 +21,73 @@
 			<f:selectItem itemLabel="Lailah" itemValue="lailah" />
 			<f:selectItem itemLabel="Khai" itemValue="khai" />
 			<f:selectItem itemLabel="Alex" itemValue="alex" />
-			<p:ajax event="change" update="defineSearchTbl" listener="#{flDocumentBackingBean.selectedUser}" />
-		</p:selectOneMenu>		
+			<p:ajax event="change" update="defineSearchTbl"
+				listener="#{flDocumentBackingBean.selectedUser}" />
+		</p:selectOneMenu>
 		<p:panel id="searchPanel" header="SEARCH" toggleable="true">
 			<table>
 				<tr>
-					<td>
-						<p:selectOneRadio id="searchRadio" value="#{flDocumentBackingBean.managedBean.searchType}">
+					<td><p:selectOneRadio id="searchRadio"
+							value="#{flDocumentBackingBean.managedBean.searchType}">
 							<f:selectItem itemValue="D" itemLabel="Define Search" />
 							<!--  <f:selectItem itemValue="A" itemLabel="Advance Search" /> -->
-							<p:ajax event="click" listener="#{flDocumentBackingBean.advanceSearch()}" update="advanceSearchID" />
-						</p:selectOneRadio>
-					</td>
+							<p:ajax event="click"
+								listener="#{flDocumentBackingBean.advanceSearch()}"
+								update="advanceSearchID" />
+						</p:selectOneRadio></td>
 				</tr>
 			</table>
 			<h:panelGroup id="defineSearchTbl">
 				<h:panelGrid columns="3" columnClasses="cmWidth1">
 					<p:outputLabel value="Fulfilment Order Type" />
-					<p:selectOneMenu value="#{flDocumentBackingBean.managedBean.searchOrderType}">
-						<f:selectItems value="#{flDocumentBackingBean.getDropdownCodeValues(PmCodeCatConst.fulfilmentOrderType)}" />
-						<p:ajax event="change" update="defineSearchTbl"	listener="#{flDocumentBackingBean.selectedDoctype}" />
+					<p:selectOneMenu
+						value="#{flDocumentBackingBean.managedBean.searchOrderType}">
+						<f:selectItems
+							value="#{flDocumentBackingBean.getDropdownCodeValues(PmCodeCatConst.fulfilmentOrderType)}" />
 					</p:selectOneMenu>
 				</h:panelGrid>
-				<h:panelGrid columns="3" columnClasses="cmWidth1" >
+				<h:panelGrid columns="3" columnClasses="cmWidth1">
 					<p:outputLabel value="Document Type" />
-					<p:selectOneMenu value="#{flDocumentBackingBean.managedBean.searchDocType}">
-						<f:selectItems value="#{flDocumentBackingBean.getDropdownCodeValues(PmCodeCatConst.fulfilmentDocumentType)}" />
-						<p:ajax event="change" update="defineSearchTbl" listener="#{flDocumentBackingBean.selectedDoctype}" />
+					<p:selectOneMenu
+						value="#{flDocumentBackingBean.managedBean.searchDocType}">
+						<f:selectItems
+							value="#{flDocumentBackingBean.getDropdownCodeValues(PmCodeCatConst.fulfilmentDocumentType)}" />
+						<p:ajax event="change" update="docTypeSearch"
+							listener="#{flDocumentBackingBean.selectedDoctype}" />
 					</p:selectOneMenu>
 				</h:panelGrid>
-			</h:panelGroup>		
-			<p:outputPanel id="advanceSearchID" style="width:100%">
+				<h:panelGrid columns="3" columnClasses="cmWidth1">
+					<p:outputLabel value="Doc No" />
+					<p:inputText size="50"
+						value="#{flDocumentBackingBean.managedBean.searchDocNo}"></p:inputText>
+				</h:panelGrid>
+			</h:panelGroup>
+			<h:panelGroup id="docTypeSearch">
+				<h:panelGrid columns="10" columnClasses="cmWidth1"
+					rendered="#{flDocumentBackingBean.managedBean.searchDocType eq 'CO'}">
+					<p:outputLabel value="Contract No" />
+					<p:inputText size="50"
+						value="#{flDocumentBackingBean.managedBean.searchContractNo}"></p:inputText>
+					<p:outputLabel value="Circular No" />
+					<p:inputText size="50"
+						value="#{flDocumentBackingBean.managedBean.searchCircularNo}"></p:inputText>
+				</h:panelGrid>
 				
-			</p:outputPanel>	
-			<p:commandButton value="search"	action="#{flDocumentBackingBean.searchDocument}" update="resultPanel" />
-		</p:panel>	
+			</h:panelGroup>
+			<p:outputPanel id="advanceSearchID" style="width:100%">
+			</p:outputPanel>
+			<p:commandButton value="search"
+				action="#{flDocumentBackingBean.searchDocument}"
+				update="resultPanel" />
+		</p:panel>
 		<p:panel id="resultPanel" header="RESULT" toggleable="true">
-			<p:dataTable id="flDocListDt" value="#{flDocumentBackingBean.flDocumentDataModel}" lazy="true"
-				var="flDocument" rowIndexVar="rowIndex" rowKey="#{flDocument.docId}" width="100%">
-	
-			 	<ac:paginator for="flDocListDt" />
-			 	
+			<p:dataTable id="flDocListDt"
+				value="#{flDocumentBackingBean.flDocumentDataModel}" lazy="true"
+				var="flDocument" rowIndexVar="rowIndex" rowKey="#{flDocument.docId}"
+				width="100%">
+
+				<ac:paginator for="flDocListDt" />
+
 				<p:column headerText="Document Type">
 					<h:outputText value="#{flDocument.docType}" />
 				</p:column>
@@ -72,16 +99,32 @@
 				</p:column>
 				<p:column headerText="Circular No.">
 					<h:outputText value="#{flDocument.circularNo}" />
-				</p:column>	
+				</p:column>
 				<p:column headerText="Status">
 					<h:outputText value="#{flDocument.status.statusId}" />
-				</p:column>										
-				<p:column headerText="Detail">
-					<p:commandButton action="#{flDocumentBackingBean.navigateToFulfillmentDet(rowIndex)}" value="Detail">
-						<f:param name="flDocId" value="#{flDocument.docId}" />
-					</p:commandButton>
+				</p:column>
+				
+				<p:column headerText="View">
+					<p:commandButton
+						onclick="goToDetail([{name:'docType', value:'#{flDocument.docType}'}, {name:'docId', value:'#{flDocument.docId}'}, {name:'docNo', value:'#{flDocument.docNo}'}, {name:'buttonVal', value:'View'}])"
+						value="View" />
+				</p:column>
+				<p:column headerText="Update">
+					<p:commandButton
+						onclick="goToDetail([{name:'docType', value:'#{flDocument.docType}'}, {name:'docId', value:'#{flDocument.docId}'}, {name:'docNo', value:'#{flDocument.docNo}'}, {name:'buttonVal', value:'Update'}])"
+						value="Update" />
+				</p:column>
+				<p:column headerText="Cancel">
+					<p:commandButton
+						onclick="goToDetail([{name:'docType', value:'#{flDocument.docType}'}, {name:'docId', value:'#{flDocument.docId}'}, {name:'docNo', value:'#{flDocument.docNo}'}, {name:'buttonVal', value:'Cancel'}])"
+						value="Cancel" />
 				</p:column>
 			</p:dataTable>
+			<p:remoteCommand action="#{flDocumentBackingBean.navigateToPage}"
+				name="goToDetail" />
+
+
+
 		</p:panel>
 	</ui:define>
 </ui:composition>

@@ -10,7 +10,6 @@ import javax.faces.bean.RequestScoped;
 
 import my.ep.biz.service.fl.frn.IReceivedNoteSO;
 import my.ep.dto.fl.FulfilmentReqDTO;
-import my.ep.dto.fl.FulfilmentResDTO;
 import my.ep.persistence.entity.fl.FlAttachment;
 import my.ep.persistence.entity.fl.FlRemark;
 import my.ep.persistence.entity.fl.frn.FlFulfilmentNote;

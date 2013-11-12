@@ -4,11 +4,11 @@
 package my.ep.web.backingbean.fl.deliveryorder;
 
 import java.text.ParseException;
-import java.util.ArrayList;
 
 import javax.annotation.PostConstruct;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.RequestScoped;
+import javax.faces.context.FacesContext;
 
 import my.ep.biz.service.fl.order.IDeliveryOrderSO;
 import my.ep.dto.fl.FulfilmentReqDTO;
@@ -19,9 +19,6 @@ import my.ep.persistence.entity.fl.order.FlDeliveryOrder;
 import my.ep.persistence.entity.fl.order.FlFulfilmentOrder;
 import my.ep.persistence.entity.fl.request.FlDeliveryAddress;
 import my.ep.persistence.entity.fl.request.FlFulfilmentRequest;
-import my.ep.persistence.entity.pm.authorization.PmOrgProfile;
-import my.ep.persistence.entity.pm.common.PmStatus;
-import my.ep.persistence.entity.sm.SmSupplier;
 import my.ep.persistence.logging.LogKey;
 import my.ep.web.backingbean.BaseBackingBean;
 import my.ep.web.managedbean.fl.creatdo.DeliveryOrderManagedBean;
@@ -48,27 +45,32 @@ public class DeliveryOrderBackingBean extends BaseBackingBean<DeliveryOrderManag
 	}
 	@PostConstruct
 	public void init() {
-		if (getManagedBean().getFlDeliveryOrder() == null) {
+		/*if (getManagedBean().getFlDeliveryOrder() == null) {
 			getManagedBean().setFlDeliveryOrder(new FlDeliveryOrder());
 			
-		}
+		}*/
 		if (getManagedBean().getFulfilmentOrder() == null) {
 			getManagedBean().setFulfilmentRequest(new FlFulfilmentRequest());
 			//getManagedBean().getFulfilmentRequest()
 			getManagedBean().setFulfilmentOrder(new FlFulfilmentOrder() );
-			getManagedBean().setFlDeliveryOrder(new FlDeliveryOrder());
+			//getManagedBean().setFlDeliveryOrder(new FlDeliveryOrder());
 			getManagedBean().setDeliveryAddress(new FlDeliveryAddress());
 		}
 	}
 
-	public void createDeliveryOrder() throws ParseException {
+	public void createDeliveryOrder(String action) throws ParseException {
 		IDeliveryOrderSO deliveryOrderSO = null;
 		try {
-			//fulfilmentOrderId
-			System.out.println("3333333333333333  "+getManagedBean().getFulfilmentOrder().getFlFulfilmentRequest().getFulfilmentReqId());
-			//System.out.println("fulfilmentOrderId in CreateDOBackingBean:: "+this.getManagedBean().getFulfilmentOrderId());
-			Long fulfilmentOrderId=Long.valueOf(getManagedBean().getFulfilmentOrder().getFulfilmentOrderId());
-			Long flRequestId=Long.valueOf(getManagedBean().getFulfilmentOrder().getFlFulfilmentRequest().getFulfilmentReqId());
+			String actionName=FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap().get("actionName");
+			Long flOrderId;
+			if(actionName!=null && actionName!=""){
+				flOrderId=this.getManagedBean().getFlDeliveryOrder().getFlFulfilmentOrder().getFulfilmentOrderId();
+			}else{
+				flOrderId=getManagedBean().getFulfilmentOrder().getFulfilmentOrderId();
+			}
+			
+			Long fulfilmentOrderId=Long.valueOf(flOrderId);
+			//Long flRequestId=Long.valueOf(getManagedBean().getFulfilmentOrder().getFlFulfilmentRequest().getFulfilmentReqId());
 			String  statusId=this.getManagedBean().getStatusId();
 			FulfilmentReqDTO reqDTO = new FulfilmentReqDTO();
 			
@@ -92,13 +94,13 @@ public class DeliveryOrderBackingBean extends BaseBackingBean<DeliveryOrderManag
 			//reqDTO.setFlAttachment(flAttachment);
 			reqDTO.setFulfilmentOrderId(fulfilmentOrderId);
 			reqDTO.setStatusId(statusId);
-			reqDTO.setFlRequestId(flRequestId);
+			//reqDTO.setFlRequestId(flRequestId);
 			reqDTO.setFlDeliveryOrder(flDeliveryOrder);
-			System.out.println("3333333333333333  "+getManagedBean().getFulfilmentOrder().getDocNo());
 			reqDTO.setFulfilmentOrder(getManagedBean().getFulfilmentOrder());
 			//reqDTO.setContractRequest(false);
 			//reqDTO.setTaskId(this.getManagedBean().getTaskId());
-			reqDTO.setOutcome("SUBMIT");
+			reqDTO.setOutcome(action);
+			
 			//reqDTO.setProcessId("Order_Fullfillment.CreatePurchaseOrder");
 			FulfilmentResDTO resDTO = deliveryOrderSO.saveDeliveryOrder(reqDTO);
 			//System.out.println("resDTO.isSuccessful() in backing bean:: "+ resDTO.isSuccessful());

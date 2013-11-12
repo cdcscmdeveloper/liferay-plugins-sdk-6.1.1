@@ -25,7 +25,7 @@ import org.apache.log4j.Logger;
  * @author Giribabu
  * @since 7/10/2013
  */
-@ManagedBean
+@ManagedBean(name = "frnMB")
 @SessionScoped
 public class ReceivedNoteManagedBean extends BaseManagedBean {
 	private static Logger log = Logger.getLogger(ReceivedNoteManagedBean.class);
@@ -49,6 +49,7 @@ public class ReceivedNoteManagedBean extends BaseManagedBean {
 	private String fulfillmentReqId;
 	private String taskId;
 	private String[] actions;
+	private String buttonVal;
 	private long deliveryOrderId;
 	
 
@@ -236,6 +237,20 @@ public class ReceivedNoteManagedBean extends BaseManagedBean {
 	 */
 	public void setFulfilmentNoteItem(FlFulfilmentNoteItem fulfilmentNoteItem) {
 		this.fulfilmentNoteItem = fulfilmentNoteItem;
+	}
+
+	/**
+	 * @return the buttonVal
+	 */
+	public String getButtonVal() {
+		return buttonVal;
+	}
+
+	/**
+	 * @param buttonVal the buttonVal to set
+	 */
+	public void setButtonVal(String buttonVal) {
+		this.buttonVal = buttonVal;
 	}
 
 	/**

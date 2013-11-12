@@ -26,7 +26,7 @@ import org.apache.log4j.Logger;
  * @author Giribabu
  * @since 7/10/2013
  */
-@ManagedBean
+@ManagedBean(name = "doMB")
 @SessionScoped
 public class DeliveryOrderManagedBean extends BaseManagedBean {
 	private static Logger log = Logger.getLogger(DeliveryOrderManagedBean.class);
@@ -56,6 +56,7 @@ public class DeliveryOrderManagedBean extends BaseManagedBean {
 	private List<FlFulfilmentOrder> pendingDoList;
 	private List<FlDeliveryAddress>deliveryAddressList;
 	private String docProcess;
+	private String buttonVal;
 
 	/**
 	 * @return the flRemark
@@ -339,6 +340,20 @@ public class DeliveryOrderManagedBean extends BaseManagedBean {
 	 */
 	public void setDocProcess(String docProcess) {
 		this.docProcess = docProcess;
+	}
+
+	/**
+	 * @return the buttonVal
+	 */
+	public String getButtonVal() {
+		return buttonVal;
+	}
+
+	/**
+	 * @param buttonVal the buttonVal to set
+	 */
+	public void setButtonVal(String buttonVal) {
+		this.buttonVal = buttonVal;
 	}
 
 }

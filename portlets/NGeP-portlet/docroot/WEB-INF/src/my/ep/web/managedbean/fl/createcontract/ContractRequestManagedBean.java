@@ -26,7 +26,7 @@ import org.apache.log4j.Logger;
  * @author Giribabu
  * @since 20/9/2013
  */
-@ManagedBean
+@ManagedBean(name = "crMB")
 @SessionScoped
 public class ContractRequestManagedBean extends BaseManagedBean {
 	private static Logger log = Logger.getLogger(ContractRequestManagedBean.class);
@@ -57,6 +57,11 @@ public class ContractRequestManagedBean extends BaseManagedBean {
 	private boolean selectedRowFlg;
 	
 	private String tempLogin; //TODO: temp and to be removed
+	
+	//doc search
+	private String docProcess;
+	private String flDocId;
+	private String buttonVal;
 		
 	public ContractRequestManagedBean(){
 		
@@ -323,6 +328,54 @@ public class ContractRequestManagedBean extends BaseManagedBean {
 	 */
 	public void setTempLogin(String tempLogin) {
 		this.tempLogin = tempLogin;
+	}
+
+
+	/**
+	 * @return the docProcess
+	 */
+	public String getDocProcess() {
+		return docProcess;
+	}
+
+
+	/**
+	 * @param docProcess the docProcess to set
+	 */
+	public void setDocProcess(String docProcess) {
+		this.docProcess = docProcess;
+	}
+
+
+	/**
+	 * @return the flDocId
+	 */
+	public String getFlDocId() {
+		return flDocId;
+	}
+
+
+	/**
+	 * @param flDocId the flDocId to set
+	 */
+	public void setFlDocId(String flDocId) {
+		this.flDocId = flDocId;
+	}
+
+
+	/**
+	 * @return the buttonVal
+	 */
+	public String getButtonVal() {
+		return buttonVal;
+	}
+
+
+	/**
+	 * @param buttonVal the buttonVal to set
+	 */
+	public void setButtonVal(String buttonVal) {
+		this.buttonVal = buttonVal;
 	}
 
 }
