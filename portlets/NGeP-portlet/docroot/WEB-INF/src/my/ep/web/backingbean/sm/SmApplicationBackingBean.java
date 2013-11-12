@@ -134,6 +134,12 @@ public class SmApplicationBackingBean extends
 			getManagedBean().setSmAppl(smAppl);
 			getManagedBean().setTabActiveIndex(0);
 			getManagedBean().setOfficeFacility(new SmFacility());
+			// TODo Remove hard code later
+			if (getManagedBean().isApproverUser()
+					|| getManagedBean().isPoUser()) {
+				System.out.println("**** LOGIN IS PO or APPROVER *******");
+				getManagedBean().getSmAppl().setSupportingDocMode("O");
+			}
 			if (applicationType.equalsIgnoreCase("B")) {
 				return SupplierManagementConst.PROCEED_BUMI_APPLN;
 			} else if (applicationType.equalsIgnoreCase("N")) {
@@ -261,6 +267,29 @@ public class SmApplicationBackingBean extends
 		System.out.println(" ***** Tab Values *** " + currentTab + outputTab);
 		this.currentTab = currentTab;
 		this.outputTab = outputTab;
+	}
+
+	public void assignReviewSupportingNav(String navType) {
+		int currentPage = getManagedBean().getTabActiveIndex();
+		try {
+			this.currentTab = currentPage;
+			System.out
+					.println("********** ENTER THE PRE RENDER FOR SUPP DOXS ***** "
+							+ currentPage + "  , " + navType);
+			getManagedBean().getSmAppl().setSupportingDocMode("O");
+			if (navType.equalsIgnoreCase("next")) {
+				System.out.println("** MY NEXT PAGE ***");
+				this.outputTab = currentPage + 1;
+			} else if (navType.equalsIgnoreCase("prev")) {
+				System.out.println("** MY PREV PAGE ***");
+				this.outputTab = currentPage - 1;
+			} else {
+				this.outputTab = currentPage;
+			}
+		} catch (Exception e) {
+			this.currentTab = currentPage;
+			this.outputTab = currentPage;
+		}
 	}
 
 	public void officeFacilitySelected(AjaxBehaviorEvent e) {

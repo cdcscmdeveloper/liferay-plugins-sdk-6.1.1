@@ -32,7 +32,11 @@ import my.ep.persistence.entity.sm.SmSupplierBank;
 import my.ep.persistence.entity.sm.SmSupplierBranch;
 import my.ep.persistence.entity.sm.SmSupplierCategory;
 import my.ep.persistence.entity.sm.SmSupplierCert;
+import my.ep.web.bean.sm.SvcTemplateBean;
 import my.ep.web.managedbean.BaseManagedBean;
+import my.ep.web.util.FacesScopes;
+
+import com.liferay.portal.model.Role;
 
 @ManagedBean(name = "smApplMB")
 @SessionScoped
@@ -130,16 +134,67 @@ public class SmApplicationManagedBean extends BaseManagedBean {
 	private SmSupplierBank selectedSignatoryBankAcct;
 
 	private List<SmSupplierBank> selectedBanks;
-	
+
+	private List<SmSupplierCategory> selectedCategories;
+
 	private String delPendAckMsg;
 
+	private boolean poUser;
+
+	private boolean supplierUser;
+
+	private boolean approverUser;
+
+	// TODO change the type later
+	private List<SvcTemplateBean> selectedTemplateList;
+
+	private List<SvcTemplateBean> templateList = new ArrayList<SvcTemplateBean>();
+
 	public SmApplicationManagedBean() {
+		// TODO Checking the user role
+		FacesScopes sc = new FacesScopes();
+		System.out.println(" << ======= Login USer === >>  "
+				+ sc.getUserScreenName());
+		List<Role> loginUserRoles = sc.getUserRoleList();
+		// if (sc.hasRoleUser("HQ_PO")) {
+		// setPoUser(true);
+		// System.out.println();
+		// } else if (sc.hasRoleUser("HQ_REG_APPROVER")) {
+		// setApproverUser(true);
+		// } else if (sc.hasRoleUser("SUPPLIER_ADMIN")
+		// || sc.hasRoleUser("SUPPLIER_USER")) {
+		// setSupplierUser(true);
+		//
+		// }
+		List<String> roleNames = new ArrayList<String>();
+		for (Role r : loginUserRoles) {
+			System.out.println(" Role ===  >> " + r.getName());
+			roleNames.add(r.getName());
+		}
+		if (roleNames.contains("HQ_PO")) {
+			setPoUser(true);
+			System.out.println();
+		} else if (roleNames.contains("HQ_REG_APPROVER")) {
+			setApproverUser(true);
+		} else if (roleNames.contains("SUPPLIER_ADMIN")
+				|| roleNames.contains("SUPPLIER_USER")) {
+			setSupplierUser(true);
+
+		} else {
+			System.out.println("****** UNKNOWN ROLE ****** ");
+		}
+
+		System.out.println("PO USER === >> " + isPoUser());
+		System.out.println("APPROVER USER === >> " + isApproverUser());
+		System.out.println("NORMAL USER === >> " + isSupplierUser());
+
 		defaultAddr = new SmAddress();
 		defaultAddr.setPmCity(new PmCity());
 		defaultAddr.setPmDistrict(new PmDistrict());
 		defaultAddr.setPmCountry(new PmCountry());
 		defaultAddr.setPmState(new PmState());
 
+		selectedCategories = new ArrayList<SmSupplierCategory>();
 		selectedBranch = new SmSupplierBranch();
 		selectedBranch.setSmAddress(defaultAddr);
 		selectedBranches = new ArrayList<SmSupplierBranch>();
@@ -298,6 +353,21 @@ public class SmApplicationManagedBean extends BaseManagedBean {
 		defaultParentCatList.add(p1);
 		defaultParentCatList.add(p2);
 		// For CategoryCodes End
+
+		prepareTemplateList();
+
+		System.out.println(" ********* END MANAGED BEAN CREATION ****** ");
+	}
+
+	private List<SvcTemplateBean> prepareTemplateList() {
+		templateList.add(new SvcTemplateBean(1, "Status Bumiputera"));
+		templateList.add(new SvcTemplateBean(2, "Status Pembuatan"));
+		templateList.add(new SvcTemplateBean(3, "Insurans"));
+		templateList.add(new SvcTemplateBean(4, "Limbungan"));
+		templateList.add(new SvcTemplateBean(5, "Percetaken"));
+		templateList.add(new SvcTemplateBean(6, "Pengangkut"));
+
+		return templateList;
 	}
 
 	public SmSupplierCategory getSelectedCategory() {
@@ -666,6 +736,56 @@ public class SmApplicationManagedBean extends BaseManagedBean {
 
 	public void setDelPendAckMsg(String delPendAckMsg) {
 		this.delPendAckMsg = delPendAckMsg;
+	}
+
+	public boolean isPoUser() {
+		return poUser;
+	}
+
+	public void setPoUser(boolean poUser) {
+		this.poUser = poUser;
+	}
+
+	public boolean isSupplierUser() {
+		return supplierUser;
+	}
+
+	public void setSupplierUser(boolean supplierUser) {
+		this.supplierUser = supplierUser;
+	}
+
+	public boolean isApproverUser() {
+		return approverUser;
+	}
+
+	public void setApproverUser(boolean approverUser) {
+		this.approverUser = approverUser;
+	}
+
+	public List<SvcTemplateBean> getSelectedTemplateList() {
+		return selectedTemplateList;
+	}
+
+	public void setSelectedTemplateList(
+			List<SvcTemplateBean> selectedTemplateList) {
+		this.selectedTemplateList = selectedTemplateList;
+	}
+
+	public List<SvcTemplateBean> getTemplateList() {
+		return templateList;
+	}
+
+	public void setTemplateList(List<SvcTemplateBean> templateList) {
+		this.templateList = templateList;
+	}
+
+	public List<SmSupplierCategory> getSelectedCategories() {
+		return selectedCategories;
+	}
+
+	public void setSelectedCategories(
+			List<SmSupplierCategory> selectedCategories) {
+		this.selectedCategories = selectedCategories;
 	}
 
 }
