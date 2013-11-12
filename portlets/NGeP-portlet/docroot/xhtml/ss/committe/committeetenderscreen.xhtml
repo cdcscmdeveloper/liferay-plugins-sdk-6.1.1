@@ -6,56 +6,40 @@
 	xmlns:c="http://java.sun.com/jsp/jstl/core">
 
 
-	<p:dialog id="POP" header="Search Qtn/Tender" widgetVar="screen5" modal="true"> 
-	<p:panel>
-		<p:panelGrid style="width:100%;" styleClass="noBorders tr,noBorders td" ></p:panelGrid>
-    </p:panel>
-    
-    <p:panel>
-    <p:commandLink value="View Qtn/Tender" />
-    <br/>
-		   <h:panelGroup  style="width:100%;">
-				<p:dataTable value="#{CommitteBackingBean.managedBean.supplierItemList}" var="searchquo" editable="true">
-				
-				  <p:ajax event="rowEdit" />  
-                  <p:ajax event="rowEditCancel" /> 
+	<p:dialog header="Search Qtn/Tender" widgetVar="screen5" modal="true"  styleClass="qtCount"> 
+<p:panel>
+<h:panelGroup  style="width:100%;">
+				<p:dataTable value="#{committeBackingBean.managedBean.scQt}" var="qt" >
+								 
 
 					<p:column headerText="Qtn/Tender No" style="width:2px">
-					  <p:outputLabel value="#{searchquo.qtno}" />
+					  <p:outputLabel value="#{qt.qtNo}" />
 					</p:column>
 
 					<p:column headerText="Title" style="width:10px;">
-				      <p:cellEditor>  
-                       <f:facet name="output">  
-                        <h:outputText value="#{searchquo.committeeType}" />
-                     </f:facet>  
-                      <f:facet name="input">  
-                       <p:inputText value="#{searchquo.committeeType}"/>  
-                     </f:facet>  
-                    </p:cellEditor>   
+				     
+                        <h:outputText value="#{qt.qtTitle}" />
+                      
 					</p:column>
 
 					<p:column headerText="Procurement Mode" style="width:5px">  
-                        <h:outputText value="#{searchquo.procuremode}" />  
+                        <h:outputText value="#{qt.procurementMode}" />  
                     </p:column>
                     
 					<p:column headerText="Date Created" style="width:5px">  
-                        <h:outputText value="#{searchquo.dateCreated}" />  
+                        <h:outputText value="#{qt.createdDate}" />  
                     </p:column>                       
                       
-		            <p:column headerText="Status" style="width:5px">  
-                        <h:outputText value="#{searchquo.status}" />  
-                    </p:column>  
+		            
             
 		       </p:dataTable>	
 			</h:panelGroup>	
-			
 		<p:panelGrid columns="2" styleClass="noBorders tr,noBorders td">
 				<h:outputLabel value="Total: " />
-                <p:inputText value="#{CommitteBackingBean.managedBean.total}" readonly="true"></p:inputText>
+                <p:inputText value="#{committeBackingBean.managedBean.scQt.size()}" readonly="true"></p:inputText>
 
 		</p:panelGrid>	
-						<p:commandButton value="CANCEL"  style="float:right;" onclick="screen5.hide();"></p:commandButton>  		
-		</p:panel>		
+		<p:commandButton value="CANCEL"  style="float:right;" onclick="screen5.hide();"></p:commandButton>
+		</p:panel>
 	</p:dialog>
 </ui:composition>

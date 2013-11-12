@@ -6,11 +6,11 @@
 	xmlns:c="http://java.sun.com/jsp/jstl/core">
 
 	<p:panel header="Header" toggleable="true">
-		<p:panelGrid columns="4" style="width:100%;" styleClass="noBorders tr,noBorders td">
+		<h:panelGrid columns="4" style="width:100%;" styleClass="noBorders tr,noBorders td">
 
-		<h:outputText value="Committee Type" />
+		<h:outputLabel value="Committee Type" />
 		 <p:selectOneMenu value="#{committeBackingBean.managedBean.scCommittee.committeeType}">
-            <f:selectItem itemLabel="Select One" itemValue="" />  
+            <f:selectItem itemLabel="Select One" itemValue="-1" />  
             <f:selectItem itemLabel="DOAA" itemValue="1" />  
             <f:selectItem itemLabel="OC" itemValue="2" />  
             <f:selectItem itemLabel="EC" itemValue="3" /> 
@@ -27,31 +27,31 @@
 			<p:ajax event="change" update="parentText, approvaldetails,committecheckbox" />
          </p:selectOneMenu>
 
-            <h:outputText value="Ministry Code/Name" />  
+            <h:outputLabel value="Ministry Code/Name" />  
             <p:inputText readonly="true"/> 
                      			
-			<h:outputText value="Qtn/Tender No" />  
-            <p:inputText readonly="true"/>            
+			<h:outputLabel value="Qtn/Tender No" />  
+            <p:inputText value="#{committeBackingBean.managedBean.tenderNum}"/>            
             
-            <h:outputText value="Status" />  
+            <h:outputLabel value="Status" />  
             <p:inputText  readonly="true" />  
             
-            <h:outputText value="Department Code/Name" />  
+            <h:outputLabel value="Department Code/Name" />  
             <p:inputText readonly="true"/>  
            
-           <h:outputText value="Created Date"  /> 
+           <h:outputLabel value="Created Date"  /> 
    		   <p:inputText readonly="true"/>  
  
-           <h:outputText value="Divison Code/Name" />  
+           <h:outputLabel value="Divison Code/Name" />  
            <p:inputText readonly="true"/>  
                           
-           <h:outputText value="Committee Status" /> 
+           <h:outputLabel value="Committee Status" /> 
    		   <p:inputText readonly="true"/> 
    		   
-           <h:outputText value="Record Status" /> 
+           <h:outputLabel value="Record Status" /> 
    		   <p:inputText readonly="true"/>     		     		                                                                          
                       
-      </p:panelGrid>
+      </h:panelGrid>
   	</p:panel>   
        
        <h:panelGroup id="parentText">

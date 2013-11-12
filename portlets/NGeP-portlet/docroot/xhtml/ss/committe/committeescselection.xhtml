@@ -8,18 +8,17 @@
 	<p:panel header="Committee Details" toggleable="true">
 		<h:panelGrid columns="4" style="width:100%;" cellpadding="3"
 			id="committecheckbox"
-			rendered="#{committeBackingBean.managedBean.scCommittee.committeeType eq '3' 
-    	         or committeBackingBean.managedBean.scCommittee.committeeType eq '4'
+			rendered="#{committeBackingBean.managedBean.scCommittee.committeeType eq '4'
     	         or committeBackingBean.managedBean.scCommittee.committeeType eq '5'}">
+    	         <h:outputLabel value="Change To EC" />  
+ <p:selectBooleanCheckbox value="#{committeBackingBean.managedBean.ecType}" /> 
 
-			<h:outputText value="" />
-			<p:selectManyCheckbox>
-				<f:selectItem itemLabel="&#160;Committee to TEC/FEC"
-					itemValue="Option 1" />
-				<f:selectItem itemLabel="&#160;Change Committee to EC"
-					itemValue="Option 2" />
-			</p:selectManyCheckbox>
-
+		</h:panelGrid>
+		<h:panelGrid columns="4" style="width:100%;" cellpadding="3"
+			
+			rendered="#{committeBackingBean.managedBean.scCommittee.committeeType eq '3' }">
+			<h:outputLabel value="Change to TEC/FEC: " />  
+			<p:selectBooleanCheckbox value="#{committeBackingBean.managedBean.tecType}" /> 
 		</h:panelGrid>
 		<br />
 
@@ -28,21 +27,21 @@
 				value="#{committeBackingBean.managedBean.committemembers}"
 				var="committemember" rowIndexVar="index">
 				<p:column headerText="No">
-					<h:outputText value="#{index + 1}" />
+					<h:outputLabel value="#{index + 1}" />
 				</p:column>
 
 				<p:column headerText="Name">
-					<h:outputText value="#{committemember.memberName}" />
+					<h:outputLabel value="#{committemember.memberName}" />
 				</p:column>
 
 				<p:column headerText="IC/PassPort No">
-					<h:outputText value="#{committemember.icPassport}" />
+					<h:outputLabel value="#{committemember.icPassport}" />
 				</p:column>
 				<p:column headerText="Role">
-					<h:outputText value="#{committemember.memberRole}" />
+					<h:outputLabel value="#{committemember.memberRole}" />
 				</p:column>
 				<p:column headerText="Access">
-					<h:outputText value="#{committemember.accessRight}" />
+					<h:outputLabel value="#{committemember.accessRight}" />
 				</p:column>
 			
 			</p:dataTable>
@@ -51,9 +50,9 @@
 		<div align="right">
 			<p:commandButton value="ADD"
 				action="#{committeBackingBean.showCommitteMember}"
-				oncomplete="screen3.show();" ></p:commandButton>
+				oncomplete="screen3.show();" update="@(.qtAddMember)"></p:commandButton>
 
-			<p:commandButton value="CLONE" onclick="screen4.show();"></p:commandButton>
+			<p:commandButton value="CLONE" onclick="screen2.show();" process="@this"></p:commandButton>
 		</div>
 		<br />
 	</p:panel>
@@ -68,31 +67,25 @@
 
 		<h:panelGrid columns="4" style="margin-bottom:10px;width:100%;"
 			cellpadding="3">
-			<h:outputText style="bold" value="Approver Name: " />
+			<h:outputLabel style="bold" value="Approver Name: " />
 			<p:selectOneMenu
-				value="#{committeBackingBean.managedBean.scCommittee.pmUser}"
+				value="#{committeBackingBean.managedBean.approverId}"
 				style="width: 120px;">
-				<f:selectItem itemLabel="" itemValue="" />
-				<f:selectItem itemLabel="" itemValue="1" />
-				<f:selectItem itemLabel="" itemValue="2" />
-				<f:selectItem itemLabel="" itemValue="3" />
+				<f:selectItems value="#{committeBackingBean.managedBean.approvers}"></f:selectItems>
 			</p:selectOneMenu>
 
-			<h:outputText style="bold" value="Approver Date: " />
+			<h:outputLabel style="bold" value="Approver Date: " />
 			<p:calendar value="#{committeBackingBean.managedBean.scCommittee.approvalDate}" showOn="button"></p:calendar>
 			
 
-			<h:outputText style="bold" value="Approver Action: " />
-			<p:selectOneMenu
+			<h:outputLabel style="bold" value="Approver Action: " />
+			<!-- <p:selectOneMenu
 				value="#{committeBackingBean.managedBean.scCommittee.approvalStatus}"
 				style="width: 120px;">
-				<f:selectItem itemLabel="" itemValue="" />
-				<f:selectItem itemLabel="" itemValue="1" />
-				<f:selectItem itemLabel="" itemValue="2" />
-				<f:selectItem itemLabel="" itemValue="3" />
-			</p:selectOneMenu>
+				<f:selectItems value=""></f:selectItems>
+			</p:selectOneMenu> -->
 
-			<h:outputText style="bold" value="Approval Remarks: " />
+			<h:outputLabel style="bold" value="Approval Remarks: " />
 			<p:inputText id="appRemark"
 				value="#{committeBackingBean.managedBean.scCommittee.approvalRemark}"
 				/>

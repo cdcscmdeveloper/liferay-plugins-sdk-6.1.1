@@ -6,120 +6,118 @@
 	xmlns:c="http://java.sun.com/jsp/jstl/core">
 
 
-	<p:dialog id="Clone" header="Clone XXXX" widgetVar="screen2" modal="true" appendToBody="true">
-		<p:panel header="Search Qtn/Tender" toggleable="true">
+	<p:dialog id="Clone" header="Clone Committe" widgetVar="screen2"
+		modal="true">
+		<p:panel>
+			<h:panelGrid id="search" columns="4" style="width:100%;"
+				styleClass="noBorders tr,noBorders td">
 
-			<p:panelGrid columns="4" style="width:46%;" styleClass="noBorders tr,noBorders td">
-				
 
-				<h:outputText value="Qtn/Tender No" ></h:outputText>
-					<p:selectOneMenu value="#{CommitteBackingBean.managedBean.qtno}">  
-    	             <f:selectItem itemLabel="" itemValue="" />  
-                     <f:selectItem itemLabel="" itemValue="1" /> 
-                     <f:selectItem itemLabel="" itemValue="1" />  
-    			    </p:selectOneMenu> 
-				</p:panelGrid>
-    
-     <p:panelGrid columns="4"  style="width:100%;"  styleClass="noBorders tr,noBorders td">
-				 
-				 <h:outputText value="Created Date (From)" />
-				<p:calendar value="#{CommitteBackingBean.managedBean.dateCreatedF}" id="createdateFrom"
+				<h:outputLabel value="Committee No"></h:outputLabel>
+
+				<p:inputText value="#{committeBackingBean.managedBean.committeNo}"></p:inputText>
+
+				<h:outputLabel value="Qtn/Tender No"></h:outputLabel>
+				<p:inputText value="#{committeBackingBean.managedBean.qtNo}"
+					size="49"></p:inputText>
+
+				<h:outputLabel value="Committe Type"></h:outputLabel>
+
+				<p:selectOneMenu
+					value="#{committeBackingBean.managedBean.selectedCommitte}">
+					<f:selectItems
+						value="#{committeBackingBean.managedBean.committeType}"></f:selectItems>
+				</p:selectOneMenu>
+
+				<h:outputLabel value="Date Created"></h:outputLabel>
+				<p:calendar value="#{committeBackingBean.managedBean.createdDt}"
 					showOn="button" />
 
-				<h:outputText value="Created Date (To)" />
-				<p:calendar value="#{CommitteBackingBean.managedBean.dateCreatedT}" id="createdateTo" showOn="button" />                
+				<h:outputLabel value="Record Status" style="width:104px;"></h:outputLabel>
 
-				<h:outputText value="Record Status"></h:outputText>
-					<p:selectOneMenu value="#{CommitteBackingBean.managedBean.approvalStatus}" >  
-    	             <f:selectItem itemLabel="" itemValue="" />  
-                     <f:selectItem itemLabel="" itemValue="1" /> 
-                     <f:selectItem itemLabel="" itemValue="1" />  
-    			    </p:selectOneMenu> 
-			   
-                
-			</p:panelGrid>
+				<p:selectOneMenu style="width:61%;"
+					value="#{committeBackingBean.managedBean.status}">
+					<f:selectItem itemLabel="Select One" itemValue="" />
+					<f:selectItem itemLabel="Active" itemValue="1" />
+					<f:selectItem itemLabel="Non-Active" itemValue="2" />
+				</p:selectOneMenu>
 
-		<p:commandButton value="SEARCH"
-			styleClass="apply_button" style="float:right;">
-
-		</p:commandButton>
-		
-		<br/>
-
+			</h:panelGrid>
+			<p:commandButton value="SEARCH" style="float:right;"
+				action="#{committeBackingBean.cloneSearchCommitteAction}"
+				update="clonesearchCommitte,cloneSearchResults" />
+			<br />
+			<br />
 		</p:panel>
-<br/>
 
-		<p:panel header="Search Committee" toggleable="true">
-		   <h:panelGroup  style="width:100%;">
-				<p:dataTable value="#{CommitteBackingBean.managedBean.supplierItemList}" var="committeclone" editable="true">
-				
-				  <p:ajax event="rowEdit" />  
-                  <p:ajax event="rowEditCancel" /> 
+		<p:panel header="Results" toggleable="true">
+			<p:dataTable id="clonesearchCommitte"
+				value="#{committeBackingBean.managedBean.cloneSearchCommittes}"
+				var="committe">
 
-					<p:column headerText="Committee Type" style="width:10px">
-					  <p:outputLabel value="#{committeclone.committeeType}" />
-					</p:column>
 
-					<p:column headerText="Qtn/Tender No" style="width:5px;">
-				      <p:cellEditor>  
-                       <f:facet name="output">  
-                        <h:outputText value="#{committeclone.qtno}" />
-                     </f:facet>  
-                      <f:facet name="input">  
-                       <p:inputText value=""/>  
-                     </f:facet>  
-                    </p:cellEditor>   
-					</p:column>
+				<p:column headerText="CommitteType">
+					<h:outputLabel value="#{committe.scCommittee.committeeType}"></h:outputLabel>
+				</p:column>
+				<p:column headerText="QTN/TenderNo">
 
-					<p:column headerText="Date Created" style="width:5px">  
-                        <h:outputText value="#{committeclone.dateCreated}" />  
-                    </p:column>
-                    
-					<p:column headerText="Record Status" style="width:5px">  
-                        <h:outputText value="#{committeclone.approvalStatus}" />  
-                    </p:column>                       
-                      
-                    <p:column style="width:5px">  
-                        <p:rowEditor />  
-                     </p:column>  
-            
-		       </p:dataTable>	
-			</h:panelGroup>	
+					<h:outputLabel value="#{committe.scQt.qtNo}"></h:outputLabel>
+
+				</p:column>
+				<p:column headerText="DateCreated">
+					<h:outputLabel value="#{committe.scCommittee.createdDate}"></h:outputLabel>
+				</p:column>
+				<p:column headerText="ApprovalStatus">
+					<h:outputLabel value="#{committe.scCommittee.approvalStatus}"></h:outputLabel>
+				</p:column>
+				<p:column headerText="RecordStatus">
+					<h:outputLabel value="#{committe.scCommittee.recordStatus}"></h:outputLabel>
+				</p:column>
+				<p:column headerText="Action">
+					<p:commandButton value="ClONE" style="float:right;"
+						action="#{committeBackingBean.cloneCommitteMembersAcition(committe.scCommittee.committeeId)}"
+						update="@(.cloneCommitteMembers)" />
+				</p:column>
+			</p:dataTable>
 		</p:panel>
-		<br/>
-		
+
 		<p:panel header="Clone Committee Result" toggleable="true">
-		   <h:panelGroup style="width:100%;">
-				<p:dataTable value="#{CommitteBackingBean.managedBean.supplierItemList}" var="committeclonetwo" editable="true" >
-
-					<p:column>
-					   <p:selectBooleanCheckbox />
-					</p:column>
+			<h:panelGroup style="width:100%;">
+				<p:dataTable id="cloneSearchResults"
+					value="#{committeBackingBean.managedBean.cloneCommitteMemebers}"
+					var="member" styleClass="cloneCommitteMembers"
+					rowKey="#{member.committeeMemberId}"
+					selection="#{committeBackingBean.managedBean.selectedCommitteMemebers}">
+					<p:column selectionMode="multiple" style="width:2%" />
 
 					<p:column headerText="Name">
-					   <h:outputText value="#{committeclonetwo.memberName}" />
+						<h:outputLabel value="#{member.memberName}" />
 					</p:column>
 
-					 <p:column headerText="Ministry" >  
-                        <h:outputText value="#{committeclonetwo.ministry}" />  
-                     </p:column>  
-                      
-                    <p:column headerText="Division" >  
-                       <h:outputText value="#{committeclonetwo.division}" />  
-                    </p:column>  
-                    
-                    <p:column headerText="Designation" >  
-                       <h:outputText value="#{committeclonetwo.designation}" />  
-                    </p:column>  
-                    
-                    <p:column headerText="Role" >  
-                       <h:outputText value="#{committeclonetwo.memberRole}" />  
-                    </p:column>                                          
-            
-		       </p:dataTable>	
-				<p:commandButton value="CANCEL"  style="float:right;" onclick="screen2.hide();"></p:commandButton>		       		       				
-				<p:commandButton value="CLONE"  style="float:right;" onclick="screen2.hide();"></p:commandButton>
+					<p:column headerText="Ministry">
+						<!--  <h:outputLabel value="#{member.pmOrgProfile.ministry}" />   -->
+					</p:column>
+
+					<p:column headerText="Division">
+						<!-- <h:outputLabel value="#{member.pmOrgProfile.division}" />  -->
+					</p:column>
+
+					<p:column headerText="Designation">
+						<!-- <h:outputLabel value="#{member.pmOrgProfile.designation}" />   -->
+					</p:column>
+
+					<p:column headerText="Role">
+						<h:outputLabel value="#{memberR.memberRole}" />
+					</p:column>
+
+
+				</p:dataTable>
+				<p:commandButton value="Cancel" style="float:right;"
+					onclick="screen2.hide();"></p:commandButton>
+				<p:commandButton value="Clone" style="float:right;"
+					action="#{committeBackingBean.addCloneCommitteeMembersAction}"
+					oncomplete="screen2.hide();" update="committeMember"></p:commandButton>
 			</h:panelGroup>
-		</p:panel>		
+		</p:panel>
 	</p:dialog>
 </ui:composition>
