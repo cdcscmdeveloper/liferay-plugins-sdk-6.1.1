@@ -5,91 +5,91 @@
 	xmlns:p="http://primefaces.org/ui"
 	xmlns:c="http://java.sun.com/jsp/jstl/core">
 
-<p:panel header="Approval Details Section" toggleable="true">
-<p:panelGrid columns="4"  style="width:100%;"
-    styleClass="noBorders tr,noBorders td">
-    
-     </p:panelGrid>
-     
+	<p:panel header="Approval Details Section" toggleable="true">
 
-<p:panelGrid columnClasses="30,30,20,20"  styleClass="noBorders tr,noBorders td">
- <p:row >  
-   <p:column >
-    <p:outputLabel value="Approver Name"></p:outputLabel>
-    </p:column>
-           <p:column >
-             <h:panelGroup  id="sample1"  >
-         <c:if test="${approvalBackingBean.managedBean.selectedBoolean1 eq '1'}">
-          <p:selectOneMenu value="#{approvalBackingBean.managedBean.scQtApproval.approverUserId}"   > 
-	<f:selectItem itemLabel="approve" itemValue="1" />   
-	<f:selectItem itemLabel="reject" itemValue="2" />
-	<f:selectItem itemLabel="revise" itemValue="3" />
-	</p:selectOneMenu> 
-	</c:if>
-	  <c:if test="${approvalBackingBean.managedBean.selectedBoolean1 eq '2'}">
-          <p:inputText value="#{approvalBackingBean.managedBean.scQtApproval.approverUserId}" size="10" ></p:inputText>
-          </c:if>
-          </h:panelGroup>
-          </p:column>
-          
-           <p:column style="width:35%;">
-    <p:outputLabel value="Approver Date"></p:outputLabel>
-    </p:column>
-          <p:column >
-          <p:inputText value="#{approvalBackingBean.managedBean.approvalDate}"></p:inputText>
-          </p:column>
-          </p:row>	
-          
-          
 
-          
-                    
-           <p:row >  
-   <p:column >
-    <p:outputLabel value="Action"></p:outputLabel>
-    </p:column>
-          <p:column >
-             <h:panelGroup  id="checkboxBPK"  >
-               <c:choose>
-               
-         <c:when test="${approvalBackingBean.managedBean.checkBoxBPK eq 'Restricted'}">
-          <p:selectOneMenu value="#{approvalBackingBean.managedBean.scQtApproval.approvalAction}"   > 
-	<f:selectItem itemLabel="approve" itemValue="ar" />   
-	<f:selectItem itemLabel="reject" itemValue="rj" />
-	<f:selectItem itemLabel="revise" itemValue="rv" />
-		<f:selectItem itemLabel="restrict" itemValue="rs" />
-	</p:selectOneMenu> 
-	</c:when>
-	  <c:when test="${approvalBackingBean.managedBean.checkBoxBPK eq 'Direct'}">
-         <p:selectOneMenu value="#approvalBackingBean.managedBean.scQtApproval.approvalAction}"   > 
-	<f:selectItem itemLabel="approve" itemValue="ar" />   
-	<f:selectItem itemLabel="reject" itemValue="rj" />
-	<f:selectItem itemLabel="revise" itemValue="rv" />
-	<f:selectItem itemLabel="direct" itemValue="rs" />
-	</p:selectOneMenu> 
-          </c:when>
-          
-          <c:otherwise>
-           <p:selectOneMenu value="#{approvalBackingBean.managedBean.scQtApproval.approvalAction}" > 
-	<f:selectItem itemLabel="Approver" itemValue="ar" />   
-	<f:selectItem itemLabel="Reject" itemValue="rj" />
-	<f:selectItem itemLabel="Revise" itemValue="rv" />
-	</p:selectOneMenu> 
-	</c:otherwise>
-	</c:choose>
-	</h:panelGroup>
-          </p:column>
-            
-   <p:column >
-    <p:outputLabel value="Remarks"></p:outputLabel>
-    </p:column>
-          <p:column  >
-      <p:inputText value="#{approvalBackingBean.managedBean.scQtApproval.approvalRemark}"></p:inputText>
-          </p:column>
-          </p:row>				
 
-</p:panelGrid>
+		<h:panelGrid columns="4"
+			columnClasses="columnWidth20,columnWidth30,columnWidth20,columnWidth30">
 
-</p:panel>
+			<h:outputLabel value="Approver Name"></h:outputLabel>
+   
+             <h:panelGroup id="sample1">
+				<c:if
+					test="${approvalBackingBean.managedBean.selectedBoolean1 eq '1'}">
+					<p:selectOneMenu
+						value="#{approvalCategory.scQtApproval.approverUserId}">
+						<f:selectItem itemLabel="approve" itemValue="1" />
+						<f:selectItem itemLabel="reject" itemValue="2" />
+						<f:selectItem itemLabel="revise" itemValue="3" />
+					</p:selectOneMenu>
+				</c:if>
+				<c:if
+					test="${approvalBackingBean.managedBean.selectedBoolean1 eq '2'}">
+					<p:inputText
+						value="#{approvalCategory.scQtApproval.approverUserId}"
+						size="10"></p:inputText>
+				</c:if>
+			</h:panelGroup>
 
-	</ui:composition>
+			<h:outputLabel value="Approver Date"></h:outputLabel>
+
+			<p:calendar
+				value="#{approvalCategory.scQtApproval.approvalDate}"
+				showOn="button"></p:calendar>
+
+
+
+
+
+
+
+			<h:outputLabel value="Action"></h:outputLabel>
+
+			<h:panelGroup id="checkboxBPK">
+				<c:choose>
+
+					<c:when
+						test="${approvalBackingBean.managedBean.checkBoxBPK eq 'Restricted'}">
+						<p:selectOneMenu
+							value="#{approvalCategory.scQtApproval.approvalAction}">
+							<f:selectItem itemLabel="approve" itemValue="ar" />
+							<f:selectItem itemLabel="reject" itemValue="rj" />
+							<f:selectItem itemLabel="revise" itemValue="rv" />
+							<f:selectItem itemLabel="restrict" itemValue="rs" />
+						</p:selectOneMenu>
+					</c:when>
+					<c:when
+						test="${approvalBackingBean.managedBean.checkBoxBPK eq 'Direct'}">
+						<p:selectOneMenu
+							value="#{approvalCategory.scQtApproval.approvalAction}">
+							<f:selectItem itemLabel="approve" itemValue="ar" />
+							<f:selectItem itemLabel="reject" itemValue="rj" />
+							<f:selectItem itemLabel="revise" itemValue="rv" />
+							<f:selectItem itemLabel="direct" itemValue="rs" />
+						</p:selectOneMenu>
+					</c:when>
+
+					<c:otherwise>
+						<p:selectOneMenu
+							value="#{approvalCategory.scQtApproval.approvalAction}">
+							<f:selectItem itemLabel="Approver" itemValue="ar" />
+							<f:selectItem itemLabel="Reject" itemValue="rj" />
+							<f:selectItem itemLabel="Revise" itemValue="rv" />
+						</p:selectOneMenu>
+					</c:otherwise>
+				</c:choose>
+			</h:panelGroup>
+
+			<h:outputLabel value="Remarks"></h:outputLabel>
+
+			<p:inputTextarea
+				value="#{approvalCategory.scQtApproval.approvalRemark}"
+				rows="3" cols="50" autoResize="false"></p:inputTextarea>
+
+
+		</h:panelGrid>
+
+	</p:panel>
+
+</ui:composition>

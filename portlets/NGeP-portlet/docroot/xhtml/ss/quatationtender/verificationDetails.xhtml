@@ -7,83 +7,68 @@
 
 	<p:panel header="Verification Details Section" toggleable="true">
 
-		<p:panelGrid columnClasses="30,20,30,20"
+		<h:panelGrid columns="2"
+			
 			styleClass="noBorders tr,noBorders td">
-			<p:row>
-				<p:column>
-					<h:outputText value="Option Of Verification"></h:outputText>
-				</p:column>
-				<p:column width="20%">
-					<p:selectOneRadio
-						value="#{approvalBackingBean.managedBean.scQtApproval.verifyOption}">
-						<f:selectItem itemLabel="Online" itemValue="1" />
-						<f:selectItem itemLabel="Offline" itemValue="2" />
-						<p:ajax event="change"
-							listener="#{approvalBackingBean.processChecked}"
-							update="sample,sample1,sample2"/>
-						<!--  <p:ajax update="@form"   />  -->
-					</p:selectOneRadio>
-				</p:column>
-			</p:row>
+
+			<h:outputText value="Option Of Verification"></h:outputText>
+
+			<p:selectOneRadio
+				value="#{approvalCategory.scQtApproval.verifyOption}">
+				<f:selectItem itemLabel="Online" itemValue="1" />
+				<f:selectItem itemLabel="Offline" itemValue="2" />
+				<p:ajax event="change"
+					listener="#{approvalBackingBean.processChecked}"
+					update="sample,sample1,sample2" />
+				<!--  <p:ajax update="@form"   />  -->
+			</p:selectOneRadio>
+		</h:panelGrid>
+		<h:panelGrid columns="4"
+			columnClasses="columnWidth20,columnWidth30,columnWidth20,columnWidth30"
+			styleClass="noBorders tr,noBorders td">
+			<h:outputText value="Verifier Name"></h:outputText>
+
+			<h:panelGroup id="sample">
+				<p:selectOneMenu
+					value="#{approvalCategory.scQtApproval.verifierUserId}"
+					rendered="#{approvalBackingBean.managedBean.selectedBoolean1 eq '1'}">
+					<f:selectItem itemLabel="verifier Name" itemValue="1" />
+					<f:selectItem itemLabel="Roslan" itemValue="2" />
+					<f:selectItem itemLabel="Hanib" itemValue="3" />
+				</p:selectOneMenu>
+
+				<p:inputText
+					value="#{approvalCategory.scQtApproval.verifierUserId}"
+					rendered="#{approvalBackingBean.managedBean.selectedBoolean1 eq '2'}"></p:inputText>
+			</h:panelGroup>
+
+			<h:outputText value="Verification Date"></h:outputText>
+
+			<p:calendar
+				value="#{approvalCategory.scQtApproval.verificationDate}"
+				showOn="button"></p:calendar>
 
 
-			<p:row>
-
-				<p:column>
-					<h:outputText value="Verifier Name"></h:outputText>
-				</p:column>
-				<p:column width="20%">
-					<h:panelGroup id="sample">
-						<p:selectOneMenu
-							value="#{approvalBackingBean.managedBean.scQtApproval.verifierUserId}"
-							rendered="#{approvalBackingBean.managedBean.selectedBoolean1 eq '1'}">
-							<f:selectItem itemLabel="approve" itemValue="1" />
-							<f:selectItem itemLabel="reject" itemValue="2" />
-							<f:selectItem itemLabel="revise" itemValue="3" />
-						</p:selectOneMenu>
-
-						<p:inputText
-							value="#{approvalBackingBean.managedBean.scQtApproval.verifierUserId}"
-							rendered="#{approvalBackingBean.managedBean.selectedBoolean1 eq '2'}"></p:inputText>
-					</h:panelGroup>
-				</p:column>
-
-				<p:column>
-					<h:outputText value="Verification Date"></h:outputText>
-				</p:column>
-				<p:column width="20%">
-					<p:inputText value="#{approvalBackingBean.managedBean.verifyDate}"></p:inputText>
-					
-					</p:column>
-				
-				
-            
-       </p:row>
 
 
-			<p:row>
-				<p:column>
-					<h:outputText value="Action"></h:outputText>
-				</p:column>
-				<p:column width="20%">
-					<p:selectOneMenu
-						value="#{approvalBackingBean.managedBean.scQtApproval.verifyAction}">
-						<f:selectItem itemLabel="approve" itemValue="1" />
-						<f:selectItem itemLabel="reject" itemValue="2" />
-						<f:selectItem itemLabel="revise" itemValue="2" />
-					</p:selectOneMenu>
-				</p:column>
 
-				<p:column>
-					<h:outputText value="Remarks"></h:outputText>
-				</p:column>
-				<p:column width="20%">
-					<p:inputTextarea rows="3"
-						value="#{approvalBackingBean.managedBean.scQtApproval.verifierRemark}"></p:inputTextarea>
-				</p:column>
-			</p:row>
 
-		</p:panelGrid>
+			<h:outputText value="Action"></h:outputText>
+
+			<p:selectOneMenu
+				value="#{approvalCategory.scQtApproval.verifyAction}">
+				<f:selectItem itemLabel="approve" itemValue="1" />
+				<f:selectItem itemLabel="reject" itemValue="2" />
+				<f:selectItem itemLabel="revise" itemValue="2" />
+			</p:selectOneMenu>
+
+			<h:outputText value="Remarks"></h:outputText>
+
+			<p:inputTextarea rows="3" cols="50" autoResize="false"
+				value="#{approvalCategory.scQtApproval.verifierRemark}"></p:inputTextarea>
+
+
+		</h:panelGrid>
 
 	</p:panel>
 

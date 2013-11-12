@@ -5,65 +5,61 @@
 	xmlns:p="http://primefaces.org/ui"
 	xmlns:c="http://java.sun.com/jsp/jstl/core">
 
-<p:panel header="Approval Details Section" toggleable="true">
+	<p:panel header="Approval Details Section" toggleable="true">
 
-<p:panelGrid columnClasses="30,20,30,20" styleClass="noBorders tr,noBorders td">
- 
-<p:row >  
-   <p:column >
-    <p:outputLabel value="Approver Name"></p:outputLabel>
-    </p:column>
-          <p:column  >
-          <h:panelGroup  id="sample2"  >
-          <p:selectOneMenu value="#{approvalBackingBean.managedBean.scQtApproval.approverUserId}"  rendered="#{approvalBackingBean.managedBean.selectedBoolean1 eq '1'}" > 
-	<f:selectItem itemLabel="approve" itemValue="1" />   
-	<f:selectItem itemLabel="reject" itemValue="2" />
-	<f:selectItem itemLabel="revise" itemValue="3" />
-	</p:selectOneMenu> 
-	 
-          <p:inputText value="#{approvalBackingBean.managedBean.scQtApproval.approverUserId}"  rendered="#{approvalBackingBean.managedBean.selectedBoolean1 eq '2'}"></p:inputText>
-          </h:panelGroup>
-          </p:column>
-          
-             <p:column  style="width:35%;">
-    <p:outputLabel value="Approver Date"></p:outputLabel>
-    </p:column  >
-          <p:column >
-      <p:inputText value="#{approvalBackingBean.managedBean.approvalDate}"></p:inputText>
-          </p:column>
-         	
-          </p:row>	
-        
-           
- 
-          
-               
+		<h:panelGrid columns="4"
+			columnClasses="columnWidth20,columnWidth30,columnWidth20,columnWidth30">
 
-         	
-          
-       <p:row>             
-           
-   <p:column >
-    <p:outputLabel value="Action"></p:outputLabel>
-    </p:column>
-          <p:column  >
-           <p:selectOneMenu value="#{approvalBackingBean.managedBean.scQtApproval.approvalAction}" > 
-	<f:selectItem itemLabel="Approver" itemValue="ar" />   
-	<f:selectItem itemLabel="Reject" itemValue="rj" />
-	
-	</p:selectOneMenu> 
-          </p:column>
-           
-   <p:column >
-    <p:outputLabel value="Remarks"></p:outputLabel>
-    </p:column>
-          <p:column  width="20%">
-      <p:inputText value="#{approvalBackingBean.managedBean.scQtApproval.approvalRemark}"></p:inputText>
-          </p:column>
-      		  </p:row>   	
 
-</p:panelGrid>
+			<h:outputLabel value="Approver Name"></h:outputLabel>
 
-</p:panel>
+			<h:panelGroup id="sample2">
+				<p:selectOneMenu
+					value="#{approvalCategory.scQtApproval.approverUserId}"
+					rendered="#{approvalBackingBean.managedBean.selectedBoolean1 eq '1'}">
+					<f:selectItem itemLabel="approve" itemValue="1" />
+					<f:selectItem itemLabel="reject" itemValue="2" />
+					<f:selectItem itemLabel="revise" itemValue="3" />
+				</p:selectOneMenu>
 
-	</ui:composition>
+				<p:inputText
+					value="#{approvalCategory.scQtApproval.approverUserId}"
+					rendered="#{approvalBackingBean.managedBean.selectedBoolean1 eq '2'}"></p:inputText>
+			</h:panelGroup>
+
+			<h:outputLabel value="Approver Date"></h:outputLabel>
+
+			<p:calendar
+				value="#{approvalCategory.scQtApproval.approvalDate}"
+				showOn="button"></p:calendar>
+
+
+
+
+
+
+
+
+
+
+			<h:outputLabel value="Action"></h:outputLabel>
+
+			<p:selectOneMenu
+				value="#{approvalCategory.scQtApproval.approvalAction}">
+				<f:selectItem itemLabel="Approver" itemValue="ar" />
+				<f:selectItem itemLabel="Reject" itemValue="rj" />
+
+			</p:selectOneMenu>
+
+			<h:outputLabel value="Remarks"></h:outputLabel>
+
+			<p:inputTextarea rows="3" cols="50"
+				value="#{approvalCategory.scQtApproval.approvalRemark}"
+				autoResize="false"></p:inputTextarea>
+
+
+		</h:panelGrid>
+
+	</p:panel>
+
+</ui:composition>

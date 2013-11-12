@@ -8,9 +8,9 @@
 	<p:panel header="Approval Workflow" toggleable="true">
 		<table border="0" cellspacing="0" cellpadding="0">
 		<tr>
-			<td width="20%"><h:outputText value="Approval Category" /></td>
+			<td width="20%"><h:outputLabel value="Approval Category" /></td>
 			<td width="80%">
-				<p:panelGrid border="0" cellpadding="0" cellspacing="0" columns="3"
+				<h:panelGrid border="0" cellpadding="0" cellspacing="0" columns="3"
 					styleClass="noBorders tr,noBorders td">
 					<c:forEach var="approvalCategory" items="#{approvalBackingBean.approvalCategories}">
 						<p:selectManyCheckbox
@@ -19,7 +19,7 @@
 							<f:selectItem value="#{approvalCategory}" />
 						</p:selectManyCheckbox>
 					</c:forEach>
-				</p:panelGrid>
+				</h:panelGrid>
 			</td>
 		</tr>
 		</table>

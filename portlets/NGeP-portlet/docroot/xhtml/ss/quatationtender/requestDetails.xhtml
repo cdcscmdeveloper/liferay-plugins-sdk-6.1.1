@@ -11,257 +11,236 @@
 
 
 
-		<p:panelGrid columnClasses="25,25,25,25"
+		<h:panelGrid columns="2"
+			columnClasses="columnWidth20,columnWidth30,columnWidth20,columnWidth30"
 			styleClass="noBorders tr,noBorders td">
 
-			<p:row>
-				<p:column>
-					<p:outputLabel value="Type Of Approval Request"></p:outputLabel>
-				</p:column>
-				<p:column width="20%">
+
+			<p:outputLabel value="Type Of Approval Request"></p:outputLabel>
 
 
-					<p:selectManyCheckbox
-						value="#{approvalBackingBean.managedBean.approvalTypelist}"
-						layout="pageDirection">
-						<f:selectItem itemLabel="RestrictedTender" itemValue="Restricted" />
-						<f:selectItem itemLabel="DirectNegotiations" itemValue="Direct" />
-						<f:selectItem itemLabel="Qtn/Tender Type Approval"
-							itemValue="TendertypeApproval" />
-						<f:selectItem itemLabel="ReducePublishingPeriod"
-							itemValue="PublishingPeriod" />
-						<f:selectItem itemLabel="ReduceProposalValidityPeriod"
-							itemValue="ProposalValidity" />
-					</p:selectManyCheckbox>
+			<p:selectManyCheckbox
+				value="#{approvalBackingBean.managedBean.approvalTypelist}"
+				layout="pageDirection">
+				<f:selectItem itemLabel="RestrictedTender" itemValue="Restricted" />
+				<f:selectItem itemLabel="DirectNegotiations" itemValue="Direct" />
+				<f:selectItem itemLabel="Qtn/Tender Type Approval"
+					itemValue="TendertypeApproval" />
+				<f:selectItem itemLabel="ReducePublishingPeriod"
+					itemValue="PublishingPeriod" />
+				<f:selectItem itemLabel="ReduceProposalValidityPeriod"
+					itemValue="ProposalValidity" />
+			</p:selectManyCheckbox>
 
-				</p:column>
-			</p:row>
 
-		</p:panelGrid>
+		</h:panelGrid>
 
 	</ui:fragment>
 
-	<ui:fragment rendered="#{approvalCategory.titleName eq 'Procurement Board'}">
+	<ui:fragment
+		rendered="#{approvalCategory.titleName eq 'Procurement Board'}">
 
 
-		<p:panelGrid columnClasses="25,25,25,25"
+		<h:panelGrid columns="2"
+			columnClasses="columnWidth20,columnWidth30,columnWidth20,columnWidth30"
 			styleClass="noBorders tr,noBorders td">
 
-			<p:row>
-				<p:column>
-					<p:outputLabel value="Type Of Approval Request"></p:outputLabel>
-				</p:column>
-				<p:column width="20%">
 
-					<p:selectManyCheckbox
-						value="#{approvalBackingBean.managedBean.approvalTypelist}"
-						layout="pageDirection">
-						<f:selectItem itemLabel="CancellationQtn/Tender"
-							itemValue="Publication" />
-						<f:selectItem itemLabel="ExtendedProposalValidityPeriod"
-							itemValue="startDate" />
-						<f:selectItem itemLabel="ExtendPerformenceBondPeriod"
-							itemValue="ModificationQT" />
-					</p:selectManyCheckbox>
-				</p:column>
-			</p:row>
+			<p:outputLabel value="Type Of Approval Request"></p:outputLabel>
 
-		</p:panelGrid>
+			<p:selectManyCheckbox
+				value="#{approvalBackingBean.managedBean.approvalTypelist}"
+				layout="pageDirection">
+				<f:selectItem itemLabel="CancellationQtn/Tender"
+					itemValue="Publication" />
+				<f:selectItem itemLabel="ExtendedProposalValidityPeriod"
+					itemValue="startDate" />
+				<f:selectItem itemLabel="ExtendPerformenceBondPeriod"
+					itemValue="ModificationQT" />
+			</p:selectManyCheckbox>
+
+
+		</h:panelGrid>
 
 	</ui:fragment>
 
-	<ui:fragment rendered="#{approvalCategory.titleName eq 'MITI Approval'}">
+	<ui:fragment
+		rendered="#{approvalCategory.titleName eq 'MITI Approval'}">
 
 
-		<p:panelGrid columnClasses="25,25,25,25"
+		<h:panelGrid columns="2"
+			columnClasses="columnWidth20,columnWidth30,columnWidth20,columnWidth30"
 			styleClass="noBorders tr,noBorders td">
 
-			<p:row>
-				<p:column>
-					<p:outputLabel value="Type Of Approval Request"></p:outputLabel>
-				</p:column>
-				<p:column width="20%">
 
-					<p:selectManyCheckbox
-						value="#{approvalBackingBean.managedBean.approvalTypelist}"
-						layout="pageDirection">
-						<f:selectItem itemLabel="Imported Goods"
-							itemValue="Imported Goods" />
+			<p:outputLabel value="Type Of Approval Request"></p:outputLabel>
 
-					</p:selectManyCheckbox>
-				</p:column>
-			</p:row>
 
-		</p:panelGrid>
+			<p:selectManyCheckbox
+				value="#{approvalBackingBean.managedBean.approvalTypelist}"
+				layout="pageDirection">
+				<f:selectItem itemLabel="Imported Goods" itemValue="Imported Goods" />
+
+			</p:selectManyCheckbox>
+
+
+		</h:panelGrid>
 
 	</ui:fragment>
 
-	<ui:fragment rendered="#{approvalCategory.titleName eq 'Budget Approval'}">
+	<ui:fragment
+		rendered="#{approvalCategory.titleName eq 'Budget Approval'}">
 
 
-		<p:panelGrid columnClasses="25,25,25,25"
+		<h:panelGrid columns="2"
+			columnClasses="columnWidth20,columnWidth30,columnWidth20,columnWidth30"
 			styleClass="noBorders tr,noBorders td">
 
-			<p:row>
-				<p:column>
-					<p:outputLabel value="Type Of Approval Request"></p:outputLabel>
-				</p:column>
-				<p:column width="20%">
 
-					<p:selectManyCheckbox
-						value="#{approvalBackingBean.managedBean.approvalTypelist}"
-						layout="pageDirection">
-						<f:selectItem itemLabel="Budget" itemValue="Budget" />
+			<p:outputLabel value="Type Of Approval Request"></p:outputLabel>
 
-					</p:selectManyCheckbox>
-				</p:column>
-			</p:row>
 
-		</p:panelGrid>
+			<p:selectManyCheckbox
+				value="#{approvalBackingBean.managedBean.approvalTypelist}"
+				layout="pageDirection">
+				<f:selectItem itemLabel="Budget" itemValue="Budget" />
+
+			</p:selectManyCheckbox>
+
+
+		</h:panelGrid>
 
 	</ui:fragment>
 
 	<ui:fragment rendered="#{approvalCategory.titleName eq 'ICT Approval'}">
 
 
-		<p:panelGrid columnClasses="25,25,25,25"
+		<h:panelGrid columns="2"
+			columnClasses="columnWidth20,columnWidth30,columnWidth20,columnWidth30"
 			styleClass="noBorders tr,noBorders td">
 
-			<p:row>
-				<p:column>
-					<p:outputLabel value="Type Of Approval Request"></p:outputLabel>
-				</p:column>
-				<p:column width="20%">
 
-					<p:selectManyCheckbox
-						value="#{approvalBackingBean.managedBean.approvalTypelist}"
-						layout="pageDirection">
-						<f:selectItem itemLabel="ICT Project" itemValue="ICT Project" />
+			<p:outputLabel value="Type Of Approval Request"></p:outputLabel>
 
-					</p:selectManyCheckbox>
-				</p:column>
-			</p:row>
 
-		</p:panelGrid>
+			<p:selectManyCheckbox
+				value="#{approvalBackingBean.managedBean.approvalTypelist}"
+				layout="pageDirection">
+				<f:selectItem itemLabel="ICT Project" itemValue="ICT Project" />
+
+			</p:selectManyCheckbox>
+
+
+		</h:panelGrid>
 
 	</ui:fragment>
 
 
-	<ui:fragment rendered="#{approvalCategory.titleName eq 'Division Approval'}">
+	<ui:fragment
+		rendered="#{approvalCategory.titleName eq 'Division Approval'}">
 
 
-		<p:panelGrid columnClasses="25,25,25,25"
+		<h:panelGrid columns="2"
+			columnClasses="columnWidth20,columnWidth30,columnWidth20,columnWidth30"
 			styleClass="noBorders tr,noBorders td">
 
-			<p:row>
-				<p:column>
-					<p:outputLabel value="Type Of Approval Request"></p:outputLabel>
-				</p:column>
-				<p:column width="20%">
 
-					<p:selectManyCheckbox
-						value="#{approvalBackingBean.managedBean.approvalTypelist}"
-						layout="pageDirection">
-						<f:selectItem itemLabel="Publication" itemValue="Publication" />
-						<f:selectItem itemLabel="ExtendedProposalPreparationStartDate"
-							itemValue="startDate" />
-						<f:selectItem itemLabel="ModificationQT"
-							itemValue="ModificationQT" />
-					</p:selectManyCheckbox>
-				</p:column>
-			</p:row>
+			<p:outputLabel value="Type Of Approval Request"></p:outputLabel>
 
-		</p:panelGrid>
+
+			<p:selectManyCheckbox
+				value="#{approvalBackingBean.managedBean.approvalTypelist}"
+				layout="pageDirection">
+				<f:selectItem itemLabel="Publication" itemValue="Publication" />
+				<f:selectItem itemLabel="ExtendedProposalPreparationStartDate"
+					itemValue="startDate" />
+				<f:selectItem itemLabel="ModificationQT" itemValue="ModificationQT" />
+			</p:selectManyCheckbox>
+
+
+		</h:panelGrid>
 
 
 	</ui:fragment>
 
 	<p:panel>
-		<p:panelGrid columnClasses="25,25,25,25"
+		<h:panelGrid columns="2"
+			columnClasses="columnWidth20,columnWidth30,columnWidth20,columnWidth30"
 			styleClass="noBorders tr,noBorders td">
 
-			<p:row>
-				<p:column>
-					<p:outputLabel value="Status"></p:outputLabel>
-				</p:column>
-				<p:column>
+
+			<p:outputLabel value="Status"></p:outputLabel>
+
+			<p:inputText
+				value="#{approvalCategory.scQtApproval.statusId}"
+				readonly="true"></p:inputText>
+		</h:panelGrid>
+
+		<h:panelGrid columns="4"
+			columnClasses="columnWidth20,columnWidth30,columnWidth20,columnWidth30"
+			styleClass="noBorders tr,noBorders td">
+			<p:outputLabel value="Letter No"></p:outputLabel>
+
+			<p:inputText
+				value="#{approvalCategory.scQtApproval.approverLetterNo}"></p:inputText>
+
+
+
+
+			<p:outputLabel value="Standard Document"></p:outputLabel>
+
+
+			<h:panelGroup>
+				<h:panelGrid columns="2">
 					<p:inputText
-						value="#{approvalBackingBean.managedBean.scQtApproval.statusId}"
-						readonly="true"></p:inputText>
-				</p:column>
-
-			</p:row>
-
-			<p:row>
-				<p:column>
-					<p:outputLabel value="Letter No"></p:outputLabel>
-				</p:column>
-				<p:column width="20%">
-					<p:inputText
-						value="#{approvalCategory.scQtApproval.approverLetterNo}"></p:inputText>
-				</p:column>
+						value="#{approvalBackingBean.managedBean.standardDocument}"></p:inputText>
+					<p:commandButton value="UPLOAD"></p:commandButton>
+				</h:panelGrid>
+			</h:panelGroup>
 
 
-
-				<p:column style="width:30%;">
-					<p:outputLabel  value="Standard Document"></p:outputLabel>
-				</p:column>
-				<p:column>
-
-					<h:panelGroup>
-						<p:inputText
-							value="#{approvalBackingBean.managedBean.standardDocument}"></p:inputText>
-						<p:commandButton value="UPLOAD"></p:commandButton>
-					</h:panelGroup>
-				</p:column>
-			</p:row>
-
-		</p:panelGrid>
+		</h:panelGrid>
 	</p:panel>
 
 
 	<p:panel header="Proposal/Working Paper" toggleable="true"
-		style="width:100%">
-		<p:panelGrid columnClasses="25,25,25,25"
-			styleClass="noBorders tr,noBorders td" rows="1">
-			<p:row>
-				<p:column style="width:30%">
-					<p:dataTable var="attendancetender"
-						value="#{approvalBackingBean.managedBean.qtnTenders}" rows="10">
+		>
+		<h:panelGrid columns="3" styleClass="noBorders tr,noBorders td" style="width:700px;"
+			rows="1">
+			<h:panelGroup>
+				<p:dataTable var="attendancetender"
+					value="#{approvalBackingBean.managedBean.qtnTenders}" rows="10">
 
 
-						<p:column headerText="Proposal/Working Paper" style="width:30%">
-							<h:outputText value="proposalpaper"></h:outputText>
-						</p:column>
+					<p:column headerText="Proposal/Working Paper" style="width:30%">
+						<h:outputText value="proposalpaper"></h:outputText>
+					</p:column>
 
-						<p:column headerText="Action">
-							<p:commandLink>
-								<p:graphicImage library="ep/images/design" name="delete.png"
-									value="/resources/ep/images/design/delete.png" />
+					<p:column headerText="Action">
+						<p:commandLink>
+							<p:graphicImage library="ep/images/design" name="delete.png"
+								value="/resources/ep/images/design/delete.png" />
 
-							</p:commandLink>
-
-
-
-						</p:column>
+						</p:commandLink>
 
 
-					</p:dataTable>
-					<p:commandButton value="UPLOAD" style="float:right;"></p:commandButton>
-				</p:column>
-				<br />
-				<br />
 
-				<p:column style="width:25%;">
-					<p:outputLabel value="Remarks"></p:outputLabel>
-				</p:column>
-				<p:column>
-					<p:inputTextarea rows="2"
-						value="#{approvalBackingBean.managedBean.scQtApproval.requesterRemark}"></p:inputTextarea>
+					</p:column>
 
-				</p:column>
-			</p:row>
-		</p:panelGrid>
+
+				</p:dataTable>
+				<p:commandButton value="UPLOAD" style="float:right;"></p:commandButton>
+			</h:panelGroup>
+
+
+
+			<p:outputLabel value="Remarks"></p:outputLabel>
+
+			<p:inputTextarea rows="3" cols="30" autoResize="false"
+				value="#{approvalCategory.scQtApproval.requesterRemark}"></p:inputTextarea>
+
+
+		</h:panelGrid>
 	</p:panel>
 
 </ui:composition>
