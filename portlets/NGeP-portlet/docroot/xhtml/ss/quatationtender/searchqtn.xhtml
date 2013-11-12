@@ -69,11 +69,11 @@
 			<p:dataTable id="searchQTs" value="#{qTDetailBB.managedBean.qtList}"
 				var="scQt" resizableColumns="true" rowIndexVar="index">
 
-				<p:column headerText="#{lbl['lbl.so.no']}">
+				<p:column headerText="#{lbl['lbl.so.no']}" style="width:20px;">
 					<h:outputText value="#{index + 1}" />
 				</p:column>
 
-				<p:column headerText="Qtn/Tender No">
+				<p:column headerText="Qtn/Tender No" style="width:100px;">
 					<p:commandLink action="#{qTDetailBB.editAction(scQt)}"
 						style="margin-right:20px;">
 						<h:outputText value="#{scQt.qtNo}" />
@@ -85,19 +85,19 @@
 				<p:column headerText="#{lbl['lbl.so.title']}">
 					<h:outputText value="#{scQt.qtTitle}" />
 				</p:column>
-				<p:column headerText="#{lbl['lbl.so.procmode']}">
+				<p:column headerText="#{lbl['lbl.so.procmode']}" style="width:100px;">
 					<h:outputText value="#{scQt.procurementMode}" />
 				</p:column>
 
-				<p:column headerText="#{lbl['lbl.so.crtdt']}">
+				<p:column headerText="#{lbl['lbl.so.crtdt']}" style="width:120px;">
 					<h:outputText value="#{scQt.createdDate}" />
 				</p:column>
 
-				<p:column headerText="#{lbl['lbl.so.pbdt']}">
+				<p:column headerText="#{lbl['lbl.so.pbdt']}" style="width:120px;">
 					<h:outputText value="#{scQt.publishDate}" />
 				</p:column>
 
-				<p:column headerText="#{lbl['lbl.so.clsdt']}">
+				<p:column headerText="#{lbl['lbl.so.clsdt']}" style="width:120px;">
 					<h:outputText value="#{scQt.closingDate}" />
 				</p:column>
 
