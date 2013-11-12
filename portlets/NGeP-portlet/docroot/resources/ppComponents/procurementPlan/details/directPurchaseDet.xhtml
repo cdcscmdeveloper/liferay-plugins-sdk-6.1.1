@@ -14,10 +14,10 @@ xmlns:c="http://java.sun.com/jsp/jstl/core">
 		<div class="ppRightBtn">
 			<!-- update="tvPlanContent:dtEpItemDetails" -->
 			<p:commandButton id="cbConfirm" value="#{lbl['lbl.pp.confirm']}" action="#{planBackingBean.addPpPlanToList()}"
-			  onclick="dlItemDetailsDpModal.hide()" oncomplete="dlItemDetailsDpModal.hide()"  process="opEpDirectPurchase"
+			  onclick="dlItemDetailsModal.hide()" oncomplete="dlItemDetailsModal.hide()"  process="opEpDirectPurchase"
 			  update="dtEpPlanItem"  />
 			&nbsp; 
-			<p:commandButton id="cbCancel" value="#{lbl['lbl.pp.cancel']}" onclick="dlItemDetailsDpModal.hide()" 
+			<p:commandButton id="cbCancel" value="#{lbl['lbl.pp.cancel']}" onclick="dlItemDetailsModal.hide()" 
 				immediate="true"/>&nbsp;
 		</div>
 		<!-- Sub Header -->

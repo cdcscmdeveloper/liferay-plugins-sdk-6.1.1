@@ -16,34 +16,34 @@ xmlns:c="http://java.sun.com/jsp/jstl/core">
 					<th>#{lbl['lbl.pp.plan.name']}</th>
 					<td class="ppSmallTd">:</td>
 					<td>
-						<p:inputText value="#{cc.attrs.selectedPlanItem.favorPlanRecurFreq.planName}" 
-							disabled="#{!cc.attrs.selectedPlanItem.brandNew &amp;&amp; cc.attrs.viewMode!=PPConst.modeRevision}"/>
+						<p:inputText value="#{planBackingBean.managedBean.selectedPlanItem.favorPlanRecurFreq.planName}" 
+							disabled="#{!planBackingBean.managedBean.selectedPlanItem.brandNew &amp;&amp; cc.attrs.viewMode!=PPConst.modeRevision}"/>
 					</td>
 				</tr>
 				<tr>
 					<th>#{lbl['lbl.pp.recurring.frequency']}</th>
 					<td class="ppSmallTd">:</td>
 					<td>
-						<p:inputText value="#{cc.attrs.selectedPlanItem.favorPlanRecurFreq.recurFreq}"
-							disabled="#{!cc.attrs.selectedPlanItem.brandNew &amp;&amp; cc.attrs.viewMode!=PPConst.modeRevision}">
+						<p:inputText value="#{planBackingBean.managedBean.selectedPlanItem.favorPlanRecurFreq.recurFreq}"
+							disabled="#{!planBackingBean.managedBean.selectedPlanItem.brandNew &amp;&amp; cc.attrs.viewMode!=PPConst.modeRevision}">
 						    <p:ajax event="change" listener="#{planBackingBean.changeRecurFreq}" update="opPlanEpFavorPlan" />
 						</p:inputText>
 					</td>
 				</tr>
 				<!-- Repeat this based on recurring frequency -->
-				<ui:repeat var="fav" value="#{cc.attrs.selectedPlanItem.favorPlanRecurFreq.ppRecurFreqDtls}" varStatus="status">
+				<ui:repeat var="fav" value="#{planBackingBean.managedBean.selectedPlanItem.favorPlanRecurFreq.ppRecurFreqDtls}" varStatus="status">
 					<tr>
 						<th>#{lbl['lbl.pp.planned.activities.start.end.month']} ${status.index+1}</th>
 						<td class="ppSmallTd">:</td>
 						<td>
 							<p:selectOneMenu value="#{fav.intPlanStartMonth}"
-								disabled="#{!cc.attrs.selectedPlanItem.brandNew &amp;&amp; cc.attrs.viewMode!=PPConst.modeRevision}">
+								disabled="#{!planBackingBean.managedBean.selectedPlanItem.brandNew &amp;&amp; cc.attrs.viewMode!=PPConst.modeRevision}">
 								<f:selectItem itemLabel="#{lbl['lbl.select']}" itemValue="12"/>
 								<f:selectItems value="#{planBackingBean.shortMonths()}"/>
 							</p:selectOneMenu>
 							&nbsp;
 							<p:selectOneMenu value="#{fav.intPlanEndMonth}"
-								disabled="#{!cc.attrs.selectedPlanItem.brandNew &amp;&amp; cc.attrs.viewMode!=PPConst.modeRevision}">
+								disabled="#{!planBackingBean.managedBean.selectedPlanItem.brandNew &amp;&amp; cc.attrs.viewMode!=PPConst.modeRevision}">
 								<f:selectItem itemLabel="#{lbl['lbl.select']}" itemValue="12"/>
 								<f:selectItems value="#{planBackingBean.shortMonths()}"/>
 							</p:selectOneMenu>

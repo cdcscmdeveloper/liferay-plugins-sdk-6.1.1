@@ -202,18 +202,6 @@ public class PlanBackingBean extends BaseBackingBean<PlanManagedBean>{
 		log.info("PlanBackingBean - End");
 	}
 
-	public String dummyTask(Long tskId, String action){
-		ProcurementPlanReqDTO planReqDTO = new ProcurementPlanReqDTO();
-		planReqDTO.setPlanId(tskId);
-		IProcurementPlanSO planSO = (IProcurementPlanSO) BusinessDelegate.getInstance().getServiceObject("pp", IProcurementPlanSO.class);
-		ProcurementPlanResDTO planResDTO = planSO.retrievePlanById(planReqDTO);
-
-		PlanBackingBean planBB = new PlanBackingBean();
-		planBB.getManagedBean().setBpmTaskId("RAIN");
-		planBB.getManagedBean().setActions(new String[]{"SUBMIT","REVISE"});
-		planBB.loadTask(planResDTO.getPlan(), action);
-		return ProcurementPlanConst.NAV_TO_PLAN_DET;
-	}
 	
 	/**
 	 * load task from task list
@@ -262,7 +250,6 @@ public class PlanBackingBean extends BaseBackingBean<PlanManagedBean>{
 				vo.setActorType("V");
 				ppPlan.addVerificationOfficers(vo);
 			}
-			
 		
 			//load mto plan
 			if(ppPlan.getPpPlanMaster().isMtoPlan()){
@@ -338,23 +325,6 @@ public class PlanBackingBean extends BaseBackingBean<PlanManagedBean>{
 		log.info("loadTask - End");
 	}
 	
-//	public static void main(String[]args){
-//		System.out.println("result start");
-//		List<PpQtActivity> actList = new ArrayList<PpQtActivity>();
-//		PpQtActivity act = new PpQtActivity();
-//		PmBusinessActivity b = new PmBusinessActivity();
-//		b.setBusinessActivityId(1);
-//		act.setPmBusinessActivity(b);
-//		actList.add(act);
-//		
-//		PmBusinessActivity a = new PmBusinessActivity();
-//		a.setBusinessActivityId(1);
-//		
-//		
-//		System.out.println("result end");
-//		System.out.println("result>>2" + actList.contains(a));
-//
-//	}
 	/**
 	 * redirect to plan details view from BPM & DB
 	 * @param taskId
@@ -564,7 +534,9 @@ public class PlanBackingBean extends BaseBackingBean<PlanManagedBean>{
 				this.getManagedBean().getSelectedPlanMaster().setVotType(votType);
 				if(ProcurementPlanConst.PROCUREMENT_DIRECT_PURCHASE.equals(procurementMode)){
 					//default favorite options to none
-					this.getManagedBean().getSelectedPlan().setFavouriteOption(ProcurementPlanConst.FAVOURITE_TYPE_NONE);
+					if(this.getManagedBean().getSelectedPlan().isBrandNew()){
+						this.getManagedBean().getSelectedPlan().setFavouriteOption(ProcurementPlanConst.FAVOURITE_TYPE_NONE);
+					}
 				}
 			}
 			
@@ -609,9 +581,11 @@ public class PlanBackingBean extends BaseBackingBean<PlanManagedBean>{
 					this.getManagedBean().setDynamicDetailsName(ProcurementPlanConst.EP_DIRECT_PURCHASE_DET);
 				}else if(ProcurementPlanConst.FAVOURITE_TYPE_PLAN.equals(favoriteOption)){
 					this.getManagedBean().setDynamicDetailsName(ProcurementPlanConst.EP_FAVOURITE_PLAN_DET);
+					showPpPlan(null);
 					loadFavouritePlan();
 				}else if(ProcurementPlanConst.FAVOURITE_TYPE_ITEM.equals(favoriteOption)){
 					this.getManagedBean().setDynamicDetailsName(ProcurementPlanConst.EP_FAVOURITE_ITEM_DET);
+					showPpPlan(null);
 					loadFavouriteItem();
 				}	
 				result = true;
@@ -733,16 +707,24 @@ public class PlanBackingBean extends BaseBackingBean<PlanManagedBean>{
 			this.getManagedBean().getSelectedItem().setBrandNew(true);
 			this.getManagedBean().getSelectedItem().setCmUnspsc(new CmUnspsc());
 			this.getManagedBean().getSelectedItem().setPpBudgetAllocDtl(new PpBudgetAllocDtl());
-			
+
 			//For favourite item
 			String favoriteOption = this.getManagedBean().getSelectedPlan().getFavouriteOption()!=null ? this.getManagedBean().getSelectedPlan().getFavouriteOption() : "";
 			if(ProcurementPlanConst.FAVOURITE_TYPE_ITEM.equals(favoriteOption)){
-				loadFavouriteItem();
+//				loadFavouriteItem();
+				PpRecurFreq ppRecurFreq = new PpRecurFreq();
+				ppRecurFreq.setRecurFreq(1);
+				ppRecurFreq.setPpRecurFreqDtls(new ArrayList<PpRecurFreqDtl>());
+				ppRecurFreq.addPpRecurFreqDtls(new PpRecurFreqDtl());
+				this.getManagedBean().getSelectedItem().setPpRecurFreq(ppRecurFreq);
+				
 			}	
+			if(ProcurementPlanConst.FAVOURITE_TYPE_ITEM.equals(favoriteOption) 
+					|| ProcurementPlanConst.FAVOURITE_TYPE_PLAN.equals(favoriteOption)){
+				this.getManagedBean().getSelectedItem().setCmSupplierItem(new CmSupplierItem());
+				this.getManagedBean().getSelectedItem().getCmSupplierItem().setSmSupplier(new SmSupplier());
+			}
 
-			//temp TODO rain
-			this.getManagedBean().getSelectedItem().setCmSupplierItem(new CmSupplierItem());
-			this.getManagedBean().getSelectedItem().getCmSupplierItem().setSmSupplier(new SmSupplier());
 		}else{
 			
 			if(ProcurementPlanConst.MODE_REVISION.equals(this.getManagedBean().getViewMode())){
@@ -763,10 +745,16 @@ public class PlanBackingBean extends BaseBackingBean<PlanManagedBean>{
 			item.setUnspscSegmentCode(segmentObj.getUnspscCode());
 			item.setUnspscFamilyCode(familyObj.getUnspscCode());
 			item.setUnspscClassCode(item.getCmUnspsc().getUnspscCode());
+			
+			String favoriteOption = this.getManagedBean().getSelectedPlan().getFavouriteOption()!=null ? this.getManagedBean().getSelectedPlan().getFavouriteOption() : "";
+			if(ProcurementPlanConst.FAVOURITE_TYPE_ITEM.equals(favoriteOption) || ProcurementPlanConst.FAVOURITE_TYPE_PLAN.equals(favoriteOption)){
+				System.out.println("showPpItem med");
+				item.setUnspscCommodityId((item.getCmSupplierItem()!=null && item.getCmSupplierItem().getCmItem()!=null) ? 
+						item.getCmSupplierItem().getCmItem().getItemId() : 0L);
+				item.setCmSupplierItem(item.getCmSupplierItem()!=null ? item.getCmSupplierItem() : new CmSupplierItem());
+			}
 			this.getManagedBean().setSelectedItem(item);
 			this.getManagedBean().setSelectedItemRemark(new PpRemark());
-
-			//call populate allocated budget as gosodo
 		}
 		log.info("showPpItem - End");
 	}
@@ -802,12 +790,9 @@ public class PlanBackingBean extends BaseBackingBean<PlanManagedBean>{
 			this.getManagedBean().getSelectedItem().setStatusId(ProcurementPlanConst.STATUS_PBD_NEW);
 			updateSelectedDo(this.getManagedBean().getSelectedItem(), "ADD");
 			if(ProcurementPlanConst.PLAN_TYPE_EXPENDITURE.equals(this.getManagedBean().getSelectedPlanMaster().getPlanType())){
-//				if(ProcurementPlanConst.FAVOURITE_TYPE_PLAN.equals(this.getManagedBean().getSelectedPlan().getFavouriteOption())){
-//					this.getManagedBean().getSelectedPlan().addPpPlanItems(this.getManagedBean().getSelectedItem());
-//				}else{
-					this.getManagedBean().getSelectedPlanItem().addPpPlanItems(this.getManagedBean().getSelectedItem());
-//				}
+				this.getManagedBean().getSelectedPlanItem().addPpPlanItems(this.getManagedBean().getSelectedItem());
 			}else{
+				System.out.println("add pp");
 				this.getManagedBean().getSelectedPlan().addPpPlanItems(this.getManagedBean().getSelectedItem());
 			}
 			
@@ -843,10 +828,18 @@ public class PlanBackingBean extends BaseBackingBean<PlanManagedBean>{
 			
 		}
 
-		//reset item view
-		showPpItem(null);
-				
+		//reset item view for DP - none & EC only
+//		if((ProcurementPlanConst.PROCUREMENT_DIRECT_PURCHASE.equals(this.getManagedBean().getSelectedPlanMaster().getProcurementMode())
+//				&& ProcurementPlanConst.FAVOURITE_TYPE_NONE.equals(this.getManagedBean().getSelectedPlan().getFavouriteOption())) 
+//				|| ProcurementPlanConst.PROCUREMENT_EXISTING_CONTRACT.equals(this.getManagedBean().getSelectedPlanMaster().getProcurementMode())){
+//			
+				showPpItem(null);
+			
+//		}
+
 		System.out.println("item list size " + this.getManagedBean().getSelectedPlanItem().getPpPlanItems().size());
+		
+		
 		log.info("addItemToList - End");
 	}
 	
@@ -861,11 +854,6 @@ public class PlanBackingBean extends BaseBackingBean<PlanManagedBean>{
 				//set empty view for ppPlan
 				this.getManagedBean().setSelectedPlanItem(new PpPlan());
 				this.getManagedBean().getSelectedPlanItem().setBrandNew(true);
-//				this.getManagedBean().getSelectedPlanItem().setCtCircular(new CtCircular());
-//				this.getManagedBean().getSelectedPlanItem().setCtContract(new CtContract());
-//			 	this.getManagedBean().getSelectedPlanItem().setLoaId();
-//				this.getManagedBean().getSelectedPlanItem().setCmUnspsc(new CmUnspsc());
-//				this.getManagedBean().egetSelectedPlanItem().setPpBudgetAllocDtl(new PpBudgetAllocDtl());
 				
 				//set empty view for ppPlanItem
 				this.getManagedBean().setSelectedItem(new PpPlanItem());
@@ -941,29 +929,6 @@ public class PlanBackingBean extends BaseBackingBean<PlanManagedBean>{
 
 	
 	
-	/*
-	public void changeRecurFreq(){
-		log.info("changeRecurFreq - Start");
-		int recurFreq = this.getManagedBean().getSelectedPlan().getFavorPlanRecurFreq().getRecurFreq();
-		int currentSize = this.getManagedBean().getSelectedPlan().getFavorPlanRecurFreq().getPpRecurFreqDtls().size();
-		log.info("recurFreq: " + recurFreq);
-
-		if(recurFreq>currentSize){
-			log.info("+ size");
-			int newFreq = recurFreq - currentSize;
-			for(int i=0; i<newFreq; i++){
-				this.getManagedBean().getSelectedPlan().getFavorPlanRecurFreq().addPpRecurFreqDtls(new PpRecurFreqDtl());
-			}
-		}else if (recurFreq<currentSize){
-			log.info("- size");
-			this.getManagedBean().getSelectedPlan().getFavorPlanRecurFreq().getPpRecurFreqDtls().remove(
-					this.getManagedBean().getSelectedPlan().getFavorPlanRecurFreq().getPpRecurFreqDtls().size() - 1);
-		}
-		System.out.println("size = " + this.getManagedBean().getSelectedPlan().getFavorPlanRecurFreq().getPpRecurFreqDtls().size());
-		log.info("changeRecurFreq - End");
-		
-	}*/
-	
 	/**
 	 * update the recurring frequency details by the recurring frequency entered
 	 */
@@ -1007,13 +972,19 @@ public class PlanBackingBean extends BaseBackingBean<PlanManagedBean>{
 	 */
 	public void loadFavouritePlan(){
 		log.info("loadFavouritePlan");
-		this.getManagedBean().setSelectedPlanItem(new PpPlan());
-		this.getManagedBean().getSelectedPlanItem().setPpPlanItems(new ArrayList<PpPlanItem>());
-		PpRecurFreq ppRecurFreq = new PpRecurFreq();
-		ppRecurFreq.setRecurFreq(1);
-		ppRecurFreq.setPpRecurFreqDtls(new ArrayList<PpRecurFreqDtl>());
-		ppRecurFreq.addPpRecurFreqDtls(new PpRecurFreqDtl());
-		this.getManagedBean().getSelectedPlanItem().setFavorPlanRecurFreq(ppRecurFreq);
+		if(this.getManagedBean().getSelectedPlanMaster().isBrandNew()){
+			PpRecurFreq ppRecurFreq = new PpRecurFreq();
+			ppRecurFreq.setRecurFreq(1);
+			ppRecurFreq.setPpRecurFreqDtls(new ArrayList<PpRecurFreqDtl>());
+			ppRecurFreq.addPpRecurFreqDtls(new PpRecurFreqDtl());
+			this.getManagedBean().getSelectedPlanItem().setFavorPlanRecurFreq(ppRecurFreq);
+		}else{
+			//load for favourite plan 
+			PpPlanItem item = this.getManagedBean().getSelectedPlan().getPpPlanItems().get(0);
+			this.getManagedBean().setSelectedPlanItem(this.getManagedBean().getSelectedPlan());
+			this.getManagedBean().getSelectedPlanItem().setFavorPlanRecurFreq(item.getPpRecurFreq());
+		}
+		
 	}
 	
 	/**
@@ -1021,14 +992,10 @@ public class PlanBackingBean extends BaseBackingBean<PlanManagedBean>{
 	 */
 	public void loadFavouriteItem(){
 		log.info("loadFavouriteItem");
-		this.getManagedBean().setSelectedPlanItem(new PpPlan());
-		this.getManagedBean().getSelectedPlanItem().setPpPlanItems(new ArrayList<PpPlanItem>());
-		PpRecurFreq ppRecurFreq = new PpRecurFreq();
-		ppRecurFreq.setRecurFreq(1);
-		ppRecurFreq.setPpRecurFreqDtls(new ArrayList<PpRecurFreqDtl>());
-		ppRecurFreq.addPpRecurFreqDtls(new PpRecurFreqDtl());
-		this.getManagedBean().getSelectedItem().setPpRecurFreq(ppRecurFreq);
-		
+		if(!this.getManagedBean().getSelectedPlanMaster().isBrandNew()){
+			//load for favourite item 
+			this.getManagedBean().setSelectedPlanItem(this.getManagedBean().getSelectedPlan());
+		}
 	}
 	
 	
@@ -1344,9 +1311,10 @@ public class PlanBackingBean extends BaseBackingBean<PlanManagedBean>{
 		return CommonMethod.calendarMonths();
 	}
 
-	
-	
-	//TEMP VOT 
+	/**
+	 * vot type options
+	 * @return
+	 */
 	public List<SelectItem> votTypeOptions() {
 		log.info("votTypeOptions");
 		List<SelectItem>options = new ArrayList<SelectItem>();
@@ -1561,78 +1529,44 @@ public class PlanBackingBean extends BaseBackingBean<PlanManagedBean>{
 	/**
 	 * retrieve extension item and supplier item object
 	 */
-//	public void selectedExtensionItem(){
-//		log.info("selectedExtensionItem - Start");
-//		Long id = this.getManagedBean().getSelectedItem().getExtensionId();
-//		try{
-//			if(CommonMethod.isSelected(id)){
-//				CodificationReqDTO reqDTO = new CodificationReqDTO();
-////				reqDTO.setItemId(id);
-//				ICodificationSO reqSO = (ICodificationSO) BusinessDelegate.getInstance().getServiceObject("cm", ICodificationSO.class);
-//				CodificationResDTO resDTO = reqSO.searchExtensionItem(reqDTO);
-//				if(resDTO.isSuccessful()){
-//					new CmItem().getCmSupplierItems();
-////					this.getManagedBean().getSelectedItem().setCmUnspsc(resDTO.getUnspscObj());
-//				}
-//			}
-//		}catch (Exception e){
-//			e.printStackTrace();
-//			this.getManagedBean().setSystemMsg(e.getMessage());
-//		}
-//		log.info("selectedExtensionItem - End");		
-//	}
-//	
-	/**
-	 * retrieve and set cm supplier item
-	 */
-	public void selectedSupItem(){
-		log.info("selectedSupItem - Start");
-		// select and set cmSupplierItem 
-		this.getManagedBean().getSelectedItem().setCmSupplierItem(new CmSupplierItem());
-		log.info("selectedSupItem - End");
-	}
-	
-	/**
-	 * retrieve supplier item list from CM
-	 * @return List<CmSupplierItem> 
-	 */
-	public List<CmSupplierItem> supplierItemOptions(){
-		log.info("extensionItemOptions - Start");
+	public void selectedExtensionItem(){
+		log.info("selectedExtensionItem - Start");
 		Long id = this.getManagedBean().getSelectedItem().getExtensionId();
-		List<CmSupplierItem> options = new ArrayList<CmSupplierItem>();
 		try{
 			if(CommonMethod.isSelected(id)){
-//				CodificationReqDTO reqDTO = new CodificationReqDTO();
-//				reqDTO.setItemId(id);
-//				ICodificationSO reqSO = (ICodificationSO) BusinessDelegate.getInstance().getServiceObject("cm", ICodificationSO.class);
-//				CodificationResDTO resDTO = reqSO.searchExtensionItem(reqDTO);
-//				if(resDTO.isSuccessful()){
-//					options = new CmItem().getCmSupplierItems();
-//				}
+				CodificationReqDTO reqDTO = new CodificationReqDTO();
+				reqDTO.setItemId(id);
+				ICodificationSO reqSO = (ICodificationSO) BusinessDelegate.getInstance().getServiceObject("cm", ICodificationSO.class);
+				CodificationResDTO resDTO = reqSO.searchItemObj(reqDTO);
+				if(resDTO.isSuccessful()){
+					CmItem item = resDTO.getCmItem();
+					this.getManagedBean().getSelectedItem().setCmSupplierItem(
+							((item!=null && item.getCmSupplierItems()!=null) ? item.getCmSupplierItems().get(0) : new CmSupplierItem())
+						);
+				}
 			}
 		}catch (Exception e){
 			e.printStackTrace();
 			this.getManagedBean().setSystemMsg(e.getMessage());
 		}
-		log.info("extensionItemOptions - End");
-		return options;
+		log.info("selectedExtensionItem - End");		
 	}
-	
-	
+
 	/**
 	 * retrieve extension item list from CM
 	 * @return List<CmItem> 
 	 */
 	public List<CmItem> extensionItemOptions(){
 		log.info("extensionItemOptions - Start");
-		String code = this.getManagedBean().getSelectedItem().getUnspscCommodityCode();
+		Long id = this.getManagedBean().getSelectedItem().getUnspscCommodityId();
+		System.out.println("id " + id);
 		List<CmItem> options = new ArrayList<CmItem>();
 		try{
-			if(CommonMethod.isSelected(code)){
+			if(CommonMethod.isSelected(id)){
 				CodificationReqDTO reqDTO = new CodificationReqDTO();
-				reqDTO.setUnspscCode(code);
+				reqDTO.setUnspscId(id);
 				ICodificationSO reqSO = (ICodificationSO) BusinessDelegate.getInstance().getServiceObject("cm", ICodificationSO.class);
-				CodificationResDTO resDTO = reqSO.searchItem(reqDTO);
+				CodificationResDTO resDTO = reqSO.searchItemList(reqDTO);
 				if(resDTO.isSuccessful()){
 					options = resDTO.getItemList();
 				}
@@ -1834,6 +1768,12 @@ public class PlanBackingBean extends BaseBackingBean<PlanManagedBean>{
 				ContractResDTO resDTO = reqSO.retrieveContractByContractType(reqDTO);
 				if(resDTO.isSuccessful()){
 					options = resDTO.getCtContracts();
+					for(CtContract contract : resDTO.getCtContracts()) {
+						System.out.print(contract.getContractName()+" >> "+contract.getSmSupplier().getRegNo());
+						if(contract.getContractValue()!=null)
+							System.out.print(" $$## "+contract.getContractValue().getContractNo());
+						System.out.println();
+					}
 				}
 				log.info("result size: " +options.size());
 			}
@@ -1977,7 +1917,23 @@ public class PlanBackingBean extends BaseBackingBean<PlanManagedBean>{
 	
 	public void test(){
 		System.out.println("sssssssssssssss rain");
-				
+//		if(this.getManagedBean().getSelectedPlanItem().isBrandNew() && !this.getManagedBean().getSelectedPlanItem().isSelected()){
+			for(PpPlanItem item: this.getManagedBean().getSelectedPlanItem().getPpPlanItems()){
+				System.out.println("item rm: " + item.getEstimatedAmount());
+				if(item.getCmSupplierItem()!=null){
+					System.out.println("item sup : " + item.getCmSupplierItem().getSupplierItemId());
+				}else{
+					System.out.println("item sup : x");
+				}
+				if(item.getPpRecurFreq()!=null){
+					System.out.println("item f : " + item.getPpRecurFreq().getPlanName() );
+				}else{
+					System.out.println("item f : x");
+				}
+				System.out.println("item : " + item.getPpBudgetAllocDtl().getBudgetAllocDtlId());
+			}
+//			this.getManagedBean().getPlanMaster().addPpPlans(this.getManagedBean().getSelectedPlanItem());
+//		}
 	}
 	
 	
@@ -2031,103 +1987,120 @@ public class PlanBackingBean extends BaseBackingBean<PlanManagedBean>{
 	private void getCompletePlanMaster(){
 		
 		log.info("getCompletePlanMaster - Start");
-		
-		//getting only selected task activities
-		List <PpQtActivity> planActivities = this.getManagedBean().getPlan().getAllPpQtActivities();
-		this.getManagedBean().getPlan().setPpQtActivities(new ArrayList<PpQtActivity>());
-		for(PpQtActivity act:planActivities){
-			if(act.getPlanStartDate()!=null){
-				this.getManagedBean().getPlan().addPpQtActivities(act);
-
-			}
-		}
-		
-		//initialize actor list
-		if(this.getManagedBean().getSelectedPlan().getPpPlanActors()==null){
-			this.getManagedBean().getSelectedPlan().setPpPlanActors(new ArrayList<PpPlanActor>());
-		}
-		
-		//getting approver
-		System.out.println("approver " +this.getManagedBean().getSelectedPlan().getApprover().getUserId());
-		this.getManagedBean().getSelectedPlan().addPpPlanActors(this.getManagedBean().getSelectedPlan().getApprover());
-		
-		//getting verification officer
-		if(ProcurementPlanConst.SUBMIT_VERIFICATION.equals(this.getManagedBean().getSelectedPlan().getSubmissionType())){
-			for(PpPlanActor pvo: this.getManagedBean().getSelectedPlan().getVerificationOfficers()){
-				if(CommonMethod.isSelected(pvo.getUserId())){
-					this.getManagedBean().getSelectedPlan().addPpPlanActors(pvo);
-				}
-			}
-		}
-		
-		if(!CommonMethod.isSelected(this.getManagedBean().getSelectedPlanMaster().getMaksudId())){
-			this.getManagedBean().getSelectedPlanMaster().setMaksudId(null);
-		}
-		
-		//for EP
-		if(ProcurementPlanConst.PLAN_TYPE_EXPENDITURE.equals(this.getManagedBean().getSelectedPlanMaster().getPlanType())){
-			//DP & EC
-			if(ProcurementPlanConst.PROCUREMENT_DIRECT_PURCHASE.equals(this.getManagedBean().getSelectedPlanMaster().getProcurementMode())
-					|| ProcurementPlanConst.PROCUREMENT_EXISTING_CONTRACT.equals(this.getManagedBean().getSelectedPlanMaster().getProcurementMode())){
-				for(PpPlan epPlan:this.getManagedBean().getPlanMaster().getPpPlans()){
-					epPlan = clonePlan(this.getManagedBean().getSelectedPlan(), epPlan);
-				}
-//			}else{
+		try{
 			
-					//for favourite plan
-					if(ProcurementPlanConst.FAVOURITE_TYPE_PLAN.equals(this.getManagedBean().getSelectedPlan().getFavouriteOption())){
-						//clone favourite plan sub header to all item
-						for(PpPlanItem item: this.getManagedBean().getSelectedPlan().getPpPlanItems()){
-							item.setPpRecurFreq(this.getManagedBean().getSelectedPlan().getFavorPlanRecurFreq());
-							for(PpRecurFreqDtl recurDtl:item.getPpRecurFreq().getPpRecurFreqDtls()){
-								item.getPpRecurFreq().addPpRecurFreqDtls(recurDtl);
-							}
-						}
-					}
-					//for favourite item
-//				}
-			}
-
-		//for PP
-		}else if(ProcurementPlanConst.PLAN_TYPE_PROCUREMENT.equals(this.getManagedBean().getSelectedPlanMaster().getPlanType())){
-			//only one plan
-			if(this.getManagedBean().getPlanMaster().isBrandNew()){
-				this.getManagedBean().getPlanMaster().addPpPlans(this.getManagedBean().getSelectedPlan());
-			}
-		}
-
-		if(this.getManagedBean().isEnableMto()){
-			List <PpQtActivity> mtoActivities = this.getManagedBean().getMtoPlan().getAllPpQtActivities();
-			this.getManagedBean().getMtoPlan().setPpQtActivities(new ArrayList<PpQtActivity>());
-			for(PpQtActivity act:mtoActivities){
+			test();
+			
+			
+			//getting only selected task activities
+			List <PpQtActivity> planActivities = this.getManagedBean().getPlan().getAllPpQtActivities();
+			this.getManagedBean().getPlan().setPpQtActivities(new ArrayList<PpQtActivity>());
+			for(PpQtActivity act:planActivities){
 				if(act.getPlanStartDate()!=null){
-					this.getManagedBean().getMtoPlan().addPpQtActivities(act);
+					this.getManagedBean().getPlan().addPpQtActivities(act);
+	
 				}
 			}
-
+			
 			//initialize actor list
-			if(this.getManagedBean().getMtoPlan().getPpPlanActors()==null){
-				this.getManagedBean().getMtoPlan().setPpPlanActors(new ArrayList<PpPlanActor>());
+			if(this.getManagedBean().getPlan().getPpPlanActors()==null){
+				this.getManagedBean().getPlan().setPpPlanActors(new ArrayList<PpPlanActor>());
 			}
 			
 			//getting approver
-			this.getManagedBean().getMtoPlan().addPpPlanActors(this.getManagedBean().getMtoPlan().getApprover());
+			this.getManagedBean().getPlan().addPpPlanActors(this.getManagedBean().getPlan().getApprover());
 			
 			//getting verification officer
-			if(ProcurementPlanConst.SUBMIT_VERIFICATION.equals(this.getManagedBean().getMtoPlan().getSubmissionType())){
-				for(PpPlanActor pvo: this.getManagedBean().getMtoPlan().getVerificationOfficers()){
-					if(CommonMethod.isSelected(pvo.getPlanActorId())){
-						this.getManagedBean().getMtoPlan().addPpPlanActors(pvo);
+			if(ProcurementPlanConst.SUBMIT_VERIFICATION.equals(this.getManagedBean().getPlan().getSubmissionType())){
+				for(PpPlanActor pvo: this.getManagedBean().getPlan().getVerificationOfficers()){
+					if(CommonMethod.isSelected(pvo.getUserId())){
+						this.getManagedBean().getPlan().addPpPlanActors(pvo);
 					}
 				}
 			}
 			
-			//only one plan
-			if(this.getManagedBean().getMtoPlanMaster().isBrandNew()){
-				this.getManagedBean().getMtoPlanMaster().addPpPlans(this.getManagedBean().getMtoPlan());
+			if(!CommonMethod.isSelected(this.getManagedBean().getPlanMaster().getMaksudId())){
+				this.getManagedBean().getPlanMaster().setMaksudId(null);
 			}
 			
-			this.getManagedBean().getPlanMaster().setMtoPlanMaster(this.getManagedBean().getMtoPlanMaster());
+			//for EP
+			if(ProcurementPlanConst.PLAN_TYPE_EXPENDITURE.equals(this.getManagedBean().getPlanMaster().getPlanType())){
+				//for FP/FI
+				if(ProcurementPlanConst.FAVOURITE_TYPE_PLAN.equals(this.getManagedBean().getPlan().getFavouriteOption())
+					|| ProcurementPlanConst.FAVOURITE_TYPE_ITEM.equals(this.getManagedBean().getPlan().getFavouriteOption())){
+
+					if(this.getManagedBean().getSelectedPlanItem().isBrandNew() && !this.getManagedBean().getSelectedPlanItem().isSelected()){
+						this.getManagedBean().getPlanMaster().addPpPlans(this.getManagedBean().getSelectedPlanItem());
+					}
+				}
+				
+				for(PpPlan epPlan:this.getManagedBean().getPlanMaster().getPpPlans()){
+					epPlan = clonePlan(this.getManagedBean().getPlan(), epPlan);
+				}
+
+				//for favourite plan
+				if(ProcurementPlanConst.FAVOURITE_TYPE_PLAN.equals(this.getManagedBean().getPlan().getFavouriteOption())){
+					//clone favourite plan sub header to all item
+					for(PpPlanItem item: this.getManagedBean().getSelectedPlanItem().getPpPlanItems()){
+						item.setPpRecurFreq(new PpRecurFreq());
+						item.getPpRecurFreq().setRecurFreq(this.getManagedBean().getSelectedPlanItem().getFavorPlanRecurFreq().getRecurFreq());
+						item.getPpRecurFreq().setPlanName(this.getManagedBean().getSelectedPlanItem().getFavorPlanRecurFreq().getPlanName());
+						item.getPpRecurFreq().setPpRecurFreqDtls(new ArrayList<PpRecurFreqDtl>());
+						for(PpRecurFreqDtl recurDtl:this.getManagedBean().getSelectedPlanItem().getFavorPlanRecurFreq().getPpRecurFreqDtls()){
+							item.getPpRecurFreq().addPpRecurFreqDtls(recurDtl);
+						}
+					}
+				}else if(ProcurementPlanConst.FAVOURITE_TYPE_ITEM.equals(this.getManagedBean().getPlan().getFavouriteOption())){
+					System.out.println(".................................Rain 3");
+					
+				}
+				
+	
+			//for PP
+			}else if(ProcurementPlanConst.PLAN_TYPE_PROCUREMENT.equals(this.getManagedBean().getSelectedPlanMaster().getPlanType())){
+				//only one plan
+				if(this.getManagedBean().getPlanMaster().isBrandNew()){
+					this.getManagedBean().getPlanMaster().addPpPlans(this.getManagedBean().getPlan());
+				}
+				
+				if(this.getManagedBean().isEnableMto()){
+					List <PpQtActivity> mtoActivities = this.getManagedBean().getMtoPlan().getAllPpQtActivities();
+					this.getManagedBean().getMtoPlan().setPpQtActivities(new ArrayList<PpQtActivity>());
+					for(PpQtActivity act:mtoActivities){
+						if(act.getPlanStartDate()!=null){
+							this.getManagedBean().getMtoPlan().addPpQtActivities(act);
+						}
+					}
+		
+					//initialize actor list
+					if(this.getManagedBean().getMtoPlan().getPpPlanActors()==null){
+						this.getManagedBean().getMtoPlan().setPpPlanActors(new ArrayList<PpPlanActor>());
+					}
+					
+					//getting approver
+					this.getManagedBean().getMtoPlan().addPpPlanActors(this.getManagedBean().getMtoPlan().getApprover());
+					
+					//getting verification officer
+					if(ProcurementPlanConst.SUBMIT_VERIFICATION.equals(this.getManagedBean().getMtoPlan().getSubmissionType())){
+						for(PpPlanActor pvo: this.getManagedBean().getMtoPlan().getVerificationOfficers()){
+							if(CommonMethod.isSelected(pvo.getPlanActorId())){
+								this.getManagedBean().getMtoPlan().addPpPlanActors(pvo);
+							}
+						}
+					}
+					
+					//only one plan
+					if(this.getManagedBean().getMtoPlanMaster().isBrandNew()){
+						this.getManagedBean().getMtoPlanMaster().addPpPlans(this.getManagedBean().getMtoPlan());
+					}
+					
+					this.getManagedBean().getPlanMaster().setMtoPlanMaster(this.getManagedBean().getMtoPlanMaster());
+				}
+			}
+	
+			
+		}catch(Exception e){
+			e.printStackTrace();
 		}
 		log.info("getCompletePlanMaster - End");
 	}
@@ -2147,6 +2120,7 @@ public class PlanBackingBean extends BaseBackingBean<PlanManagedBean>{
 			isSuccess = updatePlan(action);
 		} else {
 			getCompletePlanMaster();
+//			test();
 			isSuccess = addPlan(action);
 			
 		}
