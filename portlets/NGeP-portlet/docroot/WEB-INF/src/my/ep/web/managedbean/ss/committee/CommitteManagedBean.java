@@ -12,6 +12,8 @@ import javax.faces.bean.SessionScoped;
 import javax.faces.model.SelectItem;
 
 import my.ep.factory.EpLogger;
+import my.ep.persistence.entity.pm.authorization.PmOrgProfile;
+import my.ep.persistence.entity.pm.authorization.PmUser;
 import my.ep.persistence.entity.ss.quationtender.ScCommittee;
 import my.ep.persistence.entity.ss.quationtender.ScCommitteeMember;
 import my.ep.persistence.entity.ss.quationtender.ScQt;
@@ -45,15 +47,15 @@ public class CommitteManagedBean extends BaseManagedBean {
 		
 	private String profileSelction;
 	
-	private ScCommitteeMember committeMember = new ScCommitteeMember();
+	private ScCommitteeMember committeMember ;
 	
 	private List<ScCommitteeMember> committemembers;
 	
-	private List<SelectItem> minstryList;
+	private List<PmOrgProfile> minstryList;
 	
-	private List<SelectItem> divisionList;
+	private List<PmOrgProfile> divisionList;
 	
-	private List<SelectItem> deptList;
+	private List<PmOrgProfile> deptList;
 	 
 	private ScCommittee scCommittee;
 	
@@ -73,12 +75,25 @@ public class CommitteManagedBean extends BaseManagedBean {
 	
 	private String approverId;
 	
-	private List<SelectItem> govUsers;
+	private List<PmUser> govUsers;
 	
-	private List<SelectItem> externalUsers;
+	private String userId;
+	
+	private List<PmUser> externalUsers;
 	
 	private String tenderNum;
 	private List<ScQt> scQt;
+	
+	private List<ScQtCommittee> cloneSearchCommittes;
+	
+	private List<ScCommitteeMember> cloneCommitteMemebers;
+	private List<ScCommitteeMember> selectedCommitteMemebers;
+	
+	private List<SelectItem> approvalStatus;
+	
+	private boolean ecType;
+	
+	private boolean tecType;
 	
 	//Search properties
 	
@@ -177,15 +192,7 @@ public class CommitteManagedBean extends BaseManagedBean {
 	}
 
 
-	public List<SelectItem> getMinstryList() {
-		return minstryList;
-	}
-
-
-	public void setMinstryList(List<SelectItem> minstryList) {
-		this.minstryList = minstryList;
-	}
-
+	
 
 	public List<SelectItem> getSelections() {
 		return selections;
@@ -247,25 +254,7 @@ public class CommitteManagedBean extends BaseManagedBean {
 	}
 
 
-	public List<SelectItem> getDivisionList() {
-		return divisionList;
-	}
-
-
-	public void setDivisionList(List<SelectItem> divisionList) {
-		this.divisionList = divisionList;
-	}
-
-
-	public List<SelectItem> getDeptList() {
-		return deptList;
-	}
-
-
-	public void setDeptList(List<SelectItem> deptList) {
-		this.deptList = deptList;
-	}
-
+	
 
 
 	public String getQtNo() {
@@ -317,24 +306,7 @@ public class CommitteManagedBean extends BaseManagedBean {
 	}
 
 
-	public List<SelectItem> getGovUsers() {
-		return govUsers;
-	}
 
-
-	public void setGovUsers(List<SelectItem> govUsers) {
-		this.govUsers = govUsers;
-	}
-
-
-	public List<SelectItem> getExternalUsers() {
-		return externalUsers;
-	}
-
-
-	public void setExternalUsers(List<SelectItem> externalUsers) {
-		this.externalUsers = externalUsers;
-	}
 
 
 	public String getCommitteNo() {
@@ -364,6 +336,130 @@ public class CommitteManagedBean extends BaseManagedBean {
 
 	public void setScQt(List<ScQt> scQt) {
 		this.scQt = scQt;
+	}
+
+
+	public List<ScQtCommittee> getCloneSearchCommittes() {
+		return cloneSearchCommittes;
+	}
+
+
+	public void setCloneSearchCommittes(List<ScQtCommittee> cloneSearchCommittes) {
+		this.cloneSearchCommittes = cloneSearchCommittes;
+	}
+
+
+	public List<ScCommitteeMember> getCloneCommitteMemebers() {
+		return cloneCommitteMemebers;
+	}
+
+
+	public void setCloneCommitteMemebers(
+			List<ScCommitteeMember> cloneCommitteMemebers) {
+		this.cloneCommitteMemebers = cloneCommitteMemebers;
+	}
+
+
+	public boolean isEcType() {
+		return ecType;
+	}
+
+
+	public void setEcType(boolean ecType) {
+		this.ecType = ecType;
+	}
+
+
+	public boolean isTecType() {
+		return tecType;
+	}
+
+
+	public void setTecType(boolean tecType) {
+		this.tecType = tecType;
+	}
+
+
+	public List<ScCommitteeMember> getSelectedCommitteMemebers() {
+		return selectedCommitteMemebers;
+	}
+
+
+	public void setSelectedCommitteMemebers(
+			List<ScCommitteeMember> selectedCommitteMemebers) {
+		this.selectedCommitteMemebers = selectedCommitteMemebers;
+	}
+
+
+	public List<SelectItem> getApprovalStatus() {
+		return approvalStatus;
+	}
+
+
+	public void setApprovalStatus(List<SelectItem> approvalStatus) {
+		this.approvalStatus = approvalStatus;
+	}
+
+
+	public List<PmUser> getGovUsers() {
+		return govUsers;
+	}
+
+
+	public void setGovUsers(List<PmUser> govUsers) {
+		this.govUsers = govUsers;
+	}
+
+
+
+
+	public List<PmOrgProfile> getMinstryList() {
+		return minstryList;
+	}
+
+
+	public void setMinstryList(List<PmOrgProfile> minstryList) {
+		this.minstryList = minstryList;
+	}
+
+
+	public List<PmOrgProfile> getDivisionList() {
+		return divisionList;
+	}
+
+
+	public void setDivisionList(List<PmOrgProfile> divisionList) {
+		this.divisionList = divisionList;
+	}
+
+
+	public List<PmOrgProfile> getDeptList() {
+		return deptList;
+	}
+
+
+	public void setDeptList(List<PmOrgProfile> deptList) {
+		this.deptList = deptList;
+	}
+
+
+	public String getUserId() {
+		return userId;
+	}
+
+
+	public void setUserId(String userId) {
+		this.userId = userId;
+	}
+
+
+	public List<PmUser> getExternalUsers() {
+		return externalUsers;
+	}
+
+
+	public void setExternalUsers(List<PmUser> externalUsers) {
+		this.externalUsers = externalUsers;
 	}
 
 
