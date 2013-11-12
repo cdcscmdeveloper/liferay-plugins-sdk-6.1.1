@@ -30,8 +30,19 @@
 			<p:tab title="Bank Information">
 				<ui:include src="step3BumiAppln_BankInfo.xhtml" />
 			</p:tab>
-			<p:tab title="Support Document(s)">
+			<p:tab title="Support Document(s)"
+				rendered="#{backingBean.managedBean.supplierUser}">
 				<ui:include src="step5BumiAppln_SupportingDocumentsInfo.xhtml" />
+			</p:tab>
+			<p:tab title="Support Document(s) Review"
+				rendered="#{backingBean.managedBean.poUser}">
+				<ui:include
+					src="/xhtml/sm/poDecisionPages/poReviewSupportingDocuments.xhtml" />
+			</p:tab>
+			<p:tab title="PO Decision"
+				rendered="#{backingBean.managedBean.poUser}">
+				<ui:include
+					src="/xhtml/sm/poDecisionPages/poDefault_DescisionPage.xhtml" />
 			</p:tab>
 			<!-- <p:tab title="PO DECISION">
 				<ui:include

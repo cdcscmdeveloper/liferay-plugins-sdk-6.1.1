@@ -8,17 +8,23 @@
 	<p:panel header="Manufacturing / Assembly Information"
 		toggleable="true">
 		<table style="width: 250px">
-			<tr>
-				<td width="10px" style="padding-right: 2px;"><p:selectBooleanCheckbox /></td>
-				<td><h:outputText value=" Section Verified By PO: "
-						title="For PO to highlight the verified section " /></td>
+			<p:outputPanel rendered="#{backingBean.managedBean.poUser}">
+				<tr>
+					<td width="10px" style="padding-right: 2px;"><p:selectBooleanCheckbox /></td>
+					<td valign="top"><h:outputText
+							value=" Section Verified By PO: "
+							title="For PO to highlight the verified section " /></td>
 
-			</tr>
-			<tr>
-				<td width="10px"><p:selectBooleanCheckbox /></td>
-				<td><h:outputText value=" Section Verified By Approver: "
-						title="For Approver to highlight the verified section " /></td>
-			</tr>
+				</tr>
+			</p:outputPanel>
+			<p:outputPanel rendered="#{backingBean.managedBean.approverUser}">
+				<tr>
+					<td width="10px"><p:selectBooleanCheckbox /></td>
+					<td valign="top"><h:outputText
+							value=" Section Verified By Approver: "
+							title="For Approver to highlight the verified section " /></td>
+				</tr>
+			</p:outputPanel>
 		</table>
 		<br />
 		<p:dataTable var="manBean"
@@ -56,14 +62,27 @@
 				action="#{backingBean.assignNewManufacturerBean}" />
 			<p:commandButton value="Delete Assembly Info(s)" />
 		</div>
-		<table style="width: 100%">
-			<tr>
-				<td><p:outputLabel value="PO Remarks" /></td>
-				<td><p:inputTextarea autoResize="true" /></td>
-				<td><p:outputLabel value="Approver Remarks" /></td>
-				<td><p:inputTextarea autoResize="true" /></td>
-			</tr>
-		</table>
+		<br />
+		<p:outputPanel rendered="#{backingBean.managedBean.poUser}">
+			<table style="width: 50%">
+				<tr>
+					<td><p:outputLabel value="PO Remarks" /></td>
+					<td><p:inputTextarea autoResize="true" /></td>
+				</tr>
+			</table>
+		</p:outputPanel>
+		<p:outputPanel rendered="#{backingBean.managedBean.approverUser}">
+			<table style="width: 100%">
+				<tr>
+					<td><p:outputLabel value="PO Remarks" /></td>
+					<td><p:inputTextarea autoResize="true" readonly="true"
+							disabled="true" /></td>
+					<td><p:outputLabel value="Approver Remarks" /></td>
+					<td><p:inputTextarea autoResize="true" /></td>
+
+				</tr>
+			</table>
+		</p:outputPanel>
 	</p:panel>
 	<p:dialog width="600px" header="Manufacturing / Assembly Page"
 		widgetVar="manufactorDialog" resizable="false" showEffect="fade"
