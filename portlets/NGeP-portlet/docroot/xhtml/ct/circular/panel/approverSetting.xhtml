@@ -9,13 +9,12 @@
 		<h:panelGrid columns="1">
 			<h:panelGrid style="width:500px">
 				<p:pickList id="approverpickList" value="#{panelBackingBean.managedBean.approverModel}"
-					var="data" itemValue="#{data}" itemLabel="#{data.approverUser.userName}"
+					var="data" itemValue="#{data}" itemLabel="#{data}" 
 					showTargetControls="true" filterMatchMode="contains">
 					<f:facet name="sourceCaption">Available Approver(s)</f:facet>  
         			<f:facet name="targetCaption">Selected Approver(s)</f:facet> 
-					<p:ajax event="transfer" listener="#{panelBackingBean.onTransfer}" />
 					<p:column style="width:75%;">
-						<h:outputText value="#{data.approverUser.userName}" />
+						<h:outputText value="#{data}" />
 					</p:column>
 				</p:pickList>
 			</h:panelGrid>

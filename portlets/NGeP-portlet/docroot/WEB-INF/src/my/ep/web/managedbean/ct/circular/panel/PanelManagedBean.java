@@ -9,7 +9,6 @@ import java.util.List;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
 
-import my.ep.persistence.entity.ct.CtApprover;
 import my.ep.persistence.entity.ct.circular.CtCircular;
 import my.ep.persistence.entity.ct.circular.CtCircularVer;
 import my.ep.persistence.entity.ct.circular.dtl.CtCancelCircular;
@@ -48,7 +47,7 @@ public class PanelManagedBean extends BaseManagedBean {
 	private CtPanelSupplierItem selectedPanelSupplierItem;
 	
 	private List<CtCancelCircular> selectedCancelledCircularList;
-	private DualListModel<CtApprover> approverModel;
+	private DualListModel<String> approverModel;
 
 	// Search
 	private String searchCircularNo;
@@ -142,11 +141,11 @@ public class PanelManagedBean extends BaseManagedBean {
 		this.selectedPanelSupplierItem = selectedPanelSupplierItem;
 	}
 
-	public DualListModel<CtApprover> getApproverModel() {
+	public DualListModel<String> getApproverModel() {
 		return approverModel;
 	}
 
-	public void setApproverModel(DualListModel<CtApprover> approverModel) {
+	public void setApproverModel(DualListModel<String> approverModel) {
 		this.approverModel = approverModel;
 	}
 
