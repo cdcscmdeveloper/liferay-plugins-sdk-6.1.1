@@ -1,44 +1,28 @@
 <ui:composition
-	template="/WEB-INF/facelets/templates/sidemenu_template.xhtml"
 	xmlns="http://www.w3.org/1999/xhtml"
 	xmlns:f="http://java.sun.com/jsf/core"
 	xmlns:h="http://java.sun.com/jsf/html"
 	xmlns:ui="http://java.sun.com/jsf/facelets"
 	xmlns:p="http://primefaces.org/ui"
 	xmlns:c="http://java.sun.com/jsp/jstl/core">
-	<ui:define name="resourceSection">
-	</ui:define>
-	<ui:define name="sideMenu">
-		<ui:include src="/xhtml/ct/fulfilmentdetails/shared/sidemenu/amend.xhtml" />
-	</ui:define>
-	<ui:define name="content">
-	 <p:panel id="pRightPanel">
-			<div class="ppRightBtn">
-				<p:commandButton id="ctSave" value="#{lbl['lbl.ct.btn.save']}"/>
-				<p:commandButton id="ctSubmit" value="#{lbl['lbl.ct.btn.submit']}"/>
-			</div>
-		</p:panel>
-	  <p:panel id="fd" header="#{lbl['lbl.ct.cname']}" toggleable="true"  toggleSpeed="500" widgetVar="panelfd">
-         <ui:include src="/xhtml/ct/fulfilmentdetails/shared/fulfilment.xhtml"/>
-      </p:panel>
-      <p:panel id="amend" header=" Amendment Details"    toggleable="true"  toggleSpeed="500" widgetVar="panelamends">
+      <p:panel id="amend" header="#{lbl['lbl.ct.amend.panel.header']}"    toggleable="true"  toggleSpeed="500" widgetVar="panelamends">
       <h:panelGrid columns="4" style="width:700px;">  
-         <p:outputLabel value="Amendment Request No" />
+         <p:outputLabel value="#{lbl['lbl.ct.amend.txt.rno']}" />
          <h:panelGrid columns="2">
             <p:inputText value="" disabled="true" style="width:30px;"/>
             <p:inputText value="" disabled="true" style="width:100px;"/>
          </h:panelGrid>
-         <p:outputLabel value="Amendment Request Date" />
+         <p:outputLabel value="#{lbl['lbl.ct.amend.txt.rdate']}" />
          <p:inputText value=""  disabled="true" />
-         <p:outputLabel value="Amendment Title/ Name" />
+         <p:outputLabel value="#{lbl['lbl.ct.amend.txt.name']}" />
          <p:inputText value=""  disabled="true" style="width:170px;" />
-         <p:outputLabel value="Amendment File Ref. No"  />
+         <p:outputLabel value="#{lbl['lbl.ct.amend.txt.frno']}"  />
          <p:inputText value=""  disabled="true" />
         </h:panelGrid>
         <h:panelGrid columns="2" style="width:750px;">  
         <h:panelGroup>
             <div style="height: 45px;width:120px; vertical-align: top">
-	             <p:outputLabel for="amendmentD" value="Amendment Description" />
+	             <p:outputLabel for="amendmentD" value="#{lbl['lbl.ct.amend.txt.desc']}" />
             </div>
         </h:panelGroup>
        <h:panelGrid>
@@ -46,7 +30,7 @@
 	   </h:panelGrid>
        </h:panelGrid>
        <h:panelGrid columns="4" style="width:700px;">  
-          <p:outputLabel value="Contract Extension Period" />
+          <p:outputLabel value="#{lbl['lbl.ct.amend.txt.ceperiod']}" />
           <h:panelGrid columns="3">
              <p:inputText value="" disabled="true" style="width:90px;"/>
              <p:selectOneMenu value=" " style="width:40px;">
@@ -54,13 +38,13 @@
 		       <f:selectItem itemLabel="Years" itemValue="1" /> 
 		     </p:selectOneMenu>   
             </h:panelGrid>
-            <p:outputLabel value="Contract Extension Start"/>
+            <p:outputLabel value="#{lbl['lbl.ct.amend.txt.cestart']}"/>
             <p:inputText value=""  disabled="true" />
-            <p:outputLabel value="Contract Extension End" />
+            <p:outputLabel value="#{lbl['lbl.ct.amend.txt.ceend']}" />
             <p:inputText value=""  disabled="true" style="width:170px;"/>
-            <p:outputLabel value="Amendment Effective Date" />
+            <p:outputLabel value="#{lbl['lbl.ct.amend.txt.effdate']}" />
             <p:inputText value=""  disabled="true" />
-            <p:outputLabel value="Additional Contract Value" />
+            <p:outputLabel value="#{lbl['lbl.ct.amend.txt.avalue']}" />
             <h:panelGrid columns="3">
               <p:inputText value="" disabled="true" style="width:100px;"/>
                  <p:selectOneMenu value=" " style="width:30px;">
@@ -68,26 +52,26 @@
 		            <f:selectItem itemLabel="SGD" itemValue="1" /> 
 		         </p:selectOneMenu>   
              </h:panelGrid> 
-             <p:outputLabel value="Contract Approved Date" />
+             <p:outputLabel value="#{lbl['lbl.ct.amend.txt.apr.date']}" />
              <p:inputText value=""  disabled="true" />
-             <p:outputLabel value="Approver Name" />
+             <p:outputLabel value="#{lbl['lbl.ct.amend.txt.apr.name']}" />
              <p:inputText value=""  disabled="true" style="width:170px;" />
            </h:panelGrid>
            <h:panelGrid columns="2" style="width:700px;">  
            <h:panelGroup>
               <div style="height: 45px;width:140px; vertical-align: top">
-	              <p:outputLabel for="contractHistory" value="Contract Extension History" />
+	              <p:outputLabel for="contractHistory" value="#{lbl['lbl.ct.amend.txt.history']}" />
              </div>
       	   </h:panelGroup>
            <h:panelGrid id="contractHistory" columns="1">
               <p:dataTable id="dataTableHistory" var="data"  value=" "   rowIndexVar="index">
                  <p:columnGroup type="header"> 
                     <p:row> 
-                      <p:column rowspan="1" headerText="No."/>
-                      <p:column rowspan="1" headerText="Amendment Request No." />
-                      <p:column colspan="1" headerText="Extend Period (Months)"  /> 
-                      <p:column rowspan="1" headerText="Start Date" />
-                      <p:column colspan="1" headerText="End Date"  /> 
+                      <p:column rowspan="1" headerText="#{lbl['lbl.ct.amend.txt.no']}"/>
+                      <p:column rowspan="1" headerText="#{lbl['lbl.ct.amend.tbl.rno']}" />
+                      <p:column colspan="1" headerText="#{lbl['lbl.ct.amend.tbl.eperiod']}"  /> 
+                      <p:column rowspan="1" headerText="#{lbl['lbl.ct.amend.tbl.sdate']}" />
+                      <p:column colspan="1" headerText="#{lbl['lbl.ct.amend.tbl.edate']}"  /> 
                     </p:row>
                  </p:columnGroup>
                     <p:column styleClass="column-align-center"  > <h:outputText value="#{index+1}" /></p:column> 						
@@ -99,15 +83,4 @@
              </h:panelGrid>
            </h:panelGrid>
       	</p:panel>
-        <p:panel id="sbd" header="#{lbl['lbl.panel.supplier.name']}"  toggleable="true"  toggleSpeed="500" 
-         widgetVar="panelsbd">
-               <ui:include src="/xhtml/ct/fulfilmentdetails/shared/supplier.xhtml"/>                 
-         </p:panel>
-          <p:panel id="factoringId" header="#{lbl['lbl.panel.fc.name']}"    toggleable="true"  toggleSpeed="500" widgetVar="panelfactoring">
-             <ui:include src="/xhtml/ct/fulfilmentdetails/shared/factoring.xhtml"/>     
-          </p:panel>
-          <p:panel id="bondId" header="Performance Bond Details"    toggleable="true"  toggleSpeed="500" widgetVar="panelbond">
-             <ui:include src="/xhtml/ct/fulfilmentdetails/shared/performanceBond.xhtml"/>                         
-          </p:panel>
-      </ui:define>
 </ui:composition>

@@ -22,7 +22,7 @@
          <ui:include src="/xhtml/ct/fulfilmentdetails/termination/termination.xhtml"/>
        </p:tab> 
        <p:tab title="#{lbl['lbl.ct.menu.sup']}" >
-         <ui:include src="/xhtml/ct/fulfilmentdetails/termination/supplierDetails.xhtml"/>
+         <ui:include src="/xhtml/ct/fulfilmentdetails/shared/supplier.xhtml"/>    
        </p:tab> 
 	   <p:tab title="#{lbl['lbl.ct.menu.wletter']}" rendered="#{contractDetailsBackingBean.managedBean.terminateWarningLetter}" >
          <ui:include src="/xhtml/ct/fulfilmentdetails/termination/warningLetter.xhtml"/>
@@ -34,7 +34,7 @@
          <ui:include src="/xhtml/ct/fulfilmentdetails/termination/rejectionLetter.xhtml" />    
        </p:tab>  
 	   <p:tab title="#{lbl['lbl.ct.menu.remark']}">
-         <ui:include src="/xhtml/ct/fulfilmentdetails/termination/attachements.xhtml" />    
+         <ui:include src="/xhtml/ct/fulfilmentdetails/shared/remarks.xhtml" /> 
      </p:tab> 
 	</p:tabView>
    </ui:define>  
