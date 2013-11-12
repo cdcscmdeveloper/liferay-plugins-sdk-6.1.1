@@ -7,60 +7,46 @@
 
 	<p:panel
 		header="Category Code List"
-		toggleable="true">
+		toggleable="true" >
 
-			<p:dataTable value="#{qTDetailBB.managedBean.qt.scQtCategorys}"
-			var="ccode" resizableColumns="true" editable="true" id="catList">
-			<p:ajax event="rowEdit" />
-			<p:ajax event="rowEditCancel" />
-
+				<p:dataTable value="#{qTSupplierQulCriteriaBackingBean.managedBean.openCategorys}"
+			var="ccode" resizableColumns="true" editable="true" styleClass="myCatList">
 			<p:column headerText="Category Code">
-
 				<p:cellEditor>
 					<f:facet name="output">
 						<h:outputText value="#{ccode.pmCategoryL1.categoryL1Id}" />
                 </f:facet>
 					<f:facet name="input">
-						<p:selectOneMenu value="#{ccode.pmCategoryL1}"
-							effect="fold" >
-							<p:ajax event="change" listener="#{qTDetailBB.handleL2CategoryChange}" />
-							<f:selectItem itemLabel="Select One" itemValue="#{null}" />
-							<f:selectItems value="#{qTDetailBB.managedBean.categoryL1s}" var="catL1Opt" itemLabel="#{catL1Opt.cateogryL1Code}" itemValue="#{catL1Opt}"/>
+						<p:selectOneMenu value="#{ccode.pmCategoryL1.categoryL1Id}" >
+						<p:ajax event="change" listener="#{qTSupplierQulCriteriaBackingBean.handleL2CategoryChange}"/>
+						<f:selectItem itemLabel="Select One" itemValue="#{null}" />
+							<f:selectItems value="#{qTSupplierQulCriteriaBackingBean.managedBean.categoryL1s}" var="catL1Opt" itemLabel="#{catL1Opt.cateogryL1Code}" itemValue="#{catL1Opt.categoryL1Id}"/>
 						</p:selectOneMenu>
 					</f:facet>
-				
 					<f:facet name="output">
 						<h:outputText value="#{ccode.pmCategoryL2.categoryL2Id}" />,
                 </f:facet>
 					<f:facet name="input">
 						<p:selectOneMenu value="#{ccode.pmCategoryL2.categoryL2Id}"
 							effect="fold" editable="true">
-							<f:selectItem itemLabel="Select One" itemValue="0" />
-							<f:selectItems value="#{qTDetailBB.managedBean.categoryL2s}" var="catL2Opt" itemLabel="#{catL2Opt.cateogryL2Code}" itemValue="#{catL2Opt.categoryL2Id}"/>
+							<p:ajax event="change" listener="#{qTSupplierQulCriteriaBackingBean.handleL3CategoryChange}"/>
+							<f:selectItem itemLabel="Select One" itemValue="#{null}" />
+							<f:selectItems value="#{qTSupplierQulCriteriaBackingBean.managedBean.categoryL2s}" var="catL2Opt" itemLabel="#{catL2Opt.cateogryL2Code}" itemValue="#{catL2Opt.categoryL2Id}"/>
 						</p:selectOneMenu>
 					</f:facet>
-				
 					<f:facet name="output">
-						<h:outputText value="#{ccode.pmCategoryL3.cateogryL3Code}" />
+						<h:outputText value="#{ccode.pmCategoryL3.cateogryL3Id}" />
 					</f:facet>
 					<f:facet name="input">
-						<p:selectOneMenu value="#{ccode.pmCategoryL3.cateogryL3Code}"
+						<p:selectOneMenu value="#{ccode.pmCategoryL3.cateogryL3Id}"
 							effect="fold" editable="true">
-							<f:selectItem itemLabel="Select One" itemValue="" />
-							<f:selectItem itemLabel="Subcc1" itemValue="1" />
-							<f:selectItem itemLabel="Subcc2" itemValue="2" />
-							<f:selectItem itemLabel="Subcc3" itemValue="3" />
+							<f:selectItem itemLabel="Select One" itemValue="#{null}" />
+							<f:selectItems value="#{qTSupplierQulCriteriaBackingBean.managedBean.categoryL3s}" var="catL3Opt" itemLabel="#{catL3Opt.cateogryL3Code}" itemValue="#{catL3Opt.categoryL3Id}"/>
 						</p:selectOneMenu>
 					</f:facet>
-				</p:cellEditor>
-
-
-
-			</p:column>
-
-			<p:column headerText="Mandatory" style="width: 150px;">
-
-
+					</p:cellEditor>
+			 </p:column>
+			 <p:column headerText="Mandatory" style="width: 150px;">
 				<p:cellEditor>
 					<f:facet name="output">
 						<h:outputText value="#{ccode.isMandatory}" />
@@ -77,7 +63,7 @@
 				</p:cellEditor>
 
 			</p:column>
-			<p:column style="width:6%">
+     		<p:column style="width:6%">
 				<p:rowEditor />
 			</p:column>
 
@@ -88,257 +74,32 @@
 			styleClass="noBorders tr,noBorders td">
 
 			<p:commandButton value="ADD" style="float:right;"
-				actionListener="#{qTDetailBB.addNewCategoryItem}" update="catList" />
+				actionListener="#{qTSupplierQulCriteriaBackingBean.addNewCategoryItem}" update="@(.myCatList)" />
 		</h:panelGrid>
-		<h:panelGrid columns="2" style="width:40%;"
+	
+	<h:panelGrid columns="2" style="width:40%;"
 			styleClass="noBorders tr,noBorders td">
 
 			<h:outputText value="Mulitiple Locality: " />
-			<p:selectOneRadio
-				value="#{searchQtnTenderBB.managedBean.selectOption}">
-				<f:selectItem itemLabel="yes" itemValue="1" />
-				<f:selectItem itemLabel="No" itemValue="2" />
-				<p:ajax update="@form" />
-			</p:selectOneRadio>
+			
 		
+			<p:selectOneRadio value="#{qTSupplierQulCriteriaBackingBean.managedBean.multiLoc}">
+			<f:selectItem itemLabel="yes" itemValue="true" />
+			<f:selectItem itemLabel="No" itemValue="false" />
+			<p:ajax event="change" listener="#{qTSupplierQulCriteriaBackingBean.multiLocationChange}" update="allstate"></p:ajax>
+		</p:selectOneRadio>
 		
-
-
-		<h:panelGroup rendered="#{searchQtnTenderBB.managedBean.selectOption eq '1'}">
+		<h:panelGroup rendered="#{qTSupplierQulCriteriaBackingBean.managedBean.multiLoc eq 'true'}" id="allstate">
 
 
 			<h:outputText value="All States: " />
 			
 			
-			<p:selectBooleanCheckbox value="#{searchQtnTenderBB.checked}" />
+			<p:selectBooleanCheckbox value="#{qTSupplierQulCriteriaBackingBean.checked}" />
+		
 			
 	
 </h:panelGroup>
 </h:panelGrid>
-
-<h:panelGroup rendered="#{searchQtnTenderBB.managedBean.selectOption eq '2'}">
-		<p:panel header="Location List" toggleable="true">
-
-			<p:dataTable id="dtusers"
-				value="#{searchQtnTenderBB.managedBean.locations}" var="tender"
-				editable="true">
-				<p:ajax event="rowEdit" />
-				<p:ajax event="rowEditCancel" />
-				<p:column headerText="States" style="width:30%">
-					<p:cellEditor>
-						<f:facet name="output">
-							<h:outputText value="#{tender.state}" />
-						</f:facet>
-						<f:facet name="input">
-							<h:selectOneMenu value="#{tender.state}">
-								<f:selectItems
-									value="#{searchQtnTenderBB.managedBean.stateList}" var="state"
-									itemLabel="#{state}" itemValue="#{state}" />
-							</h:selectOneMenu>
-						</f:facet>
-					</p:cellEditor>
-				</p:column>
-
-				<p:column headerText="Districts">
-					<p:cellEditor>
-						<f:facet name="output">
-							<ui:repeat var="loccity" value="#{tender.location}">
-								<h:outputText value="#{loccity}"  />
-							</ui:repeat>
-
-						</f:facet>
-						<f:facet name="input">
-							<p:selectManyCheckbox value="#{tender.location}"
-								layout="pageDirection">
-								<f:selectItems value="#{searchQtnTenderBB.managedBean.cities}" />
-							</p:selectManyCheckbox>
-
-
-						</f:facet>
-					</p:cellEditor>
-
-				</p:column>
-
-
-				<p:column style="width:6%">
-					<p:rowEditor />
-				</p:column>
-
-
-			</p:dataTable>
-			<p:commandButton value="ADDStates" style="float:right;"
-				onclick="stateDlg.show();"></p:commandButton>
-			<br />
-
-		</p:panel>
-</h:panelGroup>
-
-<h:panelGroup rendered="#{searchQtnTenderBB.managedBean.selectOption eq '1'}">
-
-		<p:panel header="Location List" toggleable="true">
-			<h:panelGroup style="width:100%;">
-				<p:dataTable id="zones"
-					value="#{searchQtnTenderBB.managedBean.zoneList}" var="zoneTen"
-					editable="true">
-					<p:ajax event="rowEdit" />
-					<p:ajax event="rowEditCancel" />
-
-					<p:column headerText="Zones">
-						<p:cellEditor>
-							<f:facet name="output">
-								<h:outputText value="#{zoneTen.zoneName}" />
-							</f:facet>
-							<f:facet name="input">
-								<h:selectOneMenu value="#{zoneTen.zoneId}">
-									<f:selectItems value="#{searchQtnTenderBB.managedBean.zones}"
-										var="state" itemLabel="#{state}" itemValue="#{state}" />
-								</h:selectOneMenu>
-							</f:facet>
-						</p:cellEditor>
-
-					</p:column>
-					<p:column headerText="States" style="width:30%">
-						<p:cellEditor>
-							<f:facet name="output">
-								<h:outputText value="#{zoneTen.stateNameStr}" />
-							</f:facet>
-							<f:facet name="input">
-								<h:selectOneMenu value="#{zoneTen.zoneSt}">
-									<f:selectItems
-										value="#{searchQtnTenderBB.managedBean.zoneState}" var="state"
-										itemLabel="#{state}" itemValue="#{state}" />
-								</h:selectOneMenu>
-							</f:facet>
-						</p:cellEditor>
-
-					</p:column>
-
-					<p:column headerText="Districts">
-						<p:cellEditor>
-							<f:facet name="output">
-								<ui:repeat var="loccity" value="#{zoneTen.districtStr}">
-								<h:outputText value="#{loccity}"  />
-							</ui:repeat>
-							</f:facet>
-							<f:facet name="input">
-								<p:selectManyCheckbox value="#{zoneTen.zoneLoc}"
-									layout="pageDirection">
-									<f:selectItems
-										value="#{searchQtnTenderBB.managedBean.zoneCities}" />
-								</p:selectManyCheckbox>
-
-							</f:facet>
-						</p:cellEditor>
-					</p:column>
-
-
-
-					<p:column style="width:6%">
-						<p:rowEditor />
-					</p:column>
-
-
-				</p:dataTable>
-				<p:commandButton value="ADDZONES" style="float:right;"
-					onclick="zoneDlg.show();"></p:commandButton>
-			</h:panelGroup>
-			<br />
-
-		</p:panel>
-</h:panelGroup>
-
-		<p:panelGrid columns="2" style="width:40%;"
-			styleClass="noBorders tr,noBorders td">
-			<h:outputText value="Paid Up Capital (MYR)" />
-			<p:inputText value="#{qTDetailBB.managedBean.qtc.paidUpCaptial}" />
-
-
-		</p:panelGrid>
-		<p:panelGrid columns="1" style="width:100%;"
-			styleClass="noBorders tr,noBorders td">
-		<p:commandButton value="SEARCH" style="float:right;"></p:commandButton>
-</p:panelGrid>
-</p:panel>
-		<p:panel
-		header="Supplier List"
-		toggleable="true">
-		<ui:include src="/xhtml/ss/quatationtender/opensupplierlist.xhtml"></ui:include>
-
-		<p:panelGrid columns="2" style="width:45%;"
-			styleClass="noBorders tr,noBorders td">
-			<h:outputText value="Total Suppliers(s)" />
-			<p:inputText value="1" readonly="true" />
-
-
-			
-		</p:panelGrid>
-		
-	
 	</p:panel>
-
-	<p:dialog widgetVar="stateDlg" modal="true">
-		<p:panel header="Add State" toggleable="true">
-
-			<p:panelGrid columns="2" style="width:100%;"
-				styleClass="noBorders tr,noBorders td">
-				<p:outputLabel value="States"></p:outputLabel>
-				<p:selectOneMenu value="#{searchQtnTenderBB.managedBean.state}"
-					valueChangeListener="#{searchQtnTenderBB.managedBean.stateChangeListener}">
-					<f:selectItem itemLabel="Select One" itemValue="" />
-					<f:selectItems value="#{searchQtnTenderBB.managedBean.stateList}" />
-					<p:ajax event="change" update="cities" />
-				</p:selectOneMenu>
-				<p:fieldset legend="Districts">
-					<p:selectManyCheckbox id="cities"
-						value="#{searchQtnTenderBB.managedBean.location}"
-						layout="pageDirection">
-						<f:selectItems value="#{searchQtnTenderBB.managedBean.cities}" />
-					</p:selectManyCheckbox>
-				</p:fieldset>
-			</p:panelGrid>
-			<p:commandButton action="#{searchQtnTenderBB.managedBean.addAction}"
-				update="dtusers" value="ADD" oncomplete="stateDlg.hide()"
-				style="float:right" />
-
-		</p:panel>
-	</p:dialog>
-
-	<p:dialog widgetVar="zoneDlg" modal="true">
-		<p:panel header="Add Zone" toggleable="true">
-
-			<p:panelGrid columns="2" style="width:100%;"
-				styleClass="noBorders tr,noBorders td">
-				<p:outputLabel value="Zones"></p:outputLabel>
-		
-
- <p:inputText value="#{searchQtnTenderBB.managedBean.zone}" >
- 
- <p:ajax event="blur" update="zstates"></p:ajax>
- 
- </p:inputText>
- 
-				<p:outputLabel value="States"></p:outputLabel>
-				<p:selectOneMenu id="zstates"
-					value="#{searchQtnTenderBB.managedBean.zoneSt}" 
-				valueChangeListener="#{searchQtnTenderBB.managedBean.zoneStChangeListener}"	>
-					<f:selectItem itemLabel="Select One" itemValue="" />
-					<f:selectItems value="#{searchQtnTenderBB.managedBean.zoneState}" />
-					<p:ajax event="change" update="zcities" />
-				</p:selectOneMenu>
-				<p:fieldset legend="Districts">
-					<p:selectManyCheckbox id="zcities"
-						value="#{searchQtnTenderBB.managedBean.zoneCt}"
-						layout="pageDirection">
-						<f:selectItems value="#{searchQtnTenderBB.managedBean.zoneCities}" />
-					</p:selectManyCheckbox>
-				</p:fieldset>
-			</p:panelGrid>
-			<p:commandButton
-				action="#{searchQtnTenderBB.managedBean.addZoneAction}"
-				update="zones" value="ADD" oncomplete="zoneDlg.hide()"
-				style="float:right" />
-
-		</p:panel>
-	</p:dialog>
-
-</ui:composition>
+	</ui:composition>

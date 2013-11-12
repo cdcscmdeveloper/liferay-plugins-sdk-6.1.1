@@ -10,8 +10,6 @@ import javax.faces.bean.SessionScoped;
 import javax.faces.model.SelectItem;
 
 import my.ep.factory.EpLogger;
-import my.ep.jaxb.sm.useradddata.SMUserAddDataType;
-import my.ep.persistence.entity.ct.circular.panel.CtPanelSupplier;
 import my.ep.persistence.entity.pm.authorization.PmOrgProfile;
 import my.ep.persistence.entity.pm.common.PmCategoryL1;
 import my.ep.persistence.entity.pm.common.PmCategoryL2;
@@ -54,7 +52,12 @@ public class QTDetailManagedBean extends BaseManagedBean {
 	private ScQtCategory qtcategory= new ScQtCategory();
 	private String selectedBoolean1;
 	private String multiLoc;
+	private List<ScQtCategory> openCategorys;
+	private List<ScQtCategory> restrictedCategorys;
+	private SmSupplier searchSupplier;
+	private List<SmSupplier> smSupplierList;
 
+	
 	/**
 	 * For Search Quotation/Tender Screen
 	 */
@@ -123,6 +126,10 @@ public class QTDetailManagedBean extends BaseManagedBean {
 	private List<PmDistrict> pmDistricts=new ArrayList<PmDistrict>();
 	private List<String> selectedPmStateList=new ArrayList<String>();
 	private List<String> selectedPmDistricts=new ArrayList<String>();
+	private Boolean isTender=false;
+	private Boolean isPanel=false;
+	private Boolean isResctricted=false;
+	
 	static{
 			PmZone zone=new PmZone();
 			zone.setZoneName("India");
@@ -351,7 +358,13 @@ public class QTDetailManagedBean extends BaseManagedBean {
 
 	private List<ScQt> qtList = new ArrayList<ScQt>();
 
-	private List<SmSupplier> panelSuppliers;
+	private List<SmSupplier> panelSuppliers; 
+	
+
+	public void setPanelSuppliers(List<SmSupplier> panelSuppliers) {
+		this.panelSuppliers = panelSuppliers;
+	}
+
 
 	public QTDetailManagedBean() {
 		log.info("inside ");
@@ -690,13 +703,7 @@ public class QTDetailManagedBean extends BaseManagedBean {
 		this.qtList = qtList;
 	}
 
-	public List<SmSupplier> getPanelSuppliers() {
-		return panelSuppliers;
-	}
-
-	public void setPanelSuppliers(List<SmSupplier> panelSuppliers) {
-		this.panelSuppliers = panelSuppliers;
-	}
+	
 	
 	public String getMultiLoc() {
 		return multiLoc;
@@ -773,5 +780,84 @@ public class QTDetailManagedBean extends BaseManagedBean {
 	public void setDivisionCode(String divisionCode) {
 		this.divisionCode = divisionCode;
 	}
+
+
+	public Boolean getIsTender() {
+		return isTender;
+	}
+
+
+	public void setIsTender(Boolean isTender) {
+		this.isTender = isTender;
+	}
+
+
+	public Boolean getIsPanel() {
+		return isPanel;
+	}
+
+
+	public void setIsPanel(Boolean isPanel) {
+		this.isPanel = isPanel;
+	}
+
+
+	public Boolean getIsResctricted() {
+		return isResctricted;
+	}
+
+
+	public void setIsResctricted(Boolean isResctricted) {
+		this.isResctricted = isResctricted;
+	}
+
+
+	public List<ScQtCategory> getOpenCategorys() {
+		return openCategorys;
+	}
+
+
+	public void setOpenCategorys(List<ScQtCategory> openCategorys) {
+		this.openCategorys = openCategorys;
+	}
+
+
+	public List<ScQtCategory> getRestrictedCategorys() {
+		return restrictedCategorys;
+	}
+
+
+	public void setRestrictedCategorys(List<ScQtCategory> restrictedCategorys) {
+		this.restrictedCategorys = restrictedCategorys;
+	}
+
+
+	public List<SmSupplier> getPanelSuppliers() {
+		return panelSuppliers;
+	}
+
+	public SmSupplier getSearchSupplier() {
+		return searchSupplier;
+	}
+
+
+	public void setSearchSupplier(SmSupplier searchSupplier) {
+		this.searchSupplier = searchSupplier;
+	}
+
+
+	public List<SmSupplier> getSmSupplierList() {
+		return smSupplierList;
+	}
+
+
+	public void setSmSupplierList(List<SmSupplier> smSupplierList) {
+		this.smSupplierList = smSupplierList;
+	}
+
+
+	
+	
+	
 
 }

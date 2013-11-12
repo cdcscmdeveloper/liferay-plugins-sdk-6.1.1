@@ -12,98 +12,73 @@
 <p:panelGrid columns="2" style="width:38%;"
 				styleClass="noBorders tr,noBorders td">
 		<h:outputText value="Paid Up Capital (MYR)" />  
-            <p:inputText value="#{searchQtnTenderBB.managedBean.qtno}"/> 
+            <p:inputText value="#{qTSupplierQulCriteriaBackingBean.managedBean.qtc.paidUpCaptial}"/> 
             </p:panelGrid>
           
     
 			
 
 <h:panelGroup  style="width:100%;">
-			<p:dataTable value="#{searchQtnTenderBB.managedBean.categories}" var="ccode" resizableColumns="true"
-				editable="true">
-<p:ajax event="rowEdit" />  
-        <p:ajax event="rowEditCancel" />  
+			<p:dataTable value="#{qTSupplierQulCriteriaBackingBean.managedBean.restrictedCategorys}"
+			var="ccode" resizableColumns="true" editable="true" id="catList2">
   
-				<p:column headerText="No." style="width:05%">
 				
-				<p:cellEditor>  
-                <f:facet name="output">  
-                    <h:outputText value="#{ccode.num}" />
-                </f:facet>  
-                <f:facet name="input">  
-                    <p:inputText value="#{ccode.num}" style="width:100%"/>  
-                </f:facet>  
-            </p:cellEditor> 
-					
-				</p:column>
 
 				<p:column headerText="Category Code">
-
 				<p:cellEditor>
 					<f:facet name="output">
-						<h:outputText value="#{ccode.mainCCode}" />,
+						<h:outputText value="#{ccode.pmCategoryL1.categoryL1Id}" />
                 </f:facet>
 					<f:facet name="input">
-						<p:selectOneMenu value="#{searchQtnTenderBB.managedBean.qtno}"
-							effect="fold" editable="true">
-							<f:selectItem itemLabel="Select One" itemValue="" />
-							<f:selectItems value="#{searchQtnTenderBB.managedBean.mainCcode}" />
+						<p:selectOneMenu value="#{ccode.pmCategoryL1.categoryL1Id}" >
+						<p:ajax event="change" listener="#{qTSupplierQulCriteriaBackingBean.handleL2CategoryChange}"/>
+						<f:selectItem itemLabel="Select One" itemValue="#{null}" />
+							<f:selectItems value="#{qTSupplierQulCriteriaBackingBean.managedBean.categoryL1s}" var="catL1Opt" itemLabel="#{catL1Opt.cateogryL1Code}" itemValue="#{catL1Opt.categoryL1Id}"/>
 						</p:selectOneMenu>
 					</f:facet>
-				
 					<f:facet name="output">
-						<h:outputText value="#{ccode.subCCode}" />,
+						<h:outputText value="#{ccode.pmCategoryL2.categoryL2Id}" />,
                 </f:facet>
 					<f:facet name="input">
-						<p:selectOneMenu value="#{searchQtnTenderBB.managedBean.qtno}"
+						<p:selectOneMenu value="#{ccode.pmCategoryL2.categoryL2Id}"
 							effect="fold" editable="true">
-							<f:selectItem itemLabel="Select One" itemValue="" />
-							<f:selectItem itemLabel="sub1" itemValue="1" />
-							<f:selectItem itemLabel="sub2" itemValue="2" />
-							<f:selectItem itemLabel="sub3" itemValue="3" />
+							<p:ajax event="change" listener="#{qTSupplierQulCriteriaBackingBean.handleL3CategoryChange}"/>
+							<f:selectItem itemLabel="Select One" itemValue="#{null}" />
+							<f:selectItems value="#{qTSupplierQulCriteriaBackingBean.managedBean.categoryL2s}" var="catL2Opt" itemLabel="#{catL2Opt.cateogryL2Code}" itemValue="#{catL2Opt.categoryL2Id}"/>
 						</p:selectOneMenu>
 					</f:facet>
-				
 					<f:facet name="output">
-						<h:outputText value="#{ccode.subCDevison}" />
+						<h:outputText value="#{ccode.pmCategoryL3.cateogryL3Id}" />
 					</f:facet>
 					<f:facet name="input">
-						<p:selectOneMenu value="#{searchQtnTenderBB.managedBean.qtno}"
+						<p:selectOneMenu value="#{ccode.pmCategoryL3.cateogryL3Id}"
 							effect="fold" editable="true">
-							<f:selectItem itemLabel="Select One" itemValue="" />
-							<f:selectItem itemLabel="Subcc1" itemValue="1" />
-							<f:selectItem itemLabel="Subcc2" itemValue="2" />
-							<f:selectItem itemLabel="Subcc3" itemValue="3" />
+							<f:selectItem itemLabel="Select One" itemValue="#{null}" />
+							<f:selectItems value="#{qTSupplierQulCriteriaBackingBean.managedBean.categoryL3s}" var="catL3Opt" itemLabel="#{catL3Opt.cateogryL3Code}" itemValue="#{catL3Opt.categoryL3Id}"/>
 						</p:selectOneMenu>
+					</f:facet>
+					</p:cellEditor>
+			 </p:column>
+			 <p:column headerText="Mandatory" style="width: 150px;">
+				<p:cellEditor>
+					<f:facet name="output">
+						<h:outputText value="#{ccode.isMandatory}" />
+					</f:facet>
+					<f:facet name="input">
+
+						<p:selectManyCheckbox
+							value="#{qTSupplierQulCriteriaBackingBean.managedBean.qtcategory.isMandatory}">
+							<f:selectItem itemLabel="yes" />
+							<f:selectItem itemLabel="no" />
+
+						</p:selectManyCheckbox>
 					</f:facet>
 				</p:cellEditor>
 
-
-
 			</p:column>
-
-				<p:column headerText="Mandatory" style="width:30%">
-				
-				
-				<p:cellEditor>  
-                <f:facet name="output">  
-                    <h:outputText value="#{ccode.manditory}" />
-                </f:facet>  
-                <f:facet name="input">  
-                    
-              <p:selectManyCheckbox value="#{searchQtnTenderBB.managedBean.selectOptions}">  
-            <f:selectItem itemLabel="yes"/>  
-            <f:selectItem itemLabel="no" />  
-           
-        </p:selectManyCheckbox>  
-                </f:facet>  
-            </p:cellEditor> 
-					
-				</p:column>
-				 <p:column style="width:6%">  
-            <p:rowEditor />  
-        </p:column>
-
+     		<p:column style="width:6%">
+				<p:rowEditor />
+			</p:column>
 			</p:dataTable>
 
 
@@ -112,7 +87,7 @@
 		</h:panelGroup>
 
 		<p:commandButton value="#{lbl['lbl.so.addbtn']}" style="float:right;"
-			onclick="ccdlg.show();" />
+			actionListener="#{qTSupplierQulCriteriaBackingBean.addNewRestrictedCategoryItem}" update="catList2" />
 			<p:panelGrid columns="1" style="width:100%;"
 				styleClass="noBorders tr,noBorders td">
 <p:commandButton value="#{lbl['lbl.so.searchbtn']}" style="float:right;"

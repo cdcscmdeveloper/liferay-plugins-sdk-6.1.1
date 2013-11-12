@@ -11,41 +11,39 @@
 	 <ui:include src="/xhtml/ss/quatationtender/qtntenderheader.xhtml" /> 
 	 <p:panel
 						header="Supplier Qualification Criteria" toggleable="true">
+						</p:panel>
 						<p:panelGrid columns="2" style="width:40%;"
 							styleClass="noBorders tr,noBorders td">
 							<h:outputText value="* Qtn/Tender Type" />
 							<p:selectOneMenu
-								value="#{qTDetailBB.managedBean.qt.qtType}">
+								value="#{qTSupplierQulCriteriaBackingBean.managedBean.qt.qtType}">
 								<f:selectItem itemLabel="Select One" itemValue="" />
-								<f:selectItem itemLabel="Open" itemValue="1" />
-								<f:selectItem itemLabel="Bumiputra" itemValue="2" />
-								<f:selectItem itemLabel="Panel" itemValue="3" />
-								<f:selectItem itemLabel="Restricted Tender" itemValue="4" />
-								<p:ajax event="change" update="parentText" />
-
-
+								<f:selectItem itemLabel="Open" itemValue="O" />
+								<f:selectItem itemLabel="Bumiputra" itemValue="B" />
+								<f:selectItem itemLabel="Panel" itemValue="P" />
+								<f:selectItem itemLabel="Restricted Tender" itemValue="R" />
+								<p:ajax event="change" process="@this" update="parentText" listener="#{qTSupplierQulCriteriaBackingBean.tenderChange}"/>
 							</p:selectOneMenu>
 
 						</p:panelGrid>
-						<p:inputText value="#{qTDetailBB.managedBean.qt.qtType}"></p:inputText>
-
-					</p:panel> <h:panelGroup id="parentText">
+ <h:panelGroup id="parentText">
 						<h:panelGroup
-							rendered="#{qTDetailBB.managedBean.qt.qtType == '1' or qTDetailBB.managedBean.qt.qtType == '2'}">
+							rendered="#{qTSupplierQulCriteriaBackingBean.managedBean.isTender}">
 							<ui:include src="/xhtml/ss/quatationtender/nrmqtntender.xhtml" />
 						</h:panelGroup>
 						<h:panelGroup
-							rendered="#{qTDetailBB.managedBean.qt.qtType == '3' }">
+							rendered="#{qTSupplierQulCriteriaBackingBean.managedBean.isPanel}">
 
 							<ui:include src="/xhtml/ss/quatationtender/panelqtntender.xhtml" />
 						</h:panelGroup>
 
 						<h:panelGroup
-							rendered="#{qTDetailBB.managedBean.qt.qtType eq '4' }">
+							rendered="#{qTSupplierQulCriteriaBackingBean.managedBean.isResctricted}">
 							<ui:include src="/xhtml/ss/quatationtender/restictedtender.xhtml" />
 						</h:panelGroup>
 
-					</h:panelGroup> 
-			
+				</h:panelGroup>	
 
 </ui:composition>
+
+					

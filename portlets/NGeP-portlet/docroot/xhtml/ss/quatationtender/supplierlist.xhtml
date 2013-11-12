@@ -86,13 +86,14 @@
 				
 			</p:panelGrid>
 			
+			
 			<p:panelGrid columns="1" style="width:100%;"
 			styleClass="noBorders tr,noBorders td">
 <p:commandButton  value="#{lbl['lbl.so.searchbtn']}"
 			styleClass="apply_button" style="float:right;" >
 		</p:commandButton>
 		</p:panelGrid>
-		
+		</p:panel>
 			<p:panel header="Supplier List" toggleable="true">
 		<p:panelGrid columns="2" style="width:100%;"
 			styleClass="noBorders tr,noBorders td">
@@ -131,7 +132,7 @@
 				
 			</p:dataTable>
 </p:panelGrid>
-</p:panel>
+
 
 	
 
@@ -142,9 +143,9 @@
  
  </p:panelGrid>
 	
- </p:panel>           
+          
 
-<p:panel toggleable="true">
+
 <div>           
 <p:commandButton value="CANCEL" style="float:right;" oncomplete="suppdlg.hide()">
 </p:commandButton>

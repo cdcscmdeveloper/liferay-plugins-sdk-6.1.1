@@ -62,75 +62,47 @@
 		
 				
 			<p:panel header="Category Code List" toggleable="true">	
-				<p:dataTable value="#{searchQtnTenderBB.managedBean.categories}"
-			var="ccode" resizableColumns="true" editable="true">
-			<p:ajax event="rowEdit" />
-			<p:ajax event="rowEditCancel" />
-
-			<p:column headerText="No." style="width:05%">
-
-				<p:cellEditor>
-					<f:facet name="output">
-						<h:outputText value="#{ccode.num}" />
-					</f:facet>
-					<f:facet name="input">
-						<p:inputText value="#{ccode.num}" style="width:100%" />
-					</f:facet>
-				</p:cellEditor>
-
-			</p:column>
-
+				<p:dataTable value="#{qTSupplierQulCriteriaBackingBean.managedBean.openCategorys}"
+			var="ccode" resizableColumns="true" editable="true" styleClass="myCatList">
 			<p:column headerText="Category Code">
-
-				<p:cellEditor>
-					<f:facet name="output">
-						<h:outputText value="#{ccode.mainCCode}" />,
-                </f:facet>
-					<f:facet name="input">
-						<p:selectOneMenu value="#{searchQtnTenderBB.managedBean.qtno}"
-							effect="fold" editable="true">
-							<f:selectItem itemLabel="Select One" itemValue="" />
-							<f:selectItems value="#{searchQtnTenderBB.managedBean.mainCcode}" />
-						</p:selectOneMenu>
-					</f:facet>
 				
 					<f:facet name="output">
-						<h:outputText value="#{ccode.subCCode}" />,
+						<h:outputText value="#{ccode.pmCategoryL1.categoryL1Id}" />
                 </f:facet>
 					<f:facet name="input">
-						<p:selectOneMenu value="#{searchQtnTenderBB.managedBean.qtno}"
-							effect="fold" editable="true">
-							<f:selectItem itemLabel="Select One" itemValue="" />
-							<f:selectItem itemLabel="sub1" itemValue="1" />
-							<f:selectItem itemLabel="sub2" itemValue="2" />
-							<f:selectItem itemLabel="sub3" itemValue="3" />
+						<p:selectOneMenu value="#{ccode.pmCategoryL1.categoryL1Id}" >
+						<p:ajax event="change" listener="#{qTSupplierQulCriteriaBackingBean.handleL2CategoryChange}"/>
+						<f:selectItem itemLabel="Select One" itemValue="#{null}" />
+							<f:selectItems value="#{qTSupplierQulCriteriaBackingBean.managedBean.categoryL1s}" var="catL1Opt" itemLabel="#{catL1Opt.cateogryL1Code}" itemValue="#{catL1Opt.categoryL1Id}"/>
 						</p:selectOneMenu>
 					</f:facet>
-				
 					<f:facet name="output">
-						<h:outputText value="#{ccode.subCDevison}" />
+						<h:outputText value="#{ccode.pmCategoryL2.categoryL2Id}" />,
+                </f:facet>
+					<f:facet name="input">
+						<p:selectOneMenu value="#{ccode.pmCategoryL2.categoryL2Id}"
+							effect="fold" editable="true">
+							<p:ajax event="change" listener="#{qTSupplierQulCriteriaBackingBean.handleL3CategoryChange}"/>
+							<f:selectItem itemLabel="Select One" itemValue="#{null}" />
+							<f:selectItems value="#{qTSupplierQulCriteriaBackingBean.managedBean.categoryL2s}" var="catL2Opt" itemLabel="#{catL2Opt.cateogryL2Code}" itemValue="#{catL2Opt.categoryL2Id}"/>
+						</p:selectOneMenu>
+					</f:facet>
+					<f:facet name="output">
+						<h:outputText value="#{ccode.pmCategoryL3.cateogryL3Id}" />
 					</f:facet>
 					<f:facet name="input">
-						<p:selectOneMenu value="#{searchQtnTenderBB.managedBean.qtno}"
+						<p:selectOneMenu value="#{ccode.pmCategoryL3.cateogryL3Id}"
 							effect="fold" editable="true">
-							<f:selectItem itemLabel="Select One" itemValue="" />
-							<f:selectItem itemLabel="Subcc1" itemValue="1" />
-							<f:selectItem itemLabel="Subcc2" itemValue="2" />
-							<f:selectItem itemLabel="Subcc3" itemValue="3" />
+							<f:selectItem itemLabel="Select One" itemValue="#{null}" />
+							<f:selectItems value="#{qTSupplierQulCriteriaBackingBean.managedBean.categoryL3s}" var="catL3Opt" itemLabel="#{catL3Opt.cateogryL3Code}" itemValue="#{catL3Opt.categoryL3Id}"/>
 						</p:selectOneMenu>
 					</f:facet>
-				</p:cellEditor>
-
-
-
-			</p:column>
-
-			<p:column headerText="Mandatory" style="width:30%">
-
-
-				<p:cellEditor>
+					
+			 </p:column>
+			 <p:column headerText="Mandatory" style="width: 150px;">
+				
 					<f:facet name="output">
-						<h:outputText value="#{ccode.manditory}" />
+						<h:outputText value="#{ccode.isMandatory}" />
 					</f:facet>
 					<f:facet name="input">
 
@@ -141,26 +113,16 @@
 
 						</p:selectManyCheckbox>
 					</f:facet>
-				</p:cellEditor>
+				
 
 			</p:column>
-			<p:column style="width:6%">
-				<p:rowEditor />
-			</p:column>
+     		
 
 		</p:dataTable>
 			
-			<p:commandButton  value="#{lbl['lbl.so.addbtn']}"
-			styleClass="apply_button" style="float:right;">
-		</p:commandButton>
-		<br/>
-		<br/>	
-	</p:panel>		
+			
+			
 				<p:panelGrid columns="2" style="width:100%;" styleClass="noBorders tr,noBorders td">
-				
-			
-			
-			
 			
 			<h:outputText  value="Paid Up Capital(MYR)" />
 			<p:inputText  value="#{searchQtnTenderBB.managedBean.qtno}"/>
@@ -172,13 +134,14 @@
 			<p:inputText  value="#{searchQtnTenderBB.managedBean.qtno}"/>
 				
 			</p:panelGrid>
+			
 			<p:commandButton  value="#{lbl['lbl.so.searchbtn']}"
 			styleClass="apply_button" style="float:right;" >
 		</p:commandButton>
+		
 				<br/>
 				<br/>
-		
-		
+		</p:panel>
 			<p:panel header="Supplier List" toggleable="true">
 		<p:panelGrid columns="2" style="width:100%;"
 			styleClass="noBorders tr,noBorders td">
@@ -206,35 +169,24 @@
             <h:outputText  value="01-25-3456" />
         </h:panelGrid>  
     </p:panel>  </p:tooltip> 
-							
-
+				
 				</p:column>
 
 				<p:column headerText="MOF No">
 				<h:outputText value="Mof001"></h:outputText>
 				</p:column>
-						
-
+	
 <p:column headerText="MOF Expiry Date">
 				<h:outputText value="05/09/2013"></h:outputText>
 				</p:column>
-				
-				
+			
 				<p:column headerText="Status">
 				<h:outputText value="Active/Expired"></h:outputText>
 				</p:column>
 				
 			</p:dataTable>
 </p:panelGrid>
-</p:panel>
 
-	
-
-
-   
-      
-
-<p:panel toggleable="true">
 <div>           
 <p:commandButton value="CANCEL" style="float:right;" oncomplete="suppdlg.hide()">
 </p:commandButton>
@@ -242,10 +194,6 @@
 </p:commandButton>
 </div> 
 </p:panel>
-		
-		
+
 	</p:dialog>
-	
-		
-			
 		</ui:composition>
