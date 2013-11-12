@@ -12,15 +12,15 @@ import javax.portlet.PortletRequest;
 import javax.portlet.PortletSession;
 
 import my.ep.biz.service.pm.authorization.user.IUserSO;
+import my.ep.bpm.service.IBpmSO;
 import my.ep.dto.pm.authorization.user.UserReqDTO;
 import my.ep.dto.pm.authorization.user.UserResDTO;
 import my.ep.persistence.entity.pm.authorization.PmUser;
+import my.ep.util.lookupservice.EpBpmBusinessDelegate;
 import my.ep.web.util.lookupservice.BusinessDelegate;
 
 import org.apache.log4j.Logger;
 
-import com.liferay.portal.kernel.exception.PortalException;
-import com.liferay.portal.kernel.exception.SystemException;
 import com.liferay.portal.kernel.util.WebKeys;
 import com.liferay.portal.model.Role;
 import com.liferay.portal.model.User;
@@ -37,7 +37,8 @@ import com.liferay.portal.theme.ThemeDisplay;
 public class FacesScopes {
 	private static Logger log = Logger.getLogger(FacesScopes.class);
 
-	public static final String SESS_USER_SESSION_BEAN = "USER_SESSION_BEAN"; 
+	public static final String SESS_USER_SESSION_BEAN = "USER_SESSION_BEAN";
+	private static final String BPM_AUTH_CONTEXT_TOKEN = "BPM_AUTH_CONTEXT_TOKEN"; 
 	
 	FacesContext facesContext = null;
 	Application application = null;
@@ -280,4 +281,16 @@ public class FacesScopes {
 		int end = value.lastIndexOf('}');
 		return (end >= 0 && start < end);
 	}
+	
+	public String getBPMAuthenticationCtxToken(){
+        Object ctxToken= portletSession.getAttribute(BPM_AUTH_CONTEXT_TOKEN,PortletSession.APPLICATION_SCOPE);
+        if(null==ctxToken){
+              PmUser user=getUserSessionBean();
+              IBpmSO bpmSO = (IBpmSO) EpBpmBusinessDelegate.getInstance().getServiceObject(IBpmSO.class);
+              ctxToken = bpmSO.authenticate(user.getUserName(),"welcome1");
+              portletSession.setAttribute(BPM_AUTH_CONTEXT_TOKEN, ctxToken,PortletSession.APPLICATION_SCOPE);
+        }
+        return (String) ctxToken;
+	}
+
 }
