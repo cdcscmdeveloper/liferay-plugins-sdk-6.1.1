@@ -10,16 +10,16 @@ import my.ep.type.IEnumType;
  *
  */
 public enum MemberType implements IEnumType {
-	GovernmentUser(1),
-	NonGovernmentUser(2);
+	GovernmentUser(true),
+	NonGovernmentUser(false);
 	
 	
-	private int memeberType;
+	private boolean memeberType;
 
 	/**
 	 * 
 	 */
-	private MemberType(int type) {
+	private MemberType(boolean type) {
 		this.memeberType=type;
 	}
 	/* (non-Javadoc)
@@ -30,10 +30,10 @@ public enum MemberType implements IEnumType {
 		// TODO Auto-generated method stub
 		return memeberType;
 	}
-	public int getMemeberType() {
+	public boolean getMemeberType() {
 		return memeberType;
 	}
-	public void setMemeberType(int memeberType) {
+	public void setMemeberType(boolean memeberType) {
 		this.memeberType = memeberType;
 	}
 

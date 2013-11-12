@@ -10,29 +10,29 @@ import my.ep.type.IEnumType;
  *
  */
 public enum SelectionType implements IEnumType {
-	PROFILE(1),
-	EXISITING(2),
-	New(3);
+	PROFILE("P"),
+	EXISITING("E"),
+	New("N");
 
-	private int userSelection;
+	private String userSelection;
 	/**
 	 * 
 	 */
-	private SelectionType(int type) {
+	private SelectionType(String type) {
 		this.userSelection=type;
 	}
 	/* (non-Javadoc)
 	 * @see my.ep.type.IEnumType#value()
 	 */
 	@Override
-	public Object value() {
+	public String value() {
 		// TODO Auto-generated method stub
 		return userSelection;
 	}
-	public int getUserSelection() {
+	public String getUserSelection() {
 		return userSelection;
 	}
-	public void setUserSelection(int userSelection) {
+	public void setUserSelection(String userSelection) {
 		this.userSelection = userSelection;
 	}
 
