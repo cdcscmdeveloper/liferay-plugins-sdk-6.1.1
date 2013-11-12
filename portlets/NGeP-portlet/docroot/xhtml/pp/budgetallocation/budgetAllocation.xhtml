@@ -11,14 +11,8 @@ xmlns:c="http://java.sun.com/jsp/jstl/core"
     <ui:define name="contentSection">
     	<!-- Top Button -->
     	<ui:include src="headerSection.xhtml"/>
-		<p:tabView id="tvBudgetAlloc" dynamic="true" orientation="left">  
-		    <p:tab id="tBudgetAlloc" title="#{budgetAllocationBackingBean.generateHeader(budgetAllocationBackingBean.managedBean.viewMode)}"> 
-	    		<ui:include src="budgetAllocationContent.xhtml"/>
-		    </p:tab>
-		    <p:tab title="#{lbl['lbl.pp.title.audit.trail']}">  
-		   	 	Coming Soon. 
-		    </p:tab>
-	    </p:tabView>
+    	<ui:include src="budgetAllocationContent.xhtml"/>
+		
 	</ui:define>
 </ui:composition>
 

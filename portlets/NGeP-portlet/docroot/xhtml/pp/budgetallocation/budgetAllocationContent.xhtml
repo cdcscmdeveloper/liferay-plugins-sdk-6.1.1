@@ -9,14 +9,13 @@ xmlns:p="http://primefaces.org/ui"
 xmlns:c="http://java.sun.com/jsp/jstl/core"
 >
 	<p:outputPanel id="opBudgetAllocationContent">
-		<p:tabView id="tvBudgetAllocContent" orientation="top"> 
+		<p:tabView id="tvBudgetAllocContent"><!-- orientation="top" --> 
 			<!-- Header -->
 			<p:tab id="tBudgetAllocHeader" dynamic="true" title="#{lbl['lbl.pp.header']}">  
 				<p:panel id="pTabBudgetAllocHeader">
 					<table class="ppTwoPartsTable">
 						<tr>
-							<th>#{lbl['lbl.pp.ministry.code.name']}</th>
-							<td class="ppSmallTd">:</td>
+							<th><p:outputLabel value="#{lbl['lbl.pp.ministry.code.name']}"/></th>
 							<td>
 								<p:selectOneMenu value="#{budgetAllocationBackingBean.managedBean.selectedBudgetAllocation.ministryOrgProfileId}"
 									disabled="#{!budgetAllocationBackingBean.managedBean.selectedBudgetAllocation.editable}">
@@ -28,8 +27,7 @@ xmlns:c="http://java.sun.com/jsp/jstl/core"
 							</td>
 						</tr>
 						<tr>
-							<th>#{lbl['lbl.pp.jabatan.code.name']}</th>
-							<td class="ppSmallTd">:</td>
+							<th><p:outputLabel value="#{lbl['lbl.pp.jabatan.code.name']}"/></th>
 							<td>
 								<p:selectOneMenu id="somJbt" value="#{budgetAllocationBackingBean.managedBean.selectedBudgetAllocation.jabatanOrgProfileId}"
 									disabled="#{!budgetAllocationBackingBean.managedBean.selectedBudgetAllocation.editable}">
@@ -41,8 +39,7 @@ xmlns:c="http://java.sun.com/jsp/jstl/core"
 							</td>
 						</tr>
 						<tr>
-							<th>#{lbl['lbl.pp.ptj.code.name']}</th>
-							<td class="ppSmallTd">:</td>
+							<th><p:outputLabel value="#{lbl['lbl.pp.ptj.code.name']}"/></th>
 							<td>
 								<p:selectOneMenu id="somPtj" value="#{budgetAllocationBackingBean.managedBean.selectedBudgetAllocation.orgProfileId}" 
 									disabled="#{!budgetAllocationBackingBean.managedBean.selectedBudgetAllocation.editable}">
@@ -53,15 +50,13 @@ xmlns:c="http://java.sun.com/jsp/jstl/core"
 							</td>
 						</tr>
 						<tr>
-							<th>#{lbl['lbl.pp.status']}</th>
-							<td class="ppSmallTd">:</td>
+							<th><p:outputLabel value="#{lbl['lbl.pp.status']}"/></th>
 							<td>
 								<p:inputText value="#{budgetAllocationBackingBean.managedBean.selectedBudgetAllocation.statusId}"  disabled="true"/>
 							</td>
 						</tr>
 						<tr>
-							<th>* #{lbl['lbl.pp.plan.approver']}</th>
-							<td class="ppSmallTd">:</td>
+							<th>* <p:outputLabel value="#{lbl['lbl.pp.plan.approver']}"/></th>
 							<td>
 								<p:selectOneMenu value="#{budgetAllocationBackingBean.managedBean.selectedBudgetAllocation.approverId}" 
 								disabled="#{!budgetAllocationBackingBean.managedBean.selectedBudgetAllocation.editable}">
@@ -105,7 +100,7 @@ xmlns:c="http://java.sun.com/jsp/jstl/core"
 	                    <p:column headerText="#{lbl['lbl.pp.action']}">  
                     		 <p:commandLink id="clEdit" value="#{lbl['lbl.pp.edit']}" 
 	                         	action="#{budgetAllocationBackingBean.showBudgetAllocationItem(budgetAllocationDet)}" 
-	                         	oncomplete="dlItemDetailsBudgetModal.show();" update=":form:tvBudgetAlloc:dlItemDetailsBudget"/>
+	                         	oncomplete="dlItemDetailsBudgetModal.show();" update=":form:dlItemDetailsBudget"/>
 	                         &nbsp;&nbsp;
 	                         <p:commandLink id="clDelete" value="#{lbl['lbl.pp.delete']}"
 	                         	update="dtBudgetAllocDet" rendered="#{budgetAllocationDet.brandNew || 
@@ -121,7 +116,7 @@ xmlns:c="http://java.sun.com/jsp/jstl/core"
 						<c:if test="#{budgetAllocationBackingBean.managedBean.selectedBudgetAllocation.editable}">
 							<p:commandButton value="#{lbl['lbl.pp.add.item']}" 
 								action="#{budgetAllocationBackingBean.showBudgetAllocationItem(null)}" 
-								oncomplete="dlItemDetailsBudgetModal.show();" update=":form:tvBudgetAlloc:dlItemDetailsBudget" /> 
+								oncomplete="dlItemDetailsBudgetModal.show();" update=":form:dlItemDetailsBudget" /> 
 						</c:if>
 					</div>
 				</p:panel>
@@ -130,54 +125,39 @@ xmlns:c="http://java.sun.com/jsp/jstl/core"
 			<p:tab id="tBudgetAllocRmk" title="#{lbl['lbl.pp.remarks']}">
 				<br/>  
 				<p:panel id="pTabBudgetAllocRmk">
-					<table class="ppRmkTable">
-						<tr>
-							<th>#{lbl['lbl.pp.remarks']}</th>
-							<td class="ppSmallTd">:</td>
-							<td>
-								<p:dataTable id="dtRemark" styleClass="ppRmkList" var="budgetAllocRemark" rowIndexVar="rowIndex"
-									value="#{budgetAllocationBackingBean.managedBean.selectedBudgetAllocation.ppRemarks}"
-									emptyMessage="#{lbl['lbl.pp.pls.add.item']}">  
-			                        <p:column headerText="#{lbl['lbl.pp.seq']}">  
-			                            #{rowIndex+1}
-			                        </p:column>   
-			                        <p:column headerText="#{lbl['lbl.pp.comment']}">  
-			                            <p:inputTextarea value="#{budgetAllocRemark.remark}" rows="2" cols="50" 
-			                            	disabled="#{!budgetAllocRemark.brandNew}" />
-			                        </p:column>  
-			                        <p:column headerText="#{lbl['lbl.pp.created.by']}">  
-			                            <p:inputText value="#{budgetAllocRemark.createdBy}" disabled="true" />  
-			                        </p:column> 
-			                        <p:column headerText="#{lbl['lbl.pp.created.date']}">  
-			                            <p:inputText value="#{budgetAllocRemark.createdDate}" disabled="true" />  
-			                        </p:column>  
-			                </p:dataTable>  
-							</td>
-						</tr>
-						<tr>
-							<th>&nbsp;</th>
-							<td class="ppSmallTd">&nbsp;</td>
-							<td>
-								<div class="ppRightBtn">
-									<p:commandButton id="cbAddBudgetAllocRmk" value="#{lbl['lbl.pp.add']}" update="pTabBudgetAllocRmk"
-										action="#{budgetAllocationBackingBean.addBudgetAllocRemark()}" />
-								</div>
-							</td>
-						</tr>
-					</table>
+					<p:dataTable id="dtRemark" styleClass="ppRmkList" var="budgetAllocRemark" rowIndexVar="rowIndex"
+						value="#{budgetAllocationBackingBean.managedBean.selectedBudgetAllocation.ppRemarks}"
+						emptyMessage="#{lbl['lbl.pp.pls.add.item']}">  
+                        <p:column headerText="#{lbl['lbl.pp.seq']}">  
+                            #{rowIndex+1}
+                        </p:column>   
+                        <p:column headerText="#{lbl['lbl.pp.comment']}">  
+                            <p:inputTextarea value="#{budgetAllocRemark.remark}" rows="2" cols="50" 
+                            	disabled="#{!budgetAllocRemark.brandNew}" />
+                        </p:column>  
+                        <p:column headerText="#{lbl['lbl.pp.created.by']}">  
+                            <p:inputText value="#{budgetAllocRemark.createdBy}" disabled="true" />  
+                        </p:column> 
+                        <p:column headerText="#{lbl['lbl.pp.created.date']}">  
+                            <p:inputText value="#{budgetAllocRemark.createdDate}" disabled="true" />  
+                        </p:column>  
+	                </p:dataTable>  
 				</p:panel>
+				<div class="ppRightBtn">
+					<p:commandButton id="cbAddBudgetAllocRmk" value="#{lbl['lbl.pp.add']}" update="pTabBudgetAllocRmk"
+						action="#{budgetAllocationBackingBean.addBudgetAllocRemark()}" />
+				</div>
 			</p:tab>
 		</p:tabView>
 		
 		<!-- Item Detail Form -->
         <p:dialog id="dlItemDetailsBudget" header="#{lbl['lbl.pp.item.details']}" widgetVar="dlItemDetailsBudgetModal"
      		 resizable="false" styleClass="ppDiaglogBg" dynamic="true">  
-			    <p:panel id="pItemDet" header="#{lbl['lbl.pp.item.details']}">
+			    
 			    	<table class="ppTwoPartsTable">
 			    		<c:if test="#{budgetAllocationBackingBean.managedBean.viewMode==PPConst.modeApproval}">
 				    		<tr>
 				    			<th>#{lbl['lbl.pp.require.revision']}</th>
-								<td class="ppSmallTd">:</td>
 								<td>
 									<p:selectBooleanCheckbox value="#{budgetAllocationBackingBean.managedBean.selectedBudgetAllocItem.revisionRequired}" /> 
 								</td>
@@ -185,7 +165,6 @@ xmlns:c="http://java.sun.com/jsp/jstl/core"
 			    		</c:if>
 			    		<tr>
 			    			<th>* #{lbl['lbl.pp.gosodo.code']}</th>
-							<td class="ppSmallTd">:</td>
 							<td>
 							    <p:selectOneMenu
 							    	value="#{budgetAllocationBackingBean.managedBean.selectedBudgetAllocItem.budgetId}"
@@ -194,7 +173,7 @@ xmlns:c="http://java.sun.com/jsp/jstl/core"
 									<f:selectItem itemLabel="#{lbl['lbl.select']}" itemValue="0" />
 									<f:selectItems value="#{budgetAllocationBackingBean.populateGo()}" 
 										var="budget" itemLabel="#{budget.pmGo.goCode}" itemValue="#{budget.budgetId}" />
-									<p:ajax event="change" listener="#{budgetAllocationBackingBean.selectedGo}" update="pItemDet"  />
+									<p:ajax event="change" listener="#{budgetAllocationBackingBean.selectedGo}" update="dlItemDetailsBudget"  />
 								</p:selectOneMenu>
 								<p:selectOneMenu 
 									value="#{budgetAllocationBackingBean.managedBean.selectedBudgetAllocItem.soId}"
@@ -218,7 +197,6 @@ xmlns:c="http://java.sun.com/jsp/jstl/core"
 			    		</tr>
 			    		<tr>
 			    			<th>#{lbl['lbl.pp.gosodo.name']}</th>
-							<td class="ppSmallTd">:</td>
 							<td>
 								<p:outputPanel id="opGosodo">
 									<p:inputText disabled="true"
@@ -230,10 +208,8 @@ xmlns:c="http://java.sun.com/jsp/jstl/core"
 								</p:outputPanel>    
 							</td>
 			    		</tr>
-			    		
 			    		<tr>
 			    			<th>* #{lbl['lbl.pp.financial.year']}</th>
-							<td class="ppSmallTd">:</td>
 							<td>
 								<p:selectOneMenu value="#{budgetAllocationBackingBean.managedBean.selectedBudgetAllocItem.ovrFinancialYear}"
 									disabled="#{!budgetAllocationBackingBean.managedBean.selectedBudgetAllocItem.brandNew &amp;&amp; 
@@ -245,7 +221,6 @@ xmlns:c="http://java.sun.com/jsp/jstl/core"
 			    		</tr>
 			    		<tr>
 			    			<th>#{lbl['lbl.pp.budgeted.amount']}</th>
-							<td class="ppSmallTd">:</td>
 							<td>
 								<p:inputText value="#{budgetAllocationBackingBean.managedBean.selectedBudgetAllocItem.ppBudget.budgetAmount}"
 								 	disabled="true"/>
@@ -253,14 +228,12 @@ xmlns:c="http://java.sun.com/jsp/jstl/core"
 			    		</tr>
 			    		<tr>
 			    			<th>#{lbl['lbl.pp.available.amount']}</th>
-							<td class="ppSmallTd">:</td>
 							<td>
 								<p:inputText id="itAvailableAmt" value="#{budgetAllocationBackingBean.generateAvailableBudget()}" disabled="true"/>
 							</td>
 			    		</tr>
 			    		<tr>
 			    			<th>* #{lbl['lbl.pp.allocate.budget.amount']}</th>
-							<td class="ppSmallTd">:</td>
 							<td>
 								<p:inputText value="#{budgetAllocationBackingBean.managedBean.selectedBudgetAllocItem.allocAmount}" 
 									disabled="#{!budgetAllocationBackingBean.managedBean.selectedBudgetAllocItem.brandNew &amp;&amp; 
@@ -270,7 +243,6 @@ xmlns:c="http://java.sun.com/jsp/jstl/core"
 			    		</tr>
 			    		<tr>
 			    			<th>#{lbl['lbl.pp.remarks']}</th>
-							<td class="ppSmallTd">:</td>
 							<td>
 								<c:if test="#{budgetAllocationBackingBean.managedBean.viewMode!=PPConst.modeNew}">
 									<p:inputTextarea value="#{budgetAllocationBackingBean.managedBean.selectedBudgetAllocItem.latestRemark.remark}" 
@@ -282,16 +254,16 @@ xmlns:c="http://java.sun.com/jsp/jstl/core"
 			    		</tr>
 			    		<tr>
 			    			<td>&nbsp;</td>
-							<td colspan="2">
+							<td>
 								<p:commandButton value="#{lbl['lbl.pp.save']}" action="#{budgetAllocationBackingBean.addBudgetAllocationItemList()}"
-									onclick="dlItemDetailsBudgetModal.hide()" oncomplete="dlItemDetailsBudgetModal.hide()" update=":form:tvBudgetAlloc:tvBudgetAllocContent" 
-									process="pItemDet"/>
+									onclick="dlItemDetailsBudgetModal.hide()" oncomplete="dlItemDetailsBudgetModal.hide()" update=":form:tvBudgetAllocContent" 
+									process="dlItemDetailsBudget"/>
 								<p:commandButton value="#{lbl['lbl.pp.cancel']}" 
 									onclick="dlItemDetailsBudgetModal.hide()" immediate="true"/>
 							</td>
 			    		</tr>
 			    	</table> 
-    			</p:panel>  
+    			
 		</p:dialog>  		
 		
         <br/>

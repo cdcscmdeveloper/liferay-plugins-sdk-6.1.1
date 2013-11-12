@@ -17,7 +17,8 @@ xmlns:ac="http://ac.my/jsf/composite/cc">
 						<th>#{lbl['lbl.pp.ministry.code.name']}</th>
 						<td class="ppSmallTd">:</td>
 						<td>
-							<p:inputText value="#{budgetAllocationBackingBean.managedBean.currentUser.orgName}" disabled="true"/>
+							#{budgetAllocationBackingBean.managedBean.currentUser.orgCode} /
+							#{budgetAllocationBackingBean.managedBean.currentUser.orgName}
 						</td>
 					</tr>
 					<tr>
