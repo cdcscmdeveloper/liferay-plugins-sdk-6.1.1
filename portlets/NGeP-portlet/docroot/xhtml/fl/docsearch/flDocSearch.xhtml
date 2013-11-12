@@ -1,156 +1,130 @@
-<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+<ui:composition
+	template="/WEB-INF/facelets/templates/basic_template.xhtml"
+	xmlns="http://www.w3.org/1999/xhtml"
 	xmlns:f="http://java.sun.com/jsf/core"
 	xmlns:h="http://java.sun.com/jsf/html"
 	xmlns:ui="http://java.sun.com/jsf/facelets"
 	xmlns:p="http://primefaces.org/ui"
 	xmlns:c="http://java.sun.com/jsp/jstl/core"
-	xmlns:fn="http://java.sun.com/jsp/jstl/functions">
-	<h:panelGroup id="messages">
+	xmlns:ac="http://ac.my/jsf/composite/cc">
 
-		<p:outputLabel styleClass="titleFront" value="Document Search"></p:outputLabel>
+	<ui:define name="resourceSection">
+	</ui:define>
 
-		<p:remoteCommand id="searching" name="searching"
-			update="advanceSearchID" process="@this searchRadio"
-			action="#{documentBackingBean.advanceSearch()}">
-		</p:remoteCommand>
-		<table>
-			<tr>
-				<td><p:selectOneRadio id="searchRadio"
-						value="#{documentBackingBean.managedBean.searchType}">
-						<f:selectItem itemValue="S" itemLabel="Search " />
-						<f:selectItem itemValue="A" itemLabel="Advance Search" />
-						<p:ajax event="click"
-							listener="#{documentBackingBean.advanceSearch()}"
-							update="advanceSearchID"></p:ajax>
-					</p:selectOneRadio></td>
-			</tr>
-		</table>
+	<ui:define name="contentSection">
+		<p:messages id="messages" showDetail="true" autoUpdate="true"
+			closable="true" severity="error, info" />
 		<p:selectOneMenu
-			value="#{documentBackingBean.managedBean.tempLoginId}">
+			value="#{flDocumentBackingBean.managedBean.tempLoginId}">
 			<f:selectItem itemLabel="CURRENT LOGIN" itemValue="0" />
 			<f:selectItem itemLabel="Roslan" itemValue="roslan" />
 			<f:selectItem itemLabel="Lailah" itemValue="lailah" />
 			<f:selectItem itemLabel="Khai" itemValue="khai" />
 			<f:selectItem itemLabel="Alex" itemValue="alex" />
-			<p:ajax event="change" update="loginUser"
-				listener="#{documentBackingBean.selectedUser}" />
+			<p:ajax event="change" update="defineSearchTbl"
+				listener="#{flDocumentBackingBean.selectedUser}" />
 		</p:selectOneMenu>
-		<h:panelGroup id="loginUser">
-			<h:panelGrid columns="3" columnClasses="cmWidth1"
-				rendered="#{documentBackingBean.managedBean.tempLoginId eq 'roslan'}">
-				<p:outputLabel value="Doc Type" />
-				<p:selectOneMenu
-					value="#{documentBackingBean.managedBean.tempDocType}">
-					<f:selectItem itemLabel="SELECT DOC TYPE" itemValue="0" />
-					<f:selectItem itemLabel="PR" itemValue="pr" />
-					<f:selectItem itemLabel="CR" itemValue="cr" />
-					<p:ajax event="change" update="selDoctype"
-						listener="#{documentBackingBean.selectedDoctype}" />
-					
-				</p:selectOneMenu>
-			</h:panelGrid>
-			<h:panelGrid columns="3" columnClasses="cmWidth1"
-				rendered="#{documentBackingBean.managedBean.tempLoginId eq 'alex'}">
-				<p:outputLabel value="Doc Type" />
-				<p:selectOneMenu
-					value="#{documentBackingBean.managedBean.tempDocType}">
-					<f:selectItem itemLabel="SELECT DOC TYPE" itemValue="0" />
-					<f:selectItem itemLabel="PR" itemValue="pr" />
-					<f:selectItem itemLabel="CR" itemValue="cr" />
-					<p:ajax event="change" update="selDoctype"
-						listener="#{documentBackingBean.selectedDoctype}" />
-					
-				</p:selectOneMenu>
-			</h:panelGrid>
-			<h:panelGrid columns="3" columnClasses="cmWidth1"
-				rendered="#{documentBackingBean.managedBean.tempLoginId eq 'khai'}">
-				<p:outputLabel value="Doc Type" />
-				<p:selectOneMenu
-					value="#{documentBackingBean.managedBean.tempDocType}">
-					<f:selectItem itemLabel="SELECT DOC TYPE" itemValue="0" />
-					<f:selectItem itemLabel="DO" itemValue="do" />
-					<f:selectItem itemLabel="Invoice" itemValue="invoice" />
-					<p:ajax event="change" update="selDoctype"
-						listener="#{documentBackingBean.selectedDoctype}" />
-					
-				</p:selectOneMenu>
+		<p:panel id="searchPanel" header="SEARCH" toggleable="true">
+			<table>
+				<tr>
+					<td><p:selectOneRadio id="searchRadio"
+							value="#{flDocumentBackingBean.managedBean.searchType}">
+							<f:selectItem itemValue="D" itemLabel="Define Search" />
+							<!--  <f:selectItem itemValue="A" itemLabel="Advance Search" /> -->
+							<p:ajax event="click"
+								listener="#{flDocumentBackingBean.advanceSearch()}"
+								update="advanceSearchID" />
+						</p:selectOneRadio></td>
+				</tr>
+			</table>
+			<h:panelGroup id="defineSearchTbl">
+				<h:panelGrid columns="3" columnClasses="cmWidth1">
+					<p:outputLabel value="Fulfilment Order Type" />
+					<p:selectOneMenu
+						value="#{flDocumentBackingBean.managedBean.searchOrderType}">
+						<f:selectItems
+							value="#{flDocumentBackingBean.getDropdownCodeValues(PmCodeCatConst.fulfilmentOrderType)}" />
+					</p:selectOneMenu>
+				</h:panelGrid>
+				<h:panelGrid columns="3" columnClasses="cmWidth1">
+					<p:outputLabel value="Document Type" />
+					<p:selectOneMenu
+						value="#{flDocumentBackingBean.managedBean.searchDocType}">
+						<f:selectItems
+							value="#{flDocumentBackingBean.getDropdownCodeValues(PmCodeCatConst.fulfilmentDocumentType)}" />
+						<p:ajax event="change" update="docTypeSearch"
+							listener="#{flDocumentBackingBean.selectedDoctype}" />
+					</p:selectOneMenu>
+				</h:panelGrid>
+				<h:panelGrid columns="3" columnClasses="cmWidth1">
+					<p:outputLabel value="Doc No" />
+					<p:inputText size="50"
+						value="#{flDocumentBackingBean.managedBean.searchDocNo}"></p:inputText>
+				</h:panelGrid>
+			</h:panelGroup>
+			<h:panelGroup id="docTypeSearch">
+				<h:panelGrid columns="10" columnClasses="cmWidth1"
+					rendered="#{flDocumentBackingBean.managedBean.searchDocType eq 'CO'}">
+					<p:outputLabel value="Contract No" />
+					<p:inputText size="50"
+						value="#{flDocumentBackingBean.managedBean.searchContractNo}"></p:inputText>
+					<p:outputLabel value="Circular No" />
+					<p:inputText size="50"
+						value="#{flDocumentBackingBean.managedBean.searchCircularNo}"></p:inputText>
+				</h:panelGrid>
+				
+			</h:panelGroup>
+			<p:outputPanel id="advanceSearchID" style="width:100%">
+			</p:outputPanel>
+			<p:commandButton value="search"
+				action="#{flDocumentBackingBean.searchDocument}"
+				update="resultPanel" />
+		</p:panel>
+		<p:panel id="resultPanel" header="RESULT" toggleable="true">
+			<p:dataTable id="flDocListDt"
+				value="#{flDocumentBackingBean.flDocumentDataModel}" lazy="true"
+				var="flDocument" rowIndexVar="rowIndex" rowKey="#{flDocument.docId}"
+				width="100%">
 
-			</h:panelGrid>
-		</h:panelGroup>
-		<h:panelGroup id="selDoctype">
-		</h:panelGroup>
-		<h:panelGrid columns="3" columnClasses="cmWidth1">
-			<p:outputLabel value="Doc Type" />
-			<p:inputText size="50"
-				value="#{documentBackingBean.managedBean.docType}"></p:inputText>
-			<p:selectOneMenu>
-				<f:selectItem itemValue="and" itemLabel="And" />
-				<f:selectItem itemValue="or" itemLabel="Or" />
-			</p:selectOneMenu>
-		</h:panelGrid>
+				<ac:paginator for="flDocListDt" />
 
-		<p:outputPanel id="advanceSearchID" style="width:100%">
-			<c:if test="#{documentBackingBean.managedBean.advanceSearchInd}">
-
-				<ui:repeat var="search"
-					value="#{documentBackingBean.managedBean.advanceSearchList}">
-
-					<h:panelGrid columns="2" columnClasses="cmPadding5">
-						<p:selectOneMenu value="#{search.name}">
-							<f:selectItems
-								value="#{documentBackingBean.managedBean.searchCriteria}" />
-						</p:selectOneMenu>
-						<p:inputText size="50" value="#{search.value}" />
-					</h:panelGrid>
-
-				</ui:repeat>
-			</c:if>
-		</p:outputPanel>
-
-		<p:commandButton value="search"
-			action="#{documentBackingBean.searchDocument}" update="docNo" />
-		<p:dataTable paginator="true" rows="10" editable="true"
-			paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
-			rowsPerPageTemplate="5,10,15" paginatorPosition="bottom"
-			value="#{documentBackingBean.managedBean.documentItemList}"
-			id="docNo" var="documentItem" rowIndexVar="rowIndex"
-			rowKey="#{documentItem.docNo}" width="100%">
-
-			<p:column headerText="Doc No">
-				<h:outputText value="#{documentItem.docNo}" />
-			</p:column>
-			<p:column headerText="Title">
-				<h:outputText value="#{documentItem.title}" />
-			</p:column>
-			<p:column headerText="Document Type">
-				<h:outputText value="#{documentItem.docType}" />
-			</p:column>
-			<p:column headerText="Detail">
-				<p:commandButton
-					action="#{documentBackingBean.navigateToFulfillmentDet(rowIndex)}"
-					value="Detail">
-					<f:param name="fulfilmentReqId"
-						value="#{documentItem.fulfilmentReqId}" />
-				</p:commandButton>
-
-			</p:column>
-			<p:column headerText="Cancel">
-				<p:commandButton
-					action="#{documentBackingBean.cancelDoc(rowIndex)}"
-					value="Cancel">
-					<f:param name="fulfilmentReqId"
-						value="#{documentItem.fulfilmentReqId}" />
-				</p:commandButton>
-
-			</p:column>
-
-		</p:dataTable>
-
-	</h:panelGroup>
+				<p:column headerText="Document Type">
+					<h:outputText value="#{flDocument.docType}" />
+				</p:column>
+				<p:column headerText="Doc No">
+					<h:outputText value="#{flDocument.docNo}" />
+				</p:column>
+				<p:column headerText="Contract No.">
+					<h:outputText value="#{flDocument.contractNo}" />
+				</p:column>
+				<p:column headerText="Circular No.">
+					<h:outputText value="#{flDocument.circularNo}" />
+				</p:column>
+				<p:column headerText="Status">
+					<h:outputText value="#{flDocument.status.statusId}" />
+				</p:column>
+				
+				<p:column headerText="View">
+					<p:commandButton
+						onclick="goToDetail([{name:'docType', value:'#{flDocument.docType}'}, {name:'docId', value:'#{flDocument.docId}'}, {name:'docNo', value:'#{flDocument.docNo}'}, {name:'buttonVal', value:'View'}])"
+						value="View" />
+				</p:column>
+				<p:column headerText="Update">
+					<p:commandButton
+						onclick="goToDetail([{name:'docType', value:'#{flDocument.docType}'}, {name:'docId', value:'#{flDocument.docId}'}, {name:'docNo', value:'#{flDocument.docNo}'}, {name:'buttonVal', value:'Update'}])"
+						value="Update" />
+				</p:column>
+				<p:column headerText="Cancel">
+					<p:commandButton
+						onclick="goToDetail([{name:'docType', value:'#{flDocument.docType}'}, {name:'docId', value:'#{flDocument.docId}'}, {name:'docNo', value:'#{flDocument.docNo}'}, {name:'buttonVal', value:'Cancel'}])"
+						value="Cancel" />
+				</p:column>
+			</p:dataTable>
+			<p:remoteCommand action="#{flDocumentBackingBean.navigateToPage}"
+				name="goToDetail" />
 
 
 
-
-
-
+		</p:panel>
+	</ui:define>
 </ui:composition>
