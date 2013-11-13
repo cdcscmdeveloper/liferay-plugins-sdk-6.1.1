@@ -96,10 +96,10 @@
 		<ui:include src="/xhtml/fl/receivednote/frnBasePage.xhtml"></ui:include>
 	</c:if>
 	<c:if
-		test='#{tasklistBackingBean.managedBean.processName eq "Create Purchase Order"}'>
+		test='#{tasklistBackingBean.managedBean.processName eq "Purchase Request Creation"}'>
 		<c:choose>
 			<c:when
-				test='#{tasklistBackingBean.managedBean.taskName eq "Acknowledge the Purchase Request"}'>
+				test='#{tasklistBackingBean.managedBean.taskName eq "Acknowledge Purchase Request"}'>
 				<ui:include src="/xhtml/fl/purchaseorder/poBasePage.xhtml"></ui:include>
 			</c:when>
 			<c:otherwise>
