@@ -77,7 +77,7 @@ public class PlanManagedBean extends BaseManagedBean{
 	
 	private boolean reasonRejectOther;
 	
-	private String customReason;
+
 
 	private Long tempId; //temp
 	
@@ -646,20 +646,6 @@ public class PlanManagedBean extends BaseManagedBean{
 	 */
 	public void setReasonRejectOther(boolean reasonRejectOther) {
 		this.reasonRejectOther = reasonRejectOther;
-	}
-
-	/**
-	 * @return the customReason
-	 */
-	public String getCustomReason() {
-		return customReason;
-	}
-
-	/**
-	 * @param customReason the customReason to set
-	 */
-	public void setCustomReason(String customReason) {
-		this.customReason = customReason;
 	}
 
 

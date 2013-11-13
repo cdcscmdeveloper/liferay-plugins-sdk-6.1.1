@@ -46,7 +46,7 @@ public class ProcurementPlanConst {
 	public static final String CURRENT_MTO = "tabM";
 	public static final String CURRENT_ALLOC_BUDGET = "tabB";
 	public static final String CURRENT_PLAN = "tabL";
-	public static final String CURRENT_AUDIT = "tabA";
+
 	
 	
 	//Plan Type
@@ -108,40 +108,14 @@ public class ProcurementPlanConst {
 	public static final String CONTRACT_IND_LOA = "S";
 	public static final String CONTRACT_IND_CONTRACT = "C";
 	
-	//Contract Type
-	public static final String CONTRACT_TYPE_MINISTRY = "168"; //refer to PM_CODE
-	public static final String CONTRACT_IND_CENTRAL = "169"; //refer to PM_CODE
-	
 	
 	//Product Level
 	public static final Integer UNSPSC_SEGMENT = 0;
 	public static final Integer UNSPSC_FAMILY = 1;
 	public static final Integer UNSPSC_CLASS = 2;
 	public static final Integer UNSPSC_COMMODITY = 3;
+
 	
-	//PM Status Budget Allocation
-	public static final Long STATUS_PBA_NEW = 10001L;
-	public static final Long STATUS_PBA_PENDING_APPROVAL = 10002L;
-	public static final Long STATUS_PBA_SAVED = 10003L;
-	
-	//PM Status Budget Allocation Dtl
-	public static final Long STATUS_PBD_NEW = 10005L;
-	
-	//PM Status Plan
-	public static final Long STATUS_PPL_NEW = 10005L;
-	
-	//PM Status Plan Item
-	public static final Long STATUS_PPI_NEW = 10005L;
-	
-	
-	//PM Profile Types
-//	public static final Long TYPE_MINISTRY = 38L;
-//	public static final Long TYPE_JABATAN = 37L;
-//	public static final Long TYPE_PTJ = 1L;
-	
-	
-	public static final Long STATUS_PENDING_APPROVAL = 2L;
-	public static final Long STATUS_PENDING_REVISION = 3L;
 	
 	//Doc Type
 	public static final String DOCTYPE_PLAN = "PPL";
@@ -165,9 +139,32 @@ public class ProcurementPlanConst {
 	public static final String REASON_REJECT = "PPR";
 	public static final String REASON_CANCEL = "PPC";
 	
-	public static final String REASON_REJECT_OTHER = "3";
-	public static final String REASON_CANCEL_OTHER = "3";
 	
+	/** refer to PM_CODE **/
+	//PM Status Budget Allocation
+	public static final Long STATUS_PBA_NEW = 10001L;
+	public static final Long STATUS_PBA_PENDING_APPROVAL = 10002L;
+	public static final Long STATUS_PBA_SAVED = 10003L;
+	
+	//PM Status Budget Allocation Dtl
+	public static final Long STATUS_PBD_NEW = 10005L; 
+	
+	//PM Status Plan
+	public static final Long STATUS_PPL_NEW = 10005L;
+	
+	//PM Status Plan Item
+	public static final Long STATUS_PPI_NEW = 10005L;
+	
+	public static final Long STATUS_PENDING_APPROVAL = 2L; 
+	public static final Long STATUS_PENDING_REVISION = 3L; 
+	
+	public static final String REASON_REJECT_OTHER = "3"; 
+	public static final String REASON_CANCEL_OTHER = "3";
+
+	
+	//Contract Type
+	public static final String CONTRACT_TYPE_MINISTRY = "168"; //refer to PM_CODE
+	public static final String CONTRACT_IND_CENTRAL = "169"; //refer to PM_CODE
 	
 	/**
 	 * @return the votPs
@@ -420,12 +417,7 @@ public class ProcurementPlanConst {
 	public String getCurrentMto() {
 		return CURRENT_MTO;
 	}
-	/**
-	 * @return the currentAudit
-	 */
-	public String getCurrentAudit() {
-		return CURRENT_AUDIT;
-	}
+
 	/**
 	 * @return the currentAllocBudget
 	 */

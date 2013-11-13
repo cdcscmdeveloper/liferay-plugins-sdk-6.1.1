@@ -12,9 +12,9 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import javax.faces.event.ValueChangeEvent;
 import javax.faces.model.SelectItem;
 
+import my.ep.persistence.entity.pm.authorization.PmOrgProfile;
 import my.ep.persistence.entity.pm.common.PmStatus;
 import my.ep.web.constant.pp.ProcurementPlanConst;
 import my.ep.web.util.FacesScopes;
@@ -146,6 +146,82 @@ public class CommonMethod {
 		return months;
 	}
 	
+	/**
+	 * generate plan number 
+	 * @param planType
+	 * @param issueOrgProf
+	 * @return String
+	 */
+//	public static String generatePlanNumber(boolean isPlanned, String planType, PmOrgProfile issueOrgProf){
+//		StringBuilder sb = new StringBuilder();
+//		if(planType!=null && issueOrgProf!=null){
+//		
+//			//plan prefix
+//			if(isPlanned){
+//				if(ProcurementPlanConst.PLAN_TYPE_EXPENDITURE.equals(planType)){
+//					sb.append("pe");
+//				}else{
+//					sb.append("pp");
+//				}
+//			}else{
+//				if(ProcurementPlanConst.PLAN_TYPE_EXPENDITURE.equals(planType)){
+//					sb.append("ue");
+//				}else{
+//					sb.append("up");
+//				}
+//			}
+//			
+//			sb.append(issueOrgProf.getParentOrgProfile().getOrgCode()); //4  last digits
+//			sb.append(issueOrgProf.getOrgCode()); // 6 digits
+//			//2 last digits year
+//			Calendar cal = Calendar.getInstance();
+//			String.valueOf(cal.get(Calendar.YEAR)).substring(2);
+//			
+//		}
+//
+//		
+//		System.out.println("plan number: " + sb.toString());
+//		return sb.toString();
+//	}
+//	
+	
+	/**
+	 * temp generate plan number 
+	 * @param planType
+	 * @param issueOrgProf
+	 * @return String
+	 */
+	public static String generatePlanNumber(boolean isPlanned, String planType, PmOrgProfile issueOrgProf){
+		StringBuilder sb = new StringBuilder();
+		//plan prefix
+		if(isPlanned){
+			if(ProcurementPlanConst.PLAN_TYPE_EXPENDITURE.equals(planType)){
+				sb.append("pe");
+			}else{
+				sb.append("pp");
+			}
+		}else{
+			if(ProcurementPlanConst.PLAN_TYPE_EXPENDITURE.equals(planType)){
+				sb.append("ue");
+			}else{
+				sb.append("up");
+			}
+		}
+		Calendar cal = Calendar.getInstance();
+		sb.append(cal.get(Calendar.YEAR));
+		sb.append(cal.get(Calendar.MONTH));
+		sb.append(cal.get(Calendar.DATE));
+		sb.append(cal.get(Calendar.HOUR));
+		sb.append(cal.get(Calendar.MINUTE));
+		sb.append(cal.get(Calendar.SECOND));
+		System.out.println("plan number: " + sb.toString());
+		return sb.toString();
+	}
+	
+	
+	
+
+
 //	public static List<String> selectedCheckBoxValue(ValueChangeEvent event){
 //		List<String> itemList = new ArrayList<String>();
 //		if(event!=null){
