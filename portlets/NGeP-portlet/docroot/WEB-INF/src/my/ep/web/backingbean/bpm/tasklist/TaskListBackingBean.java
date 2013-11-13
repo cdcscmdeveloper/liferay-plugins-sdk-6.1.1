@@ -74,6 +74,7 @@ import my.ep.web.backingbean.BaseBackingBean;
 import my.ep.web.backingbean.cm.codification.UnspscCodeBackingBean;
 import my.ep.web.backingbean.ct.ContractDetailsBackingBean;
 import my.ep.web.backingbean.ct.agreement.AgreementBackingBean;
+import my.ep.web.backingbean.ct.circular.cc.CentralContractBackingBean;
 import my.ep.web.backingbean.ct.circular.panel.PanelBackingBean;
 import my.ep.web.backingbean.ct.supplier.SupplierBackingBean;
 import my.ep.web.backingbean.ct.suspend.ContractSuspendBackingBean;
@@ -570,11 +571,21 @@ public class TaskListBackingBean extends BaseBackingBean<TaskListManagedBean>{
 				}
 			} else if(res.getProcessName().equalsIgnoreCase("Circular Contract Maintenance")) {
 				CTCircularContractDataType dataType = (CTCircularContractDataType) obj;
-				PanelBackingBean panelCircularBB = new PanelBackingBean();
-				panelCircularBB.taskListAction(dataType.getCircularId().longValue());
-				panelCircularBB.getManagedBean().setToken(ctx);
-				panelCircularBB.getManagedBean().setOutComes(res.getAction());
-				panelCircularBB.getManagedBean().setTaskId(taskId);
+				if(dataType.getType().equalsIgnoreCase("Central")) {
+					CentralContractBackingBean centralContractBB = new CentralContractBackingBean();
+					centralContractBB.taskListAction(dataType.getCircularId().longValue());
+					centralContractBB.getManagedBean().setToken(ctx);
+					centralContractBB.getManagedBean().setOutComes(res.getAction());
+					centralContractBB.getManagedBean().setTaskId(taskId);		
+					getManagedBean().setPageUrl("/xhtml/ct/circular/centralcontract/circularBase.xhtml");
+				} else {
+					PanelBackingBean panelCircularBB = new PanelBackingBean();
+					panelCircularBB.taskListAction(dataType.getCircularId().longValue());
+					panelCircularBB.getManagedBean().setToken(ctx);
+					panelCircularBB.getManagedBean().setOutComes(res.getAction());
+					panelCircularBB.getManagedBean().setTaskId(taskId);					
+					getManagedBean().setPageUrl("/xhtml/ct/circular/panel/circularBase.xhtml");
+				}
 			} else if(res.getProcessName().equalsIgnoreCase("Circular Contract Cancellation")) {
 				CTCircularCancellationDataType dataType = (CTCircularCancellationDataType) obj;
 				PanelBackingBean panelCircularBB = new PanelBackingBean();

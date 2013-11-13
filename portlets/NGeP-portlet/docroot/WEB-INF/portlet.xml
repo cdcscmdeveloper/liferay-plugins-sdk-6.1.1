@@ -232,11 +232,11 @@
 
 	<portlet>
 		<portlet-name>cc</portlet-name>
-		<display-name>Create Central Circular</display-name>
+		<display-name>Create Central Contract Circular</display-name>
 		<portlet-class>org.portletfaces.bridge.GenericFacesPortlet</portlet-class>
 		<init-param>
 			<name>javax.portlet.faces.defaultViewId.view</name>
-			<value>/xhtml/ct/circular/centralcontract/createCircular.xhtml</value>
+			<value>/xhtml/ct/circular/centralcontract/circularBase.xhtml</value>
 		</init-param>
 		<expiration-cache>0</expiration-cache>
 		<supports>
@@ -244,7 +244,7 @@
 			<portlet-mode>view</portlet-mode>
 		</supports>
 		<portlet-info>
-			<title>Create Central Circular</title>
+			<title>Create Central Contract Circular</title>
 			<short-title>NewJSFPortlet</short-title>
 			<keywords></keywords>
 		</portlet-info>
@@ -264,7 +264,7 @@
 
 	<portlet>
 		<portlet-name>ccSearch</portlet-name>
-		<display-name>Search Central Circular</display-name>
+		<display-name>Search Central Contract Circular</display-name>
 		<portlet-class>org.portletfaces.bridge.GenericFacesPortlet</portlet-class>
 		<init-param>
 			<name>javax.portlet.faces.defaultViewId.view</name>
@@ -276,7 +276,7 @@
 			<portlet-mode>view</portlet-mode>
 		</supports>
 		<portlet-info>
-			<title>Search Central Circular</title>
+			<title>Search Central Contract Circular</title>
 			<short-title>NewJSFPortlet</short-title>
 			<keywords></keywords>
 		</portlet-info>

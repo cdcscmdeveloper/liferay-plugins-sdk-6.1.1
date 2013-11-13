@@ -30,6 +30,7 @@ public class TaskListManagedBean extends BaseManagedBean {
 	private String status;
 	
 	private String taskName;
+	private String pageUrl;
 	
 	private String tempLoginId; //TODO: temp and to be removed
 	
@@ -106,6 +107,14 @@ public class TaskListManagedBean extends BaseManagedBean {
 
 	public void setStatus(String status) {
 		this.status = status;
+	}
+
+	public String getPageUrl() {
+		return pageUrl;
+	}
+
+	public void setPageUrl(String pageUrl) {
+		this.pageUrl = pageUrl;
 	}
 	
 	

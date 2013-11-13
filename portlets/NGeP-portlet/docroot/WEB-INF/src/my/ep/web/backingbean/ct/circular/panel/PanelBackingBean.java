@@ -520,6 +520,11 @@ public class PanelBackingBean extends BaseBackingBean<PanelManagedBean>{
 			} else if(action.equalsIgnoreCase("update")) {
 				reqDTO.setUpdateAction(true);
 				resDTO = circularSO.retrieveCircularVerById(reqDTO);
+				if(resDTO.getCircularVer().getCircularTypeCode()==null) {
+					PmCode code = new PmCode();
+					code.setCodeId(-1L);
+					resDTO.getCircularVer().setCircularTypeCode(code);
+				}				
 				getManagedBean().setCircular(resDTO.getCircular());
 				getManagedBean().setCircularVer(resDTO.getCircularVer());
 				getManagedBean().setUpdateAction(true);
