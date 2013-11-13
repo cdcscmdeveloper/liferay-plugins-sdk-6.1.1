@@ -10,9 +10,9 @@
 	<ui:define name="resourceSection">
 	</ui:define>
 	<ui:define name="contentSection">
-		<table style="width:100%">
-			<p:commandButton value="STOP DELIVERY" action="#{flOrderBB.stopDelivery}" style="text-align:right;"></p:commandButton>
-		</table>
+		<div class="ppRightBtn">
+			<p:commandButton value="STOP DELIVERY" action="#{flOrderBB.stopDelivery}" ></p:commandButton>
+		</div>
 		<p:panel header="FULFILMENT DETAIL" toggleable="true">
 			<table>
 				<tr>

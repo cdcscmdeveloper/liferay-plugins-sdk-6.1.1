@@ -65,7 +65,7 @@
 		test='#{tasklistBackingBean.managedBean.processName eq "Contract Request Creation"}'>
 		<c:choose>
 			<c:when
-				test='#{tasklistBackingBean.managedBean.taskName eq "Acknowledg Contract Order"}'>
+				test='#{tasklistBackingBean.managedBean.taskName eq "Acknowledge Contract Order"}'>
 				<ui:include src="/xhtml/fl/purchaseorder/poBasePage.xhtml"></ui:include>
 			</c:when>
 			<c:otherwise>
@@ -116,7 +116,7 @@
 		test='#{tasklistBackingBean.managedBean.processName eq "Plan Preparation"}'>
 		<ui:include src="/xhtml/pp/procurementplan/procurementPlan.xhtml"></ui:include>
 	</c:if>
-	<c:if test='#{tasklistBackingBean.managedBean.processName eq "Create Invoice and Payment"}'>
+	<c:if test='#{tasklistBackingBean.managedBean.processName eq "Invoice and Payment Creation"}'>
 		<c:choose>
 			<c:when
 				test='#{tasklistBackingBean.managedBean.taskName eq "Create Invoice"}'>

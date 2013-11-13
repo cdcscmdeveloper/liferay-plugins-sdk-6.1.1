@@ -52,7 +52,7 @@ public class DeliveryOrderBackingBean extends BaseBackingBean<DeliveryOrderManag
 		}
 	}
 
-	public void createDeliveryOrder(String action) throws ParseException {
+	public void createDeliveryOrder(String action) {
 		IDeliveryOrderSO deliveryOrderSO = null;
 		try {
 			String actionName=FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap().get("actionName");
