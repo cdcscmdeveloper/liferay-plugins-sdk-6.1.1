@@ -63,9 +63,6 @@ public class FlDocumentBackingBean extends BaseBackingBean<FlDocumentManagedBean
 	public static final String NAV_TO_MAINTAIN_CR = "MaintainCR";
 	public static final String NAV_TO_MAINTAIN_INV = "MaintainINV";
 	public static final String NAV_TO_MAINTAIN_FRN = "MaintainFRN";
-	
-	
-	
 
 	private IPagingDataModel<VFlDocument> flDocumentDataModel = new FlDocumentPagingDataModel();
 	
@@ -85,6 +82,7 @@ public class FlDocumentBackingBean extends BaseBackingBean<FlDocumentManagedBean
 		IInvoiceSO invoiceSO = null;
 		IReceivedNoteSO receivedNoteSO = null;
 		IFulfilmentOrderSO fulfilmentOrderSO = null;
+		String NavgPage=null;
 		FulfilmentReqDTO reqDTO = new FulfilmentReqDTO();
 		String docType = FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap().get("docType");
 		String flDocNo = FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap().get("docNo");
@@ -100,26 +98,21 @@ public class FlDocumentBackingBean extends BaseBackingBean<FlDocumentManagedBean
 			reqDTO.setFlRequestId(Long.valueOf(flDocId));
 			FulfilmentResDTO resDTO = fulfilmentRequestSO.retrieveFulfilmentRequest(reqDTO);
 			PurchaseRequestBackingBean PrBB=new PurchaseRequestBackingBean();
-			//PurchaseRequestManagedBean prMB= new PurchaseRequestManagedBean();
-			PrBB.setManagedBeanClazz(PurchaseRequestManagedBean.class);
 			PrBB.getManagedBean().setDocProcess(docType);
 			PrBB.getManagedBean().setButtonVal(buttonVal);
 			PrBB.getManagedBean().setFlDocId(flDocId);
 			PrBB.getManagedBean().setFulfilmentRequest(resDTO.getFlFulfilmentRequest());
-			return NAV_TO_MAINTAIN_PR;
+			NavgPage=NAV_TO_MAINTAIN_PR;
 		}else if(docType.equals("CR")){
 			fulfilmentRequestSO = (IFulfilmentRequestSO) BusinessDelegate.getInstance().getServiceObject("fl",IFulfilmentRequestSO.class);
 			reqDTO.setFlRequestId(Long.valueOf(flDocId));
 			FulfilmentResDTO resDTO = fulfilmentRequestSO.retrieveFulfilmentRequest(reqDTO);
 			ContractRequestBackingBean crBB = new ContractRequestBackingBean();
-			//ContractRequestManagedBean crMB=new ContractRequestManagedBean();
-			crBB.setManagedBeanClazz(ContractRequestManagedBean.class);
 			crBB.getManagedBean().setDocProcess(docType);
 			crBB.getManagedBean().setFlDocId(flDocId);
 			crBB.getManagedBean().setButtonVal(buttonVal);
 			crBB.getManagedBean().setFlRequest(resDTO.getFlFulfilmentRequest());
-			
-			return NAV_TO_MAINTAIN_CR;	
+			NavgPage=NAV_TO_MAINTAIN_CR;
 		}else if(docType.equals("PO")){
 			fulfilmentOrderSO = (IFulfilmentOrderSO) BusinessDelegate.getInstance().getServiceObject("fl",IFulfilmentOrderSO.class);
 			fulfilmentRequestSO = (IFulfilmentRequestSO) BusinessDelegate.getInstance().getServiceObject("fl",IFulfilmentRequestSO.class);
@@ -131,7 +124,7 @@ public class FlDocumentBackingBean extends BaseBackingBean<FlDocumentManagedBean
 			FulfilmentResDTO resFlDTO = fulfilmentRequestSO.retrieveFulfilmentRequest(reqDTO);
 			flOrderBB.getManagedBean().setButtonVal(buttonVal);
 			flOrderBB.getManagedBean().setFulfilmentRequest(resFlDTO.getFlFulfilmentRequest());
-			return NAV_TO_MAINTAIN_PO;
+			NavgPage=NAV_TO_MAINTAIN_PO;
 		}else if(docType.equals("CO")){
 			fulfilmentOrderSO = (IFulfilmentOrderSO) BusinessDelegate.getInstance().getServiceObject("fl",IFulfilmentOrderSO.class);
 			fulfilmentRequestSO = (IFulfilmentRequestSO) BusinessDelegate.getInstance().getServiceObject("fl",IFulfilmentRequestSO.class);
@@ -143,42 +136,36 @@ public class FlDocumentBackingBean extends BaseBackingBean<FlDocumentManagedBean
 			FulfilmentResDTO resFlDTO = fulfilmentRequestSO.retrieveFulfilmentRequest(reqDTO);
 			flOrderBB.getManagedBean().setButtonVal(buttonVal);
 			flOrderBB.getManagedBean().setFulfilmentRequest(resFlDTO.getFlFulfilmentRequest());
-			return NAV_TO_MAINTAIN_CO;			
+			NavgPage=NAV_TO_MAINTAIN_CO;
 		}else if(docType.equals("DO")){
 			deliveryOrderSO = (IDeliveryOrderSO) BusinessDelegate.getInstance().getServiceObject("fl",IDeliveryOrderSO.class);
 			reqDTO.setDeliveryOrderId(Long.valueOf(flDocId));
 			FulfilmentResDTO resDTO = deliveryOrderSO.retrieveDeliveryOrder(reqDTO);
 			DeliveryOrderBackingBean doBB=new DeliveryOrderBackingBean();
-			//DeliveryOrderManagedBean dpMB=new DeliveryOrderManagedBean();
-			doBB.setManagedBeanClazz(DeliveryOrderManagedBean.class);
 			doBB.getManagedBean().setButtonVal(buttonVal);
 			doBB.getManagedBean().setDocProcess(docType);
 			doBB.getManagedBean().setFlDeliveryOrder(resDTO.getFlDeliveryOrder());
-			return NAV_TO_MAINTAIN_DO;			
+			NavgPage=NAV_TO_MAINTAIN_DO;
 		}else if(docType.equals("IN")){
 			invoiceSO = (IInvoiceSO) BusinessDelegate.getInstance().getServiceObject("fl",IInvoiceSO.class);
 			reqDTO.setFlOrderId(Long.valueOf(flDocId));
 			FulfilmentResDTO resDTO = invoiceSO.retrieveInvoice(reqDTO);
 			InvoiceBackingBean invBB = new InvoiceBackingBean();
-			//InvoiceManagedBean invMB=new InvoiceManagedBean();
-			invBB.setManagedBeanClazz(InvoiceManagedBean.class);
 			invBB.getManagedBean().setButtonVal(buttonVal);
 			invBB.getManagedBean().setDocProcess(docType);
 			invBB.getManagedBean().setInvoice(resDTO.getInvoice());
-			return NAV_TO_MAINTAIN_INV;			
+			NavgPage=NAV_TO_MAINTAIN_INV;
 		}
 		else if(docType.equals("FN")){
 			receivedNoteSO = (IReceivedNoteSO) BusinessDelegate.getInstance().getServiceObject("fl",IReceivedNoteSO.class);
 			reqDTO.setFulfilmentNoteId(Long.valueOf(flDocId));
 			FulfilmentResDTO resDTO = receivedNoteSO.retrieveReceivedNote(reqDTO);
 			ReceivedNoteBackingBean recNoteBB = new ReceivedNoteBackingBean();
-			//ReceivedNoteManagedBean RecNoteMB=new ReceivedNoteManagedBean();
-			recNoteBB.setManagedBeanClazz(ReceivedNoteManagedBean.class);
 			recNoteBB.getManagedBean().setButtonVal(buttonVal);
 			recNoteBB.getManagedBean().setFulfilmentNote(resDTO.getFulfilmentNote());
-			return NAV_TO_MAINTAIN_FRN;			
+			NavgPage=NAV_TO_MAINTAIN_FRN;
 		}
-		return NAV_TO_MAINTAIN_PR;
+		return NavgPage;
 	}
 	
 	public void selectedUser(AjaxBehaviorEvent e) {
