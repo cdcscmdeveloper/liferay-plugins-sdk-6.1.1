@@ -2069,7 +2069,7 @@ table.ppThreePartsTable td {
 
 .ui-datatable.ppFixTdWidth table {
    /* table-layout:fixed;*/
-    width:90% !important;
+    width:100% !important;
 }
 
 .ui-dialog.ppDiaglogBg{

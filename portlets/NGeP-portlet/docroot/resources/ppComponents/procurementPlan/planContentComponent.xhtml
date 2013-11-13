@@ -22,7 +22,7 @@ xmlns:composite="http://java.sun.com/jsf/composite">
 			<p:tabView widgetVar="tvPlanContentVar" id="tvPlanContent" styleClass="ppPlanContent" dynamic="true" cache="true" orientation="top">
 				<p:tab id="tPlanHeader" title="#{lbl['lbl.pp.header']}">  
 					<p:panel id="pTabPlanHeader">
-					<h:inputHidden id="selectedTab" value="#{planBackingBean.managedBean.selectedTab}" />
+					
 					<h:inputHidden id="enableMtoFlag" value="#{planBackingBean.managedBean.enableMto}" />
 					<h:inputHidden id="enableDetailFlag" value="#{planBackingBean.managedBean.enableDetail}" />
 					<table class="ppThreePartsTable">
@@ -30,41 +30,37 @@ xmlns:composite="http://java.sun.com/jsf/composite">
 						<c:if test="#{cc.attrs.viewMode==PPConst.modeApproval}">
 							<tr>
 								<th>#{lbl['lbl.pp.check.to.approve']}</th>
-								<td class="ppSmallTd">:</td>
 								<td>
 									<p:selectBooleanCheckbox value="#{cc.attrs.selectedPlan.approved}">  
 			        				</p:selectBooleanCheckbox>  
 								</td>
 								<th>&nbsp;</th>
-								<td class="ppSmallTd">&nbsp;</td>
 								<td>&nbsp;</td>
 								<td>&nbsp;</td>
 							</tr>
 						</c:if>
 						 -->
 						<tr>
-							<th>#{lbl['lbl.pp.vot.type']}</th>
-							<td class="ppSmallTd">:</td>
-							<td>
-								<p:selectOneMenu value="#{cc.attrs.selectedPlanMaster.votType}">
+							<th>* <p:outputLabel value="#{lbl['lbl.pp.vot.type']}"/></th>
+							<td>	
+								<p:selectOneMenu value="#{cc.attrs.selectedPlanMaster.votType}" disabled="#{!cc.attrs.selectedPlanMaster.brandNew}">
 									<f:selectItem itemLabel="#{lbl['lbl.select']}" itemValue="0" />
 									<f:selectItems value="#{planBackingBean.votTypeOptions()}"/>
 									<p:ajax event="change" update="somProjList, somMaksudCode"  /> 
 								</p:selectOneMenu>
 								<br/>
-							
 							</td>
-							<th>&nbsp;</th>
-							<td>&nbsp;</td>
-							<td>&nbsp;</td>
+							<th><p:outputLabel value="#{lbl['lbl.pp.status']}"/></th>
+							<td>#{cc.attrs.selectedPlan.statusId}</td>
 							<td>&nbsp;</td>
 						</tr>
 						<tr>
-							<th>#{lbl['lbl.pp.ministry.code.name']}</th>
-							<td class="ppSmallTd">:</td>
-							<td><p:inputText disabled="true" value="#{cc.attrs.selectedPlanMaster.orgProfile.parentOrgProfile.parentOrgProfile.orgName}" /></td>
-							<th>* #{lbl['lbl.pp.procurement.mode']}</th>
-							<td class="ppSmallTd">:</td>
+							<th><p:outputLabel value="#{lbl['lbl.pp.ministry.code.name']}"/></th>
+							<td>
+								#{cc.attrs.selectedPlanMaster.orgProfile.parentOrgProfile.parentOrgProfile.orgCode} /	
+								#{cc.attrs.selectedPlanMaster.orgProfile.parentOrgProfile.parentOrgProfile.orgName}
+							</td>
+							<th>* <p:outputLabel value="#{lbl['lbl.pp.procurement.mode']}"/></th>
 							<td>
 								<p:selectOneMenu id="procurementMode" value="#{cc.attrs.selectedPlanMaster.procurementMode}"
 									disabled="#{!cc.attrs.selectedPlanMaster.brandNew || cc.attrs.selectedPlanMaster.mtoPlan}">
@@ -77,25 +73,24 @@ xmlns:composite="http://java.sun.com/jsf/composite">
 							<td>&nbsp;</td>
 						</tr>
 						<tr>
-							<th>#{lbl['lbl.pp.jabatan.code.name']}</th>
-							<td class="ppSmallTd">:</td>
-							<td><p:inputText disabled="true" value="#{cc.attrs.selectedPlanMaster.orgProfile.parentOrgProfile.orgName}" /></td>
-							<th>* #{lbl['lbl.pp.plan.description']}</th>
-							<td class="ppSmallTd">:</td>
+							<th><p:outputLabel value="#{lbl['lbl.pp.jabatan.code.name']}"/></th>
+							<td>
+								#{cc.attrs.selectedPlanMaster.orgProfile.parentOrgProfile.orgCode} /
+								#{cc.attrs.selectedPlanMaster.orgProfile.parentOrgProfile.orgName}
+							</td>
+							<th>* <p:outputLabel value="#{lbl['lbl.pp.plan.description']}"/></th>
 							<td>
 								<p:inputText value="#{cc.attrs.selectedPlan.planDesc}" disabled="#{!cc.attrs.selectedPlan.editable}"/>
 							</td>
 							<td>&nbsp;</td>
-							
 						</tr>
 						<tr>
-							<th>#{lbl['lbl.pp.ptj.code.name']}</th>
-							<td class="ppSmallTd">:</td>
+							<th><p:outputLabel value="#{lbl['lbl.pp.ptj.code.name']}"/></th>
 							<td>
-								<p:inputText disabled="true" value="#{cc.attrs.selectedPlanMaster.orgProfile.orgName}" />
+								#{cc.attrs.selectedPlanMaster.orgProfile.orgCode} / 
+								#{cc.attrs.selectedPlanMaster.orgProfile.orgName} 
 							</td>
-							<th>#{lbl['lbl.pp.project.name']}</th>
-							<td class="ppSmallTd">:</td>
+							<th><p:outputLabel value="#{lbl['lbl.pp.project.name']}"/></th>
 							<td>
 								<p:selectOneMenu id="somProjList" value="#{cc.attrs.selectedPlanMaster.projectId}"
 									disabled="#{!cc.attrs.selectedPlanMaster.brandNew || cc.attrs.selectedPlanMaster.votType!=PPConst.votPs}">
@@ -104,27 +99,92 @@ xmlns:composite="http://java.sun.com/jsf/composite">
 								</p:selectOneMenu>
 							</td>
 							<td>&nbsp;</td>
-
 						</tr>
 						<tr>
-							<th>#{lbl['lbl.pp.status']}</th>
-							<td class="ppSmallTd">:</td>
+							<th>&nbsp;</th>
+							<td>&nbsp;</td>
+							<th><p:outputLabel value="#{lbl['lbl.pp.total.estimated.amount']}"/></th>
+							<td>#{cc.attrs.selectedPlan.estimatedAmount}</td>
+							<td>&nbsp;</td>
+						</tr>
+						
+						<!-- Issue/Received/Charge PTJ -->
+						<tr>
+							<th>* <p:outputLabel value="#{lbl['lbl.pp.issue.ptj']}"/></th>
 							<td>
-								<p:inputText disabled="true" value="#{cc.attrs.selectedPlan.statusId}" />
+								<p:selectOneMenu value="#{cc.attrs.selectedPlanMaster.issueOrgProfile.parentOrgProfile.orgProfileId}"
+									disabled="#{!cc.attrs.selectedPlanMaster.brandNew}">
+									<f:selectItem itemLabel="#{lbl['lbl.select']}" itemValue="0"/>
+									<f:selectItems value="#{planBackingBean.departmentOptions()}" var="obj" 
+										itemLabel="#{obj.orgName}" itemValue="#{obj.orgProfileId}"  />
+									<p:ajax event="change" update="somIssuePtj"/>
+								</p:selectOneMenu>
 							</td>
-							<th>#{lbl['lbl.pp.total.estimated.amount']}</th>
-							<td class="ppSmallTd">:</td>
+							<th>* <p:outputLabel value="#{lbl['lbl.pp.issue.ptj']}"/></th>
 							<td>
-								<p:inputText disabled="true" value="#{cc.attrs.selectedPlan.estimatedAmount}" />
+								<p:selectOneMenu id="somIssuePtj" value="#{cc.attrs.selectedPlanMaster.issueOrgProfile.orgProfileId}"
+									disabled="#{!cc.attrs.selectedPlanMaster.brandNew || cc.attrs.selectedPlanMaster.issueOrgProfile.parentOrgProfile.orgProfileId=='0' 
+										|| cc.attrs.selectedPlanMaster.issueOrgProfile.parentOrgProfile.orgProfileId==null}">
+									<f:selectItem itemLabel="#{lbl['lbl.select']}" itemValue="0"/>
+									<f:selectItems value="#{planBackingBean.divisionOptions(cc.attrs.selectedPlanMaster.issueOrgProfile.parentOrgProfile.orgProfileId)}" 
+										var="obj" itemLabel="#{obj.orgName}" itemValue="#{obj.orgProfileId}"  />
+								</p:selectOneMenu>
 							</td>
 							<td>&nbsp;</td>
 						</tr>
+						<p:outputPanel rendered="#{cc.attrs.selectedPlanMaster.planType==PPConst.planTypeExpenditure}">
+							<tr>
+								<th>* <p:outputLabel value="#{lbl['lbl.pp.received.jabatan']}"/></th>
+								<td>
+									<p:selectOneMenu value="#{cc.attrs.selectedPlanMaster.receivedOrgProfile.parentOrgProfile.orgProfileId}"
+										disabled="#{!cc.attrs.selectedPlanMaster.brandNew}">
+										<f:selectItem itemLabel="#{lbl['lbl.select']}" itemValue="0"/>
+										<f:selectItems value="#{planBackingBean.departmentOptions()}" var="obj" 
+											itemLabel="#{obj.orgName}" itemValue="#{obj.orgProfileId}"  />
+										<p:ajax event="change" update="somReceivedPtj"/>
+									</p:selectOneMenu>
+								</td>
+								<th>* <p:outputLabel value="#{lbl['lbl.pp.received.ptj']}"/></th>
+								<td>
+									<p:selectOneMenu id="somReceivedPtj" value="#{cc.attrs.selectedPlanMaster.receivedOrgProfile.orgProfileId}"
+										disabled="#{!cc.attrs.selectedPlanMaster.brandNew || cc.attrs.selectedPlanMaster.receivedOrgProfile.parentOrgProfile.orgProfileId=='0' 
+											|| cc.attrs.selectedPlanMaster.receivedOrgProfile.parentOrgProfile.orgProfileId==null}">
+										<f:selectItem itemLabel="#{lbl['lbl.select']}" itemValue="0"/>
+										<f:selectItems value="#{planBackingBean.divisionOptions(cc.attrs.selectedPlanMaster.receivedOrgProfile.parentOrgProfile.orgProfileId)}" 
+											var="obj" itemLabel="#{obj.orgName}" itemValue="#{obj.orgProfileId}"  />
+									</p:selectOneMenu>
+								</td>
+								<td>&nbsp;</td>
+							</tr>
+							<tr>
+								<th>* <p:outputLabel value="#{lbl['lbl.pp.charge.jabatan']}"/></th>
+								<td>
+									<p:selectOneMenu value="#{cc.attrs.selectedPlanMaster.chargeOrgProfile.parentOrgProfile.orgProfileId}"
+										disabled="#{!cc.attrs.selectedPlanMaster.brandNew}">
+										<f:selectItem itemLabel="#{lbl['lbl.select']}" itemValue="0"/>
+										<f:selectItems value="#{planBackingBean.departmentOptions()}" var="obj" 
+											itemLabel="#{obj.orgName}" itemValue="#{obj.orgProfileId}"  />
+										<p:ajax event="change" update="somChargePtj"/>
+									</p:selectOneMenu>
+								</td>
+								<th>* <p:outputLabel value="#{lbl['lbl.pp.charge.ptj']}"/></th>
+								<td>
+									<p:selectOneMenu id="somChargePtj" value="#{cc.attrs.selectedPlanMaster.chargeOrgProfile.orgProfileId}"
+										disabled="#{!cc.attrs.selectedPlanMaster.brandNew || cc.attrs.selectedPlanMaster.chargeOrgProfile.parentOrgProfile.orgProfileId=='0'
+											|| cc.attrs.selectedPlanMaster.chargeOrgProfile.parentOrgProfile.orgProfileId==null}">
+										<f:selectItem itemLabel="#{lbl['lbl.select']}" itemValue="0"/>
+										<f:selectItems value="#{planBackingBean.divisionOptions(cc.attrs.selectedPlanMaster.chargeOrgProfile.parentOrgProfile.orgProfileId)}" 
+											var="obj" itemLabel="#{obj.orgName}" itemValue="#{obj.orgProfileId}"  />
+									</p:selectOneMenu>
+								</td>
+								<td>&nbsp;</td>
+							</tr>
+						</p:outputPanel>
+						
 
 						<p:outputPanel rendered="#{cc.attrs.selectedPlanMaster.planType==PPConst.planTypeExpenditure}">
-							<tr><td colspan="7"><hr/></td></tr>
 							<tr>
-								<th>* #{lbl['lbl.pp.fulfillment.type']}</th>
-								<td class="ppSmallTd">:</td>
+								<th>* <p:outputLabel value="#{lbl['lbl.pp.fulfillment.type']}"/></th>
 								<td>
 									<p:selectOneMenu id="somFulfillment" value="#{cc.attrs.selectedPlanMaster.fulfilmentType}" 
 										disabled="#{cc.attrs.selectedPlanMaster.procurementMode==PPConst.procurementDirectPurchase || 
@@ -136,8 +196,7 @@ xmlns:composite="http://java.sun.com/jsf/composite">
 									</p:selectOneMenu>
 									<p:tooltip for="somFulfillment" value="Fade effect is used by default" showEffect="fade" hideEffect="fade" />
 								</td>
-								<th>* #{lbl['lbl.pp.favourite.options']}</th>
-								<td class="ppSmallTd">:</td>
+								<th>* <p:outputLabel value="#{lbl['lbl.pp.favourite.options']}"/></th>
 								<td>
 									<p:selectOneRadio id="sorFavOpt" value="#{cc.attrs.selectedPlan.favouriteOption}" 
 										disabled="#{cc.attrs.selectedPlanMaster.procurementMode==PPConst.procurementExistingContract 
@@ -150,8 +209,7 @@ xmlns:composite="http://java.sun.com/jsf/composite">
 								<td>&nbsp;</td>
 							</tr>
 							<tr>
-								<th>#{lbl['lbl.pp.maksud.code']}</th>
-								<td class="ppSmallTd">:</td>
+								<th><p:outputLabel value="#{lbl['lbl.pp.maksud.code']}"/></th>
 								<td>
 									<p:selectOneMenu id="somMaksudCode" value="#{cc.attrs.selectedPlanMaster.maksudId}" 
 										disabled="#{!cc.attrs.selectedPlanMaster.brandNew || cc.attrs.selectedPlanMaster.votType!=PPConst.votWithout}">
@@ -162,18 +220,16 @@ xmlns:composite="http://java.sun.com/jsf/composite">
 									</p:selectOneMenu>
 								</td>
 								<th>&nbsp;</th>
-								<td class="ppSmallTd">&nbsp;</td>
 								<td>&nbsp;</td>
 								<td>&nbsp;</td>
 							</tr>
 				
 						</p:outputPanel>
+						
 
 						<p:outputPanel rendered="#{cc.attrs.selectedPlanMaster.planType==PPConst.planTypeProcurement}">
-							<tr><td colspan="7"><hr/></td></tr>
 							<tr>
-								<th>* #{lbl['lbl.pp.quotation.tender.type']}</th>
-								<td class="ppSmallTd">:</td>
+								<th>* <p:outputLabel value="#{lbl['lbl.pp.quotation.tender.type']}"/></th>
 								<td>
 									<p:selectOneMenu value="#{cc.attrs.selectedPlanMaster.qtType}" 
 										disabled="#{!cc.attrs.selectedPlanMaster.brandNew}" >
@@ -181,8 +237,7 @@ xmlns:composite="http://java.sun.com/jsf/composite">
 										<f:selectItems value="#{planBackingBean.qtTypeOptions()}" />
 									</p:selectOneMenu>
 								</td>
-								<th>#{lbl['lbl.pp.item.origin.type']}</th>
-								<td class="ppSmallTd">:</td>
+								<th><p:outputLabel value="#{lbl['lbl.pp.item.origin.type']}"/></th>
 								<td>
 									<p:selectOneMenu id="somItemOrigin" value="#{cc.attrs.selectedPlanMaster.itemOrigin}" 
 										disabled="#{!cc.attrs.selectedPlanMaster.brandNew || cc.attrs.selectedPlanMaster.mtoPlan}">
@@ -196,10 +251,8 @@ xmlns:composite="http://java.sun.com/jsf/composite">
 							</tr>
 							<tr>
 								<th>&nbsp;</th>
-								<td class="ppSmallTd">&nbsp;</td>
 								<td>&nbsp;</td>
-								<th>* #{lbl['lbl.pp.mto.required']}</th>
-								<td class="ppSmallTd">:</td>
+								<th>* <p:outputLabel value="#{lbl['lbl.pp.mto.required']}"/></th>
 								<td>
 									<p:selectOneRadio required="false" id="sorMto" value="#{cc.attrs.selectedPlanMaster.requiredMto}" 
 										disabled="#{planBackingBean.lockMto()}" >  
@@ -212,84 +265,9 @@ xmlns:composite="http://java.sun.com/jsf/composite">
 								<td>&nbsp;</td>
 							</tr>
 						</p:outputPanel>
-						
-						<tr><td colspan="7"><hr/></td></tr>
-							
-						<!-- Issue/Received/Charge PTJ -->
+
 						<tr>
-							<th>* #{lbl['lbl.pp.issue.ptj']}</th>
-							<td class="ppSmallTd">:</td>
-							<td colspan="4">
-								<p:selectOneMenu value="#{cc.attrs.selectedPlanMaster.issueOrgProfile.parentOrgProfile.orgProfileId}"
-									disabled="#{!cc.attrs.selectedPlanMaster.brandNew}">
-									<f:selectItem itemLabel="#{lbl['lbl.select']}" itemValue="0"/>
-									<f:selectItems value="#{planBackingBean.departmentOptions()}" var="obj" 
-										itemLabel="#{obj.orgName}" itemValue="#{obj.orgProfileId}"  />
-									<p:ajax event="change" update="somIssuePtj"/>
-								</p:selectOneMenu>
-								&nbsp;
-								<p:selectOneMenu id="somIssuePtj" value="#{cc.attrs.selectedPlanMaster.issueOrgProfile.orgProfileId}"
-									disabled="#{!cc.attrs.selectedPlanMaster.brandNew || cc.attrs.selectedPlanMaster.issueOrgProfile.parentOrgProfile.orgProfileId=='0' 
-										|| cc.attrs.selectedPlanMaster.issueOrgProfile.parentOrgProfile.orgProfileId==null}">
-									<f:selectItem itemLabel="#{lbl['lbl.select']}" itemValue="0"/>
-									<f:selectItems value="#{planBackingBean.divisionOptions(cc.attrs.selectedPlanMaster.issueOrgProfile.parentOrgProfile.orgProfileId)}" 
-										var="obj" itemLabel="#{obj.orgName}" itemValue="#{obj.orgProfileId}"  />
-								</p:selectOneMenu>
-							</td>
-							<td>&nbsp;</td>
-						</tr>
-						<p:outputPanel rendered="#{cc.attrs.selectedPlanMaster.planType==PPConst.planTypeExpenditure}">
-							<tr>
-								<th>* #{lbl['lbl.pp.received.ptj']}</th>
-								<td class="ppSmallTd">:</td>
-								<td colspan="4">
-									<p:selectOneMenu value="#{cc.attrs.selectedPlanMaster.receivedOrgProfile.parentOrgProfile.orgProfileId}"
-										disabled="#{!cc.attrs.selectedPlanMaster.brandNew}">
-										<f:selectItem itemLabel="#{lbl['lbl.select']}" itemValue="0"/>
-										<f:selectItems value="#{planBackingBean.departmentOptions()}" var="obj" 
-											itemLabel="#{obj.orgName}" itemValue="#{obj.orgProfileId}"  />
-										<p:ajax event="change" update="somReceivedPtj"/>
-									</p:selectOneMenu>
-									&nbsp;
-									<p:selectOneMenu id="somReceivedPtj" value="#{cc.attrs.selectedPlanMaster.receivedOrgProfile.orgProfileId}"
-										disabled="#{!cc.attrs.selectedPlanMaster.brandNew || cc.attrs.selectedPlanMaster.receivedOrgProfile.parentOrgProfile.orgProfileId=='0' 
-											|| cc.attrs.selectedPlanMaster.receivedOrgProfile.parentOrgProfile.orgProfileId==null}">
-										<f:selectItem itemLabel="#{lbl['lbl.select']}" itemValue="0"/>
-										<f:selectItems value="#{planBackingBean.divisionOptions(cc.attrs.selectedPlanMaster.receivedOrgProfile.parentOrgProfile.orgProfileId)}" 
-											var="obj" itemLabel="#{obj.orgName}" itemValue="#{obj.orgProfileId}"  />
-									</p:selectOneMenu>
-								</td>
-								<td>&nbsp;</td>
-							</tr>
-							<tr>
-								<th>* #{lbl['lbl.pp.charge.ptj']}</th>
-								<td class="ppSmallTd">:</td>
-								<td colspan="4">
-									<p:selectOneMenu value="#{cc.attrs.selectedPlanMaster.chargeOrgProfile.parentOrgProfile.orgProfileId}"
-										disabled="#{!cc.attrs.selectedPlanMaster.brandNew}">
-										<f:selectItem itemLabel="#{lbl['lbl.select']}" itemValue="0"/>
-										<f:selectItems value="#{planBackingBean.departmentOptions()}" var="obj" 
-											itemLabel="#{obj.orgName}" itemValue="#{obj.orgProfileId}"  />
-										<p:ajax event="change" update="somChargePtj"/>
-									</p:selectOneMenu>
-									&nbsp;
-									<p:selectOneMenu id="somChargePtj" value="#{cc.attrs.selectedPlanMaster.chargeOrgProfile.orgProfileId}"
-										disabled="#{!cc.attrs.selectedPlanMaster.brandNew || cc.attrs.selectedPlanMaster.chargeOrgProfile.parentOrgProfile.orgProfileId=='0'
-											|| cc.attrs.selectedPlanMaster.chargeOrgProfile.parentOrgProfile.orgProfileId==null}">
-										<f:selectItem itemLabel="#{lbl['lbl.select']}" itemValue="0"/>
-										<f:selectItems value="#{planBackingBean.divisionOptions(cc.attrs.selectedPlanMaster.chargeOrgProfile.parentOrgProfile.orgProfileId)}" 
-											var="obj" itemLabel="#{obj.orgName}" itemValue="#{obj.orgProfileId}"  />
-									</p:selectOneMenu>
-								</td>
-								<td>&nbsp;</td>
-							</tr>
-						</p:outputPanel>
-						
-						<tr><td colspan="7"><hr/></td></tr>
-						
-						<tr>
-							<th>* #{lbl['lbl.pp.plan.approver']}</th>
-							<td class="ppSmallTd">:</td>
+							<th>* <p:outputLabel value="#{lbl['lbl.pp.plan.approver']}"/></th>
 							<td>
 								<p:selectOneMenu value="#{cc.attrs.selectedPlan.approver.userId}"
 									disabled="#{!cc.attrs.selectedPlan.editable}">
@@ -298,27 +276,25 @@ xmlns:composite="http://java.sun.com/jsf/composite">
 								</p:selectOneMenu>
 							</td>
 					        <th>&nbsp;</th>
-							<td class="ppSmallTd">&nbsp;</td>
 							<td>&nbsp;</td>
 							<td>&nbsp;</td>
 						</tr>
 						<tr>
-							<th>* #{lbl['lbl.pp.require.verification']}</th>
-							<td class="ppSmallTd">:</td>
+							<th>* <p:outputLabel value="#{lbl['lbl.pp.require.verification']}"/></th>
 							<td>
-								<p:selectBooleanCheckbox id="sbcbPvo" value="#{cc.attrs.selectedPlan.submissionType}"
+								<p:selectOneRadio  id="sorPvo" required="false" value="#{cc.attrs.selectedPlan.submissionType}"
 									disabled="#{!cc.attrs.selectedPlan.editable}">
-									   <p:ajax event="change" update="opPvo, sorPvoLvl" />
-								</p:selectBooleanCheckbox>
+									<f:selectItem itemLabel="Yes" itemValue="true" />
+									<f:selectItem itemLabel="No" itemValue="false" />
+									<p:ajax event="change" update="opPvo, sorPvoLvl" />
+								</p:selectOneRadio> 
 					        </td>
 					        <th>&nbsp;</th>
-							<td class="ppSmallTd">&nbsp;</td>
 							<td>&nbsp;</td>
 							<td>&nbsp;</td>
 						</tr>
 						<tr>
-							<th>* #{lbl['lbl.pp.verification.level']}</th>
-							<td class="ppSmallTd">:</td>
+							<th>* <p:outputLabel value="#{lbl['lbl.pp.verification.level']}"/></th>
 							<td>
 								 <p:selectOneRadio disabled="#{!cc.attrs.selectedPlan.submissionType 
 								 	|| !cc.attrs.selectedPlan.brandNew}" 
@@ -327,8 +303,7 @@ xmlns:composite="http://java.sun.com/jsf/composite">
 						            <p:ajax event="change" update="opPvo" />
 						        </p:selectOneRadio> 
 					        </td>
-				         	<th>* #{lbl['lbl.pp.plan.verification.officer']}</th>
-							<td class="ppSmallTd">:</td>
+				         	<th>* <p:outputLabel value="#{lbl['lbl.pp.plan.verification.officer']}"/></th>
 							<td>
 								<p:outputPanel id="opPvo">	
 									<ui:repeat var="vo" value="#{cc.attrs.selectedPlan.verificationOfficers}" varStatus="status">
@@ -357,11 +332,9 @@ xmlns:composite="http://java.sun.com/jsf/composite">
 							<td>&nbsp;</td>
 				        </tr>
 						<c:if test="#{cc.attrs.viewMode==PPConst.modeVerification || cc.attrs.viewMode==PPConst.modeApproval}">
-							<tr><td colspan="7"><hr/></td></tr>
 							<!-- Revision Types -->
 							<tr>
-								<th>* #{lbl['lbl.pp.revision.type']}</th>
-								<td class="ppSmallTd">:</td>
+								<th>* <p:outputLabel value="#{lbl['lbl.pp.revision.type']}"/></th>
 								<td>
 									<p:selectOneRadio required="false" id="sorRevType">  
 							            <f:selectItem itemLabel="#{lbl['lbl.pp.self.revise']}" itemValue="1" /> &nbsp;
@@ -370,51 +343,35 @@ xmlns:composite="http://java.sun.com/jsf/composite">
 							        </p:selectOneRadio>  
 								</td>
 								<th>&nbsp;</th>
-								<td class="ppSmallTd">&nbsp;</td>
 								<td>&nbsp;</td>
 								<td>&nbsp;</td>
 							</tr>
 							<!-- Rejection Reason -->
 							<tr>
-								<th>* #{lbl['lbl.pp.rejection.reason']}</th>
-								<td class="ppSmallTd">:</td>
+								<th>* <p:outputLabel value="#{lbl['lbl.pp.rejection.reason']}"/></th>
 								<td>
-									<p:selectManyCheckbox value="#{cc.attrs.selectedPlan.rejectReasonIds}" >  
-							            <f:selectItems value="#{planBackingBean.rejectionReasonOptions()}"
-							            	 var="obj" itemLabel="#{obj.reasonCode}" itemValue="#{obj.reasonId}"  />  
-							            	 <p:ajax event="change" listener="#{planBackingBean.testAjaxChangeEvent}"/>
-							        </p:selectManyCheckbox>  
-							        <p:selectManyCheckbox value="#{cc.attrs.selectedPlan.rejectReasonIds}"
-							        valueChangeListener="#{planBackingBean.testValueChangeEvent}" >  
+									<p:selectManyCheckbox value="#{cc.attrs.selectedPlan.pmRejectReasonIds}" >  
 							            <f:selectItems value="#{planBackingBean.rejectionReasonOptions()}"
 							            	 var="obj" itemLabel="#{obj.reasonCode}" itemValue="#{obj.reasonId}"  />  
 							            	 <p:ajax event="change"/>
 							        </p:selectManyCheckbox>  
 								</td>
 								<th>&nbsp;</th>
-								<td class="ppSmallTd">&nbsp;</td>
 								<td>&nbsp;</td>
 								<td>&nbsp;</td>
 							</tr>
 							<tr>
-								<th>* #{lbl['lbl.pp.others']}</th>
-								<td class="ppSmallTd">:</td>
+								<th>* <p:outputLabel value="#{lbl['lbl.pp.others']}"/></th>
 								<td>
-									<p:inputText id="itRejectOthers" value="#{planBackingBean.managedBean.customReason}" disabled="#{!planBackingBean.managedBean.reasonRejectOther}" />  
+									<p:inputText id="itRejectOthers" value="#{cc.attrs.selectedPlan.customReason}" 
+										disabled="#{!planBackingBean.managedBean.reasonRejectOther}" />  
 								</td>
 								<th>&nbsp;</th>
-								<td class="ppSmallTd">&nbsp;</td>
 								<td>&nbsp;</td>
 								<td>&nbsp;</td>
 							</tr>
 						</c:if>
-						
-						
-						
 					</table>
-					
-							        
-							
 					</p:panel>
 					<br/>
 					
@@ -430,41 +387,27 @@ xmlns:composite="http://java.sun.com/jsf/composite">
 				<p:tab id="tPlanRmk" title="#{lbl['lbl.pp.remarks']}">
 					<br/>  
 					<p:panel id="pTabPlanRmk">
-						<table class="ppRmkTable">
-							<tr>
-								<th>#{lbl['lbl.pp.remarks']}</th>
-								<td class="ppSmallTd">:</td>
-								<td>
-									<p:dataTable id="dtPlanRemark" styleClass="ppRmkList" var="remarkObj" rowIndexVar="rowIndex"
-										value="#{cc.attrs.selectedPlan.ppRemarks}"
-										emptyMessage="#{lbl['lbl.pp.pls.add.item']}">  
-				                        <p:column headerText="#{lbl['lbl.pp.seq']}">  
-				                            #{rowIndex+1}
-				                        </p:column>   
-				                        <p:column headerText="#{lbl['lbl.pp.comment']}">  
-				                            <p:inputTextarea value="#{remarkObj.remark}" rows="2" cols="50" 
-				                            	disabled="#{!remarkObj.brandNew}" />
-				                        </p:column>  
-				                        <p:column headerText="#{lbl['lbl.pp.created.by']}">  
-				                            <p:inputText value="#{remarkObj.createdBy}" disabled="true" />  
-				                        </p:column> 
-				                        <p:column headerText="#{lbl['lbl.pp.created.date']}">  
-				                            <p:inputText value="#{remarkObj.createdDate}" disabled="true" />  
-				                        </p:column>  
-				                </p:dataTable>  
-								</td>
-							</tr>
-							<tr>
-								<th>&nbsp;</th>
-								<td class="ppSmallTd">&nbsp;</td>
-								<td>
-									<div class="ppRightBtn">
-										<p:commandButton id="cbAddPlanRemark" value="#{lbl['lbl.pp.add']}" update="dtPlanRemark"
-											action="#{planBackingBean.addPlanRemark()}" />
-									</div>
-								</td>
-							</tr>
-						</table>
+						<p:dataTable id="dtPlanRemark" styleClass="ppRmkList" var="remarkObj" rowIndexVar="rowIndex"
+								value="#{cc.attrs.selectedPlan.ppRemarks}"
+								emptyMessage="#{lbl['lbl.pp.pls.add.item']}">  
+		                        <p:column headerText="#{lbl['lbl.pp.seq']}">  
+		                            #{rowIndex+1}
+		                        </p:column>   
+		                        <p:column headerText="#{lbl['lbl.pp.comment']}">  
+		                            <p:inputTextarea value="#{remarkObj.remark}" rows="2" cols="50" 
+		                            	disabled="#{!remarkObj.brandNew}" />
+		                        </p:column>  
+		                        <p:column headerText="#{lbl['lbl.pp.created.by']}">  
+		                            <p:inputText value="#{remarkObj.createdBy}" disabled="true" />  
+		                        </p:column> 
+		                        <p:column headerText="#{lbl['lbl.pp.created.date']}">  
+		                            <p:inputText value="#{remarkObj.createdDate}" disabled="true" />  
+		                        </p:column>  
+		                </p:dataTable>  
+						<div class="ppRightBtn">
+							<p:commandButton id="cbAddPlanRemark" value="#{lbl['lbl.pp.add']}" update="dtPlanRemark"
+								action="#{planBackingBean.addPlanRemark()}" />
+						</div>
 					</p:panel>
 				</p:tab>
 			</p:tabView>

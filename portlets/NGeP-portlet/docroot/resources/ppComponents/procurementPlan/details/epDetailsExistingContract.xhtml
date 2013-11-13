@@ -27,15 +27,15 @@ xmlns:c="http://java.sun.com/jsp/jstl/core">
 	        <p:column headerText="#{lbl['lbl.pp.contract.class']}">  
             	#{ppPlan.contractInd}
 	        </p:column>   
-        	<p:column headerText="#{lbl['lbl.pp.planned.activities.startdate']}">  
+        	<p:column headerText="#{lbl['lbl.pp.planned.activity.startdate']}">  
 	            #{ppPlan.planStartDate}
 	        </p:column>  
-	        <p:column headerText="#{lbl['lbl.pp.planned.activities.enddate']}">  
+	        <p:column headerText="#{lbl['lbl.pp.planned.activity.enddate']}">  
 	            #{ppPlan.planEndDate}
 	        </p:column>	    
 	        <p:column headerText="#{lbl['lbl.pp.action']}">  
                 <p:commandLink value="#{lbl['lbl.pp.edit']}" update="@([id$=dlItemDetailsEc])" 
-					action="#{planBackingBean.showPpPlan(ppPlan)}" oncomplete="dlItemDetailsEcModal.show();"/>
+					action="#{planBackingBean.showPpPlan(ppPlan)}" oncomplete="dlItemDetailsModal.show();"/>
                 &nbsp;&nbsp;
                 <p:commandLink value="#{lbl['lbl.pp.delete']}"
                   	update="dtEpItem" rendered="#{ppPlan.brandNew || cc.attrs.viewMode==PPConst.modeRevision}"
@@ -62,8 +62,8 @@ xmlns:c="http://java.sun.com/jsp/jstl/core">
 			        	lbl['lbl.pp.program.activiti.code'] : (cc.attrs.selectedPlanMaster.votType==PPConst.votPs ?
 			        	lbl['lbl.pp.projek.setia.code'] : lbl['lbl.pp.amanah.code'])}">    
 		                 #{cc.attrs.selectedPlanMaster.votType==PPConst.votBt? 
-				        	ppItem.progAct.activityId : (cc.attrs.selectedPlanMaster.votType==PPConst.votPs ?
-				        	ppItem.projSetia.activityId : ppItem.amanah.activityId)}
+				        	ppItem.progActId : (cc.attrs.selectedPlanMaster.votType==PPConst.votPs ?
+				        	ppItem.projSetiaId : ppItem.amanahId)}
 			        </p:column>  
 		    	</p:dataTable>  
             </p:rowExpansion>
@@ -73,7 +73,7 @@ xmlns:c="http://java.sun.com/jsp/jstl/core">
     	<!-- Button(s) -->
     	<c:if test="#{cc.attrs.viewMode==PPConst.modeNew || cc.attrs.viewMode==PPConst.modeRevision}">
     		<div class="ppRightBtn">
-				<p:commandButton value="#{lbl['lbl.pp.add.item']}" action="#{planBackingBean.showPpPlan(null)}"
+				<p:commandButton value="#{lbl['lbl.pp.add']}" action="#{planBackingBean.showPpPlan(null)}"
 					 oncomplete="dlItemDetailsModal.show()" update="dlItemDetails" /> 
 		 		<br/>
 		 		<br/>

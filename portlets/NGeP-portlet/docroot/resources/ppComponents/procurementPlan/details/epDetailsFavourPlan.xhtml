@@ -10,7 +10,7 @@ xmlns:c="http://java.sun.com/jsp/jstl/core">
 
 	<p:outputPanel id="opPlanEpFavorPlan">
 		<!-- Favourite Activities -->
-		<p:panel header="#{lbl['lbl.pp.favourite.activities']}">
+		<p:panel header="#{lbl['lbl.pp.favourite.plan.activities']}" toggleable="true">
 			<table class="ppTwoPartsTable">
 				<tr>
 					<th>#{lbl['lbl.pp.plan.name']}</th>
@@ -31,29 +31,35 @@ xmlns:c="http://java.sun.com/jsp/jstl/core">
 					</td>
 				</tr>
 				<!-- Repeat this based on recurring frequency -->
-				<ui:repeat var="fav" value="#{planBackingBean.managedBean.selectedPlanItem.favorPlanRecurFreq.ppRecurFreqDtls}" varStatus="status">
-					<tr>
-						<th>#{lbl['lbl.pp.planned.activities.start.end.month']} ${status.index+1}</th>
-						<td class="ppSmallTd">:</td>
-						<td>
-							<p:selectOneMenu value="#{fav.intPlanStartMonth}"
-								disabled="#{!planBackingBean.managedBean.selectedPlanItem.brandNew &amp;&amp; cc.attrs.viewMode!=PPConst.modeRevision}">
-								<f:selectItem itemLabel="#{lbl['lbl.select']}" itemValue="12"/>
-								<f:selectItems value="#{planBackingBean.shortMonths()}"/>
-							</p:selectOneMenu>
-							&nbsp;
-							<p:selectOneMenu value="#{fav.intPlanEndMonth}"
-								disabled="#{!planBackingBean.managedBean.selectedPlanItem.brandNew &amp;&amp; cc.attrs.viewMode!=PPConst.modeRevision}">
-								<f:selectItem itemLabel="#{lbl['lbl.select']}" itemValue="12"/>
-								<f:selectItems value="#{planBackingBean.shortMonths()}"/>
-							</p:selectOneMenu>
-						</td>
-					</tr>
-				</ui:repeat>	
+				<tr>
+					<td colspan="3">
+						<p:dataTable id="dtFavItem" styleClass="ppFixTdWidth" var="fav" 
+							value="#{planBackingBean.managedBean.selectedPlanItem.favorPlanRecurFreq.ppRecurFreqDtls}"  
+							rowIndexVar="rowIndex">    
+							<p:column styleClass="ppSmallTd" headerText="#{lbl['lbl.pp.seq']}">  
+				             	#{rowIndex+1} 
+					        </p:column>   
+					        <p:column headerText="#{lbl['lbl.pp.planned.activity.startmonth']}">  
+					        	<p:selectOneMenu value="#{fav.intPlanStartMonth}"
+									disabled="#{!planBackingBean.managedBean.selectedPlanItem.brandNew &amp;&amp; cc.attrs.viewMode!=PPConst.modeRevision}">
+									<f:selectItem itemLabel="#{lbl['lbl.select']}" itemValue="12"/>
+									<f:selectItems value="#{planBackingBean.shortMonths()}"/>
+								</p:selectOneMenu>
+					        </p:column>		
+					        <p:column headerText="#{lbl['lbl.pp.planned.activity.endmonth']}">  
+						       <p:selectOneMenu value="#{fav.intPlanEndMonth}"
+									disabled="#{!planBackingBean.managedBean.selectedPlanItem.brandNew &amp;&amp; cc.attrs.viewMode!=PPConst.modeRevision}">
+									<f:selectItem itemLabel="#{lbl['lbl.select']}" itemValue="12"/>
+									<f:selectItems value="#{planBackingBean.shortMonths()}"/>
+								</p:selectOneMenu>
+					        </p:column>			
+						</p:dataTable>
+					</td>
+				</tr>
 			</table>
 		</p:panel>
 		<!-- Details -->
-		<p:panel id="pItemDetailsSub" header="#{lbl['lbl.pp.details']}" >
+		<p:panel id="pItemDetailsSub" header="#{lbl['lbl.pp.details']}" toggleable="true" >
 			<!-- Item List -->
 	
 			<ui:include src="itemList.xhtml"/>
@@ -62,7 +68,7 @@ xmlns:c="http://java.sun.com/jsp/jstl/core">
 			<!-- Button(s) -->
 			<c:if test="#{cc.attrs.viewMode==PPConst.modeNew || cc.attrs.viewMode==PPConst.modeRevision}">
 				<div class="ppRightBtn">
-					<p:commandButton value="#{lbl['lbl.pp.add.item']}" action="#{planBackingBean.showPpItem(null)}"
+					<p:commandButton value="#{lbl['lbl.pp.add']}" action="#{planBackingBean.showPpItem(null)}"
 					 oncomplete="dlItemDetailsModal.show()" update="dlItemDetails" /> 
 				</div>
 			</c:if>

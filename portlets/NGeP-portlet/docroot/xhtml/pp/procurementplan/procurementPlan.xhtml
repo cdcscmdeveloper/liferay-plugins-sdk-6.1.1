@@ -39,30 +39,15 @@ xmlns:tp="http://java.sun.com/jsf/composite/ppComponents/procurementPlan"
 	 				tvPlanContentVar.disable(1);
 	 			}
    		    }
-   			
-   			function showSelectedTab(e){
-   		   		//var id = $("li.tab.ui-tabs-selected").attr("id");
-   		   		var selectedTab= $("input[name$='selectedTab']").val();
-   		   	
-
-   		   	 	//$(selectedTab).css("display", "block");
-   		   		//$("#tabN").css("display", "block");
    		
-   		   		var id2=tvPlanVar.getActiveIndex();
-   		   		alert(id2);
-   		   		
-   		   		//$("#tabN.ui-tabs-panel").css("display", "block");
-   		   		
-
-   			}
 		</script>
 	
 		<!-- Top Button -->
 		<ui:include src="headerSection.xhtml"/>
 		
 		<p:tabView widgetVar="tvPlanVar" id="tvPlan" dynamic="true" cache="true" orientation="left">
-			<p:ajax event="tabChange" listener="#{planBackingBean.updateCurrentView}" update="tvPlan, @([id$=selectedTab])" oncomplete="return showSelectedTab(this)"/>  
-		    <p:tab id="#{PPConst.currentNew}" title="#{planBackingBean.generateHeader(planBackingBean.managedBean.viewMode)}">
+			<p:ajax event="tabChange" listener="#{planBackingBean.updateCurrentView}"/>  
+		    <p:tab id="#{PPConst.currentNew}" styleClass="#{PPConst.currentNew}" title="#{planBackingBean.generateHeader(planBackingBean.managedBean.viewMode)}">
     		  	<tp:planContentComponent 
 		            selectedPlan="#{planBackingBean.managedBean.plan}" 
 		            selectedPlanMaster="#{planBackingBean.managedBean.planMaster}" 
@@ -86,10 +71,6 @@ xmlns:tp="http://java.sun.com/jsf/composite/ppComponents/procurementPlan"
 		    		<ui:include src="listPlanContent.xhtml"/>
 		    	</p:panel>
 		    </p:tab>
-		    <p:tab id="#{PPConst.currentAudit}" title="#{lbl['lbl.pp.title.audit.trail']}">  
-		    	Coming Soon
-		    </p:tab>
-		     
 	    </p:tabView>
 
 	</ui:define>
