@@ -11,6 +11,7 @@
       .column-align-right { text-align: right !important;}
     </style>
 	 <p:panel>
+	  <p:messages id="messages" showDetail="true" autoUpdate="true" closable="true" severity="error, info" />
 	 <div class="ppRightBtn">
 				<ui:repeat var="action"	value="#{agreementBackingBean.managedBean.outComes}">
 					<p:commandButton value="#{action}" process="@this" styleClass="ui-button" actionListener="#{agreementBackingBean.createAgreement(action)}" />

@@ -65,9 +65,10 @@
             				<p:selectOneMenu id="ministry"  value="" style="width:230px">
             				   <f:selectItem itemLabel="--Please Select--" itemValue="" /> 
                         	</p:selectOneMenu>
-							
+							<p:spacer height="2"/>
+							<f:verbatim></f:verbatim>
 							<h:outputLabel for="department" value="Department" />
-            				<p:selectOneMenu id="department"  value="" style="width:230px" >
+            				<p:selectOneMenu id="department"  style="width:230px" >
             					<f:selectItem itemLabel="--Please Select--" itemValue="" /> 
                 				</p:selectOneMenu>
 						</h:panelGrid>
@@ -86,9 +87,9 @@
 					</p:column>
 			 </p:dataTable>
              <f:facet name="footer">
-			  <h:panelGrid columns="2"  style="height: 40px;vertical-align: middle;">
-				<p:commandButton value="#{lbl['lbl.ct.agn.btn.select']}"   process="dialogAgency" update="treetableAgency,dialogAgency" onclick="dlgAgency.hide();"/>
-                <p:commandButton value="#{lbl['lbl.ct.agn.btn.cancel']}"  type="button" ajax="false" onclick="dlgAgency.hide();" />
+			  <h:panelGrid columns="2"  style="float:right;height:100px;vertical-align: middle;">
+				<p:commandButton value="#{lbl['lbl.ct.agn.btn.select']}"   process="dialogAgency" update="treetableAgency,dialogAgency" icon="ui-icon-select" onclick="dlgAgency.hide();"/>
+                <p:commandButton value="#{lbl['lbl.ct.agn.btn.cancel']}" icon="ui-icon-cancel" type="button" ajax="false" onclick="dlgAgency.hide();" />
 			  </h:panelGrid>
 			</f:facet>
            </p:panel>

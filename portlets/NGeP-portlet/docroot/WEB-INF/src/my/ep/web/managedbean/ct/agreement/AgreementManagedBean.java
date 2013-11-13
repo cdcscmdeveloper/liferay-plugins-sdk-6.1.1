@@ -33,6 +33,7 @@ public class AgreementManagedBean extends BaseManagedBean {
 	private CtContract contract  = new CtContract();
 	private CtAgreement agreement;
 	private Long contractId;
+	private String agreementType ="supplemental";
 	
 	public AgreementManagedBean(){
 		
@@ -129,7 +130,13 @@ public class AgreementManagedBean extends BaseManagedBean {
 	public void setContractId(Long contractId) {
 		this.contractId = contractId;
 	}
-	
-	
-	
+
+	public String getAgreementType() {
+		return agreementType;
+	}
+
+	public void setAgreementType(String agreementType) {
+		this.agreementType = agreementType;
+	}
+		
 }

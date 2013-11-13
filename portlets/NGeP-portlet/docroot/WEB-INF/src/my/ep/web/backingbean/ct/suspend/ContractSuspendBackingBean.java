@@ -93,6 +93,7 @@ public class ContractSuspendBackingBean extends BaseBackingBean<ContractSuspendM
 		  
 		  }else if(outcome == BpmOutcomeConst.BPM_REVISE)
 		  reqDTO.setTaskId(this.getManagedBean().getTaskId());
+		  
 		  System.out.println("Contract Id>>>:: "+ this.getManagedBean().getContract().getContractId()); 
 		  this.getManagedBean().getSuspendActive().setCtContract(this.getManagedBean().getContract());
 		  ContractSuspendResDTO resDTO = suspendActiveSO.createSuspend(reqDTO);

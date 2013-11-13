@@ -34,10 +34,11 @@ import my.ep.web.managedbean.BaseManagedBean;
 import my.ep.web.bean.ct.ApproverSetting;
 import my.ep.web.bean.ct.CheckBoxSelections;
 import my.ep.web.bean.ct.CreateContractDetails;
-import my.ep.web.bean.ct.FactoringCompany;
 import my.ep.web.bean.ct.MtoDetails;
+import my.ep.web.bean.ct.PaymentSummary;
 import my.ep.web.bean.ct.SettingDetails;
 import my.ep.persistence.entity.ct.agreement.CtAgreement;
+import my.ep.persistence.entity.ct.amend.CtAmendment;
 import my.ep.persistence.entity.ct.assoc.CtAssociation;
 
 /**
@@ -61,10 +62,10 @@ public class ContractDetailsManagedBean extends BaseManagedBean{
 	private boolean itemCeilingQuantity;
 	private String showItem ="Item  Pricing";
 	
+	private List<PaymentSummary> paymentSummary;
 	/*Table from supplier managements*/
 	private SmSupplier smSupplier = new SmSupplier();
 	private SmSupplierBank smSupplierBank = new SmSupplierBank();
-	private FactoringCompany factoringCompany = new FactoringCompany();
 	private CtSupplierBank ctSupplierBank = new CtSupplierBank();
 	/*End*/
 	
@@ -82,7 +83,7 @@ public class ContractDetailsManagedBean extends BaseManagedBean{
 	
 	private CtSetting ctSetting = new CtSetting();
 	private CtCircular ctCircular = new CtCircular();
-	private CtContract ctContract = new CtContract();
+	private CtContract ctContract;
 	private CtSchedule ctSchedules = new CtSchedule();
 	private CtApprover ctApprovers = new CtApprover();
 	private CtDeduction ctDeduction = new CtDeduction();
@@ -119,6 +120,9 @@ public class ContractDetailsManagedBean extends BaseManagedBean{
 	private CtTerminationReason terminationReason;
 	private CtTerminationClause terminationClause = new CtTerminationClause();
 	private CtTermination termination;
+	
+	/*Amendment*/
+	private CtAmendment ctAmendment;
 	
 	public  ContractDetailsManagedBean(){
 		source.add(new SettingDetails("Khan", 10));  
@@ -225,15 +229,6 @@ public class ContractDetailsManagedBean extends BaseManagedBean{
 	public void setSmSupplierBank(SmSupplierBank smSupplierBank) {
 		this.smSupplierBank = smSupplierBank;
 	}
-
-	public FactoringCompany getFactoringCompany() {
-		return factoringCompany;
-	}
-
-	public void setFactoringCompany(FactoringCompany factoringCompany) {
-		this.factoringCompany = factoringCompany;
-	}
-	
 
 	public CtContractValue getContractValues() {
 		return contractValues;
@@ -558,6 +553,22 @@ public class ContractDetailsManagedBean extends BaseManagedBean{
 
 	public void setTermination(CtTermination termination) {
 		this.termination = termination;
+	}
+
+	public CtAmendment getCtAmendment() {
+		return ctAmendment;
+	}
+
+	public void setCtAmendment(CtAmendment ctAmendment) {
+		this.ctAmendment = ctAmendment;
+	}
+
+	public List<PaymentSummary> getPaymentSummary() {
+		return paymentSummary;
+	}
+
+	public void setPaymentSummary(List<PaymentSummary> paymentSummary) {
+		this.paymentSummary = paymentSummary;
 	}
 	
 	

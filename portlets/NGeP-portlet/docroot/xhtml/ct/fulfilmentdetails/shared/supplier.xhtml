@@ -9,48 +9,51 @@
     <h:panelGrid columns="2" style="width:670px;">  
      <h:panelGrid columns="2" style="width:350px;">  
               <p:outputLabel value="#{lbl['lbl.ct.su.id']}" />  
-              <p:inputText value="" disabled="false" style="width:170px;"/>
+              <p:inputText value="SU-234-56789" disabled="true" style="width:170px;"/>
               <p:outputLabel value="Supplier Name" />  
-              <p:inputText value="" disabled="false" style="width:170px;"/> 
+              <p:inputText value="KHAI SDN BHD" disabled="true" style="width:170px;"/> 
               <p:outputLabel  value="#{lbl['lbl.ct.su.email']}"/>  
-              <p:inputText  value="" required="true" disabled="false" style="width:170px;" />
+              <p:inputText  value="xyz@hotmail.com"  disabled="true" style="width:170px;" />
               <p:outputLabel  value="#{lbl['lbl.ct.su.tel.hp']}"/>  
-              <p:inputText  value="" required="true" disabled="false" style="width:120px;"/>  
+              <p:inputText  value="0172-98-93039" disabled="true" style="width:120px;"/>  
               <p:outputLabel  value="#{lbl['lbl.ct.su.fax']}"/>
-              <p:inputText  value="" required="true" disabled="false" style="width:120px;"/>  
+              <p:inputText  value="309-98-93039" disabled="true" style="width:120px;"/>  
               <p:outputLabel  value="#{lbl['lbl.ct.su.tel.office']}"/>  
-              <p:inputText  value="" required="true" disabled="false" style="width:120px;" />
+              <p:inputText  value="309-98-93039"  disabled="true" style="width:120px;" />
               <h:panelGroup>
               <div style="height: 30px; vertical-align:top">
                  <p:outputLabel for="supplierAddress" value="#{lbl['lbl.ct.su.address']}" />
               </div>
               </h:panelGroup>
               <h:panelGrid>
-                 <p:inputTextarea id="supplierAddress" disabled="false" value="" required="false" 
-                  rows="2" cols="28"   maxlength="100"  autoResize="false" />
+                 <p:inputTextarea id="supplierAddress" disabled="false" value="Prima 6-A, Jalan Teknokrat 5,63000 Cyberjaya, Selangor Malaysia" 
+                  rows="3" cols="31"   maxlength="100"  autoResize="false" />
               </h:panelGrid>
               </h:panelGrid>
               
               <h:panelGrid columns="1" style="width:320px; vertical-align: top;">
-                 <h:panelGrid columns="2" style="width:300px;vertical-align: top;">
+                 <h:panelGrid columns="2" style="width:300px;">
                   <p:outputLabel  value="#{lbl['lbl.ct.bank.acc.no']}" />  
                     <p:selectOneMenu disabled="false" style="width:170px;">
+                      <f:selectItem itemLabel="-Please Select--" itemValue="" /> 
+                       <f:selectItem itemLabel="0111-2345-8795" itemValue="1" /> 
                   </p:selectOneMenu>
                 </h:panelGrid>
                 <p:spacer height="1"/>
                 <p:outputPanel id="changeAccValue"> 
                    <h:panelGrid columns="2" style="width:300px;">
                          <p:outputLabel  value="#{lbl['lbl.ct.bank.name']}"/>  
-                         <p:inputText  disabled="false" style="width:170px;" /> 
+                         <p:inputText  value="CIMB BANK" disabled="true" style="width:170px;" /> 
                          <p:outputLabel  value="#{lbl['lbl.ct.bank.branch']}"/>  
-                         <p:inputText   disabled="false" style="width:170px;" />
+                         <p:inputText value="CYBERJAYA"  disabled="true" style="width:170px;" />
                          <h:panelGroup>
                              <div style="height: 30px; vertical-align: top">
                                <p:outputLabel for="bankAddress" value="#{lbl['lbl.ct.bank.address']}" />
                              </div>
                          </h:panelGroup>
 	                     <h:panelGrid>
-                            <p:inputTextarea id="bankAddress"  value="" disabled="false" rows="2" cols="31"  autoResize="false" />
+                            <p:inputTextarea id="bankAddress"  value="Prima 5-A, Jalan Teknokrat 5,63000 Cyberjaya, Selangor Malaysia" 
+                            disabled="true" rows="3" cols="31"  autoResize="false" />
 	                     </h:panelGrid>
 	                     </h:panelGrid>
 	           </p:outputPanel>

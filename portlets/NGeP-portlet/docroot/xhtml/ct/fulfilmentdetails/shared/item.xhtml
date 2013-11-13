@@ -6,26 +6,28 @@
 	xmlns:p="http://primefaces.org/ui"
 	xmlns:c="http://java.sun.com/jsp/jstl/core">
          <p:panel id="itemId" header="#{lbl['lbl.ct.item.panel.name']}"   toggleable="true"  toggleSpeed="500" widgetVar="panelitem">
-            <p:dataTable id="tableItem" var="data" value="" paginator="true" paginatorPosition="bottom" paginatorAlwaysVisible="true" 
-            emptyMessage="No Records!" rows="10">
+            <p:dataTable id="tableItem" var="data" value="#{contractDetailsBackingBean.managedBean.ctContract.ctContractedItems}" paginator="true" 
+            paginatorPosition="bottom" paginatorAlwaysVisible="true"  emptyMessage="No Records!" rows="10">
             
               <p:ajax event="rowSelect"   listener="#{contractDetailsBackingBean.onRowSelect}"  process="@this" update=":form:tabview:changeFields"/> 
               <p:ajax event="rowUnselect" listener="#{contractDetailsBackingBean.onRowUnselect}" />  
                <p:columnGroup type="header"> 
 			  <p:row> 
 				 <p:column style="width:80px" headerText="#{lbl['lbl.ct.item.table.code']}" /> 
-				 <p:column style="width:320px" headerText="#{lbl['lbl.ct.item.table.name']}" /> 	
+				 <p:column style="width:120px" headerText="#{lbl['lbl.ct.item.table.name']}" /> 
+				 <p:column style="width:200px" headerText="Description" /> 	
 				 <p:column style="width:100px" headerText="#{lbl['lbl.ct.item.table.uom']}"  /> 
 				 <p:column style="width:70px" headerText="#{lbl['lbl.ct.item.table.morder']}" /> 	
 				 <p:column style="width:50px" headerText="#{lbl['lbl.ct.item.table.exmtd']}"  /> 
 			  </p:row>							
 			 </p:columnGroup>
-			 <p:column><p:outputLabel value=""/></p:column>       
-			 <p:column><p:outputLabel value=""/></p:column>       
-			 <p:column><p:outputLabel value=""/></p:column>       
-			 <p:column><p:outputLabel value=""/></p:column>       
+			 <p:column><p:outputLabel value="#{data.itemCode}" style="float:left;"/></p:column>       
+			 <p:column><p:outputLabel value="#{data.itemName}" style="float:left;"/></p:column>       
+			 <p:column><p:outputLabel value="#{data.itemDescription}" style="float:left;"/></p:column>      
+			 <p:column><p:outputLabel value="UNIT" style="float:left;"/></p:column>       
+			 <p:column><p:outputLabel value="#{data.minimumOrderQty}" style="float:left;"/></p:column>       
 			 <p:column styleClass="column-align-center"> 
-			    <p:selectBooleanCheckbox value=""/></p:column>     
+			    <p:selectBooleanCheckbox value="#{data.exempted}"/></p:column>     
 			</p:dataTable>
 			<h:panelGrid columns="2" style="height:70px;text-align:bottom;">
 			  <p:spacer height="10"/>
@@ -41,7 +43,7 @@
 		   <p:outputPanel id="changeFields"> 
 		 	 <p:panel id="itemZoneId"  header="#{contractDetailsBackingBean.managedBean.showItem}"  toggleable="true"  toggleSpeed="500"  widgetVar="panelitemzone">
 				<h:panelGrid rendered="#{contractDetailsBackingBean.managedBean.itemPricing}">
-				   <p:dataTable id="tableItemZone"  var="data" value="#{contractDetailsBackingBean.ctItemPrice}" widgetVar="dataTableObj"
+				   <p:dataTable id="tableItemZone"  var="data" value=" " widgetVar="dataTableObj"
                     lazy="false" dynamic="true" paginator="true" paginatorPosition="bottom" paginatorAlwaysVisible="true" emptyMessage="No Records!" rows="10">
 				    <p:columnGroup type="header"> 
 				    <p:row> 
@@ -53,17 +55,16 @@
 					  <p:column headerText="#{lbl['lbl.ct.item.table1.price.edate']}" />
 					</p:row>	
 				 </p:columnGroup>
-				  <p:column> 						    
-				  <p:outputLabel value="#{data.ctContractZone.zoneName}"/></p:column>       
-			      <p:column><p:outputLabel value="#{data.tierTo}"/></p:column>       
-			      <p:column><p:outputLabel value="#{data.tierFrom}"/></p:column>       
-			      <p:column><p:outputLabel value="#{data.unitPrice}"/></p:column> 
-			      <p:column><p:outputLabel value="#{data.effDate}"/></p:column>       
-			      <p:column><p:outputLabel value="#{data.expDate}"/></p:column>      
+				  <p:column> <p:outputLabel value="NORTHZONE"/></p:column>       
+			      <p:column><p:outputLabel value="1"/></p:column>       
+			      <p:column><p:outputLabel value="50"/></p:column>       
+			      <p:column><p:outputLabel value="2300.000"/></p:column> 
+			      <p:column><p:outputLabel value="01-JAN-2013"/></p:column>       
+			      <p:column><p:outputLabel value="31-DEC-2014"/></p:column>      
 			     </p:dataTable>
 				 </h:panelGrid>
 				  <h:panelGrid rendered="#{contractDetailsBackingBean.managedBean.itemCeilingQuantity}">
-				  <p:dataTable id="tableItemZone1"  var="data" value="#{contractDetailsBackingBean.ctItemCeilingQty}" widgetVar="dataTableObj"
+				  <p:dataTable id="tableItemZone1"  var="data" value=" " widgetVar="dataTableObj"
                     lazy="false" dynamic="true" paginator="true" paginatorPosition="bottom" paginatorAlwaysVisible="true" emptyMessage="No Records!" rows="10" 
 			        rowsPerPageTemplate="5,10,15,20">
 					 <p:columnGroup type="header"> 
@@ -76,12 +77,12 @@
 					  <p:column headerText="#{lbl['lbl.ct.item.table1.price.edate']}" />
 					</p:row>								
 			       </p:columnGroup>
-			        <p:column><p:outputLabel value=""/></p:column>       
-			        <p:column><p:outputLabel value=""/></p:column>  
-			        <p:column><p:outputLabel value=""/></p:column>       
-			        <p:column><p:outputLabel value="#{data.ceilingQuantity}"/></p:column>  
-			        <p:column><p:outputLabel value="#{data.effDate}"/></p:column>       
-			        <p:column><p:outputLabel value="#{data.expDate}"/></p:column>  
+			        <p:column><p:outputLabel value="10"/></p:column>       
+			        <p:column><p:outputLabel value="Ministry"/></p:column>  
+			        <p:column><p:outputLabel value="Central"/></p:column>       
+			        <p:column><p:outputLabel value="50"/></p:column>  
+			        <p:column><p:outputLabel value="31-DEC-2013"/></p:column>       
+			        <p:column><p:outputLabel value="30-DEC-2014"/></p:column>  
 				  </p:dataTable>
 				  </h:panelGrid>
 			     </p:panel>

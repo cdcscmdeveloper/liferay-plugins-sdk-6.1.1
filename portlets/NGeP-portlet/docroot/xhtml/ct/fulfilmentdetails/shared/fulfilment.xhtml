@@ -30,7 +30,7 @@
              <p:outputLabel value="Concession" />
           </h:panelGrid>  
           <p:outputLabel value="#{lbl['lbl.ct.createdDate']}" />  
-          <p:inputText  value="#{contractDetailsBackingBean.managedBean.ctContract.createdDate}" style="width:170px;"   disabled="false"/>  
+          <p:inputText  value="#{contractDetailsBackingBean.managedBean.ctContract.qtPublishDate}" style="width:170px;"   disabled="false"/>  
           <p:outputLabel value="#{lbl['lbl.ct.publishingDate']}"  />  
           <p:inputText  value="#{contractDetailsBackingBean.managedBean.ctContract.qtPublishDate}"  style="width:170px;" disabled="false"/>  
           <h:panelGrid columns="2">
@@ -73,14 +73,15 @@
             <f:verbatim></f:verbatim>    
              <p:outputLabel  value="#{lbl['lbl.ct.sfee']}" />  
             <p:selectOneMenu  disabled="false"  value="#{contractDetailsBackingBean.managedBean.ctContract.serviceFee}"  style="width:60px;">
-               <f:selectItems value="#{contractDetailsBackingBean.contractListItem.currency}" />
+               <f:selectItem itemLabel="0.4" itemValue="2"/>
+               <f:selectItem itemLabel="0.8" itemValue="3"/>    
             </p:selectOneMenu>
+             <p:outputLabel  value="#{lbl['lbl.ct.effectiveDate']}"  />  
+               <p:calendar style="width:170px;" value="#{contractDetailsBackingBean.managedBean.contractValues.effDate}" id="popupCal1" showOn="button" />
+             <f:verbatim></f:verbatim>  
             <h:outputLabel value="#{lbl['lbl.ct.edate']}" />  
              <p:calendar style="width:170px;" value="#{contractDetailsBackingBean.managedBean.contractValues.expDate}" id="popupCal" showOn="button" /> 
-             <f:verbatim></f:verbatim>  
-              <p:outputLabel  value="#{lbl['lbl.ct.effectiveDate']}"  />  
-               <p:calendar style="width:170px;" value="#{contractDetailsBackingBean.managedBean.contractValues.effDate}" id="popupCal1" showOn="button" />
-            <h:outputLabel rendered="#{contractDetailsBackingBean.managedBean.ctCircular.latestCircularVer.circularNo != null}" value="#{lbl['lbl.ct.circularNo']}"  />  
+             <h:outputLabel rendered="#{contractDetailsBackingBean.managedBean.ctCircular.latestCircularVer.circularNo != null}" value="#{lbl['lbl.ct.circularNo']}"  />  
            <p:commandLink  rendered="#{contractDetailsBackingBean.managedBean.ctCircular.latestCircularVer.circularNo != null}"  style="margin-right:20px;" ajax="false">  
            <h:outputText value="#{contractDetailsBackingBean.managedBean.ctCircular.latestCircularVer.circularNo}"  styleClass="linkcommand" />  
            </p:commandLink> 

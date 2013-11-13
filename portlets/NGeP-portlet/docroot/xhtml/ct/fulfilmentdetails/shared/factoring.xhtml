@@ -9,15 +9,15 @@
     <h:panelGrid columns="1" style="width:750px;">  
      <h:panelGrid columns="2" style="width:430px;">  
      <h:outputLabel  value="#{lbl['lbl.ct.fc.name']}"/>  
-     <p:inputText  value="#{contractDetailsBackingBean.managedBean.factoringCompany.factoringName}"  disabled="false" style="width:260px;" />  
+     <p:inputText  value="MOF"  disabled="false" style="width:260px;" />  
       <h:outputLabel  value="#{lbl['lbl.ct.fc.authname']}"  />  
-      <p:inputText  value="#{contractDetailsBackingBean.managedBean.factoringCompany.authRefNo}" disabled="false" style="width:200px;" />  
+      <p:inputText  value="#{contractDetailsBackingBean.managedBean.ctFactoring.authRefNo}" disabled="false" style="width:200px;" />  
       <h:outputLabel  value="#{lbl['lbl.ct.fc.fdate']}"  />  
-      <p:inputText  value="#{contractDetailsBackingBean.managedBean.factoringCompany.effDate}" disabled="false" style="width:160px;" />  
+      <p:inputText  value="#{contractDetailsBackingBean.managedBean.ctFactoring.effDate}" disabled="false" style="width:160px;" />  
       <h:outputLabel  value="#{lbl['lbl.ct.fc.edate']}" />  
-      <p:inputText  value="#{contractDetailsBackingBean.managedBean.factoringCompany.expDate}" disabled="false" style="width:160px;" />  
+      <p:inputText  value="#{contractDetailsBackingBean.managedBean.ctFactoring.expDate}" disabled="false" style="width:160px;" />  
       <h:outputLabel  value="#{lbl['lbl.ct.fc.adate']}" />  
-      <p:inputText  value="#{contractDetailsBackingBean.managedBean.factoringCompany.appDate}" disabled="false" style="width:160px;" />  
+      <p:inputText  value="#{contractDetailsBackingBean.managedBean.ctFactoring.approvedDate}" disabled="false" style="width:160px;" />  
     </h:panelGrid>
   </h:panelGrid>
  </p:panel>

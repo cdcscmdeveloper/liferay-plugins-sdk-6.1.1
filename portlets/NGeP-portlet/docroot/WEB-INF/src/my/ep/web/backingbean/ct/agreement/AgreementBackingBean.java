@@ -21,8 +21,14 @@ import org.primefaces.model.DefaultStreamedContent;
 import org.primefaces.model.StreamedContent;
 import org.primefaces.model.UploadedFile;
 
+import my.ep.biz.service.ct.IContractSO;
 import my.ep.biz.service.ct.agreement.IAgreementSO;
+import my.ep.bpm.service.IBpmSO;
+import my.ep.dto.ct.ContractReqDTO;
+import my.ep.dto.ct.ContractResDTO;
 import my.ep.dto.ct.agreement.ContractAgreementReqDTO;
+import my.ep.dto.ct.agreement.ContractAgreementResDTO;
+import my.ep.exception.EpException;
 import my.ep.persistence.entity.ct.CtContract;
 import my.ep.persistence.entity.ct.agreement.CtAgreement;
 import my.ep.persistence.entity.ct.agreement.CtSignParty;
@@ -30,6 +36,7 @@ import my.ep.persistence.entity.ct.amend.CtAmendment;
 import my.ep.persistence.entity.pm.authorization.PmOrgProfile;
 import my.ep.persistence.entity.pm.authorization.PmUser;
 import my.ep.persistence.entity.pm.common.PmCode;
+import my.ep.util.lookupservice.EpBpmBusinessDelegate;
 import my.ep.web.backingbean.BaseBackingBean;
 import my.ep.web.bean.ct.AgreementDetails;
 import my.ep.web.bean.ct.ContractListItem;
@@ -101,7 +108,7 @@ public class AgreementBackingBean extends BaseBackingBean<AgreementManagedBean> 
 	  }
 	}
 	
-	public void createAgreement(String outcome){
+	public String createAgreement(String action){
 	
 		IAgreementSO agreementSO = null;
 		 ContractAgreementReqDTO reqDTO = null;	
@@ -109,28 +116,55 @@ public class AgreementBackingBean extends BaseBackingBean<AgreementManagedBean> 
 			
 			 reqDTO = new ContractAgreementReqDTO();
 		     agreementSO = (IAgreementSO)BusinessDelegate.getInstance().getServiceObject("ct", IAgreementSO.class);
-		     this.getManagedBean().getAgreement().getCtContract().setContractId(this.getManagedBean().getContractId());
 		     this.getManagedBean().getAgreement().setCtAgreementAppendixs(this.getManagedBean().getAppendixList());
 		     
-			 reqDTO.setAgreement(this.getManagedBean().getAgreement());
-			 reqDTO.setOutcome(outcome);
-			 reqDTO.setTaskId(this.getManagedBean().getTaskId());
+		     IContractSO contractSO = (IContractSO) BusinessDelegate.getInstance().getServiceObject("ct",IContractSO.class);
+			 ContractReqDTO ctReqDTO = new ContractReqDTO();
+			 ctReqDTO.setContractId(this.getManagedBean().getContractId());
+			 ContractResDTO ctResDTO = contractSO.retrieveContract(ctReqDTO);
+			 this.getManagedBean().getAgreement().setCtContract(ctResDTO.getContract());
 			 
-			 if(outcome == BpmOutcomeConst.BPM_SAVE){
-			    reqDTO.setOutcome("");
-			  
-			 }else if(outcome == BpmOutcomeConst.BPM_REVISE)
-			   reqDTO.setTaskId(this.getManagedBean().getTaskId());
-			  
-			 agreementSO.createAgreement(reqDTO);
-	   
-		 }catch(Exception ex){
-		   log.error("Exception>>>" +ex);
+			 reqDTO.setAgreement(this.getManagedBean().getAgreement());
+			 
+			 String token = getManagedBean().getToken();
+				if(token==null) {
+					IBpmSO bpmSO = (IBpmSO) EpBpmBusinessDelegate.getInstance().getServiceObject(IBpmSO.class);
+					token = bpmSO.authenticate("roslan", "welcome1");
+					if(token==null) {
+						throw new EpException("BPM token not found");
+					}
+				}
+
+				reqDTO.setOutcome(action);
+				if(action == BpmOutcomeConst.BPM_SAVE){
+					  reqDTO.setOutcome("");
+			     }
+				reqDTO.setToken(token);
+				reqDTO.setTaskId(getManagedBean().getTaskId());
+			 
+				 ContractAgreementResDTO resDTO=  agreementSO.createAgreement(reqDTO);
+			 
+			  if(resDTO.isSuccessful()) {
+					log.info("Record saved successfully");
+					FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "Record saved successfully.","Contract Name. : "+this.getManagedBean().getAgreement().getAgreementId()));
+					if(!action.equalsIgnoreCase(BpmOutcomeConst.BPM_SAVE)) { // save action will remain in the same page
+						renewSesionObject();
+						return "/xhtml/shared/acknowledge.xhtml";
+					}
+				} else {
+					throw new EpException("Failed.");
+				}
+				
+			} catch (Exception e) {
+				e.printStackTrace();
+				FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR,e.toString(), "Contract save failed."));
 		
 		}finally{
 			agreementSO = null;
 			reqDTO = null;
-		}	 
+		}	
+		
+		return null;
 	}
 	
 	public void createSupAgreement(String outcome){

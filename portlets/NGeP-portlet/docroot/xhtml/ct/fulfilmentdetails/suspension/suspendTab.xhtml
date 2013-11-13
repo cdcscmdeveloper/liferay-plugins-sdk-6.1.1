@@ -20,16 +20,16 @@
 	 <p:tabView id="tabview" orientation="left" onTabShow="handleTabShow(tab)" activeIndex="0">
      <p:tab title="#{lbl['lbl.ct.menu.fd']}" >
             <ui:include src="/xhtml/ct/fulfilmentdetails/shared/fulfilment.xhtml"/>
-            <ui:include src="/xhtml/ct/fulfilmentdetails/suspension/suspendDetails.xhtml"/>
+            <ui:include src="suspendDetails.xhtml"/>
        </p:tab> 
 	   <p:tab title="#{lbl['lbl.ct.menu.item']}" >
-           <ui:include src="/xhtml/ct/fulfilmentdetails/suspension/suspendItem.xhtml"/>
+           <ui:include src="suspendItem.xhtml"/>
        </p:tab> 
         <p:tab id="sLocation" title="#{lbl['lbl.ct.menu.location']}" >
-           <ui:include src="/xhtml/ct/fulfilmentdetails/suspension/suspendLocation.xhtml"/>
+           <ui:include src="suspendLocation.xhtml"/>
        </p:tab> 
         <p:tab id="sletter" title="Suspension Letter">
-           <ui:include src="/xhtml/ct/fulfilmentdetails/suspension/suspensionLetter.xhtml"/>
+           <ui:include src="suspensionLetter.xhtml"/>
        </p:tab> 
        <p:tab title="#{lbl['lbl.ct.menu.remark']}" >
            <ui:include src="/xhtml/ct/fulfilmentdetails/suspension/attachements.xhtml"/>

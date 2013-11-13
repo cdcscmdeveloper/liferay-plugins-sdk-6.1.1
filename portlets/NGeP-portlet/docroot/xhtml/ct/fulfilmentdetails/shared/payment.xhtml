@@ -5,36 +5,44 @@
 	xmlns:ui="http://java.sun.com/jsf/facelets"
 	xmlns:p="http://primefaces.org/ui"
 	xmlns:c="http://java.sun.com/jsp/jstl/core">
-	<p:panel id="paymentId" header="Payment History"  toggleable="true"  toggleSpeed="500" widgetVar="panelpayment">  
-    <p:dataTable id="tablePayment" var="data" value=" " widgetVar="dataTableObj" lazy="false" dynamic="true" 
+	<p:panel id="paymentId" header="Payment History"  toggleable="true"  toggleSpeed="500">  
+    <p:dataTable id="tablePayment" var="data" value=" " widgetVar="dataTableObj" rowIndexVar="index" lazy="false" dynamic="true" 
 	   paginator="true" paginatorPosition="bottom" paginatorAlwaysVisible="true" emptyMessage="No Records!" rows="10">
 	   <p:columnGroup type="header"> 
 		<p:row> 
+		  <p:column style="width:30px" headerText="Seq No"  /> 
 		  <p:column style="width:150px" headerText="#{lbl['lbl.ct.pay.table.no']}"  /> 
 		  <p:column style="width:300px" headerText="#{lbl['lbl.ct.pay.table.payto']}" /> 
 		  <p:column style="width:150px" headerText="#{lbl['lbl.ct.pay.table.invoice']}" /> 	
 		  <p:column style="width:100px" headerText="#{lbl['lbl.ct.pay.table.invoice.amt']}"  /> 
 		 </p:row>	
 	   </p:columnGroup>
+	   <p:column styleClass="column-align-center" > <h:outputText value="#{index+1}" /></p:column>     
 		<p:column>
 		<p:commandLink id="fulfillmentNo" style="margin-right:20px;" process="@this"  partialSubmit="true" 
 		 actionListener="#{contractDetailsBackingBean.changePaymentValue}">  
 		  <h:outputText value="#{contractDetailsBackingBean.fulfillmentNo}"  styleClass="linkcommand"/>  
         </p:commandLink>  
-	    </p:column>       
+	    </p:column>
+	    <p:column> <p:outputLabel value="Factoring Company" style="float:left;" /></p:column>   
+	    <p:column> <p:outputLabel value="13/11/2013 00:00" style="float:left;" /></p:column>   
+	    <p:column> <p:outputLabel value="30000.000" style="float:left;" /></p:column>        
 	  </p:dataTable>
-      <h:panelGrid style="width:600px">
+      <h:panelGrid>
       <p:spacer height="8"/>
       <h:outputLabel  value="#{lbl['lbl.ct.pay.summ']}" style="width:100px;font-size:12px;font-weight:bold;float:left;"/>  
-      <p:dataTable id="tablePaySum" var="data" value=" " widgetVar="dataTableObj" lazy="false" dynamic="true" 
-		 paginator="true" paginatorPosition="bottom" paginatorAlwaysVisible="true" emptyMessage="No Records!" rows="10">
+      <p:dataTable id="tablePaySum" var="data" value="#{contractDetailsBackingBean.managedBean.paymentSummary}" widgetVar="dataTableObj"
+       rowIndexVar="index" lazy="false" dynamic="true"  paginator="true" paginatorPosition="bottom" paginatorAlwaysVisible="true" emptyMessage="No Records!" rows="10">
 	     <p:columnGroup type="header"> 
 		 <p:row> 
-		   <p:column colspan="1" style="width:200px" headerText="#{lbl['lbl.ct.pay.table1.desc']}"  /> 
-		   <p:column colspan="1"  style="width:150px" headerText="#{lbl['lbl.ct.pay.table1.amt']}" /> 
+		   <p:column style="width:30px" headerText="Seq No"  />
+		   <p:column style="width:250px" headerText="#{lbl['lbl.ct.pay.table1.desc']}"  /> 
+		   <p:column style="width:100px" headerText="#{lbl['lbl.ct.pay.table1.amt']}" /> 
 		 </p:row>	
 		</p:columnGroup>
-		<p:column></p:column>
+		 <p:column styleClass="column-align-center"> <h:outputText value="#{index+1}" /></p:column> 
+		<p:column> <h:outputText value="#{data.description}" /></p:column>
+		<p:column> <h:outputText value="#{data.amount}" /></p:column>
        </p:dataTable>
      </h:panelGrid>
     </p:panel>

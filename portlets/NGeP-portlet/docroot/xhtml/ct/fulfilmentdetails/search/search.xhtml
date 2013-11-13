@@ -83,21 +83,21 @@
 							                            <p:column> <h:outputText value="Active"/> </p:column>	
 							                            <p:column styleClass="column-align-center">
 								                          <p:commandButton title="Suspended"  action="#{contractDetailsBackingBean.gotoSuspendPage}" 
-								                          icon="ui-icon-suspension">
+								                          image="ui-icon-suspension">
 								                           <f:setPropertyActionListener value="#{data}" target="#{contractDetailsBackingBean.contract}"  />
 								                          </p:commandButton>
 								                     
 								                          <p:commandButton title="Termination" action="#{contractDetailsBackingBean.gotoTerminatePage}"
-								                             partialSubmit="true" process="@this" icon="ui-icon-terminate">
+								                             partialSubmit="true" process="@this" image="ui-icon-terminate">
 								                              <f:setPropertyActionListener target="#{contractDetailsBackingBean.managedBean.ctContract}" value="#{data}" />
 								                              </p:commandButton>
 								                       
 								                          <p:commandButton title="Amendment" action="#{contractDetailsBackingBean.gotoAmendPage}" 
-								                            partialSubmit="true" process="@this" icon="ui-icon-revise">
+								                            partialSubmit="true" process="@this" image="ui-icon-revise">
 								                             <f:setPropertyActionListener target="#{contractDetailsBackingBean.managedBean.ctContract}" value="#{data}" />
 								                            </p:commandButton>
 								                            
-								                          <p:commandButton title="View Agreement"  action="#{contractDetailsBackingBean.gotoViewPage}" icon="ui-icon-agree">
+								                          <p:commandButton title="View Agreement"  action="#{contractDetailsBackingBean.gotoViewPage}" image="ui-icon-agree">
 								                              <f:setPropertyActionListener value="#{data}" target="#{contractDetailsBackingBean.contract}"  />
 								                          </p:commandButton>
 								                      </p:column> 

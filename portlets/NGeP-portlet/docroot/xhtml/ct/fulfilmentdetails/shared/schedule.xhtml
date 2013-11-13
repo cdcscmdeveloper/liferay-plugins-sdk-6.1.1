@@ -14,7 +14,7 @@
             <p:ajax event="change"  listener="#{contractDetailsBackingBean.progressivePayment}" process="@this" update=":form:tabview:paymentSchedule"/>
            </p:selectBooleanCheckbox>
      </h:panelGrid>
-	 <p:dataTable id="tableSchedule" var="data" value="" widgetVar="dataTableObj" 
+	 <p:dataTable id="tableSchedule" var="data" value="#{contractDetailsBackingBean.managedBean.ctContract.ctSchedules}" widgetVar="dataTableObj" 
 	    rowIndexVar="index" paginator="true" paginatorPosition="bottom" paginatorAlwaysVisible="true" emptyMessage="No Records!">
 		<p:columnGroup type="header"> 
 		 <p:row> 
@@ -24,23 +24,15 @@
 		  <p:column style="width:150px" headerText="#{lbl['lbl.ct.sched.table.edate']}"  /> 
 		</p:row>	
 		</p:columnGroup>
-		<p:column styleClass="column-align-center" >
-		  <h:outputText value="#{index+1}" />
-		</p:column>     
-		<p:column>
-		 <p:outputLabel value=""/>
-		</p:column>
-		<p:column>
-		
-        </p:column>   
-        <p:column>   
-         
-        </p:column>        
+		<p:column styleClass="column-align-center" > <h:outputText value="#{index+1}" /></p:column>     
+		<p:column><p:outputLabel value="#{data.scheduleNo}" style="float:left;"/></p:column>
+		<p:column><p:outputLabel value="#{data.startDate}"/></p:column>   
+        <p:column><p:outputLabel value="#{data.endDate}"/></p:column>        
 	  </p:dataTable>
 	</p:panel>	
 	 <p:outputPanel id="paymentSchedule">                
 	 <p:panel header="#{lbl['lbl.ct.sched.panel1.name']}" rendered="#{contractDetailsBackingBean.managedBean.chkSchedule}"  toggleable="true"  toggleSpeed="500">
-	    <p:dataTable id="tableProgress" var="data" value="#{contractDetailsBackingBean.managedBean.ctProgressivePaymentList}" widgetVar="dataTableObj" 
+	    <p:dataTable id="tableProgress" var="data" value="#{contractDetailsBackingBean.managedBean.ctContract.ctProgressivePayments}" widgetVar="dataTableObj" 
 		   paginator="true" paginatorPosition="bottom" paginatorAlwaysVisible="true" emptyMessage="No Records!">
 		   <p:columnGroup type="header"> 
 			 <p:row> 
@@ -62,23 +54,23 @@
 			   <p:inputText value="#{data.percentage}" style="width:60px;"/>
 			</p:column>
 			<p:column styleClass="column-align-center">
-		        <p:commandButton title="delete" onsuccess="confirmation.show()" partialSubmit="true" process="@this" icon="ui-icon-delete">
+		        <p:commandButton title="delete" onsuccess="confirmation5.show()" partialSubmit="true" process="@this" icon="ui-icon-delete">
 					    <f:setPropertyActionListener value="#{data}" target="#{contractDetailsBackingBean.managedBean.ctProgressivePayment}" />
 					  </p:commandButton>
 			</p:column>    
 		</p:dataTable>
-		<p:confirmDialog message="Do you want to delete the record?"  closable="true" appendToBody="true" header="Delete Confirmation"
-			   severity="alert" widgetVar="confirmation">
-                 <h:panelGrid columns="2" columnClasses="column-align-right-50,column-align-left">
-				 <p:commandButton value="Yes" update="tableProgress" partialSubmit="true" process="@this"
-				    onclick="confirmation.hide();" actionListener="#{contractDetailsBackingBean.deleteScheduleDetails()}"/>
-				  <p:commandButton value="No" 	onclick="confirmation.hide()" type="button" />
-				</h:panelGrid>
-			</p:confirmDialog>
-	    <h:panelGrid style="width:770px" columnClasses="column-align-right">
-		  <p:commandButton value="#{lbl['lbl.ct.ded.btn.add']}" process="@this" partialSubmit="true" 
+		<h:panelGrid style="width:760px" columnClasses="column-align-right">
+		  <p:commandButton value="#{lbl['lbl.ct.ded.btn.add']}" process="@this" partialSubmit="true" icon="ui-icon-add"
 		  action="#{contractDetailsBackingBean.addScheduleDetails()}" update="tableProgress"/>
 		</h:panelGrid>
+		<p:confirmDialog message="Do you want to delete the record?"  closable="true" appendToBody="true" header="Delete Confirmation"
+			   severity="alert" widgetVar="confirmation5">
+                 <h:panelGrid columns="2">
+				 <p:commandButton value="Yes" update="tableProgress" partialSubmit="true" process="@this"
+				    onclick="confirmation5.hide();" actionListener="#{contractDetailsBackingBean.deleteScheduleDetails()}"/>
+				  <p:commandButton value="No" 	onclick="confirmation5.hide()" type="button" />
+				</h:panelGrid>
+			</p:confirmDialog>
    </p:panel>
    </p:outputPanel>
 </ui:composition>
