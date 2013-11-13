@@ -352,7 +352,7 @@ xmlns:composite="http://java.sun.com/jsf/composite">
 								<td>
 									<p:selectManyCheckbox value="#{cc.attrs.selectedPlan.pmRejectReasonIds}" >  
 							            <f:selectItems value="#{planBackingBean.rejectionReasonOptions()}"
-							            	 var="obj" itemLabel="#{obj.reasonCode}" itemValue="#{obj.reasonId}"  />  
+							            	 var="obj" itemLabel="#{obj.reasonDesc}" itemValue="#{obj.pmReason.reasonId}"  />  
 							            	 <p:ajax event="change"/>
 							        </p:selectManyCheckbox>  
 								</td>
