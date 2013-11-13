@@ -64,6 +64,7 @@ import my.ep.persistence.entity.pm.authorization.PmUser;
 import my.ep.persistence.entity.pm.common.PmActivity;
 import my.ep.persistence.entity.pm.common.PmMaksud;
 import my.ep.persistence.entity.pm.common.PmReason;
+import my.ep.persistence.entity.pm.common.PmReasonDesc;
 import my.ep.persistence.entity.pm.common.PmSo;
 import my.ep.persistence.entity.pp.PpRemark;
 import my.ep.persistence.entity.pp.budgetallocation.PpBudget;
@@ -1695,27 +1696,27 @@ public class PlanBackingBean extends BaseBackingBean<PlanManagedBean>{
 	
 	/**
 	 * retrieve rejection reason
-	 * @return List<PmReason> 
+	 * @return List<PmReasonDesc> 
 	 */
-	public List<PmReason> rejectionReasonOptions(){
+	public List<PmReasonDesc> rejectionReasonOptions(){
 		return reasonOptions(ProcurementPlanConst.REASON_REJECT);
 	}
 
 	/**
 	 * retrieve reason by category
-	 * @return List<PmReason> 
+	 * @return List<PmReasonDesc> 
 	 */
-	public List<PmReason> reasonOptions(String category){
+	public List<PmReasonDesc> reasonOptions(String category){
 		log.info("reasonOptions - Start");
-		List<PmReason> options = new ArrayList<PmReason>();
+		List<PmReasonDesc> options = new ArrayList<PmReasonDesc>();
 		try{
 			ReasonReqDTO reqDTO = new ReasonReqDTO();
-			reqDTO.setReasonCatrgory(category);
-//			reqDTO.setOrgProfileId("PPR");
+			reqDTO.setReasonCategory(category);
+			reqDTO.setLanguage("1");
 			IReasonSO reqSO = (IReasonSO) BusinessDelegate.getInstance().getServiceObject("pm", IReasonSO.class);
-			ReasonResDTO resDTO = reqSO.retrieveReasonsListByCategory(reqDTO);
+			ReasonResDTO resDTO = reqSO.retrieveReasonDescListByCategory(reqDTO);
 //			if(resDTO.isSuccessful()){
-				options = resDTO.getReasonCategoryList();
+				options = resDTO.getReasonDescList();
 //			}
 			log.info("result size: " +options.size());
 			
