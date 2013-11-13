@@ -264,6 +264,13 @@
 		<header-portlet-css>/css/main.css</header-portlet-css>
 		<css-class-wrapper>fldopending-portlet</css-class-wrapper>
 	</portlet>
+	<portlet>
+		<portlet-name>FLRequestNoteList</portlet-name>
+		<icon>/icon.png</icon>
+		<instanceable>false</instanceable>
+		<header-portlet-css>/css/main.css</header-portlet-css>
+		<css-class-wrapper>flrequestnote-portlet</css-class-wrapper>
+	</portlet>
 
 	<!-- Fulfilment End Added by Giri -->
 	<portlet>

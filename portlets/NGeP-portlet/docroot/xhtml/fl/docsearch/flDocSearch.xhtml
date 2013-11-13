@@ -117,6 +117,9 @@
 					<p:commandButton
 						onclick="goToDetail([{name:'docType', value:'#{flDocument.docType}'}, {name:'docId', value:'#{flDocument.docId}'}, {name:'docNo', value:'#{flDocument.docNo}'}, {name:'buttonVal', value:'Cancel'}])"
 						value="Cancel" />	
+					<p:commandButton rendered="#{flDocument.docType == 'CR'}"
+						onclick="goToDetail([{name:'docType', value:'#{flDocument.docType}'}, {name:'docId', value:'#{flDocument.docId}'}, {name:'docNo', value:'#{flDocument.docNo}'}, {name:'buttonVal', value:'complain'}])"
+						value="Complain" />
 				</p:column>
 				
 			</p:dataTable>

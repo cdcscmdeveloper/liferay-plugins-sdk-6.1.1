@@ -15,6 +15,8 @@ import my.ep.persistence.entity.fl.request.FlDeliveryAddress;
 import my.ep.persistence.entity.fl.request.FlFulfilmentRequest;
 import my.ep.persistence.entity.pm.authorization.PmOrgAddress;
 import my.ep.persistence.entity.pm.common.PmMaksud;
+import my.ep.persistence.entity.ss.directpurchase.ScRequestNote;
+import my.ep.persistence.entity.ss.directpurchase.ScRequestNoteDtl;
 import my.ep.web.managedbean.BaseManagedBean;
 
 import org.apache.log4j.Logger;
@@ -43,7 +45,9 @@ public class PurchaseRequestManagedBean extends BaseManagedBean {
 	private List<PmOrgAddress> delAddrList;
 	private FlDeliveryAddress selectedDelAddr;
 	private List<PmMaksud> maksudCodeList;
+	private List<ScRequestNote> requestNoteList;
 	private boolean checkPtjFlg = true;
+	private ScRequestNote selectedRequestNote;
 	
 	private String fulfillmentReqId;
 	private String taskId;
@@ -286,6 +290,35 @@ public class PurchaseRequestManagedBean extends BaseManagedBean {
 	public void setButtonVal(String buttonVal) {
 		this.buttonVal = buttonVal;
 	}
+	
+	/**
+	 * @param requestNoteList the requestNoteList to set
+	 */
+	public void setRequestNoteList(List<ScRequestNote> requestNoteList) {
+		this.requestNoteList = requestNoteList;
+	}
+
+	/**
+	 * @return the requestNoteList
+	 */
+	public List<ScRequestNote> getRequestNoteList() {
+		return requestNoteList;
+	}
+
+	/**
+	 * @return the selectedRequestNote
+	 */
+	public ScRequestNote getSelectedRequestNote() {
+		return selectedRequestNote;
+	}
+
+	/**
+	 * @param selectedRequestNote the selectedRequestNote to set
+	 */
+	public void setSelectedRequestNote(ScRequestNote selectedRequestNote) {
+		this.selectedRequestNote = selectedRequestNote;
+	}
+
 
 	/**
 	 * @return the submitButtonStatus

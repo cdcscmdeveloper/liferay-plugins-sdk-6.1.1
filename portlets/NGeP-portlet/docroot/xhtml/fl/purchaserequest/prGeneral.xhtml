@@ -23,7 +23,9 @@
 						<f:selectItems />
 					</p:selectOneMenu></td>
 				<td><p:outputLabel value="Req. Note NO" /></td>
-				<td><p:inputText disabled="true" style="width: 260px;" /></td>
+				<td><p:inputText
+						value="#{purchaseRequestBackingBean.managedBean.selectedRequestNote.requestNoteNo}"
+						disabled="true" style="width: 260px;" /></td>
 			</tr>
 			<tr>
 				<td><p:outputLabel value="* Issued PTJ" /></td>
@@ -33,7 +35,8 @@
 						<f:selectItems />
 					</p:selectOneMenu></td>
 				<td><p:outputLabel value="Plan NO." /></td>
-				<td><p:inputText style="width: 260px;" disabled="true" /></td>
+				<td><p:inputText style="width: 260px;"
+					value="#{purchaseRequestBackingBean.managedBean.selectedRequestNote.scRequestList.ppPlan.planNo}" disabled="true" /></td>
 			</tr>
 			<tr>
 				<td><p:outputLabel value="* Received Jabatan" /></td>
@@ -43,7 +46,8 @@
 						<f:selectItems />
 					</p:selectOneMenu></td>
 				<td><p:outputLabel value="Procurement Type" /></td>
-				<td><p:inputText style="width: 260px;" disabled="true" /></td>
+				<td><p:inputText style="width: 260px;"
+				value="#{purchaseRequestBackingBean.managedBean.selectedRequestNote.fulfillmentType}" disabled="true" /></td>
 			</tr>
 			<tr>
 				<td><p:outputLabel value="* Received PTJ" /></td>

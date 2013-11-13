@@ -14,6 +14,7 @@ import my.ep.persistence.entity.fl.FlRemark;
 import my.ep.persistence.entity.fl.order.FlDeliveryOrder;
 import my.ep.persistence.entity.fl.order.FlFulfilmentOrder;
 import my.ep.persistence.entity.fl.request.FlDeliveryAddress;
+import my.ep.persistence.entity.fl.request.FlFulfilmentItem;
 import my.ep.persistence.entity.fl.request.FlFulfilmentRequest;
 import my.ep.web.managedbean.BaseManagedBean;
 
@@ -29,20 +30,14 @@ public class FulfilmentOrderManagedBean extends BaseManagedBean {
 	private Map bpmMap = new HashMap();
 	private String processName;
 	private String[] action;
-	
 	private String taskId;
-	
 	private String status;
-	
 	private String taskName;
-	
 	private String[] actions;
 	
 	private String tempLoginId; //TODO: temp and to be removed
 	private boolean contractRequest;
-	
 	private String buttonVal;
-	
 	
 	private FlRemark flRemark = new FlRemark();
 	private FlAttachment flAttachment = new FlAttachment();
@@ -55,7 +50,8 @@ public class FulfilmentOrderManagedBean extends BaseManagedBean {
 	private List<FlDeliveryAddress>deliveryAddressList;
 	private List<FlDeliveryOrder>deliveryOrderStatusList;
 	
-
+	private List<FlFulfilmentItem> flItemList;
+	
 	/**
 	 * @return the tempLoginId
 	 */
@@ -297,6 +293,20 @@ public class FulfilmentOrderManagedBean extends BaseManagedBean {
 	 */
 	public void setButtonVal(String buttonVal) {
 		this.buttonVal = buttonVal;
+	}
+
+	/**
+	 * @return the flItemList
+	 */
+	public List<FlFulfilmentItem> getFlItemList() {
+		return flItemList;
+	}
+
+	/**
+	 * @param flItemList the flItemList to set
+	 */
+	public void setFlItemList(List<FlFulfilmentItem> flItemList) {
+		this.flItemList = flItemList;
 	}
 
 	

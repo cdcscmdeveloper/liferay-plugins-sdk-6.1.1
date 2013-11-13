@@ -1,0 +1,45 @@
+<ui:composition
+	template="/WEB-INF/facelets/templates/basic_template.xhtml"
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:ac="http://ac.my/jsf/composite/cc">
+
+	<ui:define name="resourceSection">
+	</ui:define>
+	<ui:define name="contentSection">
+		<p:panel header="LIST OF REQUEST NOTE" toggleable="true">
+			<p:dataTable id="rnListDt" value="#{purchaseRequestBackingBean.managedBean.requestNoteList}"
+				var="requestNote" rowIndexVar="rowIndex">
+				<ac:paginator for="rnListDt" />
+				
+				<p:column headerText="Request Note No.">
+					<h:outputText value="#{requestNote.requestNoteNo}" />
+				</p:column>
+				<p:column headerText="Supplier Name">
+					<h:outputText value="#{requestNote.smSupplier.supplierName}" />
+				</p:column>
+				<p:column headerText="Delivery Period">
+					<h:outputText value="#{requestNote.deliverPeriod}" />
+				</p:column>
+				<p:column headerText="Delivery Type">
+					<h:outputText value="#{requestNote.deliverPeriodType}" />
+				</p:column>
+				<p:column headerText="Action">
+					<p:commandButton value="Procure"
+						action="#{purchaseRequestBackingBean.navigateToPurchaseRequest}" >
+					<f:setPropertyActionListener value="#{requestNote}"
+						target="#{purchaseRequestBackingBean.managedBean.selectedRequestNote}" />
+					</p:commandButton>
+				</p:column>
+
+			</p:dataTable>
+
+
+		</p:panel>
+	</ui:define>
+		
+</ui:composition>

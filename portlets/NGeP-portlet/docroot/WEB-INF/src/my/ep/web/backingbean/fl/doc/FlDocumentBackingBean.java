@@ -64,6 +64,7 @@ public class FlDocumentBackingBean extends BaseBackingBean<FlDocumentManagedBean
 	public static final String NAV_TO_MAINTAIN_CR = "MaintainCR";
 	public static final String NAV_TO_MAINTAIN_INV = "MaintainINV";
 	public static final String NAV_TO_MAINTAIN_FRN = "MaintainFRN";
+	public static final String NAV_TO_COMPLAIN_CC_ITEM = "/xhtml/fl/complaincontractitem/complainCentralContractItem.xhtml";
 
 	private IPagingDataModel<VFlDocument> flDocumentDataModel = new FlDocumentPagingDataModel();
 	
@@ -116,7 +117,11 @@ public class FlDocumentBackingBean extends BaseBackingBean<FlDocumentManagedBean
 			crBB.getManagedBean().setFlDocId(flDocId);
 			crBB.getManagedBean().setButtonVal(buttonVal);
 			crBB.getManagedBean().setFlRequest(resDTO.getFlFulfilmentRequest());
-			NavgPage=NAV_TO_MAINTAIN_CR;
+			if(buttonVal.equalsIgnoreCase("complain")){
+				return NAV_TO_COMPLAIN_CC_ITEM;	
+			}else{
+				return NAV_TO_MAINTAIN_CR;	
+			}
 		}else if(docType.equals("PO")){
 			fulfilmentOrderSO = (IFulfilmentOrderSO) BusinessDelegate.getInstance().getServiceObject("fl",IFulfilmentOrderSO.class);
 			fulfilmentRequestSO = (IFulfilmentRequestSO) BusinessDelegate.getInstance().getServiceObject("fl",IFulfilmentRequestSO.class);

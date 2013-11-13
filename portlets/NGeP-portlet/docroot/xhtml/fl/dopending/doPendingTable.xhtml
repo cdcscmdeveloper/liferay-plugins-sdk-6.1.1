@@ -1,5 +1,5 @@
 <ui:composition
-	template="/WEB-INF/facelets/templates/sidemenu_template.xhtml"
+	template="/WEB-INF/facelets/templates/basic_template.xhtml"
 	xmlns="http://www.w3.org/1999/xhtml"
 	xmlns:f="http://java.sun.com/jsf/core"
 	xmlns:h="http://java.sun.com/jsf/html"
@@ -9,7 +9,7 @@
 
 	<ui:define name="resourceSection">
 	</ui:define>
-	<ui:define name="content">
+	<ui:define name="contentSection">
 		<p:panel header="DELIVERY ORDER DETAILS" toggleable="true">
 		<br />
 		<p:dataTable value="#{flOrderBB.managedBean.pendingDoList}" var="pending"

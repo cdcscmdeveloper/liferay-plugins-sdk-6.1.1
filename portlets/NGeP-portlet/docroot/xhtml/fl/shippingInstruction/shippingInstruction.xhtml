@@ -9,9 +9,9 @@
 	<ui:define name="resourceSection">
 	</ui:define>
 	<ui:define name="contentSection">
-		<table style="width: 800px;">
+		<table style="width: 100%;">
 			<tr>
-				<td colspan="4" align="right">
+				<td colspan="4" style="text-align:right;">
 				<ui:repeat var="bpmAction"
 					value="#{shipInstrBackingBean.managedBean.actions}">
 					<p:commandButton value="#{bpmAction}" action="#{shipInstrBackingBean.submitShippingAction(bpmAction)}" process="@this"/>

@@ -20,11 +20,15 @@ import javax.faces.model.SelectItem;
 import my.ep.biz.service.ct.maintain.IContractAmendmentSO;
 import my.ep.biz.service.fl.request.IFulfilmentRequestSO;
 import my.ep.biz.service.pm.authorization.orgprofile.IOrgProfileSO;
+import my.ep.biz.service.ss.directpurchase.IRequestNoteSO;
 import my.ep.dto.ct.maintain.ContractAmendmentReqDTO;
 import my.ep.dto.ct.maintain.ContractAmendmentResDTO;
 import my.ep.dto.fl.FulfilmentReqDTO;
+import my.ep.dto.fl.FulfilmentResDTO;
 import my.ep.dto.pm.authorization.orgprofile.OrgProfileReqDTO;
 import my.ep.dto.pm.authorization.orgprofile.OrgProfileResDTO;
+import my.ep.dto.ss.directpurchase.RequestNoteReqDTO;
+import my.ep.dto.ss.directpurchase.RequestNoteResDTO;
 import my.ep.persistence.entity.fl.FlAttachment;
 import my.ep.persistence.entity.fl.FlRemark;
 import my.ep.persistence.entity.fl.request.FlDeliveryAddress;
@@ -33,6 +37,8 @@ import my.ep.persistence.entity.pm.authorization.PmOrgAddress;
 import my.ep.persistence.entity.pm.authorization.PmOrgProfile;
 import my.ep.persistence.entity.pm.common.PmStatus;
 import my.ep.persistence.entity.sm.SmSupplier;
+import my.ep.persistence.entity.ss.directpurchase.ScRequestNote;
+import my.ep.persistence.entity.ss.directpurchase.ScRequestNoteDtl;
 import my.ep.type.pm.OrganizationType;
 import my.ep.web.backingbean.BaseBackingBean;
 import my.ep.web.constant.BpmOutcomeConst;
@@ -53,6 +59,7 @@ import org.primefaces.model.UploadedFile;
 @RequestScoped
 public class PurchaseRequestBackingBean extends BaseBackingBean<PurchaseRequestManagedBean> {
 	private static Logger log = Logger.getLogger(PurchaseRequestBackingBean.class);
+	public static final String NAV_TO_CREATE_PURCHASE_REQUEST = "/xhtml/fl/purchaserequest/prBasePage.xhtml";
 	
 	public PurchaseRequestBackingBean(){
 	}
@@ -73,6 +80,9 @@ public class PurchaseRequestBackingBean extends BaseBackingBean<PurchaseRequestM
 			getManagedBean().getFulfilmentRequest().getSmSupplier().setSupplierId(27L);
 			getManagedBean().getFulfilmentRequest().setFlDeliveryAddresses(new ArrayList<FlDeliveryAddress>());
 		}
+		
+		retrieveRequestNoteList();
+		
 	}
 
 	public void fulfillmentRequestAction(String action) throws ParseException {
@@ -185,6 +195,25 @@ public class PurchaseRequestBackingBean extends BaseBackingBean<PurchaseRequestM
 		IContractAmendmentSO ctAmendmentSO = (IContractAmendmentSO) BusinessDelegate.getInstance().getServiceObject("ct",IContractAmendmentSO.class);
 		ContractAmendmentResDTO resDTO = ctAmendmentSO.getActiveLocation(ctReqDTO);
 		getManagedBean().setDelAddrList(resDTO.getOrgAddresses());
+	}
+	
+	public void retrieveRequestNoteList() {
+		IRequestNoteSO requestNoteSO = (IRequestNoteSO) BusinessDelegate.getInstance().getServiceObject("ss",IRequestNoteSO.class);
+		RequestNoteReqDTO reqDTO = new RequestNoteReqDTO();
+		reqDTO.setAssignedTo(2L);
+		reqDTO.setFulfillmentType("O");
+		
+		RequestNoteResDTO resDTO = requestNoteSO.retrievRequestNotes(reqDTO);
+		getManagedBean().setRequestNoteList(resDTO.getRequestNoteList());
+
+	}
+	
+	public String navigateToPurchaseRequest() {
+		getManagedBean().getSelectedRequestNote();
+		
+		
+		return NAV_TO_CREATE_PURCHASE_REQUEST;
+		
 	}
 	
 	

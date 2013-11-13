@@ -78,6 +78,7 @@
 			<portlet id="FLContractOrderSearch" />
 			<portlet id="FLDocumentSearch" />
 			<portlet id="FLPendingDoList" />
+			<portlet id="FLRequestNoteList" />
 		</category>
 		<!-- Fulfilment End Added by Giri -->
 		<portlet id="NGeP" />

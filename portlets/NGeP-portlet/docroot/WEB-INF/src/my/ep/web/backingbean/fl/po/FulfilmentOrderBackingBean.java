@@ -32,7 +32,7 @@ public class FulfilmentOrderBackingBean extends BaseBackingBean<FulfilmentOrderM
 	
 	public static final String NAV_TO_CREATE_DO = "createDo";
 	public static final String NAV_TO_FL_ORDER = "flOrder";
-
+	
 	private static Logger log = Logger.getLogger(FulfilmentOrderBackingBean.class);
 	public static final SimpleDateFormat DATE_FORMAT = new SimpleDateFormat( "MM/dd/yy hh:mm a" );
 
@@ -139,5 +139,13 @@ public class FulfilmentOrderBackingBean extends BaseBackingBean<FulfilmentOrderM
 		this.getManagedBean().setFulfilmentOrder(this.getManagedBean().getPendingDoList().get(index));
 		return NAV_TO_FL_ORDER;
 
+	}
+	
+	public void stopDelivery() {
+		FulfilmentReqDTO reqDTO = new FulfilmentReqDTO();
+		reqDTO.setFulfilmentOrder(getManagedBean().getFulfilmentOrder());
+		IFulfilmentOrderSO flOrderSO = (IFulfilmentOrderSO) BusinessDelegate.getInstance().getServiceObject("fl",IFulfilmentOrderSO.class);
+		flOrderSO.stopDeliveryWSDL(reqDTO);
+		
 	}
 }
