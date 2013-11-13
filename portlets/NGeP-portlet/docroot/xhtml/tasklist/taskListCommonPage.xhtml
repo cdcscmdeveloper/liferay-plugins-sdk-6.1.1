@@ -144,5 +144,8 @@
 	<c:if test='#{tasklistBackingBean.managedBean.processName eq "Circular Contract Maintenance"}'>
 		<ui:include src="/xhtml/ct/circular/panel/circularBase.xhtml" />
 	</c:if>	
+	<c:if test='#{tasklistBackingBean.managedBean.processName eq "Circular Contract Cancellation"}'>
+		<ui:include src="/xhtml/ct/circular/panel/cancelCircularBase.xhtml" />
+	</c:if>		
 
 </ui:composition>

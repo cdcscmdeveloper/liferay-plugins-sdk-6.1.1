@@ -11,10 +11,12 @@ import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.RequestScoped;
 import javax.faces.context.FacesContext;
+import javax.faces.event.ActionEvent;
 import javax.faces.model.SelectItem;
 
 import my.ep.biz.bean.search.ISearchBean;
 import my.ep.biz.bean.search.ISearchResultBean;
+import my.ep.biz.bean.search.SearchBean;
 import my.ep.biz.bean.search.SearchBetweenValue;
 import my.ep.biz.bean.search.SearchFilterBean;
 import my.ep.biz.service.ct.circular.ICircularSO;
@@ -31,6 +33,7 @@ import my.ep.dto.pm.authorization.user.UserResDTO;
 import my.ep.dto.pm.common.state.StateReqDTO;
 import my.ep.dto.pm.common.state.StateResDTO;
 import my.ep.exception.EpException;
+import my.ep.persistence.entity.ct.circular.CtCancelCircularReq;
 import my.ep.persistence.entity.ct.circular.CtCircular;
 import my.ep.persistence.entity.ct.circular.CtCircularVer;
 import my.ep.persistence.entity.ct.circular.dtl.CtCancelCircular;
@@ -90,6 +93,9 @@ public class PanelBackingBean extends BaseBackingBean<PanelManagedBean>{
 			List<String> source = getAvailableApproverList();  
 	        List<String> target = new ArrayList<String>();  
 	        getManagedBean().setApproverModel(new DualListModel<String>(source, target));
+		}
+		if(getManagedBean().getCircularDocType()==null) {
+			getManagedBean().setCircularDocType(ContractConst.CIRCULAR_DOC_TYPE_PANEL);
 		}
 	}
 	
@@ -158,7 +164,11 @@ public class PanelBackingBean extends BaseBackingBean<PanelManagedBean>{
 			CircularResDTO resDTO = circularSO.saveCircular(reqDTO);
 			if(resDTO.isSuccessful()) {
 				log.info("Record saved successfully");
-				FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "Record saved successfully.","Circular No. : "+circularVer.getCircularNo()));
+				String message = "Circular No. : "+circularVer.getCircularNo();
+				if(circularVer.getUpdateNo()!=null) {
+					message = message + ". Update No. : "+circularVer.getUpdateNo();
+				}
+				FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "Record saved successfully.",message));
 				if(!action.equalsIgnoreCase(BpmOutcomeConst.BPM_SAVE)) { // save action will remain in the same page
 					renewSesionObject();
 					return "/xhtml/shared/acknowledge.xhtml";
@@ -176,6 +186,51 @@ public class PanelBackingBean extends BaseBackingBean<PanelManagedBean>{
 		return null;
 	}
 	
+	public String saveCancelCircularReq(String action) {
+		log.debug("PanelBackingBean.saveCircularPanel("+action+")");
+
+		ICircularSO circularSO = null;
+		try {
+			circularSO = (ICircularSO)BusinessDelegate.getInstance().getServiceObject("ct",ICircularSO.class);
+			
+			String token = getManagedBean().getToken();
+			if(token==null) {
+				IBpmSO bpmSO = (IBpmSO) EpBpmBusinessDelegate.getInstance().getServiceObject(IBpmSO.class);
+				token = bpmSO.authenticate("roslan", "welcome1");
+				if(token==null) {
+					throw new EpException("BPM token not found");
+				}
+			}
+
+			CircularReqDTO reqDTO = new CircularReqDTO();
+			reqDTO.setCancelCircularReq(getManagedBean().getCancelCircularReq());
+			reqDTO.setSelectedApprovers(getManagedBean().getApproverModel().getTarget());
+			reqDTO.setAvailableApprovers(getManagedBean().getApproverModel().getSource());			
+			reqDTO.setDocType(getManagedBean().getCircularDocType());
+			reqDTO.setOutcome(action);
+			reqDTO.setToken(token);
+			reqDTO.setTaskId(getManagedBean().getTaskId());
+			
+			CircularResDTO resDTO = circularSO.saveCancelCircularRequest(reqDTO);
+			if(resDTO.isSuccessful()) {
+				log.info("Record saved successfully");
+				FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "Record saved successfully.","Cancel Circular Request"));
+				if(!action.equalsIgnoreCase(BpmOutcomeConst.BPM_SAVE)) { // save action will remain in the same page
+					renewSesionObject();
+					return "/xhtml/shared/acknowledge.xhtml";
+				}
+			} else {
+				throw new EpException("Failed.");
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+			FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR,e.toString(), "Cancel circular request save failed."));
+		} finally {
+			circularSO = null;
+		}
+		return null;
+	}
+	
 	public void searchCircularVer() {
 		try { 
 			circularVerPagingDataModel.reloadData();
@@ -183,6 +238,34 @@ public class PanelBackingBean extends BaseBackingBean<PanelManagedBean>{
 			e.printStackTrace();
 			FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR,e.toString(), "Circular save failed."));
 		}			
+	}
+	
+	public void searchActiveCircularVer(ActionEvent event) {
+		ICircularSO circularSO = null;
+		try { 
+			circularSO = (ICircularSO)BusinessDelegate.getInstance().getServiceObject("ct",ICircularSO.class);
+
+			ISearchBean<CtCircularVer> searchBean = new SearchBean<CtCircularVer>();
+			if(getManagedBean().getCircularDocType()!=null) {
+				searchBean.getDataFilterBeans().add(new SearchFilterBean("ctCircular.docType",SearchOperator.OPERATOR_EQUALS.value(),getManagedBean().getCircularDocType()));
+			}
+			if(getManagedBean().getSearchStatusId()!=null) {
+				searchBean.getDataFilterBeans().add(new SearchFilterBean("status.statusId",SearchOperator.OPERATOR_EQUALS.value(),getManagedBean().getSearchStatusId()));	
+			}					
+			
+			CircularReqDTO reqDTO = new CircularReqDTO();
+			reqDTO.setCircularVerSearchBean(searchBean);
+			
+			CircularResDTO resDTO = circularSO.searchCircularVer(reqDTO);
+			if(resDTO.isSuccessful()) {
+				getManagedBean().setCircularVerList(resDTO.getCircularVerResultBean().getResultList());
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+			FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR,e.toString(), "Circular save failed."));
+		} finally {
+			circularSO = null;
+		}
 	}
 	
 	public void addContactPerson(){
@@ -245,7 +328,7 @@ public class PanelBackingBean extends BaseBackingBean<PanelManagedBean>{
 	}
 	
 	public void deleteCancelCircular(){
-		log.info("PanelBackingBean.deletePanelSupplier()");
+		log.info("PanelBackingBean.deleteCancelCircular()");
 		try {
 			getManagedBean().getCircularVer().getCtCancelCircularList().remove(getManagedBean().getSelectedCancelCircular());
 		} catch (Exception e) {
@@ -341,6 +424,36 @@ public class PanelBackingBean extends BaseBackingBean<PanelManagedBean>{
 		}
 	}
 	
+	public void selectActiveCirculars(){
+		log.info("PanelBackingBean.selectActiveCirculars()");
+        try {	
+        	CtCancelCircular cancelCircular = null;
+        	List<CtCancelCircular> cancelCircularList = new ArrayList<CtCancelCircular>();
+        	for(CtCircularVer circularVer : getManagedBean().getSelectedCircularVerList()) {
+        		cancelCircular = new CtCancelCircular();
+        		cancelCircular.setCtCancelCircularVer(circularVer);
+        		cancelCircularList.add(cancelCircular);
+        	}
+        	if(getManagedBean().getCancelCircularReq()==null) {
+        		getManagedBean().setCancelCircularReq(new CtCancelCircularReq());
+        	}
+			getManagedBean().getCancelCircularReq().getCtCancelCircularList().addAll(cancelCircularList);
+		} catch (Exception e) {
+			e.printStackTrace();
+			FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR,e.toString(), e.getMessage()));
+		}
+	}
+	
+	public void deleteCancelReqCircular() {
+		log.info("PanelBackingBean.deleteCancelReqCircular()");
+		try {
+			getManagedBean().getCancelCircularReq().getCtCancelCircularList().remove(getManagedBean().getSelectedCancelCircular());
+		} catch (Exception e) {
+			e.printStackTrace();
+			FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR,e.toString(), e.getMessage()));
+		}
+	}
+	
 	public SelectItem[] getStateDropdownValues() {
 		SelectItem[] items = null;
 		try {
@@ -355,6 +468,19 @@ public class PanelBackingBean extends BaseBackingBean<PanelManagedBean>{
 		    for(PmState state: resDTO.getStateList()) {
 		    	items[i++] = new SelectItem(state.getStateId(), state.getStateName());
 		    }
+		} catch (Exception e) {
+			e.printStackTrace();
+			FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR,e.toString(), e.getMessage()));
+		}
+	    return items;
+	}
+	
+	public SelectItem[] getCircularDocTypeValues() {
+		SelectItem[] items = null;
+		try {
+		    items = new SelectItem[2];
+		    items[0] = new SelectItem(ContractConst.CIRCULAR_DOC_TYPE_PANEL, "Panel Circular");
+		    items[1] = new SelectItem(ContractConst.CIRCULAR_DOC_TYPE_CENTRAL_CONTRACT, "Central Contract Circular");
 		} catch (Exception e) {
 			e.printStackTrace();
 			FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR,e.toString(), e.getMessage()));
@@ -438,6 +564,26 @@ public class PanelBackingBean extends BaseBackingBean<PanelManagedBean>{
 			getManagedBean().getApproverModel().getSource().removeAll(resDTO.getApproverList());
 			getManagedBean().setCircular(resDTO.getCircularVer().getCtCircular());
 			getManagedBean().setCircularVer(resDTO.getCircularVer());
+		} catch (Exception e) {
+			e.printStackTrace();
+			FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR,e.toString(), e.getMessage()));
+		} finally {
+			circularSO = null;
+		}
+	}
+	
+	public void taskListCancelCircularAction(Long cancelCircularReqId) {
+		ICircularSO circularSO = null;
+		try {
+			circularSO = (ICircularSO)BusinessDelegate.getInstance().getServiceObject("ct",ICircularSO.class);
+			
+			CircularReqDTO reqDTO = new CircularReqDTO();
+			reqDTO.setCancelCircularReqId(cancelCircularReqId);
+			
+			CircularResDTO resDTO = circularSO.retrieveCancelCircularReqById(reqDTO);
+			getManagedBean().getApproverModel().setTarget(resDTO.getApproverList());
+			getManagedBean().getApproverModel().getSource().removeAll(resDTO.getApproverList());
+			getManagedBean().setCancelCircularReq(resDTO.getCancelCircularReq());
 		} catch (Exception e) {
 			e.printStackTrace();
 			FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR,e.toString(), e.getMessage()));

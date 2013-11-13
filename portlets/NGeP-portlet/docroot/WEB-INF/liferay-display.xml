@@ -17,6 +17,7 @@
 					<portlet id="ccSearch"></portlet>
 					<portlet id="cc"></portlet>
 				</category>
+				<portlet id="cancelCircular"></portlet>
 			</category>
 			<category name="category.ep.ag">
 				<portlet id="ag"></portlet>

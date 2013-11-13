@@ -1,0 +1,100 @@
+<ui:composition
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:fn="http://java.sun.com/jsp/jstl/functions" 
+	xmlns:ac="http://ac.my/jsf/composite/cc" >
+
+	<p:panel id="cancelCcrPnl" header="Circular(s) to be cancel" toggleable="true" toggleSpeed="500" >
+		<p:selectOneMenu value="#{panelBackingBean.managedBean.circularDocType}" 
+			disabled="#{fn:length(panelBackingBean.managedBean.cancelCircularReq.ctCancelCircularList) > 0}">
+			<f:selectItems value="#{panelBackingBean.getCircularDocTypeValues()}" />
+		</p:selectOneMenu>		
+		<p:spacer height="5" />
+		<p:dataTable id="cancelCcrDt" var="data" lazy="true" rowIndexVar="index" paginator="true"
+			value="#{panelBackingBean.managedBean.cancelCircularReq.ctCancelCircularList}" >
+			<ac:paginator for="cancelCcrDt" />
+			<p:columnGroup type="header">
+				<p:row>
+					<p:column style="width:30px" headerText="#{lbl['lbl.ct.pc.no']}" />
+					<p:column style="width:140px" headerText="#{lbl['lbl.ct.pc.cno']}" />
+					<p:column style="width:200px" headerText="#{lbl['lbl.ct.pc.cname']}" />
+					<p:column style="width:100px" headerText="#{lbl['lbl.ct.pc.ctype']}" />
+					<p:column style="width:100px" headerText="Update No." />
+					<p:column style="width:80px" headerText="#{lbl['lbl.ct.pc.action']}" />
+				</p:row>
+			</p:columnGroup>
+			<p:column styleClass="column-align-center">
+				<h:outputText value="#{index+1}" />
+			</p:column>
+			<p:column>
+				<h:outputText value="#{data.ctCancelCircularVer.circularNo}" />
+			</p:column>
+			<p:column>
+				<h:outputText value="#{data.ctCancelCircularVer.name}" />
+			</p:column>
+			<p:column>
+				<h:outputText value="#{data.ctCancelCircularVer.circularTypeCode.code}" />
+			</p:column>
+			<p:column>
+				<h:outputText value="#{data.ctCancelCircularVer.updateNo}" />
+			</p:column>
+			<p:column styleClass="column-align-center">
+				<p:commandButton title="delete" oncomplete="delCancelCcrDlg.show()" partialSubmit="true" process="@form" icon="ui-icon-delete">
+					<f:setPropertyActionListener value="#{data}" target="#{panelBackingBean.managedBean.selectedCancelCircular}" />
+				</p:commandButton>				
+			</p:column>
+		</p:dataTable>
+		<p:confirmDialog message="#{lbl['lbl.ct.dialong.cofirm.message']}" closable="true" appendToBody="true"
+			header="#{lbl['lbl.ct.dialong.cofirm.header']}" severity="alert" widgetVar="delCancelCcrDlg">
+			<h:panelGrid columns="2"
+				columnClasses="column-align-right-50,column-align-left">
+				<p:commandButton value="#{lbl['lbl.ct.dialong.cofirm.yes']}" action="#{panelBackingBean.deleteCancelReqCircular()}"
+					update="cancelCcrDt cancelCcrPnl" partialSubmit="true" process="@this" onclick="delCancelCcrDlg.hide();" />
+				<p:commandButton value="#{lbl['lbl.ct.dialong.cofirm.no']}" onclick="delCancelCcrDlg.hide()" type="button" />
+			</h:panelGrid>
+		</p:confirmDialog>	
+		<p:spacer height="2" />
+		<div class="ppRightBtn"> 
+			<p:commandButton value="Add" icon="ui-icon-add" actionListener="#{panelBackingBean.searchActiveCircularVer}" update="circularVerDt" oncomplete="activeCircularDlg.show();" >
+				<f:setPropertyActionListener value="#{CtStatusConst.approved}" target="#{panelBackingBean.managedBean.searchStatusId}" />
+			</p:commandButton>
+		</div>					
+		<p:dialog id="activeCircularDlg" header="Active Circulars" widgetVar="activeCircularDlg" modal="true" width="550" height="350">
+			<p:panel id="circular">
+				<p:dataTable id="circularVerDt" var="data" lazy="true" rowKey="#{data.circularVerId}" 
+					selection="#{panelBackingBean.managedBean.selectedCircularVerList}"
+					value="#{panelBackingBean.managedBean.circularVerList}" rowIndexVar="index" >
+					<ac:paginator for="circularVerDt" />
+					<p:column selectionMode="multiple" style="width:18px" />
+					<p:column headerText="No.">
+						<h:outputText value="#{index+1}" />
+					</p:column>
+					<p:column headerText="Circular No.">
+						<h:outputText value="#{data.circularNo}" />
+					</p:column>
+					<p:column headerText="Circular Name">
+						<h:outputText value="#{data.name}" />
+					</p:column>
+					<p:column headerText="Update Type">
+						<h:outputText value="#{data.circularTypeCode.code}" />
+					</p:column>
+					<p:column headerText="Update No.">
+						<h:outputText value="#{data.updateNo}" />
+					</p:column>												
+				</p:dataTable>
+				<f:facet name="footer">
+					<div class="ppRightBtn"> 
+						<p:commandButton value="Select" process="@form" action="#{panelBackingBean.selectActiveCirculars()}"
+							update="cancelCcrDt cancelCcrPnl" onclick="activeCircularDlg.hide();" />
+						<p:commandButton value="Cancel" type="button" ajax="false" onclick="activeCircularDlg.hide();" />
+					</div>
+				</f:facet>
+			</p:panel>
+		</p:dialog>			
+	</p:panel>
+		
+</ui:composition>

@@ -9,6 +9,7 @@ import java.util.List;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
 
+import my.ep.persistence.entity.ct.circular.CtCancelCircularReq;
 import my.ep.persistence.entity.ct.circular.CtCircular;
 import my.ep.persistence.entity.ct.circular.CtCircularVer;
 import my.ep.persistence.entity.ct.circular.dtl.CtCancelCircular;
@@ -34,6 +35,8 @@ public class PanelManagedBean extends BaseManagedBean {
 
 	private static final long serialVersionUID = 1L;
 
+	private String circularDocType;
+	
 	private boolean updateAction;
 	
 	private CtCircular circular;
@@ -45,7 +48,10 @@ public class PanelManagedBean extends BaseManagedBean {
 	private CtPanelState selectedPanelState;
 	private CtPanelItem selectedPanelItem;
 	private CtPanelSupplierItem selectedPanelSupplierItem;
+	private CtCancelCircularReq cancelCircularReq;
 	
+	private CtCircularVer[] selectedCircularVerList;
+	private List<CtCircularVer> circularVerList;
 	private List<CtCancelCircular> selectedCancelledCircularList;
 	private DualListModel<String> approverModel;
 
@@ -227,6 +233,38 @@ public class PanelManagedBean extends BaseManagedBean {
 
 	public void setUpdateAction(boolean updateAction) {
 		this.updateAction = updateAction;
+	}
+
+	public CtCancelCircularReq getCancelCircularReq() {
+		return cancelCircularReq;
+	}
+
+	public void setCancelCircularReq(CtCancelCircularReq cancelCircularReq) {
+		this.cancelCircularReq = cancelCircularReq;
+	}
+
+	public CtCircularVer[] getSelectedCircularVerList() {
+		return selectedCircularVerList;
+	}
+
+	public void setSelectedCircularVerList(CtCircularVer[] selectedCircularVerList) {
+		this.selectedCircularVerList = selectedCircularVerList;
+	}
+
+	public List<CtCircularVer> getCircularVerList() {
+		return circularVerList;
+	}
+
+	public void setCircularVerList(List<CtCircularVer> circularVerList) {
+		this.circularVerList = circularVerList;
+	}
+
+	public String getCircularDocType() {
+		return circularDocType;
+	}
+
+	public void setCircularDocType(String circularDocType) {
+		this.circularDocType = circularDocType;
 	}
 
 }

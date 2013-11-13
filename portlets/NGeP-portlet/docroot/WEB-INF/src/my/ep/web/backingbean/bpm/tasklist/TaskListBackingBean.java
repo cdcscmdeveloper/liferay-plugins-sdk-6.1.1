@@ -48,6 +48,7 @@ import my.ep.jaxb.cd.requestdata.CDRequestDataType;
 import my.ep.jaxb.ct.agreement.CTAgreementDataType;
 import my.ep.jaxb.ct.bankaccount.CTBankAccountDataType;
 import my.ep.jaxb.ct.circular.CTCircularContractDataType;
+import my.ep.jaxb.ct.circular.cancellation.CTCircularCancellationDataType;
 import my.ep.jaxb.ct.contract.CTContractDataType;
 import my.ep.jaxb.ct.factoring.CTFactoringDataType;
 import my.ep.jaxb.ct.suspension.CTContractSuspensionDataType;
@@ -418,7 +419,7 @@ public class TaskListBackingBean extends BaseBackingBean<TaskListManagedBean>{
 			PPBudgetDataType budgetObj = (PPBudgetDataType)obj;
 			
 			BudgetAllocationReqDTO budgetReqDTO = new BudgetAllocationReqDTO();
-			budgetReqDTO.setBudgetAllocId(Long.parseLong(budgetObj.getBudgetId()));
+			budgetReqDTO.setBudgetAllocId(budgetObj.getBudgetId().longValue());
 			IBudgetAllocationSO budgetSO = (IBudgetAllocationSO) BusinessDelegate.getInstance().getServiceObject("pp", IBudgetAllocationSO.class);
 			BudgetAllocationResDTO budgetResSO = budgetSO.retrieveBudgetAllocation(budgetReqDTO);
 
@@ -434,7 +435,7 @@ public class TaskListBackingBean extends BaseBackingBean<TaskListManagedBean>{
 			PPPlanDataType planObj = (PPPlanDataType)obj;
 			
 			ProcurementPlanReqDTO planReqDTO = new ProcurementPlanReqDTO();
-			planReqDTO.setPlanId(Long.parseLong(planObj.getPlanId()));
+			planReqDTO.setPlanId(planObj.getPlanId().longValue());
 			IProcurementPlanSO planSO = (IProcurementPlanSO) BusinessDelegate.getInstance().getServiceObject("pp", IProcurementPlanSO.class);
 			ProcurementPlanResDTO planResDTO = planSO.retrievePlanById(planReqDTO);
 
@@ -575,6 +576,13 @@ public class TaskListBackingBean extends BaseBackingBean<TaskListManagedBean>{
 				CTCircularContractDataType dataType = (CTCircularContractDataType) obj;
 				PanelBackingBean panelCircularBB = new PanelBackingBean();
 				panelCircularBB.taskListAction(dataType.getCircularId().longValue());
+				panelCircularBB.getManagedBean().setToken(ctx);
+				panelCircularBB.getManagedBean().setOutComes(res.getAction());
+				panelCircularBB.getManagedBean().setTaskId(taskId);
+			} else if(res.getProcessName().equalsIgnoreCase("Circular Contract Cancellation")) {
+				CTCircularCancellationDataType dataType = (CTCircularCancellationDataType) obj;
+				PanelBackingBean panelCircularBB = new PanelBackingBean();
+				panelCircularBB.taskListCancelCircularAction(dataType.getCircularIds().get(0).longValue());
 				panelCircularBB.getManagedBean().setToken(ctx);
 				panelCircularBB.getManagedBean().setOutComes(res.getAction());
 				panelCircularBB.getManagedBean().setTaskId(taskId);
