@@ -33,12 +33,16 @@ public class CommitteManagedBean extends BaseManagedBean {
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;
+	
+	private String outComes[];
+	
+	private String taskId;
 
 	private static final Logger log= EpLogger.getLogger(CommitteManagedBean.class);
 	
 	private List<ScQtCommittee>	qtcommittees= new ArrayList();
 	
-	private ScQtCommittee qtCommittee= new ScQtCommittee();
+	private ScQtCommittee qtCommittee;
 	
 	private String selectedCommitte;
 	
@@ -71,7 +75,7 @@ public class CommitteManagedBean extends BaseManagedBean {
 	
 	private List<SelectItem> idTypes;
 	
-	private List<SelectItem> approvers;
+	private List<PmUser> approvers;
 	
 	private String approverId;
 	
@@ -286,15 +290,7 @@ public class CommitteManagedBean extends BaseManagedBean {
 		this.status = status;
 	}
 
-	public List<SelectItem> getApprovers() {
-		return approvers;
-	}
-
-
-	public void setApprovers(List<SelectItem> approvers) {
-		this.approvers = approvers;
-	}
-
+	
 
 	public String getApproverId() {
 		return approverId;
@@ -460,6 +456,36 @@ public class CommitteManagedBean extends BaseManagedBean {
 
 	public void setExternalUsers(List<PmUser> externalUsers) {
 		this.externalUsers = externalUsers;
+	}
+
+
+	public List<PmUser> getApprovers() {
+		return approvers;
+	}
+
+
+	public void setApprovers(List<PmUser> approvers) {
+		this.approvers = approvers;
+	}
+
+
+	public String[] getOutComes() {
+		return outComes;
+	}
+
+
+	public void setOutComes(String[] outComes) {
+		this.outComes = outComes;
+	}
+
+
+	public String getTaskId() {
+		return taskId;
+	}
+
+
+	public void setTaskId(String taskId) {
+		this.taskId = taskId;
 	}
 
 
