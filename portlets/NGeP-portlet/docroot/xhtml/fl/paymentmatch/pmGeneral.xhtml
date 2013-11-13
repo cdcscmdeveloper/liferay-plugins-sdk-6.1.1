@@ -6,17 +6,6 @@
 	xmlns:p="http://primefaces.org/ui"
 	xmlns:c="http://java.sun.com/jsp/jstl/core">
 
-		<table style="width: 800px;">
-			<tr>
-				<td colspan="4" align="right">
-				<ui:repeat var="bpmAction"
-					value="#{paymentMatchBackingBean.managedBean.actions}">
-					<p:commandButton value="#{bpmAction}" action="#{paymentMatchBackingBean.submitAction(bpmAction)}" process="@this"/>
-				</ui:repeat> 
-				</td>
-			</tr>
-		</table>
-
 		<p:panel header="FULFILMENT DETAIL" toggleable="true">
 			<table>
 				<tr>

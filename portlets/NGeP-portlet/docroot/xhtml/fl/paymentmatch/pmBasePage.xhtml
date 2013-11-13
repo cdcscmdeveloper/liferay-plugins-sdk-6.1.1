@@ -11,6 +11,16 @@
 	</ui:define>
 
 	<ui:define name="contentSection">
+	<table style="width: 100%;">
+			<tr>
+				<td colspan="4" style="text-align:right;">
+				<ui:repeat var="bpmAction"
+					value="#{paymentMatchBackingBean.managedBean.actions}">
+					<p:commandButton value="#{bpmAction}" action="#{paymentMatchBackingBean.submitAction(bpmAction)}" process="@this"/>
+				</ui:repeat> 
+				</td>
+			</tr>
+		</table>
 		<p:tabView id="tt" orientation="left" widgetVar="tt">
 			<p:tab title="GENERAL">
 				<ui:include src="pmGeneral.xhtml" />
