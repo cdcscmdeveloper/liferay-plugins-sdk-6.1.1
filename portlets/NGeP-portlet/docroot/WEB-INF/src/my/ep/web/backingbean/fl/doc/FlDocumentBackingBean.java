@@ -5,6 +5,7 @@ package my.ep.web.backingbean.fl.doc;
 
 import java.util.Date;
 
+import javax.annotation.PostConstruct;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.RequestScoped;
 import javax.faces.context.FacesContext;
@@ -35,12 +36,7 @@ import my.ep.web.backingbean.fl.po.FulfilmentOrderBackingBean;
 import my.ep.web.backingbean.fl.pr.PurchaseRequestBackingBean;
 import my.ep.web.bean.paginator.IPagingDataModel;
 import my.ep.web.bean.paginator.PagingDataModel;
-import my.ep.web.managedbean.fl.creatdo.DeliveryOrderManagedBean;
-import my.ep.web.managedbean.fl.createcontract.ContractRequestManagedBean;
 import my.ep.web.managedbean.fl.doc.FlDocumentManagedBean;
-import my.ep.web.managedbean.fl.frn.ReceivedNoteManagedBean;
-import my.ep.web.managedbean.fl.invoice.InvoiceManagedBean;
-import my.ep.web.managedbean.fl.pr.PurchaseRequestManagedBean;
 import my.ep.web.util.lookupservice.BusinessDelegate;
 
 import org.apache.log4j.Logger;
@@ -74,6 +70,19 @@ public class FlDocumentBackingBean extends BaseBackingBean<FlDocumentManagedBean
 
 	public void searchDocument(){
 		flDocumentDataModel.reloadData();
+	}
+	
+	@PostConstruct
+	public void init() {
+		getManagedBean().setSearchDocType(null);
+		getManagedBean().setSearchDocNo(null);
+		getManagedBean().setSearchStartDate(null);
+		getManagedBean().setSearchEndDate(null);
+		getManagedBean().setSearchOrderType(null);
+		getManagedBean().setSearchLoaNo(null);
+		getManagedBean().setSearchProcurementType(null);
+		getManagedBean().setSearchStatusId(null);
+		getManagedBean().setSearchType(null);
 	}
 	
 	//public S
@@ -214,7 +223,7 @@ public class FlDocumentBackingBean extends BaseBackingBean<FlDocumentManagedBean
 			if (log.isDebugEnabled()) {
 				log.debug("pageChangeListener");
 			}
-			try {				
+			try {
 				searchBean.getDataFilterBeans().add(new SearchFilterBean("orderType",SearchOperator.OPERATOR_EQUALS.value(),getManagedBean().getSearchOrderType()));
 
 				if(getManagedBean().getSearchDocType()!=null) {
