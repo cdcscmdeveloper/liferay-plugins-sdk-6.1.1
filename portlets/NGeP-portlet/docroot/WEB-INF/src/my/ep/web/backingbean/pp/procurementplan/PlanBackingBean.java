@@ -80,6 +80,7 @@ import my.ep.persistence.entity.sm.SmSupplier;
 import my.ep.persistence.logging.LogKey;
 import my.ep.type.aut.SearchOperator;
 import my.ep.type.pm.OrganizationType;
+import my.ep.type.pm.ReasonCategory;
 import my.ep.web.backingbean.BaseBackingBean;
 import my.ep.web.constant.BpmOutcomeConst;
 import my.ep.web.constant.pp.ProcurementPlanConst;
@@ -1711,8 +1712,8 @@ public class PlanBackingBean extends BaseBackingBean<PlanManagedBean>{
 		List<PmReasonDesc> options = new ArrayList<PmReasonDesc>();
 		try{
 			ReasonReqDTO reqDTO = new ReasonReqDTO();
-			reqDTO.setReasonCategory(category);
-			reqDTO.setLanguage("1");
+			reqDTO.setReasonCategory(ReasonCategory.PROCUREMENT_PLAN_CANCELLATION.value());
+			reqDTO.setLanguage("18N");
 			IReasonSO reqSO = (IReasonSO) BusinessDelegate.getInstance().getServiceObject("pm", IReasonSO.class);
 			ReasonResDTO resDTO = reqSO.retrieveReasonDescListByCategory(reqDTO);
 //			if(resDTO.isSuccessful()){
