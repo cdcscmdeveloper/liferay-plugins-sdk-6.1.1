@@ -11,9 +11,57 @@
 	</ui:define>
 
 	<ui:define name="contentSection">
+		<table style="width: 100%;">
+			<tr>
+			
+				<c:if
+					test="#{purchaseRequestBackingBean.managedBean.submitButtonStatus}">
+
+					<td colspan="4" style="text-align: right"><p:commandButton
+							value="SUBMIT" ajax='false'
+							action="#{purchaseRequestBackingBean.fulfillmentRequestAction('SUBMIT')}" />
+					</td>
+				</c:if>
+				<td colspan="4" style="text-align: right"><ui:repeat var="bpmAction"
+						value="#{purchaseRequestBackingBean.managedBean.actions}">
+						
+							<p:commandButton value="#{bpmAction}" ajax='false'
+								action="#{purchaseRequestBackingBean.fulfillmentRequestAction(bpmAction)}"
+								process="@this" />
+						
+					</ui:repeat></td>
+			</tr>
+		</table>
+		<table style="width: 100%;">
+			<tr>
+				<c:if
+					test='#{purchaseRequestBackingBean.managedBean.buttonVal eq "Update"}'>
+					<td colspan="4">
+						<div align="right">
+							<p:commandButton value="UPDATE"
+								action="#{purchaseRequestBackingBean.fulfillmentRequestAction('UPDATE')}">
+								<f:param name="actionName" value="UPDATE" />
+							</p:commandButton>
+						</div>
+					</td>
+				</c:if>
+				<c:if
+					test='#{purchaseRequestBackingBean.managedBean.buttonVal eq "Cancel"}'>
+					<td colspan="4" align="right"><div align="right">
+							<p:commandButton value="CANCEL"
+								action="#{purchaseRequestBackingBean.fulfillmentRequestAction('CANCEL')}">
+								<f:param name="actionName" value="CANCEL" />
+							</p:commandButton>
+						</div></td>
+				</c:if>
+			</tr>
+		</table>
 		<p:tabView id="tt" orientation="left" widgetVar="tt">
 			<p:tab title="GENERAL">
 				<ui:include src="prGeneral.xhtml" />
+			</p:tab>
+			<p:tab title="ITEM">
+				<ui:include src="prItem.xhtml" />
 			</p:tab>
 		</p:tabView>
 	</ui:define>

@@ -56,6 +56,7 @@ import org.apache.log4j.Logger;
 public class FlDocumentBackingBean extends BaseBackingBean<FlDocumentManagedBean>{
 
 	private static Logger log = Logger.getLogger(FlDocumentBackingBean.class);
+	
 	public static final String NAV_TO_MAINTAIN_PR = "MaintainPR";
 	public static final String NAV_TO_MAINTAIN_PO = "MaintainPO";
 	public static final String NAV_TO_MAINTAIN_CO = "MaintainCO";
@@ -82,7 +83,7 @@ public class FlDocumentBackingBean extends BaseBackingBean<FlDocumentManagedBean
 		IInvoiceSO invoiceSO = null;
 		IReceivedNoteSO receivedNoteSO = null;
 		IFulfilmentOrderSO fulfilmentOrderSO = null;
-		String NavgPage=null;
+		String NavgPage="/xhtml/fl/docsearch/flDocSearch.xhtml";
 		FulfilmentReqDTO reqDTO = new FulfilmentReqDTO();
 		String docType = FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap().get("docType");
 		String flDocNo = FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap().get("docNo");
@@ -101,6 +102,9 @@ public class FlDocumentBackingBean extends BaseBackingBean<FlDocumentManagedBean
 			PrBB.getManagedBean().setDocProcess(docType);
 			PrBB.getManagedBean().setButtonVal(buttonVal);
 			PrBB.getManagedBean().setFlDocId(flDocId);
+			if(null!=buttonVal && !"".equals(buttonVal)){
+				PrBB.getManagedBean().setSubmitButtonStatus(false);
+			}
 			PrBB.getManagedBean().setFulfilmentRequest(resDTO.getFlFulfilmentRequest());
 			NavgPage=NAV_TO_MAINTAIN_PR;
 		}else if(docType.equals("CR")){

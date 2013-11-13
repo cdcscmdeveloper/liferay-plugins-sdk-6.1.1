@@ -54,6 +54,7 @@ public class FulfilmentOrderManagedBean extends BaseManagedBean {
 	private List<FlFulfilmentOrder> pendingDoList;
 	private List<FlDeliveryAddress>deliveryAddressList;
 	private List<FlDeliveryOrder>deliveryOrderStatusList;
+	
 
 	/**
 	 * @return the tempLoginId

@@ -19,13 +19,11 @@ import my.ep.persistence.entity.fl.order.FlDeliveryOrder;
 import my.ep.persistence.entity.fl.order.FlFulfilmentOrder;
 import my.ep.persistence.entity.fl.request.FlDeliveryAddress;
 import my.ep.persistence.entity.fl.request.FlFulfilmentRequest;
-import my.ep.persistence.logging.LogKey;
 import my.ep.web.backingbean.BaseBackingBean;
 import my.ep.web.managedbean.fl.creatdo.DeliveryOrderManagedBean;
 import my.ep.web.util.lookupservice.BusinessDelegate;
 
 import org.apache.log4j.Logger;
-import org.apache.log4j.MDC;
 
 /**
  * Backing Bean for Create Purchase Order
@@ -39,16 +37,12 @@ public class DeliveryOrderBackingBean extends BaseBackingBean<DeliveryOrderManag
 	private static Logger log = Logger.getLogger(DeliveryOrderBackingBean.class);
 	
 	public DeliveryOrderBackingBean(){
-		if(MDC.get(LogKey.USER_ID)==null) {
-			MDC.put(LogKey.USER_ID, 1L);
-		}
 	}
 	@PostConstruct
 	public void init() {
-		/*if (getManagedBean().getFlDeliveryOrder() == null) {
+		if (getManagedBean().getFlDeliveryOrder() == null) {
 			getManagedBean().setFlDeliveryOrder(new FlDeliveryOrder());
-			
-		}*/
+		}
 		if (getManagedBean().getFulfilmentOrder() == null) {
 			getManagedBean().setFulfilmentRequest(new FlFulfilmentRequest());
 			//getManagedBean().getFulfilmentRequest()

@@ -103,6 +103,12 @@ public class PurchaseRequestBackingBean extends BaseBackingBean<PurchaseRequestM
 			reqDTO.setContractRequest(false);
 			reqDTO.setTaskId(this.getManagedBean().getTaskId());
 			reqDTO.setOutcome(action);
+			System.out.println("temploginId: "+ getManagedBean().getTempLoginId());
+			if(null==getManagedBean().getTempLoginId() || "".equals(getManagedBean().getTempLoginId())){
+				reqDTO.setTempLogin("roslan");
+			}else{
+				reqDTO.setTempLogin(getManagedBean().getTempLoginId());
+			}
 			fulfilmentRequestSO.saveFulfillmentRequest(reqDTO);
 		} catch (Exception e) {
 			log.error("Exception>>", e);

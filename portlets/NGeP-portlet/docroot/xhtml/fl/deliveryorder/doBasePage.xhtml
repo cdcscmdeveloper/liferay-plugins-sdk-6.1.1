@@ -11,6 +11,42 @@
 	</ui:define>
 
 	<ui:define name="contentSection">
+		<table style="width: 100%;">
+
+			<tr>
+				<c:if test="#{empty createDOBackingBean.managedBean.buttonVal}">
+					<td colspan="4" style="text-align: right">
+						<div align="right">
+							<p:commandButton value="SUBMIT" ajax='false'
+								action="#{createDOBackingBean.createDeliveryOrder('SUBMIT')}" />
+							<p:commandButton value="PRINT" />
+						</div>
+					</td>
+				</c:if>
+			</tr>
+
+		</table>
+
+		<table style="width: 100%;">
+			<tr>
+				<c:if
+					test='#{createDOBackingBean.managedBean.buttonVal eq "Update"}'>
+					<td colspan="4" style="text-align: right"><p:commandButton
+							value="UPDATE"
+							action="#{createDOBackingBean.createDeliveryOrder('UPDATE')}">
+							<f:param name="actionName" value="UPDATE" />
+						</p:commandButton></td>
+				</c:if>
+				<c:if
+					test='#{createDOBackingBean.managedBean.buttonVal eq "Cancel"}'>
+					<td colspan="4" style="text-align: right"><p:commandButton
+							value="CANCEL"
+							action="#{createDOBackingBean.createDeliveryOrder('CANCEL')}">
+							<f:param name="actionName" value="CANCEL" />
+						</p:commandButton></td>
+				</c:if>
+			</tr>
+		</table>
 		<p:tabView id="tt" orientation="left" widgetVar="tt">
 			<p:tab title="GENERAL">
 				<ui:include src="doGeneral.xhtml" />

@@ -11,6 +11,37 @@
 	</ui:define>
 
 	<ui:define name="contentSection">
+		<table style="width: 100%;">
+			<tr>
+				<td colspan="4" style="text-align: right"><ui:repeat
+						var="bpmAction"
+						value="#{recievedNoteBackingBean.managedBean.actions}">
+						<p:commandButton value="#{bpmAction}" ajax='false'
+							action="#{recievedNoteBackingBean.submitAction(bpmAction)}"
+							process="@this" />
+					</ui:repeat></td>
+			</tr>
+		</table>
+		<table style="width: 100%;">
+			<tr>
+				<c:if
+					test='#{recievedNoteBackingBean.managedBean.buttonVal eq "Update"}'>
+					<td colspan="4" style="text-align: right"><p:commandButton
+							value="UPDATE"
+							action="#{recievedNoteBackingBean.submitAction('UPDATE')}">
+							<f:param name="actionName" value="UPDATE" />
+						</p:commandButton></td>
+				</c:if>
+				<c:if
+					test='#{recievedNoteBackingBean.managedBean.buttonVal eq "Cancel"}'>
+					<td colspan="4" style="text-align: right"><p:commandButton
+							value="CANCEL"
+							action="#{recievedNoteBackingBean.submitAction('CANCEL')}">
+							<f:param name="actionName" value="CANCEL" />
+						</p:commandButton></td>
+				</c:if>
+			</tr>
+		</table>
 		<p:tabView id="tt" orientation="left" widgetVar="tt">
 			<p:tab title="GENERAL">
 				<ui:include src="frnGeneral.xhtml" />

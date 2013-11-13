@@ -87,6 +87,12 @@ public class FulfilmentOrderBackingBean extends BaseBackingBean<FulfilmentOrderM
 			
 			reqDTO.setTaskId(this.getManagedBean().getTaskId());
 			reqDTO.setOutcome(action);
+			System.out.println("temploginId: "+ getManagedBean().getTempLoginId());
+			if(null==getManagedBean().getTempLoginId() || "".equals(getManagedBean().getTempLoginId())){
+				reqDTO.setTempLogin("roslan");
+			}else{
+				reqDTO.setTempLogin(getManagedBean().getTempLoginId());
+			}
 			fulfilmentOrderSO.acknowledgeFulfillmentOrder(reqDTO);
 			//System.out.println("resDTO.isSuccessful() in backing bean:: "+ resDTO.isSuccessful());
 		} catch (Exception e) {

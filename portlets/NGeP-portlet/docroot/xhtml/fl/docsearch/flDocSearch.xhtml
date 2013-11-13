@@ -71,6 +71,9 @@
 					<p:outputLabel value="Circular No" />
 					<p:inputText size="50"
 						value="#{flDocumentBackingBean.managedBean.searchCircularNo}"></p:inputText>
+					<p:outputLabel value="Loa No" />
+					<p:inputText size="50"
+						value="#{flDocumentBackingBean.managedBean.searchCircularNo}"></p:inputText>	
 				</h:panelGrid>
 				
 			</h:panelGroup>
@@ -104,21 +107,18 @@
 					<h:outputText value="#{flDocument.status.statusId}" />
 				</p:column>
 				
-				<p:column headerText="View">
+				<p:column headerText="Action" style="text-align: center">
 					<p:commandButton
 						onclick="goToDetail([{name:'docType', value:'#{flDocument.docType}'}, {name:'docId', value:'#{flDocument.docId}'}, {name:'docNo', value:'#{flDocument.docNo}'}, {name:'buttonVal', value:'View'}])"
 						value="View" />
-				</p:column>
-				<p:column headerText="Update">
 					<p:commandButton
 						onclick="goToDetail([{name:'docType', value:'#{flDocument.docType}'}, {name:'docId', value:'#{flDocument.docId}'}, {name:'docNo', value:'#{flDocument.docNo}'}, {name:'buttonVal', value:'Update'}])"
 						value="Update" />
-				</p:column>
-				<p:column headerText="Cancel">
 					<p:commandButton
 						onclick="goToDetail([{name:'docType', value:'#{flDocument.docType}'}, {name:'docId', value:'#{flDocument.docId}'}, {name:'docNo', value:'#{flDocument.docNo}'}, {name:'buttonVal', value:'Cancel'}])"
-						value="Cancel" />
+						value="Cancel" />	
 				</p:column>
+				
 			</p:dataTable>
 			<p:remoteCommand action="#{flDocumentBackingBean.navigateToPage}"
 				name="goToDetail" />

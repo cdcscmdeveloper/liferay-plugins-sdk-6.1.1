@@ -52,6 +52,8 @@ public class PurchaseRequestManagedBean extends BaseManagedBean {
 	private String docProcess;
 	private String flDocId;
 	private String buttonVal;
+	private Boolean submitButtonStatus =true;
+	private String tempLoginId;
 	
 	/**
 	 * @return the flRemark
@@ -284,6 +286,36 @@ public class PurchaseRequestManagedBean extends BaseManagedBean {
 	public void setButtonVal(String buttonVal) {
 		this.buttonVal = buttonVal;
 	}
+
+	/**
+	 * @return the submitButtonStatus
+	 */
+	public Boolean getSubmitButtonStatus() {
+		return submitButtonStatus;
+	}
+
+	/**
+	 * @param submitButtonStatus the submitButtonStatus to set
+	 */
+	public void setSubmitButtonStatus(Boolean submitButtonStatus) {
+		this.submitButtonStatus = submitButtonStatus;
+	}
+
+	/**
+	 * @return the tempLoginId
+	 */
+	public String getTempLoginId() {
+		return tempLoginId;
+	}
+
+	/**
+	 * @param tempLoginId the tempLoginId to set
+	 */
+	public void setTempLoginId(String tempLoginId) {
+		this.tempLoginId = tempLoginId;
+	}
+
+	
 
 	
 }

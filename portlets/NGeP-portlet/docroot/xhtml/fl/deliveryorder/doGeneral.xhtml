@@ -5,42 +5,6 @@
 	xmlns:p="http://primefaces.org/ui"
 	xmlns:c="http://java.sun.com/jsp/jstl/core">
 
-
-	<table style="width: 800px;">
-
-		<tr>
-			<td colspan="4" align="right">
-				<p:commandButton value="SUBMIT" ajax='false'
-					action="#{createDOBackingBean.createDeliveryOrder('SUBMIT')}" /> <p:commandButton value="PRINT" /></td>
-		</tr>
-		
-	</table>
-	
-	<table style="width: 800px;">
-		<tr>
-			<c:if
-				test='#{createDOBackingBean.managedBean.buttonVal eq "Update"}'>
-				<td colspan="4">
-					<div align="right">
-						<p:commandButton value="UPDATE"
-							action="#{createDOBackingBean.createDeliveryOrder('UPDATE')}">
-							<f:param name="actionName" value="UPDATE" />
-						</p:commandButton>
-					</div>
-				</td>
-			</c:if>
-			<c:if
-				test='#{createDOBackingBean.managedBean.buttonVal eq "Cancel"}'>
-				<td colspan="4" align="right"><div align="right">
-						<p:commandButton value="CANCEL"
-							action="#{createDOBackingBean.createDeliveryOrder('CANCEL')}">
-							<f:param name="actionName" value="CANCEL" />
-						</p:commandButton>
-					</div></td>
-			</c:if>
-		</tr>
-	</table>
-
 	<p:panel header="SUPPLIER DETAIL (FROM)" toggleable="true">
 		<table>
 			<tr>
