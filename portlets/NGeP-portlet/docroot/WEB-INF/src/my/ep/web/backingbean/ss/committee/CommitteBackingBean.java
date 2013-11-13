@@ -1,12 +1,16 @@
 package my.ep.web.backingbean.ss.committee;
 
+import java.awt.Event;
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.faces.application.ConfigurableNavigationHandler;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.RequestScoped;
+import javax.faces.context.FacesContext;
 import javax.faces.model.SelectItem;
+import javax.resource.spi.IllegalStateException;
 
 import my.ep.biz.bean.search.ISearchBean;
 import my.ep.biz.bean.search.SearchBean;
@@ -45,8 +49,10 @@ import my.ep.web.type.ss.quationtender.IdentificationType;
 import my.ep.web.type.ss.quationtender.MemberRole;
 import my.ep.web.type.ss.quationtender.MemberType;
 import my.ep.web.type.ss.quationtender.SelectionType;
+import my.ep.web.util.FacesScopes;
 
 import org.apache.log4j.Logger;
+import org.primefaces.event.RowEditEvent;
 
 /**
  * @author VidyasagarReddy
@@ -86,60 +92,48 @@ public class CommitteBackingBean extends
 	}
 
 	private CommitteResDTO saveCommitte() {
-		IOrgProfileSO orgProfileSO = EpEjbBusinessDelegate.getInstance()
-				.getServiceObject(QTConstants.PM_MODULE, IOrgProfileSO.class);
-		IUserSO userSO = EpEjbBusinessDelegate.getInstance().getServiceObject(
-				QTConstants.PM_MODULE, IUserSO.class);
-		ScQtCommittee committee = getManagedBean().getQtCommittee();
+		
+		Long currentUser = new FacesScopes().getUserSessionBean().getUserId();
+		// ScQtcommitte date setting
+		ScQtCommittee scQtCommittee = this.getManagedBean().getQtCommittee();
+		scQtCommittee.setCreatedBy(currentUser);
+		scQtCommittee.setChangedBy(currentUser);
+		scQtCommittee.setCreatedDate(new Timestamp(System.currentTimeMillis()));
+		scQtCommittee.setRecordStatus(true);
 
-		String tenderNumber = getManagedBean().getTenderNum();
-		// Need to remove below 3 properties
-		committee.setChangedBy(getCurrentUser().getUserId());
-		committee.setCreatedBy(getCurrentUser().getUserId());
+		// SCcommitteData setting
+		ScCommittee committee = this.getManagedBean().getScCommittee();
+		committee.setCreatedBy(currentUser);
+		committee.setChangedBy(currentUser);
 		committee.setCreatedDate(new Timestamp(System.currentTimeMillis()));
+		committee.setRecordStatus(true);
 
-		ScCommittee scCommittee = getManagedBean().getScCommittee();
-		// Need to remove below properties
-		scCommittee.setChangedBy(getCurrentUser().getUserId());
+		// Sccommittemembers info
+		List<ScCommitteeMember> committeMembers = this.getManagedBean()
+				.getCommittemembers();
+		List<ScCommitteeMember> commMembers = new ArrayList<ScCommitteeMember>();
+		for (ScCommitteeMember comMember : committeMembers) {
+			comMember.setScCommittee(committee);
+			comMember.setCreatedBy(currentUser);
+			comMember.setChangedBy(currentUser);
+			comMember.setCreatedDate(new Timestamp(System.currentTimeMillis()));
+			comMember.setRecordStatus(true);
+			comMember.setMemberType("T");
+			commMembers.add(comMember);
 
-		scCommittee.setCreatedBy(getCurrentUser().getUserId());
-		scCommittee.setCreatedDate(new Timestamp(System.currentTimeMillis()));
-		scCommittee.setRecordStatus(Boolean.TRUE);
-
-		scCommittee.setApprovalReq(Boolean.TRUE);
-		scCommittee.setStatusId(1);
-		List<ScCommitteeMember> member = getManagedBean().getCommittemembers();
-		if (member != null) {
-			List<ScCommitteeMember> committeMembers = new ArrayList<ScCommitteeMember>();
-			for (ScCommitteeMember commMember : member) {
-				commMember.setChangedBy(getCurrentUser().getUserId());
-				commMember.setCreatedBy(getCurrentUser().getUserId());
-				commMember.setCreatedDate(new Timestamp(System
-						.currentTimeMillis()));
-				commMember.setScCommittee(scCommittee);
-
-				commMember.setPmUser(null);
-				OrgProfileReqDTO orgProfileReqDTO = new OrgProfileReqDTO();
-				orgProfileReqDTO.setOrgProfileId(1l);
-				OrgProfileResDTO pmOrgProfile = orgProfileSO
-						.retrieveOrgProfileByProfileId(orgProfileReqDTO);
-				commMember.setPmOrgProfile(pmOrgProfile.getPmOrgProfile());
-
-				committeMembers.add(commMember);
-
-			}
-
-			scCommittee.setScCommitteeMembers(committeMembers);
 		}
-		committee.setScCommittee(scCommittee);
+		committee.setScCommitteeMembers(commMembers);
+		// Need to change this status based on qt status
+		committee.setStatusId(1);
 
+		scQtCommittee.setScCommittee(committee);
+	
 		CommitteReqDTO committeReqDTO = new CommitteReqDTO();
-		committeReqDTO.setQtCommittee(committee);
-		committeReqDTO.setQtNumber(tenderNumber);
+		committeReqDTO.setQtCommittee(scQtCommittee);
 		ICommitteSO committeSO = EpEjbBusinessDelegate.getInstance()
 				.getServiceObject(QTConstants.SS_MODULE, ICommitteSO.class);
 		CommitteResDTO resDTO = committeSO.saveOrUpdateCommitte(committeReqDTO);
-
+		
 		return resDTO;
 	}
 
@@ -269,6 +263,16 @@ public class CommitteBackingBean extends
 		if (committeMemebers == null) {
 			committeMemebers = new ArrayList<ScCommitteeMember>();
 		}
+		this.getManagedBean().setCommitteMember(null);
+		ScCommitteeMember committeeMember = new ScCommitteeMember();
+		committeeMember.setPmUser(new PmUser());
+		committeeMember.setMinistryOrgProfile(new PmOrgProfile());
+		committeeMember.setPmOrgProfile(new PmOrgProfile());
+		committeeMember.setDepartmentOrgProfile(new PmOrgProfile());
+
+		this.getManagedBean().setCommitteMember(committeeMember);
+		getSelectionTypes();
+		getUserTypes();
 		committeMemebers.add(getManagedBean().getCommitteMember());
 		getManagedBean().setCommittemembers(committeMemebers);
 
@@ -283,18 +287,26 @@ public class CommitteBackingBean extends
 	 */
 	public String newCommitteeAction() {
 		try {
+			resetCommitte();
+			
 			ICommitteSO committeSO = EpEjbBusinessDelegate.getInstance()
 					.getServiceObject(QTConstants.SS_MODULE, ICommitteSO.class);
 			CommitteResDTO committeResDTO = committeSO
 					.retriveQTCommitteDetails(new CommitteReqDTO());
-			getManagedBean().setScCommittee(
-					committeResDTO.getCommittee().getScCommittee());
+			ScQtCommittee qtCommittee = committeResDTO.getCommittee();
+			ScQt scQt = new ScQt();
+			qtCommittee.setScQt(scQt);
+			getManagedBean().setQtCommittee(qtCommittee);
+			ScCommittee committee = qtCommittee.getScCommittee();
+			PmUser pmUser = new PmUser();
+			committee.setPmUser(pmUser);
+			getManagedBean().setScCommittee(committee);
 			if (getManagedBean().getCommitteType() == null) {
 				retriveCommitteTypes();
 			}
 
-			getManagedBean().setApprovers(
-					toUserSelectItem(committeResDTO.getCommitteApprovers()));
+			getManagedBean()
+					.setApprovers(committeResDTO.getCommitteApprovers());
 			if (getManagedBean().getApprovalStatus() == null) {
 				getApprovalStatus();
 			}
@@ -434,8 +446,10 @@ public class CommitteBackingBean extends
 			getManagedBean().setCloneCommitteMemebers(
 					new ArrayList<ScCommitteeMember>());
 		}
+
 		getManagedBean().getCloneCommitteMemebers().addAll(
 				resDTO.getCommitteMembers());
+
 	}
 
 	public void addCloneCommitteeMembersAction() {
@@ -449,13 +463,13 @@ public class CommitteBackingBean extends
 		}
 	}
 
-	public void advanceSearch() {
+	public void userSelcetionAction() {
 
 		logger.debug("getSearchType:"
 				+ this.getManagedBean().getUserSelection());
 		this.getManagedBean().setGovUsers(null);
 		this.getManagedBean().setExternalUsers(null);
-		this.getManagedBean().setCommitteMember(null);
+		
 		this.getManagedBean().setMinstryList(null);
 		this.getManagedBean().setDeptList(null);
 		this.getManagedBean().setDivisionList(null);
@@ -464,8 +478,10 @@ public class CommitteBackingBean extends
 		committeeMember.setMinistryOrgProfile(new PmOrgProfile());
 		committeeMember.setPmOrgProfile(new PmOrgProfile());
 		committeeMember.setDepartmentOrgProfile(new PmOrgProfile());
-
+		
+		this.getManagedBean().getCommittemembers().remove(this.getManagedBean().getCommitteMember());
 		this.getManagedBean().setCommitteMember(committeeMember);
+		this.getManagedBean().getCommittemembers().add(committeeMember);
 		if (this.getManagedBean().getUserSelection()
 				.equalsIgnoreCase(SelectionType.PROFILE.value())) {
 
@@ -486,6 +502,7 @@ public class CommitteBackingBean extends
 	}
 
 	public void retriveUserDetails(Long userid) {
+
 		IUserSO iUserSO = EpEjbBusinessDelegate.getInstance().getServiceObject(
 				QTConstants.PM_MODULE, IUserSO.class);
 		UserReqDTO reqDTO = new UserReqDTO();
@@ -529,22 +546,22 @@ public class CommitteBackingBean extends
 				.getMinistryOrgProfile().getOrgProfileId();
 
 		if (parentOrgProfileId != null) {
-			Long userId = this.getManagedBean().getCommitteMember().getPmUser().getUserId();
-							
-				OrgProfileReqDTO reqDTO = new OrgProfileReqDTO();
+			Long userId = this.getManagedBean().getCommitteMember().getPmUser()
+					.getUserId();
 
-				reqDTO.setUserId(userId);
-				reqDTO.setOrgType(OrganizationType.DEPARTMENT.value());
-				reqDTO.setParentOrgProfileId(parentOrgProfileId);
+			OrgProfileReqDTO reqDTO = new OrgProfileReqDTO();
 
-				IOrgProfileSO orgProfileSO = EpEjbBusinessDelegate
-						.getInstance().getServiceObject("pm",
-								IOrgProfileSO.class);
-				OrgProfileResDTO resDTO = orgProfileSO
-						.retrieveOrgProfileListByOrgType(reqDTO);
+			reqDTO.setUserId(userId);
+			reqDTO.setOrgType(OrganizationType.DEPARTMENT.value());
+			reqDTO.setParentOrgProfileId(parentOrgProfileId);
 
-				this.getManagedBean().setDeptList(resDTO.getOrgProfileList());
-			
+			IOrgProfileSO orgProfileSO = EpEjbBusinessDelegate.getInstance()
+					.getServiceObject("pm", IOrgProfileSO.class);
+			OrgProfileResDTO resDTO = orgProfileSO
+					.retrieveOrgProfileListByOrgType(reqDTO);
+
+			this.getManagedBean().setDeptList(resDTO.getOrgProfileList());
+
 		} else {
 			this.getManagedBean().setDeptList(new ArrayList<PmOrgProfile>());
 		}
@@ -565,22 +582,21 @@ public class CommitteBackingBean extends
 				.getDepartmentOrgProfile().getOrgProfileId();
 
 		if (parentOrgProfileId != null) {
-			Long userId = this.getManagedBean().getCommitteMember().getPmUser().getUserId();
-				OrgProfileReqDTO reqDTO = new OrgProfileReqDTO();
+			Long userId = this.getManagedBean().getCommitteMember().getPmUser()
+					.getUserId();
+			OrgProfileReqDTO reqDTO = new OrgProfileReqDTO();
 
-				reqDTO.setUserId(userId);
-				reqDTO.setOrgType(OrganizationType.DIVISION.value());
-				reqDTO.setParentOrgProfileId(parentOrgProfileId);
+			reqDTO.setUserId(userId);
+			reqDTO.setOrgType(OrganizationType.DIVISION.value());
+			reqDTO.setParentOrgProfileId(parentOrgProfileId);
 
-				IOrgProfileSO orgProfileSO = EpEjbBusinessDelegate
-						.getInstance().getServiceObject("pm",
-								IOrgProfileSO.class);
-				OrgProfileResDTO resDTO = orgProfileSO
-						.retrieveOrgProfileListByOrgType(reqDTO);
+			IOrgProfileSO orgProfileSO = EpEjbBusinessDelegate.getInstance()
+					.getServiceObject("pm", IOrgProfileSO.class);
+			OrgProfileResDTO resDTO = orgProfileSO
+					.retrieveOrgProfileListByOrgType(reqDTO);
 
-				this.getManagedBean().setDivisionList(
-						resDTO.getOrgProfileList());
-			
+			this.getManagedBean().setDivisionList(resDTO.getOrgProfileList());
+
 		} else {
 			this.getManagedBean()
 					.setDivisionList(new ArrayList<PmOrgProfile>());
@@ -603,4 +619,40 @@ public class CommitteBackingBean extends
 		this.getManagedBean().setMinstryList(resDTO.getOrgProfileList());
 
 	}
+	public void resetCommitteDetails(){
+		resetCommitte();
+	}
+	
+	private void resetCommitte(){
+		getManagedBean().setCloneCommitteMemebers(null);
+		getManagedBean().setCloneSearchCommittes(null);
+		getManagedBean().setCommittemembers(null);
+	}
+	
+	public void onRowEditAction(RowEditEvent event) {  
+		ScCommitteeMember committeeMember = (ScCommitteeMember) event.getObject();
+       getManagedBean().setCommitteMember(committeeMember);
+  
+       
+    }  
+	
+	 public void onRowCancel(RowEditEvent event) {  
+	      ScCommitteeMember member= (ScCommitteeMember) event.getObject();
+	      this.getManagedBean().getCommittemembers().remove(member);
+	    }  
+	 
+	 public void cancelCommitteAction(){
+		this.getManagedBean().getCommittemembers().remove(this.getManagedBean().getCommitteMember());
+	 }
+	
+	 public void goToMaintainceAction(RowEditEvent editEvent){
+		ScQtCommittee committee= (ScQtCommittee) editEvent.getObject();
+		this.getManagedBean().setQtCommittee(committee);
+		this.getManagedBean().setScCommittee(committee.getScCommittee());
+		 ConfigurableNavigationHandler handler = (ConfigurableNavigationHandler) FacesContext
+	               .getCurrentInstance().getApplication()
+	               .getNavigationHandler();
+	         handler.performNavigation("committeemaintanancepage");
+		 
+	 }
 }
