@@ -24,6 +24,7 @@ import my.ep.biz.service.pp.procurementplan.IProcurementPlanSO;
 import my.ep.bpm.dto.BpmRequestDTO;
 import my.ep.bpm.dto.BpmResponseDTO;
 import my.ep.bpm.service.IBpmSO;
+import my.ep.constants.FlProcessNameConst;
 import my.ep.dto.cm.codification.CodificationReqDTO;
 import my.ep.dto.cm.codification.CodificationResDTO;
 import my.ep.dto.cm.codification.RequestCodeReqDTO;
@@ -387,7 +388,7 @@ public class TaskListBackingBean extends BaseBackingBean<TaskListManagedBean>{
 
 
 		}
-		else if(res.getProcessName().equalsIgnoreCase("Create Purchase Order")){
+		else if(res.getProcessName().equalsIgnoreCase(FlProcessNameConst.PURCHASE_REQ_CREATION_PROCESS_NAME)){
 			System.out.println("in Task List Create Purchase Order");
 			IFulfilmentRequestSO fulfilmentSO = (IFulfilmentRequestSO) BusinessDelegate.getInstance().getServiceObject("fl",IFulfilmentRequestSO.class);
 			FulfilmentReqDTO fulfilmentReqDTO = new FulfilmentReqDTO();
@@ -405,14 +406,18 @@ public class TaskListBackingBean extends BaseBackingBean<TaskListManagedBean>{
 			System.out.println("Action In task list"+res.getAction());
 			purchaseRequestBackingBean.getManagedBean().setActions(res.getAction());
 			purchaseRequestBackingBean.getManagedBean().setTaskName(res.getTaskName());
-			if(res.getTaskName().equals("Acknowledge the Purchase Request")){
+			purchaseRequestBackingBean.getManagedBean().setTempLoginId(this.getManagedBean().getTempLoginId());
+			if(null!=res.getAction() && !"".equals(res.getAction())){
+				purchaseRequestBackingBean.getManagedBean().setSubmitButtonStatus(false);
+			}
+			if(res.getTaskName().equals("Acknowledge Purchase Request")){
+				System.out.println("We are in ACKDGE");
 				FulfilmentOrderBackingBean florderBB=new FulfilmentOrderBackingBean();
 				florderBB.getManagedBean().setFulfilmentRequest(resDTO.getFlFulfilmentRequest());
 				florderBB.getManagedBean().setTaskId(taskId);
 				florderBB.getManagedBean().setActions(res.getAction());
+				florderBB.getManagedBean().setTempLoginId(this.getManagedBean().getTempLoginId());
 			}
-			
-			
 		}else if(res.getProcessName().equalsIgnoreCase("Budget Endorsement")){
 
 			//Procurement Plan - Budget
