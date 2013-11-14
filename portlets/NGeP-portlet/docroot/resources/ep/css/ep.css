@@ -751,7 +751,7 @@ a:visited.menuItemLink-selected {
 	height: 25px !important;
 	margin:5px 0 5px 10px;
 	border-radius: 5px !important;
-	background: #017D9F !important; /* Old browsers */
+	background: #808080 !important; /* Old browsers */
 
 }
 
@@ -762,12 +762,16 @@ a:visited.menuItemLink-selected {
 	border-collapse: separate;
 	box-shadow: 0px 0px 8px #B4DFF8, inset 0px 1px 0px white;
 	color: #77be08;
-	background-color:#1AA1C6 !important;
+	background-color:#808080 !important;
 
 }
 
 .ui-button-text-icon-left .ui-button-text {
 	padding: .4em 1em .2em 2.1em;
+}
+
+.ui-button .ui-button-text {
+	display: inline !important;
 }
 /* --------------------------          End Button         ------------------------------ */
 a.blue_font {
