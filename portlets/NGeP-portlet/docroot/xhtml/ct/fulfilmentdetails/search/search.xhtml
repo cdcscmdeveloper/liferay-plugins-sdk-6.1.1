@@ -48,12 +48,14 @@
                                 </p:selectOneListbox>
                                 </h:panelGrid>
                                 <f:verbatim></f:verbatim>
-                                <h:panelGrid columns="2">
-			                    <p:commandButton value="#{lbl['lbl.ct.search.btn.search']}" actionListener="#{contractDetailsBackingBean.searchContract()}"
+                               
+                               
+						     </h:panelGrid>
+						     <div class="ppRightBtn"> 
+                               <p:commandButton value="#{lbl['lbl.ct.search.btn.search']}" actionListener="#{contractDetailsBackingBean.searchContract()}"
                                     process="@this" partialSubmit="true"  icon="ui-icon-search"  update="dataTable"/>
 							        <p:commandButton value="#{lbl['lbl.ct.search.btn.reset']}"  process="@this" partialSubmit="true" icon="ui-icon-reset"  update="dataTable"/>
-						       </h:panelGrid>
-						     </h:panelGrid>
+						      </div>	
 			       </p:panel>
 				   <p:panel id="searchResulId" header="#{lbl['lbl.ct.search.panel.result']}"  toggleable="true"  toggleSpeed="500">
                        <div style="overflow-x:auto">
@@ -84,22 +86,18 @@
 							                            <p:column styleClass="column-align-center">
 								                          <p:commandButton title="Suspended"  action="#{contractDetailsBackingBean.gotoSuspendPage}" 
 								                          image="ui-icon-suspension">
-								                           <f:setPropertyActionListener value="#{data}" target="#{contractDetailsBackingBean.contract}"  />
-								                          </p:commandButton>
+								                            </p:commandButton>
 								                     
 								                          <p:commandButton title="Termination" action="#{contractDetailsBackingBean.gotoTerminatePage}"
 								                             partialSubmit="true" process="@this" image="ui-icon-terminate">
 								                              <f:setPropertyActionListener target="#{contractDetailsBackingBean.managedBean.ctContract}" value="#{data}" />
 								                              </p:commandButton>
 								                       
-								                          <p:commandButton title="Amendment" action="#{contractDetailsBackingBean.gotoAmendPage}" 
-								                            partialSubmit="true" process="@this" image="ui-icon-revise">
-								                             <f:setPropertyActionListener target="#{contractDetailsBackingBean.managedBean.ctContract}" value="#{data}" />
-								                            </p:commandButton>
+								                          <p:commandButton title="Amendment" action="#{contractDetailsBackingBean.gotoAmendPage}"  partialSubmit="true" process="@this" image="ui-icon-revise">
+								                           </p:commandButton>
 								                            
 								                          <p:commandButton title="View Agreement"  action="#{contractDetailsBackingBean.gotoViewPage}" image="ui-icon-agree">
-								                              <f:setPropertyActionListener value="#{data}" target="#{contractDetailsBackingBean.contract}"  />
-								                          </p:commandButton>
+								                              </p:commandButton>
 								                      </p:column> 
 							              </p:dataTable>
 						       </div>

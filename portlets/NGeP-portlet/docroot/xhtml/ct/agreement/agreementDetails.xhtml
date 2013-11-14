@@ -6,7 +6,7 @@
 	xmlns:p="http://primefaces.org/ui"
 	xmlns:c="http://java.sun.com/jsp/jstl/core">
     <p:panel id="fd" header="#{lbl['lbl.ct.panel.name']}"   toggleable="true"  toggleSpeed="500">
-       <h:panelGrid columns="4" style="width:800px;">  
+       <h:panelGrid columns="4" style="width:700px;">  
          <p:outputLabel value="#{lbl['lbl.ct.cname']}"/>  
          <p:inputText value="#{agreementBackingBean.managedBean.contract.contractName}" style="width:150px;" disabled="true" />
          <p:outputLabel value="#{lbl['lbl.ct.cno']}" />  
@@ -59,15 +59,15 @@
          </h:panelGrid>
          <p:outputLabel value="#{lbl['lbl.ct.ft.no']}" />  
          <p:commandLink>  
-          <p:outputLabel value="2348-5674874" />  
+          <p:outputLabel value="2348-5674874" style="float:left;"/>  
          </p:commandLink> 
          <p:outputLabel value="#{lbl['lbl.ct.final.ag']}"  />  
-         <p:selectBooleanCheckbox value=""  disabled="false"/> 
+         <p:selectBooleanCheckbox value="true"  disabled="false"/> 
          <f:verbatim></f:verbatim>
          <f:verbatim></f:verbatim>
          <p:outputLabel value="#{lbl['lbl.ct.circular']}"  />  
          <p:commandLink>  
-          <p:outputLabel value="CR-2013-PTJ-0001"  />  
+          <p:outputLabel value="CR-2013-PTJ-0001" style="float:left;"  />  
          </p:commandLink> 
        </h:panelGrid>
       </p:panel>

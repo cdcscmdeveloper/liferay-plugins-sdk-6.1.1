@@ -28,13 +28,13 @@
                  <f:verbatim></f:verbatim>
                  <f:verbatim></f:verbatim>
                  <f:verbatim></f:verbatim>
-                 <h:panelGrid columns="2" style="width:170px;" columnClasses="column-align-right">
+                </h:panelGrid>
+                 <div class="ppRightBtn"> 
                     <p:commandButton value="Search" styleClass="text-align:right;" actionListener="#{supplierBackingBean.searchContract()}"
                                     process="@this" partialSubmit="true"  icon="ui-icon-search"  update="supTable"/>
 					<p:commandButton value="Reset" process="@this" partialSubmit="true" icon="ui-icon-reset"/>
-			     </h:panelGrid>
-               </h:panelGrid>
-            </p:panel>
+				</div>
+	        </p:panel>
 			<p:panel id="searchResulId" header="Search Result"   toggleable="true"  toggleSpeed="500" widgetVar="panelsearchResul">
               <div style="overflow-x:auto">
 			     <p:dataTable id="supTable" var="data" value="#{supplierBackingBean.managedBean.contractList}" rowIndexVar="index"
@@ -62,14 +62,13 @@
 						<p:column> <p:outputLabel  value="12/11/2013" style="float:left;"/> </p:column>	
 						<p:column> <p:outputLabel  value="11/11/2014" style="float:left;"/> </p:column>	
 						<p:column styleClass="column-align-center">
-						<p:commandButton title="change Bank" action="#{supplierBackingBean.gotoBankPage}" partialSubmit="true" process="@this" 
-						   icon="ui-icon-bank" styleClass="ui-icon-bank"/>
-						<p:spacer width="3"/>
+						<p:commandButton title="change Bank" action="#{supplierBackingBean.gotoBankPage}" partialSubmit="true" process="@this" icon="ui-icon-bank"/>
+						<p:spacer width="1"/>
 						<p:commandButton title="Change Factory" action="#{supplierBackingBean.gotoFactoringPage}" partialSubmit="true" process="@this" 
-						   icon="ui-icon-factory" styleClass="ui-icon-button"/>
-						<p:spacer width="3"/>
+						   icon="ui-icon-factory"/>
+						<p:spacer width="1"/>
 						<p:commandButton title="Terminate Contract" action="#{supplierBackingBean.gotoTerminationPage}" partialSubmit="true" process="@this" 
-						   icon="ui-icon-terminate" styleClass="ui-icon-button"/>
+						   icon="ui-icon-terminate"/>
 						</p:column> 
 					</p:dataTable>
 				</div>

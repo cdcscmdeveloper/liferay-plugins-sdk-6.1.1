@@ -27,18 +27,18 @@
                <h:outputLabel value="#{lbl['lbl.ct.asearch.pcno']}" styleClass="txtsize" />
                <p:inputText  style="width:170px;"/>
                <f:verbatim></f:verbatim>
-               <h:panelGrid columns="2">
+                </h:panelGrid>
+              <div class="ppRightBtn"> 
                  <p:commandButton value="#{lbl['lbl.ct.asearch.btn.search']}"  process="@this" icon="ui-icon-search"  
                     actionListener="#{contractDetailsBackingBean.searchAssociation()}"  update="associateSearch"/>
                  <p:commandButton value="#{lbl['lbl.ct.asearch.btn.reset']}"  process="@this" partialSubmit="true" icon="ui-icon-reset" />
-               </h:panelGrid>
-              </h:panelGrid>
+              </div>
 		 </p:panel>
 		 <p:panel id="associateResultId" header="#{lbl['lbl.ct.asearch.panel.result']}"   toggleable="true"  toggleSpeed="500">
             <div style="overflow-x:auto">
 			    <h:panelGrid  style="width:950px;">          
 			        <p:dataTable id="associateSearch" var="data" value="#{contractDetailsBackingBean.managedBean.associationList}" rowIndexVar="index"
-			         widgetVar="dataTableObj" lazy="false" dynamic="true" paginator="true" paginatorPosition="bottom" paginatorAlwaysVisible="false" 
+			         widgetVar="dataTableObj" lazy="false" dynamic="true" paginator="true" paginatorPosition="bottom" paginatorAlwaysVisible="true" 
 			         emptyMessage="No Records!" rows="5">
 						<p:columnGroup type="header"> 
 							<p:row> 
@@ -62,7 +62,7 @@
 								   </p:commandButton>   
 								</p:column>
 					      </p:dataTable>
-						    <h:panelGrid style="width:950px;">
+						    <h:panelGrid style="width:940px;">
 							  <p:commandButton value="Create"  style="float:right;" icon="ui-icon-add" action="#{contractDetailsBackingBean.gotoAssociatePage}"/>
 						    </h:panelGrid>
 				    </h:panelGrid>

@@ -5,8 +5,8 @@
 	xmlns:ui="http://java.sun.com/jsf/facelets"
 	xmlns:p="http://primefaces.org/ui"
 	xmlns:c="http://java.sun.com/jsp/jstl/core">
-    <p:panel id="factoringId" header="#{lbl['lbl.panel.fc.name']}"    toggleable="true"  toggleSpeed="500">
-      <h:panelGrid columns="4" style="width:600px;">  
+    <p:panel id="factoringId" header="#{lbl['lbl.ct.fc.panel.name']}"    toggleable="true"  toggleSpeed="500">
+      <h:panelGrid columns="4" style="width:550px;">  
          <p:outputLabel  value="Company Name"/>  
             <p:selectOneMenu style="width:150px;">
                <f:selectItem itemLabel="-Please Select--" itemValue="" /> 
@@ -20,10 +20,10 @@
           <p:outputLabel value=" Expiry Date"/>
           <p:calendar style="width:140px;" value="#{supplierBackingBean.managedBean.factoring.expDate}" id="popupButtonCal1" showOn="button" />
            </h:panelGrid>
-           <h:panelGrid columns="2" style="width:550px;">  
+           <h:panelGrid columns="2">  
            <h:panelGroup>
-			<div style="height: 30px;width:108px; vertical-align: top">
-				<p:outputLabel for="fcaddress" value="Factoring Company Address"  />
+			<div style="height: 30px;width:115px; vertical-align: top">
+				<p:outputLabel for="fcaddress" value="Company Address"  />
 			</div>
 		   </h:panelGroup>
 		   <h:panelGrid>

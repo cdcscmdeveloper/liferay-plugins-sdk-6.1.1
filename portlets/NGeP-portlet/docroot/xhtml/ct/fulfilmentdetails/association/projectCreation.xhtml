@@ -17,7 +17,6 @@
 		 <h:outputLabel  value="#{lbl['lbl.ct.asearch.model.pdes']}" />
          <p:inputText  value="#{contractDetailsBackingBean.managedBean.projectDescription}"  style="width:400px;"></p:inputText>
 	  </h:panelGrid>
-      <div style="overflow-x:auto;">
           <p:dataTable id="associateCreation" var="data" value="#{contractDetailsBackingBean.managedBean.associateSearchList}" rowIndexVar="index"
              widgetVar="dataTableObj" paginator="true" paginatorPosition="bottom" paginatorAlwaysVisible="true"  emptyMessage="No Records!" rows="6">
              <p:columnGroup type="header"> 
@@ -45,12 +44,11 @@
 				    </p:commandButton>
 				</p:column>
 			</p:dataTable>
-		   </div>
 			<h:panelGrid style="width:980px;" columns="2">
-			<h:panelGrid width="700px;" columns="1">
+			<h:panelGrid width="720px;" columns="1">
 			<f:verbatim></f:verbatim>
 			</h:panelGrid>
-			<h:panelGrid width="200px;" columns="3">
+			<h:panelGrid width="180px;" columns="3">
 			   <p:commandButton value="Add" process="@this" icon="ui-icon-add" onclick="dlg2.show();">
 			      <p:ajax event="change" update="associateCreation" process="@this" />
 			   </p:commandButton>
@@ -78,7 +76,7 @@
                   <p:commandButton value="Search" process="@this" icon="ui-icon-search"
                     actionListener="#{contractDetailsBackingBean.advanceContractSearch()}" update="advanceCtSearch"/>
               </h:panelGrid>
-		      <div style="overflow-x:auto">
+		     <p:spacer height="2"/>
                    <p:dataTable id="advanceCtSearch" var="data" value="#{contractDetailsBackingBean.managedBean.contractList}" rowIndexVar="index"
                     widgetVar="dataTableObj"  lazy="false" dynamic="true" selection="#{contractDetailsBackingBean.selectedContractList}" rowKey="#{data.contractId}"
                     paginator="true" paginatorPosition="bottom" paginatorAlwaysVisible="true"  emptyMessage="No Records!" rows="6">
@@ -102,12 +100,11 @@
                     <h:outputText value="#{data.contractStatus}" />
 					</p:column> 
 			  	 </p:dataTable>
-		     </div>
 			 <f:facet name="footer">
-			   <h:panelGrid columns="2"  style="float:right;height:100px;vertical-align: middle;">
+			   <h:panelGrid columns="2"  style="float:right;height:50px;vertical-align: middle;">
 				  <p:commandButton value="Select" process="modelDialog" actionListener="#{contractDetailsBackingBean.addAdvanceContract}" 
-				     update="associateCreation,modelDialog" onclick="dlg2.hide();"/>
-                    <p:commandButton value="Cancel" type="button" ajax="false" onclick="dlg2.hide();" />
+				     update="associateCreation,modelDialog" icon="ui-icon-select" onclick="dlg2.hide();"/>
+                    <p:commandButton value="Cancel" type="button"  icon="ui-icon-cancel" ajax="false" onclick="dlg2.hide();" />
 			    </h:panelGrid>
 		    </f:facet>
          </p:panel>

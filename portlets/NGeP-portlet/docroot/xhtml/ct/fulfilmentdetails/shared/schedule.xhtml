@@ -8,7 +8,7 @@
     <p:panel id="scheduleId" header="#{lbl['lbl.ct.sched.panel.name']}"  toggleable="true"  toggleSpeed="500" widgetVar="panelschedule">
     <h:panelGrid columns="2">
        <p:outputLabel value="#{lbl['lbl.ct.sched.fsched']}"/>
-       <p:inputText value="" style="width:100px;"/>
+       <p:inputText  style="width:100px;"/>
        <p:outputLabel value="#{lbl['lbl.ct.sched.progre']}"/>
            <p:selectBooleanCheckbox value="#{contractDetailsBackingBean.managedBean.contractValues.progressivePayment}">
             <p:ajax event="change"  listener="#{contractDetailsBackingBean.progressivePayment}" process="@this" update=":form:tabview:paymentSchedule"/>

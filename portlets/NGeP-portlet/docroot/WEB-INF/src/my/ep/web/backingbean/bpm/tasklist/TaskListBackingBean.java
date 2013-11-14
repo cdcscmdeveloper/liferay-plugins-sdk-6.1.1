@@ -51,6 +51,7 @@ import my.ep.jaxb.ct.bankaccount.CTBankAccountDataType;
 import my.ep.jaxb.ct.circular.CTCircularContractDataType;
 import my.ep.jaxb.ct.circular.cancellation.CTCircularCancellationDataType;
 import my.ep.jaxb.ct.contract.CTContractDataType;
+import my.ep.jaxb.ct.contract.amendment.CTContractAmendmentDataType;
 import my.ep.jaxb.ct.factoring.CTFactoringDataType;
 import my.ep.jaxb.ct.suspension.CTContractSuspensionDataType;
 import my.ep.jaxb.fl.codata.FLContractOrderDataType;
@@ -449,15 +450,14 @@ public class TaskListBackingBean extends BaseBackingBean<TaskListManagedBean>{
 
 				IContractSO contractSO = (IContractSO) BusinessDelegate.getInstance().getServiceObject("ct",IContractSO.class);
 				ContractReqDTO ctReqDTO = new ContractReqDTO();
-				ctReqDTO.setContractId(new Long(ctDataType.getContractId()));
+				ctReqDTO.setContractId(ctDataType.getContractId().longValue());
 				ContractResDTO resDTO = contractSO.retrieveContract(ctReqDTO);
 				
 				ContractDetailsBackingBean ctdBB = new ContractDetailsBackingBean();
 				ctdBB.getManagedBean().setCtContract(resDTO.getContract());
 				ctdBB.getManagedBean().setOutComes(res.getAction());
-				
 				ctdBB.getManagedBean().setTaskId(taskId);
-				ctReqDTO.setTaskId(taskId);
+				ctdBB.getManagedBean().setToken(ctx);
 
 			}else if(res.getProcessName().equalsIgnoreCase("Agreement Creation")){
 				
@@ -466,20 +466,20 @@ public class TaskListBackingBean extends BaseBackingBean<TaskListManagedBean>{
 				IAgreementSO agreementSO = (IAgreementSO) BusinessDelegate.getInstance().getServiceObject("ct",IAgreementSO.class);
 				ContractAgreementReqDTO ctReqDTO = new ContractAgreementReqDTO();
 				
-				ctReqDTO.setContractId(new Long(agDataType.getContractId()));
+				ctReqDTO.setContractId(agDataType.getContractId().longValue());
 				AgreementBackingBean ctaBB = new AgreementBackingBean();
-				ctaBB.getManagedBean().setContractId(new Long(agDataType.getContractId()));
+				ctaBB.getManagedBean().setContractId(agDataType.getContractId().longValue());
 				ctaBB.getManagedBean().setOutComes(res.getAction());
 			    ctaBB.getManagedBean().setTaskId(taskId);
-			    ctReqDTO.setTaskId(taskId);
-				
+			    ctaBB.getManagedBean().setToken(ctx);
+			    ctaBB.getManagedBean().setAgreementType(agDataType.getAgreementType());
 				if(agDataType.getAgreementId().intValue() != 0){
-				     ctReqDTO.setAgreementId(new Long(agDataType.getAgreementId()));
+				     ctReqDTO.setAgreementId(agDataType.getAgreementId().longValue());
 				     ContractAgreementResDTO resDTO = agreementSO.retrieveAgreement(ctReqDTO);
 				     ctaBB.getManagedBean().setAgreement(resDTO.getAgreement());
 			    }
-			    System.out.println("====================task name====================" +res.getTaskName());
-				System.out.println("====================taskId======================="+taskId);
+				
+		
 			}else if(res.getProcessName().equalsIgnoreCase("Contract Activation Suspension Request")){
 				
 	        	 CTContractSuspensionDataType ctsDataType = (CTContractSuspensionDataType)obj;
@@ -498,9 +498,7 @@ public class TaskListBackingBean extends BaseBackingBean<TaskListManagedBean>{
 				
 				ctdBB.getManagedBean().setTaskId(taskId);
 				ctsReqDTO.setTaskId(taskId);
-				System.out.println("================Contract Id=================" +ctsReqDTO.getContractId());
-				System.out.println("====================task name====================" +res.getTaskName());
-				System.out.println("====================taskId======================="+taskId);
+				
 
 			}else if(res.getProcessName().equalsIgnoreCase("Bank Account Change Request")){
 				
@@ -536,6 +534,15 @@ public class TaskListBackingBean extends BaseBackingBean<TaskListManagedBean>{
 				
 				ctsReqDTO.setTaskId(taskId);
 		
+			}else if(res.getProcessName().equalsIgnoreCase("Contract Amendment Request")) {
+			
+				CTContractAmendmentDataType dataType = (CTContractAmendmentDataType) obj;
+				ContractDetailsBackingBean ctdBB = new ContractDetailsBackingBean();
+				ctdBB.taskListAction(dataType.getAmendmentId().longValue(),dataType.getContractId().longValue());
+				ctdBB.getManagedBean().setOutComes(res.getAction());
+				ctdBB.getManagedBean().setTaskId(taskId);
+				ctdBB.getManagedBean().setToken(ctx);
+			
 			}else if (res.getProcessName().equalsIgnoreCase(
 					"MOF Supplier Registration")) {
 				SMMOFRegDataType smObj = (SMMOFRegDataType) obj;

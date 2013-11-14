@@ -7,7 +7,7 @@
 	xmlns:c="http://java.sun.com/jsp/jstl/core">
 	<ui:include src="/xhtml/ct/fulfilmentdetails/shared/fulfilment.xhtml"/>
     <p:panel id="terCont" header="#{lbl['lbl.ct.tr.panel.header']}" toggleable="true"  toggleSpeed="500">
-            <h:panelGrid columns="4">  
+            <h:panelGrid columns="4" style="width:650px;">  
                <h:outputLabel value="#{lbl['lbl.ct.tr.mutual']}"/>  
                <p:selectBooleanCheckbox value="#{contractDetailsBackingBean.managedBean.termination.mutualTerminate}"/> 
                <f:verbatim></f:verbatim> <f:verbatim></f:verbatim>
@@ -21,7 +21,7 @@
 	         </h:panelGrid> 
      </p:panel>
      <p:panel id="trReason" header="#{lbl['lbl.ct.tr.reason']}" toggleable="true"  toggleSpeed="500">
-       <h:panelGrid>
+       <h:panelGrid style="width:780px;">
 			<p:dataTable id="dataTable" var="data" value="#{contractDetailsBackingBean.managedBean.terminateReasonList}" rowIndexVar="index" 
 			  widgetVar="dataTableObj" lazy="false" dynamic="true" paginator="true" paginatorPosition="bottom" paginatorAlwaysVisible="true"
 			  emptyMessage="No Records!" rows="10">
@@ -84,7 +84,7 @@
 		   </p:column>						
 		  </p:dataTable>
 		 </h:panelGrid>
-		 <h:panelGrid style="width:780px" columnClasses="column-align-right">
+		 <h:panelGrid style="width:770px" columnClasses="column-align-right">
 			<p:commandButton value="Add" process="@this" partialSubmit="true" 
 			   icon="ui-icon-add" onclick="dlg2.show();">
 			</p:commandButton>
@@ -106,8 +106,8 @@
 			 </p:dataTable>
 			 <f:facet name="footer">
 			 <h:panelGrid columns="2"  style="height:40px;vertical-align: middle;float:right;">
-			   <p:commandButton value="Select"   process="modalDialog" update="clauseTable,modalDialog" onclick="dlg2.hide();"/>
-               <p:commandButton value="Cancel"  type="button" ajax="false" onclick="dlg2.hide();" />
+			   <p:commandButton value="Select" icon="ui-icon-select"  process="modalDialog" update="clauseTable,modalDialog" onclick="dlg2.hide();"/>
+               <p:commandButton value="Cancel" icon="ui-icon-cancel" type="button" ajax="false" onclick="dlg2.hide();" />
 			</h:panelGrid>
 			</f:facet>
 		</p:panel>

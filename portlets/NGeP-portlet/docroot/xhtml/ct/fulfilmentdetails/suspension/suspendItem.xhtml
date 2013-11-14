@@ -17,7 +17,7 @@
 				<p:column rowspan="2" headerText="Start Date" /> 	
 				<p:column rowspan="2" headerText="End Date" /> 		
 				<p:column rowspan="2" headerText="Status" /> 					
-				<p:column colspan="3" headerText="Action" styleClass="column-align-center"/>
+				<p:column colspan="3" headerText="Action"/>
 			 </p:row>							
 			 <p:row> 
 				<p:column headerText="S" />	
@@ -26,14 +26,14 @@
 			 </p:row>
 		   </p:columnGroup>
 		   <p:column styleClass="column-align-center" ><h:outputText value="#{index+1}" /></p:column> 
-		   <p:column><p:outputLabel value ="Product"/> </p:column> 
-		   <p:column width="100"> <p:outputLabel value ="EP 308X3120P"/></p:column> 
+		   <p:column><p:outputLabel value ="Product" style="float:left;"/> </p:column> 
+		   <p:column width="100"> <p:outputLabel value ="EP 308X3120P" style="float:left;"/></p:column> 
 		   <p:column width="100" > <p:calendar value="#{contractSuspendBackingBean.managedBean.startDate}" id="calItem" showOn="button"/>  </p:column> 
 		   <p:column> <p:calendar value="#{contractSuspendBackingBean.managedBean.endDate}" id="calItem1" showOn="button"/>  </p:column> 
-		   <p:column> <p:outputLabel value ="Active"/> </p:column>
-		   <p:column>  <p:selectBooleanCheckbox value=""  disabled="false"/>  </p:column>
-		   <p:column> <p:selectBooleanCheckbox value=""  disabled="false"/>  </p:column>
-		   <p:column> <p:selectBooleanCheckbox value=""  disabled="false"/> </p:column>
+		   <p:column> <p:outputLabel value ="Active" style="float:left;"/> </p:column>
+		   <p:column>  <p:selectBooleanCheckbox value="false"  disabled="false"/>  </p:column>
+		   <p:column> <p:selectBooleanCheckbox value="false"  disabled="false"/>  </p:column>
+		   <p:column> <p:selectBooleanCheckbox value="true"  disabled="false"/> </p:column>
 		 </p:dataTable>	
 		 </div>	
 		 <p:spacer width="12"/>	
@@ -51,13 +51,13 @@
 				<p:column headerText="Minimum Order"/>
 			</p:row>
 			</p:columnGroup>
-			<p:column> <p:outputLabel value ="EP 308X3120P"/> </p:column>
-			<p:column> <p:outputLabel value ="DESKTOP"/> </p:column>
-			<p:column> <p:outputLabel value ="KHAI"/> </p:column>
-			<p:column> <p:outputLabel value ="MYR"/> </p:column>
-			<p:column> <p:outputLabel value ="2300"/> </p:column>
-			<p:column> <p:outputLabel value ="UNIT"/> </p:column>
-			<p:column> <p:outputLabel value ="10"/> </p:column>
+			<p:column> <p:outputLabel value ="EP 308X3120P" style="float:left;"/> </p:column>
+			<p:column> <p:outputLabel value ="DESKTOP" style="float:left;"/> </p:column>
+			<p:column> <p:outputLabel value ="KHAI" style="float:left;"/> </p:column>
+			<p:column> <p:outputLabel value ="MYR" style="float:left;"/> </p:column>
+			<p:column> <p:outputLabel value ="2300" style="float:left;"/> </p:column>
+			<p:column> <p:outputLabel value ="UNIT" style="float:left;"/> </p:column>
+			<p:column> <p:outputLabel value ="10" style="float:left;"/> </p:column>
 		 </p:dataTable>	
 		 </div>		
 		</p:panel>            

@@ -13,11 +13,17 @@
       <h:outputLabel  value="#{lbl['lbl.ct.fc.authname']}"  />  
       <p:inputText  value="#{contractDetailsBackingBean.managedBean.ctFactoring.authRefNo}" disabled="false" style="width:200px;" />  
       <h:outputLabel  value="#{lbl['lbl.ct.fc.fdate']}"  />  
-      <p:inputText  value="#{contractDetailsBackingBean.managedBean.ctFactoring.effDate}" disabled="false" style="width:160px;" />  
+      <p:inputText  value="#{contractDetailsBackingBean.managedBean.ctFactoring.effDate}" disabled="false" style="width:160px;" >
+       <f:convertDateTime pattern="MM/dd/yyyy" />
+       </p:inputText>  
       <h:outputLabel  value="#{lbl['lbl.ct.fc.edate']}" />  
-      <p:inputText  value="#{contractDetailsBackingBean.managedBean.ctFactoring.expDate}" disabled="false" style="width:160px;" />  
+      <p:inputText  value="#{contractDetailsBackingBean.managedBean.ctFactoring.expDate}" disabled="false" style="width:160px;">
+       <f:convertDateTime pattern="MM/dd/yyyy" />
+      </p:inputText>  
       <h:outputLabel  value="#{lbl['lbl.ct.fc.adate']}" />  
-      <p:inputText  value="#{contractDetailsBackingBean.managedBean.ctFactoring.approvedDate}" disabled="false" style="width:160px;" />  
+      <p:inputText  value="#{contractDetailsBackingBean.managedBean.ctFactoring.approvedDate}" disabled="false" style="width:160px;" >
+       <f:convertDateTime pattern="MM/dd/yyyy" />
+       </p:inputText>  
     </h:panelGrid>
   </h:panelGrid>
  </p:panel>

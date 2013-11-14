@@ -41,7 +41,7 @@
               </h:panelGrid>
 		   </p:panel>
 		   <p:outputPanel id="changeFields"> 
-		 	 <p:panel id="itemZoneId"  header="#{contractDetailsBackingBean.managedBean.showItem}"  toggleable="true"  toggleSpeed="500"  widgetVar="panelitemzone">
+		 	 <p:panel id="itemZoneId"  header="#{contractDetailsBackingBean.managedBean.showItem}"  toggleable="true"  toggleSpeed="500">
 				<h:panelGrid rendered="#{contractDetailsBackingBean.managedBean.itemPricing}">
 				   <p:dataTable id="tableItemZone"  var="data" value=" " widgetVar="dataTableObj"
                     lazy="false" dynamic="true" paginator="true" paginatorPosition="bottom" paginatorAlwaysVisible="true" emptyMessage="No Records!" rows="10">

@@ -6,29 +6,26 @@
 	xmlns:p="http://primefaces.org/ui"
 	xmlns:c="http://java.sun.com/jsp/jstl/core">
 	  <h:panelGrid columns="4" style="width:700px;">  
-      <h:outputLabel value="Amended Request No" />  
+      <p:outputLabel value="Amended Request No" />  
       <p:commandLink style="margin-right:20px;" sajax="false">  
-      <h:outputText value="FA00099234242" />  
+       <p:outputLabel value="FA00099234242" style="float:left;" />  
       </p:commandLink> 
-      <h:outputLabel value="Amended Request Date" />  
-      <p:inputText style="width:170px;" required="true" disabled="true" />
-      <h:outputLabel value="Amended Title / Name" />  
-      <p:inputText style="width:170px;"/>
-      <h:outputLabel value="Amended File Ref No"/>  
-                        <p:inputText style="width:170px;" disabled="true" /> 
-                        </h:panelGrid>
-                        <h:panelGrid style="width:700px;">  
-                        <h:panelGrid columns="2">
-                        <h:panelGroup>
-						<div style="height: 30px;width:135px; vertical-align: top">
-						<p:outputLabel for="amendmentD" value="Amended Description" />
-						</div>
-						</h:panelGroup>
-						<h:panelGrid>
-						<p:inputTextarea id="amendmentD" required="false" 
-						   rows="2" cols="60" disabled="false" autoResize="false" />
-					    </h:panelGrid>
-						</h:panelGrid>
-                        </h:panelGrid> 
+      <p:outputLabel value="Amended Request Date" />  
+      <p:inputText style="width:150px;" required="true" disabled="true" />
+      <p:outputLabel value="Amended Title / Name" />  
+      <p:inputText style="width:150px;"/>
+      <p:outputLabel value="Amended File Ref No"/>  
+      <p:inputText style="width:150px;" disabled="true" /> 
+     </h:panelGrid>
+     <h:panelGrid columns="2">  
+      <h:panelGroup>
+		<div style="height: 30px;width:142px; vertical-align: top">
+		   <p:outputLabel for="amendmentD" value="Amended Description" />
+		</div>
+		</h:panelGroup>
+		<h:panelGrid>
+		  <p:inputTextarea id="amendmentD" required="false" rows="2" cols="60" disabled="false" autoResize="false" />
+		</h:panelGrid>
+	</h:panelGrid>
 </ui:composition>
 	  

@@ -6,11 +6,8 @@
 	xmlns:p="http://primefaces.org/ui"
 	xmlns:c="http://java.sun.com/jsp/jstl/core">
         <p:panel id="itemId" header="Item Details"   toggleable="true"  toggleSpeed="500" widgetVar="panelitem">
-          <p:dataTable id="dataTable" var="data" value=" " widgetVar="dataTableObj" lazy="false" dynamic="true" 
-			 paginator="true" paginatorPosition="bottom" paginatorAlwaysVisible="true" emptyMessage="No Records!" rows="10" 
-			 rowsPerPageTemplate="5,10,15,20" currentPageReportTemplate=" total {totalRecords},  page {currentPage} of {totalPages} "
-			 paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink}
-			 {LastPageLink} {RowsPerPageDropdown}">
+          <p:dataTable id="dataTable" var="data" value=" " widgetVar="dataTableObj"
+           lazy="false" dynamic="true"  paginator="true" paginatorPosition="bottom" paginatorAlwaysVisible="true" emptyMessage="No Records!" rows="10">
 			 <p:columnGroup type="header"> 
 			 <p:row> 
 			   <p:column style="width:80px" headerText="Item Code" /> 
@@ -21,25 +18,22 @@
                <p:column style="width:70px" headerText="Action"  /> 
             </p:row>							
 			</p:columnGroup>
-			<p:column></p:column>       
-			<p:column></p:column>       
-			<p:column></p:column>       
-			<p:column></p:column>       
+			<p:column><p:outputLabel value="EP 308X3120P" style="float:left;"/></p:column>       
+			 <p:column><p:outputLabel value="DESKTOP" style="float:left;"/></p:column>       
+			 <p:column><p:outputLabel value="Malaysia" style="float:left;"/></p:column>        
+			 <p:column><p:outputLabel value="30000" style="float:left;"/></p:column>      
 			<p:column styleClass="column-align-center">
-			<p:selectBooleanCheckbox value=""/> 
+			<p:selectBooleanCheckbox value="true"/> 
             </p:column>       
 			<p:column styleClass="column-align-center">
-			<p:commandButton title="Edit" partialSubmit="true" process="@this" 
-			   icon="ui-icon-edit" styleClass="ui-icon-button"/>
+			<p:commandButton title="Edit" partialSubmit="true" process="@this" icon="ui-icon-edit" styleClass="ui-icon-button"/>
 			<p:spacer width="2"></p:spacer>
-			<p:commandButton title="delete" onsuccess="confirmation.show()" partialSubmit="true" process="@this" 
-			  icon="ui-icon-delete" styleClass="ui-icon-button"/>
+			<p:commandButton title="delete" onsuccess="confirmation6.show()" partialSubmit="true" process="@this" icon="ui-icon-delete"/>
 			</p:column>  
 		</p:dataTable>
-		<h:panelGrid columns="2" style="height:100px;text-align:bottom;">
-		   <h:outputLabel for="show" value="Show" style="width:100px;" styleClass="txtsize"/>  
-           <p:selectOneMenu id="show" disabled="false"  value="#{contractDetailsBackingBean.managedBean.createContractDetails.zoneType}"  style="width:200px;">
-              <f:selectItem itemLabel="--Please Select--" itemValue="--Please Select--" /> 
+		<h:panelGrid columns="2" style="height:50px;text-align:bottom;">
+		   <h:outputLabel for="show" value="Show" style="width:50px;"/>  
+           <p:selectOneMenu id="show" disabled="false"  value="#{contractDetailsBackingBean.managedBean.showItem}"  style="width:200px;">
               <f:selectItems value="#{contractDetailsBackingBean.itemDetailsMethod}" />
             	 <p:ajax event="change" update="changeField" listener="#{contractDetailsBackingBean.changeField}" process="@this"/>  
 	       </p:selectOneMenu>         
@@ -48,15 +42,12 @@
 	   </p:panel>
 	   <p:outputPanel id="changeField"> 
 	   <h:panelGrid columns="1" style="width:800px"
-		  rendered="#{contractDetailsBackingBean.itemPricing or contractDetailsBackingBean.itemCeilingQuantity}">
-		  <p:panel id="itemZoneId"  header="#{contractDetailsBackingBean.managedBean.createContractDetails.zoneType}"  toggleable="true"  toggleSpeed="500" widgetVar="panelitemzone">
-		  <p:dataTable id="dataTable1"  var="data" value=" " widgetVar="dataTableObj" lazy="false" dynamic="true" 
-			 paginator="true" paginatorPosition="bottom" paginatorAlwaysVisible="true" emptyMessage="No Records!" rows="10" 
-			 rowsPerPageTemplate="5,10,15,20" currentPageReportTemplate=" total {totalRecords},  page {currentPage} of {totalPages} "
-		     paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink}
-			 {LastPageLink} {RowsPerPageDropdown}">
+		  rendered="#{contractDetailsBackingBean.managedBean.itemPricing or contractDetailsBackingBean.managedBean.itemCeilingQuantity}">
+		  <p:panel id="itemZoneId"  header="#{contractDetailsBackingBean.managedBean.showItem}"  toggleable="true"  toggleSpeed="500">
+		  <p:dataTable id="itemTable"  var="data" value=" " widgetVar="dataTableObj" lazy="false" dynamic="true" 
+			 paginator="true" paginatorPosition="bottom" paginatorAlwaysVisible="true" emptyMessage="No Records!" rows="10">
 			 <p:columnGroup type="header">
-				<p:row rendered="#{contractDetailsBackingBean.itemPricing}">
+				<p:row rendered="#{contractDetailsBackingBean.managedBean.itemPricing}">
                    <p:column style="width:100px" headerText="Zone" />
 				   <p:column style="width:50px" headerText="From Qty" />
 				   <p:column style="width:50px" headerText="To Qty" />
@@ -65,7 +56,7 @@
 				   <p:column style="width:150px" headerText="Expirey Date" />
 				   <p:column style="width:100px" headerText="Action" />
 		       </p:row>
-               <p:row  rendered="#{contractDetailsBackingBean.itemCeilingQuantity}"> 
+               <p:row  rendered="#{contractDetailsBackingBean.managedBean.itemCeilingQuantity}"> 
 				  <p:column style="width:100px" headerText="Ministry Name"   /> 
 				  <p:column style="width:100px" headerText="Jabatan Name" /> 
 				  <p:column style="width:100px" headerText="PTJ Name" /> 
@@ -84,26 +75,24 @@
 			<p:column>
 			  <p:calendar style="width:130px;" value="#{contractDetailsBackingBean.managedBean.createContractDetails.date}" id="popupButtonCal1" showOn="button" />
 			</p:column>       
-			<p:column styleClass="column-align-center" rendered="#{!contractDetailsBackingBean.itemCeilingQuantity}">
-			<p:commandButton title="Add" partialSubmit="true" process="@this" 
-			   icon="ui-icon-add1" styleClass="ui-icon-button"/>
+			<p:column styleClass="column-align-center" rendered="#{!contractDetailsBackingBean.managedBean.itemCeilingQuantity}">
+			<p:commandButton title="Edit" partialSubmit="true" process="@this" icon="ui-icon-edit"/>
 			<p:spacer width="2"/>
-			<p:commandButton title="Edit" partialSubmit="true" process="@this" 
-			   icon="ui-icon-edit" styleClass="ui-icon-button"/>
-			<p:spacer width="2"/>
-			<p:commandButton title="delete" onsuccess="confirmation.show()" partialSubmit="true" process="@this" 
-				icon="ui-icon-delete" styleClass="ui-icon-button"/>
+			<p:commandButton title="delete" onsuccess="confirmation6.show()" partialSubmit="true" process="@this" icon="ui-icon-delete"/>
 			</p:column>          
 		</p:dataTable>
+		 <h:panelGrid style="width:760px" columnClasses="column-align-right" rendered="#{!contractDetailsBackingBean.managedBean.itemCeilingQuantity}">
+		       <p:commandButton value="#{lbl['lbl.ct.ded.btn.add']}" process="@this" partialSubmit="true"  icon="ui-icon-add" update="itemTable"/>
+		  </h:panelGrid>
 	   </p:panel>
 	  </h:panelGrid>  
 	</p:outputPanel>
-    <p:confirmDialog message="Do you want to delete the record?" closable="true" appendToBody="true" header="Delete Confirmation"
-	   severity="alert" widgetVar="confirmation">
-       <h:panelGrid columns="2" columnClasses="column-align-right-50,column-align-left">
+    <p:confirmDialog message="Do you want to delete the record?" closable="true" appendToBody="false" header="Delete Confirmation"
+	   severity="alert" widgetVar="confirmation6">
+       <h:panelGrid columns="2">
 		  <p:commandButton value="Yes" 	update="dataTable" partialSubmit="true" process="@this"
-			 onclick="confirmation.hide();"/>
-		  <p:commandButton value="No" onclick="confirmation.hide()" type="button" />
+			 onclick="confirmation6.hide();"/>
+		  <p:commandButton value="No" onclick="confirmation6.hide()" type="button" />
 	   </h:panelGrid>
     </p:confirmDialog>                          
 </ui:composition>

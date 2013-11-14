@@ -1,6 +1,7 @@
 package my.ep.web.managedbean.ct.circular.central;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import javax.faces.bean.ManagedBean;
@@ -24,6 +25,18 @@ public class CentralManagedBean extends BaseManagedBean {
 	private String[] outComes;
 	private int selectedIndex;
 	private Object searchValue;
+	
+	/*Search parameter*/
+	// Search
+	private String searchCircularNo;
+	private String searchCircularName;
+	private String searchFileRefNo;
+	private String searchSupplierName;
+	private String searchItemName;
+	private Date searchStartDate;
+	private Date searchEndDate;	
+	private Long searchCircularTypeCodeId;
+	private Long searchStatusId;
 	
 	private List<CtContactPerson> contractPerson;
 	private CtContactPerson deleteContractPerson;
@@ -183,7 +196,77 @@ public class CentralManagedBean extends BaseManagedBean {
 	public void setCircularList(List<CtCircular> circularList) {
 		this.circularList = circularList;
 	}
-	
-	
+
+	public String getSearchCircularNo() {
+		return searchCircularNo;
+	}
+
+	public void setSearchCircularNo(String searchCircularNo) {
+		this.searchCircularNo = searchCircularNo;
+	}
+
+	public String getSearchCircularName() {
+		return searchCircularName;
+	}
+
+	public void setSearchCircularName(String searchCircularName) {
+		this.searchCircularName = searchCircularName;
+	}
+
+	public String getSearchFileRefNo() {
+		return searchFileRefNo;
+	}
+
+	public void setSearchFileRefNo(String searchFileRefNo) {
+		this.searchFileRefNo = searchFileRefNo;
+	}
+
+	public String getSearchSupplierName() {
+		return searchSupplierName;
+	}
+
+	public void setSearchSupplierName(String searchSupplierName) {
+		this.searchSupplierName = searchSupplierName;
+	}
+
+	public String getSearchItemName() {
+		return searchItemName;
+	}
+
+	public void setSearchItemName(String searchItemName) {
+		this.searchItemName = searchItemName;
+	}
+
+	public Date getSearchStartDate() {
+		return searchStartDate;
+	}
+
+	public void setSearchStartDate(Date searchStartDate) {
+		this.searchStartDate = searchStartDate;
+	}
+
+	public Date getSearchEndDate() {
+		return searchEndDate;
+	}
+
+	public void setSearchEndDate(Date searchEndDate) {
+		this.searchEndDate = searchEndDate;
+	}
+
+	public Long getSearchCircularTypeCodeId() {
+		return searchCircularTypeCodeId;
+	}
+
+	public void setSearchCircularTypeCodeId(Long searchCircularTypeCodeId) {
+		this.searchCircularTypeCodeId = searchCircularTypeCodeId;
+	}
+
+	public Long getSearchStatusId() {
+		return searchStatusId;
+	}
+
+	public void setSearchStatusId(Long searchStatusId) {
+		this.searchStatusId = searchStatusId;
+	}
 	
 }

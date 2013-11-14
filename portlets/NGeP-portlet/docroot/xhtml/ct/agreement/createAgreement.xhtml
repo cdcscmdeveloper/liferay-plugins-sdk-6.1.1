@@ -6,12 +6,13 @@
 	xmlns:p="http://primefaces.org/ui"
 	xmlns:c="http://java.sun.com/jsp/jstl/core">
 		  <p:panel id="createAgreement" header="#{lbl['lbl.ct.ag.panel.header']}"  toggleable="true"  toggleSpeed="500">
-           <h:panelGrid style="width:800px;">  
+           <h:panelGrid style="width:780px;">  
              <p:spacer height="5"/>
               <p:outputLabel value="#{lbl['lbl.ct.ag.standard']}" style="float:left;" />
               <p:spacer height="5"/>
               <p:dataTable id="standard" var="data" value="#{agreementBackingBean.agreementList}" 
-                 widgetVar="dataTableObj">
+                 widgetVar="dataTableObj" paginator="true" paginatorPosition="bottom" paginatorAlwaysVisible="true" 
+                    emptyMessage="No Records!" rows="10">
 			     <p:columnGroup type="header"> 
 				    <p:row> 
 					   <p:column style="width:30px" headerText="#{lbl['lbl.ct.ag.table.no']}"  /> 
@@ -34,11 +35,11 @@
 			 </h:panelGrid>
 			 <h:panelGrid style="width:770px" columnClasses="column-align-right">
 			<p:commandButton id="downloadLink" value="Download" ajax="false" onclick="PrimeFaces.monitorDownload(start, stop)"   
-                      icon="ui-icon-arrowthichk-s">  
+                      icon="ui-icon-download">  
                 <p:fileDownload value="#{agreementBackingBean.download}" />  
             </p:commandButton>  
 			 </h:panelGrid>
-			 <h:panelGrid style="width:800px;">  
+			 <h:panelGrid style="width:780px;">  
                <p:spacer height="5"/>
                  <p:outputLabel value="#{lbl['lbl.ct.ag.appendixes']}" style="float:left;" />
                   <p:spacer height="5"/>
@@ -62,8 +63,7 @@
 					         <f:setPropertyActionListener value="#{data}" target="#{agreementBackingBean.managedBean.agreementAppendix}" />
 					     </p:commandButton>
 					  <p:spacer width="3"/>
-					  <p:commandButton title="View" onsuccess="confirmation.show()" partialSubmit="true" 
-						 process="@this" style="float:center;" icon="ui-icon-view"/>
+					  <p:commandButton title="View" onsuccess="confirmation.show()" partialSubmit="true"  process="@this" style="float:center;" icon="ui-icon-view"/>
 					  </p:column> 
 				   </p:dataTable>
 			  </h:panelGrid>
@@ -73,7 +73,7 @@
             </p:panel>
             <p:panel id="uploadAgreements" header="#{lbl['lbl.ct.ag.upload']}"  toggleable="true"  toggleSpeed="500" widgetVar="uploadsagreement">
                <p:spacer width="15"/>
-                  <h:panelGrid style="width:800px;">
+                  <h:panelGrid style="width:780px;">
                     <p:outputLabel value="User is allowed to export the agreement into word document and modifies in word application such as adding image.
                          User is required to upload the modified agreement document in this section. If there is no modification on the agreement generated, 
                          system will automatic generate the agreement in word format for approver review during submission." />
@@ -93,8 +93,7 @@
                 <p:confirmDialog message="Do you want to delete the record?"
 				  closable="true" appendToBody="true" header="Delete Confirmation"
 							severity="alert" widgetVar="confirmation">
-                         	<h:panelGrid columns="2"
-								columnClasses="column-align-right,column-align-left">
+                         	<h:panelGrid columns="2">
 								<p:commandButton value="Yes" icon="ui-icon-accept"
 									update="appendixes" partialSubmit="true" process="@this" actionListener="#{agreementBackingBean.deleteAgreementAppendix()}"
 									onclick="confirmation.hide();"/>

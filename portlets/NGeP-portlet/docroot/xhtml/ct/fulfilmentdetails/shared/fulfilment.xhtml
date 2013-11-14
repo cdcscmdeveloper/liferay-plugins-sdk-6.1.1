@@ -30,9 +30,13 @@
              <p:outputLabel value="Concession" />
           </h:panelGrid>  
           <p:outputLabel value="#{lbl['lbl.ct.createdDate']}" />  
-          <p:inputText  value="#{contractDetailsBackingBean.managedBean.ctContract.qtPublishDate}" style="width:170px;"   disabled="false"/>  
+          <p:inputText  value="#{contractDetailsBackingBean.managedBean.ctContract.qtPublishDate}" style="width:170px;"   disabled="false">
+          <f:convertDateTime pattern="MM/dd/yyyy" />
+          </p:inputText>  
           <p:outputLabel value="#{lbl['lbl.ct.publishingDate']}"  />  
-          <p:inputText  value="#{contractDetailsBackingBean.managedBean.ctContract.qtPublishDate}"  style="width:170px;" disabled="false"/>  
+          <p:inputText  value="#{contractDetailsBackingBean.managedBean.ctContract.qtPublishDate}"  style="width:170px;" disabled="false">
+          <f:convertDateTime pattern="MM/dd/yyyy" />
+          </p:inputText>  
           <h:panelGrid columns="2">
              <p:selectBooleanCheckbox value="#{contractDetailsBackingBean.managedBean.contractValues.exempted}" disabled="false"/> 
              <p:outputLabel value="Exempted" />
@@ -40,7 +44,9 @@
           <p:outputLabel value="#{lbl['lbl.ct.loaNo']}"  />  
           <p:inputText  value="#{contractDetailsBackingBean.managedBean.ctContract.qtLoaNo}" style="width:170px;" disabled="false"/>  
           <p:outputLabel value="#{lbl['lbl.ct.loaDate']}" />  
-          <p:inputText  value="#{contractDetailsBackingBean.managedBean.ctContract.qtLoaDate}" style="width:170px;" disabled="false"/>  
+          <p:inputText  value="#{contractDetailsBackingBean.managedBean.ctContract.qtLoaDate}" style="width:170px;" disabled="false">
+          <f:convertDateTime pattern="MM/dd/yyyy" />
+          </p:inputText>  
           <h:panelGrid columns="2">
              <p:selectBooleanCheckbox value="#{contractDetailsBackingBean.managedBean.ctContract.chkLocal}" disabled="false"/> 
              <p:outputLabel  value="#{lbl['lbl.ct.localGoods']}"  />

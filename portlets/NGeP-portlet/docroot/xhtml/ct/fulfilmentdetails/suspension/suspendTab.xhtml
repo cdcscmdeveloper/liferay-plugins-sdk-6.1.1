@@ -17,7 +17,7 @@
 				</ui:repeat>		
     </div>
 	</p:panel>
-	 <p:tabView id="tabview" orientation="left" onTabShow="handleTabShow(tab)" activeIndex="0">
+	 <p:tabView id="tabview" orientation="left" dynamic="true">
      <p:tab title="#{lbl['lbl.ct.menu.fd']}" >
             <ui:include src="/xhtml/ct/fulfilmentdetails/shared/fulfilment.xhtml"/>
             <ui:include src="suspendDetails.xhtml"/>

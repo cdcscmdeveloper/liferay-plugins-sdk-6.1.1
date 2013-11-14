@@ -6,8 +6,9 @@
 	xmlns:p="http://primefaces.org/ui"
 	xmlns:c="http://java.sun.com/jsp/jstl/core">
         <p:panel id="signingAgreements" header="Signing Agreement Details"  toggleable="true"  toggleSpeed="500">
+        <h:panelGrid style="width:780px;">
 			<p:dataTable id="signTable" var="data" value="#{agreementBackingBean.managedBean.signPartyList}" rowIndexVar="index" 
-			  style="table-layout: fixed; width:800px;" paginator="true" paginatorPosition="bottom" paginatorAlwaysVisible="true" 
+			  paginator="true" paginatorPosition="bottom" paginatorAlwaysVisible="true" 
 			  emptyMessage="No Records!" rows="5">
 			   <p:columnGroup type="header"> 
 				<p:row> 
@@ -48,18 +49,19 @@
                 <p:column width="120"> <h:outputLabel value="6404-03-6843"/> </p:column>
                 <p:column width="180"><h:outputLabel value="PTJ Head"/></p:column>	
                  <p:column width="50" styleClass="column-align-center">
-                  <p:commandButton title="delete" onsuccess="confirmation.show()" partialSubmit="true" process="@this"  icon="ui-icon-delete">
+                  <p:commandButton title="delete" onsuccess="confirmation2.show()" partialSubmit="true" process="@this"  icon="ui-icon-delete">
                  <f:setPropertyActionListener value="#{data}" target="#{agreementBackingBean.managedBean.signParty}" />
                 </p:commandButton>
                  </p:column> 
            </p:dataTable>
-		 <h:panelGrid style="width:780px" columnClasses="column-align-right">
-		    <p:commandButton value="Add" styleClass="text-align: right;" process="@this" action="#{agreementBackingBean.addSignParty()}" 
+           </h:panelGrid>
+		 <h:panelGrid style="width:770px" columnClasses="column-align-right">
+		    <p:commandButton value="Add" process="@this" action="#{agreementBackingBean.addSignParty()}" 
 		    partialSubmit="true" icon="ui-icon-add" update="signTable"/>
 		</h:panelGrid>
 		 
 	     <p:spacer width="15"/>
-         <h:panelGrid style="width:800px;">  
+         <h:panelGrid style="width:780px;">  
          <p:dataTable id="supplierSign" var="data" value="#{agreementBackingBean.managedBean.signSupplierList}" widgetVar="dataTableObj" 
             lazy="false" dynamic="true" rowIndexVar="index" paginator="true" paginatorPosition="bottom"
             paginatorAlwaysVisible="true" emptyMessage="No Records!" rows="5">
@@ -88,7 +90,7 @@
                 </p:column> 
              </p:dataTable>
 		</h:panelGrid>
-		<h:panelGrid style="width:790px" columnClasses="column-align-right">
+		<h:panelGrid style="width:770px" columnClasses="column-align-right">
 		  <p:commandButton value="Add" process="@this" partialSubmit="true" action="#{agreementBackingBean.addSignSupplier()}" icon="ui-icon-add"
 		  update="supplierSign"/>
 	   </h:panelGrid>
@@ -102,11 +104,11 @@
 		  </h:panelGrid>
 		</p:confirmDialog>
 		 <p:confirmDialog message="Do you want to delete the record?"
-		  closable="true" appendToBody="true" header="Delete Confirmation" severity="alert" widgetVar="confirmation">
+		  closable="true" appendToBody="true" header="Delete Confirmation" severity="alert" widgetVar="confirmation2">
           <h:panelGrid columns="2">
 			<p:commandButton value="Yes" icon="ui-icon-accept" update="signTable" partialSubmit="true"
-			 process="@this" actionListener="#{agreementBackingBean.deleteSignParty()}" onclick="confirmation.hide();"/>
-			  <p:commandButton value="No" icon="ui-icon-reject" onclick="confirmation.hide()" type="button" />
+			 process="@this" actionListener="#{agreementBackingBean.deleteSignParty()}" onclick="confirmation2.hide();"/>
+			  <p:commandButton value="No" icon="ui-icon-reject" onclick="confirmation2.hide()" type="button" />
 		  </h:panelGrid>
 		</p:confirmDialog>
 </ui:composition>
