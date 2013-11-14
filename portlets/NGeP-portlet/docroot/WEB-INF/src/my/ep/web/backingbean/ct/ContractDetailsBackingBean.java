@@ -68,7 +68,7 @@ import my.ep.type.aut.SearchOperator;
 import my.ep.util.lookupservice.EpBpmBusinessDelegate;
 import my.ep.web.backingbean.BaseBackingBean;
 import my.ep.web.backingbean.ct.agreement.AgreementBackingBean;
-import my.ep.web.backingbean.ct.circular.central.PickListBean;
+//import my.ep.web.backingbean.ct.circular.central.PickListBean;
 import my.ep.web.backingbean.ct.suspend.ContractSuspendBackingBean;
 import my.ep.web.bean.ct.ContractListItem;
 import my.ep.web.bean.ct.CreateContractDetails;
@@ -110,7 +110,7 @@ public class ContractDetailsBackingBean extends BaseBackingBean<ContractDetailsM
 	private TreeNode rootNode;  
 	private TreeNode selectedNode; 
 	private List<PmUser> dsLst; 
-	private PickListBean pickListBean = null;
+	//private PickListBean pickListBean = null;
 	
 	private boolean paymentHistory;
 	private TreeNode rootNodeAgency;  
@@ -1235,14 +1235,14 @@ public void onChange(TabChangeEvent event) { }
 		this.editorValue = editorValue;
 	}
 
-	public PickListBean getPickListBean() {
+	/*public PickListBean getPickListBean() {
 		pickListBean = new PickListBean(dsLst);
 		return pickListBean;
 	}
 
 	public void setPickListBean(PickListBean pickListBean) {
 		this.pickListBean = pickListBean;
-	}
+	} */
 
 	
 }
