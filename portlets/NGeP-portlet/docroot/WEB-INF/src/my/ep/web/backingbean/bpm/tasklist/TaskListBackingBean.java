@@ -407,6 +407,7 @@ public class TaskListBackingBean extends BaseBackingBean<TaskListManagedBean>{
 				florderBB.getManagedBean().setFulfilmentRequest(resDTO.getFlFulfilmentRequest());
 				florderBB.getManagedBean().setTaskId(taskId);
 				florderBB.getManagedBean().setActions(res.getAction());
+				florderBB.getManagedBean().setTempLoginId(this.getManagedBean().getTempLoginId());
 			}
 			
 			
