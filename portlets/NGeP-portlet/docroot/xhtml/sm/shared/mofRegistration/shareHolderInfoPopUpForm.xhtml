@@ -8,10 +8,10 @@
 
 		<table style="width: 100%">
 			<tr>
-				<td><p:outputLabel value=" Name *" /></td>
+				<td><p:outputLabel value="* Name" /></td>
 				<td><p:inputText
 						value="#{backingBean.managedBean.selectedShareHolder.name}" /></td>
-				<td><p:outputLabel value="Nationality *" /></td>
+				<td><p:outputLabel value="* Nationality" /></td>
 				<td><p:selectOneMenu
 						value="#{backingBean.managedBean.selectedShareHolder.nationalityId}">
 						<f:selectItem itemLabel="-- Select One--" itemValue="1" />
@@ -19,7 +19,14 @@
 						<f:selectItem itemLabel="Chinese" itemValue="3" />
 						<f:selectItem itemLabel="Indian" itemValue="4" />
 					</p:selectOneMenu></td>
-				<td><p:outputLabel value="Race*" title="For Malaysian Only" /></td>
+
+			</tr>
+			<tr>
+
+				<td><p:outputLabel value="* IC/Pspt No." /></td>
+				<td><p:inputText
+						value="#{backingBean.managedBean.selectedShareHolder.identificationNo}" /></td>
+				<td><p:outputLabel value="* Race" title="For Malaysian Only" /></td>
 				<td><p:selectOneMenu
 						value="#{backingBean.managedBean.selectedShareHolder.race}">
 						<f:selectItem itemLabel="-- Others--" itemValue="1" />
@@ -29,7 +36,10 @@
 					</p:selectOneMenu></td>
 			</tr>
 			<tr>
-				<td><p:outputLabel value=" Personnel Type *" /></td>
+				<td><p:outputLabel value="* DOB" /></td>
+				<td><p:calendar showOn="button"
+						value="#{backingBean.managedBean.selectedShareHolder.birthDate}" /></td>
+				<td><p:outputLabel value="* Personnel Type" /></td>
 				<td><p:selectOneMenu
 						value="#{backingBean.managedBean.selectedShareHolder.personnelType}">
 						<f:selectItem itemLabel="-- Select One--" itemValue="" />
@@ -37,34 +47,12 @@
 						<f:selectItem itemLabel="Management Staff" itemValue="M" />
 						<f:selectItem itemLabel="Normal Staff" itemValue="N" />
 					</p:selectOneMenu></td>
-				<td><p:outputLabel value=" IC/Pspt No. *" /></td>
+			</tr>
+			<tr>
+				<td><p:outputLabel value="* Designation" /></td>
 				<td><p:inputText
-						value="#{backingBean.managedBean.selectedShareHolder.identificationNo}" /></td>
-				<td><p:outputLabel value=" DOB *" /></td>
-				<td><p:calendar showOn="button"
-						value="#{backingBean.managedBean.selectedShareHolder.birthDate}" /></td>
-			</tr>
-
-			<tr>
-				<td><p:outputLabel value=" Bumi *" title="For Malaysian Only" /></td>
-				<td><p:selectOneRadio
-						value="#{backingBean.managedBean.selectedShareHolder.isBumi}">
-						<f:selectItem itemLabel="Yes" itemValue="1" />
-						<f:selectItem itemLabel="No" itemValue="2" />
-					</p:selectOneRadio></td>
-				<td><p:outputLabel value=" Religion *"
-						title="For Malaysian Only" /></td>
-				<td><p:selectOneRadio
-						value="#{backingBean.managedBean.selectedShareHolder.isMuslim}">
-						<f:selectItem itemLabel="Islam" itemValue="1" />
-						<f:selectItem itemLabel="Non-Islam" itemValue="2" />
-					</p:selectOneRadio></td>
-				<td><p:outputLabel value=" EPF No." /></td>
-				<td><p:inputText title="For Malaysian Only"
-						value="#{backingBean.managedBean.selectedShareHolder.epfNo}" /></td>
-			</tr>
-			<tr>
-				<td><p:outputLabel value="Branch Associated *" /></td>
+						value="#{backingBean.managedBean.selectedShareHolder.designation}" /></td>
+				<td><p:outputLabel value="* Branch Associated" /></td>
 				<td><p:selectOneMenu>
 						<f:selectItem itemLabel="-- Select One--" itemValue="1" />
 						<f:selectItems
@@ -72,20 +60,25 @@
 							var="supBean" itemLabel="#{supBean.branchName}"
 							itemValue="#{supBean.branchName}" />
 					</p:selectOneMenu></td>
-				<td><p:outputLabel value=" Designation *" /></td>
-				<td><p:inputText
-						value="#{backingBean.managedBean.selectedShareHolder.designation}" /></td>
+
+			</tr>
+
+			<tr>
+				<td><p:outputLabel value=" EPF No." /></td>
+				<td><p:inputText title="For Malaysian Only"
+						value="#{backingBean.managedBean.selectedShareHolder.epfNo}" /></td>
 				<td><p:outputLabel value=" Experience" /></td>
 				<td><p:inputText
 						value="#{backingBean.managedBean.selectedShareHolder.workExperienceYear}" /></td>
 			</tr>
 			<tr>
-				<td><p:outputLabel value=" Job Function *" /></td>
-				<td><p:inputTextarea
-						value="#{backingBean.managedBean.selectedShareHolder.jobFunction}" /></td>
 				<td><p:outputLabel value=" Email " /></td>
 				<td><p:inputText
 						value="#{backingBean.managedBean.selectedShareHolder.email}" /></td>
+				<td><p:outputLabel value=" Job Function" /></td>
+				<td><p:inputTextarea
+						value="#{backingBean.managedBean.selectedShareHolder.jobFunction}" /></td>
+
 			</tr>
 			<tr>
 				<td style="float: right; padding-right: 20px;"><p:selectBooleanCheckbox
@@ -95,17 +88,28 @@
 						value="#{backingBean.managedBean.selectedShareHolder.softcert}" /></td>
 				<td><h:outputText value="Issue Soft Cert" /></td>
 			</tr>
+			<tr>
+				<td><p:outputLabel value="Bumi" title="For Malaysian Only" /></td>
+				<td><p:selectOneRadio>
+						<f:selectItem itemLabel="Yes" itemValue="1" />
+						<f:selectItem itemLabel="No" itemValue="0" />
+					</p:selectOneRadio></td>
+				<td><p:outputLabel value=" Religion" title="For Malaysian Only" /></td>
+				<td><p:selectOneRadio>
+						<f:selectItem itemLabel="Islam" itemValue="1" />
+						<f:selectItem itemLabel="Non-Islam" itemValue="0" />
+					</p:selectOneRadio></td>
+
+			</tr>
 
 		</table>
 
 	</p:panel>
-	<p:panel
-		header="Academic Qualification ( All fields in this section Mandatory for consultant)"
-		toggleable="true">
+	<p:panel header="Academic Qualification" toggleable="true">
 
 		<table style="width: 100%">
 			<tr>
-				<td><p:outputLabel value=" Institution *" /></td>
+				<td><p:outputLabel value="* Institution" /></td>
 				<td><p:inputText /></td>
 				<td><p:outputLabel value="Year *" /></td>
 				<td><p:selectOneMenu>
@@ -113,6 +117,16 @@
 						<f:selectItem itemLabel="2013" itemValue="2013" />
 						<f:selectItem itemLabel="2012" itemValue="2012" />
 						<f:selectItem itemLabel="2011" itemValue="2011" />
+					</p:selectOneMenu></td>
+
+			</tr>
+			<tr>
+				<td><p:outputLabel value="* Educational Field" /></td>
+				<td><p:selectOneMenu>
+						<f:selectItem itemLabel="-- Select One--" itemValue="1" />
+						<f:selectItem itemLabel="Computers" itemValue="1" />
+						<f:selectItem itemLabel="Mechanical" itemValue="1" />
+						<f:selectItem itemLabel="Civil" itemValue="1" />
 					</p:selectOneMenu></td>
 				<td><p:outputLabel value="Qualification"
 						title="For Malaysian Only" /></td>
@@ -122,17 +136,6 @@
 						<f:selectItem itemLabel="Post Graduate" itemValue="1" />
 					</p:selectOneMenu></td>
 			</tr>
-			<tr>
-				<td><p:outputLabel value="Educational Field *" /></td>
-				<td><p:selectOneMenu>
-						<f:selectItem itemLabel="-- Select One--" itemValue="1" />
-						<f:selectItem itemLabel="Computers" itemValue="1" />
-						<f:selectItem itemLabel="Mechanical" itemValue="1" />
-						<f:selectItem itemLabel="Civil" itemValue="1" />
-					</p:selectOneMenu></td>
-			</tr>
-
-
 
 		</table>
 
@@ -145,12 +148,12 @@
 
 					<table style="width: 100%">
 						<tr>
-							<td><u><b> <h:outputText
+							<td colspan="2"><u><b> <h:outputText
 											value="Permenant Address : " /></b></u></td>
-							<td></td>
+
 						</tr>
 						<tr>
-							<td><p:outputLabel value="Address" /></td>
+							<td><p:outputLabel value="* Address" /></td>
 							<td><p:inputText
 									value="#{backingBean.managedBean.shareHolderPermAddr.smAddress.address1}" /></td>
 						</tr>
@@ -166,7 +169,7 @@
 									value="#{backingBean.managedBean.shareHolderPermAddr.smAddress.address3}" /></td>
 						</tr>
 						<tr>
-							<td><p:outputLabel value="Country *" /></td>
+							<td><p:outputLabel value="* Country" /></td>
 							<td><p:selectOneMenu
 									value="#{backingBean.managedBean.shareHolderPermAddr.smAddress.pmCountry.countryCode}">
 									<f:selectItem itemLabel="-- Select One -- " itemValue="" />
@@ -195,12 +198,12 @@
 									value="#{backingBean.managedBean.shareHolderPermAddr.smAddress.pmCity.cityCode}" /></td>
 						</tr>
 						<tr>
-							<td><p:outputLabel value="Phone No." /></td>
+							<td><p:outputLabel value="Phone NO." /></td>
 							<td><p:inputText
 									value="#{backingBean.managedBean.shareHolderPermAddr.smAddress.phoneNo}" /></td>
 						</tr>
 						<tr>
-							<td><p:outputLabel value="Fax No." /></td>
+							<td><p:outputLabel value="Fax NO." /></td>
 							<td><p:inputText
 									value="#{backingBean.managedBean.shareHolderPermAddr.smAddress.faxNo}" /></td>
 						</tr>
@@ -212,12 +215,16 @@
 					<table style="width: 100%">
 						<tr>
 							<td><u><b><h:outputText value="Mailing Address : " /></b></u>
-								<p:selectBooleanCheckbox /> <h:outputText
-									value=" Same as permenant: " /></td>
-							<td></td>
+							</td>
+							<td><table style="width: 100%">
+									<tr>
+										<td><p:selectBooleanCheckbox /></td>
+										<td><h:outputText value=" Same as permenant: " /></td>
+									</tr>
+								</table></td>
 						</tr>
 						<tr>
-							<td><p:outputLabel value="Address" /></td>
+							<td><p:outputLabel value="* Address" /></td>
 							<td><p:inputText
 									value="#{backingBean.managedBean.shareHolderMailAddr.smAddress.address1}" /></td>
 						</tr>
@@ -233,7 +240,7 @@
 									value="#{backingBean.managedBean.shareHolderMailAddr.smAddress.address3}" /></td>
 						</tr>
 						<tr>
-							<td><p:outputLabel value="Country *" /></td>
+							<td><p:outputLabel value="* Country" /></td>
 							<td><p:selectOneMenu
 									value="#{backingBean.managedBean.shareHolderMailAddr.smAddress.pmCountry.countryCode}">
 									<f:selectItem itemLabel="-- Select One -- " itemValue="" />
@@ -262,12 +269,12 @@
 									value="#{backingBean.managedBean.shareHolderMailAddr.smAddress.pmCity.cityCode}" /></td>
 						</tr>
 						<tr>
-							<td><p:outputLabel value="Phone No." /></td>
+							<td><p:outputLabel value="Phone NO." /></td>
 							<td><p:inputText
 									value="#{backingBean.managedBean.shareHolderMailAddr.smAddress.phoneNo}" /></td>
 						</tr>
 						<tr>
-							<td><p:outputLabel value="Fax No." /></td>
+							<td><p:outputLabel value="Fax NO." /></td>
 							<td><p:inputText
 									value="#{backingBean.managedBean.shareHolderMailAddr.smAddress.faxNo}" /></td>
 						</tr>
@@ -282,14 +289,14 @@
 
 		<table style="width: 100%">
 			<tr>
-				<td><p:outputLabel value=" Amount *" /></td>
+				<td><p:outputLabel value="* Amount(MYR.)" /></td>
 				<td><p:inputText
 						value="#{backingBean.managedBean.selectedShareHolder.shareAmount}" />
-					<h:outputText value="MYR" /></td>
-				<td><p:outputLabel value="Percentage *" /></td>
+				</td>
+				<td><p:outputLabel value="* Percentage(%)" /></td>
 				<td><p:inputText title="Auto Populated Value"
 						value="#{backingBean.managedBean.selectedShareHolder.sharePercentage}" />
-					<h:outputText value="%" /></td>
+				</td>
 
 			</tr>
 		</table>

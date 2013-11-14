@@ -44,51 +44,80 @@
 			rendered="#{backingBean.managedBean.officeFacility.ownershipType eq 'R'}">
 			<table style="width: 100%">
 				<tr>
-					<td><p:outputLabel value="Landlord's Name *" /></td>
+					<td><p:outputLabel value="* Landlord's Name" /></td>
 					<td><p:inputText
-							value="#{backingBean.managedBean.officeFacility.ownerName}" /></td>
-
-					<td><p:outputLabel value="Landlord's Address *" /></td>
-					<td><p:inputTextarea /></td>
-				</tr>
-				<tr>
-					<td><p:outputLabel value="Monthly Rental*" /></td>
+							value="#{backingBean.managedBean.officeFacility.ownerName}"
+							size="25" /></td>
+					<td><p:outputLabel value="* Monthly Rental" /></td>
 					<td>
 						<table>
 							<tr>
-								<td style="padding-right: 10px;"><p:inputText
-										value="#{backingBean.managedBean.officeFacility.rentalRate}" />
-								</td>
-								<td valign="top"><p:selectOneMenu>
+								<td style="padding-right: 5px;"><p:inputText
+										value="#{backingBean.managedBean.officeFacility.rentalRate}"
+										size="10" /></td>
+								<td valign="top"><p:selectOneMenu
+										style="margin-bottom:5px;">
 										<f:selectItem itemLabel="MYR" itemValue="1" />
 									</p:selectOneMenu></td>
 							</tr>
 						</table>
 					</td>
+				</tr>
+				<tr>
+					<td><p:outputLabel value="#{lbl['lbl.sm.companyaddress']}" /></td>
+					<td><p:inputText size="50" colspan="3" /></td>
+				</tr>
+				<tr>
+					<td></td>
+					<td><p:inputText size="50" colspan="3" /></td>
+				</tr>
+				<tr>
+					<td></td>
+					<td><p:inputText size="50" colspan="3" /></td>
+				</tr>
+				<tr>
+					<td><p:outputLabel value="#{lbl['lbl.sm.postcode']}" /></td>
+					<td><p:inputText /></td>
+					<td><p:outputLabel value="#{lbl['lbl.sm.state']}" /></td>
+					<td><p:inputText /></td>
+				</tr>
+
+				<tr>
+					<td><p:outputLabel value="#{lbl['lbl.sm.district']}" /></td>
+					<td><p:inputText /></td>
+					<td><p:outputLabel value="#{lbl['lbl.sm.towncity']}" /></td>
+					<td><p:inputText /></td>
+				</tr>
+				<tr>
+
 
 				</tr>
 			</table>
 		</ui:fragment>
 		<ui:fragment
 			rendered="#{backingBean.managedBean.officeFacility.ownershipType eq 'O'}">
-			<table style="width: 100%">
+			<table style="width: 50%">
 				<tr>
-					<td><p:outputLabel value="Owner Name *" /></td>
+					<td><p:outputLabel value="* Owner Name" /></td>
 					<td><p:inputText
-							value="#{backingBean.managedBean.officeFacility.ownerName}" /></td>
-					<td><p:outputLabel value="Purchase Date *" /></td>
+							value="#{backingBean.managedBean.officeFacility.ownerName}"
+							size="25" /></td>
+				</tr>
+				<tr>
+					<td><p:outputLabel value="* Purchase Date" /></td>
 					<td><p:calendar showOn="button"
 							value="#{backingBean.managedBean.officeFacility.purchaseDate}" /></td>
 				</tr>
 				<tr>
-					<td><p:outputLabel value="Purchase Price*" /></td>
+					<td><p:outputLabel value="* Purchase Price" /></td>
 					<td>
 						<table>
 							<tr>
-								<td style="padding-right: 10px;"><p:inputText
+								<td style="padding-right: 5px;"><p:inputText size="10"
 										value="#{backingBean.managedBean.officeFacility.purchasePrice}" />
 								</td>
-								<td valign="top"><p:selectOneMenu>
+								<td valign="top"><p:selectOneMenu
+										style="margin-bottom:5px;">
 										<f:selectItem itemLabel="MYR" itemValue="1" />
 									</p:selectOneMenu></td>
 							</tr>

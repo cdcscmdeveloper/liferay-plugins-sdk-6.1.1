@@ -37,24 +37,31 @@
 			</p:column>
 
 			<p:column headerText="Branch Name">
-				<p:commandLink id="selectButton" update=":form:tt:display"
-					oncomplete="banchDialog.show();"
-					action="#{backingBean.assignSelBranch(branchBean)}"
-					value="#{branchBean.branchName}">
-
-				</p:commandLink>
+				<h:outputText value="#{branchBean.branchName}" />
 			</p:column>
 
 			<p:column headerText="Address">
 				<h:outputText
 					value="#{branchBean.smAddress.address1},#{branchBean.smAddress.address2}" />
 			</p:column>
+			<p:column headerText="Action">
+				<p:commandLink id="selectButton" update=":form:tt:display"
+					oncomplete="banchDialog.show();"
+					action="#{backingBean.assignSelBranch(branchBean)}">
+					<p:graphicImage library="ep/images/design" name="edit.png"
+						value="/resources/ep/images/design/edit.png" />
+				</p:commandLink>
+				<p:commandLink>
+					<p:graphicImage library="ep/images/design" name="delete.png"
+						value="/resources/ep/images/design/delete.png" />
+				</p:commandLink>
+			</p:column>
 		</p:dataTable>
 		<div align="right">
-			<p:commandButton value="Add Branch"
+			<p:commandButton value="Add"
 				action="#{backingBean.assignNewBranchBean}"
 				oncomplete="banchDialog.show();" update=":form:tt:display" />
-			<p:commandButton value="Delete Branch(es)"
+			<p:commandButton value="Delete"
 				action="#{backingBean.deleteSelectedBranches}" />
 
 		</div>
@@ -80,76 +87,76 @@
 			</table>
 		</p:outputPanel>
 	</p:panel>
-	<p:dialog width="400px" header="Branch Page" widgetVar="banchDialog"
+	<p:dialog width="400px" header="Branch Details" widgetVar="banchDialog"
 		id="display" resizable="false" showEffect="fade" hideEffect="fade"
 		modal="true">
-		<p:panel header="Branch Details">
-			<table style="width: 100%">
-				<tr>
-					<td><p:outputLabel value="Branch Name *" /></td>
-					<td><p:inputText
-							value="#{backingBean.managedBean.selectedBranch.branchName}" /></td>
-				</tr>
-				<tr>
-					<td><p:outputLabel value="Address" /></td>
-					<td><p:inputText
-							value="#{backingBean.managedBean.selectedBranch.smAddress.address1}" /></td>
-				</tr>
+		<!-- <p:panel header="Branch Details"> -->
+		<table style="width: 100%">
+			<tr>
+				<td><p:outputLabel value="* Branch Name" /></td>
+				<td><p:inputText
+						value="#{backingBean.managedBean.selectedBranch.branchName}" /></td>
+			</tr>
+			<tr>
+				<td><p:outputLabel value="* Address" /></td>
+				<td><p:inputText
+						value="#{backingBean.managedBean.selectedBranch.smAddress.address1}" /></td>
+			</tr>
 
-				<tr>
-					<td></td>
-					<td><p:inputText
-							value="#{backingBean.managedBean.selectedBranch.smAddress.address2}" /></td>
-				</tr>
-				<tr>
-					<td></td>
-					<td><p:inputText
-							value="#{backingBean.managedBean.selectedBranch.smAddress.address3}" /></td>
-				</tr>
-				<tr>
-					<td><p:outputLabel value="Country *" /></td>
-					<td><p:selectOneMenu
-							value="#{backingBean.managedBean.selectedBranch.smAddress.pmCountry.countryCode}">
-							<f:selectItem itemLabel="-- Select One -- " itemValue="" />
-							<f:selectItem itemLabel="Malaysia" itemValue="MY" />
-						</p:selectOneMenu></td>
-				</tr>
-				<tr>
-					<td><p:outputLabel value="#{lbl['lbl.sm.postcode']}" /></td>
-					<td><p:inputText
-							value="#{backingBean.managedBean.selectedBranch.smAddress.postcode}" /></td>
-				</tr>
-				<tr>
-					<td><p:outputLabel value="#{lbl['lbl.sm.state']}" /></td>
-					<td><p:inputText
-							value="#{backingBean.managedBean.selectedBranch.smAddress.pmState.stateCode}" /></td>
-				</tr>
+			<tr>
+				<td></td>
+				<td><p:inputText
+						value="#{backingBean.managedBean.selectedBranch.smAddress.address2}" /></td>
+			</tr>
+			<tr>
+				<td></td>
+				<td><p:inputText
+						value="#{backingBean.managedBean.selectedBranch.smAddress.address3}" /></td>
+			</tr>
+			<tr>
+				<td><p:outputLabel value="* Country" /></td>
+				<td><p:selectOneMenu
+						value="#{backingBean.managedBean.selectedBranch.smAddress.pmCountry.countryCode}">
+						<f:selectItem itemLabel="-- Select -- " itemValue="" />
+						<f:selectItem itemLabel="Malaysia" itemValue="MY" />
+					</p:selectOneMenu></td>
+			</tr>
+			<tr>
+				<td><p:outputLabel value="#{lbl['lbl.sm.postcode']}" /></td>
+				<td><p:inputText
+						value="#{backingBean.managedBean.selectedBranch.smAddress.postcode}" /></td>
+			</tr>
+			<tr>
+				<td><p:outputLabel value="#{lbl['lbl.sm.state']}" /></td>
+				<td><p:inputText
+						value="#{backingBean.managedBean.selectedBranch.smAddress.pmState.stateCode}" /></td>
+			</tr>
 
-				<tr>
-					<td><p:outputLabel value="#{lbl['lbl.sm.district']}" /></td>
-					<td><p:inputText
-							value="#{backingBean.managedBean.selectedBranch.smAddress.pmDistrict.districtCode}" /></td>
-				</tr>
-				<tr>
-					<td><p:outputLabel value="#{lbl['lbl.sm.towncity']}" /></td>
-					<td><p:inputText
-							value="#{backingBean.managedBean.selectedBranch.smAddress.pmCity.cityCode}" /></td>
-				</tr>
-				<tr>
-					<td><p:outputLabel value="Phone No." /></td>
-					<td><p:inputText
-							value="#{backingBean.managedBean.selectedBranch.smAddress.phoneNo}" /></td>
-				</tr>
-				<tr>
-					<td><p:outputLabel value="Fax No." /></td>
-					<td><p:inputText
-							value="#{backingBean.managedBean.selectedBranch.smAddress.faxNo}" /></td>
-				</tr>
+			<tr>
+				<td><p:outputLabel value="#{lbl['lbl.sm.district']}" /></td>
+				<td><p:inputText
+						value="#{backingBean.managedBean.selectedBranch.smAddress.pmDistrict.districtCode}" /></td>
+			</tr>
+			<tr>
+				<td><p:outputLabel value="#{lbl['lbl.sm.towncity']}" /></td>
+				<td><p:inputText
+						value="#{backingBean.managedBean.selectedBranch.smAddress.pmCity.cityCode}" /></td>
+			</tr>
+			<tr>
+				<td><p:outputLabel value="Phone NO." /></td>
+				<td><p:inputText
+						value="#{backingBean.managedBean.selectedBranch.smAddress.phoneNo}" /></td>
+			</tr>
+			<tr>
+				<td><p:outputLabel value="Fax NO." /></td>
+				<td><p:inputText
+						value="#{backingBean.managedBean.selectedBranch.smAddress.faxNo}" /></td>
+			</tr>
 
-			</table>
-		</p:panel>
+		</table>
+		<!-- </p:panel> -->
 		<br />
-		<div align="center">
+		<div align="right">
 			<p:commandButton value="Save"
 				action="#{backingBean.addOrUpdateBranchToSmAppl}"
 				oncomplete="banchDialog.hide();" type="submit" partialSubmit="true"

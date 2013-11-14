@@ -12,55 +12,57 @@
 		<br />
 		<table style="width: 100%">
 			<tr>
-				<td colspan="4" align="center"><p:panelGrid>
-						<f:facet name="header">
+				<td colspan="4"><div align="center">
+						<p:panelGrid>
+							<f:facet name="header">
+								<p:row>
+									<p:column rowspan="2"></p:column>
+									<p:column rowspan="2">Management</p:column>
+									<p:column colspan="2">Personnel</p:column>
+								</p:row>
+								<p:row>
+									<p:column>No. Of Actual Personnel</p:column>
+									<p:column colspan="2">No. Of Personnel Entered</p:column>
+								</p:row>
+							</f:facet>
 							<p:row>
-								<p:column rowspan="2"></p:column>
-								<p:column rowspan="2">Management</p:column>
-								<p:column colspan="2">Personnel</p:column>
+								<p:column>Bumiputera</p:column>
+								<p:column>
+									<p:outputLabel />
+								</p:column>
+								<p:column>
+									<p:outputLabel />
+								</p:column>
+								<p:column>
+									<p:outputLabel />
+								</p:column>
 							</p:row>
 							<p:row>
-								<p:column>No. Of Actual Personnel</p:column>
-								<p:column colspan="2">No. Of Personnel Entered</p:column>
+								<p:column>Non Bumiputera</p:column>
+								<p:column>
+									<p:outputLabel />
+								</p:column>
+								<p:column>
+									<p:outputLabel />
+								</p:column>
+								<p:column>
+									<p:outputLabel />
+								</p:column>
 							</p:row>
-						</f:facet>
-						<p:row>
-							<p:column>Bumiputera</p:column>
-							<p:column>
-								<p:outputLabel />
-							</p:column>
-							<p:column>
-								<p:outputLabel />
-							</p:column>
-							<p:column>
-								<p:outputLabel />
-							</p:column>
-						</p:row>
-						<p:row>
-							<p:column>Non Bumiputera</p:column>
-							<p:column>
-								<p:outputLabel />
-							</p:column>
-							<p:column>
-								<p:outputLabel />
-							</p:column>
-							<p:column>
-								<p:outputLabel />
-							</p:column>
-						</p:row>
-						<p:row>
-							<p:column>Non - Malaysian</p:column>
-							<p:column>
-								<p:outputLabel />
-							</p:column>
-							<p:column>
-								<p:outputLabel />
-							</p:column>
-							<p:column>
-								<p:outputLabel />
-							</p:column>
-						</p:row>
-					</p:panelGrid></td>
+							<p:row>
+								<p:column>Non - Malaysian</p:column>
+								<p:column>
+									<p:outputLabel />
+								</p:column>
+								<p:column>
+									<p:outputLabel />
+								</p:column>
+								<p:column>
+									<p:outputLabel />
+								</p:column>
+							</p:row>
+						</p:panelGrid>
+					</div></td>
 
 			</tr>
 		</table>
@@ -102,13 +104,12 @@
 
 			<p:column headerText="Name">
 
-				<h:outputText value="#{person.name}"
-					rendered="#{person.equityOwner == true}" />
-				<p:commandLink value="#{person.name}"
+				<h:outputText value="#{person.name}" />
+				<!-- <p:commandLink value="#{person.name}"
 					rendered="#{person.equityOwner == false}"
 					action="#{backingBean.assignSelPersonnel(person)}"
 					oncomplete="personnelDialog.show();"
-					update=":form:tt:personnelDialog" />
+					update=":form:tt:personnelDialog" /> -->
 			</p:column>
 
 			<p:column headerText="Roles In Company">
@@ -118,7 +119,7 @@
 				<h:outputText value="Yes" rendered="#{person.equityOwner == true}" />
 				<h:outputText value="No" rendered="#{person.equityOwner == false}" />
 			</p:column>
-			<p:column headerText="Is Authorized ?">
+			<p:column headerText="Authorized ?">
 				<h:outputText value="Yes" rendered="#{person.authorized == true}" />
 				<h:outputText value="No" rendered="#{person.authorized == false}" />
 			</p:column>
@@ -126,16 +127,29 @@
 				<h:outputText value="Yes" rendered="#{person.softcert == true}" />
 				<h:outputText value="No" rendered="#{person.softcert == false}" />
 			</p:column>
+			<p:column headerText="Action">
+				<p:commandLink rendered="#{person.equityOwner == false}"
+					action="#{backingBean.assignSelPersonnel(person)}"
+					oncomplete="personnelDialog.show();"
+					update=":form:tt:personnelDialog">
+					<p:graphicImage library="ep/images/design" name="edit.png"
+						value="/resources/ep/images/design/edit.png" />
+				</p:commandLink>
+				<p:commandLink rendered="#{person.equityOwner == false}">
+					<p:graphicImage library="ep/images/design" name="delete.png"
+						value="/resources/ep/images/design/delete.png" />
+				</p:commandLink>
+			</p:column>
 
 		</p:dataTable>
 		<div align="right">
-			<p:commandButton value="Add Personnel"
+			<p:commandButton value="Add"
 				action="#{backingBean.assignNewPersonnel}"
 				oncomplete="personnelDialog.show();"
 				update=":form:tt:personnelDialog" />
-			<p:commandButton value="Delete Personnel(s)" />
+			<p:commandButton value="Delete" />
 		</div>
-		<p:fieldset legend="List of Authorized Personnel">
+		<p:panel header="List of Authorized Personnel">
 			<p:dataTable var="auth"
 				value="#{backingBean.managedBean.smapplAuthPersonnels}"
 				rowKey="#{auth.personnelId}" rowIndexVar="index" id="authDt">
@@ -156,7 +170,7 @@
 					<h:outputText value="No" rendered="#{auth.softcert == false}" />
 				</p:column>
 			</p:dataTable>
-		</p:fieldset>
+		</p:panel>
 
 		<br />
 		<p:outputPanel rendered="#{backingBean.managedBean.poUser}">
@@ -180,13 +194,13 @@
 			</table>
 		</p:outputPanel>
 	</p:panel>
-	<p:dialog width="1000px" height="500px" header="Personnel Details"
+	<p:dialog width="700px" height="560px" header="Personnel Details"
 		widgetVar="personnelDialog" resizable="false" showEffect="fade"
 		hideEffect="fade" modal="true" id="personnelDialog">
 
 		<ui:include
 			src="/xhtml/sm/shared/mofRegistration/personnelInfoPopUpForm.xhtml" />
-		<div align="center">
+		<div align="right">
 			<p:commandButton value="Save"
 				action="#{backingBean.addOrUpdatePersonnelToSmAppl}"
 				oncomplete="personnelDialog.hide();"

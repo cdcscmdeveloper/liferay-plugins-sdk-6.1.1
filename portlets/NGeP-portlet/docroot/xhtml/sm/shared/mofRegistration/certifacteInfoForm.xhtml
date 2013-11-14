@@ -38,9 +38,7 @@
 			</p:column>
 
 			<p:column headerText="Cert Name">
-				<p:commandLink value="#{certBean.certName}"
-					action="#{backingBean.assignSelCert(certBean)}"
-					oncomplete="certDialog.show();" update=":form:tt:certPop" />
+				<h:outputText value="#{certBean.certName}" />
 			</p:column>
 
 			<p:column headerText="Cert Type">
@@ -59,13 +57,22 @@
 				</h:outputText>
 
 			</p:column>
-
+			<p:column headerText="Action">
+				<p:commandLink action="#{backingBean.assignSelCert(certBean)}"
+					oncomplete="certDialog.show();" update=":form:tt:certPop">
+					<p:graphicImage library="ep/images/design" name="edit.png"
+						value="/resources/ep/images/design/edit.png" />
+				</p:commandLink>
+				<p:commandLink>
+					<p:graphicImage library="ep/images/design" name="delete.png"
+						value="/resources/ep/images/design/delete.png" />
+				</p:commandLink>
+			</p:column>
 		</p:dataTable>
 		<div align="right">
-			<p:commandButton value="Add Certificate"
-				oncomplete="certDialog.show();"
+			<p:commandButton value="Add " oncomplete="certDialog.show();"
 				action="#{backingBean.assignNewCert}" update=":form:tt:certPop" />
-			<p:commandButton value="Delete Certificate(s)" />
+			<p:commandButton value="Delete " />
 
 		</div>
 		<br />
@@ -93,7 +100,7 @@
 	<p:dialog width="400px" header="Company Certificate Page"
 		widgetVar="certDialog" resizable="false" showEffect="fade"
 		hideEffect="fade" modal="true" id="certPop">
-		<p:panel header="Certificate Details">
+		<!-- <p:panel header="Certificate Details"> -->
 
 			<table style="width: 100%">
 				<tr>
@@ -110,28 +117,37 @@
 					<td><p:inputText
 							value="#{backingBean.managedBean.selectedCert.certName}" /></td>
 				</tr>
-				<tr>
+				<!-- <tr>
 					<td><p:outputLabel value="Certificate Body *" /></td>
 					<td><p:inputTextarea readonly="true"
-							title="-- Auto populated based on the Certificate Type , 
-							can key the body for type - Others only ----"
+							title="Auto populated based on the Certificate Type , 
+							can key the body for type - Others only "
 							value="#{backingBean.managedBean.selectedCert.certBody}" /></td>
+				</tr> -->
+				<tr>
+					<td><p:outputLabel value="Certificate Body *" /></td>
+					<td><p:selectOneMenu>
+							<f:selectItem itemLabel="-- Select  -- " itemValue="N" />
+							<f:selectItem itemLabel="Cert Body1" itemValue="M" />
+							<f:selectItem itemLabel="Cert Body2" itemValue="B" />
+							<f:selectItem itemLabel="Cert Body3" itemValue="T" />
+						</p:selectOneMenu></td>
 				</tr>
 				<tr>
-					<td><p:outputLabel value="Start Date *" /></td>
+					<td><p:outputLabel value="* Start Date" /></td>
 					<td><p:calendar showOn="button"
 							value="#{backingBean.managedBean.selectedCert.certStartDate}" /></td>
 				</tr>
 				<tr>
-					<td><p:outputLabel value="Expiry Date *" /></td>
+					<td><p:outputLabel value="* Expiry Date" /></td>
 					<td><p:calendar showOn="button"
 							value="#{backingBean.managedBean.selectedCert.certEndDate}" /></td>
 				</tr>
 
 			</table>
-		</p:panel>
+		<!-- </p:panel> -->
 		<br />
-		<div align="center">
+		<div align="right">
 			<p:commandButton value="Save"
 				action="#{backingBean.addOrUpdateCertsToSmAppl}"
 				partialSubmit="true" process="certPop"

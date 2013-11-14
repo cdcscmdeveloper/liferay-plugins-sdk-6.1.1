@@ -5,22 +5,25 @@
 	xmlns:p="http://primefaces.org/ui"
 	xmlns:c="http://java.sun.com/jsp/jstl/core">
 
-	<table style="width: 100%">
-		<tr>
+	<table style="width: 99%">
+		<!-- <tr>
 			<td colspan="2"><h4
 					style="color: blue; text-decoration: underline; text-align: center;">
 					<h:outputText value="#{lbl['lbl.sm.applnTypeLbl']}" />
 					<h:outputText value="#{lbl['lbl.sm.newMofAppln']}" />
 					<h:outputText value=" - #{backingBean.managedBean.smAppl.applNo}" />
 				</h4></td>
-		</tr>
+		</tr> -->
 		<tr>
-			<td><h6 style="color: blue;">
+			<td>
+				<!-- <h6 style="color: blue;">
 					<h:outputText value="#{lbl['lbl.sm.step1Lbl']}" />
 					<h:outputText value="#{lbl['lbl.sm.companyStepLbl']}" />
-				</h6></td>
+				</h6> -->
+			</td>
 			<td><div align="right" style="width: 100%">
-					<p:commandButton value="#{lbl['lbl.sm.saveAsDraft']}" />
+					<p:commandButton value="#{lbl['lbl.sm.saveAsDraft']}"
+						icon="ui-icon-save" />
 				</div></td>
 		</tr>
 	</table>
@@ -35,8 +38,9 @@
 		<tr>
 			<td></td>
 			<td>
-				<div align="right" style="width: 100%">
-					<p:commandButton value="#{lbl['lbl.sm.next']}"
+				<div align="right" style="width: 99%">
+					<p:commandButton value="#{lbl['lbl.sm.next']}" icon="ui-icon-next"
+						iconPos="right"
 						actionListener="#{backingBean.setTabValue('0','1')}"
 						action="#{backingBean.updateSmAppl}" update=":form:tt" />
 				</div>

@@ -29,10 +29,10 @@
 							<p:separator />
 							<p>Note : Before proceed please select the Supplier Type</p>
 							<br />
-							
+
 							<table style="width: 35%">
 								<tr>
-									<td><p:outputLabel value="Supplier Type *" /></td>
+									<td><p:outputLabel value="* Supplier Type" /></td>
 									<td><p:selectOneMenu
 											value="#{backingBean.managedBean.smAppl.supplierType}">
 											<f:selectItem itemLabel="Contractor " itemValue="1" />
@@ -44,10 +44,10 @@
 				</tr>
 			</table>
 		</p:panel>
-		<div align="center">
+		<div align="right">
 			<p:commandButton value="Proceed"
 				action="#{backingBean.proceedToApplication('N')}" />
-			<p:commandButton value="Cancel" />
+			<!-- <p:commandButton value="Cancel" /> -->
 		</div>
 	</ui:define>
 </ui:composition>

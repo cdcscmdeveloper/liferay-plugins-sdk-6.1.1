@@ -36,7 +36,8 @@
 					<p:column colspan="3" headerText="Category" />
 					<p:column rowspan="2" headerText="Business Type" />
 					<p:column rowspan="2" headerText="Category Type" />
-					<p:column rowspan="2" headerText="PO Action" />
+					<p:column rowspan="2" headerText="PO Action"
+						rendered="#{backingBean.managedBean.poUser}" />
 				</p:row>
 
 				<p:row>
@@ -74,7 +75,7 @@
 				<h:outputText value="Special"
 					rendered="#{catBean.categoryType eq 'S'}" />
 			</p:column>
-			<p:column>
+			<p:column rendered="#{backingBean.managedBean.poUser}">
 				<p:selectOneRadio>
 					<f:selectItem itemLabel="Approve" itemValue="1" />
 					<f:selectItem itemLabel="Reject" itemValue="2" />
@@ -82,7 +83,7 @@
 			</p:column>
 		</p:dataTable>
 		<div align="right">
-			<p:commandButton value="Add Category Code"
+			<p:commandButton value="Add"
 				action="#{backingBean.assignNewCategoryCode}"
 				oncomplete="regCatDialog.show();" update=":form:tt:regCatDialog" />
 		</div>
@@ -110,10 +111,10 @@
 		</p:outputPanel>
 	</p:panel>
 
-	<p:dialog width="600px" header="Branch Page" widgetVar="regCatDialog"
-		resizable="false" showEffect="fade" hideEffect="fade" modal="true"
-		id="regCatDialog">
-		<p:panel header="Branch Details" id="catPanel">
+	<p:dialog width="600px" header="Category Code Page"
+		widgetVar="regCatDialog" resizable="false" showEffect="fade"
+		hideEffect="fade" modal="true" id="regCatDialog">
+		<p:outputPanel id="catPanel">
 
 			<table style="width: 100%">
 				<tr>
@@ -131,7 +132,7 @@
 				<ui:fragment
 					rendered="#{backingBean.managedBean.selectedCategory.entryMode eq 'E'}">
 					<tr>
-						<td><p:outputLabel value="Category Type *" /></td>
+						<td><p:outputLabel value="* Category Type" /></td>
 						<td><p:selectOneMenu
 								value="#{backingBean.managedBean.selectedCategory.categoryType}">
 								<f:selectItem itemLabel="-- Select One -- " itemValue="O" />
@@ -175,7 +176,7 @@
 				<ui:fragment
 					rendered="#{backingBean.managedBean.selectedCategory.entryMode eq 'S'}">
 					<tr>
-						<td><p:outputLabel value="Category Type *" /></td>
+						<td><p:outputLabel value="* Category Type" /></td>
 						<td><p:selectOneMenu
 								value="#{backingBean.managedBean.selectedCategory.categoryType}">
 								<f:selectItem itemLabel="-- Select One -- " itemValue="O" />
@@ -185,7 +186,7 @@
 					</tr>
 					<tr>
 						<td><p:outputLabel value="
-										Parent Category *" /></td>
+										* Parent Category" /></td>
 						<td><p:selectOneMenu
 								value="#{backingBean.managedBean.selectedParentCat}">
 								<f:selectItem itemLabel="-- Select One -- " itemValue="" />
@@ -199,7 +200,7 @@
 							</p:selectOneMenu></td>
 					</tr>
 					<tr>
-						<td><p:outputLabel value="Child Category *" /></td>
+						<td><p:outputLabel value="* Child Category" /></td>
 						<td><p:selectOneMenu
 								value="#{backingBean.managedBean.selectedChildCat}" id="child">
 								<f:selectItem itemLabel=" -- Select One -- " itemValue="" />
@@ -212,7 +213,7 @@
 							</p:selectOneMenu></td>
 					</tr>
 					<tr>
-						<td><p:outputLabel value="Sub Child Category *" /></td>
+						<td><p:outputLabel value="* Sub Child Category" /></td>
 						<td><p:selectOneMenu
 								value="#{backingBean.managedBean.selectedSubChildCat}"
 								id="subChild">
@@ -245,7 +246,7 @@
 					</tr>
 				</ui:fragment>
 			</table>
-		</p:panel>
+		</p:outputPanel>
 		<br />
 
 	</p:dialog>

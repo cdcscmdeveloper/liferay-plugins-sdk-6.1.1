@@ -39,9 +39,7 @@
 			</p:column>
 
 			<p:column headerText="Project Title">
-				<p:commandLink value="#{contrBean.title}"
-					action="#{backingBean.assignSelContractProj(contrBean)}"
-					oncomplete="contDialog.show();" update=":form:tt:contDialog" />
+				<h:outputText value="#{contrBean.title}" />
 			</p:column>
 
 			<p:column headerText="Contract Value">
@@ -61,13 +59,24 @@
 					rendered="#{contrBean.endResult eq '2'}" />
 				<h:outputText value="Fail" rendered="#{contrBean.endResult eq '3'}" />
 			</p:column>
-
+			<p:column headerText="Action">
+				<p:commandLink
+					action="#{backingBean.assignSelContractProj(contrBean)}"
+					oncomplete="contDialog.show();" update=":form:tt:contDialog">
+					<p:graphicImage library="ep/images/design" name="edit.png"
+						value="/resources/ep/images/design/edit.png" />
+				</p:commandLink>
+				<p:commandLink>
+					<p:graphicImage library="ep/images/design" name="delete.png"
+						value="/resources/ep/images/design/delete.png" />
+				</p:commandLink>
+			</p:column>
 		</p:dataTable>
 		<div align="right">
-			<p:commandButton value="Add Project"
+			<p:commandButton value="Add "
 				action="#{backingBean.assignNewContractProj}"
 				oncomplete="contDialog.show();" update=":form:tt:contDialog" />
-			<p:commandButton value="Delete Project(s)" />
+			<p:commandButton value="Delete " />
 
 		</div>
 		<br />
@@ -92,72 +101,71 @@
 			</table>
 		</p:outputPanel>
 	</p:panel>
-	<p:dialog header="Company Project Page" widgetVar="contDialog"
-		resizable="false" showEffect="fade" hideEffect="fade" modal="true"
-		id="contDialog">
+	<p:dialog header="Project Details - For Contractor"
+		widgetVar="contDialog" resizable="false" showEffect="fade"
+		hideEffect="fade" modal="true" id="contDialog">
 		<table style="width: 100%">
 			<tr>
-				<td valign="top"><p:panel
-						header="Project Details - For Contractor">
+				<td valign="top">
 
-						<table style="width: 100%">
-							<tr>
-								<td><p:outputLabel value=" Title *" /></td>
-								<td><p:inputText
-										value="#{backingBean.managedBean.selectedContractProj.title}" /></td>
-							</tr>
-							<tr>
-								<td><p:outputLabel value="Procurement Date *" /></td>
-								<td><p:calendar showOn="button"
-										value="#{backingBean.managedBean.selectedContractProj.procureDate}" /></td>
-							</tr>
-							<tr>
-								<td><p:outputLabel value="Contract Value *" /></td>
+					<table style="width: 100%">
+						<tr>
+							<td><p:outputLabel value="* Title" /></td>
+							<td><p:inputText
+									value="#{backingBean.managedBean.selectedContractProj.title}" /></td>
+						</tr>
+						<tr>
+							<td><p:outputLabel value="* Procurement Date" /></td>
+							<td><p:calendar showOn="button"
+									value="#{backingBean.managedBean.selectedContractProj.procureDate}" /></td>
+						</tr>
+						<tr>
+							<td><p:outputLabel value="* Contract Value" /></td>
 
-								<td><table>
-										<tr>
-											<td style="padding-right: 20px;"><p:inputText
-													value="#{backingBean.managedBean.selectedContractProj.contractValue}" />
-											</td>
-											<td valign="top"><p:selectOneMenu>
-													<f:selectItem itemLabel="MYR" itemValue="1"></f:selectItem>
-												</p:selectOneMenu></td>
-										</tr>
-									</table></td>
-							</tr>
-							<tr>
-								<td><p:outputLabel value="Procurement Mode *" /></td>
-								<td><p:selectOneMenu
-										value="#{backingBean.managedBean.selectedContractProj.procureMode}">
-										<f:selectItem itemLabel="-- Select One--" itemValue="1" />
-										<f:selectItem itemLabel="Tender" itemValue="T" />
-										<f:selectItem itemLabel="eBidding" itemValue="E" />
-										<f:selectItem itemLabel="SebutHarga" itemValue="S" />
-									</p:selectOneMenu></td>
-							</tr>
-							<tr>
-								<td><p:outputLabel value="Project Status *" /></td>
-								<td><p:selectOneRadio
-										value="#{backingBean.managedBean.selectedContractProj.endResult}">
-										<f:selectItem itemLabel="In Progress" itemValue="1" />
-										<f:selectItem itemLabel="Complete" itemValue="2" />
-										<f:selectItem itemLabel="Fail" itemValue="3" />
-									</p:selectOneRadio></td>
-							</tr>
-							<tr>
-								<td><p:outputLabel
-										value="Ministry/Statutory Body/Private *" /></td>
-								<td><p:inputTextarea
-										value="#{backingBean.managedBean.selectedContractProj.orgName}" /></td>
-							</tr>
+							<td><table>
+									<tr>
+										<td style="padding-right: 5px;"><p:inputText
+												value="#{backingBean.managedBean.selectedContractProj.contractValue}"
+												size="10" /></td>
+										<td valign="top"><p:selectOneMenu
+												style="margin-bottom : 5px;">
+												<f:selectItem itemLabel="MYR" itemValue="1"></f:selectItem>
+											</p:selectOneMenu></td>
+									</tr>
+								</table></td>
+						</tr>
+						<tr>
+							<td><p:outputLabel value="* Procurement Mode" /></td>
+							<td><p:selectOneMenu
+									value="#{backingBean.managedBean.selectedContractProj.procureMode}">
+									<f:selectItem itemLabel="-- Select One--" itemValue="1" />
+									<f:selectItem itemLabel="Tender" itemValue="T" />
+									<f:selectItem itemLabel="eBidding" itemValue="E" />
+									<f:selectItem itemLabel="SebutHarga" itemValue="S" />
+								</p:selectOneMenu></td>
+						</tr>
 
-						</table>
-					</p:panel></td>
+						<tr>
+							<td><p:outputLabel value="* Ministry/Statutory Body/Private" /></td>
+							<td><p:inputTextarea
+									value="#{backingBean.managedBean.selectedContractProj.orgName}" /></td>
+						</tr>
+						<tr>
+							<td><p:outputLabel value="* Project Status" /></td>
+							<td><p:selectOneRadio
+									value="#{backingBean.managedBean.selectedContractProj.endResult}">
+									<f:selectItem itemLabel="In Progress" itemValue="1" />
+									<f:selectItem itemLabel="Complete" itemValue="2" />
+									<f:selectItem itemLabel="Fail" itemValue="3" />
+								</p:selectOneRadio></td>
+						</tr>
+					</table>
+				</td>
 			</tr>
 		</table>
 		<br />
 
-		<div align="center">
+		<div align="right">
 			<p:commandButton value="Save"
 				action="#{backingBean.addOrUpdateContractProjsToSmAppl}"
 				oncomplete="contDialog.hide();" update=":form:tt:contDt" />

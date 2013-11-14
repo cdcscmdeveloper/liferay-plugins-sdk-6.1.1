@@ -39,9 +39,7 @@
 			</p:column>
 
 			<p:column headerText="Type Of Product (s)">
-				<p:commandLink value="#{manBean.goodsType}"
-					oncomplete="manufactorDialog.show();" update=":form:tt:manDia"
-					action="#{backingBean.assignSelManufacturer(manBean)}" />
+				<h:outputText value="#{manBean.goodsType}" />
 			</p:column>
 
 			<p:column headerText="Brand">
@@ -54,13 +52,26 @@
 			<p:column headerText="Measurement Unit">
 				<h:outputText value="#{manBean.uom}" />
 			</p:column>
+			<p:column headerText="Action">
+				<p:commandLink oncomplete="manufactorDialog.show();"
+					update=":form:tt:manDia"
+					action="#{backingBean.assignSelManufacturer(manBean)}"
+					style="padding-right:5px">
+					<p:graphicImage library="ep/images/design" name="edit.png"
+						value="/resources/ep/images/design/edit.png" />
+				</p:commandLink>
+				<p:commandLink>
+					<p:graphicImage library="ep/images/design" name="delete.png"
+						value="/resources/ep/images/design/delete.png" />
+				</p:commandLink>
+			</p:column>
 
 		</p:dataTable>
 		<div align="right">
-			<p:commandButton value="Add Assembly Info"
-				oncomplete="manufactorDialog.show();" update=":form:tt:manDia"
+			<p:commandButton value="Add" oncomplete="manufactorDialog.show();"
+				update=":form:tt:manDia"
 				action="#{backingBean.assignNewManufacturerBean}" />
-			<p:commandButton value="Delete Assembly Info(s)" />
+			<p:commandButton value="Delete" />
 		</div>
 		<br />
 		<p:outputPanel rendered="#{backingBean.managedBean.poUser}">
@@ -87,42 +98,42 @@
 	<p:dialog width="600px" header="Manufacturing / Assembly Page"
 		widgetVar="manufactorDialog" resizable="false" showEffect="fade"
 		hideEffect="fade" modal="true" id="manDia">
-		<p:panel header="Manufacturing / Assembly Information">
+		<!-- <p:panel header="Manufacturing / Assembly Information"> -->
 
-			<table style="width: 100%">
-				<tr>
-					<td><p:outputLabel value="Type Of Product(s) *" /></td>
-					<td><p:inputText
-							value="#{backingBean.managedBean.selectedManufacturer.goodsType}" /></td>
-				</tr>
+		<table style="width: 100%">
+			<tr>
+				<td><p:outputLabel value="* Product Type" /></td>
+				<td><p:inputText
+						value="#{backingBean.managedBean.selectedManufacturer.goodsType}" /></td>
+			</tr>
 
-				<tr>
-					<td><p:outputLabel value="Brand" /></td>
-					<td><p:inputText
-							value="#{backingBean.managedBean.selectedManufacturer.brand}" /></td>
-				</tr>
-				<tr>
-					<td><p:outputLabel value="Production Capacity *" /></td>
-					<td>
-						<table>
-							<tr>
-								<td style="padding-right: 20px;"><p:inputText
-										value="#{backingBean.managedBean.selectedManufacturer.productionCapacity}" /></td>
-								<td valign="top"><p:outputLabel value=" / Month" /></td>
-							</tr>
-						</table>
-					</td>
-				</tr>
+			<tr>
+				<td><p:outputLabel value="Brand" /></td>
+				<td><p:inputText
+						value="#{backingBean.managedBean.selectedManufacturer.brand}" /></td>
+			</tr>
+			<tr>
+				<td><p:outputLabel value="* Production Capacity" /></td>
+				<td>
+					<table>
+						<tr>
+							<td style="padding-right: 5px;"><p:inputText
+									value="#{backingBean.managedBean.selectedManufacturer.productionCapacity}" /></td>
+							<td valign="top"><h:outputText value=" per Month" /></td>
+						</tr>
+					</table>
+				</td>
+			</tr>
 
-				<tr>
-					<td><p:outputLabel value="Measurement *" /></td>
-					<td valign="top"><p:selectOneMenu
-							value="#{backingBean.managedBean.selectedManufacturer.uom}">
-							<f:selectItem itemLabel="-- Select --" itemValue="" />
-							<f:selectItem itemLabel="Unit " itemValue="Unit" />
-							<f:selectItem itemLabel="Volume" itemValue="Volume" />
-						</p:selectOneMenu></td>
-					<!-- <td>
+			<tr>
+				<td><p:outputLabel value="* Measurement" /></td>
+				<td valign="top"><p:selectOneMenu
+						value="#{backingBean.managedBean.selectedManufacturer.uom}">
+						<f:selectItem itemLabel="-- Select --" itemValue="" />
+						<f:selectItem itemLabel="Unit " itemValue="Unit" />
+						<f:selectItem itemLabel="Volume" itemValue="Volume" />
+					</p:selectOneMenu></td>
+				<!-- <td>
 						<table>
 							<tr>
 								<td style="padding-right: 20px;"><p:inputText /></td>
@@ -130,12 +141,12 @@
 							</tr>
 						</table>
 					</td> -->
-				</tr>
+			</tr>
 
-			</table>
-		</p:panel>
+		</table>
+		<!-- </p:panel> -->
 		<br />
-		<div align="center">
+		<div align="right">
 			<p:commandButton value="Save" oncomplete="manufactorDialog.hide();"
 				action="#{backingBean.addOrUpdateManufacturerToSmAppl}"
 				update=":form:tt:manDt" />

@@ -38,10 +38,7 @@
 			</p:column>
 
 			<p:column headerText="Equipment Type">
-				<p:commandLink value="#{macBean.machineType}"
-					oncomplete="equipmentDialog.show();"
-					action="#{backingBean.assignSelMachinery(macBean)}"
-					update=":form:tt:eqDia" />
+				<h:outputText value="#{macBean.machineType}" />
 			</p:column>
 
 			<p:column headerText="Brand">
@@ -55,16 +52,28 @@
 				<h:outputText value="#{macBean.qty}" />
 			</p:column>
 
-			<p:column headerText="Value">
-				<h:outputText value="RM. #{macBean.value}" />
+			<p:column headerText="Value(MYR.)">
+				<h:outputText value="#{macBean.value}" />
+			</p:column>
+			<p:column headerText="Action">
+				<p:commandLink oncomplete="equipmentDialog.show();"
+					action="#{backingBean.assignSelMachinery(macBean)}"
+					update=":form:tt:eqDia" style="padding-right:5px">
+					<p:graphicImage library="ep/images/design" name="edit.png"
+						value="/resources/ep/images/design/edit.png" />
+				</p:commandLink>
+				<p:commandLink>
+					<p:graphicImage library="ep/images/design" name="delete.png"
+						value="/resources/ep/images/design/delete.png" />
+				</p:commandLink>
 			</p:column>
 
 		</p:dataTable>
 		<div align="right">
-			<p:commandButton value="Add Machinery"
-				oncomplete="equipmentDialog.show();" update=":form:tt:eqDia"
+			<p:commandButton value="Add" oncomplete="equipmentDialog.show();"
+				update=":form:tt:eqDia"
 				action="#{backingBean.assignNewMachineryBean}" />
-			<p:commandButton value="Delete Machine(s)" />
+			<p:commandButton value="Delete" />
 		</div>
 		<br />
 		<p:outputPanel rendered="#{backingBean.managedBean.poUser}">
@@ -88,66 +97,67 @@
 			</table>
 		</p:outputPanel>
 	</p:panel>
-	<p:dialog width="600px" header="Manufacturing / Assembly Page"
+	<p:dialog width="600px" header="Machinery / Equipment Information"
 		widgetVar="equipmentDialog" resizable="false" showEffect="fade"
 		hideEffect="fade" modal="true" id="eqDia">
-		<p:panel header="Machinery / Equipment Information">
+		<!-- <p:panel header="Machinery / Equipment Information"> -->
 
-			<table style="width: 100%">
-				<tr>
-					<td><p:outputLabel value="Type Machinery / Equipment(s)" /></td>
-					<td><p:inputText
-							value="#{backingBean.managedBean.selectedMachine.machineType}" /></td>
-				</tr>
+		<table style="width: 100%">
+			<tr>
+				<td><p:outputLabel value="* Machinery Type" /></td>
+				<td><p:inputText
+						value="#{backingBean.managedBean.selectedMachine.machineType}" /></td>
+			</tr>
 
-				<tr>
-					<td><p:outputLabel value="Brand" /></td>
-					<td><p:inputText
-							value="#{backingBean.managedBean.selectedMachine.brandName}" /></td>
-				</tr>
-				<tr>
-					<td><p:outputLabel value="Funtion *" /></td>
-					<td><p:inputText
-							value="#{backingBean.managedBean.selectedMachine.machineFunction}" /></td>
-				</tr>
-				<tr>
-					<td><p:outputLabel value="Quantity *" /></td>
-					<td><p:inputText
-							value="#{backingBean.managedBean.selectedMachine.qty}" /></td>
-				</tr>
+			<tr>
+				<td><p:outputLabel value="Brand" /></td>
+				<td><p:inputText
+						value="#{backingBean.managedBean.selectedMachine.brandName}" /></td>
+			</tr>
+			<tr>
+				<td><p:outputLabel value="* Funtion" /></td>
+				<td><p:inputText
+						value="#{backingBean.managedBean.selectedMachine.machineFunction}" /></td>
+			</tr>
+			<tr>
+				<td><p:outputLabel value="* Quantity" /></td>
+				<td><p:inputText
+						value="#{backingBean.managedBean.selectedMachine.qty}" /></td>
+			</tr>
 
-				<tr>
-					<td><p:outputLabel value="Value *" /></td>
-					<td>
-						<table>
-							<tr>
-								<td style="padding-right: 20px;"><p:inputText
-										value="#{backingBean.managedBean.selectedMachine.value}" /></td>
-								<td valign="top"><p:selectOneMenu>
-										<f:selectItem itemLabel="MYR" itemValue="1" />
-									</p:selectOneMenu></td>
-							</tr>
-						</table>
-					</td>
-				</tr>
-				<tr>
-					<td><p:outputLabel value="Purchase Method *" /></td>
-					<td><p:selectOneMenu
-							value="#{backingBean.managedBean.selectedMachine.purchaseMethod}">
-							<f:selectItem itemLabel="-- Select --" itemValue="" />
-							<f:selectItem itemLabel="Cash" itemValue="1" />
-							<f:selectItem itemLabel="Credit Card" itemValue="1" />
-						</p:selectOneMenu></td>
-				</tr>
-				<tr>
-					<td><p:outputLabel value="Guarantor Name" /></td>
-					<td><p:inputText value=" -- TBC --" /></td>
-				</tr>
+			<tr>
+				<td><p:outputLabel value="* Value" /></td>
+				<td>
+					<table>
+						<tr>
+							<td style="padding-right: 5px;"><p:inputText
+									value="#{backingBean.managedBean.selectedMachine.value}"
+									size="10" /></td>
+							<td valign="top"><p:selectOneMenu style="margin-bottom:5px;">
+									<f:selectItem itemLabel="MYR" itemValue="1" />
+								</p:selectOneMenu></td>
+						</tr>
+					</table>
+				</td>
+			</tr>
+			<tr>
+				<td><p:outputLabel value="* Purchase Method" /></td>
+				<td><p:selectOneMenu
+						value="#{backingBean.managedBean.selectedMachine.purchaseMethod}">
+						<f:selectItem itemLabel="-- Select --" itemValue="" />
+						<f:selectItem itemLabel="Cash" itemValue="1" />
+						<f:selectItem itemLabel="Credit Card" itemValue="1" />
+					</p:selectOneMenu></td>
+			</tr>
+			<tr>
+				<td><p:outputLabel value="Guarantor Name" /></td>
+				<td><p:inputText value=" -- TBC --" /></td>
+			</tr>
 
-			</table>
-		</p:panel>
+		</table>
+		<!-- </p:panel> -->
 		<br />
-		<div align="center">
+		<div align="right">
 			<p:commandButton value="Save" oncomplete="equipmentDialog.hide();"
 				action="#{backingBean.addOrUpdateMachineToSmAppl}"
 				update=":form:tt:macDt" />

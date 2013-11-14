@@ -4,7 +4,7 @@
 	xmlns:ui="http://java.sun.com/jsf/facelets"
 	xmlns:p="http://primefaces.org/ui"
 	xmlns:c="http://java.sun.com/jsp/jstl/core">
-	<table style="width: 100%">
+	<!-- <table style="width: 100%">
 		<tr>
 			<td colspan="2"><h4
 					style="color: blue; text-decoration: underline; text-align: center;">
@@ -24,7 +24,11 @@
 					<p:commandButton value="#{lbl['lbl.sm.saveAsDraft']}" />
 				</div></td>
 		</tr>
-	</table>
+	</table> -->
+	<div align="right" style="width: 99%">
+		<p:commandButton value="#{lbl['lbl.sm.saveAsDraft']}"
+			icon="ui-icon-save" />
+	</div>
 	<ui:include
 		src="/xhtml/sm/shared/mofRegistration/captialOrEquityStatusInfoForm.xhtml" />
 	<ui:include
@@ -33,15 +37,17 @@
 		src="/xhtml/sm/shared/mofRegistration/captialOrEquityShareHoldingCompanyInfoForm.xhtml" />
 	<table style="width: 100%">
 		<tr>
-			<td><div align="left" style="width: 100%">
+			<td><div align="left" style="width: 99%">
 					<p:commandButton value="#{lbl['lbl.sm.prev']}"
 						actionListener="#{backingBean.setTabValue('2','1')}"
-						action="#{backingBean.updateSmAppl}" update=":form:tt" />
+						action="#{backingBean.updateSmAppl}" update=":form:tt"
+						icon="ui-icon-prev" />
 				</div></td>
-			<td><div align="right" style="width: 100%">
+			<td><div align="right" style="width: 99%">
 					<p:commandButton value="#{lbl['lbl.sm.next']}"
 						actionListener="#{backingBean.setTabValue('2','3')}"
-						action="#{backingBean.updateSmAppl}" update=":form:tt" />
+						action="#{backingBean.updateSmAppl}" update=":form:tt"
+						icon="ui-icon-next" iconPos="right" />
 				</div></td>
 		</tr>
 	</table>

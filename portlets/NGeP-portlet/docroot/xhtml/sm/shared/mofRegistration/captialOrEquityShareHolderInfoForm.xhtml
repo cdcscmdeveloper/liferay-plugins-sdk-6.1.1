@@ -39,10 +39,7 @@
 			</p:column>
 
 			<p:column headerText="Name">
-				<p:commandLink value="#{shareBean.name}"
-					oncomplete="shareHolderDialog.show();"
-					action="#{backingBean.assignSelShareHolder(shareBean)}"
-					update=":form:tt:shareHolderDialog" />
+				<h:outputText value="#{shareBean.name}" />
 			</p:column>
 			<p:column headerText="IC/Passport Num">
 				<h:outputText value="#{shareBean.identificationNo}" />
@@ -56,14 +53,24 @@
 			<p:column headerText="Equity Owner?">
 				<h:outputText value="Yes" />
 			</p:column>
-
+			<p:column headerText="Action">
+				<p:commandLink oncomplete="shareHolderDialog.show();"
+					action="#{backingBean.assignSelShareHolder(shareBean)}"
+					update=":form:tt:shareHolderDialog">
+					<p:graphicImage library="ep/images/design" name="edit.png"
+						value="/resources/ep/images/design/edit.png" />
+				</p:commandLink>
+				<p:commandLink>
+					<p:graphicImage library="ep/images/design" name="delete.png"
+						value="/resources/ep/images/design/delete.png" />
+				</p:commandLink>
+			</p:column>
 		</p:dataTable>
 		<div align="right">
-			<p:commandButton value="Add Share Holder"
-				oncomplete="shareHolderDialog.show();"
+			<p:commandButton value="Add" oncomplete="shareHolderDialog.show();"
 				action="#{backingBean.assignNewShareHolder}"
 				update=":form:tt:shareHolderDialog" />
-			<p:commandButton value="Delete Share Holder(s)" />
+			<p:commandButton value="Delete" />
 		</div>
 		<br />
 		<p:outputPanel rendered="#{backingBean.managedBean.poUser}">
@@ -87,13 +94,13 @@
 			</table>
 		</p:outputPanel>
 	</p:panel>
-	<p:dialog width="1000px" height="500px" header="Share Holder Details"
+	<p:dialog width="700px" height="560px" header="Share Holder Details"
 		widgetVar="shareHolderDialog" resizable="false" showEffect="fade"
 		hideEffect="fade" modal="true" id="shareHolderDialog">
 
 		<ui:include
 			src="/xhtml/sm/shared/mofRegistration/shareHolderInfoPopUpForm.xhtml" />
-		<div align="center">
+		<div align="right">
 			<p:commandButton value="Save" oncomplete="shareHolderDialog.hide();"
 				action="#{backingBean.addOrUpdateShareHolderToSmAppl}"
 				update=":form:tt:shrPerDt" />

@@ -39,23 +39,33 @@
 				<h:outputText value="#{index+1}" />
 			</p:column>
 			<p:column headerText="Company Name">
-				<p:commandLink value="#{assocBean.companyName}"
-					update=":form:tt:asDisp"
-					action="#{backingBean.assignSelAssoc(assocBean)}"
-					oncomplete="assocDialog.show();" />
+				<h:outputText value="#{assocBean.companyName}" />
 			</p:column>
 
 			<p:column headerText="Address">
 				<h:outputText
 					value="#{assocBean.smAddress.address1},#{assocBean.smAddress.address2}" />
 			</p:column>
+			<p:column headerText="Action">
+				<p:commandLink update=":form:tt:asDisp"
+					action="#{backingBean.assignSelAssoc(assocBean)}"
+					oncomplete="assocDialog.show();">
+					<p:graphicImage library="ep/images/design" name="edit.png"
+						value="/resources/ep/images/design/edit.png" />
+				</p:commandLink>
+				<p:commandLink>
+					<p:graphicImage library="ep/images/design" name="delete.png"
+						value="/resources/ep/images/design/delete.png" />
+				</p:commandLink>
+			</p:column>
+
 
 		</p:dataTable>
 		<div align="right">
-			<p:commandButton value="Add Associated Company"
+			<p:commandButton value="Add"
 				action="#{backingBean.assignNewAssocBean}"
 				oncomplete="assocDialog.show();" update=":form:tt:asDisp" />
-			<p:commandButton value="Delete Associate(s)" />
+			<p:commandButton value="Delete" />
 
 		</div>
 		<br />
@@ -80,98 +90,99 @@
 			</table>
 		</p:outputPanel>
 	</p:panel>
-	<p:dialog width="400px" height="500px" header="Associated Company Page"
-		id="asDisp" widgetVar="assocDialog" resizable="false"
-		showEffect="fade" hideEffect="fade" modal="true">
-		<p:panel header="Associated Company Details">
+	<p:dialog width="400px" height="460px"
+		header="Associated Company Details" id="asDisp"
+		widgetVar="assocDialog" resizable="false" showEffect="fade"
+		hideEffect="fade" modal="true">
+		<!-- <p:panel header="Associated Company Details"> -->
 
-			<table style="width: 100%">
-				<tr>
-					<td><p:outputLabel value="Company Name *" /></td>
-					<td><p:inputText
-							value="#{backingBean.managedBean.selectedAssocCompany.companyName}" /></td>
-				</tr>
-				<tr>
-					<td><p:outputLabel value="ROC/ROB/ROS No. *" /></td>
-					<td><p:inputText
-							value="#{backingBean.managedBean.selectedAssocCompany.regNo}" /></td>
-				</tr>
-				<tr>
-					<td><p:outputLabel value="MOF Registration No. *" /></td>
-					<td><p:inputText readonly="true"
-							value="Read Only  - Autopopulated as per ROC/ROB/ROS No."
-							title="This field TBC" /></td>
-				</tr>
-				<tr>
-					<!-- 	<td><p:outputLabel value="Share Holding *" /></td>
+		<table style="width: 100%">
+			<tr>
+				<td><p:outputLabel value="* Company Name" /></td>
+				<td><p:inputText
+						value="#{backingBean.managedBean.selectedAssocCompany.companyName}" /></td>
+			</tr>
+			<tr>
+				<td><p:outputLabel value="* ROC/ROB/ROS NO." /></td>
+				<td><p:inputText
+						value="#{backingBean.managedBean.selectedAssocCompany.regNo}" /></td>
+			</tr>
+			<tr>
+				<td><p:outputLabel value="* MOF Registration NO." /></td>
+				<td><p:inputText readonly="true"
+						value="Read Only  - Autopopulated as per ROC/ROB/ROS No."
+						title="This field TBC" /></td>
+			</tr>
+			<tr>
+				<!-- 	<td><p:outputLabel value="Share Holding *" /></td>
 					<td><p:inputText /> <p:outputLabel value="%" /></td> -->
-					<td><p:outputLabel value="Is Share Holding" /></td>
-					<td><p:selectOneRadio id="shopt"
-							value="#{backingBean.managedBean.selectedAssocCompany.isShareholding}">
-							<f:selectItem itemLabel="Yes" itemValue="1" />
-							<f:selectItem itemLabel="No" itemValue="0" />
-						</p:selectOneRadio></td>
-				</tr>
-				<tr>
-					<td><p:outputLabel value="Address" /></td>
-					<td><p:inputText
-							value="#{backingBean.managedBean.selectedAssocCompany.smAddress.address1}" /></td>
-				</tr>
+				<td><p:outputLabel value="Is Share Holding" /></td>
+				<td><p:selectOneRadio id="shopt"
+						value="#{backingBean.managedBean.selectedAssocCompany.isShareholding}">
+						<f:selectItem itemLabel="Yes" itemValue="1" />
+						<f:selectItem itemLabel="No" itemValue="0" />
+					</p:selectOneRadio></td>
+			</tr>
+			<tr>
+				<td><p:outputLabel value="* Address" /></td>
+				<td><p:inputText
+						value="#{backingBean.managedBean.selectedAssocCompany.smAddress.address1}" /></td>
+			</tr>
 
-				<tr>
-					<td></td>
-					<td><p:inputText
-							value="#{backingBean.managedBean.selectedAssocCompany.smAddress.address2}" /></td>
-				</tr>
-				<tr>
-					<td></td>
-					<td><p:inputText
-							value="#{backingBean.managedBean.selectedAssocCompany.smAddress.address3}" /></td>
-				</tr>
-				<tr>
-					<td><p:outputLabel value="Country *" /></td>
-					<td><p:selectOneMenu
-							value="#{backingBean.managedBean.selectedAssocCompany.smAddress.pmCountry.countryCode}">
-							<f:selectItem itemLabel="-- Select One -- " itemValue="" />
-							<f:selectItem itemLabel="Malaysia" itemValue="1" />
-						</p:selectOneMenu></td>
-				</tr>
-				<tr>
-					<td><p:outputLabel value="#{lbl['lbl.sm.postcode']}" /></td>
-					<td><p:inputText
-							value="#{backingBean.managedBean.selectedAssocCompany.smAddress.postcode}" /></td>
-				</tr>
-				<tr>
-					<td><p:outputLabel value="#{lbl['lbl.sm.state']}" /></td>
-					<td><p:inputText
-							value="#{backingBean.managedBean.selectedAssocCompany.smAddress.pmState.stateCode}" /></td>
-				</tr>
+			<tr>
+				<td></td>
+				<td><p:inputText
+						value="#{backingBean.managedBean.selectedAssocCompany.smAddress.address2}" /></td>
+			</tr>
+			<tr>
+				<td></td>
+				<td><p:inputText
+						value="#{backingBean.managedBean.selectedAssocCompany.smAddress.address3}" /></td>
+			</tr>
+			<tr>
+				<td><p:outputLabel value="* Country" /></td>
+				<td><p:selectOneMenu
+						value="#{backingBean.managedBean.selectedAssocCompany.smAddress.pmCountry.countryCode}">
+						<f:selectItem itemLabel="-- Select  -- " itemValue="" />
+						<f:selectItem itemLabel="Malaysia" itemValue="1" />
+					</p:selectOneMenu></td>
+			</tr>
+			<tr>
+				<td><p:outputLabel value="#{lbl['lbl.sm.postcode']}" /></td>
+				<td><p:inputText
+						value="#{backingBean.managedBean.selectedAssocCompany.smAddress.postcode}" /></td>
+			</tr>
+			<tr>
+				<td><p:outputLabel value="#{lbl['lbl.sm.state']}" /></td>
+				<td><p:inputText
+						value="#{backingBean.managedBean.selectedAssocCompany.smAddress.pmState.stateCode}" /></td>
+			</tr>
 
-				<tr>
-					<td><p:outputLabel value="#{lbl['lbl.sm.district']}" /></td>
-					<td><p:inputText
-							value="#{backingBean.managedBean.selectedAssocCompany.smAddress.pmDistrict.districtCode}" /></td>
-				</tr>
-				<tr>
-					<td><p:outputLabel value="#{lbl['lbl.sm.towncity']}" /></td>
-					<td><p:inputText
-							value="#{backingBean.managedBean.selectedAssocCompany.smAddress.pmCity.cityCode}" /></td>
-				</tr>
-				<tr>
-					<td><p:outputLabel value="Phone No." /></td>
-					<td><p:inputText
-							value="#{backingBean.managedBean.selectedAssocCompany.smAddress.phoneNo}" /></td>
-				</tr>
-				<tr>
-					<td><p:outputLabel value="Fax No." /></td>
-					<td><p:inputText
-							value="#{backingBean.managedBean.selectedAssocCompany.smAddress.faxNo}" /></td>
-				</tr>
+			<tr>
+				<td><p:outputLabel value="#{lbl['lbl.sm.district']}" /></td>
+				<td><p:inputText
+						value="#{backingBean.managedBean.selectedAssocCompany.smAddress.pmDistrict.districtCode}" /></td>
+			</tr>
+			<tr>
+				<td><p:outputLabel value="#{lbl['lbl.sm.towncity']}" /></td>
+				<td><p:inputText
+						value="#{backingBean.managedBean.selectedAssocCompany.smAddress.pmCity.cityCode}" /></td>
+			</tr>
+			<tr>
+				<td><p:outputLabel value="Phone NO." /></td>
+				<td><p:inputText
+						value="#{backingBean.managedBean.selectedAssocCompany.smAddress.phoneNo}" /></td>
+			</tr>
+			<tr>
+				<td><p:outputLabel value="Fax NO." /></td>
+				<td><p:inputText
+						value="#{backingBean.managedBean.selectedAssocCompany.smAddress.faxNo}" /></td>
+			</tr>
 
-			</table>
-		</p:panel>
+		</table>
+		<!-- </p:panel> -->
 		<br />
-		<div align="center">
+		<div align="right">
 			<p:commandButton value="Save"
 				action="#{backingBean.addOrUpdateAssocToSmAppl}"
 				oncomplete="assocDialog.hide();" type="submit" partialSubmit="true"

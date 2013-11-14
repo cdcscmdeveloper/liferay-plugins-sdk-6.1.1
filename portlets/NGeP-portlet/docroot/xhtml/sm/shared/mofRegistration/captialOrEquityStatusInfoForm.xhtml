@@ -28,71 +28,51 @@
 		<br />
 		<table style="width: 100%">
 			<tr>
-				<td><p:outputLabel value="Authorized Capital *" /></td>
-				<td><p:panelGrid columns="2"
-						styleClass="noBorders tr,noBorders td">
-						<p:column>
-							<p:inputText
-								title="This field is applicable for companies of type ROC Only" />
-						</p:column>
-						<p:column>
-							<p:selectOneMenu>
-								<f:selectItem itemLabel="MYR" itemValue="1" />
-							</p:selectOneMenu>
-						</p:column>
-					</p:panelGrid></td>
-				<td><p:outputLabel value=" Paid-Up Capital *" /></td>
-				<td><p:panelGrid columns="2"
-						styleClass="noBorders tr,noBorders td">
-						<p:column>
-							<p:inputText
-								title="This field is applicable for companies of type ROC Only" />
-						</p:column>
-						<p:column>
-							<p:selectOneMenu>
-								<f:selectItem itemLabel="MYR" itemValue="1" />
-							</p:selectOneMenu>
-						</p:column>
-					</p:panelGrid></td>
+				<td><p:outputLabel value="* Authorized Capital" /></td>
+				<td><table>
+						<tr>
+							<td style="padding-right: 5px;"><p:inputText
+									title="This field is applicable for companies of type ROC Only"
+									size="10" /></td>
+							<td valign="top"><p:selectOneMenu
+									style="margin-bottom : 5px;">
+									<f:selectItem itemLabel="MYR" itemValue="1"></f:selectItem>
+								</p:selectOneMenu></td>
+						</tr>
+					</table></td>
+
+				<td><p:outputLabel value="* Paid-Up Capital" /></td>
+				<td><table>
+						<tr>
+							<td style="padding-right: 5px;"><p:inputText
+									title="This field is applicable for companies of type ROC Only"
+									size="10" /></td>
+							<td valign="top"><p:selectOneMenu
+									style="margin-bottom : 5px;">
+									<f:selectItem itemLabel="MYR" itemValue="1"></f:selectItem>
+								</p:selectOneMenu></td>
+						</tr>
+					</table></td>
 			</tr>
 			<tr>
-				<td><p:outputLabel value=" Accum Capital *" /></td>
-				<td><p:panelGrid columns="2"
-						styleClass="noBorders tr,noBorders td">
-						<p:column>
-							<p:inputText
-								title="This field is applicable and 
+				<td><p:outputLabel value="Accumulated Capital(MYR)" /></td>
+				<td><p:inputText
+						title="This field is applicable and 
 						data is auto populated for companies other than ROC"
-								readonly="true" />
-						</p:column>
-						<p:column>
-							<p:selectOneMenu>
-								<f:selectItem itemLabel="MYR" itemValue="1" />
-							</p:selectOneMenu>
-						</p:column>
-					</p:panelGrid></td>
-				<td><p:outputLabel value=" / Accum Share *" /></td>
-				<td><p:panelGrid columns="2"
-						styleClass="noBorders tr,noBorders td">
-						<p:column>
-							<p:inputText
-								title=" This field is applicable and
-						data is auto populated for companies of type ROS"
-								readonly="true" />
-						</p:column>
-						<p:column>
-							<p:selectOneMenu>
-								<f:selectItem itemLabel="MYR" itemValue="1" />
-							</p:selectOneMenu>
-						</p:column>
-					</p:panelGrid></td>
+						readonly="true" size="10" disabled="true" /></td>
+				<td><p:outputLabel value="Accumulated Share(MYR)" /></td>
+				<td><p:inputText
+						title="This field is applicable and 
+						data is auto populated for companies other than ROC"
+						readonly="true" size="10" disabled="true" /></td>
+
 			</tr>
 			<tr>
 				<td colspan="4" align="center"><p:panelGrid>
 						<f:facet name="header">
 							<p:row>
 								<p:column>Composition of Capital Distribution</p:column>
-								<p:column>No. Of Members</p:column>
+								<p:column>NO. Of Members</p:column>
 								<p:column>Value (MYR)</p:column>
 								<p:column>%</p:column>
 							</p:row>

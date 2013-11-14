@@ -30,13 +30,17 @@
 		<br />
 		<table style="width: 100%">
 			<tr>
-				<td><p:outputLabel value="Company Name *" /></td>
-				<td colspan="3"><p:inputText disabled="true" readonly="true"
+
+				<td><p:outputLabel value="Company Name" /></td>
+				<td><p:inputText disabled="true" readonly="true"
 						value="#{backingBean.managedBean.smSupplier.supplierName}"
-						size="100" /></td>
+						size="50" /></td>
+						<td><p:outputLabel value="Application NO." /></td>
+				<td><p:inputText disabled="true" readonly="true"
+						value="#{backingBean.managedBean.smAppl.applNo}" /></td>
 			</tr>
 			<tr>
-				<td><p:outputLabel value="Registration Type *" /></td>
+				<td><p:outputLabel value="* Registration Type" /></td>
 				<td><p:inputText disabled="true" readonly="true"
 						value="#{backingBean.managedBean.smSupplier.businessType}" /> <!-- rendered="#{backingBean.managedBean.smSupplier.businessType == 1}" />
 					<p:inputText disabled="true" readonly="true" value="ROC - BERHAD"
@@ -45,17 +49,17 @@
 						value="ROS - PERKONGSIAN"
 						rendered="#{backingBean.managedBean.smSupplier.businessType == 3}" /> -->
 				</td>
-				<td><p:outputLabel value="ROC/ROB/ROS No. *" /></td>
+				<td><p:outputLabel value="* ROC/ROB/ROS NO." /></td>
 				<td><p:inputText
 						value="#{backingBean.managedBean.smSupplier.regNo}"
 						disabled="true" readonly="true" /></td>
 			</tr>
 			<tr>
-				<td><p:outputLabel value="Income Tax Ref No. *" /></td>
+				<td><p:outputLabel value="* Income Tax Ref NO." /></td>
 				<td><p:inputText
 						value="#{backingBean.managedBean.smSupplier.incomeTaxNo}"
 						disabled="true" readonly="true" /></td>
-				<td><p:outputLabel value="Established Date *" /></td>
+				<td><p:outputLabel value="* Established Date" /></td>
 				<td><p:inputText
 						value="#{backingBean.managedBean.smSupplier.establishDate}"
 						readonly="true">
@@ -63,15 +67,15 @@
 					</p:inputText></td>
 			</tr>
 			<tr>
-				<td><p:outputLabel value="Annual Income *" /></td>
+				<td><p:outputLabel value="* Annual Income" /></td>
 				<td><p:selectOneMenu>
-						<f:selectItem itemLabel="-- Select One -- " itemValue="" />
+						<f:selectItem itemLabel="-- Select -- " itemValue="" />
 						<f:selectItem itemLabel="Kuarang Daripada RM 100,000"
 							itemValue="1" />
 					</p:selectOneMenu></td>
-				<td><p:outputLabel value="Country *" /></td>
+				<td><p:outputLabel value="* Country" /></td>
 				<td><p:selectOneMenu>
-						<f:selectItem itemLabel="-- Select One -- " itemValue="" />
+						<f:selectItem itemLabel="-- Select -- " itemValue="" />
 						<f:selectItem itemLabel="Malaysia" itemValue="MY" />
 					</p:selectOneMenu></td>
 			</tr>

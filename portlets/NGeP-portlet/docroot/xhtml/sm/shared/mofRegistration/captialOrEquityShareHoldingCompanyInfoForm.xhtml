@@ -39,9 +39,7 @@
 			</p:column>
 
 			<p:column headerText="Company Name">
-				<p:commandLink value="#{equiBean.companyName}"
-					update=":form:tt:eqiCompDialog" oncomplete="eqiCompDialog.show();"
-					action="#{backingBean.assignSelEquiCompany(equiBean)}" />
+				<h:outputText value="#{equiBean.companyName}" />
 			</p:column>
 
 			<p:column headerText="Address">
@@ -50,15 +48,27 @@
 					#{equiBean.smAddress.address2},#{equiBean.smAddress.address3}" />
 			</p:column>
 
-			<p:column headerText="Share Amt">
-				<h:outputText value="RM. #{equiBean.shareAmount}" />
+			<p:column headerText="Share Amt(MYR.)">
+				<h:outputText value="#{equiBean.shareAmount}" />
 			</p:column>
 			<p:column headerText="Share holding(%)">
 				<h:outputText value="#{equiBean.sharePercentage}" />
 			</p:column>
+			<p:column headerText="Action">
+				<p:commandLink update=":form:tt:eqiCompDialog"
+					oncomplete="eqiCompDialog.show();"
+					action="#{backingBean.assignSelEquiCompany(equiBean)}">
+					<p:graphicImage library="ep/images/design" name="edit.png"
+						value="/resources/ep/images/design/edit.png" />
+				</p:commandLink>
+				<p:commandLink>
+					<p:graphicImage library="ep/images/design" name="delete.png"
+						value="/resources/ep/images/design/delete.png" />
+				</p:commandLink>
+			</p:column>
 		</p:dataTable>
 		<div align="right">
-			<p:commandButton value="Add Equity Company"
+			<p:commandButton value="Add"
 				action="#{backingBean.assignNewEquiCompBean}"
 				oncomplete="eqiCompDialog.show();" update=":form:tt:eqiCompDialog" />
 			<p:commandButton value="Delete" />
@@ -86,95 +96,95 @@
 			</table>
 		</p:outputPanel>
 	</p:panel>
-	<p:dialog width="500px" height="510px"
+	<p:dialog width="450px" height="460px"
 		header="ShareHolding / Equity Company Page" id="eqiCompDialog"
 		widgetVar="eqiCompDialog" resizable="false" showEffect="fade"
 		hideEffect="fade" modal="true">
-		<p:panel header="Associated Company Details">
+		<!-- <p:panel header="Associated Company Details"> -->
 
-			<table style="width: 100%">
-				<tr>
-					<td><p:outputLabel value="Company Name *" /></td>
-					<td><p:inputText
-							value="#{backingBean.managedBean.selectedEquityCompany.companyName}" /></td>
-				</tr>
-				<tr>
-					<td><p:outputLabel value="ROC/ROB/ROS No. *" /></td>
-					<td><p:inputText
-							value="#{backingBean.managedBean.selectedEquityCompany.regNo}" /></td>
-				</tr>
-				<tr>
-					<td><p:outputLabel value="Share Amount *" /></td>
-					<td><p:inputText
-							value="#{backingBean.managedBean.selectedEquityCompany.shareAmount}" />
-						<h:outputText value="MYR" /></td>
-				</tr>
-				<tr>
-					<td><p:outputLabel value="Share Percentage *" /></td>
-					<td><p:inputText
-							value="#{backingBean.managedBean.selectedEquityCompany.sharePercentage}" />
-						<h:outputText value="%" /></td>
-				</tr>
-				<tr>
-					<td><p:outputLabel value="Address" /></td>
-					<td><p:inputText
-							value="#{backingBean.managedBean.selectedEquityCompany.smAddress.address1}" /></td>
-				</tr>
+		<table style="width: 100%">
+			<tr>
+				<td><p:outputLabel value="* Company Name" /></td>
+				<td><p:inputText
+						value="#{backingBean.managedBean.selectedEquityCompany.companyName}" /></td>
+			</tr>
+			<tr>
+				<td><p:outputLabel value="* ROC/ROB/ROS NO." /></td>
+				<td><p:inputText
+						value="#{backingBean.managedBean.selectedEquityCompany.regNo}" /></td>
+			</tr>
+			<tr>
+				<td><p:outputLabel value="* Share Amount(MYR)" /></td>
+				<td><p:inputText
+						value="#{backingBean.managedBean.selectedEquityCompany.shareAmount}" />
+				</td>
+			</tr>
+			<tr>
+				<td><p:outputLabel value="* Share Percentage(%)" /></td>
+				<td><p:inputText
+						value="#{backingBean.managedBean.selectedEquityCompany.sharePercentage}" />
+				</td>
+			</tr>
+			<tr>
+				<td><p:outputLabel value="* Address" /></td>
+				<td><p:inputText
+						value="#{backingBean.managedBean.selectedEquityCompany.smAddress.address1}" /></td>
+			</tr>
 
-				<tr>
-					<td></td>
-					<td><p:inputText
-							value="#{backingBean.managedBean.selectedEquityCompany.smAddress.address2}" /></td>
-				</tr>
-				<tr>
-					<td></td>
-					<td><p:inputText
-							value="#{backingBean.managedBean.selectedEquityCompany.smAddress.address3}" /></td>
-				</tr>
-				<tr>
-					<td><p:outputLabel value="Country *" /></td>
-					<td><p:selectOneMenu
-							value="#{backingBean.managedBean.selectedEquityCompany.smAddress.pmCountry.countryCode}">
-							<f:selectItem itemLabel="-- Select One -- " itemValue="" />
-							<f:selectItem itemLabel="Malaysia" itemValue="1" />
-						</p:selectOneMenu></td>
-				</tr>
-				<tr>
-					<td><p:outputLabel value="#{lbl['lbl.sm.postcode']}" /></td>
-					<td><p:inputText
-							value="#{backingBean.managedBean.selectedEquityCompany.smAddress.postcode}" /></td>
-				</tr>
-				<tr>
-					<td><p:outputLabel value="#{lbl['lbl.sm.state']}" /></td>
-					<td><p:inputText
-							value="#{backingBean.managedBean.selectedEquityCompany.smAddress.pmState.stateCode}" /></td>
-				</tr>
+			<tr>
+				<td></td>
+				<td><p:inputText
+						value="#{backingBean.managedBean.selectedEquityCompany.smAddress.address2}" /></td>
+			</tr>
+			<tr>
+				<td></td>
+				<td><p:inputText
+						value="#{backingBean.managedBean.selectedEquityCompany.smAddress.address3}" /></td>
+			</tr>
+			<tr>
+				<td><p:outputLabel value="* Country" /></td>
+				<td><p:selectOneMenu
+						value="#{backingBean.managedBean.selectedEquityCompany.smAddress.pmCountry.countryCode}">
+						<f:selectItem itemLabel="-- Select -- " itemValue="" />
+						<f:selectItem itemLabel="Malaysia" itemValue="1" />
+					</p:selectOneMenu></td>
+			</tr>
+			<tr>
+				<td><p:outputLabel value="#{lbl['lbl.sm.postcode']}" /></td>
+				<td><p:inputText
+						value="#{backingBean.managedBean.selectedEquityCompany.smAddress.postcode}" /></td>
+			</tr>
+			<tr>
+				<td><p:outputLabel value="#{lbl['lbl.sm.state']}" /></td>
+				<td><p:inputText
+						value="#{backingBean.managedBean.selectedEquityCompany.smAddress.pmState.stateCode}" /></td>
+			</tr>
 
-				<tr>
-					<td><p:outputLabel value="#{lbl['lbl.sm.district']}" /></td>
-					<td><p:inputText
-							value="#{backingBean.managedBean.selectedEquityCompany.smAddress.pmDistrict.districtCode}" /></td>
-				</tr>
-				<tr>
-					<td><p:outputLabel value="#{lbl['lbl.sm.towncity']}" /></td>
-					<td><p:inputText
-							value="#{backingBean.managedBean.selectedEquityCompany.smAddress.pmCity.cityCode}" /></td>
-				</tr>
-				<tr>
-					<td><p:outputLabel value="Phone No." /></td>
-					<td><p:inputText
-							value="#{backingBean.managedBean.selectedEquityCompany.smAddress.phoneNo}" /></td>
-				</tr>
-				<tr>
-					<td><p:outputLabel value="Fax No." /></td>
-					<td><p:inputText
-							value="#{backingBean.managedBean.selectedEquityCompany.smAddress.faxNo}" /></td>
-				</tr>
+			<tr>
+				<td><p:outputLabel value="#{lbl['lbl.sm.district']}" /></td>
+				<td><p:inputText
+						value="#{backingBean.managedBean.selectedEquityCompany.smAddress.pmDistrict.districtCode}" /></td>
+			</tr>
+			<tr>
+				<td><p:outputLabel value="#{lbl['lbl.sm.towncity']}" /></td>
+				<td><p:inputText
+						value="#{backingBean.managedBean.selectedEquityCompany.smAddress.pmCity.cityCode}" /></td>
+			</tr>
+			<tr>
+				<td><p:outputLabel value="Phone NO." /></td>
+				<td><p:inputText
+						value="#{backingBean.managedBean.selectedEquityCompany.smAddress.phoneNo}" /></td>
+			</tr>
+			<tr>
+				<td><p:outputLabel value="Fax NO." /></td>
+				<td><p:inputText
+						value="#{backingBean.managedBean.selectedEquityCompany.smAddress.faxNo}" /></td>
+			</tr>
 
-			</table>
-		</p:panel>
+		</table>
+		<!-- </p:panel> -->
 		<br />
-		<div align="center">
+		<div align="right">
 			<p:commandButton value="Save"
 				action="#{backingBean.addOrUpdateEquityCompanyToSmAppl}"
 				oncomplete="eqiCompDialog.hide();" type="submit"
