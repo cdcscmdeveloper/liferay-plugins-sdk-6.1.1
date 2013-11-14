@@ -133,7 +133,7 @@ public class SmApplicationBackingBean extends
 						.println("****** INSERT A FRESH RECORD OF APPL TO SUUPPLIER ******** ");
 				smApplSupplier.getSmAppls().add(smAppl);
 			}
-			if (applicationType.equals("N")) {
+			if (applicationType.equals("XX")) {
 				System.out
 						.println(" **** START INSERTING THE NEW APPLN FOR MOF REG ****");
 				reqDto.setSmSupplier(smApplSupplier);
