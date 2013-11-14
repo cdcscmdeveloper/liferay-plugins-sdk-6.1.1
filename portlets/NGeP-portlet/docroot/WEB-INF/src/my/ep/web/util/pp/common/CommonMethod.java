@@ -6,6 +6,7 @@ package my.ep.web.util.pp.common;
 import java.math.BigDecimal;
 import java.text.DateFormatSymbols;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
@@ -137,10 +138,12 @@ public class CommonMethod {
 	 */
 	public static List<SelectItem> calendarMonths(){
 		List<SelectItem> months = new ArrayList<SelectItem>();
-		String[] shortMonths = new DateFormatSymbols().getShortMonths();
+		String[] shortMonths = Arrays.copyOf(DateFormatSymbols.getInstance().getShortMonths(), 12);
+		Calendar cal = Calendar.getInstance();
+		Integer year = cal.get(Calendar.YEAR);
 		Integer i = 0;
 		for(String month:shortMonths){
-			months.add(new SelectItem(i, month));
+			months.add(new SelectItem(i, month + " " + year));
 			i++;
 		}
 		return months;
@@ -214,6 +217,7 @@ public class CommonMethod {
 		sb.append(cal.get(Calendar.HOUR));
 		sb.append(cal.get(Calendar.MINUTE));
 		sb.append(cal.get(Calendar.SECOND));
+		sb.append(cal.get(Calendar.MILLISECOND));
 		System.out.println("plan number: " + sb.toString());
 		return sb.toString();
 	}

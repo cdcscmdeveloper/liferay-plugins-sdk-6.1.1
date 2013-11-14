@@ -115,7 +115,8 @@ public class ProcurementPlanConst {
 	public static final Integer UNSPSC_CLASS = 2;
 	public static final Integer UNSPSC_COMMODITY = 3;
 
-	
+	//Module
+	public static final String MODULE = "PP";
 	
 	//Doc Type
 	public static final String DOCTYPE_PLAN = "PPL";

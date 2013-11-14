@@ -574,8 +574,34 @@ public class BudgetAllocationBackingBean extends BaseBackingBean<BudgetAllocatio
 	 */
 	public List<PpBudget> populateGo() {
 		log.info("populateGo");
-		return getAllBudgets(USER_ID_MIN, true);
+		return getAllAvailableBudgets(USER_ID_MIN);
 	}
+
+	/**
+	 * get all available budget only
+	 * @param ministryId
+	 * @return
+	 */
+	public List <PpBudget> getAllAvailableBudgets(Long ministryId){
+		log.info("getAllBudgets - Start");
+		List <PpBudget> budgetList =  new ArrayList<PpBudget>();
+		try{
+			BudgetReqDTO reqDTO = new BudgetReqDTO();
+			reqDTO.setMinistryId(ministryId);
+	
+			IBudgetSO reqSO = (IBudgetSO) BusinessDelegate.getInstance().getServiceObject(ProcurementPlanConst.SO_PP, IBudgetSO.class);
+			BudgetResDTO resDTO = reqSO.retrieveAvailableBudgetList(reqDTO);
+			
+			if (resDTO.isSuccessful()) {
+				budgetList = resDTO.getBudgetList();
+			}
+		}catch(Exception e){
+			e.printStackTrace();
+		}
+		log.info("getAllAvailableBudgets - End");
+		return budgetList;
+	}
+	
 	
 	/**
 	 * retrieve and set the selected budget(GO)
@@ -760,7 +786,7 @@ public class BudgetAllocationBackingBean extends BaseBackingBean<BudgetAllocatio
 	 * @param ministryId
 	 * @return budget list
 	 */
-	private List <PpBudget> getAllBudgets(Long ministryId, boolean isAvailable){
+	private List <PpBudget> getAllBudgets(Long ministryId){
 		log.info("getAllBudgets - Start");
 		List <PpBudget> budgetList =  new ArrayList<PpBudget>();
 		try{
@@ -771,12 +797,6 @@ public class BudgetAllocationBackingBean extends BaseBackingBean<BudgetAllocatio
 					"orgProfileId", 
 					SearchOperator.OPERATOR_EQUALS.value(), 
 					USER_ID_MIN));
-			if(isAvailable){
-				searchBean.getDataFilterBeans().add(new SearchFilterBean(
-						"usedAmount", 
-						SearchOperator.OPERATOR_GREATER.value(), 
-						0));
-			}
 			searchBean.setNavigatable(false);
 			reqDTO.setBudgetSearchBean(searchBean);	
 			
