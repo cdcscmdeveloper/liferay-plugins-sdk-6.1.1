@@ -1618,7 +1618,7 @@
 				<portlet-mode>view</portlet-mode>
 			</supports>
 			<portlet-info>
-				<title>catalogueTaskList</title>
+				<title>Catalogue DashBoard</title>
 				<short-title>NewJSFPortlet</short-title>
 				<keywords></keywords>
 			</portlet-info>
