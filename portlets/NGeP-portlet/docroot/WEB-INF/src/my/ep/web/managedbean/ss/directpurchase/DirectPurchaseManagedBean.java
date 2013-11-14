@@ -37,6 +37,7 @@ public class DirectPurchaseManagedBean extends BaseManagedBean{
 	private	List<ScRequestListItem> requestListItems = new ArrayList<ScRequestListItem>();
 	private	List<ScRequestSupplierItem> recommendRequestListSupplierItems = new ArrayList<ScRequestSupplierItem>();
 	private	ScRequestSupplierItem	selectedItem	=	new ScRequestSupplierItem();
+	private	List<ScRequestSupplierItem>	selectedSupplierItems	=	new ArrayList<ScRequestSupplierItem>();
 	private	String	requestListRemark;
 	private	ScPrInquiry	scPrInquiry = new ScPrInquiry();
 	
@@ -68,6 +69,15 @@ public class DirectPurchaseManagedBean extends BaseManagedBean{
 	public void setRecommendRequestListSupplierItems(List<ScRequestSupplierItem> recommendRequestListSupplierItems) {
 		this.recommendRequestListSupplierItems = recommendRequestListSupplierItems;
 	}
+	public List<ScRequestSupplierItem>	getScRequestSupplierItems(){
+		List<ScRequestSupplierItem> results	=	new ArrayList<ScRequestSupplierItem>();
+		if(requestList.getRequestItems() != null && requestList.getRequestItems().size() > 0){
+			for(ScRequestListItem requestItem: requestList.getRequestItems()){
+				results.addAll(requestItem.getSupplierItems());
+			}
+		}
+		return results;
+	}
 
 	private	void prepareDummyData(){
 		requestList	=	new	ScRequestList();
@@ -85,16 +95,29 @@ public class DirectPurchaseManagedBean extends BaseManagedBean{
 		
 		ScRequestListItem requestListItem1 = new ScRequestListItem(1L,"Item1",1000,"KG");
 		List<ScRequestSupplierItem> supplierItems1 = new ArrayList<ScRequestSupplierItem>();
+		ScRequestSupplierItem	supplierItem	=	new ScRequestSupplierItem(3L,1L,1000,new Double(4.5));
+		supplierItem.setScRequestListItem(requestListItem1);
+		supplierItems1.add(supplierItem);
 		
-		supplierItems1.add(new ScRequestSupplierItem(3L,1L,1000,new Double(4.5)));
-		supplierItems1.add(new ScRequestSupplierItem(21L,1L,1000,new Double(4.6)));
-		supplierItems1.add(new ScRequestSupplierItem(22L,3L,1000,new Double(4.4)));
+		supplierItem	=	new ScRequestSupplierItem(21L,1L,1000,new Double(4.6));
+		supplierItem.setScRequestListItem(requestListItem1);
+		supplierItems1.add(supplierItem);
+		
+		supplierItem	=	new ScRequestSupplierItem(22L,3L,1000,new Double(4.4));
+		supplierItem.setScRequestListItem(requestListItem1);
+		supplierItems1.add(supplierItem);
+		
 		requestListItem1.setSupplierItems(supplierItems1);
 		requestListItems.add(requestListItem1);
 		
 		ScRequestListItem requestListItem2 = new ScRequestListItem(2L,"Item2",2000,"KG");
 		List<ScRequestSupplierItem> supplierItems2 = new ArrayList<ScRequestSupplierItem>();
-		supplierItems2.add(new ScRequestSupplierItem(31L,1L,1000,new Double(4.5)));/*
+		
+		supplierItem	=	new ScRequestSupplierItem(31L,1L,1000,new Double(4.5));
+		supplierItem.setScRequestListItem(requestListItem2);
+		supplierItems2.add(supplierItem);
+		
+		/*
 		supplierItems2.add(new ScRequestSupplierItem(21L,3L,1000,new Double(4.6)));
 		supplierItems2.add(new ScRequestSupplierItem(33L,3L,1000,new Double(4.4)));*/
 		requestListItem2.setSupplierItems(supplierItems2);
@@ -138,6 +161,14 @@ public class DirectPurchaseManagedBean extends BaseManagedBean{
 
 	public void setRequestListRemark(String requestListRemark) {
 		this.requestListRemark = requestListRemark;
+	}
+
+	public List<ScRequestSupplierItem> getSelectedSupplierItems() {
+		return selectedSupplierItems;
+	}
+
+	public void setSelectedSupplierItems(List<ScRequestSupplierItem> selectedSupplierItems) {
+		this.selectedSupplierItems = selectedSupplierItems;
 	}
 	
 }

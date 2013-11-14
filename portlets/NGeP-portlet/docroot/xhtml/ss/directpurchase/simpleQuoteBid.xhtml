@@ -10,44 +10,38 @@
 		modal="true" width="800" height="250">
 		<p:panel header="#{lbl['lbl.ss.simple.quote.purchase.panel.header']}">
 
-			<p:dataTable id="simpleQuote" var="simpleQuote"
-				value="#{simpleQuoteBidBackingBean.utilList}"
-				selection="#{simpleQuoteBidBackingBean.managedBean.selectedUtilList}"
-				rowKey="#{simpleQuote.seqNo}" rowIndexVar="index">
+			<p:dataTable id="supplierItemPopupTable" var="supplierItem"
+				value="#{directPurchaseBackingBean.managedBean.scRequestSupplierItems}"
+				selection="#{directPurchaseBackingBean.managedBean.selectedSupplierItems}"
+				rowKey="#{supplierItem.cmSupplierItem.supplierItemId}" rowIndexVar="index">
 
 				<p:column selectionMode="multiple" style="width:2%" />
 
 				<p:column headerText="#{lbl['lbl.ss.simple.quote.purchase.supplier']}" style="width:10%">
-					<h:outputText value="#{simpleQuote.supplier}"></h:outputText>
+					<h:outputText value="#{supplierItem.smSupplier.supplierName}"></h:outputText>
 				</p:column>
 
 				<p:column headerText="#{lbl['lbl.ss.simple.quote.purchase.description']}" style="width:25%">
-					<h:outputText value="#{simpleQuote.description}"></h:outputText>
+					<h:outputText value="#{supplierItem.cmSupplierItem.itemDesc}"></h:outputText>
 				</p:column>
 
 				
 				<p:column headerText="#{lbl['lbl.ss.simple.quote.purchase.qty.order']}" style="width:25%">
-					<h:outputText value="#{simpleQuote.qtyOrder}"></h:outputText>
+					<h:outputText value="#{supplierItem.cmSupplierItem.minOrder}"></h:outputText>
 				</p:column>
 
 				<p:column headerText="#{lbl['lbl.ss.simple.quote.item.uom']}" style="width:5%">
-					<h:outputText value="#{simpleQuote.uom}"></h:outputText>
 				</p:column>
 
 				<p:column headerText="#{lbl['lbl.ss.simple.quote.purchase.unit.price']}" style="width:20%">
-					<h:outputText value="#{simpleQuote.unitPerPrice}"></h:outputText>
+					<h:outputText value="#{supplierItem.cmSupplierItem.minOrder}"></h:outputText>
 				</p:column>
-
-				<p:column headerText="#{lbl['lbl.ss.simple.quote.purchase.amount']}" style="width:13%">
-					<h:outputText value="#{simpleQuote.amount}"></h:outputText>
-				</p:column>
-
 			</p:dataTable>
 
 		</p:panel>
 
 		<p:commandButton value="#{lbl['lbl.ss.simple.quote.purchase.btn.ok']}" style="float:right;"
-			onclick="simpleQuoteBid.hide();" action="/xhtml/ss/directpurchase/common/simpleQuoteGroupTab.xhtml"></p:commandButton>
+			onclick="simpleQuoteBid.hide();" process="@all" action="#{directPurchaseBackingBean.simpleQuoteBid()}"></p:commandButton>
 				&#160;&#160;
 				<p:commandButton value="#{lbl['lbl.ss.simple.quote.purchase.btn.cancel']}" style="float:right;"
 			onclick="simpleQuoteBid.hide();"></p:commandButton>

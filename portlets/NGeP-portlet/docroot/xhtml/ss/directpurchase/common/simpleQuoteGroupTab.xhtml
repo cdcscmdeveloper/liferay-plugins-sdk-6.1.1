@@ -1,5 +1,5 @@
 <ui:composition
-	template="/WEB-INF/facelets/templates/sidemenu_template.xhtml"
+	template="/WEB-INF/facelets/templates/basic_template.xhtml"
 	xmlns="http://www.w3.org/1999/xhtml"
 	xmlns:f="http://java.sun.com/jsf/core"
 	xmlns:h="http://java.sun.com/jsf/html"
@@ -8,34 +8,45 @@
 	xmlns:c="http://java.sun.com/jsp/jstl/core">
 	<ui:define name="resourceSection">
 	</ui:define>
-	<ui:define name="sideMenu">
-		<ui:include
-			src="/xhtml/ss/directpurchase/common/ss_directpurchase_sidemenu.xhtml" />
-	</ui:define>
-	<ui:define name="content">
-		<p:panel header="SimpleQuote-PTJ">
-			<p:panelGrid style="width:100%;"
-				styleClass="noBorders tr,noBorders td">
-				<p:row>
-					<p:column width="100%" style="text-align:right">
-						<p:commandButton value="SUBMIT" />
-					</p:column>
-				</p:row>
-			</p:panelGrid>
-			<p:tabView>
-				<p:tab title="GENERAL" styleClass="noBorders tr,noBorders td">
-					<ui:include src="/xhtml/ss/directpurchase/common/general.xhtml" />
-				</p:tab>
-				<p:tab title="ZONE PRICE" styleClass="noBorders tr,noBorders td">
-					<ui:include
-						src="/xhtml/ss/directpurchase/common/supplierCriteria.xhtml" />
-				</p:tab>
-				<p:tab title="SUPPLIER CRITERIA"
-					styleClass="noBorders tr,noBorders td">
-					<ui:include
-						src="/xhtml/ss/directpurchase/common/supplierCriteria.xhtml" />
-				</p:tab>
-			</p:tabView>
-		</p:panel>
+	<ui:define name="contentSection">
+		<div align="right" id="div_globe_11">
+			<p:commandButton id="commond_button_save1" process="@all"
+				value="#{lbl['lbl.ss.save']}"
+				actionListener="#{simpleQuoteBidBackingBean.saveQuoteBid()}"></p:commandButton>
+			<p:commandButton value="#{lbl['lbl.ss.submit']}">
+			</p:commandButton>
+		</div>
+		<p:tabView id="dp" dynamic="true" orientation="left" widgetVar="dp">
+			<p:tab id="simpleQuoteTab" title="Simple Quote">
+				<p:panel header="SimpleQuote-PTJ">
+					<p:tabView dynamic="true">
+						<p:tab title="GENERAL" styleClass="noBorders tr,noBorders td">
+							<ui:include src="/xhtml/ss/directpurchase/common/general.xhtml" />
+						</p:tab>
+						<p:tab title="ZONE PRICE" styleClass="noBorders tr,noBorders td">
+							<ui:include
+								src="/xhtml/ss/directpurchase/common/supplierCriteria.xhtml" />
+						</p:tab>
+						<p:tab title="SUPPLIER CRITERIA"
+							styleClass="noBorders tr,noBorders td">
+							<ui:include
+								src="/xhtml/ss/directpurchase/common/supplierCriteria.xhtml" />
+						</p:tab>
+					</p:tabView>
+				</p:panel>
+			</p:tab>
+			<!-- p:tab id="marketResearch"
+				title="#{lbl['lbl.ss.sidemenu.market.research']}">
+				<ui:include src="/xhtml/ss/directpurchase/marketResearch.xhtml"></ui:include>
+			</p:tab>
+			<p:tab id="requestList"
+				title="#{lbl['lbl.ss.sidemenu.request.list']}">
+				<ui:include src="/xhtml/ss/directpurchase/requestList.xhtml"></ui:include>
+			</p:tab>
+			<p:tab id="remark" title="#{lbl['lbl.ss.sidemenu.remarks']}">
+				<ui:include
+					src="/xhtml/ss/directpurchase/directPurchaseRemarks.xhtml"></ui:include>
+			</p:tab	-->
+		</p:tabView>
 	</ui:define>
 </ui:composition>

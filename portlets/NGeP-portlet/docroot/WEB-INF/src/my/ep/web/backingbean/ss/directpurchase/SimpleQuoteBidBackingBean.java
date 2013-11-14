@@ -8,13 +8,19 @@ import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
 import javax.faces.context.FacesContext;
 
+import my.ep.biz.service.ss.directpurchase.IDirectPurchaseSO;
+import my.ep.biz.service.ss.directpurchase.IQuoteBidSO;
+import my.ep.dto.ss.directpurchase.QuoteBidReqDTO;
+import my.ep.dto.ss.directpurchase.QuoteBidResDTO;
 import my.ep.web.backingbean.BaseBackingBean;
+import my.ep.web.constant.SourcingConst;
 import my.ep.web.managedbean.ss.directpurchase.SimpleQuoteBidManagedBean;
+import my.ep.web.util.lookupservice.BusinessDelegate;
 
 import org.primefaces.event.RowEditEvent;
 import org.primefaces.model.DualListModel;
 
-@ManagedBean
+@ManagedBean(name = "simpleQuoteBidBackingBean")
 @SessionScoped
 public class SimpleQuoteBidBackingBean extends BaseBackingBean<SimpleQuoteBidManagedBean> {
 
@@ -52,6 +58,13 @@ public class SimpleQuoteBidBackingBean extends BaseBackingBean<SimpleQuoteBidMan
 	public void setItems(DualListModel<String> items) {
 		this.items = items;
 	}
+	public void saveQuoteBid(){
+		QuoteBidReqDTO	reqDTO	=	new	QuoteBidReqDTO();
+		reqDTO.setQuoteBidDtl(this.getManagedBean().getScQuoteBid());
+		IQuoteBidSO quoteBidSO = (IQuoteBidSO) BusinessDelegate.getInstance().getServiceObject(SourcingConst.SOURCING_MODULE, IQuoteBidSO.class);
+		QuoteBidResDTO	resDTO	=	quoteBidSO.saveQuoteBidDtl(reqDTO);	
+	}
+	
 
 	private List<SimpleQuoteBidBean> prepareUtilList() {
 		utilList.add(new SimpleQuoteBidBean(1, "Supplier1", "Item1", 1000, " ", 3, 3000));

@@ -47,17 +47,53 @@
 					<p:outputLabel value="Requisition Title"></p:outputLabel>
 				</p:column>
 				<p:column colspan="3">
-					<p:inputText size="100"></p:inputText>
+					<p:inputText size="100" value="#{simpleQuoteBidBackingBean.managedBean.scQuoteBid.title}"></p:inputText>
 				</p:column>
 			</p:row>
 			<p:row>
 				<p:column>
 					<p:outputLabel value="Price Mode"></p:outputLabel>
 				</p:column>
-				<p:column>
-					<p:selectOneMenu>
-						<f:selectItem itemLabel="Tier" itemValue="1" />
+				<p:column colspan="3">
+					<p:selectOneMenu value="#{simpleQuoteBidBackingBean.managedBean.scQuoteBid.priceMode}">
+						<f:selectItem itemLabel="Normal" itemValue="N"></f:selectItem>
+						<f:selectItem itemLabel="Zone" itemValue="Z"></f:selectItem>
+						<f:selectItem itemLabel="Tier" itemValue="T" />
+						<f:selectItem itemLabel="Zone Tier" itemValue="ZT"></f:selectItem>
 					</p:selectOneMenu>
+				</p:column>
+			</p:row>
+			<p:row>
+				<p:column>
+					<p:outputLabel value="Panel"></p:outputLabel>
+				</p:column>
+				<p:column colspan="3">
+					<p:selectOneRadio value="#{simpleQuoteBidBackingBean.managedBean.scQuoteBid.isPanel}">
+						<f:selectItem itemLabel="Yes" itemValue="1"></f:selectItem>
+						<f:selectItem itemLabel="No" itemValue="0"></f:selectItem>
+					</p:selectOneRadio>
+				</p:column>
+			</p:row>
+			<p:row>
+				<p:column width="25%">
+					<p:outputLabel value="start Date"></p:outputLabel>
+				</p:column>
+				<p:column width="25%">
+					<p:calendar value="#{simpleQuoteBidBackingBean.managedBean.scQuoteBid.startDate}" showOn="button"></p:calendar>
+				</p:column>
+				<p:column width="25%">
+					<p:outputLabel value="End Date"></p:outputLabel>
+				</p:column>
+				<p:column width="25%">
+					<p:calendar value="#{simpleQuoteBidBackingBean.managedBean.scQuoteBid.endDate}" showOn="button"></p:calendar>
+				</p:column>
+			</p:row>	
+			<p:row>
+				<p:column>
+					<p:outputLabel value="Estimate Price"></p:outputLabel>
+				</p:column>
+				<p:column colspan="3">
+					<p:inputText value="#{simpleQuoteBidBackingBean.managedBean.scQuoteBid.estimatePrice}"></p:inputText>
 				</p:column>
 			</p:row>
 			<p:row>
@@ -68,68 +104,34 @@
 					<p:inputText size="100"></p:inputText>
 				</p:column>
 			</p:row>
-			<p:row>
-				<p:column>
-					<p:outputLabel value="Panel"></p:outputLabel>
-				</p:column>
-				<p:column colspan="3">
-					<p:selectOneRadio>
-						<f:selectItem itemLabel="Yes" itemValue="true"></f:selectItem>
-						<f:selectItem itemLabel="No" itemValue="false"></f:selectItem>
-					</p:selectOneRadio>
-				</p:column>
-			</p:row>
-			<p:row>
-				<p:column width="25%">
-					<p:outputLabel value="start Date"></p:outputLabel>
-				</p:column>
-				<p:column width="25%">
-					<p:calendar showOn="button"></p:calendar>
-				</p:column>
-				<p:column width="25%">
-					<p:outputLabel value="End Date"></p:outputLabel>
-				</p:column>
-				<p:column width="25%">
-					<p:calendar showOn="button"></p:calendar>
-				</p:column>
-			</p:row>	
-			<p:row>
-				<p:column>
-					<p:outputLabel value="Estimate Price"></p:outputLabel>
-				</p:column>
-				<p:column colspan="3">
-					<p:inputText></p:inputText>
-				</p:column>
-			</p:row>
 		</p:panelGrid>
 	</p:panel>
 	<p:panel header="ITEM DETAIL" toggleable="true"  toggleSpeed="500">
-		<p:dataTable var="simpleQuote"
-			value="#{simpleQuoteBidBackingBean.utilList}"
-			selection="#{simpleQuoteBidBackingBean.managedBean.selectedUtilList}"
-			rowKey="#{simpleQuote.seqNo}" rowIndexVar="index">
+		<p:dataTable 
+			value="#{simpleQuoteBidBackingBean.managedBean.quoteBidItems}"
+			var="item" rowIndexVar="index">
 			<p:column
 				headerText="#{lbl['lbl.ss.simple.quote.purchase.group.seq.no']}"
 				style="width:10%">
 				<h:outputText value="#{index+1}"></h:outputText>
 			</p:column>
 			<p:column headerText="Item Name" style="width:10%">
-				<h:outputText value="#{simpleQuote.description}"></h:outputText>
+				<h:outputText value="#{item.itemName}"></h:outputText>
 			</p:column>
 			<p:column
 				headerText="#{lbl['lbl.ss.simple.quote.purchase.description']}"
 				style="width:35%">
-				<h:outputText value="#{simpleQuote.supplier}Description"></h:outputText>
+				<h:outputText value="#{item.itemDesc}"></h:outputText>
 			</p:column>
 			<p:column headerText="Product Code" style="width:5%">
-				<h:outputText value="123#{index+1}"></h:outputText>
+				<h:outputText value="#{item.cmItem.extensionCode}"></h:outputText>
 			</p:column>
 			<p:column headerText="Quantity" style="width:25%">
-				<h:outputText value="#{simpleQuote.qtyOrder}"></h:outputText>
+				<h:outputText value="#{item.quantity}"></h:outputText>
 			</p:column>
 			<p:column headerText="#{lbl['lbl.ss.simple.quote.item.uom']}"
 				style="width:5%">
-				<h:outputText value="#{simpleQuote.uom}"></h:outputText>
+				<h:outputText value="#{item.uom}"></h:outputText>
 			</p:column>
 			<p:column headerText="Action" style="width:10%">
 				<p:commandLink>
