@@ -429,7 +429,8 @@ public class TaskListBackingBean extends BaseBackingBean<TaskListManagedBean>{
 			budgetBB.loadTask(budgetResSO.getBudgetAlloc(), res.getTaskName());
 
 			
-		}else if(res.getProcessName().equalsIgnoreCase("Plan Preparation")){
+		}else if(res.getProcessName().equalsIgnoreCase("Plan Preparation") 
+				|| res.getProcessName().equalsIgnoreCase("Plan Revision") ){
 			//Procurement Plan - Plan
 			PPPlanDataType planObj = (PPPlanDataType)obj;
 			
