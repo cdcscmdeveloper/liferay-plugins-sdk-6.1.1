@@ -26,7 +26,7 @@
 			</p:outputPanel>
 		</table>
 		<br />
-		<table style="width: 100%">
+		<table style="width: 50%">
 
 			<tr>
 				<td><p:outputLabel value="Ownership Type" /></td>
@@ -39,17 +39,24 @@
 					</p:selectOneRadio></td>
 
 			</tr>
-			<ui:fragment
-				rendered="#{backingBean.managedBean.officeFacility.ownershipType eq 'R'}">
+		</table>
+		<ui:fragment
+			rendered="#{backingBean.managedBean.officeFacility.ownershipType eq 'R'}">
+			<table style="width: 100%">
 				<tr>
 					<td><p:outputLabel value="Landlord's Name *" /></td>
 					<td><p:inputText
 							value="#{backingBean.managedBean.officeFacility.ownerName}" /></td>
+
+					<td><p:outputLabel value="Landlord's Address *" /></td>
+					<td><p:inputTextarea /></td>
+				</tr>
+				<tr>
 					<td><p:outputLabel value="Monthly Rental*" /></td>
 					<td>
 						<table>
 							<tr>
-								<td style="padding-right: 20px;"><p:inputText
+								<td style="padding-right: 10px;"><p:inputText
 										value="#{backingBean.managedBean.officeFacility.rentalRate}" />
 								</td>
 								<td valign="top"><p:selectOneMenu>
@@ -58,23 +65,27 @@
 							</tr>
 						</table>
 					</td>
+
 				</tr>
-				<tr>
-					<td><p:outputLabel value="Landlord's Address *" /></td>
-					<td><p:inputTextarea /></td>
-				</tr>
-			</ui:fragment>
-			<ui:fragment
-				rendered="#{backingBean.managedBean.officeFacility.ownershipType eq 'O'}">
+			</table>
+		</ui:fragment>
+		<ui:fragment
+			rendered="#{backingBean.managedBean.officeFacility.ownershipType eq 'O'}">
+			<table style="width: 100%">
 				<tr>
 					<td><p:outputLabel value="Owner Name *" /></td>
 					<td><p:inputText
 							value="#{backingBean.managedBean.officeFacility.ownerName}" /></td>
+					<td><p:outputLabel value="Purchase Date *" /></td>
+					<td><p:calendar showOn="button"
+							value="#{backingBean.managedBean.officeFacility.purchaseDate}" /></td>
+				</tr>
+				<tr>
 					<td><p:outputLabel value="Purchase Price*" /></td>
 					<td>
 						<table>
 							<tr>
-								<td style="padding-right: 20px;"><p:inputText
+								<td style="padding-right: 10px;"><p:inputText
 										value="#{backingBean.managedBean.officeFacility.purchasePrice}" />
 								</td>
 								<td valign="top"><p:selectOneMenu>
@@ -83,15 +94,12 @@
 							</tr>
 						</table>
 					</td>
-				</tr>
-				<tr>
-					<td><p:outputLabel value="Purchase Date *" /></td>
-					<td><p:calendar showOn="button"
-							value="#{backingBean.managedBean.officeFacility.purchaseDate}" /></td>
-				</tr>
-			</ui:fragment>
 
-		</table>
+				</tr>
+			</table>
+		</ui:fragment>
+
+
 		<br />
 		<p:outputPanel rendered="#{backingBean.managedBean.poUser}">
 			<table style="width: 50%">

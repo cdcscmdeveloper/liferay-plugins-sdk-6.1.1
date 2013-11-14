@@ -44,10 +44,17 @@
 				<ui:include
 					src="/xhtml/sm/poDecisionPages/poDefault_DescisionPage.xhtml" />
 			</p:tab>
-			<!-- <p:tab title="PO DECISION">
+			<p:tab title="Support Document(s) Review"
+				rendered="#{backingBean.managedBean.approverUser}">
 				<ui:include
-					src="/xhtml/sm/poDecisionPages/poDefault_DescisionPage.xhtml" />
-			</p:tab> -->
+					src="/xhtml/sm/approverDecisionPages/approverReviewSupportingDocuments.xhtml" />
+			</p:tab>
+			<p:tab title="Approver Decision"
+				rendered="#{backingBean.managedBean.approverUser}">
+				<ui:include
+					src="/xhtml/sm/approverDecisionPages/approverDefault_DescisionPage.xhtml" />
+			</p:tab>
+
 		</p:tabView>
 	</ui:define>
 </ui:composition>

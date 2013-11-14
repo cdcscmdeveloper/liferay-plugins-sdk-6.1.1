@@ -14,7 +14,7 @@
 	<ui:define name="contentSection">
 		<p:messages id="messages" showDetail="true" autoUpdate="true"
 			closable="true" />
-		<p:tabView id="tt" orientation="left" widgetVar="tt"
+		<p:tabView id="tt" widgetVar="tt" orientation="left"
 			activeIndex="#{backingBean.managedBean.tabActiveIndex}">
 
 			<p:tab title="Company Basic Information">
@@ -38,13 +38,34 @@
 			<p:tab title="Factory / Equipment Details">
 				<ui:include src="step6.1FactoryInfo.xhtml" />
 			</p:tab>
-			<p:tab title="Support Document(s)">
+			<p:tab title="Supporting Document(s)"
+				rendered="#{backingBean.managedBean.supplierUser}">
 				<ui:include src="step7SupportingDocumentsInfo.xhtml" />
 			</p:tab>
-			<p:tab title="Processing Fee Payment">
+			<p:tab title="Payment"
+				rendered="#{backingBean.managedBean.supplierUser}">
 				<ui:include src="step8ProcessingFeePaymentInfo.xhtml" />
 			</p:tab>
-
+			<p:tab title="Documents Review"
+				rendered="#{backingBean.managedBean.poUser}">
+				<ui:include
+					src="/xhtml/sm/poDecisionPages/poReviewSupportingDocuments.xhtml" />
+			</p:tab>
+			<p:tab title="PO Decision"
+				rendered="#{backingBean.managedBean.poUser}">
+				<ui:include
+					src="/xhtml/sm/poDecisionPages/poDefault_DescisionPage.xhtml" />
+			</p:tab>
+			<p:tab title="Documents Review"
+				rendered="#{backingBean.managedBean.approverUser}">
+				<ui:include
+					src="/xhtml/sm/approverDecisionPages/approverReviewSupportingDocuments.xhtml" />
+			</p:tab>
+			<p:tab title="Approver Decision"
+				rendered="#{backingBean.managedBean.approverUser}">
+				<ui:include
+					src="/xhtml/sm/approverDecisionPages/approverDefault_DescisionPage.xhtml" />
+			</p:tab>
 		</p:tabView>
 	</ui:define>
 </ui:composition>
