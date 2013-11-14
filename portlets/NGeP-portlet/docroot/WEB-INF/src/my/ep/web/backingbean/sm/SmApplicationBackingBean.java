@@ -65,7 +65,8 @@ public class SmApplicationBackingBean extends
 	public String proceedToApplication(String applicationType) {
 		System.out
 				.println("**** ENTER Create Application Type Of  *************"
-						+ applicationType);
+						+ applicationType + "Application type = >>"
+						+ getManagedBean().getSmAppl().getSupplierType());
 		IMofRegistrationSO mofRegistrationSO = null;
 
 		try {
@@ -107,9 +108,14 @@ public class SmApplicationBackingBean extends
 			}
 
 			smAppl.setSmSupplier(smApplSupplier);
-			// mofRegAppl.setSmAddress(smAddress);
-			// 1- For Contractor, 2 - For Consultant
-			smAppl.setSupplierType("2");
+			if (!applicationType.equalsIgnoreCase("N")) {
+				// mofRegAppl.setSmAddress(smAddress);
+				// 1- For Contractor, 2 - For Consultant
+				smAppl.setSupplierType("2");
+			} else {
+				smAppl.setSupplierType(getManagedBean().getSmAppl()
+						.getSupplierType());
+			}
 			smAppl.setApplType(applicationType);
 			// TODO Set default not null values -- Start insert appl ---
 			smAppl.setStatusId(20001);
@@ -117,7 +123,16 @@ public class SmApplicationBackingBean extends
 			// SmAddress smAddress = setDefaultAddr();
 			// getManagedBean().getSmSupplier().setSmAppl(mofRegAppl);
 			smAppl.setCreatedBy(1l);
-			smApplSupplier.getSmAppls().add(smAppl);
+			if (smApplSupplier.getSmAppls().contains(smAppl)) {
+				System.out
+						.println(" *** Already existing record its a duplicate only update **** ");
+				smApplSupplier.getSmAppls().set(
+						smApplSupplier.getSmAppls().indexOf(smAppl), smAppl);
+			} else {
+				System.out
+						.println("****** INSERT A FRESH RECORD OF APPL TO SUUPPLIER ******** ");
+				smApplSupplier.getSmAppls().add(smAppl);
+			}
 			if (applicationType.equals("N")) {
 				System.out
 						.println(" **** START INSERTING THE NEW APPLN FOR MOF REG ****");
@@ -182,6 +197,99 @@ public class SmApplicationBackingBean extends
 		}
 	}
 
+	// TODO Remove the method added only for demo purpose
+	public void assignTaskListSampleForDemo(String bpmApplType) {
+
+		IMofRegistrationSO mofRegistrationSO = null;
+
+		try {
+			mofRegistrationSO = (IMofRegistrationSO) BusinessDelegate
+					.getInstance().getServiceObject("sm",
+							IMofRegistrationSO.class);
+			MofRegistrationReqDTO reqDto = new MofRegistrationReqDTO();
+			SmSupplier smApplSupplier = retriveSupplierById((long) 3)
+					.getSmSupplier();
+			if (smApplSupplier == null) {
+				smApplSupplier = new SmSupplier();
+				smApplSupplier.setSupplierName("My Sample Supplier");
+				smApplSupplier.setBusinessType("1");
+				smApplSupplier.setRegNo("12345");
+				smApplSupplier.setEstablishDate(new Date());
+				smApplSupplier.setWebSite("www.samplecompany.com");
+			}
+
+			SmAppl bpmSmAppl = smApplSupplier.getSmAppl();
+			if (bpmSmAppl == null) {
+				bpmSmAppl = new SmAppl();
+			}
+			if (bpmApplType.equalsIgnoreCase("N")) {
+				bpmSmAppl.setApplNo("KN-20102013-1111");
+			} else if (bpmApplType.equalsIgnoreCase("B")) {
+				bpmSmAppl.setApplNo("KB-25102013-2222");
+			} else if (bpmApplType.equalsIgnoreCase("U")) {
+				bpmSmAppl.setApplNo(" KU-28102013-3333");
+			} else if (bpmApplType.equalsIgnoreCase("A")) {
+				bpmSmAppl.setApplNo(" KA-28102013-4444");
+			} else if (bpmApplType.equalsIgnoreCase("R")) {
+				bpmSmAppl.setApplNo(" KR-31102013-5555");
+			} else if (bpmApplType.equalsIgnoreCase("C")) {
+				bpmSmAppl.setApplNo(" KC-01112013-6666");
+			} else {
+				bpmSmAppl.setApplNo("UNKNOWNAPPL");
+			}
+
+			bpmSmAppl.setSmSupplier(smApplSupplier);
+			// mofRegAppl.setSmAddress(smAddress);
+			// 1- For Contractor, 2 - For Consultant
+			bpmSmAppl.setSupplierType("2");
+			bpmSmAppl.setApplType(bpmApplType);
+			// TODO Set default not null values -- Start insert appl ---
+			bpmSmAppl.setStatusId(20001);
+			// sm.setSmAddress(new SmAddress());
+			// SmAddress smAddress = setDefaultAddr();
+			// getManagedBean().getSmSupplier().setSmAppl(mofRegAppl);
+			bpmSmAppl.setCreatedBy(1l);
+			boolean isNewAppln = true;
+			for (int i = 0; i < smApplSupplier.getSmAppls().size(); i++) {
+				SmAppl app = smApplSupplier.getSmAppls().get(i);
+				if (bpmSmAppl.getApplId() == app.getApplId()) {
+					System.out.println("****** Update Application******** ");
+					isNewAppln = false;
+					smApplSupplier.getSmAppls().set(i, bpmSmAppl);
+					break;
+				}
+			}
+			if (isNewAppln) {
+				System.out
+						.println("****** INSERT A FRESH RECORD OF APPL TO SUUPPLIER ******** ");
+				smApplSupplier.getSmAppls().add(bpmSmAppl);
+			}
+
+			getManagedBean().setSmSupplier(smApplSupplier);
+			// TODO Set default not null values -- End insert appl ---
+
+			bpmSmAppl = defaultSmAppl(bpmSmAppl);
+			bpmSmAppl
+					.setSmStaffTotals(getStaffList(bpmSmAppl.getSupplierType()));
+			getManagedBean().setSmAppl(bpmSmAppl);
+			getManagedBean().setTabActiveIndex(0);
+			getManagedBean().setOfficeFacility(new SmFacility());
+			// TODo Remove hard code later
+			if (getManagedBean().isApproverUser()
+					|| getManagedBean().isPoUser()) {
+				System.out.println("**** LOGIN IS PO or APPROVER *******");
+				getManagedBean().getSmAppl().setSupportingDocMode("O");
+			}
+
+		} catch (Exception e) {
+			System.out.println(" **** Unknown Expection ******* ");
+			e.printStackTrace();
+
+		} finally {
+			mofRegistrationSO = null;
+		}
+	}
+
 	public String deletePendingMofApplication() {
 
 		try {
@@ -220,6 +328,27 @@ public class SmApplicationBackingBean extends
 		try {
 			System.out.println("**** ENTER ACTION METHOD BEAN *************"
 					+ currentTab + "  " + outputTab);
+			// TODO Un comment during iteration2
+			// boolean isNewAppln = true;
+			// for (int i = 0; i < getManagedBean().getSmSupplier().getSmAppls()
+			// .size(); i++) {
+			// SmAppl app = getManagedBean().getSmSupplier().getSmAppls()
+			// .get(i);
+			// if (getManagedBean().getSmAppl().getApplId() == app.getApplId())
+			// {
+			// System.out.println("****** Update Application******** ");
+			// isNewAppln = false;
+			// getManagedBean().getSmSupplier().getSmAppls()
+			// .set(i, getManagedBean().getSmAppl());
+			// break;
+			// }
+			// }
+			// if (isNewAppln) {
+			// System.out
+			// .println("****** INSERT A FRESH RECORD OF APPL TO SUUPPLIER ******** ");
+			// getManagedBean().getSmSupplier().getSmAppls()
+			// .add(getManagedBean().getSmAppl());
+			// }
 			// TODO to be confirmed whether reqd to save the appln as draft
 			getManagedBean().setTabActiveIndex(outputTab);
 
