@@ -17,7 +17,7 @@ import my.ep.biz.bean.search.ISearchBean;
 import my.ep.biz.bean.search.SearchBean;
 import my.ep.biz.bean.search.SearchFilterBean;
 import my.ep.biz.service.pm.authorization.orgprofile.IOrgProfileSO;
-import my.ep.biz.service.pm.common.object.IObjectSO;
+import my.ep.biz.service.pm.common.codecategory.ICodeCategorySO;
 import my.ep.biz.service.pm.common.uom.IUomSO;
 import my.ep.biz.service.tpl.spec.ITemplateSpecSO;
 import my.ep.constant.pm.PmCodeCategoryConst;
@@ -25,8 +25,8 @@ import my.ep.constant.pm.PmCodeConst;
 import my.ep.constant.tpl.TemplateSpecConst;
 import my.ep.dto.pm.authorization.orgprofile.OrgProfileReqDTO;
 import my.ep.dto.pm.authorization.orgprofile.OrgProfileResDTO;
-import my.ep.dto.pm.common.object.ObjectReqDTO;
-import my.ep.dto.pm.common.object.ObjectResDTO;
+import my.ep.dto.pm.common.codecategory.CodeCategoryReqDTO;
+import my.ep.dto.pm.common.codecategory.CodeCategoryResDTO;
 import my.ep.dto.pm.common.uom.UomResDTO;
 import my.ep.dto.tpl.spec.TemplateSpecReqDTO;
 import my.ep.dto.tpl.spec.TemplateSpecResDTO;
@@ -290,16 +290,16 @@ public class TemplateSpecBackingBean extends BaseBackingBean<TemplateSpecManaged
 	}
 
 	private void addQuestion(List<TplSpecQuestion> questionList, Integer row, String questionType) {
-		IObjectSO objectSO = null;
+		ICodeCategorySO codeCategorySO = null;
 		try {
 			TplSpecQuestion newQuestion = new TplSpecQuestion();
 			newQuestion.setQuestionType(questionType);
 			
-			objectSO = (IObjectSO)BusinessDelegate.getInstance().getServiceObject("pm",IObjectSO.class);
-			ObjectReqDTO reqDTO = new ObjectReqDTO();
+			codeCategorySO = BusinessDelegate.getInstance().getServiceObject("pm", ICodeCategorySO.class);
+			CodeCategoryReqDTO reqDTO = new CodeCategoryReqDTO();
 			reqDTO.setCategory(PmCodeCategoryConst.ANSWER_TYPE);
 			reqDTO.setCode(PmCodeConst.ANSWER_TYPE_TEXT);
-			ObjectResDTO resDTO = objectSO.retrieveCodeByCategoryAndCode(reqDTO);
+			CodeCategoryResDTO resDTO = codeCategorySO.retrieveCodeByCategoryAndCode(reqDTO);
 			newQuestion.setAnswerTypeCode(resDTO.getPmCode());
 			
 			PmUom uom = new PmUom();
@@ -314,7 +314,7 @@ public class TemplateSpecBackingBean extends BaseBackingBean<TemplateSpecManaged
 			e.printStackTrace();
 			FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR,e.toString(), e.getMessage()));
 		} finally {
-			objectSO = null;
+			codeCategorySO = null;
 		}
 	}		
 	
@@ -372,20 +372,20 @@ public class TemplateSpecBackingBean extends BaseBackingBean<TemplateSpecManaged
 	}
 	
 	public void answerTypeChange(int row) {
-		IObjectSO objectSO = null;
+		ICodeCategorySO codeCategorySO = null;
 		try {
 			Long codeId = getManagedBean().getSpecMaster().getTplSpecQuestions().get(row).getAnswerTypeCode().getCodeId();
 			
-			objectSO = (IObjectSO)BusinessDelegate.getInstance().getServiceObject("pm",IObjectSO.class);
-			ObjectReqDTO reqDTO = new ObjectReqDTO();
+			codeCategorySO = BusinessDelegate.getInstance().getServiceObject("pm", ICodeCategorySO.class);
+			CodeCategoryReqDTO reqDTO = new CodeCategoryReqDTO();
 			reqDTO.setCodeId(codeId);
-			ObjectResDTO resDTO = objectSO.retrieveCodeById(reqDTO);
+			CodeCategoryResDTO resDTO = codeCategorySO.retrieveCodeById(reqDTO);
 			getManagedBean().getSpecMaster().getTplSpecQuestions().get(row).getAnswerTypeCode().setCode(resDTO.getPmCode().getCode());
 		} catch (Exception e) {
 			e.printStackTrace();
 			FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR,e.toString(), e.getMessage()));
 		} finally {
-			objectSO = null;
+			codeCategorySO = null;
 		}
 		
 	}

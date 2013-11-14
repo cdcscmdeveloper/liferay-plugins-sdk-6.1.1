@@ -13,14 +13,14 @@ import javax.faces.bean.RequestScoped;
 import javax.faces.event.AjaxBehaviorEvent;
 
 import my.ep.biz.service.pm.authorization.orgprofile.IOrgProfileSO;
-import my.ep.biz.service.pm.common.object.IObjectSO;
+import my.ep.biz.service.pm.common.codecategory.ICodeCategorySO;
 import my.ep.biz.service.pm.common.status.IStatusSO;
 import my.ep.biz.service.ss.quationtender.IQTDetailSO;
 import my.ep.biz.service.tpl.spec.ITemplateSpecSO;
 import my.ep.dto.pm.authorization.orgprofile.OrgProfileReqDTO;
 import my.ep.dto.pm.authorization.orgprofile.OrgProfileResDTO;
-import my.ep.dto.pm.common.object.ObjectReqDTO;
-import my.ep.dto.pm.common.object.ObjectResDTO;
+import my.ep.dto.pm.common.codecategory.CodeCategoryReqDTO;
+import my.ep.dto.pm.common.codecategory.CodeCategoryResDTO;
 import my.ep.dto.pm.common.status.StatusReqDTO;
 import my.ep.dto.pm.common.status.StatusResDTO;
 import my.ep.dto.ss.quationtender.QuationTenderReqDTO;
@@ -303,32 +303,32 @@ public class TemplateMaintenanceBackingBean extends
 			 * System.out.println
 			 * ("=======check list size===="+checklist.size());
 			 */
-			IObjectSO CodesO = BusinessDelegate.getInstance().getServiceObject(
-					"pm", IObjectSO.class);
-			System.out.println("manga template construcoor" + CodesO);
-			ObjectReqDTO reqDTO = new ObjectReqDTO();
+			ICodeCategorySO codeCategorySO = BusinessDelegate.getInstance().getServiceObject(
+					"pm", ICodeCategorySO.class);
+			System.out.println("manga template construcoor" + codeCategorySO);
+			CodeCategoryReqDTO reqDTO = new CodeCategoryReqDTO();
 			reqDTO.setCodeId(2L);
-			ObjectResDTO resprocure = CodesO.retrieveCodeById(reqDTO);
+			CodeCategoryResDTO resprocure = codeCategorySO.retrieveCodeById(reqDTO);
 			System.out.println("=====resource procure id==="
 					+ resprocure.getPmCode().getCodeId());
 
-			ObjectReqDTO reqDTOItem = new ObjectReqDTO();
+			CodeCategoryReqDTO reqDTOItem = new CodeCategoryReqDTO();
 			reqDTOItem.setCodeId(2L);
-			ObjectResDTO resItem = CodesO.retrieveCodeById(reqDTOItem);
+			CodeCategoryResDTO resItem = codeCategorySO.retrieveCodeById(reqDTOItem);
 			System.out.println("=====resource item id==="
 					+ resItem.getPmCode().getCodeId());
 
-			ObjectReqDTO reqDTOTemp = new ObjectReqDTO();
+			CodeCategoryReqDTO reqDTOTemp = new CodeCategoryReqDTO();
 			reqDTOTemp.setCodeId(Long.valueOf(this.getManagedBean()
 					.getTemplateType()));
-			ObjectResDTO resTemp = CodesO.retrieveCodeById(reqDTOTemp);
+			CodeCategoryResDTO resTemp = codeCategorySO.retrieveCodeById(reqDTOTemp);
 			System.out.println("=====resource template id==="
 					+ resTemp.getPmCode().getCodeId());
 
-			ObjectReqDTO reqDTOSpec = new ObjectReqDTO();
+			CodeCategoryReqDTO reqDTOSpec = new CodeCategoryReqDTO();
 			reqDTOSpec.setCodeId(Long.valueOf(this.getManagedBean()
 					.getSpecificationType()));
-			ObjectResDTO resSpec = CodesO.retrieveCodeById(reqDTOSpec);
+			CodeCategoryResDTO resSpec = codeCategorySO.retrieveCodeById(reqDTOSpec);
 			System.out.println("=====resource Spec id==="
 					+ resSpec.getPmCode().getCodeId());
 

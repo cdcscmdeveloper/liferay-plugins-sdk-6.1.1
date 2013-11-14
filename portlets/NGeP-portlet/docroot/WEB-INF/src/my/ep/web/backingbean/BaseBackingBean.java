@@ -14,10 +14,10 @@ import javax.faces.model.SelectItem;
 
 import my.ep.biz.bean.search.ISearchBean;
 import my.ep.biz.bean.search.SearchBean;
-import my.ep.biz.service.pm.common.object.IObjectSO;
-import my.ep.dto.pm.common.object.ObjectReqDTO;
-import my.ep.dto.pm.common.object.ObjectResDTO;
-import my.ep.persistence.entity.pm.common.PmCode;
+import my.ep.biz.service.pm.common.codecategory.ICodeCategorySO;
+import my.ep.dto.pm.common.codecategory.CodeCategoryReqDTO;
+import my.ep.dto.pm.common.codecategory.CodeCategoryResDTO;
+import my.ep.persistence.entity.pm.common.PmCodeDesc;
 import my.ep.type.IEnumType;
 import my.ep.web.managedbean.BaseManagedBean;
 import my.ep.web.util.EpPortletUtil;
@@ -261,16 +261,20 @@ public abstract class BaseBackingBean<T extends BaseManagedBean> {
 	public SelectItem[] getDropdownValues(String category) {
 		SelectItem[] items = null;
 		try {
-			IObjectSO objectSO = (IObjectSO)BusinessDelegate.getInstance().getServiceObject("pm",IObjectSO.class);
-			ObjectReqDTO reqDTO = new ObjectReqDTO();
-			reqDTO.setCategory(category);
-			ObjectResDTO resDTO = objectSO.retrieveCodeByCategory(reqDTO);
+			ICodeCategorySO codeCategorySO = BusinessDelegate.getInstance().getServiceObject("pm", ICodeCategorySO.class);
+			String language = new FacesScopes().getUserLocale().getLanguage();
 			
-		    items = new SelectItem[resDTO.getPmCodeList().size()+1];
+			CodeCategoryReqDTO reqDTO = new CodeCategoryReqDTO();
+			
+			reqDTO.setCategory(category);
+			reqDTO.setLanguage(language);
+			CodeCategoryResDTO resDTO = codeCategorySO.retrieveCodeDescListByCategory(reqDTO);
+			
+		    items = new SelectItem[resDTO.getPmCodeDescList().size()+1];
 		    items[0] = new SelectItem(null, "- Select One -");
 		    int i = 1;
-		    for(PmCode code: resDTO.getPmCodeList()) {
-		    	items[i++] = new SelectItem(code.getCodeId(), code.getPmCodeDescs().get(0).getCodeName());
+		    for(PmCodeDesc codeDesc : resDTO.getPmCodeDescList()) {
+		    	items[i++] = new SelectItem(codeDesc.getPmCode().getCodeId(), codeDesc.getCodeName());
 		    }
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -282,16 +286,20 @@ public abstract class BaseBackingBean<T extends BaseManagedBean> {
 	public SelectItem[] getDropdownCodeValues(String category) {
 		SelectItem[] items = null;
 		try {
-			IObjectSO objectSO = (IObjectSO)BusinessDelegate.getInstance().getServiceObject("pm",IObjectSO.class);
-			ObjectReqDTO reqDTO = new ObjectReqDTO();
-			reqDTO.setCategory(category);
-			ObjectResDTO resDTO = objectSO.retrieveCodeByCategory(reqDTO);
+			ICodeCategorySO codeCategorySO = BusinessDelegate.getInstance().getServiceObject("pm", ICodeCategorySO.class);
+			String language = new FacesScopes().getUserLocale().getLanguage();
 			
-		    items = new SelectItem[resDTO.getPmCodeList().size()+1];
+			CodeCategoryReqDTO reqDTO = new CodeCategoryReqDTO();
+			
+			reqDTO.setCategory(category);
+			reqDTO.setLanguage(language);
+			CodeCategoryResDTO resDTO = codeCategorySO.retrieveCodeDescListByCategory(reqDTO);
+			
+		    items = new SelectItem[resDTO.getPmCodeDescList().size()+1];
 		    items[0] = new SelectItem(null, "- Select One -");
 		    int i = 1;
-		    for(PmCode code: resDTO.getPmCodeList()) {
-		    	items[i++] = new SelectItem(code.getCode(), code.getPmCodeDescs().get(0).getCodeName());
+		    for(PmCodeDesc codeDesc : resDTO.getPmCodeDescList()) {
+		    	items[i++] = new SelectItem(codeDesc.getPmCode().getCode(), codeDesc.getCodeName());
 		    }
 		} catch (Exception e) {
 			e.printStackTrace();
