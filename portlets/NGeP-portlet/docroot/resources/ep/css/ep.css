@@ -1395,6 +1395,10 @@ important
 /* --------------------------          End Input Text         ------------------------------ */
 
 /* --------------------------          Check Box         ------------------------------ */
+.ui-chkbox {
+	display: block !important;	
+}
+
 .ui-chkbox .ui-chkbox-box {
 	width: 12px;
 	height: 12px;
@@ -1402,6 +1406,7 @@ important
 	-webkit-border-radius: 0px;
 	border-radius: 0px;
 	border-collapse: separate;
+	display: block !important;
 }
 
 .ui-chkbox .ui-chkbox-box .ui-icon-check {
@@ -1418,6 +1423,10 @@ important
 
 .ui-radiobutton .ui-radiobutton-box .ui-icon-bullet {
 	background-position: -82px -146px;
+}
+
+.ui-radiobutton {
+	display: block !important;
 }
 /* --------------------------          End Radio Button         ------------------------------ */
 
