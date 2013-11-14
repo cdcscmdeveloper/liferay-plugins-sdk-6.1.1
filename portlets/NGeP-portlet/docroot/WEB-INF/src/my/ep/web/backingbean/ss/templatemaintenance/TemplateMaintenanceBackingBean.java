@@ -408,8 +408,8 @@ public class TemplateMaintenanceBackingBean extends
 			scQtDOc.setTplSpecMaster(templateSpecRes.getSpecMaster());
 			scQtDOc.setQtZoneCriteriaId(this.getManagedBean().getScqtDoc()
 					.getQtZoneCriteriaId());
-			scQtDOc.setIsSupportDocReq(this.getManagedBean().getScqtDoc()
-					.getIsSupportDocReq());
+			scQtDOc.setSupportDocReq(this.getManagedBean().getScqtDoc()
+					.getSupportDocReq());
 			specificationReqDTO.setScQtDoc(scQtDOc);
 			SpecificationResDTO specificationResDTO = new SpecificationResDTO();
 			// specificationResDTO=SpecificationSO.saveOrUpdateScQtDoc(specificationReqDTO);
