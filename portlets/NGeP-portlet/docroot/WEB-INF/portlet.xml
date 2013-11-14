@@ -1958,7 +1958,7 @@
 			<portlet-mode>view</portlet-mode>
 		</supports>
 		<portlet-info>
-			<title>CatalogueMaintenance</title>
+			<title>Catalogue Maintenance</title>
 			<short-title>NewJSFPortlet</short-title>
 			<keywords></keywords>
 		</portlet-info>
@@ -1979,7 +1979,7 @@
 
 	<portlet>
 		<portlet-name>UnspscRequestForm</portlet-name>
-		<display-name>UnspscRequestForm</display-name>
+		<display-name>UNSPSC Request Form</display-name>
 		<portlet-class>
 			org.portletfaces.bridge.GenericFacesPortlet
 		</portlet-class>
@@ -1995,7 +1995,7 @@
 			<portlet-mode>view</portlet-mode>
 		</supports>
 		<portlet-info>
-			<title>UnspscRequestForm</title>
+			<title>UNSPSC Request Form</title>
 			<short-title>NewJSFPortlet</short-title>
 			<keywords></keywords>
 		</portlet-info>
@@ -2030,7 +2030,7 @@
 			<portlet-mode>view</portlet-mode>
 		</supports>
 		<portlet-info>
-			<title>ExtensionRequestForm</title>
+			<title>Extension Request Form</title>
 			<short-title>NewJSFPortlet</short-title>
 			<keywords></keywords>
 		</portlet-info>
@@ -2063,7 +2063,7 @@
 			<portlet-mode>view</portlet-mode>
 		</supports>
 		<portlet-info>
-			<title>UnspscBulkUpload</title>
+			<title>UNSPSC Bulk Upload</title>
 			<short-title>NewJSFPortlet</short-title>
 			<keywords></keywords>
 		</portlet-info>
@@ -2131,7 +2131,7 @@
 			<portlet-mode>view</portlet-mode>
 		</supports>
 		<portlet-info>
-			<title>UnspscSingleUpload</title>
+			<title>UNSPSC Maintenance</title>
 			<short-title>NewJSFPortlet</short-title>
 			<keywords></keywords>
 		</portlet-info>
@@ -2156,7 +2156,7 @@
 		</portlet-class>
 		<init-param>
 			<name>javax.portlet.faces.defaultViewId.view</name>
-			<value>/xhtml/tasklist/reviewUnspscCode.xhtml</value>
+			<value>/xhtml/cm/codification/unspscReviewPage.xhtml</value>
 		</init-param>
 		<expiration-cache>0</expiration-cache>
 		<supports>
