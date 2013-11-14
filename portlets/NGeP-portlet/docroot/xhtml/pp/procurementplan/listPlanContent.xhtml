@@ -10,38 +10,41 @@ xmlns:c="http://java.sun.com/jsp/jstl/core">
 		
 	<p:outputPanel id="opViewPlanContent">
    			<div class="ppProfileInfo">
-				<table class="ppTwoPartsTable">
+   				<br/>
+				<table class="ppHalf">
 					<tr>
-						<th><p:outputLabel value="#{lbl['lbl.pp.ministry.code.name']}"/></th>
+						<td><p:outputLabel value="#{lbl['lbl.pp.ministry.code.name']}"/></td>
 						<td>
-							#{planBackingBean.managedBean.currentUser.parentOrgProfile.parentOrgProfile.orgCode} / 
-							#{planBackingBean.managedBean.currentUser.parentOrgProfile.parentOrgProfile.orgName} 
+							<p:inputText disabled="true" styleClass="ppDisplayText"
+								value="#{planBackingBean.managedBean.currentUser.parentOrgProfile.parentOrgProfile.orgCode} / #{planBackingBean.managedBean.currentUser.parentOrgProfile.parentOrgProfile.orgName}" /> 
 						</td>
 					</tr>
 					<tr>
-						<th><p:outputLabel value="#{lbl['lbl.pp.jabatan.code.name']}"/></th>
+						<td><p:outputLabel value="#{lbl['lbl.pp.jabatan.code.name']}"/></td>
 						<td>
-							#{planBackingBean.managedBean.currentUser.parentOrgProfile.orgCode} /
-							#{planBackingBean.managedBean.currentUser.parentOrgProfile.orgName}
+							<p:inputText disabled="true" styleClass="ppDisplayText"
+								value="#{planBackingBean.managedBean.currentUser.parentOrgProfile.orgCode} / #{planBackingBean.managedBean.currentUser.parentOrgProfile.orgName}" />
 						</td>
 					</tr>
 					<tr> 
-						<th><p:outputLabel value="#{lbl['lbl.pp.ptj.code.name']}"/></th>
+						<td><p:outputLabel value="#{lbl['lbl.pp.ptj.code.name']}"/></td>
 						<td>
-							#{planBackingBean.managedBean.currentUser.orgCode} /
-							#{planBackingBean.managedBean.currentUser.orgName}
+							<p:inputText disabled="true" styleClass="ppDisplayText"
+								value="#{planBackingBean.managedBean.currentUser.orgCode} / #{planBackingBean.managedBean.currentUser.orgName}" />
 						</td>
 					</tr>
 				</table>
+				<br/>
 			</div>
 			<!-- 
 			id<p:inputText value="#{planBackingBean.managedBean.tempId}" />, 
 			<p:inputText value="#{planBackingBean.managedBean.actionDesc}" />
 			<p:commandButton value="Load" action="#{planBackingBean.dummyTask(planBackingBean.managedBean.tempId, planBackingBean.managedBean.actionDesc)}" 
-			update="@form"  /> -->
-			  
+			update="@form"  /> 
+			  -->
    			<!-- Search -->
    			<p:panel header="#{lbl['lbl.pp.search.plan']}"  toggleable="true">
+   				<br/>
    				<table class="ppThreePartsTable">
    					<tr>
    						<th><p:outputLabel value="#{lbl['lbl.pp.plan.number']}"/></th>
@@ -66,26 +69,34 @@ xmlns:c="http://java.sun.com/jsp/jstl/core">
    						</td>
    						<th>&nbsp;</th>
    						<td>&nbsp;</td>
-   						<td>
-   							<p:commandButton value="#{lbl['lbl.pp.search']}"
-			 					update="dtPlanResult" action="#{planBackingBean.searchPlan()}"   /> 
+   						<td>&nbsp;</td>
+   					</tr>
+   					<tr>
+   						<td colspan="5">
+   							<div class="ppRightBtn">
+   								<p:commandButton value="#{lbl['lbl.pp.search']}" icon="ui-icon-search"
+			 						update="dtPlanResult" action="#{planBackingBean.searchPlan()}"   /> 
+		 					</div>
    						</td>
    					</tr>
    				</table>
+   				<br/>
    			</p:panel>
    			<!-- Result List -->
    			<p:panel header="#{lbl['lbl.pp.result']}"  toggleable="true">
+   				<br/>
     			<p:dataTable id="dtPlanResult" styleClass="ppTableFull"  var="ppPlan" 
 					value="#{planBackingBean.managedBean.planList}"  rowIndexVar="rowIndex"
 					emptyMessage="#{lbl['lbl.pp.no.record.found']}">  
-			 		<p:column headerText="#{lbl['lbl.pp.seq']}">  
-                       	#{rowIndex+1}
-                    </p:column>    
+			 		 
                     <p:column headerText="#{lbl['lbl.pp.details']}">  
-                       <p:commandLink id="clPlanDetails" action="#{planBackingBean.redirectToViewPlan()}">  
+                       <p:commandLink id="clPlanDetails" action="#{planBackingBean.redirectToPlanContent(ppPlan)">  
 				        	#{lbl['lbl.pp.details']}
 				       </p:commandLink>  
-                    </p:column>  
+                    </p:column> 
+                    <p:column headerText="#{lbl['lbl.pp.plan.number']}">  
+                		#{ppPlan.planNo}
+                    </p:column>   
                     <p:column headerText="#{lbl['lbl.pp.procurement.mode']}">  
                 		#{ppPlan.ppPlanMaster.procurementMode}
                     </p:column>  

@@ -51,14 +51,17 @@ xmlns:composite="http://java.sun.com/jsf/composite">
 								<br/>
 							</td>
 							<th><p:outputLabel value="#{lbl['lbl.pp.status']}"/></th>
-							<td>#{cc.attrs.selectedPlan.statusId}</td>
+							<td>
+								<p:inputText disabled="true" styleClass="ppDisplayTextSmall"
+									value="#{cc.attrs.selectedPlan.statusId}"/>
+							</td>
 							<td>&nbsp;</td>
 						</tr>
 						<tr>
 							<th><p:outputLabel value="#{lbl['lbl.pp.ministry.code.name']}"/></th>
 							<td>
-								#{cc.attrs.selectedPlanMaster.orgProfile.parentOrgProfile.parentOrgProfile.orgCode} /	
-								#{cc.attrs.selectedPlanMaster.orgProfile.parentOrgProfile.parentOrgProfile.orgName}
+								<p:inputText disabled="true" styleClass="ppDisplayTextSmall"
+									value="#{cc.attrs.selectedPlanMaster.orgProfile.parentOrgProfile.parentOrgProfile.orgCode} / #{cc.attrs.selectedPlanMaster.orgProfile.parentOrgProfile.parentOrgProfile.orgName}"/>
 							</td>
 							<th>* <p:outputLabel value="#{lbl['lbl.pp.procurement.mode']}"/></th>
 							<td>
@@ -75,8 +78,8 @@ xmlns:composite="http://java.sun.com/jsf/composite">
 						<tr>
 							<th><p:outputLabel value="#{lbl['lbl.pp.jabatan.code.name']}"/></th>
 							<td>
-								#{cc.attrs.selectedPlanMaster.orgProfile.parentOrgProfile.orgCode} /
-								#{cc.attrs.selectedPlanMaster.orgProfile.parentOrgProfile.orgName}
+								<p:inputText disabled="true" styleClass="ppDisplayTextSmall"
+									value="#{cc.attrs.selectedPlanMaster.orgProfile.parentOrgProfile.orgCode} / #{cc.attrs.selectedPlanMaster.orgProfile.parentOrgProfile.orgName}" />
 							</td>
 							<th>* <p:outputLabel value="#{lbl['lbl.pp.plan.description']}"/></th>
 							<td>
@@ -87,8 +90,8 @@ xmlns:composite="http://java.sun.com/jsf/composite">
 						<tr>
 							<th><p:outputLabel value="#{lbl['lbl.pp.ptj.code.name']}"/></th>
 							<td>
-								#{cc.attrs.selectedPlanMaster.orgProfile.orgCode} / 
-								#{cc.attrs.selectedPlanMaster.orgProfile.orgName} 
+								<p:inputText disabled="true" styleClass="ppDisplayTextSmall"
+									value="#{cc.attrs.selectedPlanMaster.orgProfile.orgCode} / #{cc.attrs.selectedPlanMaster.orgProfile.orgName}" /> 
 							</td>
 							<th><p:outputLabel value="#{lbl['lbl.pp.project.name']}"/></th>
 							<td>
@@ -104,7 +107,10 @@ xmlns:composite="http://java.sun.com/jsf/composite">
 							<th>&nbsp;</th>
 							<td>&nbsp;</td>
 							<th><p:outputLabel value="#{lbl['lbl.pp.total.estimated.amount']}"/></th>
-							<td>#{cc.attrs.selectedPlan.estimatedAmount}</td>
+							<td>
+								<p:inputText disabled="true" styleClass="ppDisplayTextSmall"
+									value="#{cc.attrs.selectedPlan.estimatedAmount}"/>
+							</td>
 							<td>&nbsp;</td>
 						</tr>
 						
@@ -322,7 +328,7 @@ xmlns:composite="http://java.sun.com/jsf/composite">
 													|| !cc.attrs.selectedPlan.multiLevel
 													|| !cc.attrs.selectedPlan.brandNew}">
 												<f:selectItem itemLabel="#{lbl['lbl.select']}" itemValue="0" />
-												<f:selectItem itemLabel="Khai" itemValue="2" />
+												<f:selectItem itemLabel="Tan" itemValue="2" />
 											</p:selectOneMenu>
 										</ui:fragment>
 										<br/>
@@ -336,10 +342,9 @@ xmlns:composite="http://java.sun.com/jsf/composite">
 							<tr>
 								<th>* <p:outputLabel value="#{lbl['lbl.pp.revision.type']}"/></th>
 								<td>
-									<p:selectOneRadio required="false" id="sorRevType">  
-							            <f:selectItem itemLabel="#{lbl['lbl.pp.self.revise']}" itemValue="1" /> &nbsp;
-							            <f:selectItem itemLabel="#{lbl['lbl.pp.send.to.officer']}" itemValue="0" /> &nbsp;
-							            <p:ajax event="change" update="tPlanHeader" />
+									<p:selectOneRadio value="#{cc.attrs.selectedPlan.selfRevise}" required="false" id="sorRevType">  
+							            <f:selectItem itemLabel="#{lbl['lbl.pp.self.revise']}" itemValue="true" /> &nbsp;
+							            <f:selectItem itemLabel="#{lbl['lbl.pp.send.to.officer']}" itemValue="false" /> &nbsp;
 							        </p:selectOneRadio>  
 								</td>
 								<th>&nbsp;</th>
@@ -349,15 +354,14 @@ xmlns:composite="http://java.sun.com/jsf/composite">
 							<!-- Rejection Reason -->
 							<tr>
 								<th>* <p:outputLabel value="#{lbl['lbl.pp.rejection.reason']}"/></th>
-								<td>
+								<td colspan="3">
 									<p:selectManyCheckbox value="#{cc.attrs.selectedPlan.pmRejectReasonIds}" >  
 							            <f:selectItems value="#{planBackingBean.rejectionReasonOptions()}"
-							            	 var="obj" itemLabel="#{obj.reasonDesc}" itemValue="#{obj.pmReason.reasonId}"  />  
-							            	 <p:ajax event="change"/>
+							            	 var="obj" itemLabel="#{obj.reasonDesc}" itemValue="#{obj.pmReason.reasonId}"  />
+					            	    <f:selectItem itemLabel="Others" itemValue="0" />  
+						            	 <p:ajax event="change" listener="#{planBackingBean.customReason}" />
 							        </p:selectManyCheckbox>  
 								</td>
-								<th>&nbsp;</th>
-								<td>&nbsp;</td>
 								<td>&nbsp;</td>
 							</tr>
 							<tr>
@@ -378,10 +382,12 @@ xmlns:composite="http://java.sun.com/jsf/composite">
 					<br/>
 				</p:tab>
 				<!-- Details -->
-				<p:tab id="tPlanDetails" title="#{lbl['lbl.pp.details']}" disabled="#{!planBackingBean.managedBean.enableDetail}">  
+				<p:tab id="tPlanDetails" title="#{lbl['lbl.pp.details']}" disabled="#{!planBackingBean.managedBean.enableDetail}">
+					<div class="ppScrollableDet">  
 					<p:panel id="pTabPlanDetails">
 						<ui:include src="#{planBackingBean.managedBean.dynamicDetailsName}"/>
 					</p:panel>
+					</div>
 				</p:tab>
 				<!-- Remarks -->
 				<p:tab id="tPlanRmk" title="#{lbl['lbl.pp.remarks']}">
@@ -390,9 +396,11 @@ xmlns:composite="http://java.sun.com/jsf/composite">
 						<p:dataTable id="dtPlanRemark" styleClass="ppRmkList" var="remarkObj" rowIndexVar="rowIndex"
 								value="#{cc.attrs.selectedPlan.ppRemarks}"
 								emptyMessage="#{lbl['lbl.pp.pls.add.item']}">  
+								<!-- 
 		                        <p:column headerText="#{lbl['lbl.pp.seq']}">  
 		                            #{rowIndex+1}
 		                        </p:column>   
+		                         -->
 		                        <p:column headerText="#{lbl['lbl.pp.comment']}">  
 		                            <p:inputTextarea value="#{remarkObj.remark}" rows="2" cols="50" 
 		                            	disabled="#{!remarkObj.brandNew}" />
@@ -406,7 +414,7 @@ xmlns:composite="http://java.sun.com/jsf/composite">
 		                </p:dataTable>  
 						<div class="ppRightBtn">
 							<p:commandButton id="cbAddPlanRemark" value="#{lbl['lbl.pp.add']}" update="dtPlanRemark"
-								action="#{planBackingBean.addPlanRemark()}" />
+								action="#{planBackingBean.addPlanRemark()}" icon="ui-icon-add" />
 						</div>
 					</p:panel>
 				</p:tab>

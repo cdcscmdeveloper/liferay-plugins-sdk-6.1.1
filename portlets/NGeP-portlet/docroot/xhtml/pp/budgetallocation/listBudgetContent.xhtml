@@ -12,18 +12,59 @@ xmlns:ac="http://ac.my/jsf/composite/cc">
 	<p:outputPanel id="opViewBudgetAllocationContent">
 		<br/>
 		<div class="ppProfileInfo">
-			<table class="ppTwoPartsTable" align="left">
-					<tr>
-						<th>#{lbl['lbl.pp.ministry.code.name']}</th>
-						<td class="ppSmallTd">:</td>
-						<td>
-							#{budgetAllocationBackingBean.managedBean.currentUser.orgCode} /
-							#{budgetAllocationBackingBean.managedBean.currentUser.orgName}
-						</td>
-					</tr>
-					<tr>
-						<td colspan="3">&nbsp;</td>
-					</tr>
+			<table width="100%">
+				<tr>
+					<td colspan="3">
+						<table class="ppHalf">
+							<tr>
+								<td><p:outputLabel value="#{lbl['lbl.pp.ministry.code.name']}" /></td>
+								<td>
+									<p:inputText disabled="true" styleClass="ppDisplayText"
+										value="#{budgetAllocationBackingBean.managedBean.currentUser.orgCode} / #{budgetAllocationBackingBean.managedBean.currentUser.orgName}" />
+									
+								</td>
+							</tr>
+						</table>
+					</td>
+				</tr>
+				<tr>
+					<td colspan="3">&nbsp;</td>
+				</tr>
+				<tr>
+					<td colspan="3">
+						<p:dataTable id="tblBudget" styleClass="ppTableFull" var="budget" rowIndexVar="rowIndex"
+						 	emptyMessage="#{lbl['lbl.pp.no.record.found']}"
+						 	value="#{budgetAllocationBackingBean.budgetDataModel}"
+							lazy="true">
+						 	
+						 	<ac:paginator for="tblBudget" />
+					    	
+					        <p:column headerText="#{lbl['lbl.pp.go.code']}">  
+					            #{budget.pmGo.goCode}
+					        </p:column>  
+					        <p:column headerText="#{lbl['lbl.pp.go.name']}">  
+					             #{budget.pmGo.goName}
+					        </p:column> 
+					        <p:column headerText="#{lbl['lbl.pp.financial.year']}">  
+					            #{budget.financialYear}   
+					        </p:column>  
+					        <p:column headerText="#{lbl['lbl.pp.budgeted.amount']}">  
+					            #{budget.budgetAmount}    
+					        </p:column>  
+					        <p:column headerText="#{lbl['lbl.pp.used.amount']}">  
+					            #{budget.usedAmount}    
+					        </p:column>  
+				         	<p:column headerText="#{lbl['lbl.pp.created.date']}">  
+					            #{budget.createdDate}     
+					        </p:column>  
+					        <!-- 
+					        <p:column headerText="#{lbl['lbl.pp.flag']}">  
+								#{budget.budgetType}   
+					        </p:column>  
+					         -->
+				    	</p:dataTable> 
+					</td>
+				</tr>
 			</table>
 		</div>
 		<br/> 
@@ -34,45 +75,6 @@ xmlns:ac="http://ac.my/jsf/composite/cc">
 			<p:commandButton value="Load" action="#{budgetAllocationBackingBean.dummyTask(budgetAllocationBackingBean.managedBean.tempId, budgetAllocationBackingBean.managedBean.actionDesc)}" 
 			update="@form"  />  -->
 			
-	 	<p:dataTable id="tblBudget" styleClass="ppTableFull" var="budget" rowIndexVar="rowIndex"
-		 	emptyMessage="#{lbl['lbl.pp.no.record.found']}"
-		 	value="#{budgetAllocationBackingBean.budgetDataModel}"
-			lazy="true">
-		 	
-		 	<ac:paginator for="tblBudget" />
-		 	  
-	    	<p:column styleClass="ppSmallTd" headerText="#{lbl['lbl.pp.seq']}">  
-                #{rowIndex+1}
-            </p:column>   
-	        <p:column headerText="#{lbl['lbl.pp.go.code']}">  
-	            #{budget.pmGo.goCode}
-	        </p:column>  
-	        <p:column headerText="#{lbl['lbl.pp.go.name']}">  
-	             #{budget.pmGo.goName}
-	        </p:column> 
-	        <!-- 
-	        <p:column headerText="#{lbl['lbl.pp.activity.description']}">  
-	            <p:outputLabel value="" /> 
-	        </p:column>  
-	         -->
-	        <p:column headerText="#{lbl['lbl.pp.financial.year']}">  
-	            #{budget.financialYear}   
-	        </p:column>  
-	        <p:column headerText="#{lbl['lbl.pp.budgeted.amount']}">  
-	            #{budget.budgetAmount}    
-	        </p:column>  
-	        <p:column headerText="#{lbl['lbl.pp.used.amount']}">  
-	            #{budget.usedAmount}    
-	        </p:column>  
-         	<p:column headerText="#{lbl['lbl.pp.created.date']}">  
-	            #{budget.createdDate}     
-	        </p:column>  
-	        <p:column headerText="#{lbl['lbl.pp.flag']}">  
-				#{budget.budgetType}   
-	        </p:column>  
-    	</p:dataTable> 
-    	<br/>
-		<br/>
 		
 	</p:outputPanel>
 					

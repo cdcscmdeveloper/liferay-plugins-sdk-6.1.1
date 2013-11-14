@@ -14,9 +14,6 @@ xmlns:c="http://java.sun.com/jsp/jstl/core">
 			<p:dataTable id="dtPpItem" styleClass="ppFixTdWidth" var="ppItem" 
 				value="#{cc.attrs.selectedPlan.ppPlanItems}"  rowIndexVar="rowIndex"
 				emptyMessage="#{lbl['lbl.pp.no.record.found']}">  
-		    	<p:column styleClass="ppSmallTd" headerText="#{lbl['lbl.pp.seq']}">  
-	               	#{rowIndex+1}
-	            </p:column>   
 		        <p:column headerText="#{lbl['lbl.pp.gosodo.code']}">  
 					#{ppItem.ppBudgetAllocDtl.ppBudget.pmGo.goName}
 					#{ppItem.ppBudgetAllocDtl.pmDo.pmSo.soName}
@@ -32,11 +29,12 @@ xmlns:c="http://java.sun.com/jsp/jstl/core">
 	                 #{ppItem.recordStatus?'Active':'Deleted'}
 	            </p:column>              
 		        <p:column headerText="#{lbl['lbl.pp.action']}"> 
-	                <p:commandLink value="#{lbl['lbl.pp.edit']}" action="#{planBackingBean.showPpItem(ppItem)}" 
-	                	update="@([id$=dlItemDetails])" oncomplete="dlItemDetailsModal.show()"/>
+	                <p:commandButton value="#{lbl['lbl.pp.edit']}" action="#{planBackingBean.showPpItem(ppItem)}" 
+	                	update="@([id$=dlItemDetails])" oncomplete="dlItemDetailsModal.show()"
+	                	icon="ui-icon-edit" />
 	                 &nbsp;&nbsp;
-	                <p:commandLink value="#{lbl['lbl.pp.delete']}"
-	                  	update="dtPpItem" rendered="#{ppItem.brandNew || cc.attrs.viewMode==PPConst.modeRevision}" 	 
+	                <p:commandButton value="#{lbl['lbl.pp.delete']}" icon="ui-icon-delete"
+	                  	update="dtPpItem" disabled="#{!(ppItem.brandNew || cc.attrs.viewMode==PPConst.modeRevision)}" 	 
 	                  	action="#{planBackingBean.deletePpItem(ppItem)}" />
 	            </p:column>  
 	    	</p:dataTable>  
@@ -46,7 +44,7 @@ xmlns:c="http://java.sun.com/jsp/jstl/core">
 	    	<c:if test="#{cc.attrs.viewMode==PPConst.modeNew || cc.attrs.viewMode==PPConst.modeRevision}">
 	    		<div class="ppRightBtn">
 					<p:commandButton value="#{lbl['lbl.pp.add']}" action="#{planBackingBean.showPpItem(null)}"
-						oncomplete="dlItemDetailsModal.show()" update="dlItemDetails" />  
+						oncomplete="dlItemDetailsModal.show()" update="dlItemDetails" icon="ui-icon-add" />  
 			 		<br/>
 			 		<br/>
 		 		</div>
@@ -59,9 +57,11 @@ xmlns:c="http://java.sun.com/jsp/jstl/core">
 			<p:dataTable id="dtSrcAct" styleClass="ppFixTdWidth" var="qtActivity" rowIndexVar="rowIndex"
 				value="#{cc.attrs.selectedPlan.allPpQtActivities}"
 				emptyMessage="..">   
+				<!-- 
 				<p:column styleClass="ppSmallTd" headerText="#{lbl['lbl.pp.seq']}">  
 	               	#{rowIndex+1}
-	            </p:column>   
+	            </p:column> 
+	             -->  
 	            <p:column headerText="#{lbl['lbl.pp.activity.name']}">  
 		            #{qtActivity.pmBusinessActivity.activityName}
 	            </p:column>     
@@ -87,10 +87,9 @@ xmlns:c="http://java.sun.com/jsp/jstl/core">
 	<p:dialog id="dlItemDetails" header="#{lbl['lbl.pp.item.details']}" widgetVar="dlItemDetailsModal" 
 	              	 resizable="false" styleClass="ppDiaglogBg" dynamic="true">
     	<p:outputPanel id="opItemDetails">  
-    		<table class="ppTwoPartsTable">
+    		<table>
 				<tr>
-					<th>* #{lbl['lbl.pp.gosodo.code']} </th>
-					<td class="ppSmallTd">:</td>
+					<th>* <p:outputLabel value="#{lbl['lbl.pp.gosodo.code']}"/> </th>
 					<td>
 						<p:selectOneMenu value="#{planBackingBean.managedBean.selectedItem.goId}"
 							disabled="#{!planBackingBean.managedBean.selectedItem.brandNew &amp;&amp; 
@@ -119,11 +118,10 @@ xmlns:c="http://java.sun.com/jsp/jstl/core">
 					</td>
 				</tr>
 				<tr>
-		   			<th>#{lbl['lbl.pp.gosodo.name']}</th>
-					<td class="ppSmallTd">:</td>
+		   			<th><p:outputLabel value="#{lbl['lbl.pp.gosodo.name']}"/></th>
 					<td>
 						<p:outputPanel id="opGosodo">
-							<p:inputText disabled="true"
+							<p:inputText disabled="true" styleClass="ppDisplayTextSmall"
 								value="#{planBackingBean.managedBean.selectedItem.ppBudgetAllocDtl.ppBudget.pmGo.goName}
 								#{planBackingBean.managedBean.selectedItem.ppBudgetAllocDtl.pmDo.pmSo.soName}
 								#{planBackingBean.managedBean.selectedItem.ppBudgetAllocDtl.pmDo.doName}"/>
@@ -132,8 +130,7 @@ xmlns:c="http://java.sun.com/jsp/jstl/core">
 		   		</tr>
 				<!-- For Amanah Without VOT only -->
 				<tr>
-					<th>#{lbl['lbl.pp.financial.year']}</th>
-					<td class="ppSmallTd">:</td>
+					<th><p:outputLabel value="#{lbl['lbl.pp.financial.year']}"/></th>
 					<td>
 						<p:selectOneMenu id="somYear" value="#{planBackingBean.managedBean.selectedItem.ovrFinancialYear}"
 							disabled="#{cc.attrs.selectedPlanMaster.votType!=PPConst.votWithout}">
@@ -144,15 +141,14 @@ xmlns:c="http://java.sun.com/jsp/jstl/core">
 					</td>
 				</tr>
 				<tr>
-					<th>#{lbl['lbl.pp.available.budgeted.amount']}</th>
-					<td class="ppSmallTd">:</td>
+					<th><p:outputLabel value="#{lbl['lbl.pp.available.budgeted.amount']}"/></th>
 					<td>
-						 <p:inputText id="itAvailbleBud" value="#{planBackingBean.generateAvailableBudget()}" disabled="true"/>
+						 <p:inputText id="itAvailbleBud" styleClass="ppDisplayTextSmall"
+						 	value="#{planBackingBean.generateAvailableBudget()}" disabled="true"/>
 					</td>
 				</tr>
 				<tr>
-					<th>* #{lbl['lbl.pp.estimated.amount']}</th>
-					<td class="ppSmallTd">:</td>
+					<th>* <p:outputLabel value="#{lbl['lbl.pp.estimated.amount']}"/></th>
 					<td>
 						 <p:inputText value="#{planBackingBean.managedBean.selectedItem.estimatedAmount}" 
 						 	disabled="#{!planBackingBean.managedBean.selectedItem.brandNew &amp;&amp; 
@@ -160,8 +156,7 @@ xmlns:c="http://java.sun.com/jsp/jstl/core">
 					</td>
 				</tr>
 				<tr>
-					<th>* #{lbl['lbl.pp.product.segment']}</th>
-					<td class="ppSmallTd">:</td>
+					<th>* <p:outputLabel value="#{lbl['lbl.pp.product.segment']}"/></th>
 					<td>
 						<p:selectOneMenu value="#{planBackingBean.managedBean.selectedItem.unspscSegmentCode}"
 							disabled="#{!planBackingBean.managedBean.selectedItem.brandNew &amp;&amp; 
@@ -174,8 +169,7 @@ xmlns:c="http://java.sun.com/jsp/jstl/core">
 					</td>
 				</tr>
 				<tr>
-					<th>* #{lbl['lbl.pp.product.family']}</th>
-					<td class="ppSmallTd">:</td>
+					<th>* <p:outputLabel value="#{lbl['lbl.pp.product.family']}"/></th>
 					<td>
 						<p:selectOneMenu id="somProdFamily" value="#{planBackingBean.managedBean.selectedItem.unspscFamilyCode}"
 							disabled="#{!planBackingBean.managedBean.selectedItem.brandNew &amp;&amp; 
@@ -188,8 +182,7 @@ xmlns:c="http://java.sun.com/jsp/jstl/core">
 					</td>
 				</tr>
 				<tr>
-					<th>* #{lbl['lbl.pp.product.class']}</th>
-					<td class="ppSmallTd">:</td>
+					<th>* <p:outputLabel value="#{lbl['lbl.pp.product.class']}"/></th>
 					<td>
 						<p:selectOneMenu id="somProdClass" value="#{planBackingBean.managedBean.selectedItem.unspscClassCode}"
 							disabled="#{!planBackingBean.managedBean.selectedItem.brandNew &amp;&amp; 
@@ -202,21 +195,21 @@ xmlns:c="http://java.sun.com/jsp/jstl/core">
 					</td>
 				</tr>
 				<tr>
-		   			<th>#{lbl['lbl.pp.remarks']}</th>
-					<td class="ppSmallTd">:</td>
+		   			<th><p:outputLabel value="#{lbl['lbl.pp.remarks']}"/></th>
 					<td>
 						<p:inputTextarea value="#{planBackingBean.managedBean.selectedItemRemark.remark}" 
 							rows="3" cols="70"/>
 					</td>
 		   		</tr>
 		   		<tr>
-		   			<td colspan="2">&nbsp;</td>
+		   			<td>&nbsp;</td>
 					<td>
-						<p:commandButton value="#{lbl['lbl.pp.ok']}" action="#{planBackingBean.addItemToList()}"
+						<p:commandButton value="#{lbl['lbl.pp.ok']}" 
+							action="#{planBackingBean.addItemToList()}"
 							onclick="dlItemDetailsModal.hide()" oncomplete="dlItemDetailsModal.hide()" 
 							process="opItemDetails" update="@([id$=dtPpItem])"/>
 						&nbsp;
-						<p:commandButton value="#{lbl['lbl.pp.cancel']}" 
+						<p:commandButton value="#{lbl['lbl.pp.cancel']}" icon="ui-icon-cancel"
 							onclick="dlItemDetailsModal.hide()" immediate="true"/>
 					</td>
 		   		</tr>

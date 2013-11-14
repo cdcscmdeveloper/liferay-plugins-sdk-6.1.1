@@ -17,7 +17,7 @@ xmlns:c="http://java.sun.com/jsp/jstl/core">
 				  update="dtEpPlanItem"  />
 				&nbsp; 
 				<p:commandButton id="cbCancel" value="#{lbl['lbl.pp.cancel']}" onclick="dlItemDetailsModal.hide()" 
-					immediate="true"/>&nbsp;
+					icon="ui-icon-cancel" immediate="true"/>&nbsp;
 			</div>
 			<!-- Sub Header -->
 			<p:panel id="pSubDetailsContract" header="#{lbl['lbl.pp.sub.header']}" toggleable="true">
@@ -35,9 +35,10 @@ xmlns:c="http://java.sun.com/jsp/jstl/core">
 						<th><p:outputLabel value="#{lbl['lbl.pp.supplier.id']}"/></th>
 						<td>
 							<p:outputPanel id="opSupId">
-								#{planBackingBean.managedBean.selectedPlanItem.ctContract.smSupplier!=null? 
+								<p:inputText disabled="true" styleClass="ppDisplayTextSmall"
+									value="#{planBackingBean.managedBean.selectedPlanItem.ctContract.smSupplier!=null? 
 									planBackingBean.managedBean.selectedPlanItem.ctContract.smSupplier.supplierId 
-									: ""}
+									: ''}"/>
 							</p:outputPanel>
 						</td>
 					</tr>
@@ -55,9 +56,10 @@ xmlns:c="http://java.sun.com/jsp/jstl/core">
 						<th><p:outputLabel value="#{lbl['lbl.pp.supplier.name']}"/></th>
 						<td>
 							<p:outputPanel id="opSupName">
-								#{planBackingBean.managedBean.selectedPlanItem.ctContract.smSupplier!=null? 
+								<p:inputText disabled="true" styleClass="ppDisplayTextSmall"
+									value="#{planBackingBean.managedBean.selectedPlanItem.ctContract.smSupplier!=null? 
 									planBackingBean.managedBean.selectedPlanItem.ctContract.smSupplier.supplierName : 
-									""}
+									''}"/>
 							</p:outputPanel>
 							
 						</td>
@@ -77,9 +79,11 @@ xmlns:c="http://java.sun.com/jsp/jstl/core">
 						<th><p:outputLabel value="#{lbl['lbl.pp.duration.month']}"/></th>
 						<td>
 							<p:outputPanel id="opDuration">
-								#{planBackingBean.managedBean.selectedPlanItem.ctContract.contractValue!=null? 
+								<p:inputText disabled="true" styleClass="ppDisplayTextSmall"
+									value="
+									#{planBackingBean.managedBean.selectedPlanItem.ctContract.contractValue!=null? 
 									planBackingBean.managedBean.selectedPlanItem.ctContract.contractValue.contractPeriod : 
-									""}
+									''}" />
 							</p:outputPanel>
 							
 						</td>
@@ -148,9 +152,10 @@ xmlns:c="http://java.sun.com/jsp/jstl/core">
 						</th>
 						<td>
 							<p:outputPanel id="opEndDate">
-								#{cc.attrs.selectedPlanMaster.fulfilmentType==PPConst.fulfillmentSchedule ?
+								<p:inputText disabled="true" styleClass="ppDisplayTextSmall"
+									value="#{cc.attrs.selectedPlanMaster.fulfilmentType==PPConst.fulfillmentSchedule ?
 									planBackingBean.managedBean.selectedPlanItem.planEndDate :  
-									planBackingBean.managedBean.selectedPlanItem.planEndMonthString}
+									planBackingBean.managedBean.selectedPlanItem.planEndMonthString}"/>
 							</p:outputPanel>
 						</td>
 					</tr>

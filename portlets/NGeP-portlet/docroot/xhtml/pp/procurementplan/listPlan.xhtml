@@ -13,13 +13,14 @@ xmlns:tp="http://java.sun.com/jsf/composite/ep"
 >
 	<ui:define name="contentSection">
 	 	
-   		<p:panel id="pRightPanel" header="#{planBackingBean.generateHeader('L')}">
+   		<p:panel id="pRightPanel" header="#{planBackingBean.generateHeader(PPConst.modeList)}">
+   			<!-- Search Plan -->
    			<ui:include src="listPlanContent.xhtml"/>
    			
    			<!-- Bottom Button(s) -->
    			<div class="ppRightBtn">
-				<p:commandButton value="#{lbl['lbl.pp.create.new.plan']}" id="cbNewPlan"
-			 		action="#{planBackingBean.redirectToPlanContent(null,null)}"   /> 
+				<p:commandButton value="#{lbl['lbl.pp.create.new.plan']}" id="cbNewPlan" icon="ui-icon-add"
+			 		action="#{planBackingBean.redirectToPlanContent(null)}"   /> 
 			</div>
 
    		</p:panel>

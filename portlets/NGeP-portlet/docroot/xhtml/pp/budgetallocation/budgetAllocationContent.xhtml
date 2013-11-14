@@ -50,7 +50,8 @@ xmlns:c="http://java.sun.com/jsp/jstl/core"
 				<tr>
 					<th><p:outputLabel value="#{lbl['lbl.pp.status']}"/></th>
 					<td>
-						<p:inputText value="#{budgetAllocationBackingBean.managedBean.selectedBudgetAllocation.statusId}"  disabled="true"/>
+						<p:inputText value="#{budgetAllocationBackingBean.managedBean.selectedBudgetAllocation.statusId}"  
+							styleClass="displayText" disabled="true"/>
 					</td>
 				</tr>
 				<tr>
@@ -74,9 +75,6 @@ xmlns:c="http://java.sun.com/jsp/jstl/core"
 						headerText="#{lbl['lbl.pp.revise']}">  
 						<p:selectBooleanCheckbox value="#{budgetAllocationDet.revisionRequired}" />
 					</p:column>
-			 		<p:column headerText="#{lbl['lbl.pp.seq']}">  
-                        #{rowIndex+1}
-                    </p:column>    
                     <p:column headerText="#{lbl['lbl.pp.gosodo.code']}">  
                        	#{budgetAllocationDet.ppBudget.pmGo.goCode}
                     </p:column>  
@@ -98,9 +96,9 @@ xmlns:c="http://java.sun.com/jsp/jstl/core"
                         	oncomplete="dlItemDetailsBudgetModal.show();" update=":form:dlItemDetailsBudget"/>
                         &nbsp;
                         <p:commandButton value="#{lbl['lbl.pp.delete']}" icon="ui-icon-delete"
-                        	update="dtBudgetAllocDet" rendered="#{budgetAllocationDet.brandNew || 
+                        	update="dtBudgetAllocDet" disabled="#!({budgetAllocationDet.brandNew || 
                         	(budgetAllocationBackingBean.managedBean.viewMode==PPConst.modeRevision &amp;&amp; 
-                        	 budgetAllocationDet.revisionRequired )}"
+                        	 budgetAllocationDet.revisionRequired ))}"
                         	action="#{budgetAllocationBackingBean.deleteBudgetAllocItem(budgetAllocationDet)}" />
                    	</p:column>  
            	</p:dataTable>  
@@ -119,9 +117,11 @@ xmlns:c="http://java.sun.com/jsp/jstl/core"
 			<p:dataTable id="dtRemark" styleClass="ppRmkList" var="budgetAllocRemark" rowIndexVar="rowIndex"
 				value="#{budgetAllocationBackingBean.managedBean.selectedBudgetAllocation.ppRemarks}"
 				emptyMessage="#{lbl['lbl.pp.pls.add.item']}">  
+				<!-- 
                  <p:column headerText="#{lbl['lbl.pp.seq']}">  
                      #{rowIndex+1}
-                 </p:column>   
+                 </p:column>
+                  -->   
                  <p:column headerText="#{lbl['lbl.pp.comment']}">  
                      <p:inputTextarea value="#{budgetAllocRemark.remark}" rows="2" cols="50" 
                      	disabled="#{!budgetAllocRemark.brandNew}" />
@@ -188,9 +188,8 @@ xmlns:c="http://java.sun.com/jsp/jstl/core"
 	    			<th><p:outputLabel value="#{lbl['lbl.pp.gosodo.name']}"/></th>
 					<td>
 						<p:outputPanel id="opGosodo">
-							#{budgetAllocationBackingBean.managedBean.selectedBudgetAllocItem.pmDo.pmSo.pmGo.goName}
-							#{budgetAllocationBackingBean.managedBean.selectedBudgetAllocItem.pmDo.pmSo.soName}  
-							#{budgetAllocationBackingBean.managedBean.selectedBudgetAllocItem.pmDo.doName}
+							<p:inputText disabled="true" styleClass="ppDisplayText"
+								value="#{budgetAllocationBackingBean.managedBean.selectedBudgetAllocItem.pmDo.pmSo.pmGo.goName} #{budgetAllocationBackingBean.managedBean.selectedBudgetAllocItem.pmDo.pmSo.soName} #{budgetAllocationBackingBean.managedBean.selectedBudgetAllocItem.pmDo.doName}"/>
 						</p:outputPanel>    
 					</td>
 	    		</tr>
@@ -208,13 +207,15 @@ xmlns:c="http://java.sun.com/jsp/jstl/core"
 	    		<tr>
 	    			<th><p:outputLabel value="#{lbl['lbl.pp.budgeted.amount']}"/></th>
 					<td>
-						#{budgetAllocationBackingBean.managedBean.selectedBudgetAllocItem.ppBudget.budgetAmount}
+						<p:inputText disabled="true" styleClass="ppDisplayText"
+							value="#{budgetAllocationBackingBean.managedBean.selectedBudgetAllocItem.ppBudget.budgetAmount}"/>
 					</td>
 	    		</tr>
 	    		<tr>
 	    			<th><p:outputLabel value="#{lbl['lbl.pp.available.amount']}"/></th>
 					<td>
-						#{budgetAllocationBackingBean.generateAvailableBudget()}
+						<p:inputText disabled="true" styleClass="ppDisplayText"
+								value="#{budgetAllocationBackingBean.generateAvailableBudget()}"/>
 					</td>
 	    		</tr>
 	    		<tr>
