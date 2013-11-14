@@ -2103,6 +2103,22 @@ table.ppThreePartsTable td {
 	min-width:60px;
 	vertical-align: middle;
 }
+
+
+.ppDisplayText{
+	width: 300px;
+}
+.ppDisplayTextSmall{
+	width: 200px;
+}
+.ppHalf{
+	width: 50%;
+}
+.ppScrollableDet{
+	width: 800px;
+	height: 500px;
+	overflow: auto !important;
+}
 /*--------------------------       End PP Related      ------------------------------ */
 
 /*--------------------------       Custom Icons        ------------------------------ */
