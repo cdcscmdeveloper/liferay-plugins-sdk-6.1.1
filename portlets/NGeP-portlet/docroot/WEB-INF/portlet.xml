@@ -1672,7 +1672,7 @@
 	<!-- Supplier Management Start venkat -->
 	<portlet>
 		<portlet-name>sm</portlet-name>
-		<display-name>Supplier Management</display-name>
+		<display-name>MOF Registration Application</display-name>
 		<portlet-class>org.portletfaces.bridge.GenericFacesPortlet</portlet-class>
 		<init-param>
 			<name>javax.portlet.faces.defaultViewId.view</name>
@@ -1685,7 +1685,7 @@
 			<portlet-mode>view</portlet-mode>
 		</supports>
 		<portlet-info>
-			<title>Supplier Management</title>
+			<title>MOF Registration Application</title>
 			<short-title>NewJSFPortlet</short-title>
 			<keywords></keywords>
 		</portlet-info>
