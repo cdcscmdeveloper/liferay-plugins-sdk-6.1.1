@@ -200,6 +200,9 @@ public class FlDocumentBackingBean extends BaseBackingBean<FlDocumentManagedBean
 		// String dueDate = (String) ((UIOutput)e.getSource()).getValue();
 		String id = (String) e.getComponent().getAttributes().get("value");
 		System.out.println("=======get id value=====" + id);
+		if(id.equals("CO")){
+			this.getManagedBean().setCheckDocType(true);
+		}	
 		getManagedBean().setSearchDocType(id);
 	}
 
@@ -232,13 +235,13 @@ public class FlDocumentBackingBean extends BaseBackingBean<FlDocumentManagedBean
 				if(getManagedBean().getSearchDocNo()!=null) {
 					searchBean.getDataFilterBeans().add(new SearchFilterBean("docNo",SearchOperator.OPERATOR_LIKE.value(),getManagedBean().getSearchDocNo()));
 				}
-				if(getManagedBean().getSearchContractNo()!=null) {
+				if(getManagedBean().getSearchContractNo()!=null && getManagedBean().getSearchContractNo()!="") {
 					searchBean.getDataFilterBeans().add(new SearchFilterBean("contractNo",SearchOperator.OPERATOR_LIKE.value(),getManagedBean().getSearchContractNo()));
 				}
-				if(getManagedBean().getSearchCircularNo()!=null) {
+				if(getManagedBean().getSearchCircularNo()!=null && getManagedBean().getSearchCircularNo()!="")  {
 					searchBean.getDataFilterBeans().add(new SearchFilterBean("circularNo",SearchOperator.OPERATOR_LIKE.value(),getManagedBean().getSearchCircularNo()));
 				}
-				if(getManagedBean().getSearchLoaNo()!=null) {
+				if(getManagedBean().getSearchLoaNo()!=null && getManagedBean().getSearchLoaNo()!="") {
 					searchBean.getDataFilterBeans().add(new SearchFilterBean("loaNo",SearchOperator.OPERATOR_LIKE.value(),getManagedBean().getSearchLoaNo()));
 				}		
 				if(getManagedBean().getSearchStartDate()!=null && getManagedBean().getSearchEndDate()!=null) {

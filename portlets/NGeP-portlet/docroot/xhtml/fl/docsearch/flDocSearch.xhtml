@@ -38,16 +38,16 @@
 				</tr>
 			</table>
 			<h:panelGroup id="defineSearchTbl">
-				<h:panelGrid columns="3" columnClasses="cmWidth1">
-					<p:outputLabel value="Fulfilment Order Type" />
+				<h:panelGrid columns="4" columnClasses="cmWidth1">
+					<p:outputLabel value="#{lbl['lbl.fl.doc.search.fl.order.type']}" />
 					<p:selectOneMenu
 						value="#{flDocumentBackingBean.managedBean.searchOrderType}">
 						<f:selectItems
 							value="#{flDocumentBackingBean.getDropdownCodeValues(PmCodeCatConst.fulfilmentOrderType)}" />
 					</p:selectOneMenu>
 				</h:panelGrid>
-				<h:panelGrid columns="3" columnClasses="cmWidth1">
-					<p:outputLabel value="Document Type" />
+				<h:panelGrid columns="4" columnClasses="cmWidth1">
+					<p:outputLabel value="#{lbl['lbl.fl.doc.search.doc.type']}" />
 					<p:selectOneMenu
 						value="#{flDocumentBackingBean.managedBean.searchDocType}">
 						<f:selectItems
@@ -56,30 +56,36 @@
 							listener="#{flDocumentBackingBean.selectedDoctype}" />
 					</p:selectOneMenu>
 				</h:panelGrid>
-				<h:panelGrid columns="3" columnClasses="cmWidth1">
-					<p:outputLabel value="Doc No" />
+				<h:panelGrid columns="4" columnClasses="cmWidth1">
+					<p:outputLabel value="#{lbl['lbl.fl.doc.search.doc.no']}" />
 					<p:inputText size="50"
 						value="#{flDocumentBackingBean.managedBean.searchDocNo}"></p:inputText>
 				</h:panelGrid>
 			</h:panelGroup>
 			<h:panelGroup id="docTypeSearch">
-				<h:panelGrid columns="10" columnClasses="cmWidth1"
-					rendered="#{flDocumentBackingBean.managedBean.searchDocType eq 'CO'}">
-					<p:outputLabel value="Contract No" />
+				<h:panelGrid columns="4" columnClasses="cmWidth1"
+					rendered="#{flDocumentBackingBean.managedBean.checkDocType}">
+					<p:outputLabel value="#{lbl['lbl.fl.doc.search.contract.no']}"  />
 					<p:inputText size="50"
 						value="#{flDocumentBackingBean.managedBean.searchContractNo}"></p:inputText>
-					<p:outputLabel value="Circular No" />
+				</h:panelGrid>
+				<h:panelGrid columns="4" columnClasses="cmWidth1"
+					rendered="#{flDocumentBackingBean.managedBean.checkDocType}">
+					<p:outputLabel value="#{lbl['lbl.fl.doc.search.circular.no']}" />
 					<p:inputText size="50"
 						value="#{flDocumentBackingBean.managedBean.searchCircularNo}"></p:inputText>
-					<p:outputLabel value="Loa No" />
-					<p:inputText size="50"
-						value="#{flDocumentBackingBean.managedBean.searchCircularNo}"></p:inputText>	
 				</h:panelGrid>
-				
+				<h:panelGrid columns="4" columnClasses="cmWidth1"
+					rendered="#{flDocumentBackingBean.managedBean.checkDocType}">
+					<p:outputLabel value="#{lbl['lbl.fl.doc.search.loa.no']}" />
+					<p:inputText size="50"
+						value="#{flDocumentBackingBean.managedBean.searchLoaNo}"></p:inputText>
+				</h:panelGrid>
+
 			</h:panelGroup>
 			<p:outputPanel id="advanceSearchID" style="width:100%">
 			</p:outputPanel>
-			<p:commandButton value="search"
+			<p:commandButton value="search" icon="ui-icon-search"
 				action="#{flDocumentBackingBean.searchDocument}"
 				update="resultPanel" />
 		</p:panel>
@@ -106,7 +112,7 @@
 				<p:column headerText="Status">
 					<h:outputText value="#{flDocument.status.statusId}" />
 				</p:column>
-				
+
 				<p:column headerText="Action" style="text-align: center">
 					<p:commandButton
 						onclick="goToDetail([{name:'docType', value:'#{flDocument.docType}'}, {name:'docId', value:'#{flDocument.docId}'}, {name:'docNo', value:'#{flDocument.docNo}'}, {name:'buttonVal', value:'View'}])"
@@ -116,12 +122,12 @@
 						value="Update" />
 					<p:commandButton
 						onclick="goToDetail([{name:'docType', value:'#{flDocument.docType}'}, {name:'docId', value:'#{flDocument.docId}'}, {name:'docNo', value:'#{flDocument.docNo}'}, {name:'buttonVal', value:'Cancel'}])"
-						value="Cancel" />	
+						value="Cancel" />
 					<p:commandButton rendered="#{flDocument.docType == 'CR'}"
 						onclick="goToDetail([{name:'docType', value:'#{flDocument.docType}'}, {name:'docId', value:'#{flDocument.docId}'}, {name:'docNo', value:'#{flDocument.docNo}'}, {name:'buttonVal', value:'complain'}])"
 						value="Complain" />
 				</p:column>
-				
+
 			</p:dataTable>
 			<p:remoteCommand action="#{flDocumentBackingBean.navigateToPage}"
 				name="goToDetail" />

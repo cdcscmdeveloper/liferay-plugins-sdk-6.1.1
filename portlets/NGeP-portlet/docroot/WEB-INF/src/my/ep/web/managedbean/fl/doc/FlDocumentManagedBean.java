@@ -41,6 +41,8 @@ public class FlDocumentManagedBean extends BaseManagedBean {
 	private FlFulfilmentRequest fulfilmentRequest;
 	
 	private List<VFlDocument> flDocumentList;
+	
+	private Boolean checkDocType =false;
 
 	public String getTempLoginId() {
 		return tempLoginId;
@@ -166,6 +168,20 @@ public class FlDocumentManagedBean extends BaseManagedBean {
 	 */
 	public void setFulfilmentRequest(FlFulfilmentRequest fulfilmentRequest) {
 		this.fulfilmentRequest = fulfilmentRequest;
+	}
+
+	/**
+	 * @return the checkDocType
+	 */
+	public Boolean getCheckDocType() {
+		return checkDocType;
+	}
+
+	/**
+	 * @param checkDocType the checkDocType to set
+	 */
+	public void setCheckDocType(Boolean checkDocType) {
+		this.checkDocType = checkDocType;
 	}
 	
 }
