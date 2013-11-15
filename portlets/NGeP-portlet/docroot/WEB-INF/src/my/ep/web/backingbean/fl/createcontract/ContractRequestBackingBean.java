@@ -38,6 +38,7 @@ import my.ep.persistence.entity.fl.request.FlDeliveryAddress;
 import my.ep.persistence.entity.fl.request.FlFulfilmentRequest;
 import my.ep.persistence.entity.pm.authorization.PmOrgAddress;
 import my.ep.persistence.entity.pm.authorization.PmOrgProfile;
+import my.ep.persistence.entity.pm.common.PmAddressType;
 import my.ep.persistence.entity.pm.common.PmCode;
 import my.ep.persistence.entity.pm.common.PmMaksud;
 import my.ep.persistence.entity.pm.common.PmStatus;
@@ -134,6 +135,7 @@ public class ContractRequestBackingBean extends BaseBackingBean<ContractRequestM
 			iFulfilmentRequestSO = (IFulfilmentRequestSO) BusinessDelegate.getInstance().getServiceObject("fl", IFulfilmentRequestSO.class);
 			reqDTO.setFlFulfilmentRequest(flRequest);
 			reqDTO.setContractRequest(Boolean.TRUE);
+			reqDTO.setMto(getManagedBean().isMto());
 			System.out.println("templogin: "+ getManagedBean().getTempLogin());
 			if(getManagedBean().getTempLogin() == null){
 				reqDTO.setTempLogin("roslan");
@@ -230,11 +232,11 @@ public class ContractRequestBackingBean extends BaseBackingBean<ContractRequestM
 	}
 
 	public void addDeliveryAddr(){
-		for(PmOrgAddress pmOrgAddr : getManagedBean().getSelectedPmDelAddrList()){
+		for(PmAddressType addrType : getManagedBean().getSelectedPmAddrTypeList()){
 			FlDeliveryAddress deliveryAddr = new FlDeliveryAddress();
 			deliveryAddr.setFlFulfilmentRequest(getManagedBean().getFlRequest());
-			deliveryAddr.setOrgAddress(pmOrgAddr);
-			deliveryAddr.setDeliveryAddressId(pmOrgAddr.getOrgAddressId());
+			deliveryAddr.setAddressType(addrType);
+			deliveryAddr.setDeliveryAddressId(addrType.getAddressTypeId());
 			getManagedBean().getFlRequest().getFlDeliveryAddresses().add(deliveryAddr);
 		}
 	}
@@ -245,11 +247,11 @@ public class ContractRequestBackingBean extends BaseBackingBean<ContractRequestM
 
 	public void flDeliveryAddrList(){
 		ContractAmendmentReqDTO ctReqDTO = new ContractAmendmentReqDTO();
-		ctReqDTO.setOrgProfileId(1L);
+		ctReqDTO.setOrgProfileId(4L);
+		ctReqDTO.setCtContract(getManagedBean().getCtContract());
 		IContractAmendmentSO ctAmendmentSO = (IContractAmendmentSO)BusinessDelegate.getInstance().getServiceObject("ct",IContractAmendmentSO.class);	
 		ContractAmendmentResDTO resDTO = ctAmendmentSO.getActiveLocation(ctReqDTO);
-		getManagedBean().setDelAddrList(resDTO.getOrgAddresses());
-
+		getManagedBean().setAddressTypesList(resDTO.getAddressTypeList());
 	}
 
 	public String procureContract(){
@@ -270,16 +272,6 @@ public class ContractRequestBackingBean extends BaseBackingBean<ContractRequestM
 
 	public void selectedAddrRow(){
 		getManagedBean().setSelectedRowFlg(true);
-	}
-
-
-	public void flDeliveryItemList(){
-		ContractAmendmentReqDTO ctReqDTO = new ContractAmendmentReqDTO();
-		ctReqDTO.setOrgProfileId(1L);
-		IContractAmendmentSO ctAmendmentSO = (IContractAmendmentSO)BusinessDelegate.getInstance().getServiceObject("ct",IContractAmendmentSO.class);	
-		ContractAmendmentResDTO resDTO = ctAmendmentSO.getActiveLocation(ctReqDTO);
-		getManagedBean().setDelAddrList(resDTO.getOrgAddresses());
-
 	}
 
 	public List<SelectItem> getMaksudCodeList(){

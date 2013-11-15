@@ -15,6 +15,7 @@ import my.ep.persistence.entity.fl.request.FlDeliveryAddress;
 import my.ep.persistence.entity.fl.request.FlFulfilmentRequest;
 import my.ep.persistence.entity.fl.request.FlShippingInstr;
 import my.ep.persistence.entity.pm.authorization.PmOrgAddress;
+import my.ep.persistence.entity.pm.common.PmAddressType;
 import my.ep.persistence.entity.pm.common.PmMaksud;
 import my.ep.web.managedbean.BaseManagedBean;
 
@@ -36,11 +37,11 @@ public class ContractRequestManagedBean extends BaseManagedBean {
 	private FlAttachment flAttachment = new FlAttachment();
 	private FlFulfilmentRequest flRequest;
 	private FlDeliveryAddress selectedAddrRow;
-	private List<PmOrgAddress> selectedPmDelAddrList;
-	private List<PmOrgAddress> delAddrList;
 	private FlDeliveryAddress selectedDelAddr;
 	private List<PmMaksud> maksudCodeList;
 	private boolean checkPtjFlg = true;
+	private List<PmAddressType> addressTypesList; 
+	private List<PmAddressType> selectedPmAddrTypeList;
 	
 	//getbpm
 	private String bpmTaskId;
@@ -62,6 +63,7 @@ public class ContractRequestManagedBean extends BaseManagedBean {
 	private String docProcess;
 	private String flDocId;
 	private String buttonVal;
+	private boolean isMto = false;
 		
 	public ContractRequestManagedBean(){
 		
@@ -123,38 +125,6 @@ public class ContractRequestManagedBean extends BaseManagedBean {
 	public void setSelectedAddrRow(FlDeliveryAddress selectedAddrRow) {
 		this.selectedAddrRow = selectedAddrRow;
 	}
-
-	/**
-	 * @return the delAddrList
-	 */
-	public List<PmOrgAddress> getDelAddrList() {
-		return delAddrList;
-	}
-
-
-	/**
-	 * @param delAddrList the delAddrList to set
-	 */
-	public void setDelAddrList(List<PmOrgAddress> delAddrList) {
-		this.delAddrList = delAddrList;
-	}
-
-
-	/**
-	 * @return the selectedPmDelAddrList
-	 */
-	public List<PmOrgAddress> getSelectedPmDelAddrList() {
-		return selectedPmDelAddrList;
-	}
-
-
-	/**
-	 * @param selectedPmDelAddrList the selectedPmDelAddrList to set
-	 */
-	public void setSelectedPmDelAddrList(List<PmOrgAddress> selectedPmDelAddrList) {
-		this.selectedPmDelAddrList = selectedPmDelAddrList;
-	}
-
 
 	/**
 	 * @return the selectedDelAddrList
@@ -377,5 +347,55 @@ public class ContractRequestManagedBean extends BaseManagedBean {
 	public void setButtonVal(String buttonVal) {
 		this.buttonVal = buttonVal;
 	}
+
+
+	/**
+	 * @return the isMto
+	 */
+	public boolean isMto() {
+		return isMto;
+	}
+
+
+	/**
+	 * @param isMto the isMto to set
+	 */
+	public void setMto(boolean isMto) {
+		this.isMto = isMto;
+	}
+
+
+	/**
+	 * @return the addressTypesList
+	 */
+	public List<PmAddressType> getAddressTypesList() {
+		return addressTypesList;
+	}
+
+
+	/**
+	 * @param addressTypesList the addressTypesList to set
+	 */
+	public void setAddressTypesList(List<PmAddressType> addressTypesList) {
+		this.addressTypesList = addressTypesList;
+	}
+
+
+	/**
+	 * @return the selectedPmAddrTypeList
+	 */
+	public List<PmAddressType> getSelectedPmAddrTypeList() {
+		return selectedPmAddrTypeList;
+	}
+
+
+	/**
+	 * @param selectedPmAddrTypeList the selectedPmAddrTypeList to set
+	 */
+	public void setSelectedPmAddrTypeList(List<PmAddressType> selectedPmAddrTypeList) {
+		this.selectedPmAddrTypeList = selectedPmAddrTypeList;
+	}
+
+
 
 }

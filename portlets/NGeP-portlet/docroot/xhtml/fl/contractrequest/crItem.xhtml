@@ -18,7 +18,7 @@
 			listener="#{contractRequestBackingBean.selectedAddrRow()}"/>
 			
 			<p:column headerText="Delivery Address">
-				<h:outputText value="#{address.orgAddress.pmAddress.address1}, #{address.orgAddress.pmAddress.address2}, #{address.orgAddress.pmAddress.address3}, #{address.orgAddress.pmAddress.address4}" />
+				<h:outputText value="#{address.addressType.pmAddress.address1}, #{address.addressType.pmAddress.address2}, #{address.addressType.pmAddress.address3}, #{address.addressType.pmAddress.address4}" />
 			</p:column>
 
 			<p:column headerText="Exp. Delivery (Start)">
@@ -37,25 +37,21 @@
 				</p:commandLink>
 			</p:column>
 		</p:dataTable>
-		<table style="width: 775px;">
-
-			<tr>
-				<td colspan="6" align="right"><p:commandButton value="ADD"
+		<div style="width:100%;text-align:right">
+				<p:commandButton value="ADD" 
 						action="#{contractRequestBackingBean.flDeliveryAddrList}"
 						update="delAddr" process="@this,delAddr"
-						oncomplete="addDeliveryAddr.show();" /></td>
+						oncomplete="addDeliveryAddr.show();" />
 
-			</tr>
-		</table>
+		</div>
 	</p:panel>
 	<p:panel header="ITEM DETAIL" toggleable="true">
 		
 		<p:dataTable id="itemDataTable" var="item"
 			value="#{contractRequestBackingBean.managedBean.flRequest.flFulfilmentItems}"
-			paginator="true" rows="10"
-			paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
-			rowsPerPageTemplate="5,10,15" paginatorPosition="bottom"
 			rendered="#{contractRequestBackingBean.managedBean.selectedRowFlg}">
+			<ac:paginator for="itemDataTable"/>
+			
 			<p:column headerText="Product Code">
 				<h:outputText value="" />
 			</p:column>
@@ -88,30 +84,21 @@
 				<p:commandLink id="deleteLink" styleClass="ui-icon ui-icon-trash" />
 			</p:column>
 		</p:dataTable>
-		<table style="width: 775px;">
-			<tr>
-				<td colspan="6" align="right"><p:commandButton value="ACTION" rendered="#{contractRequestBackingBean.managedBean.selectedRowFlg}"/>
-				</td>
-			</tr>
-		</table>
-
-
-		<table style="width: 100%;text-align:right;" >
-			<tr>
-				<td colspan="4" align="right"><p:commandButton type="button"
-						icon="ui-icon-circle-triangle-w" /> <p:commandButton
-						type="button" icon="ui-icon-circle-triangle-e" /></td>
-			</tr>
-		</table>
+		<div style="width: 100%;text-align:right" >
+				<p:commandButton value="ACTION" 
+				rendered="#{contractRequestBackingBean.managedBean.selectedRowFlg}"/>
+				
+		</div>
 	</p:panel>
 
 	<p:dialog header="Add Delivery Address" widgetVar="addDeliveryAddr"
 		showEffect="fade" hideEffect="fade" modal="true" height="450"
 		width="600" resizable="false">
+		
 		<p:dataTable id="delAddr" var="delAddr"
-			value="#{contractRequestBackingBean.managedBean.delAddrList}"
-			rowKey="#{delAddr.pmAddress.addressId}" paginator="true" rows="10"
-			selection="#{contractRequestBackingBean.managedBean.selectedPmDelAddrList}">
+			value="#{contractRequestBackingBean.managedBean.addressTypesList}"
+			rowKey="#{delAddr.pmAddress.addressId}"  
+			selection="#{contractRequestBackingBean.managedBean.selectedPmAddrTypeList}">
 			<p:ajax event="rowSelect" update=":form" process="@this" 
 			listener="#{contractRequestBackingBean.selectedAddrRow()}"/>
 			<p:columnGroup type="header">
@@ -129,12 +116,13 @@
 				<h:outputText value="#{delAddr.pmAddress.address1}, #{delAddr.pmAddress.address2}, #{delAddr.pmAddress.address3}, #{delAddr.pmAddress.address4}" escape="false"/>
 			</p:column>
 		</p:dataTable>
-
-		<p:commandButton value="Add"
-			action="#{contractRequestBackingBean.addDeliveryAddr}"
-			oncomplete="addDeliveryAddr.hide();" process="@this,delAddr"
-			update="addressDataTable" styleClass="ppRightBtn">
-		</p:commandButton>
+		<div style="width:100%;text-align: right">
+			<p:commandButton value="Add"
+				action="#{contractRequestBackingBean.addDeliveryAddr}"
+				oncomplete="addDeliveryAddr.hide();" process="@this,delAddr"
+				update="addressDataTable">
+			</p:commandButton>
+		</div>
 		
 
 	</p:dialog>
