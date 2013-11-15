@@ -20,26 +20,18 @@
 		</p:panel>
 
 		<p:panel header="COMMITTEE DETAILS" toggleable="true">
-			<p:panelGrid styleClass="noBorders tr,noBorders td">
+			<h:panelGrid styleClass="noBorders tr,noBorders td" columns="2">
 
-				<p:row>
-					<p:column>
-						<h:outputLabel value="Subject" />
-					</p:column>
-					<p:column>
+				
+						<h:outputLabel value="Subject:" />
+				
 						<p:inputText size="50"></p:inputText>
-					</p:column>
-				</p:row>
-
-				<p:row>
-					<p:column>
-						<h:outputLabel value="Message" />
-					</p:column>
-					<p:column>
-						<p:inputTextarea rows="5" cols="40"></p:inputTextarea>
-					</p:column>
-				</p:row>
-			</p:panelGrid>
+				
+						<h:outputLabel value="Message:" />
+					
+						<p:inputTextarea rows="5" cols="50"></p:inputTextarea>
+					
+			</h:panelGrid>
 		</p:panel>
 
 

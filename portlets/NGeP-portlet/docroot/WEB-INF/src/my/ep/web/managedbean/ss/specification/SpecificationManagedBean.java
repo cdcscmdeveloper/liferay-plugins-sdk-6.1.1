@@ -14,6 +14,7 @@ import my.ep.persistence.entity.ss.quationtender.ScQtCheckList;
 import my.ep.persistence.entity.ss.quationtender.ScQtDeduction;
 import my.ep.persistence.entity.ss.quationtender.ScQtRemark;
 import my.ep.persistence.entity.ss.quationtender.ScQtSpec;
+import my.ep.persistence.entity.ss.quationtender.ScRemark;
 import my.ep.web.backingbean.ss.specification.SpecificationCompilanceBean;
 import my.ep.web.managedbean.BaseManagedBean;
 
@@ -56,9 +57,9 @@ public class SpecificationManagedBean extends BaseManagedBean {
 	
 	private List<String> compilanceList=new ArrayList<String>();
 	 public List<SpecificationCompilanceBean> compilaenceList;
+	 private ScRemark scRemark;
 	
-	
-	
+	public boolean isSampleReq=true;
 
 	/**
 	 * @return the scQtSpec
@@ -276,6 +277,34 @@ public class SpecificationManagedBean extends BaseManagedBean {
 	 */
 	public void setCompilaenceList(List<SpecificationCompilanceBean> compilaenceList) {
 		this.compilaenceList = compilaenceList;
+	}
+
+	/**
+	 * @return the scRemark
+	 */
+	public ScRemark getScRemark() {
+		return scRemark;
+	}
+
+	/**
+	 * @param scRemark the scRemark to set
+	 */
+	public void setScRemark(ScRemark scRemark) {
+		this.scRemark = scRemark;
+	}
+
+	/**
+	 * @return the isSampleReq
+	 */
+	public boolean isSampleReq() {
+		return isSampleReq;
+	}
+
+	/**
+	 * @param isSampleReq the isSampleReq to set
+	 */
+	public void setSampleReq(boolean isSampleReq) {
+		this.isSampleReq = isSampleReq;
 	}
 
 	

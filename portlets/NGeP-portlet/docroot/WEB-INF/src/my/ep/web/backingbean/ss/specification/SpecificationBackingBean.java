@@ -11,10 +11,15 @@ import javax.faces.bean.ManagedBean;
 import javax.faces.bean.RequestScoped;
 import javax.faces.event.AjaxBehaviorEvent;
 
+import my.ep.biz.service.pm.common.currency.ICurrencySO;
 import my.ep.biz.service.pm.common.procurementcategory.IProcurementSO;
+import my.ep.biz.service.pm.common.status.IStatusSO;
+import my.ep.dto.pm.common.currency.CurrencyReqDTO;
 import my.ep.dto.pm.common.currency.CurrencyResDTO;
 import my.ep.dto.pm.common.procurementcategory.ProcurementReqDTO;
 import my.ep.dto.pm.common.procurementcategory.ProcurementResDTO;
+import my.ep.dto.pm.common.status.StatusReqDTO;
+import my.ep.dto.pm.common.status.StatusResDTO;
 import my.ep.persistence.entity.pm.common.PmCurrency;
 import my.ep.persistence.entity.pm.common.PmProcurementCategory;
 import my.ep.persistence.entity.ss.quationtender.ScQt;
@@ -22,8 +27,8 @@ import my.ep.persistence.entity.ss.quationtender.ScQtCheckList;
 import my.ep.persistence.entity.ss.quationtender.ScQtDeduction;
 import my.ep.persistence.entity.ss.quationtender.ScQtRemark;
 import my.ep.persistence.entity.ss.quationtender.ScQtSpec;
+import my.ep.persistence.entity.ss.quationtender.ScRemark;
 import my.ep.web.backingbean.BaseBackingBean;
-import my.ep.web.backingbean.ss.directpurchase.SimpleQuoteBidBean;
 import my.ep.web.managedbean.ss.specification.SpecificationManagedBean;
 import my.ep.web.util.lookupservice.BusinessDelegate;
 
@@ -91,7 +96,55 @@ public SpecificationBackingBean(){
 		System.out.println("===========status id========"+this.getManagedBean().getScQtSpec().getStatusId());
 		System.out.println("===========contract period======="+this.getManagedBean().getScQtSpec().getContractDuration());
 		*/
+			IProcurementSO procurementSO =  BusinessDelegate.getInstance()
+					.getServiceObject("pm", IProcurementSO.class);
+			System.out.println(procurementSO);
+			//ProcurementResDTO resDTO=CurrencySO.retriveProcurementList();
+			//System.out.println("======procurement List Size===="+resDTO.getProcurementList().size());
+			ProcurementReqDTO reqDTO=new ProcurementReqDTO();
+			reqDTO.setProcurementId(this.getManagedBean().getScQtSpec().getPmProcurementCategory().getProcurementCategoryId());
+			ProcurementResDTO procResDTO1=procurementSO.retriveProcurementCategoryById(reqDTO);
+			ScQtSpec scqtSpec=new ScQtSpec();
+			scqtSpec.setEvaluationType(this.getManagedBean().getScQtSpec().getEvaluationType());
+			scqtSpec.setPmProcurementCategory(procResDTO1.getProcureCategory());
+			ICurrencySO CurrencySO =  BusinessDelegate.getInstance()
+					.getServiceObject("pm", ICurrencySO.class);
+			System.out.println(CurrencySO);
+			//CurrencyResDTO resDTO=CurrencySO.retriveCurrencyList();
+			//System.out.println("======currency List Size===="+resDTO.getCurrencyList().size());
+			CurrencyReqDTO currencyreqDTO=new CurrencyReqDTO();
+			currencyreqDTO.setCurrencyCode(this.getManagedBean().getScQtSpec().getPmCurrency().getCurrencyCode());
+			CurrencyResDTO currencyresDTO=CurrencySO.retriveCurrencyCodeByCodeId(currencyreqDTO);
+			scqtSpec.setPmCurrency(currencyresDTO.getPmCurrency());
+			scqtSpec.setApprovalDate(this.getManagedBean().getScQtSpec().getApprovalDate());
+			scqtSpec.setApproverName(this.getManagedBean().getScQtSpec().getApproverName());
+			scqtSpec.setApproverAction(this.getManagedBean().getScQtSpec().getApproverAction());
+			scqtSpec.setMaxProposal(this.getManagedBean().getScQtSpec().getMaxProposal());
+			scqtSpec.setAwardType(this.getManagedBean().getScQtSpec().getAwardType());
+			scqtSpec.setFulfilmentType(this.getManagedBean().getScQtSpec().getFulfilmentType());
+			scqtSpec.setJustificationRemark(this.getManagedBean().getScQtSpec().getJustificationRemark());
+			scqtSpec.setIsSampleReq(this.getManagedBean().getScQtSpec().getIsSampleReq());
+			scqtSpec.setIsApprovalReq(this.getManagedBean().getScQtSpec().getIsApprovalReq());
+			scqtSpec.setContractDuration(this.getManagedBean().getScQtSpec().getContractDuration());
+			//scqtSpec.setScQt(scQt);
+			scqtSpec.setStatusId(this.getManagedBean().getScQtSpec().getStatusId());
+			
+			ScQt qt=new ScQt();
+			qt.setQtAmount(this.getManagedBean().getScQtSpec().getScQt().getQtAmount());
+			
+			ScQtRemark remarks=new ScQtRemark();
+			remarks.setRemark(	this.getManagedBean().getScQtRemarks().getRemark());
 		
+			/*IStatusSO statussO = BusinessDelegate.getInstance()
+					.getServiceObject("pm", IStatusSO.class);
+			System.out.println("====status Object====" + statussO);
+			StatusReqDTO statusreq = new StatusReqDTO();
+			statusreq.setStatusId(1L);
+			StatusResDTO statusres = statussO
+					.retrieveStatusByStatusId(statusreq);
+			System.out.println("=====resource Status id==="
+					+ statusres.getPmStatus().getStatusId());*/
+			
 		List<ScQtDeduction> listdedudt=	this.getManagedBean().getScQtDeductionList();
 		System.out.println("=========deduction list==="+listdedudt.size());
 		if(listdedudt!=null){
@@ -103,88 +156,221 @@ public SpecificationBackingBean(){
 			System.out.println("====getDeductionAmount==="+checkList.getDeductionAmount());
 			System.out.println("====getIsFixed==="+checkList.getIsFixed());
 			*/
+			ScQtDeduction deduction=new ScQtDeduction();
+			//deduction.setScQt(scQt);
+			deduction.setDeductionType(checkList.getDeductionType());
+			deduction.setDeductionAmount(checkList.getDeductionAmount());
+			
 		}
 		}
 		System.out.println("=========stage one list====");
 	List< ScQtCheckList> list=	this.getManagedBean().getScQtCheckSt1techProposal();
 	for(int i=0;i<list.size();i++){
-		ScQtCheckList checkList=list.get(i);
+		ScQtCheckList checkSt1tech=list.get(i);
 		/*System.out.println("=======enter getScQtCheckSt1techProposal==== ");
 		System.out.println("====check list title==="+checkList.getTitle());
 		System.out.println("====check list type==="+checkList.getChecklistType());
 		System.out.println("====check list seq==="+checkList.getChecklistSeq());
 		System.out.println("====check list doctype==="+checkList.getDocType());
 		System.out.println("====check list evaluation==="+checkList.getEvaluationStage());*/
+		ScQtCheckList checkList = new ScQtCheckList();
+		checkList.setTitle(checkSt1tech.getTitle());
+		checkList.setDocType("1");
+		checkList.setEvaluationStage("1");
+		checkList.setChecklistType("UP");
+		checkList.setChecklistSeq(checkSt1tech.getChecklistSeq());
+		//checkList.setScQt(tenderResDTO.getQtDetail());
+		//checkList.setQtDocId(qt123);
+		IStatusSO statussO = BusinessDelegate.getInstance()
+				.getServiceObject("pm", IStatusSO.class);
+		System.out.println("====status Object====" + statussO);
+		StatusReqDTO statusreq = new StatusReqDTO();
+		statusreq.setStatusId(1L);
+		StatusResDTO statusres = statussO
+				.retrieveStatusByStatusId(statusreq);
+		checkList.setPmStatus(statusres.getPmStatus());
 	}
 	List< ScQtCheckList> list1=	this.getManagedBean().getScQtCheckSt1techAdditionalProposalList();
 	for(int j=0;j<list1.size();j++){
-		ScQtCheckList checkList=list1.get(j);
+		ScQtCheckList checkListSt1Add=list1.get(j);
 		/*System.out.println("=== enetr getScQtCheckSt1techAdditionalProposalList==");
 		System.out.println("====check list title==="+checkList.getTitle());
 		System.out.println("====check list type==="+checkList.getChecklistType());
 		System.out.println("====check list seq==="+checkList.getChecklistSeq());*/
+		ScQtCheckList checkList = new ScQtCheckList();
+		checkList.setTitle(checkListSt1Add.getTitle());
+		checkList.setDocType("2");
+		checkList.setEvaluationStage("1");
+		checkList.setChecklistType("UP");
+		checkList.setChecklistSeq(checkListSt1Add.getChecklistSeq());
+		//checkList.setScQt(tenderResDTO.getQtDetail());
+		//checkList.setQtDocId(qt123);
+		IStatusSO statussO = BusinessDelegate.getInstance()
+				.getServiceObject("pm", IStatusSO.class);
+		System.out.println("====status Object====" + statussO);
+		StatusReqDTO statusreq = new StatusReqDTO();
+		statusreq.setStatusId(1L);
+		StatusResDTO statusres = statussO
+				.retrieveStatusByStatusId(statusreq);
+		checkList.setPmStatus(statusres.getPmStatus());
 		
 	}
 	
 	List< ScQtCheckList> list2=	this.getManagedBean().getScQtCheckSt1financeProposalList();
 	for(int k=0;k<list2.size();k++){
-		ScQtCheckList checkList=list2.get(k);
+		ScQtCheckList checkListSt1fiProp=list2.get(k);
 		/*System.out.println("=== enetr getScQtCheckSt1financeProposalList==");
 		System.out.println("====check list title==="+checkList.getTitle());
 		System.out.println("====check list type==="+checkList.getChecklistType());
 		System.out.println("====check list seq==="+checkList.getChecklistSeq());*/
+		ScQtCheckList checkList = new ScQtCheckList();
+		checkList.setTitle(checkListSt1fiProp.getTitle());
+		checkList.setDocType("3");
+		checkList.setEvaluationStage("1");
+		checkList.setChecklistType("UP");
+		checkList.setChecklistSeq(checkListSt1fiProp.getChecklistSeq());
+		//checkList.setScQt(tenderResDTO.getQtDetail());
+		//checkList.setQtDocId(qt123);
+		IStatusSO statussO = BusinessDelegate.getInstance()
+				.getServiceObject("pm", IStatusSO.class);
+		System.out.println("====status Object====" + statussO);
+		StatusReqDTO statusreq = new StatusReqDTO();
+		statusreq.setStatusId(1L);
+		StatusResDTO statusres = statussO
+				.retrieveStatusByStatusId(statusreq);
+		checkList.setPmStatus(statusres.getPmStatus());
 		
 	}
 	
 	List< ScQtCheckList> list3=	this.getManagedBean().getScQtCheckSt1financeAdditionalProposalList();
 	for(int l=0;l<list3.size();l++){
-		ScQtCheckList checkList=list3.get(l);
+		ScQtCheckList checkListst1fiadd=list3.get(l);
 	/*	System.out.println("=== enetr getScQtCheckSt1financeAdditionalProposalList==");
 		System.out.println("====check list title==="+checkList.getTitle());
 		System.out.println("====check list type==="+checkList.getChecklistType());
 		System.out.println("====check list seq==="+checkList.getChecklistSeq());
 		*/
+		ScQtCheckList checkList = new ScQtCheckList();
+		checkList.setTitle(checkListst1fiadd.getTitle());
+		checkList.setDocType("4");
+		checkList.setEvaluationStage("1");
+		checkList.setChecklistType("UP");
+		checkList.setChecklistSeq(checkListst1fiadd.getChecklistSeq());
+		//checkList.setScQt(tenderResDTO.getQtDetail());
+		//checkList.setQtDocId(qt123);
+		IStatusSO statussO = BusinessDelegate.getInstance()
+				.getServiceObject("pm", IStatusSO.class);
+		System.out.println("====status Object====" + statussO);
+		StatusReqDTO statusreq = new StatusReqDTO();
+		statusreq.setStatusId(1L);
+		StatusResDTO statusres = statussO
+				.retrieveStatusByStatusId(statusreq);
+		checkList.setPmStatus(statusres.getPmStatus());
 	}
 	
 	List< ScQtCheckList> list4=	this.getManagedBean().getScQtCheckSt2techAdditionalProposalList();
 	for(int l=0;l<list4.size();l++){
-		ScQtCheckList checkList=list4.get(l);
+		ScQtCheckList checkListst2tech=list4.get(l);
 		/*System.out.println("=== enetr getScQtCheckSt2techAdditionalProposalList==");
 		System.out.println("====check list title==="+checkList.getTitle());
 		System.out.println("====check list type==="+checkList.getChecklistType());
 		System.out.println("====check list seq==="+checkList.getChecklistSeq());
 		*/
+		ScQtCheckList checkList = new ScQtCheckList();
+		checkList.setTitle(checkListst2tech.getTitle());
+		checkList.setDocType("2");
+		checkList.setEvaluationStage("2");
+		checkList.setChecklistType(checkListst2tech.getChecklistType());
+		checkList.setChecklistSeq(checkListst2tech.getChecklistSeq());
+		//checkList.setScQt(tenderResDTO.getQtDetail());
+		//checkList.setQtDocId(qt123);
+		IStatusSO statussO = BusinessDelegate.getInstance()
+				.getServiceObject("pm", IStatusSO.class);
+		System.out.println("====status Object====" + statussO);
+		StatusReqDTO statusreq = new StatusReqDTO();
+		statusreq.setStatusId(1L);
+		StatusResDTO statusres = statussO
+				.retrieveStatusByStatusId(statusreq);
+		checkList.setPmStatus(statusres.getPmStatus());
 	}
 	
 	List< ScQtCheckList> list5=	this.getManagedBean().getScQtCheckSt2financeProposalList();
 	for(int m=0;m<list5.size();m++){
-		ScQtCheckList checkList=list5.get(m);
+		ScQtCheckList checkListst2fiprop=list5.get(m);
 		/*System.out.println("=== enetr getScQtCheckSt2financeProposalList==");
 		System.out.println("====check list title==="+checkList.getTitle());
 		System.out.println("====check list type==="+checkList.getChecklistType());
 		System.out.println("====check list seq==="+checkList.getChecklistSeq());
 		*/
+		ScQtCheckList checkList = new ScQtCheckList();
+		checkList.setTitle(checkListst2fiprop.getTitle());
+		checkList.setDocType("3");
+		checkList.setEvaluationStage("2");
+		checkList.setChecklistType(checkListst2fiprop.getChecklistType());
+		checkList.setChecklistSeq(checkListst2fiprop.getChecklistSeq());
+		//checkList.setScQt(tenderResDTO.getQtDetail());
+		//checkList.setQtDocId(qt123);
+		IStatusSO statussO = BusinessDelegate.getInstance()
+				.getServiceObject("pm", IStatusSO.class);
+		System.out.println("====status Object====" + statussO);
+		StatusReqDTO statusreq = new StatusReqDTO();
+		statusreq.setStatusId(1L);
+		StatusResDTO statusres = statussO
+				.retrieveStatusByStatusId(statusreq);
+		checkList.setPmStatus(statusres.getPmStatus());
 	}
 	
 	List< ScQtCheckList> list6=	this.getManagedBean().getScQtCheckSt2financeAdditionalProposalList();
 	for(int n=0;n<list6.size();n++){
-		ScQtCheckList checkList=list6.get(n);
+		ScQtCheckList checkListst2fipropAdd=list6.get(n);
 		/*System.out.println("=== enetr getScQtCheckSt2financeAdditionalProposalList==");
 		System.out.println("====check list title==="+checkList.getTitle());
 		System.out.println("====check list type==="+checkList.getChecklistType());
 		System.out.println("====check list seq==="+checkList.getChecklistSeq());
 		*/
+		ScQtCheckList checkList = new ScQtCheckList();
+		checkList.setTitle(checkListst2fipropAdd.getTitle());
+		checkList.setDocType("4");
+		checkList.setEvaluationStage("2");
+		checkList.setChecklistType(checkListst2fipropAdd.getChecklistType());
+		checkList.setChecklistSeq(checkListst2fipropAdd.getChecklistSeq());
+		//checkList.setScQt(tenderResDTO.getQtDetail());
+		//checkList.setQtDocId(qt123);
+		IStatusSO statussO = BusinessDelegate.getInstance()
+				.getServiceObject("pm", IStatusSO.class);
+		System.out.println("====status Object====" + statussO);
+		StatusReqDTO statusreq = new StatusReqDTO();
+		statusreq.setStatusId(1L);
+		StatusResDTO statusres = statussO
+				.retrieveStatusByStatusId(statusreq);
+		checkList.setPmStatus(statusres.getPmStatus());
 	}
 	
 	
 	List< ScQtCheckList> list7=	this.getManagedBean().getScQtCheckSt2techProposal();
 	for(int r=0;r<list7.size();r++){
-		ScQtCheckList checkList=list7.get(r);
+		ScQtCheckList checkListst2tech=list7.get(r);
 		/*System.out.println("=======enter getScQtCheckSt2techProposal==== ");
 		System.out.println("====check list title==="+checkList.getTitle());
 		System.out.println("====check list type==="+checkList.getChecklistType());
 		System.out.println("====check list seq==="+checkList.getChecklistSeq());
 		*/
+		ScQtCheckList checkList = new ScQtCheckList();
+		checkList.setTitle(checkListst2tech.getTitle());
+		checkList.setDocType("1");
+		checkList.setEvaluationStage("2");
+		checkList.setChecklistType(checkListst2tech.getChecklistType());
+		checkList.setChecklistSeq(checkListst2tech.getChecklistSeq());
+		//checkList.setScQt(tenderResDTO.getQtDetail());
+		//checkList.setQtDocId(qt123);
+		IStatusSO statussO = BusinessDelegate.getInstance()
+				.getServiceObject("pm", IStatusSO.class);
+		System.out.println("====status Object====" + statussO);
+		StatusReqDTO statusreq = new StatusReqDTO();
+		statusreq.setStatusId(1L);
+		StatusResDTO statusres = statussO
+				.retrieveStatusByStatusId(statusreq);
+		checkList.setPmStatus(statusres.getPmStatus());
 	}
 	
 		}catch(Exception e ){
@@ -206,6 +392,7 @@ public SpecificationBackingBean(){
             getManagedBean().getScQtSpec().setScQt(new ScQt());
             getManagedBean().setScQtRemarks(new ScQtRemark());
             getManagedBean().setScQtChecklist(new ScQtCheckList());
+           // getManagedBean().setScRemark(new ScRemark());
            // getManagedBean().setScQtDeduction(new ScQtDeduction());
           //  getManagedBean().setScQtDeductionList(new ScQtDeduction());
           //  getManagedBean().getScQtChecklist().setTitle("Manga");

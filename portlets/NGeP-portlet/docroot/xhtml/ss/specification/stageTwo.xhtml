@@ -41,26 +41,31 @@
 				</p:selectOneMenu>
 
 			</p:column>
-			<p:column headerText="Positioning">
+			<p:column headerText="Supporting Doc">
+				<h:outputText value="Yes/No"></h:outputText>
+
+			</p:column>
+			<p:column headerText="Ordering">
 
 				<p:inputText
 					value="#{stageTwoTechnical.checklistSeq}"></p:inputText>
 			</p:column>
 
-			<p:column headerText="Supporting Doc">
-				<h:outputText value="Yes/No"></h:outputText>
+			<p:column headerText="Template Status">
+				<h:outputText value="(InProgress/Completed)"></h:outputText>
 
 			</p:column>
 			
 		 <!-- 	<h:panelGroup id="selectdrop" rendered="#{specificationBackingBean.selctValue eq '1' or specificationBackingBean.selctValue eq '2'}"> --> 
-			<p:column headerText="Action"  rendered="#{specificationBackingBean.selctValue eq '1' or specificationBackingBean.selctValue eq '2'}">
-				<p:commandButton value="ADD" process="@this" partialSubmit="true"
-				onclick="qtnTndr.show();" />
-            </p:column>
+			<!-- <p:column headerText="Action"  rendered="#{specificationBackingBean.selctValue eq '1' or specificationBackingBean.selctValue eq '2'}">
+				
+            </p:column> -->
            <!--  </h:panelGroup> -->
 
 			<p:column headerText="Action" style="width:10%">
 			<p:commandLink>
+			<!-- <p:commandButton value="Search" process="@this" partialSubmit="true"
+				onclick="qtnTndr.show();"  rendered="#{specificationBackingBean.selctValue eq '1' or specificationBackingBean.selctValue eq '2'}" /> -->
 					<p:graphicImage library="ep/images/design" name="edit.png"
 						value="/resources/ep/images/design/edit.png" />
 
@@ -104,33 +109,33 @@
 			</p:column>
 
 			<p:column headerText="Type" style="width:40%">
-				<p:selectOneMenu
-					value="#{stageTwoTechnicalAdditional.checklistType}">
-					<f:selectItem itemLabel="Select One" itemValue=" " />
-					<f:selectItem itemLabel="Specification" itemValue="1" />
-					<f:selectItem itemLabel="Document" itemValue="2" />
-					<f:selectItem itemLabel="System Defined" itemValue="3" />
-					<f:selectItem itemLabel="Input" itemValue="4" />
-					<p:ajax event="change" update="techAdditionaltwo"  process="@this" listener="#{specificationBackingBean.stageTwotechproposal}" />
-				</p:selectOneMenu>
+				<h:outputText value="Upload"></h:outputText>
 			</p:column>
 
-			<p:column headerText="Positioning">
+           <p:column headerText="Sample Document">
+
+				<p:commandButton value="Upload"></p:commandButton>
+
+			</p:column>
+			 <p:column headerText="Max Score">
+
+				<h:outputText value="readOnly"></h:outputText>
+
+			</p:column>
+			<p:column headerText="Ordering">
 				<p:inputText
 					value="#{stageTwoTechnicalAdditional.checklistSeq}"></p:inputText>
 			</p:column>
 
-			<p:column headerText="Supporting Doc">
-
-				<h:outputText value="Yes/No"></h:outputText>
-
-			</p:column>
-			<p:column headerText="Action"  rendered="#{specificationBackingBean.selctValue eq '1' or specificationBackingBean.selctValue eq '2'}">
+			
+			<!-- <p:column headerText="Action"  rendered="#{specificationBackingBean.selctValue eq '1' or specificationBackingBean.selctValue eq '2'}">
 				<p:commandButton value="ADD" process="@this" partialSubmit="true"
 				onclick="qtnTndr.show();" />
-            </p:column>
+            </p:column> -->
 
 			<p:column headerText="Action" style="width:10%">
+				<!-- <p:commandButton value="Search" process="@this" partialSubmit="true"
+				onclick="qtnTndr.show();"  rendered="#{specificationBackingBean.selctValue eq '1' or specificationBackingBean.selctValue eq '2'}" /> -->
 			<p:commandLink>
 					<p:graphicImage library="ep/images/design" name="edit.png"
 						value="/resources/ep/images/design/edit.png" />
@@ -191,23 +196,28 @@
 					<p:ajax event="change" update="financeProposaltwo"  process="@this" listener="#{specificationBackingBean.stageTwotechproposal}" />
 				</p:selectOneMenu>
 			</p:column>
-
-			<p:column headerText="Positioning">
-				<p:inputText
-					value="#{stageTwofunctional.checklistSeq}"></p:inputText>
-			</p:column>
-
-			<p:column headerText="Supporting Doc">
+             <p:column headerText="Supporting Doc">
 				<h:outputText value="Yes/No"></h:outputText>
 
 			</p:column>
-				<p:column headerText="Action"  rendered="#{specificationBackingBean.selctValue eq '1' or specificationBackingBean.selctValue eq '2'}">
+			<p:column headerText="Ordering">
+				<p:inputText
+					value="#{stageTwofunctional.checklistSeq}"></p:inputText>
+			</p:column>
+              <p:column headerText="Template Status">
+				<h:outputText value="(InProgress/Completed)"></h:outputText>
+
+			</p:column>
+			
+				<!-- <p:column headerText="Action"  rendered="#{specificationBackingBean.selctValue eq '1' or specificationBackingBean.selctValue eq '2'}">
 				<p:commandButton value="ADD" process="@this" partialSubmit="true"
 				onclick="qtnTndr.show();" />
-            </p:column>
+            </p:column> -->
 			
 
 			<p:column headerText="Action" style="width:10%">
+				<!-- <p:commandButton value="Search" process="@this" partialSubmit="true"
+				onclick="qtnTndr.show();"  rendered="#{specificationBackingBean.selctValue eq '1' or specificationBackingBean.selctValue eq '2'}" /> -->
 			<p:commandLink>
 					<p:graphicImage library="ep/images/design" name="edit.png"
 						value="/resources/ep/images/design/edit.png" />
@@ -254,33 +264,33 @@
 			</p:column>
 
 			<p:column headerText="Type" style="width:40%">
-				<p:selectOneMenu
-					value="#{stageTwofunctionalAdditional.checklistType}">
-						<f:selectItem itemLabel="Select One" itemValue=" " />
-					<f:selectItem itemLabel="Specification" itemValue="1" />
-					<f:selectItem itemLabel="Document" itemValue="2" />
-					<f:selectItem itemLabel="System Defined" itemValue="3" />
-					<f:selectItem itemLabel="Input" itemValue="4" />
-						<p:ajax event="change" update="financeAdditionaltwo"  process="@this" listener="#{specificationBackingBean.stageTwotechproposal}" />
-				</p:selectOneMenu>
+				<h:outputText value="Upload"></h:outputText>
 			</p:column>
-			<p:column headerText="Positioning">
+
+           <p:column headerText="Sample Document">
+
+				<p:commandButton value="Upload"></p:commandButton>
+
+			</p:column>
+			 <p:column headerText="Max Score">
+
+				<h:outputText value="readOnly"></h:outputText>
+
+			</p:column>
+			<p:column headerText="Ordering">
 				<p:inputText
 					value="#{stageTwofunctionalAdditional.checklistSeq}"></p:inputText>
 			</p:column>
 
-			<p:column headerText="Supporting Doc">
-
-				<h:outputText value="Yes/No"></h:outputText>
-
-			</p:column>
 		
-				<p:column headerText="Action"  rendered="#{specificationBackingBean.selctValue eq '1' or specificationBackingBean.selctValue eq '2'}">
+				<!-- <p:column headerText="Action"  rendered="#{specificationBackingBean.selctValue eq '1' or specificationBackingBean.selctValue eq '2'}">
 				<p:commandButton value="ADD" process="@this" partialSubmit="true"
 				onclick="qtnTndr.show();" />
-            </p:column>
+            </p:column> -->
 
 			<p:column headerText="Action" style="width:10%">
+				<!-- <p:commandButton value="Search" process="@this" partialSubmit="true"
+				onclick="qtnTndr.show();"  rendered="#{specificationBackingBean.selctValue eq '1' or specificationBackingBean.selctValue eq '2'}" /> -->
 			<p:commandLink>
 					<p:graphicImage library="ep/images/design" name="edit.png"
 						value="/resources/ep/images/design/edit.png" />
