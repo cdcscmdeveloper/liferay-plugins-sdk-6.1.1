@@ -9,8 +9,7 @@
 	<p:dialog id="Clone" header="Clone Committe" widgetVar="screen2"
 		modal="true">
 		<p:panel>
-			<h:panelGrid id="search" columns="4" style="width:100%;"
-				styleClass="noBorders tr,noBorders td">
+			<p:panelGrid id="search" columns="4" styleClass="noBorders tr,noBorders td">
 
 
 				<h:outputLabel value="Committee No"></h:outputLabel>
@@ -33,19 +32,19 @@
 				<p:calendar value="#{committeBackingBean.managedBean.createdDt}"
 					showOn="button" />
 
-				<h:outputLabel value="Record Status" style="width:104px;"></h:outputLabel>
+				<h:outputLabel value="Committe Status" ></h:outputLabel>
 
-				<p:selectOneMenu style="width:61%;"
+				<p:selectOneMenu 
 					value="#{committeBackingBean.managedBean.status}">
 					<f:selectItem itemLabel="Select One" itemValue="" />
 					<f:selectItem itemLabel="Active" itemValue="1" />
 					<f:selectItem itemLabel="Non-Active" itemValue="2" />
 				</p:selectOneMenu>
 
-			</h:panelGrid>
-			<p:commandButton value="SEARCH" style="float:right;"
+			</p:panelGrid>
+			<p:commandButton value="Search" style="float:right;"
 				action="#{committeBackingBean.cloneSearchCommitteAction}"
-				update="clonesearchCommitte,cloneSearchResults" />
+				update="@(.cloneResults)" partialSubmit="true" process="@parent"/>
 			<br />
 			<br />
 		</p:panel>
@@ -53,7 +52,7 @@
 		<p:panel header="Results" toggleable="true">
 			<p:dataTable id="clonesearchCommitte"
 				value="#{committeBackingBean.managedBean.cloneSearchCommittes}"
-				var="committe">
+				var="committe" styleClass="cloneResults">
 
 
 				<p:column headerText="CommitteType">
@@ -75,19 +74,19 @@
 				</p:column>
 				<p:column headerText="Action">
 					<p:commandButton value="ClONE" style="float:right;"
-						action="#{committeBackingBean.cloneCommitteMembersAcition(committe.scCommittee.committeeId)}"
-						update="@(.cloneCommitteMembers)" />
+						action="#{committeBackingBean.cloneCommitteMembersAcition(committe.scCommittee.committeeId)}" partialSubmit="true" process="@this" update="@(.cloneCommitteMembers)"
+						 />
 				</p:column>
 			</p:dataTable>
 		</p:panel>
 
-		<p:panel header="Clone Committee Result" toggleable="true">
-			<h:panelGroup style="width:100%;">
-				<p:dataTable id="cloneSearchResults"
+		<p:panel id="cloneCommitteMembers" header="Clone Committee Result" toggleable="true">
+			
+				<p:dataTable 
 					value="#{committeBackingBean.managedBean.cloneCommitteMemebers}"
-					var="member" styleClass="cloneCommitteMembers"
-					rowKey="#{member.committeeMemberId}"
-					selection="#{committeBackingBean.managedBean.selectedCommitteMemebers}">
+					var="member" rowKey="#{member.committeeMemberId}"
+					selection="#{committeBackingBean.managedBean.selectedCommitteMemebers}" styleClass="cloneResults,cloneCommitteMembers">
+					
 					<p:column selectionMode="multiple" style="width:2%" />
 
 					<p:column headerText="Name">
@@ -117,7 +116,7 @@
 				<p:commandButton value="Clone" style="float:right;"
 					action="#{committeBackingBean.addCloneCommitteeMembersAction}"
 					oncomplete="screen2.hide();" update="committeMember"></p:commandButton>
-			</h:panelGroup>
+			
 		</p:panel>
 	</p:dialog>
 </ui:composition>

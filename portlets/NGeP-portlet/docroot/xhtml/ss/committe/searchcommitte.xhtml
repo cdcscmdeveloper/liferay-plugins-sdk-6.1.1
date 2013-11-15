@@ -8,7 +8,7 @@
 	
 	
 	<p:panel>
-		<h:panelGrid style="width:1000px;" styleClass="noBorders tr,noBorders td" ></h:panelGrid>
+		<h:panelGrid styleClass="noBorders tr,noBorders td" ></h:panelGrid>
     </p:panel>
 	
 	<p:panel header="SEARCH" toggleable="true">
@@ -32,7 +32,7 @@
 	<p:calendar value="#{committeBackingBean.managedBean.createdDt}"
 				 showOn="button" />
 	
-	<h:outputLabel value="Record Status" style="width:104px;"></h:outputLabel>
+	<h:outputLabel value="CommitteStatus" ></h:outputLabel>
 
 	 <p:selectOneMenu style="width:61%;" value="#{committeBackingBean.managedBean.status}">  
             <f:selectItem itemLabel="Select One" itemValue="" />  
@@ -48,8 +48,11 @@
 	</p:panel>
 	
 	<p:panel header="Results" toggleable="true">
-	<p:dataTable id="searchCommitte" value="#{committeBackingBean.managedBean.qtcommittees}" var="committe">
+	<p:dataTable id="searchCommitte" value="#{committeBackingBean.managedBean.qtcommittees}" var="committe" editable="true">
         
+  <p:ajax event="rowEdit" listener="#{committeBackingBean.goToMaintainceAction}" />  
+                 <p:ajax event="rowEditCancel"/> 
+				
  
         <p:column headerText="CommitteType" > 
         <h:outputLabel value="#{committe.scCommittee.committeeType}"></h:outputLabel>   
@@ -66,8 +69,11 @@
      <p:column headerText="ApprovalStatus" > 
          <h:outputLabel value="#{committe.scCommittee.approvalStatus}"></h:outputLabel>   
     </p:column>
-     <p:column headerText="RecordStatus"> 
+     <p:column headerText="CommitteStatus"> 
         <h:outputLabel value="#{committe.scCommittee.recordStatus}"></h:outputLabel>   
+    </p:column>
+    <p:column>
+    <p:rowEditor />
     </p:column>
      </p:dataTable>
 	</p:panel>

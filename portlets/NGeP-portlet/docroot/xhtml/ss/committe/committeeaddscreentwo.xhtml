@@ -14,11 +14,11 @@
 				styleClass="noBorders tr,noBorders td">
 				<h:outputLabel value="* Selection  " />
 				<p:selectOneRadio
-					value="#{committeBackingBean.managedBean.userSelection}">
+					value="#{committeBackingBean.managedBean.committeMember.userSelection}">
 					<f:selectItems
 						value="#{committeBackingBean.managedBean.selections}" />
 					<p:ajax event="click"
-						listener="#{committeBackingBean.advanceSearch}"
+						listener="#{committeBackingBean.userSelcetionAction}"
 						update="newProfile"></p:ajax>
 				</p:selectOneRadio>
 
@@ -31,7 +31,7 @@
 			<p:panel id="newProfile" style="width:100%">
 
 				<c:if
-					test="#{committeBackingBean.managedBean.userSelection eq 'P' }">
+					test="#{committeBackingBean.managedBean.committeMember.userSelection eq 'P' }">
 
 					<h:panelGrid columns="2" styleClass="noBorders tr,noBorders td">
 						<h:outputLabel value="* Type of User  " />
@@ -158,7 +158,7 @@
 				</c:if>
 
 				<c:if
-					test="#{committeBackingBean.managedBean.userSelection eq 'E' }">
+					test="#{committeBackingBean.managedBean.committeMember.userSelection eq 'E' }">
 					<h:panelGrid columns="2" styleClass="noBorders tr,noBorders td">
 						<h:outputLabel value="* Type of User  " />
 						<p:selectOneRadio
@@ -283,7 +283,7 @@
 				</c:if>
 
 				<c:if
-					test="#{committeBackingBean.managedBean.userSelection eq 'N'}">
+					test="#{committeBackingBean.managedBean.committeMember.userSelection eq 'N'}">
 					<h:panelGrid columns="2" styleClass="noBorders tr,noBorders td">
 						<h:outputLabel value="* Type of User  " />
 						<p:selectOneRadio
@@ -403,11 +403,10 @@
 				</c:if>
 
 			</p:panel>
-			<p:commandButton value="CANCEL" style="float:right;"
-				onclick="screen3.hide();"></p:commandButton>
-			<p:commandButton value="OK" style="float:right;"
-				action="#{committeBackingBean.addCommitteMember}"
-				oncomplete="screen3.hide();" update="committeMember" process="@all"></p:commandButton>
+			<p:commandButton value="CANCEL" style="float:right;" action="#{committeBackingBean.cancelCommitteAction}"
+				oncomplete="screen3.hide();" update="committeMember"></p:commandButton>
+			<p:commandButton value="OK" style="float:right;"				
+				onclick="screen3.hide();" update="committeMember"></p:commandButton>
 
 		</p:panel>
 	</p:dialog>

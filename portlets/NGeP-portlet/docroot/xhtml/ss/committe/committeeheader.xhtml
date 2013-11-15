@@ -24,14 +24,14 @@
             <f:selectItem itemLabel="FPB SBH" itemValue="11" />
             <f:selectItem itemLabel="FPB SRW" itemValue="12" />
             <f:selectItem itemLabel="BPK PB" itemValue="13" />
-			<p:ajax event="change" update="parentText, approvaldetails,committecheckbox" />
+			<p:ajax event="change" update="parentText, approvaldetails,committecheckbox" listener="#{committeBackingBean.resetCommitteDetails}"/>
          </p:selectOneMenu>
 
             <h:outputLabel value="Ministry Code/Name" />  
             <p:inputText readonly="true"/> 
                      			
 			<h:outputLabel value="Qtn/Tender No" />  
-            <p:inputText value="#{committeBackingBean.managedBean.tenderNum}"/>            
+            <p:inputText value="#{committeBackingBean.managedBean.qtCommittee.scQt.qtNo}"/>            
             
             <h:outputLabel value="Status" />  
             <p:inputText  readonly="true" />  

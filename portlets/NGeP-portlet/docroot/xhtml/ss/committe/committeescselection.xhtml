@@ -22,13 +22,13 @@
 		</h:panelGrid>
 		<br />
 
-		<h:panelGroup style="width:100%;">
+	
 			<p:dataTable id="committeMember"
 				value="#{committeBackingBean.managedBean.committemembers}"
-				var="committemember" rowIndexVar="index">
-				<p:column headerText="No">
-					<h:outputLabel value="#{index + 1}" />
-				</p:column>
+				var="committemember" rowIndexVar="index" editable="true">
+				 <p:ajax event="rowEdit" listener="#{committeBackingBean.onRowEditAction}" oncomplete="screen3.show();"  update="@(.qtAddMember)"/>  
+                 <p:ajax event="rowEditCancel" listener="#{committeBackingBean.onRowCancel}" update="committeMember"/> 
+				
 
 				<p:column headerText="Name">
 					<h:outputLabel value="#{committemember.memberName}" />
@@ -43,14 +43,17 @@
 				<p:column headerText="Access">
 					<h:outputLabel value="#{committemember.accessRight}" />
 				</p:column>
+				<p:column style="width:6%">  
+            <p:rowEditor />  
+        </p:column> 
 			
 			</p:dataTable>
-		</h:panelGroup>
+		
 
 		<div align="right">
 			<p:commandButton value="ADD"
-				action="#{committeBackingBean.showCommitteMember}"
-				oncomplete="screen3.show();" update="@(.qtAddMember)"></p:commandButton>
+				action="#{committeBackingBean.addCommitteMember}"
+				 process="@this" oncomplete="screen3.show();" update="@(.qtAddMember)"></p:commandButton>
 
 			<p:commandButton value="CLONE" onclick="screen2.show();" process="@this"></p:commandButton>
 		</div>
@@ -69,9 +72,9 @@
 			cellpadding="3">
 			<h:outputLabel style="bold" value="Approver Name: " />
 			<p:selectOneMenu
-				value="#{committeBackingBean.managedBean.approverId}"
+				value="#{committeBackingBean.managedBean.scCommittee.pmUser.userId}"
 				style="width: 120px;">
-				<f:selectItems value="#{committeBackingBean.managedBean.approvers}"></f:selectItems>
+				<f:selectItems value="#{committeBackingBean.managedBean.approvers}" var="approver" itemLabel="#{approver.userName}" itemValue="#{approver.userId}"></f:selectItems>
 			</p:selectOneMenu>
 
 			<h:outputLabel style="bold" value="Approver Date: " />
