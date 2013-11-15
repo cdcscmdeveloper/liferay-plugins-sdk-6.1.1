@@ -77,17 +77,14 @@
           <p:inputText  value="#{contractDetailsBackingBean.managedBean.contractValues.liquidatedDamage}" size="8" disabled="true"/>  
           <f:verbatim></f:verbatim>
           <p:outputLabel value="#{lbl['lbl.ct.cur']}" />
-          <p:selectOneMenu  disabled="true" style="width:60px;">
+          <p:selectOneMenu  disabled="true" style="width:65px;">
               <f:selectItems value="#{contractDetailsBackingBean.contractListItem.currency}" />
           </p:selectOneMenu>
             <h:outputLabel value="#{lbl['lbl.ct.dperiod']}"  />  
               <p:inputText  value="#{contractDetailsBackingBean.managedBean.contractValues.deliveryPeriod}" size="8" disabled="true"/>
             <f:verbatim></f:verbatim>    
              <p:outputLabel  value="#{lbl['lbl.ct.sfee']}" />  
-            <p:selectOneMenu  disabled="true"  value="#{contractDetailsBackingBean.managedBean.ctContract.serviceFee}"  style="width:60px;">
-               <f:selectItem itemLabel="0.4" itemValue="2"/>
-               <f:selectItem itemLabel="0.8" itemValue="3"/>    
-            </p:selectOneMenu>
+              <p:inputText  value="#{contractDetailsBackingBean.managedBean.ctContract.serviceFee}" style="width:55px;" disabled="true"/>
              <f:verbatim></f:verbatim>  
            
               <h:outputLabel rendered="#{contractDetailsBackingBean.managedBean.ctCircular.latestCircularVer.circularNo != null}" value="#{lbl['lbl.ct.circularNo']}"  />  
@@ -113,21 +110,17 @@
 		   </h:panelGrid>
 		 </h:panelGrid>
 		 
-          <h:panelGrid columns="4">
+          <h:panelGrid columns="6">
           <h:panelGroup>
             <div style="width:115px;">
               <h:outputLabel value="#{lbl['lbl.ct.owner']}" />  
             </div>
            </h:panelGroup>
-             <p:selectOneMenu disabled="false"   style="width:170px;">
-              <f:selectItems value="#{contractDetailsBackingBean.contractListItem.contractOwner}" />
-             </p:selectOneMenu>
-             <p:selectOneMenu  disabled="false" style="width:140px;">
-             <f:selectItems value="#{contractDetailsBackingBean.contractListItem.contractOwnerJabatan}" />
-             </p:selectOneMenu>
-             <p:selectOneMenu  disabled="false" style="width:120px;">
-               <f:selectItems value="#{contractDetailsBackingBean.contractListItem.contractOwnerPtj}" />
-             </p:selectOneMenu>
+            <p:inputText  value="PTJ" style="width:160px;" disabled="true"/>
+            <p:spacer width="1"/>
+            <p:inputText  value="MINISTRY" style="width:130px;" disabled="true"/>
+             <p:spacer width="1"/>
+            <p:inputText  value="JABATAN" style="width:110px;" disabled="true"/>
              </h:panelGrid>         
 	</h:panelGrid>
 	</p:panel>
