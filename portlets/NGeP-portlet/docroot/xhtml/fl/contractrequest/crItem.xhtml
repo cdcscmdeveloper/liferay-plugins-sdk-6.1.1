@@ -49,12 +49,6 @@
 		</table>
 	</p:panel>
 	<p:panel header="ITEM DETAIL" toggleable="true">
-		<table style="width: 775px;">
-			<tr>
-				<td colspan="6" align="right"><p:commandButton value="ACTION" />
-				</td>
-			</tr>
-		</table>
 		
 		<p:dataTable id="itemDataTable" var="item"
 			value="#{contractRequestBackingBean.managedBean.flRequest.flFulfilmentItems}"
@@ -94,11 +88,15 @@
 				<p:commandLink id="deleteLink" styleClass="ui-icon ui-icon-trash" />
 			</p:column>
 		</p:dataTable>
+		<table style="width: 775px;">
+			<tr>
+				<td colspan="6" align="right"><p:commandButton value="ACTION" rendered="#{contractRequestBackingBean.managedBean.selectedRowFlg}"/>
+				</td>
+			</tr>
+		</table>
 
-		<br />
-		<br />
 
-		<table style="width: 800px;">
+		<table style="width: 100%;text-align:right;" >
 			<tr>
 				<td colspan="4" align="right"><p:commandButton type="button"
 						icon="ui-icon-circle-triangle-w" /> <p:commandButton
@@ -135,7 +133,7 @@
 		<p:commandButton value="Add"
 			action="#{contractRequestBackingBean.addDeliveryAddr}"
 			oncomplete="addDeliveryAddr.hide();" process="@this,delAddr"
-			update="addressDataTable">
+			update="addressDataTable" styleClass="ppRightBtn">
 		</p:commandButton>
 		
 

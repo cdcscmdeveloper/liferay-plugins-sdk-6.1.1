@@ -8,100 +8,110 @@
 
 		
 		 <p:messages id="msgs"/>
+		 <table>
+		 	<tr>
+		 	<td><p:outputLabel value="For Mto Testing Purpose: "/></td>
+		 	<td><p:selectBooleanCheckbox value="#{contractRequestBackingBean.managedBean.mto}"/></td>
+		 	
+		 	
+		 	</tr>
+		 </table>
 		<p:panel header="FULFILMENT DETAIL" toggleable="true" id="flDetails">
 			<table>
+			
+			
 				<tr>
-					<td><p:outputLabel value="Ministry" /></td>
+					<td><p:outputLabel value="#{lbl['lbl.fl.ministry']}" /></td>
 					<td><p:inputText style="width: 260px;"
 							value="#{contractRequestBackingBean.managedBean.flRequest.createdOrgProfile.parentOrgProfile.parentOrgProfile.orgName}" disabled="true" /></td>
-					<td><p:outputLabel value="Contract Req. NO." /></td>
+					<td><p:outputLabel value="#{lbl['lbl.fl.contract.request.no']}" /></td>
 					<td><p:inputText style="width: 260px;" 
 							disabled="true" /></td>
 				</tr>
 				<tr>
-					<td><p:outputLabel value="* Issued Jabatan" /></td>
+					<td><p:outputLabel value="* #{lbl['lbl.fl.contract.request.no']}" /></td>
 					<td><p:selectOneMenu value="#{contractRequestBackingBean.managedBean.flRequest.issuedOrgProfile.orgProfileId}" style="width: 260px;">
 							<f:selectItems value="#{contractRequestBackingBean.divisionProfileList}" />
 							<p:ajax event="change" update="flDetails" process="@this"
 								listener="#{contractRequestBackingBean.checkPtjFlg}" />
 						</p:selectOneMenu></td>
-					<td><p:outputLabel value="MTO?" /></td>
+					<td><p:outputLabel value="#{lbl['lbl.fl.mto']}" /></td>
 					<td><p:selectBooleanCheckbox value="#{contractRequestBackingBean.managedBean.flRequest.mto}"/></td>
 				</tr>
 				<tr>
-					<td><p:outputLabel value="* Issued PTJ" /></td>
+					<td><p:outputLabel value="* #{lbl['lbl.fl.issued.ptj']}" /></td>
 					<td><p:selectOneMenu
 						disabled="#{contractRequestBackingBean.managedBean.checkPtjFlg}"
 						value="#{contractRequestBackingBean.managedBean.flRequest.issuedOrgProfile.orgProfileId}"
 						style="width: 260px;">
 						<f:selectItems value="#{contractRequestBackingBean.PTJList}" />
 					</p:selectOneMenu></td>
-					<td><p:outputLabel value="Contract NO." /></td>
+					<td><p:outputLabel value="#{lbl['lbl.fl.contract.no']}" /></td>
 					<td><p:inputText style="width: 260px;" value="#{contractRequestBackingBean.managedBean.flRequest.ctContract.contractName}"
 							disabled="true" /></td>
 				</tr>
 				<tr>
-					<td><p:outputLabel value="* Received Jabatan" /></td>
+					<td><p:outputLabel value="* #{lbl['lbl.fl.received.div']}" /></td>
 					<td><p:selectOneMenu value="#{contractRequestBackingBean.managedBean.flRequest.receivedOrgProfile.orgProfileId}" style="width: 260px;">
 							<f:selectItems value="#{contractRequestBackingBean.divisionProfileList}"/>
 						</p:selectOneMenu></td>
-					<td><p:outputLabel value="Contract Type" /></td>
+					<td><p:outputLabel value="#{lbl['lbl.fl.contract.type']}" /></td>
 					<td><p:inputText style="width: 260px;"
 							value="#{contractRequestBackingBean.managedBean.flRequest.ctContract.contractTypeCode.code}" disabled="true" /></td>
 				</tr>
 				<tr>
-					<td><p:outputLabel value="* Received PTJ" /></td>
+					<td><p:outputLabel value="* #{lbl['lbl.fl.received.ptj']}" /></td>
 					<td><p:selectOneMenu disabled="#{contractRequestBackingBean.managedBean.checkPtjFlg}" value="#{contractRequestBackingBean.managedBean.flRequest.receivedOrgProfile.orgProfileId}" style="width: 260px;">
 							<f:selectItems value="#{contractRequestBackingBean.PTJList}" />
 						</p:selectOneMenu></td>
-					<td><p:outputLabel value="Fulfillment Type" /></td>
+					<td><p:outputLabel value="#{lbl['lbl.fl.fulfilment.type']}" /></td>
 					<td><p:inputText style="width: 260px;"
 							value="#{contractRequestBackingBean.managedBean.flRequest.ctContract.fulfillmentTypeCode.code}" disabled="true" /></td>
 				</tr>
 				<tr>
-					<td rowspan="4"><p:outputLabel value="* Title" /></td>
+					<td rowspan="4"><p:outputLabel value="* #{lbl['lbl.fl.title']}" style="vertical-align:top;"/></td>
 					<td rowspan="4"><p:inputTextarea rows="8" style="width: 260px;" value="#{contractRequestBackingBean.managedBean.flRequest.title}"/></td>
 					<td><p:outputLabel value="Plan NO." /></td>
 					<td><p:inputText style="width: 260px;" value="#{contractRequestBackingBean.managedBean.flRequest.planId}"
 							disabled="true" /></td>
 				</tr>
 				<tr>
-					<td><p:outputLabel value="FS. NO." /></td>
+					<td><p:outputLabel value="#{lbl['lbl.fl.fs.no']}" /></td>
 					<td><p:inputText style="width: 260px;" 
 							disabled="true" /></td>
 				</tr>
 				<tr>
-					<td><p:outputLabel value="Creation Date" /></td>
+					<td><p:outputLabel value="#{lbl['lbl.fl.creation.date']}" /></td>
 					<td><p:inputText style="width: 260px;"
 							value="#{contractRequestBackingBean.managedBean.flRequest.createdDate}" disabled="true" /></td>
 				</tr>
 				<tr>
-					<td><p:outputLabel value="Status" /></td>
+					<td><p:outputLabel value="#{lbl['lbl.fl.status']}" /></td>
 					<td><p:inputText style="width: 260px;" value="#{contractRequestBackingBean.managedBean.flRequest.pmDocStatus.statusId}"
 							disabled="true" /></td>
 				</tr>
 				<tr>
-					<td><p:outputLabel value="*Financial Year" /></td>
+					<td><p:outputLabel value="* #{lbl['lbl.fl.financial.year']}" /></td>
 					<td><p:selectOneMenu value="#{contractRequestBackingBean.managedBean.flRequest.financialYear}" style="width: 260px;">
 							<f:selectItems itemLabel="2013" itemValue="1" />
 						</p:selectOneMenu></td>
-					<td><p:outputLabel value=" *Maksud  Code" /></td>
+					<td><p:outputLabel value=" * #{lbl['lbl.fl.maksud.code']}" /></td>
 					<td><p:selectOneMenu value="#{contractRequestBackingBean.managedBean.flRequest.maksudId}" style="width: 260px;">
 							<f:selectItems value="#{contractRequestBackingBean.maksudCodeList}" />
 						</p:selectOneMenu></td>
 				</tr>
 				<tr>
-					<td><p:outputLabel value="*AG Office" /></td>
+					<td><p:outputLabel value="* #{lbl['lbl.fl.ag.office']}" /></td>
 					<td><p:selectOneMenu value="#{contractRequestBackingBean.managedBean.flRequest.orgProfileAgoId}" style="width: 260px;">
 							<f:selectItems itemLabel="002 KAWANGAN KL" itemValue="1" />
 						</p:selectOneMenu></td>
-					<td><p:outputLabel value="*Charge PTJ" /></td>
+					<td><p:outputLabel value="* #{lbl['lbl.fl.charged.ptj']}" /></td>
 					<td><p:selectOneMenu disabled="#{contractRequestBackingBean.managedBean.checkPtjFlg}" style="width: 260px;">
 							<f:selectItems value="#{contractRequestBackingBean.PTJList}" />
 						</p:selectOneMenu></td>
 				</tr>
 				<tr>
-					<td><p:outputLabel value="Financing?" /></td>
+					<td><p:outputLabel value="#{lbl['lbl.fl.financing']}" /></td>
 					<td><p:selectBooleanCheckbox value="#{contractRequestBackingBean.managedBean.flRequest.financingLoan}"/></td>
 
 				</tr>
