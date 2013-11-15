@@ -164,32 +164,38 @@
 	</ui:fragment>
 
 	<p:panel>
-		<h:panelGrid columns="2"
+		<!-- <h:panelGrid columns="2"
 			columnClasses="columnWidth20,columnWidth30,columnWidth20,columnWidth30"
-			styleClass="noBorders tr,noBorders td">
-
-
+			styleClass="noBorders tr,noBorders td"> -->
+           <table>
+            <tr>
+            <td>
 			<p:outputLabel value="Status"></p:outputLabel>
-
+            </td>
+            <td>
 			<p:inputText
 				value="#{approvalCategory.scQtApproval.statusId}"
 				readonly="true"></p:inputText>
-		</h:panelGrid>
+				</td>
+				</tr>
+	<!-- 	</h:panelGrid> -->
 
-		<h:panelGrid columns="4"
+	<!-- 	<h:panelGrid columns="4"
 			columnClasses="columnWidth20,columnWidth30,columnWidth20,columnWidth30"
-			styleClass="noBorders tr,noBorders td">
+			styleClass="noBorders tr,noBorders td"> -->
+			<tr>
+            <td>
 			<p:outputLabel value="Letter No"></p:outputLabel>
-
+             </td>
+             <td>
 			<p:inputText
 				value="#{approvalCategory.scQtApproval.approverLetterNo}"></p:inputText>
-
-
-
+</td>
+<td style="width:40%">
 
 			<p:outputLabel value="Standard Document"></p:outputLabel>
-
-
+</td>
+<td>
 			<h:panelGroup>
 				<h:panelGrid columns="2">
 					<p:inputText
@@ -197,9 +203,10 @@
 					<p:commandButton value="UPLOAD"></p:commandButton>
 				</h:panelGrid>
 			</h:panelGroup>
-
-
-		</h:panelGrid>
+</td>
+</tr>
+</table>
+		<!-- </h:panelGrid> -->
 	</p:panel>
 
 
@@ -236,7 +243,7 @@
 
 			<p:outputLabel value="Remarks"></p:outputLabel>
 
-			<p:inputTextarea rows="3" cols="30" autoResize="false"
+			<p:inputTextarea rows="3" cols="50" autoResize="false"
 				value="#{approvalCategory.scQtApproval.requesterRemark}"></p:inputTextarea>
 
 
