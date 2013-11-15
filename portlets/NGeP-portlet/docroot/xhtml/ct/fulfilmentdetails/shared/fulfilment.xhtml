@@ -8,86 +8,89 @@
 	 <p:panel id="fd" header="#{lbl['lbl.ct.panel.name']}" toggleable="true"  toggleSpeed="500">
       <h:panelGrid columns="5" style="width:800px;">  
          <p:outputLabel  value="#{lbl['lbl.ct.cno']}"/>  
-         <p:inputText  value="#{contractDetailsBackingBean.managedBean.contractValues.contractNo}"  disabled="false" style="width:170px;" />  
+         <p:inputText  value="#{contractDetailsBackingBean.managedBean.contractValues.contractNo}"  disabled="true" style="width:170px;" />  
          <p:outputLabel  value="#{lbl['lbl.ct.sourcingType']}"/>  
-         <p:selectOneMenu disabled="false" value="Tender"  style="width:180px;" >
+         <p:selectOneMenu disabled="true" value="Tender"  style="width:180px;" >
             <f:selectItems value="#{contractDetailsBackingBean.contractListItem.sourcingType}" />
          </p:selectOneMenu>
-         <h:panelGrid columns="2">
-            <p:selectBooleanCheckbox value="#{contractDetailsBackingBean.managedBean.contractValues.agreement}"  disabled="false"/> 
-            <p:outputLabel  value="#{lbl['lbl.ct.agreement']}" />
-         </h:panelGrid>    
+          <h:panelGrid columns="2">
+             <p:selectBooleanCheckbox value="#{contractDetailsBackingBean.managedBean.contractValues.exempted}" disabled="false"/> 
+             <p:outputLabel value="Exempted" />
+          </h:panelGrid> 
          <p:outputLabel value="#{lbl['lbl.ct.contractType']}"/>  
-          <p:selectOneMenu disabled="false" style="width:180px;">
+          <p:selectOneMenu disabled="true" style="width:180px;">
              <f:selectItems value="#{contractDetailsBackingBean.getDropdownValues(PmCodeCatConst.contractType)}" />
          </p:selectOneMenu> 
          <p:outputLabel value="#{lbl['lbl.ct.sourcingCategory']}" />  
-         <p:selectOneMenu disabled="false" style="width:180px;">
+         <p:selectOneMenu disabled="true" style="width:180px;">
              <f:selectItems value="#{contractDetailsBackingBean.getDropdownValues(PmCodeCatConst.quotationCategory)}" />
          </p:selectOneMenu> 
          <h:panelGrid columns="2">
              <p:selectBooleanCheckbox value="#{contractDetailsBackingBean.managedBean.contractValues.concession}" disabled="false"/> 
              <p:outputLabel value="Concession" />
-          </h:panelGrid>  
-          <p:outputLabel value="#{lbl['lbl.ct.createdDate']}" />  
-          <p:inputText  value="#{contractDetailsBackingBean.managedBean.ctContract.qtPublishDate}" style="width:170px;"   disabled="false">
+          </h:panelGrid> 
+           <p:outputLabel value="#{lbl['lbl.ct.loaNo']}"  />  
+          <p:inputText  value="#{contractDetailsBackingBean.managedBean.ctContract.qtLoaNo}" style="width:170px;" disabled="true"/>  
+          <p:outputLabel value="#{lbl['lbl.ct.loaDate']}" />  
+          <p:inputText  value="#{contractDetailsBackingBean.managedBean.ctContract.qtLoaDate}" style="width:170px;" disabled="true">
+          <f:convertDateTime pattern="MM/dd/yyyy" />
+          </p:inputText>  
+          <h:panelGrid columns="2">
+            <p:selectBooleanCheckbox value="#{contractDetailsBackingBean.managedBean.contractValues.agreement}"  disabled="true"/> 
+            <p:outputLabel  value="#{lbl['lbl.ct.agreement']}" />
+         </h:panelGrid>     
+         <p:outputLabel value="#{lbl['lbl.ct.createdDate']}" />  
+          <p:inputText  value="#{contractDetailsBackingBean.managedBean.ctContract.qtPublishDate}" style="width:170px;"   disabled="true">
           <f:convertDateTime pattern="MM/dd/yyyy" />
           </p:inputText>  
           <p:outputLabel value="#{lbl['lbl.ct.publishingDate']}"  />  
-          <p:inputText  value="#{contractDetailsBackingBean.managedBean.ctContract.qtPublishDate}"  style="width:170px;" disabled="false">
+          <p:inputText  value="#{contractDetailsBackingBean.managedBean.ctContract.qtPublishDate}"  style="width:170px;" disabled="true">
           <f:convertDateTime pattern="MM/dd/yyyy" />
-          </p:inputText>  
+          </p:inputText> 
           <h:panelGrid columns="2">
-             <p:selectBooleanCheckbox value="#{contractDetailsBackingBean.managedBean.contractValues.exempted}" disabled="false"/> 
-             <p:outputLabel value="Exempted" />
-          </h:panelGrid> 
-          <p:outputLabel value="#{lbl['lbl.ct.loaNo']}"  />  
-          <p:inputText  value="#{contractDetailsBackingBean.managedBean.ctContract.qtLoaNo}" style="width:170px;" disabled="false"/>  
-          <p:outputLabel value="#{lbl['lbl.ct.loaDate']}" />  
-          <p:inputText  value="#{contractDetailsBackingBean.managedBean.ctContract.qtLoaDate}" style="width:170px;" disabled="false">
-          <f:convertDateTime pattern="MM/dd/yyyy" />
-          </p:inputText>  
-          <h:panelGrid columns="2">
-             <p:selectBooleanCheckbox value="#{contractDetailsBackingBean.managedBean.ctContract.chkLocal}" disabled="false"/> 
+             <p:selectBooleanCheckbox value="#{contractDetailsBackingBean.managedBean.ctContract.chkLocal}" disabled="true"/> 
              <p:outputLabel  value="#{lbl['lbl.ct.localGoods']}"  />
           </h:panelGrid> 
-          <p:outputLabel  value="#{lbl['lbl.ct.contractAmount']}" />  
-          <p:inputText value="#{contractDetailsBackingBean.managedBean.contractValues.contractAmount}"   size="8"  disabled="false"/>  
+           <p:outputLabel value="#{lbl['lbl.ct.physicalNo']}" />  
+          <p:inputText  style="width:170px;"   disabled="true" />  
           <p:outputLabel  value="#{lbl['lbl.ct.fulfilmentType']}"/>  
-           <p:selectOneMenu disabled="false" style="width:180px;">
+           <p:selectOneMenu disabled="true" style="width:180px;">
              <f:selectItems value="#{contractDetailsBackingBean.getDropdownValues(PmCodeCatConst.fulfilmentType)}" />
          </p:selectOneMenu> 
           <h:panelGrid columns="2">
               <p:selectBooleanCheckbox value="#{contractDetailsBackingBean.managedBean.ctContract.chkImported}" 
-                 disabled="false"/> 
-              <p:outputLabel   value="#{lbl['lbl.ct.Igoods']}"/>
+                 disabled="true"/> 
+              <p:outputLabel value="#{lbl['lbl.ct.Igoods']}"/>
           </h:panelGrid>
-          <p:outputLabel value="#{lbl['lbl.ct.physicalNo']}" />  
-          <p:inputText  size="8"   disabled="false" />  
-          <h:outputLabel value="#{lbl['lbl.ct.liquidated']}"/>  
-          <p:inputText  value="#{contractDetailsBackingBean.managedBean.contractValues.liquidatedDamage}" size="8" disabled="false"/>  
-          <h:panelGrid columns="2">
-             <p:selectBooleanCheckbox value="#{contractDetailsBackingBean.managedBean.ctContract.chkMto}" disabled="false"/> 
+           <p:outputLabel  value="#{lbl['lbl.ct.effectiveDate']}"  />  
+               <p:calendar style="width:170px;" value="#{contractDetailsBackingBean.managedBean.contractValues.effDate}" id="popupCal1" showOn="button" />
+            <h:outputLabel value="#{lbl['lbl.ct.edate']}" />  
+             <p:calendar style="width:170px;" value="#{contractDetailsBackingBean.managedBean.contractValues.expDate}" id="popupCal" showOn="button" /> 
+           <h:panelGrid columns="2">
+             <p:selectBooleanCheckbox value="#{contractDetailsBackingBean.managedBean.ctContract.chkMto}" disabled="true"/> 
              <p:outputLabel  value="#{lbl['lbl.ct.mto']}" />
           </h:panelGrid>
+     
+         <p:outputLabel  value="#{lbl['lbl.ct.contractAmount']}" />  
+          <p:inputText value="#{contractDetailsBackingBean.managedBean.contractValues.contractAmount}"   size="8"  disabled="true"/>  
+          <h:outputLabel value="#{lbl['lbl.ct.liquidated']}"/>  
+          <p:inputText  value="#{contractDetailsBackingBean.managedBean.contractValues.liquidatedDamage}" size="8" disabled="true"/>  
+          <f:verbatim></f:verbatim>
           <p:outputLabel value="#{lbl['lbl.ct.cur']}" />
-          <p:selectOneMenu  disabled="false" style="width:60px;">
+          <p:selectOneMenu  disabled="true" style="width:60px;">
               <f:selectItems value="#{contractDetailsBackingBean.contractListItem.currency}" />
           </p:selectOneMenu>
             <h:outputLabel value="#{lbl['lbl.ct.dperiod']}"  />  
-              <p:inputText  value="#{contractDetailsBackingBean.managedBean.contractValues.deliveryPeriod}" size="8" disabled="false"/>
+              <p:inputText  value="#{contractDetailsBackingBean.managedBean.contractValues.deliveryPeriod}" size="8" disabled="true"/>
             <f:verbatim></f:verbatim>    
              <p:outputLabel  value="#{lbl['lbl.ct.sfee']}" />  
-            <p:selectOneMenu  disabled="false"  value="#{contractDetailsBackingBean.managedBean.ctContract.serviceFee}"  style="width:60px;">
+            <p:selectOneMenu  disabled="true"  value="#{contractDetailsBackingBean.managedBean.ctContract.serviceFee}"  style="width:60px;">
                <f:selectItem itemLabel="0.4" itemValue="2"/>
                <f:selectItem itemLabel="0.8" itemValue="3"/>    
             </p:selectOneMenu>
-             <p:outputLabel  value="#{lbl['lbl.ct.effectiveDate']}"  />  
-               <p:calendar style="width:170px;" value="#{contractDetailsBackingBean.managedBean.contractValues.effDate}" id="popupCal1" showOn="button" />
              <f:verbatim></f:verbatim>  
-            <h:outputLabel value="#{lbl['lbl.ct.edate']}" />  
-             <p:calendar style="width:170px;" value="#{contractDetailsBackingBean.managedBean.contractValues.expDate}" id="popupCal" showOn="button" /> 
-             <h:outputLabel rendered="#{contractDetailsBackingBean.managedBean.ctCircular.latestCircularVer.circularNo != null}" value="#{lbl['lbl.ct.circularNo']}"  />  
+           
+              <h:outputLabel rendered="#{contractDetailsBackingBean.managedBean.ctCircular.latestCircularVer.circularNo != null}" value="#{lbl['lbl.ct.circularNo']}"  />  
            <p:commandLink  rendered="#{contractDetailsBackingBean.managedBean.ctCircular.latestCircularVer.circularNo != null}"  style="margin-right:20px;" ajax="false">  
            <h:outputText value="#{contractDetailsBackingBean.managedBean.ctCircular.latestCircularVer.circularNo}"  styleClass="linkcommand" />  
            </p:commandLink> 
