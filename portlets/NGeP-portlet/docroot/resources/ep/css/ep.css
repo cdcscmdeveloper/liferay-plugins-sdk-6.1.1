@@ -2123,6 +2123,10 @@ table.ppThreePartsTable td {
 	height: 500px;
 	overflow: auto !important;
 }
+
+.ppNumericAlign{
+	text-align: right;
+}
 /*--------------------------       End PP Related      ------------------------------ */
 
 /*--------------------------       Custom Icons        ------------------------------ */
