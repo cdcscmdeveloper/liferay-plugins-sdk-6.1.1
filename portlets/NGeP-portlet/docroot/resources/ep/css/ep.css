@@ -3538,6 +3538,7 @@ textarea[disabled],input[type="text"][disabled],input[type="password"][disabled]
 	background-color: #EEEEEE;
 	padding: 10px;
 	border-radius: 10px;
+	margin-left: 10px;
 }
 
 .accordian-title {
@@ -3584,4 +3585,8 @@ textarea[disabled],input[type="text"][disabled],input[type="password"][disabled]
 
 .columnWidth30 {
 	width: 30%;
+}
+
+.ui-datagrid-row{
+	border-bottom:1px solid #EEE !important;
 }
