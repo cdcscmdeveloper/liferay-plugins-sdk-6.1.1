@@ -8,15 +8,105 @@
 
 	<p:panel header="Search" toggleable="true">
 		<p:commandLink value="Search Template"></p:commandLink>
-		<p:panelGrid columns="2" styleClass="noBorders tr,noBorders td">
+		<!-- <h:panelGrid columns="2"
+			
+			styleClass="noBorders tr,noBorders td">
 
-			<h:outputText value="Qtn/Tender No: "></h:outputText>
-			<h:inputText size="70" />
+			<h:outputLabel value="Template Title: "></h:outputLabel>
+			<h:inputText size="100" value="#{TemplateMBB.managedBean.scqtDoc.tplSpecMaster.specName}" />
 
-			<h:outputText value="Template Title: "></h:outputText>
-			<h:inputText size="100" />
+		</h:panelGrid>
+		<h:panelGrid columns="4"
+			columnClasses="columnWidth20,columnWidth30,columnWidth20,columnWidth30"
+			styleClass="noBorders tr,noBorders td">
 
-		</p:panelGrid>
+			<h:outputLabel value="Specification Type: "></h:outputLabel>
+
+			<p:selectOneMenu value="#{TemplateMBB.managedBean.searchSpecTypeId}">
+							<f:selectItems value="#{TemplateMBB.getDropdownValues(PmCodeCatConst.specificationType)}" />
+						</p:selectOneMenu>
+
+
+			<h:outputLabel value="Item Type: "></h:outputLabel>
+
+		
+				<p:selectOneMenu value="#{TemplateMBB.managedBean.searchItemTypeId}" >
+							<f:selectItems value="#{templateSpecBackingBean.getDropdownValues(PmCodeCatConst.itemType)}" />
+						</p:selectOneMenu>
+
+			<h:outputLabel value="Qtn/Tender No: "></h:outputLabel>
+
+			<p:inputText value="#{TemplateMBB.managedBean.scqtDoc.scQt.qtNo}" />
+
+
+
+			<h:outputLabel value="Procurement Category: "></h:outputLabel>
+
+
+
+			
+				<p:selectOneMenu value="#{TemplateMBB.managedBean.searchProcurementId}" >
+							<f:selectItems value="#{templateSpecBackingBean.getDropdownValues(PmCodeCatConst.procurementCategory)}" />
+						</p:selectOneMenu>
+
+
+
+		</h:panelGrid> -->
+		
+		
+		
+                        <table>
+<tr>
+<td style="width:30%">
+
+			<h:outputLabel value="Template Title: "></h:outputLabel>
+</td>
+<td>
+			<h:inputText size="70" value="#{TemplateMBB.managedBean.scqtDoc.tplSpecMaster.specName}" />
+</td>
+</tr>
+		<tr>
+<td  style="width:50%">
+
+			<h:outputLabel value="Specification Type: "></h:outputLabel>
+</td>
+<td>
+			<p:selectOneMenu value="#{TemplateMBB.managedBean.searchSpecTypeId}">
+							<f:selectItems value="#{TemplateMBB.getDropdownValues(PmCodeCatConst.specificationType)}" />
+						</p:selectOneMenu>
+</td>
+<td>
+			<h:outputLabel value="Item Type: "></h:outputLabel>
+</td>
+		<td>
+				<p:selectOneMenu value="#{TemplateMBB.managedBean.searchItemTypeId}" >
+							<f:selectItems value="#{templateSpecBackingBean.getDropdownValues(PmCodeCatConst.itemType)}" />
+						</p:selectOneMenu>
+</td>
+</tr>
+<tr>
+<td  style="width:30%">
+
+			<h:outputLabel value="Qtn/Tender No: "></h:outputLabel>
+</td>
+<td>
+			<p:inputText value="#{TemplateMBB.managedBean.scqtDoc.scQt.qtNo}" />
+
+</td>
+<td  style="width:50%">
+			<h:outputLabel value="Procurement Category: "></h:outputLabel>
+
+</td>
+<td>
+
+			
+				<p:selectOneMenu value="#{TemplateMBB.managedBean.searchProcurementId}" >
+							<f:selectItems value="#{templateSpecBackingBean.getDropdownValues(PmCodeCatConst.procurementCategory)}" />
+						</p:selectOneMenu>
+</td>
+</tr>
+</table>
+		
 		<div align="right">
 			<p:commandButton value="SEARCH" />
 		</div>
@@ -39,11 +129,32 @@
 				<p:column headerText=" Template Title">
 					<h:outputText value="Title#{index+1}"></h:outputText>
 				</p:column>
+				<p:column headerText="Specification Type">
+					<h:outputText value="#{index+1}" />
+				</p:column>
+				<p:column headerText="Item Type">
+					<h:outputText value="#{index+1}" />
+				</p:column>
+				<p:column headerText="Procurement Category">
+					<h:outputText value="#{index+1}" />
+				</p:column>
+				<p:column headerText="Qtn/Tender No">
+					<h:outputText value="#{index+1}" />
+				</p:column>
+				<p:column headerText="Status">
+					<h:outputText value="#{index+1}" />
+				</p:column>
+				<p:column headerText="Action">
+					   <p:commandLink>
+					<p:graphicImage library="ep/images/design" name="edit.png"
+						value="/resources/ep/images/design/edit.png" />
+
+				</p:commandLink>
+				</p:column>
 			</p:dataTable>
 		</h:panelGrid>
 		<div align="right" style="width: 950px;">
-			<p:commandButton value="CREATE"
-				action="#{TemplateMBB.editAction}" />
+			<p:commandButton value="CREATE" action="#{TemplateMBB.editAction}" />
 
 		</div>
 
