@@ -81,12 +81,6 @@ public class QTDetailManagedBean extends BaseManagedBean {
 	
 	private PmOrgProfile selectedUserMinistry;
 	private PmOrgProfile selectedUserDepartment;
-
-	private List<SelectItem> procurementModeItems;
-	private List<SelectItem> itemTypeList;
-	private List<SelectItem> tenderTypeList;
-	private List<SelectItem> lineItemList;
-	private List<SelectItem> itemOriginList;
 	
 	private List<PmOrgProfile> userMinistryList;
 	private List<PmOrgProfile> userDepartmentList;
@@ -458,38 +452,6 @@ public class QTDetailManagedBean extends BaseManagedBean {
 		this.selectedNodes = selectedNodes;
 	}
 
-	public List<SelectItem> getProcurementModeItems() {
-		return procurementModeItems;
-	}
-
-	public void setProcurementModeItems(List<SelectItem> procurementModeItems) {
-		this.procurementModeItems = procurementModeItems;
-	}
-
-	public List<SelectItem> getItemTypeList() {
-		return itemTypeList;
-	}
-
-	public void setItemTypeList(List<SelectItem> itemTypeList) {
-		this.itemTypeList = itemTypeList;
-	}
-
-	public List<SelectItem> getTenderTypeList() {
-		return tenderTypeList;
-	}
-
-	public void setTenderTypeList(List<SelectItem> tenderTypeList) {
-		this.tenderTypeList = tenderTypeList;
-	}
-
-	public List<SelectItem> getLineItemList() {
-		return lineItemList;
-	}
-
-	public void setLineItemList(List<SelectItem> lineItemList) {
-		this.lineItemList = lineItemList;
-	}
-
 	public List<PmCategoryL1> getCategoryL1s() {
 		return categoryL1s;
 	}
@@ -577,14 +539,6 @@ public class QTDetailManagedBean extends BaseManagedBean {
 
 	public void setQb(ScQtBriefing qb) {
 		this.qb = qb;
-	}
-
-	public List<SelectItem> getItemOriginList() {
-		return itemOriginList;
-	}
-
-	public void setItemOriginList(List<SelectItem> itemOriginList) {
-		this.itemOriginList = itemOriginList;
 	}
 
 	/**

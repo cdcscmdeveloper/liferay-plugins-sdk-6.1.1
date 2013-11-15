@@ -13,7 +13,7 @@
 			</h:column>
 			<h:column>
 				<p:selectOneMenu value="#{qTDetailBB.managedBean.qt.qtType}">
-					<f:selectItems value="#{qTDetailBB.managedBean.tenderTypeList}" />
+					<f:selectItems value="#{qTDetailBB.getDropdownCodeValues(PmCodeCatConst.quotationTenderType)}" />
 				</p:selectOneMenu>
 			</h:column>
 			<h:column>
@@ -21,7 +21,7 @@
 			</h:column>
 			<h:column>
 				<p:selectOneMenu value="#{qTDetailBB.managedBean.qt.itemOrigin}">
-					<f:selectItems value="#{qTDetailBB.managedBean.itemOriginList}" />
+					<f:selectItems value="#{qTDetailBB.getDropdownCodeValues(PmCodeCatConst.itemOrigin)}" />
 				</p:selectOneMenu>
 			</h:column>
 			<h:column>
@@ -29,7 +29,7 @@
 			</h:column>
 			<h:column>
 				<p:selectOneMenu value="#{qTDetailBB.managedBean.qt.itemType}">
-					<f:selectItems value="#{qTDetailBB.managedBean.itemTypeList}" />
+					<f:selectItems value="#{qTDetailBB.getDropdownCodeValues(PmCodeCatConst.scItemType)}" />
 				</p:selectOneMenu>
 			</h:column>
 			<h:column>
@@ -37,14 +37,14 @@
 			</h:column>
 			<h:column>
 				<p:inputText id="AsnTenderNo"
-					value="#{qTDetailBB.managedBean.qt.qtNo}" readonly="true" />
+					value="#{qTDetailBB.managedBean.qt.qtNo}" disabled="true" />
 			</h:column>
 			<h:column>
 				<h:outputLabel value="MTO" />
 			</h:column>
 			<h:column>
 				<p:inputText id="MTO" value="#{qTDetailBB.managedBean.qt.mto ? 'Yes' : 'No'}"
-					readonly="true" />
+					disabled="true" />
 			</h:column>
 			<h:column>
 				<h:outputLabel value="* RFP" />
@@ -68,7 +68,7 @@
 			</h:column>
 			<h:column>
 				<p:selectOneMenu value="#{qTDetailBB.managedBean.qt.responseRule}" style="width:220px;">
-					<f:selectItems value="#{qTDetailBB.managedBean.lineItemList}" />
+					<f:selectItems value="#{qTDetailBB.getDropdownCodeValues(PmCodeCatConst.responseRules)}" />
 				</p:selectOneMenu>
 			</h:column>
 		</h:panelGrid>

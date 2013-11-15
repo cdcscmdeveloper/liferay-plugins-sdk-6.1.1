@@ -15,7 +15,7 @@
 
 			<h:outputLabel value="#{lbl['lbl.so.procmode']}" />
 			<p:selectOneMenu value="#{qTDetailBB.managedBean.qtnTenderSearchBean.procurementMode}">
-				<f:selectItems value="#{qTDetailBB.procurementModeItems}" />
+				<f:selectItems value="#{qTDetailBB.getDropdownCodeValues(PmCodeCatConst.scProcurementMode)}" />
 			</p:selectOneMenu>
 
 			<h:outputLabel value="#{lbl['lbl.so.creatdtfrom']}" />

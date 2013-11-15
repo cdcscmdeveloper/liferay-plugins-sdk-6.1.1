@@ -50,7 +50,7 @@
 			<h:column>
 				<p:selectOneMenu
 					value="#{qTDetailBB.managedBean.qt.procurementMode}">
-					<f:selectItems value="#{qTDetailBB.procurementModeItems}" />
+					<f:selectItems value="#{qTDetailBB.getDropdownCodeValues(PmCodeCatConst.scProcurementMode)}" />
 				</p:selectOneMenu>
 			</h:column>
 			<h:column>

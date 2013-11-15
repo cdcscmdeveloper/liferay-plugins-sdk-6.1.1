@@ -10,7 +10,6 @@ import javax.faces.bean.ManagedBean;
 import javax.faces.bean.RequestScoped;
 import javax.faces.context.FacesContext;
 import javax.faces.event.ValueChangeEvent;
-import javax.faces.model.SelectItem;
 
 import my.ep.biz.bean.search.SearchBean;
 import my.ep.biz.bean.search.SearchBetweenValue;
@@ -54,11 +53,6 @@ import my.ep.util.lookupservice.EpEjbBusinessDelegate;
 import my.ep.web.bean.ss.quatationtender.QtnTenderSearchBean;
 import my.ep.web.managedbean.ss.quationtender.QTDetailManagedBean;
 import my.ep.web.ss.quationtender.common.QTConstants;
-import my.ep.web.type.ss.quationtender.ItemOrigin;
-import my.ep.web.type.ss.quationtender.ItemType;
-import my.ep.web.type.ss.quationtender.LineItem;
-import my.ep.web.type.ss.quationtender.QTType;
-import my.ep.web.type.ss.quationtender.SSProcurmentMode;
 import my.ep.web.util.FacesScopes;
 import my.ep.web.util.lookupservice.BusinessDelegate;
 
@@ -386,72 +380,6 @@ public class QTDetailBackingBean extends
 			this.getManagedBean().setUserMinistryList(userMinistryList);
 		}
 	}
-
-	private void populateTenderType() {
-		List<SelectItem> tenderTypeList = new ArrayList<SelectItem>();
-		tenderTypeList.add(new SelectItem("", "Select One"));
-		QTType[] tenderTypes = QTType.values();
-		for (QTType tenderType : tenderTypes) {
-			tenderTypeList.add(new SelectItem(tenderType.value(), tenderType
-					.name()));
-		}
-		this.getManagedBean().setTenderTypeList(tenderTypeList);
-
-	}
-
-	private void populateItemType() {
-		List<SelectItem> itemTypeList = new ArrayList<SelectItem>();
-		itemTypeList.add(new SelectItem("", "Select One"));
-		ItemType[] itemTypes = ItemType.values();
-		for (ItemType itemType : itemTypes) {
-			itemTypeList.add(new SelectItem(itemType.value(), itemType.name()));
-		}
-		this.getManagedBean().setItemTypeList(itemTypeList);
-
-	}
-
-	private void populateItemOrigin() {
-		List<SelectItem> itemOriginList = new ArrayList<SelectItem>();
-		itemOriginList.add(new SelectItem("", "Select One"));
-		ItemOrigin[] itemOrigins = ItemOrigin.values();
-		for (ItemOrigin itemOrigin : itemOrigins) {
-			itemOriginList.add(new SelectItem(itemOrigin.value(), itemOrigin
-					.name()));
-		}
-		this.getManagedBean().setItemOriginList(itemOriginList);
-	}
-
-	private void populateResponseRule() {
-		List<SelectItem> lineItemList = new ArrayList<SelectItem>();
-		lineItemList.add(new SelectItem("", "Select One"));
-		LineItem[] responseRules = LineItem.values();
-		for (LineItem responseRule : responseRules) {
-			lineItemList.add(new SelectItem(responseRule.value(), responseRule
-					.name()));
-		}
-		this.getManagedBean().setLineItemList(lineItemList);
-	}
-
-	public List<SelectItem> getProcurementModeItems() {
-		List<SelectItem> procurementModeItems = this.getManagedBean()
-				.getProcurementModeItems();
-
-		if (procurementModeItems == null) {
-			procurementModeItems = new ArrayList<SelectItem>();
-
-			procurementModeItems.add(new SelectItem("", "Select One"));
-
-			SSProcurmentMode[] procuementModes = SSProcurmentMode.values();
-			for (SSProcurmentMode mode : procuementModes) {
-				procurementModeItems.add(new SelectItem(mode.value(), mode
-						.name()));
-			}
-
-			this.getManagedBean().setProcurementModeItems(procurementModeItems);
-		}
-
-		return procurementModeItems;
-	}
 	
 	public List<PmGo> getGoList() {
 		debugLogger("getGoList");
@@ -484,10 +412,6 @@ public class QTDetailBackingBean extends
 		scQt.setPmOrgProfile(new PmOrgProfile());
 
 		populateUserMinistryList();
-		populateItemType();
-		populateTenderType();
-		populateResponseRule();
-		populateItemOrigin();
 
 		this.getManagedBean().setQt(scQt);
 

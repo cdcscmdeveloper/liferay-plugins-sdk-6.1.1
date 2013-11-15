@@ -12,7 +12,7 @@
 				<h:outputLabel value="Qtn/Tender No." />  
 			</h:column>
 			<h:column>
-				<p:inputText  value="#{qTDetailBB.managedBean.qt.qtNo}" readonly="true"/>
+				<p:inputText  value="#{qTDetailBB.managedBean.qt.qtNo}" disabled="true"/>
 			</h:column>
             <h:column>
             	<h:outputLabel value="Ministry Code/Name" />
@@ -33,7 +33,7 @@
 	            <c:if test="#{!qTDetailBB.managedBean.qt.brandNew}">
             		<p:inputText 
             			value="#{qTDetailBB.managedBean.qt.ministryOrgProfile.orgCode} - #{qTDetailBB.managedBean.qt.ministryOrgProfile.orgName}" 
-            			readonly="true" 
+            			disabled="true" 
             			size="35" />
             	</c:if>
             </h:column>
@@ -41,7 +41,7 @@
             	<h:outputLabel value="Status" />  
             </h:column>
             <h:column>
-            	<p:inputText  value="#{qTDetailBB.managedBean.qt.pmStatus}" readonly="true" />  
+            	<p:inputText  value="#{qTDetailBB.managedBean.qt.pmStatus.pmStatusDescs[0]}" disabled="true" />  
             </h:column>
             <h:column>
              	<h:outputLabel value="Department Code/Name" />  
@@ -62,7 +62,7 @@
 	            <c:if test="#{!qTDetailBB.managedBean.qt.brandNew}">
             		<p:inputText 
             			value="#{qTDetailBB.managedBean.qt.departmentOrgProfile.orgCode} - #{qTDetailBB.managedBean.qt.departmentOrgProfile.orgName}" 
-            			readonly="true"
+            			disabled="true"
             			size="35" />
             	</c:if>
            	</h:column>
@@ -70,7 +70,7 @@
            		<h:outputLabel value="Created Date" /> 
            	</h:column>
            	<h:column>
-           		<p:inputText value="#{qTDetailBB.managedBean.qt.createdDate}"  readonly="true"/>  
+           		<p:inputText value="#{qTDetailBB.managedBean.qt.createdDate}"  disabled="true"/>  
  			</h:column>
  			<h:column>
             	<h:outputLabel value="Divison Code/Name" />  
@@ -91,7 +91,7 @@
 	           	<c:if test="#{!qTDetailBB.managedBean.qt.brandNew}">
             		<p:inputText 
             			value="#{qTDetailBB.managedBean.qt.pmOrgProfile.orgCode} - #{qTDetailBB.managedBean.qt.pmOrgProfile.orgName}" 
-            			readonly="true"
+            			disabled="true"
             			size="35" />
             	</c:if>
             </h:column>       
