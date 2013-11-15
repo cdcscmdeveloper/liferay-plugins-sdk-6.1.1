@@ -264,7 +264,7 @@ public class TemplateMaintenanceBackingBean extends
 		 System.out.println("=========templateSpecRes========="+templateSpecRes.getSpecMaster().getSpecMasterId());
 
 			System.out.println("=====successfully template saved in db====");
-			try{
+		/*	try{
 			IQTDetailSO QtDetailsSO = BusinessDelegate.getInstance()
 					.getServiceObject("ss", IQTDetailSO.class);
 			System.out.println("manga Details Object" + QtDetailsSO);
@@ -277,26 +277,26 @@ public class TemplateMaintenanceBackingBean extends
 			System.out.println("=====quotationTndrSetValue======");
 			QuationTenderResDTO tenderResDTO=new QuationTenderResDTO();
 			
-			/*tenderResDTO = QtDetailsSO
-					.retriveQtByQtNumber(tenderReqDTO);*/
-		/*	System.out.println("========tenderResDTO====="
-					+ tenderResDTO.getQtDetail().getQtId());*/
-			/* ISpecificationSO SpecificationSO = BusinessDelegate.getInstance()
+			tenderResDTO = QtDetailsSO
+					.retriveQtByQtNumber(tenderReqDTO);
+			System.out.println("========tenderResDTO====="
+					+ tenderResDTO.getQtDetail().getQtId());
+			 ISpecificationSO SpecificationSO = BusinessDelegate.getInstance()
 					  .getServiceObject("ss", ISpecificationSO.class);
 					  System.out.println("manga Details Object"+QtDetailsSO);
-					*/
+					
 					SpecificationReqDTO specificationReqDTO = new SpecificationReqDTO();
 					ScQtDoc scQtDOc = new ScQtDoc();
 					ScQt scQt=new ScQt();
 					
 					scQtDOc.setScQt(scQt);
 					//scQtDOc.setTplDocMaster(null);
-					/*scQtDOc.setTplSpecMaster(templateSpecRes.getSpecMaster());
+					scQtDOc.setTplSpecMaster(templateSpecRes.getSpecMaster());
 				
 					scQtDOc.setQtZoneCriteriaId(this.getManagedBean().getScqtDoc()
 							.getQtZoneCriteriaId());
 					scQtDOc.setSupportDocReq(true);
-					specificationReqDTO.setScQtDoc(scQtDOc);*/
+					specificationReqDTO.setScQtDoc(scQtDOc);
 					List<ScQtDoc> docList=new ArrayList<ScQtDoc>();
 					System.out.println("====list===");
 					docList.add(scQtDOc);
@@ -314,7 +314,7 @@ public class TemplateMaintenanceBackingBean extends
 			}catch(Exception e){
 				e.printStackTrace();
 			}
-			
+			*/
 			
 		
 		} catch (Exception e) {
