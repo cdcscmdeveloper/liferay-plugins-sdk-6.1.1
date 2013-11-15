@@ -7,6 +7,7 @@ import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collections;
+import java.util.Date;
 import java.util.List;
 
 import javax.faces.bean.ManagedBean;
@@ -19,6 +20,7 @@ import javax.portlet.PortletRequest;
 
 import my.ep.biz.bean.search.ISearchBean;
 import my.ep.biz.bean.search.SearchBean;
+import my.ep.biz.bean.search.SearchBetweenValue;
 import my.ep.biz.bean.search.SearchFilterBean;
 import my.ep.biz.service.cm.codification.ICodificationSO;
 import my.ep.biz.service.ct.IContractSO;
@@ -85,6 +87,7 @@ import my.ep.web.backingbean.BaseBackingBean;
 import my.ep.web.constant.BpmOutcomeConst;
 import my.ep.web.constant.pp.ProcurementPlanConst;
 import my.ep.web.managedbean.pp.procurementplan.PlanManagedBean;
+import my.ep.web.ss.quationtender.common.QTConstants;
 import my.ep.web.util.FacesScopes;
 import my.ep.web.util.lookupservice.BusinessDelegate;
 import my.ep.web.util.pp.common.CommonMethod;
@@ -175,6 +178,23 @@ public class PlanBackingBean extends BaseBackingBean<PlanManagedBean>{
 			log.info("+ createdDateFilterBean: " + createdDateFilterBean.getSearchValue());
 			createdDateFilterBean.setSearchField("createdDate");
 			searchBean.getDataFilterBeans().add(createdDateFilterBean);
+			
+//			Date fromCreatedDate = qtnTenderSearchBean.getFromCreatedDate();
+//			Date toCreatedDate = qtnTenderSearchBean.getToCreatedDate();
+//			if (null != fromCreatedDate || toCreatedDate != null) {
+//				SearchFilterBean bean = new SearchFilterBean();
+//				bean.setSearchField(QTConstants.CREATED_DATE);
+//				bean.setSearchOperator(SearchOperator.OPERATOR_BETWEEN.value());
+//
+//				SearchBetweenValue<Date> betweenVal = new SearchBetweenValue<Date>(
+//						fromCreatedDate, toCreatedDate);
+//
+//				bean.setSearchValue(betweenVal);
+//				searchFilterBean.add(bean);
+//			}
+			
+			
+			
 		}
 		
 		reqDTO.setSearchBean(searchBean);
@@ -325,10 +345,13 @@ public class PlanBackingBean extends BaseBackingBean<PlanManagedBean>{
 					this.getManagedBean().getPlan().setPmRejectReasonIds(new ArrayList<Long>());
 					this.getManagedBean().getPlanMaster().setPpPlans(new ArrayList<PpPlan>());
 					this.getManagedBean().getPlanMaster().addPpPlans(this.getManagedBean().getPlan());
-				}else if("Draft".equals(taskName)){
-					//draft mode
-					this.getManagedBean().setViewMode(ProcurementPlanConst.MODE_DRAFT);
-					this.getManagedBean().getPlan().setEditable(true); 
+				}else{
+					log.info("Other Mode " + this.getManagedBean().getViewMode());
+					if(ProcurementPlanConst.MODE_DRAFT.equals(this.getManagedBean().getViewMode())){
+						this.getManagedBean().getPlan().setEditable(true); 
+						this.getManagedBean().setActions(ProcurementPlanConst.BPM_DEFAULT_ACTIONS);
+					}
+					
 				}
 				
 				
@@ -363,7 +386,8 @@ public class PlanBackingBean extends BaseBackingBean<PlanManagedBean>{
 		boolean isComplete = false;
 		try{
 			if(ppPlan!=null){
-				loadTask(ppPlan, null);
+				String taskName = ppPlan.isDraft() ? ProcurementPlanConst.MODE_DRAFT : ProcurementPlanConst.MODE_VIEW;
+				loadTask(ppPlan, taskName);
 				isComplete = true;
 			}else{
 				cleanPlanDetails();
@@ -2097,19 +2121,12 @@ public class PlanBackingBean extends BaseBackingBean<PlanManagedBean>{
 				}
 				
 				for(PpPlan epPlan:this.getManagedBean().getPlanMaster().getPpPlans()){
-					epPlan.setPlanNo(CommonMethod.generatePlanNumber(true, this.getManagedBean().getPlanMaster().getPlanType(), null));
+					epPlan.setTempPlanNo(CommonMethod.generatePlanNumber(true, this.getManagedBean().getPlanMaster().getPlanType(), null));
 					epPlan = clonePlan(this.getManagedBean().getPlan(), epPlan);
 					
 					
 				}
-				for(PpPlan epPlan:this.getManagedBean().getPlanMaster().getPpPlans()){
-					System.out.println("after.....cloned..");
-					System.out.println("plan...plan id " + epPlan.getPlanNo());
-					for(PpPlanActor pvo: epPlan.getPpPlanActors()){
-						System.out.println("actor...plan id " +pvo.getPpPlan().getPlanNo());
-					}
-				}
-			
+
 
 				//for favourite plan
 				if(ProcurementPlanConst.FAVOURITE_TYPE_PLAN.equals(this.getManagedBean().getPlan().getFavouriteOption())){
@@ -2134,7 +2151,7 @@ public class PlanBackingBean extends BaseBackingBean<PlanManagedBean>{
 			}else if(ProcurementPlanConst.PLAN_TYPE_PROCUREMENT.equals(this.getManagedBean().getSelectedPlanMaster().getPlanType())){
 				//only one plan
 				if(this.getManagedBean().getPlanMaster().isBrandNew()){
-					this.getManagedBean().getPlan().setPlanNo(CommonMethod.generatePlanNumber(true, this.getManagedBean().getPlanMaster().getPlanType(), null));
+					this.getManagedBean().getPlan().setTempPlanNo(CommonMethod.generatePlanNumber(true, this.getManagedBean().getPlanMaster().getPlanType(), null));
 					this.getManagedBean().getPlanMaster().addPpPlans(this.getManagedBean().getPlan());
 				}
 				
@@ -2192,7 +2209,10 @@ public class PlanBackingBean extends BaseBackingBean<PlanManagedBean>{
 		boolean brandNew = this.getManagedBean().getSelectedPlanMaster().isBrandNew();
 		if (!brandNew) {
 			getCompletePlanMaster();
-			isSuccess = updatePlanMaster(action);
+//			if(ProcurementPlanConst.MODE_DRAFT.equals(this.getManagedBean().getViewMode())){
+				isSuccess = updatePlanMaster(action);
+//			}
+			
 			
 		} else {
 			getCompletePlanMaster();
@@ -2303,7 +2323,6 @@ public class PlanBackingBean extends BaseBackingBean<PlanManagedBean>{
 		if(profile!=null){
 			System.out.println("not null");
 		}else{
-			System.out.println("null");
 			System.out.println(profile.getOrgCode());
 		}
 		System.out.println(profile!=null?profile.getOrgName():"xx");

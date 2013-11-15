@@ -51,22 +51,22 @@ xmlns:c="http://java.sun.com/jsp/jstl/core">
    						<td>
    							<p:inputText value="#{planBackingBean.planNumberFilterBean.searchValue}" />
 						</td>
-   						<th><p:outputLabel value="#{lbl['lbl.pp.plan.created.date']}"/></th>
-   						<td>
-   							<p:calendar showOn="button" pattern="MM/dd/yyyy" value="#{planBackingBean.createdDateFilterBean.searchValue}"/> 
-						</td>
-   						<td>
-   							&nbsp;
-   						</td>
-   					</tr>
-   					<tr>
-   						<th><p:outputLabel value="#{lbl['lbl.pp.status']}"/></th>
+							<th><p:outputLabel value="#{lbl['lbl.pp.status']}"/></th>
    						<td>
     						<p:selectOneMenu value="#{planBackingBean.statusFilterBean.searchValue}">
 								<f:selectItem itemLabel="#{lbl['lbl.select']}" itemValue="0"/>
 								<f:selectItem itemLabel="New" itemValue="10005"/>
 							</p:selectOneMenu>
    						</td>
+   						<td>
+   							&nbsp;
+   						</td>
+   					</tr>
+   					<tr>
+   						<th><p:outputLabel value="#{lbl['lbl.pp.from.created.date']}"/></th>
+   						<td>
+   							<p:calendar showOn="button" pattern="MM/dd/yyyy" value="#{planBackingBean.createdDateFilterBean.searchValue}"/> 
+						</td>
    						<th>&nbsp;</th>
    						<td>&nbsp;</td>
    						<td>&nbsp;</td>
@@ -90,7 +90,7 @@ xmlns:c="http://java.sun.com/jsp/jstl/core">
 					emptyMessage="#{lbl['lbl.pp.no.record.found']}">  
 			 		 
                     <p:column headerText="#{lbl['lbl.pp.details']}">  
-                       <p:commandLink id="clPlanDetails" action="#{planBackingBean.redirectToPlanContent(ppPlan)">  
+                       <p:commandLink id="clPlanDetails" action="#{planBackingBean.redirectToPlanContent(ppPlan)}">  
 				        	#{lbl['lbl.pp.details']}
 				       </p:commandLink>  
                     </p:column> 

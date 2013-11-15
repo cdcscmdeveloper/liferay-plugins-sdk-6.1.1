@@ -59,6 +59,10 @@ public class CommonMethod {
 		String titleLabel = "";
 		if(ProcurementPlanConst.MODE_NEW.equals(viewMode)){
 			pageTitle = "lbl.pp." + progType + ".title.new";
+		}else if(ProcurementPlanConst.MODE_DRAFT.equals(viewMode)){
+			pageTitle = "lbl.pp." + progType + ".title.draft";
+		}else if(ProcurementPlanConst.MODE_VIEW.equals(viewMode)){
+			pageTitle = "lbl.pp." + progType + ".title.view";
 		}else if(ProcurementPlanConst.MODE_LIST.equals(viewMode)){
 			pageTitle = "lbl.pp." + progType + ".title.list";
 		}else if(ProcurementPlanConst.MODE_APPROVAL.equals(viewMode)){

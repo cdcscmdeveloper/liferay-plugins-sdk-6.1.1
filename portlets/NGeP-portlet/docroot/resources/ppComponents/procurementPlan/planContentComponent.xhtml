@@ -319,6 +319,8 @@ xmlns:composite="http://java.sun.com/jsf/composite">
 													|| !cc.attrs.selectedPlan.brandNew}">
 												<f:selectItem itemLabel="#{lbl['lbl.select']}" itemValue="0" />
 												<f:selectItem itemLabel="Khai" itemValue="2" />
+												<f:selectItem itemLabel="Tan" itemValue="3" />
+												<f:selectItem itemLabel="Alex" itemValue="4" />
 												<p:ajax event="change" listener="#{planBackingBean.test}" />
 											</p:selectOneMenu>
 										</ui:fragment>
@@ -328,7 +330,9 @@ xmlns:composite="http://java.sun.com/jsf/composite">
 													|| !cc.attrs.selectedPlan.multiLevel
 													|| !cc.attrs.selectedPlan.brandNew}">
 												<f:selectItem itemLabel="#{lbl['lbl.select']}" itemValue="0" />
-												<f:selectItem itemLabel="Tan" itemValue="2" />
+												<f:selectItem itemLabel="Khai" itemValue="2" />
+												<f:selectItem itemLabel="Tan" itemValue="3" />
+												<f:selectItem itemLabel="Alex" itemValue="4" />
 											</p:selectOneMenu>
 										</ui:fragment>
 										<br/>
