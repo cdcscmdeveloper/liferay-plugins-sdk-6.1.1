@@ -15,6 +15,7 @@ import my.ep.persistence.entity.pp.procurementplan.PpPlan;
 import my.ep.persistence.entity.pp.procurementplan.PpPlanItem;
 import my.ep.persistence.entity.pp.procurementplan.PpPlanMaster;
 import my.ep.persistence.entity.pp.procurementplan.PpQtActivity;
+import my.ep.web.bean.pp.ProcurementPlanSearchBean;
 import my.ep.web.managedbean.BaseManagedBean;
 
 @ManagedBean(name = "planManagedBean")
@@ -67,7 +68,7 @@ public class PlanManagedBean extends BaseManagedBean{
 	
 	private String dynamicDetailsName;
 
-//	private String votType;
+	private ProcurementPlanSearchBean ppSearchPlan;
 	
 	private List <PpBudgetAllocDtl> budgetAllocDtlList;
 	
@@ -646,6 +647,22 @@ public class PlanManagedBean extends BaseManagedBean{
 	 */
 	public void setReasonRejectOther(boolean reasonRejectOther) {
 		this.reasonRejectOther = reasonRejectOther;
+	}
+
+	/**
+	 * @return the ppSearchPlan
+	 */
+	public ProcurementPlanSearchBean getPpSearchPlan() {
+		if(ppSearchPlan==null)
+			ppSearchPlan = new ProcurementPlanSearchBean();
+		return ppSearchPlan;
+	}
+
+	/**
+	 * @param ppSearchPlan the ppSearchPlan to set
+	 */
+	public void setPpSearchPlan(ProcurementPlanSearchBean ppSearchPlan) {
+		this.ppSearchPlan = ppSearchPlan;
 	}
 
 
