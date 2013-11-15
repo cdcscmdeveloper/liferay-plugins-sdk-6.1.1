@@ -30,6 +30,9 @@ public class TemplateMaintenanceManagedBean extends BaseManagedBean  {
 	public ScQtDoc scqtDoc;
 	private String ministryName;
 	public List<ScQtCheckList> supportDocList;
+	private Long searchItemTypeId;
+	private Long searchSpecTypeId;
+	private Long searchProcurementId;
 	public TemplateMaintenanceManagedBean(){
 		scqtDoc=new ScQtDoc();
 		/*getScqtDoc().setTplSpecMaster(new TplSpecMaster());
@@ -111,6 +114,42 @@ public class TemplateMaintenanceManagedBean extends BaseManagedBean  {
 	 */
 	public void setSupportDocList(List<ScQtCheckList> supportDocList) {
 		this.supportDocList = supportDocList;
+	}
+	/**
+	 * @return the searchItemTypeId
+	 */
+	public Long getSearchItemTypeId() {
+		return searchItemTypeId;
+	}
+	/**
+	 * @param searchItemTypeId the searchItemTypeId to set
+	 */
+	public void setSearchItemTypeId(Long searchItemTypeId) {
+		this.searchItemTypeId = searchItemTypeId;
+	}
+	/**
+	 * @return the searchSpecTypeId
+	 */
+	public Long getSearchSpecTypeId() {
+		return searchSpecTypeId;
+	}
+	/**
+	 * @param searchSpecTypeId the searchSpecTypeId to set
+	 */
+	public void setSearchSpecTypeId(Long searchSpecTypeId) {
+		this.searchSpecTypeId = searchSpecTypeId;
+	}
+	/**
+	 * @return the searchProcurementId
+	 */
+	public Long getSearchProcurementId() {
+		return searchProcurementId;
+	}
+	/**
+	 * @param searchProcurementId the searchProcurementId to set
+	 */
+	public void setSearchProcurementId(Long searchProcurementId) {
+		this.searchProcurementId = searchProcurementId;
 	}
 
 }
