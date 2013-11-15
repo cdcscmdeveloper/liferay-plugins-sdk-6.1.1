@@ -3455,8 +3455,9 @@ textarea[disabled],input[type="text"][disabled],input[type="password"][disabled]
 
 .catMenu {
 	background-color: #F9F9F9;
-	width: 35%;
-	padding-left: 650px;
+	padding-left: 920px;
+	padding-top: 5px;
+	padding-bottom: 5px;
 }
 
 .ui-widget input, .ui-widget select, .ui-widget textarea, .ui-widget button {
@@ -3587,6 +3588,3 @@ textarea[disabled],input[type="text"][disabled],input[type="password"][disabled]
 	width: 30%;
 }
 
-.ui-datagrid-row{
-	border-bottom:1px solid #EEE !important;
-}
