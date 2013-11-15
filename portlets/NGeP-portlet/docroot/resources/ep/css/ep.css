@@ -3535,11 +3535,46 @@ textarea[disabled],input[type="text"][disabled],input[type="password"][disabled]
 }
 
 .accordian-panel {
-	background-color: #cecece;
+	background-color: #EEEEEE;
+	padding: 10px;
+	border-radius: 10px;
 }
 
 .accordian-title {
 	float: none;
+	font-size: 14px;
+	font-weight: bold;
+}
+
+.ui-accordion .ui-accordion-header {
+	border-bottom: 1px solid #333333;
+	z-index: 1;
+	background: #EEEEEE; /* Old browsers */
+	background: -moz-linear-gradient(top, #FFFFFF 0%, #EEEEEE 100%);
+	/* FF3.6+ */
+	background: -webkit-gradient(linear, left top, left bottom, color-stop(0%, #FFFFFF),
+		color-stop(100%, #EEEEEE) ); /* Chrome,Safari4+ */
+	background: -webkit-linear-gradient(top, #FFFFFF 0%, #EEEEEE 100%);
+	/* Chrome10+,Safari5.1+ */
+	background: -o-linear-gradient(top, #FFFFFF 0%, #EEEEEE 100%);
+	/* Opera 11.10+ */
+	background: -ms-linear-gradient(top, #FFFFFF 0%, #EEEEEE 100%);
+	/* IE10+ */
+	background: linear-gradient(to bottom, #FFFFFF 0%, #EEEEEE 100%);
+	/* W3C */
+	filter: progid:DXImageTransform.Microsoft.gradient(  startColorstr='#FFFFFF',
+		endColorstr='#EEEEEE', GradientType=0 ); /* IE6-8 */
+}
+
+.ui-accordion .ui-accordion-header .ui-icon {
+	float: right;
+	left: 0;
+	margin: 5px 5px 0 0;
+	position: relative;
+}
+
+.ui-accordion .ui-accordion-header a {
+	padding: 5px 0 5px 10px;
 }
 /*--------------------------       End Custom CSS       --------------------------- */
 
