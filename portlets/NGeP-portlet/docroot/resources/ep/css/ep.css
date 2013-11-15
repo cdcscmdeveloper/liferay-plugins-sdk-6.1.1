@@ -3231,6 +3231,44 @@ important
 
 
 }
+
+.ui-icon-cart {
+	background-image: url(#{ resource [ 'ep/images/design:cart.png' ]
+}
+
+)
+!
+important
+;
+
+	
+background-position
+:
+ 
+center
+;
+
+	
+border-radius
+:
+ 
+0
+px
+;
+
+	
+height
+:
+ 
+16
+px
+ 
+!
+important
+;
+
+
+}
 /*--------------------------       End Custom Icons    ------------------------------ */
 
 /*--------------------------       Custom CSS          ------------------------------ */
@@ -3494,6 +3532,14 @@ textarea[disabled],input[type="text"][disabled],input[type="password"][disabled]
 
 .ui-panelgrid {
 	width: 100%;
+}
+
+.accordian-panel {
+	background-color: #cecece;
+}
+
+.accordian-title {
+	float: none;
 }
 /*--------------------------       End Custom CSS       --------------------------- */
 
