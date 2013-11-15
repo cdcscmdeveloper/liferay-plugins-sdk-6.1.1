@@ -21,16 +21,21 @@
 		</div>
 		<p:panel header="Template" toggleable="true">
 			
-			<h:panelGrid columns="4"
+			<!-- <h:panelGrid columns="4"
 				columnClasses="columnWidth20,columnWidth30,columnWidth20,columnWidth30"
-				styleClass="noBorders tr,noBorders td">
-
+				styleClass="noBorders tr,noBorders td"> -->
+                <table>
+                <tr>
+                <td>
 				<h:outputLabel value="Qtn/Tender No: "></h:outputLabel>
-
+             </td>
+             <td>
 				<p:inputText value="#{TemplateMBB.managedBean.scqtDoc.scQt.qtNo}" />
-
+              </td>
+              <td>
 				<h:outputLabel value="Specification Type: "></h:outputLabel>
-
+</td>
+<td>
 				<p:selectOneMenu
 					value="#{TemplateMBB.managedBean.specificationType}">
 					<f:selectItem itemLabel="Select One" itemValue=" " />
@@ -38,59 +43,69 @@
 					<f:selectItem itemLabel="Financial" itemValue="2" />
 					<p:ajax update="estimated,price"></p:ajax>
 				</p:selectOneMenu>
-
+</td>
+</tr>
+ <tr>
+                <td>
 				<h:outputLabel value="Procurement Category: "></h:outputLabel>
+				</td>
+				 <td>
 				<p:inputText
 					value="#{TemplateMBB.managedBean.scqtDoc.tplSpecMaster.procurementCategory.codeId}" />
-
+</td>
+<td>
 
 				<h:outputLabel value="Item Type: "></h:outputLabel>
-
+</td><td>
 				<p:inputText
 					value="#{TemplateMBB.managedBean.scqtDoc.tplSpecMaster.itemTypeCode.codeId}" />
-			</h:panelGrid>
-			<h:panelGrid columns="2">
+					</td>
+					</tr>
+			<!-- </h:panelGrid>
+			<h:panelGrid columns="2"> -->
+			<tr>
+			<td>
 				<h:outputLabel value="Checklist: "></h:outputLabel>
-
+            </td><td>
 				<p:selectOneMenu
 					value="#{TemplateMBB.managedBean.specificationType}">
 					<f:selectItem itemLabel="Select One" itemValue="0" />
 					<f:selectItem itemLabel="Stagetwo" itemValue="1" />
 					<f:selectItem itemLabel="StagetwoAdd" itemValue="2" />
 				</p:selectOneMenu>
+				</td></tr><tr><td>
 				<h:outputLabel value="Title: "></h:outputLabel>
-
-				<p:inputText size="100"
+              </td><td>
+				<p:inputText size="50"
 					value="#{TemplateMBB.managedBean.scqtDoc.tplSpecMaster.specName}" />
-
+               </td></tr><tr><td>
 
 
 
 
 				<h:outputLabel value="Description: "></h:outputLabel>
-
-				<p:inputTextarea rows="3" cols="100" autoResize="false"
+</td><td>
+				<p:inputTextarea rows="3" cols="50" autoResize="false"
 					value="#{TemplateMBB.managedBean.scqtDoc.tplSpecMaster.specDesc}" />
-
-			</h:panelGrid>
+</td></tr>
+			<!-- </h:panelGrid>
 
 			<p:panelGrid styleClass="noBorders tr,noBorders td" style="width:70%">
 				<p:row>
-					<p:column>
+					<p:column> -->
+					<tr>
+					<td>
 						<h:outputLabel value="Zone: " />
-					</p:column>
-					<!--   <p:inputText id="zone" disabled="#{TemplateMBB.managedBean.specificationType ne '2'}"></p:inputText> -->
-					<p:column>
+						</td>
+					<td>
 						<p:selectOneMenu id="zone"
 							value="#{TemplateMBB.managedBean.scqtDoc.qtZoneCriteriaId}">
 							<f:selectItems
 								value="#{templateSpecBackingBean.getDropdownValues(PmCodeCatConst.zonalCategory)}" />
 						</p:selectOneMenu>
-					</p:column>
-					<p:column>
+					</td><td>
 						<h:outputLabel value="Estimated Cost Required: " />
-					</p:column>
-					<p:column>
+					</td><td>
 						<p:selectOneRadio id="estimated"
 							disabled="#{TemplateMBB.managedBean.specificationType ne '2'}"
 							value="#{TemplateMBB.managedBean.scqtDoc.tplSpecMaster.estCostReq}">
@@ -98,20 +113,16 @@
 							<f:selectItem itemLabel="No" itemValue="false" />
 
 						</p:selectOneRadio>
-					</p:column>
-				</p:row>
-				<p:row>
-					<p:column>
+						</td></tr>
+					<tr><td>
 						<h:outputLabel value="Status: " />
-					</p:column>
-					<p:column>
+					</td><td>
 						<p:inputText value="#{TemplateMBB.managedBean.scqtDoc.tplSpecMaster.status.statusId}"></p:inputText>
-					</p:column>
+					</td><td>
 
-					<p:column>
+					
 						<h:outputLabel value="Tier price Required: " />
-					</p:column>
-					<p:column>
+					</td><td>
 						<p:selectOneRadio id="price"
 							disabled="#{TemplateMBB.managedBean.specificationType ne '2'}"
 							value="#{TemplateMBB.managedBean.scqtDoc.tplSpecMaster.tierPrice}">
@@ -119,11 +130,12 @@
 							<f:selectItem itemLabel="No" itemValue="false" />
 
 						</p:selectOneRadio>
-					</p:column>
-				</p:row>
+					</td>
+					</tr>
+					</table>
 
 
-			</p:panelGrid>
+			
 		</p:panel>
 
 
