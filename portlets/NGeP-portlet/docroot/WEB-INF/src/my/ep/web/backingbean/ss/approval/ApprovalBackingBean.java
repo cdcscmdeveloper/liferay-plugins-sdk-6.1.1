@@ -223,7 +223,7 @@ public class ApprovalBackingBean extends
 		for (TabBean tabBean : getManagedBean().getTabList()) {
 			ScQtApproval scApproval = tabBean.getScQtApproval();
 			System.out.println(tabBean.getTitleName() + " ::: "
-					+ scApproval.getApproverLetterNo());
+					+ scApproval.getApprovalLetterNo());
 		}
 		
 		/*int activeApprovalTab = getActiveApprovalTab();
@@ -253,7 +253,7 @@ public class ApprovalBackingBean extends
 
 	private ScQtApproval cloneApproval(ScQtApproval app) {
 		ScQtApproval cloneApp = new ScQtApproval();
-		cloneApp.setApproverLetterNo(app.getApproverLetterNo());
+		cloneApp.setApprovalLetterNo(app.getApprovalLetterNo());
 		return cloneApp;
 	}
 
