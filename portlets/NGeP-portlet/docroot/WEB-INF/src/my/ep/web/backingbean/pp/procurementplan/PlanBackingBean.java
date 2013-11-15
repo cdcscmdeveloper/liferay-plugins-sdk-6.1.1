@@ -347,7 +347,8 @@ public class PlanBackingBean extends BaseBackingBean<PlanManagedBean>{
 					this.getManagedBean().getPlanMaster().addPpPlans(this.getManagedBean().getPlan());
 				}else{
 					log.info("Other Mode " + this.getManagedBean().getViewMode());
-					if(ProcurementPlanConst.MODE_DRAFT.equals(this.getManagedBean().getViewMode())){
+					if(ProcurementPlanConst.MODE_DRAFT.equals(taskName)){
+						this.getManagedBean().setViewMode(ProcurementPlanConst.MODE_DRAFT);
 						this.getManagedBean().getPlan().setEditable(true); 
 						this.getManagedBean().setActions(ProcurementPlanConst.BPM_DEFAULT_ACTIONS);
 					}
