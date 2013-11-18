@@ -165,10 +165,10 @@
 	<p:panel header="REMARKS AND ATTACHMENT" toggleable="true">
 		<table>
 			<tr>
-				<td><p:outputLabel value="* Remarks    " /></td>
+				<td valign="top"><p:outputLabel value="* Remarks    " /></td>
 				<td><p:inputTextarea rows="8" style="width: 260px;"
 						value="#{purchaseRequestBackingBean.managedBean.flRemark.remark}" /></td>
-				<td><p:outputLabel value="Attachment" /></td>
+				<td valign="top"><p:outputLabel value="Attachment" /></td>
 				<td><p:fileUpload
 						fileUploadListener="#{purchaseRequestBackingBean.fileUpload}"
 						update="messages" mode="advanced" dragDropSupport="false"
