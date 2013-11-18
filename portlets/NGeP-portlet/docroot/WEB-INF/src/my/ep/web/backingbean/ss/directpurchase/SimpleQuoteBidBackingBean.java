@@ -12,6 +12,7 @@ import my.ep.biz.service.ss.directpurchase.IDirectPurchaseSO;
 import my.ep.biz.service.ss.directpurchase.IQuoteBidSO;
 import my.ep.dto.ss.directpurchase.QuoteBidReqDTO;
 import my.ep.dto.ss.directpurchase.QuoteBidResDTO;
+import my.ep.persistence.entity.ss.directpurchase.ScBusinessNatureQuoteBidCriteria;
 import my.ep.web.backingbean.BaseBackingBean;
 import my.ep.web.constant.SourcingConst;
 import my.ep.web.managedbean.ss.directpurchase.SimpleQuoteBidManagedBean;
@@ -58,11 +59,15 @@ public class SimpleQuoteBidBackingBean extends BaseBackingBean<SimpleQuoteBidMan
 	public void setItems(DualListModel<String> items) {
 		this.items = items;
 	}
-	public void saveQuoteBid(){
+	public void saveQuoteBid(String action){
 		QuoteBidReqDTO	reqDTO	=	new	QuoteBidReqDTO();
 		reqDTO.setQuoteBidDtl(this.getManagedBean().getScQuoteBid());
 		IQuoteBidSO quoteBidSO = (IQuoteBidSO) BusinessDelegate.getInstance().getServiceObject(SourcingConst.SOURCING_MODULE, IQuoteBidSO.class);
-		QuoteBidResDTO	resDTO	=	quoteBidSO.saveQuoteBidDtl(reqDTO);	
+		if("saveQuote".equalsIgnoreCase(action)){
+			reqDTO.getQuoteBidDtl().setIsQuote(1);
+			QuoteBidResDTO	resDTO	=	quoteBidSO.saveQuoteBidDtl(reqDTO);	
+		}
+		
 	}
 	
 
@@ -86,5 +91,9 @@ public class SimpleQuoteBidBackingBean extends BaseBackingBean<SimpleQuoteBidMan
 		FacesMessage msg = new FacesMessage("Car Cancelled", ((SimpleQuoteBidBean) event.getObject()).getDescription());
 
 		FacesContext.getCurrentInstance().addMessage(null, msg);
+	}
+	public void	addBusinessNature(){
+		ScBusinessNatureQuoteBidCriteria	businessNature	=	new ScBusinessNatureQuoteBidCriteria();
+		getManagedBean().getBusinessNatureCriterias().add(businessNature);
 	}
 }

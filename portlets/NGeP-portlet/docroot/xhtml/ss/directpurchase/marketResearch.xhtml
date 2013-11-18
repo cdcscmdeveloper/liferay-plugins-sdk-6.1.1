@@ -9,6 +9,70 @@
 		header="#{lbl['lbl.ss.panel.title.general']}" toggleable="true"
 		toggleSpeed="500">
 		<p:spacer height="10" />
+		<!-- div style="width: 100%" id="div_header">
+			<DIV id="div_header_tr_1" style="display: block;">
+				<DIV id="div_tr_td_11">
+					<p:outputLabel value="#{lbl['lbl.ss.simple.quote.ministry.code']}" />
+				</DIV>
+				<DIV id="div_tr_td_12">
+					<p:inputText readonly="true" />
+				</DIV>
+				<DIV id="div_tr_td_13">
+					<p:outputLabel value="#{lbl['lbl.ss.simple.quote.department']}" />
+				</DIV>
+				<DIV id="div_tr_td_14">
+					<p:inputText readonly="true" />
+				</DIV>
+			</DIV>
+			<DIV id="div_header_tr_2" style="display: block;">
+				<DIV id="div_tr_td_21">
+					<p:outputLabel value="#{lbl['lbl.ss.simple.quote.devision']}" />
+				</DIV>
+				<DIV id="div_tr_td_22">
+					<p:inputText readonly="true" />
+				</DIV>
+				<DIV id="div_tr_td_23">
+					<p:outputLabel value="#{lbl['lbl.ss.simple.quote.requisitioner']}" />
+				</DIV>
+				<DIV>
+					<p:inputText readonly="true" />
+				</DIV>
+			</DIV>
+			<DIV id="div_header_tr_3" style="display: block;">
+				<DIV id="div_tr_td_31">
+					<p:outputLabel value="#{lbl['lbl.sc.purchase.procurement.type']}" id="lbl_11" />
+				</DIV>
+				<DIV id="div_tr_td_32">
+					<p:selectOneMenu value="#{directPurchaseBackingBean.managedBean.requestList.procurementType}"
+						id="procurementType" style="width: auto; min-width: 200px;"
+						required="false" disabled="false">
+						<p:ajax update="globe_panel_1" event="valueChange"
+							partialSubmit="true" process="@this"
+							listener="#{directPurchaseBackingBean.procurementTypeChangeListener()}" />
+						<f:selectItems value="#{directPurchaseBackingBean.procumentList}"
+							var="type" itemValue="#{type.optionValue}"
+							itemLabel="#{type.optionName}"></f:selectItems>
+					</p:selectOneMenu>
+				</DIV>
+			</DIV>
+			<DIV id="div_header_tr_4" style="display: block;">
+				<DIV id="div_tr_td_41">
+					<p:outputLabel value="#{lbl['lbl.sc.purchase.justification']}" id="lbl_22" />
+				</DIV>	
+				<DIV id="div_tr_td_42">
+					<p:selectOneMenu value="#{directPurchaseBackingBean.managedBean.requestList.justificationType}"
+						id="justificationTypeId" style="width: auto; min-width: 100px;" required="false" disabled="false">
+						<f:selectItems
+							value="#{directPurchaseBackingBean.justificationTypes}"
+							var="justificationType"
+							itemValue="#{justificationType.optionValue}"
+							itemLabel="#{justificationType.optionName}"></f:selectItems>
+					</p:selectOneMenu> 
+					<h:inputText value="#{directPurchaseBackingBean.managedBean.requestList.justification}"
+						id="justificationTextId" style="width:450px;" required="false" />
+				</DIV>
+			</DIV>
+		</div -->
 		<table style="width: 100%">
 			<tr>
 				<td width="20%" align="left"><p:outputLabel
