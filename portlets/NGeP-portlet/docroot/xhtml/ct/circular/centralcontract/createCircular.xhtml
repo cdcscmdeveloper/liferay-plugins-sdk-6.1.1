@@ -23,7 +23,6 @@
 			<ac:paginator for="contactPersonDt" />
 			<p:columnGroup type="header">
 				<p:row>
-					<p:column style="width:30px;" headerText="#{lbl['lbl.ct.pc.no']}" />
 					<p:column style="width:150px;" headerText="#{lbl['lbl.ct.pc.cperson']}" />
 					<p:column style="width:250px;" headerText="#{lbl['lbl.ct.pc.caddress']}" />
 					<p:column style="width:100px;" headerText="#{lbl['lbl.ct.pc.cemail']}" />
@@ -31,9 +30,6 @@
 					<p:column style="width:60px;" headerText="#{lbl['lbl.ct.pc.action']}" />
 				</p:row>
 			</p:columnGroup>
-			<p:column styleClass="column-align-center">
-				<h:outputText value="#{index+1}" />
-			</p:column>
 			<p:column>
 				<p:inputText value="#{data.name}" style="width:120px;" />
 			</p:column>
@@ -73,7 +69,6 @@
 			<ac:paginator for="centralContractDt" />
 			<p:columnGroup type="header">
 				<p:row>
-					<p:column headerText="#{lbl['lbl.ct.cc.no']}" />
 					<p:column headerText="#{lbl['lbl.ct.cc.ctno']}" />
 					<p:column headerText="#{lbl['lbl.ct.cc.ctname']}" />
 					<p:column headerText="#{lbl['lbl.ct.cc.loa']}" />
@@ -83,9 +78,6 @@
 					<p:column headerText="#{lbl['lbl.ct.cc.action']}" />
 				</p:row>
 			</p:columnGroup>
-			<p:column styleClass="column-align-center">
-				<h:outputText value="#{index+1}" />
-			</p:column>
 			<p:column>
 				<p:outputLabel value="#{data.ctContract.contractValue.contractNo}" />
 			</p:column>
@@ -183,7 +175,6 @@
 			<ac:paginator for="cancelCircularDt" />
 			<p:columnGroup type="header">
 				<p:row>
-					<p:column style="width:30px" headerText="#{lbl['lbl.ct.pc.no']}" />
 					<p:column style="width:80px" headerText="Circular No." />
 					<p:column style="width:150px" headerText="#{lbl['lbl.ct.pc.cname']}" />
 					<p:column style="width:100px" headerText="Update Type" />
@@ -191,9 +182,6 @@
 					<p:column style="width:60px" headerText="#{lbl['lbl.ct.pc.action']}" />
 				</p:row>
 			</p:columnGroup>
-			<p:column styleClass="column-align-center">
-				<h:outputText value="#{index+1}" />
-			</p:column>
 			<p:column>
 				<h:outputText value="#{data.ctCancelCircularVer.circularNo}" />
 			</p:column>
@@ -232,9 +220,6 @@
 				value="#{centralContractBackingBean.cancelledCircularDataModel}" rowIndexVar="index" >
 				<ac:paginator for="cancelledCclDt" />
 				<p:column selectionMode="multiple" style="width:18px" />
-				<p:column headerText="No.">
-					<h:outputText value="#{index+1}" />
-				</p:column>
 				<p:column headerText="Circular No.">
 				</p:column>
 				<p:column headerText="Circular Name">

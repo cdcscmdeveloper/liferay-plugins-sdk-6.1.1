@@ -10,45 +10,42 @@
     <style>
       .column-align-center { text-align: center !important;}
     </style>
-         <p:tabView id="tabview"   tabChangeListener="#{contractDetailsBackingBean.onChange}" onTabChangeUpdate="growl">
-            <p:tab id="searchTab" title="General" >
-                  <p:panel id="searchId" header="#{lbl['lbl.ct.search.panel.name']}" toggleable="true"  toggleSpeed="500" widgetVar="panelsearch">
+     <p:panel id="searchId" header="#{lbl['lbl.ct.search.panel.name']}" toggleable="true"  toggleSpeed="500" widgetVar="panelsearch">
                            <h:panelGrid columns="4" style="width:900px;">
                                 <h:outputLabel value="#{lbl['lbl.ct.search.cno']}" />
                                 <p:inputText value="#{contractDetailsBackingBean.managedBean.contractNo}"  style="width:170px;"/>
                                 <h:outputLabel value="#{lbl['lbl.ct.search.cname']}" />
                                 <p:inputText value="#{contractDetailsBackingBean.managedBean.contractName}"  style="width:170px;"/>
+                                <h:outputLabel value="#{lbl['lbl.ct.search.clno']}" />
+                                <p:inputText  style="width:170px;" />
+                                <h:outputLabel value="#{lbl['lbl.ct.search.clname']}" />
+                                <p:inputText  style="width:170px;"/>
+                                <h:outputLabel value="#{lbl['lbl.ct.search.sid']}" />
+                                <p:inputText  style="width:170px;"/>
+                                <h:outputLabel value="#{lbl['lbl.ct.search.sname']}"/>
+                                <p:inputText  style="width:170px;"/> 
                                  <h:outputLabel value="#{lbl['lbl.ct.search.cstart']}"/>
                                 <p:calendar style="width:130px;" value="#{contractDetailsBackingBean.managedBean.effDate}" id="popupButtonCal" showOn="button" />
                                 <h:outputLabel value="#{lbl['lbl.ct.search.cend']}" />
                                 <p:calendar style="width:130px;" value="#{contractDetailsBackingBean.managedBean.expDate}" id="popupButtonCal1" showOn="button" />
                                 <h:outputLabel value="#{lbl['lbl.ct.search.lno']}" />
                                 <p:inputText value="#{contractDetailsBackingBean.managedBean.qtLoaNo}" style="width:170px;"/>
-                                <h:outputLabel value="#{lbl['lbl.ct.search.sid']}" />
-                                <p:inputText  style="width:170px;"/>
-                                <h:outputLabel value="#{lbl['lbl.ct.search.sname']}"/>
-                                <p:inputText  style="width:170px;"/>
-                                <h:outputLabel value="#{lbl['lbl.ct.search.clno']}" />
-                                <p:inputText  style="width:170px;" />
-                                <h:outputLabel value="#{lbl['lbl.ct.search.clname']}" />
-                                <p:inputText  style="width:170px;"/>
-                                <p:outputLabel value="#{lbl['lbl.ct.search.pcode']}" />
+                                
+                                <p:outputLabel value="#{lbl['lbl.ct.search.pno']}" />
 							    <p:inputText id="productCode"  style="width:170px;" />
 
 						        <h:panelGroup>
-			                    <div style="height: 10px; vertical-align: top">
+			                    <div style="height: 50px; vertical-align: top">
 			                     <p:outputLabel for="status" value="#{lbl['lbl.ct.search.status']}" />
 							    </div>
 						        </h:panelGroup>
 						        <h:panelGrid>
-                                <p:selectOneListbox id="status"   style="width:180px;"  >
+                                <p:selectOneListbox id="status"   style="width:175px;"  >
                                    <f:selectItem itemLabel="Pending Fulfillment Creation" itemValue="1"  />  
                                    <f:selectItem itemLabel="Pending Approval" itemValue="2"  />  
                                    <f:selectItem itemLabel="Approved" itemValue="3" />  
                                 </p:selectOneListbox>
                                 </h:panelGrid>
-                                <f:verbatim></f:verbatim>
-                               
                                
 						     </h:panelGrid>
 						     <div class="ppRightBtn"> 
@@ -64,7 +61,7 @@
 							               paginatorAlwaysVisible="true" emptyMessage="No Records!" rows="5">
 							               <p:columnGroup type="header"> 
 								                <p:row> 
-									                     <p:column headerText="#{lbl['lbl.ct.search.table.no']}" />
+									                   
 									                     <p:column headerText="#{lbl['lbl.ct.search.table.cname']}"   /> 
 									                     <p:column headerText="#{lbl['lbl.ct.search.table.clno']}" /> 
 									                     <p:column headerText="#{lbl['lbl.ct.search.table.sname']}"  /> 
@@ -75,7 +72,6 @@
 									                     <p:column headerText="#{lbl['lbl.ct.search.table.action']}" />
 								               </p:row>							
 								               </p:columnGroup>
-							                            <p:column styleClass="column-align-center" > <h:outputText value="#{index+1}" /></p:column> 							
 							                            <p:column> <h:outputText value="#{data.contractName}" /></p:column>
 							                            <p:column><h:outputText value="CR-2013-0001" /></p:column>	
 							                            <p:column><h:outputText value="Khai Sdn Bhd" /></p:column>					
@@ -84,26 +80,31 @@
 							                            <p:column><h:outputText value="#{data.qtLoaNo}" /></p:column>	
 							                            <p:column> <h:outputText value="Active"/> </p:column>	
 							                            <p:column styleClass="column-align-center">
-								                          <p:commandButton title="Suspended"  action="#{contractDetailsBackingBean.gotoSuspendPage}" 
-								                          image="ui-icon-suspension">
-								                            </p:commandButton>
-								                     
-								                          <p:commandButton title="Termination" action="#{contractDetailsBackingBean.gotoTerminatePage}"
-								                             partialSubmit="true" process="@this" image="ui-icon-terminate">
-								                              <f:setPropertyActionListener target="#{contractDetailsBackingBean.managedBean.ctContract}" value="#{data}" />
-								                              </p:commandButton>
-								                       
-								                          <p:commandButton title="Amendment" action="#{contractDetailsBackingBean.gotoAmendPage}"  partialSubmit="true" process="@this" image="ui-icon-revise">
-								                           </p:commandButton>
-								                            
-								                          <p:commandButton title="View Agreement"  action="#{contractDetailsBackingBean.gotoViewPage}" image="ui-icon-agree">
-								                              </p:commandButton>
+								                   
+								                              <p:commandLink action="#{contractDetailsBackingBean.gotoSuspendPage}">
+					                                          <p:graphicImage library="ep/images/design" name="pause.png"
+					                                           	value="/resources/ep/images/design/pause.png" title="Suspend Contract" />
+				                                         </p:commandLink>
+				                                         <p:spacer width="7"/>
+				                                          <p:commandLink action="#{contractDetailsBackingBean.gotoTerminatePage}">
+					                                          <p:graphicImage library="ep/images/design" name="terminate.png"
+					                                           	value="/resources/ep/images/design/terminate.png" title="Termination" />
+				                                         </p:commandLink>
+				                                         <p:spacer width="7"/>
+				                                        <p:commandLink action="#{contractDetailsBackingBean.gotoAmendPage}">
+					                                          <p:graphicImage library="ep/images/design" name="revise.png"
+					                                           	value="/resources/ep/images/design/revise.png" title="Termination" />
+				                                         </p:commandLink>
+								                          <p:spacer width="7"/>
+								                       <p:commandLink action="#{contractDetailsBackingBean.gotoViewPage}">
+					                                          <p:graphicImage library="ep/images/design" name="document.png"
+					                                           	value="/resources/ep/images/design/document.png" title="View Agreement" />
+				                                         </p:commandLink>
+								                         
 								                      </p:column> 
 							              </p:dataTable>
 						       </div>
 						</p:panel>
-                  </p:tab>
-	     </p:tabView>
    </ui:define>
 </ui:composition>
   

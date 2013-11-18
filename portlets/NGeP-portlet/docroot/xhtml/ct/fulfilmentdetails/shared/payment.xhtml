@@ -10,14 +10,12 @@
 	   paginator="true" paginatorPosition="bottom" paginatorAlwaysVisible="true" emptyMessage="No Records!" rows="10">
 	   <p:columnGroup type="header"> 
 		<p:row> 
-		  <p:column style="width:30px" headerText="Seq No"  /> 
 		  <p:column style="width:150px" headerText="#{lbl['lbl.ct.pay.table.no']}"  /> 
 		  <p:column style="width:300px" headerText="#{lbl['lbl.ct.pay.table.payto']}" /> 
 		  <p:column style="width:150px" headerText="#{lbl['lbl.ct.pay.table.invoice']}" /> 	
 		  <p:column style="width:100px" headerText="#{lbl['lbl.ct.pay.table.invoice.amt']}"  /> 
 		 </p:row>	
 	   </p:columnGroup>
-	   <p:column styleClass="column-align-center" > <h:outputText value="#{index+1}" /></p:column>     
 		<p:column>
 		<p:commandLink id="fulfillmentNo" style="margin-right:20px;" process="@this"  partialSubmit="true" 
 		 actionListener="#{contractDetailsBackingBean.changePaymentValue}">  
@@ -35,12 +33,10 @@
        rowIndexVar="index" lazy="false" dynamic="true"  paginator="true" paginatorPosition="bottom" paginatorAlwaysVisible="true" emptyMessage="No Records!" rows="10">
 	     <p:columnGroup type="header"> 
 		 <p:row> 
-		   <p:column style="width:30px" headerText="Seq No"  />
-		   <p:column style="width:250px" headerText="#{lbl['lbl.ct.pay.table1.desc']}"  /> 
-		   <p:column style="width:100px" headerText="#{lbl['lbl.ct.pay.table1.amt']}" /> 
+		   <p:column style="width:530px" headerText="#{lbl['lbl.ct.pay.table1.desc']}"  /> 
+		   <p:column style="width:200px" headerText="#{lbl['lbl.ct.pay.table1.amt']}" /> 
 		 </p:row>	
 		</p:columnGroup>
-		 <p:column styleClass="column-align-center"> <h:outputText value="#{index+1}" /></p:column> 
 		<p:column> <h:outputText value="#{data.description}" /></p:column>
 		<p:column> <h:outputText value="#{data.amount}" /></p:column>
        </p:dataTable>

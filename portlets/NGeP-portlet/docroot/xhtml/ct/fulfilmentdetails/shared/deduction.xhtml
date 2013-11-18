@@ -113,9 +113,6 @@
            widgetVar="dataTableObj" scrollable="false" lazy="false" dynamic="true" 
            selection="#{contractDetailsBackingBean.chkDeductionClause}" rowKey="#{data.deductionClauseId}">
               <p:column selectionMode="multiple" style="width:18px" />
-                <p:column headerText="#{lbl['lbl.ct.agn.model.table.no']}">
-						<h:outputText value="#{index+1}" />
-					</p:column>
 					<p:column headerText="#{lbl['lbl.ct.ded.table1.clause']}">
 						<h:outputText value="#{data.clauseName}" />
 					</p:column>
@@ -124,7 +121,7 @@
 					</p:column>
           </p:dataTable>
            <h:panelGrid columns="2" style="float:right;height:100px;vertical-align: middle;">
-             <p:commandButton value="#{lbl['lbl.ct.ded.btn.select']}" actionListener="#{contractDetailsBackingBean.addDeductionClause}" process="dialogClause" icon="ui-icon-select"
+             <p:commandButton value="#{lbl['lbl.ct.ded.btn.ok']}" actionListener="#{contractDetailsBackingBean.addDeductionClause}" process="dialogClause" icon="ui-icon-select"
               update="tableClause,dialogClause" onclick="dlg2.hide();"  />
         	 <p:commandButton value="#{lbl['lbl.ct.ded.btn.cancel']}"   type="button" ajax="false" icon="ui-icon-cancel" onclick="dlg2.hide();" />
        	  </h:panelGrid>

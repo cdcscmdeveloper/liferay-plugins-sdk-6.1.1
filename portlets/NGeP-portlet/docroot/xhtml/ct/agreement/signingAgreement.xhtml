@@ -55,7 +55,7 @@
                  </p:column> 
            </p:dataTable>
            </h:panelGrid>
-		 <h:panelGrid style="width:770px" columnClasses="column-align-right">
+		 <h:panelGrid style="width:770px;" columnClasses="column-align-right">
 		    <p:commandButton value="Add" process="@this" action="#{agreementBackingBean.addSignParty()}" 
 		    partialSubmit="true" icon="ui-icon-add" update="signTable"/>
 		</h:panelGrid>
@@ -90,7 +90,7 @@
                 </p:column> 
              </p:dataTable>
 		</h:panelGrid>
-		<h:panelGrid style="width:770px" columnClasses="column-align-right">
+		<h:panelGrid style="width:770px;" columnClasses="column-align-right">
 		  <p:commandButton value="Add" process="@this" partialSubmit="true" action="#{agreementBackingBean.addSignSupplier()}" icon="ui-icon-add"
 		  update="supplierSign"/>
 	   </h:panelGrid>

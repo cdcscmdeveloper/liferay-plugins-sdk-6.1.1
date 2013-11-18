@@ -12,11 +12,11 @@
 		<p:messages id="messages" showDetail="true" autoUpdate="true" closable="true" severity="error, info" />
 		<p:panel id="searchPanel" header="Search" toggleable="true">
 			<h:panelGrid columns="4" style="width:900px;">
-				<h:outputLabel value="Circular No" />
+				<h:outputLabel value="Circular No." />
 				<p:inputText value="#{centralContractBackingBean.managedBean.searchCircularNo}" style="width:200px;" />
 				<h:outputLabel value="Circular Name" />
 				<p:inputText value="#{centralContractBackingBean.managedBean.searchCircularName}" style="width:200px;" />
-				<h:outputLabel value="File Reference No" />
+				<h:outputLabel value="File Reference No." />
 				<p:inputText value="#{centralContractBackingBean.managedBean.searchFileRefNo}" style="width:200px;" />
 				<p:outputLabel value="Circular Type" />
 				<p:selectOneMenu value="#{centralContractBackingBean.managedBean.searchCircularTypeCodeId}">
@@ -53,7 +53,6 @@
 				<ac:paginator for="circularVerDt" />
 				<p:columnGroup type="header">
 					<p:row>
-						<p:column rowspan="1" headerText="No." />
 						<p:column colspan="1" headerText="Circular Number" />
 						<p:column colspan="1" headerText="Circular Name" />
 						<p:column colspan="1" headerText="Circular Type" />
@@ -64,9 +63,6 @@
 						<p:column colspan="1" headerText="Action" />
 					</p:row>
 				</p:columnGroup>
-				<p:column styleClass="column-align-center">
-					<h:outputText value="#{index+1}" />
-				</p:column>
 				<p:column>
 					<h:outputText value="#{data.circularNo}" />
 				</p:column>

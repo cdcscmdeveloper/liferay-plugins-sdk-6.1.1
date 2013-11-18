@@ -13,7 +13,7 @@
          <p:tab id="searchTab" title="General">
            <p:panel id="searchId" header="Supplier Search" toggleable="true"  toggleSpeed="500" widgetVar="panelsearch">
               <h:panelGrid columns="4" style="width:900px;" >
-                 <h:outputLabel value="Contract Number"/>
+                 <h:outputLabel value="Contract No."/>
                  <p:inputText value="#{supplierBackingBean.managedBean.contractNo}" style="width:170px;"/>
                  <h:outputLabel value="Contract Name"/>
                  <p:inputText value="#{supplierBackingBean.managedBean.contractName}" style="width:170px;"/>
@@ -21,7 +21,7 @@
                  <p:calendar style="width:150px;" value="#{supplierBackingBean.managedBean.startDate}" id="popupButtonCal" showOn="button" />
                  <h:outputLabel value="Contract End Date" />
                  <p:calendar style="width:150px;" value="#{supplierBackingBean.managedBean.endDate}" id="popupButtonCal1" showOn="button" />
-                 <h:outputLabel value="LOA No"/>
+                 <h:outputLabel value="LOA No."/>
                  <p:inputText value="#{supplierBackingBean.managedBean.loaNo}" style="width:170px;"/>
                  <f:verbatim></f:verbatim>
                  <f:verbatim></f:verbatim>
@@ -42,7 +42,6 @@
 				    paginatorAlwaysVisible="true" emptyMessage="No Records!" rows="4">
 				    <p:columnGroup type="header"> 
 					   <p:row> 
-	                     <p:column headerText="No." />
 	                     <p:column headerText=" Contact  No"   /> 
 	                     <p:column headerText="Contract Name" /> 
 	                     <p:column headerText="LOA No" /> 	
@@ -52,8 +51,7 @@
 	                     <p:column headerText="Circular End"   /> 
 	                     <p:column headerText="Action" />
 					  </p:row>							
-					  </p:columnGroup>
-						<p:column styleClass="column-align-center" > <p:outputLabel value="#{index+1}" /></p:column> 							
+					  </p:columnGroup>							
 						<p:column> <p:outputLabel value="CT102357-456" style="float:left;" /></p:column>
 						<p:column> <p:outputLabel value="#{data.contractName}" style="float:left;" /></p:column>	
 						<p:column> <p:outputLabel  value="#{data.qtLoaNo}" style="float:left;"  /></p:column>	

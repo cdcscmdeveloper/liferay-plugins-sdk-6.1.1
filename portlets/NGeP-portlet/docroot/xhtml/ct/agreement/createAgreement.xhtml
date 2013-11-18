@@ -15,14 +15,12 @@
                     emptyMessage="No Records!" rows="10">
 			     <p:columnGroup type="header"> 
 				    <p:row> 
-					   <p:column style="width:30px" headerText="#{lbl['lbl.ct.ag.table.no']}"  /> 
-					   <p:column style="width:400px" headerText="#{lbl['lbl.ct.ag.table.section']}" /> 
-					   <p:column style="width:150px" headerText="#{lbl['lbl.ct.ag.table.type']}" /> 	
-					   <p:column style="width:100px" styleClass="column-align-center"
+					   <p:column style="width:400px;" headerText="#{lbl['lbl.ct.ag.table.section']}" /> 
+					   <p:column style="width:150px;" headerText="#{lbl['lbl.ct.ag.table.type']}" /> 	
+					   <p:column style="width:100px;" styleClass="column-align-center"
 					            headerText="#{lbl['lbl.ct.ag.table.action']}"  /> 
 					 </p:row>	
-				  </p:columnGroup>
-				  <p:column styleClass="column-align-center"> <h:outputText value="#{index+1}" /></p:column> 							
+				  </p:columnGroup> 							
 				  <p:column> <p:outputLabel value="#{data.agrementTitle}" style="float:left;"/> </p:column>
 			      <p:column><p:outputLabel value="#{data.agrementType}" style="float:left;"/> </p:column>	
 				  <p:column  styleClass="column-align-center">
@@ -33,7 +31,7 @@
 				  </p:column> 
 				</p:dataTable>
 			 </h:panelGrid>
-			 <h:panelGrid style="width:770px" columnClasses="column-align-right">
+			 <h:panelGrid style="width:770px;" columnClasses="column-align-right">
 			<p:commandButton id="downloadLink" value="Download" ajax="false" onclick="PrimeFaces.monitorDownload(start, stop)"   
                       icon="ui-icon-download">  
                 <p:fileDownload value="#{agreementBackingBean.download}" />  
@@ -48,13 +46,11 @@
                     emptyMessage="No Records!" rows="10">
 					  <p:columnGroup type="header"> 
 					      <p:row> 
-						     <p:column style="width:30px" headerText="#{lbl['lbl.ct.ag.table.no']}"  /> 
-						      <p:column style="width:200px" headerText="#{lbl['lbl.ct.ag.table.type']}" /> 	
-					         <p:column style="width:200px" headerText="#{lbl['lbl.ct.ag.table.section']}" /> 
-					         <p:column style="width:100px" headerText="#{lbl['lbl.ct.ag.table.action']}"  /> 
+						      <p:column style="width:200px;" headerText="#{lbl['lbl.ct.ag.table.type']}" /> 	
+					         <p:column style="width:200px;" headerText="#{lbl['lbl.ct.ag.table.section']}" /> 
+					         <p:column style="width:100px;" headerText="#{lbl['lbl.ct.ag.table.action']}"  /> 
 		                  </p:row>	
 	               	  </p:columnGroup>
-					  <p:column styleClass="column-align-center" > <h:outputText value="#{index+1}" /></p:column> 							
 					  <p:column><p:outputLabel value="#{data.title}" style="float:left;" /></p:column>
 					  <p:column><p:outputLabel value="#{data.fileName}" style="float:left;"  /></p:column>	
 					  <p:column styleClass="column-align-center">
@@ -67,7 +63,7 @@
 					  </p:column> 
 				   </p:dataTable>
 			  </h:panelGrid>
-			  <h:panelGrid style="width:770px" columnClasses="column-align-right">
+			  <h:panelGrid style="width:770px;" columnClasses="column-align-right">
 				 <p:commandButton value="#{lbl['lbl.ct.ag.btn.appendixes']}" process="@this" partialSubmit="true" icon="ui-icon-add"  onclick="dlg2.show();" />
 				</h:panelGrid>
             </p:panel>
@@ -117,7 +113,7 @@
                        <p:outputPanel id="changeField"> 
 						  <h:panelGrid rendered="#{agreementBackingBean.systemDefined}" columns="2" style="width:350px;">
 						    <h:panelGroup>
-			                <div style="height: 30px; width:95px; vertical-align: top">
+			                <div style="height: 30px; width:95px; vertical-align: top;">
 			                  <p:outputLabel for="sourcingFiles" value="#{lbl['lbl.ct.ag.dailog.file']}" />
 							 </div>
 						     </h:panelGroup>

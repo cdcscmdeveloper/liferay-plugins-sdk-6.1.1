@@ -27,31 +27,32 @@
           <p:inputTextarea id="txtdesc" value="#{contractDetailsBackingBean.managedBean.ctAmendment.description}"  rows="2" cols="63"/>
 	   </h:panelGrid>
        </h:panelGrid>
-       <h:panelGrid columns="4" style="width:720px;">  
+       <h:panelGrid columns="4" style="width:680px;"> 
           <p:outputLabel  value="#{lbl['lbl.ct.amend.txt.ceperiod']}" />
           <h:panelGrid columns="3">
-             <p:inputText id="ceperiod"  style="width:90px;"/>
-             <p:selectOneMenu value=" " style="width:70px;">
+             <p:inputText id="ceperiod"  style="width:80px;"/>
+             <p:spacer width="1"/>
+             <p:selectOneMenu  style="width:65px;">
 		       <f:selectItem itemLabel="Months" itemValue="1" /> 
 		       <f:selectItem itemLabel="Years" itemValue="2" /> 
 		     </p:selectOneMenu>   
             </h:panelGrid>
-            <p:outputLabel value="#{lbl['lbl.ct.amend.txt.cestart']}"/>
-            <p:inputText style="width:170px;" />
-            <p:outputLabel value="#{lbl['lbl.ct.amend.txt.ceend']}" />
-            <p:inputText   style="width:170px;"/>
-            <p:outputLabel value="#{lbl['lbl.ct.amend.txt.effdate']}" />
-            <p:inputText style="width:170px;" />
             <p:outputLabel value="#{lbl['lbl.ct.amend.txt.avalue']}" />
-            <p:inputText  style="width:50px;"/>
+            <p:inputText  style="width:50px;"/> 
+            <p:outputLabel value="#{lbl['lbl.ct.amend.txt.cestart']}"/>
+            <p:calendar style="width:170px;" value="#{contractDetailsBackingBean.managedBean.contractValues.effDate}" id="efdateCal" showOn="button" /> 
+            <p:outputLabel value="#{lbl['lbl.ct.amend.txt.ceend']}" />
+            <p:calendar style="width:170px;" value="#{contractDetailsBackingBean.managedBean.contractValues.expDate}" id="exdateCal" showOn="button" /> 
+            <p:outputLabel value="#{lbl['lbl.ct.amend.txt.effdate']}" />
+             <p:calendar style="width:170px;" value="#{contractDetailsBackingBean.managedBean.ctAmendment.amendmentEffDate}" id="edateCal" showOn="button" />
              <p:outputLabel value="#{lbl['lbl.ct.amend.txt.apr.date']}" />
-             <p:inputText style="width:170px;" />
+              <p:calendar style="width:170px;" value="#{contractDetailsBackingBean.managedBean.ctAmendment.approvedDate}" id="adateCal" showOn="button" />
              <p:outputLabel value="#{lbl['lbl.ct.amend.txt.apr.name']}" />
              <p:inputText   style="width:170px;" />
            </h:panelGrid>
            <h:panelGrid columns="2" style="width:660px;">  
            <h:panelGroup>
-              <div style="height: 45px;width:100px; vertical-align: top">
+              <div style="height: 45px;width:100px; float:right; vertical-align:top">
 	              <p:outputLabel for="contractHistory" value="#{lbl['lbl.ct.amend.txt.history']}" />
              </div>
       	   </h:panelGroup>

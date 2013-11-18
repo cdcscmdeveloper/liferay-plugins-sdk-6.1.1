@@ -24,7 +24,7 @@
                <p:calendar style="width:130px;" value="#{contractDetailsBackingBean.managedBean.effDate}" id="calefdate" showOn="button" />
                <h:outputLabel value="#{lbl['lbl.ct.asearch.cend']}" />
                <p:calendar style="width:130px;" value="#{contractDetailsBackingBean.managedBean.expDate}" id="calepdate" showOn="button" />
-               <h:outputLabel value="#{lbl['lbl.ct.asearch.pcno']}" styleClass="txtsize" />
+               <h:outputLabel value="#{lbl['lbl.ct.asearch.pcno']}"/>
                <p:inputText  style="width:170px;"/>
                <f:verbatim></f:verbatim>
                 </h:panelGrid>
@@ -42,14 +42,12 @@
 			         emptyMessage="No Records!" rows="5">
 						<p:columnGroup type="header"> 
 							<p:row> 
-							    <p:column  headerText="#{lbl['lbl.ct.asearch.table1.no']}" />
 								<p:column  style="width:200px" headerText="#{lbl['lbl.ct.asearch.table1.pname']}"   /> 
-								<p:column  style="width:400px" headerText="#{lbl['lbl.ct.asearch.table1.pdes']}" /> 
-							    <p:column  style="width:80px" headerText="#{lbl['lbl.ct.asearch.table1.noc']}" /> 	
+								<p:column  style="width:420px" headerText="#{lbl['lbl.ct.asearch.table1.pdes']}" /> 
+							    <p:column  style="width:100px" headerText="#{lbl['lbl.ct.asearch.table1.noc']}" /> 	
 							    <p:column  style="width:100px" headerText="#{lbl['lbl.ct.asearch.table1.action']}" />
 					        </p:row>							
-							</p:columnGroup>
-							    <p:column> <h:outputText value="#{index+1}" /></p:column> 							
+							</p:columnGroup>					
 							    <p:column> <h:outputText value="#{data.projectName}"  /></p:column>
 							    <p:column><h:outputText value="#{data.description}" /></p:column>	
 							    <p:column><h:outputText value="1" /></p:column>	

@@ -15,9 +15,21 @@
               <p:outputLabel  value="#{lbl['lbl.ct.mto.quantity']}"/>  
               <p:inputText value="150"  style="width:100px;"   disabled="false" />
               <p:outputLabel  value="#{lbl['lbl.ct.mto.weight']}" />  
-              <p:inputText value="150kg" style="width:100px;" disabled="false" />  
+              <h:panelGrid columns="3">
+              <p:inputText value="150kg" style="width:80px;" disabled="false" /> 
+              <p:spacer width="1"/>
+              <p:selectOneMenu  disabled="true" style="width:65px;">
+              <f:selectItem itemValue="kg" itemLabel="kg" />
+              </p:selectOneMenu> 
+              </h:panelGrid>
               <p:outputLabel  value="#{lbl['lbl.ct.mto.dimension']}" />  
-              <p:inputText value="300 m3"  style="width:170px;" disabled="false" />
+               <h:panelGrid columns="3">
+              <p:inputText value="300" style="width:80px;" disabled="false" /> 
+               <p:spacer width="1"/>
+              <p:selectOneMenu  disabled="true" style="width:65px;">
+              <f:selectItem itemValue="m3" itemLabel="m3" />
+              </p:selectOneMenu>  
+              </h:panelGrid>
               <p:outputLabel  value="#{lbl['lbl.ct.mto.packaging']}"/>  
               <p:selectOneMenu  disabled="false"  style="width:180px;">
                    <f:selectItem itemLabel="--Please Select--" itemValue="--Please Select--" /> 
@@ -75,11 +87,29 @@
              <f:verbatim></f:verbatim>
              <p:inputText value="TX002" disabled="false" style="width:60px;" />
               <p:outputLabel  value="#{lbl['lbl.ct.mto.heights']}"/>  
-               <p:inputText value="200cm" disabled="false"   style="width:60px;" />
+               <h:panelGrid columns="3">
+              <p:inputText value="200" style="width:80px;" disabled="false" />  
+               <p:spacer width="1"/>
+              <p:selectOneMenu  disabled="true" style="width:65px;">
+              <f:selectItem itemValue="cm" itemLabel="cm" />
+              </p:selectOneMenu>  
+              </h:panelGrid>
               <p:outputLabel   value="#{lbl['lbl.ct.mto.width']}"/>  
-              <p:inputText  value="30cm"   disabled="false" style="width:60px;" />
+               <h:panelGrid columns="3">
+              <p:inputText value="30" style="width:80px;" disabled="false" />  
+               <p:spacer width="1"/>
+              <p:selectOneMenu  disabled="true" style="width:65px;">
+              <f:selectItem itemValue="cm" itemLabel="cm" />
+              </p:selectOneMenu>  
+              </h:panelGrid>
                <p:outputLabel  value="#{lbl['lbl.ct.mto.length']}" />  
-              <p:inputText value="45cm"  disabled="false" style="width:60px;" />
+                <h:panelGrid columns="3">
+              <p:inputText value="45" style="width:80px;" disabled="false" />  
+                <p:spacer width="1"/>
+              <p:selectOneMenu  disabled="true" style="width:65px;">
+              <f:selectItem itemValue="cm" itemLabel="cm" />
+              </p:selectOneMenu> 
+              </h:panelGrid>
               <p:outputLabel rendered="true" value="#{lbl['lbl.ct.mto.rexport']}" />
               <p:selectBooleanCheckbox  value="" disabled="false"/> 
              

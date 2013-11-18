@@ -27,13 +27,11 @@
 			  emptyMessage="No Records!" rows="10">
 			   <p:columnGroup type="header"> 
 				<p:row> 
-				  <p:column style="width:30px;" headerText="#{lbl['lbl.ct.tr.table.no']}"  />
 				  <p:column style="width:200px;" headerText="#{lbl['lbl.ct.tr.table.reason']}"  /> 
-				  <p:column style="width:450px;" headerText="#{lbl['lbl.ct.tr.table.descp']}" /> 
+				  <p:column style="width:480px;" headerText="#{lbl['lbl.ct.tr.table.descp']}" /> 
 				  <p:column style="width:50px;" headerText="#{lbl['lbl.ct.tr.table.action']}" /> 
 				</p:row>							
 				</p:columnGroup>
-				<p:column styleClass="column-align-center"> <h:outputText value="#{index+1}" /></p:column>
 				<p:column>  
 				   <p:selectOneMenu   style="width:170px;">
                     <f:selectItems value="#{contractDetailsBackingBean.getDropdownValues(PmCodeCatConst.ctTerminationReasonType)}" />
@@ -68,13 +66,11 @@
 		   paginatorAlwaysVisible="true" emptyMessage="No Records!" rows="10">
 		   <p:columnGroup type="header"> 
 		    <p:row> 
-			   <p:column style="width:30px;" headerText="#{lbl['lbl.ct.tr.table1.no']}"  />
 			   <p:column style="width:200px;" headerText="#{lbl['lbl.ct.tr.table1.clausNo']}" /> 
 			   <p:column style="width:450px;" headerText="#{lbl['lbl.ct.tr.table1.clausDesc']}" /> 
 		       <p:column style="width:50px;" headerText="#{lbl['lbl.ct.tr.table1.action']}" />
 		    </p:row>							
 		   </p:columnGroup>
-		   <p:column styleClass="column-align-center"> <h:outputText value="#{index+1}" /></p:column>
 		   <p:column><h:outputLabel value="#{data.clauseName}" style="float:left;"/></p:column>	
 		   <p:column><h:outputLabel value="#{data.clauseDesc}" style="float:left;"/></p:column> 	
 		   <p:column styleClass="column-align-center">

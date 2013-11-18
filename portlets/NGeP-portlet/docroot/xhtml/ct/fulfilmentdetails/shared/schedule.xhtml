@@ -18,16 +18,18 @@
 	    rowIndexVar="index" paginator="true" paginatorPosition="bottom" paginatorAlwaysVisible="true" emptyMessage="No Records!">
 		<p:columnGroup type="header"> 
 		 <p:row> 
-		  <p:column style="width:150px" headerText="#{lbl['lbl.ct.sched.table.no']}"  /> 
 		  <p:column style="width:250px" headerText="#{lbl['lbl.ct.sched.table.schedno']}" /> 
 		  <p:column style="width:150px" headerText="#{lbl['lbl.ct.sched.table.sdate']}" /> 	
 		  <p:column style="width:150px" headerText="#{lbl['lbl.ct.sched.table.edate']}"  /> 
 		</p:row>	
-		</p:columnGroup>
-		<p:column styleClass="column-align-center" > <h:outputText value="#{index+1}" /></p:column>     
+		</p:columnGroup>  
 		<p:column><p:outputLabel value="#{data.scheduleNo}" style="float:left;"/></p:column>
-		<p:column><p:outputLabel value="#{data.startDate}"/></p:column>   
-        <p:column><p:outputLabel value="#{data.endDate}"/></p:column>        
+		<p:column><p:outputLabel value="#{data.startDate}" style="float:left;">
+		          <f:convertDateTime pattern="MM/dd/yyyy" /></p:outputLabel>
+		</p:column>   
+        <p:column><p:outputLabel value="#{data.endDate}" style="float:left;">
+                  <f:convertDateTime pattern="MM/dd/yyyy" /></p:outputLabel>
+         </p:column>        
 	  </p:dataTable>
 	</p:panel>	
 	 <p:outputPanel id="paymentSchedule">                
