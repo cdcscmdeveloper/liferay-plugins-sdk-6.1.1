@@ -112,7 +112,7 @@
 													<td style="font-weight: bold; width: 15%;"><p:outputLabel
 															value="Supplier:"></p:outputLabel></td>
 													<td>ABC SDN BHD<p:commandLink
-															action="#{favoriteSupplierBackingBean.addToFavoriteSupplier}"
+															action="#{favoriteSupplierBackingBean.addToFavoriteSupplier(supplierItem.supplierId)}"
 															update=":form:supplierItemViewID">
 															<p:graphicImage
 																value="/resources/ep/images/design/add.png"></p:graphicImage>

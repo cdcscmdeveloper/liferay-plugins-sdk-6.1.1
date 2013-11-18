@@ -35,21 +35,21 @@ public class FavoriteSupplierBackingBean extends BaseBackingBean<FavoriteSupplie
 	}
 
 
-	public void addToFavoriteSupplier(){
-
+	public void addToFavoriteSupplier(Long supplierId){
+		System.out.println("supplierId:"+supplierId);
 		IFavoriteSupplierSO favoriteSupplierSO = (IFavoriteSupplierSO) BusinessDelegate.getInstance().getServiceObject("cm",IFavoriteSupplierSO.class);
 
 		CatalogueBackingBean catBB = new CatalogueBackingBean();
 		FavoriteSupplierReqDTO reqDTO = new FavoriteSupplierReqDTO();
 
-		for(CmSupplierItem item : catBB.getManagedBean().getSelectedSupplierItemList()){
+		//for(CmSupplierItem item : catBB.getManagedBean().getSelectedSupplierItemList()){
 			CmFavoriteSupplier favor = new CmFavoriteSupplier();
 
 			favor.setRecordStatus(true);
 			favor.setPtjUserId(new Long(11003));
-			favor.setSupplierId(item.getSupplierId());
+			favor.setSupplierId(supplierId);
 			this.getManagedBean().getFavoriteSupplier().add(favor);	
-		}
+		//}
 
 
 		reqDTO.setFavoriteSupplier(this.getManagedBean().getFavoriteSupplier());
