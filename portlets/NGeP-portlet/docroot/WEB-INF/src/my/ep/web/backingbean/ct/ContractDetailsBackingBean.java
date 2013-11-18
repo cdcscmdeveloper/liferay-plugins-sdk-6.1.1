@@ -114,8 +114,6 @@ public class ContractDetailsBackingBean extends BaseBackingBean<ContractDetailsM
 	
 	private TreeNode rootNode;  
 	private TreeNode selectedNode; 
-	private List<PmUser> dsLst; 
-	private PickListBean pickListBean = null;
 	
 	private boolean paymentHistory;
 	private TreeNode rootNodeAgency;  
@@ -207,7 +205,6 @@ public class ContractDetailsBackingBean extends BaseBackingBean<ContractDetailsM
 	
 	@PostConstruct
 	public void initializeContractValue() throws ParseException{
-		 dsLst = new ArrayList<PmUser>(); 
 		/*Insert Data Contract Table*/
 		if(this.getManagedBean().getCtContract() == null){
 			
@@ -1277,14 +1274,4 @@ public void onChange(TabChangeEvent event) { }
 		this.editorValue = editorValue;
 	}
 
-	public PickListBean getPickListBean() {
-		pickListBean = new PickListBean(dsLst);
-		return pickListBean;
-	}
-
-	public void setPickListBean(PickListBean pickListBean) {
-		this.pickListBean = pickListBean;
-	} 
-
-	
 }
