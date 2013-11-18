@@ -51,6 +51,7 @@ import my.ep.persistence.entity.sm.SmSupplier;
 import my.ep.type.aut.SearchOperator;
 import my.ep.util.lookupservice.EpBpmBusinessDelegate;
 import my.ep.web.backingbean.BaseBackingBean;
+import my.ep.web.backingbean.ct.ContractBackingBean;
 import my.ep.web.bean.paginator.IPagingDataModel;
 import my.ep.web.bean.paginator.PagingDataModel;
 import my.ep.web.managedbean.ct.circular.panel.PanelManagedBean;
@@ -81,6 +82,9 @@ public class PanelBackingBean extends BaseBackingBean<PanelManagedBean>{
 		if(getManagedBean().getOutComes()==null) {
 			getManagedBean().setOutComes(new String[]{"SAVE","SUBMIT"});
 			getManagedBean().setCircularVer(new CtCircularVer());
+			
+			ContractBackingBean ctBB = new ContractBackingBean();
+			ctBB.initializeRemarkAndAttachement(getManagedBean().getRemarkList(), getManagedBean().getAttachmentList());
 		}
 		if(getManagedBean().getCircularVer().getCtPanelSuppliers()!=null) {
 			for(CtPanelSupplier panelSupplier : getManagedBean().getCircularVer().getCtPanelSuppliers()) {
@@ -155,6 +159,8 @@ public class PanelBackingBean extends BaseBackingBean<PanelManagedBean>{
 			CircularReqDTO reqDTO = new CircularReqDTO();
 			reqDTO.setSelectedApprovers(getManagedBean().getApproverModel().getTarget());
 			reqDTO.setAvailableApprovers(getManagedBean().getApproverModel().getSource());
+			reqDTO.setRemark(getManagedBean().getRemarkList().get(0));
+			reqDTO.setAttachments(getManagedBean().getAttachmentList());
 			reqDTO.setCircular(circular);
 			reqDTO.setCircularVer(circularVer);
 			reqDTO.setOutcome(action);
@@ -205,7 +211,9 @@ public class PanelBackingBean extends BaseBackingBean<PanelManagedBean>{
 			CircularReqDTO reqDTO = new CircularReqDTO();
 			reqDTO.setCancelCircularReq(getManagedBean().getCancelCircularReq());
 			reqDTO.setSelectedApprovers(getManagedBean().getApproverModel().getTarget());
-			reqDTO.setAvailableApprovers(getManagedBean().getApproverModel().getSource());			
+			reqDTO.setAvailableApprovers(getManagedBean().getApproverModel().getSource());		
+			reqDTO.setRemark(getManagedBean().getRemarkList().get(0));
+			reqDTO.setAttachments(getManagedBean().getAttachmentList());			
 			reqDTO.setDocType(getManagedBean().getCircularDocType());
 			reqDTO.setOutcome(action);
 			reqDTO.setToken(token);
@@ -534,6 +542,12 @@ public class PanelBackingBean extends BaseBackingBean<PanelManagedBean>{
 			}
 			getManagedBean().getApproverModel().setTarget(resDTO.getApproverList());
 			getManagedBean().getApproverModel().getSource().removeAll(resDTO.getApproverList());
+			getManagedBean().setRemarkList(resDTO.getRemarkList());
+			getManagedBean().setAttachmentList(resDTO.getAttachmentList());
+			
+			ContractBackingBean ctBB = new ContractBackingBean();
+			ctBB.initializeRemarkAndAttachement(getManagedBean().getRemarkList(), getManagedBean().getAttachmentList());
+			
 			return "circularBase";
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -567,8 +581,14 @@ public class PanelBackingBean extends BaseBackingBean<PanelManagedBean>{
 			}
 			getManagedBean().getApproverModel().setTarget(resDTO.getApproverList());
 			getManagedBean().getApproverModel().getSource().removeAll(resDTO.getApproverList());
+			getManagedBean().setRemarkList(resDTO.getRemarkList());
+			getManagedBean().setAttachmentList(resDTO.getAttachmentList());
 			getManagedBean().setCircular(resDTO.getCircularVer().getCtCircular());
 			getManagedBean().setCircularVer(resDTO.getCircularVer());
+			
+			ContractBackingBean ctBB = new ContractBackingBean();
+			ctBB.initializeRemarkAndAttachement(getManagedBean().getRemarkList(), getManagedBean().getAttachmentList());
+			
 		} catch (Exception e) {
 			e.printStackTrace();
 			FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR,e.toString(), e.getMessage()));
@@ -588,7 +608,13 @@ public class PanelBackingBean extends BaseBackingBean<PanelManagedBean>{
 			CircularResDTO resDTO = circularSO.retrieveCancelCircularReqById(reqDTO);
 			getManagedBean().getApproverModel().setTarget(resDTO.getApproverList());
 			getManagedBean().getApproverModel().getSource().removeAll(resDTO.getApproverList());
+			getManagedBean().setRemarkList(resDTO.getRemarkList());
+			getManagedBean().setAttachmentList(resDTO.getAttachmentList());
 			getManagedBean().setCancelCircularReq(resDTO.getCancelCircularReq());
+			
+			ContractBackingBean ctBB = new ContractBackingBean();
+			ctBB.initializeRemarkAndAttachement(getManagedBean().getRemarkList(), getManagedBean().getAttachmentList());
+			
 		} catch (Exception e) {
 			e.printStackTrace();
 			FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR,e.toString(), e.getMessage()));

@@ -3,12 +3,15 @@
  */
 package my.ep.web.managedbean.ct.circular.panel;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
 
+import my.ep.persistence.entity.ct.CtAttachment;
+import my.ep.persistence.entity.ct.CtRemark;
 import my.ep.persistence.entity.ct.circular.CtCancelCircularReq;
 import my.ep.persistence.entity.ct.circular.CtCircular;
 import my.ep.persistence.entity.ct.circular.CtCircularVer;
@@ -53,6 +56,8 @@ public class PanelManagedBean extends BaseManagedBean {
 	private CtCircularVer[] selectedCircularVerList;
 	private List<CtCircularVer> circularVerList;
 	private List<CtCancelCircular> selectedCancelledCircularList;
+	private List<CtRemark> remarkList;
+	private List<CtAttachment> attachmentList;
 	private DualListModel<String> approverModel;
 
 	// Search
@@ -265,6 +270,28 @@ public class PanelManagedBean extends BaseManagedBean {
 
 	public void setCircularDocType(String circularDocType) {
 		this.circularDocType = circularDocType;
+	}
+
+	public List<CtRemark> getRemarkList() {
+		if(remarkList==null) {
+			remarkList = new ArrayList<CtRemark>();
+		}
+		return remarkList;
+	}
+
+	public void setRemarkList(List<CtRemark> remarkList) {
+		this.remarkList = remarkList;
+	}
+
+	public List<CtAttachment> getAttachmentList() {
+		if(attachmentList==null) {
+			attachmentList = new ArrayList<CtAttachment>();
+		}
+		return attachmentList;
+	}
+
+	public void setAttachmentList(List<CtAttachment> attachmentList) {
+		this.attachmentList = attachmentList;
 	}
 
 }
