@@ -10,11 +10,13 @@
 	xmlns:c="http://java.sun.com/jsp/jstl/core">
 
 	<ui:define name="contentSection">
+	
+	<p:messages id="catalogFileMsg" globalOnly="true"></p:messages>
 
 		<h:panelGroup>
-			<p:tabView id="maintenanceTabId" dynamic="true">
+			<p:tabView id="maintenanceTabId" dynamic="true" cache="false">
 
-				<p:ajax event="tabChange" listener="#{catalogueBackingBean.onTabChange}" />
+				<p:ajax event="tabChange" listener="#{catalogueBackingBean.onTabChange}" update=":form:maintenanceTabId"/>
 					
 				<p:tab id="tab1" title="#{lbl['lbl.cm.draft']}">
 					<ui:include src="draftSupplierItem.xhtml" />
@@ -28,7 +30,7 @@
 				<p:tab id="tab4" title="#{lbl['lbl.cm.approved']}">
 					<ui:include src="approvedSupplierItem.xhtml" />
 				</p:tab>
-				<p:tab id="tab5" title="#{lbl['lbl.cm.reject.revise']}">
+				<p:tab id="tab5" title="#{lbl['lbl.cm.reject']}">
 					<ui:include src="rejectedOrReviseSupplierItem.xhtml" />
 				</p:tab>
 			</p:tabView>

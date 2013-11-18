@@ -7,35 +7,12 @@
 
 
 	<div class="catMenu">
-		<p:menubar>
-			<p:submenu
-				label="Wish List ( #{fn:length(catalogueBackingBean.managedBean.wishLists)} )">
-				<p:menuitem value="View WishList"
-					action="#{wishListBackingBean.viewWishListItem}" />
-			</p:submenu>
-			<p:submenu
-				label="Cart List ( #{fn:length(catalogueBackingBean.managedBean.cartList)} )"
-				style=" border-right: 1px;">
-				<p:menuitem value="View Cart Items"
-					action="#{catalogueBackingBean.viewCartListItem}" />
-			</p:submenu>
-			<p:submenu
-				label="Supplier List ( #{fn:length(catalogueBackingBean.managedBean.favoriteSupplierList)} )"
-				style=" border-right: 1px;">
 
-				<c:forEach
-					items="#{catalogueBackingBean.managedBean.favoriteSupplierList}"
-					var="favor">
+		<p:commandLink action="#{catalogueBackingBean.viewCartListItem}">
+			<p:graphicImage value="/resources/ep/images/design/cart.png"></p:graphicImage>( #{fn:length(catalogueBackingBean.managedBean.cartList)} )
+		</p:commandLink>
 
-					<p:menuitem value="#{favor.supplierId}*" action="#{favoriteSupplierBackingBean.filterFavoriteSupplierItems(favor.supplierId)}"/>
-				</c:forEach>
-
-
-			</p:submenu>
-		</p:menubar>
-
-
-
+		
 	</div>
 
 

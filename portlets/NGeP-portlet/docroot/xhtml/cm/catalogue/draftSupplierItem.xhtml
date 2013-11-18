@@ -11,13 +11,13 @@
 		<p:commandButton value="#{lbl['lbl.cm.upload']}" icon="ui-icon-upload"
 			onclick="excelDialog.show()"></p:commandButton>
 
-		<p:commandButton id="downloadLink"
-			value="#{lbl['lbl.cm.download']}" icon="ui-icon-download" ajax="false">
+		<p:commandButton id="downloadLink" value="#{lbl['lbl.cm.download']}"
+			icon="ui-icon-download" ajax="false">
 			<p:fileDownload value="#{catalogueBackingBean.file}" />
 		</p:commandButton>
 
 		<p:commandButton value="#{lbl['lbl.cm.save']}" icon="ui-icon-save"
-			action="#{catalogueBackingBean.saveCatalogItem}"></p:commandButton>
+			action="#{catalogueBackingBean.saveCatalogItem}" update=":form:catalogFileMsg"></p:commandButton>
 
 		<p:commandButton value="#{lbl['lbl.cm.submit']}" icon="ui-icon-submit"
 			action="#{catalogueBackingBean.submitToReviewItems}"
@@ -46,29 +46,29 @@
 			<f:facet name="header">
 				#{lbl['lbl.cm.price']}
 			</f:facet>
+			<p:inputText></p:inputText>
 
 		</p:column>
 		<p:column>
 			<f:facet name="header">
 				#{lbl['lbl.cm.start.date']}
 			</f:facet>
-
+			<p:calendar></p:calendar>
 
 		</p:column>
 		<p:column>
 			<f:facet name="header">
 				#{lbl['lbl.cm.end.date']}
 			</f:facet>
-
+			<p:calendar></p:calendar>
 
 		</p:column>
 		<p:column>
 			<f:facet name="header">
 				#{lbl['lbl.cm.action']}
 			</f:facet>
-			<p:commandButton
-				action="#{catalogueBackingBean.navigateToCatalogDet(rowIndex)}"
-				value="Details"></p:commandButton>
+			<p:commandButton icon="ui-icon-edit"
+				action="#{catalogueBackingBean.navigateToCatalogDet(rowIndex)}"></p:commandButton>
 		</p:column>
 	</p:dataTable>
 	<p:dialog id="excelDialog" widgetVar="excelDialog" modal="true"

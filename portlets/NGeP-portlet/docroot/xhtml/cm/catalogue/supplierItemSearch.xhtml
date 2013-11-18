@@ -6,188 +6,195 @@
 	xmlns:c="http://java.sun.com/jsp/jstl/core"
 	xmlns:fn="http://java.sun.com/jsp/jstl/functions">
 
-	
+
 
 	<h:panelGroup id="supplierItemViewID">
 
-	
-		<ui:include src="catalogueMenuBar.xhtml"></ui:include>
-
-
-		<p:outputLabel styleClass="screen-title"
-			value="#{lbl['lbl.cm.catalogue.search']}"></p:outputLabel>
 
 
 
-		<table>
+		<table style="width: 100%">
 			<tr>
-				<td><p:selectOneRadio id="searchRadio"
-						value="#{catalogueBackingBean.managedBean.searchType}">
-						<f:selectItem itemValue="S" itemLabel="Search " />
-						<f:selectItem itemValue="A" itemLabel="Advance Search" />
-						<p:ajax event="click"
-							listener="#{catalogueBackingBean.advanceSearch()}"
-							update="advanceSearchId"></p:ajax>
-					</p:selectOneRadio></td>
+				<td><p:tabView style="width: 70%;" id="searchTabId">
+
+						<p:tab id="tab1" title="Search">
+
+							<table style="width: 100%; margin-top: 10px;">
+								<tr>
+									<td><p:outputLabel value="#{lbl['lbl.cm.item.name']}" /></td>
+									<td><p:inputText size="50"
+											value="#{catalogueBackingBean.managedBean.itemName}"></p:inputText></td>
+
+								</tr>
+							</table>
+							<div style="text-align: right;">
+								<p:commandButton value="Search" icon="ui-icon-search"
+									action="#{catalogueBackingBean.searchCatalogue}"
+									update=":form:supplierItemID" />
+							</div>
+						</p:tab>
+
+						<p:tab id="tab2" title="Advance Search">
+							<table style="margin-top: 10px;">
+								<tr>
+									<td style="padding-left: 64px;"><p:outputLabel
+											value="#{lbl['lbl.cm.item.name']}" /></td>
+									<td><p:inputText size="50"
+											value="#{catalogueBackingBean.managedBean.itemName}"></p:inputText></td>
+								</tr>
+							</table>
+							<ui:repeat var="search"
+								value="#{catalogueBackingBean.managedBean.advanceSearchList}">
+
+								<h:panelGrid columns="2" columnClasses="cmPadding5">
+									<p:selectOneMenu value="#{search.name}">
+										<f:selectItems
+											value="#{catalogueBackingBean.managedBean.searchCriteria}" />
+									</p:selectOneMenu>
+									<p:inputText size="50" value="#{search.value}" />
+								</h:panelGrid>
+
+
+							</ui:repeat>
+							<div style="text-align: right;">
+								<p:commandButton value="Search" icon="ui-icon-search"
+									action="#{catalogueBackingBean.searchCatalogue}"
+									update=":form:supplierItemID" />
+							</div>
+
+						</p:tab>
+
+					</p:tabView></td>
+				<td><p:commandLink
+						action="#{catalogueBackingBean.viewCartListItem}">
+						<p:graphicImage value="/resources/ep/images/design/cart1.png"></p:graphicImage>( #{fn:length(catalogueBackingBean.managedBean.cartList)} )
+		</p:commandLink></td>
 			</tr>
 		</table>
 
-		<h:panelGrid columns="3">
-			<p:outputLabel value="#{lbl['lbl.cm.item.name']}" />
-			<p:inputText size="50"
-				value="#{catalogueBackingBean.managedBean.itemName}"></p:inputText>
-		</h:panelGrid>
+		<table style="width: 100%;">
+			<tr>
+				<td width="70%" style="vertical-align: top;"><p:panel
+						style="width: 100%;" header="SEARCH RESULTS" toggleable="true">
+
+						<div style="text-align: right;">
+							<p:commandButton id="compareButton"
+								action="#{catalogueBackingBean.compareSupplierItem}"
+								value="#{lbl['lbl.cm.compare']} ( #{fn:length(catalogueBackingBean.managedBean.selectedSupplierItemList)} )"
+								disabled="#{2 > fn:length(catalogueBackingBean.managedBean.selectedSupplierItemList)}" />
+						</div>
+						<p:dataGrid
+							value="#{catalogueBackingBean.managedBean.supplierItemList}"
+							id="supplierItemID" var="supplierItem" rowIndexVar="rowIndex"
+							width="70%" columns="1">
+							<div style="border-bottom: 1px solid #EEE;">
+								<table style="width: 100%;">
+									<tr>
+										<td width="85%">
+
+											<table style="width: 100%;">
+												<tr>
+
+													<td rowspan="4" style="width: 20%;"><p:graphicImage
+															value="/resources/ep/images/product/computer/879949914_125.jpg"
+															height="80" width="80" /></td>
+													<td style="font-weight: bold; width: 15%;"><p:outputLabel
+															value="Item Name:"></p:outputLabel></td>
+													<td><p:commandLink
+															value="#{supplierItem.cmItem.itemName}"
+															action="#{catalogueBackingBean.navigateToSupplierItemDet(rowIndex)}" /></td>
+													<td></td>
+													<td></td>
 
 
+												</tr>
+												<tr>
+													<td style="font-weight: bold; width: 15%;"><p:outputLabel
+															value="Supplier:"></p:outputLabel></td>
+													<td>ABC SDN BHD<p:commandLink
+															action="#{favoriteSupplierBackingBean.addToFavoriteSupplier}" update=":form:supplierItemViewID">
+															<p:graphicImage
+																value="/resources/ep/images/design/add.png"></p:graphicImage>
+														</p:commandLink></td>
 
-		<h:panelGroup id="advanceSearchId" style="width:100%">
+												</tr>
+											</table>
 
+										</td>
+										<td width="15%" style="background-color: #EEEEEE;">
+											<table>
+												<tr>
+													<td style="font-weight: bold; border-bottom: 1px solid">Price
+														(MYR)</td>
+												</tr>
+												<tr>
+													<td>1000.00</td>
+													<td><p:commandLink
+															action="#{catalogueBackingBean.addToCart}"
+															update=":form:supplierItemViewID">
+															<p:graphicImage
+																value="/resources/ep/images/design/cart.png"></p:graphicImage>
+														</p:commandLink></td>
+												</tr>
+											</table>
 
+										</td>
+										<td width="2%"><p:selectBooleanCheckbox
+												value="#{supplierItem.selected}">
+												<p:ajax update=":form:compareButton"
+													listener="#{catalogueBackingBean.triggerCompare(rowIndex)}" />
+											</p:selectBooleanCheckbox></td>
 
-			<c:if test="#{catalogueBackingBean.managedBean.advanceSearchInd}">
+									</tr>
+								</table>
+							</div>
+						</p:dataGrid>
 
-				<ui:repeat var="search"
-					value="#{catalogueBackingBean.managedBean.advanceSearchList}">
+					</p:panel></td>
+				<td width="30%" style="vertical-align: top;"><div
+						class="accordian-panel" style="width: 80%;">
+						<p:outputLabel styleClass="accordian-title" value="My Favorites"></p:outputLabel>
+						<p:accordionPanel multiple="true">
+							<p:tab
+								title="WishList ( #{fn:length(catalogueBackingBean.managedBean.wishLists)} ) ">
+								<p:dataGrid var="type" rowIndexVar="rowIndex"
+									value="#{catalogueBackingBean.managedBean.wishLists}"
+									columns="1" style="width: 100%;">
+									<p:commandLink value="#{type.wishlistDesc}"
+										update=":form:supplierItemID"
+										action="#{wishListBackingBean.filterWishListType(rowIndex)}" />
+								</p:dataGrid>
+							</p:tab>
+						</p:accordionPanel>
+						<p:commandButton icon="ui-icon-add" value="Wishlist"
+							action="#{catalogueBackingBean.addIntoWishList}"
+							onclick="wishListPopUp.show()"
+							update="selectWishList, allWishListId" />
+						<p:accordionPanel multiple="true">
+							<p:tab
+								title="Supplier ( #{fn:length(catalogueBackingBean.managedBean.favoriteSupplierList)} )">
+								<c:forEach
+									items="#{catalogueBackingBean.managedBean.favoriteSupplierList}"
+									var="favor">
 
-					<h:panelGrid columns="2" columnClasses="cmPadding5">
-						<p:selectOneMenu value="#{search.name}">
-							<f:selectItems
-								value="#{catalogueBackingBean.managedBean.searchCriteria}" />
-						</p:selectOneMenu>
-						<p:inputText size="50" value="#{search.value}" />
-					</h:panelGrid>
+									<p:commandLink value="#{favor.supplierId}*"
+										action="#{favoriteSupplierBackingBean.filterFavoriteSupplierItems(favor.supplierId)}"
+										update=":form:supplierItemID" />
+								</c:forEach>
+							</p:tab>
+						</p:accordionPanel>
+					</div></td>
 
-				</ui:repeat>
-			</c:if>
+			</tr>
 
-		</h:panelGroup>
-
-		<p:commandButton value="Search" icon="ui-icon-search"
-			action="#{catalogueBackingBean.searchCatalogue}"
-			update="supplierItemID" />
-
-
-
-
-
-		<p:dataTable
-			value="#{catalogueBackingBean.managedBean.supplierItemList}"
-			id="supplierItemID" var="supplierItem" rowIndexVar="rowIndex"
-			rowKey="#{supplierItem.supplierItemId}" width="100%"
-			selection="#{catalogueBackingBean.managedBean.selectedSupplierItems}">
-
-			<p:column selectionMode="multiple" style="width:2%" />
-
-			<p:ajax event="rowSelectCheckbox"
-				listener="#{catalogueBackingBean.compareSupplierItem()}"
-				process="@this " update=":form:compareButton" />
-			<p:ajax event="rowUnselectCheckbox"
-				listener="#{catalogueBackingBean.compareSupplierItem()}"
-				process="@this " update=":form:compareButton" />
-
-			<p:ajax event="toggleSelect"
-				listener="#{catalogueBackingBean.compareSupplierItem()}"
-				process="@this " update=":form:compareButton" />
-
-			<p:column>
-				<f:facet name="header">
-					#{lbl['lbl.cm.item.code']}
-				</f:facet>
-
-			</p:column>
-			<p:column>
-				<f:facet name="header">
-					#{lbl['lbl.cm.item.name']}
-				</f:facet>
-				#{supplierItem.cmItem.itemName}
-			</p:column>
-			<p:column>
-				<f:facet name="header">
-					#{lbl['lbl.cm.supplier.name']}
-				</f:facet>
-
-			</p:column>
-			<p:column>
-				<f:facet name="header">
-					#{lbl['lbl.cm.uom']}
-				</f:facet>
-
-			</p:column>
-			<p:column>
-				<f:facet name="header">
-					#{lbl['lbl.cm.contract.no']}
-				</f:facet>
-
-			</p:column>
-			<p:column>
-				<f:facet name="header">
-					#{lbl['lbl.cm.price']}
-				</f:facet>
-
-			</p:column>
-			<p:column>
-				<f:facet name="header">
-					#{lbl['lbl.cm.state']}
-				</f:facet>
-
-			</p:column>
-			<p:column>
-				<f:facet name="header">
-					#{lbl['lbl.cm.district']}
-				</f:facet>
-
-			</p:column>
-			<p:column>
-				<f:facet name="header">
-					#{lbl['lbl.cm.catalogue.type']}
-				</f:facet>
-
-			</p:column>
-			<p:column>
-				<f:facet name="header">
-					#{lbl['lbl.cm.image']}
-				</f:facet>
-
-			</p:column>
-
-			<p:column>
-				<f:facet name="header">
-					#{lbl['lbl.cm.action']}
-				</f:facet>
-				<p:commandButton
-					action="#{catalogueBackingBean.navigateToSupplierItemDet(rowIndex)}"
-					value="Detail"></p:commandButton>
-
-			</p:column>
+		</table>
 
 
-		</p:dataTable>
-
-		<h:panelGrid columns="4">
-			<p:commandButton id="compareButton"
-				action="#{catalogueBackingBean.compareSupplierItem}"
-				value="#{lbl['lbl.cm.compare']} ( #{fn:length(catalogueBackingBean.managedBean.selectedSupplierItemList)} )"
-				disabled="#{2 > fn:length(catalogueBackingBean.managedBean.selectedSupplierItemList)}" />
-			<p:commandButton value="Add To Cart"
-				action="#{catalogueBackingBean.addToCart}"
-				update="supplierItemViewID" />
-			<p:commandButton value="Wishlist"
-				action="#{catalogueBackingBean.addIntoWishList}"
-				onclick="wishListPopUp.show()"
-				update="selectWishList, allWishListId" />
-			<p:commandButton value="Favorite Supplier"
-				action="#{favoriteSupplierBackingBean.addToFavoriteSupplier}"
-				update="supplierItemViewID" />
-
-		</h:panelGrid>
-
-
-		<p:dialog id="wishListDialog" widgetVar="wishListPopUp" width="500px" >
+		<p:dialog id="wishListDialog" widgetVar="wishListPopUp" width="500px">
 
 			<ui:include src="wishListPopUp.xhtml" />
 
 		</p:dialog>
-
 	</h:panelGroup>
 
 
