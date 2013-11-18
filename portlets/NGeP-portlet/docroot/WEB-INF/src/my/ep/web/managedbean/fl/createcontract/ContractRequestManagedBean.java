@@ -9,12 +9,12 @@ import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
 
 import my.ep.persistence.entity.ct.CtContract;
+import my.ep.persistence.entity.ct.dtl.item.CtContractedItem;
 import my.ep.persistence.entity.fl.FlAttachment;
 import my.ep.persistence.entity.fl.FlRemark;
 import my.ep.persistence.entity.fl.request.FlDeliveryAddress;
 import my.ep.persistence.entity.fl.request.FlFulfilmentRequest;
 import my.ep.persistence.entity.fl.request.FlShippingInstr;
-import my.ep.persistence.entity.pm.authorization.PmOrgAddress;
 import my.ep.persistence.entity.pm.common.PmAddressType;
 import my.ep.persistence.entity.pm.common.PmMaksud;
 import my.ep.web.managedbean.BaseManagedBean;
@@ -42,6 +42,9 @@ public class ContractRequestManagedBean extends BaseManagedBean {
 	private boolean checkPtjFlg = true;
 	private List<PmAddressType> addressTypesList; 
 	private List<PmAddressType> selectedPmAddrTypeList;
+	private FlDeliveryAddress selectedAddr;
+	private List<CtContractedItem> contractedItemList;
+	private List<CtContractedItem> selectedContractedItemList;
 	
 	//getbpm
 	private String bpmTaskId;
@@ -394,6 +397,55 @@ public class ContractRequestManagedBean extends BaseManagedBean {
 	 */
 	public void setSelectedPmAddrTypeList(List<PmAddressType> selectedPmAddrTypeList) {
 		this.selectedPmAddrTypeList = selectedPmAddrTypeList;
+	}
+
+
+	/**
+	 * @return the selectedAddr
+	 */
+	public FlDeliveryAddress getSelectedAddr() {
+		return selectedAddr;
+	}
+
+
+	/**
+	 * @param selectedAddr the selectedAddr to set
+	 */
+	public void setSelectedAddr(FlDeliveryAddress selectedAddr) {
+		this.selectedAddr = selectedAddr;
+	}
+
+
+	/**
+	 * @return the contractedItemList
+	 */
+	public List<CtContractedItem> getContractedItemList() {
+		return contractedItemList;
+	}
+
+
+	/**
+	 * @param contractedItemList the contractedItemList to set
+	 */
+	public void setContractedItemList(List<CtContractedItem> contractedItemList) {
+		this.contractedItemList = contractedItemList;
+	}
+
+
+	/**
+	 * @return the selectedContractedItemList
+	 */
+	public List<CtContractedItem> getSelectedContractedItemList() {
+		return selectedContractedItemList;
+	}
+
+
+	/**
+	 * @param selectedContractedItemList the selectedContractedItemList to set
+	 */
+	public void setSelectedContractedItemList(
+			List<CtContractedItem> selectedContractedItemList) {
+		this.selectedContractedItemList = selectedContractedItemList;
 	}
 
 

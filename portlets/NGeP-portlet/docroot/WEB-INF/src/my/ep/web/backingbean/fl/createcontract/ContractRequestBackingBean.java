@@ -6,7 +6,6 @@ package my.ep.web.backingbean.fl.createcontract;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -34,9 +33,10 @@ import my.ep.dto.pm.authorization.orgprofile.OrgProfileResDTO;
 import my.ep.dto.pm.common.maksud.MaksudReqDTO;
 import my.ep.dto.pm.common.maksud.MaksudResDTO;
 import my.ep.persistence.entity.ct.CtContract;
+import my.ep.persistence.entity.ct.dtl.item.CtContractedItem;
 import my.ep.persistence.entity.fl.request.FlDeliveryAddress;
+import my.ep.persistence.entity.fl.request.FlFulfilmentItem;
 import my.ep.persistence.entity.fl.request.FlFulfilmentRequest;
-import my.ep.persistence.entity.pm.authorization.PmOrgAddress;
 import my.ep.persistence.entity.pm.authorization.PmOrgProfile;
 import my.ep.persistence.entity.pm.common.PmAddressType;
 import my.ep.persistence.entity.pm.common.PmCode;
@@ -89,6 +89,7 @@ public class ContractRequestBackingBean extends BaseBackingBean<ContractRequestM
 			getManagedBean().getFlRequest().getCtContract().setFulfillmentTypeCode(new PmCode());
 			getManagedBean().getFlRequest().getCtContract().setSmSupplier(new SmSupplier());
 			getManagedBean().getFlRequest().setFlDeliveryAddresses(new ArrayList<FlDeliveryAddress>());
+			getManagedBean().getFlRequest().setFlFulfilmentItems(new ArrayList<FlFulfilmentItem>());
 		}
 
 		//onclick or trigger from the liferay menu page
@@ -231,7 +232,7 @@ public class ContractRequestBackingBean extends BaseBackingBean<ContractRequestM
 		getManagedBean().getFlRequest().getFlDeliveryAddresses().remove(getManagedBean().getSelectedAddrRow());
 	}
 
-	public void addDeliveryAddr(){
+	public void updateDeliveryAddrDt(){
 		for(PmAddressType addrType : getManagedBean().getSelectedPmAddrTypeList()){
 			FlDeliveryAddress deliveryAddr = new FlDeliveryAddress();
 			deliveryAddr.setFlFulfilmentRequest(getManagedBean().getFlRequest());
@@ -294,6 +295,25 @@ public class ContractRequestBackingBean extends BaseBackingBean<ContractRequestM
 
 	public void checkPtjFlg(){
 		getManagedBean().setCheckPtjFlg(false);
+	}
+	
+	public void addContractedItems(){
+		IContractSO contractSO = (IContractSO)BusinessDelegate.getInstance().getServiceObject("ct",IContractSO.class);	
+		ContractReqDTO ctReqDTO = new ContractReqDTO();
+		ctReqDTO.setContractId(getManagedBean().getFlRequest().getCtContract().getContractId());
+		ContractResDTO ctResDTO = contractSO.retrieveContract(ctReqDTO);
+	
+		getManagedBean().setContractedItemList(ctResDTO.getContract().getCtContractedItems());
+	}
+	
+	public void updateContractedItemDt(){
+		for(CtContractedItem contractedItems : getManagedBean().getSelectedContractedItemList()){
+			FlFulfilmentItem flItem = new FlFulfilmentItem();
+			flItem.setFlFulfilmentRequest(getManagedBean().getFlRequest());
+			flItem.setContractedItem(contractedItems);
+			getManagedBean().getFlRequest().setFlFulfilmentItems(new ArrayList<FlFulfilmentItem>());
+			getManagedBean().getFlRequest().getFlFulfilmentItems().add(flItem);
+		}
 	}
 	
 	
