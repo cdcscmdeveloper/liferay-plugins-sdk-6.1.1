@@ -103,7 +103,7 @@
 					</p:commandLink>
 				</p:column>
 				<p:column headerText="Del Address">
-					<h:outputText value="#{delivery.orgAddress.pmAddress.address1}" />
+					<h:outputText value="#{delivery.addressType.pmAddress.address1}" />
 				</p:column>
 				<p:column headerText="Start Date">
 					<h:outputText value="#{delivery.startDate}">
@@ -123,9 +123,7 @@
 		<p:panel header="DELIVERY ORDER" toggleable="true">
 			<br />
 			<p:dataTable value="#{flOrderBB.managedBean.deliveryOrderStatusList}"
-				var="deliveryOrder" paginator="true" rows="10" id="doTable"
-				paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
-				rowsPerPageTemplate="5,10,15" paginatorPosition="bottom"
+				var="deliveryOrder"  id="doTable"
 				rowIndexVar="rowIndex" width="100%">
 				<p:column headerText="Del Order No">
 					<h:outputText value="#{deliveryOrder.deliveryOrderId}" />

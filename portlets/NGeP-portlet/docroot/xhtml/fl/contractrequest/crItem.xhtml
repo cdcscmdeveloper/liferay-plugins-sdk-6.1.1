@@ -14,9 +14,9 @@
 			selection="#{contractRequestBackingBean.managedBean.selectedDelAddr}" rowKey="#{address.deliveryAddressId}" 
 			selectionMode="single">
 			<ac:paginator for="addressDataTable"/>
-			<p:ajax event="rowSelect" update=":form:cotabs" process="@this" 
-			listener="#{contractRequestBackingBean.selectedAddrRow()}"/>
-			
+			<p:ajax event="rowSelect" update=":form:cotabs"  process="@this"
+			listener="#{contractRequestBackingBean.selectedAddrRow()}">
+			</p:ajax>
 			<p:column headerText="Delivery Address">
 				<h:outputText value="#{address.addressType.pmAddress.address1}, #{address.addressType.pmAddress.address2}, #{address.addressType.pmAddress.address3}, #{address.addressType.pmAddress.address4}" />
 			</p:column>
@@ -53,7 +53,7 @@
 			<ac:paginator for="itemDataTable"/>
 			
 			<p:column headerText="Product Code">
-				<h:outputText value="" />
+				<h:outputText value="#{item.contractedItem.itemCode}" />
 			</p:column>
 
 			<p:column headerText="Item Name">
@@ -61,32 +61,24 @@
 			</p:column>
 
 			<p:column headerText="GOSODO">
-				<h:outputText value="" />
 			</p:column>
 
 			<p:column headerText="Activity Code">
-				<p:selectOneMenu value="#{item.pmActivity.activityCode}"
-					style="width: 260px;">
-					<f:selectItems itemLabel="012345" itemValue="1"
-						value="#{contractRequestBackingBean.activityCode}" />
-				</p:selectOneMenu>
 			</p:column>
 			<p:column headerText="Unit Price (MYR)">
-				<h:outputText value="" />
 			</p:column>
 			<p:column headerText="Ord. Qty.">
-				<h:outputText value="#{item.flFulfilmentItemAddr.orderedQty}" />
 			</p:column>
 			<p:column headerText="Sub Total">
-				<h:outputText value="" />
 			</p:column>
 			<p:column headerText="Action">
 				<p:commandLink id="deleteLink" styleClass="ui-icon ui-icon-trash" />
 			</p:column>
 		</p:dataTable>
 		<div style="width: 100%;text-align:right" >
-				<p:commandButton value="ACTION" 
-				rendered="#{contractRequestBackingBean.managedBean.selectedRowFlg}"/>
+				<p:commandButton id="addItems" value="ADD ITEMS" action="#{contractRequestBackingBean.addContractedItems}"
+				rendered="#{contractRequestBackingBean.managedBean.selectedRowFlg}" 
+				update="contractedItemDt" process="@this,contractedItemDt" oncomplete="addItems.show();"/>
 				
 		</div>
 	</p:panel>
@@ -101,6 +93,7 @@
 			selection="#{contractRequestBackingBean.managedBean.selectedPmAddrTypeList}">
 			<p:ajax event="rowSelect" update=":form" process="@this" 
 			listener="#{contractRequestBackingBean.selectedAddrRow()}"/>
+			<ac:paginator for="delAddr"/>
 			<p:columnGroup type="header">
 				<p:row>
 					<p:column rowspan="1" headerText=""></p:column>
@@ -118,9 +111,44 @@
 		</p:dataTable>
 		<div style="width:100%;text-align: right">
 			<p:commandButton value="Add"
-				action="#{contractRequestBackingBean.addDeliveryAddr}"
+				action="#{contractRequestBackingBean.updateDeliveryAddrDt}"
 				oncomplete="addDeliveryAddr.hide();" process="@this,delAddr"
 				update="addressDataTable">
+			</p:commandButton>
+		</div>
+		
+
+	</p:dialog>
+	<p:dialog header="Add Contracted Items" widgetVar="addItems"
+		showEffect="fade" hideEffect="fade" modal="true" height="450"
+		width="600" resizable="false">
+		
+		<p:dataTable id="contractedItemDt" var="contractedItem"
+			value="#{contractRequestBackingBean.managedBean.contractedItemList}"
+			rowKey="#{contractedItem.contractedItemId}"
+			selection="#{contractRequestBackingBean.managedBean.selectedContractedItemList}">
+			<p:ajax event="rowSelect" update=":form" process="@this"/>
+			<ac:paginator for="contractedItemDt"/>
+			<p:columnGroup type="header">
+				<p:row>
+					<p:column rowspan="1" headerText=""></p:column>
+					<p:column rowspan="1" headerText="No"></p:column>
+					<p:column rowspan="1" headerText="Items"></p:column>
+				</p:row>
+			</p:columnGroup>
+			<p:column selectionMode="multiple" />
+			<p:column>
+				<h:outputText value="#{contractedItem.contractedItemId}" />
+			</p:column>
+			<p:column>
+				<h:outputText value="#{contractedItem.itemName}" />
+			</p:column>
+		</p:dataTable>
+		<div style="width:100%;text-align: right">
+			<p:commandButton value="Add"
+				action="#{contractRequestBackingBean.updateContractedItemDt}"
+				oncomplete="addItems.hide();"
+				update="itemDataTable" process="@this,contractedItemDt">
 			</p:commandButton>
 		</div>
 		
