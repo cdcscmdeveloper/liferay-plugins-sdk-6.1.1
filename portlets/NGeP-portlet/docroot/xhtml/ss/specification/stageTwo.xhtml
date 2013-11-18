@@ -13,13 +13,14 @@
 		<p:commandLink value="Proposal Checklist"></p:commandLink>
 		<p:dataTable id="stageTwotechProposal" var="stageTwoTechnical"
 			value="#{specificationBackingBean.managedBean.scQtCheckSt2techProposal}"
-			editable="true" style="width:100%" rowIndexVar="index">
-
-             <p:column headerText="No">
+			editable="true" style="width:100%" rowIndexVar="index"
+			selection="#{specificationBackingBean.selectedst2TechProposal}" rowKey="#{stageTwoTechnical.qtChecklistId}">
+        <p:column selectionMode="multiple"  style="text-align:center;"/>
+            <!--  <p:column headerText="No">
 				
              <h:outputText value="#{index+1}"></h:outputText>
 
-			</p:column>
+			</p:column> -->
 
 			<p:column headerText="Title" style="width:80%">
 
@@ -85,6 +86,7 @@
 		<div align="right">
 			<p:commandButton value="ADD" process="@this,stageTwotechProposal" partialSubmit="true"
 				action="#{specificationBackingBean.stageTwoTechnicalAddProposal}" update="stageTwotechProposal"/>
+				<p:commandButton value="DELETE"  />
 
 		</div>
 
@@ -94,12 +96,14 @@
 		<p:commandLink value="Proposal Misc. Checklist"></p:commandLink>
 		<p:dataTable id="techAdditionaltwo" var="stageTwoTechnicalAdditional"
 			value="#{specificationBackingBean.managedBean.scQtCheckSt2techAdditionalProposalList}"
-			rowIndexVar="index" editable="true" style="width:100%">
-
-			<p:column headerText="No">
+			rowIndexVar="index" editable="true" style="width:100%"
+			selection="#{specificationBackingBean.selectedst2TechAddProposal}" rowKey="#{stageTwoTechnicalAdditional.qtChecklistId}">
+           
+           <p:column selectionMode="multiple"  style="text-align:center;"/>
+			<!-- <p:column headerText="No">
 				<h:outputText value="#{index+1}"></h:outputText>
 
-			</p:column>
+			</p:column> -->
 
 			<p:column headerText="Title" style="width:80%">
 
@@ -155,6 +159,7 @@
 		<div align="right">
 			<p:commandButton value="ADD" process="@this,techAdditionaltwo" partialSubmit="true"
 				action="#{specificationBackingBean.stageTwoAdditionalAdd}" update="techAdditionaltwo"/>
+				<p:commandButton value="DELETE"  />
 
 		</div>
 
@@ -171,12 +176,13 @@
 		<p:commandLink value="Proposal Checklist"></p:commandLink>
 		<p:dataTable id="financeProposaltwo" var="stageTwofunctional"
 			value="#{specificationBackingBean.managedBean.scQtCheckSt2financeProposalList}"
-			editable="true" style="width:100%" rowIndexVar="index">
-
-			<p:column headerText="No">
+			editable="true" style="width:100%" rowIndexVar="index"
+			selection="#{specificationBackingBean.selectedst2FinanceProposal}" rowKey="#{stageTwofunctional.qtChecklistId}">
+          <p:column selectionMode="multiple"  style="text-align:center;"/>
+			<!-- <p:column headerText="No">
 				<h:outputText value="#{index+1}"></h:outputText>
 
-			</p:column>
+			</p:column> -->
 
 			<p:column headerText="Title" style="width:80%">
 
@@ -238,6 +244,7 @@
 		<div align="right">
 			<p:commandButton value="ADD" process="@this,financeProposaltwo" partialSubmit="true"
 				action="#{specificationBackingBean.stageTwoFiProposalAdd}" update="financeProposaltwo"/>
+				<p:commandButton value="DELETE"  />
 
 		</div>
 
@@ -247,13 +254,14 @@
 		<p:commandLink value="Proposal Misc. Checklist"></p:commandLink>
 		<p:dataTable id="financeAdditionaltwo" var="stageTwofunctionalAdditional"
 			value="#{specificationBackingBean.managedBean.scQtCheckSt2financeAdditionalProposalList}"
-			editable="true" style="width:100%" rowIndexVar="index">
-
-			<p:column headerText="No">
+			editable="true" style="width:100%" rowIndexVar="index"
+			selection="#{specificationBackingBean.selectedst2FinanceAddProposal}" rowKey="#{stageTwofunctionalAdditional.qtChecklistId}">
+         <p:column selectionMode="multiple"  style="text-align:center;"/>
+			<!-- <p:column headerText="No">
 
 				<h:outputText value="#{index+1}"></h:outputText>
 
-			</p:column>
+			</p:column> -->
 
 			<p:column headerText="Title" style="width:80%">
 
@@ -307,6 +315,7 @@
 		<div align="right">
 			<p:commandButton value="ADD" process="@this,financeAdditionaltwo" partialSubmit="true"
 				action="#{specificationBackingBean.stageTwoFiAdditioalProposalAdd}" update="financeAdditionaltwo" />
+				<p:commandButton value="DELETE"  />
 
 		</div>
 	</p:panel>

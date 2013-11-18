@@ -17,7 +17,7 @@
    <f:selectItem itemLabel="Sijil Bumiputera" itemValue="SijilBumiputera"></f:selectItem>
    </p:selectManyCheckbox> -->
    
-   <p:dataTable var="compilance" value="#{specificationBackingBean.managedBean.compilaenceList}" editable="true"
+   <p:dataTable id="compli#{index}"  var="compilance" value="#{specificationBackingBean.managedBean.compilaenceList}" editable="true"
    	selection="#{specificationBackingBean.selectedCompilenceList}"
 				rowKey="#{compilance.compilanceId}" rowIndexVar="index">
 
@@ -33,7 +33,7 @@
 				
 				
 				<p:commandButton value="CANCEL"  style="float:right;" onclick="compliance.hide();"></p:commandButton>
-				<p:commandButton value="OK"  style="float:right;" process="@all" action="#{specificationBackingBean.stageOneTechProposal}"  oncomplete="compliance.hide();" update="compilence"></p:commandButton>
+				<p:commandButton value="OK"  style="float:right;" process="@all" partialSubmit="true" action="#{specificationBackingBean.stageOneTechProposal}"  oncomplete="compliance.hide();" update="compilence"></p:commandButton>
 			
 				
 	</p:dialog>

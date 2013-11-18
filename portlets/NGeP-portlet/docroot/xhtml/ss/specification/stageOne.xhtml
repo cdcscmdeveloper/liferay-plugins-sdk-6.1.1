@@ -14,16 +14,17 @@
 
 		<p:dataTable id="compilence" var="stageoneTechnical"
 			value="#{specificationBackingBean.managedBean.scQtCheckSt1techProposal}"
-			editable="true" rowIndexVar="index" style="width:100%">
+			editable="true" rowIndexVar="index" style="width:100%"
+			selection="#{specificationBackingBean.selectedst1TechProposal}" rowKey="{stageoneTechnical.qtChecklistId">
 
 
-
-			<p:column headerText="No">
-				<!-- <h:outputText value="1"></h:outputText> -->
+         <p:column selectionMode="multiple"  style="text-align:center;"/> 
+			<!-- <p:column headerText="No">
+				<h:outputText value="1"></h:outputText>
 
 				<h:outputText value="#{index+1}"></h:outputText>
 
-			</p:column>
+			</p:column> -->
 
 			<p:column headerText="Title" style="width:80%">
 				<!-- <h:outputText value="Arjun"></h:outputText> -->
@@ -78,6 +79,7 @@
 		<div align="right">
 			<p:commandButton value="ADD" process="@this" partialSubmit="true"
 				onclick="compliance.show();" />
+				<p:commandButton value="DELETE"  />
 
 		</div>
 
@@ -85,18 +87,19 @@
 
 
 		<p:commandLink value="Additional Proposal Checklist"></p:commandLink>
-		<p:dataTable id="additionaltech" var="stageoneaddTechnical"
+		<p:dataTable id="additionaltech" var="stageoneaddTechnical" rowKey="#{stageoneaddTechnical.qtChecklistId}"
 			value="#{specificationBackingBean.managedBean.scQtCheckSt1techAdditionalProposalList}"
-			editable="true" rowIndexVar="index" style="width:100%">
+			 		selection="#{specificationBackingBean.selectedst1TechAddProposal}"
+			 rowIndexVar="index" style="width:100%">
 
+           <p:column selectionMode="multiple"  style="text-align:center;"/> 
 
-
-			<p:column headerText="No">
-				<!-- <h:outputText value="1"></h:outputText> -->
+		<!-- 	<p:column headerText="No">
+				<h:outputText value="1"></h:outputText>
 
 				<h:outputText value="#{index+1}"></h:outputText>
 
-			</p:column>
+			</p:column> -->
 
 			<p:column headerText="Title" style="width:80%">
 				<!-- <h:outputText value="Arjun"></h:outputText> -->
@@ -148,6 +151,7 @@
 				partialSubmit="true"
 				action="#{specificationBackingBean.stageOneAdditionalAdd}"
 				update="additionaltech" />
+				<p:commandButton value="DELETE"  />
 
 		</div>
 
@@ -162,16 +166,17 @@
 		<p:commandLink value="Proposal Checklist"></p:commandLink>
 		<p:dataTable id="financeProposal" var="stageonefinanceProp"
 			value="#{specificationBackingBean.managedBean.scQtCheckSt1financeProposalList}"
-			editable="true" style="width:100%" rowIndexVar="index">
+			 rowKey="#{stageonefinanceProp.qtChecklistId}" selection="#{specificationBackingBean.selectedst1FinanceProposal}"
+			 style="width:100%" rowIndexVar="index">
 
+       <p:column selectionMode="multiple"  style="text-align:center;"/>
 
-
-			<p:column headerText="No">
-				<!-- <h:outputText value="1"></h:outputText> -->
+			<!-- <p:column headerText="No">
+				<h:outputText value="1"></h:outputText>
 
 				<h:outputText value="#{index+1}"></h:outputText>
 
-			</p:column>
+			</p:column> -->
 
 			<p:column headerText="Title" style="width:80%">
 				<!-- <h:outputText value="Arjun"></h:outputText> -->
@@ -223,6 +228,7 @@
 				partialSubmit="true"
 				action="#{specificationBackingBean.stageOneFiProposalAdd}"
 				update="financeProposal" />
+				<p:commandButton value="DELETE"  />
 
 		</div>
 
@@ -232,16 +238,17 @@
 		<p:commandLink value="Additional Proposal Checklist"></p:commandLink>
 		<p:dataTable id="financeAdditional" var="stageonefinanceAdd"
 			value="#{specificationBackingBean.managedBean.scQtCheckSt1financeAdditionalProposalList}"
+			 rowKey="#{stageonefinanceAdd.qtChecklistId}" selection="#{specificationBackingBean.selectedst1FinanceAddProposal}"
 			editable="true" style="width:100%" rowIndexVar="index">
 
+        <p:column selectionMode="multiple"  style="text-align:center;"/>
 
-
-			<p:column headerText="No">
-				<!-- <h:outputText value="1"></h:outputText> -->
+		<!-- 	<p:column headerText="No">
+				<h:outputText value="1"></h:outputText>
 
 				<h:outputText value="#{index+1}"></h:outputText>
 
-			</p:column>
+			</p:column> -->
 
 			<p:column headerText="Title" style="width:80%">
 				<!-- <h:outputText value="Arjun"></h:outputText> -->
@@ -292,6 +299,7 @@
 				partialSubmit="true"
 				action="#{specificationBackingBean.stageOneFiAdditioalProposalAdd}"
 				update="financeAdditional" />
+				<p:commandButton value="DELETE"  />
 
 		</div>
 
@@ -301,7 +309,7 @@
 		<h:panelGrid columns="2" styleClass="noBorders tr,noBorders td">
 
 
-			<h:outputText value="Sample Product Required : " />
+			<h:outputText value="Sample Product Required" />
 
 
 			<p:selectOneRadio
@@ -311,7 +319,7 @@
 
 			</p:selectOneRadio>
 
-			<h:outputText value="Sample Closing Date Time :" />
+			<h:outputText value="Sample Closing Date Time" />
 
 
 			<p:calendar
@@ -319,7 +327,7 @@
 				showOn="button"></p:calendar>
 
 
-			<h:outputText value="Sample Product Information:" />
+			<h:outputText value="Sample Product Information" />
 
 
 			<p:inputTextarea rows="3" cols="40"
