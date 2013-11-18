@@ -11,7 +11,7 @@
 	<h:panelGroup id="supplierItemViewID">
 
 
-
+		<p:messages globalOnly="true"></p:messages>
 
 		<table style="width: 100%">
 			<tr>
@@ -112,7 +112,8 @@
 													<td style="font-weight: bold; width: 15%;"><p:outputLabel
 															value="Supplier:"></p:outputLabel></td>
 													<td>ABC SDN BHD<p:commandLink
-															action="#{favoriteSupplierBackingBean.addToFavoriteSupplier}" update=":form:supplierItemViewID">
+															action="#{favoriteSupplierBackingBean.addToFavoriteSupplier}"
+															update=":form:supplierItemViewID">
 															<p:graphicImage
 																value="/resources/ep/images/design/add.png"></p:graphicImage>
 														</p:commandLink></td>
@@ -173,14 +174,35 @@
 						<p:accordionPanel multiple="true">
 							<p:tab
 								title="Supplier ( #{fn:length(catalogueBackingBean.managedBean.favoriteSupplierList)} )">
-								<c:forEach
-									items="#{catalogueBackingBean.managedBean.favoriteSupplierList}"
-									var="favor">
 
-									<p:commandLink value="#{favor.supplierId}*"
-										action="#{favoriteSupplierBackingBean.filterFavoriteSupplierItems(favor.supplierId)}"
-										update=":form:supplierItemID" />
-								</c:forEach>
+								<table>
+									<tr>
+										<td><p:dataGrid var="favor" rowIndexVar="rowIndex"
+												value="#{catalogueBackingBean.managedBean.favoriteSupplierList}"
+												columns="1" style="width: 100%;">
+												<table>
+													<tr>
+														<td><p:commandLink value="ABC SDN BHD"
+																update=":form:supplierItemID"
+																action="#{favoriteSupplierBackingBean.filterFavoriteSupplierItems(favor.supplierId)}" /></td>
+														<td><p:commandLink
+																action="#{favoriteSupplierBackingBean.deleteFavoriteSupplier(rowIndex)}"
+																update=":form:supplierItemViewID">
+																<p:graphicImage
+																	value="/resources/ep/images/design/trash.png"></p:graphicImage>
+															</p:commandLink></td>
+													</tr>
+												</table>
+
+
+											</p:dataGrid></td>
+
+									</tr>
+								</table>
+
+
+
+
 							</p:tab>
 						</p:accordionPanel>
 					</div></td>

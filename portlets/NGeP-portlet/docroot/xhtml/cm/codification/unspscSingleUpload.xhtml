@@ -10,90 +10,143 @@
 	<ui:define name="contentSection">
 
 		<h:panelGroup id="cmUNSPSCSingleUploadID">
-			<p:outputLabel styleClass="screen-title"
-				value="#{lbl['lbl.cm.unspsc.code.single.upload']}"></p:outputLabel>
 
 			<div style="text-align: right;">
 				<p:commandButton value="#{lbl['lbl.cm.save']}" icon="ui-icon-save"
 					action="#{unspscCodeBackingBean.savetempCode}"></p:commandButton>
 			</div>
-			<table style="width:100%;">
-				<tr>
-					<td><p:outputLabel value="* #{lbl['lbl.cm.segment.code']}"></p:outputLabel></td>
-					<td><p:inputText
-							value="#{unspscCodeBackingBean.managedBean.segmentCode}"></p:inputText></td>
-					<td><p:outputLabel value="* #{lbl['lbl.cm.family.code']}"></p:outputLabel></td>
-					<td><p:inputText
-							value="#{unspscCodeBackingBean.managedBean.familyCode}"></p:inputText></td>
-				</tr>
-				<tr>
-					<td><p:outputLabel value="* #{lbl['lbl.cm.segment.title']}"></p:outputLabel></td>
-					<td><p:inputText
-							value="#{unspscCodeBackingBean.managedBean.segmentTitle}"></p:inputText></td>
-					<td><p:outputLabel value="* #{lbl['lbl.cm.family.title']}"></p:outputLabel></td>
-					<td><p:inputText
-							value="#{unspscCodeBackingBean.managedBean.familyTitle}"></p:inputText></td>
-				</tr>
-
-				<tr>
-					<td><p:outputLabel value="* #{lbl['lbl.cm.segment.key']}"></p:outputLabel></td>
-					<td><p:inputText
-							value="#{unspscCodeBackingBean.managedBean.segmentKey}"></p:inputText></td>
-					<td><p:outputLabel value="* #{lbl['lbl.cm.family.key']}"></p:outputLabel></td>
-					<td><p:inputText
-							value="#{unspscCodeBackingBean.managedBean.familyKey}"></p:inputText></td>
-				</tr>
-
-				<tr>
-					<td><p:outputLabel
-							value="#{lbl['lbl.cm.segment.description']}"></p:outputLabel></td>
-					<td><p:inputText
-							value="#{unspscCodeBackingBean.managedBean.segmentDesc}"></p:inputText></td>
-					<td><p:outputLabel
-							value="#{lbl['lbl.cm.family.description']}"></p:outputLabel></td>
-					<td><p:inputText
-							value="#{unspscCodeBackingBean.managedBean.familyDesc}"></p:inputText></td>
-				</tr>
-
-				<tr>
-					<td><p:outputLabel value="* #{lbl['lbl.cm.class.code']}"></p:outputLabel></td>
-					<td><p:inputText
-							value="#{unspscCodeBackingBean.managedBean.classCode}"></p:inputText></td>
-					<td><p:outputLabel value="* #{lbl['lbl.cm.commodity.code']}"></p:outputLabel></td>
-					<td><p:inputText
-							value="#{unspscCodeBackingBean.managedBean.commodityCode}"></p:inputText></td>
-				</tr>
-				<tr>
-					<td><p:outputLabel value="* #{lbl['lbl.cm.class.title']}"></p:outputLabel></td>
-					<td><p:inputText
-							value="#{unspscCodeBackingBean.managedBean.classTitle}"></p:inputText></td>
-					<td><p:outputLabel value="* #{lbl['lbl.cm.commodity.title']}"></p:outputLabel></td>
-					<td><p:inputText
-							value="#{unspscCodeBackingBean.managedBean.commodityTitle}"></p:inputText></td>
-				</tr>
-
-				<tr>
-					<td><p:outputLabel value="* #{lbl['lbl.cm.class.key']}"></p:outputLabel></td>
-					<td><p:inputText
-							value="#{unspscCodeBackingBean.managedBean.classKey}"></p:inputText></td>
-					<td><p:outputLabel value="* #{lbl['lbl.cm.commodity.key']}"></p:outputLabel></td>
-					<td><p:inputText
-							value="#{unspscCodeBackingBean.managedBean.commodityKey}"></p:inputText></td>
-				</tr>
-
-				<tr>
-					<td><p:outputLabel
-							value="#{lbl['lbl.cm.class.description']}"></p:outputLabel></td>
-					<td><p:inputText
-							value="#{unspscCodeBackingBean.managedBean.classDesc}"></p:inputText></td>
-					<td><p:outputLabel
-							value="#{lbl['lbl.cm.commodity.description']}"></p:outputLabel></td>
-					<td><p:inputText
-							value="#{unspscCodeBackingBean.managedBean.commodityDesc}"></p:inputText></td>
-				</tr>
-			</table>
 
 
+			<p:panelGrid style="width:100%;">
+				<f:facet name="header">
+					<p:row>
+						<p:column>
+							<h:outputLabel value="" />
+						</p:column>
+						<p:column>
+							 Code
+						</p:column>
+						<p:column>
+							Title
+						</p:column>
+						<p:column>
+							Key
+						</p:column>
+						<p:column>
+							Description
+						</p:column>
+					</p:row>
+
+				</f:facet>
+
+				<p:row>
+					<p:column>
+						<h:outputLabel value="Segment" />
+					</p:column>
+					<p:column>
+						<p:inputText
+							value="#{unspscCodeBackingBean.managedBean.segmentCode}"></p:inputText>
+
+					</p:column>
+					<p:column>
+						<p:inputText
+							value="#{unspscCodeBackingBean.managedBean.segmentTitle}"></p:inputText>
+
+					</p:column>
+					<p:column>
+						<p:inputText
+							value="#{unspscCodeBackingBean.managedBean.segmentKey}"></p:inputText>
+					</p:column>
+					<p:column>
+						<p:inputText
+							value="#{unspscCodeBackingBean.managedBean.segmentDesc}"></p:inputText>
+
+					</p:column>
+				</p:row>
+				
+				
+				<p:row>
+					<p:column>
+						<h:outputLabel value="Family" />
+					</p:column>
+					<p:column>
+						<p:inputText
+							value="#{unspscCodeBackingBean.managedBean.familyCode}"></p:inputText>
+
+					</p:column>
+					<p:column>
+						<p:inputText
+							value="#{unspscCodeBackingBean.managedBean.familyTitle}"></p:inputText>
+
+					</p:column>
+					<p:column>
+						<p:inputText
+							value="#{unspscCodeBackingBean.managedBean.familyKey}"></p:inputText>
+					</p:column>
+					<p:column>
+						<p:inputText
+							value="#{unspscCodeBackingBean.managedBean.familyDesc}"></p:inputText>
+
+					</p:column>
+				</p:row>
+				
+				<p:row>
+					<p:column>
+						<h:outputLabel value="Class" />
+					</p:column>
+					<p:column>
+						<p:inputText
+							value="#{unspscCodeBackingBean.managedBean.classCode}"></p:inputText>
+
+					</p:column>
+					<p:column>
+						<p:inputText
+							value="#{unspscCodeBackingBean.managedBean.classTitle}"></p:inputText>
+
+					</p:column>
+					<p:column>
+						<p:inputText
+							value="#{unspscCodeBackingBean.managedBean.classKey}"></p:inputText>
+					</p:column>
+					<p:column>
+						<p:inputText
+							value="#{unspscCodeBackingBean.managedBean.classDesc}"></p:inputText>
+
+					</p:column>
+				</p:row>
+				
+				
+				<p:row>
+					<p:column>
+						<h:outputLabel value="Commodity" />
+					</p:column>
+					<p:column>
+						<p:inputText
+							value="#{unspscCodeBackingBean.managedBean.commodityCode}"></p:inputText>
+
+					</p:column>
+					<p:column>
+						<p:inputText
+							value="#{unspscCodeBackingBean.managedBean.commodityTitle}"></p:inputText>
+
+					</p:column>
+					<p:column>
+						<p:inputText
+							value="#{unspscCodeBackingBean.managedBean.commodityKey}"></p:inputText>
+					</p:column>
+					<p:column>
+						<p:inputText
+							value="#{unspscCodeBackingBean.managedBean.commodityDesc}"></p:inputText>
+
+					</p:column>
+				</p:row>
+				
+
+			</p:panelGrid>
+
+
+
+			
 
 		</h:panelGroup>
 

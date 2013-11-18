@@ -14,122 +14,121 @@
 
 
 		<h:panelGroup id="cmExtensionSearchID">
-			<p:outputLabel styleClass="screen-title"
-				value="#{lbl['lbl.cm.extension.search']}"></p:outputLabel>
+			
+			<p:panel header="SEARCH" toggleable="true">
 
-			<table>
-				<tr>
-					<td><p:outputLabel value="#{lbl['lbl.cm.unspsc.code']}"></p:outputLabel></td>
-					<td colspan="1"><p:inputText
-							value="#{codificationBackingBean.managedBean.selectedUNSPSCObj.unspscCode}" /></td>
-				</tr>
+				<table style="width: 100%;">
+					<tr>
+						<td><p:outputLabel value="#{lbl['lbl.cm.unspsc.code']}"></p:outputLabel></td>
+						<td colspan="1"><p:inputText
+								value="#{codificationBackingBean.managedBean.selectedUNSPSCObj.unspscCode}"
+								size="40" /></td>
+						<td><p:outputLabel value="#{lbl['lbl.cm.unspsc.title']}"></p:outputLabel></td>
+						<td colspan="1"><p:inputText
+								value="#{codificationBackingBean.managedBean.selectedUNSPSCObj.unspscTitle}"
+								size="40" /></td>
+					</tr>
 
-				<tr>
-					<td><p:outputLabel value="#{lbl['lbl.cm.unspsc.title']}"></p:outputLabel></td>
-					<td colspan="1"><p:inputText
-							value="#{codificationBackingBean.managedBean.selectedUNSPSCObj.unspscTitle}" /></td>
-				</tr>
-				<tr>
-					<td><p:outputLabel value="#{lbl['lbl.cm.type']}"></p:outputLabel></td>
-					<td colspan="1"><p:selectOneMenu
-							value="#{codificationBackingBean.typeFilterBean.searchValue}">
-							<f:selectItems
-								value="#{codificationBackingBean.managedBean.typeCriteria}" />
-						</p:selectOneMenu></td>
-				</tr>
-				<tr>
-					<td><p:outputLabel value="#{lbl['lbl.cm.brand']}"></p:outputLabel></td>
-					<td colspan="1"><p:selectOneMenu
-							value="#{codificationBackingBean.brandFilterBean.searchValue}">
-							<f:selectItems
-								value="#{codificationBackingBean.managedBean.brandCriteria}" />
-						</p:selectOneMenu></td>
-				</tr>
-				<tr>
-					<td><p:outputLabel value="#{lbl['lbl.cm.measurement']}"></p:outputLabel></td>
-					<td colspan="1"><p:selectOneMenu
-							value="#{codificationBackingBean.measurementFilterBean.searchValue}">
-							<f:selectItems
-								value="#{codificationBackingBean.managedBean.measurementCriteria}" />
-						</p:selectOneMenu></td>
-				</tr>
+					<tr>
+						<td><p:outputLabel value="#{lbl['lbl.cm.type']}"></p:outputLabel></td>
+						<td colspan="1"><p:selectOneMenu
+								value="#{codificationBackingBean.typeFilterBean.searchValue}"
+								style="width:228px;">
+								<f:selectItems
+									value="#{codificationBackingBean.managedBean.typeCriteria}" />
+							</p:selectOneMenu></td>
+						<td><p:outputLabel value="#{lbl['lbl.cm.brand']}"></p:outputLabel></td>
+						<td colspan="1"><p:selectOneMenu
+								value="#{codificationBackingBean.brandFilterBean.searchValue}"
+								style="width:228px;">
+								<f:selectItems
+									value="#{codificationBackingBean.managedBean.brandCriteria}" />
+							</p:selectOneMenu></td>
+					</tr>
 
-				<tr>
-					<td><p:outputLabel value="#{lbl['lbl.cm.color']}"></p:outputLabel></td>
-					<td><p:selectOneMenu
-							value="#{codificationBackingBean.colorFilterBean.searchValue}">
-							<f:selectItems
-								value="#{codificationBackingBean.managedBean.colorCriteria}" />
-						</p:selectOneMenu></td>
-					<td><p:commandButton value="Search" icon="ui-icon-search"
-							action="#{codificationBackingBean.itemSearch}"
-							update="itemTableID" /></td>
-				</tr>
+					<tr>
+						<td><p:outputLabel value="#{lbl['lbl.cm.measurement']}"></p:outputLabel></td>
+						<td colspan="1"><p:selectOneMenu
+								value="#{codificationBackingBean.measurementFilterBean.searchValue}"
+								style="width:228px;">
+								<f:selectItems
+									value="#{codificationBackingBean.managedBean.measurementCriteria}" />
+							</p:selectOneMenu></td>
+						<td><p:outputLabel value="#{lbl['lbl.cm.color']}"></p:outputLabel></td>
+						<td><p:selectOneMenu
+								value="#{codificationBackingBean.colorFilterBean.searchValue}"
+								style="width:228px;">
+								<f:selectItems
+									value="#{codificationBackingBean.managedBean.colorCriteria}" />
+							</p:selectOneMenu></td>
+					</tr>
+				</table>
+			</p:panel>
 
-			</table>
+			<div style="text-align: right;">
+				<p:commandButton value="Search" icon="ui-icon-search"
+					action="#{codificationBackingBean.itemSearch}" update="itemTableID" />
+			</div>
 
-			<p:dataTable id="itemTableID"
-				value="#{codificationBackingBean.managedBean.itemList}"
-				rowKey="#{item.itemId}" var="item" rowIndexVar="rowIndex"
-				selection="#{codificationBackingBean.managedBean.selectedItems}">
+			<p:panel header="SEARCH RESULTS" toggleable="true">
 
-				<p:column selectionMode="multiple" style="width:2%" />
+				<p:dataTable id="itemTableID"
+					value="#{codificationBackingBean.managedBean.itemList}"
+					rowKey="#{item.itemId}" var="item" rowIndexVar="rowIndex"
+					selection="#{codificationBackingBean.managedBean.selectedItems}">
 
+					<p:column selectionMode="multiple" style="width:2%" />
 
 
-				<p:column>
-					<f:facet name="header">
+
+					<p:column>
+						<f:facet name="header">
 							#{lbl['lbl.cm.type']}
 						</f:facet>
 						#{item.cmType.typeName}
 
 					</p:column>
-				<p:column>
-					<f:facet name="header">
+					<p:column>
+						<f:facet name="header">
 							#{lbl['lbl.cm.brand']}
 						</f:facet>
 						#{item.cmBrand.brandName}
 					</p:column>
-				<p:column>
-					<f:facet name="header">
+					<p:column>
+						<f:facet name="header">
 							#{lbl['lbl.cm.measurement']}
 						</f:facet>
 						
 						#{item.cmMeasurement.measurementName}
 
 					</p:column>
-				<p:column>
-					<f:facet name="header">
+					<p:column>
+						<f:facet name="header">
 							#{lbl['lbl.cm.color']}
 						</f:facet>
 						#{item.cmColor.colorName}
 					</p:column>
-				<p:column>
-					<f:facet name="header">
+					<p:column>
+						<f:facet name="header">
 							#{lbl['lbl.cm.action']}
 						</f:facet>
+						
+						<p:commandButton icon="ui-icon-edit" action="#{codificationBackingBean.editExtension(rowIndex)}"></p:commandButton>
+						<p:commandButton icon="ui-icon-delete" action="#{codificationBackingBean.deleteExtension(rowIndex)}"></p:commandButton>
+						
+					</p:column>
+					<f:facet name="footer">
+						<div style="text-align: right;">
+							<p:commandButton value="Maintenance FIle" icon="ui-icon-folder"
+								action="#{catalogueBackingBean.GoToMaintain()}" />
+							<p:commandButton value="Add" icon="ui-icon-add"
+								action="#{catalogueBackingBean.addToMaintain()}" />
+						</div>
 
-					<p:splitButton value="Action" icon="ui-icon-action">
-						<p:menuitem value="Edit"
-							action="#{codificationBackingBean.editExtension(rowIndex)}"
-							icon="ui-icon-edit" />
-						<p:menuitem value="Delete"
-							action="#{codificationBackingBean.deleteExtension(rowIndex)}"
-							icon="ui-icon-delete" />
-					</p:splitButton>
-				</p:column>
-				<f:facet name="footer">
-					<div style="text-align: right;">
-						<p:commandButton value="Maintenance FIle" icon="ui-icon-folder"
-							action="#{catalogueBackingBean.GoToMaintain()}" />
-						<p:commandButton value="Add" icon="ui-icon-add"
-							action="#{catalogueBackingBean.addToMaintain()}" />
-					</div>
+					</f:facet>
+				</p:dataTable>
 
-				</f:facet>
-			</p:dataTable>
-
-
+			</p:panel>
 
 
 		</h:panelGroup>

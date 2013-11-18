@@ -22,42 +22,53 @@
 
 			</div>
 
-			<p:selectOneRadio>
-				<f:selectItem itemValue="P" itemLabel="Product " />
-				<f:selectItem itemValue="S" itemLabel="Service" />
-			</p:selectOneRadio>
-
-			<h:panelGrid columns="2">
-
-				<p:outputLabel value="User"></p:outputLabel>
-				<p:inputText value="#{unspscCodeBackingBean.managedBean.tempUser}" />
-
-				<p:outputLabel value="* #{lbl['lbl.cm.item.name']}"></p:outputLabel>
-				<p:inputText
-					value="#{unspscCodeBackingBean.managedBean.requestCode.itemName}"></p:inputText>
-
-				<p:outputLabel value="* #{lbl['lbl.cm.item.details']}"></p:outputLabel>
-				<p:inputText
-					value="#{unspscCodeBackingBean.managedBean.requestCode.itemDetail}"></p:inputText>
-
-				<p:outputLabel value="* #{lbl['lbl.cm.type']}"></p:outputLabel>
-				<p:inputText
-					value="#{unspscCodeBackingBean.managedBean.requestCode.typeName}"></p:inputText>
-
-				<p:outputLabel value="* #{lbl['lbl.cm.brand']}"></p:outputLabel>
-				<p:inputText
-					value="#{unspscCodeBackingBean.managedBean.requestCode.brandName}"></p:inputText>
-
-				<p:outputLabel value="* #{lbl['lbl.cm.measurement']}"></p:outputLabel>
-				<p:inputText
-					value="#{unspscCodeBackingBean.managedBean.requestCode.measurementName}"></p:inputText>
-
-				<p:outputLabel value="* #{lbl['lbl.cm.color']}"></p:outputLabel>
-				<p:inputText
-					value="#{unspscCodeBackingBean.managedBean.requestCode.colorName}"></p:inputText>
+			<table style="width: 66%; margin-bottom: 4px;">
+				<tr>
+					<td><p:outputLabel value="Item Type"></p:outputLabel></td>
+					<td><p:selectOneMenu style="width:228px;">
+							<f:selectItem itemValue="P" itemLabel="Product " />
+							<f:selectItem itemValue="S" itemLabel="Service" />
+						</p:selectOneMenu></td>
+				</tr>
+			</table>
 
 
-			</h:panelGrid>
+
+			<table style="width: 100%;">
+
+
+				<tr>
+					<td><p:outputLabel value="* #{lbl['lbl.cm.item.name']}"></p:outputLabel></td>
+					<td><p:inputText
+							value="#{unspscCodeBackingBean.managedBean.requestCode.itemName}"
+							size="40"></p:inputText></td>
+					<td><p:outputLabel value="* #{lbl['lbl.cm.item.details']}"></p:outputLabel></td>
+					<td><p:inputText
+							value="#{unspscCodeBackingBean.managedBean.requestCode.itemDetail}"
+							size="40"></p:inputText></td>
+				</tr>
+				<tr>
+					<td><p:outputLabel value="* #{lbl['lbl.cm.type']}"></p:outputLabel></td>
+					<td><p:inputText
+							value="#{unspscCodeBackingBean.managedBean.requestCode.typeName}"
+							size="40"></p:inputText></td>
+					<td><p:outputLabel value="* #{lbl['lbl.cm.brand']}"></p:outputLabel></td>
+					<td><p:inputText
+							value="#{unspscCodeBackingBean.managedBean.requestCode.brandName}"
+							size="40"></p:inputText></td>
+				</tr>
+				<tr>
+					<td><p:outputLabel value="* #{lbl['lbl.cm.measurement']}"></p:outputLabel></td>
+					<td><p:inputText
+							value="#{unspscCodeBackingBean.managedBean.requestCode.measurementName}"
+							size="40"></p:inputText></td>
+					<td><p:outputLabel value="* #{lbl['lbl.cm.color']}"></p:outputLabel></td>
+					<td><p:inputText
+							value="#{unspscCodeBackingBean.managedBean.requestCode.colorName}"
+							size="40"></p:inputText></td>
+				</tr>
+
+			</table>
 
 
 

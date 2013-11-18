@@ -20,36 +20,34 @@
 					action="#{unspscCodeBackingBean.saveExtCode}"></p:commandButton>
 			</div>
 
-			<h:panelGrid columns="2" columnClasses="cmPadding">
-				<p:outputLabel value="#{lbl['lbl.cm.unspsc.code']}"></p:outputLabel>
-				<p:inputText
-					value="#{unspscCodeBackingBean.managedBean.requestCode.tempCode}"></p:inputText>
 
 
+			<table style="width: 100%;">
 
-				<p:outputLabel value="#{lbl['lbl.cm.unspsc.title']}"></p:outputLabel>
-				<p:inputText></p:inputText>
+				<tr>
+					<td><p:outputLabel value="* #{lbl['lbl.cm.unspsc.code']}"></p:outputLabel></td>
+					<td><p:inputText value="#{unspscCodeBackingBean.managedBean.requestCode.tempCode}" disabled="true" size="40" ></p:inputText></td>
+					<td><p:outputLabel value="* #{lbl['lbl.cm.unspsc.title']}"></p:outputLabel></td>
+					<td><p:inputText value="#{unspscCodeBackingBean.managedBean.requestCode.tempTitle}" disabled="true" size="40"></p:inputText></td>
+				</tr>
 
-
-				<p:outputLabel value="#{lbl['lbl.cm.type.name']}"></p:outputLabel>
-				<p:inputText
-					value="#{unspscCodeBackingBean.managedBean.cmType.typeName}"></p:inputText>
-
-				<p:outputLabel value="#{lbl['lbl.cm.brand.name']}"></p:outputLabel>
-				<p:inputText
-					value="#{unspscCodeBackingBean.managedBean.cmBrand.brandName}"></p:inputText>
-
-				<p:outputLabel value="#{lbl['lbl.cm.measurement.name']}"></p:outputLabel>
-				<p:inputText
-					value="#{unspscCodeBackingBean.managedBean.cmMeasurement.measurementName}"></p:inputText>
-
-				<p:outputLabel value="#{lbl['lbl.cm.color.name']}"></p:outputLabel>
-				<p:inputText
-					value="#{unspscCodeBackingBean.managedBean.cmColor.colorName}"></p:inputText>
-
-
-
-			</h:panelGrid>
+				<tr>
+					<td><p:outputLabel value="* #{lbl['lbl.cm.type.name']}"></p:outputLabel></td>
+					<td><p:inputText
+							value="#{unspscCodeBackingBean.managedBean.cmType.typeName}" size="40"></p:inputText></td>
+					<td><p:outputLabel value="* #{lbl['lbl.cm.brand.name']}"></p:outputLabel></td>
+					<td><p:inputText
+							value="#{unspscCodeBackingBean.managedBean.cmBrand.brandName}" size="40"></p:inputText></td>
+				</tr>
+				<tr>
+					<td><p:outputLabel value="* #{lbl['lbl.cm.measurement.name']}"></p:outputLabel></td>
+					<td><p:inputText
+							value="#{unspscCodeBackingBean.managedBean.cmMeasurement.measurementName}" size="40"></p:inputText></td>
+					<td><p:outputLabel value="* #{lbl['lbl.cm.color.name']}"></p:outputLabel></td>
+					<td><p:inputText
+							value="#{unspscCodeBackingBean.managedBean.cmColor.colorName}" size="40"></p:inputText></td>
+				</tr>
+			</table>
 
 
 		</h:panelGroup>

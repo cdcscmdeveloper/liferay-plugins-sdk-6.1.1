@@ -1,5 +1,4 @@
-<ui:composition
-	xmlns="http://www.w3.org/1999/xhtml"
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
 	xmlns:f="http://java.sun.com/jsf/core"
 	xmlns:h="http://java.sun.com/jsf/html"
 	xmlns:ui="http://java.sun.com/jsf/facelets"
@@ -9,46 +8,58 @@
 
 
 	<h:panelGroup id="cmUNSPSCsearchID">
-		<p:outputLabel styleClass="screen-title"
-			value="#{lbl['lbl.cm.codification.search']}"></p:outputLabel>
 
-		<table>
-			<tr>
-				<td><p:outputLabel value="#{lbl['lbl.cm.unspsc.code']}"></p:outputLabel></td>
-				<td colspan="1" ><p:inputText value="#{codificationBackingBean.codeFilterBean.searchValue}" /></td>
-			</tr>
-			<tr>
-				<td><p:outputLabel value="#{lbl['lbl.cm.unspsc.title']}"></p:outputLabel></td>
-				<td><p:inputText value="#{codificationBackingBean.titleFilterBean.searchValue}" /></td>
-				<td><p:commandButton icon="ui-icon-search" value="Search" action="#{codificationBackingBean.unspscSearch2}" update="cmUNSPSCsearchID"/></td>
-			</tr>
+		<p:panel header="SEARCH" toggleable="true">
+			<table style="width: 100%;">
+				<tr>
+					<td><p:outputLabel value="#{lbl['lbl.cm.unspsc.code']}"></p:outputLabel></td>
+					<td colspan="1"><p:inputText
+							value="#{codificationBackingBean.codeFilterBean.searchValue}" size="40" /></td>
+					<td><p:outputLabel value="#{lbl['lbl.cm.unspsc.title']}"></p:outputLabel></td>
+					<td><p:inputText
+							value="#{codificationBackingBean.titleFilterBean.searchValue}" size="40"/></td>
+				</tr>
+			</table>
+		</p:panel>
 
-		</table>
+
+		<div style="text-align: right;">
+			<p:commandButton icon="ui-icon-search" value="Search"
+				action="#{codificationBackingBean.unspscSearch2}"
+				update="cmUNSPSCsearchID" />
+
+		</div>
+
 
 		<p:remoteCommand name="extensionSearch"
 			action="#{codificationBackingBean.goToExtensionSearch}" />
 
-		<p:dataTable id="unspscTableID"
-			value="#{codificationBackingBean.managedBean.unspscList}"
-			var="unspscObj" rowKey="#{unspscObj.unspscId}"
-			selection="#{codificationBackingBean.managedBean.selectedUNSPSCObj}"
-			width="100%" selectionMode="single">
 
-			<p:ajax event="rowSelect" oncomplete="extensionSearch();" />
+		<p:panel header="SEARCH RESULTS" toggleable="true">
 
-			<p:column>
-				<f:facet name="header">
+			<p:dataTable id="unspscTableID"
+				value="#{codificationBackingBean.managedBean.unspscList}"
+				var="unspscObj" rowKey="#{unspscObj.unspscId}"
+				selection="#{codificationBackingBean.managedBean.selectedUNSPSCObj}"
+				width="100%" selectionMode="single">
+
+				<p:ajax event="rowSelect" oncomplete="extensionSearch();" />
+
+				<p:column>
+					<f:facet name="header">
 					#{lbl['lbl.cm.unspsc.code']}
 				</f:facet>
 				#{unspscObj.unspscCode}
 			</p:column>
-			<p:column>
-				<f:facet name="header">
+				<p:column>
+					<f:facet name="header">
 					#{lbl['lbl.cm.unspsc.title']}
 				</f:facet>
 				#{unspscObj.unspscTitle}
 			</p:column>
-		</p:dataTable>
+			</p:dataTable>
+
+		</p:panel>
 
 	</h:panelGroup>
 
