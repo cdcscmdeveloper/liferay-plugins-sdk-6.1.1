@@ -17,7 +17,8 @@
 		</p:commandButton>
 
 		<p:commandButton value="#{lbl['lbl.cm.save']}" icon="ui-icon-save"
-			action="#{catalogueBackingBean.saveCatalogItem}" update=":form:catalogFileMsg"></p:commandButton>
+			action="#{catalogueBackingBean.saveCatalogItem}"
+			update=":form:catalogFileMsg"></p:commandButton>
 
 		<p:commandButton value="#{lbl['lbl.cm.submit']}" icon="ui-icon-submit"
 			action="#{catalogueBackingBean.submitToReviewItems}"
@@ -67,8 +68,11 @@
 			<f:facet name="header">
 				#{lbl['lbl.cm.action']}
 			</f:facet>
-			<p:commandButton icon="ui-icon-edit"
-				action="#{catalogueBackingBean.navigateToCatalogDet(rowIndex)}"></p:commandButton>
+
+			<p:commandLink
+				action="#{catalogueBackingBean.navigateToCatalogDet(rowIndex)}">
+				<p:graphicImage value="/resources/ep/images/design/edit.png"></p:graphicImage>
+			</p:commandLink>
 		</p:column>
 	</p:dataTable>
 	<p:dialog id="excelDialog" widgetVar="excelDialog" modal="true"
