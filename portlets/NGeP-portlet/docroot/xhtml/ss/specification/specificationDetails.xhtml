@@ -12,26 +12,26 @@
 		<h:panelGrid columns="4" style="width:100%;"
 			columnClasses="columnWidth20,columnWidth30,columnWidth20,columnWidth30"
 			styleClass="noBorders tr,noBorders td">
-			<h:outputLabel value="*Procurement Category:" />
+			<h:outputLabel value="*Procurement Category" />
 			<p:selectOneMenu
 				value="#{specificationBackingBean.managedBean.scQtSpec.pmProcurementCategory.procurementCategoryId}">
 				<f:selectItem itemLabel="01 kawalan keselamatan" itemValue="1" />
 				<f:selectItem itemLabel="02 kawalan keselamatan" itemValue="2" />
 
 			</p:selectOneMenu>
-			<h:outputLabel value="Max.Proposaal:" />
+			<h:outputLabel value="Max.Proposaal" />
 			<p:inputText
 				value="#{specificationBackingBean.managedBean.scQtSpec.maxProposal}"></p:inputText>
 
 
-			<h:outputLabel value="* Evaluation TYpe : " />
+			<h:outputLabel value="* Evaluation TYpe" />
 			<p:selectOneRadio
 				value="#{specificationBackingBean.managedBean.scQtSpec.evaluationType}">
 				<f:selectItem itemLabel="One Tier" itemValue="1" />
 				<f:selectItem itemLabel="Two Tier" itemValue="2" />
 
 			</p:selectOneRadio>
-			<h:outputLabel value="Award Type : " />
+			<h:outputLabel value="Award Type" />
 			<p:selectOneRadio
 				value="#{specificationBackingBean.managedBean.scQtSpec.awardType}">
 				<f:selectItem itemLabel="By LineItem" itemValue="1" />
@@ -39,7 +39,7 @@
 
 			</p:selectOneRadio>
 
-			<h:outputLabel value="* Fulfillment TYpe : " />
+			<h:outputLabel value="* Fulfillment TYpe" />
 			<p:selectOneMenu
 				value="#{specificationBackingBean.managedBean.scQtSpec.fulfilmentType}">
 				<f:selectItem itemLabel="One-Off" itemValue="1" />
@@ -47,13 +47,13 @@
 				<f:selectItem itemLabel="Periodic(Schedule)" itemValue="3" />
 			</p:selectOneMenu>
 
-			<h:outputLabel value="Currency : " />
+			<h:outputLabel value="Currency" />
 			<p:selectOneMenu
 				value="#{specificationBackingBean.managedBean.scQtSpec.pmCurrency.currencyCode}">
 				<f:selectItem itemLabel="RM" itemValue="1" />
 				<f:selectItem itemLabel="$" itemValue="2" />
 			</p:selectOneMenu>
-			<h:outputLabel value="*Planned Amount: " />
+			<h:outputLabel value="*Planned Amount" />
 			<p:inputText
 				value="#{specificationBackingBean.managedBean.scQtSpec.scQt.qtAmount}"></p:inputText>
 			<h:outputLabel value=" Justification: " />
@@ -61,7 +61,7 @@
 				value="#{specificationBackingBean.managedBean.scQtSpec.justificationRemark}"></p:inputText>
 
 
-			<h:outputLabel value="Required Approval : " />
+			<h:outputLabel value="Required Approval" />
 			<p:selectOneRadio
 				value="#{specificationBackingBean.managedBean.scQtSpec.isApprovalReq}">
 				<f:selectItem itemLabel="Yes" itemValue="1" />
@@ -70,12 +70,12 @@
 			</p:selectOneRadio>
 
 
-			<h:outputLabel value="Status: " />
+			<h:outputLabel value="Status" />
 			<p:inputText
 				value="#{specificationBackingBean.managedBean.scQtSpec.statusId}"></p:inputText>
 
 
-			<h:outputLabel value="*Contract Period : " />
+			<h:outputLabel value="*Contract Period" />
 			<h:panelGroup>
 
 				<h:inputText size="4"
@@ -134,12 +134,13 @@
 		toggleable="true">
 		<p:dataTable var="specificationdetails"
 			value="#{specificationBackingBean.managedBean.scQtDeductionList}"
-			editable="true" rowIndexVar="index">
+			editable="true" rowIndexVar="index"
+			selection="#{specificationBackingBean.selectedDeduction}" rowKey="{specificationdetails.qtDeductionId}">
+            <p:column selectionMode="multiple"  style="text-align:center;"/>
 
-
-			<p:column headerText="No">
+			<!-- <p:column headerText="No">
 				<h:outputText value="#{index+1}"></h:outputText>
-			</p:column>
+			</p:column> -->
 
 			<p:column headerText="Type Of Deduction">
 
@@ -181,6 +182,7 @@
 			<p:commandButton value="ADD" process="@this,deduction"
 				partialSubmit="true"
 				action="#{specificationBackingBean.specificAdd}" update="deduction" />
+				<p:commandButton value="DELETE"  />
 
 		</div>
 
