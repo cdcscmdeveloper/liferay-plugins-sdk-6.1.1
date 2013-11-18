@@ -18,16 +18,17 @@
 				<c:if
 					test="${approvalBackingBean.managedBean.selectedBoolean1 eq '1'}">
 					<p:selectOneMenu
-						value="#{approvalCategory.scQtApproval.approverUserId}">
-						<f:selectItem itemLabel="approve" itemValue="1" />
-						<f:selectItem itemLabel="reject" itemValue="2" />
-						<f:selectItem itemLabel="revise" itemValue="3" />
+						value="#{approvalCategory.scQtApproval.approverId}">
+							<f:selectItem itemLabel="Select One" itemValue="" />
+						
+						<f:selectItem itemLabel="ROSLAN" itemValue="2" />
+						<f:selectItem itemLabel="KHAIR" itemValue="3" />
 					</p:selectOneMenu>
 				</c:if>
 				<c:if
 					test="${approvalBackingBean.managedBean.selectedBoolean1 eq '2'}">
 					<p:inputText
-						value="#{approvalCategory.scQtApproval.approverUserId}"
+						value="#{approvalCategory.scQtApproval.approverId}"
 						size="10"></p:inputText>
 				</c:if>
 			</h:panelGroup>
@@ -35,7 +36,7 @@
 			<h:outputLabel value="Approver Date"></h:outputLabel>
 
 			<p:calendar
-				value="#{approvalCategory.scQtApproval.approvalDate}"
+				value="#{approvalCategory.scQtApproval.approverActionDate}"
 				showOn="button"></p:calendar>
 
 
@@ -52,30 +53,33 @@
 					<c:when
 						test="${approvalBackingBean.managedBean.checkBoxBPK eq 'Restricted'}">
 						<p:selectOneMenu
-							value="#{approvalCategory.scQtApproval.approvalAction}">
-							<f:selectItem itemLabel="approve" itemValue="ar" />
-							<f:selectItem itemLabel="reject" itemValue="rj" />
-							<f:selectItem itemLabel="revise" itemValue="rv" />
-							<f:selectItem itemLabel="restrict" itemValue="rs" />
+							value="#{approvalCategory.scQtApproval.approverAction}">
+								<f:selectItem itemLabel="Select One" itemValue="" />
+							<f:selectItem itemLabel="APPROVE" itemValue="ar" />
+							<f:selectItem itemLabel="REJECT" itemValue="rj" />
+							<f:selectItem itemLabel="REVISE" itemValue="rv" />
+							<f:selectItem itemLabel="RESTRICT" itemValue="rs" />
 						</p:selectOneMenu>
 					</c:when>
 					<c:when
 						test="${approvalBackingBean.managedBean.checkBoxBPK eq 'Direct'}">
 						<p:selectOneMenu
-							value="#{approvalCategory.scQtApproval.approvalAction}">
-							<f:selectItem itemLabel="approve" itemValue="ar" />
-							<f:selectItem itemLabel="reject" itemValue="rj" />
-							<f:selectItem itemLabel="revise" itemValue="rv" />
-							<f:selectItem itemLabel="direct" itemValue="rs" />
+							value="#{approvalCategory.scQtApproval.approverAction}">
+								<f:selectItem itemLabel="Select One" itemValue="" />
+							<f:selectItem itemLabel="APPROVE" itemValue="ar" />
+							<f:selectItem itemLabel="REJECT" itemValue="rj" />
+							<f:selectItem itemLabel="REVISE" itemValue="rv" />
+							<f:selectItem itemLabel="DIRECT" itemValue="rs" />
 						</p:selectOneMenu>
 					</c:when>
 
 					<c:otherwise>
 						<p:selectOneMenu
-							value="#{approvalCategory.scQtApproval.approvalAction}">
-							<f:selectItem itemLabel="Approver" itemValue="ar" />
-							<f:selectItem itemLabel="Reject" itemValue="rj" />
-							<f:selectItem itemLabel="Revise" itemValue="rv" />
+							value="#{approvalCategory.scQtApproval.approverAction}">
+								<f:selectItem itemLabel="Select One" itemValue="" />
+							<f:selectItem itemLabel="APPROVE" itemValue="ar" />
+							<f:selectItem itemLabel="REJECT" itemValue="rj" />
+							<f:selectItem itemLabel="REVISE" itemValue="rv" />
 						</p:selectOneMenu>
 					</c:otherwise>
 				</c:choose>
@@ -84,7 +88,7 @@
 			<h:outputLabel value="Remarks"></h:outputLabel>
 
 			<p:inputTextarea
-				value="#{approvalCategory.scQtApproval.approvalRemark}"
+				value="#{approvalCategory.scQtApproval.approverRemark}"
 				rows="3" cols="50" autoResize="false"></p:inputTextarea>
 
 

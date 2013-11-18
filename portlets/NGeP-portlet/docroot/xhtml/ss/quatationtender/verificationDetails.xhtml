@@ -29,22 +29,22 @@
 
 			<h:panelGroup id="sample">
 				<p:selectOneMenu
-					value="#{approvalCategory.scQtApproval.verifierUserId}"
+					value="#{approvalCategory.scQtApproval.verifierId}"
 					rendered="#{approvalBackingBean.managedBean.selectedBoolean1 eq '1'}">
-					<f:selectItem itemLabel="verifier Name" itemValue="1" />
+					<f:selectItem itemLabel="Select One" itemValue="" />
 					<f:selectItem itemLabel="Roslan" itemValue="2" />
 					<f:selectItem itemLabel="Hanib" itemValue="3" />
 				</p:selectOneMenu>
 
 				<p:inputText
-					value="#{approvalCategory.scQtApproval.verifierUserId}"
+					value="#{approvalCategory.scQtApproval.verifierId}"
 					rendered="#{approvalBackingBean.managedBean.selectedBoolean1 eq '2'}"></p:inputText>
 			</h:panelGroup>
 
 			<h:outputLabel value="Verification Date"></h:outputLabel>
 
 			<p:calendar
-				value="#{approvalCategory.scQtApproval.verificationDate}"
+				value="#{approvalCategory.scQtApproval.verifierActionDate}"
 				showOn="button"></p:calendar>
 
 
@@ -56,12 +56,13 @@
 
 			<p:selectOneMenu
 				value="#{approvalCategory.scQtApproval.verifyAction}">
-				<f:selectItem itemLabel="approve" itemValue="1" />
-				<f:selectItem itemLabel="reject" itemValue="2" />
-				<f:selectItem itemLabel="revise" itemValue="2" />
+				<f:selectItem itemLabel="Select One" itemValue="" />
+				<f:selectItem itemLabel="APPROVE" itemValue="1" />
+				<f:selectItem itemLabel="REJECT" itemValue="2" />
+				<f:selectItem itemLabel="REVISE" itemValue="2" />
 			</p:selectOneMenu>
-
-			<h:outputLabel value="Remarks"></h:outputLabel>
+          
+			<h:outputLabel value="Remarks" style="vertical-align:top;"></h:outputLabel>
 
 			<p:inputTextarea rows="3" cols="50" autoResize="false"
 				value="#{approvalCategory.scQtApproval.verifierRemark}"></p:inputTextarea>

@@ -15,22 +15,22 @@
 
 			<h:panelGroup id="sample2">
 				<p:selectOneMenu
-					value="#{approvalCategory.scQtApproval.approverUserId}"
+					value="#{approvalCategory.scQtApproval.approverId}"
 					rendered="#{approvalBackingBean.managedBean.selectedBoolean1 eq '1'}">
-					<f:selectItem itemLabel="approve" itemValue="1" />
-					<f:selectItem itemLabel="reject" itemValue="2" />
-					<f:selectItem itemLabel="revise" itemValue="3" />
+					<f:selectItem itemLabel="Select One" itemValue="" />
+					<f:selectItem itemLabel="ROSLAN" itemValue="2" />
+					<f:selectItem itemLabel="KHAIR" itemValue="3" />
 				</p:selectOneMenu>
 
 				<p:inputText
-					value="#{approvalCategory.scQtApproval.approverUserId}"
+					value="#{approvalCategory.scQtApproval.approverId}"
 					rendered="#{approvalBackingBean.managedBean.selectedBoolean1 eq '2'}"></p:inputText>
 			</h:panelGroup>
 
 			<h:outputLabel value="Approver Date"></h:outputLabel>
 
 			<p:calendar
-				value="#{approvalCategory.scQtApproval.approvalDate}"
+				value="#{approvalCategory.scQtApproval.approverActionDate}"
 				showOn="button"></p:calendar>
 
 
@@ -45,16 +45,17 @@
 			<h:outputLabel value="Action"></h:outputLabel>
 
 			<p:selectOneMenu
-				value="#{approvalCategory.scQtApproval.approvalAction}">
-				<f:selectItem itemLabel="Approver" itemValue="ar" />
-				<f:selectItem itemLabel="Reject" itemValue="rj" />
+				value="#{approvalCategory.scQtApproval.approverAction}">
+					<f:selectItem itemLabel="Select One" itemValue="" />
+				<f:selectItem itemLabel="APPROVER" itemValue="ar" />
+				<f:selectItem itemLabel="REJECT" itemValue="rj" />
 
 			</p:selectOneMenu>
 
 			<h:outputLabel value="Remarks"></h:outputLabel>
 
 			<p:inputTextarea rows="3" cols="50"
-				value="#{approvalCategory.scQtApproval.approvalRemark}"
+				value="#{approvalCategory.scQtApproval.approverRemark}"
 				autoResize="false"></p:inputTextarea>
 
 
