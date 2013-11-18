@@ -17,6 +17,7 @@ import java.util.Map;
 import java.util.Vector;
 
 import javax.annotation.PostConstruct;
+import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.RequestScoped;
 import javax.faces.context.FacesContext;
@@ -163,7 +164,7 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean>{
 		log.info("catalogueSO:"+catalogueSO);
 
 		CatalogueResDTO resDTO = catalogueSO.searchSupplierItemByStatus(reqDTO);
-
+		System.out.println("resDTO.getSupplierItemList():"+resDTO.getSupplierItemList().size());
 		this.getManagedBean().setMaintainItemList(resDTO.getSupplierItemList());
 
 
@@ -301,6 +302,7 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean>{
 
 
 		return "catalogMaintenanceFile?faces-redirect=true";
+		//return "catalogMaintenanceFile";
 	}
 
 	public void advanceSearch(){
@@ -316,40 +318,7 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean>{
 
 	}
 
-	public void addIntoWishList() {
 
-
-
-		log.info("==============hktan========================"+this.getManagedBean().getSelectedSupplierItems().length);
-
-		this.getManagedBean().setSelectedSupplierItemList(null);
-
-		if(this.getManagedBean().getSelectedSupplierItems() != null && this.getManagedBean().getSelectedSupplierItems().length > 0) {
-			for(int i = 0; i < this.getManagedBean().getSelectedSupplierItems().length; i++) {
-				CmSupplierItem catalog = this.getManagedBean().getSelectedSupplierItems()[i];
-				this.getManagedBean().getSelectedSupplierItemList().add(catalog);
-			}			
-		}
-
-		log.info("size:"+this.getManagedBean().getSelectedSupplierItemList().size());
-
-		//genTempImages(this.getManagedBean().getSelectedCatalogList());
-
-		/*for (CatCatalog beanNew : this.getManagedBean().getCatalogList()) {  
-			log.info("hktan beanNew.isSelected()" + beanNew.isSelected());
-			log.info("hktan beanNew.getCatalogSeq()" + beanNew.getCatalogSeq());
-			if (beanNew.isSelected() && !isExistWishList(beanNew.getCatalogSeq())) {
-
-				this.getManagedBean().getSelectedCatalogList().add(beanNew);
-
-			}else if(!beanNew.isSelected()){
-				this.getManagedBean().getSelectedCatalogList().remove(beanNew);
-
-			}
-
-		}*/
-
-	}
 
 	public TreeNode getRoot() {
 		return root;
@@ -669,7 +638,6 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean>{
 
 			log.info("length:"+this.getManagedBean().getSelectedMaintainItems().length);
 			log.info("length:"+this.getManagedBean().getSelectedMaintainItem().getCmImages().size());
-			//this.getM
 
 			for(CmSupplierItem catalog : this.getManagedBean().getMaintainItemList()){
 
@@ -680,8 +648,9 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean>{
 			}
 
 			catalogueSO.updateSupplierItem(reqDTO);
-
-			//this.getManagedBean().setCatalogueNavigation("catalogMaintenance.xhtml");
+			
+			FacesContext facesContext = FacesContext.getCurrentInstance();
+			facesContext.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO," Saved Successfully", ""));
 
 		} finally {
 			catalogueSO = null;
@@ -689,7 +658,8 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean>{
 
 		log.info("Exit saveCatalogItem");
 
-		return "catalogMaintenanceFile?faces-redirect=true";
+		return "catalogMaintenanceFile";
+		//return "catalogMaintenanceFile?faces-redirect=true";
 	}
 
 
@@ -746,28 +716,7 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean>{
 	}
 
 
-	public String compareSupplierItem(){
 
-		log.info("==============hktan========================"+this.getManagedBean().getSelectedSupplierItems().length);
-
-		this.getManagedBean().setSelectedSupplierItemList(null);
-
-		if(this.getManagedBean().getSelectedSupplierItems() != null && this.getManagedBean().getSelectedSupplierItems().length > 0) {
-			for(int i = 0; i < this.getManagedBean().getSelectedSupplierItems().length; i++) {
-				CmSupplierItem catalog = this.getManagedBean().getSelectedSupplierItems()[i];
-				this.getManagedBean().getSelectedSupplierItemList().add(catalog);
-			}			
-		}
-
-		log.info("size:"+this.getManagedBean().getSelectedSupplierItemList().size());
-		this.getManagedBean().setCompareIndex(0);
-		CmSupplierItem catalog = this.getManagedBean().getSelectedSupplierItemList().get(0);
-
-		this.getManagedBean().setCatalogueObj(catalog);
-
-
-		return "compareCatalogue";
-	}
 
 	public void compareIndxeAction(){
 
@@ -858,22 +807,6 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean>{
 	}  
 
 
-	public void addToCart(){
-
-		for(int i=0; i<this.getManagedBean().getSelectedSupplierItems().length; i++){
-			CmSupplierItem item = this.getManagedBean().getSelectedSupplierItems()[i];
-
-			this.getManagedBean().getTempList().add(item);
-
-		}
-
-		for(CmSupplierItem temp:this.getManagedBean().getTempList()){
-			if(!this.getManagedBean().getTempMap().containsKey(temp.getSupplierItemId())){
-				this.getManagedBean().getCartList().add(temp);
-				this.getManagedBean().getTempMap().put(temp.getSupplierItemId(), temp.getSupplierItemId());
-			}
-		}
-	}
 
 	public String viewCartListItem(){
 
@@ -886,7 +819,7 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean>{
 	}
 
 
-	@PostConstruct
+	/*@PostConstruct
 	public void init() {
 
 
@@ -918,7 +851,7 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean>{
 			this.getManagedBean().setMaintainItemList(resDTO.getSupplierItemList());
 
 		}
-	}
+	}*/
 
 
 	public void publishCatalogItem(){
@@ -952,14 +885,99 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean>{
 	}
 
 
-	public void preRenderView() {
-		HttpServletRequest servletRequest = PortalUtil.getHttpServletRequest(new FacesScopes().getRequest());
-		HttpServletRequest originalServletRequest = PortalUtil.getOriginalServletRequest(servletRequest);
-		String param = originalServletRequest.getParameter("taskId");
+
+
+	public String compareSupplierItem(){
+
+		log.info("==============compareSupplierItem========================");
+
+
+
+		log.info("size:"+this.getManagedBean().getSelectedSupplierItemList().size());
+		this.getManagedBean().setCompareIndex(0);
+		CmSupplierItem catalog = this.getManagedBean().getSelectedSupplierItemList().get(0);
+
+		this.getManagedBean().setCatalogueObj(catalog);
+
+
+		return "compareCatalogue";
+	}
+
+
+
+	public void addToCart(){
+
+		for(CmSupplierItem supplierItem : this.getManagedBean().getSelectedSupplierItemList()){
+			this.getManagedBean().getTempList().add(supplierItem);
+		}
+
+
+
+		for(CmSupplierItem temp:this.getManagedBean().getTempList()){
+			if(!this.getManagedBean().getTempMap().containsKey(temp.getSupplierItemId())){
+				this.getManagedBean().getCartList().add(temp);
+				this.getManagedBean().getTempMap().put(temp.getSupplierItemId(), temp.getSupplierItemId());
+			}
+		}
+	}
+
+	public void triggerCompare(int index){
+
+		System.out.println("***********triggerCompare************"+index);
+
+
+		this.getManagedBean().setSelectedSupplierItemList(null);
+
+		for(CmSupplierItem supplierItem:this.getManagedBean().getSupplierItemList()){
+			if(supplierItem.isSelected()){
+				this.getManagedBean().getSelectedSupplierItemList().add(supplierItem);
+			}
+		}
 
 	}
-	
 
-	
+	public void addIntoWishList() {
+
+
+
+		this.getManagedBean().setSelectedSupplierItemList(null);
+		
+		for(CmSupplierItem supplierItem:this.getManagedBean().getSupplierItemList()){
+			if(supplierItem.isSelected()){
+				this.getManagedBean().getSelectedSupplierItemList().add(supplierItem);
+			}
+		}
+
+		log.info("size:"+this.getManagedBean().getSelectedSupplierItemList().size());
+
+		//genTempImages(this.getManagedBean().getSelectedCatalogList());
+
+		/*for (CatCatalog beanNew : this.getManagedBean().getCatalogList()) {  
+			log.info("hktan beanNew.isSelected()" + beanNew.isSelected());
+			log.info("hktan beanNew.getCatalogSeq()" + beanNew.getCatalogSeq());
+			if (beanNew.isSelected() && !isExistWishList(beanNew.getCatalogSeq())) {
+
+				this.getManagedBean().getSelectedCatalogList().add(beanNew);
+
+			}else if(!beanNew.isSelected()){
+				this.getManagedBean().getSelectedCatalogList().remove(beanNew);
+
+			}
+
+		}*/
+
+	}
+
+
+	public void deleteComparedItem(int index){
+
+		this.getManagedBean().getSelectedSupplierItemList().remove(index);
+	}
+
+
+
+
+
+
 
 }

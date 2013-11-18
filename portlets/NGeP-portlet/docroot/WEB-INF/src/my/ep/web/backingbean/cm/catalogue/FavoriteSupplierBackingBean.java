@@ -1,7 +1,9 @@
 package my.ep.web.backingbean.cm.catalogue;
 
+import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.RequestScoped;
+import javax.faces.context.FacesContext;
 
 import my.ep.biz.bean.search.ISearchBean;
 import my.ep.biz.bean.search.SearchBean;
@@ -31,38 +33,38 @@ public class FavoriteSupplierBackingBean extends BaseBackingBean<FavoriteSupplie
 	public FavoriteSupplierBackingBean(){
 		log.info("*******favoriteSupplierBackingBean************");
 	}
-	
-	
+
+
 	public void addToFavoriteSupplier(){
-		
+
 		IFavoriteSupplierSO favoriteSupplierSO = (IFavoriteSupplierSO) BusinessDelegate.getInstance().getServiceObject("cm",IFavoriteSupplierSO.class);
-		
+
 		CatalogueBackingBean catBB = new CatalogueBackingBean();
 		FavoriteSupplierReqDTO reqDTO = new FavoriteSupplierReqDTO();
-		for(int i=0; i<catBB.getManagedBean().getSelectedSupplierItems().length; i++){
+
+		for(CmSupplierItem item : catBB.getManagedBean().getSelectedSupplierItemList()){
 			CmFavoriteSupplier favor = new CmFavoriteSupplier();
-			CmSupplierItem item = catBB.getManagedBean().getSelectedSupplierItems()[i];
-			
+
 			favor.setRecordStatus(true);
 			favor.setPtjUserId(new Long(11003));
 			favor.setSupplierId(item.getSupplierId());
 			this.getManagedBean().getFavoriteSupplier().add(favor);	
 		}
-		
-		
+
+
 		reqDTO.setFavoriteSupplier(this.getManagedBean().getFavoriteSupplier());
-		
+
 		FavoriteSupplierResDTO resDTO = favoriteSupplierSO.saveFavoriteSupplier(reqDTO);
-		
-		
+
+
 		resDTO =  favoriteSupplierSO.retrieveFavoriteSupplierList(reqDTO);
 		catBB.getManagedBean().setFavoriteSupplierList(resDTO.getFavoriteSupplier());
-		
+
 	}
-	
-	
-	public String filterFavoriteSupplierItems(Long supplierId){
-		
+
+
+	public void filterFavoriteSupplierItems(Long supplierId){
+
 		log.info("*******filterFavoriteSupplierItems************");  
 		CatalogueBackingBean catBB = new CatalogueBackingBean();
 		ICatalogueSO catalogueSO = (ICatalogueSO) BusinessDelegate.getInstance().getServiceObject("cm",ICatalogueSO.class);
@@ -80,10 +82,32 @@ public class FavoriteSupplierBackingBean extends BaseBackingBean<FavoriteSupplie
 		CatalogueResDTO resDTO = catalogueSO.searchSupplierItemByStatus(reqDTO);
 
 		catBB.getManagedBean().setSupplierItemList(resDTO.getSupplierItemList());
-	
-		return "supplierItemView?faces-redirect=true";
+
+		//return "supplierItemView?faces-redirect=true";
 	}
 
+
+	public void deleteFavoriteSupplier(int index){
+
+		CatalogueBackingBean catBB = new CatalogueBackingBean();
+		IFavoriteSupplierSO favoriteSupplierSO = (IFavoriteSupplierSO) BusinessDelegate.getInstance().getServiceObject("cm",IFavoriteSupplierSO.class);
+		
+		System.out.println("index****"+index);
+		System.out.println("ID:"+catBB.getManagedBean().getFavoriteSupplierList().get(index).getSupplierId());
+		
+		FavoriteSupplierReqDTO reqDTO = new FavoriteSupplierReqDTO();
+		
+	
+		reqDTO.setCmFavoriteSupplier(catBB.getManagedBean().getFavoriteSupplierList().remove(index));
+		FavoriteSupplierResDTO resDTO = favoriteSupplierSO.deleteFavoriteSupplier(reqDTO);
+		
+		
+		
+		FacesContext facesContext = FacesContext.getCurrentInstance();
+		facesContext.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO,"Deleted Successfully", ""));
+		
+
+	}
 
 
 

@@ -6,22 +6,33 @@ import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.RequestScoped;
 import javax.faces.context.FacesContext;
+import javax.servlet.http.HttpServletRequest;
 
+import my.ep.biz.bean.search.ISearchBean;
+import my.ep.biz.bean.search.SearchBean;
+import my.ep.biz.bean.search.SearchFilterBean;
 import my.ep.biz.service.cm.codification.ICodificationSO;
+import my.ep.biz.service.cm.codification.IRequestCodeSO;
 import my.ep.bpm.dto.BpmRequestDTO;
 import my.ep.bpm.dto.BpmResponseDTO;
 import my.ep.bpm.service.IBpmSO;
 import my.ep.dto.cm.codification.CodificationReqDTO;
 import my.ep.dto.cm.codification.CodificationResDTO;
+import my.ep.dto.cm.codification.RequestCodeReqDTO;
+import my.ep.dto.cm.codification.RequestCodeResDTO;
 import my.ep.jaxb.cd.requestdata.CDRequestDataType;
+import my.ep.persistence.entity.cm.catalog.CmColor;
 import my.ep.persistence.entity.cm.catalog.CmItem;
 import my.ep.persistence.entity.cm.catalog.CmRequestCode;
 import my.ep.persistence.entity.cm.catalog.CmUnspsc;
 import my.ep.persistence.logging.LogKey;
+import my.ep.type.aut.SearchOperator;
 import my.ep.util.lookupservice.EpBpmBusinessDelegate;
 import my.ep.web.backingbean.BaseBackingBean;
+import my.ep.web.backingbean.bpm.tasklist.BPMTaskListBackingBean;
 import my.ep.web.backingbean.bpm.tasklist.TaskListBackingBean;
 import my.ep.web.managedbean.cm.codification.UnspscCodeManagedBean;
+import my.ep.web.util.FacesScopes;
 import my.ep.web.util.lookupservice.BusinessDelegate;
 
 import org.apache.commons.id.serial.AlphanumericGenerator;
@@ -33,6 +44,8 @@ import org.apache.poi.ss.usermodel.Row;
 import org.primefaces.event.FileUploadEvent;
 import org.primefaces.model.UploadedFile;
 
+import com.liferay.portal.util.PortalUtil;
+
 @ManagedBean(name="unspscCodeBackingBean")
 @RequestScoped
 public class UnspscCodeBackingBean extends BaseBackingBean<UnspscCodeManagedBean>{
@@ -40,12 +53,19 @@ public class UnspscCodeBackingBean extends BaseBackingBean<UnspscCodeManagedBean
 
 	private static Logger log = Logger.getLogger(UnspscCodeBackingBean.class);
 
+	private SearchFilterBean colorFilterBean = new SearchFilterBean(SearchOperator.OPERATOR_EQUALS.value());
+	private SearchFilterBean typeFilterBean = new SearchFilterBean(SearchOperator.OPERATOR_EQUALS.value());
+	private SearchFilterBean brandFilterBean = new SearchFilterBean(SearchOperator.OPERATOR_EQUALS.value());
+	private SearchFilterBean measurementFilterBean = new SearchFilterBean(SearchOperator.OPERATOR_EQUALS.value());
+
 	public UnspscCodeBackingBean(){
 		if(MDC.get(LogKey.USER_ID)==null) {
 			MDC.put(LogKey.USER_ID, 1L);
 		}
 
 	}
+
+
 
 	public String submitForRequest(String action)throws Exception{
 
@@ -97,6 +117,57 @@ public class UnspscCodeBackingBean extends BaseBackingBean<UnspscCodeManagedBean
 	}
 
 
+
+	public String bpmTesting(String action)throws Exception{
+
+		try{
+			System.out.println("action:"+action);
+
+			ICodificationSO unspscSO = (ICodificationSO) BusinessDelegate.getInstance().getServiceObject("cm",ICodificationSO.class);
+
+			CodificationReqDTO reqDTO = new CodificationReqDTO();
+			log.info("new:"+this.getManagedBean().getRequestCode().isBrandNew());
+			reqDTO.setRequestCode(this.getManagedBean().getRequestCode());
+			reqDTO.setUser(this.getManagedBean().getTempUser());
+			reqDTO.setTaskId(this.getManagedBean().getTaskId());
+			reqDTO.setOutCome(action);
+			reqDTO.setProcessId("Codification.UNSPSCCodeRequest");
+			CodificationResDTO resDTO = null;
+
+			if(action.equalsIgnoreCase("SUBMIT")){
+
+				if(this.getManagedBean().getRequestCode().isBrandNew()){
+					reqDTO.setUser("roslan");
+					resDTO = unspscSO.addCodificationRequest(reqDTO);
+
+					FacesContext facesContext = FacesContext.getCurrentInstance();
+					facesContext.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO,"Submitted Successfully", ""));
+
+					return "unspscRequestForm";
+
+				}else{
+					log.info("***update***");
+					resDTO = unspscSO.updateCodificationRequest(reqDTO);
+				}
+
+			}
+
+			FacesContext facesContext = FacesContext.getCurrentInstance();
+			facesContext.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO," Submitted Successfully", ""));
+		}catch(Exception ex){
+			System.out.println("***************Exception*****************");
+			FacesContext facesContext = FacesContext.getCurrentInstance();
+			facesContext.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR,"BPM  ERROR", ex.getMessage()));
+
+			return "reviewUnspscCode";
+		}
+
+		return "BPMtesting";
+
+
+	}
+
+
 	public String submitForMaintenanceRequest(String action)throws Exception{
 
 		try{
@@ -105,7 +176,7 @@ public class UnspscCodeBackingBean extends BaseBackingBean<UnspscCodeManagedBean
 			ICodificationSO unspscSO = (ICodificationSO) BusinessDelegate.getInstance().getServiceObject("cm",ICodificationSO.class);
 			TaskListBackingBean taskListBB = new TaskListBackingBean();
 			CodificationReqDTO reqDTO = new CodificationReqDTO();
-		
+
 			reqDTO.setRequestCode(this.getManagedBean().getRequestCode());
 			reqDTO.setUser(this.getManagedBean().getTempUser());
 			reqDTO.setTaskId(taskListBB.getManagedBean().getTaskId());
@@ -449,71 +520,72 @@ public class UnspscCodeBackingBean extends BaseBackingBean<UnspscCodeManagedBean
 		TaskListBackingBean taskListBB = new TaskListBackingBean();
 		CodificationReqDTO reqDTO = new CodificationReqDTO();
 		CodificationResDTO resDTO = null;
-		CmUnspsc unspsc = new CmUnspsc();
-		unspsc.setUnspscCode(this.getManagedBean().getSegmentCode());	
-		unspsc.setUnspscKey(this.getManagedBean().getSegmentKey());
-		unspsc.setUnspscTitle(this.getManagedBean().getSegmentTitle());
-		unspsc.setUnspscDescription(this.getManagedBean().getSegmentDesc());
-		unspsc.setUnspscLevel(0);
-
-		reqDTO.setCmUnspsc(unspsc);
-		reqDTO.getUnspscList().add(reqDTO.getCmUnspsc());
-
-		resDTO =  unspscSO.saveUnspsc(reqDTO);
-		////// start family
-
-		unspsc.setUnspscCode(this.getManagedBean().getFamilyCode());	
-		unspsc.setUnspscKey(this.getManagedBean().getFamilyKey());
-		unspsc.setUnspscTitle(this.getManagedBean().getFamilyTitle());
-		unspsc.setUnspscDescription(this.getManagedBean().getFamilyDesc());
-		unspsc.setUnspscLevel(1);
-		unspsc.setUnspscParentCode(this.getManagedBean().getSegmentCode());
-
-		reqDTO.setCmUnspsc(unspsc);
-		reqDTO.getFamilyList().add(reqDTO.getCmUnspsc());
-		resDTO = unspscSO.saveFamilyList(reqDTO);
-
-		/////start class	
-
-		unspsc.setUnspscCode(this.getManagedBean().getClassCode());	
-		unspsc.setUnspscKey(this.getManagedBean().getClassKey());
-		unspsc.setUnspscTitle(this.getManagedBean().getClassTitle());
-		unspsc.setUnspscDescription(this.getManagedBean().getClassDesc());
-		unspsc.setUnspscLevel(2);
-		unspsc.setUnspscParentCode(this.getManagedBean().getFamilyCode());
-
-		reqDTO.setCmUnspsc(unspsc);
-		reqDTO.getClassList().add(reqDTO.getCmUnspsc());
-		resDTO = unspscSO.saveClassList(reqDTO);
-
-		////start commodity
-
-		unspsc.setUnspscCode(this.getManagedBean().getCommodityCode());	
-		unspsc.setUnspscKey(this.getManagedBean().getCommodityKey());
-		unspsc.setUnspscTitle(this.getManagedBean().getCommodityTitle());
-		unspsc.setUnspscDescription(this.getManagedBean().getCommodityDesc());
-		unspsc.setUnspscLevel(3);
-		unspsc.setUnspscParentCode(this.getManagedBean().getClassCode());
-
-		reqDTO.setCmUnspsc(unspsc);
-		reqDTO.getCommodityList().add(reqDTO.getCmUnspsc());
-
-		resDTO = unspscSO.saveCommodityList(reqDTO);
-
-		String check68 = (String)String.valueOf(this.getManagedBean().getCommodityCode()).substring(6, 8);
-		String check46 = (String)String.valueOf(this.getManagedBean().getClassCode()).substring(4, 6);
-		String check24 = (String)String.valueOf(this.getManagedBean().getFamilyCode()).substring(2, 4);
-		String check02 = (String)String.valueOf(this.getManagedBean().getSegmentCode()).substring(0, 2);
-
-		String tempCode = check02 + check24 +check46 +check68;
-		log.info(tempCode);
-
-		this.getManagedBean().getRequestCode().setTempCode(tempCode);
-		reqDTO.setRequestCode(this.getManagedBean().getRequestCode());
-		reqDTO.setUser("lailah");
-		reqDTO.setTaskId(taskListBB.getManagedBean().getTaskId());
-		reqDTO.setOutCome("CREATE");
 		try {
+			CmUnspsc unspsc = new CmUnspsc();
+			unspsc.setUnspscCode(this.getManagedBean().getSegmentCode());	
+			unspsc.setUnspscKey(this.getManagedBean().getSegmentKey());
+			unspsc.setUnspscTitle(this.getManagedBean().getSegmentTitle());
+			unspsc.setUnspscDescription(this.getManagedBean().getSegmentDesc());
+			unspsc.setUnspscLevel(0);
+
+			reqDTO.setCmUnspsc(unspsc);
+			reqDTO.getUnspscList().add(reqDTO.getCmUnspsc());
+
+			resDTO =  unspscSO.saveUnspsc(reqDTO);
+			////// start family
+
+			unspsc.setUnspscCode(this.getManagedBean().getFamilyCode());	
+			unspsc.setUnspscKey(this.getManagedBean().getFamilyKey());
+			unspsc.setUnspscTitle(this.getManagedBean().getFamilyTitle());
+			unspsc.setUnspscDescription(this.getManagedBean().getFamilyDesc());
+			unspsc.setUnspscLevel(1);
+			unspsc.setUnspscParentCode(this.getManagedBean().getSegmentCode());
+
+			reqDTO.setCmUnspsc(unspsc);
+			reqDTO.getFamilyList().add(reqDTO.getCmUnspsc());
+			resDTO = unspscSO.saveFamilyList(reqDTO);
+
+			/////start class	
+
+			unspsc.setUnspscCode(this.getManagedBean().getClassCode());	
+			unspsc.setUnspscKey(this.getManagedBean().getClassKey());
+			unspsc.setUnspscTitle(this.getManagedBean().getClassTitle());
+			unspsc.setUnspscDescription(this.getManagedBean().getClassDesc());
+			unspsc.setUnspscLevel(2);
+			unspsc.setUnspscParentCode(this.getManagedBean().getFamilyCode());
+
+			reqDTO.setCmUnspsc(unspsc);
+			reqDTO.getClassList().add(reqDTO.getCmUnspsc());
+			resDTO = unspscSO.saveClassList(reqDTO);
+
+			////start commodity
+
+			unspsc.setUnspscCode(this.getManagedBean().getCommodityCode());	
+			unspsc.setUnspscKey(this.getManagedBean().getCommodityKey());
+			unspsc.setUnspscTitle(this.getManagedBean().getCommodityTitle());
+			unspsc.setUnspscDescription(this.getManagedBean().getCommodityDesc());
+			unspsc.setUnspscLevel(3);
+			unspsc.setUnspscParentCode(this.getManagedBean().getClassCode());
+
+			reqDTO.setCmUnspsc(unspsc);
+			reqDTO.getCommodityList().add(reqDTO.getCmUnspsc());
+
+			resDTO = unspscSO.saveCommodityList(reqDTO);
+
+			String check68 = (String)String.valueOf(this.getManagedBean().getCommodityCode()).substring(6, 8);
+			String check46 = (String)String.valueOf(this.getManagedBean().getClassCode()).substring(4, 6);
+			String check24 = (String)String.valueOf(this.getManagedBean().getFamilyCode()).substring(2, 4);
+			String check02 = (String)String.valueOf(this.getManagedBean().getSegmentCode()).substring(0, 2);
+
+			String tempCode = check02 + check24 +check46 +check68;
+			log.info(tempCode);
+
+			this.getManagedBean().getRequestCode().setTempCode(tempCode);
+			reqDTO.setRequestCode(this.getManagedBean().getRequestCode());
+			reqDTO.setUser("lailah");
+			reqDTO.setTaskId(taskListBB.getManagedBean().getTaskId());
+			reqDTO.setOutCome("CREATE");
+
 			resDTO = unspscSO.updateCodificationRequest(reqDTO);
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
@@ -526,6 +598,7 @@ public class UnspscCodeBackingBean extends BaseBackingBean<UnspscCodeManagedBean
 		facesContext.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO,"Submitted Successfully", ""));
 
 		return "taskListView";
+		//return "BPMtesting";
 
 	}
 
@@ -613,7 +686,7 @@ public class UnspscCodeBackingBean extends BaseBackingBean<UnspscCodeManagedBean
 		reqDTO.setCmItem(item);
 		reqDTO.setRequestCode(this.getManagedBean().getRequestCode());
 		reqDTO.setTaskId(taskListBB.getManagedBean().getTaskId());
-		reqDTO.setUser("khai");
+		reqDTO.setUser("lailah");
 		reqDTO.setOutCome("CREATE");
 		resDTO = unspscSO.addNewItem(reqDTO);
 
@@ -624,6 +697,7 @@ public class UnspscCodeBackingBean extends BaseBackingBean<UnspscCodeManagedBean
 		facesContext.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO,"Submitted Successfully", ""));
 
 		return "taskListView";
+		//return "BPMtesting";
 
 	}
 
@@ -693,11 +767,25 @@ public class UnspscCodeBackingBean extends BaseBackingBean<UnspscCodeManagedBean
 		System.out.println("***action***"+action);
 		ICodificationSO unspscSO = (ICodificationSO) BusinessDelegate.getInstance().getServiceObject("cm",ICodificationSO.class);
 		CodificationReqDTO reqDTO = new CodificationReqDTO();
+		CodificationResDTO resDTO = null;
 		TaskListBackingBean taskListBB = new TaskListBackingBean();
 		for(CmRequestCode code:this.getManagedBean().getReviewExtCodeList()){
 
+
+
 			if(code.getColorNameDD()!=null){
+				/*ISearchBean<CmColor> searchBeanColor = new SearchBean<CmColor>();
+				colorFilterBean.setSearchField("colorId");
+				colorFilterBean.setSearchValue(code.getColorNameDD());
+				searchBeanColor.getDataFilterBeans().add(colorFilterBean);
+
+				reqDTO.setColorSearchBean(searchBeanColor);
+
+				resDTO = unspscSO.searchColorObj(reqDTO);
+				code.setColorName(resDTO.getColorList().get(0).getColorName());*/
+
 				code.setColorName(code.getColorNameDD());
+
 			}
 			if(code.getBrandNameDD()!=null){
 				code.setBrandName(code.getBrandNameDD());
@@ -722,7 +810,7 @@ public class UnspscCodeBackingBean extends BaseBackingBean<UnspscCodeManagedBean
 		reqDTO.setUser(this.getManagedBean().getTempUser());
 
 
-		CodificationResDTO resDTO = unspscSO.updateExtensionRequest(reqDTO);
+		resDTO = unspscSO.updateExtensionRequest(reqDTO);
 
 		FacesContext facesContext = FacesContext.getCurrentInstance();
 		facesContext.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO,"Submitted Successfully", ""));
@@ -733,14 +821,16 @@ public class UnspscCodeBackingBean extends BaseBackingBean<UnspscCodeManagedBean
 
 
 
-	/*	public void preRenderView() {
+	public void preRenderView() {
+		System.out.println("**********preRenderView**************");
+		BPMTaskListBackingBean bb = new BPMTaskListBackingBean();
 		HttpServletRequest servletRequest = PortalUtil.getHttpServletRequest(new FacesScopes().getRequest());
 		HttpServletRequest originalServletRequest = PortalUtil.getOriginalServletRequest(servletRequest);
 		String taskId = originalServletRequest.getParameter("taskId");
-
+		System.out.println("taskId:"+taskId);
 
 		IBpmSO bpmSO = (IBpmSO) EpBpmBusinessDelegate.getInstance().getServiceObject(IBpmSO.class);
-		String ctx = bpmSO.authenticate("roslan","welcome1");
+		String ctx = bpmSO.authenticate(bb.getManagedBean().getTempLoginId(),"welcome1");
 		BpmRequestDTO reqDTO = new BpmRequestDTO();
 
 
@@ -753,15 +843,30 @@ public class UnspscCodeBackingBean extends BaseBackingBean<UnspscCodeManagedBean
 
 		IRequestCodeSO requestSO = (IRequestCodeSO) BusinessDelegate.getInstance().getServiceObject("cm",IRequestCodeSO.class);
 		RequestCodeReqDTO codeDTO = new RequestCodeReqDTO();
+		System.out.println("unspsc.getRequestId()"+unspsc.getRequestId());
 		codeDTO.setRequestId(new Long(unspsc.getRequestId()));
 		RequestCodeResDTO resDTO = requestSO.retrieveUnspscCodeReview(codeDTO);
 
 
+		this.getManagedBean().setTaskName(res.getTaskName());
 		this.getManagedBean().setRequestCode(resDTO.getRequestCode());
 		this.getManagedBean().setTaskId(taskId);
 		this.getManagedBean().setAction(res.getAction());
 
-	}*/
+		if(res.getTaskName().equalsIgnoreCase("Create Temporary Code")){
+			FacesContext fc = FacesContext.getCurrentInstance();
+			fc.getApplication().getNavigationHandler().handleNavigation(fc, null, "reviewBeforeCreateTempCode");
+		}else if(res.getTaskName().equalsIgnoreCase("Create Extension Code")){
+			FacesContext fc = FacesContext.getCurrentInstance();
+			fc.getApplication().getNavigationHandler().handleNavigation(fc, null, "reviewBeforeCreateExtCode");
+		}else{
+			FacesContext fc = FacesContext.getCurrentInstance();
+			fc.getApplication().getNavigationHandler().handleNavigation(fc, null, "navigation");
+
+		}
+
+
+	}
 
 
 	public String deleteExtensionCode(){
@@ -801,6 +906,54 @@ public class UnspscCodeBackingBean extends BaseBackingBean<UnspscCodeManagedBean
 
 
 		return "extensionSearch";
+	}
+
+
+
+	public SearchFilterBean getColorFilterBean() {
+		return colorFilterBean;
+	}
+
+
+
+	public void setColorFilterBean(SearchFilterBean colorFilterBean) {
+		this.colorFilterBean = colorFilterBean;
+	}
+
+
+
+	public SearchFilterBean getTypeFilterBean() {
+		return typeFilterBean;
+	}
+
+
+
+	public void setTypeFilterBean(SearchFilterBean typeFilterBean) {
+		this.typeFilterBean = typeFilterBean;
+	}
+
+
+
+	public SearchFilterBean getBrandFilterBean() {
+		return brandFilterBean;
+	}
+
+
+
+	public void setBrandFilterBean(SearchFilterBean brandFilterBean) {
+		this.brandFilterBean = brandFilterBean;
+	}
+
+
+
+	public SearchFilterBean getMeasurementFilterBean() {
+		return measurementFilterBean;
+	}
+
+
+
+	public void setMeasurementFilterBean(SearchFilterBean measurementFilterBean) {
+		this.measurementFilterBean = measurementFilterBean;
 	}
 
 
