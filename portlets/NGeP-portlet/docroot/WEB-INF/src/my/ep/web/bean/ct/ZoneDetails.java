@@ -18,6 +18,7 @@ public class ZoneDetails implements Serializable {
 		
 	}
 	
+	
 	public ZoneDetails(String zoneName, String zonePeriod){
 		this.zoneName=zoneName;
 		this.zonePeriod=zonePeriod;

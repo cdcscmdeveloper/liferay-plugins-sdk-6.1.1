@@ -6,14 +6,17 @@
 	xmlns:p="http://primefaces.org/ui"
 	xmlns:c="http://java.sun.com/jsp/jstl/core">
     <p:panel id="scheduleId" header="#{lbl['lbl.ct.sched.panel.name']}"  toggleable="true"  toggleSpeed="500" widgetVar="panelschedule">
-    <h:panelGrid columns="2">
-       <p:outputLabel value="#{lbl['lbl.ct.sched.fsched']}"/>
-       <p:inputText  style="width:100px;"/>
-       <p:outputLabel value="#{lbl['lbl.ct.sched.progre']}"/>
-           <p:selectBooleanCheckbox value="#{contractDetailsBackingBean.managedBean.contractValues.progressivePayment}">
-            <p:ajax event="change"  listener="#{contractDetailsBackingBean.progressivePayment}" process="@this" update=":form:tabview:paymentSchedule"/>
-           </p:selectBooleanCheckbox>
+    <h:panelGrid columns="4">
+       <p:selectOneRadio id="options" value="#{contractDetailsBackingBean.managedBean.scheduleOption}" >  
+            <f:selectItem itemLabel="#{lbl['lbl.ct.sched.fsched']}" itemValue="1" />  
+            <f:selectItem itemLabel="#{lbl['lbl.ct.sched.progre']}" itemValue="2" /> 
+            <p:ajax event="change"  listener="#{contractDetailsBackingBean.progressivePayment}" process="@this" update=":form:tabview:paymentSchedule"/> 
+        </p:selectOneRadio> 
      </h:panelGrid>
+	
+	 <p:outputPanel id="paymentSchedule">  
+	 <p:spacer height="10"/>
+	 <h:panelGrid rendered="#{contractDetailsBackingBean.managedBean.chkSchedule}" style="width:780px;">   
 	 <p:dataTable id="tableSchedule" var="data" value="#{contractDetailsBackingBean.managedBean.ctContract.ctSchedules}" widgetVar="dataTableObj" 
 	    rowIndexVar="index" paginator="true" paginatorPosition="bottom" paginatorAlwaysVisible="true" emptyMessage="No Records!">
 		<p:columnGroup type="header"> 
@@ -23,37 +26,40 @@
 		  <p:column style="width:150px" headerText="#{lbl['lbl.ct.sched.table.edate']}"  /> 
 		</p:row>	
 		</p:columnGroup>  
-		<p:column><p:outputLabel value="#{data.scheduleNo}" style="float:left;"/></p:column>
+		<p:column><p:outputLabel value="Schedule #{index+1}" style="float:left;"/></p:column>
 		<p:column><p:outputLabel value="#{data.startDate}" style="float:left;">
 		          <f:convertDateTime pattern="MM/dd/yyyy" /></p:outputLabel>
 		</p:column>   
         <p:column><p:outputLabel value="#{data.endDate}" style="float:left;">
                   <f:convertDateTime pattern="MM/dd/yyyy" /></p:outputLabel>
          </p:column>        
-	  </p:dataTable>
-	</p:panel>	
-	 <p:outputPanel id="paymentSchedule">                
-	 <p:panel header="#{lbl['lbl.ct.sched.panel1.name']}" rendered="#{contractDetailsBackingBean.managedBean.chkSchedule}"  toggleable="true"  toggleSpeed="500">
+	  </p:dataTable>  
+	 </h:panelGrid>         
+	 <h:panelGrid rendered="#{contractDetailsBackingBean.managedBean.chkProgressive}" style="width:780px;">
 	    <p:dataTable id="tableProgress" var="data" value="#{contractDetailsBackingBean.managedBean.ctContract.ctProgressivePayments}" widgetVar="dataTableObj" 
 		   paginator="true" paginatorPosition="bottom" paginatorAlwaysVisible="true" emptyMessage="No Records!">
 		   <p:columnGroup type="header"> 
 			 <p:row> 
-		        <p:column style="width:100px" headerText="#{lbl['lbl.ct.sched.table1.phase']}"  />
-                <p:column style="width:200px" headerText="#{lbl['lbl.ct.sched.table1.from']}" /> 
-                <p:column style="width:200px" headerText="#{lbl['lbl.ct.sched.table1.to']}" /> 	
-                <p:column style="width:100px" headerText="#{lbl['lbl.ct.sched.table1.per']}"  /> 
-                <p:column style="width:100px" headerText="#{lbl['lbl.ct.sched.table1.action']}"  /> 
+		        <p:column style="width:50px;" headerText="#{lbl['lbl.ct.sched.table1.phase']}"  />
+		        <p:column style="width:200px;" headerText="#{lbl['lbl.ct.sched.table1.desc']}"  />
+                <p:column style="width:100px;" headerText="#{lbl['lbl.ct.sched.table1.from']}" /> 
+                <p:column style="width:100px;" headerText="#{lbl['lbl.ct.sched.table1.to']}" /> 	
+                <p:column style="width:100px;" headerText="#{lbl['lbl.ct.sched.table1.per']}"  /> 
+                <p:column style="width:60px;" headerText="#{lbl['lbl.ct.sched.table1.action']}"  /> 
             </p:row>	
 			</p:columnGroup>
-			<p:column><p:inputText value="#{data.phase}" style="width:80px;"/> </p:column>      
+			<p:column><p:inputText value="#{data.phase}" style="width:40px;"/> </p:column>  
 			<p:column>
-			   <p:calendar style="width:130px" value="#{data.toDate}" id="popupButtonCal" showOn="button" />
+			     <p:inputText style="width:150px;"/> 
+			</p:column>         
+			<p:column>
+			   <p:calendar style="width:80px" value="#{data.fromDate}" id="popupButtonCal" showOn="button" />
 		    </p:column>      
 			<p:column>
-			  <p:calendar style="width:130px" value="#{data.fromDate}" id="popupButtonCal1" showOn="button" />  
+			  <p:calendar style="width:80px" value="#{data.toDate}" id="popupButtonCal1" showOn="button" />  
 			</p:column>     
 			<p:column>
-			   <p:inputText value="#{data.percentage}" style="width:60px;"/>
+			   <p:inputText value="#{data.percentage}" style="width:50px;"/>
 			</p:column>
 			<p:column styleClass="column-align-center">
 		        <p:commandButton title="delete" onsuccess="confirmation5.show()" partialSubmit="true" process="@this" icon="ui-icon-delete">
@@ -73,8 +79,9 @@
 				  <p:commandButton value="No" 	onclick="confirmation5.hide()" type="button" />
 				</h:panelGrid>
 			</p:confirmDialog>
-   </p:panel>
+      </h:panelGrid>
    </p:outputPanel>
+  </p:panel>
 </ui:composition>
 
 

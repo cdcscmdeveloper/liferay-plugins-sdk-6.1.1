@@ -9,10 +9,11 @@
     <p:treeTable id="treetable" value="#{contractDetailsBackingBean.rootNode}" var="data">
        <p:column style="width:40%">  
           <f:facet name="header"> #{lbl['lbl.ct.zone.tree.name']}  </f:facet>  
-           <h:outputText value="#{data.zoneName}" />  
+           <p:outputLabel value="#{data.zoneName}" style="float:left;"/>  
        </p:column>  
        <p:column style="width:40%" styleClass="removeBorder">  
-           <h:outputText value="#{data.zonePeriod}" />  
+           <f:facet name="header"> #{lbl['lbl.ct.zone.tree.period']}  </f:facet>  
+           <h:inputText value="#{data.zonePeriod}" rendered="#{data.zonePeriod != null}" size="5" />  
        </p:column>  
    </p:treeTable>   
    </p:panel>

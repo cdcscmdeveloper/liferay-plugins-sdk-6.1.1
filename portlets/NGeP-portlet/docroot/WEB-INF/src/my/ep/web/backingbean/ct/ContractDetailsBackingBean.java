@@ -26,6 +26,7 @@ import my.ep.biz.service.ct.IContractSO;
 import my.ep.biz.service.ct.maintain.IContractAmendmentSO;
 import my.ep.biz.service.ct.maintain.IContractAssociationSO;
 import my.ep.biz.service.ct.terminate.IContractTerminationSO;
+import my.ep.biz.service.pm.authorization.user.IUserSO;
 import my.ep.bpm.service.IBpmSO;
 import my.ep.constant.ct.ContractConst;
 import my.ep.dto.ct.ContractReqDTO;
@@ -36,6 +37,8 @@ import my.ep.dto.ct.maintain.ContractAssociationReqDTO;
 import my.ep.dto.ct.maintain.ContractAssociationResDTO;
 import my.ep.dto.ct.terminate.ContractTerminationReqDTO;
 import my.ep.dto.ct.terminate.ContractTerminationResDTO;
+import my.ep.dto.pm.authorization.user.UserReqDTO;
+import my.ep.dto.pm.authorization.user.UserResDTO;
 import my.ep.exception.EpException;
 import my.ep.persistence.entity.ct.CtContract;
 import my.ep.persistence.entity.ct.amend.CtAmendment;
@@ -58,6 +61,7 @@ import my.ep.persistence.entity.ct.terminate.CtTermination;
 import my.ep.persistence.entity.ct.terminate.CtTerminationReason;
 import my.ep.persistence.entity.pm.authorization.PmOrgProfile;
 import my.ep.persistence.entity.pm.authorization.PmUser;
+import my.ep.persistence.entity.pm.authorization.PmUserGroupUser;
 import my.ep.persistence.entity.pm.common.PmCode;
 import my.ep.persistence.entity.pm.common.PmFinancialOrg;
 import my.ep.persistence.entity.pm.common.PmStatus;
@@ -87,6 +91,7 @@ import org.primefaces.event.TabChangeEvent;
 import org.primefaces.event.TransferEvent;
 import org.primefaces.event.UnselectEvent;
 import org.primefaces.model.DefaultTreeNode;
+import org.primefaces.model.DualListModel;
 import org.primefaces.model.TreeNode;
 
 /**
@@ -110,7 +115,7 @@ public class ContractDetailsBackingBean extends BaseBackingBean<ContractDetailsM
 	private TreeNode rootNode;  
 	private TreeNode selectedNode; 
 	private List<PmUser> dsLst; 
-	//private PickListBean pickListBean = null;
+	private PickListBean pickListBean = null;
 	
 	private boolean paymentHistory;
 	private TreeNode rootNodeAgency;  
@@ -140,11 +145,13 @@ public class ContractDetailsBackingBean extends BaseBackingBean<ContractDetailsM
 	private final static String[] deductions;   
 	static {  
 		  
-		  deductions = new String[4];  
+		  deductions = new String[6];  
 		  deductions[0] = "Royalty";  
 		  deductions[1] = "Penalty";  
 		  deductions[2] = "Advanced Payment";  
-		  deductions[3] = "Others";  
+		  deductions[3] = "Fixed";
+		  deductions[4] =  "Non-Fixed"; 
+		  deductions[5] = "Others";  
     }  
 	
 	/*Termination*/
@@ -159,14 +166,21 @@ public class ContractDetailsBackingBean extends BaseBackingBean<ContractDetailsM
 		if (MDC.get(LogKey.USER_ID) == null) {
 			MDC.put(LogKey.USER_ID, 1L);
 		}
-	 	
+		
+		if(getManagedBean().getApproverModel()==null) {
+			List<String> source = getAvailableApproverList();  
+	        List<String> target = new ArrayList<String>();  
+	        getManagedBean().setApproverModel(new DualListModel<String>(source, target));
+		}
+		
+			
 		 contractListItem = new ContractListItem();
 		 
 		 rootNode = new DefaultTreeNode("root", null);  
-		 TreeNode zone1 = new DefaultTreeNode(new ZoneDetails("Zone Name  ZON TENGAH", "Delivery Period 15"), rootNode);  
-	     TreeNode Zone2 = new DefaultTreeNode(new ZoneDetails("Zone Name ZON UTARA", "Delivery Period 21 Days"), rootNode);  
-	     new DefaultTreeNode(new ZoneDetails("PUTRAJAYA", " "), zone1);  
-	     new DefaultTreeNode(new ZoneDetails("SELANGOR", " "), Zone2);  
+		 TreeNode zone1 = new DefaultTreeNode(new ZoneDetails("Zone Name  ZON TENGAH", "0"), rootNode);  
+	     TreeNode Zone2 = new DefaultTreeNode(new ZoneDetails("Zone Name ZON UTARA", "0"), rootNode);  
+	     new DefaultTreeNode(new ZoneDetails("PUTRAJAYA"), zone1);  
+	     new DefaultTreeNode(new ZoneDetails("SELANGOR"), Zone2);  
 	    
 	     rootNodeAgency = new DefaultTreeNode("root", null);  
 		 this.getManagedBean().getCreateContractDetails().setMinistryName("KEMENTERIAN PELAJARAN");
@@ -196,6 +210,9 @@ public class ContractDetailsBackingBean extends BaseBackingBean<ContractDetailsM
 		 dsLst = new ArrayList<PmUser>(); 
 		/*Insert Data Contract Table*/
 		if(this.getManagedBean().getCtContract() == null){
+			
+			ContractBackingBean ctBB = new ContractBackingBean();
+			ctBB.initializeRemarkAndAttachement(getManagedBean().getRemarkList(), getManagedBean().getAttachmentList());
 			
 			this.getManagedBean().setCtContract(new CtContract());
 		    this.getManagedBean().getCtContract().setQtPublishDate(new Date());
@@ -269,7 +286,7 @@ public class ContractDetailsBackingBean extends BaseBackingBean<ContractDetailsM
 			ctSetting.setAgNotifyDaysB4Ag(0);
 			ctSetting.setAgNotifyDayB4Ct(0);
 			ctSetting.setBondNotifyDays(30);
-			ctSetting.setTerminationNotifyDays(0);
+			ctSetting.setTerminationNotifyDays(90);
 			ctSetting.setSupplierActionDays(0);
 			ctSetting.setApproverMtoDays(30);
 			this.getManagedBean().setCtSetting(ctSetting);
@@ -439,6 +456,7 @@ public class ContractDetailsBackingBean extends BaseBackingBean<ContractDetailsM
 	     //this.getManagedBean().setSmSupplierBank(null);
 		 paymentHistory = false;
 		 this.getManagedBean().setChkSchedule(false);
+		 this.getManagedBean().setChkProgressive(false);
 		 this.getManagedBean().setTerminateNotice(false);
 		 this.getManagedBean().setTerminateRejectLetter(false);
 		 this.getManagedBean().setTerminateWarningLetter(false);
@@ -984,6 +1002,28 @@ public class ContractDetailsBackingBean extends BaseBackingBean<ContractDetailsM
     public void addDeductionClause(){
 	 
     }
+    
+    private List<String> getAvailableApproverList() {
+		List<String> availableApprovers = new ArrayList<String>(); 
+		IUserSO userSO = null;
+		try {
+			userSO = (IUserSO)BusinessDelegate.getInstance().getServiceObject("pm",IUserSO.class);
+			
+			UserReqDTO reqDTO = new UserReqDTO();
+			//TODO
+			reqDTO.setOrgProfileId(1250l);
+			UserResDTO resDTO = userSO.retrieveUserGroupList(reqDTO);
+			for(PmUserGroupUser user : resDTO.getUserGroupList().get(0).getPmUserGroupUsers()) {
+				availableApprovers.add(user.getPmUser().getUserName());
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+			FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR,e.toString(), "Circular save failed."));
+		} finally {
+			userSO = null;
+		}
+		return availableApprovers;
+	}
    
     public List<SmSupplierBank> getSmSupplier() {
 		return smSupplier;
@@ -1046,8 +1086,10 @@ public class ContractDetailsBackingBean extends BaseBackingBean<ContractDetailsM
 	
 	public void progressivePayment(){
 		flush();
-		if(this.getManagedBean().getContractValues().isProgressivePayment())
+		if(this.getManagedBean().getScheduleOption().equalsIgnoreCase("1"))
 		  this.getManagedBean().setChkSchedule(true);
+		else if(this.getManagedBean().getScheduleOption().equalsIgnoreCase("2"))
+	           this.getManagedBean().setChkProgressive(true);
 	}
 
 	public List<CtSchedule> getCtSchedules() {
@@ -1235,14 +1277,14 @@ public void onChange(TabChangeEvent event) { }
 		this.editorValue = editorValue;
 	}
 
-	/*public PickListBean getPickListBean() {
+	public PickListBean getPickListBean() {
 		pickListBean = new PickListBean(dsLst);
 		return pickListBean;
 	}
 
 	public void setPickListBean(PickListBean pickListBean) {
 		this.pickListBean = pickListBean;
-	} */
+	} 
 
 	
 }

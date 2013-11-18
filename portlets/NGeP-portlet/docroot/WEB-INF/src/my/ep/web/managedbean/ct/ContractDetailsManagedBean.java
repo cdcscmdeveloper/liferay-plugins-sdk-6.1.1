@@ -15,7 +15,9 @@ import org.primefaces.model.DualListModel;
 
 import my.ep.biz.bean.search.SearchFilterBean;
 import my.ep.persistence.entity.ct.CtApprover;
+import my.ep.persistence.entity.ct.CtAttachment;
 import my.ep.persistence.entity.ct.CtContract;
+import my.ep.persistence.entity.ct.CtRemark;
 import my.ep.persistence.entity.ct.bank.CtSupplierBank;
 import my.ep.persistence.entity.ct.circular.CtCircular;
 import my.ep.persistence.entity.ct.dtl.CtContractValue;
@@ -58,6 +60,7 @@ public class ContractDetailsManagedBean extends BaseManagedBean{
 	private String[] outComes;
 	private int selectedIndex;
 	private boolean chkSchedule;
+	private boolean chkProgressive;
 	private boolean itemPricing = true;
 	private boolean itemCeilingQuantity;
 	private String showItem ="Item  Pricing";
@@ -123,6 +126,10 @@ public class ContractDetailsManagedBean extends BaseManagedBean{
 	
 	/*Amendment*/
 	private CtAmendment ctAmendment;
+	private DualListModel<String> approverModel;
+	private List<CtRemark> remarkList;
+	private List<CtAttachment> attachmentList;
+	private String scheduleOption;
 	
 	public  ContractDetailsManagedBean(){
 		source.add(new SettingDetails("Khan", 10));  
@@ -569,6 +576,50 @@ public class ContractDetailsManagedBean extends BaseManagedBean{
 
 	public void setPaymentSummary(List<PaymentSummary> paymentSummary) {
 		this.paymentSummary = paymentSummary;
+	}
+
+	public DualListModel<String> getApproverModel() {
+		return approverModel;
+	}
+
+	public void setApproverModel(DualListModel<String> approverModel) {
+		this.approverModel = approverModel;
+	}
+
+	public List<CtRemark> getRemarkList() {
+		if(remarkList == null)
+			remarkList = new ArrayList<CtRemark>();
+		return remarkList;
+	}
+
+	public void setRemarkList(List<CtRemark> remarkList) {
+		this.remarkList = remarkList;
+	}
+
+	public List<CtAttachment> getAttachmentList() {
+		if(attachmentList == null)
+		   attachmentList = new ArrayList<CtAttachment>();
+		return attachmentList;
+	}
+
+	public void setAttachmentList(List<CtAttachment> attachmentList) {
+		this.attachmentList = attachmentList;
+	}
+
+	public String getScheduleOption() {
+		return scheduleOption;
+	}
+
+	public void setScheduleOption(String scheduleOption) {
+		this.scheduleOption = scheduleOption;
+	}
+
+	public boolean isChkProgressive() {
+		return chkProgressive;
+	}
+
+	public void setChkProgressive(boolean chkProgressive) {
+		this.chkProgressive = chkProgressive;
 	}
 	
 	

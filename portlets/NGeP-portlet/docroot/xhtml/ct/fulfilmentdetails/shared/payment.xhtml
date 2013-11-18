@@ -4,48 +4,59 @@
 	xmlns:h="http://java.sun.com/jsf/html"
 	xmlns:ui="http://java.sun.com/jsf/facelets"
 	xmlns:p="http://primefaces.org/ui"
-	xmlns:c="http://java.sun.com/jsp/jstl/core">
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:ac="http://ac.my/jsf/composite/cc" >
 	<p:panel id="paymentId" header="Payment History"  toggleable="true"  toggleSpeed="500">  
-    <p:dataTable id="tablePayment" var="data" value=" " widgetVar="dataTableObj" rowIndexVar="index" lazy="false" dynamic="true" 
-	   paginator="true" paginatorPosition="bottom" paginatorAlwaysVisible="true" emptyMessage="No Records!" rows="10">
+	 <p:dataTable id="paymentPtj" var="data" value=" " rowKey="#{data}" widgetVar="dataTableObj"  lazy="true" 
+      dynamic="true" selectionMode="single"  selection=" ">
+	  <ac:paginator for="paymentPtj" />
+	  <p:ajax event="rowSelect" update=":form:tabview:paymentSumm" />
 	   <p:columnGroup type="header"> 
+		<p:row> 
+		  <p:column style="width:150px" headerText="#{lbl['lbl.ct.pay.table.minstry']}"  /> 
+		  <p:column style="width:150px" headerText="#{lbl['lbl.ct.pay.table.jabatan']}" /> 
+		  <p:column style="width:150px" headerText="#{lbl['lbl.ct.pay.table.ptj']}" /> 	
+		  <p:column style="width:100px" headerText="#{lbl['lbl.ct.pay.table.ceil.amt']}"  /> 
+		  <p:column style="width:100px" headerText="#{lbl['lbl.ct.pay.table.invoice']}" /> 	
+		  <p:column style="width:100px" headerText="#{lbl['lbl.ct.pay.table.bal']}"  /> 
+		 </p:row>	
+	   </p:columnGroup>
+		<p:column> <p:outputLabel value="Ministry Name" style="float:left;"/> </p:column>
+	    <p:column> <p:outputLabel value="Jabatan Name" style="float:left;"/> </p:column>   
+	    <p:column> <p:outputLabel value="PJT Name" style="float:left;"/> </p:column>   
+	    <p:column> <p:outputLabel value="4000.00" style="float:right;"/> </p:column>  
+	    <p:column> <p:outputLabel value="3000.00" style="float:right;"/> </p:column>   
+	    <p:column> <p:outputLabel value="2000.00" style="float:right;"/> </p:column>             
+	  </p:dataTable>
+      <h:panelGrid>
+      <p:spacer height="8"/>
+      <p:dataTable id="paymentSumm" var="data" value=" " widgetVar="dataTableObj"  lazy="false"
+        dynamic="true" paginator="true" paginatorPosition="bottom" paginatorAlwaysVisible="true" 
+        emptyMessage="No Records!" rows="10">
+         <ac:paginator for="paymentSumm" />
+	    <p:columnGroup type="header"> 
 		<p:row> 
 		  <p:column style="width:150px" headerText="#{lbl['lbl.ct.pay.table.no']}"  /> 
 		  <p:column style="width:300px" headerText="#{lbl['lbl.ct.pay.table.payto']}" /> 
-		  <p:column style="width:150px" headerText="#{lbl['lbl.ct.pay.table.invoice']}" /> 	
+		  <p:column style="width:150px" headerText="#{lbl['lbl.ct.pay.table.invoice.date']}" /> 	
 		  <p:column style="width:100px" headerText="#{lbl['lbl.ct.pay.table.invoice.amt']}"  /> 
 		 </p:row>	
 	   </p:columnGroup>
 		<p:column>
-		<p:commandLink id="fulfillmentNo" style="margin-right:20px;" process="@this"  partialSubmit="true" 
-		 actionListener="#{contractDetailsBackingBean.changePaymentValue}">  
-		  <h:outputText value="#{contractDetailsBackingBean.fulfillmentNo}"  styleClass="linkcommand"/>  
-        </p:commandLink>  
+		      <p:commandLink id="fulfillmentNo" style="margin-right:20px;" process="@this"  partialSubmit="true" 
+		      actionListener="#{contractDetailsBackingBean.changePaymentValue}">  
+		      <h:outputText value="#{contractDetailsBackingBean.fulfillmentNo}"  styleClass="linkcommand"/>  
+              </p:commandLink>  
 	    </p:column>
-	    <p:column> <p:outputLabel value="Factoring Company" style="float:left;" /></p:column>   
-	    <p:column> <p:outputLabel value="13/11/2013 00:00" style="float:left;" /></p:column>   
-	    <p:column> <p:outputLabel value="30000.000" style="float:left;" /></p:column>        
+	          <p:column> <p:outputLabel value="Factoring Company" style="float:left;" />
+	    </p:column>   
+	    <p:column>
+	          <p:outputLabel value="13/11/2013 00:00" style="float:left;" />
+	    </p:column>   
+	    <p:column> 
+	          <p:outputLabel value="30000.000" style="float:left;" />
+	    </p:column>        
 	  </p:dataTable>
-      <h:panelGrid>
-      <p:spacer height="8"/>
-      <h:outputLabel  value="#{lbl['lbl.ct.pay.summ']}" style="width:100px;font-size:12px;font-weight:bold;float:left;"/>  
-      <p:dataTable id="tablePaySum" var="data" value="#{contractDetailsBackingBean.managedBean.paymentSummary}" widgetVar="dataTableObj"
-       rowIndexVar="index" lazy="false" dynamic="true"  paginator="true" paginatorPosition="bottom" paginatorAlwaysVisible="true" emptyMessage="No Records!" rows="10">
-	     <p:columnGroup type="header"> 
-		 <p:row> 
-		   <p:column style="width:530px" headerText="#{lbl['lbl.ct.pay.table1.desc']}"  /> 
-		   <p:column style="width:200px" headerText="#{lbl['lbl.ct.pay.table1.amt']}" /> 
-		 </p:row>	
-		</p:columnGroup>
-		<p:column> <h:outputText value="#{data.description}" /></p:column>
-		<p:column> <h:outputText value="#{data.amount}" /></p:column>
-       </p:dataTable>
-     </h:panelGrid>
+	  </h:panelGrid>
     </p:panel>
-</ui:composition>
-
-
-
-
-                                       
-                                       
+</ui:composition>                                   
