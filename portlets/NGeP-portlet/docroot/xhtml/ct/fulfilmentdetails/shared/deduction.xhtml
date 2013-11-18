@@ -22,7 +22,7 @@
                 </f:facet>   
                </p:cellEditor>  
            </p:column>    
-           <p:column headerText="#{lbl['lbl.ct.ded.table.desc']}" style="width:300px;">  
+           <p:column headerText="#{lbl['lbl.ct.ded.table.per']}" style="width:300px;">  
                <p:cellEditor>  
                    <f:facet name="output">
                    <h:outputText value="#{data.description}" />
@@ -32,18 +32,6 @@
                    </f:facet>  
                </p:cellEditor>  
            </p:column>  
-	    	 <p:column headerText="#{lbl['lbl.ct.ded.table.cur']}" style="width:100px;">  
-               <p:cellEditor>  
-                    <f:facet name="output">
-                    <h:outputText value="" />
-                    </f:facet>  
-                    <f:facet name="input">  
-                    <h:selectOneMenu value="" style="width:100%">  
-                    <f:selectItems value="#{contractDetailsBackingBean.contractListItem.currency}"  />  
-                    </h:selectOneMenu>  
-                    </f:facet>   
-               </p:cellEditor>  
-           </p:column>  	
 			<p:column headerText="#{lbl['lbl.ct.ded.table.ramt']}" style="width:120px;">  
                <p:cellEditor>  
                    <f:facet name="output">
@@ -55,9 +43,10 @@
                </p:cellEditor>  
            </p:column>  
 			 <p:column headerText="#{lbl['lbl.ct.ded.table.action']}" styleClass="column-align-center">
-			  <p:commandButton title="delete" onsuccess="deleteDeduct.show()" partialSubmit="true" process="@this" icon="ui-icon-delete">
-					    <f:setPropertyActionListener value="#{data}" target="#{contractDetailsBackingBean.managedBean.ctDeduction}" />
-					  </p:commandButton>
+			  <p:commandLink partialSubmit="true" process="@this" onsuccess="deleteDeduct.show()">
+			        <f:setPropertyActionListener value="#{data}" target="#{contractDetailsBackingBean.managedBean.ctDeduction}" />
+			        <p:graphicImage library="ep/images/design" name="delete.png" value="/resources/ep/images/design/delete.png" title="Delete" />
+			  </p:commandLink>
 			 </p:column>     
 			</p:dataTable>
 		   <h:panelGrid style="width:760px" columnClasses="column-align-right">
@@ -86,9 +75,10 @@
       		  <p:column><p:outputLabel value = "#{data.clauseName}" style="float:left;"/></p:column>       
               <p:column><p:outputLabel value = "#{data.clauseDesc}" style="float:left;"/></p:column>    
               <p:column styleClass="column-align-center">
-              <p:commandButton title="delete" onsuccess="confirmation.show()" partialSubmit="true" process="@this" icon="ui-icon-delete">
+               <p:commandLink onsuccess="confirmation.show()" partialSubmit="true" process="@this" icon="ui-icon-delete">
                 <f:setPropertyActionListener value="#{data}" target="#{contractDetailsBackingBean.managedBean.deductionClause}" />
-                </p:commandButton>
+                 <p:graphicImage library="ep/images/design" name="delete.png" value="/resources/ep/images/design/delete.png" title="Delete" />
+			  </p:commandLink>
               </p:column>  
           </p:dataTable>
          <h:panelGrid style="width:760px" columnClasses="column-align-right">

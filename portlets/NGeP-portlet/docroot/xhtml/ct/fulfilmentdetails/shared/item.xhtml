@@ -13,17 +13,13 @@
               <p:ajax event="rowUnselect" listener="#{contractDetailsBackingBean.onRowUnselect}" />  
                <p:columnGroup type="header"> 
 			  <p:row> 
-				 <p:column style="width:80px" headerText="#{lbl['lbl.ct.item.table.code']}" /> 
-				 <p:column style="width:120px" headerText="#{lbl['lbl.ct.item.table.name']}" /> 
-				 <p:column style="width:200px" headerText="Description" /> 	
-				 <p:column style="width:100px" headerText="#{lbl['lbl.ct.item.table.uom']}"  /> 
-				 <p:column style="width:70px" headerText="#{lbl['lbl.ct.item.table.morder']}" /> 	
-				 <p:column style="width:50px" headerText="#{lbl['lbl.ct.item.table.exmtd']}"  /> 
+				 <p:column style="width:250px" headerText="#{lbl['lbl.ct.item.table.name']}" /> 
+				 <p:column style="width:150px" headerText="#{lbl['lbl.ct.item.table.uom']}"  /> 
+				 <p:column style="width:100px" headerText="#{lbl['lbl.ct.item.table.morder']}" /> 	
+				 <p:column style="width:60px" headerText="#{lbl['lbl.ct.item.table.exmtd']}"  /> 
 			  </p:row>							
 			 </p:columnGroup>
-			 <p:column><p:outputLabel value="#{data.itemCode}" style="float:left;"/></p:column>       
 			 <p:column><p:outputLabel value="#{data.itemName}" style="float:left;"/></p:column>       
-			 <p:column><p:outputLabel value="#{data.itemDescription}" style="float:left;"/></p:column>      
 			 <p:column><p:outputLabel value="UNIT" style="float:left;"/></p:column>       
 			 <p:column><p:outputLabel value="#{data.minimumOrderQty}" style="float:left;"/></p:column>       
 			 <p:column styleClass="column-align-center"> 

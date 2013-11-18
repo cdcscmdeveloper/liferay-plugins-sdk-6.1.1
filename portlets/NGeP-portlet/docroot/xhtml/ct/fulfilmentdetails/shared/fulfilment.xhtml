@@ -14,7 +14,7 @@
             <f:selectItems value="#{contractDetailsBackingBean.contractListItem.sourcingType}" />
          </p:selectOneMenu>
           <h:panelGrid columns="2">
-             <p:selectBooleanCheckbox value="#{contractDetailsBackingBean.managedBean.contractValues.exempted}" disabled="false"/> 
+             <p:selectBooleanCheckbox value="#{contractDetailsBackingBean.managedBean.contractValues.exempted}" disabled="true"/> 
              <p:outputLabel value="Exempted" />
           </h:panelGrid> 
          <p:outputLabel value="#{lbl['lbl.ct.contractType']}"/>  
