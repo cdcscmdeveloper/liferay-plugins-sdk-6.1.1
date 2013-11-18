@@ -32,7 +32,7 @@
 	<p:calendar value="#{committeBackingBean.managedBean.createdDt}"
 				 showOn="button" />
 	
-	<h:outputLabel value="CommitteStatus" ></h:outputLabel>
+	<h:outputLabel value="Record Status" ></h:outputLabel>
 
 	 <p:selectOneMenu style="width:61%;" value="#{committeBackingBean.managedBean.status}">  
             <f:selectItem itemLabel="Select One" itemValue="" />  
@@ -41,7 +41,7 @@
      </p:selectOneMenu> 
      	 
     </h:panelGrid>
-	<p:commandButton value="SEARCH" style="float:right;" action="#{committeBackingBean.sarchQtCommitte}"
+	<p:commandButton value="Search" style="float:right;" action="#{committeBackingBean.sarchQtCommitte}"
 			update="searchCommitte"/>
     <br/>
 	<br/>
@@ -55,24 +55,24 @@
 				
  
         <p:column headerText="CommitteType" > 
-        <h:outputLabel value="#{committe.scCommittee.committeeType}"></h:outputLabel>   
-    </p:column>
+        <h:outputText value="#{committe.scCommittee.committeeType}"/>
+        </p:column>
          <p:column headerText="QTN/TenderNo" > 
          <p:commandLink action="#{committeBackingBean.showQtDetailAction(committe.scQt.qtId)}"
 						style="margin-right:20px;" ajax1="false" oncomplete="screen5.show()" update="@(.qtCount)">
-        <h:outputLabel value="#{committe.scQt.qtNo}"></h:outputLabel>   
+        <h:outputText value="#{committe.scQt.qtNo}"/>   
         </p:commandLink>
     </p:column>
      <p:column headerText="DateCreated" > 
-        <h:outputLabel value="#{committe.scCommittee.createdDate}"></h:outputLabel>   
+        <h:outputText value="#{committe.scCommittee.createdDate}"/>  
     </p:column>
-     <p:column headerText="ApprovalStatus" > 
-         <h:outputLabel value="#{committe.scCommittee.approvalStatus}"></h:outputLabel>   
+     <p:column headerText="CommitteStatus" > 
+         <h:outputText value="#{committe.scCommittee.approvalStatus}"/>  
     </p:column>
-     <p:column headerText="CommitteStatus"> 
-        <h:outputLabel value="#{committe.scCommittee.recordStatus}"></h:outputLabel>   
+     <p:column headerText="RecordStatus"> 
+        <h:outputText value="#{committe.scCommittee.recordStatus}"/>
     </p:column>
-    <p:column>
+    <p:column headerText="Action">
     <p:rowEditor />
     </p:column>
      </p:dataTable>
@@ -81,7 +81,7 @@
 	<p:panel>
 	<h:panelGrid columns="2" style="width:100%;" styleClass="noBorders tr,noBorders td">
 
-      <p:commandButton value="ADD" style="float:right;" action="#{committeBackingBean.newCommitteeAction}" ajax="false"/>
+      <p:commandButton value="Add" style="float:right;" action="#{committeBackingBean.newCommitteeAction}" ajax="false"/>
 	 </h:panelGrid>
 	</p:panel>
 
