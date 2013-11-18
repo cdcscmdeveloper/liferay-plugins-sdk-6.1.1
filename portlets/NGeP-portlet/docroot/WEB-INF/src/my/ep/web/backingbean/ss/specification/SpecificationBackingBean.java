@@ -43,8 +43,17 @@ BaseBackingBean<SpecificationManagedBean>{
 	 private int count;  
 	
 	 private List<SpecificationCompilanceBean> selectedCompilenceList;
+	 private ScQtCheckList[] selectedst1TechAddProposal;
 	 private String selctValue;
-	  
+	
+	 private ScQtCheckList[] selectedst1FinanceProposal;
+	 private ScQtCheckList[] selectedst1FinanceAddProposal;
+	 private ScQtCheckList[] selectedst2TechProposal;
+	 private ScQtCheckList[] selectedst2TechAddProposal;
+	 private ScQtCheckList[] selectedst2FinanceProposal;
+	 private ScQtCheckList[] selectedst2FinanceAddProposal;
+	 private ScQtDeduction[] selectedDeduction;
+	 private ScQtCheckList[] selectedst1TechProposal;
 	    public int getCount() {  
 	        return count;  
 	    }  
@@ -432,7 +441,13 @@ public SpecificationBackingBean(){
 			}
 			}*/
 		ScQtDeduction deduction=new ScQtDeduction();
-		
+		if(null == deductionList){
+			deduction.setQtDeductionId(1);
+											
+		}if(null != deductionList){
+			deduction.setQtDeductionId(deductionList.size()+1);
+											
+		}
 	 deductionList.add(deduction);
 		//this.getManagedBean().getScQtDeductionList().addAll(c);
 		this.getManagedBean().setScQtDeductionList(deductionList);
@@ -448,14 +463,17 @@ public SpecificationBackingBean(){
 		System.out.println("====enter stage1 additional add method====");
 		try{
 			List<ScQtCheckList> st1additionalList= getManagedBean().getScQtCheckSt1techAdditionalProposalList();
+			 
 			if(null == st1additionalList){
 				st1additionalList= new ArrayList<ScQtCheckList>();
+				 //mediumCarsModel = new CarDataModel(st1additionalList);
 								
 			}
 			
 			ScQtCheckList additionProposalst1=new ScQtCheckList();
-		
+			additionProposalst1.setQtChecklistId(1L);
 			st1additionalList.add(additionProposalst1);
+			// mediumCarsModel = new CarDataModel(st1additionalList);
 		this.getManagedBean().setScQtCheckSt1techAdditionalProposalList(st1additionalList);
 		}catch(Exception e){
 			//e.printStackTrace();
@@ -474,7 +492,7 @@ public SpecificationBackingBean(){
 			}
 			
 			ScQtCheckList st1financeproposalList1=new ScQtCheckList();
-		
+			st1financeproposalList1.setQtChecklistId(1L);
 			st1financeproposalList.add(st1financeproposalList1);
 		this.getManagedBean().setScQtCheckSt1financeProposalList(st1financeproposalList);
 		}catch(Exception e){
@@ -494,7 +512,7 @@ public SpecificationBackingBean(){
 			}
 			
 			ScQtCheckList st1financeAdditionalproposalList1=new ScQtCheckList();
-		
+			st1financeAdditionalproposalList1.setQtChecklistId(1L);
 			st1financeAdditionalproposalList.add(st1financeAdditionalproposalList1);
 		this.getManagedBean().setScQtCheckSt1financeAdditionalProposalList(st1financeAdditionalproposalList);
 		}catch(Exception e){
@@ -515,7 +533,7 @@ public SpecificationBackingBean(){
 			}
 			
 			ScQtCheckList additionProposalst2=new ScQtCheckList();
-		
+			additionProposalst2.setQtChecklistId(1L);
 			st2additionalList.add(additionProposalst2);
 		this.getManagedBean().setScQtCheckSt2techAdditionalProposalList(st2additionalList);
 		}catch(Exception e){
@@ -535,7 +553,7 @@ public SpecificationBackingBean(){
 			}
 			
 			ScQtCheckList st2financeproposalList2=new ScQtCheckList();
-		
+			st2financeproposalList2.setQtChecklistId(1L);
 			st2financeproposalList.add(st2financeproposalList2);
 		this.getManagedBean().setScQtCheckSt2financeProposalList(st2financeproposalList);
 		}catch(Exception e){
@@ -555,7 +573,7 @@ public SpecificationBackingBean(){
 			}
 			
 			ScQtCheckList st2financeAdditionalproposalList1=new ScQtCheckList();
-		
+			st2financeAdditionalproposalList1.setQtChecklistId(1L);
 			st2financeAdditionalproposalList.add(st2financeAdditionalproposalList1);
 		this.getManagedBean().setScQtCheckSt2financeAdditionalProposalList(st2financeAdditionalproposalList);
 		}catch(Exception e){
@@ -587,11 +605,14 @@ public SpecificationBackingBean(){
 				getManagedBean().setScQtCheckSt1techProposal(compilance);*/
 			List<ScQtCheckList> compilance = new ArrayList<ScQtCheckList>();
 			List<SpecificationCompilanceBean> list=getSelectedCompilenceList();
+			List<SpecificationCompilanceBean> list1=this.getManagedBean().getCompilaenceList();
 			System.out.println("======tech one list size===="+list.size());
+			System.out.println("=======compilence bean list one size===="+list1.size());
 			for(int i=0;i<list.size();i++){
 				SpecificationCompilanceBean bean=list.get(i);
 				ScQtCheckList scqtlist=new ScQtCheckList();
 				scqtlist.setTitle(bean.getCompilanceTitle());
+				scqtlist.setQtChecklistId(new Long(i));
 				compilance.add(scqtlist);
 
 				//getManagedBean().setCompilanceList(compilance);
@@ -620,6 +641,7 @@ public SpecificationBackingBean(){
 			}
 				
 				ScQtCheckList scqtlist=new ScQtCheckList();
+				
 				scqtlist.setTitle("TemplateTitle");
 				scqtlist.setChecklistType("Technical/Financial/Others");
 				
@@ -649,7 +671,12 @@ public SpecificationBackingBean(){
 			}
 			
 			ScQtCheckList st2technicalproposalList1=new ScQtCheckList();
-		
+			if(st2technicalproposalList==null){
+				st2technicalproposalList1.setQtChecklistId(1L);	
+			}else{
+				
+				st2technicalproposalList1.setQtChecklistId(new Long(st2technicalproposalList.size()+1));	
+				}
 			st2technicalproposalList.add(st2technicalproposalList1);
 		this.getManagedBean().setScQtCheckSt2techProposal(st2technicalproposalList);
 		}catch(Exception e){
@@ -751,4 +778,143 @@ public SpecificationBackingBean(){
 			List<SpecificationCompilanceBean> selectedCompilenceList) {
 		this.selectedCompilenceList = selectedCompilenceList;
 	}
+
+	/**
+	 * @return the selectedst1TechAddProposal
+	 */
+	public ScQtCheckList[] getSelectedst1TechAddProposal() {
+		return selectedst1TechAddProposal;
+	}
+
+	/**
+	 * @param selectedst1TechAddProposal the selectedst1TechAddProposal to set
+	 */
+	public void setSelectedst1TechAddProposal(
+			ScQtCheckList[] selectedst1TechAddProposal) {
+		this.selectedst1TechAddProposal = selectedst1TechAddProposal;
+	}
+
+	
+
+	/**
+	 * @return the selectedst1FinanceProposal
+	 */
+	public ScQtCheckList[] getSelectedst1FinanceProposal() {
+		return selectedst1FinanceProposal;
+	}
+
+	/**
+	 * @param selectedst1FinanceProposal the selectedst1FinanceProposal to set
+	 */
+	public void setSelectedst1FinanceProposal(
+			ScQtCheckList[] selectedst1FinanceProposal) {
+		this.selectedst1FinanceProposal = selectedst1FinanceProposal;
+	}
+
+	/**
+	 * @return the selectedst1FinanceAddProposal
+	 */
+	public ScQtCheckList[] getSelectedst1FinanceAddProposal() {
+		return selectedst1FinanceAddProposal;
+	}
+
+	/**
+	 * @param selectedst1FinanceAddProposal the selectedst1FinanceAddProposal to set
+	 */
+	public void setSelectedst1FinanceAddProposal(
+			ScQtCheckList[] selectedst1FinanceAddProposal) {
+		this.selectedst1FinanceAddProposal = selectedst1FinanceAddProposal;
+	}
+
+	/**
+	 * @return the selectedst2TechProposal
+	 */
+	public ScQtCheckList[] getSelectedst2TechProposal() {
+		return selectedst2TechProposal;
+	}
+
+	/**
+	 * @param selectedst2TechProposal the selectedst2TechProposal to set
+	 */
+	public void setSelectedst2TechProposal(ScQtCheckList[] selectedst2TechProposal) {
+		this.selectedst2TechProposal = selectedst2TechProposal;
+	}
+
+	/**
+	 * @return the selectedst2TechAddProposal
+	 */
+	public ScQtCheckList[] getSelectedst2TechAddProposal() {
+		return selectedst2TechAddProposal;
+	}
+
+	/**
+	 * @param selectedst2TechAddProposal the selectedst2TechAddProposal to set
+	 */
+	public void setSelectedst2TechAddProposal(
+			ScQtCheckList[] selectedst2TechAddProposal) {
+		this.selectedst2TechAddProposal = selectedst2TechAddProposal;
+	}
+
+	/**
+	 * @return the selectedst2FinanceProposal
+	 */
+	public ScQtCheckList[] getSelectedst2FinanceProposal() {
+		return selectedst2FinanceProposal;
+	}
+
+	/**
+	 * @param selectedst2FinanceProposal the selectedst2FinanceProposal to set
+	 */
+	public void setSelectedst2FinanceProposal(
+			ScQtCheckList[] selectedst2FinanceProposal) {
+		this.selectedst2FinanceProposal = selectedst2FinanceProposal;
+	}
+
+	/**
+	 * @return the selectedst2FinanceAddProposal
+	 */
+	public ScQtCheckList[] getSelectedst2FinanceAddProposal() {
+		return selectedst2FinanceAddProposal;
+	}
+
+	/**
+	 * @param selectedst2FinanceAddProposal the selectedst2FinanceAddProposal to set
+	 */
+	public void setSelectedst2FinanceAddProposal(
+			ScQtCheckList[] selectedst2FinanceAddProposal) {
+		this.selectedst2FinanceAddProposal = selectedst2FinanceAddProposal;
+	}
+
+	/**
+	 * @return the selectedDeduction
+	 */
+	public ScQtDeduction[] getSelectedDeduction() {
+		return selectedDeduction;
+	}
+
+	/**
+	 * @param selectedDeduction the selectedDeduction to set
+	 */
+	public void setSelectedDeduction(ScQtDeduction[] selectedDeduction) {
+		this.selectedDeduction = selectedDeduction;
+	}
+
+	/**
+	 * @return the selectedst1TechProposal
+	 */
+	public ScQtCheckList[] getSelectedst1TechProposal() {
+		return selectedst1TechProposal;
+	}
+
+	/**
+	 * @param selectedst1TechProposal the selectedst1TechProposal to set
+	 */
+	public void setSelectedst1TechProposal(ScQtCheckList[] selectedst1TechProposal) {
+		this.selectedst1TechProposal = selectedst1TechProposal;
+	}
+
+	
+
+	
+	
 }
