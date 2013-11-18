@@ -14,22 +14,20 @@ xmlns:c="http://java.sun.com/jsp/jstl/core">
 			 	var="obj" rowIndexVar="rowIndex"
 			 	value="#{planBackingBean.managedBean.budgetAllocDtlList}" 
 			 	emptyMessage="#{lbl['lbl.pp.no.record.found']}">  
-		    	<p:column styleClass="ppSmallTd" headerText="#{lbl['lbl.pp.seq']}">  
-                    #{rowIndex+1}
-                </p:column>   
+			 	   
 		        <p:column headerText="#{lbl['lbl.pp.gosodo.code']}">  
 		            #{obj.pmDo.pmSo.pmGo.goCode} #{obj.pmDo.pmSo.soCode}#{obj.pmDo.doCode}
 		        </p:column>  
 		        <p:column headerText="#{lbl['lbl.pp.gosodo.name']}">  
 		            #{obj.pmDo.pmSo.pmGo.goName} #{obj.pmDo.pmSo.soName}#{obj.pmDo.doName}
 		        </p:column> 
-		        <p:column headerText="#{lbl['lbl.pp.financial.year']}">  
+		        <p:column headerText="#{lbl['lbl.pp.financial.year']}" styleClass="ppNumericAlign">  
 		            #{obj.ppBudget.financialYear}  
 		        </p:column>  
-		        <p:column headerText="#{lbl['lbl.pp.budgeted.amount']}">  
+		        <p:column headerText="#{lbl['lbl.pp.budgeted.amount']}" styleClass="ppNumericAlign">  
 		            #{obj.allocAmount}    
 		        </p:column>  
-		        <p:column headerText="#{lbl['lbl.pp.used.amount']}">  
+		        <p:column headerText="#{lbl['lbl.pp.used.amount']}" styleClass="ppNumericAlign">  
 		            #{obj.usedAmount}  
 		        </p:column> 
 		        <!-- 

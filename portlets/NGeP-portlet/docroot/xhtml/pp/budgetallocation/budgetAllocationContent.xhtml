@@ -17,7 +17,7 @@ xmlns:c="http://java.sun.com/jsp/jstl/core"
 					<td>
 						<p:selectOneMenu value="#{budgetAllocationBackingBean.managedBean.selectedBudgetAllocation.ministryOrgProfileId}"
 							disabled="#{!budgetAllocationBackingBean.managedBean.selectedBudgetAllocation.editable}">
-							<f:selectItem itemLabel="#{lbl['lbl.select']}" itemValue="0"/>
+							<f:selectItem itemLabel="#{lbl['lbl.select']}" itemValue="#{null}"/>
 							<f:selectItems value="#{budgetAllocationBackingBean.ministryOptions()}" 
 								var="orgProf" itemLabel="#{orgProf.orgName}" itemValue="#{orgProf.orgProfileId}" />
 							<p:ajax event="change" update="somJbt, somPtj"  />
@@ -29,7 +29,7 @@ xmlns:c="http://java.sun.com/jsp/jstl/core"
 					<td>
 						<p:selectOneMenu id="somJbt" value="#{budgetAllocationBackingBean.managedBean.selectedBudgetAllocation.jabatanOrgProfileId}"
 							disabled="#{!budgetAllocationBackingBean.managedBean.selectedBudgetAllocation.editable}">
-							<f:selectItem itemLabel="#{lbl['lbl.select']}" itemValue="0"/>
+							<f:selectItem itemLabel="#{lbl['lbl.select']}" itemValue="#{null}"/>
 							<f:selectItems value="#{budgetAllocationBackingBean.populateJabatan()}" 
 								var="orgProf" itemLabel="#{orgProf.orgName}" itemValue="#{orgProf.orgProfileId}" />
 							<p:ajax event="change" update="somPtj"  />
@@ -41,7 +41,7 @@ xmlns:c="http://java.sun.com/jsp/jstl/core"
 					<td>
 						<p:selectOneMenu id="somPtj" value="#{budgetAllocationBackingBean.managedBean.selectedBudgetAllocation.orgProfileId}" 
 							disabled="#{!budgetAllocationBackingBean.managedBean.selectedBudgetAllocation.editable}">
-							<f:selectItem itemLabel="#{lbl['lbl.select']}" itemValue="0"/>
+							<f:selectItem itemLabel="#{lbl['lbl.select']}" itemValue="#{null}"/>
 							<f:selectItems value="#{budgetAllocationBackingBean.populatePtj()}" 
 								var="orgProf" itemLabel="#{orgProf.orgName}" itemValue="#{orgProf.orgProfileId}" />
 						</p:selectOneMenu>
@@ -59,7 +59,7 @@ xmlns:c="http://java.sun.com/jsp/jstl/core"
 					<td>
 						<p:selectOneMenu value="#{budgetAllocationBackingBean.managedBean.selectedBudgetAllocation.approverId}" 
 						disabled="#{!budgetAllocationBackingBean.managedBean.selectedBudgetAllocation.editable}">
-							<f:selectItem itemLabel="#{lbl['lbl.select']}" itemValue="0"/>
+							<f:selectItem itemLabel="#{lbl['lbl.select']}" itemValue="#{null}"/>
 							<f:selectItem itemLabel="Lailah" itemValue="1"/>
 							<f:selectItem itemLabel="Khai" itemValue="2"/>
 						</p:selectOneMenu>
@@ -91,7 +91,7 @@ xmlns:c="http://java.sun.com/jsp/jstl/core"
                         #{budgetAllocationDet.recordStatus?'Active':'Deleted'}
                    	</p:column>                
                    	<p:column headerText="#{lbl['lbl.pp.action']}">  
-                  		<p:commandButton value="#{lbl['lbl.pp.edit']}" icon="ui-icon-edit"
+                  		<p:commandButton value="#{lbl['lbl.pp.edit']}" icon="ui-icon-edit" 
                         	action="#{budgetAllocationBackingBean.showBudgetAllocationItem(budgetAllocationDet)}" 
                         	oncomplete="dlItemDetailsBudgetModal.show();" update=":form:dlItemDetailsBudget"/>
                         &nbsp;
@@ -159,7 +159,7 @@ xmlns:c="http://java.sun.com/jsp/jstl/core"
 					    	value="#{budgetAllocationBackingBean.managedBean.selectedBudgetAllocItem.budgetId}"
 					    	disabled="#{!budgetAllocationBackingBean.managedBean.selectedBudgetAllocItem.brandNew &amp;&amp; 
 					    		!budgetAllocationBackingBean.managedBean.selectedBudgetAllocItem.editable}">
-							<f:selectItem itemLabel="#{lbl['lbl.select']}" itemValue="0" />
+							<f:selectItem itemLabel="#{lbl['lbl.select']}" itemValue="#{null}" />
 							<f:selectItems value="#{budgetAllocationBackingBean.populateGo()}" 
 								var="budget" itemLabel="#{budget.pmGo.goCode}" itemValue="#{budget.budgetId}" />
 							<p:ajax event="change" listener="#{budgetAllocationBackingBean.selectedGo}" update="opItemDetailsBudget"  />
@@ -168,7 +168,7 @@ xmlns:c="http://java.sun.com/jsp/jstl/core"
 							value="#{budgetAllocationBackingBean.managedBean.selectedBudgetAllocItem.soId}"
 							disabled="#{!budgetAllocationBackingBean.managedBean.selectedBudgetAllocItem.brandNew &amp;&amp; 
 					    		!budgetAllocationBackingBean.managedBean.selectedBudgetAllocItem.editable}">
-							<f:selectItem itemLabel="#{lbl['lbl.select']}" itemValue="0" />
+							<f:selectItem itemLabel="#{lbl['lbl.select']}" itemValue="#{null}" />
 							<f:selectItems value="#{budgetAllocationBackingBean.populateSo()}" 
 								var="pmSo" itemLabel="#{pmSo.soCode}" itemValue="#{pmSo.soId}" />
 							<p:ajax event="change" update="somDo, opGosodo"  />
@@ -177,7 +177,7 @@ xmlns:c="http://java.sun.com/jsp/jstl/core"
 							value="#{budgetAllocationBackingBean.managedBean.selectedBudgetAllocItem.doId}"
 							disabled="#{!budgetAllocationBackingBean.managedBean.selectedBudgetAllocItem.brandNew &amp;&amp; 
 					    		!budgetAllocationBackingBean.managedBean.selectedBudgetAllocItem.editable}">
-							<f:selectItem itemLabel="#{lbl['lbl.select']}" itemValue="0" />
+							<f:selectItem itemLabel="#{lbl['lbl.select']}" itemValue="#{null}" />
 							<f:selectItems value="#{budgetAllocationBackingBean.populateDo()}" 
 								var="pmDo" itemLabel="#{pmDo.doCode}" itemValue="#{pmDo.doId}" />
 							<p:ajax event="change" listener="#{budgetAllocationBackingBean.selectedDo}" update="opGosodo" />
@@ -199,7 +199,7 @@ xmlns:c="http://java.sun.com/jsp/jstl/core"
 						<p:selectOneMenu value="#{budgetAllocationBackingBean.managedBean.selectedBudgetAllocItem.ovrFinancialYear}"
 							disabled="#{!budgetAllocationBackingBean.managedBean.selectedBudgetAllocItem.brandNew &amp;&amp; 
 					    		!budgetAllocationBackingBean.managedBean.selectedBudgetAllocItem.editable}">
-							<f:selectItem itemLabel="#{lbl['lbl.select']}" itemValue="0" />
+							<f:selectItem itemLabel="#{lbl['lbl.select']}" itemValue="#{null}" />
 							<f:selectItems value="#{budgetAllocationBackingBean.financialYearOptions()}"/>
 						</p:selectOneMenu>
 					</td>

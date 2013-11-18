@@ -12,11 +12,9 @@ import java.util.List;
 
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.RequestScoped;
-import javax.faces.context.FacesContext;
 import javax.faces.event.AjaxBehaviorEvent;
 import javax.faces.event.ValueChangeEvent;
 import javax.faces.model.SelectItem;
-import javax.portlet.PortletRequest;
 
 import my.ep.biz.bean.search.ISearchBean;
 import my.ep.biz.bean.search.SearchBean;
@@ -77,6 +75,7 @@ import my.ep.persistence.entity.pp.procurementplan.PpPlanMaster;
 import my.ep.persistence.entity.pp.procurementplan.PpQtActivity;
 import my.ep.persistence.entity.pp.procurementplan.PpRecurFreq;
 import my.ep.persistence.entity.pp.procurementplan.PpRecurFreqDtl;
+import my.ep.persistence.entity.pp.procurementplan.PpRejectReason;
 import my.ep.persistence.entity.sm.SmSupplier;
 import my.ep.persistence.logging.LogKey;
 import my.ep.type.aut.SearchOperator;
@@ -100,56 +99,7 @@ import org.primefaces.event.TabChangeEvent;
 public class PlanBackingBean extends BaseBackingBean<PlanManagedBean>{
 	private static Logger log = Logger.getLogger(PlanBackingBean.class);
 	private final static Long USER_ID_PTJ= 4L; //TEMP
-	
-//	private SearchFilterBean statusFilterBean = new SearchFilterBean(SearchOperator.OPERATOR_EQUALS.value());
-//	private SearchFilterBean planNumberFilterBean = new SearchFilterBean(SearchOperator.OPERATOR_LIKE.value());
-//	private SearchFilterBean createdDateFilterBean = new SearchFilterBean(SearchOperator.OPERATOR_LIKE.value());
-//	
-//	/**
-//	 * @return the statusFilterBean
-//	 */
-//	public SearchFilterBean getStatusFilterBean() {
-//		return statusFilterBean;
-//	}
-//
-//	/**
-//	 * @param statusFilterBean the statusFilterBean to set
-//	 */
-//	public void setStatusFilterBean(SearchFilterBean statusFilterBean) {
-//		this.statusFilterBean = statusFilterBean;
-//	}
-//
-//	/**
-//	 * @return the planNumberFilterBean
-//	 */
-//	public SearchFilterBean getPlanNumberFilterBean() {
-//		return planNumberFilterBean;
-//	}
-//
-//	/**
-//	 * @param planNumberFilterBean the planNumberFilterBean to set
-//	 */
-//	public void setPlanNumberFilterBean(SearchFilterBean planNumberFilterBean) {
-//		this.planNumberFilterBean = planNumberFilterBean;
-//	}
-//
-//	/**
-//	 * @return the createdDateFilterBean
-//	 */
-//	public SearchFilterBean getCreatedDateFilterBean() {
-//		return createdDateFilterBean;
-//	}
-//
-//	/**
-//	 * @param createdDateFilterBean the createdDateFilterBean to set
-//	 */
-//	public void setCreatedDateFilterBean(SearchFilterBean createdDateFilterBean) {
-//		this.createdDateFilterBean = createdDateFilterBean;
-//	}
-//	
-//	private PortletRequest getPortletRequest() {
-//		return (PortletRequest)FacesContext.getCurrentInstance().getExternalContext().getRequest();
-//	}
+
 	
 	/**
 	 * search plan
@@ -275,7 +225,7 @@ public class PlanBackingBean extends BaseBackingBean<PlanManagedBean>{
 				for(int i=numPvo; i<=ProcurementPlanConst.PVO_LEVEL; i++){
 					PpPlanActor vo = new PpPlanActor();
 					vo.setActorSeq(i);
-					vo.setActorType("V");
+					vo.setActorType(ProcurementPlanConst.SUBMIT_VERIFICATION);
 					ppPlan.addVerificationOfficers(vo);
 				}
 			
@@ -312,7 +262,7 @@ public class PlanBackingBean extends BaseBackingBean<PlanManagedBean>{
 					for(int i=numPvoMto; i<=ProcurementPlanConst.PVO_LEVEL; i++){
 						PpPlanActor vo = new PpPlanActor();
 						vo.setActorSeq(i);
-						vo.setActorType("V");
+						vo.setActorType(ProcurementPlanConst.SUBMIT_VERIFICATION);
 						mtoPlan.addVerificationOfficers(vo);
 					}
 					
@@ -358,6 +308,8 @@ public class PlanBackingBean extends BaseBackingBean<PlanManagedBean>{
 					}else{
 						this.getManagedBean().setViewMode(ProcurementPlanConst.MODE_VIEW);
 						this.getManagedBean().setActions(null);
+						this.getManagedBean().getPlanMaster().setPpPlans(new ArrayList<PpPlan>());
+						this.getManagedBean().getPlanMaster().addPpPlans(this.getManagedBean().getPlan());
 					}
 					
 				}
@@ -1222,6 +1174,7 @@ public class PlanBackingBean extends BaseBackingBean<PlanManagedBean>{
 		List<PmOrgProfile> options = new ArrayList<PmOrgProfile>();
 		
 		if(this.getManagedBean().getSelectedPlanMaster().getOrgProfile()!=null){
+			System.out.println("rain......");
 			Long orgProfileId = this.getManagedBean().getSelectedPlanMaster().getOrgProfile().getParentOrgProfile().getParentOrgProfile().getOrgProfileId();
 			OrgProfileReqDTO reqDTO = new OrgProfileReqDTO();
 			reqDTO.setParentOrgProfileId(orgProfileId);
@@ -1768,7 +1721,7 @@ public class PlanBackingBean extends BaseBackingBean<PlanManagedBean>{
 			FacesScopes fs = new FacesScopes();
 			ReasonReqDTO reqDTO = new ReasonReqDTO();
 			reqDTO.setReasonCategory(ReasonCategory.PROCUREMENT_PLAN_REJECTION.value());
-			reqDTO.setLanguage(fs.getUserLocale().getLanguage().toUpperCase());
+			reqDTO.setLanguage("EN");//fs.getUserLocale().getLanguage().toUpperCase()
 			IReasonSO reqSO = (IReasonSO) BusinessDelegate.getInstance().getServiceObject("pm", IReasonSO.class);
 			ReasonResDTO resDTO = reqSO.retrieveReasonDescListByCategory(reqDTO);
 //			if(resDTO.isSuccessful()){
@@ -2117,6 +2070,16 @@ public class PlanBackingBean extends BaseBackingBean<PlanManagedBean>{
 				this.getManagedBean().getPlanMaster().setMaksudId(null);
 			}
 			
+			//Rejection Reasons
+			if(ProcurementPlanConst.MODE_VERIFICATION.equals(this.getManagedBean().getViewMode()) 
+					|| ProcurementPlanConst.MODE_APPROVAL.equals(this.getManagedBean().getViewMode())){
+				for(Long rejectId : this.getManagedBean().getPlan().getPmRejectReasonIds()){
+					PpRejectReason rejectReason  = new PpRejectReason();
+					rejectReason.setReasonId(rejectId);
+					this.getManagedBean().getPlan().addPpRejectReasons(rejectReason);
+				}
+			}
+			
 			//for EP
 			if(ProcurementPlanConst.PLAN_TYPE_EXPENDITURE.equals(this.getManagedBean().getPlanMaster().getPlanType())){
 				//for FP/FI
@@ -2180,6 +2143,15 @@ public class PlanBackingBean extends BaseBackingBean<PlanManagedBean>{
 					//getting approver
 					this.getManagedBean().getMtoPlan().addPpPlanActors(this.getManagedBean().getMtoPlan().getApprover());
 					
+					//Rejection Reasons
+					if(ProcurementPlanConst.MODE_VERIFICATION.equals(this.getManagedBean().getViewMode()) 
+							|| ProcurementPlanConst.MODE_APPROVAL.equals(this.getManagedBean().getViewMode())){
+						for(Long rejectId : this.getManagedBean().getMtoPlan().getPmRejectReasonIds()){
+							PpRejectReason rejectReason  = new PpRejectReason();
+							rejectReason.setReasonId(rejectId);
+							this.getManagedBean().getMtoPlan().addPpRejectReasons(rejectReason);
+						}
+					}
 					//getting verification officer
 					if(ProcurementPlanConst.SUBMIT_VERIFICATION.equals(this.getManagedBean().getMtoPlan().getSubmissionType())){
 						for(PpPlanActor pvo: this.getManagedBean().getMtoPlan().getVerificationOfficers()){

@@ -94,7 +94,7 @@ xmlns:c="http://java.sun.com/jsp/jstl/core">
 						<p:selectOneMenu value="#{planBackingBean.managedBean.selectedItem.goId}"
 							disabled="#{!planBackingBean.managedBean.selectedItem.brandNew &amp;&amp; 
 								!planBackingBean.managedBean.selectedItem.editable}">
-							<f:selectItem itemLabel="#{lbl['lbl.select']}" itemValue="0" />
+							<f:selectItem itemLabel="#{lbl['lbl.select']}" itemValue="#{null}" />
 							<f:selectItems value="#{planBackingBean.goOptions()}" 
 									var="obj" itemLabel="#{obj.pmGo.goCode}" itemValue="#{obj.budgetId}" />
 							<p:ajax event="change" update="somSo"/>
@@ -102,7 +102,7 @@ xmlns:c="http://java.sun.com/jsp/jstl/core">
 						<p:selectOneMenu id="somSo" value="#{planBackingBean.managedBean.selectedItem.soId}"
 							disabled="#{!planBackingBean.managedBean.selectedItem.brandNew &amp;&amp; 
 								!planBackingBean.managedBean.selectedItem.editable}">
-							<f:selectItem itemLabel="#{lbl['lbl.select']}" itemValue="0" />
+							<f:selectItem itemLabel="#{lbl['lbl.select']}" itemValue="#{null}" />
 							<f:selectItems value="#{planBackingBean.soOptions()}" 
 									var="obj" itemLabel="#{obj.soCode}" itemValue="#{obj.soId}" />
 							<p:ajax event="change" update="somDo"/>
@@ -110,7 +110,7 @@ xmlns:c="http://java.sun.com/jsp/jstl/core">
 						<p:selectOneMenu  id="somDo" value="#{planBackingBean.managedBean.selectedItem.ppBudgetAllocDtl.budgetAllocDtlId}"
 							disabled="#{!planBackingBean.managedBean.selectedItem.brandNew &amp;&amp; 
 								!planBackingBean.managedBean.selectedItem.editable}">
-							<f:selectItem itemLabel="#{lbl['lbl.select']}" itemValue="0" />
+							<f:selectItem itemLabel="#{lbl['lbl.select']}" itemValue="#{null}" />
 							<f:selectItems value="#{planBackingBean.doOptions()}" 
 									var="obj" itemLabel="#{obj.pmDo.doCode}" itemValue="#{obj.budgetAllocDtlId}" />
 							<p:ajax event="change" listener="#{planBackingBean.selectedGoSoDo}" update="opGosodo, somYear, itAvailbleBud"/>
@@ -134,7 +134,7 @@ xmlns:c="http://java.sun.com/jsp/jstl/core">
 					<td>
 						<p:selectOneMenu id="somYear" value="#{planBackingBean.managedBean.selectedItem.ovrFinancialYear}"
 							disabled="#{cc.attrs.selectedPlanMaster.votType!=PPConst.votWithout}">
-							<f:selectItem itemLabel="#{lbl['lbl.select']}" itemValue="0" />
+							<f:selectItem itemLabel="#{lbl['lbl.select']}" itemValue="#{null}" />
 							<f:selectItems value="#{planBackingBean.financialYearOptions()}"/>
 						</p:selectOneMenu>
 						
@@ -161,7 +161,7 @@ xmlns:c="http://java.sun.com/jsp/jstl/core">
 						<p:selectOneMenu value="#{planBackingBean.managedBean.selectedItem.unspscSegmentCode}"
 							disabled="#{!planBackingBean.managedBean.selectedItem.brandNew &amp;&amp; 
 							!planBackingBean.managedBean.selectedItem.editable}">
-							<f:selectItem itemLabel="#{lbl['lbl.select']}" itemValue="0"/>
+							<f:selectItem itemLabel="#{lbl['lbl.select']}" itemValue="#{null}"/>
 							<f:selectItems value="#{planBackingBean.unspscSegmentOptions()}" 
 								var="obj" itemLabel="#{obj.unspscTitle}" itemValue="#{obj.unspscCode}"/>
 							<p:ajax event="change" update="somProdFamily" />
@@ -174,7 +174,7 @@ xmlns:c="http://java.sun.com/jsp/jstl/core">
 						<p:selectOneMenu id="somProdFamily" value="#{planBackingBean.managedBean.selectedItem.unspscFamilyCode}"
 							disabled="#{!planBackingBean.managedBean.selectedItem.brandNew &amp;&amp; 
 							!planBackingBean.managedBean.selectedItem.editable}">
-							<f:selectItem itemLabel="#{lbl['lbl.select']}" itemValue="0"/>
+							<f:selectItem itemLabel="#{lbl['lbl.select']}" itemValue="#{null}"/>
 							<f:selectItems value="#{planBackingBean.unspscFamilyOptions()}" 
 								var="obj" itemLabel="#{obj.unspscTitle}" itemValue="#{obj.unspscCode}"/>
 							<p:ajax event="change" update="somProdClass" />
@@ -187,7 +187,7 @@ xmlns:c="http://java.sun.com/jsp/jstl/core">
 						<p:selectOneMenu id="somProdClass" value="#{planBackingBean.managedBean.selectedItem.unspscClassCode}"
 							disabled="#{!planBackingBean.managedBean.selectedItem.brandNew &amp;&amp; 
 							!planBackingBean.managedBean.selectedItem.editable}">
-							<f:selectItem itemLabel="#{lbl['lbl.select']}" itemValue="0"/>
+							<f:selectItem itemLabel="#{lbl['lbl.select']}" itemValue="#{null}"/>
 							<f:selectItems value="#{planBackingBean.unspscClassOptions()}" 
 								var="obj" itemLabel="#{obj.unspscTitle}" itemValue="#{obj.unspscCode}"/>
 							<p:ajax event="change" listener="#{planBackingBean.selectedProduct()}"/>
@@ -197,6 +197,10 @@ xmlns:c="http://java.sun.com/jsp/jstl/core">
 				<tr>
 		   			<th><p:outputLabel value="#{lbl['lbl.pp.remarks']}"/></th>
 					<td>
+						<c:if test="#{cc.attrs.viewMode!=PPConst.modeNew}">
+							<p:inputTextarea value="#{planBackingBean.managedBean.selectedItem.latestRemark.remark}" 
+								rows="3" cols="70" disabled="true"/>
+						</c:if>
 						<p:inputTextarea value="#{planBackingBean.managedBean.selectedItemRemark.remark}" 
 							rows="3" cols="70"/>
 					</td>

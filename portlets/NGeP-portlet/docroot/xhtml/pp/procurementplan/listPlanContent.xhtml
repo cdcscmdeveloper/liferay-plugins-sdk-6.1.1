@@ -54,7 +54,7 @@ xmlns:c="http://java.sun.com/jsp/jstl/core">
 							<th><p:outputLabel value="#{lbl['lbl.pp.status']}"/></th>
    						<td>
     						<p:selectOneMenu value="#{planBackingBean.managedBean.ppSearchPlan.status}">
-								<f:selectItem itemLabel="#{lbl['lbl.select']}" itemValue="0"/>
+								<f:selectItem itemLabel="#{lbl['lbl.select']}" itemValue="#{null}"/>
 								<f:selectItem itemLabel="New" itemValue="10005"/>
 							</p:selectOneMenu>
    						</td>
