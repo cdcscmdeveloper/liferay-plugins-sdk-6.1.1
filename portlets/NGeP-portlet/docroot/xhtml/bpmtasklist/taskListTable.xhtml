@@ -37,7 +37,8 @@
 
 		<p:dataTable value="#{bpmTasklistBackingBean.managedBean.taskList}" style="width:780px;"
 			var="tasks" paginator="true" rows="10" paginatorPosition="bottom"
-			paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+			paginatorTemplate="{LastPageLink} {NextPageLink} {PreviousPageLink} {FirstPageLink} Page {JumpToPageDropdown} {CurrentPageReport}"
+			currentPageReportTemplate="/ {totalPages}"
 			rowsPerPageTemplate="5,10,15">
 
 			<p:column>

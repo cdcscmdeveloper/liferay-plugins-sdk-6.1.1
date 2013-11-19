@@ -38,7 +38,10 @@
 								onclick="compareRow([{name: 'name1', value: '#{compareKey}'}])">
 								<f:selectItem itemValue="#{compareKey}" />
 							</h:selectOneRadio></td>
-						<td colspan="1"><p:commandButton icon="ui-icon-delete" action="#{catalogueBackingBean.deleteComparedItem(compareKey)}" update=":form:compareDataList"></p:commandButton> </td>
+						<td colspan="1"><p:commandLink
+								action="#{catalogueBackingBean.deleteComparedItem(compareKey)}" update=":form:compareDataList">
+								<p:graphicImage value="/resources/ep/images/design/trash.png"></p:graphicImage>
+							</p:commandLink></td>
 					</tr>
 				</table>
 

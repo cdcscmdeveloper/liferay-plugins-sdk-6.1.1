@@ -14,7 +14,7 @@
 
 
 		<h:panelGroup id="cmExtensionSearchID">
-			
+
 			<p:panel header="SEARCH" toggleable="true">
 
 				<table style="width: 100%;">
@@ -112,10 +112,21 @@
 						<f:facet name="header">
 							#{lbl['lbl.cm.action']}
 						</f:facet>
-						
-						<p:commandButton icon="ui-icon-edit" action="#{codificationBackingBean.editExtension(rowIndex)}"></p:commandButton>
-						<p:commandButton icon="ui-icon-delete" action="#{codificationBackingBean.deleteExtension(rowIndex)}"></p:commandButton>
-						
+						<table>
+							<tr>
+								<td width="2px"><p:commandLink
+										action="#{codificationBackingBean.editExtension(rowIndex)}">
+										<p:graphicImage value="/resources/ep/images/design/edit.png"></p:graphicImage>
+									</p:commandLink></td>
+								<td><p:commandLink
+										action="#{codificationBackingBean.deleteExtension(rowIndex)}">
+										<p:graphicImage value="/resources/ep/images/design/trash.png"></p:graphicImage>
+									</p:commandLink></td>
+							</tr>
+						</table>
+
+
+
 					</p:column>
 					<f:facet name="footer">
 						<div style="text-align: right;">
