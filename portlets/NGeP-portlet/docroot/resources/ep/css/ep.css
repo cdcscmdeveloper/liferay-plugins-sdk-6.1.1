@@ -2123,7 +2123,7 @@ table.ppThreePartsTable td {
 }
 
 .ppNumericAlign{
-	text-align: right;
+	text-align: right !important;
 }
 /*--------------------------       End PP Related      ------------------------------ */
 
@@ -3306,7 +3306,7 @@ thead > tr > th.ui-state-default {
 	color:#555555 !important;
 	font-size:11px !important;
 	font-weight:bold !important;
-	text-align:left !important;
+	text-align:left;
 }
 
 .ui-state-default {
