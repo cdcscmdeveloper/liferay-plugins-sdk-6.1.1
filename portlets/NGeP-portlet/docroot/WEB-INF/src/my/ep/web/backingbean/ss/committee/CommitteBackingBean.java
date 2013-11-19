@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import javax.faces.application.ConfigurableNavigationHandler;
+import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.RequestScoped;
 import javax.faces.context.FacesContext;
@@ -26,6 +27,7 @@ import my.ep.dto.ss.committe.CommitteReqDTO;
 import my.ep.dto.ss.committe.CommitteResDTO;
 import my.ep.dto.ss.quationtender.QuationTenderReqDTO;
 import my.ep.dto.ss.quationtender.QuationTenderResDTO;
+import my.ep.exception.EpException;
 import my.ep.factory.EpLogger;
 import my.ep.persistence.entity.pm.authorization.PmOrgProfile;
 import my.ep.persistence.entity.pm.authorization.PmUser;
@@ -87,8 +89,8 @@ public class CommitteBackingBean extends
 	}
 
 	private void updateCommitteBpmTask(String action) {
-		CommitteReqDTO committeReqDTO = constructSaveCommitte();		
-		
+		CommitteReqDTO committeReqDTO = constructSaveCommitte();
+
 		committeReqDTO.setTaskId(this.getManagedBean().getTaskId());
 		committeReqDTO.setOutcome(action);
 		ICommitteSO commso = EpEjbBusinessDelegate.getInstance()
@@ -101,24 +103,52 @@ public class CommitteBackingBean extends
 	/**
 	 * Method to save the committe details.
 	 */
-	private void saveCommitteDetails() {
+	public String saveCommitteDetails() {
 		// TODO Need to get the committe object from managed bean.
 
 		CommitteReqDTO committeReqDTO = constructSaveCommitte();
 		ICommitteSO committeSO = EpEjbBusinessDelegate.getInstance()
 				.getServiceObject(QTConstants.SS_MODULE, ICommitteSO.class);
 		CommitteResDTO resDTO = committeSO.saveOrUpdateCommitte(committeReqDTO);
+		if (resDTO.isSuccessful()) {
+
+			FacesContext.getCurrentInstance().addMessage(
+					null,
+					new FacesMessage(FacesMessage.SEVERITY_INFO,
+							"Record saved successfully.", "Committe Type. : "
+									+ this.getManagedBean().getScCommittee().getCommitteeType()
+											));
+
+			return "/xhtml/shared/acknowledge.xhtml";
+
+		} else {
+			throw new EpException("Failed.");
+		}
 	}
 
 	/**
 	 * Method to save and submit the data to BPM
 	 */
-	private void submitCommitteDetails() {
+	public String submitCommitteDetails() {
 		CommitteReqDTO committeReqDTO = constructSaveCommitte();
 		ICommitteSO commso = EpEjbBusinessDelegate.getInstance()
 				.getServiceObject(QTConstants.SS_MODULE, ICommitteSO.class);
-		
-		commso.submitCommitteeDetails(committeReqDTO);
+
+		CommitteResDTO resDTO = commso.submitCommitteeDetails(committeReqDTO);
+		if (resDTO.isSuccessful()) {
+
+			FacesContext.getCurrentInstance().addMessage(
+					null,
+					new FacesMessage(FacesMessage.SEVERITY_INFO,
+							"Record saved successfully.", "Committe Type. : "
+									+ this.getManagedBean().getScCommittee().getCommitteeType()
+											));
+
+			return "/xhtml/shared/acknowledge.xhtml";
+
+		} else {
+			throw new EpException("Failed.");
+		}
 	}
 
 	private CommitteReqDTO constructSaveCommitte() {
@@ -163,9 +193,12 @@ public class CommitteBackingBean extends
 
 		CommitteReqDTO committeReqDTO = new CommitteReqDTO();
 		committeReqDTO.setQtCommittee(scQtCommittee);
-		/*ICommitteSO committeSO = EpEjbBusinessDelegate.getInstance()
-				.getServiceObject(QTConstants.SS_MODULE, ICommitteSO.class);
-		CommitteResDTO resDTO = committeSO.saveOrUpdateCommitte(committeReqDTO);*/
+		/*
+		 * ICommitteSO committeSO = EpEjbBusinessDelegate.getInstance()
+		 * .getServiceObject(QTConstants.SS_MODULE, ICommitteSO.class);
+		 * CommitteResDTO resDTO =
+		 * committeSO.saveOrUpdateCommitte(committeReqDTO);
+		 */
 
 		return committeReqDTO;
 	}
