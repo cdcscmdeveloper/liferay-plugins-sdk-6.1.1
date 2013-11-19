@@ -38,6 +38,11 @@ public class BPMTaskListBackingBean extends BaseBackingBean<BPMTaskListManagedBe
 		temp.put("Extension Code Request", "review-extension");
 		temp.put("Extension Code Maintenance", "review-extension-maintenance");
 		
+		//Procurement Plan - Start
+		temp.put("Plan Preparation", "review-plan");
+		temp.put("Plan Revision", "review-plan");
+		temp.put("Budget Endorsement", "review-budget");
+		//Procurement Plan - End
 		
 		
 		this.getManagedBean().setBpmMap(temp);
