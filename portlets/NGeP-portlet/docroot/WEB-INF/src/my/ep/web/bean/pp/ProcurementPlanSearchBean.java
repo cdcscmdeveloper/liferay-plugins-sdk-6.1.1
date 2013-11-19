@@ -8,6 +8,10 @@ public class ProcurementPlanSearchBean {
 	
 	private String planNo;
 	
+	private String planDesc;
+	
+	private String procurementMode;
+	
 	private Date fromDate;
 	
 	private Date toDate;
@@ -68,7 +72,33 @@ public class ProcurementPlanSearchBean {
 		this.toDate = toDate;
 	}
 
+	/**
+	 * @return the planDesc
+	 */
+	public String getPlanDesc() {
+		return planDesc;
+	}
 
+	/**
+	 * @param planDesc the planDesc to set
+	 */
+	public void setPlanDesc(String planDesc) {
+		this.planDesc = planDesc;
+	}
+
+	/**
+	 * @return the procurementMode
+	 */
+	public String getProcurementMode() {
+		return procurementMode;
+	}
+
+	/**
+	 * @param procurementMode the procurementMode to set
+	 */
+	public void setProcurementMode(String procurementMode) {
+		this.procurementMode = procurementMode;
+	}
 	
 	
 }

@@ -12,6 +12,7 @@ import javax.faces.bean.RequestScoped;
 import javax.faces.context.FacesContext;
 import javax.faces.model.SelectItem;
 import javax.portlet.PortletRequest;
+import javax.servlet.http.HttpServletRequest;
 
 import my.ep.biz.bean.search.ISearchBean;
 import my.ep.biz.bean.search.ISearchResultBean;
@@ -23,6 +24,9 @@ import my.ep.biz.service.pm.common.status.IStatusSO;
 import my.ep.biz.service.pp.budgetallocation.IBudgetAllocationSO;
 import my.ep.biz.service.pp.budgetallocation.IBudgetSO;
 import my.ep.biz.service.pp.procurementplan.IProcurementPlanSO;
+import my.ep.bpm.dto.BpmRequestDTO;
+import my.ep.bpm.dto.BpmResponseDTO;
+import my.ep.bpm.service.IBpmSO;
 import my.ep.dto.pm.authorization.orgprofile.OrgProfileReqDTO;
 import my.ep.dto.pm.authorization.orgprofile.OrgProfileResDTO;
 import my.ep.dto.pm.common.object.ObjectReqDTO;
@@ -35,6 +39,8 @@ import my.ep.dto.pp.budgetallocation.BudgetReqDTO;
 import my.ep.dto.pp.budgetallocation.BudgetResDTO;
 import my.ep.dto.pp.procurementplan.ProcurementPlanReqDTO;
 import my.ep.dto.pp.procurementplan.ProcurementPlanResDTO;
+import my.ep.jaxb.pp.budgetdata.PPBudgetDataType;
+import my.ep.jaxb.pp.plandata.PPPlanDataType;
 import my.ep.persistence.entity.pm.authorization.PmOrgProfile;
 import my.ep.persistence.entity.pm.common.PmDo;
 import my.ep.persistence.entity.pm.common.PmSo;
@@ -45,18 +51,23 @@ import my.ep.persistence.entity.pp.budgetallocation.PpBudgetAllocDtl;
 import my.ep.persistence.logging.LogKey;
 import my.ep.type.aut.SearchOperator;
 import my.ep.type.pm.OrganizationType;
+import my.ep.util.lookupservice.EpBpmBusinessDelegate;
 import my.ep.web.backingbean.BaseBackingBean;
+import my.ep.web.backingbean.bpm.tasklist.BPMTaskListBackingBean;
 import my.ep.web.backingbean.pp.procurementplan.PlanBackingBean;
 import my.ep.web.bean.paginator.IPagingDataModel;
 import my.ep.web.bean.paginator.PagingDataModel;
 import my.ep.web.constant.BpmOutcomeConst;
 import my.ep.web.constant.pp.ProcurementPlanConst;
 import my.ep.web.managedbean.pp.budgetallocation.BudgetAllocationManagedBean;
+import my.ep.web.util.FacesScopes;
 import my.ep.web.util.lookupservice.BusinessDelegate;
 import my.ep.web.util.pp.common.CommonMethod;
 
 import org.apache.log4j.Logger;
 import org.apache.log4j.MDC;
+
+import com.liferay.portal.util.PortalUtil;
 
 @ManagedBean(name="budgetAllocationBackingBean")
 @RequestScoped
@@ -815,30 +826,79 @@ public class BudgetAllocationBackingBean extends BaseBackingBean<BudgetAllocatio
 		return budgetList;
 	}
 	
-	
-	
-	private String getStatusDesc(){
+	/**
+	 * redirect from task list
+	 */
+	private void loadBpmTask(){
+		BPMTaskListBackingBean bb = new BPMTaskListBackingBean();
+		  HttpServletRequest servletRequest = PortalUtil.getHttpServletRequest(new FacesScopes().getRequest());
+		  HttpServletRequest originalServletRequest = PortalUtil.getOriginalServletRequest(servletRequest);
+		  String taskId = originalServletRequest.getParameter("taskId");
+		  System.out.println("taskId:"+taskId);
 
-		log.info("getAllBudgets - Start");
-		List <PpBudget> budgetList =  new ArrayList<PpBudget>();
-		try{
-			StatusReqDTO reqDTO = new StatusReqDTO();
-//			reqDTO.setLanguage("");
-			reqDTO.setStatusId(ProcurementPlanConst.STATUS_PBA_NEW);
-			reqDTO.setDocType(ProcurementPlanConst.DOCTYPE_BUDGET_ALLOC);
-			reqDTO.setModuleCode("PP");
-			IStatusSO statusSO = (IStatusSO) BusinessDelegate.getInstance().getServiceObject("pm", IStatusSO.class);
-			StatusResDTO resDTO = statusSO.retrieveStatusByParams(reqDTO);
-//			if(resDTO.isSuccessful()){
-//				resDTO.getPmStatus().getPmStatusDescs().get();
-//			}
-		}catch (Exception e){
-			e.printStackTrace();
-			
-		}
-		log.info("getAllBudgets - End");
-		return "";
+		  IBpmSO bpmSO = (IBpmSO) EpBpmBusinessDelegate.getInstance().getServiceObject(IBpmSO.class);
+		  String ctx = bpmSO.authenticate(bb.getManagedBean().getTempLoginId(),"welcome1");
+		  BpmRequestDTO reqDTO = new BpmRequestDTO();
+
+
+		  reqDTO.setCtxToken(ctx);
+		  reqDTO.setTaskId(taskId);
+		  BpmResponseDTO res = bpmSO.getTaskDetails(reqDTO);
+		  Object obj = res.getPojo();
+		  
+		  
+		//Procurement Plan - Budget
+		PPBudgetDataType budgetObj = (PPBudgetDataType)obj;
+		
+		BudgetAllocationReqDTO budgetReqDTO = new BudgetAllocationReqDTO();
+		budgetReqDTO.setBudgetAllocId(budgetObj.getBudgetId().longValue());
+		IBudgetAllocationSO budgetSO = (IBudgetAllocationSO) BusinessDelegate.getInstance().getServiceObject("pp", IBudgetAllocationSO.class);
+		BudgetAllocationResDTO budgetResSO = budgetSO.retrieveBudgetAllocation(budgetReqDTO);
+
+		BudgetAllocationBackingBean budgetBB = new BudgetAllocationBackingBean();
+		budgetBB.getManagedBean().setLoginUser(bb.getManagedBean().getTempLoginId());
+		budgetBB.getManagedBean().setBpmTaskId(taskId);
+		budgetBB.getManagedBean().setActions(res.getAction());
+		budgetBB.loadTask(budgetResSO.getBudgetAlloc(), res.getTaskName());
 	}
+	
+	/**
+	 * pre-render for the budget alloation content page
+	 */
+	public void preRenderView(){
+		if(!ProcurementPlanConst.MODE_NEW.equals(this.getManagedBean().getViewMode())
+				&& !ProcurementPlanConst.MODE_DRAFT.equals(this.getManagedBean().getViewMode())){
+			loadBpmTask();
+		}
+		
+	}
+	
+	
+	
+//	
+//	
+//	private String getStatusDesc(){
+//
+//		log.info("getAllBudgets - Start");
+//		List <PpBudget> budgetList =  new ArrayList<PpBudget>();
+//		try{
+//			StatusReqDTO reqDTO = new StatusReqDTO();
+////			reqDTO.setLanguage("");
+//			reqDTO.setStatusId(ProcurementPlanConst.STATUS_PBA_NEW);
+//			reqDTO.setDocType(ProcurementPlanConst.DOCTYPE_BUDGET_ALLOC);
+//			reqDTO.setModuleCode("PP");
+//			IStatusSO statusSO = (IStatusSO) BusinessDelegate.getInstance().getServiceObject("pm", IStatusSO.class);
+//			StatusResDTO resDTO = statusSO.retrieveStatusByParams(reqDTO);
+////			if(resDTO.isSuccessful()){
+////				resDTO.getPmStatus().getPmStatusDescs().get();
+////			}
+//		}catch (Exception e){
+//			e.printStackTrace();
+//			
+//		}
+//		log.info("getAllBudgets - End");
+//		return "";
+//	}
 	
 	private class BudgetPagingDataModel extends PagingDataModel<PpBudget> {
 		private static final long serialVersionUID = 1L;

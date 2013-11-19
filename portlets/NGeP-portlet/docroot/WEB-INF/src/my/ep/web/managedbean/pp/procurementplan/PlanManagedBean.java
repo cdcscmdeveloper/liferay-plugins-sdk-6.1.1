@@ -77,8 +77,6 @@ public class PlanManagedBean extends BaseManagedBean{
 	private String selectedTab;
 	
 	private boolean reasonRejectOther;
-	
-	private List<PpPlan> pendingApprovalPlans;
 
 	private Long tempId; //temp
 	
@@ -665,19 +663,6 @@ public class PlanManagedBean extends BaseManagedBean{
 		this.ppSearchPlan = ppSearchPlan;
 	}
 
-	/**
-	 * @return the pendingApprovalPlans
-	 */
-	public List<PpPlan> getPendingApprovalPlans() {
-		return pendingApprovalPlans;
-	}
-
-	/**
-	 * @param pendingApprovalPlans the pendingApprovalPlans to set
-	 */
-	public void setPendingApprovalPlans(List<PpPlan> pendingApprovalPlans) {
-		this.pendingApprovalPlans = pendingApprovalPlans;
-	}
 
 
 

@@ -12,12 +12,8 @@ public class ProcurementPlanConst {
 	public static final String NAV_TO_LIST_PLAN = "listPlan";
 	public static final String NAV_TO_PLAN_DET = "procurementPlan";
 	
-	public static final String NAV_TO_TASK_LIST = "/xhtml/tasklist/taskListView";
+	public static final String NAV_TO_TASK_LIST = "/xhtml/shared/acknowledge";
 	
-//	public static final String NAV_TO_REVIEW_PLAN = "reviewPlan";
-//	public static final String NAV_TO_VERIFY_PLAN = "verifyPlan";
-//	public static final String NAV_TO_VIEW_PLAN = "viewPlan";
-//	public static final String NAV_TO_CREATE_MTO_PLAN = "createPlan";
 	
 	public static final String PP_DET = "details/ppDetails.xhtml";
 	public static final String EP_EXISTING_CONTRACT_DET = "details/epDetailsExistingContract.xhtml";
@@ -40,6 +36,7 @@ public class ProcurementPlanConst {
 	public static final String MODE_MAINTAIN = "M";
 	public static final String MODE_VIEW = "R";
 	public static final String MODE_LIST = "L";
+	public static final String MODE_APPROVAL_LIST = "P";
 	
 	//Current Mode
 	public static final String CURRENT_NEW = "tabN";
@@ -738,6 +735,12 @@ public class ProcurementPlanConst {
 	 */
 	public String getModeDraft() {
 		return MODE_DRAFT;
+	}
+	/**
+	 * @return the modeApprovalList
+	 */
+	public String getModeApprovalList() {
+		return MODE_APPROVAL_LIST;
 	}
 	
 	

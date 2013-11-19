@@ -75,6 +75,8 @@ public class CommonMethod {
 			pageTitle = "lbl.pp." + progType + ".title.maintain";
 		}else if(ProcurementPlanConst.MODE_NEW_MTO.equals(viewMode)){
 			pageTitle = "lbl.pp." + progType + ".title.mto.plan";
+		}else if(ProcurementPlanConst.MODE_APPROVAL_LIST.equals(viewMode)){
+			pageTitle = "lbl.pp." + progType + ".title.procurement.approval";
 		}
 
 		titleLabel = getMessageCommon(pageTitle);
