@@ -153,10 +153,12 @@
 			<td><div align="left" style="width: 100%">
 					<p:commandButton value="#{lbl['lbl.sm.prev']}"
 						actionListener="#{backingBean.assignReviewSupportingNav('prev')}"
-						action="#{backingBean.updateSmAppl}" update=":form:tt" />
+						icon="ui-icon-prev" action="#{backingBean.updateSmAppl}"
+						update=":form:tt" />
 				</div></td>
 			<td><div align="right" style="width: 100%">
-					<p:commandButton value="#{lbl['lbl.sm.next']}"
+					<p:commandButton value="#{lbl['lbl.sm.next']}" icon="ui-icon-next"
+						iconPos="right"
 						actionListener="#{backingBean.assignReviewSupportingNav('next')}"
 						action="#{backingBean.updateSmAppl}" update=":form:tt" />
 				</div></td>

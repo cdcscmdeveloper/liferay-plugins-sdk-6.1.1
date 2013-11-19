@@ -1,110 +1,120 @@
-<ui:composition
-	xmlns="http://www.w3.org/1999/xhtml"
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
 	xmlns:f="http://java.sun.com/jsf/core"
 	xmlns:h="http://java.sun.com/jsf/html"
 	xmlns:ui="http://java.sun.com/jsf/facelets"
 	xmlns:p="http://primefaces.org/ui"
 	xmlns:c="http://java.sun.com/jsp/jstl/core">
-		<p:panel header="PO Decision">
-			<table>
-				<tr>
-					<td colspan="3"><h4
-							style="color: blue; text-align: center; font-weight: bold;">
-							<p:outputLabel
-								value="Decision For Application Type - Appln No.123434" />
-						</h4></td>
-				</tr>
-				<tr>
-					<td><p:outputLabel value="Supplier Name" /></td>
-					<td><p:outputLabel value="   : " /></td>
-					<td><p:inputText readonly="true" value="Sample Data"
-							disabled="true" /></td>
+	<p:panel header="PO Decision">
+		<table>
+			<tr>
+				<td colspan="3"><h4
+						style="color: blue; text-align: center; font-weight: bold;">
+						<p:outputLabel
+							value="Decision For Application Type - Appln No.123434" />
+					</h4></td>
+			</tr>
+			<tr>
+				<td><p:outputLabel value="Supplier Name" /></td>
+				<td><p:outputLabel value="   : " /></td>
+				<td><p:inputText readonly="true" value="Sample Data"
+						disabled="true" /></td>
 
-				</tr>
-				<tr>
-					<td><p:outputLabel value="Date Submitted" /></td>
-					<td><p:outputLabel value="   : " /></td>
-					<td><p:inputText readonly="true" value="Sample Date"
-							disabled="true" /></td>
+			</tr>
+			<tr>
+				<td><p:outputLabel value="Date Submitted" /></td>
+				<td><p:outputLabel value="   : " /></td>
+				<td><p:inputText readonly="true" value="Sample Date"
+						disabled="true" /></td>
 
-				</tr>
-				<tr>
-					<td><p:outputLabel value="Current Status" /></td>
-					<td><p:outputLabel value="   : " /></td>
-					<td><p:inputText readonly="true" value="Sample Data"
-							disabled="true" /></td>
+			</tr>
+			<tr>
+				<td><p:outputLabel value="Current Status" /></td>
+				<td><p:outputLabel value="   : " /></td>
+				<td><p:inputText readonly="true" value="Sample Data"
+						disabled="true" /></td>
 
-				</tr>
-			</table>
-			<p:separator />
-			<div>
-				<p>
-					You have finished reviewing all the necessary information for MOF
-					account registration. Please perform one the below operations to
-					provide your decision<br /> 1. Click ' Send Enquiry ' to submit an
-					enquiry to the supplier regarding missing / incomplete supporting
-					documents.<br /> 2. Click 'Recommend Site Visit' To sugges for a
-					site visit.<br /> 3.Click 'Approve'' to approve the application.<br />
-					4. Click ' Reject' to reject the application.<br /> 5. Click
-					'Submit To Approver' for futher proceeding with the next step of
-					registration i.e. submitting the application to the Approver
-				</p>
-			</div>
-			<p:separator />
-			<div align="center">
-				<p:splitButton value="-- Select Decision --">
-					<p:menuitem value="Approve" onclick="approveDialog.show();" />
-					<p:menuitem value="Reject" onclick="rejectDialog.show();" />
-					<p:menuitem value="Submit To Approver"
-						onclick="submitApprvrDialog.show();" />
-					<p:menuitem value="Recommend Site Visit"
-						onclick="svcDialog.show();" />
-					<p:menuitem value="Send Enquiry" />
-				</p:splitButton>
-			</div>
-		</p:panel>
-		<p:dialog width="800px" height="500px" header="Assign Site Visit"
-			widgetVar="svcDialog" resizable="false" showEffect="fade"
-			hideEffect="fade" modal="true">
+			</tr>
+		</table>
+		<p:separator />
+		<div>
+			<p>
+				You have finished reviewing all the necessary information for MOF
+				account registration. Please perform one the below operations to
+				provide your decision<br /> 1. Click ' Send Enquiry ' to submit an
+				enquiry to the supplier regarding missing / incomplete supporting
+				documents.<br /> 2. Click 'Recommend Site Visit' To sugges for a
+				site visit.<br /> 3.Click 'Approve'' to approve the application.<br />
+				4. Click ' Reject' to reject the application.<br /> 5. Click
+				'Submit To Approver' for futher proceeding with the next step of
+				registration i.e. submitting the application to the Approver
+			</p>
+		</div>
+		<p:separator />
+		<!-- <div align="center">
+			<p:splitButton value=" Select Decision ">
+				<p:menuitem value="Approve" onclick="approveDialog.show();" />
+				<p:menuitem value="Reject" onclick="rejectDialog.show();" />
+				<p:menuitem value="Submit To Approver"
+					onclick="submitApprvrDialog.show();" />
+				<p:menuitem value="Recommend Site Visit" onclick="svcDialog.show();" />
+				<p:menuitem value="Send Enquiry" />
+			</p:splitButton>
+		</div> -->
+		<div style="width: 100%" align="right">
+			<p:commandButton value="Approve" onclick="approveDialog.show();" />
+			<p:commandButton value="Reject" onclick="rejectDialog.show();" />
+			<p:commandButton value="Submit To Approver"
+				onclick="submitApprvrDialog.show();" />
+			<p:commandButton value="Recommend Site Visit"
+				onclick="svcDialog.show();" />
+			<p:commandButton value="Send Enquiry" />
+		</div>
+	</p:panel>
+	<p:dialog width="800px" height="500px" header="Assign Site Visit"
+		widgetVar="svcDialog" resizable="false" showEffect="fade"
+		hideEffect="fade" modal="true">
 
-			<ui:include
-				src="/xhtml/sm/shared/poDecisionSharedPages/assignToSvcForm.xhtml" />
-			<div align="center">
-				<p:commandButton value="Submit" onclick="svcDialog.hide();" />
-				<p:commandButton value="Cancel" onclick="svcDialog.hide();" />
-			</div>
-		</p:dialog>
-		<p:dialog width="600px" header="Submit To Approver"
-			widgetVar="submitApprvrDialog" resizable="false" showEffect="fade"
-			hideEffect="fade" modal="true">
+		<ui:include
+			src="/xhtml/sm/shared/poDecisionSharedPages/assignToSvcForm.xhtml" />
+		<div align="center">
+			<p:commandButton value="Submit" onclick="svcDialog.hide();" />
+			<p:commandButton value="Cancel" onclick="svcDialog.hide();" />
+		</div>
+	</p:dialog>
+	<p:dialog width="600px" header="Submit To Approver"
+		widgetVar="submitApprvrDialog" resizable="false" showEffect="fade"
+		hideEffect="fade" modal="true">
 
-			<ui:include
-				src="/xhtml/sm/shared/poDecisionSharedPages/submitToApproverForm.xhtml" />
-			<div align="center">
-				<p:commandButton value="Submit" onclick="submitApprvrDialog.hide();" />
-				<p:commandButton value="Cancel" onclick="submitApprvrDialog.hide();" />
-			</div>
-		</p:dialog>
-		<p:dialog width="600px" header="Approve Application"
-			widgetVar="approveDialog" resizable="false" showEffect="fade"
-			hideEffect="fade" modal="true">
+		<ui:include
+			src="/xhtml/sm/shared/poDecisionSharedPages/submitToApproverForm.xhtml" />
+		<div align="center">
+			<p:commandButton value="Submit" onclick="submitApprvrDialog.hide();"
+				action="#{backingBean.submitPOReviewAction('ESCALATE')}" />
+			<p:commandButton value="Cancel" onclick="submitApprvrDialog.hide();" />
+		</div>
+	</p:dialog>
+	<p:dialog width="600px" header="Approve Application"
+		widgetVar="approveDialog" resizable="false" showEffect="fade"
+		hideEffect="fade" modal="true">
 
-			<ui:include
-				src="/xhtml/sm/shared/poDecisionSharedPages/approvedRemarksPopUpForm.xhtml" />
-			<div align="center">
-				<p:commandButton value="Submit" onclick="approveDialog.hide();" />
-				<p:commandButton value="Cancel" onclick="approveDialog.hide();" />
-			</div>
-		</p:dialog>
-		<p:dialog width="600px" header="Reject Application"
-			widgetVar="rejectDialog" resizable="false" showEffect="fade"
-			hideEffect="fade" modal="true">
+		<ui:include
+			src="/xhtml/sm/shared/poDecisionSharedPages/approvedRemarksPopUpForm.xhtml" />
+		<div align="center">
+			<p:commandButton value="Submit" onclick="approveDialog.hide();"
+				action="#{backingBean.submitPOReviewAction('APPROVE')}" />
+			<p:commandButton value="Cancel" onclick="approveDialog.hide();" />
+		</div>
+	</p:dialog>
+	<p:dialog width="600px" header="Reject Application"
+		widgetVar="rejectDialog" resizable="false" showEffect="fade"
+		hideEffect="fade" modal="true">
 
-			<ui:include
-				src="/xhtml/sm/shared/poDecisionSharedPages/rejectedRemarksPopUpForm.xhtml" />
-			<div align="center">
-				<p:commandButton value="Submit" onclick="rejectDialog.hide();" />
-				<p:commandButton value="Cancel" onclick="rejectDialog.hide();" />
-			</div>
-		</p:dialog>
+		<ui:include
+			src="/xhtml/sm/shared/poDecisionSharedPages/rejectedRemarksPopUpForm.xhtml" />
+		<div align="center">
+			<p:commandButton value="Submit" onclick="rejectDialog.hide();"
+				action="#{backingBean.submitPOReviewAction('REJECT')}" />
+			<p:commandButton value="Cancel" onclick="rejectDialog.hide();" />
+		</div>
+	</p:dialog>
 </ui:composition>

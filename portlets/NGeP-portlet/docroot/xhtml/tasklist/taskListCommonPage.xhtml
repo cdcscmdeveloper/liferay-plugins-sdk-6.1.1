@@ -17,7 +17,7 @@
 			</c:when>
 			<c:when
 				test='#{tasklistBackingBean.managedBean.taskName eq "Create Extension Code"}'>
-				
+
 				<ui:include
 					src="/xhtml/cm/codification/reviewBeforeCreateExtCode.xhtml"></ui:include>
 			</c:when>
@@ -26,33 +26,41 @@
 			</c:otherwise>
 		</c:choose>
 	</c:if>
-	
-	<c:if test='#{tasklistBackingBean.managedBean.processName eq "Contract Creation"}'>
-		<ui:include src="/xhtml/ct/fulfilmentdetails/creation/fulfilment.xhtml"></ui:include>
+
+	<c:if
+		test='#{tasklistBackingBean.managedBean.processName eq "Contract Creation"}'>
+		<ui:include
+			src="/xhtml/ct/fulfilmentdetails/creation/fulfilment.xhtml"></ui:include>
 	</c:if>
-	
-	<c:if test='#{tasklistBackingBean.managedBean.processName eq "Agreement Creation"}'>
-		<ui:include src="/xhtml/ct/agreement/shared/sidemenu/agreementTab.xhtml"></ui:include>
+
+	<c:if
+		test='#{tasklistBackingBean.managedBean.processName eq "Agreement Creation"}'>
+		<ui:include
+			src="/xhtml/ct/agreement/shared/sidemenu/agreementTab.xhtml"></ui:include>
 	</c:if>
-	
-	<c:if test='#{tasklistBackingBean.managedBean.processName eq "Bank Account Change Request"}'>
+
+	<c:if
+		test='#{tasklistBackingBean.managedBean.processName eq "Bank Account Change Request"}'>
 		<ui:include src="/xhtml/ct/supplier/bank/tabView.xhtml"></ui:include>
 	</c:if>
-	
-	<c:if test='#{tasklistBackingBean.managedBean.processName eq "Factoring Company Request"}'>
+
+	<c:if
+		test='#{tasklistBackingBean.managedBean.processName eq "Factoring Company Request"}'>
 		<ui:include src="/xhtml/ct/supplier/factoring/tabView.xhtml"></ui:include>
 	</c:if>
-	
-	<c:if test='#{tasklistBackingBean.managedBean.processName eq "Contract Activation Suspension Request"}'>
-		<ui:include src="/xhtml/ct/fulfilmentdetails/suspension/suspendTab.xhtml"></ui:include>
+
+	<c:if
+		test='#{tasklistBackingBean.managedBean.processName eq "Contract Activation Suspension Request"}'>
+		<ui:include
+			src="/xhtml/ct/fulfilmentdetails/suspension/suspendTab.xhtml"></ui:include>
 	</c:if>
 
 	<c:if
 		test='#{tasklistBackingBean.managedBean.processName eq "Extension Code Request"}'>
 		<ui:include src="extensionCodeReview.xhtml"></ui:include>
 	</c:if>
-	
-	
+
+
 	<c:if
 		test='#{tasklistBackingBean.managedBean.processName eq "Extension Code Maintenance"}'>
 		<ui:include src="reviewDeleteExtension.xhtml"></ui:include>
@@ -116,19 +124,21 @@
 		test='#{tasklistBackingBean.managedBean.processName eq "Plan Preparation"}'>
 		<ui:include src="/xhtml/pp/procurementplan/procurementPlan.xhtml"></ui:include>
 	</c:if>
-	<c:if test='#{tasklistBackingBean.managedBean.processName eq "Invoice and Payment Creation"}'>
+	<c:if
+		test='#{tasklistBackingBean.managedBean.processName eq "Invoice and Payment Creation"}'>
 		<c:choose>
 			<c:when
 				test='#{tasklistBackingBean.managedBean.taskName eq "Create Invoice"}'>
 				<ui:include src="/xhtml/fl/invoice/invBasePage.xhtml"></ui:include>
 			</c:when>
 			<c:otherwise>
-				
+
 				<ui:include src="/xhtml/fl/paymentmatch/pmBasePage.xhtml"></ui:include>
 			</c:otherwise>
 		</c:choose>
 	</c:if>
-	<c:if test='#{tasklistBackingBean.managedBean.processName eq "Perform DAN"}'>
+	<c:if
+		test='#{tasklistBackingBean.managedBean.processName eq "Perform DAN"}'>
 		<ui:include src="/xhtml/fl/invoice/DAN.xhtml"></ui:include>
 	</c:if>
 
@@ -138,14 +148,21 @@
 	</c:if>
 
 	<c:if
+		test='#{tasklistBackingBean.managedBean.processName eq "Processing Officer Manage"}'>
+		<ui:include src="commonSM.xhtml"></ui:include>
+	</c:if>
+
+	<c:if
 		test='#{tasklistBackingBean.managedBean.processName eq "Site Visit Manage"}'>
 		<ui:include src="commonSM.xhtml"></ui:include>
 	</c:if>
-	<c:if test='#{tasklistBackingBean.managedBean.processName eq "Circular Contract Maintenance"}'>
+	<c:if
+		test='#{tasklistBackingBean.managedBean.processName eq "Circular Contract Maintenance"}'>
 		<ui:include src="#{tasklistBackingBean.managedBean.pageUrl}" />
-	</c:if>	
-	<c:if test='#{tasklistBackingBean.managedBean.processName eq "Circular Contract Cancellation"}'>
+	</c:if>
+	<c:if
+		test='#{tasklistBackingBean.managedBean.processName eq "Circular Contract Cancellation"}'>
 		<ui:include src="/xhtml/ct/circular/panel/cancelCircularBase.xhtml" />
-	</c:if>		
+	</c:if>
 
 </ui:composition>
