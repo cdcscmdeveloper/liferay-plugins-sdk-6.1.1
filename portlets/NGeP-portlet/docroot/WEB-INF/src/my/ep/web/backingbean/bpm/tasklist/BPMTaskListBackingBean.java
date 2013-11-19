@@ -1,0 +1,168 @@
+package my.ep.web.backingbean.bpm.tasklist;
+
+import java.io.IOException;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.Map;
+
+import javax.faces.bean.ManagedBean;
+import javax.faces.bean.RequestScoped;
+import javax.faces.context.ExternalContext;
+import javax.faces.context.FacesContext;
+
+import my.ep.bpm.dto.BpmRequestDTO;
+import my.ep.bpm.dto.BpmResponseDTO;
+import my.ep.bpm.service.IBpmSO;
+import my.ep.util.lookupservice.EpBpmBusinessDelegate;
+import my.ep.web.backingbean.BaseBackingBean;
+import my.ep.web.constant.PagingConst;
+import my.ep.web.managedbean.bpm.tasklist.BPMTaskListManagedBean;
+
+import org.apache.log4j.Logger;
+
+@ManagedBean(name="bpmTasklistBackingBean")
+@RequestScoped
+public class BPMTaskListBackingBean extends BaseBackingBean<BPMTaskListManagedBean>{
+
+	private static Logger log = Logger.getLogger(TaskListBackingBean.class);
+
+	public BPMTaskListBackingBean(){
+		
+		
+		
+		this.getManagedBean().setBpmMap(null);
+		Map temp = new HashMap();
+
+
+		temp.put("UNSPSC Code Request", "reviewUnspscCode");
+		temp.put("Extension Code Request", "review-extension");
+		temp.put("Extension Code Maintenance", "review-extension-maintenance");
+		
+		
+		
+		this.getManagedBean().setBpmMap(temp);
+		
+
+		System.out.println("testing BPM******");
+
+		String viewBy = "";
+		try{
+			BpmResponseDTO responseDTO = retrieveWorklistItems(this.getManagedBean().getStatus(), viewBy);
+		}catch(Exception e){
+			log.info("BPM Errors");
+			e.printStackTrace();
+		}
+	}
+
+
+	public BpmResponseDTO retrieveWorklistItems(String status, String viewBy){
+
+
+
+		IBpmSO bpmSO = (IBpmSO) EpBpmBusinessDelegate.getInstance().getServiceObject(IBpmSO.class);
+
+		//String token = bpmSO.authenticate("roslan", "welcome1");
+		String token = bpmSO.authenticate(this.getManagedBean().getTempLoginId(), "welcome1");
+		System.out.println("testing BPM auth******"+token);
+		BpmRequestDTO reqDTO = new BpmRequestDTO();
+
+		reqDTO.setLimit(PagingConst.ROWS_PER_PAGE);
+		reqDTO.setOffset(calculateFinalOffSet(1));
+		reqDTO.setState(status);
+		reqDTO.setViewBy(viewBy);
+		reqDTO.setCtxToken(token);
+		BpmResponseDTO responseDTO = bpmSO.getWorklistItems(reqDTO);
+
+		System.out.println("testing BPM******"+responseDTO.getWorklistVO().getWorklistItem().size());
+
+
+
+		this.getManagedBean().setTaskList(responseDTO.getWorklistVO().getWorklistItem());
+
+
+
+
+		return responseDTO;
+
+	}
+	
+	
+	public void navigateToURL(){
+
+		IBpmSO bpmSO = (IBpmSO) EpBpmBusinessDelegate.getInstance().getServiceObject(IBpmSO.class);
+
+		String taskId = FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap().get("taskId");
+		String ctx = bpmSO.authenticate(this.getManagedBean().getTempLoginId(),"welcome1");
+		BpmRequestDTO reqDTO = new BpmRequestDTO();
+
+		try {
+			log.info("taskId:"+taskId);
+			reqDTO.setCtxToken(ctx);
+			reqDTO.setTaskId(taskId);
+			BpmResponseDTO res = bpmSO.getTaskDetails(reqDTO);
+			System.out.println("********getProcessName********"+res.getProcessName());
+			System.out.println("********res.getAction()********"+res.getAction());
+			this.getManagedBean().setProcessName(res.getProcessName());
+			this.getManagedBean().setAction(res.getAction());
+			Object obj = res.getPojo();
+
+
+			
+			String url = "";
+		
+			if(!this.getManagedBean().getBpmMap().isEmpty() && this.getManagedBean().getBpmMap().size() > 0 ){ 
+
+				 url= (String)this.getManagedBean().getBpmMap().get(res.getProcessName());
+
+			}
+			log.info("url:"+url);
+
+
+
+
+			ExternalContext externalContext = FacesContext.getCurrentInstance().getExternalContext();
+
+			externalContext.redirect("/web/guest/" +url +"?taskId="+taskId);
+			//externalContext.redirect("http://localhost:8080/web/guest/" +url +"?taskId="+taskId);
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+
+	}
+	
+	
+	
+	private int calculateFinalOffSet(int currentPage){
+
+		int offSet = (currentPage-1) *PagingConst.ROWS_PER_PAGE;
+
+		return offSet;
+	}
+	
+	public void viewby(String viewBy){
+		System.out.println("viewBy:"+viewBy);
+
+		BpmResponseDTO responseDTO = retrieveWorklistItems(this.getManagedBean().getStatus(), viewBy);
+
+
+	}
+	
+	public void filterStatus(){
+
+		BpmResponseDTO responseDTO = retrieveWorklistItems(this.getManagedBean().getStatus(), "");
+	}
+	
+	public void tempFilterLogin(){
+
+		BpmResponseDTO responseDTO = retrieveWorklistItems(this.getManagedBean().getStatus(), "");
+	}
+
+
+
+
+
+
+
+
+}

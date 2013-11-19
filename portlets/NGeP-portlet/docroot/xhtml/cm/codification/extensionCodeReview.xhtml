@@ -11,91 +11,134 @@
 
 
 	<ui:define name="contentSection">
+		<f:event listener="#{unspscCodeBackingBean.preRenderExtensionView}"
+			type="preRenderView" />
 
-		<h:panelGrid columns="2" columnClasses="cmLeft,cmRight" width="100%">
+		<h:panelGroup id="extensionReviewID">
+			<p:outputLabel styleClass="screen-title"
+				value="Extension Code Review"></p:outputLabel>
 
-			<h:panelGroup id="extensionReviewID">
-				<p:outputLabel styleClass="screen-title" value="Extension Code Review"></p:outputLabel>
+			<div style="text-align: right;">
+				<ui:repeat var="action"
+					value="#{unspscCodeBackingBean.managedBean.action}">
+					<p:commandButton value="#{action}"
+						action="#{unspscCodeBackingBean.submitToReviewExt(action)}"></p:commandButton>
+				</ui:repeat>
+			</div>
 
-				<table>
-					<tr>
-						<td><p:outputLabel value="#{lbl['lbl.cm.unspsc.code']}"></p:outputLabel></td>
-						<td><p:inputText /></td>
-					</tr>
-					<tr>
-						<td><p:outputLabel value="#{lbl['lbl.cm.unspsc.title']}"></p:outputLabel></td>
-						<td><p:inputText /></td>
-					</tr>
-				</table>
+			<table>
+				<tr>
+					<td><p:outputLabel value="#{lbl['lbl.cm.unspsc.code']}"></p:outputLabel></td>
+					<td><p:inputText
+							value="#{unspscCodeBackingBean.managedBean.reviewExtCodeList[0].tempCode}" /></td>
+				</tr>
+				<tr>
+					<td><p:outputLabel value="#{lbl['lbl.cm.unspsc.title']}"></p:outputLabel></td>
+					<td><p:inputText
+							value="#{unspscCodeBackingBean.managedBean.reviewExtCodeList[0].tempTitle}" /></td>
+				</tr>
+				<tr>
+					<td><p:outputLabel value="User"></p:outputLabel></td>
+					<td><p:inputText
+							value="#{unspscCodeBackingBean.managedBean.tempUser}" /></td>
+				</tr>
+			</table>
 
-				<p:dataTable value="#{codificationBackingBean.managedBean.unspscList}"
-					var="test">
-					<p:column>
-						<f:facet name="header">
-							<p:outputLabel value="#{lbl['lbl.cm.type']}" />
+			<p:dataTable style="width:100%;"
+				value="#{unspscCodeBackingBean.managedBean.reviewExtCodeList}"
+				var="review">
+				<p:column>
+					<f:facet name="header">
+							#{lbl['lbl.cm.item.name']}
 						</f:facet>
-						<h:panelGrid columns="2" columnClasses="border0, border0">
-							<p:inputText></p:inputText>
-							<p:selectOneMenu></p:selectOneMenu>
-						</h:panelGrid>
-					</p:column>
-					<p:column>
-						<f:facet name="header">
-							<p:outputLabel value="#{lbl['lbl.cm.brand']}" />
+					<p:outputLabel value="#{review.itemName}"></p:outputLabel>
+				</p:column>
+				<p:column>
+					<f:facet name="header">
+							#{lbl['lbl.cm.item.description']}
 						</f:facet>
-
-						<h:panelGrid columns="2" columnClasses="border0, border0">
-							<p:inputText></p:inputText>
-							<p:selectOneMenu></p:selectOneMenu>
-						</h:panelGrid>
-
-					</p:column>
-					<p:column>
-						<f:facet name="header">
-							<p:outputLabel value="#{lbl['lbl.cm.measurement']}" />
+					<p:outputLabel value="#{review.itemDetail}"></p:outputLabel>
+				</p:column>
+				<p:column>
+					<f:facet name="header">
+							#{lbl['lbl.cm.type']}
 						</f:facet>
-
-						<h:panelGrid columns="2" columnClasses="border0, border0">
-							<p:inputText></p:inputText>
-							<p:selectOneMenu></p:selectOneMenu>
-						</h:panelGrid>
-
-
-					</p:column>
-					<p:column>
-						<f:facet name="header">
-							<p:outputLabel value="#{lbl['lbl.cm.color']}" />
-						</f:facet>
-						<h:panelGrid columns="2" columnClasses="border0, border0">
-							<p:inputText></p:inputText>
-							<p:selectOneMenu></p:selectOneMenu>
-						</h:panelGrid>
-
-					</p:column>
-					<p:column>
-						<f:facet name="header">
-							<p:outputLabel value="#{lbl['lbl.cm.item.name']}" />
-						</f:facet>
-
-					</p:column>
-					<p:column>
-						<f:facet name="header">
-							<p:outputLabel value="#{lbl['lbl.cm.item.description']}" />
+					<h:panelGrid columns="2" columnClasses="border0, border0">
+						<p:inputText value="#{review.typeName}"
+							disabled="#{!review.requestType}"></p:inputText>
+						<p:selectOneMenu rendered="#{review.requestType}"
+							value="#{review.typeNameDD}">
+							<f:selectItem itemLabel="Select One" itemValue="" />
+							<f:selectItems
+								value="#{unspscCodeBackingBean.managedBean.typeList}" var="type"
+								itemLabel="#{type.typeName}" itemValue="#{type.typeName}"></f:selectItems>
+						</p:selectOneMenu>
+					</h:panelGrid>
+				</p:column>
+				<p:column>
+					<f:facet name="header">
+							#{lbl['lbl.cm.brand']}
 						</f:facet>
 
-					</p:column>
+					<h:panelGrid columns="2" columnClasses="border0, border0">
+						<p:inputText value="#{review.brandName}"
+							disabled="#{!review.requestBrand}"></p:inputText>
+						<p:selectOneMenu rendered="#{review.requestBrand}"
+							value="#{review.brandNameDD}">
+							<f:selectItem itemLabel="Select One" itemValue="" />
+							<f:selectItems
+								value="#{unspscCodeBackingBean.managedBean.brandList}"
+								var="brand" itemLabel="#{brand.brandName}"
+								itemValue="#{brand.brandName}"></f:selectItems>
+						</p:selectOneMenu>
+					</h:panelGrid>
 
-				</p:dataTable>
+				</p:column>
+				<p:column>
+					<f:facet name="header">
+							#{lbl['lbl.cm.measurement']}
+						</f:facet>
 
-				<div style="text-align: right;">
-					<p:commandButton value="Submit"></p:commandButton>
-				</div>
+					<h:panelGrid columns="2" columnClasses="border0, border0">
+						<p:inputText value="#{review.measurementName}"
+							disabled="#{!review.requestMeasurement}"></p:inputText>
+						<p:selectOneMenu rendered="#{review.requestMeasurement}"
+							value="#{review.measurementNameDD}">
+							<f:selectItem itemLabel="Select One" itemValue="" />
+							<f:selectItems
+								value="#{unspscCodeBackingBean.managedBean.measurementList}"
+								var="measurement" itemLabel="#{measurement.measurementName}"
+								itemValue="#{measurement.measurementName}"></f:selectItems>
+						</p:selectOneMenu>
+					</h:panelGrid>
 
 
+				</p:column>
+				<p:column>
+					<f:facet name="header">
+							#{lbl['lbl.cm.color']}
+						</f:facet>
+					<h:panelGrid columns="2" columnClasses="border0, border0">
+						<p:inputText value="#{review.colorName}"
+							disabled="#{!review.requestColor}"></p:inputText>
+						<p:selectOneMenu rendered="#{review.requestColor}"
+							value="#{review.colorNameDD}">
+							<f:selectItem itemLabel="Select One" itemValue="" />
+							<f:selectItems
+								value="#{unspscCodeBackingBean.managedBean.colorList}"
+								var="color" itemLabel="#{color.colorName}"
+								itemValue="#{color.colorName}"></f:selectItems>
+						</p:selectOneMenu>
+					</h:panelGrid>
 
-			</h:panelGroup>
+				</p:column>
 
-		</h:panelGrid>
+
+			</p:dataTable>
+
+
+		</h:panelGroup>
+
 
 
 	</ui:define>

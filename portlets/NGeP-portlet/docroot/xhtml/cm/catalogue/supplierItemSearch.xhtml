@@ -122,25 +122,28 @@
 											</table>
 
 										</td>
-										<td width="15%" style="background-color: #EEEEEE;">
+										<td width="15%"
+											style="background-color: #EEEEEE; padding-left: 5px;">
 											<table>
 												<tr>
 													<td style="font-weight: bold; border-bottom: 1px solid">Price
 														(MYR)</td>
-												</tr>
-												<tr>
-													<td>1000.00</td>
-													<td><p:commandLink
+													<td rowspan="2" style="padding-left:5px;"><p:commandLink
 															action="#{catalogueBackingBean.addToCart}"
 															update=":form:supplierItemViewID">
 															<p:graphicImage
 																value="/resources/ep/images/design/cart.png"></p:graphicImage>
 														</p:commandLink></td>
 												</tr>
+												<tr>
+													<td><p:outputLabel value="1000.00"></p:outputLabel> </td>
+													<td></td>
+												</tr>
+												
 											</table>
 
 										</td>
-										<td width="2%"><p:selectBooleanCheckbox
+										<td width="2%" style="padding-left: 5px;"><p:selectBooleanCheckbox
 												value="#{supplierItem.selected}">
 												<p:ajax update=":form:compareButton"
 													listener="#{catalogueBackingBean.triggerCompare(rowIndex)}" />
