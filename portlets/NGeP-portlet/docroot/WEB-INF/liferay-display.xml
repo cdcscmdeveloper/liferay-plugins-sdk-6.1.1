@@ -109,6 +109,8 @@
 		<portlet id="reviewUnspsc"></portlet>
 
 		<portlet id="BpmTaskList"></portlet>
+		<portlet id="reviewExtensionRequest"></portlet>
+		<portlet id="reviewExtensionMaintenance"></portlet>
 	</category>
 
 	<category name="Template">
