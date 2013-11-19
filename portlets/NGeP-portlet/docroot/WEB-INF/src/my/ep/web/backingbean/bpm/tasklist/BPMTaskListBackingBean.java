@@ -166,7 +166,12 @@ public class BPMTaskListBackingBean extends BaseBackingBean<BPMTaskListManagedBe
 
 
 
-
+	public String backToTaskList(){
+		
+		System.out.println("*******backToTaskList*******");
+		
+		return "/xhtml/bpmtasklist/taskListView";
+	}
 
 
 
