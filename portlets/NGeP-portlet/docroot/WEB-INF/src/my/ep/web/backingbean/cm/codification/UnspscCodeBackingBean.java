@@ -73,12 +73,12 @@ public class UnspscCodeBackingBean extends BaseBackingBean<UnspscCodeManagedBean
 			System.out.println("action:"+action);
 
 			ICodificationSO unspscSO = (ICodificationSO) BusinessDelegate.getInstance().getServiceObject("cm",ICodificationSO.class);
-			TaskListBackingBean taskListBB = new TaskListBackingBean();
+			//TaskListBackingBean taskListBB = new TaskListBackingBean();
 			CodificationReqDTO reqDTO = new CodificationReqDTO();
 			log.info("new:"+this.getManagedBean().getRequestCode().isBrandNew());
 			reqDTO.setRequestCode(this.getManagedBean().getRequestCode());
 			reqDTO.setUser(this.getManagedBean().getTempUser());
-			reqDTO.setTaskId(taskListBB.getManagedBean().getTaskId());
+			reqDTO.setTaskId(this.getManagedBean().getTaskId());
 			reqDTO.setOutCome(action);
 			reqDTO.setProcessId("Codification.UNSPSCCodeRequest");
 			CodificationResDTO resDTO = null;
@@ -958,7 +958,7 @@ public class UnspscCodeBackingBean extends BaseBackingBean<UnspscCodeManagedBean
 	public String deleteExtensionCode(){
 
 		ICodificationSO unspscSO = (ICodificationSO) BusinessDelegate.getInstance().getServiceObject("cm",ICodificationSO.class);
-		TaskListBackingBean taskListBB = new TaskListBackingBean();
+		//TaskListBackingBean taskListBB = new TaskListBackingBean();
 		CodificationReqDTO reqDTO = new CodificationReqDTO();
 		CmRequestCode code = new CmRequestCode();
 		CodificationBackingBean cdBB = new CodificationBackingBean();
@@ -973,7 +973,7 @@ public class UnspscCodeBackingBean extends BaseBackingBean<UnspscCodeManagedBean
 			code.setMeasurementName(cdBB.getManagedBean().getDeleteItem().getCmMeasurement().getMeasurementName());
 			code.setColorName(cdBB.getManagedBean().getDeleteItem().getCmColor().getColorName());
 			reqDTO.setUser("lailah");
-			reqDTO.setTaskId(taskListBB.getManagedBean().getTaskId());
+			reqDTO.setTaskId(this.getManagedBean().getTaskId());
 			reqDTO.setOutCome("SUBMIT");
 			reqDTO.setRequestCode(code);
 			reqDTO.setProcessId("Codification.ExtensionCodeMaintenance");
