@@ -12,8 +12,14 @@ import javax.faces.context.FacesContext;
 import javax.faces.event.AjaxBehaviorEvent;
 
 import my.ep.biz.service.sm.mofRegistration.IMofRegistrationSO;
+import my.ep.biz.service.sm.reviewApplication.IReviewApplicationSO;
+import my.ep.biz.service.sm.sdoreview.ISdoReviewSO;
 import my.ep.dto.sm.mofRegistration.MofRegistrationReqDTO;
 import my.ep.dto.sm.mofRegistration.MofRegistrationResDTO;
+import my.ep.dto.sm.reviewApplication.ReviewApplicationReqDTO;
+import my.ep.dto.sm.reviewApplication.ReviewApplicationResDTO;
+import my.ep.dto.sm.sdoreview.SdoReviewReqDTO;
+import my.ep.dto.sm.sdoreview.SdoReviewResDTO;
 import my.ep.persistence.entity.pm.common.PmBank;
 import my.ep.persistence.entity.pm.common.PmCategoryL1;
 import my.ep.persistence.entity.pm.common.PmCategoryL2;
@@ -143,18 +149,21 @@ public class SmApplicationBackingBean extends
 			}
 			getManagedBean().setSmSupplier(smApplSupplier);
 			// TODO Set default not null values -- End insert appl ---
-
+			// TODo Remove hard code later
+			if (getManagedBean().isApproverUser()
+					|| getManagedBean().isPoUser()) {
+				System.out.println("**** LOGIN IS PO or APPROVER *******");
+				smAppl.setSupportingDocMode("O");
+				smAppl.setSupplierType("2");
+			}
 			smAppl = defaultSmAppl(smAppl);
 			smAppl.setSmStaffTotals(getStaffList(smAppl.getSupplierType()));
 			getManagedBean().setSmAppl(smAppl);
 			getManagedBean().setTabActiveIndex(0);
 			getManagedBean().setOfficeFacility(new SmFacility());
-			// TODo Remove hard code later
-			if (getManagedBean().isApproverUser()
-					|| getManagedBean().isPoUser()) {
-				System.out.println("**** LOGIN IS PO or APPROVER *******");
-				getManagedBean().getSmAppl().setSupportingDocMode("O");
-			}
+
+			System.out
+					.println(" **** APPLICATION TYPE **** " + applicationType);
 			if (applicationType.equalsIgnoreCase("B")) {
 				return SupplierManagementConst.PROCEED_BUMI_APPLN;
 			} else if (applicationType.equalsIgnoreCase("N")) {
@@ -1177,6 +1186,36 @@ public class SmApplicationBackingBean extends
 		} finally {
 			regSo = null;
 		}
+	}
+
+	public void submitPOReviewAction(String res) {
+		IReviewApplicationSO reqSO = null;
+		try {
+			log.info("----------------------Submit PO Decision For BPM-------------------------"
+					+ res);
+			ReviewApplicationReqDTO reqDTO = new ReviewApplicationReqDTO();
+			reqSO = (IReviewApplicationSO) BusinessDelegate.getInstance()
+					.getServiceObject("sm", IReviewApplicationSO.class);
+			reqDTO.setApplId(this.getManagedBean().getSmAppl().getApplId());
+			reqDTO.setOutcome(res);
+			reqDTO.setSuppId(this.getManagedBean().getSmAppl().getSmSupplier()
+					.getSupplierId());
+			reqDTO.setAppType(this.getManagedBean().getSmAppl().getApplType());
+			reqDTO.setTaskId(this.getManagedBean().getTaskId());
+
+			if (this.getManagedBean().getSmAppl().getSupportingDocMode() == "O") {
+				reqDTO.setOnlineDoc(true);
+			} else {
+				reqDTO.setOnlineDoc(false);
+			}
+
+			ReviewApplicationResDTO resDTO = reqSO.submitBPMPoReview(reqDTO);
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			reqSO = null;
+		}
+
 	}
 
 	public String submitUpdateMofApplToBpm() {

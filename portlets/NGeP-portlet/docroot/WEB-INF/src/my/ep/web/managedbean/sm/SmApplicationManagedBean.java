@@ -150,6 +150,12 @@ public class SmApplicationManagedBean extends BaseManagedBean {
 
 	private List<SvcTemplateBean> templateList = new ArrayList<SvcTemplateBean>();
 
+	private String[] bpmActions;
+
+	private String selectedBpmAction;
+
+	private String taskId;
+
 	public SmApplicationManagedBean() {
 		// TODO Checking the user role
 		FacesScopes sc = new FacesScopes();
@@ -786,6 +792,30 @@ public class SmApplicationManagedBean extends BaseManagedBean {
 	public void setSelectedCategories(
 			List<SmSupplierCategory> selectedCategories) {
 		this.selectedCategories = selectedCategories;
+	}
+
+	public String[] getBpmActions() {
+		return bpmActions;
+	}
+
+	public void setBpmActions(String[] bpmActions) {
+		this.bpmActions = bpmActions;
+	}
+
+	public String getSelectedBpmAction() {
+		return selectedBpmAction;
+	}
+
+	public void setSelectedBpmAction(String selectedBpmAction) {
+		this.selectedBpmAction = selectedBpmAction;
+	}
+
+	public String getTaskId() {
+		return taskId;
+	}
+
+	public void setTaskId(String taskId) {
+		this.taskId = taskId;
 	}
 
 }
