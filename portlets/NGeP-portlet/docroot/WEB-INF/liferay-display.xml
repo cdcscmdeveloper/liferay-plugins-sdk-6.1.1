@@ -43,6 +43,7 @@
 		<category name="category.ep.pp">
 			<portlet id="ppBudget"></portlet>
 			<portlet id="ppPlan"></portlet>
+			<portlet id="ppProcurementApproval"></portlet>
 		</category>
 		<!-- Procurement Plan - END -->
 
