@@ -41,14 +41,14 @@ xmlns:c="http://java.sun.com/jsp/jstl/core">
 	    	<br/>
 	    	
 	    	<!-- Button(s) -->
-	    	<c:if test="#{cc.attrs.viewMode==PPConst.modeNew || cc.attrs.viewMode==PPConst.modeRevision}">
-	    		<div class="ppRightBtn">
-					<p:commandButton value="#{lbl['lbl.pp.add']}" action="#{planBackingBean.showPpItem(null)}"
-						oncomplete="dlItemDetailsModal.show()" update="dlItemDetails" icon="ui-icon-add" />  
-			 		<br/>
-			 		<br/>
-		 		</div>
-	 		</c:if>
+    		<div class="ppRightBtn">
+				<p:commandButton value="#{lbl['lbl.pp.add']}" action="#{planBackingBean.showPpItem(null)}"
+					oncomplete="dlItemDetailsModal.show()" update="dlItemDetails" icon="ui-icon-add" 
+					disabled="#{!(cc.attrs.viewMode==PPConst.modeNew || cc.attrs.viewMode==PPConst.modeRevision)}"/>  
+		 		<br/>
+		 		<br/>
+	 		</div>
+	 		
  		</p:panel>
  		
  		
@@ -208,13 +208,15 @@ xmlns:c="http://java.sun.com/jsp/jstl/core">
 		   		<tr>
 		   			<td>&nbsp;</td>
 					<td>
-						<p:commandButton value="#{lbl['lbl.pp.ok']}" 
-							action="#{planBackingBean.addItemToList()}"
-							onclick="dlItemDetailsModal.hide()" oncomplete="dlItemDetailsModal.hide()" 
-							process="opItemDetails" update="@([id$=dtPpItem])"/>
-						&nbsp;
-						<p:commandButton value="#{lbl['lbl.pp.cancel']}" icon="ui-icon-cancel"
-							onclick="dlItemDetailsModal.hide()" immediate="true"/>
+						<div class="ppRightBtn">
+							<p:commandButton value="#{lbl['lbl.pp.ok']}" 
+								action="#{planBackingBean.addItemToList()}"
+								onclick="dlItemDetailsModal.hide()" oncomplete="dlItemDetailsModal.hide()" 
+								process="opItemDetails" update="@([id$=dtPpItem])"/>
+							&nbsp;
+							<p:commandButton value="#{lbl['lbl.pp.cancel']}" icon="ui-icon-cancel"
+								onclick="dlItemDetailsModal.hide()" immediate="true"/>
+						</div>
 					</td>
 		   		</tr>
 				

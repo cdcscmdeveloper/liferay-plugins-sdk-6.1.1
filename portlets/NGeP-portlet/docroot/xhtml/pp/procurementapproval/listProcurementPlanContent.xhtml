@@ -6,16 +6,19 @@ xmlns:f="http://java.sun.com/jsf/core"
 xmlns:h="http://java.sun.com/jsf/html"
 xmlns:ui="http://java.sun.com/jsf/facelets"
 xmlns:p="http://primefaces.org/ui"
-xmlns:c="http://java.sun.com/jsp/jstl/core">
-		
+xmlns:c="http://java.sun.com/jsp/jstl/core"
+xmlns:tp="http://java.sun.com/jsf/composite/ppComponents/procurementPlan"
+>
+
 	<p:outputPanel id="opPendingPlanApprovalList">
-		<p:dataTable id="dtPendingApproval" var="ppPlan" value="#{planBackingBean.managedBean.pendingApprovalPlans}" 
+		<p:dataTable id="dtPendingApproval" var="ppPlan" 
+			value="#{procurementApprovalBackingBean.managedBean.pendingApprovalPlans}" 
 			emptyMessage="#{lbl['lbl.pp.no.record.found']}">
 		 		<p:column styleClass="ppSmallTd" headerText="#{lbl['lbl.pp.expand']}">
 		    		<p:rowToggler />
 	    		</p:column>
 		    	<p:column styleClass="ppSmallTd" headerText="#{lbl['lbl.pp.approve']}">  
-	                <p:selectBooleanCheckbox value="#{planBackingBean.managedBean.approve}"/>  
+	                <p:selectBooleanCheckbox value="#{ppPlan.approved}"/>  
 	            </p:column>   
                	<p:column headerText="#{lbl['lbl.pp.plan.number']}">  
 	           		#{ppPlan.planNo}
@@ -43,7 +46,7 @@ xmlns:c="http://java.sun.com/jsp/jstl/core">
 	       				<tp:planContentComponent 
 				            selectedPlan="#{ppPlan}" 
 				            selectedPlanMaster="#{ppPlan.ppPlanMaster}" 
-				            viewMode="#{planBackingBean.managedBean.viewMode}"/>
+				            viewMode="#{PPConst.modeApproval}"/>
 		       		</div>
                 </p:rowExpansion>
          </p:dataTable>

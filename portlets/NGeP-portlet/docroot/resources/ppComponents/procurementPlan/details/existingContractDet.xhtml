@@ -86,10 +86,7 @@ xmlns:c="http://java.sun.com/jsp/jstl/core">
 						<td>
 							<p:outputPanel id="opDuration">
 								<p:inputText disabled="true" styleClass="ppDisplayTextSmall"
-									value="
-									#{planBackingBean.managedBean.selectedPlanItem.ctContract.contractValue!=null? 
-									planBackingBean.managedBean.selectedPlanItem.ctContract.contractValue.contractPeriod : 
-									''}" />
+									value="#{planBackingBean.managedBean.selectedPlanItem.ctContract.contractValue!=null? planBackingBean.managedBean.selectedPlanItem.ctContract.contractValue.contractPeriod : ''}" />
 							</p:outputPanel>
 							
 						</td>

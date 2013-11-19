@@ -41,6 +41,7 @@ xmlns:tp="http://java.sun.com/jsf/composite/ppComponents/procurementPlan"
    		    }
    		
 		</script>
+		<f:event listener="#{planBackingBean.preRenderView}" type="preRenderView" />	
 	
 		<!-- Top Button -->
 		<ui:include src="headerSection.xhtml"/>

@@ -9,15 +9,16 @@ xmlns:h="http://java.sun.com/jsf/html"
 xmlns:ui="http://java.sun.com/jsf/facelets"
 xmlns:p="http://primefaces.org/ui"
 xmlns:c="http://java.sun.com/jsp/jstl/core"
-xmlns:tp="http://java.sun.com/jsf/composite/ep"
 >
 	<ui:define name="contentSection">
-		<p:panel id="pRightPanel" header="#{planBackingBean.generateHeader(PPConst.modeList)}">
+		<p:panel id="pRightPanel" header="#{procurementApprovalBackingBean.generateHeader(PPConst.modeApprovalList)}"
+			action="#{procurementApprovalBackingBean.approvePlans}">
 			<!-- Top Button -->
 			<div class="ppRightBtn">
-				<p:commandButton value="#{lbl['lbl.pp.approve']}" action="#{planBackingBean.redirectToListPlan}"   />&nbsp;
+				<p:commandButton value="#{lbl['lbl.pp.approve']}"  />&nbsp;
 			</div>
 			<br/>
+			
 			<!-- Pending Approval Plan List -->
    			<ui:include src="listProcurementPlanContent.xhtml"/>
 		</p:panel>

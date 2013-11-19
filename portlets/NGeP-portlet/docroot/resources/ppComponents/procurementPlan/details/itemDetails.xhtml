@@ -20,7 +20,7 @@ xmlns:c="http://java.sun.com/jsp/jstl/core">
 								<th>* <p:outputLabel value="#{lbl['lbl.pp.plan.name']}"/></th>
 								<td>
 									<p:inputText value="#{planBackingBean.managedBean.selectedItem.ppRecurFreq.planName}" 
-										disabled="#{!planBackingBean.managedBean.selectedItem.brandNew}"/>
+										disabled="#{!planBackingBean.managedBean.selectedItem.brandNew &amp;&amp; !planBackingBean.managedBean.selectedItem.editable}"/>
 								</td>
 								<th></th>
 								<td></td>
@@ -29,7 +29,7 @@ xmlns:c="http://java.sun.com/jsp/jstl/core">
 								<th>* <p:outputLabel value="#{lbl['lbl.pp.recurring.frequency']}"/></th>
 								<td>
 									<p:inputText value="#{planBackingBean.managedBean.selectedItem.ppRecurFreq.recurFreq}" 
-										disabled="#{!cc.attrs.selectedPlan.brandNew &amp;&amp; cc.attrs.viewMode!=PPConst.modeRevision}">
+										disabled="#{!planBackingBean.managedBean.selectedItem.brandNew &amp;&amp; !planBackingBean.managedBean.selectedItem.editable}">
 									    <p:ajax event="change" listener="#{planBackingBean.changeRecurFreq}" update="dtFavItem" />
 									</p:inputText>
 								</td>
@@ -45,14 +45,14 @@ xmlns:c="http://java.sun.com/jsp/jstl/core">
 								        </p:column>   
 								        <p:column headerText="#{lbl['lbl.pp.planned.activity.startmonth']}">  
 								        	<p:selectOneMenu value="#{fav.intPlanStartMonth}"
-												disabled="#{!cc.attrs.selectedPlan.brandNew &amp;&amp; cc.attrs.viewMode!=PPConst.modeRevision}">
+												disabled="#{!planBackingBean.managedBean.selectedItem.brandNew &amp;&amp; !planBackingBean.managedBean.selectedItem.editable}">
 												<f:selectItem itemLabel="#{lbl['lbl.select']}" itemValue="12"/>
 												<f:selectItems value="#{planBackingBean.shortMonths()}"/>
 											</p:selectOneMenu>
 								        </p:column>		
 								         <p:column headerText="#{lbl['lbl.pp.planned.activity.endmonth']}">  
 								         	<p:selectOneMenu value="#{fav.intPlanEndMonth}"
-												disabled="#{!cc.attrs.selectedPlan.brandNew &amp;&amp; cc.attrs.viewMode!=PPConst.modeRevision}">
+												disabled="#{!planBackingBean.managedBean.selectedItem.brandNew &amp;&amp; !planBackingBean.managedBean.selectedItem.editable}">
 												<f:selectItem itemLabel="#{lbl['lbl.select']}" itemValue="12"/>
 												<f:selectItems value="#{planBackingBean.shortMonths()}"/>
 											</p:selectOneMenu>
@@ -125,7 +125,8 @@ xmlns:c="http://java.sun.com/jsp/jstl/core">
 							<th><p:outputLabel value="#{lbl['lbl.pp.financial.year']}"/></th>
 							<td>
 								<p:selectOneMenu id="somYear" value="#{planBackingBean.managedBean.selectedItem.ovrFinancialYear}"
-									disabled="#{cc.attrs.selectedPlanMaster.votType!=PPConst.votWithout}">
+									disabled="#{cc.attrs.selectedPlanMaster.votType!=PPConst.votWithout 
+										|| (!planBackingBean.managedBean.selectedItem.brandNew &amp;&amp; !planBackingBean.managedBean.selectedItem.editable)}">
 									<f:selectItem itemLabel="#{lbl['lbl.select']}" itemValue="#{null}" />
 									<f:selectItems value="#{planBackingBean.financialYearOptions()}"/>
 								</p:selectOneMenu>
@@ -196,7 +197,8 @@ xmlns:c="http://java.sun.com/jsp/jstl/core">
 								<th>* <p:outputLabel value="#{lbl['lbl.pp.product.extension']}"/></th>
 								<td colspan="3">
 									<p:selectOneMenu id="somExt" value="#{planBackingBean.managedBean.selectedItem.extensionId}"
-										disabled="#{!planBackingBean.managedBean.selectedItem.brandNew}">
+										disabled="#{!planBackingBean.managedBean.selectedItem.brandNew &amp;&amp; 
+											!planBackingBean.managedBean.selectedItem.editable}">
 										<f:selectItem itemLabel="#{lbl['lbl.select']}" itemValue="#{null}"/>
 										<f:selectItems value="#{planBackingBean.extensionItemOptions()}" 
 											var="obj" itemLabel="#{obj.itemName}" itemValue="#{obj.itemId}"/>
@@ -234,7 +236,9 @@ xmlns:c="http://java.sun.com/jsp/jstl/core">
 									<th><p:outputLabel value="#{lbl['lbl.pp.program.activiti.code']}"/></th>
 									<td>
 										<p:selectOneMenu id="somProgAct" value="#{planBackingBean.managedBean.selectedItem.progActId}"
-											disabled="#{cc.attrs.selectedPlanMaster.maksudId==''||!cc.attrs.selectedPlan.brandNew}">
+											disabled="#{cc.attrs.selectedPlanMaster.maksudId==''|| 
+											(!planBackingBean.managedBean.selectedItem.brandNew &amp;&amp; 
+											!planBackingBean.managedBean.selectedItem.editable)}">
 											<f:selectItem itemLabel="#{lbl['lbl.select']}" itemValue="#{null}"/>
 											<f:selectItem itemLabel="1" itemValue="1"/>
 										</p:selectOneMenu>
@@ -246,7 +250,8 @@ xmlns:c="http://java.sun.com/jsp/jstl/core">
 									<td>
 										<p:selectOneMenu id="somProjSetia" value="#{planBackingBean.managedBean.selectedItem.projSetiaId}"
 											disabled="#{planBackingBean.managedBean.maksudCode==null 
-											|| !planBackingBean.managedBean.selectedItem.brandNew}">
+											|| (!planBackingBean.managedBean.selectedItem.brandNew &amp;&amp; 
+											!planBackingBean.managedBean.selectedItem.editable)}">
 											<f:selectItem itemLabel="#{lbl['lbl.select']}" itemValue="#{null}"/>
 											<f:selectItem itemLabel="1" itemValue="1"/>
 										</p:selectOneMenu>
@@ -257,7 +262,8 @@ xmlns:c="http://java.sun.com/jsp/jstl/core">
 									<th><p:outputLabel value="#{lbl['lbl.pp.amanah.code']}"/></th>
 									<td>
 										<p:selectOneMenu value="#{planBackingBean.managedBean.selectedItem.amanahId}"
-											disabled="#{!planBackingBean.managedBean.selectedItem.brandNew}">
+											disabled="#{!planBackingBean.managedBean.selectedItem.brandNew &amp;&amp; 
+											!planBackingBean.managedBean.selectedItem.editable}">
 											<f:selectItem itemLabel="#{lbl['lbl.select']}" itemValue="#{null}"/>
 											<f:selectItem itemLabel="1" itemValue="1"/>
 										</p:selectOneMenu>

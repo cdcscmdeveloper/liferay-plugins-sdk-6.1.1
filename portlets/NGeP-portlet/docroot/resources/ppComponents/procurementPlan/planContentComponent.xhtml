@@ -289,7 +289,7 @@ xmlns:composite="http://java.sun.com/jsf/composite">
 							<th>* <p:outputLabel value="#{lbl['lbl.pp.plan.approver']}"/></th>
 							<td>
 								<p:selectOneMenu value="#{cc.attrs.selectedPlan.approver.userId}"
-									disabled="#{!cc.attrs.selectedPlan.editable}">
+									disabled="#{!cc.attrs.selectedPlan.editable}" >
 									<f:selectItem itemLabel="#{lbl['lbl.select']}" />
 									<f:selectItem itemLabel="Lailah" itemValue="1" />
 								</p:selectOneMenu>
@@ -334,7 +334,6 @@ xmlns:composite="http://java.sun.com/jsf/composite">
 												<f:selectItem itemLabel="Khai" itemValue="2" />
 												<f:selectItem itemLabel="Tan" itemValue="3" />
 												<f:selectItem itemLabel="Alex" itemValue="4" />
-												<p:ajax event="change" listener="#{planBackingBean.test}" />
 											</p:selectOneMenu>
 										</ui:fragment>
 										<ui:fragment rendered="#{status.index&gt;0}">
@@ -372,10 +371,10 @@ xmlns:composite="http://java.sun.com/jsf/composite">
 							<tr>
 								<th>* <p:outputLabel value="#{lbl['lbl.pp.rejection.reason']}"/></th>
 								<td colspan="3">
-									<p:selectManyCheckbox value="#{cc.attrs.selectedPlan.pmRejectReasonIds}" >  
+									<p:selectManyCheckbox value="#{cc.attrs.selectedPlan.pmRejectReasonIds}" converter="javax.faces.Long" >  
 							            <f:selectItems value="#{planBackingBean.rejectionReasonOptions()}"
 							            	 var="obj" itemLabel="#{obj.reasonDesc}" itemValue="#{obj.pmReason.reasonId}"  />
-					            	    <f:selectItem itemLabel="Others" itemValue="#{null}" />  
+					            	    <f:selectItem itemLabel="Others" itemValue="0" />  
 						            	<p:ajax event="change" listener="#{planBackingBean.customReason}" update="itRejectOthers"/>
 							        </p:selectManyCheckbox>  
 								</td>

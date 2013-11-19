@@ -12,9 +12,8 @@ xmlns:c="http://java.sun.com/jsp/jstl/core"
 >
 	
 	<ui:define name="contentSection">
-		<p:outputLabel id="itSysMsg" rendered="#{budgetAllocationBackingBean.managedBean.systemMsg!=''}" disabled="true"
-			value="#{budgetAllocationBackingBean.managedBean.systemMsg}"/><br />
-		<p:panel id="pRightPanel" header="#{budgetAllocationBackingBean.generateHeader('L')}">
+		
+		<p:panel id="pRightPanel" header="#{budgetAllocationBackingBean.generateHeader(PPConst.modeList)}">
 			<ui:include src="listBudgetContent.xhtml"/>
 		
 			<!-- Bottom Button(s) -->
