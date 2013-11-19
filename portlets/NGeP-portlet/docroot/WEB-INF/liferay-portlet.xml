@@ -148,6 +148,41 @@
 		</footer-portlet-javascript>
 		<css-class-wrapper>pp-plan-portlet</css-class-wrapper>
 	</portlet>
+		<portlet>
+		<portlet-name>reviewPlanPreparation</portlet-name>
+		<icon>/icon.png</icon>
+		<instanceable>false</instanceable>
+		<header-portlet-css>/css/main.css</header-portlet-css>
+		<footer-portlet-javascript>
+			/js/main.js
+		</footer-portlet-javascript>
+		<css-class-wrapper>
+			reviewplanpreparation-portlet
+		</css-class-wrapper>
+	</portlet>
+	
+	<portlet>
+		<portlet-name>reviewBudgetAllocation</portlet-name>
+		<icon>/icon.png</icon>
+		<instanceable>false</instanceable>
+		<header-portlet-css>/css/main.css</header-portlet-css>
+		<footer-portlet-javascript>
+			/js/main.js
+		</footer-portlet-javascript>
+		<css-class-wrapper>
+			reviewbudgetallocation-portlet
+		</css-class-wrapper>
+	</portlet>
+	<portlet>
+		<portlet-name>ppProcurementApproval</portlet-name>
+		<icon>/icon.png</icon>
+		<instanceable>false</instanceable>
+		<header-portlet-css>/css/ep/main.css</header-portlet-css>
+		<footer-portlet-javascript>
+			/js/main.js
+		</footer-portlet-javascript>
+		<css-class-wrapper>pp-approval-portlet</css-class-wrapper>
+	</portlet>
 	<!-- Procurement Plan - END -->
 
 
