@@ -83,23 +83,19 @@
 			<h:outputText value="Mulitiple Locality: " />
 			
 		
-			<p:selectOneRadio value="#{qTSupplierQulCriteriaBackingBean.managedBean.multiLoc}">
+			<p:selectOneRadio value="#{qTSupplierQulCriteriaBackingBean.managedBean.qtc.multiLocality}">
 			<f:selectItem itemLabel="yes" itemValue="true" />
 			<f:selectItem itemLabel="No" itemValue="false" />
-			<p:ajax event="change" listener="#{qTSupplierQulCriteriaBackingBean.multiLocationChange}" update="allstate"></p:ajax>
+			<p:ajax event="change" listener="#{qTSupplierQulCriteriaBackingBean.multiLocationChange}"
+				partialSubmit="true" process="@this" update="allstate"></p:ajax>
 		</p:selectOneRadio>
 		
-		<h:panelGroup rendered="#{qTSupplierQulCriteriaBackingBean.managedBean.multiLoc eq 'true'}" id="allstate">
-
-
-			<h:outputText value="All States: " />
-			
-			
-			<p:selectBooleanCheckbox value="#{qTSupplierQulCriteriaBackingBean.checked}" />
-		
-			
-	
-</h:panelGroup>
-</h:panelGrid>
+		<h:panelGroup id="allstate">
+			<h:panelGroup rendered="#{qTSupplierQulCriteriaBackingBean.managedBean.qtc.multiLocality}">
+				<h:outputText value="All States: " />
+				<p:selectBooleanCheckbox value="#{qTSupplierQulCriteriaBackingBean.checked}" />
+			</h:panelGroup>
+		</h:panelGroup>
+	</h:panelGrid>
 	</p:panel>
 	</ui:composition>
