@@ -19,7 +19,8 @@ xmlns:composite="http://java.sun.com/jsf/composite">
 	<composite:implementation>
 		<p:outputPanel id="opPlanDetailsContent">
 			
-			<p:tabView widgetVar="tvPlanContentVar" id="tvPlanContent" styleClass="ppPlanContent" dynamic="true" cache="true" orientation="top">
+			<p:tabView widgetVar="tvPlanContentVar" id="tvPlanContent" dynamic="true" cache="false" orientation="top">
+				
 				<p:tab id="tPlanHeader" title="#{lbl['lbl.pp.header']}">  
 					<p:panel id="pTabPlanHeader">
 					
@@ -303,8 +304,8 @@ xmlns:composite="http://java.sun.com/jsf/composite">
 							<td>
 								<p:selectOneRadio  id="sorPvo" required="false" value="#{cc.attrs.selectedPlan.submissionType}"
 									disabled="#{!cc.attrs.selectedPlan.editable}">
-									<f:selectItem itemLabel="Yes" itemValue="true" />
-									<f:selectItem itemLabel="No" itemValue="false" />
+									<f:selectItem itemLabel="Yes" itemValue="V" />
+									<f:selectItem itemLabel="No" itemValue="A" />
 									<p:ajax event="change" update="opPvo, sorPvoLvl" />
 								</p:selectOneRadio> 
 					        </td>
@@ -315,7 +316,7 @@ xmlns:composite="http://java.sun.com/jsf/composite">
 						<tr>
 							<th>* <p:outputLabel value="#{lbl['lbl.pp.verification.level']}"/></th>
 							<td>
-								 <p:selectOneRadio disabled="#{!cc.attrs.selectedPlan.submissionType 
+								 <p:selectOneRadio disabled="#{cc.attrs.selectedPlan.submissionType=='A'
 								 	|| !cc.attrs.selectedPlan.brandNew}" 
 									value="#{cc.attrs.selectedPlan.multiLevel}" id="sorPvoLvl">  
 						            <f:selectItems value="#{planBackingBean.verificationLevelOptions()}" /> &nbsp;
@@ -328,7 +329,7 @@ xmlns:composite="http://java.sun.com/jsf/composite">
 									<ui:repeat var="vo" value="#{cc.attrs.selectedPlan.verificationOfficers}" varStatus="status">
 										<ui:fragment rendered="#{status.index==0}">
 											<p:selectOneMenu value="#{vo.userId}"
-												disabled="#{!cc.attrs.selectedPlan.submissionType
+												disabled="#{cc.attrs.selectedPlan.submissionType=='A'
 													|| !cc.attrs.selectedPlan.brandNew}">
 												<f:selectItem itemLabel="#{lbl['lbl.select']}" itemValue="#{null}" />
 												<f:selectItem itemLabel="Khai" itemValue="2" />
@@ -353,6 +354,7 @@ xmlns:composite="http://java.sun.com/jsf/composite">
 							</td>
 							<td>&nbsp;</td>
 				        </tr>
+				        
 						<c:if test="#{cc.attrs.viewMode==PPConst.modeVerification || cc.attrs.viewMode==PPConst.modeApproval}">
 							<!-- Revision Types -->
 							<tr>

@@ -41,12 +41,12 @@ xmlns:tp="http://java.sun.com/jsf/composite/ppComponents/procurementPlan"
    		    }
    		
 		</script>
-		<f:event listener="#{planBackingBean.preRenderView}" type="preRenderView" />	
+		
 	
 		<!-- Top Button -->
 		<ui:include src="headerSection.xhtml"/>
 		
-		<p:tabView widgetVar="tvPlanVar" id="tvPlan" dynamic="true" cache="true" orientation="left">
+		<p:tabView widgetVar="tvPlanVar" id="tvPlan" dynamic="true" cache="false" orientation="left">
 			<p:ajax event="tabChange" listener="#{planBackingBean.updateCurrentView}"/>  
 		    <p:tab id="#{PPConst.currentNew}" styleClass="#{PPConst.currentNew}" title="#{planBackingBean.generateHeader(planBackingBean.managedBean.viewMode)}">
 		    	<p:outputPanel id="opPlanContent">
