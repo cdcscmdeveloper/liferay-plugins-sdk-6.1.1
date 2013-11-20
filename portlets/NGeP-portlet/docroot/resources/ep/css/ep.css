@@ -3387,9 +3387,10 @@ textarea[disabled],input[type="text"][disabled],input[type="password"][disabled]
 	{
 	cursor: default;
 	color: #333333 !important;
-	background-color: #F4F4F4 !important;
+	background-color: #F4F4F4;
 	opacity: 1 !important;
-	border: 1px solid #CECECE !important;
+	border: 1px solid #CECECE;
+	border-radius: 0;
 }
 
 .screen-title {
@@ -3596,6 +3597,10 @@ textarea[disabled],input[type="text"][disabled],input[type="password"][disabled]
 	/* W3C */
 	filter: progid:DXImageTransform.Microsoft.gradient(  startColorstr='#FFFFFF',
 		endColorstr='#BCE18A', GradientType=0 ); /* IE6-8 */
+}
+
+.ui-button-icon-only > .ui-button-text {
+	visibility: hidden;
 }
 /*--------------------------       End Custom CSS       --------------------------- */
 
