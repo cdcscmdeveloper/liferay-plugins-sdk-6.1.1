@@ -28,7 +28,7 @@ import my.ep.dto.fl.FulfilmentResDTO;
 import my.ep.persistence.entity.fl.VFlDocument;
 import my.ep.type.aut.SearchOperator;
 import my.ep.web.backingbean.BaseBackingBean;
-import my.ep.web.backingbean.fl.createcontract.ContractRequestBackingBean;
+import my.ep.web.backingbean.fl.cr.ContractRequestBackingBean;
 import my.ep.web.backingbean.fl.deliveryorder.DeliveryOrderBackingBean;
 import my.ep.web.backingbean.fl.frn.ReceivedNoteBackingBean;
 import my.ep.web.backingbean.fl.invoice.InvoiceBackingBean;
