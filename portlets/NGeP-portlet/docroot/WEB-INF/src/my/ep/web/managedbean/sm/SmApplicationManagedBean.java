@@ -144,6 +144,8 @@ public class SmApplicationManagedBean extends BaseManagedBean {
 	private boolean supplierUser;
 
 	private boolean approverUser;
+	
+	private String decisionAckMsg;
 
 	// TODO change the type later
 	private List<SvcTemplateBean> selectedTemplateList;
@@ -816,6 +818,14 @@ public class SmApplicationManagedBean extends BaseManagedBean {
 
 	public void setTaskId(String taskId) {
 		this.taskId = taskId;
+	}
+
+	public String getDecisionAckMsg() {
+		return decisionAckMsg;
+	}
+
+	public void setDecisionAckMsg(String decisionAckMsg) {
+		this.decisionAckMsg = decisionAckMsg;
 	}
 
 }

@@ -1188,10 +1188,10 @@ public class SmApplicationBackingBean extends
 		}
 	}
 
-	public void submitPOReviewAction(String res) {
+	public String submitPOorApproverReviewToBPM(String res) {
 		IReviewApplicationSO reqSO = null;
 		try {
-			log.info("----------------------Submit PO Decision For BPM-------------------------"
+			log.info("----------------------Submit PO / Approver Decision For BPM-------------------------"
 					+ res);
 			ReviewApplicationReqDTO reqDTO = new ReviewApplicationReqDTO();
 			reqSO = (IReviewApplicationSO) BusinessDelegate.getInstance()
@@ -1209,9 +1209,56 @@ public class SmApplicationBackingBean extends
 				reqDTO.setOnlineDoc(false);
 			}
 
-			ReviewApplicationResDTO resDTO = reqSO.submitBPMPoReview(reqDTO);
+			ReviewApplicationResDTO resDTO = reqSO
+					.submitPOorApproverReviewToBPM(reqDTO);
+			if (getManagedBean().isApproverUser()) {
+				System.out.println(" **** Final Decision from Approver ****");
+				if (res.equalsIgnoreCase("Approve")) {
+					getManagedBean()
+							.setDecisionAckMsg(
+									" is APPROVED.A notification is sent to the respective supplier.");
+				} else if (res.equalsIgnoreCase("Reject")) {
+					getManagedBean()
+							.setDecisionAckMsg(
+									" is REJECTED.A notification is sent to the respective supplier.");
+				}
+				return SupplierManagementConst.APPROVER_DECISION_ACK;
+			} else if (getManagedBean().isPoUser()) {
+				System.out.println(" **** Final Decision from PO ****");
+				if (res.equalsIgnoreCase("Approve")) {
+					getManagedBean()
+							.setDecisionAckMsg(
+									" is APPROVED.A notification is sent to the respective supplier.");
+				} else if (res.equalsIgnoreCase("Reject")) {
+					getManagedBean()
+							.setDecisionAckMsg(
+									" is REJECTED.A notification is sent to the respective supplier.");
+				} else if (res.equalsIgnoreCase("Escalate")) {
+					getManagedBean()
+							.setDecisionAckMsg(
+									" is Escalated to the Apporver.Please wait for further notification.");
+				}
+				return SupplierManagementConst.PO_DECISION_ACK;
+
+			} else {
+				FacesContext.getCurrentInstance().addMessage(
+						null,
+						new FacesMessage(FacesMessage.SEVERITY_ERROR,
+								"Sample error message",
+								"Un Authorized user to perform this action"));
+				return null;
+			}
 		} catch (Exception e) {
 			e.printStackTrace();
+			FacesContext
+					.getCurrentInstance()
+					.addMessage(
+							null,
+							new FacesMessage(
+									FacesMessage.SEVERITY_ERROR,
+									"Sample error message",
+									"There is problem in submitting the decision.Please contact the administrator or retry later"));
+			return null;
 		} finally {
 			reqSO = null;
 		}

@@ -61,6 +61,7 @@ import my.ep.jaxb.fl.invoicepaymentdata.FLInvoiceAndPaymentDataType;
 import my.ep.jaxb.fl.podata.FLPurchaseOrderDataType;
 import my.ep.jaxb.pp.budgetdata.PPBudgetDataType;
 import my.ep.jaxb.pp.plandata.PPPlanDataType;
+import my.ep.jaxb.sm.mofaccmaindata.SMMOFAccMainDataType;
 import my.ep.jaxb.sm.mofregdata.SMMOFRegDataType;
 import my.ep.jaxb.sm.procsofficedata.SMProcsOfficeDataType;
 import my.ep.jaxb.sm.sitevisitdata.SMSiteVisitDataType;
@@ -658,6 +659,48 @@ public class TaskListBackingBean extends BaseBackingBean<TaskListManagedBean> {
 				sdoReviewBB.getManagedBean().setBpmAction(res.getAction());
 				sdoReviewBB.getManagedBean().setTaskId(taskId);
 			}
+			if (res.getTaskName().equalsIgnoreCase(
+					"Review Application (Escalated)")) {
+				System.out
+						.println("********Review Application Escalted for new mof********");
+				System.out.println("********getTaskId********" + taskId);
+				System.out.println("********getTaskName********"
+						+ this.getManagedBean().getTaskName());
+				SmApplicationBackingBean smApplBB = new SmApplicationBackingBean();
+				// TODO Change this impl to get values from DB and set
+				// smSupplier , smAppl of the managedBean
+				setNavigationForSmDecision(smObj.getAppType());
+				smApplBB.proceedToApplication(smObj.getAppType());
+				smApplBB.getManagedBean().getSmAppl()
+						.setApplId(Long.parseLong(smObj.getAppId()));
+				smApplBB.getManagedBean().setBpmActions(res.getAction());
+				smApplBB.getManagedBean().setTaskId(taskId);
+
+			}
+		} else if (res.getProcessName()
+				.equalsIgnoreCase("MOF Account Maintain")) {
+			SMMOFAccMainDataType smObj = (SMMOFAccMainDataType) obj;
+			this.getManagedBean().setTaskName(res.getTaskName());
+
+			if (res.getTaskName().equalsIgnoreCase(
+					"Review Application (Escalated)")) {
+				System.out
+						.println("********Review Application Escalted for account maintain********"
+								+ smObj.getAppType());
+				System.out.println("********getTaskId********" + taskId);
+				System.out.println("********getTaskName********"
+						+ this.getManagedBean().getTaskName());
+				SmApplicationBackingBean smApplBB = new SmApplicationBackingBean();
+				// TODO Change this impl to get values from DB and set
+				// smSupplier , smAppl of the managedBean
+				setNavigationForSmDecision(smObj.getAppType());
+				smApplBB.proceedToApplication(smObj.getAppType());
+				smApplBB.getManagedBean().getSmAppl()
+						.setApplId(Long.parseLong(smObj.getAppId()));
+				smApplBB.getManagedBean().setBpmActions(res.getAction());
+				smApplBB.getManagedBean().setTaskId(taskId);
+
+			}
 		} else if (res.getProcessName().equalsIgnoreCase(
 				"Processing Officer Manage")) {
 			// SMMOFRegDataType smObj = (SMMOFRegDataType) obj;
@@ -672,35 +715,7 @@ public class TaskListBackingBean extends BaseBackingBean<TaskListManagedBean> {
 				// TODO Change this impl to get values from DB and set
 				// smSupplier , smAppl of the managedBean
 				smApplBB.proceedToApplication(smObj.getAppType());
-
-				switch (smObj.getAppType()) {
-				case "N":
-					getManagedBean().setPageUrl(
-							"/xhtml/sm/NewMofApplication/mofRegBasePage.xhtml");
-					break;
-				case "A":
-					getManagedBean()
-							.setPageUrl(
-									"/xhtml/sm/addAdditionalCategoryCodes/addAdditionalCategoryBasePage.xhtml");
-					break;
-				case "B":
-					getManagedBean()
-							.setPageUrl(
-									"/xhtml/sm/bumiPuteraApplication/applyBumiStatusBasePage.xhtml");
-					break;
-				case "U":
-					getManagedBean()
-							.setPageUrl(
-									"/xhtml/sm/updateMofDetails/updateMofDetailsBasePage.xhtml");
-					break;
-				case "R":
-					getManagedBean()
-							.setPageUrl(
-									"/xhtml/sm/renewMofApplication/renewMofBasePage.xhtml");
-					break;
-				default:
-					break;
-				}
+				setNavigationForSmDecision(smObj.getAppType());
 				smApplBB.getManagedBean().getSmAppl()
 						.setApplId(Long.parseLong(smObj.getAppId()));
 				smApplBB.getManagedBean().setBpmActions(res.getAction());
@@ -768,6 +783,36 @@ public class TaskListBackingBean extends BaseBackingBean<TaskListManagedBean> {
 		}
 
 		return "taskListCommonPage";
+	}
+
+	private void setNavigationForSmDecision(String applType) {
+		switch (applType) {
+		case "N":
+			getManagedBean().setPageUrl(
+					"/xhtml/sm/NewMofApplication/mofRegBasePage.xhtml");
+			break;
+		case "A":
+			getManagedBean()
+					.setPageUrl(
+							"/xhtml/sm/addAdditionalCategoryCodes/addAdditionalCategoryBasePage.xhtml");
+			break;
+		case "B":
+			getManagedBean()
+					.setPageUrl(
+							"/xhtml/sm/bumiPuteraApplication/applyBumiStatusBasePage.xhtml");
+			break;
+		case "U":
+			getManagedBean()
+					.setPageUrl(
+							"/xhtml/sm/updateMofDetails/updateMofDetailsBasePage.xhtml");
+			break;
+		case "R":
+			getManagedBean().setPageUrl(
+					"/xhtml/sm/renewMofApplication/renewMofBasePage.xhtml");
+			break;
+		default:
+			break;
+		}
 	}
 
 	private int calculateFinalOffSet(int currentPage) {
