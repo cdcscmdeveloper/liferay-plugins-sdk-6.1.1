@@ -21,16 +21,18 @@ import my.ep.dto.cm.codification.CodificationResDTO;
 import my.ep.dto.cm.codification.RequestCodeReqDTO;
 import my.ep.dto.cm.codification.RequestCodeResDTO;
 import my.ep.jaxb.cd.requestdata.CDRequestDataType;
+import my.ep.persistence.entity.cm.catalog.CmBrand;
 import my.ep.persistence.entity.cm.catalog.CmColor;
 import my.ep.persistence.entity.cm.catalog.CmItem;
+import my.ep.persistence.entity.cm.catalog.CmMeasurement;
 import my.ep.persistence.entity.cm.catalog.CmRequestCode;
+import my.ep.persistence.entity.cm.catalog.CmType;
 import my.ep.persistence.entity.cm.catalog.CmUnspsc;
 import my.ep.persistence.logging.LogKey;
 import my.ep.type.aut.SearchOperator;
 import my.ep.util.lookupservice.EpBpmBusinessDelegate;
 import my.ep.web.backingbean.BaseBackingBean;
 import my.ep.web.backingbean.bpm.tasklist.BPMTaskListBackingBean;
-import my.ep.web.backingbean.bpm.tasklist.TaskListBackingBean;
 import my.ep.web.managedbean.cm.codification.UnspscCodeManagedBean;
 import my.ep.web.util.FacesScopes;
 import my.ep.web.util.lookupservice.BusinessDelegate;
@@ -705,28 +707,7 @@ public class UnspscCodeBackingBean extends BaseBackingBean<UnspscCodeManagedBean
 	}
 
 
-	public void addNewRequest(){
-
-
-		if(!this.getManagedBean().getRequestExtCode().isRequestType()){
-			this.getManagedBean().getRequestExtCode().setTypeName(this.getManagedBean().getTypeName());
-		}
-
-		if(!this.getManagedBean().getRequestExtCode().isRequestBrand()){
-			this.getManagedBean().getRequestExtCode().setBrandName(this.getManagedBean().getBrandName());
-		}
-
-		if(!this.getManagedBean().getRequestExtCode().isRequestColor()){
-			this.getManagedBean().getRequestExtCode().setColorName(this.getManagedBean().getColorName());
-		}
-
-		if(!this.getManagedBean().getRequestExtCode().isRequestMeasurement()){
-			this.getManagedBean().getRequestExtCode().setMeasurementName(this.getManagedBean().getMeasurementName());
-		}
-
-		this.getManagedBean().getRequestExtCodeList().add(this.getManagedBean().getRequestExtCode());
-
-	}
+	
 
 	public void addMoreRequest(){
 
@@ -763,6 +744,80 @@ public class UnspscCodeBackingBean extends BaseBackingBean<UnspscCodeManagedBean
 		facesContext.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO,"Submitted Successfully", ""));
 
 	}
+	
+	
+	public void addNewRequest(){
+		ICodificationSO unspscSO = (ICodificationSO) BusinessDelegate.getInstance().getServiceObject("cm",ICodificationSO.class);
+		CodificationReqDTO reqDTO = new CodificationReqDTO();
+		CodificationResDTO resDTO = null;
+
+		if(!this.getManagedBean().getRequestExtCode().isRequestType()){
+			
+			System.out.println("this.getManagedBean().getTypeId()"+this.getManagedBean().getTypeId());
+			ISearchBean<CmType> searchBeanColor = new SearchBean<CmType>();
+			typeFilterBean.setSearchField("typeId");
+			typeFilterBean.setSearchValue(this.getManagedBean().getTypeId());
+			searchBeanColor.getDataFilterBeans().add(typeFilterBean);
+
+			reqDTO.setTypeSearchBean(searchBeanColor);
+
+			resDTO = unspscSO.searchTypeObj(reqDTO);
+		
+			this.getManagedBean().getRequestExtCode().setTypeName(resDTO.getTypeList().get(0).getTypeName());
+			this.getManagedBean().getRequestExtCode().setTypeId(this.getManagedBean().getTypeId());
+			
+		}
+
+		if(!this.getManagedBean().getRequestExtCode().isRequestBrand()){
+		
+			ISearchBean<CmBrand> searchBeanColor = new SearchBean<CmBrand>();
+			brandFilterBean.setSearchField("brandId");
+			brandFilterBean.setSearchValue(this.getManagedBean().getBrandId());
+			searchBeanColor.getDataFilterBeans().add(brandFilterBean);
+
+			reqDTO.setBrandSearchBean(searchBeanColor);
+
+			resDTO = unspscSO.searchBrandObj(reqDTO);
+			
+			this.getManagedBean().getRequestExtCode().setBrandName(resDTO.getBrandList().get(0).getBrandName());
+			this.getManagedBean().getRequestExtCode().setBrandId(this.getManagedBean().getBrandId());
+			
+		}
+
+		if(!this.getManagedBean().getRequestExtCode().isRequestColor()){
+			
+			ISearchBean<CmColor> searchBeanColor = new SearchBean<CmColor>();
+			colorFilterBean.setSearchField("colorId");
+			colorFilterBean.setSearchValue(this.getManagedBean().getColorId());
+			searchBeanColor.getDataFilterBeans().add(colorFilterBean);
+
+			reqDTO.setColorSearchBean(searchBeanColor);
+
+			resDTO = unspscSO.searchColorObj(reqDTO);
+			
+			this.getManagedBean().getRequestExtCode().setColorName(resDTO.getColorList().get(0).getColorName());
+			this.getManagedBean().getRequestExtCode().setColorId(this.getManagedBean().getColorId());
+			
+		}
+
+		if(!this.getManagedBean().getRequestExtCode().isRequestMeasurement()){
+			
+			ISearchBean<CmMeasurement> searchBeanColor = new SearchBean<CmMeasurement>();
+			measurementFilterBean.setSearchField("measurementId");
+			measurementFilterBean.setSearchValue(this.getManagedBean().getMeasurementId());
+			searchBeanColor.getDataFilterBeans().add(measurementFilterBean);
+
+			reqDTO.setMeasurementSearchBean(searchBeanColor);
+
+			resDTO = unspscSO.searchMeasurementObj(reqDTO);
+			
+			this.getManagedBean().getRequestExtCode().setColorId(this.getManagedBean().getMeasurementId());
+			this.getManagedBean().getRequestExtCode().setMeasurementName(resDTO.getMeasurementList().get(0).getMeasurementName());
+		}
+
+		this.getManagedBean().getRequestExtCodeList().add(this.getManagedBean().getRequestExtCode());
+
+	}
 
 
 
@@ -771,13 +826,13 @@ public class UnspscCodeBackingBean extends BaseBackingBean<UnspscCodeManagedBean
 		ICodificationSO unspscSO = (ICodificationSO) BusinessDelegate.getInstance().getServiceObject("cm",ICodificationSO.class);
 		CodificationReqDTO reqDTO = new CodificationReqDTO();
 		CodificationResDTO resDTO = null;
-		//TaskListBackingBean taskListBB = new TaskListBackingBean();
+
 		for(CmRequestCode code:this.getManagedBean().getReviewExtCodeList()){
 
 
 
 			if(code.getColorNameDD()!=null){
-				/*ISearchBean<CmColor> searchBeanColor = new SearchBean<CmColor>();
+				ISearchBean<CmColor> searchBeanColor = new SearchBean<CmColor>();
 				colorFilterBean.setSearchField("colorId");
 				colorFilterBean.setSearchValue(code.getColorNameDD());
 				searchBeanColor.getDataFilterBeans().add(colorFilterBean);
@@ -785,21 +840,56 @@ public class UnspscCodeBackingBean extends BaseBackingBean<UnspscCodeManagedBean
 				reqDTO.setColorSearchBean(searchBeanColor);
 
 				resDTO = unspscSO.searchColorObj(reqDTO);
-				code.setColorName(resDTO.getColorList().get(0).getColorName());*/
+				code.setColorName(resDTO.getColorList().get(0).getColorName());
+				code.setColorId(code.getColorNameDD());
 
-				code.setColorName(code.getColorNameDD());
 
 			}
 			if(code.getBrandNameDD()!=null){
-				code.setBrandName(code.getBrandNameDD());
+				
+				ISearchBean<CmBrand> searchBeanColor = new SearchBean<CmBrand>();
+				brandFilterBean.setSearchField("brandId");
+				brandFilterBean.setSearchValue(code.getBrandNameDD());
+				searchBeanColor.getDataFilterBeans().add(brandFilterBean);
+
+				reqDTO.setBrandSearchBean(searchBeanColor);
+
+				resDTO = unspscSO.searchBrandObj(reqDTO);
+				
+				code.setBrandName(resDTO.getBrandList().get(0).getBrandName());
+				code.setBrandId(code.getBrandNameDD());
+				
 			}
 
 			if(code.getTypeNameDD()!=null){
-				code.setTypeName(code.getTypeNameDD());
+				
+				ISearchBean<CmType> searchBeanColor = new SearchBean<CmType>();
+				typeFilterBean.setSearchField("typeId");
+				typeFilterBean.setSearchValue(code.getTypeNameDD());
+				searchBeanColor.getDataFilterBeans().add(typeFilterBean);
+
+				reqDTO.setTypeSearchBean(searchBeanColor);
+
+				resDTO = unspscSO.searchTypeObj(reqDTO);
+				
+				
+				code.setTypeName(resDTO.getTypeList().get(0).getTypeName());
+				code.setTypeId(code.getTypeNameDD());
 			}
 
 			if(code.getMeasurementNameDD()!=null){
-				code.setMeasurementName(code.getMeasurementNameDD());
+				
+				ISearchBean<CmMeasurement> searchBeanColor = new SearchBean<CmMeasurement>();
+				measurementFilterBean.setSearchField("measurementId");
+				measurementFilterBean.setSearchValue(code.getMeasurementNameDD());
+				searchBeanColor.getDataFilterBeans().add(measurementFilterBean);
+
+				reqDTO.setMeasurementSearchBean(searchBeanColor);
+
+				resDTO = unspscSO.searchMeasurementObj(reqDTO);
+				
+				code.setMeasurementName(resDTO.getMeasurementList().get(0).getMeasurementName());
+				code.setMeasurementId(code.getMeasurementNameDD());
 			}
 			code.setRequestType(false);
 			code.setRequestColor(false);

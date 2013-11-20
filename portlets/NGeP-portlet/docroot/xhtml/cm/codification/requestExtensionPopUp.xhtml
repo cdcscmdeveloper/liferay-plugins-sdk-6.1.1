@@ -31,11 +31,11 @@
 			<tr>
 				<td><p:outputLabel value="* #{lbl['lbl.cm.type']}" /></td>
 				<td><p:selectOneMenu
-						value="#{unspscCodeBackingBean.managedBean.typeName}">
+						value="#{unspscCodeBackingBean.managedBean.typeId}">
 						<f:selectItem itemLabel="Select One" itemValue="" />
 						<f:selectItems
 							value="#{unspscCodeBackingBean.managedBean.typeList}" var="type"
-							itemLabel="#{type.typeName}" itemValue="#{type.typeName}"></f:selectItems>
+							itemLabel="#{type.typeName}" itemValue="#{type.typeId}"></f:selectItems>
 					</p:selectOneMenu></td>
 				<td><p:selectBooleanCheckbox
 						value="#{unspscCodeBackingBean.managedBean.requestExtCode.requestType}"></p:selectBooleanCheckbox></td>
@@ -46,12 +46,12 @@
 			<tr>
 				<td><p:outputLabel value="* #{lbl['lbl.cm.brand']}" /></td>
 				<td><p:selectOneMenu
-						value="#{unspscCodeBackingBean.managedBean.brandName}">
+						value="#{unspscCodeBackingBean.managedBean.brandId}">
 						<f:selectItem itemLabel="Select One" itemValue="" />
 						<f:selectItems
 							value="#{unspscCodeBackingBean.managedBean.brandList}"
 							var="brand" itemLabel="#{brand.brandName}"
-							itemValue="#{brand.brandName}"></f:selectItems>
+							itemValue="#{brand.brandId}"></f:selectItems>
 					</p:selectOneMenu></td>
 				<td><p:selectBooleanCheckbox
 						value="#{unspscCodeBackingBean.managedBean.requestExtCode.requestBrand}"></p:selectBooleanCheckbox></td>
@@ -62,12 +62,12 @@
 			<tr>
 				<td><p:outputLabel value="* #{lbl['lbl.cm.measurement']}" /></td>
 				<td><p:selectOneMenu
-						value="#{unspscCodeBackingBean.managedBean.measurementName}">
+						value="#{unspscCodeBackingBean.managedBean.measurementId}">
 						<f:selectItem itemLabel="Select One" itemValue="" />
 						<f:selectItems
 							value="#{unspscCodeBackingBean.managedBean.measurementList}"
 							var="measurement" itemLabel="#{measurement.measurementName}"
-							itemValue="#{measurement.measurementName}"></f:selectItems>
+							itemValue="#{measurement.measurementId}"></f:selectItems>
 					</p:selectOneMenu></td>
 				<td><p:selectBooleanCheckbox
 						value="#{unspscCodeBackingBean.managedBean.requestExtCode.requestMeasurement}"></p:selectBooleanCheckbox></td>
@@ -78,11 +78,11 @@
 			<tr>
 				<td><p:outputLabel value="* #{lbl['lbl.cm.color']}" /></td>
 				<td><p:selectOneMenu
-						value="#{unspscCodeBackingBean.managedBean.colorName}">
+						value="#{unspscCodeBackingBean.managedBean.colorId}">
 						<f:selectItem itemLabel="Select One" itemValue="" />
 						<f:selectItems
 							value="#{unspscCodeBackingBean.managedBean.colorList}"
-							var="color" itemLabel="#{color.colorName}"
+							var="color" itemLabel="#{color.colorId}"
 							itemValue="#{color.colorName}"></f:selectItems>
 					</p:selectOneMenu></td>
 				<td><p:selectBooleanCheckbox
