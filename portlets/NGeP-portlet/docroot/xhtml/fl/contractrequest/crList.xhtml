@@ -1,0 +1,67 @@
+<ui:composition
+	template="/WEB-INF/facelets/templates/basic_template.xhtml"
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:ac="http://ac.my/jsf/composite/cc" >
+
+	<ui:define name="resourceSection">
+	</ui:define>
+	<ui:define name="contentSection">
+		<p:tabView id="tabView">
+			<p:tab id="tab1" title="Contract List">
+				<p:panel header="CONTRACT LIST" toggleable="true">
+					<p:dataTable id="contractListTable" var="data" lazy="true"
+						value="#{contractRequestBackingBean.activeContractPagingDataModel}" >
+						<ac:paginator for="contractListTable" />
+						<p:column headerText="Contract No.">
+							<h:outputText value="#{data.contract.contractValue.contractNo}" />
+						</p:column>
+						<p:column headerText="Plan No.">
+							<h:outputText value="#{data.planNo}" />
+						</p:column>
+						<p:column headerText="Schedule/Phase No.">
+							<h:outputText value="#{not empty data.scheduleNo ? data.scheduleNo : data.phase}" />
+						</p:column>
+						<p:column headerText="Circular No.">
+							<h:outputText value="#{data.circularNo}" />
+						</p:column>
+						<p:column headerText="Period(Start)">
+							<h:outputText value="#{data.periodStart}">
+								<f:convertDateTime type="date" pattern="MMM-yyyy"/>
+							</h:outputText>
+						</p:column>
+						<p:column headerText="Period(End)">
+							<h:outputText value="#{data.periodEnd}" >
+								<f:convertDateTime type="date" pattern="MMM-yyyy"/>
+							</h:outputText>
+						</p:column>
+						<p:column headerText="Fulfillment Type">
+							<h:outputText value="#{data.contract.fulfillmentTypeCode.pmCodeDescs[0].codeName}" />
+						</p:column>
+						<p:column headerText="Contract Type">
+							<h:outputText value="#{data.contract.contractTypeCode.pmCodeDescs[0].codeName}" />
+						</p:column>
+						<p:column headerText="EP Unique No.">
+							<h:outputText value="#{data.contract.smSupplier.epNo}" />
+						</p:column>
+						<p:column headerText="Supplier Name">
+							<h:outputText value="#{data.contract.smSupplier.supplierName}" />
+						</p:column>
+						<p:column headerText="Action">
+							<p:commandLink id="crBasepageLink" value="request" oncomplete="procure()" >
+								<f:setPropertyActionListener value="#{data.contract}" target="#{contractRequestBackingBean.managedBean.selectedContract}" />  
+							</p:commandLink>
+						</p:column>
+					</p:dataTable>
+					<p:remoteCommand name="procure" action="#{contractRequestBackingBean.procureContract}" />
+				</p:panel>
+			</p:tab>
+			<p:tab id="tab2" title="Catalogue">
+			</p:tab>
+		</p:tabView>
+	</ui:define>
+</ui:composition>

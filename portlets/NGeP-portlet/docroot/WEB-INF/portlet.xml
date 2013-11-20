@@ -1090,12 +1090,12 @@
 		</security-role-ref>
 	</portlet>
 	<portlet>
-		<portlet-name>FLContractOrderSearch</portlet-name>
-		<display-name>FLContractOrderSearch</display-name>
+		<portlet-name>FLContractRequestList</portlet-name>
+		<display-name>FLContractRequestList</display-name>
 		<portlet-class>org.portletfaces.bridge.GenericFacesPortlet</portlet-class>
 		<init-param>
 			<name>javax.portlet.faces.defaultViewId.view</name>
-			<value>/xhtml/fl/contractordersearch/coSearch.xhtml</value>
+			<value>/xhtml/fl/contractrequest/crList.xhtml</value>
 		</init-param>
 		<expiration-cache>0</expiration-cache>
 		<supports>
@@ -1103,7 +1103,7 @@
 			<portlet-mode>view</portlet-mode>
 		</supports>
 		<portlet-info>
-			<title>FLContractOrderSearch</title>
+			<title>FLContractRequestList</title>
 			<short-title>NewJSFPortlet</short-title>
 			<keywords></keywords>
 		</portlet-info>

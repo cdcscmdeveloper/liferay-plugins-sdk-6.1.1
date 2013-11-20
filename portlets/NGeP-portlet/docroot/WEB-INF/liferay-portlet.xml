@@ -279,7 +279,7 @@
 		<css-class-wrapper>flshippingInst-portlet</css-class-wrapper>
 	</portlet>
 	<portlet>
-		<portlet-name>FLContractOrderSearch</portlet-name>
+		<portlet-name>FLContractRequestList</portlet-name>
 		<icon>/icon.png</icon>
 		<instanceable>false</instanceable>
 		<header-portlet-css>/css/main.css</header-portlet-css>

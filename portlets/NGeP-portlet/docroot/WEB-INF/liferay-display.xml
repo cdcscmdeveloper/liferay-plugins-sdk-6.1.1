@@ -76,7 +76,7 @@
 			<portlet id="FLPurchaseOrder" />
 			<portlet id="FLPurchaseRequest" />
 			<portlet id="FLShippingInstruction" />
-			<portlet id="FLContractOrderSearch" />
+			<portlet id="FLContractRequestList" />
 			<portlet id="FLDocumentSearch" />
 			<portlet id="FLPendingDoList" />
 			<portlet id="FLRequestNoteList" />
