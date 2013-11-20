@@ -31,4 +31,9 @@
 		test='#{tasklistBackingBean.managedBean.taskName eq "Review Application (Escalated)"}'>
 		<ui:include src="#{tasklistBackingBean.managedBean.pageUrl}" />
 	</c:if>
+	
+	<c:if
+		test='#{tasklistBackingBean.managedBean.taskName eq "Review Cancellation"}'>
+		<ui:include src="#{tasklistBackingBean.managedBean.pageUrl}" />
+	</c:if>
 </ui:composition>

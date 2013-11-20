@@ -151,6 +151,10 @@
 		<ui:include src="commonSM.xhtml"></ui:include>
 	</c:if>
 	<c:if
+		test='#{tasklistBackingBean.managedBean.processName eq "MOF Registration Cancellation"}'>
+		<ui:include src="commonSM.xhtml"></ui:include>
+	</c:if>
+	<c:if
 		test='#{tasklistBackingBean.managedBean.processName eq "Processing Officer Manage"}'>
 		<ui:include src="commonSM.xhtml"></ui:include>
 	</c:if>

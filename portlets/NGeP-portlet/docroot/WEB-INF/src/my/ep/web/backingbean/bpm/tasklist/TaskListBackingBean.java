@@ -62,6 +62,7 @@ import my.ep.jaxb.fl.podata.FLPurchaseOrderDataType;
 import my.ep.jaxb.pp.budgetdata.PPBudgetDataType;
 import my.ep.jaxb.pp.plandata.PPPlanDataType;
 import my.ep.jaxb.sm.mofaccmaindata.SMMOFAccMainDataType;
+import my.ep.jaxb.sm.mofregcandata.SMMOFRegCanDataType;
 import my.ep.jaxb.sm.mofregdata.SMMOFRegDataType;
 import my.ep.jaxb.sm.procsofficedata.SMProcsOfficeDataType;
 import my.ep.jaxb.sm.sitevisitdata.SMSiteVisitDataType;
@@ -725,6 +726,29 @@ public class TaskListBackingBean extends BaseBackingBean<TaskListManagedBean> {
 						+ "  and doc type ====>  "
 						+ smApplBB.getManagedBean().getSmAppl()
 								.getSupportingDocMode());
+			}
+		} else if (res.getProcessName().equalsIgnoreCase(
+				"MOF Registration Cancellation")) {
+			System.out
+					.println("**********MOF Registration Cancellation***********"
+							+ taskId);
+			SMMOFRegCanDataType srcObj = (SMMOFRegCanDataType) obj;
+			this.getManagedBean().setTaskName(res.getTaskName());
+			if (res.getTaskName().equalsIgnoreCase("Review Cancellation")) {
+				System.out.println("********Review Cancellation********");
+				System.out.println("********Assign Site Visit APPID********"
+						+ srcObj.getAppId());
+				SmApplicationBackingBean smApplBB = new SmApplicationBackingBean();
+				// TODO Change this impl to get values from DB and set
+				// smSupplier , smAppl of the managedBean
+				smApplBB.proceedToApplication("C");
+				getManagedBean()
+						.setPageUrl(
+								"/xhtml/sm/approverDecisionPages/approverCanRegistration_DescisionPage.xhtml");
+				smApplBB.getManagedBean().getSmAppl()
+						.setApplId(Long.parseLong(srcObj.getAppId()));
+				smApplBB.getManagedBean().setBpmActions(res.getAction());
+				smApplBB.getManagedBean().setTaskId(taskId);
 			}
 		} else if (res.getProcessName().equalsIgnoreCase("Site Visit Manage")) {
 			System.out.println("**********Site Visit Manage***********"
