@@ -146,7 +146,10 @@
 		test='#{tasklistBackingBean.managedBean.processName eq "MOF Supplier Registration"}'>
 		<ui:include src="commonSM.xhtml"></ui:include>
 	</c:if>
-
+	<c:if
+		test='#{tasklistBackingBean.managedBean.processName eq "MOF Account Maintain"}'>
+		<ui:include src="commonSM.xhtml"></ui:include>
+	</c:if>
 	<c:if
 		test='#{tasklistBackingBean.managedBean.processName eq "Processing Officer Manage"}'>
 		<ui:include src="commonSM.xhtml"></ui:include>

@@ -81,7 +81,7 @@
 			<p:commandButton value="Cancel" onclick="svcDialog.hide();" />
 		</div>
 	</p:dialog>
-	<p:dialog width="600px" header="Submit To Approver"
+	<p:dialog width="650px" header="Submit To Approver"
 		widgetVar="submitApprvrDialog" resizable="false" showEffect="fade"
 		hideEffect="fade" modal="true">
 
@@ -89,11 +89,11 @@
 			src="/xhtml/sm/shared/poDecisionSharedPages/submitToApproverForm.xhtml" />
 		<div align="center">
 			<p:commandButton value="Submit" onclick="submitApprvrDialog.hide();"
-				action="#{backingBean.submitPOReviewAction('ESCALATE')}" />
+				action="#{backingBean.submitPOorApproverReviewToBPM('ESCALATE')}" />
 			<p:commandButton value="Cancel" onclick="submitApprvrDialog.hide();" />
 		</div>
 	</p:dialog>
-	<p:dialog width="600px" header="Approve Application"
+	<p:dialog width="650px" header="Approve Application"
 		widgetVar="approveDialog" resizable="false" showEffect="fade"
 		hideEffect="fade" modal="true">
 
@@ -101,11 +101,11 @@
 			src="/xhtml/sm/shared/poDecisionSharedPages/approvedRemarksPopUpForm.xhtml" />
 		<div align="center">
 			<p:commandButton value="Submit" onclick="approveDialog.hide();"
-				action="#{backingBean.submitPOReviewAction('APPROVE')}" />
+				action="#{backingBean.submitPOorApproverReviewToBPM('APPROVE')}" />
 			<p:commandButton value="Cancel" onclick="approveDialog.hide();" />
 		</div>
 	</p:dialog>
-	<p:dialog width="600px" header="Reject Application"
+	<p:dialog width="650px" header="Reject Application"
 		widgetVar="rejectDialog" resizable="false" showEffect="fade"
 		hideEffect="fade" modal="true">
 
@@ -113,7 +113,7 @@
 			src="/xhtml/sm/shared/poDecisionSharedPages/rejectedRemarksPopUpForm.xhtml" />
 		<div align="center">
 			<p:commandButton value="Submit" onclick="rejectDialog.hide();"
-				action="#{backingBean.submitPOReviewAction('REJECT')}" />
+				action="#{backingBean.submitPOorApproverReviewToBPM('REJECT')}" />
 			<p:commandButton value="Cancel" onclick="rejectDialog.hide();" />
 		</div>
 	</p:dialog>

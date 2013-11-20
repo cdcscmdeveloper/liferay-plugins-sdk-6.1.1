@@ -52,35 +52,42 @@
 			</p>
 		</div>
 		<p:separator />
-		<div align="center">
-			<p:splitButton value="-- Select Decision --">
+		<!-- <div align="center">
+			<p:splitButton value="Select Decision">
 				<p:menuitem value="Approve" onclick="approverAppDialog.show();" />
 				<p:menuitem value="Reject" onclick="approverRejDialog.show();" />
 
 			</p:splitButton>
+		</div> -->
+		<div style="width: 100%" align="right">
+			<p:commandButton value="Approve" onclick="approveDialog.show();" />
+			<p:commandButton value="Reject" onclick="rejectDialog.show();" />
+			
 		</div>
 	</p:panel>
 
 
-	<p:dialog width="500px" header="Approve Application"
+	<p:dialog width="650px" header="Approve Application"
 		widgetVar="approverAppDialog" resizable="false" showEffect="fade"
 		hideEffect="fade" modal="true">
 
 		<ui:include
 			src="/xhtml/sm/shared/poDecisionSharedPages/approvedRemarksPopUpForm.xhtml" />
 		<div align="center">
-			<p:commandButton value="Submit" onclick="approverAppDialog.hide();" />
+			<p:commandButton value="Submit" onclick="approverAppDialog.hide();"
+				action="#{backingBean.submitPOorApproverReviewToBPM('APPROVE')}" />
 			<p:commandButton value="Cancel" onclick="approverAppDialog.hide();" />
 		</div>
 	</p:dialog>
-	<p:dialog width="500px" header="Reject Application"
+	<p:dialog width="650px" header="Reject Application"
 		widgetVar="approverRejDialog" resizable="false" showEffect="fade"
 		hideEffect="fade" modal="true">
 
 		<ui:include
 			src="/xhtml/sm/shared/poDecisionSharedPages/rejectedRemarksPopUpForm.xhtml" />
 		<div align="center">
-			<p:commandButton value="Submit" onclick="approverRejDialog.hide();" />
+			<p:commandButton value="Submit" onclick="approverRejDialog.hide();"
+				action="#{backingBean.submitPOorApproverReviewToBPM('REJECT')}" />
 			<p:commandButton value="Cancel" onclick="approverRejDialog.hide();" />
 		</div>
 	</p:dialog>
