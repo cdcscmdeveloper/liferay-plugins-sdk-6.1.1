@@ -102,19 +102,22 @@ public class WishListBackingBean extends BaseBackingBean<WishListManagedBean>{
 		
 	}
 	
-	public void deleteWishListItem(int index){
+	public void deleteFavoriteWishList(int index){
 		
 		IWishListSO wishListSO = (IWishListSO)BusinessDelegate.getInstance().getServiceObject("cm",IWishListSO.class);
 		WishListReqDTO reqDTO = new WishListReqDTO();
 	
-//		this.getManagedBean().getWishList().getCmWishlistDtls().remove(index);
-		this.getManagedBean().getSelectedWishList().getCmWishlistDtls().remove(index);
-//		reqDTO.setCmWishListDet(this.getManagedBean().getWishListDet().get(index));
-		reqDTO.setCmWishlist(this.getManagedBean().getSelectedWishList());
+		CatalogueBackingBean catBB = new CatalogueBackingBean();
+		
+		catBB.getManagedBean().getWishLists().remove(index);
+
+		reqDTO.setCmWishlist(catBB.getManagedBean().getWishLists().get(index));
 		
 		WishListResDTO resDTO = wishListSO.deleteWishListItem(reqDTO);
 		
 	}
+	
+	
 
 
 

@@ -128,7 +128,7 @@
 												<tr>
 													<td style="font-weight: bold; border-bottom: 1px solid">Price
 														(MYR)</td>
-													<td rowspan="2" style="padding-left:5px;"><p:commandLink
+													<td rowspan="2" style="padding-left: 5px;"><p:commandLink
 															action="#{catalogueBackingBean.addToCart}"
 															update=":form:supplierItemViewID">
 															<p:graphicImage
@@ -136,10 +136,10 @@
 														</p:commandLink></td>
 												</tr>
 												<tr>
-													<td><p:outputLabel value="1000.00"></p:outputLabel> </td>
+													<td><p:outputLabel value="1000.00"></p:outputLabel></td>
 													<td></td>
 												</tr>
-												
+
 											</table>
 
 										</td>
@@ -164,9 +164,21 @@
 								<p:dataGrid var="type" rowIndexVar="rowIndex"
 									value="#{catalogueBackingBean.managedBean.wishLists}"
 									columns="1" style="width: 100%;">
-									<p:commandLink value="#{type.wishlistDesc}"
-										update=":form:supplierItemID"
-										action="#{wishListBackingBean.filterWishListType(rowIndex)}" />
+
+
+									<table style="width: 100%;">
+										<tr>
+											<td width="80%"><p:commandLink value="#{type.wishlistDesc}"
+													update=":form:supplierItemID"
+													action="#{wishListBackingBean.filterWishListType(rowIndex)}" /></td>
+											<td><p:commandLink
+													action="#{wishListBackingBean.deleteFavoriteWishList(rowIndex)}"
+													update=":form:supplierItemViewID">
+													<p:graphicImage
+														value="/resources/ep/images/design/trash.png"></p:graphicImage>
+												</p:commandLink></td>
+										</tr>
+									</table>
 								</p:dataGrid>
 							</p:tab>
 						</p:accordionPanel>
@@ -178,14 +190,14 @@
 							<p:tab
 								title="Supplier ( #{fn:length(catalogueBackingBean.managedBean.favoriteSupplierList)} )">
 
-								<table>
+								<table style="width: 100%;">
 									<tr>
 										<td><p:dataGrid var="favor" rowIndexVar="rowIndex"
 												value="#{catalogueBackingBean.managedBean.favoriteSupplierList}"
 												columns="1" style="width: 100%;">
-												<table>
+												<table style="width: 100%;">
 													<tr>
-														<td><p:commandLink value="ABC SDN BHD"
+														<td width="80%"><p:commandLink value="ABC SDN BHD"
 																update=":form:supplierItemID"
 																action="#{favoriteSupplierBackingBean.filterFavoriteSupplierItems(favor.supplierId)}" /></td>
 														<td><p:commandLink
