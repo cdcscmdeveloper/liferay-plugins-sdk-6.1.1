@@ -127,7 +127,7 @@ public class BPMTaskListBackingBean extends BaseBackingBean<BPMTaskListManagedBe
 
 			ExternalContext externalContext = FacesContext.getCurrentInstance().getExternalContext();
 
-			externalContext.redirect("/web/guest/" +url +"?taskId="+taskId);
+			externalContext.redirect("/web/guest/" +url +"?taskId="+taskId+"&loginId="+this.getManagedBean().getTempLoginId());
 			//externalContext.redirect("http://localhost:8080/web/guest/" +url +"?taskId="+taskId);
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
