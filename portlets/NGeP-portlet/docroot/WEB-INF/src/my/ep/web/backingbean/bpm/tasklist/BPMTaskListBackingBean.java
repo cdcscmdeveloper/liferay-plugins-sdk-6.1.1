@@ -24,7 +24,7 @@ import org.apache.log4j.Logger;
 @RequestScoped
 public class BPMTaskListBackingBean extends BaseBackingBean<BPMTaskListManagedBean>{
 
-	private static Logger log = Logger.getLogger(TaskListBackingBean.class);
+	private static Logger log = Logger.getLogger(BPMTaskListBackingBean.class);
 
 	public BPMTaskListBackingBean(){
 		
