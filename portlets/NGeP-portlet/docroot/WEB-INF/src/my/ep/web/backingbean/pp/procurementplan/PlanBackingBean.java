@@ -10,6 +10,7 @@ import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 
+import javax.faces.application.ConfigurableNavigationHandler;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.RequestScoped;
 import javax.faces.context.FacesContext;
@@ -502,6 +503,7 @@ public class PlanBackingBean extends BaseBackingBean<PlanManagedBean>{
 			mtoPlanMaster.setQtType(this.getManagedBean().getPlanMaster().getQtType());
 			mtoPlanMaster.setItemOrigin(ProcurementPlanConst.ITEM_ORIGIN_TYPE_IMPORTED);
 			mtoPlanMaster.setRequiredMto(true);
+			mtoPlanMaster.setPlanType(ProcurementPlanConst.PLAN_TYPE_PROCUREMENT);
 			
 			//Plan Approver
 			PpPlanActor approver = new PpPlanActor();
@@ -639,8 +641,9 @@ public class PlanBackingBean extends BaseBackingBean<PlanManagedBean>{
 	 */
 	public void updateMtoFlag(){
 		log.info("updateMtoFlag - Start");
+		System.out.println("xxx " +  this.getManagedBean().getSelectedPlanMaster().getRequiredMto());
 		if(ProcurementPlanConst.PLAN_TYPE_PROCUREMENT.equals(this.getManagedBean().getSelectedPlanMaster().getPlanType())
-				&& this.getManagedBean().getSelectedPlanMaster().isRequiredMto()
+				&& this.getManagedBean().getSelectedPlanMaster().getRequiredMto()
 				&& (ProcurementPlanConst.ITEM_ORIGIN_TYPE_IMPORTED.equals(this.getManagedBean().getSelectedPlanMaster().getItemOrigin())
 						|| ProcurementPlanConst.ITEM_ORIGIN_TYPE_BOTH.equals(this.getManagedBean().getSelectedPlanMaster().getItemOrigin()))){
 			
@@ -665,15 +668,11 @@ public class PlanBackingBean extends BaseBackingBean<PlanManagedBean>{
 		boolean result = true;
 		if(CommonMethod.isSelected(this.getManagedBean().getSelectedPlanMaster().getItemOrigin())
 				&& !ProcurementPlanConst.ITEM_ORIGIN_TYPE_LOCAL.equals(this.getManagedBean().getSelectedPlanMaster().getItemOrigin())
-				&& this.getManagedBean().getSelectedPlanMaster().isBrandNew()){
+				&& this.getManagedBean().getSelectedPlanMaster().isBrandNew() && !this.getManagedBean().getSelectedPlanMaster().isMtoPlan()){
+			System.out.println("requiredMto " + this.getManagedBean().getSelectedPlanMaster().getRequiredMto());
 					result = false;
 		}
 		
-//		if((this.getManagedBean().getSelectedPlanMaster().getItemOrigin()!=null 
-//				&& !ProcurementPlanConst.ITEM_ORIGIN_TYPE_LOCAL.equals(this.getManagedBean().getSelectedPlanMaster().getItemOrigin())) 
-//				&& this.getManagedBean().getSelectedPlanMaster().isBrandNew()){
-//			
-//		}
 		log.info("lockMto - End");
 		return result;
 	}
@@ -712,7 +711,16 @@ public class PlanBackingBean extends BaseBackingBean<PlanManagedBean>{
 		
 		log.info("updateCurrentView - End");
 	}
-	
+//	
+//	public void test(){
+//		System.out.println("new ");
+//		System.out.println("requiredMto " + this.getManagedBean().getPlanMaster().getRequiredMto());
+//		System.out.println("submissionType " + this.getManagedBean().getPlan().getSubmissionType());
+//		
+//		System.out.println("mto ");
+//		System.out.println("requiredMto " + this.getManagedBean().getMtoPlanMaster().getRequiredMto());
+//		System.out.println("submissionType " + this.getManagedBean().getMtoPlan().getSubmissionType());
+//	}
 	/**
 	 * add remark to pp plan level
 	 */
@@ -1204,7 +1212,7 @@ public class PlanBackingBean extends BaseBackingBean<PlanManagedBean>{
 		List<PmOrgProfile> options = new ArrayList<PmOrgProfile>();
 		
 		if(this.getManagedBean().getSelectedPlanMaster()!=null && this.getManagedBean().getSelectedPlanMaster().getOrgProfile()!=null){
-			System.out.println("rain......");
+			
 			Long orgProfileId = this.getManagedBean().getSelectedPlanMaster().getOrgProfile().getParentOrgProfile().getParentOrgProfile().getOrgProfileId();
 			OrgProfileReqDTO reqDTO = new OrgProfileReqDTO();
 			reqDTO.setParentOrgProfileId(orgProfileId);
@@ -1214,6 +1222,7 @@ public class PlanBackingBean extends BaseBackingBean<PlanManagedBean>{
 			OrgProfileResDTO resDTO = orgProfileSO.retrieveOrgProfileListByOrgType(reqDTO);
 	//		if(resDTO.isSuccessful()){
 				options = resDTO.getOrgProfileList();
+				System.out.println("rain......" + resDTO.getOrgProfileList().size());
 	//		}
 		}
 		log.info("departmentOptions - End");
@@ -2058,6 +2067,7 @@ public class PlanBackingBean extends BaseBackingBean<PlanManagedBean>{
 		
 		log.info("getCompletePlanMaster - Start");
 		try{
+			System.out.println("plan item size: " +this.getManagedBean().getPlan().getPpPlanItems().size());
 
 			//getting only selected task activities
 			List <PpQtActivity> planActivities = this.getManagedBean().getPlan().getAllPpQtActivities();
@@ -2140,7 +2150,7 @@ public class PlanBackingBean extends BaseBackingBean<PlanManagedBean>{
 				
 	
 			//for PP
-			}else if(ProcurementPlanConst.PLAN_TYPE_PROCUREMENT.equals(this.getManagedBean().getSelectedPlanMaster().getPlanType())){
+			}else if(ProcurementPlanConst.PLAN_TYPE_PROCUREMENT.equals(this.getManagedBean().getPlanMaster().getPlanType())){
 				//only one plan
 				if(this.getManagedBean().getPlanMaster().isBrandNew()){
 					this.getManagedBean().getPlan().setTempPlanNo(CommonMethod.generatePlanNumber(true, this.getManagedBean().getPlanMaster().getPlanType(), null));
@@ -2148,6 +2158,7 @@ public class PlanBackingBean extends BaseBackingBean<PlanManagedBean>{
 				}
 				
 				if(this.getManagedBean().isEnableMto()){
+					System.out.println("plan item size: " +this.getManagedBean().getMtoPlan().getPpPlanItems().size());
 					List <PpQtActivity> mtoActivities = this.getManagedBean().getMtoPlan().getAllPpQtActivities();
 					this.getManagedBean().getMtoPlan().setPpQtActivities(new ArrayList<PpQtActivity>());
 					for(PpQtActivity act:mtoActivities){
@@ -2251,6 +2262,7 @@ public class PlanBackingBean extends BaseBackingBean<PlanManagedBean>{
 			reqDTO.setAction(action);
 			reqDTO.setTaskId(this.getManagedBean().getBpmTaskId());
 			reqDTO.setPlanMaster(this.getManagedBean().getPlanMaster());
+			System.out.println("this.getManagedBean().getLoginUser() " + this.getManagedBean().getLoginUser()); 
 			reqDTO.setLoginUser(this.getManagedBean().getLoginUser());
 			
 			IProcurementPlanSO procurementPlanSO = (IProcurementPlanSO) BusinessDelegate.getInstance().getServiceObject(ProcurementPlanConst.SO_PP, IProcurementPlanSO.class);
@@ -2354,46 +2366,49 @@ public class PlanBackingBean extends BaseBackingBean<PlanManagedBean>{
 		return ProcurementPlanConst.NAV_TO_PLAN_DET;
 	}
 	
-	
-	private void loadBpmTask(){
-		BPMTaskListBackingBean bb = new BPMTaskListBackingBean();
-		  HttpServletRequest servletRequest = PortalUtil.getHttpServletRequest(new FacesScopes().getRequest());
-		  HttpServletRequest originalServletRequest = PortalUtil.getOriginalServletRequest(servletRequest);
-		  String taskId = originalServletRequest.getParameter("taskId");
-		  System.out.println("taskId:"+taskId);
+	public void preRenderView() {
+		log.info("preRenderView - Start");
+//		BPMTaskListBackingBean bb = new BPMTaskListBackingBean();
+		HttpServletRequest servletRequest = PortalUtil
+				.getHttpServletRequest(new FacesScopes().getRequest());
+		HttpServletRequest originalServletRequest = PortalUtil
+				.getOriginalServletRequest(servletRequest);
+		String taskId = originalServletRequest.getParameter("taskId");
+		String loginId = originalServletRequest.getParameter("loginId");
+		System.out.println("taskId:" + taskId);
+		System.out.println("loginId:" + loginId);
 
-		  IBpmSO bpmSO = (IBpmSO) EpBpmBusinessDelegate.getInstance().getServiceObject(IBpmSO.class);
-		  String ctx = bpmSO.authenticate(bb.getManagedBean().getTempLoginId(),"welcome1");
-		  BpmRequestDTO reqDTO = new BpmRequestDTO();
+		IBpmSO bpmSO = (IBpmSO) EpBpmBusinessDelegate.getInstance()
+				.getServiceObject(IBpmSO.class);
+		String ctx = bpmSO.authenticate(loginId,"welcome1");
+		BpmRequestDTO reqDTO = new BpmRequestDTO();
+
+		reqDTO.setCtxToken(ctx);
+		reqDTO.setTaskId(taskId);
+		BpmResponseDTO res = bpmSO.getTaskDetails(reqDTO);
+		Object obj = res.getPojo();
 
 
-		  reqDTO.setCtxToken(ctx);
-		  reqDTO.setTaskId(taskId);
-		  BpmResponseDTO res = bpmSO.getTaskDetails(reqDTO);
-		  Object obj = res.getPojo();
-		  
-		  
-		  /////////////////////////
-		//Procurement Plan - Plan
-		PPPlanDataType planObj = (PPPlanDataType)obj;
-		
+		// Procurement Plan - Plan
+		PPPlanDataType planObj = (PPPlanDataType) obj;
+
 		ProcurementPlanReqDTO planReqDTO = new ProcurementPlanReqDTO();
 		planReqDTO.setPlanId(planObj.getPlanId().longValue());
-		IProcurementPlanSO planSO = (IProcurementPlanSO) BusinessDelegate.getInstance().getServiceObject("pp", IProcurementPlanSO.class);
+		IProcurementPlanSO planSO = (IProcurementPlanSO) BusinessDelegate
+				.getInstance().getServiceObject("pp", IProcurementPlanSO.class);
 		ProcurementPlanResDTO planResDTO = planSO.retrievePlanById(planReqDTO);
 
 		PlanBackingBean planBB = new PlanBackingBean();
-		planBB.getManagedBean().setLoginUser(bb.getManagedBean().getTempLoginId());
+//		System.out.println("loadbpm " + bb.getManagedBean().getTempLoginId());
+		planBB.getManagedBean().setLoginUser(loginId);
 		planBB.getManagedBean().setBpmTaskId(taskId);
 		planBB.getManagedBean().setActions(res.getAction());
 		planBB.loadTask(planResDTO.getPlan(), res.getTaskName());
-	}
-	
-	public void preRenderView(){
-		if(!ProcurementPlanConst.MODE_NEW.equals(this.getManagedBean().getViewMode())
-				&& !ProcurementPlanConst.MODE_DRAFT.equals(this.getManagedBean().getViewMode())){
-			loadBpmTask();
-		}
-		
+		log.info("preRenderView - End");
+
+
+		FacesContext fc = FacesContext.getCurrentInstance();
+	    fc.getApplication().getNavigationHandler().handleNavigation(fc, null, ProcurementPlanConst.NAV_TO_PLAN_DET);
+
 	}
 }

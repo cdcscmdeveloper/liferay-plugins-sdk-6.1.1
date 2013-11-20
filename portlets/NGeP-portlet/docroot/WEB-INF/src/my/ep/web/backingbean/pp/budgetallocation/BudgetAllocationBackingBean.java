@@ -826,53 +826,57 @@ public class BudgetAllocationBackingBean extends BaseBackingBean<BudgetAllocatio
 		return budgetList;
 	}
 	
-	/**
-	 * redirect from task list
-	 */
-	private void loadBpmTask(){
-		BPMTaskListBackingBean bb = new BPMTaskListBackingBean();
-		  HttpServletRequest servletRequest = PortalUtil.getHttpServletRequest(new FacesScopes().getRequest());
-		  HttpServletRequest originalServletRequest = PortalUtil.getOriginalServletRequest(servletRequest);
-		  String taskId = originalServletRequest.getParameter("taskId");
-		  System.out.println("taskId:"+taskId);
-
-		  IBpmSO bpmSO = (IBpmSO) EpBpmBusinessDelegate.getInstance().getServiceObject(IBpmSO.class);
-		  String ctx = bpmSO.authenticate(bb.getManagedBean().getTempLoginId(),"welcome1");
-		  BpmRequestDTO reqDTO = new BpmRequestDTO();
-
-
-		  reqDTO.setCtxToken(ctx);
-		  reqDTO.setTaskId(taskId);
-		  BpmResponseDTO res = bpmSO.getTaskDetails(reqDTO);
-		  Object obj = res.getPojo();
-		  
-		  
-		//Procurement Plan - Budget
-		PPBudgetDataType budgetObj = (PPBudgetDataType)obj;
-		
-		BudgetAllocationReqDTO budgetReqDTO = new BudgetAllocationReqDTO();
-		budgetReqDTO.setBudgetAllocId(budgetObj.getBudgetId().longValue());
-		IBudgetAllocationSO budgetSO = (IBudgetAllocationSO) BusinessDelegate.getInstance().getServiceObject("pp", IBudgetAllocationSO.class);
-		BudgetAllocationResDTO budgetResSO = budgetSO.retrieveBudgetAllocation(budgetReqDTO);
-
-		BudgetAllocationBackingBean budgetBB = new BudgetAllocationBackingBean();
-		budgetBB.getManagedBean().setLoginUser(bb.getManagedBean().getTempLoginId());
-		budgetBB.getManagedBean().setBpmTaskId(taskId);
-		budgetBB.getManagedBean().setActions(res.getAction());
-		budgetBB.loadTask(budgetResSO.getBudgetAlloc(), res.getTaskName());
-	}
 	
 	/**
 	 * pre-render for the budget alloation content page
 	 */
-	public void preRenderView(){
-		if(!ProcurementPlanConst.MODE_NEW.equals(this.getManagedBean().getViewMode())
-				&& !ProcurementPlanConst.MODE_DRAFT.equals(this.getManagedBean().getViewMode())){
-			loadBpmTask();
-		}
-		
-	}
+	public void preRenderView() {
+		try{
+			BPMTaskListBackingBean bb = new BPMTaskListBackingBean();
+			HttpServletRequest servletRequest = PortalUtil
+					.getHttpServletRequest(new FacesScopes().getRequest());
+			HttpServletRequest originalServletRequest = PortalUtil
+					.getOriginalServletRequest(servletRequest);
+			String taskId = originalServletRequest.getParameter("taskId");
+			System.out.println("taskId:" + taskId);
 	
+			IBpmSO bpmSO = (IBpmSO) EpBpmBusinessDelegate.getInstance()
+					.getServiceObject(IBpmSO.class);
+			String ctx = bpmSO.authenticate(bb.getManagedBean().getTempLoginId(),
+					"welcome1");
+			BpmRequestDTO reqDTO = new BpmRequestDTO();
+	
+			reqDTO.setCtxToken(ctx);
+			reqDTO.setTaskId(taskId);
+			BpmResponseDTO res = bpmSO.getTaskDetails(reqDTO);
+			Object obj = res.getPojo();
+	
+			// Procurement Plan - Budget
+			PPBudgetDataType budgetObj = (PPBudgetDataType) obj;
+	
+			BudgetAllocationReqDTO budgetReqDTO = new BudgetAllocationReqDTO();
+			budgetReqDTO.setBudgetAllocId(budgetObj.getBudgetId().longValue());
+			IBudgetAllocationSO budgetSO = (IBudgetAllocationSO) BusinessDelegate
+					.getInstance()
+					.getServiceObject("pp", IBudgetAllocationSO.class);
+			BudgetAllocationResDTO budgetResSO = budgetSO
+					.retrieveBudgetAllocation(budgetReqDTO);
+	
+			BudgetAllocationBackingBean budgetBB = new BudgetAllocationBackingBean();
+			budgetBB.getManagedBean().setLoginUser(
+					bb.getManagedBean().getTempLoginId());
+			budgetBB.getManagedBean().setBpmTaskId(taskId);
+			budgetBB.getManagedBean().setActions(res.getAction());
+			budgetBB.loadTask(budgetResSO.getBudgetAlloc(), res.getTaskName());
+			
+			 
+		    FacesContext fc = FacesContext.getCurrentInstance();
+		    fc.getApplication().getNavigationHandler().handleNavigation(fc, null, ProcurementPlanConst.NAV_TO_BUDGET_ALLOCATION);
+		}catch(Exception e){
+			e.printStackTrace();
+		}
+
+	}
 	
 	
 //	
