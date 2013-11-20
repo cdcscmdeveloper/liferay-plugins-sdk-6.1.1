@@ -7,14 +7,14 @@
 	xmlns:c="http://java.sun.com/jsp/jstl/core">
 	
 	<p:panel>
-		<p:panelGrid style="width:100%;" styleClass="noBorders tr,noBorders td" ></p:panelGrid>
-</p:panel>
+		<h:panelGrid style="width:1000px;" styleClass="noBorders tr,noBorders td" ></h:panelGrid>
+    </p:panel>
 	
 	<p:panel header="Search Qtn/Tender" toggleable="true">
 	
 	<p:panelGrid columns="4" style="width:100%;" styleClass="noBorders tr,noBorders td">
 	
-	<h:outputText value="Ministry: "></h:outputText>
+	<h:outputText value="Ministry"></h:outputText>
 
 	 <p:selectOneMenu style ="width:40%;" value="#{searchQtnTenderBB.managedBean.selectOption}">  
             <f:selectItem itemLabel="Select One" itemValue="" />  
@@ -24,7 +24,7 @@
             <f:selectItem itemLabel="Finance minister" itemValue="1" />               
      </p:selectOneMenu>
      
-	<h:outputText value="Jabatan: "></h:outputText>
+	<h:outputText value="Department"></h:outputText>
 
 	 <p:selectOneMenu style ="width:40%;" value="#{searchQtnTenderBB.managedBean.selectOption}">  
             <f:selectItem itemLabel="Select One" itemValue="" />  
@@ -34,7 +34,7 @@
             <f:selectItem itemLabel="JPA" itemValue="4" />               
      </p:selectOneMenu>       
      
-	<h:outputText value="PTJ: "></h:outputText>
+	<h:outputText value="Division"></h:outputText>
 
 	 <p:selectOneMenu style ="width:40%;" value="#{searchQtnTenderBB.managedBean.selectOption}">  
             <f:selectItem itemLabel="Select One" itemValue="" />  
@@ -92,34 +92,27 @@
 	    <p:tabView id="tabView" dynamic="true" cache="true">  
   
         <p:tab id="tba1" title="Publish">  
-            <h:panelGrid columns="2" cellpadding="10">    
-            </h:panelGrid>  
+			<ui:include src="/xhtml/ss/notice/tenderSubCategory.xhtml" /> 
         </p:tab>  
   
         <p:tab id="tab2" title="Changes">  
-            <h:panelGrid columns="2" cellpadding="10">    
-            </h:panelGrid>  
+			<ui:include src="/xhtml/ss/notice/tenderSubCategory.xhtml" />
         </p:tab>  
   
         <p:tab id="tab3" title="Closed">  
-            <h:panelGrid columns="2" cellpadding="10">    
-            </h:panelGrid>  
+			<ui:include src="/xhtml/ss/notice/tenderSubCategory.xhtml" /> 
         </p:tab>
         
         <p:tab id="tab4" title="Price Schedule">  
-            <h:panelGrid columns="2" cellpadding="10">   
-            </h:panelGrid>  
+			<ui:include src="/xhtml/ss/notice/tenderSubCategory.xhtml" />
         </p:tab> 
         
         <p:tab id="tab5" title="Awarded">  
-            <h:panelGrid columns="2" cellpadding="10">    
-            </h:panelGrid>  
+       	 	<ui:include src="/xhtml/ss/notice/tenderSubCategory.xhtml" />  
         </p:tab>                   
   
     </p:tabView> 
 	</p:panel>
-	
-<ui:include src="/xhtml/ss/notice/tenderSubCategory.xhtml" />
 
 	<p:panel header="Qtn/Tender Summary" toggleable="true">
 	<p:dataTable value="" var="" resizableColumns="true" editable="true">
@@ -138,11 +131,11 @@
         </p:column>          
          
          <p:column headerText="Publishing Date" >  
-           <p:calendar value="#{searchQtnTenderBB.managedBean.date}" id="publdate" showOn="button" />
+           <h:outputText value="13/4/2013" />
         </p:column>
         
          <p:column headerText="Closing Date" >  
-           <p:calendar value="#{searchQtnTenderBB.managedBean.date}" id="closdate" showOn="button" />
+           <h:outputText value="20/5/2013" />
         </p:column>
         
          <p:column headerText="Countdown" >  

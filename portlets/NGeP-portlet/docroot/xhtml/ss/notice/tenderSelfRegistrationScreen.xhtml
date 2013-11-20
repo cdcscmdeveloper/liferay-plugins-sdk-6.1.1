@@ -12,7 +12,7 @@
 	
 	<p:panel header="Supplier Self Registration" toggleable="true">
 	
-	<p:panelGrid columns="2" style="width:50%;" styleClass="noBorders tr,noBorders td">
+	<p:panelGrid columns="2" style="width:100%;" styleClass="noBorders tr,noBorders td">
 	
 	<h:outputText value="Briefing Same As Site Visit : "></h:outputText>
 	  <h:inputText value="Yes" />
@@ -26,16 +26,16 @@
 	<p:panel header="Briefing Details" toggleable="true">
 	<p:dataTable value="" var="" resizableColumns="true">
         
-		<p:column headerText="CheckBox" style="width:10%" >
+		<p:column headerText="CheckBox" style="width:2%" >
 			<h:selectBooleanCheckbox value="1"  > 
 		    </h:selectBooleanCheckbox>
 	    </p:column>
        
-        <p:column headerText="No" style="width:10%"> 
+        <p:column headerText="No" style="width:2%"> 
              <h:outputText value="1" />  
         </p:column>          
          
-        <p:column headerText="Briefing Description" style="width:20%"> 
+        <p:column headerText="Description" style="width:20%"> 
              <h:outputText value="abcdefghi" />  
         </p:column>
         
@@ -51,8 +51,8 @@
              <h:outputText value="Officer A" />  
         </p:column>
         
-        <p:column headerText="Attendance" style="width:10%"> 
-             <h:outputText value="Attend" />  
+        <p:column headerText="Zone" style="width:10%"> 
+             <h:outputText value="Zone Name" />  
         </p:column>   
                 
     </p:dataTable>
