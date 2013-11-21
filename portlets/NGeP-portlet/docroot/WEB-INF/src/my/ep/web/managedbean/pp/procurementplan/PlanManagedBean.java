@@ -8,6 +8,7 @@ import java.util.List;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
 
+import my.ep.jaxb.pp.plandata.PPPlanDataType;
 import my.ep.persistence.entity.pm.authorization.PmOrgProfile;
 import my.ep.persistence.entity.pp.PpRemark;
 import my.ep.persistence.entity.pp.budgetallocation.PpBudgetAllocDtl;
@@ -77,7 +78,7 @@ public class PlanManagedBean extends BaseManagedBean{
 	private String selectedTab;
 	
 	private boolean reasonRejectOther;
-
+	
 	private Long tempId; //temp
 	
 	private String actionDesc; // temp
@@ -662,8 +663,6 @@ public class PlanManagedBean extends BaseManagedBean{
 	public void setPpSearchPlan(ProcurementPlanSearchBean ppSearchPlan) {
 		this.ppSearchPlan = ppSearchPlan;
 	}
-
-
 
 
 
