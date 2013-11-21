@@ -78,15 +78,12 @@
 						#{ext.itemDetail}
 					</p:column>
 
-				<f:facet name="footer">
-					<div style="text-align: right;">
-						<p:commandButton value="Add" icon="ui-icon-add"
-							action="#{unspscCodeBackingBean.addMoreRequest}"
-							update=":form:requestExtPopUpId" onclick="extensionPopUp.show()"></p:commandButton>
-					</div>
-				</f:facet>
 			</p:dataTable>
-
+			<div style="text-align: right;">
+				<p:commandButton value="Add" icon="ui-icon-add"
+					action="#{unspscCodeBackingBean.addMoreRequest}"
+					update=":form:requestExtPopUpId" onclick="extensionPopUp.show()"></p:commandButton>
+			</div>
 
 
 			<p:dialog id="extensionDialog" widgetVar="extensionPopUp"
