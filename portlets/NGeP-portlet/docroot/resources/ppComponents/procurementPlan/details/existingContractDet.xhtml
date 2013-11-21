@@ -102,7 +102,7 @@ xmlns:c="http://java.sun.com/jsp/jstl/core">
 									<f:selectItem itemLabel="#{lbl['lbl.select']}" itemValue="#{null}"/>
 									<f:selectItems value="#{planBackingBean.cicularContractOptions(planBackingBean.managedBean.selectedPlanItem.circularId)}" 
 										var="obj" itemLabel="#{obj.ctContract.contractValue.contractNo}" itemValue="#{obj.ctContract.contractId}"/>
-									<p:ajax event="change" listener="#{planBackingBean.selectedContract()}" update="opDuration, opSupId, opSupName" />
+									<p:ajax event="change" listener="#{planBackingBean.selectedContract()}" update="opDuration, opSupId, opSupName, opStartMonth" />
 								</p:selectOneMenu>
 							</p:outputPanel>
 							<p:outputPanel rendered="#{planBackingBean.managedBean.selectedPlanItem.contractInd!=PPConst.contractIndPkp}">
@@ -113,7 +113,7 @@ xmlns:c="http://java.sun.com/jsp/jstl/core">
 									<f:selectItem itemLabel="#{lbl['lbl.select']}" itemValue="#{null}"/>
 									<f:selectItems value="#{planBackingBean.contractOptions(planBackingBean.managedBean.selectedPlanItem.contractType)}"
 										var="obj" itemLabel="#{obj.contractValue.contractNo}" itemValue="#{obj.contractId}"/>
-									<p:ajax event="change" listener="#{planBackingBean.selectedContract()}" update="opDuration, opSupId, opSupName" />
+									<p:ajax event="change" listener="#{planBackingBean.selectedContract()}" update="opDuration, opSupId, opSupName, opStartMonth" />
 								</p:selectOneMenu>
 							</p:outputPanel>
 						</td>
@@ -122,23 +122,26 @@ xmlns:c="http://java.sun.com/jsp/jstl/core">
 								lbl['lbl.pp.planned.activity.startdate'] : lbl['lbl.pp.planned.activity.startmonth']}" />
 						</th>
 						<td>
+							<p:outputPanel id="opStartMonth">
 							<p:calendar showOn="button" value="#{planBackingBean.managedBean.selectedPlanItem.planStartDate}" 
 								rendered="#{cc.attrs.selectedPlanMaster.fulfilmentType==PPConst.fulfillmentSchedule}" pattern="#{PPConst.dateDisplayPattern}" 
 				             	disabled="#{planBackingBean.managedBean.selectedPlanItem.ctContract.contractId==null 
-				             	 	(!planBackingBean.managedBean.selectedPlanItem.brandNew 
+				             	 	|| (!planBackingBean.managedBean.selectedPlanItem.brandNew 
 				             		&amp;&amp; !planBackingBean.managedBean.selectedPlanItem.editable)}">
 				             	<p:ajax event="dateSelect" update="opEndDate" listener="#{planBackingBean.calculatePlanEndDate()}"  />              	
 	             				<p:ajax event="change" update="opEndDate" listener="#{planBackingBean.calculatePlanEndDate()}" />
 				             </p:calendar>
 							<p:selectOneMenu rendered="#{cc.attrs.selectedPlanMaster.fulfilmentType!=PPConst.fulfillmentSchedule}"
 								value="#{planBackingBean.managedBean.selectedPlanItem.planStartMonth}"
-							 	disabled="#{planBackingBean.managedBean.selectedPlanItem.ctContract.contractId==null || (!planBackingBean.managedBean.selectedPlanItem.brandNew 
+							 	disabled="#{planBackingBean.managedBean.selectedPlanItem.ctContract.contractId==null 
+							 		|| (!planBackingBean.managedBean.selectedPlanItem.brandNew 
 				             		&amp;&amp; !planBackingBean.managedBean.selectedPlanItem.editable)}">
 								<f:selectItem itemLabel="#{lbl['lbl.select']}" itemValue="12"/>
 								<f:selectItems value="#{planBackingBean.shortMonths()}"/>
 								<p:ajax event="change" update="opEndDate"
 								 listener="#{planBackingBean.calculatePlanEndDate()}"/>
 							</p:selectOneMenu>
+							</p:outputPanel>
 						</td>
 						
 					</tr>

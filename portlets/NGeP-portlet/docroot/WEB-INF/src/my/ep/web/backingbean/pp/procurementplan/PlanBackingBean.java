@@ -10,7 +10,6 @@ import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 
-import javax.faces.application.ConfigurableNavigationHandler;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.RequestScoped;
 import javax.faces.context.FacesContext;
@@ -89,7 +88,6 @@ import my.ep.type.pm.OrganizationType;
 import my.ep.type.pm.ReasonCategory;
 import my.ep.util.lookupservice.EpBpmBusinessDelegate;
 import my.ep.web.backingbean.BaseBackingBean;
-import my.ep.web.backingbean.bpm.tasklist.BPMTaskListBackingBean;
 import my.ep.web.bean.pp.ProcurementPlanSearchBean;
 import my.ep.web.constant.BpmOutcomeConst;
 import my.ep.web.constant.pp.ProcurementPlanConst;
@@ -110,11 +108,13 @@ public class PlanBackingBean extends BaseBackingBean<PlanManagedBean>{
 	private static Logger log = Logger.getLogger(PlanBackingBean.class);
 	private final static Long USER_ID_PTJ= 4L; //TEMP
 
+//	private IPagingDataModel<PpPlan> planDataModel = new PlanPagingDataModel();
+	
 	
 	/**
 	 * search plan
 	 */
-	public void searchPlan(){
+	public void searchPlan(boolean defaultMode){
 		log.info("planSearch - Start");
 		
 		List<PpPlan> planList = new ArrayList<PpPlan>();
@@ -124,49 +124,57 @@ public class PlanBackingBean extends BaseBackingBean<PlanManagedBean>{
 		
 		ISearchBean<PpPlan> searchBean = new SearchBean<PpPlan>();
 		
-		if(ppSearchBean.getStatus()!=null && CommonMethod.isSelected(ppSearchBean.getStatus())){
-			log.info("+ status " + ppSearchBean.getStatus());
-			SearchFilterBean bean = new SearchFilterBean();
-			bean.setSearchField("pmStatus.statusId");
-			bean.setSearchOperator(SearchOperator.OPERATOR_EQUALS.value());
-			bean.setSearchValue(ppSearchBean.getStatus());
-			searchBean.getDataFilterBeans().add(bean);
-		}
-		if(ppSearchBean.getPlanNo()!=null && CommonMethod.isSelected(ppSearchBean.getPlanNo())){
-			log.info("+ planNo " + ppSearchBean.getPlanNo());
-			SearchFilterBean bean = new SearchFilterBean();
-			bean.setSearchField("planNo");
-			bean.setSearchOperator(SearchOperator.OPERATOR_LIKE.value());
-			bean.setSearchValue(ppSearchBean.getPlanNo());
-			searchBean.getDataFilterBeans().add(bean);
-		}
-		if(ppSearchBean.getPlanDesc()!=null && CommonMethod.isSelected(ppSearchBean.getPlanDesc())){
-			log.info("+ getPlanDesc " + ppSearchBean.getPlanDesc());
-			SearchFilterBean bean = new SearchFilterBean();
-			bean.setSearchField("planDesc");
-			bean.setSearchOperator(SearchOperator.OPERATOR_LIKE.value());
-			bean.setSearchValue(ppSearchBean.getPlanDesc());
-			searchBean.getDataFilterBeans().add(bean);
-		}
-		if(ppSearchBean.getProcurementMode()!=null && CommonMethod.isSelected(ppSearchBean.getProcurementMode())){
-			log.info("+ getProcurementMode " + ppSearchBean.getProcurementMode());
-			SearchFilterBean bean = new SearchFilterBean();
-			bean.setSearchField("ppPlanMaster.procurementMode");
-			bean.setSearchOperator(SearchOperator.OPERATOR_LIKE.value());
-			bean.setSearchValue(ppSearchBean.getProcurementMode());
-			searchBean.getDataFilterBeans().add(bean);
-		}
-		if(ppSearchBean.getFromDate()!=null && ppSearchBean.getToDate()!=null){
-			log.info("+ createDate " + ppSearchBean.getFromDate() + " - " + ppSearchBean.getToDate());
-			SearchFilterBean bean = new SearchFilterBean();
-			bean.setSearchField("createdDate");
-			bean.setSearchOperator(SearchOperator.OPERATOR_BETWEEN.value());
-			SearchBetweenValue<Date> betweenVal = new SearchBetweenValue<Date>(
-					ppSearchBean.getFromDate(), ppSearchBean.getToDate());
-			bean.setSearchValue(betweenVal);
-			searchBean.getDataFilterBeans().add(bean);
-		}
+		//filter by profile
+		SearchFilterBean defaultBean = new SearchFilterBean();
+		defaultBean.setSearchField("ppPlanMaster.orgProfileId");
+		defaultBean.setSearchOperator(SearchOperator.OPERATOR_EQUALS.value());
+		defaultBean.setSearchValue(this.getManagedBean().getCurrentUser().getOrgProfileId());
+		searchBean.getDataFilterBeans().add(defaultBean);
 		
+		if(!defaultMode){
+			if(ppSearchBean.getStatus()!=null && CommonMethod.isSelected(ppSearchBean.getStatus())){
+				log.info("+ status " + ppSearchBean.getStatus());
+				SearchFilterBean bean = new SearchFilterBean();
+				bean.setSearchField("pmStatus.statusId");
+				bean.setSearchOperator(SearchOperator.OPERATOR_EQUALS.value());
+				bean.setSearchValue(ppSearchBean.getStatus());
+				searchBean.getDataFilterBeans().add(bean);
+			}
+			if(ppSearchBean.getPlanNo()!=null && CommonMethod.isSelected(ppSearchBean.getPlanNo())){
+				log.info("+ planNo " + ppSearchBean.getPlanNo());
+				SearchFilterBean bean = new SearchFilterBean();
+				bean.setSearchField("planNo");
+				bean.setSearchOperator(SearchOperator.OPERATOR_LIKE.value());
+				bean.setSearchValue(ppSearchBean.getPlanNo());
+				searchBean.getDataFilterBeans().add(bean);
+			}
+			if(ppSearchBean.getPlanDesc()!=null && CommonMethod.isSelected(ppSearchBean.getPlanDesc())){
+				log.info("+ getPlanDesc " + ppSearchBean.getPlanDesc());
+				SearchFilterBean bean = new SearchFilterBean();
+				bean.setSearchField("planDesc");
+				bean.setSearchOperator(SearchOperator.OPERATOR_LIKE.value());
+				bean.setSearchValue(ppSearchBean.getPlanDesc());
+				searchBean.getDataFilterBeans().add(bean);
+			}
+			if(ppSearchBean.getProcurementMode()!=null && CommonMethod.isSelected(ppSearchBean.getProcurementMode())){
+				log.info("+ getProcurementMode " + ppSearchBean.getProcurementMode());
+				SearchFilterBean bean = new SearchFilterBean();
+				bean.setSearchField("ppPlanMaster.procurementMode");
+				bean.setSearchOperator(SearchOperator.OPERATOR_LIKE.value());
+				bean.setSearchValue(ppSearchBean.getProcurementMode());
+				searchBean.getDataFilterBeans().add(bean);
+			}
+			if(ppSearchBean.getFromDate()!=null && ppSearchBean.getToDate()!=null){
+				log.info("+ createDate " + ppSearchBean.getFromDate() + " - " + ppSearchBean.getToDate());
+				SearchFilterBean bean = new SearchFilterBean();
+				bean.setSearchField("createdDate");
+				bean.setSearchOperator(SearchOperator.OPERATOR_BETWEEN.value());
+				SearchBetweenValue<Date> betweenVal = new SearchBetweenValue<Date>(
+						ppSearchBean.getFromDate(), ppSearchBean.getToDate());
+				bean.setSearchValue(betweenVal);
+				searchBean.getDataFilterBeans().add(bean);
+			}
+		}
 		reqDTO.setSearchBean(searchBean);
 		ProcurementPlanResDTO resDTO = procurementPlanSO.retrievePlanListByParams(reqDTO);
 		if(resDTO.isSuccessful()){
@@ -468,6 +476,20 @@ public class PlanBackingBean extends BaseBackingBean<PlanManagedBean>{
 	}
 	
 	/**
+	 * populate default mto fields from main plan
+	 */
+	private void populateDefaultMtoFields(){
+		log.info("populateDefaultMtoFields - Start");
+		this.getManagedBean().getMtoPlanMaster().setMtoPlan(true);
+		this.getManagedBean().getMtoPlanMaster().setProcurementMode(this.getManagedBean().getPlanMaster().getProcurementMode());
+		this.getManagedBean().getMtoPlanMaster().setQtType(this.getManagedBean().getPlanMaster().getQtType());
+		this.getManagedBean().getMtoPlanMaster().setItemOrigin(ProcurementPlanConst.ITEM_ORIGIN_TYPE_IMPORTED);
+		this.getManagedBean().getMtoPlanMaster().setRequiredMto(true);
+		this.getManagedBean().getMtoPlanMaster().setPlanType(ProcurementPlanConst.PLAN_TYPE_PROCUREMENT);
+		log.info("populateDefaultMtoFields - End");
+	}
+	
+	/**
 	 * initial MTO default view
 	 */
 	private void initialMtoPlan(){
@@ -488,14 +510,6 @@ public class PlanBackingBean extends BaseBackingBean<PlanManagedBean>{
 			
 			//Set Profile Tree
 			mtoPlanMaster.setOrgProfile(this.getManagedBean().getCurrentUser());
-
-			//Set default values as per main procurement plan
-			mtoPlanMaster.setMtoPlan(true);
-			mtoPlanMaster.setProcurementMode(this.getManagedBean().getPlanMaster().getProcurementMode());
-			mtoPlanMaster.setQtType(this.getManagedBean().getPlanMaster().getQtType());
-			mtoPlanMaster.setItemOrigin(ProcurementPlanConst.ITEM_ORIGIN_TYPE_IMPORTED);
-			mtoPlanMaster.setRequiredMto(true);
-			mtoPlanMaster.setPlanType(ProcurementPlanConst.PLAN_TYPE_PROCUREMENT);
 			
 			//Plan Approver
 			PpPlanActor approver = new PpPlanActor();
@@ -679,9 +693,12 @@ public class PlanBackingBean extends BaseBackingBean<PlanManagedBean>{
 		try{
 			this.getManagedBean().setSelectedTab(val.getTab().getId());
 			if(ProcurementPlanConst.CURRENT_ALLOC_BUDGET.equals(val.getTab().getId())){
+				log.info("...tabB");
 				this.getManagedBean().setBudgetAllocDtlList(getAllBudgetAllocDtls(this.getManagedBean().getCurrentUser().getOrgProfileId()));
 			}else if(ProcurementPlanConst.CURRENT_PLAN.equals(val.getTab().getId())){	
-				//setting the criteria to load the plan from same profile
+				log.info("...tabP");
+				//retrieve and set relevant plans
+				searchPlan(true);
 			}else if(ProcurementPlanConst.CURRENT_NEW.equals(val.getTab().getId())){
 				log.info("...tabN");
 				this.getManagedBean().setCurrent(ProcurementPlanConst.CURRENT_NEW);
@@ -690,6 +707,7 @@ public class PlanBackingBean extends BaseBackingBean<PlanManagedBean>{
 				
 			}else if(ProcurementPlanConst.CURRENT_MTO.equals(val.getTab().getId())){
 				log.info("...tabM");
+				populateDefaultMtoFields();
 				this.getManagedBean().setCurrent(ProcurementPlanConst.CURRENT_MTO);
 				this.getManagedBean().setSelectedPlanMaster(this.getManagedBean().getMtoPlanMaster());
 				this.getManagedBean().setSelectedPlan(this.getManagedBean().getMtoPlan());
@@ -768,6 +786,7 @@ public class PlanBackingBean extends BaseBackingBean<PlanManagedBean>{
 			
 			item.setSelected(true);
 			//populate selected GOSODO
+			item.setBudgetAllocDtlId(item.getPpBudgetAllocDtl().getBudgetAllocDtlId());
 			item.setGoId(item.getPpBudgetAllocDtl().getPpBudget().getBudgetId());
 			item.setSoId(item.getPpBudgetAllocDtl().getSoId());
 			item.setDoId(item.getPpBudgetAllocDtl().getDoId());
@@ -2400,4 +2419,70 @@ public class PlanBackingBean extends BaseBackingBean<PlanManagedBean>{
 	    fc.getApplication().getNavigationHandler().handleNavigation(fc, null, ProcurementPlanConst.NAV_TO_PLAN_DET);
 
 	}
+
+//	private class PlanPagingDataModel extends PagingDataModel<PpPlan> {
+//		private static final long serialVersionUID = 1L;
+//
+//		public PlanPagingDataModel() {
+//			super("dtPlan");
+//		}
+//
+//		
+//		/**
+//		 * @author ktfong
+//		 * @since 28.10.2013
+//		 * retrieve default budget by ministry id
+//		 * 
+//		 * @see my.ep.web.bean.paginator.PagingDataModel#pageChangeListener(my.ep.biz.bean.search.ISearchBean)
+//		 */
+//		@Override
+//		public ISearchResultBean<PpPlan> pageChangeListener(ISearchBean<PpPlan> searchBean) {
+//			if (log.isDebugEnabled()) {
+//				log.debug("pageChangeListener");
+//			}
+//			/*if (super.getWrappedData() != null) {
+//				SearchResultBean<PpBudget> resultBean = new SearchResultBean<PpBudget>();
+//				resultBean.setResultList((List<PpBudget>)super.getWrappedData());
+//				resultBean.setTotalRecord(super.getRowCount());
+//				
+//				return resultBean;
+//			}*/
+//			
+//			try {				
+//				BudgetReqDTO reqDTO = new BudgetReqDTO();
+//				
+//				searchBean.getDataFilterBeans().add(new SearchFilterBean(
+//						"orgProfileId", 
+//						SearchOperator.OPERATOR_EQUALS.value(), 
+//						USER_ID_MIN));
+//				reqDTO.setBudgetSearchBean(searchBean);	
+//				
+//				IBudgetSO reqSO = (IBudgetSO) BusinessDelegate.getInstance().getServiceObject(ProcurementPlanConst.SO_PP, IBudgetSO.class);
+//				
+//				BudgetResDTO resDTO = reqSO.retrieveBudgetList(reqDTO);
+//				
+//				if (resDTO.isSuccessful()) {
+//					return resDTO.getBudgetResultBean();
+//				}
+//			} catch (Exception e) {
+//				e.printStackTrace();
+//			}
+//
+//			return null;
+//		}
+//	}
+//
+//	/**
+//	 * @return the planDataModel
+//	 */
+//	public IPagingDataModel<PpPlan> getPlanPagingDataModel() {
+//		return planDataModel;
+//	}
+//
+//	/**
+//	 * @param planDataModel the planDataModel to set
+//	 */
+//	public void setPlanPagingDataModel(IPagingDataModel<PpPlan> planDataModel) {
+//		this.planDataModel = planDataModel;
+//	}
 }

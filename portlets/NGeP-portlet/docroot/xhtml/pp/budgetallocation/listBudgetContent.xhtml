@@ -11,62 +11,40 @@ xmlns:ac="http://ac.my/jsf/composite/cc">
 	
 	<p:outputPanel id="opViewBudgetAllocationContent">
 		<br/>
-		<div class="ppProfileInfo">
-			<table width="100%">
-				<tr>
-					<td colspan="3">
-						<table class="ppHalf">
-							<tr>
-								<td><p:outputLabel value="#{lbl['lbl.pp.ministry.code.name']}" /></td>
-								<td>
-									<p:inputText disabled="true" styleClass="ppDisplayText"
-										value="#{budgetAllocationBackingBean.managedBean.currentUser.orgCode} / #{budgetAllocationBackingBean.managedBean.currentUser.orgName}" />
-									
-								</td>
-							</tr>
-						</table>
-					</td>
-				</tr>
-				<tr>
-					<td colspan="3">&nbsp;</td>
-				</tr>
-				<tr>
-					<td colspan="3">
-						<p:dataTable id="tblBudget" styleClass="ppTableFull" var="budget" rowIndexVar="rowIndex"
-						 	emptyMessage="#{lbl['lbl.pp.no.record.found']}"
-						 	value="#{budgetAllocationBackingBean.budgetDataModel}"
-							lazy="true">
-						 	
-						 	<ac:paginator for="tblBudget" />
-					    	
-					        <p:column headerText="#{lbl['lbl.pp.go.code']}">  
-					            #{budget.pmGo.goCode}
-					        </p:column>  
-					        <p:column headerText="#{lbl['lbl.pp.go.name']}">  
-					             #{budget.pmGo.goName}
-					        </p:column> 
-					        <p:column headerText="#{lbl['lbl.pp.financial.year']}" styleClass="ppNumericAlign">  
-					            #{budget.financialYear}   
-					        </p:column>  
-					        <p:column headerText="#{lbl['lbl.pp.budgeted.amount']}" styleClass="ppNumericAlign">  
-					            #{budget.budgetAmount}    
-					        </p:column>  
-					        <p:column headerText="#{lbl['lbl.pp.used.amount']}" styleClass="ppNumericAlign">  
-					            #{budget.usedAmount}    
-					        </p:column>  
-				         	<p:column headerText="#{lbl['lbl.pp.created.date']}">  
-					            #{budget.createdDate}     
-					        </p:column>  
-					        <!-- 
-					        <p:column headerText="#{lbl['lbl.pp.flag']}">  
-								#{budget.budgetType}   
-					        </p:column>  
-					         -->
-				    	</p:dataTable> 
-					</td>
-				</tr>
-			</table>
-		</div>
+		
+		<p:dataTable id="dtBudget" styleClass="ppTableFull" var="budget" rowIndexVar="rowIndex"
+		 	emptyMessage="#{lbl['lbl.pp.no.record.found']}"
+		 	value="#{budgetAllocationBackingBean.budgetDataModel}"
+			lazy="true">
+		 	
+		 	<ac:paginator for="dtBudget" />
+	    	
+	        <p:column headerText="#{lbl['lbl.pp.go.code']}">  
+	            #{budget.pmGo.goCode}
+	        </p:column>  
+	        <p:column headerText="#{lbl['lbl.pp.go.name']}">  
+	             #{budget.pmGo.goName}
+	        </p:column> 
+	        <p:column headerText="#{lbl['lbl.pp.financial.year']}" styleClass="ppNumericAlign">  
+	            #{budget.financialYear}   
+	        </p:column>  
+	        <p:column headerText="#{lbl['lbl.pp.budgeted.amount']}" styleClass="ppNumericAlign">  
+	            #{budget.budgetAmount}    
+	        </p:column>  
+	        <p:column headerText="#{lbl['lbl.pp.used.amount']}" styleClass="ppNumericAlign">  
+	            #{budget.usedAmount}    
+	        </p:column>  
+         	<p:column headerText="#{lbl['lbl.pp.created.date']}">  
+	            #{budget.createdDate}     
+	        </p:column>  
+	        <!-- 
+	        <p:column headerText="#{lbl['lbl.pp.flag']}">  
+				#{budget.budgetType}   
+	        </p:column>  
+	         -->
+    	</p:dataTable> 
+				
+
 		<br/> 
 		<br/> 
 		<!-- 

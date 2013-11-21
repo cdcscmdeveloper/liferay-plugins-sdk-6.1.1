@@ -908,7 +908,7 @@ public class BudgetAllocationBackingBean extends BaseBackingBean<BudgetAllocatio
 		private static final long serialVersionUID = 1L;
 
 		public BudgetPagingDataModel() {
-			super("tblBudget");
+			super("dtBudget");
 		}
 
 		
