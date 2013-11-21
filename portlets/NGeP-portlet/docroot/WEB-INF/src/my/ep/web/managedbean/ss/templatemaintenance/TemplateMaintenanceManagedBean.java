@@ -7,6 +7,7 @@ import java.util.List;
 
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
+import javax.faces.model.SelectItem;
 
 import my.ep.persistence.entity.ss.quationtender.ScQtCheckList;
 import my.ep.persistence.entity.ss.quationtender.ScQtDoc;
@@ -33,6 +34,9 @@ public class TemplateMaintenanceManagedBean extends BaseManagedBean  {
 	private Long searchItemTypeId;
 	private Long searchSpecTypeId;
 	private Long searchProcurementId;
+	private List<ScQtDoc> docSearchlist;
+	private List<SelectItem> checkListItem;
+	private List<SelectItem>  zoneList;
 	public TemplateMaintenanceManagedBean(){
 		scqtDoc=new ScQtDoc();
 		/*getScqtDoc().setTplSpecMaster(new TplSpecMaster());
@@ -150,6 +154,42 @@ public class TemplateMaintenanceManagedBean extends BaseManagedBean  {
 	 */
 	public void setSearchProcurementId(Long searchProcurementId) {
 		this.searchProcurementId = searchProcurementId;
+	}
+	/**
+	 * @return the docSearchlist
+	 */
+	public List<ScQtDoc> getDocSearchlist() {
+		return docSearchlist;
+	}
+	/**
+	 * @param docSearchlist the docSearchlist to set
+	 */
+	public void setDocSearchlist(List<ScQtDoc> docSearchlist) {
+		this.docSearchlist = docSearchlist;
+	}
+	/**
+	 * @return the checkListItem
+	 */
+	public List<SelectItem> getCheckListItem() {
+		return checkListItem;
+	}
+	/**
+	 * @param checkListItem the checkListItem to set
+	 */
+	public void setCheckListItem(List<SelectItem> checkListItem) {
+		this.checkListItem = checkListItem;
+	}
+	/**
+	 * @return the zoneList
+	 */
+	public List<SelectItem> getZoneList() {
+		return zoneList;
+	}
+	/**
+	 * @param zoneList the zoneList to set
+	 */
+	public void setZoneList(List<SelectItem> zoneList) {
+		this.zoneList = zoneList;
 	}
 
 }
