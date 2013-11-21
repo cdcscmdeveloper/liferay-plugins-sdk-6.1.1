@@ -141,7 +141,7 @@ public class FlDocumentBackingBean extends BaseBackingBean<FlDocumentManagedBean
 			reqDTO.setFlRequestId(flReqId);
 			FulfilmentResDTO resFlDTO = fulfilmentRequestSO.retrieveFulfilmentRequest(reqDTO);
 			flOrderBB.getManagedBean().setButtonVal(buttonVal);
-			flOrderBB.getManagedBean().setFulfilmentRequest(resFlDTO.getFlFulfilmentRequest());
+			flOrderBB.getManagedBean().setFlRequest(resFlDTO.getFlFulfilmentRequest());
 			NavgPage=NAV_TO_MAINTAIN_PO;
 		}else if(docType.equals("CO")){
 			fulfilmentOrderSO = (IFulfilmentOrderSO) BusinessDelegate.getInstance().getServiceObject("fl",IFulfilmentOrderSO.class);
@@ -153,7 +153,7 @@ public class FlDocumentBackingBean extends BaseBackingBean<FlDocumentManagedBean
 			reqDTO.setFlRequestId(flReqId);
 			FulfilmentResDTO resFlDTO = fulfilmentRequestSO.retrieveFulfilmentRequest(reqDTO);
 			flOrderBB.getManagedBean().setButtonVal(buttonVal);
-			flOrderBB.getManagedBean().setFulfilmentRequest(resFlDTO.getFlFulfilmentRequest());
+			flOrderBB.getManagedBean().setFlRequest(resFlDTO.getFlFulfilmentRequest());
 			NavgPage=NAV_TO_MAINTAIN_CO;
 		}else if(docType.equals("DO")){
 			deliveryOrderSO = (IDeliveryOrderSO) BusinessDelegate.getInstance().getServiceObject("fl",IDeliveryOrderSO.class);

@@ -147,6 +147,7 @@ public class ContractRequestBackingBean extends BaseBackingBean<ContractRequestM
 			}
 
 		}catch(Exception e){
+			FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "Error: ",e.getMessage()));
 			log.error("Exception>>", e);
 		}finally {
 			iFulfilmentRequestSO = null;
@@ -274,7 +275,6 @@ public class ContractRequestBackingBean extends BaseBackingBean<ContractRequestM
 		ContractReqDTO ctReqDTO = new ContractReqDTO();
 		ctReqDTO.setContractId(getManagedBean().getFlRequest().getCtContract().getContractId());
 		ContractResDTO ctResDTO = contractSO.retrieveContract(ctReqDTO);
-		System.out.println("ctResDTO.getContract().getCtContractedItems(): "+ctResDTO.getContract().getCtContractedItems());
 		getManagedBean().setContractedItemList(ctResDTO.getContract().getCtContractedItems());
 	}
 

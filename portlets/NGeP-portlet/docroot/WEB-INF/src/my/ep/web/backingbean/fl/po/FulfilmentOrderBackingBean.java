@@ -13,8 +13,6 @@ import my.ep.biz.service.fl.order.IFulfilmentOrderSO;
 import my.ep.dto.fl.FulfilmentReqDTO;
 import my.ep.dto.fl.FulfilmentResDTO;
 import my.ep.exception.EpException;
-import my.ep.persistence.entity.fl.FlAttachment;
-import my.ep.persistence.entity.fl.FlRemark;
 import my.ep.persistence.entity.fl.order.FlDeliveryOrder;
 import my.ep.persistence.entity.fl.order.FlFulfilmentOrder;
 import my.ep.persistence.entity.fl.request.FlDeliveryAddress;
@@ -43,7 +41,7 @@ public class FulfilmentOrderBackingBean extends BaseBackingBean<FulfilmentOrderM
 		retrievePendingDoItems();
 		getDeliveryAddress();
 		getDeliveryOrderStatus();
-
+		
 	}
 	@PostConstruct
 	public void init() {
@@ -56,31 +54,13 @@ public class FulfilmentOrderBackingBean extends BaseBackingBean<FulfilmentOrderM
 		IFulfilmentOrderSO fulfilmentOrderSO = null;
 		try {
 			
-			String actionName=FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap().get("actionName");
-			System.out.println("action name in BB "+actionName);
-			System.out.println("action in BB "+action);
 			FulfilmentReqDTO reqDTO = new FulfilmentReqDTO();
-			FlRemark flRemark = getManagedBean().getFlRemark();
-			FlAttachment flAttachment = this.getManagedBean().getFlAttachment();
-			FlFulfilmentRequest flFulfilmentRequest = getManagedBean().getFulfilmentRequest();
+			FlFulfilmentRequest flRequest = getManagedBean().getFlRequest();
 			SmSupplier smSupplier = new SmSupplier();
 			smSupplier.setSupplierId(27);
-			flFulfilmentRequest.setSmSupplier(smSupplier);
-			String fileName = this.getManagedBean().getFlAttachment().getFileName();
-			String fileDesc = this.getManagedBean().getFlAttachment().getFileDescription();
-			String filePath = this.getManagedBean().getFlAttachment().getFilePath();
-			flAttachment.setDocType("txt");
-			flAttachment.setDocId(Long.valueOf(44));
-			flAttachment.setFileName(fileName);
-			flAttachment.setFileDescription(fileDesc);
-			flAttachment.setFilePath(filePath);
-			//log.info("flRemark.getRemark() in backing beans::"+ flRemark.getRemark());
-			flRemark.setDocId(Long.valueOf(1));
-			flRemark.setDocType("tex");
+			flRequest.setSmSupplier(smSupplier);
 			fulfilmentOrderSO = (IFulfilmentOrderSO) BusinessDelegate.getInstance().getServiceObject("fl",IFulfilmentOrderSO.class);
-			reqDTO.setFlRemark(flRemark);
-			reqDTO.setFlAttachment(flAttachment);
-			reqDTO.setFlFulfilmentRequest(flFulfilmentRequest);
+			reqDTO.setFlFulfilmentRequest(flRequest);
 			
 			if(getManagedBean().isContractRequest() == Boolean.TRUE){
 				reqDTO.setContractRequest(getManagedBean().isContractRequest());
@@ -99,9 +79,9 @@ public class FulfilmentOrderBackingBean extends BaseBackingBean<FulfilmentOrderM
 			FulfilmentResDTO resDTO = fulfilmentOrderSO.acknowledgeFulfillmentOrder(reqDTO);
 			if(resDTO.isSuccessful()) {
 				log.info("Record saved successfully");
-				String message = "Fulfilment Request No. : "+flFulfilmentRequest.getFulfilmentReqId();
-				if(flFulfilmentRequest.getDocNo()!=null) {
-					message = message + ". Doc No. : "+flFulfilmentRequest.getDocNo();
+				String message = "Fulfilment Request No. : "+flRequest.getFulfilmentReqId();
+				if(flRequest.getDocNo()!=null) {
+					message = message + ". Doc No. : "+flRequest.getDocNo();
 				}
 				FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "Record saved successfully.",message));
 				if(!action.equalsIgnoreCase(BpmOutcomeConst.BPM_SAVE)) { // save action will remain in the same page
@@ -111,13 +91,16 @@ public class FulfilmentOrderBackingBean extends BaseBackingBean<FulfilmentOrderM
 			} else {
 				throw new EpException("Failed.");
 			}
-		} catch (Exception e) {
+
+		}catch(Exception e){
+			FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "Error: ",e.getMessage()));
 			log.error("Exception>>", e);
-		} finally {
+		}finally {
 			fulfilmentOrderSO = null;
 		}
 		return null;
 	}
+	
 	public FulfilmentResDTO retrievePendingDoItems() {
 		IFulfilmentOrderSO filmentOrderSO = (IFulfilmentOrderSO) BusinessDelegate.getInstance().getServiceObject("fl", IFulfilmentOrderSO.class);
 		FulfilmentResDTO resDTO = new FulfilmentResDTO();
@@ -165,4 +148,10 @@ public class FulfilmentOrderBackingBean extends BaseBackingBean<FulfilmentOrderM
 		flOrderSO.stopDeliveryWSDL(reqDTO);
 		
 	}
+	
+	public void selectedAddrRow(){
+		//TODO
+//		getManagedBean().setSelectedRowFlg(true);
+	}
+	
 }

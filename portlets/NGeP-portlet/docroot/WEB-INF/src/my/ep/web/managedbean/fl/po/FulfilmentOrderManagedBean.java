@@ -8,6 +8,8 @@ import java.util.Map;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
 
+import org.primefaces.model.DualListModel;
+
 import my.ep.bpm.vo.WorklistItemVO;
 import my.ep.persistence.entity.fl.FlAttachment;
 import my.ep.persistence.entity.fl.FlRemark;
@@ -41,16 +43,19 @@ public class FulfilmentOrderManagedBean extends BaseManagedBean {
 	
 	private FlRemark flRemark = new FlRemark();
 	private FlAttachment flAttachment = new FlAttachment();
-	private FlFulfilmentRequest fulfilmentRequest;
+	private FlFulfilmentRequest flRequest;
 	private FlDeliveryOrder flDeliveryOrder;
 	private FlDeliveryAddress deliveryAddress;
 	private FlFulfilmentOrder fulfilmentOrder;
+	private FlDeliveryAddress selectedDelAddr;
+	private FlDeliveryAddress selectedAddrRow;
 	
 	private List<FlFulfilmentOrder> pendingDoList;
 	private List<FlDeliveryAddress>deliveryAddressList;
 	private List<FlDeliveryOrder>deliveryOrderStatusList;
 	
 	private List<FlFulfilmentItem> flItemList;
+	private DualListModel<String> approverModel;
 	
 	/**
 	 * @return the tempLoginId
@@ -152,20 +157,6 @@ public class FulfilmentOrderManagedBean extends BaseManagedBean {
 	 */
 	public void setFlAttachment(FlAttachment flAttachment) {
 		this.flAttachment = flAttachment;
-	}
-
-	/**
-	 * @return the fulfilmentRequest
-	 */
-	public FlFulfilmentRequest getFulfilmentRequest() {
-		return fulfilmentRequest;
-	}
-
-	/**
-	 * @param fulfilmentRequest the fulfilmentRequest to set
-	 */
-	public void setFulfilmentRequest(FlFulfilmentRequest fulfilmentRequest) {
-		this.fulfilmentRequest = fulfilmentRequest;
 	}
 
 	/**
@@ -307,6 +298,62 @@ public class FulfilmentOrderManagedBean extends BaseManagedBean {
 	 */
 	public void setFlItemList(List<FlFulfilmentItem> flItemList) {
 		this.flItemList = flItemList;
+	}
+
+	/**
+	 * @return the flRequest
+	 */
+	public FlFulfilmentRequest getFlRequest() {
+		return flRequest;
+	}
+
+	/**
+	 * @param flRequest the flRequest to set
+	 */
+	public void setFlRequest(FlFulfilmentRequest flRequest) {
+		this.flRequest = flRequest;
+	}
+
+	/**
+	 * @return the approverModel
+	 */
+	public DualListModel<String> getApproverModel() {
+		return approverModel;
+	}
+
+	/**
+	 * @param approverModel the approverModel to set
+	 */
+	public void setApproverModel(DualListModel<String> approverModel) {
+		this.approverModel = approverModel;
+	}
+
+	/**
+	 * @return the selectedDelAddr
+	 */
+	public FlDeliveryAddress getSelectedDelAddr() {
+		return selectedDelAddr;
+	}
+
+	/**
+	 * @param selectedDelAddr the selectedDelAddr to set
+	 */
+	public void setSelectedDelAddr(FlDeliveryAddress selectedDelAddr) {
+		this.selectedDelAddr = selectedDelAddr;
+	}
+
+	/**
+	 * @return the selectedAddrRow
+	 */
+	public FlDeliveryAddress getSelectedAddrRow() {
+		return selectedAddrRow;
+	}
+
+	/**
+	 * @param selectedAddrRow the selectedAddrRow to set
+	 */
+	public void setSelectedAddrRow(FlDeliveryAddress selectedAddrRow) {
+		this.selectedAddrRow = selectedAddrRow;
 	}
 
 	
