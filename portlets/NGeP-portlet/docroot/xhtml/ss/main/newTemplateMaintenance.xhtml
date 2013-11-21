@@ -11,13 +11,13 @@
 
 
 	<ui:define name="contentSection">
-	<ui:include src="/xhtml/ss/main/createTemplate.xhtml" />
+	
 		<div align="right">
-		
-			<p:commandButton value="SUBMIT" style="margin-right:30px;"
-				onclick="create.show();"/>
-			<p:commandButton value="SAVE" style="margin-right:30px;"
+		<p:commandButton value="SAVE" style="margin-right:30px;"
 				action="#{TemplateMBB.save}" />
+			<p:commandButton value="SUBMIT" style="margin-right:30px;"
+				/>
+			
 		</div>
 		<p:panel header="Template" toggleable="true">
 			
@@ -27,54 +27,55 @@
                 <table>
                 <tr>
                 <td>
-				<h:outputLabel value="Qtn/Tender No: "></h:outputLabel>
+				<h:outputLabel value="Qtn/Tender No"></h:outputLabel>
              </td>
              <td>
-				<p:inputText value="#{TemplateMBB.managedBean.scqtDoc.scQt.qtNo}" />
+				<p:inputText value="#{TemplateMBB.managedBean.scqtDoc.scQt.qtNo}" readonly="true" disabled="true"/>
               </td>
               <td>
-				<h:outputLabel value="Specification Type: "></h:outputLabel>
+				<h:outputLabel value="Specification Type"></h:outputLabel>
 </td>
 <td>
-				<p:selectOneMenu
+				<!-- <p:selectOneMenu
 					value="#{TemplateMBB.managedBean.specificationType}">
 					<f:selectItem itemLabel="Select One" itemValue=" " />
 					<f:selectItem itemLabel="Technical" itemValue="1" />
 					<f:selectItem itemLabel="Financial" itemValue="2" />
 					<p:ajax update="estimated,price"></p:ajax>
-				</p:selectOneMenu>
+				</p:selectOneMenu> -->
+				<p:inputText value="#{TemplateMBB.managedBean.scqtDoc.tplSpecMaster.specTypeCode.codeId}" readonly="true" disabled="true"></p:inputText>
 </td>
 </tr>
  <tr>
                 <td>
-				<h:outputLabel value="Procurement Category: "></h:outputLabel>
+				<h:outputLabel value="Procurement Category"></h:outputLabel>
 				</td>
 				 <td>
 				<p:inputText
-					value="#{TemplateMBB.managedBean.scqtDoc.tplSpecMaster.procurementCategory.codeId}" />
+					value="#{TemplateMBB.managedBean.scqtDoc.tplSpecMaster.procurementCategory.codeId}" readonly="true" disabled="true"/>
 </td>
 <td>
 
-				<h:outputLabel value="Item Type: "></h:outputLabel>
+				<h:outputLabel value="Item Type"></h:outputLabel>
 </td><td>
 				<p:inputText
-					value="#{TemplateMBB.managedBean.scqtDoc.tplSpecMaster.itemTypeCode.codeId}" />
+					value="#{TemplateMBB.managedBean.scqtDoc.tplSpecMaster.itemTypeCode.codeId}" readonly="true" disabled="true"/>
 					</td>
 					</tr>
 			<!-- </h:panelGrid>
 			<h:panelGrid columns="2"> -->
 			<tr>
 			<td>
-				<h:outputLabel value="Checklist: "></h:outputLabel>
+				<h:outputLabel value="Checklist"></h:outputLabel>
             </td><td>
 				<p:selectOneMenu
 					value="#{TemplateMBB.managedBean.specificationType}">
 					<f:selectItem itemLabel="Select One" itemValue="0" />
-					<f:selectItem itemLabel="Stagetwo" itemValue="1" />
-					<f:selectItem itemLabel="StagetwoAdd" itemValue="2" />
+					<f:selectItems  value="#{TemplateMBB.managedBean.checkListItem}" />
+					
 				</p:selectOneMenu>
 				</td></tr><tr><td>
-				<h:outputLabel value="Title: "></h:outputLabel>
+				<h:outputLabel value="Title"></h:outputLabel>
               </td><td>
 				<p:inputText size="50"
 					value="#{TemplateMBB.managedBean.scqtDoc.tplSpecMaster.specName}" />
@@ -83,7 +84,7 @@
 
 
 
-				<h:outputLabel value="Description: "></h:outputLabel>
+				<h:outputLabel value="Description"></h:outputLabel>
 </td><td>
 				<p:inputTextarea rows="3" cols="50" autoResize="false"
 					value="#{TemplateMBB.managedBean.scqtDoc.tplSpecMaster.specDesc}" />
@@ -95,19 +96,20 @@
 					<p:column> -->
 					<tr>
 					<td>
-						<h:outputLabel value="Zone: " />
+						<h:outputLabel value="Zone" />
 						</td>
 					<td>
 						<p:selectOneMenu id="zone"
 							value="#{TemplateMBB.managedBean.scqtDoc.qtZoneCriteriaId}">
+								<f:selectItem itemLabel="Select One" itemValue="0" />
 							<f:selectItems
-								value="#{templateSpecBackingBean.getDropdownValues(PmCodeCatConst.zonalCategory)}" />
+								value="#{TemplateMBB.managedBean.zoneList}" />
 						</p:selectOneMenu>
 					</td><td>
-						<h:outputLabel value="Estimated Cost Required: " />
+						<h:outputLabel value="Estimated Cost Required" />
 					</td><td>
 						<p:selectOneRadio id="estimated"
-							disabled="#{TemplateMBB.managedBean.specificationType ne '2'}"
+							
 							value="#{TemplateMBB.managedBean.scqtDoc.tplSpecMaster.estCostReq}">
 							<f:selectItem itemLabel="Yes" itemValue="true" />
 							<f:selectItem itemLabel="No" itemValue="false" />
@@ -115,16 +117,16 @@
 						</p:selectOneRadio>
 						</td></tr>
 					<tr><td>
-						<h:outputLabel value="Status: " />
+						<h:outputLabel value="Status" />
 					</td><td>
-						<p:inputText value="#{TemplateMBB.managedBean.scqtDoc.tplSpecMaster.status.statusId}"></p:inputText>
+						<p:inputText value="#{TemplateMBB.managedBean.scqtDoc.tplSpecMaster.status.statusId}" readonly="true" disabled="true"></p:inputText>
 					</td><td>
 
 					
-						<h:outputLabel value="Tier price Required: " />
+						<h:outputLabel value="Tier price Required" />
 					</td><td>
 						<p:selectOneRadio id="price"
-							disabled="#{TemplateMBB.managedBean.specificationType ne '2'}"
+							
 							value="#{TemplateMBB.managedBean.scqtDoc.tplSpecMaster.tierPrice}">
 							<f:selectItem itemLabel="Yes" itemValue="true" />
 							<f:selectItem itemLabel="No" itemValue="false" />
@@ -141,7 +143,7 @@
 
 		<ui:include src="/xhtml/tpl/spec/specContent.xhtml" />
 		<h:panelGrid columns="2">
-			<h:outputLabel value="Total:"></h:outputLabel>
+			<h:outputLabel value="Total"></h:outputLabel>
 			<p:inputText
 				value="#{TemplateMBB.managedBean.scqtDoc.tplSpecMaster.specTotal}"></p:inputText>
 		</h:panelGrid>

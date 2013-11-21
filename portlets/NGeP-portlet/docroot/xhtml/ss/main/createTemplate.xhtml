@@ -61,7 +61,7 @@
                         <table>
 <tr>
 <td >
-	<h:outputLabel value="Specification Type: "></h:outputLabel>
+	<h:outputLabel value="Specification Type"></h:outputLabel>
 			
 </td>
 <td>
@@ -74,7 +74,7 @@
 		<tr>
 <td  style="width:50%">
 
-			<h:outputLabel value="Template Title: "></h:outputLabel>
+			<h:outputLabel value="Template Title"></h:outputLabel>
 </td>
 <td>
 			<h:inputText size="70" value="#{TemplateMBB.managedBean.scqtDoc.tplSpecMaster.specName}" />
@@ -82,7 +82,7 @@
 </tr>
 <tr>
 <td>
-<h:outputLabel value="Qtn/Tender No: "></h:outputLabel>
+<h:outputLabel value="Qtn/Tender No"></h:outputLabel>
 			
 </td>
 		<td>
@@ -92,7 +92,7 @@
 </tr>
 <tr>
 <td  style="width:30%">
-<h:outputLabel value="Item Type: "></h:outputLabel>
+<h:outputLabel value="Item Type"></h:outputLabel>
 			
 </td>
 <td>
@@ -102,7 +102,7 @@
 
 </td>
 <td  style="width:50%">
-			<h:outputLabel value="Procurement Category: "></h:outputLabel>
+			<h:outputLabel value="Procurement Category"></h:outputLabel>
 
 </td>
 <td>
@@ -115,51 +115,45 @@
 </tr>
 </table>
 		<div align="right">
-			<p:commandButton value="SEARCH" />
+			<p:commandButton value="SEARCH" action="#{TemplateMBB.searchCreateListAction}" update="createList"/>
 		</div>
 
 	</p:panel>
 
 	<p:panel header="Template Search"  toggleable="true">
 		<h:panelGrid style="width:950px;">
-			<p:dataTable var="compilance"
-				value="#{specificationBackingBean.managedBean.compilaenceList}"
+			<p:dataTable id="createList" var="scQtDoc"
+				value="#{TemplateMBB.managedBean.docSearchlist}"
 				editable="true"
-				selection="#{specificationBackingBean.selectedCompilenceList}"
-				rowKey="#{compilance.compilanceId}" rowIndexVar="index">
-
+				rowKey="#{scQtDoc.qtDocId}" rowIndexVar="index">
+          <!--   <p:column selectionMode="multiple"  style="text-align:center;"/> -->
 
 				<p:column headerText="Qtn/Tender No">
-					<h:outputText value="#{index+1}" />
+					<h:outputText value="#{scQtDoc.scQt.qtNo}" />
 				</p:column>
 
 				<p:column headerText=" Template Title">
-					<h:outputText value="Title#{index+1}"></h:outputText>
+					<h:outputText value="#{scQtDoc.tplSpecMaster.specName}"></h:outputText>
 				</p:column>
 				<p:column headerText="Specification Type">
-					<h:outputText value="#{index+1}" />
+					<h:outputText value="#{scQtDoc.tplSpecMaster.specTypeCode.codeId}" />
 				</p:column>
 				<p:column headerText="Item Type">
-					<h:outputText value="#{index+1}" />
+					<h:outputText value="#{scQtDoc.tplSpecMaster.itemTypeCode.codeId}" />
 				</p:column>
 				<p:column headerText="Procurement Category">
-					<h:outputText value="#{index+1}" />
+					<h:outputText value="#{scQtDoc.tplSpecMaster.procurementCategory.codeId}" />
 				</p:column>
-				<p:column headerText="Qtn/Tender No">
-					<h:outputText value="#{index+1}" />
-				</p:column>
+			
 				<p:column headerText="Status">
-					<h:outputText value="#{index+1}" />
+					<h:outputText value="#{scQtDoc.tplSpecMaster.status.statusId}" />
 				</p:column>
 				<p:column headerText="Action">
-					<p:commandButton value="CLONE"></p:commandButton>
+					<p:commandButton value="CLONE" action="#{TemplateMBB.cloneAction(scQtDoc)}" oncomplete="create.hide();"></p:commandButton>
 				</p:column>
 			</p:dataTable>
 		</h:panelGrid>
-		<div align="right" style="width: 950px;">
-			<p:commandButton value="CREATE" action="#{TemplateMBB.editAction}" />
-
-		</div>
+		
 
 	</p:panel>
 </p:dialog>
