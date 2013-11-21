@@ -10,34 +10,41 @@ import javax.annotation.PostConstruct;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.RequestScoped;
 import javax.faces.event.AjaxBehaviorEvent;
+import javax.faces.model.SelectItem;
 
+import my.ep.biz.bean.search.ISearchBean;
+import my.ep.biz.bean.search.SearchBean;
+import my.ep.biz.bean.search.SearchFilterBean;
 import my.ep.biz.service.pm.authorization.orgprofile.IOrgProfileSO;
 import my.ep.biz.service.pm.common.codecategory.ICodeCategorySO;
 import my.ep.biz.service.pm.common.status.IStatusSO;
 import my.ep.biz.service.ss.quationtender.IQTDetailSO;
-import my.ep.biz.service.tpl.spec.ITemplateSpecSO;
+import my.ep.biz.service.ss.quationtender.IQTTemplateSO;
 import my.ep.dto.pm.authorization.orgprofile.OrgProfileReqDTO;
 import my.ep.dto.pm.authorization.orgprofile.OrgProfileResDTO;
 import my.ep.dto.pm.common.codecategory.CodeCategoryReqDTO;
 import my.ep.dto.pm.common.codecategory.CodeCategoryResDTO;
 import my.ep.dto.pm.common.status.StatusReqDTO;
 import my.ep.dto.pm.common.status.StatusResDTO;
+import my.ep.dto.ss.quationtender.QTTemplateDocReqDTO;
+import my.ep.dto.ss.quationtender.QTTemplateDocResDTO;
 import my.ep.dto.ss.quationtender.QuationTenderReqDTO;
 import my.ep.dto.ss.quationtender.QuationTenderResDTO;
-import my.ep.dto.ss.specification.SpecificationReqDTO;
-import my.ep.dto.ss.specification.SpecificationResDTO;
-import my.ep.dto.tpl.spec.TemplateSpecReqDTO;
-import my.ep.dto.tpl.spec.TemplateSpecResDTO;
 import my.ep.persistence.entity.pm.authorization.PmOrgProfile;
 import my.ep.persistence.entity.pm.common.PmCode;
 import my.ep.persistence.entity.pm.common.PmStatus;
 import my.ep.persistence.entity.ss.quationtender.ScQt;
 import my.ep.persistence.entity.ss.quationtender.ScQtCheckList;
 import my.ep.persistence.entity.ss.quationtender.ScQtDoc;
+import my.ep.persistence.entity.ss.quationtender.ScQtZoneCriteria;
 import my.ep.persistence.entity.tpl.spec.TplSpecMaster;
+import my.ep.persistence.entity.tpl.spec.TplSpecQuestion;
+import my.ep.type.aut.SearchOperator;
+import my.ep.util.lookupservice.EpEjbBusinessDelegate;
 import my.ep.web.backingbean.BaseBackingBean;
 import my.ep.web.backingbean.tpl.spec.TemplateSpecBackingBean;
 import my.ep.web.managedbean.ss.templatemaintenance.TemplateMaintenanceManagedBean;
+import my.ep.web.ss.quationtender.common.QTConstants;
 import my.ep.web.util.lookupservice.BusinessDelegate;
 
 /**
@@ -51,108 +58,206 @@ public class TemplateMaintenanceBackingBean extends
 
 	public TemplateMaintenanceBackingBean() {
 
-		
-	}
-	
-	public String editAction() {
-		try{
-		System.out.println("=====enter edit action====");
-		TemplateSpecBackingBean specBB = new TemplateSpecBackingBean();
-		TplSpecMaster specMaster = new TplSpecMaster();
-		specMaster.setSpecMasterId(2L);
-		
-		specBB.getManagedBean().setSpecMaster(specMaster);
-		specBB.retrieveTemplateSpecMaster();
-		}catch(Exception e ){
-			e.printStackTrace();
-		}
-		return"newTemplateMaintenance.xhtml?faces-redirect=true";
 	}
 
 	@PostConstruct
 	public void init() {
 		try {
 
-			
 			if (getManagedBean().getScqtDoc() == null) {
 				getManagedBean().setScqtDoc(new ScQtDoc());
-			
-				
+
 			}
-             if(getManagedBean().getScqtDoc().getScQt()==null){
-            		getManagedBean().getScqtDoc().setScQt(new ScQt());
-             }
+			if (getManagedBean().getScqtDoc().getScQt() == null) {
+				getManagedBean().getScqtDoc().setScQt(new ScQt());
+			}
 			if (getManagedBean().getScqtDoc().getTplSpecMaster() == null) {
-			
+
 				getManagedBean().getScqtDoc().setTplSpecMaster(
 						new TplSpecMaster());
-				
+
 			}
 
 			if (getManagedBean().getScqtDoc().getTplSpecMaster()
 					.getProcurementCategory() == null) {
-			
+
 				getManagedBean().getScqtDoc().getTplSpecMaster()
 						.setProcurementCategory(new PmCode());
-			
+
 			}
 			if (getManagedBean().getScqtDoc().getTplSpecMaster()
 					.getItemTypeCode() == null) {
-			
+
 				getManagedBean().getScqtDoc().getTplSpecMaster()
 						.setItemTypeCode(new PmCode());
-		
+
 			}
 			if (getManagedBean().getScqtDoc().getTplSpecMaster()
 					.getSpecTypeCode() == null) {
-			
+
 				getManagedBean().getScqtDoc().getTplSpecMaster()
 						.setSpecTypeCode(new PmCode());
-				
+
 			}
 			if (getManagedBean().getScqtDoc().getTplSpecMaster()
 					.getOrgProfile() == null) {
-			
+
 				getManagedBean().getScqtDoc().getTplSpecMaster()
 						.setOrgProfile(new PmOrgProfile());
-			
+
 			}
 			if (getManagedBean().getScqtDoc().getTplSpecMaster()
 					.getTemplateTypeCode() == null) {
-			
+
 				getManagedBean().getScqtDoc().getTplSpecMaster()
 						.setTemplateTypeCode(new PmCode());
-			
+
 			}
-			
-			if (getManagedBean().getScqtDoc().getTplSpecMaster()
-					.getStatus() == null) {
-		
-				getManagedBean().getScqtDoc().getTplSpecMaster().setStatus(new PmStatus());
-				
+
+			if (getManagedBean().getScqtDoc().getTplSpecMaster().getStatus() == null) {
+
+				getManagedBean().getScqtDoc().getTplSpecMaster()
+						.setStatus(new PmStatus());
+
 			}
-			this.getManagedBean().getScqtDoc().getTplSpecMaster()
-					.getProcurementCategory().setCodeId(1L);
-			this.getManagedBean().getScqtDoc().getTplSpecMaster()
-					.getItemTypeCode().setCodeId(2L);
-			this.getManagedBean().getScqtDoc().getTplSpecMaster().getStatus().setStatusId(1L);
+			/*
+			 * this.getManagedBean().getScqtDoc().getTplSpecMaster()
+			 * .getProcurementCategory().setCodeId(1L);
+			 * this.getManagedBean().getScqtDoc().getTplSpecMaster()
+			 * .getItemTypeCode().setCodeId(2L);
+			 * this.getManagedBean().getScqtDoc().getTplSpecMaster().getStatus()
+			 * .setStatusId(1L);
+			 */
 		} catch (Exception e) {
 			throw new IllegalArgumentException();
 		}
 
 	}
 
+	public String cloneAction(ScQtDoc scqtDoc) {
+		try {
+			QTTemplateDocReqDTO qtTemplateReqDTO = new QTTemplateDocReqDTO();
+
+			QTTemplateDocResDTO resDto = null;
+			System.out.println("=====enter edit action====");
+			System.out.println("=====scqtDoc====" + scqtDoc.getQtDocId());
+		/*	System.out.println("==procuremnet id=="
+					+ scqtDoc.getTplSpecMaster().getProcurementCategory()
+							.getCodeId());
+			System.out.println("====spec master id==="
+					+ scqtDoc.getTplSpecMaster().getSpecMasterId());*/
+			TemplateSpecBackingBean specBB = new TemplateSpecBackingBean();
+			TplSpecMaster specMaster = new TplSpecMaster();
+			specMaster.setSpecMasterId(new Long(scqtDoc.getTplSpecMaster()
+					.getSpecMasterId()));
+
+			specBB.getManagedBean().setSpecMaster(specMaster);
+			specBB.retrieveTemplateSpecMaster();
+			this.getManagedBean()
+					.getScqtDoc()
+					.getTplSpecMaster()
+					.getProcurementCategory()
+					.setCodeId(
+							scqtDoc.getTplSpecMaster().getProcurementCategory()
+									.getCodeId());
+			this.getManagedBean()
+					.getScqtDoc()
+					.getTplSpecMaster()
+					.getItemTypeCode()
+					.setCodeId(
+							scqtDoc.getTplSpecMaster().getItemTypeCode()
+									.getCodeId());
+			this.getManagedBean()
+					.getScqtDoc()
+					.getTplSpecMaster()
+					.getSpecTypeCode()
+					.setCodeId(
+							scqtDoc.getTplSpecMaster().getSpecTypeCode()
+									.getCodeId());
+			this.getManagedBean()
+					.getScqtDoc()
+					.getTplSpecMaster()
+					.getStatus()
+					.setStatusId(
+							scqtDoc.getTplSpecMaster().getStatus()
+									.getStatusId());
+			System.out.println("====edit specification type==="
+					+ scqtDoc.getTplSpecMaster().getSpecTypeCode().getCodeId());
+			qtTemplateReqDTO.setCheckListType("UP");
+			qtTemplateReqDTO.setSpecMaster(scqtDoc.getTplSpecMaster());
+			qtTemplateReqDTO.setSpecMasterId(scqtDoc.getTplSpecMaster()
+					.getSpecMasterId());
+
+			try {
+				IQTTemplateSO qtTemplateSO = EpEjbBusinessDelegate
+						.getInstance().getServiceObject(QTConstants.SS_MODULE,
+								IQTTemplateSO.class);
+				System.out.println("=====before retrive details====");
+				resDto = qtTemplateSO
+						.retriveTemplateDocDetails(qtTemplateReqDTO);
+				System.out
+						.println("====display retriveTemplateDocDetails size=== "
+								+ resDto.getCheckListItems().size());
+				retriveCheckList(resDto.getCheckListItems());
+				retriveZoneList(resDto.getZones());
+
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+
+		return "newTemplateMaintenance.xhtml?faces-redirect=true";
+	}
+
+	public void retriveZoneList(List zonesList) {
+		List<SelectItem> selectItems = new ArrayList<SelectItem>();
+		try {
+			ScQtZoneCriteria scQtZone;
+
+			for (int i = 0; i < zonesList.size(); i++) {
+				scQtZone = (ScQtZoneCriteria) zonesList.get(i);
+				selectItems.add(new SelectItem(scQtZone.getQtZoneCriteriaId(),
+						scQtZone.getZoneName()));
+			}
+			this.getManagedBean().setZoneList(selectItems);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+
+	}
+
+	public void retriveCheckList(List checklist) {
+		List<SelectItem> selectItems = new ArrayList<SelectItem>();
+		try {
+
+			ScQtCheckList checkList;
+
+			for (int i = 0; i < checklist.size(); i++) {
+				checkList = (ScQtCheckList) checklist.get(i);
+				selectItems.add(new SelectItem(checkList.getQtChecklistId(),
+						checkList.getTitle()));
+			}
+			this.getManagedBean().setCheckListItem(selectItems);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+
+	}
+
 	public void checkSupportingDoc(AjaxBehaviorEvent e) {
-		
+
 		String supportingDoc = (String) e.getComponent().getAttributes()
 				.get("value");
-		
+
 		this.getManagedBean().setSupportingDoc(supportingDoc);
 
 	}
 
 	public void supportingDocAdd() {
-		
+
 		try {
 			List<ScQtCheckList> supportDocList = getManagedBean()
 					.getSupportDocList();
@@ -173,61 +278,65 @@ public class TemplateMaintenanceBackingBean extends
 
 	public void save() {
 		try {
-			
-			ICodeCategorySO codeCategorySO = BusinessDelegate.getInstance().getServiceObject(
-					"pm", ICodeCategorySO.class);
-			
+
+			ICodeCategorySO codeCategorySO = BusinessDelegate.getInstance()
+					.getServiceObject("pm", ICodeCategorySO.class);
+
 			CodeCategoryReqDTO reqDTO = new CodeCategoryReqDTO();
 			System.out.println("manga template construcoor" + codeCategorySO);
-			reqDTO.setCodeId(this.getManagedBean().getScqtDoc().getTplSpecMaster().getProcurementCategory().getCodeId());
-			CodeCategoryResDTO resprocure = codeCategorySO.retrieveCodeById(reqDTO);
-		
+			reqDTO.setCodeId(this.getManagedBean().getScqtDoc()
+					.getTplSpecMaster().getProcurementCategory().getCodeId());
+			CodeCategoryResDTO resprocure = codeCategorySO
+					.retrieveCodeById(reqDTO);
+System.out.println("===resprocure===="+resprocure.getPmCode().getCodeId());
 			CodeCategoryReqDTO reqDTOItem = new CodeCategoryReqDTO();
-			reqDTOItem.setCodeId(this.getManagedBean().getScqtDoc().getTplSpecMaster().getItemTypeCode().getCodeId());
-			CodeCategoryResDTO resItem = codeCategorySO.retrieveCodeById(reqDTOItem);
-			
+			reqDTOItem.setCodeId(this.getManagedBean().getScqtDoc()
+					.getTplSpecMaster().getItemTypeCode().getCodeId());
+			CodeCategoryResDTO resItem = codeCategorySO
+					.retrieveCodeById(reqDTOItem);
+			System.out.println("===resItem===="+resItem.getPmCode().getCodeId());
 			CodeCategoryReqDTO reqDTOTemp = new CodeCategoryReqDTO();
 			reqDTOTemp.setCodeId(1L);
-			CodeCategoryResDTO resTemp = codeCategorySO.retrieveCodeById(reqDTOTemp);
-			
+			CodeCategoryResDTO resTemp = codeCategorySO
+					.retrieveCodeById(reqDTOTemp);
+			System.out.println("===resTemp===="+resTemp.getPmCode().getCodeId());
 			CodeCategoryReqDTO reqDTOSpec = new CodeCategoryReqDTO();
-			
-			reqDTOSpec.setCodeId(1L);
-			CodeCategoryResDTO resSpec = codeCategorySO.retrieveCodeById(reqDTOSpec);
-			
+
+			reqDTOSpec.setCodeId(this.getManagedBean().getScqtDoc()
+					.getTplSpecMaster().getSpecTypeCode().getCodeId());
+			CodeCategoryResDTO resSpec = codeCategorySO
+					.retrieveCodeById(reqDTOSpec);
+			System.out.println("===resSpec===="+resSpec.getPmCode().getCodeId());
 			IStatusSO statussO = BusinessDelegate.getInstance()
 					.getServiceObject("pm", IStatusSO.class);
-		
+
 			StatusReqDTO statusreq = new StatusReqDTO();
-			statusreq.setStatusId(this.getManagedBean().getScqtDoc().getTplSpecMaster().getStatus().getStatusId());
+			statusreq.setStatusId(this.getManagedBean().getScqtDoc()
+					.getTplSpecMaster().getStatus().getStatusId());
 			StatusResDTO statusres = statussO
 					.retrieveStatusByStatusId(statusreq);
-			
+
 			IOrgProfileSO ProfileSo = BusinessDelegate.getInstance()
 					.getServiceObject("pm", IOrgProfileSO.class);
-		
+
 			OrgProfileReqDTO profileReq = new OrgProfileReqDTO();
 			profileReq.setOrgProfileId(1L);
 			OrgProfileResDTO profileRes = ProfileSo
 					.retrieveOrgProfileByProfileId(profileReq);
-			
-			ITemplateSpecSO templateSo = BusinessDelegate.getInstance()
-					.getServiceObject("cc", ITemplateSpecSO.class);
-			
-			TemplateSpecReqDTO templateSpecReq = new TemplateSpecReqDTO();
+
 			TplSpecMaster specMaster = new TplSpecMaster();
 			specMaster.setProcurementCategory(resprocure.getPmCode());
-		
+
 			specMaster.setProcessType("SC");
-		
+
 			specMaster.setTemplateTypeCode(resTemp.getPmCode());
-		
+
 			specMaster.setOrgProfile(profileRes.getPmOrgProfile());
-			
+
 			specMaster.setItemTypeCode(resItem.getPmCode());
-			
+
 			specMaster.setSpecTypeCode(resSpec.getPmCode());
-			
+
 			specMaster.setSpecName(this.getManagedBean().getScqtDoc()
 					.getTplSpecMaster().getSpecName());
 			specMaster.setSpecDesc(this.getManagedBean().getScqtDoc()
@@ -236,97 +345,252 @@ public class TemplateMaintenanceBackingBean extends
 					.getTplSpecMaster().getSpecTotal());
 			specMaster.setEstCostReq(this.getManagedBean().getScqtDoc()
 					.getTplSpecMaster().isEstCostReq());
-		      System.out.println("=====middle of insert===");
+
 			specMaster.setNoOfYear(1);
 			specMaster.setTemplateStatus("D");
 			specMaster.setStatus(statusres.getPmStatus());
 			specMaster.setTierPrice(this.getManagedBean().getScqtDoc()
 					.getTplSpecMaster().isTierPrice());
-			
-			TemplateSpecBackingBean specBB = new TemplateSpecBackingBean();
-			
-			specBB.getManagedBean().getSpecMaster().getTplSpecQuestions().remove(0);
-			
-			templateSpecReq.setSpecMaster(specBB.getManagedBean().getSpecMaster());
-			
-			//templateSpecReq.setSpecMaster(specMaster);
-			TemplateSpecResDTO templateSpecRes = new TemplateSpecResDTO();
-			System.out.println("====before insert==");
-			System.out.println("MMMMMMMMM   "+templateSo);
-			System.out.println("AAAAAAAAAAAAA" +templateSpecReq);
-			try{
-			 templateSpecRes=templateSo.saveTemplateSpec(templateSpecReq);
-			}catch(Exception e){
-				e.printStackTrace();
-			}
-			System.out.println("=====zone id===="+this.getManagedBean().getScqtDoc()
-					.getQtZoneCriteriaId());
-		 System.out.println("=========templateSpecRes========="+templateSpecRes.getSpecMaster().getSpecMasterId());
 
-			System.out.println("=====successfully template saved in db====");
-		/*	try{
+			TemplateSpecBackingBean specBB = new TemplateSpecBackingBean();
+          // System.out.println("====before Question List size===="+this.getManagedBean().getSpecMaster().getTplSpecQuestions().size());
+		
+	List<TplSpecQuestion> questions=	specBB.getManagedBean().getSpecMaster().getTplSpecQuestions();
+			for(TplSpecQuestion tpl:questions){
+				System.out.println("==QuestionNumber0===="+tpl.getQuestionNumber());
+			}			;
+	TplSpecQuestion queston=	questions.remove(0);
+	List<TplSpecQuestion> questions1=new ArrayList<TplSpecQuestion>();
+	
+	questions1.addAll(questions);
+	for(TplSpecQuestion tpl:questions1){
+		System.out.println("==Question Number===="+tpl.getQuestionNumber());
+	}
+			specMaster.setTplSpecQuestions(questions1);
+			QTTemplateDocReqDTO qtTemplateReqDTO = new QTTemplateDocReqDTO();
+			QTTemplateDocResDTO resDTO = new QTTemplateDocResDTO();
 			IQTDetailSO QtDetailsSO = BusinessDelegate.getInstance()
 					.getServiceObject("ss", IQTDetailSO.class);
 			System.out.println("manga Details Object" + QtDetailsSO);
 			QuationTenderReqDTO tenderReqDTO = new QuationTenderReqDTO();
-			// ScQt scQt=new
-			System.out.println("======qtTndrNo====="+this.getManagedBean().getScqtDoc()
-					.getScQt().getQtNo());
+
 			tenderReqDTO.setQtTndrNo(this.getManagedBean().getScqtDoc()
 					.getScQt().getQtNo());
-			System.out.println("=====quotationTndrSetValue======");
-			QuationTenderResDTO tenderResDTO=new QuationTenderResDTO();
-			
-			tenderResDTO = QtDetailsSO
-					.retriveQtByQtNumber(tenderReqDTO);
-			System.out.println("========tenderResDTO====="
-					+ tenderResDTO.getQtDetail().getQtId());
-			 ISpecificationSO SpecificationSO = BusinessDelegate.getInstance()
-					  .getServiceObject("ss", ISpecificationSO.class);
-					  System.out.println("manga Details Object"+QtDetailsSO);
-					
-					SpecificationReqDTO specificationReqDTO = new SpecificationReqDTO();
-					ScQtDoc scQtDOc = new ScQtDoc();
-					ScQt scQt=new ScQt();
-					
-					scQtDOc.setScQt(scQt);
-					//scQtDOc.setTplDocMaster(null);
-					scQtDOc.setTplSpecMaster(templateSpecRes.getSpecMaster());
-				
-					scQtDOc.setQtZoneCriteriaId(this.getManagedBean().getScqtDoc()
-							.getQtZoneCriteriaId());
-					scQtDOc.setSupportDocReq(true);
-					specificationReqDTO.setScQtDoc(scQtDOc);
-					List<ScQtDoc> docList=new ArrayList<ScQtDoc>();
-					System.out.println("====list===");
-					docList.add(scQtDOc);
-					
-					scQt.setScQtDocs(docList);
-					QuationTenderReqDTO tenderReqDTO1 = new QuationTenderReqDTO();
-					tenderReqDTO1.setQtdetail(scQt);
-					System.out.println("====before save==");
-					QtDetailsSO.saveOrUpdateQT(tenderReqDTO1);
-					System.out.println("======successfully saved in scqtdoc table===");
-					SpecificationResDTO specificationResDTO = new SpecificationResDTO();
-					
-					// specificationResDTO=SpecificationSO.saveOrUpdateScQtDoc(specificationReqDTO);
-					// System.out.println("==========save or Update Scqt DocId====="+specificationRe//sDTO.getScQtDoc().getQtDocId());
-			}catch(Exception e){
+
+			QuationTenderResDTO tenderResDTO = new QuationTenderResDTO();
+
+			tenderResDTO = QtDetailsSO.retriveQtByQtNumber(tenderReqDTO);
+
+			ScQtDoc scQtDOc = new ScQtDoc();
+
+			System.out.println("====tenderResDTO.getQtDetail()."
+					+ tenderResDTO.getQtDetail().getQtNo());
+			scQtDOc.setScQt(tenderResDTO.getQtDetail());
+			// scQtDOc.setTplDocMaster(null);
+
+			// scQtDOc.setTplSpecMaster(specBB.getManagedBean()
+			// .getSpecMaster());
+
+			scQtDOc.setQtZoneCriteriaId(this.getManagedBean().getScqtDoc()
+					.getQtZoneCriteriaId());
+			scQtDOc.setSupportDocReq(this.getManagedBean().getScqtDoc()
+					.getSupportDocReq());
+			// TemplateSpecBackingBean specBB = new TemplateSpecBackingBean();
+			scQtDOc.setChangedBy(2L);
+			scQtDOc.setCreatedBy(2L);
+			java.util.Date date = new java.util.Date(); // Right now
+			java.sql.Timestamp timestamp = new java.sql.Timestamp(
+					date.getTime());
+			scQtDOc.setCreatedDate(timestamp);
+			// scQtDOc.setChangedDate(timestamp);
+			/*
+			 * specBB.getManagedBean().getSpecMaster().getTplSpecQuestions()
+			 * .remove(0);
+			 */
+        
+			qtTemplateReqDTO.setSpecMaster(specMaster);
+			qtTemplateReqDTO.setQtDoc(scQtDOc);
+			try {
+				IQTTemplateSO qtTemplateSO = EpEjbBusinessDelegate
+						.getInstance().getServiceObject(QTConstants.SS_MODULE,
+								IQTTemplateSO.class);
+System.out.println("=======before insert method====");
+				resDTO = qtTemplateSO.saveORUpdateTemplateDoc(qtTemplateReqDTO);
+				System.out
+						.println("=====success fully saves data in scqtdoc table");
+			} catch (Exception e) {
 				e.printStackTrace();
 			}
-			*/
-			
-		
+
 		} catch (Exception e) {
 			e.printStackTrace();
-			//throw new IllegalArgumentException();
+			// throw new IllegalArgumentException();
 		}
 
 	}
-	
-	
-	public void submit(){
+
+	public void submit() {
 		System.out.println("=====enter submit method====");
+	}
+
+	public List<ScQtDoc> searchScqtDocAction() {
+
+		QTTemplateDocReqDTO qtTemplateReqDTO = new QTTemplateDocReqDTO();
+		ISearchBean<ScQtDoc> searchBean = new SearchBean<ScQtDoc>();
+		QTTemplateDocResDTO resDto = null;
+
+		if (getManagedBean().getScqtDoc().getTplSpecMaster().getSpecName() != null
+				&& !"".equalsIgnoreCase(getManagedBean().getScqtDoc()
+						.getTplSpecMaster().getSpecName())) {
+			System.out.println("yes"+getManagedBean().getScqtDoc()
+						.getTplSpecMaster().getSpecName());
+			SearchFilterBean committeSearchBean = new SearchFilterBean(
+					SearchOperator.OPERATOR_EQUALS.value());
+			committeSearchBean.setSearchField("tplSpecMaster.specName");
+			committeSearchBean.setSearchValue(getManagedBean().getScqtDoc()
+					.getTplSpecMaster().getSpecName());
+			searchBean.getDataFilterBeans().add(committeSearchBean);
+
+		}
+
+		if (getManagedBean().getSearchSpecTypeId() != null) {
+			SearchFilterBean committeTypeSearchBean = new SearchFilterBean(
+					SearchOperator.OPERATOR_EQUALS.value());
+			committeTypeSearchBean
+					.setSearchField("tplSpecMaster.specTypeCode.codeId");
+			committeTypeSearchBean.setSearchValue(getManagedBean()
+					.getSearchSpecTypeId());
+			searchBean.getDataFilterBeans().add(committeTypeSearchBean);
+		}
+
+		if (getManagedBean().getSearchItemTypeId() != null) {
+			SearchFilterBean creatDtSearchBean = new SearchFilterBean(
+					SearchOperator.OPERATOR_EQUALS.value());
+			creatDtSearchBean
+					.setSearchField("tplSpecMaster.itemTypeCode.codeId");
+			creatDtSearchBean.setSearchValue(getManagedBean()
+					.getSearchItemTypeId());
+			searchBean.getDataFilterBeans().add(creatDtSearchBean);
+		}
+
+		if (getManagedBean().getSearchProcurementId() != null) {
+			SearchFilterBean creatDtSearchBean = new SearchFilterBean(
+					SearchOperator.OPERATOR_EQUALS.value());
+			creatDtSearchBean
+					.setSearchField("tplSpecMaster.procurementCategory.codeId");
+			creatDtSearchBean.setSearchValue(getManagedBean()
+					.getSearchProcurementId());
+			searchBean.getDataFilterBeans().add(creatDtSearchBean);
+		}
+		if (getManagedBean().getScqtDoc().getScQt().getQtNo() != null
+				&& !"".equalsIgnoreCase(getManagedBean().getScqtDoc().getScQt()
+						.getQtNo())) {
+			SearchFilterBean qtnoSearchBean = new SearchFilterBean(
+					SearchOperator.OPERATOR_EQUALS.value());
+			qtnoSearchBean.setSearchField("scQt.qtNo");
+			qtnoSearchBean.setSearchValue(getManagedBean().getScqtDoc()
+					.getScQt().getQtNo());
+
+			searchBean.getDataFilterBeans().add(qtnoSearchBean);
+		}
+
+		qtTemplateReqDTO.setDocSearchBean(searchBean);
+
+		try {
+			IQTTemplateSO qtTemplateSO = EpEjbBusinessDelegate.getInstance()
+					.getServiceObject(QTConstants.SS_MODULE,
+							IQTTemplateSO.class);
+
+			resDto = qtTemplateSO.fetchTemplates(qtTemplateReqDTO);
+
+		} catch (Exception ex) {
+			ex.printStackTrace();
+		}
+		this.getManagedBean().setDocSearchlist(
+				resDto.getSearchResultBean().getResultList());
+		return resDto.getSearchResultBean().getResultList();
+
+	}
+
+	public List<ScQtDoc> searchCreateListAction() {
+
+		QTTemplateDocReqDTO qtTemplateReqDTO = new QTTemplateDocReqDTO();
+		ISearchBean<ScQtDoc> searchBean = new SearchBean<ScQtDoc>();
+		QTTemplateDocResDTO resDto = null;
+
+		if (getManagedBean().getScqtDoc().getTplSpecMaster().getSpecName() != null
+				&& !"".equalsIgnoreCase(getManagedBean().getScqtDoc()
+						.getTplSpecMaster().getSpecName())) {
+			SearchFilterBean committeSearchBean = new SearchFilterBean(
+					SearchOperator.OPERATOR_EQUALS.value());
+			committeSearchBean.setSearchField("tplSpecMaster.specName");
+			committeSearchBean.setSearchValue(getManagedBean().getScqtDoc()
+					.getTplSpecMaster().getSpecName());
+			searchBean.getDataFilterBeans().add(committeSearchBean);
+
+		}
+
+		if (getManagedBean().getSearchSpecTypeId() != null) {
+			SearchFilterBean committeTypeSearchBean = new SearchFilterBean(
+					SearchOperator.OPERATOR_EQUALS.value());
+			committeTypeSearchBean
+					.setSearchField("tplSpecMaster.specTypeCode.codeId");
+			committeTypeSearchBean.setSearchValue(getManagedBean()
+					.getSearchSpecTypeId());
+			searchBean.getDataFilterBeans().add(committeTypeSearchBean);
+		}
+
+		if (getManagedBean().getSearchItemTypeId() != null) {
+			SearchFilterBean creatDtSearchBean = new SearchFilterBean(
+					SearchOperator.OPERATOR_EQUALS.value());
+			creatDtSearchBean
+					.setSearchField("tplSpecMaster.itemTypeCode.codeId");
+			creatDtSearchBean.setSearchValue(getManagedBean()
+					.getSearchItemTypeId());
+			searchBean.getDataFilterBeans().add(creatDtSearchBean);
+		}
+
+		if (getManagedBean().getSearchProcurementId() != null) {
+			SearchFilterBean creatDtSearchBean = new SearchFilterBean(
+					SearchOperator.OPERATOR_EQUALS.value());
+			creatDtSearchBean
+					.setSearchField("tplSpecMaster.procurementCategory.codeId");
+			creatDtSearchBean.setSearchValue(getManagedBean()
+					.getSearchProcurementId());
+			searchBean.getDataFilterBeans().add(creatDtSearchBean);
+		}
+		if (getManagedBean().getScqtDoc().getScQt().getQtNo() != null
+				&& !"".equalsIgnoreCase(getManagedBean().getScqtDoc().getScQt()
+						.getQtNo())) {
+			SearchFilterBean qtnoSearchBean = new SearchFilterBean(
+					SearchOperator.OPERATOR_EQUALS.value());
+			qtnoSearchBean.setSearchField("scQt.qtNo");
+			qtnoSearchBean.setSearchValue(getManagedBean().getScqtDoc()
+					.getScQt().getQtNo());
+
+			searchBean.getDataFilterBeans().add(qtnoSearchBean);
+		}
+
+		qtTemplateReqDTO.setDocSearchBean(searchBean);
+
+		try {
+			IQTTemplateSO qtTemplateSO = EpEjbBusinessDelegate.getInstance()
+					.getServiceObject(QTConstants.SS_MODULE,
+							IQTTemplateSO.class);
+
+			resDto = qtTemplateSO.fetchTemplates(qtTemplateReqDTO);
+			System.out.println("========scQTDOC List size===="+resDto.getSearchResultBean().getResultList().size());
+			for(ScQtDoc sc : resDto.getSearchResultBean().getResultList()){
+				System.out.println("--- IN LOOP --"+sc.getQtDocId() +" ---- "+sc.getTplSpecMaster().getSpecName());
+			}
+
+		} catch (Exception ex) {
+			ex.printStackTrace();
+		}
+		this.getManagedBean().setDocSearchlist(
+				resDto.getSearchResultBean().getResultList());
+		return resDto.getSearchResultBean().getResultList();
+
 	}
 
 }
