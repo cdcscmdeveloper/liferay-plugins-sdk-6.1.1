@@ -173,107 +173,108 @@
 		</footer-portlet-javascript>
 		<css-class-wrapper>catalogue-portlet</css-class-wrapper>
 	</portlet>
+	
 	<!-- Fulfilment Start Added by Giri -->
 	<portlet>
-		<portlet-name>FLContractOrder</portlet-name>
+		<portlet-name>flContractList</portlet-name>
+		<icon>/icon.png</icon>
+		<instanceable>false</instanceable>
+		<header-portlet-css>/css/main.css</header-portlet-css>
+		<css-class-wrapper>flcos-portlet</css-class-wrapper>
+	</portlet>	
+	<portlet>
+		<portlet-name>flRequestNoteList</portlet-name>
+		<icon>/icon.png</icon>
+		<instanceable>false</instanceable>
+		<header-portlet-css>/css/main.css</header-portlet-css>
+		<css-class-wrapper>flrequestnote-portlet</css-class-wrapper>
+	</portlet>	
+	<portlet>
+		<portlet-name>flPendingDeliveryList</portlet-name>
+		<icon>/icon.png</icon>
+		<instanceable>false</instanceable>
+		<header-portlet-css>/css/main.css</header-portlet-css>
+		<css-class-wrapper>fldopending-portlet</css-class-wrapper>
+	</portlet>	
+	<portlet>
+		<portlet-name>flDocumentMaintenance</portlet-name>
+		<icon>/icon.png</icon>
+		<instanceable>false</instanceable>
+		<header-portlet-css>/css/main.css</header-portlet-css>
+		<css-class-wrapper>fldocs-portlet</css-class-wrapper>
+	</portlet>	
+	<portlet>
+		<portlet-name>flContractOrder</portlet-name>
 		<icon>/icon.png</icon>
 		<instanceable>false</instanceable>
 		<header-portlet-css>/css/main.css</header-portlet-css>
 		<css-class-wrapper>fl-portlet</css-class-wrapper>
 	</portlet>
 	<portlet>
-		<portlet-name>FLDeliveryOrder</portlet-name>
+		<portlet-name>flContractRequest</portlet-name>
+		<icon>/icon.png</icon>
+		<instanceable>false</instanceable>
+		<header-portlet-css>/css/main.css</header-portlet-css>
+		<css-class-wrapper>flcr-portlet</css-class-wrapper>
+	</portlet>	
+	<portlet>
+		<portlet-name>flInvoice</portlet-name>
+		<icon>/icon.png</icon>
+		<instanceable>false</instanceable>
+		<header-portlet-css>/css/main.css</header-portlet-css>
+		<css-class-wrapper>flinv-portlet</css-class-wrapper>
+	</portlet>	
+	<portlet>
+		<portlet-name>flDeliveryOrder</portlet-name>
 		<icon>/icon.png</icon>
 		<instanceable>false</instanceable>
 		<header-portlet-css>/css/main.css</header-portlet-css>
 		<css-class-wrapper>fldo-portlet</css-class-wrapper>
 	</portlet>
 	<portlet>
-		<portlet-name>FLContractRequest</portlet-name>
-		<icon>/icon.png</icon>
-		<instanceable>false</instanceable>
-		<header-portlet-css>/css/main.css</header-portlet-css>
-		<css-class-wrapper>flcr-portlet</css-class-wrapper>
-	</portlet>
-	<portlet>
-		<portlet-name>FLFulfilmentReceivedNote</portlet-name>
+		<portlet-name>flFulfilmentReceivedNote</portlet-name>
 		<icon>/icon.png</icon>
 		<instanceable>false</instanceable>
 		<header-portlet-css>/css/main.css</header-portlet-css>
 		<css-class-wrapper>flfrn-portlet</css-class-wrapper>
 	</portlet>
 	<portlet>
-		<portlet-name>FLCreateInvoice</portlet-name>
-		<icon>/icon.png</icon>
-		<instanceable>false</instanceable>
-		<header-portlet-css>/css/main.css</header-portlet-css>
-		<css-class-wrapper>flinv-portlet</css-class-wrapper>
-	</portlet>
-	<portlet>
-		<portlet-name>FLPaymentMatch</portlet-name>
+		<portlet-name>flPaymentMatch</portlet-name>
 		<icon>/icon.png</icon>
 		<instanceable>false</instanceable>
 		<header-portlet-css>/css/main.css</header-portlet-css>
 		<css-class-wrapper>flpm-portlet</css-class-wrapper>
 	</portlet>
 	<portlet>
-		<portlet-name>FLStopInstruction</portlet-name>
-		<icon>/icon.png</icon>
-		<instanceable>false</instanceable>
-		<header-portlet-css>/css/main.css</header-portlet-css>
-		<css-class-wrapper>flsi-portlet</css-class-wrapper>
-	</portlet>
-	<portlet>
-		<portlet-name>FLPurchaseOrder</portlet-name>
+		<portlet-name>flPurchaseOrder</portlet-name>
 		<icon>/icon.png</icon>
 		<instanceable>false</instanceable>
 		<header-portlet-css>/css/main.css</header-portlet-css>
 		<css-class-wrapper>flpo-portlet</css-class-wrapper>
 	</portlet>
 	<portlet>
-		<portlet-name>FLPurchaseRequest</portlet-name>
+		<portlet-name>flPurchaseRequest</portlet-name>
 		<icon>/icon.png</icon>
 		<instanceable>false</instanceable>
 		<header-portlet-css>/css/main.css</header-portlet-css>
 		<css-class-wrapper>flpr-portlet</css-class-wrapper>
 	</portlet>
 	<portlet>
-		<portlet-name>FLShippingInstruction</portlet-name>
+		<portlet-name>flShippingInstruction</portlet-name>
 		<icon>/icon.png</icon>
 		<instanceable>false</instanceable>
 		<header-portlet-css>/css/main.css</header-portlet-css>
 		<css-class-wrapper>flshippingInst-portlet</css-class-wrapper>
 	</portlet>
 	<portlet>
-		<portlet-name>FLContractRequestList</portlet-name>
+		<portlet-name>flStopDelivery</portlet-name>
 		<icon>/icon.png</icon>
 		<instanceable>false</instanceable>
 		<header-portlet-css>/css/main.css</header-portlet-css>
-		<css-class-wrapper>flcos-portlet</css-class-wrapper>
-	</portlet>
-	<portlet>
-		<portlet-name>FLDocumentSearch</portlet-name>
-		<icon>/icon.png</icon>
-		<instanceable>false</instanceable>
-		<header-portlet-css>/css/main.css</header-portlet-css>
-		<css-class-wrapper>fldocs-portlet</css-class-wrapper>
-	</portlet>
-	<portlet>
-		<portlet-name>FLPendingDoList</portlet-name>
-		<icon>/icon.png</icon>
-		<instanceable>false</instanceable>
-		<header-portlet-css>/css/main.css</header-portlet-css>
-		<css-class-wrapper>fldopending-portlet</css-class-wrapper>
-	</portlet>
-	<portlet>
-		<portlet-name>FLRequestNoteList</portlet-name>
-		<icon>/icon.png</icon>
-		<instanceable>false</instanceable>
-		<header-portlet-css>/css/main.css</header-portlet-css>
-		<css-class-wrapper>flrequestnote-portlet</css-class-wrapper>
-	</portlet>
-
+		<css-class-wrapper>flsi-portlet</css-class-wrapper>
+	</portlet>	
 	<!-- Fulfilment End Added by Giri -->
+	
 	<portlet>
 		<portlet-name>scCommittee</portlet-name>
 		<icon>/icon.png</icon>

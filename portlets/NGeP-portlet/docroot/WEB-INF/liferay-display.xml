@@ -46,20 +46,20 @@
 
 		<!-- Fulfilment Start Added by Giri -->
 		<category name="category.ep.fl">
-			<portlet id="FLContractOrder" />
-			<portlet id="FLDeliveryOrder" />
-			<portlet id="FLContractRequest" />
-			<portlet id="FLFulfilmentReceivedNote" />
-			<portlet id="FLCreateInvoice" />
-			<portlet id="FLPaymentMatch" />
-			<portlet id="FLStopInstruction" />
-			<portlet id="FLPurchaseOrder" />
-			<portlet id="FLPurchaseRequest" />
-			<portlet id="FLShippingInstruction" />
-			<portlet id="FLContractRequestList" />
-			<portlet id="FLDocumentSearch" />
-			<portlet id="FLPendingDoList" />
-			<portlet id="FLRequestNoteList" />
+			<portlet id="flContractList" />
+			<portlet id="flRequestNoteList" />
+			<portlet id="flPendingDeliveryList" />
+			<portlet id="flDocumentMaintenance" />
+			<portlet id="flContractOrder" />
+			<portlet id="flContractRequest" />
+			<portlet id="flInvoice" />
+			<portlet id="flDeliveryOrder" />
+			<portlet id="flFulfilmentReceivedNote" />
+			<portlet id="flPaymentMatch" />
+			<portlet id="flPurchaseOrder" />
+			<portlet id="flPurchaseRequest" />
+			<portlet id="flShippingInstruction" />
+			<portlet id="flStopDelivery" />
 		</category>
 		<!-- Fulfilment End Added by Giri -->
 		<portlet id="NGeP" />
