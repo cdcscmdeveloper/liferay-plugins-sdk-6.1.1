@@ -40,6 +40,8 @@ public class BSVAttendanceBackingBean extends
 		BaseBackingBean<BSVAttendanceManagedBean> {
 	public static Logger log = Logger.getLogger(BSVAttendanceBackingBean.class);
 	
+	private static final String NAV_TO_BSV_ATTENDANCE_MAIN_PAGE = "bsvAttendanceRegisterMain.xhtml?faces-redirect=true";
+	
 	private IUserSO userSO = null;
 	
 	private IQTBriefingSO qTBriefingSO = null;
@@ -247,5 +249,24 @@ public class BSVAttendanceBackingBean extends
 		}
 
 	}
+	
+	
+	/**
+	 * Cancel button for Bsv Registration
+	 */
+	public String cancelBriefing() {
+		log.info("** cancel Button **");
+		return NAV_TO_BSV_ATTENDANCE_MAIN_PAGE;
+
+		
+
+	}
+	
+	
+	
+	
+	
+	
+	
 
 }
