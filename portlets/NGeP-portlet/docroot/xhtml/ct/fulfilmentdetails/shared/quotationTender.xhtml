@@ -1,0 +1,50 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:c="http://java.sun.com/jsp/jstl/core">
+	
+	<p:panel id="qtnTenderPnl" header="Quotation / Tender Details" toggleable="true" toggleSpeed="500">
+		<h:panelGrid columns="4" style="width:800px;">
+			<p:outputLabel value="Qtn./Tender Type" />
+			<p:selectOneMenu disabled="true" value="Tender" style="width:180px;">
+				<f:selectItems value="#{contractDetailsBackingBean.contractListItem.sourcingType}" />
+			</p:selectOneMenu>
+			<p:outputLabel value="Published Date" />
+			<p:inputText style="width:170px;" disabled="true"
+				value="#{contractDetailsBackingBean.managedBean.ctContract.qtPublishDate}" >
+				<f:convertDateTime pattern="MM/dd/yyyy" />
+			</p:inputText>			
+			<p:outputLabel value="#{lbl['lbl.ct.loaNo']}" />
+			<p:inputText style="width:170px;" disabled="true" 
+				value="#{contractDetailsBackingBean.managedBean.ctContract.qtLoaNo}" />
+			<p:outputLabel value="LOA Acknowledged Date" />
+			<p:inputText style="width:170px;" disabled="true"
+				value="#{contractDetailsBackingBean.managedBean.ctContract.qtLoaDate}" >
+				<f:convertDateTime pattern="MM/dd/yyyy" />
+			</p:inputText>
+			<p:outputLabel value="Item Type" />
+			<p:selectOneMenu disabled="true" style="width:180px;">
+				<f:selectItems value="#{contractDetailsBackingBean.getDropdownValues(PmCodeCatConst.quotationCategory)}" />
+			</p:selectOneMenu>			
+			<p:outputLabel value="Item Origin" />
+			<p:selectOneMenu disabled="true" style="width:180px;">
+				<f:selectItems value="#{contractDetailsBackingBean.getDropdownValues(PmCodeCatConst.quotationCategory)}" />
+			</p:selectOneMenu>			
+			<p:outputLabel value="#{lbl['lbl.ct.fulfilmentType']}" />
+			<p:selectOneMenu disabled="true" style="width:180px;">
+				<f:selectItems value="#{contractDetailsBackingBean.getDropdownValues(PmCodeCatConst.fulfilmentType)}" />
+			</p:selectOneMenu>
+			<p:outputLabel value="#{lbl['lbl.ct.sfee']}" />
+			<p:inputText
+				value="#{contractDetailsBackingBean.managedBean.ctContract.serviceFee}"
+				style="width:55px;" disabled="true" />			
+		</h:panelGrid>
+	</p:panel>
+</ui:composition>
+
+
+
+
+
