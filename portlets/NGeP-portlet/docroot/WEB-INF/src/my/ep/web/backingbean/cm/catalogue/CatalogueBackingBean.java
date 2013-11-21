@@ -973,6 +973,33 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean>{
 
 		this.getManagedBean().getSelectedSupplierItemList().remove(index);
 	}
+	
+	
+	public void preRenderCatalogue(){
+		
+		ICatalogueSO catalogueSO = (ICatalogueSO) BusinessDelegate.getInstance().getServiceObject("cm",ICatalogueSO.class);
+
+		ISearchBean<CmSupplierItem> searchBean = new SearchBean<CmSupplierItem>();
+		statusFilterBean.setSearchField("itemStatus");
+		statusFilterBean.setSearchValue("D");
+		searchBean.getDataFilterBeans().add(statusFilterBean);
+
+
+
+		CatalogueReqDTO reqDTO = new CatalogueReqDTO();
+
+		reqDTO.setSearchBean(searchBean);
+		log.info("catalogueSO:"+catalogueSO);
+
+		CatalogueResDTO resDTO = catalogueSO.searchSupplierItemByStatus(reqDTO);
+
+		this.getManagedBean().setMaintainItemList(resDTO.getSupplierItemList());
+		
+		
+		FacesContext fc = FacesContext.getCurrentInstance();
+		fc.getApplication().getNavigationHandler().handleNavigation(fc, null, "catalogMaintenanceFile");
+		
+	}
 
 
 
