@@ -2440,8 +2440,7 @@
 			<role-name>user</role-name>
 		</security-role-ref>
 	</portlet>
-	
-			<portlet>
+	 <portlet>
 		<portlet-name>scBriefingSiteVisitAttendance</portlet-name>
 		<display-name>Briefing/Site Visit Attendance</display-name>
 		<portlet-class>
@@ -2476,8 +2475,5 @@
 			<role-name>user</role-name>
 		</security-role-ref>
 	</portlet>
-	
-	
-	
 	
 </portlet-app>
