@@ -15,15 +15,15 @@ xmlns:c="http://java.sun.com/jsp/jstl/core">
 			<!-- Item List -->
 			<ui:include src="itemList.xhtml"/>
 		
-			<!-- Button(s) -->
-			<c:if test="#{cc.attrs.viewMode==PPConst.modeNew || cc.attrs.viewMode==PPConst.modeRevision}">
-				<div class="ppRightBtn">
-					<p:commandButton value="#{lbl['lbl.pp.add']}" action="#{planBackingBean.showPpItem(null)}"
-						 oncomplete="dlItemDetailsModal.show()" update="dlItemDetails" icon="ui-icon-add" /> 
-			 		<br/>
-			 		<br/>
-		 		</div>
-			</c:if>
+			<!-- Button(s) -->			
+			<div class="ppRightBtn">
+				<p:commandButton value="#{lbl['lbl.pp.add']}" action="#{planBackingBean.showPpItem(null)}"
+					oncomplete="dlItemDetailsModal.show()" update="dlItemDetails" icon="ui-icon-add" 
+					disabled="#{!(cc.attrs.viewMode==PPConst.modeNew || cc.attrs.viewMode==PPConst.modeRevision)}"/>  
+		 		<br/>
+		 		<br/>
+	 		</div>
+		 		
 	 		<!-- Sub Item Details -->
 	 		<p:dialog id="dlItemDetails" header="#{lbl['lbl.pp.item.details']}" widgetVar="dlItemDetailsModal" 
 		            resizable="false" styleClass="ppDiaglogBg" dynamic="true">  

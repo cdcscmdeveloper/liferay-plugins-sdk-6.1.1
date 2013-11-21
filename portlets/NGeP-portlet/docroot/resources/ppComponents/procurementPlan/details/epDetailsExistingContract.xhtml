@@ -66,15 +66,14 @@ xmlns:c="http://java.sun.com/jsp/jstl/core">
     	<br/>
     	
     	<!-- Button(s) -->
-    	<c:if test="#{cc.attrs.viewMode==PPConst.modeNew || cc.attrs.viewMode==PPConst.modeRevision}">
-    		<div class="ppRightBtn">
-				<p:commandButton value="#{lbl['lbl.pp.add']}" action="#{planBackingBean.showPpPlan(null)}"
-					 oncomplete="dlItemDetailsModal.show()" update="dlItemDetails" icon="ui-icon-add"/> 
-		 		<br/>
-		 		<br/>
-	 		</div>
- 		</c:if>
- 		
+   		<div class="ppRightBtn">
+			<p:commandButton value="#{lbl['lbl.pp.add']}" action="#{planBackingBean.showPpPlan(null)}"
+				 oncomplete="dlItemDetailsModal.show()" update="dlItemDetails" icon="ui-icon-add"
+				 disabled="#{!(cc.attrs.viewMode==PPConst.modeNew || cc.attrs.viewMode==PPConst.modeRevision)}"/> 
+	 		<br/>
+	 		<br/>
+ 		</div>
+ 
  		<!-- Sub Item Details -->
  		<p:dialog id="dlItemDetails" header="#{lbl['lbl.pp.item.details']}" widgetVar="dlItemDetailsModal" 
 	              resizable="false" styleClass="ppDiaglogBigBg" dynamic="true">  

@@ -49,8 +49,8 @@ xmlns:c="http://java.sun.com/jsp/jstl/core">
 						<td>
 							<p:selectOneMenu id="somContractType" value="#{planBackingBean.managedBean.selectedPlanItem.contractType}" 
 								disabled="#{planBackingBean.managedBean.selectedPlanItem.contractInd!=PPConst.contractIndContract
-								|| !planBackingBean.managedBean.selectedPlanItem.brandNew 
-								&amp;&amp; !planBackingBean.managedBean.selectedPlanItem.editable}">
+								|| (!planBackingBean.managedBean.selectedPlanItem.brandNew 
+								&amp;&amp; !planBackingBean.managedBean.selectedPlanItem.editable)}">
 								<f:selectItem itemLabel="#{lbl['lbl.select']}" itemValue="#{null}"/>
 								<f:selectItems value="#{planBackingBean.contractTypeOptions()}"/>
 								<p:ajax event="change" update="somContractNum" />
@@ -73,8 +73,8 @@ xmlns:c="http://java.sun.com/jsp/jstl/core">
 						<td>
 							<p:selectOneMenu value="#{planBackingBean.managedBean.selectedPlanItem.circularId}"
 								disabled="#{planBackingBean.managedBean.selectedPlanItem.contractInd!=PPConst.contractIndPkp
-								|| !planBackingBean.managedBean.selectedPlanItem.brandNew 
-								&amp;&amp; !planBackingBean.managedBean.selectedPlanItem.editable}" >
+								|| (!planBackingBean.managedBean.selectedPlanItem.brandNew 
+								&amp;&amp; !planBackingBean.managedBean.selectedPlanItem.editable)}" >
 								<f:selectItem itemLabel="#{lbl['lbl.select']}" itemValue="#{null}"/>
 								<f:selectItems value="#{planBackingBean.circularOptions()}" var="obj" 
 									itemLabel="#{obj.latestCircularVer.circularNo}" itemValue="#{obj.circularId}"/>
@@ -96,8 +96,9 @@ xmlns:c="http://java.sun.com/jsp/jstl/core">
 						<td>
 							<p:outputPanel rendered="#{planBackingBean.managedBean.selectedPlanItem.contractInd==PPConst.contractIndPkp}">
 								<p:selectOneMenu id="somPkpContractNum" value="#{planBackingBean.managedBean.selectedPlanItem.ctContract.contractId}"
-									disabled="#{planBackingBean.managedBean.selectedPlanItem.contractInd==PPConst.contractIndLoa ||
-									planBackingBean.managedBean.selectedPlanItem.circularId==null}" >
+									disabled="#{planBackingBean.managedBean.selectedPlanItem.contractInd==PPConst.contractIndLoa 
+									|| planBackingBean.managedBean.selectedPlanItem.circularId==null
+									||(!planBackingBean.managedBean.selectedPlanItem.brandNew &amp;&amp; !planBackingBean.managedBean.selectedPlanItem.editable)}" >
 									<f:selectItem itemLabel="#{lbl['lbl.select']}" itemValue="#{null}"/>
 									<f:selectItems value="#{planBackingBean.cicularContractOptions(planBackingBean.managedBean.selectedPlanItem.circularId)}" 
 										var="obj" itemLabel="#{obj.ctContract.contractValue.contractNo}" itemValue="#{obj.ctContract.contractId}"/>
@@ -107,7 +108,8 @@ xmlns:c="http://java.sun.com/jsp/jstl/core">
 							<p:outputPanel rendered="#{planBackingBean.managedBean.selectedPlanItem.contractInd!=PPConst.contractIndPkp}">
 								<p:selectOneMenu id="somContractNum" value="#{planBackingBean.managedBean.selectedPlanItem.ctContract.contractId}"
 									disabled="#{planBackingBean.managedBean.selectedPlanItem.contractInd==PPConst.contractIndLoa
-									|| planBackingBean.managedBean.selectedPlanItem.contractType==null}">
+									|| planBackingBean.managedBean.selectedPlanItem.contractType==null 
+									||(!planBackingBean.managedBean.selectedPlanItem.brandNew &amp;&amp; !planBackingBean.managedBean.selectedPlanItem.editable)}">
 									<f:selectItem itemLabel="#{lbl['lbl.select']}" itemValue="#{null}"/>
 									<f:selectItems value="#{planBackingBean.contractOptions(planBackingBean.managedBean.selectedPlanItem.contractType)}"
 										var="obj" itemLabel="#{obj.contractValue.contractNo}" itemValue="#{obj.contractId}"/>
@@ -122,15 +124,16 @@ xmlns:c="http://java.sun.com/jsp/jstl/core">
 						<td>
 							<p:calendar showOn="button" value="#{planBackingBean.managedBean.selectedPlanItem.planStartDate}" 
 								rendered="#{cc.attrs.selectedPlanMaster.fulfilmentType==PPConst.fulfillmentSchedule}" pattern="#{PPConst.dateDisplayPattern}" 
-				             	disabled="#{!planBackingBean.managedBean.selectedPlanItem.brandNew 
-				             		&amp;&amp; !planBackingBean.managedBean.selectedPlanItem.editable}">
+				             	disabled="#{planBackingBean.managedBean.selectedPlanItem.ctContract.contractId==null 
+				             	 	(!planBackingBean.managedBean.selectedPlanItem.brandNew 
+				             		&amp;&amp; !planBackingBean.managedBean.selectedPlanItem.editable)}">
 				             	<p:ajax event="dateSelect" update="opEndDate" listener="#{planBackingBean.calculatePlanEndDate()}"  />              	
 	             				<p:ajax event="change" update="opEndDate" listener="#{planBackingBean.calculatePlanEndDate()}" />
 				             </p:calendar>
 							<p:selectOneMenu rendered="#{cc.attrs.selectedPlanMaster.fulfilmentType!=PPConst.fulfillmentSchedule}"
 								value="#{planBackingBean.managedBean.selectedPlanItem.planStartMonth}"
-							 	disabled="#{!planBackingBean.managedBean.selectedPlanItem.brandNew 
-				             		&amp;&amp; !planBackingBean.managedBean.selectedPlanItem.editable}">
+							 	disabled="#{planBackingBean.managedBean.selectedPlanItem.ctContract.contractId==null || (!planBackingBean.managedBean.selectedPlanItem.brandNew 
+				             		&amp;&amp; !planBackingBean.managedBean.selectedPlanItem.editable)}">
 								<f:selectItem itemLabel="#{lbl['lbl.select']}" itemValue="12"/>
 								<f:selectItems value="#{planBackingBean.shortMonths()}"/>
 								<p:ajax event="change" update="opEndDate"
@@ -171,9 +174,10 @@ xmlns:c="http://java.sun.com/jsp/jstl/core">
 				<ui:include src="itemList.xhtml"/>
 		    	<br/>
 		    	<br/>
-				<!-- Item Details -->
-				<ui:include src="itemDetails.xhtml"/>
-				
+		    	<c:if test="#{cc.attrs.viewMode!=PPConst.modeApproval &amp;&amp; cc.attrs.viewMode!=PPConst.modeVerification}">
+					<!-- Item Details -->
+					<ui:include src="itemDetails.xhtml"/>
+				</c:if>
 				
 			</p:panel>	
 	</p:outputPanel>
