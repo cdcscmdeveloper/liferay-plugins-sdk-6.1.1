@@ -1,0 +1,187 @@
+
+
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:c="http://java.sun.com/jsp/jstl/core">
+
+	<p:growl id="growl" showDetail="true" />
+	<p:panel header="Company List" toggleable="true">
+		<p:dataTable id="complisttbl" var="scQtBriefReg"
+			value="#{bsvAttendanceBackingBean.managedBean.briefingRegistrationList}"
+			selection="bsvAttendanceBackingBean.managedBean.selectedbriefRegistration"
+			rowKey="#{scQtBriefReg.smSupplier.supplierId}"
+			rowIndexVar="rowIndex">
+
+			<p:ajax event="rowSelect"
+				listener="#{bsvAttendanceBackingBean.onRowSelect}" />
+
+
+			<p:column headerText="#{lbl['lbl.sc.bsv.attendance.mof.regno']}">
+				<p:inputText value="#{scQtBriefReg.smSupplier.supplierId}" />
+			</p:column>
+
+			<p:column headerText="#{lbl['lbl.sc.bsv.attendance.comp.name']}">
+				<p:inputText value="#{scQtBriefReg.smSupplier.supplierName}" />
+			</p:column>
+
+			<p:column headerText="#{lbl['lbl.sc.bsv.attendance.attendance']}">
+				<h:selectBooleanCheckbox value="1" />
+			</p:column>
+
+
+			<p:column headerText="#{lbl['lbl.sc.bsv.attendance.action']}">
+				<p:commandLink>
+					<p:graphicImage library="ep/images/design" name="edit.png"
+						value="/resources/ep/images/design/edit.png" />
+				</p:commandLink>
+				<p:commandLink>
+					<p:graphicImage library="ep/images/design" name="delete.png"
+						value="/resources/ep/images/design/delete.png" />
+				</p:commandLink>
+
+			</p:column>
+		</p:dataTable>
+
+
+		<p:panelGrid style="width:100%;"
+			styleClass="noBorders tr,noBorders td">
+			<p:row>
+				<p:commandButton value="#{lbl['lbl.sc.bsv.attendance.add']}"
+					action="#{bsvAttendanceBackingBean.addCompanyDetails}" />
+			</p:row>
+		</p:panelGrid>
+	</p:panel>
+
+
+	<p:panel header="Attendence List For Company" toggleable="true">
+		<p:dataTable id="attendanceDetailstbl" var="ScQtBriefAttendace"
+			value="#{bsvAttendanceBackingBean.managedBean.briefingAttendanceList}"
+			rows="10" rowKey="#{ScQtBriefAttendace.qtBriefingAttendanceId}"
+			rowIndexVar="rowIndex">
+
+			<p:column headerText="#{lbl['lbl.sc.bsv.attendance.name']}">
+				<p:inputText value="#{ScQtBriefAttendace.name}" />
+			</p:column>
+
+			<p:column
+				headerText="#{lbl['lbl.sc.bsv.attendance.identification.type']}">
+				<p:inputText value="#{ScQtBriefAttendace.icPassport}" />
+			</p:column>
+
+			<p:column
+				headerText="#{lbl['lbl.sc.bsv.attendance.identification.no']}">
+				<p:inputText value="#{ScQtBriefAttendace.icPassport}" />
+			</p:column>
+
+			<p:column headerText="#{lbl['lbl.sc.bsv.attendance.contact.no']}">
+				<p:inputText value="#{ScQtBriefAttendace.contactNo}" />
+			</p:column>
+
+
+			<p:column headerText="#{lbl['lbl.sc.bsv.attendance.email']}">
+				<p:inputText value="#{ScQtBriefAttendace.email}" />
+			</p:column>
+
+
+			<p:column headerText="#{lbl['lbl.sc.bsv.attendance.action']}">
+				<p:commandLink>
+					<p:graphicImage library="ep/images/design" name="edit.png"
+						value="/resources/ep/images/design/edit.png" />
+				</p:commandLink>
+				<p:commandLink>
+					<p:graphicImage library="ep/images/design" name="delete.png"
+						value="/resources/ep/images/design/delete.png" />
+				</p:commandLink>
+
+			</p:column>
+
+		</p:dataTable>
+
+
+		<div align="right">
+			<p:commandButton value="#{lbl['lbl.sc.bsv.attendance.add']}"
+				process="@this,attendanceDetailstbl" partialSubmit="true"
+				action="#{bsvAttendanceBackingBean.addAttendaceDetails}"
+				update="attendanceDetailstbl" />
+		</div>
+
+	</p:panel>
+
+	<p:panel header="Approval Details" toggleable="true">
+		<h:panelGrid border="0" cellpadding="0" cellspacing="0" width="100%"
+			columns="4"
+			columnClasses="columnWidth20,columnWidth30,columnWidth20,columnWidth30">
+			<p:column>
+				<p:outputLabel value="#{lbl['lbl.sc.bsv.attendance.approver.name']}"></p:outputLabel>
+			</p:column>
+
+			<p:column>
+		<!-- 	  <p:selectOneMenu  value="#">
+				<f:selectItem itemLabel="Select One" itemValue="" />
+				<f:selectItems value="#{bsvAttendanceBackingBean.managedBean.approverNames}" var="appName"
+								itemLabel="#{appName.userName}" itemValue="#{appName.userId}"></f:selectItems>
+			   </p:selectOneMenu> -->
+	
+		    <p:column>
+				<p:selectOneMenu
+					value="searchQtnTenderBB.managedBean.qtnTenders.planNumber">
+					<f:selectItem itemLabel="DeskOfficer" itemValue="1" />
+					<f:selectItem itemLabel="siteManager" itemValue="2" />
+				</p:selectOneMenu>
+			</p:column>
+	
+	
+			</p:column>
+
+			<p:column>
+				<p:outputLabel value="#{lbl['lbl.sc.bsv.attendance.approval.date']}"></p:outputLabel>
+			</p:column>
+
+			<p:column>
+				<p:inputText value="23/09/2013 04:15" readonly="true"
+					disabled="true"></p:inputText>
+			</p:column>
+
+			<p:column>
+				<p:outputLabel value="#{lbl['lbl.sc.bsv.attendance.action']}"></p:outputLabel>
+			</p:column>
+
+			<p:column>
+				<p:selectOneMenu
+					value="searchQtnTenderBB.managedBean.qtnTenders.planNumber">
+					<f:selectItem itemLabel="Approve" itemValue="A" />
+					<f:selectItem itemLabel="Reject" itemValue="R" />
+					<f:selectItem itemLabel="Revise" itemValue="R" />
+				</p:selectOneMenu>
+			</p:column>
+
+			<p:column>
+				<p:outputLabel value="#{lbl['lbl.sc.bsv.attendance.remarks']}"></p:outputLabel>
+			</p:column>
+
+			<p:column>
+				<p:inputTextarea rows="4" cols="25" autoResize="false"></p:inputTextarea>
+			</p:column>
+
+
+		</h:panelGrid>
+
+		<br />
+		<br />
+		<p:panelGrid style="width:100%;"
+			styleClass="noBorders tr,noBorders td">
+			<p:row>
+				<p:column width="100%" style="text-align:right">
+					<p:commandButton value="#{lbl['lbl.sc.bsv.attendance.okbtn']}" />
+					<p:commandButton value="#{lbl['lbl.sc.bsv.attendance.cancelbtn']}" />
+				</p:column>
+
+			</p:row>
+		</p:panelGrid>
+
+	</p:panel>
+
+</ui:composition>
