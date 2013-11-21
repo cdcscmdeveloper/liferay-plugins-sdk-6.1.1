@@ -2,6 +2,87 @@
 <!DOCTYPE liferay-portlet-app PUBLIC "-//Liferay//DTD Portlet Application 6.1.0//EN" "http://www.liferay.com/dtd/liferay-portlet-app_6_1_0.dtd">
 <liferay-portlet-app>
 
+	<!-- Contract - START -->
+	<portlet>
+		<portlet-name>ctContractMaintenance</portlet-name>
+		<icon>/icon.png</icon>
+		<instanceable>false</instanceable>
+		<ajaxable>false</ajaxable>
+		<header-portlet-css>/css/ep/main.css</header-portlet-css>
+		<css-class-wrapper>ct-portlet</css-class-wrapper>
+	</portlet>	
+	<portlet>
+		<portlet-name>ctAssociateContract</portlet-name>
+		<icon>/icon.png</icon>
+		<instanceable>false</instanceable>
+		<ajaxable>false</ajaxable>
+		<header-portlet-css>/css/ep/main.css</header-portlet-css>
+		<css-class-wrapper>ct-portlet</css-class-wrapper>
+	</portlet>
+	<portlet>
+		<portlet-name>ctCreateCcCircular</portlet-name>
+		<icon>/icon.png</icon>
+		<instanceable>false</instanceable>
+		<ajaxable>false</ajaxable>
+		<header-portlet-css>/css/ep/main.css</header-portlet-css>
+		<css-class-wrapper>ct-portlet</css-class-wrapper>
+	</portlet>
+	<portlet>
+		<portlet-name>ctCcCircularMaintenance</portlet-name>
+		<icon>/icon.png</icon>
+		<instanceable>false</instanceable>
+		<ajaxable>false</ajaxable>
+		<header-portlet-css>/css/ep/main.css</header-portlet-css>
+		<css-class-wrapper>ct-portlet</css-class-wrapper>
+	</portlet>
+	<portlet>
+		<portlet-name>ctCreatePanelCircular</portlet-name>
+		<icon>/icon.png</icon>
+		<instanceable>false</instanceable>
+		<ajaxable>false</ajaxable>
+		<header-portlet-css>/css/ep/main.css</header-portlet-css>
+		<css-class-wrapper>ct-portlet</css-class-wrapper>
+	</portlet>
+	<portlet>
+		<portlet-name>ctPanelCircularMaintenance</portlet-name>
+		<icon>/icon.png</icon>
+		<instanceable>false</instanceable>
+		<ajaxable>false</ajaxable>
+		<header-portlet-css>/css/ep/main.css</header-portlet-css>
+		<css-class-wrapper>ct-portlet</css-class-wrapper>
+	</portlet>	
+	<portlet>
+		<portlet-name>ctCancelCircular</portlet-name>
+		<icon>/icon.png</icon>
+		<instanceable>false</instanceable>
+		<ajaxable>false</ajaxable>
+		<header-portlet-css>/css/ep/main.css</header-portlet-css>
+		<css-class-wrapper>ct-portlet</css-class-wrapper>
+	</portlet>
+	<portlet>
+		<portlet-name>ctFulfilmentDetail</portlet-name>
+		<icon>/icon.png</icon>
+		<instanceable>false</instanceable>
+		<ajaxable>false</ajaxable>
+		<header-portlet-css>/css/ep/main.css</header-portlet-css>
+		<css-class-wrapper>ct-portlet</css-class-wrapper>
+	</portlet>
+	<portlet>
+		<portlet-name>ctAgreement</portlet-name>
+		<icon>/icon.png</icon>
+		<instanceable>false</instanceable>
+		<ajaxable>false</ajaxable>
+		<header-portlet-css>/css/ep/main.css</header-portlet-css>
+		<css-class-wrapper>ct-portlet</css-class-wrapper>
+	</portlet>
+	<portlet>
+		<portlet-name>ctSuppAgreement</portlet-name>
+		<icon>/icon.png</icon>
+		<instanceable>false</instanceable>
+		<ajaxable>false</ajaxable>
+		<header-portlet-css>/css/ep/main.css</header-portlet-css>
+		<css-class-wrapper>ct-portlet</css-class-wrapper>
+	</portlet>
 	<portlet>
 		<portlet-name>ctTemplate</portlet-name>
 		<icon>/icon.png</icon>
@@ -9,123 +90,8 @@
 		<ajaxable>false</ajaxable>
 		<header-portlet-css>/css/ep/main.css</header-portlet-css>
 		<css-class-wrapper>ct-portlet</css-class-wrapper>
-	</portlet>
-	<portlet>
-		<portlet-name>associate</portlet-name>
-		<icon>/icon.png</icon>
-		<instanceable>false</instanceable>
-		<ajaxable>false</ajaxable>
-		<header-portlet-css>/css/ep/main.css</header-portlet-css>
-		<css-class-wrapper>ct-portlet</css-class-wrapper>
-	</portlet>
-	
-	<portlet>
-		<portlet-name>search</portlet-name>
-		<icon>/icon.png</icon>
-		<instanceable>false</instanceable>
-		<ajaxable>false</ajaxable>
-		<header-portlet-css>/css/ep/main.css</header-portlet-css>
-		<css-class-wrapper>ct-portlet</css-class-wrapper>
-	</portlet>
-
-	<portlet>
-		<portlet-name>fd</portlet-name>
-		<icon>/icon.png</icon>
-		<instanceable>false</instanceable>
-		<ajaxable>false</ajaxable>
-		<header-portlet-css>/css/ep/main.css</header-portlet-css>
-		<css-class-wrapper>ct-portlet</css-class-wrapper>
-	</portlet>
-
-	<portlet>
-		<portlet-name>pc</portlet-name>
-		<icon>/icon.png</icon>
-		<instanceable>false</instanceable>
-		<ajaxable>false</ajaxable>
-		<header-portlet-css>/css/ep/main.css</header-portlet-css>
-		<css-class-wrapper>ct-portlet</css-class-wrapper>
-	</portlet>
-
-	<portlet>
-		<portlet-name>cancelCircular</portlet-name>
-		<icon>/icon.png</icon>
-		<instanceable>false</instanceable>
-		<ajaxable>false</ajaxable>
-		<header-portlet-css>/css/ep/main.css</header-portlet-css>
-		<css-class-wrapper>ct-portlet</css-class-wrapper>
-	</portlet>
-	
-	<portlet>
-		<portlet-name>pcSearch</portlet-name>
-		<icon>/icon.png</icon>
-		<instanceable>false</instanceable>
-		<ajaxable>false</ajaxable>
-		<header-portlet-css>/css/ep/main.css</header-portlet-css>
-		<css-class-wrapper>ct-portlet</css-class-wrapper>
-	</portlet>
-
-	<portlet>
-		<portlet-name>cc</portlet-name>
-		<icon>/icon.png</icon>
-		<instanceable>false</instanceable>
-		<ajaxable>false</ajaxable>
-		<header-portlet-css>/css/ep/main.css</header-portlet-css>
-		<css-class-wrapper>ct-portlet</css-class-wrapper>
-	</portlet>
-
-	<portlet>
-		<portlet-name>ccSearch</portlet-name>
-	<icon>/icon.png</icon>
-		<instanceable>false</instanceable>
-		<ajaxable>false</ajaxable>
-		<header-portlet-css>/css/ep/main.css</header-portlet-css>
-		<css-class-wrapper>ct-portlet</css-class-wrapper>
-	</portlet>
-
-	<portlet>
-		<portlet-name>ag</portlet-name>
-		<icon>/icon.png</icon>
-		<instanceable>false</instanceable>
-		<ajaxable>false</ajaxable>
-		<header-portlet-css>/css/ep/main.css</header-portlet-css>
-		<css-class-wrapper>ct-portlet</css-class-wrapper>
-	</portlet>
-
-	<portlet>
-		<portlet-name>supag</portlet-name>
-		<icon>/icon.png</icon>
-		<instanceable>false</instanceable>
-		<ajaxable>false</ajaxable>
-		<header-portlet-css>/css/ep/main.css</header-portlet-css>
-		<css-class-wrapper>ct-portlet</css-class-wrapper>
-	</portlet>
-
-	<portlet>
-		<portlet-name>supplierSearch</portlet-name>
-		<icon>/icon.png</icon>
-		<instanceable>false</instanceable>
-		<ajaxable>false</ajaxable>
-		<header-portlet-css>/css/ep/main.css</header-portlet-css>
-		<css-class-wrapper>ct-portlet</css-class-wrapper>
-	</portlet>
-
-	<portlet>
-		<portlet-name>pbReview</portlet-name>
-		<icon>/icon.png</icon>
-		<instanceable>false</instanceable>
-		<ajaxable>false</ajaxable>
-		<header-portlet-css>/css/ep/main.css</header-portlet-css>
-		<css-class-wrapper>ct-portlet</css-class-wrapper>
-	</portlet>
-
-	<portlet>
-		<portlet-name>bpkReview</portlet-name>
-		<icon>/icon.png</icon>
-		<instanceable>false</instanceable>
-		<ajaxable>false</ajaxable>
-		<header-portlet-css>/css/ep/main.css</header-portlet-css>
-		<css-class-wrapper>ct-portlet</css-class-wrapper>
-	</portlet>
+	</portlet>	
+	<!-- Contract - END -->
 
 	<!-- Procurement Plan - START -->
 	<portlet>

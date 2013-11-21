@@ -3,40 +3,19 @@
 <display>
 	<category name="NGeP">
 		<category name="category.ep.ct">
-			<category name="category.ep.fd">
-				<portlet id="search"></portlet>
-				<portlet id="fd"></portlet>
-				<portlet id="associate"></portlet>
-			</category>
 			<category name="category.ep.cr">
-				<category name="category.ep.cr.pc">
-					<portlet id="pcSearch"></portlet>
-					<portlet id="pc"></portlet>
-				</category>
-				<category name="category.ep.cr.cc">
-					<portlet id="ccSearch"></portlet>
-					<portlet id="cc"></portlet>
-				</category>
-				<portlet id="cancelCircular"></portlet>
+				<portlet id="ctCreateCcCircular" />
+				<portlet id="ctCcCircularMaintenance" />
+				<portlet id="ctCreatePanelCircular" />
+				<portlet id="ctPanelCircularMaintenance" />
+				<portlet id="ctCancelCircular" />
 			</category>
-			<category name="category.ep.ag">
-				<portlet id="ag"></portlet>
-				<portlet id="supag"></portlet>
-			</category>
-			<category name="category.ep.fs">
-				<portlet id="supplierSearch"></portlet>
-			</category>
-			<category name="category.ep.pb">
-				<portlet id="pbReview"></portlet>
-			</category>
-			<category name="category.ep.bpk">
-				<portlet id="bpkReview"></portlet>
-			</category>
-			<category name="category.ep.tpl">
-				<portlet id="ctTemplate"></portlet>
-				<portlet id="ShippingInstruction" />
-				<portlet id="StopInstruction" />
-			</category>
+			<portlet id="ctContractMaintenance" />
+			<portlet id="ctAssociateContract" />
+			<portlet id="ctFulfilmentDetail" />
+			<portlet id="ctAgreement" />
+			<portlet id="ctSuppAgreement" />
+			<portlet id="ctTemplate"></portlet>
 		</category>
 
 		<!-- Procurement Plan - START -->
