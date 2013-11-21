@@ -111,12 +111,11 @@
 												<tr>
 													<td style="font-weight: bold; width: 15%;"><p:outputLabel
 															value="Supplier:"></p:outputLabel></td>
-													<td>ABC SDN BHD<p:commandLink
+													<td>ABC SDN BHD<p:commandButton icon="ui-icon-add" value="Favorite"
 															action="#{favoriteSupplierBackingBean.addToFavoriteSupplier(supplierItem.supplierId)}"
 															update=":form:supplierItemViewID">
-															<p:graphicImage
-																value="/resources/ep/images/design/add.png"></p:graphicImage>
-														</p:commandLink></td>
+														
+														</p:commandButton></td>
 
 												</tr>
 											</table>
@@ -132,7 +131,7 @@
 															action="#{catalogueBackingBean.addToCart}"
 															update=":form:supplierItemViewID">
 															<p:graphicImage
-																value="/resources/ep/images/design/cart.png"></p:graphicImage>
+																value="/resources/ep/images/design/cart_add.png"></p:graphicImage>
 														</p:commandLink></td>
 												</tr>
 												<tr>
