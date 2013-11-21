@@ -519,7 +519,62 @@
 		<css-class-wrapper>smdisciplinary-portlet</css-class-wrapper>
 	</portlet>
 	<!-- Supplier Management End venkat -->
+	
+	<!-- Supplier Management - Andrew -->
+	<portlet>
+		<portlet-name>sdoreview</portlet-name>
+		<icon>/icon.png</icon>
+		<instanceable>false</instanceable>
+		<header-portlet-css>/css/main.css</header-portlet-css>
+		<footer-portlet-javascript>
+			/js/main.js
+		</footer-portlet-javascript>
+		<css-class-wrapper>sdoreview-portlet</css-class-wrapper>
+	</portlet>
+	<portlet>
+		<portlet-name>complaint</portlet-name>
+		<icon>/icon.png</icon>
+		<instanceable>false</instanceable>
+		<header-portlet-css>/css/main.css</header-portlet-css>
+		<footer-portlet-javascript>
+			/js/main.js
+		</footer-portlet-javascript>
+		<css-class-wrapper>complaint-portlet</css-class-wrapper>
+	</portlet>
 
+	<portlet>
+		<portlet-name>svcassignment</portlet-name>
+		<icon>/icon.png</icon>
+		<instanceable>false</instanceable>
+		<header-portlet-css>/css/main.css</header-portlet-css>
+		<footer-portlet-javascript>
+			/js/main.js
+		</footer-portlet-javascript>
+		<css-class-wrapper>svcassignment-portlet</css-class-wrapper>
+	</portlet>
+	<portlet>
+		<portlet-name>SvoSiteVisit</portlet-name>
+		<icon>/icon.png</icon>
+		<instanceable>false</instanceable>
+		<header-portlet-css>/css/main.css</header-portlet-css>
+		<footer-portlet-javascript>
+			/js/main.js
+		</footer-portlet-javascript>
+		<css-class-wrapper>svositevisit-portlet</css-class-wrapper>
+	</portlet>
+
+	<portlet>
+		<portlet-name>questionnaire</portlet-name>
+		<icon>/icon.png</icon>
+		<instanceable>false</instanceable>
+		<header-portlet-css>/css/main.css</header-portlet-css>
+		<footer-portlet-javascript>
+			/js/main.js
+		</footer-portlet-javascript>
+		<css-class-wrapper>questionnaire-portlet</css-class-wrapper>
+	</portlet>
+	<!-- Supplier Management - End - Andrew -->
+	
 	<portlet>
 		<portlet-name>ReviewUNSPSC</portlet-name>
 		<icon>/icon.png</icon>
