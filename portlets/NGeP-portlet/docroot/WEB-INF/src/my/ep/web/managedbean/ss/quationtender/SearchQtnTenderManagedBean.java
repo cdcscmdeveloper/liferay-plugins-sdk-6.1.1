@@ -113,7 +113,6 @@ public class SearchQtnTenderManagedBean extends BaseManagedBean {
 	 * public void setTabview(Map<String, List<SelectItem>> tabview) {
 	 * this.tabview = tabview; }
 	 */
-
 	public List<String> getCheckBoxBPK1() {
 		return checkBoxBPK1;
 	}
@@ -311,28 +310,35 @@ public class SearchQtnTenderManagedBean extends BaseManagedBean {
 
 		ScQtApproval scQtApproval = new ScQtApproval();
 		scQtApproval.setApprovalCategory(ApprovalCategory.BUDGET_APPROVAL.value());
+		scQtApproval.setVerifyOption("1");
 		tabList.add(new TabBean("Budget Approval", scQtApproval));
 		
 		scQtApproval = new ScQtApproval();
 		scQtApproval.setApprovalCategory(ApprovalCategory.BPK_APPROVAL.value());
+		scQtApproval.setVerifyOption("1");
 		tabList.add(new TabBean("BPK Approval", scQtApproval));
 		
 		scQtApproval = new ScQtApproval();
 		scQtApproval.setApprovalCategory(ApprovalCategory.MITI_APPROVAL.value());
+		scQtApproval.setVerifyOption("1");
 		//tabList.add(new TabBean("MITI Approval", scQtApproval));
 		
 		scQtApproval = new ScQtApproval();
 		scQtApproval.setApprovalCategory(ApprovalCategory.ICT_APPROVAL.value());
+		scQtApproval.setVerifyOption("1");
 		tabList.add(new TabBean("ICT Approval", scQtApproval));
 		
 		scQtApproval = new ScQtApproval();
 		scQtApproval.setApprovalCategory(ApprovalCategory.PROCUREMENT_BOARD_APPROVAL.value());
+		scQtApproval.setVerifyOption("1");
 		//tabList.add(new TabBean("Procurement Board Approval", scQtApproval));
 		
 		scQtApproval = new ScQtApproval();
 		scQtApproval.setApprovalCategory(ApprovalCategory.DIVISION_APPROVAL.value());
+		scQtApproval.setVerifyOption("1");
 		tabList.add(new TabBean("Division Approval", scQtApproval));
 		// Tabview end
+		
 	}
 
 	private List<String> populateSucCate() {
