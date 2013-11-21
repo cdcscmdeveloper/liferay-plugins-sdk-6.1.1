@@ -12,8 +12,7 @@
 		<p:dataTable id="complisttbl" var="scQtBriefReg"
 			value="#{bsvAttendanceBackingBean.managedBean.briefingRegistrationList}"
 			selection="bsvAttendanceBackingBean.managedBean.selectedbriefRegistration"
-			rowKey="#{scQtBriefReg.smSupplier.supplierId}"
-			rowIndexVar="rowIndex">
+			rowKey="#{scQtBriefReg.smSupplier.supplierId}" rowIndexVar="rowIndex">
 
 			<p:ajax event="rowSelect"
 				listener="#{bsvAttendanceBackingBean.onRowSelect}" />
@@ -119,21 +118,21 @@
 			</p:column>
 
 			<p:column>
-		<!-- 	  <p:selectOneMenu  value="#">
+				<!-- 	  <p:selectOneMenu  value="#">
 				<f:selectItem itemLabel="Select One" itemValue="" />
 				<f:selectItems value="#{bsvAttendanceBackingBean.managedBean.approverNames}" var="appName"
 								itemLabel="#{appName.userName}" itemValue="#{appName.userId}"></f:selectItems>
 			   </p:selectOneMenu> -->
-	
-		    <p:column>
-				<p:selectOneMenu
-					value="searchQtnTenderBB.managedBean.qtnTenders.planNumber">
-					<f:selectItem itemLabel="DeskOfficer" itemValue="1" />
-					<f:selectItem itemLabel="siteManager" itemValue="2" />
-				</p:selectOneMenu>
-			</p:column>
-	
-	
+
+				<p:column>
+					<p:selectOneMenu
+						value="searchQtnTenderBB.managedBean.qtnTenders.planNumber">
+						<f:selectItem itemLabel="DeskOfficer" itemValue="1" />
+						<f:selectItem itemLabel="siteManager" itemValue="2" />
+					</p:selectOneMenu>
+				</p:column>
+
+
 			</p:column>
 
 			<p:column>
@@ -176,7 +175,7 @@
 			<p:row>
 				<p:column width="100%" style="text-align:right">
 					<p:commandButton value="#{lbl['lbl.sc.bsv.attendance.okbtn']}" />
-					<p:commandButton value="#{lbl['lbl.sc.bsv.attendance.cancelbtn']}" />
+					<p:commandButton value="#{lbl['lbl.sc.bsv.attendance.cancelbtn']}"  action="#{bsvAttendanceBackingBean.cancelBriefing}"/>
 				</p:column>
 
 			</p:row>

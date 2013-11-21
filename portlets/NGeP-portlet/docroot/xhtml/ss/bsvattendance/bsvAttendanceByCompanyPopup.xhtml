@@ -105,113 +105,67 @@
 		</p:panel>
 		<br />
 
-		<p:contextMenu for="briefInfoId" widgetVar="cMenu">
-			<p:menuitem value="Edit Cell" icon="ui-icon-search"
-				onclick="PF('briefInfoTable').showCellEditor();return false;" />
-			<p:menuitem value="Hide Menu" icon="ui-icon-close"
-				onclick="PF('cMenu').hide()" />
-		</p:contextMenu>
+		<p:dataTable id="registrationId" var="ScQtBriefAttendace"
+			value="#{bsvAttendanceBackingBean.managedBean.briefingAttendanceList}"
+			rows="10" rowKey="#{ScQtBriefAttendace.qtBriefingAttendanceId}"
+			rowIndexVar="rowIndex">
 
-		<p:panel toggleable="true">
-			<p:dataTable id="briefInfoId" var="" value="" editable="true"
-				editMode="cell" widgetVar="briefInfoTable">
+			<p:column headerText="#{lbl['lbl.sc.bsv.attendance.name']}">
+				<p:inputText value="#{ScQtBriefAttendace.name}" />
+			</p:column>
 
-				<p:ajax event="cellEdit"
-					listener="#{bsvAttendanceBackingBean.onCellEdit}" />
+			<p:column
+				headerText="#{lbl['lbl.sc.bsv.attendance.identification.type']}">
+				<p:inputText value="#{ScQtBriefAttendace.icPassport}" />
+			</p:column>
 
-				<p:column headerText="#{lbl['lbl.sc.bsv.attendance.no']}">
-					<p:cellEditor>
-						<f:facet name="output">
-							<h:outputText value="1"></h:outputText>
-						</f:facet>
-						<f:facet name="input">
-							<p:inputText value="2" />
-						</f:facet>
-					</p:cellEditor>
-				</p:column>
+			<p:column
+				headerText="#{lbl['lbl.sc.bsv.attendance.identification.no']}">
+				<p:inputText value="#{ScQtBriefAttendace.icPassport}" />
+			</p:column>
 
-				<p:column headerText="#{lbl['lbl.sc.bsv.attendance.name']}">
-					<p:cellEditor>
-						<f:facet name="output">
-							<h:outputText value="Arjun"></h:outputText>
-						</f:facet>
-						<f:facet name="input">
-							<p:inputText value="Naveen" />
-						</f:facet>
-					</p:cellEditor>
-				</p:column>
+			<p:column headerText="#{lbl['lbl.sc.bsv.attendance.contact.no']}">
+				<p:inputText value="#{ScQtBriefAttendace.contactNo}" />
+			</p:column>
 
-				<p:column
-					headerText="#{lbl['lbl.sc.bsv.attendance.identification.type']}">
-					<p:cellEditor>
-						<f:facet name="output">
-							<h:outputText value="4355727"></h:outputText>
-						</f:facet>
-						<f:facet name="input">
-							<p:inputText value="435544654" />
-						</f:facet>
-					</p:cellEditor>
-				</p:column>
 
-				<p:column
-					headerText="#{lbl['lbl.sc.bsv.attendance.identification.no']}">
-					<p:cellEditor>
-						<f:facet name="output">
-							<h:outputText value="345234"></h:outputText>
-						</f:facet>
-						<f:facet name="input">
-							<p:inputText value="45820002" />
-						</f:facet>
-					</p:cellEditor>
-				</p:column>
+			<p:column headerText="#{lbl['lbl.sc.bsv.attendance.email']}">
+				<p:inputText value="#{ScQtBriefAttendace.email}" />
+			</p:column>
 
-				<p:column headerText="#{lbl['lbl.sc.bsv.attendance.contact.no']}">
-					<p:cellEditor>
-						<f:facet name="output">
-							<h:outputText value="1234555"></h:outputText>
-						</f:facet>
-						<f:facet name="input">
-							<p:inputText value="1234555456789" />
-						</f:facet>
-					</p:cellEditor>
-				</p:column>
 
-				<p:column headerText="#{lbl['lbl.sc.bsv.attendance.email']}">
-					<p:cellEditor>
-						<f:facet name="output">
-							<h:outputText value="cdc@cdcinfo.com"></h:outputText>
-						</f:facet>
-						<f:facet name="input">
-							<p:inputText value="cdc@cdcinfo.com" />
-						</f:facet>
-					</p:cellEditor>
-				</p:column>
+			<p:column headerText="#{lbl['lbl.sc.bsv.attendance.action']}">
+				<p:commandLink>
+					<p:graphicImage library="ep/images/design" name="edit.png"
+						value="/resources/ep/images/design/edit.png" />
+				</p:commandLink>
+				<p:commandLink>
+					<p:graphicImage library="ep/images/design" name="delete.png"
+						value="/resources/ep/images/design/delete.png" />
+				</p:commandLink>
 
-				<p:column headerText="#{lbl['lbl.sc.bsv.attendance.action']}">
-					<p:commandLink id="deleteLink" styleClass="ui-icon ui-icon-trash" />
-				</p:column>
-			</p:dataTable>
+			</p:column>
 
-			<p:panelGrid style="width:100%;"
-				styleClass="noBorders tr,noBorders td">
-				<p:row>
-					<p:column width="100%" style="text-align:right">
-						<p:commandButton value="#{lbl['lbl.sc.bsv.attendance.add']}" />
-					</p:column>
-				</p:row>
-			</p:panelGrid>
-			<br />
-			<br />
+		</p:dataTable>
+
+
+		<div align="right">
+			<p:commandButton value="#{lbl['lbl.sc.bsv.attendance.add']}"
+				process="@this,attendanceDetailstbl" partialSubmit="true"
+				action="#{bsvAttendanceBackingBean.addAttendaceDetails}"
+				update=":form:registrationId" />
+		</div>
+
+			<br /><br />
 			<p:panelGrid style="width:100%;"
 				styleClass="noBorders tr,noBorders td">
 				<p:row>
 					<p:column width="100%" style="text-align:right">
 						<p:commandButton value="#{lbl['lbl.sc.bsv.attendance.okbtn']}" />
-						<p:commandButton value="#{lbl['lbl.sc.bsv.attendance.cancelbtn']}" />
+						<p:commandButton value="#{lbl['lbl.sc.bsv.attendance.cancelbtn']}"  action="#{bsvAttendanceBackingBean.cancelBriefing}" />
 					</p:column>
 
 				</p:row>
 			</p:panelGrid>
-		</p:panel>
 
 </ui:composition>
