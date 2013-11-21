@@ -1,0 +1,52 @@
+<ui:composition
+	template="/WEB-INF/facelets/templates/basic_template.xhtml"
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:c="http://java.sun.com/jsp/jstl/core">
+
+	<ui:define name="contentSection">
+		<f:event listener="#{complaintBackingBean.retrieveComplaintInfo}"
+			type="preRenderView"></f:event>
+		<p:panel
+			header="Update Complaint Details - Send to PTPK For Round 2 Validation">
+			<ui:include
+				src="/xhtml/sm/shared/complaintRegistration/complaintBasicInfo.xhtml" />
+		</p:panel>
+		<p:panel header="Received Supplier Response For Show Cause Letter"
+			toggleable="true">
+			<table style="width: 100%">
+				<tr>
+					<td width="200px;"><h:outputText
+							value="  Date Show Cause Received By Supplier*" /></td>
+					<td width="200px;"><p:calendar showOn="button" /></td>
+					<td width="200px;"><h:outputText
+							value="  Date Show Cause Letter Response Received *" /></td>
+					<td width="200px;"><p:calendar showOn="button" /></td>
+
+				</tr>
+				<tr>
+					<td width="200px;"><h:outputText
+							value="  Expected Convene Date For Round2 PTPK Validation *" /></td>
+					<td width="200px;"><p:calendar showOn="button" /></td>
+					<td width="200px;"><h:outputText
+							value="Upload Show Cause Letter Response*" /></td>
+					<td width="200px;"><p:fileUpload mode="simple" /></td>
+				</tr>
+			</table>
+		</p:panel>
+		<ui:include
+			src="/xhtml/sm/shared/complaintRegistration/complaintTracking.xhtml" />
+		<div align="right">
+			<ui:repeat value="#{complaintBackingBean.managedBean.bpmAction}"
+				var="item">
+				<p:commandButton
+					action="#{complaintBackingBean.updateComplaintSecReviewInfo(item)}"
+					value="#{item}" />
+			</ui:repeat>
+		</div>
+
+	</ui:define>
+</ui:composition>

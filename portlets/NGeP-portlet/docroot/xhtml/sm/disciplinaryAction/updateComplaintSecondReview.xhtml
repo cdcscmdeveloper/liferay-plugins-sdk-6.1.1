@@ -1,0 +1,81 @@
+<ui:composition
+	template="/WEB-INF/facelets/templates/basic_template.xhtml"
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:c="http://java.sun.com/jsp/jstl/core">
+
+	<ui:define name="contentSection">
+		<p:panel
+			header="Update Complaint Details - Update PTPK Round2 Review Response">
+			<ui:include
+				src="/xhtml/sm/shared/complaintRegistration/complaintBasicInfo.xhtml" />
+				
+			<p:panel header="Second Review Response"
+				toggleable="true">
+				<table style="width: 100%">
+					<tr>
+						<td id="tdTitle"><p:outputLabel value="* Actual Meeting Date" /></td>
+						<td id="tdContent"><p:calendar showOn="button"
+								value="#{complaintBackingBean.managedBean.smComplReview.actualConveneDate}" /></td>
+						<td id="tdTitle"><p:outputLabel
+								value="* Meeting Minutes Ref No." /></td>
+						<td id="tdContent"><p:inputText
+								value="#{complaintBackingBean.managedBean.smComplReview.minutesRefNo}" /></td>
+					</tr>
+
+					<tr>
+						<td id="tdTitle"><p:outputLabel
+								value="* Date Round 2 Report Received" /></td>
+						<td id="tdContent"><p:calendar showOn="button" /></td>
+						<td id="tdTitle"><p:outputLabel value="* Decesion" /></td>
+						<td id="tdContent"><p:selectOneMenu
+								value="#{complaintBackingBean.managedBean.smComplReview.decisionTaken}">
+								<f:selectItem itemLabel="-- Select --" itemValue="" />
+								<f:selectItem itemLabel="Valid" itemValue="1" />
+								<f:selectItem itemLabel="Invalid" itemValue="0" />
+							</p:selectOneMenu></td>
+					</tr>
+
+					<tr>
+						<td id="tdTitle"><p:outputLabel value="* Remarks" /></td>
+						<td id="tdContent" colspan="3"><p:inputTextarea
+								value="#{complaintBackingBean.managedBean.smComplReview.decisionRemark}"
+								rows="8" cols="100" /></td>
+					</tr>
+
+					<!--  
+				<tr>
+					<td id="tdTitle"><p:outputLabel
+							value="* Date Closed / Issued ShowCause Letter" /></td>
+					<td id="tdContent"><p:calendar showOn="button" /></td>
+					<td id="tdTitle"><p:outputLabel
+							value="* Remarks For Closed Case" /></td>
+					<td id="tdContent"><p:inputTextarea /></td>
+				</tr>
+				-->
+					<tr>
+						<td id="tdTitle"><p:outputLabel
+								value="* Upload Decision Signed By PTPK"></p:outputLabel></td>
+						<td id="tdContent"><p:fileUpload mode="simple" /></td>
+					</tr>
+				</table>
+			</p:panel>
+			
+			
+			<ui:include
+				src="/xhtml/sm/shared/complaintRegistration/complaintTracking.xhtml" />
+			<div align="center">
+				<ui:repeat value="#{complaintBackingBean.managedBean.bpmAction}"
+					var="item">
+					<p:commandButton
+						action="#{complaintBackingBean.updateComplaintSecReviewResponse(item)}"
+						value="#{item}" />
+				</ui:repeat>
+			</div>
+		</p:panel>
+
+	</ui:define>
+</ui:composition>

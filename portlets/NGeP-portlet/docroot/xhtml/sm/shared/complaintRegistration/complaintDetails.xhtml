@@ -4,75 +4,87 @@
 	xmlns:ui="http://java.sun.com/jsf/facelets"
 	xmlns:p="http://primefaces.org/ui"
 	xmlns:c="http://java.sun.com/jsp/jstl/core">
-	<p:panel header="Complaint Details" toggleable="true">
-		<div align="center">
-			<p:panelGrid columns="2">
-				<f:facet name="header">Suppliers Search Block</f:facet>
-				<p:outputLabel value="Supplier Name :" />
-				<p:inputText
-					value="#{complaintBackingBean.managedBean.searchSupName}" />
-				<p:outputLabel value="Supplier NO. : " />
-				<p:inputText
-					value="#{complaintBackingBean.managedBean.searchSupRegNo}" />
 
-				<h:outputLabel />
-				<p:commandButton value="Search" />
-			</p:panelGrid>
+	<p:panel header="Supplier Search" toggleable="true">
+		<table class="customTbl">
+			<tr>
+				<td id="tdTitle"><p:outputLabel value="* Search By" /></td>
+				<td id="tdContent"><p:selectOneMenu>
+						<f:selectItem itemLabel= "MOF No." itemValue="1"></f:selectItem>
+						<f:selectItem itemLabel= "eP No." itemValue="2"></f:selectItem>
+						<f:selectItem itemLabel= "Company Registration No." itemValue="3"></f:selectItem>
+						<f:selectItem itemLabel= "Company Name" itemValue="4"></f:selectItem>
+					</p:selectOneMenu></td>
+
+				<!-- <td id="tdTitle"><p:outputLabel value="* Keyword." /></td> -->
+				<td id="tdContent"><p:inputText /></td>
+			</tr>
+		</table>
+
+		<div align="right">
+			<p:commandButton value="Search"
+				action="#{complaintBackingBean.searchSupplier}"
+				update="suppSearchRes" />
 		</div>
-		<br />
+	</p:panel>
 
-		<p:dataTable var="compBean" id="dt"
-			value="#{complaintBackingBean.managedBean.suppliersList}"
+	<p:panel header="Search Result" toggleable="true" id="suppSearchRes">
+		<p:dataTable var="supp"
+			value="#{complaintBackingBean.managedBean.smSupplierLs}"
 			selection="#{complaintBackingBean.managedBean.selectedSupplier}"
-			rowKey="#{compBean.supplierId}" rowIndexVar="index">
-
-			<p:column selectionMode="single" width="5%" />
-			<p:column headerText="NO.">
-				<h:outputText value="#{index+1}" />
-			</p:column>
-
+			rowKey="#{supp.supplierId}" selectionMode="single">
+			<p:ajax event="rowSelect"
+				listener="#{complaintBackingBean.onSupplierRowSelect}"
+				update=":form:complDtl" />
 			<p:column headerText="Supplier Name">
-				<h:outputText value="#{compBean.supplierName}" />
+				#{supp.supplierName}
 			</p:column>
-			<p:column headerText="Supplier No.">
-				<h:outputText value="#{compBean.regNo}" />
+			<p:column headerText="EP No.">
+				#{supp.epNo}
 			</p:column>
 		</p:dataTable>
+	</p:panel>
 
-
-		<p:commandButton value="Add/Select Supplier" style="float:right;"
-			actionListener="#{complaintBackingBean.onSupplierSelection}"
-			update=":form:tt:compSupName"></p:commandButton>
-		<table style="width: 100%">
+	<p:panel header="Complaint Details" toggleable="true" id="complDtl">
+		<table class="customTbl">
 			<tr>
 				<td><p:outputLabel value="Complaint Against Supplier* " /></td>
-				<td><p:inputText id="compSupName" readonly="true"
-						value="#{complaintBackingBean.managedBean.selectedSupplier.supplierName}"
+				<td><p:inputText readonly="true"
+						value="#{complaintBackingBean.managedBean.smComplaint.smSupplier.supplierName}"
 						size="50" /></td>
-			</tr>
-			<tr>
+
 				<td><p:outputLabel value="Complaint Type* " /></td>
-				<td><p:selectOneMenu>
+				<td><p:selectOneMenu
+						value="#{complaintBackingBean.managedBean.smComplaint.complaintCategory}">
 						<f:selectItem itemLabel="-- Select One -- " itemValue="" />
-						<f:selectItem itemLabel="Type1" itemValue="1" />
-						<f:selectItem itemLabel="Type2" itemValue="2" />
-						<f:selectItem itemLabel="Type3" itemValue="3" />
+						<f:selectItem itemLabel="Breach the obligation of registration" itemValue="1" />
+						<f:selectItem itemLabel="Breach the obligation of Tender/ Contract" itemValue="2" />
+						<f:selectItem itemLabel="Criminal or Civil Offenses" itemValue="3" />
 					</p:selectOneMenu></td>
 			</tr>
+
 			<tr>
 				<td><p:outputLabel value="Complaint Details* " /></td>
-				<td><p:inputTextarea rows="4" cols="33" /></td>
+				<td colspan="3"><p:inputTextarea
+						value="#{complaintBackingBean.managedBean.smComplaint.complaintDesc}"
+						rows="8" cols="100" /></td>
 			</tr>
-			<tr style="text-align: center;">
+
+			<tr>
+				<td><br /></td>
+			</tr>
+			<tr>
 				<td><p:outputLabel
 						value="Upload Complaint / Proof Doc (If Any) " /></td>
 				<td><p:fileUpload mode="simple" /></td>
 			</tr>
 		</table>
-		<br />
-		<div align="center">
-			<p:commandButton value="Lodge Complaint" />
-			<p:commandButton value="Cancel" />
-		</div>
 	</p:panel>
+
+	<div align="right">
+		<p:commandButton value="Submit"
+			action="#{complaintBackingBean.lodgeComplaint}"></p:commandButton>
+	</div>
+
+
 </ui:composition>

@@ -8,20 +8,20 @@
 
 
 	<p:panel header="Company Information">
-		<table>
+		<table class="customTbl">
 			<tr>
-				<td><p:outputLabel value="#{lbl['lbl.sm.businessregno']}" /></td>
-				<td><p:inputText
+				<td id="tdTitle"><p:outputLabel value="#{lbl['lbl.sm.businessregno']}" /></td>
+				<td id="tdContent"><p:inputText
 						value="#{registrationBackingBean.managedBean.smSupp.regNo}" /></td>
 
-				<td><p:outputLabel value="Owner Name" /></td>
-				<td><p:inputText
+				<td id="tdTitle"><p:outputLabel value="Owner Name" /></td>
+				<td id="tdContent"><p:inputText
 						value="#{registrationBackingBean.managedBean.smSuppOwner.ownerName}" /></td>
 			</tr>
 
 			<tr>
-				<td><p:outputLabel value="#{lbl['lbl.sm.identificationtype']}" /></td>
-				<td><p:selectOneMenu id="cmbUsrIdenType"
+				<td id="tdTitle"><p:outputLabel value="* #{lbl['lbl.sm.identificationtype']}" /></td>
+				<td id="tdContent"><p:selectOneMenu id="cmbUsrIdenType"
 						value="#{registrationBackingBean.managedBean.smSuppOwner.identificationType}">
 						<f:selectItem itemLabel="Select" itemValue="" />
 						<f:selectItem itemLabel="New NRIC" itemValue="I" />
@@ -30,28 +30,28 @@
 							<f:selectItem itemLabel="Passport" itemValue="1" /> -->
 					</p:selectOneMenu></td>
 
-				<td><p:outputLabel value="#{lbl['lbl.sm.identificationno']}" /></td>
-				<td><p:inputText id="txtIdNumber"
+				<td id="tdTitle"><p:outputLabel value="* #{lbl['lbl.sm.identificationno']}" /></td>
+				<td id="tdContent"><p:inputText id="txtIdNumber"
 						value="#{registrationBackingBean.managedBean.smSuppOwner.identificationNo}" /></td>
 			</tr>
 
 			<tr>
-				<td><p:outputLabel value="#{lbl['lbl.sm.companyname']}" /></td>
-				<td><p:inputText value="#{registrationBackingBean.managedBean.smSupp.supplierName}" /></td>
+				<td id="tdTitle"><p:outputLabel value="* #{lbl['lbl.sm.companyname']}" /></td>
+				<td id="tdContent"><p:inputText value="#{registrationBackingBean.managedBean.smSupp.supplierName}" /></td>
 
-				<td><p:outputLabel value="#{lbl['lbl.sm.estdate']}" /></td>
-				<td><p:calendar id="cal" navigator="true" display="inline" /></td>
+				<td id="tdTitle"><p:outputLabel value="#{lbl['lbl.sm.estdate']}" /></td>
+				<td id="tdContent"><p:calendar id="cal" navigator="true" display="inline" /></td>
 			</tr>
 
 			<tr>
-				<td><p:outputLabel value="#{lbl['lbl.sm.country']}" /></td>
-				<td><p:selectOneMenu value="MY">
+				<td id="tdTitle"><p:outputLabel value="* #{lbl['lbl.sm.country']}" /></td>
+				<td id="tdContent"><p:selectOneMenu value="MY">
 						<f:selectItem itemLabel="MY - Malaysia" itemValue="MY" />
 					</p:selectOneMenu></td>
 			</tr>
 
 			<tr>
-				<td><p:outputLabel value="#{lbl['lbl.sm.companyaddress']}" /></td>
+				<td id="tdTitle"><p:outputLabel value="* #{lbl['lbl.sm.companyaddress']}" /></td>
 				<td id="tdContent" colspan="2"><p:inputText size="50"
 						value="#{registrationBackingBean.managedBean.smBusinessAdd.address1}" /></td>
 
@@ -76,28 +76,31 @@
 			</tr>
 			
 			<tr>
-				<td><p:outputLabel value="#{lbl['lbl.sm.postcode']}" /></td>
-				<td><p:inputText value="#{registrationBackingBean.managedBean.smBusinessAdd.postcode}"/></td>
-				<td><p:outputLabel value="#{lbl['lbl.sm.state']}" /></td>
-				<td><p:inputText value="#{registrationBackingBean.managedBean.smBusinessAdd.stateId}"/></td>
+				<td id="tdTitle"><p:outputLabel value="* #{lbl['lbl.sm.postcode']}" /></td>
+				<td id="tdContent"><p:inputText value="#{registrationBackingBean.managedBean.smBusinessAdd.postcode}"/></td>
+				<td id="tdTitle"><p:outputLabel value="* #{lbl['lbl.sm.state']}" /></td>
+				<td id="tdContent"><p:inputText /></td>
+				<!--<td><p:inputText value="#{registrationBackingBean.managedBean.smBusinessAdd.pmState.stateId}"/></td>-->
 			</tr>
 
 			<tr>
-				<td><p:outputLabel value="#{lbl['lbl.sm.district']}" /></td>
-				<td><p:inputText value="#{registrationBackingBean.managedBean.smBusinessAdd.districtId}"/></td>
-				<td><p:outputLabel value="#{lbl['lbl.sm.towncity']}" /></td>
-				<td><p:inputText value="#{registrationBackingBean.managedBean.smBusinessAdd.cityId}"/></td>
+				<td id="tdTitle"><p:outputLabel value="* #{lbl['lbl.sm.district']}" /></td>
+				<td id="tdContent"><p:inputText /></td>
+				<!--  <td><p:inputText value="#{registrationBackingBean.managedBean.smBusinessAdd.pmDistrict.districtId}"/></td>-->
+				<td id="tdTitle"><p:outputLabel value="* #{lbl['lbl.sm.towncity']}" /></td>
+				<td id="tdContent"><p:inputText /></td>
+				<!--<td><p:inputText value="#{registrationBackingBean.managedBean.smBusinessAdd.pmCity.cityId}"/></td>-->
 			</tr>
 
 			<tr>
-				<td><p:outputLabel value="#{lbl['lbl.sm.telnumber']}" /></td>
-				<td><p:inputText value="#{registrationBackingBean.managedBean.smBusinessAdd.phoneNo}" /></td>
-				<td><p:outputLabel value="#{lbl['lbl.sm.faxnumber']}" /></td>
-				<td><p:inputText value="#{registrationBackingBean.managedBean.smBusinessAdd.faxNo}" /></td>
+				<td id="tdTitle"><p:outputLabel value="* #{lbl['lbl.sm.telnumber']}" /></td>
+				<td id="tdContent"><p:inputText value="#{registrationBackingBean.managedBean.smBusinessAdd.phoneNo}" /></td>
+				<td id="tdTitle"><p:outputLabel value="#{lbl['lbl.sm.faxnumber']}" /></td>
+				<td id="tdContent"><p:inputText value="#{registrationBackingBean.managedBean.smBusinessAdd.faxNo}" /></td>
 			</tr>
 			<tr>
 
-				<td>Nature of Business</td>
+				<td id="tdTitle"><p:outputLabel value="Nature of Business" /></td>
 				<td id="tdContent" colspan="3">
 				 <p:inputText  />
 				<!-- <p:inputText value="#{registrationBackingBean.managedBean.smBusNature.businessNatureId}" /> -->

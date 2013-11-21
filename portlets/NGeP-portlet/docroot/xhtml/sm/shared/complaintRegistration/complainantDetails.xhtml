@@ -4,65 +4,87 @@
 	xmlns:ui="http://java.sun.com/jsf/facelets"
 	xmlns:p="http://primefaces.org/ui"
 	xmlns:c="http://java.sun.com/jsp/jstl/core">
-
-	<p:panel header="Complainant Details"
-		toggleTitle="( Details in this section auto - populated for users with login / for general public will have to fill manually)"
-		toggleable="true">
-		<br />
+	<p:panel header="Complainant Details" toggleable="true">
 		<table style="width: 100%">
 			<tr>
-				<td><p:outputLabel value="Name*" /></td>
-				<td><p:inputText /></td>
-				<td><p:outputLabel value="Address 1*" /></td>
-				<td><p:inputText /></td>
+				<td><p:outputLabel value="* Name" /></td>
+				<td><p:inputText value="#{complaintBackingBean.managedBean.smComplaint.smComplainant.name}"/></td>
+
+				<td><p:outputLabel value="* Nationality" /></td>
+				<td><p:selectOneMenu value="#{complaintBackingBean.managedBean.smComplaint.smComplainant.nationalityId}">
+						<f:selectItem itemLabel="-- Select -- " itemValue="" />
+						<f:selectItem itemLabel="Malaysian" itemValue="1" />
+						<f:selectItem itemLabel="Non Malaysian" itemValue="0" />
+					</p:selectOneMenu></td>
+			</tr>
+
+			<tr>
+				<td><p:outputLabel value="* Identification Type" /></td>
+				<td><p:selectOneMenu
+						value="#{complaintBackingBean.managedBean.smComplaint.smComplainant.identificationTypeId}">
+						<f:selectItem itemLabel="-- Select -- " itemValue="" />
+						<f:selectItem itemLabel="I/C" itemValue="I" />
+						<f:selectItem itemLabel="Passport" itemValue="P" />
+					</p:selectOneMenu></td>
+				<td><p:outputLabel value="* Identification No." /></td>
+				<td><p:inputText
+						value="#{complaintBackingBean.managedBean.smComplaint.smComplainant.identificationNo}" /></td>
+			</tr>
+
+			<tr>
+				<td><p:outputLabel value="* Country" /></td>
+				<td><p:selectOneMenu>
+						<f:selectItem itemLabel="-- Select -- " itemValue="" />
+						<f:selectItem itemLabel="Malaysia" itemValue="1" />
+					</p:selectOneMenu></td>
+			</tr>
+
+			<tr>
+				<td><p:outputLabel value="* Address" /></td>
+				<td><p:inputText size="50" colspan="3"
+						value="#{complaintBackingBean.managedBean.smComplaint.smComplainant.address1}" /></td>
 			</tr>
 			<tr>
-				<td><p:outputLabel value="Race*" /></td>
-				<td><p:selectOneMenu>
-						<f:selectItem itemLabel="-- Select One -- " itemValue="" />
-						<f:selectItem itemLabel="Melayu" itemValue="1" />
-						<f:selectItem itemLabel="Cina" itemValue="2" />
-						<f:selectItem itemLabel="Lain-lain" itemValue="3" />
-					</p:selectOneMenu></td>
 				<td></td>
+				<td><p:inputText size="50" colspan="3"
+						value="#{complaintBackingBean.managedBean.smComplaint.smComplainant.address2}" /></td>
+			</tr>
+			<tr>
+				<td></td>
+				<td><p:inputText size="50" colspan="3"
+						value="#{complaintBackingBean.managedBean.smComplaint.smComplainant.address3}" /></td>
+			</tr>
+			<tr>
+				<td></td>
+				<td><p:inputText size="50" colspan="3"
+						value="#{complaintBackingBean.managedBean.smComplaint.smComplainant.address4}" /></td>
+			</tr>
+
+			<tr>
+				<td><p:outputLabel value="* Postcode" /></td>
+				<td><p:inputText
+						value="#{complaintBackingBean.managedBean.smComplaint.smComplainant.postcode}" /></td>
+				<td><p:outputLabel value="* State" /></td>
+				<!-- <td><p:inputText value="#{complaintBackingBean.managedBean.pmState.stateId}" /></td> -->
+				<td><p:inputText /></td>
+			</tr>
+
+			<tr>
+				<td><p:outputLabel value="* District" /></td>
+				<td><p:inputText /></td>
+
+				<td><p:outputLabel value="* City" /></td>
+				<!-- <td><p:inputText  value="#{complaintBackingBean.managedBean.pmCity.cityId}" /></td>-->
 				<td><p:inputText /></td>
 			</tr>
 			<tr>
-				<td><p:outputLabel value="Nationality*" /></td>
-				<td><p:selectOneMenu>
-						<f:selectItem itemLabel="-- Select One -- " itemValue="" />
-						<f:selectItem itemLabel="Malaysia" itemValue="1" />
-						<f:selectItem itemLabel="China" itemValue="2" />
-					</p:selectOneMenu></td>
-				<td><p:outputLabel value="Country*" /></td>
-				<td><p:selectOneMenu>
-						<f:selectItem itemLabel="-- Select One -- " itemValue="" />
-						<f:selectItem itemLabel="Malaysia" itemValue="1" />
-					</p:selectOneMenu></td>
-			</tr>
-			<tr>
-				<td><p:outputLabel value="Old IC/Passport No.*" /></td>
-				<td><p:inputText /></td>
-				<td><p:outputLabel value="Postcode*" /></td>
-				<td><p:inputText /></td>
-			</tr>
-			<tr>
-				<td><p:outputLabel value="New IC/Passport No.*" /></td>
-				<td><p:inputText /></td>
-				<td><p:outputLabel value="State*" /></td>
-				<td><p:inputText /></td>
-			</tr>
-			<tr>
-				<td><p:outputLabel value="Email*" /></td>
-				<td><p:inputText /></td>
-				<td><p:outputLabel value="District*" /></td>
-				<td><p:inputText /></td>
-			</tr>
-			<tr>
-				<td><p:outputLabel value="Telephone* " /></td>
-				<td><p:inputText /></td>
-				<td><p:outputLabel value="City*" /></td>
-				<td><p:inputText /></td>
+				<td><p:outputLabel value="* Telephone" /></td>
+				<td><p:inputText
+						value="#{complaintBackingBean.managedBean.smComplaint.smComplainant.phoneNo}" /></td>
+
+				<td><p:outputLabel value="* Email" /></td>
+				<td><p:inputText
+						value="#{complaintBackingBean.managedBean.smComplaint.smComplainant.email}" /></td>
 			</tr>
 		</table>
 	</p:panel>

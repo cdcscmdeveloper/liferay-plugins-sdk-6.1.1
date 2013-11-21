@@ -1,5 +1,5 @@
 <ui:composition
-	template="/WEB-INF/facelets/templates/sidemenu_template.xhtml"
+	template="/WEB-INF/facelets/templates/basic_template.xhtml"
 	xmlns="http://www.w3.org/1999/xhtml"
 	xmlns:f="http://java.sun.com/jsf/core"
 	xmlns:h="http://java.sun.com/jsf/html"
@@ -7,26 +7,21 @@
 	xmlns:p="http://primefaces.org/ui"
 	xmlns:c="http://java.sun.com/jsp/jstl/core">
 
-	<ui:define name="sideMenu">
-
-		<ui:include src="/xhtml/sm/shared/sidemenu/registrationSideMenu.xhtml">
-		</ui:include>
-	</ui:define>
 
 	<ui:define name="contentSection">
-		<p:outputLabel value="First User Registration"
-			style="font-weight:bold;font-size:15px;" />
 		<p:panel header="User Information">
-			<table>
+			<table class="customTbl">
 				<tr>
-					<td><p:outputLabel value="#{lbl['lbl.sm.fullname']}" /></td>
+					<td id="tdTitle"><p:outputLabel
+							value="#{lbl['lbl.sm.fullname']}" /></td>
 					<td id="tdContent" colspan="3"><p:inputText size="50"
 							value="#{registrationBackingBean.managedBean.smPersonnel.name}" />
 					</td>
 				</tr>
 				<tr>
-					<td><p:outputLabel value="#{lbl['lbl.sm.nationality']}" /></td>
-					<td><p:selectOneMenu
+					<td id="tdTitle"><p:outputLabel
+							value="#{lbl['lbl.sm.nationality']}" /></td>
+					<td id="tdContent"><p:selectOneMenu
 							value="#{registrationBackingBean.managedBean.smPersonnel.nationalityId}">
 							<f:selectItem itemLabel="Select" itemValue="" />
 							<f:selectItem itemLabel="Malaysian" itemValue="0" />
@@ -36,7 +31,7 @@
 
 				<tr>
 					<td><p:outputLabel value="#{lbl['lbl.sm.identificationtype']}" /></td>
-					<td><p:selectOneMenu id="cmbUsrIdenType"
+					<td id="tdContent"><p:selectOneMenu id="cmbUsrIdenType"
 							value="#{registrationBackingBean.managedBean.smPersonnel.identificationType}">
 							<f:selectItem itemLabel="Select" itemValue="" />
 							<f:selectItem itemLabel="New NRIC" itemValue="I" />
@@ -44,7 +39,7 @@
 						</p:selectOneMenu></td>
 
 					<td><p:outputLabel value="#{lbl['lbl.sm.identificationno']}" /></td>
-					<td><p:inputText id="txtIdNumber"
+					<td id="tdContent"><p:inputText id="txtIdNumber"
 							value="#{registrationBackingBean.managedBean.smPersonnel.identificationNo}" />
 					</td>
 				</tr>
@@ -52,50 +47,43 @@
 					rendered="#{registrationBackingBean.managedBean.smSupp.businessType != 'I'}">
 					<tr>
 						<td><p:outputLabel value="#{lbl['lbl.sm.permenantaddress']}" /></td>
-						<td id="tdContent" colspan="2"><p:inputText size="50"
-								value="#{registrationBackingBean.managedBean.smRegAdd.address1}" /></td>
+						<td id="tdContent" colspan="2"><p:inputText size="50" /></td>
 					</tr>
 
 					<tr>
 						<td></td>
-						<td id="tdContent" colspan="2"><p:inputText size="50"
-								value="#{registrationBackingBean.managedBean.smRegAdd.address2}" /></td>
+						<td id="tdContent" colspan="2"><p:inputText size="50" /></td>
 					</tr>
 
 					<tr>
 						<td></td>
-						<td id="tdContent" colspan="2"><p:inputText size="50"
-								value="#{registrationBackingBean.managedBean.smRegAdd.address3}" /></td>
+						<td id="tdContent" colspan="2"><p:inputText size="50" /></td>
 					</tr>
 
 					<tr>
 						<td></td>
-						<td id="tdContent" colspan="2"><p:inputText size="50"
-								value="#{registrationBackingBean.managedBean.smRegAdd.address4}" /></td>
+						<td id="tdContent" colspan="2"><p:inputText size="50" /></td>
 					</tr>
 					<tr>
 						<td><p:outputLabel value="#{lbl['lbl.sm.postcode']}" /></td>
-						<td><p:inputText
-								value="#{registrationBackingBean.managedBean.smRegAdd.postcode}" /></td>
+						<td id="tdContent"><p:inputText /></td>
 						<td><p:outputLabel value="#{lbl['lbl.sm.state']}" /></td>
-						<td><p:inputText
-								value="#{registrationBackingBean.managedBean.smRegAdd.stateId}" /></td>
+						<td id="tdContent"><p:inputText /></td>
 					</tr>
 
 					<tr>
 						<td><p:outputLabel value="#{lbl['lbl.sm.district']}" /></td>
-						<td><p:inputText
-								value="#{registrationBackingBean.managedBean.smRegAdd.districtId}" /></td>
+						<td id="tdContent"><p:inputText /></td>
 						<td><p:outputLabel value="#{lbl['lbl.sm.towncity']}" /></td>
-						<td><p:inputText
-								value="#{registrationBackingBean.managedBean.smRegAdd.cityId}" /></td>
+						<td id="tdContent"><p:inputText /></td>
 					</tr>
 
 					<c:if
 						test="#{registrationBackingBean.managedBean.smSupp.businessType != 'I'}">
 						<tr>
-							<td><p:outputLabel value="#{lbl['lbl.sm.positionincomp']}" /></td>
-							<td id="tdContent" colspan="3"><p:selectOneMenu 
+							<td id="tdTitle"><p:outputLabel
+									value="#{lbl['lbl.sm.positionincomp']}" /></td>
+							<td id="tdContent" colspan="3"><p:selectOneMenu
 									value="#{registrationBackingBean.managedBean.smPersonnel.personnelType}">
 									<f:selectItem itemLabel="BOD" itemValue="B" />
 									<f:selectItem itemLabel="Management Staff" itemValue="M" />
@@ -111,87 +99,84 @@
 		</p:panel>
 
 		<p:panel header="Contact Information">
-			<table>
+			<table class="customTbl">
 				<tr>
-					<td><p:outputLabel value="#{lbl['lbl.sm.correspondenceadd']}" /></td>
-					<td><p:selectOneRadio>
+					<td id="tdTitle"><p:outputLabel
+							value="#{lbl['lbl.sm.correspondenceadd']}" /></td>
+					<td id="tdContent"><p:selectOneRadio>
 							<f:selectItem itemLabel="Permenant Address" itemValue="perm" />
 							<f:selectItem itemLabel="Different Address" itemValue="diff" />
 						</p:selectOneRadio></td>
 				</tr>
 
 				<tr>
-					<td></td>
-					<td id="tdContent" colspan="2"><p:inputText size="50"
-							value="#{registrationBackingBean.managedBean.smResAdd.address1}" /></td>
+					<td id="tdTitle"></td>
+					<td id="tdContent" colspan="2"><p:inputText size="50" /></td>
 				</tr>
 
 				<tr>
-					<td></td>
-					<td id="tdContent" colspan="2"><p:inputText size="50"
-							value="#{registrationBackingBean.managedBean.smResAdd.address2}" /></td>
+					<td id="tdTitle"></td>
+					<td id="tdContent" colspan="2"><p:inputText size="50" /></td>
 				</tr>
 
 				<tr>
-					<td></td>
-					<td id="tdContent" colspan="2"><p:inputText size="50"
-							value="#{registrationBackingBean.managedBean.smResAdd.address3}" /></td>
+					<td id="tdTitle"></td>
+					<td id="tdContent" colspan="2"><p:inputText size="50" /></td>
 				</tr>
 
 				<tr>
-					<td></td>
-					<td id="tdContent" colspan="2"><p:inputText size="50"
-							value="#{registrationBackingBean.managedBean.smResAdd.address4}" /></td>
+					<td id="tdTitle"></td>
+					<td id="tdContent" colspan="2"><p:inputText size="50" /></td>
 				</tr>
 
 				<tr>
-					<td><p:outputLabel value="#{lbl['lbl.sm.postcode']}" /></td>
-					<td><p:inputText
-							value="#{registrationBackingBean.managedBean.smResAdd.postcode}" /></td>
-					<td><p:outputLabel value="#{lbl['lbl.sm.state']}" /></td>
-					<td><p:inputText
-							value="#{registrationBackingBean.managedBean.smResAdd.stateId}" /></td>
+					<td id="tdTitle"><p:outputLabel
+							value="#{lbl['lbl.sm.postcode']}" /></td>
+					<td id="tdContent"><p:inputText /></td>
+					<td id="tdTitle"><p:outputLabel value="#{lbl['lbl.sm.state']}" /></td>
+					<td id="tdContent"><p:inputText /></td>
 				</tr>
 
 				<tr>
-					<td><p:outputLabel value="#{lbl['lbl.sm.district']}" /></td>
-					<td><p:inputText
-							value="#{registrationBackingBean.managedBean.smResAdd.districtId}" /></td>
-					<td><p:outputLabel value="#{lbl['lbl.sm.towncity']}" /></td>
-					<td><p:inputText
-							value="#{registrationBackingBean.managedBean.smResAdd.cityId}" /></td>
+					<td id="tdTitle"><p:outputLabel
+							value="#{lbl['lbl.sm.district']}" /></td>
+					<td id="tdContent"><p:inputText /></td>
+					<td id="tdTitle"><p:outputLabel
+							value="#{lbl['lbl.sm.towncity']}" /></td>
+					<td id="tdContent"><p:inputText /></td>
 				</tr>
 
 				<tr>
-					<td><p:outputLabel value="Phone No" /></td>
-					<td><p:inputText
-							value="#{registrationBackingBean.managedBean.smResAdd.phoneNo}" /></td>
+					<td id="tdTitle"><p:outputLabel value="Phone No" /></td>
+					<td id="tdContent"><p:inputText /></td>
 
-					<td><p:outputLabel value="Fax No" /></td>
-					<td><p:inputText
-							value="#{registrationBackingBean.managedBean.smResAdd.faxNo}" /></td>
+					<td id="tdTitle"><p:outputLabel value="Fax No" /></td>
+					<td id="tdContent"><p:inputText /></td>
 				</tr>
 
 				<tr>
-					<td><p:outputLabel value="#{lbl['lbl.sm.mobilenumber']}" /></td>
-					<td><p:inputText
+					<td id="tdTitle"><p:outputLabel
+							value="#{lbl['lbl.sm.mobilenumber']}" /></td>
+					<td id="tdContent"><p:inputText
 							value="#{registrationBackingBean.managedBean.smResAdd.mobileNo}" /></td>
 				</tr>
 
 				<tr>
-					<td><p:outputLabel value="#{lbl['lbl.sm.email']}" /></td>
-					<td><p:inputText
+					<td id="tdTitle"><p:outputLabel value="#{lbl['lbl.sm.email']}" /></td>
+					<td id="tdContent"><p:inputText
 							value="#{registrationBackingBean.managedBean.smPersonnel.email}" /></td>
 				</tr>
 
 				<tr>
-					<td><p:outputLabel value="#{lbl['lbl.sm.confirmemail']}" /></td>
-					<td><p:inputText /></td>
+					<td id="tdTitle"><p:outputLabel
+							value="#{lbl['lbl.sm.confirmemail']}" /></td>
+					<td id="tdContent"><p:inputText /></td>
 				</tr>
 
 				<tr>
-					<td><p:outputLabel value="#{lbl['lbl.sm.notificationmode']}" /></td>
-					<td><p:selectOneRadio>
+					<td id="tdTitle"><p:outputLabel
+							value="#{lbl['lbl.sm.notificationmode']}" /></td>
+					<td id="tdContent"><p:selectOneRadio>
 							<f:selectItem itemLabel="Email" itemValue="0" />
 							<f:selectItem itemLabel="SMS" itemValue="1" />
 						</p:selectOneRadio></td>

@@ -1,0 +1,103 @@
+<ui:composition
+	template="/WEB-INF/facelets/templates/basic_template.xhtml"
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:c="http://java.sun.com/jsp/jstl/core">
+
+	<ui:define name="contentSection">
+		<f:event listener="#{svcSiteAssignBackingBean.retrieveSiteAssignInfo}"
+			type="preRenderView"></f:event>
+		<p:panel header="Site Visit Information">
+			<table style="width: 100%">
+				<tr>
+					<td><p:outputLabel value="Application No." /></td>
+					<td><p:inputText
+							value="#{svcSiteAssignBackingBean.managedBean.smApplSv.smAppl.applNo}" disabled="true" /></td>
+
+					<td><p:outputLabel value="Application Type" /></td>
+					<td><p:inputText
+							value="#{svcSiteAssignBackingBean.managedBean.smApplSv.smAppl.applType}" disabled="true" /></td>
+				</tr>
+
+				<tr>
+					<td><p:outputLabel value="MOF No." /></td>
+					<td><p:inputText disabled="true" /></td>
+
+					<td><p:outputLabel value="Company Name" /></td>
+					<td><p:inputText
+							value="#{svcSiteAssignBackingBean.managedBean.smApplSv.smAppl.smSupplier.supplierName}" disabled="true"/></td>
+				</tr>
+
+				<tr>
+					<td><p:outputLabel value="Status" /></td>
+					<td><p:inputText disabled="true"/></td>
+
+					<td><p:outputLabel value="Date of Creation" /></td>
+					<td><p:inputText disabled="true" /></td>
+				</tr>
+
+				<tr>
+					<td><p:outputLabel value="Expected Date" /></td>
+					<td><p:calendar
+							value="#{svcSiteAssignBackingBean.managedBean.smApplSv.expectedDate}"
+							id="popupButtonCal" showOn="button" /></td>
+				</tr>
+			</table>
+		</p:panel>
+
+		<p:panel header="Site Visit Assignment">
+			<p:dataTable var="svc"
+				value="#{svcSiteAssignBackingBean.managedBean.smApplSv.smSiteVisitAddresses}"
+				rowIndexVar="rowIndex">
+				<p:column headerText="No">
+				#{rowIndex+1}
+				</p:column>
+
+				<p:column headerText="Address">
+					#{svc.smAddress.address1}<br />
+					#{svc.smAddress.address2}<br />
+					#{svc.smAddress.address3}<br />
+					#{svc.smAddress.address4}
+				</p:column>
+
+				<p:column headerText="Post Code">
+				#{svc.smAddress.postcode}
+				</p:column>
+
+				<p:column headerText="City">
+				</p:column>
+
+
+				<p:column headerText="District">
+				</p:column>
+
+				<p:column headerText="State">
+				</p:column>
+
+				<p:column headerText="Country">
+				#{svc.smAddress.pmCountry.countryName}
+			</p:column>
+
+				<p:column headerText="Assign Site Visit Officer(Mins 2)">
+					<p:selectManyMenu>
+						<f:selectItem itemLabel="Option 1" itemValue="1" />
+						<f:selectItem itemLabel="Option 2" itemValue="2" />
+						<f:selectItem itemLabel="Option 3" itemValue="3" />
+					</p:selectManyMenu>
+				</p:column>
+			</p:dataTable>
+		</p:panel>
+
+		<div align="right">
+			<ui:repeat value="#{svcSiteAssignBackingBean.managedBean.bpmAction}"
+				var="item">
+				<p:commandButton
+					action="#{svcSiteAssignBackingBean.submitSiteVisitAssignment(item)}"
+					value="#{item}" />
+			</ui:repeat>
+		</div>
+	</ui:define>
+</ui:composition>

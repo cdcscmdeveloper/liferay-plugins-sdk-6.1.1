@@ -8,25 +8,25 @@
 
 	<table style="width: 100%">
 		<tr>
-			<td><p:outputLabel value="Supplier Name" /></td>
-			<td><p:inputText readonly="true" disabled="true"
-					value="-- Read Only --" /></td>
-			<td><p:outputLabel value="Complaint Type" /></td>
-			<td><p:inputText readonly="true" disabled="true"
-					value="-- Read Only --" /></td>
-		</tr>
-		<tr>
-			<td><p:outputLabel value="Lodged On" /></td>
-			<td><p:inputText readonly="true" disabled="true"
-					value="-- Read Only --" /></td>
-			<td><p:outputLabel value="Complaint Stage /Status" /></td>
-			<td><p:inputText readonly="true" disabled="true"
+			<td id="tdTitle"><p:outputLabel value="Supplier Name" /></td>
+			<td id="tdContent"><p:inputText readonly="true" disabled="true"
+					value="#{complaintBackingBean.managedBean.smComplaint.smComplainant.name}" /></td>
+			<td id="tdTitle"><p:outputLabel value="Complaint Type" /></td>
+			<td id="tdContent"><p:inputText readonly="true" disabled="true"
 					value="-- Read Only --" /></td>
 		</tr>
 		<tr>
-			<td><p:outputLabel value="Complaint Details" /></td>
-			<td colspan="3"><p:inputTextarea readonly="true" cols="70"
-					disabled="true" value="-- Read Only --" /></td>
+			<td id="tdTitle"><p:outputLabel value="Lodged On" /></td>
+			<td id="tdContent"><p:inputText readonly="true" disabled="true"
+					value="#{complaintBackingBean.managedBean.smComplaint.createdDate}" /></td>
+			<td id="tdTitle"><p:outputLabel value="Complaint Stage /Status" /></td>
+			<td id="tdContent"><p:inputText readonly="true" disabled="true"
+					value="-- Read Only --" /></td>
+		</tr>
+		<tr>
+			<td id="tdTitle"><p:outputLabel value="Complaint Details" /></td>
+			<td colspan="3" id="tdContent"><p:inputTextarea readonly="true" rows="8" cols="100" 
+					disabled="true" value="#{complaintBackingBean.managedBean.smComplaint.complaintDesc}" /></td>
 		</tr>
 	</table>
 </ui:composition>

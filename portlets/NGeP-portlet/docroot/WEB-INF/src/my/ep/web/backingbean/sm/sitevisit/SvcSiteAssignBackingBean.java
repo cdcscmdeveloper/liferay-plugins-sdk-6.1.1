@@ -24,13 +24,18 @@ public class SvcSiteAssignBackingBean extends
 	}
 
 	public void retrieveSiteAssignInfo() {
+		this.getManagedBean().setAppId(22);
+		
 		log.info("----------------------retrieveSiteAssignInfo start----------------");
 		SiteAssignReqDTO reqDTO = new SiteAssignReqDTO();
 		ISiteAssignSO reqSO = (ISiteAssignSO) BusinessDelegate.getInstance()
 				.getServiceObject("sm", ISiteAssignSO.class);
+		log.info("----------------------retrieveSiteAssignInfo----------------" + this.getManagedBean().getAppId());
 		reqDTO.setAppId(this.getManagedBean().getAppId());
 		//reqDTO.setAppId(2);
 		SiteAssignResDTO resDTO = reqSO.retrieveSiteVisitByApplId(reqDTO);
+		log.info("*********Address Size*************" + resDTO.getSmApplSv().getSmSiteVisitAddresses().size());
+
 		this.getManagedBean().setSmApplSv(resDTO.getSmApplSv());
 	}
 	

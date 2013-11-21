@@ -1,5 +1,5 @@
 <ui:composition
-	template="/WEB-INF/facelets/templates/sidemenu_template.xhtml"
+	template="/WEB-INF/facelets/templates/basic_template.xhtml"
 	xmlns="http://www.w3.org/1999/xhtml"
 	xmlns:f="http://java.sun.com/jsf/core"
 	xmlns:h="http://java.sun.com/jsf/html"
@@ -7,66 +7,94 @@
 	xmlns:p="http://primefaces.org/ui"
 	xmlns:c="http://java.sun.com/jsp/jstl/core">
 
-	<ui:define name="sideMenu">
-	</ui:define>
-
-	<ui:define name="content">
-		<!--<p:panel header="Site Visit Search" toggleable="true">
-			<table class="test">
+	<ui:define name="contentSection">
+		<f:event listener="#{svoSiteVisitBackingBean.retrieveSiteVisitInfo}"
+			type="preRenderView"></f:event>
+		<p:panel header="Site Visit Details" toggleable="true">
+			<table style="width: 80%">
 				<tr>
-					<td id="tdTitle">Supplier Name</td>
-					<td id="tdContent"><p:inputText /></td>
-
-					<td id="tdTitle">Application No</td>
-					<td id="tdContent"><p:inputText /></td>
+					<td><p:outputLabel value="Area" /></td>
+					<td><p:inputText value="Lembah Klang" disabled="true" /></td>
 				</tr>
 
 				<tr>
-					<td id="tdTitle">Account Stage</td>
-					<td id="tdContent"><p:selectOneMenu>
-							<f:selectItem itemLabel="Select" itemValue="" />
-							<f:selectItem itemLabel="Pending SVO Report" itemValue="0" />
-							<f:selectItem itemLabel="Pending Review" itemValue="1" />
-						</p:selectOneMenu></td>
+					<td><p:outputLabel value="Supplier Name" /></td>
+					<td><p:inputText
+							value="#{svoSiteVisitBackingBean.managedBean.smApplSv.smAppl.smSupplier.supplierName}"
+							disabled="true" /></td>
+					<td><p:outputLabel value="MOF Registration No." /></td>
+					<td><p:inputText value="Demo" disabled="true" /></td>
+				</tr>
 
-					<td id="tdTitle">Expected Site Visit Date</td>
-					<td id="tdContent"><p:inputText /></td>
+				<tr>
+					<td><p:outputLabel value="Application Reference" /></td>
+					<td><p:inputText value="Demo" disabled="true" /></td>
+
+					<td><p:outputLabel value="Processing Officer" /></td>
+					<td><p:inputText value="Demo" disabled="true" /></td>
+				</tr>
+
+				<tr>
+					<td><p:outputLabel value="Application Type" /></td>
+					<td><p:inputText value="Demo" disabled="true" /></td>
 				</tr>
 			</table>
-			<div align="right">
-				<p:commandButton value="Submit" />
-			</div>
-		</p:panel>  -->
+		</p:panel>
 
-		<p:panel header="Site Visit List" toggleable="true">
-			<p:dataTable var="svlist"
-				value="#{svoSiteVisitBackingBean.managedBean.svDetailList}">
-				<p:column headerText="Supplier Name">
-					<p:outputLabel value="#{svlist.suppName}" />
+		<p:panel header="Site(s)">
+			<p:dataTable var="svo"
+				value="#{svoSiteVisitBackingBean.managedBean.smApplSv.smSiteVisitAddresses}">
+				<p:column headerText="No">
+				#{rowIndex+1}
 				</p:column>
 
-				<p:column headerText="Application No.">
-					<p:outputLabel value="#{svlist.appNo}" />
+				<p:column headerText="Address">
+					#{svo.smAddress.address1}<br />
+					#{svo.smAddress.address2}<br />
+					#{svo.smAddress.address3}<br />
+					#{svo.smAddress.address4}
 				</p:column>
 
-				<p:column headerText="Account Stage">
-					<p:outputLabel value="#{svlist.accStage}" />
+				<p:column headerText="Post Code">
+				#{svo.smAddress.postcode}
 				</p:column>
 
-				<p:column headerText="Expected Site Visit Date">
-					<p:outputLabel value="#{svlist.expSvDate}" />
+				<p:column headerText="City">
 				</p:column>
 
-				<p:column headerText="Report Uploaded Date">
-					<p:outputLabel value="#{svlist.rptUploadDate}" />
+
+				<p:column headerText="District">
+				</p:column>
+
+				<p:column headerText="State">
+				</p:column>
+
+				<p:column headerText="Country">
+				#{svo.smAddress.pmCountry.countryName}
 				</p:column>
 
 				<p:column headerText="Action">
-					<p:panelGrid columns="3">
-					<p:commandButton value="View" action="#{svoSiteVisitBackingBean.proceedToView}" />
-					</p:panelGrid>
+					<p:commandButton value="Download Template" />
+					<p:commandButton value="Submit Report"
+						action="/xhtml/sm/svositevisit/siteVisitRptSubmission.xhtml" />
+					<!-- <p:commandButton id="modalDialogButton" value="View Report"
+						onclick="dlg2.show();" type="button" /> -->
 				</p:column>
 			</p:dataTable>
 		</p:panel>
+		<!--  
+		<p:dialog id="modalDialog" header="Site Visit Report" widgetVar="dlg2"
+			modal="true" height="500" width="1000">
+			<ui:include src="/xhtml/svositevisit/siteVisitRptSubmission.xhtml" />
+		</p:dialog>-->
+
+		<div align="right">
+			<ui:repeat value="#{svoSiteVisitBackingBean.managedBean.bpmAction}"
+				var="item">
+				<p:commandButton
+					action="#{svoSiteVisitBackingBean.submitSiteVisitReport(item)}"
+					value="#{item}" />
+			</ui:repeat>
+		</div>
 	</ui:define>
 </ui:composition>

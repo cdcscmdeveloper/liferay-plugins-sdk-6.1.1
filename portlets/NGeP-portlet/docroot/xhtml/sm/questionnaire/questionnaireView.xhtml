@@ -1,0 +1,127 @@
+<ui:composition
+	template="/WEB-INF/facelets/templates/basic_template.xhtml"
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:c="http://java.sun.com/jsp/jstl/core">
+
+	<ui:define name="contentSection">
+		<f:event listener="#{questionnaireBackingBean.retrieveQuestionnaire}"
+			type="preRenderView"></f:event>
+
+		<p:panel header="Answer Questionnaire" id="questionPanel">
+			<table style="width: 100%">
+				<tr>
+					<td>CUSTOMER SATISFACTION FEEDBACK FORM MALAYSIAN MINISTRY OF
+						FINANCE <BR />(SYARAKIT BEKALAN DAN PERKHIDMATAN)
+					</td>
+				</tr>
+				<tr>
+					<td><p:separator /></td>
+				</tr>
+				<tr>
+					<td>This feedback takes only 2-3 minutes, we request your
+						cooperation to participate.<br /> Your cooperation is greatly
+						appreciated and your valuable feedback will be used in improving
+						the quality of service and supply contractor MOF service. All
+						information provided will be kept confidential.
+					</td>
+				</tr>
+
+			</table>
+		</p:panel>
+
+		<p:panel header="">
+			<table style="width: 100%">
+				<tr>
+					<td><p:outputLabel value="MOF No." /></td>
+					<td><p:inputText disabled="true" /></td>
+
+					<td><p:outputLabel value="Company Name" /></td>
+					<td><p:inputText
+							value="#{questionnaireBackingBean.managedBean.smSupp.supplierName}"
+							disabled="true" /></td>
+				</tr>
+
+				<tr>
+					<td><p:outputLabel value="Application Reference NO." /></td>
+					<td><p:inputText disabled="true" /></td>
+
+					<td><p:outputLabel value="Type Of Application" /></td>
+					<td><p:inputText
+							value="#{questionnaireBackingBean.managedBean.smSupp.smAppl.applType}"
+							disabled="true" /></td>
+				</tr>
+
+				<tr>
+					<td><p:outputLabel value="Nama Pegawai Pemproses" /></td>
+					<td><p:inputText disabled="true" /></td>
+				</tr>
+
+				<tr>
+					<td><p:outputLabel value="Name*" /></td>
+					<td><p:inputText /></td>
+
+					<td><p:outputLabel value="Telephone No." /></td>
+					<td><p:inputText /></td>
+				</tr>
+			</table>
+		</p:panel>
+
+
+
+		<p:panel header="">
+			<table align="center" style="width:80%">
+				<ui:repeat
+					value="#{questionnaireBackingBean.managedBean.smSuppAnswerLs}"
+					var="ques">
+					<tr>
+						<td>#{ques.smQuestion.questionValue}</td>
+					</tr>
+					<tr>
+
+						<td><p:selectOneRadio value="#{ques.smAnswer.answerId}">
+								<f:selectItems
+									value="#{ques.smQuestion.smAnswerCategory.smAnswers}" var="ans"
+									itemLabel="#{ans.answerValue}" itemValue="#{ans.answerId}">
+								</f:selectItems>
+							</p:selectOneRadio></td>
+					</tr>
+					<tr>
+						<td><br /></td>
+					</tr>
+				</ui:repeat>
+			</table>
+			<!-- <table style="width: 100%">
+				<p:dataTable
+					value="#{questionnaireBackingBean.managedBean.smSuppAnswerLs}"
+					var="ques" rowIndexVar="rowIndex">
+					<p:column>
+						<tr>
+							<td>#{rowIndex+1}.#{ques.smQuestion.questionValue}</td>
+						</tr>
+						<tr>
+							<td><p:selectOneRadio value="#{ques.smAnswer.answerId}">
+									<f:selectItems
+										value="#{ques.smQuestion.smAnswerCategory.smAnswers}"
+										var="ans" itemLabel="#{ans.answerValue}"
+										itemValue="#{ans.answerId}">
+									</f:selectItems>
+								</p:selectOneRadio></td>
+						</tr>
+						<tr>
+							<td></td>
+						</tr>
+					</p:column>
+				</p:dataTable>
+			 </table> -->
+		</p:panel>
+		<div align="right">
+			<p:commandButton
+				action="#{questionnaireBackingBean.submitQuestionnaire}"
+				value="Next" />
+		</div>
+	</ui:define>
+</ui:composition>

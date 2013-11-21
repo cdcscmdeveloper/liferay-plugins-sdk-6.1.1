@@ -6,18 +6,21 @@
 	xmlns:c="http://java.sun.com/jsp/jstl/core">
 
 	<p:panel header="Bank Information">
-		<table class="test">
+		<table class="customTbl">
 			<tr>
-				<td><p:outputLabel
-						value="#{lbl['lbl.sm.bankname']}" /></td>
-				<td><p:selectOneMenu value="#{registrationBackingBean.managedBean.smSuppBank.bankId}">
+				<td id="tdTitle"><p:outputLabel
+						value="* #{lbl['lbl.sm.bankname']}" /></td>
+				<td id="tdContent"><p:selectOneMenu >
 						<f:selectItem itemLabel="Select" itemValue="" />
 						<f:selectItem itemLabel="CIMB" itemValue="1" />
 					</p:selectOneMenu></td>
-				<td><p:outputLabel
-						value="#{lbl['lbl.sm.bankaccnumber']}" /></td>
-				<td><p:inputText value="#{registrationBackingBean.managedBean.smSuppBank.accountNo}"/></td>
+				<td id="tdTitle"><p:outputLabel
+						value="* #{lbl['lbl.sm.bankaccnumber']}" /></td>
+				<td id="tdContent"><p:inputText /></td>
 			</tr>
 		</table>
 	</p:panel>
+	<!-- <p:selectOneMenu value="#{registrationBackingBean.managedBean.smSuppBank.pmbank.bankId}">
+	<p:inputText value="#{registrationBackingBean.managedBean.smSuppBank.accountNo}"/>
+	-->
 </ui:composition>

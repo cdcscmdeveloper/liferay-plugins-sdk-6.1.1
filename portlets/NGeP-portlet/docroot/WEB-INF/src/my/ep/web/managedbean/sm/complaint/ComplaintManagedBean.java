@@ -1,12 +1,15 @@
 package my.ep.web.managedbean.sm.complaint;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
 
+import my.ep.persistence.entity.pm.common.PmCity;
+import my.ep.persistence.entity.pm.common.PmCountry;
+import my.ep.persistence.entity.pm.common.PmState;
 import my.ep.persistence.entity.sm.SmComplaint;
+import my.ep.persistence.entity.sm.SmComplaintReview;
 import my.ep.persistence.entity.sm.SmSupplier;
 import my.ep.web.managedbean.BaseManagedBean;
 
@@ -14,23 +17,33 @@ import my.ep.web.managedbean.BaseManagedBean;
 @SessionScoped
 public class ComplaintManagedBean extends BaseManagedBean {
 	private static final long serialVersionUID = 1L;
-
-	private List<SmSupplier> suppliersList = new ArrayList<SmSupplier>();
-
-	private SmSupplier selectedSupplier = new SmSupplier();
-
+	
 	private SmComplaint smComplaint;
+	private List<SmSupplier> smSupplierLs;
+	private SmSupplier selectedSupplier;
+	private SmComplaintReview smComplReview;
+	private long complaintId;
+	private String taskId;
+	private String[] bpmAction;
+	
+	private PmCountry pmCountry;
+	private PmState pmState;
+	private PmCity pmCity;
 
-	private String searchSupName;
-
-	private String searchSupRegNo;
-
-	public List<SmSupplier> getSuppliersList() {
-		return suppliersList;
+	public SmComplaint getSmComplaint() {
+		return smComplaint;
 	}
 
-	public void setSuppliersList(List<SmSupplier> suppliersList) {
-		this.suppliersList = suppliersList;
+	public void setSmComplaint(SmComplaint smComplaint) {
+		this.smComplaint = smComplaint;
+	}
+
+	public List<SmSupplier> getSmSupplierLs() {
+		return smSupplierLs;
+	}
+
+	public void setSmSupplierLs(List<SmSupplier> smSupplierLs) {
+		this.smSupplierLs = smSupplierLs;
 	}
 
 	public SmSupplier getSelectedSupplier() {
@@ -41,28 +54,61 @@ public class ComplaintManagedBean extends BaseManagedBean {
 		this.selectedSupplier = selectedSupplier;
 	}
 
-	public SmComplaint getSmComplaint() {
-		return smComplaint;
+	public SmComplaintReview getSmComplReview() {
+		return smComplReview;
 	}
 
-	public void setSmComplaint(SmComplaint smComplaint) {
-		this.smComplaint = smComplaint;
+	public void setSmComplReview(SmComplaintReview smComplReview) {
+		this.smComplReview = smComplReview;
 	}
 
-	public String getSearchSupName() {
-		return searchSupName;
+
+	public long getComplaintId() {
+		return complaintId;
 	}
 
-	public void setSearchSupName(String searchSupName) {
-		this.searchSupName = searchSupName;
+	public void setComplaintId(long complaintId) {
+		this.complaintId = complaintId;
 	}
 
-	public String getSearchSupRegNo() {
-		return searchSupRegNo;
+	public String getTaskId() {
+		return taskId;
 	}
 
-	public void setSearchSupRegNo(String searchSupRegNo) {
-		this.searchSupRegNo = searchSupRegNo;
+	public void setTaskId(String taskId) {
+		this.taskId = taskId;
 	}
 
+	public String[] getBpmAction() {
+		return bpmAction;
+	}
+
+	public void setBpmAction(String[] bpmAction) {
+		this.bpmAction = bpmAction;
+	}
+
+	public PmCountry getPmCountry() {
+		return pmCountry;
+	}
+
+	public void setPmCountry(PmCountry pmCountry) {
+		this.pmCountry = pmCountry;
+	}
+
+	public PmState getPmState() {
+		return pmState;
+	}
+
+	public void setPmState(PmState pmState) {
+		this.pmState = pmState;
+	}
+
+	public PmCity getPmCity() {
+		return pmCity;
+	}
+
+	public void setPmCity(PmCity pmCity) {
+		this.pmCity = pmCity;
+	}
+	
 }

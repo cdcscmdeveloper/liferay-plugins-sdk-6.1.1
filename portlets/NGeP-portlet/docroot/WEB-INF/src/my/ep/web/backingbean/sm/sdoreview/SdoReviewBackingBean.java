@@ -28,16 +28,25 @@ public class SdoReviewBackingBean extends BaseBackingBean<SdoReviewManagedBean> 
 	}
 
 	public void viewSupportingDocument() {
+		//this.getManagedBean().setAppId(22);
+		log.info("----------appID------------" + this.getManagedBean().getAppId());
+		
 		SdoReviewReqDTO reqDTO = new SdoReviewReqDTO();
 		ISdoReviewSO reqSO = (ISdoReviewSO) BusinessDelegate.getInstance()
 				.getServiceObject("sm", ISdoReviewSO.class);
 		reqDTO.setApplId(this.getManagedBean().getAppId());
 		SdoReviewResDTO resDTO = reqSO.retrieveApplById(reqDTO);
-		
+//		
+//		String[] arr = new String[2]; // 10 is the length of array.
+//		arr[0] = "INQUIRY";
+//		arr[1] = "VERIFY";
+//		
+//		this.getManagedBean().setBpmAction(arr);
 		this.getManagedBean().setSmAppl(resDTO.getSmAppl());
 		log.info("----------------------supportingDocMode-------------------------"
 				+ resDTO.getSmAppl().getSupportingDocMode());
 
+		
 	}
 
 	public void submitSDOReviewAction(String res) {

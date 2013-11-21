@@ -14,8 +14,7 @@
 	<ui:define name="content">
 		<h:outputLabel value="Site Visit Assignation"
 			style="font-weight:bold;font-size:15px;" />
-		<p:dataTable var="svList"
-			value="#{siteVisitAssignatioBackingBean.managedBean.siteViewList}">
+		<p:dataTable>
 			<p:column headerText="No.">
 				<p:outputLabel value="#{svList.taskNo}" />
 			</p:column>

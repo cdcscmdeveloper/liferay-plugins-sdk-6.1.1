@@ -1,5 +1,5 @@
 <ui:composition
-	template="/WEB-INF/facelets/templates/sidemenu_template.xhtml"
+	template="/WEB-INF/facelets/templates/basic_template.xhtml"
 	xmlns="http://www.w3.org/1999/xhtml"
 	xmlns:f="http://java.sun.com/jsf/core"
 	xmlns:h="http://java.sun.com/jsf/html"
@@ -7,15 +7,9 @@
 	xmlns:p="http://primefaces.org/ui"
 	xmlns:c="http://java.sun.com/jsp/jstl/core">
 
-	<ui:define name="sideMenu">
-		<ui:include
-			src="/xhtml/sm/shared/sidemenu/siteVisitTemplateMenu.xhtml"></ui:include>
-	</ui:define>
 	<ui:define name="contentSection">
-		<h:outputLabel value="Sign Up New Account"
-			style="font-weight:bold;font-size:15px;" />
 		<p:panel header="Acoount Type">
-			<table class="test">
+			<table>
 				<tr>
 					<td><h:outputLabel value="#{lbl['lbl.sm.regtype']}" /></td>
 					<td><p:selectOneRadio

@@ -20,18 +20,16 @@ import org.apache.log4j.Logger;
 public class SvoSiteVisitBackingBean extends
 		BaseBackingBean<SvoSiteVisitManagedBean> {
 	public static Logger log = Logger.getLogger(SvoSiteVisitManagedBean.class);
-	public static String NaviToView = "siteVisitDetails?faces-redirect=true";
+//	public static String NaviToView = "siteVisitDetails?faces-redirect=true";
 	//public static String NaviToSiteVisitTemplate = "submitOnlineRpt?faces-redirect=true";
 	public static String NaviToSiteVisitTemplate = "submitOnlineRpt";
 	public static String NaviToSiteVisitPreDetails = "submitOnlineRptPreDetails";
+	public static String NaviToSiteVisitView = "siteVisitView";
 
 	public SvoSiteVisitBackingBean() {
 
 	}
 
-	public String proceedToView() {
-		return NaviToView;
-	}
 
 	public String rptSubmitMethod() {
 		log.info("-----------------rptSubmitMethod---------------"
@@ -68,9 +66,10 @@ public class SvoSiteVisitBackingBean extends
 	}
 
 	public void retrieveSiteVisitInfo(){
+		this.getManagedBean().setAppId(22);
 		SiteVisitReqDTO reqDTO = new SiteVisitReqDTO();
-		//reqDTO.setAppId(this.getManagedBean().getAppId());
-		reqDTO.setAppId(2);
+		reqDTO.setAppId(this.getManagedBean().getAppId());
+		//reqDTO.setAppId(2);
 		ISiteVisitSO reqSO = (ISiteVisitSO) BusinessDelegate.getInstance()
 				.getServiceObject("sm", ISiteVisitSO.class);
 		SiteVisitResDTO resDTO = reqSO.retrieveSiteVisitInfoByAppId(reqDTO);
@@ -100,5 +99,9 @@ public class SvoSiteVisitBackingBean extends
 	
 	public void uploadSiteVisitReport(){
 		
+	}
+	
+	public String naviToSiteVisitView(){
+		return NaviToSiteVisitView;
 	}
 }
