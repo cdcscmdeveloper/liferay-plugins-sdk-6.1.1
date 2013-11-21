@@ -222,8 +222,8 @@
 
 	<p:panel header="Proposal/Working Paper" toggleable="true"
 		>
-		<h:panelGrid columns="3" styleClass="noBorders tr,noBorders td" style="width:700px;"
-			rows="1">
+		<h:panelGrid columns="3" 
+			rows="1" columnClasses="columnWidth50,columnWidth20,columnWidth30">
 			<h:panelGroup>
 				<p:dataTable var="attendancetender"
 					value="#{approvalBackingBean.managedBean.qtnTenders}" rows="10">

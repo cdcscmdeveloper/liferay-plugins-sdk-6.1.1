@@ -8,7 +8,7 @@
 	<p:panel header="Approval Details Section" toggleable="true">
 
 		<h:panelGrid columns="4"
-			columnClasses="columnWidth20,columnWidth30,columnWidth20,columnWidth30">
+			columnClasses="columnWidth25,columnWidth25,columnWidth20,columnWidth30">
 
 
 			<h:outputLabel value="Approver Name"></h:outputLabel>
@@ -16,7 +16,7 @@
 			<h:panelGroup id="sample2">
 				<p:selectOneMenu
 					value="#{approvalCategory.scQtApproval.approverId}"
-					rendered="#{approvalBackingBean.managedBean.selectedBoolean1 eq '1'}">
+					rendered="#{approvalCategory.scQtApproval.verifyOption eq '1'}">
 					<f:selectItem itemLabel="Select One" itemValue="" />
 					<f:selectItem itemLabel="ROSLAN" itemValue="2" />
 					<f:selectItem itemLabel="KHAIR" itemValue="3" />
@@ -24,7 +24,7 @@
 
 				<p:inputText
 					value="#{approvalCategory.scQtApproval.approverId}"
-					rendered="#{approvalBackingBean.managedBean.selectedBoolean1 eq '2'}"></p:inputText>
+					rendered="#{approvalCategory.scQtApproval.verifyOption eq '2'}"></p:inputText>
 			</h:panelGroup>
 
 			<h:outputLabel value="Approver Date"></h:outputLabel>

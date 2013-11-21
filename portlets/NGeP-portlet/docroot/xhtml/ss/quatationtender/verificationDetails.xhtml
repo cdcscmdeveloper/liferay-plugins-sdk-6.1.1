@@ -7,10 +7,9 @@
 
 	<p:panel header="Verification Details Section" toggleable="true">
 
-		
+
 		<h:panelGrid columns="4"
-			columnClasses="columnWidth20,columnWidth30,columnWidth20,columnWidth30"
-			styleClass="noBorders tr,noBorders td">
+			columnClasses="columnWidth25,columnWidth25,columnWidth20,columnWidth30">
 
 			<h:outputLabel value="Option Of Verification"></h:outputLabel>
 
@@ -23,22 +22,20 @@
 					update="sample,sample1,sample2" />
 				<!--  <p:ajax update="@form"   />  -->
 			</p:selectOneRadio>
-		   <h:outputLabel></h:outputLabel>
-		     <h:outputLabel></h:outputLabel>
+			<h:column></h:column>
+			<h:column></h:column>
 			<h:outputLabel value="Verifier Name"></h:outputLabel>
 
 			<h:panelGroup id="sample">
-				<p:selectOneMenu
-					value="#{approvalCategory.scQtApproval.verifierId}"
-					rendered="#{approvalBackingBean.managedBean.selectedBoolean1 eq '1'}">
+				<p:selectOneMenu value="#{approvalCategory.scQtApproval.verifierId}"
+					rendered="#{approvalCategory.scQtApproval.verifyOption eq '1'}">
 					<f:selectItem itemLabel="Select One" itemValue="" />
 					<f:selectItem itemLabel="Roslan" itemValue="2" />
 					<f:selectItem itemLabel="Hanib" itemValue="3" />
 				</p:selectOneMenu>
 
-				<p:inputText
-					value="#{approvalCategory.scQtApproval.verifierId}"
-					rendered="#{approvalBackingBean.managedBean.selectedBoolean1 eq '2'}"></p:inputText>
+				<p:inputText value="#{approvalCategory.scQtApproval.verifierId}"
+					rendered="#{approvalCategory.scQtApproval.verifyOption eq '2'}"></p:inputText>
 			</h:panelGroup>
 
 			<h:outputLabel value="Verification Date"></h:outputLabel>
@@ -61,7 +58,7 @@
 				<f:selectItem itemLabel="REJECT" itemValue="2" />
 				<f:selectItem itemLabel="REVISE" itemValue="2" />
 			</p:selectOneMenu>
-          
+
 			<h:outputLabel value="Remarks" style="vertical-align:top;"></h:outputLabel>
 
 			<p:inputTextarea rows="3" cols="50" autoResize="false"

@@ -24,7 +24,7 @@
 		</tr>
 		</table>
 	</p:panel>
-	<p:tabView var="approvalCategory" dynamic="true" cache1="true" orientation="top"
+	<p:tabView var="approvalCategory" dynamic="true" cache1="false" orientation="top"
 		activeIndex="#{approvalBackingBean.activeApprovalTab}"
 		value="#{approvalBackingBean.managedBean.tabList}">
 		<p:ajax event="tabChange" process="@this"
