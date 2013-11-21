@@ -68,11 +68,67 @@ public class UnspscCodeManagedBean extends BaseManagedBean {
 	
 	private String tempUser;
 	
+	private String taskName;
+	private String processName;
+	
+	
+	private Long typeId;
+	private Long colorId;
+	private Long measurementId;
+	private Long brandId;
 	
 	
 	
 	
 	
+	public Long getTypeId() {
+		return typeId;
+	}
+
+	public void setTypeId(Long typeId) {
+		this.typeId = typeId;
+	}
+
+	public Long getColorId() {
+		return colorId;
+	}
+
+	public void setColorId(Long colorId) {
+		this.colorId = colorId;
+	}
+
+	public Long getMeasurementId() {
+		return measurementId;
+	}
+
+	public void setMeasurementId(Long measurementId) {
+		this.measurementId = measurementId;
+	}
+
+	public Long getBrandId() {
+		return brandId;
+	}
+
+	public void setBrandId(Long brandId) {
+		this.brandId = brandId;
+	}
+
+	public String getTaskName() {
+		return taskName;
+	}
+
+	public void setTaskName(String taskName) {
+		this.taskName = taskName;
+	}
+
+	public String getProcessName() {
+		return processName;
+	}
+
+	public void setProcessName(String processName) {
+		this.processName = processName;
+	}
+
 	public String getTempUser() {
 		return tempUser;
 	}
