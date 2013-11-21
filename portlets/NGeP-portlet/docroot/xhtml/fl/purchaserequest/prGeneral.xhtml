@@ -161,21 +161,13 @@
 			</tr>
 		</table>
 	</p:panel>
-
-	<p:panel header="REMARKS AND ATTACHMENT" toggleable="true">
-		<table>
+	<p:panel header="#{lbl['lbl.fl.remark.attachment']}" toggleable="true">
+		<table style="width: 100%">
 			<tr>
-				<td valign="top"><p:outputLabel value="* Remarks    " /></td>
-				<td><p:inputTextarea rows="8" style="width: 260px;"
-						value="#{purchaseRequestBackingBean.managedBean.flRemark.remark}" /></td>
-				<td valign="top"><p:outputLabel value="Attachment" /></td>
-				<td><p:fileUpload
-						fileUploadListener="#{purchaseRequestBackingBean.fileUpload}"
-						update="messages" mode="advanced" dragDropSupport="false"
-						sizeLimit="100000" multiple="true"
-						allowTypes="/(\.|\/)(doc|docx|xls|xlsx|pdf)$/" /> <p:growl
-						id="messages" showDetail="true" /></td>
+				<td width="50%" valign="top"><ui:include src="/xhtml/fl/shared/remark.xhtml" /></td>
+				<td width="50%" valign="top"><ui:include src="/xhtml/fl/shared/attachment.xhtml" /></td>
 			</tr>
 		</table>
 	</p:panel>
+	
 </ui:composition>

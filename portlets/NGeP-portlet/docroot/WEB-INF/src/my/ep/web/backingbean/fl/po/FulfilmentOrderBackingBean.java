@@ -4,6 +4,7 @@ import java.text.SimpleDateFormat;
 import java.util.List;
 
 import javax.annotation.PostConstruct;
+import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.RequestScoped;
 import javax.faces.context.FacesContext;
@@ -11,6 +12,7 @@ import javax.faces.context.FacesContext;
 import my.ep.biz.service.fl.order.IFulfilmentOrderSO;
 import my.ep.dto.fl.FulfilmentReqDTO;
 import my.ep.dto.fl.FulfilmentResDTO;
+import my.ep.exception.EpException;
 import my.ep.persistence.entity.fl.FlAttachment;
 import my.ep.persistence.entity.fl.FlRemark;
 import my.ep.persistence.entity.fl.order.FlDeliveryOrder;
@@ -20,6 +22,7 @@ import my.ep.persistence.entity.fl.request.FlFulfilmentRequest;
 import my.ep.persistence.entity.sm.SmSupplier;
 import my.ep.web.backingbean.BaseBackingBean;
 import my.ep.web.backingbean.fl.deliveryorder.DeliveryOrderBackingBean;
+import my.ep.web.constant.BpmOutcomeConst;
 import my.ep.web.managedbean.fl.po.FulfilmentOrderManagedBean;
 import my.ep.web.util.lookupservice.BusinessDelegate;
 
@@ -49,7 +52,7 @@ public class FulfilmentOrderBackingBean extends BaseBackingBean<FulfilmentOrderM
 //			getManagedBean().getFulfilmentRequest().getSmSupplier().setSupplierId(27L);
 //		}
 	}
-	public void fulfillmentOrderAction(String action) {
+	public String fulfillmentOrderAction(String action) {
 		IFulfilmentOrderSO fulfilmentOrderSO = null;
 		try {
 			
@@ -93,13 +96,27 @@ public class FulfilmentOrderBackingBean extends BaseBackingBean<FulfilmentOrderM
 			}else{
 				reqDTO.setTempLogin(getManagedBean().getTempLoginId());
 			}
-			fulfilmentOrderSO.acknowledgeFulfillmentOrder(reqDTO);
-			//System.out.println("resDTO.isSuccessful() in backing bean:: "+ resDTO.isSuccessful());
+			FulfilmentResDTO resDTO = fulfilmentOrderSO.acknowledgeFulfillmentOrder(reqDTO);
+			if(resDTO.isSuccessful()) {
+				log.info("Record saved successfully");
+				String message = "Fulfilment Request No. : "+flFulfilmentRequest.getFulfilmentReqId();
+				if(flFulfilmentRequest.getDocNo()!=null) {
+					message = message + ". Doc No. : "+flFulfilmentRequest.getDocNo();
+				}
+				FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "Record saved successfully.",message));
+				if(!action.equalsIgnoreCase(BpmOutcomeConst.BPM_SAVE)) { // save action will remain in the same page
+					renewSesionObject();
+					return "/xhtml/shared/acknowledge.xhtml";
+				}
+			} else {
+				throw new EpException("Failed.");
+			}
 		} catch (Exception e) {
 			log.error("Exception>>", e);
 		} finally {
 			fulfilmentOrderSO = null;
 		}
+		return null;
 	}
 	public FulfilmentResDTO retrievePendingDoItems() {
 		IFulfilmentOrderSO filmentOrderSO = (IFulfilmentOrderSO) BusinessDelegate.getInstance().getServiceObject("fl", IFulfilmentOrderSO.class);

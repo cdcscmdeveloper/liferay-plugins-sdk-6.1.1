@@ -54,13 +54,14 @@
 				</c:if>
 			</tr>
 		</table>
-		<p:tabView id="tt" orientation="left" widgetVar="tt">
-			<p:tab title="General">
+		<p:tabView id="prtabs" orientation="left" dynamic="true" cache="false">
+			<p:tab id= "tab1" title="General">
 				<ui:include src="prGeneral.xhtml" />
 			</p:tab>
-			<p:tab title="Item">
+			<p:tab  id="tab2" title="Item">
 				<ui:include src="prItem.xhtml" />
 			</p:tab>
 		</p:tabView>
+		
 	</ui:define>
 </ui:composition>

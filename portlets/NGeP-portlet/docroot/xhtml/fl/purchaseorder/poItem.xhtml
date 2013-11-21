@@ -5,87 +5,53 @@
 	xmlns:p="http://primefaces.org/ui"
 	xmlns:c="http://java.sun.com/jsp/jstl/core"
 	xmlns:ac="http://ac.my/jsf/composite/cc">
-	<p:panel header="DELIVERY ADDRESS" toggleable="true">
+	<p:panel id="delAddrPanel" header="DELIVERY ADDRESS" toggleable="true">
 
-		<p:dataTable id="dataTable1" var="address" width="100%">
-			<ac:paginator for="dataTable1" />
-			<p:column style="width: 400px;" headerText="Delivery Address">
-				<h:outputText />
+		<p:dataTable id="addressDataTable" var="address"
+			value="#{flOrderBB.managedBean.fulfilmentRequest.flDeliveryAddresses}"
+			>
+			<ac:paginator for="addressDataTable"/>
+			<p:column headerText="Delivery Address">
+				<h:outputText value="#{address.addressType.pmAddress.address1}, #{address.addressType.pmAddress.address2}, #{address.addressType.pmAddress.address3}, #{address.addressType.pmAddress.address4}" />
 			</p:column>
+
 			<p:column headerText="Exp. Delivery (Start)">
-				<h:outputText />
+				 <p:calendar value="#{address.startDate}" id="calStartDate" showOn="button" />  
 			</p:column>
+
 			<p:column headerText="Exp. Delivery (End)">
-				<h:outputText />
+				<p:calendar value="#{address.endDate}" id="calEndDate" showOn="button" />  
 			</p:column>
-			<p:column headerText="Sub Total (MYR)">
-				<h:outputText />
-			</p:column>
+
 		</p:dataTable>
-		<table style="width: 100%;">
-			<tr>
-				<td colspan="6" style="text-align: right"><p:commandButton
-						value="ADD" /></td>
-			</tr>
-		</table>
 	</p:panel>
-	<p:panel header="ITEM DETAIL" toggleable="true">
-		<br />
-		<p:dataTable id="dataTable2" var="item" width="100%">
-			<ac:paginator for="dataTable2" />
+	<p:panel id="itemDetPanel" header="ITEM DETAIL" toggleable="true">
+		
+		<p:dataTable id="itemDataTable" var="flItem"
+			value="#{flOrderBB.managedBean.fulfilmentRequest.flFulfilmentItems}"
+			rendered="#{not empty flOrderBB.managedBean.fulfilmentRequest.flDeliveryAddresses}">
+			<ac:paginator for="itemDataTable"/>
+			
 			<p:column headerText="Product Code">
-				<h:outputText />
+				<h:outputText  value="#{flItem.scRequestNoteDtl.scRequestSupplierItem.scRequestListItem.requestListItemId}" />
 			</p:column>
+
 			<p:column headerText="Item Name">
-				<h:outputText />
+				<h:outputText value="#{flItem.scRequestNoteDtl.scRequestSupplierItem.scRequestListItem.itemName}" />
 			</p:column>
+
 			<p:column headerText="GOSODO">
-				<h:outputText />
 			</p:column>
+
 			<p:column headerText="Activity Code">
-				<h:outputText />
 			</p:column>
 			<p:column headerText="Unit Price (MYR)">
-				<h:outputText />
 			</p:column>
 			<p:column headerText="Ord. Qty.">
-				<h:outputText />
 			</p:column>
-			<p:column headerText="Total">
-				<h:outputText />
+			<p:column headerText="Sub Total">
 			</p:column>
 		</p:dataTable>
-		<br />
-		<br />
-		<table>
-			<tr>
-				<td><p:outputLabel value="Product Code" /></td>
-				<td><p:inputText style="width: 260px;" value="200003"
-						disabled="true" /></td>
-				<td><p:outputLabel value="Unit Price" /></td>
-				<td><p:inputText style="width: 260px;" value="0.50"
-						disabled="true" /></td>
-			</tr>
-			<tr>
-				<td><p:outputLabel value="Item Name" /></td>
-				<td><p:inputText style="width: 260px;" value="Blue Pen"
-						disabled="true" /></td>
-				<td><p:outputLabel value="Ordered Qty" /></td>
-				<td><p:inputText style="width: 260px;" value="200" /></td>
-			</tr>
-			<tr>
-				<td><p:outputLabel value="GOSODO" /></td>
-				<td><p:inputText style="width: 260px;" value="GOSODO001"
-						disabled="true" /></td>
-				<td><p:outputLabel value="Total" /></td>
-				<td><p:inputText style="width: 260px;" value="100.00"
-						disabled="true" /></td>
-			</tr>
-			<tr>
-				<td><p:outputLabel value="Activity Code" /></td>
-				<td><p:inputText style="width: 260px;" value="ACTIVITY1 "
-						disabled="true" /></td>
-			</tr>
-		</table>
+		
 	</p:panel>
 </ui:composition>

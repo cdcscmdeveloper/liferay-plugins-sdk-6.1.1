@@ -6,66 +6,156 @@
 	xmlns:c="http://java.sun.com/jsp/jstl/core"
 	xmlns:ac="http://ac.my/jsf/composite/cc">
 
-	<p:panel header="DELIVERY ADDRESS" toggleable="true">
-		<p:dataTable id="addressDataTable" var="address" width="100%">
-			<ac:paginator for="addressDataTable" />
+
+	<p:panel id="delAddrPanel" header="DELIVERY ADDRESS" toggleable="true">
+
+		<p:dataTable id="addressDataTable" var="address"
+			value="#{purchaseRequestBackingBean.managedBean.fulfilmentRequest.flDeliveryAddresses}"
+			selection="#{purchaseRequestBackingBean.managedBean.selectedDelAddr}" rowKey="#{address}" 
+			selectionMode="single">
+			<ac:paginator for="addressDataTable"/>
+			<p:ajax event="rowSelect" update=":form:prtabs:itemDetPanel"  process="@this"
+			listener="#{purchaseRequestBackingBean.selectedAddrRow()}">
+			</p:ajax>
 			<p:column headerText="Delivery Address">
-				<h:outputText value=" " />
+				<h:outputText value="#{address.addressType.pmAddress.address1}, #{address.addressType.pmAddress.address2}, #{address.addressType.pmAddress.address3}, #{address.addressType.pmAddress.address4}" />
 			</p:column>
+
 			<p:column headerText="Exp. Delivery (Start)">
-				<h:outputText value=" " />
+				 <p:calendar value="#{address.startDate}" id="calStartDate" showOn="button" />  
 			</p:column>
+
 			<p:column headerText="Exp. Delivery (End)">
-				<h:outputText />
+				<p:calendar value="#{address.endDate}" id="calEndDate" showOn="button" />  
 			</p:column>
+
 			<p:column headerText="Action">
-				<p:commandLink id="deleteLink" styleClass="ui-icon ui-icon-trash" />
+				<p:commandLink id="deleteLink" styleClass="ui-icon ui-icon-trash" update="addressDataTable" process="@this"
+					action="#{purchaseRequestBackingBean.removeAddRow}" >
+					<f:setPropertyActionListener value="#{address}"
+						target="#{purchaseRequestBackingBean.managedBean.selectedAddrRow}" />
+				</p:commandLink>
 			</p:column>
 		</p:dataTable>
-		<table style="width: 100%;">
+		<div style="width:100%;text-align:right">
+				<p:commandButton value="ADD" 
+						action="#{purchaseRequestBackingBean.flDeliveryAddrList}"
+						update="delAddr" process="@this,delAddr"
+						oncomplete="addDeliveryAddr.show();" />
 
-			<tr>
-				<td colspan="6" style="text-align: right"><p:commandButton
-						value="ADD" /></td>
-			</tr>
-		</table>
+		</div>
 	</p:panel>
-	<p:panel header="ITEM DETAIL" toggleable="true">
-		<table style="width: 100%;">
-			<tr>
-				<td colspan="6" style="text-align: right"><p:commandButton
-						value="ACTION" /></td>
-			</tr>
-		</table>
-		<p:dataTable id="itemDataTable" var="item" width="100%">
-			<ac:paginator for="itemDataTable" />
+	<p:panel id="itemDetPanel" header="ITEM DETAIL" toggleable="true">
+		
+		<p:dataTable id="itemDataTable" var="flItem"
+			value="#{purchaseRequestBackingBean.managedBean.fulfilmentRequest.flFulfilmentItems}"
+			rendered="#{not empty purchaseRequestBackingBean.managedBean.fulfilmentRequest.flDeliveryAddresses}">
+			<ac:paginator for="itemDataTable"/>
+			
 			<p:column headerText="Product Code">
-				<h:outputText />
+				<h:outputText  value="#{flItem.scRequestNoteDtl.scRequestSupplierItem.scRequestListItem.requestListItemId}" />
 			</p:column>
+
 			<p:column headerText="Item Name">
-				<h:outputText />
+				<h:outputText value="#{flItem.scRequestNoteDtl.scRequestSupplierItem.scRequestListItem.itemName}" />
 			</p:column>
+
 			<p:column headerText="GOSODO">
-				<h:outputText />
 			</p:column>
+
 			<p:column headerText="Activity Code">
-				<h:outputText />
 			</p:column>
 			<p:column headerText="Unit Price (MYR)">
-				<h:outputText />
 			</p:column>
 			<p:column headerText="Ord. Qty.">
-				<h:outputText />
 			</p:column>
 			<p:column headerText="Sub Total">
-				<h:outputText />
 			</p:column>
 			<p:column headerText="Action">
-				<p:commandLink id="deleteLink" styleClass="ui-icon ui-icon-trash" />
+				<p:commandLink id="deleteLink" styleClass="ui-icon ui-icon-trash" update="itemDataTable" process="@this"
+					action="#{purchaseRequestBackingBean.removeItemRow}" >
+					<f:setPropertyActionListener value="#{flItem}"
+						target="#{purchaseRequestBackingBean.managedBean.selectedItemRow}" />
+				</p:commandLink>
 			</p:column>
 		</p:dataTable>
-		<f:verbatim>
-			<hr width="12" />
-		</f:verbatim>
+		<div style="width: 100%;text-align:right" >
+				<p:commandButton id="addItems" value="ADD ITEMS" action="#{purchaseRequestBackingBean.addPurchsedItems}"
+				rendered="#{not empty purchaseRequestBackingBean.managedBean.fulfilmentRequest.flDeliveryAddresses}" 
+				update="purchasedItemDt" process="@this,purchasedItemDt" oncomplete="addItems.show();"/>
+				
+		</div>
 	</p:panel>
+
+	<p:dialog id="addDelAddrDialog" header="Add Delivery Address" widgetVar="addDeliveryAddr"
+		showEffect="fade" hideEffect="fade" modal="true" height="450"
+		width="600" resizable="false">
+		
+		<p:dataTable id="delAddr" var="delAddr"
+			value="#{purchaseRequestBackingBean.managedBean.addressTypesList}"
+			rowKey="#{delAddr.addressTypeId}"   
+			selection="#{purchaseRequestBackingBean.managedBean.selectedPmAddrTypeList}">
+			<p:ajax event="rowSelect" update=":form:prtabs:delAddr" process="@this" 
+			listener="#{purchaseRequestBackingBean.selectedAddrRow()}"/>
+			<ac:paginator for="delAddr"/>
+			<p:columnGroup type="header">
+				<p:row>
+					<p:column rowspan="1" headerText=""></p:column>
+					<p:column rowspan="1" headerText="No"></p:column>
+					<p:column rowspan="1" headerText="Address"></p:column>
+				</p:row>
+			</p:columnGroup>
+			<p:column selectionMode="multiple" />
+			<p:column>
+				<h:outputText value="#{delAddr.pmAddress.addressId}" />
+			</p:column>
+			<p:column>
+				<h:outputText value="#{delAddr.pmAddress.address1}, #{delAddr.pmAddress.address2}, #{delAddr.pmAddress.address3}, #{delAddr.pmAddress.address4}" escape="false"/>
+			</p:column>
+		</p:dataTable>
+		<div style="width:100%;text-align: right">
+			<p:commandButton value="Add"
+				action="#{purchaseRequestBackingBean.updateDeliveryAddrDt}"
+				oncomplete="addDeliveryAddr.hide();" process="@this,delAddr"
+				update="addressDataTable">
+			</p:commandButton>
+		</div>
+		
+
+	</p:dialog>
+	<p:dialog id="addPurchasedItemDialog" header="Add Purchased Items" widgetVar="addItems"
+		showEffect="fade" hideEffect="fade" modal="true" height="450"
+		width="600" resizable="false">
+		
+		<p:dataTable id="purchasedItemDt" var="purchasedItem"
+			value="#{purchaseRequestBackingBean.managedBean.requestNoteWithDtlsList}"
+			rowKey="#{purchasedItem.scRequestList.requestItems[0].requestListItemId}"
+			selection="#{purchaseRequestBackingBean.managedBean.selectedPurchasedItemList}">
+			<p:ajax event="rowSelect" update=":form:prtabs:addPurchasedItemDialog" process="@this"/>
+			<ac:paginator for="purchasedItemDt"/>
+			<p:columnGroup type="header">
+				<p:row>
+					<p:column rowspan="1" headerText=""></p:column>
+					<p:column rowspan="1" headerText="No"></p:column>
+					<p:column rowspan="1" headerText="Items"></p:column>
+				</p:row>
+			</p:columnGroup>
+			<p:column selectionMode="multiple" />
+			<p:column>
+				<h:outputText value="#{purchasedItem.scRequestList.requestItems[0].requestListItemId}" />
+			</p:column>
+			<p:column>
+				<h:outputText value="#{purchasedItem.scRequestList.requestItems[0].itemName}" />
+			</p:column>
+		</p:dataTable>
+		<div style="width:100%;text-align: right">
+			<p:commandButton value="Add"
+				action="#{purchaseRequestBackingBean.updatePurchasedItemDt}"
+				oncomplete="addItems.hide();"
+				update="itemDataTable" process="@this,purchasedItemDt">
+			</p:commandButton>
+		</div>
+		
+
+	</p:dialog>
 </ui:composition>
