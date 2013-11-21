@@ -63,19 +63,11 @@
 		</category>
 		<!-- Fulfilment End Added by Giri -->
 		<portlet id="NGeP" />
-		<portlet id="sm" />
 		<portlet id="codification"></portlet>
 		<portlet id="Catalogue"></portlet>
-		<portlet id="smApplyBumi"></portlet>
-		<portlet id="smUpdateMofDetails"></portlet>
 		<portlet id="ReviewUNSPSC"></portlet>
 		<portlet id="catalogueTaskList"></portlet>
-		<portlet id="smAddtionalCatCodes"></portlet>
-		<portlet id="smDeleteCategoryCode"></portlet>
-		<portlet id="smRenewMof"></portlet>
-		<portlet id="smCancelMofReg"></portlet>
-		<portlet id="smDelPendingAppln"></portlet>
-		<portlet id="smDisciplinary"></portlet>
+
 	</category>
 
 	<category name="category.sample">
@@ -99,6 +91,22 @@
 		<portlet id="templateSpec"></portlet>
 	</category>
 	<category name="Supplier Management">
-		<!-- <portlet id="NGeP" /> -->
+		<portlet id="sdoreview"></portlet>
+		<portlet id="disciplinaryAction"></portlet>
+		<portlet id="questionnaire"></portlet>
+		<portlet id="complaint"></portlet>
+		<portlet id="svcassignment"></portlet>
+		<portlet id="SvoSiteVisit"></portlet>
+		<portlet id="onlineRegistration"></portlet>
+		
+		<portlet id="sm" />
+		<portlet id="smAddtionalCatCodes"></portlet>
+		<portlet id="smDeleteCategoryCode"></portlet>
+		<portlet id="smRenewMof"></portlet>
+		<portlet id="smCancelMofReg"></portlet>
+		<portlet id="smDelPendingAppln"></portlet>
+		<portlet id="smApplyBumi"></portlet>
+		<portlet id="smUpdateMofDetails"></portlet>
+		
 	</category>
 </display>

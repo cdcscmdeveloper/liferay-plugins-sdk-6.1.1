@@ -10,7 +10,7 @@
 		<ajaxable>false</ajaxable>
 		<header-portlet-css>/css/ep/main.css</header-portlet-css>
 		<css-class-wrapper>ct-portlet</css-class-wrapper>
-	</portlet>	
+	</portlet>
 	<portlet>
 		<portlet-name>ctAssociateContract</portlet-name>
 		<icon>/icon.png</icon>
@@ -50,7 +50,7 @@
 		<ajaxable>false</ajaxable>
 		<header-portlet-css>/css/ep/main.css</header-portlet-css>
 		<css-class-wrapper>ct-portlet</css-class-wrapper>
-	</portlet>	
+	</portlet>
 	<portlet>
 		<portlet-name>ctCancelCircular</portlet-name>
 		<icon>/icon.png</icon>
@@ -90,7 +90,7 @@
 		<ajaxable>false</ajaxable>
 		<header-portlet-css>/css/ep/main.css</header-portlet-css>
 		<css-class-wrapper>ct-portlet</css-class-wrapper>
-	</portlet>	
+	</portlet>
 	<!-- Contract - END -->
 
 	<!-- Procurement Plan - START -->
@@ -114,7 +114,7 @@
 		</footer-portlet-javascript>
 		<css-class-wrapper>pp-plan-portlet</css-class-wrapper>
 	</portlet>
-		<portlet>
+	<portlet>
 		<portlet-name>reviewPlanPreparation</portlet-name>
 		<icon>/icon.png</icon>
 		<instanceable>false</instanceable>
@@ -126,7 +126,7 @@
 			reviewplanpreparation-portlet
 		</css-class-wrapper>
 	</portlet>
-	
+
 	<portlet>
 		<portlet-name>reviewBudgetAllocation</portlet-name>
 		<icon>/icon.png</icon>
@@ -173,7 +173,7 @@
 		</footer-portlet-javascript>
 		<css-class-wrapper>catalogue-portlet</css-class-wrapper>
 	</portlet>
-	
+
 	<!-- Fulfilment Start Added by Giri -->
 	<portlet>
 		<portlet-name>flContractList</portlet-name>
@@ -181,28 +181,28 @@
 		<instanceable>false</instanceable>
 		<header-portlet-css>/css/main.css</header-portlet-css>
 		<css-class-wrapper>flcos-portlet</css-class-wrapper>
-	</portlet>	
+	</portlet>
 	<portlet>
 		<portlet-name>flRequestNoteList</portlet-name>
 		<icon>/icon.png</icon>
 		<instanceable>false</instanceable>
 		<header-portlet-css>/css/main.css</header-portlet-css>
 		<css-class-wrapper>flrequestnote-portlet</css-class-wrapper>
-	</portlet>	
+	</portlet>
 	<portlet>
 		<portlet-name>flPendingDeliveryList</portlet-name>
 		<icon>/icon.png</icon>
 		<instanceable>false</instanceable>
 		<header-portlet-css>/css/main.css</header-portlet-css>
 		<css-class-wrapper>fldopending-portlet</css-class-wrapper>
-	</portlet>	
+	</portlet>
 	<portlet>
 		<portlet-name>flDocumentMaintenance</portlet-name>
 		<icon>/icon.png</icon>
 		<instanceable>false</instanceable>
 		<header-portlet-css>/css/main.css</header-portlet-css>
 		<css-class-wrapper>fldocs-portlet</css-class-wrapper>
-	</portlet>	
+	</portlet>
 	<portlet>
 		<portlet-name>flContractOrder</portlet-name>
 		<icon>/icon.png</icon>
@@ -216,14 +216,14 @@
 		<instanceable>false</instanceable>
 		<header-portlet-css>/css/main.css</header-portlet-css>
 		<css-class-wrapper>flcr-portlet</css-class-wrapper>
-	</portlet>	
+	</portlet>
 	<portlet>
 		<portlet-name>flInvoice</portlet-name>
 		<icon>/icon.png</icon>
 		<instanceable>false</instanceable>
 		<header-portlet-css>/css/main.css</header-portlet-css>
 		<css-class-wrapper>flinv-portlet</css-class-wrapper>
-	</portlet>	
+	</portlet>
 	<portlet>
 		<portlet-name>flDeliveryOrder</portlet-name>
 		<icon>/icon.png</icon>
@@ -272,9 +272,9 @@
 		<instanceable>false</instanceable>
 		<header-portlet-css>/css/main.css</header-portlet-css>
 		<css-class-wrapper>flsi-portlet</css-class-wrapper>
-	</portlet>	
+	</portlet>
 	<!-- Fulfilment End Added by Giri -->
-	
+
 	<portlet>
 		<portlet-name>scCommittee</portlet-name>
 		<icon>/icon.png</icon>
@@ -508,18 +508,8 @@
 		</footer-portlet-javascript>
 		<css-class-wrapper>smdelpendingappln-portlet</css-class-wrapper>
 	</portlet>
-	<portlet>
-		<portlet-name>smDisciplinary</portlet-name>
-		<icon>/icon.png</icon>
-		<instanceable>false</instanceable>
-		<header-portlet-css>/css/main.css</header-portlet-css>
-		<footer-portlet-javascript>
-			/js/main.js
-		</footer-portlet-javascript>
-		<css-class-wrapper>smdisciplinary-portlet</css-class-wrapper>
-	</portlet>
 	<!-- Supplier Management End venkat -->
-	
+
 	<!-- Supplier Management - Andrew -->
 	<portlet>
 		<portlet-name>sdoreview</portlet-name>
@@ -573,8 +563,19 @@
 		</footer-portlet-javascript>
 		<css-class-wrapper>questionnaire-portlet</css-class-wrapper>
 	</portlet>
+
+	<portlet>
+		<portlet-name>onlineRegistration</portlet-name>
+		<icon>/icon.png</icon>
+		<instanceable>false</instanceable>
+		<header-portlet-css>/css/main.css</header-portlet-css>
+		<footer-portlet-javascript>
+			/js/main.js
+		</footer-portlet-javascript>
+		<css-class-wrapper>onlineregistration-portlet</css-class-wrapper>
+	</portlet>
 	<!-- Supplier Management - End - Andrew -->
-	
+
 	<portlet>
 		<portlet-name>ReviewUNSPSC</portlet-name>
 		<icon>/icon.png</icon>
@@ -672,7 +673,7 @@
 		</footer-portlet-javascript>
 		<css-class-wrapper>reviewunspsc-portlet</css-class-wrapper>
 	</portlet>
-	
+
 	<portlet>
 		<portlet-name>BpmTaskList</portlet-name>
 		<icon>/icon.png</icon>
@@ -719,7 +720,7 @@
 			scbriefingsitevisitattendance-portlet
 		</css-class-wrapper>
 	</portlet>
-	
+
 	<role-mapper>
 		<role-name>administrator</role-name>
 		<role-link>Administrator</role-link>
