@@ -3611,3 +3611,26 @@ textarea[disabled],input[type="text"][disabled],input[type="password"][disabled]
 .columnWidth30 {
 	width: 30%;
 }
+
+/*------------------------------------Andrew ------------------------------*/
+.customTbl {
+	
+}
+
+table.customTbl {
+	width: 100%;
+}
+
+.customTbl td {
+	/*padding: 5px;*/
+}
+
+#tdContent {
+	text-align: left;
+}
+
+#tdTitle {
+	width: 20%;
+	text-align: right;
+}
+/*---------------------------------------------------------------------------*/
