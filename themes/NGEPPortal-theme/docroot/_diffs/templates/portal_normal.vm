@@ -147,11 +147,17 @@ $theme.include($body_top_include)
                 </div>
                 
                 
-                <div class="middle-search-wrapper">
                 	#if (!$is_signed_in)
+                	<div class="middle-search-wrapper">
                     	<input name="search" type="text" placeholder="Search"><a class="btn-search" href="#"></a>
+                	</div>
                 	#end
-                </div>
+                	
+                  	#if ($is_signed_in)
+                	<div class="middle-search-wrapper-sign-in">
+                    	<input name="search" type="text" placeholder="Search"><a class="btn-search" href="#"></a>
+                	</div>
+                	#end
                 
                 
                 <div class="middle-logo-wrapper">
