@@ -10,8 +10,6 @@ import javax.faces.bean.SessionScoped;
 
 import my.ep.persistence.entity.ct.CtContract;
 import my.ep.persistence.entity.ct.dtl.item.CtContractedItem;
-import my.ep.persistence.entity.fl.FlAttachment;
-import my.ep.persistence.entity.fl.FlRemark;
 import my.ep.persistence.entity.fl.request.FlDeliveryAddress;
 import my.ep.persistence.entity.fl.request.FlFulfilmentRequest;
 import my.ep.persistence.entity.fl.request.FlShippingInstr;
@@ -20,6 +18,7 @@ import my.ep.persistence.entity.pm.common.PmMaksud;
 import my.ep.web.managedbean.BaseManagedBean;
 
 import org.apache.log4j.Logger;
+import org.primefaces.model.DualListModel;
 
 /**
  * Managed Bean for Create Contract Order
@@ -33,8 +32,6 @@ public class ContractRequestManagedBean extends BaseManagedBean {
 	private static Logger log = Logger.getLogger(ContractRequestManagedBean.class);
 	private static final long serialVersionUID = 1L;
 
-	private FlRemark flRemark = new FlRemark();
-	private FlAttachment flAttachment = new FlAttachment();
 	private FlFulfilmentRequest flRequest;
 	private FlDeliveryAddress selectedAddrRow;
 	private FlDeliveryAddress selectedDelAddr;
@@ -45,6 +42,7 @@ public class ContractRequestManagedBean extends BaseManagedBean {
 	private FlDeliveryAddress selectedAddr;
 	private List<CtContractedItem> contractedItemList;
 	private List<CtContractedItem> selectedContractedItemList;
+	private DualListModel<String> approverModel;
 	
 	//getbpm
 	private String bpmTaskId;
@@ -52,6 +50,7 @@ public class ContractRequestManagedBean extends BaseManagedBean {
 	
 	//getcontract
 	private CtContract ctContract = new CtContract();
+	private List <CtContract> contractList;
 	private CtContract selectedContract;
 	
 	//getSI
@@ -71,37 +70,6 @@ public class ContractRequestManagedBean extends BaseManagedBean {
 		
 	}
 	
-
-	/**
-	 * @return the flRemark
-	 */
-	public FlRemark getFlRemark() {
-		return flRemark;
-	}
-
-	/**
-	 * @param flRemark
-	 *            the flRemark to set
-	 */
-	public void setFlRemark(FlRemark flRemark) {
-		this.flRemark = flRemark;
-	}
-
-	/**
-	 * @return the flAttachment
-	 */
-	public FlAttachment getFlAttachment() {
-		return flAttachment;
-	}
-
-	/**
-	 * @param flAttachment
-	 *            the flAttachment to set
-	 */
-	public void setFlAttachment(FlAttachment flAttachment) {
-		this.flAttachment = flAttachment;
-	}
-
 
 	public FlFulfilmentRequest getFlRequest() {
 		return flRequest;
@@ -158,6 +126,23 @@ public class ContractRequestManagedBean extends BaseManagedBean {
 	public void setCtContract(CtContract ctContract) {
 		this.ctContract = ctContract;
 	}
+
+
+	/**
+	 * @return the contractList
+	 */
+	public List<CtContract> getContractList() {
+		return contractList;
+	}
+
+
+	/**
+	 * @param contractList the contractList to set
+	 */
+	public void setContractList(List<CtContract> contractList) {
+		this.contractList = contractList;
+	}
+
 
 	/**
 	 * @return the selectedContract
@@ -431,5 +416,19 @@ public class ContractRequestManagedBean extends BaseManagedBean {
 	}
 
 
+	/**
+	 * @return the approverModel
+	 */
+	public DualListModel<String> getApproverModel() {
+		return approverModel;
+	}
+
+
+	/**
+	 * @param approverModel the approverModel to set
+	 */
+	public void setApproverModel(DualListModel<String> approverModel) {
+		this.approverModel = approverModel;
+	}
 
 }

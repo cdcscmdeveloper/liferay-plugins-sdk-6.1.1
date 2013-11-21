@@ -7,14 +7,14 @@
 	xmlns:ac="http://ac.my/jsf/composite/cc">
 
 
-	<p:panel header="DELIVERY ADDRESS" toggleable="true">
+	<p:panel id="delAddrPanel" header="DELIVERY ADDRESS" toggleable="true">
 
 		<p:dataTable id="addressDataTable" var="address"
 			value="#{contractRequestBackingBean.managedBean.flRequest.flDeliveryAddresses}"
-			selection="#{contractRequestBackingBean.managedBean.selectedDelAddr}" rowKey="#{address.deliveryAddressId}" 
+			selection="#{contractRequestBackingBean.managedBean.selectedDelAddr}" rowKey="#{address}" 
 			selectionMode="single">
 			<ac:paginator for="addressDataTable"/>
-			<p:ajax event="rowSelect" update=":form:cotabs"  process="@this"
+			<p:ajax event="rowSelect" update=":form:cotabs:itemDetPanel" 
 			listener="#{contractRequestBackingBean.selectedAddrRow()}">
 			</p:ajax>
 			<p:column headerText="Delivery Address">
@@ -45,11 +45,11 @@
 
 		</div>
 	</p:panel>
-	<p:panel header="ITEM DETAIL" toggleable="true">
+	<p:panel id="itemDetPanel" header="ITEM DETAIL" toggleable="true">
 		
 		<p:dataTable id="itemDataTable" var="item"
 			value="#{contractRequestBackingBean.managedBean.flRequest.flFulfilmentItems}"
-			rendered="#{contractRequestBackingBean.managedBean.selectedRowFlg}">
+			rendered="#{not empty contractRequestBackingBean.managedBean.flRequest.flDeliveryAddresses}">
 			<ac:paginator for="itemDataTable"/>
 			
 			<p:column headerText="Product Code">
@@ -77,21 +77,21 @@
 		</p:dataTable>
 		<div style="width: 100%;text-align:right" >
 				<p:commandButton id="addItems" value="ADD ITEMS" action="#{contractRequestBackingBean.addContractedItems}"
-				rendered="#{contractRequestBackingBean.managedBean.selectedRowFlg}" 
+				rendered="#{not empty contractRequestBackingBean.managedBean.flRequest.flDeliveryAddresses}" 
 				update="contractedItemDt" process="@this,contractedItemDt" oncomplete="addItems.show();"/>
 				
 		</div>
 	</p:panel>
 
-	<p:dialog header="Add Delivery Address" widgetVar="addDeliveryAddr"
+	<p:dialog id="addDelAddrDialog" header="Add Delivery Address" widgetVar="addDeliveryAddr"
 		showEffect="fade" hideEffect="fade" modal="true" height="450"
 		width="600" resizable="false">
 		
 		<p:dataTable id="delAddr" var="delAddr"
 			value="#{contractRequestBackingBean.managedBean.addressTypesList}"
-			rowKey="#{delAddr.pmAddress.addressId}"  
+			rowKey="#{delAddr.addressTypeId}"  
 			selection="#{contractRequestBackingBean.managedBean.selectedPmAddrTypeList}">
-			<p:ajax event="rowSelect" update=":form" process="@this" 
+			<p:ajax event="rowSelect" update=":form:cotabs:delAddr" 
 			listener="#{contractRequestBackingBean.selectedAddrRow()}"/>
 			<ac:paginator for="delAddr"/>
 			<p:columnGroup type="header">
@@ -119,7 +119,7 @@
 		
 
 	</p:dialog>
-	<p:dialog header="Add Contracted Items" widgetVar="addItems"
+	<p:dialog id="addContractedItemDialog" header="Add Contracted Items" widgetVar="addItems"
 		showEffect="fade" hideEffect="fade" modal="true" height="450"
 		width="600" resizable="false">
 		
@@ -127,7 +127,7 @@
 			value="#{contractRequestBackingBean.managedBean.contractedItemList}"
 			rowKey="#{contractedItem.contractedItemId}"
 			selection="#{contractRequestBackingBean.managedBean.selectedContractedItemList}">
-			<p:ajax event="rowSelect" update=":form" process="@this"/>
+			<p:ajax event="rowSelect" update=":form:cotabs:addContractedItemDialog" process="@this"/>
 			<ac:paginator for="contractedItemDt"/>
 			<p:columnGroup type="header">
 				<p:row>

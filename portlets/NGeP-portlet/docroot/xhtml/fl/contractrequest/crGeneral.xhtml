@@ -1,199 +1,200 @@
-<ui:composition
-	xmlns="http://www.w3.org/1999/xhtml"
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
 	xmlns:f="http://java.sun.com/jsf/core"
 	xmlns:h="http://java.sun.com/jsf/html"
 	xmlns:ui="http://java.sun.com/jsf/facelets"
 	xmlns:p="http://primefaces.org/ui"
 	xmlns:c="http://java.sun.com/jsp/jstl/core">
 
-		
-		 <p:messages id="msgs"/>
-		 <table>
-		 	<tr>
-		 	<td><p:outputLabel value="For Mto Testing Purpose: "/></td>
-		 	<td><p:selectBooleanCheckbox value="#{contractRequestBackingBean.managedBean.mto}"/></td>
-		 	
-		 	
-		 	</tr>
-		 </table>
-		<p:panel header="FULFILMENT DETAIL" toggleable="true" id="flDetails">
-			<table>
-			
-			
-				<tr>
-					<td><p:outputLabel value="#{lbl['lbl.fl.ministry']}" /></td>
-					<td><p:inputText style="width: 260px;"
-							value="#{contractRequestBackingBean.managedBean.flRequest.createdOrgProfile.parentOrgProfile.parentOrgProfile.orgName}" disabled="true" /></td>
-					<td><p:outputLabel value="#{lbl['lbl.fl.contract.request.no']}" /></td>
-					<td><p:inputText style="width: 260px;" 
-							disabled="true" /></td>
-				</tr>
-				<tr>
-					<td><p:outputLabel value="* #{lbl['lbl.fl.contract.request.no']}" /></td>
-					<td><p:selectOneMenu value="#{contractRequestBackingBean.managedBean.flRequest.issuedOrgProfile.orgProfileId}" style="width: 260px;">
-							<f:selectItems value="#{contractRequestBackingBean.divisionProfileList}" />
-							<p:ajax event="change" update="flDetails" process="@this"
-								listener="#{contractRequestBackingBean.checkPtjFlg}" />
-						</p:selectOneMenu></td>
-					<td><p:outputLabel value="#{lbl['lbl.fl.mto']}" /></td>
-					<td><p:selectBooleanCheckbox value="#{contractRequestBackingBean.managedBean.flRequest.mto}"/></td>
-				</tr>
-				<tr>
-					<td><p:outputLabel value="* #{lbl['lbl.fl.issued.ptj']}" /></td>
-					<td><p:selectOneMenu
+
+	<p:messages id="msgs" />
+	<table>
+		<tr>
+			<td><p:outputLabel value="For Mto Testing Purpose: " /></td>
+			<td><p:selectBooleanCheckbox
+					value="#{contractRequestBackingBean.managedBean.mto}" /></td>
+
+
+		</tr>
+	</table>
+	<p:panel header="FULFILMENT DETAIL" toggleable="true" id="flDetails">
+		<table>
+
+
+			<tr>
+				<td><p:outputLabel value="#{lbl['lbl.fl.ministry']}" /></td>
+				<td><p:inputText style="width: 260px;"
+						value="#{contractRequestBackingBean.managedBean.flRequest.createdOrgProfile.parentOrgProfile.parentOrgProfile.orgName}"
+						disabled="true" /></td>
+				<td><p:outputLabel value="#{lbl['lbl.fl.contract.request.no']}" /></td>
+				<td><p:inputText style="width: 260px;" disabled="true" /></td>
+			</tr>
+			<tr>
+				<td><p:outputLabel
+						value="* #{lbl['lbl.fl.contract.request.no']}" /></td>
+				<td><p:selectOneMenu
+						value="#{contractRequestBackingBean.managedBean.flRequest.issuedOrgProfile.orgProfileId}"
+						style="width: 260px;">
+						<f:selectItems
+							value="#{contractRequestBackingBean.divisionProfileList}" />
+						<p:ajax event="change" update="flDetails" process="@this"
+							listener="#{contractRequestBackingBean.checkPtjFlg}" />
+					</p:selectOneMenu></td>
+				<td><p:outputLabel value="#{lbl['lbl.fl.mto']}" /></td>
+				<td><p:selectBooleanCheckbox
+						value="#{contractRequestBackingBean.managedBean.flRequest.mto}" /></td>
+			</tr>
+			<tr>
+				<td><p:outputLabel value="* #{lbl['lbl.fl.issued.ptj']}" /></td>
+				<td><p:selectOneMenu
 						disabled="#{contractRequestBackingBean.managedBean.checkPtjFlg}"
 						value="#{contractRequestBackingBean.managedBean.flRequest.issuedOrgProfile.orgProfileId}"
 						style="width: 260px;">
 						<f:selectItems value="#{contractRequestBackingBean.PTJList}" />
 					</p:selectOneMenu></td>
-					<td><p:outputLabel value="#{lbl['lbl.fl.contract.no']}" /></td>
-					<td><p:inputText style="width: 260px;" value="#{contractRequestBackingBean.managedBean.flRequest.ctContract.contractName}"
-							disabled="true" /></td>
-				</tr>
-				<tr>
-					<td><p:outputLabel value="* #{lbl['lbl.fl.received.div']}" /></td>
-					<td><p:selectOneMenu value="#{contractRequestBackingBean.managedBean.flRequest.receivedOrgProfile.orgProfileId}" style="width: 260px;">
-							<f:selectItems value="#{contractRequestBackingBean.divisionProfileList}"/>
-						</p:selectOneMenu></td>
-					<td><p:outputLabel value="#{lbl['lbl.fl.contract.type']}" /></td>
-					<td><p:inputText style="width: 260px;"
-							value="#{contractRequestBackingBean.managedBean.flRequest.ctContract.contractTypeCode.code}" disabled="true" /></td>
-				</tr>
-				<tr>
-					<td><p:outputLabel value="* #{lbl['lbl.fl.received.ptj']}" /></td>
-					<td><p:selectOneMenu disabled="#{contractRequestBackingBean.managedBean.checkPtjFlg}" value="#{contractRequestBackingBean.managedBean.flRequest.receivedOrgProfile.orgProfileId}" style="width: 260px;">
-							<f:selectItems value="#{contractRequestBackingBean.PTJList}" />
-						</p:selectOneMenu></td>
-					<td><p:outputLabel value="#{lbl['lbl.fl.fulfilment.type']}" /></td>
-					<td><p:inputText style="width: 260px;"
-							value="#{contractRequestBackingBean.managedBean.flRequest.ctContract.fulfillmentTypeCode.code}" disabled="true" /></td>
-				</tr>
-				<tr>
-					<td rowspan="4"><p:outputLabel value="* #{lbl['lbl.fl.title']}" style="vertical-align:top;"/></td>
-					<td rowspan="4"><p:inputTextarea rows="8" style="width: 260px;" value="#{contractRequestBackingBean.managedBean.flRequest.title}"/></td>
-					<td><p:outputLabel value="Plan NO." /></td>
-					<td><p:inputText style="width: 260px;" value="#{contractRequestBackingBean.managedBean.flRequest.planId}"
-							disabled="true" /></td>
-				</tr>
-				<tr>
-					<td><p:outputLabel value="#{lbl['lbl.fl.fs.no']}" /></td>
-					<td><p:inputText style="width: 260px;" 
-							disabled="true" /></td>
-				</tr>
-				<tr>
-					<td><p:outputLabel value="#{lbl['lbl.fl.creation.date']}" /></td>
-					<td><p:inputText style="width: 260px;"
-							value="#{contractRequestBackingBean.managedBean.flRequest.createdDate}" disabled="true" /></td>
-				</tr>
-				<tr>
-					<td><p:outputLabel value="#{lbl['lbl.fl.status']}" /></td>
-					<td><p:inputText style="width: 260px;" value="#{contractRequestBackingBean.managedBean.flRequest.pmDocStatus.statusId}"
-							disabled="true" /></td>
-				</tr>
-				<tr>
-					<td><p:outputLabel value="* #{lbl['lbl.fl.financial.year']}" /></td>
-					<td><p:selectOneMenu value="#{contractRequestBackingBean.managedBean.flRequest.financialYear}" style="width: 260px;">
-							<f:selectItems itemLabel="2013" itemValue="1" />
-						</p:selectOneMenu></td>
-					<td><p:outputLabel value=" * #{lbl['lbl.fl.maksud.code']}" /></td>
-					<td><p:selectOneMenu value="#{contractRequestBackingBean.managedBean.flRequest.maksudId}" style="width: 260px;">
-							<f:selectItems value="#{contractRequestBackingBean.maksudCodeList}" />
-						</p:selectOneMenu></td>
-				</tr>
-				<tr>
-					<td><p:outputLabel value="* #{lbl['lbl.fl.ag.office']}" /></td>
-					<td><p:selectOneMenu value="#{contractRequestBackingBean.managedBean.flRequest.orgProfileAgoId}" style="width: 260px;">
-							<f:selectItems itemLabel="002 KAWANGAN KL" itemValue="1" />
-						</p:selectOneMenu></td>
-					<td><p:outputLabel value="* #{lbl['lbl.fl.charged.ptj']}" /></td>
-					<td><p:selectOneMenu disabled="#{contractRequestBackingBean.managedBean.checkPtjFlg}" style="width: 260px;">
-							<f:selectItems value="#{contractRequestBackingBean.PTJList}" />
-						</p:selectOneMenu></td>
-				</tr>
-				<tr>
-					<td><p:outputLabel value="#{lbl['lbl.fl.financing']}" /></td>
-					<td><p:selectBooleanCheckbox value="#{contractRequestBackingBean.managedBean.flRequest.financingLoan}"/></td>
+				<td><p:outputLabel value="#{lbl['lbl.fl.contract.no']}" /></td>
+				<td><p:inputText style="width: 260px;"
+						value="#{contractRequestBackingBean.managedBean.flRequest.ctContract.contractName}"
+						disabled="true" /></td>
+			</tr>
+			<tr>
+				<td><p:outputLabel value="* #{lbl['lbl.fl.received.div']}" /></td>
+				<td><p:selectOneMenu
+						value="#{contractRequestBackingBean.managedBean.flRequest.receivedOrgProfile.orgProfileId}"
+						style="width: 260px;">
+						<f:selectItems
+							value="#{contractRequestBackingBean.divisionProfileList}" />
+					</p:selectOneMenu></td>
+				<td><p:outputLabel value="#{lbl['lbl.fl.contract.type']}" /></td>
+				<td><p:inputText style="width: 260px;"
+						value="#{contractRequestBackingBean.managedBean.flRequest.ctContract.contractTypeCode.code}"
+						disabled="true" /></td>
+			</tr>
+			<tr>
+				<td><p:outputLabel value="* #{lbl['lbl.fl.received.ptj']}" /></td>
+				<td><p:selectOneMenu
+						disabled="#{contractRequestBackingBean.managedBean.checkPtjFlg}"
+						value="#{contractRequestBackingBean.managedBean.flRequest.receivedOrgProfile.orgProfileId}"
+						style="width: 260px;">
+						<f:selectItems value="#{contractRequestBackingBean.PTJList}" />
+					</p:selectOneMenu></td>
+				<td><p:outputLabel value="#{lbl['lbl.fl.fulfilment.type']}" /></td>
+				<td><p:inputText style="width: 260px;"
+						value="#{contractRequestBackingBean.managedBean.flRequest.ctContract.fulfillmentTypeCode.code}"
+						disabled="true" /></td>
+			</tr>
+			<tr>
+				<td rowspan="4"><p:outputLabel value="* #{lbl['lbl.fl.title']}"
+						style="vertical-align:top;" /></td>
+				<td rowspan="4"><p:inputTextarea rows="8" style="width: 260px;"
+						value="#{contractRequestBackingBean.managedBean.flRequest.title}" /></td>
+				<td><p:outputLabel value="Plan NO." /></td>
+				<td><p:inputText style="width: 260px;"
+						value="#{contractRequestBackingBean.managedBean.flRequest.planId}"
+						disabled="true" /></td>
+			</tr>
+			<tr>
+				<td><p:outputLabel value="#{lbl['lbl.fl.fs.no']}" /></td>
+				<td><p:inputText style="width: 260px;" disabled="true" /></td>
+			</tr>
+			<tr>
+				<td><p:outputLabel value="#{lbl['lbl.fl.creation.date']}" /></td>
+				<td><p:inputText style="width: 260px;"
+						value="#{contractRequestBackingBean.managedBean.flRequest.createdDate}"
+						disabled="true" /></td>
+			</tr>
+			<tr>
+				<td><p:outputLabel value="#{lbl['lbl.fl.status']}" /></td>
+				<td><p:inputText style="width: 260px;"
+						value="#{contractRequestBackingBean.managedBean.flRequest.pmDocStatus.statusId}"
+						disabled="true" /></td>
+			</tr>
+			<tr>
+				<td><p:outputLabel value="* #{lbl['lbl.fl.financial.year']}" /></td>
+				<td><p:selectOneMenu
+						value="#{contractRequestBackingBean.managedBean.flRequest.financialYear}"
+						style="width: 260px;">
+						<f:selectItems itemLabel="2013" itemValue="1" />
+					</p:selectOneMenu></td>
+				<td><p:outputLabel value=" * #{lbl['lbl.fl.maksud.code']}" /></td>
+				<td><p:selectOneMenu
+						value="#{contractRequestBackingBean.managedBean.flRequest.maksudId}"
+						style="width: 260px;">
+						<f:selectItems
+							value="#{contractRequestBackingBean.maksudCodeList}" />
+					</p:selectOneMenu></td>
+			</tr>
+			<tr>
+				<td><p:outputLabel value="* #{lbl['lbl.fl.ag.office']}" /></td>
+				<td><p:selectOneMenu
+						value="#{contractRequestBackingBean.managedBean.flRequest.orgProfileAgoId}"
+						style="width: 260px;">
+						<f:selectItems itemLabel="002 KAWANGAN KL" itemValue="1" />
+					</p:selectOneMenu></td>
+				<td><p:outputLabel value="* #{lbl['lbl.fl.charged.ptj']}" /></td>
+				<td><p:selectOneMenu
+						disabled="#{contractRequestBackingBean.managedBean.checkPtjFlg}"
+						style="width: 260px;">
+						<f:selectItems value="#{contractRequestBackingBean.PTJList}" />
+					</p:selectOneMenu></td>
+			</tr>
+			<tr>
+				<td><p:outputLabel value="#{lbl['lbl.fl.financing']}" /></td>
+				<td><p:selectBooleanCheckbox
+						value="#{contractRequestBackingBean.managedBean.flRequest.financingLoan}" /></td>
 
-				</tr>
-			</table>
-		</p:panel>
-		<p:panel header="SUPPLIER DETAIL" toggleable="true">
-			<table>
-				<tr>
-					<td><p:outputLabel value="#{lbl['lbl.fl.supp.id']}" /></td>
-					<td><p:inputText style="width: 120px;" value="#{contractRequestBackingBean.managedBean.flRequest.ctContract.smSupplier.supplierId}"
-							disabled="true" /></td>
-				</tr>
-				<tr>
-					<td><p:outputLabel value="#{lbl['lbl.fl.supp.name']}" /></td>
-					<td><p:inputText style="width: 260px;" 
-							disabled="true" /></td>
-				</tr>
-				<tr>
-					<td><p:outputLabel value="#{lbl['lbl.fl.supp.address']}" /></td>
-					<td><p:inputTextarea rows="8" style="width: 260px;"
-							disabled="true" /></td>
-				</tr>
-				<tr>
-					<td><p:outputLabel value="#{lbl['lbl.fl.supp.email']}" /></td>
-					<td><p:inputText style="width: 260px;"
-							 disabled="true" /></td>
-				</tr>
-				<tr>
-					<td><p:outputLabel value="#{lbl['lbl.fl.supp.telno']}" /></td>
-					<td><p:inputText style="width: 120px;" 
-							disabled="true"/></td>
-				</tr>
-			</table>
-		</p:panel>
-		<p:panel header="APPROVER DETAIL" toggleable="true">
-			<table>
-				<tr>
-					<td colspan="2"><p:pickList id="pickList"
-							value="#{screenDesignListsBean.approverDetails}" var="approver"
-							itemLabel="#{approver}" itemValue="#{approver}">
-							<f:facet name="sourceCaption">Available</f:facet>
-							<f:facet name="targetCaption">Selected</f:facet>
-						</p:pickList> 
-						<p:dialog modal="true" showEffect="fade" hideEffect="fade"
-							widgetVar="approverDialog">
-							<h:panelGrid id="displayApproverDetails" columns="2">
-								<h:outputText value="Source: " style="font-weight:bold" />
-								<ui:repeat
-									value="#{screenDesignListsBean.approverDetails.source}"
-									var="item">
-									<h:outputText value="#{item}" style="margin-right:5px" />
-								</ui:repeat>
-
-								<h:outputText value="Target: " style="font-weight:bold" />
-								<ui:repeat
-									value="#{screenDesignListsBean.approverDetails.target}"
-									var="item">
-									<h:outputText value="#{item}" style="margin-right:5px" />
-								</ui:repeat>
-							</h:panelGrid>
-
-						</p:dialog></td>
-				</tr>
-			</table>
-		</p:panel>
-		<p:panel header="REMARKS AND ATTACHMENT" toggleable="true">
-			<table>
-				<tr>
-					<td><p:outputLabel value="* Remarks    " /></td>
-					<td><p:inputTextarea rows="8" style="width: 260px;" required="true" id="remark"
-							requiredMessage="Please enter remarks."
-							value="#{contractRequestBackingBean.managedBean.flRemark.remark}" maxlength="200"       
-    						counterTemplate="{0} characters remaining." autoResize="false"/>
-    						<p:message for="remark"/></td>
-					<td><p:outputLabel value="Attachment" /></td>
-					<td><p:fileUpload
-							fileUploadListener="#{contractRequestBackingBean.fileUpload}"
-							update="messages" mode="advanced" dragDropSupport="false" sizeLimit="100000"
-							multiple="true" allowTypes="/(\.|\/)(doc|docx|xls|xlsx|pdf)$/" />
-							 <p:growl id="messages" showDetail="true"/></td>
-				</tr>
-			</table>
-
-		</p:panel>
+			</tr>
+		</table>
+	</p:panel>
+	<p:panel header="SUPPLIER DETAIL" toggleable="true">
+		<table>
+			<tr>
+				<td><p:outputLabel value="#{lbl['lbl.fl.supp.id']}" /></td>
+				<td><p:inputText style="width: 120px;"
+						value="#{contractRequestBackingBean.managedBean.flRequest.ctContract.smSupplier.supplierId}"
+						disabled="true" /></td>
+			</tr>
+			<tr>
+				<td><p:outputLabel value="#{lbl['lbl.fl.supp.name']}" /></td>
+				<td><p:inputText style="width: 260px;" disabled="true" /></td>
+			</tr>
+			<tr>
+				<td><p:outputLabel value="#{lbl['lbl.fl.supp.address']}" /></td>
+				<td><p:inputTextarea rows="8" style="width: 260px;"
+						disabled="true" /></td>
+			</tr>
+			<tr>
+				<td><p:outputLabel value="#{lbl['lbl.fl.supp.email']}" /></td>
+				<td><p:inputText style="width: 260px;" disabled="true" /></td>
+			</tr>
+			<tr>
+				<td><p:outputLabel value="#{lbl['lbl.fl.supp.telno']}" /></td>
+				<td><p:inputText style="width: 120px;" disabled="true" /></td>
+			</tr>
+		</table>
+	</p:panel>
+	<p:panel id="settingId" header="Approver Setting" toggleable="true"
+		toggleSpeed="500">
+		<h:panelGrid columns="1">
+			<h:panelGrid style="width:500px">
+				<p:pickList id="approverpickList"
+					value="#{contractRequestBackingBean.managedBean.approverModel}" var="data"
+					itemValue="#{data}" itemLabel="#{data}" showTargetControls="true"
+					filterMatchMode="contains">
+					<f:facet name="sourceCaption">Available Approver(s)</f:facet>
+					<f:facet name="targetCaption">Selected Approver(s)</f:facet>
+					<p:column style="width:75%;">
+						<h:outputText value="#{data}" />
+					</p:column>
+				</p:pickList>
+			</h:panelGrid>
+		</h:panelGrid>
+	</p:panel>
+	<p:panel header="#{lbl['lbl.fl.remark.attachment']}" toggleable="true">
+		<table style="width: 100%">
+			<tr>
+				<td width="50%" valign="top"><ui:include src="/xhtml/fl/shared/remark.xhtml" /></td>
+				<td width="50%" valign="top"><ui:include src="/xhtml/fl/shared/attachment.xhtml" /></td>
+			</tr>
+		</table>
+	</p:panel>
 </ui:composition>

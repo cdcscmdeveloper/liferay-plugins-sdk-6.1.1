@@ -3,13 +3,9 @@
  */
 package my.ep.web.backingbean.fl.cr;
 
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.annotation.PostConstruct;
 import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.RequestScoped;
@@ -21,19 +17,23 @@ import my.ep.biz.bean.search.ISearchResultBean;
 import my.ep.biz.bean.search.SearchFilterBean;
 import my.ep.biz.service.ct.IContractSO;
 import my.ep.biz.service.ct.maintain.IContractAmendmentSO;
-import my.ep.biz.service.fl.order.IFulfilmentOrderSO;
 import my.ep.biz.service.fl.request.IFulfilmentRequestSO;
 import my.ep.biz.service.pm.authorization.orgprofile.IOrgProfileSO;
+import my.ep.biz.service.pm.authorization.user.IUserSO;
 import my.ep.biz.service.pm.common.maksud.IMaksudSO;
 import my.ep.dto.ct.ContractReqDTO;
 import my.ep.dto.ct.ContractResDTO;
 import my.ep.dto.ct.maintain.ContractAmendmentReqDTO;
 import my.ep.dto.ct.maintain.ContractAmendmentResDTO;
 import my.ep.dto.fl.FulfilmentReqDTO;
+import my.ep.dto.fl.FulfilmentResDTO;
 import my.ep.dto.pm.authorization.orgprofile.OrgProfileReqDTO;
 import my.ep.dto.pm.authorization.orgprofile.OrgProfileResDTO;
+import my.ep.dto.pm.authorization.user.UserReqDTO;
+import my.ep.dto.pm.authorization.user.UserResDTO;
 import my.ep.dto.pm.common.maksud.MaksudReqDTO;
 import my.ep.dto.pm.common.maksud.MaksudResDTO;
+import my.ep.exception.EpException;
 import my.ep.persistence.entity.ct.CtContract;
 import my.ep.persistence.entity.ct.VCtActiveContract;
 import my.ep.persistence.entity.ct.dtl.item.CtContractedItem;
@@ -41,6 +41,7 @@ import my.ep.persistence.entity.fl.request.FlDeliveryAddress;
 import my.ep.persistence.entity.fl.request.FlFulfilmentItem;
 import my.ep.persistence.entity.fl.request.FlFulfilmentRequest;
 import my.ep.persistence.entity.pm.authorization.PmOrgProfile;
+import my.ep.persistence.entity.pm.authorization.PmUserGroupUser;
 import my.ep.persistence.entity.pm.common.PmAddressType;
 import my.ep.persistence.entity.pm.common.PmCode;
 import my.ep.persistence.entity.pm.common.PmMaksud;
@@ -49,6 +50,7 @@ import my.ep.persistence.entity.sm.SmSupplier;
 import my.ep.type.aut.SearchOperator;
 import my.ep.type.pm.OrganizationType;
 import my.ep.web.backingbean.BaseBackingBean;
+import my.ep.web.backingbean.fl.FulfilmentBackingBean;
 import my.ep.web.bean.paginator.IPagingDataModel;
 import my.ep.web.bean.paginator.PagingDataModel;
 import my.ep.web.constant.BpmOutcomeConst;
@@ -56,8 +58,7 @@ import my.ep.web.managedbean.fl.cr.ContractRequestManagedBean;
 import my.ep.web.util.lookupservice.BusinessDelegate;
 
 import org.apache.log4j.Logger;
-import org.primefaces.event.FileUploadEvent;
-import org.primefaces.model.UploadedFile;
+import org.primefaces.model.DualListModel;
 
 /**
  * Backing Bean for Create Contract Order
@@ -74,12 +75,9 @@ public class ContractRequestBackingBean extends BaseBackingBean<ContractRequestM
 	private IPagingDataModel<VCtActiveContract> activeContractPagingDataModel = new ActiveContractPagingDataModel();
 
 	public ContractRequestBackingBean(){
-	}
 
-	@PostConstruct
-	public void init(){
 		if(getManagedBean().getFlRequest() == null){
-			System.out.println("==post contruct==");
+			System.out.println("==contructor==");
 			getManagedBean().setFlRequest(new FlFulfilmentRequest());
 			getManagedBean().getFlRequest().setPmDocStatus(new PmStatus());
 			getManagedBean().getFlRequest().setIssuedOrgProfile(new PmOrgProfile());
@@ -92,82 +90,68 @@ public class ContractRequestBackingBean extends BaseBackingBean<ContractRequestM
 			getManagedBean().getFlRequest().getCtContract().setSmSupplier(new SmSupplier());
 			getManagedBean().getFlRequest().setFlDeliveryAddresses(new ArrayList<FlDeliveryAddress>());
 			getManagedBean().getFlRequest().setFlFulfilmentItems(new ArrayList<FlFulfilmentItem>());
+			
 		}
-	} 
 
-	public void submitAction(String action) {
+		if(getManagedBean().getApproverModel()==null) {
+			System.out.println("--renew--");
+			List<String> source = getAvailableApproverList();  
+			List<String> target = new ArrayList<String>();  
+			getManagedBean().setApproverModel(new DualListModel<String>(source, target));
+		}
+	
+	}
+
+
+	public String submitAction(String action) {
 		IFulfilmentRequestSO iFulfilmentRequestSO = null;
-		IFulfilmentOrderSO flOrderSO = null;
+		FulfilmentBackingBean flBB = new FulfilmentBackingBean();
 		try {
 			FulfilmentReqDTO reqDTO = new FulfilmentReqDTO();
 			FlFulfilmentRequest flRequest = getManagedBean().getFlRequest();
 			System.out.println("title: "+flRequest.getTitle());
-			//			FlRemark flRemark = this.getManagedBean().getFlRemark();//temporary comment for attachment n remark
-			//			FlAttachment flAttachment = this.getManagedBean().getFlAttachment();
-//			String fileName = this.getManagedBean().getFlAttachment().getFileName();
-//			String fileDesc = this.getManagedBean().getFlAttachment().getFileDescription();
-//			String filePath = this.getManagedBean().getFlAttachment().getFilePath();
-			//			flAttachment.setDocType("txt");
-			//			flAttachment.setDocId(Long.valueOf(44));
-			//			flAttachment.setFileName(fileName);
-			//			flAttachment.setFileDescription(fileDesc);
-			//			flAttachment.setFilePath(filePath);
-			//			log.info("flRemark.getRemark() in backing beans::"+ flRemark.getRemark());
-			//			flRemark.setDocId(Long.valueOf(1));
-			//			flRemark.setDocType("tex");
-			//			reqDTO.setFlRemark(flRemark);
-			//			reqDTO.setFlAttachment(flAttachment);
-			iFulfilmentRequestSO = (IFulfilmentRequestSO) BusinessDelegate.getInstance().getServiceObject("fl", IFulfilmentRequestSO.class);
+
 			reqDTO.setFlFulfilmentRequest(flRequest);
 			reqDTO.setContractRequest(Boolean.TRUE);
 			reqDTO.setMto(getManagedBean().isMto());
-			System.out.println("templogin: "+ getManagedBean().getTempLogin());
+			reqDTO.setOutcome(action);
+			reqDTO.setTaskId(getManagedBean().getBpmTaskId());
+			reqDTO.setSelectedApprovers(getManagedBean().getApproverModel().getTarget());
+			reqDTO.setAvailableApprovers(getManagedBean().getApproverModel().getSource());
+			reqDTO.setFlAttachmentList(flBB.getManagedBean().getAttachmentList());
+			reqDTO.setFlRemark(flBB.getManagedBean().getRemarkList().get(0));
 			if(getManagedBean().getTempLogin() == null){
 				reqDTO.setTempLogin("roslan");
 			}else{
 				reqDTO.setTempLogin(getManagedBean().getTempLogin());
 			}
-			
 			if(action.equalsIgnoreCase(BpmOutcomeConst.BPM_SAVE)){
 				action = "";
 			}
-			
-			reqDTO.setOutcome(action);
-			reqDTO.setTaskId(getManagedBean().getBpmTaskId());
-			iFulfilmentRequestSO.saveFulfillmentRequest(reqDTO);
-			
+			iFulfilmentRequestSO = (IFulfilmentRequestSO) BusinessDelegate.getInstance().getServiceObject("fl", IFulfilmentRequestSO.class);
+			FulfilmentResDTO resDTO = iFulfilmentRequestSO.saveFulfillmentRequest(reqDTO);
+
+			if(resDTO.isSuccessful()) {
+				log.info("Record saved successfully");
+				String message = "Fulfilment Request No. : "+flRequest.getFulfilmentReqId();
+				if(flRequest.getDocNo()!=null) {
+					message = message + ". Doc No. : "+flRequest.getDocNo();
+				}
+				FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "Record saved successfully.",message));
+				if(!action.equalsIgnoreCase(BpmOutcomeConst.BPM_SAVE)) { // save action will remain in the same page
+					renewSesionObject();
+					return "/xhtml/shared/acknowledge.xhtml";
+				}
+			} else {
+				throw new EpException("Failed.");
+			}
 
 		}catch(Exception e){
 			log.error("Exception>>", e);
 		}finally {
 			iFulfilmentRequestSO = null;
 		}
-	}
-
-	public void fileUpload(FileUploadEvent event) {
-		UploadedFile file = event.getFile();
-		String fileName = file.getFileName();
-		byte[] fileBytes = file.getContents();
-		log.info("Processed uploaded file " + fileName + " of size:"+ fileBytes.length);
-		this.getManagedBean().getFlAttachment().setFileName(fileName);
-		this.getManagedBean().getFlAttachment().setFileDescription("File uploded for Contract Req Order");
-		this.getManagedBean().getFlAttachment().setFilePath("D:\\upload");
-		FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_INFO,"The file was uploaded successfully.", null);
-		FacesMessage msg = new FacesMessage("Succesful", event.getFile().getFileName() + " is uploaded.");  
-		FacesContext.getCurrentInstance().addMessage(null, msg);  
-		FileOutputStream fos;
-		try {
-			fos = new FileOutputStream("D:\\upload\\" + fileName);
-			fos.write(fileBytes);
-			fos.close();
-		} catch (FileNotFoundException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		FacesContext.getCurrentInstance().addMessage(null, message);
+		return null;
 	}
 
 	public List<SelectItem> getPTJList(){
@@ -199,7 +183,7 @@ public class ContractRequestBackingBean extends BaseBackingBean<ContractRequestM
 		OrgProfileReqDTO orgProfileReqDTO = new OrgProfileReqDTO();
 		orgProfileReqDTO.setParentOrgProfileId(getManagedBean().getFlRequest().getCreatedOrgProfile().getParentOrgProfile().getParentOrgProfile().getOrgProfileId());
 		orgProfileReqDTO.setOrgType(OrganizationType.DEPARTMENT.value());
-		
+
 		OrgProfileResDTO resDTO = orgProfileSO.retrieveOrgProfileListByOrgType(orgProfileReqDTO);
 		if(resDTO.getOrgProfileList() != null && !resDTO.getOrgProfileList().isEmpty()){
 			retrieveDivisionList.add(new SelectItem("", "- Select One -"));
@@ -221,17 +205,13 @@ public class ContractRequestBackingBean extends BaseBackingBean<ContractRequestM
 			FlDeliveryAddress deliveryAddr = new FlDeliveryAddress();
 			deliveryAddr.setFlFulfilmentRequest(getManagedBean().getFlRequest());
 			deliveryAddr.setAddressType(addrType);
-			deliveryAddr.setDeliveryAddressId(addrType.getAddressTypeId());
 			getManagedBean().getFlRequest().getFlDeliveryAddresses().add(deliveryAddr);
 		}
 	}
 
-	public void getActivityCode(){
-
-	}
-
 	public void flDeliveryAddrList(){
 		ContractAmendmentReqDTO ctReqDTO = new ContractAmendmentReqDTO();
+		//TODO
 		ctReqDTO.setOrgProfileId(4L);
 		ctReqDTO.setCtContract(getManagedBean().getCtContract());
 		IContractAmendmentSO ctAmendmentSO = (IContractAmendmentSO)BusinessDelegate.getInstance().getServiceObject("ct",IContractAmendmentSO.class);	
@@ -240,8 +220,14 @@ public class ContractRequestBackingBean extends BaseBackingBean<ContractRequestM
 	}
 
 	public String procureContract(){
-		getManagedBean().getFlRequest().setCtContract(getManagedBean().getSelectedContract());
-
+		FulfilmentBackingBean flBB = new FulfilmentBackingBean();
+		Long contractId = Long.parseLong(FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap().get("contractId"));
+		IContractSO contractSO = BusinessDelegate.getInstance().getServiceObject("ct",IContractSO.class);
+		ContractReqDTO ctDTO = new ContractReqDTO();
+		ctDTO.setContractId(contractId);
+		System.out.println("contractId: "+contractId);
+		getManagedBean().getFlRequest().setCtContract(contractSO.retrieveContract(ctDTO).getContract());
+		System.out.println("getManagedBean().getFlRequest().setCtContract: "+getManagedBean().getFlRequest().getCtContract());
 		IOrgProfileSO orgProfileSO = BusinessDelegate.getInstance().getServiceObject("pm",IOrgProfileSO.class);
 		OrgProfileReqDTO orgProfileReqDTO = new OrgProfileReqDTO();
 		orgProfileReqDTO.setOrgProfileId(4L);// set current login user org profile ID
@@ -250,13 +236,15 @@ public class ContractRequestBackingBean extends BaseBackingBean<ContractRequestM
 			getManagedBean().getFlRequest().setCreatedOrgProfile(resDTO.getPmOrgProfile());
 		}
 		this.getManagedBean().setActions(new String[]{"SAVE", "SUBMIT"}); 
-		
+		FulfilmentBackingBean flBackingBean = new FulfilmentBackingBean();
+		flBackingBean.initializeRemarkAndAttachement(flBB.getManagedBean().getRemarkList(), flBB.getManagedBean().getAttachmentList());
 
 		return NAV_TO_CREATE_CONTRACT_REQUEST;
 	}
 
 	public void selectedAddrRow(){
-		getManagedBean().setSelectedRowFlg(true);
+		//TODO
+//		getManagedBean().setSelectedRowFlg(true);
 	}
 
 	public List<SelectItem> getMaksudCodeList(){
@@ -280,16 +268,16 @@ public class ContractRequestBackingBean extends BaseBackingBean<ContractRequestM
 	public void checkPtjFlg(){
 		getManagedBean().setCheckPtjFlg(false);
 	}
-	
+
 	public void addContractedItems(){
 		IContractSO contractSO = (IContractSO)BusinessDelegate.getInstance().getServiceObject("ct",IContractSO.class);	
 		ContractReqDTO ctReqDTO = new ContractReqDTO();
 		ctReqDTO.setContractId(getManagedBean().getFlRequest().getCtContract().getContractId());
 		ContractResDTO ctResDTO = contractSO.retrieveContract(ctReqDTO);
-	
+		System.out.println("ctResDTO.getContract().getCtContractedItems(): "+ctResDTO.getContract().getCtContractedItems());
 		getManagedBean().setContractedItemList(ctResDTO.getContract().getCtContractedItems());
 	}
-	
+
 	public void updateContractedItemDt(){
 		for(CtContractedItem contractedItems : getManagedBean().getSelectedContractedItemList()){
 			FlFulfilmentItem flItem = new FlFulfilmentItem();
@@ -299,7 +287,29 @@ public class ContractRequestBackingBean extends BaseBackingBean<ContractRequestM
 			getManagedBean().getFlRequest().getFlFulfilmentItems().add(flItem);
 		}
 	}
-	
+
+	private List<String> getAvailableApproverList() {
+		List<String> availableApprovers = new ArrayList<String>(); 
+		IUserSO userSO = null;
+		try {
+			userSO = (IUserSO)BusinessDelegate.getInstance().getServiceObject("pm",IUserSO.class);
+
+			UserReqDTO reqDTO = new UserReqDTO();
+			//TODO
+			reqDTO.setOrgProfileId(1250l);
+			UserResDTO resDTO = userSO.retrieveUserGroupList(reqDTO);
+			for(PmUserGroupUser user : resDTO.getUserGroupList().get(0).getPmUserGroupUsers()) {
+				availableApprovers.add(user.getPmUser().getUserName());
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+			FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR,e.toString(), "Circular save failed."));
+		} finally {
+			userSO = null;
+		}
+		return availableApprovers;
+	}
+
 	public IPagingDataModel<VCtActiveContract> getActiveContractPagingDataModel() {
 		return activeContractPagingDataModel;
 	}
@@ -340,4 +350,5 @@ public class ContractRequestBackingBean extends BaseBackingBean<ContractRequestM
 			return null;
 		}
 	}
+
 }
