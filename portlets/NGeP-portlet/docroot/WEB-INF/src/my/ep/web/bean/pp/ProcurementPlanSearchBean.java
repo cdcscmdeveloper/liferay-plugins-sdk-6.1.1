@@ -100,5 +100,17 @@ public class ProcurementPlanSearchBean {
 		this.procurementMode = procurementMode;
 	}
 	
+	/**
+	 * clear the bean values
+	 */
+	public void clear(){
+		status = null;
+		planNo = null;
+		planDesc = null;
+		procurementMode = null;
+		fromDate = null;
+		toDate = null;
+	}
+	
 	
 }

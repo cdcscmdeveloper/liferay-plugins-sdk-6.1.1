@@ -177,12 +177,9 @@ public class PlanBackingBean extends BaseBackingBean<PlanManagedBean>{
 	/**
 	 * search plan
 	 */
-	public void searchPlan(boolean defaultMode){
+	public void searchPlan(){
 		log.info("planSearch - Start");
-		
 		planDataModel.reloadData();
-		
-		
 		log.info("planSearch - End");
 		
 	}
@@ -698,7 +695,9 @@ public class PlanBackingBean extends BaseBackingBean<PlanManagedBean>{
 			}else if(ProcurementPlanConst.CURRENT_PLAN.equals(val.getTab().getId())){	
 				log.info("...tabP");
 				//retrieve and set relevant plans
-				searchPlan(true);
+				ProcurementPlanSearchBean ppSearchBean = this.getManagedBean().getPpSearchPlan();
+				ppSearchBean.clear();
+				searchPlan();
 			}else if(ProcurementPlanConst.CURRENT_NEW.equals(val.getTab().getId())){
 				log.info("...tabN");
 				this.getManagedBean().setCurrent(ProcurementPlanConst.CURRENT_NEW);
@@ -2452,7 +2451,6 @@ public class PlanBackingBean extends BaseBackingBean<PlanManagedBean>{
 				
 				
 				ISearchBean<PpPlan> searchBean1 = getSearchBean();
-				
 				IProcurementPlanSO procurementPlanSO = (IProcurementPlanSO) BusinessDelegate.getInstance().getServiceObject(ProcurementPlanConst.SO_PP, IProcurementPlanSO.class);
 				ProcurementPlanReqDTO reqDTO = new ProcurementPlanReqDTO();
 				reqDTO.setSearchBean(searchBean1);
