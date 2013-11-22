@@ -125,17 +125,14 @@ public class ContractRequestBackingBean extends BaseBackingBean<ContractRequestM
 			}else{
 				reqDTO.setTempLogin(getManagedBean().getTempLogin());
 			}
-			if(action.equalsIgnoreCase(BpmOutcomeConst.BPM_SAVE)){
-				action = "";
-			}
 			iFulfilmentRequestSO = (IFulfilmentRequestSO) BusinessDelegate.getInstance().getServiceObject("fl", IFulfilmentRequestSO.class);
 			FulfilmentResDTO resDTO = iFulfilmentRequestSO.saveFulfillmentRequest(reqDTO);
 
 			if(resDTO.isSuccessful()) {
 				log.info("Record saved successfully");
-				String message = "Fulfilment Request No. : "+flRequest.getFulfilmentReqId();
-				if(flRequest.getDocNo()!=null) {
-					message = message + ". Doc No. : "+flRequest.getDocNo();
+				String message = "Fulfilment Request No. : "+resDTO.getFlFulfilmentRequest().getFulfilmentReqId();
+				if(resDTO.getFlFulfilmentRequest().getDocNo()!=null) {
+					message = message + ". Doc No. : "+resDTO.getFlFulfilmentRequest().getDocNo();
 				}
 				FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "Record saved successfully.",message));
 				if(!action.equalsIgnoreCase(BpmOutcomeConst.BPM_SAVE)) { // save action will remain in the same page

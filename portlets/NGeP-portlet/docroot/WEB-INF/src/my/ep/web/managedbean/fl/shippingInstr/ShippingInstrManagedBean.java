@@ -19,7 +19,7 @@ import my.ep.web.managedbean.BaseManagedBean;
  * @since 28/10/2013
  *
  */
-@ManagedBean
+@ManagedBean(name="shippingInstrMB")
 @SessionScoped
 public class ShippingInstrManagedBean extends BaseManagedBean {
 
@@ -38,6 +38,7 @@ public class ShippingInstrManagedBean extends BaseManagedBean {
 		private CtContract ctContract = new CtContract();
 		private List <CtContract> contractList;
 		private CtContract selectedContract;
+		private String tempLogin;
 		
 
 	/**
@@ -122,6 +123,20 @@ public class ShippingInstrManagedBean extends BaseManagedBean {
 	 */
 	public void setSelectedContract(CtContract selectedContract) {
 		this.selectedContract = selectedContract;
+	}
+
+	/**
+	 * @return the tempLogin
+	 */
+	public String getTempLogin() {
+		return tempLogin;
+	}
+
+	/**
+	 * @param tempLogin the tempLogin to set
+	 */
+	public void setTempLogin(String tempLogin) {
+		this.tempLogin = tempLogin;
 	} 
 
 }

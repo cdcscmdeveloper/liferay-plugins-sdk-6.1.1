@@ -28,7 +28,7 @@
 			</tr>
 			<tr>
 				<td><p:outputLabel
-						value="* #{lbl['lbl.fl.contract.request.no']}" /></td>
+						value="* #{lbl['lbl.fl.issued.jabatan']}" /></td>
 				<td><p:selectOneMenu
 						value="#{contractRequestBackingBean.managedBean.flRequest.issuedOrgProfile.orgProfileId}"
 						style="width: 260px;">
@@ -55,7 +55,7 @@
 						disabled="true" /></td>
 			</tr>
 			<tr>
-				<td><p:outputLabel value="* #{lbl['lbl.fl.received.div']}" /></td>
+				<td><p:outputLabel value="* #{lbl['lbl.fl.received.jabatan']}" /></td>
 				<td><p:selectOneMenu
 						value="#{contractRequestBackingBean.managedBean.flRequest.receivedOrgProfile.orgProfileId}"
 						style="width: 260px;">
@@ -85,7 +85,7 @@
 						style="vertical-align:top;" /></td>
 				<td rowspan="4"><p:inputTextarea rows="8" style="width: 260px;"
 						value="#{contractRequestBackingBean.managedBean.flRequest.title}" /></td>
-				<td><p:outputLabel value="Plan NO." /></td>
+				<td><p:outputLabel value="#{lbl['lbl.fl.plan.no']}" /></td>
 				<td><p:inputText style="width: 260px;"
 						value="#{contractRequestBackingBean.managedBean.flRequest.planId}"
 						disabled="true" /></td>

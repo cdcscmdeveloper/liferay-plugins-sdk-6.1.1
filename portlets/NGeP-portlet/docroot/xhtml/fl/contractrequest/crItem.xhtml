@@ -22,11 +22,11 @@
 			</p:column>
 
 			<p:column headerText="Exp. Delivery (Start)">
-				 <p:calendar value="#{address.startDate}" id="calStartDate" showOn="button" />  
+				 <p:calendar value="#{address.startDate}" id="calStartDate" showOn="button" pattern="dd/mm/yyyy"/>  
 			</p:column>
 
 			<p:column headerText="Exp. Delivery (End)">
-				<p:calendar value="#{address.endDate}" id="calEndDate" showOn="button" />  
+				<p:calendar value="#{address.endDate}" id="calEndDate" showOn="button" pattern="dd/mm/yyyy"/>  
 			</p:column>
 
 			<p:column headerText="Action">
@@ -37,6 +37,7 @@
 				</p:commandLink>
 			</p:column>
 		</p:dataTable>
+		<p:spacer height="2px"></p:spacer>
 		<div style="width:100%;text-align:right">
 				<p:commandButton value="ADD" 
 						action="#{contractRequestBackingBean.flDeliveryAddrList}"
@@ -75,6 +76,7 @@
 				<p:commandLink id="deleteLink" styleClass="ui-icon ui-icon-trash" />
 			</p:column>
 		</p:dataTable>
+		<p:spacer height="2px"></p:spacer>
 		<div style="width: 100%;text-align:right" >
 				<p:commandButton id="addItems" value="ADD ITEMS" action="#{contractRequestBackingBean.addContractedItems}"
 				rendered="#{not empty contractRequestBackingBean.managedBean.flRequest.flDeliveryAddresses}" 
@@ -97,18 +99,15 @@
 			<p:columnGroup type="header">
 				<p:row>
 					<p:column rowspan="1" headerText=""></p:column>
-					<p:column rowspan="1" headerText="No"></p:column>
 					<p:column rowspan="1" headerText="Address"></p:column>
 				</p:row>
 			</p:columnGroup>
 			<p:column selectionMode="multiple" />
 			<p:column>
-				<h:outputText value="#{delAddr.pmAddress.addressId}" />
-			</p:column>
-			<p:column>
 				<h:outputText value="#{delAddr.pmAddress.address1}, #{delAddr.pmAddress.address2}, #{delAddr.pmAddress.address3}, #{delAddr.pmAddress.address4}" escape="false"/>
 			</p:column>
 		</p:dataTable>
+		<p:spacer height="2px"></p:spacer>
 		<div style="width:100%;text-align: right">
 			<p:commandButton value="Add"
 				action="#{contractRequestBackingBean.updateDeliveryAddrDt}"
@@ -119,7 +118,7 @@
 		
 
 	</p:dialog>
-	<p:dialog id="addContractedItemDialog" header="Add Contracted Items" widgetVar="addItems"
+	<p:dialog id="addContractedItemDialog" header="Add Contract Items" widgetVar="addItems"
 		showEffect="fade" hideEffect="fade" modal="true" height="450"
 		width="600" resizable="false">
 		
@@ -132,18 +131,15 @@
 			<p:columnGroup type="header">
 				<p:row>
 					<p:column rowspan="1" headerText=""></p:column>
-					<p:column rowspan="1" headerText="No"></p:column>
-					<p:column rowspan="1" headerText="Items"></p:column>
+					<p:column rowspan="1" headerText="Item"></p:column>
 				</p:row>
 			</p:columnGroup>
 			<p:column selectionMode="multiple" />
 			<p:column>
-				<h:outputText value="#{contractedItem.contractedItemId}" />
-			</p:column>
-			<p:column>
 				<h:outputText value="#{contractedItem.itemName}" />
 			</p:column>
 		</p:dataTable>
+		<p:spacer height="2px"></p:spacer>
 		<div style="width:100%;text-align: right">
 			<p:commandButton value="Add"
 				action="#{contractRequestBackingBean.updateContractedItemDt}"

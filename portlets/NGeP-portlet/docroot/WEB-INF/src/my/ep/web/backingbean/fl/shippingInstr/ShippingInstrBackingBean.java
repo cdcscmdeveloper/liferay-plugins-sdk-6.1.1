@@ -6,9 +6,9 @@ package my.ep.web.backingbean.fl.shippingInstr;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.RequestScoped;
 
-import my.ep.biz.service.fl.request.IFulfilmentRequestSO;
 import my.ep.biz.service.fl.request.IShippingInstructionSO;
 import my.ep.dto.fl.FulfilmentReqDTO;
+import my.ep.persistence.entity.fl.request.FlFulfilmentRequest;
 import my.ep.persistence.entity.fl.request.FlShippingInstr;
 import my.ep.web.backingbean.BaseBackingBean;
 import my.ep.web.constant.BpmOutcomeConst;
@@ -40,17 +40,21 @@ public class ShippingInstrBackingBean extends BaseBackingBean<ShippingInstrManag
 		IShippingInstructionSO shippingInstrSO = null;
 		try {
 			FulfilmentReqDTO reqDTO = new FulfilmentReqDTO();
-			FlShippingInstr shippingInstr = getManagedBean().getShippingInstr();
+			FlShippingInstr shippingInstr = new FlShippingInstr();
 			shippingInstrSO = (IShippingInstructionSO) BusinessDelegate.getInstance().getServiceObject("fl",IShippingInstructionSO.class);
-			
-			System.out.println("shipInstr: "+shippingInstr.getFlFulfilmentRequest().getFulfilmentReqId());
+			FlFulfilmentRequest flRequest = new FlFulfilmentRequest();
 			reqDTO.setShippingInstr(shippingInstr);
-			reqDTO.setFlFulfilmentRequest(getManagedBean().getShippingInstr().getFlFulfilmentRequest());
+			reqDTO.setFlFulfilmentRequest(flRequest);
 			if(action.equalsIgnoreCase(BpmOutcomeConst.BPM_SAVE)){
 				action = "";
 			}
 			reqDTO.setOutcome(action);
 			reqDTO.setTaskId(getManagedBean().getBpmTaskId());
+			if(getManagedBean().getTempLogin() == null){
+				reqDTO.setTempLogin("roslan");
+			}else{
+				reqDTO.setTempLogin(getManagedBean().getTempLogin());
+			}
 			shippingInstrSO.saveShippingInstruction(reqDTO);
 
 		}catch(Exception e){
