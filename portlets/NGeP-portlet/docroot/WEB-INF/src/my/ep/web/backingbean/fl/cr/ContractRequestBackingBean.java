@@ -182,7 +182,8 @@ public class ContractRequestBackingBean extends BaseBackingBean<ContractRequestM
 		List<SelectItem> retrieveDivisionList = new ArrayList<SelectItem>();
 		IOrgProfileSO orgProfileSO = BusinessDelegate.getInstance().getServiceObject("pm",IOrgProfileSO.class);
 		OrgProfileReqDTO orgProfileReqDTO = new OrgProfileReqDTO();
-		orgProfileReqDTO.setParentOrgProfileId(getManagedBean().getFlRequest().getCreatedOrgProfile().getParentOrgProfile().getParentOrgProfile().getOrgProfileId());
+		//TODO
+		orgProfileReqDTO.setParentOrgProfileId(3L);
 		orgProfileReqDTO.setOrgType(OrganizationType.DEPARTMENT.value());
 
 		OrgProfileResDTO resDTO = orgProfileSO.retrieveOrgProfileListByOrgType(orgProfileReqDTO);

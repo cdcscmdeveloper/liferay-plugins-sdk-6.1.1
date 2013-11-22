@@ -274,10 +274,12 @@ public class TaskListBackingBean extends BaseBackingBean<TaskListManagedBean> {
 			flReqDTO.setSelectedApprovers(coObj.getApproverList());
 			resDTO = requestSO.retrieveFulfilmentRequest(flReqDTO);
 
-			if(res.getTaskName().equals(FlProcessNameConst.CREATE_CO_HT) || res.getTaskName().equals(FlProcessNameConst.REVIEW_CR_HT)){
+			if(res.getTaskName().equals(FlProcessNameConst.CREATE_CO_HT) || res.getTaskName().equals(FlProcessNameConst.REVIEW_CR_HT) || res.getTaskName().equals(FlProcessNameConst.REVISE_CR_HT)){
 
 				ContractRequestBackingBean crBB = new ContractRequestBackingBean();
 				FulfilmentBackingBean flBB = new FulfilmentBackingBean();
+				flBB.getManagedBean().setRemarkList(resDTO.getRemarkList());
+				flBB.getManagedBean().setAttachmentList(resDTO.getAttachmentList());
 				flBB.initializeRemarkAndAttachement(flBB.getManagedBean().getRemarkList(), flBB.getManagedBean().getAttachmentList());
 
 				IOrgProfileSO orgProfileSO = (IOrgProfileSO)BusinessDelegate.getInstance().getServiceObject("pm",IOrgProfileSO.class);
