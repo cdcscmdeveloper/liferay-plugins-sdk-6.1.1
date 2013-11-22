@@ -55,6 +55,7 @@ import my.ep.jaxb.ct.contract.CTContractDataType;
 import my.ep.jaxb.ct.contract.amendment.CTContractAmendmentDataType;
 import my.ep.jaxb.ct.factoring.CTFactoringDataType;
 import my.ep.jaxb.ct.suspension.CTContractSuspensionDataType;
+import my.ep.jaxb.ct.termination.CTContractTerminationDataType;
 import my.ep.jaxb.fl.codata.FLContractOrderDataType;
 import my.ep.jaxb.fl.dandata.FLDanDataType;
 import my.ep.jaxb.fl.dofullfillmentdata.FLDOFullfillmentDataType;
@@ -564,12 +565,19 @@ public class TaskListBackingBean extends BaseBackingBean<TaskListManagedBean> {
 
 			CTContractAmendmentDataType dataType = (CTContractAmendmentDataType) obj;
 			ContractDetailsBackingBean ctdBB = new ContractDetailsBackingBean();
-			ctdBB.taskListAction(dataType.getAmendmentId().longValue(),
+			ctdBB.taskListAmendmentAction(dataType.getAmendmentId().longValue(),
 					dataType.getContractId().longValue());
 			ctdBB.getManagedBean().setOutComes(res.getAction());
 			ctdBB.getManagedBean().setTaskId(taskId);
 			ctdBB.getManagedBean().setToken(ctx);
 
+		}else if (res.getProcessName().equalsIgnoreCase("Contract Termination")) {
+			CTContractTerminationDataType dataType = (CTContractTerminationDataType) obj;
+			ContractDetailsBackingBean ctdBB = new ContractDetailsBackingBean();
+			ctdBB.taskListTerminationAction(dataType.getTerminationId().longValue(), dataType.getContractId().longValue());
+			ctdBB.getManagedBean().setOutComes(res.getAction());
+			ctdBB.getManagedBean().setTaskId(taskId);
+			ctdBB.getManagedBean().setToken(ctx);
 		} else if (res.getProcessName().equalsIgnoreCase(
 				"MOF Supplier Registration")) {
 			SMMOFRegDataType smObj = (SMMOFRegDataType) obj;
