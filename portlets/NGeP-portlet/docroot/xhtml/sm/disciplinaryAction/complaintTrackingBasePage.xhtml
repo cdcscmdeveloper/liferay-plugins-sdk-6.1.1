@@ -7,34 +7,6 @@
 	xmlns:p="http://primefaces.org/ui"
 	xmlns:c="http://java.sun.com/jsp/jstl/core">
 
-	<ui:define name="resourceSection">
-	</ui:define>
-
-
-	<ui:define name="contentSection">
-		<p:messages id="messages" showDetail="true" autoUpdate="true"
-			closable="true" />
-		<p:tabView id="tt" orientation="left" widgetVar="tt">
-			<p:tab title="Send PTPK Review1">
-<!-- 				<ui:include src="step1UrusTo_PtpkFirstReview.xhtml" /> -->
-			</p:tab>
-			<p:tab title="Update PTPK Response1">
-<!-- 				<ui:include src="step2UrusUpdate_PtpkFirstResponse.xhtml" /> -->
-			</p:tab>
-			<p:tab title="Send PTPK Review2">
-<!-- 				<ui:include src="step3UrusTo_PtpkSecondReview.xhtml" /> -->
-			</p:tab>
-			<p:tab title="Update PTPK Response1">
-<!-- 				<ui:include src="step4UrusUpdate_PtpkSendResponse.xhtml" /> -->
-			</p:tab>
-			<p:tab title="Send JTKK-Final Review">
-<!-- 				<ui:include src="step5UrusTo_JkttFinalReview.xhtml" /> -->
-			</p:tab>
-			<p:tab title="Impose Final Decision">
-<!-- 				<ui:include src="step6UrusImpose_JkttFinalDecision.xhtml" /> -->
-			</p:tab>
-		</p:tabView>
-		
-		<p:commandButton  value="Step 2" action="/xhtml/sm/disciplinaryAction/updateComplaintSecondReview.xhtml?faces-redirect=true" />
+	<ui:define name="contentSection"></ui:define>
 	</ui:define>
 </ui:composition>
