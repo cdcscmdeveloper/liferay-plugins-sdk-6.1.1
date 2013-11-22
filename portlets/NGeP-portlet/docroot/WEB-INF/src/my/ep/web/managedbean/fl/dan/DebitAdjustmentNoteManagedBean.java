@@ -17,7 +17,7 @@ import org.apache.log4j.Logger;
  * @author KKLIM
  * @since 1/11/2013
  */
-@ManagedBean
+@ManagedBean(name = "danMB")
 @SessionScoped
 public class DebitAdjustmentNoteManagedBean extends BaseManagedBean{
 	/**
