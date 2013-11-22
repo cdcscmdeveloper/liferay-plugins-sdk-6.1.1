@@ -8,7 +8,7 @@
 	<p:panel id="delAddrPanel" header="DELIVERY ADDRESS" toggleable="true">
 
 		<p:dataTable id="addressDataTable" var="address"
-			value="#{flOrderBB.managedBean.fulfilmentRequest.flDeliveryAddresses}"
+			value="#{flOrderBB.managedBean.flRequest.flDeliveryAddresses}"
 			>
 			<ac:paginator for="addressDataTable"/>
 			<p:column headerText="Delivery Address">
@@ -28,8 +28,8 @@
 	<p:panel id="itemDetPanel" header="ITEM DETAIL" toggleable="true">
 		
 		<p:dataTable id="itemDataTable" var="flItem"
-			value="#{flOrderBB.managedBean.fulfilmentRequest.flFulfilmentItems}"
-			rendered="#{not empty flOrderBB.managedBean.fulfilmentRequest.flDeliveryAddresses}">
+			value="#{flOrderBB.managedBean.flRequest.flFulfilmentItems}"
+			rendered="#{not empty flOrderBB.managedBean.flRequest.flDeliveryAddresses}">
 			<ac:paginator for="itemDataTable"/>
 			
 			<p:column headerText="Product Code">

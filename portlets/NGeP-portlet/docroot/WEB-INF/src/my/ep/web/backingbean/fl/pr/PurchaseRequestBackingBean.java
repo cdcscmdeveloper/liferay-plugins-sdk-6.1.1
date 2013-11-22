@@ -116,8 +116,8 @@ public class PurchaseRequestBackingBean extends BaseBackingBean<PurchaseRequestM
 			reqDTO.setTaskId(this.getManagedBean().getTaskId());
 			reqDTO.setSelectedApprovers(getManagedBean().getApproverModel().getTarget());
 			reqDTO.setAvailableApprovers(getManagedBean().getApproverModel().getSource());
-			//reqDTO.setFlAttachmentList(flBB.getManagedBean().getAttachmentList());
-			//reqDTO.setFlRemark(flBB.getManagedBean().getRemarkList().get(0));
+			reqDTO.setFlAttachmentList(flBB.getManagedBean().getAttachmentList());
+			reqDTO.setFlRemark(flBB.getManagedBean().getRemarkList().get(0));
 			reqDTO.setOutcome(action);
 			//System.out.println("temploginId: "+ getManagedBean().getTempLoginId());
 			if(null==getManagedBean().getTempLoginId() || "".equals(getManagedBean().getTempLoginId())){
@@ -270,12 +270,15 @@ public class PurchaseRequestBackingBean extends BaseBackingBean<PurchaseRequestM
 	}
 	
 	public void retrieveRequestNoteList() {
+		FulfilmentBackingBean flBB = new FulfilmentBackingBean();
 		IRequestNoteSO requestNoteSO = (IRequestNoteSO) BusinessDelegate.getInstance().getServiceObject("ss",IRequestNoteSO.class);
 		RequestNoteReqDTO reqDTO = new RequestNoteReqDTO();
 		reqDTO.setAssignedTo(2L);
 		reqDTO.setFulfillmentType("O");
 		RequestNoteResDTO resDTO = requestNoteSO.retrievRequestNotes(reqDTO);
 		getManagedBean().setRequestNoteList(resDTO.getRequestNoteList());
+		FulfilmentBackingBean flBackingBean = new FulfilmentBackingBean();
+		flBackingBean.initializeRemarkAndAttachement(flBB.getManagedBean().getRemarkList(), flBB.getManagedBean().getAttachmentList());
 	}
 	
 	public String navigateToPurchaseRequest() {
