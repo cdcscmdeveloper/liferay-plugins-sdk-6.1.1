@@ -7,7 +7,7 @@
 	xmlns="http://www.w3.org/1999/xhtml">
 
 	<h:panelGroup id="requestExtPopUpId">
-		<table>
+		<table style="width:100%;">
 			<tr>
 				<td><p:outputLabel value="#{lbl['lbl.cm.unspsc.code']}" /></td>
 				<td colspan="3"><p:inputText
@@ -30,7 +30,7 @@
 			</tr>
 			<tr>
 				<td><p:outputLabel value="* #{lbl['lbl.cm.type']}" /></td>
-				<td><p:selectOneMenu
+				<td><p:selectOneMenu style="width: 128px;"
 						value="#{unspscCodeBackingBean.managedBean.typeId}">
 						<f:selectItem itemLabel="Select One" itemValue="" />
 						<f:selectItems
@@ -45,7 +45,7 @@
 			</tr>
 			<tr>
 				<td><p:outputLabel value="* #{lbl['lbl.cm.brand']}" /></td>
-				<td><p:selectOneMenu
+				<td><p:selectOneMenu style="width: 128px;"
 						value="#{unspscCodeBackingBean.managedBean.brandId}">
 						<f:selectItem itemLabel="Select One" itemValue="" />
 						<f:selectItems
@@ -61,7 +61,7 @@
 			</tr>
 			<tr>
 				<td><p:outputLabel value="* #{lbl['lbl.cm.measurement']}" /></td>
-				<td><p:selectOneMenu
+				<td><p:selectOneMenu style="width: 128px;"
 						value="#{unspscCodeBackingBean.managedBean.measurementId}">
 						<f:selectItem itemLabel="Select One" itemValue="" />
 						<f:selectItems
@@ -77,7 +77,7 @@
 			</tr>
 			<tr>
 				<td><p:outputLabel value="* #{lbl['lbl.cm.color']}" /></td>
-				<td><p:selectOneMenu
+				<td><p:selectOneMenu style="width: 128px;"
 						value="#{unspscCodeBackingBean.managedBean.colorId}">
 						<f:selectItem itemLabel="Select One" itemValue="" />
 						<f:selectItems
@@ -95,14 +95,17 @@
 		</table>
 
 
+		<div style="text-align: right;">
 
+			<p:commandButton value="#{lbl['lbl.cm.ok']}" icon="ui-icon-approve"
+				action="#{unspscCodeBackingBean.addNewRequest}"
+				update=":form:extCodeId :form:requestExtPopUpId"
+				oncomplete="extensionPopUp.hide()"></p:commandButton>
 
-		<p:commandButton value="#{lbl['lbl.cm.ok']}" icon="ui-icon-approve"
-			action="#{unspscCodeBackingBean.addNewRequest}" update=":form:extCodeId :form:requestExtPopUpId"
-			oncomplete="extensionPopUp.hide()"></p:commandButton>
-
-		<p:commandButton value="#{lbl['lbl.cm.cancel']}" icon="ui-icon-cancel" immediate="true"
-			onclick="extensionPopUp.hide()"></p:commandButton>
+			<p:commandButton value="#{lbl['lbl.cm.cancel']}"
+				icon="ui-icon-cancel" immediate="true"
+				onclick="extensionPopUp.hide()"></p:commandButton>
+		</div>
 
 	</h:panelGroup>
 
