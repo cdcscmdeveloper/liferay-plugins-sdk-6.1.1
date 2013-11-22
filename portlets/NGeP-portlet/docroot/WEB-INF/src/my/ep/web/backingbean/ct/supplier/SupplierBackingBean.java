@@ -7,8 +7,11 @@ import java.util.ArrayList;
 import java.util.Date;
 
 import javax.annotation.PostConstruct;
+import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.RequestScoped;
+import javax.faces.context.FacesContext;
+
 import org.apache.log4j.Logger;
 
 import my.ep.biz.bean.search.ISearchBean;
@@ -19,6 +22,8 @@ import my.ep.biz.service.ct.supplier.IContractSupplierSO;
 import my.ep.dto.ct.ContractReqDTO;
 import my.ep.dto.ct.ContractResDTO;
 import my.ep.dto.ct.supplier.ContractSupplierReqDTO;
+import my.ep.dto.ct.supplier.ContractSupplierResDTO;
+import my.ep.exception.EpException;
 import my.ep.persistence.entity.ct.CtContract;
 import my.ep.persistence.entity.ct.bank.CtSupplierBank;
 import my.ep.persistence.entity.ct.factoring.CtFactoring;
@@ -114,15 +119,18 @@ public class SupplierBackingBean extends BaseBackingBean<SupplierManagedBean> {
 			this.getManagedBean().getTermination().getCtContract().setContractId(1L);
 			this.getManagedBean().getTermination().getStatus().setStatusId(1L);
 			this.getManagedBean().getTermination().setMutualTerminate(true);
+			this.getManagedBean().getTermination().setCaRecommendationCode(new PmCode());
+			this.getManagedBean().getTermination().getCaRecommendationCode().setCodeId(1L);
 			
-			if(this.getManagedBean().getCtTerminationReason() == null){
+		}
+		
+		if(this.getManagedBean().getCtTerminationReason() == null){
 			   this.getManagedBean().setCtTerminationReason(new CtTerminationReason());
 			   this.getManagedBean().getCtTerminationReason().setTypeCode(new PmCode());
 			   this.getManagedBean().getTermination().setCtTerminationReasons(new ArrayList<CtTerminationReason>());
 			   this.getManagedBean().getCtTerminationReason().setCtTermination(this.getManagedBean().getTermination());
-			   this.getManagedBean().getCtTerminationReason().getTypeCode().setCodeId(1L);
+			   this.getManagedBean().getCtTerminationReason().getTypeCode().setCodeId(155L);
 			}
-		}
 	}
 	
     public void searchContract() {
@@ -161,7 +169,7 @@ public class SupplierBackingBean extends BaseBackingBean<SupplierManagedBean> {
 	     }
 	}
     
-    public void saveChangeBankRequest(String outcome){
+    public String saveChangeBankRequest(String outcome){
     	
     	IContractSupplierSO supplierSO = null;
 		ContractSupplierReqDTO reqDTO = null;	
@@ -181,18 +189,30 @@ public class SupplierBackingBean extends BaseBackingBean<SupplierManagedBean> {
 			 }else if(outcome == BpmOutcomeConst.BPM_REVISE)
 			      reqDTO.setTaskId(this.getManagedBean().getTaskId());
 			  
-			 supplierSO.saveChangeBankRequest(reqDTO);
-	   
-		 }catch(Exception ex){
-		   log.error("Exception>>>" +ex);
-		
-		}finally{
+			 ContractSupplierResDTO resDTO = supplierSO.saveChangeBankRequest(reqDTO); 
+			 if(resDTO.isSuccessful()) {
+					log.info("Record saved successfully");
+					FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "Record saved successfully.","Change Bank A/C. : "));
+					if(!outcome.equalsIgnoreCase(BpmOutcomeConst.BPM_SAVE)) { // save action will remain in the same page
+						renewSesionObject();
+						return "/xhtml/shared/acknowledge.xhtml";
+					}
+				} else {
+					throw new EpException("Failed.");
+				}
+				
+			} catch (Exception e) {
+				e.printStackTrace();
+				FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR,e.toString(), "Change Bank A/C save failed."));
+			}finally{
 			supplierSO = null;
 			reqDTO = null;
-		}	 
+		}	
+		
+		return null;
     }
 	
-    public void saveFactoringRequest(String outcome){
+    public String saveFactoringRequest(String outcome){
     	
 
     	IContractSupplierSO supplierSO = null;
@@ -212,29 +232,40 @@ public class SupplierBackingBean extends BaseBackingBean<SupplierManagedBean> {
 			 }else if(outcome == BpmOutcomeConst.BPM_REVISE)
 			   reqDTO.setTaskId(this.getManagedBean().getTaskId());
 			  
-			 supplierSO.saveFactoringRequest(reqDTO);
-	   
-		 }catch(Exception ex){
-		   log.error("Exception>>>" +ex);
-		
-		}finally{
+			 ContractSupplierResDTO resDTO = supplierSO.saveFactoringRequest(reqDTO);
+			 if(resDTO.isSuccessful()) {
+					log.info("Record saved successfully");
+					FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "Record saved successfully.","Factoring Request. : "));
+					if(!outcome.equalsIgnoreCase(BpmOutcomeConst.BPM_SAVE)) { // save action will remain in the same page
+						renewSesionObject();
+						return "/xhtml/shared/acknowledge.xhtml";
+					}
+				} else {
+					throw new EpException("Failed.");
+				}
+				
+			} catch (Exception e) {
+				e.printStackTrace();
+				FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR,e.toString(), "Factoring Request save failed."));
+			}finally{
 			supplierSO = null;
 			reqDTO = null;
 		}
+		
+		return null;
 	}
     
-    public void saveTerminationRequest(String outcome){
+    public String saveTerminationRequest(String outcome){
     	
+    	System.out.println("inside supplier termination Log >>>>>>>>>>>>>>>>>>");
     	IContractSupplierSO supplierSO = null;
 		ContractSupplierReqDTO reqDTO = null;	
 		try{
 			
 			 reqDTO = new ContractSupplierReqDTO();
 			 supplierSO = (IContractSupplierSO)BusinessDelegate.getInstance().getServiceObject("ct", IContractSupplierSO.class);
-            
-			 this.getManagedBean().getCtTerminationReason().setDescription(this.getManagedBean().getTerminationReason());
-			 this.getManagedBean().getTermination().setTerminationDate(this.getManagedBean().getTerminationDate());	
 			 this.getManagedBean().getTermination().getCtTerminationReasons().add(this.getManagedBean().getCtTerminationReason());
+			 this.getManagedBean().getTermination().getCaRecommendationCode().setCodeId(155L);
 			 reqDTO.setTerminationRequest(this.getManagedBean().getTermination());
 			
 		   	 reqDTO.setOutcome(outcome);
@@ -245,15 +276,28 @@ public class SupplierBackingBean extends BaseBackingBean<SupplierManagedBean> {
 			 else if(outcome == BpmOutcomeConst.BPM_REVISE)
 			   reqDTO.setTaskId(this.getManagedBean().getTaskId());
 			  
-			 supplierSO.saveTerminationRequest(reqDTO);
-	   
-		 }catch(Exception ex){
-		   log.error("Exception>>>" +ex);
-		
-		}finally{
+			 ContractSupplierResDTO resDTO = supplierSO.saveTerminationRequest(reqDTO);
+			 if(resDTO.isSuccessful()) {
+					log.info("Record saved successfully");
+					FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "Record saved successfully.","Contract Termination. : "));
+					if(!outcome.equalsIgnoreCase(BpmOutcomeConst.BPM_SAVE)) { // save action will remain in the same page
+						renewSesionObject();
+						return "/xhtml/shared/acknowledge.xhtml";
+					}
+				} else {
+					throw new EpException("Failed.");
+				}
+				
+			} catch (Exception e) {
+				e.printStackTrace();
+				FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR,e.toString(), "Termination save failed."));
+			}finally{
+	 
 		   supplierSO = null;
 		   reqDTO = null;
 		}
+		
+		return null;
     }
 
 	public Date getDate() {

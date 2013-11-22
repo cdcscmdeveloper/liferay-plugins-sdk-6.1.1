@@ -40,12 +40,6 @@ public class SupplierManagedBean extends BaseManagedBean {
 	private String contractName;
 	private String loginUser;
 	
-	/*Value for termination*/
-	private Date terminationDate;
-	private String terminationType;
-	private String terminationReason;
-	/*End*/
-	
 	private int selectedIndex;
 	private CtFactoring factoring;
 	private CtTermination termination;
@@ -168,30 +162,6 @@ public class SupplierManagedBean extends BaseManagedBean {
 	
 	public void setContractList(List<CtContract> contractList) {
 		this.contractList = contractList;
-	}
-	
-	public Date getTerminationDate() {
-		return terminationDate;
-	}
-	
-	public void setTerminationDate(Date terminationDate) {
-		this.terminationDate = terminationDate;
-	}
-	
-	public String getTerminationType() {
-		return terminationType;
-	}
-	
-	public void setTerminationType(String terminationType) {
-		this.terminationType = terminationType;
-	}
-	
-	public String getTerminationReason() {
-		return terminationReason;
-	}
-	
-	public void setTerminationReason(String terminationReason) {
-		this.terminationReason = terminationReason;
 	}
 	
 	public static long getSerialversionuid() {
