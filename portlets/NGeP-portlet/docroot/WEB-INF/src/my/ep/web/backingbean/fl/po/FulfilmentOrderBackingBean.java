@@ -3,7 +3,6 @@ package my.ep.web.backingbean.fl.po;
 import java.text.SimpleDateFormat;
 import java.util.List;
 
-import javax.annotation.PostConstruct;
 import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.RequestScoped;
@@ -34,22 +33,17 @@ public class FulfilmentOrderBackingBean extends BaseBackingBean<FulfilmentOrderM
 	public static final String NAV_TO_CREATE_DO = "createDo";
 	public static final String NAV_TO_FL_ORDER = "flOrder";
 	
+	
 	private static Logger log = Logger.getLogger(FulfilmentOrderBackingBean.class);
 	public static final SimpleDateFormat DATE_FORMAT = new SimpleDateFormat( "MM/dd/yy hh:mm a" );
 
 	public FulfilmentOrderBackingBean(){
-		retrievePendingDoItems();
-		getDeliveryAddress();
+		retrievePendingDo();
+//		getDeliveryAddress();
 		getDeliveryOrderStatus();
 		
 	}
-	@PostConstruct
-	public void init() {
-//		if (getManagedBean().getFulfilmentRequest() == null) {
-//			getManagedBean().setFulfilmentRequest(new FlFulfilmentRequest());
-//			getManagedBean().getFulfilmentRequest().getSmSupplier().setSupplierId(27L);
-//		}
-	}
+	
 	public String fulfillmentOrderAction(String action) {
 		IFulfilmentOrderSO fulfilmentOrderSO = null;
 		try {
@@ -101,7 +95,7 @@ public class FulfilmentOrderBackingBean extends BaseBackingBean<FulfilmentOrderM
 		return null;
 	}
 	
-	public FulfilmentResDTO retrievePendingDoItems() {
+	public FulfilmentResDTO retrievePendingDo() {
 		IFulfilmentOrderSO filmentOrderSO = (IFulfilmentOrderSO) BusinessDelegate.getInstance().getServiceObject("fl", IFulfilmentOrderSO.class);
 		FulfilmentResDTO resDTO = new FulfilmentResDTO();
 		List<FlFulfilmentOrder> pendingDoList = filmentOrderSO.getPendingDoList();
@@ -116,6 +110,13 @@ public class FulfilmentOrderBackingBean extends BaseBackingBean<FulfilmentOrderM
 		this.getManagedBean().setDeliveryAddressList(deliveryAddressList);
 		return resDTO;
 		
+	}
+	public void delAddrList(){
+		IFulfilmentOrderSO filmentOrderSO = (IFulfilmentOrderSO) BusinessDelegate.getInstance().getServiceObject("fl", IFulfilmentOrderSO.class);
+		FulfilmentReqDTO reqDTO = new FulfilmentReqDTO();
+		reqDTO.setFlRequestId(getManagedBean().getFulfilmentOrder().getFlFulfilmentRequest().getFulfilmentReqId());
+		FulfilmentResDTO resDTO = filmentOrderSO.getDeliveryAddressListById(reqDTO);
+		this.getManagedBean().setDeliveryAddressList(resDTO.getDelAddrList());
 	}
 	public FulfilmentResDTO getDeliveryOrderStatus() {
 		IFulfilmentOrderSO filmentOrderSO = (IFulfilmentOrderSO) BusinessDelegate.getInstance().getServiceObject("fl", IFulfilmentOrderSO.class);
@@ -136,8 +137,15 @@ public class FulfilmentOrderBackingBean extends BaseBackingBean<FulfilmentOrderM
 	}
 
 	public String navigateToFlOrder(int index) {
-		this.getManagedBean().setFulfilmentOrder(this.getManagedBean().getPendingDoList().get(index));
-		return NAV_TO_FL_ORDER;
+		System.out.println("getSelectedFlOrder: "+getManagedBean().getSelectedFlOrder().getFulfilmentOrderId());
+//		this.getManagedBean().setFulfilmentOrder(this.getManagedBean().getPendingDoList().get(index));
+		getManagedBean().setFulfilmentOrder(getManagedBean().getSelectedFlOrder());
+		
+		DeliveryOrderBackingBean doMB = new DeliveryOrderBackingBean();
+		doMB.getManagedBean().setFulfilmentOrder(getManagedBean().getFulfilmentOrder());
+//		doMB.getManagedBean().setDeliveryAddress(this.getManagedBean().getDeliveryAddressList().get(index));
+		
+		return NAV_TO_CREATE_DO;
 
 	}
 	
@@ -152,6 +160,14 @@ public class FulfilmentOrderBackingBean extends BaseBackingBean<FulfilmentOrderM
 	public void selectedAddrRow(){
 		//TODO
 //		getManagedBean().setSelectedRowFlg(true);
+	}
+	
+	public void updateDeliveryAddrText(){
+		getManagedBean().setSelectedLovDelAddr(getManagedBean().getSelectedDelAddr().getAddressType().getPmAddress().getAddress1()
+				+" "+getManagedBean().getSelectedDelAddr().getAddressType().getPmAddress().getAddress2()
+				+" "+getManagedBean().getSelectedDelAddr().getAddressType().getPmAddress().getAddress3()
+				+" "+getManagedBean().getSelectedDelAddr().getAddressType().getPmAddress().getAddress4());
+
 	}
 	
 }

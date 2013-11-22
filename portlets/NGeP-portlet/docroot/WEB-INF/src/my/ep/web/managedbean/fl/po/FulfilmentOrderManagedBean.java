@@ -49,6 +49,8 @@ public class FulfilmentOrderManagedBean extends BaseManagedBean {
 	private FlFulfilmentOrder fulfilmentOrder;
 	private FlDeliveryAddress selectedDelAddr;
 	private FlDeliveryAddress selectedAddrRow;
+	private FlFulfilmentOrder selectedFlOrder;
+	private List<FlDeliveryAddress> selectedDelAddrList;
 	
 	private List<FlFulfilmentOrder> pendingDoList;
 	private List<FlDeliveryAddress>deliveryAddressList;
@@ -56,6 +58,7 @@ public class FulfilmentOrderManagedBean extends BaseManagedBean {
 	
 	private List<FlFulfilmentItem> flItemList;
 	private DualListModel<String> approverModel;
+	private String selectedLovDelAddr;
 	
 	/**
 	 * @return the tempLoginId
@@ -354,6 +357,48 @@ public class FulfilmentOrderManagedBean extends BaseManagedBean {
 	 */
 	public void setSelectedAddrRow(FlDeliveryAddress selectedAddrRow) {
 		this.selectedAddrRow = selectedAddrRow;
+	}
+
+	/**
+	 * @return the selectedLovDelAddr
+	 */
+	public String getSelectedLovDelAddr() {
+		return selectedLovDelAddr;
+	}
+
+	/**
+	 * @param selectedLovDelAddr the selectedLovDelAddr to set
+	 */
+	public void setSelectedLovDelAddr(String selectedLovDelAddr) {
+		this.selectedLovDelAddr = selectedLovDelAddr;
+	}
+
+	/**
+	 * @return the selectedFlOrder
+	 */
+	public FlFulfilmentOrder getSelectedFlOrder() {
+		return selectedFlOrder;
+	}
+
+	/**
+	 * @param selectedFlOrder the selectedFlOrder to set
+	 */
+	public void setSelectedFlOrder(FlFulfilmentOrder selectedFlOrder) {
+		this.selectedFlOrder = selectedFlOrder;
+	}
+
+	/**
+	 * @return the selectedDelAddrList
+	 */
+	public List<FlDeliveryAddress> getSelectedDelAddrList() {
+		return selectedDelAddrList;
+	}
+
+	/**
+	 * @param selectedDelAddrList the selectedDelAddrList to set
+	 */
+	public void setSelectedDelAddrList(List<FlDeliveryAddress> selectedDelAddrList) {
+		this.selectedDelAddrList = selectedDelAddrList;
 	}
 
 	
