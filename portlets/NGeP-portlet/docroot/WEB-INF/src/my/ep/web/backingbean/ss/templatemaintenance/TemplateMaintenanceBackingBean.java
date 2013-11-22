@@ -47,6 +47,8 @@ import my.ep.web.managedbean.ss.templatemaintenance.TemplateMaintenanceManagedBe
 import my.ep.web.ss.quationtender.common.QTConstants;
 import my.ep.web.util.lookupservice.BusinessDelegate;
 
+import org.apache.commons.beanutils.BeanUtils;
+
 /**
  * @author ACER
  * 
@@ -141,11 +143,12 @@ public class TemplateMaintenanceBackingBean extends
 			QTTemplateDocResDTO resDto = null;
 			System.out.println("=====enter edit action====");
 			System.out.println("=====scqtDoc====" + scqtDoc.getQtDocId());
-		/*	System.out.println("==procuremnet id=="
-					+ scqtDoc.getTplSpecMaster().getProcurementCategory()
-							.getCodeId());
-			System.out.println("====spec master id==="
-					+ scqtDoc.getTplSpecMaster().getSpecMasterId());*/
+			/*
+			 * System.out.println("==procuremnet id==" +
+			 * scqtDoc.getTplSpecMaster().getProcurementCategory()
+			 * .getCodeId()); System.out.println("====spec master id===" +
+			 * scqtDoc.getTplSpecMaster().getSpecMasterId());
+			 */
 			TemplateSpecBackingBean specBB = new TemplateSpecBackingBean();
 			TplSpecMaster specMaster = new TplSpecMaster();
 			specMaster.setSpecMasterId(new Long(scqtDoc.getTplSpecMaster()
@@ -181,6 +184,8 @@ public class TemplateMaintenanceBackingBean extends
 					.setStatusId(
 							scqtDoc.getTplSpecMaster().getStatus()
 									.getStatusId());
+			this.getManagedBean().getScqtDoc().getScQt()
+					.setQtNo(scqtDoc.getScQt().getQtNo());
 			System.out.println("====edit specification type==="
 					+ scqtDoc.getTplSpecMaster().getSpecTypeCode().getCodeId());
 			qtTemplateReqDTO.setCheckListType("UP");
@@ -256,6 +261,16 @@ public class TemplateMaintenanceBackingBean extends
 
 	}
 
+	public void selectChecklist(AjaxBehaviorEvent e) {
+
+		String checkValue = (String) e.getComponent().getAttributes()
+				.get("value");
+		System.out.println("=====display check value==="+checkValue);
+
+		this.getManagedBean().getScqtDoc().getTplSpecMaster().setSpecName(checkValue);
+
+	}
+
 	public void supportingDocAdd() {
 
 		try {
@@ -276,6 +291,13 @@ public class TemplateMaintenanceBackingBean extends
 		}
 	}
 
+	/*
+	 * public TplSpecQuestion deepCopy(TplSpecQuestion input){ TplSpecQuestion
+	 * copy = new TplSpecQuestion(); copy.setValue(input.);//.. copy primitives,
+	 * deep copy objects again
+	 * 
+	 * return copy; }
+	 */
 	public void save() {
 		try {
 
@@ -288,25 +310,29 @@ public class TemplateMaintenanceBackingBean extends
 					.getTplSpecMaster().getProcurementCategory().getCodeId());
 			CodeCategoryResDTO resprocure = codeCategorySO
 					.retrieveCodeById(reqDTO);
-System.out.println("===resprocure===="+resprocure.getPmCode().getCodeId());
+			System.out.println("===resprocure===="
+					+ resprocure.getPmCode().getCodeId());
 			CodeCategoryReqDTO reqDTOItem = new CodeCategoryReqDTO();
 			reqDTOItem.setCodeId(this.getManagedBean().getScqtDoc()
 					.getTplSpecMaster().getItemTypeCode().getCodeId());
 			CodeCategoryResDTO resItem = codeCategorySO
 					.retrieveCodeById(reqDTOItem);
-			System.out.println("===resItem===="+resItem.getPmCode().getCodeId());
+			System.out.println("===resItem===="
+					+ resItem.getPmCode().getCodeId());
 			CodeCategoryReqDTO reqDTOTemp = new CodeCategoryReqDTO();
 			reqDTOTemp.setCodeId(1L);
 			CodeCategoryResDTO resTemp = codeCategorySO
 					.retrieveCodeById(reqDTOTemp);
-			System.out.println("===resTemp===="+resTemp.getPmCode().getCodeId());
+			System.out.println("===resTemp===="
+					+ resTemp.getPmCode().getCodeId());
 			CodeCategoryReqDTO reqDTOSpec = new CodeCategoryReqDTO();
 
 			reqDTOSpec.setCodeId(this.getManagedBean().getScqtDoc()
 					.getTplSpecMaster().getSpecTypeCode().getCodeId());
 			CodeCategoryResDTO resSpec = codeCategorySO
 					.retrieveCodeById(reqDTOSpec);
-			System.out.println("===resSpec===="+resSpec.getPmCode().getCodeId());
+			System.out.println("===resSpec===="
+					+ resSpec.getPmCode().getCodeId());
 			IStatusSO statussO = BusinessDelegate.getInstance()
 					.getServiceObject("pm", IStatusSO.class);
 
@@ -351,22 +377,61 @@ System.out.println("===resprocure===="+resprocure.getPmCode().getCodeId());
 			specMaster.setStatus(statusres.getPmStatus());
 			specMaster.setTierPrice(this.getManagedBean().getScqtDoc()
 					.getTplSpecMaster().isTierPrice());
+			specMaster.setScQtDocs(null);
+			specMaster.setChangedBy(2L);
+			specMaster.setCreatedBy(2L);
+			specMaster.setBrandNew(false);
 
+			java.util.Date date = new java.util.Date(); // Right now
+			java.sql.Timestamp timestamp = new java.sql.Timestamp(
+					date.getTime());
+			specMaster.setCreatedDate(timestamp);
 			TemplateSpecBackingBean specBB = new TemplateSpecBackingBean();
-          // System.out.println("====before Question List size===="+this.getManagedBean().getSpecMaster().getTplSpecQuestions().size());
-		
-	List<TplSpecQuestion> questions=	specBB.getManagedBean().getSpecMaster().getTplSpecQuestions();
-			for(TplSpecQuestion tpl:questions){
-				System.out.println("==QuestionNumber0===="+tpl.getQuestionNumber());
-			}			;
-	TplSpecQuestion queston=	questions.remove(0);
-	List<TplSpecQuestion> questions1=new ArrayList<TplSpecQuestion>();
-	
-	questions1.addAll(questions);
-	for(TplSpecQuestion tpl:questions1){
-		System.out.println("==Question Number===="+tpl.getQuestionNumber());
-	}
-			specMaster.setTplSpecQuestions(questions1);
+			// System.out.println("====before Question List size===="+this.getManagedBean().getSpecMaster().getTplSpecQuestions().size());
+
+			List<TplSpecQuestion> questions = specBB.getManagedBean()
+					.getSpecMaster().getTplSpecQuestions();
+			;
+			TplSpecQuestion queston = questions.remove(0);
+			List<TplSpecQuestion> questions1 = new ArrayList<TplSpecQuestion>();
+
+			questions1.addAll(questions);
+			List<TplSpecQuestion> questions2 = new ArrayList<TplSpecQuestion>();
+			for (TplSpecQuestion tpl : questions1) {
+				System.out.println("==Question Number===="
+						+ tpl.getQuestionNumber());
+				System.out.println("====before question Id==="
+						+ tpl.getSpecQuestionId());
+				tpl.setSpecQuestionId(null);
+				System.out.println("====after question Id==="
+						+ tpl.getSpecQuestionId());
+				// TplSpecQuestion cloned = (TplSpecQuestion) tpl.cloneEntity();
+				/*
+				 * System.out.println("====cloned question Id1==="+cloned.
+				 * getSpecQuestionId());
+				 * System.out.println("cloned object===="+cloned
+				 * .getQuestionNumber());
+				 */
+				// TplSpecQuestion copy = deepCopy(tpl);
+				// two.add(copy);
+				TplSpecQuestion tpl2 = new TplSpecQuestion();
+				TplSpecQuestion tpl1 = (TplSpecQuestion) BeanUtils
+						.cloneBean(tpl);
+				tpl1.setTplSpecMaster(specMaster);
+				tpl1.setTplSpecAnswers(null);
+				tpl1.setTplSpecScorings(null);
+				tpl1.setTplSpecTierPriceQuestions(null);
+				System.out.println("===after copy data==="
+						+ tpl1.getQuestionNumber());
+				questions2.add(tpl1);
+				// BeanUtils.copyProperties(tpl2, tpl);
+				// questions2.add(tpl2);
+
+			}
+
+			specMaster.setTplSpecQuestions(questions2);
+			// specMaster.setTplSpecQuestions(questions1);
+			// specMaster.setTplSpecQuestions(null);
 			QTTemplateDocReqDTO qtTemplateReqDTO = new QTTemplateDocReqDTO();
 			QTTemplateDocResDTO resDTO = new QTTemplateDocResDTO();
 			IQTDetailSO QtDetailsSO = BusinessDelegate.getInstance()
@@ -398,23 +463,25 @@ System.out.println("===resprocure===="+resprocure.getPmCode().getCodeId());
 			// TemplateSpecBackingBean specBB = new TemplateSpecBackingBean();
 			scQtDOc.setChangedBy(2L);
 			scQtDOc.setCreatedBy(2L);
-			java.util.Date date = new java.util.Date(); // Right now
-			java.sql.Timestamp timestamp = new java.sql.Timestamp(
-					date.getTime());
+			/*
+			 * java.util.Date date = new java.util.Date(); // Right now
+			 * java.sql.Timestamp timestamp = new java.sql.Timestamp(
+			 * date.getTime());
+			 */
 			scQtDOc.setCreatedDate(timestamp);
 			// scQtDOc.setChangedDate(timestamp);
 			/*
 			 * specBB.getManagedBean().getSpecMaster().getTplSpecQuestions()
 			 * .remove(0);
 			 */
-        
+
 			qtTemplateReqDTO.setSpecMaster(specMaster);
 			qtTemplateReqDTO.setQtDoc(scQtDOc);
 			try {
 				IQTTemplateSO qtTemplateSO = EpEjbBusinessDelegate
 						.getInstance().getServiceObject(QTConstants.SS_MODULE,
 								IQTTemplateSO.class);
-System.out.println("=======before insert method====");
+				System.out.println("=======before insert method====");
 				resDTO = qtTemplateSO.saveORUpdateTemplateDoc(qtTemplateReqDTO);
 				System.out
 						.println("=====success fully saves data in scqtdoc table");
@@ -442,8 +509,9 @@ System.out.println("=======before insert method====");
 		if (getManagedBean().getScqtDoc().getTplSpecMaster().getSpecName() != null
 				&& !"".equalsIgnoreCase(getManagedBean().getScqtDoc()
 						.getTplSpecMaster().getSpecName())) {
-			System.out.println("yes"+getManagedBean().getScqtDoc()
-						.getTplSpecMaster().getSpecName());
+			System.out.println("yes"
+					+ getManagedBean().getScqtDoc().getTplSpecMaster()
+							.getSpecName());
 			SearchFilterBean committeSearchBean = new SearchFilterBean(
 					SearchOperator.OPERATOR_EQUALS.value());
 			committeSearchBean.setSearchField("tplSpecMaster.specName");
@@ -579,9 +647,11 @@ System.out.println("=======before insert method====");
 							IQTTemplateSO.class);
 
 			resDto = qtTemplateSO.fetchTemplates(qtTemplateReqDTO);
-			System.out.println("========scQTDOC List size===="+resDto.getSearchResultBean().getResultList().size());
-			for(ScQtDoc sc : resDto.getSearchResultBean().getResultList()){
-				System.out.println("--- IN LOOP --"+sc.getQtDocId() +" ---- "+sc.getTplSpecMaster().getSpecName());
+			System.out.println("========scQTDOC List size===="
+					+ resDto.getSearchResultBean().getResultList().size());
+			for (ScQtDoc sc : resDto.getSearchResultBean().getResultList()) {
+				System.out.println("--- IN LOOP --" + sc.getQtDocId()
+						+ " ---- " + sc.getTplSpecMaster().getSpecName());
 			}
 
 		} catch (Exception ex) {
