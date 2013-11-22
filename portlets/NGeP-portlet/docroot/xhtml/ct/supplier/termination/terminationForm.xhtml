@@ -8,15 +8,10 @@
          <p:panel id="sTermination" header="Termination Request Details" toggleable="true"  toggleSpeed="500">
             <h:panelGrid columns="4" style="width:560px;">  
               <h:outputLabel value="Termination Date"/>
-              <p:calendar style="width:140px;" value="#{supplierBackingBean.managedBean.terminationDate}" id="popupButtonCal" showOn="button" />
+              <p:calendar style="width:140px;" value="#{supplierBackingBean.managedBean.termination.terminationDate}" id="popupButtonCal" showOn="button" />
               <h:outputLabel  value="Termination Type"/>  
-              <p:selectOneMenu value="#{supplierBackingBean.managedBean.terminationType}" style="width:140px;">
-            	 <f:selectItem itemLabel="-Please Select--" itemValue="" /> 
-            	 <f:selectItem itemLabel="Late Supply" itemValue="Late Supply" /> 
-            	 <f:selectItem itemLabel="Fail To Supply" itemValue="Fail To Supply" /> 
-            	 <f:selectItem itemLabel="Lack Of Quality" itemValue="Lack Of Quality" /> 
-            	 <f:selectItem itemLabel="Fail To Comply Term And Condition" itemValue="Fail To Comply Term And Condition" /> 
-            	 <f:selectItem itemLabel="Other" itemValue="Other" /> 
+              <p:selectOneMenu value="#{supplierBackingBean.managedBean.ctTerminationReason.typeCode.codeId}" style="width:140px;">
+            	  <f:selectItems value="#{supplierBackingBean.getDropdownValues(PmCodeCatConst.ctTerminationReasonType)}" />
               </p:selectOneMenu>    
            </h:panelGrid>
            <h:panelGrid columns="2">  
@@ -26,7 +21,7 @@
 			    </div>
 			 </h:panelGroup>
 			 <h:panelGrid>
-                <p:inputTextarea id="rftermination" value="#{supplierBackingBean.managedBean.terminationReason}"  rows="2" cols="66"  autoResize="false" />
+                <p:inputTextarea id="rftermination" value="#{supplierBackingBean.managedBean.ctTerminationReason.description}"  rows="2" cols="66"  autoResize="false" />
 			 </h:panelGrid>
 	       </h:panelGrid>
 		   </p:panel>

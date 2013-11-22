@@ -12,7 +12,7 @@
                <p:selectBooleanCheckbox value="#{contractDetailsBackingBean.managedBean.termination.mutualTerminate}"/> 
                <f:verbatim></f:verbatim> <f:verbatim></f:verbatim>
                <h:outputLabel  value="#{lbl['lbl.ct.tr.recom']}"/>  
-               <p:selectOneMenu value="#{contractDetailsBackingBean.managedBean.termination.caRecommendationCode.code}" style="width:150px;">
+               <p:selectOneMenu value="#{contractDetailsBackingBean.managedBean.termination.caRecommendationCode.codeId}" style="width:150px;">
                   <f:selectItems value="#{contractDetailsBackingBean.getDropdownValues(PmCodeCatConst.ctTerminationRecommendType)}" />
             	   <p:ajax event="change" update=":form:tabview" listener="#{contractDetailsBackingBean.changeField}" process="@this"/>  
                </p:selectOneMenu>    
@@ -22,7 +22,7 @@
      </p:panel>
      <p:panel id="trReason" header="#{lbl['lbl.ct.tr.reason']}" toggleable="true"  toggleSpeed="500">
        <h:panelGrid style="width:780px;">
-			<p:dataTable id="dataTable" var="data" value="#{contractDetailsBackingBean.managedBean.terminateReasonList}" rowIndexVar="index" 
+			<p:dataTable id="dataTable" var="data" value="#{contractDetailsBackingBean.managedBean.termination.ctTerminationReasons}" rowIndexVar="index" 
 			  widgetVar="dataTableObj" lazy="false" dynamic="true" paginator="true" paginatorPosition="bottom" paginatorAlwaysVisible="true"
 			  emptyMessage="No Records!" rows="10">
 			   <p:columnGroup type="header"> 
