@@ -84,7 +84,7 @@
 											value="Supplier:"></p:outputLabel></td>
 									<td>ABC SDN BHD<p:commandButton icon="ui-icon-add" value="Bookmark"
 											action="#{favoriteSupplierBackingBean.addToFavoriteSupplier(supplierItem.supplierId)}"
-											update=":form:supplierItemViewID">
+											update=":form:tabView:supplierItemViewID">
 										</p:commandButton></td>
 								</tr>
 							</table>
@@ -97,7 +97,7 @@
 										(MYR)</p:outputLabel></td>
 									<td rowspan="2" style="padding-left: 6px;width: 20%;"><p:commandLink
 											action="#{catalogueBackingBean.addToCart}"
-											update=":form:supplierItemViewID">
+											update=":form:tabView:supplierItemViewID">
 											<p:graphicImage
 												value="/resources/ep/images/design/cart_add.png"></p:graphicImage>
 										</p:commandLink></td>
