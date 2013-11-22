@@ -51,7 +51,8 @@
 					action="#{backingBean.assignSelAssoc(assocBean)}"
 					oncomplete="assocDialog.show();">
 					<p:graphicImage library="ep/images/design" name="edit.png"
-						value="/resources/ep/images/design/edit.png" />
+						value="/resources/ep/images/design/edit.png"
+						style="margin-right:2px;" />
 				</p:commandLink>
 				<p:commandLink>
 					<p:graphicImage library="ep/images/design" name="delete.png"
@@ -72,25 +73,28 @@
 		<p:outputPanel rendered="#{backingBean.managedBean.poUser}">
 			<table style="width: 50%">
 				<tr>
-					<td><p:outputLabel value="PO Remarks" /></td>
-					<td><p:inputTextarea autoResize="true" /></td>
+					<td style="padding-left: 38px;"><p:outputLabel
+							value="PO Remarks" /></td>
+					<td><p:inputTextarea autoResize="true" cols="41" /></td>
 				</tr>
 			</table>
 		</p:outputPanel>
 		<p:outputPanel rendered="#{backingBean.managedBean.approverUser}">
 			<table style="width: 100%">
 				<tr>
-					<td><p:outputLabel value="PO Remarks" /></td>
+					<td style="padding-left: 38px;"><p:outputLabel
+							value="PO Remarks" /></td>
 					<td><p:inputTextarea autoResize="true" readonly="true"
-							disabled="true" /></td>
-					<td><p:outputLabel value="Approver Remarks" /></td>
-					<td><p:inputTextarea autoResize="true" /></td>
+							disabled="true" cols="41" /></td>
+					<td style="padding-left: 22px;"><p:outputLabel
+							value="Approver Remarks" /></td>
+					<td><p:inputTextarea autoResize="true" cols="41" /></td>
 
 				</tr>
 			</table>
 		</p:outputPanel>
 	</p:panel>
-	<p:dialog width="400px" height="460px"
+	<p:dialog width="500px" height="435px"
 		header="Associated Company Details" id="asDisp"
 		widgetVar="assocDialog" resizable="false" showEffect="fade"
 		hideEffect="fade" modal="true">
@@ -100,18 +104,20 @@
 			<tr>
 				<td><p:outputLabel value="* Company Name" /></td>
 				<td><p:inputText
-						value="#{backingBean.managedBean.selectedAssocCompany.companyName}" /></td>
+						value="#{backingBean.managedBean.selectedAssocCompany.companyName}"
+						size="35" /></td>
 			</tr>
 			<tr>
 				<td><p:outputLabel value="* ROC/ROB/ROS NO." /></td>
 				<td><p:inputText
-						value="#{backingBean.managedBean.selectedAssocCompany.regNo}" /></td>
+						value="#{backingBean.managedBean.selectedAssocCompany.regNo}"
+						size="35" /></td>
 			</tr>
 			<tr>
-				<td><p:outputLabel value="* MOF Registration NO." /></td>
+				<td><p:outputLabel value="* MOF NO." /></td>
 				<td><p:inputText readonly="true"
 						value="Read Only  - Autopopulated as per ROC/ROB/ROS No."
-						title="This field TBC" /></td>
+						title="This field TBC" size="35" /></td>
 			</tr>
 			<tr>
 				<!-- 	<td><p:outputLabel value="Share Holding *" /></td>
@@ -126,23 +132,27 @@
 			<tr>
 				<td><p:outputLabel value="* Address" /></td>
 				<td><p:inputText
-						value="#{backingBean.managedBean.selectedAssocCompany.smAddress.address1}" /></td>
+						value="#{backingBean.managedBean.selectedAssocCompany.smAddress.address1}"
+						size="35" /></td>
 			</tr>
 
 			<tr>
 				<td></td>
 				<td><p:inputText
-						value="#{backingBean.managedBean.selectedAssocCompany.smAddress.address2}" /></td>
+						value="#{backingBean.managedBean.selectedAssocCompany.smAddress.address2}"
+						size="35" /></td>
 			</tr>
 			<tr>
 				<td></td>
 				<td><p:inputText
-						value="#{backingBean.managedBean.selectedAssocCompany.smAddress.address3}" /></td>
+						value="#{backingBean.managedBean.selectedAssocCompany.smAddress.address3}"
+						size="35" /></td>
 			</tr>
 			<tr>
 				<td><p:outputLabel value="* Country" /></td>
 				<td><p:selectOneMenu
-						value="#{backingBean.managedBean.selectedAssocCompany.smAddress.pmCountry.countryCode}">
+						value="#{backingBean.managedBean.selectedAssocCompany.smAddress.pmCountry.countryCode}"
+						style="width: 207px;margin-bottom: 5px;">
 						<f:selectItem itemLabel="-- Select  -- " itemValue="" />
 						<f:selectItem itemLabel="Malaysia" itemValue="1" />
 					</p:selectOneMenu></td>
@@ -150,33 +160,39 @@
 			<tr>
 				<td><p:outputLabel value="#{lbl['lbl.sm.postcode']}" /></td>
 				<td><p:inputText
-						value="#{backingBean.managedBean.selectedAssocCompany.smAddress.postcode}" /></td>
+						value="#{backingBean.managedBean.selectedAssocCompany.smAddress.postcode}"
+						size="35" /></td>
 			</tr>
 			<tr>
 				<td><p:outputLabel value="#{lbl['lbl.sm.state']}" /></td>
 				<td><p:inputText
-						value="#{backingBean.managedBean.selectedAssocCompany.smAddress.pmState.stateCode}" /></td>
+						value="#{backingBean.managedBean.selectedAssocCompany.smAddress.pmState.stateCode}"
+						size="35" /></td>
 			</tr>
 
 			<tr>
 				<td><p:outputLabel value="#{lbl['lbl.sm.district']}" /></td>
 				<td><p:inputText
-						value="#{backingBean.managedBean.selectedAssocCompany.smAddress.pmDistrict.districtCode}" /></td>
+						value="#{backingBean.managedBean.selectedAssocCompany.smAddress.pmDistrict.districtCode}"
+						size="35" /></td>
 			</tr>
 			<tr>
 				<td><p:outputLabel value="#{lbl['lbl.sm.towncity']}" /></td>
 				<td><p:inputText
-						value="#{backingBean.managedBean.selectedAssocCompany.smAddress.pmCity.cityCode}" /></td>
+						value="#{backingBean.managedBean.selectedAssocCompany.smAddress.pmCity.cityCode}"
+						size="35" /></td>
 			</tr>
 			<tr>
 				<td><p:outputLabel value="Phone NO." /></td>
 				<td><p:inputText
-						value="#{backingBean.managedBean.selectedAssocCompany.smAddress.phoneNo}" /></td>
+						value="#{backingBean.managedBean.selectedAssocCompany.smAddress.phoneNo}"
+						size="35" /></td>
 			</tr>
 			<tr>
 				<td><p:outputLabel value="Fax NO." /></td>
 				<td><p:inputText
-						value="#{backingBean.managedBean.selectedAssocCompany.smAddress.faxNo}" /></td>
+						value="#{backingBean.managedBean.selectedAssocCompany.smAddress.faxNo}"
+						size="35" /></td>
 			</tr>
 
 		</table>

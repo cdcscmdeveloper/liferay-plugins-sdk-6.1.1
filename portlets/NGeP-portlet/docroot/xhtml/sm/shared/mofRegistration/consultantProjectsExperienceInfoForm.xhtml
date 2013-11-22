@@ -80,19 +80,22 @@
 		<p:outputPanel rendered="#{backingBean.managedBean.poUser}">
 			<table style="width: 50%">
 				<tr>
-					<td><p:outputLabel value="PO Remarks" /></td>
-					<td><p:inputTextarea autoResize="true" /></td>
+					<td style="padding-left: 38px;"><p:outputLabel
+							value="PO Remarks" /></td>
+					<td><p:inputTextarea autoResize="true" cols="41" /></td>
 				</tr>
 			</table>
 		</p:outputPanel>
 		<p:outputPanel rendered="#{backingBean.managedBean.approverUser}">
 			<table style="width: 100%">
 				<tr>
-					<td><p:outputLabel value="PO Remarks" /></td>
+					<td style="padding-left: 38px;"><p:outputLabel
+							value="PO Remarks" /></td>
 					<td><p:inputTextarea autoResize="true" readonly="true"
-							disabled="true" /></td>
-					<td><p:outputLabel value="Approver Remarks" /></td>
-					<td><p:inputTextarea autoResize="true" /></td>
+							disabled="true" cols="41" /></td>
+					<td style="padding-left: 22px;"><p:outputLabel
+							value="Approver Remarks" /></td>
+					<td><p:inputTextarea autoResize="true" cols="41" /></td>
 
 				</tr>
 			</table>
@@ -100,7 +103,7 @@
 	</p:panel>
 	<p:dialog header="Project Details - For Consultant"
 		widgetVar="consDialog" resizable="false" showEffect="fade"
-		hideEffect="fade" modal="true" id="consDialog">
+		hideEffect="fade" modal="true" id="consDialog" width="500px">
 		<table style="width: 100%">
 			<tr>
 				<td valign="top">
@@ -109,27 +112,26 @@
 						<tr>
 							<td><p:outputLabel value="* Project Name" /></td>
 							<td><p:inputText
-									value="#{backingBean.managedBean.selectedConstProj.projectName}" /></td>
+									value="#{backingBean.managedBean.selectedConstProj.projectName}"
+									size="35" /></td>
 						</tr>
 						<tr>
 							<td><p:outputLabel value="* Project Ref NO." /></td>
 							<td><p:inputText
-									value="#{backingBean.managedBean.selectedConstProj.projectRefNo}" /></td>
+									value="#{backingBean.managedBean.selectedConstProj.projectRefNo}"
+									size="35" /></td>
 						</tr>
 						<tr>
 							<td><p:outputLabel value="* Project Location" /></td>
 							<td><p:inputText
-									value="#{backingBean.managedBean.selectedConstProj.projectLocation}" /></td>
+									value="#{backingBean.managedBean.selectedConstProj.projectLocation}"
+									size="35" /></td>
 						</tr>
 						<tr>
 							<td><p:outputLabel value="* Client's Name" /></td>
 							<td><p:inputText
-									value="#{backingBean.managedBean.selectedConstProj.clientName}" /></td>
-						</tr>
-						<tr>
-							<td><p:outputLabel value="* Appointment Date" /></td>
-							<td><p:calendar showOn="button"
-									value="#{backingBean.managedBean.selectedConstProj.appointmentDate}" /></td>
+									value="#{backingBean.managedBean.selectedConstProj.clientName}"
+									size="35" /></td>
 						</tr>
 						<tr>
 							<td><p:outputLabel value="* Project Cost" /></td>
@@ -137,7 +139,7 @@
 									<tr>
 										<td style="padding-right: 5px;"><p:inputText
 												value="#{backingBean.managedBean.selectedConstProj.projectCost}"
-												size="10" /></td>
+												size="20" /></td>
 										<td valign="top"><p:selectOneMenu
 												style="margin-bottom : 5px;">
 												<f:selectItem itemLabel="MYR" itemValue="1"></f:selectItem>
@@ -148,14 +150,14 @@
 						<tr>
 							<td><p:outputLabel value="* Service Provided" /></td>
 							<td><p:inputTextarea
-									value="#{backingBean.managedBean.selectedConstProj.serviceDesc}" />
-							</td>
+									value="#{backingBean.managedBean.selectedConstProj.serviceDesc}"
+									cols="36" style="margin-bottom:5px;" /></td>
 						</tr>
 						<tr>
 							<td><p:outputLabel value="* Work Progress(%)" /></td>
 							<td><p:inputText
-									value="#{backingBean.managedBean.selectedConstProj.workStatus}" />
-							</td>
+									value="#{backingBean.managedBean.selectedConstProj.workStatus}"
+									size="35" /></td>
 						</tr>
 						<tr>
 							<td><p:outputLabel value="* Consultant Fee" /></td>
@@ -163,13 +165,18 @@
 									<tr>
 										<td style="padding-right: 5px;"><p:inputText
 												value="#{backingBean.managedBean.selectedConstProj.consultantFee}"
-												size="10" /></td>
+												size="20" /></td>
 										<td valign="top"><p:selectOneMenu
 												style="margin-bottom : 5px;">
 												<f:selectItem itemLabel="MYR" itemValue="1"></f:selectItem>
 											</p:selectOneMenu></td>
 									</tr>
 								</table></td>
+						</tr>
+						<tr>
+							<td><p:outputLabel value="* Appointment Date" /></td>
+							<td><p:calendar showOn="button"
+									value="#{backingBean.managedBean.selectedConstProj.appointmentDate}" /></td>
 						</tr>
 					</table>
 

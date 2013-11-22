@@ -61,7 +61,8 @@
 				<p:commandLink action="#{backingBean.assignSelCert(certBean)}"
 					oncomplete="certDialog.show();" update=":form:tt:certPop">
 					<p:graphicImage library="ep/images/design" name="edit.png"
-						value="/resources/ep/images/design/edit.png" />
+						value="/resources/ep/images/design/edit.png"
+						style="margin-right:2px;" />
 				</p:commandLink>
 				<p:commandLink>
 					<p:graphicImage library="ep/images/design" name="delete.png"
@@ -79,72 +80,75 @@
 		<p:outputPanel rendered="#{backingBean.managedBean.poUser}">
 			<table style="width: 50%">
 				<tr>
-					<td><p:outputLabel value="PO Remarks" /></td>
-					<td><p:inputTextarea autoResize="true" /></td>
+					<td style="padding-left: 38px;"><p:outputLabel
+							value="PO Remarks" /></td>
+					<td><p:inputTextarea autoResize="true" cols="41" /></td>
 				</tr>
 			</table>
 		</p:outputPanel>
 		<p:outputPanel rendered="#{backingBean.managedBean.approverUser}">
 			<table style="width: 100%">
 				<tr>
-					<td><p:outputLabel value="PO Remarks" /></td>
+					<td style="padding-left: 38px;"><p:outputLabel
+							value="PO Remarks" /></td>
 					<td><p:inputTextarea autoResize="true" readonly="true"
-							disabled="true" /></td>
-					<td><p:outputLabel value="Approver Remarks" /></td>
-					<td><p:inputTextarea autoResize="true" /></td>
+							disabled="true" cols="41" /></td>
+					<td style="padding-left: 22px;"><p:outputLabel
+							value="Approver Remarks" /></td>
+					<td><p:inputTextarea autoResize="true" cols="41" /></td>
 
 				</tr>
 			</table>
 		</p:outputPanel>
 	</p:panel>
-	<p:dialog width="400px" header="Company Certificate Page"
+	<p:dialog width="500px" header="Company Certificate Page"
 		widgetVar="certDialog" resizable="false" showEffect="fade"
 		hideEffect="fade" modal="true" id="certPop">
 		<!-- <p:panel header="Certificate Details"> -->
 
-			<table style="width: 100%">
-				<tr>
-					<td><p:outputLabel value="Certificate Type *" /></td>
-					<td><p:selectOneMenu>
-							<f:selectItem itemLabel="-- Select One -- " itemValue="N" />
-							<f:selectItem itemLabel="MOF" itemValue="M" />
-							<f:selectItem itemLabel="BumiPutera" itemValue="B" />
-							<f:selectItem itemLabel="Type3" itemValue="T" />
-						</p:selectOneMenu></td>
-				</tr>
-				<tr>
-					<td><p:outputLabel value="Certificate Name *" /></td>
-					<td><p:inputText
-							value="#{backingBean.managedBean.selectedCert.certName}" /></td>
-				</tr>
-				<!-- <tr>
+		<table style="width: 100%">
+			<tr>
+				<td><p:outputLabel value="Certificate Type *" /></td>
+				<td><p:selectOneMenu style="width: 207px;margin-bottom: 5px;">
+						<f:selectItem itemLabel="-- Select -- " itemValue="N" />
+						<f:selectItem itemLabel="MOF" itemValue="M" />
+						<f:selectItem itemLabel="BumiPutera" itemValue="B" />
+						<f:selectItem itemLabel="Type3" itemValue="T" />
+					</p:selectOneMenu></td>
+			</tr>
+			<tr>
+				<td><p:outputLabel value="Certificate Name *" /></td>
+				<td><p:inputText
+						value="#{backingBean.managedBean.selectedCert.certName}" size="35" /></td>
+			</tr>
+			<!-- <tr>
 					<td><p:outputLabel value="Certificate Body *" /></td>
 					<td><p:inputTextarea readonly="true"
 							title="Auto populated based on the Certificate Type , 
 							can key the body for type - Others only "
 							value="#{backingBean.managedBean.selectedCert.certBody}" /></td>
 				</tr> -->
-				<tr>
-					<td><p:outputLabel value="Certificate Body *" /></td>
-					<td><p:selectOneMenu>
-							<f:selectItem itemLabel="-- Select  -- " itemValue="N" />
-							<f:selectItem itemLabel="Cert Body1" itemValue="M" />
-							<f:selectItem itemLabel="Cert Body2" itemValue="B" />
-							<f:selectItem itemLabel="Cert Body3" itemValue="T" />
-						</p:selectOneMenu></td>
-				</tr>
-				<tr>
-					<td><p:outputLabel value="* Start Date" /></td>
-					<td><p:calendar showOn="button"
-							value="#{backingBean.managedBean.selectedCert.certStartDate}" /></td>
-				</tr>
-				<tr>
-					<td><p:outputLabel value="* Expiry Date" /></td>
-					<td><p:calendar showOn="button"
-							value="#{backingBean.managedBean.selectedCert.certEndDate}" /></td>
-				</tr>
+			<tr>
+				<td><p:outputLabel value="Certificate Body *" /></td>
+				<td><p:selectOneMenu style="width: 207px;margin-bottom: 5px;">
+						<f:selectItem itemLabel="-- Select  -- " itemValue="N" />
+						<f:selectItem itemLabel="Cert Body1" itemValue="M" />
+						<f:selectItem itemLabel="Cert Body2" itemValue="B" />
+						<f:selectItem itemLabel="Cert Body3" itemValue="T" />
+					</p:selectOneMenu></td>
+			</tr>
+			<tr>
+				<td><p:outputLabel value="* Start Date" /></td>
+				<td><p:calendar showOn="button"
+						value="#{backingBean.managedBean.selectedCert.certStartDate}" /></td>
+			</tr>
+			<tr>
+				<td><p:outputLabel value="* Expiry Date" /></td>
+				<td><p:calendar showOn="button"
+						value="#{backingBean.managedBean.selectedCert.certEndDate}" /></td>
+			</tr>
 
-			</table>
+		</table>
 		<!-- </p:panel> -->
 		<br />
 		<div align="right">
