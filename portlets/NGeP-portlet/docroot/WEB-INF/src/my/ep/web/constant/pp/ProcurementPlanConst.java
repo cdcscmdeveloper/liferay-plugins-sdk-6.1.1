@@ -132,32 +132,24 @@ public class ProcurementPlanConst {
 	public static final String VOT_AMANAH = "AV";
 	public static final String VOT_WITHOUT = "AW";
 	
-	
-	//Reason Code
-	public static final String REASON_REJECT = "PPR";
-	public static final String REASON_CANCEL = "PPC";
+//	
+//	//Reason Code
+//	public static final String REASON_REJECT = "PPR";
+//	public static final String REASON_CANCEL = "PPC";
 	
 	
 	/** refer to PM_CODE **/
 	//PM Status Budget Allocation
-	public static final Long STATUS_PBA_NEW = 10001L;
-	public static final Long STATUS_PBA_PENDING_APPROVAL = 10002L;
-	public static final Long STATUS_PBA_SAVED = 10003L;
-	
+	public static final Long STATUS_PBA_PENDING_SUBMIT = 30020L;
+
 	//PM Status Budget Allocation Dtl
-	public static final Long STATUS_PBD_NEW = 10005L; 
+	public static final Long STATUS_PBD_PENDING_SUBMIT = 30025L; 
 	
 	//PM Status Plan
-	public static final Long STATUS_PPL_NEW = 10005L;
+	public static final Long STATUS_PPL_PENDING_SUBMIT = 30001L;
 	
 	//PM Status Plan Item
-	public static final Long STATUS_PPI_NEW = 10005L;
-	
-	public static final Long STATUS_PENDING_APPROVAL = 2L; 
-	public static final Long STATUS_PENDING_REVISION = 3L; 
-	
-	public static final String REASON_REJECT_OTHER = "3"; 
-	public static final String REASON_CANCEL_OTHER = "3";
+	public static final Long STATUS_PPI_PENDING_SUBMIT = 30009L;
 
 	
 	//Contract Type
@@ -216,24 +208,7 @@ public class ProcurementPlanConst {
 		return SO_PP;
 	}
 	
-	/**
-	 * @return the statusPbaNew
-	 */
-	public Long getStatusPbaNew() {
-		return STATUS_PBA_NEW;
-	}
-	/**
-	 * @return the statusPbaPendingApproval
-	 */
-	public Long getStatusPbaPendingApproval() {
-		return STATUS_PBA_PENDING_APPROVAL;
-	}
-	/**
-	 * @return the statusPbdNew
-	 */
-	public Long getStatusPbdNew() {
-		return STATUS_PBD_NEW;
-	}
+	
 	/**
 	 * @return the progPlan
 	 */
@@ -246,18 +221,7 @@ public class ProcurementPlanConst {
 	public String getProgBudget() {
 		return PROG_BUDGET;
 	}
-	/**
-	 * @return the statusPendingApproval
-	 */
-	public Long getStatusPendingApproval() {
-		return STATUS_PENDING_APPROVAL;
-	}
-	/**
-	 * @return the statusPendingRevision
-	 */
-	public Long getStatusPendingRevision() {
-		return STATUS_PENDING_REVISION;
-	}
+	
 	/**
 	 * @return the doctypePlan
 	 */
@@ -627,24 +591,6 @@ public class ProcurementPlanConst {
 	public String[] getBpmDefaultActions() {
 		return BPM_DEFAULT_ACTIONS;
 	}
-	/**
-	 * @return the statusPbaSaved
-	 */
-	public Long getStatusPbaSaved() {
-		return STATUS_PBA_SAVED;
-	}
-	/**
-	 * @return the statusPplNew
-	 */
-	public Long getStatusPplNew() {
-		return STATUS_PPL_NEW;
-	}
-	/**
-	 * @return the statusPpiNew
-	 */
-	public Long getStatusPpiNew() {
-		return STATUS_PPI_NEW;
-	}
 	
 	/**
 	 * @return the ppDet
@@ -706,30 +652,18 @@ public class ProcurementPlanConst {
 	public String getDateDisplayPattern() {
 		return DATE_DISPLAY_PATTERN;
 	}
-	/**
-	 * @return the reasonReject
-	 */
-	public String getReasonReject() {
-		return REASON_REJECT;
-	}
-	/**
-	 * @return the reasonCancel
-	 */
-	public String getReasonCancel() {
-		return REASON_CANCEL;
-	}
-	/**
-	 * @return the reasonRejectOther
-	 */
-	public String getReasonRejectOther() {
-		return REASON_REJECT_OTHER;
-	}
-	/**
-	 * @return the reasonCancelOther
-	 */
-	public String getReasonCancelOther() {
-		return REASON_CANCEL_OTHER;
-	}
+//	/**
+//	 * @return the reasonReject
+//	 */
+//	public String getReasonReject() {
+//		return REASON_REJECT;
+//	}
+//	/**
+//	 * @return the reasonCancel
+//	 */
+//	public String getReasonCancel() {
+//		return REASON_CANCEL;
+//	}
 	/**
 	 * @return the modeDraft
 	 */
@@ -742,6 +676,37 @@ public class ProcurementPlanConst {
 	public String getModeApprovalList() {
 		return MODE_APPROVAL_LIST;
 	}
+	/**
+	 * @return the module
+	 */
+	public String getModule() {
+		return MODULE;
+	}
+	/**
+	 * @return the statusPbaPendingSubmit
+	 */
+	public Long getStatusPbaPendingSubmit() {
+		return STATUS_PBA_PENDING_SUBMIT;
+	}
+	/**
+	 * @return the statusPbdPendingSubmit
+	 */
+	public Long getStatusPbdPendingSubmit() {
+		return STATUS_PBD_PENDING_SUBMIT;
+	}
+	/**
+	 * @return the statusPplPendingSubmit
+	 */
+	public Long getStatusPplPendingSubmit() {
+		return STATUS_PPL_PENDING_SUBMIT;
+	}
+	/**
+	 * @return the statusPpiPendingSubmit
+	 */
+	public Long getStatusPpiPendingSubmit() {
+		return STATUS_PPI_PENDING_SUBMIT;
+	}
+	
 	
 	
 }

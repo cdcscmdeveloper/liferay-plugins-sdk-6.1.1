@@ -2027,7 +2027,7 @@ table.ppTwoPartsTable, .ppThreePartsTable, .ppRmkTable{
 }
 
 table.ppTwoPartsTable th {
- 	text-align: right;
+ 	/*text-align: right;*/
 	width: 30%;
 	vertical-align: top;
 	padding: 2px;
@@ -2039,7 +2039,7 @@ table.ppTwoPartsTable td {
 }
 
 table.ppThreePartsTable th {
- 	text-align: right;
+ 	/*text-align: right;*/
 	width: 20%;
 	vertical-align: top;
 	padding: 2px;
@@ -2107,11 +2107,14 @@ table.ppThreePartsTable td {
 }
 
 
-.ppDisplayText{
+.ppDisplayTextL{
 	width: 300px;
 }
-.ppDisplayTextSmall{
+.ppDisplayTextM{
 	width: 200px;
+}
+.ppDisplayTextS{
+	width: 150px;
 }
 .ppHalf{
 	width: 50%;
@@ -2124,6 +2127,9 @@ table.ppThreePartsTable td {
 
 .ppNumericAlign{
 	text-align: right !important;
+}
+.ppCurrency{
+	width: 30px;
 }
 /*--------------------------       End PP Related      ------------------------------ */
 

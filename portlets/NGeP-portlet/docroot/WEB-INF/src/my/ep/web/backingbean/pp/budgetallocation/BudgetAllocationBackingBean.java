@@ -176,7 +176,7 @@ public class BudgetAllocationBackingBean extends BaseBackingBean<BudgetAllocatio
 		this.getManagedBean().setSelectedBudgetAllocation(new PpBudgetAlloc());
 //			this.getManagedBean().getSelectedBudgetAllocation().setPmStatus(
 //					CommonMethod.currentStatus(ProcurementPlanConst.STATUS_NEW, ProcurementPlanConst.DOCTYPE_BUDGET_ALLOC));
-		this.getManagedBean().getSelectedBudgetAllocation().setStatusId(ProcurementPlanConst.STATUS_PBA_NEW);//TODO
+		this.getManagedBean().getSelectedBudgetAllocation().setStatusId(ProcurementPlanConst.STATUS_PBA_PENDING_SUBMIT);//TODO
 		this.getManagedBean().getSelectedBudgetAllocation().setEditable(true);
 		this.getManagedBean().getSelectedBudgetAllocation().setPpRemarks(new ArrayList<PpRemark>());//TODO
 		this.getManagedBean().getSelectedBudgetAllocation().setPpBudgetAllocDtls(new ArrayList<PpBudgetAllocDtl>());
@@ -343,7 +343,7 @@ public class BudgetAllocationBackingBean extends BaseBackingBean<BudgetAllocatio
 
 		if(this.getManagedBean().getSelectedBudgetAllocItem().isBrandNew() && !this.getManagedBean().getSelectedBudgetAllocItem().isSelected()){
 			//update amount
-			this.getManagedBean().getSelectedBudgetAllocItem().setStatusId(ProcurementPlanConst.STATUS_PBD_NEW);
+			this.getManagedBean().getSelectedBudgetAllocItem().setStatusId(ProcurementPlanConst.STATUS_PBD_PENDING_SUBMIT);
 			updateSelectedGo(this.getManagedBean().getSelectedBudgetAllocItem(), "ADD");
 			this.getManagedBean().getSelectedBudgetAllocation().addPpBudgetAllocDtls(this.getManagedBean().getSelectedBudgetAllocItem());
 		}else{	
@@ -518,7 +518,7 @@ public class BudgetAllocationBackingBean extends BaseBackingBean<BudgetAllocatio
 				PpBudgetAlloc butgetAlloc = this.getManagedBean().getSelectedBudgetAllocation();
 				for(PpBudgetAllocDtl p :butgetAlloc.getPpBudgetAllocDtls()){
 					p.setRevisionRequired(false);
-					p.setStatusId(ProcurementPlanConst.STATUS_PENDING_APPROVAL); //TODO change 
+					p.setStatusId(ProcurementPlanConst.STATUS_PBD_PENDING_SUBMIT); //TODO change 
 				}
 			}
 			reqDTO.setAction(action);

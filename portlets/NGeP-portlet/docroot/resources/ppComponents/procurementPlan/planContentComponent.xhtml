@@ -46,7 +46,7 @@ xmlns:composite="http://java.sun.com/jsf/composite">
 							<tr>
 								<th>* <p:outputLabel value="#{lbl['lbl.pp.plan.number']}"/></th>
 								<td>	
-									<p:inputText disabled="true" styleClass="ppDisplayTextSmall"
+									<p:inputText disabled="true" styleClass="ppDisplayTextM"
 										value="#{cc.attrs.selectedPlan.planNo}"/>
 									<br/>
 								</td>
@@ -68,14 +68,14 @@ xmlns:composite="http://java.sun.com/jsf/composite">
 							
 							<th><p:outputLabel value="#{lbl['lbl.pp.status']}"/></th>
 							<td>
-								<p:inputText disabled="true" styleClass="ppDisplayTextSmall"
+								<p:inputText disabled="true" styleClass="ppDisplayTextM"
 									value="#{cc.attrs.selectedPlan.statusId}"/>
 							</td>
 						</tr>
 						<tr>
 							<th><p:outputLabel value="#{lbl['lbl.pp.ministry.code.name']}"/></th>
 							<td>
-								<p:inputText disabled="true" styleClass="ppDisplayTextSmall"
+								<p:inputText disabled="true" styleClass="ppDisplayTextM"
 									value="#{cc.attrs.selectedPlanMaster.orgProfile.parentOrgProfile.parentOrgProfile.orgCode} / #{cc.attrs.selectedPlanMaster.orgProfile.parentOrgProfile.parentOrgProfile.orgName}"/>
 							</td>
 							
@@ -93,7 +93,7 @@ xmlns:composite="http://java.sun.com/jsf/composite">
 						<tr>
 							<th><p:outputLabel value="#{lbl['lbl.pp.jabatan.code.name']}"/></th>
 							<td>
-								<p:inputText disabled="true" styleClass="ppDisplayTextSmall"
+								<p:inputText disabled="true" styleClass="ppDisplayTextM"
 									value="#{cc.attrs.selectedPlanMaster.orgProfile.parentOrgProfile.orgCode} / #{cc.attrs.selectedPlanMaster.orgProfile.parentOrgProfile.orgName}" />
 							</td>
 							
@@ -105,7 +105,7 @@ xmlns:composite="http://java.sun.com/jsf/composite">
 						<tr>
 							<th><p:outputLabel value="#{lbl['lbl.pp.ptj.code.name']}"/></th>
 							<td>
-								<p:inputText disabled="true" styleClass="ppDisplayTextSmall"
+								<p:inputText disabled="true" styleClass="ppDisplayTextM"
 									value="#{cc.attrs.selectedPlanMaster.orgProfile.orgCode} / #{cc.attrs.selectedPlanMaster.orgProfile.orgName}" /> 
 							</td>
 							
@@ -124,7 +124,7 @@ xmlns:composite="http://java.sun.com/jsf/composite">
 							
 							<th><p:outputLabel value="#{lbl['lbl.pp.total.estimated.amount']}"/></th>
 							<td>
-								<p:inputText disabled="true" styleClass="ppDisplayTextSmall"
+								<p:inputText disabled="true" styleClass="ppDisplayTextM"
 									value="#{cc.attrs.selectedPlan.estimatedAmount}"/>
 							</td>
 						</tr>

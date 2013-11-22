@@ -188,7 +188,7 @@ xmlns:c="http://java.sun.com/jsp/jstl/core"
 	    			<th><p:outputLabel value="#{lbl['lbl.pp.gosodo.name']}"/></th>
 					<td>
 						<p:outputPanel id="opGosodo">
-							<p:inputText disabled="true" styleClass="ppDisplayText"
+							<p:inputText disabled="true" styleClass="ppDisplayTextL"
 								value="#{budgetAllocationBackingBean.managedBean.selectedBudgetAllocItem.pmDo.pmSo.pmGo.goName} #{budgetAllocationBackingBean.managedBean.selectedBudgetAllocItem.pmDo.pmSo.soName} #{budgetAllocationBackingBean.managedBean.selectedBudgetAllocItem.pmDo.doName}"/>
 						</p:outputPanel>    
 					</td>
@@ -207,14 +207,15 @@ xmlns:c="http://java.sun.com/jsp/jstl/core"
 	    		<tr>
 	    			<th><p:outputLabel value="#{lbl['lbl.pp.budgeted.amount']}"/></th>
 					<td>
-						<p:inputText disabled="true" styleClass="ppDisplayText"
+						<p:inputText disabled="true" styleClass="ppDisplayTextL"
 							value="#{budgetAllocationBackingBean.managedBean.selectedBudgetAllocItem.ppBudget.budgetAmount}"/>
+						
 					</td>
 	    		</tr>
 	    		<tr>
 	    			<th><p:outputLabel value="#{lbl['lbl.pp.available.amount']}"/></th>
 					<td>
-						<p:inputText disabled="true" styleClass="ppDisplayText"
+						<p:inputText disabled="true" styleClass="ppDisplayTextL"
 								value="#{budgetAllocationBackingBean.generateAvailableBudget()}"/>
 					</td>
 	    		</tr>

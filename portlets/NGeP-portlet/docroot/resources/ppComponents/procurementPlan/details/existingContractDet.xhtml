@@ -37,7 +37,7 @@ xmlns:c="http://java.sun.com/jsp/jstl/core">
 						<th><p:outputLabel value="#{lbl['lbl.pp.supplier.id']}"/></th>
 						<td>
 							<p:outputPanel id="opSupId">
-								<p:inputText disabled="true" styleClass="ppDisplayTextSmall"
+								<p:inputText disabled="true" styleClass="ppDisplayTextM"
 									value="#{planBackingBean.managedBean.selectedPlanItem.ctContract.smSupplier!=null? 
 									planBackingBean.managedBean.selectedPlanItem.ctContract.smSupplier.supplierId 
 									: ''}"/>
@@ -60,7 +60,7 @@ xmlns:c="http://java.sun.com/jsp/jstl/core">
 						<th><p:outputLabel value="#{lbl['lbl.pp.supplier.name']}"/></th>
 						<td>
 							<p:outputPanel id="opSupName">
-								<p:inputText disabled="true" styleClass="ppDisplayTextSmall"
+								<p:inputText disabled="true" styleClass="ppDisplayTextM"
 									value="#{planBackingBean.managedBean.selectedPlanItem.ctContract.smSupplier!=null? 
 									planBackingBean.managedBean.selectedPlanItem.ctContract.smSupplier.supplierName : 
 									''}"/>
@@ -85,7 +85,7 @@ xmlns:c="http://java.sun.com/jsp/jstl/core">
 						<th><p:outputLabel value="#{lbl['lbl.pp.duration.month']}"/></th>
 						<td>
 							<p:outputPanel id="opDuration">
-								<p:inputText disabled="true" styleClass="ppDisplayTextSmall"
+								<p:inputText disabled="true" styleClass="ppDisplayTextM"
 									value="#{planBackingBean.managedBean.selectedPlanItem.ctContract.contractValue!=null? planBackingBean.managedBean.selectedPlanItem.ctContract.contractValue.contractPeriod : ''}" />
 							</p:outputPanel>
 							
@@ -162,7 +162,7 @@ xmlns:c="http://java.sun.com/jsp/jstl/core">
 						</th>
 						<td>
 							<p:outputPanel id="opEndDate">
-								<p:inputText disabled="true" styleClass="ppDisplayTextSmall"
+								<p:inputText disabled="true" styleClass="ppDisplayTextM"
 									value="#{cc.attrs.selectedPlanMaster.fulfilmentType==PPConst.fulfillmentSchedule ?
 									planBackingBean.managedBean.selectedPlanItem.planEndDate :  
 									planBackingBean.managedBean.selectedPlanItem.planEndMonthString}"/>

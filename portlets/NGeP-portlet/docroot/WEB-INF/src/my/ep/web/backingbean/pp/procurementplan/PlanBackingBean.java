@@ -406,7 +406,7 @@ public class PlanBackingBean extends BaseBackingBean<PlanManagedBean>{
 		planMaster.setPpPlans(new ArrayList<PpPlan>());
 		planMaster.getSelectedGoMapper().clear();
 		plan.setEditable(true);
-		plan.setStatusId(ProcurementPlanConst.STATUS_PPL_NEW);
+		plan.setStatusId(ProcurementPlanConst.STATUS_PPL_PENDING_SUBMIT);
 		plan.setPpRemarks(new ArrayList<PpRemark>());
 		plan.setPpQtActivities(new ArrayList<PpQtActivity>());
 		
@@ -841,7 +841,7 @@ public class PlanBackingBean extends BaseBackingBean<PlanManagedBean>{
 	
 		if(this.getManagedBean().getSelectedItem().isBrandNew() && !this.getManagedBean().getSelectedItem().isSelected()){
 			//update amount
-			this.getManagedBean().getSelectedItem().setStatusId(ProcurementPlanConst.STATUS_PBD_NEW);
+			this.getManagedBean().getSelectedItem().setStatusId(ProcurementPlanConst.STATUS_PPI_PENDING_SUBMIT);
 			updateSelectedDo(this.getManagedBean().getSelectedItem(), "ADD");
 			if(ProcurementPlanConst.PLAN_TYPE_EXPENDITURE.equals(this.getManagedBean().getSelectedPlanMaster().getPlanType())){
 				this.getManagedBean().getSelectedPlanItem().addPpPlanItems(this.getManagedBean().getSelectedItem());
@@ -1758,7 +1758,7 @@ public class PlanBackingBean extends BaseBackingBean<PlanManagedBean>{
 	 * @return List<PmReasonDesc> 
 	 */
 	public List<PmReasonDesc> rejectionReasonOptions(){
-		return reasonOptions(ProcurementPlanConst.REASON_REJECT);
+		return reasonOptions(ReasonCategory.PROCUREMENT_PLAN_REJECTION.value());
 	}
 
 	/**
@@ -1771,7 +1771,7 @@ public class PlanBackingBean extends BaseBackingBean<PlanManagedBean>{
 		try{
 			FacesScopes fs = new FacesScopes();
 			ReasonReqDTO reqDTO = new ReasonReqDTO();
-			reqDTO.setReasonCategory(ReasonCategory.PROCUREMENT_PLAN_REJECTION.value());
+			reqDTO.setReasonCategory(category);
 			reqDTO.setLanguage(fs.getUserLocale().getLanguage());
 			IReasonSO reqSO = (IReasonSO) BusinessDelegate.getInstance().getServiceObject("pm", IReasonSO.class);
 			ReasonResDTO resDTO = reqSO.retrieveReasonDescListByCategory(reqDTO);

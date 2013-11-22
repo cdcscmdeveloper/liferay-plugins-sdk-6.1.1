@@ -20,19 +20,19 @@ xmlns:tp="http://java.sun.com/jsf/composite/ep"
 					<tr>
 						<td><p:outputLabel
 								value="#{lbl['lbl.pp.ministry.code.name']}" /></td>
-						<td><p:inputText disabled="true" styleClass="ppDisplayText"
+						<td><p:inputText disabled="true" styleClass="ppDisplayTextL"
 								value="#{planBackingBean.managedBean.currentUser.parentOrgProfile.parentOrgProfile.orgCode} / #{planBackingBean.managedBean.currentUser.parentOrgProfile.parentOrgProfile.orgName}" />
 						</td>
 					</tr>
 					<tr>
 						<td><p:outputLabel value="#{lbl['lbl.pp.jabatan.code.name']}" /></td>
-						<td><p:inputText disabled="true" styleClass="ppDisplayText"
+						<td><p:inputText disabled="true" styleClass="ppDisplayTextL"
 								value="#{planBackingBean.managedBean.currentUser.parentOrgProfile.orgCode} / #{planBackingBean.managedBean.currentUser.parentOrgProfile.orgName}" />
 						</td>
 					</tr>
 					<tr>
 						<td><p:outputLabel value="#{lbl['lbl.pp.ptj.code.name']}" /></td>
-						<td><p:inputText disabled="true" styleClass="ppDisplayText"
+						<td><p:inputText disabled="true" styleClass="ppDisplayTextL"
 								value="#{planBackingBean.managedBean.currentUser.orgCode} / #{planBackingBean.managedBean.currentUser.orgName}" />
 						</td>
 					</tr>
@@ -53,7 +53,8 @@ xmlns:tp="http://java.sun.com/jsf/composite/ep"
 								value="#{planBackingBean.managedBean.ppSearchPlan.status}">
 								<f:selectItem itemLabel="#{lbl['lbl.select']}"
 									itemValue="#{null}" />
-								<f:selectItem itemLabel="New" itemValue="10005" />
+								<f:selectItem itemLabel="Draft" itemValue="30001" />
+								<f:selectItem itemLabel="Pending Approval" itemValue="30004" />
 							</p:selectOneMenu></td>
 						<td>&nbsp;</td>
 					</tr>
