@@ -40,7 +40,7 @@ public class ShippingInstrManagedBean extends BaseManagedBean {
 		private List <CtContract> contractList;
 		private CtContract selectedContract;
 		private String tempLogin;
-		private Long flRequest;
+		private FlFulfilmentRequest flRequest;
 		
 
 	/**
@@ -142,17 +142,18 @@ public class ShippingInstrManagedBean extends BaseManagedBean {
 	}
 
 	/**
-	 * @param flRequest the flRequest to set
+	 * @return the flRequest
 	 */
-	public void setFlRequest(Long flRequest) {
-		this.flRequest = flRequest;
+	public FlFulfilmentRequest getFlRequest() {
+		return flRequest;
 	}
 
 	/**
-	 * @return the flRequest
+	 * @param flRequest the flRequest to set
 	 */
-	public Long getFlRequest() {
-		return flRequest;
-	} 
+	public void setFlRequest(FlFulfilmentRequest flRequest) {
+		this.flRequest = flRequest;
+	}
+
 
 }

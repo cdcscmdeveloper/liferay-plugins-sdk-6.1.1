@@ -73,6 +73,7 @@ import my.ep.persistence.entity.fl.payment.FlInvoice;
 import my.ep.persistence.entity.fl.payment.FlPaymentAdvice;
 import my.ep.persistence.entity.fl.request.FlDeliveryAddress;
 import my.ep.persistence.entity.fl.request.FlFulfilmentRequest;
+import my.ep.persistence.entity.fl.request.FlShippingInstr;
 import my.ep.persistence.entity.pm.authorization.PmOrgProfile;
 import my.ep.persistence.entity.pm.common.PmStatus;
 import my.ep.util.lookupservice.EpBpmBusinessDelegate;
@@ -262,7 +263,7 @@ public class TaskListBackingBean extends BaseBackingBean<TaskListManagedBean> {
 			UnspscCodeBackingBean unspscBB = new UnspscCodeBackingBean();
 			unspscBB.getManagedBean().setRequestCode(resDTO.getRequestCode());
 
-		} else if(res.getProcessName().equalsIgnoreCase(FlProcessNameConst.CONTRACT_REQ_CREATION_PROCESS_NAME) || (res.getProcessName().equalsIgnoreCase(FlProcessNameConst.CONTRACT_REQ_INITIATION_PROCESS_NAME) || (res.getProcessName().equalsIgnoreCase(FlProcessNameConst.MTO_CONTRACT_REQ_CREATION_PROCESS_NAME)))){
+		} else if(res.getProcessName().equalsIgnoreCase(FlProcessNameConst.MTO_CONTRACT_REQ_CREATION_PROCESS_NAME) ||res.getProcessName().equalsIgnoreCase(FlProcessNameConst.CONTRACT_REQ_CREATION_PROCESS_NAME) || (res.getProcessName().equalsIgnoreCase(FlProcessNameConst.CONTRACT_REQ_INITIATION_PROCESS_NAME) || (res.getProcessName().equalsIgnoreCase(FlProcessNameConst.MTO_CONTRACT_REQ_CREATION_PROCESS_NAME)))){
 			IFulfilmentRequestSO requestSO = (IFulfilmentRequestSO) BusinessDelegate.getInstance().getServiceObject("fl",IFulfilmentRequestSO.class);
 			IShippingInstructionSO shippingSO = (IShippingInstructionSO) BusinessDelegate.getInstance().getServiceObject("fl", IShippingInstructionSO.class);
 			FulfilmentReqDTO flReqDTO = new FulfilmentReqDTO();
@@ -274,20 +275,29 @@ public class TaskListBackingBean extends BaseBackingBean<TaskListManagedBean> {
 				flReqDTO.setFlRequestId(coObj.getContractRequestId());
 			}
 			flReqDTO.setSelectedApprovers(coObj.getApproverList());
-			if(getManagedBean().getTaskName().equalsIgnoreCase(FlProcessNameConst.CREATE_SI_HT) || getManagedBean().getTaskName().equalsIgnoreCase(FlProcessNameConst.REVIEW_SI_HT)){
-				System.out.println("--shipping instr--");
+			if(getManagedBean().getTaskName().equalsIgnoreCase(FlProcessNameConst.REVIEW_SI_HT)){
 				resDTO = shippingSO.retrieveShippingInstruction(flReqDTO);
 			}else{
 			resDTO = requestSO.retrieveFulfilmentRequest(flReqDTO);
 			}
-			if(getManagedBean().getTaskName().equalsIgnoreCase(FlProcessNameConst.REVISE_SI_HT)||getManagedBean().getTaskName().equalsIgnoreCase(FlProcessNameConst.CREATE_SI_HT) || getManagedBean().getTaskName().equalsIgnoreCase(FlProcessNameConst.REVIEW_SI_HT)){
+			if(getManagedBean().getTaskName().equalsIgnoreCase(FlProcessNameConst.REVISE_SI_HT)|| getManagedBean().getTaskName().equalsIgnoreCase(FlProcessNameConst.REVIEW_SI_HT)){
 				ShippingInstrBackingBean siBB = new ShippingInstrBackingBean();
 				siBB.getManagedBean().setShippingInstr(resDTO.getShippingInstr());
-				siBB.getManagedBean().setFlRequest(flReqDTO.getFlRequestId());
+				siBB.getManagedBean().setFlRequest(resDTO.getShippingInstr().getFlFulfilmentRequest());
 				siBB.getManagedBean().setBpmTaskId(taskId);
 				siBB.getManagedBean().setActions(res.getAction());
 				siBB.getManagedBean().setTempLogin(this.getManagedBean().getTempLoginId());
-				}else if(res.getTaskName().equalsIgnoreCase(FlProcessNameConst.CREATE_NEW_CO_HT)||res.getTaskName().equalsIgnoreCase(FlProcessNameConst.CREATE_CO_HT) || res.getTaskName().equalsIgnoreCase(FlProcessNameConst.REVIEW_CR_HT) || res.getTaskName().equalsIgnoreCase(FlProcessNameConst.REVISE_CR_HT) || res.getTaskName().equalsIgnoreCase(FlProcessNameConst.CREATE_NORMAL_CO_HT) || res.getTaskName().equalsIgnoreCase(FlProcessNameConst.REVIEW_MTO_CR_HT)){
+				}else if (getManagedBean().getTaskName().equalsIgnoreCase(FlProcessNameConst.CREATE_SI_HT)){
+					ShippingInstrBackingBean siBB = new ShippingInstrBackingBean();
+					FlShippingInstr flSi = new FlShippingInstr();
+					flSi.setFlFulfilmentRequest(resDTO.getFlFulfilmentRequest());
+					siBB.getManagedBean().setShippingInstr(flSi);
+//					siBB.getManagedBean().setFlRequest(resDTO.getFlFulfilmentRequest());
+					siBB.getManagedBean().setBpmTaskId(taskId);
+					siBB.getManagedBean().setActions(res.getAction());
+					siBB.getManagedBean().setTempLogin(this.getManagedBean().getTempLoginId());
+				}
+				else if(res.getTaskName().equalsIgnoreCase(FlProcessNameConst.CREATE_NEW_CO_HT)||res.getTaskName().equalsIgnoreCase(FlProcessNameConst.CREATE_CO_HT) || res.getTaskName().equalsIgnoreCase(FlProcessNameConst.REVIEW_CR_HT) || res.getTaskName().equalsIgnoreCase(FlProcessNameConst.REVISE_CR_HT) || res.getTaskName().equalsIgnoreCase(FlProcessNameConst.CREATE_NORMAL_CO_HT) || res.getTaskName().equalsIgnoreCase(FlProcessNameConst.REVIEW_MTO_CR_HT)){
 
 				ContractRequestBackingBean crBB = new ContractRequestBackingBean();
 				FulfilmentBackingBean flBB = new FulfilmentBackingBean();
