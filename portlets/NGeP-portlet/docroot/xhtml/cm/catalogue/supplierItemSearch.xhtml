@@ -90,7 +90,7 @@
 							<div style="border-bottom: 1px solid #EEE;">
 								<table style="width: 100%;">
 									<tr>
-										<td width="85%">
+										<td width="80%">
 
 											<table style="width: 100%;">
 												<tr>
@@ -111,7 +111,7 @@
 												<tr>
 													<td style="font-weight: bold; width: 15%;"><p:outputLabel
 															value="Supplier:"></p:outputLabel></td>
-													<td>ABC SDN BHD<p:commandButton icon="ui-icon-add" value="Favorite"
+													<td>ABC SDN BHD<p:commandButton icon="ui-icon-add" value="Bookmark"
 															action="#{favoriteSupplierBackingBean.addToFavoriteSupplier(supplierItem.supplierId)}"
 															update=":form:supplierItemViewID">
 														
@@ -121,13 +121,13 @@
 											</table>
 
 										</td>
-										<td width="15%"
+										<td width="20%"
 											style="background-color: #EEEEEE; padding-left: 5px;">
 											<table>
 												<tr>
-													<td style="font-weight: bold; border-bottom: 1px solid">Price
-														(MYR)</td>
-													<td rowspan="2" style="padding-left: 5px;"><p:commandLink
+													<td style="font-weight: bold !important; border-bottom: 1px solid"><p:outputLabel> Price
+														(MYR)</p:outputLabel></td>
+													<td rowspan="2" style="padding-left: 6px;width: 20%;"><p:commandLink
 															action="#{catalogueBackingBean.addToCart}"
 															update=":form:supplierItemViewID">
 															<p:graphicImage
@@ -135,7 +135,7 @@
 														</p:commandLink></td>
 												</tr>
 												<tr>
-													<td><p:outputLabel value="1000.00"></p:outputLabel></td>
+													<td><p:outputLabel style="font-size: 14px;" value="1000.00"></p:outputLabel></td>
 													<td></td>
 												</tr>
 
@@ -156,7 +156,7 @@
 					</p:panel></td>
 				<td width="30%" style="vertical-align: top;"><div
 						class="accordian-panel" style="width: 80%;">
-						<p:outputLabel styleClass="accordian-title" value="My Favorites"></p:outputLabel>
+						<p:outputLabel styleClass="accordian-title" value="Watch Lists"></p:outputLabel>
 						<p:accordionPanel multiple="true">
 							<p:tab
 								title="WishList ( #{fn:length(catalogueBackingBean.managedBean.wishLists)} ) ">
