@@ -5,7 +5,8 @@
 	xmlns:h="http://java.sun.com/jsf/html"
 	xmlns:ui="http://java.sun.com/jsf/facelets"
 	xmlns:p="http://primefaces.org/ui"
-	xmlns:c="http://java.sun.com/jsp/jstl/core">
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+xmlns:ac="http://ac.my/jsf/composite/cc">
 
 	<p:outputPanel id="opViewPlanContent">
 
@@ -16,10 +17,11 @@
 		update="@form"  />  -->
 
 		<p:dataTable id="dtPlanResult" styleClass="ppTableFull" var="ppPlan"
-			value="#{planBackingBean.managedBean.planList}"
+			value="#{planBackingBean.planDataModel}"
+			lazy="true"
 			rowIndexVar="rowIndex"
 			emptyMessage="#{lbl['lbl.pp.no.record.found']}">
-
+			<ac:paginator for="dtPlanResult" />
 			<p:column headerText="#{lbl['lbl.pp.details']}">
 				<p:commandLink id="clPlanDetails"
 					action="#{planBackingBean.redirectToPlanContent(ppPlan)}">  

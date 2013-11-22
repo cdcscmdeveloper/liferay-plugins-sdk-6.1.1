@@ -18,6 +18,7 @@ import javax.faces.model.SelectItem;
 import javax.servlet.http.HttpServletRequest;
 
 import my.ep.biz.bean.search.ISearchBean;
+import my.ep.biz.bean.search.ISearchResultBean;
 import my.ep.biz.bean.search.SearchBean;
 import my.ep.biz.bean.search.SearchBetweenValue;
 import my.ep.biz.bean.search.SearchFilterBean;
@@ -88,6 +89,8 @@ import my.ep.type.pm.OrganizationType;
 import my.ep.type.pm.ReasonCategory;
 import my.ep.util.lookupservice.EpBpmBusinessDelegate;
 import my.ep.web.backingbean.BaseBackingBean;
+import my.ep.web.bean.paginator.IPagingDataModel;
+import my.ep.web.bean.paginator.PagingDataModel;
 import my.ep.web.bean.pp.ProcurementPlanSearchBean;
 import my.ep.web.constant.BpmOutcomeConst;
 import my.ep.web.constant.pp.ProcurementPlanConst;
@@ -108,21 +111,13 @@ public class PlanBackingBean extends BaseBackingBean<PlanManagedBean>{
 	private static Logger log = Logger.getLogger(PlanBackingBean.class);
 	private final static Long USER_ID_PTJ= 4L; //TEMP
 
-//	private IPagingDataModel<PpPlan> planDataModel = new PlanPagingDataModel();
+	private IPagingDataModel<PpPlan> planDataModel = new PlanPagingDataModel();
 	
 	
-	/**
-	 * search plan
-	 */
-	public void searchPlan(boolean defaultMode){
-		log.info("planSearch - Start");
-		
-		List<PpPlan> planList = new ArrayList<PpPlan>();
-		ProcurementPlanSearchBean ppSearchBean = this.getManagedBean().getPpSearchPlan();
-		IProcurementPlanSO procurementPlanSO = (IProcurementPlanSO) BusinessDelegate.getInstance().getServiceObject(ProcurementPlanConst.SO_PP, IProcurementPlanSO.class);
-		ProcurementPlanReqDTO reqDTO = new ProcurementPlanReqDTO();
-		
+	private ISearchBean<PpPlan> getSearchBean(){
+		log.info("getSearchBean - Start");
 		ISearchBean<PpPlan> searchBean = new SearchBean<PpPlan>();
+		ProcurementPlanSearchBean ppSearchBean = this.getManagedBean().getPpSearchPlan();
 		
 		//filter by profile
 		SearchFilterBean defaultBean = new SearchFilterBean();
@@ -131,7 +126,7 @@ public class PlanBackingBean extends BaseBackingBean<PlanManagedBean>{
 		defaultBean.setSearchValue(this.getManagedBean().getCurrentUser().getOrgProfileId());
 		searchBean.getDataFilterBeans().add(defaultBean);
 		
-		if(!defaultMode){
+		
 			if(ppSearchBean.getStatus()!=null && CommonMethod.isSelected(ppSearchBean.getStatus())){
 				log.info("+ status " + ppSearchBean.getStatus());
 				SearchFilterBean bean = new SearchFilterBean();
@@ -174,14 +169,19 @@ public class PlanBackingBean extends BaseBackingBean<PlanManagedBean>{
 				bean.setSearchValue(betweenVal);
 				searchBean.getDataFilterBeans().add(bean);
 			}
-		}
-		reqDTO.setSearchBean(searchBean);
-		ProcurementPlanResDTO resDTO = procurementPlanSO.retrievePlanListByParams(reqDTO);
-		if(resDTO.isSuccessful()){
-			planList = resDTO.getPlanList();
-		}
-		log.info("size:"+planList.size());
-		this.getManagedBean().setPlanList(planList);
+		
+
+		log.info("getSearchBean - End");
+		return searchBean;
+	}
+	/**
+	 * search plan
+	 */
+	public void searchPlan(boolean defaultMode){
+		log.info("planSearch - Start");
+		
+		planDataModel.reloadData();
+		
 		
 		log.info("planSearch - End");
 		
@@ -2420,69 +2420,66 @@ public class PlanBackingBean extends BaseBackingBean<PlanManagedBean>{
 
 	}
 
-//	private class PlanPagingDataModel extends PagingDataModel<PpPlan> {
-//		private static final long serialVersionUID = 1L;
-//
-//		public PlanPagingDataModel() {
-//			super("dtPlan");
-//		}
-//
-//		
-//		/**
-//		 * @author ktfong
-//		 * @since 28.10.2013
-//		 * retrieve default budget by ministry id
-//		 * 
-//		 * @see my.ep.web.bean.paginator.PagingDataModel#pageChangeListener(my.ep.biz.bean.search.ISearchBean)
-//		 */
-//		@Override
-//		public ISearchResultBean<PpPlan> pageChangeListener(ISearchBean<PpPlan> searchBean) {
-//			if (log.isDebugEnabled()) {
-//				log.debug("pageChangeListener");
-//			}
-//			/*if (super.getWrappedData() != null) {
-//				SearchResultBean<PpBudget> resultBean = new SearchResultBean<PpBudget>();
-//				resultBean.setResultList((List<PpBudget>)super.getWrappedData());
-//				resultBean.setTotalRecord(super.getRowCount());
-//				
-//				return resultBean;
-//			}*/
-//			
-//			try {				
-//				BudgetReqDTO reqDTO = new BudgetReqDTO();
-//				
-//				searchBean.getDataFilterBeans().add(new SearchFilterBean(
-//						"orgProfileId", 
-//						SearchOperator.OPERATOR_EQUALS.value(), 
-//						USER_ID_MIN));
-//				reqDTO.setBudgetSearchBean(searchBean);	
-//				
-//				IBudgetSO reqSO = (IBudgetSO) BusinessDelegate.getInstance().getServiceObject(ProcurementPlanConst.SO_PP, IBudgetSO.class);
-//				
-//				BudgetResDTO resDTO = reqSO.retrieveBudgetList(reqDTO);
-//				
-//				if (resDTO.isSuccessful()) {
-//					return resDTO.getBudgetResultBean();
-//				}
-//			} catch (Exception e) {
-//				e.printStackTrace();
-//			}
-//
-//			return null;
-//		}
-//	}
-//
-//	/**
-//	 * @return the planDataModel
-//	 */
-//	public IPagingDataModel<PpPlan> getPlanPagingDataModel() {
-//		return planDataModel;
-//	}
-//
-//	/**
-//	 * @param planDataModel the planDataModel to set
-//	 */
-//	public void setPlanPagingDataModel(IPagingDataModel<PpPlan> planDataModel) {
-//		this.planDataModel = planDataModel;
-//	}
+	private class PlanPagingDataModel extends PagingDataModel<PpPlan> {
+		private static final long serialVersionUID = 1L;
+
+		public PlanPagingDataModel() {
+			super("dtPlanResult");
+		}
+
+		
+		/**
+		 * @author htpoh
+		 * @since 22.11.2013
+		 * retrieve default plans by org profile id
+		 * 
+		 * @see my.ep.web.bean.paginator.PagingDataModel#pageChangeListener(my.ep.biz.bean.search.ISearchBean)
+		 */
+		@Override
+		public ISearchResultBean<PpPlan> pageChangeListener(ISearchBean<PpPlan> searchBean) {
+			if (log.isDebugEnabled()) {
+				log.debug("pageChangeListener");
+			}
+			/*if (super.getWrappedData() != null) {
+				SearchResultBean<PpBudget> resultBean = new SearchResultBean<PpBudget>();
+				resultBean.setResultList((List<PpBudget>)super.getWrappedData());
+				resultBean.setTotalRecord(super.getRowCount());
+				
+				return resultBean;
+			}*/
+			
+			try {				
+				
+				
+				ISearchBean<PpPlan> searchBean1 = getSearchBean();
+				
+				IProcurementPlanSO procurementPlanSO = (IProcurementPlanSO) BusinessDelegate.getInstance().getServiceObject(ProcurementPlanConst.SO_PP, IProcurementPlanSO.class);
+				ProcurementPlanReqDTO reqDTO = new ProcurementPlanReqDTO();
+				reqDTO.setSearchBean(searchBean1);
+				ProcurementPlanResDTO resDTO = procurementPlanSO.retrievePlanListByParams(reqDTO);
+				if(resDTO.isSuccessful()){
+					return resDTO.getPpPlanResultBean();
+				}
+
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+
+			return null;
+		}
+	}
+
+	/**
+	 * @return the planDataModel
+	 */
+	public IPagingDataModel<PpPlan> getPlanDataModel() {
+		return planDataModel;
+	}
+	/**
+	 * @param planDataModel the planDataModel to set
+	 */
+	public void setPlanDataModel(IPagingDataModel<PpPlan> planDataModel) {
+		this.planDataModel = planDataModel;
+	}
+	
 }
