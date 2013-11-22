@@ -70,14 +70,14 @@
             </td><td>
 				<p:selectOneMenu
 					value="#{TemplateMBB.managedBean.specificationType}">
-					<f:selectItem itemLabel="Select One" itemValue="0" />
+					<f:selectItem itemLabel="Select One" itemValue=" " />
 					<f:selectItems  value="#{TemplateMBB.managedBean.checkListItem}" />
-					
+					<p:ajax event="change" listener="#{TemplateMBB.selectChecklist}" update="checkList"></p:ajax>
 				</p:selectOneMenu>
 				</td></tr><tr><td>
 				<h:outputLabel value="Title"></h:outputLabel>
               </td><td>
-				<p:inputText size="50"
+				<p:inputText size="50" id="checkList" disabled="#{TemplateMBB.managedBean.specificationType !=null}"
 					value="#{TemplateMBB.managedBean.scqtDoc.tplSpecMaster.specName}" />
                </td></tr><tr><td>
 
