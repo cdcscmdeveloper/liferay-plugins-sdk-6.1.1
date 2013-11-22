@@ -48,12 +48,13 @@ xmlns:tp="http://java.sun.com/jsf/composite/ppComponents/procurementPlan"
 		
 		<p:tabView widgetVar="tvPlanVar" id="tvPlan" dynamic="true" cache="false" orientation="left">
 			<p:ajax event="tabChange" listener="#{planBackingBean.updateCurrentView}"/>  
-		    <p:tab id="#{PPConst.currentNew}" styleClass="#{PPConst.currentNew}" title="#{planBackingBean.generateHeader(planBackingBean.managedBean.viewMode)}">
+		    <p:tab id="#{PPConst.currentNew}" title="#{planBackingBean.generateHeader(planBackingBean.managedBean.viewMode)}">
 		    	<p:outputPanel id="opPlanContent">
 	    		  	<tp:planContentComponent 
 			            selectedPlan="#{planBackingBean.managedBean.plan}" 
 			            selectedPlanMaster="#{planBackingBean.managedBean.planMaster}" 
-			            viewMode="#{planBackingBean.managedBean.viewMode}"/>
+			            viewMode="#{planBackingBean.managedBean.viewMode}"
+			            tabId="#{PPConst.currentNew}"/>
 	            </p:outputPanel>
 		    </p:tab>
 		    <p:tab id="#{PPConst.currentMto}" title="#{lbl['lbl.pp.plan.title.mto.plan']}" disabled="#{!planBackingBean.managedBean.enableMto}">
@@ -61,7 +62,8 @@ xmlns:tp="http://java.sun.com/jsf/composite/ppComponents/procurementPlan"
 			      	<tp:planContentComponent 
 			            selectedPlan="#{planBackingBean.managedBean.mtoPlan}" 
 			            selectedPlanMaster="#{planBackingBean.managedBean.mtoPlanMaster}" 
-	 					viewMode="#{planBackingBean.managedBean.viewMode}"/>
+	 					viewMode="#{planBackingBean.managedBean.viewMode}"
+    					tabId="#{PPConst.currentMto}"/>
 				</p:outputPanel>
 		    </p:tab>
 		    <p:tab id="#{PPConst.currentAllocBudget}" title="#{lbl['lbl.pp.budget.title.allocated.gosodo']}">  

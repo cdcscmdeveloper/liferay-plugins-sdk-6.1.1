@@ -29,9 +29,9 @@ xmlns:c="http://java.sun.com/jsp/jstl/core">
 	                 #{ppItem.recordStatus?'Active':'Deleted'}
 	            </p:column>              
 		        <p:column headerText="#{lbl['lbl.pp.action']}"> 
-	                <p:commandButton value="#{lbl['lbl.pp.edit']}" action="#{planBackingBean.showPpItem(ppItem)}" 
-	                	update="@([id$=dlItemDetails])" oncomplete="dlItemDetailsModal.show()"
-	                	icon="ui-icon-edit" />
+	                <p:commandButton value="#{lbl['lbl.pp.edit']}"  action="#{planBackingBean.showPpItem(ppItem)}"
+	                	update="@([id$=#{cc.attrs.tabId}dlItemDetails])" oncomplete="#{cc.attrs.tabId}dlItemDetailsModal.show()"
+	                	icon="ui-icon-edit" /> <!--  -->
 	                 &nbsp;&nbsp;
 	                <p:commandButton value="#{lbl['lbl.pp.delete']}" icon="ui-icon-delete"
 	                  	update="dtPpItem" disabled="#{!(ppItem.brandNew || cc.attrs.viewMode==PPConst.modeRevision)}" 	 
@@ -43,7 +43,7 @@ xmlns:c="http://java.sun.com/jsp/jstl/core">
 	    	<!-- Button(s) -->
     		<div class="ppRightBtn">
 				<p:commandButton value="#{lbl['lbl.pp.add']}" action="#{planBackingBean.showPpItem(null)}"
-					oncomplete="dlItemDetailsModal.show()" update="dlItemDetails" icon="ui-icon-add" 
+					oncomplete="#{cc.attrs.tabId}dlItemDetailsModal.show()" update="#{cc.attrs.tabId}dlItemDetails" icon="ui-icon-add" 
 					disabled="#{!(cc.attrs.viewMode==PPConst.modeNew || cc.attrs.viewMode==PPConst.modeRevision)}"/>  
 		 		<br/>
 		 		<br/>
@@ -84,7 +84,7 @@ xmlns:c="http://java.sun.com/jsp/jstl/core">
 		</p:panel>
 	
 	<!-- Item Detail Form -->
-	<p:dialog id="dlItemDetails" header="#{lbl['lbl.pp.item.details']}" widgetVar="dlItemDetailsModal" 
+	<p:dialog id="#{cc.attrs.tabId}dlItemDetails" header="#{lbl['lbl.pp.item.details']}" widgetVar="#{cc.attrs.tabId}dlItemDetailsModal" 
 	              	 resizable="false" styleClass="ppDiaglogBg" dynamic="true">
     	<p:outputPanel id="opItemDetails">  
     		<table>
@@ -211,11 +211,12 @@ xmlns:c="http://java.sun.com/jsp/jstl/core">
 						<div class="ppRightBtn">
 							<p:commandButton value="#{lbl['lbl.pp.ok']}" 
 								action="#{planBackingBean.addItemToList()}"
-								onclick="dlItemDetailsModal.hide()" oncomplete="dlItemDetailsModal.hide()" 
+								onclick="#{cc.attrs.tabId}dlItemDetailsModal.hide()" 
+								oncomplete="#{cc.attrs.tabId}dlItemDetailsModal.hide()" 
 								process="opItemDetails" update="@([id$=dtPpItem])"/>
 							&nbsp;
 							<p:commandButton value="#{lbl['lbl.pp.cancel']}" icon="ui-icon-cancel"
-								onclick="dlItemDetailsModal.hide()" immediate="true"/>
+								onclick="#{cc.attrs.tabId}dlItemDetailsModal.hide()" immediate="true"/>
 						</div>
 					</td>
 		   		</tr>
