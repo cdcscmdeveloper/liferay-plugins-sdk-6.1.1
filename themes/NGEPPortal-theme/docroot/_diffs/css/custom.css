@@ -16,39 +16,39 @@ nav#navigation ul li a{font-family:'notosans-bold', Arial, Helvetica, sans-serif
 
 .navi-text{text-align:center;}
 
-ul.child-menu{list-style-type: none; border: 3px solid #5ba218; border-radius: 10px;}
-#navigation ul li:hover > ul.child-menu li:hover > ul.child-menu {border: 3px solid #5ba218; display: block; float: none; margin: 0; background-color:#3B3B3B; position:absolute; z-index:50; top: 0; left: 200px;}
-#navigation ul li:hover > ul.child-menu li:hover > ul.child-menu li:hover > ul.child-menu {border: 3px solid #5ba218; top: 0; left: 250px;}
+#navigation ul li:hover > ul.child-menu li:hover > ul.child-menu {display: block; float: none; margin: 0; background-color:#3B3B3B; position:absolute; z-index:50; top: 0; left: 150px;}
+#navigation ul li:hover > ul.child-menu li:hover > ul.child-menu li:hover > ul.child-menu {top: 0; left: 250px;}
 
 #navigation ul.child-menu > li:first-child > a:after {
 	content: '';
 	position: absolute;
 	left: 40px;
-	top: -6px;
-	border-left: 6px solid transparent;
-	border-right: 6px solid transparent;
-	border-bottom: 6px solid #444;
+	top: -10px;
+	border-left: 7px solid transparent;
+	border-right: 7px solid transparent;
+	border-bottom: 7px solid #3B3B3B;
 }
 
-#navigation ul.child-menu > li:first-child > ul > li a:after {
-	left: -6px;
+#navigation ul.child-menu > li > ul > li:first-child a:after {
+	left: -10px;
 	top: 50%;
-	margin-top: -6px;
+	margin-top: -10px;
 	border-left: 0;	
 	border-bottom: 6px solid transparent;
 	border-top: 6px solid transparent;
 	border-right: 6px solid #3b3b3b;
 }
 
-#navigation ul.child-menu > li:last-child > ul > li a:after {
-	left: -6px;
+#navigation ul.child-menu > li > ul > li:last-child a:after {
+	left: -10px;
 	top: 50%;
-	margin-top: -6px;
+	margin-top: -15px;
 	border-left: 0;	
 	border-bottom: 6px solid transparent;
 	border-top: 6px solid transparent;
 	border-right: 6px solid #3b3b3b;
 }
+
 
 /*  ----   dockbar   --------  */
 
@@ -85,7 +85,7 @@ footer.footer-home-sign-in {
 	width:100%; 
 	position:relative; 
 	background:url(../images/login/footer-home.jpg) repeat-x; 
-	height:150px; 
+	height:110px; 
 	bottom:0;
 }
 
