@@ -9,6 +9,7 @@ import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
 
 import my.ep.persistence.entity.ct.CtContract;
+import my.ep.persistence.entity.fl.request.FlFulfilmentRequest;
 import my.ep.persistence.entity.fl.request.FlShippingInstr;
 import my.ep.web.managedbean.BaseManagedBean;
 
@@ -39,6 +40,7 @@ public class ShippingInstrManagedBean extends BaseManagedBean {
 		private List <CtContract> contractList;
 		private CtContract selectedContract;
 		private String tempLogin;
+		private Long flRequest;
 		
 
 	/**
@@ -137,6 +139,20 @@ public class ShippingInstrManagedBean extends BaseManagedBean {
 	 */
 	public void setTempLogin(String tempLogin) {
 		this.tempLogin = tempLogin;
+	}
+
+	/**
+	 * @param flRequest the flRequest to set
+	 */
+	public void setFlRequest(Long flRequest) {
+		this.flRequest = flRequest;
+	}
+
+	/**
+	 * @return the flRequest
+	 */
+	public Long getFlRequest() {
+		return flRequest;
 	} 
 
 }

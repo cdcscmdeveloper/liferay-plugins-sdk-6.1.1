@@ -40,11 +40,10 @@ public class ShippingInstrBackingBean extends BaseBackingBean<ShippingInstrManag
 		IShippingInstructionSO shippingInstrSO = null;
 		try {
 			FulfilmentReqDTO reqDTO = new FulfilmentReqDTO();
-			FlShippingInstr shippingInstr = new FlShippingInstr();
+			FlShippingInstr shippingInstr = getManagedBean().getShippingInstr();
 			shippingInstrSO = (IShippingInstructionSO) BusinessDelegate.getInstance().getServiceObject("fl",IShippingInstructionSO.class);
-			FlFulfilmentRequest flRequest = new FlFulfilmentRequest();
+			reqDTO.setFlRequestId(getManagedBean().getFlRequest());
 			reqDTO.setShippingInstr(shippingInstr);
-			reqDTO.setFlFulfilmentRequest(flRequest);
 			if(action.equalsIgnoreCase(BpmOutcomeConst.BPM_SAVE)){
 				action = "";
 			}

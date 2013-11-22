@@ -276,13 +276,14 @@ public class TaskListBackingBean extends BaseBackingBean<TaskListManagedBean> {
 			flReqDTO.setSelectedApprovers(coObj.getApproverList());
 			if(getManagedBean().getTaskName().equalsIgnoreCase(FlProcessNameConst.CREATE_SI_HT) || getManagedBean().getTaskName().equalsIgnoreCase(FlProcessNameConst.REVIEW_SI_HT)){
 				System.out.println("--shipping instr--");
-//				resDTO = shippingSO.retrieveShippingInstruction(flReqDTO);
+				resDTO = shippingSO.retrieveShippingInstruction(flReqDTO);
 			}else{
 			resDTO = requestSO.retrieveFulfilmentRequest(flReqDTO);
 			}
 			if(getManagedBean().getTaskName().equalsIgnoreCase(FlProcessNameConst.REVISE_SI_HT)||getManagedBean().getTaskName().equalsIgnoreCase(FlProcessNameConst.CREATE_SI_HT) || getManagedBean().getTaskName().equalsIgnoreCase(FlProcessNameConst.REVIEW_SI_HT)){
 				ShippingInstrBackingBean siBB = new ShippingInstrBackingBean();
-//				siBB.getManagedBean().setShippingInstr(resDTO.getShippingInstr());
+				siBB.getManagedBean().setShippingInstr(resDTO.getShippingInstr());
+				siBB.getManagedBean().setFlRequest(flReqDTO.getFlRequestId());
 				siBB.getManagedBean().setBpmTaskId(taskId);
 				siBB.getManagedBean().setActions(res.getAction());
 				siBB.getManagedBean().setTempLogin(this.getManagedBean().getTempLoginId());
@@ -322,7 +323,7 @@ public class TaskListBackingBean extends BaseBackingBean<TaskListManagedBean> {
 				if(pmResDTO.getPmOrgProfile() != null){
 					crBB.getManagedBean().getFlRequest().setCreatedOrgProfile(pmResDTO.getPmOrgProfile());
 				}
-			}else if(res.getTaskName().equals(FlProcessNameConst.CO_ACK_HT)){
+			}else if(res.getTaskName().equals(FlProcessNameConst.MTO_CO_ACK_HT) || res.getTaskName().equals(FlProcessNameConst.CO_ACK_HT)){
 
 				FulfilmentOrderBackingBean florderBB  = new FulfilmentOrderBackingBean();
 				florderBB.getManagedBean().setFlRequest(resDTO.getFlFulfilmentRequest());
@@ -576,8 +577,8 @@ public class TaskListBackingBean extends BaseBackingBean<TaskListManagedBean> {
 
 			CTContractAmendmentDataType dataType = (CTContractAmendmentDataType) obj;
 			ContractDetailsBackingBean ctdBB = new ContractDetailsBackingBean();
-			ctdBB.taskListAmendmentAction(dataType.getAmendmentId().longValue(),
-					dataType.getContractId().longValue());
+//			ctdBB.taskListAmendmentAction(dataType.getAmendmentId().longValue(),
+//					dataType.getContractId().longValue());
 			ctdBB.getManagedBean().setOutComes(res.getAction());
 			ctdBB.getManagedBean().setTaskId(taskId);
 			ctdBB.getManagedBean().setToken(ctx);
@@ -585,7 +586,7 @@ public class TaskListBackingBean extends BaseBackingBean<TaskListManagedBean> {
 		}else if (res.getProcessName().equalsIgnoreCase("Contract Termination")) {
 			CTContractTerminationDataType dataType = (CTContractTerminationDataType) obj;
 			ContractDetailsBackingBean ctdBB = new ContractDetailsBackingBean();
-			ctdBB.taskListTerminationAction(dataType.getTerminationId().longValue(), dataType.getContractId().longValue());
+//			ctdBB.taskListTerminationAction(dataType.getTerminationId().longValue(), dataType.getContractId().longValue());
 			ctdBB.getManagedBean().setOutComes(res.getAction());
 			ctdBB.getManagedBean().setTaskId(taskId);
 			ctdBB.getManagedBean().setToken(ctx);
