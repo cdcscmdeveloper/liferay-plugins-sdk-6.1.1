@@ -6,19 +6,24 @@ package my.ep.web.backingbean.ct.suspend;
 import java.util.Date;
 
 import javax.annotation.PostConstruct;
+import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.RequestScoped;
+import javax.faces.context.FacesContext;
 
 import org.apache.log4j.Logger;
 import org.primefaces.event.TabChangeEvent;
 
 import my.ep.biz.service.ct.suspend.ISuspendActiveSO;
+import my.ep.bpm.service.IBpmSO;
 import my.ep.dto.ct.suspend.ContractSuspendReqDTO;
 import my.ep.dto.ct.suspend.ContractSuspendResDTO;
+import my.ep.exception.EpException;
 import my.ep.persistence.entity.ct.CtContract;
 import my.ep.persistence.entity.ct.suspend.CtSuspendActive;
 import my.ep.persistence.entity.pm.authorization.PmUser;
 import my.ep.persistence.entity.pm.common.PmStatus;
+import my.ep.util.lookupservice.EpBpmBusinessDelegate;
 import my.ep.web.backingbean.BaseBackingBean;
 import my.ep.web.backingbean.ct.ContractBackingBean;
 import my.ep.web.constant.BpmOutcomeConst;
@@ -77,38 +82,56 @@ public class ContractSuspendBackingBean extends BaseBackingBean<ContractSuspendM
 			this.getManagedBean().getSuspendActive().setStatus(new PmStatus());
 			this.getManagedBean().getSuspendActive().getApprover().setUserId(new Long(1));
 			this.getManagedBean().getSuspendActive().getStatus().setStatusId(new Long(1));
-			
+			this.getManagedBean().getSuspendActive().getCtContract().setContractId(1L);
 		}
 	}
 	
-	public void createSuspend(String outcome){
+	public String createSuspend(String action){
 		
 		ISuspendActiveSO suspendActiveSO = null;
 		try{
 			
 		  ContractSuspendReqDTO reqDTO = new ContractSuspendReqDTO();
 		  suspendActiveSO = (ISuspendActiveSO)BusinessDelegate.getInstance().getServiceObject("ct", ISuspendActiveSO.class);
-		  this.getManagedBean().getSuspendActive().getCtContract().setContractId(this.getManagedBean().getContract().getContractId());
 		  reqDTO.setSuspendActive(this.getManagedBean().getSuspendActive());
-		  reqDTO.setOutcome(outcome);
-		  reqDTO.setTaskId(this.getManagedBean().getTaskId());
 		 
-		  if(outcome == BpmOutcomeConst.BPM_SAVE){
-		  reqDTO.setOutcome("");
+		  String token = getManagedBean().getToken();
+			if (token == null) {
+				IBpmSO bpmSO = (IBpmSO) EpBpmBusinessDelegate.getInstance().getServiceObject(IBpmSO.class);
+				token = bpmSO.authenticate("roslan", "welcome1");
+				if (token == null) {
+					throw new EpException("BPM token not found");
+				}
+			}
+
+			reqDTO.setOutcome(action);
+			if (action == BpmOutcomeConst.BPM_SAVE) {
+				reqDTO.setOutcome("");
+			}
+			reqDTO.setToken(token);
+			reqDTO.setTaskId(getManagedBean().getTaskId());
 		  
-		  }else if(outcome == BpmOutcomeConst.BPM_REVISE)
-		  reqDTO.setTaskId(this.getManagedBean().getTaskId());
-		  
-		  System.out.println("Contract Id>>>:: "+ this.getManagedBean().getContract().getContractId()); 
-		  this.getManagedBean().getSuspendActive().setCtContract(this.getManagedBean().getContract());
 		  ContractSuspendResDTO resDTO = suspendActiveSO.createSuspend(reqDTO);
-		  System.out.println("Save Successful>>>:: "+ resDTO.isSuccessful()); 
-	
-		}catch(Exception ex){
-		   log.error("Exception>>>" +ex);
+		  if (resDTO.isSuccessful()) {
+				
+			  log.info("Record saved successfully");
+			  FacesContext.getCurrentInstance().addMessage(null,new FacesMessage(FacesMessage.SEVERITY_INFO,"Record saved successfully.","Contract Name. : "+ this.getManagedBean().getSuspendActive().getSuspendActiveId()));
+			  if (!action.equalsIgnoreCase(BpmOutcomeConst.BPM_SAVE)) { 
+					renewSesionObject();
+					return "/xhtml/shared/acknowledge.xhtml";
+			   }
+		  } else {
+				throw new EpException("Failed.");
+			}
+
+		} catch (Exception e) {
+			e.printStackTrace();
+			FacesContext.getCurrentInstance().addMessage(null,new FacesMessage(FacesMessage.SEVERITY_ERROR, e.toString(),"Contract save failed."));
 		}finally{
 			suspendActiveSO = null;
 		}
+		
+		return null;
 	}
 	
 	public String gotoSuspendPage() {	

@@ -5,7 +5,7 @@
 	xmlns:h="http://java.sun.com/jsf/html"
 	xmlns:ui="http://java.sun.com/jsf/facelets"
 	xmlns:p="http://primefaces.org/ui"
-	xmlns:c="http://java.sun.com/jsp/jstl/core">  
+	xmlns:c="http://java.sun.com/jsp/jstl/core">
 	<ui:define name="contentSection">
 	<style>
       .column-align-right { text-align: right !important;}
@@ -14,7 +14,7 @@
 	  <p:messages id="messages" showDetail="true" autoUpdate="true" closable="true" severity="error, info" />
 	 <div class="ppRightBtn">
 				<ui:repeat var="action"	value="#{agreementBackingBean.managedBean.outComes}">
-					<p:commandButton value="#{action}" process="@this" styleClass="ui-button" actionListener="#{agreementBackingBean.createAgreement(action)}" />
+					<p:commandButton value="#{action}" process="@this" styleClass="ui-button" action="#{agreementBackingBean.createAgreement(action)}" />
 				</ui:repeat>		
     </div>
 	</p:panel>

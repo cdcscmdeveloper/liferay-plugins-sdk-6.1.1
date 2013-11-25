@@ -12,23 +12,23 @@
         <h:outputLabel value="Activate Start Date" />
         <p:calendar  value="#{contractSuspendBackingBean.managedBean.suspendActive.activeFrom}" id="activeDateId" showOn="button" />
      </h:panelGrid>
-	 <h:panelGrid columns="2" style="width:400px;" rendered="#{!contractSuspendBackingBean.managedBean.activeSuspension}">  
+	 <h:panelGrid columns="4" style="width:700px;" rendered="#{!contractSuspendBackingBean.managedBean.activeSuspension}">  
         <h:panelGroup>
-		  <div style="height: 40px;width:100px;float:right; vertical-align: top;">
+		  <div style="height: 40px;float:right; vertical-align: top;">
 		      <p:outputLabel for="suspendes" value="Suspend Reason"/>
 		  </div>
 	    </h:panelGroup>
         <h:panelGrid>
-		  <p:inputTextarea id="suspendes" value="#{contractSuspendBackingBean.managedBean.suspendActive.suspendActiveDesc}" required="false"  rows="2" cols="40" disabled="false" autoResize="false" />
+		  <p:inputTextarea id="suspendes" value="#{contractSuspendBackingBean.managedBean.suspendActive.suspendActiveDesc}" rows="2" 
+		  cols="30" disabled="false" autoResize="false" />
 	     </h:panelGrid>
+	     <f:verbatim></f:verbatim>  <f:verbatim></f:verbatim>
 	     <h:outputLabel value="Suspend Contract"  />  
          <p:selectBooleanCheckbox value="#{contractSuspendBackingBean.managedBean.booleanSuspendValue}"  disabled="false"/> 
-	   </h:panelGrid>
-	   <h:panelGrid columns="4" style="width:610px;" rendered="#{!contractSuspendBackingBean.managedBean.activeSuspension}">  
-            <h:outputLabel value="Suspend Start Date" />
-            <p:calendar value="#{contractSuspendBackingBean.managedBean.suspendActive.suspendFrom}" id="startDateId" showOn="button" />
-            <h:outputLabel value=" Suspend End Date" />
-            <p:calendar  value="#{contractSuspendBackingBean.managedBean.suspendActive.suspendTo}" id="endDateId" showOn="button" />
+         <h:outputLabel value="Suspend Start Date" />
+         <p:calendar value="#{contractSuspendBackingBean.managedBean.suspendActive.suspendFrom}" id="startDateId" showOn="button" />
+         <h:outputLabel value=" Suspend End Date" />
+         <p:calendar  value="#{contractSuspendBackingBean.managedBean.suspendActive.suspendTo}" id="endDateId" showOn="button" />
          </h:panelGrid>
       </p:panel>
 </ui:composition>

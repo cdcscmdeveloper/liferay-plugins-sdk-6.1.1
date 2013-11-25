@@ -147,11 +147,66 @@ public class AgreementBackingBean extends BaseBackingBean<AgreementManagedBean> 
 				reqDTO.setToken(token);
 				reqDTO.setTaskId(getManagedBean().getTaskId());
 			 
-				 ContractAgreementResDTO resDTO=  agreementSO.createAgreement(reqDTO);
+				 ContractAgreementResDTO resDTO =  agreementSO.createAgreement(reqDTO);
 			 
-			  if(resDTO.isSuccessful()) {
+				 if (resDTO.isSuccessful()) {
+						log.info("Record saved successfully1");
+						FacesContext.getCurrentInstance().addMessage(null,new FacesMessage(FacesMessage.SEVERITY_INFO,"Record saved successfully.","Agreement Name. : "+ resDTO.getAgreement().getAgreementId()));
+						if (!action.equalsIgnoreCase(BpmOutcomeConst.BPM_SAVE)) { 
+							renewSesionObject();
+							return "/xhtml/shared/acknowledge.xhtml";
+						}
+					} else {
+						throw new EpException("Failed.");
+					}
+
+				} catch (Exception e) {
+					e.printStackTrace();
+					FacesContext.getCurrentInstance().addMessage(null,new FacesMessage(FacesMessage.SEVERITY_ERROR, e.toString(),"Agreement save failed."));
+		  }finally{
+			agreementSO = null;
+			reqDTO = null;
+		}	
+		
+		return null;
+	}
+	
+	public String createSupAgreement(String action){
+		
+		IAgreementSO agreementSO = null;
+		 ContractAgreementReqDTO reqDTO = null;	
+		try{
+			
+			 reqDTO = new ContractAgreementReqDTO();
+		     agreementSO = (IAgreementSO)BusinessDelegate.getInstance().getServiceObject("ct", IAgreementSO.class);
+		     this.getManagedBean().getAgreement().setCtAmendment(new CtAmendment());
+		     this.getManagedBean().getAgreement().getCtAmendment().setAmendmentId(1L);
+		     this.getManagedBean().getAgreement().setCtAgreementAppendixs(this.getManagedBean().getAppendixList());
+			 reqDTO.setAgreement(this.getManagedBean().getAgreement());
+			 reqDTO.setOutcome(action);
+			 reqDTO.setTaskId(this.getManagedBean().getTaskId());
+			 
+			 String token = getManagedBean().getToken();
+				if(token==null) {
+					IBpmSO bpmSO = (IBpmSO) EpBpmBusinessDelegate.getInstance().getServiceObject(IBpmSO.class);
+					token = bpmSO.authenticate("roslan", "welcome1");
+					if(token==null) {
+						throw new EpException("BPM token not found");
+					}
+				}
+
+				reqDTO.setOutcome(action);
+				if(action == BpmOutcomeConst.BPM_SAVE){
+					  reqDTO.setOutcome("");
+			     }
+				reqDTO.setToken(token);
+				reqDTO.setTaskId(getManagedBean().getTaskId());
+			  
+				ContractAgreementResDTO resDTO = agreementSO.createAgreement(reqDTO);
+			 
+			 if(resDTO.isSuccessful()) {
 					log.info("Record saved successfully");
-					FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "Record saved successfully.","Contract Name. : "+this.getManagedBean().getAgreement().getAgreementId()));
+					FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "Record saved successfully.","Agreement Saved. : "));
 					if(!action.equalsIgnoreCase(BpmOutcomeConst.BPM_SAVE)) { // save action will remain in the same page
 						renewSesionObject();
 						return "/xhtml/shared/acknowledge.xhtml";
@@ -164,44 +219,12 @@ public class AgreementBackingBean extends BaseBackingBean<AgreementManagedBean> 
 				e.printStackTrace();
 				FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR,e.toString(), "Contract save failed."));
 		
-		}finally{
+		} finally{
 			agreementSO = null;
 			reqDTO = null;
-		}	
+		}
 		
 		return null;
-	}
-	
-	public void createSupAgreement(String outcome){
-		
-		IAgreementSO agreementSO = null;
-		 ContractAgreementReqDTO reqDTO = null;	
-		try{
-			
-			 reqDTO = new ContractAgreementReqDTO();
-		     agreementSO = (IAgreementSO)BusinessDelegate.getInstance().getServiceObject("ct", IAgreementSO.class);
-		     this.getManagedBean().getAgreement().setCtAmendment(new CtAmendment());
-		     this.getManagedBean().getAgreement().getCtAmendment().setAmendmentId(1L);
-		     this.getManagedBean().getAgreement().setCtAgreementAppendixs(this.getManagedBean().getAppendixList());
-			 reqDTO.setAgreement(this.getManagedBean().getAgreement());
-			 reqDTO.setOutcome(outcome);
-			 reqDTO.setTaskId(this.getManagedBean().getTaskId());
-			 
-			 if(outcome == BpmOutcomeConst.BPM_SAVE){
-			    reqDTO.setOutcome("");
-			  
-			 }else if(outcome == BpmOutcomeConst.BPM_REVISE)
-			   reqDTO.setTaskId(this.getManagedBean().getTaskId());
-			  
-			 agreementSO.createAgreement(reqDTO);
-	   
-		 }catch(Exception ex){
-		   log.error("Exception>>>" +ex);
-		
-		}finally{
-			agreementSO = null;
-			reqDTO = null;
-		}	 
 	}
 	
 	public void fileUpload(FileUploadEvent event) {

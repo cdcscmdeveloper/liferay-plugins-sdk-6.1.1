@@ -11,9 +11,10 @@
       .column-align-center { text-align: center !important;}
     </style>
 	<p:panel>
+	<p:messages id="messages" showDetail="true" autoUpdate="true" closable="true" severity="error, info" />
 	 <div class="ppRightBtn"> 
 	  			<ui:repeat var="action"	value="#{contractSuspendBackingBean.managedBean.outComes}">
-					<p:commandButton value="#{action}" process="@this" styleClass="ui-button" actionListener="#{contractSuspendBackingBean.createSuspend(action)}" />
+					<p:commandButton value="#{action}" process="@this" styleClass="ui-button" action="#{contractSuspendBackingBean.createSuspend(action)}" />
 				</ui:repeat>		
     </div>
 	</p:panel>
