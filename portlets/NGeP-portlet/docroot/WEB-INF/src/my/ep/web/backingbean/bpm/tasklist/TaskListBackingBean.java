@@ -275,7 +275,7 @@ public class TaskListBackingBean extends BaseBackingBean<TaskListManagedBean> {
 				flReqDTO.setFlRequestId(coObj.getContractRequestId());
 			}
 			flReqDTO.setSelectedApprovers(coObj.getApproverList());
-			if(getManagedBean().getTaskName().equalsIgnoreCase(FlProcessNameConst.REVIEW_SI_HT)){
+			if(getManagedBean().getTaskName().equalsIgnoreCase(FlProcessNameConst.REVISE_SI_HT) || getManagedBean().getTaskName().equalsIgnoreCase(FlProcessNameConst.REVIEW_SI_HT)){
 				resDTO = shippingSO.retrieveShippingInstruction(flReqDTO);
 			}else{
 			resDTO = requestSO.retrieveFulfilmentRequest(flReqDTO);
