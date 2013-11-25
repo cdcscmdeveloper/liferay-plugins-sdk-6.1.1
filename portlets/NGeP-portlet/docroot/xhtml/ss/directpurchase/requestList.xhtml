@@ -9,11 +9,10 @@
 		header="#{lbl['lbl.ss.panel.title.approve.list']}" toggleable="true"
 		toggleSpeed="500">
 		<div style="width: 100%">
-			<p:pickList id="approvalPickList"
-				value="#{directPurchaseBackingBean.approveUseritems}" var="approver"
+			<p:pickList value="#{directPurchaseBackingBean.managedBean.approvalUsers}" var="approverUser"
 				showCheckbox="true" showSourceFilter="true"
-				showTargetControls="true" itemLabel="#{approver}"
-				itemValue="#{approver}">
+				showTargetControls="true" itemLabel="#{approverUser.userName}"
+				itemValue="#{approverUser.userId}">
 				<f:facet name="sourceCaption">Available</f:facet>
 				<f:facet name="targetCaption">Selected</f:facet>
 			</p:pickList>
@@ -26,6 +25,8 @@
 				var="requestNoteDtl">
 				<p:columnGroup type="header">
 					<p:row>
+						<p:column>
+						</p:column>
 						<p:column colspan="1" width="15%" rendered="true"
 							style="text-align:center; vertical-align:top;"
 							headerText="#{lbl['lbl.sc.item.detail.supplier']}">
@@ -66,23 +67,20 @@
 				<p:column>
 				</p:column>
 				<p:column>
-					<p:selectOneMenu id="requestNoteDtl_fulfillmentType#{rowIndex}" value="#{requestNoteDtl.fulfillmentType}"
-						style="width: auto;" required="false" disabled="false">
-						<!--TODO hardcode  option value because later will replace by the list in backing bean -->
+					<p:selectOneMenu style="width: auto;" value="#{requestNoteDtl.fulfillmentType}" 
+						required="false" disabled="false">
 						<f:selectItem itemLabel="One Off" itemValue="O"></f:selectItem>
 						<f:selectItem itemLabel="Periodic" itemValue="P"></f:selectItem>
 					</p:selectOneMenu>
 				</p:column>
 				<p:column>
-					<p:selectOneMenu id="approveBy#{rowIndex}" style="width: auto;" value="#{requestNoteDtl.assignedUserId}"
+					<p:selectOneMenu style="width: auto;" value="#{requestNoteDtl.assignedUserId}"
 						required="false" disabled="false">
-						<!--TODO hardcode  option value because later will replace by the list in backing bean -->
-						<f:selectItem itemLabel="user1" itemValue="1"></f:selectItem>
-						<f:selectItem itemLabel="user2" itemValue="2"></f:selectItem>
+						<f:selectItems value="#{directPurchaseBackingBean.managedBean.govUsers}" var="govUser" itemLabel="#{govUser.userName}" itemValue="#{govUser.userId}"></f:selectItems>
 					</p:selectOneMenu>
 				</p:column>
 				<p:column>
-					<p:inputText id="periodId" style="width:10px;" required="false" value="#{requestNoteDtl.deliverPeriod}"/>
+					<p:inputText style="width:10px;" required="false" value="#{requestNoteDtl.deliverPeriod}"/>
 					<p:selectOneMenu id="periodMode" style="width: auto;" value="#{requestNoteDtl.deliverPeriodType}">
 						<f:selectItem itemLabel="Day" itemValue="D"></f:selectItem>
 						<f:selectItem itemLabel="Month" itemValue="M"></f:selectItem>
@@ -104,24 +102,21 @@
 					<p:outputLabel value="#{lbl['lbl.sc.purchase.fulfillment.type']}"></p:outputLabel>
 				</p:column>
 				<p:column>
-					<p:selectOneMenu id="fulfillmentType"
+					<p:selectOneMenu id="fulfillmentType" value="#{directPurchaseBackingBean.managedBean.fulfillmentType}"
 						style="width: auto; min-width: 200px;" required="false"
 						disabled="false">
-						<f:selectItem id="one-off" itemLabel="One Off" itemValue="1" />
-						<f:selectItem id="periodic" itemLabel="Periodic" itemValue="2" />
+						<f:selectItem itemLabel="One Off" itemValue="O" />
+						<f:selectItem itemLabel="Periodic" itemValue="P" />
 					</p:selectOneMenu>
 				</p:column>
 				<p:column>
 					<p:outputLabel value="#{lbl['lbl.sc.purchase.prepare']}" />
 				</p:column>
 				<p:column>
-					<p:selectOneMenu id="prepareBy"
+					<p:selectOneMenu id="prepareBy" value="#{directPurchaseBackingBean.managedBean.assignedToUserId}"
 						style="width: auto; min-width: 200px;" required="false"
 						disabled="false">
-						<f:selectItem id="requisitioner1" itemLabel="Requisitioner 1"
-							itemValue="requisitioner1"></f:selectItem>
-						<f:selectItem id="requisitioner2" itemLabel="Requisitioner 2"
-							itemValue="requisitioner2"></f:selectItem>
+						<f:selectItems value="#{directPurchaseBackingBean.managedBean.govUsers}" var="govUser" itemLabel="#{govUser.userName}" itemValue="#{govUser.userId}"></f:selectItems>
 					</p:selectOneMenu>
 				</p:column>
 			</p:row>
@@ -130,9 +125,9 @@
 					<p:outputLabel value="#{lbl['lbl.sc.purchase.deliver.period']}" />
 				</p:column>
 				<p:column colspan="3">
-					<p:inputText id="periodId" style="width:10px;" required="false" />
+					<p:inputText id="periodId" style="width:10px;" required="false" value="#{directPurchaseBackingBean.managedBean.periodValue}"/>
 					<p:spacer />
-					<p:selectOneMenu id="periodMode" style="width: auto;">
+					<p:selectOneMenu id="periodMode" style="width: auto;" value="#{directPurchaseBackingBean.managedBean.periodType}">
 						<f:selectItem itemLabel="Day" itemValue="D"></f:selectItem>
 						<f:selectItem itemLabel="Month" itemValue="M"></f:selectItem>
 						<f:selectItem itemLabel="Year" itemValue="Y"></f:selectItem>
@@ -141,7 +136,7 @@
 			</p:row>
 		</p:panelGrid>
 		<div align="right">
-			<p:commandButton value="#{lbl['lbl.ss.action.apply']}" />
+			<p:commandButton value="#{lbl['lbl.ss.action.apply']}" process="@all" action="#{directPurchaseBackingBean.applyForRequestNote}" update="@([id$=requestListDataTable])"/>
 		</div>
 	</p:panel>
 </ui:composition>

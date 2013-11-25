@@ -13,7 +13,7 @@
 			styleClass="noBorders tr,noBorders td">
 			<p:row>
 				<p:column style="width:100%">
-					<p:selectBooleanCheckbox>By Business Nature</p:selectBooleanCheckbox>
+					<p:selectBooleanCheckbox itemLabel="By Business Nature"></p:selectBooleanCheckbox>
 				</p:column>
 			</p:row>
 		</p:panelGrid>
@@ -33,7 +33,7 @@
 			<p:column headerText="Description">
 			</p:column>
 			<p:column style="width:6%">  
-				<p:rowEditor />  
+				<p:rowEditor />
 			</p:column>
 		</p:dataTable>
 		<div align="right">
@@ -44,7 +44,7 @@
 			styleClass="noBorders tr,noBorders td">
 			<p:row>
 				<p:column style="width:100%">
-					<p:selectBooleanCheckbox>By Locality</p:selectBooleanCheckbox>
+					<p:selectBooleanCheckbox itemLabel="By Locality"></p:selectBooleanCheckbox>
 				</p:column>
 			</p:row>
 		</p:panelGrid>
@@ -52,40 +52,38 @@
 			styleClass="noBorders tr,noBorders td">
 			<p:row>
 				<p:column style="width:15%">
-					<p:selectBooleanCheckbox>By Supplier</p:selectBooleanCheckbox>
+					<p:selectBooleanCheckbox itemLabel="By Supplier"></p:selectBooleanCheckbox>
+					<p:selectOneMenu value="#{simpleQuoteBidBackingBean.managedBean.supplierFilterType}">
+						<f:selectItem itemValue="MOF" itemLabel="MOF Reg. No."></f:selectItem>
+						<f:selectItem itemValue="RN" itemLabel="Registration No."></f:selectItem>
+					</p:selectOneMenu>
+					<p:inputText value="#{simpleQuoteBidBackingBean.managedBean.supplierFilterValue}"></p:inputText>
 				</p:column>
 				<p:column style="width:15%">
-					<p:selectBooleanCheckbox>By Supplier</p:selectBooleanCheckbox>
+					<p:selectBooleanCheckbox itemLabel="By Product"></p:selectBooleanCheckbox>
 				</p:column>
 			</p:row>
 		</p:panelGrid>
 	</p:panel>
 	<p:panel header="SUPPLIER" toggleable="true">
 
-		<p:dataTable var="simpleQuote"
-			value="#{simpleQuoteBidBackingBean.utilList}"
-			selection="#{simpleQuoteBidBackingBean.managedBean.selectedUtilList}"
+		<p:dataTable var="quoteBidSupplier"
+			value="#{simpleQuoteBidBackingBean.managedBean.quoteBidSuppliers}"
 			rowKey="#{simpleQuote.seqNo}" rowIndexVar="index">
 
-			<p:column selectionMode="multiple" style="width:2%" />
-
 			<p:column
-				headerText="#{lbl['lbl.ss.simple.quote.purchase.group.seq.no']}"
-				style="width:10%">
-				<h:outputText value="#{index+1}"></h:outputText>
+				headerText="#{lbl['lbl.sc.quote.bid.ep.no']}"
+				style="width:15%">
+				<h:outputText value="#{quoteBidSupplier.smSupplier.epNo}"></h:outputText>
 			</p:column>
 
-			<p:column headerText="Company Name" style="width:50%">
-				<h:outputText value="Commerce Dot Com"></h:outputText>
+			<p:column headerText="#{lbl['lbl.sc.quote.bid.mof.no']}" style="width:15%">
+				<h:outputText value="#{quoteBidSupplier.smSupplier.regNo}"></h:outputText>
 			</p:column>
 
-			<p:column headerText="Supplier Status" style="width:38%">
-				<h:outputText value="Active"></h:outputText>
+			<p:column headerText="#{lbl['lbl.sc.quote.bid.supplier.name']}" style="width:70%">
+				<h:outputText value="#{quoteBidSupplier.smSupplier.supplierName}"></h:outputText>
 			</p:column>
-
-
-
 		</p:dataTable>
-
 	</p:panel>
 </ui:composition>

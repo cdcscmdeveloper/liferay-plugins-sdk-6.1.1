@@ -107,42 +107,70 @@
 		</p:panelGrid>
 	</p:panel>
 	<p:panel header="ITEM DETAIL" toggleable="true"  toggleSpeed="500">
-		<p:dataTable 
+		<p:dataTable id="quoteBidItemDataTable"
 			value="#{simpleQuoteBidBackingBean.managedBean.quoteBidItems}"
-			var="item" rowIndexVar="index">
+			var="item" rowIndexVar="index" editable="true">
 			<p:column
 				headerText="#{lbl['lbl.ss.simple.quote.purchase.group.seq.no']}"
 				style="width:10%">
 				<h:outputText value="#{index+1}"></h:outputText>
 			</p:column>
 			<p:column headerText="Item Name" style="width:10%">
-				<h:outputText value="#{item.itemName}"></h:outputText>
+				<p:cellEditor>
+					<f:facet name="output">
+						<h:outputText value="#{item.itemName}" />
+					</f:facet>
+					<f:facet name="input">
+						<p:inputText value="#{item.itemName}" style="width:100%" />
+					</f:facet>
+				</p:cellEditor>
 			</p:column>
 			<p:column
 				headerText="#{lbl['lbl.ss.simple.quote.purchase.description']}"
 				style="width:35%">
-				<h:outputText value="#{item.itemDesc}"></h:outputText>
+				<p:cellEditor>
+					<f:facet name="output">
+						<h:outputText value="#{item.itemDesc}" />
+					</f:facet>
+					<f:facet name="input">
+						<p:inputText value="#{item.itemDesc}" style="width:100%" />
+					</f:facet>
+				</p:cellEditor>
 			</p:column>
 			<p:column headerText="Product Code" style="width:5%">
 				<h:outputText value="#{item.cmItem.extensionCode}"></h:outputText>
 			</p:column>
 			<p:column headerText="Quantity" style="width:25%">
-				<h:outputText value="#{item.quantity}"></h:outputText>
+				<p:cellEditor>
+					<f:facet name="output">
+						<h:outputText value="#{item.quantity}" />
+					</f:facet>
+					<f:facet name="input">
+						<p:inputText value="#{item.quantity}" style="width:100%" />
+					</f:facet>
+				</p:cellEditor>
 			</p:column>
 			<p:column headerText="#{lbl['lbl.ss.simple.quote.item.uom']}"
 				style="width:5%">
-				<h:outputText value="#{item.uom}"></h:outputText>
+				<p:cellEditor>
+					<f:facet name="output">
+						<h:outputText value="#{item.uom}" />
+					</f:facet>
+					<f:facet name="input">
+						<p:inputText value="#{item.uom}" style="width:100%" />
+					</f:facet>
+				</p:cellEditor>
 			</p:column>
 			<p:column headerText="Action" style="width:10%">
+				<p:rowEditor />
 				<p:commandLink>
 					<p:graphicImage library="ep/images/design" name="delete.png"
 						value="/resources/ep/images/design/delete.png" />
-
 				</p:commandLink>
 			</p:column>
 		</p:dataTable>
 		<div align="right">
-			<p:commandButton value="ADD" />
+			<p:commandButton value="ADD" icon="ui-icon-add" process="@this" partialSubmit="true" action="#{simpleQuoteBidBackingBean.addItem()}" update="quoteBidItemDataTable"/>
 		</div>
 		
 	</p:panel>
