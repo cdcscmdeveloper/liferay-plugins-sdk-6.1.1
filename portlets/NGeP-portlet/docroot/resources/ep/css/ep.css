@@ -3425,6 +3425,158 @@ important
 
 
 }
+
+.ui-icon-arrow-1-n {
+	background-image: url(#{ resource [ 'ep/images/design:bullet_arrow_up.png' ]
+}
+
+)
+!
+important
+;
+
+	
+background-position
+:
+ 
+center
+;
+
+	
+border-radius
+:
+ 
+0
+px
+;
+
+	
+height
+:
+ 
+16
+px
+ 
+!
+important
+;
+
+
+}
+
+.ui-icon-arrowstop-1-n {
+	background-image: url(#{ resource [ 'ep/images/design:bullet_arrow_top.png' ]
+}
+
+)
+!
+important
+;
+
+	
+background-position
+:
+ 
+center
+;
+
+	
+border-radius
+:
+ 
+0
+px
+;
+
+	
+height
+:
+ 
+16
+px
+ 
+!
+important
+;
+
+
+}
+
+.ui-icon-arrow-1-s {
+	background-image: url(#{ resource [ 'ep/images/design:bullet_arrow_down.png' ]
+}
+
+)
+!
+important
+;
+
+	
+background-position
+:
+ 
+center
+;
+
+	
+border-radius
+:
+ 
+0
+px
+;
+
+	
+height
+:
+ 
+16
+px
+ 
+!
+important
+;
+
+
+}
+
+.ui-icon-arrowstop-1-s {
+	background-image: url(#{ resource [ 'ep/images/design:bullet_arrow_bottom.png' ]
+}
+
+)
+!
+important
+;
+
+	
+background-position
+:
+ 
+center
+;
+
+	
+border-radius
+:
+ 
+0
+px
+;
+
+	
+height
+:
+ 
+16
+px
+ 
+!
+important
+;
+
+
+}
 /*--------------------------       End Custom Icons    ------------------------------ */
 
 /*--------------------------       Custom CSS          ------------------------------ */
@@ -3842,6 +3994,27 @@ label > span.ui-button-text {
 }
 
 .ui-picklist .ui-picklist-list li.ui-state-hover {
+	border-radius: 0;
+	box-shadow: none;
+	background: #FDD655; /* Old browsers */
+	background: -moz-linear-gradient(top, #FCEAAE 0%, #FDD655 100%);
+	/* FF3.6+ */
+	background: -webkit-gradient(linear, left top, left bottom, color-stop(0%, #FCEAAE),
+		color-stop(100%, #FDD655) ); /* Chrome,Safari4+ */
+	background: -webkit-linear-gradient(top, #FCEAAE 0%, #FDD655 100%);
+	/* Chrome10+,Safari5.1+ */
+	background: -o-linear-gradient(top, #FCEAAE 0%, #FDD655 100%);
+	/* Opera 11.10+ */
+	background: -ms-linear-gradient(top, #FCEAAE 0%, #FDD655 100%);
+	/* IE10+ */
+	background: linear-gradient(to bottom, #FCEAAE 0%, #FDD655 100%);
+	/* W3C */
+	filter: progid:DXImageTransform.Microsoft.gradient(  startColorstr='#FCEAAE',
+		endColorstr='#FDD655', GradientType=0 ); /* IE6-8 */
+}
+
+.ui-picklist .ui-picklist-list li.ui-state-highlight {
+	color: #333333;
 	border-radius: 0;
 	box-shadow: none;
 	background: #FDD655; /* Old browsers */
