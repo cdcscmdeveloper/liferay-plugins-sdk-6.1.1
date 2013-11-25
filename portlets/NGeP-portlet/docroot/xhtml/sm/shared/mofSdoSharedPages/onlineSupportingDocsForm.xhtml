@@ -5,39 +5,33 @@
 	xmlns:p="http://primefaces.org/ui"
 	xmlns:c="http://java.sun.com/jsp/jstl/core">
 
-	<p:panel
-		header="Online Supporting Documents List" >
+	<p:panel header="Online Supporting Documents List">
 
 
-		<table>
+		<table style="width: 100%">
 			<tr>
-				<td>
-						<p:dataTable var="table"
-							value="#{mofRegistrationBackingBean.dataList}">
-							<p:column headerText="No.">  
+				<td><p:dataTable var="table"
+						value="#{mofRegistrationBackingBean.dataList}">
+						<p:column headerText="No.">  
                    #{table.no}  
       		    </p:column>
 
-							<p:column headerText="Document Name">  
+						<p:column headerText="Document Name">  
 		            #{table.documentName} 
 		        </p:column>
-							<p:column headerText="Document Description">  
+						<p:column headerText="Document Description">  
 		            #{table.documentdescription} 
 		        </p:column>
-							<p:column headerText="View/Download Document">
-								<!-- #{table.isSentBySupplier} -->
-								<p:commandButton value="Download" icon="ui-icon-arrowthichk-s"></p:commandButton>
-							</p:column>
-							<p:column headerText="Is Document Valid?">
-								<p:selectBooleanCheckbox value="#{table.documentValid}" />
-							</p:column>
+						<p:column headerText="View/Download Document">
+							<!-- #{table.isSentBySupplier} -->
+							<p:commandButton value="Download" icon="ui-icon-arrowthichk-s"></p:commandButton>
+						</p:column>
+						<p:column headerText="Is Document Valid?">
+							<p:selectBooleanCheckbox value="#{table.documentValid}" />
+						</p:column>
 
 
-						</p:dataTable>
-
-						<br />
-
-					</td>
+					</p:dataTable> <br /></td>
 			</tr>
 		</table>
 

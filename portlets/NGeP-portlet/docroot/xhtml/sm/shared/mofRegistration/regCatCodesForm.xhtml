@@ -134,32 +134,29 @@
 					<tr>
 						<td><p:outputLabel value="* Category Type" /></td>
 						<td><p:selectOneMenu
-								value="#{backingBean.managedBean.selectedCategory.categoryType}">
-								<f:selectItem itemLabel="-- Select One -- " itemValue="O" />
+								value="#{backingBean.managedBean.selectedCategory.categoryType}"
+								style="width: 232px;margin-bottom: 5px;">
+								<f:selectItem itemLabel="-- Select  -- " itemValue="O" />
 								<f:selectItem itemLabel="Normal" itemValue="N" />
 								<f:selectItem itemLabel="Special" itemValue="S" />
 							</p:selectOneMenu></td>
 					</tr>
 					<tr>
 						<td><p:outputLabel value="Enter Category Code" /></td>
-						<td>
-							<table style="width: 100%">
-								<tr>
-									<td><p:inputText maxlength="2" size="2"
-											style="width : 30px;"
-											value="#{backingBean.managedBean.selectedParentCat}" /> -</td>
-									<td><p:inputText maxlength="2" size="2"
-											value="#{backingBean.managedBean.selectedChildCat}" /> -</td>
-									<td><p:inputText maxlength="2" size="2"
-											value="#{backingBean.managedBean.selectedSubChildCat}" /></td>
-								</tr>
-							</table>
-						</td>
+						<td><p:inputText maxlength="2" size="2"
+								value="#{backingBean.managedBean.selectedParentCat}" /> -<p:inputText
+								maxlength="2" size="2"
+								value="#{backingBean.managedBean.selectedChildCat}"
+								style="margin-left: 3px;" /> -<p:inputText maxlength="2"
+								size="2" value="#{backingBean.managedBean.selectedSubChildCat}"
+								style="margin-left: 3px;" /></td>
 					</tr>
+					
 					<tr>
 						<td><p:outputLabel value="Business Type" /></td>
 						<td><p:inputText readonly="true"
-								title="Auto populated based on the category code enterd/selected" /></td>
+								title="Auto populated based on the category code enterd/selected"
+								size="40" /></td>
 					</tr>
 					<tr>
 						<td colspan="2">
@@ -178,8 +175,9 @@
 					<tr>
 						<td><p:outputLabel value="* Category Type" /></td>
 						<td><p:selectOneMenu
-								value="#{backingBean.managedBean.selectedCategory.categoryType}">
-								<f:selectItem itemLabel="-- Select One -- " itemValue="O" />
+								value="#{backingBean.managedBean.selectedCategory.categoryType}"
+								style="width: 207px;margin-bottom: 5px;">
+								<f:selectItem itemLabel="-- Select  -- " itemValue="O" />
 								<f:selectItem itemLabel="Normal" itemValue="N" />
 								<f:selectItem itemLabel="Special" itemValue="S" />
 							</p:selectOneMenu></td>
@@ -188,8 +186,9 @@
 						<td><p:outputLabel value="
 										* Parent Category" /></td>
 						<td><p:selectOneMenu
-								value="#{backingBean.managedBean.selectedParentCat}">
-								<f:selectItem itemLabel="-- Select One -- " itemValue="" />
+								value="#{backingBean.managedBean.selectedParentCat}"
+								style="width: 207px;margin-bottom: 5px;">
+								<f:selectItem itemLabel="-- Select  -- " itemValue="" />
 								<f:selectItems
 									value="#{backingBean.managedBean.defaultParentCatList}"
 									var="parent" itemLabel="#{parent.categoryName}"
@@ -202,8 +201,9 @@
 					<tr>
 						<td><p:outputLabel value="* Child Category" /></td>
 						<td><p:selectOneMenu
-								value="#{backingBean.managedBean.selectedChildCat}" id="child">
-								<f:selectItem itemLabel=" -- Select One -- " itemValue="" />
+								value="#{backingBean.managedBean.selectedChildCat}" id="child"
+								style="width: 207px;margin-bottom: 5px;">
+								<f:selectItem itemLabel=" -- Select  -- " itemValue="" />
 								<f:selectItems
 									value="#{backingBean.managedBean.selectedCategory.pmCategoryL1.pmCategoryL2s}"
 									var="child" itemLabel="#{child.categoryName}"
@@ -216,8 +216,8 @@
 						<td><p:outputLabel value="* Sub Child Category" /></td>
 						<td><p:selectOneMenu
 								value="#{backingBean.managedBean.selectedSubChildCat}"
-								id="subChild">
-								<f:selectItem itemLabel=" -- Select One --  " itemValue="" />
+								id="subChild" style="width: 207px;margin-bottom: 5px;">
+								<f:selectItem itemLabel=" -- Select  --  " itemValue="" />
 								<f:selectItems
 									value="#{backingBean.managedBean.selectedCategory.pmCategoryL2.pmCategoryL3s}"
 									var="subChild" itemLabel="#{subChild.categoryName}"
@@ -229,7 +229,8 @@
 					<tr>
 						<td><p:outputLabel value="Business Type" /></td>
 						<td><p:inputText readonly="true"
-								title="Auto populated based on the category code enterd/selected" /></td>
+								title="Auto populated based on the category code enterd/selected"
+								size="35" /></td>
 					</tr>
 					<tr>
 						<td colspan="2">

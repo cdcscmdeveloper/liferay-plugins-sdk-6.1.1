@@ -10,10 +10,12 @@
 			<tr>
 				<td><p:outputLabel value="* Name" /></td>
 				<td><p:inputText
-						value="#{backingBean.managedBean.selectedPersonnel.name}" /></td>
+						value="#{backingBean.managedBean.selectedPersonnel.name}"
+						size="35" /></td>
 				<td><p:outputLabel value="* Nationality" /></td>
 				<td><p:selectOneMenu
-						value="#{backingBean.managedBean.selectedPersonnel.nationalityId}">
+						value="#{backingBean.managedBean.selectedPersonnel.nationalityId}"
+						style="width: 207px;margin-bottom: 5px;">
 						<f:selectItem itemLabel="-- Select One--" itemValue="1" />
 						<f:selectItem itemLabel="Malaysian" itemValue="2" />
 						<f:selectItem itemLabel="Chinese" itemValue="3" />
@@ -24,10 +26,12 @@
 			<tr>
 				<td><p:outputLabel value="* IC/Pspt No." /></td>
 				<td><p:inputText
-						value="#{backingBean.managedBean.selectedPersonnel.identificationNo}" /></td>
+						value="#{backingBean.managedBean.selectedPersonnel.identificationNo}"
+						size="35" /></td>
 				<td><p:outputLabel value="Race*" title="For Malaysian Only" /></td>
 				<td><p:selectOneMenu
-						value="#{backingBean.managedBean.selectedPersonnel.race}">
+						value="#{backingBean.managedBean.selectedPersonnel.race}"
+						style="width: 207px;margin-bottom: 5px;">
 						<f:selectItem itemLabel="-- Others--" itemValue="1" />
 						<f:selectItem itemLabel="Melayu" itemValue="M" />
 						<f:selectItem itemLabel="Chinese" itemValue="C" />
@@ -41,7 +45,8 @@
 						value="#{backingBean.managedBean.selectedPersonnel.birthDate}" /></td>
 				<td><p:outputLabel value="* Personnel Type" /></td>
 				<td><p:selectOneMenu
-						value="#{backingBean.managedBean.selectedPersonnel.personnelType}">
+						value="#{backingBean.managedBean.selectedPersonnel.personnelType}"
+						style="width: 207px;margin-bottom: 5px;">
 						<f:selectItem itemLabel="-- Select One--" itemValue="" />
 						<f:selectItem itemLabel="BOD" itemValue="B" />
 						<f:selectItem itemLabel="Management Staff" itemValue="M" />
@@ -50,20 +55,12 @@
 
 			</tr>
 			<tr>
-				<td><p:outputLabel value=" EPF NO." /></td>
-				<td><p:inputText title="For Malaysian Only"
-						value="#{backingBean.managedBean.selectedPersonnel.epfNo}" /></td>
-				<td><p:outputLabel value=" Experience" /></td>
-				<td><p:inputText
-						value="#{backingBean.managedBean.selectedPersonnel.workExperienceYear}" /></td>
-			</tr>
-
-			<tr>
 				<td><p:outputLabel value=" Designation" /></td>
 				<td><p:inputText
-						value="#{backingBean.managedBean.selectedPersonnel.designation}" /></td>
+						value="#{backingBean.managedBean.selectedPersonnel.designation}"
+						size="35" /></td>
 				<td><p:outputLabel value="* Branch Associated" /></td>
-				<td><p:selectOneMenu>
+				<td><p:selectOneMenu style="width: 207px;margin-bottom: 5px;">
 						<f:selectItem itemLabel="-- Select " itemValue="1" />
 						<f:selectItems
 							value="#{backingBean.managedBean.smAppl.smSupplierBranches}"
@@ -74,12 +71,26 @@
 
 			</tr>
 			<tr>
+				<td><p:outputLabel value=" EPF NO." /></td>
+				<td><p:inputText title="For Malaysian Only"
+						value="#{backingBean.managedBean.selectedPersonnel.epfNo}"
+						size="35" /></td>
+				<td><p:outputLabel value=" Experience" /></td>
+				<td><p:inputText
+						value="#{backingBean.managedBean.selectedPersonnel.workExperienceYear}"
+						size="35" /></td>
+			</tr>
+
+
+			<tr>
 				<td><p:outputLabel value="Email" /></td>
 				<td><p:inputText
-						value="#{backingBean.managedBean.selectedPersonnel.email}" /></td>
+						value="#{backingBean.managedBean.selectedPersonnel.email}"
+						size="35" /></td>
 				<td><p:outputLabel value="* Job Function" /></td>
 				<td><p:inputTextarea
-						value="#{backingBean.managedBean.selectedPersonnel.jobFunction}" /></td>
+						value="#{backingBean.managedBean.selectedPersonnel.jobFunction}"
+						cols="36" /></td>
 
 			</tr>
 			<tr>
@@ -112,8 +123,8 @@
 
 		<table style="width: 100%">
 			<tr>
-				<td><p:outputLabel value="* Institution" /></td>
-				<td><p:inputText /></td>
+				<td width="85px;"><p:outputLabel value="* Institution" /></td>
+				<td style="padding-right: 42px;"><p:inputText size="35" /></td>
 				<td><p:outputLabel value="Year " /></td>
 				<td><p:selectOneMenu>
 						<f:selectItem itemLabel="-- Select One--" itemValue="1" />
@@ -124,7 +135,7 @@
 
 			</tr>
 			<tr>
-				<td><p:outputLabel value="Educational Field" /></td>
+				<td><p:outputLabel value=" Field" /></td>
 				<td><p:selectOneMenu>
 						<f:selectItem itemLabel="-- Select One--" itemValue="1" />
 						<f:selectItem itemLabel="Computers" itemValue="1" />
@@ -160,23 +171,27 @@
 						<tr>
 							<td><p:outputLabel value="* Address" /></td>
 							<td><p:inputText
-									value="#{backingBean.managedBean.personnelPermAddr.smAddress.address1}" /></td>
+									value="#{backingBean.managedBean.personnelPermAddr.smAddress.address1}"
+									size="35" /></td>
 						</tr>
 
 						<tr>
 							<td></td>
 							<td><p:inputText
-									value="#{backingBean.managedBean.personnelPermAddr.smAddress.address2}" /></td>
+									value="#{backingBean.managedBean.personnelPermAddr.smAddress.address2}"
+									size="35" /></td>
 						</tr>
 						<tr>
 							<td></td>
 							<td><p:inputText
-									value="#{backingBean.managedBean.personnelPermAddr.smAddress.address3}" /></td>
+									value="#{backingBean.managedBean.personnelPermAddr.smAddress.address3}"
+									size="35" /></td>
 						</tr>
 						<tr>
 							<td><p:outputLabel value="* Country" /></td>
 							<td><p:selectOneMenu
-									value="#{backingBean.managedBean.personnelPermAddr.smAddress.pmCountry.countryCode}">
+									value="#{backingBean.managedBean.personnelPermAddr.smAddress.pmCountry.countryCode}"
+									style="width: 207px;margin-bottom: 5px;">
 									<f:selectItem itemLabel="-- Select One -- " itemValue="" />
 									<f:selectItem itemLabel="Malaysia" itemValue="1" />
 								</p:selectOneMenu></td>
@@ -184,33 +199,39 @@
 						<tr>
 							<td><p:outputLabel value="#{lbl['lbl.sm.postcode']}" /></td>
 							<td><p:inputText
-									value="#{backingBean.managedBean.personnelPermAddr.smAddress.postcode}" /></td>
+									value="#{backingBean.managedBean.personnelPermAddr.smAddress.postcode}"
+									size="35" /></td>
 						</tr>
 						<tr>
 							<td><p:outputLabel value="#{lbl['lbl.sm.state']}" /></td>
 							<td><p:inputText
-									value="#{backingBean.managedBean.personnelPermAddr.smAddress.pmState.stateCode}" /></td>
+									value="#{backingBean.managedBean.personnelPermAddr.smAddress.pmState.stateCode}"
+									size="35" /></td>
 						</tr>
 
 						<tr>
 							<td><p:outputLabel value="#{lbl['lbl.sm.district']}" /></td>
 							<td><p:inputText
-									value="#{backingBean.managedBean.personnelPermAddr.smAddress.pmDistrict.districtCode}" /></td>
+									value="#{backingBean.managedBean.personnelPermAddr.smAddress.pmDistrict.districtCode}"
+									size="35" /></td>
 						</tr>
 						<tr>
 							<td><p:outputLabel value="#{lbl['lbl.sm.towncity']}" /></td>
 							<td><p:inputText
-									value="#{backingBean.managedBean.personnelPermAddr.smAddress.pmCity.cityCode}" /></td>
+									value="#{backingBean.managedBean.personnelPermAddr.smAddress.pmCity.cityCode}"
+									size="35" /></td>
 						</tr>
 						<tr>
 							<td><p:outputLabel value="Phone NO." /></td>
 							<td><p:inputText
-									value="#{backingBean.managedBean.personnelPermAddr.smAddress.phoneNo}" /></td>
+									value="#{backingBean.managedBean.personnelPermAddr.smAddress.phoneNo}"
+									size="35" /></td>
 						</tr>
 						<tr>
 							<td><p:outputLabel value="Fax NO." /></td>
 							<td><p:inputText
-									value="#{backingBean.managedBean.personnelPermAddr.smAddress.faxNo}" /></td>
+									value="#{backingBean.managedBean.personnelPermAddr.smAddress.faxNo}"
+									size="35" /></td>
 						</tr>
 					</table>
 
@@ -231,23 +252,27 @@
 						<tr>
 							<td><p:outputLabel value="* Address" /></td>
 							<td><p:inputText
-									value="#{backingBean.managedBean.personnelMailAddr.smAddress.address1}" /></td>
+									value="#{backingBean.managedBean.personnelMailAddr.smAddress.address1}"
+									size="35" /></td>
 						</tr>
 
 						<tr>
 							<td></td>
 							<td><p:inputText
-									value="#{backingBean.managedBean.personnelMailAddr.smAddress.address2}" /></td>
+									value="#{backingBean.managedBean.personnelMailAddr.smAddress.address2}"
+									size="35" /></td>
 						</tr>
 						<tr>
 							<td></td>
 							<td><p:inputText
-									value="#{backingBean.managedBean.personnelMailAddr.smAddress.address3}" /></td>
+									value="#{backingBean.managedBean.personnelMailAddr.smAddress.address3}"
+									size="35" /></td>
 						</tr>
 						<tr>
 							<td><p:outputLabel value="* Country" /></td>
 							<td><p:selectOneMenu
-									value="#{backingBean.managedBean.personnelMailAddr.smAddress.pmCountry.countryCode}">
+									value="#{backingBean.managedBean.personnelMailAddr.smAddress.pmCountry.countryCode}"
+									style="width: 207px;margin-bottom: 5px;">
 									<f:selectItem itemLabel="-- Select One -- " itemValue="" />
 									<f:selectItem itemLabel="Malaysia" itemValue="1" />
 								</p:selectOneMenu></td>
@@ -255,33 +280,39 @@
 						<tr>
 							<td><p:outputLabel value="#{lbl['lbl.sm.postcode']}" /></td>
 							<td><p:inputText
-									value="#{backingBean.managedBean.personnelMailAddr.smAddress.postcode}" /></td>
+									value="#{backingBean.managedBean.personnelMailAddr.smAddress.postcode}"
+									size="35" /></td>
 						</tr>
 						<tr>
 							<td><p:outputLabel value="#{lbl['lbl.sm.state']}" /></td>
 							<td><p:inputText
-									value="#{backingBean.managedBean.personnelMailAddr.smAddress.pmState.stateCode}" /></td>
+									value="#{backingBean.managedBean.personnelMailAddr.smAddress.pmState.stateCode}"
+									size="35" /></td>
 						</tr>
 
 						<tr>
 							<td><p:outputLabel value="#{lbl['lbl.sm.district']}" /></td>
 							<td><p:inputText
-									value="#{backingBean.managedBean.personnelMailAddr.smAddress.pmDistrict.districtCode}" /></td>
+									value="#{backingBean.managedBean.personnelMailAddr.smAddress.pmDistrict.districtCode}"
+									size="35" /></td>
 						</tr>
 						<tr>
 							<td><p:outputLabel value="#{lbl['lbl.sm.towncity']}" /></td>
 							<td><p:inputText
-									value="#{backingBean.managedBean.personnelMailAddr.smAddress.pmCity.cityCode}" /></td>
+									value="#{backingBean.managedBean.personnelMailAddr.smAddress.pmCity.cityCode}"
+									size="35" /></td>
 						</tr>
 						<tr>
 							<td><p:outputLabel value="Phone NO." /></td>
 							<td><p:inputText
-									value="#{backingBean.managedBean.personnelMailAddr.smAddress.phoneNo}" /></td>
+									value="#{backingBean.managedBean.personnelMailAddr.smAddress.phoneNo}"
+									size="35" /></td>
 						</tr>
 						<tr>
 							<td><p:outputLabel value="Fax NO." /></td>
 							<td><p:inputText
-									value="#{backingBean.managedBean.personnelMailAddr.smAddress.faxNo}" /></td>
+									value="#{backingBean.managedBean.personnelMailAddr.smAddress.faxNo}"
+									size="35" /></td>
 						</tr>
 					</table>
 

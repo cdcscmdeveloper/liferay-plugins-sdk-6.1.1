@@ -136,7 +136,8 @@
 			<tr>
 				<td><p:outputLabel value="* Bank Name" /></td>
 				<td><p:selectOneMenu
-						value="#{backingBean.managedBean.selectedBank.pmbank.bankCode}">
+						value="#{backingBean.managedBean.selectedBank.pmbank.bankCode}"
+						style="width: 207px;margin-bottom: 5px;">
 						<f:selectItem itemLabel="-- Select One -- " itemValue="" />
 						<f:selectItem itemLabel="Maybank" itemValue="MY" />
 						<f:selectItem itemLabel="CIMB" itemValue="CIMB" />
@@ -146,28 +147,33 @@
 			<tr>
 				<td><p:outputLabel value="* Account NO." /></td>
 				<td><p:inputText
-						value="#{backingBean.managedBean.selectedBank.accountNo}" /></td>
+						value="#{backingBean.managedBean.selectedBank.accountNo}"
+						size="35" /></td>
 			</tr>
 			<tr>
 				<td><p:outputLabel value="* Address" /></td>
 				<td><p:inputText
-						value="#{backingBean.managedBean.selectedBank.smAddress.address1}" /></td>
+						value="#{backingBean.managedBean.selectedBank.smAddress.address1}"
+						size="35" /></td>
 			</tr>
 
 			<tr>
 				<td></td>
 				<td><p:inputText
-						value="#{backingBean.managedBean.selectedBank.smAddress.address2}" /></td>
+						value="#{backingBean.managedBean.selectedBank.smAddress.address2}"
+						size="35" /></td>
 			</tr>
 			<tr>
 				<td></td>
 				<td><p:inputText
-						value="#{backingBean.managedBean.selectedBank.smAddress.address3}" /></td>
+						value="#{backingBean.managedBean.selectedBank.smAddress.address3}"
+						size="35" /></td>
 			</tr>
 			<tr>
 				<td><p:outputLabel value="* Country" /></td>
 				<td><p:selectOneMenu
-						value="#{backingBean.managedBean.selectedBank.smAddress.pmCountry.countryCode}">
+						value="#{backingBean.managedBean.selectedBank.smAddress.pmCountry.countryCode}"
+						style="width: 207px;margin-bottom: 5px;">
 						<f:selectItem itemLabel="-- Select One -- " itemValue="" />
 						<f:selectItem itemLabel="Malaysia" itemValue="1" />
 					</p:selectOneMenu></td>
@@ -175,31 +181,57 @@
 			<tr>
 				<td><p:outputLabel value="#{lbl['lbl.sm.postcode']}" /></td>
 				<td><p:inputText
-						value="#{backingBean.managedBean.selectedBank.smAddress.postcode}" /></td>
+						value="#{backingBean.managedBean.selectedBank.smAddress.postcode}"
+						size="35" /></td>
 			</tr>
 			<tr>
 				<td><p:outputLabel value="#{lbl['lbl.sm.state']}" /></td>
 				<td><p:inputText
-						value="#{backingBean.managedBean.selectedBank.smAddress.pmState.stateCode}" /></td>
+						value="#{backingBean.managedBean.selectedBank.smAddress.pmState.stateCode}"
+						size="35" /></td>
 			</tr>
 
 			<tr>
 				<td><p:outputLabel value="#{lbl['lbl.sm.district']}" /></td>
 				<td><p:inputText
-						value="#{backingBean.managedBean.selectedBank.smAddress.pmDistrict.districtCode}" /></td>
+						value="#{backingBean.managedBean.selectedBank.smAddress.pmDistrict.districtCode}"
+						size="35" /></td>
 			</tr>
 			<tr>
 				<td><p:outputLabel value="#{lbl['lbl.sm.towncity']}" /></td>
 				<td><p:inputText
-						value="#{backingBean.managedBean.selectedBank.smAddress.pmCity.cityCode}" /></td>
+						value="#{backingBean.managedBean.selectedBank.smAddress.pmCity.cityCode}"
+						size="35" /></td>
 			</tr>
 			<tr>
 				<td><p:outputLabel value="* Account Purpose *" /></td>
-				<td><p:selectOneMenu>
-						<f:selectItem itemLabel="-- Select One -- " itemValue="" />
+				<td><p:selectOneMenu style="width: 207px;margin-bottom: 5px;">
+						<f:selectItem itemLabel="-- Select  -- " itemValue="" />
 						<f:selectItem itemLabel="Registration" itemValue="1" />
 						<f:selectItem itemLabel="Payment" itemValue="1" />
 					</p:selectOneMenu></td>
+			</tr>
+
+			<tr>
+				<td style="float: right; padding-right: 20px;"><p:selectBooleanCheckbox
+						value="#{backingBean.managedBean.selectedBank.defaultAccount}" /></td>
+				<td><h:outputText value="Designated Bank Account" /></td>
+			</tr>
+			<tr>
+				<td><p:outputLabel value="* Associated Branch" /></td>
+				<td><p:selectOneMenu style="width: 207px;margin-bottom: 5px;">
+						<f:selectItem itemLabel="-- Select --" itemValue="1" />
+						<f:selectItems
+							value="#{backingBean.managedBean.smAppl.smSupplierBranches}"
+							var="supBean" itemLabel="#{supBean.branchName}"
+							itemValue="#{supBean.branchName}" />
+					</p:selectOneMenu></td>
+			</tr>
+			<tr>
+				<td><p:outputLabel value="Fax NO." /></td>
+				<td><p:inputText
+						value="#{backingBean.managedBean.selectedBank.smAddress.faxNo}"
+						size="35" /></td>
 			</tr>
 			<tr>
 				<td><p:outputLabel value="* Cheque Signatories" /></td>
@@ -211,26 +243,6 @@
 							itemLabel="#{per.name}" itemValue="#{per.name}" />
 					</p:selectManyMenu></td>
 
-			</tr>
-			<tr>
-				<td style="float: right; padding-right: 20px;"><p:selectBooleanCheckbox
-						value="#{backingBean.managedBean.selectedBank.defaultAccount}" /></td>
-				<td><h:outputText value="Designated Bank Account" /></td>
-			</tr>
-			<tr>
-				<td><p:outputLabel value="* Associated Branch" /></td>
-				<td><p:selectOneMenu>
-						<f:selectItem itemLabel="-- Select One--" itemValue="1" />
-						<f:selectItems
-							value="#{backingBean.managedBean.smAppl.smSupplierBranches}"
-							var="supBean" itemLabel="#{supBean.branchName}"
-							itemValue="#{supBean.branchName}" />
-					</p:selectOneMenu></td>
-			</tr>
-			<tr>
-				<td><p:outputLabel value="Fax NO." /></td>
-				<td><p:inputText
-						value="#{backingBean.managedBean.selectedBank.smAddress.faxNo}" /></td>
 			</tr>
 
 		</table>

@@ -9,18 +9,18 @@
 
 
 	<ui:define name="contentSection">
-		<p:panel header="Delete Pending MOF Application">
+		<p:panel header="Delete Pending MOF Application - #{backingBean.managedBean.smAppl.applNo}">
 
-			<div>
+			<!-- <div>
 
 				<h4
 					style="color: blue; text-decoration: underline; text-align: center;">
 					<h:outputText value="#{lbl['lbl.sm.applnTypeLbl']}" />
 					<h:outputText value="Delete Pending MOF Application" />
-					<h:outputText value=" - #{backingBean.managedBean.smAppl.applNo}" />
+					<h:outputText value=" " />
 
 				</h4>
-			</div>
+			</div> -->
 			<br />
 			<table style="width: 100%;">
 				<tr>
@@ -53,7 +53,7 @@
 				</tr>
 				<tr>
 					<td><p:outputLabel value="Reason for delete MOF-Registered" /></td>
-					<td><p:inputTextarea cols="60" /></td>
+					<td><p:inputTextarea cols="45" style="margin-bottom : 5px;"/></td>
 
 				</tr>
 				<tr>

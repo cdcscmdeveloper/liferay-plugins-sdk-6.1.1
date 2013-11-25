@@ -106,23 +106,23 @@
 			<tr>
 				<td><p:outputLabel value="* Machinery Type" /></td>
 				<td><p:inputText
-						value="#{backingBean.managedBean.selectedMachine.machineType}" /></td>
+						value="#{backingBean.managedBean.selectedMachine.machineType}" size="35"/></td>
 			</tr>
 
 			<tr>
 				<td><p:outputLabel value="Brand" /></td>
 				<td><p:inputText
-						value="#{backingBean.managedBean.selectedMachine.brandName}" /></td>
+						value="#{backingBean.managedBean.selectedMachine.brandName}" size="35"/></td>
 			</tr>
 			<tr>
 				<td><p:outputLabel value="* Funtion" /></td>
 				<td><p:inputText
-						value="#{backingBean.managedBean.selectedMachine.machineFunction}" /></td>
+						value="#{backingBean.managedBean.selectedMachine.machineFunction}" size="35"/></td>
 			</tr>
 			<tr>
 				<td><p:outputLabel value="* Quantity" /></td>
 				<td><p:inputText
-						value="#{backingBean.managedBean.selectedMachine.qty}" /></td>
+						value="#{backingBean.managedBean.selectedMachine.qty}" size="35"/></td>
 			</tr>
 
 			<tr>
@@ -132,7 +132,7 @@
 						<tr>
 							<td style="padding-right: 5px;"><p:inputText
 									value="#{backingBean.managedBean.selectedMachine.value}"
-									size="10" /></td>
+									size="20" /></td>
 							<td valign="top"><p:selectOneMenu style="margin-bottom:5px;">
 									<f:selectItem itemLabel="MYR" itemValue="1" />
 								</p:selectOneMenu></td>
@@ -143,7 +143,7 @@
 			<tr>
 				<td><p:outputLabel value="* Purchase Method" /></td>
 				<td><p:selectOneMenu
-						value="#{backingBean.managedBean.selectedMachine.purchaseMethod}">
+						value="#{backingBean.managedBean.selectedMachine.purchaseMethod}" style="width: 207px;margin-bottom: 5px;">
 						<f:selectItem itemLabel="-- Select --" itemValue="" />
 						<f:selectItem itemLabel="Cash" itemValue="1" />
 						<f:selectItem itemLabel="Credit Card" itemValue="1" />
@@ -151,7 +151,7 @@
 			</tr>
 			<tr>
 				<td><p:outputLabel value="Guarantor Name" /></td>
-				<td><p:inputText value=" -- TBC --" /></td>
+				<td><p:inputText value=" -- TBC --" size="35"/></td>
 			</tr>
 
 		</table>
