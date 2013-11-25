@@ -44,6 +44,7 @@ public class BPMTaskListBackingBean extends BaseBackingBean<BPMTaskListManagedBe
 		temp.put("Disciplinary Action", "disciplinary-action");
 		temp.put("Site Visit Manage", "site-visit");
 		temp.put("MOF Supplier Registration", "mof-application");
+		temp.put("DirectPurchase Creation", "review-directpuchase");
 		
 		
 		this.getManagedBean().setBpmMap(temp);
