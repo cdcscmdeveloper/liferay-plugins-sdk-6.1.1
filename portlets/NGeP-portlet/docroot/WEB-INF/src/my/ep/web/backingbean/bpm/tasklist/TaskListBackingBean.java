@@ -425,7 +425,7 @@ public class TaskListBackingBean extends BaseBackingBean<TaskListManagedBean> {
 			if(null!=res.getAction() && !"".equals(res.getAction())){
 				purchaseRequestBackingBean.getManagedBean().setSubmitButtonStatus(false);
 			}
-			if(res.getTaskName().equals(FlProcessNameConst.PR_ACK_HT)){
+			if(res.getTaskName().equals(FlProcessNameConst.PR_ACK_HT) || res.getTaskName().equals(FlProcessNameConst.REVIEW_REJECTED_PO_HT)){
 				FulfilmentOrderBackingBean florderBB=new FulfilmentOrderBackingBean();
 				florderBB.getManagedBean().setFlRequest(resDTO.getFlFulfilmentRequest());
 				florderBB.getManagedBean().setTaskId(taskId);

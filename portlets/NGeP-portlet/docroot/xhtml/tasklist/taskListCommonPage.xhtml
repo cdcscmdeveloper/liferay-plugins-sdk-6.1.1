@@ -119,6 +119,10 @@
 				test='#{tasklistBackingBean.managedBean.taskName eq "Acknowledge Purchase Request"}'>
 				<ui:include src="/xhtml/fl/purchaseorder/poBasePage.xhtml"></ui:include>
 			</c:when>
+			<c:when
+				test='#{tasklistBackingBean.managedBean.taskName eq "Review Rejected Acknowledgement"}'>
+				<ui:include src="/xhtml/fl/purchaseorder/poBasePage.xhtml"></ui:include>
+			</c:when>
 			<c:otherwise>
 				<ui:include src="/xhtml/fl/purchaserequest/prBasePage.xhtml"></ui:include>
 			</c:otherwise>
