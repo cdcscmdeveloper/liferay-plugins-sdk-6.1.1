@@ -48,8 +48,15 @@
 						value="#{flOrderBB.managedBean.flRequest.issuedOrgProfile.orgName}"
 						disabled="true"></p:inputText></td>
 				<td><p:outputLabel value="#{lbl['lbl.fl.mto']}" /></td>
-				<td><p:selectBooleanCheckbox
-						value="#{flOrderBB.managedBean.flRequest.mto}" /></td>
+				<td>
+						<p:selectOneRadio 
+						value="#{flOrderBB.managedBean.flRequest.mto}">
+						<f:selectItem itemLabel="Yes" itemValue="true" />
+						<f:selectItem itemLabel="No" itemValue="false" />
+					</p:selectOneRadio></td>
+						
+						
+						</td>
 			</tr>
 			<tr>
 				<td><p:outputLabel value="* #{lbl['lbl.fl.issued.ptj']}" /></td>
