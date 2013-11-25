@@ -33,6 +33,7 @@ import my.ep.dto.tpl.spec.TemplateSpecResDTO;
 import my.ep.persistence.entity.pm.authorization.PmOrgProfile;
 import my.ep.persistence.entity.pm.common.PmCode;
 import my.ep.persistence.entity.pm.common.PmUom;
+import my.ep.persistence.entity.sm.SmSupplier;
 import my.ep.persistence.entity.tpl.spec.TplSpecAnswer;
 import my.ep.persistence.entity.tpl.spec.TplSpecMaster;
 import my.ep.persistence.entity.tpl.spec.TplSpecQuestion;
@@ -58,23 +59,46 @@ public class TemplateSpecBackingBean extends BaseBackingBean<TemplateSpecManaged
 	
 	public String retrieveTemplateSpecMaster() {
 		ITemplateSpecSO templateSpecSO = null;
+		ICodeCategorySO codeCategorySO = null;
 		TplSpecMaster specMaster = this.getManagedBean().getSpecMaster();
+		
+		/*IRegistrationSO registrationSO = BusinessDelegate.getInstance().getServiceObject("sm", IRegistrationSO.class);
+		RegistrationReqDTO registrationReqDTO = new RegistrationReqDTO();
+		registrationReqDTO.setSupplierId(1L);
+		RegistrationResDTO registrationResDTO = registrationSO.retrieveSuppOnlineAcc(registrationReqDTO);
+		getManagedBean().setSupplier(registrationResDTO.getSmSupp());*/
+		
+		SmSupplier smSupplier = this.getManagedBean().getSupplier();
 		try {
 			templateSpecSO = (ITemplateSpecSO)BusinessDelegate.getInstance().getServiceObject("cc",ITemplateSpecSO.class);
 			TemplateSpecReqDTO reqDTO = new TemplateSpecReqDTO();
 			reqDTO.setSpecMaster(specMaster);
+			reqDTO.setContentType(getManagedBean().getContentType());
+			if (!TemplateSpecConst.CONTENT_TYPE_QUESTION.equals(getManagedBean().getContentType())) {
+				reqDTO.setSupplier(smSupplier);
+			}
 
 			TemplateSpecResDTO resDTO = templateSpecSO.getTemplateMaster(reqDTO);
 			if(resDTO.isSuccessful()) {
 				getManagedBean().setSpecMaster(resDTO.getSpecMaster());
 				addQuestion(-1, TemplateSpecConst.QUESTION_TYPE_HEADER);
 				getManagedBean().setSelectedSpecQuestion(new TplSpecQuestion());
-				PmCode code = new PmCode();
-				code.setCodeId(0l);
-				getManagedBean().getSelectedSpecQuestion().setAnswerTypeCode(code);				
+				
+				codeCategorySO = BusinessDelegate.getInstance().getServiceObject("pm", ICodeCategorySO.class);
+				CodeCategoryReqDTO codeCategoryReqDTO = new CodeCategoryReqDTO();
+				codeCategoryReqDTO.setCategory(PmCodeCategoryConst.ANSWER_TYPE);
+				codeCategoryReqDTO.setCode(PmCodeConst.ANSWER_TYPE_TEXT);
+				CodeCategoryResDTO codeCategoryResDTO = codeCategorySO.retrieveCodeByCategoryAndCode(codeCategoryReqDTO);
+				
+				getManagedBean().getSelectedSpecQuestion().setAnswerTypeCode(codeCategoryResDTO.getPmCode());	
+				
+				if (!TemplateSpecConst.CONTENT_TYPE_QUESTION.equals(getManagedBean().getContentType())) {
+					populateSpecAnswer(getManagedBean().getSpecMaster().getTplSpecQuestions());
+				}
 			}
 		} finally {
 			templateSpecSO = null;
+			codeCategorySO = null;
 		}
 		return "maintenance";
 	}
@@ -115,22 +139,17 @@ public class TemplateSpecBackingBean extends BaseBackingBean<TemplateSpecManaged
 			List<TplSpecAnswer> answerList = new ArrayList<TplSpecAnswer>();
 			for(TplSpecQuestion question : this.getManagedBean().getSpecMaster().getTplSpecQuestions()) {
 				if(question.getTplSpecAnswer() != null) {
-					if(question.getTplSpecAnswer().isBrandNew()) {
-						question.getTplSpecAnswer().setSupplier(getManagedBean().getSupplier());
-						question.getTplSpecAnswer().setTplSpecQuestion(question);
-					}
 					answerList.add(question.getTplSpecAnswer());
 				}
 			}
 			TemplateSpecReqDTO reqDTO = new TemplateSpecReqDTO();
-			reqDTO.setSpecMaster(getManagedBean().getSpecMaster());
-			reqDTO.setSupplier(getManagedBean().getSupplier());
 			reqDTO.setAnswerList(answerList);
 
 			TemplateSpecResDTO resDTO = templateSpecSO.saveTemplateSpecAnswer(reqDTO);
 
 			if(resDTO.isSuccessful()) {
-				this.getManagedBean().setSpecMaster(resDTO.getSpecMaster());
+				retrieveTemplateSpecMaster();
+				FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO,"Record save successfully", "Record ID: "+getManagedBean().getSpecMaster().getSpecMasterId()));
 			}
 
 		} finally {
@@ -388,6 +407,24 @@ public class TemplateSpecBackingBean extends BaseBackingBean<TemplateSpecManaged
 			codeCategorySO = null;
 		}
 		
+	}
+	
+	private void populateSpecAnswer(List<TplSpecQuestion> questions) {		
+		TplSpecAnswer tplSpecAnswer = null;
+		
+		for (TplSpecQuestion question : questions) {
+			if (question.getTplSpecAnswers() != null && question.getTplSpecAnswers().size() > 0) {
+				question.setTplSpecAnswer(question.getTplSpecAnswers().iterator().next());
+			} else if (TemplateSpecConst.CONTENT_TYPE_ANSWER.equals(getManagedBean().getContentType()) && 
+				question.getQuestionType().equals(TemplateSpecConst.QUESTION_TYPE_LINE_ITEM)) {
+						
+				tplSpecAnswer = new TplSpecAnswer();
+				tplSpecAnswer.setSupplier(getManagedBean().getSupplier());
+				tplSpecAnswer.setTplSpecQuestion(question);
+				
+				question.setTplSpecAnswer(tplSpecAnswer);
+			}
+		}
 	}
 	
 }

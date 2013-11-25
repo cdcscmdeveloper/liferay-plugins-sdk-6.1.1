@@ -3,6 +3,7 @@
 	xmlns:f="http://java.sun.com/jsf/core"
 	xmlns:h="http://java.sun.com/jsf/html"
 	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
 	xmlns:ac="http://ac.my/jsf/composite/cc"
 	xmlns:p="http://primefaces.org/ui">
 
@@ -21,28 +22,50 @@
 		</script>
 		
 		<p:panel id="spg" header="Specification Content" toggleable="true">
+			<h:panelGroup rendered="false">
+			Content Type: 
+			<p:selectOneMenu value="#{templateSpecBackingBean.managedBean.contentType}">
+				<f:selectItem itemLabel="Question" itemValue="#{TplSpecConst.contentTypeQuestion}" />
+				<f:selectItem itemLabel="Answer" itemValue="#{TplSpecConst.contentTypeAnswer}" />
+				<f:selectItem itemLabel="Score" itemValue="#{TplSpecConst.contentTypeScore}" />
+				<p:ajax event="change" update="questionTbl, saveAnsPG" />
+			</p:selectOneMenu>
+			
+			<h:panelGroup id="saveAnsPG" >
+				<p:commandButton value="Save Answer" action="#{templateSpecBackingBean.saveAnswerAction}" 
+					rendered="#{templateSpecBackingBean.managedBean.contentType != TplSpecConst.contentTypeQuestion}" />
+			</h:panelGroup>
+			</h:panelGroup>
 			<p:commandButton value="Re-Numbering" action="#{templateSpecBackingBean.renumberingQuestionTable}"
 				process="@this spg" update="spg" />
 			<p:dataTable id="questionTbl" var="question" rowIndexVar="row"
 				value="#{templateSpecBackingBean.managedBean.specMaster.tplSpecQuestions}">
 				<p:column style="#{(question.questionType == TplSpecConst.questionTypeHeader) ? 'background-color:#dddddd;' : ''}" >
 					<h:outputLabel value="Numbering" style="float: left" rendered="#{question.questionType == TplSpecConst.questionTypeHeader}" />
-					<p:inputText style="min-width:0px !important" size="5" value="#{question.questionNumber}" rendered="#{question.questionType != TplSpecConst.questionTypeHeader}" />
+					<p:inputText style="min-width:0px !important" size="5" value="#{question.questionNumber}" 
+						rendered="#{question.questionType != TplSpecConst.questionTypeHeader}" 
+						disabled="#{templateSpecBackingBean.managedBean.contentType != TplSpecConst.contentTypeQuestion}" />
 				</p:column>
 				<p:column style="#{(question.questionType == TplSpecConst.questionTypeHeader) ? 'background-color:#dddddd;' : ''}" 
 					colspan="#{(question.questionType == TplSpecConst.questionTypeSection) ? 6 : 1}" styleClass="colspan#{(question.questionType == TplSpecConst.questionTypeSection) ? 6 : 1}" >
 					<h:outputLabel value="Item" style="float: left" rendered="#{question.questionType == TplSpecConst.questionTypeHeader}" />	
-					<p:inputText value="#{question.clItem}" rendered="#{question.questionType != TplSpecConst.questionTypeHeader}" />
+					<p:inputText value="#{question.clItem}" 
+						rendered="#{question.questionType != TplSpecConst.questionTypeHeader}" 
+						disabled="#{templateSpecBackingBean.managedBean.contentType != TplSpecConst.contentTypeQuestion}" />
 				</p:column>
 				<p:column style="#{(question.questionType == TplSpecConst.questionTypeHeader) ? 'background-color:#dddddd;' : ''}" 
 					rendered="#{question.questionType != TplSpecConst.questionTypeSection}">
 					<h:outputLabel value="Specification" style="float: left" rendered="#{question.questionType == TplSpecConst.questionTypeHeader}" />
-					<p:inputText value="#{question.clSpecDetail}" rendered="#{question.questionType != TplSpecConst.questionTypeHeader}" />
+					<p:inputText value="#{question.clSpecDetail}" 
+						rendered="#{question.questionType != TplSpecConst.questionTypeHeader}" 
+						disabled="#{templateSpecBackingBean.managedBean.contentType != TplSpecConst.contentTypeQuestion}" />
 				</p:column>
 				<p:column style="#{(question.questionType == TplSpecConst.questionTypeHeader) ? 'background-color:#dddddd;' : ''}"
 					rendered="#{question.questionType != TplSpecConst.questionTypeSection}">
 					<h:outputLabel value="Uom" style="float: left" rendered="#{question.questionType == TplSpecConst.questionTypeHeader}" />
-					<p:selectOneMenu style="width:100px;" value="#{question.clUom.uomId}" rendered="#{question.questionType != TplSpecConst.questionTypeHeader}">
+					<p:selectOneMenu style="width:100px;" value="#{question.clUom.uomId}" 
+						rendered="#{question.questionType != TplSpecConst.questionTypeHeader}" 
+						disabled="#{templateSpecBackingBean.managedBean.contentType != TplSpecConst.contentTypeQuestion}">
 						<f:selectItems value="#{templateSpecBackingBean.uomList}" />
 					</p:selectOneMenu>
 				</p:column>
@@ -50,27 +73,79 @@
 					rendered="#{question.questionType != TplSpecConst.questionTypeSection}">
 					<h:outputLabel value="Quantity" rendered="#{question.questionType == TplSpecConst.questionTypeHeader}" />
 					<p:inputText style="min-width:0px !important" size="6" dir="rtl" value="#{question.clQuantity}" 
-						rendered="#{question.questionType != TplSpecConst.questionTypeHeader}" />
+						rendered="#{question.questionType != TplSpecConst.questionTypeHeader}"
+						disabled="#{templateSpecBackingBean.managedBean.contentType != TplSpecConst.contentTypeQuestion}" />
 				</p:column>
 				<p:column style="#{(question.questionType == TplSpecConst.questionTypeHeader) ? 'background-color:#dddddd;' : ''}"
-					rendered="#{question.questionType != TplSpecConst.questionTypeSection}">
+					rendered="#{question.questionType != TplSpecConst.questionTypeSection and templateSpecBackingBean.managedBean.contentType == TplSpecConst.contentTypeQuestion}">
 					<h:outputLabel value="Mandatory" rendered="#{question.questionType == TplSpecConst.questionTypeHeader}" />
 					<p:selectBooleanCheckbox value="#{question.clAnswerRequired}" rendered="#{question.questionType != TplSpecConst.questionTypeHeader}" />
 				</p:column>
 				<p:column style="#{(question.questionType == TplSpecConst.questionTypeHeader) ? 'background-color:#dddddd;' : ''}"
 					rendered="#{question.questionType != TplSpecConst.questionTypeSection}">
 					<h:outputLabel value="Answer" style="float: left" rendered="#{question.questionType == TplSpecConst.questionTypeHeader}" />
-					<p:selectOneMenu id="answerTypeId" style="width:100px;" rendered="#{question.questionType != TplSpecConst.questionTypeHeader}"
-						value="#{question.answerTypeCode.codeId}" >
-						<f:selectItems value="#{templateSpecBackingBean.getDropdownValues(PmCodeCatConst.answerType)}" />
-						<p:ajax event="change" listener="#{templateSpecBackingBean.answerTypeChange(row)}" update="scoringBtn" />
-					</p:selectOneMenu>			
-					<p:commandButton id="scoringBtn" image="add" style="float:right" 
-						rendered="#{(question.questionType != TplSpecConst.questionTypeHeader)}"
-						disabled="#{(question.answerTypeCode.code == PmCodeConst.answerTypeText)}" 
-						action="#{templateSpecBackingBean.setIndex(row)}" oncomplete="scoringSetting.show();" />
-				</p:column>	
-				<p:column style="#{(question.questionType == TplSpecConst.questionTypeHeader) ? 'background-color:#dddddd;' : ''}">
+					<c:if test="#{templateSpecBackingBean.managedBean.contentType == TplSpecConst.contentTypeQuestion}">
+						<p:selectOneMenu id="answerTypeId" style="width:100px;" rendered="#{question.questionType != TplSpecConst.questionTypeHeader}"
+							value="#{question.answerTypeCode.codeId}" >
+							<f:selectItems value="#{templateSpecBackingBean.getDropdownValues(PmCodeCatConst.answerType)}" />
+							<p:ajax event="change" listener="#{templateSpecBackingBean.answerTypeChange(row)}" update="scoringBtn" />
+						</p:selectOneMenu>			
+						<p:commandButton id="scoringBtn" image="add" style="float:right" 
+							rendered="#{(question.questionType != TplSpecConst.questionTypeHeader)}"
+							disabled="#{(question.answerTypeCode.code == PmCodeConst.answerTypeText)}" 
+							action="#{templateSpecBackingBean.setIndex(row)}" oncomplete="scoringSetting.show();" />
+					</c:if>
+					<c:if test="#{templateSpecBackingBean.managedBean.contentType != TplSpecConst.contentTypeQuestion}">
+						<h:panelGroup rendered="#{question.questionType != TplSpecConst.questionTypeHeader and !empty question.tplSpecAnswer}">
+							<p:inputText value="#{question.tplSpecAnswer.answerText}" 
+								rendered="#{question.answerTypeCode.code == PmCodeConst.answerTypeText}"
+								disabled="#{templateSpecBackingBean.managedBean.contentType != TplSpecConst.contentTypeAnswer}"
+								required="#{question.clAnswerRequired}" />
+							<p:inputText value="#{question.tplSpecAnswer.answerNumeric}" 
+								rendered="#{question.answerTypeCode.code == PmCodeConst.answerTypeNumeric}"
+								disabled="#{templateSpecBackingBean.managedBean.contentType != TplSpecConst.contentTypeAnswer}"
+								required="#{question.clAnswerRequired}" />
+							<p:selectOneMenu id="answerTypeId" style="width:100px;"
+								value="#{question.tplSpecAnswer.answerCompliance}"
+								rendered="#{question.answerTypeCode.code == PmCodeConst.answerTypeDropdown}"
+								disabled="#{templateSpecBackingBean.managedBean.contentType != TplSpecConst.contentTypeAnswer}"
+								required="#{question.clAnswerRequired}">
+								<f:selectItem itemLabel="- Select One -" itemValue="#{null}" />
+								<f:selectItem itemLabel="Yes" itemValue="true" />
+								<f:selectItem itemLabel="No" itemValue="false" />
+							</p:selectOneMenu>
+						</h:panelGroup>
+					</c:if>
+				</p:column>
+				<p:column style="#{(question.questionType == TplSpecConst.questionTypeHeader) ? 'background-color:#dddddd;' : ''}"
+					rendered="#{question.questionType != TplSpecConst.questionTypeSection and templateSpecBackingBean.managedBean.contentType != TplSpecConst.contentTypeQuestion}">
+					<h:outputLabel value="Answer Remark" style="float: left" rendered="#{question.questionType == TplSpecConst.questionTypeHeader}" />
+					<p:inputTextarea value="#{question.tplSpecAnswer.answerRemark}"
+						rendered="#{question.questionType != TplSpecConst.questionTypeHeader and !empty question.tplSpecAnswer}"
+						disabled="#{templateSpecBackingBean.managedBean.contentType != TplSpecConst.contentTypeAnswer}" />
+				</p:column>
+				<p:column style="#{(question.questionType == TplSpecConst.questionTypeHeader) ? 'background-color:#dddddd;' : ''}"
+					rendered="#{question.questionType != TplSpecConst.questionTypeSection and templateSpecBackingBean.managedBean.contentType == TplSpecConst.contentTypeScore and question.answerTypeCode.code != PmCodeConst.answerTypeText}">
+					<h:outputLabel value="System Score" style="float: left" 
+						rendered="#{question.questionType == TplSpecConst.questionTypeHeader}" />
+					<p:inputText value="#{question.tplSpecAnswer.autoScore}"
+						rendered="#{question.questionType != TplSpecConst.questionTypeHeader and !empty question.tplSpecAnswer}" />
+				</p:column>
+				<p:column style="#{(question.questionType == TplSpecConst.questionTypeHeader) ? 'background-color:#dddddd;' : ''}"
+					rendered="#{question.questionType != TplSpecConst.questionTypeSection and templateSpecBackingBean.managedBean.contentType == TplSpecConst.contentTypeScore and question.answerTypeCode.code == PmCodeConst.answerTypeText}">
+					<h:outputLabel value="User Score" style="float: left" 
+						rendered="#{question.questionType == TplSpecConst.questionTypeHeader}" />
+					<p:inputText value="#{question.tplSpecAnswer.userScore}"
+						rendered="#{question.questionType != TplSpecConst.questionTypeHeader and !empty question.tplSpecAnswer}" />
+				</p:column>
+				<p:column style="#{(question.questionType == TplSpecConst.questionTypeHeader) ? 'background-color:#dddddd;' : ''}"
+					rendered="#{question.questionType != TplSpecConst.questionTypeSection and templateSpecBackingBean.managedBean.contentType == TplSpecConst.contentTypeScore}">
+					<h:outputLabel value="User Remark" style="float: left" rendered="#{question.questionType == TplSpecConst.questionTypeHeader}" />
+					<p:inputTextarea value="#{question.tplSpecAnswer.userRemark}"
+						rendered="#{question.questionType != TplSpecConst.questionTypeHeader and !empty question.tplSpecAnswer}" />
+				</p:column>
+				<p:column style="#{(question.questionType == TplSpecConst.questionTypeHeader) ? 'background-color:#dddddd;' : ''}"
+					rendered="#{templateSpecBackingBean.managedBean.contentType == TplSpecConst.contentTypeQuestion}">
 					<p:menuButton value="Add" >
 			            <p:menuitem value="Section" action="#{templateSpecBackingBean.addQuestion(row,TplSpecConst.questionTypeSection)}"  
 			            	update="questionTbl" process="@form" oncomplete="updateColspan()">

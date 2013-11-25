@@ -9,6 +9,7 @@ import java.util.List;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
 
+import my.ep.constant.tpl.TemplateSpecConst;
 import my.ep.persistence.entity.sm.SmSupplier;
 import my.ep.persistence.entity.tpl.spec.TplSpecMaster;
 import my.ep.persistence.entity.tpl.spec.TplSpecQuestion;
@@ -38,6 +39,8 @@ public class TemplateSpecManagedBean extends BaseManagedBean {
 	private Long searchSpecTypeId;	
 	private TplSpecMaster specMaster;
 	private TplSpecQuestion selectedSpecQuestion;
+	
+	private String contentType = TemplateSpecConst.CONTENT_TYPE_QUESTION;
 	private SmSupplier supplier;
 	
 	private List<TplSpecMaster> specMasterList;
@@ -69,6 +72,20 @@ public class TemplateSpecManagedBean extends BaseManagedBean {
 	
 	public void setDeletedQuestions(List<TplSpecQuestion> deletedQuestions) {
 		this.deletedQuestions = deletedQuestions;
+	}
+
+	/**
+	 * @return the contentType
+	 */
+	public String getContentType() {
+		return contentType;
+	}
+
+	/**
+	 * @param contentType the contentType to set
+	 */
+	public void setContentType(String contentType) {
+		this.contentType = contentType;
 	}
 
 	public SmSupplier getSupplier() {
