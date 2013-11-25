@@ -19,6 +19,7 @@ import my.ep.biz.bean.search.SearchBean;
 import my.ep.biz.bean.search.SearchFilterBean;
 import my.ep.biz.service.ct.IContractSO;
 import my.ep.biz.service.ct.supplier.IContractSupplierSO;
+import my.ep.bpm.service.IBpmSO;
 import my.ep.dto.ct.ContractReqDTO;
 import my.ep.dto.ct.ContractResDTO;
 import my.ep.dto.ct.supplier.ContractSupplierReqDTO;
@@ -36,7 +37,9 @@ import my.ep.persistence.entity.pm.common.PmStatus;
 import my.ep.persistence.entity.sm.SmSupplier;
 import my.ep.persistence.entity.sm.SmSupplierBank;
 import my.ep.type.aut.SearchOperator;
+import my.ep.util.lookupservice.EpBpmBusinessDelegate;
 import my.ep.web.backingbean.BaseBackingBean;
+import my.ep.web.backingbean.ct.ContractBackingBean;
 import my.ep.web.bean.ct.CheckBoxSelections;
 import my.ep.web.bean.ct.ContractListItem;
 import my.ep.web.constant.BpmOutcomeConst;
@@ -66,6 +69,10 @@ public class SupplierBackingBean extends BaseBackingBean<SupplierManagedBean> {
 	
 
 	public SupplierBackingBean(){
+		
+		ContractBackingBean ctBB = new ContractBackingBean();
+		ctBB.initializeRemarkAndAttachement(getManagedBean().getRemarkList(), getManagedBean().getAttachmentList());
+
 		if(this.getManagedBean().getOutComes()==null) {
 			this.getManagedBean().setOutComes(new String[]{BpmOutcomeConst.BPM_SAVE, BpmOutcomeConst.BPM_SUBMIT});
 		}
@@ -75,7 +82,23 @@ public class SupplierBackingBean extends BaseBackingBean<SupplierManagedBean> {
 	public void init(){
 		checkBoxSelections = new CheckBoxSelections();
 		contractListItem = new ContractListItem();
-		
+		if (this.getManagedBean().getCtContract() == null) {
+
+			ContractBackingBean ctBB = new ContractBackingBean();
+			ctBB.initializeRemarkAndAttachement(getManagedBean().getRemarkList(), getManagedBean().getAttachmentList());
+
+			this.getManagedBean().setCtContract(new CtContract());
+			this.getManagedBean().getCtContract().setQtPublishDate(new Date());
+			this.getManagedBean().getCtContract().setQtLoaNo("LOA 325/2012");
+			this.getManagedBean().getCtContract().setQtLoaDate(new Date());
+			this.getManagedBean().getCtContract().setChkLocal(false);
+			this.getManagedBean().getCtContract().setChkImported(false);
+			this.getManagedBean().getCtContract().setChkMto(false);
+			this.getManagedBean().getCtContract().setContractName("Bekalan Pen Bebola");
+			this.getManagedBean().getCtContract().setServiceFee(0.4);
+			this.getManagedBean().getCtContract().setQtLoaId(new Long(3252012));
+			this.getManagedBean().getCtContract().setQtLoaId(new Long(3252012));
+		}
 		if(this.getManagedBean().getSupplierBank() == null){
 			this.getManagedBean().setSupplierBank(new CtSupplierBank());
 			this.getManagedBean().getSupplierBank().setCtContract(new CtContract());
@@ -169,7 +192,7 @@ public class SupplierBackingBean extends BaseBackingBean<SupplierManagedBean> {
 	     }
 	}
     
-    public String saveChangeBankRequest(String outcome){
+    public String saveChangeBankRequest(String action){
     	
     	IContractSupplierSO supplierSO = null;
 		ContractSupplierReqDTO reqDTO = null;	
@@ -180,20 +203,27 @@ public class SupplierBackingBean extends BaseBackingBean<SupplierManagedBean> {
 			 supplierSO = (IContractSupplierSO)BusinessDelegate.getInstance().getServiceObject("ct", IContractSupplierSO.class);
 		   	 reqDTO.setSupplierBank(this.getManagedBean().getSupplierBank());
 			
-		   	 reqDTO.setOutcome(outcome);
-			 reqDTO.setTaskId(this.getManagedBean().getTaskId());
-			 
-			 if(outcome == BpmOutcomeConst.BPM_SAVE){
-			      reqDTO.setOutcome("");
-			  
-			 }else if(outcome == BpmOutcomeConst.BPM_REVISE)
-			      reqDTO.setTaskId(this.getManagedBean().getTaskId());
+		   	String token = this.getManagedBean().getToken();
+			if (token == null) {
+				IBpmSO bpmSO = (IBpmSO) EpBpmBusinessDelegate.getInstance().getServiceObject(IBpmSO.class);
+				token = bpmSO.authenticate("khai", "welcome1");
+				if (token == null) {
+					throw new EpException("BPM token not found");
+				}
+			}
+
+			reqDTO.setOutcome(action);
+			if (action == BpmOutcomeConst.BPM_SAVE) {
+				reqDTO.setOutcome("");
+			}
+			reqDTO.setToken(token);
+			reqDTO.setTaskId(this.getManagedBean().getTaskId());
 			  
 			 ContractSupplierResDTO resDTO = supplierSO.saveChangeBankRequest(reqDTO); 
 			 if(resDTO.isSuccessful()) {
 					log.info("Record saved successfully");
 					FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "Record saved successfully.","Change Bank A/C. : "));
-					if(!outcome.equalsIgnoreCase(BpmOutcomeConst.BPM_SAVE)) { // save action will remain in the same page
+					if(!action.equalsIgnoreCase(BpmOutcomeConst.BPM_SAVE)) { 
 						renewSesionObject();
 						return "/xhtml/shared/acknowledge.xhtml";
 					}
@@ -212,7 +242,7 @@ public class SupplierBackingBean extends BaseBackingBean<SupplierManagedBean> {
 		return null;
     }
 	
-    public String saveFactoringRequest(String outcome){
+    public String saveFactoringRequest(String action){
     	
 
     	IContractSupplierSO supplierSO = null;
@@ -223,20 +253,28 @@ public class SupplierBackingBean extends BaseBackingBean<SupplierManagedBean> {
 			 supplierSO = (IContractSupplierSO)BusinessDelegate.getInstance().getServiceObject("ct", IContractSupplierSO.class);
 		   	 reqDTO.setFactoring(this.getManagedBean().getFactoring());
 			
-		   	 reqDTO.setOutcome(outcome);
-			 reqDTO.setTaskId(this.getManagedBean().getTaskId());
-			 
-			 if(outcome == BpmOutcomeConst.BPM_SAVE){
-			    reqDTO.setOutcome("");
-			  
-			 }else if(outcome == BpmOutcomeConst.BPM_REVISE)
-			   reqDTO.setTaskId(this.getManagedBean().getTaskId());
+		   	String token = this.getManagedBean().getToken();
+			if (token == null) {
+				IBpmSO bpmSO = (IBpmSO) EpBpmBusinessDelegate.getInstance().getServiceObject(IBpmSO.class);
+				token = bpmSO.authenticate("khai", "welcome1");
+				if (token == null) {
+					throw new EpException("BPM token not found");
+				}
+			}
+
+			reqDTO.setOutcome(action);
+			if (action == BpmOutcomeConst.BPM_SAVE) {
+				reqDTO.setOutcome("");
+			}
+			reqDTO.setToken(token);
+			reqDTO.setTaskId(this.getManagedBean().getTaskId());
+
 			  
 			 ContractSupplierResDTO resDTO = supplierSO.saveFactoringRequest(reqDTO);
 			 if(resDTO.isSuccessful()) {
 					log.info("Record saved successfully");
 					FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "Record saved successfully.","Factoring Request. : "));
-					if(!outcome.equalsIgnoreCase(BpmOutcomeConst.BPM_SAVE)) { // save action will remain in the same page
+					if(!action.equalsIgnoreCase(BpmOutcomeConst.BPM_SAVE)) { 
 						renewSesionObject();
 						return "/xhtml/shared/acknowledge.xhtml";
 					}
@@ -273,8 +311,6 @@ public class SupplierBackingBean extends BaseBackingBean<SupplierManagedBean> {
 			 
 			 if(outcome == BpmOutcomeConst.BPM_SAVE)
 			   reqDTO.setOutcome("");
-			 else if(outcome == BpmOutcomeConst.BPM_REVISE)
-			   reqDTO.setTaskId(this.getManagedBean().getTaskId());
 			  
 			 ContractSupplierResDTO resDTO = supplierSO.saveTerminationRequest(reqDTO);
 			 if(resDTO.isSuccessful()) {

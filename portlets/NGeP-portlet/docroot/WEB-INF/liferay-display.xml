@@ -14,6 +14,7 @@
 			<portlet id="ctAssociateContract" />
 			<portlet id="ctFulfilmentDetail" />
 			<portlet id="ctAgreement" />
+			<portlet id="ctFactoringRequest" />
 			<portlet id="ctSuppAgreement" />
 			<portlet id="ctTemplate"></portlet>
 		</category>

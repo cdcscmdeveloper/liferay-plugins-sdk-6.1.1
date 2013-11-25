@@ -1,123 +1,162 @@
-<ui:composition
-	xmlns="http://www.w3.org/1999/xhtml"
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
 	xmlns:f="http://java.sun.com/jsf/core"
 	xmlns:h="http://java.sun.com/jsf/html"
 	xmlns:ui="http://java.sun.com/jsf/facelets"
 	xmlns:p="http://primefaces.org/ui"
 	xmlns:c="http://java.sun.com/jsp/jstl/core">
-	 <p:panel id="fd" header="#{lbl['lbl.ct.panel.name']}" toggleable="true"  toggleSpeed="500" widgetVar="panelfd">
-    <h:panelGrid columns="5" style="width:750px;">  
-    <p:outputLabel  value="#{lbl['lbl.ct.cno']}"/>  
-    <p:inputText value=" "  required="true" disabled="true" style="width:150px;"  /> 
-    <p:outputLabel value="#{lbl['lbl.ct.sourcingType']}"/>  
-    <p:selectOneMenu disabled="false" style="width:160px;">
-    <f:selectItems value="#{supplierBackingBean.contractListItem.sourcingType}" />
-    </p:selectOneMenu>
-    <h:panelGrid columns="2">
-       <p:selectBooleanCheckbox value="#{supplierBackingBean.checkBoxSelections.checkedAgreement}" 
-          disabled="#{supplierBackingBean.checkBoxSelections.disabledAgreement}"/> 
-        <p:outputLabel value="#{lbl['lbl.ct.agreement']}"/>
-    </h:panelGrid>
-        <p:outputLabel value="#{lbl['lbl.ct.contractType']}"/>  
-        <p:selectOneMenu disabled="false"  style="width:120px;">
-          <f:selectItems value="#{supplierBackingBean.contractListItem.contractType}" />
-        </p:selectOneMenu>
-        <p:outputLabel value="#{lbl['lbl.ct.sourcingCategory']}" />  
-        <p:selectOneMenu disabled="false" style="width:160px;">
-          <f:selectItems value="#{supplierBackingBean.contractListItem.sourcingCategory}" />
-        </p:selectOneMenu>
-         <h:panelGrid columns="2">
-        <p:selectBooleanCheckbox value="#{supplierBackingBean.checkBoxSelections.checkedConcession}" 
-           disabled="#{supplierBackingBean.checkBoxSelections.checkedConcession}"/> 
-        <p:outputLabel rendered="true"  value="Concession"/>
-        </h:panelGrid>
-        <p:outputLabel value="#{lbl['lbl.ct.createdDate']}" />  
-        <p:inputText disabled="true" style="width:150px;" />  
-        <p:outputLabel value="#{lbl['lbl.ct.publishingDate']}" />  
-        <p:inputText  disabled="true" style="width:150px;"/>
-         <h:panelGrid columns="2">
-        <p:selectBooleanCheckbox value="#{supplierBackingBean.checkBoxSelections.checkedExempted}" 
-           disabled="#{supplierBackingBean.checkBoxSelections.checkedExempted}"/> 
-        <p:outputLabel value="Exempted"/>
-        </h:panelGrid>
-        <p:outputLabel value="#{lbl['lbl.ct.loaNo']}"  />  
-        <p:inputText disabled="true" style="width:150px;" />  
-        <p:outputLabel  value="#{lbl['lbl.ct.loaDate']}"/>  
-        <p:inputText disabled="true" style="width:150px;" />  
-         <h:panelGrid columns="2">
-        <p:selectBooleanCheckbox value="#{supplierBackingBean.checkBoxSelections.checkedGood}" 
-           disabled="#{supplierBackingBean.checkBoxSelections.disabledGood}"/> 
-        <p:outputLabel value="#{lbl['lbl.ct.localGoods']}" />
-        </h:panelGrid>
-        <p:outputLabel value="#{lbl['lbl.ct.contractAmount']}" />  
-        <p:inputText  disabled="true" style="width:90px;" />  
-         <p:outputLabel value="#{lbl['lbl.ct.fulfilmentType']}" />  
-         <p:selectOneMenu disabled="false" style="width:160px;" value="" >
-           <f:selectItems value="#{supplierBackingBean.contractListItem.fulfilmentType}" />
-         </p:selectOneMenu>
-          <h:panelGrid columns="2">
-         <p:selectBooleanCheckbox value="#{supplierBackingBean.checkBoxSelections.checkedIGood}" 
-             disabled="#{supplierBackingBean.checkBoxSelections.checkedIGood}"/> 
-          <p:outputLabel rendered="true"  value="#{lbl['lbl.ct.Igoods']}" />
-          </h:panelGrid>
-           <p:outputLabel value="Currency" />  
-           <p:selectOneMenu style="width:65px;">
-               <f:selectItems value="#{supplierBackingBean.contractListItem.currency}" /></p:selectOneMenu>
-         <p:outputLabel  value="#{lbl['lbl.ct.sfee']}" />  
-             <p:selectOneMenu  disabled="true" style="width:85px;">
-                <f:selectItems value="#{supplierBackingBean.contractListItem.serviceFee}" />
-            </p:selectOneMenu> 
-           <h:panelGrid columns="2">
-           <p:selectBooleanCheckbox value="#{supplierBackingBean.checkBoxSelections.checkedMto}" 
-               disabled="#{supplierBackingBean.checkBoxSelections.disabledMto}"/> 
-            <p:outputLabel value="#{lbl['lbl.ct.mto']}" />
-            </h:panelGrid>
-            
-          <p:outputLabel value="#{lbl['lbl.ct.effectiveDate']}"/>  
-          <p:inputText  style="width:150px;" disabled="true"/>  
-          <p:outputLabel value="#{lbl['lbl.ct.edate']}"/>  
-          <p:inputText  style="width:150px;" disabled="true" /> 
-          <f:verbatim></f:verbatim> 
-             <p:outputLabel value="#{lbl['lbl.ct.dperiod']}" />  
-            <p:inputText style="width:85px;" disabled="true" />  
-             <p:outputLabel value="#{lbl['lbl.ct.physicalNo']}"  />  
-                <p:commandLink  style="margin-right:20px;" ajax="false">  
-                <h:outputText value="2348-5674874" />  
-            </p:commandLink> 
-              <f:verbatim></f:verbatim>
-            <p:outputLabel  value="#{lbl['lbl.ct.liquidated']}" />  
-            <p:inputText value="" required="true" disabled="true" style="width:90px;" />  
-          </h:panelGrid>
-          <h:panelGrid columns="1" style="width:750px;">  
-           <h:panelGrid columns="2">
-              <h:panelGroup>
-			   <div style="height: 30px;width:115px; vertical-align: top">
-			      <p:outputLabel for="contractName" value="#{lbl['lbl.ct.cname']}" styleClass="txtsize" />
-			    </div>
-			   </h:panelGroup>
-			   <h:panelGrid>
-				<p:inputTextarea id="contractName"  required="false"  rows="1" cols="66" disabled="true" autoResize="false" />
-			   </h:panelGrid>
-		    </h:panelGrid>
-            <h:panelGrid columns="4">
-            <h:panelGroup>
-            <div style="width:115px;">
-               <p:outputLabel value="#{lbl['lbl.ct.owner']}" />  
-            </div>
-           </h:panelGroup>
-           <p:selectOneMenu disabled="false"  style="width:160px;">
-             <f:selectItems value="#{supplierBackingBean.contractListItem.contractOwner}" />
-           </p:selectOneMenu>
-           <p:selectOneMenu disabled="false" style="width:140px;">
-              <f:selectItems value="#{supplierBackingBean.contractListItem.contractOwnerJabatan}" />
-            </p:selectOneMenu>
-            <p:selectOneMenu  disabled="false" style="width:120px;">
-            		 <f:selectItems value="#{supplierBackingBean.contractListItem.contractOwnerPtj}" />
-            </p:selectOneMenu>
-         </h:panelGrid>   
-       </h:panelGrid>
-  </p:panel>
+	<p:panel id="fd" header="#{lbl['lbl.ct.panel.name']}" toggleable="true" toggleSpeed="500">
+		<h:panelGrid columns="5" style="width:800px;">
+			<p:outputLabel value="#{lbl['lbl.ct.cno']}" />
+			<p:inputText disabled="true" style="width:170px;"
+				value="#{supplierBackingBean.managedBean.contractValues.contractNo}" />
+			<p:outputLabel value="#{lbl['lbl.ct.physicalNo']}" />
+			<p:inputText style="width:170px;" />				
+			<h:panelGrid columns="3">
+				<p:selectBooleanCheckbox
+					value="#{supplierBackingBean.managedBean.contractValues.concession}"
+					disabled="false" />
+				<p:spacer width="2" />
+				<p:outputLabel value="Concession" />
+			</h:panelGrid>
+			<p:outputLabel value="#{lbl['lbl.ct.contractType']}" />
+			<p:selectOneMenu disabled="true" style="width:180px;">
+				<f:selectItems value="#{supplierBackingBean.getDropdownValues(PmCodeCatConst.contractType)}" />
+			</p:selectOneMenu>						
+			<p:outputLabel value="Created Date" />
+			<p:inputText style="width:170px;" disabled="true"
+				value="#{supplierBackingBean.managedBean.ctContract.qtLoaDate}" >
+				<f:convertDateTime pattern="MM/dd/yyyy" />
+			</p:inputText>				
+			<h:panelGrid columns="3">
+				<p:selectBooleanCheckbox
+					value="#{supplierBackingBean.managedBean.contractValues.exempted}"
+					disabled="true" />
+				<p:spacer width="2" />	
+				<p:outputLabel value="Exempted" />
+			</h:panelGrid>
+			<p:outputLabel value="#{lbl['lbl.ct.effectiveDate']}" />
+			<p:calendar style="width:170px;"
+				value="#{supplierBackingBean.managedBean.contractValues.effDate}"
+				id="popupCal1" showOn="button" />
+			<h:outputLabel value="#{lbl['lbl.ct.edate']}" />
+			<p:calendar style="width:170px;"
+				value="#{supplierBackingBean.managedBean.contractValues.expDate}"
+				id="popupCal" showOn="button" />			
+			<h:panelGrid columns="3">
+				<p:selectBooleanCheckbox
+					value="#{supplierBackingBean.managedBean.contractValues.agreement}"
+					disabled="true" />
+				<p:spacer width="2" />	
+				<p:outputLabel value="#{lbl['lbl.ct.agreement']}" />
+			</h:panelGrid>
+			<p:outputLabel value="#{lbl['lbl.ct.cur']}" />
+			<p:selectOneMenu disabled="true" style="width:65px;">
+				<f:selectItems
+					value="#{supplierBackingBean.contractListItem.currency}" />			
+			</p:selectOneMenu>
+			<p:outputLabel value="#{lbl['lbl.ct.contractAmount']}" />
+			<p:inputText
+				value="#{supplierBackingBean.managedBean.contractValues.contractAmount}"
+				size="8" disabled="true" />			
+			<h:panelGrid columns="3">
+				<p:selectBooleanCheckbox
+					value="#{supplierBackingBean.managedBean.ctContract.chkMto}"
+					disabled="true" />
+				<p:spacer width="2" />	
+				<p:outputLabel value="#{lbl['lbl.ct.mto']}" />
+			</h:panelGrid>
+			<h:outputLabel value="#{lbl['lbl.ct.liquidated']}" />
+			<p:inputText
+				value="#{supplierBackingBean.managedBean.contractValues.liquidatedDamage}"
+				size="8" disabled="true" />
+			<h:outputLabel value="#{lbl['lbl.ct.dperiod']}" />
+			<h:panelGrid columns="2">
+				<p:inputText size="8" value="#{supplierBackingBean.managedBean.contractValues.deliveryPeriod}" />
+				<p:outputLabel value="days" />
+			</h:panelGrid>
+			<f:verbatim />
+			 <h:panelGroup>
+		      <div style="height: 40px; vertical-align: top;">
+			  <p:outputLabel for="contractName" value="Contract Title" />
+			</div>
+			</h:panelGroup>
+			 <h:panelGrid>
+			<p:inputTextarea id="contractName"
+				value="#{supplierBackingBean.managedBean.ctContract.contractName}"
+				required="false" rows="2" cols="30" disabled="true"
+				autoResize="false" />	
+			</h:panelGrid>		
+			<f:verbatim />
+			<f:verbatim />
+			<f:verbatim />
+			<h:outputLabel
+				rendered="#{supplierBackingBean.managedBean.ctCircular.latestCircularVer.circularNo != null}"
+				value="#{lbl['lbl.ct.circularNo']}" />
+			<p:commandLink
+				rendered="#{supplierBackingBean.managedBean.ctCircular.latestCircularVer.circularNo != null}"
+				style="margin-right:20px;" ajax="false">
+				<h:outputText
+					value="#{supplierBackingBean.managedBean.ctCircular.latestCircularVer.circularNo}"
+					styleClass="linkcommand" />
+			</p:commandLink>
+			<h:outputLabel
+				rendered="#{supplierBackingBean.managedBean.ctAgreement.agreementId != null}"
+				value="#{lbl['lbl.ct.agreeemntno']}" />
+			<p:commandLink
+				rendered="#{supplierBackingBean.managedBean.ctAgreement.agreementId != null}"
+				style="margin-right:20px;" ajax="false">
+				<h:outputText value="#{supplierBackingBean.managedBean.ctAgreement.agreementId}" />
+			</p:commandLink>
+		</h:panelGrid>
+	</p:panel>
+	<p:panel id="qtnTenderPnl" header="Quotation / Tender Details" toggleable="true" toggleSpeed="500">
+		<h:panelGrid columns="4" style="width:750px;">
+			<p:outputLabel value="Procurement Mode" />
+			<p:selectOneMenu disabled="true" value="Tender" style="width:180px;">
+				<f:selectItems value="#{supplierBackingBean.contractListItem.sourcingType}" />
+			</p:selectOneMenu>
+			<p:outputLabel value="Published Date" />
+			<p:inputText style="width:170px;" disabled="true"
+				value="#{supplierBackingBean.managedBean.ctContract.qtPublishDate}" >
+				<f:convertDateTime pattern="MM/dd/yyyy" />
+			</p:inputText>			
+			<p:outputLabel value="#{lbl['lbl.ct.loaNo']}" />
+			<p:inputText style="width:170px;" disabled="true" 
+				value="#{supplierBackingBean.managedBean.ctContract.qtLoaNo}" />
+			<p:outputLabel value="LOA Acknowledged Date" />
+			<p:inputText style="width:170px;" disabled="true"
+				value="#{supplierBackingBean.managedBean.ctContract.qtLoaDate}" >
+				<f:convertDateTime pattern="MM/dd/yyyy" />
+			</p:inputText>
+			<p:outputLabel value="Item Type" />
+			<p:selectOneMenu disabled="true" style="width:180px;">
+				<f:selectItems value="#{supplierBackingBean.getDropdownValues(PmCodeCatConst.quotationCategory)}" />
+			</p:selectOneMenu>			
+			<p:outputLabel value="Item Origin" />
+			<p:selectOneMenu disabled="true" style="width:180px;">
+				<f:selectItems value="#{supplierBackingBean.getDropdownValues(PmCodeCatConst.quotationCategory)}" />
+			</p:selectOneMenu>			
+			<p:outputLabel value="#{lbl['lbl.ct.fulfilmentType']}" />
+			<p:selectOneMenu disabled="true" style="width:180px;">
+				<f:selectItems value="#{supplierBackingBean.getDropdownValues(PmCodeCatConst.fulfilmentType)}" />
+			</p:selectOneMenu>
+			<p:outputLabel value="#{lbl['lbl.ct.sfee']}" />
+			<p:inputText
+				value="#{supplierBackingBean.managedBean.ctContract.serviceFee}"
+				style="width:55px;" disabled="true" />			
+		</h:panelGrid>
+	</p:panel>
 </ui:composition>
+
+
+
+
+
+
+
+
+
+
 
 
 

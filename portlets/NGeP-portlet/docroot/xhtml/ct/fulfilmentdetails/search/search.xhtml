@@ -102,6 +102,14 @@
 					                                          <p:graphicImage library="ep/images/design" name="document.png"
 					                                           	value="/resources/ep/images/design/document.png" title="View Agreement" />
 				                                         </p:commandLink>
+				                                            <p:commandLink action="#{contractDetailsBackingBean.gotoBankPage}">
+					                                          <p:graphicImage library="ep/images/design" name="bank.png"
+					                                           	value="/resources/ep/images/design/bank.png" title="Change Bank" />
+				                                         </p:commandLink>
+				                                            <p:commandLink action="#{contractDetailsBackingBean.gotoSupplierTerminatePage}">
+					                                          <p:graphicImage library="ep/images/design" name="terminate.png"
+					                                           	value="/resources/ep/images/design/terminate.png" title="Supplier Termination" />
+				                                         </p:commandLink>
 								                         
 								                      </p:column> 
 							              </p:dataTable>

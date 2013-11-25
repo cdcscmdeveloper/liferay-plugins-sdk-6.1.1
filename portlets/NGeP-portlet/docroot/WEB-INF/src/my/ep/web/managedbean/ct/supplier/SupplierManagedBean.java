@@ -11,8 +11,13 @@ import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
 
 import my.ep.biz.bean.search.SearchFilterBean;
+import my.ep.persistence.entity.ct.CtAttachment;
 import my.ep.persistence.entity.ct.CtContract;
+import my.ep.persistence.entity.ct.CtRemark;
+import my.ep.persistence.entity.ct.agreement.CtAgreement;
 import my.ep.persistence.entity.ct.bank.CtSupplierBank;
+import my.ep.persistence.entity.ct.circular.CtCircular;
+import my.ep.persistence.entity.ct.dtl.CtContractValue;
 import my.ep.persistence.entity.ct.factoring.CtFactoring;
 import my.ep.persistence.entity.ct.terminate.CtTermination;
 import my.ep.persistence.entity.ct.terminate.CtTerminationReason;
@@ -47,6 +52,13 @@ public class SupplierManagedBean extends BaseManagedBean {
 	private CtTerminationReason ctTerminationReason;
 	private SearchFilterBean searchFilterBean = new SearchFilterBean();
 	private List<CtContract> contractList = new ArrayList<CtContract>();
+	private List<CtRemark> remarkList;
+	private List<CtAttachment> attachmentList;
+	
+	private CtContractValue contractValues = new CtContractValue();
+	private CtContract ctContract;
+	private CtCircular ctCircular = new CtCircular();
+	private CtAgreement ctAgreement = new CtAgreement();
 	
 	public SupplierManagedBean(){
 		
@@ -176,6 +188,58 @@ public class SupplierManagedBean extends BaseManagedBean {
 		this.loginUser = loginUser;
 	}
 	
-	
+	public List<CtRemark> getRemarkList() {
+		if(remarkList == null)
+			remarkList = new ArrayList<CtRemark>();
+		return remarkList;
+	}
 
+	public void setRemarkList(List<CtRemark> remarkList) {
+		this.remarkList = remarkList;
+	}
+
+	public List<CtAttachment> getAttachmentList() {
+		if(attachmentList == null)
+		   attachmentList = new ArrayList<CtAttachment>();
+		return attachmentList;
+	}
+
+	public void setAttachmentList(List<CtAttachment> attachmentList) {
+		this.attachmentList = attachmentList;
+	}
+
+	public CtContractValue getContractValues() {
+		return contractValues;
+	}
+
+	public void setContractValues(CtContractValue contractValues) {
+		this.contractValues = contractValues;
+	}
+
+	public CtContract getCtContract() {
+		return ctContract;
+	}
+
+	public void setCtContract(CtContract ctContract) {
+		this.ctContract = ctContract;
+	}
+
+	public CtCircular getCtCircular() {
+		return ctCircular;
+	}
+
+	public void setCtCircular(CtCircular ctCircular) {
+		this.ctCircular = ctCircular;
+	}
+
+	public CtAgreement getCtAgreement() {
+		return ctAgreement;
+	}
+
+	public void setCtAgreement(CtAgreement ctAgreement) {
+		this.ctAgreement = ctAgreement;
+	}
+	
+	
+	
 }

@@ -72,7 +72,6 @@ import my.ep.type.aut.SearchOperator;
 import my.ep.util.lookupservice.EpBpmBusinessDelegate;
 import my.ep.web.backingbean.BaseBackingBean;
 import my.ep.web.backingbean.ct.agreement.AgreementBackingBean;
-//import my.ep.web.backingbean.ct.circular.central.PickListBean;
 import my.ep.web.backingbean.ct.suspend.ContractSuspendBackingBean;
 import my.ep.web.bean.ct.ContractListItem;
 import my.ep.web.bean.ct.CreateContractDetails;
@@ -106,14 +105,15 @@ import org.primefaces.model.TreeNode;
 public class ContractDetailsBackingBean extends
 		BaseBackingBean<ContractDetailsManagedBean> {
 
-	private static Logger log = Logger
-			.getLogger(ContractDetailsBackingBean.class);
+	private static Logger log = Logger.getLogger(ContractDetailsBackingBean.class);
 	private static final String PROCESS_TERMINATE_PAGE = "/xhtml/ct/fulfilmentdetails/termination/terminationTab.xhtml";
 	private static final String PROCESS_AMEND_PAGE = "/xhtml/ct/fulfilmentdetails/amendment/amendmentTab.xhtml";
 	private static final String PROCESS_VIEW_PAGE = "/xhtml/ct/agreement/shared/sidemenu/agreementViewTab.xhtml";
 	private static final String PROCESS_SUSPEND_PAGE = "/xhtml/ct/fulfilmentdetails/suspension/suspendTab.xhtml";
 	private static final String PROCESS_ASSOCIATE_PAGE = "/xhtml/ct/fulfilmentdetails/association/projectCreation.xhtml";
 	private static final String PROCESS_ASSOCIATE_CANCEL_PAGE = "/xhtml/ct/fulfilmentdetails/association/projectAssociation.xhtml";
+	private static final String PROCESS_BANK_PAGE = "/xhtml/ct/supplier/bank/tabView.xhtml";
+	private static final String PROCESS_SUPPLIER_TERMINATE_PAGE = "/xhtml/ct/supplier/termination/tabView.xhtml";
 
 	private TreeNode rootNode;
 	private TreeNode selectedNode;
@@ -1314,6 +1314,14 @@ public class ContractDetailsBackingBean extends
 
 	public String gotoCancelPage() {
 		return PROCESS_ASSOCIATE_CANCEL_PAGE;
+	}
+	
+	public String gotoBankPage(){
+		return PROCESS_BANK_PAGE;
+	}
+	
+	public String gotoSupplierTerminatePage(){
+		return PROCESS_SUPPLIER_TERMINATE_PAGE;
 	}
 
 	public CtContract getContract() {
