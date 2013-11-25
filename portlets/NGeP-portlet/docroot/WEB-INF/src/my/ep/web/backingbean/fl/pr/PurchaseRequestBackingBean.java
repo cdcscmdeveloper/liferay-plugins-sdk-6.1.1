@@ -142,6 +142,8 @@ public class PurchaseRequestBackingBean extends BaseBackingBean<PurchaseRequestM
 			}
 		} catch (Exception e) {
 			log.error("Exception>>", e);
+			e.printStackTrace();
+			FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR,e.toString(), e.getMessage()));
 		} finally {
 			fulfilmentRequestSO = null;
 		}
@@ -175,10 +177,11 @@ public class PurchaseRequestBackingBean extends BaseBackingBean<PurchaseRequestM
 			FlDeliveryAddress deliveryAddr = new FlDeliveryAddress();
 			deliveryAddr.setFlFulfilmentRequest(getManagedBean().getFulfilmentRequest());
 			deliveryAddr.setAddressType(addrType);
-			deliveryAddr.setDeliveryAddressId(addrType.getAddressTypeId());
+			//deliveryAddr.setDeliveryAddressId(addrType.getAddressTypeId());
 			getManagedBean().getFulfilmentRequest().getFlDeliveryAddresses().add(deliveryAddr);
 		}
 	}
+	
 	public void flDeliveryAddrList(){
 		ContractAmendmentReqDTO ctReqDTO = new ContractAmendmentReqDTO();
 		ctReqDTO.setOrgProfileId(4L);

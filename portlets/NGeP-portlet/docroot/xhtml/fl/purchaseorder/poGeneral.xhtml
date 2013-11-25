@@ -40,11 +40,11 @@
 						value="NORMAL" /></td>
 			</tr>
 			<tr>
-				<td rowspan="4" valign="top"><p:outputLabel value="#{lbl['lbl.fl.title']}" /></td>
+				<td rowspan="4" valign="top"><p:outputLabel
+						value="#{lbl['lbl.fl.title']}" /></td>
 				<td rowspan="4"><p:inputTextarea rows="8"
 						style="width: 260px;margin-bottom:5px;"
-						value="#{flOrderBB.managedBean.flRequest.title}"
-						disabled="true" /></td>
+						value="#{flOrderBB.managedBean.flRequest.title}" disabled="true" /></td>
 				<td><p:outputLabel value="#{lbl['lbl.fl.maksud.code']}" /></td>
 				<td><p:inputText style="width: 260px;"
 						value="KEMENTERIAN KEWANGAN" disabled="true" /></td>
@@ -74,7 +74,11 @@
 			</tr>
 			<tr>
 				<td><p:outputLabel value="#{lbl['lbl.fl.financing']} ?" /></td>
-				<td><p:selectBooleanCheckbox /></td>
+				<td><p:selectOneRadio id="options" disabled="true"
+						value="#{flOrderBB.managedBean.flRequest.financingLoan}">
+						<f:selectItem itemLabel="Yes" itemValue="true" />
+						<f:selectItem itemLabel="No" itemValue="false" />
+					</p:selectOneRadio></td>
 			</tr>
 		</table>
 	</p:panel>
@@ -84,11 +88,22 @@
 	<p:panel header="SUPPLIER DETAIL" toggleable="true">
 		<table>
 			<tr>
-				<td><p:outputLabel value="#{lbl['lbl.fl.supp.id']}" /></td>
-				<td><p:inputText disabled="true" style="width: 120px;"
-						value="#{flOrderBB.managedBean.flRequest.smSupplier.supplierId}" /></td>
+
+			</tr>
+			<tr>
+				<td><p:outputLabel value="EP No." /></td>
+				<td><table style="width: 100%">
+						<tr>
+							<td><p:inputText size="5" disabled="true" /></td>
+							<td><p:outputLabel value="MOF No." /></td>
+							<td><p:inputText size="15" disabled="true" /></td>
+						</tr>
+					</table></td>
 				<td><p:outputLabel value="Factoring?" /></td>
-				<td><p:selectBooleanCheckbox /></td>
+				<td><p:selectOneRadio id="options" >
+						<f:selectItem itemLabel="Yes" itemValue="true" />
+						<f:selectItem itemLabel="No" itemValue="false" />
+					</p:selectOneRadio></td>
 			</tr>
 			<tr>
 				<td><p:outputLabel value="#{lbl['lbl.fl.supp.name']}" /></td>
@@ -117,5 +132,15 @@
 			</tr>
 		</table>
 	</p:panel>
-	
+	<p:panel header="#{lbl['lbl.fl.remark.attachment']}" toggleable="true">
+		<table style="width: 100%">
+			<tr>
+				<td width="50%" valign="top"><ui:include
+						src="/xhtml/fl/shared/remark.xhtml" /></td>
+				<td width="50%" valign="top"><ui:include
+						src="/xhtml/fl/shared/attachment.xhtml" /></td>
+			</tr>
+		</table>
+	</p:panel>
+
 </ui:composition>

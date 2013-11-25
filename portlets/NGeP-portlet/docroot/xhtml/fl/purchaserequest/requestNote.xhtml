@@ -29,11 +29,14 @@
 					<h:outputText value="#{requestNote.deliverPeriodType}" />
 				</p:column>
 				<p:column headerText="Action">
-					<p:commandButton value="Procure"
-						action="#{purchaseRequestBackingBean.navigateToPurchaseRequest}" >
-					<f:setPropertyActionListener value="#{requestNote}"
+					<p:commandLink
+						action="#{purchaseRequestBackingBean.navigateToPurchaseRequest}">
+						<f:setPropertyActionListener value="#{requestNote}"
 						target="#{purchaseRequestBackingBean.managedBean.selectedRequestNote}" />
-					</p:commandButton>
+						<p:graphicImage library="ep/images/design" name="action.png"
+							value="/resources/ep/images/design/action.png"
+							title="procure" />
+					</p:commandLink>
 				</p:column>
 
 			</p:dataTable>

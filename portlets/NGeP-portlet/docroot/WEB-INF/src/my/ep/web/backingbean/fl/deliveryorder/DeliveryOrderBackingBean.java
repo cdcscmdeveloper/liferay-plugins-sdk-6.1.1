@@ -3,9 +3,8 @@
  */
 package my.ep.web.backingbean.fl.deliveryorder;
 
-import java.text.ParseException;
-
 import javax.annotation.PostConstruct;
+import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.RequestScoped;
 import javax.faces.context.FacesContext;
@@ -13,6 +12,7 @@ import javax.faces.context.FacesContext;
 import my.ep.biz.service.fl.order.IDeliveryOrderSO;
 import my.ep.dto.fl.FulfilmentReqDTO;
 import my.ep.dto.fl.FulfilmentResDTO;
+import my.ep.exception.EpException;
 import my.ep.persistence.entity.fl.FlAttachment;
 import my.ep.persistence.entity.fl.FlRemark;
 import my.ep.persistence.entity.fl.order.FlDeliveryOrder;
@@ -20,6 +20,7 @@ import my.ep.persistence.entity.fl.order.FlFulfilmentOrder;
 import my.ep.persistence.entity.fl.request.FlDeliveryAddress;
 import my.ep.persistence.entity.fl.request.FlFulfilmentRequest;
 import my.ep.web.backingbean.BaseBackingBean;
+import my.ep.web.constant.BpmOutcomeConst;
 import my.ep.web.managedbean.fl.creatdo.DeliveryOrderManagedBean;
 import my.ep.web.util.lookupservice.BusinessDelegate;
 
@@ -52,7 +53,7 @@ public class DeliveryOrderBackingBean extends BaseBackingBean<DeliveryOrderManag
 		}
 	}
 
-	public void createDeliveryOrder(String action) {
+	public String createDeliveryOrder(String action) {
 		IDeliveryOrderSO deliveryOrderSO = null;
 		try {
 			String actionName=FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap().get("actionName");
@@ -64,6 +65,7 @@ public class DeliveryOrderBackingBean extends BaseBackingBean<DeliveryOrderManag
 			}
 			
 			Long fulfilmentOrderId=Long.valueOf(flOrderId);
+			System.out.println("fulfilmentOrderId::: "+fulfilmentOrderId);
 			//Long flRequestId=Long.valueOf(getManagedBean().getFulfilmentOrder().getFlFulfilmentRequest().getFulfilmentReqId());
 			String  statusId=this.getManagedBean().getStatusId();
 			FulfilmentReqDTO reqDTO = new FulfilmentReqDTO();
@@ -97,12 +99,28 @@ public class DeliveryOrderBackingBean extends BaseBackingBean<DeliveryOrderManag
 			
 			//reqDTO.setProcessId("Order_Fullfillment.CreatePurchaseOrder");
 			FulfilmentResDTO resDTO = deliveryOrderSO.saveDeliveryOrder(reqDTO);
-			//System.out.println("resDTO.isSuccessful() in backing bean:: "+ resDTO.isSuccessful());
+			if(resDTO.isSuccessful()) {
+				log.info("Record saved successfully");
+				String message = "Delivery Order Id. : "+flDeliveryOrder.getDeliveryOrderId();
+				if(flDeliveryOrder.getDeliveryOrderNo()!=null) {
+					message = message + ". Delivery Order. : "+flDeliveryOrder.getDeliveryOrderNo();
+				}
+				FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "Record saved successfully.",message));
+				if(!action.equalsIgnoreCase(BpmOutcomeConst.BPM_SAVE)) { // save action will remain in the same page
+					renewSesionObject();
+					return "/xhtml/shared/acknowledge.xhtml";
+				}
+			} else {
+				throw new EpException("Failed.");
+			}
 		} catch (Exception e) {
 			log.error("Exception>>", e);
+			e.printStackTrace();
+			FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR,e.toString(), e.getMessage()));
 		} finally {
 			deliveryOrderSO = null;
 		}
+		return null;
 	}
 	
 	

@@ -37,6 +37,7 @@
 				</p:commandLink>
 			</p:column>
 		</p:dataTable>
+		<p:spacer height="2px"></p:spacer>
 		<div style="width:100%;text-align:right">
 				<p:commandButton value="ADD" 
 						action="#{purchaseRequestBackingBean.flDeliveryAddrList}"
@@ -79,6 +80,7 @@
 				</p:commandLink>
 			</p:column>
 		</p:dataTable>
+		<p:spacer height="2px"></p:spacer>
 		<div style="width: 100%;text-align:right" >
 				<p:commandButton id="addItems" value="ADD ITEMS" action="#{purchaseRequestBackingBean.addPurchsedItems}"
 				rendered="#{not empty purchaseRequestBackingBean.managedBean.fulfilmentRequest.flDeliveryAddresses}" 
@@ -101,18 +103,15 @@
 			<p:columnGroup type="header">
 				<p:row>
 					<p:column rowspan="1" headerText=""></p:column>
-					<p:column rowspan="1" headerText="No"></p:column>
 					<p:column rowspan="1" headerText="Address"></p:column>
 				</p:row>
 			</p:columnGroup>
 			<p:column selectionMode="multiple" />
 			<p:column>
-				<h:outputText value="#{delAddr.pmAddress.addressId}" />
-			</p:column>
-			<p:column>
 				<h:outputText value="#{delAddr.pmAddress.address1}, #{delAddr.pmAddress.address2}, #{delAddr.pmAddress.address3}, #{delAddr.pmAddress.address4}" escape="false"/>
 			</p:column>
 		</p:dataTable>
+		<p:spacer height="2px"></p:spacer>
 		<div style="width:100%;text-align: right">
 			<p:commandButton value="Add"
 				action="#{purchaseRequestBackingBean.updateDeliveryAddrDt}"
@@ -123,7 +122,7 @@
 		
 
 	</p:dialog>
-	<p:dialog id="addPurchasedItemDialog" header="Add Purchased Items" widgetVar="addItems"
+	<p:dialog id="addPurchasedItemDialog" header="Add Items" widgetVar="addItems"
 		showEffect="fade" hideEffect="fade" modal="true" height="450"
 		width="600" resizable="false">
 		
@@ -136,18 +135,15 @@
 			<p:columnGroup type="header">
 				<p:row>
 					<p:column rowspan="1" headerText=""></p:column>
-					<p:column rowspan="1" headerText="No"></p:column>
-					<p:column rowspan="1" headerText="Items"></p:column>
+					<p:column rowspan="1" headerText="Item"></p:column>
 				</p:row>
 			</p:columnGroup>
 			<p:column selectionMode="multiple" />
 			<p:column>
-				<h:outputText value="#{purchasedItem.scRequestList.requestItems[0].requestListItemId}" />
-			</p:column>
-			<p:column>
 				<h:outputText value="#{purchasedItem.scRequestList.requestItems[0].itemName}" />
 			</p:column>
 		</p:dataTable>
+		<p:spacer height="2px"></p:spacer>
 		<div style="width:100%;text-align: right">
 			<p:commandButton value="Add"
 				action="#{purchaseRequestBackingBean.updatePurchasedItemDt}"

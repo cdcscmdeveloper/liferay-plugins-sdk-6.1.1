@@ -18,6 +18,7 @@ import my.ep.persistence.entity.fl.request.FlDeliveryAddress;
 import my.ep.persistence.entity.fl.request.FlFulfilmentRequest;
 import my.ep.persistence.entity.sm.SmSupplier;
 import my.ep.web.backingbean.BaseBackingBean;
+import my.ep.web.backingbean.fl.FulfilmentBackingBean;
 import my.ep.web.backingbean.fl.deliveryorder.DeliveryOrderBackingBean;
 import my.ep.web.constant.BpmOutcomeConst;
 import my.ep.web.managedbean.fl.po.FulfilmentOrderManagedBean;
@@ -46,6 +47,7 @@ public class FulfilmentOrderBackingBean extends BaseBackingBean<FulfilmentOrderM
 	
 	public String fulfillmentOrderAction(String action) {
 		IFulfilmentOrderSO fulfilmentOrderSO = null;
+		FulfilmentBackingBean flBB = new FulfilmentBackingBean();
 		try {
 			
 			FulfilmentReqDTO reqDTO = new FulfilmentReqDTO();
@@ -70,6 +72,8 @@ public class FulfilmentOrderBackingBean extends BaseBackingBean<FulfilmentOrderM
 			}else{
 				reqDTO.setTempLogin(getManagedBean().getTempLoginId());
 			}
+			reqDTO.setFlAttachmentList(flBB.getManagedBean().getAttachmentList());
+			reqDTO.setFlRemark(flBB.getManagedBean().getRemarkList().get(0));
 			FulfilmentResDTO resDTO = fulfilmentOrderSO.acknowledgeFulfillmentOrder(reqDTO);
 			if(resDTO.isSuccessful()) {
 				log.info("Record saved successfully");

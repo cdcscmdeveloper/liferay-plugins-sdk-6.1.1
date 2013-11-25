@@ -14,29 +14,9 @@
 	<ui:define name="contentSection">
 		<p:messages id="messages" showDetail="true" autoUpdate="true"
 			closable="true" severity="error, info" />
-		<p:selectOneMenu
-			value="#{flDocumentBackingBean.managedBean.tempLoginId}">
-			<f:selectItem itemLabel="CURRENT LOGIN" itemValue="0" />
-			<f:selectItem itemLabel="Roslan" itemValue="roslan" />
-			<f:selectItem itemLabel="Lailah" itemValue="lailah" />
-			<f:selectItem itemLabel="Khai" itemValue="khai" />
-			<f:selectItem itemLabel="Alex" itemValue="alex" />
-			<p:ajax event="change" update="defineSearchTbl"
-				listener="#{flDocumentBackingBean.selectedUser}" />
-		</p:selectOneMenu>
+
 		<p:panel id="searchPanel" header="SEARCH" toggleable="true">
-			<table>
-				<tr>
-					<td><p:selectOneRadio id="searchRadio"
-							value="#{flDocumentBackingBean.managedBean.searchType}">
-							<f:selectItem itemValue="D" itemLabel="Define Search" />
-							<!--  <f:selectItem itemValue="A" itemLabel="Advance Search" /> -->
-							<p:ajax event="click"
-								listener="#{flDocumentBackingBean.advanceSearch()}"
-								update="advanceSearchID" />
-						</p:selectOneRadio></td>
-				</tr>
-			</table>
+
 			<h:panelGroup id="defineSearchTbl">
 				<h:panelGrid columns="4" columnClasses="cmWidth1">
 					<p:outputLabel value="#{lbl['lbl.fl.doc.search.fl.order.type']}" />
@@ -65,7 +45,7 @@
 			<h:panelGroup id="docTypeSearch">
 				<h:panelGrid columns="4" columnClasses="cmWidth1"
 					rendered="#{flDocumentBackingBean.managedBean.checkDocType}">
-					<p:outputLabel value="#{lbl['lbl.fl.doc.search.contract.no']}"  />
+					<p:outputLabel value="#{lbl['lbl.fl.doc.search.contract.no']}" />
 					<p:inputText size="50"
 						value="#{flDocumentBackingBean.managedBean.searchContractNo}"></p:inputText>
 				</h:panelGrid>
@@ -85,9 +65,14 @@
 			</h:panelGroup>
 			<p:outputPanel id="advanceSearchID" style="width:100%">
 			</p:outputPanel>
-			<p:commandButton value="search" icon="ui-icon-search"
-				action="#{flDocumentBackingBean.searchDocument}"
-				update="resultPanel" />
+			<table style="width: 100%;">
+				<tr>
+					<td colspan="4" style="text-align: right"><p:commandButton
+							value="search" icon="ui-icon-search"
+							action="#{flDocumentBackingBean.searchDocument}"
+							update="resultPanel" /></td>
+				</tr>
+			</table>
 		</p:panel>
 		<p:panel id="resultPanel" header="RESULT" toggleable="true">
 			<p:dataTable id="flDocListDt"
@@ -114,18 +99,27 @@
 				</p:column>
 
 				<p:column headerText="Action" style="text-align: center">
-					<p:commandButton
-						onclick="goToDetail([{name:'docType', value:'#{flDocument.docType}'}, {name:'docId', value:'#{flDocument.docId}'}, {name:'docNo', value:'#{flDocument.docNo}'}, {name:'buttonVal', value:'View'}])"
-						value="View" />
-					<p:commandButton
-						onclick="goToDetail([{name:'docType', value:'#{flDocument.docType}'}, {name:'docId', value:'#{flDocument.docId}'}, {name:'docNo', value:'#{flDocument.docNo}'}, {name:'buttonVal', value:'Update'}])"
-						value="Update" />
-					<p:commandButton
-						onclick="goToDetail([{name:'docType', value:'#{flDocument.docType}'}, {name:'docId', value:'#{flDocument.docId}'}, {name:'docNo', value:'#{flDocument.docNo}'}, {name:'buttonVal', value:'Cancel'}])"
-						value="Cancel" />
-					<p:commandButton rendered="#{flDocument.docType == 'CR'}"
-						onclick="goToDetail([{name:'docType', value:'#{flDocument.docType}'}, {name:'docId', value:'#{flDocument.docId}'}, {name:'docNo', value:'#{flDocument.docNo}'}, {name:'buttonVal', value:'complain'}])"
-						value="Complain" />
+					<p:commandLink
+						onclick="goToDetail([{name:'docType', value:'#{flDocument.docType}'}, {name:'docId', value:'#{flDocument.docId}'}, {name:'docNo', value:'#{flDocument.docNo}'}, {name:'buttonVal', value:'View'}])">
+						<p:graphicImage library="ep/images/design" name="document.png"
+							value="/resources/ep/images/design/document.png"
+							title="View Document" />
+					</p:commandLink>
+					<p:spacer width="7" />
+					<p:commandLink
+						onclick="goToDetail([{name:'docType', value:'#{flDocument.docType}'}, {name:'docId', value:'#{flDocument.docId}'}, {name:'docNo', value:'#{flDocument.docNo}'}, {name:'buttonVal', value:'Update'}])">
+						<p:graphicImage library="ep/images/design" name="edit.png"
+							value="/resources/ep/images/design/edit.png"
+							title="Update Document" />
+					</p:commandLink>
+					<p:spacer width="7" />
+					<p:commandLink
+						onclick="goToDetail([{name:'docType', value:'#{flDocument.docType}'}, {name:'docId', value:'#{flDocument.docId}'}, {name:'docNo', value:'#{flDocument.docNo}'}, {name:'buttonVal', value:'Cancel'}])">
+						<p:graphicImage library="ep/images/design" name="cancel.png"
+							value="/resources/ep/images/design/cancel.png"
+							title="Cancel Document" />
+					</p:commandLink>
+
 				</p:column>
 
 			</p:dataTable>
