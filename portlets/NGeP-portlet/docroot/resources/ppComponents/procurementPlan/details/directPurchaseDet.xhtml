@@ -24,7 +24,7 @@ xmlns:c="http://java.sun.com/jsp/jstl/core">
 		<p:panel id="pSubDirectPurchase" header="#{lbl['lbl.pp.item.details.form']}" toggleable="true">
 			<table width="70%" class="ppTwoPartsTable ppMedWidth">
 				<tr>
-					<th><p:outputLabel value="#{lbl['lbl.pp.planned.activity.startmonth']}" /></th>
+					<th>* <p:outputLabel value="#{lbl['lbl.pp.planned.activity.startmonth']}" /></th>
 					<td>
 						<p:selectOneMenu value="#{planBackingBean.managedBean.selectedPlanItem.planStartMonth}">
 							<f:selectItem itemLabel="#{lbl['lbl.select']}" itemValue="12"/>
@@ -33,7 +33,7 @@ xmlns:c="http://java.sun.com/jsp/jstl/core">
 					</td>
 				</tr>
 				<tr>
-					<th><p:outputLabel value="#{lbl['lbl.pp.planned.activity.endmonth']}" /></th>
+					<th>* <p:outputLabel value="#{lbl['lbl.pp.planned.activity.endmonth']}" /></th>
 					<td>
 						<p:selectOneMenu value="#{planBackingBean.managedBean.selectedPlanItem.planEndMonth}">
 							<f:selectItem itemLabel="#{lbl['lbl.select']}" itemValue="12"/>

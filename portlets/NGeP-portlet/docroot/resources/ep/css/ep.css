@@ -2027,7 +2027,7 @@ table.ppTwoPartsTable, .ppThreePartsTable, .ppRmkTable{
 }
 
 table.ppTwoPartsTable th {
- 	/*text-align: right;*/
+ 	text-align: right;
 	width: 30%;
 	vertical-align: top;
 	padding: 2px;
@@ -2039,7 +2039,7 @@ table.ppTwoPartsTable td {
 }
 
 table.ppThreePartsTable th {
- 	/*text-align: right;*/
+ 	text-align: right;
 	width: 20%;
 	vertical-align: top;
 	padding: 2px;
@@ -2131,7 +2131,7 @@ table.ppThreePartsTable td {
 .ppCurrency{
 	width: 30px;
 }
-/*--------------------------       End PP Related      ------------------------------ */
+/*--------------------------       End PP Related      ------------------------------ */----- */
 
 /*--------------------------       Custom Icons        ------------------------------ */
 .ui-icon-add {
