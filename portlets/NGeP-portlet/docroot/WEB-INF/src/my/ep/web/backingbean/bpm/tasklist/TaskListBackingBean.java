@@ -302,7 +302,8 @@ public class TaskListBackingBean extends BaseBackingBean<TaskListManagedBean> {
 				}
 				else if(res.getTaskName().equalsIgnoreCase(FlProcessNameConst.CREATE_NEW_CO_HT)||res.getTaskName().equalsIgnoreCase(FlProcessNameConst.CREATE_CO_HT) 
 						|| res.getTaskName().equalsIgnoreCase(FlProcessNameConst.REVIEW_CR_HT) || res.getTaskName().equalsIgnoreCase(FlProcessNameConst.REVISE_CR_HT) 
-						|| res.getTaskName().equalsIgnoreCase(FlProcessNameConst.CREATE_NORMAL_CO_HT) || res.getTaskName().equalsIgnoreCase(FlProcessNameConst.REVIEW_MTO_CR_HT)){
+						|| res.getTaskName().equalsIgnoreCase(FlProcessNameConst.CREATE_NORMAL_CO_HT) || res.getTaskName().equalsIgnoreCase(FlProcessNameConst.REVIEW_MTO_CR_HT)
+						|| res.getTaskName().equalsIgnoreCase(FlProcessNameConst.REVISE_MTO_CR_HT)|| res.getTaskName().equalsIgnoreCase(FlProcessNameConst.INTIATE_MTO_CR_HT)){
 
 				ContractRequestBackingBean crBB = new ContractRequestBackingBean();
 				FulfilmentBackingBean flBB = new FulfilmentBackingBean();
