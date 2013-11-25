@@ -1,7 +1,9 @@
 package my.ep.web.backingbean.sm.sitevisit;
 
+import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.RequestScoped;
+import javax.faces.context.FacesContext;
 
 import my.ep.biz.service.sm.siteVisit.ISiteAssignSO;
 import my.ep.dto.sm.siteVisit.SiteAssignReqDTO;
@@ -24,7 +26,7 @@ public class SvcSiteAssignBackingBean extends
 	}
 
 	public void retrieveSiteAssignInfo() {
-		this.getManagedBean().setAppId(22);
+		//this.getManagedBean().setAppId(22);
 		
 		log.info("----------------------retrieveSiteAssignInfo start----------------");
 		SiteAssignReqDTO reqDTO = new SiteAssignReqDTO();
@@ -39,14 +41,25 @@ public class SvcSiteAssignBackingBean extends
 		this.getManagedBean().setSmApplSv(resDTO.getSmApplSv());
 	}
 	
-	public void submitSiteVisitAssignment(String action){
+	public String submitSiteVisitAssignment(String action){
 		log.info("----------------------submitSiteVisitAssignment start----------------");
 		SiteAssignReqDTO reqDTO = new SiteAssignReqDTO();
 		ISiteAssignSO reqSO = (ISiteAssignSO) BusinessDelegate.getInstance()
 				.getServiceObject("sm", ISiteAssignSO.class);
-		//reqDTO.setAppId(2);
+		reqDTO.setAppId(this.getManagedBean().getAppId());
 		reqDTO.setOutcome(action);
 		reqDTO.setTaskId(this.getManagedBean().getTaskId());
 		SiteAssignResDTO resDTO = reqSO.submitBPMTaskAssignment(reqDTO);
+		
+		if (resDTO.isSuccessful()) {
+			FacesContext.getCurrentInstance().addMessage(null,
+					new FacesMessage(FacesMessage.SEVERITY_INFO, "Site Visit has been submitted.", ""));
+			return "/xhtml/sm/sitevisit/outputMsg";
+		} else {
+			FacesContext.getCurrentInstance().addMessage(null,
+					new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error", ""));
+			return "";
+		}
 	}
+	
 }

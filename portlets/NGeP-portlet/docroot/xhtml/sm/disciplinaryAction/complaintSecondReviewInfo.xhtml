@@ -10,30 +10,18 @@
 	<ui:define name="contentSection">
 		<f:event listener="#{complaintBackingBean.retrieveComplaintInfo}"
 			type="preRenderView"></f:event>
-		<p:panel
-			header="Update Complaint Details - Send to PTPK For Round 2 Validation">
+		<p:panel header="Complaint Details">
 			<ui:include
 				src="/xhtml/sm/shared/complaintRegistration/complaintBasicInfo.xhtml" />
 		</p:panel>
-		<p:panel header="Received Supplier Response For Show Cause Letter"
-			toggleable="true">
+		<p:panel header="Second Review Info" toggleable="true">
 			<table style="width: 100%">
 				<tr>
-					<td width="200px;"><h:outputText
-							value="  Date Show Cause Received By Supplier*" /></td>
-					<td width="200px;"><p:calendar showOn="button" /></td>
-					<td width="200px;"><h:outputText
-							value="  Date Show Cause Letter Response Received *" /></td>
-					<td width="200px;"><p:calendar showOn="button" /></td>
-
-				</tr>
-				<tr>
-					<td width="200px;"><h:outputText
-							value="  Expected Convene Date For Round2 PTPK Validation *" /></td>
-					<td width="200px;"><p:calendar showOn="button" /></td>
-					<td width="200px;"><h:outputText
-							value="Upload Show Cause Letter Response*" /></td>
-					<td width="200px;"><p:fileUpload mode="simple" /></td>
+					<td id="tdTitle"><p:outputLabel value="Report Sent to PTPK *" /></td>
+					<td id="tdContent"><p:calendar showOn="button" /></td>
+					<td id="tdTitle"><p:outputLabel value="Expected Convene Date *" /></td>
+					<td id="tdContent"><p:calendar showOn="button"
+							value="#{complaintBackingBean.managedBean.smComplReview.conveneDate}" /></td>
 				</tr>
 			</table>
 		</p:panel>

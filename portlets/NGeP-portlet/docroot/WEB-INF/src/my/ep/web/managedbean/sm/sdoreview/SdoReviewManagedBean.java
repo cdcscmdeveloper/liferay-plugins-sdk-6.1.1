@@ -15,6 +15,7 @@ public class SdoReviewManagedBean extends BaseManagedBean{
 	private long appId;
 	private String[] bpmAction;
 	private String taskId;
+	private String taskName;
 
 	public SmAppl getSmAppl() {
 		return smAppl;
@@ -46,6 +47,14 @@ public class SdoReviewManagedBean extends BaseManagedBean{
 
 	public void setTaskId(String taskId) {
 		this.taskId = taskId;
+	}
+
+	public String getTaskName() {
+		return taskName;
+	}
+
+	public void setTaskName(String taskName) {
+		this.taskName = taskName;
 	}
 	
 }

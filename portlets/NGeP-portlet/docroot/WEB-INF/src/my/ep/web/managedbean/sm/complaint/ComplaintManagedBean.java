@@ -25,6 +25,7 @@ public class ComplaintManagedBean extends BaseManagedBean {
 	private long complaintId;
 	private String taskId;
 	private String[] bpmAction;
+	private String taskName;
 	
 	private PmCountry pmCountry;
 	private PmState pmState;
@@ -85,6 +86,14 @@ public class ComplaintManagedBean extends BaseManagedBean {
 
 	public void setBpmAction(String[] bpmAction) {
 		this.bpmAction = bpmAction;
+	}
+
+	public String getTaskName() {
+		return taskName;
+	}
+
+	public void setTaskName(String taskName) {
+		this.taskName = taskName;
 	}
 
 	public PmCountry getPmCountry() {

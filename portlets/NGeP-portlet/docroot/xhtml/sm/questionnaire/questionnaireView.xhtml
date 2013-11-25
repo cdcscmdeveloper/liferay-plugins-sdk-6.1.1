@@ -71,30 +71,32 @@
 		</p:panel>
 
 
-
-		<p:panel header="">
-			<table align="center" style="width:80%">
-				<ui:repeat
-					value="#{questionnaireBackingBean.managedBean.smSuppAnswerLs}"
-					var="ques">
-					<tr>
-						<td>#{ques.smQuestion.questionValue}</td>
-					</tr>
-					<tr>
-
-						<td><p:selectOneRadio value="#{ques.smAnswer.answerId}">
-								<f:selectItems
-									value="#{ques.smQuestion.smAnswerCategory.smAnswers}" var="ans"
-									itemLabel="#{ans.answerValue}" itemValue="#{ans.answerId}">
-								</f:selectItems>
-							</p:selectOneRadio></td>
-					</tr>
-					<tr>
-						<td><br /></td>
-					</tr>
-				</ui:repeat>
-			</table>
-			<!-- <table style="width: 100%">
+		<div align="center">
+			<p:panel header="">
+				<table>
+					<ui:repeat varStatus="status"
+						value="#{questionnaireBackingBean.managedBean.smSuppAnswerLs}"
+						var="ques">
+						<tr>
+							<td>#{status.index+1}. </td>
+							<td>#{ques.smQuestion.questionValue}</td>
+						</tr>
+						<tr>
+							<td></td>
+							<td><p:selectOneRadio value="#{ques.smAnswer.answerId}">
+									<f:selectItems
+										value="#{ques.smQuestion.smAnswerCategory.smAnswers}"
+										var="ans" itemLabel="#{ans.answerValue}"
+										itemValue="#{ans.answerId}">
+									</f:selectItems>
+								</p:selectOneRadio></td>
+						</tr>
+						<tr>
+							<td><br /></td>
+						</tr>
+					</ui:repeat>
+				</table>
+				<!-- <table style="width: 100%">
 				<p:dataTable
 					value="#{questionnaireBackingBean.managedBean.smSuppAnswerLs}"
 					var="ques" rowIndexVar="rowIndex">
@@ -117,7 +119,8 @@
 					</p:column>
 				</p:dataTable>
 			 </table> -->
-		</p:panel>
+			</p:panel>
+		</div>
 		<div align="right">
 			<p:commandButton
 				action="#{questionnaireBackingBean.submitQuestionnaire}"

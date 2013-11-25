@@ -1,9 +1,12 @@
 package my.ep.web.backingbean.sm.registration;
 
+import java.sql.Timestamp;
 import java.util.ArrayList;
 
+import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.RequestScoped;
+import javax.faces.context.FacesContext;
 
 import my.ep.biz.service.sm.registration.IRegistrationSO;
 import my.ep.dto.sm.registration.RegistrationReqDTO;
@@ -36,6 +39,8 @@ public class RegistrationBackingBean extends
 	private static String accountRegistration = "registrationInfo";
 	private static String firstUserRegistration = "firstUserRegistration";
 	private static int nationality = 1;
+	
+	private static long tempId = 1;
 
 	public RegistrationBackingBean() {
 		// if (MDC.get(LogKey.USER_ID) == null) {
@@ -189,10 +194,34 @@ public class RegistrationBackingBean extends
 		 */
 	}
 
-	public void submitRegisteration() {
+	public String submitRegisteration() {
 		log.info("-----------------submitRegisteration---------------");
 		SmSupplier smSupp = this.getManagedBean().getSmSupp();
 		smSupp.setCatalogueUploaded(false);
+		
+		
+		java.util.Date date= new java.util.Date();
+		Timestamp ts = new Timestamp(date.getTime());
+		 
+		smSupp.setCreatedBy(tempId);
+		smSupp.setChangedBy(tempId);
+		smSupp.setCreatedDate(ts);
+		smSupp.setChangedDate(ts);
+		
+		this.getManagedBean().getSmAppl().setCreatedBy(tempId);
+		this.getManagedBean().getSmAppl().setChangedBy(tempId);
+		this.getManagedBean().getSmAppl().setCreatedDate(ts);
+		this.getManagedBean().getSmAppl().setChangedDate(ts);
+		
+		this.getManagedBean().getSmPersonnel().setCreatedBy(tempId);
+		this.getManagedBean().getSmPersonnel().setChangedBy(tempId);
+		this.getManagedBean().getSmPersonnel().setCreatedDate(ts);
+		this.getManagedBean().getSmPersonnel().setChangedDate(ts);
+		
+		this.getManagedBean().getSmSuppOwner().setCreatedBy(tempId);
+		this.getManagedBean().getSmSuppOwner().setChangedBy(tempId);
+		this.getManagedBean().getSmSuppOwner().setCreatedDate(ts);
+		this.getManagedBean().getSmSuppOwner().setChangedDate(ts);
 		/*
 		 * if (smSupp.getBusinessType() != "I") {
 		 * smSupp.getSmBusinessNatures().add
@@ -233,11 +262,10 @@ public class RegistrationBackingBean extends
 		// this.getManagedBean().getSmPersonnel().setAuthorized(true);
 
 		this.getManagedBean().getSmAppl().setSupplierType("B");
-		
-		
-//		this.getManagedBean().getSmAppl().getSmSupplierBanks()
-//				.add(this.getManagedBean().getSmSuppBank());
-		
+
+		// this.getManagedBean().getSmAppl().getSmSupplierBanks()
+		// .add(this.getManagedBean().getSmSuppBank());
+
 		this.getManagedBean().getSmAppl().getSmPersonnels()
 				.add(this.getManagedBean().getSmPersonnel());
 		// this.getManagedBean().getSmAppl().setSmAddress(this.getManagedBean().getSmBusinessAdd());////////
@@ -253,8 +281,18 @@ public class RegistrationBackingBean extends
 		IRegistrationSO reqSO = (IRegistrationSO) BusinessDelegate
 				.getInstance().getServiceObject("sm", IRegistrationSO.class);
 		RegistrationResDTO resDTO = reqSO.createSupplier(reqDTO);
-
 		log.info("-----------------End submitRegisteration---------------");
+
+		
+		if (resDTO.isSuccessful()){
+			FacesContext.getCurrentInstance().addMessage(null,
+					new FacesMessage(FacesMessage.SEVERITY_INFO, "Your account has been registered successfully.", ""));
+			return "/xhtml/sm/onlinereg/outputMsg";
+		} else {
+			FacesContext.getCurrentInstance().addMessage(null,
+					new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error", ""));
+			return "";
+		}
 
 		// this.getManagedBean().getSmBusinessAdd().setSmAppls(new
 		// ArrayList<SmAppl>());
@@ -296,9 +334,10 @@ public class RegistrationBackingBean extends
 
 		this.getManagedBean().setSmSuppOwner(
 				resDTO.getSmSupp().getSmSupplierOwners().get(0));
-//		this.getManagedBean().setSmSuppBank(
-//				resDTO.getSmSupp().getSmAppl().getSmSupplierBanks().get(0));
-		//return "onlineAccount/accountMaintenance";
+		// this.getManagedBean().setSmSuppBank(
+		// resDTO.getSmSupp().getSmAppl().getSmSupplierBanks().get(0));
+		// return "onlineAccount/accountMaintenance";
 	}
+
 
 }

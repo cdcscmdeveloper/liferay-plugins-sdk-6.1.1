@@ -27,11 +27,43 @@
 				<c:choose>
 					<c:when
 						test="${registrationBackingBean.managedBean.applType == 'N'}">
-						aaaaa
+						<p>By agreeing to the Terms, you represent that you are at
+							least eighteen years old and capable of entering into a legally
+							binding agreement on behalf of yourself and others in your
+							residence who may utilize the Services.</p><br />
+						<p>By signing up for or in any way using the Services, you
+							agree to the Terms, including the following:</p>
 					</c:when>
 
 					<c:otherwise>
-						bbbbb
+						<p>You agree that you will pay for all products you purchase
+							through the Services, and that Apple may charge your payment
+							method for any products purchased and for any additional amounts
+							(including any taxes and late fees, as applicable) that may be
+							accrued by or in connection with your Account. YOU ARE
+							RESPONSIBLE FOR THE TIMELY PAYMENT OF ALL FEES AND FOR PROVIDING
+							APPLE WITH A VALID PAYMENT METHOD FOR PAYMENT OF ALL FEES. For
+							details of how purchases are billed please visit
+							support.apple.com/kb/HT5582.</p><br />
+
+						<p>Your total price will include the price of the product plus
+							any applicable sales tax; such sales tax is based on the bill-to
+							address and the sales tax rate in effect at the time you download
+							the product. We will charge tax only in states where digital
+							goods are taxable.</p><br />
+
+						<p>All sales and rentals of products are final.</p><br />
+
+						<p>Prices for products offered via the Services may change at
+							any time, and the Services do not provide price protection or
+							refunds in the event of a price reduction or promotional
+							offering.</p><br />
+
+						<p>If a product becomes unavailable following a transaction
+							but prior to download, your sole remedy is a refund. If technical
+							problems prevent or unreasonably delay delivery of your product,
+							your exclusive and sole remedy is either replacement or refund of
+							the price paid, as determined by Apple.</p><br />
 					</c:otherwise>
 				</c:choose>
 			</p:scrollPanel>

@@ -18,10 +18,11 @@
 							value="#{registrationBackingBean.managedBean.smPersonnel.name}" />
 					</td>
 				</tr>
+
 				<tr>
 					<td id="tdTitle"><p:outputLabel
 							value="#{lbl['lbl.sm.nationality']}" /></td>
-					<td id="tdContent"><p:selectOneMenu
+					<td id="tdContent"><p:selectOneMenu id="nationalityId"
 							value="#{registrationBackingBean.managedBean.smPersonnel.nationalityId}">
 							<f:selectItem itemLabel="Select" itemValue="" />
 							<f:selectItem itemLabel="Malaysian" itemValue="0" />
@@ -43,8 +44,10 @@
 							value="#{registrationBackingBean.managedBean.smPersonnel.identificationNo}" />
 					</td>
 				</tr>
-				<p:outputPanel
-					rendered="#{registrationBackingBean.managedBean.smSupp.businessType != 'I'}">
+				<!-- <p:outputPanel
+					rendered="#{registrationBackingBean.managedBean.smSupp.businessType != 'I'}">-->
+				<c:if
+					test="#{registrationBackingBean.managedBean.smSupp.businessType != 'I'}">
 					<tr>
 						<td><p:outputLabel value="#{lbl['lbl.sm.permenantaddress']}" /></td>
 						<td id="tdContent" colspan="2"><p:inputText size="50" /></td>
@@ -78,23 +81,22 @@
 						<td id="tdContent"><p:inputText /></td>
 					</tr>
 
-					<c:if
-						test="#{registrationBackingBean.managedBean.smSupp.businessType != 'I'}">
-						<tr>
-							<td id="tdTitle"><p:outputLabel
-									value="#{lbl['lbl.sm.positionincomp']}" /></td>
-							<td id="tdContent" colspan="3"><p:selectOneMenu
-									value="#{registrationBackingBean.managedBean.smPersonnel.personnelType}">
-									<f:selectItem itemLabel="BOD" itemValue="B" />
-									<f:selectItem itemLabel="Management Staff" itemValue="M" />
-									<f:selectItem itemLabel="Normal Staff" itemValue="N" />
-									<f:selectItem itemLabel="Professional Staff" itemValue="P" />
-									<f:selectItem itemLabel="Semi-Professional Staff" itemValue="S" />
-									<f:selectItem itemLabel="Clerical Staff" itemValue="C" />
-								</p:selectOneMenu></td>
-						</tr>
-					</c:if>
-				</p:outputPanel>
+
+					<tr>
+						<td id="tdTitle"><p:outputLabel
+								value="#{lbl['lbl.sm.positionincomp']}" /></td>
+						<td id="tdContent"><p:selectOneMenu id="positionId"
+								value="#{registrationBackingBean.managedBean.smPersonnel.personnelType}">
+								<f:selectItem itemLabel="BOD" itemValue="B" />
+								<f:selectItem itemLabel="Management Staff" itemValue="M" />
+								<f:selectItem itemLabel="Normal Staff" itemValue="N" />
+								<f:selectItem itemLabel="Professional Staff" itemValue="P" />
+								<f:selectItem itemLabel="Semi-Professional Staff" itemValue="S" />
+								<f:selectItem itemLabel="Clerical Staff" itemValue="C" />
+							</p:selectOneMenu></td>
+					</tr>
+				</c:if>
+<!-- 				</p:outputPanel> -->
 			</table>
 		</p:panel>
 

@@ -27,12 +27,8 @@ public class BPMTaskListBackingBean extends BaseBackingBean<BPMTaskListManagedBe
 	private static Logger log = Logger.getLogger(BPMTaskListBackingBean.class);
 
 	public BPMTaskListBackingBean(){
-		
-		
-		
 		this.getManagedBean().setBpmMap(null);
 		Map temp = new HashMap();
-
 
 		temp.put("UNSPSC Code Request", "reviewUnspscCode");
 		temp.put("Extension Code Request", "review-extension");
@@ -43,6 +39,11 @@ public class BPMTaskListBackingBean extends BaseBackingBean<BPMTaskListManagedBe
 		temp.put("Plan Revision", "review-plan");
 		temp.put("Budget Endorsement", "review-budget");
 		//Procurement Plan - End
+		
+		//Supplier Management - Start
+		temp.put("Disciplinary Action", "disciplinary-action");
+		temp.put("Site Visit Manage", "site-visit");
+		temp.put("MOF Supplier Registration", "mof-application");
 		
 		
 		this.getManagedBean().setBpmMap(temp);
@@ -172,7 +173,5 @@ public class BPMTaskListBackingBean extends BaseBackingBean<BPMTaskListManagedBe
 		
 		return "/xhtml/bpmtasklist/taskListView";
 	}
-
-
 
 }

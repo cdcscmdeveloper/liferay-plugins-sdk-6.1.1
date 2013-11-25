@@ -82,11 +82,6 @@
 				</p:column>
 			</p:dataTable>
 		</p:panel>
-		<!--  
-		<p:dialog id="modalDialog" header="Site Visit Report" widgetVar="dlg2"
-			modal="true" height="500" width="1000">
-			<ui:include src="/xhtml/svositevisit/siteVisitRptSubmission.xhtml" />
-		</p:dialog>-->
 
 		<div align="right">
 			<ui:repeat value="#{svoSiteVisitBackingBean.managedBean.bpmAction}"
@@ -96,5 +91,6 @@
 					value="#{item}" />
 			</ui:repeat>
 		</div>
+
 	</ui:define>
 </ui:composition>

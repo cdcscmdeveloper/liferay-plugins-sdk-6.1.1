@@ -1,5 +1,7 @@
 package my.ep.web.backingbean.sm.sitevisit;
 
+import java.util.Map;
+
 import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.RequestScoped;
@@ -79,7 +81,11 @@ public class SvoSiteVisitBackingBean extends
 	}
 	
 	public String submitSiteVisitReport(String action){
-		log.info("----------------------submitSiteVisitReport start----------------");
+		/*Map map2 = FacesContext.getCurrentInstance().getExternalContext()
+				.getRequestParameterMap();
+		String action = (String) map2.get("name1");
+		*/
+		log.info("----------------------submitSiteVisitReport start----------------" +  action);
 		SiteVisitReqDTO reqDTO = new SiteVisitReqDTO();
 		ISiteVisitSO reqSO = (ISiteVisitSO) BusinessDelegate.getInstance()
 				.getServiceObject("sm", ISiteVisitSO.class);
@@ -88,13 +94,16 @@ public class SvoSiteVisitBackingBean extends
 		reqDTO.setTaskId(this.getManagedBean().getTaskId());
 		SiteVisitResDTO resDTO = reqSO.submitSiteVisitReport(reqDTO);
 		
-		if(resDTO.isSuccessful()){
-			FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO,"Sample info message", "PrimeFaces rocks!"));  
-			return "taskListCommonPage";
-		}else{
-			FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_WARN,"Sample Warning message", "PrimeFaces Sucks!")); 
-			return "taskListCommonPage";
+		if (resDTO.isSuccessful()) {
+			FacesContext.getCurrentInstance().addMessage(null,
+					new FacesMessage(FacesMessage.SEVERITY_INFO, "Site Visit Report has been submitted.", ""));
+			return "/xhtml/sm/sitevisit/outputMsg";
+		} else {
+			FacesContext.getCurrentInstance().addMessage(null,
+					new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error", ""));
+			return "";
 		}
+		
 	}
 	
 	public void uploadSiteVisitReport(){
@@ -104,4 +113,5 @@ public class SvoSiteVisitBackingBean extends
 	public String naviToSiteVisitView(){
 		return NaviToSiteVisitView;
 	}
+	
 }

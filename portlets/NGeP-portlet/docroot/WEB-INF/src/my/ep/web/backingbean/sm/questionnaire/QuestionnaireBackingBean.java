@@ -72,7 +72,7 @@ public class QuestionnaireBackingBean extends
 		this.getManagedBean().setSmSuppAnswerLs(smSuppAnswerLs);
 	}
 
-	public void submitQuestionnaire() {
+	public String submitQuestionnaire() {
 		log.info("***********submitQuestionnaire Start**************");
 		// this.getManagedBean().getSmSupp().setSmSupplierAnswers(this.getManagedBean().getSmSuppAnswerLs());
 		QuestionnaireReqDTO reqDTO = new QuestionnaireReqDTO();
@@ -86,8 +86,7 @@ public class QuestionnaireBackingBean extends
 				.getInstance().getServiceObject("sm", IQuestionnaireSO.class);
 		QuestionnaireResDTO resDTO = reqSO.questionnaireSubmission(reqDTO);
 
-		// log.info("****88888888888888888*****" +
-		// this.getManagedBean().getSmSupp().getSmSupplierAnswers().size());
-		// log.info("***********submitQuestionnaire End**************");
+		return "viewVirtualCert";
+
 	}
 }

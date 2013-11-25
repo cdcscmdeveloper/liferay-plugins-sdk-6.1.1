@@ -8,7 +8,8 @@
 	xmlns:c="http://java.sun.com/jsp/jstl/core">
 
 	<ui:define name="contentSection">
-		<p:remoteCommand name="testAutoRun" action="#{sdoReviewBackingBean.viewSupportingDocument}" autoRun="true" update="test" />
+		<f:event listener="#{sdoReviewBackingBean.preRenderView}"
+			type="preRenderView"></f:event>
 		<!-- <p:panel>
 			<p>NOTE : The supplier has submitted the documents</p>
 			<p>
@@ -24,34 +25,46 @@
 			<table class="customTbl">
 				<tr>
 					<td id="tdTitle">Status Bayaran</td>
-					<td id="tdContent"><p:inputText value="Belum Bayar" disabled="true"/></td>
+					<td id="tdContent"><p:inputText value="Belum Bayar"
+							disabled="true" /></td>
 
 					<td id="tdTitle">Supplier Name</td>
-					<td id="tdContent"><p:inputText value="#{sdoReviewBackingBean.managedBean.smAppl.smSupplier.supplierName}" disabled="true"/></td>
+					<td id="tdContent"><p:inputText
+							value="#{sdoReviewBackingBean.managedBean.smAppl.smSupplier.supplierName}"
+							disabled="true" /></td>
 				</tr>
 
 				<tr>
 					<td id="tdTitle">Jenis Pendaftaran</td>
-					<td id="tdContent"><p:inputText value="#{sdoReviewBackingBean.managedBean.smAppl.smSupplier.businessType}" disabled="true"/></td>
+					<td id="tdContent"><p:inputText
+							value="#{sdoReviewBackingBean.managedBean.smAppl.smSupplier.businessType}"
+							disabled="true" /></td>
 
 					<td id="tdTitle">No. ROC/ROBROS</td>
-					<td id="tdContent"><p:inputText value="#{sdoReviewBackingBean.managedBean.smAppl.smSupplier.regNo}" disabled="true"/></td>
+					<td id="tdContent"><p:inputText
+							value="#{sdoReviewBackingBean.managedBean.smAppl.smSupplier.regNo}"
+							disabled="true" /></td>
 				</tr>
 
 				<tr>
 					<td id="tdTitle">No. Rujukan Cukai Pendapatan</td>
-					<td id="tdContent"><p:inputText value="#{sdoReviewBackingBean.managedBean.smAppl.smSupplier.incomeTaxNo}" disabled="true"/></td>
+					<td id="tdContent"><p:inputText
+							value="#{sdoReviewBackingBean.managedBean.smAppl.smSupplier.incomeTaxNo}"
+							disabled="true" /></td>
 
 					<td id="tdTitle">Tarikh Penubuhan</td>
-					<td id="tdContent"><p:inputText value="#{sdoReviewBackingBean.managedBean.smAppl.smSupplier.establishDate}" disabled="true"/></td>
+					<td id="tdContent"><p:inputText
+							value="#{sdoReviewBackingBean.managedBean.smAppl.smSupplier.establishDate}"
+							disabled="true" /></td>
 				</tr>
 
 				<tr>
 					<td id="tdTitle">Jumlah Staf Syarikat</td>
-					<td id="tdContent"><p:inputText value="Bumiputera 3orang" disabled="true"/></td>
+					<td id="tdContent"><p:inputText value="Bumiputera 3orang"
+							disabled="true" /></td>
 
 					<td id="tdTitle">Pendapatan Tahunan</td>
-					<td id="tdContent"><p:inputText value="a" disabled="true"/></td>
+					<td id="tdContent"><p:inputText value="a" disabled="true" /></td>
 				</tr>
 			</table>
 		</p:panel>
@@ -68,51 +81,55 @@
 
 				<tr>
 					<td id="tdTitle">Bandar</td>
-					<td id="tdContent"><p:inputText value="a" disabled="true"/></td>
+					<td id="tdContent"><p:inputText value="a" disabled="true" /></td>
 
 					<td id="tdTitle">Negeri</td>
-					<td id="tdContent"><p:inputText value="a" disabled="true"/></td>
+					<td id="tdContent"><p:inputText value="a" disabled="true" /></td>
 				</tr>
 
 				<tr>
 					<td id="tdTitle">Daerah</td>
-					<td id="tdContent"><p:inputText value="a" disabled="true"/></td>
+					<td id="tdContent"><p:inputText value="a" disabled="true" /></td>
 
-					<td >Negara</td>
-					<td id="tdContent"><p:inputText value="a" disabled="true"/></td>
+					<td>Negara</td>
+					<td id="tdContent"><p:inputText value="a" disabled="true" /></td>
 				</tr>
 
 				<tr>
 					<td id="tdTitle">No. Telefon</td>
-					<td id="tdContent"><p:inputText value="a" disabled="true"/></td>
+					<td id="tdContent"><p:inputText value="a" disabled="true" /></td>
 
 					<td id="tdTitle">No. Faks</td>
-					<td id="tdContent"><p:inputText value="a" disabled="true"/></td>
+					<td id="tdContent"><p:inputText value="a" disabled="true" /></td>
 				</tr>
 
 				<tr>
 					<td id="tdTitle">Laman Web</td>
-					<td id="tdContent"><p:inputText value="a" disabled="true"/></td>
+					<td id="tdContent"><p:inputText value="a" disabled="true" /></td>
 				</tr>
 			</table>
 		</p:panel>
 
-		<p:panel header="">
+		<p:panel header="Contact Info">
 			<table class="customTbl">
 				<tr>
 					<td id="tdTitle">Contact Person</td>
-					<td id="tdContent"><p:inputText value="KU MOHD KAMAL BIN KU SHAARI" disabled="true"/></td>
+					<td id="tdContent"><p:inputText
+							value="KU MOHD KAMAL BIN KU SHAARI" disabled="true" /></td>
 
 					<td id="tdTitle">Jawatan</td>
-					<td id="tdContent"><p:inputText value="MANAGER" disabled="true"/></td>
+					<td id="tdContent"><p:inputText value="MANAGER"
+							disabled="true" /></td>
 				</tr>
 
 				<tr>
 					<td id="tdTitle">No. Telefon</td>
-					<td id="tdContent"><p:inputText value="012-4013352" disabled="true" /></td>
+					<td id="tdContent"><p:inputText value="012-4013352"
+							disabled="true" /></td>
 
 					<td id="tdTitle">Alamat Emel</td>
-					<td id="tdContent"><p:inputText value="mantoyz@hotmail.com" disabled="true" /></td>
+					<td id="tdContent"><p:inputText value="mantoyz@hotmail.com"
+							disabled="true" /></td>
 				</tr>
 			</table>
 		</p:panel>
@@ -120,10 +137,10 @@
 		<p:panel id="test" header="Supporting Document">
 			<!-- <c:if
 				test="#{sdoReviewBackingBean.managedBean.smAppl.supportingDocMode == 'H'}"> -->
-				<ui:include
-					src="/xhtml/sm/shared/mofSdoSharedPages/onlineSupportingDocsForm.xhtml" />
+			<ui:include
+				src="/xhtml/sm/shared/mofSdoSharedPages/onlineSupportingDocsForm.xhtml" />
 			<!-- </c:if> -->
-			
+
 			<!--  <c:if
 				test="#{sdoReviewBackingBean.managedBean.smAppl.supportingDocMode == 'S'}">
 				<ui:include
