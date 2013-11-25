@@ -168,7 +168,7 @@ public class QTDetailManagedBean extends BaseManagedBean {
 		    List<PmDistrict> distrcitList= new ArrayList<PmDistrict>();
 		    PmDistrict district=new PmDistrict();
 		    district.setDistrictName("Hyd");
-		    district.setDistrictId(1);
+		    district.setDistrictId(1L);
 		    distrcitList.add(district);
 		    districtMap.put(district.getDistrictId(),district);
 		    stateDistrictMap.put(new Long(1), distrcitList);
@@ -176,7 +176,7 @@ public class QTDetailManagedBean extends BaseManagedBean {
 		    List<PmDistrict> districtList1 =new ArrayList<PmDistrict>();
 		    PmDistrict district2=new PmDistrict();
 		    district2.setDistrictName("Brick");
-		    district2.setDistrictId(2);
+		    district2.setDistrictId(2L);
 		    districtList1.add(district2);
 		    districtMap.put(district2.getDistrictId(),district2);
 		    stateDistrictMap.put(new Long(3), distrcitList);
