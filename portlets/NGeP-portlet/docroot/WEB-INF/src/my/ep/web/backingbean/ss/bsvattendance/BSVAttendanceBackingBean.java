@@ -96,7 +96,7 @@ public class BSVAttendanceBackingBean extends
 
 			ScQt scQt = resQtDTO.getQtDetail();
 
-			if (scQt.getIsSameBsv() == true) {
+			if (scQt.isSameBsv()) {
 
 				this.getManagedBean().setBriefSameAsSiteVisit("Yes");
 

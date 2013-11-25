@@ -29,10 +29,13 @@
 			<h:column />
 			<h:column />
 			<h:column>
-				<h:outputLabel value="Plan No." />
+				<h:outputLabel value="Plan No." 
+					rendered="#{qTDetailBB.managedBean.qt.planned}" />
 			</h:column>
 			<h:column>
-				<p:inputText id="planno" value="#{qTDetailBB.managedBean.qt.planId}" />
+				<p:inputText id="planno" 
+					value="#{qTDetailBB.managedBean.qt.ppPlan.planId}"
+					rendered="#{qTDetailBB.managedBean.qt.planned}" />
 			</h:column>
 			<h:column>
 				<h:outputLabel value="* Planned Amount"

@@ -456,10 +456,10 @@ public class TemplateMaintenanceBackingBean extends
 			// scQtDOc.setTplSpecMaster(specBB.getManagedBean()
 			// .getSpecMaster());
 
-			scQtDOc.setQtZoneCriteriaId(this.getManagedBean().getScqtDoc()
-					.getQtZoneCriteriaId());
+			scQtDOc.setScQtZoneCriteria(this.getManagedBean().getScqtDoc()
+					.getScQtZoneCriteria());
 			scQtDOc.setSupportDocReq(this.getManagedBean().getScqtDoc()
-					.getSupportDocReq());
+					.isSupportDocReq());
 			// TemplateSpecBackingBean specBB = new TemplateSpecBackingBean();
 			scQtDOc.setChangedBy(2L);
 			scQtDOc.setCreatedBy(2L);
