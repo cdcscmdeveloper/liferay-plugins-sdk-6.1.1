@@ -96,9 +96,8 @@ xmlns:c="http://java.sun.com/jsp/jstl/core"
                         	oncomplete="dlItemDetailsBudgetModal.show();" update=":form:dlItemDetailsBudget"/>
                         &nbsp;
                         <p:commandButton value="#{lbl['lbl.pp.delete']}" icon="ui-icon-delete"
-                        	update="dtBudgetAllocDet" disabled="#!({budgetAllocationDet.brandNew || 
-                        	(budgetAllocationBackingBean.managedBean.viewMode==PPConst.modeRevision &amp;&amp; 
-                        	 budgetAllocationDet.revisionRequired ))}"
+                        	update="dtBudgetAllocDet" disabled="#{!(budgetAllocationDet.brandNew || 
+                        	(budgetAllocationBackingBean.managedBean.viewMode==PPConst.modeRevision &amp;&amp; budgetAllocationDet.revisionRequired ))}"
                         	action="#{budgetAllocationBackingBean.deleteBudgetAllocItem(budgetAllocationDet)}" />
                    	</p:column>  
            	</p:dataTable>  
