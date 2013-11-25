@@ -13,10 +13,11 @@ nav#navigation ul li{padding:6px 0 6px 0;}
 nav#navigation ul li:hover{background-color:#5ba218; text-decoration:none;}
 nav#navigation ul li.selected{background-color:#5ba218;}
 nav#navigation ul li a{font-family:'notosans-bold', Arial, Helvetica, sans-serif; font-size:14px; color:#FFF; padding:0 20px 0 20px; margin:10px 0 0 0;}
+ul.child-menu li:hover {border: 1px solid #3B3B3B;}
 
 .navi-text{text-align:center;}
 
-#navigation ul li:hover > ul.child-menu li:hover > ul.child-menu {display: block; float: none; margin: 0; background-color:#3B3B3B; position:absolute; z-index:50; top: 0; left: 150px;}
+#navigation ul li:hover > ul.child-menu li:hover > ul.child-menu {display: block; float: none; margin: 0; background-color:#3B3B3B; position:absolute; z-index:50; top: 0; left: 149px;}
 #navigation ul li:hover > ul.child-menu li:hover > ul.child-menu li:hover > ul.child-menu {top: 0; left: 250px;}
 
 #navigation ul.child-menu > li:first-child > a:after {
@@ -30,7 +31,7 @@ nav#navigation ul li a{font-family:'notosans-bold', Arial, Helvetica, sans-serif
 }
 
 #navigation ul.child-menu > li > ul > li:first-child a:after {
-	left: -10px;
+	left: -12px;
 	top: 50%;
 	margin-top: -10px;
 	border-left: 0;	
@@ -40,9 +41,9 @@ nav#navigation ul li a{font-family:'notosans-bold', Arial, Helvetica, sans-serif
 }
 
 #navigation ul.child-menu > li > ul > li:last-child a:after {
-	left: -10px;
+	left: -12px;
 	top: 50%;
-	margin-top: -15px;
+	margin-top: -20px;
 	border-left: 0;	
 	border-bottom: 6px solid transparent;
 	border-top: 6px solid transparent;
