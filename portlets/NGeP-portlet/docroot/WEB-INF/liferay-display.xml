@@ -23,6 +23,8 @@
 			<portlet id="ppBudget"></portlet>
 			<portlet id="ppPlan"></portlet>
 			<portlet id="ppProcurementApproval"></portlet>
+			<portlet id="reviewBudgetAllocation"></portlet>
+			<portlet id="reviewPlanPreparation"></portlet>
 		</category>
 		<!-- Procurement Plan - END -->
 
