@@ -3,8 +3,7 @@
 	xmlns:h="http://java.sun.com/jsf/html"
 	xmlns:ui="http://java.sun.com/jsf/facelets"
 	xmlns:p="http://primefaces.org/ui"
-	xmlns:c="http://java.sun.com/jsp/jstl/core"
-	xmlns:ac="http://ac.my/jsf/composite/cc">
+	xmlns:c="http://java.sun.com/jsp/jstl/core">
 
 
 	<p:panel header="Search Quotation/Tender Screen" toggleable="true">
@@ -68,8 +67,6 @@
 		<h:panelGroup id="table-wrapper" style="width:100%;">
 			<p:dataTable id="searchQTs" value="#{qTDetailBB.managedBean.qtList}"
 				var="scQt" resizableColumns="true" rowIndexVar="index">
-				
-				<ac:paginator for="searchQTs" />
 
 				<p:column headerText="#{lbl['lbl.so.no']}" style="width:20px;">
 					<h:outputText value="#{index + 1}" />
