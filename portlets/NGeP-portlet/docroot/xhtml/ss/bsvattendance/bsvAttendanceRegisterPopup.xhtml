@@ -1,5 +1,4 @@
 
-
 <ui:composition xmlns="http://www.w3.org/1999/xhtml"
 	xmlns:f="http://java.sun.com/jsf/core"
 	xmlns:h="http://java.sun.com/jsf/html"
@@ -8,26 +7,29 @@
 	xmlns:c="http://java.sun.com/jsp/jstl/core">
 
 	<p:growl id="growl" showDetail="true" />
-	<p:panel header="Company List" toggleable="true">
+	<p:panel header="Supplier List" toggleable="true">
 		<p:dataTable id="complisttbl" var="scQtBriefReg"
-			value="#{bsvAttendanceBackingBean.managedBean.briefingRegistrationList}"
-			selection="bsvAttendanceBackingBean.managedBean.selectedbriefRegistration"
-			rowKey="#{scQtBriefReg.smSupplier.supplierId}" rowIndexVar="rowIndex">
-
+			value="#{bsvAttendanceBackingBean.managedBean.briefingRegistrationList}" 
+			selection="#{bsvAttendanceBackingBean.managedBean.selectedbriefRegistration}"
+			rowKey="#{scQtBriefReg.qtBriefingRegistrationId}" selectionMode="single" >
+			
 			<p:ajax event="rowSelect"
-				listener="#{bsvAttendanceBackingBean.onRowSelect}" />
-
+				listener="#{bsvAttendanceBackingBean.onRowSelect}" update=":form:attlistforCompId" />
 
 			<p:column headerText="#{lbl['lbl.sc.bsv.attendance.mof.regno']}">
-				<p:inputText value="#{scQtBriefReg.smSupplier.supplierId}" />
+				<p:inputText value="#" />
 			</p:column>
 
-			<p:column headerText="#{lbl['lbl.sc.bsv.attendance.comp.name']}">
+			<p:column headerText="#{lbl['lbl.sc.bsv.attendance.supp.name']}">
 				<p:inputText value="#{scQtBriefReg.smSupplier.supplierName}" />
 			</p:column>
 
+	        <p:column headerText="#{lbl['lbl.sc.bsv.attendance.remarks']}">
+				<p:inputText value="-" />
+			</p:column>
+
 			<p:column headerText="#{lbl['lbl.sc.bsv.attendance.attendance']}">
-				<h:selectBooleanCheckbox value="1" />
+				<p:selectBooleanCheckbox value="1" />
 			</p:column>
 
 
@@ -45,17 +47,17 @@
 		</p:dataTable>
 
 
-		<p:panelGrid style="width:100%;"
-			styleClass="noBorders tr,noBorders td">
-			<p:row>
-				<p:commandButton value="#{lbl['lbl.sc.bsv.attendance.add']}"
-					action="#{bsvAttendanceBackingBean.addCompanyDetails}" />
-			</p:row>
-		</p:panelGrid>
+	   <div align="right">
+			<p:commandButton value="#{lbl['lbl.sc.bsv.attendance.add']}"
+				process="@this,complisttbl" partialSubmit="true"
+				action="#{bsvAttendanceBackingBean.addCompany}"
+				update=":form:complisttbl" />
+		</div>
+
 	</p:panel>
 
 
-	<p:panel header="Attendence List For Company" toggleable="true">
+	<p:panel header="Attendence List" toggleable="true" id="attlistforCompId">
 		<p:dataTable id="attendanceDetailstbl" var="ScQtBriefAttendace"
 			value="#{bsvAttendanceBackingBean.managedBean.briefingAttendanceList}"
 			rows="10" rowKey="#{ScQtBriefAttendace.qtBriefingAttendanceId}"
@@ -99,11 +101,10 @@
 
 		</p:dataTable>
 
-
 		<div align="right">
 			<p:commandButton value="#{lbl['lbl.sc.bsv.attendance.add']}"
 				process="@this,attendanceDetailstbl" partialSubmit="true"
-				action="#{bsvAttendanceBackingBean.addAttendaceDetails}"
+				action="#{bsvAttendanceBackingBean.addAttendaceForComp}"
 				update="attendanceDetailstbl" />
 		</div>
 
@@ -118,20 +119,11 @@
 			</p:column>
 
 			<p:column>
-				<!-- 	  <p:selectOneMenu  value="#">
+				  <p:selectOneMenu  value="#">
 				<f:selectItem itemLabel="Select One" itemValue="" />
 				<f:selectItems value="#{bsvAttendanceBackingBean.managedBean.approverNames}" var="appName"
 								itemLabel="#{appName.userName}" itemValue="#{appName.userId}"></f:selectItems>
-			   </p:selectOneMenu> -->
-
-				<p:column>
-					<p:selectOneMenu
-						value="searchQtnTenderBB.managedBean.qtnTenders.planNumber">
-						<f:selectItem itemLabel="DeskOfficer" itemValue="1" />
-						<f:selectItem itemLabel="siteManager" itemValue="2" />
-					</p:selectOneMenu>
-				</p:column>
-
+			   </p:selectOneMenu> 
 
 			</p:column>
 
@@ -151,6 +143,7 @@
 			<p:column>
 				<p:selectOneMenu
 					value="searchQtnTenderBB.managedBean.qtnTenders.planNumber">
+					<f:selectItem itemLabel="Select One" itemValue="" />
 					<f:selectItem itemLabel="Approve" itemValue="A" />
 					<f:selectItem itemLabel="Reject" itemValue="R" />
 					<f:selectItem itemLabel="Revise" itemValue="R" />

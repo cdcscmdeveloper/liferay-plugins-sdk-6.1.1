@@ -95,7 +95,7 @@
 				</h:column>
 
 				<h:column>
-					<h:outputLabel value="#{lbl['lbl.sc.bsv.attendance.comp.name']}"></h:outputLabel>
+					<h:outputLabel value="#{lbl['lbl.sc.bsv.attendance.supp.name']}"></h:outputLabel>
 				</h:column>
 				<h:column>
 					<p:inputText value="Commercedotcom"></p:inputText>
@@ -151,8 +151,8 @@
 
 		<div align="right">
 			<p:commandButton value="#{lbl['lbl.sc.bsv.attendance.add']}"
-				process="@this,attendanceDetailstbl" partialSubmit="true"
-				action="#{bsvAttendanceBackingBean.addAttendaceDetails}"
+				process="@this,registrationId" partialSubmit="true"
+				action="#{bsvAttendanceBackingBean.addRegistration}"
 				update=":form:registrationId" />
 		</div>
 
