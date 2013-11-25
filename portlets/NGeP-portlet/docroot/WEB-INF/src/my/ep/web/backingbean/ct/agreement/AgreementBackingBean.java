@@ -38,6 +38,7 @@ import my.ep.persistence.entity.pm.authorization.PmUser;
 import my.ep.persistence.entity.pm.common.PmCode;
 import my.ep.util.lookupservice.EpBpmBusinessDelegate;
 import my.ep.web.backingbean.BaseBackingBean;
+import my.ep.web.backingbean.ct.ContractBackingBean;
 import my.ep.web.bean.ct.AgreementDetails;
 import my.ep.web.bean.ct.ContractListItem;
 import my.ep.web.constant.BpmOutcomeConst;
@@ -61,6 +62,10 @@ public class AgreementBackingBean extends BaseBackingBean<AgreementManagedBean> 
 	
 	
 	public AgreementBackingBean(){
+		
+		ContractBackingBean ctBB = new ContractBackingBean();
+		ctBB.initializeRemarkAndAttachement(getManagedBean().getRemarkList(), getManagedBean().getAttachmentList());
+		
 		agreementDetails = new AgreementDetails();
 		contractListItem = new ContractListItem();
 		if(this.getManagedBean().getOutComes()==null) {

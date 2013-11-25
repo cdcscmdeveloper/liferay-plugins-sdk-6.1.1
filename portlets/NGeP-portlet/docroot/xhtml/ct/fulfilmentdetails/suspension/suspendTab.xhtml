@@ -20,6 +20,7 @@
 	 <p:tabView id="tabview" orientation="left" dynamic="true">
      <p:tab title="#{lbl['lbl.ct.menu.fd']}" >
             <ui:include src="/xhtml/ct/fulfilmentdetails/shared/fulfilment.xhtml"/>
+            <ui:include	src="/xhtml/ct/fulfilmentdetails/shared/quotationTender.xhtml" />
             <ui:include src="suspendDetails.xhtml"/>
        </p:tab> 
 	   <p:tab title="#{lbl['lbl.ct.menu.item']}" >
@@ -32,7 +33,7 @@
            <ui:include src="suspensionLetter.xhtml"/>
        </p:tab> 
        <p:tab title="#{lbl['lbl.ct.menu.remark']}" >
-           <ui:include src="/xhtml/ct/fulfilmentdetails/suspension/attachements.xhtml"/>
+           <ui:include src="/xhtml/ct/shared/remarkAndAttachment.xhtml" /> 
        </p:tab> 
 	</p:tabView>
 	<script type="text/javascript"> 

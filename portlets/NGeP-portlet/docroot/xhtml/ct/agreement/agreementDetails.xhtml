@@ -74,7 +74,6 @@
           <p:panel id="supAgDetail" header="Amendment Details"  rendered="#{agreementBackingBean.managedBean.agreementType eq 'supplemental'}"  toggleable="true"  toggleSpeed="500">
           <ui:include src="agreementSupDetails.xhtml"></ui:include>
 		</p:panel>         
-	  <p:panel id="fa" header="Remarks And Attachements"   toggleable="true"  toggleSpeed="500">
-      </p:panel>
+	  <ui:include src="/xhtml/ct/shared/remarkAndAttachment.xhtml" /> 
 </ui:composition>
 	  

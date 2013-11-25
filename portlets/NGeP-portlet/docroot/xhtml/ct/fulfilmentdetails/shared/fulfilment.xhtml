@@ -75,11 +75,17 @@
 				<p:outputLabel value="days" />
 			</h:panelGrid>
 			<f:verbatim />
-			<p:outputLabel value="Contract Title" />
+			 <h:panelGroup>
+		      <div style="height: 40px; vertical-align: top;">
+			  <p:outputLabel for="contractName" value="Contract Title" />
+			</div>
+			</h:panelGroup>
+			 <h:panelGrid>
 			<p:inputTextarea id="contractName"
 				value="#{contractDetailsBackingBean.managedBean.ctContract.contractName}"
 				required="false" rows="2" cols="30" disabled="true"
-				autoResize="false" />			
+				autoResize="false" />	
+			</h:panelGrid>		
 			<f:verbatim />
 			<f:verbatim />
 			<f:verbatim />

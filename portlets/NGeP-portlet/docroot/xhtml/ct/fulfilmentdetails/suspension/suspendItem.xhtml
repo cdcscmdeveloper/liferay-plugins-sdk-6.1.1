@@ -11,29 +11,23 @@
           paginatorPosition="bottom" paginatorAlwaysVisible="true" emptyMessage="No Records!">
 		  <p:columnGroup type="header"> 
 			 <p:row> 
-				<p:column rowspan="2" headerText="No."  />
-				<p:column rowspan="2" headerText="Item Type" /> 
-				<p:column rowspan="2" headerText="Item Code" /> 
-				<p:column rowspan="2" headerText="Start Date" /> 	
-				<p:column rowspan="2" headerText="End Date" /> 		
-				<p:column rowspan="2" headerText="Status" /> 					
-				<p:column colspan="3" headerText="Action"/>
+				<p:column rowspan="1" headerText="Item Type" /> 
+				<p:column rowspan="1" headerText="Item Code" /> 
+				<p:column rowspan="1" headerText="Start Date" /> 	
+				<p:column rowspan="1" headerText="End Date" /> 							
+				<p:column colspan="1" headerText="Action"/>
 			 </p:row>							
-			 <p:row> 
-				<p:column headerText="S" />	
-				<p:column headerText="A"/>
-				<p:column headerText="E" />	
-			 </p:row>
 		   </p:columnGroup>
-		   <p:column styleClass="column-align-center" ><h:outputText value="#{index+1}" /></p:column> 
 		   <p:column><p:outputLabel value ="Product" style="float:left;"/> </p:column> 
 		   <p:column width="100"> <p:outputLabel value ="EP 308X3120P" style="float:left;"/></p:column> 
 		   <p:column width="100" > <p:calendar value="#{contractSuspendBackingBean.managedBean.startDate}" id="calItem" showOn="button"/>  </p:column> 
 		   <p:column> <p:calendar value="#{contractSuspendBackingBean.managedBean.endDate}" id="calItem1" showOn="button"/>  </p:column> 
-		   <p:column> <p:outputLabel value ="Active" style="float:left;"/> </p:column>
-		   <p:column>  <p:selectBooleanCheckbox value="false"  disabled="false"/>  </p:column>
-		   <p:column> <p:selectBooleanCheckbox value="false"  disabled="false"/>  </p:column>
-		   <p:column> <p:selectBooleanCheckbox value="true"  disabled="false"/> </p:column>
+		   <p:column>  <p:selectOneMenu disabled="false" style="width:110px;">
+				<f:selectItem itemLabel="-Select One-" itemValue="" />	
+				<f:selectItem itemLabel="Active" itemValue="Active" />	
+				<f:selectItem itemLabel="Suspend" itemValue="Suspend" />	
+				<f:selectItem itemLabel="Extend" itemValue="Extend" />			
+			</p:selectOneMenu>  </p:column>
 		 </p:dataTable>	
 		 </div>	
 		 <p:spacer width="12"/>	

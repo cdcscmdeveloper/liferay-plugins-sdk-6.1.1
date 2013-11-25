@@ -3,7 +3,9 @@
  */
 package my.ep.web.managedbean.ct.suspend;
 
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 import java.util.Map;
 
 import javax.faces.bean.ManagedBean;
@@ -13,7 +15,9 @@ import org.apache.log4j.Logger;
 import org.primefaces.model.TreeNode;
 
 import my.ep.web.managedbean.BaseManagedBean;
+import my.ep.persistence.entity.ct.CtAttachment;
 import my.ep.persistence.entity.ct.CtContract;
+import my.ep.persistence.entity.ct.CtRemark;
 import my.ep.persistence.entity.ct.suspend.CtSuspendActive;
 import my.ep.persistence.entity.pm.common.PmCountry;
 /**
@@ -43,6 +47,9 @@ public class ContractSuspendManagedBean  extends BaseManagedBean {
 	
 	private CtContract contract = new CtContract();
 	private CtSuspendActive suspendActive;
+	
+	private List<CtRemark> remarkList;
+	private List<CtAttachment> attachmentList;
 	
 	public ContractSuspendManagedBean(){
 		
@@ -135,7 +142,27 @@ public class ContractSuspendManagedBean  extends BaseManagedBean {
 	public void setContractId(Long contractId) {
 		this.contractId = contractId;
 	}
-	
-	
+
+	public List<CtRemark> getRemarkList() {
+		if(remarkList==null) {
+			remarkList = new ArrayList<CtRemark>();
+		}
+		return remarkList;
+	}
+
+	public void setRemarkList(List<CtRemark> remarkList) {
+		this.remarkList = remarkList;
+	}
+
+	public List<CtAttachment> getAttachmentList() {
+		if(attachmentList==null) {
+			attachmentList = new ArrayList<CtAttachment>();
+		}
+		return attachmentList;
+	}
+
+	public void setAttachmentList(List<CtAttachment> attachmentList) {
+		this.attachmentList = attachmentList;
+	}
 	
 }

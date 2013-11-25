@@ -40,7 +40,7 @@
 		   paginator="true" paginatorPosition="bottom" paginatorAlwaysVisible="true" emptyMessage="No Records!">
 		   <p:columnGroup type="header"> 
 			 <p:row> 
-		        <p:column style="width:50px;" headerText="#{lbl['lbl.ct.sched.table1.phase']}"  />
+		        <p:column headerText="#{lbl['lbl.ct.sched.table1.phase']}"  />
 		        <p:column style="width:200px;" headerText="#{lbl['lbl.ct.sched.table1.desc']}"  />
                 <p:column style="width:100px;" headerText="#{lbl['lbl.ct.sched.table1.from']}" /> 
                 <p:column style="width:100px;" headerText="#{lbl['lbl.ct.sched.table1.to']}" /> 	
@@ -48,7 +48,7 @@
                 <p:column style="width:60px;" headerText="#{lbl['lbl.ct.sched.table1.action']}"  /> 
             </p:row>	
 			</p:columnGroup>
-			<p:column><p:inputText value="#{data.phase}" style="width:40px;"/> </p:column>  
+			<p:column><p:inputText value="#{data.phase}" size="5"/> </p:column>  
 			<p:column>
 			     <p:inputText style="width:150px;"/> 
 			</p:column>         

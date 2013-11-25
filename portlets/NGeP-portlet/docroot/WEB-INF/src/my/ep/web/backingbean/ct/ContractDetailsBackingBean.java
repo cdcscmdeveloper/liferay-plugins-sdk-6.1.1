@@ -90,6 +90,7 @@ import org.primefaces.event.SelectEvent;
 import org.primefaces.event.TabChangeEvent;
 import org.primefaces.event.TransferEvent;
 import org.primefaces.event.UnselectEvent;
+import org.primefaces.model.DefaultStreamedContent;
 import org.primefaces.model.DefaultTreeNode;
 import org.primefaces.model.DualListModel;
 import org.primefaces.model.TreeNode;
@@ -141,6 +142,7 @@ public class ContractDetailsBackingBean extends
 	private CtContract contract = new CtContract();
 	/* Testing purpose End */
 
+	private DefaultStreamedContent download;
 	private CtDeductionClause[] chkDeductionClause;
 	private final static String[] deductions;
 	static {
@@ -414,8 +416,8 @@ public class ContractDetailsBackingBean extends
 			
 			   this.getManagedBean().getTermination().setStatus(new PmStatus());
 			   this.getManagedBean().getTermination().getStatus().setStatusId(new Long(1));
-			   this.getManagedBean().getTermination().getCaRecommendationCode().setCodeId(1L);
-			   this.getManagedBean().getTermination().getCaRecommendationCode().setCode("T");
+			   this.getManagedBean().getTermination().getCaRecommendationCode().setCodeId(155L);
+			   this.getManagedBean().getTermination().getCtContract().setContractId(1L);
 		   }
 
 		if (this.getManagedBean().getCtAmendment() == null)
@@ -762,7 +764,6 @@ public class ContractDetailsBackingBean extends
 
 			ContractTerminationReqDTO reqDTO = new ContractTerminationReqDTO();
 			terminationSO = (IContractTerminationSO) BusinessDelegate.getInstance().getServiceObject("ct",IContractTerminationSO.class);
-			this.getManagedBean().getTermination().getCtContract().setContractId(this.getManagedBean().getCtContract().getContractId());
 			reqDTO.setTerminateContract(this.getManagedBean().getTermination());
 
 			String token = getManagedBean().getToken();
@@ -1329,6 +1330,14 @@ public class ContractDetailsBackingBean extends
 
 	public void setEditorValue(String editorValue) {
 		this.editorValue = editorValue;
+	}
+
+	public DefaultStreamedContent getDownload() {
+		return download;
+	}
+
+	public void setDownload(DefaultStreamedContent download) {
+		this.download = download;
 	}
 
 }

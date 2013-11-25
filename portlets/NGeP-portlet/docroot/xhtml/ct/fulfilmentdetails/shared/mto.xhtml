@@ -9,14 +9,14 @@
     <h:panelGrid columns="2" style="width:680px;">  
        <h:panelGrid columns="2" style="width:340px;">  
               <p:outputLabel  value="#{lbl['lbl.ct.mto.description']}"  />  
-              <p:inputText value="Fire Fight Gloves"  style="width:170px;" />  
+              <p:inputText value="Fire Fight Gloves"  style="width:170px;" disabled="true" />  
               <p:outputLabel value="#{lbl['lbl.ct.mto.department']}"/>  
-              <p:inputText value="Jabatan Bomba" style="width:170px;"  />
+              <p:inputText value="Jabatan Bomba" style="width:170px;" disabled="true"  />
               <p:outputLabel  value="#{lbl['lbl.ct.mto.quantity']}"/>  
-              <p:inputText value="150"  style="width:100px;"   disabled="false" />
+              <p:inputText value="150"  style="width:100px;"   disabled="true" />
               <p:outputLabel  value="#{lbl['lbl.ct.mto.weight']}" />  
               <h:panelGrid columns="3">
-              <p:inputText value="150kg" style="width:80px;" disabled="false" /> 
+              <p:inputText value="150kg" style="width:80px;" disabled="true" /> 
               <p:spacer width="1"/>
               <p:selectOneMenu  disabled="true" style="width:65px;">
               <f:selectItem itemValue="kg" itemLabel="kg" />
@@ -24,14 +24,14 @@
               </h:panelGrid>
               <p:outputLabel  value="#{lbl['lbl.ct.mto.dimension']}" />  
                <h:panelGrid columns="3">
-              <p:inputText value="300" style="width:80px;" disabled="false" /> 
+              <p:inputText value="300" style="width:80px;" disabled="true" /> 
                <p:spacer width="1"/>
               <p:selectOneMenu  disabled="true" style="width:65px;">
               <f:selectItem itemValue="m3" itemLabel="m3" />
               </p:selectOneMenu>  
               </h:panelGrid>
               <p:outputLabel  value="#{lbl['lbl.ct.mto.packaging']}"/>  
-              <p:selectOneMenu  disabled="false"  style="width:180px;">
+              <p:selectOneMenu  disabled="true"  style="width:180px;">
                    <f:selectItem itemLabel="--Please Select--" itemValue="--Please Select--" /> 
               </p:selectOneMenu>
               <f:verbatim></f:verbatim>
@@ -48,47 +48,47 @@
                  </p:dataTable>
                 </h:panelGrid>
                 <p:outputLabel  value="#{lbl['lbl.ct.mto.agentInformation']}" />  
-                <p:inputText value="Bennet SafefyWear Limited" style="width:170px;"  disabled="false"  />  
+                <p:inputText value="Bennet SafefyWear Limited" style="width:170px;"  disabled="true"  />  
                <h:panelGroup>
                <div style="height:30px; vertical-align: top">
                 <p:outputLabel value="#{lbl['lbl.ct.mto.address']}" />
                </div>
               </h:panelGroup>
               <h:panelGrid>
-                 <p:inputTextarea  value="7/11 Mersey Road, Crosby, LiverPool, England" required="false" rows="2" cols="31"  disabled="false" autoResize="false" />
+                 <p:inputTextarea  value="7/11 Mersey Road, Crosby, LiverPool, England" required="false" rows="2" cols="31"  disabled="true" autoResize="false" />
               </h:panelGrid>
               <p:outputLabel  value="#{lbl['lbl.ct.mto.transportation']}" />  
-                 <p:selectOneMenu   disabled="false"  style="width:180px;" >
+                 <p:selectOneMenu   disabled="true"  style="width:180px;" >
                     <f:selectItem itemLabel="--Please Select--" itemValue="--Please Select--" /> 
                  </p:selectOneMenu>
              <p:outputLabel value="#{lbl['lbl.ct.mto.base']}"  />  
-             <p:inputText value="London Port"  style="width:170px;" required="true" disabled="false" />  
+             <p:inputText value="London Port"  style="width:170px;" required="true" disabled="true" />  
             
              <p:outputLabel  value="#{lbl['lbl.ct.mto.pmethod']}" />  
-              <p:selectOneMenu  disabled="false"  style="width:180px;" >
+              <p:selectOneMenu  disabled="true"  style="width:180px;" >
                  <f:selectItem itemLabel="--Please Select--" itemValue="--Please Select--" /> 
               </p:selectOneMenu>
          </h:panelGrid>  
          <h:panelGrid columns="2" style="width:350px;">  
            <p:outputLabel   value="#{lbl['lbl.ct.mto.idescription']}"  />  
-           <p:inputText value="Blaze Master Pro-Fit MK V Fire Fighting Gloves" style="width:170px;"  disabled="false" />  
+           <p:inputText value="Blaze Master Pro-Fit MK V Fire Fighting Gloves" style="width:170px;"  disabled="true" />  
            <h:panelGroup>
            <div style="height: 30px; vertical-align: top">
                <p:outputLabel  value="Goods Name/Description" />
             </div>
            </h:panelGroup>
            <h:panelGrid>
-             <p:inputTextarea value="Blaze Master Pro-Fit MK V Fire Fighting Gloves" required="false"  rows="2" cols="31" maxlength="100"  disabled="false" autoResize="false" />
+             <p:inputTextarea value="Blaze Master Pro-Fit MK V Fire Fighting Gloves" required="false"  rows="2" cols="31" maxlength="100"  disabled="true" autoResize="false" />
            </h:panelGrid>
             <p:outputLabel  value="#{lbl['lbl.ct.mto.tgoods']}"  />  
-              <p:selectOneMenu  disabled="false"  style="width:180px;" >
+              <p:selectOneMenu  disabled="true"  style="width:180px;" >
                 <f:selectItem itemLabel="-Please Select--" itemValue="" /> 
               </p:selectOneMenu>
              <f:verbatim></f:verbatim>
-             <p:inputText value="TX002" disabled="false" style="width:60px;" />
+             <p:inputText value="TX002" disabled="true" style="width:60px;" />
               <p:outputLabel  value="#{lbl['lbl.ct.mto.heights']}"/>  
                <h:panelGrid columns="3">
-              <p:inputText value="200" style="width:80px;" disabled="false" />  
+              <p:inputText value="200" style="width:80px;" disabled="true" />  
                <p:spacer width="1"/>
               <p:selectOneMenu  disabled="true" style="width:65px;">
               <f:selectItem itemValue="cm" itemLabel="cm" />
@@ -96,7 +96,7 @@
               </h:panelGrid>
               <p:outputLabel   value="#{lbl['lbl.ct.mto.width']}"/>  
                <h:panelGrid columns="3">
-              <p:inputText value="30" style="width:80px;" disabled="false" />  
+              <p:inputText value="30" style="width:80px;" disabled="true" />  
                <p:spacer width="1"/>
               <p:selectOneMenu  disabled="true" style="width:65px;">
               <f:selectItem itemValue="cm" itemLabel="cm" />
@@ -104,14 +104,14 @@
               </h:panelGrid>
                <p:outputLabel  value="#{lbl['lbl.ct.mto.length']}" />  
                 <h:panelGrid columns="3">
-              <p:inputText value="45" style="width:80px;" disabled="false" />  
+              <p:inputText value="45" style="width:80px;" disabled="true" />  
                 <p:spacer width="1"/>
               <p:selectOneMenu  disabled="true" style="width:65px;">
               <f:selectItem itemValue="cm" itemLabel="cm" />
               </p:selectOneMenu> 
               </h:panelGrid>
               <p:outputLabel rendered="true" value="#{lbl['lbl.ct.mto.rexport']}" />
-              <p:selectBooleanCheckbox  value=" " disabled="false"/> 
+              <p:selectBooleanCheckbox  value=" " disabled="true"/> 
              
               <h:panelGroup>
               <div style="height: 30px; vertical-align: top">
@@ -119,16 +119,16 @@
               </div>
               </h:panelGroup>
               <h:panelGrid>
-              <p:inputTextarea required="false" value="Blaze Master Pro-Fit MK V Fire Fighting Gloves" rows="2" cols="31" disabled="false" autoResize="false" />
+              <p:inputTextarea required="false" value="Blaze Master Pro-Fit MK V Fire Fighting Gloves" rows="2" cols="31" disabled="true" autoResize="false" />
               </h:panelGrid>
               <p:outputLabel value="#{lbl['lbl.ct.mto.officer']}" />  
-              <p:inputText value="David Bennet"  style="width:170px;" disabled="false"  />
+              <p:inputText value="David Bennet"  style="width:170px;" disabled="true"  />
               <p:outputLabel  value="#{lbl['lbl.ct.mto.phone']}" />  
-              <p:inputText value="+44 151924 3996" style="width:100px;"  disabled="false"   />
+              <p:inputText value="+44 151924 3996" style="width:100px;"  disabled="true"   />
               <p:outputLabel  value="#{lbl['lbl.ct.mto.fax']}"/>  
-              <p:inputText value="+44 151924 3995"  style="width:100px;"  disabled="false" />
+              <p:inputText value="+44 151924 3995"  style="width:100px;"  disabled="true" />
                <p:outputLabel  value="#{lbl['lbl.ct.mto.dLocation']}"  />  
-             <p:inputText value="Melbourne, Australia"  style="width:170px;" required="true" disabled="false" /> 
+             <p:inputText value="Melbourne, Australia"  style="width:170px;" required="true" disabled="true" /> 
            </h:panelGrid>
      </h:panelGrid>
      </p:panel>

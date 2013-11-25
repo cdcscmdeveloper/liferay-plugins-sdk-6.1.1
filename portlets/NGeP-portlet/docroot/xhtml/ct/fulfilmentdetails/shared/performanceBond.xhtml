@@ -12,22 +12,25 @@
 	paginatorAlwaysVisible="true" emptyMessage="No Records!" rows="10">
 	   <p:columnGroup type="header"> 
 	   <p:row> 
-         <p:column headerText="#{lbl['lbl.ct.pbd.table.btype']}"  /> 
          <p:column headerText="#{lbl['lbl.ct.pbd.table.rno']}"  /> 
          <p:column headerText="#{lbl['lbl.ct.pbd.table.fi']}" /> 
          <p:column headerText="#{lbl['lbl.ct.pbd.table.cur']}"  /> 
          <p:column headerText="#{lbl['lbl.ct.pbd.table.amt']}" /> 
          <p:column headerText="#{lbl['lbl.ct.pbd.table.efdate']}" /> 	
 		 <p:column headerText="#{lbl['lbl.ct.pbd.table.edate']}" />
+		 <p:column headerText="#{lbl['lbl.ct.pbd.table.download']}"  /> 
        </p:row>							
 	  </p:columnGroup>
-	      <p:column><p:outputLabel value="#{data.bondType}" style="float:left;" /></p:column>
           <p:column><p:outputLabel value="#{data.refNo}" style="float:left;"/></p:column>	
           <p:column><p:outputLabel value="CIMB BERHAD" style="float:left;"/></p:column>	
           <p:column > <p:outputLabel value="MYR" style="float:left;"/></p:column> 							
           <p:column><p:outputLabel value="#{data.bondAmount}" style="float:left;"/>  </p:column>	
           <p:column><p:outputLabel value="11/11/2013" style="float:left;"/></p:column>	
           <p:column><p:outputLabel value="10/11/2014" style="float:left;"/></p:column>	
+           <p:column><p:commandButton id="downloadLink" ajax="false" onclick="PrimeFaces.monitorDownload(start, stop)"   
+                      icon="ui-icon-download">  
+                <p:fileDownload value="#{contractDetailsBackingBean.download}"/>  
+            </p:commandButton>  </p:column>
 	</p:dataTable>
    </div>
   </p:panel>

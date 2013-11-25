@@ -20,6 +20,7 @@ import my.ep.persistence.entity.ct.suspend.CtSuspendActive;
 import my.ep.persistence.entity.pm.authorization.PmUser;
 import my.ep.persistence.entity.pm.common.PmStatus;
 import my.ep.web.backingbean.BaseBackingBean;
+import my.ep.web.backingbean.ct.ContractBackingBean;
 import my.ep.web.constant.BpmOutcomeConst;
 import my.ep.web.managedbean.ct.suspend.ContractSuspendManagedBean;
 import my.ep.web.util.lookupservice.BusinessDelegate;
@@ -39,6 +40,7 @@ public class ContractSuspendBackingBean extends BaseBackingBean<ContractSuspendM
 	private static final String PROCESS_SUSPEND_PAGE="/xhtml/ct/fulfilmentdetails/suspension/suspend.xhtml";
 	
 	public ContractSuspendBackingBean(){
+		
 		/* this.getManagedBean().setSuspendLocTN(new DefaultTreeNode("root","", null));
 		 TreeNode zone1 = new DefaultTreeNode(new ZoneDetails("Zone Tengah"), this.getManagedBean().getSuspendLocTN());  
 	     TreeNode zone2 = new DefaultTreeNode(new ZoneDetails("Zone Selatan"), this.getManagedBean().getSuspendLocTN());  
@@ -50,6 +52,9 @@ public class ContractSuspendBackingBean extends BaseBackingBean<ContractSuspendM
 	     new DefaultTreeNode(new ZoneDetails("JOHOR", " "), zone2);  
 	     new DefaultTreeNode(new ZoneDetails("PAHANG", " "), zone2);  
 	     new DefaultTreeNode(new ZoneDetails("MELAKA", " "), zone2);  */
+		
+		ContractBackingBean ctBB = new ContractBackingBean();
+		ctBB.initializeRemarkAndAttachement(getManagedBean().getRemarkList(), getManagedBean().getAttachmentList());
 		
 		if(this.getManagedBean().getOutComes()==null) {
 			this.getManagedBean().setOutComes(new String[]{BpmOutcomeConst.BPM_SAVE, BpmOutcomeConst.BPM_SUBMIT});

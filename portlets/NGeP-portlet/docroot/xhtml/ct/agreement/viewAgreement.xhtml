@@ -8,34 +8,34 @@
 	<p:panel id="fd" header="Fulfillment Details"   toggleable="true"  toggleSpeed="500">
     <h:panelGrid columns="4" style="width:700px;">  
        <p:outputLabel value="Contract Name"/>  
-       <p:inputText style="width:170px;" required="true" disabled="true" />
-       <p:outputLabel value="Contract No"/>  
-       <p:inputText style="width:170px;" required="true" disabled="true" />
+       <p:inputText style="width:170px;" disabled="true" />
+       <p:outputLabel value="Contract No."/>  
+       <p:inputText style="width:170px;" disabled="true" />
        <p:outputLabel value="#{lbl['lbl.ct.ministry']}" />  
        <p:selectOneMenu disabled="false" style="width:120px;">
           <f:selectItems value="#{agreementBackingBean.contractListItem.contractOwner}" />
        </p:selectOneMenu>
-       <p:outputLabel value="Physical Contract No"/>  
-       <p:inputText style="width:170px;" required="true" disabled="true" />
+       <p:outputLabel value="Physical No."/>  
+       <p:inputText style="width:170px;"  disabled="true" />
        <p:outputLabel value="Department Name"/>  
           <p:selectOneMenu disabled="false"  style="width:120px;">
        <f:selectItems value="#{agreementBackingBean.contractListItem.contractOwnerJabatan}" />
        </p:selectOneMenu>
        <p:outputLabel value="Company Name"/>  
-       <p:inputText style="width:170px;" required="true" disabled="true" />
+       <p:inputText style="width:170px;"  disabled="true" />
        <p:outputLabel value="PTJ Name" /> 
          <p:selectOneMenu disabled="false" style="width:120px;">
        <f:selectItems value="#{agreementBackingBean.contractListItem.contractOwnerPtj}" />
        </p:selectOneMenu>
        <p:outputLabel value="Supplier Name"  />  
-       <p:inputText required="true"  style="width:170px;" disabled="true" />
-       <p:outputLabel value="Contract Effective Date" />  
+       <p:inputText  style="width:170px;" disabled="true" />
+       <p:outputLabel value="Effective Date" />  
        <p:inputText   disabled="true" />
-       <p:outputLabel value="Contract Expiry Date" />  
-       <p:inputText  required="true" disabled="true" />
+       <p:outputLabel value="Expirey Date" />  
+       <p:inputText   disabled="true" />
        <p:outputLabel value="Contract Period"/>  
        <h:panelGrid columns="3">
-          <p:inputText  required="true" style="width:100px;"  disabled="true" />
+          <p:inputText  style="width:100px;"  disabled="true" />
         <p:spacer height="2"/>
         <p:selectOneMenu disabled="false"  style="width:60px;">
            <f:selectItem itemLabel="Month" itemValue="Month" /> 
@@ -44,7 +44,7 @@
        </h:panelGrid>
        <p:outputLabel value="Contract Amount" />  
        <h:panelGrid columns="3">
-          <p:inputText  style="width:105px;" required="true" disabled="true" />
+          <p:inputText  style="width:105px;"  disabled="true" />
         <p:spacer height="2"/>
         <p:selectOneMenu disabled="false"   style="width:60px;">
            <f:selectItem itemLabel="MYR" itemValue="MYR" /> 
@@ -53,7 +53,7 @@
        </h:panelGrid>
        <p:outputLabel value="Performance Bond Value" />  
        <h:panelGrid columns="3">
-       <p:inputText  required="true" disabled="true" style="width:100px;" />
+       <p:inputText   disabled="true" style="width:100px;" />
        <p:spacer height="2"/>
        <p:selectOneMenu disabled="false"  style="width:60px;">
           <f:selectItem itemLabel="MYR" itemValue="MYR"  /> 
@@ -68,21 +68,21 @@
        <p:selectBooleanCheckbox   disabled="false"/> 
        <p:outputLabel value="Warning Letter"/>  
        <p:commandLink>  
-       <p:outputLabel value="SyarikatCBP_Warn.doc" style="float:left;" />  
+       <p:outputLabel value="SyarikatCBP_Warn.doc" style="float:left; hight:20px;" />  
        </p:commandLink> 
        <h:outputLabel value="Circular No"  />  
        <p:commandLink>  
-          <p:outputLabel value="CR-2013-PTJ-0001"  style="float:left;" />  
+          <p:outputLabel value="CR-2013-PTJ-0001"  style="float:left;hight:20px;" />  
        </p:commandLink> 
        <p:outputLabel value="No Action Taken Letter" />  
        <p:commandLink>  
-       <p:outputLabel value="SyarikatCBP_notice.doc" style="float:left;" />  
+       <p:outputLabel value="SyarikatCBP_notice.doc" style="float:left;hight:20px;" />  
        </p:commandLink> 
        <f:verbatim></f:verbatim>
        <f:verbatim></f:verbatim>
        <p:outputLabel value="Termination Notice" />  
        <p:commandLink  sajax="false">  
-          <p:outputLabel value="SyarikatCBP_termination.doc" style="float:left;"  />  
+          <p:outputLabel value="SyarikatCBP_termination.doc" style="float:left;hight:20px;"  />  
        </p:commandLink> 
        </h:panelGrid>
 	 </p:panel>
@@ -91,14 +91,12 @@
 		   paginator="true" paginatorPosition="bottom" paginatorAlwaysVisible="true" emptyMessage="No Records!" rows="10" >
 		   <p:columnGroup type="header"> 
 			<p:row> 
-		       <p:column style="width:30px" headerText="No"  /> 
                <p:column style="width:150px" headerText="Agreement No" /> 
                <p:column style="width:280px" headerText="Fulfillment Amendment No" /> 	
                <p:column style="width:100px" headerText="Created User"  /> 
                <p:column style="width:100px" headerText="Created Date"  /> 
             </p:row>	
-			</p:columnGroup>
-			<p:column styleClass="column-align-center" > <h:outputText value="#{index+1}" /></p:column> 							
+			</p:columnGroup>						
 			<p:column> <p:commandLink style="margin-right:20px;" sajax="false">  
             <h:outputText value="AG-2013-0001"  styleClass="linkcommand" />  
             </p:commandLink> 
@@ -110,7 +108,6 @@
 			<p:column></p:column>	
 		</p:dataTable>
 	    </p:panel>
-		<p:panel id="remarks" header="Remarks And Attachments"   toggleable="true"  toggleSpeed="500" widgetVar="panelremarks">
-		</p:panel>
+		 <ui:include src="/xhtml/ct/shared/remarkAndAttachment.xhtml" /> 
 </ui:composition>
 	  

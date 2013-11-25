@@ -8,7 +8,9 @@ import javax.faces.bean.SessionScoped;
 
 import org.apache.log4j.Logger;
 
+import my.ep.persistence.entity.ct.CtAttachment;
 import my.ep.persistence.entity.ct.CtContract;
+import my.ep.persistence.entity.ct.CtRemark;
 import my.ep.persistence.entity.ct.agreement.CtAgreement;
 import my.ep.persistence.entity.ct.agreement.CtAgreementAppendix;
 import my.ep.persistence.entity.ct.agreement.CtSignParty;
@@ -29,6 +31,9 @@ public class AgreementManagedBean extends BaseManagedBean {
 	private CtSignParty signSupplier = new CtSignParty();
 	private CtAgreementAppendix agreementAppendix = new CtAgreementAppendix();
 	private List<CtAgreementAppendix> appendixList = new ArrayList<CtAgreementAppendix>();
+	
+	private List<CtRemark> remarkList;
+	private List<CtAttachment> attachmentList;
 	
 	private CtContract contract  = new CtContract();
 	private CtAgreement agreement;
@@ -138,5 +143,28 @@ public class AgreementManagedBean extends BaseManagedBean {
 	public void setAgreementType(String agreementType) {
 		this.agreementType = agreementType;
 	}
+	
+	public List<CtRemark> getRemarkList() {
+		if(remarkList==null) {
+			remarkList = new ArrayList<CtRemark>();
+		}
+		return remarkList;
+	}
+
+	public void setRemarkList(List<CtRemark> remarkList) {
+		this.remarkList = remarkList;
+	}
+
+	public List<CtAttachment> getAttachmentList() {
+		if(attachmentList==null) {
+			attachmentList = new ArrayList<CtAttachment>();
+		}
+		return attachmentList;
+	}
+
+	public void setAttachmentList(List<CtAttachment> attachmentList) {
+		this.attachmentList = attachmentList;
+	}
+	
 		
 }

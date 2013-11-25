@@ -1,18 +1,23 @@
-<ui:composition
-	xmlns="http://www.w3.org/1999/xhtml"
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
 	xmlns:f="http://java.sun.com/jsf/core"
 	xmlns:h="http://java.sun.com/jsf/html"
 	xmlns:ui="http://java.sun.com/jsf/facelets"
 	xmlns:p="http://primefaces.org/ui"
 	xmlns:c="http://java.sun.com/jsp/jstl/core">
-   <p:panel id="sbd" header="#{lbl['lbl.ct.su.panel.name']}"  toggleable="true"  toggleSpeed="500" widgetVar="panelsbd">
-    <h:panelGrid columns="4" style="width:700px;">  
-              <p:outputLabel value="#{lbl['lbl.ct.su.id']}" />  
-              <p:inputText value="SU-234-56789" disabled="true" style="width:170px;"/>
+	
+   <p:panel id="sbd" header="#{lbl['lbl.ct.su.panel.name']}"  toggleable="true"  toggleSpeed="500">
+    <h:panelGrid columns="4" style="width:800px;">  
+              <p:outputLabel value="EP No." />  
+              <h:panelGrid columns="4">
+              <p:inputText value="SU-234-56789" disabled="true" size="12"/>
+              <p:spacer width="5"/>
+              <p:outputLabel value="MOF No." />  
+               <p:inputText value="SU-234-56789" disabled="true" size="12"/>
+              </h:panelGrid>
               <p:outputLabel  value="#{lbl['lbl.ct.bank.name']}"/>  
               <p:inputText  value="CIMB BANK" disabled="true" style="width:170px;" /> 
               <p:outputLabel value="Supplier Name" />  
-              <p:inputText value="KHAI SDN BHD" disabled="true" style="width:170px;"/> 
+              <p:inputText value="KHAI SDN BHD" disabled="true" style="width:225px;"/> 
               <p:outputLabel  value="#{lbl['lbl.ct.bank.acc.no']}" />  
               <p:inputText value="0111-2345-8795" disabled="true" style="width:170px;"/>
             
