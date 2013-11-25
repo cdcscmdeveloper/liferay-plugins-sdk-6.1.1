@@ -174,10 +174,10 @@ public class BSVAttendanceBackingBean extends
 	}
 
 	/**
-	 * Adding new row for Company List in Attendance by Company
+	 * Adding new row for Company List in Briefing Attendance Registration
 	 */
-	public void addCompanyDetails() {
-		log.info("** addCompanyDetails **");
+	public void addCompany() {
+		log.info("** add Company **");
 		ScQtBriefingRegistration attendacelist = new ScQtBriefingRegistration();
 		try {
 			List<ScQtBriefingRegistration> attendaceByComplist = getManagedBean()
@@ -196,10 +196,10 @@ public class BSVAttendanceBackingBean extends
 	}
 
 	/**
-	 * Adding new row for Attendance List for Company in Attendance by Company
+	 * Adding new row for Attendance List for Company in in Briefing Attendance Registration
 	 */
-	public void addAttendaceDetails() {
-		log.info("** addAttendaceDetails **");
+	public void addAttendaceForComp() {
+		log.info("** add Attendance for Company  **");
 		ScQtBriefingAttendance attendacelist = new ScQtBriefingAttendance();
 		try {
 			List<ScQtBriefingAttendance> attendaceDetails = getManagedBean()
@@ -214,20 +214,51 @@ public class BSVAttendanceBackingBean extends
 			throw new IllegalArgumentException();
 		}
 	}
-
+	
 	/**
-	 * onRowSelect event - For datatable row selection in Attendance
-	 * Registration popup
+	 * Adding new row for Registration in Briefing Attendance By Company
 	 */
-	public void onRowSelect(SelectEvent event) {
-		log.info("** addAttendaceDetails **");
-
+	public void addRegistration() {
+		log.info("** add Registration **");
+		ScQtBriefingAttendance attendacelist = new ScQtBriefingAttendance();
+		try {
+			List<ScQtBriefingAttendance> attendaceDetails = getManagedBean()
+					.getBriefingAttendanceList();
+			if (null == attendaceDetails) {
+				attendaceDetails = new ArrayList<ScQtBriefingAttendance>();
+			}
+			attendaceDetails.add(attendacelist);
+			this.getManagedBean().setBriefingAttendanceList(attendaceDetails);
+		} catch (Exception e) {
+			// e.printStackTrace();
+			throw new IllegalArgumentException();
+		}
+	}
+	
+	/**
+	 * onRowSelect event - For datatable row selection for Attendance List For Company 
+	 * in Attendance Registration popup 
+	 */
+	public void onRowSelect(SelectEvent event) { 
+		IQTBriefingSO qTBriefingSO = null;
+		log.info("** onRowSelecte event  **");
+		qTBriefingSO = BusinessDelegate.getInstance().getServiceObject(
+				QTConstants.SS_MODULE, IQTBriefingSO.class);
 		ScQtBriefingRegistration briefReg = this.getManagedBean()
 				.getSelectedbriefRegistration();
 		System.out.println("selected briefReg "
 				+ briefReg.getSmSupplier().getSupplierName());
 
+		// Attendance List For Company listing 
+		BriefingReqDTO reqDTO = new BriefingReqDTO();
+		reqDTO.setQtBriefingRegistrationId(briefReg.getQtBriefingRegistrationId());
+
+		BriefingResDTO resDTO = qTBriefingSO.retrieveBriefingAttendanceList(reqDTO);
+		List<ScQtBriefingAttendance> briefingAttList = resDTO.getBriefingAttResultBean().getResultList();
+		this.getManagedBean().setBriefingAttendanceList(briefingAttList);
+
 	}
+	
 
 	/**
 	 * getting Approver drop down listing
@@ -270,11 +301,6 @@ public class BSVAttendanceBackingBean extends
 		
 
 	}
-	
-	
-	
-	
-	
 	
 	
 

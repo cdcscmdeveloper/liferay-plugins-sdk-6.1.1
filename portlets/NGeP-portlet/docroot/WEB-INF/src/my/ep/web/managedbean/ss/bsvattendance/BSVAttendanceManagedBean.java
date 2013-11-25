@@ -28,7 +28,7 @@ public class BSVAttendanceManagedBean extends BaseManagedBean {
 	
 	private List<ScQtBriefing> selectedSiteVisitDetails; // Selected Site Visit Details
 	
-	private List<ScQtBriefingRegistration> briefingRegistrationList; // Listing for Registration for Company 
+	private List<ScQtBriefingRegistration> briefingRegistrationList; // briefingRegistrationList  for Registration for Company List
 	
 	private List<ScQtBriefingAttendance> briefingAttendanceList;  // Listing for Attendance By Company
 	
