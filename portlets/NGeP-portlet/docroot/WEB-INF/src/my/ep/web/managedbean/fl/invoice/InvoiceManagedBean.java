@@ -32,6 +32,9 @@ public class InvoiceManagedBean extends BaseManagedBean {
 	private String DocProcess;
 	private String buttonVal;
 	
+	private boolean isDan = false;
+	private boolean isUpdateDan = false;
+	
 	
 	/**
 	 * @return the invoice
@@ -92,5 +95,29 @@ public class InvoiceManagedBean extends BaseManagedBean {
 	 */
 	public void setButtonVal(String buttonVal) {
 		this.buttonVal = buttonVal;
+	}
+	/**
+	 * @return the isDan
+	 */
+	public boolean isDan() {
+		return isDan;
+	}
+	/**
+	 * @param isDan the isDan to set
+	 */
+	public void setDan(boolean isDan) {
+		this.isDan = isDan;
+	}
+	/**
+	 * @return the isUpdateDan
+	 */
+	public boolean isUpdateDan() {
+		return isUpdateDan;
+	}
+	/**
+	 * @param isUpdateDan the isUpdateDan to set
+	 */
+	public void setUpdateDan(boolean isUpdateDan) {
+		this.isUpdateDan = isUpdateDan;
 	}
 }

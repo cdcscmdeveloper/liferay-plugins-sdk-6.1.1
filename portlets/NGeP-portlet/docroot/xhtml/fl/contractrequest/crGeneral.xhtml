@@ -37,7 +37,7 @@
 							listener="#{contractRequestBackingBean.checkPtjFlg}" />
 					</p:selectOneMenu></td>
 				<td><p:outputLabel value="#{lbl['lbl.fl.mto']}" /></td>
-				<td><p:selectOneRadio
+				<td><p:selectOneRadio disable="true"
 						value="#{contractRequestBackingBean.managedBean.flRequest.mto}">
 						<f:selectItem itemLabel="Yes" itemValue="true" />
 						<f:selectItem itemLabel="No" itemValue="false" />
@@ -97,22 +97,6 @@
 				<td><p:inputText style="width: 120px;" disabled="true" /></td>
 			</tr>
 			<tr>
-				<td><p:outputLabel value="#{lbl['lbl.fl.creation.date']}" /></td>
-				<td><p:inputText style="width: 120px;"
-						value="#{contractRequestBackingBean.managedBean.flRequest.createdDate}"
-						disabled="true" /></td>
-			</tr>
-			<tr>
-				<td><p:outputLabel value="#{lbl['lbl.fl.status']}" /></td>
-				<td><p:inputText style="width: 260px;"
-						value="#{contractRequestBackingBean.managedBean.flRequest.pmDocStatus.statusId}"
-						disabled="true" /></td>
-			</tr>
-			<tr>
-				<td><p:outputLabel value="* #{lbl['lbl.fl.financial.year']}" /></td>
-				<td><p:inputText style="width: 120px;"
-						value="#{contractRequestBackingBean.managedBean.flRequest.financialYear}"
-						disabled="true" /></td>
 				<td><p:outputLabel value=" * #{lbl['lbl.fl.maksud.code']}" /></td>
 				<td><p:selectOneMenu
 						value="#{contractRequestBackingBean.managedBean.flRequest.maksudId}"
@@ -122,12 +106,6 @@
 					</p:selectOneMenu></td>
 			</tr>
 			<tr>
-				<td><p:outputLabel value="* #{lbl['lbl.fl.ag.office']}" /></td>
-				<td><p:selectOneMenu
-						value="#{contractRequestBackingBean.managedBean.flRequest.orgProfileAgoId}"
-						style="width: 260px;">
-						<f:selectItems itemLabel="002 KAWANGAN KL" itemValue="1" />
-					</p:selectOneMenu></td>
 				<td><p:outputLabel value="* #{lbl['lbl.fl.charged.ptj']}" /></td>
 				<td><p:selectOneMenu
 						disabled="#{contractRequestBackingBean.managedBean.checkPtjFlg}"
@@ -136,8 +114,30 @@
 					</p:selectOneMenu></td>
 			</tr>
 			<tr>
+				<td><p:outputLabel value="* #{lbl['lbl.fl.financial.year']}" /></td>
+				<td><p:inputText style="width: 120px;"
+						value="#{contractRequestBackingBean.managedBean.flRequest.financialYear}"
+						disabled="true" /></td>
+				<td><p:outputLabel value="#{lbl['lbl.fl.creation.date']}" /></td>
+				<td><p:inputText style="width: 120px;"
+						value="#{contractRequestBackingBean.managedBean.flRequest.createdDate}"
+						disabled="true" /></td>
+			</tr>
+			<tr>
+				<td><p:outputLabel value="* #{lbl['lbl.fl.ag.office']}" /></td>
+				<td><p:selectOneMenu
+						value="#{contractRequestBackingBean.managedBean.flRequest.orgProfileAgoId}"
+						style="width: 260px;">
+						<f:selectItems itemLabel="002 KAWANGAN KL" itemValue="1" />
+					</p:selectOneMenu></td>
+				<td><p:outputLabel value="#{lbl['lbl.fl.status']}" /></td>
+				<td><p:inputText style="width: 260px;"
+						value="#{contractRequestBackingBean.managedBean.flRequest.pmDocStatus.statusId}"
+						disabled="true" /></td>
+			</tr>
+			<tr>
 				<td><p:outputLabel value="#{lbl['lbl.fl.financing']}" /></td>
-				<td><p:selectOneRadio id="options"
+				<td><p:selectOneRadio id="financingOpt"
 						value="#{contractRequestBackingBean.managedBean.flRequest.financingLoan}">
 						<f:selectItem itemLabel="Yes" itemValue="true" />
 						<f:selectItem itemLabel="No" itemValue="false" />

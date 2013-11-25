@@ -30,6 +30,7 @@ public class DebitAdjustmentNoteManagedBean extends BaseManagedBean{
 	
 	private String bpmTaskId;
 	private String[] actions;
+	private boolean isDan = false;
 	/**
 	 * @return the adjustment
 	 */
@@ -65,6 +66,18 @@ public class DebitAdjustmentNoteManagedBean extends BaseManagedBean{
 	 */
 	public void setActions(String[] actions) {
 		this.actions = actions;
+	}
+	/**
+	 * @return the isDan
+	 */
+	public boolean isDan() {
+		return isDan;
+	}
+	/**
+	 * @param isDan the isDan to set
+	 */
+	public void setDan(boolean isDan) {
+		this.isDan = isDan;
 	}
 	
 }

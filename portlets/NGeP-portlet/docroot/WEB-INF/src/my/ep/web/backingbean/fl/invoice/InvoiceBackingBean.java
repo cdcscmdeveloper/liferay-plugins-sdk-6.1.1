@@ -45,7 +45,9 @@ public class InvoiceBackingBean extends BaseBackingBean<InvoiceManagedBean> {
 			}
 			reqDTO.setOutcome(action);
 			reqDTO.setTaskId(getManagedBean().getBpmTaskId());
-			reqDTO.setDanRequired(false);// for current testing DAN purpose in SO
+			System.out.println("getManagedBean().isDan(): "+getManagedBean().isDan());
+			reqDTO.setDanRequired(getManagedBean().isDan());// for current testing DAN purpose in SO
+			reqDTO.setUpdateDan(getManagedBean().isUpdateDan());
 			invoiceSO.saveInvoice(reqDTO);
 
 		}catch(Exception e){
@@ -53,5 +55,10 @@ public class InvoiceBackingBean extends BaseBackingBean<InvoiceManagedBean> {
 		}finally {
 			invoiceSO = null;
 		}
+	}
+	
+	public void test(){
+		System.out.println("getManagedBean().isDan(): "+getManagedBean().isDan());
+		System.out.println("getManagedBean().isUpdateDan(): "+getManagedBean().isUpdateDan());
 	}
 }
