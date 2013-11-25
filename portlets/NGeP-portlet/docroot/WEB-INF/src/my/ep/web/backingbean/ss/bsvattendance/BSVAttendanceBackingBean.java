@@ -41,12 +41,6 @@ public class BSVAttendanceBackingBean extends
 	public static Logger log = Logger.getLogger(BSVAttendanceBackingBean.class);
 	
 	private static final String NAV_TO_BSV_ATTENDANCE_MAIN_PAGE = "bsvAttendanceRegisterMain.xhtml?faces-redirect=true";
-	
-	private IUserSO userSO = null;
-	
-	private IQTBriefingSO qTBriefingSO = null;
-	
-	private IQTDetailSO qtSo = null;
 
 	public BSVAttendanceBackingBean() {
 		
@@ -59,12 +53,15 @@ public class BSVAttendanceBackingBean extends
 	 */
 	public void retrieveBriefingSiteVisitList() {
 		log.info("** retrieveBriefingSiteVisitList **");
-		qTBriefingSO = BusinessDelegate.getInstance().getServiceObject(
-				QTConstants.SS_MODULE, IQTBriefingSO.class);
-		qtSo = BusinessDelegate.getInstance().getServiceObject("ss",
-				IQTDetailSO.class);
+		IQTBriefingSO qTBriefingSO = null;
+		IQTDetailSO qtSo = null;
 		
 		try {
+			qTBriefingSO = BusinessDelegate.getInstance().getServiceObject(
+					QTConstants.SS_MODULE, IQTBriefingSO.class);
+			qtSo = BusinessDelegate.getInstance().getServiceObject("ss",
+					IQTDetailSO.class);
+			
 			// Briefing Details Listing
 			BriefingReqDTO reqDTO = new BriefingReqDTO();
 			reqDTO.setQtId(146L);
@@ -115,6 +112,9 @@ public class BSVAttendanceBackingBean extends
 					null,
 					new FacesMessage(FacesMessage.SEVERITY_ERROR,
 							ex.toString(), ex.getMessage()));
+		} finally {
+			qTBriefingSO = null;
+			qtSo = null;
 		}
 
 	}
@@ -142,9 +142,12 @@ public class BSVAttendanceBackingBean extends
 	 */
 	public void attendanceRegistration() {
 		log.info("** attendanceRegistration **");
-		qTBriefingSO = BusinessDelegate.getInstance().getServiceObject(
-				QTConstants.SS_MODULE, IQTBriefingSO.class);
+		IQTBriefingSO qTBriefingSO = null;
+		
 		try {
+			qTBriefingSO = BusinessDelegate.getInstance().getServiceObject(
+					QTConstants.SS_MODULE, IQTBriefingSO.class);
+			
 			if (getManagedBean().getScQtBriefing() != null) {
 
 				ScQtBriefing selectedBriefing = this.getManagedBean()
@@ -165,6 +168,8 @@ public class BSVAttendanceBackingBean extends
 
 		} catch (Exception e) {
 			e.printStackTrace();
+		} finally {
+			qTBriefingSO = null;
 		}
 	}
 
@@ -228,9 +233,11 @@ public class BSVAttendanceBackingBean extends
 	 * getting Approver drop down listing
 	 */
 	public void retrieveUserListByRole() {
-		userSO = BusinessDelegate.getInstance().getServiceObject(
-				QTConstants.PM_MODULE, IUserSO.class);
+		IUserSO userSO = null;
 		try {
+			userSO = BusinessDelegate.getInstance().getServiceObject(
+					QTConstants.PM_MODULE, IUserSO.class);
+			
 			// Get Approver Users
 			UserReqDTO reqDTO = new UserReqDTO();
 			reqDTO.setRoleCode(RoleCode.APPROVER.value());
@@ -246,6 +253,8 @@ public class BSVAttendanceBackingBean extends
 					null,
 					new FacesMessage(FacesMessage.SEVERITY_ERROR,
 							ex.toString(), ex.getMessage()));
+		} finally {
+			userSO = null;
 		}
 
 	}
