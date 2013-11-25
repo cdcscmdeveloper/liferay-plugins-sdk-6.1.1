@@ -3273,6 +3273,158 @@ important
 
 
 }
+
+.ui-icon-arrow-1-e {
+	background-image: url(#{ resource [ 'ep/images/design:bullet_arrow_right.png' ]
+}
+
+)
+!
+important
+;
+
+	
+background-position
+:
+ 
+center
+;
+
+	
+border-radius
+:
+ 
+0
+px
+;
+
+	
+height
+:
+ 
+16
+px
+ 
+!
+important
+;
+
+
+}
+
+.ui-icon-arrowstop-1-e {
+	background-image: url(#{ resource [ 'ep/images/design:bullet_arrow_right_2.png' ]
+}
+
+)
+!
+important
+;
+
+	
+background-position
+:
+ 
+center
+;
+
+	
+border-radius
+:
+ 
+0
+px
+;
+
+	
+height
+:
+ 
+16
+px
+ 
+!
+important
+;
+
+
+}
+
+.ui-icon-arrow-1-w {
+	background-image: url(#{ resource [ 'ep/images/design:bullet_arrow_left.png' ]
+}
+
+)
+!
+important
+;
+
+	
+background-position
+:
+ 
+center
+;
+
+	
+border-radius
+:
+ 
+0
+px
+;
+
+	
+height
+:
+ 
+16
+px
+ 
+!
+important
+;
+
+
+}
+
+.ui-icon-arrowstop-1-w {
+	background-image: url(#{ resource [ 'ep/images/design:bullet_arrow_left_2.png' ]
+}
+
+)
+!
+important
+;
+
+	
+background-position
+:
+ 
+center
+;
+
+	
+border-radius
+:
+ 
+0
+px
+;
+
+	
+height
+:
+ 
+16
+px
+ 
+!
+important
+;
+
+
+}
 /*--------------------------       End Custom Icons    ------------------------------ */
 
 /*--------------------------       Custom CSS          ------------------------------ */
@@ -3667,6 +3819,46 @@ table[role="treegrid"] > tbody > tr > td {
 label > span.ui-button-text {
 	vertical-align: middle;
 	padding-top: 8px !important;
+}
+
+.ui-picklist .ui-picklist-caption {
+	font-family: Tahoma;
+	font-size: 11px;
+	background: #BCE18A !important; /* Old browsers */
+	background: -moz-linear-gradient(top, #FFFFFF 0%, #BCE18A 100%) !important;
+	/* FF3.6+ */
+	background: -webkit-gradient(linear, left top, left bottom, color-stop(0%, #FFFFFF),
+		color-stop(100%, #BCE18A) ) !important; /* Chrome,Safari4+ */
+	background: -webkit-linear-gradient(top, #FFFFFF 0%, #BCE18A 100%) !important;
+	/* Chrome10+,Safari5.1+ */
+	background: -o-linear-gradient(top, #FFFFFF 0%, #BCE18A 100%) !important;
+	/* Opera 11.10+ */
+	background: -ms-linear-gradient(top, #FFFFFF 0%, #BCE18A 100%) !important;
+	/* IE10+ */
+	background: linear-gradient(to bottom, #FFFFFF 0%, #BCE18A 100%) !important;
+	/* W3C */
+	filter: progid:DXImageTransform.Microsoft.gradient(  startColorstr='#FFFFFF',
+		endColorstr='#BCE18A', GradientType=0 ) !important; /* IE6-8 */
+}
+
+.ui-picklist .ui-picklist-list li.ui-state-hover {
+	border-radius: 0;
+	box-shadow: none;
+	background: #FDD655; /* Old browsers */
+	background: -moz-linear-gradient(top, #FCEAAE 0%, #FDD655 100%);
+	/* FF3.6+ */
+	background: -webkit-gradient(linear, left top, left bottom, color-stop(0%, #FCEAAE),
+		color-stop(100%, #FDD655) ); /* Chrome,Safari4+ */
+	background: -webkit-linear-gradient(top, #FCEAAE 0%, #FDD655 100%);
+	/* Chrome10+,Safari5.1+ */
+	background: -o-linear-gradient(top, #FCEAAE 0%, #FDD655 100%);
+	/* Opera 11.10+ */
+	background: -ms-linear-gradient(top, #FCEAAE 0%, #FDD655 100%);
+	/* IE10+ */
+	background: linear-gradient(to bottom, #FCEAAE 0%, #FDD655 100%);
+	/* W3C */
+	filter: progid:DXImageTransform.Microsoft.gradient(  startColorstr='#FCEAAE',
+		endColorstr='#FDD655', GradientType=0 ); /* IE6-8 */
 }
 /*--------------------------       End Custom CSS       --------------------------- */
 
