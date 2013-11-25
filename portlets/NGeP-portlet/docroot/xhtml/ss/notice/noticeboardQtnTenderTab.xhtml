@@ -1,0 +1,160 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:c="http://java.sun.com/jsp/jstl/core">
+
+	<p:panel header="Qtn / Tender Notice" toggleable="true">
+
+		<p:panelGrid style="width:100%;"
+			styleClass="noBorders tr,noBorders td">
+			<p:row>
+				<p:column width="100%" style="text-align:right">
+					<p:commandButton value="#{lbl['lbl.sc.notice.board.backbtn']}"
+						action="noticeboardmain.xhtml?faces-redirect=true"
+						style="float:right;" />
+				</p:column>
+			</p:row>
+		</p:panelGrid>
+
+
+		<h:panelGrid border="0" cellpadding="0" cellspacing="" width="100%"
+			columns="2" columnClasses="columnWidth20,columnWidth80">
+
+			<p:column>
+				<p:outputLabel value="#{lbl['lbl.sc.notice.board.title']}"></p:outputLabel>
+			</p:column>
+
+			<p:column>
+				<p:inputText readonly="true" size="117" />
+			</p:column>
+		</h:panelGrid>
+
+		<h:panelGrid border="0" cellpadding="0" cellspacing="4" width="100%"
+			columns="4"
+			columnClasses="columnWidth20,columnWidth30,columnWidth20,columnWidth30">
+
+			<p:column>
+				<p:outputLabel value="#{lbl['lbl.sc.notice.board.qtno']}"></p:outputLabel>
+			</p:column>
+
+			<p:column>
+				<p:inputText readonly="true" />
+			</p:column>
+
+			<p:column>
+				<p:outputLabel value="#{lbl['lbl.sc.notice.board.ministry']}"></p:outputLabel>
+			</p:column>
+
+			<p:column>
+				<p:inputText readonly="true" />
+			</p:column>
+
+			<p:column>
+				<p:outputLabel value="#{lbl['lbl.sc.notice.board.department']}"></p:outputLabel>
+			</p:column>
+
+			<p:column>
+				<p:inputText readonly="true" />
+			</p:column>
+
+			<p:column>
+				<p:outputLabel value="#{lbl['lbl.sc.notice.board.division']}"></p:outputLabel>
+			</p:column>
+
+			<p:column>
+				<p:inputText readonly="true" />
+			</p:column>
+		</h:panelGrid>
+
+		<p:spacer height="15" />
+
+		<h:panelGrid border="0" cellpadding="0" cellspacing="4" width="60%"
+			columns="2" columnClasses="columnWidth30,columnWidth30">
+
+			<p:column>
+				<p:outputLabel value="#{lbl['lbl.sc.notice.board.pv.period']}"></p:outputLabel>
+			</p:column>
+
+			<p:column>
+				<p:inputText readonly="true" size="6" />
+			</p:column>
+
+		</h:panelGrid>
+
+		<p:panel header="Supplier Qualification Criteria " toggleable="true">
+			<h:panelGrid border="0" cellpadding="0" cellspacing="0" width="50%">
+
+			</h:panelGrid>
+
+			
+	   <p:outputPanel deferred="true">  
+	      <h3>Category Code List:</h3>
+	    </p:outputPanel>
+
+			<p:dataTable value="" var="">
+				<p:column headerText="#{lbl['lbl.sc.notice.board.catcode']}">
+					<h:outputText value="ct01" />
+				</p:column>
+
+				<p:column headerText="#{lbl['lbl.sc.notice.board.mandatory']}">
+					<h:outputText value="high" />
+				</p:column>
+
+			</p:dataTable>
+
+			<p:spacer height="10" />
+			<h:panelGrid border="0" cellpadding="0" cellspacing="0" width="50%"
+				columns="2" columnClasses="columnWidth20,columnWidth30">
+
+				<p:column>
+					<p:outputLabel value="#{lbl['lbl.sc.notice.board.mlocality']}"></p:outputLabel>
+				</p:column>
+
+				<p:column>
+					<p:inputText readonly="true" />
+				</p:column>
+
+
+				<p:column>
+					<p:outputLabel value="#{lbl['lbl.sc.notice.board.all.states']}"></p:outputLabel>
+				</p:column>
+
+				<p:column>
+					<p:inputText readonly="true" />
+				</p:column>
+
+			</h:panelGrid>
+
+			<p:spacer height="20" />
+
+
+		   <p:outputPanel deferred="true">  
+			    <h3>Location List:</h3>
+			    </p:outputPanel>
+			
+			<p:dataTable value="" var="">
+				<p:column headerText="#{lbl['lbl.sc.notice.board.location']}">
+					<p:commandLink onclick="popQtn.show();">
+						<h:outputText value="Zone Name" />
+					</p:commandLink>
+				</p:column>
+			</p:dataTable>
+
+			<h:panelGrid border="0" cellpadding="0" cellspacing="0" width="50%"
+				columns="2" columnClasses="columnWidth20,columnWidth30">
+				<p:column>
+					<p:outputLabel value="#{lbl['lbl.sc.notice.board.paidup.capital']}"></p:outputLabel>
+				</p:column>
+
+				<p:column>
+					<p:inputText readonly="true" />
+				</p:column>
+			</h:panelGrid>
+			
+		</p:panel>
+
+	</p:panel>
+
+</ui:composition>

@@ -1,377 +1,42 @@
-<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition
+	template="/WEB-INF/facelets/templates/basic_template.xhtml"
+	xmlns:p="http://primefaces.org/ui" xmlns="http://www.w3.org/1999/xhtml"
 	xmlns:f="http://java.sun.com/jsf/core"
 	xmlns:h="http://java.sun.com/jsf/html"
 	xmlns:ui="http://java.sun.com/jsf/facelets"
-	xmlns:p="http://primefaces.org/ui"
+	xmlns:fn="http://java.sun.com/jsp/jstl/functions"
 	xmlns:c="http://java.sun.com/jsp/jstl/core">
 
-	<p:panel>
-		<p:panelGrid style="width:100%;"
-			styleClass="noBorders tr,noBorders td"></p:panelGrid>
-	</p:panel>
-
-	<p:panel toggleable="true">
-		<p:tabView id="tabView" dynamic="true" cache="true">
-
-
-			<p:tab id="tba1" title="Qtn / Tender Notice ">
-			<br />
-				<h:panelGrid columns="2" style="width:100%;"
-					styleClass="noBorders tr,noBorders td">
+	<ui:define name="contentSection">
+	
+		<h:panelGroup>
+			<p:tabView id="NoticeBoardDet" dynamic="true" cache="false">
 					
-					<h:outputText value="Title"/>
-					<h:inputText readonly="true" size="80" />
-				</h:panelGrid>
-				<br />
-
-				<h:panelGrid columns="4" style="width:70%;"
-					styleClass="noBorders tr,noBorders td">
-
-					<h:outputText value="Qtn / Tender No"></h:outputText>
-					<h:inputText readonly="true" />
-
-					<h:outputText value="Ministry"></h:outputText>
-					<h:inputText readonly="true" />
-
-					<h:outputText value="Department"></h:outputText>
-					<h:inputText readonly="true" />
-
-					<h:outputText value="Division"></h:outputText>
-					<h:inputText readonly="true" />
-
-					<h:outputText value="Proposal Validity Period: "></h:outputText>
-					<h:inputText readonly="true" />
-
-				</h:panelGrid>
-
-				<p:panel header="Supplier Qualification Criteria " toggleable="true">
-
-					<h:outputLabel value="Category Code List"
-						style="text-decoration:underline;float:left;" />
-
-					<br />
-					<h:panelGroup style="width:100%;">
-						<p:dataTable value="" var="" resizableColumns="true"
-							editable="true">
-							<p:column headerText="Category Code">
-								<h:outputText value="ct01"/>
-							</p:column>
-
-							<p:column headerText="Mandatory">
-								<h:outputText value="high" />
-							</p:column>
-
-						</p:dataTable>
-					</h:panelGroup>
-					<br />
-
-				<h:panelGrid columns="2" style="width:50%;"
-					styleClass="noBorders tr,noBorders td">
-
-					<h:outputText value="Multiple Locality "></h:outputText>
-					<h:inputText readonly="true" />
-
-					<h:outputText value="All States"></h:outputText>
-					<h:inputText readonly="true" />
-
-				</h:panelGrid>
-				<br />
-					<h:outputLabel value="Location List"
-						style="text-decoration:underline;float:left;" />	
-						<br/>			
-					<h:panelGroup style="width:100%;">
-						<p:dataTable value="" var="">
-							<p:column headerText="Location">
-							 <p:commandLink onclick="popQtn.show();">
-								<h:outputText value="Zone Name" />
-							 </p:commandLink>
-							</p:column>
-
-						</p:dataTable>
-					</h:panelGroup>
-					<br />
-					<h:panelGrid columns="2" style="width:43%;"
-						styleClass="noBorders tr,noBorders td">
-						<h:outputText value="Paid Up Capital (RM)" />
-						<h:inputText readonly="true" />
-				    </h:panelGrid>
-				</p:panel>
-			</p:tab>
-
-			<p:tab id="tab2" title="Schedule">
-			<br />
-			<p:panel headerText="Schedule">
-				<h:panelGrid columns="2" style="width:50%;"
-					styleClass="noBorders tr,noBorders td">
-
-					<h:outputText value="Publish Date"></h:outputText>
-					<h:inputText readonly="true" />
-
-					<h:outputText value="Briefing Same As Site Visit"></h:outputText>
-					<h:inputText readonly="true" />
-
-				</h:panelGrid>
-				<br />
-					<h:outputLabel value="Briefing Details:"
-						style="text-decoration:underline;float:left;" />
-				<br />
-					<h:panelGroup style="width:100%;">
-						<p:dataTable value="" var="">
-							<p:column headerText="No">
-      						  <h:outputText  />
-							</p:column>
-							
-							<p:column headerText="Description">
-      						  <h:outputText readonly="true" />
-							</p:column>
-							
-							<p:column headerText="Date/Time">
-      						  <h:outputText readonly="true" />
-							</p:column>
-							
-							<p:column headerText="No">
-      						  <h:outputText value="r/o" />
-							</p:column>
-							
-							<p:column headerText="Coordinating Officer">
-      						  <h:outputText readonly="true" />
-							</p:column>	
-							
-							<p:column headerText="Attendance">
-      						  <h:outputText readonly="true" />
-							</p:column>
-							
-							<p:column headerText="Zone">
-							 <p:commandLink onclick="popQtn.show();">
-								<h:outputText value="Zone Name" />
-							 </p:commandLink>
-							</p:column>																																												
-
-						</p:dataTable>
-					</h:panelGroup>	
-					<br />
-					<br />	
-					<h:outputLabel value="Site Details:"
-						style="text-decoration:underline;float:left;" />
-				<br />
-					<h:panelGroup style="width:100%;">
-						<p:dataTable value="" var="">
-							<p:column headerText="No">
-      						  <h:outputText  />
-							</p:column>
-							
-							<p:column headerText="Description">
-      						  <h:outputText readonly="true" />
-							</p:column>
-							
-							<p:column headerText="Date/Time">
-      						  <h:outputText readonly="true" />
-							</p:column>
-							
-							<p:column headerText="Location">
-      						  <h:outputText readonly="true" />
-							</p:column>
-							
-							<p:column headerText="Coordinating Officer">
-      						  <h:outputText readonly="true" />
-							</p:column>	
-							
-							<p:column headerText="Attendance">
-      						  <h:outputText readonly="true" />
-							</p:column>
-							
-							<p:column headerText="Zone">
-							 <p:commandLink onclick="popQtn.show();">
-								<h:outputText value="Zone Name" />
-							 </p:commandLink>
-							</p:column>																																												
-
-						</p:dataTable>
-					</h:panelGroup>	
+				<p:tab id="tab1" title="Qtn / Tender Details">
+					<ui:include src="noticeboardQtnTenderTab.xhtml" />
+				</p:tab>
+				<p:tab id="tab2" title="Schedule">
+					<ui:include src="noticeboardScheduleTab.xhtml" />
+				</p:tab>
+				<p:tab id="tab3" title="Document">
+					<ui:include src="noticeboardDocumentTab.xhtml" />
+				</p:tab>
 			
-					<br />
-					<br />	
-					<h:outputLabel value="Proposal Preparation Sections:"
-						style="text-decoration:underline;float:left;" />
-				<br />			
-				<h:panelGrid columns="4" style="width:73%;"
-					styleClass="noBorders tr,noBorders td">
-
-					<h:outputText value="* Proposal Preparation Start Date And Time"></h:outputText>
-					<h:inputText readonly="true" />
-
-					<h:outputText value="Expected LOA Issuance Date"></h:outputText>
-					<h:inputText readonly="true" />
-					
-					<h:outputText value="Closing Date And Time"></h:outputText>
-					<h:inputText readonly="true" />
-					
-					
-					<h:outputText value="Expected Start Delivery Date"></h:outputText>
-					<h:inputText readonly="true" />	
-					
-					<h:outputText value="Publishing Period (Days)"></h:outputText>
-					<h:inputText readonly="true" />																
-
-				</h:panelGrid>	
-				<br />
-				<br />	
-				<p:panel>
-			    	<h:outputLabel value="Contact Person:"
-						style="text-decoration:underline;float:left;" />
-				</p:panel>
-				<br />		
-					<h:panelGroup style="width:100%;">
-						<p:dataTable value="" var="">
-							<p:column headerText="No">
-      						  <h:outputText  />
-							</p:column>
-							
-							<p:column headerText="Name">
-      						  <h:outputText readonly="true" />
-							</p:column>
-							
-							<p:column headerText="Tel. No">
-      						  <h:outputText readonly="true" />
-							</p:column>
-							
-							<p:column headerText="Fax No">
-      						  <h:outputText readonly="true" />
-							</p:column>
-							
-							<p:column headerText="Email">
-      						  <h:outputText readonly="true" />
-							</p:column>																																										
-						</p:dataTable>
-					</h:panelGroup>																		
-			</p:panel>
-			</p:tab>
-
-			<p:tab id="tab3" title="Document">
-				<h:panelGrid columns="2" style="width:50%;"
-					styleClass="noBorders tr,noBorders td">
-
-
-					<h:outputText value="1. NOTIS KENYATAAN TAWARAN"></h:outputText>
-					<h:commandLink value="Hyperlink 1" />
-
-					<h:outputText value="2. ARAHAN KEPADA PETENDER"></h:outputText>
-					<h:commandLink value="Hyperlink 2" />
-
-					<h:outputText value="3. ARAHAN DAN SYARAT-SYARAT AM"></h:outputText>
-					<h:commandLink value="Hyperlink 3" />
-
-					<h:outputText value="4. SYARAT-SYARAT KHAS"></h:outputText>
-					<h:commandLink value="Hyperlink 4" />
-
-					<h:outputText value="5. Skop Kerja"></h:outputText>
-					<h:commandLink value="Hyperlink 5" />
-
-					<h:outputText value="6. Jadual Pelaksanaan / Schedule-Based"></h:outputText>
-					<h:commandLink value="Hyperlink 5" />
-
-
-					<h:outputText value="3.5 Technical Proposal Submission Check List"
-						style="font-weight:bold; font-size:14px;"></h:outputText>
-					<h:commandLink value="" />
-
-					<h:outputText value="1. Jadual Spesifikasi Tawaran"></h:outputText>
-					<h:commandLink value="Hyperlink" />
-
-					<h:outputText value="2. Jadual Pematuhan Spesifikasi"></h:outputText>
-					<h:commandLink value="Hyperlink" />
-
-					<h:outputText value="3. Senarai Kakitangan Teknikal"></h:outputText>
-					<h:commandLink value="Hyperlink" />
-
-					<h:outputText value="4. Pengalaman Syarikat"></h:outputText>
-					<h:commandLink value="Hyperlink" />
-
-					<h:outputText value="5. Projek Yang Sedang Dijalankan"></h:outputText>
-					<h:commandLink value="Hyperlink" />
-
-					<h:outputText value="Required Manual Submission : Sample Product"></h:outputText>
-					<h:commandLink value="Hyperlink" />
-
-					<h:outputText value="3.6 Financial Proposal Submission Check List"
-						style="font-weight:bold; font-size:14px;"></h:outputText>
-					<h:commandLink value="" />
-
-					<h:outputText
-						value="1. Jadual Harga Tawaran Apply Line schedule base on Techincal Specification"></h:outputText>
-					<h:commandLink value="Hyperlink" />
-
-					<h:outputText value="Unit Price"></h:outputText>
-					<h:commandLink value="Hyperlink" />
-
-					<h:outputText value="Quantity"></h:outputText>
-					<h:commandLink value="Hyperlink" />
-
-					<h:outputText value="Template as per prepare by TSC"></h:outputText>
-					<h:commandLink value="Hyperlink" />
-
-					<h:outputText value="2. Keterangan Mengenai Petender"></h:outputText>
-					<h:commandLink value="Hyperlink" />
-
-					<h:outputText value="Profil Syarikat"></h:outputText>
-					<h:commandLink value="Hyperlink" />
-
-					<h:outputText value="Lembaga Pengarah"></h:outputText>
-					<h:commandLink value="Hyperlink" />
-
-					<h:outputText value="Komposisi Modal"></h:outputText>
-					<h:commandLink value="Hyperlink" />
-
-					<h:outputText value="Komposisi Kakitangan"></h:outputText>
-					<h:commandLink value="Hyperlink" />
-
-					<h:outputText value="Pendaftaran Dengan Kementerian Kewangan"></h:outputText>
-					<h:commandLink value="Hyperlink" />
-
-					<h:outputText value="Kategori Pendaftaran"></h:outputText>
-					<h:commandLink value="Hyperlink" />
-
-					<h:outputText value="3. Surat Akuan Pembida"></h:outputText>
-					<h:commandLink value="Hyperlink" />
-
-					<h:outputText value="5. Maklumat Bank"></h:outputText>
-					<h:commandLink value="Hyperlink" />
-
-					<h:outputText value="6. Borang Penyata Bulanan Akaun Bank"></h:outputText>
-					<h:commandLink value="Hyperlink" />
-
-					<h:outputText value="7. Kemudahan Pembiayaan Bank"></h:outputText>
-					<h:commandLink value="Hyperlink" />
-
-					<h:outputText
-						value="8. Salinan Sijil Akuan Pendaftaran Dari Kementerian Kewangan"></h:outputText>
-					<h:commandLink value="Hyperlink" />
-
-					<h:outputText
-						value="9. Salinan Sijil Akuan Bumiputera Dari Kementerian Kewangan"></h:outputText>
-					<h:commandLink value="Hyperlink" />
-
-					<h:outputText
-						value="10. Salinan Sijil Akuan Pembuat Dari Kementerian Kewangan"></h:outputText>
-					<h:commandLink value="Hyperlink" />
-
-					<h:outputText
-						value="11. Surat Akuan Pengesahan / Jaminan (Waranti) daripada prinsipal"></h:outputText>
-					<h:commandLink value="Hyperlink" />
-
-
-				</h:panelGrid>
-
-
-			</p:tab>
-		</p:tabView>
-		<p:commandButton value="BACK"
-			action="noticeboardmain.xhtml?faces-redirect=true"
-			style="float:right;">
-		</p:commandButton>
-		<br />
-		<br />
-	</p:panel>
-
-
+			</p:tabView>
+		</h:panelGroup>
+		<ui:include src="/xhtml/ss/notice/noticePopUpQtn.xhtml" />
+	</ui:define>
 </ui:composition>
+
+
+
+
+
+
+
+
+
+

@@ -4,125 +4,188 @@
 	xmlns:h="http://java.sun.com/jsf/html"
 	xmlns:ui="http://java.sun.com/jsf/facelets"
 	xmlns:p="http://primefaces.org/ui"
-	xmlns:c="http://java.sun.com/jsp/jstl/core">
-	
-	<p:panel>
-		<p:panelGrid style="width:100%;" styleClass="noBorders tr,noBorders td" ></p:panelGrid>
-</p:panel>
-	
-	<p:panel header="Supplier Self Registration" toggleable="true">
-	
-	<p:panelGrid columns="2" style="width:100%;" styleClass="noBorders tr,noBorders td">
-	
-	<h:outputText value="Briefing Same As Site Visit : "></h:outputText>
-	  <h:inputText value="Yes" />
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:ac="http://ac.my/jsf/composite/cc">
 
-    </p:panelGrid>
-	</p:panel>
-	
- 
- 	
-	
-	<p:panel header="Briefing Details" toggleable="true">
-	<p:dataTable value="" var="" resizableColumns="true">
-        
-		<p:column headerText="CheckBox" style="width:2%" >
-			<h:selectBooleanCheckbox value="1"  > 
-		    </h:selectBooleanCheckbox>
-	    </p:column>
-       
-        <p:column headerText="No" style="width:2%"> 
-             <h:outputText value="1" />  
-        </p:column>          
-         
-        <p:column headerText="Description" style="width:20%"> 
-             <h:outputText value="abcdefghi" />  
-        </p:column>
-        
-        <p:column headerText="Date/Time" style="width:10%"> 
-             <h:outputText value="4/7/13 / 11.15am" />  
-        </p:column>
-        
-        <p:column headerText="Location" style="width:10%"> 
-             <h:outputText value="Location B" />  
-        </p:column>
-        
-        <p:column headerText="Coordinating Officer" style="width:10%"> 
-             <h:outputText value="Officer A" />  
-        </p:column>
-        
-        <p:column headerText="Zone" style="width:10%"> 
-             <h:outputText value="Zone Name" />  
-        </p:column>   
-                
-    </p:dataTable>
-  </p:panel>
-<br/>
+	<p:panel header="Supplier Self Registration" toggleable="true"  >
+     <p:spacer height="25"/> 
+		<h:panelGrid border="0" cellpadding="0" cellspacing="0"  width="50%"
+			columns="2" columnClasses="columnWidth20,columnWidth30">
+			<h:column>
+				<h:outputLabel
+					value="#{lbl['lbl.sc.bsv.attendance.briefing.sameas.sv']}"></h:outputLabel>
+			</h:column>
 
-	<p:panel header="Site Details" toggleable="true">
-	<p:dataTable value="" var="" resizableColumns="true">
-        
-		<p:column headerText="CheckBox" style="width:10%" >
-			<h:selectBooleanCheckbox value="1"  > 
-		    </h:selectBooleanCheckbox>
-	    </p:column>
-       
-        <p:column headerText="No" style="width:10%"> 
-             <h:outputText value="1" />  
-        </p:column>          
-         
-        <p:column headerText="Site Description" style="width:20%"> 
-             <h:outputText value="abcdefghi" />  
-        </p:column>
-        
-        <p:column headerText="Date/Time" style="width:10%"> 
-             <h:outputText value="4/7/13 / 11.15am" />  
-        </p:column>
-        
-        <p:column headerText="Location" style="width:10%"> 
-             <h:outputText value="Location B" />  
-        </p:column>
-        
-        <p:column headerText="Coordinating Officer" style="width:10%"> 
-             <h:outputText value="Officer A" />  
-        </p:column>
-        
-        <p:column headerText="Attendance" style="width:10%"> 
-             <h:outputText value="Attend" />  
-        </p:column>   
-                
-    </p:dataTable>
-   </p:panel>
-<br/>
+			<p:column>
+				<p:inputText value="#{bsvAttendanceBackingBean.managedBean.briefSameAsSiteVisit}" readonly="true" disabled="true" size="6"></p:inputText>
+			</p:column>
 
-	<p:panel header="Supplier Details" toggleable="true">
-	
-	<p:panelGrid columns="4" style="width:75%;" styleClass="noBorders tr,noBorders td">
-	
-	<h:outputText value="MOF Registration No: * "></h:outputText>
-      <h:inputText />  
+		</h:panelGrid>
+        <p:spacer height="5"/> 
+		<p:panel header="Briefing Details">
+			<p:dataTable id="briefingDeails" var="scQtBriefing"
+				value="#{bsvAttendanceBackingBean.managedBean.briefingDetailsList}"
+				rows="10"
+				selection="#{bsvAttendanceBackingBean.managedBean.selectedBriefingDetails}"
+				rowKey="#{scQtBriefing.qtBriefingId}" rowIndexVar="rowIndex">
+				<p:column selectionMode="multiple" style="width:2%" />
+				<ac:paginator for="briefingDeails" />
+
+				<p:column headerText="#{lbl['lbl.sc.bsv.attendance.desc']}"
+					style="width:100%">
+						<h:outputText value="#{scQtBriefing.briefingDesc}"
+							style="width:100%" />
+				</p:column>
+				<p:column headerText="#{lbl['lbl.sc.bsv.attendance.date']}">
+					<h:outputText value="14/11/2013" />
+				</p:column>
+				<p:column headerText="#{lbl['lbl.sc.bsv.attendance.location']}">
+					<h:outputText value="#{scQtBriefing.location}" />
+				</p:column>
+				<p:column
+					headerText="#{lbl['lbl.sc.bsv.attendance.coordinating.officer']}">
+					<h:outputText value="#{scQtBriefing.coordinatingOfficer}" />
+				</p:column>
+				<p:column headerText="#{lbl['lbl.sc.bsv.attendance.attendance']}">
+					<h:outputText value="#{scQtBriefing.attendanceType}" />
+				</p:column>
+				<p:column headerText="#{lbl['lbl.sc.bsv.attendance.zone.name']}">
+				 <p:commandLink onclick="popQtn.show();">
+					 <h:outputText value="Zone Name" />
+				</p:commandLink>
+				</p:column>
+			
+			</p:dataTable>
+
+		</p:panel>
+        <p:spacer height="25"/> 
+		<p:panel header="Site Visit Details" visible="#{bsvAttendanceBackingBean.managedBean.visibleState}">
+			<p:dataTable id="sitevisitdetails" var="scQtsitevisit"
+				value="#{bsvAttendanceBackingBean.managedBean.siteVisitDetailsList}"
+				selection="#{bsvAttendanceBackingBean.managedBean.selectedSiteVisitDetails}"
+				rowKey="#{scQtsitevisit.qtBriefingId}" rowIndexVar="rowIndex"
+				rows="10">
+				<ac:paginator for="sitevisitdetails" />
+				<p:column selectionMode="multiple" style="width:2%" />
+
+				<p:column headerText="#{lbl['lbl.sc.bsv.attendance.desc']}"
+					style="width:100%">
+						<h:outputText value="#{scQtsitevisit.briefingDesc}"
+							style="width:100%" />
+				</p:column>
+				<p:column headerText="#{lbl['lbl.sc.bsv.attendance.date']}">
+					<h:outputText value="04/09/2013 04:44" />
+				</p:column>
+				<p:column headerText="#{lbl['lbl.sc.bsv.attendance.location']}">
+					<h:outputText value="#{scQtsitevisit.location}" />
+				</p:column>
+				<p:column
+					headerText="#{lbl['lbl.sc.bsv.attendance.coordinating.officer']}">
+					<h:outputText value="#{scQtsitevisit.coordinatingOfficer}" />
+				</p:column>
+				<p:column headerText="#{lbl['lbl.sc.bsv.attendance.attendance']}">
+					<h:outputText value="#{scQtsitevisit.attendanceType}" />
+				</p:column>
+				<p:column headerText="#{lbl['lbl.sc.bsv.attendance.zone.name']}">
+				  <p:commandLink onclick="popQtn.show();">
+					 <h:outputText value="Zone Name" />
+				</p:commandLink>
+				</p:column>
+			
+			</p:dataTable>
+		</p:panel>
+		
+     <p:spacer height="25"/> 
+	<p:panel header="Supplier Details" >
+	  <br />
+		<p:panel header="Registration" toggleable="true">
+			<h:panelGrid styleClass="noBorders tr,noBorders td" columns="2">
+
+				<h:column>
+					<h:outputLabel value="#{lbl['lbl.sc.notice.board.mof.no']}"></h:outputLabel>
+				</h:column>
+				<h:column>
+					<p:inputText value="47200"></p:inputText>
+				</h:column>
+
+				<h:column>
+					<h:outputLabel value="#{lbl['lbl.sc.notice.board.comp.name']}"></h:outputLabel>
+				</h:column>
+				<h:column>
+					<p:inputText value="Commercedotcom"></p:inputText>
+				</h:column>
+
+			</h:panelGrid>
+		</p:panel>
+		<br />
+
+		<p:dataTable id="regiInfoId" var="ScQtBriefAttendace"
+			value="#{bsvAttendanceBackingBean.managedBean.briefingAttendanceList}"
+			rows="10" rowKey="#{ScQtBriefAttendace.qtBriefingAttendanceId}"
+			rowIndexVar="rowIndex">
+
+			<p:column headerText="#{lbl['lbl.sc.notice.board.name']}">
+				<p:inputText value="#{ScQtBriefAttendace.name}" />
+			</p:column>
+
+			<p:column
+				headerText="#{lbl['lbl.sc.notice.board.id.type']}">
+				<p:inputText value="#{ScQtBriefAttendace.icPassport}" />
+			</p:column>
+
+			<p:column
+				headerText="#{lbl['lbl.sc.notice.board.id.no']}">
+				<p:inputText value="#{ScQtBriefAttendace.icPassport}" />
+			</p:column>
+
+			<p:column headerText="#{lbl['lbl.sc.notice.board.contact.no']}">
+				<p:inputText value="#{ScQtBriefAttendace.contactNo}" />
+			</p:column>
+
+
+			<p:column headerText="#{lbl['lbl.sc.notice.board.email']}">
+				<p:inputText value="#{ScQtBriefAttendace.email}" />
+			</p:column>
+
+
+			<p:column headerText="#{lbl['lbl.sc.notice.board.action']}">
+				<p:commandLink>
+					<p:graphicImage library="ep/images/design" name="edit.png"
+						value="/resources/ep/images/design/edit.png" />
+				</p:commandLink>
+				<p:commandLink>
+					<p:graphicImage library="ep/images/design" name="delete.png"
+						value="/resources/ep/images/design/delete.png" />
+				</p:commandLink>
+
+			</p:column>
+
+		</p:dataTable>
+
+
+		<div align="right">
+			<p:commandButton value="#{lbl['lbl.sc.bsv.attendance.add']}"
+				process="@this,regiInfoId" partialSubmit="true"
+				action="#{bsvAttendanceBackingBean.addRegistration}"
+				update=":form:regiInfoId" />
+		</div>
+
+		<p:spacer  height="20" />
+		<p:panelGrid style="width:100%;"
+			styleClass="noBorders tr,noBorders td">
+			<p:row>
+				<p:column width="100%" style="text-align:right">
+				      <p:commandButton value="REGISTRATION"/>
+					 <p:commandButton value="BACK" action="noticeboardmain.xhtml?faces-redirect=true" style="float:right;" />
+					
+				</p:column>
+
+			</p:row>
+		</p:panelGrid>
+  
+      </p:panel>
      
-	<h:outputText value="Company Name: "></h:outputText>
-      <h:inputText />        
      
-	<h:outputText value="Attedandee's IC No: * "></h:outputText>
-      <h:inputText />   
-     
-	<h:outputText value="Attedandee's Name: * "></h:outputText>
-	  <h:inputText />     
-     
-    <h:outputText value="Hp. No: * " />  
-      <h:inputText />   
-             
-	<h:outputText value="Email: * "></h:outputText>
-      <h:inputText />                   
-	
-     </p:panelGrid>
-     
-     <p:commandButton value="BACK" action="noticeboardmain.xhtml?faces-redirect=true" style="float:right;">
-    </p:commandButton> 
-    <br/>
-    <br/>    
-     </p:panel>
+    </p:panel>
 
 </ui:composition>
