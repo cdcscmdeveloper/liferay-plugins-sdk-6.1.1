@@ -22,18 +22,25 @@
 				showEffect="slide" hideEffect="slide" showEffectLength="1"
 				hideEffectLength="1" />
 			<table style="width: 400px;">
-				<tr>
-					<td colspan="2"><p:dataTable id="dataTable" var="sv" 
-							paginator="false">
-							<p:column style="width:200px" headerText="Criteria">
-								<h:outputText  value="aaaaaaaaa"/>
-							</p:column>
-							<p:column style="width:150px" headerText="Score">
-								<h:outputText  value="ssssssss"/>
-							</p:column>
-						</p:dataTable></td>
-				</tr>
+			<tr>
+			<th>Criteria</th>
+			<th>Score</th>
+			</tr>
+			<tr>
+			<td><h:outputText  value="Delivery service"/></td>
+			<td><p:inputText  /></td>
+			</tr>
+			<tr>
+			<td><h:outputText  value="Quality"/></td>
+			<td><p:inputText  /></td>
+			</tr>
+			<tr>
+			<td><h:outputText  value="Score"/></td>
+			<td><p:inputText  /></td>
+			</tr>
+				
 			</table>
+			
 			
 		</p:panel>
 </ui:composition>

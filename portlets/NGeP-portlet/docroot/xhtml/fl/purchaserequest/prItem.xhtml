@@ -22,11 +22,10 @@
 			</p:column>
 
 			<p:column headerText="Exp. Delivery (Start)">
-				 <p:calendar value="#{address.startDate}" id="calStartDate" showOn="button" />  
+				 <p:calendar value="#{address.startDate}" id="calStartDate" pattern="dd/MM/yyyy" showOn="button" />  
 			</p:column>
-
 			<p:column headerText="Exp. Delivery (End)">
-				<p:calendar value="#{address.endDate}" id="calEndDate" showOn="button" />  
+				<p:calendar value="#{address.endDate}" id="calEndDate" pattern="dd/MM/yyyy" showOn="button" />  
 			</p:column>
 
 			<p:column headerText="Action">
