@@ -523,7 +523,7 @@ public class BudgetAllocationBackingBean extends BaseBackingBean<BudgetAllocatio
 				}
 			}
 			reqDTO.setAction(action);
-			reqDTO.setLoginUser("roslan");
+			reqDTO.setLoginUser(this.getManagedBean().getLoginUser());
 			reqDTO.setTaskId(this.getManagedBean().getBpmTaskId());
 			reqDTO.setBudgetAllocation(this.getManagedBean().getSelectedBudgetAllocation());
 			reqDTO.setSelectedGoMapper(this.getManagedBean().getSelectedGoMapper());
