@@ -33,20 +33,19 @@
 					<td colspan="2"><p:commandLink value="Click Here" /> <h:outputText
 							value="To download investigation report template" /></td>
 				</tr>
+				<!-- 
 				<tr>
 					<td id="tdTitle"><p:outputLabel value="Supplier MOF NO. *"></p:outputLabel></td>
 					<td id="tdContent"><p:inputText /></td>
-				</tr>
+				</tr> -->
 
 			</table>
 		</p:panel>
-		<!--  <ui:include
-		src="/xhtml/sm/shared/complaintRegistration/complaintTracking.xhtml" />-->
+
 		<div align="center">
 			<p:commandButton value="Update"
 				action="#{complaintBackingBean.sendForPtpkInitialReview}" />
-			<p:commandButton value="Cancel"
-				action="/xhtml/sm/homeScreen/defaultVirtualCertPage.xhtml" />
+
 		</div>
 	</ui:define>
 </ui:composition>
