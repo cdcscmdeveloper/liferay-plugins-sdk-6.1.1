@@ -2265,7 +2265,7 @@ public class PlanBackingBean extends BaseBackingBean<PlanManagedBean>{
 					item.setRevisionRequired(false);
 				}
 			}
-			
+			reqDTO.setUpdateBudget(ProcurementPlanConst.MODE_REVISION.equals(this.getManagedBean().getViewMode())?true:false);
 			reqDTO.setAction(action);
 			reqDTO.setTaskId(this.getManagedBean().getBpmTaskId());
 			reqDTO.setPlanMaster(this.getManagedBean().getPlanMaster());

@@ -186,9 +186,6 @@ public class BudgetAllocationBackingBean extends BaseBackingBean<BudgetAllocatio
 		log.info("loadTask - Start");
 		if(budgetAlloc!=null && taskName!=null){
 			if("Review Budget".equalsIgnoreCase(taskName)){
-				System.out.println("ptj " + budgetAlloc.getPtjOrgProfile().getOrgProfileId());
-//				System.out.println("1, " + budgetAlloc.getOrgProfileId());
-				
 				this.getManagedBean().setViewMode(ProcurementPlanConst.MODE_APPROVAL);
 				this.getManagedBean().setSelectedBudgetAllocation(budgetAlloc);
 				this.getManagedBean().getSelectedBudgetAllocation().setEditable(false); 
@@ -196,8 +193,6 @@ public class BudgetAllocationBackingBean extends BaseBackingBean<BudgetAllocatio
 				this.getManagedBean().setSelectedBudgetAllocItem(new PpBudgetAllocDtl()); //avoid nul
 				loadHeader();
 			}else if("Revise Budget".equals(taskName)){
-				System.out.println("ptj " + budgetAlloc.getPtjOrgProfile().getOrgProfileId());
-//				System.out.println("1, " + budgetAlloc.getOrgProfileId());
 				this.getManagedBean().setViewMode(ProcurementPlanConst.MODE_REVISION);
 				this.getManagedBean().setSelectedBudgetAllocation(budgetAlloc);
 				this.getManagedBean().getSelectedBudgetAllocation().setEditable(true); 
@@ -526,7 +521,9 @@ public class BudgetAllocationBackingBean extends BaseBackingBean<BudgetAllocatio
 			reqDTO.setLoginUser(this.getManagedBean().getLoginUser());
 			reqDTO.setTaskId(this.getManagedBean().getBpmTaskId());
 			reqDTO.setBudgetAllocation(this.getManagedBean().getSelectedBudgetAllocation());
+			reqDTO.setUpdateBudget(ProcurementPlanConst.MODE_REVISION.equals(this.getManagedBean().getViewMode())?true:false);
 			reqDTO.setSelectedGoMapper(this.getManagedBean().getSelectedGoMapper());
+			
 			IBudgetAllocationSO budgetSO = (IBudgetAllocationSO) BusinessDelegate.getInstance().getServiceObject(ProcurementPlanConst.SO_PP, IBudgetAllocationSO.class);
 			BudgetAllocationResDTO resDTO = budgetSO.updateBudgetAllocation(reqDTO);
 			
