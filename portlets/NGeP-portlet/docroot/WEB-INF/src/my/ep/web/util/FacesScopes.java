@@ -172,12 +172,12 @@ public class FacesScopes {
 				IUserSO userSO = BusinessDelegate.getInstance().getServiceObject("pm", IUserSO.class);
 				
 				UserReqDTO reqDTO = new UserReqDTO();
-				reqDTO.setUserName(new FacesScopes().getUserScreenName());
-				
+				reqDTO.setUserName(new FacesScopes().getUserScreenName().toUpperCase());
+				System.out.println("name "  +new FacesScopes().getUserScreenName().toUpperCase());
 				UserResDTO resDTO = userSO.retrieveUserByName(reqDTO);
 				
 				user = resDTO.getPmUser();
-				
+				System.out.println("id "+ user.getUserId());
 				facesScopes.setSessionScope(SESS_USER_SESSION_BEAN, user);
 			} catch (Exception e) {
 				e.printStackTrace();
@@ -286,8 +286,9 @@ public class FacesScopes {
         Object ctxToken= portletSession.getAttribute(BPM_AUTH_CONTEXT_TOKEN,PortletSession.APPLICATION_SCOPE);
         if(null==ctxToken){
               PmUser user=getUserSessionBean();
+              System.out.println("user.getLoginId()" + user.getLoginId());
               IBpmSO bpmSO = (IBpmSO) EpBpmBusinessDelegate.getInstance().getServiceObject(IBpmSO.class);
-              ctxToken = bpmSO.authenticate(user.getUserName(),"welcome1");
+              ctxToken = bpmSO.authenticate(user.getLoginId(),"welcome1");
               portletSession.setAttribute(BPM_AUTH_CONTEXT_TOKEN, ctxToken,PortletSession.APPLICATION_SCOPE);
         }
         return (String) ctxToken;
