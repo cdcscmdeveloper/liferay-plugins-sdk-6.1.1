@@ -3709,29 +3709,29 @@ textarea[disabled],input[type="text"][disabled],input[type="password"][disabled]
 }
 
 .ui-menu > ul > li.ui-widget-header {
+	font-family: Tahoma;
+	font-size: 12px;
+	color: #FFFFFF;
 	background: none !important;
 	background-color: #5BA218 !important;
 	height: 25px;
-	border-radius: 0;
-	box-shadow: 0px 5px 5px #A8A8A8 !important;
+	border-radius: 1px 1px 0 0;
 	border: none;
+	margin: -9px 0 0 -4px !important;
+	padding: 5px 9px 0 3px;
+	overflow: hidden;
 }
 
-.ui-panelmenu-header > a {
+.ui-menu-header > a {
 	color: #FFFFFF !important;
 	text-shadow: none !important;
 }
 
-.ui-menu .ui-menu-content {
+.ui-menu {
 	background-color: #F9F9F9;
-	box-shadow: 0px 5px 5px #A8A8A8;
 	width: 90%;
 }
 
-.ui-menu .ui-panelmenu-panel {
-	height: 200px;
-	padding:0 10px 0 10px;
-}
 
 .ui-menuitem-text {
 	color: #333333;
