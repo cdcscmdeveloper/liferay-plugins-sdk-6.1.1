@@ -8,20 +8,18 @@
 	<table style="width: 100%;">
 		<tr>
 			<c:if test='#{flOrderBB.managedBean.buttonVal eq "Update"}'>
-				<td colspan="4" style="text-align: right">
-						<p:commandButton value="#{lbl['lbl.update']}"
-							action="#{flOrderBB.fulfillmentOrderAction('UPDATE')}">
-							<f:param name="actionName" value="UPDATE" />
-						</p:commandButton>
-				</td>
+				<td colspan="4" style="text-align: right"><p:commandButton
+						value="#{lbl['lbl.update']}"
+						action="#{flOrderBB.fulfillmentOrderAction('UPDATE')}">
+						<f:param name="actionName" value="UPDATE" />
+					</p:commandButton></td>
 			</c:if>
 			<c:if test='#{flOrderBB.managedBean.buttonVal eq "Cancel"}'>
-				<td colspan="4" style="text-align: right">
-						<p:commandButton value="#{lbl['lbl.cancel']}"
-							action="#{flOrderBB.fulfillmentOrderAction('CANCEL')}">
-							<f:param name="actionName" value="CANCEL" />
-						</p:commandButton>
-					</td>
+				<td colspan="4" style="text-align: right"><p:commandButton
+						value="#{lbl['lbl.cancel']}"
+						action="#{flOrderBB.fulfillmentOrderAction('CANCEL')}">
+						<f:param name="actionName" value="CANCEL" />
+					</p:commandButton></td>
 			</c:if>
 		</tr>
 	</table>
@@ -95,36 +93,37 @@
 				<td><p:inputText disabled="true" /></td>
 			</tr>
 			<tr>
-				<td><p:outputLabel value="#{lbl['lbl.fl.creation.date']}" /></td>
-				<td><p:inputText
-						value="#{flOrderBB.managedBean.flRequest.createdDate}"
-						disabled="true" /></td>
+				<td><p:outputLabel value=" * #{lbl['lbl.fl.maksud.code']}" /></td>
+				<td><p:inputText value="#{flOrderBB.managedBean.flRequest.maksudId}"
+						disabled="true"></p:inputText></td>
 			</tr>
 			<tr>
-				<td><p:outputLabel value="#{lbl['lbl.fl.status']}" /></td>
-				<td><p:inputText style="width: 240px;"
-						value="#{flOrderBB.managedBean.flRequest.pmDocStatus.statusId}"
-						disabled="true" /></td>
+				<td><p:outputLabel value="* #{lbl['lbl.fl.charged.ptj']}" /></td>
+				<td><p:inputText
+						value="#{flOrderBB.managedBean.flRequest.orgProfileAgoId}"
+						disabled="true"></p:inputText></td>
+
 			</tr>
 			<tr>
 				<td><p:outputLabel value="* #{lbl['lbl.fl.financial.year']}" /></td>
 				<td><p:inputText
 						value="#{flOrderBB.managedBean.flRequest.financialYear}"
 						disabled="true"></p:inputText></td>
-				<td><p:outputLabel value=" * #{lbl['lbl.fl.maksud.code']}" /></td>
+				<td><p:outputLabel value="#{lbl['lbl.fl.creation.date']}" /></td>
 				<td><p:inputText
-						value="#{flOrderBB.managedBean.flRequest.maksudId}"
-						disabled="true"></p:inputText></td>
+						value="#{flOrderBB.managedBean.flRequest.createdDate}"
+						disabled="true" /></td>
+
 			</tr>
 			<tr>
 				<td><p:outputLabel value="* #{lbl['lbl.fl.ag.office']}" /></td>
 				<td><p:inputText
 						value="#{flOrderBB.managedBean.flRequest.orgProfileAgoId}"
 						disabled="true"></p:inputText></td>
-				<td><p:outputLabel value="* #{lbl['lbl.fl.charged.ptj']}" /></td>
-				<td><p:inputText
-						value="#{flOrderBB.managedBean.flRequest.orgProfileAgoId}"
-						disabled="true"></p:inputText></td>
+				<td><p:outputLabel value="#{lbl['lbl.fl.status']}" /></td>
+				<td><p:inputText style="width: 240px;"
+						value="#{flOrderBB.managedBean.flRequest.pmDocStatus.statusId}"
+						disabled="true" /></td>
 			</tr>
 			<tr>
 				<td><p:outputLabel value="#{lbl['lbl.fl.financing']}" /></td>
