@@ -33,24 +33,17 @@
 				<td><p:outputLabel value="#{lbl['lbl.fl.received.ptj']}" /></td>
 				<td><p:inputText style="width: 260px;"
 						value="IBU PEJABAT KASTAM" disabled="true" /></td>
-				<td><p:outputLabel value="#{lbl['lbl.fl.creation.date']}" /></td>
-				<td><p:inputText style="width: 120px;"
-						value="12/10/2012 10:45 AM" disabled="true" /></td>
-			</tr>
-			<tr>
-				<td rowspan="4" valign="top"><p:outputLabel value="#{lbl['lbl.fl.title']}" /></td>
-				<td rowspan="4"><p:inputTextarea rows="8"
-						style="width: 260px;margin-bottom:5px;" disabled="true" /></td>
-				<td><p:outputLabel value="#{lbl['lbl.fl.status']}" /></td>
-				<td><p:inputText style="width: 260px;" value="NEW REQUEST"
-						disabled="true" /></td>
-			</tr>
-			<tr>
+
 				<td><p:outputLabel value="#{lbl['lbl.fl.financial.year']}" /></td>
 				<td><p:inputText style="width: 120px;" value="2013"
 						disabled="true" /></td>
 			</tr>
 			<tr>
+				<td rowspan="4" valign="top"><p:outputLabel
+						value="#{lbl['lbl.fl.title']}" /></td>
+				<td rowspan="4"><p:inputTextarea rows="8"
+						style="width: 260px;margin-bottom:5px;" disabled="true" /></td>
+
 				<td><p:outputLabel value="#{lbl['lbl.fl.maksud.code']}" /></td>
 				<td><p:inputText style="width: 260px;"
 						value="KEMENTERIAN KEWANGAN" disabled="true" /></td>
@@ -61,15 +54,26 @@
 						value="IBU PEJABAT KASTAM (RECEIVING PTJ)" disabled="true" /></td>
 			</tr>
 			<tr>
+				<td><p:outputLabel value="#{lbl['lbl.fl.financing']} ?" /></td>
+				<td><p:selectOneRadio
+						value="#{purchaseRequestBackingBean.managedBean.fulfilmentRequest.financingLoan}">
+						<f:selectItem itemLabel="Yes" itemValue="true" />
+						<f:selectItem itemLabel="No" itemValue="false" />
+					</p:selectOneRadio></td>
+			</tr>
+			<tr>
+				<td><p:outputLabel value="#{lbl['lbl.fl.creation.date']}" /></td>
+				<td><p:inputText style="width: 120px;"
+						value="12/10/2012 10:45 AM" disabled="true" /></td>
+			</tr>
+			<tr>
 				<td><p:outputLabel value="#{lbl['lbl.fl.ag.office']}" /></td>
 				<td><p:inputText style="width: 120px;" value="002 CAWANGAN KL"
 						disabled="true" /></td>
-				<td><p:outputLabel value="#{lbl['lbl.fl.financing']} ?" /></td>
-				<td><p:selectOneRadio 
-						value="#{purchaseRequestBackingBean.managedBean.fulfilmentRequest.financingLoan}">
-						<f:selectItem itemLabel="Yes" itemValue="true" />
-							<f:selectItem itemLabel="No" itemValue="false" />
-					</p:selectOneRadio></td>
+				<td><p:outputLabel value="#{lbl['lbl.fl.status']}" /></td>
+				<td><p:inputText style="width: 260px;" value="NEW REQUEST"
+						disabled="true" /></td>
+
 			</tr>
 		</table>
 	</p:panel>
@@ -92,7 +96,8 @@
 			<tr>
 				<td><p:outputLabel
 						value="* #{lbl['lbl.fl.del.actual.recv.date']}" /></td>
-				<td><p:calendar mode="popup" showOn="button" pattern="dd/mm/yyyy"
+				<td><p:calendar mode="popup" showOn="button"
+						pattern="dd/mm/yyyy"
 						value="#{recievedNoteBackingBean.managedBean.fulfilmentNote.actStartDate}" /></td>
 			</tr>
 		</table>
@@ -116,7 +121,8 @@
 						disabled="true" /></td>
 			</tr>
 			<tr>
-				<td valign="top"><p:outputLabel value="#{lbl['lbl.fl.supp.address']}" /></td>
+				<td valign="top"><p:outputLabel
+						value="#{lbl['lbl.fl.supp.address']}" /></td>
 				<td><p:inputTextarea rows="8"
 						style="width: 260px;margin-bottom:5px;" disabled="true" /></td>
 			</tr>
