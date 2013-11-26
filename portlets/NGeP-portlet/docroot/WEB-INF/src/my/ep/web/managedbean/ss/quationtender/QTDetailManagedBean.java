@@ -27,6 +27,7 @@ import my.ep.persistence.entity.ss.quationtender.ScQtCategory;
 import my.ep.persistence.entity.ss.quationtender.ScQtCriteria;
 import my.ep.persistence.entity.ss.quationtender.ScQtGosodoBudget;
 import my.ep.web.bean.ss.quatationtender.QtnTenderSearchBean;
+import my.ep.web.bean.ss.quatationtender.TabBean;
 import my.ep.web.managedbean.BaseManagedBean;
 import my.ep.web.type.ss.quationtender.CloneAll;
 
@@ -123,7 +124,14 @@ public class QTDetailManagedBean extends BaseManagedBean {
 	private Boolean isTender=false;
 	private Boolean isPanel=false;
 	private Boolean isResctricted=false;
+	private List<TabBean> tabList ;	
 	
+	private String checkBoxBPK;
+	private List<String> checkBoxBPK1;
+	private String standardDocument;
+	private List<String> approvalTypelist = new ArrayList<String>();
+	private int activeIndex=0;
+	private int subTabIndex=0;
 	static{
 			PmZone zone=new PmZone();
 			zone.setZoneName("India");
@@ -807,6 +815,76 @@ public class QTDetailManagedBean extends BaseManagedBean {
 
 	public void setSmSupplierList(List<SmSupplier> smSupplierList) {
 		this.smSupplierList = smSupplierList;
+	}
+
+
+	public List<TabBean> getTabList() {
+		return tabList;
+	}
+
+
+	public void setTabList(List<TabBean> tabList) {
+		this.tabList = tabList;
+	}
+
+
+	public String getCheckBoxBPK() {
+		return checkBoxBPK;
+	}
+
+
+	public void setCheckBoxBPK(String checkBoxBPK) {
+		this.checkBoxBPK = checkBoxBPK;
+	}
+
+
+	public List<String> getCheckBoxBPK1() {
+		return checkBoxBPK1;
+	}
+
+
+	public void setCheckBoxBPK1(List<String> checkBoxBPK1) {
+		this.checkBoxBPK1 = checkBoxBPK1;
+	}
+
+
+	public String getStandardDocument() {
+		return standardDocument;
+	}
+
+
+	public void setStandardDocument(String standardDocument) {
+		this.standardDocument = standardDocument;
+	}
+
+
+	public List<String> getApprovalTypelist() {
+		return approvalTypelist;
+	}
+
+
+	public void setApprovalTypelist(List<String> approvalTypelist) {
+		this.approvalTypelist = approvalTypelist;
+	}
+
+
+	public int getActiveIndex() {
+		return activeIndex;
+	}
+
+
+	public void setActiveIndex(int activeIndex) {
+		this.activeIndex = activeIndex;
+	}
+
+
+	public int getSubTabIndex() {
+		return subTabIndex;
+	}
+
+
+	public void setSubTabIndex(int subTabIndex) {
+		this.subTabIndex = subTabIndex;
 	}
 
 
