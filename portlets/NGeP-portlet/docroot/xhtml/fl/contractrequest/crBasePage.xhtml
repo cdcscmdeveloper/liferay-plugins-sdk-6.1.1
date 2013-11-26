@@ -22,27 +22,25 @@
 					</ui:repeat></td>
 			</tr>
 		</table>
-		<table>
+		<table style="width:100%">
 			<tr>
 				<c:if
 					test='#{contractRequestBackingBean.managedBean.buttonVal eq "Update"}'>
-					<td colspan="4">
-						<div align="right">
+					<td colspan="4" style="text-align: right">
 							<p:commandButton value="UPDATE"
 								action="#{contractRequestBackingBean.submitAction('UPDATE')}">
 								<f:param name="actionName" value="UPDATE" />
 							</p:commandButton>
-						</div>
 					</td>
 				</c:if>
 				<c:if
 					test='#{contractRequestBackingBean.managedBean.buttonVal eq "Cancel"}'>
-					<td colspan="4" align="right"><div align="right">
+					<td colspan="4" style="text-align: right">
 							<p:commandButton value="CANCEL"
 								action="#{contractRequestBackingBean.submitAction('CANCEL')}">
 								<f:param name="actionName" value="CANCEL" />
 							</p:commandButton>
-						</div></td>
+						</td>
 				</c:if>
 			</tr>
 		</table>
