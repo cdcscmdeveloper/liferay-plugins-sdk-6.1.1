@@ -16,6 +16,7 @@ import my.ep.biz.service.ct.supplier.IContractSupplierSO;
 import my.ep.biz.service.ct.suspend.ISuspendActiveSO;
 import my.ep.biz.service.fl.adjustment.IAdjustmentSO;
 import my.ep.biz.service.fl.invoice.IInvoiceSO;
+import my.ep.biz.service.fl.order.IDeliveryOrderSO;
 import my.ep.biz.service.fl.order.IFulfilmentOrderSO;
 import my.ep.biz.service.fl.request.IFulfilmentRequestSO;
 import my.ep.biz.service.fl.request.IShippingInstructionSO;
@@ -380,8 +381,18 @@ public class TaskListBackingBean extends BaseBackingBean<TaskListManagedBean> {
 			}
 		}
 		else if(res.getProcessName().equalsIgnoreCase(FlProcessNameConst.DELIVERY_ORDER_FULFILMENT_PROCESS_NAME)){
-			ReceivedNoteBackingBean createFRNBackingBean = new ReceivedNoteBackingBean();  
+			FulfilmentReqDTO flReqDTO = new FulfilmentReqDTO();
+			FulfilmentResDTO resDTO = new FulfilmentResDTO();
+			IFulfilmentRequestSO fulfilmentSO = (IFulfilmentRequestSO) BusinessDelegate.getInstance().getServiceObject("fl",IFulfilmentRequestSO.class);
+			IDeliveryOrderSO deliveryOrderSO = (IDeliveryOrderSO) BusinessDelegate.getInstance().getServiceObject("fl",IDeliveryOrderSO.class);
 			FLDOFullfillmentDataType flDeliveryOrder = (FLDOFullfillmentDataType)obj;
+			flReqDTO.setDeliveryOrderId(flDeliveryOrder.getDeliveryOrderId());
+			resDTO=deliveryOrderSO.retrieveDeliveryOrder(flReqDTO);
+			ReceivedNoteBackingBean createFRNBackingBean = new ReceivedNoteBackingBean();  
+			flReqDTO.setFlRequestId(resDTO.getFlDeliveryOrder().getFlFulfilmentOrder().getFlFulfilmentRequest().getFulfilmentReqId());
+			resDTO = fulfilmentSO.retrieveFulfilmentRequest(flReqDTO);
+			FulfilmentBackingBean flBB = new FulfilmentBackingBean();
+			flBB.initializeRemarkAndAttachement(resDTO.getRemarkList(), flBB.getManagedBean().getAttachmentList());
 			createFRNBackingBean.getManagedBean().setDeliveryOrderId(flDeliveryOrder.getDeliveryOrderId());
 			createFRNBackingBean.getManagedBean().setTaskId(taskId);
 			createFRNBackingBean.getManagedBean().setActions(res.getAction());
@@ -414,12 +425,10 @@ public class TaskListBackingBean extends BaseBackingBean<TaskListManagedBean> {
 			resDTO = fulfilmentSO.retrieveFulfilmentRequest(flReqDTO);
 			flReqDTO.setFlFulfilmentRequest(resDTO.getFlFulfilmentRequest());
 			FulfilmentBackingBean flBB = new FulfilmentBackingBean();
-			flBB.initializeRemarkAndAttachement(flBB.getManagedBean().getRemarkList(), flBB.getManagedBean().getAttachmentList());
-			
+			flBB.initializeRemarkAndAttachement(resDTO.getRemarkList(), flBB.getManagedBean().getAttachmentList());
 			PurchaseRequestBackingBean purchaseRequestBackingBean=new PurchaseRequestBackingBean();  
 			purchaseRequestBackingBean.getManagedBean().setFulfilmentRequest(resDTO.getFlFulfilmentRequest());
 			purchaseRequestBackingBean.getManagedBean().setTaskId(taskId);
-			System.out.println("Action In task list"+res.getAction());
 			purchaseRequestBackingBean.getManagedBean().setActions(res.getAction());
 			purchaseRequestBackingBean.getManagedBean().setTaskName(res.getTaskName());
 			purchaseRequestBackingBean.getManagedBean().setTempLoginId(this.getManagedBean().getTempLoginId());
