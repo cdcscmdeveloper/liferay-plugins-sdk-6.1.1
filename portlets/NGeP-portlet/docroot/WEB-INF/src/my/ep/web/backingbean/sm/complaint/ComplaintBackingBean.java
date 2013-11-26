@@ -68,9 +68,9 @@ public class ComplaintBackingBean extends BaseBackingBean<ComplaintManagedBean> 
 				.setPmState(new PmState());
 
 		this.getManagedBean().getSmComplaint().getSmComplainant().getPmCity()
-				.setCityId(1);
+				.setCityId(1L);
 		this.getManagedBean().getSmComplaint().getSmComplainant().getPmState()
-				.setStateId(1);
+				.setStateId(1L);
 		this.getManagedBean().getSmComplaint().getSmComplainant()
 				.getPmCountry().setCountryId(1);
 

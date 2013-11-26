@@ -145,14 +145,14 @@ public class QTDetailManagedBean extends BaseManagedBean {
 		    List<PmState> stateList=new ArrayList<PmState>();
 		    PmState state=new PmState();
 		    state.setStateName("AP");
-		    state.setStateId(1);
+		    state.setStateId(1L);
 		    stateList.add(state);
 		    pmStateList.add(state);
 		    stateMap.put(state.getStateId(),state);
 		    
 		    PmState state1=new PmState();
 		    state1.setStateName("TN");
-		    state1.setStateId(2);
+		    state1.setStateId(2L);
 		    stateList.add(state1);
 		    pmStateList.add(state1);
 		    stateMap.put(state1.getStateId(),state1);
@@ -161,13 +161,13 @@ public class QTDetailManagedBean extends BaseManagedBean {
 		    List<PmState> stateList1=new ArrayList<PmState>();
 		    PmState state3=new PmState();
 		    state3.setStateName("KL");
-		    state3.setStateId(3);
+		    state3.setStateId(3L);
 		    stateList1.add(state3);
 		    pmStateList.add(state3);
 		    stateMap.put(state3.getStateId(),state3);
 		    PmState state4=new PmState();
 		    state4.setStateName("CJ");
-		    state4.setStateId(4);
+		    state4.setStateId(4L);
 		    stateList1.add(state4);
 		    pmStateList.add(state4);
 		    stateMap.put(state4.getStateId(),state4);
