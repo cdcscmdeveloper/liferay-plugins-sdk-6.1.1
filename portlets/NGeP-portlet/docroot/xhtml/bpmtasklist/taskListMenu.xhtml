@@ -10,16 +10,22 @@
 	<h:panelGroup id="taskListMenuId">
 
 		<h:panelGrid columns="2" width="100%">
-			<p:panelMenu>
+			<p:menu>
 
 				<p:submenu label="View By">
-					<p:menuitem value="Past Day"  action="#{bpmTasklistBackingBean.viewby('DAY')}" update="taskListID"/>
-					<p:menuitem value="Past Week" action="#{bpmTasklistBackingBean.viewby('WEEK')}" update="taskListID"/>
-					<p:menuitem value="Past Month" action="#{bpmTasklistBackingBean.viewby('MONTH')}" update="taskListID" />
+					<p:menuitem value="Past Day"
+						action="#{bpmTasklistBackingBean.viewby('DAY')}"
+						update="taskListID" />
+					<p:menuitem value="Past Week"
+						action="#{bpmTasklistBackingBean.viewby('WEEK')}"
+						update="taskListID" />
+					<p:menuitem value="Past Month"
+						action="#{bpmTasklistBackingBean.viewby('MONTH')}"
+						update="taskListID" />
 				</p:submenu>
 
 
-			</p:panelMenu>
+			</p:menu>
 		</h:panelGrid>
 
 	</h:panelGroup>
