@@ -12,14 +12,6 @@
 	
 
 		<div style="text-align: left; float: right;">
-			<p:selectOneMenu value="#{bpmTasklistBackingBean.managedBean.tempLoginId}">
-				<f:selectItem itemLabel="CURRENT LOGIN" itemValue="roslan"/>
-				<f:selectItem itemLabel="Lailah" itemValue="lailah"/>
-				<f:selectItem itemLabel="Roslan" itemValue="roslan"/>
-				<f:selectItem itemLabel="Khai" itemValue="khai"/>
-				<f:selectItem itemLabel="Tan" itemValue="Tan"/>
-				<p:ajax event="change" update="@form" listener="#{bpmTasklistBackingBean.tempFilterLogin}"/>
-			</p:selectOneMenu>
 			<p:selectOneMenu value="#{bpmTasklistBackingBean.managedBean.status}">
 				<f:selectItem itemLabel="ASSIGNED" itemValue="ASSIGNED"></f:selectItem>
 				<f:selectItem itemLabel="COMPLETED" itemValue="COMPLETED"></f:selectItem>
