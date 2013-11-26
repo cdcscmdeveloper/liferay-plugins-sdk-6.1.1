@@ -770,7 +770,7 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean>{
 
 			this.getManagedBean().setPublishedItemList(resDTO.getSupplierItemList());
 
-		}else if(event.getTab().getTitle().equalsIgnoreCase("Approval")){
+		}else if(event.getTab().getTitle().equalsIgnoreCase("Pending Approval")){
 
 			statusFilterBean.setSearchField("itemStatus");
 			statusFilterBean.setSearchValue("P");
