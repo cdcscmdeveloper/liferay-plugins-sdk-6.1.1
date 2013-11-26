@@ -5,64 +5,62 @@
 	xmlns:h="http://java.sun.com/jsf/html"
 	xmlns:ui="http://java.sun.com/jsf/facelets"
 	xmlns:p="http://primefaces.org/ui"
-	xmlns:c="http://java.sun.com/jsp/jstl/core">
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:ac="http://ac.my/jsf/composite/cc">
     <ui:define name="contentSection">
-  	  <p:tabView id="tabview"  onTabChangeUpdate="growl">
-            <p:tab id="ctTemplate" title="#{lbl['lbl.ct.tpl.tab']}" >
-                  <p:panel id="templateId" header="#{lbl['lbl.ct.tpl.name']}">
-                    <h:panelGrid columns="3" style="width:400px;">
-                        <p:selectOneMenu id="searchid" value="#{contractTemplateBackingBean.managedBean.searchFilterBean.searchField}" style="width:200px">
-	                     <f:selectItem itemLabel="---Please Select-----" itemValue="" />
-	                     <f:selectItems value="#{contractTemplateBackingBean.searchOptions}" />
-	                    </p:selectOneMenu>
-                       <p:inputText id="searchTxt" value="#{contractTemplateBackingBean.searchValue}" style="width:150px;"/>
-                       <p:commandButton value="#{lbl['lbl.ct.search.btn.search']}" action="#{contractTemplateBackingBean.searchActionListener}"
-                          process="@this,searchTxt,searchid"  icon="ui-icon-add"  update="dataTable"/>
-              	     </h:panelGrid>
-                  </p:panel>
-				  <p:panel id="searchResulId" header="#{lbl['lbl.ct.tpl.result']}">
-                     <div style="overflow-x:auto">
-			           <p:dataTable id="dataTable" var="data" value="#{contractTemplateBackingBean.managedBean.ctTemplatesList}" rowIndexVar="index"
-					      widgetVar="dataTableObj" lazy="false" dynamic="true"  paginator="true" paginatorPosition="bottom" paginatorAlwaysVisible="true" emptyMessage="No Records!" rows="10" 
-			              rowsPerPageTemplate="5,10,15,20" currentPageReportTemplate=" total {totalRecords},  page {currentPage} of {totalPages} "
-					      paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink}  {LastPageLink} {RowsPerPageDropdown}">
-					      <p:columnGroup type="header"> 
-						     <p:row> 
-			                     <p:column headerText="#{lbl['lbl.ct.tpl.table.no']}" />
-			                     <p:column headerText="#{lbl['lbl.ct.tpl.table.name']}"   /> 
-			                     <p:column headerText="#{lbl['lbl.ct.tpl.table.cby']}" /> 	
-			                     <p:column headerText="#{lbl['lbl.ct.tpl.table.cdate']}" /> 
-			                     <p:column headerText="#{lbl['lbl.ct.tpl.table.action']}" /> 		
-			                  </p:row>							
-							  </p:columnGroup>
-							      <p:column styleClass="column-align-center" > <h:outputText value="#{index+1}" /></p:column> 							
-							      <p:column><h:outputText value="#{data.name}" /></p:column>
-							      <p:column><h:outputText value="#{data.createdBy}" /></p:column>	
-							      <p:column><h:outputText value="#{data.createdDate}" /></p:column>	
-							      <p:column styleClass="column-align-center">
-								  <p:commandButton title="Edit" action="#{contractTemplateBackingBean.gotoEditPage}"  icon="ui-icon-edit" ajax="false">
-								     <f:setPropertyActionListener target="#{contractTemplateBackingBean.managedBean.ctTemplate}" value="#{data}" />
-								  </p:commandButton>
-								  <p:spacer width="3"/>
-								  <p:commandButton title="delete" onsuccess="confirmation.show()" partialSubmit="true" process="@this" icon="ui-icon-delete">
-					                 <f:setPropertyActionListener value="#{data}" target="#{contractTemplateBackingBean.managedBean.ctTemplate}" />
-					              </p:commandButton>
-								  </p:column> 
-					      </p:dataTable>
-						  <p:confirmDialog message="Do you want to delete the record?" closable="true" appendToBody="true" 
-						     header="Delete Confirmation" severity="alert" widgetVar="confirmation">
-                             <h:panelGrid columns="2" columnClasses="column-align-right-50,column-align-left">
-								<p:commandButton value="Yes" icon="ui-icon-accept" update="dataTable" partialSubmit="true" process="@this"
-									onclick="confirmation.hide();" actionListener="#{contractTemplateBackingBean.deleteTemplate()}" />
-								 <p:commandButton value="No" icon="ui-icon-reject" onclick="confirmation.hide()" type="button" />
-							</h:panelGrid>
-						 </p:confirmDialog>
-				    </div>
-					<h:panelGrid style="width:950px" columnClasses="column-align-right-30">
-						<p:commandButton action="#{contractTemplateBackingBean.gotoAddPage}"  value="Add" ajax="false"/>
-				    </h:panelGrid>
-				 </p:panel>
-               </p:tab>
-             </p:tabView>
+  	<p:panel id="templateId" header="#{lbl['lbl.ct.tpl.name']}" toggleable="true" toggleSpeed="500">
+      <h:panelGrid columns="4" style="width:400px;">
+         <p:selectOneMenu id="searchid" value="#{contractTemplateBackingBean.managedBean.searchFilterBean.searchField}" style="width:170px">
+	       <f:selectItem itemLabel="---Please Select-----" itemValue="" />
+	       <f:selectItems value="#{contractTemplateBackingBean.searchOptions}" />
+	    </p:selectOneMenu>
+	    <p:spacer width="5"/>
+        <p:inputText id="searchTxt" value="#{contractTemplateBackingBean.searchValue}" style="width:150px;"/>
+        <p:commandButton value="#{lbl['lbl.ct.search.btn.search']}" action="#{contractTemplateBackingBean.searchActionListener}"
+          process="@this,searchTxt,searchid"  icon="ui-icon-search"  update="dataTable"/>
+      </h:panelGrid>
+     </p:panel>
+     <p:panel id="searchResulId" header="#{lbl['lbl.ct.tpl.result']}" toggleable="true" toggleSpeed="500">
+       <div style="overflow-x:auto">
+       <p:dataTable id="dataTable" var="data" value="#{contractTemplateBackingBean.managedBean.ctTemplatesList}" rowIndexVar="index"
+	     widgetVar="dataTableObj" lazy="false" dynamic="true"  paginator="true" paginatorPosition="bottom" paginatorAlwaysVisible="true"
+	     emptyMessage="No Records!">
+		 <ac:paginator for="dataTable"/>
+		 <p:columnGroup type="header"> 
+		 <p:row> 
+			<p:column headerText="#{lbl['lbl.ct.tpl.table.name']}"   /> 
+			<p:column headerText="#{lbl['lbl.ct.tpl.table.cby']}" /> 	
+			<p:column headerText="#{lbl['lbl.ct.tpl.table.cdate']}" /> 
+			<p:column headerText="#{lbl['lbl.ct.tpl.table.action']}" /> 		
+		  </p:row>						
+		  </p:columnGroup>
+		  <p:column><h:outputText value="#{data.name}" /></p:column>
+		  <p:column><h:outputText value="#{data.createdBy}" /></p:column>	
+		  <p:column><h:outputText value="#{data.createdDate}" /></p:column>	
+		  <p:column styleClass="column-align-center">
+		     <p:commandLink action="#{contractTemplateBackingBean.gotoEditPage}">
+			 <f:setPropertyActionListener target="#{contractTemplateBackingBean.managedBean.ctTemplate}" value="#{data}" />
+			 <p:graphicImage library="ep/images/design" name="edit.png" value="/resources/ep/images/design/edit.png" title="Edit" />
+		  </p:commandLink>
+          <p:spacer width="3"/>
+           <p:commandLink partialSubmit="true" process="@this" onsuccess="confirmation.show()" >
+		     <f:setPropertyActionListener value="#{data}" target="#{contractTemplateBackingBean.managedBean.ctTemplate}" />
+			 <p:graphicImage library="ep/images/design" name="delete.png" value="/resources/ep/images/design/delete.png" title="Delete" />
+		   </p:commandLink>
+		  </p:column> 
+		  </p:dataTable>
+		  <p:confirmDialog message="Do you want to delete the record?" closable="true" appendToBody="true" 
+			header="Delete Confirmation" severity="alert" widgetVar="confirmation">
+            <h:panelGrid columns="2">
+			<p:commandButton value="Yes" icon="ui-icon-accept" update="dataTable" partialSubmit="true" process="@this"
+				onclick="confirmation.hide();" actionListener="#{contractTemplateBackingBean.deleteTemplate()}" />
+			<p:commandButton value="No" icon="ui-icon-reject" onclick="confirmation.hide()" type="button" />
+			</h:panelGrid>
+			</p:confirmDialog>
+		   </div>
+		  <div class="ppRightBtn"> 
+		       <p:commandButton action="#{contractTemplateBackingBean.gotoAddPage}"  value="Add" icon="ui-icon-add" ajax="false"/>
+		   </div>
+		 </p:panel>
        </ui:define>
 </ui:composition>

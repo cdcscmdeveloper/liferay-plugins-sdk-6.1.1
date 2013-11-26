@@ -10,17 +10,19 @@
 	     <p:panel id="ctTemplate" header="#{lbl['lbl.ct.tpl.name']}" toggleable="true"  toggleSpeed="500">
             <h:panelGrid columns="2">
                <p:outputLabel value="#{lbl['lbl.ct.tpl.name']}"/>
-               <p:inputText value="#{contractTemplateBackingBean.managedBean.ctTemplate.name}" size="40"/>
+               <p:inputText value="#{contractTemplateBackingBean.managedBean.ctTemplate.name}" style="width:250px;"/>
              <h:panelGroup>
 			     <div style="height: 220px; vertical-align: top">
-               <p:outputLabel value="#{lbl['lbl.ct.tpl.content']}"/>  
+               <p:outputLabel for="editorId" value="#{lbl['lbl.ct.tpl.content']}"/>  
                </div>
                </h:panelGroup>
-               <p:editor value="#{contractTemplateBackingBean.editorValue}" style="width:650px;"></p:editor>
+                <h:panelGrid>
+               <p:editor id="editorId" value="#{contractTemplateBackingBean.editorValue}" style="width:800px;"></p:editor>
             </h:panelGrid>
-            <h:panelGrid style="width:600px" columnClasses="column-align-right">
-			      <p:commandButton value="Submit" icon="ui-icon-add"   action="#{contractTemplateBackingBean.updateTemplate()}" update="@form" />
-			</h:panelGrid>
+            </h:panelGrid>
+            <div class="ppRightBtn"> 
+			      <p:commandButton value="Submit" icon="ui-icon-submit"   action="#{contractTemplateBackingBean.updateTemplate()}" update="@form" />
+			</div>
          </p:panel>
    </ui:define>
 </ui:composition>

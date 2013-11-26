@@ -46,6 +46,7 @@ import my.ep.persistence.entity.pm.common.PmCode;
 import my.ep.type.aut.SearchOperator;
 import my.ep.util.lookupservice.EpBpmBusinessDelegate;
 import my.ep.web.backingbean.BaseBackingBean;
+import my.ep.web.backingbean.ct.ContractBackingBean;
 import my.ep.web.bean.paginator.IPagingDataModel;
 import my.ep.web.bean.paginator.PagingDataModel;
 import my.ep.web.managedbean.ct.circular.cc.CentralContractManagedBean;
@@ -72,6 +73,10 @@ public class CentralContractBackingBean extends BaseBackingBean<CentralContractM
 	private IPagingDataModel<CtCircularVer> circularVerPagingDataModel = new CircularVerPagingDataModel();
 	
 	public CentralContractBackingBean(){
+		
+		ContractBackingBean ctBB = new ContractBackingBean();
+		ctBB.initializeRemarkAndAttachement(getManagedBean().getRemarkList(), getManagedBean().getAttachmentList());
+		
 		if(getManagedBean().getOutComes()==null) {
 			getManagedBean().setOutComes(new String[]{"SAVE","SUBMIT"});
 			getManagedBean().setCircularVer(new CtCircularVer());

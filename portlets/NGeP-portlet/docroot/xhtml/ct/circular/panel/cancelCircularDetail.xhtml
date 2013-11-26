@@ -13,7 +13,7 @@
 			disabled="#{fn:length(panelBackingBean.managedBean.cancelCircularReq.ctCancelCircularList) > 0}">
 			<f:selectItems value="#{panelBackingBean.getCircularDocTypeValues()}" />
 		</p:selectOneMenu>		
-		<p:spacer height="5" />
+		<p:spacer height="10" />
 		<p:dataTable id="cancelCcrDt" var="data" lazy="true" rowIndexVar="index" paginator="true"
 			value="#{panelBackingBean.managedBean.cancelCircularReq.ctCancelCircularList}" >
 			<ac:paginator for="cancelCcrDt" />
@@ -43,9 +43,10 @@
 				<h:outputText value="#{data.ctCancelCircularVer.updateNo}" />
 			</p:column>
 			<p:column styleClass="column-align-center">
-				<p:commandButton title="delete" oncomplete="delCancelCcrDlg.show()" partialSubmit="true" process="@form" icon="ui-icon-delete">
-					<f:setPropertyActionListener value="#{data}" target="#{panelBackingBean.managedBean.selectedCancelCircular}" />
-				</p:commandButton>				
+			 <p:commandLink oncomplete="delCancelCcrDlg.show()" partialSubmit="true" process="@form">
+			       <f:setPropertyActionListener value="#{data}" target="#{panelBackingBean.managedBean.selectedCancelCircular}" />
+			        <p:graphicImage library="ep/images/design" name="delete.png" value="/resources/ep/images/design/delete.png" title="Delete" />
+			  </p:commandLink>			
 			</p:column>
 		</p:dataTable>
 		<p:confirmDialog message="#{lbl['lbl.ct.dialong.cofirm.message']}" closable="true" appendToBody="true"
@@ -63,7 +64,7 @@
 				<f:setPropertyActionListener value="#{CtStatusConst.approved}" target="#{panelBackingBean.managedBean.searchStatusId}" />
 			</p:commandButton>
 		</div>					
-		<p:dialog id="activeCircularDlg" header="Active Circulars" widgetVar="activeCircularDlg" modal="true" width="550" height="350">
+		<p:dialog id="activeCircularDlg" header="Active Circulars" widgetVar="activeCircularDlg" modal="true" width="650" height="350">
 			<p:panel id="circular">
 				<p:dataTable id="circularVerDt" var="data" lazy="true" rowKey="#{data.circularVerId}" 
 					selection="#{panelBackingBean.managedBean.selectedCircularVerList}"

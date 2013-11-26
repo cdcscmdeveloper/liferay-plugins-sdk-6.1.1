@@ -402,7 +402,7 @@ public class PanelBackingBean extends BaseBackingBean<PanelManagedBean>{
 	public void deletePanelItem(){
 		log.info("PanelBackingBean.deletePanelItem() : "+getManagedBean().getSelectedPanelItem());
 		try {
-			getManagedBean().getCircularVer().getCtPanelItems().remove(getManagedBean().getSelectedPanelItem());
+			this.getManagedBean().getCircularVer().getCtPanelItems().remove(this.getManagedBean().getSelectedPanelItem());
 		} catch (Exception e) {
 			e.printStackTrace();
 			FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR,e.toString(), e.getMessage()));

@@ -41,9 +41,10 @@
 				<p:column> <p:inputText value="#{data.description}" style="width:430px;"/>
 				</p:column> 	
 				<p:column styleClass="column-align-center">
-				<p:commandButton title="delete" onsuccess="confirmation.show()" partialSubmit="true" process="@this" icon="ui-icon-delete">
+				 <p:commandLink partialSubmit="true" process="@this"  onsuccess="confirmation.show()">
 				   <f:setPropertyActionListener value="#{data}" target="#{contractDetailsBackingBean.managedBean.terminationReason}" />
-				</p:commandButton>
+			       <p:graphicImage library="ep/images/design" name="delete.png" value="/resources/ep/images/design/delete.png" title="Delete" />
+			</p:commandLink>
 				</p:column>						
 		    </p:dataTable>
 		 </h:panelGrid>
@@ -75,9 +76,10 @@
 		   <p:column><h:outputLabel value="#{data.clauseName}" style="float:left;"/></p:column>	
 		   <p:column><h:outputLabel value="#{data.clauseDesc}" style="float:left;"/></p:column> 	
 		   <p:column styleClass="column-align-center">
-		   <p:commandButton title="delete" onsuccess="confirmation.show()" partialSubmit="true" process="@this" icon="ui-icon-delete">
-		      <f:setPropertyActionListener value="#{data}" target="#{contractDetailsBackingBean.managedBean.terminationClause}" />
-		   </p:commandButton>
+		     <p:commandLink partialSubmit="true" process="@this"  onsuccess="confirmation.show()">
+		       <f:setPropertyActionListener value="#{data}" target="#{contractDetailsBackingBean.managedBean.terminationClause}" />
+		       <p:graphicImage library="ep/images/design" name="delete.png" value="/resources/ep/images/design/delete.png" title="Delete" />
+		  </p:commandLink>
 		   </p:column>						
 		  </p:dataTable>
 		 </h:panelGrid>

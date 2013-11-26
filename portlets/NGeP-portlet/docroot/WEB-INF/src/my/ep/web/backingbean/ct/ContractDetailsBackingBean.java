@@ -786,7 +786,7 @@ public class ContractDetailsBackingBean extends
 			ContractTerminationResDTO resDTO = terminationSO.terminateContract(reqDTO);
 			if (resDTO.isSuccessful()) {
 				log.info("Record saved successfully");
-				FacesContext.getCurrentInstance().addMessage(null,new FacesMessage(FacesMessage.SEVERITY_INFO,"Record saved successfully.","Termination Id. : "+ this.getManagedBean().getTermination().getTerminationId()));
+				FacesContext.getCurrentInstance().addMessage(null,new FacesMessage(FacesMessage.SEVERITY_INFO,"Record saved successfully.","Termination Id. : "+ resDTO.getTerminateContract().getTerminationId()));
 				if (!action.equalsIgnoreCase(BpmOutcomeConst.BPM_SAVE)) { 
 					renewSesionObject();
 					return "/xhtml/shared/acknowledge.xhtml";

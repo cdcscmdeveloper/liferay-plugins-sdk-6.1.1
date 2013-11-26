@@ -10,7 +10,9 @@ import java.util.List;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
 
+import my.ep.persistence.entity.ct.CtAttachment;
 import my.ep.persistence.entity.ct.CtContract;
+import my.ep.persistence.entity.ct.CtRemark;
 import my.ep.persistence.entity.ct.circular.CtCircular;
 import my.ep.persistence.entity.ct.circular.CtCircularVer;
 import my.ep.persistence.entity.ct.circular.cc.CtCircularContract;
@@ -55,6 +57,9 @@ public class CentralContractManagedBean extends BaseManagedBean {
 	private Long searchStatusId;
 	private String searchContractNo;
 	private String searchContractName;
+	
+	private List<CtRemark> remarkList;
+	private List<CtAttachment> attachmentList;
 	
 	public boolean isUpdateAction() {
 		return updateAction;
@@ -173,6 +178,26 @@ public class CentralContractManagedBean extends BaseManagedBean {
 	}
 	public void setContractList(List<CtContract> contractList) {
 		this.contractList = contractList;
+	}
+	
+	public List<CtRemark> getRemarkList() {
+		if(remarkList == null)
+			remarkList = new ArrayList<CtRemark>();
+		return remarkList;
+	}
+
+	public void setRemarkList(List<CtRemark> remarkList) {
+		this.remarkList = remarkList;
+	}
+
+	public List<CtAttachment> getAttachmentList() {
+		if(attachmentList == null)
+		   attachmentList = new ArrayList<CtAttachment>();
+		return attachmentList;
+	}
+
+	public void setAttachmentList(List<CtAttachment> attachmentList) {
+		this.attachmentList = attachmentList;
 	}
 	
 }

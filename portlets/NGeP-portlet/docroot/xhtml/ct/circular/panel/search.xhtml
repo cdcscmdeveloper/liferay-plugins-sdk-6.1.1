@@ -47,7 +47,7 @@
 				<f:verbatim></f:verbatim>
 			</h:panelGrid>		
 			<div class="ppRightBtn"> 
-				<p:commandButton value="Search" action="#{panelBackingBean.searchCircularVer}" update="circularVerDt" />
+				<p:commandButton value="Search" action="#{panelBackingBean.searchCircularVer}" icon="ui-icon-search" update="circularVerDt" />
 			</div>		
 		</p:panel>
 		<p:panel id="resultPanel" header="Result" toggleable="true">
@@ -92,12 +92,14 @@
 					</h:outputText>
 				</p:column>
 				<p:column styleClass="column-align-center">
-					<p:commandButton title="View" icon="ui-icon-search" 
-						onclick="gotoPage([{name:'action',value:'view'},{name:'circularVerId',value:'#{data.circularVerId}'}])"  />
-					<p:spacer width="1" />				
-					<p:commandButton title="Update" icon="ui-icon-edit" 
-						rendered="#{data.status.statusId==CtStatusConst.approved}"
-						onclick="gotoPage([{name:'action',value:'update'},{name:'circularVerId',value:'#{data.circularVerId}'}])"  />
+				<p:commandLink rendered="#{data.status.statusId==CtStatusConst.approved}"
+						onclick="gotoPage([{name:'action',value:'update'},{name:'circularVerId',value:'#{data.circularVerId}'}])">
+				 <p:graphicImage library="ep/images/design" name="edit.png" value="/resources/ep/images/design/edit.png" title="Update" />
+				</p:commandLink>
+				<p:spacer width="5" />	
+				<p:commandLink onclick="gotoPage([{name:'action',value:'view'},{name:'circularVerId',value:'#{data.circularVerId}'}])">
+				 <p:graphicImage library="ep/images/design" name="view.png" value="/resources/ep/images/design/view.png" title="View" />
+				</p:commandLink>	
 					<!-- 
 					<p:spacer width="1" />
 					<p:commandButton title="Cancel" icon="ui-icon-cancel" 

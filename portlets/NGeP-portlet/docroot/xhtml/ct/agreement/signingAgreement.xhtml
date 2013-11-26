@@ -4,12 +4,14 @@
 	xmlns:h="http://java.sun.com/jsf/html"
 	xmlns:ui="http://java.sun.com/jsf/facelets"
 	xmlns:p="http://primefaces.org/ui"
-	xmlns:c="http://java.sun.com/jsp/jstl/core">
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:ac="http://ac.my/jsf/composite/cc" >
         <p:panel id="signingAgreements" header="Signing Agreement Details"  toggleable="true"  toggleSpeed="500">
         <h:panelGrid style="width:780px;">
 			<p:dataTable id="signTable" var="data" value="#{agreementBackingBean.managedBean.signPartyList}" rowIndexVar="index" 
 			  paginator="true" paginatorPosition="bottom" paginatorAlwaysVisible="true" 
-			  emptyMessage="No Records!" rows="5">
+			  emptyMessage="No Records!">
+			  <ac:paginator for="signTable"/>
 			   <p:columnGroup type="header"> 
 				<p:row> 
                    <p:column style="width:100px;"  headerText="Ministry" /> 
@@ -49,9 +51,10 @@
                 <p:column width="120"> <h:outputLabel value="6404-03-6843"/> </p:column>
                 <p:column width="180"><h:outputLabel value="PTJ Head"/></p:column>	
                  <p:column width="50" styleClass="column-align-center">
-                  <p:commandButton title="delete" onsuccess="confirmation2.show()" partialSubmit="true" process="@this"  icon="ui-icon-delete">
-                 <f:setPropertyActionListener value="#{data}" target="#{agreementBackingBean.managedBean.signParty}" />
-                </p:commandButton>
+                  <p:commandLink partialSubmit="true" process="@this"  onsuccess="confirmation2.show()">
+					     <f:setPropertyActionListener value="#{data}" target="#{agreementBackingBean.managedBean.signParty}" />
+			             <p:graphicImage library="ep/images/design" name="delete.png" value="/resources/ep/images/design/delete.png" title="Delete" />
+			          </p:commandLink>
                  </p:column> 
            </p:dataTable>
            </h:panelGrid>
@@ -64,7 +67,8 @@
          <h:panelGrid style="width:780px;">  
          <p:dataTable id="supplierSign" var="data" value="#{agreementBackingBean.managedBean.signSupplierList}" widgetVar="dataTableObj" 
             lazy="false" dynamic="true" rowIndexVar="index" paginator="true" paginatorPosition="bottom"
-            paginatorAlwaysVisible="true" emptyMessage="No Records!" rows="5">
+            paginatorAlwaysVisible="true" emptyMessage="No Records!">
+            <ac:paginator for="supplierSign"/>
 			  <p:columnGroup type="header"> 
                <p:row> 
                    <p:column colspan="1"  style="width:100px" headerText="Supplier Company Name" /> 
@@ -82,9 +86,10 @@
                  <p:column><h:outputLabel value="64043-03-6843"/> </p:column>
                 <p:column><h:outputLabel value="Sales Manager"/></p:column>	
                <p:column styleClass="column-align-center">
-             <p:commandButton title="delete" onsuccess="confirmation1.show()" partialSubmit="true" process="@this"  icon="ui-icon-delete">
-                 <f:setPropertyActionListener value="#{data}" target="#{agreementBackingBean.managedBean.signSupplier}" />
-             </p:commandButton>
+                <p:commandLink partialSubmit="true" process="@this"  onsuccess="confirmation1.show()">
+				   <f:setPropertyActionListener value="#{data}" target="#{agreementBackingBean.managedBean.signSupplier}" />
+			       <p:graphicImage library="ep/images/design" name="delete.png" value="/resources/ep/images/design/delete.png" title="Delete" />
+			    </p:commandLink>
                 </p:column> 
              </p:dataTable>
 		</h:panelGrid>

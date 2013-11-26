@@ -33,16 +33,17 @@
 			<p:column>
 			</p:column>
 			<p:column>
-				<p:commandButton title="delete" oncomplete="delItemDlg.show()" partialSubmit="true" process="@this" icon="ui-icon-delete">
-					<f:setPropertyActionListener value="#{data}" target="#{panelBackingBean.managedBean.selectedPanelItem}" />
-				</p:commandButton>				
+			<p:commandLink onsuccess="delItemDlg.show()" partialSubmit="true" process="@this">
+			    <f:setPropertyActionListener value="#{data}" target="#{panelBackingBean.managedBean.selectedPanelItem}" />
+				<p:graphicImage library="ep/images/design" name="delete.png" value="/resources/ep/images/design/delete.png" title="Delete" />
+		    </p:commandLink>		
 			</p:column>			
 		</p:dataTable>
 		<p:confirmDialog message="Do you want to delete the record?" severity="alert" widgetVar="delItemDlg"
 			closable="true" appendToBody="true" header="Delete Confirmation" >
-			<h:panelGrid columns="2" columnClasses="column-align-right-50,column-align-left">
-				<p:commandButton value="Yes" icon="ui-icon-accept" update="panelItemDt"
-					 action="#{panelBackingBean.deletePanelItem()}" oncomplete="delItemDlg.hide();"   /> 
+			<h:panelGrid columns="2">
+				<p:commandButton value="Yes" icon="ui-icon-accept" partialSubmit="true" process="@this"
+				 update="panelItemDt" action="#{panelBackingBean.deletePanelItem()}" onsuccess="delItemDlg.hide();"   /> 
 				<p:commandButton value="No" icon="ui-icon-reject" onclick="delItemDlg.hide()" type="button" />
 			</h:panelGrid>
 		</p:confirmDialog>	
@@ -79,15 +80,16 @@
 					</p:selectOneMenu>					
 				</p:column>
 				<p:column styleClass="column-align-center">
-					<p:commandButton title="delete" oncomplete="delSupItemDlg.show()" partialSubmit="true" process="@this" icon="ui-icon-delete">
-						<f:setPropertyActionListener value="#{data}" target="#{panelBackingBean.managedBean.selectedPanelSupplierItem}" />
-					</p:commandButton>					
+				   <p:commandLink oncomplete="delSupItemDlg.show()" partialSubmit="true" process="@this">
+			          <f:setPropertyActionListener value="#{data}" target="#{panelBackingBean.managedBean.selectedPanelSupplierItem}" />
+				      <p:graphicImage library="ep/images/design" name="delete.png" value="/resources/ep/images/design/delete.png" title="Delete" />
+		           </p:commandLink>		
 				</p:column>
 			</p:dataTable>			
 			<p:confirmDialog message="Do you want to delete the record?" severity="alert" widgetVar="delSupItemDlg"
 				closable="true" appendToBody="true" header="Delete Confirmation" >
-				<h:panelGrid columns="2" columnClasses="column-align-right-50,column-align-left">
-					<p:commandButton value="Yes" icon="ui-icon-accept" update="supplierItemDt"
+				<h:panelGrid columns="2">
+					<p:commandButton value="Yes" icon="ui-icon-accept" partialSubmit="true" process="@this" update="supplierItemDt"
 						 action="#{panelBackingBean.deletePanelSupplierItem()}" oncomplete="delSupItemDlg.hide();"   /> 
 					<p:commandButton value="No" icon="ui-icon-reject" onclick="delSupItemDlg.hide()" type="button" />
 				</h:panelGrid>

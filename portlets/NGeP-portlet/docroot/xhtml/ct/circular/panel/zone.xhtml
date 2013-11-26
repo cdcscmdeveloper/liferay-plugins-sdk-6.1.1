@@ -26,15 +26,16 @@
 				<p:inputText value="#{data.name}" style="width:120px;" />
 			</p:column>
 			<p:column styleClass="column-align-center">
-				<p:commandButton title="delete" oncomplete="delZoneDlg.show()" partialSubmit="true" process="@this" icon="ui-icon-delete">
-					<f:setPropertyActionListener value="#{data}" target="#{panelBackingBean.managedBean.selectedPanelZone}" />
-				</p:commandButton>				
+			 <p:commandLink  oncomplete="delZoneDlg.show()" partialSubmit="true" process="@this">
+			    <f:setPropertyActionListener value="#{data}" target="#{panelBackingBean.managedBean.selectedPanelZone}" />
+				<p:graphicImage library="ep/images/design" name="delete.png" value="/resources/ep/images/design/delete.png" title="Delete" />
+		        </p:commandLink>			
 			</p:column>
 		</p:dataTable>
 		<p:confirmDialog message="Do you want to delete the record?" severity="alert" widgetVar="delZoneDlg"
 			closable="true" appendToBody="true" header="Delete Confirmation" >
-			<h:panelGrid columns="2" columnClasses="column-align-right-50,column-align-left">
-				<p:commandButton value="Yes" icon="ui-icon-accept" update="panelZoneDt"
+			<h:panelGrid columns="2">
+				<p:commandButton value="Yes" icon="ui-icon-accept" update="panelZoneDt" partialSubmit="true" process="@this"
 					 action="#{panelBackingBean.deletePanelZone()}" oncomplete="delZoneDlg.hide();"   /> 
 				<p:commandButton value="No" icon="ui-icon-reject" onclick="delZoneDlg.hide()" type="button" />
 			</h:panelGrid>
@@ -67,15 +68,16 @@
 					</p:selectOneMenu>			
 				</p:column>
 				<p:column styleClass="column-align-center">
-					<p:commandButton title="delete" oncomplete="delStateDlg.show()" partialSubmit="true" process="@this" icon="ui-icon-delete">
-						<f:setPropertyActionListener value="#{data}" target="#{panelBackingBean.managedBean.selectedPanelState}" />
-					</p:commandButton>			
+				<p:commandLink  oncomplete="delStateDlg.show()" partialSubmit="true" process="@this">
+			       <f:setPropertyActionListener value="#{data}" target="#{panelBackingBean.managedBean.selectedPanelState}" />
+				   <p:graphicImage library="ep/images/design" name="delete.png" value="/resources/ep/images/design/delete.png" title="Delete" />
+		        </p:commandLink>			
 				</p:column>			
 			</p:dataTable>
 			<p:confirmDialog message="Do you want to delete the record?" severity="alert" widgetVar="delStateDlg"
 				closable="true" appendToBody="true" header="Delete Confirmation" >
-				<h:panelGrid columns="2" columnClasses="column-align-right-50,column-align-left">
-					<p:commandButton value="Yes" icon="ui-icon-accept" update="panelStateDt"
+				<h:panelGrid columns="2">
+					<p:commandButton value="Yes" icon="ui-icon-accept" update="panelStateDt" partialSubmit="true" process="@this"
 						 action="#{panelBackingBean.deletePanelState()}" oncomplete="delStateDlg.hide();"   /> 
 					<p:commandButton value="No" icon="ui-icon-reject" onclick="delStateDlg.hide()" type="button" />
 				</h:panelGrid>

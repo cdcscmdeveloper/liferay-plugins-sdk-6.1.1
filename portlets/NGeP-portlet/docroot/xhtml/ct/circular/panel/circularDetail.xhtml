@@ -43,11 +43,17 @@
 				<p:inputText value="#{data.phoneNo}" style="width:90px;" />
 			</p:column>
 			<p:column styleClass="column-align-center">
-				<p:commandButton title="delete" oncomplete="delCtPersonDlg.show()" partialSubmit="true" process="@form" icon="ui-icon-delete">
-					<f:setPropertyActionListener value="#{data}" target="#{panelBackingBean.managedBean.selectedContactPerson}" />
-				</p:commandButton>
+			<p:commandLink  oncomplete="delCtPersonDlg.show()" partialSubmit="true" process="@form">
+			    <f:setPropertyActionListener value="#{data}" target="#{panelBackingBean.managedBean.selectedContactPerson}" />
+				<p:graphicImage library="ep/images/design" name="delete.png" value="/resources/ep/images/design/delete.png" title="Delete" />
+		    </p:commandLink>
 			</p:column>
 		</p:dataTable>
+		<p:spacer height="2" />
+		<div class="ppRightBtn"> 
+			<p:commandButton value="Add" process="@form" partialSubmit="true" icon="ui-icon-add"
+				action="#{panelBackingBean.addContactPerson()}" update="contactPersonDt" />
+		</div>
 		<p:confirmDialog message="Do you want to delete the record?" severity="alert" widgetVar="delCtPersonDlg"
 			closable="true" appendToBody="true" header="Delete Confirmation" >
 			<h:panelGrid columns="2" columnClasses="column-align-right-50,column-align-left">
@@ -56,13 +62,7 @@
 				<p:commandButton value="No" icon="ui-icon-reject" onclick="delCtPersonDlg.hide()" type="button" />
 			</h:panelGrid>
 		</p:confirmDialog>
-		<p:spacer height="2" />
-		<div class="ppRightBtn"> 
-			<p:commandButton value="Add" process="@form" partialSubmit="true" icon="ui-icon-add"
-				action="#{panelBackingBean.addContactPerson()}" update="contactPersonDt" />
-		</div>
 	</p:panel>
-	
 	<p:panel id="supplierPnl" header="Supplier Details" toggleable="true" toggleSpeed="500">
 		<p:dataTable id="pnlSupplierDt" var="data" value="#{panelBackingBean.managedBean.circularVer.ctPanelSuppliers}"
 			lazy="true" rowIndexVar="index">
@@ -85,11 +85,17 @@
 				<p:inputText value="#{data.factoringOrgProfile.orgName}"/>
 			</p:column>
 			<p:column styleClass="column-align-center">
-				<p:commandButton title="delete" oncomplete="delPnlSupplierDlg.show()" partialSubmit="true" process="@form" icon="ui-icon-delete">
-					<f:setPropertyActionListener value="#{data}" target="#{panelBackingBean.managedBean.selectedPanelSupplier}" />
-				</p:commandButton>			
+			<p:commandLink  oncomplete="delPnlSupplierDlg.show()" partialSubmit="true" process="@form" >
+			   <f:setPropertyActionListener value="#{data}" target="#{panelBackingBean.managedBean.selectedPanelSupplier}" />
+				<p:graphicImage library="ep/images/design" name="delete.png" value="/resources/ep/images/design/delete.png" title="Delete" />
+		    </p:commandLink>		
 			</p:column>
 		</p:dataTable>
+		<p:spacer height="2" />
+		<div class="ppRightBtn"> 
+			<p:commandButton value="Add" process="@form" partialSubmit="true" icon="ui-icon-add"
+				action="#{panelBackingBean.addPanelSupplier()}" update="pnlSupplierDt" />
+		</div>
 		<p:confirmDialog message="Do you want to delete the record?" severity="alert" widgetVar="delPnlSupplierDlg"
 			closable="true" appendToBody="true" header="Delete Confirmation" >
 			<h:panelGrid columns="2" columnClasses="column-align-right-50,column-align-left">
@@ -98,11 +104,6 @@
 				<p:commandButton value="No" icon="ui-icon-reject" onclick="delPnlSupplierDlg.hide()" type="button" />
 			</h:panelGrid>
 		</p:confirmDialog>
-		<p:spacer height="2" />
-		<div class="ppRightBtn"> 
-			<p:commandButton value="Add" process="@form" partialSubmit="true" icon="ui-icon-add"
-				action="#{panelBackingBean.addPanelSupplier()}" update="pnlSupplierDt" />
-		</div>
 	</p:panel>
 	
 	<p:panel id="concelCircularPnl" header="Related Cancelled Circular" toggleable="true" toggleSpeed="500" 
@@ -132,25 +133,25 @@
 				<h:outputText value="#{data.ctCancelCircularVer.updateNo}" />
 			</p:column>
 			<p:column styleClass="column-align-center">
-				<p:commandButton title="delete" oncomplete="delCancelCircularDlg.show()" partialSubmit="true" process="@form" icon="ui-icon-delete">
-					<f:setPropertyActionListener value="#{data}" target="#{panelBackingBean.managedBean.selectedCancelCircular}" />
-				</p:commandButton>			
+			<p:commandLink  oncomplete="delCancelCircularDlg.show()" partialSubmit="true" process="@form" >
+			    <f:setPropertyActionListener value="#{data}" target="#{panelBackingBean.managedBean.selectedCancelCircular}" />
+				<p:graphicImage library="ep/images/design" name="delete.png" value="/resources/ep/images/design/delete.png" title="Delete" />
+		    </p:commandLink>	
 			</p:column>			
 		</p:dataTable>
+		<p:spacer height="2" />
+		<div class="ppRightBtn"> 
+			<p:commandButton value="Add" icon="ui-icon-add" onclick="cancelCircularDlg.show();" />
+		</div>	
 		<p:confirmDialog message="Do you want to delete the record?" severity="alert" widgetVar="delCancelCircularDlg"
 			closable="true" appendToBody="true" header="Delete Confirmation" >
-			<h:panelGrid columns="2" columnClasses="column-align-right-50,column-align-left">
+			<h:panelGrid columns="2">
 				<p:commandButton value="Yes" icon="ui-icon-accept" update="cancelCircularDt"
 					 action="#{panelBackingBean.deleteCancelCircular()}" oncomplete="delCancelCircularDlg.hide();"   /> 
 				<p:commandButton value="No" icon="ui-icon-reject" onclick="delCancelCircularDlg.hide()" type="button" />
 			</h:panelGrid>
-		</p:confirmDialog>
-		<p:spacer height="2" />
-		<div class="ppRightBtn"> 
-			<p:commandButton value="Add" icon="ui-icon-add" onclick="cancelCircularDlg.show();" />
-		</div>		
+		</p:confirmDialog>	
 	</p:panel>
-	
 	<p:dialog id="cancelCircularDlg" header="Cancelled Circulars" widgetVar="cancelCircularDlg" modal="true" width="550" height="350">
 		<p:panel id="circular">
 			<p:dataTable id="cancelledCclDt" var="data" lazy="false" selection="#{panelBackingBean.managedBean.selectedCancelledCircularList}"
@@ -170,8 +171,8 @@
 				<div class="ppRightBtn"> 
 					<p:commandButton value="Select" process="cancelCircularDlg" 
 						action="#{panelBackingBean.addCancelledCircular()}"
-						update="cancelCircularDt" onclick="cancelCircularDlg.hide();" />
-					<p:commandButton value="Cancel" type="button" ajax="false" onclick="cancelCircularDlg.hide();" />
+						update="cancelCircularDt" onclick="cancelCircularDlg.hide();" icon="ui-icon-select" />
+					<p:commandButton value="Cancel" icon="ui-icon-cancel" type="button" ajax="false" onclick="cancelCircularDlg.hide();" />
 				</div>
 			</f:facet>
 		</p:panel>

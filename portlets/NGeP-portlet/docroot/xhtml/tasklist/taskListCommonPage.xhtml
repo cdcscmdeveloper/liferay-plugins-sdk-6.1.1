@@ -56,6 +56,16 @@
 	</c:if>
 
 	<c:if
+		test='#{tasklistBackingBean.managedBean.processName eq "Contract Amendment Request"}'>
+		<ui:include src="/xhtml/ct/fulfilmentdetails/amendment/amendmentTab.xhtml"></ui:include>
+	</c:if>
+	
+	<c:if
+		test='#{tasklistBackingBean.managedBean.processName eq "Contract Termination"}'>
+		<ui:include src="/xhtml/ct/fulfilmentdetails/termination/terminationTab.xhtml"></ui:include>
+	</c:if>
+	
+	<c:if
 		test='#{tasklistBackingBean.managedBean.processName eq "Extension Code Request"}'>
 		<ui:include src="extensionCodeReview.xhtml"></ui:include>
 	</c:if>
