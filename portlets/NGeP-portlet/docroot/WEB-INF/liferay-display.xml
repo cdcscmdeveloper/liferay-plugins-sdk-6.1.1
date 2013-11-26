@@ -44,7 +44,9 @@
 			<portlet id="scEvaluation" />
 			<portlet id="scBidding" />
 			<portlet id="scTemplateMaint" />
-			<portlet id="scBriefingSiteVisitAttendance" />
+           <portlet id="scTemplateDocument" />
+           <portlet id="scBriefingSiteVisitAttendance" />
+
 
 		</category>
 
