@@ -132,8 +132,8 @@ public SpecificationBackingBean(){
 			scqtSpec.setAwardType(this.getManagedBean().getScQtSpec().getAwardType());
 			scqtSpec.setFulfilmentType(this.getManagedBean().getScQtSpec().getFulfilmentType());
 			scqtSpec.setJustificationRemark(this.getManagedBean().getScQtSpec().getJustificationRemark());
-			scqtSpec.setIsSampleReq(this.getManagedBean().getScQtSpec().getIsSampleReq());
-			scqtSpec.setIsApprovalReq(this.getManagedBean().getScQtSpec().getIsApprovalReq());
+			scqtSpec.setSampleReq(this.getManagedBean().getScQtSpec().isSampleReq());
+			scqtSpec.setApprovalReq(this.getManagedBean().getScQtSpec().isApprovalReq());
 			scqtSpec.setContractDuration(this.getManagedBean().getScQtSpec().getContractDuration());
 			//scqtSpec.setScQt(scQt);
 			scqtSpec.setStatusId(this.getManagedBean().getScQtSpec().getStatusId());
