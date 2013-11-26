@@ -10,10 +10,10 @@
 	<ui:define name="contentSection">
 
 		<h:panelGroup id="cmUNSPSCSingleUploadID">
-
+			<p:messages globalOnly="true"></p:messages>
 			<div style="text-align: right;">
 				<p:commandButton value="#{lbl['lbl.cm.save']}" icon="ui-icon-save"
-					action="#{unspscCodeBackingBean.savetempCode}"></p:commandButton>
+					action="#{unspscCodeBackingBean.savetempCode}" update="@form"></p:commandButton>
 			</div>
 
 
@@ -63,8 +63,8 @@
 
 					</p:column>
 				</p:row>
-				
-				
+
+
 				<p:row>
 					<p:column>
 						<h:outputLabel value="Family" />
@@ -89,7 +89,7 @@
 
 					</p:column>
 				</p:row>
-				
+
 				<p:row>
 					<p:column>
 						<h:outputLabel value="Class" />
@@ -105,8 +105,7 @@
 
 					</p:column>
 					<p:column>
-						<p:inputText
-							value="#{unspscCodeBackingBean.managedBean.classKey}"></p:inputText>
+						<p:inputText value="#{unspscCodeBackingBean.managedBean.classKey}"></p:inputText>
 					</p:column>
 					<p:column>
 						<p:inputText
@@ -114,8 +113,8 @@
 
 					</p:column>
 				</p:row>
-				
-				
+
+
 				<p:row>
 					<p:column>
 						<h:outputLabel value="Commodity" />
@@ -140,13 +139,13 @@
 
 					</p:column>
 				</p:row>
-				
+
 
 			</p:panelGrid>
 
 
 
-			
+
 
 		</h:panelGroup>
 
