@@ -576,7 +576,7 @@ public class CommitteBackingBean extends
 				.getCommitteMember();
 
 		committeeMember.setMemberName(pmUser.getUserName());
-		committeeMember.setIdType(pmUser.getPmCode().getCode());
+		committeeMember.setIdType(pmUser.getPmIdentificationCode().getCode());
 		committeeMember.setIcPassport(pmUser.getIdentificationNo());
 		committeeMember.setDesignation(pmUser.getDesignation());
 		committeeMember.setGrade(pmUser.getGrade());
