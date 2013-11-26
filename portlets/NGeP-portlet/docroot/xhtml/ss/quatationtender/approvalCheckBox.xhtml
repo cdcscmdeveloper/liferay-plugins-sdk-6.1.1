@@ -5,7 +5,7 @@
 	xmlns:p="http://primefaces.org/ui"
 	xmlns:c="http://java.sun.com/jsp/jstl/core">
 
-	<p:panel header="Approval Workflow" toggleable="true">
+	<p:panel header="Approval Workflow" toggleable="true" id="approvalWorkFlow">
 		<table border="0" cellspacing="0" cellpadding="0" width="100%">
 		<tr>
 			<td width="20%"><h:outputLabel value="Approval Category" /></td>
@@ -23,14 +23,12 @@
 			</td>
 		</tr>
 		</table>
-	</p:panel>
-	<p:tabView var="approvalCategory" dynamic="true" cache1="false" orientation="top"
-		activeIndex="#{approvalBackingBean.activeApprovalTab}"
-		value="#{approvalBackingBean.managedBean.tabList}">
-		<p:ajax event="tabChange" process="@this"
-			listener="#{approvalBackingBean.approvalTabChanged}" />
+	
+	<p:tabView var="approvalCategory" dynamic="true" cache="true" orientation="top"
+		activeIndex="#{qTDetailBB.managedBean.subTabIndex}"
+		value="#{approvalBackingBean.managedBean.tabList}">		
 
-		<p:tab title="#{approvalCategory.titleName}">
+		<p:tab title="#{approvalCategory.titleName}" >
 			<ui:fragment rendered="#{approvalCategory.titleName eq 'Division Approval'}">
 
 				<ui:include src="/xhtml/ss/quatationtender/requestDetails.xhtml" />
@@ -47,5 +45,5 @@
 		</p:tab>
 	</p:tabView>
 
-
+</p:panel>
 </ui:composition>

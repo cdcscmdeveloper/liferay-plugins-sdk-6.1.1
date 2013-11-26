@@ -13,10 +13,10 @@
 			<ui:include src="/xhtml/ss/quatationtender/cloneqtntenderscreen.xhtml" />
 		</c:if>
 		<c:if test="#{!qTDetailBB.managedBean.qt.brandNew}">
-			<p:button value="CANCEL" style="float:right;margin-right: 12px;" />
+			<p:button value="Cancel" style="float:right;margin-right: 12px;" />
 		</c:if>
-		<p:button value="SUBMIT" style="float:right;margin-right: 12px;" />
-		<p:commandButton value="SAVE" style="float:right;margin-right: 12px;" action="#{qTDetailBB.saveQtDetailsAction}" process="@all"/>
+		<p:commandButton value="Submit" style="float:right;margin-right: 12px;" action="#{qTDetailBB.submitQTDetailsAction}" process="@all" />
+		<p:commandButton value="Save" style="float:right;margin-right: 12px;" action="#{qTDetailBB.saveQtDetailsAction}" process="@all"/>
 		<br/>
 		<br/>
 	</div>
