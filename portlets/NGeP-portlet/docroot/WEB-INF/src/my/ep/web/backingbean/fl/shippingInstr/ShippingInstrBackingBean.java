@@ -3,11 +3,15 @@
  */
 package my.ep.web.backingbean.fl.shippingInstr;
 
+import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.RequestScoped;
+import javax.faces.context.FacesContext;
 
 import my.ep.biz.service.fl.request.IShippingInstructionSO;
 import my.ep.dto.fl.FulfilmentReqDTO;
+import my.ep.dto.fl.FulfilmentResDTO;
+import my.ep.exception.EpException;
 import my.ep.persistence.entity.fl.request.FlFulfilmentRequest;
 import my.ep.persistence.entity.fl.request.FlShippingInstr;
 import my.ep.web.backingbean.BaseBackingBean;
@@ -35,7 +39,7 @@ public class ShippingInstrBackingBean extends BaseBackingBean<ShippingInstrManag
 
 	}
 	
-	public void submitShippingAction(String action){
+	public String submitShippingAction(String action){
 		System.out.println("-- shipping Instr --");
 		IShippingInstructionSO shippingInstrSO = null;
 		try {
@@ -54,13 +58,28 @@ public class ShippingInstrBackingBean extends BaseBackingBean<ShippingInstrManag
 			}else{
 				reqDTO.setTempLogin(getManagedBean().getTempLogin());
 			}
-			shippingInstrSO.saveShippingInstruction(reqDTO);
-
-		}catch(Exception e){
+			FulfilmentResDTO resDTO = shippingInstrSO.saveShippingInstruction(reqDTO);
+			
+			if(resDTO.isSuccessful()) {
+				log.info("Record saved successfully");
+				String message = "Shipping Instr Id. : "+shippingInstr.getShippingInstrId();
+				FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "Record saved successfully.",message));
+				if(!action.equalsIgnoreCase(BpmOutcomeConst.BPM_SAVE)) { // save action will remain in the same page
+					renewSesionObject();
+					return "/xhtml/shared/acknowledge.xhtml";
+				}
+			} else {
+				throw new EpException("Failed.");
+			}
+		} catch (Exception e) {
 			log.error("Exception>>", e);
+			e.printStackTrace();
+			FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR,e.toString(), e.getMessage()));
+		
 		}finally {
 			shippingInstrSO = null;
 		}
+		return null;
 	}
 
 

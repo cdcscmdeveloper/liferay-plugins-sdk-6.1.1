@@ -3,11 +3,15 @@
  */
 package my.ep.web.backingbean.fl.invoice;
 
+import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.RequestScoped;
+import javax.faces.context.FacesContext;
 
 import my.ep.biz.service.fl.invoice.IInvoiceSO;
 import my.ep.dto.fl.FulfilmentReqDTO;
+import my.ep.dto.fl.FulfilmentResDTO;
+import my.ep.exception.EpException;
 import my.ep.persistence.entity.fl.payment.FlInvoice;
 import my.ep.web.backingbean.BaseBackingBean;
 import my.ep.web.constant.BpmOutcomeConst;
@@ -31,7 +35,7 @@ public class InvoiceBackingBean extends BaseBackingBean<InvoiceManagedBean> {
 	public InvoiceBackingBean(){
 	}
 	
-	public void submitAction(String action) {
+	public String submitAction(String action) {
 		IInvoiceSO invoiceSO = null;
 		FulfilmentReqDTO reqDTO = new FulfilmentReqDTO();
 		try {
@@ -48,13 +52,27 @@ public class InvoiceBackingBean extends BaseBackingBean<InvoiceManagedBean> {
 			System.out.println("getManagedBean().isDan(): "+getManagedBean().isDan());
 			reqDTO.setDanRequired(getManagedBean().isDan());// for current testing DAN purpose in SO
 			reqDTO.setUpdateDan(getManagedBean().isUpdateDan());
-			invoiceSO.saveInvoice(reqDTO);
+			FulfilmentResDTO resDTO=invoiceSO.saveInvoice(reqDTO);
 
-		}catch(Exception e){
+			if(resDTO.isSuccessful()) {
+				log.info("Record saved successfully");
+				String message = "InvoiceNo. : "+invoice.getInvoiceNo();
+				FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "Record saved successfully.",message));
+				if(!action.equalsIgnoreCase(BpmOutcomeConst.BPM_SAVE)) { // save action will remain in the same page
+					renewSesionObject();
+					return "/xhtml/shared/acknowledge.xhtml";
+				}
+			} else {
+				throw new EpException("Failed.");
+			}
+		} catch (Exception e) {
 			log.error("Exception>>", e);
+			e.printStackTrace();
+			FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR,e.toString(), e.getMessage()));
 		}finally {
 			invoiceSO = null;
 		}
+		return null;
 	}
 	
 	public void test(){

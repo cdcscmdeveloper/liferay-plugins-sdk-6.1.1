@@ -3,6 +3,7 @@
  */
 package my.ep.web.managedbean.fl.pr;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.faces.bean.ManagedBean;
@@ -11,6 +12,7 @@ import javax.faces.bean.SessionScoped;
 import my.ep.persistence.entity.ct.CtContract;
 import my.ep.persistence.entity.fl.FlAttachment;
 import my.ep.persistence.entity.fl.FlRemark;
+import my.ep.persistence.entity.fl.frn.FlFulfilmentNote;
 import my.ep.persistence.entity.fl.request.FlDeliveryAddress;
 import my.ep.persistence.entity.fl.request.FlFulfilmentItem;
 import my.ep.persistence.entity.fl.request.FlFulfilmentRequest;
@@ -77,6 +79,7 @@ public class PurchaseRequestManagedBean extends BaseManagedBean {
 	private List<ScRequestNote> selectedPurchasedItemList;
 	private FlFulfilmentItem  selectedItemRow;
 	
+	
 	/**
 	 * @return the flRemark
 	 */
@@ -119,12 +122,6 @@ public class PurchaseRequestManagedBean extends BaseManagedBean {
 	public void setFulfilmentRequest(FlFulfilmentRequest fulfilmentRequest) {
 		this.fulfilmentRequest = fulfilmentRequest;
 	}
-	
-
-	
-
-	public PurchaseRequestManagedBean() {}
-
 	
 
 	/**
@@ -495,9 +492,6 @@ public class PurchaseRequestManagedBean extends BaseManagedBean {
 	public void setApproverModel(DualListModel<String> approverModel) {
 		this.approverModel = approverModel;
 	}
-
-
-	
 
 	
 }

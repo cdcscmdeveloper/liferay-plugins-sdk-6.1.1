@@ -10,6 +10,7 @@
 	<ui:define name="resourceSection">
 	</ui:define>
 	<ui:define name="contentSection">
+	<p:messages id="messages" showDetail="true" autoUpdate="true" closable="true" severity="error, info" />
 		<table style="width: 100%;">
 			<tr>
 				<td colspan="4" style="text-align: right;"><ui:repeat
@@ -32,7 +33,7 @@
 										<tr>
 											<td><p:inputText size="15" disabled="true"
 													value="#{shipInstrBackingBean.managedBean.shippingInstr.shippingInstrNo}" /></td>
-											<td><p:outputLabel value="NO. of SI Issued" /></td>
+											<td><p:outputLabel value="No. of SI Issued" /></td>
 											<td><p:inputText size="5" disabled="true" /></td>
 										</tr>
 									</table></td>

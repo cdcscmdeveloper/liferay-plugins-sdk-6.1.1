@@ -5,16 +5,18 @@
 	xmlns:h="http://java.sun.com/jsf/html"
 	xmlns:ui="http://java.sun.com/jsf/facelets"
 	xmlns:p="http://primefaces.org/ui"
-	xmlns:c="http://java.sun.com/jsp/jstl/core">
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:ac="http://ac.my/jsf/composite/cc">
 
 	<ui:define name="resourceSection">
 	</ui:define>
 
 	<ui:define name="contentSection">
-	
-		<table style="width: 800px;">
+	<p:messages id="messages" showDetail="true" autoUpdate="true" closable="true" severity="error, info" />
+
+		<table style="width: 100%;">
 			<tr>
-				<td colspan="4" align="right"><ui:repeat var="bpmAction"
+				<td colspan="4" style="text-align: right"><ui:repeat var="bpmAction"
 						value="#{danBackingBean.managedBean.actions}">
 						<p:commandButton value="#{bpmAction}"
 							action="#{danBackingBean.submitAction(bpmAction)}"
@@ -133,12 +135,8 @@
 		<p:panel header="ITEMS" toggleable="true">
 			<table>
 				<tr>
-					<td><p:dataTable id="danDataTable" var="dan" value=""
-							paginator="true" rows="10"
-							paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
-							rowsPerPageTemplate="5,10,15" paginatorPosition="bottom"
-							style="width:100%">
-
+					<td><p:dataTable id="danDataTable" var="dan">
+							<ac:paginator for="addressDataTable" />
 							<p:columnGroup type="header">
 								<p:row>
 									<p:column headerText="Product Code" rowspan="2" />

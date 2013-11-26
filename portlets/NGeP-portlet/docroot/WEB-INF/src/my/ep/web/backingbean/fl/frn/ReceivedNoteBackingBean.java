@@ -52,9 +52,6 @@ public class ReceivedNoteBackingBean extends BaseBackingBean<ReceivedNoteManaged
 			if(resDTO.isSuccessful()) {
 				log.info("Record saved successfully");
 				String message = "fulfilmentNote id. : "+fulfilmentNote.getFulfilmentNoteId();
-				/*if(fulfilmentNote.getFulfilmentNoteId()!=null) {
-					message = message + ". Doc No. : "+fulfilmentNote.getFulfilmentNoteId();
-				}*/
 				FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "Record saved successfully.",message));
 				if(!action.equalsIgnoreCase(BpmOutcomeConst.BPM_SAVE)) { // save action will remain in the same page
 					renewSesionObject();

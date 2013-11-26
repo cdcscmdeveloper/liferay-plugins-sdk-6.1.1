@@ -7,35 +7,37 @@
 
 	<table>
 		<tr>
-			<td><p:outputLabel value="For iteration1 - generate DAN Testing Purpose: " /></td>
+			<td><p:outputLabel
+					value="For iteration1 - generate DAN Testing Purpose: " /></td>
 			<td><p:selectBooleanCheckbox
-					value="#{invoiceBackingBean.managedBean.dan}"><p:ajax listener="#{invoiceBackingBean.test}" process="@this"></p:ajax> </p:selectBooleanCheckbox></td>
+					value="#{invoiceBackingBean.managedBean.dan}">
+					<p:ajax listener="#{invoiceBackingBean.test}" process="@this"></p:ajax>
+				</p:selectBooleanCheckbox></td>
 		</tr>
 		<tr>
-			<td><p:outputLabel value="For interation1 - update DAN Testing Purpose: " /></td>
+			<td><p:outputLabel
+					value="For interation1 - update DAN Testing Purpose: " /></td>
 			<td><p:selectBooleanCheckbox
-					value="#{invoiceBackingBean.managedBean.updateDan}"><p:ajax listener="#{invoiceBackingBean.test}" process="@this"></p:ajax> </p:selectBooleanCheckbox></td>
+					value="#{invoiceBackingBean.managedBean.updateDan}">
+					<p:ajax listener="#{invoiceBackingBean.test}" process="@this"></p:ajax>
+				</p:selectBooleanCheckbox></td>
 		</tr>
 	</table>
-	<table style="width: 800px;">
+	<table style="width: 100%">
 		<tr>
 			<c:if test='#{invoiceBackingBean.managedBean.buttonVal eq "Update"}'>
-				<td colspan="4">
-					<div align="right">
-						<p:commandButton value="UPDATE"
-							action="#{invoiceBackingBean.submitAction('UPDATE')}">
-							<f:param name="actionName" value="UPDATE" />
-						</p:commandButton>
-					</div>
-				</td>
+				<td colspan="4" style="text-align: right;"><p:commandButton
+						value="UPDATE"
+						action="#{invoiceBackingBean.submitAction('UPDATE')}">
+						<f:param name="actionName" value="UPDATE" />
+					</p:commandButton></td>
 			</c:if>
 			<c:if test='#{invoiceBackingBean.managedBean.buttonVal eq "Cancel"}'>
-				<td colspan="4" align="right"><div align="right">
-						<p:commandButton value="CANCEL"
-							action="#{invoiceBackingBean.submitAction('CANCEL')}">
-							<f:param name="actionName" value="CANCEL" />
-						</p:commandButton>
-					</div></td>
+				<td colspan="4" style="text-align: right;"><p:commandButton
+						value="CANCEL"
+						action="#{invoiceBackingBean.submitAction('CANCEL')}">
+						<f:param name="actionName" value="CANCEL" />
+					</p:commandButton></td>
 			</c:if>
 		</tr>
 	</table>
@@ -71,12 +73,14 @@
 			<tr>
 				<td><p:outputLabel value="Ori. Invoice Amt." /></td>
 				<td><p:inputText style="width: 120px;" value="20,000.00"
-						disabled="true" />MYR</td>
+						disabled="true" /> <p:spacer width="5" /> <p:inputText
+						disabled="true" style="width: 2px;" value="MYR" /></td>
 			</tr>
 			<tr>
 				<td><p:outputLabel value="New Invoice Amt." /></td>
 				<td><p:inputText style="width: 120px;" value="18,500.00"
-						disabled="true" />MYR</td>
+						disabled="true" /> <p:spacer width="5" /> <p:inputText
+						disabled="true" style="width: 2px;" value="MYR" /></td>
 			</tr>
 			<tr>
 				<td><p:outputLabel value="Status" /></td>
@@ -142,7 +146,7 @@
 		<table>
 			<tr>
 				<td><p:outputLabel value="Factored?" /></td>
-				<td><p:selectOneRadio  value="No">
+				<td><p:selectOneRadio value="No">
 						<f:selectItem itemLabel="Yes" itemValue="true" />
 						<f:selectItem itemLabel="No" itemValue="false" />
 					</p:selectOneRadio></td>
@@ -168,19 +172,25 @@
 				<td></td>
 			</tr>
 			<tr>
-				<td><p:outputLabel value="Pay Amt (MYR)" /></td>
-				<td><p:inputText style="width: 260px;" disabled="true" /></td>
+				<td><p:outputLabel value="Pay Amt" /></td>
+				<td><p:inputText style="width: 260px;" disabled="true" /> <p:spacer
+						width="5" /> <p:inputText disabled="true" style="width: 2px;"
+						value="MYR" /></td>
 				<td></td>
 				<td></td>
 			</tr>
 		</table>
 		<br />
-		<p:panel header="Commerce Dot Com" />
-		<br />
-		<br />
-		<p:outputLabel value="Pay Amt (MYR)" />
-		<p:inputText style="width: 260px;" disabled="true" />
 
+		<p:panel header="Commerce Dot Com" />
+		<table>
+			<tr>
+				<td><p:outputLabel value="Pay Amt" /></td>
+				<td><p:inputText style="width: 260px;" disabled="true" /> <p:spacer
+						width="5" /> <p:inputText disabled="true" style="width: 2px;"
+						value="MYR" /></td>
+			</tr>
+		</table>
 	</p:panel>
 	<p:panel header="#{lbl['lbl.fl.remark.attachment']}" toggleable="true">
 		<table style="width: 100%">

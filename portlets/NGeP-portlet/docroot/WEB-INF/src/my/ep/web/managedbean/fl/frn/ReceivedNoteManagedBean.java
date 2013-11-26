@@ -52,7 +52,6 @@ public class ReceivedNoteManagedBean extends BaseManagedBean {
 	private String buttonVal;
 	private long deliveryOrderId;
 	
-
 	/**
 	 * @return the flRemark
 	 */
