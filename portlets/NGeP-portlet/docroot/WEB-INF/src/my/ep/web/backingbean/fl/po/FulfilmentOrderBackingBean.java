@@ -9,6 +9,7 @@ import javax.faces.bean.RequestScoped;
 import javax.faces.context.FacesContext;
 
 import my.ep.biz.service.fl.order.IFulfilmentOrderSO;
+import my.ep.biz.service.fl.request.IFulfilmentRequestSO;
 import my.ep.dto.fl.FulfilmentReqDTO;
 import my.ep.dto.fl.FulfilmentResDTO;
 import my.ep.exception.EpException;
@@ -145,6 +146,13 @@ public class FulfilmentOrderBackingBean extends BaseBackingBean<FulfilmentOrderM
 	public String navigateToFlOrder(int index) {
 		System.out.println("getSelectedFlOrder: "+getManagedBean().getSelectedFlOrder().getFulfilmentOrderId());
 //		this.getManagedBean().setFulfilmentOrder(this.getManagedBean().getPendingDoList().get(index));
+		FulfilmentReqDTO flReqDTO = new FulfilmentReqDTO();
+		FulfilmentResDTO resDTO = new FulfilmentResDTO();
+		flReqDTO.setFlRequestId(getManagedBean().getSelectedFlOrder().getFlFulfilmentRequest().getFulfilmentReqId());
+		IFulfilmentRequestSO fulfilmentSO = (IFulfilmentRequestSO) BusinessDelegate.getInstance().getServiceObject("fl",IFulfilmentRequestSO.class);
+		resDTO = fulfilmentSO.retrieveFulfilmentRequest(flReqDTO);
+		FulfilmentBackingBean flBB = new FulfilmentBackingBean();
+		flBB.initializeRemarkAndAttachement(resDTO.getRemarkList(), flBB.getManagedBean().getAttachmentList());
 		getManagedBean().setFulfilmentOrder(getManagedBean().getSelectedFlOrder());
 		
 		DeliveryOrderBackingBean doMB = new DeliveryOrderBackingBean();

@@ -13,13 +13,12 @@ import my.ep.biz.service.fl.order.IDeliveryOrderSO;
 import my.ep.dto.fl.FulfilmentReqDTO;
 import my.ep.dto.fl.FulfilmentResDTO;
 import my.ep.exception.EpException;
-import my.ep.persistence.entity.fl.FlAttachment;
-import my.ep.persistence.entity.fl.FlRemark;
 import my.ep.persistence.entity.fl.order.FlDeliveryOrder;
 import my.ep.persistence.entity.fl.order.FlFulfilmentOrder;
 import my.ep.persistence.entity.fl.request.FlDeliveryAddress;
 import my.ep.persistence.entity.fl.request.FlFulfilmentRequest;
 import my.ep.web.backingbean.BaseBackingBean;
+import my.ep.web.backingbean.fl.FulfilmentBackingBean;
 import my.ep.web.constant.BpmOutcomeConst;
 import my.ep.web.managedbean.fl.creatdo.DeliveryOrderManagedBean;
 import my.ep.web.util.lookupservice.BusinessDelegate;
@@ -55,6 +54,7 @@ public class DeliveryOrderBackingBean extends BaseBackingBean<DeliveryOrderManag
 
 	public String createDeliveryOrder(String action) {
 		IDeliveryOrderSO deliveryOrderSO = null;
+		FulfilmentBackingBean flBB = new FulfilmentBackingBean();
 		try {
 			String actionName=FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap().get("actionName");
 			Long flOrderId;
@@ -65,39 +65,18 @@ public class DeliveryOrderBackingBean extends BaseBackingBean<DeliveryOrderManag
 			}
 			
 			Long fulfilmentOrderId=Long.valueOf(flOrderId);
-			System.out.println("fulfilmentOrderId::: "+fulfilmentOrderId);
-			//Long flRequestId=Long.valueOf(getManagedBean().getFulfilmentOrder().getFlFulfilmentRequest().getFulfilmentReqId());
+			log.info("fulfilmentOrderId::: "+fulfilmentOrderId);
 			String  statusId=this.getManagedBean().getStatusId();
 			FulfilmentReqDTO reqDTO = new FulfilmentReqDTO();
-			
-			FlRemark flRemark = getManagedBean().getFlRemark();
-			flRemark.setDocId(Long.valueOf(1));
-			flRemark.setDocType("tex");
-			
-			FlAttachment flAttachment = this.getManagedBean().getFlAttachment();
-			String fileName = this.getManagedBean().getFlAttachment().getFileName();
-			String fileDesc = this.getManagedBean().getFlAttachment().getFileDescription();
-			String filePath = this.getManagedBean().getFlAttachment().getFilePath();
-			flAttachment.setDocType("txt");
-			flAttachment.setDocId(Long.valueOf(44));
-			flAttachment.setFileName(fileName);
-			flAttachment.setFileDescription(fileDesc);
-			flAttachment.setFilePath(filePath);
-			
 			FlDeliveryOrder flDeliveryOrder = getManagedBean().getFlDeliveryOrder();
 			deliveryOrderSO = (IDeliveryOrderSO) BusinessDelegate.getInstance().getServiceObject("fl",IDeliveryOrderSO.class);
-			//reqDTO.setFlRemark(flRemark);
-			//reqDTO.setFlAttachment(flAttachment);
 			reqDTO.setFulfilmentOrderId(fulfilmentOrderId);
 			reqDTO.setStatusId(statusId);
-			//reqDTO.setFlRequestId(flRequestId);
 			reqDTO.setFlDeliveryOrder(flDeliveryOrder);
 			reqDTO.setFulfilmentOrder(getManagedBean().getFulfilmentOrder());
-			//reqDTO.setContractRequest(false);
-			//reqDTO.setTaskId(this.getManagedBean().getTaskId());
 			reqDTO.setOutcome(action);
-			
-			//reqDTO.setProcessId("Order_Fullfillment.CreatePurchaseOrder");
+			reqDTO.setFlAttachmentList(flBB.getManagedBean().getAttachmentList());
+			reqDTO.setFlRemark(flBB.getManagedBean().getRemarkList().get(0));
 			FulfilmentResDTO resDTO = deliveryOrderSO.saveDeliveryOrder(reqDTO);
 			if(resDTO.isSuccessful()) {
 				log.info("Record saved successfully");
