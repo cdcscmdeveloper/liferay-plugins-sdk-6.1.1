@@ -2100,7 +2100,7 @@ table.ppThreePartsTable td {
 }
 
 
-.ui-selectonemenu, .ui-inputtext{
+.ui-selectonemenu{
 	height:20px;
 	min-width:60px;
 	vertical-align: middle;
@@ -3654,9 +3654,13 @@ thead > tr > th.ui-state-default {
 	padding:2px 0 3px 5px !important;
 }
 
-input[type="text"], input[type="password"], input[type="file"], input[type="submit"], input[type="button"], input[type="reset"], select, button, .aui-field-input-text {
+input[type="text"], input[type="password"], input[type="file"], input[type="submit"], input[type="button"], input[type="reset"], button, .aui-field-input-text {
 	padding:0 5px 0 5px !important;
 	height: 20px !important;
+}
+
+select {
+	border-radius: 0 !important;
 }
 
 li[role=tab].ui-state-hover > a {
