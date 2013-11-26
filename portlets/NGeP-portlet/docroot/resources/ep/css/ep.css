@@ -952,12 +952,12 @@ px
 	border-radius: 0px;
 }
 
-.ui-menu,.ui-menu .ui-menu-child {
+.ui-menu .ui-menu-child {
 	background: #F9F9F9;
 	border: none;
 }
 
-.ui-menu,.ui-selectonemenu-items {
+.ui-selectonemenu-items {
 	padding: 3px 0px 3px 0px !important;
 }
 
@@ -3708,9 +3708,9 @@ textarea[disabled],input[type="text"][disabled],input[type="password"][disabled]
 	text-transform: uppercase;
 }
 
-.ui-panelmenu-header {
+.ui-menu > ul > li.ui-widget-header {
 	background: none !important;
-	background-color: #017D9F !important;
+	background-color: #5BA218 !important;
 	height: 25px;
 	border-radius: 0;
 	box-shadow: 0px 5px 5px #A8A8A8 !important;
@@ -3722,12 +3722,13 @@ textarea[disabled],input[type="text"][disabled],input[type="password"][disabled]
 	text-shadow: none !important;
 }
 
-.ui-panelmenu .ui-panelmenu-content {
+.ui-menu .ui-menu-content {
 	background-color: #F9F9F9;
 	box-shadow: 0px 5px 5px #A8A8A8;
+	width: 90%;
 }
 
-.ui-panelmenu .ui-panelmenu-panel {
+.ui-menu .ui-panelmenu-panel {
 	height: 200px;
 	padding:0 10px 0 10px;
 }
