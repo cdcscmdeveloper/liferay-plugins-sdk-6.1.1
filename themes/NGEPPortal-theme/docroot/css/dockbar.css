@@ -478,3 +478,8 @@ html > .lfr-dockbar-pinned {
 	font-size: 0.8em;
 	padding: 0 1em;
 }
+
+.dockbar-wrapper {
+	width: 1000px;
+	margin: 0 auto;
+}

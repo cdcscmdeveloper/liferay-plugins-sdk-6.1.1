@@ -243,7 +243,7 @@ $theme.include($body_top_include)
             <div class="footer-eperolehan-sign-in">
             	<img src="$images_folder/general/eperolehan-footer.png" />
                 <p>
-                    Copyright &copy; 2013, ePerolehan, Ministry of Finance, Malaysia. Maintained by Commerce Dot Com Sdn Bhd.
+                    Copyright &copy; 2013, ePerolehan, Ministry of Finance, Malaysia. <br/>Maintained by Commerce Dot Com Sdn Bhd.
                 </p>
             </div>
             <div class="clear"></div>

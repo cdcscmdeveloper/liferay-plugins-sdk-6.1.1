@@ -178,7 +178,7 @@ nav ul li{float:left;}
 .middle-navi-right-wrapper ul li.user-thumb{float:left; margin-top:6px;}
 .middle-navi-right-wrapper ul li.btn-language a{float:left; padding:2px 11px; text-decoration:none; margin:0 -15px;}
 .middle-navi-right-wrapper ul li.btn-language a:hover{text-decoration:underline; background:#000; color:#FFF; padding:0 -15px;}
-.middle-navi-right-wrapper ul li.btn-language div.dropdown-language-wrapper{display:none; position:absolute; z-index:20; background:#000; padding:10px; top:20px; right:-123px; width:150px; -webkit-border-bottom-right-radius:10px; -webkit-border-bottom-left-radius:10px; -moz-border-radius-bottomright:10px; -moz-border-radius-bottomleft:10px; border-bottom-right-radius:10px; border-bottom-left-radius:10px;}
+.middle-navi-right-wrapper ul li.btn-language div.dropdown-language-wrapper{display:none; position:absolute; z-index:20; background:#000; padding:10px; top:20px; right:-76px; width:100px;}
 .middle-navi-right-wrapper ul li.btn-language div.dropdown-language-wrapper a{color:#fff; text-decoration:none; padding:0; margin:0; cursor:pointer;}
 .middle-navi-right-wrapper ul li.btn-language div.dropdown-language-wrapper a:hover{color:#8cc63e; padding:0; margin:0;}
 .middle-navi-right-wrapper ul li.btn-language div.dropdown-language-wrapper a.active{color:#8cc63e; padding:0; margin:0;}
