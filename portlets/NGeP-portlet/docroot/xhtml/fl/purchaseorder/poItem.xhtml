@@ -16,11 +16,11 @@
 			</p:column>
 
 			<p:column headerText="Exp. Delivery (Start)">
-				 <p:calendar value="#{address.startDate}" id="calStartDate" showOn="button" />  
+				 <p:calendar value="#{address.startDate}" pattern="dd/mm/yyyy" id="calStartDate" showOn="button" />  
 			</p:column>
 
 			<p:column headerText="Exp. Delivery (End)">
-				<p:calendar value="#{address.endDate}" id="calEndDate" showOn="button" />  
+				<p:calendar value="#{address.endDate}" pattern="dd/mm/yyyy" id="calEndDate" showOn="button" />  
 			</p:column>
 
 		</p:dataTable>

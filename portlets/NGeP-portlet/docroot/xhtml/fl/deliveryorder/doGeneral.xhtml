@@ -73,7 +73,7 @@
 				<td><p:inputText style="width: 260px;"
 						value="KEMENTERIAN KEWANGAN" disabled="true" /></td>
 				<td><p:outputLabel value="* #{lbl['lbl.fl.delivery.start']}" /></td>
-				<td><p:calendar mode="popup" showOn="button"
+				<td><p:calendar mode="popup" showOn="button" pattern="dd/mm/yyyy"
 						value="#{createDOBackingBean.managedBean.flDeliveryOrder.estStartDate}" requiredMessage="Start date is Required" required="true"/></td>
 			</tr>
 			<tr>
@@ -81,7 +81,7 @@
 				<td><p:inputText style="width: 260px;"
 						value="JABATAN KASTAM DAN EKSAIS DIRAJA" disabled="true" /></td>
 				<td><p:outputLabel value="* #{lbl['lbl.fl.delivery.end']}" /></td>
-				<td><p:calendar mode="popup" showOn="button" 
+				<td><p:calendar mode="popup" showOn="button"  pattern="dd/mm/yyyy"
 						value="#{createDOBackingBean.managedBean.flDeliveryOrder.estEndDate}"  requiredMessage="End date is Required" required="true"/></td>
 			</tr>
 			<tr>
