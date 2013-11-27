@@ -13,6 +13,7 @@ import my.ep.persistence.entity.fl.FlRemark;
 import my.ep.persistence.entity.fl.frn.FlFulfilmentNote;
 import my.ep.persistence.entity.fl.frn.FlFulfilmentNoteItem;
 import my.ep.persistence.entity.fl.request.FlDeliveryAddress;
+import my.ep.persistence.entity.fl.request.FlFulfilmentRequest;
 import my.ep.persistence.entity.pm.authorization.PmOrgAddress;
 import my.ep.persistence.entity.pm.common.PmMaksud;
 import my.ep.web.managedbean.BaseManagedBean;
@@ -35,6 +36,7 @@ public class ReceivedNoteManagedBean extends BaseManagedBean {
 	private FlAttachment flAttachment = new FlAttachment();
 	private FlFulfilmentNote fulfilmentNote=new FlFulfilmentNote();
 	private FlFulfilmentNoteItem fulfilmentNoteItem=new FlFulfilmentNoteItem();
+	private FlFulfilmentRequest fulfilmentRequest;
 
 	//private List<DeliveryAddressPopup> daPopupList;
 	//private List<DeliveryAddressPopup> selectedPopupAddress;
@@ -264,6 +266,20 @@ public class ReceivedNoteManagedBean extends BaseManagedBean {
 	 */
 	public void setDeliveryOrderId(long deliveryOrderId) {
 		this.deliveryOrderId = deliveryOrderId;
+	}
+
+	/**
+	 * @return the fulfilmentRequest
+	 */
+	public FlFulfilmentRequest getFulfilmentRequest() {
+		return fulfilmentRequest;
+	}
+
+	/**
+	 * @param fulfilmentRequest the fulfilmentRequest to set
+	 */
+	public void setFulfilmentRequest(FlFulfilmentRequest fulfilmentRequest) {
+		this.fulfilmentRequest = fulfilmentRequest;
 	}
 
 
