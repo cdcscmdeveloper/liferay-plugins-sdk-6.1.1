@@ -396,6 +396,7 @@ public class TaskListBackingBean extends BaseBackingBean<TaskListManagedBean> {
 			resDTO = fulfilmentSO.retrieveFulfilmentRequest(flReqDTO);
 			FulfilmentBackingBean flBB = new FulfilmentBackingBean();
 			flBB.initializeRemarkAndAttachement(resDTO.getRemarkList(), flBB.getManagedBean().getAttachmentList());
+			createFRNBackingBean.getManagedBean().setFulfilmentRequest(resDTO.getFlFulfilmentRequest());
 			createFRNBackingBean.getManagedBean().setDeliveryOrderId(flDeliveryOrder.getDeliveryOrderId());
 			createFRNBackingBean.getManagedBean().setTaskId(taskId);
 			createFRNBackingBean.getManagedBean().setActions(res.getAction());
