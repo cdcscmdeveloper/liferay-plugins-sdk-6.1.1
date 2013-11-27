@@ -1,0 +1,56 @@
+<ui:composition
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:ac="http://ac.my/jsf/composite/cc"
+	xmlns:p="http://primefaces.org/ui">
+
+		<p:panel id="panel1" header="Search" toggleable="true">
+				<table width="100%">
+				<tr>
+					<td class="TableFieldLeft" style="width: 120px">
+						<!-- <h:outputLabel value="#{lbl['lbl.template.doc.category']}" /> -->
+						<h:outputLabel value="Template Category" />
+					</td>
+					<td class="TableFieldRight">
+						<p:selectOneMenu value="#{templateDocBackingBean.managedBean.categoryId}" id="templateCategory">
+						<!-- <p:selectOneMenu value="#{templateDocBackingBean.managedBean.templCategory}" id="templateCategory"> -->
+							<f:selectItems value="#{templateDocBackingBean.templateCategoryList}" />
+						</p:selectOneMenu>
+					</td>
+					<td class="TableFieldLeft" style="width:120px">
+						<h:outputLabel value=" Process Type" />
+					</td>
+					<td class="TableFieldRight">
+					<p:selectOneMenu value="#{templateDocBackingBean.managedBean.processType}" id="templateCategory111">
+							<f:selectItems value="#{templateDocBackingBean.managedBean.templateProcessTypeList}" />
+						</p:selectOneMenu>
+					</td>
+				</tr>
+				<tr style="height: 5px;"></tr>
+				<tr>
+					<td class="TableFieldLeft" style="width: 120px"><h:outputLabel value=" Title" /></td>
+					<td class="TableFieldRight">
+						<p:inputText value="#{templateDocBackingBean.managedBean.selectedTemplate.docTitle}" style="width:280px" />
+					</td>
+					<td class="TableFieldLeft" style="width: 120px"><h:outputLabel value="Decription" /></td>
+					<td class="TableFieldRight">
+						<p:inputTextarea value="#{templateDocBackingBean.managedBean.selectedTemplate.docDesc}"
+							style="width:280px" cols="33" rows="3" autoResize="false" />
+					</td>
+				</tr>
+				<tr style="height: 5px;"></tr>
+					<tr>
+					<td class="TableFieldLeft" style="width: 120px;"><h:outputLabel value="Created User"/></td>
+					<td class="TableFieldRight">
+						<p:inputText value="#{tplMasterObj.createdBy}" readonly="true" style="width:280px" />
+					</td>
+					<td class="TableFieldLeft" style="width: 120px"><h:outputLabel value="Date" /></td>
+					<td class="TableFieldRight">
+						<p:inputText value="#{tplMasterObj.createdDate}" readonly="true" style="width:280px" />
+					</td>
+				</tr>
+			</table>
+		</p:panel>
+	
+</ui:composition>
