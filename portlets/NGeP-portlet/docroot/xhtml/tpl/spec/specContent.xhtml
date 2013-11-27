@@ -37,7 +37,8 @@
 			</h:panelGroup>
 			</h:panelGroup>
 			<p:commandButton value="Re-Numbering" action="#{templateSpecBackingBean.renumberingQuestionTable}"
-				process="@this spg" update="spg" />
+				process="@this spg" update="spg"
+				rendered="#{templateSpecBackingBean.managedBean.contentType == TplSpecConst.contentTypeQuestion}" />
 			<p:dataTable id="questionTbl" var="question" rowIndexVar="row"
 				value="#{templateSpecBackingBean.managedBean.specMaster.tplSpecQuestions}">
 				<p:column style="#{(question.questionType == TplSpecConst.questionTypeHeader) ? 'background-color:#dddddd;' : ''}" >
