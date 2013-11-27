@@ -30,7 +30,7 @@ public class BPMTaskListBackingBean extends BaseBackingBean<BPMTaskListManagedBe
 		this.getManagedBean().setBpmMap(null);
 		Map temp = new HashMap();
 
-		temp.put("UNSPSC Code Request", "reviewUnspscCode");
+		temp.put("UNSPSC Code Request", "reviewunspsccode");
 		temp.put("Extension Code Request", "review-extension");
 		temp.put("Extension Code Maintenance", "review-extension-maintenance");
 		
