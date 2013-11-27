@@ -3984,6 +3984,7 @@ label > span.ui-button-text {
 .ui-picklist .ui-picklist-caption {
 	font-family: Tahoma;
 	font-size: 11px;
+	border: 1px solid #AAAAAA;
 	background: #BCE18A !important; /* Old browsers */
 	background: -moz-linear-gradient(top, #FFFFFF 0%, #BCE18A 100%) !important;
 	/* FF3.6+ */
