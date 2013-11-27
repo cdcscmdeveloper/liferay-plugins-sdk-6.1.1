@@ -44,11 +44,11 @@
           </p:column>  
        </p:treeTable>
        </div>
-       <h:panelGrid style="width:770px" columnClasses="column-align-right">
+       <div class="ppRightBtn"> 
 		 <p:commandButton value="#{lbl['lbl.ct.agn.btn.add']}" process="@this" partialSubmit="true" 
 		     icon="ui-icon-add"   onclick="dlgAgency.show();">
 		 </p:commandButton>
-	   </h:panelGrid>	
+	  </div>
 	   </p:panel>  
         <p:confirmDialog message="Do you want to delete the record?" 
 		  closable="true" appendToBody="true" header="Delete Confirmation" severity="alert" widgetVar="confirmation">

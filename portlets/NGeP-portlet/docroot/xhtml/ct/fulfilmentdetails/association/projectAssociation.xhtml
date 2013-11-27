@@ -37,7 +37,7 @@
 		 </p:panel>
 		 <p:panel id="associateResultId" header="#{lbl['lbl.ct.asearch.panel.result']}"   toggleable="true"  toggleSpeed="500">
             <div style="overflow-x:auto">
-			    <h:panelGrid  style="width:950px;">          
+			    <h:panelGrid  style="width:930px;">          
 			        <p:dataTable id="associateSearch" var="data" value="#{contractDetailsBackingBean.managedBean.associationList}" rowIndexVar="index"
 			         widgetVar="dataTableObj" lazy="false" dynamic="true" paginator="true" paginatorPosition="bottom" paginatorAlwaysVisible="true" 
 			         emptyMessage="No Records!">
@@ -45,7 +45,7 @@
 						<p:columnGroup type="header"> 
 							<p:row> 
 								<p:column  style="width:200px" headerText="#{lbl['lbl.ct.asearch.table1.pname']}"   /> 
-								<p:column  style="width:420px" headerText="#{lbl['lbl.ct.asearch.table1.pdes']}" /> 
+								<p:column  style="width:400px" headerText="#{lbl['lbl.ct.asearch.table1.pdes']}" /> 
 							    <p:column  style="width:100px" headerText="#{lbl['lbl.ct.asearch.table1.noc']}" /> 	
 							    <p:column  style="width:100px" headerText="#{lbl['lbl.ct.asearch.table1.action']}" />
 					        </p:row>							

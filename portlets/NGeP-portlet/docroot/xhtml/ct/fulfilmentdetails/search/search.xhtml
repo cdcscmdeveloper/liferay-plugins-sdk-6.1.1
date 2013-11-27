@@ -5,7 +5,8 @@
 	xmlns:h="http://java.sun.com/jsf/html"
 	xmlns:ui="http://java.sun.com/jsf/facelets"
 	xmlns:p="http://primefaces.org/ui"
-	xmlns:c="http://java.sun.com/jsp/jstl/core">
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:ac="http://ac.my/jsf/composite/cc">
     <ui:define name="contentSection">
     <style>
       .column-align-center { text-align: center !important;}
@@ -58,7 +59,8 @@
                        <div style="overflow-x:auto">
 			                     <p:dataTable id="dataTable" var="data" value="#{contractDetailsBackingBean.managedBean.contractList}" rowIndexVar="index"
 							               widgetVar="dataTableObj" lazy="false" dynamic="true" paginator="true" paginatorPosition="bottom"
-							               paginatorAlwaysVisible="true" emptyMessage="No Records!" rows="5">
+							               paginatorAlwaysVisible="true" emptyMessage="No Records!">
+							               <ac:paginator for="dataTable"/>
 							               <p:columnGroup type="header"> 
 								                <p:row> 
 									                   

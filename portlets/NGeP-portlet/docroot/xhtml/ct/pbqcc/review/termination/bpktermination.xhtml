@@ -1,0 +1,76 @@
+<ui:composition
+	template="/WEB-INF/facelets/templates/sidemenu_template.xhtml"
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:c="http://java.sun.com/jsp/jstl/core">
+    <ui:define name="resourceSection">
+	</ui:define>
+	<ui:define name="sideMenu">
+		<ui:include src="/xhtml/ct/pbqcc/shared/sidemenu/bpktermination.xhtml" />
+	</ui:define>
+   <ui:define name="content">
+	 <p:panel id="pRightPanel">
+			<div class="ppRightBtn">
+				<p:commandButton id="ctSave" value="#{lbl['lbl.ct.btn.save']}"/>
+				<p:commandButton id="ctSubmit" value="#{lbl['lbl.ct.btn.submit']}"/>
+			</div>
+		</p:panel>
+		<p:panel id="fd" header="#{lbl['lbl.ct.cname']}" toggleable="true"  toggleSpeed="500" widgetVar="panelfd">
+            <ui:include src="/xhtml/ct/fulfilmentdetails/shared/fulfilment.xhtml" />     
+        </p:panel>
+        <p:panel id="sTermination" header="Termination Details"    toggleable="true"  toggleSpeed="500" widgetVar="panelsTermination">
+        <h:panelGrid columns="4" style="width:750px;">  
+        <h:outputLabel value="Termination Request No" styleClass="txtsize" />
+         <h:panelGrid columns="3">
+          <p:inputText value="" disabled="true" style="width:15px;"/>
+          <p:spacer width="1"/>
+          <p:inputText value="" disabled="true" style="width:125px;"/>
+          </h:panelGrid>
+          <h:outputLabel value="Termination Request Date" styleClass="txtsize" />
+          <p:inputText value=""  disabled="true" style="width:155px;"/>
+          </h:panelGrid>
+         </p:panel>
+         <p:panel id="rft" header="Reason For Termination"    toggleable="true"  toggleSpeed="500" widgetVar="panelrft">
+		 <p:dataTable id="dataTable" var="data" value=" " rowIndexVar="index"
+		    widgetVar="dataTableObj" lazy="false" dynamic="true" paginator="true" paginatorPosition="bottom"
+			paginatorAlwaysVisible="true" emptyMessage="No Records!" rows="10" rowsPerPageTemplate="5,10,15,20"
+			currentPageReportTemplate=" total {totalRecords},  page {currentPage} of {totalPages} "
+			paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink}
+			{LastPageLink} {RowsPerPageDropdown}">
+			<p:columnGroup type="header"> 
+			   <p:row> 
+				 <p:column style="width:30px;" headerText="No."  />
+				 <p:column colspan="1" style="width:200px;" headerText="Termination Reason"  /> 
+				 <p:column colspan="1" style="width:500px;" headerText="Termination Description" /> 
+			   </p:row>							
+			 </p:columnGroup>
+			 <p:column styleClass="column-align-center"  > <h:outputText value="#{index+1}" /></p:column>
+			 <p:column><h:outputLabel value="Late Supply"/></p:column>	
+			 <p:column > <h:outputLabel value="More than 2 weeks"/> </p:column> 							
+		  </p:dataTable>
+		 </p:panel>
+		 <p:panel id="tacg" header="Termination Agreement Clause"  toggleable="true"  toggleSpeed="500" widgetVar="paneltacg">
+           <p:dataTable id="dataTable1" var="data" value=" " rowIndexVar="index"
+			  widgetVar="dataTableObj" lazy="false" dynamic="true" paginator="true" paginatorPosition="bottom"
+			  paginatorAlwaysVisible="true" emptyMessage="No Records!" rows="10" rowsPerPageTemplate="5,10,15,20"
+			  currentPageReportTemplate=" total {totalRecords},  page {currentPage} of {totalPages} "
+			  paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink}
+			  {LastPageLink} {RowsPerPageDropdown}">
+			  <p:columnGroup type="header"> 
+				<p:row> 
+                   <p:column style="width:30px;" headerText="No."  />
+                   <p:column style="width:200px;" headerText="Agreement Clause No"  /> 
+                   <p:column style="width:500px;" headerText="Agreement Clause Description" /> 
+				</p:row>							
+			  </p:columnGroup>
+			  <p:column styleClass="column-align-center" > <h:outputText value="#{index+1}" /></p:column>
+			  <p:column><h:outputLabel value="CLAUSE 8.1"/></p:column>	
+			  <p:column > <h:outputLabel value="The SERVICE to be provided by the COMPANY shall include,
+						  among other things, the following:"/> </p:column> 							
+			</p:dataTable>
+		  </p:panel>
+       </ui:define>
+</ui:composition>

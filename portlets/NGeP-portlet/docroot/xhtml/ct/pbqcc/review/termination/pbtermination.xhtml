@@ -1,0 +1,103 @@
+<ui:composition
+	template="/WEB-INF/facelets/templates/sidemenu_template.xhtml"
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:c="http://java.sun.com/jsp/jstl/core">
+    <ui:define name="resourceSection">
+	</ui:define>
+	<ui:define name="sideMenu">
+		<ui:include src="/xhtml/ct/pbqcc/shared/sidemenu/pbtermination.xhtml" />
+	</ui:define>
+    <ui:define name="content">
+	  <p:panel id="pRightPanel">
+			<div class="ppRightBtn">
+				<p:commandButton id="ctSave" value="#{lbl['lbl.ct.btn.save']}"/>
+				<p:commandButton id="ctSubmit" value="#{lbl['lbl.ct.btn.submit']}"/>
+			</div>
+		</p:panel>
+	    <p:panel id="fd" header="#{lbl['lbl.ct.cname']}" toggleable="true"  toggleSpeed="500" widgetVar="panelfd">
+            <ui:include src="/xhtml/ct/fulfilmentdetails/shared/fulfilment.xhtml" />            
+        </p:panel>
+        <p:panel id="sTermination" header="Termination Details"    toggleable="true"  toggleSpeed="500" widgetVar="panelsTermination">
+             <h:panelGrid columns="4" style="width:750px;">  
+                   <h:outputLabel value="Termination Request No" />
+           <h:panelGrid columns="2">
+              <p:inputText value="" disabled="true" style="width:30px;"/>
+              <p:inputText value="" disabled="true" style="width:100px;"/>
+           </h:panelGrid>
+           <h:outputLabel  value="Select Approver BPK" />  
+           <p:selectOneMenu value=" " style="width:150px;">
+              <f:selectItem itemLabel="-Please Select--" itemValue="" /> 
+           </p:selectOneMenu>    
+           <h:outputLabel value="Termination Request Date" />
+           <p:inputText value=""  disabled="true" style="width:170px;"/>
+           <h:outputLabel  value="100% Agree on Termination"/>  
+           <p:selectOneMenu value=" " style="width:60px;">
+              <f:selectItem itemLabel="No" itemValue="1" /> 
+              <f:selectItem itemLabel="Yes" itemValue="1" /> 
+           </p:selectOneMenu>   
+           <h:outputLabel  value="Diciplinary Action"/>  
+           <p:selectOneMenu value=" " style="width:60px;">
+              <f:selectItem itemLabel="No" itemValue="1" /> 
+              <f:selectItem itemLabel="Yes" itemValue="1" /> 
+           </p:selectOneMenu>     
+           <f:verbatim></f:verbatim>          
+         </h:panelGrid>
+         <h:panelGrid columns="2" style="width:750px;">  
+          <h:panelGroup>
+		    <div style="height: 45px;width:133px; vertical-align: top">
+				 <p:outputLabel for="dar" value="Diciplinary Action Reason" styleClass="txtsize" />
+			</div>
+	     </h:panelGroup>
+	     <h:panelGrid>
+		   <p:inputTextarea id="dar" value="" required="false"  rows="2" cols="73" disabled="true" autoResize="false" />
+		 </h:panelGrid>
+	    </h:panelGrid>
+	   </p:panel>
+      <p:panel id="rft" header="Reason For Termination"    toggleable="true"  toggleSpeed="500" widgetVar="panelrft">
+        <h:panelGrid style="width:780px;">
+		<p:dataTable id="dataTable" var="data" value=" " rowIndexVar="index"
+		   widgetVar="dataTableObj" lazy="false" dynamic="true" paginator="true" paginatorPosition="bottom"
+		   paginatorAlwaysVisible="true" emptyMessage="No Records!" rows="10" rowsPerPageTemplate="5,10,15,20"
+		   currentPageReportTemplate=" total {totalRecords},  page {currentPage} of {totalPages} "
+		   paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink}
+		   {LastPageLink} {RowsPerPageDropdown}">
+		   <p:columnGroup type="header"> 
+			<p:row> 
+			  <p:column style="width:30px;" headerText="No."  />
+			  <p:column style="width:200px;" headerText="Termination Reason"  /> 
+			  <p:column style="width:500px;" headerText="Termination Description" /> 
+		    </p:row>							
+		   </p:columnGroup>
+		   <p:column styleClass="column-align-center"  > <h:outputText value="#{index+1}" /></p:column>
+		   <p:column><h:outputLabel value="Late Supply"/></p:column>	
+		   <p:column > <h:outputLabel value="More than 2 weeks"/> </p:column> 							
+		 </p:dataTable>
+		</h:panelGrid>
+	    </p:panel>
+		<p:panel id="tacg" header="Termination Agreement Clause"  toggleable="true"  toggleSpeed="500" widgetVar="paneltacg">
+           <p:dataTable id="dataTable1" var="data" value=" " rowIndexVar="index"
+			  widgetVar="dataTableObj" lazy="false" dynamic="true" paginator="true" paginatorPosition="bottom"
+			  paginatorAlwaysVisible="true" emptyMessage="No Records!" rows="10" rowsPerPageTemplate="5,10,15,20"
+			  currentPageReportTemplate=" total {totalRecords},  page {currentPage} of {totalPages} "
+			  paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink}
+			  {LastPageLink} {RowsPerPageDropdown}">
+			  <p:columnGroup type="header"> 
+                <p:row> 
+                    <p:column style="width:30px;" headerText="No."  />
+                    <p:column style="width:200px;" headerText="Agreement Clause No"  /> 
+                    <p:column style="width:500px;" headerText="Agreement Clause Description" /> 
+                </p:row>							
+			   </p:columnGroup>
+				  <p:column styleClass="column-align-center" > <h:outputText value="#{index+1}" /></p:column>
+				  <p:column><h:outputLabel value="CLAUSE 8.1"/></p:column>	
+				  <p:column > <h:outputLabel value="The SERVICE to be provided by the COMPANY shall include,
+				  among other things, the following:"/> </p:column> 							
+			  </p:dataTable>
+			</h:panelGrid>
+			</p:panel>
+       </ui:define>
+</ui:composition>

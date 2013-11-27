@@ -1,0 +1,90 @@
+<ui:composition
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:c="http://java.sun.com/jsp/jstl/core">
+	       <ui:include src="/xhtml/ct/fulfilmentdetails/shared/fulfilment.xhtml"/>                  
+       <p:panel id="amend" header=" Amendment Details"    toggleable="true"  toggleSpeed="500" widgetVar="panelamends">
+      <h:panelGrid columns="4" style="width:700px;">  
+         <p:outputLabel value="Amendment Request No" />
+         <h:panelGrid columns="2">
+            <p:inputText value="" disabled="true" style="width:30px;"/>
+            <p:inputText value="" disabled="true" style="width:100px;"/>
+         </h:panelGrid>
+         <p:outputLabel value="Amendment Request Date" />
+         <p:inputText value=""  disabled="true" />
+         <p:outputLabel value="Amendment Title/ Name" />
+         <p:inputText value=""  disabled="true" style="width:170px;" />
+         <p:outputLabel value="Amendment File Ref. No"  />
+         <p:inputText value=""  disabled="true" />
+        </h:panelGrid>
+        <h:panelGrid columns="2" style="width:750px;">  
+        <h:panelGroup>
+            <div style="height: 45px;width:120px; vertical-align: top">
+	             <p:outputLabel for="amendmentD" value="Amendment Description" />
+            </div>
+        </h:panelGroup>
+       <h:panelGrid>
+          <p:inputTextarea id="amendmentD" value="" required="false"  rows="2" cols="74" disabled="true" autoResize="false" />
+	   </h:panelGrid>
+       </h:panelGrid>
+       <h:panelGrid columns="4" style="width:700px;">  
+          <p:outputLabel value="Contract Extension Period" />
+          <h:panelGrid columns="3">
+             <p:inputText value="" disabled="true" style="width:90px;"/>
+             <p:selectOneMenu value=" " style="width:40px;">
+		       <f:selectItem itemLabel="Months" itemValue="1" /> 
+		       <f:selectItem itemLabel="Years" itemValue="1" /> 
+		     </p:selectOneMenu>   
+            </h:panelGrid>
+            <p:outputLabel value="Contract Extension Start"/>
+            <p:inputText value=""  disabled="true" />
+            <p:outputLabel value="Contract Extension End" />
+            <p:inputText value=""  disabled="true" style="width:170px;"/>
+            <p:outputLabel value="Amendment Effective Date" />
+            <p:inputText value=""  disabled="true" />
+            <p:outputLabel value="Additional Contract Value" />
+            <h:panelGrid columns="3">
+              <p:inputText value="" disabled="true" style="width:100px;"/>
+                 <p:selectOneMenu value=" " style="width:30px;">
+		            <f:selectItem itemLabel="MYR" itemValue="1" /> 
+		            <f:selectItem itemLabel="SGD" itemValue="1" /> 
+		         </p:selectOneMenu>   
+             </h:panelGrid> 
+             <p:outputLabel value="Contract Approved Date" />
+             <p:inputText value=""  disabled="true" />
+             <p:outputLabel value="Approver Name" />
+             <p:inputText value=""  disabled="true" style="width:170px;" />
+           </h:panelGrid>
+           <h:panelGrid columns="2" style="width:700px;">  
+           <h:panelGroup>
+              <div style="height: 45px;width:140px; vertical-align: top">
+	              <p:outputLabel for="contractHistory" value="Contract Extension History" />
+             </div>
+      	   </h:panelGroup>
+           <h:panelGrid id="contractHistory" columns="1">
+              <p:dataTable id="dataTableHistory" var="data"  value=" "   rowIndexVar="index">
+                 <p:columnGroup type="header"> 
+                    <p:row> 
+                      <p:column rowspan="1" headerText="No."/>
+                      <p:column rowspan="1" headerText="Amendment Request No." />
+                      <p:column colspan="1" headerText="Extend Period (Months)"  /> 
+                      <p:column rowspan="1" headerText="Start Date" />
+                      <p:column colspan="1" headerText="End Date"  /> 
+                    </p:row>
+                 </p:columnGroup>
+                    <p:column styleClass="column-align-center"  > <h:outputText value="#{index+1}" /></p:column> 						
+                    <p:column> <h:outputText value=" " /></p:column>
+                    <p:column><h:outputText value=" " /></p:column>
+                    <p:column> <h:outputText value=" " /></p:column>
+                    <p:column><h:outputText value=" " /></p:column>
+                </p:dataTable>
+             </h:panelGrid>
+           </h:panelGrid>
+      	</p:panel>
+           <ui:include src="/xhtml/ct/fulfilmentdetails/shared/supplier.xhtml"/> 
+             <ui:include src="/xhtml/ct/fulfilmentdetails/shared/factoring.xhtml"/>   
+            <ui:include src="/xhtml/ct/fulfilmentdetails/shared/performanceBond.xhtml"/>  
+</ui:composition>
