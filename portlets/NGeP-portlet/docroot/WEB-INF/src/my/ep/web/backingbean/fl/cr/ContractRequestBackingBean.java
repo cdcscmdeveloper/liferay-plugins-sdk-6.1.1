@@ -180,7 +180,7 @@ public class ContractRequestBackingBean extends BaseBackingBean<ContractRequestM
 		IOrgProfileSO orgProfileSO = BusinessDelegate.getInstance().getServiceObject("pm",IOrgProfileSO.class);
 		OrgProfileReqDTO orgProfileReqDTO = new OrgProfileReqDTO();
 		//TODO
-		orgProfileReqDTO.setParentOrgProfileId(3L);
+		orgProfileReqDTO.setParentOrgProfileId(1L);
 		orgProfileReqDTO.setOrgType(OrganizationType.DEPARTMENT.value());
 
 		OrgProfileResDTO resDTO = orgProfileSO.retrieveOrgProfileListByOrgType(orgProfileReqDTO);
@@ -197,6 +197,10 @@ public class ContractRequestBackingBean extends BaseBackingBean<ContractRequestM
 
 	public void removeAddRow(){
 		getManagedBean().getFlRequest().getFlDeliveryAddresses().remove(getManagedBean().getSelectedAddrRow());
+	}
+	
+	public void removeItemRow(){
+		getManagedBean().getFlRequest().getFlFulfilmentItems().remove(getManagedBean().getSelectedItemRow());
 	}
 
 	public void updateDeliveryAddrDt(){

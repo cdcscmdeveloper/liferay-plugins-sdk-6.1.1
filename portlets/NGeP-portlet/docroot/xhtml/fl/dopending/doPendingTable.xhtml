@@ -43,12 +43,13 @@
 							value="/resources/ep/images/design/cancel.png"
 							title="Stop Delivery" />
 					</p:commandLink>
+					<p:spacer width="7px"></p:spacer>
 				</p:column>
 				
 
 			</p:dataTable>
 			<p:remoteCommand action="#{flOrderBB.stopDelivery}"
-				name="goToDetail" update="pendingTable"/>
+				name="goToDetail" update="pendingTable" process="@this"/>
 
 		</p:panel>
 	</ui:define>

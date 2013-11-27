@@ -62,6 +62,7 @@ import my.ep.jaxb.fl.dandata.FLDanDataType;
 import my.ep.jaxb.fl.dofullfillmentdata.FLDOFullfillmentDataType;
 import my.ep.jaxb.fl.invoicepaymentdata.FLInvoiceAndPaymentDataType;
 import my.ep.jaxb.fl.podata.FLPurchaseOrderDataType;
+import my.ep.jaxb.fl.stopfullfillmentdata.FLStopFullfillmentDataType;
 import my.ep.jaxb.pp.budgetdata.PPBudgetDataType;
 import my.ep.jaxb.pp.plandata.PPPlanDataType;
 import my.ep.jaxb.sm.mofaccmaindata.SMMOFAccMainDataType;
@@ -278,6 +279,8 @@ public class TaskListBackingBean extends BaseBackingBean<TaskListManagedBean> {
 			}else{
 				flReqDTO.setFlRequestId(coObj.getContractRequestId());
 			}
+				
+			
 			flReqDTO.setSelectedApprovers(coObj.getApproverList());
 			
 			if(getManagedBean().getTaskName().equalsIgnoreCase(FlProcessNameConst.REVISE_SI_HT) || getManagedBean().getTaskName().equalsIgnoreCase(FlProcessNameConst.REVIEW_SI_HT)){
@@ -415,7 +418,6 @@ public class TaskListBackingBean extends BaseBackingBean<TaskListManagedBean> {
 
 		}
 		else if(res.getProcessName().equalsIgnoreCase(FlProcessNameConst.PURCHASE_REQ_CREATION_PROCESS_NAME)){
-			System.out.println("in Task List Create Purchase Order");
 			FulfilmentReqDTO flReqDTO = new FulfilmentReqDTO();
 			FulfilmentResDTO resDTO = new FulfilmentResDTO();
 			IFulfilmentRequestSO fulfilmentSO = (IFulfilmentRequestSO) BusinessDelegate.getInstance().getServiceObject("fl",IFulfilmentRequestSO.class);
@@ -426,7 +428,7 @@ public class TaskListBackingBean extends BaseBackingBean<TaskListManagedBean> {
 			flReqDTO.setFlFulfilmentRequest(resDTO.getFlFulfilmentRequest());
 			FulfilmentBackingBean flBB = new FulfilmentBackingBean();
 			flBB.initializeRemarkAndAttachement(resDTO.getRemarkList(), flBB.getManagedBean().getAttachmentList());
-			PurchaseRequestBackingBean purchaseRequestBackingBean=new PurchaseRequestBackingBean();  
+			PurchaseRequestBackingBean purchaseRequestBackingBean = new PurchaseRequestBackingBean();  
 			purchaseRequestBackingBean.getManagedBean().setFulfilmentRequest(resDTO.getFlFulfilmentRequest());
 			purchaseRequestBackingBean.getManagedBean().setTaskId(taskId);
 			purchaseRequestBackingBean.getManagedBean().setActions(res.getAction());
@@ -447,6 +449,23 @@ public class TaskListBackingBean extends BaseBackingBean<TaskListManagedBean> {
 				florderBB.getManagedBean().setActions(res.getAction());
 				florderBB.getManagedBean().setTempLoginId(this.getManagedBean().getTempLoginId());
 			}
+			
+		} else if (res.getProcessName().equalsIgnoreCase(FlProcessNameConst.STOP_FULFILMENT_REQUEST_PROCESS_NAME)){
+			IFulfilmentOrderSO orderSO = (IFulfilmentOrderSO) BusinessDelegate.getInstance().getServiceObject("fl",IFulfilmentOrderSO.class);
+			FLStopFullfillmentDataType stopFlData = (FLStopFullfillmentDataType)obj;
+			FulfilmentReqDTO flReqDTO = new FulfilmentReqDTO();
+			
+			flReqDTO.setFlOrderId(stopFlData.getFullfillmentRequestId());
+			FulfilmentResDTO resDTO = orderSO.retrieveFulfilmentOrderById(flReqDTO);
+			FulfilmentOrderBackingBean flOrderBB = new FulfilmentOrderBackingBean();
+			flOrderBB.getManagedBean().setStopRequestId(stopFlData.getStopRequestId().longValue());
+			flOrderBB.getManagedBean().setTaskId(taskId);
+			flOrderBB.getManagedBean().setActions(res.getAction());
+			flOrderBB.getManagedBean().setFulfilmentOrder(resDTO.getFlOrder());
+			flOrderBB.getManagedBean().setFlRequest(resDTO.getFlFulfilmentRequest());
+//			flOrderBB.getManagedBean().setFlRequest(resDTO.getFlOrder().getFlFulfilmentRequest());
+			flOrderBB.getManagedBean().setContractRequest(Boolean.TRUE);
+			
 			
 		} else if (res.getProcessName().equalsIgnoreCase("Budget Endorsement")) {
 			log.info("task list loading " + res.getProcessName());

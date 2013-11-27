@@ -52,7 +52,7 @@ public class InvoiceBackingBean extends BaseBackingBean<InvoiceManagedBean> {
 			System.out.println("getManagedBean().isDan(): "+getManagedBean().isDan());
 			reqDTO.setDanRequired(getManagedBean().isDan());// for current testing DAN purpose in SO
 			reqDTO.setUpdateDan(getManagedBean().isUpdateDan());
-			FulfilmentResDTO resDTO=invoiceSO.saveInvoice(reqDTO);
+			FulfilmentResDTO resDTO = invoiceSO.saveInvoice(reqDTO);
 
 			if(resDTO.isSuccessful()) {
 				log.info("Record saved successfully");

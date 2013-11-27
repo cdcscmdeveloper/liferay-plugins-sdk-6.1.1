@@ -119,6 +119,13 @@
 							value="/resources/ep/images/design/cancel.png"
 							title="Cancel Document" />
 					</p:commandLink>
+					<p:spacer width="7" />
+					<p:commandLink rendered="#{flDocument.docType == 'CR'}"
+						onclick="goToDetail([{name:'docType', value:'#{flDocument.docType}'}, {name:'docId', value:'#{flDocument.docId}'}, {name:'docNo', value:'#{flDocument.docNo}'}, {name:'buttonVal', value:'complain'}])">
+						<p:graphicImage library="ep/images/design" name="exclamation.png"
+							value="/resources/ep/images/design/exclamation.png"
+							title="Complain" />
+					 </p:commandLink>
 
 				</p:column>
 

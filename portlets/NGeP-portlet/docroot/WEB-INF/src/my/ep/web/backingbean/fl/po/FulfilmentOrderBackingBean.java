@@ -77,6 +77,8 @@ public class FulfilmentOrderBackingBean extends BaseBackingBean<FulfilmentOrderM
 			reqDTO.setFlAttachmentList(flBB.getManagedBean().getAttachmentList());
 			reqDTO.setFlRemark(flBB.getManagedBean().getRemarkList().get(0));
 			}
+			reqDTO.setStopRequestId(getManagedBean().getStopRequestId());
+			reqDTO.setContractOrder(getManagedBean().isContractRequest());
 			FulfilmentResDTO resDTO = fulfilmentOrderSO.acknowledgeFulfillmentOrder(reqDTO);
 			if(resDTO.isSuccessful()) {
 				log.info("Record saved successfully");
@@ -169,7 +171,6 @@ public class FulfilmentOrderBackingBean extends BaseBackingBean<FulfilmentOrderM
 		IFulfilmentOrderSO flOrderSO = BusinessDelegate.getInstance().getServiceObject("fl",IFulfilmentOrderSO.class);
 		FulfilmentReqDTO flDTO = new FulfilmentReqDTO();
 		flDTO.setFlOrderId(orderId);
-		System.out.println("setFlOrderId: "+flDTO.getFlOrderId());
 		getManagedBean().setFulfilmentOrder(flOrderSO.retrieveFulfilmentOrder(flDTO).getFlOrder());
 		reqDTO.setFulfilmentOrder(getManagedBean().getFulfilmentOrder());
 //		IFulfilmentOrderSO flOrderSO = (IFulfilmentOrderSO) BusinessDelegate.getInstance().getServiceObject("fl",IFulfilmentOrderSO.class);

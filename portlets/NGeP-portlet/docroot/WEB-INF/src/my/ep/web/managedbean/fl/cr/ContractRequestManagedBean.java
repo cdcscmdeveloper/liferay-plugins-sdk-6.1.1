@@ -11,6 +11,7 @@ import javax.faces.bean.SessionScoped;
 import my.ep.persistence.entity.ct.CtContract;
 import my.ep.persistence.entity.ct.dtl.item.CtContractedItem;
 import my.ep.persistence.entity.fl.request.FlDeliveryAddress;
+import my.ep.persistence.entity.fl.request.FlFulfilmentItem;
 import my.ep.persistence.entity.fl.request.FlFulfilmentRequest;
 import my.ep.persistence.entity.fl.request.FlShippingInstr;
 import my.ep.persistence.entity.pm.common.PmAddressType;
@@ -43,6 +44,7 @@ public class ContractRequestManagedBean extends BaseManagedBean {
 	private List<CtContractedItem> contractedItemList;
 	private List<CtContractedItem> selectedContractedItemList;
 	private DualListModel<String> approverModel;
+	private FlFulfilmentItem selectedItemRow;
 	
 	//getbpm
 	private String bpmTaskId;
@@ -429,6 +431,22 @@ public class ContractRequestManagedBean extends BaseManagedBean {
 	 */
 	public void setApproverModel(DualListModel<String> approverModel) {
 		this.approverModel = approverModel;
+	}
+
+
+	/**
+	 * @return the selectedItemRow
+	 */
+	public FlFulfilmentItem getSelectedItemRow() {
+		return selectedItemRow;
+	}
+
+
+	/**
+	 * @param selectedItemRow the selectedItemRow to set
+	 */
+	public void setSelectedItemRow(FlFulfilmentItem selectedItemRow) {
+		this.selectedItemRow = selectedItemRow;
 	}
 
 }

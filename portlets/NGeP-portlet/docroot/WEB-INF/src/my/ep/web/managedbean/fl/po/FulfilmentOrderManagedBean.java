@@ -36,6 +36,8 @@ public class FulfilmentOrderManagedBean extends BaseManagedBean {
 	private String status;
 	private String taskName;
 	private String[] actions;
+	private Long flOrderId;
+	private Long stopRequestId;
 	
 	private String tempLoginId; //TODO: temp and to be removed
 	private boolean contractRequest;
@@ -51,7 +53,6 @@ public class FulfilmentOrderManagedBean extends BaseManagedBean {
 	private FlDeliveryAddress selectedAddrRow;
 	private FlFulfilmentOrder selectedFlOrder;
 	private List<FlDeliveryAddress> selectedDelAddrList;
-	
 	private List<FlFulfilmentOrder> pendingDoList;
 	private List<FlDeliveryAddress>deliveryAddressList;
 	private List<FlDeliveryOrder>deliveryOrderStatusList;
@@ -399,6 +400,34 @@ public class FulfilmentOrderManagedBean extends BaseManagedBean {
 	 */
 	public void setSelectedDelAddrList(List<FlDeliveryAddress> selectedDelAddrList) {
 		this.selectedDelAddrList = selectedDelAddrList;
+	}
+
+	/**
+	 * @return the flOrderId
+	 */
+	public Long getFlOrderId() {
+		return flOrderId;
+	}
+
+	/**
+	 * @param flOrderId the flOrderId to set
+	 */
+	public void setFlOrderId(Long flOrderId) {
+		this.flOrderId = flOrderId;
+	}
+
+	/**
+	 * @return the stopRequestId
+	 */
+	public Long getStopRequestId() {
+		return stopRequestId;
+	}
+
+	/**
+	 * @param stopRequestId the stopRequestId to set
+	 */
+	public void setStopRequestId(Long stopRequestId) {
+		this.stopRequestId = stopRequestId;
 	}
 
 	

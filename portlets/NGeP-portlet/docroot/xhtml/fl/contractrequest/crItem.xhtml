@@ -73,7 +73,11 @@
 			<p:column headerText="Sub Total">
 			</p:column>
 			<p:column headerText="Action">
-				<p:commandLink id="deleteLink" styleClass="ui-icon ui-icon-trash" />
+				<p:commandLink id="deleteLink" styleClass="ui-icon ui-icon-trash" update="itemDataTable" process="@this"
+					action="#{contractRequestBackingBean.removeItemRow}" >
+					<f:setPropertyActionListener value="#{item}"
+						target="#{contractRequestBackingBean.managedBean.selectedItemRow}" />
+				</p:commandLink>
 			</p:column>
 		</p:dataTable>
 		<p:spacer height="2px"></p:spacer>

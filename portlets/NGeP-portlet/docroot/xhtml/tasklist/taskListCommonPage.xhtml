@@ -138,6 +138,15 @@
 			</c:otherwise>
 		</c:choose>
 	</c:if>
+	<c:if
+		test='#{tasklistBackingBean.managedBean.processName eq "Stop Fullfillment Request"}'>
+		<c:choose>
+			<c:when
+				test='#{tasklistBackingBean.managedBean.taskName eq "Review Stop Fullfillment Request"}'>
+				<ui:include src="/xhtml/fl/contractorder/coBasePage.xhtml"></ui:include>
+			</c:when>
+		</c:choose>
+	</c:if>
 	<!-- Procurement Plan -->
 	<c:if
 		test='#{tasklistBackingBean.managedBean.processName eq "Budget Endorsement"}'>
