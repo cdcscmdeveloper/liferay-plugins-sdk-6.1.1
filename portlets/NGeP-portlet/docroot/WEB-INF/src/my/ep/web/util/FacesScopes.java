@@ -172,8 +172,8 @@ public class FacesScopes {
 				IUserSO userSO = BusinessDelegate.getInstance().getServiceObject("pm", IUserSO.class);
 				
 				UserReqDTO reqDTO = new UserReqDTO();
-				reqDTO.setUserName(new FacesScopes().getUserScreenName().toUpperCase());
-				System.out.println("name "  +new FacesScopes().getUserScreenName().toUpperCase());
+				reqDTO.setUserName(new FacesScopes().getUserScreenName());
+				
 				UserResDTO resDTO = userSO.retrieveUserByName(reqDTO);
 				
 				user = resDTO.getPmUser();
