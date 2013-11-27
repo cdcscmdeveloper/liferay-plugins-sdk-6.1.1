@@ -203,14 +203,14 @@ public class PlanBackingBean extends BaseBackingBean<PlanManagedBean>{
 	public PlanBackingBean() {
 		log.info("PlanBackingBean - Start");
 		if(this.getManagedBean().getViewMode()==null || ProcurementPlanConst.MODE_LIST.equals(this.getManagedBean().getViewMode())){			
-			//set current user profile
+			//set current user profile (login user must be PTJ)
 			List <PmOrgProfile> ptjProfiles = getOrgProfiles(getFacesScopes().getUserSessionBean().getUserId(), OrganizationType.DIVISION.value());// TODO dynamic
 			this.getManagedBean().setCurrentUser(ptjProfiles!=null ? ptjProfiles.get(0) : new PmOrgProfile());
 		}
 		
 		//TODO: temp
 		if(MDC.get(LogKey.USER_ID)==null) {
-			MDC.put(LogKey.USER_ID, 1L);
+			MDC.put(LogKey.USER_ID, getFacesScopes().getUserSessionBean().getUserId());
 		}
 		log.info("PlanBackingBean - End");
 	}
@@ -374,15 +374,15 @@ public class PlanBackingBean extends BaseBackingBean<PlanManagedBean>{
 	
 	/**
 	 * redirect to plan details view from ui
-	 * @param taskId
-	 * @param status
+	 * @param PpPlan
 	 * @return xhtml
 	 */
 	public String redirectToPlanContent(PpPlan ppPlan){
-		log.info("redirectToPlanContent - Start");
+		log.info("1redirectToPlanContent - Start");
 		boolean isComplete = false;
 		try{
 			if(ppPlan!=null){
+//				PpPlan ppPlan = this.getManagedBean().getSelectedPlan();
 				String taskName = ppPlan.isDraft() ? ProcurementPlanConst.MODE_DRAFT : ProcurementPlanConst.MODE_VIEW;
 				loadTask(ppPlan, taskName);
 				isComplete = true;
@@ -395,13 +395,9 @@ public class PlanBackingBean extends BaseBackingBean<PlanManagedBean>{
 			e.printStackTrace();
 			
 		}
-		log.info("redirectToPlanContent - End");
-		
-		if(isComplete){
-			return ProcurementPlanConst.NAV_TO_PLAN_DET;
-		}else{
-			return "";
-		}
+		log.info("redirectToPlanContent - End" + isComplete);
+		return isComplete ? ProcurementPlanConst.NAV_TO_PLAN_DET : "";
+	
 	}
 	
 	/**
@@ -1226,7 +1222,9 @@ public class PlanBackingBean extends BaseBackingBean<PlanManagedBean>{
 		log.info("departmentOptions - Start");
 		List<PmOrgProfile> options = new ArrayList<PmOrgProfile>();
 		
-		if(this.getManagedBean().getSelectedPlanMaster()!=null && this.getManagedBean().getSelectedPlanMaster().getOrgProfile()!=null){
+		if(this.getManagedBean().getSelectedPlanMaster()!=null 
+				&& this.getManagedBean().getSelectedPlanMaster().getOrgProfile().getParentOrgProfile()!=null
+				&& this.getManagedBean().getSelectedPlanMaster().getOrgProfile().getParentOrgProfile().getParentOrgProfile()!=null){
 			
 			Long orgProfileId = this.getManagedBean().getSelectedPlanMaster().getOrgProfile().getParentOrgProfile().getParentOrgProfile().getOrgProfileId();
 			OrgProfileReqDTO reqDTO = new OrgProfileReqDTO();
@@ -2282,7 +2280,34 @@ public class PlanBackingBean extends BaseBackingBean<PlanManagedBean>{
 		return returnPage;
 	}
 
-
+	/**
+	 * update object(s) before based on selected outcome
+	 * @param action
+	 */
+	private void bpmOutcomeHandler(String action){
+		if(BpmOutcomeConst.BPM_SUBMIT.equals(action)){
+			//rollback revision flag
+			for(PpPlanItem item :this.getManagedBean().getPlan().getPpPlanItems()){
+				item.setRevisionRequired(false);
+			}
+			if(this.getManagedBean().getPlanMaster().getRequiredMto()){
+				for(PpPlanItem item :this.getManagedBean().getMtoPlan().getPpPlanItems()){
+					item.setRevisionRequired(false);
+				}
+			}
+		}else if(BpmOutcomeConst.BPM_REJECT.equals(action)){
+			//rollback budget
+			for(PpPlanItem item :this.getManagedBean().getPlan().getPpPlanItems()){
+				updateSelectedDo(item, "REMOVE");
+			}
+			if(this.getManagedBean().getPlanMaster().getRequiredMto()){
+				for(PpPlanItem item :this.getManagedBean().getMtoPlan().getPpPlanItems()){
+					updateSelectedDo(item, "REMOVE");
+				}
+			}
+		}
+	}
+	
 	/**
 	 * update plan master to DB (for draft)
 	 * @param action
@@ -2292,23 +2317,17 @@ public class PlanBackingBean extends BaseBackingBean<PlanManagedBean>{
 		log.info("updatePlanMaster - Start");
 		boolean result  = false;
 		try{
+			bpmOutcomeHandler(action);
 			ProcurementPlanReqDTO reqDTO = new ProcurementPlanReqDTO();
 			ProcurementPlanResDTO resDTO = new ProcurementPlanResDTO();
-			if(BpmOutcomeConst.BPM_SUBMIT.equals(action)){
-				//rollback revision flag
-				PpPlan ppPlan = this.getManagedBean().getSelectedPlan();
-				for(PpPlanItem item :ppPlan.getPpPlanItems()){
-					item.setRevisionRequired(false);
-				}
-			}
-			reqDTO.setUpdateBudget(ProcurementPlanConst.MODE_REVISION.equals(this.getManagedBean().getViewMode())?true:false);
+			reqDTO.setUpdateBudget(
+					(ProcurementPlanConst.MODE_REVISION.equals(this.getManagedBean().getViewMode())
+							|| (BpmOutcomeConst.BPM_REJECT.equals(action)))
+					?true:false);
 			reqDTO.setAction(action);
 			reqDTO.setToken(getFacesScopes().getBPMAuthenticationCtxToken());
 			reqDTO.setTaskId(this.getManagedBean().getBpmTaskId());
 			reqDTO.setPlanMaster(this.getManagedBean().getPlanMaster());
-			System.out.println("this.getManagedBean().getLoginUser() " + this.getManagedBean().getLoginUser()); 
-//			reqDTO.setLoginUser(this.getManagedBean().getLoginUser());
-			
 			IProcurementPlanSO procurementPlanSO = (IProcurementPlanSO) BusinessDelegate.getInstance().getServiceObject(ProcurementPlanConst.SO_PP, IProcurementPlanSO.class);
 			if(!ProcurementPlanConst.MODE_DRAFT.equals(this.getManagedBean().getViewMode())){
 				resDTO =  procurementPlanSO.updatePlan(reqDTO);
@@ -2338,8 +2357,8 @@ public class PlanBackingBean extends BaseBackingBean<PlanManagedBean>{
 			ProcurementPlanReqDTO reqDTO = new ProcurementPlanReqDTO();
 			reqDTO.setPlanMaster(this.getManagedBean().getPlanMaster());
 			reqDTO.setAction(action);
+			reqDTO.setUpdateBudget(true);
 			reqDTO.setToken(getFacesScopes().getBPMAuthenticationCtxToken());
-//			reqDTO.setLoginUser("roslan");
 			IProcurementPlanSO procurementPlanSO = (IProcurementPlanSO) BusinessDelegate.getInstance().getServiceObject(ProcurementPlanConst.SO_PP, IProcurementPlanSO.class);
 			ProcurementPlanResDTO resDTO = procurementPlanSO.addPlan(reqDTO);
 			if(resDTO.isSuccessful()){
@@ -2355,29 +2374,11 @@ public class PlanBackingBean extends BaseBackingBean<PlanManagedBean>{
 		return result;
 	}
 	
-//	/**
-//	 * 
-//	 * @param id
-//	 * @param type
-//	 * @param seq
-//	 */
-//	public boolean changeActors(Long id, String type, Integer seq){
-//		log.info("changeActors - Start");
-//		boolean result=false;
-//		PpPlanActor actor = new PpPlanActor();
-//		actor.setUserId(id);
-//		actor.setActorType(type);
-//		actor.setActorSeq(seq);
-//		if(this.getManagedBean().getSelectedPlan().getPpPlanActors().contains(actor)){
-//			result = false;
-//		}else{
-//			result = true;
-//		}
-//		log.info("changeActors - End");
-//		return result;	
-//		
-//	}
-	
+	/**
+	 * update selected actors
+	 * @param planActor
+	 * @param plan
+	 */
 	public void changeActors(PpPlanActor planActor, PpPlan plan){
 		log.info("changeActors - Start");
 		if(!plan.getPpPlanActors().contains(planActor)){
@@ -2518,4 +2519,38 @@ public class PlanBackingBean extends BaseBackingBean<PlanManagedBean>{
 		this.planDataModel = planDataModel;
 	}
 	
+	
+	
+	/**
+	 * redirect to plan details view from ui
+	 * @param PpPlan
+	 * @return xhtml
+	 */
+	public String redirectToPlanContent2(Boolean isNew){
+		log.info("redirectToPlanContent - Start");
+		boolean isComplete = false;
+		try{
+			if(!isNew){
+				PpPlan ppPlan = this.getManagedBean().getSelectedPlan();
+				if(ppPlan==null){
+					System.out.println("null");
+				}else{
+					System.out.println("not null");
+				}
+				String taskName = ppPlan.isDraft() ? ProcurementPlanConst.MODE_DRAFT : ProcurementPlanConst.MODE_VIEW;
+				loadTask(ppPlan, taskName);
+				isComplete = true;
+			}else{
+				cleanPlanDetails();
+				isComplete = true;
+			}
+			
+		}catch (Exception e){
+			e.printStackTrace();
+			
+		}
+		log.info("redirectToPlanContent - End");
+		return isComplete ? ProcurementPlanConst.NAV_TO_PLAN_DET : "";
+	
+	}
 }

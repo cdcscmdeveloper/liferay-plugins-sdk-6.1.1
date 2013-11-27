@@ -16,14 +16,14 @@ xmlns:c="http://java.sun.com/jsp/jstl/core">
 					<td colspan="3">
 						<table class="ppHalf">
 							<tr>					
-								<td>* <p:outputLabel value="#{lbl['lbl.pp.plan.name']}"/></td>
+								<td><p:outputLabel value="* #{lbl['lbl.pp.plan.name']}"/></td>
 								<td>
 									<p:inputText value="#{planBackingBean.managedBean.selectedPlanItem.favorPlanRecurFreq.planName}" 
 										disabled="#{!planBackingBean.managedBean.selectedPlanItem.brandNew &amp;&amp; cc.attrs.viewMode!=PPConst.modeRevision}"/>
 								</td>
 							</tr>
 							<tr>
-								<td>* <p:outputLabel value="#{lbl['lbl.pp.recurring.frequency']}"/></td>
+								<td><p:outputLabel value="* #{lbl['lbl.pp.recurring.frequency']}"/></td>
 								<td>
 									<p:inputText value="#{planBackingBean.managedBean.selectedPlanItem.favorPlanRecurFreq.recurFreq}"
 										disabled="#{!planBackingBean.managedBean.selectedPlanItem.brandNew &amp;&amp; cc.attrs.viewMode!=PPConst.modeRevision}">
@@ -40,7 +40,7 @@ xmlns:c="http://java.sun.com/jsp/jstl/core">
 						<p:dataTable id="dtFavItem" styleClass="ppFixTdWidth" var="fav" 
 							value="#{planBackingBean.managedBean.selectedPlanItem.favorPlanRecurFreq.ppRecurFreqDtls}"  
 							rowIndexVar="rowIndex">    
-							<p:column headerText="#{lbl['lbl.pp.seq']}">  
+							<p:column styleClass="ppNumericAlign, ppSmallTd" headerText="#{lbl['lbl.pp.seq']}">  
 				             	#{rowIndex+1} 
 					        </p:column>   
 					        <p:column headerText="* #{lbl['lbl.pp.planned.activity.startmonth']}">  

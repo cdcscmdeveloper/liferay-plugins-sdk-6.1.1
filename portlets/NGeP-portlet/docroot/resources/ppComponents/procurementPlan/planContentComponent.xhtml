@@ -44,7 +44,7 @@ xmlns:composite="http://java.sun.com/jsf/composite">
 						 -->
 						<c:if test="#{cc.attrs.viewMode!=PPConst.modeNew &amp;&amp; cc.attrs.viewMode!=PPConst.modeDraft}">
 							<tr>
-								<th>* <p:outputLabel value="#{lbl['lbl.pp.plan.number']}"/></th>
+								<th><p:outputLabel value="* #{lbl['lbl.pp.plan.number']}"/></th>
 								<td>	
 									<p:inputText disabled="true" styleClass="ppDisplayTextM"
 										value="#{cc.attrs.selectedPlan.planNo}"/>
@@ -56,7 +56,7 @@ xmlns:composite="http://java.sun.com/jsf/composite">
 							</tr>
 						</c:if>
 						<tr>
-							<th>* <p:outputLabel value="#{lbl['lbl.pp.vot.type']}"/></th>
+							<th><p:outputLabel value="* #{lbl['lbl.pp.vot.type']}"/></th>
 							<td>	
 								<p:selectOneMenu value="#{cc.attrs.selectedPlanMaster.votType}" disabled="#{!cc.attrs.selectedPlanMaster.brandNew}">
 									<f:selectItem itemLabel="#{lbl['lbl.select']}" itemValue="#{null}" />
@@ -79,7 +79,7 @@ xmlns:composite="http://java.sun.com/jsf/composite">
 									value="#{cc.attrs.selectedPlanMaster.orgProfile.parentOrgProfile.parentOrgProfile.orgCode} / #{cc.attrs.selectedPlanMaster.orgProfile.parentOrgProfile.parentOrgProfile.orgName}"/>
 							</td>
 							
-							<th>* <p:outputLabel value="#{lbl['lbl.pp.procurement.mode']}"/></th>
+							<th><p:outputLabel value="* #{lbl['lbl.pp.procurement.mode']}"/></th>
 							<td>
 								<p:selectOneMenu id="procurementMode" value="#{cc.attrs.selectedPlanMaster.procurementMode}"
 									disabled="#{!cc.attrs.selectedPlanMaster.brandNew || cc.attrs.selectedPlanMaster.mtoPlan}">
@@ -97,7 +97,7 @@ xmlns:composite="http://java.sun.com/jsf/composite">
 									value="#{cc.attrs.selectedPlanMaster.orgProfile.parentOrgProfile.orgCode} / #{cc.attrs.selectedPlanMaster.orgProfile.parentOrgProfile.orgName}" />
 							</td>
 							
-							<th>* <p:outputLabel value="#{lbl['lbl.pp.plan.description']}"/></th>
+							<th><p:outputLabel value="* #{lbl['lbl.pp.plan.description']}"/></th>
 							<td>
 								<p:inputText value="#{cc.attrs.selectedPlan.planDesc}" disabled="#{!cc.attrs.selectedPlan.editable}"/>
 							</td>
@@ -131,7 +131,7 @@ xmlns:composite="http://java.sun.com/jsf/composite">
 						
 						<!-- Issue/Received/Charge PTJ -->
 						<tr>
-							<th>* <p:outputLabel value="#{lbl['lbl.pp.issue.jabatan']}"/></th>
+							<th><p:outputLabel value="* #{lbl['lbl.pp.issue.jabatan']}"/></th>
 							<td>
 								<p:selectOneMenu styleClass="ppTempFix" value="#{cc.attrs.selectedPlanMaster.issueOrgProfile.parentOrgProfile.orgProfileId}"
 									disabled="#{!cc.attrs.selectedPlanMaster.brandNew}">
@@ -142,7 +142,7 @@ xmlns:composite="http://java.sun.com/jsf/composite">
 								</p:selectOneMenu>
 							</td>
 							
-							<th>* <p:outputLabel value="#{lbl['lbl.pp.issue.ptj']}"/></th>
+							<th><p:outputLabel value="* #{lbl['lbl.pp.issue.ptj']}"/></th>
 							<td>
 								<p:selectOneMenu styleClass="ppTempFix" id="somIssuePtj" value="#{cc.attrs.selectedPlanMaster.issueOrgProfile.orgProfileId}"
 									disabled="#{!cc.attrs.selectedPlanMaster.brandNew 
@@ -155,7 +155,7 @@ xmlns:composite="http://java.sun.com/jsf/composite">
 						</tr>
 						<p:outputPanel rendered="#{cc.attrs.selectedPlanMaster.planType==PPConst.planTypeExpenditure}">
 							<tr>
-								<th>* <p:outputLabel value="#{lbl['lbl.pp.received.jabatan']}"/></th>
+								<th><p:outputLabel value="* #{lbl['lbl.pp.received.jabatan']}"/></th>
 								<td>
 									<p:selectOneMenu styleClass="ppTempFix" value="#{cc.attrs.selectedPlanMaster.receivedOrgProfile.parentOrgProfile.orgProfileId}"
 										disabled="#{!cc.attrs.selectedPlanMaster.brandNew}">
@@ -166,7 +166,7 @@ xmlns:composite="http://java.sun.com/jsf/composite">
 									</p:selectOneMenu>
 								</td>
 								
-								<th>* <p:outputLabel value="#{lbl['lbl.pp.received.ptj']}"/></th>
+								<th><p:outputLabel value="* #{lbl['lbl.pp.received.ptj']}"/></th>
 								<td>
 									<p:selectOneMenu styleClass="ppTempFix" id="somReceivedPtj" value="#{cc.attrs.selectedPlanMaster.receivedOrgProfile.orgProfileId}"
 										disabled="#{!cc.attrs.selectedPlanMaster.brandNew  
@@ -178,7 +178,7 @@ xmlns:composite="http://java.sun.com/jsf/composite">
 								</td>
 							</tr>
 							<tr>
-								<th>* <p:outputLabel value="#{lbl['lbl.pp.charge.jabatan']}"/></th>
+								<th><p:outputLabel value="* #{lbl['lbl.pp.charge.jabatan']}"/></th>
 								<td>
 									<p:selectOneMenu styleClass="ppTempFix" value="#{cc.attrs.selectedPlanMaster.chargeOrgProfile.parentOrgProfile.orgProfileId}"
 										disabled="#{!cc.attrs.selectedPlanMaster.brandNew}">
@@ -189,7 +189,7 @@ xmlns:composite="http://java.sun.com/jsf/composite">
 									</p:selectOneMenu>
 								</td>
 								
-								<th>* <p:outputLabel value="#{lbl['lbl.pp.charge.ptj']}"/></th>
+								<th><p:outputLabel value="* #{lbl['lbl.pp.charge.ptj']}"/></th>
 								<td>
 									<p:selectOneMenu styleClass="ppTempFix" id="somChargePtj" value="#{cc.attrs.selectedPlanMaster.chargeOrgProfile.orgProfileId}"
 										disabled="#{!cc.attrs.selectedPlanMaster.brandNew 
@@ -205,7 +205,7 @@ xmlns:composite="http://java.sun.com/jsf/composite">
 
 						<p:outputPanel rendered="#{cc.attrs.selectedPlanMaster.planType==PPConst.planTypeExpenditure}">
 							<tr>
-								<th>* <p:outputLabel value="#{lbl['lbl.pp.fulfillment.type']}"/></th>
+								<th><p:outputLabel value="* #{lbl['lbl.pp.fulfillment.type']}"/></th>
 								<td>
 									<p:selectOneMenu id="somFulfillment" value="#{cc.attrs.selectedPlanMaster.fulfilmentType}" 
 										disabled="#{cc.attrs.selectedPlanMaster.procurementMode==PPConst.procurementDirectPurchase || 
@@ -218,7 +218,7 @@ xmlns:composite="http://java.sun.com/jsf/composite">
 									<p:tooltip for="somFulfillment" value="Fade effect is used by default" showEffect="fade" hideEffect="fade" />
 								</td>
 								
-								<th>* <p:outputLabel value="#{lbl['lbl.pp.favourite.options']}"/></th>
+								<th><p:outputLabel value="* #{lbl['lbl.pp.favourite.options']}"/></th>
 								<td>
 									<p:selectOneRadio id="sorFavOpt" value="#{cc.attrs.selectedPlan.favouriteOption}" 
 										disabled="#{cc.attrs.selectedPlanMaster.procurementMode==PPConst.procurementExistingContract 
@@ -250,7 +250,7 @@ xmlns:composite="http://java.sun.com/jsf/composite">
 
 						<p:outputPanel rendered="#{cc.attrs.selectedPlanMaster.planType==PPConst.planTypeProcurement}">
 							<tr>
-								<th>* <p:outputLabel value="#{lbl['lbl.pp.quotation.tender.type']}"/></th>
+								<th><p:outputLabel value="* #{lbl['lbl.pp.quotation.tender.type']}"/></th>
 								<td>
 									<p:selectOneMenu value="#{cc.attrs.selectedPlanMaster.qtType}" 
 										disabled="#{!cc.attrs.selectedPlanMaster.brandNew}" >
@@ -274,7 +274,7 @@ xmlns:composite="http://java.sun.com/jsf/composite">
 								<th>&nbsp;</th>
 								<td>&nbsp;</td>
 								
-								<th>* <p:outputLabel value="#{lbl['lbl.pp.mto.required']}"/></th>
+								<th><p:outputLabel value="* #{lbl['lbl.pp.mto.required']}"/></th>
 								<td>
 									<p:selectOneRadio required="false" id="sorMto" value="#{cc.attrs.selectedPlanMaster.requiredMto}" 
 										disabled="#{planBackingBean.lockMto()}" >  
@@ -288,7 +288,7 @@ xmlns:composite="http://java.sun.com/jsf/composite">
 						</p:outputPanel>
 
 						<tr>
-							<th>* <p:outputLabel value="#{lbl['lbl.pp.plan.approver']}"/></th>
+							<th><p:outputLabel value="* #{lbl['lbl.pp.plan.approver']}"/></th>
 							<td>
 								<p:selectOneMenu value="#{cc.attrs.selectedPlan.approver.userId}"
 									disabled="#{!cc.attrs.selectedPlan.editable}" >
@@ -303,7 +303,7 @@ xmlns:composite="http://java.sun.com/jsf/composite">
 							<td>&nbsp;</td>
 						</tr>
 						<tr>
-							<th>* <p:outputLabel value="#{lbl['lbl.pp.require.verification']}"/></th>
+							<th><p:outputLabel value="* #{lbl['lbl.pp.require.verification']}"/></th>
 							<td>
 								<p:selectOneRadio  id="sorPvo" required="false" value="#{cc.attrs.selectedPlan.submissionType}"
 									disabled="#{!cc.attrs.selectedPlan.editable}">
@@ -317,7 +317,7 @@ xmlns:composite="http://java.sun.com/jsf/composite">
 							<td>&nbsp;</td>
 						</tr>
 						<tr>
-							<th>* <p:outputLabel value="#{lbl['lbl.pp.verification.level']}"/></th>
+							<th><p:outputLabel value="* #{lbl['lbl.pp.verification.level']}"/></th>
 							<td>
 								 <p:selectOneRadio disabled="#{cc.attrs.selectedPlan.submissionType=='A'
 								 	|| !cc.attrs.selectedPlan.brandNew}" 
@@ -326,7 +326,7 @@ xmlns:composite="http://java.sun.com/jsf/composite">
 						            <p:ajax event="change" update="opPvo" />
 						        </p:selectOneRadio> 
 					        </td>
-				         	<th>* <p:outputLabel value="#{lbl['lbl.pp.plan.verification.officer']}"/></th>
+				         	<th><p:outputLabel value="* #{lbl['lbl.pp.plan.verification.officer']}"/></th>
 				         	
 							<td>
 								<p:outputPanel id="opPvo">	
@@ -363,7 +363,7 @@ xmlns:composite="http://java.sun.com/jsf/composite">
 						<c:if test="#{cc.attrs.viewMode==PPConst.modeVerification || cc.attrs.viewMode==PPConst.modeApproval}">
 							<!-- Revision Types -->
 							<tr>
-								<th>* <p:outputLabel value="#{lbl['lbl.pp.revision.type']}"/></th>
+								<th><p:outputLabel value="* #{lbl['lbl.pp.revision.type']}"/></th>
 								<td>
 									<p:selectOneRadio value="#{cc.attrs.selectedPlan.selfRevise}" required="false" id="sorRevType">  
 							            <f:selectItem itemLabel="#{lbl['lbl.pp.self.revise']}" itemValue="true" /> &nbsp;
@@ -376,7 +376,7 @@ xmlns:composite="http://java.sun.com/jsf/composite">
 							</tr>
 							<!-- Rejection Reason -->
 							<tr>
-								<th>* <p:outputLabel value="#{lbl['lbl.pp.rejection.reason']}"/></th>
+								<th><p:outputLabel value="* #{lbl['lbl.pp.rejection.reason']}"/></th>
 								<td colspan="3">
 									<p:selectManyCheckbox value="#{cc.attrs.selectedPlan.pmRejectReasonIds}" converter="javax.faces.Long" >  
 							            <f:selectItems value="#{planBackingBean.rejectionReasonOptions()}"
@@ -388,7 +388,7 @@ xmlns:composite="http://java.sun.com/jsf/composite">
 								<td>&nbsp;</td>
 							</tr>
 							<tr>
-								<th>* <p:outputLabel value="#{lbl['lbl.pp.others']}"/></th>
+								<th><p:outputLabel value="* #{lbl['lbl.pp.others']}"/></th>
 								<td>
 									<p:inputText id="itRejectOthers" value="#{cc.attrs.selectedPlan.customReason}" 
 										disabled="#{!planBackingBean.managedBean.reasonRejectOther}" />  

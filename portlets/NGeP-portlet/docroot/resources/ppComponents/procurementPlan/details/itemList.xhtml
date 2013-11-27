@@ -36,11 +36,11 @@ xmlns:c="http://java.sun.com/jsp/jstl/core">
 	        	ppItem.projSetiaId : ppItem.amanahId)}
 	        </p:column>  
 	        <p:column headerText="#{lbl['lbl.pp.action']}">  
-	         	<p:commandButton value="#{lbl['lbl.pp.edit']}" 
+	         	<p:commandButton 
 	         		action="#{planBackingBean.showPpItem(ppItem)}"  icon="ui-icon-edit"
 	         		update="@([id$=pItemDetails])" oncomplete="dlItemDetailsModal.show()"  /> 
                  &nbsp;&nbsp;
-                <p:commandButton value="#{lbl['lbl.pp.delete']}" icon="ui-icon-delete"
+                <p:commandButton icon="ui-icon-delete"
                   	update="dtEpItemDetails" disabled="#{!(ppItem.brandNew || (cc.attrs.viewMode==PPConst.modeRevision 
                   		&amp;&amp; ppItem.revisionRequired))}" action="#{planBackingBean.deletePpItem(ppItem)}"  />
 	        </p:column>

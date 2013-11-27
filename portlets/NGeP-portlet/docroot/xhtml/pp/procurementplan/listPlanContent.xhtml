@@ -6,7 +6,7 @@
 	xmlns:ui="http://java.sun.com/jsf/facelets"
 	xmlns:p="http://primefaces.org/ui"
 	xmlns:c="http://java.sun.com/jsp/jstl/core"
-xmlns:ac="http://ac.my/jsf/composite/cc">
+	xmlns:ac="http://ac.my/jsf/composite/cc">
 
 	<p:outputPanel id="opViewPlanContent">
 
@@ -17,40 +17,42 @@ xmlns:ac="http://ac.my/jsf/composite/cc">
 		update="@form"  />  -->
 
 		<p:dataTable id="dtPlanResult" styleClass="ppTableFull" var="ppPlan"
-			value="#{planBackingBean.planDataModel}"
-			lazy="true"
+			value="#{planBackingBean.planDataModel}" lazy="true"
 			rowIndexVar="rowIndex"
 			emptyMessage="#{lbl['lbl.pp.no.record.found']}">
 			<ac:paginator for="dtPlanResult" />
-			<p:column headerText="#{lbl['lbl.pp.details']}">
-				<p:commandLink id="clPlanDetails"
-					action="#{planBackingBean.redirectToPlanContent(ppPlan)}">  
-			        	#{lbl['lbl.pp.details']}
-			       </p:commandLink>
-			</p:column>
+
 			<p:column headerText="#{lbl['lbl.pp.plan.number']}">  
                		#{ppPlan.planNo}
-                   </p:column>
+            </p:column>
 			<p:column headerText="#{lbl['lbl.pp.procurement.mode']}">  
                		#{ppPlan.ppPlanMaster.procurementMode}
-                   </p:column>
+            </p:column>
 			<p:column headerText="#{lbl['lbl.pp.plan.description']}">  
-                       #{ppPlan.planDesc}
-                   </p:column>
-			<p:column headerText="#{lbl['lbl.pp.total.estimated.amount']}"
+                    #{ppPlan.planDesc}
+            </p:column>
+			<p:column headerText="#{lbl['lbl.pp.short.total.estimated.amount']}"
 				styleClass="ppNumericAlign">  
-                       #{ppPlan.estimatedAmount}
-                   </p:column>
+                    #{ppPlan.estimatedAmount}
+            </p:column>
 			<p:column headerText="#{lbl['lbl.pp.status']}">  
-                       #{ppPlan.statusId}
-                   </p:column>
+                    #{ppPlan.statusId}
+            </p:column>
 			<p:column headerText="#{lbl['lbl.pp.created.by']}">  
-                       #{ppPlan.createdBy}
-                   </p:column>
+                    #{ppPlan.createdBy}
+            </p:column>
 			<p:column headerText="#{lbl['lbl.pp.created.date']}">  
-                       #{ppPlan.createdDate}
-                   </p:column>
+                 <h:outputText value="#{ppPlan.createdDate}" >
+               		<f:convertDateTime pattern="#{PPConst.dateDisplayPattern}" />
+                 </h:outputText>
+            </p:column>
+			<p:column headerText="#{lbl['lbl.pp.action']}">
+				<p:commandButton icon="ui-icon-edit" action="#{planBackingBean.redirectToPlanContent(ppPlan)}" />
+			</p:column>
 		</p:dataTable>
+		
+	
+
 		<br />
 		<br />
 	</p:outputPanel>

@@ -29,11 +29,11 @@ xmlns:c="http://java.sun.com/jsp/jstl/core">
 	                 #{ppItem.recordStatus?'Active':'Deleted'}
 	            </p:column>              
 		        <p:column headerText="#{lbl['lbl.pp.action']}"> 
-	                <p:commandButton value="#{lbl['lbl.pp.edit']}"  action="#{planBackingBean.showPpItem(ppItem)}"
+	                <p:commandButton action="#{planBackingBean.showPpItem(ppItem)}"
 	                	update="@([id$=#{cc.attrs.tabId}dlItemDetails])" oncomplete="#{cc.attrs.tabId}dlItemDetailsModal.show()"
 	                	icon="ui-icon-edit" /> <!--  -->
 	                 &nbsp;&nbsp;
-	                <p:commandButton value="#{lbl['lbl.pp.delete']}" icon="ui-icon-delete"
+	                <p:commandButton icon="ui-icon-delete"
 	                  	update="dtPpItem" disabled="#{!(ppItem.brandNew || cc.attrs.viewMode==PPConst.modeRevision)}" 	 
 	                  	action="#{planBackingBean.deletePpItem(ppItem)}" />
 	            </p:column>  
@@ -89,7 +89,7 @@ xmlns:c="http://java.sun.com/jsp/jstl/core">
     	<p:outputPanel id="opItemDetails">  
     		<table class="ppTwoPartsTable">
 				<tr>
-					<th>* <p:outputLabel value="#{lbl['lbl.pp.gosodo.code']}"/> </th>
+					<th><p:outputLabel value="* #{lbl['lbl.pp.gosodo.code']}"/> </th>
 					<td>
 						<p:selectOneMenu value="#{planBackingBean.managedBean.selectedItem.goId}"
 							disabled="#{!planBackingBean.managedBean.selectedItem.brandNew &amp;&amp; 
@@ -148,7 +148,7 @@ xmlns:c="http://java.sun.com/jsp/jstl/core">
 					</td>
 				</tr>
 				<tr>
-					<th>* <p:outputLabel value="#{lbl['lbl.pp.estimated.amount']}"/></th>
+					<th><p:outputLabel value="* #{lbl['lbl.pp.estimated.amount']}"/></th>
 					<td>
 						 <p:inputText value="#{planBackingBean.managedBean.selectedItem.estimatedAmount}" 
 						 	disabled="#{!planBackingBean.managedBean.selectedItem.brandNew &amp;&amp; 
@@ -156,7 +156,7 @@ xmlns:c="http://java.sun.com/jsp/jstl/core">
 					</td>
 				</tr>
 				<tr>
-					<th>* <p:outputLabel value="#{lbl['lbl.pp.product.segment']}"/></th>
+					<th><p:outputLabel value="* #{lbl['lbl.pp.product.segment']}"/></th>
 					<td>
 						<p:selectOneMenu value="#{planBackingBean.managedBean.selectedItem.unspscSegmentCode}"
 							disabled="#{!planBackingBean.managedBean.selectedItem.brandNew &amp;&amp; 
@@ -169,7 +169,7 @@ xmlns:c="http://java.sun.com/jsp/jstl/core">
 					</td>
 				</tr>
 				<tr>
-					<th>* <p:outputLabel value="#{lbl['lbl.pp.product.family']}"/></th>
+					<th><p:outputLabel value="* #{lbl['lbl.pp.product.family']}"/></th>
 					<td>
 						<p:selectOneMenu id="somProdFamily" value="#{planBackingBean.managedBean.selectedItem.unspscFamilyCode}"
 							disabled="#{!planBackingBean.managedBean.selectedItem.brandNew &amp;&amp; 
@@ -182,7 +182,7 @@ xmlns:c="http://java.sun.com/jsp/jstl/core">
 					</td>
 				</tr>
 				<tr>
-					<th>* <p:outputLabel value="#{lbl['lbl.pp.product.class']}"/></th>
+					<th><p:outputLabel value="* #{lbl['lbl.pp.product.class']}"/></th>
 					<td>
 						<p:selectOneMenu id="somProdClass" value="#{planBackingBean.managedBean.selectedItem.unspscClassCode}"
 							disabled="#{!planBackingBean.managedBean.selectedItem.brandNew &amp;&amp; 

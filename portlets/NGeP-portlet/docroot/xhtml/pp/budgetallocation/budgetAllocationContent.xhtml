@@ -55,7 +55,7 @@ xmlns:c="http://java.sun.com/jsp/jstl/core"
 					</td>
 				</tr>
 				<tr>
-					<th>* <p:outputLabel value="#{lbl['lbl.pp.plan.approver']}"/></th>
+					<th><p:outputLabel value="* #{lbl['lbl.pp.plan.approver']}"/></th>
 					<td>
 						<p:selectOneMenu value="#{budgetAllocationBackingBean.managedBean.selectedBudgetAllocation.approverId}" 
 						disabled="#{!budgetAllocationBackingBean.managedBean.selectedBudgetAllocation.editable}">
@@ -90,11 +90,11 @@ xmlns:c="http://java.sun.com/jsp/jstl/core"
                         #{budgetAllocationDet.recordStatus?'Active':'Deleted'}
                    	</p:column>                
                    	<p:column headerText="#{lbl['lbl.pp.action']}">  
-                  		<p:commandButton value="#{lbl['lbl.pp.edit']}" icon="ui-icon-edit" 
+                  		<p:commandButton icon="ui-icon-edit" 
                         	action="#{budgetAllocationBackingBean.showBudgetAllocationItem(budgetAllocationDet)}" 
                         	oncomplete="dlItemDetailsBudgetModal.show();" update=":form:dlItemDetailsBudget"/>
                         &nbsp;
-                        <p:commandButton value="#{lbl['lbl.pp.delete']}" icon="ui-icon-delete"
+                        <p:commandButton icon="ui-icon-delete"
                         	update="dtBudgetAllocDet" disabled="#{!(budgetAllocationDet.brandNew || 
                         	(budgetAllocationBackingBean.managedBean.viewMode==PPConst.modeRevision &amp;&amp; budgetAllocationDet.revisionRequired ))}"
                         	action="#{budgetAllocationBackingBean.deleteBudgetAllocItem(budgetAllocationDet)}" />
@@ -151,7 +151,7 @@ xmlns:c="http://java.sun.com/jsp/jstl/core"
 		    		</tr>
 	    		</c:if>
 	    		<tr>
-	    			<th>* <p:outputLabel value="#{lbl['lbl.pp.gosodo.code']}"/></th>
+	    			<th><p:outputLabel value="* #{lbl['lbl.pp.gosodo.code']}"/></th>
 					<td>
 					    <p:selectOneMenu
 					    	value="#{budgetAllocationBackingBean.managedBean.selectedBudgetAllocItem.budgetId}"
@@ -192,7 +192,7 @@ xmlns:c="http://java.sun.com/jsp/jstl/core"
 					</td>
 	    		</tr>
 	    		<tr>
-	    			<th>* <p:outputLabel value="#{lbl['lbl.pp.financial.year']}"/></th>
+	    			<th><p:outputLabel value="* #{lbl['lbl.pp.financial.year']}"/></th>
 					<td>
 						<p:selectOneMenu value="#{budgetAllocationBackingBean.managedBean.selectedBudgetAllocItem.ovrFinancialYear}"
 							disabled="#{!budgetAllocationBackingBean.managedBean.selectedBudgetAllocItem.brandNew &amp;&amp; 
@@ -218,7 +218,7 @@ xmlns:c="http://java.sun.com/jsp/jstl/core"
 					</td>
 	    		</tr>
 	    		<tr>
-	    			<th>* <p:outputLabel value="#{lbl['lbl.pp.allocate.budget.amount']}"/></th>
+	    			<th><p:outputLabel value="* #{lbl['lbl.pp.allocate.budget.amount']}"/></th>
 					<td>
 						<p:inputText value="#{budgetAllocationBackingBean.managedBean.selectedBudgetAllocItem.allocAmount}" 
 							disabled="#{!budgetAllocationBackingBean.managedBean.selectedBudgetAllocItem.brandNew &amp;&amp; 

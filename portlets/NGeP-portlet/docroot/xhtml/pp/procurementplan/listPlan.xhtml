@@ -18,25 +18,30 @@ xmlns:tp="http://java.sun.com/jsf/composite/ep"
 				<br />
 				<table class="ppHalf">
 					<tr>
-						<td><p:outputLabel
-								value="#{lbl['lbl.pp.ministry.code.name']}" /></td>
+						<td>
+						<p:outputLabel value="#{planBackingBean.managedBean.currentUser.parentOrgProfile.parentOrgProfile.pmCode.code=='FJA' ? lbl['lbl.pp.jabatan.code.name'] :
+							 (planBackingBean.managedBean.currentUser.parentOrgProfile.parentOrgProfile.pmCode.code=='FPJ'? lbl['lbl.pp.ptj.code.name'] : lbl['lbl.pp.ministry.code.name'])}" /></td>
 						<td><p:inputText disabled="true" styleClass="ppDisplayTextL"
 								value="#{planBackingBean.managedBean.currentUser.parentOrgProfile.parentOrgProfile.orgCode} / #{planBackingBean.managedBean.currentUser.parentOrgProfile.parentOrgProfile.orgName}" />
 						</td>
 					</tr>
 					<tr>
-						<td><p:outputLabel value="#{lbl['lbl.pp.jabatan.code.name']}" /></td>
+						<td><p:outputLabel value="#{planBackingBean.managedBean.currentUser.parentOrgProfile.pmCode.code=='FJA' ? lbl['lbl.pp.jabatan.code.name']
+				: (planBackingBean.managedBean.currentUser.parentOrgProfile.pmCode.code=='FPJ'? lbl['lbl.pp.ptj.code.name'] : lbl['lbl.pp.ministry.code.name'])}" /></td>
 						<td><p:inputText disabled="true" styleClass="ppDisplayTextL"
 								value="#{planBackingBean.managedBean.currentUser.parentOrgProfile.orgCode} / #{planBackingBean.managedBean.currentUser.parentOrgProfile.orgName}" />
 						</td>
 					</tr>
 					<tr>
-						<td><p:outputLabel value="#{lbl['lbl.pp.ptj.code.name']}" /></td>
+						<td><p:outputLabel value="#{planBackingBean.managedBean.currentUser.pmCode.code=='FJA' ? lbl['lbl.pp.jabatan.code.name']
+				: (planBackingBean.managedBean.currentUser.pmCode.code=='FPJ'? lbl['lbl.pp.ptj.code.name'] : lbl['lbl.pp.ministry.code.name'])}" /></td>
 						<td><p:inputText disabled="true" styleClass="ppDisplayTextL"
 								value="#{planBackingBean.managedBean.currentUser.orgCode} / #{planBackingBean.managedBean.currentUser.orgName}" />
 						</td>
 					</tr>
 				</table>
+				
+	
 				<br />
 			</div>
    			<!-- Search Plan -->
@@ -103,6 +108,7 @@ xmlns:tp="http://java.sun.com/jsf/composite/ep"
    			<!-- Bottom Button(s) -->
    			<div class="ppRightBtn">
 				<p:commandButton value="#{lbl['lbl.pp.create.new.plan']}" id="cbNewPlan" icon="ui-icon-add"
+				disabled="#{planBackingBean.managedBean.currentUser.pmCode.code!='FPJ'}"
 			 		action="#{planBackingBean.redirectToPlanContent(null)}"   /> 
 			</div>
 

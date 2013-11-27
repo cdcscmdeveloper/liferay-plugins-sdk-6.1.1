@@ -501,15 +501,17 @@ public class BudgetAllocationBackingBean extends BaseBackingBean<BudgetAllocatio
 				PpBudgetAlloc butgetAlloc = this.getManagedBean().getSelectedBudgetAllocation();
 				for(PpBudgetAllocDtl p :butgetAlloc.getPpBudgetAllocDtls()){
 					p.setRevisionRequired(false);
-					p.setStatusId(ProcurementPlanConst.STATUS_PBD_PENDING_SUBMIT); //TODO change 
 				}
 			}
 			reqDTO.setAction(action);
-//			reqDTO.setLoginUser(this.getManagedBean().getLoginUser());
 			reqDTO.setToken(getFacesScopes().getBPMAuthenticationCtxToken());
 			reqDTO.setTaskId(this.getManagedBean().getBpmTaskId());
 			reqDTO.setBudgetAllocation(this.getManagedBean().getSelectedBudgetAllocation());
-			reqDTO.setUpdateBudget(ProcurementPlanConst.MODE_REVISION.equals(this.getManagedBean().getViewMode())?true:false);
+			reqDTO.setUpdateBudget(
+					(ProcurementPlanConst.MODE_REVISION.equals(this.getManagedBean().getViewMode())
+							|| (BpmOutcomeConst.BPM_REJECT.equals(action)))
+					?true:false);
+			reqDTO.setAction(action);
 			reqDTO.setSelectedGoMapper(this.getManagedBean().getSelectedGoMapper());
 			
 			IBudgetAllocationSO budgetSO = (IBudgetAllocationSO) BusinessDelegate.getInstance().getServiceObject(ProcurementPlanConst.SO_PP, IBudgetAllocationSO.class);
@@ -538,7 +540,7 @@ public class BudgetAllocationBackingBean extends BaseBackingBean<BudgetAllocatio
 			reqDTO.setBudgetAllocation(this.getManagedBean().getSelectedBudgetAllocation());
 			reqDTO.setSelectedGoMapper(this.getManagedBean().getSelectedGoMapper());
 			reqDTO.setAction(action);
-//			reqDTO.setLoginUser(this.getManagedBean().getLoginUser());
+			reqDTO.setUpdateBudget(true);
 			reqDTO.setToken(getFacesScopes().getBPMAuthenticationCtxToken());
 			IBudgetAllocationSO reqSO = (IBudgetAllocationSO) BusinessDelegate.getInstance().getServiceObject(ProcurementPlanConst.SO_PP, IBudgetAllocationSO.class);
 			BudgetAllocationResDTO resDTO = reqSO.addBudgetAllocation(reqDTO);
@@ -892,6 +894,9 @@ public class BudgetAllocationBackingBean extends BaseBackingBean<BudgetAllocatio
 //		return "";
 //	}
 	
+	public void test(){
+		System.out.println("test");
+	}
 	private class BudgetPagingDataModel extends PagingDataModel<PpBudget> {
 		private static final long serialVersionUID = 1L;
 
