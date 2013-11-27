@@ -21,7 +21,7 @@ import my.ep.web.managedbean.ss.quationtender.QTDetailManagedBean;
 @ManagedBean(name="qTRemarksBB")
 @RequestScoped
 public class QTRemarksBackingBean extends SourcingBaseBackingBean<QTDetailManagedBean>{
-	private static final Logger log=EpLogger.getLogger(QTDocumentsBackingBean.class);
+	private static final Logger log=EpLogger.getLogger(QTRemarksBackingBean.class);
 	
 	public QTRemarksBackingBean(){
 		
