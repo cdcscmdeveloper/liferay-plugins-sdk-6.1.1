@@ -625,6 +625,12 @@ public class CodificationBackingBean extends BaseBackingBean<CodificationManaged
 	}
 
 	
+	public String backToPrev(){
+		
+		
+		return "codificationView";
+	}
+	
 	
 
 	

@@ -22,11 +22,11 @@
 						<td><p:outputLabel value="#{lbl['lbl.cm.unspsc.code']}"></p:outputLabel></td>
 						<td colspan="1"><p:inputText
 								value="#{codificationBackingBean.managedBean.selectedUNSPSCObj.unspscCode}"
-								size="40" /></td>
+								size="40" disabled="true" /></td>
 						<td><p:outputLabel value="#{lbl['lbl.cm.unspsc.title']}"></p:outputLabel></td>
 						<td colspan="1"><p:inputText
 								value="#{codificationBackingBean.managedBean.selectedUNSPSCObj.unspscTitle}"
-								size="40" /></td>
+								size="40" disabled="true" /></td>
 					</tr>
 
 					<tr>
@@ -68,6 +68,8 @@
 			<div style="text-align: right;">
 				<p:commandButton value="Search" icon="ui-icon-search"
 					action="#{codificationBackingBean.itemSearch}" update="itemTableID" />
+				<p:commandButton value="Back" icon="ui-icon-prev"
+					action="#{codificationBackingBean.backToPrev}" />
 			</div>
 
 			<p:panel header="SEARCH RESULTS" toggleable="true">
@@ -130,12 +132,12 @@
 					</p:column>
 
 				</p:dataTable>
-					<div style="text-align: right;">
-							<p:commandButton value="Maintenance FIle" icon="ui-icon-folder"
-								action="#{catalogueBackingBean.GoToMaintain()}" />
-							<p:commandButton value="Add" icon="ui-icon-add"
-								action="#{catalogueBackingBean.addToMaintain()}" />
-						</div>
+				<div style="text-align: right;">
+					<p:commandButton value="Maintenance FIle" icon="ui-icon-folder"
+						action="#{catalogueBackingBean.GoToMaintain()}" />
+					<p:commandButton value="Add" icon="ui-icon-add"
+						action="#{catalogueBackingBean.addToMaintain()}" />
+				</div>
 
 			</p:panel>
 
