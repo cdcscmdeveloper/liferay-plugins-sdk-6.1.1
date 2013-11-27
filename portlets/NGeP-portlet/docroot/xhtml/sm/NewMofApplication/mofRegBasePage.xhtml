@@ -8,10 +8,68 @@
 	xmlns:c="http://java.sun.com/jsp/jstl/core">
 
 	<ui:define name="resourceSection">
+		<style>
+.navDiv {
+	
+	float: left;
+	display: block;
+}
+
+.menu-text {
+	list-style-type: none;
+	margin: 40px 0 0 10px;
+	float: left;
+	width: 810px;
+}
+
+.menu-text li {
+	float: left;
+	width: 135px;
+	text-align: center;
+	list-style-type: decimal;
+	list-style-position: inside;
+	display: list-item;
+}
+
+.menu-line {
+	padding-left: 0;
+	list-style-type: none;
+	margin: 15px 0 0 108px;
+	width: 559px;
+	border-top-color: #000;
+	border-top-width: 4px;
+	border-top-style: solid;
+	float: left;
+}
+
+.menu-line .space {
+	margin-right: 121px;
+}
+
+.menu-line .red-dot {
+	background: url(../../../../images/aa-sprites.png) no-repeat -50px
+		-240px #FFF;
+	width: 15px;
+	height: 15px;
+}
+
+.menu-line li {
+	margin-top: -10px;
+	float: left;
+}
+
+.menu-line .black-dot {
+	background: url(../../../../images/aa-sprites.png) no-repeat -30px
+		-240px #FFF;
+	width: 15px;
+	height: 15px;
+}
+</style>
 	</ui:define>
 
 
 	<ui:define name="contentSection">
+
 		<p:messages id="messages" showDetail="true" autoUpdate="true"
 			closable="true" />
 		<p:tabView id="tt" widgetVar="tt" orientation="left"
