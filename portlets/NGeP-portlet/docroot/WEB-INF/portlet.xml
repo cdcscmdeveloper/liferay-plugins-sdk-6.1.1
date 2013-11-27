@@ -262,8 +262,8 @@
 		</security-role-ref>
 	</portlet>
 	<portlet>
-		<portlet-name>ctFactoringRequest</portlet-name>
-		<display-name>Factoring Request</display-name>
+		<portlet-name>ctRequestFactoring</portlet-name>
+		<display-name>Request Factoring</display-name>
 		<portlet-class>org.portletfaces.bridge.GenericFacesPortlet</portlet-class>
 		<init-param>
 			<name>javax.portlet.faces.defaultViewId.view</name>
@@ -275,7 +275,7 @@
 			<portlet-mode>view</portlet-mode>
 		</supports>
 		<portlet-info>
-			<title>Factoring Request</title>
+			<title>Request Factoring</title>
 			<short-title>NewJSFPortlet</short-title>
 			<keywords></keywords>
 		</portlet-info>

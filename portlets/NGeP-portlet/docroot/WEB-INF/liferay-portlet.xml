@@ -68,7 +68,7 @@
 		<css-class-wrapper>ct-portlet</css-class-wrapper>
 	</portlet>
 	<portlet>
-		<portlet-name>ctFactoringRequest</portlet-name>
+		<portlet-name>ctRequestFactoring</portlet-name>
 		<icon>/icon.png</icon>
 		<instanceable>false</instanceable>
 		<ajaxable>false</ajaxable>
