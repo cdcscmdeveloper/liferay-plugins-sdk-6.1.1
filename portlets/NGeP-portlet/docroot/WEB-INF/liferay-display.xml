@@ -90,6 +90,7 @@
 		<portlet id="BpmTaskList"></portlet>
 		<portlet id="reviewExtensionRequest"></portlet>
 		<portlet id="reviewExtensionMaintenance"></portlet>
+
 	</category>
 
 	<category name="Template">
@@ -113,6 +114,6 @@
 		<portlet id="smDelPendingAppln"></portlet>
 		<portlet id="smApplyBumi"></portlet>
 		<portlet id="smUpdateMofDetails"></portlet>
-		
+		<portlet id="SiteVisit"></portlet>
 	</category>
 </display>
