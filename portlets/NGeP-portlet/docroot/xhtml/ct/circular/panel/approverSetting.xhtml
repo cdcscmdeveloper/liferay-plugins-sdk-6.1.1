@@ -11,8 +11,8 @@
 				<p:pickList id="approverpickList" value="#{panelBackingBean.managedBean.approverModel}"
 					var="data" itemValue="#{data}" itemLabel="#{data}" 
 					showTargetControls="true" filterMatchMode="contains">
-					<f:facet name="sourceCaption">Available Approver(s)</f:facet>  
-        			<f:facet name="targetCaption">Selected Approver(s)</f:facet> 
+					<f:facet name="sourceCaption">Available</f:facet>  
+        			<f:facet name="targetCaption">Selected</f:facet> 
 					<p:column style="width:75%;">
 						<h:outputText value="#{data}" />
 					</p:column>
