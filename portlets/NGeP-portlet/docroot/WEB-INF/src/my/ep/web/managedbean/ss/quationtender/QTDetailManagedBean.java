@@ -10,6 +10,7 @@ import javax.faces.bean.SessionScoped;
 import javax.faces.model.SelectItem;
 
 import my.ep.factory.EpLogger;
+import my.ep.persistence.entity.ct.circular.CtCircular;
 import my.ep.persistence.entity.pm.authorization.PmOrgProfile;
 import my.ep.persistence.entity.pm.common.PmCategoryL1;
 import my.ep.persistence.entity.pm.common.PmCategoryL2;
@@ -20,12 +21,17 @@ import my.ep.persistence.entity.pm.common.PmGo;
 import my.ep.persistence.entity.pm.common.PmSo;
 import my.ep.persistence.entity.pm.common.PmState;
 import my.ep.persistence.entity.pm.common.PmZone;
+import my.ep.persistence.entity.sm.SmMofAccount;
 import my.ep.persistence.entity.sm.SmSupplier;
 import my.ep.persistence.entity.ss.quationtender.ScQt;
 import my.ep.persistence.entity.ss.quationtender.ScQtBriefing;
 import my.ep.persistence.entity.ss.quationtender.ScQtCategory;
+import my.ep.persistence.entity.ss.quationtender.ScQtContactPerson;
 import my.ep.persistence.entity.ss.quationtender.ScQtCriteria;
+import my.ep.persistence.entity.ss.quationtender.ScQtDoc;
 import my.ep.persistence.entity.ss.quationtender.ScQtGosodoBudget;
+import my.ep.persistence.entity.ss.quationtender.ScQtRemark;
+import my.ep.persistence.entity.ss.quationtender.ScRemark;
 import my.ep.web.bean.ss.quatationtender.QtnTenderSearchBean;
 import my.ep.web.bean.ss.quatationtender.TabBean;
 import my.ep.web.managedbean.BaseManagedBean;
@@ -48,15 +54,23 @@ public class QTDetailManagedBean extends BaseManagedBean {
 			.getLogger(QTDetailManagedBean.class);
 
 	private ScQt qt;
-	private ScQtCriteria qtc;
-	private ScQtBriefing qb=new ScQtBriefing();
-	private ScQtCategory qtcategory= new ScQtCategory();
+	private ScQtCriteria qtCriteria;
+	private ScQtBriefing qtBriefing;
+	private ScQtCategory qtCategory;
+	private CtCircular searchCircular;
+	private ScQtBriefing qtSiteBriefing;
+	private ScQtDoc qtDoc;
+	private ScQtRemark qtRemark;
+	private SmMofAccount smMofAccount;
+	private ScRemark scRemark;
+	
 	private String selectedBoolean1;
 	private String multiLoc;
 	private List<ScQtCategory> openCategorys;
 	private List<ScQtCategory> restrictedCategorys;
 	private SmSupplier searchSupplier;
 	private List<SmSupplier> smSupplierList;
+	private List<SmMofAccount> smMofAccounts;
 
 	
 	/**
@@ -77,8 +91,14 @@ public class QTDetailManagedBean extends BaseManagedBean {
 
 	public List<ScQtGosodoBudget> gosodos;
 	public List<ScQtCategory> categorys;
-
-	private String qtNumber;
+	public List<ScQtBriefing> briefings;
+	public List<ScQtBriefing> siteBriefings;
+	public List<ScQtDoc> scQtDocs;
+    public List<SelectItem> cloneAllList;
+    private List<ScQtContactPerson> scQtContactPersons;
+    private List<CtCircular> ctCirculars;
+    private List<ScQtRemark> scQtRemarks;
+    private String qtNumber;
 	
 	private PmOrgProfile selectedUserMinistry;
 	private PmOrgProfile selectedUserDepartment;
@@ -532,23 +552,7 @@ public class QTDetailManagedBean extends BaseManagedBean {
 		this.categorys = categorys;
 	}
 
-	public ScQtCriteria getQtc() {
-		return qtc;
-	}
-
-	public void setQtc(ScQtCriteria qtc) {
-		this.qtc = qtc;
-	}
 	
-	public ScQtBriefing getQb() {
-		return qb;
-	}
-
-
-	public void setQb(ScQtBriefing qb) {
-		this.qb = qb;
-	}
-
 	/**
 	 * @return the userMinistryList
 	 */
@@ -683,14 +687,7 @@ public class QTDetailManagedBean extends BaseManagedBean {
 		this.selectedBoolean1 = selectedBoolean1;
 	}
 
-	public ScQtCategory getQtcategory() {
-		return qtcategory;
-	}
-
-	public void setQtcategory(ScQtCategory qtcategory) {
-		this.qtcategory = qtcategory;
-	}
-
+	
 	/**
 	 * @return the selectedUserMinistry
 	 */
@@ -888,8 +885,175 @@ public class QTDetailManagedBean extends BaseManagedBean {
 	}
 
 
-	
-	
+	public ScQtCriteria getQtCriteria() {
+		return qtCriteria;
+	}
+
+
+	public void setQtCriteria(ScQtCriteria qtCriteria) {
+		this.qtCriteria = qtCriteria;
+	}
+
+
+	public ScQtBriefing getQtBriefing() {
+		return qtBriefing;
+	}
+
+
+	public void setQtBriefing(ScQtBriefing qtBriefing) {
+		this.qtBriefing = qtBriefing;
+	}
+
+
+	public ScQtCategory getQtCategory() {
+		return qtCategory;
+	}
+
+
+	public void setQtCategory(ScQtCategory qtCategory) {
+		this.qtCategory = qtCategory;
+	}
+
+
+	public CtCircular getSearchCircular() {
+		return searchCircular;
+	}
+
+
+	public void setSearchCircular(CtCircular searchCircular) {
+		this.searchCircular = searchCircular;
+	}
+
+
+	public ScQtBriefing getQtSiteBriefing() {
+		return qtSiteBriefing;
+	}
+
+
+	public void setQtSiteBriefing(ScQtBriefing qtSiteBriefing) {
+		this.qtSiteBriefing = qtSiteBriefing;
+	}
+
+
+	public ScQtDoc getQtDoc() {
+		return qtDoc;
+	}
+
+
+	public void setQtDoc(ScQtDoc qtDoc) {
+		this.qtDoc = qtDoc;
+	}
+
+
+	public List<ScQtBriefing> getBriefings() {
+		return briefings;
+	}
+
+
+	public void setBriefings(List<ScQtBriefing> briefings) {
+		this.briefings = briefings;
+	}
+
+
+	public List<ScQtBriefing> getSiteBriefings() {
+		return siteBriefings;
+	}
+
+
+	public void setSiteBriefings(List<ScQtBriefing> siteBriefings) {
+		this.siteBriefings = siteBriefings;
+	}
+
+
+	public List<ScQtDoc> getScQtDocs() {
+		return scQtDocs;
+	}
+
+
+	public void setScQtDocs(List<ScQtDoc> scQtDocs) {
+		this.scQtDocs = scQtDocs;
+	}
+
+
+	public List<SelectItem> getCloneAllList() {
+		return cloneAllList;
+	}
+
+
+	public void setCloneAllList(List<SelectItem> cloneAllList) {
+		this.cloneAllList = cloneAllList;
+	}
+
+
+	public List<SmMofAccount> getSmMofAccounts() {
+		return smMofAccounts;
+	}
+
+
+	public void setSmMofAccounts(List<SmMofAccount> smMofAccounts) {
+		this.smMofAccounts = smMofAccounts;
+	}
+
+
+	public SmMofAccount getSmMofAccount() {
+		return smMofAccount;
+	}
+
+
+	public void setSmMofAccount(SmMofAccount smMofAccount) {
+		this.smMofAccount = smMofAccount;
+	}
+
+
+    public List<CtCircular> getCtCirculars() {
+		return ctCirculars;
+	}
+
+
+	public void setCtCirculars(List<CtCircular> ctCirculars) {
+		this.ctCirculars = ctCirculars;
+	}
+
+
+	public List<ScQtContactPerson> getScQtContactPersons() {
+		return scQtContactPersons;
+	}
+
+
+	public void setScQtContactPersons(List<ScQtContactPerson> scQtContactPersons) {
+		this.scQtContactPersons = scQtContactPersons;
+	}
+
+
+	public List<ScQtRemark> getScQtRemarks() {
+		return scQtRemarks;
+	}
+
+
+	public void setScQtRemarks(List<ScQtRemark> scQtRemarks) {
+		this.scQtRemarks = scQtRemarks;
+	}
+
+
+	public ScQtRemark getQtRemark() {
+		return qtRemark;
+	}
+
+
+	public void setQtRemark(ScQtRemark qtRemark) {
+		this.qtRemark = qtRemark;
+	}
+
+
+	public ScRemark getScRemark() {
+		return scRemark;
+	}
+
+
+	public void setScRemark(ScRemark scRemark) {
+		this.scRemark = scRemark;
+	}
+
 	
 
 }
