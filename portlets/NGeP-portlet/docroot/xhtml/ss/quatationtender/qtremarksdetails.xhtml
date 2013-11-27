@@ -12,65 +12,49 @@
 		<p:panelGrid columns="4" style="width:100%;"
 			styleClass="noBorders tr,noBorders td">
 			<p:dataTable  var="attendancecompany"
-				value="#{searchQtnTenderBB.managedBean.qtnTenders}" editable="false">
+				value="#{qTRemarksBB.managedBean.scQtRemarks}" editable="false" styleClass="remarkslist">
 
 
 
 
 
 				<p:column headerText="Remarks">
-					<!-- <h:outputText value=""></h:outputText> -->
-					<p:cellEditor>
-						<f:facet name="output">
-							<h:outputText value="xxx"></h:outputText>
-						</f:facet>
-						<f:facet name="input">
-							<p:inputText value="xxxxx" />
-						</f:facet>
-					</p:cellEditor>
+					
+					
+						<p:inputTextarea value="#{qTRemarksBB.managedBean.qtRemark.remark}" rows="1" cols="50" 
+                     	disabled="e" />
+						
 				</p:column>
 
 				<p:column headerText="User">
-					<!-- <h:outputText value=""></h:outputText> -->
-					<p:cellEditor>
-						<f:facet name="output">
-							<h:outputText value="Steve"></h:outputText>
-						</f:facet>
-						<f:facet name="input">
-							<p:inputText value="#####" />
-						</f:facet>
-					</p:cellEditor>
-				</p:column>
+					<h:outputText value="" readonly="true"></h:outputText>
+						 
+                     	</p:column>
+						
+							
+						
+				
 
 				<p:column headerText="Date/Time">
 
-					<!--    <h:outputText value="" />   -->
-					<p:cellEditor>
-						<f:facet name="output">
-							<h:outputText value="sunday"></h:outputText>
-						</f:facet>
-						<f:facet name="input">
-							<p:inputText value="monday" />
-						</f:facet>
-					</p:cellEditor>
+					
+							<h:outputText value="#{qTRemarksBB.managedBean.qtRemark.createdDate}" readonly="true"></h:outputText>
+					
+				
+						
 
 				</p:column>
 
-				<p:column headerText="QTN/Tender Status">
-					<!-- <h:outputText value="" />  -->
-
-					<p:cellEditor>
-						<f:facet name="output">
-							<h:outputText value="***"></h:outputText>
-						</f:facet>
-						<f:facet name="input">
-							<p:inputText value="*****" />
-						</f:facet>
-					</p:cellEditor>
-				</p:column>
+				<p:column headerText="Status">
+					<h:outputText value="#{qTRemarksBB.managedBean.qtRemark.recordStatus}" readonly="true"></h:outputText>
+					</p:column>
 
 			</p:dataTable>
 
 		</p:panelGrid>
+		<p:commandButton value="Delete" style="float:right;" ></p:commandButton>
+		
+		 <p:commandButton value="ADD" action="#{qTRemarksBB.addRemarks}" update="@(.remarkslist)" style="float:right;" ></p:commandButton>
+
 	</p:panel>
 </ui:composition>
