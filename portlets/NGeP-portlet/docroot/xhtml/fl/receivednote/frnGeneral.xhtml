@@ -96,7 +96,7 @@
 			<tr>
 				<td><p:outputLabel
 						value="* #{lbl['lbl.fl.del.actual.recv.date']}" /></td>
-				<td><p:calendar mode="popup" showOn="button"
+				<td><p:calendar mode="popup" showOn="button" requiredMessage="Actual received date is required" required="true"
 						pattern="dd/mm/yyyy"
 						value="#{recievedNoteBackingBean.managedBean.fulfilmentNote.actStartDate}" /></td>
 			</tr>
