@@ -2089,8 +2089,8 @@ table.ppThreePartsTable td {
 
 .ui-dialog.ppDiaglogBigBg{
 	background: #FFFFFF;
-	height:90% !important;
-	width: 90% !important;
+	height:80% !important;
+	width: 800px !important;
 	overflow-y: scroll;
 }
 
@@ -2100,7 +2100,7 @@ table.ppThreePartsTable td {
 }
 
 
-.ui-selectonemenu{
+.ui-selectonemenu, .ui-inputtext{
 	height:20px;
 	min-width:60px;
 	vertical-align: middle;
@@ -2130,6 +2130,9 @@ table.ppThreePartsTable td {
 }
 .ppCurrency{
 	width: 30px;
+}
+.ppTempFix{
+	width: 200px !important;
 }
 /*--------------------------       End PP Related      ------------------------------ */
 
