@@ -4,10 +4,12 @@
 	xmlns:h="http://java.sun.com/jsf/html"
 	xmlns:ui="http://java.sun.com/jsf/facelets"
 	xmlns:p="http://primefaces.org/ui"
-	xmlns:c="http://java.sun.com/jsp/jstl/core">
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:ac="http://ac.my/jsf/composite/cc" >
         <p:panel id="itemId" header="Item Details"   toggleable="true"  toggleSpeed="500" widgetVar="panelitem">
           <p:dataTable id="dataTable" var="data" value=" " widgetVar="dataTableObj"
-           lazy="false" dynamic="true"  paginator="true" paginatorPosition="bottom" paginatorAlwaysVisible="true" emptyMessage="No Records!" rows="10">
+           lazy="false" dynamic="true"  paginator="true" paginatorPosition="bottom" paginatorAlwaysVisible="true" emptyMessage="No Records!">
+           <ac:paginator for="dataTable"/>
 			 <p:columnGroup type="header"> 
 			 <p:row> 
 			   <p:column style="width:80px" headerText="Item Code" /> 
@@ -49,7 +51,8 @@
 		  rendered="#{contractDetailsBackingBean.managedBean.itemPricing or contractDetailsBackingBean.managedBean.itemCeilingQuantity}">
 		  <p:panel id="itemZoneId"  header="#{contractDetailsBackingBean.managedBean.showItem}"  toggleable="true"  toggleSpeed="500">
 		  <p:dataTable id="itemTable"  var="data" value=" " widgetVar="dataTableObj" lazy="false" dynamic="true" 
-			 paginator="true" paginatorPosition="bottom" paginatorAlwaysVisible="true" emptyMessage="No Records!" rows="10">
+			 paginator="true" paginatorPosition="bottom" paginatorAlwaysVisible="true" emptyMessage="No Records!">
+			 <ac:paginator for="itemTable"/>
 			 <p:columnGroup type="header">
 				<p:row rendered="#{contractDetailsBackingBean.managedBean.itemPricing}">
                    <p:column style="width:100px" headerText="Zone" />
