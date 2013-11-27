@@ -23,7 +23,7 @@ import my.ep.web.util.lookupservice.BusinessDelegate;
 @ManagedBean(name = "commSiteVisitBackingBean")
 @RequestScoped
 public class CommonSiteVisitBackingBean extends BaseBackingBean<CommonSiteVisitManagedBean>{
-public static Logger log = Logger.getLogger(CommonApplBackingBean.class);
+public static Logger log = Logger.getLogger(CommonSiteVisitBackingBean.class);
 	public void preRenderView() {
 		log.info("-------ComAppl prerender view-------");
 		HttpServletRequest servletRequest = PortalUtil
