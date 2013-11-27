@@ -105,7 +105,7 @@ public class SearchQtnTenderManagedBean extends BaseManagedBean {
 	private String approverstatus;
 	private String verifierName;
 	private String verifierStatus;
-	private ScAttachment scAttachment = new ScAttachment();
+	private ScAttachment scAttachment/* = new ScAttachment()*/;
 	private List<ScQtApproval>	sampleList=new ArrayList<ScQtApproval>();
 	/*
 	 * public Map<String, List<SelectItem>> getTabview() { return tabview; }
