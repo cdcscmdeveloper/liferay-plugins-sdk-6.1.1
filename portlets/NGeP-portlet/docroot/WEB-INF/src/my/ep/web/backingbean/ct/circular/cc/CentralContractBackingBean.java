@@ -74,12 +74,11 @@ public class CentralContractBackingBean extends BaseBackingBean<CentralContractM
 	
 	public CentralContractBackingBean(){
 		
-		ContractBackingBean ctBB = new ContractBackingBean();
-		ctBB.initializeRemarkAndAttachement(getManagedBean().getRemarkList(), getManagedBean().getAttachmentList());
-		
 		if(getManagedBean().getOutComes()==null) {
 			getManagedBean().setOutComes(new String[]{"SAVE","SUBMIT"});
 			getManagedBean().setCircularVer(new CtCircularVer());
+			ContractBackingBean ctBB = new ContractBackingBean();
+			ctBB.initializeRemarkAndAttachement(getManagedBean().getRemarkList(), getManagedBean().getAttachmentList());
 		}
 		if(getManagedBean().getApproverModel()==null) {
 			List<String> source = getAvailableApproverList();  
@@ -314,7 +313,7 @@ public class CentralContractBackingBean extends BaseBackingBean<CentralContractM
 		try {
 			circularSO = (ICircularSO)BusinessDelegate.getInstance().getServiceObject("ct",ICircularSO.class);
 			
-			CtCircular circular = getManagedBean().getCircular();
+			CtCircular circular = this.getManagedBean().getCircular();
 			if(circular==null) {
 				circular = new CtCircular();
 				circular.setDocType(ContractConst.CIRCULAR_DOC_TYPE_CENTRAL_CONTRACT);
@@ -336,6 +335,8 @@ public class CentralContractBackingBean extends BaseBackingBean<CentralContractM
 			CircularReqDTO reqDTO = new CircularReqDTO();
 			reqDTO.setSelectedApprovers(getManagedBean().getApproverModel().getTarget());
 			reqDTO.setAvailableApprovers(getManagedBean().getApproverModel().getSource());
+			reqDTO.setRemark(getManagedBean().getRemarkList().get(0));
+			reqDTO.setAttachments(getManagedBean().getAttachmentList());			
 			reqDTO.setCircular(circular);
 			reqDTO.setCircularVer(circularVer);
 			reqDTO.setOutcome(outcome);

@@ -85,6 +85,7 @@ import my.ep.web.util.lookupservice.BusinessDelegate;
 import org.apache.log4j.Logger;
 import org.apache.log4j.MDC;
 import org.primefaces.event.CellEditEvent;
+import org.primefaces.event.FileUploadEvent;
 import org.primefaces.event.SelectEvent;
 import org.primefaces.event.TabChangeEvent;
 import org.primefaces.event.TransferEvent;
@@ -426,6 +427,7 @@ public class ContractDetailsBackingBean extends
 		this.getManagedBean().getCtAmendment().setStatus(new PmStatus());
 		this.getManagedBean().getCtAmendment().getStatus().setStatusId(new Long(1));
 		this.getManagedBean().getCtAmendment().setCtContract(new CtContract());
+		this.getManagedBean().getCtAmendment().getCtContract().setContractId(1L);
 	}
 
 	public List<SelectItem> getItemDetailsMethod() {
@@ -812,7 +814,6 @@ public class ContractDetailsBackingBean extends
 			ContractAmendmentReqDTO reqDTO = new ContractAmendmentReqDTO();
 			amendmentSO = (IContractAmendmentSO) BusinessDelegate.getInstance().getServiceObject("ct", IContractAmendmentSO.class);
 			this.getManagedBean().getCtAmendment().setAmendmentType(ContractConst.AMENDMENT_TYPE_AMEND);
-			this.getManagedBean().getCtAmendment().getCtContract().setContractId(this.getManagedBean().getCtContract().getContractId());
 			reqDTO.setAmendment(this.getManagedBean().getCtAmendment());
 
 			String token = getManagedBean().getToken();
@@ -1071,6 +1072,10 @@ public class ContractDetailsBackingBean extends
 			userSO = null;
 		}
 		return availableApprovers;
+	}
+	
+	public void fileUpload(FileUploadEvent event) {
+		
 	}
 
 	public List<SmSupplierBank> getSmSupplier() {

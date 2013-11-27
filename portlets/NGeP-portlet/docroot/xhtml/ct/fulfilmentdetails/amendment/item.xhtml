@@ -23,12 +23,16 @@
 			 <p:column><p:outputLabel value="Malaysia" style="float:left;"/></p:column>        
 			 <p:column><p:outputLabel value="30000" style="float:left;"/></p:column>      
 			<p:column styleClass="column-align-center">
-			<p:selectBooleanCheckbox value="true"/> 
+			<p:selectBooleanCheckbox value="true" disabled="true"/> 
             </p:column>       
 			<p:column styleClass="column-align-center">
-			<p:commandButton title="Edit" partialSubmit="true" process="@this" icon="ui-icon-edit" styleClass="ui-icon-button"/>
-			<p:spacer width="2"></p:spacer>
-			<p:commandButton title="delete" onsuccess="confirmation6.show()" partialSubmit="true" process="@this" icon="ui-icon-delete"/>
+			 <p:commandLink>
+			        <p:graphicImage library="ep/images/design" name="edit.png" value="/resources/ep/images/design/edit.png" title="Edit" />
+			  </p:commandLink>
+			<p:spacer width="2"/>
+			 <p:commandLink partialSubmit="true" process="@this" onsuccess="confirmation6.show()">
+			        <p:graphicImage library="ep/images/design" name="delete.png" value="/resources/ep/images/design/delete.png" title="Delete" />
+			  </p:commandLink>
 			</p:column>  
 		</p:dataTable>
 		<h:panelGrid columns="2" style="height:50px;text-align:bottom;">
@@ -76,9 +80,13 @@
 			  <p:calendar style="width:130px;" value="#{contractDetailsBackingBean.managedBean.createContractDetails.date}" id="popupButtonCal1" showOn="button" />
 			</p:column>       
 			<p:column styleClass="column-align-center" rendered="#{!contractDetailsBackingBean.managedBean.itemCeilingQuantity}">
-			<p:commandButton title="Edit" partialSubmit="true" process="@this" icon="ui-icon-edit"/>
+			<p:commandLink>
+			        <p:graphicImage library="ep/images/design" name="edit.png" value="/resources/ep/images/design/edit.png" title="Edit" />
+			  </p:commandLink>
 			<p:spacer width="2"/>
-			<p:commandButton title="delete" onsuccess="confirmation6.show()" partialSubmit="true" process="@this" icon="ui-icon-delete"/>
+			 <p:commandLink partialSubmit="true" process="@this" onsuccess="confirmation6.show()">
+			        <p:graphicImage library="ep/images/design" name="delete.png" value="/resources/ep/images/design/delete.png" title="Delete" />
+			  </p:commandLink>
 			</p:column>          
 		</p:dataTable>
 		 <h:panelGrid style="width:760px" columnClasses="column-align-right" rendered="#{!contractDetailsBackingBean.managedBean.itemCeilingQuantity}">

@@ -14,17 +14,18 @@
 	  <p:messages id="messages" showDetail="true" autoUpdate="true" closable="true" severity="error, info" />
 	 <div class="ppRightBtn"> 
 	     <ui:repeat var="action" value="#{contractDetailsBackingBean.managedBean.outComes}">
-			<p:commandButton value="#{action}" process="@this" styleClass="ui-button" action="#{contractDetailsBackingBean.amendContract(action)}" />
+			<p:commandButton value="#{action}" process="@this"  action="#{contractDetailsBackingBean.amendContract(action)}" />
 		 </ui:repeat>		
     </div>
 	</p:panel>
 	<p:tabView id="tabview" value="Termination" dynamic="true" orientation="left" >
 	   <p:tab title="#{lbl['lbl.ct.menu.fd']}" >
 	     <ui:include src="/xhtml/ct/fulfilmentdetails/shared/fulfilment.xhtml"/>
+	     <ui:include src="/xhtml/ct/fulfilmentdetails/shared/quotationTender.xhtml" />
          <ui:include src="amendment.xhtml"/>
          <ui:include src="/xhtml/ct/fulfilmentdetails/shared/supplier.xhtml"/>                 
          <ui:include src="/xhtml/ct/fulfilmentdetails/shared/factoring.xhtml"/>     
-         <ui:include src="/xhtml/ct/fulfilmentdetails/shared/performanceBond.xhtml"/>                      
+         <ui:include src="bond.xhtml"/>                      
       </p:tab> 
        <p:tab title="#{lbl['lbl.ct.menu.agency']}" >
          <ui:include src="/xhtml/ct/fulfilmentdetails/shared/agency.xhtml"/>

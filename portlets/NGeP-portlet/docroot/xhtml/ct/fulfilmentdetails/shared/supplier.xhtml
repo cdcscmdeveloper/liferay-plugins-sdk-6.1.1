@@ -4,7 +4,6 @@
 	xmlns:ui="http://java.sun.com/jsf/facelets"
 	xmlns:p="http://primefaces.org/ui"
 	xmlns:c="http://java.sun.com/jsp/jstl/core">
-	
    <p:panel id="sbd" header="#{lbl['lbl.ct.su.panel.name']}"  toggleable="true"  toggleSpeed="500">
     <h:panelGrid columns="4" style="width:800px;">  
               <p:outputLabel value="EP No." />  
@@ -20,20 +19,11 @@
               <p:inputText value="KHAI SDN BHD" disabled="true" style="width:225px;"/> 
               <p:outputLabel  value="#{lbl['lbl.ct.bank.acc.no']}" />  
               <p:inputText value="0111-2345-8795" disabled="true" style="width:170px;"/>
-            
-              <p:outputLabel  value="#{lbl['lbl.ct.su.email']}"/>  
-              <p:inputText  value="xyz@hotmail.com"  disabled="true" style="width:170px;" />
+              <p:outputLabel value="Contact Person" />  
+              <p:inputText value="xyz" disabled="true" style="width:170px;"/> 
               <p:outputLabel  value="#{lbl['lbl.ct.bank.branch']}"/>  
               <p:inputText value="CYBERJAYA"  disabled="true" style="width:170px;" />
-              <p:outputLabel  value="#{lbl['lbl.ct.su.tel.office']}"/>  
-              <p:inputText  value="309-98-93039"  disabled="true" style="width:120px;" /> 
-              <p:outputLabel  value="Bank Tel No."/>  
-              <p:inputText  value="309-98-93039"  disabled="true" style="width:120px;" />
-              <p:outputLabel  value="#{lbl['lbl.ct.su.fax']}"/>
-              <p:inputText  value="309-98-93039" disabled="true" style="width:120px;"/>  
-               <p:outputLabel  value="#{lbl['lbl.ct.su.fax']}"/>
-              <p:inputText  value="309-98-93039" disabled="true" style="width:120px;"/>  
-              <h:panelGroup>
+               <h:panelGroup>
               <div style="height: 40px; vertical-align:top">
                  <p:outputLabel for="supplierAddress" value="#{lbl['lbl.ct.su.address']}" />
               </div>
@@ -51,6 +41,20 @@
                  <p:inputTextarea id="bankAddress"  value="Prima 5-A, Jalan Teknokrat 5,63000 Cyberjaya, Selangor Malaysia" 
                     disabled="true" rows="3" cols="31"  autoResize="false" />
 	          </h:panelGrid>
+	           <p:outputLabel  value="#{lbl['lbl.ct.su.tel.office']}"/>  
+              <p:inputText  value="309-98-93039"  disabled="true" style="width:120px;" /> 
+               <p:outputLabel  value="#{lbl['lbl.ct.su.tel.office']}"/>  
+              <p:inputText  value="309-98-93039"  disabled="true" style="width:120px;" />
+              <p:outputLabel  value="#{lbl['lbl.ct.su.fax']}"/>
+              <p:inputText  value="309-98-93039" disabled="true" style="width:120px;"/>  
+              <p:outputLabel  value="#{lbl['lbl.ct.su.fax']}"/>
+              <p:inputText  value="309-98-93039" disabled="true" style="width:120px;"/>  
+              <p:outputLabel  value="#{lbl['lbl.ct.su.tel.hp']}"/>
+              <p:inputText  value="309-98-93039" disabled="true" style="width:120px;"/>  
+              <f:verbatim> </f:verbatim>  <f:verbatim> </f:verbatim>
+              <p:outputLabel  value="#{lbl['lbl.ct.su.email']}"/>  
+              <p:inputText  value="xyz@hotmail.com"  disabled="true" style="width:170px;" />
+               <f:verbatim> </f:verbatim>  <f:verbatim> </f:verbatim>
               </h:panelGrid>
      </p:panel>
 </ui:composition>
