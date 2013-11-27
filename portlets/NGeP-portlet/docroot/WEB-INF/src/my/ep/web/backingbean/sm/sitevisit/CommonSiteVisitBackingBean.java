@@ -5,20 +5,18 @@ import javax.faces.bean.RequestScoped;
 import javax.faces.context.FacesContext;
 import javax.servlet.http.HttpServletRequest;
 
-import org.apache.log4j.Logger;
-
-import com.liferay.portal.util.PortalUtil;
-
 import my.ep.biz.service.sm.complaint.IComplaintSO;
 import my.ep.bpm.dto.BpmResponseDTO;
 import my.ep.dto.sm.complaint.ComplaintReqDTO;
 import my.ep.jaxb.sm.sitevisitdata.SMSiteVisitDataType;
 import my.ep.web.backingbean.BaseBackingBean;
-import my.ep.web.backingbean.sm.commonappl.CommonApplBackingBean;
-import my.ep.web.managedbean.sm.commonappl.CommonApplManagedBean;
 import my.ep.web.managedbean.sm.sitevisit.CommonSiteVisitManagedBean;
 import my.ep.web.util.FacesScopes;
 import my.ep.web.util.lookupservice.BusinessDelegate;
+
+import org.apache.log4j.Logger;
+
+import com.liferay.portal.util.PortalUtil;
 
 @ManagedBean(name = "commSiteVisitBackingBean")
 @RequestScoped
