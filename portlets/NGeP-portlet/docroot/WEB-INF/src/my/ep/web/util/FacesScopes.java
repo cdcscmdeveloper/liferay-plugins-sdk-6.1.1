@@ -38,8 +38,8 @@ public class FacesScopes {
 	private static Logger log = Logger.getLogger(FacesScopes.class);
 
 	public static final String SESS_USER_SESSION_BEAN = "USER_SESSION_BEAN";
-	private static final String BPM_AUTH_CONTEXT_TOKEN = "BPM_AUTH_CONTEXT_TOKEN"; 
-	
+	private static final String BPM_AUTH_CONTEXT_TOKEN = "BPM_AUTH_CONTEXT_TOKEN";
+
 	FacesContext facesContext = null;
 	Application application = null;
 	PortletSession portletSession = null;
@@ -165,101 +165,112 @@ public class FacesScopes {
 	 */
 	public PmUser getUserSessionBean() {
 		FacesScopes facesScopes = new FacesScopes();
-		PmUser user = (PmUser)facesScopes.getSessionScope(SESS_USER_SESSION_BEAN);
+		PmUser user = (PmUser) facesScopes
+				.getSessionScope(SESS_USER_SESSION_BEAN);
 		System.out.println("user:" + user);
 		if (user == null) {
 			try {
-				IUserSO userSO = BusinessDelegate.getInstance().getServiceObject("pm", IUserSO.class);
-				
+				IUserSO userSO = BusinessDelegate.getInstance()
+						.getServiceObject("pm", IUserSO.class);
+
 				UserReqDTO reqDTO = new UserReqDTO();
 				reqDTO.setUserName(new FacesScopes().getUserScreenName());
-				
+
 				UserResDTO resDTO = userSO.retrieveUserByName(reqDTO);
-				
+
 				user = resDTO.getPmUser();
-				System.out.println("id "+ user.getUserId());
+				System.out.println("id " + user.getUserId());
 				facesScopes.setSessionScope(SESS_USER_SESSION_BEAN, user);
 			} catch (Exception e) {
 				e.printStackTrace();
-				
-				FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR,e.toString(), e.getMessage()));
-				
+
+				FacesContext.getCurrentInstance().addMessage(
+						null,
+						new FacesMessage(FacesMessage.SEVERITY_ERROR, e
+								.toString(), e.getMessage()));
+
 				user = new PmUser();
 			}
 		}
-		
+
 		return user;
 	}
-	
+
 	public String getUserScreenName() {
 		String screenName = "";
 		try {
 
-			//FacesScopes facesScopes = new FacesScopes();
-			User user = UserServiceUtil.getUserById(Long.valueOf(this.getRequest().getRemoteUser()));
+			// FacesScopes facesScopes = new FacesScopes();
+			User user = UserServiceUtil.getUserById(Long.valueOf(this
+					.getRequest().getRemoteUser()));
 			screenName = user.getScreenName();
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
 		return screenName;
 	}
-	
-	public List<Role> getUserRoleList(){
+
+	public List<Role> getUserRoleList() {
 		List<Role> userRoleList = null;
-		try{
-//			User user = UserServiceUtil.getUserById(Long.valueOf(this.getRequest().getRemoteUser()));
-//			userRoleList = user.getRoles();
-			userRoleList = RoleServiceUtil.getUserRoles(Long.valueOf(this.getRequest().getRemoteUser()));
+		try {
+			// User user =
+			// UserServiceUtil.getUserById(Long.valueOf(this.getRequest().getRemoteUser()));
+			// userRoleList = user.getRoles();
+			userRoleList = RoleServiceUtil.getUserRoles(Long.valueOf(this
+					.getRequest().getRemoteUser()));
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
 		return userRoleList;
 
 	}
-	
+
 	/**
 	 * check whether the current login user has the passed in role
+	 * 
 	 * @param roleId
 	 * @return
 	 */
 	public boolean hasRoleUser(long roleId) {
 		boolean hasRoleUser = false;
 		try {
-			hasRoleUser = UserServiceUtil.hasRoleUser(roleId, Long.valueOf(this.getRequest().getRemoteUser()));
+			hasRoleUser = UserServiceUtil.hasRoleUser(roleId,
+					Long.valueOf(this.getRequest().getRemoteUser()));
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
 		return hasRoleUser;
 	}
-	
+
 	/**
 	 * check whether the current login user has the passed in role
+	 * 
 	 * @param roleName
 	 * @return
 	 */
 	public boolean hasRoleUser(String roleName) {
-//		Role role;
+		// Role role;
 		boolean hasRoleUser = false;
-		
+
 		List<Role> userRoleList = getUserRoleList();
-		for(Role role : userRoleList) {
-			if(role.getName().equals(roleName)) {
+		for (Role role : userRoleList) {
+			if (role.getName().equals(roleName)) {
 				hasRoleUser = true;
 				break;
 			}
 		}
 		return hasRoleUser;
 	}
-	
+
 	public Locale getUserLocale() {
-		return ((ThemeDisplay)this.getRequest().getAttribute(WebKeys.THEME_DISPLAY)).getLocale();
+		return ((ThemeDisplay) this.getRequest().getAttribute(
+				WebKeys.THEME_DISPLAY)).getLocale();
 	}
-	
-	
+
 	public UIComponent findComponentById(UIComponent root, String id) {
 		UIComponent component = null;
 		Iterator<UIComponent> itr = root.getFacetsAndChildren();
-		
+
 		while (itr.hasNext() && component == null) {
 			component = findComponentById(itr.next(), id);
 		}
@@ -281,17 +292,23 @@ public class FacesScopes {
 		int end = value.lastIndexOf('}');
 		return (end >= 0 && start < end);
 	}
-	
-	public String getBPMAuthenticationCtxToken(){
-        Object ctxToken= portletSession.getAttribute(BPM_AUTH_CONTEXT_TOKEN,PortletSession.APPLICATION_SCOPE);
-        if(null==ctxToken){
-              PmUser user=getUserSessionBean();
-              System.out.println("user.getLoginId()" + user.getLoginId());
-              IBpmSO bpmSO = (IBpmSO) EpBpmBusinessDelegate.getInstance().getServiceObject(IBpmSO.class);
-              ctxToken = bpmSO.authenticate(user.getLoginId(),"welcome1");
-              portletSession.setAttribute(BPM_AUTH_CONTEXT_TOKEN, ctxToken,PortletSession.APPLICATION_SCOPE);
-        }
-        return (String) ctxToken;
+
+	public String getBPMAuthenticationCtxToken() {
+		Object ctxToken = portletSession.getAttribute(BPM_AUTH_CONTEXT_TOKEN,
+				PortletSession.APPLICATION_SCOPE);
+		if (null == ctxToken) {
+			String loginId = getUserScreenName();
+			System.out.println("loginId: " + loginId);
+			
+			if (loginId != null) {
+				IBpmSO bpmSO = (IBpmSO) EpBpmBusinessDelegate.getInstance()
+						.getServiceObject(IBpmSO.class);
+				ctxToken = bpmSO.authenticate(loginId, "welcome1");
+				portletSession.setAttribute(BPM_AUTH_CONTEXT_TOKEN, ctxToken,
+						PortletSession.APPLICATION_SCOPE);	
+			}
+		}
+		return (String) ctxToken;
 	}
 
 }
