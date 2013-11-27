@@ -40,7 +40,7 @@ xmlns:c="http://java.sun.com/jsp/jstl/core">
 						<p:dataTable id="dtFavItem" styleClass="ppFixTdWidth" var="fav" 
 							value="#{planBackingBean.managedBean.selectedPlanItem.favorPlanRecurFreq.ppRecurFreqDtls}"  
 							rowIndexVar="rowIndex">    
-							<p:column styleClass="ppNumericAlign" headerText="#{lbl['lbl.pp.seq']}">  
+							<p:column headerText="#{lbl['lbl.pp.seq']}">  
 				             	#{rowIndex+1} 
 					        </p:column>   
 					        <p:column headerText="* #{lbl['lbl.pp.planned.activity.startmonth']}">  

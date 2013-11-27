@@ -134,102 +134,123 @@ xmlns:c="http://java.sun.com/jsp/jstl/core">
 							<th>&nbsp;</th>
 							<td>&nbsp;</td>
 						</tr>
-						<tr>
-							<th>* <p:outputLabel value="#{lbl['lbl.pp.product.segment']}"/></th>
-							<td colspan="3">
-								<p:selectOneMenu value="#{planBackingBean.managedBean.selectedItem.unspscSegmentCode}"
-									disabled="#{!planBackingBean.managedBean.selectedItem.brandNew &amp;&amp; 
-									!planBackingBean.managedBean.selectedItem.editable}">
-									<f:selectItem itemLabel="#{lbl['lbl.select']}" itemValue="#{null}"/>
-									<f:selectItems value="#{planBackingBean.unspscSegmentOptions()}" 
-										var="obj" itemLabel="#{obj.unspscTitle}" itemValue="#{obj.unspscCode}"/>
-									<p:ajax event="change" update="somProdFamily" />
-								</p:selectOneMenu>
-							</td>
-						</tr>
-						<tr>
-							<th>* <p:outputLabel value="#{lbl['lbl.pp.product.family']}"/></th>
-							<td colspan="3">
-								<p:selectOneMenu id="somProdFamily" value="#{planBackingBean.managedBean.selectedItem.unspscFamilyCode}"
-									disabled="#{!planBackingBean.managedBean.selectedItem.brandNew &amp;&amp; 
-									!planBackingBean.managedBean.selectedItem.editable}">
-									<f:selectItem itemLabel="#{lbl['lbl.select']}" itemValue="#{null}"/>
-									<f:selectItems value="#{planBackingBean.unspscFamilyOptions()}" 
-										var="obj" itemLabel="#{obj.unspscTitle}" itemValue="#{obj.unspscCode}"/>
-									<p:ajax event="change" update="somProdClass" />
-								</p:selectOneMenu>
-							</td>	
-						</tr>
-						<tr>
-							<th>* <p:outputLabel value="#{lbl['lbl.pp.product.class']}"/></th>
-							<td colspan="3">
-								<p:selectOneMenu id="somProdClass" value="#{planBackingBean.managedBean.selectedItem.unspscClassCode}"
-									disabled="#{!planBackingBean.managedBean.selectedItem.brandNew &amp;&amp; 
-									!planBackingBean.managedBean.selectedItem.editable}">
-									<f:selectItem itemLabel="#{lbl['lbl.select']}" itemValue="#{null}"/>
-									<f:selectItems value="#{planBackingBean.unspscClassOptions()}" 
-										var="obj" itemLabel="#{obj.unspscTitle}" itemValue="#{obj.unspscCode}"/>
-									<p:ajax event="change" listener="#{planBackingBean.selectedProduct()}" update="somProdCom"/>
-								</p:selectOneMenu>
-								<c:if test="#{cc.attrs.selectedPlan.favouriteOption!=PPConst.favouriteTypeItem 
-									&amp;&amp; cc.attrs.selectedPlan.favouriteOption!=PPConst.favouriteTypePlan}">
-									<p:outputPanel id="somProdCom"></p:outputPanel>
-								</c:if>
-							</td>
-						</tr>
-						
-						<c:if test="#{cc.attrs.selectedPlan.favouriteOption==PPConst.favouriteTypeItem 
-									|| cc.attrs.selectedPlan.favouriteOption==PPConst.favouriteTypePlan}">
-							<tr>
-								<th>* <p:outputLabel value="#{lbl['lbl.pp.product.commodity']}"/></th>
-								<td colspan="3">
-									<p:selectOneMenu id="somProdCom" value="#{planBackingBean.managedBean.selectedItem.unspscCommodityId}"
-										disabled="#{!planBackingBean.managedBean.selectedItem.brandNew &amp;&amp; 
-										!planBackingBean.managedBean.selectedItem.editable}">
-										<f:selectItem itemLabel="#{lbl['lbl.select']}" itemValue="#{null}"/>
-										<f:selectItems value="#{planBackingBean.unspscCommodityOptions()}" 
-											var="obj" itemLabel="#{obj.unspscTitle}" itemValue="#{obj.unspscId}"/>
-										<p:ajax event="change"  update="somExt"/>
-									</p:selectOneMenu>
-								</td>
-							</tr>
-							<tr>
-								<th>* <p:outputLabel value="#{lbl['lbl.pp.product.extension']}"/></th>
-								<td colspan="3">
-									<p:selectOneMenu id="somExt" value="#{planBackingBean.managedBean.selectedItem.extensionId}"
-										disabled="#{!planBackingBean.managedBean.selectedItem.brandNew &amp;&amp; 
+						<c:choose>
+							<!-- Contracted Item -->
+							<c:when test="#{cc.attrs.selectedPlanMaster.procurementMode==PPConst.procurementExistingContract}">
+								<tr>
+									<th>* <p:outputLabel value="#{lbl['lbl.pp.contract.item']}"/></th>
+									<td colspan="3">
+										<p:selectOneMenu id="somContractItem"
+											value="#{planBackingBean.managedBean.selectedItem.unspscSegmentCode}"
+											disabled="#{!planBackingBean.managedBean.selectedItem.brandNew &amp;&amp; 
 											!planBackingBean.managedBean.selectedItem.editable}">
-										<f:selectItem itemLabel="#{lbl['lbl.select']}" itemValue="#{null}"/>
-										<f:selectItems value="#{planBackingBean.extensionItemOptions()}" 
-											var="obj" itemLabel="#{obj.itemName}" itemValue="#{obj.itemId}"/>
-										<p:ajax event="change" listener="#{planBackingBean.selectedExtensionItem()}" update="opSupplierId opSupplierName"/>
-									</p:selectOneMenu>
-								</td>
-							</tr>
-							<tr>
-								<th><p:outputLabel value="#{lbl['lbl.pp.supplier.id']}"/></th>
-								<td>
-									<p:outputPanel  id="opSupplierId">
-										<p:inputText disabled="true" styleClass="ppDisplayTextM"
-											value="#{planBackingBean.managedBean.selectedItem.cmSupplierItem.smSupplier.supplierId}"/>
-									</p:outputPanel>
-								</td>
-								<th></th>
-								<td></td>
-							</tr>
-							<tr>
-								<th><p:outputLabel value="#{lbl['lbl.pp.supplier.name']}"/></th>
-								<td>	
-									<p:outputPanel  id="opSupplierName">
-										<p:inputText disabled="true" styleClass="ppDisplayTextM"
-											value="#{planBackingBean.managedBean.selectedItem.cmSupplierItem.smSupplier.supplierName}"/>
-									</p:outputPanel>
-								</td>
-								<th></th>
-								<td></td>
-							</tr>
+											<f:selectItem itemLabel="#{lbl['lbl.select']}" itemValue="#{null}"/>
+											<f:selectItems value="#{planBackingBean.contractItemOptions()}" 
+												var="obj" itemLabel="#{obj.itemName}" itemValue="#{obj.contractedItemId}"/>
+										</p:selectOneMenu>
+									</td>
+								</tr>
+							</c:when>
+							<!-- UNSPSC Product -->
+							<c:when test="#{cc.attrs.selectedPlanMaster.procurementMode!=PPConst.procurementExistingContract}">
+								<tr>
+									<th>* <p:outputLabel value="#{lbl['lbl.pp.product.segment']}"/></th>
+									<td colspan="3">
+										<p:selectOneMenu value="#{planBackingBean.managedBean.selectedItem.unspscSegmentCode}"
+											disabled="#{!planBackingBean.managedBean.selectedItem.brandNew &amp;&amp; 
+											!planBackingBean.managedBean.selectedItem.editable}">
+											<f:selectItem itemLabel="#{lbl['lbl.select']}" itemValue="#{null}"/>
+											<f:selectItems value="#{planBackingBean.unspscSegmentOptions()}" 
+												var="obj" itemLabel="#{obj.unspscTitle}" itemValue="#{obj.unspscCode}"/>
+											<p:ajax event="change" update="somProdFamily" />
+										</p:selectOneMenu>
+									</td>
+								</tr>
+								<tr>
+									<th>* <p:outputLabel value="#{lbl['lbl.pp.product.family']}"/></th>
+									<td colspan="3">
+										<p:selectOneMenu id="somProdFamily" value="#{planBackingBean.managedBean.selectedItem.unspscFamilyCode}"
+											disabled="#{!planBackingBean.managedBean.selectedItem.brandNew &amp;&amp; 
+											!planBackingBean.managedBean.selectedItem.editable}">
+											<f:selectItem itemLabel="#{lbl['lbl.select']}" itemValue="#{null}"/>
+											<f:selectItems value="#{planBackingBean.unspscFamilyOptions()}" 
+												var="obj" itemLabel="#{obj.unspscTitle}" itemValue="#{obj.unspscCode}"/>
+											<p:ajax event="change" update="somProdClass" />
+										</p:selectOneMenu>
+									</td>	
+								</tr>
+								<tr>
+									<th>* <p:outputLabel value="#{lbl['lbl.pp.product.class']}"/></th>
+									<td colspan="3">
+										<p:selectOneMenu id="somProdClass" value="#{planBackingBean.managedBean.selectedItem.unspscClassCode}"
+											disabled="#{!planBackingBean.managedBean.selectedItem.brandNew &amp;&amp; 
+											!planBackingBean.managedBean.selectedItem.editable}">
+											<f:selectItem itemLabel="#{lbl['lbl.select']}" itemValue="#{null}"/>
+											<f:selectItems value="#{planBackingBean.unspscClassOptions()}" 
+												var="obj" itemLabel="#{obj.unspscTitle}" itemValue="#{obj.unspscCode}"/>
+											<p:ajax event="change" listener="#{planBackingBean.selectedProduct()}" update="somProdCom"/>
+										</p:selectOneMenu>
+										<c:if test="#{cc.attrs.selectedPlan.favouriteOption!=PPConst.favouriteTypeItem 
+											&amp;&amp; cc.attrs.selectedPlan.favouriteOption!=PPConst.favouriteTypePlan}">
+											<p:outputPanel id="somProdCom"></p:outputPanel>
+										</c:if>
+									</td>
+								</tr>
 						
-						</c:if>
+								<c:if test="#{cc.attrs.selectedPlan.favouriteOption==PPConst.favouriteTypeItem 
+											|| cc.attrs.selectedPlan.favouriteOption==PPConst.favouriteTypePlan}">
+									<tr>
+										<th>* <p:outputLabel value="#{lbl['lbl.pp.product.commodity']}"/></th>
+										<td colspan="3">
+											<p:selectOneMenu id="somProdCom" value="#{planBackingBean.managedBean.selectedItem.unspscCommodityId}"
+												disabled="#{!planBackingBean.managedBean.selectedItem.brandNew &amp;&amp; 
+												!planBackingBean.managedBean.selectedItem.editable}">
+												<f:selectItem itemLabel="#{lbl['lbl.select']}" itemValue="#{null}"/>
+												<f:selectItems value="#{planBackingBean.unspscCommodityOptions()}" 
+													var="obj" itemLabel="#{obj.unspscTitle}" itemValue="#{obj.unspscId}"/>
+												<p:ajax event="change"  update="somExt"/>
+											</p:selectOneMenu>
+										</td>
+									</tr>
+									<tr>
+										<th>* <p:outputLabel value="#{lbl['lbl.pp.product.extension']}"/></th>
+										<td colspan="3">
+											<p:selectOneMenu id="somExt" value="#{planBackingBean.managedBean.selectedItem.extensionId}"
+												disabled="#{!planBackingBean.managedBean.selectedItem.brandNew &amp;&amp; 
+													!planBackingBean.managedBean.selectedItem.editable}">
+												<f:selectItem itemLabel="#{lbl['lbl.select']}" itemValue="#{null}"/>
+												<f:selectItems value="#{planBackingBean.extensionItemOptions()}" 
+													var="obj" itemLabel="#{obj.itemName}" itemValue="#{obj.itemId}"/>
+												<p:ajax event="change" listener="#{planBackingBean.selectedExtensionItem()}" update="opSupplierId, opSupplierName"/>
+											</p:selectOneMenu>
+										</td>
+									</tr>
+									<tr>
+										<th><p:outputLabel value="#{lbl['lbl.pp.supplier.id']}"/></th>
+										<td>
+											<p:outputPanel  id="opSupplierId">
+												<p:inputText disabled="true" styleClass="ppDisplayTextM"
+													value="#{planBackingBean.managedBean.selectedItem.cmSupplierItem.smSupplier.supplierId}"/>
+											</p:outputPanel>
+										</td>
+										<th></th>
+										<td></td>
+									</tr>
+									<tr>
+										<th><p:outputLabel value="#{lbl['lbl.pp.supplier.name']}"/></th>
+										<td>	
+											<p:outputPanel  id="opSupplierName">
+												<p:inputText disabled="true" styleClass="ppDisplayTextM"
+													value="#{planBackingBean.managedBean.selectedItem.cmSupplierItem.smSupplier.supplierName}"/>
+											</p:outputPanel>
+										</td>
+										<th></th>
+										<td></td>
+									</tr>
+								
+								</c:if>
+							</c:when>
+						</c:choose>
 						<tr>
 							<c:choose>
 					   			<c:when test="#{cc.attrs.selectedPlanMaster.votType==PPConst.votBt}">

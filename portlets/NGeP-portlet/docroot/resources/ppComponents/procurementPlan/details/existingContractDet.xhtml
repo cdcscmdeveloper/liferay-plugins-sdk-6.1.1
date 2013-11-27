@@ -102,7 +102,7 @@ xmlns:c="http://java.sun.com/jsp/jstl/core">
 									<f:selectItem itemLabel="#{lbl['lbl.select']}" itemValue="#{null}"/>
 									<f:selectItems value="#{planBackingBean.cicularContractOptions(planBackingBean.managedBean.selectedPlanItem.circularId)}" 
 										var="obj" itemLabel="#{obj.ctContract.contractValue.contractNo}" itemValue="#{obj.ctContract.contractId}"/>
-									<p:ajax event="change" listener="#{planBackingBean.selectedContract()}" update="opDuration, opSupId, opSupName, opStartMonth" />
+									<p:ajax event="change" listener="#{planBackingBean.selectedContract()}" update="opDuration, opSupId, opSupName, opStartMonth, somContractItem" />
 								</p:selectOneMenu>
 							</p:outputPanel>
 							<p:outputPanel rendered="#{planBackingBean.managedBean.selectedPlanItem.contractInd!=PPConst.contractIndPkp}">
@@ -113,7 +113,7 @@ xmlns:c="http://java.sun.com/jsp/jstl/core">
 									<f:selectItem itemLabel="#{lbl['lbl.select']}" itemValue="#{null}"/>
 									<f:selectItems value="#{planBackingBean.contractOptions(planBackingBean.managedBean.selectedPlanItem.contractType)}"
 										var="obj" itemLabel="#{obj.contractValue.contractNo}" itemValue="#{obj.contractId}"/>
-									<p:ajax event="change" listener="#{planBackingBean.selectedContract()}" update="opDuration, opSupId, opSupName, opStartMonth" />
+									<p:ajax event="change" listener="#{planBackingBean.selectedContract()}" update="opDuration, opSupId, opSupName, opStartMonth, somContractItem" />
 								</p:selectOneMenu>
 							</p:outputPanel>
 						</td>

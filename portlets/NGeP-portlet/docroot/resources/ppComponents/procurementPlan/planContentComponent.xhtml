@@ -131,9 +131,9 @@ xmlns:composite="http://java.sun.com/jsf/composite">
 						
 						<!-- Issue/Received/Charge PTJ -->
 						<tr>
-							<th>* <p:outputLabel value="#{lbl['lbl.pp.issue.ptj']}"/></th>
+							<th>* <p:outputLabel value="#{lbl['lbl.pp.issue.jabatan']}"/></th>
 							<td>
-								<p:selectOneMenu value="#{cc.attrs.selectedPlanMaster.issueOrgProfile.parentOrgProfile.orgProfileId}"
+								<p:selectOneMenu styleClass="ppTempFix" value="#{cc.attrs.selectedPlanMaster.issueOrgProfile.parentOrgProfile.orgProfileId}"
 									disabled="#{!cc.attrs.selectedPlanMaster.brandNew}">
 									<f:selectItem itemLabel="#{lbl['lbl.select']}" itemValue="#{null}"/>
 									<f:selectItems value="#{planBackingBean.departmentOptions()}" var="obj" 
@@ -144,7 +144,7 @@ xmlns:composite="http://java.sun.com/jsf/composite">
 							
 							<th>* <p:outputLabel value="#{lbl['lbl.pp.issue.ptj']}"/></th>
 							<td>
-								<p:selectOneMenu id="somIssuePtj" value="#{cc.attrs.selectedPlanMaster.issueOrgProfile.orgProfileId}"
+								<p:selectOneMenu styleClass="ppTempFix" id="somIssuePtj" value="#{cc.attrs.selectedPlanMaster.issueOrgProfile.orgProfileId}"
 									disabled="#{!cc.attrs.selectedPlanMaster.brandNew 
 										|| cc.attrs.selectedPlanMaster.issueOrgProfile.parentOrgProfile.orgProfileId==null}">
 									<f:selectItem itemLabel="#{lbl['lbl.select']}" itemValue="#{null}"/>
@@ -157,7 +157,7 @@ xmlns:composite="http://java.sun.com/jsf/composite">
 							<tr>
 								<th>* <p:outputLabel value="#{lbl['lbl.pp.received.jabatan']}"/></th>
 								<td>
-									<p:selectOneMenu value="#{cc.attrs.selectedPlanMaster.receivedOrgProfile.parentOrgProfile.orgProfileId}"
+									<p:selectOneMenu styleClass="ppTempFix" value="#{cc.attrs.selectedPlanMaster.receivedOrgProfile.parentOrgProfile.orgProfileId}"
 										disabled="#{!cc.attrs.selectedPlanMaster.brandNew}">
 										<f:selectItem itemLabel="#{lbl['lbl.select']}" itemValue="#{null}"/>
 										<f:selectItems value="#{planBackingBean.departmentOptions()}" var="obj" 
@@ -168,7 +168,7 @@ xmlns:composite="http://java.sun.com/jsf/composite">
 								
 								<th>* <p:outputLabel value="#{lbl['lbl.pp.received.ptj']}"/></th>
 								<td>
-									<p:selectOneMenu id="somReceivedPtj" value="#{cc.attrs.selectedPlanMaster.receivedOrgProfile.orgProfileId}"
+									<p:selectOneMenu styleClass="ppTempFix" id="somReceivedPtj" value="#{cc.attrs.selectedPlanMaster.receivedOrgProfile.orgProfileId}"
 										disabled="#{!cc.attrs.selectedPlanMaster.brandNew  
 											|| cc.attrs.selectedPlanMaster.receivedOrgProfile.parentOrgProfile.orgProfileId==null}">
 										<f:selectItem itemLabel="#{lbl['lbl.select']}" itemValue="#{null}"/>
@@ -180,7 +180,7 @@ xmlns:composite="http://java.sun.com/jsf/composite">
 							<tr>
 								<th>* <p:outputLabel value="#{lbl['lbl.pp.charge.jabatan']}"/></th>
 								<td>
-									<p:selectOneMenu value="#{cc.attrs.selectedPlanMaster.chargeOrgProfile.parentOrgProfile.orgProfileId}"
+									<p:selectOneMenu styleClass="ppTempFix" value="#{cc.attrs.selectedPlanMaster.chargeOrgProfile.parentOrgProfile.orgProfileId}"
 										disabled="#{!cc.attrs.selectedPlanMaster.brandNew}">
 										<f:selectItem itemLabel="#{lbl['lbl.select']}" itemValue="#{null}"/>
 										<f:selectItems value="#{planBackingBean.departmentOptions()}" var="obj" 
@@ -191,7 +191,7 @@ xmlns:composite="http://java.sun.com/jsf/composite">
 								
 								<th>* <p:outputLabel value="#{lbl['lbl.pp.charge.ptj']}"/></th>
 								<td>
-									<p:selectOneMenu id="somChargePtj" value="#{cc.attrs.selectedPlanMaster.chargeOrgProfile.orgProfileId}"
+									<p:selectOneMenu styleClass="ppTempFix" id="somChargePtj" value="#{cc.attrs.selectedPlanMaster.chargeOrgProfile.orgProfileId}"
 										disabled="#{!cc.attrs.selectedPlanMaster.brandNew 
 											|| cc.attrs.selectedPlanMaster.chargeOrgProfile.parentOrgProfile.orgProfileId==null}">
 										<f:selectItem itemLabel="#{lbl['lbl.select']}" itemValue="#{null}"/>
@@ -293,7 +293,9 @@ xmlns:composite="http://java.sun.com/jsf/composite">
 								<p:selectOneMenu value="#{cc.attrs.selectedPlan.approver.userId}"
 									disabled="#{!cc.attrs.selectedPlan.editable}" >
 									<f:selectItem itemLabel="#{lbl['lbl.select']}" />
-									<f:selectItem itemLabel="Lailah" itemValue="1" />
+									<f:selectItem itemLabel="USER005" itemValue="39" />
+									<f:selectItem itemLabel="USER006" itemValue="40" />
+									<f:selectItem itemLabel="USER007" itemValue="41" />
 								</p:selectOneMenu>
 							</td>
 							
@@ -334,20 +336,22 @@ xmlns:composite="http://java.sun.com/jsf/composite">
 												disabled="#{cc.attrs.selectedPlan.submissionType=='A'
 													|| !cc.attrs.selectedPlan.brandNew}">
 												<f:selectItem itemLabel="#{lbl['lbl.select']}" itemValue="#{null}" />
-												<f:selectItem itemLabel="Khai" itemValue="2" />
-												<f:selectItem itemLabel="Tan" itemValue="3" />
-												<f:selectItem itemLabel="Alex" itemValue="4" />
+												<f:selectItem itemLabel="USER009" itemValue="43" />
+												<f:selectItem itemLabel="USER033" itemValue="67" />
+												<f:selectItem itemLabel="USER034" itemValue="68" />
+												<f:selectItem itemLabel="USER036" itemValue="70" />
 											</p:selectOneMenu>
 										</ui:fragment>
 										<ui:fragment rendered="#{status.index&gt;0}">
 											<p:selectOneMenu value="#{vo.userId}"
-												disabled="#{!cc.attrs.selectedPlan.submissionType
+												disabled="#{cc.attrs.selectedPlan.submissionType=='A'
 													|| !cc.attrs.selectedPlan.multiLevel
 													|| !cc.attrs.selectedPlan.brandNew}">
 												<f:selectItem itemLabel="#{lbl['lbl.select']}" itemValue="#{null}" />
-												<f:selectItem itemLabel="Khai" itemValue="2" />
-												<f:selectItem itemLabel="Tan" itemValue="3" />
-												<f:selectItem itemLabel="Alex" itemValue="4" />
+												<f:selectItem itemLabel="USER009" itemValue="43" />
+												<f:selectItem itemLabel="USER033" itemValue="67" />
+												<f:selectItem itemLabel="USER034" itemValue="68" />
+												<f:selectItem itemLabel="USER036" itemValue="70" />
 											</p:selectOneMenu>
 										</ui:fragment>
 										<br/>
