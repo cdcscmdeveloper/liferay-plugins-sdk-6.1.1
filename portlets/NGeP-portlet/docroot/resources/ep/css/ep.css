@@ -4043,7 +4043,58 @@ label > span.ui-button-text {
 		endColorstr='#FDD655', GradientType=0 ); /* IE6-8 */
 }
 /*--------------------------       End Custom CSS       --------------------------- */
+/*--------------------------       Breadcrumb Wizard    --------------------------- */
+.navDiv {	
+	float: left;
+	display: block;
+}
 
+.menu-text {
+	list-style-type: none;
+	margin: 40px 0 0 10px;
+	float: left;
+}
+
+.menu-text li {
+	float: left;
+	width: 135px;
+	text-align: center;
+	list-style-type: decimal;
+	list-style-position: inside;
+	display: list-item;
+}
+
+.menu-line {
+	padding-left: 0;
+	list-style-type: none;
+	margin: 15px 0 0 108px;
+	border-top-color: #000;
+	border-top-width: 4px;
+	border-top-style: solid;
+	float: left;
+}
+
+.menu-line .space {
+	margin-right: 121px;
+}
+
+.menu-line .red-dot {
+	background-image: url(#{resource['ep/images/design:reddot.png']});
+	width: 15px;
+	height: 15px;
+}
+
+.menu-line li {
+	margin-top: -10px;
+	float: left;
+}
+
+.menu-line .black-dot {
+	background-image: url(#{resource['ep/images/design:blackdot.png']});
+	width: 15px;
+	height: 15px;
+}
+/*--------------------------    End Breadcrumb Wizard   --------------------------- */
 .columnWidth20 {
 	width: 20%;
 }
