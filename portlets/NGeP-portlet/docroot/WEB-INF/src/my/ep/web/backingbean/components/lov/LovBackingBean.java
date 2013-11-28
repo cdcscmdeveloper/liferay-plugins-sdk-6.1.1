@@ -86,6 +86,7 @@ public class LovBackingBean implements Serializable {
 			}
 			
 			debugLogger("pageChangeListener");
+			
 			ILovSO lovSO = null;
 			try {				
 				LovReqDTO reqDTO = new LovReqDTO();
@@ -206,15 +207,17 @@ public class LovBackingBean implements Serializable {
 	}
 	
 	private void constructSearchBean(String conditionField) {
-		String[] conditionFields = conditionField.split("\\|");
-		for(int i = 0; i < conditionFields.length; i++) {
-			String[] fieldMapping = conditionFields[i].split("\\^");
-			SearchFilterBean filterBean = new SearchFilterBean();
-			
-			filterBean.setSearchField(fieldMapping[0]);
-			filterBean.setSearchOperator(SearchOperator.OPERATOR_EQUALS.value());
-			filterBean.setSearchValue(fieldMapping[1]);
-			lovSearchBean.getDataFilterBeans().add(filterBean);
+		if(StringUtils.isNotBlank(conditionField)) {
+			String[] conditionFields = conditionField.split("\\|");
+			for(int i = 0; i < conditionFields.length; i++) {
+				String[] fieldMapping = conditionFields[i].split("\\^");
+				SearchFilterBean filterBean = new SearchFilterBean();
+				
+				filterBean.setSearchField(fieldMapping[0]);
+				filterBean.setSearchOperator(SearchOperator.OPERATOR_EQUALS.value());
+				filterBean.setSearchValue(fieldMapping[1]);
+				lovSearchBean.getDataFilterBeans().add(filterBean);
+			}
 		}
 	}
 	
