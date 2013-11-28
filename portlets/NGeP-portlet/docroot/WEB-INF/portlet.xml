@@ -405,7 +405,7 @@
 			<portlet-mode>view</portlet-mode>
 		</supports>
 		<portlet-info>
-			<title>ProcurementPlanBudget</title>
+			<title>Budget Allocation</title>
 			<short-title>ProcurementPlanBudget</short-title>
 			<keywords></keywords>
 		</portlet-info>
@@ -436,7 +436,7 @@
 			<portlet-mode>view</portlet-mode>
 		</supports>
 		<portlet-info>
-			<title>ProcurementPlan</title>
+			<title>Procurement Plan</title>
 			<short-title>ProcurementPlan</short-title>
 			<keywords></keywords>
 		</portlet-info>
@@ -537,7 +537,7 @@
 			<portlet-mode>view</portlet-mode>
 		</supports>
 		<portlet-info>
-			<title>PendingApprovalProcurementPlan</title>
+			<title>Pending Approval Procurement Plan</title>
 			<short-title>PendingApprovalProcurementPlan</short-title>
 			<keywords></keywords>
 		</portlet-info>
@@ -555,6 +555,7 @@
 		</security-role-ref>
 	</portlet>
 	<!-- Procurement Plan - END -->
+
 
 
 
