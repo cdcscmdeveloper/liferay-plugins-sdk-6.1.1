@@ -14,76 +14,40 @@
 	
 	<p:panelGrid columns="4" style="width:100%;"
 			styleClass="noBorders tr,noBorders td">
-			<p:dataTable  var="attendancecompany"
-				value="#{searchQtnTenderBB.managedBean.qtnTenders}" editable="false">
+			<p:dataTable  var="document"
+				value="#{qTDocumentsBB.managedBean.scQtChecklists}"  editable="false" styleClass="documentslist">
 
-          <p:column headerText="No" style="width:05%">
-					<!-- <h:outputText value=""></h:outputText> -->
-					<p:cellEditor>
-						<f:facet name="output">
-							<h:outputText value="1"></h:outputText>
-						</f:facet>
-						<f:facet name="input">
-							<p:inputText value="1" />
-						</f:facet>
-					</p:cellEditor>
-				</p:column>
-
-				<p:column headerText="Title" readonly="true" style="width:50%">
+         <p:column headerText="Title">  
+                     <p:inputTextarea value="#{qTDocumentsBB.managedBean.scQtDoc.docTitle}"  rows="1" cols="50" 
+                     	disabled="e" />
+                     	</p:column>
+         
+          
 					
-					<p:cellEditor>
-						<f:facet name="output">
-							<h:outputText value="Read Only"></h:outputText>
-						</f:facet>
-						<f:facet name="input">
-							<p:inputText value="" />
-						</f:facet>
-					</p:cellEditor>
-				</p:column>
 
-				<p:column headerText="Type">
-
+    <p:column headerText="Type" style="width:35%">
+				<h:outputText value="#{qTDocumentsBB.managedBean.qtCheckList.docType}"></h:outputText>
 					
-					<p:cellEditor>
-						<f:facet name="output">
-							<h:outputText value="Upload/Specification/Document/SystemDefined"></h:outputText>
-						</f:facet>
-						<f:facet name="input">
-							<p:inputText value="Upload/Specification/Document/SystemDefined" />
-						</f:facet>
-					</p:cellEditor>
-
-				</p:column>
-
-				<p:column headerText="positioning">
+</p:column>
+     <p:column headerText="Ordering" style="width:35%">
+				<h:inputText value="number" size="2"/>
+					
+</p:column>
+ <p:column headerText="Action" style="width:35%">
 				
-
-					<p:cellEditor>
-						<f:facet name="output">
-							<h:outputText value=""></h:outputText>
-						</f:facet>
-						<f:facet name="input">
-							<p:inputText value="" />
-						</f:facet>
-					</p:cellEditor>
-				</p:column>
-				
-				
-				   <p:column headerText="Action" >
-				     <p:commandLink >
-				     <p:graphicImage    library="ep/images/design" name="delete.png" value="/resources/ep/images/design/delete.png" />
-                  
-                 </p:commandLink>
-               
-				
-				
-        </p:column>
-
+		<p:commandLink>
+					<p:graphicImage library="ep/images/design" name="delete.png"
+						value="/resources/ep/images/design/delete.png" />
+				</p:commandLink>			
+</p:column>
+  
 			</p:dataTable>
+			
+			
 	</p:panelGrid>
-	
-	      <p:commandButton value="ADD" style="float:right;" action="#{searchQtnTenderBB.add}"></p:commandButton>
-  <br/>
+<!-- <p:commandButton value="ADD" action="#{qTDocumentsBB.addDocuments}" update="@(.documentslist)" style="float:right;" ></p:commandButton>  -->	 
+ 
+	  <br/>
   <br/>
 	
 	</p:panel>

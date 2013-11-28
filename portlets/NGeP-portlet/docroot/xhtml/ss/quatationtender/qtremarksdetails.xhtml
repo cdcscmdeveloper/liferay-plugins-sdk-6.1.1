@@ -8,53 +8,41 @@
 
 	
 	<ui:include src="/xhtml/ss/quatationtender/qtntenderheader.xhtml" />
-	<p:panel header="Remarks" toggleable="true">
-		<p:panelGrid columns="4" style="width:100%;"
-			styleClass="noBorders tr,noBorders td">
-			<p:dataTable  var="attendancecompany"
-				value="#{qTRemarksBB.managedBean.scQtRemarks}" editable="false" styleClass="remarkslist">
+	<p:panel header="Remarks" style="width: 100%" toggleable="true">
+	
+	<table style="width: 50%" id="remarkslist">
+		<tr>
+			<td class="TableFieldLeft" width="24%"><h:outputLabel value="Remark" /></td>
+			<td class="TableFieldRight">
+				<p:dataGrid id="catatan" value="#{qTRemarksBB.managedBean.scQtRemarks}" var="remarkVar" rowIndexVar="remarkIndex" columns="1" >
+					<table>
+						<tr>
+							<td rowspan="2" valign="top">
+								<h:graphicImage value="#{qTRemarksBB.userImagePath(remarkVar.createdUsername)}" height="30" width="30" />
+							</td>
+							<td width="5"></td>
+							<td>
+								<h:outputText value="#{remarkVar.createdUsername}"></h:outputText>,
+								<h:outputText id="remarkDate" value="#{remarkVar.changedDate}">
+									<f:convertDateTime pattern="dd/MM/yyyy hh:mm aaa" />
+								</h:outputText>
+							</td>
+						</tr>
+						<tr>
+							<td></td>
+							<td>
+								<p:inputTextarea cols="40" value="#{remarkVar.remark}" rendered="#{remarkIndex==0}" /> 
+								<h:outputText value="#{remarkVar.remark}" rendered="#{remarkIndex>0}" style="display: inline-block; width:220px;word-wrap: break-word;" />
+							</td>
+						</tr>
+					</table>
+				</p:dataGrid>
+			</td>
+		</tr>
+	</table>    				
+<!-- <p:commandButton value="ADD" action="#{qTRemarksBB.addRemarks}" update="@(.remarkslist)" style="float:right;" ></p:commandButton> -->
+	</p:panel>	
+	
 
-
-
-
-
-				<p:column headerText="Remarks">
-					
-					
-						<p:inputTextarea value="#{qTRemarksBB.managedBean.qtRemark.remark}" rows="1" cols="50" 
-                     	disabled="e" />
-						
-				</p:column>
-
-				<p:column headerText="User">
-					<h:outputText value="" readonly="true"></h:outputText>
-						 
-                     	</p:column>
-						
-							
-						
-				
-
-				<p:column headerText="Date/Time">
-
-					
-							<h:outputText value="#{qTRemarksBB.managedBean.qtRemark.createdDate}" readonly="true"></h:outputText>
-					
-				
-						
-
-				</p:column>
-
-				<p:column headerText="Status">
-					<h:outputText value="#{qTRemarksBB.managedBean.qtRemark.recordStatus}" readonly="true"></h:outputText>
-					</p:column>
-
-			</p:dataTable>
-
-		</p:panelGrid>
-		<p:commandButton value="Delete" style="float:right;" ></p:commandButton>
-		
-		 <p:commandButton value="ADD" action="#{qTRemarksBB.addRemarks}" update="@(.remarkslist)" style="float:right;" ></p:commandButton>
-
-	</p:panel>
+	
 </ui:composition>
