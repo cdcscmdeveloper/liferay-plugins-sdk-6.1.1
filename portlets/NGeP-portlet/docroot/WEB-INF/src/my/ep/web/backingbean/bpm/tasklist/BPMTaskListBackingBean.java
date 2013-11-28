@@ -2,6 +2,7 @@ package my.ep.web.backingbean.bpm.tasklist;
 
 import java.io.IOException;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.Map;
 
 import javax.faces.bean.ManagedBean;
@@ -30,7 +31,7 @@ public class BPMTaskListBackingBean extends BaseBackingBean<BPMTaskListManagedBe
 		this.getManagedBean().setBpmMap(null);
 		Map temp = new HashMap();
 
-		temp.put("UNSPSC Code Request", "review-unspsc-code");
+		temp.put("UNSPSC Code Request", "reviewUnspscCode");
 		temp.put("Extension Code Request", "review-extension");
 		temp.put("Extension Code Maintenance", "review-extension-maintenance");
 		
@@ -46,6 +47,15 @@ public class BPMTaskListBackingBean extends BaseBackingBean<BPMTaskListManagedBe
 		temp.put("MOF Supplier Registration", "mof-application");
 		temp.put("DirectPurchase Creation", "review-directpuchase");
 		
+		//QuationTender 
+		temp.put("MITI Approval", "qtmaintanance");
+		temp.put("Budget Approval", "qtmaintanance");
+		temp.put("ICT Approval", "qtmaintanance");
+		temp.put("BPK Approval", "qtmaintanance");
+		temp.put("QuotationTender Creation", "qtreview");
+		
+		temp.put("Specification Preparation", "qtsprecprepartaion");
+		temp.put("View Preparation", "qtsprecprepartaion");
 		
 		this.getManagedBean().setBpmMap(temp);
 		
@@ -68,6 +78,7 @@ public class BPMTaskListBackingBean extends BaseBackingBean<BPMTaskListManagedBe
 
 		IBpmSO bpmSO = (IBpmSO) EpBpmBusinessDelegate.getInstance().getServiceObject(IBpmSO.class);
 
+		//String token = bpmSO.authenticate("roslan", "welcome1");
 		FacesScopes face = new FacesScopes();
 		String token =face.getBPMAuthenticationCtxToken();
 		
@@ -91,7 +102,6 @@ public class BPMTaskListBackingBean extends BaseBackingBean<BPMTaskListManagedBe
 
 
 		return responseDTO;
-
 	}
 	
 	
@@ -131,7 +141,7 @@ public class BPMTaskListBackingBean extends BaseBackingBean<BPMTaskListManagedBe
 
 			ExternalContext externalContext = FacesContext.getCurrentInstance().getExternalContext();
 
-			externalContext.redirect("/web/guest/" +url +"?taskId="+taskId);
+			externalContext.redirect("/web/guest/" +url +"?taskId="+taskId+"&loginId="+this.getManagedBean().getTempLoginId());
 			//externalContext.redirect("http://localhost:8080/web/guest/" +url +"?taskId="+taskId);
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
