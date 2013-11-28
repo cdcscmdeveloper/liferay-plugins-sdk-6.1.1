@@ -1,0 +1,52 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:c="http://java.sun.com/jsp/jstl/core">
+
+
+	<ui:include src="/xhtml/ss/supplierproposal/spheader.xhtml" />
+	<p:panel header="#{lbl['lbl.sc.sp.financepplcheklist']}"
+		toggleable="true">
+		<p:panelGrid columns="4" style="width:100%;"
+			styleClass="noBorders tr,noBorders td">
+			<p:dataTable id="financeDeails" var="financeList"
+				value="#{sPDetailBB.managedBean.financeCheckDetailsList}" rows="10"
+				selection="#{sPDetailBB.managedBean.selectedCheckDetails}"
+				rowKey="#{financeList.qtProposalChecklistId}" rowIndexVar="rowIndex">
+
+				<p:column selectionMode="multiple" style="width:2%" />
+				<p:column headerText="#{lbl['lbl.sc.sp.desc']}" style="width:68%">
+					<h:outputText value="#{financeList.scQtCheckList.title}" />
+				</p:column>
+				<p:column headerText="#{lbl['lbl.sc.sp.upload']}" style="width:10%">
+					<h:outputText value="PenyataBank.doc (78KB)" />
+				</p:column>
+				<p:column headerText="#{lbl['lbl.sc.sp.download']}"
+					style="width:10%">
+					<p:commandLink id="downloadLink" value="Download">
+						<p:fileDownload value="#{sPDetailBB.downloadFile(attachFile)}" />
+					</p:commandLink>
+				</p:column>
+				<p:column headerText="#{lbl['lbl.sc.sp.online']}" style="width:10%">
+					<h:outputText value="Online" />
+				</p:column>
+
+			</p:dataTable>
+		</p:panelGrid>
+	</p:panel>
+
+	<p:panel header="#{lbl['lbl.sc.sp.termconds']}" toggleable="true">
+		<p:inputTextarea rows="5" cols="140" autoResize="false" value="XYZ"></p:inputTextarea>
+		<p:selectManyCheckbox
+			value="#{approvalBackingBean.managedBean.approvalTypelist}"
+			layout="pageDirection">
+			<p:spacer width="10" />
+			<f:selectItem
+				itemLabel=" I have read and agree with the Terms and Condition"
+				itemValue="I have read and agree with the Terms and Condition" />
+
+		</p:selectManyCheckbox>
+	</p:panel>
+</ui:composition>

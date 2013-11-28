@@ -1,0 +1,19 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:c="http://java.sun.com/jsp/jstl/core">
+
+	<p:tabView dynamic="true" orientation="left">
+
+		<p:tab title="Supplier Proposal - Technical">
+			<ui:include src="/xhtml/ss/supplierproposal/sptechdetails.xhtml" />
+		</p:tab>
+
+		<p:tab title="Supplier Proposal - Financial">
+			<ui:include src="/xhtml/ss/supplierproposal/spfinancedetails.xhtml" />
+		</p:tab>
+	</p:tabView>
+
+</ui:composition>
