@@ -21,6 +21,7 @@ import my.ep.web.backingbean.BaseBackingBean;
 import my.ep.web.constant.BpmOutcomeConst;
 import my.ep.web.constant.pp.ProcurementPlanConst;
 import my.ep.web.managedbean.pp.procurementapproval.ProcurementApprovalManagedBean;
+import my.ep.web.util.FacesScopes;
 import my.ep.web.util.lookupservice.BusinessDelegate;
 import my.ep.web.util.pp.common.CommonMethod;
 
@@ -51,10 +52,20 @@ public class ProcurementApprovalBackingBean extends BaseBackingBean<ProcurementA
 		
 		//TODO: temp
 		if(MDC.get(LogKey.USER_ID)==null) {
-			MDC.put(LogKey.USER_ID, 1L);
+			MDC.put(LogKey.USER_ID, getFacesScopes().getUserSessionBean().getUserId());
 		}
 		log.info("ProcurementApprovalBackingBean - End");
 	}
+	
+	/**
+	 * get faces scopes
+	 * @return FacesScopes
+	 */
+	private FacesScopes getFacesScopes(){
+		FacesScopes facesScopes = new FacesScopes();
+		return facesScopes;
+	}
+	
 	
 	/**
 	 * retrieve list of pending approval plans
@@ -139,21 +150,17 @@ public class ProcurementApprovalBackingBean extends BaseBackingBean<ProcurementA
 			
 			for(PpPlan plan:this.getManagedBean().getPendingApprovalPlans()){
 				if(plan.isApproved()){
-					
+//					reqDTO.setUpdateBudget(false);
+//					reqDTO.setAction(ProcurementPlanConst.BPM_APPROVE);
+//					reqDTO.setToken(getFacesScopes().getBPMAuthenticationCtxToken());
+//					reqDTO.setTaskId(this.getManagedBean().getBpmTaskId());
+//					reqDTO.setPlanMaster(plan.getPpPlanMaster());
+//					IProcurementPlanSO procurementPlanSO = (IProcurementPlanSO) BusinessDelegate.getInstance().getServiceObject(ProcurementPlanConst.SO_PP, IProcurementPlanSO.class);
+//					resDTO =  procurementPlanSO.updatePlan(reqDTO);
+//					
+//					result = resDTO.isSuccessful();
 				}
 			}
-			reqDTO.setAction("APPROVE");
-//		
-//			reqDTO.setTaskId(this.getManagedBean().getBpmTaskId());
-//			reqDTO.setPlanMaster(this.getManagedBean().getPlanMaster());
-//			reqDTO.setLoginUser(this.getManagedBean().getLoginUser());
-//			
-//			IProcurementPlanSO procurementPlanSO = (IProcurementPlanSO) BusinessDelegate.getInstance().getServiceObject(ProcurementPlanConst.SO_PP, IProcurementPlanSO.class);
-//			if(!ProcurementPlanConst.MODE_DRAFT.equals(this.getManagedBean().getViewMode())){
-//				resDTO =  procurementPlanSO.updatePlan(reqDTO);
-//			}else{
-//				resDTO =  procurementPlanSO.updatePlanMaster(reqDTO);
-//			}
 			result = resDTO.isSuccessful();
 			log.info("updatePlan result: " + result);
 		} catch (Exception e) {

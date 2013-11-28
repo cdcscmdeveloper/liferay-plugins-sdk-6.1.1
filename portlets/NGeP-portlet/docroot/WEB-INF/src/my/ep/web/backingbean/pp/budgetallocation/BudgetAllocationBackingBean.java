@@ -150,6 +150,7 @@ public class BudgetAllocationBackingBean extends BaseBackingBean<BudgetAllocatio
 		this.getManagedBean().setViewMode(ProcurementPlanConst.MODE_NEW);
 		this.getManagedBean().setActions(ProcurementPlanConst.BPM_DEFAULT_ACTIONS); 
 		this.getManagedBean().setSelectedBudgetAllocation(new PpBudgetAlloc());
+		this.getManagedBean().getSelectedBudgetAllocation().setMinistryProfile(ministryOptions().get(0));
 //			this.getManagedBean().getSelectedBudgetAllocation().setPmStatus(
 //					CommonMethod.currentStatus(ProcurementPlanConst.STATUS_NEW, ProcurementPlanConst.DOCTYPE_BUDGET_ALLOC));
 		this.getManagedBean().getSelectedBudgetAllocation().setStatusId(ProcurementPlanConst.STATUS_PBA_PENDING_SUBMIT);//TODO

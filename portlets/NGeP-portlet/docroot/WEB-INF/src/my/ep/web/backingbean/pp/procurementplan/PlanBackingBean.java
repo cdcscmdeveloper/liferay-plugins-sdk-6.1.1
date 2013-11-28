@@ -350,9 +350,7 @@ public class PlanBackingBean extends BaseBackingBean<PlanManagedBean>{
 					}
 					
 				}
-				
-				
-				
+
 				//set the default current view obj
 				this.getManagedBean().setSelectedPlanMaster(this.getManagedBean().getPlanMaster());
 				this.getManagedBean().setSelectedPlan(this.getManagedBean().getPlan());
@@ -510,7 +508,7 @@ public class PlanBackingBean extends BaseBackingBean<PlanManagedBean>{
 			mtoPlanMaster.getSelectedGoMapper().clear();
 			
 			mtoPlan.setEditable(true);
-			mtoPlan.setStatusId(1L);
+			mtoPlan.setStatusId(ProcurementPlanConst.STATUS_PPL_PENDING_SUBMIT);
 			mtoPlan.setPpQtActivities(new ArrayList<PpQtActivity>());
 			mtoPlan.setPpRemarks(new ArrayList<PpRemark>());
 			
@@ -1828,12 +1826,10 @@ public class PlanBackingBean extends BaseBackingBean<PlanManagedBean>{
 				OrgProfileReqDTO reqDTO = new OrgProfileReqDTO();
 				reqDTO.setUserId(userId);
 				reqDTO.setOrgType(orgType);
-				
 				IOrgProfileSO orgProfileSO = BusinessDelegate.getInstance().getServiceObject("pm", IOrgProfileSO.class);
 				OrgProfileResDTO resDTO = orgProfileSO.retrieveOrgProfileListByOrgType(reqDTO);
 //				if(resDTO.isSuccessful()){
 					profileList = resDTO.getOrgProfileList();
-					System.out.println("size..." + profileList.size());
 //				}
 			}
 		}catch (Exception e){
