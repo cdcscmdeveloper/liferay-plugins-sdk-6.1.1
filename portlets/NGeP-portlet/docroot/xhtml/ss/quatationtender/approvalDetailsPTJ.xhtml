@@ -17,9 +17,7 @@
 				<p:selectOneMenu
 					value="#{approvalCategory.scQtApproval.approverId}"
 					rendered="#{approvalCategory.scQtApproval.verifyOption eq '1'}">
-					<f:selectItem itemLabel="Select One" itemValue="" />
-					<f:selectItem itemLabel="ROSLAN" itemValue="2" />
-					<f:selectItem itemLabel="KHAIR" itemValue="3" />
+					<f:selectItems value="#{qTDetailBB.managedBean.approvers}" var="approver"   itemLabel="#{approver.userName}" itemValue="#{approver.userId}"></f:selectItems>
 				</p:selectOneMenu>
 
 				<p:inputText

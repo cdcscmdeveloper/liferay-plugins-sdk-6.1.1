@@ -55,10 +55,10 @@
 						<p:selectOneMenu
 							value="#{approvalCategory.scQtApproval.approverAction}">
 								<f:selectItem itemLabel="Select One" itemValue="" />
-							<f:selectItem itemLabel="APPROVE" itemValue="ar" />
-							<f:selectItem itemLabel="REJECT" itemValue="rj" />
-							<f:selectItem itemLabel="REVISE" itemValue="rv" />
-							<f:selectItem itemLabel="RESTRICT" itemValue="rs" />
+							<f:selectItem itemLabel="APPROVE" itemValue="a" />
+							<f:selectItem itemLabel="REJECT" itemValue="r" />
+							<p:ajax event="change" partialSubmit="true" process="@this" listener="#{qTDetailBB.setOutComeAction}"/>
+			
 						</p:selectOneMenu>
 					</c:when>
 					<c:when
@@ -66,10 +66,9 @@
 						<p:selectOneMenu
 							value="#{approvalCategory.scQtApproval.approverAction}">
 								<f:selectItem itemLabel="Select One" itemValue="" />
-							<f:selectItem itemLabel="APPROVE" itemValue="ar" />
-							<f:selectItem itemLabel="REJECT" itemValue="rj" />
-							<f:selectItem itemLabel="REVISE" itemValue="rv" />
-							<f:selectItem itemLabel="DIRECT" itemValue="rs" />
+							<f:selectItem itemLabel="APPROVE" itemValue="a" />
+							<f:selectItem itemLabel="REJECT" itemValue="r" />
+							<p:ajax event="change" partialSubmit="true" process="@this" listener="#{qTDetailBB.setOutComeAction}"/>
 						</p:selectOneMenu>
 					</c:when>
 
@@ -77,9 +76,10 @@
 						<p:selectOneMenu
 							value="#{approvalCategory.scQtApproval.approverAction}">
 								<f:selectItem itemLabel="Select One" itemValue="" />
-							<f:selectItem itemLabel="APPROVE" itemValue="ar" />
-							<f:selectItem itemLabel="REJECT" itemValue="rj" />
-							<f:selectItem itemLabel="REVISE" itemValue="rv" />
+							<f:selectItem itemLabel="APPROVE" itemValue="a" />
+							<f:selectItem itemLabel="REJECT" itemValue="r" />
+							<p:ajax event="change" partialSubmit="true" process="@this" listener="#{qTDetailBB.setOutComeAction(approvalCategory.scQtApproval.approverAction)}"/>
+						
 						</p:selectOneMenu>
 					</c:otherwise>
 				</c:choose>

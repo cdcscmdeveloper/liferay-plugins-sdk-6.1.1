@@ -63,14 +63,13 @@
 		<br />
 	</p:panel>
 
+
 	<p:panel header="Qtn/Tender List" toggleable="true">
 		<h:panelGroup id="table-wrapper" style="width:100%;">
 			<p:dataTable id="searchQTs" value="#{qTDetailBB.managedBean.qtList}"
 				var="scQt" resizableColumns="true" rowIndexVar="index">
 
-				<p:column headerText="#{lbl['lbl.so.no']}" style="width:20px;">
-					<h:outputText value="#{index + 1}" />
-				</p:column>
+				
 
 				<p:column headerText="Qtn/Tender No" style="width:100px;">
 					<p:commandLink action="#{qTDetailBB.editAction(scQt)}"

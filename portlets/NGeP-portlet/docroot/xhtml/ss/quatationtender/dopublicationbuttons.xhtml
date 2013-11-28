@@ -4,21 +4,49 @@
 	xmlns:ui="http://java.sun.com/jsf/facelets"
 	xmlns:p="http://primefaces.org/ui"
 	xmlns:c="http://java.sun.com/jsp/jstl/core">
-	
-<p:panel >	
-	<div>
-		<c:if test="#{qTDetailBB.managedBean.qt.brandNew}">
-			<p:commandButton  action="#{qTDetailBB.clonePopupAction}" value="CLONE" oncomplete="clonedlg.show();"
-				style="float:right;margin-right: 12px;" />
-			<ui:include src="/xhtml/ss/quatationtender/cloneqtntenderscreen.xhtml" />
-		</c:if>
-		<c:if test="#{!qTDetailBB.managedBean.qt.brandNew}">
-			<p:button value="Cancel" style="float:right;margin-right: 12px;" />
-		</c:if>
-		<p:commandButton value="Submit" style="float:right;margin-right: 12px;" action="#{qTDetailBB.submitQTDetailsAction}" process="@all" />
-		<p:commandButton value="Save" style="float:right;margin-right: 12px;" action="#{qTDetailBB.saveQtDetailsAction}" process="@all"/>
-		<br/>
-		<br/>
-	</div>
-</p:panel>
+
+	<p:panel>
+		<div>
+
+			<c:if test="#{qTDetailBB.managedBean.taskId eq null}">
+				<c:if test="#{qTDetailBB.managedBean.qt.brandNew}">
+					<p:commandButton action="#{qTDetailBB.clonePopupAction}"
+						value="CLONE" oncomplete="clonedlg.show();" styleClass="ui-button" />
+					<ui:include
+						src="/xhtml/ss/quatationtender/cloneqtntenderscreen.xhtml" />
+				</c:if>
+				<c:if test="#{!qTDetailBB.managedBean.qt.brandNew}">
+					<p:button value="Cancel" style="float:right;margin-right: 12px;" />
+				</c:if>
+				<p:commandButton value="Submit" styleClass="ui-button"
+					action="#{qTDetailBB.submitQTDetailsAction}" process="@all" />
+				<p:commandButton value="Save" styleClass="ui-button"
+					action="#{qTDetailBB.saveQtDetailsAction}" process="@all" />
+				<br />
+				<br />
+			</c:if>
+			<c:if
+				test="#{((qTDetailBB.managedBean.processName != 'QuotationTender Creation' ) and (qTDetailBB.managedBean.taskId != null))}">
+				<p:commandButton value="Submit" styleClass="ui-button"
+					action="#{qTDetailBB.updateBpmTask}" process="@all">
+
+				</p:commandButton>
+			</c:if>
+		
+		<table>
+			<tr>
+				<td align="right"><c:if
+						test="#{qTDetailBB.managedBean.processName eq 'QuotationTender Creation'}">
+						<ui:repeat var="action" value="#{qTDetailBB.managedBean.outComes}">
+							<p:commandButton value="#{action}" process="@all"
+								styleClass="ui-button"
+								actionListener="#{qTDetailBB.updateBpmTask(action)}" />
+						</ui:repeat>
+
+
+					</c:if></td>
+			</tr>
+		</table>
+		</div>
+	</p:panel>
 </ui:composition>

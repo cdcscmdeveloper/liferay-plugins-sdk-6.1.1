@@ -15,8 +15,8 @@
 
 			<p:selectOneRadio
 				value="#{approvalCategory.scQtApproval.verifyOption}">
-				<f:selectItem itemLabel="Online" itemValue="1" />
-				<f:selectItem itemLabel="Offline" itemValue="2" />
+				<f:selectItem itemLabel="Online" itemValue="O" />
+				<f:selectItem itemLabel="Offline" itemValue="F" />
 				<p:ajax event="change"
 					listener="#{approvalBackingBean.processChecked}"
 					update="sample,sample1,sample2" />
@@ -29,9 +29,8 @@
 			<h:panelGroup id="sample">
 				<p:selectOneMenu value="#{approvalCategory.scQtApproval.verifierId}"
 					rendered="#{approvalCategory.scQtApproval.verifyOption eq '1'}">
-					<f:selectItem itemLabel="Select One" itemValue="" />
-					<f:selectItem itemLabel="Roslan" itemValue="2" />
-					<f:selectItem itemLabel="Hanib" itemValue="3" />
+					<f:selectItems value="#{qTDetailBB.managedBean.veryfiers}" var="verifyer"   itemLabel="#{verifyer.userName}" itemValue="#{verifyer.userId}"></f:selectItems>
+				
 				</p:selectOneMenu>
 
 				<p:inputText value="#{approvalCategory.scQtApproval.verifierId}"
@@ -54,9 +53,11 @@
 			<p:selectOneMenu
 				value="#{approvalCategory.scQtApproval.verifyAction}">
 				<f:selectItem itemLabel="Select One" itemValue="" />
-				<f:selectItem itemLabel="APPROVE" itemValue="1" />
-				<f:selectItem itemLabel="REJECT" itemValue="2" />
-				<f:selectItem itemLabel="REVISE" itemValue="2" />
+				<f:selectItem itemLabel="REVISE" itemValue="s" />
+				<f:selectItem itemLabel="REJECT" itemValue="r" />
+				<f:selectItem itemLabel="ACCEPT" itemValue="e" />
+			<p:ajax event="change" partialSubmit="true" process="@this" listener="#{qTDetailBB.setOutComeAction(approvalCategory.scQtApproval.verifyAction)}"/>
+						
 			</p:selectOneMenu>
 
 			<h:outputLabel value="Remarks" style="vertical-align:top;"></h:outputLabel>
