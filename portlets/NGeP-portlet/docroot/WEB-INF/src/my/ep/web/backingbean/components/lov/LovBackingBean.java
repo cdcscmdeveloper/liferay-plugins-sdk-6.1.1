@@ -18,6 +18,7 @@ import my.ep.biz.bean.search.ISearchBean;
 import my.ep.biz.bean.search.ISearchResultBean;
 import my.ep.biz.bean.search.SearchBean;
 import my.ep.biz.bean.search.SearchFilterBean;
+import my.ep.biz.bean.search.SearchResultBean;
 import my.ep.biz.service.cc.lov.ILovSO;
 import my.ep.dto.cc.lov.LovReqDTO;
 import my.ep.dto.cc.lov.LovResDTO;
@@ -32,6 +33,8 @@ import my.ep.web.bean.paginator.PagingDataModel;
 import my.ep.web.util.FacesScopes;
 import my.ep.web.util.lookupservice.BusinessDelegate;
 
+import org.apache.commons.lang.StringUtils;
+import org.apache.log4j.Logger;
 import org.springframework.web.context.WebApplicationContext;
 import org.springframework.web.context.support.WebApplicationContextUtils;
 
@@ -45,11 +48,12 @@ public class LovBackingBean implements Serializable {
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;
+	private static Logger log = Logger.getLogger(LovBackingBean.class);
 
 	WebApplicationContext webApplicationContext = null;
 //	private ILovEvent ?ookupEvent = null;
 	
-	private IPagingDataModel<AutUser> searchDataModel = new SearchPagingDataModel();
+	private IPagingDataModel searchDataModel = new SearchPagingDataModel();
 	private SearchFilterBean searchFilterBean = new SearchFilterBean(SearchOperator.OPERATOR_STARTS_WITH.value());
 	private String lovId = null;
 	private ISearchBean lovSearchBean = new SearchBean();
@@ -58,6 +62,13 @@ public class LovBackingBean implements Serializable {
 	
 	private List resultList = new ArrayList();
 	private BaseEntity selectedEntity;
+	
+	private void debugLogger(Object message) {
+        if(log.isDebugEnabled()) {
+            log.debug(message);
+        }
+        log.info(message);
+    }
 	
 	private class SearchPagingDataModel extends PagingDataModel<AutUser> {
 		private static final long serialVersionUID = 1L;
@@ -68,17 +79,37 @@ public class LovBackingBean implements Serializable {
 		
 		@Override
 		public ISearchResultBean pageChangeListener(ISearchBean searchBean) {
-//			debugLogger("pageChangeListener");
+
+			debugLogger("getLovBean(): " + getLovBean());
+			if(getLovBean() == null) {
+				return new SearchResultBean();
+			}
+			
+			debugLogger("pageChangeListener");
 			ILovSO lovSO = null;
 			try {				
-				lovSO = (ILovSO)BusinessDelegate.getInstance().getServiceObject(ILovSO.class);
+				LovReqDTO reqDTO = new LovReqDTO();
 				
-//				if (StringUtils.isNotBlank((String)searchFilterBean.getSearchValue())) {
-//					searchBean.getDataFilterBeans().add(searchFilterBean);
-//				}
-//				return lovSO.getUserList(searchBean);
-//				return lovSO.getSearchList(searchBean);
-				return null;
+				if(lovSearchBean.getDataFilterBeans().size() <= 5) {
+					constructSearchBean(getLovBean().getConditionField());
+				}
+				searchBean.getDataFilterBeans().clear();
+				searchBean.getDataFilterBeans().addAll(getLovSearchBean().getDataFilterBeans());
+				
+				debugLogger("searchBean.getDataFilterBeans(): " + searchBean.getDataFilterBeans());
+				debugLogger("searchBean.getDataFilterBeans().size(): " + searchBean.getDataFilterBeans().size());
+				
+				reqDTO.setSearchBean(searchBean);
+				reqDTO.setDaoClass(getLovBean().getDaoClass());
+				reqDTO.setSearchMethod(getLovBean().getSearchMethod());
+				
+				lovSO = (ILovSO)BusinessDelegate.getInstance().getServiceObject("cc", ILovSO.class);
+//				ISearchResultBean resultBean = lovSO.getSearchList(lovSearchBean);
+				
+				LovResDTO resDTO = lovSO.getSearchList(reqDTO);
+				ISearchResultBean resultBean = resDTO.getResultBean();	
+				
+				return resultBean;
 			} finally {
 				lovSO = null;
 			}
@@ -111,9 +142,9 @@ public class LovBackingBean implements Serializable {
 		String clientId = facesScopes.getParameter("clientId");
 		String update = facesScopes.getParameter("update");
 
-		if(lovId != null && lovId.equals(facesScopes.getParameter("lovId"))) {
-			
-		} else if(lovId == null || !lovId.equals(facesScopes.getParameter("lovId"))) {
+//		if(lovId != null && lovId.equals(facesScopes.getParameter("lovId"))) {
+//			
+//		} else if(lovId == null || !lovId.equals(facesScopes.getParameter("lovId"))) {
 			lovId = facesScopes.getParameter("lovId");
 			lovBean = getBeanByLovId(lovId);
 			lovBean.setLovId(lovId);
@@ -130,15 +161,15 @@ public class LovBackingBean implements Serializable {
 			
 //			constructSearchBean(conditionField);
 //			initSearchBean();
-		}
+//		}
 		resetAction();
 	}
 	
 	public void searchAction() {
 		
-//		searchDataModel.reloadData();
+		searchDataModel.reloadData();
 		
-		ILovSO lovSO = null;
+/*		ILovSO lovSO = null;
 		try {
 			LovReqDTO reqDTO = new LovReqDTO();
 			
@@ -164,12 +195,14 @@ public class LovBackingBean implements Serializable {
 			this.setResultList(resultBean.getResultList());
 		} finally {
 			lovSO = null;
-		}
+		}*/
 	}
 
 	public void resetAction() {
-		this.setResultList(new ArrayList());
+//		this.setResultList(new ArrayList());
+		this.setSearchDataModel(new SearchPagingDataModel());
 		this.setLovSearchBean(new SearchBean());
+//		this.setLovBean(new LovBean());
 	}
 	
 	private void constructSearchBean(String conditionField) {
@@ -251,7 +284,8 @@ public class LovBackingBean implements Serializable {
 				valueExpression.setValue(context.getELContext(), selectedEntity);
 			}
 			
-			this.resetAction();
+//			this.resetAction();
+//			this.setLovBean(new LovBean());
 			
 //			TODO: postUpdateListener(entity)
 		}

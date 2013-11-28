@@ -15,12 +15,16 @@
 
 <cc:implementation>
 	<p:remoteCommand name="updateSearchDialog" update="searchPanel lovTitle resultPanel" partialSubmit="true" />
-	<p:dialog id="lovPopup" widgetVar="lovPopup" modal="true" width="700" position="top">
+	<p:remoteCommand name="resetAllData" update="searchPanel lovTitle resultPanel" partialSubmit="true" action="#{lovBackingBean.resetAction}" />
+	
+	<p:dialog id="lovPopup" widgetVar="lovPopup" modal="true" width="700" position="top" onHide="resetAllData();">
 	
 		<f:facet name="header">
 			<h:outputLabel id="lovTitle" value="#{lovBackingBean.lovBean.title}" />
 		</f:facet>
-	
+		
+		<p:panel header="Search" toggleable="true">
+		
 		<h:panelGroup id="searchPanel" style="width:100%;">
 
 		<ui:include src="lovSearchPanel.xhtml" />
@@ -42,26 +46,29 @@
 		</TD></tr></table>
 
 		</h:panelGroup>
-		<br />
+		</p:panel>
+		<p:panel header="Result" toggleable="true">
 		<h:panelGroup id="resultPanel" style="width:100%;">
 		
 			<p:dataTable id="lovTb"
 				var="entity" 
 				selection="#{lovBackingBean.selectedEntity}"
+				selectionMode="single"
 				rowIndexVar="rowIndex"
 				rowKey="#{entity[lovBackingBean.lovBean.pk]}"
-				value="#{lovBackingBean.resultList}">
+				lazy="true"
+				value="#{lovBackingBean.searchDataModel}" >
 				
-				<!-- <ac:paginator for="lovTb" /> -->
+				<ac:paginator for="lovTb" />
 				
-				<p:column selectionMode="single" style="width:2%" /> 
+				<!-- <p:column selectionMode="single" style="width:2%" /> 
 				
 				<p:column width="5%">
 					<f:facet name="header">
 						<p:outputLabel value="No." />
 					</f:facet>
 					<p:outputLabel value="#{rowIndex + 1}" />
-				</p:column>
+				</p:column> -->
 				
 				<p:columns var="column" value="#{lovBackingBean.lovBean.columns}">
 				
@@ -71,20 +78,19 @@
 						<p:outputLabel value="#{entity[column.columnName]}" />
 				</p:columns>
 				
-				<f:facet name="footer">
-					<div align="right">
-						<p:commandButton 
-							value="Select"
-							action="#{lovBackingBean.populateToSaveObject}"
-							update="lovTb #{lovBackingBean.lovBean.clientId}"
-							oncomplete="lovPopup.hide();"
-							partialSubmit="true" />	
-					</div>
-				</f:facet>
-				
 			</p:dataTable>
+
+			<div align="right" style="width:100%;">
+				<p:commandButton 
+					value="Select"
+					action="#{lovBackingBean.populateToSaveObject}"
+					update="lovTb searchPanel #{lovBackingBean.lovBean.clientId}"
+					oncomplete="lovPopup.hide();"
+					partialSubmit="true" />	
+			</div>
 			
 		</h:panelGroup>
+		</p:panel>
 	</p:dialog>
 </cc:implementation>
 </ui:composition>
