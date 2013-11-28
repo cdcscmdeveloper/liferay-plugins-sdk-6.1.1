@@ -4095,6 +4095,12 @@ label > span.ui-button-text {
 	width: 15px;
 	height: 15px;
 }
+
+.menu-line .green-dot {
+	background-image: url(#{resource['ep/images/design:greendot.png']});
+	width: 15px;
+	height: 15px;
+}
 /*--------------------------    End Breadcrumb Wizard   --------------------------- */
 .columnWidth20 {
 	width: 20%;
