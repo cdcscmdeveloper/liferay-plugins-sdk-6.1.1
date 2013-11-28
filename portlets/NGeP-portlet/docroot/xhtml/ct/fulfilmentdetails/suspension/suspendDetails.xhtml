@@ -6,15 +6,18 @@
 	xmlns:p="http://primefaces.org/ui"
 	xmlns:c="http://java.sun.com/jsp/jstl/core">
     <p:panel id="suspend" header="Activation/Suspension Details"    toggleable="true"  toggleSpeed="500" widgetVar="panelsuspend">
-      <h:panelGrid columns="2" style="width:350px;" rendered="#{contractSuspendBackingBean.managedBean.activeSuspension}">  
+      <h:panelGrid columns="2" style="width:800px;" columnClasses="columnWidth15" rendered="#{contractSuspendBackingBean.managedBean.activeSuspension}">  
         <p:outputLabel value="Activate Fulfillment Details"/>  
         <p:selectBooleanCheckbox value="#{contractSuspendBackingBean.managedBean.booleanSuspendValue}"  disabled="false"/> 
         <h:outputLabel value="Activate Start Date" />
         <p:calendar  value="#{contractSuspendBackingBean.managedBean.suspendActive.activeFrom}" id="activeDateId" showOn="button" />
      </h:panelGrid>
-	 <h:panelGrid columns="4" style="width:700px;" rendered="#{!contractSuspendBackingBean.managedBean.activeSuspension}">  
+	 <h:panelGrid columns="4" style="width:800px;" columnClasses="columnWidth15"  rendered="#{!contractSuspendBackingBean.managedBean.activeSuspension}">  
+	  <h:outputLabel value="Suspend Contract"  />  
+         <p:selectBooleanCheckbox value="#{contractSuspendBackingBean.managedBean.booleanSuspendValue}"  disabled="false"/> 
+          <f:verbatim></f:verbatim>  <f:verbatim></f:verbatim>
         <h:panelGroup>
-		  <div style="height: 40px;float:right; vertical-align: top;">
+		  <div style="height: 35px;float:right; vertical-align: top;">
 		      <p:outputLabel for="suspendes" value="Suspend Reason"/>
 		  </div>
 	    </h:panelGroup>
@@ -22,9 +25,8 @@
 		  <p:inputTextarea id="suspendes" value="#{contractSuspendBackingBean.managedBean.suspendActive.suspendActiveDesc}" rows="2" 
 		  cols="30" disabled="false" autoResize="false" />
 	     </h:panelGrid>
-	     <f:verbatim></f:verbatim>  <f:verbatim></f:verbatim>
-	     <h:outputLabel value="Suspend Contract"  />  
-         <p:selectBooleanCheckbox value="#{contractSuspendBackingBean.managedBean.booleanSuspendValue}"  disabled="false"/> 
+	    
+           <f:verbatim></f:verbatim>  <f:verbatim></f:verbatim>
          <h:outputLabel value="Suspend Start Date" />
          <p:calendar value="#{contractSuspendBackingBean.managedBean.suspendActive.suspendFrom}" id="startDateId" showOn="button" />
          <h:outputLabel value=" Suspend End Date" />

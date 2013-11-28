@@ -63,7 +63,6 @@
 							               <ac:paginator for="dataTable"/>
 							               <p:columnGroup type="header"> 
 								                <p:row> 
-									                   
 									                     <p:column headerText="#{lbl['lbl.ct.search.table.cname']}"   /> 
 									                     <p:column headerText="#{lbl['lbl.ct.search.table.clno']}" /> 
 									                     <p:column headerText="#{lbl['lbl.ct.search.table.sname']}"  /> 
@@ -82,8 +81,7 @@
 							                            <p:column><h:outputText value="#{data.qtLoaNo}" /></p:column>	
 							                            <p:column> <h:outputText value="Active"/> </p:column>	
 							                            <p:column styleClass="column-align-center">
-								                   
-								                              <p:commandLink action="#{contractDetailsBackingBean.gotoSuspendPage}">
+								                          <p:commandLink action="#{contractDetailsBackingBean.gotoSuspendPage}">
 								                                <f:setPropertyActionListener target="#{contractDetailsBackingBean.managedBean.ctContract}" value="#{data}" />
 					                                          <p:graphicImage library="ep/images/design" name="pause.png"
 					                                           	value="/resources/ep/images/design/pause.png" title="Suspend Contract" />
@@ -105,8 +103,8 @@
 					                                           	value="/resources/ep/images/design/document.png" title="View Agreement" />
 				                                         </p:commandLink>
 				                                            <p:commandLink action="#{contractDetailsBackingBean.gotoBankPage}">
-					                                          <p:graphicImage library="ep/images/design" name="bank.png"
-					                                           	value="/resources/ep/images/design/bank.png" title="Change Bank" />
+					                                          <p:graphicImage library="ep/images/design" name="revise.png"
+					                                           	value="/resources/ep/images/design/revise.png" title="Change Bank" />
 				                                         </p:commandLink>
 				                                            <p:commandLink action="#{contractDetailsBackingBean.gotoSupplierTerminatePage}">
 					                                          <p:graphicImage library="ep/images/design" name="terminate.png"

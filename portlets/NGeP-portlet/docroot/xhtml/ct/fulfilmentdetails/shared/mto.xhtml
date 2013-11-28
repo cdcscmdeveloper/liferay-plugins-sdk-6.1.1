@@ -6,14 +6,14 @@
 	xmlns:p="http://primefaces.org/ui"
 	xmlns:c="http://java.sun.com/jsp/jstl/core">
 	<p:panel header="#{lbl['lbl.ct.mto.panel.name']}"   toggleable="true" rendered="#{contractDetailsBackingBean.managedBean.checkBoxSelections.checkedMto}"   toggleSpeed="500">
-    <h:panelGrid columns="2" style="width:680px;">  
-       <h:panelGrid columns="2" style="width:340px;">  
+    <h:panelGrid columns="2" style="width:800px;">  
+       <h:panelGrid columns="2" style="width:400px;" columnClasses="columnWidth30">  
               <p:outputLabel  value="#{lbl['lbl.ct.mto.description']}"  />  
               <p:inputText value="Fire Fight Gloves"  style="width:170px;" disabled="true" />  
               <p:outputLabel value="#{lbl['lbl.ct.mto.department']}"/>  
               <p:inputText value="Jabatan Bomba" style="width:170px;" disabled="true"  />
               <p:outputLabel  value="#{lbl['lbl.ct.mto.quantity']}"/>  
-              <p:inputText value="150"  style="width:100px;"   disabled="true" />
+              <p:inputText value="150"  style="width:100px;" disabled="true" />
               <p:outputLabel  value="#{lbl['lbl.ct.mto.weight']}" />  
               <h:panelGrid columns="3">
               <p:inputText value="150kg" style="width:80px;" disabled="true" /> 
@@ -69,7 +69,7 @@
                  <f:selectItem itemLabel="--Please Select--" itemValue="--Please Select--" /> 
               </p:selectOneMenu>
          </h:panelGrid>  
-         <h:panelGrid columns="2" style="width:350px;">  
+         <h:panelGrid columns="2" style="width:400px;" columnClasses="columnWidth30">  
            <p:outputLabel   value="#{lbl['lbl.ct.mto.idescription']}"  />  
            <p:inputText value="Blaze Master Pro-Fit MK V Fire Fighting Gloves" style="width:170px;"  disabled="true" />  
            <h:panelGroup>

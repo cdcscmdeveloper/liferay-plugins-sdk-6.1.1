@@ -6,45 +6,47 @@
 	xmlns:p="http://primefaces.org/ui"
 	xmlns:c="http://java.sun.com/jsp/jstl/core">
          <p:panel id="sTermination" header="Termination Request Details" toggleable="true"  toggleSpeed="500">
-            <h:panelGrid columns="4" style="width:620px;">  
-              <h:outputLabel value="Termination Date"/>
+            <h:panelGrid columns="4" style="width:800px;" columnClasses="columnWidth15">  
+              <p:outputLabel value="Termination Date"/>
               <p:calendar style="width:140px;" value="#{supplierBackingBean.managedBean.termination.terminationDate}" id="popupButtonCal" showOn="button" />
-              <h:outputLabel  value="Termination Type"/>  
-              <p:selectOneMenu value="#{supplierBackingBean.managedBean.ctTerminationReason.typeCode.codeId}" style="width:140px;">
+              <p:outputLabel  value="Termination Type"/>  
+              <p:selectOneMenu value="#{supplierBackingBean.managedBean.ctTerminationReason.typeCode.codeId}" style="width:170px;">
             	  <f:selectItems value="#{supplierBackingBean.getDropdownValues(PmCodeCatConst.ctTerminationReasonType)}" />
-              </p:selectOneMenu>    
+              </p:selectOneMenu>   
              <h:panelGroup>
-				<div style="height: 30px; vertical-align:top">
+				<div style="height: 30px; vertical-align:top;">
                      <p:outputLabel for="rftermination" value="Termination Reason" />
 			    </div>
 			 </h:panelGroup>
 			 <h:panelGrid>
-                <p:inputTextarea id="rftermination" value="#{supplierBackingBean.managedBean.ctTerminationReason.description}"  rows="3" cols="27"  autoResize="false" />
+                <p:inputTextarea id="rftermination" value="#{supplierBackingBean.managedBean.ctTerminationReason.description}"  rows="3" cols="31"  autoResize="false" />
 			 </h:panelGrid>
 	       </h:panelGrid>
 		   </p:panel>
            <p:panel id="sdetails" header="Supplier  Details"    toggleable="true"  toggleSpeed="500">
-              <h:panelGrid columns="4" style="width:700px;">  
+              <h:panelGrid columns="4" style="width:800px;" columnClasses="columnWidth15" >  
               <p:outputLabel value="Supplier ID"/>
-              <p:inputText value="SU-01145-456" style="width:150px;"/>   
+              <p:inputText value="SU-01145-456" style="width:170px;" disabled="true"/>   
               <p:outputLabel value="Supplier Name" />
-              <p:inputText value="CDC Sdn Bhd" style="width:150px;"/>   
+              <p:inputText value="CDC Sdn Bhd" style="width:170px;" disabled="true"/>   
               <p:outputLabel value="Email ID" />
-              <p:inputText value="abc@yahoo.com" style="width:150px;"/>   
-              <p:outputLabel value="Tel No (H.P)" />
-              <p:inputText value="60172487465" style="width:110px;"/> 
-              <p:outputLabel value="Tel No (Office)"/>
-              <p:inputText value="60172487465" style="width:110px;"/>   
-              <p:outputLabel value="Fax No" />
-              <p:inputText value="60172487465" style="width:110px;"/> 
+              <p:inputText value="abc@yahoo.com" style="width:170px;" disabled="true"/>   
+               <p:outputLabel value="Tel No."/>
+              <p:inputText value="60172487465" style="width:110px;" disabled="true"/>   
+               <p:outputLabel value="Fax No." />
+              <p:inputText value="60172487465" style="width:110px;" disabled="true"/> 
+              <p:outputLabel value="Mobile No." />
+              <p:inputText value="60172487465" style="width:110px;" disabled="true"/> 
+              
+             
                <h:panelGroup>
-				<div style="height:40px; vertical-align: top">
+				<div style="height:40px; vertical-align: top;">
 					<p:outputLabel for="spAddress" value="Supplier Address"/>
 				</div>
 			   </h:panelGroup>
 			   <h:panelGrid>
 				 <p:inputTextarea id="spAddress" value="25, Belatuk Block, CyberView Garden, CyberJaya, Selangor Malaysia"
-				      required="false"  rows="3" cols="28" autoResize="false" />
+				     rows="3" cols="31" autoResize="false" />
 			   </h:panelGrid>
 			</h:panelGrid>
 		 </p:panel>

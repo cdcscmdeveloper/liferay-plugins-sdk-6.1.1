@@ -8,16 +8,16 @@
        <p:panel id="sbd" header="#{lbl['lbl.ct.su.panel.name']}"  toggleable="true"  toggleSpeed="500" 
           widgetVar="panelsbd">
          <h:panelGrid columns="2" style="width:800px;">  
-           <h:panelGrid columns="2" style="width:370px;">  
+           <h:panelGrid columns="2" style="width:400px;" columnClasses="columnWidth25">  
               <p:outputLabel value="#{lbl['lbl.ct.su.id']}" />  
-              <p:inputText value="SU-01145-456" disabled="true" style="width:150px;" />  
+              <p:inputText value="SU-01145-456" disabled="true" style="width:170px;" />  
               <p:outputLabel  value="#{lbl['lbl.ct.su.email']}"/>  
-              <p:inputText value="abc@yahoo.com"  disabled="true"   style="width:150px;" />
+              <p:inputText value="abc@yahoo.com"  disabled="true"   style="width:170px;" />
               <p:outputLabel   value="#{lbl['lbl.ct.su.tel.hp']}"/>  
               <p:inputText value="60172487465" disabled="true" style="width:110px;" />  
-              <h:outputLabel  value="#{lbl['lbl.ct.su.fax']}"/>
+              <p:outputLabel  value="#{lbl['lbl.ct.su.fax']}"/>
               <p:inputText value="60172487465"  disabled="true" style="width:110px;" />  
-              <h:outputLabel  value="#{lbl['lbl.ct.su.tel.office']}" />  
+              <p:outputLabel  value="#{lbl['lbl.ct.su.tel.office']}" />  
               <p:inputText value="60172487465" disabled="true"  style="width:110px;" />
               <h:panelGroup>
 				<div style="height: 40px; vertical-align: top">
@@ -25,23 +25,23 @@
 			    </div>
 			  </h:panelGroup>
 			  <h:panelGrid>
-				<p:inputTextarea id="supplierAddress"  disabled="true" value="25, Belatuk Block, CyberView Garden, CyberJaya, Selangor Malaysia"  rows="3" cols="28"   maxlength="150"  />
+				<p:inputTextarea id="supplierAddress"  disabled="true" value="25, Belatuk Block, CyberView Garden, CyberJaya, Selangor Malaysia"  rows="3" cols="31"   maxlength="150"  />
 			  </h:panelGrid>
             </h:panelGrid>  
-            <h:panelGrid columns="2" style="width:430px;">  
-              <h:outputLabel  value="#{lbl['lbl.ct.su.name']}" />  
-              <p:inputText value="CDC Sdn Bhd"  disabled="true" style="width:150px;" />  
-              <h:outputLabel  value="Bank A/C" />  
+            <h:panelGrid columns="2" style="width:400px;" columnClasses="columnWidth25">  
+              <p:outputLabel  value="#{lbl['lbl.ct.su.name']}" />  
+              <p:inputText value="CDC Sdn Bhd"  disabled="true" style="width:170px;" />  
+              <p:outputLabel  value="Bank A/C" />  
                 <p:selectOneMenu value=" " style="width:110px;">
             	   <f:selectItem itemLabel="-Please Select--" itemValue="" /> 
             	   <f:selectItem itemLabel="011234560987" itemValue="1" /> 
             	   <f:selectItem itemLabel="011234560986" itemValue="2" /> 
                 </p:selectOneMenu>     
-               <h:outputLabel  value="#{lbl['lbl.ct.bank.name']}"/>  
-               <p:inputText value="CIMB BERHAD"  disabled="true" style="width:150px;" />  
-               <h:outputLabel   value="#{lbl['lbl.ct.bank.branch']}" />  
-               <p:inputText value="Cyber Jaya"  disabled="true" style="width:150px;" />
-               <h:outputLabel  value="Bank Tel No" />  
+               <p:outputLabel  value="#{lbl['lbl.ct.bank.name']}"/>  
+               <p:inputText value="CIMB BERHAD"  disabled="true" style="width:170px;" />  
+               <p:outputLabel   value="#{lbl['lbl.ct.bank.branch']}" />  
+               <p:inputText value="Cyber Jaya"  disabled="true" style="width:170px;" />
+               <p:outputLabel  value="Tel No" />  
                <p:inputText value="60172487465" disabled="true"  style="width:110px;" />
                <h:panelGroup>
 				  <div style="height: 40px; vertical-align: top">
@@ -49,7 +49,7 @@
 				  </div>
 			   </h:panelGroup>
 			   <h:panelGrid>
-				  <p:inputTextarea id="bankAddress" value="CIMB Berhad, CyberView, CyberJaya, Selangor Malaysia" rows="3" cols="28" disabled="true" maxlength="250" />
+				  <p:inputTextarea id="bankAddress" value="CIMB Berhad, CyberView, CyberJaya, Selangor Malaysia" rows="3" cols="31" disabled="true" maxlength="250" />
 			   </h:panelGrid>
              </h:panelGrid>
            </h:panelGrid> 

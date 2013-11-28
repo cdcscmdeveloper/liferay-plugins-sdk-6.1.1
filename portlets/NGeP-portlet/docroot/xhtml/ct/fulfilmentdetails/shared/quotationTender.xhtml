@@ -6,7 +6,7 @@
 	xmlns:c="http://java.sun.com/jsp/jstl/core">
 	
 	<p:panel id="qtnTenderPnl" header="Quotation / Tender Details" toggleable="true" toggleSpeed="500">
-		<h:panelGrid columns="4" style="width:800px;">
+		<h:panelGrid columns="4" style="width:800px;" columnClasses="columnWidth15">
 			<p:outputLabel value="Procurement Mode" />
 			<p:selectOneMenu disabled="true" value="Tender" style="width:180px;">
 				<f:selectItems value="#{contractDetailsBackingBean.contractListItem.sourcingType}" />

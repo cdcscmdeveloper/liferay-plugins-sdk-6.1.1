@@ -5,24 +5,35 @@
 	xmlns:ui="http://java.sun.com/jsf/facelets"
 	xmlns:p="http://primefaces.org/ui"
 	xmlns:c="http://java.sun.com/jsp/jstl/core">
-	  <h:panelGrid columns="4" style="width:700px;">  
-      <p:outputLabel value="Amended Request No" />  
-      <p:commandLink style="margin-right:20px;" sajax="false">  
+	  <h:panelGrid columns="4" style="width:800px;" columnClasses="columnWidth15">  
+	 
+	   <p:outputLabel value="Request No" />  
+      <p:commandLink style="margin-right:20px;">  
        <p:outputLabel value="FA00099234242" style="float:left;" />  
       </p:commandLink> 
-      <p:outputLabel value="Amended Request Date" />  
-      <p:inputText style="width:150px;" required="true" disabled="true" />
-      <p:outputLabel value="Amended Title / Name" />  
-      <p:inputText style="width:150px;"/>
-      <p:outputLabel value="Amended File Ref No"/>  
-      <p:inputText style="width:150px;" disabled="true" /> 
-      <h:panelGroup>
-		<div style="height: 40px; vertical-align: top">
-		   <p:outputLabel for="amendmentD" value="Amended Description" />
+       <p:outputLabel value="Extension of Contract" />
+	   <p:selectBooleanCheckbox value="true" disabled="true" />
+       <p:outputLabel value="Request Date" />  
+      <p:inputText style="width:170px;"  disabled="true" />
+          <p:outputLabel value="Change of item price" />
+	  <p:selectBooleanCheckbox value="false" disabled="True" />
+       <p:outputLabel value="File Ref No."/>  
+      <p:inputText style="width:170px;" disabled="true" /> 
+      <p:outputLabel value="Change of contract value" />
+	   <p:selectBooleanCheckbox value=" " disabled="true" /> 
+	  <p:outputLabel value="Title / Name" />  
+      <p:inputText style="width:170px;"/>
+	   <p:outputLabel value="Change of quantity" />
+	   <p:selectBooleanCheckbox value=" " disabled="true" />
+	   <f:verbatim></f:verbatim> <f:verbatim></f:verbatim>
+	   
+	  <h:panelGroup>
+		<div style="height: 40px; vertical-align: top;">
+		   <p:outputLabel for="amendmentD" value="Description" />
 		</div>
 		</h:panelGroup>
 		<h:panelGrid>
-		  <p:inputTextarea id="amendmentD" required="false" rows="2" cols="26" disabled="false" autoResize="false" />
+		  <p:inputTextarea id="amendmentD"  rows="2" cols="31"  autoResize="false" />
 		</h:panelGrid>
 	</h:panelGrid>
 </ui:composition>

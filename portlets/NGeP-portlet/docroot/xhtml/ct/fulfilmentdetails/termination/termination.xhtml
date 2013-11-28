@@ -8,16 +8,16 @@
 	<ui:include src="/xhtml/ct/fulfilmentdetails/shared/fulfilment.xhtml"/>
 	<ui:include	src="/xhtml/ct/fulfilmentdetails/shared/quotationTender.xhtml" />
     <p:panel id="terCont" header="#{lbl['lbl.ct.tr.panel.header']}" toggleable="true"  toggleSpeed="500">
-            <h:panelGrid columns="4" style="width:650px;">  
-               <h:outputLabel value="#{lbl['lbl.ct.tr.mutual']}"/>  
+            <h:panelGrid columns="4" style="width:800px;" columnClasses="columnWidth15">  
+               <p:outputLabel value="#{lbl['lbl.ct.tr.mutual']}"/>  
                <p:selectBooleanCheckbox value="#{contractDetailsBackingBean.managedBean.termination.mutualTerminate}"/> 
                <f:verbatim></f:verbatim> <f:verbatim></f:verbatim>
-               <h:outputLabel  value="#{lbl['lbl.ct.tr.recom']}"/>  
-               <p:selectOneMenu value="#{contractDetailsBackingBean.managedBean.termination.caRecommendationCode.code}" style="width:150px;">
+               <p:outputLabel  value="#{lbl['lbl.ct.tr.recom']}"/>  
+               <p:selectOneMenu value="#{contractDetailsBackingBean.managedBean.termination.caRecommendationCode.code}" style="width:170px;">
                   <f:selectItems value="#{contractDetailsBackingBean.getDropdownValues(PmCodeCatConst.ctTerminationRecommendType)}" />
             	   <p:ajax event="change" update=":form:tabview" listener="#{contractDetailsBackingBean.changeField}" process="@this"/>  
                </p:selectOneMenu>    
-               <h:outputLabel value="#{lbl['lbl.ct.tr.date']}"/>
+               <p:outputLabel value="#{lbl['lbl.ct.tr.date']}"/>
                <p:calendar style="width:120px;" value="#{contractDetailsBackingBean.managedBean.termination.terminationDate}" id="popupButtonCal3" showOn="button" />
 	         </h:panelGrid> 
      </p:panel>
