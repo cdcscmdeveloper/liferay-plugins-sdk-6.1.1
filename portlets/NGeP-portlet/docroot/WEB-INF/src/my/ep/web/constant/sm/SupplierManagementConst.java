@@ -6,7 +6,8 @@ package my.ep.web.constant.sm;
 public class SupplierManagementConst {
 
 	// Navigation
-	public static final String PROCEED_MOF_REG = "mofRegBasePage";
+	public static final String PROCEED_MOF_REG = "mofRegSmUser_BaseWizardPage";
+	public static final String MOF_REG_REDIRECT = "mofRegSmUser_BaseWizardPage?faces-redirect=true";
 	public static final String PROCEED_BUMI_APPLN = "applyBumiStatusBasePage";
 	public static final String PROCEED_UPDATE_MOF_APPLN = "updateMofDetailsBasePage";
 	public static final String PROCEED_ADDTNLCAT_MOF_APPLN = "addAdditionalCategoryBasePage";

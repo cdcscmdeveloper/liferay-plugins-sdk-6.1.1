@@ -112,7 +112,7 @@ public class SmApplicationBackingBean extends
 			} else {
 				smAppl.setApplNo("UNKNOWNAPPL");
 			}
-
+			smApplSupplier.setEstablishDate(new Date());
 			smAppl.setSmSupplier(smApplSupplier);
 			if (!applicationType.equalsIgnoreCase("N")) {
 				// mofRegAppl.setSmAddress(smAddress);
@@ -333,7 +333,7 @@ public class SmApplicationBackingBean extends
 		}
 	}
 
-	public void updateSmAppl() throws Exception {
+	public String updateSmAppl() throws Exception {
 		try {
 			System.out.println("**** ENTER ACTION METHOD BEAN *************"
 					+ currentTab + "  " + outputTab);
@@ -360,6 +360,7 @@ public class SmApplicationBackingBean extends
 			// }
 			// TODO to be confirmed whether reqd to save the appln as draft
 			getManagedBean().setTabActiveIndex(outputTab);
+			return SupplierManagementConst.PROCEED_MOF_REG;
 
 		} catch (Exception e) {
 			System.out.println("this is error");
@@ -370,6 +371,7 @@ public class SmApplicationBackingBean extends
 							"Sample error message",
 							"PrimeFaces makes no mistakes"));
 			getManagedBean().setTabActiveIndex(currentTab);
+			return SupplierManagementConst.PROCEED_MOF_REG;
 		}
 
 	}
@@ -405,6 +407,7 @@ public class SmApplicationBackingBean extends
 		System.out.println(" ***** Tab Values *** " + currentTab + outputTab);
 		this.currentTab = currentTab;
 		this.outputTab = outputTab;
+		getManagedBean().setTabActiveIndex(outputTab);
 	}
 
 	public void assignReviewSupportingNav(String navType) {
