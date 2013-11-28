@@ -29,7 +29,7 @@
 
 		<ui:include src="lovSearchPanel.xhtml" />
 
-		<table style="width:100%;"><tr align="right"><TD align="right">
+		<table style="width:100%; text-align:right;"><tr><TD>
 			<p:commandButton
 				value="Reset"
 				action="#{lovBackingBean.resetAction}"
@@ -80,11 +80,11 @@
 				
 			</p:dataTable>
 
-			<div align="right" style="width:100%;">
+			<div style="text-align:right; width:100%;">
 				<p:commandButton 
 					value="Select"
 					action="#{lovBackingBean.populateToSaveObject}"
-					update="lovTb searchPanel #{lovBackingBean.lovBean.clientId}"
+					update="lovTb searchPanel #{lovBackingBean.lovBean.clientId} #{lovBackingBean.lovBean.update}"
 					oncomplete="lovPopup.hide();"
 					partialSubmit="true" />	
 			</div>
