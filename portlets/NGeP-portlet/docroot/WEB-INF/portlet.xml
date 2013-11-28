@@ -1480,11 +1480,11 @@
 
 	<portlet>
 		<portlet-name>scProposal</portlet-name>
-		<display-name>Proposal</display-name>
+		<display-name>Supplier Proposal</display-name>
 		<portlet-class>org.portletfaces.bridge.GenericFacesPortlet</portlet-class>
 		<init-param>
 			<name>javax.portlet.faces.defaultViewId.view</name>
-			<value>/xhtml/ss/proposal/proposalview.xhtml</value>
+			<value>/xhtml/ss/supplierproposal/supplierProposalMain.xhtml</value>
 		</init-param>
 		<expiration-cache>0</expiration-cache>
 		<supports>
@@ -1492,8 +1492,8 @@
 			<portlet-mode>view</portlet-mode>
 		</supports>
 		<portlet-info>
-			<title>Proposal</title>
-			<short-title>Proposal</short-title>
+			<title>Supplier Proposal</title>
+			<short-title>Supplier Proposal</short-title>
 			<keywords></keywords>
 		</portlet-info>
 		<security-role-ref>
