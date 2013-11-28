@@ -71,7 +71,6 @@ import org.apache.log4j.Logger;
 import org.primefaces.event.TabChangeEvent;
 
 import com.liferay.portal.util.PortalUtil;
-import com.sun.imageio.plugins.bmp.BMPConstants;
 
 /**
  * @Author VidyasagarReddy
