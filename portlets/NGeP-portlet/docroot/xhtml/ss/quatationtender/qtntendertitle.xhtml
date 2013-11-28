@@ -52,8 +52,9 @@
 			</h:column>
 			<h:column>
 				<p:selectOneMenu
-					value="#{qTDetailBB.managedBean.qt.procurementMode}">
+					value="#{qTDetailBB.managedBean.qt.procurementMode}" >
 					<f:selectItems value="#{qTDetailBB.getDropdownCodeValues(PmCodeCatConst.scProcurementMode)}" />
+				<p:ajax event="change" partialSubmit="true" process="@this" update="approvalWorkFlow" listener="#{qTDetailBB.onChangeAction}"/>
 				</p:selectOneMenu>
 			</h:column>
 			<h:column>
@@ -74,14 +75,14 @@
 		<p:dataTable id="gosodoList"
 			rowIndexVar="rowIndex"
 			value="#{qTDetailBB.managedBean.qt.scQtGosodoBudgets}" var="gosodo"
-			editable="true">
+			>
 			<p:column headerText="GO Code">
 				<h:outputText value="#{gosodo.pmGo.goCode}"
 					rendered="#{rowIndex lt qTDetailBB.managedBean.qt.scQtGosodoBudgets.size()-1}" />
 				<p:selectOneMenu value="#{gosodo.pmGo.goId}"
 					rendered="#{rowIndex eq qTDetailBB.managedBean.qt.scQtGosodoBudgets.size()-1}">
 					<f:selectItem itemLabel="Select One" itemValue="#{null}" />
-					<f:selectItems value="#{qTDetailBB.goList}" var="go"
+					<f:selectItems value="#{qTDetailBB.managedBean.goList}" var="go"
 						itemLabel="#{go.goCode}" itemValue="#{go.goId}" />
 					<p:ajax event="change"
 						listener="#{qTDetailBB.handleGoChanged(gosodo)}"
@@ -109,10 +110,14 @@
 					<f:selectItem itemLabel="Select One" itemValue="#{null}" />
 					<f:selectItems value="#{qTDetailBB.managedBean.doList}" var="do"
 						itemLabel="#{do.doCode}" itemValue="#{do.doId}" />
+						<p:ajax event="change"
+					listener="#{qTDetailBB.handleDoChange(gosodo)}"
+						partialSubmit="true" process="@this" />
+						
 				</p:selectOneMenu>
 			</p:column>
 			<p:column headerText="Budget Availability"> 
-       		#{!empty gosodo.isBudgetAvailable ? (gosodo.isBudgetAvailable ? 'Yes' : 'No') : ''}
+       		#{empty gosodo.budgetAvailable ? (gosodo.budgetAvailable ? 'Yes' : 'No') : ''}
        	</p:column>
 			<p:column headerText="Action ">
 				<p:commandLink style="margin-right:20px;" ajax="false">
