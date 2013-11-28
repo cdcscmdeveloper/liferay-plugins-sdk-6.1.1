@@ -51,9 +51,11 @@
 			<f:facet name="header">
 				#{lbl['lbl.cm.action']}
 			</f:facet>
-			<p:commandButton
-				action="#{catalogueBackingBean.navigateToApprovedItemDet(rowIndex)}"
-				value="Details"></p:commandButton>
+				<p:commandLink
+				action="#{catalogueBackingBean.navigateToApprovedItemDet(rowIndex)}">
+				<p:graphicImage value="/resources/ep/images/design/edit.png"></p:graphicImage>
+			</p:commandLink>
+			
 		</p:column>
 	</p:dataTable>
 

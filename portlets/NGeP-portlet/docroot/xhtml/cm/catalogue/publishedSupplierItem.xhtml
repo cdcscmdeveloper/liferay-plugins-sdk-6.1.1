@@ -8,12 +8,13 @@
 
 
 	<p:dataTable id="publishSupplierItemID"
-		value="#{catalogueBackingBean.managedBean.publishedItemList}" rowIndexVar="rowIndex"
-		var="publish" rowKey="#{publish.supplierItemId}"
+		value="#{catalogueBackingBean.managedBean.publishedItemList}"
+		rowIndexVar="rowIndex" var="publish"
+		rowKey="#{publish.supplierItemId}"
 		selection="#{catalogueBackingBean.managedBean.selectedPublishedItems}">
 
 		<p:column selectionMode="multiple" style="width:2%" />
-		
+
 		<p:column>
 			<f:facet name="header">
 				#{lbl['lbl.cm.item.name']}
@@ -46,10 +47,12 @@
 			<f:facet name="header">
 				#{lbl['lbl.cm.action']}
 			</f:facet>
-			<p:commandButton
-				action="#{catalogueBackingBean.navigateToPublishedItemDet(rowIndex)}"
-				value="Details"></p:commandButton>
+			<p:commandLink
+				action="#{catalogueBackingBean.navigateToPublishedItemDet(rowIndex)}">
+				<p:graphicImage value="/resources/ep/images/design/edit.png"></p:graphicImage>
+			</p:commandLink>
+			
 		</p:column>
 	</p:dataTable>
-	
+
 </ui:composition>
