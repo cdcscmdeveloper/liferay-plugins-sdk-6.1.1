@@ -207,7 +207,7 @@
 					<td><p:outputLabel value="Tel No." /></td>
 					<td><p:inputText style="width: 120px;" value="02-7324800 "
 							disabled="true" /></td>
-					<td><p:outputLabel value="Tel Ni." /></td>
+					<td><p:outputLabel value="Tel No." /></td>
 					<td><p:inputText style="width: 120px;" value="02-7324800 "
 							disabled="true" /></td>
 				</tr>
@@ -217,10 +217,10 @@
 			<table>
 				<tr>
 					<td valign="top"><p:outputLabel value="Special Instruction" /></td>
-					<td><p:inputTextarea rows="7" style="width: 260px;"
+					<td><p:inputTextarea rows="7" style="width: 260px;margin-bottom:5px;"
 							value="#{shipInstrBackingBean.managedBean.shippingInstr.specialInstruction}" /></td>
 					<td valign="top"><p:outputLabel value="Marks And Numbers" /></td>
-					<td><p:inputTextarea rows="7" style="width: 260px;" /></td>
+					<td><p:inputTextarea rows="7" style="width: 260px;margin-bottom:5px;" /></td>
 
 				</tr>
 			</table>
@@ -239,5 +239,15 @@
 				</p:column>
 			</p:dataTable>
 		</p:panel>
+		<p:panel header="#{lbl['lbl.fl.remark.attachment']}" toggleable="true">
+		<table style="width: 100%">
+			<tr>
+				<td width="50%" valign="top"><ui:include
+						src="/xhtml/fl/shared/remark.xhtml" /></td>
+				<td width="50%" valign="top"><ui:include
+						src="/xhtml/fl/shared/attachment.xhtml" /></td>
+			</tr>
+		</table>
+	</p:panel>
 	</ui:define>
 </ui:composition>
