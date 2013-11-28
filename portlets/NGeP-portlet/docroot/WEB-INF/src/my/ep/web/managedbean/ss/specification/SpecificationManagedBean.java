@@ -8,6 +8,7 @@ import java.util.List;
 
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
+import javax.faces.model.SelectItem;
 
 import my.ep.factory.EpLogger;
 import my.ep.persistence.entity.ss.quationtender.ScQtCheckList;
@@ -58,8 +59,12 @@ public class SpecificationManagedBean extends BaseManagedBean {
 	private List<String> compilanceList=new ArrayList<String>();
 	 public List<SpecificationCompilanceBean> compilaenceList;
 	 private ScRemark scRemark;
+	 private List<SelectItem> comitteeUsers;
+	 private List<SelectItem> currencyListDetails;
+	 private List<SelectItem> procurementListDetails;
 	
 	public boolean isSampleReq=true;
+	public String approvalDate;
 
 	/**
 	 * @return the scQtSpec
@@ -306,6 +311,64 @@ public class SpecificationManagedBean extends BaseManagedBean {
 	public void setSampleReq(boolean isSampleReq) {
 		this.isSampleReq = isSampleReq;
 	}
+
+	/**
+	 * @return the comitteeUsers
+	 */
+	public List<SelectItem> getComitteeUsers() {
+		return comitteeUsers;
+	}
+
+	/**
+	 * @param comitteeUsers the comitteeUsers to set
+	 */
+	public void setComitteeUsers(List<SelectItem> comitteeUsers) {
+		this.comitteeUsers = comitteeUsers;
+	}
+
+	/**
+	 * @return the approvalDate
+	 */
+	public String getApprovalDate() {
+		return approvalDate;
+	}
+
+	/**
+	 * @param approvalDate the approvalDate to set
+	 */
+	public void setApprovalDate(String approvalDate) {
+		this.approvalDate = approvalDate;
+	}
+
+	/**
+	 * @return the currencyListDetails
+	 */
+	public List<SelectItem> getCurrencyListDetails() {
+		return currencyListDetails;
+	}
+
+	/**
+	 * @param currencyListDetails the currencyListDetails to set
+	 */
+	public void setCurrencyListDetails(List<SelectItem> currencyListDetails) {
+		this.currencyListDetails = currencyListDetails;
+	}
+
+	/**
+	 * @return the procurementListDetails
+	 */
+	public List<SelectItem> getProcurementListDetails() {
+		return procurementListDetails;
+	}
+
+	/**
+	 * @param procurementListDetails the procurementListDetails to set
+	 */
+	public void setProcurementListDetails(List<SelectItem> procurementListDetails) {
+		this.procurementListDetails = procurementListDetails;
+	}
+
+	
 
 	
 
