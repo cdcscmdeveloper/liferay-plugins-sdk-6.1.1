@@ -11,6 +11,7 @@ import javax.faces.model.SelectItem;
 
 import my.ep.factory.EpLogger;
 import my.ep.persistence.entity.ct.circular.CtCircular;
+import my.ep.persistence.entity.ct.circular.panel.CtPanelSupplier;
 import my.ep.persistence.entity.pm.authorization.PmOrgProfile;
 import my.ep.persistence.entity.pm.common.PmCategoryL1;
 import my.ep.persistence.entity.pm.common.PmCategoryL2;
@@ -26,12 +27,14 @@ import my.ep.persistence.entity.sm.SmSupplier;
 import my.ep.persistence.entity.ss.quationtender.ScQt;
 import my.ep.persistence.entity.ss.quationtender.ScQtBriefing;
 import my.ep.persistence.entity.ss.quationtender.ScQtCategory;
+import my.ep.persistence.entity.ss.quationtender.ScQtCheckList;
 import my.ep.persistence.entity.ss.quationtender.ScQtContactPerson;
 import my.ep.persistence.entity.ss.quationtender.ScQtCriteria;
 import my.ep.persistence.entity.ss.quationtender.ScQtDoc;
 import my.ep.persistence.entity.ss.quationtender.ScQtGosodoBudget;
 import my.ep.persistence.entity.ss.quationtender.ScQtRemark;
 import my.ep.persistence.entity.ss.quationtender.ScRemark;
+import my.ep.web.backingbean.ss.quatationtender.CloneAllDataModel;
 import my.ep.web.bean.ss.quatationtender.QtnTenderSearchBean;
 import my.ep.web.bean.ss.quatationtender.TabBean;
 import my.ep.web.managedbean.BaseManagedBean;
@@ -40,6 +43,8 @@ import my.ep.web.type.ss.quationtender.CloneAll;
 import org.apache.log4j.Logger;
 import org.primefaces.model.DefaultTreeNode;
 import org.primefaces.model.TreeNode;
+
+import com.bea.common.security.jdkutils.WeaverUtil.Arrays;
 
 /**
  * @Author VidyasagarReddy
@@ -58,11 +63,14 @@ public class QTDetailManagedBean extends BaseManagedBean {
 	private ScQtBriefing qtBriefing;
 	private ScQtCategory qtCategory;
 	private CtCircular searchCircular;
+	private CtPanelSupplier ctPanelSupplier;
 	private ScQtBriefing qtSiteBriefing;
 	private ScQtDoc qtDoc;
 	private ScQtRemark qtRemark;
 	private SmMofAccount smMofAccount;
 	private ScRemark scRemark;
+	private ScQtCheckList qtCheckList;
+	private ScQtContactPerson qtContactPerson;
 	
 	private String selectedBoolean1;
 	private String multiLoc;
@@ -71,7 +79,8 @@ public class QTDetailManagedBean extends BaseManagedBean {
 	private SmSupplier searchSupplier;
 	private List<SmSupplier> smSupplierList;
 	private List<SmMofAccount> smMofAccounts;
-
+	private List<CtPanelSupplier> ctPanelSuppliers;
+	
 	
 	/**
 	 * For Search Quotation/Tender Screen
@@ -98,7 +107,9 @@ public class QTDetailManagedBean extends BaseManagedBean {
     private List<ScQtContactPerson> scQtContactPersons;
     private List<CtCircular> ctCirculars;
     private List<ScQtRemark> scQtRemarks;
-    private String qtNumber;
+    private List<ScQtCheckList> scQtChecklists;
+   
+	private String qtNumber;
 	
 	private PmOrgProfile selectedUserMinistry;
 	private PmOrgProfile selectedUserDepartment;
@@ -152,6 +163,8 @@ public class QTDetailManagedBean extends BaseManagedBean {
 	private List<String> approvalTypelist = new ArrayList<String>();
 	private int activeIndex=0;
 	private int subTabIndex=0;
+	private CloneAllDataModel cloneAll;
+	
 	static{
 			PmZone zone=new PmZone();
 			zone.setZoneName("India");
@@ -416,6 +429,7 @@ public class QTDetailManagedBean extends BaseManagedBean {
 		TreeNode d1 = new DefaultTreeNode(("District1"), states);
 		TreeNode d2 = new DefaultTreeNode(("District2"), states);
 		TreeNode d = new DefaultTreeNode(("District1"), districts);
+		
 
 	}
 
@@ -1054,6 +1068,70 @@ public class QTDetailManagedBean extends BaseManagedBean {
 		this.scRemark = scRemark;
 	}
 
-	
 
+	public List<CtPanelSupplier> getCtPanelSuppliers() {
+		return ctPanelSuppliers;
+	}
+
+
+	public void setCtPanelSuppliers(List<CtPanelSupplier> ctPanelSuppliers) {
+		this.ctPanelSuppliers = ctPanelSuppliers;
+	}
+
+
+	public CtPanelSupplier getCtPanelSupplier() {
+		return ctPanelSupplier;
+	}
+
+
+	public void setCtPanelSupplier(CtPanelSupplier ctPanelSupplier) {
+		this.ctPanelSupplier = ctPanelSupplier;
+	}
+
+	 
+    public List<ScQtCheckList> getScQtChecklists() {
+		return scQtChecklists;
+	}
+
+
+	public void setScQtChecklists(List<ScQtCheckList> scQtChecklists) {
+		this.scQtChecklists = scQtChecklists;
+	}
+
+
+	public ScQtCheckList getQtCheckList() {
+		return qtCheckList;
+	}
+
+
+	public void setQtCheckList(ScQtCheckList qtCheckList) {
+		this.qtCheckList = qtCheckList;
+	}
+
+
+	public CloneAllDataModel getCloneAll() {
+		return cloneAll;
+	}
+
+
+	public void setCloneAll(CloneAllDataModel cloneAll) {
+		this.cloneAll = cloneAll;
+	}
+
+
+	public void populateCloneAll(){
+		CloneAll [] cloneAllValues=CloneAll.values();
+		//Arrays.
+	}
+
+
+	public ScQtContactPerson getQtContactPerson() {
+		return qtContactPerson;
+	}
+
+
+	public void setQtContactPerson(ScQtContactPerson qtContactPerson) {
+		this.qtContactPerson = qtContactPerson;
+	}
+   
 }
