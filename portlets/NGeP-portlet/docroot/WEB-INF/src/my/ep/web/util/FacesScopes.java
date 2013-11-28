@@ -213,11 +213,10 @@ public class FacesScopes {
 	public List<Role> getUserRoleList() {
 		List<Role> userRoleList = null;
 		try {
-			// User user =
-			// UserServiceUtil.getUserById(Long.valueOf(this.getRequest().getRemoteUser()));
-			// userRoleList = user.getRoles();
-			userRoleList = RoleServiceUtil.getUserRoles(Long.valueOf(this
-					.getRequest().getRemoteUser()));
+			User user = UserServiceUtil.getUserById(Long.valueOf(this.getRequest().getRemoteUser()));
+			userRoleList = user.getRoles();
+//			userRoleList = RoleServiceUtil.getUserRoles(Long.valueOf(this
+//					.getRequest().getRemoteUser()));
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
