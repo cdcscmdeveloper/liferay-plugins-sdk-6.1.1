@@ -2100,7 +2100,7 @@ table.ppThreePartsTable td {
 }
 
 
-.ui-selectonemenu, .ui-inputtext{
+.ui-selectonemenu {
 	height:20px;
 	min-width:60px;
 	vertical-align: middle;
