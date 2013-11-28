@@ -38,7 +38,6 @@ import my.ep.persistence.entity.ss.quationtender.ScQt;
 import my.ep.persistence.entity.ss.quationtender.ScQtCommittee;
 import my.ep.type.aut.SearchOperator;
 import my.ep.type.pm.OrganizationType;
-import my.ep.type.ss.CommitteType;
 import my.ep.util.lookupservice.EpEjbBusinessDelegate;
 import my.ep.web.backingbean.ss.quatationtender.SourcingBaseBackingBean;
 import my.ep.web.constant.BpmOutcomeConst;
@@ -46,6 +45,7 @@ import my.ep.web.constant.SourcingConst;
 import my.ep.web.managedbean.ss.committee.CommitteManagedBean;
 import my.ep.web.ss.quationtender.common.QTConstants;
 import my.ep.web.type.ss.quationtender.ApprovalStatus;
+import my.ep.web.type.ss.quationtender.CommitteType;
 import my.ep.web.type.ss.quationtender.IdentificationType;
 import my.ep.web.type.ss.quationtender.MemberRole;
 import my.ep.web.type.ss.quationtender.MemberType;
@@ -576,7 +576,7 @@ public class CommitteBackingBean extends
 				.getCommitteMember();
 
 		committeeMember.setMemberName(pmUser.getUserName());
-		committeeMember.setIdType(pmUser.getPmIdentificationCode().getCode());
+		committeeMember.setIdType("");
 		committeeMember.setIcPassport(pmUser.getIdentificationNo());
 		committeeMember.setDesignation(pmUser.getDesignation());
 		committeeMember.setGrade(pmUser.getGrade());
