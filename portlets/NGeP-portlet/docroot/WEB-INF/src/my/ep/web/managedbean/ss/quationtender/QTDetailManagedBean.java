@@ -10,9 +10,11 @@ import javax.faces.bean.SessionScoped;
 import javax.faces.model.SelectItem;
 
 import my.ep.factory.EpLogger;
+import my.ep.jaxb.sc.quotationtenderdata.SCQuotationTenderDataType;
 import my.ep.persistence.entity.ct.circular.CtCircular;
 import my.ep.persistence.entity.ct.circular.panel.CtPanelSupplier;
 import my.ep.persistence.entity.pm.authorization.PmOrgProfile;
+import my.ep.persistence.entity.pm.authorization.PmUser;
 import my.ep.persistence.entity.pm.common.PmCategoryL1;
 import my.ep.persistence.entity.pm.common.PmCategoryL2;
 import my.ep.persistence.entity.pm.common.PmCategoryL3;
@@ -43,8 +45,6 @@ import my.ep.web.type.ss.quationtender.CloneAll;
 import org.apache.log4j.Logger;
 import org.primefaces.model.DefaultTreeNode;
 import org.primefaces.model.TreeNode;
-
-import com.bea.common.security.jdkutils.WeaverUtil.Arrays;
 
 /**
  * @Author VidyasagarReddy
@@ -164,6 +164,14 @@ public class QTDetailManagedBean extends BaseManagedBean {
 	private int activeIndex=0;
 	private int subTabIndex=0;
 	private CloneAllDataModel cloneAll;
+	
+	private List<PmUser> veryfiers;
+	private List<PmUser> approvers;
+	private List<PmUser> bbkApprovers;
+	private String outCome;
+	private String processName;
+	//Payload for BPM
+		private SCQuotationTenderDataType quotationTenderDataType;
 	
 	static{
 			PmZone zone=new PmZone();
@@ -1132,6 +1140,67 @@ public class QTDetailManagedBean extends BaseManagedBean {
 
 	public void setQtContactPerson(ScQtContactPerson qtContactPerson) {
 		this.qtContactPerson = qtContactPerson;
+	}
+
+
+	public List<PmUser> getVeryfiers() {
+		return veryfiers;
+	}
+
+
+	public void setVeryfiers(List<PmUser> veryfiers) {
+		this.veryfiers = veryfiers;
+	}
+
+
+	public List<PmUser> getApprovers() {
+		return approvers;
+	}
+
+
+	public void setApprovers(List<PmUser> approvers) {
+		this.approvers = approvers;
+	}
+
+
+	public List<PmUser> getBbkApprovers() {
+		return bbkApprovers;
+	}
+
+
+	public void setBbkApprovers(List<PmUser> bbkApprovers) {
+		this.bbkApprovers = bbkApprovers;
+	}
+
+
+	public String getOutCome() {
+		return outCome;
+	}
+
+
+	public void setOutCome(String outCome) {
+		this.outCome = outCome;
+	}
+
+
+	public String getProcessName() {
+		return processName;
+	}
+
+
+	public void setProcessName(String processName) {
+		this.processName = processName;
+	}
+
+
+	public SCQuotationTenderDataType getQuotationTenderDataType() {
+		return quotationTenderDataType;
+	}
+
+
+	public void setQuotationTenderDataType(
+			SCQuotationTenderDataType quotationTenderDataType) {
+		this.quotationTenderDataType = quotationTenderDataType;
 	}
    
 }
