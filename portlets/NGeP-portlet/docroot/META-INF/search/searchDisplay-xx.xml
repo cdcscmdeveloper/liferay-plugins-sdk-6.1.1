@@ -61,4 +61,29 @@
 	</property>
 </bean>
 
+<bean id="PM_CITY" class="my.ep.web.bean.LovBean">
+	<property name="pk" value="cityId" />
+
+	<property name="daoClass" value="my.ep.persistence.dao.pm.common.city.CityDAO" />
+	<!-- <property name="searchMethod" value="findColor" /> -->
+	<property name="columns">
+		<list>
+			<bean class="my.ep.web.bean.LovColumnBean">
+		        <property name="columnName" 	value="cityCode" />
+      			<property name="bundleFile" 	value="messageprovider-config.bundles.labels.labels" />
+      			<property name="bundleKey" 		value="lbl.pm.city.code" />
+      			<property name="columnWidth" 	value="150" />
+      			<!-- <property name="columnTitle" 	value="Color Name" /> -->
+			</bean>
+			<bean class="my.ep.web.bean.LovColumnBean">
+		        <property name="columnName" 	value="cityName" />
+      			<property name="bundleFile" 	value="messageprovider-config.bundles.labels.labels" />
+      			<property name="bundleKey" 		value="lbl.pm.city.name" />
+      			<property name="columnWidth" 	value="150" />
+      			<!-- <property name="columnTitle" 	value="Color Code" /> -->
+			</bean>
+		</list>
+	</property>
+</bean>
+
 </beans>
