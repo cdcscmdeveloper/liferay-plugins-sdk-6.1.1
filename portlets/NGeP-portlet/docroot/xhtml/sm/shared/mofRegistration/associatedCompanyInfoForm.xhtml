@@ -47,17 +47,14 @@
 					value="#{assocBean.smAddress.address1},#{assocBean.smAddress.address2}" />
 			</p:column>
 			<p:column headerText="Action">
-				<p:commandLink update=":form:tt:asDisp"
+				<p:commandLink update=":form:asDisp"
 					action="#{backingBean.assignSelAssoc(assocBean)}"
 					oncomplete="assocDialog.show();">
 					<p:graphicImage library="ep/images/design" name="edit.png"
 						value="/resources/ep/images/design/edit.png"
 						style="margin-right:2px;" />
 				</p:commandLink>
-				<p:commandLink>
-					<p:graphicImage library="ep/images/design" name="delete.png"
-						value="/resources/ep/images/design/delete.png" />
-				</p:commandLink>
+				
 			</p:column>
 
 
@@ -65,7 +62,7 @@
 		<div align="right">
 			<p:commandButton value="Add"
 				action="#{backingBean.assignNewAssocBean}"
-				oncomplete="assocDialog.show();" update=":form:tt:asDisp" />
+				oncomplete="assocDialog.show();" update=":form:asDisp" />
 			<p:commandButton value="Delete" />
 
 		</div>
@@ -202,7 +199,7 @@
 			<p:commandButton value="Save"
 				action="#{backingBean.addOrUpdateAssocToSmAppl}"
 				oncomplete="assocDialog.hide();" type="submit" partialSubmit="true"
-				process="asDisp" update=":form:tt:asoc" />
+				process="asDisp" update=":form:asoc" />
 			<p:commandButton value="Cancel" onclick="assocDialog.hide();" />
 		</div>
 	</p:dialog>

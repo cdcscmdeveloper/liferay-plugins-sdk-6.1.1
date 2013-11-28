@@ -1,0 +1,191 @@
+<ui:composition
+	template="/WEB-INF/facelets/templates/basic_template.xhtml"
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:c="http://java.sun.com/jsp/jstl/core">
+
+	<ui:define name="resourceSection">
+
+	</ui:define>
+
+
+	<ui:define name="contentSection">
+		<p:panel id="tt">
+			<table style="width: 100%">
+				<tr>
+					<td><div class="navDiv" id="menuDiv" align="center">
+							<ul class="menu-text">
+								<li><h:outputText value="Company Info"
+										rendered="#{backingBean.managedBean.tabActiveIndex eq 0}" />
+									<p:commandLink value="Company Info"
+										rendered="#{backingBean.managedBean.tabActiveIndex gt 0}" /></li>
+								<li><h:outputText value="Branch / Assocs"
+										rendered="#{backingBean.managedBean.tabActiveIndex le 1}" />
+									<p:commandLink value="Branch / Assocs"
+										rendered="#{backingBean.managedBean.tabActiveIndex gt 1}" /></li>
+								<li><h:outputText value="Captial Info"
+										rendered="#{backingBean.managedBean.tabActiveIndex le 2}" />
+									<p:commandLink value="Captial Info"
+										rendered="#{backingBean.managedBean.tabActiveIndex gt 2}" /></li>
+								<li><h:outputText value="Personnels"
+										rendered="#{backingBean.managedBean.tabActiveIndex le 3}" />
+									<p:commandLink value="Personnels"
+										rendered="#{backingBean.managedBean.tabActiveIndex gt 3}" /></li>
+								<li><h:outputText value="Bank Info"
+										rendered="#{backingBean.managedBean.tabActiveIndex le 4}" />
+									<p:commandLink value="Bank Info"
+										rendered="#{backingBean.managedBean.tabActiveIndex gt 4}" /></li>
+								<li><h:outputText value="Category Codes"
+										rendered="#{backingBean.managedBean.tabActiveIndex le 5}" />
+									<p:commandLink value="Personnels"
+										rendered="#{backingBean.managedBean.tabActiveIndex gt 5}" /></li>
+								<li><h:outputText value="Factory"
+										rendered="#{backingBean.managedBean.tabActiveIndex le 6}" />
+									<p:commandLink value="Factory"
+										rendered="#{backingBean.managedBean.tabActiveIndex gt 6}" /></li>
+								<li><h:outputText value="Supporting Docs"
+										rendered="#{backingBean.managedBean.tabActiveIndex le 7}" />
+									<p:commandLink value="Supporting Docs"
+										rendered="#{backingBean.managedBean.tabActiveIndex gt 7}" /></li>
+								<li><h:outputText value="Payment" /></li>
+							</ul>
+							<ul id="tripMeter" class="menu-line">
+								<c:choose>
+									<c:when test="#{backingBean.managedBean.tabActiveIndex eq 0}">
+										<li class="space red-dot"></li>
+									</c:when>
+									<c:otherwise>
+										<li class="space green-dot"></li>
+									</c:otherwise>
+								</c:choose>
+								<c:choose>
+									<c:when test="#{backingBean.managedBean.tabActiveIndex lt 1}">
+										<li class="space black-dot"></li>
+									</c:when>
+									<c:when test="#{backingBean.managedBean.tabActiveIndex gt 1}">
+										<li class="space green-dot"></li>
+									</c:when>
+									<c:otherwise>
+										<li class="space red-dot"></li>
+									</c:otherwise>
+								</c:choose>
+								<c:choose>
+									<c:when test="#{backingBean.managedBean.tabActiveIndex lt 2}">
+										<li class="space black-dot"></li>
+									</c:when>
+									<c:when test="#{backingBean.managedBean.tabActiveIndex gt 2}">
+										<li class="space green-dot"></li>
+									</c:when>
+									<c:otherwise>
+										<li class="space red-dot"></li>
+									</c:otherwise>
+								</c:choose>
+								<c:choose>
+									<c:when test="#{backingBean.managedBean.tabActiveIndex lt 3}">
+										<li class="space black-dot"></li>
+									</c:when>
+									<c:when test="#{backingBean.managedBean.tabActiveIndex gt 3}">
+										<li class="space green-dot"></li>
+									</c:when>
+									<c:otherwise>
+										<li class="space red-dot"></li>
+									</c:otherwise>
+								</c:choose>
+								<c:choose>
+									<c:when test="#{backingBean.managedBean.tabActiveIndex lt 4}">
+										<li class="space black-dot"></li>
+									</c:when>
+									<c:when test="#{backingBean.managedBean.tabActiveIndex gt 4}">
+										<li class="space green-dot"></li>
+									</c:when>
+									<c:otherwise>
+										<li class="space red-dot"></li>
+									</c:otherwise>
+								</c:choose>
+								<c:choose>
+									<c:when test="#{backingBean.managedBean.tabActiveIndex lt 5}">
+										<li class="space black-dot"></li>
+									</c:when>
+									<c:when test="#{backingBean.managedBean.tabActiveIndex gt 5}">
+										<li class="space green-dot"></li>
+									</c:when>
+									<c:otherwise>
+										<li class="space red-dot"></li>
+									</c:otherwise>
+								</c:choose>
+								<c:choose>
+									<c:when test="#{backingBean.managedBean.tabActiveIndex lt 6}">
+										<li class="space black-dot"></li>
+									</c:when>
+									<c:when test="#{backingBean.managedBean.tabActiveIndex gt 6}">
+										<li class="space green-dot"></li>
+									</c:when>
+									<c:otherwise>
+										<li class="space red-dot"></li>
+									</c:otherwise>
+								</c:choose>
+								<c:choose>
+									<c:when test="#{backingBean.managedBean.tabActiveIndex lt 7}">
+										<li class="space black-dot"></li>
+									</c:when>
+									<c:when test="#{backingBean.managedBean.tabActiveIndex gt 7}">
+										<li class="space green-dot"></li>
+									</c:when>
+									<c:otherwise>
+										<li class="space red-dot"></li>
+									</c:otherwise>
+								</c:choose>
+								<c:choose>
+									<c:when test="#{backingBean.managedBean.tabActiveIndex lt 8}">
+										<li class="black-dot"></li>
+									</c:when>
+									<c:otherwise>
+										<li class="red-dot"></li>
+									</c:otherwise>
+								</c:choose>
+
+							</ul>
+						</div></td>
+					<td></td>
+				</tr>
+			</table>
+			<div align="right" style="width: 99%">
+				<p:commandButton value="#{lbl['lbl.sm.saveAsDraft']}"
+					icon="ui-icon-save" />
+			</div>
+			<p:messages id="messages" showDetail="true" autoUpdate="true"
+				closable="true" />
+
+			<c:if test="#{backingBean.managedBean.tabActiveIndex eq 0}">
+				<ui:include src="step1CompanyInfo.xhtml" />
+			</c:if>
+			<c:if test="#{backingBean.managedBean.tabActiveIndex eq 1}">
+				<ui:include src="step2BranchCompanyInfo.xhtml" />
+			</c:if>
+			<c:if test="#{backingBean.managedBean.tabActiveIndex eq 2}">
+				<ui:include src="step3CaptialAndEquityStatusInfo.xhtml" />
+			</c:if>
+			<c:if test="#{backingBean.managedBean.tabActiveIndex eq 3}">
+				<ui:include src="step4PersonnelInfo.xhtml" />
+			</c:if>
+			<c:if test="#{backingBean.managedBean.tabActiveIndex eq 4}">
+				<ui:include src="step5BankInfo.xhtml" />
+			</c:if>
+			<c:if test="#{backingBean.managedBean.tabActiveIndex eq 5}">
+				<ui:include src="step6RegisterCategoryCodesInfo.xhtml" />
+			</c:if>
+			<c:if test="#{backingBean.managedBean.tabActiveIndex eq 6}">
+				<ui:include src="step6.1FactoryInfo.xhtml" />
+			</c:if>
+			<c:if test="#{backingBean.managedBean.tabActiveIndex eq 7}">
+				<ui:include src="step7SupportingDocumentsInfo.xhtml" />
+			</c:if>
+			<c:if test="#{backingBean.managedBean.tabActiveIndex eq 8}">
+				<ui:include src="step8ProcessingFeePaymentInfo.xhtml" />
+			</c:if>
+		</p:panel>
+	</ui:define>
+</ui:composition>

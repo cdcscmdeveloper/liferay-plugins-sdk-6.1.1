@@ -62,20 +62,16 @@
 			<p:column headerText="Action">
 				<p:commandLink
 					action="#{backingBean.assignSelContractProj(contrBean)}"
-					oncomplete="contDialog.show();" update=":form:tt:contDialog">
+					oncomplete="contDialog.show();" update=":form:contDialog">
 					<p:graphicImage library="ep/images/design" name="edit.png"
 						value="/resources/ep/images/design/edit.png" />
-				</p:commandLink>
-				<p:commandLink>
-					<p:graphicImage library="ep/images/design" name="delete.png"
-						value="/resources/ep/images/design/delete.png" />
 				</p:commandLink>
 			</p:column>
 		</p:dataTable>
 		<div align="right">
 			<p:commandButton value="Add "
 				action="#{backingBean.assignNewContractProj}"
-				oncomplete="contDialog.show();" update=":form:tt:contDialog" />
+				oncomplete="contDialog.show();" update=":form:contDialog" />
 			<p:commandButton value="Delete " />
 
 		</div>
@@ -175,7 +171,7 @@
 		<div align="right">
 			<p:commandButton value="Save"
 				action="#{backingBean.addOrUpdateContractProjsToSmAppl}"
-				oncomplete="contDialog.hide();" update=":form:tt:contDt" />
+				oncomplete="contDialog.hide();" update=":form:contDt" />
 			<p:commandButton value="Cancel" onclick="contDialog.hide();" />
 		</div>
 

@@ -109,7 +109,7 @@
 					rendered="#{person.equityOwner == false}"
 					action="#{backingBean.assignSelPersonnel(person)}"
 					oncomplete="personnelDialog.show();"
-					update=":form:tt:personnelDialog" /> -->
+					update=":form:personnelDialog" /> -->
 			</p:column>
 
 			<p:column headerText="Roles In Company">
@@ -131,13 +131,9 @@
 				<p:commandLink rendered="#{person.equityOwner == false}"
 					action="#{backingBean.assignSelPersonnel(person)}"
 					oncomplete="personnelDialog.show();"
-					update=":form:tt:personnelDialog">
+					update=":form:personnelDialog">
 					<p:graphicImage library="ep/images/design" name="edit.png"
 						value="/resources/ep/images/design/edit.png" />
-				</p:commandLink>
-				<p:commandLink rendered="#{person.equityOwner == false}">
-					<p:graphicImage library="ep/images/design" name="delete.png"
-						value="/resources/ep/images/design/delete.png" />
 				</p:commandLink>
 			</p:column>
 
@@ -146,10 +142,10 @@
 			<p:commandButton value="Add"
 				action="#{backingBean.assignNewPersonnel}"
 				oncomplete="personnelDialog.show();"
-				update=":form:tt:personnelDialog" />
+				update=":form:personnelDialog" />
 			<p:commandButton value="Delete" />
 		</div>
-		<p:panel header="List of Authorized Personnel">
+		<!-- <p:panel header="List of Authorized Personnel">
 			<p:dataTable var="auth"
 				value="#{backingBean.managedBean.smapplAuthPersonnels}"
 				rowKey="#{auth.personnelId}" rowIndexVar="index" id="authDt">
@@ -171,7 +167,7 @@
 				</p:column>
 			</p:dataTable>
 		</p:panel>
-
+ -->
 		<br />
 		<p:outputPanel rendered="#{backingBean.managedBean.poUser}">
 			<table style="width: 50%">
@@ -207,7 +203,7 @@
 			<p:commandButton value="Save"
 				action="#{backingBean.addOrUpdatePersonnelToSmAppl}"
 				oncomplete="personnelDialog.hide();"
-				update=":form:tt:authDt , :form:tt:personDt" />
+				update=":form:personDt" />
 			<p:commandButton value="Cancel" onclick="personnelDialog.hide();" />
 		</div>
 	</p:dialog>

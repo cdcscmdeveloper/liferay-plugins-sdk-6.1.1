@@ -49,13 +49,9 @@
 			<p:column headerText="Action">
 				<p:commandLink oncomplete="factoryDialog.show();"
 					action="#{backingBean.assignSelFactory(fac)}"
-					update=":form:tt:factoryDialog" style="padding-right:5px">
+					update=":form:factoryDialog" style="padding-right:5px">
 					<p:graphicImage library="ep/images/design" name="edit.png"
 						value="/resources/ep/images/design/edit.png" />
-				</p:commandLink>
-				<p:commandLink>
-					<p:graphicImage library="ep/images/design" name="delete.png"
-						value="/resources/ep/images/design/delete.png" />
 				</p:commandLink>
 			</p:column>
 
@@ -63,7 +59,7 @@
 		<div align="right">
 			<p:commandButton value="Add " oncomplete="factoryDialog.show();"
 				action="#{backingBean.assignNewFactoryBean}"
-				update=":form:tt:factoryDialog" />
+				update=":form:factoryDialog" />
 			<p:commandButton value="Delete " />
 		</div>
 		<br />
@@ -237,7 +233,7 @@
 		<div align="right">
 			<p:commandButton value="Save"
 				action="#{backingBean.addOrUpdateFactoryToSmAppl}"
-				oncomplete="factoryDialog.hide();" update=":form:tt:facDt" />
+				oncomplete="factoryDialog.hide();" update=":form:facDt" />
 			<p:commandButton value="Cancel" onclick="factoryDialog.hide();" />
 		</div>
 	</p:dialog>

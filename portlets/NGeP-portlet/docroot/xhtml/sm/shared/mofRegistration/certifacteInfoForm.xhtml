@@ -59,20 +59,16 @@
 			</p:column>
 			<p:column headerText="Action">
 				<p:commandLink action="#{backingBean.assignSelCert(certBean)}"
-					oncomplete="certDialog.show();" update=":form:tt:certPop">
+					oncomplete="certDialog.show();" update=":form:certPop">
 					<p:graphicImage library="ep/images/design" name="edit.png"
 						value="/resources/ep/images/design/edit.png"
 						style="margin-right:2px;" />
-				</p:commandLink>
-				<p:commandLink>
-					<p:graphicImage library="ep/images/design" name="delete.png"
-						value="/resources/ep/images/design/delete.png" />
 				</p:commandLink>
 			</p:column>
 		</p:dataTable>
 		<div align="right">
 			<p:commandButton value="Add " oncomplete="certDialog.show();"
-				action="#{backingBean.assignNewCert}" update=":form:tt:certPop" />
+				action="#{backingBean.assignNewCert}" update=":form:certPop" />
 			<p:commandButton value="Delete " />
 
 		</div>
@@ -155,7 +151,7 @@
 			<p:commandButton value="Save"
 				action="#{backingBean.addOrUpdateCertsToSmAppl}"
 				partialSubmit="true" process="certPop"
-				oncomplete="certDialog.hide();" update=":form:tt:certDt" />
+				oncomplete="certDialog.hide();" update=":form:certDt" />
 			<p:commandButton value="Cancel" onclick="certDialog.hide();" />
 		</div>
 
