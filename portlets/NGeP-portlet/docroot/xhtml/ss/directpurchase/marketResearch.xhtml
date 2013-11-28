@@ -30,13 +30,12 @@
 				<td width="20%" align="left"><p:outputLabel
 						value="#{lbl['lbl.sc.purchase.procurement.type']}" id="lbl_11" />
 				</td>
-				<TD><p:selectOneMenu
-						value="#{directPurchaseBackingBean.managedBean.requestList.procurementType}"
-						style="width: auto; min-width: 200px;" required="false" disabled="false">
-						<p:ajax update="@([id$=globe_panel_1])" event="valueChange"
+				<TD><p:selectOneMenu value="#{directPurchaseBackingBean.managedBean.requestList.procurementType}"
+						converter="procurementTypeConverter" style="width: auto; min-width: 200px;" required="true">
+						<!-- p:ajax update="@([id$=justificationTypeSelectMenu])" event="valueChange"
 							partialSubmit="true" process="@this"
-							listener="#{directPurchaseBackingBean.procurementTypeChangeListener()}" />
-						<f:selectItems value="#{directPurchaseBackingBean.procumentList}"
+							listener="#{directPurchaseBackingBean.procurementTypeChangeListener()}" /-->
+						<f:selectItems value="#{directPurchaseBackingBean.managedBean.procumentList}"
 							var="type" itemValue="#{type.optionValue}"
 							itemLabel="#{type.optionName}"></f:selectItems>
 					</p:selectOneMenu></TD>
@@ -44,11 +43,12 @@
 			<TR>
 				<TD width="20%" align="left"><p:outputLabel
 						value="#{lbl['lbl.sc.purchase.justification']}" id="lbl_22" /></TD>
-				<TD colspan="3"><p:selectOneMenu
+				<TD colspan="3">
+					<p:selectOneMenu id="justificationTypeSelectMenu"
 						value="#{directPurchaseBackingBean.managedBean.requestList.justificationType}"
-						style="width: auto; min-width: 100px;" required="false" disabled="false">
+						converter="justificationTypeConverter" style="width: auto; min-width: 100px;" required="false">
 						<f:selectItems
-							value="#{directPurchaseBackingBean.justificationTypes}"
+							value="#{directPurchaseBackingBean.managedBean.justificationTypes}"
 							var="justificationType"
 							itemValue="#{justificationType.optionValue}"
 							itemLabel="#{justificationType.optionName}"></f:selectItems>
@@ -70,7 +70,7 @@
 			<p:button value="#{lbl['lbl.ss.action.clone']}" />
 		</div>
 		<h:panelGrid	width="100%" style="margin-top:20px">
-			<p:dataTable id="requestItemDataTable" width="100%" cellpadding="1" rowIndexVar="rowIndex" editable="true"
+			<p:dataTable id="requestItemDataTable" width="100%" cellpadding="1" rowIndexVar="rowIndex" editable="true" editMode="cell"
 				value="#{directPurchaseBackingBean.managedBean.requestList.requestItems}" selection="#{directPurchaseBackingBean.managedBean.selectedRequestListItem}"
 				var="item" rowKey="#{item.cmItem.itemId}" selectionMode="single">
 				<p:ajax event="rowSelect" partialSubmit="true" process="requestItemDataTable" listener="#{directPurchaseBackingBean.requestListItemSelection}" 
@@ -78,7 +78,7 @@
 				<p:column>
 					<p:selectBooleanCheckbox value="#{item.selectedCheckBox}"/> 
 				</p:column>
-				<p:column headerText="#{lbl['lbl.ss.item.detail.item.name']}">
+				<p:column headerText="#{lbl['lbl.ss.item.detail.item.name']}" style="width:30%">
 					#{item.itemName}
 				</p:column>
 				<p:column headerText="#{lbl['lbl.ss.item.detail.uom']}">
@@ -90,7 +90,7 @@
 							<h:outputText value="#{item.minqty}"></h:outputText>
 						</f:facet>  
 						<f:facet name="input">  
-							<p:inputText value="#{item.minqty}"></p:inputText>  
+							<p:inputText value="#{item.minqty}" style="width:96%"></p:inputText>  
 						</f:facet>  
 					</p:cellEditor>
 				</p:column>
@@ -100,15 +100,12 @@
 							<h:outputText value="#{item.quantity}"></h:outputText>
 						</f:facet>  
 						<f:facet name="input">  
-							<p:inputText value="#{item.quantity}"></p:inputText>  
+							<p:inputText value="#{item.quantity}" style="width:96%"></p:inputText>  
 						</f:facet>  
 					</p:cellEditor>
 				</p:column>
 				<p:column headerText="#{lbl['lbl.sc.item.detail.recommended']}">
 					#{item.recommendStr}
-				</p:column>
-				<p:column style="width:6%">  
-					<p:rowEditor />  
 				</p:column>
 			</p:dataTable>
 		</h:panelGrid>
@@ -126,11 +123,15 @@
 				<TD width="80%">
 					<p:selectOneMenu value="#{directPurchaseBackingBean.managedBean.recommendAction}">
 						<p:ajax event="change" listener="#{directPurchaseBackingBean.recommendActionListener}" process="@all" 
-							update="@all"></p:ajax>
+							update="multipleRecommendSupplierId"></p:ajax>
 						<f:selectItem itemValue="-" itemLabel="-"></f:selectItem>
 						<f:selectItem itemValue="U" itemLabel="Unrecommend"></f:selectItem>
 						<f:selectItem itemValue="R" itemLabel="Recommend"></f:selectItem>
 					</p:selectOneMenu>
+					<p:selectOneMenu id="multipleRecommendSupplierId" value="#{directPurchaseBackingBean.managedBean.recommendedSupplierId}" style="width: auto; min-width: 200px;">
+						<f:selectItems value="#{directPurchaseBackingBean.managedBean.supplierList}" var="supplier" itemValue="#{supplier.supplierId}" itemLabel="#{supplier.supplierName}"></f:selectItems>
+					</p:selectOneMenu>
+					<p:commandButton value="#{lbl['lbl.ss.action.apply']}" process="@all" action="#{directPurchaseBackingBean.applyRecommend}" update="@all"/>
 				</TD>
 			</TR>
 		</table>
@@ -138,29 +139,12 @@
 	<p:panel id="recommend_supplier_panel_1" label="#{lbl['lbl.sc.panel.title.recommend.supplier']}"
 		header="#{lbl['lbl.sc.panel.title.recommend.supplier']}"
 		toggleable="true" toggleSpeed="500">
-		<p:panel style="width:100%" rendered="#{!directPurchaseBackingBean.managedBean.multipleRecommend}">
+		<p:panel style="width:100%">
 			<table style="width: 100%">
 			<TR>
 				<TD width="20%" align="right">
 				</TD>
 				<TD width="50%">
-				</TD>
-				<TD width="30%" align="right">
-					<p:commandButton value="#{lbl['lbl.ss.action.apply']}" process="@all" action="#{directPurchaseBackingBean.applyRecommend}" update="@all"/>
-				</TD>
-			</TR>
-		</table>
-		</p:panel>
-		<p:panel style="width:100%" rendered="#{directPurchaseBackingBean.managedBean.multipleRecommend}">
-			<table style="width: 100%">
-			<TR>
-				<TD width="20%" align="right">
-					<p:outputLabel value="Supplier" />
-				</TD>
-				<TD width="50%">
-					<p:selectOneMenu value="#{directPurchaseBackingBean.managedBean.recommendedSupplierId}" style="width: auto; min-width: 200px;">
-						<f:selectItems value="#{directPurchaseBackingBean.managedBean.supplierList}" var="supplier" itemValue="#{supplier.supplierId}" itemLabel="#{supplier.supplierName}"></f:selectItems>
-					</p:selectOneMenu>
 				</TD>
 				<TD width="30%" align="right">
 					<p:commandButton value="#{lbl['lbl.ss.action.apply']}" process="@all" action="#{directPurchaseBackingBean.applyRecommend}" update="@all"/>
@@ -226,6 +210,10 @@
 					<p:column selectionMode="single" style="width:2%" />
 			</p:dataTable>
 		</h:panelGrid>
+		<div align="right">
+			<p:commandButton id="commond_button_recommend1" process="@all"
+					value="#{lbl['lbl.ss.action.recommend']}" action="#{directPurchaseBackingBean.showRequestListAction()}"></p:commandButton>
+		</div>
 	</p:panel>
 	<ui:include src="/xhtml/ss/directpurchase/simpleQuoteBid.xhtml" />
 	<ui:include src="/xhtml/ss/directpurchase/prInquiry.xhtml" />

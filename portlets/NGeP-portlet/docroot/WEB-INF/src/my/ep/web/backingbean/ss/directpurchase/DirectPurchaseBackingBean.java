@@ -1,11 +1,9 @@
 package my.ep.web.backingbean.ss.directpurchase;
 
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.RequestScoped;
@@ -20,10 +18,7 @@ import my.ep.bpm.dto.BpmResponseDTO;
 import my.ep.bpm.service.IBpmSO;
 import my.ep.dto.ss.directpurchase.RequestListReqDTO;
 import my.ep.dto.ss.directpurchase.RequestListResDTO;
-import my.ep.dto.ss.directpurchase.SelectOptionDTO;
 import my.ep.jaxb.sc.directpurchasedata.SCDirectPurchaseDataType;
-import my.ep.persistence.entity.cm.catalog.CmItem;
-import my.ep.persistence.entity.cm.catalog.CmSupplierItem;
 import my.ep.persistence.entity.pm.common.PmStatus;
 import my.ep.persistence.entity.sm.SmSupplier;
 import my.ep.persistence.entity.ss.directpurchase.ScDpRemark;
@@ -32,6 +27,7 @@ import my.ep.persistence.entity.ss.directpurchase.ScQuoteBid;
 import my.ep.persistence.entity.ss.directpurchase.ScQuoteBidSupplier;
 import my.ep.persistence.entity.ss.directpurchase.ScRequestList;
 import my.ep.persistence.entity.ss.directpurchase.ScRequestListItem;
+import my.ep.persistence.entity.ss.directpurchase.ScRequestNote;
 import my.ep.persistence.entity.ss.directpurchase.ScRequestNoteDtl;
 import my.ep.persistence.entity.ss.directpurchase.ScRequestSupplierItem;
 import my.ep.persistence.logging.LogKey;
@@ -44,12 +40,10 @@ import my.ep.web.util.DateUtils;
 import my.ep.web.util.FacesScopes;
 import my.ep.web.util.lookupservice.BusinessDelegate;
 import my.ep.web.util.ss.helper.ApprovalUserHelper;
-import my.ep.web.util.ss.helper.RequestListItemHelper;
+import my.ep.web.util.ss.helper.RequestListHelper;
 import my.ep.web.util.ss.helper.RequestNoteDtlHelper;
 import my.ep.web.util.ss.helper.RequestNoteHelper;
-import my.ep.web.util.ss.helper.RequestSupplierItemHelper;
 
-import org.apache.commons.collections.map.HashedMap;
 import org.apache.log4j.Logger;
 import org.apache.log4j.MDC;
 import org.primefaces.event.SelectEvent;
@@ -66,22 +60,13 @@ import com.liferay.portal.util.PortalUtil;
 @ManagedBean(name = "directPurchaseBackingBean")
 @RequestScoped
 public class DirectPurchaseBackingBean extends BaseBackingBean<DirectPurchaseManagedBean> {
-	private List<SelectOptionDTO> procumentList = null;
-	private static Map<String, List<SelectOptionDTO>> justificationMap = null;
-	private List<SelectOptionDTO> justificationTypes = new ArrayList<SelectOptionDTO>();
-	// TODO testing, remove it soon
-	private SelectOptionDTO selectedProcumentType;
-	private	int	activeTabIndex = 0;
 	private static Logger log = Logger.getLogger(DirectPurchaseBackingBean.class);
-
 	public DirectPurchaseBackingBean() {
 		super();
-		// TODO temporary hard code this one, remove it later
 		if (MDC.get(LogKey.USER_ID) == null) {
 			PortletRequest request = (PortletRequest) FacesContext.getCurrentInstance().getExternalContext().getRequest();
 			User user = (User) request.getAttribute(WebKeys.USER);
 			if (user != null) {
-				// String userName = user.getScreenName();
 				Long userName = user.getUserId();
 				new LogKey(userName);
 				if (log.isDebugEnabled()) {
@@ -89,30 +74,26 @@ public class DirectPurchaseBackingBean extends BaseBackingBean<DirectPurchaseMan
 				}
 			}
 		}
-
 	}
 
-	public void showPRInquiry(ScRequestSupplierItem supplierItem) {
-
-	}
-
-	public void saveRequestList(String action) {
+	public String saveRequestList(String action) {
 		log.info("start DirectPurchaseBackingBean.saveRequestList()");
 		IDirectPurchaseSO directPurchaseSO = (IDirectPurchaseSO) BusinessDelegate.getInstance().getServiceObject(SourcingConst.SOURCING_MODULE, IDirectPurchaseSO.class);
 		RequestListReqDTO requestListReqDTO = new RequestListReqDTO();
+		ScRequestList requestList = getManagedBean().getRequestList();
 		if(this.getManagedBean().getRequestNoteDtls() != null && this.getManagedBean().getRequestNoteDtls().size() > 0){
-			this.getManagedBean().getRequestList().setScRequestNotes(RequestNoteHelper.createRequestNoteFromRquestNoteDtls(this.getManagedBean().getRequestNoteDtls()));
+			requestList.setScRequestNotes(RequestNoteHelper.createRequestNoteFromRquestNoteDtls(this.getManagedBean().getRequestNoteDtls()));
 		}
 		if(this.getManagedBean().getApprovalUsers().getTarget() != null && this.getManagedBean().getApprovalUsers().getTarget().size() > 0){
-			this.getManagedBean().getRequestList().setScApprovalUsers(ApprovalUserHelper.createApprovalUsers(this.getManagedBean().getApprovalUsers().getTarget()));
+			requestList.setScApprovalUsers(ApprovalUserHelper.createApprovalUsers(this.getManagedBean().getApprovalUsers().getTarget()));
 		}
-		requestListReqDTO.setRequestListDetail(this.getManagedBean().getRequestList());
+		requestListReqDTO.setRequestListDetail(requestList);
 		RequestListResDTO requestListResDTO = directPurchaseSO.saveRequestList(requestListReqDTO);
 		BpmResponseDTO res = createBPMTask(requestListResDTO);
 		getManagedBean().setTaskId(res.getTaskId());
-
 		this.getManagedBean().setRequestList(requestListResDTO.getRequestListDetail());
-		log.info("test test test");
+		log.info("finish save request List, return directPurchase");
+		return "directPurchase";
 	}
 	
 	public String	simpleQuoteBid(){
@@ -123,8 +104,13 @@ public class DirectPurchaseBackingBean extends BaseBackingBean<DirectPurchaseMan
 		}
 		//save request list and information
 		IDirectPurchaseSO directPurchaseSO = (IDirectPurchaseSO) BusinessDelegate.getInstance().getServiceObject(SourcingConst.SOURCING_MODULE, IDirectPurchaseSO.class);
+		ScRequestList requestList = getManagedBean().getRequestList();
+		PmStatus	status	=	new	PmStatus();
+		status.setStatusId(61000L);
+		requestList.setPmStatus(status);
+		
 		RequestListReqDTO requestListReqDTO = new RequestListReqDTO();
-		requestListReqDTO.setRequestListDetail(this.getManagedBean().getRequestList());
+		requestListReqDTO.setRequestListDetail(requestList);
 		RequestListResDTO requestListResDTO = directPurchaseSO.saveRequestList(requestListReqDTO);
 		BpmResponseDTO res = createBPMTask(requestListResDTO);
 		quoteBidBackingBean.getManagedBean().setTaskId(res.getTaskId());
@@ -156,10 +142,10 @@ public class DirectPurchaseBackingBean extends BaseBackingBean<DirectPurchaseMan
 		this.getManagedBean().setTaskId(taskId);
 		log.info("taskId : "+ taskId);
 		IBpmSO bpmSO = (IBpmSO) EpBpmBusinessDelegate.getInstance().getServiceObject(IBpmSO.class);
-		//TODO
-		String ctx = bpmSO.authenticate("roslan","welcome1");
+		FacesScopes facesScopes = new FacesScopes();
+		String token = facesScopes.getBPMAuthenticationCtxToken();
 		BpmRequestDTO reqDTO = new BpmRequestDTO();
-		reqDTO.setCtxToken(ctx);
+		reqDTO.setCtxToken(token);
 		reqDTO.setTaskId(taskId);
 		BpmResponseDTO res = bpmSO.getTaskDetails(reqDTO);
 		Object obj = res.getPojo();
@@ -172,18 +158,41 @@ public class DirectPurchaseBackingBean extends BaseBackingBean<DirectPurchaseMan
 		requestListReqDTO.setRequestListId(Long.valueOf(directPurchaseDataType.getRequestId()));
 		ScRequestList requestList = directPurchaseSO.getRequestListWithDtls(requestListReqDTO).getRequestListDetail();
 		this.getManagedBean().setRequestList(requestList);
+		if(requestList.getScRequestNotes() != null && requestList.getScRequestNotes().size() > 0){
+			List<ScRequestNoteDtl>	requestNoteDtls	=	new ArrayList<ScRequestNoteDtl>();
+			for(ScRequestNote requestNote: requestList.getScRequestNotes()){
+				requestNoteDtls.addAll(requestNote.getScRequestNoteDtls());
+			}
+			getManagedBean().setRequestNoteDtls(requestNoteDtls);
+		}
 		this.getManagedBean().initialInformation();
 		
 		FacesContext fc = FacesContext.getCurrentInstance();
 		fc.getApplication().getNavigationHandler().handleNavigation(fc, null, "directPurchase");
 	}
 	public void prInquiryListener(ScRequestSupplierItem scRequestSupplierItem) {
-		this.getManagedBean().setSelectedItem(scRequestSupplierItem);
-		this.getManagedBean().setScPrInquiry(new ScPrInquiry());
+		getManagedBean().setInquirySupplierItem(scRequestSupplierItem);
+		getManagedBean().setScPrInquiry(new ScPrInquiry());
 	}
 
 	public void savePrInquiry() {
 		log.info("start method savePrInquiry().............");
+		IDirectPurchaseSO directPurchaseSO = (IDirectPurchaseSO) BusinessDelegate.getInstance().getServiceObject(SourcingConst.SOURCING_MODULE, IDirectPurchaseSO.class);
+		RequestListReqDTO requestListReqDTO = new RequestListReqDTO();
+		ScRequestList requestList = getManagedBean().getRequestList();
+		ScRequestSupplierItem	inquirySupplierItem	=	getManagedBean().getInquirySupplierItem();
+		List<ScPrInquiry> prInquiries = new ArrayList<ScPrInquiry>();
+		prInquiries.add(getManagedBean().getScPrInquiry());
+		inquirySupplierItem.setScPrInquiries(prInquiries);
+		//change request list status to Pending Inquiry Response
+		PmStatus	status	=	new	PmStatus();
+		status.setStatusId(SourcingConst.REQUEST_LIST_PENDING_INQUIRY_RESPONSE);
+		requestList.setPmStatus(status);
+		requestListReqDTO.setRequestListDetail(requestList);
+		//save	request	list
+		RequestListResDTO requestListResDTO = directPurchaseSO.saveRequestList(requestListReqDTO);
+		//TODO handle by Inbox, impl later
+		
 	}
 	public void addRemark() {
 		ScDpRemark scDpRemark = new ScDpRemark();
@@ -202,34 +211,6 @@ public class DirectPurchaseBackingBean extends BaseBackingBean<DirectPurchaseMan
 			getManagedBean().getRequestList().getScDpRemarks().remove(scDpRemark);
 		}
 	}
-	public void setProcumentList(List<SelectOptionDTO> procumentList) {
-		this.procumentList = procumentList;
-	}
-
-	public List<SelectOptionDTO> getJustificationTypes() {
-		return this.justificationTypes;
-	}
-
-	public void setJustificationTypes(List<SelectOptionDTO> justificationTypes) {
-		this.justificationTypes = justificationTypes;
-	}
-
-	public Map<String, List<SelectOptionDTO>> getJustificationMap() {
-		return justificationMap;
-	}
-
-	public void setJustificationMap(Map<String, List<SelectOptionDTO>> justificationMap) {
-		DirectPurchaseBackingBean.justificationMap = justificationMap;
-	}
-
-	public SelectOptionDTO getSelectedProcumentType() {
-		return selectedProcumentType;
-	}
-
-	public void setSelectedProcumentType(SelectOptionDTO selectedProcumentType) {
-		this.selectedProcumentType = selectedProcumentType;
-	}
-
 	 public void requestListItemSelection(SelectEvent event) {  
 		 ScRequestListItem item	=	(ScRequestListItem) event.getObject();
 		 this.getManagedBean().setRequestSupplierItems(item.getSupplierItems());
@@ -245,9 +226,9 @@ public class DirectPurchaseBackingBean extends BaseBackingBean<DirectPurchaseMan
 			}
 		}
 		if("R".equalsIgnoreCase(this.getManagedBean().getRecommendAction())){
-			if(isMultipleRecommend(this.getManagedBean().getRequestList().getRequestItems())){
+			if(RequestListHelper.isMultipleRecommend(this.getManagedBean().getRequestList().getRequestItems())){
 				this.getManagedBean().setMultipleRecommend(true);
-				List<SmSupplier>	listSuppliers	=	new ArrayList<SmSupplier>(getRecommendSupplier(this.getManagedBean().getRequestList().getRequestItems()));
+				List<SmSupplier>	listSuppliers	=	new ArrayList<SmSupplier>(RequestListHelper.getRecommendSupplier(this.getManagedBean().getRequestList().getRequestItems()));
 				this.getManagedBean().setSupplierList(listSuppliers);
 			}else{
 				this.getManagedBean().setMultipleRecommend(false);
@@ -263,7 +244,7 @@ public class DirectPurchaseBackingBean extends BaseBackingBean<DirectPurchaseMan
 		if(catalogueBackingBean == null){
 			catalogueBackingBean = new CatalogueBackingBean();
 		}
-		List<ScRequestListItem> requestListItems = getUniqueItemList(catalogueBackingBean.getManagedBean().getCartList());
+		List<ScRequestListItem> requestListItems = RequestListHelper.getUniqueItemList(catalogueBackingBean.getManagedBean().getCartList());
 		//reset cartList
 		catalogueBackingBean.getManagedBean().getCartList().clear();
 		//TODO maybe have to merge RequestListItem with the existing requestListItem in RequestList
@@ -294,11 +275,21 @@ public class DirectPurchaseBackingBean extends BaseBackingBean<DirectPurchaseMan
 			this.getManagedBean().setRecommededRequestSupplierItem(null);
 		}
 	}
-	public	void	showRequestListAction(){
-		List<ScRequestSupplierItem>	recommendedSupplierItemList	=	getRecommendRequestSupplierItems(this.getManagedBean().getRequestList());
-		this.getManagedBean().setRequestNoteDtls(RequestNoteDtlHelper.createRequestNoteDtls(recommendedSupplierItemList));
+	public	String	showRequestListAction(){
+		List<ScRequestSupplierItem>	recommendedSupplierItemList	=	RequestListHelper.getRecommendRequestSupplierItems(this.getManagedBean().getRequestList());
+		//TODO
+		if(getManagedBean().getRequestList().getScRequestNotes() != null && getManagedBean().getRequestList().getScRequestNotes().size() > 0){
+			List<ScRequestNoteDtl>	requestNoteDtls	=	new ArrayList<ScRequestNoteDtl>();
+			for(ScRequestNote requestNote: getManagedBean().getRequestList().getScRequestNotes()){
+				requestNoteDtls.addAll(requestNote.getScRequestNoteDtls());
+			}
+			getManagedBean().setRequestNoteDtls(requestNoteDtls);
+		}else{
+			getManagedBean().setRequestNoteDtls(RequestNoteDtlHelper.createRequestNoteDtls(recommendedSupplierItemList));
+		}
 		//set focus on RequestList tab
-		setActiveTabIndex(1);
+		getManagedBean().setActiveTabIndex(1);
+		return "directPurchase";
 	}
 	
 	public	void	applyForRequestNote(){
@@ -311,164 +302,13 @@ public class DirectPurchaseBackingBean extends BaseBackingBean<DirectPurchaseMan
 		getManagedBean().getSelectedRequestNoteDtls().clear();
 	}
 	
-	
-	
-	private	List<ScRequestListItem>		getUniqueItemList(List<CmSupplierItem> supplierItems){
-		List<ScRequestListItem>	results	=	new ArrayList<ScRequestListItem>();
-		Map<CmItem, List<CmSupplierItem>>	uniqueItemList	=	new HashMap<CmItem, List<CmSupplierItem>>();
-		
-		for(CmSupplierItem supplierItem: supplierItems){
-			if(uniqueItemList.get(supplierItem.getCmItem()) != null){
-				uniqueItemList.get(supplierItem.getCmItem()).add(supplierItem);
-			}else{
-				List<CmSupplierItem>	supplierItemList	=	new ArrayList<CmSupplierItem>();
-				supplierItemList.add(supplierItem);
-				uniqueItemList.put(supplierItem.getCmItem(), supplierItemList);
-			}
-		}
-		Set<CmItem>	cmItems	=	uniqueItemList.keySet();
-		for(CmItem cmItem: cmItems){
-			List<CmSupplierItem>	supplierItemList	=	uniqueItemList.get(cmItem);
-			ScRequestListItem	requestListItem	=	RequestListItemHelper.createRequestListItem(cmItem);
-			requestListItem.setSupplierItems(RequestSupplierItemHelper.createRequestSupplierItems(requestListItem, supplierItemList));
-			results.add(requestListItem);
-		}
-		return results;
-	}
-	
-	
-	private	Collection<SmSupplier>	getRecommendSupplier(List<ScRequestListItem> requestListItems){
-		Map<Long,SmSupplier>	uniqueSmSuppliers	=	new HashMap<Long,SmSupplier>();
-		for(ScRequestListItem requestListItem: requestListItems){
-			if(requestListItem.isSelectedCheckBox()){
-				for(ScRequestSupplierItem requestSupplierItem: requestListItem.getSupplierItems()){
-					uniqueSmSuppliers.put(requestSupplierItem.getSmSupplier().getSupplierId(), requestSupplierItem.getSmSupplier());
-				}
-			}
-		}
-		return uniqueSmSuppliers.values();
-	}
-	private	boolean	isMultipleRecommend(List<ScRequestListItem> requestListItems){
-		int numberOfSelectedItem	= 0;
-		for(ScRequestListItem requestListItem: requestListItems){
-			if(requestListItem.isSelectedCheckBox()){
-				numberOfSelectedItem = numberOfSelectedItem + 1;
-			}
-		}
-		if(numberOfSelectedItem >=2){
-			return true;
-		}else{
-			return false;
-		}
-	}
-	
-	private	List<ScRequestSupplierItem>	getRecommendRequestSupplierItems(ScRequestList requestList){
-		List<ScRequestSupplierItem>	results	=	new ArrayList<ScRequestSupplierItem>();
-		for(ScRequestListItem requestListItem: requestList.getRequestItems()){
-			for(ScRequestSupplierItem supplierItem: requestListItem.getSupplierItems()){
-				if(supplierItem.getIsRecommended()){
-					results.add(supplierItem);
-				}
-			}
-		}
-		return results;
-	}
-
-	public int getActiveTabIndex() {
-		return activeTabIndex;
-	}
-
-	public void setActiveTabIndex(int activeTabIndex) {
-		this.activeTabIndex = activeTabIndex;
-	}
-	public List<SelectOptionDTO> getProcumentList() {
-		if (procumentList == null) {
-			procumentList = new ArrayList<SelectOptionDTO>();
-			SelectOptionDTO normalOption = new SelectOptionDTO();
-			normalOption.setOptionValue("N");
-			normalOption.setOptionName("Normal");
-			normalOption.setDescription("Normal Procure");
-			procumentList.add(normalOption);
-			SelectOptionDTO adhocOption = new SelectOptionDTO();
-			adhocOption.setOptionValue("A");
-			adhocOption.setOptionName("Adhoc");
-			adhocOption.setDescription("Adhoc Procure");
-			procumentList.add(adhocOption);
-			SelectOptionDTO emergencyOption = new SelectOptionDTO();
-			emergencyOption.setOptionValue("E");
-			emergencyOption.setOptionName("Emergency");
-			emergencyOption.setDescription("Emergency Procure");
-			procumentList.add(emergencyOption);
-			SelectOptionDTO g2gOption = new SelectOptionDTO();
-			g2gOption.setOptionValue("G");
-			g2gOption.setOptionName("G2G");
-			g2gOption.setDescription("Goverment to Goverment procurement");
-			procumentList.add(g2gOption);
-
-		}
-		return procumentList;
-	}
-	public void procurementTypeChangeListener() {
-		if (justificationMap == null) {
-			justificationMap = new HashedMap();
-			List<SelectOptionDTO> emergencyJustifycations = new ArrayList<SelectOptionDTO>();
-			SelectOptionDTO epidemic = new SelectOptionDTO();
-			epidemic.setOptionValue("E");
-			epidemic.setOptionName("Epidemic");
-			epidemic.setDescription("Emergency - Epidemic");
-			emergencyJustifycations.add(epidemic);
-
-			SelectOptionDTO fire = new SelectOptionDTO();
-			fire.setOptionValue("F");
-			fire.setOptionName("Fire");
-			fire.setDescription("Emergency - Fire");
-			emergencyJustifycations.add(fire);
-
-			SelectOptionDTO flood = new SelectOptionDTO();
-			flood.setOptionValue("B");
-			flood.setOptionName("Flood");
-			flood.setDescription("Emergency - Flood");
-			emergencyJustifycations.add(flood);
-
-			SelectOptionDTO others = new SelectOptionDTO();
-			others.setOptionValue("O");
-			others.setOptionName("Others");
-			others.setDescription("Emergency - Others");
-			emergencyJustifycations.add(others);
-
-			justificationMap.put("E", emergencyJustifycations);
-
-			List<SelectOptionDTO> adhocJustifications = new ArrayList<SelectOptionDTO>();
-			SelectOptionDTO adhocMeeting = new SelectOptionDTO();
-			adhocMeeting.setOptionValue("A");
-			adhocMeeting.setOptionName("Ad hoc meeting");
-			adhocMeeting.setDescription("Ad hoc meeting");
-			adhocJustifications.add(adhocMeeting);
-
-			SelectOptionDTO carBreak = new SelectOptionDTO();
-			carBreak.setOptionValue("C");
-			carBreak.setOptionName("Car Break down");
-			carBreak.setDescription("Ad Hoc - Car Break down");
-			adhocJustifications.add(carBreak);
-
-			SelectOptionDTO adhocOthers = new SelectOptionDTO();
-			adhocOthers.setOptionValue("O");
-			adhocOthers.setOptionName("Others");
-			adhocOthers.setDescription("Ad hoc - Others");
-			adhocJustifications.add(adhocOthers);
-			justificationMap.put("A", adhocJustifications);
-		}
-		this.justificationTypes = justificationMap.get(this.getManagedBean().getRequestList().getProcurementType());
-		if (this.justificationTypes != null && this.justificationTypes.size() > 0) {
-			this.getManagedBean().getRequestList().setJustificationType(justificationTypes.get(0).getOptionValue());
-		}
-	}
 	private	BpmResponseDTO	createBPMTask(RequestListResDTO requestListResDTO){
 		IBpmSO bpmSO = (IBpmSO) EpBpmBusinessDelegate.getInstance().getServiceObject(IBpmSO.class);
+		FacesScopes facesScopes = new FacesScopes();
+		String token = facesScopes.getBPMAuthenticationCtxToken();
 
-		String ctx = bpmSO.authenticate("roslan", "welcome1");
 		BpmRequestDTO reqDTO = new BpmRequestDTO();
-		reqDTO.setCtxToken(ctx);
+		reqDTO.setCtxToken(token);
 		reqDTO.setProcessId("Sourcing.DirectPurchaseCreation");
 		// reqDTO.setOutcome("SUBMIT");
 		SCDirectPurchaseDataType obj = new SCDirectPurchaseDataType();

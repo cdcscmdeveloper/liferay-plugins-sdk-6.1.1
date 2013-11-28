@@ -1,20 +1,15 @@
 <ui:composition
-	template="/WEB-INF/facelets/templates/sidemenu_template.xhtml"
+	template="/WEB-INF/facelets/templates/basic_template.xhtml"
 	xmlns="http://www.w3.org/1999/xhtml"
 	xmlns:f="http://java.sun.com/jsf/core"
 	xmlns:h="http://java.sun.com/jsf/html"
 	xmlns:ui="http://java.sun.com/jsf/facelets"
-	xmlns:p="http://primefaces.org/ui"
+	xmlns:p="http://primefaces.org/ui" xmlns:dp="http://openam.com/ui"
 	xmlns:c="http://java.sun.com/jsp/jstl/core">
 	<ui:define name="resourceSection">
 	</ui:define>
 
-	<ui:define name="sideMenu">
-		<ui:include
-			src="/xhtml/ss/directpurchase/common/ss_defaultpurchase_sidemenu.xhtml" />
-	</ui:define>
 	<ui:define name="content">
-		
 			<div align="right">
 				<p:commandButton value="#{lbl['lbl.ss.save']}" />
 				&#160;
@@ -34,20 +29,13 @@
 					<p:columnGroup type="header">
 						<p:row>
 
-							<p:column colspan="1" headerText="Supplier" />
-							<p:column colspan="1" headerText="Description" />
-							<p:column colspan="1" headerText="Min. Qty. Order" />
-							<p:column colspan="1" headerText="Unit Per Price" />
-							<p:column colspan="1" headerText="Amount" />
+							<p:column colspan="1" headerText="Item Nam" />
+							<p:column colspan="1" headerText="UOM" />
 							<p:column colspan="1" headerText="Category Type" />
-							<p:column colspan="1" headerText="Recommend" />
-						</p:row>
-						<p:row>
-
-							<p:column colspan="2" headerText="Item Name : Item 1 " />
-							<p:column colspan="2" headerText="Quantity : 1000" />
-							<p:column colspan="2" headerText="UOM : KG" />
-							<p:column colspan="1" headerText="" />
+							<p:column colspan="1" headerText="PKP/Contract No." />
+							<p:column colspan="1" headerText="Contract Period" />
+							<p:column colspan="1" headerText="Contract Amount" />
+							<p:column colspan="1" headerText="Quantity Offer" />
 						</p:row>
 					</p:columnGroup>
 

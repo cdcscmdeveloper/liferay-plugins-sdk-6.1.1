@@ -66,6 +66,7 @@ public class SimpleQuoteBidBackingBean extends BaseBackingBean<SimpleQuoteBidMan
 				if(locationDTO.getDistrict() != null){
 					zoneLocations.add(new ScQBZoneLocation(locationDTO.getDistrict()));
 				}
+				
 			}
 		}
 		result.setScQBZoneLocations(zoneLocations);

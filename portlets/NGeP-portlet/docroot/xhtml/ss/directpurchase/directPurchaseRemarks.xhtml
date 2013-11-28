@@ -22,7 +22,7 @@
 					<p:column width="15%" rendered="true" headerText="#{lbl['lbl.ss.purchase.remark.createddate']}">
 					</p:column>
 					<p:column width="15%" rendered="true" style="white-space:nowrap; text-align:center; vertical-align:top;">
-						<p:commandButton title="delete" update="remarkDataTable" action="#{directPurchaseBackingBean.deleteRemark(remark)}" 
+						<p:commandButton title="delete" update="@([id$=remarkDataTable])" action="#{directPurchaseBackingBean.deleteRemark(remark)}" 
 						  icon="ui-icon-delete" styleClass="ui-icon-button">
 						</p:commandButton>
 					</p:column>
@@ -34,7 +34,7 @@
 						<p:column></p:column>
 						<p:column></p:column>
 						<p:column>
-							<p:commandLink partialSubmit="true" process="@this,remarkInput" update="remarkDataTable" action="#{directPurchaseBackingBean.addRemark()}">
+							<p:commandLink partialSubmit="true" process="@this,remarkInput" update="@([id$=remarkDataTable])" action="#{directPurchaseBackingBean.addRemark()}">
 								<h:graphicImage value="/resources/ep/images/design/btn_add.png"></h:graphicImage>
 							</p:commandLink>
 						</p:column>

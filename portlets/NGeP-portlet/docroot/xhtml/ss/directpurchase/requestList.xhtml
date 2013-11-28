@@ -10,14 +10,12 @@
 		toggleSpeed="500">
 		<div style="width: 100%">
 			<p:pickList value="#{directPurchaseBackingBean.managedBean.approvalUsers}" var="approverUser"
-				showCheckbox="true" showSourceFilter="true"
-				showTargetControls="true" itemLabel="#{approverUser.userName}"
-				itemValue="#{approverUser.userId}">
+				showSourceFilter="true" showTargetControls="true" itemLabel="#{approverUser.userName}"
+				itemValue="#{approverUser}" converter="approverConverter">
 				<f:facet name="sourceCaption">Available</f:facet>
 				<f:facet name="targetCaption">Selected</f:facet>
 			</p:pickList>
 		</div>
-		<p:separator style="width:100%;height:1%"></p:separator>
 		<h:panelGrid width="100%" style="margin-top:20px">
 			<p:dataTable id="requestListDataTable" width="100%" cellpadding="1"
 				value="#{directPurchaseBackingBean.managedBean.requestNoteDtls}" rowKey="#{requestNoteDtl.scRequestSupplierItem.cmSupplierItem.supplierItemId}"
@@ -96,7 +94,8 @@
 		</h:panelGrid>
 		<br />
 		<br />
-		<p:panelGrid id="panel_request_list_2" styleClass="noBorders tr,noBorders td">
+		<p:fieldset id="fieldset_request_list_2" legend="Supplier Award" toggleable="true" toggleSpeed="500">
+			<p:panelGrid styleClass="noBorders tr,noBorders td">
 			<p:row>
 				<p:column>
 					<p:outputLabel value="#{lbl['lbl.sc.purchase.fulfillment.type']}"></p:outputLabel>
@@ -134,7 +133,8 @@
 					</p:selectOneMenu>
 				</p:column>
 			</p:row>
-		</p:panelGrid>
+			</p:panelGrid>
+		</p:fieldset>
 		<div align="right">
 			<p:commandButton value="#{lbl['lbl.ss.action.apply']}" process="@all" action="#{directPurchaseBackingBean.applyForRequestNote}" update="@([id$=requestListDataTable])"/>
 		</div>

@@ -27,5 +27,18 @@
 			<to-view-id>/xhtml/tasklist/taskListView.xhtml</to-view-id>
 		</navigation-case>
 	</navigation-rule>
+	
+	<converter>
+		<converter-id>approverConverter</converter-id>
+		<converter-class>my.ep.web.ss.converter.ApproverPickListConverter</converter-class>
+	</converter>
+	<converter>
+		<converter-id>procurementTypeConverter</converter-id>
+		<converter-class>my.ep.web.ss.converter.ProcumentTypeConverter</converter-class>
+	</converter>
+	<converter>
+		<converter-id>justificationTypeConverter</converter-id>
+		<converter-class>my.ep.web.ss.converter.JustificationTypeConverter</converter-class>
+	</converter>
 </faces-config>
 

@@ -2,7 +2,9 @@ package my.ep.web.backingbean.ss.directpurchase;
 
 import java.io.Serializable;
 
+import my.ep.persistence.entity.pm.common.PmCity;
 import my.ep.persistence.entity.pm.common.PmDistrict;
+import my.ep.persistence.entity.pm.common.PmDivision;
 import my.ep.persistence.entity.pm.common.PmState;
 
 public class LocationDTO implements Serializable{
@@ -13,6 +15,8 @@ public class LocationDTO implements Serializable{
 	private static final long serialVersionUID = -8954854049553749821L;
 	private	PmState	state;
 	private	PmDistrict	district;
+	private	PmCity	city;
+	private	PmDivision division;
 	private	String	locationName;
 	public LocationDTO(PmState state) {
 		super();
@@ -23,6 +27,15 @@ public class LocationDTO implements Serializable{
 		super();
 		this.district = district;
 	}
+	public LocationDTO(PmCity city) {
+		super();
+		this.city = city;
+	}
+	
+	public LocationDTO(PmDivision division) {
+		super();
+		this.division = division;
+	}
 
 	public String getLocationName() {
 		if(locationName == null || "".equalsIgnoreCase(locationName)){
@@ -31,6 +44,12 @@ public class LocationDTO implements Serializable{
 			}
 			if(district != null){
 				return district.getDistrictName();
+			}
+			if(division != null){
+				return division.getDivisionName();
+			}
+			if(city != null){
+				return city.getCityName();
 			}
 		}
 		return locationName;
@@ -50,6 +69,21 @@ public class LocationDTO implements Serializable{
 	public void setDistrict(PmDistrict district) {
 		this.district = district;
 	}
-	
+
+	public PmCity getCity() {
+		return city;
+	}
+
+	public void setCity(PmCity city) {
+		this.city = city;
+	}
+
+	public PmDivision getDivision() {
+		return division;
+	}
+
+	public void setDivision(PmDivision division) {
+		this.division = division;
+	}
 	
 }

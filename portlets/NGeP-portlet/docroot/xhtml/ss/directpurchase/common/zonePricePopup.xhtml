@@ -18,7 +18,9 @@
 				<TR>
 					<TD width="20%" valign="top"><p:outputLabel value="Zone Location"></p:outputLabel>
 					</TD>
-					<TD width="80%"><p:tree id="treeZoneLocationPopup"
+					<TD width="80%">
+						<p:panel ></p:panel>
+						<p:tree id="treeZoneLocationPopup"
 							value="#{simpleQuoteBidBackingBean.managedBean.rootLocationTree}"
 							var="location"
 							selection="#{simpleQuoteBidBackingBean.managedBean.selectedNodes}"
@@ -26,7 +28,8 @@
 							<p:treeNode>
 								<h:outputText value="#{location.locationName}" />
 							</p:treeNode>
-						</p:tree></TD>
+						</p:tree>
+					</TD>
 				</TR>
 			</table>
 		</p:panel>

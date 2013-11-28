@@ -7,12 +7,12 @@
 	<p:dialog header="PR Inquiry" widgetVar="prInquiry" modal="true"
 		width="800" height="500">
 			<div align="right" id="div_globe_11">
-				<p:commandButton value="#{lbl['lbl.ss.submit']}" action="#{directPurchaseBackingBean.savePrInquiry()}"/>
+				<p:commandButton value="#{lbl['lbl.ss.simple.quote.purchase.btn.cancel']}" style="float:right;" onclick="prInquiry.hide();"></p:commandButton>
+				<p:commandButton value="#{lbl['lbl.ss.submit']}" action="#{directPurchaseBackingBean.savePrInquiry()}" oncomplete="prInquiry.hide();"/>
 			</div>
 			<p:panel label="#{lbl['lbl.ss.panel.title.general']}"
 				header="#{lbl['lbl.ss.panel.title.general']}" toggleable="true">
-				<p:panelGrid
-					style="border-style: none; wiwth: 100%; border: 0 solid #FFFFFF !important;">
+				<p:panelGrid styleClass="noBorders tr,noBorders td">
 					<p:row>
 						<p:column width="25%">
 							<p:outputLabel
@@ -47,21 +47,20 @@
 			</p:panel>
 			<p:panel label="#{lbl['lbl.ss.panel.title.detail']}"
 				header="#{lbl['lbl.ss.panel.title.detail']}" toggleable="true">
-				<p:panelGrid
-					style="border-style: none; wiwth: 100%; border: 0 solid #FFFFFF !important;">
+				<p:panelGrid styleClass="noBorders tr,noBorders td">
 					<p:row>
 						<p:column width="25%">
 							<p:outputLabel
 								value="#{lbl['lbl.ss.item.detail.item.name']}" />
 						</p:column>
 						<p:column width="25%">
-							<p:inputText readonly="true" />
+							<p:inputText readonly="true" value="#{directPurchaseBackingBean.managedBean.inquirySupplierItem.cmSupplierItem.cmItem.itemName}"/>
 						</p:column>
 						<p:column width="25%">
 							<p:outputLabel value="#{lbl['lbl.ss.simple.quote.item.product.code']}" />
 						</p:column>
 						<p:column width="25%">
-							<p:inputText readonly="true" />
+							<p:inputText readonly="true" value="#{directPurchaseBackingBean.managedBean.inquirySupplierItem.cmSupplierItem.cmItem.extensionCode}"/>
 						</p:column>
 					</p:row>
 					<p:row>
@@ -69,7 +68,7 @@
 							<p:outputLabel value="#{lbl['lbl.ss.item.detail.desc']}" />
 						</p:column>
 						<p:column colspan="3">
-							<p:inputTextarea readonly="true" value="#{directPurchaseBackingBean.managedBean.selectedItem.cmSupplierItem.itemDesc}"></p:inputTextarea>
+							<p:inputTextarea readonly="true" value="#{directPurchaseBackingBean.managedBean.inquirySupplierItem.cmSupplierItem.itemDesc}" style="width:80%;"></p:inputTextarea>
 						</p:column>
 					</p:row>
 					<p:row>
@@ -91,10 +90,10 @@
 					</p:row>
 					<p:row>
 						<p:column>
-							<p:outputLabel value="#{lbl['lbl.ss.simple.quote.remark']}" />
+							<p:outputLabel value="#{lbl['lbl.ss.simple.quote.remark']}"/>
 						</p:column>
 						<p:column colspan="3">
-							<p:inputTextarea ></p:inputTextarea>
+							<p:inputTextarea value="#{directPurchaseBackingBean.managedBean.scPrInquiry.remark}" style="width:80%;"></p:inputTextarea>
 						</p:column>
 					</p:row>
 				</p:panelGrid>
