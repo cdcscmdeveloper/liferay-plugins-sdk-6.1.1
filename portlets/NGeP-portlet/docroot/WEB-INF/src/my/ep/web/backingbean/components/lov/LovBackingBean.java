@@ -142,6 +142,13 @@ public class LovBackingBean implements Serializable {
 		String conditionField = facesScopes.getParameter("conditionField");
 		String clientId = facesScopes.getParameter("clientId");
 		String update = facesScopes.getParameter("update");
+		
+		debugLogger("headerText: " + headerText);
+		debugLogger("saveObject: " + saveObject);
+		debugLogger("componentId: " + componentId);
+		debugLogger("conditionField: " + conditionField);
+		debugLogger("clientId: " + clientId);
+		debugLogger("update: " + update);
 
 //		if(lovId != null && lovId.equals(facesScopes.getParameter("lovId"))) {
 //			
@@ -208,7 +215,7 @@ public class LovBackingBean implements Serializable {
 	
 	private void constructSearchBean(String conditionField) {
 		debugLogger("In constructSearchBean");
-		if(conditionField != null && !conditionField.equals("") && !conditionField.equals("null")) {
+		if(StringUtils.isNotBlank(conditionField)) {
 			debugLogger("conditionField: " + conditionField);
 			
 			String[] conditionFields = conditionField.split("\\|");
