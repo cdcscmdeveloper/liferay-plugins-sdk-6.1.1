@@ -14,6 +14,8 @@
 			<h:column>
 				<p:selectOneMenu value="#{qTDetailBB.managedBean.qt.qtType}">
 					<f:selectItems value="#{qTDetailBB.getDropdownCodeValues(PmCodeCatConst.quotationTenderType)}" />
+				<p:ajax event="change" partialSubmit="true" process="@this" update="approvalWorkFlow" listener="#{qTDetailBB.onChangeAction}"/>
+			
 				</p:selectOneMenu>
 			</h:column>
 			<h:column>
@@ -22,6 +24,8 @@
 			<h:column>
 				<p:selectOneMenu value="#{qTDetailBB.managedBean.qt.itemOrigin}">
 					<f:selectItems value="#{qTDetailBB.getDropdownCodeValues(PmCodeCatConst.itemOrigin)}" />
+				<p:ajax event="change" partialSubmit="true" process="@this" update="approvalWorkFlow" listener="#{qTDetailBB.onChangeAction}"/>
+			
 				</p:selectOneMenu>
 			</h:column>
 			<h:column>
@@ -30,6 +34,8 @@
 			<h:column>
 				<p:selectOneMenu value="#{qTDetailBB.managedBean.qt.itemType}">
 					<f:selectItems value="#{qTDetailBB.getDropdownCodeValues(PmCodeCatConst.scItemType)}" />
+				<p:ajax event="change" partialSubmit="true" process="@this" update="approvalWorkFlow" listener="#{qTDetailBB.onChangeAction}"/>
+			
 				</p:selectOneMenu>
 			</h:column>
 			<h:column>
