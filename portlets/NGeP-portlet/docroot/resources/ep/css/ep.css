@@ -4051,7 +4051,7 @@ label > span.ui-button-text {
 
 .menu-text {
 	list-style-type: none;
-	margin: 5px 0 0 50px;
+	margin: 5px 0 0 0;
 	float: left;
 }
 
@@ -4068,7 +4068,7 @@ label > span.ui-button-text {
 .menu-line {
 	padding-left: 0;
 	list-style-type: none;
-	margin: 15px 0 0 96px;
+	margin: 9px 0 0 40px;
 	border-top-color: #000;
 	border-top-width: 4px;
 	border-top-style: solid;
