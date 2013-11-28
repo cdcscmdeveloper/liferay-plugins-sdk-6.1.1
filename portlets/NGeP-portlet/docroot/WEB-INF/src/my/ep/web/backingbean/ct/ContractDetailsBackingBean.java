@@ -206,6 +206,7 @@ public class ContractDetailsBackingBean extends
 		 * this.getManagedBean().getOutComes()[i-1]; }
 		 * this.getManagedBean().setOutComes(outcomeArr); }
 		 */
+		
 	}
 
 	@PostConstruct
@@ -421,13 +422,14 @@ public class ContractDetailsBackingBean extends
 			   this.getManagedBean().getTermination().getCtContract().setContractId(1L);
 		   }
 
-		if (this.getManagedBean().getCtAmendment() == null)
+		if (this.getManagedBean().getCtAmendment() == null){
 
 			this.getManagedBean().setCtAmendment(new CtAmendment());
-		this.getManagedBean().getCtAmendment().setStatus(new PmStatus());
-		this.getManagedBean().getCtAmendment().getStatus().setStatusId(new Long(1));
-		this.getManagedBean().getCtAmendment().setCtContract(new CtContract());
-		this.getManagedBean().getCtAmendment().getCtContract().setContractId(1L);
+		    this.getManagedBean().getCtAmendment().setStatus(new PmStatus());
+		    this.getManagedBean().getCtAmendment().getStatus().setStatusId(new Long(1));
+		    this.getManagedBean().getCtAmendment().setCtContract(new CtContract());
+		    this.getManagedBean().getCtAmendment().getCtContract().setContractId(1L);
+		}
 	}
 
 	public List<SelectItem> getItemDetailsMethod() {
