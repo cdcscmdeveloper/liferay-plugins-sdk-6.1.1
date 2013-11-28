@@ -2027,8 +2027,8 @@ table.ppTwoPartsTable, .ppThreePartsTable, .ppRmkTable{
 }
 
 table.ppTwoPartsTable th {
- 	text-align: right;
-	width: 30%;
+ 	/*text-align: right;*/
+	width: 25%;
 	vertical-align: top;
 	padding: 2px;
 }
@@ -2039,7 +2039,7 @@ table.ppTwoPartsTable td {
 }
 
 table.ppThreePartsTable th {
- 	text-align: right;
+ 	/*text-align: right;*/
 	width: 20%;
 	vertical-align: top;
 	padding: 2px;
@@ -2064,7 +2064,7 @@ table.ppThreePartsTable td {
 }
 
 .ppSmallTd{
-	width:5%;
+	width:5% !important;
 	text-align:center;
 }
 
@@ -2090,7 +2090,7 @@ table.ppThreePartsTable td {
 .ui-dialog.ppDiaglogBigBg{
 	background: #FFFFFF;
 	height:80% !important;
-	width: 800px !important;
+	width: 900px !important;
 	overflow-y: scroll;
 }
 
