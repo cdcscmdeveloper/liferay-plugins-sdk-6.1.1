@@ -207,7 +207,10 @@ public class LovBackingBean implements Serializable {
 	}
 	
 	private void constructSearchBean(String conditionField) {
-		if(StringUtils.isNotBlank(conditionField)) {
+		debugLogger("In constructSearchBean");
+		if(conditionField != null && !conditionField.equals("") && !conditionField.equals("null")) {
+			debugLogger("conditionField: " + conditionField);
+			
 			String[] conditionFields = conditionField.split("\\|");
 			for(int i = 0; i < conditionFields.length; i++) {
 				String[] fieldMapping = conditionFields[i].split("\\^");
