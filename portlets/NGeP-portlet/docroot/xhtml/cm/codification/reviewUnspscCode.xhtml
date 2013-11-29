@@ -29,7 +29,7 @@
 			<table style="width: 66%;margin-bottom: 4px;">
 				<tr>
 					<td><p:outputLabel value="Item Type"></p:outputLabel></td>
-					<td><p:selectOneMenu style="width:228px;">
+					<td><p:selectOneMenu value="#{unspscCodeBackingBean.managedBean.requestCode.itemType}" style="width:228px;">
 							<f:selectItem itemValue="P" itemLabel="Product " />
 							<f:selectItem itemValue="S" itemLabel="Service" />
 						</p:selectOneMenu></td>

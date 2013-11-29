@@ -11,21 +11,17 @@
 
 
 		<h:panelGroup id="cmReviewUnspsc">
-
-			<p:outputLabel styleClass="screen-title"
-				value="#{lbl['lbl.cm.unspsc.code.request.form']}"></p:outputLabel>
-
 			<div style="text-align: right;">
 
-				<p:commandButton value="#{lbl['lbl.cm.create.ext.code']}"
-					action="#{unspscCodeBackingBean.createExtCode}"></p:commandButton>
+				<p:commandButton value="Submit"
+					action="#{unspscCodeBackingBean.saveExtCode}"></p:commandButton>
 
 			</div>
 
 			<table style="width: 66%; margin-bottom: 4px;">
 				<tr>
 					<td><p:outputLabel value="Item Type"></p:outputLabel></td>
-					<td><p:selectOneMenu style="width:228px;">
+					<td><p:selectOneMenu value="#{unspscCodeBackingBean.managedBean.requestCode.itemType}" style="width:228px;" disabled="true">
 							<f:selectItem itemValue="P" itemLabel="Product " />
 							<f:selectItem itemValue="S" itemLabel="Service" />
 						</p:selectOneMenu></td>
@@ -35,6 +31,17 @@
 
 
 			<table style="width: 100%;">
+
+				<tr>
+					<td><p:outputLabel value="* #{lbl['lbl.cm.unspsc.code']}"></p:outputLabel></td>
+					<td><p:inputText
+							value="#{unspscCodeBackingBean.managedBean.requestCode.tempCode}"
+							disabled="true" size="40"></p:inputText></td>
+					<td><p:outputLabel value="* #{lbl['lbl.cm.unspsc.title']}"></p:outputLabel></td>
+					<td><p:inputText
+							value="#{unspscCodeBackingBean.managedBean.requestCode.tempTitle}"
+							disabled="true" size="40"></p:inputText></td>
+				</tr>
 
 
 				<tr>

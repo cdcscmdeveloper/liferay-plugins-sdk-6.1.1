@@ -5,7 +5,8 @@
 	xmlns:h="http://java.sun.com/jsf/html"
 	xmlns:ui="http://java.sun.com/jsf/facelets"
 	xmlns:p="http://primefaces.org/ui"
-	xmlns:c="http://java.sun.com/jsp/jstl/core">
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:ac="http://ac.my/jsf/composite/cc">
 
 	<ui:define name="contentSection">
 
@@ -18,19 +19,25 @@
 					action="#{unspscCodeBackingBean.submitToBPM}" update="@form"></p:commandButton>
 			</div>
 
+			<h:panelGroup rendered="#{unspscCodeBackingBean.catalogueAdmin}">
+			</h:panelGroup>
+
 
 
 			<table>
 				<tr>
 					<td><p:outputLabel value="#{lbl['lbl.cm.unspsc.code']}" /></td>
-					<td><p:inputText
-							value="#{unspscCodeBackingBean.managedBean.unspscCode}" /></td>
-					<td><p:commandButton value="Find" /></td>
+					<td><ac:lov id="extensionCodeId" lovId="CM_UNSPSC"
+							headerText="UNSPSC Lov" update=":form:unspscTitleId"
+							saveObject="unspscCodeBackingBean.managedBean.selectedLovUnspsc"
+							value="#{unspscCodeBackingBean.managedBean.selectedLovUnspsc.unspscCode}"
+							conditionField="recordStatus^1|unspscLevel^3">
+						</ac:lov> <ac:lovPopup /></td>
 				</tr>
 				<tr>
 					<td><p:outputLabel value="#{lbl['lbl.cm.unspsc.title']}"></p:outputLabel></td>
-					<td cosplan="1"><p:inputText
-							value="#{unspscCodeBackingBean.managedBean.unspscTitle}" /></td>
+					<td cosplan="1"><p:inputText id="unspscTitleId"
+							value="#{unspscCodeBackingBean.managedBean.selectedLovUnspsc.unspscTitle}" /></td>
 				</tr>
 			</table>
 

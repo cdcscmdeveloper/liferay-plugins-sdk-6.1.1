@@ -63,7 +63,12 @@
 				<tr style="height: 30px;">
 
 					<td><p:outputLabel value="#{lbl['lbl.cm.payment.term']}" /></td>
-					<td><p:selectOneMenu style="width:200px;"></p:selectOneMenu></td>
+					<td><p:selectOneMenu
+							value="#{catalogueBackingBean.managedBean.selectedMaintainItem.paymentTerms}"
+							style="width:200px;">
+							<f:selectItems
+								value="#{catalogueBackingBean.managedBean.paymentTermCriteria}" />
+						</p:selectOneMenu></td>
 					<td><p:outputLabel value="#{lbl['lbl.cm.sku']}" /></td>
 					<td><p:inputText size="35"
 							value="#{catalogueBackingBean.managedBean.selectedMaintainItem.skuNumber}"></p:inputText></td>
@@ -101,7 +106,7 @@
 				<tr style="height: 30px;">
 					<td><p:outputLabel
 							value="#{lbl['lbl.cm.additional.item.description']}" /></td>
-					<td colspan="3"><p:inputTextarea style="width:510px;" 
+					<td colspan="3"><p:inputTextarea style="width:510px;"
 							value="#{catalogueBackingBean.managedBean.selectedMaintainItem.itemDesc}" /></td>
 
 				</tr>
@@ -133,9 +138,9 @@
 			<p:tab id="pricing2" title="Zonal Price">
 				<ui:include src="zonalPricingTab.xhtml" />
 			</p:tab>
-			
+
 			<p:tab id="pricing3" title="Supplier Info">
-				
+
 			</p:tab>
 
 		</p:tabView>

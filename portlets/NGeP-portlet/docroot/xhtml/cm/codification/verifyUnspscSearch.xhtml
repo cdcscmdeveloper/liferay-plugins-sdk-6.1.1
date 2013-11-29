@@ -11,52 +11,7 @@
 
 
 
-		<h:panelGroup id="verifySearchId">
-			<p:outputLabel styleClass="screen-title"
-				value="#{lbl['lbl.cm.codification.search']}"></p:outputLabel>
-
-			<table>
-				<tr>
-					<td><p:outputLabel value="#{lbl['lbl.cm.unspsc.code']}"></p:outputLabel></td>
-					<td colspan="1"><p:inputText
-							value="#{codificationBackingBean.codeFilterBean.searchValue}" /></td>
-				</tr>
-				<tr>
-					<td><p:outputLabel value="#{lbl['lbl.cm.unspsc.title']}"></p:outputLabel></td>
-					<td><p:inputText
-							value="#{codificationBackingBean.titleFilterBean.searchValue}" /></td>
-					<td><p:commandButton value="search"
-							action="#{codificationBackingBean.unspscSearch2}"
-							update="verifySearchId" /></td>
-				</tr>
-
-			</table>
-
-
-
-			<p:dataTable id="unspscTableID"
-				value="#{codificationBackingBean.managedBean.unspscList}"
-				var="unspscObj" rowKey="#{unspscObj.unspscId}"
-				selection="#{codificationBackingBean.managedBean.selectedUNSPSCObj}"
-				width="100%" selectionMode="single">
-
-
-
-				<p:column>
-					<f:facet name="header">
-						<p:outputLabel value="#{lbl['lbl.cm.unspsc.code']}" />
-					</f:facet>
-					<p:outputLabel value="#{unspscObj.unspscCode}" />
-				</p:column>
-				<p:column>
-					<f:facet name="header">
-						<p:outputLabel value="#{lbl['lbl.cm.unspsc.title']}" />
-					</f:facet>
-					<p:outputLabel value="#{unspscObj.unspscTitle}" />
-				</p:column>
-			</p:dataTable>
-
-		</h:panelGroup>
+		<ui:include src="codificationSearch.xhtml"></ui:include>
 
 	</ui:define>
 

@@ -11,6 +11,7 @@ import my.ep.persistence.entity.cm.catalog.CmColor;
 import my.ep.persistence.entity.cm.catalog.CmMeasurement;
 import my.ep.persistence.entity.cm.catalog.CmRequestCode;
 import my.ep.persistence.entity.cm.catalog.CmType;
+import my.ep.persistence.entity.cm.catalog.CmUnspsc;
 import my.ep.web.managedbean.BaseManagedBean;
 import my.ep.web.vo.RemarksVO;
 
@@ -77,10 +78,58 @@ public class UnspscCodeManagedBean extends BaseManagedBean {
 	private Long measurementId;
 	private Long brandId;
 	
+	private CmUnspsc selectedLovUnspsc;
+	private CmUnspsc selectedLovUnspscSegment;
+	private CmUnspsc selectedLovUnspscfamily;
+	private CmUnspsc selectedLovUnspscClass;
 	
 	
 	
 	
+	
+	
+	
+	
+	public CmUnspsc getSelectedLovUnspscfamily() {
+		if(selectedLovUnspscfamily==null)
+			selectedLovUnspscfamily = new CmUnspsc();
+		return selectedLovUnspscfamily;
+	}
+
+	public void setSelectedLovUnspscfamily(CmUnspsc selectedLovUnspscfamily) {
+		this.selectedLovUnspscfamily = selectedLovUnspscfamily;
+	}
+
+	public CmUnspsc getSelectedLovUnspscClass() {
+		if(selectedLovUnspscClass==null)
+			selectedLovUnspscClass = new CmUnspsc();
+		return selectedLovUnspscClass;
+	}
+
+	public void setSelectedLovUnspscClass(CmUnspsc selectedLovUnspscClass) {
+		this.selectedLovUnspscClass = selectedLovUnspscClass;
+	}
+
+	public CmUnspsc getSelectedLovUnspscSegment() {
+		if(selectedLovUnspscSegment==null)
+			selectedLovUnspscSegment = new CmUnspsc();
+		return selectedLovUnspscSegment;
+	}
+
+	public void setSelectedLovUnspscSegment(CmUnspsc selectedLovUnspscSegment) {
+		this.selectedLovUnspscSegment = selectedLovUnspscSegment;
+	}
+
+	public CmUnspsc getSelectedLovUnspsc() {
+		if(selectedLovUnspsc == null)
+			selectedLovUnspsc = new CmUnspsc();
+		return selectedLovUnspsc;
+	}
+
+	public void setSelectedLovUnspsc(CmUnspsc selectedLovUnspsc) {
+		this.selectedLovUnspsc = selectedLovUnspsc;
+	}
+
 	public Long getTypeId() {
 		return typeId;
 	}
