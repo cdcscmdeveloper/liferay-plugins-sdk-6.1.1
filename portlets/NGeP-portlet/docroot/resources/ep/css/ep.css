@@ -2100,7 +2100,7 @@ table.ppThreePartsTable td {
 }
 
 
-.ui-selectonemenu {
+.ui-selectonemenu, .ui-inputtext{
 	height:20px;
 	min-width:60px;
 	vertical-align: middle;
@@ -2133,6 +2133,10 @@ table.ppThreePartsTable td {
 }
 .ppTempFix{
 	width: 200px !important;
+}
+.smallUserImage{
+	 height:30px;
+	 width:30px;
 }
 /*--------------------------       End PP Related      ------------------------------ */
 
