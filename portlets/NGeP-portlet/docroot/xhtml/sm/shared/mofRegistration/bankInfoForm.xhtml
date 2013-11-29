@@ -53,14 +53,14 @@
 			</p:column>
 			<p:column headerText="Action">
 				<p:commandLink action="#{backingBean.viewSignatories(bankBean)}"
-					update=":form:sfieldset" style="padding-right :5px;">
+					update=":form:tt:sfieldset" style="padding-right :5px;">
 					<p:graphicImage library="ep/images/design" name="seller_detail.png"
 						value="/resources/ep/images/design/seller_detail.png"
 						title="View Signatories" />
 				</p:commandLink>
 				<p:commandLink oncomplete="bankDialog.show();"
 					action="#{backingBean.assignSelBank(bankBean)}"
-					update=":form:bankDialog" style="padding-right :5px;">
+					update=":form:tt:bankDialog" style="padding-right :5px;">
 					<p:graphicImage library="ep/images/design" name="edit.png"
 						value="/resources/ep/images/design/edit.png" />
 				</p:commandLink>
@@ -73,7 +73,7 @@
 		</p:dataTable>
 		<div align="right">
 			<p:commandButton value="Add" oncomplete="bankDialog.show();"
-				action="#{backingBean.assignNewBank}" update=":form:bankDialog" />
+				action="#{backingBean.assignNewBank}" update=":form:tt:bankDialog" />
 			<p:commandButton value="Delete" />
 		</div>
 		<p:panel id="sfieldset"
@@ -250,7 +250,7 @@
 		<div align="right">
 			<p:commandButton value="Save" oncomplete="bankDialog.hide();"
 				action="#{backingBean.addOrUpdateBankInfoToSmAppl}"
-				update=":form:bankDt , :form:sfieldset" />
+				update=":form:tt:bankDt , :form:tt:sfieldset" />
 			<p:commandButton value="Cancel" onclick="bankDialog.hide();" />
 		</div>
 	</p:dialog>

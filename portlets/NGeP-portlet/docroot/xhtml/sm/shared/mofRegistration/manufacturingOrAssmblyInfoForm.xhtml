@@ -54,7 +54,7 @@
 			</p:column>
 			<p:column headerText="Action">
 				<p:commandLink oncomplete="manufactorDialog.show();"
-					update=":form:manDia"
+					update=":form:tt:manDia"
 					action="#{backingBean.assignSelManufacturer(manBean)}"
 					style="padding-right:5px">
 					<p:graphicImage library="ep/images/design" name="edit.png"
@@ -65,7 +65,7 @@
 		</p:dataTable>
 		<div align="right">
 			<p:commandButton value="Add" oncomplete="manufactorDialog.show();"
-				update=":form:manDia"
+				update=":form:tt:manDia"
 				action="#{backingBean.assignNewManufacturerBean}" />
 			<p:commandButton value="Delete" />
 		</div>
@@ -145,7 +145,7 @@
 		<div align="right">
 			<p:commandButton value="Save" oncomplete="manufactorDialog.hide();"
 				action="#{backingBean.addOrUpdateManufacturerToSmAppl}"
-				update=":form:manDt" />
+				update=":form:tt:manDt" />
 			<p:commandButton value="Cancel" onclick="manufactorDialog.hide();" />
 		</div>
 	</p:dialog>

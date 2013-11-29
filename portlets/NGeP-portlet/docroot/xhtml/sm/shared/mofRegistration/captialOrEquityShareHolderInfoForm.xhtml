@@ -56,7 +56,7 @@
 			<p:column headerText="Action">
 				<p:commandLink oncomplete="shareHolderDialog.show();"
 					action="#{backingBean.assignSelShareHolder(shareBean)}"
-					update=":form:shareHolderDialog">
+					update=":form:tt:shareHolderDialog">
 					<p:graphicImage library="ep/images/design" name="edit.png"
 						value="/resources/ep/images/design/edit.png" />
 				</p:commandLink>
@@ -65,7 +65,7 @@
 		<div align="right">
 			<p:commandButton value="Add" oncomplete="shareHolderDialog.show();"
 				action="#{backingBean.assignNewShareHolder}"
-				update=":form:shareHolderDialog" />
+				update=":form:tt:shareHolderDialog" />
 			<p:commandButton value="Delete" />
 		</div>
 		<br />
@@ -102,7 +102,7 @@
 		<div align="right">
 			<p:commandButton value="Save" oncomplete="shareHolderDialog.hide();"
 				action="#{backingBean.addOrUpdateShareHolderToSmAppl}"
-				update=":form:shrPerDt" />
+				update=":form:tt:shrPerDt" />
 			<p:commandButton value="Cancel" onclick="shareHolderDialog.hide();" />
 		</div>
 	</p:dialog>

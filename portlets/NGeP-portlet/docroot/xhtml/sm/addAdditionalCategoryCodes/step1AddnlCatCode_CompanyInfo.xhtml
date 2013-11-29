@@ -14,16 +14,16 @@
 					<h:outputText value=" - #{backingBean.managedBean.smAppl.applNo}" />
 				</h4></td>
 		</tr> -->
-		<tr>
-			<!-- <td><h6 style="color: blue;">
+		<!--<tr>
+			 <td><h6 style="color: blue;">
 					<h:outputText value="#{lbl['lbl.sm.step1Lbl']}" />
 					<h:outputText value="#{lbl['lbl.sm.companyStepLbl']}" />
-				</h6></td> -->
+				</h6></td> 
 			<td><div align="right" style="width: 100%">
 					<p:commandButton value="#{lbl['lbl.sm.saveAsDraft']}"
 						icon="ui-icon-save" />
 				</div></td>
-		</tr>
+		</tr>-->
 	</table>
 	<ui:include
 		src="/xhtml/sm/shared/mofRegistration/companyBasicInfoForm.xhtml" />
@@ -37,7 +37,7 @@
 			<td><div align="right" style="width: 100%">
 					<p:commandButton value="#{lbl['lbl.sm.next']}"
 						actionListener="#{backingBean.setTabValue('0','1')}"
-						action="#{backingBean.updateSmAppl}" update=":form:tt"
+						action="#{backingBean.updateSmAppl}" update=":form"
 						icon="ui-icon-next" iconPos="right" />
 				</div></td>
 		</tr>

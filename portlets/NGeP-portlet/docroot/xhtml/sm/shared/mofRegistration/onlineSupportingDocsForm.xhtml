@@ -26,8 +26,7 @@
 		<p:panel
 			header="Online Documents Check List - Application No. - #{backingBean.managedBean.smAppl.applNo}">
 			<p:dataTable var="table"
-				value="#{mofRegistrationBackingBean.dataList}"
-				style="width : 800px;">
+				value="#{mofRegistrationBackingBean.dataList}">
 				<p:column headerText="No.">  
                    #{table.no}  
       		    </p:column>
@@ -39,15 +38,12 @@
 		            #{table.documentdescription} 
 		        </p:column>
 				<p:column headerText="Upload Document ">
-					<!-- <p:fileUpload value="#{testBean.file}" mode="simple"
-						showButtons="false" /> -->
-					<p:fileUpload value="#{testBean.file}" mode="simple">
-					
-					</p:fileUpload>
+					<!-- <p:fileUpload mode="simple"></p:fileUpload> -->
+
 				</p:column>
-				<!-- 	<p:column headerText="Added Document Name">  
+				<p:column headerText="Added Document Name">  
                    #{table.addedDocumentName}  
-      		    </p:column>-->
+      		    </p:column>
 			</p:dataTable>
 
 			<br />

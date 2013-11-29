@@ -58,7 +58,7 @@
 			<p:column headerText="Action">
 				<p:commandLink oncomplete="equipmentDialog.show();"
 					action="#{backingBean.assignSelMachinery(macBean)}"
-					update=":form:eqDia" style="padding-right:5px">
+					update=":form:tt:eqDia" style="padding-right:5px">
 					<p:graphicImage library="ep/images/design" name="edit.png"
 						value="/resources/ep/images/design/edit.png" />
 				</p:commandLink>
@@ -67,7 +67,7 @@
 		</p:dataTable>
 		<div align="right">
 			<p:commandButton value="Add" oncomplete="equipmentDialog.show();"
-				update=":form:eqDia"
+				update=":form:tt:eqDia"
 				action="#{backingBean.assignNewMachineryBean}" />
 			<p:commandButton value="Delete" />
 		</div>
@@ -156,7 +156,7 @@
 		<div align="right">
 			<p:commandButton value="Save" oncomplete="equipmentDialog.hide();"
 				action="#{backingBean.addOrUpdateMachineToSmAppl}"
-				update=":form:macDt" />
+				update=":form:tt:macDt" />
 			<p:commandButton value="Cancel" onclick="equipmentDialog.hide();" />
 		</div>
 	</p:dialog>

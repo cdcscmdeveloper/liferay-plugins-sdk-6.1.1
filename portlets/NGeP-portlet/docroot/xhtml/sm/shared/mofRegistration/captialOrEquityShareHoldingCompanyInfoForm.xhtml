@@ -55,7 +55,7 @@
 				<h:outputText value="#{equiBean.sharePercentage}" />
 			</p:column>
 			<p:column headerText="Action">
-				<p:commandLink update=":form:eqiCompDialog"
+				<p:commandLink update=":form:tt:eqiCompDialog"
 					oncomplete="eqiCompDialog.show();"
 					action="#{backingBean.assignSelEquiCompany(equiBean)}">
 					<p:graphicImage library="ep/images/design" name="edit.png"
@@ -66,7 +66,7 @@
 		<div align="right">
 			<p:commandButton value="Add"
 				action="#{backingBean.assignNewEquiCompBean}"
-				oncomplete="eqiCompDialog.show();" update=":form:eqiCompDialog" />
+				oncomplete="eqiCompDialog.show();" update=":form:tt:eqiCompDialog" />
 			<p:commandButton value="Delete" />
 
 		</div>
@@ -199,8 +199,8 @@
 			<p:commandButton value="Save"
 				action="#{backingBean.addOrUpdateEquityCompanyToSmAppl}"
 				oncomplete="eqiCompDialog.hide();" type="submit"
-				partialSubmit="true" process=":form:eqiCompDialog"
-				update=":form:eqiComDt" />
+				partialSubmit="true" process=":form:tt:eqiCompDialog"
+				update=":form:tt:eqiComDt" />
 			<p:commandButton value="Cancel" onclick="eqiCompDialog.hide();" />
 		</div>
 	</p:dialog>

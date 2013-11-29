@@ -45,7 +45,7 @@
 					value="#{branchBean.smAddress.address1},#{branchBean.smAddress.address2}" />
 			</p:column>
 			<p:column headerText="Action">
-				<p:commandLink id="selectButton" update=":form:display"
+				<p:commandLink id="selectButton" update=":form:tt:display"
 					oncomplete="banchDialog.show();"
 					action="#{backingBean.assignSelBranch(branchBean)}">
 					<p:graphicImage library="ep/images/design" name="edit.png"
@@ -57,7 +57,7 @@
 		<div align="right">
 			<p:commandButton value="Add"
 				action="#{backingBean.assignNewBranchBean}"
-				oncomplete="banchDialog.show();" update=":form:display" />
+				oncomplete="banchDialog.show();" update=":form:tt:display" />
 			<p:commandButton value="Delete"
 				action="#{backingBean.deleteSelectedBranches}" />
 
@@ -171,7 +171,7 @@
 			<p:commandButton value="Save"
 				action="#{backingBean.addOrUpdateBranchToSmAppl}"
 				oncomplete="banchDialog.hide();" type="submit" partialSubmit="true"
-				process="display" update=":form:dt" />
+				process="display" update=":form:tt:dt" />
 			<p:commandButton value="Cancel" onclick="banchDialog.hide();" />
 		</div>
 	</p:dialog>

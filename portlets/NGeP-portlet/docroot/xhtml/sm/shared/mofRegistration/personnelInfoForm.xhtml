@@ -109,7 +109,7 @@
 					rendered="#{person.equityOwner == false}"
 					action="#{backingBean.assignSelPersonnel(person)}"
 					oncomplete="personnelDialog.show();"
-					update=":form:personnelDialog" /> -->
+					update=":form:tt:personnelDialog" /> -->
 			</p:column>
 
 			<p:column headerText="Roles In Company">
@@ -131,7 +131,7 @@
 				<p:commandLink rendered="#{person.equityOwner == false}"
 					action="#{backingBean.assignSelPersonnel(person)}"
 					oncomplete="personnelDialog.show();"
-					update=":form:personnelDialog">
+					update=":form:tt:personnelDialog">
 					<p:graphicImage library="ep/images/design" name="edit.png"
 						value="/resources/ep/images/design/edit.png" />
 				</p:commandLink>
@@ -142,7 +142,7 @@
 			<p:commandButton value="Add"
 				action="#{backingBean.assignNewPersonnel}"
 				oncomplete="personnelDialog.show();"
-				update=":form:personnelDialog" />
+				update=":form:tt:personnelDialog" />
 			<p:commandButton value="Delete" />
 		</div>
 		<!-- <p:panel header="List of Authorized Personnel">
@@ -203,7 +203,7 @@
 			<p:commandButton value="Save"
 				action="#{backingBean.addOrUpdatePersonnelToSmAppl}"
 				oncomplete="personnelDialog.hide();"
-				update=":form:personDt" />
+				update=":form:tt:personDt" />
 			<p:commandButton value="Cancel" onclick="personnelDialog.hide();" />
 		</div>
 	</p:dialog>

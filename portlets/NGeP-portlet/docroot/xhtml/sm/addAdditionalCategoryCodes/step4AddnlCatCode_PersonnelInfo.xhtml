@@ -5,28 +5,6 @@
 	xmlns:p="http://primefaces.org/ui"
 	xmlns:c="http://java.sun.com/jsp/jstl/core">
 
-	<table style="width: 100%">
-		<!-- 	<tr>
-			<td colspan="2"><h4
-					style="color: blue; text-decoration: underline; text-align: center;">
-					<h:outputText value="#{lbl['lbl.sm.applnTypeLbl']}" />
-					<h:outputText value="Add Additional Category Code(s) " />
-					<h:outputText value=" - #{backingBean.managedBean.smAppl.applNo}" />
-				</h4></td>
-		</tr> -->
-		<tr>
-			<!-- <td>
-				<h6 style="color: blue;">
-					<h:outputText value="Step4 :" />
-					<h:outputText value=" Personnel(s) Information Page" />
-				</h6>
-			</td> -->
-			<td><div align="right" style="width: 100%">
-					<p:commandButton value="#{lbl['lbl.sm.saveAsDraft']}"
-						icon="ui-icon-save" />
-				</div></td>
-		</tr>
-	</table>
 	<ui:include
 		src="/xhtml/sm/shared/mofRegistration/personnelInfoForm.xhtml" />
 	<table style="width: 100%">
@@ -34,13 +12,13 @@
 			<td><div align="left" style="width: 100%">
 					<p:commandButton value="#{lbl['lbl.sm.prev']}"
 						actionListener="#{backingBean.setTabValue('3','2')}"
-						action="#{backingBean.updateSmAppl}" update=":form:tt"
+						action="#{backingBean.updateSmAppl}" update=":form"
 						icon="ui-icon-prev" />
 				</div></td>
 			<td><div align="right" style="width: 100%">
 					<p:commandButton value="#{lbl['lbl.sm.next']}"
 						actionListener="#{backingBean.setTabValue('3','4')}"
-						action="#{backingBean.updateSmAppl}" update=":form:tt"
+						action="#{backingBean.updateSmAppl}" update=":form"
 						icon="ui-icon-next" iconPos="right" />
 				</div></td>
 		</tr>

@@ -5,6 +5,7 @@
 	xmlns:h="http://java.sun.com/jsf/html"
 	xmlns:ui="http://java.sun.com/jsf/facelets"
 	xmlns:p="http://primefaces.org/ui"
+	xmlns:ac="http://ac.my/jsf/composite/cc"
 	xmlns:c="http://java.sun.com/jsp/jstl/core">
 
 	<ui:define name="resourceSection">
@@ -13,7 +14,7 @@
 
 
 	<ui:define name="contentSection">
-		<p:panel id="tt">
+		<ac:smPanel id="tt">
 			<table style="width: 100%">
 				<tr>
 					<td><div class="navDiv" id="menuDiv" align="center">
@@ -22,34 +23,42 @@
 										rendered="#{backingBean.managedBean.tabActiveIndex eq 0}" />
 									<p:commandLink value="Company Info"
 										rendered="#{backingBean.managedBean.tabActiveIndex gt 0}" /></li>
+
 								<li><h:outputText value="Branch / Assocs"
 										rendered="#{backingBean.managedBean.tabActiveIndex le 1}" />
 									<p:commandLink value="Branch / Assocs"
 										rendered="#{backingBean.managedBean.tabActiveIndex gt 1}" /></li>
+
 								<li><h:outputText value="Captial Info"
 										rendered="#{backingBean.managedBean.tabActiveIndex le 2}" />
 									<p:commandLink value="Captial Info"
 										rendered="#{backingBean.managedBean.tabActiveIndex gt 2}" /></li>
+
 								<li><h:outputText value="Personnels"
 										rendered="#{backingBean.managedBean.tabActiveIndex le 3}" />
 									<p:commandLink value="Personnels"
 										rendered="#{backingBean.managedBean.tabActiveIndex gt 3}" /></li>
+
 								<li><h:outputText value="Bank Info"
 										rendered="#{backingBean.managedBean.tabActiveIndex le 4}" />
 									<p:commandLink value="Bank Info"
 										rendered="#{backingBean.managedBean.tabActiveIndex gt 4}" /></li>
+
 								<li><h:outputText value="Category Codes"
 										rendered="#{backingBean.managedBean.tabActiveIndex le 5}" />
-									<p:commandLink value="Personnels"
+									<p:commandLink value="Category Codes"
 										rendered="#{backingBean.managedBean.tabActiveIndex gt 5}" /></li>
+
 								<li><h:outputText value="Factory"
 										rendered="#{backingBean.managedBean.tabActiveIndex le 6}" />
 									<p:commandLink value="Factory"
 										rendered="#{backingBean.managedBean.tabActiveIndex gt 6}" /></li>
+
 								<li><h:outputText value="Supporting Docs"
 										rendered="#{backingBean.managedBean.tabActiveIndex le 7}" />
 									<p:commandLink value="Supporting Docs"
 										rendered="#{backingBean.managedBean.tabActiveIndex gt 7}" /></li>
+
 								<li><h:outputText value="Payment" /></li>
 							</ul>
 							<ul id="tripMeter" class="menu-line">
@@ -186,6 +195,6 @@
 			<c:if test="#{backingBean.managedBean.tabActiveIndex eq 8}">
 				<ui:include src="step8ProcessingFeePaymentInfo.xhtml" />
 			</c:if>
-		</p:panel>
+		</ac:smPanel>
 	</ui:define>
 </ui:composition>

@@ -85,7 +85,7 @@
 		<div align="right">
 			<p:commandButton value="Add"
 				action="#{backingBean.assignNewCategoryCode}"
-				oncomplete="regCatDialog.show();" update=":form:regCatDialog" />
+				oncomplete="regCatDialog.show();" update=":form:tt:regCatDialog" />
 		</div>
 
 		<br />
@@ -163,7 +163,7 @@
 							<div align="center">
 								<p:commandButton value="Save"
 									action="#{backingBean.saveEnteredCategory}"
-									oncomplete="regCatDialog.hide();" update=":form:catDt" />
+									oncomplete="regCatDialog.hide();" update=":form:tt:catDt" />
 								<p:commandButton value="Cancel" onclick="regCatDialog.hide();" />
 							</div>
 						</td>
@@ -239,7 +239,7 @@
 									action="#{backingBean.saveSelectedCategory}"
 									oncomplete="regCatDialog.hide();" type="submit"
 									partialSubmit="true" process="regCatDialog"
-									update=":form:catDt" />
+									update=":form:tt:catDt" />
 								<p:commandButton value="Cancel" onclick="regCatDialog.hide();" />
 							</div>
 						</td>
