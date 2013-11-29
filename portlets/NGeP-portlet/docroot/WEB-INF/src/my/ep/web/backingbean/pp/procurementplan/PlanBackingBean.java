@@ -2099,6 +2099,7 @@ public class PlanBackingBean extends BaseBackingBean<PlanManagedBean>{
 					tempActor.setActorSeq(actor.getActorSeq());
 					tempActor.setActorType(actor.getActorType());
 					tempActor.setUserId(actor.getUserId());
+					tempActor.setPmUser(actor.getPmUser());
 					desPlan.addPpPlanActors(tempActor);;
 				}
 
@@ -2523,10 +2524,10 @@ public class PlanBackingBean extends BaseBackingBean<PlanManagedBean>{
 			try {				
 				
 				
-				ISearchBean<PpPlan> searchBean1 = getSearchBean();
+				ISearchBean<PpPlan> searchBeanData = getSearchBean();
 				IProcurementPlanSO procurementPlanSO = (IProcurementPlanSO) BusinessDelegate.getInstance().getServiceObject(ProcurementPlanConst.SO_PP, IProcurementPlanSO.class);
 				ProcurementPlanReqDTO reqDTO = new ProcurementPlanReqDTO();
-				reqDTO.setSearchBean(searchBean1);
+				reqDTO.setSearchBean(searchBeanData);
 				ProcurementPlanResDTO resDTO = procurementPlanSO.retrievePlanListByParams(reqDTO);
 				if(resDTO.isSuccessful()){
 					return resDTO.getPpPlanResultBean();

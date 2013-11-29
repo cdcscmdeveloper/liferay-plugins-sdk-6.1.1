@@ -14,7 +14,7 @@ xmlns:c="http://java.sun.com/jsp/jstl/core">
 			<div class="ppRightBtn">
 				<p:commandButton id="cbConfirm" value="#{lbl['lbl.pp.confirm']}" action="#{planBackingBean.addPpPlanToList()}"
 				  onclick="dlItemDetailsModal.hide()" oncomplete="dlItemDetailsModal.hide()"  process="opEpExistingContract"
-				  update="dtEpPlanItem"  />
+				  update="dtEpPlanItem" icon="ui-icon-accept" />
 				&nbsp; 
 				<p:commandButton id="cbCancel" value="#{lbl['lbl.pp.cancel']}" onclick="dlItemDetailsModal.hide()" 
 					icon="ui-icon-cancel" immediate="true"/>&nbsp;
