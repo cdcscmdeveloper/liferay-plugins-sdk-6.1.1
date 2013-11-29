@@ -320,7 +320,7 @@ xmlns:c="http://java.sun.com/jsp/jstl/core">
 	   			<td colspan="4">
 	   			 	<div class="ppRightBtn">
 						<p:commandButton value="#{lbl['lbl.pp.ok']}"  action="#{planBackingBean.addItemToList()}"
-							process="pItemDetails" update="tvPlanContent:pItemDetailsSub" />
+							process="pItemDetails" update="tvPlanContent:pItemDetailsSub" icon="ui-icon-accept" />
 						<c:if test="#{cc.attrs.selectedPlan.favouriteOption==PPConst.favouriteTypeItem}">
 							&nbsp;
 							<p:commandButton value="#{lbl['lbl.pp.cancel']}" icon="ui-icon-cancel"

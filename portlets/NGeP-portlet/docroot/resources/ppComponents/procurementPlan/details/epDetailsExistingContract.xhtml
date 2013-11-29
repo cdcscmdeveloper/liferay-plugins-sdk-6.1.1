@@ -31,13 +31,16 @@ xmlns:c="http://java.sun.com/jsp/jstl/core">
 	            #{ppPlan.planEndDate}
 	        </p:column>	    
 	        <p:column headerText="#{lbl['lbl.pp.action']}">  
-                <p:commandButton update="@([id$=dlItemDetails])" 
-					action="#{planBackingBean.showPpPlan(ppPlan)}" oncomplete="dlItemDetailsModal.show();"
-					icon="ui-icon-edit" />
+                <p:commandLink update="@([id$=dlItemDetails])" 
+					action="#{planBackingBean.showPpPlan(ppPlan)}" oncomplete="dlItemDetailsModal.show();">
+					<p:graphicImage value="/resources/ep/images/design/edit.png"/>
+				</p:commandLink>
                 &nbsp;&nbsp;
-                <p:commandButton icon="ui-icon-delete"
+                <p:commandLink 
                   	update="dtEpItem" disabled="#{!(ppPlan.brandNew || cc.attrs.viewMode==PPConst.modeRevision)}"
-                  	action="#{planBackingBean.deletePpPlan(ppPlan)}" />  
+                  	action="#{planBackingBean.deletePpPlan(ppPlan)}">
+                  	<p:graphicImage value="/resources/ep/images/design/trash.png"/>
+               	</p:commandLink>  
             </p:column>  
             <p:rowExpansion>  
             	<p:dataTable id="dtEpItem" styleClass="ppFixTdWidth" var="ppItem" value="#{ppPlan.ppPlanItems}" 

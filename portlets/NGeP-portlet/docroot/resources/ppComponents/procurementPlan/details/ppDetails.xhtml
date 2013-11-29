@@ -29,13 +29,16 @@ xmlns:c="http://java.sun.com/jsp/jstl/core">
 	                 #{ppItem.recordStatus?'Active':'Deleted'}
 	            </p:column>              
 		        <p:column headerText="#{lbl['lbl.pp.action']}"> 
-	                <p:commandButton action="#{planBackingBean.showPpItem(ppItem)}"
-	                	update="@([id$=#{cc.attrs.tabId}dlItemDetails])" oncomplete="#{cc.attrs.tabId}dlItemDetailsModal.show()"
-	                	icon="ui-icon-edit" /> <!--  -->
+	                <p:commandLink action="#{planBackingBean.showPpItem(ppItem)}"
+	                	update="@([id$=#{cc.attrs.tabId}dlItemDetails])" oncomplete="#{cc.attrs.tabId}dlItemDetailsModal.show()">
+	                	<p:graphicImage value="/resources/ep/images/design/edit.png"/>
+                	</p:commandLink>
 	                 &nbsp;&nbsp;
-	                <p:commandButton icon="ui-icon-delete"
+	                <p:commandLink 
 	                  	update="dtPpItem" disabled="#{!(ppItem.brandNew || cc.attrs.viewMode==PPConst.modeRevision)}" 	 
-	                  	action="#{planBackingBean.deletePpItem(ppItem)}" />
+	                  	action="#{planBackingBean.deletePpItem(ppItem)}">
+	                  	<p:graphicImage value="/resources/ep/images/design/trash.png"/>
+                  	</p:commandLink>
 	            </p:column>  
 	    	</p:dataTable>  
 	    	<br/>
@@ -209,7 +212,7 @@ xmlns:c="http://java.sun.com/jsp/jstl/core">
 		   			<td>&nbsp;</td>
 					<td>
 						<div class="ppRightBtn">
-							<p:commandButton value="#{lbl['lbl.pp.ok']}" 
+							<p:commandButton value="#{lbl['lbl.pp.ok']}" icon="ui-icon-accept"
 								action="#{planBackingBean.addItemToList()}"
 								onclick="#{cc.attrs.tabId}dlItemDetailsModal.hide()" 
 								oncomplete="#{cc.attrs.tabId}dlItemDetailsModal.hide()" 

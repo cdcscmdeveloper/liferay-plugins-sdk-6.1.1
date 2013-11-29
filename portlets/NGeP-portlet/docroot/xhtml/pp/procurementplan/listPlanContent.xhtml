@@ -47,7 +47,9 @@
                  </h:outputText>
             </p:column>
 			<p:column headerText="#{lbl['lbl.pp.action']}">
-				<p:commandButton icon="ui-icon-edit" action="#{planBackingBean.redirectToPlanContent(ppPlan)}" />
+				<p:commandLink action="#{planBackingBean.redirectToPlanContent(ppPlan)}" >
+					<p:graphicImage value="/resources/ep/images/design/edit.png"/>
+				</p:commandLink>
 			</p:column>
 		</p:dataTable>
 		
