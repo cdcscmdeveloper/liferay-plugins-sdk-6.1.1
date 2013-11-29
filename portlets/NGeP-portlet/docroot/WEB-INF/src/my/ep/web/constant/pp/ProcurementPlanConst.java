@@ -87,8 +87,18 @@ public class ProcurementPlanConst {
 	//BPM
 	public static final String BPM_REVISE = "REVISE";
 	public static final String BPM_APPROVE = "APPROVE";
+	public static final String BPM_VERIFY = "VERIFY";
 	public static final String BPM_SUBMIT = "SUBMIT";
 	public static final String BPM_SAVE = "SAVE";
+	
+	public static final String BPM_TASK_BUDGET_REVISE = "Revise Budget";
+	public static final String BPM_TASK_BUDGET_REVIEW = "Review Budget";
+	
+	public static final String BPM_TASK_PLAN_REVISE = "Revise Plan";
+	public static final String BPM_TASK_PLAN_REVIEW = "Review Plan";
+	public static final String BPM_TASK_PLAN_VERIFY = "Verify Plan";
+
+	
 
 	//Default BPM Actions
 	public static final String[] BPM_DEFAULT_ACTIONS = new String[]{BPM_SAVE, BPM_SUBMIT};
@@ -99,6 +109,9 @@ public class ProcurementPlanConst {
 	public static final String SO_PP = "pp";
 	public static final Integer PVO_LEVEL = 3;
 	public static final String DATE_DISPLAY_PATTERN = "MM/dd/yyyy";
+	public static final String DATETIME_DISPLAY_PATTERN = "dd/MM/yyyy hh:mm aaa";
+	
+	
 	
 	//Contract Ind
 	public static final String CONTRACT_IND_PKP = "P";
@@ -705,6 +718,12 @@ public class ProcurementPlanConst {
 	 */
 	public Long getStatusPpiPendingSubmit() {
 		return STATUS_PPI_PENDING_SUBMIT;
+	}
+	/**
+	 * @return the datetimeDisplayPattern
+	 */
+	public String getDatetimeDisplayPattern() {
+		return DATETIME_DISPLAY_PATTERN;
 	}
 	
 	

@@ -124,6 +124,25 @@ public class PlanBackingBean extends BaseBackingBean<PlanManagedBean>{
 	}
 	
 	/**
+	 * constructor of the backingbean
+	 */
+	public PlanBackingBean() {
+		log.info("PlanBackingBean - Start");
+		if(this.getManagedBean().getViewMode()==null || ProcurementPlanConst.MODE_LIST.equals(this.getManagedBean().getViewMode())){			
+			//set current user profile (login user must be PTJ)
+			List <PmOrgProfile> ptjProfiles = getOrgProfiles(getFacesScopes().getUserSessionBean().getUserId(), OrganizationType.DIVISION.value());// TODO dynamic
+			this.getManagedBean().setCurrentUser(ptjProfiles!=null ? ptjProfiles.get(0) : new PmOrgProfile());
+		}
+		
+		//TODO: temp
+		if(MDC.get(LogKey.USER_ID)==null) {
+			MDC.put(LogKey.USER_ID, getFacesScopes().getUserSessionBean().getUserId());
+		}
+		log.info("PlanBackingBean - End");
+	}
+	
+	
+	/**
 	 * get search bean 
 	 * @return ISearchBean<PpPlan>
 	 */
@@ -196,25 +215,6 @@ public class PlanBackingBean extends BaseBackingBean<PlanManagedBean>{
 		log.info("planSearch - End");
 		
 	}
-	
-	/**
-	 * constructor of the backingbean
-	 */
-	public PlanBackingBean() {
-		log.info("PlanBackingBean - Start");
-		if(this.getManagedBean().getViewMode()==null || ProcurementPlanConst.MODE_LIST.equals(this.getManagedBean().getViewMode())){			
-			//set current user profile (login user must be PTJ)
-			List <PmOrgProfile> ptjProfiles = getOrgProfiles(getFacesScopes().getUserSessionBean().getUserId(), OrganizationType.DIVISION.value());// TODO dynamic
-			this.getManagedBean().setCurrentUser(ptjProfiles!=null ? ptjProfiles.get(0) : new PmOrgProfile());
-		}
-		
-		//TODO: temp
-		if(MDC.get(LogKey.USER_ID)==null) {
-			MDC.put(LogKey.USER_ID, getFacesScopes().getUserSessionBean().getUserId());
-		}
-		log.info("PlanBackingBean - End");
-	}
-
 	
 	/**
 	 * load task from task list
@@ -313,14 +313,14 @@ public class PlanBackingBean extends BaseBackingBean<PlanManagedBean>{
 				this.getManagedBean().setPlanMaster(ppPlan.getPpPlanMaster());
 				this.getManagedBean().setPlan(ppPlan);
 				
-				if("Review Plan".equalsIgnoreCase(taskName)){
+				if(ProcurementPlanConst.BPM_TASK_PLAN_REVIEW.equalsIgnoreCase(taskName)){
 					log.info("Review Plan");
 					this.getManagedBean().setViewMode(ProcurementPlanConst.MODE_APPROVAL);
 					this.getManagedBean().getPlan().setEditable(false); 
 					this.getManagedBean().getPlan().setPmRejectReasonIds(new ArrayList<Long>());
 					this.getManagedBean().getPlanMaster().setPpPlans(new ArrayList<PpPlan>());
 					this.getManagedBean().getPlanMaster().addPpPlans(this.getManagedBean().getPlan());
-				}else if("Revise Plan".equals(taskName)){
+				}else if(ProcurementPlanConst.BPM_TASK_PLAN_REVISE.equals(taskName)){
 					log.info("Revise Plan");
 					this.getManagedBean().setViewMode(ProcurementPlanConst.MODE_REVISION);
 					this.getManagedBean().getPlan().setEditable(true); 
@@ -329,7 +329,7 @@ public class PlanBackingBean extends BaseBackingBean<PlanManagedBean>{
 					}
 					this.getManagedBean().getPlanMaster().setPpPlans(new ArrayList<PpPlan>());
 					this.getManagedBean().getPlanMaster().addPpPlans(this.getManagedBean().getPlan());
-				}else if("Verify Plan".equals(taskName)){
+				}else if(ProcurementPlanConst.BPM_TASK_PLAN_VERIFY.equals(taskName)){
 					log.info("Verify Plan");
 					this.getManagedBean().setViewMode(ProcurementPlanConst.MODE_VERIFICATION);
 					this.getManagedBean().getPlan().setEditable(false); 
@@ -1581,6 +1581,33 @@ public class PlanBackingBean extends BaseBackingBean<PlanManagedBean>{
 		
 	}
 	
+
+	/**
+	 * retrieve and set actor
+	 * @param userId
+	 */
+	private PmUser getActor(Long userId){
+		log.info("getActor - Start");
+		System.out.println("userId " + userId);
+		UserReqDTO reqDTO = new UserReqDTO();
+		PmUser user = new PmUser();
+		if(userId!=null){
+			try{
+				IUserSO userSO = BusinessDelegate.getInstance().getServiceObject("pm", IUserSO.class);
+				reqDTO.setUserId(userId);
+				UserResDTO resDTO = userSO.retrieveUserDetails(reqDTO);
+				user = resDTO.getPmUser();
+				
+				
+			}catch(Exception e){
+				e.printStackTrace();
+			}
+		}
+		log.info("getActor - End");
+		return user;
+	
+	}
+	
 	/**
 	 * retrieve and set selected GOSODO
 	 */
@@ -2135,6 +2162,7 @@ public class PlanBackingBean extends BaseBackingBean<PlanManagedBean>{
 					}
 				}
 			}
+	
 			
 
 			if(!CommonMethod.isSelected(this.getManagedBean().getPlanMaster().getMaksudId())){
@@ -2386,6 +2414,7 @@ public class PlanBackingBean extends BaseBackingBean<PlanManagedBean>{
 					break;
 				}
 			}
+			planActor.setPmUser(getActor(planActor.getUserId()));
 			//add new
 			plan.addPpPlanActors(planActor);
 		}
