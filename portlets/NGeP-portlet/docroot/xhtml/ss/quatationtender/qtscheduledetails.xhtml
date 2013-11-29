@@ -17,24 +17,24 @@
 			<p:calendar value="#{qTScheduleDetailBB.managedBean.qt.publishDate}"
 				id="noticePublish" showOn="button" />
 	
-	        <h:outputLabel value="Proposal Preparation Start Date/Time " />
+	        <h:outputLabel value="#{lbl['lbl.so.propredate']}" />
 	
 			 <p:calendar value="#{qTScheduleDetailBB.managedBean.qt.proposalStartDate}"  id="proposalPreparation" showOn="button"/> 
 			
 			
-			<h:outputLabel value="Closing Date and Time"/>
+			<h:outputLabel value="#{lbl['lbl.so.closingdate']}"/>
 			
 			 <p:calendar value="#{qTScheduleDetailBB.managedBean.qt.closingDate}" id="closingDate" showOn="button"/>
 			
-			<h:outputLabel  value="Publishing Period (Days) " escape="false" />
+			<h:outputLabel  value="#{lbl['lbl.so.publsihperiod']}" escape="false" />
 					
 			<p:inputText value="#{qTScheduleDetailBB.managedBean.qt.qtValidityPeriod}"  readonly="true" id="publishingperiod" />
 			
-			<h:outputLabel value="Expected LOA Issuance Date "/>
+			<h:outputLabel value="#{lbl['lbl.so.expectloadate']}"/>
 			
 			<p:calendar value="#{qTScheduleDetailBB.managedBean.qt.expectedLoaDate}"  id="loaDate" showOn="button"/>
 			
-			<h:outputLabel value="Expected Start Delivery Date "/>
+			<h:outputLabel value="#{lbl['lbl.so.expectdeldate']}"/>
 			
 			<p:calendar value="#{qTScheduleDetailBB.managedBean.qt.expectedDeliveryDate}"  id="deliveryDate" showOn="button"/>
 		
@@ -45,14 +45,14 @@
 		<h:panelGrid border="0" cellpadding="0" cellspacing="0" width="100%" columns="2" 
 			 columnClasses="columnWidth30,columnWidth70">
 
-		 	<h:outputLabel value="Briefing/Site Visit Required" />
+		 	<h:outputLabel value="#{lbl['lbl.so.briefsitereq']}" />
 		 <p:selectOneRadio
 				value="#{qTScheduleDetailBB.managedBean.qt.bsvRequired}">
 				<f:selectItem itemLabel="yes" itemValue="true" />
 				<f:selectItem itemLabel="No" itemValue="false" />
 				<p:ajax update="bsvrequire" listener="#{qTSupplierQulCriteriaBackingBean.processChecked}"/>
 			</p:selectOneRadio>
-			<h:outputLabel value="Briefing Same As Site Visit" />
+			<h:outputLabel value="#{lbl['lbl.so.briefsamevisit']}" />
 			<p:selectOneRadio
 				value="#{qTScheduleDetailBB.managedBean.qt.sameBsv}">
 				<f:selectItem itemLabel="yes" itemValue="true" />
@@ -208,59 +208,14 @@
 				<p:ajax event="rowEditCancel"
 					listener="#{searchQtnTenderBB.onCancel}" />
 
-				<p:column headerText="No">
-					<!-- <h:outputText value="1"></h:outputText> -->
-					<p:cellEditor>
-						<f:facet name="output">
-							<h:outputText value="1"></h:outputText>
-						</f:facet>
-						<f:facet name="input">
-							<p:inputText value="2" />
-						</f:facet>
-					</p:cellEditor>
-				</p:column>
-
+				
 				<p:column headerText="Name">
-					<!-- <h:outputText value="Arjun"></h:outputText> -->
-					<p:cellEditor>
-						<f:facet name="output">
-							<h:outputText value="#{contactpersondetails.name}"></h:outputText>
-						</f:facet>
-					</p:cellEditor>	
+					
+							<p:inputTextarea value="#{qTScheduleDetailBB.managedBean.qtContactPerson.name}" rows="1" cols="50" 
+                     	disabled="e" />
+						
                 </p:column>
-				<p:column headerText="Tel No">
-
-					<!--    <h:outputText value="355446727" />   -->
-					<p:cellEditor>
-						<f:facet name="output">
-							<h:outputText value="#{contactpersondetails.phoneNo}"></h:outputText>
-						</f:facet>
-						
-					</p:cellEditor>
-
-				</p:column>
-
-				<p:column headerText="Fax No">
-					<!-- <h:outputText value="1234555" />  -->
-
-					<p:cellEditor>
-						<f:facet name="output">
-							<h:outputText value="#{contactpersondetails.faxNo}"></h:outputText>
-						</f:facet>
-						
-					</p:cellEditor>
-				</p:column>
-
-				<p:column headerText="Email">
-					<!-- <h:outputText value="1234555" />  -->
-
-					<p:cellEditor>
-						<f:facet name="output">
-							<h:outputText value="#{contactpersondetails.email}"></h:outputText>
-						</f:facet>
-						
-					</p:cellEditor>
-				</p:column>
+				
 
 				<p:column headerText="Action" style="width:6%">
 					<p:rowEditor />
@@ -275,8 +230,8 @@
 			styleClass="noBorders tr,noBorders td">
 			<f:facet name="footer">
 					<div align="right">
-						<p:commandButton id="add" value="#{lbl['lbl.so.addbtn']}" />
 					
+					<p:commandButton value="#{lbl['lbl.so.addbtn']}" action="#{qTScheduleDetailBB.addContactPerson}" update="@(.contactdetails)" style="float:right;" ></p:commandButton>
 					</div>
 				</f:facet>
 			</p:panelGrid>

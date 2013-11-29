@@ -10,7 +10,7 @@
 			columns="2" columnClasses="columnWidth20">
 
 			<h:column>
-				<h:outputLabel value="* Title" />
+				<h:outputLabel value="* #{lbl['lbl.so.title']}" />
 			</h:column>
 			<h:column>
 				<p:inputText value="#{qTDetailBB.managedBean.qt.qtTitle}" size="103" />
@@ -21,7 +21,7 @@
 			columnClasses="columnWidth20,columnWidth30,columnWidth20,columnWidth30">
 
 			<h:column>
-				<h:outputLabel value=" * File No." />
+				<h:outputLabel value="* #{lbl['lbl.so.fileno']}"/>
 			</h:column>
 			<h:column>
 				<p:inputText id="fileno" value="#{qTDetailBB.managedBean.qt.fileNo}" />
@@ -40,7 +40,7 @@
 			<h:column>
 				<h:outputLabel value="* Planned Amount"
 					rendered="#{qTDetailBB.managedBean.qt.planned}" />
-				<h:outputLabel value="* Estimated Price"
+				<h:outputLabel value="* #{lbl['lbl.so.estimated']}"
 					rendered="#{!qTDetailBB.managedBean.qt.planned}" />
 			</h:column>
 			<h:column>
@@ -48,7 +48,7 @@
 					value="#{qTDetailBB.managedBean.qt.qtAmount}" />
 			</h:column>
 			<h:column>
-				<h:outputLabel value="* Procurement Mode" />
+				<h:outputLabel value="* #{lbl['lbl.so.procmode']}" />
 			</h:column>
 			<h:column>
 				<p:selectOneMenu
@@ -58,7 +58,7 @@
 				</p:selectOneMenu>
 			</h:column>
 			<h:column>
-				<h:outputLabel value="* Financial Year" />
+				<h:outputLabel value="* #{lbl['lbl.so.financialyr']}" />
 			</h:column>
 			<h:column>
 				<p:selectOneRadio id="optionradio"

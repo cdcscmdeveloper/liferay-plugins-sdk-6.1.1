@@ -9,7 +9,7 @@
 			columns="4" columnClasses="columnWidth20,columnWidth30,columnWidth20,columnWidth30">
 			
 			<h:column>
-				<h:outputLabel value="* Qtn/Tender Type" />
+				<h:outputLabel value="* #{lbl['lbl.so.qttentype']}" />
 			</h:column>
 			<h:column>
 				<p:selectOneMenu value="#{qTDetailBB.managedBean.qt.qtType}">
@@ -19,7 +19,7 @@
 				</p:selectOneMenu>
 			</h:column>
 			<h:column>
-				<h:outputLabel value="Item Origin" />
+				<h:outputLabel value="#{lbl['lbl.so.itemorg']}"  />
 			</h:column>
 			<h:column>
 				<p:selectOneMenu value="#{qTDetailBB.managedBean.qt.itemOrigin}">
@@ -29,7 +29,7 @@
 				</p:selectOneMenu>
 			</h:column>
 			<h:column>
-				<h:outputLabel value="Item Type" />
+				<h:outputLabel value="#{lbl['lbl.so.itemtype']}"  />
 			</h:column>
 			<h:column>
 				<p:selectOneMenu value="#{qTDetailBB.managedBean.qt.itemType}">
@@ -39,21 +39,21 @@
 				</p:selectOneMenu>
 			</h:column>
 			<h:column>
-				<h:outputLabel value="Assoc. Qtn/Tender No." />
+				<h:outputLabel value="#{lbl['lbl.so.asqttype']}" />
 			</h:column>
 			<h:column>
 				<p:inputText id="AsnTenderNo"
 					value="#{qTDetailBB.managedBean.qt.qtNo}" disabled="true" />
 			</h:column>
 			<h:column>
-				<h:outputLabel value="MTO" />
+				<h:outputLabel value="#{lbl['lbl.so.mto']}" />
 			</h:column>
 			<h:column>
 				<p:inputText id="MTO" value="#{qTDetailBB.managedBean.qt.mto ? 'Yes' : 'No'}"
 					disabled="true" />
 			</h:column>
 			<h:column>
-				<h:outputLabel value="* RFP" />
+				<h:outputLabel value="* #{lbl['lbl.so.rfp']}" />
 			</h:column>
 			<h:column>
 				<p:selectOneRadio id="rfpType" value="#{qTDetailBB.managedBean.qt.rfp}">
@@ -62,15 +62,15 @@
 				</p:selectOneRadio>
 			</h:column>
 			<h:column>
-				<h:outputLabel for="validityperiod"
-					value="* Proposal Validity (Days)" />
+				<h:outputLabel 
+					value="* #{lbl['lbl.so.provaldate']}" />
 			</h:column>
 			<h:column>
 				<p:inputText id="validityperiod"
 					value="#{qTDetailBB.managedBean.qt.qtValidityPeriod}" />
 			</h:column>
 			<h:column>
-				<h:outputLabel value="* Response Rules" />
+				<h:outputLabel value="* #{lbl['lbl.so.resrules']}"  />
 			</h:column>
 			<h:column>
 				<p:selectOneMenu value="#{qTDetailBB.managedBean.qt.responseRule}" style="width:220px;">
