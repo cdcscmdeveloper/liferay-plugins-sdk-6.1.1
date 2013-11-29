@@ -6,15 +6,15 @@
 	xmlns:p="http://primefaces.org/ui"
 	xmlns:c="http://java.sun.com/jsp/jstl/core">
     <p:panel id="factoringId" header="#{lbl['lbl.ct.fc.panel.name']}"    toggleable="true"  toggleSpeed="500">
-      <h:panelGrid columns="4" style="width:770px;" columnClasses="columnWidth15">  
+      <h:panelGrid columns="4" style="width:100%" columnClasses="columnWidth15">  
          <p:outputLabel  value="Company Name"/>  
-            <p:selectOneMenu style="width:170px;">
+            <p:selectOneMenu style="width:180px;">
                <f:selectItem itemLabel="-Please Select--" itemValue="" /> 
                <f:selectItem itemLabel="RHB Group" itemValue="1" /> 
                <f:selectItem itemLabel="CIMB Group" itemValue="2" /> 
             </p:selectOneMenu>    
           <p:outputLabel  value="Authorized Ref No."/>  
-          <p:inputText value="#{supplierBackingBean.managedBean.factoring.authRefNo}" style="width:170px;" />  
+          <p:inputText value="#{supplierBackingBean.managedBean.factoring.authRefNo}" style="width:155px;" />  
           <p:outputLabel value=" Effective Date"/>
           <p:calendar style="width:140px;" value="#{supplierBackingBean.managedBean.factoring.effDate}" id="popupButtonCal" showOn="button" />
           <p:outputLabel value=" Expiry Date"/>
@@ -25,7 +25,7 @@
 			</div>
 		   </h:panelGroup>
 		   <h:panelGrid>
-		   <p:inputTextarea id="fcaddress" value="125, Jalan P RamLee, KL" rows="3" cols="29"  autoResize="false" />
+		   <p:inputTextarea id="fcaddress" value="125, Jalan P RamLee, KL" rows="3" cols="31"  autoResize="false" />
 	       </h:panelGrid>
 	       </h:panelGrid>
        </p:panel>

@@ -8,7 +8,7 @@
 	<ui:include src="/xhtml/ct/fulfilmentdetails/shared/fulfilment.xhtml"/>
 	<ui:include	src="/xhtml/ct/fulfilmentdetails/shared/quotationTender.xhtml" />
     <p:panel id="terCont" header="#{lbl['lbl.ct.tr.panel.header']}" toggleable="true"  toggleSpeed="500">
-            <h:panelGrid columns="4" style="width:800px;" columnClasses="columnWidth15">  
+            <h:panelGrid columns="4" style="width:100%" columnClasses="columnWidth15">  
                <p:outputLabel value="#{lbl['lbl.ct.tr.mutual']}"/>  
                <p:selectBooleanCheckbox value="#{contractDetailsBackingBean.managedBean.termination.mutualTerminate}"/> 
                <f:verbatim></f:verbatim> <f:verbatim></f:verbatim>
@@ -22,7 +22,7 @@
 	         </h:panelGrid> 
      </p:panel>
      <p:panel id="trReason" header="#{lbl['lbl.ct.tr.reason']}" toggleable="true"  toggleSpeed="500">
-       <h:panelGrid style="width:780px;">
+       <h:panelGrid style="width:100%">
 			<p:dataTable id="dataTable" var="data" value="#{contractDetailsBackingBean.managedBean.termination.ctTerminationReasons}" rowIndexVar="index" 
 			  widgetVar="dataTableObj" lazy="false" dynamic="true" paginator="true" paginatorPosition="bottom" paginatorAlwaysVisible="true"
 			  emptyMessage="No Records!" rows="10">
@@ -48,7 +48,7 @@
 				</p:column>						
 		    </p:dataTable>
 		 </h:panelGrid>
-		 <h:panelGrid style="width:770px" columnClasses="column-align-right">
+		 <h:panelGrid style="width:100%" columnClasses="column-align-right">
 			<p:commandButton value="Add"  process="@this" partialSubmit="true" icon="ui-icon-add" 
 			   action="#{contractDetailsBackingBean.addTerminateReason()}" update="dataTable"/>
 		  </h:panelGrid>
@@ -62,7 +62,7 @@
 			</p:confirmDialog>
 		</p:panel>
 		<p:panel id="panelClause" header="#{lbl['lbl.ct.tr.panel.claus']}"  toggleable="true"  toggleSpeed="500">
-        <h:panelGrid style="width:780px;">
+        <h:panelGrid style="width:100%">
 		<p:dataTable id="clauseTable" var="data" value="#{contractDetailsBackingBean.managedBean.terminationClauseList}" rowIndexVar="index"
 		   widgetVar="dataTableObj" lazy="false" dynamic="true" paginator="true" paginatorPosition="bottom"
 		   paginatorAlwaysVisible="true" emptyMessage="No Records!" rows="10">
@@ -83,7 +83,7 @@
 		   </p:column>						
 		  </p:dataTable>
 		 </h:panelGrid>
-		 <h:panelGrid style="width:770px" columnClasses="column-align-right">
+		 <h:panelGrid style="width:100%" columnClasses="column-align-right">
 			<p:commandButton value="Add" process="@this" partialSubmit="true" 
 			   icon="ui-icon-add" onclick="dlg2.show();">
 			</p:commandButton>

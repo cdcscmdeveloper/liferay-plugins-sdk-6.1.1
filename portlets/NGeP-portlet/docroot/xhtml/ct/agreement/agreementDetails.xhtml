@@ -6,36 +6,36 @@
 	xmlns:p="http://primefaces.org/ui"
 	xmlns:c="http://java.sun.com/jsp/jstl/core">
     <p:panel id="fd" header="#{lbl['lbl.ct.panel.name']}"   toggleable="true"  toggleSpeed="500">
-       <h:panelGrid columns="4" style="width:800px;" columnClasses="columnWidth15">  
+       <h:panelGrid columns="4" style="width:100%" columnClasses="columnWidth15">  
          <p:outputLabel value="#{lbl['lbl.ct.cname']}"/>  
-         <p:inputText value="#{agreementBackingBean.managedBean.contract.contractName}" style="width:150px;" disabled="true" />
+         <p:inputText value="Bekalan Pen Bebola" style="width:170px;" disabled="true" />
          <p:outputLabel value="#{lbl['lbl.ct.cno']}" />  
-         <h:inputText style="width:150px;" disabled="true"/>
+         <h:inputText style="width:170px;" value="234ER5670" disabled="true"/>
          <p:outputLabel value="#{lbl['lbl.ct.ministry']}" />  
-         <p:selectOneMenu  disabled="false"  style="width:120px;">
+         <p:selectOneMenu  disabled="false"  style="width:130px;">
 			<f:selectItems value="#{agreementBackingBean.contractListItem.contractOwnerJabatan}" />
 	     </p:selectOneMenu>
 	     <p:outputLabel value="#{lbl['lbl.ct.phyno']}" />  
-         <p:inputText style="width:150px;" disabled="true" />
+         <p:inputText style="width:170px;" value="234ER5670" disabled="true" />
 	     <p:outputLabel value="#{lbl['lbl.ct.dname']}"/>  
-         <p:selectOneMenu disabled="false" style="width:120px;">
+         <p:selectOneMenu disabled="false" style="width:130px;">
 		   <f:selectItems value="#{agreementBackingBean.contractListItem.contractOwnerJabatan}" />
 	     </p:selectOneMenu>
 		 <p:outputLabel value="#{lbl['lbl.ct.company']}" />  
-         <p:inputText style="width:150px;" disabled="true" />
+         <p:inputText style="width:170px;" value="Xyz Sdn Bhd" disabled="true" />
          <p:outputLabel value="#{lbl['lbl.ct.ptj.name']}" /> 
-  	     <p:selectOneMenu disabled="false" style="width:120px;">
+  	     <p:selectOneMenu disabled="false" style="width:130px;">
 		  <f:selectItems value="#{agreementBackingBean.contractListItem.contractOwnerPtj}" />
   		 </p:selectOneMenu>
   		 <p:outputLabel value="#{lbl['lbl.ct.ptj.sname']}"/>  
-         <p:inputText required="true"  style="width:150px;" disabled="true" />
+         <p:inputText value="Khai Sdn Bhd"  style="width:150px;" disabled="true" />
          <p:outputLabel value="#{lbl['lbl.ct.ptj.ceff.date']}"/>  
-         <p:inputText required="true" disabled="true" style="width:150px;" />
+         <p:inputText value="01 DEC 2013" disabled="true" style="width:150px;" />
          <p:outputLabel value="#{lbl['lbl.ct.ptj.cexp.date']}" />  
-         <p:inputText  disabled="true" style="width:150px;" />
+         <p:inputText value ="30 NOV 2014" disabled="true" style="width:150px;" />
          <p:outputLabel value="#{lbl['lbl.ct.cperiod']}" />  
          <h:panelGrid columns="2">
-         <p:inputText style="width:60px;"  disabled="true" />
+         <p:inputText style="width:60px;" value="14"  disabled="true" />
          <p:selectOneMenu disabled="false" style="width:20px;">
 			<f:selectItem itemLabel="Month" itemValue="Month" /> 
 		    <f:selectItem itemLabel="Years" itemValue="Years" /> 
@@ -43,7 +43,7 @@
          </h:panelGrid>
          <h:outputLabel value="#{lbl['lbl.ct.camount']}"/>  
          <h:panelGrid columns="2">
-           <p:inputText style="width:60px;" disabled="true" />
+           <p:inputText style="width:60px;" value="3000.00" disabled="true" />
            <p:selectOneMenu disabled="false" style="width:20px;">
 			  <f:selectItem itemLabel="MYR" itemValue="MYR"/> 
 			  <f:selectItem itemLabel="USD" itemValue="USD"/> 
@@ -51,7 +51,7 @@
          </h:panelGrid>
          <p:outputLabel value="#{lbl['lbl.ct.bond.value']}" />  
          <h:panelGrid columns="2">
-            <p:inputText disabled="true" style="width:60px;" />
+            <p:inputText disabled="true" value="2000.00" style="width:60px;" />
             <p:selectOneMenu disabled="false"  style="width:20px;">
 			<f:selectItem itemLabel="MYR" itemValue="MYR"  /> 
 		    <f:selectItem itemLabel="USD" itemValue="USD" /> 
@@ -73,7 +73,7 @@
       </p:panel>
           <p:panel id="supAgDetail" header="Amendment Details"  rendered="#{agreementBackingBean.managedBean.agreementType eq 'supplemental'}"  toggleable="true"  toggleSpeed="500">
           <ui:include src="agreementSupDetails.xhtml"></ui:include>
-		</p:panel>         
-	  <ui:include src="/xhtml/ct/shared/remarkAndAttachment.xhtml" /> 
+		</p:panel>       
+		 <ui:include src="/xhtml/ct/agreement/signingAgreement.xhtml"/>  
 </ui:composition>
 	  

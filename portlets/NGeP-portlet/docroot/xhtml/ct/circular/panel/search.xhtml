@@ -10,7 +10,7 @@
 	<ui:define name="contentSection">
 		<p:messages id="messages" showDetail="true" autoUpdate="true" closable="true" severity="error, info" />
 		<p:panel id="searchPanel" header="Search" toggleable="true">
-			<h:panelGrid columns="4" style="width:900px;">
+			<h:panelGrid columns="4" style="width:100%">
 				<h:outputLabel value="Circular No." />
 				<p:inputText value="#{panelBackingBean.managedBean.searchCircularNo}" style="width:200px;" />
 				<h:outputLabel value="Circular Name" />
@@ -98,7 +98,7 @@
 				</p:commandLink>
 				<p:spacer width="5" />	
 				<p:commandLink onclick="gotoPage([{name:'action',value:'view'},{name:'circularVerId',value:'#{data.circularVerId}'}])">
-				 <p:graphicImage library="ep/images/design" name="search.png" value="/resources/ep/images/design/search.png" title="View" />
+				 <p:graphicImage library="ep/images/design" name="document.png" value="/resources/ep/images/design/document.png" title="View" />
 				</p:commandLink>	
 					<!-- 
 					<p:spacer width="1" />

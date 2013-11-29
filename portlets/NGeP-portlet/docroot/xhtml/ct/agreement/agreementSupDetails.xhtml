@@ -5,28 +5,35 @@
 	xmlns:ui="http://java.sun.com/jsf/facelets"
 	xmlns:p="http://primefaces.org/ui"
 	xmlns:c="http://java.sun.com/jsp/jstl/core">
-	  <h:panelGrid columns="4" style="width:800px;" columnClasses="columnWidth15">  
+	  <h:panelGrid columns="4" style="width:100%" columnClasses="columnWidth15">  
 	 
+	  
+	  <p:outputLabel value="Change of quantity" />
+	   <p:selectBooleanCheckbox value=" " disabled="true" />
+	  <p:outputLabel value="Change contract value" />
+	   <p:selectBooleanCheckbox value=" " disabled="true" /> 
+	    <p:spacer height="1"/> <f:verbatim></f:verbatim>
+	   <p:spacer height="1"/> <f:verbatim></f:verbatim>
+	     <p:outputLabel value="Change of item price" />
+	  <p:selectBooleanCheckbox value="false" disabled="True" />
+	  
+	    <p:outputLabel value="Extension of Contract" />
+	  <p:selectBooleanCheckbox value="true" disabled="true" />
+	    
+	   <p:spacer height="1"/> <f:verbatim></f:verbatim>
+	   <p:spacer height="1"/> <f:verbatim></f:verbatim>
 	   <p:outputLabel value="Request No" />  
       <p:commandLink style="margin-right:20px;">  
        <p:outputLabel value="FA00099234242" style="float:left;" />  
       </p:commandLink> 
-       <p:outputLabel value="Extension of Contract" />
-	   <p:selectBooleanCheckbox value="true" disabled="true" />
-       <p:outputLabel value="Request Date" />  
-      <p:inputText style="width:170px;"  disabled="true" />
-          <p:outputLabel value="Change of item price" />
-	  <p:selectBooleanCheckbox value="false" disabled="True" />
-       <p:outputLabel value="File Ref No."/>  
-      <p:inputText style="width:170px;" disabled="true" /> 
-      <p:outputLabel value="Change of contract value" />
-	   <p:selectBooleanCheckbox value=" " disabled="true" /> 
-	  <p:outputLabel value="Title / Name" />  
+          <p:outputLabel value="File Ref No."/>  
+      <p:inputText value="FA00099234242" style="width:170px;" disabled="true" /> 
+      
+        <p:outputLabel value="Title / Name" />  
       <p:inputText style="width:170px;"/>
-	   <p:outputLabel value="Change of quantity" />
-	   <p:selectBooleanCheckbox value=" " disabled="true" />
-	   <f:verbatim></f:verbatim> <f:verbatim></f:verbatim>
-	   
+       <p:outputLabel value="Request Date" />  
+      <p:inputText value="02 DEC 2013" style="width:170px;"  disabled="true" />
+         
 	  <h:panelGroup>
 		<div style="height: 40px; vertical-align: top;">
 		   <p:outputLabel for="amendmentD" value="Description" />

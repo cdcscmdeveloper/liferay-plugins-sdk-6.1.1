@@ -39,7 +39,7 @@
 		   </p:panel>
 		   <p:outputPanel id="changeFields"> 
 		 	 <p:panel id="itemZoneId"  header="#{contractDetailsBackingBean.managedBean.showItem}"  toggleable="true"  toggleSpeed="500">
-				<h:panelGrid rendered="#{contractDetailsBackingBean.managedBean.itemPricing}">
+				<h:panelGrid rendered="#{contractDetailsBackingBean.managedBean.itemPricing}" style="width:100%">
 				   <p:dataTable id="tableItemZone"  var="data" value=" " widgetVar="dataTableObj"
                     lazy="false" dynamic="true" paginator="true" paginatorPosition="bottom" paginatorAlwaysVisible="true" emptyMessage="No Records!" rows="10">
 				    <ac:paginator for="tableItemZone" />
@@ -53,15 +53,15 @@
 					  <p:column headerText="#{lbl['lbl.ct.item.table1.price.edate']}" />
 					</p:row>	
 				 </p:columnGroup>
-				  <p:column> <p:outputLabel value="NORTHZONE"/></p:column>       
+				  <p:column> <p:outputLabel value="NORTHZONE" style="float:left;"/></p:column>       
 			      <p:column><p:outputLabel value="1"/></p:column>       
 			      <p:column><p:outputLabel value="50"/></p:column>       
 			      <p:column><p:outputLabel value="2300.000"/></p:column> 
-			      <p:column><p:outputLabel value="01-JAN-2013"/></p:column>       
-			      <p:column><p:outputLabel value="31-DEC-2014"/></p:column>      
+			      <p:column><p:outputLabel value="01-JAN-2013" style="float:left;"/></p:column>       
+			      <p:column><p:outputLabel value="31-DEC-2014" style="float:left;"/></p:column>      
 			     </p:dataTable>
 				 </h:panelGrid>
-				  <h:panelGrid rendered="#{contractDetailsBackingBean.managedBean.itemCeilingQuantity}">
+				  <h:panelGrid rendered="#{contractDetailsBackingBean.managedBean.itemCeilingQuantity}" style="width:100%">
 				  <p:dataTable id="tableItemZone1"  var="data" value=" " widgetVar="dataTableObj"
                     lazy="false" dynamic="true" paginator="true" paginatorPosition="bottom" paginatorAlwaysVisible="true" emptyMessage="No Records!" rows="10" 
 			        rowsPerPageTemplate="5,10,15,20">
@@ -76,12 +76,12 @@
 					  <p:column headerText="#{lbl['lbl.ct.item.table1.price.edate']}" />
 					</p:row>								
 			       </p:columnGroup>
-			        <p:column><p:outputLabel value="10"/></p:column>       
-			        <p:column><p:outputLabel value="Ministry"/></p:column>  
-			        <p:column><p:outputLabel value="Central"/></p:column>       
-			        <p:column><p:outputLabel value="50"/></p:column>  
-			        <p:column><p:outputLabel value="31-DEC-2013"/></p:column>       
-			        <p:column><p:outputLabel value="30-DEC-2014"/></p:column>  
+			        <p:column><p:outputLabel value="Ministry Name" style="float:left;"/></p:column>       
+			        <p:column><p:outputLabel value="Jabatan Name" style="float:left;"/></p:column>  
+			        <p:column><p:outputLabel value="Central Name" style="float:left;"/></p:column>       
+			        <p:column><p:outputLabel value="50" /></p:column>  
+			        <p:column><p:outputLabel value="31-DEC-2013" style="float:left;"/></p:column>       
+			        <p:column><p:outputLabel value="30-DEC-2014" style="float:left;"/></p:column>  
 				  </p:dataTable>
 				  </h:panelGrid>
 			     </p:panel>

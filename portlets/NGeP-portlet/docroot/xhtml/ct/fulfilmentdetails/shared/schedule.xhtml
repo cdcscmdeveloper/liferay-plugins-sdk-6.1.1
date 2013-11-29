@@ -37,7 +37,7 @@
          </p:column>        
 	  </p:dataTable>  
 	 </h:panelGrid>         
-	 <h:panelGrid rendered="#{contractDetailsBackingBean.managedBean.chkProgressive}" style="width:780px;">
+	 <h:panelGrid rendered="#{contractDetailsBackingBean.managedBean.chkProgressive}" style="width:100%">
 	    <p:dataTable id="tableProgress" var="data" value="#{contractDetailsBackingBean.managedBean.ctContract.ctProgressivePayments}" widgetVar="dataTableObj" 
 		   paginator="true" paginatorPosition="bottom" paginatorAlwaysVisible="true" emptyMessage="No Records!">
 		   <ac:paginator for="tableProgress" />
@@ -51,15 +51,15 @@
                 <p:column style="width:60px;" headerText="#{lbl['lbl.ct.sched.table1.action']}"  /> 
             </p:row>	
 			</p:columnGroup>
-			<p:column><p:inputText value="#{data.phase}" size="5"/> </p:column>  
+			<p:column><p:inputText value="#{data.phase}" style="width:40px;" /> </p:column>  
 			<p:column>
-			     <p:inputText style="width:150px;"/> 
+			     <p:inputText style="width:200px;"/> 
 			</p:column>         
 			<p:column>
-			   <p:calendar style="width:80px" value="#{data.fromDate}" id="popupButtonCal" showOn="button" />
+			   <p:calendar size="12" value="#{data.fromDate}" id="popupButtonCal" showOn="button" />
 		    </p:column>      
 			<p:column>
-			  <p:calendar style="width:80px" value="#{data.toDate}" id="popupButtonCal1" showOn="button" />  
+			  <p:calendar size="12" value="#{data.toDate}" id="popupButtonCal1" showOn="button" />  
 			</p:column>     
 			<p:column>
 			   <p:inputText value="#{data.percentage}" style="width:50px;"/>

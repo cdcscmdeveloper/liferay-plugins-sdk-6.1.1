@@ -8,9 +8,9 @@
 	xmlns:ac="http://ac.my/jsf/composite/cc" >
 	<p:panel id="bondId" header="#{lbl['lbl.ct.pbd.panel.name']}" toggleable="true"  toggleSpeed="500" widgetVar="panelbond">
     <div style="overflow-x:auto">
-	<p:dataTable id="tableBond" var="data" value="#{contractDetailsBackingBean.managedBean.ctContract.ctPerformanceBonds}" rowIndexVar="index" 
+	<p:dataTable  id="tableBond" var="data" value="#{contractDetailsBackingBean.managedBean.ctContract.ctPerformanceBonds}" rowIndexVar="index" 
 	lazy="false" widgetVar="dataTableObj" dynamic="true" paginator="true" paginatorPosition="bottom" 
-	paginatorAlwaysVisible="true" emptyMessage="No Records!" rows="10">
+	paginatorAlwaysVisible="true" emptyMessage="No Records!" rows="10" styleClass="tablePanel">
 	    <ac:paginator for="tableBond" />
 	   <p:columnGroup type="header"> 
 	   <p:row> 

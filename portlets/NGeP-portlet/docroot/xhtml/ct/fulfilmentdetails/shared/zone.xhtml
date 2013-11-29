@@ -6,7 +6,7 @@
 	xmlns:p="http://primefaces.org/ui"
 	xmlns:c="http://java.sun.com/jsp/jstl/core">
     <p:panel id="zoneId" header="Zone Details"  toggleable="true"  toggleSpeed="500" widgetVar="panelzone">
-    <p:treeTable id="treetable" value="#{contractDetailsBackingBean.rootNode}" var="data">
+    <p:treeTable id="treetable" value="#{contractDetailsBackingBean.rootNode}" var="data" styleClass="tablePanel">
        <p:column style="width:40%">  
           <f:facet name="header"> #{lbl['lbl.ct.zone.tree.name']}  </f:facet>  
            <p:outputLabel value="#{data.zoneName}" style="float:left;"/>  

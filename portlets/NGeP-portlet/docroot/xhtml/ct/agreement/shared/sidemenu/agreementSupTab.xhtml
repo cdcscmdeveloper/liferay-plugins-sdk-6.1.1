@@ -21,12 +21,12 @@
 	    <p:tab id="agDetail" title="Fulfilment Details" >
             <ui:include src="/xhtml/ct/agreement/agreementDetails.xhtml"/>
         </p:tab> 
-	    <p:tab id="agSubSign" title="Signing Agreement" >
-           <ui:include src="/xhtml/ct/agreement/signingAgreement.xhtml"/>
-        </p:tab> 
-	    <p:tab id="agSubCreate" title="Create Agreement" >
+	     <p:tab id="agCreate" title="Create Agreement">
             <ui:include src="/xhtml/ct/agreement/createAgreement.xhtml"/>
         </p:tab> 
+       <p:tab id="tabRemarks" title="#{lbl['lbl.ct.menu.remark']}">
+				<ui:include src="/xhtml/ct/shared/remarkAndAttachment.xhtml" />
+			</p:tab>
 	</p:tabView>
 </ui:define>
    
