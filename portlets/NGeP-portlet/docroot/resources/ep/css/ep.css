@@ -948,7 +948,7 @@ px
 	font-size: 11px;
 	text-decoration: none;
 	background: #97d832 !important;
-	box-shadow: 0px 0px 8px rgb(255, 255, 255);
+	box-shadow: none;
 	border-radius: 0px;
 }
 
@@ -1178,6 +1178,7 @@ repeat-x
 	text-decoration: none;
 	padding: 0px;
 	background: #FFFFFF !important;
+	width: 40px;
 }
 
 .ui-icon-seek-first {
