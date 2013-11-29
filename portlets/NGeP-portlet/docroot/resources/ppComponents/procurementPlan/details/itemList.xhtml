@@ -44,7 +44,7 @@ xmlns:c="http://java.sun.com/jsp/jstl/core">
                  &nbsp;&nbsp;
                 <p:commandLink
                   	update="dtEpItemDetails" disabled="#{!(ppItem.brandNew || (cc.attrs.viewMode==PPConst.modeRevision 
-                  		&amp;&amp; ppItem.revisionRequired))}" action="#{planBackingBean.deletePpItem(ppItem)}"  />
+                  		&amp;&amp; ppItem.revisionRequired))}" action="#{planBackingBean.deletePpItem(ppItem)}" >
                		<p:graphicImage value="/resources/ep/images/design/trash.png"/>
            		</p:commandLink>
 	        </p:column>
