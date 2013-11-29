@@ -1,7 +1,10 @@
 package my.ep.web.backingbean.ss.supplierproposal;
 
 import java.io.BufferedInputStream;
+import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
@@ -17,7 +20,6 @@ import javax.faces.bean.ManagedBean;
 import javax.faces.bean.RequestScoped;
 import javax.faces.context.FacesContext;
 import javax.portlet.PortletResponse;
-import javax.portlet.PortletSession;
 import javax.servlet.http.HttpServletResponse;
 
 import my.ep.biz.service.sm.registration.IRegistrationSO;
@@ -56,7 +58,7 @@ public class SPDetailBackingBean extends BaseBackingBean<SPDetailManagedBean> {
 
 	private static final String MODULE_NAME = "ss";
 	private IQTProposalSO proposalSO = null;
-	
+
 	public SPDetailBackingBean() {
 		IQTProposalSO proposalSO = BusinessDelegate.getInstance()
 				.getServiceObject(MODULE_NAME, IQTProposalSO.class);
@@ -77,9 +79,6 @@ public class SPDetailBackingBean extends BaseBackingBean<SPDetailManagedBean> {
 
 	@PostConstruct
 	public void init() {
-		// this.getManagedBean().setQtProposalChecklist(new
-		// ScQtProposalChecklist());
-		// this.getManagedBean().setSelectDetails(new ScQtProposalChecklist());
 	}
 
 	/**
@@ -91,7 +90,6 @@ public class SPDetailBackingBean extends BaseBackingBean<SPDetailManagedBean> {
 		IQTProposalSO proposalSO = null;
 
 		try {
-
 			proposalSO = BusinessDelegate.getInstance().getServiceObject(
 					MODULE_NAME, IQTProposalSO.class);
 
@@ -114,7 +112,6 @@ public class SPDetailBackingBean extends BaseBackingBean<SPDetailManagedBean> {
 			this.getManagedBean().setTecCheckDetailsList(tecCheckDetailsList);
 			this.getManagedBean().setFinanceCheckDetailsList(
 					finCheckDetailsList);
-
 		} catch (Exception ex) {
 			ex.printStackTrace();
 			FacesContext.getCurrentInstance().addMessage(
@@ -170,6 +167,7 @@ public class SPDetailBackingBean extends BaseBackingBean<SPDetailManagedBean> {
 
 		UploadedFile file = event.getFile();
 		String fileName = file.getFileName();
+		byte[] fileBytes = file.getContents();
 		FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_INFO,
 				"The file was uploaded successfully.", null);
 		FacesContext.getCurrentInstance().addMessage(null, message);
@@ -187,40 +185,43 @@ public class SPDetailBackingBean extends BaseBackingBean<SPDetailManagedBean> {
 
 		attachment.setFileName(fileName);
 		attachment.setFileDesc("File uploded for Fulfilment Req Order");
-		attachment.setFilePath("E:\\upload_" + date.getTime() + ".txt");
+		attachment.setFilePath("E:\\upload\\" + fileName);
+
+		FileOutputStream fos;
+		try {
+			fos = new FileOutputStream("E:\\upload\\" + fileName);
+			fos.write(fileBytes);
+			fos.close();
+		} catch (FileNotFoundException e) {
+			e.printStackTrace();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+
 		scQtProposalChecklist.setScQtProposalChecklistAttachment(attachment);
-
-		// this.getManagedBean().setQtProposalChecklist("fileName");
-
-		// getManagedBean().setSelectDetails(scQtProposalChecklist);
-		PortletSession session = (PortletSession) FacesContext
-				.getCurrentInstance().getExternalContext().getSession(false);
-		session.setAttribute("ATTACHMENT_SCQT", attachment,
-				PortletSession.APPLICATION_SCOPE);
 
 	}
 
-	public void downloadFile(ScQtProposalChecklist scQtProposalChecklist)
+	public void downloadPTJFile(ScQtProposalChecklist scQtProposalChecklist)
 			throws IOException {
 		debugLogger("downloadFile");
+		File file = new File("E:\\upload\\" + scQtProposalChecklist.getScQtCheckList()
+				.getScQtCheckListAttachment().getFileName());
+		InputStream input = new FileInputStream(file);
+		
 		PortletResponse portletResponse = (PortletResponse) FacesContext
 				.getCurrentInstance().getExternalContext().getResponse();
-		// PortletSession session= (PortletSession)
-		// FacesContext.getCurrentInstance().getExternalContext().getSession(false);
-		// Object
-		// obj=session.getAttribute("ATTACHMENT_SCQT",PortletSession.APPLICATION_SCOPE);
 		HttpServletResponse res = com.liferay.portal.util.PortalUtil
 				.getHttpServletResponse(portletResponse);
 		res.setHeader("Content-Disposition", "attachment; filename=\""
 				+ scQtProposalChecklist.getScQtCheckList()
-						.getScQtCheckListAttachment().getFileName() + "\"");//
+						.getScQtCheckListAttachment().getFileName() + "\"");
 		res.setHeader("Content-Transfer-Encoding", "binary");
 		res.setContentType("application/octet-stream");
 		res.flushBuffer();
 		OutputStream out = res.getOutputStream();
 		if (scQtProposalChecklist.getScQtCheckList()
 				.getScQtCheckListAttachment().getFilePath() != null) {
-			InputStream input = null;
 			try {
 				URLConnection uc = new URL(scQtProposalChecklist
 						.getScQtCheckList().getScQtCheckListAttachment()
@@ -247,7 +248,7 @@ public class SPDetailBackingBean extends BaseBackingBean<SPDetailManagedBean> {
 		FacesContext.getCurrentInstance().responseComplete();
 	}
 
-	public void newAction(ScQtProposalChecklist scQtProposalChecklist) {
+	public void onlineAction(ScQtProposalChecklist scQtProposalChecklist) {
 
 		debugLogger("newAction");
 
@@ -274,5 +275,49 @@ public class SPDetailBackingBean extends BaseBackingBean<SPDetailManagedBean> {
 				registrationResDTO.getSmSupp());
 
 		templateSpecBackingBean.retrieveTemplateSpecMaster();
+	}
+
+	public void downloadSPFile(ScQtProposalChecklist scQtProposalChecklist)
+			throws Exception {
+
+		ScQtProposalChecklistAttachment checklistAttachment = scQtProposalChecklist
+				.getScQtProposalChecklistAttachment();
+
+		File file = new File("E:\\upload\\" + checklistAttachment.getFileName());
+		InputStream input = new FileInputStream(file);
+
+		PortletResponse portletResponse = (PortletResponse) FacesContext
+				.getCurrentInstance().getExternalContext().getResponse();
+		HttpServletResponse res = com.liferay.portal.util.PortalUtil
+				.getHttpServletResponse(portletResponse);
+		res.setHeader("Content-Disposition", "attachment; filename=\""
+				+ checklistAttachment.getFileName() + "\"");
+		res.setHeader("Content-Transfer-Encoding", "binary");
+		res.setContentType("application/octet-stream");
+		res.flushBuffer();
+		OutputStream out = res.getOutputStream();
+		if (checklistAttachment.getFilePath() != null) {
+
+			try {
+				URLConnection uc = new URL(checklistAttachment.getFilePath())
+						.openConnection();
+				input = new BufferedInputStream(uc.getInputStream());
+			} catch (Exception e) {
+				// Cannot open connection, maybe local file
+				input = new FileInputStream(checklistAttachment.getFilePath());
+			}
+			byte[] buffer = new byte[4096];
+			int bytesRead;
+			while ((bytesRead = input.read(buffer)) != -1) {
+				out.write(buffer, 0, bytesRead);
+				buffer = new byte[4096];
+			}
+			input.close();
+		} else {
+			// out.write(attachment.getFileByte());
+		}
+		out.flush();
+		out.close();
+
 	}
 }
