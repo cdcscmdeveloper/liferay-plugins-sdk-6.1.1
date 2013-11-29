@@ -9,32 +9,49 @@
 	<ui:include src="/xhtml/ss/supplierproposal/spheader.xhtml" />
 	<p:panel header="#{lbl['lbl.sc.sp.financepplcheklist']}"
 		toggleable="true">
-		<p:panelGrid columns="4" style="width:100%;"
-			styleClass="noBorders tr,noBorders td">
-			<p:dataTable id="financeDeails" var="financeList"
-				value="#{sPDetailBB.managedBean.financeCheckDetailsList}" rows="10"
-				selection="#{sPDetailBB.managedBean.selectedCheckDetails}"
-				rowKey="#{financeList.qtProposalChecklistId}" rowIndexVar="rowIndex">
+		<p:dataTable id="financeDeails" var="financeList"
+			value="#{sPDetailBB.managedBean.financeCheckDetailsList}" rows="10"
+			selection="#{sPDetailBB.managedBean.selectedCheckDetails}"
+			rowKey="#{financeList.qtProposalChecklistId}" rowIndexVar="rowIndex">
 
-				<p:column selectionMode="multiple" style="width:2%" />
-				<p:column headerText="#{lbl['lbl.sc.sp.desc']}" style="width:68%">
-					<h:outputText value="#{financeList.scQtCheckList.title}" />
-				</p:column>
-				<p:column headerText="#{lbl['lbl.sc.sp.upload']}" style="width:10%">
-					<h:outputText value="PenyataBank.doc (78KB)" />
-				</p:column>
-				<p:column headerText="#{lbl['lbl.sc.sp.download']}"
-					style="width:10%">
-					<p:commandLink id="downloadLink" value="Download">
-						<p:fileDownload value="#{sPDetailBB.downloadFile(attachFile)}" />
-					</p:commandLink>
-				</p:column>
-				<p:column headerText="#{lbl['lbl.sc.sp.online']}" style="width:10%">
-					<h:outputText value="Online" />
-				</p:column>
+			<p:column selectionMode="multiple" style="width:2%" />
+			<p:column headerText="#{lbl['lbl.sc.sp.desc']}" style="width:68%">
+				<h:outputText value="#{financeList.scQtCheckList.title}" />
+			</p:column>
 
-			</p:dataTable>
-		</p:panelGrid>
+			<p:column headerText="#{lbl['lbl.sc.sp.upload']}" style="width:15%">
+				<p:commandLink oncomplete="uploadFinanceDlg.show();return false;"
+					update="financeDeails">
+					<p:graphicImage library="ep/images/design" name="upload.png"
+						value="/resources/ep/images/design/upload.png" />
+					<f:setPropertyActionListener value="#{financeList}"
+						target="#{sPDetailBB.managedBean.qtProposalChecklist}" />
+				</p:commandLink>
+				<p:spacer width="10" height="5" />
+				<p:commandLink ajax="false"
+					action="#{sPDetailBB.downloadSPFile(financeList)}">
+					<h:outputText
+						value="#{financeList.scQtProposalChecklistAttachment.fileName}"
+						rendered="#{!empty financeList.scQtProposalChecklistAttachment}" />
+				</p:commandLink>
+			</p:column>
+
+			<p:column headerText="#{lbl['lbl.sc.sp.download']}" style="width:10%">
+				<p:commandLink action="#{sPDetailBB.downloadPTJFile(financeList)}"
+					update="financeDeails">
+					<p:graphicImage library="ep/images/design" name="download.png"
+						value="/resources/ep/images/design/download.png"
+						rendered="#{!empty techList.scQtCheckList.scQtCheckListAttachment}" />
+				</p:commandLink>
+			</p:column>
+
+			<p:column headerText="#{lbl['lbl.sc.sp.online']}" style="width:10%">
+				<p:commandButton value="Online"
+					action="#{sPDetailBB.onlineAction(financeList)}"
+					oncomplete="popupDetails.show()"
+					rendered="#{financeList.scQtCheckList.checklistType == 'TS'}" update=":form:popupDetails"/>
+			</p:column>
+		</p:dataTable>
 	</p:panel>
 
 	<p:panel header="#{lbl['lbl.sc.sp.termconds']}" toggleable="true">
@@ -46,7 +63,21 @@
 			<f:selectItem
 				itemLabel=" I have read and agree with the Terms and Condition"
 				itemValue="I have read and agree with the Terms and Condition" />
-
 		</p:selectManyCheckbox>
 	</p:panel>
+
+	<p:dialog id="uploadFinanceDlg" widgetVar="uploadFinanceDlg"
+		modal="true" dynamic="true" hideEffect="explode" resizable="false"
+		width="700px" height="200" styleClass="pop_up_top"
+		header="#{lbl['lbl.bpm.choose.file']}">
+		<p:ajax event="close" />
+		<p:fileUpload style="display:inline;"
+			fileUploadListener="#{sPDetailBB.handleFileUpload}" mode="advanced"
+			id="uploadFinance"
+			allowTypes="/(\.|\/)(gif|jpe?g|png|bmp|txt|xls|xlsx|pdf|doc|docx|csv)$/"
+			invalidFileMessage="Only JPG, GIF, PNG, BMP, TXT, XLS, PDF, DOC, CSV files are accepted"
+			update="financeDeails" oncomplete="uploadFinanceDlg.hide()">
+		</p:fileUpload>
+	</p:dialog>
+
 </ui:composition>

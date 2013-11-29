@@ -16,7 +16,8 @@
 			<p:column headerText="#{lbl['lbl.sc.sp.desc']}" style="width:68%">
 				<h:outputText value="#{techList.scQtCheckList.title}" />
 			</p:column>
-			<p:column headerText="#{lbl['lbl.sc.sp.upload']}" style="width:10%">
+
+			<p:column headerText="#{lbl['lbl.sc.sp.upload']}" style="width:15%">
 				<p:commandLink oncomplete="uploadDlg.show();return false;"
 					update="techDeails">
 					<p:graphicImage library="ep/images/design" name="upload.png"
@@ -24,29 +25,29 @@
 					<f:setPropertyActionListener value="#{techList}"
 						target="#{sPDetailBB.managedBean.qtProposalChecklist}" />
 				</p:commandLink>
-
-				<p:commandLink
-					action="#{sPDetailBB.downloadFile(techList)}">
+				<p:spacer width="10" height="5" />
+				<p:commandLink ajax="false"
+					action="#{sPDetailBB.downloadSPFile(techList)}">
 					<h:outputText
 						value="#{techList.scQtProposalChecklistAttachment.fileName}"
 						rendered="#{!empty techList.scQtProposalChecklistAttachment}" />
 				</p:commandLink>
-
-
 			</p:column>
 
 			<p:column headerText="#{lbl['lbl.sc.sp.download']}" style="width:10%">
-				<p:commandLink action="#{sPDetailBB.downloadFile(techList)}"
+				<p:commandLink action="#{sPDetailBB.downloadPTJFile(techList)}"
 					update="techDeails">
 					<p:graphicImage library="ep/images/design" name="download.png"
-						value="/resources/ep/images/design/download.png" />
+						value="/resources/ep/images/design/download.png"
+						rendered="#{!empty techList.scQtCheckList.scQtCheckListAttachment}" />
 				</p:commandLink>
 			</p:column>
 
 			<p:column headerText="#{lbl['lbl.sc.sp.online']}" style="width:10%">
 				<p:commandButton value="Online"
-					action="#{sPDetailBB.newAction(techList)}"
-					oncomplete="popupDetails.show()" />
+					action="#{sPDetailBB.onlineAction(techList)}"
+					oncomplete="popupDetails.show()"
+					rendered="#{techList.scQtCheckList.checklistType == 'TS'}" update=":form:popupDetails"/>
 			</p:column>
 		</p:dataTable>
 	</p:panel>
@@ -54,17 +55,20 @@
 	<p:panel header="#{lbl['lbl.sc.sp.termconds']}" toggleable="true">
 		<p:inputTextarea rows="5" cols="140" autoResize="false" value="ABC"
 			disabled="true"></p:inputTextarea>
-		<p:selectManyCheckbox
+		<p:spacer width="5" height="5" />
+		
+		<p:selectManyCheckbox style="margin-right: 12px;"
 			value="#{approvalBackingBean.managedBean.approvalTypelist}"
 			layout="pageDirection">
 			<f:selectItem
-				itemLabel=" I have read and agree with the Terms and Condition"
+				itemLabel="I have read and agree with the Terms and Condition"
 				itemValue="I have read and agree with the Terms and Condition" />
 		</p:selectManyCheckbox>
 	</p:panel>
 
-	<p:dialog id="uploadDlg" widgetVar="uploadDlg" modal="false"
-		resizable="false" width="700px" height="200" styleClass="pop_up_top"
+	<p:dialog id="uploadDlg" widgetVar="uploadDlg" modal="true"
+		dynamic="true" hideEffect="explode" resizable="false" width="700px"
+		height="200" styleClass="pop_up_top"
 		header="#{lbl['lbl.bpm.choose.file']}">
 		<p:ajax event="close" />
 		<p:fileUpload style="display:inline;"
@@ -72,16 +76,8 @@
 			id="upload"
 			allowTypes="/(\.|\/)(gif|jpe?g|png|bmp|txt|xls|xlsx|pdf|doc|docx|csv)$/"
 			invalidFileMessage="Only JPG, GIF, PNG, BMP, TXT, XLS, PDF, DOC, CSV files are accepted"
-			update="messages, techDeails">
+			update="techDeails" oncomplete="uploadDlg.hide()">
 		</p:fileUpload>
-		<p:growl id="messages" showDetail="true" />
-	</p:dialog>
-
-	<p:dialog id="attendancebyCompId" widgetVar="popupDetails"
-		modal="false" resizable="false" header="SPECIFICATION CONTENT DETAILS"
-		width="950" height="550" hideEffect="true">
-		<p:ajax event="close" />
-		<ui:include src="/xhtml/tpl/spec/specContent.xhtml" />
 	</p:dialog>
 
 </ui:composition>

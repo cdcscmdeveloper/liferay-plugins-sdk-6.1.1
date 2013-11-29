@@ -16,4 +16,11 @@
 		</p:tab>
 	</p:tabView>
 
+	<p:dialog id="popupDetails" widgetVar="popupDetails"
+		modal="false" resizable="false" header="SPECIFICATION CONTENT DETAILS"
+		width="950" height="550" hideEffect="true">
+		<p:ajax event="close" />
+		<ui:include src="/xhtml/tpl/spec/specContent.xhtml" />
+	</p:dialog>
+	
 </ui:composition>
