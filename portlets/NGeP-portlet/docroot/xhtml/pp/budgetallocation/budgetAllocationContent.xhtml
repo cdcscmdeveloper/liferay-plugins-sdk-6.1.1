@@ -120,11 +120,11 @@ xmlns:fn="http://java.sun.com/jsp/jstl/functions"
 				<table>
 					<tr>
 						<td rowspan="2" valign="top">
-							<p:graphicImage styleClass="smallUserImage" value="#{budgetAllocationBackingBean.userImagePath(remarkVar.createdUsername)}" />
+							<p:graphicImage styleClass="smallUserImage" value="#{budgetAllocationBackingBean.userImagePath(remarkVar.createdByObj.loginId)}" />
 						</td>
 						<td width="5"></td>
 						<td>
-							<h:outputText value="#{remarkVar.createdUsername}"></h:outputText>,
+							<h:outputText value="#{remarkVar.createdByObj.loginId}"></h:outputText>,
 							<h:outputText id="remarkDate" value="#{remarkVar.changedDate}">
 								<f:convertDateTime pattern="#{PPConst.datetimeDisplayPattern}" />
 							</h:outputText>

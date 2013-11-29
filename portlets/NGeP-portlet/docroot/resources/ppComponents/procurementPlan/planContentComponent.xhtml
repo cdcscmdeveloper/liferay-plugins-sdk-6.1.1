@@ -122,7 +122,7 @@ xmlns:composite="http://java.sun.com/jsf/composite">
 							<th>&nbsp;</th>
 							<td>&nbsp;</td>
 							
-							<th><p:outputLabel value="#{lbl['lbl.pp.total.estimated.amount']}"/></th>
+							<th><p:outputLabel value="#{lbl['lbl.pp.short.total.estimated.amount']}"/></th>
 							<td>
 								<p:inputText disabled="true" styleClass="ppDisplayTextM"
 									value="#{cc.attrs.selectedPlan.estimatedAmount}"/>
@@ -286,118 +286,122 @@ xmlns:composite="http://java.sun.com/jsf/composite">
 								</td>
 							</tr>
 						</p:outputPanel>
-
-						<tr>
-							<th><p:outputLabel value="* #{lbl['lbl.pp.plan.approver']}"/></th>
-							<td>
-								<p:selectOneMenu value="#{cc.attrs.selectedPlan.approver.userId}"
-									disabled="#{!cc.attrs.selectedPlan.editable}" >
-									<f:selectItem itemLabel="#{lbl['lbl.select']}" />
-									<f:selectItem itemLabel="USER005" itemValue="39" />
-									<f:selectItem itemLabel="USER006" itemValue="40" />
-									<f:selectItem itemLabel="USER007" itemValue="41" />
-								</p:selectOneMenu>
-							</td>
-							
-					        <th>&nbsp;</th>
-							<td>&nbsp;</td>
-						</tr>
-						<tr>
-							<th><p:outputLabel value="* #{lbl['lbl.pp.require.verification']}"/></th>
-							<td>
-								<p:selectOneRadio  id="sorPvo" required="false" value="#{cc.attrs.selectedPlan.submissionType}"
-									disabled="#{!cc.attrs.selectedPlan.editable}">
-									<f:selectItem itemLabel="Yes" itemValue="V" />
-									<f:selectItem itemLabel="No" itemValue="A" />
-									<p:ajax event="change" update="opPvo, sorPvoLvl" />
-								</p:selectOneRadio> 
-					        </td>
+						
+						<!-- Hide Actor and Action part for MTO -->
+						<p:outputPanel rendered="#{!cc.attrs.selectedPlanMaster.mtoPlan}">
+							<tr>
+								<th><p:outputLabel value="* #{lbl['lbl.pp.plan.approver']}"/></th>
+								<td>
+									<p:selectOneMenu value="#{cc.attrs.selectedPlan.approver.userId}"
+										disabled="#{!cc.attrs.selectedPlan.editable}" >
+										<f:selectItem itemLabel="#{lbl['lbl.select']}" />
+										<f:selectItem itemLabel="USER005" itemValue="39" />
+										<f:selectItem itemLabel="USER006" itemValue="40" />
+										<f:selectItem itemLabel="USER007" itemValue="41" />
+									</p:selectOneMenu>
+								</td>
+								
+						        <th>&nbsp;</th>
+								<td>&nbsp;</td>
+							</tr>
+							<tr>
+								<th><p:outputLabel value="* #{lbl['lbl.pp.require.verification']}"/></th>
+								<td>
+									<p:selectOneRadio  id="sorPvo" required="false" value="#{cc.attrs.selectedPlan.submissionType}"
+										disabled="#{!cc.attrs.selectedPlan.editable}">
+										<f:selectItem itemLabel="Yes" itemValue="V" />
+										<f:selectItem itemLabel="No" itemValue="A" />
+										<p:ajax event="change" update="opPvo, sorPvoLvl" />
+									</p:selectOneRadio> 
+						        </td>
+						        
+						        <th>&nbsp;</th>
+								<td>&nbsp;</td>
+							</tr>
+							<tr>
+								<th><p:outputLabel value="* #{lbl['lbl.pp.verification.level']}"/></th>
+								<td>
+									 <p:selectOneRadio disabled="#{cc.attrs.selectedPlan.submissionType=='A'
+									 	|| !cc.attrs.selectedPlan.brandNew}" 
+										value="#{cc.attrs.selectedPlan.multiLevel}" id="sorPvoLvl">  
+							            <f:selectItems value="#{planBackingBean.verificationLevelOptions()}" /> &nbsp;
+							            <p:ajax event="change" update="opPvo" />
+							        </p:selectOneRadio> 
+						        </td>
+					         	<th><p:outputLabel value="* #{lbl['lbl.pp.plan.verification.officer']}"/></th>
+					         	
+								<td>
+									<p:outputPanel id="opPvo">	
+										<ui:repeat var="vo" value="#{cc.attrs.selectedPlan.verificationOfficers}" varStatus="status">
+											<ui:fragment rendered="#{status.index==0}">
+												<p:selectOneMenu value="#{vo.userId}"
+													disabled="#{cc.attrs.selectedPlan.submissionType=='A'
+														|| !cc.attrs.selectedPlan.brandNew}">
+													<f:selectItem itemLabel="#{lbl['lbl.select']}" itemValue="#{null}" />
+													<f:selectItem itemLabel="USER009" itemValue="43" />
+													<f:selectItem itemLabel="USER033" itemValue="67" />
+													<f:selectItem itemLabel="USER034" itemValue="68" />
+													<f:selectItem itemLabel="USER036" itemValue="70" />
+												</p:selectOneMenu>
+											</ui:fragment>
+											<ui:fragment rendered="#{status.index&gt;0}">
+												<p:selectOneMenu value="#{vo.userId}"
+													disabled="#{cc.attrs.selectedPlan.submissionType=='A'
+														|| !cc.attrs.selectedPlan.multiLevel
+														|| !cc.attrs.selectedPlan.brandNew}">
+													<f:selectItem itemLabel="#{lbl['lbl.select']}" itemValue="#{null}" />
+													<f:selectItem itemLabel="USER009" itemValue="43" />
+													<f:selectItem itemLabel="USER033" itemValue="67" />
+													<f:selectItem itemLabel="USER034" itemValue="68" />
+													<f:selectItem itemLabel="USER036" itemValue="70" />
+												</p:selectOneMenu>
+											</ui:fragment>
+											<br/>
+										</ui:repeat>
+									</p:outputPanel>
+								</td>
+					        </tr>
 					        
-					        <th>&nbsp;</th>
-							<td>&nbsp;</td>
-						</tr>
-						<tr>
-							<th><p:outputLabel value="* #{lbl['lbl.pp.verification.level']}"/></th>
-							<td>
-								 <p:selectOneRadio disabled="#{cc.attrs.selectedPlan.submissionType=='A'
-								 	|| !cc.attrs.selectedPlan.brandNew}" 
-									value="#{cc.attrs.selectedPlan.multiLevel}" id="sorPvoLvl">  
-						            <f:selectItems value="#{planBackingBean.verificationLevelOptions()}" /> &nbsp;
-						            <p:ajax event="change" update="opPvo" />
-						        </p:selectOneRadio> 
-					        </td>
-				         	<th><p:outputLabel value="* #{lbl['lbl.pp.plan.verification.officer']}"/></th>
-				         	
-							<td>
-								<p:outputPanel id="opPvo">	
-									<ui:repeat var="vo" value="#{cc.attrs.selectedPlan.verificationOfficers}" varStatus="status">
-										<ui:fragment rendered="#{status.index==0}">
-											<p:selectOneMenu value="#{vo.userId}"
-												disabled="#{cc.attrs.selectedPlan.submissionType=='A'
-													|| !cc.attrs.selectedPlan.brandNew}">
-												<f:selectItem itemLabel="#{lbl['lbl.select']}" itemValue="#{null}" />
-												<f:selectItem itemLabel="USER009" itemValue="43" />
-												<f:selectItem itemLabel="USER033" itemValue="67" />
-												<f:selectItem itemLabel="USER034" itemValue="68" />
-												<f:selectItem itemLabel="USER036" itemValue="70" />
-											</p:selectOneMenu>
-										</ui:fragment>
-										<ui:fragment rendered="#{status.index&gt;0}">
-											<p:selectOneMenu value="#{vo.userId}"
-												disabled="#{cc.attrs.selectedPlan.submissionType=='A'
-													|| !cc.attrs.selectedPlan.multiLevel
-													|| !cc.attrs.selectedPlan.brandNew}">
-												<f:selectItem itemLabel="#{lbl['lbl.select']}" itemValue="#{null}" />
-												<f:selectItem itemLabel="USER009" itemValue="43" />
-												<f:selectItem itemLabel="USER033" itemValue="67" />
-												<f:selectItem itemLabel="USER034" itemValue="68" />
-												<f:selectItem itemLabel="USER036" itemValue="70" />
-											</p:selectOneMenu>
-										</ui:fragment>
-										<br/>
-									</ui:repeat>
-								</p:outputPanel>
-							</td>
-				        </tr>
-				        
-						<c:if test="#{cc.attrs.viewMode==PPConst.modeVerification || cc.attrs.viewMode==PPConst.modeApproval}">
-							<!-- Revision Types -->
-							<tr>
-								<th><p:outputLabel value="* #{lbl['lbl.pp.revision.type']}"/></th>
-								<td>
-									<p:selectOneRadio value="#{cc.attrs.selectedPlan.selfRevise}" required="false" id="sorRevType">  
-							            <f:selectItem itemLabel="#{lbl['lbl.pp.self.revise']}" itemValue="true" /> &nbsp;
-							            <f:selectItem itemLabel="#{lbl['lbl.pp.send.to.officer']}" itemValue="false" /> &nbsp;
-							        </p:selectOneRadio>  
-								</td>
-								
-								<th>&nbsp;</th>
-								<td>&nbsp;</td>
-							</tr>
-							<!-- Rejection Reason -->
-							<tr>
-								<th><p:outputLabel value="* #{lbl['lbl.pp.rejection.reason']}"/></th>
-								<td colspan="3">
-									<p:selectManyCheckbox value="#{cc.attrs.selectedPlan.pmRejectReasonIds}" converter="javax.faces.Long" >  
-							            <f:selectItems value="#{planBackingBean.rejectionReasonOptions()}"
-							            	 var="obj" itemLabel="#{obj.reasonDesc}" itemValue="#{obj.pmReason.reasonId}"  />
-					            	    <f:selectItem itemLabel="Others" itemValue="0" />  
-						            	<p:ajax event="change" listener="#{planBackingBean.customReason}" update="itRejectOthers"/>
-							        </p:selectManyCheckbox>  
-								</td>
-								<td>&nbsp;</td>
-							</tr>
-							<tr>
-								<th><p:outputLabel value="* #{lbl['lbl.pp.others']}"/></th>
-								<td>
-									<p:inputText id="itRejectOthers" value="#{cc.attrs.selectedPlan.customReason}" 
-										disabled="#{!planBackingBean.managedBean.reasonRejectOther}" />  
-								</td>
-								
-								<th>&nbsp;</th>
-								<td>&nbsp;</td>
-							</tr>
-						</c:if>
+							<c:if test="#{cc.attrs.viewMode==PPConst.modeVerification || cc.attrs.viewMode==PPConst.modeApproval}">
+								<!-- Revision Types -->
+								<tr>
+									<th><p:outputLabel value="* #{lbl['lbl.pp.revision.type']}"/></th>
+									<td>
+										<p:selectOneRadio value="#{cc.attrs.selectedPlan.selfRevise}" required="false" id="sorRevType">  
+								            <f:selectItem itemLabel="#{lbl['lbl.pp.self.revise']}" itemValue="true" /> &nbsp;
+								            <f:selectItem itemLabel="#{lbl['lbl.pp.send.to.officer']}" itemValue="false" /> &nbsp;
+								        </p:selectOneRadio>  
+									</td>
+									
+									<th>&nbsp;</th>
+									<td>&nbsp;</td>
+								</tr>
+								<!-- Rejection Reason -->
+								<tr>
+									<th><p:outputLabel value="* #{lbl['lbl.pp.rejection.reason']}"/></th>
+									<td colspan="3">
+										<p:selectManyCheckbox value="#{cc.attrs.selectedPlan.pmRejectReasonIds}" 
+											converter="javax.faces.Long" >  
+								            <f:selectItems value="#{planBackingBean.rejectionReasonOptions()}"
+								            	 var="obj" itemLabel="#{obj.reasonDesc}" itemValue="#{obj.pmReason.reasonId}"  />
+						            	    <f:selectItem itemLabel="Others" itemValue="0" />  
+							            	<p:ajax event="change" listener="#{planBackingBean.customReason}" update="itRejectOthers"/>
+								        </p:selectManyCheckbox>  
+									</td>
+									<td>&nbsp;</td>
+								</tr>
+								<tr>
+									<th><p:outputLabel value="* #{lbl['lbl.pp.others']}"/></th>
+									<td>
+										<p:inputText id="itRejectOthers" value="#{cc.attrs.selectedPlan.customReason}" 
+											disabled="#{!planBackingBean.managedBean.reasonRejectOther}" />  
+									</td>
+									
+									<th>&nbsp;</th>
+									<td>&nbsp;</td>
+								</tr>
+							</c:if>
+						</p:outputPanel>
 					</table>
 					</p:panel>
 					<br/>
