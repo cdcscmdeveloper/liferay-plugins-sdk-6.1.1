@@ -267,6 +267,16 @@ public class PlanBackingBean extends BaseBackingBean<PlanManagedBean>{
 					ppPlan.addVerificationOfficers(vo);
 				}
 				
+				//load rejection reasons (if any)
+				if(ppPlan.getPpRejectReasons()!=null 
+						&& !ppPlan.getPpRejectReasons().isEmpty()){
+					
+					ppPlan.setPmRejectReasonIds(new ArrayList<Long>());
+					for(PpRejectReason reason:ppPlan.getPpRejectReasons()){
+						ppPlan.getPmRejectReasonIds().add(reason.getReasonId());
+					}
+				}
+
 				//load mto plan
 				if(ppPlan.getPpPlanMaster().isMtoPlan()){
 					PpPlanMaster mtoPlanMaster = ppPlan.getPpPlanMaster().getChildPlanMasters().get(0);
@@ -284,7 +294,7 @@ public class PlanBackingBean extends BaseBackingBean<PlanManagedBean>{
 							mtoPlan.getAllPpQtActivities().add(activity);
 						}
 					}
-					
+					/*
 					mtoPlan.setVerificationOfficers(new ArrayList<PpPlanActor>());
 					//retrieve and set approver and verification officer
 					for(PpPlanActor actor: mtoPlan.getPpPlanActors()){
@@ -302,7 +312,7 @@ public class PlanBackingBean extends BaseBackingBean<PlanManagedBean>{
 						vo.setActorType(ProcurementPlanConst.SUBMIT_VERIFICATION);
 						mtoPlan.addVerificationOfficers(vo);
 					}
-					
+					*/
 					
 					//set default mto plan
 					this.getManagedBean().setMtoPlanMaster(mtoPlanMaster);
@@ -317,7 +327,6 @@ public class PlanBackingBean extends BaseBackingBean<PlanManagedBean>{
 					log.info("Review Plan");
 					this.getManagedBean().setViewMode(ProcurementPlanConst.MODE_APPROVAL);
 					this.getManagedBean().getPlan().setEditable(false); 
-					this.getManagedBean().getPlan().setPmRejectReasonIds(new ArrayList<Long>());
 					this.getManagedBean().getPlanMaster().setPpPlans(new ArrayList<PpPlan>());
 					this.getManagedBean().getPlanMaster().addPpPlans(this.getManagedBean().getPlan());
 				}else if(ProcurementPlanConst.BPM_TASK_PLAN_REVISE.equals(taskName)){
@@ -333,7 +342,6 @@ public class PlanBackingBean extends BaseBackingBean<PlanManagedBean>{
 					log.info("Verify Plan");
 					this.getManagedBean().setViewMode(ProcurementPlanConst.MODE_VERIFICATION);
 					this.getManagedBean().getPlan().setEditable(false); 
-					this.getManagedBean().getPlan().setPmRejectReasonIds(new ArrayList<Long>());
 					this.getManagedBean().getPlanMaster().setPpPlans(new ArrayList<PpPlan>());
 					this.getManagedBean().getPlanMaster().addPpPlans(this.getManagedBean().getPlan());
 				}else{
@@ -2229,6 +2237,7 @@ public class PlanBackingBean extends BaseBackingBean<PlanManagedBean>{
 						}
 					}
 		
+					/*
 					//initialize actor list
 					if(this.getManagedBean().getMtoPlan().getPpPlanActors()==null){
 						this.getManagedBean().getMtoPlan().setPpPlanActors(new ArrayList<PpPlanActor>());
@@ -2258,7 +2267,7 @@ public class PlanBackingBean extends BaseBackingBean<PlanManagedBean>{
 							}
 						}
 					}
-				
+					 */
 					//only one plan
 					if(this.getManagedBean().getMtoPlanMaster().isBrandNew()){
 						this.getManagedBean().getMtoPlanMaster().addPpPlans(this.getManagedBean().getMtoPlan());

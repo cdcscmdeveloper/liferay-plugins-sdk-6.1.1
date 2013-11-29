@@ -374,13 +374,16 @@ public class BudgetAllocationBackingBean extends BaseBackingBean<BudgetAllocatio
 		if(this.getManagedBean().getSelectedBudgetAllocation().getPpRemarks()==null){
 			this.getManagedBean().getSelectedBudgetAllocation().setPpRemarks(new ArrayList<PpRemark>());
 		}
-		PpRemark remark = new PpRemark();
-		remark.setCreatedBy(getFacesScopes().getUserSessionBean().getUserId());
-		remark.setCreatedDate(new Timestamp(System.currentTimeMillis()));
-		remark.setChangedBy(remark.getCreatedBy());
-		remark.setChangedDate(remark.getCreatedDate());
-		remark.setCreatedUsername(getFacesScopes().getUserSessionBean().getLoginId());
-		this.getManagedBean().getSelectedBudgetAllocation().addPpRemarks(remark);//TODO check this
+//		if(){
+			PpRemark remark = new PpRemark();
+			remark.setCreatedBy(getFacesScopes().getUserSessionBean().getUserId());
+			remark.setCreatedByObj(getFacesScopes().getUserSessionBean());
+			remark.setCreatedDate(new Timestamp(System.currentTimeMillis()));
+			remark.setChangedBy(remark.getCreatedBy());
+			remark.setChangedDate(remark.getCreatedDate());
+			this.getManagedBean().getSelectedBudgetAllocation().addPpRemarks(remark);//TODO check this
+//		}
+		
 		
 		log.info("initialBudgetAllocRemark - End");
 	}
@@ -798,6 +801,7 @@ public class BudgetAllocationBackingBean extends BaseBackingBean<BudgetAllocatio
 				OrgProfileResDTO resDTO = orgProfileSO.retrieveOrgProfileListByOrgType(reqDTO);
 //				if(resDTO.isSuccessful()){
 					profileList = resDTO.getOrgProfileList();
+					System.out.println("size "+resDTO.getOrgProfileList().size());
 //				}
 			}
 		}catch (Exception e){
