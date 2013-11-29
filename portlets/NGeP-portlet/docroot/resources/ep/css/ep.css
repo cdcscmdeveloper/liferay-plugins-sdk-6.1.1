@@ -2099,12 +2099,12 @@ table.ppThreePartsTable td {
  	border: 0px;
 }
 
-/*
-.ui-selectonemenu, .ui-inputtext{
+
+.ui-selectonemenu {
 	height:20px;
 	min-width:60px;
 	vertical-align: middle;
-}*/
+}
 
 
 .ppDisplayTextL{
@@ -3719,6 +3719,15 @@ textarea[disabled],input[type="text"][disabled],input[type="password"][disabled]
 	text-transform: uppercase;
 }
 
+.section-title {
+	float: left;
+	font-family: Arial,Helvetica,Verdana,sans-serif;
+	font-weight: bold;
+	font-size: 14px;
+	color: #8CC63E;
+	text-transform: uppercase;
+}
+
 .ui-menu > ul > li.ui-widget-header {
 	font-family: Tahoma;
 	font-size: 12px;
@@ -3731,6 +3740,10 @@ textarea[disabled],input[type="text"][disabled],input[type="password"][disabled]
 	margin: -9px 0 0 -4px !important;
 	padding: 5px 9px 0 3px;
 	overflow: hidden;
+}
+
+.ui-menu > ul > li.ui-widget-header > h3 {
+	font-weight: bold;
 }
 
 .ui-menu-header > a {
@@ -3795,7 +3808,6 @@ textarea[disabled],input[type="text"][disabled],input[type="password"][disabled]
 }
 
 .ui-messages-error, .ui-message-error {
-	height: 10px;
 	padding: 5px 10px 10px 10px;	
 }
 
@@ -4046,6 +4058,7 @@ label > span.ui-button-text {
 	filter: progid:DXImageTransform.Microsoft.gradient(  startColorstr='#FCEAAE',
 		endColorstr='#FDD655', GradientType=0 ); /* IE6-8 */
 }
+
 /*--------------------------       End Custom CSS       --------------------------- */
 /*--------------------------       Breadcrumb Wizard    --------------------------- */
 .navDiv {
