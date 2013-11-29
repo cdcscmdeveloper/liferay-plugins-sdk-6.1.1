@@ -9,7 +9,6 @@ import java.util.List;
 import javax.annotation.PostConstruct;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.RequestScoped;
-import javax.faces.context.FacesContext;
 import javax.faces.event.AjaxBehaviorEvent;
 import javax.faces.event.ValueChangeEvent;
 
@@ -67,7 +66,7 @@ public class QTSupplierQulCriteriaBackingBean extends SourcingBaseBackingBean<QT
 		ICategorysSO categorysSO = BusinessDelegate.getInstance()
 				.getServiceObject("pm", ICategorysSO.class);
 		this.categorysSO=categorysSO;
-		this.getManagedBean().setQtc(new ScQtCriteria());
+		this.getManagedBean().setQtCriteria(new ScQtCriteria());
 		this.getManagedBean().setSearchSupplier(new SmSupplier());
 		
 	}
