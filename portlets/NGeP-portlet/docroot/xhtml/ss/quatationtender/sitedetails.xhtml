@@ -11,11 +11,11 @@
 			
 			<h:panelGrid style="width:100%;" border="0" cellpadding="0" cellspacing="0" width="100%" columns="2" columnClasses="columnWidth20,columnWidth80">
 		
-		<h:outputLabel for="sitedesc" value="Site Description" />
+		<h:outputLabel value="#{lbl['lbl.so.sitevisitdesc']}"/>
 				<p:inputTextarea id="sitedesc" value="#{qTScheduleDetailBB.managedBean.qtSiteBriefing.briefingDesc}" columns="50"></p:inputTextarea>	
 			
 		
-		<h:outputLabel value="Briefing Date and Time "/>
+		<h:outputLabel value="#{lbl['lbl.so.sitevisitdate']}"/>
 			<p:calendar value="#{qTScheduleDetailBB.managedBean.qtSiteBriefing.briefingDate}"
 				id="sitebriefDate" pattern="MM/dd/yyyy HH:mm a" showOn="button" />	
 				
@@ -31,19 +31,19 @@
               </h:panelGrid>
              <h:panelGrid style="width:100%;" border="0" cellpadding="0" cellspacing="0" width="100%" columns="4" columnClasses="columnWidth20,columnWidth30,columnWidth20,columnWidth30">
               
-               <h:outputLabel value="Address 1" />
+               <h:outputLabel value="#{lbl['lbl.so.add1']}"/>
                <p:inputText value="#{qTScheduleDetailBB.managedBean.qtSiteBriefing.pmAddress.address1}" />
                
-                <h:outputLabel value="* City" />
+                <h:outputLabel value="* #{lbl['lbl.so.city']}" />
                <p:inputText value="#{qTScheduleDetailBB.managedBean.qtSiteBriefing.pmAddress.pmCity.cityName}" />
                
-               <h:outputLabel value="Address 2" />
+               <h:outputLabel value="#{lbl['lbl.so.add2']}" />
                 <p:inputText value="#{qTScheduleDetailBB.managedBean.qtSiteBriefing.pmAddress.address2}" />  
                 
-                 <h:outputLabel value="District" />
+                 <h:outputLabel value="#{lbl['lbl.so.district']}" />
                <p:inputText value="#{qTScheduleDetailBB.managedBean.qtSiteBriefing.pmAddress.pmDistrict.districtName}" />
                
-                <h:outputLabel value="Address 3" />
+                <h:outputLabel value="#{lbl['lbl.so.add3']}" />
                <p:inputText value="#{qTScheduleDetailBB.managedBean.qtSiteBriefing.pmAddress.address3}" />  
                
                <h:outputLabel value="#{lbl['lbl.so.state']}" />  
@@ -52,10 +52,10 @@
             <f:selectItem itemLabel="Kaula lumpur" itemValue="2" />  
            </p:selectOneMenu> 
        	
-                <h:outputLabel value="Address 4" />
+                <h:outputLabel value="#{lbl['lbl.so.add4']}" />
                <p:inputText value="#{qTScheduleDetailBB.managedBean.qtSiteBriefing.pmAddress.address4}" />  
                
-               <h:outputLabel value="* Postal Code" />
+               <h:outputLabel value="* #{lbl['lbl.so.postcode']}" />
                <p:inputText value="#{qTScheduleDetailBB.managedBean.qtSiteBriefing.pmAddress.postcode}" />     
            
              </h:panelGrid>  
@@ -70,7 +70,7 @@
         </p:selectOneMenu> 
         
            
-           <h:outputLabel value="Attendance"  />  
+           <h:outputLabel value="#{lbl['lbl.so.attendance']}"  />  
        <p:selectOneMenu value="#{qTScheduleDetailBB.managedBean.qtSiteBriefing.attendanceType}"> 
             <f:selectItem itemLabel="Zone" itemValue="" />  
             <f:selectItem itemLabel="East Zone" itemValue="East Zone" />  
@@ -89,7 +89,7 @@
 		<p:commandButton  value="#{lbl['lbl.so.cancelbtn']}"
 			styleClass="apply_button" style="float:right;" oncomplete="dlg1.hide()">
 		</p:commandButton>	
-			<p:commandButton value="OK"
+			<p:commandButton value="#{lbl['lbl.so.okbtn']}" 
 			styleClass="apply_button" update="sitedetails" process="@(.qtSiteBriefDetails)" style="float:right;" oncomplete="dlg2.hide()" action="#{qTScheduleDetailBB.addToSiteBriefingList}">
 
 		</p:commandButton>
