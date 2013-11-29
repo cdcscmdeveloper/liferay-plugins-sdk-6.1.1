@@ -333,7 +333,7 @@ public class SmApplicationBackingBean extends
 		}
 	}
 
-	public String updateSmAppl() throws Exception {
+	public void updateSmAppl() throws Exception {
 		try {
 			System.out.println("**** ENTER ACTION METHOD BEAN *************"
 					+ currentTab + "  " + outputTab);
@@ -360,7 +360,7 @@ public class SmApplicationBackingBean extends
 			// }
 			// TODO to be confirmed whether reqd to save the appln as draft
 			getManagedBean().setTabActiveIndex(outputTab);
-			return SupplierManagementConst.PROCEED_MOF_REG;
+			// return SupplierManagementConst.PROCEED_MOF_REG;
 
 		} catch (Exception e) {
 			System.out.println("this is error");
@@ -371,7 +371,7 @@ public class SmApplicationBackingBean extends
 							"Sample error message",
 							"PrimeFaces makes no mistakes"));
 			getManagedBean().setTabActiveIndex(currentTab);
-			return SupplierManagementConst.PROCEED_MOF_REG;
+			// return SupplierManagementConst.PROCEED_MOF_REG;
 		}
 
 	}
