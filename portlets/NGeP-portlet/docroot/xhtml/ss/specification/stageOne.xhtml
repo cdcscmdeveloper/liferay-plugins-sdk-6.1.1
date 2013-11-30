@@ -3,7 +3,8 @@
 	xmlns:h="http://java.sun.com/jsf/html"
 	xmlns:ui="http://java.sun.com/jsf/facelets"
 	xmlns:p="http://primefaces.org/ui"
-	xmlns:c="http://java.sun.com/jsp/jstl/core">
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:ac="http://ac.my/jsf/composite/cc">
 
 
 
@@ -16,9 +17,9 @@
 			value="#{specificationBackingBean.managedBean.scQtCheckSt1techProposal}"
 			editable="true" rowIndexVar="index" style="width:100%"
 			selection="#{specificationBackingBean.selectedst1TechProposal}" rowKey="{stageoneTechnical.qtChecklistId">
+           <ac:paginator for="compilence" />
 
-
-         <p:column selectionMode="multiple"  style="text-align:center;"/> 
+       <!--   <p:column selectionMode="multiple"  style="text-align:center;"/>  -->
 			<!-- <p:column headerText="No">
 				<h:outputText value="1"></h:outputText>
 
@@ -74,7 +75,7 @@
 			<p:inputText type="hidden"
 				value="#{specificationBackingBean.managedBean.scQtChecklist.evaluationStage}"></p:inputText>
 		</p:dataTable>
-
+ <p:spacer height="20"></p:spacer>
 
 		<div align="right">
 			<p:commandButton value="ADD" process="@this" partialSubmit="true"
@@ -91,8 +92,8 @@
 			value="#{specificationBackingBean.managedBean.scQtCheckSt1techAdditionalProposalList}"
 			 		selection="#{specificationBackingBean.selectedst1TechAddProposal}"
 			 rowIndexVar="index" style="width:100%">
-
-           <p:column selectionMode="multiple"  style="text-align:center;"/> 
+              <ac:paginator for="additionaltech" />
+       <!--     <p:column selectionMode="multiple"  style="text-align:center;"/>  -->
 
 		<!-- 	<p:column headerText="No">
 				<h:outputText value="1"></h:outputText>
@@ -145,7 +146,7 @@
 			</p:column>
 
 		</p:dataTable>
-
+ <p:spacer height="20"></p:spacer>
 		<div align="right">
 			<p:commandButton value="ADD" process="@this,additionaltech"
 				partialSubmit="true"
@@ -168,8 +169,8 @@
 			value="#{specificationBackingBean.managedBean.scQtCheckSt1financeProposalList}"
 			 rowKey="#{stageonefinanceProp.qtChecklistId}" selection="#{specificationBackingBean.selectedst1FinanceProposal}"
 			 style="width:100%" rowIndexVar="index">
-
-       <p:column selectionMode="multiple"  style="text-align:center;"/>
+             <ac:paginator for="financeProposal" />
+    <!--    <p:column selectionMode="multiple"  style="text-align:center;"/> -->
 
 			<!-- <p:column headerText="No">
 				<h:outputText value="1"></h:outputText>
@@ -221,7 +222,7 @@
 			</p:column>
 
 		</p:dataTable>
-
+ <p:spacer height="20"></p:spacer>
 
 		<div align="right">
 			<p:commandButton value="ADD" process="@this,financeProposal"
@@ -240,8 +241,8 @@
 			value="#{specificationBackingBean.managedBean.scQtCheckSt1financeAdditionalProposalList}"
 			 rowKey="#{stageonefinanceAdd.qtChecklistId}" selection="#{specificationBackingBean.selectedst1FinanceAddProposal}"
 			editable="true" style="width:100%" rowIndexVar="index">
-
-        <p:column selectionMode="multiple"  style="text-align:center;"/>
+              <ac:paginator for="financeAdditional" />
+     <!--    <p:column selectionMode="multiple"  style="text-align:center;"/> -->
 
 		<!-- 	<p:column headerText="No">
 				<h:outputText value="1"></h:outputText>
@@ -293,7 +294,7 @@
 			</p:column>
 
 		</p:dataTable>
-
+ <p:spacer height="20"></p:spacer>
 		<div align="right">
 			<p:commandButton value="ADD" process="@this,financeAdditional"
 				partialSubmit="true"
@@ -313,9 +314,9 @@
 
 
 			<p:selectOneRadio
-				value="#{specificationBackingBean.managedBean.scQtSpec.isSampleReq}">
-				<f:selectItem itemLabel="Yes" itemValue="1"  noSelectionOption="true"/>
-				<f:selectItem itemLabel="No" itemValue="2" noSelectionOption="false"/>
+				value="#{specificationBackingBean.managedBean.scQtSpec.sampleReq}">
+				<f:selectItem itemLabel="Yes" itemValue="true"/>
+				<f:selectItem itemLabel="No" itemValue="false"/>
 
 			</p:selectOneRadio>
 
@@ -331,7 +332,7 @@
 
 
 			<p:inputTextarea rows="3" cols="40"
-				value="#{specificationBackingBean.managedBean.scQtRemarks.remark}"
+				
 				autoResize="false"></p:inputTextarea>
 
 

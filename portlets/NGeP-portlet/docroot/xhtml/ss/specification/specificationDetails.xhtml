@@ -31,13 +31,7 @@
 				<f:selectItem itemLabel="Two Tier" itemValue="2" />
 
 			</p:selectOneRadio>
-			<h:outputLabel value="Award Type" />
-			<p:selectOneRadio
-				value="#{specificationBackingBean.managedBean.scQtSpec.awardType}">
-				<f:selectItem itemLabel="By LineItem" itemValue="1" />
-				<f:selectItem itemLabel="By Package" itemValue="2" />
-
-			</p:selectOneRadio>
+			
 
 			<h:outputLabel value="* Fulfillment TYpe" />
 			<p:selectOneMenu
@@ -50,29 +44,31 @@
 			<h:outputLabel value="Currency" />
 			<p:selectOneMenu
 				value="#{specificationBackingBean.managedBean.scQtSpec.pmCurrency.currencyCode}">
-				<f:selectItem itemLabel="RM" itemValue="1" />
-				<f:selectItem itemLabel="$" itemValue="2" />
+				<f:selectItems value="#{specificationBackingBean.currencyDetails}" />
 			</p:selectOneMenu>
 			<h:outputLabel value="*Planned Amount" />
 			<p:inputText
 				value="#{specificationBackingBean.managedBean.scQtSpec.scQt.qtAmount}"></p:inputText>
-			<h:outputLabel value=" Justification: " />
+				
+				<h:outputLabel value="*No.Of Schedule" />
+			<p:inputText readonly="true"></p:inputText>
+			<h:outputLabel value=" Justification" />
 			<p:inputText
 				value="#{specificationBackingBean.managedBean.scQtSpec.justificationRemark}"></p:inputText>
 
 
 			<h:outputLabel value="Required Approval" />
 			<p:selectOneRadio
-				value="#{specificationBackingBean.managedBean.scQtSpec.isApprovalReq}">
-				<f:selectItem itemLabel="Yes" itemValue="1" />
-				<f:selectItem itemLabel="No" itemValue="2" />
+				value="#{specificationBackingBean.managedBean.scQtSpec.approvalReq}">
+				<f:selectItem itemLabel="Yes" itemValue="true" />
+				<f:selectItem itemLabel="No" itemValue="false" />
 
 			</p:selectOneRadio>
 
 
 			<h:outputLabel value="Status" />
 			<p:inputText
-				value="#{specificationBackingBean.managedBean.scQtSpec.statusId}"></p:inputText>
+				value="#{specificationBackingBean.managedBean.scQtSpec.pmStatus.statusId}"></p:inputText>
 
 
 			<h:outputLabel value="*Contract Period" />
@@ -89,104 +85,11 @@
 
 
 		</h:panelGrid>
-		<!-- <p:panelGrid columns="10" style="width:100%;"
-			styleClass="noBorders tr,noBorders td">
-
-			<h:outputLabel value="*Contract Period : " style="margin-right:-19px" />
-			<h:inputText size="6" style="margin-right:-30px"></h:inputText>
-			<h:outputLabel value="(Year)" style="margin-right:-20px" />
-			<h:inputText size="4" style="margin-right:-20px"></h:inputText>
-			<h:outputLabel value="(Month)" style="margin-right:0px" />
-			<h:outputLabel value="*Completion Period : "
-				style="margin-right:-19px" />
-			<h:inputText size="6" style="margin-right:-30px"></h:inputText>
-			<h:outputLabel value="(Year)" style="margin-right:-20px" />
-			<h:inputText size="4" style="margin-right:-20px"></h:inputText>
-			<h:outputLabel value="(Month)" style="margin-right:0px" />
-
-		</p:panelGrid> -->
-		<!-- <p:panelGrid columns="4" style="width:100%;"
-			styleClass="noBorders tr,noBorders td">
-
-			<h:outputLabel value="Sample Product Required : " />
-			<p:selectOneRadio>
-				<f:selectItem itemLabel="Yes" itemValue="1" />
-				<f:selectItem itemLabel="No" itemValue="2" />
-
-			</p:selectOneRadio>
-			<h:outputLabel value=" Max.Proposaal : " />
-			<p:inputText value="1"></p:inputText>
-			<h:outputLabel value="Required Approval : " />
-			<p:selectOneRadio>
-				<f:selectItem itemLabel="Yes" itemValue="1" />
-				<f:selectItem itemLabel="No" itemValue="2" />
-
-			</p:selectOneRadio>
-			<h:outputLabel value=" Justification : " />
-			<p:inputText></p:inputText>
-		</p:panelGrid>
- -->
-	</p:panel>
-
-
-
-	<p:panel id="deduction" header="Deduction Payment Details"
-		toggleable="true">
-		<p:dataTable var="specificationdetails"
-			value="#{specificationBackingBean.managedBean.scQtDeductionList}"
-			editable="true" rowIndexVar="index"
-			selection="#{specificationBackingBean.selectedDeduction}" rowKey="{specificationdetails.qtDeductionId}">
-            <p:column selectionMode="multiple"  style="text-align:center;"/>
-
-			<!-- <p:column headerText="No">
-				<h:outputText value="#{index+1}"></h:outputText>
-			</p:column> -->
-
-			<p:column headerText="Type Of Deduction">
-
-				<p:inputText value="#{specificationdetails.deductionType}" />
-
-			</p:column>
-			<!-- 
-			<p:column headerText="Fixed/Variable">
-
-
-				<p:inputText
-					value="#{specificationdetails.isFixed}" />
-
-
-			</p:column> -->
-
-			<p:column headerText="Amount">
-
-				<p:inputText value="#{specificationdetails.deductionAmount}" />
-
-			</p:column>
-			<p:column headerText="Action" style="width:10%">
-				<p:commandLink>
-					<p:graphicImage library="ep/images/design" name="edit.png"
-						value="/resources/ep/images/design/edit.png" />
-
-				</p:commandLink>
-				<p:commandLink>
-					<p:graphicImage library="ep/images/design" name="delete.png"
-						value="/resources/ep/images/design/delete.png" />
-
-				</p:commandLink>
-
-
-			</p:column>
-
-		</p:dataTable>
-		<div align="right">
-			<p:commandButton value="ADD" process="@this,deduction"
-				partialSubmit="true"
-				action="#{specificationBackingBean.specificAdd}" update="deduction" />
-				<p:commandButton value="DELETE"  />
-
-		</div>
 
 	</p:panel>
+
+
+
 
 
 
@@ -194,43 +97,32 @@
 	<p:panel header="APPROVAL DETAILS SECTION" toggleable="true">
 
 		<h:panelGrid style="width:100%;" columns="4"
-			
-			styleClass="noBorders tr,noBorders td">
+			columnClasses="columnWidth20,columnWidth30,columnWidth20,columnWidth30">
 
 
-			<h:outputLabel value="Approver Name: " />
+			<h:outputLabel value="Approver Name" />
 
 			<p:selectOneMenu
 				value="#{specificationBackingBean.managedBean.scQtSpec.approverName}">
-				<f:selectItem itemLabel="Rostima" itemValue="1" />
-				<f:selectItem itemLabel="Gustia" itemValue="2" />
-			</p:selectOneMenu>
-
-			<h:outputLabel value=" Approval Date : " />
-
-			<p:calendar
-				value="#{specificationBackingBean.managedBean.scQtSpec.approvalDate}"
-				showOn="button"></p:calendar>
-
-
-			<h:outputLabel value=" Approver Action : " />
+				<f:selectItems value="#{specificationBackingBean.approverNames}" />
 				
-					<p:selectOneMenu
-				value="#{specificationBackingBean.managedBean.scQtSpec.approverAction}">
-				<f:selectItem itemLabel="Approver" itemValue="1" />
-				<f:selectItem itemLabel="Revise" itemValue="2" />
 			</p:selectOneMenu>
 
-			<h:outputLabel value=" Approval  Remarks : " />
+			<h:outputLabel value=" Approval Date" />
+
+		<p:inputText readonly="true" disabled="true"  value="#{specificationBackingBean.managedBean.approvalDate}"></p:inputText>
 
 
-			<p:inputTextarea rows="3" cols="40"
-				value="#{specificationBackingBean.managedBean.scQtRemarks.remark}"
+		</h:panelGrid>
+		<h:panelGrid style="width:100%;" columns="2"
+			columnClasses="columnWidth20,columnWidth80">
+
+			<h:outputLabel value=" Approval  Remarks" />
+			<p:inputTextarea rows="3" cols="117"
+				value="#{specificationBackingBean.managedBean.scQtSpec.justificationRemark}"
 				autoResize="false"></p:inputTextarea>
 
-
-
-			</h:panelGrid>
+		</h:panelGrid>
 	</p:panel>
 
 </ui:composition>

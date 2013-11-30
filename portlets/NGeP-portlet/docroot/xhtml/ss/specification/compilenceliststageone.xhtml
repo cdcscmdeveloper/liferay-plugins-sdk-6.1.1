@@ -3,7 +3,8 @@
 	xmlns:h="http://java.sun.com/jsf/html"
 	xmlns:ui="http://java.sun.com/jsf/facelets"
 	xmlns:p="http://primefaces.org/ui"
-	xmlns:c="http://java.sun.com/jsp/jstl/core">
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:ac="http://ac.my/jsf/composite/cc">
 
 
 	<p:dialog  header="Compilance" widgetVar="compliance" modal="true" width="400" height="200">
@@ -17,7 +18,7 @@
    <f:selectItem itemLabel="Sijil Bumiputera" itemValue="SijilBumiputera"></f:selectItem>
    </p:selectManyCheckbox> -->
    
-   <p:dataTable id="compli#{index}"  var="compilance" value="#{specificationBackingBean.managedBean.compilaenceList}" editable="true"
+   <p:dataTable id="compilencestageone"  var="compilance" value="#{specificationBackingBean.managedBean.compilaenceList}" editable="true"
    	selection="#{specificationBackingBean.selectedCompilenceList}"
 				rowKey="#{compilance.compilanceId}" rowIndexVar="index">
 
