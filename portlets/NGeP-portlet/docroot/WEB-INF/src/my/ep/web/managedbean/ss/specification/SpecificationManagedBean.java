@@ -11,6 +11,7 @@ import javax.faces.bean.SessionScoped;
 import javax.faces.model.SelectItem;
 
 import my.ep.factory.EpLogger;
+import my.ep.persistence.entity.ss.quationtender.ScCommitteeMember;
 import my.ep.persistence.entity.ss.quationtender.ScQtCheckList;
 import my.ep.persistence.entity.ss.quationtender.ScQtDeduction;
 import my.ep.persistence.entity.ss.quationtender.ScQtRemark;
@@ -62,6 +63,8 @@ public class SpecificationManagedBean extends BaseManagedBean {
 	 private List<SelectItem> comitteeUsers;
 	 private List<SelectItem> currencyListDetails;
 	 private List<SelectItem> procurementListDetails;
+	 private List<ScCommitteeMember> committeeMemberList;
+	
 	
 	public boolean isSampleReq=true;
 	public String approvalDate;
@@ -366,6 +369,20 @@ public class SpecificationManagedBean extends BaseManagedBean {
 	 */
 	public void setProcurementListDetails(List<SelectItem> procurementListDetails) {
 		this.procurementListDetails = procurementListDetails;
+	}
+
+	/**
+	 * @return the committeeMemberList
+	 */
+	public List<ScCommitteeMember> getCommitteeMemberList() {
+		return committeeMemberList;
+	}
+
+	/**
+	 * @param committeeMemberList the committeeMemberList to set
+	 */
+	public void setCommitteeMemberList(List<ScCommitteeMember> committeeMemberList) {
+		this.committeeMemberList = committeeMemberList;
 	}
 
 	

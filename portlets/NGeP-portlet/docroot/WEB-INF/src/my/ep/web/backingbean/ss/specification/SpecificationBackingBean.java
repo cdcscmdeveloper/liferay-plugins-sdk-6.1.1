@@ -3,6 +3,7 @@
  */
 package my.ep.web.backingbean.ss.specification;
 
+import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -19,9 +20,6 @@ import javax.faces.bean.RequestScoped;
 import javax.faces.context.FacesContext;
 import javax.faces.event.AjaxBehaviorEvent;
 import javax.faces.model.SelectItem;
-
-import org.primefaces.event.FileUploadEvent;
-import org.primefaces.model.UploadedFile;
 
 import my.ep.biz.service.pm.authorization.user.IUserSO;
 import my.ep.biz.service.pm.common.currency.ICurrencySO;
@@ -42,11 +40,9 @@ import my.ep.persistence.entity.pm.authorization.PmUser;
 import my.ep.persistence.entity.pm.common.PmCurrency;
 import my.ep.persistence.entity.pm.common.PmProcurementCategory;
 import my.ep.persistence.entity.pm.common.PmStatus;
-import my.ep.persistence.entity.ss.quationtender.ScQt;
 import my.ep.persistence.entity.ss.quationtender.ScQtCheckList;
+import my.ep.persistence.entity.ss.quationtender.ScQtCheckListAttachment;
 import my.ep.persistence.entity.ss.quationtender.ScQtDeduction;
-import my.ep.persistence.entity.ss.quationtender.ScQtProposalChecklist;
-import my.ep.persistence.entity.ss.quationtender.ScQtProposalChecklistAttachment;
 import my.ep.persistence.entity.ss.quationtender.ScQtRemark;
 import my.ep.persistence.entity.ss.quationtender.ScQtSpec;
 import my.ep.persistence.entity.ss.quationtender.ScQtZoneCriteria;
@@ -54,6 +50,9 @@ import my.ep.type.pm.RoleCode;
 import my.ep.web.backingbean.BaseBackingBean;
 import my.ep.web.managedbean.ss.specification.SpecificationManagedBean;
 import my.ep.web.util.lookupservice.BusinessDelegate;
+
+import org.primefaces.event.FileUploadEvent;
+import org.primefaces.model.UploadedFile;
 
 /**
  * @author ACER
@@ -106,7 +105,6 @@ public class SpecificationBackingBean extends
 
 			List<ScQtCheckList> collectionAll = new ArrayList<ScQtCheckList>();
 			if (st1tech != null) {
-				System.out.println("=====st1tech==" + st1tech.size());
 				collectionAll.addAll(st1tech);
 			}
 
@@ -114,7 +112,6 @@ public class SpecificationBackingBean extends
 					.getScQtCheckSt1techAdditionalProposalList();
 
 			if (st1TechAdd != null) {
-				System.out.println("=====st1TechAdd==" + st1TechAdd.size());
 				collectionAll.addAll(st1TechAdd);
 			}
 
@@ -122,42 +119,36 @@ public class SpecificationBackingBean extends
 					.getScQtCheckSt1financeProposalList();
 
 			if (st1Fin != null) {
-				System.out.println("=====st1Fin==" + st1Fin.size());
 				collectionAll.addAll(st1Fin);
 			}
 			List<ScQtCheckList> st1FinAdd = this.getManagedBean()
 					.getScQtCheckSt1financeAdditionalProposalList();
 
 			if (st1FinAdd != null) {
-				System.out.println("=====st1FinAdd==" + st1FinAdd.size());
 				collectionAll.addAll(st1FinAdd);
 			}
 			List<ScQtCheckList> st2Tech = this.getManagedBean()
 					.getScQtCheckSt2techProposal();
 
 			if (st2Tech != null) {
-				System.out.println("=====st2Tech==" + st2Tech.size());
 				collectionAll.addAll(st2Tech);
 			}
 			List<ScQtCheckList> st2TechAdd = this.getManagedBean()
 					.getScQtCheckSt2techAdditionalProposalList();
 
 			if (st2TechAdd != null) {
-				System.out.println("=====st2TechAdd==" + st2TechAdd.size());
 				collectionAll.addAll(st2TechAdd);
 			}
 			List<ScQtCheckList> st2Fin = this.getManagedBean()
 					.getScQtCheckSt2financeProposalList();
 
 			if (st2Fin != null) {
-				System.out.println("=====st2Fin==" + st2Fin.size());
 				collectionAll.addAll(st2Fin);
 			}
 			List<ScQtCheckList> st2FinAdd = this.getManagedBean()
 					.getScQtCheckSt2financeAdditionalProposalList();
 
 			if (st2FinAdd != null) {
-				System.out.println("=====st2FinAdd==" + st2FinAdd.size());
 				collectionAll.addAll(st2FinAdd);
 			}
 
@@ -207,7 +198,7 @@ public class SpecificationBackingBean extends
 			if (resDTO.getScQtSpec() == null) {
 
 				getManagedBean().setScQtSpec(new ScQtSpec());
-				//getManagedBean().getScQtSpec().setAwardType("L");
+				// getManagedBean().getScQtSpec().setAwardType("L");
 				getManagedBean().getScQtSpec().setPmCurrency(new PmCurrency());
 				getManagedBean().getScQtSpec().setPmProcurementCategory(
 						new PmProcurementCategory());
@@ -220,7 +211,7 @@ public class SpecificationBackingBean extends
 				getManagedBean().getScQtSpec().setScQt(
 						tenderResDTO.getQtDetail());
 				getManagedBean().setScQtRemarks(new ScQtRemark());
-				getManagedBean().setScQtChecklist(new ScQtCheckList());
+				// getManagedBean().setScQtChecklist(new ScQtCheckList());
 				getManagedBean().getScQtSpec().setPmStatus(new PmStatus());
 
 			} else {
@@ -246,6 +237,8 @@ public class SpecificationBackingBean extends
 						resDTO.getS2AddTecResultBean().getResultList());
 				getManagedBean().setScQtCheckSt2financeAdditionalProposalList(
 						resDTO.getS2AddFinResultBean().getResultList());
+				getManagedBean().setCommitteeMemberList(
+						resDTO.getCommMemberResultBean().getResultList());
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -427,10 +420,16 @@ public class SpecificationBackingBean extends
 		System.out.println("====enter stage1 tech proposal====");
 		try {
 
-			List<ScQtCheckList> compilance = new ArrayList<ScQtCheckList>();
+			List<ScQtCheckList> compilance = this.getManagedBean()
+					.getScQtCheckSt1techProposal();
 			List<SpecificationCompilanceBean> list = getSelectedCompilenceList();
 			List<SpecificationCompilanceBean> list1 = this.getManagedBean()
 					.getCompilaenceList();
+
+			if (compilance == null) {
+				compilance = new ArrayList<ScQtCheckList>();
+			}
+
 			for (int i = 0; i < list.size(); i++) {
 				SpecificationCompilanceBean bean = list.get(i);
 				ScQtCheckList scqtlist = createSpecList();
@@ -443,13 +442,13 @@ public class SpecificationBackingBean extends
 				scqtlist.setChecklistType("UP");
 
 				// getManagedBean().setCompilanceList(compilance);
-				getManagedBean().setScQtCheckSt1techProposal(compilance);
 
 			}
+			getManagedBean().setScQtCheckSt1techProposal(compilance);
 
 		} catch (Exception e) {
-			// e.printStackTrace();
-			throw new IllegalArgumentException();
+			e.printStackTrace();
+			// throw new IllegalArgumentException();
 		}
 	}
 
@@ -611,11 +610,35 @@ public class SpecificationBackingBean extends
 		}
 		return getManagedBean().getCurrencyListDetails();
 	}
-	
-/*public void handleFileUpload(FileUploadEvent event) {
-		
-		ScQtCheckList scQtChecklist = this.getManagedBean()
-				.getScQtChecklist();
+
+	/*
+	 * public ScAttachment fileUpload(){ ScAttachment attachment=new
+	 * ScAttachment(); try{
+	 * 
+	 * attachment.setCreatedBy(1L); attachment.setCreatedDate(date);
+	 * attachment.setChangedBy(1L); }
+	 * 
+	 * attachment.setFileName(fileName);
+	 * attachment.setFileDesc("File uploded for Fulfilment Req Order"); File
+	 * theDir = new File("C:\\upload\\");
+	 * 
+	 * // if the directory does not exist, create it if (!theDir.exists()) {
+	 * 
+	 * theDir.mkdir(); System.out.println("creating directory: " + theDir); }
+	 * attachment.setFilePath(theDir+"\\"+ fileName);
+	 * System.out.println("=======get File path===="+attachment.getFilePath());
+	 * FileOutputStream fos; try { fos = new FileOutputStream(theDir+"\\"+
+	 * fileName); fos.write(fileBytes); fos.close(); } catch
+	 * (FileNotFoundException e) { e.printStackTrace(); } catch (IOException e)
+	 * { e.printStackTrace(); } }catch(Exception e ){ FacesMessage message = new
+	 * FacesMessage(FacesMessage.SEVERITY_INFO,
+	 * "The file was uploaded successfully.", null);
+	 * FacesContext.getCurrentInstance().addMessage(null, message); } }
+	 */
+
+	public void handleFileUpload(FileUploadEvent event) {
+
+		ScQtCheckList scQtChecklist = this.getManagedBean().getScQtChecklist();
 
 		UploadedFile file = event.getFile();
 		String fileName = file.getFileName();
@@ -625,11 +648,11 @@ public class SpecificationBackingBean extends
 		FacesContext.getCurrentInstance().addMessage(null, message);
 
 		Timestamp date = new Timestamp(System.currentTimeMillis());
-		ScQtChecklistAttachment attachment = scQtChecklist
-				.getScQtProposalChecklistAttachment();
+		ScQtCheckListAttachment attachment = scQtChecklist
+				.getScQtCheckListAttachment();
 		if (null == attachment) {
-			attachment = new ScQtProposalChecklistAttachment();
-			attachment.setScQtProposalChecklist(scQtProposalChecklist);
+			attachment = new ScQtCheckListAttachment();
+			attachment.setScQtCheckList(scQtChecklist);
 			attachment.setCreatedBy(1L);
 			attachment.setCreatedDate(date);
 			attachment.setChangedBy(1L);
@@ -637,11 +660,20 @@ public class SpecificationBackingBean extends
 
 		attachment.setFileName(fileName);
 		attachment.setFileDesc("File uploded for Fulfilment Req Order");
-		attachment.setFilePath("E:\\upload\\" + fileName);
+		File theDir = new File("C:\\upload\\");
 
+		// if the directory does not exist, create it
+		if (!theDir.exists()) {
+
+			theDir.mkdir();
+			System.out.println("creating directory: " + theDir);
+		}
+		attachment.setFilePath(theDir + "\\" + fileName);
+		System.out.println("=======get File path===="
+				+ attachment.getFilePath());
 		FileOutputStream fos;
 		try {
-			fos = new FileOutputStream("E:\\upload\\" + fileName);
+			fos = new FileOutputStream(theDir + "\\" + fileName);
 			fos.write(fileBytes);
 			fos.close();
 		} catch (FileNotFoundException e) {
@@ -650,9 +682,11 @@ public class SpecificationBackingBean extends
 			e.printStackTrace();
 		}
 
-		scQtProposalChecklist.setScQtProposalChecklistAttachment(attachment);
+		scQtChecklist.setScQtCheckListAttachment(attachment);
+		System.out.println("===scQtChecklist size====="
+				+ scQtChecklist.getScQtCheckListAttachment().getFileName());
 
-	}*/
+	}
 
 	/**
 	 * @return the selctValue
