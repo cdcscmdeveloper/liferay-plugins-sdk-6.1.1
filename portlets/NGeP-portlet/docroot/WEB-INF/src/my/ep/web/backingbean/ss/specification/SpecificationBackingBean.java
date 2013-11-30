@@ -3,11 +3,6 @@
  */
 package my.ep.web.backingbean.ss.specification;
 
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -47,12 +42,11 @@ import my.ep.persistence.entity.ss.quationtender.ScQtRemark;
 import my.ep.persistence.entity.ss.quationtender.ScQtSpec;
 import my.ep.persistence.entity.ss.quationtender.ScQtZoneCriteria;
 import my.ep.type.pm.RoleCode;
-import my.ep.web.backingbean.BaseBackingBean;
+import my.ep.web.backingbean.ss.quatationtender.SourcingBaseBackingBean;
 import my.ep.web.managedbean.ss.specification.SpecificationManagedBean;
 import my.ep.web.util.lookupservice.BusinessDelegate;
 
 import org.primefaces.event.FileUploadEvent;
-import org.primefaces.model.UploadedFile;
 
 /**
  * @author ACER
@@ -61,7 +55,7 @@ import org.primefaces.model.UploadedFile;
 @ManagedBean(name = "specificationBackingBean")
 @RequestScoped
 public class SpecificationBackingBean extends
-		BaseBackingBean<SpecificationManagedBean> {
+		SourcingBaseBackingBean<SpecificationManagedBean> {
 	private int count;
 
 	private List<SpecificationCompilanceBean> selectedCompilenceList;
@@ -179,7 +173,9 @@ public class SpecificationBackingBean extends
 			SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
 			this.getManagedBean().setApprovalDate(sdf.format(d));
 			compilenceList();
-			retriveSpecdetails();
+			if (getManagedBean().getScQtSpec() == null) {
+				retriveSpecdetails();	
+			}
 
 		} catch (Exception e) {
 			// e.printStackTrace();
@@ -611,81 +607,25 @@ public class SpecificationBackingBean extends
 		return getManagedBean().getCurrencyListDetails();
 	}
 
-	/*
-	 * public ScAttachment fileUpload(){ ScAttachment attachment=new
-	 * ScAttachment(); try{
-	 * 
-	 * attachment.setCreatedBy(1L); attachment.setCreatedDate(date);
-	 * attachment.setChangedBy(1L); }
-	 * 
-	 * attachment.setFileName(fileName);
-	 * attachment.setFileDesc("File uploded for Fulfilment Req Order"); File
-	 * theDir = new File("C:\\upload\\");
-	 * 
-	 * // if the directory does not exist, create it if (!theDir.exists()) {
-	 * 
-	 * theDir.mkdir(); System.out.println("creating directory: " + theDir); }
-	 * attachment.setFilePath(theDir+"\\"+ fileName);
-	 * System.out.println("=======get File path===="+attachment.getFilePath());
-	 * FileOutputStream fos; try { fos = new FileOutputStream(theDir+"\\"+
-	 * fileName); fos.write(fileBytes); fos.close(); } catch
-	 * (FileNotFoundException e) { e.printStackTrace(); } catch (IOException e)
-	 * { e.printStackTrace(); } }catch(Exception e ){ FacesMessage message = new
-	 * FacesMessage(FacesMessage.SEVERITY_INFO,
-	 * "The file was uploaded successfully.", null);
-	 * FacesContext.getCurrentInstance().addMessage(null, message); } }
-	 */
-
 	public void handleFileUpload(FileUploadEvent event) {
 
 		ScQtCheckList scQtChecklist = this.getManagedBean().getScQtChecklist();
 
-		UploadedFile file = event.getFile();
-		String fileName = file.getFileName();
-		byte[] fileBytes = file.getContents();
 		FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_INFO,
 				"The file was uploaded successfully.", null);
 		FacesContext.getCurrentInstance().addMessage(null, message);
 
-		Timestamp date = new Timestamp(System.currentTimeMillis());
 		ScQtCheckListAttachment attachment = scQtChecklist
 				.getScQtCheckListAttachment();
 		if (null == attachment) {
 			attachment = new ScQtCheckListAttachment();
 			attachment.setScQtCheckList(scQtChecklist);
-			attachment.setCreatedBy(1L);
-			attachment.setCreatedDate(date);
-			attachment.setChangedBy(1L);
 		}
-
-		attachment.setFileName(fileName);
-		attachment.setFileDesc("File uploded for Fulfilment Req Order");
-		File theDir = new File("C:\\upload\\");
-
-		// if the directory does not exist, create it
-		if (!theDir.exists()) {
-
-			theDir.mkdir();
-			System.out.println("creating directory: " + theDir);
-		}
-		attachment.setFilePath(theDir + "\\" + fileName);
-		System.out.println("=======get File path===="
-				+ attachment.getFilePath());
-		FileOutputStream fos;
-		try {
-			fos = new FileOutputStream(theDir + "\\" + fileName);
-			fos.write(fileBytes);
-			fos.close();
-		} catch (FileNotFoundException e) {
-			e.printStackTrace();
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
+		uploadAttachment(event.getFile(), attachment);
 
 		scQtChecklist.setScQtCheckListAttachment(attachment);
 		System.out.println("===scQtChecklist size====="
 				+ scQtChecklist.getScQtCheckListAttachment().getFileName());
-
 	}
 
 	/**
