@@ -1,6 +1,7 @@
 package my.ep.web.managedbean.ss.quationtender;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -424,6 +425,8 @@ public class QTDetailManagedBean extends BaseManagedBean {
 			TreeNode node1 = new DefaultTreeNode(cloneValue.getDisplayName(), node0);
 		}
 
+	
+		//location 
 		root3 = new DefaultTreeNode("Root", null);
 		TreeNode documents = new DefaultTreeNode(("Zone1"), root3);
 		documents.setExpanded(true);
@@ -1129,7 +1132,7 @@ public class QTDetailManagedBean extends BaseManagedBean {
 
 	public void populateCloneAll(){
 		CloneAll [] cloneAllValues=CloneAll.values();
-		//Arrays.
+		Arrays.asList(cloneAllValues);
 	}
 
 

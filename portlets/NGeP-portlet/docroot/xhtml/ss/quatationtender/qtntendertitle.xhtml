@@ -29,7 +29,7 @@
 			<h:column />
 			<h:column />
 			<h:column>
-				<h:outputLabel value="Plan No." 
+				<h:outputLabel value="#{lbl['lbl.so.planno']}" 
 					rendered="#{qTDetailBB.managedBean.qt.planned}" />
 			</h:column>
 			<h:column>
@@ -38,7 +38,7 @@
 					rendered="#{qTDetailBB.managedBean.qt.planned}" />
 			</h:column>
 			<h:column>
-				<h:outputLabel value="* Planned Amount"
+				<h:outputLabel value="* #{lbl['lbl.so.planamount']}" 
 					rendered="#{qTDetailBB.managedBean.qt.planned}" />
 				<h:outputLabel value="* #{lbl['lbl.so.estimated']}"
 					rendered="#{!qTDetailBB.managedBean.qt.planned}" />
@@ -126,7 +126,7 @@
 			</p:column>
 		</p:dataTable>
 
-		<p:commandButton value="ADD" style="float:right;"
+		<p:commandButton value="#{lbl['lbl.so.addbtn']}" style="float:right;" 
 			actionListener="#{qTDetailBB.addGoSoDoAction}" update="gosodoList">
 		</p:commandButton>
 

@@ -80,40 +80,40 @@
 					<p:ajax event="rowEditCancel"
 						listener="#{searchQtnTenderBB.onCancel}" />
 
-					<p:column headerText="Description">
+					<p:column headerText="#{lbl['lbl.so.desc']}">
 						<p:commandLink >
 								<h:outputText value="#{briefdetails.briefingDesc}"></h:outputText>
 								</p:commandLink>
 							
 					</p:column>
-					<p:column headerText="Date/Time">
+					<p:column headerText="#{lbl['lbl.so.date']}">
                    <h:outputText value="#{briefdetails.briefingDate}"></h:outputText>
 								</p:column>
 								
-								<p:column headerText="Location">
+								<p:column headerText="#{lbl['lbl.so.location']}">
 					<h:outputText value="#{briefdetails.location}"></h:outputText>
 							</p:column>
 							
-							<p:column headerText="Coordinating Officer">
+							<p:column headerText="#{lbl['lbl.so.coordinateofficer']}">
 
 								<h:outputText value="#{briefdetails.coordinatingOfficer}"></h:outputText>
 
 					</p:column>
 
-					<p:column headerText="Attendance">
+					<p:column headerText="#{lbl['lbl.so.attendance']}">
 
 								<h:outputText value="#{briefdetails.attendanceType}"></h:outputText>
 
 					</p:column>
 
-					<p:column headerText="Zone">
+					<p:column headerText="#{lbl['lbl.so.zone']}">
             <h:outputText value="#{briefdetails.scQtZoneCriteria.zoneName}"></h:outputText>
 							
 					</p:column>
-					<p:column headerText="Briefing Status">
+					<p:column headerText="#{lbl['lbl.so.briefstatus']}">
 		<h:outputText value="#{briefdetails.pmStatus}"></h:outputText>
 							</p:column>
-				<p:column headerText="Action" style="width:6%">
+				<p:column headerText="#{lbl['lbl.so.action']}" style="width:6%">
 						<p:rowEditor />
 						</p:column>
 
@@ -145,40 +145,40 @@
 			<p:dataTable value="#{qTScheduleDetailBB.managedBean.siteBriefings}"
 			id="sitedetails" var="sitedetails" editable="true" styleClass="">
 			
-			<p:column headerText="Description">
+			<p:column headerText="#{lbl['lbl.so.desc']}">
 						<p:commandLink >
 								<h:outputText value="#{sitedetails.briefingDesc}"></h:outputText>
 								</p:commandLink>
 							
 					</p:column>
-					<p:column headerText="Date/Time">
+					<p:column headerText="#{lbl['lbl.so.date']}">
                    <h:outputText value="#{sitedetails.briefingDate}"></h:outputText>
 								</p:column>
 								
-								<p:column headerText="Location">
+								<p:column headerText="#{lbl['lbl.so.location']}">
 					<h:outputText value="#{sitedetails.location}"></h:outputText>
 							</p:column>
 							
-							<p:column headerText="Coordinating Officer">
+							<p:column headerText="#{lbl['lbl.so.coordinateofficer']}">
 
 								<h:outputText value="#{sitedetails.coordinatingOfficer}"></h:outputText>
 
 					</p:column>
 
-					<p:column headerText="Attendance">
+					<p:column headerText="#{lbl['lbl.so.attendance']}">
 
 								<h:outputText value="#{sitedetails.attendanceType}"></h:outputText>
 
 					</p:column>
 
-					<p:column headerText="Zone">
+					<p:column headerText="#{lbl['lbl.so.zone']}">
             <h:outputText value="#{sitedetails.scQtZoneCriteria.zoneName}"></h:outputText>
 							
 					</p:column>
-					<p:column headerText="Briefing Status">
+					<p:column headerText="#{lbl['lbl.so.briefstatus']}">
 		<h:outputText value="#{sitedetails.pmStatus}"></h:outputText>
 							</p:column>
-				<p:column headerText="Action" style="width:6%">
+				<p:column headerText="#{lbl['lbl.so.action']}" style="width:6%">
 						<p:rowEditor />
 						</p:column>
 				</p:dataTable>
@@ -201,23 +201,36 @@
 	<p:panel header="Contact Person Details" toggleable="true">
 		<p:panelGrid columns="2" style="width:100%;"
 			styleClass="noBorders tr,noBorders td">
-			<p:dataTable id="contactdetails" var="contactpersondetails"
-				value="#{qTScheduleDetailBB.managedBean.scQtContactPersons}" editable="true">
+			<p:dataTable id="cpersondetails"       styleClass="contactdetails" var="contactpersondetails"
+				value= "#{qTScheduleDetailBB.managedBean.scQtContactPersons}" editable="true">
 
 				<p:ajax event="rowEdit" listener="#{searchQtnTenderBB.onEdit}" />
 				<p:ajax event="rowEditCancel"
 					listener="#{searchQtnTenderBB.onCancel}" />
 
 				
-				<p:column headerText="Name">
-					
-							<p:inputTextarea value="#{qTScheduleDetailBB.managedBean.qtContactPerson.name}" rows="1" cols="50" 
-                     	disabled="e" />
-						
-                </p:column>
+				<p:column headerText="#{lbl['lbl.so.name']}">
+                  <!--  <h:outputText value="#{contactpersondetails.name}"></h:outputText> -->
+					<h:inputText value="#{contactpersondetails.name}" size="50"/>
+								</p:column>
+				
+				<p:column headerText="#{lbl['lbl.so.phone']}" style="width:15%">
+                  <!--  <h:outputText value="#{contactpersondetails.name}"></h:outputText> -->
+					<h:inputText value="#{contactpersondetails.phoneNo}" size="10"/>
+								</p:column>
+								
+				<p:column headerText="#{lbl['lbl.so.fax']}" style="width:15%">
+                  <!--  <h:outputText value="#{contactpersondetails.name}"></h:outputText> -->
+					<h:inputText value="#{contactpersondetails.faxNo}" size="10"/>
+								</p:column>
+				
+				<p:column headerText="#{lbl['lbl.so.mail']}" style="width:15%"> 
+                  <!--  <h:outputText value="#{contactpersondetails.name}"></h:outputText> -->
+					<h:inputText value="#{contactpersondetails.email}"/>
+								</p:column>												
 				
 
-				<p:column headerText="Action" style="width:6%">
+				<p:column headerText="#{lbl['lbl.so.action']}" style="width:6%">
 					<p:rowEditor />
             <!-- <ui:include src="/xhtml/ss/committe/clonecommitteescreen.xhtml" /> -->
 
