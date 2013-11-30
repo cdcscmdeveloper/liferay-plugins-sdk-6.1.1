@@ -19,6 +19,7 @@ import my.ep.persistence.entity.pm.authorization.PmUser;
 import my.ep.persistence.entity.pm.common.PmCategoryL1;
 import my.ep.persistence.entity.pm.common.PmCategoryL2;
 import my.ep.persistence.entity.pm.common.PmCategoryL3;
+import my.ep.persistence.entity.pm.common.PmCountry;
 import my.ep.persistence.entity.pm.common.PmDistrict;
 import my.ep.persistence.entity.pm.common.PmDo;
 import my.ep.persistence.entity.pm.common.PmGo;
@@ -96,6 +97,8 @@ public class QTDetailManagedBean extends BaseManagedBean {
 	private List<PmCategoryL3> categoryL3s;
 
 	private List<PmState> states;
+	
+	private List<PmCountry> countries;
 
 	private List<PmDistrict> districts;
 
@@ -1205,5 +1208,15 @@ public class QTDetailManagedBean extends BaseManagedBean {
 			SCQuotationTenderDataType quotationTenderDataType) {
 		this.quotationTenderDataType = quotationTenderDataType;
 	}
-   
+
+
+	public List<PmCountry> getCountries() {
+		return countries;
+	}
+
+
+	public void setCountries(List<PmCountry> countries) {
+		this.countries = countries;
+	}
+       
 }
