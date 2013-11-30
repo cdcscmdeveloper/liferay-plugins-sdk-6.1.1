@@ -6,64 +6,38 @@
 	xmlns:c="http://java.sun.com/jsp/jstl/core"
 	xmlns:ac="http://ac.my/jsf/composite/cc">
 
-
-
-
-
 	<p:panel header="STAGE TWO(TECHNICAL)" toggleable="true">
 		<p:commandLink value="Proposal Checklist"></p:commandLink>
 		<p:dataTable id="stageTwotechProposal" var="stageTwoTechnical"
 			value="#{specificationBackingBean.managedBean.scQtCheckSt2techProposal}"
 			editable="true" style="width:100%" rowIndexVar="index"
-			selection="#{specificationBackingBean.selectedst2TechProposal}" rowKey="#{stageTwoTechnical.qtChecklistId}">
+			selection="#{specificationBackingBean.selectedst2TechProposal}"
+			rowKey="#{stageTwoTechnical}">
 			<ac:paginator for="stageTwotechProposal" />
-     <!--    <p:column selectionMode="multiple"  style="text-align:center;"/> -->
-            <!--  <p:column headerText="No">
-				
-             <h:outputText value="#{index+1}"></h:outputText>
-
-			</p:column> -->
-
+			<p:column selectionMode="multiple" style="text-align:center;" />
 			<p:column headerText="Title" style="width:80%">
-
-				<p:inputText
-					value="#{stageTwoTechnical.title}" size="50"></p:inputText>
-
+				<p:inputText value="#{stageTwoTechnical.title}" size="50"></p:inputText>
 			</p:column>
-
 			<p:column headerText="Type" style="width:40%">
-
-				<p:selectOneMenu
-					value="#{stageTwoTechnical.checklistType}">
+				<p:selectOneMenu value="#{stageTwoTechnical.checklistType}">
 					<f:selectItem itemLabel="Select One" itemValue=" " />
 					<f:selectItem itemLabel="Specification" itemValue="UP" />
 					<f:selectItem itemLabel="System Defined" itemValue="SD" />
-				<f:selectItem itemLabel="Web Form" itemValue="WF" />
-				<!-- 	<p:ajax event="change" update="stageTwotechProposal"  process="@this" listener="#{specificationBackingBean.stageTwotechproposal}" /> -->
+					<f:selectItem itemLabel="Web Form" itemValue="WF" />
+					<!-- 	<p:ajax event="change" update="stageTwotechProposal"  process="@this" listener="#{specificationBackingBean.stageTwotechproposal}" /> -->
 				</p:selectOneMenu>
-
 			</p:column>
-			
 			<p:column headerText="Ordering">
-
-				<p:inputText
-					value="#{stageTwoTechnical.checklistSeq}"></p:inputText>
+				<p:inputText value="#{stageTwoTechnical.checklistSeq}"></p:inputText>
 			</p:column>
 
 			<p:column headerText="Template Status">
 				<h:outputText value="(InProgress/Completed)"></h:outputText>
 
 			</p:column>
-			
-		 <!-- 	<h:panelGroup id="selectdrop" rendered="#{specificationBackingBean.selctValue eq '1' or specificationBackingBean.selctValue eq '2'}"> --> 
-			<!-- <p:column headerText="Action"  rendered="#{specificationBackingBean.selctValue eq '1' or specificationBackingBean.selctValue eq '2'}">
-				
-            </p:column> -->
-           <!--  </h:panelGroup> -->
-
 			<p:column headerText="Action" style="width:10%">
-			<p:commandLink>
-			<!-- <p:commandButton value="Search" process="@this" partialSubmit="true"
+				<p:commandLink>
+					<!-- <p:commandButton value="Search" process="@this" partialSubmit="true"
 				onclick="qtnTndr.show();"  rendered="#{specificationBackingBean.selctValue eq '1' or specificationBackingBean.selctValue eq '2'}" /> -->
 					<p:graphicImage library="ep/images/design" name="edit.png"
 						value="/resources/ep/images/design/edit.png" />
@@ -74,71 +48,61 @@
 						value="/resources/ep/images/design/delete.png" />
 
 				</p:commandLink>
-
-
 			</p:column>
-
 		</p:dataTable>
- <p:spacer height="20"></p:spacer>
+		<p:spacer height="20"></p:spacer>
 
 		<div align="right">
-			<p:commandButton value="ADD" process="@this,stageTwotechProposal" partialSubmit="true"
-				action="#{specificationBackingBean.stageTwoTechnicalAddProposal}" update="stageTwotechProposal"/>
-				<p:commandButton value="DELETE"  />
+			<p:commandButton value="ADD" process="@this,stageTwotechProposal"
+				partialSubmit="true"
+				action="#{specificationBackingBean.stageTwoTechnicalAddProposal}"
+				update="stageTwotechProposal" />
+			<p:commandButton value="DELETE" />
 
 		</div>
-
-
-
 
 		<p:commandLink value="Proposal Misc. Checklist"></p:commandLink>
 		<p:dataTable id="techAdditionaltwo" var="stageTwoTechnicalAdditional"
 			value="#{specificationBackingBean.managedBean.scQtCheckSt2techAdditionalProposalList}"
 			rowIndexVar="index" editable="true" style="width:100%"
-			selection="#{specificationBackingBean.selectedst2TechAddProposal}" rowKey="#{stageTwoTechnicalAdditional.qtChecklistId}">
-           	<ac:paginator for="techAdditionaltwo" />
-        <!--    <p:column selectionMode="multiple"  style="text-align:center;"/> -->
-			<!-- <p:column headerText="No">
-				<h:outputText value="#{index+1}"></h:outputText>
-
-			</p:column> -->
-
+			selection="#{specificationBackingBean.selectedst2TechAddProposal}"
+			rowKey="#{stageTwoTechnicalAdditional}">
+			<ac:paginator for="techAdditionaltwo" />
+			<p:column selectionMode="multiple" style="text-align:center;" />
 			<p:column headerText="Title" style="width:80%">
-
-				<p:inputText
-					value="#{stageTwoTechnicalAdditional.title}" size="50"></p:inputText>
-
+				<p:inputText value="#{stageTwoTechnicalAdditional.title}" size="50"></p:inputText>
 			</p:column>
-
 			<p:column headerText="Type" style="width:40%">
 				<h:outputText value="Upload"></h:outputText>
 			</p:column>
 
-           <p:column headerText="Sample Document">
+			<p:column headerText="Sample Document">
+				<ui:include src="/xhtml/ss/specification/upload.xhtml" />
+				<p:commandLink oncomplete="uploadS2TechAdd.show();return false;"
+					update="techAdditionaltwo">
+					<p:graphicImage library="ep/images/design" name="upload.png"
+						value="/resources/ep/images/design/upload.png" />
+					<f:setPropertyActionListener value="#{stageTwoTechnicalAdditional}"
+						target="#{specificationBackingBean.managedBean.scQtChecklist}" />
 
-				<p:commandButton value="Upload"></p:commandButton>
+				</p:commandLink>
+				<p:spacer width="10" height="5" />
+				<h:outputText
+					value="#{stageTwoTechnicalAdditional.scQtCheckListAttachment.fileName}"></h:outputText>
 
 			</p:column>
-			 <p:column headerText="Max Score">
+			<p:column headerText="Max Score">
 
 				<h:outputText value="readOnly"></h:outputText>
 
 			</p:column>
 			<p:column headerText="Ordering">
-				<p:inputText
-					value="#{stageTwoTechnicalAdditional.checklistSeq}"></p:inputText>
+				<p:inputText value="#{stageTwoTechnicalAdditional.checklistSeq}"></p:inputText>
 			</p:column>
-
-			
-			<!-- <p:column headerText="Action"  rendered="#{specificationBackingBean.selctValue eq '1' or specificationBackingBean.selctValue eq '2'}">
-				<p:commandButton value="ADD" process="@this" partialSubmit="true"
-				onclick="qtnTndr.show();" />
-            </p:column> -->
-
 			<p:column headerText="Action" style="width:10%">
 				<!-- <p:commandButton value="Search" process="@this" partialSubmit="true"
 				onclick="qtnTndr.show();"  rendered="#{specificationBackingBean.selctValue eq '1' or specificationBackingBean.selctValue eq '2'}" /> -->
-			<p:commandLink>
+				<p:commandLink>
 					<p:graphicImage library="ep/images/design" name="edit.png"
 						value="/resources/ep/images/design/edit.png" />
 
@@ -148,51 +112,35 @@
 						value="/resources/ep/images/design/delete.png" />
 
 				</p:commandLink>
-
-
 			</p:column>
 
 		</p:dataTable>
- <p:spacer height="20"></p:spacer>
+		<p:spacer height="20"></p:spacer>
 		<div align="right">
-			<p:commandButton value="ADD" process="@this,techAdditionaltwo" partialSubmit="true"
-				action="#{specificationBackingBean.stageTwoAdditionalAdd}" update="techAdditionaltwo"/>
-				<p:commandButton value="DELETE"  />
+			<p:commandButton value="ADD" process="@this,techAdditionaltwo"
+				partialSubmit="true"
+				action="#{specificationBackingBean.stageTwoAdditionalAdd}"
+				update="techAdditionaltwo" />
+			<p:commandButton value="DELETE" />
 
 		</div>
-
-
-
 	</p:panel>
-
-
-
-
-
 
 	<p:panel header="STAGE TWO(FINANCIAL)" toggleable="true">
 		<p:commandLink value="Proposal Checklist"></p:commandLink>
 		<p:dataTable id="financeProposaltwo" var="stageTwofunctional"
 			value="#{specificationBackingBean.managedBean.scQtCheckSt2financeProposalList}"
 			editable="true" style="width:100%" rowIndexVar="index"
-			selection="#{specificationBackingBean.selectedst2FinanceProposal}" rowKey="#{stageTwofunctional.qtChecklistId}">
-			 	<ac:paginator for="financeProposaltwo" />
-      <!--     <p:column selectionMode="multiple"  style="text-align:center;"/> -->
-			<!-- <p:column headerText="No">
-				<h:outputText value="#{index+1}"></h:outputText>
-
-			</p:column> -->
-
+			selection="#{specificationBackingBean.selectedst2FinanceProposal}"
+			rowKey="#{stageTwofunctional}">
+			<ac:paginator for="financeProposaltwo" />
+			<p:column selectionMode="multiple" style="text-align:center;" />
 			<p:column headerText="Title" style="width:80%">
-
-				<p:inputText
-					value="#{stageTwofunctional.title}" size="50"></p:inputText>
-
+				<p:inputText value="#{stageTwofunctional.title}" size="50"></p:inputText>
 			</p:column>
 
 			<p:column headerText="Type" style="width:40%">
-				<p:selectOneMenu
-					value="#{stageTwofunctional.checklistType}">
+				<p:selectOneMenu value="#{stageTwofunctional.checklistType}">
 					<f:selectItem itemLabel="Select One" itemValue=" " />
 					<f:selectItem itemLabel="Specification" itemValue="UP" />
 					<f:selectItem itemLabel="System Defined" itemValue="SD" />
@@ -200,26 +148,18 @@
 					<!-- <p:ajax event="change" update="financeProposaltwo"  process="@this" listener="#{specificationBackingBean.stageTwotechproposal}" /> -->
 				</p:selectOneMenu>
 			</p:column>
-           
+
 			<p:column headerText="Ordering">
-				<p:inputText
-					value="#{stageTwofunctional.checklistSeq}"></p:inputText>
+				<p:inputText value="#{stageTwofunctional.checklistSeq}"></p:inputText>
 			</p:column>
-              <p:column headerText="Template Status">
+			<p:column headerText="Template Status">
 				<h:outputText value="(InProgress/Completed)"></h:outputText>
 
 			</p:column>
-			
-				<!-- <p:column headerText="Action"  rendered="#{specificationBackingBean.selctValue eq '1' or specificationBackingBean.selctValue eq '2'}">
-				<p:commandButton value="ADD" process="@this" partialSubmit="true"
-				onclick="qtnTndr.show();" />
-            </p:column> -->
-			
-
 			<p:column headerText="Action" style="width:10%">
 				<!-- <p:commandButton value="Search" process="@this" partialSubmit="true"
 				onclick="qtnTndr.show();"  rendered="#{specificationBackingBean.selctValue eq '1' or specificationBackingBean.selctValue eq '2'}" /> -->
-			<p:commandLink>
+				<p:commandLink>
 					<p:graphicImage library="ep/images/design" name="edit.png"
 						value="/resources/ep/images/design/edit.png" />
 
@@ -229,73 +169,62 @@
 						value="/resources/ep/images/design/delete.png" />
 
 				</p:commandLink>
-
-
 			</p:column>
-
 		</p:dataTable>
- <p:spacer height="20"></p:spacer>
+		<p:spacer height="20"></p:spacer>
 
 		<div align="right">
-			<p:commandButton value="ADD" process="@this,financeProposaltwo" partialSubmit="true"
-				action="#{specificationBackingBean.stageTwoFiProposalAdd}" update="financeProposaltwo"/>
-				<p:commandButton value="DELETE"  />
+			<p:commandButton value="ADD" process="@this,financeProposaltwo"
+				partialSubmit="true"
+				action="#{specificationBackingBean.stageTwoFiProposalAdd}"
+				update="financeProposaltwo" />
+			<p:commandButton value="DELETE" />
 
 		</div>
 
-
-
-
 		<p:commandLink value="Proposal Misc. Checklist"></p:commandLink>
-		<p:dataTable id="financeAdditionaltwo" var="stageTwofunctionalAdditional"
+		<p:dataTable id="financeAdditionaltwo"
+			var="stageTwofunctionalAdditional"
 			value="#{specificationBackingBean.managedBean.scQtCheckSt2financeAdditionalProposalList}"
 			editable="true" style="width:100%" rowIndexVar="index"
-			selection="#{specificationBackingBean.selectedst2FinanceAddProposal}" rowKey="#{stageTwofunctionalAdditional.qtChecklistId}">
+			selection="#{specificationBackingBean.selectedst2FinanceAddProposal}"
+			rowKey="#{stageTwofunctionalAdditional}">
 			<ac:paginator for="financeAdditionaltwo" />
-      <!--    <p:column selectionMode="multiple"  style="text-align:center;"/> -->
-			<!-- <p:column headerText="No">
-
-				<h:outputText value="#{index+1}"></h:outputText>
-
-			</p:column> -->
-
+			<p:column selectionMode="multiple" style="text-align:center;" />
 			<p:column headerText="Title" style="width:80%">
-
-
-				<p:inputText
-					value="#{stageTwofunctionalAdditional.title}" size="50"></p:inputText>
-
+				<p:inputText value="#{stageTwofunctionalAdditional.title}" size="50"></p:inputText>
 			</p:column>
-
 			<p:column headerText="Type" style="width:40%">
 				<h:outputText value="Upload"></h:outputText>
 			</p:column>
 
-           <p:column headerText="Sample Document">
-
-				<p:commandButton value="Upload"></p:commandButton>
+			<p:column headerText="Sample Document">
+				<ui:include src="/xhtml/ss/specification/upload.xhtml" />
+				<p:commandLink oncomplete="uploadS2FinAdd.show();return false;"
+					update="financeAdditionaltwo">
+					<p:graphicImage library="ep/images/design" name="upload.png"
+						value="/resources/ep/images/design/upload.png" />
+					<f:setPropertyActionListener
+						value="#{stageTwofunctionalAdditional}"
+						target="#{specificationBackingBean.managedBean.scQtChecklist}" />
+				</p:commandLink>
+				<p:spacer width="10" height="5" />
+				<h:outputText
+					value="#{stageTwofunctionalAdditional.scQtCheckListAttachment.fileName}"></h:outputText>
 
 			</p:column>
-			 <p:column headerText="Max Score">
+			<p:column headerText="Max Score">
 
 				<h:outputText value="readOnly"></h:outputText>
 
 			</p:column>
 			<p:column headerText="Ordering">
-				<p:inputText
-					value="#{stageTwofunctionalAdditional.checklistSeq}"></p:inputText>
+				<p:inputText value="#{stageTwofunctionalAdditional.checklistSeq}"></p:inputText>
 			</p:column>
-
-		
-				<!-- <p:column headerText="Action"  rendered="#{specificationBackingBean.selctValue eq '1' or specificationBackingBean.selctValue eq '2'}">
-				<p:commandButton value="ADD" process="@this" partialSubmit="true"
-				onclick="qtnTndr.show();" />
-            </p:column> -->
-
 			<p:column headerText="Action" style="width:10%">
 				<!-- <p:commandButton value="Search" process="@this" partialSubmit="true"
 				onclick="qtnTndr.show();"  rendered="#{specificationBackingBean.selctValue eq '1' or specificationBackingBean.selctValue eq '2'}" /> -->
-			<p:commandLink>
+				<p:commandLink>
 					<p:graphicImage library="ep/images/design" name="edit.png"
 						value="/resources/ep/images/design/edit.png" />
 
@@ -307,11 +236,13 @@
 				</p:commandLink>
 			</p:column>
 		</p:dataTable>
-       <p:spacer height="20"></p:spacer>
+		<p:spacer height="20"></p:spacer>
 		<div align="right">
-			<p:commandButton value="ADD" process="@this,financeAdditionaltwo" partialSubmit="true"
-				action="#{specificationBackingBean.stageTwoFiAdditioalProposalAdd}" update="financeAdditionaltwo" />
-				<p:commandButton value="DELETE"  />
+			<p:commandButton value="ADD" process="@this,financeAdditionaltwo"
+				partialSubmit="true"
+				action="#{specificationBackingBean.stageTwoFiAdditioalProposalAdd}"
+				update="financeAdditionaltwo" />
+			<p:commandButton value="DELETE" />
 
 		</div>
 	</p:panel>

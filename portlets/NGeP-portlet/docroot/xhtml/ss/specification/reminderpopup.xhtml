@@ -11,8 +11,8 @@
 		width="600" height="250">
 		<p:panel header="Committee" toggleable="true">
 			<p:dataTable id="specificationReminder" var="reminderpopup"
-				 editable="true">
-                 <ac:paginator for="specificationReminder" />
+				editable="true">
+				<ac:paginator for="specificationReminder" />
 				<p:column headerText="Committee Name" style="width:100%">
 					<h:outputText value="readOnly"></h:outputText>
 				</p:column>
@@ -23,25 +23,24 @@
 		<p:panel header="COMMITTEE DETAILS" toggleable="true">
 			<h:panelGrid styleClass="noBorders tr,noBorders td" columns="2">
 
-				
-						<h:outputLabel value="Subject" />
-				
-						<p:inputText size="50"></p:inputText>
-				
-						<h:outputLabel value="Message" />
-					
-						<p:inputTextarea rows="5" cols="50"></p:inputTextarea>
-					
+
+				<h:outputLabel value="Subject" />
+
+				<p:inputText size="50"></p:inputText>
+
+				<h:outputLabel value="Message" />
+
+				<p:inputTextarea rows="5" cols="50"></p:inputTextarea>
+
 			</h:panelGrid>
 		</p:panel>
+		<div align="right">
+			<p:commandButton value="CANCEL" style="float:right;"
+				onclick="reminder.hide();"></p:commandButton>
 
-
-		<p:commandButton value="SEND" style="float:right;"
-			onclick="reminder.hide();"></p:commandButton>
-				&#160;&#160;
-				<p:commandButton value="CANCEL" style="float:right;"
-			onclick="reminder.hide();"></p:commandButton>
-
+			<p:commandButton value="SEND" style="float:right;"
+				onclick="reminder.hide();"></p:commandButton>
+		</div>
 
 	</p:dialog>
 </ui:composition>

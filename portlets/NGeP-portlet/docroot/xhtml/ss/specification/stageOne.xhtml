@@ -6,56 +6,45 @@
 	xmlns:c="http://java.sun.com/jsp/jstl/core"
 	xmlns:ac="http://ac.my/jsf/composite/cc">
 
-
-
-
-
 	<p:panel header="STAGE ONE(TECHNICAL)" toggleable="true">
 		<p:commandLink value="Proposal Checklist"></p:commandLink>
 
 		<p:dataTable id="compilence" var="stageoneTechnical"
 			value="#{specificationBackingBean.managedBean.scQtCheckSt1techProposal}"
 			editable="true" rowIndexVar="index" style="width:100%"
-			selection="#{specificationBackingBean.selectedst1TechProposal}" rowKey="{stageoneTechnical.qtChecklistId">
-           <ac:paginator for="compilence" />
+			selection="#{specificationBackingBean.selectedst1TechProposal}"
+			rowKey="{stageoneTechnical}">
+			<ac:paginator for="compilence" />
 
-       <!--   <p:column selectionMode="multiple"  style="text-align:center;"/>  -->
-			<!-- <p:column headerText="No">
-				<h:outputText value="1"></h:outputText>
-
-				<h:outputText value="#{index+1}"></h:outputText>
-
-			</p:column> -->
+			<p:column selectionMode="multiple" style="text-align:center;" />
 
 			<p:column headerText="Title" style="width:80%">
-				<!-- <h:outputText value="Arjun"></h:outputText> -->
-
 				<h:outputText value="#{stageoneTechnical.title}"></h:outputText>
 
 			</p:column>
 
 			<p:column headerText="Type" style="width:40%">
-
-				<!--    <h:outputText value="4355446727" />   -->
-
 				<h:outputText value="Upload"></h:outputText>
-
-
 			</p:column>
 
 			<p:column headerText="Sample Document" style="width:40%">
-				<p:commandButton value="Upload"></p:commandButton>
-			</p:column>
+				<ui:include src="/xhtml/ss/specification/upload.xhtml" />
+				<p:commandLink oncomplete="uploadDlg.show();return false;"
+					update="compilence">
+					<p:graphicImage library="ep/images/design" name="upload.png"
+						value="/resources/ep/images/design/upload.png" />
+					<f:setPropertyActionListener value="#{stageoneTechnical}"
+						target="#{specificationBackingBean.managedBean.scQtChecklist}" />
 
+				</p:commandLink>
+				<p:spacer width="10" height="5" />
+				<h:outputText
+					value="#{stageoneTechnical.scQtCheckListAttachment.fileName}"></h:outputText>
+			</p:column>
 
 			<p:column headerText="Ordering">
-
-				<!--    <h:outputText value="4355446727" />   -->
-
 				<p:inputText value="#{stageoneTechnical.checklistSeq}"></p:inputText>
 			</p:column>
-
-
 			<p:column headerText="Action" style="width:10%">
 				<p:commandLink>
 					<p:graphicImage library="ep/images/design" name="edit.png"
@@ -70,65 +59,50 @@
 
 
 			</p:column>
-			<p:inputText type="hidden"
-				value="#{specificationBackingBean.managedBean.scQtChecklist.docType}"></p:inputText>
-			<p:inputText type="hidden"
-				value="#{specificationBackingBean.managedBean.scQtChecklist.evaluationStage}"></p:inputText>
 		</p:dataTable>
- <p:spacer height="20"></p:spacer>
+		<p:spacer height="20"></p:spacer>
 
 		<div align="right">
 			<p:commandButton value="ADD" process="@this" partialSubmit="true"
 				onclick="compliance.show();" />
-				<p:commandButton value="DELETE"  />
+			<p:commandButton value="DELETE" />
 
 		</div>
 
-
-
-
-		<p:commandLink value="Additional Proposal Checklist"></p:commandLink>
-		<p:dataTable id="additionaltech" var="stageoneaddTechnical" rowKey="#{stageoneaddTechnical.qtChecklistId}"
+		<p:dataTable id="additionaltech" var="stageoneaddTechnical"
+			rowKey="#{stageoneaddTechnical}"
 			value="#{specificationBackingBean.managedBean.scQtCheckSt1techAdditionalProposalList}"
-			 		selection="#{specificationBackingBean.selectedst1TechAddProposal}"
-			 rowIndexVar="index" style="width:100%">
-              <ac:paginator for="additionaltech" />
-       <!--     <p:column selectionMode="multiple"  style="text-align:center;"/>  -->
-
-		<!-- 	<p:column headerText="No">
-				<h:outputText value="1"></h:outputText>
-
-				<h:outputText value="#{index+1}"></h:outputText>
-
-			</p:column> -->
+			selection="#{specificationBackingBean.selectedst1TechAddProposal}"
+			rowIndexVar="index" style="width:100%">
+			<ac:paginator for="additionaltech" />
+			<p:column selectionMode="multiple" style="text-align:center;" />
 
 			<p:column headerText="Title" style="width:80%">
-				<!-- <h:outputText value="Arjun"></h:outputText> -->
 
 				<p:inputText value="#{stageoneaddTechnical.title}" size="50"></p:inputText>
 
 			</p:column>
 
 			<p:column headerText="Type" style="width:40%">
-
-				<!--    <h:outputText value="4355446727" />   -->
-
 				<h:outputText value="Upload"></h:outputText>
-
-
 			</p:column>
 			<p:column headerText="Sample Document" style="width:40%">
-				<p:commandButton value="Upload"></p:commandButton>
+				<ui:include src="/xhtml/ss/specification/upload.xhtml" />
+				<p:commandLink oncomplete="uploadS1TechAdd.show();return false;"
+					update="additionaltech">
+					<p:graphicImage library="ep/images/design" name="upload.png"
+						value="/resources/ep/images/design/upload.png" />
+					<f:setPropertyActionListener value="#{stageoneaddTechnical}"
+						target="#{specificationBackingBean.managedBean.scQtChecklist}" />
+
+				</p:commandLink>
+				<p:spacer width="10" height="5" />
+				<h:outputText
+					value="#{stageoneaddTechnical.scQtCheckListAttachment.fileName}"></h:outputText>
 			</p:column>
-
-
 			<p:column headerText="Ordering">
-
-				<!--    <h:outputText value="4355446727" />   -->
-
 				<p:inputText value="#{stageoneaddTechnical.checklistSeq}"></p:inputText>
 			</p:column>
-
 
 			<p:column headerText="Action" style="width:10%">
 				<p:commandLink>
@@ -146,66 +120,52 @@
 			</p:column>
 
 		</p:dataTable>
- <p:spacer height="20"></p:spacer>
+		<p:spacer height="20"></p:spacer>
 		<div align="right">
 			<p:commandButton value="ADD" process="@this,additionaltech"
 				partialSubmit="true"
 				action="#{specificationBackingBean.stageOneAdditionalAdd}"
 				update="additionaltech" />
-				<p:commandButton value="DELETE"  />
+			<p:commandButton value="DELETE" />
 
 		</div>
 
 	</p:panel>
-
-
-
-
-
-
 	<p:panel header="STAGE ONE(FINANCIAL)" toggleable="true">
 		<p:commandLink value="Proposal Checklist"></p:commandLink>
 		<p:dataTable id="financeProposal" var="stageonefinanceProp"
 			value="#{specificationBackingBean.managedBean.scQtCheckSt1financeProposalList}"
-			 rowKey="#{stageonefinanceProp.qtChecklistId}" selection="#{specificationBackingBean.selectedst1FinanceProposal}"
-			 style="width:100%" rowIndexVar="index">
-             <ac:paginator for="financeProposal" />
-    <!--    <p:column selectionMode="multiple"  style="text-align:center;"/> -->
-
-			<!-- <p:column headerText="No">
-				<h:outputText value="1"></h:outputText>
-
-				<h:outputText value="#{index+1}"></h:outputText>
-
-			</p:column> -->
-
+			rowKey="#{stageonefinanceProp}"
+			selection="#{specificationBackingBean.selectedst1FinanceProposal}"
+			style="width:100%" rowIndexVar="index">
+			<ac:paginator for="financeProposal" />
+			<p:column selectionMode="multiple" style="text-align:center;" />
 			<p:column headerText="Title" style="width:80%">
-				<!-- <h:outputText value="Arjun"></h:outputText> -->
-
 				<p:inputText value="#{stageonefinanceProp.title}" size="50"></p:inputText>
 
 			</p:column>
 
 			<p:column headerText="Type" style="width:40%">
-
-				<!--    <h:outputText value="4355446727" />   -->
-
 				<h:outputText value="Upload"></h:outputText>
-
-
 			</p:column>
 			<p:column headerText="Sample Document" style="width:40%">
-				<p:commandButton value="Upload"></p:commandButton>
+				<ui:include src="/xhtml/ss/specification/upload.xhtml" />
+				<p:commandLink oncomplete="uploadS1Fin.show();return false;"
+					update="financeProposal">
+					<p:graphicImage library="ep/images/design" name="upload.png"
+						value="/resources/ep/images/design/upload.png" />
+					<f:setPropertyActionListener value="#{stageonefinanceProp}"
+						target="#{specificationBackingBean.managedBean.scQtChecklist}" />
+
+				</p:commandLink>
+				<p:spacer width="10" height="5" />
+				<h:outputText
+					value="#{stageonefinanceProp.scQtCheckListAttachment.fileName}"></h:outputText>
 			</p:column>
 
 			<p:column headerText="Ordering">
-
-				<!--    <h:outputText value="4355446727" />   -->
-
 				<p:inputText value="#{stageonefinanceProp.checklistSeq}"></p:inputText>
 			</p:column>
-
-
 			<p:column headerText="Action" style="width:10%">
 				<p:commandLink>
 					<p:graphicImage library="ep/images/design" name="edit.png"
@@ -217,67 +177,55 @@
 						value="/resources/ep/images/design/delete.png" />
 
 				</p:commandLink>
-
-
 			</p:column>
 
 		</p:dataTable>
- <p:spacer height="20"></p:spacer>
+		<p:spacer height="20"></p:spacer>
 
 		<div align="right">
 			<p:commandButton value="ADD" process="@this,financeProposal"
 				partialSubmit="true"
 				action="#{specificationBackingBean.stageOneFiProposalAdd}"
 				update="financeProposal" />
-				<p:commandButton value="DELETE"  />
+			<p:commandButton value="DELETE" />
 
 		</div>
-
-
-
 
 		<p:commandLink value="Additional Proposal Checklist"></p:commandLink>
 		<p:dataTable id="financeAdditional" var="stageonefinanceAdd"
 			value="#{specificationBackingBean.managedBean.scQtCheckSt1financeAdditionalProposalList}"
-			 rowKey="#{stageonefinanceAdd.qtChecklistId}" selection="#{specificationBackingBean.selectedst1FinanceAddProposal}"
+			rowKey="#{stageonefinanceAdd}"
+			selection="#{specificationBackingBean.selectedst1FinanceAddProposal}"
 			editable="true" style="width:100%" rowIndexVar="index">
-              <ac:paginator for="financeAdditional" />
-     <!--    <p:column selectionMode="multiple"  style="text-align:center;"/> -->
-
-		<!-- 	<p:column headerText="No">
-				<h:outputText value="1"></h:outputText>
-
-				<h:outputText value="#{index+1}"></h:outputText>
-
-			</p:column> -->
+			<ac:paginator for="financeAdditional" />
+			<p:column selectionMode="multiple" style="text-align:center;" />
 
 			<p:column headerText="Title" style="width:80%">
-				<!-- <h:outputText value="Arjun"></h:outputText> -->
-
 				<p:inputText value="#{stageonefinanceAdd.title}" size="50"></p:inputText>
 
 			</p:column>
 
 			<p:column headerText="Type" style="width:40%">
-
-				<!--    <h:outputText value="4355446727" />   -->
-
 				<h:outputText value="Upload"></h:outputText>
-
-
 			</p:column>
 			<p:column headerText="Sample Document" style="width:40%">
-				<p:commandButton value="Upload"></p:commandButton>
+				<ui:include src="/xhtml/ss/specification/upload.xhtml" />
+				<p:commandLink oncomplete="uploadS1FinAdd.show();return false;"
+					update="financeAdditional">
+					<p:graphicImage library="ep/images/design" name="upload.png"
+						value="/resources/ep/images/design/upload.png" />
+					<f:setPropertyActionListener value="#{stageonefinanceAdd}"
+						target="#{specificationBackingBean.managedBean.scQtChecklist}" />
+
+				</p:commandLink>
+				<p:spacer width="10" height="5" />
+				<h:outputText
+					value="#{stageonefinanceAdd.scQtCheckListAttachment.fileName}"></h:outputText>
 			</p:column>
 
 			<p:column headerText="Ordering">
-
-				<!--    <h:outputText value="4355446727" />   -->
-
 				<p:inputText value="#{stageonefinanceAdd.checklistSeq}"></p:inputText>
 			</p:column>
-
-
 			<p:column headerText="Action" style="width:10%">
 				<p:commandLink>
 					<p:graphicImage library="ep/images/design" name="edit.png"
@@ -289,63 +237,31 @@
 						value="/resources/ep/images/design/delete.png" />
 
 				</p:commandLink>
-
-
 			</p:column>
 
 		</p:dataTable>
- <p:spacer height="20"></p:spacer>
+		<p:spacer height="20"></p:spacer>
 		<div align="right">
 			<p:commandButton value="ADD" process="@this,financeAdditional"
 				partialSubmit="true"
 				action="#{specificationBackingBean.stageOneFiAdditioalProposalAdd}"
 				update="financeAdditional" />
-				<p:commandButton value="DELETE"  />
+			<p:commandButton value="DELETE" />
 
 		</div>
-
-
-
-
 		<h:panelGrid columns="2" styleClass="noBorders tr,noBorders td">
-
-
 			<h:outputText value="Sample Product Required" />
-
-
 			<p:selectOneRadio
 				value="#{specificationBackingBean.managedBean.scQtSpec.sampleReq}">
-				<f:selectItem itemLabel="Yes" itemValue="true"/>
-				<f:selectItem itemLabel="No" itemValue="false"/>
-
+				<f:selectItem itemLabel="Yes" itemValue="true" />
+				<f:selectItem itemLabel="No" itemValue="false" />
 			</p:selectOneRadio>
-
 			<h:outputText value="Sample Closing Date Time" />
-
-
 			<p:calendar
 				value="#{specificationBackingBean.managedBean.scQtSpec.approvalDate}"
 				showOn="button"></p:calendar>
-
-
 			<h:outputText value="Sample Product Information" />
-
-
-			<p:inputTextarea rows="3" cols="40"
-				
-				autoResize="false"></p:inputTextarea>
-
-
-
+			<p:inputTextarea rows="3" cols="40" autoResize="false"></p:inputTextarea>
 		</h:panelGrid>
-
-
 	</p:panel>
-
-
-
-
-
-
-
 </ui:composition>
