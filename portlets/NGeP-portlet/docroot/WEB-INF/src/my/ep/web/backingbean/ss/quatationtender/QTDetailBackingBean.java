@@ -48,6 +48,7 @@ import my.ep.persistence.entity.ss.quationtender.ScQtBriefing;
 import my.ep.persistence.entity.ss.quationtender.ScQtCategory;
 import my.ep.persistence.entity.ss.quationtender.ScQtCheckList;
 import my.ep.persistence.entity.ss.quationtender.ScQtContactPerson;
+import my.ep.persistence.entity.ss.quationtender.ScQtCriteria;
 import my.ep.persistence.entity.ss.quationtender.ScQtGosodoBudget;
 import my.ep.persistence.entity.ss.quationtender.ScQtRemark;
 import my.ep.persistence.entity.ss.quationtender.ScQtSupplier;
@@ -760,8 +761,6 @@ public class QTDetailBackingBean extends
 	}
 
 	public void onTabChangeAction(TabChangeEvent event) {
-		IQTDetailSO detailSO = EpEjbBusinessDelegate.getInstance()
-				.getServiceObject(QTConstants.SS_MODULE, IQTDetailSO.class);
 		String tabTitle = event.getTab().getTitle();
 		
 		if (QTConstants.QT_APPROVAL_TAB.equalsIgnoreCase(tabTitle)) {
@@ -988,7 +987,11 @@ public class QTDetailBackingBean extends
 		
 		QuationTenderResDTO resDTO = detailSO.retriveQTSuppQulCriDetails(reqDTO);
 		
-		resDTO.getCriteria();
+		ScQtCriteria scQtCriteria = resDTO.getCriteria();
+		if (scQtCriteria == null) {
+			scQtCriteria = new ScQtCriteria();
+		}
+		
 		resDTO.getStates();
 		resDTO.getCategoryL1();
 	}
