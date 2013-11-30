@@ -1006,12 +1006,14 @@ public class QTDetailBackingBean extends
 	}
 	
 	private void retrieveDocumentTabDtl() {
-		QuationTenderReqDTO reqDTO = new QuationTenderReqDTO();
-		reqDTO.setQtId(getManagedBean().getQt().getQtId());
-		
-		QuationTenderResDTO resDTO = detailSO.retriveQTDocDetails(reqDTO);
-		
-		getManagedBean().setScQtChecklists(resDTO.getDocumentResultBean().getResultList());
+		if (getManagedBean().getScQtChecklists() == null) {
+			QuationTenderReqDTO reqDTO = new QuationTenderReqDTO();
+			reqDTO.setQtId(getManagedBean().getQt().getQtId());
+			
+			QuationTenderResDTO resDTO = detailSO.retriveQTDocDetails(reqDTO);
+			
+			getManagedBean().setScQtChecklists(resDTO.getDocumentResultBean().getResultList());	
+		}
 	}
 	
 	private void retrieveRemarkTabDtl() {
