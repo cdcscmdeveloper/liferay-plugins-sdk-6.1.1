@@ -117,10 +117,30 @@ public class QTScheduleDetailBackingBean extends SourcingBaseBackingBean<QTDetai
     		   siteBriefings.add(selectedSiteBriefing);
     	   }
        }
-       }
+       
+       public void addContactPerson(){
+    		 List<ScQtContactPerson> contact=this.getManagedBean().getScQtContactPersons();
+    		 if(contact == null){
+    			 contact= new ArrayList<ScQtContactPerson>();
+    			 
+    		 }
+    		this.getManagedBean().setQtContactPerson(null);
+    		ScQtContactPerson contactperson=new ScQtContactPerson();
+    		
+    		this.getManagedBean().setQtContactPerson(contactperson);
+    		contact.add(this.getManagedBean().getQtContactPerson());
+    		this.getManagedBean().setScQtContactPersons(contact);
+    
+    		 
+    		} 
+       
+      
+	}
+	
+
 		
  
-	
+
 	
 		
 	
