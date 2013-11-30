@@ -4,6 +4,11 @@ public class SpecificationCompilanceBean {
 	
 	private int compilanceId;
 	private String compilanceTitle;
+	
+	public SpecificationCompilanceBean(){
+		
+	}
+	
 	public SpecificationCompilanceBean(int i, String title) {
 		// TODO Auto-generated constructor stub
 		this.compilanceId=i;

@@ -3,21 +3,30 @@
  */
 package my.ep.web.backingbean.ss.specification;
 
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
 import javax.annotation.PostConstruct;
+import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.RequestScoped;
+import javax.faces.context.FacesContext;
 import javax.faces.event.AjaxBehaviorEvent;
 import javax.faces.model.SelectItem;
+
+import org.primefaces.event.FileUploadEvent;
+import org.primefaces.model.UploadedFile;
 
 import my.ep.biz.service.pm.authorization.user.IUserSO;
 import my.ep.biz.service.pm.common.currency.ICurrencySO;
 import my.ep.biz.service.pm.common.procurementcategory.IProcurementSO;
-import my.ep.biz.service.pm.common.status.IStatusSO;
+import my.ep.biz.service.ss.quationtender.IQTDetailSO;
 import my.ep.biz.service.ss.quationtender.IQTSpecSO;
 import my.ep.dto.pm.authorization.user.UserReqDTO;
 import my.ep.dto.pm.authorization.user.UserResDTO;
@@ -25,8 +34,8 @@ import my.ep.dto.pm.common.currency.CurrencyReqDTO;
 import my.ep.dto.pm.common.currency.CurrencyResDTO;
 import my.ep.dto.pm.common.procurementcategory.ProcurementReqDTO;
 import my.ep.dto.pm.common.procurementcategory.ProcurementResDTO;
-import my.ep.dto.pm.common.status.StatusReqDTO;
-import my.ep.dto.pm.common.status.StatusResDTO;
+import my.ep.dto.ss.quationtender.QuationTenderReqDTO;
+import my.ep.dto.ss.quationtender.QuationTenderResDTO;
 import my.ep.dto.ss.specification.SpecificationReqDTO;
 import my.ep.dto.ss.specification.SpecificationResDTO;
 import my.ep.persistence.entity.pm.authorization.PmUser;
@@ -36,10 +45,11 @@ import my.ep.persistence.entity.pm.common.PmStatus;
 import my.ep.persistence.entity.ss.quationtender.ScQt;
 import my.ep.persistence.entity.ss.quationtender.ScQtCheckList;
 import my.ep.persistence.entity.ss.quationtender.ScQtDeduction;
+import my.ep.persistence.entity.ss.quationtender.ScQtProposalChecklist;
+import my.ep.persistence.entity.ss.quationtender.ScQtProposalChecklistAttachment;
 import my.ep.persistence.entity.ss.quationtender.ScQtRemark;
 import my.ep.persistence.entity.ss.quationtender.ScQtSpec;
 import my.ep.persistence.entity.ss.quationtender.ScQtZoneCriteria;
-import my.ep.persistence.entity.tpl.spec.TplSpecQuestion;
 import my.ep.type.pm.RoleCode;
 import my.ep.web.backingbean.BaseBackingBean;
 import my.ep.web.managedbean.ss.specification.SpecificationManagedBean;
@@ -77,122 +87,91 @@ public class SpecificationBackingBean extends
 	}
 
 	public SpecificationBackingBean() {
-		/*
-		 * System.out.println("====constructor====="); ICurrencySO CurrencySO =
-		 * BusinessDelegate.getInstance() .getServiceObject("pm",
-		 * ICurrencySO.class); System.out.println(CurrencySO); CurrencyResDTO
-		 * resDTO=CurrencySO.retriveCurrencyList();
-		 * System.out.println("======currency List Size===="
-		 * +resDTO.getCurrencyList().size()); CurrencyReqDTO reqDTO=new
-		 * CurrencyReqDTO(); reqDTO.setCurrencyCode("1"); CurrencyResDTO
-		 * resDTO1=CurrencySO.retriveCurrencyCodeByCodeId(reqDTO);
-		 * System.out.println
-		 * ("======currency entity value===="+resDTO1.getPmCurrency
-		 * ().getCurrencyName());
-		 */
-		/*
-		 * IProcurementSO CurrencySO = BusinessDelegate.getInstance()
-		 * .getServiceObject("pm", IProcurementSO.class);
-		 * System.out.println(CurrencySO); ProcurementResDTO
-		 * resDTO=CurrencySO.retriveProcurementList();
-		 * System.out.println("======procurement List Size===="
-		 * +resDTO.getProcurementList().size()); ProcurementReqDTO reqDTO=new
-		 * ProcurementReqDTO(); reqDTO.setProcurementId(1); ProcurementResDTO
-		 * resDTO1=CurrencySO.retriveProcurementCategoryById(reqDTO);
-		 * System.out.
-		 * println("======procurement name value===="+resDTO1.getProcureCategory
-		 * ().getCategoryName());
-		 */
-		Date d = new Date();
-		SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
-		this.getManagedBean().setApprovalDate(sdf.format(d));
-		compilenceList();
+
+		// retriveSpecdetails();
 	}
 
 	public void save() {
 		try {
-		
-
-			IProcurementSO procurementSO = BusinessDelegate.getInstance()
-					.getServiceObject("pm", IProcurementSO.class);
-			System.out.println(procurementSO);
-		
-			ProcurementReqDTO reqDTO = new ProcurementReqDTO();
-			reqDTO.setProcurementId(this.getManagedBean().getScQtSpec()
-					.getPmProcurementCategory().getProcurementCategoryId());
-			ProcurementResDTO procResDTO1 = procurementSO
-					.retriveProcurementCategoryById(reqDTO);
-			ScQtSpec scqtSpec = new ScQtSpec();
-			scqtSpec.setEvaluationType(this.getManagedBean().getScQtSpec()
-					.getEvaluationType());
-			scqtSpec.setPmProcurementCategory(procResDTO1.getProcureCategory());
-			ICurrencySO CurrencySO = BusinessDelegate.getInstance()
-					.getServiceObject("pm", ICurrencySO.class);
-			System.out.println(CurrencySO);
-			// CurrencyResDTO resDTO=CurrencySO.retriveCurrencyList();
-			// System.out.println("======currency List Size===="+resDTO.getCurrencyList().size());
-			CurrencyReqDTO currencyreqDTO = new CurrencyReqDTO();
-			currencyreqDTO.setCurrencyCode(this.getManagedBean().getScQtSpec()
-					.getPmCurrency().getCurrencyCode());
-			CurrencyResDTO currencyresDTO = CurrencySO
-					.retriveCurrencyCodeByCodeId(currencyreqDTO);
-			scqtSpec.setPmCurrency(currencyresDTO.getPmCurrency());
+			ScQtSpec scqtSpec = this.getManagedBean().getScQtSpec();
 			scqtSpec.setApprovalDate(new Date());
-				
-		/*	System.out.println("====max proposal==="+this.getManagedBean().getScQtSpec()
-					.getMaxProposal());*/
-			System.out.println("=====date==="+this.getManagedBean().getApprovalDate());
-			scqtSpec.setApproverName(this.getManagedBean().getScQtSpec()
-					.getApproverName());
-			
-			scqtSpec.setMaxProposal(this.getManagedBean().getScQtSpec()
-					.getMaxProposal());
-			scqtSpec.setAwardType(this.getManagedBean().getScQtSpec()
-					.getAwardType());
-			scqtSpec.setFulfilmentType(this.getManagedBean().getScQtSpec()
-					.getFulfilmentType());
-			scqtSpec.setJustificationRemark(this.getManagedBean().getScQtSpec()
-					.getJustificationRemark());
-			scqtSpec.setSampleReq(this.getManagedBean().getScQtSpec()
-					.isSampleReq());
-			scqtSpec.setApprovalReq(this.getManagedBean().getScQtSpec()
-					.isApprovalReq());
-			scqtSpec.setContractDuration(this.getManagedBean().getScQtSpec()
-					.getContractDuration());
-			// scqtSpec.setScQt(scQt);
-			IStatusSO statussO = BusinessDelegate.getInstance()
-					.getServiceObject("pm", IStatusSO.class);
-			System.out.println("====status Object====" + statussO);
-			StatusReqDTO statusreq = new StatusReqDTO();
-			statusreq.setStatusId(this.getManagedBean().getScQtSpec()
-					.getPmStatus().getStatusId());
-			StatusResDTO statusresspec = statussO
-					.retrieveStatusByStatusId(statusreq);
-			
-			scqtSpec.setPmStatus(statusresspec.getPmStatus());
-
-			ScQt qt = new ScQt();
-			qt.setQtAmount(this.getManagedBean().getScQtSpec().getScQt()
-					.getQtAmount());
-
-			ScQtRemark remarks = new ScQtRemark();
-			remarks.setRemark(this.getManagedBean().getScQtRemarks()
-					.getRemark());
+			scqtSpec.setAwardType("L");
+			scqtSpec.getScQt()
+					.setQtAmount(
+							this.getManagedBean().getScQtSpec().getScQt()
+									.getQtAmount());
 
 			List<ScQtCheckList> st1tech = this.getManagedBean()
 					.getScQtCheckSt1techProposal();
-			System.out.println("=====st1tech=="+st1tech.size());
-			List<ScQtCheckList> checkListSt1 = new ArrayList<ScQtCheckList>();
-			for(ScQtCheckList checkst1tech:st1tech){
-				checkst1tech.setDocType("1");
-				checkst1tech.setEvaluationStage("1");
+
+			List<ScQtCheckList> collectionAll = new ArrayList<ScQtCheckList>();
+			if (st1tech != null) {
+				System.out.println("=====st1tech==" + st1tech.size());
+				collectionAll.addAll(st1tech);
 			}
 
-			
-				IQTSpecSO specSO = BusinessDelegate.getInstance()
-						.getServiceObject("pm", IQTSpecSO.class);
-				SpecificationReqDTO specreqDTO=new SpecificationReqDTO();
-				//specSO.saveSpecDetails(reqDTO)
+			List<ScQtCheckList> st1TechAdd = this.getManagedBean()
+					.getScQtCheckSt1techAdditionalProposalList();
+
+			if (st1TechAdd != null) {
+				System.out.println("=====st1TechAdd==" + st1TechAdd.size());
+				collectionAll.addAll(st1TechAdd);
+			}
+
+			List<ScQtCheckList> st1Fin = this.getManagedBean()
+					.getScQtCheckSt1financeProposalList();
+
+			if (st1Fin != null) {
+				System.out.println("=====st1Fin==" + st1Fin.size());
+				collectionAll.addAll(st1Fin);
+			}
+			List<ScQtCheckList> st1FinAdd = this.getManagedBean()
+					.getScQtCheckSt1financeAdditionalProposalList();
+
+			if (st1FinAdd != null) {
+				System.out.println("=====st1FinAdd==" + st1FinAdd.size());
+				collectionAll.addAll(st1FinAdd);
+			}
+			List<ScQtCheckList> st2Tech = this.getManagedBean()
+					.getScQtCheckSt2techProposal();
+
+			if (st2Tech != null) {
+				System.out.println("=====st2Tech==" + st2Tech.size());
+				collectionAll.addAll(st2Tech);
+			}
+			List<ScQtCheckList> st2TechAdd = this.getManagedBean()
+					.getScQtCheckSt2techAdditionalProposalList();
+
+			if (st2TechAdd != null) {
+				System.out.println("=====st2TechAdd==" + st2TechAdd.size());
+				collectionAll.addAll(st2TechAdd);
+			}
+			List<ScQtCheckList> st2Fin = this.getManagedBean()
+					.getScQtCheckSt2financeProposalList();
+
+			if (st2Fin != null) {
+				System.out.println("=====st2Fin==" + st2Fin.size());
+				collectionAll.addAll(st2Fin);
+			}
+			List<ScQtCheckList> st2FinAdd = this.getManagedBean()
+					.getScQtCheckSt2financeAdditionalProposalList();
+
+			if (st2FinAdd != null) {
+				System.out.println("=====st2FinAdd==" + st2FinAdd.size());
+				collectionAll.addAll(st2FinAdd);
+			}
+
+			scqtSpec.setScQtCheckLists(collectionAll);
+			System.out.println("scQtSpec Object====="
+					+ scqtSpec.getScQtCheckLists().size());
+
+			IQTSpecSO specSO = BusinessDelegate.getInstance().getServiceObject(
+					"ss", IQTSpecSO.class);
+			System.out.println("=====specSO===" + specSO);
+			SpecificationReqDTO specreqDTO = new SpecificationReqDTO();
+			specreqDTO.setScQtSpec(scqtSpec);
+			specSO.saveSpecDetails(specreqDTO);
+			System.out.println("====successfully saved in db====");
 
 		} catch (Exception e) {
 			System.out.println("=====cath exception method===");
@@ -205,76 +184,87 @@ public class SpecificationBackingBean extends
 	@PostConstruct
 	public void init() {
 		try {
+			Date d = new Date();
+			SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
+			this.getManagedBean().setApprovalDate(sdf.format(d));
+			compilenceList();
+			retriveSpecdetails();
 
-			if (getManagedBean().getScQtSpec() == null) {
-				getManagedBean().setScQtSpec(new ScQtSpec());
-				getManagedBean().getScQtSpec().setPmCurrency(new PmCurrency());
-				getManagedBean().getScQtSpec().setPmProcurementCategory(
-						new PmProcurementCategory());
-				getManagedBean().getScQtSpec().setScQt(new ScQt());
-				getManagedBean().setScQtRemarks(new ScQtRemark());
-				getManagedBean().setScQtChecklist(new ScQtCheckList());
-				getManagedBean().getScQtSpec().setPmStatus(new PmStatus());
-				// getManagedBean().setScRemark(new ScRemark());
-				// getManagedBean().setScQtDeduction(new ScQtDeduction());
-				// getManagedBean().setScQtDeductionList(new ScQtDeduction());
-				// getManagedBean().getScQtChecklist().setTitle("Manga");
-				// getManagedBean().getScQtChecklist().setChecklistType("upload");
-				// List<ScQtCheckList> list=new ArrayList<ScQtCheckList>();
-				// ScQtCheckList checklist=new ScQtCheckList();
-				// checklist.setTitle("Manga");
-				// checklist.setChecklistType("Upload");
-				// checklist.setChecklistType("Upload");
-				// checklist.setDocType("1");
-				// checklist.setEvaluationStage("1");
-				// list.add(checklist);
-				// this.getManagedBean().setScQtCheckSt1techProposal(list);
-
-			}
 		} catch (Exception e) {
 			// e.printStackTrace();
 			throw new IllegalArgumentException();
 		}
 	}
 
-	public void retriveSpecdetails(){
-		IQTSpecSO specSO = BusinessDelegate.getInstance()
-				.getServiceObject("pm", IQTSpecSO.class);
-		SpecificationReqDTO reqDTO=new SpecificationReqDTO();
-		SpecificationResDTO resDTO=new SpecificationResDTO();
-		reqDTO.setQtId(146L);
-		resDTO=specSO.retrieveSpecDetails(reqDTO);
-		//List<ScQ>resDTO.getS1TecResultBean()
-		//this.getManagedBean().setScQtCheckSt1techAdditionalProposalList(resDTO.getS1TecResultBean());
-				
-		
+	public void retriveSpecdetails() {
+		try {
+			IQTSpecSO specSO = BusinessDelegate.getInstance().getServiceObject(
+					"ss", IQTSpecSO.class);
+			SpecificationReqDTO reqDTO = new SpecificationReqDTO();
+			SpecificationResDTO resDTO = null;
+			reqDTO.setQtId(151L);
+			resDTO = specSO.retrieveSpecDetails(reqDTO);
+			if (resDTO.getScQtSpec() == null) {
+
+				getManagedBean().setScQtSpec(new ScQtSpec());
+				//getManagedBean().getScQtSpec().setAwardType("L");
+				getManagedBean().getScQtSpec().setPmCurrency(new PmCurrency());
+				getManagedBean().getScQtSpec().setPmProcurementCategory(
+						new PmProcurementCategory());
+				IQTDetailSO QtDetailsSO = BusinessDelegate.getInstance()
+						.getServiceObject("ss", IQTDetailSO.class);
+				QuationTenderReqDTO tenderReqDTO = new QuationTenderReqDTO();
+				tenderReqDTO.setQtTndrNo("xxx");
+				QuationTenderResDTO tenderResDTO = new QuationTenderResDTO();
+				tenderResDTO = QtDetailsSO.retriveQtByQtNumber(tenderReqDTO);
+				getManagedBean().getScQtSpec().setScQt(
+						tenderResDTO.getQtDetail());
+				getManagedBean().setScQtRemarks(new ScQtRemark());
+				getManagedBean().setScQtChecklist(new ScQtCheckList());
+				getManagedBean().getScQtSpec().setPmStatus(new PmStatus());
+
+			} else {
+				System.out.println("=====S1TecResult===="
+						+ resDTO.getS1TecResultBean().getResultList().size());
+				System.out.println("=====CommMemberResult===="
+						+ resDTO.getCommMemberResultBean().getResultList()
+								.size());
+				getManagedBean().setScQtSpec(resDTO.getScQtSpec());
+				getManagedBean().setScQtCheckSt1techProposal(
+						resDTO.getS1TecResultBean().getResultList());
+				getManagedBean().setScQtCheckSt1techAdditionalProposalList(
+						resDTO.getS1AddTecResultBean().getResultList());
+				getManagedBean().setScQtCheckSt1financeProposalList(
+						resDTO.getS1FinResultBean().getResultList());
+				getManagedBean().setScQtCheckSt1financeAdditionalProposalList(
+						resDTO.getS1AddFinResultBean().getResultList());
+				getManagedBean().setScQtCheckSt2techProposal(
+						resDTO.getS2TecResultBean().getResultList());
+				getManagedBean().setScQtCheckSt2techAdditionalProposalList(
+						resDTO.getS2AddTecResultBean().getResultList());
+				getManagedBean().setScQtCheckSt2financeProposalList(
+						resDTO.getS2AddTecResultBean().getResultList());
+				getManagedBean().setScQtCheckSt2financeAdditionalProposalList(
+						resDTO.getS2AddFinResultBean().getResultList());
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+
 	}
-	
+
 	public void specificAdd() {
 		System.out.println("====enter specification details add method====");
 		try {
-			System.out.println("enter try loop");
 			List<ScQtDeduction> deductionList = getManagedBean()
 					.getScQtDeductionList();
 			if (null == deductionList) {
-				System.out.println("==enter null loop===");
+
 				deductionList = new ArrayList<ScQtDeduction>();
 
 			}
-			/*
-			 * if(deductionList!=null){ for(int i=0;i<deductionList.size();i++){
-			 * ScQtDeduction deduction= deductionList.get(i);
-			 * System.out.println(
-			 * "====add method value==="+deduction.getDeductionType()); } }
-			 */
 			ScQtDeduction deduction = new ScQtDeduction();
-			if (null == deductionList) {
-				deduction.setQtDeductionId(1L);
-
-			}
-			
 			deductionList.add(deduction);
-			// this.getManagedBean().getScQtDeductionList().addAll(c);
 			this.getManagedBean().setScQtDeductionList(deductionList);
 		} catch (Exception e) {
 			System.out.println("===enter catch loop");
@@ -282,6 +272,13 @@ public class SpecificationBackingBean extends
 			throw new IllegalArgumentException();
 		}
 		// return getManagedBean().getScQtDeductionList();
+	}
+
+	public ScQtCheckList createSpecList() {
+		ScQtSpec scQtSpec = getManagedBean().getScQtSpec();
+		ScQtCheckList additionProposalst1 = new ScQtCheckList();
+		additionProposalst1.setScQtSpec(scQtSpec);
+		return additionProposalst1;
 	}
 
 	public void stageOneAdditionalAdd() {
@@ -292,12 +289,12 @@ public class SpecificationBackingBean extends
 
 			if (null == st1additionalList) {
 				st1additionalList = new ArrayList<ScQtCheckList>();
-				// mediumCarsModel = new CarDataModel(st1additionalList);
-
 			}
 
-			ScQtCheckList additionProposalst1 = new ScQtCheckList();
-			additionProposalst1.setQtChecklistId(1L);
+			ScQtCheckList additionProposalst1 = createSpecList();
+			additionProposalst1.setDocType("2");
+			additionProposalst1.setEvaluationStage("1");
+			additionProposalst1.setChecklistType("UP");
 			st1additionalList.add(additionProposalst1);
 			// mediumCarsModel = new CarDataModel(st1additionalList);
 			this.getManagedBean().setScQtCheckSt1techAdditionalProposalList(
@@ -318,8 +315,10 @@ public class SpecificationBackingBean extends
 
 			}
 
-			ScQtCheckList st1financeproposalList1 = new ScQtCheckList();
-			st1financeproposalList1.setQtChecklistId(1L);
+			ScQtCheckList st1financeproposalList1 = createSpecList();
+			st1financeproposalList1.setDocType("3");
+			st1financeproposalList1.setEvaluationStage("1");
+			st1financeproposalList1.setChecklistType("UP");
 			st1financeproposalList.add(st1financeproposalList1);
 			this.getManagedBean().setScQtCheckSt1financeProposalList(
 					st1financeproposalList);
@@ -340,8 +339,10 @@ public class SpecificationBackingBean extends
 
 			}
 
-			ScQtCheckList st1financeAdditionalproposalList1 = new ScQtCheckList();
-			st1financeAdditionalproposalList1.setQtChecklistId(1L);
+			ScQtCheckList st1financeAdditionalproposalList1 = createSpecList();
+			st1financeAdditionalproposalList1.setDocType("4");
+			st1financeAdditionalproposalList1.setEvaluationStage("1");
+			st1financeAdditionalproposalList1.setChecklistType("UP");
 			st1financeAdditionalproposalList
 					.add(st1financeAdditionalproposalList1);
 			this.getManagedBean().setScQtCheckSt1financeAdditionalProposalList(
@@ -362,8 +363,10 @@ public class SpecificationBackingBean extends
 
 			}
 
-			ScQtCheckList additionProposalst2 = new ScQtCheckList();
-			additionProposalst2.setQtChecklistId(1L);
+			ScQtCheckList additionProposalst2 = createSpecList();
+			additionProposalst2.setDocType("2");
+			additionProposalst2.setEvaluationStage("2");
+			additionProposalst2.setChecklistType("UP");
 			st2additionalList.add(additionProposalst2);
 			this.getManagedBean().setScQtCheckSt2techAdditionalProposalList(
 					st2additionalList);
@@ -383,8 +386,9 @@ public class SpecificationBackingBean extends
 
 			}
 
-			ScQtCheckList st2financeproposalList2 = new ScQtCheckList();
-			st2financeproposalList2.setQtChecklistId(1L);
+			ScQtCheckList st2financeproposalList2 = createSpecList();
+			st2financeproposalList2.setDocType("3");
+			st2financeproposalList2.setEvaluationStage("2");
 			st2financeproposalList.add(st2financeproposalList2);
 			this.getManagedBean().setScQtCheckSt2financeProposalList(
 					st2financeproposalList);
@@ -405,8 +409,10 @@ public class SpecificationBackingBean extends
 
 			}
 
-			ScQtCheckList st2financeAdditionalproposalList1 = new ScQtCheckList();
-			st2financeAdditionalproposalList1.setQtChecklistId(1L);
+			ScQtCheckList st2financeAdditionalproposalList1 = createSpecList();
+			st2financeAdditionalproposalList1.setDocType("4");
+			st2financeAdditionalproposalList1.setEvaluationStage("2");
+			st2financeAdditionalproposalList1.setChecklistType("UP");
 			st2financeAdditionalproposalList
 					.add(st2financeAdditionalproposalList1);
 			this.getManagedBean().setScQtCheckSt2financeAdditionalProposalList(
@@ -420,39 +426,21 @@ public class SpecificationBackingBean extends
 	public void stageOneTechProposal() {
 		System.out.println("====enter stage1 tech proposal====");
 		try {
-			/*
-			 * List<String> compilnceList= getManagedBean().getCompilanceList();
-			 * System
-			 * .out.println("========compilance List size in backing bean====="
-			 * +compilnceList.size()); String[] strarray = (String[])
-			 * compilnceList.toArray(new String[0]); String value = "";
-			 * List<ScQtCheckList> compilance = new ArrayList<ScQtCheckList>();
-			 * for (int i = 0; i < strarray.length; i++) { value = strarray[i];
-			 * System
-			 * .out.println("=======display compilance loop values===="+value);
-			 * ScQtCheckList scqtlist=new ScQtCheckList();
-			 * scqtlist.setTitle(value);
-			 * 
-			 * //TabBean mcities1 = getManagedBean().getTabview().get(value);
-			 * 
-			 * compilance.add(scqtlist);
-			 * 
-			 * //getManagedBean().setCompilanceList(compilance);
-			 * getManagedBean().setScQtCheckSt1techProposal(compilance);
-			 */
+
 			List<ScQtCheckList> compilance = new ArrayList<ScQtCheckList>();
 			List<SpecificationCompilanceBean> list = getSelectedCompilenceList();
 			List<SpecificationCompilanceBean> list1 = this.getManagedBean()
 					.getCompilaenceList();
-			System.out.println("======tech one list size====" + list.size());
-			System.out.println("=======compilence bean list one size===="
-					+ list1.size());
 			for (int i = 0; i < list.size(); i++) {
 				SpecificationCompilanceBean bean = list.get(i);
-				ScQtCheckList scqtlist = new ScQtCheckList();
+				ScQtCheckList scqtlist = createSpecList();
+
 				scqtlist.setTitle(bean.getCompilanceTitle());
-				scqtlist.setQtChecklistId(new Long(i));
+				// scqtlist.setQtChecklistId(new Long(i));
 				compilance.add(scqtlist);
+				scqtlist.setDocType("1");
+				scqtlist.setEvaluationStage("1");
+				scqtlist.setChecklistType("UP");
 
 				// getManagedBean().setCompilanceList(compilance);
 				getManagedBean().setScQtCheckSt1techProposal(compilance);
@@ -468,13 +456,7 @@ public class SpecificationBackingBean extends
 	public void stageTwoTechProposal() {
 		System.out.println("====enter stage2 tech proposal====");
 		try {
-			/*
-			 * List<String> compilnceList= getManagedBean().getCompilanceList();
-			 * System
-			 * .out.println("========compilance List size in backing bean====="
-			 * +compilnceList.size()); String[] strarray = (String[])
-			 * compilnceList.toArray(new String[0]); String value = ""
-			 */;
+
 			List<ScQtCheckList> compilance = this.getManagedBean()
 					.getScQtCheckSt2techProposal();
 			if (compilance == null) {
@@ -485,12 +467,9 @@ public class SpecificationBackingBean extends
 
 			scqtlist.setTitle("TemplateTitle");
 			scqtlist.setChecklistType("Technical/Financial/Others");
-
-			// TabBean mcities1 = getManagedBean().getTabview().get(value);
-
+			scqtlist.setDocType("1");
+			scqtlist.setEvaluationStage("2");
 			compilance.add(scqtlist);
-
-			// getManagedBean().setCompilanceList(compilance);
 			getManagedBean().setScQtCheckSt2techProposal(compilance);
 
 		} catch (Exception e) {
@@ -508,15 +487,9 @@ public class SpecificationBackingBean extends
 				st2technicalproposalList = new ArrayList<ScQtCheckList>();
 
 			}
-
-			ScQtCheckList st2technicalproposalList1 = new ScQtCheckList();
-			if (st2technicalproposalList == null) {
-				st2technicalproposalList1.setQtChecklistId(1L);
-			} else {
-
-				st2technicalproposalList1.setQtChecklistId(new Long(
-						st2technicalproposalList.size() + 1));
-			}
+			ScQtCheckList st2technicalproposalList1 = createSpecList();
+			st2technicalproposalList1.setDocType("1");
+			st2technicalproposalList1.setEvaluationStage("2");
 			st2technicalproposalList.add(st2technicalproposalList1);
 			this.getManagedBean().setScQtCheckSt2techProposal(
 					st2technicalproposalList);
@@ -527,23 +500,12 @@ public class SpecificationBackingBean extends
 	}
 
 	public void stageTwotechproposal(AjaxBehaviorEvent e) {
-		System.out.println("=====stage two drop down ====");
+
 		try {
 			String dropdown = (String) e.getComponent().getAttributes()
 					.get("value");
-			System.out.println("=====stage two drop down value====" + dropdown);
 			List<ScQtCheckList> compilance = this.getManagedBean()
 					.getScQtCheckSt2techProposal();
-			/*
-			 * List<ScQtCheckList> compilance =
-			 * this.getManagedBean().getScQtCheckSt2techProposal();
-			 * if(compilance==null){ compilance=new ArrayList<ScQtCheckList>();
-			 * }
-			 * 
-			 * ScQtCheckList scqtlist=new ScQtCheckList();
-			 * scqtlist.setChecklistType(dropdown); compilance.add(scqtlist);
-			 */
-			// this.getManagedBean().setScQtCheckSt2techProposal(compilance);
 
 			setSelctValue(dropdown);
 		} catch (Exception e1) {
@@ -555,26 +517,7 @@ public class SpecificationBackingBean extends
 	public void compilenceList() {
 
 		try {
-			/*
-			 * List<String> compilnceList= getManagedBean().getCompilanceList();
-			 * System
-			 * .out.println("========compilance List size in backing bean====="
-			 * +compilnceList.size()); String[] strarray = (String[])
-			 * compilnceList.toArray(new String[0]); String value = "";
-			 * List<ScQtCheckList> compilance = new ArrayList<ScQtCheckList>();
-			 * for (int i = 0; i < strarray.length; i++) { value = strarray[i];
-			 * System
-			 * .out.println("=======display compilance loop values===="+value);
-			 * ScQtCheckList scqtlist=new ScQtCheckList();
-			 * scqtlist.setTitle(value);
-			 * 
-			 * //TabBean mcities1 = getManagedBean().getTabview().get(value);
-			 * 
-			 * compilance.add(scqtlist);
-			 * 
-			 * //getManagedBean().setCompilanceList(compilance);
-			 * getManagedBean().setScQtCheckSt1techProposal(compilance);
-			 */
+
 			List<SpecificationCompilanceBean> compilaenceList = new ArrayList<SpecificationCompilanceBean>();
 
 			compilaenceList
@@ -651,10 +594,10 @@ public class SpecificationBackingBean extends
 		CurrencyReqDTO reqDTO = new CurrencyReqDTO();
 		CurrencyResDTO resDto = null;
 		try {
-			
+
 			ICurrencySO CurrencySO = BusinessDelegate.getInstance()
 					.getServiceObject("pm", ICurrencySO.class);
-			resDto=CurrencySO.retriveCurrencyList();
+			resDto = CurrencySO.retriveCurrencyList();
 			selectItems.add(new SelectItem(null, "--Select One--"));
 			for (int i = 0; i < resDto.getCurrencyList().size(); i++) {
 				PmCurrency currency = (PmCurrency) resDto.getCurrencyList()
@@ -668,6 +611,48 @@ public class SpecificationBackingBean extends
 		}
 		return getManagedBean().getCurrencyListDetails();
 	}
+	
+/*public void handleFileUpload(FileUploadEvent event) {
+		
+		ScQtCheckList scQtChecklist = this.getManagedBean()
+				.getScQtChecklist();
+
+		UploadedFile file = event.getFile();
+		String fileName = file.getFileName();
+		byte[] fileBytes = file.getContents();
+		FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_INFO,
+				"The file was uploaded successfully.", null);
+		FacesContext.getCurrentInstance().addMessage(null, message);
+
+		Timestamp date = new Timestamp(System.currentTimeMillis());
+		ScQtChecklistAttachment attachment = scQtChecklist
+				.getScQtProposalChecklistAttachment();
+		if (null == attachment) {
+			attachment = new ScQtProposalChecklistAttachment();
+			attachment.setScQtProposalChecklist(scQtProposalChecklist);
+			attachment.setCreatedBy(1L);
+			attachment.setCreatedDate(date);
+			attachment.setChangedBy(1L);
+		}
+
+		attachment.setFileName(fileName);
+		attachment.setFileDesc("File uploded for Fulfilment Req Order");
+		attachment.setFilePath("E:\\upload\\" + fileName);
+
+		FileOutputStream fos;
+		try {
+			fos = new FileOutputStream("E:\\upload\\" + fileName);
+			fos.write(fileBytes);
+			fos.close();
+		} catch (FileNotFoundException e) {
+			e.printStackTrace();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+
+		scQtProposalChecklist.setScQtProposalChecklistAttachment(attachment);
+
+	}*/
 
 	/**
 	 * @return the selctValue
