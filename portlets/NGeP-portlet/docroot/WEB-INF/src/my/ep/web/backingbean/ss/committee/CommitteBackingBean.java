@@ -298,7 +298,7 @@ public class CommitteBackingBean extends
 		IQTDetailSO detailSO = EpEjbBusinessDelegate.getInstance()
 				.getServiceObject(QTConstants.SS_MODULE, IQTDetailSO.class);
 		QuationTenderReqDTO reqDTO = new QuationTenderReqDTO();
-		reqDTO.setQtDetailId(qtId);
+		reqDTO.setQtId(qtId);
 		QuationTenderResDTO tenderResDTO = detailSO.retriveQtById(reqDTO);
 		List<ScQt> qtList = new ArrayList<ScQt>();
 		qtList.add(tenderResDTO.getQtDetail());

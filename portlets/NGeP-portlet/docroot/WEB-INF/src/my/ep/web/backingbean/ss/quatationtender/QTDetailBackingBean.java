@@ -495,7 +495,7 @@ public class QTDetailBackingBean extends
 	public String editAction(ScQt scQt) {
 
 		QuationTenderReqDTO reqDTO = new QuationTenderReqDTO();
-		reqDTO.setQtDetailId(scQt.getQtId());
+		reqDTO.setQtId(scQt.getQtId());
 		QuationTenderResDTO resDTO = detailSO.retriveQtById(reqDTO);
 
 		ScQt selectedScQt = resDTO.getQtDetail();
@@ -763,43 +763,21 @@ public class QTDetailBackingBean extends
 		IQTDetailSO detailSO = EpEjbBusinessDelegate.getInstance()
 				.getServiceObject(QTConstants.SS_MODULE, IQTDetailSO.class);
 		String tabTitle = event.getTab().getTitle();
-		QuationTenderReqDTO dto = new QuationTenderReqDTO();
-		dto.setQtdetail(getManagedBean().getQt());
+		
 		if (QTConstants.QT_APPROVAL_TAB.equalsIgnoreCase(tabTitle)) {
-			this.getManagedBean().setTabList(null);
-
-			QuationTenderResDTO resDTO = detailSO.retriveQTApprovalDetails(dto);
-			if (this.getManagedBean().getTabList() == null) {
-				List<ScQtApproval> requiredApproval = resDTO.getApproval();
-				List<TabBean> tabBeans = new ArrayList<TabBean>();
-
-				if (requiredApproval != null) {
-
-					for (ScQtApproval qtApproval : requiredApproval) {
-						qtApproval.setApprovalType(ApprovalCategory
-								.getDisplayName(qtApproval.getApprovalCategory()));
-						tabBeans.add(new TabBean(qtApproval.getApprovalType(),
-								qtApproval));
-					}
-					this.getManagedBean().setTabList(tabBeans);
-				}
-			}
-
-		} else if (QTConstants.QT_SUPPLIERQULIFICATION_TAB
-				.equalsIgnoreCase(tabTitle)) {
-
-			QuationTenderResDTO resDTO = detailSO
-					.retriveQTSuppQulCriDetails(dto);
+			retrieveApprovalTabDtl();
+		} else if (QTConstants.QT_SUPPLIERQULIFICATION_TAB.equalsIgnoreCase(tabTitle)) {
+			retrieveSuppQualificationTabDtl();
 		} else if (QTConstants.QT_SCHDULE_TAB.equalsIgnoreCase(tabTitle)) {
-			QuationTenderResDTO resDTO = detailSO.retriveQTScheduleDetails(dto);
+			retrieveScheduleTabDtl();
 		} else if (QTConstants.QT_DOCUMENTS_TAB.equalsIgnoreCase(tabTitle)) {
-			QuationTenderResDTO resDTO = detailSO.retriveQTDocDetails(dto);
+			retrieveDocumentTabDtl();
 		} else if (QTConstants.QT_REMARKS_TAB.equalsIgnoreCase(tabTitle)) {
-			QuationTenderResDTO resDTO = detailSO.retriveQtRemarks(dto);
+			retrieveRemarkTabDtl();
 		}
 
 	}
-
+	
 	public void preRenderView() {
 		HttpServletRequest servletRequest = PortalUtil
 				.getHttpServletRequest(new FacesScopes().getRequest());
@@ -829,7 +807,7 @@ public class QTDetailBackingBean extends
 		IQTDetailSO detailSO = EpEjbBusinessDelegate.getInstance()
 				.getServiceObject(QTConstants.SS_MODULE, IQTDetailSO.class);
 		QuationTenderReqDTO tenderReqDTO = new QuationTenderReqDTO();
-		tenderReqDTO.setQtDetailId(new Long(quotationTenderDataType.getQtId())
+		tenderReqDTO.setQtId(new Long(quotationTenderDataType.getQtId())
 				.longValue());
 		QuationTenderResDTO tenderResDTO = detailSO
 				.retriveQTDetails(tenderReqDTO);
@@ -961,7 +939,7 @@ public class QTDetailBackingBean extends
 		IQTDetailSO detailSO = EpEjbBusinessDelegate.getInstance()
 				.getServiceObject(QTConstants.SS_MODULE, IQTDetailSO.class);
 		QuationTenderReqDTO tenderReqDTO = new QuationTenderReqDTO();
-		tenderReqDTO.setQtDetailId(new Long(quotationTenderDataType.getQtId())
+		tenderReqDTO.setQtId(new Long(quotationTenderDataType.getQtId())
 				.longValue());
 		QuationTenderResDTO tenderResDTO = detailSO
 				.retriveQTDetails(tenderReqDTO);
@@ -980,5 +958,68 @@ public class QTDetailBackingBean extends
 	
 	}
 	
+	private void retrieveApprovalTabDtl() {
+		QuationTenderReqDTO reqDTO = new QuationTenderReqDTO();
+		reqDTO.setQtdetail(getManagedBean().getQt());
+		
+		this.getManagedBean().setTabList(null);
 
+		QuationTenderResDTO resDTO = detailSO.retriveQTApprovalDetails(reqDTO);
+		if (this.getManagedBean().getTabList() == null) {
+			List<ScQtApproval> requiredApproval = resDTO.getApproval();
+			List<TabBean> tabBeans = new ArrayList<TabBean>();
+
+			if (requiredApproval != null) {
+
+				for (ScQtApproval qtApproval : requiredApproval) {
+					qtApproval.setApprovalType(ApprovalCategory
+							.getDisplayName(qtApproval.getApprovalCategory()));
+					tabBeans.add(new TabBean(qtApproval.getApprovalType(),
+							qtApproval));
+				}
+				this.getManagedBean().setTabList(tabBeans);
+			}
+		}
+	}
+
+	private void retrieveSuppQualificationTabDtl() {
+		QuationTenderReqDTO reqDTO = new QuationTenderReqDTO();
+		reqDTO.setQtId(getManagedBean().getQt().getQtId());
+		
+		QuationTenderResDTO resDTO = detailSO.retriveQTSuppQulCriDetails(reqDTO);
+		
+		resDTO.getCriteria();
+		resDTO.getStates();
+		resDTO.getCategoryL1();
+	}
+	
+	private void retrieveScheduleTabDtl() {
+		QuationTenderReqDTO reqDTO = new QuationTenderReqDTO();
+		reqDTO.setQtId(getManagedBean().getQt().getQtId());
+		
+		QuationTenderResDTO resDTO = detailSO.retriveQTScheduleDetails(reqDTO);
+		
+		resDTO.getCountries();
+		resDTO.getBriefingResultBean();
+		resDTO.getSiteVisitResultBean();
+		resDTO.getContactPersonResultBean();
+	}
+	
+	private void retrieveDocumentTabDtl() {
+		QuationTenderReqDTO reqDTO = new QuationTenderReqDTO();
+		reqDTO.setQtId(getManagedBean().getQt().getQtId());
+		
+		QuationTenderResDTO resDTO = detailSO.retriveQTDocDetails(reqDTO);
+		
+		getManagedBean().setScQtChecklists(resDTO.getDocumentResultBean().getResultList());
+	}
+	
+	private void retrieveRemarkTabDtl() {
+		QuationTenderReqDTO reqDTO = new QuationTenderReqDTO();
+		reqDTO.setQtId(getManagedBean().getQt().getQtId());
+		
+		QuationTenderResDTO resDTO = detailSO.retriveQtRemarks(reqDTO);
+		
+		resDTO.getRemarkResultBean();
+	}
 }

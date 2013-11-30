@@ -87,7 +87,7 @@ public class BSVAttendanceBackingBean extends
 
 			// getting Briefing Same As Site Visit value
 			QuationTenderReqDTO reqQtDTO = new QuationTenderReqDTO();
-			reqQtDTO.setQtDetailId(146L);
+			reqQtDTO.setQtId(146L);
 
 			QuationTenderResDTO resQtDTO = qtSo.retriveQtById(reqQtDTO);
 
