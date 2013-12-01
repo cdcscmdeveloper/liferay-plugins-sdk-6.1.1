@@ -26,6 +26,7 @@ import my.ep.persistence.entity.pm.common.PmGo;
 import my.ep.persistence.entity.pm.common.PmSo;
 import my.ep.persistence.entity.pm.common.PmState;
 import my.ep.persistence.entity.pm.common.PmZone;
+import my.ep.persistence.entity.pp.procurementplan.PpPlan;
 import my.ep.persistence.entity.sm.SmMofAccount;
 import my.ep.persistence.entity.sm.SmSupplier;
 import my.ep.persistence.entity.ss.quationtender.ScQt;
@@ -73,6 +74,7 @@ public class QTDetailManagedBean extends BaseManagedBean {
 	private ScRemark scRemark;
 	private ScQtCheckList qtCheckList;
 	private ScQtContactPerson qtContactPerson;
+	private PpPlan ppPlan;
 	
 	private String selectedBoolean1;
 	private String multiLoc;
@@ -107,7 +109,7 @@ public class QTDetailManagedBean extends BaseManagedBean {
 	public List<ScQtBriefing> briefings;
 	public List<ScQtBriefing> siteBriefings;
 	public List<ScQtDoc> scQtDocs;
-    public List<SelectItem> cloneAllList;
+    public List<CloneAll> cloneAllList;
     private List<ScQtContactPerson> scQtContactPersons;
     private List<CtCircular> ctCirculars;
     private List<ScQtRemark> scQtRemarks;
@@ -1003,12 +1005,13 @@ public class QTDetailManagedBean extends BaseManagedBean {
 	}
 
 
-	public List<SelectItem> getCloneAllList() {
+
+	public List<CloneAll> getCloneAllList() {
 		return cloneAllList;
 	}
 
 
-	public void setCloneAllList(List<SelectItem> cloneAllList) {
+	public void setCloneAllList(List<CloneAll> cloneAllList) {
 		this.cloneAllList = cloneAllList;
 	}
 
@@ -1133,12 +1136,6 @@ public class QTDetailManagedBean extends BaseManagedBean {
 	}
 
 
-	public void populateCloneAll(){
-		CloneAll [] cloneAllValues=CloneAll.values();
-		Arrays.asList(cloneAllValues);
-	}
-
-
 	public ScQtContactPerson getQtContactPerson() {
 		return qtContactPerson;
 	}
@@ -1219,4 +1216,20 @@ public class QTDetailManagedBean extends BaseManagedBean {
 		this.countries = countries;
 	}
        
+	public void populateCloneAll(){
+		CloneAll [] cloneAllValues=CloneAll.values();
+		Arrays.asList(cloneAllValues);
+	}
+
+
+	public PpPlan getPpPlan() {
+		return ppPlan;
+	}
+
+
+	public void setPpPlan(PpPlan ppPlan) {
+		this.ppPlan = ppPlan;
+	}
+
+   
 }

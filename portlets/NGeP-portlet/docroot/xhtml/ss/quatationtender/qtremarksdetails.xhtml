@@ -14,7 +14,7 @@
 		<tr>
 			<td class="TableFieldLeft" width="24%"><h:outputLabel value="Remark" /></td>
 			<td class="TableFieldRight">
-				<p:dataGrid id="remarklist" value="#{qTRemarksBB.managedBean.scQtRemarks}" var="remarkVar" rowIndexVar="remarkIndex" columns="1" >
+				<p:dataGrid id="remarklist" value="#{qTDetailBB.managedBean.scQtRemarks}" var="remarkVar" rowIndexVar="remarkIndex" columns="1" >
 					<table>
 						<tr>
 							<td rowspan="2" valign="top">
@@ -31,16 +31,15 @@
 						<tr>
 							<td></td>
 							<td>
-								<p:inputTextarea cols="40" value="#{remarkVar.remark}" rendered="#{remarkIndex==0}" /> 
-								<h:outputText value="#{remarkVar.remark}" rendered="#{remarkIndex>0}" style="display: inline-block; width:220px;word-wrap: break-word;" />
-							</td>
+								<p:inputTextarea cols="40" value="#{remarkVar.remark}" /> 
+															</td>
 						</tr>
 					</table>
 				</p:dataGrid>
 			</td>
 		</tr>
 	</table>    				
-<!-- <p:commandButton value="ADD" action="#{qTRemarksBB.addRemarks}" update="@(.remarkslist)" style="float:right;" ></p:commandButton> -->
+
 	</p:panel>	
 	
 

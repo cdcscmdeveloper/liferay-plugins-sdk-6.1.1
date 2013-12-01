@@ -18,19 +18,18 @@
 				value="#{qTDocumentsBB.managedBean.scQtChecklists}"  editable="false" styleClass="documentslist">
 
          <p:column headerText="#{lbl['lbl.so.title']}">  
-                     <p:inputTextarea value="#{qTDocumentsBB.managedBean.scQtDoc.docTitle}"  rows="1" cols="50" 
-                     	disabled="e" />
+                    <h:outputText value="#{document.title}"></h:outputText>
                      	</p:column>
          
           
 					
 
     <p:column headerText="#{lbl['lbl.so.type']}" style="width:35%">
-				<h:outputText value="#{qTDocumentsBB.managedBean.qtCheckList.docType}"></h:outputText>
+				<h:outputText value="#{document.checklistType}"></h:outputText>
 					
 </p:column>
      <p:column headerText="#{lbl['lbl.so.order']}" style="width:35%">
-				<h:inputText value="number" size="2"/>
+				<h:outputText value="#{document.checklistSeq}" size="2"/>
 					
 </p:column>
  <p:column headerText="#{lbl['lbl.so.action']}" style="width:35%"> 
