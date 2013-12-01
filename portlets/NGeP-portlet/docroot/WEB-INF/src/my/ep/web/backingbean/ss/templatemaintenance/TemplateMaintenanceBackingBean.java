@@ -122,6 +122,9 @@ public class TemplateMaintenanceBackingBean extends
 						.setStatus(new PmStatus());
 
 			}
+			if(getManagedBean().getScqtDoc().getScQtZoneCriteria()==null){
+				getManagedBean().getScqtDoc().setScQtZoneCriteria(new ScQtZoneCriteria());
+			}
 			/*
 			 * this.getManagedBean().getScqtDoc().getTplSpecMaster()
 			 * .getProcurementCategory().setCodeId(1L);
@@ -188,7 +191,8 @@ public class TemplateMaintenanceBackingBean extends
 					.setQtNo(scqtDoc.getScQt().getQtNo());
 			System.out.println("====edit specification type==="
 					+ scqtDoc.getTplSpecMaster().getSpecTypeCode().getCodeId());
-			qtTemplateReqDTO.setCheckListType("UP");
+			qtTemplateReqDTO.setQtId(146L);
+			qtTemplateReqDTO.setDocType("1");
 			qtTemplateReqDTO.setSpecMaster(scqtDoc.getTplSpecMaster());
 			qtTemplateReqDTO.setSpecMasterId(scqtDoc.getTplSpecMaster()
 					.getSpecMasterId());
