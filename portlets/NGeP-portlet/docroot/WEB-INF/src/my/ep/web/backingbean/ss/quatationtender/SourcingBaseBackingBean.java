@@ -78,7 +78,7 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 
 		attachment.setFileName(fileName);
 		attachment.setFileDesc("File uploded for Fulfilment Req Order");
-		File theDir = new File("C:\\upload\\");
+		File theDir = new File("\\upload\\");
 
 		// if the directory does not exist, create it
 		if (!theDir.exists()) {

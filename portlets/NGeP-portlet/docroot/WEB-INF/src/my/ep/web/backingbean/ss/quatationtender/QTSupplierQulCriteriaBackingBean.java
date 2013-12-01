@@ -9,6 +9,7 @@ import java.util.List;
 import javax.annotation.PostConstruct;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.RequestScoped;
+import javax.faces.context.FacesContext;
 import javax.faces.event.AjaxBehaviorEvent;
 import javax.faces.event.ValueChangeEvent;
 
@@ -25,8 +26,6 @@ import my.ep.dto.pm.common.categorys.CategorysResDTO;
 import my.ep.dto.pm.common.district.DistrictReqDTO;
 import my.ep.dto.pm.common.district.DistrictResDTO;
 import my.ep.factory.EpLogger;
-import my.ep.persistence.entity.ct.circular.CtCircular;
-import my.ep.persistence.entity.ct.circular.CtCircularVer;
 import my.ep.persistence.entity.ct.circular.panel.CtPanelSupplier;
 import my.ep.persistence.entity.pm.common.PmCategoryL1;
 import my.ep.persistence.entity.pm.common.PmCategoryL2;
@@ -70,10 +69,6 @@ public class QTSupplierQulCriteriaBackingBean extends SourcingBaseBackingBean<QT
 		this.categorysSO=categorysSO;
 		this.getManagedBean().setQtCriteria(new ScQtCriteria());
 		this.getManagedBean().setSearchSupplier(new SmSupplier());
-		
-		CtCircular searchCircular=new CtCircular();
-	     searchCircular.setLatestCircularVer(new CtCircularVer());
-	     this.getManagedBean().setSearchCircular(searchCircular);
 		
 	}
 	
@@ -214,87 +209,55 @@ public class QTSupplierQulCriteriaBackingBean extends SourcingBaseBackingBean<QT
 	 * Method to search the supplier for panel and restricted tender.
 	 */
 	public void searchQtPanelSupplier(){
-		 System.out.println(getManagedBean());
-			List<SmSupplier> panelSuppliers = retriverSuppliersForPanelQT();
-			this.getManagedBean().setPanelSuppliers(panelSuppliers);
+	
+		List<SmSupplier> panelSupplier = retriverSuppliersForPanelQT();
 		
-		//if(!getManagedBean().getPanelSuppliers().isEmpty()){
-		//	getManagedBean().getPanelSuppliers().clear();
-			
-		/*	SmSupplier supp=new SmSupplier();
-			PmOrgProfile org=new PmOrgProfile();
-			org.setOrgName("Sample");
-			supp.setPmOrgProfile(org);
-			
-			List<SmMofAccount> accList=new ArrayList<SmMofAccount>();
-			SmMofAccount mofAcc=new SmMofAccount();
-			mofAcc.setMofNo("123");
-			mofAcc.setExpDate(new Date());
-			
-			supp.setStatusId(1L);
-			
-			accList.add(mofAcc);
-			supp.setSmMofAccounts(accList);
-			
-			getManagedBean().getPanelSuppliers().add(supp);
-			getManagedBean().getPanelSuppliers().addAll(panelSupplier);*/
-			
+		if(!getManagedBean().getPanelSuppliers().isEmpty()){
+			getManagedBean().getPanelSuppliers().clear();
 		}
-		/**
-		 * Method to search the supplier for normal tender
-		 */
-		public void searchNormalQtSupplier(){
+		getManagedBean().getPanelSuppliers().addAll(panelSupplier);
+	}
+	/**
+	 * Method to search the supplier for normal tender
+	 */
+	public void searchNormalQtSupplier(){
+		
+	}
+	private List<SmSupplier> retriverSuppliersForPanelQT(){
+		
+		CircularReqDTO reqDTO = new CircularReqDTO();
+		ISearchBean<CtPanelSupplier> searchBean = new SearchBean<CtPanelSupplier>();
+		
+		SearchFilterBean equalFilterBean = new SearchFilterBean(SearchOperator.OPERATOR_EQUALS.value());
+		SearchFilterBean likeFilterBean = new SearchFilterBean(SearchOperator.OPERATOR_LIKE.value());
 			
+		equalFilterBean.setSearchField("ctCircular.circularNo");
+		equalFilterBean.setSearchValue("PCR_00001");
+		searchBean.getDataFilterBeans().add(equalFilterBean);
+		
+		likeFilterBean.setSearchField("ctPanelSupplierItems.ctPanelItem.itemName");
+		likeFilterBean.setSearchValue("Pen");
+		searchBean.getDataFilterBeans().add(likeFilterBean);
+		
+		equalFilterBean.setSearchField("ctCircular.name");
+		equalFilterBean.setSearchValue("");
+		searchBean.getDataFilterBeans().add(equalFilterBean);
+		
+		equalFilterBean.setSearchField("");
+		equalFilterBean.setSearchValue("");
+		searchBean.getDataFilterBeans().add(equalFilterBean);
+		
+		reqDTO.setSearchBean(searchBean);
+		CircularResDTO resDTO=null;
+		try{
+		ICircularSO circularSO= EpEjbBusinessDelegate.getInstance().getServiceObject("ct",ICircularSO.class);
+		resDTO = circularSO.searchPanelSuppliers(reqDTO);
+		}catch(Exception ex){
+			ex.printStackTrace();
 		}
-		private List<SmSupplier> retriverSuppliersForPanelQT(){
-			
-			CircularReqDTO reqDTO = new CircularReqDTO();
-			SearchBean<CtPanelSupplier> searchBean = new SearchBean<CtPanelSupplier>();
-			searchBean.setNavigatable(false);
-			SearchFilterBean equalFilterBean = new SearchFilterBean(SearchOperator.OPERATOR_EQUALS.value());
-			SearchFilterBean likeFilterBean = new SearchFilterBean(SearchOperator.OPERATOR_LIKE.value());
-		 	if(null!=this.getManagedBean().getSearchCircular().getLatestCircularVer().getCircularNo() && !"".equals(this.getManagedBean().getSearchCircular().getLatestCircularVer().getCircularNo())){
-		 		equalFilterBean.setSearchField("ctCircularVer.circularNo");
-		 		equalFilterBean.setSearchValue(this.getManagedBean().getSearchCircular().getLatestCircularVer().getCircularNo());
-				searchBean.getDataFilterBeans().add(equalFilterBean);
-				
-		 	}
-			
-			
-		 	if(null!=this.getManagedBean().getSearchCircular().getLatestCircularVer().getCircularFileName() && !"".equals(this.getManagedBean().getSearchCircular().getLatestCircularVer().getCircularFileName())){
-		 		equalFilterBean.setSearchField("ctCircularVer.name");
-		 		equalFilterBean.setSearchValue(this.getManagedBean().getSearchCircular().getLatestCircularVer().getCircularFileName());
-				searchBean.getDataFilterBeans().add(equalFilterBean);
-				 	}
-			
-		 	 
-			/*likeFilterBean.setSearchField("ctPanelSupplierItems.ctPanelItem.itemName");
-			likeFilterBean.setSearchValue(this.getManagedBean().getPanelSupplierVO().getItemName());
-			searchBean.getDataFilterBeans().add(likeFilterBean);
-			
-			
-			equalFilterBean.setSearchField("circular coverage");
-			equalFilterBean.setSearchValue(this.getManagedBean().getPanelSupplierVO().getCircularCoverage());
-			searchBean.getDataFilterBeans().add(equalFilterBean);*/
-		 	
-		 	
-		    reqDTO.setSearchBean(searchBean);
-			CircularResDTO resDTO=null;
-			try{
-			ICircularSO circularSO= EpEjbBusinessDelegate.getInstance().getServiceObject("ct",ICircularSO.class);
-			resDTO = circularSO.searchPanelSuppliers(reqDTO);
-			
-			}catch(Exception ex){
-				ex.printStackTrace();
-			}
-			if(null!=resDTO && null!=resDTO.getSupplierList()){
-				return resDTO.getSupplierList();
-			}
-			//resDTO.getSearchResultBean().getResultList();
-			
-			return new ArrayList<SmSupplier>();
-			
-		}
+		return resDTO.getSupplierList();
+		//resDTO.getSearchResultBean().getResultList();
+	}
 	public void addState(){
 		  if(null!=this.getManagedBean().getSelectedPmStateList()){
 			  for(String stateId:this.getManagedBean().getSelectedPmStateList()){
@@ -477,9 +440,9 @@ public class QTSupplierQulCriteriaBackingBean extends SourcingBaseBackingBean<QT
 		System.out.println("====enter process checked===="
 				+ getManagedBean().getSelectedBoolean1());
 		// String dueDate = (String) ((UIOutput)e.getSource()).getValue();
-		Boolean id = (Boolean) e.getComponent().getAttributes().get("value");
+		String id = (String) e.getComponent().getAttributes().get("value");
 		System.out.println("=======get id value=====" + id);
-		//getManagedBean().setSelectedBoolean(id);
+		getManagedBean().setSelectedBoolean1(id);
 
 	}
 	
