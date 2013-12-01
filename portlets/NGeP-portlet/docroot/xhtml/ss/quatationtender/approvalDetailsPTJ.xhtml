@@ -16,13 +16,13 @@
 			<h:panelGroup id="sample2">
 				<p:selectOneMenu
 					value="#{approvalCategory.scQtApproval.approverId}"
-					rendered="#{approvalCategory.scQtApproval.verifyOption eq '1'}">
+					rendered="#{approvalCategory.scQtApproval.verifyOption eq 'O'}">
 					<f:selectItems value="#{qTDetailBB.managedBean.approvers}" var="approver"   itemLabel="#{approver.userName}" itemValue="#{approver.userId}"></f:selectItems>
 				</p:selectOneMenu>
 
 				<p:inputText
 					value="#{approvalCategory.scQtApproval.approverId}"
-					rendered="#{approvalCategory.scQtApproval.verifyOption eq '2'}"></p:inputText>
+					rendered="#{approvalCategory.scQtApproval.verifyOption eq 'F'}"></p:inputText>
 			</h:panelGroup>
 
 			<h:outputLabel value="Approver Date"></h:outputLabel>

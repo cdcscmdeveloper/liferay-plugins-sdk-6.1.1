@@ -28,13 +28,13 @@
 
 			<h:panelGroup id="sample">
 				<p:selectOneMenu value="#{approvalCategory.scQtApproval.verifierId}"
-					rendered="#{approvalCategory.scQtApproval.verifyOption eq '1'}">
+					rendered="#{approvalCategory.scQtApproval.verifyOption eq 'O'}">
 					<f:selectItems value="#{qTDetailBB.managedBean.veryfiers}" var="verifyer"   itemLabel="#{verifyer.userName}" itemValue="#{verifyer.userId}"></f:selectItems>
 				
 				</p:selectOneMenu>
 
 				<p:inputText value="#{approvalCategory.scQtApproval.verifierId}"
-					rendered="#{approvalCategory.scQtApproval.verifyOption eq '2'}"></p:inputText>
+					rendered="#{approvalCategory.scQtApproval.verifyOption eq 'F'}"></p:inputText>
 			</h:panelGroup>
 
 			<h:outputLabel value="Verification Date"></h:outputLabel>

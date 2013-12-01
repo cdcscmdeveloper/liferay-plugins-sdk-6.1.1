@@ -201,17 +201,29 @@
 			<p:inputText
 				value="#{approvalCategory.scQtApproval.approvalLetterNo}"></p:inputText>
 </td>
-<td style="width:40%">
+<td >
 
 			<p:outputLabel value="Standard Document"></p:outputLabel>
 </td>
 <td>
 			<h:panelGroup>
-				<h:panelGrid columns="2">
-					<p:inputText
-						value="#{approvalBackingBean.managedBean.standardDocument}"></p:inputText>
-					<p:commandButton value="UPLOAD"></p:commandButton>
-				</h:panelGrid>
+				
+					
+				
+				<p:commandLink oncomplete="approvalUpload.show();return false;" partialSubmit="true" process="@this">
+					<p:graphicImage library="ep/images/design" name="upload.png"
+						value="/resources/ep/images/design/upload.png" />
+					<f:setPropertyActionListener value="#{approvalCategory.scQtApproval}"
+						target="#{approvalBackingBean.managedBean.scQtApproval}" />
+					<f:setPropertyActionListener value="@(.testClass)"
+						target="#{approvalBackingBean.managedBean.uploadUpdateId}" />
+				</p:commandLink>
+			
+				<p:outputPanel autoUpdate="true">
+				<h:outputText  styleClass="testClass"
+					value="#{approvalCategory.scQtApproval.scQtApprovalAttachment.fileName}"></h:outputText>
+				</p:outputPanel>
+				
 			</h:panelGroup>
 </td>
 </tr>
