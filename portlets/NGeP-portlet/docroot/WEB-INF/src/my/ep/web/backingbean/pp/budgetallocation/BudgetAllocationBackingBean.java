@@ -9,7 +9,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import javax.faces.bean.ManagedBean;
-import javax.faces.bean.RequestScoped;
+import javax.faces.bean.ViewScoped;
 import javax.faces.context.FacesContext;
 import javax.faces.model.SelectItem;
 import javax.servlet.http.HttpServletRequest;
@@ -66,7 +66,7 @@ import org.apache.log4j.MDC;
 import com.liferay.portal.util.PortalUtil;
 
 @ManagedBean(name="budgetAllocationBackingBean")
-@RequestScoped
+@ViewScoped
 public class BudgetAllocationBackingBean extends BaseBackingBean<BudgetAllocationManagedBean>{
 	private static Logger log = Logger.getLogger(BudgetAllocationBackingBean.class);
 //	private final static Long USER_ID_MIN = 3L; //TEMP

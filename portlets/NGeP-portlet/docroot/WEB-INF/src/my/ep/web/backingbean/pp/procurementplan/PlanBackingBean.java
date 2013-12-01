@@ -11,7 +11,7 @@ import java.util.Date;
 import java.util.List;
 
 import javax.faces.bean.ManagedBean;
-import javax.faces.bean.RequestScoped;
+import javax.faces.bean.ViewScoped;
 import javax.faces.context.FacesContext;
 import javax.faces.event.AjaxBehaviorEvent;
 import javax.faces.model.SelectItem;
@@ -19,7 +19,6 @@ import javax.servlet.http.HttpServletRequest;
 
 import my.ep.biz.bean.search.ISearchBean;
 import my.ep.biz.bean.search.ISearchResultBean;
-import my.ep.biz.bean.search.SearchBean;
 import my.ep.biz.bean.search.SearchBetweenValue;
 import my.ep.biz.bean.search.SearchFilterBean;
 import my.ep.biz.service.cm.codification.ICodificationSO;
@@ -107,7 +106,7 @@ import org.primefaces.event.TabChangeEvent;
 import com.liferay.portal.util.PortalUtil;
 
 @ManagedBean(name="planBackingBean")
-@RequestScoped
+@ViewScoped
 public class PlanBackingBean extends BaseBackingBean<PlanManagedBean>{
 	private static Logger log = Logger.getLogger(PlanBackingBean.class);
 //	private final static Long USER_ID_PTJ= 4L; //TEMP
@@ -146,9 +145,8 @@ public class PlanBackingBean extends BaseBackingBean<PlanManagedBean>{
 	 * get search bean 
 	 * @return ISearchBean<PpPlan>
 	 */
-	private ISearchBean<PpPlan> getSearchBean(){
+	private ISearchBean<PpPlan> getSearchBean(ISearchBean<PpPlan> searchBean){
 		log.info("getSearchBean - Start");
-		ISearchBean<PpPlan> searchBean = new SearchBean<PpPlan>();
 		ProcurementPlanSearchBean ppSearchBean = this.getManagedBean().getPpSearchPlan();
 		
 		//filter by profile
@@ -2524,7 +2522,7 @@ public class PlanBackingBean extends BaseBackingBean<PlanManagedBean>{
 			try {				
 				
 				
-				ISearchBean<PpPlan> searchBeanData = getSearchBean();
+				ISearchBean<PpPlan> searchBeanData = getSearchBean(searchBean);
 				IProcurementPlanSO procurementPlanSO = (IProcurementPlanSO) BusinessDelegate.getInstance().getServiceObject(ProcurementPlanConst.SO_PP, IProcurementPlanSO.class);
 				ProcurementPlanReqDTO reqDTO = new ProcurementPlanReqDTO();
 				reqDTO.setSearchBean(searchBeanData);
