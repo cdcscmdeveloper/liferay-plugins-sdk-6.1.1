@@ -100,7 +100,7 @@
 						</td>
 					<td>
 						<p:selectOneMenu id="zone"
-							value="#{TemplateMBB.managedBean.scqtDoc.qtZoneCriteriaId}">
+							value="#{TemplateMBB.managedBean.scqtDoc.scQtZoneCriteria.qtZoneCriteriaId}">
 								<f:selectItem itemLabel="Select One" itemValue="0" />
 							<f:selectItems
 								value="#{TemplateMBB.managedBean.zoneList}" />
@@ -134,6 +134,21 @@
 						</p:selectOneRadio>
 					</td>
 					</tr>
+					<tr>
+					<td  class="TableFieldLeft">
+			<h:outputLabel value="Record Status"></h:outputLabel>
+
+</td>
+<td class="TableFieldRight">
+
+			
+				<p:selectOneMenu value="#{TemplateMBB.managedBean.scqtDoc.recordStatus}" >
+							
+							<f:selectItem itemLabel="Active" itemValue="1"/>
+							<f:selectItem itemLabel="Inactive" itemValue="0"/>
+						</p:selectOneMenu>
+</td>
+</tr>
 					</table>
 
 

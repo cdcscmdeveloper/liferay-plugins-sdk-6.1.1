@@ -106,6 +106,32 @@
 						</p:selectOneMenu>
 </td>
 </tr>
+<tr>
+
+<td class="TableFieldLeft">
+			<h:outputLabel value="Status"></h:outputLabel>
+</td>
+		<td class="TableFieldRight">
+				<p:selectOneMenu value="#{TemplateMBB.managedBean.scqtDoc.tplSpecMaster.status.statusId}" >
+							<f:selectItem itemLabel="Select One" itemValue=""/>
+							<f:selectItem itemLabel="Pending" itemValue="0"/>
+							<f:selectItem itemLabel="Complete" itemValue="1"/>
+						</p:selectOneMenu>
+</td>
+<td  class="TableFieldLeft">
+			<h:outputLabel value="Record Status"></h:outputLabel>
+
+</td>
+<td class="TableFieldRight">
+
+			
+				<p:selectOneMenu value="#{TemplateMBB.managedBean.scqtDoc.recordStatus}" >
+							<f:selectItem itemLabel="Select One" itemValue="-"/>
+							<f:selectItem itemLabel="Active" itemValue="1"/>
+							<f:selectItem itemLabel="Inactive" itemValue="0"/>
+						</p:selectOneMenu>
+</td>
+</tr>
 </table>
 		
 		<div align="right">
