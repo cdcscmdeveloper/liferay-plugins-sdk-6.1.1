@@ -7,6 +7,7 @@ import my.ep.biz.service.ss.quationtender.IQTDetailSO;
 import my.ep.factory.EpLogger;
 import my.ep.persistence.entity.ss.quationtender.ScQtCheckList;
 import my.ep.persistence.entity.ss.quationtender.ScQtDoc;
+import my.ep.web.backingbean.BaseBackingBean;
 import my.ep.web.managedbean.ss.quationtender.QTDetailManagedBean;
 import my.ep.web.util.lookupservice.BusinessDelegate;
 
@@ -17,7 +18,7 @@ import org.apache.log4j.Logger;
  */
 @ManagedBean(name="qTDocumentsBB")
 @RequestScoped
-public class QTDocumentsBackingBean extends SourcingBaseBackingBean<QTDetailManagedBean> {
+public class QTDocumentsBackingBean extends BaseBackingBean<QTDetailManagedBean> {
 	private static final Logger log=EpLogger.getLogger(QTDocumentsBackingBean.class);
 	
 	private static final String MODULE_NAME = "ss";
