@@ -3,25 +3,25 @@
  */
 package my.ep.web.backingbean.ss.approval;
 
+import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.RequestScoped;
+import javax.faces.context.FacesContext;
 import javax.faces.event.AjaxBehaviorEvent;
 import javax.faces.model.SelectItem;
 
-import my.ep.biz.service.ss.quationtender.IQTDetailSO;
-import my.ep.dto.ss.quationtender.QuationTenderReqDTO;
-import my.ep.dto.ss.quationtender.QuationTenderResDTO;
 import my.ep.persistence.entity.ss.quationtender.ScQtApproval;
+import my.ep.persistence.entity.ss.quationtender.ScQtApprovalAttachment;
 import my.ep.type.ss.ApprovalCategory;
-import my.ep.util.lookupservice.EpEjbBusinessDelegate;
-import my.ep.web.backingbean.BaseBackingBean;
+import my.ep.web.backingbean.ss.quatationtender.SourcingBaseBackingBean;
 import my.ep.web.bean.ss.quatationtender.TabBean;
 import my.ep.web.managedbean.ss.quationtender.QTDetailManagedBean;
-import my.ep.web.ss.quationtender.common.QTConstants;
 
+import org.primefaces.event.FileUploadEvent;
 import org.primefaces.event.TabChangeEvent;
 
 /**
@@ -31,9 +31,10 @@ import org.primefaces.event.TabChangeEvent;
 @ManagedBean(name = "approvalBackingBean")
 @RequestScoped
 public class ApprovalBackingBean extends
-		BaseBackingBean<QTDetailManagedBean> {
+SourcingBaseBackingBean<QTDetailManagedBean> {
 
 	private int activeApprovalTab;
+	public String uploadAction;
 
 	private String activeTabName;
 
@@ -116,7 +117,47 @@ public class ApprovalBackingBean extends
 		this.activeTabName = activeTabName;
 	}
 
-	
+	public void handleFileUpload(FileUploadEvent event) {
+
+		ScQtApproval scQtApproval =this.getManagedBean().getScQtApproval();
+
+		String uploadActionName = (String)event.getComponent().getAttributes().get("uploadAction");
+		System.out.println("=============display uplaod event name====="+uploadActionName);
+		System.out.println("getUploadUpdateId: " +getManagedBean().getUploadUpdateId());
+		FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_INFO,
+				"The file was uploaded successfully.", null);
+		FacesContext.getCurrentInstance().addMessage(null, message);
+
+		Timestamp date = new Timestamp(System.currentTimeMillis());
+		ScQtApprovalAttachment attachment =scQtApproval.getScQtApprovalAttachment();
+				
+		if (null == attachment) {
+			attachment = new ScQtApprovalAttachment();
+			attachment.setScQtApproval(scQtApproval);
+			
+		}
+		uploadAttachment(event.getFile(), attachment);
+		setUploadAction(uploadActionName);
+
+		scQtApproval.setScQtApprovalAttachment(attachment);
+		System.out.println("===scQtApproval size====="
+				+ scQtApproval.getScQtApprovalAttachment().getFileName());
+
+	}
+
+	/**
+	 * @return the uploadAction
+	 */
+	public String getUploadAction() {
+		return uploadAction;
+	}
+
+	/**
+	 * @param uploadAction the uploadAction to set
+	 */
+	public void setUploadAction(String uploadAction) {
+		this.uploadAction = uploadAction;
+	}
 	
 	
 }
