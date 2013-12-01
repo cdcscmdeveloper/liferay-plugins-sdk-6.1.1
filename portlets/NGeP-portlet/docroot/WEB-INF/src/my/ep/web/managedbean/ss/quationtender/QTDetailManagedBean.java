@@ -30,6 +30,7 @@ import my.ep.persistence.entity.pp.procurementplan.PpPlan;
 import my.ep.persistence.entity.sm.SmMofAccount;
 import my.ep.persistence.entity.sm.SmSupplier;
 import my.ep.persistence.entity.ss.quationtender.ScQt;
+import my.ep.persistence.entity.ss.quationtender.ScQtApproval;
 import my.ep.persistence.entity.ss.quationtender.ScQtBriefing;
 import my.ep.persistence.entity.ss.quationtender.ScQtCategory;
 import my.ep.persistence.entity.ss.quationtender.ScQtCheckList;
@@ -176,6 +177,8 @@ public class QTDetailManagedBean extends BaseManagedBean {
 	private List<PmUser> bbkApprovers;
 	private String outCome;
 	private String processName;
+	private ScQtApproval scQtApproval;
+	private String uploadUpdateId;
 	//Payload for BPM
 		private SCQuotationTenderDataType quotationTenderDataType;
 	
@@ -1229,6 +1232,38 @@ public class QTDetailManagedBean extends BaseManagedBean {
 
 	public void setPpPlan(PpPlan ppPlan) {
 		this.ppPlan = ppPlan;
+	}
+
+
+	/**
+	 * @return the scQtApproval
+	 */
+	public ScQtApproval getScQtApproval() {
+		return scQtApproval;
+	}
+
+
+	/**
+	 * @param scQtApproval the scQtApproval to set
+	 */
+	public void setScQtApproval(ScQtApproval scQtApproval) {
+		this.scQtApproval = scQtApproval;
+	}
+
+
+	/**
+	 * @return the uploadUpdateId
+	 */
+	public String getUploadUpdateId() {
+		return uploadUpdateId;
+	}
+
+
+	/**
+	 * @param uploadUpdateId the uploadUpdateId to set
+	 */
+	public void setUploadUpdateId(String uploadUpdateId) {
+		this.uploadUpdateId = uploadUpdateId;
 	}
 
    
