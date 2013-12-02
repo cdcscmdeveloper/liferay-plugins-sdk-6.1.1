@@ -4141,12 +4141,12 @@ label > span.ui-button-text {
 }
 
 .ui-selectlistbox-item {
-	margin:0 0 0 0;
-	padding-left: 2px 0 2px 5px;
+	margin:0 0 0 0 !important;
+	padding: 2px 0 2px 5px;
 }
 
 .ui-selectlistbox-item.ui-state-hover {
-	background: #97d832;
+	background: #97D832;
 	box-shadow: none;
 	border-radius: 0;
 	color: #FFFFFF;
