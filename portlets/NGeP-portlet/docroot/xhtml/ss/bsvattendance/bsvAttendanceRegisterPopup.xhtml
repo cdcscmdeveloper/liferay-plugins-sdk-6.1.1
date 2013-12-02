@@ -30,13 +30,13 @@
 			</p:column>
 
 			<p:column headerText="#{lbl['lbl.sc.bsv.attendance.supp.name']}">
-				<p:selectOneMenu rendered="#{scQtBriefReg.brandNew}"
+				<p:selectOneMenu rendered="#{!scQtBriefReg.brandNew}"
             			value="#{scQtBriefReg.smSupplier.supplierId}" >
             			<f:selectItems value="#{bsvAttendanceBackingBean.managedBean.smSuppliers}"
             				var="smSup" itemLabel="#{smSup.supplierName}" itemValue="#{smSup.supplierId}" />
 	            </p:selectOneMenu>
 	            
-	             <p:inputText value="#{scQtBriefReg.smSupplier.supplierName}" disabled="true" rendered="#{!scQtBriefReg.brandNew}"
+	             <p:inputText value="#{scQtBriefReg.smSupplier.supplierName}" disabled="true" rendered="#{scQtBriefReg.brandNew}"
             			size="35" />
 			</p:column>
 
