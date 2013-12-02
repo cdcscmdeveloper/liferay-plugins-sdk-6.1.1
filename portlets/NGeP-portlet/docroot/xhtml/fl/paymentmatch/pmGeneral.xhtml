@@ -7,88 +7,86 @@
 	xmlns:ac="http://ac.my/jsf/composite/cc">
 
 	<p:panel header="FULFILMENT DETAIL" toggleable="true">
-		<table>
+		<table style="width: 100%">
 			<tr>
 				<td><p:outputLabel value="Ministry" /></td>
-				<td><p:inputText style="width: 260px;"
+				<td><p:inputText size="35"
 						value="KEMENTERIAN KEWANGAN" disabled="true" /></td>
 				<td><p:outputLabel value="Contract No." /></td>
-				<td><p:inputText style="width: 120px;"
+				<td><p:inputText size="20"
 						value="#{paymentMatchBackingBean.managedBean.paymentAdvice.flInvoice.flFulfilmentOrder.flFulfilmentRequest.ctContract.contractValue.contractNo}"
 						disabled="true" /></td>
 			</tr>
 			<tr>
 				<td><p:outputLabel value="Jabatan" /></td>
-				<td><p:inputText style="width: 260px;"
+				<td><p:inputText size="35"
 						value="JABATAN KASTAM DAN EKSAIS DIRAJA" disabled="true" /></td>
 				<td><p:outputLabel value="Order No." /></td>
-				<td><p:inputText disabled="true" style="width: 120px;" value="" /></td>
+				<td><p:inputText disabled="true" size="20" value="" /></td>
 			</tr>
 			<tr>
 				<td><p:outputLabel value="Issued PTJ" /></td>
-				<td><p:inputText style="width: 260px;"
+				<td><p:inputText size="35"
 						value="IBU PEJABAT KASTAM" disabled="true" /></td>
 				<td><p:outputLabel value="Order Amt." /></td>
-				<td><p:inputText disabled="true" style="width: 120px;"
+				<td><p:inputText disabled="true" size="20"
 						value=" " /><p:spacer width="5"/>
 				<p:inputText disabled="true" style="width: 15px;" value="MYR" /></td>
 			</tr>
 			<tr>
 				<td><p:outputLabel value="Received PTJ" /></td>
-				<td><p:inputText style="width: 260px;"
+				<td><p:inputText size="35"
 						value="IBU PEJABAT KASTAM" disabled="true" /></td>
 				<td><p:outputLabel value="Stop Fulfilment No" /></td>
-				<td><p:inputText disabled="true" style="width: 120px;"
+				<td><p:inputText disabled="true" size="20"
 						value=" " /></td>
 			</tr>
 			<tr>
 				<td><p:outputLabel value="Charge PTJ" /></td>
-				<td><p:inputText style="width: 260px;" disabled="true"
+				<td><p:inputText size="35" disabled="true"
 						value="IBU PEJABAT KASTAM (RECEIVING PTJ)" /></td>
 				<td><p:outputLabel value="Stop Fulfilment Amt." /></td>
-				<td><p:inputText disabled="true" style="width: 120px;" value="" />
+				<td><p:inputText disabled="true" size="20" value="" />
 				<p:spacer width="5"/>
 				<p:inputText disabled="true" style="width: 20px;" value="MYR" /></td>
 			</tr>
 			<tr>
 				<td><p:outputLabel value="Maksud Code" /></td>
-				<td><p:inputText style="width: 120px;" disabled="true" value="" /></td>
+				<td><p:inputText size="20" disabled="true" value="" /></td>
 				<td><p:outputLabel value="Invoice Amt." /></td>
-				<td><p:inputText disabled="true" style="width: 120px;" value="" /><p:spacer width="5"/>
-				<p:inputText disabled="true" style="width: 10px;" value="MYR" /></td>
+				<td><p:inputText disabled="true" size="20" value="" /><p:spacer width="5"/>
+				<p:inputText disabled="true" style="width: 20px;" value="MYR" /></td>
 			</tr>
 			<tr>
-				<td rowspan="4" valign="top"><p:outputLabel value="Title" /></td>
-				<td rowspan="4"><p:inputTextarea rows="8" value="#{paymentMatchBackingBean.managedBean.paymentAdvice.flInvoice.flFulfilmentOrder.flFulfilmentRequest.title}"
-						style="width: 260px;margin-bottom:5px;" disabled="true" /></td>
+				<td rowspan="2" valign="top"><p:outputLabel value="Title" /></td>
+				<td rowspan="2"><p:inputTextarea  value="#{paymentMatchBackingBean.managedBean.paymentAdvice.flInvoice.flFulfilmentOrder.flFulfilmentRequest.title}"
+						cols="36" style="margin-bottom:5px;" disabled="true" /></td>
 				<td><p:outputLabel value="Supp. Invoice No." /></td>
-				<td><p:inputText disabled="true" style="width: 120px;" value="" /></td>
+				<td><p:inputText disabled="true" size="20" value="" /></td>
 			</tr>
 			<tr>
 				<td><p:outputLabel value="Invoice Amt." /></td>
-				<td><p:inputText disabled="true" style="width: 120px;" value="" /><p:spacer width="5"/>
-				<p:inputText disabled="true" style="width: 25px;" value="MYR" /></td>
+				<td><p:inputText disabled="true" size="20" value="" /><p:spacer width="5"/>
+				<p:inputText disabled="true" style="width: 20px;" value="MYR" /></td>
 			</tr>
 			<tr>
 				<td><p:outputLabel value="CAN No." /></td>
-				<td><p:inputText disabled="true" style="width: 120px;" value="" /></td>
-			</tr>
-			<tr>
+				<td><p:inputText disabled="true" size="20" value="" /></td>
 				<td><p:outputLabel value="CAN Amt." /></td>
-				<td><p:inputText disabled="true" style="width: 120px;" value="" /><p:spacer width="5"/>
-				<p:inputText disabled="true" style="width: 25px;" value="MYR" /></td>
+				<td><p:inputText disabled="true" size="20" value="" /><p:spacer width="5"/>
+				<p:inputText disabled="true" style="width: 20px;" value="MYR" /></td>
 			</tr>
 			<tr>
-				<td rowspan="4" valign="top"><p:outputLabel
+				<td rowspan="2" valign="top"><p:outputLabel
 						value="Payment Description" /></td>
-				<td rowspan="4"><p:inputTextarea rows="8" style="width: 260px;" /></td>
+				<td rowspan="2"><p:inputTextarea  cols="36" /></td>
 				<td><p:outputLabel value="DAN No." /></td>
-				<td><p:inputText disabled="true" style="width: 120px;" value="" /></td>
+				<td><p:inputText disabled="true" size="20" value="" /></td>
 			</tr>
 			<tr>
 				<td><p:outputLabel value="DAN Amt." /></td>
-				<td><p:inputText disabled="true" style="width: 120px;" value="" /><p:spacer width="5"/>
-				<p:inputText disabled="true" style="width: 25px;" value="MYR" /></td>
+				<td><p:inputText disabled="true" size="20" value="" /><p:spacer width="5"/>
+				<p:inputText disabled="true" style="width: 20px;" value="MYR" /></td>
 			</tr>
 		</table>
 	</p:panel>
@@ -109,35 +107,35 @@
 		</p:dataTable>
 	</p:panel>
 	<p:panel header="SUPPLIER DETAIL" toggleable="true">
-		<table>
+		<table style="width: 100%">
 			<tr>
-				<td><p:outputLabel value="EP No." /></td>
+				<td style="width: 135px;"><p:outputLabel value="EP No." /></td>
 				<td><table style="width: 100%">
 						<tr>
-							<td><p:inputText size="5" disabled="true" /></td>
-							<td><p:outputLabel value="MOF No." /></td>
-							<td><p:inputText size="15" disabled="true" /></td>
+							<td style="width: 25px;"> <p:inputText size="5" disabled="true" /></td>
+							<td style="width: 65px;"><p:outputLabel value="MOF No." /></td>
+							<td  ><p:inputText size="10" disabled="true" /></td>
 						</tr>
 					</table></td>
 			</tr>
 			<tr>
 				<td><p:outputLabel value="Supplier Name" /></td>
-				<td><p:inputText disabled="true" style="width: 260px;"
+				<td><p:inputText disabled="true" size="35"
 						value="001" /></td>
 			</tr>
 			<tr>
 				<td><p:outputLabel value="Address" /></td>
-				<td><p:inputTextarea rows="8" style="width: 260px;"
+				<td><p:inputTextarea  cols="36"
 						disabled="true" /></td>
 			</tr>
 			<tr>
 				<td><p:outputLabel value="Tel No." /></td>
-				<td><p:inputText disabled="true" style="width: 120px;"
+				<td><p:inputText disabled="true" size="20"
 						value="02-7324800" /></td>
 			</tr>
 			<tr>
 				<td><p:outputLabel value="Email" /></td>
-				<td><p:inputText disabled="true" style="width: 260px;"
+				<td><p:inputText disabled="true" size="35"
 						value="KBB.XY@gmail.com" /></td>
 			</tr>
 		</table>

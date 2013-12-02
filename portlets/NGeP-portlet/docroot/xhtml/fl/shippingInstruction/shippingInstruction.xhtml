@@ -23,43 +23,43 @@
 			</tr>
 		</table>
 		<p:panel header="GENERAL INFORMATION" toggleable="true">
-			<table>
+			<table style="width: 100%">
 				<tr>
 					<td>
 						<table>
 							<tr>
-								<td><p:outputLabel value="SI No." /></td>
+								<td style="width: 43%"><p:outputLabel value="SI No." /></td>
 								<td><table style="width: 100%">
 										<tr>
-											<td><p:inputText size="15" disabled="true"
+											<td><p:inputText size="7" disabled="true"
 													value="#{shipInstrBackingBean.managedBean.shippingInstr.shippingInstrNo}" /></td>
 											<td><p:outputLabel value="No. of SI Issued" /></td>
-											<td><p:inputText size="5" disabled="true" /></td>
+											<td><p:inputText size="4" disabled="true" /></td>
 										</tr>
 									</table></td>
 							</tr>
 							<tr>
 								<td><p:outputLabel value="SI Creation Date" /></td>
-								<td><p:inputText style="width: 120px;"
+								<td><p:inputText size="20"
 										value="12/10/2012 10:45 AM" disabled="true" /></td>
 							</tr>
 							<tr>
 								<td><p:outputLabel value="Name" /></td>
-								<td><p:inputText style="width: 260px;" value="PTJ NAME"
+								<td><p:inputText size="35" value="PTJ NAME"
 										disabled="true" /></td>
 							</tr>
 							<tr>
 								<td><p:outputLabel value="Address" /></td>
-								<td><p:inputText style="width: 260px; height:90px; "
+								<td><p:inputText size="35" 
 										value="PTJ ADDRESS" disabled="true" /></td>
 							</tr>
 							<tr>
 								<td><p:outputLabel value="Contact Person" /></td>
-								<td><p:inputText style="width: 260px;" value="" /></td>
+								<td><p:inputText size="35" value="" /></td>
 							</tr>
 							<tr>
 								<td><p:outputLabel value="Contact No." /></td>
-								<td><p:inputText style="width: 120px; " value="" /></td>
+								<td><p:inputText size="20" value="" /></td>
 							</tr>
 						</table>
 					</td>
@@ -67,39 +67,39 @@
 						<table>
 							<tr>
 								<td><p:outputLabel value="MTO Contr. No." /></td>
-								<td><p:inputText disabled="true" style="width: 120px;"
+								<td><p:inputText disabled="true" size="20"
 										value="#{shipInstrBackingBean.managedBean.shippingInstr.flFulfilmentRequest.ctContract.contractName}" /></td>
 							</tr>
 							<tr>
 								<td><p:outputLabel value="Main Contr. No." /></td>
-								<td><p:inputText disabled="true" style="width: 120px;"
+								<td><p:inputText disabled="true" size="20"
 										value="#{shipInstrBackingBean.managedBean.shippingInstr.flFulfilmentRequest.ctContract.parentContract.contractName}" /></td>
 							</tr>
 							<tr>
 								<td><p:outputLabel value="MTO Contr. Order No." /></td>
-								<td><p:inputText disabled="true" style="width: 120px;"
+								<td><p:inputText disabled="true" size="20"
 										value="" /></td>
 							</tr>
 							<tr>
 								<td><p:outputLabel value="MTO Contr. Order Amt." /></td>
-								<td><p:inputText disabled="true" style="width: 120px;"
+								<td><p:inputText disabled="true" size="20"
 										value="" /><p:spacer width="5"/>
 				<p:inputText disabled="true" style="width: 25px;" value="USD" /></td>
 							</tr>
 							<tr>
 								<td><p:outputLabel value="Main Contr. Order No." /></td>
-								<td><p:inputText disabled="true" style="width: 120px;"
+								<td><p:inputText disabled="true" size="20"
 										value="" /></td>
 							</tr>
 							<tr>
 								<td><p:outputLabel value="Main Contr. Order Amt." /></td>
-								<td><p:inputText style="width: 120px;" value=" "
+								<td><p:inputText size="20" value=" "
 										disabled="true" /><p:spacer width="5"/>
 				<p:inputText disabled="true" style="width: 25px;" value="USD" /></td>
 							</tr>
 							<tr>
 								<td><p:outputLabel value="Payment Term" /></td>
-								<td><p:inputText style="width: 260px;" value=" "
+								<td><p:inputText size="35" value=" "
 										disabled="true" /></td>
 							</tr>
 						</table>
@@ -108,45 +108,45 @@
 			</table>
 		</p:panel>
 		<p:panel header="ROUTE AND OVERSEA AGENT" toggleable="true">
-			<table>
+			<table style="width: 100%">
 				<tr>
 					<td><p:outputLabel value="Country of Origin" /></td>
-					<td><p:inputText disabled="true" style="width: 260px;"
+					<td><p:inputText disabled="true" size="35"
 							value=" " /></td>
 					<td><p:outputLabel value="Comp. Name" /></td>
-					<td><p:inputText disabled="true" style="width: 260px;"
+					<td><p:inputText disabled="true" size="35"
 							value="" /></td>
 				</tr>
 				<tr>
 					<td><p:outputLabel value="Port of Loading" /></td>
-					<td><p:inputText disabled="true" style="width: 260px;"
+					<td><p:inputText disabled="true" size="35"
 							value="" /></td>
 					<td><p:outputLabel value="Contact Person" /></td>
-					<td><p:inputText disabled="true" style="width: 120px;"
+					<td><p:inputText disabled="true" size="20"
 							value="" /></td>
 				</tr>
 				<tr>
 					<td><p:outputLabel value="Port of Discharge" /></td>
-					<td><p:inputText disabled="true" style="width: 260px;"
+					<td><p:inputText disabled="true" size="35"
 							value="#{shipInstrBackingBean.managedBean.shippingInstr.portDischarge}" /></td>
 					<td><p:outputLabel value="Contact No." /></td>
-					<td><p:inputText style="width: 120px; " value=""
+					<td><p:inputText size="20" value=""
 							disabled="true" /></td>
 				</tr>
 				<tr>
 					<td><p:outputLabel value="Final Dest. Address" /></td>
-					<td><p:inputText style="width: 260px; height:90px; "
+					<td><p:inputText size="35" 
 							value="PTJ ADDRESS " disabled="true" /></td>
 				</tr>
 				<tr>
 					<td><p:outputLabel value="Transport Mode" /></td>
-					<td><p:inputText disabled="true" style="width: 260px;"
+					<td><p:inputText disabled="true" size="35"
 							value="" /></td>
 				</tr>
 			</table>
 		</p:panel>
 		<p:panel header="SUPPLIER DETAIL" toggleable="true">
-			<table>
+			<table style="width: 100%">
 				<tr>
 					<td><p:separator id="customSeparator1"
 							style="width:40px;height:0px" /></td>
@@ -159,68 +159,68 @@
 					<td><p:separator id="customSeparator3"
 							style="width:100px;height:0px" /></td>
 				</tr>
-			</table>
-			<table>
+			</table >
+			<table style="width: 100%">
 				<tr>
-					<td><p:outputLabel value="EP No." /></td>
+					<td style="width: 159px;"><p:outputLabel value="EP No." /></td>
 					<td><table style="width: 100%">
 							<tr>
-								<td><p:inputText size="5" disabled="true" /></td>
-								<td><p:outputLabel value="MOF No." /></td>
-								<td><p:inputText size="15" disabled="true" /></td>
-							</tr>
+							<td style="width: 25px;"> <p:inputText size="5" disabled="true" /></td>
+							<td style="width: 65px;"><p:outputLabel value="MOF No." /></td>
+							<td  ><p:inputText size="10" disabled="true" /></td>
+						</tr>
 						</table></td>
-					<td><p:outputLabel value="EP No." /></td>
+					<td style="width: 135px;"><p:outputLabel value="EP No." /></td>
 					<td><table style="width: 100%">
 							<tr>
-								<td><p:inputText size="5" disabled="true" /></td>
-								<td><p:outputLabel value="MOF No." /></td>
-								<td><p:inputText size="15" disabled="true" /></td>
-							</tr>
+							<td style="width: 25px;"> <p:inputText size="5" disabled="true" /></td>
+							<td style="width: 65px;"><p:outputLabel value="MOF No." /></td>
+							<td  ><p:inputText size="10" disabled="true" /></td>
+						</tr>
 						</table></td>
 				</tr>
 				<tr>
 					<td><p:outputLabel value="Supplier Name" /></td>
-					<td><p:inputText style="width: 260px;" value="KBB SDN BHD"
+					<td><p:inputText size="35" value="KBB SDN BHD"
 							disabled="true" /></td>
 					<td><p:outputLabel value="Supplier Name" /></td>
-					<td><p:inputText style="width: 260px;" value="KBB SDN BHD"
+					<td><p:inputText size="35" value="KBB SDN BHD"
 							disabled="true" /></td>
 				</tr>
 				<tr>
 					<td><p:outputLabel value="Address" /></td>
-					<td><p:inputText style="width: 260px; height:90px; "
+					<td><p:inputText size="35" 
 							value="Supplier Address" disabled="true" /></td>
 					<td><p:outputLabel value="Address" /></td>
-					<td><p:inputText style="width: 260px; height:90px; "
+					<td><p:inputText size="35"
 							value="Supplier Address" disabled="true" /></td>
 				</tr>
 				<tr>
 					<td><p:outputLabel value="Email" /></td>
-					<td><p:inputText style="width: 260px;"
+					<td><p:inputText size="35"
 							value="KBB.XY@gmail.com" disabled="true" /></td>
 					<td><p:outputLabel value="Email" /></td>
-					<td><p:inputText style="width: 260px;"
+					<td><p:inputText size="35"
 							value="KBB.XY@gmail.com" disabled="true" /></td>
 				</tr>
 				<tr>
 					<td><p:outputLabel value="Tel No." /></td>
-					<td><p:inputText style="width: 120px;" value="02-7324800 "
+					<td><p:inputText size="20" value="02-7324800 "
 							disabled="true" /></td>
 					<td><p:outputLabel value="Tel No." /></td>
-					<td><p:inputText style="width: 120px;" value="02-7324800 "
+					<td><p:inputText size="20" value="02-7324800 "
 							disabled="true" /></td>
 				</tr>
 			</table>
 		</p:panel>
 		<p:panel header="PACKAGE DETAIL" toggleable="true">
-			<table>
+			<table style="width: 100%">
 				<tr>
-					<td valign="top"><p:outputLabel value="Special Instruction" /></td>
-					<td><p:inputTextarea rows="7" style="width: 260px;margin-bottom:5px;"
+					<td valign="top" style="width: 157px;"><p:outputLabel value="Special Instruction" /></td>
+					<td><p:inputTextarea  cols="36" style="margin-bottom:5px;"
 							value="#{shipInstrBackingBean.managedBean.shippingInstr.specialInstruction}" /></td>
-					<td valign="top"><p:outputLabel value="Marks And Numbers" /></td>
-					<td><p:inputTextarea rows="7" style="width: 260px;margin-bottom:5px;" /></td>
+					<td valign="top" style="width: 130px;"><p:outputLabel value="Marks And Numbers" /></td>
+					<td><p:inputTextarea  cols="36" style="margin-bottom:5px;" /></td>
 
 				</tr>
 			</table>

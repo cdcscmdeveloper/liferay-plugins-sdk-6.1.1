@@ -6,60 +6,58 @@
 	xmlns:c="http://java.sun.com/jsp/jstl/core"
 	xmlns:ac="http://ac.my/jsf/composite/cc">
 	<p:panel header="SUPPLIER DETAIL (FROM)" toggleable="true">
-		<table>
+		<table style="width: 100%">
 			<tr>
-				<td><p:outputLabel value="EP No." /></td>
+				<td ><p:outputLabel value="EP No." /></td>
 				<td><table style="width: 100%">
 						<tr>
-							<td><p:inputText size="5" disabled="true" /></td>
-							<td><p:outputLabel value="MOF No." /></td>
-							<td><p:inputText size="15" disabled="true" /></td>
+							<td style="width: 25px;"><p:inputText size="5"
+									disabled="true" /></td>
+							<td style="width: 65px;"><p:outputLabel value="MOF No." /></td>
+							<td><p:inputText size="10" disabled="true" /></td>
 						</tr>
 					</table></td>
 				<td><p:outputLabel value="#{lbl['lbl.fl.supp.del.ord.no']}" /></td>
-				<td><p:inputText style="width: 120px;"
+				<td><p:inputText size="20"
 						value="- system generated -" disabled="true" /></td>
 			</tr>
 			<tr>
 				<td><p:outputLabel value="#{lbl['lbl.fl.supp.name']}" /></td>
-				<td><p:inputText style="width: 260px;" value="KBB SDN BHD"
+				<td><p:inputText size="35" value="KBB SDN BHD"
 						disabled="true" /></td>
 				<td><p:outputLabel value="#{lbl['lbl.fl.supp.del.ord.date']}" /></td>
-				<td><p:inputText style="width: 120px;" disabled="true" /></td>
+				<td><p:inputText size="20" disabled="true" /></td>
 			</tr>
 			<tr>
-				<td rowspan="4" valign="top"><p:outputLabel
+				<td rowspan="2" valign="top"><p:outputLabel
 						value="#{lbl['lbl.fl.supp.address']}" /></td>
-				<td rowspan="4"><p:inputTextarea id="delAddrText" rows="8"
+				<td rowspan="2"><p:inputTextarea id="delAddrText"  cols="36"
 						value="#{flOrderBB.managedBean.selectedLovDelAddr}"
-						style="width: 260px; margin-bottom:5px;" disabled="true" /></td>
+						style=" margin-bottom:5px;" disabled="true" /></td>
 				<td><p:outputLabel
 						value="#{lbl['lbl.fl.supp.supp.del.ord.no']}" /></td>
-				<td><p:inputText style="width: 120px;" /></td>
+				<td><p:inputText size="20" /></td>
 			</tr>
 			<tr>
 				<td><p:outputLabel value="#{lbl['lbl.fl.supp.ord.no']}" /></td>
-				<td><p:inputText style="width: 120px;" disabled="true" /></td>
+				<td><p:inputText size="20" disabled="true" /></td>
 			</tr>
 			<tr>
 				<td><p:outputLabel value="#{lbl['lbl.fl.supp.email']}" /></td>
-				<td><p:inputText style="width: 260px; margin-bottom:5px;"
+				<td><p:inputText size="35" style=" margin-bottom:5px;"
 						value="KBB.XY@gmail.com" disabled="true" /></td>
+				<td><p:outputLabel value="#{lbl['lbl.fl.supp.telno']}" /></td>
+				<td><p:inputText size="20" value="02-7324800"
+						disabled="true" /></td>
 
 			</tr>
 			<tr>
-				<td><p:outputLabel value="#{lbl['lbl.fl.supp.telno']}" /></td>
-				<td><p:inputText style="width: 120px;" value="02-7324800"
-						disabled="true" /></td>
-			</tr>
-			<tr>
 				<td><p:outputLabel value="" /></td>
-				<td><p:commandButton 
-						value="Select Delivery Address" action="#{flOrderBB.delAddrList}"
-						update="delAddr" oncomplete="delAddrList.show();"
-						process="@this,delAddr" /></td>
+				<td><p:commandButton value="Select Delivery Address"
+						action="#{flOrderBB.delAddrList}" update="delAddr"
+						oncomplete="delAddrList.show();" process="@this,delAddr" /></td>
 				<td><p:outputLabel value="#{lbl['lbl.fl.supp.status']}" /></td>
-				<td><p:inputText style="width: 260px;" disabled="true" /></td>
+				<td><p:inputText size="35" disabled="true" /></td>
 
 			</tr>
 		</table>
@@ -67,26 +65,30 @@
 	<p:panel header=" FULFILMENT DETAIL (TO)" toggleable="true">
 
 		<br />
-		<table>
+		<table style="width: 100%">
 			<tr>
-				<td><p:outputLabel value="#{lbl['lbl.fl.ministry']}" /></td>
-				<td><p:inputText style="width: 260px;"
+				<td style="width:92px;"><p:outputLabel value="#{lbl['lbl.fl.ministry']}" /></td>
+				<td style="width:100px;"><p:inputText size="35"
 						value="KEMENTERIAN KEWANGAN" disabled="true" /></td>
-				<td><p:outputLabel value="* #{lbl['lbl.fl.delivery.start']}" /></td>
-				<td><p:calendar mode="popup" showOn="button" pattern="dd/mm/yyyy"
-						value="#{createDOBackingBean.managedBean.flDeliveryOrder.estStartDate}" requiredMessage="Start date is Required" required="true"/></td>
+				<td style="width:189px;"><p:outputLabel value="* #{lbl['lbl.fl.delivery.start']}" /></td>
+				<td><p:calendar mode="popup" showOn="button"
+						pattern="dd/mm/yyyy"
+						value="#{createDOBackingBean.managedBean.flDeliveryOrder.estStartDate}"
+						requiredMessage="Start date is Required" required="true" /></td>
 			</tr>
 			<tr>
 				<td><p:outputLabel value="#{lbl['lbl.fl.issued.jabatan']}" /></td>
-				<td><p:inputText style="width: 260px;"
+				<td><p:inputText size="35"
 						value="JABATAN KASTAM DAN EKSAIS DIRAJA" disabled="true" /></td>
 				<td><p:outputLabel value="* #{lbl['lbl.fl.delivery.end']}" /></td>
-				<td><p:calendar mode="popup" showOn="button"  pattern="dd/mm/yyyy"
-						value="#{createDOBackingBean.managedBean.flDeliveryOrder.estEndDate}"  requiredMessage="End date is Required" required="true"/></td>
+				<td><p:calendar mode="popup" showOn="button"
+						pattern="dd/mm/yyyy"
+						value="#{createDOBackingBean.managedBean.flDeliveryOrder.estEndDate}"
+						requiredMessage="End date is Required" required="true" /></td>
 			</tr>
 			<tr>
 				<td><p:outputLabel value="#{lbl['lbl.fl.received.ptj']}" /></td>
-				<td><p:inputText style="width: 260px;"
+				<td><p:inputText size="35"
 						value="IBU PEJABAT KASTAM (RECEIVING PTJ) " disabled="true" /></td>
 				<td colspan="3"></td>
 				<td colspan="4"></td>
@@ -94,15 +96,15 @@
 			<tr>
 				<td valign="top"><p:outputLabel
 						value="#{lbl['lbl.fl.delivery.address']}" /></td>
-				<td><p:inputTextarea rows="8"
-						style="width: 260px;margin-bottom:5px;" disabled="true"
+				<td><p:inputTextarea  cols="36"
+						style="margin-bottom:5px;" disabled="true"
 						value="#{createDOBackingBean.managedBean.deliveryAddress.addressType.pmAddress.address1}" /></td>
 				<td colspan="3"></td>
 				<td colspan="4"></td>
 			</tr>
 			<tr>
 				<td><p:outputLabel value="#{lbl['lbl.fl.charge.account']}" /></td>
-				<td><p:inputText style="width: 120px;" value="0001010"
+				<td><p:inputText size="20" value="0001010"
 						disabled="true" /></td>
 				<td colspan="3"></td>
 				<td colspan="4"></td>
