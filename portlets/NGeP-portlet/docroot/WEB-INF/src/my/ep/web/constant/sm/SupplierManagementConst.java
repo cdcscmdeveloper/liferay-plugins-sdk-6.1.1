@@ -7,13 +7,19 @@ public class SupplierManagementConst {
 
 	// Navigation
 	public static final String PROCEED_MOF_REG = "mofRegSmUser_BaseWizardPage";
-	//public static final String PROCEED_MOF_REG = "mofRegBasePage";
+	// public static final String PROCEED_MOF_REG = "mofRegBasePage";
 	public static final String MOF_REG_REDIRECT = "mofRegSmUser_BaseWizardPage?faces-redirect=true";
-	public static final String PROCEED_BUMI_APPLN = "applyBumiStatusBasePage";
-	public static final String PROCEED_UPDATE_MOF_APPLN = "updateMofDetailsBasePage";
-	//public static final String PROCEED_ADDTNLCAT_MOF_APPLN = "addAdditionalCategoryBasePage";
-	public static final String PROCEED_ADDTNLCAT_MOF_APPLN="addAdditionalCategorySmUser_BaseWizardPage";
-	public static final String PROCEED_RENEW_MOF_APPLN = "renewMofBasePage";
+	// public static final String PROCEED_BUMI_APPLN =
+	// "applyBumiStatusBasePage";
+	public static final String PROCEED_BUMI_APPLN = "applyBumiSmUser_BaseWizardPage";
+	// public static final String PROCEED_UPDATE_MOF_APPLN =
+	// "updateMofDetailsBasePage";
+	public static final String PROCEED_UPDATE_MOF_APPLN = "updateMofSmUser_BaseWizardPage";
+	// public static final String PROCEED_ADDTNLCAT_MOF_APPLN =
+	// "addAdditionalCategoryBasePage";
+	public static final String PROCEED_ADDTNLCAT_MOF_APPLN = "addAdditionalCategorySmUser_BaseWizardPage";
+	// public static final String PROCEED_RENEW_MOF_APPLN = "renewMofBasePage";
+	public static final String PROCEED_RENEW_MOF_APPLN = "renewMofSmUser_BaseWizardPage";
 	public static final String PROCEED_CANCEL_MOF_APPLN = "cancelRegistrationWithMof";
 	public static final String PROCEED_DEL_PENDING_MOF_APPLN = "deletePendingMofApplication";
 	public static final String PROCEED_DELETE_CATCODES_APPLN = "delRegCatCodes";

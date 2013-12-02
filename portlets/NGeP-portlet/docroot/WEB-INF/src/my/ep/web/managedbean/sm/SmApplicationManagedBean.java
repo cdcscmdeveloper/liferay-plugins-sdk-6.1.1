@@ -144,7 +144,7 @@ public class SmApplicationManagedBean extends BaseManagedBean {
 	private boolean supplierUser;
 
 	private boolean approverUser;
-	
+
 	private String decisionAckMsg;
 
 	// TODO change the type later
@@ -164,33 +164,36 @@ public class SmApplicationManagedBean extends BaseManagedBean {
 		System.out.println(" << ======= Login USer === >>  "
 				+ sc.getUserScreenName());
 		List<Role> loginUserRoles = sc.getUserRoleList();
-		// if (sc.hasRoleUser("HQ_PO")) {
-		// setPoUser(true);
-		// System.out.println();
-		// } else if (sc.hasRoleUser("HQ_REG_APPROVER")) {
-		// setApproverUser(true);
-		// } else if (sc.hasRoleUser("SUPPLIER_ADMIN")
-		// || sc.hasRoleUser("SUPPLIER_USER")) {
-		// setSupplierUser(true);
-		//
-		// }
+
 		List<String> roleNames = new ArrayList<String>();
 		for (Role r : loginUserRoles) {
 			System.out.println(" Role ===  >> " + r.getName());
 			roleNames.add(r.getName());
 		}
-		if (roleNames.contains("HQ_PO")) {
+		if (sc.hasRoleUser("UPS_PO_HQ")) {
 			setPoUser(true);
-			System.out.println();
-		} else if (roleNames.contains("HQ_REG_APPROVER")) {
+			System.out.println("  *** LOGGED IN USER IS PO ****");
+		} else if (sc.hasRoleUser("UPS_APPROVER_HQ")) {
 			setApproverUser(true);
-		} else if (roleNames.contains("SUPPLIER_ADMIN")
-				|| roleNames.contains("SUPPLIER_USER")) {
+			System.out.println("  *** LOGGED IN USER IS APPROVER ****");
+		} else if (sc.hasRoleUser("SUPPLIER_ADMIN")
+				|| sc.hasRoleUser("SUPPLIER_USER")) {
 			setSupplierUser(true);
-
+			System.out.println("  *** LOGGED IN USER IS SUPPLIER ****");
 		} else {
-			System.out.println("****** UNKNOWN ROLE ****** ");
+			System.out.println("  *** UNKNOWN USER ****");
 		}
+		// if (roleNames.contains("HQ_PO")) {
+		// setPoUser(true);
+		// } else if (roleNames.contains("HQ_REG_APPROVER")) {
+		// setApproverUser(true);
+		// } else if (roleNames.contains("SUPPLIER_ADMIN")
+		// || roleNames.contains("SUPPLIER_USER")) {
+		// setSupplierUser(true);
+		//
+		// } else {
+		// System.out.println("****** UNKNOWN ROLE ****** ");
+		// }
 
 		System.out.println("PO USER === >> " + isPoUser());
 		System.out.println("APPROVER USER === >> " + isApproverUser());
