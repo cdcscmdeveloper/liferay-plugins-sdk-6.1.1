@@ -24,7 +24,11 @@ import org.apache.log4j.Logger;
 import com.liferay.portal.kernel.util.WebKeys;
 import com.liferay.portal.model.Role;
 import com.liferay.portal.model.User;
+import com.liferay.portal.model.UserGroup;
+import com.liferay.portal.service.PermissionServiceUtil;
 import com.liferay.portal.service.RoleServiceUtil;
+import com.liferay.portal.service.UserGroupRoleLocalServiceUtil;
+import com.liferay.portal.service.UserGroupRoleServiceUtil;
 import com.liferay.portal.service.UserServiceUtil;
 import com.liferay.portal.theme.ThemeDisplay;
 
@@ -215,8 +219,18 @@ public class FacesScopes {
 		try {
 			User user = UserServiceUtil.getUserById(Long.valueOf(this.getRequest().getRemoteUser()));
 			userRoleList = user.getRoles();
+			
+//			PermissionServiceUtil.set
+			
 //			userRoleList = RoleServiceUtil.getUserRoles(Long.valueOf(this
 //					.getRequest().getRemoteUser()));
+/*			List<UserGroup> userGroupList = user.getUserGroups();
+			for(UserGroup ug : userGroupList) {
+				System.out.println(ug.getName());
+			}*/
+			
+//			user.get
+			
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -248,16 +262,18 @@ public class FacesScopes {
 	 * @return
 	 */
 	public boolean hasRoleUser(String roleName) {
-		// Role role;
+
 		boolean hasRoleUser = false;
 
-		List<Role> userRoleList = getUserRoleList();
-		for (Role role : userRoleList) {
-			if (role.getName().equals(roleName)) {
-				hasRoleUser = true;
-				break;
-			}
-		}
+        ThemeDisplay themeDisplay = (ThemeDisplay)FacesContext.getCurrentInstance().getExternalContext().getRequestMap().get(WebKeys.THEME_DISPLAY);
+        long portletGroupId= themeDisplay.getScopeGroupId();
+        long userId = themeDisplay.getUserId();
+        try {
+        	hasRoleUser = UserGroupRoleLocalServiceUtil.hasUserGroupRole(userId, portletGroupId, roleName, true);
+        } catch(Exception e) {
+        	System.err.println(e);
+        }        
+        
 		return hasRoleUser;
 	}
 
@@ -311,3 +327,4 @@ public class FacesScopes {
 	}
 
 }
+
