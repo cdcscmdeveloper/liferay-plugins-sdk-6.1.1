@@ -6,6 +6,10 @@ import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
 
 import my.ep.persistence.entity.pm.authorization.PmUser;
+import my.ep.persistence.entity.pm.common.PmStatusDesc;
+import my.ep.persistence.entity.sm.SmMofAccount;
+import my.ep.persistence.entity.sm.SmSupplier;
+import my.ep.persistence.entity.ss.quationtender.ScQt;
 import my.ep.persistence.entity.ss.quationtender.ScQtBriefing;
 import my.ep.persistence.entity.ss.quationtender.ScQtBriefingAttendance;
 import my.ep.persistence.entity.ss.quationtender.ScQtBriefingRegistration;
@@ -36,12 +40,21 @@ public class BSVAttendanceManagedBean extends BaseManagedBean {
 	
 	private ScQtBriefingRegistration  selectedbriefRegistration; // Selected Briefing Registration for Attendance List 
 	
-	private List<PmUser>  approverNames; // Drop down Listing for Approver Names
-	
 	private String briefSameAsSiteVisit; //  briefSameAsSiteVisit  for Briefing Same As Site Visit value
 	
 	private boolean visibleState=true; //  isVisible  for  site visit component visible or disable
 	
+	private ScQtBriefingRegistration scQtBriefingRegistration; 
+	private ScQtBriefingAttendance scQtBriefingAttendance;
+	private ScQt scQt;
+	private SmMofAccount smMofAccount;
+	private SmSupplier smSupplier;
+	
+	//Drop down listing
+	private List<PmUser>  approverNames; // Drop down Listing for Approver Names
+	private List<PmStatusDesc> pmStatus;
+	private List<SmSupplier> smSuppliers;
+	private List<SmMofAccount> 	smMofAccounts;
 	
 	/**
 	 * @return  briefingDetailsList
@@ -202,6 +215,124 @@ public class BSVAttendanceManagedBean extends BaseManagedBean {
 	public void setApproverNames(List<PmUser> approverNames) {
 		this.approverNames = approverNames;
 	}
+
+	/**
+	 * @return the scQtBriefingRegistration
+	 */
+	public ScQtBriefingRegistration getScQtBriefingRegistration() {
+		return scQtBriefingRegistration;
+	}
+
+	/**
+	 * @param scQtBriefingRegistration the scQtBriefingRegistration to set
+	 */
+	public void setScQtBriefingRegistration(
+			ScQtBriefingRegistration scQtBriefingRegistration) {
+		this.scQtBriefingRegistration = scQtBriefingRegistration;
+	}
+
+	/**
+	 * @return the scQtBriefingAttendance
+	 */
+	public ScQtBriefingAttendance getScQtBriefingAttendance() {
+		return scQtBriefingAttendance;
+	}
+
+	/**
+	 * @param scQtBriefingAttendance the scQtBriefingAttendance to set
+	 */
+	public void setScQtBriefingAttendance(
+			ScQtBriefingAttendance scQtBriefingAttendance) {
+		this.scQtBriefingAttendance = scQtBriefingAttendance;
+	}
+
+	/**
+	 * @return the scQt
+	 */
+	public ScQt getScQt() {
+		return scQt;
+	}
+
+	/**
+	 * @param scQt the scQt to set
+	 */
+	public void setScQt(ScQt scQt) {
+		this.scQt = scQt;
+	}
+
+	/**
+	 * @return the pmStatus
+	 */
+	public List<PmStatusDesc> getPmStatus() {
+		return pmStatus;
+	}
+
+	/**
+	 * @param pmStatus the pmStatus to set
+	 */
+	public void setPmStatus(List<PmStatusDesc> pmStatus) {
+		this.pmStatus = pmStatus;
+	}
+
+
+	/**
+	 * @return the smSuppliers
+	 */
+	public List<SmSupplier> getSmSuppliers() {
+		return smSuppliers;
+	}
+
+	/**
+	 * @param smSuppliers the smSuppliers to set
+	 */
+	public void setSmSuppliers(List<SmSupplier> smSuppliers) {
+		this.smSuppliers = smSuppliers;
+	}
+
+	/**
+	 * @return the smMofAccounts
+	 */
+	public List<SmMofAccount> getSmMofAccounts() {
+		return smMofAccounts;
+	}
+
+	/**
+	 * @param smMofAccounts the smMofAccounts to set
+	 */
+	public void setSmMofAccounts(List<SmMofAccount> smMofAccounts) {
+		this.smMofAccounts = smMofAccounts;
+	}
+
+	/**
+	 * @return the smMofAccount
+	 */
+	public SmMofAccount getSmMofAccount() {
+		return smMofAccount;
+	}
+
+	/**
+	 * @param smMofAccount the smMofAccount to set
+	 */
+	public void setSmMofAccount(SmMofAccount smMofAccount) {
+		this.smMofAccount = smMofAccount;
+	}
+
+	/**
+	 * @return the smSupplier
+	 */
+	public SmSupplier getSmSupplier() {
+		return smSupplier;
+	}
+
+	/**
+	 * @param smSupplier the smSupplier to set
+	 */
+	public void setSmSupplier(SmSupplier smSupplier) {
+		this.smSupplier = smSupplier;
+	}
+
+	
+	
 	
 	
 }
