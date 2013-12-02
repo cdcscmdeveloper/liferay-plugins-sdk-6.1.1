@@ -9,7 +9,7 @@ body{margin:0 auto;}
 .portlet-content{background-color:#FFF; border-bottom-left-radius: 5px; border-bottom-right-radius: 5px; box-shadow: 0px 4px 5px #888888; margin:0 0 10px 0;}
 .icon{margin:0 0 5px 0;}
 
-nav#navigation ul li{padding:6px 0 6px 0;}
+nav#navigation ul li{padding:6px 0 6px 0; text-shadow: 1px 1px #333333;}
 nav#navigation ul li:hover{background-color:#5ba218; text-decoration:none;}
 nav#navigation ul li.selected{background-color:#5ba218;}
 nav#navigation ul li a{font-family:'notosans-bold', Arial, Helvetica, sans-serif; font-size:14px; color:#FFF; padding:0 20px 0 20px; margin:10px 0 0 0;}
@@ -20,35 +20,7 @@ ul.child-menu li:hover {border: 1px solid #3B3B3B;}
 #navigation ul li:hover > ul.child-menu li:hover > ul.child-menu {display: block; float: none; margin: 0; background-color:#3B3B3B; position:absolute; z-index:50; top: 0; left: 149px;}
 #navigation ul li:hover > ul.child-menu li:hover > ul.child-menu li:hover > ul.child-menu {top: 0; left: 250px;}
 
-#navigation ul.child-menu > li:first-child > a:after {
-	content: '';
-	position: absolute;
-	left: 40px;
-	top: -10px;
-	border-left: 7px solid transparent;
-	border-right: 7px solid transparent;
-	border-bottom: 7px solid #3B3B3B;
-}
 
-#navigation ul.child-menu > li > ul > li:first-child a:after {
-	left: -12px;
-	top: 50%;
-	margin-top: -10px;
-	border-left: 0;	
-	border-bottom: 6px solid transparent;
-	border-top: 6px solid transparent;
-	border-right: 6px solid #3b3b3b;
-}
-
-#navigation ul.child-menu > li > ul > li:last-child a:after {
-	left: -12px;
-	top: 50%;
-	margin-top: -20px;
-	border-left: 0;	
-	border-bottom: 6px solid transparent;
-	border-top: 6px solid transparent;
-	border-right: 6px solid #3b3b3b;
-}
 
 
 /*  ----   dockbar   --------  */
