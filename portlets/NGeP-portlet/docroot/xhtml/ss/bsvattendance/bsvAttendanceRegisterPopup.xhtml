@@ -5,23 +5,39 @@
 	xmlns:ui="http://java.sun.com/jsf/facelets"
 	xmlns:p="http://primefaces.org/ui"
 	xmlns:c="http://java.sun.com/jsp/jstl/core">
-
+	
+    <p:messages globalOnly="true"></p:messages>
 	<p:growl id="growl" showDetail="true" />
 	<p:panel header="Supplier List" toggleable="true">
 		<p:dataTable id="complisttbl" var="scQtBriefReg"
 			value="#{bsvAttendanceBackingBean.managedBean.briefingRegistrationList}" 
 			selection="#{bsvAttendanceBackingBean.managedBean.selectedbriefRegistration}"
-			rowKey="#{scQtBriefReg.qtBriefingRegistrationId}" selectionMode="single" >
+			rowKey="#{scQtBriefReg}" selectionMode="single" >
 			
 			<p:ajax event="rowSelect"
 				listener="#{bsvAttendanceBackingBean.onRowSelect}" update=":form:attlistforCompId" />
-
+         
 			<p:column headerText="#{lbl['lbl.sc.bsv.attendance.mof.regno']}">
-				<p:inputText value="#" />
+					<p:selectOneMenu rendered="#{!scQtBriefReg.brandNew}"
+            			value="#{scQtBriefReg.smMofAccount.mofAccountId}" >
+            			<f:selectItems value="#{bsvAttendanceBackingBean.managedBean.smMofAccounts}"
+            				var="smMof" itemLabel="#{smMof.mofNo}" itemValue="#{smMof.mofAccountId}" />
+	            	</p:selectOneMenu>
+            		<p:inputText  rendered="#{scQtBriefReg.brandNew}"
+            			value="#{scQtBriefReg.smMofAccount.mofNo}" 
+            			disabled="true"
+            			size="35" />
 			</p:column>
 
 			<p:column headerText="#{lbl['lbl.sc.bsv.attendance.supp.name']}">
-				<p:inputText value="#{scQtBriefReg.smSupplier.supplierName}" />
+				<p:selectOneMenu rendered="#{scQtBriefReg.brandNew}"
+            			value="#{scQtBriefReg.smSupplier.supplierId}" >
+            			<f:selectItems value="#{bsvAttendanceBackingBean.managedBean.smSuppliers}"
+            				var="smSup" itemLabel="#{smSup.supplierName}" itemValue="#{smSup.supplierId}" />
+	            </p:selectOneMenu>
+	            
+	             <p:inputText value="#{scQtBriefReg.smSupplier.supplierName}" disabled="true" rendered="#{!scQtBriefReg.brandNew}"
+            			size="35" />
 			</p:column>
 
 	        <p:column headerText="#{lbl['lbl.sc.bsv.attendance.remarks']}">
@@ -34,10 +50,6 @@
 
 
 			<p:column headerText="#{lbl['lbl.sc.bsv.attendance.action']}">
-				<p:commandLink>
-					<p:graphicImage library="ep/images/design" name="edit.png"
-						value="/resources/ep/images/design/edit.png" />
-				</p:commandLink>
 				<p:commandLink>
 					<p:graphicImage library="ep/images/design" name="delete.png"
 						value="/resources/ep/images/design/delete.png" />
@@ -88,10 +100,7 @@
 
 
 			<p:column headerText="#{lbl['lbl.sc.bsv.attendance.action']}">
-				<p:commandLink>
-					<p:graphicImage library="ep/images/design" name="edit.png"
-						value="/resources/ep/images/design/edit.png" />
-				</p:commandLink>
+			
 				<p:commandLink>
 					<p:graphicImage library="ep/images/design" name="delete.png"
 						value="/resources/ep/images/design/delete.png" />
@@ -155,24 +164,9 @@
 			</p:column>
 
 			<p:column>
-				<p:inputTextarea rows="4" cols="25" autoResize="false"></p:inputTextarea>
+				<p:inputTextarea rows="8" cols="27" autoResize="false"></p:inputTextarea>
 			</p:column>
-
-
 		</h:panelGrid>
-
-		<br />
-		<br />
-		<p:panelGrid style="width:100%;"
-			styleClass="noBorders tr,noBorders td">
-			<p:row>
-				<p:column width="100%" style="text-align:right">
-					<p:commandButton value="#{lbl['lbl.sc.bsv.attendance.okbtn']}" />
-					<p:commandButton value="#{lbl['lbl.sc.bsv.attendance.cancelbtn']}"  action="#{bsvAttendanceBackingBean.cancelBriefing}"/>
-				</p:column>
-
-			</p:row>
-		</p:panelGrid>
 
 	</p:panel>
 

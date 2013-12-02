@@ -6,6 +6,7 @@
 	xmlns:c="http://java.sun.com/jsp/jstl/core"
 	xmlns:ac="http://ac.my/jsf/composite/cc">
 
+      <p:messages globalOnly="true"></p:messages>
 		<p:growl id="messages" showDetail="true" />
 
 		<p:panel header="Selected Briefing Details">
@@ -22,7 +23,9 @@
 				</p:column>
 
 				<p:column headerText="#{lbl['lbl.sc.bsv.attendance.location']}">
-					<h:outputText value="#{scQtBriefing.location}" />
+				  <p:commandLink onclick="popupLoc.show();">
+				    <h:outputText value="#{scQtBriefing.location}" rendered="true"/>
+				  </p:commandLink>
 				</p:column>
 
 				<p:column
@@ -35,7 +38,9 @@
 				</p:column>
 
 				<p:column headerText="#{lbl['lbl.sc.bsv.attendance.zone.name']}">
-					<h:outputText value="-" />
+					 <p:commandLink onclick="zonePopUp.show();">
+					 <h:outputText value="EastMalaysia" />
+					</p:commandLink>
 				</p:column>
 
 				<p:column
@@ -61,7 +66,9 @@
 				</p:column>
 
 				<p:column headerText="#{lbl['lbl.sc.bsv.attendance.location']}">
-					<h:outputText value="#{scQtsitevisit.location}" />
+					<p:commandLink onclick="popupLoc.show();">
+				      <h:outputText value="#{scQtsitevisit.location}" rendered="true"/>
+				    </p:commandLink>
 				</p:column>
 
 				<p:column
@@ -74,7 +81,9 @@
 				</p:column>
 
 				<p:column headerText="#{lbl['lbl.sc.bsv.attendance.zone.name']}">
-					<h:outputText value="EastMalaysia" />
+					<p:commandLink onclick="zonePopUp.show();">
+					 <h:outputText value="EastMalaysia" />
+				    </p:commandLink>
 				</p:column>
 
 				<p:column headerText="#{lbl['lbl.sc.bsv.attendance.Site.status']}">
@@ -136,10 +145,6 @@
 
 			<p:column headerText="#{lbl['lbl.sc.bsv.attendance.action']}">
 				<p:commandLink>
-					<p:graphicImage library="ep/images/design" name="edit.png"
-						value="/resources/ep/images/design/edit.png" />
-				</p:commandLink>
-				<p:commandLink>
 					<p:graphicImage library="ep/images/design" name="delete.png"
 						value="/resources/ep/images/design/delete.png" />
 				</p:commandLink>
@@ -148,7 +153,6 @@
 
 		</p:dataTable>
 
-
 		<div align="right">
 			<p:commandButton value="#{lbl['lbl.sc.bsv.attendance.add']}"
 				process="@this,registrationId" partialSubmit="true"
@@ -156,16 +160,5 @@
 				update=":form:registrationId" />
 		</div>
 
-			<br /><br />
-			<p:panelGrid style="width:100%;"
-				styleClass="noBorders tr,noBorders td">
-				<p:row>
-					<p:column width="100%" style="text-align:right">
-						<p:commandButton value="#{lbl['lbl.sc.bsv.attendance.okbtn']}" />
-						<p:commandButton value="#{lbl['lbl.sc.bsv.attendance.cancelbtn']}"  action="#{bsvAttendanceBackingBean.cancelBriefing}" />
-					</p:column>
-
-				</p:row>
-			</p:panelGrid>
 
 </ui:composition>
