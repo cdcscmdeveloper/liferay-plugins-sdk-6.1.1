@@ -30,5 +30,17 @@ public interface QTConstants {
 	public static final String QT_DOCUMENTS_TAB="Documents";
 	public static final String QT_REMARKS_TAB="Remarks";
 	
+	// Bsv Attendance Constants
+	public static final String BSV_MOCULE_CODE = "SC";
+	public static final String BSV_DOC_TYPE = "BSV";
+	
+	// Notice Board Constants
+	public static final Integer NB_PUBLISH_STATUS = 0;
+	public static final Integer NB_CHANGES_STATUS = 1;
+	public static final Integer NB_CLOSED_STATUS = 2;
+	public static final Integer NB_PRICE_SCHEDULE_STATUS = 3;
+	public static final Integer NB_AWARDED_STATUS = 4;
+	
+	
 
 }
