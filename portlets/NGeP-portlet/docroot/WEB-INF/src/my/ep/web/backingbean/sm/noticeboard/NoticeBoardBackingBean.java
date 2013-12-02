@@ -50,7 +50,6 @@ import my.ep.type.pm.OrganizationType;
 import my.ep.util.lookupservice.EpEjbBusinessDelegate;
 import my.ep.web.backingbean.BaseBackingBean;
 import my.ep.web.managedbean.ss.noticeboard.NoticeBoardManagedBean;
-import my.ep.web.ss.noticeboard.common.NoticeBoardConstants;
 import my.ep.web.ss.quationtender.common.QTConstants;
 import my.ep.web.util.lookupservice.BusinessDelegate;
 
@@ -174,16 +173,16 @@ public class NoticeBoardBackingBean extends
 			System.out.println("tab index :  " + this.getManagedBean().getActiveTabIndex());
 			ISearchBean<ScQt> searchTabBean = new SearchBean<ScQt>();
 			
-		    if (getManagedBean().getActiveTabIndex().equals(NoticeBoardConstants.NB_PUBLISH_STATUS)) {
+		    if (getManagedBean().getActiveTabIndex().equals(QTConstants.NB_PUBLISH_STATUS)) {
 		    	statusFilter=QTStatusConst.QT_PUBLISH;
 		    	
-		    } else if (getManagedBean().getActiveTabIndex().equals(NoticeBoardConstants.NB_CHANGES_STATUS)) {
+		    } else if (getManagedBean().getActiveTabIndex().equals(QTConstants.NB_CHANGES_STATUS)) {
 		    	
-		    } else if (getManagedBean().getActiveTabIndex().equals(NoticeBoardConstants.NB_CLOSED_STATUS)) {
+		    } else if (getManagedBean().getActiveTabIndex().equals(QTConstants.NB_CLOSED_STATUS)) {
 		    	
-		    } else if (getManagedBean().getActiveTabIndex().equals(NoticeBoardConstants.NB_PRICE_SCHEDULE_STATUS)) {
+		    } else if (getManagedBean().getActiveTabIndex().equals(QTConstants.NB_PRICE_SCHEDULE_STATUS)) {
 		    	
-		    } else if (getManagedBean().getActiveTabIndex().equals(NoticeBoardConstants.NB_AWARDED_STATUS)) {
+		    } else if (getManagedBean().getActiveTabIndex().equals(QTConstants.NB_AWARDED_STATUS)) {
 		    	       statusFilter=QTStatusConst.QT_AWARDED;
 		    }
 		        
