@@ -5,156 +5,96 @@
 	xmlns:p="http://primefaces.org/ui"
 	xmlns:c="http://java.sun.com/jsp/jstl/core">
 
-<p:dialog  header="Create" widgetVar="create" modal="true" width="1000" height="500" >
-	<p:panel header="Search" toggleable="true"  >
-		<p:commandLink value="Search Template" ></p:commandLink>
-<!-- 		<h:panelGrid columns="2">
-           
-			<h:outputLabel value="Specification Type: " ></h:outputLabel>
+	<p:dialog header="Create" widgetVar="create" modal="true" width="1000"
+		height="500">
+		<p:panel header="#{lbl['lbl.sc.tpl.search']}" toggleable="true">
+			<p:commandLink value="#{lbl['lbl.sc.tpl.search.template']}"></p:commandLink>
+			<table>
+				<tr>
+					<td><h:outputLabel value="#{lbl['lbl.sc.tpl.search.spec']}"></h:outputLabel>
 
-		
-			<p:selectOneMenu value="#{TemplateMBB.managedBean.searchSpecTypeId}" >
-							<f:selectItems value="#{TemplateMBB.getDropdownValues(PmCodeCatConst.specificationType)}" />
-						</p:selectOneMenu>
-           
-			<h:outputLabel value="Template Title: "></h:outputLabel>
-			<h:inputText size="100" value="#{TemplateMBB.managedBean.scqtDoc.tplSpecMaster.specName}" />
-			
-			<h:outputLabel value="Qtn/Tender No: " ></h:outputLabel>
+					</td>
+					<td><p:selectOneMenu
+							value="#{TemplateMBB.managedBean.searchSpecTypeId}">
+							<f:selectItems
+								value="#{TemplateMBB.getDropdownValues(PmCodeCatConst.specificationType)}" />
+						</p:selectOneMenu></td>
+				</tr>
+				<tr>
+					<td style="width: 50%"><h:outputLabel value="#{lbl['lbl.sc.tpl.search.title']}"></h:outputLabel>
+					</td>
+					<td><h:inputText size="70"
+							value="#{TemplateMBB.managedBean.scqtDoc.tplSpecMaster.specName}" />
+					</td>
+				</tr>
+				<tr>
+					<td><h:outputLabel value="#{lbl['lbl.sc.tpl.search.qtn.no']}"></h:outputLabel></td>
+					<td><p:inputText
+							value="#{TemplateMBB.managedBean.scqtDoc.scQt.qtNo}" /></td>
+				</tr>
+				<tr>
+					<td style="width: 30%"><h:outputLabel value="#{lbl['lbl.sc.tpl.search.item']}"></h:outputLabel>
 
-			<p:inputText value="#{TemplateMBB.managedBean.scqtDoc.scQt.qtNo}" />
-			
+					</td>
+					<td><p:selectOneMenu
+							value="#{TemplateMBB.managedBean.searchItemTypeId}">
+							<f:selectItems
+								value="#{templateSpecBackingBean.getDropdownValues(PmCodeCatConst.itemType)}" />
+						</p:selectOneMenu></td>
+					<td style="width: 50%"><h:outputLabel
+							value="#{lbl['lbl.sc.tpl.search.procure.category']}"></h:outputLabel></td>
+					<td><p:selectOneMenu
+							value="#{TemplateMBB.managedBean.searchProcurementId}">
+							<f:selectItems
+								value="#{templateSpecBackingBean.getDropdownValues(PmCodeCatConst.procurementCategory)}" />
+						</p:selectOneMenu></td>
+				</tr>
+			</table>
+			<div align="right">
+				<p:commandButton value="#{lbl['lbl.sc.tpl.btn.search']}"
+					action="#{TemplateMBB.searchScqtDocAction}" update="createList" />
+			</div>
 
-		</h:panelGrid>
-		<p:panelGrid 
-			
-			styleClass="noBorders tr,noBorders td">
-<p:row>
-<p:column>
+		</p:panel>
 
-			<h:outputLabel value="Item Type: " ></h:outputLabel>
-</p:column>
-		<p:column>
-				<p:selectOneMenu value="#{TemplateMBB.managedBean.searchItemTypeId}">
-							<f:selectItems value="#{templateSpecBackingBean.getDropdownValues(PmCodeCatConst.itemType)}" />
-						</p:selectOneMenu>
-</p:column>
-			
+		<p:panel header="#{lbl['lbl.sc.tpl.tmp.search']}" toggleable="true">
+		<p:commandLink value="#{lbl['lbl.sc.tpl.list']}"></p:commandLink>
+			<h:panelGrid style="width:950px;">
+				<p:dataTable id="createList" var="scQtDoc"
+					value="#{TemplateMBB.managedBean.docSearchlist}" editable="true"
+					rowKey="#{scQtDoc.qtDocId}" rowIndexVar="index">
+					<!--   <p:column selectionMode="multiple"  style="text-align:center;"/> -->
 
-<p:column>
+					<p:column headerText="#{lbl['lbl.sc.tpl.search.qtn.no']}">
+						<h:outputText value="#{scQtDoc.scQt.qtNo}" />
+					</p:column>
 
-			<h:outputLabel value="Procurement Category: "></h:outputLabel>
-</p:column>
-<p:column>
-          <p:selectOneMenu value="#{TemplateMBB.managedBean.searchProcurementId}">
-							<f:selectItems value="#{templateSpecBackingBean.getDropdownValues(PmCodeCatConst.procurementCategory)}" />
-						</p:selectOneMenu>
+					<p:column headerText="#{lbl['lbl.sc.tpl.search.title']}">
+						<h:outputText value="#{scQtDoc.tplSpecMaster.specName}"></h:outputText>
+					</p:column>
+					<p:column headerText="#{lbl['lbl.sc.tpl.search.spec']}">
+						<h:outputText value="#{scQtDoc.tplSpecMaster.specTypeCode.codeId}" />
+					</p:column>
+					<p:column headerText="#{lbl['lbl.sc.tpl.search.item']}">
+						<h:outputText value="#{scQtDoc.tplSpecMaster.itemTypeCode.codeId}" />
+					</p:column>
+					<p:column headerText="#{lbl['lbl.sc.tpl.search.procure.category']}">
+						<h:outputText
+							value="#{scQtDoc.tplSpecMaster.procurementCategory.codeId}" />
+					</p:column>
 
-</p:column>
-</p:row>
-		</p:panelGrid> -->
-		
-		
-		
-		
-		
-                        <table>
-<tr>
-<td >
-	<h:outputLabel value="Specification Type"></h:outputLabel>
-			
-</td>
-<td>
-<p:selectOneMenu value="#{TemplateMBB.managedBean.searchSpecTypeId}">
-							<f:selectItems value="#{TemplateMBB.getDropdownValues(PmCodeCatConst.specificationType)}" />
-						</p:selectOneMenu>
-			
-</td>
-</tr>
-		<tr>
-<td  style="width:50%">
+					<p:column headerText="#{lbl['lbl.sc.tpl.search.status']}">
+						<h:outputText value="#{scQtDoc.tplSpecMaster.status.statusId}" />
+					</p:column>
+					<p:column headerText="#{lbl['lbl.sc.tpl.search.action']}">
+						<p:commandButton value="#{lbl['lbl.sc.tpl.search.btn.clone']}"
+							action="#{TemplateMBB.cloneAction(scQtDoc)}"
+							oncomplete="create.hide();"></p:commandButton>
+					</p:column>
+				</p:dataTable>
+			</h:panelGrid>
 
-			<h:outputLabel value="Template Title"></h:outputLabel>
-</td>
-<td>
-			<h:inputText size="70" value="#{TemplateMBB.managedBean.scqtDoc.tplSpecMaster.specName}" />
-</td>
-</tr>
-<tr>
-<td>
-<h:outputLabel value="Qtn/Tender No"></h:outputLabel>
-			
-</td>
-		<td>
-			<p:inputText value="#{TemplateMBB.managedBean.scqtDoc.scQt.qtNo}" />
-				
-</td>
-</tr>
-<tr>
-<td  style="width:30%">
-<h:outputLabel value="Item Type"></h:outputLabel>
-			
-</td>
-<td>
-		<p:selectOneMenu value="#{TemplateMBB.managedBean.searchItemTypeId}" >
-							<f:selectItems value="#{templateSpecBackingBean.getDropdownValues(PmCodeCatConst.itemType)}" />
-						</p:selectOneMenu>
 
-</td>
-<td  style="width:50%">
-			<h:outputLabel value="Procurement Category"></h:outputLabel>
-
-</td>
-<td>
-
-			
-				<p:selectOneMenu value="#{TemplateMBB.managedBean.searchProcurementId}" >
-							<f:selectItems value="#{templateSpecBackingBean.getDropdownValues(PmCodeCatConst.procurementCategory)}" />
-						</p:selectOneMenu>
-</td>
-</tr>
-</table>
-		<div align="right">
-			<p:commandButton value="SEARCH" action="#{TemplateMBB.searchScqtDocAction}" update="createList"/>
-		</div>
-
-	</p:panel>
-
-	<p:panel header="Template Search"  toggleable="true">
-		<h:panelGrid style="width:950px;">
-			<p:dataTable id="createList" var="scQtDoc"
-				value="#{TemplateMBB.managedBean.docSearchlist}"
-				editable="true"
-				rowKey="#{scQtDoc.qtDocId}" rowIndexVar="index">
-          <!--   <p:column selectionMode="multiple"  style="text-align:center;"/> -->
-
-				<p:column headerText="Qtn/Tender No">
-					<h:outputText value="#{scQtDoc.scQt.qtNo}" />
-				</p:column>
-
-				<p:column headerText=" Template Title">
-					<h:outputText value="#{scQtDoc.tplSpecMaster.specName}"></h:outputText>
-				</p:column>
-				<p:column headerText="Specification Type">
-					<h:outputText value="#{scQtDoc.tplSpecMaster.specTypeCode.codeId}" />
-				</p:column>
-				<p:column headerText="Item Type">
-					<h:outputText value="#{scQtDoc.tplSpecMaster.itemTypeCode.codeId}" />
-				</p:column>
-				<p:column headerText="Procurement Category">
-					<h:outputText value="#{scQtDoc.tplSpecMaster.procurementCategory.codeId}" />
-				</p:column>
-			
-				<p:column headerText="Status">
-					<h:outputText value="#{scQtDoc.tplSpecMaster.status.statusId}" />
-				</p:column>
-				<p:column headerText="Action">
-					<p:commandButton value="CLONE" action="#{TemplateMBB.cloneAction(scQtDoc)}" oncomplete="create.hide();"></p:commandButton>
-				</p:column>
-			</p:dataTable>
-		</h:panelGrid>
-		
-
-	</p:panel>
-</p:dialog>
+		</p:panel>
+	</p:dialog>
 </ui:composition>
