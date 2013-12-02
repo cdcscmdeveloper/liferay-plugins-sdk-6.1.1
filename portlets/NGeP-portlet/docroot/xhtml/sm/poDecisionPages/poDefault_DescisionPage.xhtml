@@ -76,7 +76,7 @@
 
 		<ui:include
 			src="/xhtml/sm/shared/poDecisionSharedPages/assignToSvcForm.xhtml" />
-		<div align="center">
+		<div align="right">
 			<p:commandButton value="Submit" onclick="svcDialog.hide();" />
 			<p:commandButton value="Cancel" onclick="svcDialog.hide();" />
 		</div>
@@ -87,7 +87,7 @@
 
 		<ui:include
 			src="/xhtml/sm/shared/poDecisionSharedPages/submitToApproverForm.xhtml" />
-		<div align="center">
+		<div align="right">
 			<p:commandButton value="Submit" onclick="submitApprvrDialog.hide();"
 				action="#{backingBean.submitPOorApproverReviewToBPM('ESCALATE')}" />
 			<p:commandButton value="Cancel" onclick="submitApprvrDialog.hide();" />
@@ -99,7 +99,7 @@
 
 		<ui:include
 			src="/xhtml/sm/shared/poDecisionSharedPages/approvedRemarksPopUpForm.xhtml" />
-		<div align="center">
+		<div align="right">
 			<p:commandButton value="Submit" onclick="approveDialog.hide();"
 				action="#{backingBean.submitPOorApproverReviewToBPM('APPROVE')}" />
 			<p:commandButton value="Cancel" onclick="approveDialog.hide();" />
@@ -111,7 +111,7 @@
 
 		<ui:include
 			src="/xhtml/sm/shared/poDecisionSharedPages/rejectedRemarksPopUpForm.xhtml" />
-		<div align="center">
+		<div align="right">
 			<p:commandButton value="Submit" onclick="rejectDialog.hide();"
 				action="#{backingBean.submitPOorApproverReviewToBPM('REJECT')}" />
 			<p:commandButton value="Cancel" onclick="rejectDialog.hide();" />

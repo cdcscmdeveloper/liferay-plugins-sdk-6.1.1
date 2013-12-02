@@ -6,27 +6,9 @@
 	xmlns:c="http://java.sun.com/jsp/jstl/core">
 
 	<table style="width: 100%">
-		<!-- <tr>
-			<td colspan="2"><h4
-					style="color: blue; text-decoration: underline; text-align: center;">
-					<h:outputText value="#{lbl['lbl.sm.applnTypeLbl']}" />
-					<h:outputText value="Apply Bumiputera Status" />
-					<h:outputText value=" - #{backingBean.managedBean.smAppl.applNo}" />
-				</h4></td>
-		</tr> -->
+
 		<tr>
-			<!-- <td>
-				<h6 style="color: blue;">
-					<h:outputText value="Step5 :" />
-					<h:outputText value=" Supporting Documents Page" />
-				</h6>
-			</td> -->
-			<td><div align="right" style="width: 100%">
-					<p:commandButton value="#{lbl['lbl.sm.saveAsDraft']}"
-						icon="ui-icon-save" />
-				</div></td>
-		</tr>
-		<tr>
+			<td width="150px;"><h:outputText value="Submission Type " /></td>
 			<td><p:selectOneRadio id="suppDocs"
 					value="#{backingBean.managedBean.smAppl.supportingDocMode}">
 					<f:selectItem itemLabel="Offline" itemValue="F" />
@@ -44,7 +26,7 @@
 				<tr>
 					<td><p:commandButton value="#{lbl['lbl.sm.prev']}"
 							actionListener="#{backingBean.setTabValue('4','3')}"
-							action="#{backingBean.updateSmAppl}" update=":form:tt"
+							action="#{backingBean.updateSmAppl}" update=":form"
 							icon="ui-icon-prev" /></td>
 					<td><p:commandButton value="Print List">
 							<p:printer target="supDocPan" />
@@ -62,7 +44,7 @@
 				<tr>
 					<td><p:commandButton value="#{lbl['lbl.sm.prev']}"
 							actionListener="#{backingBean.setTabValue('4','3')}"
-							action="#{backingBean.updateSmAppl}" update=":form:tt"
+							action="#{backingBean.updateSmAppl}" update=":form"
 							icon="ui-icon-prev" /></td>
 					<td><p:commandButton value="Print List">
 							<p:printer target="supDocPan" />
