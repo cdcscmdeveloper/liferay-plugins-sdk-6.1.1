@@ -792,7 +792,7 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean>{
 
 			this.getManagedBean().setApprovedItemList(resDTO.getSupplierItemList());
 
-		}else if(event.getTab().getTitle().equalsIgnoreCase("Rejected or Revise")){
+		}else if(event.getTab().getTitle().equalsIgnoreCase("Rejected")){
 			statusFilterBean.setSearchField("itemStatus");
 			statusFilterBean.setSearchValue("R");
 			searchBean.getDataFilterBeans().add(statusFilterBean);
