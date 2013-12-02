@@ -1272,6 +1272,17 @@ public class ContractDetailsBackingBean extends
 		this.getManagedBean().getCtContract().getCtDeductions()
 				.remove(this.getManagedBean().getCtDeduction());
 	}
+	
+	public void addFrequencyDetails(){
+		CtSchedule ctSchedules = new CtSchedule();
+		this.getManagedBean().getCtContract().getCtSchedules().add(ctSchedules);
+		
+	}
+	
+	public void deleteFrequencyDetails(){
+		this.getManagedBean().getCtContract().getCtSchedules().remove(this.getManagedBean().getCtSchedules());
+		
+	}
 
 	public void addScheduleDetails() {
 		CtProgressivePayment ctProgressivePayment = new CtProgressivePayment();

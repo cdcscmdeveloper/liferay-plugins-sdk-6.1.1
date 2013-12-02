@@ -42,21 +42,7 @@
   	     </p:selectOneMenu>
          </h:panelGrid>
          <h:outputLabel value="#{lbl['lbl.ct.camount']}"/>  
-         <h:panelGrid columns="2">
            <p:inputText style="width:60px;" value="3000.00" disabled="true" />
-           <p:selectOneMenu disabled="false" style="width:20px;">
-			  <f:selectItem itemLabel="MYR" itemValue="MYR"/> 
-			  <f:selectItem itemLabel="USD" itemValue="USD"/> 
-  	       </p:selectOneMenu>
-         </h:panelGrid>
-         <p:outputLabel value="#{lbl['lbl.ct.bond.value']}" />  
-         <h:panelGrid columns="2">
-            <p:inputText disabled="true" value="2000.00" style="width:60px;" />
-            <p:selectOneMenu disabled="false"  style="width:20px;">
-			<f:selectItem itemLabel="MYR" itemValue="MYR"  /> 
-		    <f:selectItem itemLabel="USD" itemValue="USD" /> 
-  		    </p:selectOneMenu>
-         </h:panelGrid>
          <p:outputLabel value="#{lbl['lbl.ct.ft.no']}" />  
          <p:commandLink>  
           <p:outputLabel value="2348-5674874" style="float:left;"/>  
@@ -71,9 +57,7 @@
          </p:commandLink> 
        </h:panelGrid>
       </p:panel>
-          <p:panel id="supAgDetail" header="Amendment Details"  rendered="#{agreementBackingBean.managedBean.agreementType eq 'supplemental'}"  toggleable="true"  toggleSpeed="500">
-          <ui:include src="agreementSupDetails.xhtml"></ui:include>
-		</p:panel>       
+               
 		 <ui:include src="/xhtml/ct/agreement/signingAgreement.xhtml"/>  
 </ui:composition>
 	  

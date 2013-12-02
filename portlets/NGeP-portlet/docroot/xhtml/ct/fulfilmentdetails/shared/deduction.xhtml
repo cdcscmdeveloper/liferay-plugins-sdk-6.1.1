@@ -12,7 +12,7 @@
 	   paginatorAlwaysVisible="true" emptyMessage="No Records!">
 	   <ac:paginator for="tableDeduction" />  
 		 <p:ajax event="cellEdit" listener="#{contractDetailsBackingBean.onCellEdit}" />  
-          <p:column headerText="#{lbl['lbl.ct.ded.table.type']}" style="width:130px;">  
+          <p:column headerText="#{lbl['lbl.ct.ded.table.type']}" style="width:150px;">  
                <p:cellEditor>  
                     <f:facet name="output"> 
                     <h:outputText value="#{data.deductionTypeCode.category}" />
@@ -23,8 +23,8 @@
                     </h:selectOneMenu>  
                 </f:facet>   
                </p:cellEditor>  
-           </p:column>    
-           <p:column headerText="#{lbl['lbl.ct.ded.table.per']}" style="width:300px;">  
+           </p:column>  
+            <p:column headerText="#{lbl['lbl.ct.ded.table.desc']}" style="width:450px;">  
                <p:cellEditor>  
                    <f:facet name="output">
                    <h:outputText value="#{data.description}" />
@@ -33,14 +33,24 @@
                    <p:inputText id="desInput" value="#{data.description}" style="width:96%"/>
                    </f:facet>  
                </p:cellEditor>  
-           </p:column>  
-			<p:column headerText="#{lbl['lbl.ct.ded.table.ramt']}" style="width:120px;">  
+           </p:column>    
+           <p:column headerText="#{lbl['lbl.ct.ded.table.per']}" style="width:80px;">  
                <p:cellEditor>  
                    <f:facet name="output">
-                   <h:outputText value="#{data.amount}" />
+                   <h:outputText value="20" style="float:right;" />
                    </f:facet>  
                    <f:facet name="input">
-                   <p:inputText id="amtInput" value="#{data.amount}" style="width:96%"/>
+                   <p:inputText id="perInput" value="20" style="width:96%;float:right;"/>
+                   </f:facet>  
+               </p:cellEditor>  
+           </p:column>  
+			<p:column headerText="#{lbl['lbl.ct.ded.table.ramt']}" style="width:100px;">  
+               <p:cellEditor>  
+                   <f:facet name="output">
+                   <h:outputText value="#{data.amount}" style="float:right;" />
+                   </f:facet>  
+                   <f:facet name="input">
+                   <p:inputText id="amtInput" value="#{data.amount}" style="width:96%;float:right;"/>
                    </f:facet>  
                </p:cellEditor>  
            </p:column>  

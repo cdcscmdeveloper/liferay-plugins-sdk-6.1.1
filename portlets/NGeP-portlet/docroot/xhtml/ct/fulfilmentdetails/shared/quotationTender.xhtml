@@ -37,9 +37,12 @@
 				<f:selectItems value="#{contractDetailsBackingBean.getDropdownValues(PmCodeCatConst.fulfilmentType)}" />
 			</p:selectOneMenu>
 			<p:outputLabel value="#{lbl['lbl.ct.sfee']}" />
+			<h:panelGrid columns="2">
 			<p:inputText
 				value="#{contractDetailsBackingBean.managedBean.ctContract.serviceFee}"
-				style="width:55px;" disabled="true" />			
+				style="width:55px;" disabled="true" />	
+				<p:outputLabel value="%" />
+		</h:panelGrid>		
 		</h:panelGrid>
 	</p:panel>
 </ui:composition>
