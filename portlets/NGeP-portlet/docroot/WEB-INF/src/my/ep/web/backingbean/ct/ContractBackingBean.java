@@ -49,13 +49,13 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 	public void initializeRemarkAndAttachement(List<CtRemark> remarkList, List<CtAttachment> attachmentList) {
 		FacesScopes facesScopes = new FacesScopes();
 		
-		if(remarkList.size()==0 || !compareUserName(remarkList.get(0).getCreatedUsername())) {
+		if(remarkList.size()==0 || !compareUserName(remarkList.get(0).getCreatedUser().getLoginId())) {
 			CtRemark remark = new CtRemark();
 			remark.setCreatedBy(facesScopes.getUserSessionBean().getUserId());
 			remark.setCreatedDate(new Timestamp(System.currentTimeMillis()));
 			remark.setChangedBy(remark.getCreatedBy());
 			remark.setChangedDate(remark.getCreatedDate());
-			remark.setCreatedUsername(facesScopes.getUserSessionBean().getLoginId());
+			remark.setCreatedUser(facesScopes.getUserSessionBean());
 			
 			getManagedBean().setRemarkList(remarkList);
 			getManagedBean().getRemarkList().add(0, remark);
@@ -132,7 +132,7 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 		FacesScopes facesScopes = new FacesScopes();
 		
 		UploadedFile item = event.getFile();
-		String filePath = "C:\\projects\\uploads\\"+item.getFileName();
+		String filePath = "\\"+item.getFileName();
 		FileOutputStream fileOuputStream = new FileOutputStream(filePath); 
 	    fileOuputStream.write(item.getContents());
 	    fileOuputStream.close();
@@ -141,7 +141,7 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 		attachment.setFileName(item.getFileName());
 		attachment.setFilePath(filePath);
 		attachment.setCreatedBy(facesScopes.getUserSessionBean().getUserId());
-		attachment.setCreatedUsername(facesScopes.getUserSessionBean().getUserName());
+		attachment.setCreatedUser(facesScopes.getUserSessionBean());
 		attachment.setCreatedDate(new Timestamp(System.currentTimeMillis()));
 		this.getManagedBean().getAttachmentList().add(attachment);
 	}

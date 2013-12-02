@@ -41,7 +41,6 @@ import my.ep.persistence.entity.ct.circular.dtl.CtContactPerson;
 import my.ep.persistence.entity.ct.circular.panel.CtPanelItem;
 import my.ep.persistence.entity.ct.circular.panel.CtPanelState;
 import my.ep.persistence.entity.ct.circular.panel.CtPanelSupplier;
-import my.ep.persistence.entity.ct.circular.panel.CtPanelSupplierItem;
 import my.ep.persistence.entity.ct.circular.panel.CtPanelZone;
 import my.ep.persistence.entity.pm.authorization.PmOrgProfile;
 import my.ep.persistence.entity.pm.authorization.PmUserGroupUser;
@@ -85,13 +84,6 @@ public class PanelBackingBean extends BaseBackingBean<PanelManagedBean>{
 			
 			ContractBackingBean ctBB = new ContractBackingBean();
 			ctBB.initializeRemarkAndAttachement(getManagedBean().getRemarkList(), getManagedBean().getAttachmentList());
-		}
-		if(getManagedBean().getCircularVer().getCtPanelSuppliers()!=null) {
-			for(CtPanelSupplier panelSupplier : getManagedBean().getCircularVer().getCtPanelSuppliers()) {
-				if(panelSupplier.getFactoringOrgProfile()==null) {
-					panelSupplier.setFactoringOrgProfile(new PmOrgProfile());
-				}
-			}
 		}
 		if(getManagedBean().getApproverModel()==null) {
 			List<String> source = getAvailableApproverList();  
@@ -307,8 +299,7 @@ public class PanelBackingBean extends BaseBackingBean<PanelManagedBean>{
 			PmOrgProfile factoringOrgProfile = new PmOrgProfile();
 			factoringOrgProfile.setOrgProfileId(1245L);
 			panelSupplier.setSupplier(supplier);
-			panelSupplier.setFactoringOrgProfile(factoringOrgProfile);
-	        getManagedBean().getCircularVer().getCtPanelSuppliers().add(panelSupplier);
+			getManagedBean().getSelectedPanelItem().getCtPanelSuppliers().add(panelSupplier);
 		} catch (Exception e) {
 			e.printStackTrace();
 			FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR,e.toString(), e.getMessage()));
@@ -318,7 +309,7 @@ public class PanelBackingBean extends BaseBackingBean<PanelManagedBean>{
 	public void deletePanelSupplier(){
 		log.info("PanelBackingBean.deletePanelSupplier()");
 		try {
-			getManagedBean().getCircularVer().getCtPanelSuppliers().remove(getManagedBean().getSelectedPanelSupplier());
+			getManagedBean().getSelectedPanelItem().getCtPanelSuppliers().remove(getManagedBean().getSelectedPanelSupplier());
 		} catch (Exception e) {
 			e.printStackTrace();
 			FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR,e.toString(), e.getMessage()));
@@ -409,29 +400,6 @@ public class PanelBackingBean extends BaseBackingBean<PanelManagedBean>{
 		}
 	}
 	
-	public void addPanelSupplierItem(){
-		log.info("PanelBackingBean.addPanelSupplierItem()");
-        try {	
-        	CtPanelSupplierItem panelSupplierItem = new CtPanelSupplierItem();
-        	panelSupplierItem.setCtPanelSupplier(new CtPanelSupplier());
-        	panelSupplierItem.setCtPanelZone(new CtPanelZone());
-			getManagedBean().getSelectedPanelItem().getCtPanelSupplierItems().add(panelSupplierItem);
-		} catch (Exception e) {
-			e.printStackTrace();
-			FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR,e.toString(), e.getMessage()));
-		}
-	}
-	
-	public void deletePanelSupplierItem(){
-		log.info("PanelBackingBean.deletePanelSupplierItem()");
-		try {
-			getManagedBean().getSelectedPanelItem().getCtPanelSupplierItems().remove(getManagedBean().getSelectedPanelSupplierItem());
-		} catch (Exception e) {
-			e.printStackTrace();
-			FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR,e.toString(), e.getMessage()));
-		}
-	}
-	
 	public void selectActiveCirculars(){
 		log.info("PanelBackingBean.selectActiveCirculars()");
         try {	
@@ -510,15 +478,15 @@ public class PanelBackingBean extends BaseBackingBean<PanelManagedBean>{
 			CircularResDTO resDTO = null;
 			if(action.equalsIgnoreCase("view")) {
 				resDTO = circularSO.retrieveCircularVerById(reqDTO);
-				if(resDTO.getCircularVer().getCircularTypeCode()==null) {
+				if(resDTO.getCircularVer().getUpdateType()==null) {
 					PmCode code = new PmCode();
 					code.setCodeId(-1L);
-					resDTO.getCircularVer().setCircularTypeCode(code);
+					resDTO.getCircularVer().setUpdateType(code);
 				}
 				for(CtPanelItem panelItem : resDTO.getCircularVer().getCtPanelItems()) {
-					for(CtPanelSupplierItem panelSupplierItem : panelItem.getCtPanelSupplierItems()) {
-						if(panelSupplierItem.getCtPanelZone()==null) {
-							panelSupplierItem.setCtPanelZone(new CtPanelZone());
+					for(CtPanelSupplier panelSupplier : panelItem.getCtPanelSuppliers()) {
+						if(panelSupplier.getCtPanelZone()==null) {
+							panelSupplier.setCtPanelZone(new CtPanelZone());
 						}
 					}
 				}
@@ -528,10 +496,10 @@ public class PanelBackingBean extends BaseBackingBean<PanelManagedBean>{
 			} else if(action.equalsIgnoreCase("update")) {
 				reqDTO.setUpdateAction(true);
 				resDTO = circularSO.retrieveCircularVerById(reqDTO);
-				if(resDTO.getCircularVer().getCircularTypeCode()==null) {
+				if(resDTO.getCircularVer().getUpdateType()==null) {
 					PmCode code = new PmCode();
 					code.setCodeId(-1L);
-					resDTO.getCircularVer().setCircularTypeCode(code);
+					resDTO.getCircularVer().setUpdateType(code);
 				}				
 				getManagedBean().setCircular(resDTO.getCircular());
 				getManagedBean().setCircularVer(resDTO.getCircularVer());
@@ -567,15 +535,15 @@ public class PanelBackingBean extends BaseBackingBean<PanelManagedBean>{
 			reqDTO.setCircularVerId(circularVerId);
 			
 			CircularResDTO resDTO = circularSO.retrieveCircularVerById(reqDTO);
-			if(resDTO.getCircularVer().getCircularTypeCode()==null) {
+			if(resDTO.getCircularVer().getUpdateType()==null) {
 				PmCode code = new PmCode();
 				code.setCodeId(-1L);
-				resDTO.getCircularVer().setCircularTypeCode(code);
+				resDTO.getCircularVer().setUpdateType(code);
 			}
 			for(CtPanelItem panelItem : resDTO.getCircularVer().getCtPanelItems()) {
-				for(CtPanelSupplierItem panelSupplierItem : panelItem.getCtPanelSupplierItems()) {
-					if(panelSupplierItem.getCtPanelZone()==null) {
-						panelSupplierItem.setCtPanelZone(new CtPanelZone());
+				for(CtPanelSupplier panelSupplier : panelItem.getCtPanelSuppliers()) {
+					if(panelSupplier.getCtPanelZone()==null) {
+						panelSupplier.setCtPanelZone(new CtPanelZone());
 					}
 				}
 			}

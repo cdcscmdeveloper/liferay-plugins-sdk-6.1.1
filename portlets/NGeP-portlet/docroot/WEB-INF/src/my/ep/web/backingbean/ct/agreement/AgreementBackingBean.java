@@ -1,10 +1,12 @@
+/**
+ * Copyright © 2013 Archisoft. All rights reserved.
+ */
 package my.ep.web.backingbean.ct.agreement;
 
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 import javax.annotation.PostConstruct;
@@ -15,12 +17,6 @@ import javax.faces.context.FacesContext;
 import javax.faces.event.ActionEvent;
 import javax.faces.model.SelectItem;
 
-import org.apache.log4j.Logger;
-import org.primefaces.event.FileUploadEvent;
-import org.primefaces.model.DefaultStreamedContent;
-import org.primefaces.model.StreamedContent;
-import org.primefaces.model.UploadedFile;
-
 import my.ep.biz.service.ct.IContractSO;
 import my.ep.biz.service.ct.agreement.IAgreementSO;
 import my.ep.bpm.service.IBpmSO;
@@ -29,13 +25,8 @@ import my.ep.dto.ct.ContractResDTO;
 import my.ep.dto.ct.agreement.ContractAgreementReqDTO;
 import my.ep.dto.ct.agreement.ContractAgreementResDTO;
 import my.ep.exception.EpException;
-import my.ep.persistence.entity.ct.CtContract;
-import my.ep.persistence.entity.ct.agreement.CtAgreement;
 import my.ep.persistence.entity.ct.agreement.CtSignParty;
 import my.ep.persistence.entity.ct.amend.CtAmendment;
-import my.ep.persistence.entity.pm.authorization.PmOrgProfile;
-import my.ep.persistence.entity.pm.authorization.PmUser;
-import my.ep.persistence.entity.pm.common.PmCode;
 import my.ep.util.lookupservice.EpBpmBusinessDelegate;
 import my.ep.web.backingbean.BaseBackingBean;
 import my.ep.web.backingbean.ct.ContractBackingBean;
@@ -45,6 +36,18 @@ import my.ep.web.constant.BpmOutcomeConst;
 import my.ep.web.managedbean.ct.agreement.AgreementManagedBean;
 import my.ep.web.util.lookupservice.BusinessDelegate;
 
+import org.apache.log4j.Logger;
+import org.primefaces.event.FileUploadEvent;
+import org.primefaces.model.DefaultStreamedContent;
+import org.primefaces.model.StreamedContent;
+import org.primefaces.model.UploadedFile;
+
+/**
+ * Backing Bean For Agreement
+ * 
+ * @author Alam
+ * @since 26/9/2013
+ */
 @ManagedBean(name="agreementBackingBean")
 @RequestScoped
 public class AgreementBackingBean extends BaseBackingBean<AgreementManagedBean> {
@@ -60,9 +63,7 @@ public class AgreementBackingBean extends BaseBackingBean<AgreementManagedBean> 
 	private AgreementDetails agreementDetails;
 	private List<SelectItem> sourcingFiles;  
 	
-	
 	public AgreementBackingBean(){
-		
 		ContractBackingBean ctBB = new ContractBackingBean();
 		ctBB.initializeRemarkAndAttachement(getManagedBean().getRemarkList(), getManagedBean().getAttachmentList());
 		
@@ -75,160 +76,119 @@ public class AgreementBackingBean extends BaseBackingBean<AgreementManagedBean> 
 	
 	@PostConstruct
 	public void init(){
-		
-	 if(this.getManagedBean().getAgreement() == null){
-			  
-		System.out.println("Object initialize in post contruct>>>>>>>");
-		this.getManagedBean().setAgreement(new CtAgreement());
-		this.getManagedBean().getAgreement().setClauseDocMasterId(new Long(1));
-		this.getManagedBean().getAgreement().setApprovedDate(new Date());
-		this.getManagedBean().getAgreement().setCtContract(new CtContract());
-	
-		
-		CtSignParty ctSignParty = new CtSignParty();
-		ctSignParty.setOfficerIc("897452346523");
-		ctSignParty.setOfficerName("Khan");
-		ctSignParty.setOfficerPosition("PTJ HEAD");
-		ctSignParty.setOfficer(new PmUser());
-		ctSignParty.getOfficer().setUserId(new Long(1));
-		ctSignParty.setOrgProfile(new PmOrgProfile());
-		ctSignParty.getOrgProfile().setOrgProfileId(new Long(1));
-		ctSignParty.setSignPartyTypeCode(new PmCode());
-		ctSignParty.getSignPartyTypeCode().setCodeId(new Long(1));
-		ctSignParty.setCtAgreement(this.getManagedBean().getAgreement());
-		this.getManagedBean().getAgreement().getCtSignParties().add(ctSignParty);
-	  }
-	 
-	  if(sourcingFiles == null){
-		 sourcingFiles = new ArrayList<SelectItem>();  
-		 SelectItem doc = new SelectItem("Scope of Work.docx", "Scope of Work.docx");  
-		 SelectItem doc1 = new SelectItem("Floor_map.docx", "Floor_map.docx");  
-		 SelectItem doc2 = new SelectItem("work_schedule.docx", "work_schedule.docx");  
-		 SelectItem doc3 = new SelectItem("performance_bond.docx", "performance_bond.docx");  
-		 sourcingFiles.add(doc);
-		 sourcingFiles.add(doc1);
-		 sourcingFiles.add(doc2);
-		 sourcingFiles.add(doc3);
-		 
-	  }
+		if (sourcingFiles == null) {
+			sourcingFiles = new ArrayList<SelectItem>();
+			SelectItem doc = new SelectItem("Scope of Work.docx", "Scope of Work.docx");
+			SelectItem doc1 = new SelectItem("Floor_map.docx", "Floor_map.docx");
+			SelectItem doc2 = new SelectItem("work_schedule.docx","work_schedule.docx");
+			SelectItem doc3 = new SelectItem("performance_bond.docx","performance_bond.docx");
+			sourcingFiles.add(doc);
+			sourcingFiles.add(doc1);
+			sourcingFiles.add(doc2);
+			sourcingFiles.add(doc3);
+		}
 	}
 	
-	public String createAgreement(String action){
-	
+	public String createAgreement(String action) {
 		IAgreementSO agreementSO = null;
-		 ContractAgreementReqDTO reqDTO = null;	
-		try{
-			
-			 reqDTO = new ContractAgreementReqDTO();
-		     agreementSO = (IAgreementSO)BusinessDelegate.getInstance().getServiceObject("ct", IAgreementSO.class);
-		     this.getManagedBean().getAgreement().setCtAgreementAppendixs(this.getManagedBean().getAppendixList());
-		     
-		     IContractSO contractSO = (IContractSO) BusinessDelegate.getInstance().getServiceObject("ct",IContractSO.class);
-			 ContractReqDTO ctReqDTO = new ContractReqDTO();
-			 ctReqDTO.setContractId(this.getManagedBean().getContractId());
-			 ContractResDTO ctResDTO = contractSO.retrieveContract(ctReqDTO);
-			 this.getManagedBean().getAgreement().setCtContract(ctResDTO.getContract());
-			 
-			 reqDTO.setAgreement(this.getManagedBean().getAgreement());
-			 
-			 String token = getManagedBean().getToken();
-				if(token==null) {
-					IBpmSO bpmSO = (IBpmSO) EpBpmBusinessDelegate.getInstance().getServiceObject(IBpmSO.class);
-					token = bpmSO.authenticate("roslan", "welcome1");
-					if(token==null) {
-						throw new EpException("BPM token not found");
-					}
-				}
+		ContractAgreementReqDTO reqDTO = null;
+		try {
+			reqDTO = new ContractAgreementReqDTO();
+			agreementSO = (IAgreementSO) BusinessDelegate.getInstance().getServiceObject("ct", IAgreementSO.class);
+			this.getManagedBean().getAgreement().setCtAgreementAppendixs(this.getManagedBean().getAppendixList());
 
-				reqDTO.setOutcome(action);
-				if(action == BpmOutcomeConst.BPM_SAVE){
-					  reqDTO.setOutcome("");
-			     }
-				reqDTO.setToken(token);
-				reqDTO.setTaskId(getManagedBean().getTaskId());
-			 
-				 ContractAgreementResDTO resDTO =  agreementSO.createAgreement(reqDTO);
-			 
-				 if (resDTO.isSuccessful()) {
-						log.info("Record saved successfully1");
-						FacesContext.getCurrentInstance().addMessage(null,new FacesMessage(FacesMessage.SEVERITY_INFO,"Record saved successfully.","Agreement Name. : "+ resDTO.getAgreement().getAgreementId()));
-						if (!action.equalsIgnoreCase(BpmOutcomeConst.BPM_SAVE)) { 
-							renewSesionObject();
-							return "/xhtml/shared/acknowledge.xhtml";
-						}
-					} else {
-						throw new EpException("Failed.");
-					}
+			IContractSO contractSO = (IContractSO) BusinessDelegate.getInstance().getServiceObject("ct", IContractSO.class);
+			ContractReqDTO ctReqDTO = new ContractReqDTO();
+			ctReqDTO.setContractId(this.getManagedBean().getContractId());
+			ContractResDTO ctResDTO = contractSO.retrieveContract(ctReqDTO);
+			this.getManagedBean().getAgreement().setCtContract(ctResDTO.getContract());
+			reqDTO.setAgreement(this.getManagedBean().getAgreement());
 
-				} catch (Exception e) {
-					e.printStackTrace();
-					FacesContext.getCurrentInstance().addMessage(null,new FacesMessage(FacesMessage.SEVERITY_ERROR, e.toString(),"Agreement save failed."));
-		  }finally{
-			agreementSO = null;
-			reqDTO = null;
-		}	
-		
-		return null;
-	}
-	
-	public String createSupAgreement(String action){
-		
-		IAgreementSO agreementSO = null;
-		 ContractAgreementReqDTO reqDTO = null;	
-		try{
-			
-			 reqDTO = new ContractAgreementReqDTO();
-		     agreementSO = (IAgreementSO)BusinessDelegate.getInstance().getServiceObject("ct", IAgreementSO.class);
-		     this.getManagedBean().getAgreement().setCtAmendment(new CtAmendment());
-		     this.getManagedBean().getAgreement().getCtAmendment().setAmendmentId(1L);
-		     this.getManagedBean().getAgreement().setCtAgreementAppendixs(this.getManagedBean().getAppendixList());
-			 reqDTO.setAgreement(this.getManagedBean().getAgreement());
-			 reqDTO.setOutcome(action);
-			 reqDTO.setTaskId(this.getManagedBean().getTaskId());
-			 
-			 String token = getManagedBean().getToken();
-				if(token==null) {
-					IBpmSO bpmSO = (IBpmSO) EpBpmBusinessDelegate.getInstance().getServiceObject(IBpmSO.class);
-					token = bpmSO.authenticate("roslan", "welcome1");
-					if(token==null) {
-						throw new EpException("BPM token not found");
-					}
+			String token = getManagedBean().getToken();
+			if (token == null) {
+				IBpmSO bpmSO = (IBpmSO) EpBpmBusinessDelegate.getInstance().getServiceObject(IBpmSO.class);
+				token = bpmSO.authenticate("roslan", "welcome1");
+				if (token == null) {
+					throw new EpException("BPM token not found");
 				}
+			}
 
-				reqDTO.setOutcome(action);
-				if(action == BpmOutcomeConst.BPM_SAVE){
-					  reqDTO.setOutcome("");
-			     }
-				reqDTO.setToken(token);
-				reqDTO.setTaskId(getManagedBean().getTaskId());
-			  
-				ContractAgreementResDTO resDTO = agreementSO.createAgreement(reqDTO);
-			 
-			 if(resDTO.isSuccessful()) {
-					log.info("Record saved successfully");
-					FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "Record saved successfully.","Agreement Saved. : "));
-					if(!action.equalsIgnoreCase(BpmOutcomeConst.BPM_SAVE)) { // save action will remain in the same page
-						renewSesionObject();
-						return "/xhtml/shared/acknowledge.xhtml";
-					}
-				} else {
-					throw new EpException("Failed.");
-				}
-				
-			} catch (Exception e) {
-				e.printStackTrace();
-				FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR,e.toString(), "Contract save failed."));
-		
-		} finally{
+			reqDTO.setOutcome(action);
+			if (action == BpmOutcomeConst.BPM_SAVE) {
+				reqDTO.setOutcome("");
+			}
+			reqDTO.setToken(token);
+			reqDTO.setTaskId(getManagedBean().getTaskId());
+
+			ContractAgreementResDTO resDTO = agreementSO.saveAgreement(reqDTO);
+			if (resDTO.isSuccessful()) {
+				log.info("Record saved successfully1");
+				FacesContext.getCurrentInstance().addMessage(null,new FacesMessage(FacesMessage.SEVERITY_INFO,"Record saved successfully.","Agreement Name. : "+ resDTO.getAgreement().getAgreementId()));
+				renewSesionObject();
+				return "/xhtml/shared/acknowledge.xhtml";
+			} else {
+				throw new EpException("Failed.");
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+			FacesContext.getCurrentInstance().addMessage(null,new FacesMessage(FacesMessage.SEVERITY_ERROR, e.toString(),"Agreement save failed."));
+		} finally {
 			agreementSO = null;
 			reqDTO = null;
 		}
-		
+		return null;
+	}
+
+	public String createSupAgreement(String action) {
+		IAgreementSO agreementSO = null;
+		ContractAgreementReqDTO reqDTO = null;
+		try {
+			reqDTO = new ContractAgreementReqDTO();
+			agreementSO = (IAgreementSO) BusinessDelegate.getInstance().getServiceObject("ct", IAgreementSO.class);
+			this.getManagedBean().getAgreement().setCtAmendment(new CtAmendment());
+			this.getManagedBean().getAgreement().getCtAmendment()
+					.setAmendmentId(1L);
+			this.getManagedBean().getAgreement().setCtAgreementAppendixs(this.getManagedBean().getAppendixList());
+			reqDTO.setAgreement(this.getManagedBean().getAgreement());
+			reqDTO.setOutcome(action);
+			reqDTO.setTaskId(this.getManagedBean().getTaskId());
+
+			String token = getManagedBean().getToken();
+			if (token == null) {
+				IBpmSO bpmSO = (IBpmSO) EpBpmBusinessDelegate.getInstance().getServiceObject(IBpmSO.class);
+				token = bpmSO.authenticate("roslan", "welcome1");
+				if (token == null) {
+					throw new EpException("BPM token not found");
+				}
+			}
+
+			reqDTO.setOutcome(action);
+			if (action == BpmOutcomeConst.BPM_SAVE) {
+				reqDTO.setOutcome("");
+			}
+			reqDTO.setToken(token);
+			reqDTO.setTaskId(getManagedBean().getTaskId());
+
+			ContractAgreementResDTO resDTO = agreementSO.saveAgreement(reqDTO);
+			if (resDTO.isSuccessful()) {
+				log.info("Record saved successfully");
+				FacesContext.getCurrentInstance().addMessage(null,new FacesMessage(FacesMessage.SEVERITY_INFO,"Record saved successfully.","Agreement Saved. : "));
+				renewSesionObject();
+				return "/xhtml/shared/acknowledge.xhtml";
+			} else {
+				throw new EpException("Failed.");
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+			FacesContext.getCurrentInstance().addMessage(null,new FacesMessage(FacesMessage.SEVERITY_ERROR, e.toString(),"Contract save failed."));
+		} finally {
+			agreementSO = null;
+			reqDTO = null;
+		}
 		return null;
 	}
 	
 	public void fileUpload(FileUploadEvent event) {
-		
 		UploadedFile file = event.getFile();
 		String fileName = file.getFileName();
 		byte[] fileBytes = file.getContents();
@@ -240,21 +200,18 @@ public class AgreementBackingBean extends BaseBackingBean<AgreementManagedBean> 
 		FacesContext.getCurrentInstance().addMessage(null, msg); 
 		FileOutputStream fos;
 		try {
-			  fos = new FileOutputStream("C:\\upload\\" + fileName);
-			  fos.write(fileBytes);
-			  fos.close();
-		
+			fos = new FileOutputStream("C:\\upload\\" + fileName);
+			fos.write(fileBytes);
+			fos.close();
 		} catch (FileNotFoundException e) {
-			  e.printStackTrace();
-		
+			e.printStackTrace();
 		} catch (IOException e) {
-			  e.printStackTrace();
+			e.printStackTrace();
 		}
 		FacesContext.getCurrentInstance().addMessage(null, message);
 	 }
 	
-public void fileApexUpload(FileUploadEvent event) {
-		
+	public void fileApexUpload(FileUploadEvent event) {
 	    System.out.println("==============123================================");
 		UploadedFile file = event.getFile();
 		String fileName = file.getFileName();
@@ -341,72 +298,70 @@ public void fileApexUpload(FileUploadEvent event) {
  		this.getManagedBean().getSignSupplierList().remove(this.getManagedBean().getSignSupplier());
  	}
  	
-	  public List<AgreementDetails> getAgreementList() {
+	public List<AgreementDetails> getAgreementList() {
 		List<AgreementDetails> agreementList = new ArrayList<AgreementDetails>();
-		
+
 		agreementDetails.setAgrementTitle("Agreement Cover Page");
 		agreementDetails.setAgrementType("System Defined");
 		agreementList.add(agreementDetails);
-		
+
 		AgreementDetails agreementDetails1 = new AgreementDetails();
 		agreementDetails1.setAgrementTitle("Agreement Details");
 		agreementDetails1.setAgrementType("System Defined");
 		agreementList.add(agreementDetails1);
-		
+
 		AgreementDetails agreementDetails2 = new AgreementDetails();
 		agreementDetails2.setAgrementTitle("Agreement Clause");
 		agreementDetails2.setAgrementType("Template Document");
 		agreementList.add(agreementDetails2);
-		
+
 		AgreementDetails agreementDetails3 = new AgreementDetails();
 		agreementDetails3.setAgrementTitle("Agreement Signing Page");
 		agreementDetails3.setAgrementType("System Defined");
 		agreementList.add(agreementDetails3);
 		return agreementList;
-	  }
-		
-	   public StreamedContent getFile() {
-		    return file;
-		}
+	}
 
-		public boolean isSupplementValue() {
-			return supplementValue;
-		}
-		
-		public void setFile(StreamedContent file) {  
-		       this.file = file;  
-		}  
-			
-		public void setSupplementValue(boolean supplementValue) {
-				this.supplementValue = supplementValue;
-	    }
+	public StreamedContent getFile() {
+		return file;
+	}
 
-	
-		public void setDownload(DefaultStreamedContent download) {
-			    this.download = download;
-		}
+	public boolean isSupplementValue() {
+		return supplementValue;
+	}
 
-		public DefaultStreamedContent getDownload() throws Exception {
-			    System.out.println("GET 1024 =>>>>>>>>>>>>>>>>>> " + download.getName());
-			    return download;
-		}	
-		
-		
-		public boolean isSystemDefined() {
-				return systemDefined;
-		}
+	public void setFile(StreamedContent file) {
+		this.file = file;
+	}
 
-		public void setSystemDefined(boolean systemDefined) {
-				this.systemDefined = systemDefined;
-		}
+	public void setSupplementValue(boolean supplementValue) {
+		this.supplementValue = supplementValue;
+	}
 
-		public boolean isUserUploaded() {
-				return userUploaded;
-		}
+	public void setDownload(DefaultStreamedContent download) {
+		this.download = download;
+	}
 
-		public void setUserUploaded(boolean userUploaded) {
-				this.userUploaded = userUploaded;
-		} 
+	public DefaultStreamedContent getDownload() throws Exception {
+		System.out.println("GET 1024 =>>>>>>>>>>>>>>>>>> " + download.getName());
+		return download;
+	}
+
+	public boolean isSystemDefined() {
+		return systemDefined;
+	}
+
+	public void setSystemDefined(boolean systemDefined) {
+		this.systemDefined = systemDefined;
+	}
+
+	public boolean isUserUploaded() {
+		return userUploaded;
+	}
+
+	public void setUserUploaded(boolean userUploaded) {
+		this.userUploaded = userUploaded;
+	}
 
 	public ContractListItem getContractListItem() {
 		return contractListItem;
@@ -430,6 +385,5 @@ public void fileApexUpload(FileUploadEvent event) {
 	public void setSourcingFiles(List<SelectItem> sourcingFiles) {
 		this.sourcingFiles = sourcingFiles;
 	}
-
 	
 }

@@ -20,7 +20,6 @@ import my.ep.persistence.entity.ct.circular.dtl.CtContactPerson;
 import my.ep.persistence.entity.ct.circular.panel.CtPanelItem;
 import my.ep.persistence.entity.ct.circular.panel.CtPanelState;
 import my.ep.persistence.entity.ct.circular.panel.CtPanelSupplier;
-import my.ep.persistence.entity.ct.circular.panel.CtPanelSupplierItem;
 import my.ep.persistence.entity.ct.circular.panel.CtPanelZone;
 import my.ep.web.managedbean.BaseManagedBean;
 
@@ -50,7 +49,6 @@ public class PanelManagedBean extends BaseManagedBean {
 	private CtPanelZone selectedPanelZone;
 	private CtPanelState selectedPanelState;
 	private CtPanelItem selectedPanelItem;
-	private CtPanelSupplierItem selectedPanelSupplierItem;
 	private CtCancelCircularReq cancelCircularReq;
 	
 	private CtCircularVer[] selectedCircularVerList;
@@ -142,14 +140,6 @@ public class PanelManagedBean extends BaseManagedBean {
 
 	public void setSelectedPanelItem(CtPanelItem selectedPanelItem) {
 		this.selectedPanelItem = selectedPanelItem;
-	}
-
-	public CtPanelSupplierItem getSelectedPanelSupplierItem() {
-		return selectedPanelSupplierItem;
-	}
-
-	public void setSelectedPanelSupplierItem(CtPanelSupplierItem selectedPanelSupplierItem) {
-		this.selectedPanelSupplierItem = selectedPanelSupplierItem;
 	}
 
 	public DualListModel<String> getApproverModel() {

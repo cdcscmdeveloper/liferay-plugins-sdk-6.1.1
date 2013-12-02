@@ -10,15 +10,15 @@ import java.util.List;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
 
-import org.apache.log4j.Logger;
-import org.primefaces.model.DualListModel;
-
 import my.ep.biz.bean.search.SearchFilterBean;
 import my.ep.persistence.entity.ct.CtApprover;
 import my.ep.persistence.entity.ct.CtAttachment;
 import my.ep.persistence.entity.ct.CtContract;
+import my.ep.persistence.entity.ct.CtContractVer;
 import my.ep.persistence.entity.ct.CtRemark;
-import my.ep.persistence.entity.ct.bank.CtSupplierBank;
+import my.ep.persistence.entity.ct.agreement.CtAgreement;
+import my.ep.persistence.entity.ct.amend.CtAmendment;
+import my.ep.persistence.entity.ct.assoc.CtAssociation;
 import my.ep.persistence.entity.ct.circular.CtCircular;
 import my.ep.persistence.entity.ct.dtl.CtContractValue;
 import my.ep.persistence.entity.ct.dtl.CtProgressivePayment;
@@ -32,16 +32,15 @@ import my.ep.persistence.entity.ct.terminate.CtTerminationClause;
 import my.ep.persistence.entity.ct.terminate.CtTerminationReason;
 import my.ep.persistence.entity.sm.SmSupplier;
 import my.ep.persistence.entity.sm.SmSupplierBank;
-import my.ep.web.managedbean.BaseManagedBean;
 import my.ep.web.bean.ct.ApproverSetting;
 import my.ep.web.bean.ct.CheckBoxSelections;
 import my.ep.web.bean.ct.CreateContractDetails;
 import my.ep.web.bean.ct.MtoDetails;
 import my.ep.web.bean.ct.PaymentSummary;
 import my.ep.web.bean.ct.SettingDetails;
-import my.ep.persistence.entity.ct.agreement.CtAgreement;
-import my.ep.persistence.entity.ct.amend.CtAmendment;
-import my.ep.persistence.entity.ct.assoc.CtAssociation;
+import my.ep.web.managedbean.BaseManagedBean;
+
+import org.primefaces.model.DualListModel;
 
 /**
  * Managed Bean For Contract Details
@@ -53,7 +52,6 @@ import my.ep.persistence.entity.ct.assoc.CtAssociation;
 @SessionScoped
 public class ContractDetailsManagedBean extends BaseManagedBean{
 
-	private static Logger log = Logger.getLogger(ContractDetailsManagedBean.class);
 	private static final long serialVersionUID = 1L;
 	
 	private String taskId;
@@ -66,11 +64,8 @@ public class ContractDetailsManagedBean extends BaseManagedBean{
 	private String showItem ="Item  Pricing";
 	
 	private List<PaymentSummary> paymentSummary;
-	/*Table from supplier managements*/
 	private SmSupplier smSupplier = new SmSupplier();
 	private SmSupplierBank smSupplierBank = new SmSupplierBank();
-	private CtSupplierBank ctSupplierBank = new CtSupplierBank();
-	/*End*/
 	
 	private DualListModel<SettingDetails> settingDetails;  
 	List<SettingDetails> source = new ArrayList<SettingDetails>();  
@@ -87,6 +82,7 @@ public class ContractDetailsManagedBean extends BaseManagedBean{
 	private CtSetting ctSetting = new CtSetting();
 	private CtCircular ctCircular = new CtCircular();
 	private CtContract ctContract;
+	private CtContractVer ctContractVer;
 	private CtSchedule ctSchedules = new CtSchedule();
 	private CtApprover ctApprovers = new CtApprover();
 	private CtDeduction ctDeduction = new CtDeduction();
@@ -296,15 +292,6 @@ public class ContractDetailsManagedBean extends BaseManagedBean{
 	public void setCtProgressivePaymentList(
 			List<CtProgressivePayment> ctProgressivePaymentList) {
 		this.ctProgressivePaymentList = ctProgressivePaymentList;
-	}
-
-
-	public CtSupplierBank getCtSupplierBank() {
-		return ctSupplierBank;
-	}
-
-	public void setCtSupplierBank(CtSupplierBank ctSupplierBank) {
-		this.ctSupplierBank = ctSupplierBank;
 	}
 
 	public CtFactoring getCtFactoring() {
@@ -620,6 +607,14 @@ public class ContractDetailsManagedBean extends BaseManagedBean{
 
 	public void setChkProgressive(boolean chkProgressive) {
 		this.chkProgressive = chkProgressive;
+	}
+
+	public CtContractVer getCtContractVer() {
+		return ctContractVer;
+	}
+
+	public void setCtContractVer(CtContractVer ctContractVer) {
+		this.ctContractVer = ctContractVer;
 	}
 	
 	

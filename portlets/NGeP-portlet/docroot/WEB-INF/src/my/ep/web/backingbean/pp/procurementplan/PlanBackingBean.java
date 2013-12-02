@@ -64,7 +64,7 @@ import my.ep.persistence.entity.cm.catalog.CmUnspsc;
 import my.ep.persistence.entity.ct.CtContract;
 import my.ep.persistence.entity.ct.circular.CtCircular;
 import my.ep.persistence.entity.ct.circular.cc.CtCircularContract;
-import my.ep.persistence.entity.ct.dtl.item.CtContractedItem;
+import my.ep.persistence.entity.ct.dtl.item.CtContractItem;
 import my.ep.persistence.entity.pm.authorization.PmBusinessActivity;
 import my.ep.persistence.entity.pm.authorization.PmOrgProfile;
 import my.ep.persistence.entity.pm.authorization.PmUser;
@@ -790,7 +790,7 @@ public class PlanBackingBean extends BaseBackingBean<PlanManagedBean>{
 			this.getManagedBean().setSelectedItem(new PpPlanItem());
 			this.getManagedBean().getSelectedItem().setBrandNew(true);
 			if(ProcurementPlanConst.PROCUREMENT_EXISTING_CONTRACT.equals(this.getManagedBean().getSelectedPlanMaster().getProcurementMode())){
-				this.getManagedBean().getSelectedItem().setCtContractItem(new CtContractedItem());
+				this.getManagedBean().getSelectedItem().setCtContractItem(new CtContractItem());
 			}else{
 				this.getManagedBean().getSelectedItem().setCmUnspsc(new CmUnspsc());
 			}
@@ -1109,7 +1109,7 @@ public class PlanBackingBean extends BaseBackingBean<PlanManagedBean>{
 		log.info("calculatePlanEndDate - Start");
 		if(this.getManagedBean().getSelectedPlanItem().getPlanStartDate()!=null){
 			Calendar startDate = CommonMethod.convertDateToCalender(this.getManagedBean().getSelectedPlanItem().getPlanStartDate());
-			startDate.add(Calendar.MONTH, this.getManagedBean().getSelectedPlanItem().getCtContract().getContractValue().getContractPeriod());
+			startDate.add(Calendar.MONTH, this.getManagedBean().getSelectedPlanItem().getCtContract().getLatestContractVer().getCtContractValue().getContractPeriod());
 			this.getManagedBean().getSelectedPlanItem().setPlanEndDate(startDate.getTime());
 		}else{
 			this.getManagedBean().getSelectedPlanItem().setPlanEndDate(null);
@@ -2009,9 +2009,9 @@ public class PlanBackingBean extends BaseBackingBean<PlanManagedBean>{
 	/**
 	 * retrieve the selected contract's items
 	 */
-	public List <CtContractedItem> contractItemOptions(){
+	public List <CtContractItem> contractItemOptions(){
 		return this.getManagedBean().getSelectedPlanItem().getCtContract()!=null ?
-				this.getManagedBean().getSelectedPlanItem().getCtContract().getCtContractedItems():new ArrayList<CtContractedItem>();
+				this.getManagedBean().getSelectedPlanItem().getCtContract().getLatestContractVer().getCtContractItems():new ArrayList<CtContractItem>();
 		
 	}
 	

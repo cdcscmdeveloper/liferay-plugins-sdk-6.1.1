@@ -22,7 +22,7 @@
 							<td rowspan="2"><h:graphicImage library="ep/images/design" name="#{ctBackingBean.determineIcon(attachFile)}" height="30" width="30"/></td>
 							<td width="5"></td>
 							<td>
-								<h:outputText value=" #{attachFile.createdUsername}"></h:outputText>,
+								<h:outputText value=" #{attachFile.createdUser.loginId}"></h:outputText>,
 								<h:outputText value="#{attachFile.createdDate}">
 									<f:convertDateTime pattern="dd/MM/yyyy hh:mm aaa" />
 								</h:outputText>
@@ -33,7 +33,7 @@
 							<td>
 								<h:commandLink value="#{attachFile.fileName}" styleClass="blue_font" action="#{ctBackingBean.downloadFile(attachFile)}" />
 								<p:commandLink action="#{ctBackingBean.deleteAttachmentAction(attachFileIndex)}" immediate="true" 
-									rendered="#{ctBackingBean.compareUserName(attachFile.createdUsername)}" update="lampiran" >
+									rendered="#{ctBackingBean.compareUserName(attachFile.createdUser.loginId)}" update="lampiran" >
 			   						<h:graphicImage library="ep/images/design" name="icon_trash.png" styleClass="tasklist_title1"/>
 			 	 				</p:commandLink>
 			 	 			</td>

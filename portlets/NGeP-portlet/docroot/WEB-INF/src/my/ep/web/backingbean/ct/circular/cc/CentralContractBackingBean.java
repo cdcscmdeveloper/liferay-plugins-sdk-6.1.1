@@ -400,10 +400,10 @@ public class CentralContractBackingBean extends BaseBackingBean<CentralContractM
 			reqDTO.setCircularVerId(circularVerId);
 			
 			CircularResDTO resDTO = circularSO.retrieveCircularVerById(reqDTO);
-			if(resDTO.getCircularVer().getCircularTypeCode()==null) {
+			if(resDTO.getCircularVer().getUpdateType()==null) {
 				PmCode code = new PmCode();
 				code.setCodeId(-1L);
-				resDTO.getCircularVer().setCircularTypeCode(code);
+				resDTO.getCircularVer().setUpdateType(code);
 			}
 			getManagedBean().getApproverModel().setTarget(resDTO.getApproverList());
 			getManagedBean().getApproverModel().getSource().removeAll(resDTO.getApproverList());
@@ -431,10 +431,10 @@ public class CentralContractBackingBean extends BaseBackingBean<CentralContractM
 			CircularResDTO resDTO = null;
 			if(action.equalsIgnoreCase("view")) {
 				resDTO = circularSO.retrieveCircularVerById(reqDTO);
-				if(resDTO.getCircularVer().getCircularTypeCode()==null) {
+				if(resDTO.getCircularVer().getUpdateType()==null) {
 					PmCode code = new PmCode();
 					code.setCodeId(-1L);
-					resDTO.getCircularVer().setCircularTypeCode(code);
+					resDTO.getCircularVer().setUpdateType(code);
 				}
 				getManagedBean().setCircular(resDTO.getCircularVer().getCtCircular());
 				getManagedBean().setCircularVer(resDTO.getCircularVer());
@@ -442,10 +442,10 @@ public class CentralContractBackingBean extends BaseBackingBean<CentralContractM
 			} else if(action.equalsIgnoreCase("update")) {
 				reqDTO.setUpdateAction(true);
 				resDTO = circularSO.retrieveCircularVerById(reqDTO);
-				if(resDTO.getCircularVer().getCircularTypeCode()==null) {
+				if(resDTO.getCircularVer().getUpdateType()==null) {
 					PmCode code = new PmCode();
 					code.setCodeId(-1L);
-					resDTO.getCircularVer().setCircularTypeCode(code);
+					resDTO.getCircularVer().setUpdateType(code);
 				}				
 				getManagedBean().setCircular(resDTO.getCircular());
 				getManagedBean().setCircularVer(resDTO.getCircularVer());

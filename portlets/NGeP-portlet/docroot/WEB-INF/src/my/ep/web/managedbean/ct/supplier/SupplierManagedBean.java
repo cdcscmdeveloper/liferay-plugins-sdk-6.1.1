@@ -15,7 +15,6 @@ import my.ep.persistence.entity.ct.CtAttachment;
 import my.ep.persistence.entity.ct.CtContract;
 import my.ep.persistence.entity.ct.CtRemark;
 import my.ep.persistence.entity.ct.agreement.CtAgreement;
-import my.ep.persistence.entity.ct.bank.CtSupplierBank;
 import my.ep.persistence.entity.ct.circular.CtCircular;
 import my.ep.persistence.entity.ct.dtl.CtContractValue;
 import my.ep.persistence.entity.ct.factoring.CtFactoring;
@@ -48,7 +47,6 @@ public class SupplierManagedBean extends BaseManagedBean {
 	private int selectedIndex;
 	private CtFactoring factoring;
 	private CtTermination termination;
-	private CtSupplierBank supplierBank;
 	private CtTerminationReason ctTerminationReason;
 	private SearchFilterBean searchFilterBean = new SearchFilterBean();
 	private List<CtContract> contractList = new ArrayList<CtContract>();
@@ -134,14 +132,6 @@ public class SupplierManagedBean extends BaseManagedBean {
 	
 	public void setFactoring(CtFactoring factoring) {
 		this.factoring = factoring;
-	}
-	
-	public CtSupplierBank getSupplierBank() {
-		return supplierBank;
-	}
-	
-	public void setSupplierBank(CtSupplierBank supplierBank) {
-		this.supplierBank = supplierBank;
 	}
 	
 	public CtTermination getTermination() {

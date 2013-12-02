@@ -3,7 +3,6 @@
  */
 package my.ep.web.backingbean.ct.supplier;
 
-import java.util.ArrayList;
 import java.util.Date;
 
 import javax.annotation.PostConstruct;
@@ -11,8 +10,6 @@ import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.RequestScoped;
 import javax.faces.context.FacesContext;
-
-import org.apache.log4j.Logger;
 
 import my.ep.biz.bean.search.ISearchBean;
 import my.ep.biz.bean.search.SearchBean;
@@ -26,16 +23,11 @@ import my.ep.dto.ct.supplier.ContractSupplierReqDTO;
 import my.ep.dto.ct.supplier.ContractSupplierResDTO;
 import my.ep.exception.EpException;
 import my.ep.persistence.entity.ct.CtContract;
-import my.ep.persistence.entity.ct.bank.CtSupplierBank;
 import my.ep.persistence.entity.ct.factoring.CtFactoring;
-import my.ep.persistence.entity.ct.terminate.CtTermination;
-import my.ep.persistence.entity.ct.terminate.CtTerminationReason;
-import my.ep.persistence.entity.pm.authorization.PmOrgProfile;
 import my.ep.persistence.entity.pm.authorization.PmUser;
-import my.ep.persistence.entity.pm.common.PmCode;
+import my.ep.persistence.entity.pm.common.PmFinancialOrg;
 import my.ep.persistence.entity.pm.common.PmStatus;
 import my.ep.persistence.entity.sm.SmSupplier;
-import my.ep.persistence.entity.sm.SmSupplierBank;
 import my.ep.type.aut.SearchOperator;
 import my.ep.util.lookupservice.EpBpmBusinessDelegate;
 import my.ep.web.backingbean.BaseBackingBean;
@@ -45,6 +37,8 @@ import my.ep.web.bean.ct.ContractListItem;
 import my.ep.web.constant.BpmOutcomeConst;
 import my.ep.web.managedbean.ct.supplier.SupplierManagedBean;
 import my.ep.web.util.lookupservice.BusinessDelegate;
+
+import org.apache.log4j.Logger;
 
 /**
  * Backing Bean For Supplier
@@ -82,48 +76,20 @@ public class SupplierBackingBean extends BaseBackingBean<SupplierManagedBean> {
 	public void init(){
 		checkBoxSelections = new CheckBoxSelections();
 		contractListItem = new ContractListItem();
-		if (this.getManagedBean().getCtContract() == null) {
-
+			
+		if(this.getManagedBean().getFactoring() == null){
 			ContractBackingBean ctBB = new ContractBackingBean();
 			ctBB.initializeRemarkAndAttachement(getManagedBean().getRemarkList(), getManagedBean().getAttachmentList());
-
-			this.getManagedBean().setCtContract(new CtContract());
-			this.getManagedBean().getCtContract().setQtPublishDate(new Date());
-			this.getManagedBean().getCtContract().setQtLoaNo("LOA 325/2012");
-			this.getManagedBean().getCtContract().setQtLoaDate(new Date());
-			this.getManagedBean().getCtContract().setChkLocal(false);
-			this.getManagedBean().getCtContract().setChkImported(false);
-			this.getManagedBean().getCtContract().setChkMto(false);
-			this.getManagedBean().getCtContract().setContractName("Bekalan Pen Bebola");
-			this.getManagedBean().getCtContract().setServiceFee(0.4);
-			this.getManagedBean().getCtContract().setQtLoaId(new Long(3252012));
-			this.getManagedBean().getCtContract().setQtLoaId(new Long(3252012));
-		}
-		if(this.getManagedBean().getSupplierBank() == null){
-			this.getManagedBean().setSupplierBank(new CtSupplierBank());
-			this.getManagedBean().getSupplierBank().setCtContract(new CtContract());
-			this.getManagedBean().getSupplierBank().setContractAdmin(new PmUser());
-			this.getManagedBean().getSupplierBank().setBankAccount(new SmSupplierBank());
-			this.getManagedBean().getSupplierBank().setStatus(new PmStatus());
-			this.getManagedBean().getSupplierBank().setSupplier(new SmSupplier());
-			
-			this.getManagedBean().getSupplierBank().getCtContract().setContractId(1L);
-			this.getManagedBean().getSupplierBank().getBankAccount().setSupplierBankId(2L);
-			this.getManagedBean().getSupplierBank().getContractAdmin().setUserId(27L);
-			this.getManagedBean().getSupplierBank().getStatus().setStatusId(1L);
-			this.getManagedBean().getSupplierBank().getSupplier().setSupplierId(4L);
-		
-		}if(this.getManagedBean().getFactoring() == null){
 			
 			this.getManagedBean().setFactoring(new CtFactoring());
 			this.getManagedBean().getFactoring().setCtContract(new CtContract());
-			this.getManagedBean().getFactoring().setFactorOrgProfile(new PmOrgProfile());
+			this.getManagedBean().getFactoring().setFinancialOrg(new PmFinancialOrg());
 			this.getManagedBean().getFactoring().setContractAdmin(new PmUser());
 			this.getManagedBean().getFactoring().setSmSupplier(new SmSupplier());
 			this.getManagedBean().getFactoring().setStatus(new PmStatus());
 			
 			this.getManagedBean().getFactoring().getCtContract().setContractId(1L);
-			this.getManagedBean().getFactoring().getFactorOrgProfile().setOrgProfileId(1L);
+			this.getManagedBean().getFactoring().getFinancialOrg().setFinancialOrgId(1L);
 			this.getManagedBean().getFactoring().getContractAdmin().setUserId(27L);
 			this.getManagedBean().getFactoring().getStatus().setStatusId(1L);
 			this.getManagedBean().getFactoring().getSmSupplier().setSupplierId(4L);
@@ -131,29 +97,7 @@ public class SupplierBackingBean extends BaseBackingBean<SupplierManagedBean> {
 			this.getManagedBean().getFactoring().setAuthRefNo("123-09234-76453");
 			this.getManagedBean().getFactoring().setEffDate(new Date());
 			this.getManagedBean().getFactoring().setExpDate(new Date());
-			this.getManagedBean().getFactoring().setQtLoaId(new Long(123456));
-		
-		}if(this.getManagedBean().getTermination() == null){
-			
-			this.getManagedBean().setTermination(new CtTermination());
-			this.getManagedBean().getTermination().setCtContract(new CtContract());
-			this.getManagedBean().getTermination().setStatus(new PmStatus());
-			
-			this.getManagedBean().getTermination().getCtContract().setContractId(1L);
-			this.getManagedBean().getTermination().getStatus().setStatusId(1L);
-			this.getManagedBean().getTermination().setMutualTerminate(true);
-			this.getManagedBean().getTermination().setCaRecommendationCode(new PmCode());
-			this.getManagedBean().getTermination().getCaRecommendationCode().setCodeId(1L);
-			
 		}
-		
-		if(this.getManagedBean().getCtTerminationReason() == null){
-			   this.getManagedBean().setCtTerminationReason(new CtTerminationReason());
-			   this.getManagedBean().getCtTerminationReason().setTypeCode(new PmCode());
-			   this.getManagedBean().getTermination().setCtTerminationReasons(new ArrayList<CtTerminationReason>());
-			   this.getManagedBean().getCtTerminationReason().setCtTermination(this.getManagedBean().getTermination());
-			   this.getManagedBean().getCtTerminationReason().getTypeCode().setCodeId(155L);
-			}
 	}
 	
     public void searchContract() {
@@ -191,64 +135,11 @@ public class SupplierBackingBean extends BaseBackingBean<SupplierManagedBean> {
 			contractSO = null;
 	     }
 	}
-    
-    public String saveChangeBankRequest(String action){
-    	
-    	IContractSupplierSO supplierSO = null;
-		ContractSupplierReqDTO reqDTO = null;	
-		
-		try{
-			
-			 reqDTO = new ContractSupplierReqDTO();
-			 supplierSO = (IContractSupplierSO)BusinessDelegate.getInstance().getServiceObject("ct", IContractSupplierSO.class);
-		   	 reqDTO.setSupplierBank(this.getManagedBean().getSupplierBank());
-			
-		   	String token = this.getManagedBean().getToken();
-			if (token == null) {
-				IBpmSO bpmSO = (IBpmSO) EpBpmBusinessDelegate.getInstance().getServiceObject(IBpmSO.class);
-				token = bpmSO.authenticate("khai", "welcome1");
-				if (token == null) {
-					throw new EpException("BPM token not found");
-				}
-			}
-
-			reqDTO.setOutcome(action);
-			if (action == BpmOutcomeConst.BPM_SAVE) {
-				reqDTO.setOutcome("");
-			}
-			reqDTO.setToken(token);
-			reqDTO.setTaskId(this.getManagedBean().getTaskId());
-			  
-			 ContractSupplierResDTO resDTO = supplierSO.saveChangeBankRequest(reqDTO); 
-			 if(resDTO.isSuccessful()) {
-					log.info("Record saved successfully");
-					FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "Record saved successfully.","Change Bank A/C. : "));
-					if(!action.equalsIgnoreCase(BpmOutcomeConst.BPM_SAVE)) { 
-						renewSesionObject();
-						return "/xhtml/shared/acknowledge.xhtml";
-					}
-				} else {
-					throw new EpException("Failed.");
-				}
-				
-			} catch (Exception e) {
-				e.printStackTrace();
-				FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR,e.toString(), "Change Bank A/C save failed."));
-			}finally{
-			supplierSO = null;
-			reqDTO = null;
-		}	
-		
-		return null;
-    }
 	
     public String saveFactoringRequest(String action){
-    	
-
     	IContractSupplierSO supplierSO = null;
 		ContractSupplierReqDTO reqDTO = null;	
 		try{
-			
 			 reqDTO = new ContractSupplierReqDTO();
 			 supplierSO = (IContractSupplierSO)BusinessDelegate.getInstance().getServiceObject("ct", IContractSupplierSO.class);
 		   	 reqDTO.setFactoring(this.getManagedBean().getFactoring());
@@ -292,49 +183,6 @@ public class SupplierBackingBean extends BaseBackingBean<SupplierManagedBean> {
 		
 		return null;
 	}
-    
-    public String saveTerminationRequest(String outcome){
-    	
-    	System.out.println("inside supplier termination Log >>>>>>>>>>>>>>>>>>");
-    	IContractSupplierSO supplierSO = null;
-		ContractSupplierReqDTO reqDTO = null;	
-		try{
-			
-			 reqDTO = new ContractSupplierReqDTO();
-			 supplierSO = (IContractSupplierSO)BusinessDelegate.getInstance().getServiceObject("ct", IContractSupplierSO.class);
-			 this.getManagedBean().getTermination().getCtTerminationReasons().add(this.getManagedBean().getCtTerminationReason());
-			 this.getManagedBean().getTermination().getCaRecommendationCode().setCodeId(155L);
-			 reqDTO.setTerminationRequest(this.getManagedBean().getTermination());
-			
-		   	 reqDTO.setOutcome(outcome);
-			 reqDTO.setTaskId(this.getManagedBean().getTaskId());
-			 
-			 if(outcome == BpmOutcomeConst.BPM_SAVE)
-			   reqDTO.setOutcome("");
-			  
-			 ContractSupplierResDTO resDTO = supplierSO.saveTerminationRequest(reqDTO);
-			 if(resDTO.isSuccessful()) {
-					log.info("Record saved successfully");
-					FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "Record saved successfully.","Contract Termination. : "));
-					if(!outcome.equalsIgnoreCase(BpmOutcomeConst.BPM_SAVE)) { // save action will remain in the same page
-						renewSesionObject();
-						return "/xhtml/shared/acknowledge.xhtml";
-					}
-				} else {
-					throw new EpException("Failed.");
-				}
-				
-			} catch (Exception e) {
-				e.printStackTrace();
-				FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR,e.toString(), "Termination save failed."));
-			}finally{
-	 
-		   supplierSO = null;
-		   reqDTO = null;
-		}
-		
-		return null;
-    }
 
 	public Date getDate() {
 		return date;

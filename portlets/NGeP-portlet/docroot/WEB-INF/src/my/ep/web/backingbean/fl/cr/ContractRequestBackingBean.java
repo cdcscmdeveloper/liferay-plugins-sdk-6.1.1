@@ -36,7 +36,7 @@ import my.ep.dto.pm.common.maksud.MaksudResDTO;
 import my.ep.exception.EpException;
 import my.ep.persistence.entity.ct.CtContract;
 import my.ep.persistence.entity.ct.VCtActiveContract;
-import my.ep.persistence.entity.ct.dtl.item.CtContractedItem;
+import my.ep.persistence.entity.ct.dtl.item.CtContractItem;
 import my.ep.persistence.entity.fl.request.FlDeliveryAddress;
 import my.ep.persistence.entity.fl.request.FlFulfilmentItem;
 import my.ep.persistence.entity.fl.request.FlFulfilmentRequest;
@@ -85,8 +85,8 @@ public class ContractRequestBackingBean extends BaseBackingBean<ContractRequestM
 			getManagedBean().getFlRequest().setReceivedOrgProfile(new PmOrgProfile());
 			getManagedBean().getFlRequest().setCreatedOrgProfile(new PmOrgProfile());
 			getManagedBean().getFlRequest().setCtContract(new CtContract());
-			getManagedBean().getFlRequest().getCtContract().setContractTypeCode(new PmCode());
-			getManagedBean().getFlRequest().getCtContract().setFulfillmentTypeCode(new PmCode());
+			getManagedBean().getFlRequest().getCtContract().setContractType(new PmCode());
+			getManagedBean().getFlRequest().getCtContract().setFulfillmentType(new PmCode());
 			getManagedBean().getFlRequest().getCtContract().setSmSupplier(new SmSupplier());
 			getManagedBean().getFlRequest().setFlDeliveryAddresses(new ArrayList<FlDeliveryAddress>());
 			getManagedBean().getFlRequest().setFlFulfilmentItems(new ArrayList<FlFulfilmentItem>());
@@ -277,11 +277,11 @@ public class ContractRequestBackingBean extends BaseBackingBean<ContractRequestM
 		ContractReqDTO ctReqDTO = new ContractReqDTO();
 		ctReqDTO.setContractId(getManagedBean().getFlRequest().getCtContract().getContractId());
 		ContractResDTO ctResDTO = contractSO.retrieveContract(ctReqDTO);
-		getManagedBean().setContractedItemList(ctResDTO.getContract().getCtContractedItems());
+		getManagedBean().setContractedItemList(ctResDTO.getContract().getLatestContractVer().getCtContractItems());
 	}
 
 	public void updateContractedItemDt(){
-		for(CtContractedItem contractedItems : getManagedBean().getSelectedContractedItemList()){
+		for(CtContractItem contractedItems : getManagedBean().getSelectedContractedItemList()){
 			FlFulfilmentItem flItem = new FlFulfilmentItem();
 			flItem.setFlFulfilmentRequest(getManagedBean().getFlRequest());
 			flItem.setContractedItem(contractedItems);

@@ -89,8 +89,8 @@ public class PurchaseRequestBackingBean extends BaseBackingBean<PurchaseRequestM
 			getManagedBean().getFulfilmentRequest().setFlDeliveryAddresses(new ArrayList<FlDeliveryAddress>());
 			getManagedBean().getFulfilmentRequest().setFlFulfilmentItems(new ArrayList<FlFulfilmentItem>());
 			getManagedBean().getFulfilmentRequest().setCtContract(new CtContract());
-			getManagedBean().getFulfilmentRequest().getCtContract().setContractTypeCode(new PmCode());
-			getManagedBean().getFulfilmentRequest().getCtContract().setFulfillmentTypeCode(new PmCode());
+			getManagedBean().getFulfilmentRequest().getCtContract().setContractType(new PmCode());
+			getManagedBean().getFulfilmentRequest().getCtContract().setFulfillmentType(new PmCode());
 		}
 		if(getManagedBean().getApproverModel()==null) {
 			System.out.println("--renew--");

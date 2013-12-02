@@ -9,7 +9,7 @@ import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
 
 import my.ep.persistence.entity.ct.CtContract;
-import my.ep.persistence.entity.ct.dtl.item.CtContractedItem;
+import my.ep.persistence.entity.ct.dtl.item.CtContractItem;
 import my.ep.persistence.entity.fl.request.FlDeliveryAddress;
 import my.ep.persistence.entity.fl.request.FlFulfilmentItem;
 import my.ep.persistence.entity.fl.request.FlFulfilmentRequest;
@@ -41,8 +41,8 @@ public class ContractRequestManagedBean extends BaseManagedBean {
 	private List<PmAddressType> addressTypesList; 
 	private List<PmAddressType> selectedPmAddrTypeList;
 	private FlDeliveryAddress selectedAddr;
-	private List<CtContractedItem> contractedItemList;
-	private List<CtContractedItem> selectedContractedItemList;
+	private List<CtContractItem> contractedItemList;
+	private List<CtContractItem> selectedContractedItemList;
 	private DualListModel<String> approverModel;
 	private FlFulfilmentItem selectedItemRow;
 	
@@ -388,7 +388,7 @@ public class ContractRequestManagedBean extends BaseManagedBean {
 	/**
 	 * @return the contractedItemList
 	 */
-	public List<CtContractedItem> getContractedItemList() {
+	public List<CtContractItem> getContractedItemList() {
 		return contractedItemList;
 	}
 
@@ -396,7 +396,7 @@ public class ContractRequestManagedBean extends BaseManagedBean {
 	/**
 	 * @param contractedItemList the contractedItemList to set
 	 */
-	public void setContractedItemList(List<CtContractedItem> contractedItemList) {
+	public void setContractedItemList(List<CtContractItem> contractedItemList) {
 		this.contractedItemList = contractedItemList;
 	}
 
@@ -404,7 +404,7 @@ public class ContractRequestManagedBean extends BaseManagedBean {
 	/**
 	 * @return the selectedContractedItemList
 	 */
-	public List<CtContractedItem> getSelectedContractedItemList() {
+	public List<CtContractItem> getSelectedContractedItemList() {
 		return selectedContractedItemList;
 	}
 
@@ -413,7 +413,7 @@ public class ContractRequestManagedBean extends BaseManagedBean {
 	 * @param selectedContractedItemList the selectedContractedItemList to set
 	 */
 	public void setSelectedContractedItemList(
-			List<CtContractedItem> selectedContractedItemList) {
+			List<CtContractItem> selectedContractedItemList) {
 		this.selectedContractedItemList = selectedContractedItemList;
 	}
 
