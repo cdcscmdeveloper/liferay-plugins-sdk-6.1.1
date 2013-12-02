@@ -591,11 +591,9 @@ public class BudgetAllocationBackingBean extends BaseBackingBean<BudgetAllocatio
 	 * generate available budget amount
 	 * @return available budget amount
 	 */
-	public BigDecimal generateAvailableBudget(){
+	public BigDecimal generateAvailableBudget(BigDecimal budgetAmt, BigDecimal usedAmt){
 		return
-				CommonMethod.substractBigDecimalNullable(
-				this.getManagedBean().getSelectedBudgetAllocItem().getPpBudget().getBudgetAmount(),
-				this.getManagedBean().getSelectedBudgetAllocItem().getPpBudget().getUsedAmount());
+				CommonMethod.substractBigDecimalNullable(budgetAmt,usedAmt);
 	}
 	
 	/**

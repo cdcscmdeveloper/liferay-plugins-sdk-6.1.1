@@ -219,7 +219,9 @@ xmlns:fn="http://java.sun.com/jsp/jstl/functions"
 	    			<th><p:outputLabel value="#{lbl['lbl.pp.available.amount']}"/></th>
 					<td>
 						<p:inputText disabled="true" styleClass="ppDisplayTextL"
-								value="#{budgetAllocationBackingBean.generateAvailableBudget()}"/>
+								value="#{budgetAllocationBackingBean.generateAvailableBudget(
+								budgetAllocationBackingBean.managedBean.selectedBudgetAllocItem.ppBudget.budgetAmount,
+								budgetAllocationBackingBean.managedBean.selectedBudgetAllocItem.ppBudget.usedAmount)}"/>
 					</td>
 	    		</tr>
 	    		<tr>

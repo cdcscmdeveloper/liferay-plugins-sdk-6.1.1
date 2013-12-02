@@ -21,20 +21,12 @@ xmlns:c="http://java.sun.com/jsp/jstl/core">
 		        <p:column headerText="#{lbl['lbl.pp.gosodo.name']}">  
 		            #{obj.pmDo.pmSo.pmGo.goName} #{obj.pmDo.pmSo.soName}#{obj.pmDo.doName}
 		        </p:column> 
-		        <p:column headerText="#{lbl['lbl.pp.financial.year']}" styleClass="ppNumericAlign">  
-		            #{obj.ppBudget.financialYear}  
-		        </p:column>  
 		        <p:column headerText="#{lbl['lbl.pp.budgeted.amount']}" styleClass="ppNumericAlign">  
 		            #{obj.allocAmount}    
 		        </p:column>  
-		        <p:column headerText="#{lbl['lbl.pp.used.amount']}" styleClass="ppNumericAlign">  
-		            #{obj.usedAmount}  
+		        <p:column headerText="#{lbl['lbl.pp.available.amount']}" styleClass="ppNumericAlign"> 
+		        	#{planBackingBean.generateAvailableBudget(obj.allocAmount, obj.usedAmount)} 
 		        </p:column> 
-		        <!-- 
-		        <p:column headerText="#{lbl['lbl.pp.remarks']}">  
-		            #{obj.latestRemark.remark}  
-		        </p:column>  
-		         -->
 	    	</p:dataTable> 
 	   		<br/>
 	</p:outputPanel>

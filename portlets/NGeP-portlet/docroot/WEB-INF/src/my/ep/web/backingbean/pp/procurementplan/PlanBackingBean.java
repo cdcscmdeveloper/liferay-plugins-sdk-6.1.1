@@ -4,6 +4,7 @@
 package my.ep.web.backingbean.pp.procurementplan;
 
 import java.math.BigDecimal;
+import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collections;
@@ -265,6 +266,8 @@ public class PlanBackingBean extends BaseBackingBean<PlanManagedBean>{
 					ppPlan.addVerificationOfficers(vo);
 				}
 				
+				initialPlanRemark(ppPlan);
+				
 				//load rejection reasons (if any)
 				if(ppPlan.getPpRejectReasons()!=null 
 						&& !ppPlan.getPpRejectReasons().isEmpty()){
@@ -276,7 +279,7 @@ public class PlanBackingBean extends BaseBackingBean<PlanManagedBean>{
 				}
 
 				//load mto plan
-				if(ppPlan.getPpPlanMaster().isMtoPlan()){
+				if(ppPlan.getPpPlanMaster().getRequiredMto()){ //if(ppPlan.getPpPlanMaster().isMtoPlan()){
 					PpPlanMaster mtoPlanMaster = ppPlan.getPpPlanMaster().getChildPlanMasters().get(0);
 					PpPlan mtoPlan = mtoPlanMaster.getPpPlans().get(0);
 					
@@ -292,6 +295,9 @@ public class PlanBackingBean extends BaseBackingBean<PlanManagedBean>{
 							mtoPlan.getAllPpQtActivities().add(activity);
 						}
 					}
+					
+					initialPlanRemark(mtoPlan);
+					
 					/*
 					mtoPlan.setVerificationOfficers(new ArrayList<PpPlanActor>());
 					//retrieve and set approver and verification officer
@@ -474,8 +480,10 @@ public class PlanBackingBean extends BaseBackingBean<PlanManagedBean>{
 		//Default view
 		this.getManagedBean().setSelectedPlanMaster(planMaster);
 		this.getManagedBean().setSelectedPlan(plan);
+		initialPlanRemark(plan);
 		this.getManagedBean().setMtoPlan(null);
 		this.getManagedBean().setMtoPlanMaster(null);
+		
 	
 		//avoid null
 		showPpItem(null);
@@ -484,6 +492,7 @@ public class PlanBackingBean extends BaseBackingBean<PlanManagedBean>{
 		
 		log.info("cleanPlanDetails - End");
 	}
+
 	
 	/**
 	 * populate default mto fields from main plan
@@ -509,10 +518,14 @@ public class PlanBackingBean extends BaseBackingBean<PlanManagedBean>{
 			//Initial MTO plan details
 			PpPlanMaster mtoPlanMaster = new PpPlanMaster();
 			PpPlan mtoPlan = new PpPlan();
-		
+			
 			mtoPlanMaster.setPpPlans(new ArrayList<PpPlan>());
 			mtoPlanMaster.getSelectedGoMapper().clear();
+			//Set Profile Tree
+			mtoPlanMaster.setOrgProfile(this.getManagedBean().getCurrentUser());
+			mtoPlanMaster.setOrgProfileId(this.getManagedBean().getCurrentUser().getOrgProfileId());
 			
+			initialPlanRemark(mtoPlan);
 			mtoPlan.setEditable(true);
 			mtoPlan.setStatusId(ProcurementPlanConst.STATUS_PPL_PENDING_SUBMIT);
 			mtoPlan.setPpQtActivities(new ArrayList<PpQtActivity>());
@@ -741,18 +754,28 @@ public class PlanBackingBean extends BaseBackingBean<PlanManagedBean>{
 //		System.out.println("requiredMto " + this.getManagedBean().getMtoPlanMaster().getRequiredMto());
 //		System.out.println("submissionType " + this.getManagedBean().getMtoPlan().getSubmissionType());
 //	}
-	/**
-	 * add remark to pp plan level
-	 */
-	public void addPlanRemark(){
-		log.info("addPlanRemark - Start");
-		PpRemark remark = new PpRemark();
 
-		if(this.getManagedBean().getSelectedPlan().getPpRemarks()==null){
-			this.getManagedBean().getSelectedPlan().setPpRemarks(new ArrayList<PpRemark>());
+/**
+	 * initial remark on pp plan level
+	 */
+	public void initialPlanRemark(PpPlan plan){
+		log.info("initialPlanRemark - Start");
+		
+		if(plan.getPpRemarks()==null){
+			plan.setPpRemarks(new ArrayList<PpRemark>());
 		}
-		this.getManagedBean().getSelectedPlan().addPpRemarks(remark);//TODO check this
-		log.info("addPlanRemark - End");
+		
+//		if(){
+			PpRemark remark = new PpRemark();
+			remark.setCreatedBy(getFacesScopes().getUserSessionBean().getUserId());
+			remark.setCreatedByObj(getFacesScopes().getUserSessionBean());
+			remark.setCreatedDate(new Timestamp(System.currentTimeMillis()));
+			remark.setChangedBy(remark.getCreatedBy());
+			remark.setChangedDate(remark.getCreatedDate());
+			plan.addPpRemarks(remark);//TODO check this
+//		}
+
+		log.info("initialPlanRemark - End");
 	}
 	
 	/**
