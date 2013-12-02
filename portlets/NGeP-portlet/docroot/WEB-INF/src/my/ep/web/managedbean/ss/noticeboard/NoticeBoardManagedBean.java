@@ -31,6 +31,19 @@ import org.primefaces.component.tabview.Tab;
 public class NoticeBoardManagedBean extends BaseManagedBean {
 	private static final long serialVersionUID = 1L;
 	
+  // search filter parameters
+	private Long minstryId;
+	private Long jabatanId;
+	private Long ptjId;	
+	private Long categoryId;
+	private Long stateId;
+	private Long districtId;	
+	private Long categoryL1Id; 
+	private Long categoryL2Id; 
+	private Long categoryL3Id; 
+
+	
+	
 	private List<ScQt> scQtSearchlist; // notice board search listing
 	private ScQt scQt;
 	private ScQt selectedScQt ;
@@ -70,7 +83,17 @@ public class NoticeBoardManagedBean extends BaseManagedBean {
 	private Integer activeTabIndex = 0;
 	private Integer tabIndex = 0;
 	
-	public ISearchBean<ScQt> searchBean ; //  to set criteria Parameters
+	public ISearchBean<ScQt> searchBean ;
+	
+	
+	
+
+  public NoticeBoardManagedBean(){
+	 // scQt = new ScQt();
+	  //selectedScQt = new ScQt();
+	 
+  }
+	
 
 	/**
 	 * @return the selectedScQt
@@ -115,7 +138,89 @@ public class NoticeBoardManagedBean extends BaseManagedBean {
 		this.scQtSearchlist = scQtSearchlist;
 	}
 
-	
+	/**
+	 * @return the minstryId
+	 */
+	public Long getMinstryId() {
+		return minstryId;
+	}
+
+	/**
+	 * @param minstryId the minstryId to set
+	 */
+	public void setMinstryId(Long minstryId) {
+		this.minstryId = minstryId;
+	}
+
+	/**
+	 * @return the jabatanId
+	 */
+	public Long getJabatanId() {
+		return jabatanId;
+	}
+
+	/**
+	 * @param jabatanId the jabatanId to set
+	 */
+	public void setJabatanId(Long jabatanId) {
+		this.jabatanId = jabatanId;
+	}
+
+	/**
+	 * @return the ptjId
+	 */
+	public Long getPtjId() {
+		return ptjId;
+	}
+
+	/**
+	 * @param ptjId the ptjId to set
+	 */
+	public void setPtjId(Long ptjId) {
+		this.ptjId = ptjId;
+	}
+
+	/**
+	 * @return the categoryId
+	 */
+	public Long getCategoryId() {
+		return categoryId;
+	}
+
+	/**
+	 * @param categoryId the categoryId to set
+	 */
+	public void setCategoryId(Long categoryId) {
+		this.categoryId = categoryId;
+	}
+
+	/**
+	 * @return the stateId
+	 */
+	public Long getStateId() {
+		return stateId;
+	}
+
+	/**
+	 * @param stateId the stateId to set
+	 */
+	public void setStateId(Long stateId) {
+		this.stateId = stateId;
+	}
+
+	/**
+	 * @return the districtId
+	 */
+	public Long getDistrictId() {
+		return districtId;
+	}
+
+	/**
+	 * @param districtId the districtId to set
+	 */
+	public void setDistrictId(Long districtId) {
+		this.districtId = districtId;
+	}
 
 	/**
 	 * @return the categoryList
@@ -422,6 +527,55 @@ public class NoticeBoardManagedBean extends BaseManagedBean {
 		this.districts = districts;
 	}
 
+
+	/**
+	 * @return the categoryL1Id
+	 */
+	public Long getCategoryL1Id() {
+		return categoryL1Id;
+	}
+
+
+	/**
+	 * @param categoryL1Id the categoryL1Id to set
+	 */
+	public void setCategoryL1Id(Long categoryL1Id) {
+		this.categoryL1Id = categoryL1Id;
+	}
+
+
+	/**
+	 * @return the categoryL2Id
+	 */
+	public Long getCategoryL2Id() {
+		return categoryL2Id;
+	}
+
+
+	/**
+	 * @param categoryL2Id the categoryL2Id to set
+	 */
+	public void setCategoryL2Id(Long categoryL2Id) {
+		this.categoryL2Id = categoryL2Id;
+	}
+
+
+	/**
+	 * @return the categoryL3Id
+	 */
+	public Long getCategoryL3Id() {
+		return categoryL3Id;
+	}
+
+
+	/**
+	 * @param categoryL3Id the categoryL3Id to set
+	 */
+	public void setCategoryL3Id(Long categoryL3Id) {
+		this.categoryL3Id = categoryL3Id;
+	}
+
+
 	/**
 	 * @return the pmState
 	 */
@@ -530,5 +684,9 @@ public class NoticeBoardManagedBean extends BaseManagedBean {
 	public void setSearchBean(ISearchBean<ScQt> searchBean) {
 		this.searchBean = searchBean;
 	}
+
+
+	
+	
 	
 }
