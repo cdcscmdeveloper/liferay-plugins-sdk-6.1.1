@@ -1178,7 +1178,7 @@ repeat-x
 	text-decoration: none;
 	padding: 0px;
 	background: #FFFFFF !important;
-	width: 40px;
+	min-width: 40px;
 }
 
 .ui-icon-seek-first {
@@ -3934,7 +3934,7 @@ textarea[disabled],input[type="text"][disabled],input[type="password"][disabled]
 }
 
 .ui-messages-error-icon {
-	background-position: 5px -93px;
+	background-position: -1px -50px;
 }
 
 .ui-panelgrid {
@@ -4136,6 +4136,42 @@ label > span.ui-button-text {
 		endColorstr='#FDD655', GradientType=0 ); /* IE6-8 */
 }
 
+.ui-selectonelistbox, .ui-selectmanymenu {
+	border-radius: 0;
+}
+
+.ui-selectlistbox-item {
+	margin:0 0 0 0;
+	padding-left: 2px 0 2px 5px;
+}
+
+.ui-selectlistbox-item.ui-state-hover {
+	background: #97d832;
+	box-shadow: none;
+	border-radius: 0;
+	color: #FFFFFF;
+}
+
+.ui-selectlistbox-item.ui-state-highlight {
+	color: #333333;
+	border-radius: 0;
+	box-shadow: none;
+	background: #FDD655; /* Old browsers */
+	background: -moz-linear-gradient(top, #FCEAAE 0%, #FDD655 100%);
+	/* FF3.6+ */
+	background: -webkit-gradient(linear, left top, left bottom, color-stop(0%, #FCEAAE),
+		color-stop(100%, #FDD655) ); /* Chrome,Safari4+ */
+	background: -webkit-linear-gradient(top, #FCEAAE 0%, #FDD655 100%);
+	/* Chrome10+,Safari5.1+ */
+	background: -o-linear-gradient(top, #FCEAAE 0%, #FDD655 100%);
+	/* Opera 11.10+ */
+	background: -ms-linear-gradient(top, #FCEAAE 0%, #FDD655 100%);
+	/* IE10+ */
+	background: linear-gradient(to bottom, #FCEAAE 0%, #FDD655 100%);
+	/* W3C */
+	filter: progid:DXImageTransform.Microsoft.gradient(  startColorstr='#FCEAAE',
+		endColorstr='#FDD655', GradientType=0 ); /* IE6-8 */
+}
 /*--------------------------       End Custom CSS       --------------------------- */
 /*--------------------------       Breadcrumb Wizard    --------------------------- */
 .navDiv {
