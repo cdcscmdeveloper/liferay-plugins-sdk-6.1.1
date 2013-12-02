@@ -8,17 +8,6 @@
 
 	<p:panel header="Schedule" toggleable="true">
 
-		<p:panelGrid style="width:100%;"
-			styleClass="noBorders tr,noBorders td">
-			<p:row>
-				<p:column width="100%" style="text-align:right">
-					<p:commandButton value="#{lbl['lbl.sc.notice.board.backbtn']}"
-						action="noticeboardmain.xhtml?faces-redirect=true"
-						style="float:right;" />
-				</p:column>
-			</p:row>
-		</p:panelGrid>
-
 		<h:panelGrid border="0" cellpadding="0" cellspacing="0" width="50%"
 			columns="2" columnClasses="columnWidth20,columnWidth30">
 			<h:column>
@@ -26,7 +15,7 @@
 			</h:column>
 
 			<p:column>
-				<p:inputText value="" readonly="true" disabled="true"></p:inputText>
+				<p:inputText value="#{noticeBoardBackingBean.managedBean.scQt.publishDate}" readonly="true" disabled="true"></p:inputText>
 			</p:column>
 
 			<h:column>
@@ -131,7 +120,7 @@
 			</p:column>
 
 			<p:column>
-				<p:inputText readonly="true" />
+				<p:inputText value="#{noticeBoardBackingBean.managedBean.scQt.proposalStartDate}" readonly="true" />
 			</p:column>
 
 			<p:column>
@@ -139,7 +128,7 @@
 			</p:column>
 
 			<p:column>
-				<p:inputText readonly="true" />
+				<p:inputText value="#{noticeBoardBackingBean.managedBean.scQt.expectedLoaDate}" readonly="true" />
 			</p:column>
 
 			<p:column>
@@ -147,7 +136,7 @@
 			</p:column>
 
 			<p:column>
-				<p:inputText readonly="true" />
+				<p:inputText value="#{noticeBoardBackingBean.managedBean.scQt.closingDate}" readonly="true" />
 			</p:column>
 
 			<p:column>
@@ -155,7 +144,7 @@
 			</p:column>
 
 			<p:column>
-				<p:inputText readonly="true" />
+				<p:inputText value="#{noticeBoardBackingBean.managedBean.scQt.expectedDeliveryDate}" readonly="true" />
 			</p:column>
 
 			<p:column>
@@ -163,7 +152,7 @@
 			</p:column>
 
 			<p:column>
-				<p:inputText readonly="true" />
+				<p:inputText value="#{noticeBoardBackingBean.managedBean.scQt.qtValidityPeriod}" readonly="true" />
 			</p:column>
 
 		</h:panelGrid>

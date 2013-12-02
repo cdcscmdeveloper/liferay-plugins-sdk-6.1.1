@@ -1,186 +1,232 @@
-<ui:composition	
-	xmlns="http://www.w3.org/1999/xhtml"
+
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
 	xmlns:f="http://java.sun.com/jsf/core"
 	xmlns:h="http://java.sun.com/jsf/html"
 	xmlns:ui="http://java.sun.com/jsf/facelets"
 	xmlns:p="http://primefaces.org/ui"
-	xmlns:c="http://java.sun.com/jsp/jstl/core">
-	
-	<p:panel>
-		<p:panelGrid style="width:100%;"
-			styleClass="noBorders tr,noBorders td"></p:panelGrid>
-	</p:panel>
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:ac="http://ac.my/jsf/composite/cc">
 
 	<p:panel header="Search Qtn/Tender" toggleable="true">
 
-		<p:panelGrid columns="4" style="width:100%;"
+		<h:panelGrid border="0" cellpadding="0" cellspacing="0" width="100%"
+			columns="4"
+			columnClasses="columnWidth20,columnWidth30,columnWidth20,columnWidth30">
+			<h:column>
+				<h:outputLabel value="#{lbl['lbl.sc.notice.board.ministry']} " />
+			</h:column>
+			<h:column>
+				<p:selectOneMenu
+					value="#{noticeBoardBackingBean.managedBean.scQt.ministryOrgProfile.orgProfileId}"
+					styleClass="minstryclass" style="width: 220px;">
+					<f:selectItem itemLabel="Select One" itemValue="#{null}" />
+					<f:selectItems
+						value="#{noticeBoardBackingBean.managedBean.ministryList}"
+						var="pmOrgProfile"
+						itemLabel="#{pmOrgProfile.orgCode} - #{pmOrgProfile.orgName}"
+						itemValue="#{pmOrgProfile.orgProfileId}" />
+					<p:ajax event="change"
+						listener="#{noticeBoardBackingBean.handleMinistryProfileChanged}"
+						partialSubmit="true" process="@this"
+						update="@(.minstryclass, .deptclass, .divisionclass)" />
+				</p:selectOneMenu>
+			</h:column>
+
+			<h:column>
+				<h:outputLabel value="#{lbl['lbl.sc.notice.board.jabatan']}" />
+			</h:column>
+			<h:column>
+				<p:selectOneMenu
+					value="#{noticeBoardBackingBean.managedBean.scQt.departmentOrgProfile.orgProfileId}"
+					styleClass="deptclass" style="width: 220px;">
+					<f:selectItem itemLabel="Select One" itemValue="#{null}" />
+					<f:selectItems
+						value="#{noticeBoardBackingBean.managedBean.departmentList}"
+						var="pmOrgProfile"
+						itemLabel="#{pmOrgProfile.orgCode} - #{pmOrgProfile.orgName}"
+						itemValue="#{pmOrgProfile.orgProfileId}" />
+					<p:ajax event="change"
+						listener="#{noticeBoardBackingBean.handleDepartmentProfileChanged}"
+						partialSubmit="true" process="@this"
+						update="@(.deptclass, .divisionclass)" />
+				</p:selectOneMenu>
+			</h:column>
+
+
+			<h:column>
+				<h:outputLabel value="#{lbl['lbl.sc.notice.board.ptj']} " />
+			</h:column>
+			<h:column>
+				<p:selectOneMenu
+					value="#{noticeBoardBackingBean.managedBean.scQt.pmOrgProfile.orgProfileId}"
+					styleClass="divisionclass" style="width: 220px;">
+					<f:selectItem itemLabel="Select One" itemValue="#{null}" />
+					<f:selectItems
+						value="#{noticeBoardBackingBean.managedBean.divisionList}"
+						var="pmOrgProfile"
+						itemLabel="#{pmOrgProfile.orgCode} - #{pmOrgProfile.orgName}"
+						itemValue="#{pmOrgProfile.orgProfileId}" />
+					<p:ajax event="change" partialSubmit="true" process="@this"
+						update="@(.divisionclass)" />
+				</p:selectOneMenu>
+			</h:column>
+
+			<h:column>
+				<h:outputLabel value="#{lbl['lbl.sc.notice.board.title']}" />
+			</h:column>
+			<h:column>
+				<p:inputText
+					value="#{noticeBoardBackingBean.managedBean.scQt.qtTitle}" />
+			</h:column>
+
+			<h:column>
+				<h:outputLabel value="#{lbl['lbl.sc.notice.board.npdate']}" />
+			</h:column>
+			<h:column>
+				<p:calendar
+					value="#{noticeBoardBackingBean.managedBean.scQt.publishDate}"
+					id="notdate" showOn="button" />
+			</h:column>
+
+			<h:column>
+				<h:outputLabel value="#{lbl['lbl.sc.notice.board.clsdate']}" />
+			</h:column>
+			<h:column>
+				<p:calendar
+					value="#{noticeBoardBackingBean.managedBean.scQt.closingDate}"
+					id="closedate" showOn="button" />
+			</h:column>
+
+
+			<h:column>
+				<h:outputLabel value="#{lbl['lbl.sc.notice.board.state']}" />
+			</h:column>
+			<h:column>
+				<p:selectOneMenu
+					value="#{noticeBoardBackingBean.managedBean.pmState.stateId}"
+					styleClass="stateclass" style="width: 220px;">
+					<f:selectItem itemLabel="Select One" itemValue="#{null}" />
+					<f:selectItems value="#{noticeBoardBackingBean.managedBean.states}"
+						var="state" itemLabel="#{state.stateName}"
+						itemValue="#{state.stateId}" />
+					<p:ajax event="change"
+						listener="#{noticeBoardBackingBean.handleStateChange}"
+						partialSubmit="true" process="@this"
+						update="@(.stateclass, .districtclass)" />
+				</p:selectOneMenu>
+			</h:column>
+
+			<h:column>
+				<h:outputLabel value="#{lbl['lbl.sc.notice.board.district']}" />
+			</h:column>
+			<h:column>
+				<p:selectOneMenu
+					value="#{noticeBoardBackingBean.managedBean.pmDistrict.districtId}"
+					styleClass="districtclass" style="width: 220px;">
+					<f:selectItem itemLabel="Select One" itemValue="#{null}" />
+					<f:selectItems
+						value="#{noticeBoardBackingBean.managedBean.districts}"
+						var="district" itemLabel="#{district.districtName}"
+						itemValue="#{district.districtCode}" />
+					<p:ajax event="change" partialSubmit="true" process="@this"
+						update="@(.districtclass)" />
+				</p:selectOneMenu>
+			</h:column>
+
+			<h:column>
+				<h:outputLabel value="#{lbl['lbl.sc.notice.board.ctgcode1']}" />
+			</h:column>
+			<h:column>
+				<p:selectOneMenu
+					value="#{noticeBoardBackingBean.managedBean.pmCategoryL1.categoryL1Id}"
+					styleClass="catcode1class" style="width: 220px;">
+					<p:ajax event="change"
+						listener="#{noticeBoardBackingBean.handleL2CategoryChange}" />
+					<f:selectItem itemLabel="Select One" itemValue="#{null}" />
+					<f:selectItems
+						value="#{noticeBoardBackingBean.managedBean.categoryL1s}"
+						var="catL1Opt" itemLabel="#{catL1Opt.cateogryL1Code}"
+						itemValue="#{catL1Opt.categoryL1Id}" />
+					<p:ajax event="change"
+						listener="#{noticeBoardBackingBean.handleL2CategoryChange}"
+						partialSubmit="true" process="@this"
+						update="@(.catcode1class, .catcode2class, .catcode3class)" />
+				</p:selectOneMenu>
+			</h:column>
+
+			<h:column>
+				<h:outputLabel value="#{lbl['lbl.sc.notice.board.ctgcode2']}" />
+			</h:column>
+			<h:column>
+				<p:selectOneMenu
+					value="#{noticeBoardBackingBean.managedBean.categoryL2Id}"
+					styleClass="catcode2class" style="width: 220px;">
+					<p:ajax event="change"
+						listener="#{noticeBoardBackingBean.handleL3CategoryChange}" />
+					<f:selectItem itemLabel="Select One" itemValue="#{null}" />
+					<f:selectItems
+						value="#{noticeBoardBackingBean.managedBean.categoryL2s}"
+						var="catL2Opt" itemLabel="#{catL2Opt.cateogryL2Code}"
+						itemValue="#{catL2Opt.categoryL2Id}" />
+					<p:ajax event="change" partialSubmit="true" process="@this"
+						update="@(.catcode2class, .catcode3class)" />
+				</p:selectOneMenu>
+			</h:column>
+
+			<h:column>
+				<h:outputLabel value="#{lbl['lbl.sc.notice.board.ctgcode3']}" />
+			</h:column>
+			<h:column>
+				<p:selectOneMenu
+					value="#{noticeBoardBackingBean.managedBean.categoryL3Id}"
+					styleClass="catcode3class" style="width: 220px;">
+					<f:selectItem itemLabel="Select One" itemValue="#{null}" />
+					<f:selectItems
+						value="#{qTSupplierQulCriteriaBackingBean.managedBean.categoryL3s}"
+						var="catL3Opt" itemLabel="#{catL3Opt.cateogryL3Code}"
+						itemValue="#{catL3Opt.categoryL3Id}" />
+					<p:ajax event="change" partialSubmit="true" process="@this"
+						update="@(.catcode3class)" />
+				</p:selectOneMenu>
+
+			</h:column>
+
+		</h:panelGrid>
+
+
+		<p:panelGrid style="width:100%;"
 			styleClass="noBorders tr,noBorders td">
-
-			<h:outputText value="#{lbl['lbl.sc.notice.board.ministry']} "></h:outputText>
-
-			<p:selectOneMenu style="width:40%;"
-				value="#{searchQtnTenderBB.managedBean.selectOption}">
-				<f:selectItem itemLabel="Select One" itemValue="" />
-				<f:selectItem itemLabel="Defence minister" itemValue="1" />
-				<f:selectItem itemLabel="Education minister" itemValue="2" />
-				<f:selectItem itemLabel="Environment minister" itemValue="3" />
-				<f:selectItem itemLabel="Finance minister" itemValue="1" />
-			</p:selectOneMenu>
-
-			<h:outputText value="#{lbl['lbl.sc.notice.board.jabatan']} "></h:outputText>
-
-			<p:selectOneMenu style="width:40%;"
-				value="#{searchQtnTenderBB.managedBean.selectOption}">
-				<f:selectItem itemLabel="Select One" itemValue="" />
-				<f:selectItem itemLabel="JPJ" itemValue="1" />
-				<f:selectItem itemLabel="JKR" itemValue="2" />
-				<f:selectItem itemLabel="JPN" itemValue="3" />
-				<f:selectItem itemLabel="JPA" itemValue="4" />
-			</p:selectOneMenu>
-
-			<h:outputText value="#{lbl['lbl.sc.notice.board.ptj']} "></h:outputText>
-
-			<p:selectOneMenu style="width:40%;"
-				value="#{searchQtnTenderBB.managedBean.selectOption}">
-				<f:selectItem itemLabel="Select One" itemValue="" />
-				<f:selectItem itemLabel="Team 1" itemValue="1" />
-				<f:selectItem itemLabel="Team 2" itemValue="2" />
-				<f:selectItem itemLabel="Team 3" itemValue="3" />
-				<f:selectItem itemLabel="Team 4" itemValue="4" />
-			</p:selectOneMenu>
-
-			<h:outputText value="#{lbl['lbl.sc.notice.board.title']}"></h:outputText>
-			<h:inputText
-				value="#{noticeBoardBackingBean.managedBean.scQt.qtTitle}" />
-
-			<h:outputText value="#{lbl['lbl.sc.notice.board.npdate']}"></h:outputText>
-			<p:calendar value="#{searchQtnTenderBB.managedBean.date}"
-				id="notdate" showOn="button" />
-
-			<h:outputText value="#{lbl['lbl.sc.notice.board.clsdate']}"></h:outputText>
-			<p:calendar value="#{searchQtnTenderBB.managedBean.date}"
-				id="closedate" showOn="button" />
-
-			<h:outputText value="#{lbl['lbl.sc.notice.board.ctgcode']}" />
-			<p:selectOneMenu style="width:40%;"
-				value="#{searchQtnTenderBB.managedBean.selectOption}">
-				<f:selectItem itemLabel="Select One" itemValue="" />
-				<f:selectItem itemLabel="Code 1" itemValue="1" />
-				<f:selectItem itemLabel="Code 2" itemValue="2" />
-				<f:selectItem itemLabel="Code 3" itemValue="3" />
-				<f:selectItem itemLabel="Code 4" itemValue="4" />
-			</p:selectOneMenu>
-
-			<h:outputText value="#{lbl['lbl.sc.notice.board.state']}"></h:outputText>
-
-			<p:selectOneMenu style="width:40%;"
-				value="#{searchQtnTenderBB.managedBean.selectOption}">
-				<f:selectItem itemLabel="Select One" itemValue="" />
-				<f:selectItem itemLabel="WP" itemValue="1" />
-				<f:selectItem itemLabel="Selangor" itemValue="2" />
-				<f:selectItem itemLabel="Perak" itemValue="3" />
-				<f:selectItem itemLabel="Pahang" itemValue="4" />
-			</p:selectOneMenu>
-
-			<h:outputText value="#{lbl['lbl.sc.notice.board.district']}"></h:outputText>
-
-			<p:selectOneMenu style="width:40%;"
-				value="#{searchQtnTenderBB.managedBean.selectOption}">
-				<f:selectItem itemLabel="Select One" itemValue="" />
-				<f:selectItem itemLabel="District 1" itemValue="1" />
-				<f:selectItem itemLabel="District 2" itemValue="2" />
-				<f:selectItem itemLabel="District 3" itemValue="3" />
-				<f:selectItem itemLabel="District 4" itemValue="4" />
-			</p:selectOneMenu>
-
+			<p:row>
+				<p:column width="100%" style="text-align:right">
+					<p:commandButton value="#{lbl['lbl.sc.notice.board.searchbtn']}"
+						style="float:right;"
+						action="#{noticeBoardBackingBean.searchNoticeBoard}"
+						update=":form:nbqtsummary" />
+				</p:column>
+			</p:row>
 		</p:panelGrid>
+		
+		  <p:outputPanel id="nbqtsummary">
+		
+			<p:tabView id="tabViewInfo" var="qtntender" dynamic="true"
+				activeIndex="#{noticeBoardBackingBean.managedBean.activeTabIndex}"
+				cache="false" orientation="top"
+				value="#{noticeBoardBackingBean.managedBean.tabList}">
+				<p:ajax event="tabChange"
+					listener="#{noticeBoardBackingBean.onTabChange}"
+					update=":form:tabViewInfo" />
 
-		<p:commandButton value="#{lbl['lbl.sc.notice.board.searchbtn']}"
-			style="float:right;"
-			action="#{noticeBoardBackingBean.searchNoticeBoard}"
-			update=":form:summaryId" />
-
-		<br />
-		<br />
-		<p:tabView id="tabView" dynamic="true" cache="true">
-
-			<p:tab id="tba1" title="Publish">
-				<h:panelGrid columns="2" cellpadding="10">
-				</h:panelGrid>
-			</p:tab>
-
-			<p:tab id="tab2" title="Changes">
-				<h:panelGrid columns="2" cellpadding="10">
-				</h:panelGrid>
-			</p:tab>
-
-			<p:tab id="tab3" title="Closed">
-				<h:panelGrid columns="2" cellpadding="10">
-				</h:panelGrid>
-			</p:tab>
-
-			<p:tab id="tab4" title="Price Schedule">
-				<h:panelGrid columns="2" cellpadding="10">
-
-				</h:panelGrid>
-			</p:tab>
-
-			<p:tab id="tab5" title="Awarded">
-				<h:panelGrid columns="2" cellpadding="10">
-				</h:panelGrid>
-			</p:tab>
-
-		</p:tabView>
-
-		<ui:include src="/xhtml/ss/notice/tenderSubCategory.xhtml" />
-
+				 <p:tab title="#{qtntender.title}" id="tabs">
+					 <ui:fragment rendered="#{qtntender.title eq 'Price Schedule'}">
+					 <ui:include src="/xhtml/ss/notice/noticeboardPriceSchedule.xhtml" />
+					 </ui:fragment>
+					
+                     <ui:fragment rendered="#{qtntender.title ne 'Price Schedule'}">
+						<ui:include src="/xhtml/ss/notice/noticeboardQtnTenderSummary.xhtml" />
+					 </ui:fragment>
+					
+				</p:tab>
+			</p:tabView>
+			</p:outputPanel>
 	</p:panel>
-
-	<p:panel header="Qtn/Tender Summary" id="summaryId">
-		<p:dataTable
-			value="#{noticeBoardBackingBean.managedBean.scQtSearchlist}"
-			var="scQt" rowKey="#{scQt.qtId}" rowIndexVar="index">
-
-			<p:column headerText="#{lbl['lbl.sc.notice.board.title']}"
-				style="width:15%">
-				<p:commandLink action="tenderNoticeDetail.xhtml?faces-redirect=true">
-					<h:outputText value="#{scQt.qtTitle}" />
-				</p:commandLink>
-			</p:column>
-
-			<p:column headerText="#{lbl['lbl.sc.notice.board.pdate']}">
-				<p:calendar value="#{searchQtnTenderBB.managedBean.date}"
-					id="publdate" showOn="button" />
-			</p:column>
-
-			<p:column headerText="#{lbl['lbl.sc.notice.board.clsdate']}">
-				<p:calendar value="#{searchQtnTenderBB.managedBean.date}"
-					id="closdate" showOn="button" />
-			</p:column>
-
-			<p:column headerText="#{lbl['lbl.sc.notice.board.cdown']}"
-				style="width:15%">
-				<h:outputText value="21" />
-			</p:column>
-
-			<p:column
-				headerText="#{lbl['lbl.sc.notice.board.bsv.if.yes.selfreg']}"
-				style="width:30%">
-				<p:commandLink
-					action="tenderSelfRegistration.xhtml?faces-redirect=true">
-					<h:outputText value="#{lbl['lbl.sc.notice.board.self.reg']}" />
-				</p:commandLink>
-			</p:column>
-
-			<p:column headerText="#{lbl['lbl.sc.notice.board.view.det']}">
-				<p:commandLink
-					action="noticeBoardQtnTenderDocs.xhtml?faces-redirect=true">
-					<h:outputText
-						value="#{lbl['lbl.sc.notice.board.view.qtn.tender.docs']}" />
-				</p:commandLink>
-			</p:column>
-
-		</p:dataTable>
-	</p:panel>
-
 </ui:composition>
