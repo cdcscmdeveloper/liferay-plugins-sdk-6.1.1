@@ -18,7 +18,7 @@
 						value="#{contractRequestBackingBean.activeContractPagingDataModel}">
 						<ac:paginator for="contractListTable" />
 						<p:column headerText="Contract No.">
-							<h:outputText value="#{data.contract.contractValue.contractNo}" />
+							<h:outputText value="#{data.contract.latestContractVer.ctContractValue.contractPhysicalNo}" />
 						</p:column>
 						<p:column headerText="Plan No.">
 							<h:outputText value="#{data.planNo}" />
@@ -42,11 +42,11 @@
 						</p:column>
 						<p:column headerText="Fulfillment Type">
 							<h:outputText
-								value="#{data.contract.fulfillmentTypeCode.pmCodeDescs[0].codeName}" />
+								value="#{data.contract.fulfillmentType.pmCodeDescs[0].codeName}" />
 						</p:column>
 						<p:column headerText="Contract Type">
 							<h:outputText
-								value="#{data.contract.contractTypeCode.pmCodeDescs[0].codeName}" />
+								value="#{data.contract.contractType.pmCodeDescs[0].codeName}" />
 						</p:column>
 						<p:column headerText="EP Unique No.">
 							<h:outputText value="#{data.contract.smSupplier.epNo}" />

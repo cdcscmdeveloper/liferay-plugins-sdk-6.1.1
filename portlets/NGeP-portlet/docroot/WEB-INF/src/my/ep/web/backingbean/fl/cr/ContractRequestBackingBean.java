@@ -55,6 +55,7 @@ import my.ep.web.bean.paginator.IPagingDataModel;
 import my.ep.web.bean.paginator.PagingDataModel;
 import my.ep.web.constant.BpmOutcomeConst;
 import my.ep.web.managedbean.fl.cr.ContractRequestManagedBean;
+import my.ep.web.util.FacesScopes;
 import my.ep.web.util.lookupservice.BusinessDelegate;
 
 import org.apache.log4j.Logger;
@@ -335,7 +336,10 @@ public class ContractRequestBackingBean extends BaseBackingBean<ContractRequestM
 			}
 			try {				
 				//TODO Change the orgProfileId value
-				searchBean.getDataFilterBeans().add(new SearchFilterBean("contract.ctAgencies.orgProfile.orgProfileId",SearchOperator.OPERATOR_EQUALS.value(),1L));
+				String language = new FacesScopes().getUserLocale().getLanguage();
+				searchBean.getDataFilterBeans().add(new SearchFilterBean("contract.latestContractVer.ctAgencies.orgProfile.orgProfileId",SearchOperator.OPERATOR_EQUALS.value(),1147L));
+				searchBean.getDataFilterBeans().add(new SearchFilterBean("contract.fulfillmentType.pmCodeDescs.languageCode",SearchOperator.OPERATOR_EQUALS.value(),language));
+				searchBean.getDataFilterBeans().add(new SearchFilterBean("contract.contractType.pmCodeDescs.languageCode",SearchOperator.OPERATOR_EQUALS.value(),language));
 				
 				ContractReqDTO reqDTO = new ContractReqDTO();
 				reqDTO.setActiveContractSearchBean(searchBean);
