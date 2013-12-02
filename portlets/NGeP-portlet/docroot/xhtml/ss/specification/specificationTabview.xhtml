@@ -10,7 +10,7 @@
 	
 	<p:tabView id="SpecificationtabView" dynamic="true">  
   
-    <p:tab id="tab1" title="Specification Details" styleClass="noBorders tr,noBorders td">  
+    <p:tab id="tab1" title="#{lbl['lbl.sc.spec.tabs.title']}" styleClass="noBorders tr,noBorders td">  
          <ui:include src="/xhtml/ss/specification/specificationDetails.xhtml" /> 
     </p:tab>  
   
@@ -18,19 +18,19 @@
           <ui:include src="/xhtml/ss/specification/weightageGroup.xhtml" />  
     </p:tab>  --> 
   
-    <p:tab id="tab3" title="Stage One" styleClass="noBorders tr,noBorders td">  
+    <p:tab id="tab3" title="#{lbl['lbl.sc.spec.tabs.stage.one']}" styleClass="noBorders tr,noBorders td">  
        <ui:include src="/xhtml/ss/specification/stageOne.xhtml" />
          <ui:include src="/xhtml/ss/specification/compilenceliststageone.xhtml" /> 
         
     </p:tab>  
     
-    <p:tab id="tab4" title="Stage Two" styleClass="noBorders tr,noBorders td">  
+    <p:tab id="tab4" title="#{lbl['lbl.sc.spec.tabs.stage.two']}" styleClass="noBorders tr,noBorders td">  
            <ui:include src="/xhtml/ss/specification/stageTwo.xhtml" />
            <ui:include src="/xhtml/ss/specification/stageTwoQtnTender.xhtml" /> 
           
     </p:tab> 
     
-      <p:tab id="tab5" title="SignOff" styleClass="noBorders tr,noBorders td">  
+      <p:tab id="tab5" title="#{lbl['lbl.sc.spec.tabs.sign.off']}" styleClass="noBorders tr,noBorders td">  
            <ui:include src="/xhtml/ss/specification/specificationSignoff.xhtml" />
            <ui:include src="/xhtml/ss/specification/reminderpopup.xhtml" /> 
     </p:tab> 

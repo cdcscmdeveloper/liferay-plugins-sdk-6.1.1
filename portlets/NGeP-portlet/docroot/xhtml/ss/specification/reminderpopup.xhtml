@@ -9,36 +9,36 @@
 
 	<p:dialog header="Committee" widgetVar="reminder" modal="true"
 		width="600" height="250">
-		<p:panel header="Committee" toggleable="true">
+		<p:panel header="#{lbl['lbl.sc.spec.committee']}" toggleable="true">
 			<p:dataTable id="specificationReminder" var="reminderpopup"
 				editable="true">
 				<ac:paginator for="specificationReminder" />
-				<p:column headerText="Committee Name" style="width:100%">
+				<p:column headerText="#{lbl['lbl.sc.spec.committee.name']}" style="width:100%">
 					<h:outputText value="readOnly"></h:outputText>
 				</p:column>
 
 			</p:dataTable>
 		</p:panel>
 
-		<p:panel header="COMMITTEE DETAILS" toggleable="true">
+		<p:panel header="#{lbl['lbl.sc.spec.committee.details']}" toggleable="true">
 			<h:panelGrid styleClass="noBorders tr,noBorders td" columns="2">
 
 
-				<h:outputLabel value="Subject" />
+				<h:outputLabel value="#{lbl['lbl.sc.spec.committee.subject']}" />
 
 				<p:inputText size="50"></p:inputText>
 
-				<h:outputLabel value="Message" />
+				<h:outputLabel value="#{lbl['lbl.sc.spec.committee.message']}" />
 
 				<p:inputTextarea rows="5" cols="50"></p:inputTextarea>
 
 			</h:panelGrid>
 		</p:panel>
 		<div align="right">
-			<p:commandButton value="CANCEL" style="float:right;"
+			<p:commandButton value="#{lbl['lbl.sc.spec.stage.btn.cancel']}" style="float:right;"
 				onclick="reminder.hide();"></p:commandButton>
 
-			<p:commandButton value="SEND" style="float:right;"
+			<p:commandButton value="#{lbl['lbl.sc.spec.committee.btn.send']}" style="float:right;"
 				onclick="reminder.hide();"></p:commandButton>
 		</div>
 

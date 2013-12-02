@@ -6,8 +6,8 @@
 	xmlns:c="http://java.sun.com/jsp/jstl/core"
 	xmlns:ac="http://ac.my/jsf/composite/cc">
 
-	<p:panel header="STAGE ONE(TECHNICAL)" toggleable="true">
-		<p:commandLink value="Proposal Checklist"></p:commandLink>
+	<p:panel header="#{lbl['lbl.sc.spec.stage.technical']}" toggleable="true">
+		<p:commandLink value="#{lbl['lbl.sc.spec.stage.proposal.checklist']}"></p:commandLink>
 
 		<p:dataTable id="compilence" var="stageoneTechnical"
 			value="#{specificationBackingBean.managedBean.scQtCheckSt1techProposal}"
@@ -18,16 +18,16 @@
 
 			<p:column selectionMode="multiple" style="text-align:center;" />
 
-			<p:column headerText="Title" style="width:80%">
+			<p:column headerText="#{lbl['lbl.sc.spec.stage.title']}" style="width:80%">
 				<h:outputText value="#{stageoneTechnical.title}"></h:outputText>
 
 			</p:column>
 
-			<p:column headerText="Type" style="width:40%">
+			<p:column headerText="#{lbl['lbl.sc.spec.stage.type']}" style="width:40%">
 				<h:outputText value="Upload"></h:outputText>
 			</p:column>
 
-			<p:column headerText="Sample Document" style="width:40%">
+			<p:column headerText="#{lbl['lbl.sc.spec.stage.document']}" style="width:40%">
 				<ui:include src="/xhtml/ss/specification/upload.xhtml" />
 				<p:commandLink oncomplete="uploadDlg.show();return false;"
 					update="compilence">
@@ -42,10 +42,10 @@
 					value="#{stageoneTechnical.scQtCheckListAttachment.fileName}"></h:outputText>
 			</p:column>
 
-			<p:column headerText="Ordering">
+			<p:column headerText="#{lbl['lbl.sc.spec.stage.order']}">
 				<p:inputText value="#{stageoneTechnical.checklistSeq}"></p:inputText>
 			</p:column>
-			<p:column headerText="Action" style="width:10%">
+			<p:column headerText="#{lbl['lbl.sc.spec.stage.action']}" style="width:10%">
 				<p:commandLink>
 					<p:graphicImage library="ep/images/design" name="edit.png"
 						value="/resources/ep/images/design/edit.png" />
@@ -63,13 +63,14 @@
 		<p:spacer height="20"></p:spacer>
 
 		<div align="right">
-			<p:commandButton value="ADD" process="@this" partialSubmit="true"
+			<p:commandButton value="#{lbl['lbl.sc.spec.stage.btn.add']}" process="@this" partialSubmit="true"
 				onclick="compliance.show();" />
-			<p:commandButton value="DELETE" />
+			<p:commandButton value="#{lbl['lbl.sc.spec.stage.btn.delete']}" />
 
 		</div>
 
-		<p:dataTable id="additionaltech" var="stageoneaddTechnical"
+<p:commandLink value="#{lbl['lbl.sc.spec.stage.addproposal.checklist']}"></p:commandLink>
+<p:dataTable id="additionaltech" var="stageoneaddTechnical"
 			rowKey="#{stageoneaddTechnical}"
 			value="#{specificationBackingBean.managedBean.scQtCheckSt1techAdditionalProposalList}"
 			selection="#{specificationBackingBean.selectedst1TechAddProposal}"
@@ -77,16 +78,16 @@
 			<ac:paginator for="additionaltech" />
 			<p:column selectionMode="multiple" style="text-align:center;" />
 
-			<p:column headerText="Title" style="width:80%">
+			<p:column headerText="#{lbl['lbl.sc.spec.stage.title']}" style="width:80%">
 
 				<p:inputText value="#{stageoneaddTechnical.title}" size="50"></p:inputText>
 
 			</p:column>
 
-			<p:column headerText="Type" style="width:40%">
+			<p:column headerText="#{lbl['lbl.sc.spec.stage.type']}" style="width:40%">
 				<h:outputText value="Upload"></h:outputText>
 			</p:column>
-			<p:column headerText="Sample Document" style="width:40%">
+			<p:column headerText="#{lbl['lbl.sc.spec.stage.document']}" style="width:40%">
 				<ui:include src="/xhtml/ss/specification/upload.xhtml" />
 				<p:commandLink oncomplete="uploadS1TechAdd.show();return false;"
 					update="additionaltech">
@@ -100,11 +101,11 @@
 				<h:outputText
 					value="#{stageoneaddTechnical.scQtCheckListAttachment.fileName}"></h:outputText>
 			</p:column>
-			<p:column headerText="Ordering">
+			<p:column headerText="#{lbl['lbl.sc.spec.stage.order']}">
 				<p:inputText value="#{stageoneaddTechnical.checklistSeq}"></p:inputText>
 			</p:column>
 
-			<p:column headerText="Action" style="width:10%">
+			<p:column headerText="#{lbl['lbl.sc.spec.stage.action']}" style="width:10%">
 				<p:commandLink>
 					<p:graphicImage library="ep/images/design" name="edit.png"
 						value="/resources/ep/images/design/edit.png" />
@@ -122,17 +123,17 @@
 		</p:dataTable>
 		<p:spacer height="20"></p:spacer>
 		<div align="right">
-			<p:commandButton value="ADD" process="@this,additionaltech"
+			<p:commandButton value="#{lbl['lbl.sc.spec.stage.btn.add']}" process="@this,additionaltech"
 				partialSubmit="true"
 				action="#{specificationBackingBean.stageOneAdditionalAdd}"
 				update="additionaltech" />
-			<p:commandButton value="DELETE" />
+			<p:commandButton value="#{lbl['lbl.sc.spec.stage.btn.delete']}" />
 
 		</div>
 
 	</p:panel>
-	<p:panel header="STAGE ONE(FINANCIAL)" toggleable="true">
-		<p:commandLink value="Proposal Checklist"></p:commandLink>
+	<p:panel header="#{lbl['lbl.sc.spec.stage.financial']}" toggleable="true">
+		<p:commandLink value="#{lbl['lbl.sc.spec.stage.proposal.checklist']}"></p:commandLink>
 		<p:dataTable id="financeProposal" var="stageonefinanceProp"
 			value="#{specificationBackingBean.managedBean.scQtCheckSt1financeProposalList}"
 			rowKey="#{stageonefinanceProp}"
@@ -140,15 +141,15 @@
 			style="width:100%" rowIndexVar="index">
 			<ac:paginator for="financeProposal" />
 			<p:column selectionMode="multiple" style="text-align:center;" />
-			<p:column headerText="Title" style="width:80%">
+			<p:column headerText="#{lbl['lbl.sc.spec.stage.title']}" style="width:80%">
 				<p:inputText value="#{stageonefinanceProp.title}" size="50"></p:inputText>
 
 			</p:column>
 
-			<p:column headerText="Type" style="width:40%">
+			<p:column headerText="#{lbl['lbl.sc.spec.stage.type']}" style="width:40%">
 				<h:outputText value="Upload"></h:outputText>
 			</p:column>
-			<p:column headerText="Sample Document" style="width:40%">
+			<p:column headerText="#{lbl['lbl.sc.spec.stage.document']}" style="width:40%">
 				<ui:include src="/xhtml/ss/specification/upload.xhtml" />
 				<p:commandLink oncomplete="uploadS1Fin.show();return false;"
 					update="financeProposal">
@@ -163,10 +164,10 @@
 					value="#{stageonefinanceProp.scQtCheckListAttachment.fileName}"></h:outputText>
 			</p:column>
 
-			<p:column headerText="Ordering">
+			<p:column headerText="#{lbl['lbl.sc.spec.stage.order']}">
 				<p:inputText value="#{stageonefinanceProp.checklistSeq}"></p:inputText>
 			</p:column>
-			<p:column headerText="Action" style="width:10%">
+			<p:column headerText="#{lbl['lbl.sc.spec.stage.action']}" style="width:10%">
 				<p:commandLink>
 					<p:graphicImage library="ep/images/design" name="edit.png"
 						value="/resources/ep/images/design/edit.png" />
@@ -183,15 +184,15 @@
 		<p:spacer height="20"></p:spacer>
 
 		<div align="right">
-			<p:commandButton value="ADD" process="@this,financeProposal"
+			<p:commandButton value="#{lbl['lbl.sc.spec.stage.btn.add']}" process="@this,financeProposal"
 				partialSubmit="true"
 				action="#{specificationBackingBean.stageOneFiProposalAdd}"
 				update="financeProposal" />
-			<p:commandButton value="DELETE" />
+			<p:commandButton value="#{lbl['lbl.sc.spec.stage.btn.delete']}" />
 
 		</div>
 
-		<p:commandLink value="Additional Proposal Checklist"></p:commandLink>
+		<p:commandLink value="#{lbl['lbl.sc.spec.stage.addproposal.checklist']}"></p:commandLink>
 		<p:dataTable id="financeAdditional" var="stageonefinanceAdd"
 			value="#{specificationBackingBean.managedBean.scQtCheckSt1financeAdditionalProposalList}"
 			rowKey="#{stageonefinanceAdd}"
@@ -200,15 +201,15 @@
 			<ac:paginator for="financeAdditional" />
 			<p:column selectionMode="multiple" style="text-align:center;" />
 
-			<p:column headerText="Title" style="width:80%">
+			<p:column headerText="#{lbl['lbl.sc.spec.stage.title']}" style="width:80%">
 				<p:inputText value="#{stageonefinanceAdd.title}" size="50"></p:inputText>
 
 			</p:column>
 
-			<p:column headerText="Type" style="width:40%">
+			<p:column headerText="#{lbl['lbl.sc.spec.stage.type']}" style="width:40%">
 				<h:outputText value="Upload"></h:outputText>
 			</p:column>
-			<p:column headerText="Sample Document" style="width:40%">
+			<p:column headerText="#{lbl['lbl.sc.spec.stage.document']}" style="width:40%">
 				<ui:include src="/xhtml/ss/specification/upload.xhtml" />
 				<p:commandLink oncomplete="uploadS1FinAdd.show();return false;"
 					update="financeAdditional">
@@ -223,10 +224,10 @@
 					value="#{stageonefinanceAdd.scQtCheckListAttachment.fileName}"></h:outputText>
 			</p:column>
 
-			<p:column headerText="Ordering">
+			<p:column headerText="#{lbl['lbl.sc.spec.stage.order']}">
 				<p:inputText value="#{stageonefinanceAdd.checklistSeq}"></p:inputText>
 			</p:column>
-			<p:column headerText="Action" style="width:10%">
+			<p:column headerText="#{lbl['lbl.sc.spec.stage.action']}" style="width:10%">
 				<p:commandLink>
 					<p:graphicImage library="ep/images/design" name="edit.png"
 						value="/resources/ep/images/design/edit.png" />
@@ -242,25 +243,25 @@
 		</p:dataTable>
 		<p:spacer height="20"></p:spacer>
 		<div align="right">
-			<p:commandButton value="ADD" process="@this,financeAdditional"
+			<p:commandButton value="#{lbl['lbl.sc.spec.stage.btn.add']}" process="@this,financeAdditional"
 				partialSubmit="true"
 				action="#{specificationBackingBean.stageOneFiAdditioalProposalAdd}"
 				update="financeAdditional" />
-			<p:commandButton value="DELETE" />
+			<p:commandButton value="#{lbl['lbl.sc.spec.stage.btn.delete']}" />
 
 		</div>
 		<h:panelGrid columns="2" styleClass="noBorders tr,noBorders td">
-			<h:outputText value="Sample Product Required" />
+			<h:outputText value="#{lbl['lbl.sc.spec.stage.sample.product']}" />
 			<p:selectOneRadio
 				value="#{specificationBackingBean.managedBean.scQtSpec.sampleReq}">
 				<f:selectItem itemLabel="Yes" itemValue="true" />
 				<f:selectItem itemLabel="No" itemValue="false" />
 			</p:selectOneRadio>
-			<h:outputText value="Sample Closing Date Time" />
+			<h:outputText value="#{lbl['lbl.sc.spec.stage.sample.date.time']}" />
 			<p:calendar
 				value="#{specificationBackingBean.managedBean.scQtSpec.approvalDate}"
 				showOn="button"></p:calendar>
-			<h:outputText value="Sample Product Information" />
+			<h:outputText value="#{lbl['lbl.sc.spec.stage.sample.info']}" />
 			<p:inputTextarea rows="3" cols="40" autoResize="false"></p:inputTextarea>
 		</h:panelGrid>
 	</p:panel>

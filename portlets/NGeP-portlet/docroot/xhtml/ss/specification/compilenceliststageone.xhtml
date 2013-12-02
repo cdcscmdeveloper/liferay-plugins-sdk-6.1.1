@@ -9,7 +9,7 @@
 
 	<p:dialog header="Compilance" widgetVar="compliance" modal="true"
 		width="400" height="200">
-		<p:panel header="Compilance Checklist" toggleable="true">
+		<p:panel header="#{lbl['lbl.sc.spec.stage.compilence']}" toggleable="true">
 
 			<p:dataTable id="compilencestageone" var="compilance"
 				value="#{specificationBackingBean.managedBean.compilaenceList}"
@@ -18,15 +18,15 @@
 				rowKey="#{compilance.compilanceId}" rowIndexVar="index">
 
 				<p:column selectionMode="multiple" style="width:2%;text-align:center;" />
-				<p:column headerText="Title">
+				<p:column headerText="#{lbl['lbl.sc.spec.stage.title']}">
 					<h:outputText value="#{compilance.compilanceTitle}"></h:outputText>
 				</p:column>
 			</p:dataTable>
 
 		</p:panel>
-		<p:commandButton value="CANCEL" style="float:right;"
+		<p:commandButton value="#{lbl['lbl.sc.spec.stage.btn.cancel']}" style="float:right;"
 			onclick="compliance.hide();"></p:commandButton>
-		<p:commandButton value="OK" style="float:right;" process="@all"
+		<p:commandButton value="#{lbl['lbl.sc.spec.stage.btn.ok']}" style="float:right;" process="@all"
 			partialSubmit="true"
 			action="#{specificationBackingBean.stageOneTechProposal}"
 			oncomplete="compliance.hide();" update="compilence"></p:commandButton>
