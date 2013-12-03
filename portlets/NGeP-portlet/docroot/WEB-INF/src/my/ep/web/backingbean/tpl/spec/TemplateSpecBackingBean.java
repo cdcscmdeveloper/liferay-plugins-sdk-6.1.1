@@ -322,7 +322,6 @@ public class TemplateSpecBackingBean extends BaseBackingBean<TemplateSpecManaged
 			newQuestion.setAnswerTypeCode(resDTO.getPmCode());
 			
 			PmUom uom = new PmUom();
-			uom.setUomId(-1);
 			newQuestion.setClUom(uom);
 			questionList.add(row + 1, newQuestion);
 			for(int i = row + 1; i < questionList.size(); i++) {
