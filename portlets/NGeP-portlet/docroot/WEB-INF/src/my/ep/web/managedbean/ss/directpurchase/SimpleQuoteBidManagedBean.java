@@ -20,17 +20,22 @@ import org.primefaces.model.TreeNode;
 public class SimpleQuoteBidManagedBean extends BaseManagedBean{
 	private	ScRequestList	scRequestList;
 	private	ScQuoteBid		scQuoteBid;
+	private	String	action = "";
 	
 	private	List<ScRequestListItem>	quoteBidItems = new ArrayList<ScRequestListItem>();
+	private	List<ScRequestListItem>	selectedItems	=	new ArrayList<ScRequestListItem>();
+	
 	private	List<ScQuoteBidSupplier>	quoteBidSuppliers	=	new ArrayList<ScQuoteBidSupplier>();
 	private	List<ScBusinessNatureQuoteBidCriteria>	businessNatureCriterias	=	new ArrayList<ScBusinessNatureQuoteBidCriteria>();
 	private	String	zoneName;
-	private TreeNode	rootZoneNode;
+	private List<TreeNode>	zoneTrees = new ArrayList<TreeNode>();
+	private	List<TreeNode>	selectedZoneTree	=	new ArrayList<TreeNode>();
 	private	TreeNode	rootLocationTree;
 	private TreeNode[] selectedNodes;
 	
 	private	String	supplierFilterType;
 	private	String	supplierFilterValue;
+	private	int	activeTabIndex	=	0;
 	
 	private static final long serialVersionUID = 1L;
 
@@ -106,14 +111,6 @@ public class SimpleQuoteBidManagedBean extends BaseManagedBean{
 		this.quoteBidSuppliers = quoteBidSuppliers;
 	}
 
-	public TreeNode getRootZoneNode() {
-		return rootZoneNode;
-	}
-
-	public void setRootZoneNode(TreeNode rootZoneNode) {
-		this.rootZoneNode = rootZoneNode;
-	}
-
 	public TreeNode getRootLocationTree() {
 		return rootLocationTree;
 	}
@@ -137,4 +134,45 @@ public class SimpleQuoteBidManagedBean extends BaseManagedBean{
 	public void setZoneName(String zoneName) {
 		this.zoneName = zoneName;
 	}
+
+	public String getAction() {
+		return action;
+	}
+
+	public void setAction(String action) {
+		this.action = action;
+	}
+
+	public List<ScRequestListItem> getSelectedItems() {
+		return selectedItems;
+	}
+
+	public void setSelectedItems(List<ScRequestListItem> selectedItems) {
+		this.selectedItems = selectedItems;
+	}
+
+	public List<TreeNode> getZoneTrees() {
+		return zoneTrees;
+	}
+
+	public void setZoneTrees(List<TreeNode> zoneTrees) {
+		this.zoneTrees = zoneTrees;
+	}
+
+	public List<TreeNode> getSelectedZoneTree() {
+		return selectedZoneTree;
+	}
+
+	public void setSelectedZoneTree(List<TreeNode> selectedZoneTree) {
+		this.selectedZoneTree = selectedZoneTree;
+	}
+
+	public int getActiveTabIndex() {
+		return activeTabIndex;
+	}
+
+	public void setActiveTabIndex(int activeTabIndex) {
+		this.activeTabIndex = activeTabIndex;
+	}
+	
 }

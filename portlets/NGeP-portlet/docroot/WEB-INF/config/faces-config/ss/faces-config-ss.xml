@@ -40,5 +40,11 @@
 		<converter-id>justificationTypeConverter</converter-id>
 		<converter-class>my.ep.web.ss.converter.JustificationTypeConverter</converter-class>
 	</converter>
+	<managed-bean>
+		<description>Sourcing Constants</description>
+		<managed-bean-name>SourcingConstants</managed-bean-name>
+		<managed-bean-class>my.ep.constant.ss.SourcingConstants</managed-bean-class>
+		<managed-bean-scope>application</managed-bean-scope>
+	</managed-bean>
 </faces-config>
 

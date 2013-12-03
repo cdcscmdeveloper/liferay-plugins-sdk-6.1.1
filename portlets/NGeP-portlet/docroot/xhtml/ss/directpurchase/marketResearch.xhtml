@@ -62,12 +62,12 @@
 		header="#{lbl['lbl.ss.panel.title.market.research']}"
 		toggleable="true" toggleSpeed="500">
 		<div align="right" id="div_j111">
-			<p:button value="#{lbl['lbl.ss.action.search.catelogue']}" outcome="/xhtml/ss/directpurchase/searchCatalogue.xhtml"/>
-			<p:commandButton value="#{lbl['lbl.ss.action.simple.quote']}"
+			<p:button disabled="#{directPurchaseBackingBean.managedBean.requestList.pmStatus.statusId ge SourcingConstants.requestListPendingApproval}" value="#{lbl['lbl.ss.action.search.catelogue']}" outcome="/xhtml/ss/directpurchase/searchCatalogue.xhtml"/>
+			<p:commandButton disabled="#{directPurchaseBackingBean.managedBean.requestList.pmStatus.statusId gt SourcingConstants.requestListRecommendedSupplier}" value="#{lbl['lbl.ss.action.simple.quote']}" actionListener="#{directPurchaseBackingBean.simpleQuoteAction}"
+				oncomplete="simpleQuoteBid.show();" />
+			<p:commandButton disabled="#{directPurchaseBackingBean.managedBean.requestList.pmStatus.statusId gt SourcingConstants.requestListRecommendedSupplier}" value="#{lbl['lbl.ss.action.simple.bid']}" actionListener="#{directPurchaseBackingBean.simpleBidAction}"
 				onclick="simpleQuoteBid.show();" />
-			<p:commandButton value="#{lbl['lbl.ss.action.simple.bid']}"
-				onclick="simpleQuoteBid.show();" />
-			<p:button value="#{lbl['lbl.ss.action.clone']}" />
+			<p:button disabled="#{directPurchaseBackingBean.managedBean.requestList.pmStatus.statusId ge SourcingConstants.requestListPendingApproval}" value="#{lbl['lbl.ss.action.clone']}" />
 		</div>
 		<h:panelGrid	width="100%" style="margin-top:20px">
 			<p:dataTable id="requestItemDataTable" width="100%" cellpadding="1" rowIndexVar="rowIndex" editable="true" editMode="cell"
@@ -110,8 +110,9 @@
 			</p:dataTable>
 		</h:panelGrid>
 		<div align="right" id="divGroupBtnAction">
-			<p:commandButton value="#{lbl['lbl.ss.action.group']}"
+			<p:commandButton disabled="#{directPurchaseBackingBean.managedBean.requestList.pmStatus.statusId ge SourcingConstants.requestListPendingApproval}" value="#{lbl['lbl.ss.action.group']}"
 				onclick="groupItem.show();" />
+			<p:commandButton disabled="#{directPurchaseBackingBean.managedBean.requestList.pmStatus.statusId ge SourcingConstants.requestListPendingApproval}" value="#{lbl['lbl.sc.action.delete']}" icon="ui-icon-delete"/>
 			<!-- p:button value="#{lbl['lbl.ss.action.recommend']}" onclick="dpwidget.select(1);">
 			</p:button -->
 		</div>

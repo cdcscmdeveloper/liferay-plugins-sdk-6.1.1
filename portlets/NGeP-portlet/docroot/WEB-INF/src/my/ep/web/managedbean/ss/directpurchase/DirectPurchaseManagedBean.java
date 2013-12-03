@@ -8,6 +8,7 @@ import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
 
 import my.ep.biz.service.pm.authorization.user.IUserSO;
+import my.ep.constant.ss.SourcingConstants;
 import my.ep.dto.pm.authorization.user.UserReqDTO;
 import my.ep.dto.pm.authorization.user.UserResDTO;
 import my.ep.dto.ss.directpurchase.SelectOptionDTO;
@@ -15,10 +16,10 @@ import my.ep.persistence.entity.pm.authorization.PmOrgProfile;
 import my.ep.persistence.entity.pm.authorization.PmUser;
 import my.ep.persistence.entity.pm.common.PmStatus;
 import my.ep.persistence.entity.sm.SmSupplier;
+import my.ep.persistence.entity.ss.directpurchase.ScDpRemark;
 import my.ep.persistence.entity.ss.directpurchase.ScPrInquiry;
 import my.ep.persistence.entity.ss.directpurchase.ScRequestList;
 import my.ep.persistence.entity.ss.directpurchase.ScRequestListItem;
-import my.ep.persistence.entity.ss.directpurchase.ScRequestNote;
 import my.ep.persistence.entity.ss.directpurchase.ScRequestNoteDtl;
 import my.ep.persistence.entity.ss.directpurchase.ScRequestSupplierItem;
 import my.ep.type.pm.RoleCode;
@@ -55,6 +56,8 @@ public class DirectPurchaseManagedBean extends BaseManagedBean{
 	private	List<ScRequestNoteDtl>	requestNoteDtls	=	new ArrayList<ScRequestNoteDtl>();//list request Note Dtl.
 	private	List<ScRequestNoteDtl>	selectedRequestNoteDtls	=	new ArrayList<ScRequestNoteDtl>();
 	
+	private	List<ScDpRemark>	selectedRemarks	=	new	ArrayList<ScDpRemark>();
+	
 	private	List<PmUser>	availableApprover;
 	private	List<PmUser>	selectedApprover;
 	private	DualListModel<PmUser>	approvalUsers;
@@ -79,7 +82,7 @@ public class DirectPurchaseManagedBean extends BaseManagedBean{
 		super();
 		requestList = new	ScRequestList();
 		PmStatus	status	=	new	PmStatus();
-		status.setStatusId(SourcingConst.REQUEST_LIST_NEW);
+		status.setStatusId(SourcingConstants.REQUEST_LIST_NEW);
 		requestList.setPmStatus(status);
 		initialInformation();
 		prepareDummyData();
@@ -370,5 +373,11 @@ public class DirectPurchaseManagedBean extends BaseManagedBean{
 	}
 	public void setInquirySupplierItem(ScRequestSupplierItem inquirySupplierItem) {
 		this.inquirySupplierItem = inquirySupplierItem;
+	}
+	public List<ScDpRemark> getSelectedRemarks() {
+		return selectedRemarks;
+	}
+	public void setSelectedRemarks(List<ScDpRemark> selectedRemarks) {
+		this.selectedRemarks = selectedRemarks;
 	}
 }

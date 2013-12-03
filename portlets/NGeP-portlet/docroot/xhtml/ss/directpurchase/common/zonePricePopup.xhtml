@@ -12,7 +12,7 @@
 					<TD width="20%" valign="top"><p:outputLabel value="Zone Name"></p:outputLabel>
 					</TD>
 					<TD width="80%"><p:inputText
-							value="#{simpleQuoteBidBackingBean.managedBean.zoneName}"></p:inputText>
+							value="#{simpleQuoteBidBackingBean.managedBean.zoneName}" required="true"></p:inputText>
 					</TD>
 				</TR>
 				<TR>
@@ -34,7 +34,7 @@
 			</table>
 		</p:panel>
 		<p:commandButton value="#{lbl['lbl.ss.simple.quote.purchase.btn.ok']}" style="float:right;"
-			onclick="ZoneLocation.hide();" process="@all" update="zoneLocationDataTable" action="#{simpleQuoteBidBackingBean.updateZoneLocation}"></p:commandButton>
+			onclick="ZoneLocation.hide();" process="@all" action="#{simpleQuoteBidBackingBean.updateZoneLocation}"></p:commandButton>
 				&#160;&#160;
 		<p:commandButton value="#{lbl['lbl.ss.simple.quote.purchase.btn.cancel']}" style="float:right;"
 			onclick="ZoneLocation.hide();"></p:commandButton>

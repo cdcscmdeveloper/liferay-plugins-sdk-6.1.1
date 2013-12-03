@@ -8,7 +8,6 @@
 	<p:panel header="HEADER" toggleable="true"  toggleSpeed="500">
 		<p:panelGrid style="width:100%;"
 			styleClass="noBorders tr,noBorders td">
-
 			<p:row>
 				<p:column style="width:20%">
 					<p:outputLabel value="Ministry Code"></p:outputLabel>
@@ -109,7 +108,7 @@
 	<p:panel header="ITEM DETAIL" toggleable="true"  toggleSpeed="500">
 		<p:dataTable id="quoteBidItemDataTable"
 			value="#{simpleQuoteBidBackingBean.managedBean.quoteBidItems}"
-			var="item" rowIndexVar="index" editable="true">
+			var="item" rowIndexVar="index" editable="true" editMode="cell">
 			<p:column
 				headerText="#{lbl['lbl.ss.simple.quote.purchase.group.seq.no']}"
 				style="width:10%">
@@ -121,7 +120,7 @@
 						<h:outputText value="#{item.itemName}" />
 					</f:facet>
 					<f:facet name="input">
-						<p:inputText value="#{item.itemName}" style="width:100%" />
+						<p:inputText value="#{item.itemName}" style="width:96%" />
 					</f:facet>
 				</p:cellEditor>
 			</p:column>
@@ -133,7 +132,7 @@
 						<h:outputText value="#{item.itemDesc}" />
 					</f:facet>
 					<f:facet name="input">
-						<p:inputText value="#{item.itemDesc}" style="width:100%" />
+						<p:inputText value="#{item.itemDesc}" style="width:96%" />
 					</f:facet>
 				</p:cellEditor>
 			</p:column>
@@ -146,7 +145,7 @@
 						<h:outputText value="#{item.quantity}" />
 					</f:facet>
 					<f:facet name="input">
-						<p:inputText value="#{item.quantity}" style="width:100%" />
+						<p:inputText value="#{item.quantity}" style="width:96%" />
 					</f:facet>
 				</p:cellEditor>
 			</p:column>
@@ -157,12 +156,11 @@
 						<h:outputText value="#{item.uom}" />
 					</f:facet>
 					<f:facet name="input">
-						<p:inputText value="#{item.uom}" style="width:100%" />
+						<p:inputText value="#{item.uom}" style="width:96%" />
 					</f:facet>
 				</p:cellEditor>
 			</p:column>
 			<p:column headerText="Action" style="width:10%">
-				<p:rowEditor />
 				<p:commandLink>
 					<p:graphicImage library="ep/images/design" name="delete.png"
 						value="/resources/ep/images/design/delete.png" />

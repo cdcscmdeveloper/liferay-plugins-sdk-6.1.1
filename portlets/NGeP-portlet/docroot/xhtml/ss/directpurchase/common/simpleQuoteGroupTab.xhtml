@@ -16,16 +16,16 @@
 			<p:commandButton value="#{lbl['lbl.ss.submit']}">
 			</p:commandButton>
 		</div>
-		<p:tabView id="dp" dynamic="true" orientation="left" widgetVar="dp">
-			<p:tab id="simpleQuoteTab" title="Simple Quote">
-				<p:panel header="SimpleQuote-PTJ">
-					<p:tabView dynamic="true">
+		<c:if test="#{simpleQuoteBidBackingBean.managedBean.action eq SourcingConstants.createSimpleQuote}">
+			<p:tabView id="dp" orientation="left" widgetVar="dp">
+			<p:tab id="simpleQuoteTab" title="#{lbl['lbl.sc.tab.title.simple.quote']}" >
+				<p:panel header="Simple Quote-PTJ">
+					<p:tabView dynamic="true" activeIndex="#{simpleQuoteBidBackingBean.managedBean.activeTabIndex}">
 						<p:tab title="GENERAL" styleClass="noBorders tr,noBorders td">
 							<ui:include src="/xhtml/ss/directpurchase/common/general.xhtml" />
 						</p:tab>
 						<p:tab title="ZONE PRICE" styleClass="noBorders tr,noBorders td">
-							<ui:include
-								src="/xhtml/ss/directpurchase/common/zonePrice.xhtml" />
+							<ui:include src="/xhtml/ss/directpurchase/common/zonePrice.xhtml" />
 						</p:tab>
 						<p:tab title="SUPPLIER CRITERIA"
 							styleClass="noBorders tr,noBorders td">
@@ -38,15 +38,30 @@
 			<!-- p:tab id="marketResearch"
 				title="#{lbl['lbl.ss.sidemenu.market.research']}">
 				<ui:include src="/xhtml/ss/directpurchase/marketResearch.xhtml"></ui:include>
-			</p:tab>
-			<p:tab id="requestList"
-				title="#{lbl['lbl.ss.sidemenu.request.list']}">
-				<ui:include src="/xhtml/ss/directpurchase/requestList.xhtml"></ui:include>
-			</p:tab>
-			<p:tab id="remark" title="#{lbl['lbl.ss.sidemenu.remarks']}">
-				<ui:include
-					src="/xhtml/ss/directpurchase/directPurchaseRemarks.xhtml"></ui:include>
-			</p:tab	-->
+			</p:tab-->
 		</p:tabView>
+		</c:if>
+		<c:if test="#{simpleQuoteBidBackingBean.managedBean.action eq SourcingConstants.createSimpleBid}">
+			<p:tabView id="dp" dynamic="true" orientation="left" widgetVar="dp">
+			<p:tab id="simpleQuoteTab" title="#{lbl['lbl.sc.tab.title.simple.bid']}">
+				<p:panel header="Simple Bid-PTJ">
+					<p:tabView dynamic="true">
+						<p:tab title="GENERAL" styleClass="noBorders tr,noBorders td">
+							<ui:include src="/xhtml/ss/directpurchase/common/general.xhtml" />
+						</p:tab>
+						<p:tab title="SUPPLIER CRITERIA"
+							styleClass="noBorders tr,noBorders td">
+							<ui:include
+								src="/xhtml/ss/directpurchase/common/supplierCriteria.xhtml" />
+						</p:tab>
+					</p:tabView>
+				</p:panel>
+			</p:tab>
+			<!-- p:tab id="marketResearch"
+				title="#{lbl['lbl.ss.sidemenu.market.research']}">
+				<ui:include src="/xhtml/ss/directpurchase/marketResearch.xhtml"></ui:include>
+			</p:tab-->
+		</p:tabView>
+		</c:if>
 	</ui:define>
 </ui:composition>

@@ -41,6 +41,15 @@ public class RequestListHelper {
 		}
 	}
 	
+	public	static	List<ScRequestListItem>	removeSelectedItem(List<ScRequestListItem> requestListItems){
+		for(ScRequestListItem requestListItem: requestListItems){
+			if(requestListItem.isSelectedCheckBox()){
+				requestListItems.remove(requestListItem);
+			}
+		}
+		return requestListItems;
+	}
+	
 	public	static	Collection<SmSupplier>	getRecommendSupplier(List<ScRequestListItem> requestListItems){
 		Map<Long,SmSupplier>	uniqueSmSuppliers	=	new HashMap<Long,SmSupplier>();
 		for(ScRequestListItem requestListItem: requestListItems){

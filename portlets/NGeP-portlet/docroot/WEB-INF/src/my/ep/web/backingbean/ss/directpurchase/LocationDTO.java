@@ -6,6 +6,7 @@ import my.ep.persistence.entity.pm.common.PmCity;
 import my.ep.persistence.entity.pm.common.PmDistrict;
 import my.ep.persistence.entity.pm.common.PmDivision;
 import my.ep.persistence.entity.pm.common.PmState;
+import my.ep.persistence.entity.ss.directpurchase.ScQBZone;
 
 public class LocationDTO implements Serializable{
 
@@ -13,11 +14,22 @@ public class LocationDTO implements Serializable{
 	 * 
 	 */
 	private static final long serialVersionUID = -8954854049553749821L;
+	private	ScQBZone	zone;
 	private	PmState	state;
 	private	PmDistrict	district;
 	private	PmCity	city;
 	private	PmDivision division;
 	private	String	locationName;
+	
+	public LocationDTO() {
+		super();
+	}
+	public LocationDTO(ScQBZone zone) {
+		super();
+		this.zone = zone;
+	}
+
+
 	public LocationDTO(PmState state) {
 		super();
 		this.state = state;
@@ -39,6 +51,9 @@ public class LocationDTO implements Serializable{
 
 	public String getLocationName() {
 		if(locationName == null || "".equalsIgnoreCase(locationName)){
+			if(zone != null){
+				return zone.getZoneName();
+			}
 			if(state != null){
 				return state.getStateName();
 			}
@@ -85,5 +100,67 @@ public class LocationDTO implements Serializable{
 	public void setDivision(PmDivision division) {
 		this.division = division;
 	}
+
+	public ScQBZone getZone() {
+		return zone;
+	}
+
+	public void setZone(ScQBZone zone) {
+		this.zone = zone;
+	}
 	
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + ((zone == null) ? 0 : zone.hashCode());
+		result = prime * result + ((state == null) ? 0 : state.hashCode());
+		result = prime * result + ((district == null) ? 0 : district.hashCode());
+		result = prime * result + ((division == null) ? 0 : division.hashCode());
+		result = prime * result + ((city == null) ? 0 : city.hashCode());
+		return result;
+	}
+	
+	@Override
+	public boolean equals(Object obj) {
+		if(this == obj)
+			return true;
+		if(obj == null)
+			return false;
+		if(getClass() != obj.getClass())
+			return false;
+		
+		LocationDTO other = (LocationDTO) obj;
+		if (zone == null) {
+			if (other.zone != null)
+				return false;
+		} else if (!zone.equals(other.zone))
+			return false;
+		
+		if (state == null) {
+			if (other.state != null)
+				return false;
+		} else if (!state.equals(other.state))
+			return false;
+		
+		if (district == null) {
+			if (other.district != null)
+				return false;
+		} else if (!district.equals(other.district))
+			return false;
+		
+		if (division == null) {
+			if (other.division != null)
+				return false;
+		} else if (!division.equals(other.division))
+			return false;
+		
+		if (city == null) {
+			if (other.city != null)
+				return false;
+		} else if (!city.equals(other.city))
+			return false;
+		
+		return true;
+	}
 }
