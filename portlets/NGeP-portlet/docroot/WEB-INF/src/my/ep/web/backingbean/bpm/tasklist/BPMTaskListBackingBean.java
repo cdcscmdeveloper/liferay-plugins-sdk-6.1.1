@@ -57,6 +57,19 @@ public class BPMTaskListBackingBean extends BaseBackingBean<BPMTaskListManagedBe
 		temp.put("Specification Preparation", "qtsprecprepartaion");
 		temp.put("View Preparation", "qtsprecprepartaion");
 		
+		temp.put("Circular Contract Maintenance", "create-central-contract-circular");
+		temp.put("Circular Contract Maintenance", "create-panel-circular");
+		temp.put("Circular Contract Maintenance", "central-contract-circular-maintenance");
+		temp.put("Circular Contract Maintenance", "panel-circular-maintenance");
+		temp.put("Circular Contract Cancellation", "cancel-circular");
+		temp.put("Factoring Company Request", "request-factoring");
+		temp.put("Contract Creation", "fulfilment-details");
+		temp.put("Contract Activation Suspension Request", "contract-maintenance");
+		temp.put("Contract Amendment Request", "contract-maintenance");
+		temp.put("Contract Termination", "contract-maintenance");
+		temp.put("Agreement Creation", "agreement");
+		temp.put("Agreement Creation", "supplemental-agreement");
+		
 		this.getManagedBean().setBpmMap(temp);
 		
 
