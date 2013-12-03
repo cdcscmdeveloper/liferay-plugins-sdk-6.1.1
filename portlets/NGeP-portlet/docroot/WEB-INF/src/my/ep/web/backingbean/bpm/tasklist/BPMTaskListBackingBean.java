@@ -31,7 +31,7 @@ public class BPMTaskListBackingBean extends BaseBackingBean<BPMTaskListManagedBe
 		this.getManagedBean().setBpmMap(null);
 		Map temp = new HashMap();
 
-		temp.put("UNSPSC Code Request", "reviewUnspscCode");
+		temp.put("UNSPSC Code Request", "review-unspsc-code");
 		temp.put("Extension Code Request", "review-extension");
 		temp.put("Extension Code Maintenance", "review-extension-maintenance");
 		
@@ -78,7 +78,6 @@ public class BPMTaskListBackingBean extends BaseBackingBean<BPMTaskListManagedBe
 
 		IBpmSO bpmSO = (IBpmSO) EpBpmBusinessDelegate.getInstance().getServiceObject(IBpmSO.class);
 
-		//String token = bpmSO.authenticate("roslan", "welcome1");
 		FacesScopes face = new FacesScopes();
 		String token =face.getBPMAuthenticationCtxToken();
 		
@@ -141,7 +140,7 @@ public class BPMTaskListBackingBean extends BaseBackingBean<BPMTaskListManagedBe
 
 			ExternalContext externalContext = FacesContext.getCurrentInstance().getExternalContext();
 
-			externalContext.redirect("/web/guest/" +url +"?taskId="+taskId+"&loginId="+this.getManagedBean().getTempLoginId());
+			externalContext.redirect("/web/guest/" +url +"?taskId="+taskId);
 			//externalContext.redirect("http://localhost:8080/web/guest/" +url +"?taskId="+taskId);
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
