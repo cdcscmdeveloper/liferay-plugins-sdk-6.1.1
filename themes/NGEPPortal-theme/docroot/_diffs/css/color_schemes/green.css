@@ -38,11 +38,11 @@
 	background-color: #8CC63E !important;
 }
 
-.green .ui-panelmenu-header, .green #sign-in, .green nav#navigation ul li:hover ,.green nav#navigation ul li.selected ,.green #navigation .child-menu li a:hover,.green #navigation li a.active ,.green .my-sites-menu .current-site a {
+.green .ui-panelmenu-header, .green #sign-in, .green nav#navigation ul li:hover ,.green nav#navigation ul li.selected ,.green #navigation li a.active ,.green .my-sites-menu .current-site a {
 	background-color:#5BA218 !important; 
 }
 
-.green #dockbar .aui-menu a:HOVER ,.green .middle-navi-wrapper a:HOVER ,.green .middle-navi-right-wrapper ul li.btn-language div.dropdown-language-wrapper a:hover ,.green .middle-navi-right-wrapper ul li.btn-language div.dropdown-language-wrapper a.active{
+.green .middle-navi-wrapper a:HOVER ,.green .middle-navi-right-wrapper ul li.btn-language div.dropdown-language-wrapper a:hover ,.green .middle-navi-right-wrapper ul li.btn-language div.dropdown-language-wrapper a.active{
 	color: #8CC63E;
 }
 

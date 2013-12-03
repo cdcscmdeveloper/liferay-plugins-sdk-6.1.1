@@ -24,6 +24,18 @@
 	@include box-shadow(inset 0 5px 15px rgba(255, 255, 255, 0.5));
 }
 
+ul.child-menu li:hover {
+	@include box-shadow(inset 0 5px 15px rgba(255, 255, 255, 0.5));
+}
+
+nav#navigation ul li.selected {
+	@include box-shadow(inset 0 5px 15px rgba(255, 255, 255, 0.5));
+}
+
+nav#navigation ul li:hover {
+	@include box-shadow(inset 0 5px 15px rgba(255, 255, 255, 0.5));
+}
+
 .aui-dialog-hd {
 	@include box-shadow(1px 1px 0 #FFF);
 }
