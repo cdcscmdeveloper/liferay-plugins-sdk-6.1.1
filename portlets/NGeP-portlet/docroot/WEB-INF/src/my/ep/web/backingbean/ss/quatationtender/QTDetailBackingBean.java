@@ -259,8 +259,8 @@ public class QTDetailBackingBean extends
 		QuationTenderReqDTO quationTenderReqDTO = prepareQTInfo();
 
 		try {
-			QuationTenderResDTO quationTenderResDTO = detailSO
-					.saveOrUpdateQT(quationTenderReqDTO);
+			QuationTenderResDTO quationTenderResDTO = (QuationTenderResDTO) detailSO.saveQTDtl(quationTenderReqDTO);
+					
 
 			this.getManagedBean().setQt(quationTenderResDTO.getQtDetail());
 
@@ -510,7 +510,7 @@ public class QTDetailBackingBean extends
 		return QTConstants.MAINTANANCE_PAGE;
 	}
 
-	private void populateParentOrgProfile(ScQt scQt) {
+	public void populateParentOrgProfile(ScQt scQt) {
 		PmOrgProfile parentOrgProfile = scQt.getPmOrgProfile()
 				.getParentOrgProfile();
 
@@ -588,6 +588,7 @@ public class QTDetailBackingBean extends
 
 		for (TabBean bean : tabBeans) {
 			ScQtApproval tmpApproval = bean.getScQtApproval();
+			tmpApproval.setScQtApprovalAttachment(null);
 			if(tmpApproval.getScQt() == null){
 			tmpApproval.setScQt(scQt);
 			}
@@ -838,15 +839,14 @@ public class QTDetailBackingBean extends
 		QuationTenderReqDTO qtReqDTO =prepareQTInfo();
 
 		qtReqDTO.setTaskId(this.getManagedBean().getTaskId());
-		
-		qtReqDTO.setQuotationTenderDataType(this.getManagedBean().getQuotationTenderDataType());
+		qtReqDTO.setPayLoad(this.getManagedBean().getQuotationTenderDataType());
 		//TODO Need to get it from front end and set it
 		try{
 		qtReqDTO.setOutcome(BPMOutComeTypes.getValue(this.getManagedBean().getOutCome() ));
 		IQTDetailSO detailSO = EpEjbBusinessDelegate.getInstance()
 				.getServiceObject(QTConstants.SS_MODULE, IQTDetailSO.class);
 
-		QuationTenderResDTO resDTO = detailSO.updateQTBPMTask(qtReqDTO);
+		QuationTenderResDTO resDTO = (QuationTenderResDTO) detailSO.updateBPMAction(qtReqDTO);
 		if (resDTO.isSuccessful()) {
 
 			FacesContext.getCurrentInstance().addMessage(
@@ -874,7 +874,7 @@ public class QTDetailBackingBean extends
 
 		qtReqDTO.setTaskId(this.getManagedBean().getTaskId());
 		
-		qtReqDTO.setQuotationTenderDataType(this.getManagedBean().getQuotationTenderDataType());
+		qtReqDTO.setPayLoad(this.getManagedBean().getQuotationTenderDataType());
 		//TODO Need to get it from front end and set it
 		
 		qtReqDTO.setOutcome(outcome);
@@ -882,7 +882,7 @@ public class QTDetailBackingBean extends
 		IQTDetailSO detailSO = EpEjbBusinessDelegate.getInstance()
 				.getServiceObject(QTConstants.SS_MODULE, IQTDetailSO.class);
 
-		QuationTenderResDTO resDTO = detailSO.updateQTBPMTask(qtReqDTO);
+		QuationTenderResDTO resDTO = (QuationTenderResDTO) detailSO.updateBPMAction(qtReqDTO);
 		if (resDTO.isSuccessful()) {
 
 			FacesContext.getCurrentInstance().addMessage(
