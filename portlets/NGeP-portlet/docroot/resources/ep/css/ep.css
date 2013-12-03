@@ -1218,6 +1218,45 @@ important
 
 
 }
+
+.ui-paginator-first.ui-state-hover > .ui-icon-seek-first {
+	background-image: url(#{ resource [ 'ep/images/paginator:pagination_first_hover.png' ]
+}
+
+)
+!
+important
+;
+
+	
+background-position
+:
+ 
+center
+;
+
+	
+border-radius
+:
+ 
+0
+px
+;
+
+	
+height
+:
+ 
+16
+px
+ 
+!
+important
+;
+
+
+}
+
 .ui-icon-seek-prev {
 	background-image: url(#{ resource [ 'ep/images/paginator:pagination_pre.png' ]
 }
@@ -1255,6 +1294,45 @@ important
 
 
 }
+
+.ui-paginator-prev.ui-state-hover > .ui-icon-seek-prev {
+	background-image: url(#{ resource [ 'ep/images/paginator:pagination_pre_hover.png' ]
+}
+
+)
+!
+important
+;
+
+	
+background-position
+:
+ 
+center
+;
+
+	
+border-radius
+:
+ 
+0
+px
+;
+
+	
+height
+:
+ 
+16
+px
+ 
+!
+important
+;
+
+
+}
+
 .ui-icon-seek-next {
 	background-image: url(#{ resource [ 'ep/images/paginator:pagination_next.png' ]
 }
@@ -1292,6 +1370,45 @@ important
 
 
 }
+
+.ui-paginator-next.ui-state-hover > .ui-icon-seek-next {
+	background-image: url(#{ resource [ 'ep/images/paginator:pagination_next_hover.png' ]
+}
+
+)
+!
+important
+;
+
+	
+background-position
+:
+ 
+center
+;
+
+	
+border-radius
+:
+ 
+0
+px
+;
+
+	
+height
+:
+ 
+16
+px
+ 
+!
+important
+;
+
+
+}
+
 .ui-icon-seek-end {
 	background-image: url(#{ resource [ 'ep/images/paginator:pagination_last.png' ]
 }
@@ -1335,6 +1452,51 @@ important
 
 
 }
+
+.ui-paginator-last.ui-state-hover > .ui-icon-seek-end {
+	background-image: url(#{ resource [ 'ep/images/paginator:pagination_last_hover.png' ]
+}
+
+)
+!
+important
+;
+
+	
+background-position
+:
+ 
+center
+;
+
+	
+border-radius
+:
+ 
+0
+px
+;
+
+width
+:
+ 
+27
+px
+!important;
+	
+height
+:
+ 
+27
+px
+ 
+!
+important
+;
+
+
+}
+
 .ui-datatable-scrollable-footer .ui-datatable-scrollable-header-box,.ui-datatable-scrollable-footer .ui-datatable-scrollable-header-box>table
 	{
 	width: 100% !important;
@@ -3626,6 +3788,44 @@ important
 
 .ui-icon-register {
 	background-image: url(#{ resource [ 'ep/images/design:register.png' ]
+}
+
+)
+!
+important
+;
+
+	
+background-position
+:
+ 
+center
+;
+
+	
+border-radius
+:
+ 
+0
+px
+;
+
+	
+height
+:
+ 
+16
+px
+ 
+!
+important
+;
+
+
+}
+
+.iconAttachment {
+	background-image: url(#{ resource [ 'ep/images/design:attach.png' ]
 }
 
 )
