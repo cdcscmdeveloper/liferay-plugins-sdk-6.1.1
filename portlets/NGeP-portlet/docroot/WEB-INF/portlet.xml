@@ -2612,7 +2612,7 @@
 	
 	<portlet>
 	 	<portlet-name>MOFApplication</portlet-name>
-	 	<display-name>MOF Application</display-name>
+	 	<display-name>Review Application</display-name>
 	 	<portlet-class>
 	 		org.portletfaces.bridge.GenericFacesPortlet
 	 	</portlet-class>
