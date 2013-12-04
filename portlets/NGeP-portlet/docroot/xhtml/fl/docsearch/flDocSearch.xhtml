@@ -21,7 +21,7 @@
 				<h:panelGrid columns="4" columnClasses="cmWidth1">
 					<p:outputLabel value="#{lbl['lbl.fl.doc.search.fl.order.type']}" />
 					<p:selectOneMenu
-						value="#{flDocumentBackingBean.managedBean.searchOrderType}">
+						value="#{flDocumentBackingBean.managedBean.searchOrderType}" style="width: 207px;">
 						<f:selectItems
 							value="#{flDocumentBackingBean.getDropdownCodeValues(PmCodeCatConst.fulfilmentOrderType)}" />
 					</p:selectOneMenu>
@@ -29,7 +29,7 @@
 				<h:panelGrid columns="4" columnClasses="cmWidth1">
 					<p:outputLabel value="#{lbl['lbl.fl.doc.search.doc.type']}" />
 					<p:selectOneMenu
-						value="#{flDocumentBackingBean.managedBean.searchDocType}">
+						value="#{flDocumentBackingBean.managedBean.searchDocType}" style="width: 207px;">
 						<f:selectItems
 							value="#{flDocumentBackingBean.getDropdownCodeValues(PmCodeCatConst.fulfilmentDocumentType)}" />
 						<p:ajax event="change" update="docTypeSearch"
@@ -38,7 +38,7 @@
 				</h:panelGrid>
 				<h:panelGrid columns="4" columnClasses="cmWidth1">
 					<p:outputLabel value="#{lbl['lbl.fl.doc.search.doc.no']}" />
-					<p:inputText size="50"
+					<p:inputText size="35"
 						value="#{flDocumentBackingBean.managedBean.searchDocNo}"></p:inputText>
 				</h:panelGrid>
 			</h:panelGroup>
@@ -46,22 +46,27 @@
 				<h:panelGrid columns="4" columnClasses="cmWidth1"
 					rendered="#{flDocumentBackingBean.managedBean.checkDocType}">
 					<p:outputLabel value="#{lbl['lbl.fl.doc.search.contract.no']}" />
-					<p:inputText size="50"
+					<p:inputText size="35"
 						value="#{flDocumentBackingBean.managedBean.searchContractNo}"></p:inputText>
 				</h:panelGrid>
 				<h:panelGrid columns="4" columnClasses="cmWidth1"
 					rendered="#{flDocumentBackingBean.managedBean.checkDocType}">
 					<p:outputLabel value="#{lbl['lbl.fl.doc.search.circular.no']}" />
-					<p:inputText size="50"
+					<p:inputText size="35"
 						value="#{flDocumentBackingBean.managedBean.searchCircularNo}"></p:inputText>
 				</h:panelGrid>
 				<h:panelGrid columns="4" columnClasses="cmWidth1"
 					rendered="#{flDocumentBackingBean.managedBean.checkDocType}">
 					<p:outputLabel value="#{lbl['lbl.fl.doc.search.loa.no']}" />
-					<p:inputText size="50"
+					<p:inputText size="35"
 						value="#{flDocumentBackingBean.managedBean.searchLoaNo}"></p:inputText>
 				</h:panelGrid>
-
+				<h:panelGrid columns="4" columnClasses="cmWidth1"
+					rendered="#{flDocumentBackingBean.managedBean.checkPoDocType}">
+					<p:outputLabel value="#{lbl['lbl.fl.doc.search.procurement.type']}" />
+					<p:inputText size="35"
+						value="#{flDocumentBackingBean.managedBean.searchProcurementType}"></p:inputText>
+				</h:panelGrid>
 			</h:panelGroup>
 			<p:outputPanel id="advanceSearchID" style="width:100%">
 			</p:outputPanel>

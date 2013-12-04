@@ -5,12 +5,12 @@
 	xmlns:p="http://primefaces.org/ui"
 	xmlns:c="http://java.sun.com/jsp/jstl/core">
 
-	<p:panel header="FULFILMENT DETAIL" toggleable="true">
+	<p:panel header="FULFILMENT DETAIL" toggleable="true" id="flDetails">
 		<table style="width: 100%">
 			<tr>
 				<td><p:outputLabel value="#{lbl['lbl.fl.ministry']}" /></td>
 				<td><p:inputText size="35"
-						value="#{purchaseRequestBackingBean.managedBean.fulfilmentRequest.createdOrgProfile.orgProfileId}"
+						value="#{purchaseRequestBackingBean.managedBean.fulfilmentRequest.createdOrgProfile.parentOrgProfile.parentOrgProfile.orgName}"
 						disabled="true" /></td>
 				<td><p:outputLabel value="#{lbl['lbl.fl.purchase.request.no']}" /></td>
 				<td><p:inputText size="20" disabled="true" /></td>
@@ -20,7 +20,10 @@
 				<td><p:selectOneMenu
 						value="#{purchaseRequestBackingBean.managedBean.fulfilmentRequest.issuedOrgProfile.orgProfileId}"
 						style="width: 207px;">
-						<f:selectItems />
+						<f:selectItems
+							value="#{purchaseRequestBackingBean.divisionProfileList}" />
+						<p:ajax event="change" update="flDetails" process="@this"
+							listener="#{purchaseRequestBackingBean.checkPtjFlg}" />
 					</p:selectOneMenu></td>
 				<td><p:outputLabel value="#{lbl['lbl.fl.req.note.no']}" /></td>
 				<td><p:inputText
@@ -32,7 +35,7 @@
 				<td><p:selectOneMenu
 						value="#{purchaseRequestBackingBean.managedBean.fulfilmentRequest.issuedOrgProfile.orgProfileId}"
 						style="width: 207px;">
-						<f:selectItems />
+						<f:selectItems value="#{purchaseRequestBackingBean.PTJList}" />
 					</p:selectOneMenu></td>
 				<td><p:outputLabel value="#{lbl['lbl.fl.plan.no']}" /></td>
 				<td><p:inputText size="20"
@@ -42,9 +45,10 @@
 			<tr>
 				<td><p:outputLabel value="* #{lbl['lbl.fl.received.jabatan']}" /></td>
 				<td><p:selectOneMenu
-						value="#{purchaseRequestBackingBean.managedBean.fulfilmentRequest.issuedOrgProfile.orgProfileId}"
+						value="#{purchaseRequestBackingBean.managedBean.fulfilmentRequest.receivedOrgProfile.orgProfileId}"
 						style="width: 207px;">
-						<f:selectItems />
+						<f:selectItems
+							value="#{purchaseRequestBackingBean.divisionProfileList}" />
 					</p:selectOneMenu></td>
 				<td><p:outputLabel value="#{lbl['lbl.fl.procurement.type']}" /></td>
 				<td><p:inputText size="35"
@@ -54,9 +58,9 @@
 			<tr>
 				<td><p:outputLabel value="* #{lbl['lbl.fl.received.ptj']}" /></td>
 				<td><p:selectOneMenu
-						value="#{purchaseRequestBackingBean.managedBean.fulfilmentRequest.issuedOrgProfile.orgProfileId}"
+						value="#{purchaseRequestBackingBean.managedBean.fulfilmentRequest.receivedOrgProfile.orgProfileId}"
 						style="width: 207px; margin-bottom:5px;">
-						<f:selectItems />
+						<f:selectItems value="#{purchaseRequestBackingBean.PTJList}" />
 					</p:selectOneMenu></td>
 				<td><p:outputLabel value="* #{lbl['lbl.fl.financial.year']}" /></td>
 				<td><p:inputText size="20"
@@ -74,7 +78,8 @@
 				<td><p:outputLabel value="* #{lbl['lbl.fl.maksud.code']}" /></td>
 				<td><p:selectOneMenu style="width: 207px; margin-bottom:5px;"
 						value="#{purchaseRequestBackingBean.managedBean.fulfilmentRequest.maksudId}">
-						<f:selectItem itemLabel="Select One" itemValue="1" />
+						<f:selectItems
+							value="#{purchaseRequestBackingBean.maksudCodeList}" />
 					</p:selectOneMenu></td>
 			</tr>
 			<tr>
@@ -93,7 +98,7 @@
 					</p:selectOneRadio></td>
 					<td><p:outputLabel value="* #{lbl['lbl.fl.charged.ptj']}" /></td>
 				<td><p:selectOneMenu style="width: 207px;margin-bottom:5px;">
-						<f:selectItems />
+						<f:selectItems value="#{purchaseRequestBackingBean.PTJList}" />
 					</p:selectOneMenu></td>
 			</tr>
 			<tr>
@@ -102,13 +107,8 @@
 				<td><p:outputLabel value="#{lbl['lbl.fl.status']}" /></td>
 				<td><p:inputText size="20" disabled="true" /></td>
 			</tr>
-			<tr>
-				
-			</tr>
 		</table>
 	</p:panel>
-	<br />
-	<br />
 	<p:panel header="SUPPLIER DETAIL" toggleable="true">
 		<table style="width: 100%">
 			<tr>

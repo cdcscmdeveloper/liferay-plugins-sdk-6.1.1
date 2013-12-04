@@ -7,15 +7,14 @@
 	xmlns:p="http://primefaces.org/ui"
 	xmlns:c="http://java.sun.com/jsp/jstl/core"
 	xmlns:ac="http://ac.my/jsf/composite/cc">
-	
+
 	<ui:define name="resourceSection">
 	</ui:define>
 	<ui:define name="contentSection">
 		<table style="width: 100%;">
 			<tr>
-				<td colspan="4" style="text-align:right;">
-				<p:commandButton value="SUBMIT" />
-				</td>
+				<td colspan="4" style="text-align: right;"><p:commandButton
+						value="SUBMIT" /></td>
 			</tr>
 		</table>
 		<p:panel header="FULFILMENT DETAILS" toggleable="true">
@@ -39,9 +38,10 @@
 			<table>
 				<tr>
 					<td><p:dataTable id="itemDt"
-							value="#{flOrderBB.managedBean.flItemList}" var="items" style="width:100%">
-							<ac:paginator for="itemDt"/>
-							
+							value="#{flOrderBB.managedBean.flItemList}" var="items"
+							style="width:100%">
+							<ac:paginator for="itemDt" />
+
 							<p:column headerText="Product Code">
 								<h:outputText value="" />
 							</p:column>
@@ -81,7 +81,7 @@
 				</tr>
 				<tr>
 					<td valign="top"><p:outputLabel value="Title: " /></td>
-					<td><p:inputTextarea rows="8" style="width: 260px; margin-bottom:5px;"></p:inputTextarea></td>
+					<td><p:inputTextarea cols="36" style=" margin-bottom:5px;"></p:inputTextarea></td>
 				</tr>
 			</table>
 		</p:panel>

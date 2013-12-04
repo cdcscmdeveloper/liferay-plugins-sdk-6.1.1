@@ -66,18 +66,18 @@
 			</tr>
 			<tr>
 				<td rowspan="2" valign="top"><p:outputLabel value="Address" /></td>
-				<td rowspan="2"><p:inputTextarea  cols="36"
+				<td rowspan="2"><p:inputTextarea cols="36"
 						style="margin-bottom:5px;" disabled="true" /></td>
 				<td><p:outputLabel value="Ori. Invoice Amt." /></td>
 				<td><p:inputText size="20" value="20,000.00" disabled="true"
-						style="margin-right:5px;" /> <p:inputText disabled="true" size="1"
-						value="MYR" /></td>
+						style="margin-right:5px;" /> <p:inputText disabled="true"
+						size="1" value="MYR" /></td>
 			</tr>
 			<tr>
 				<td><p:outputLabel value="New Invoice Amt." /></td>
 				<td><p:inputText size="20" value="18,500.00" disabled="true"
-						style="margin-right:5px;" /> <p:inputText disabled="true" size="1"
-						value="MYR" /></td>
+						style="margin-right:5px;" /> <p:inputText disabled="true"
+						size="1" value="MYR" /></td>
 			</tr>
 			<tr>
 				<td><p:outputLabel value="Email" /></td>
@@ -127,19 +127,14 @@
 			</tr>
 			<tr>
 				<td valign="top"><p:outputLabel value="Title" /></td>
-				<td><p:inputTextarea 
+				<td><p:inputTextarea
 						value="#{invoiceBackingBean.managedBean.invoice.flFulfilmentOrder.flFulfilmentRequest.title}"
 						cols="36" style=" margin-bottom:5px;" disabled="true" /></td>
 			</tr>
-
-
 		</table>
-
 	</p:panel>
-
 	<p:panel header="PAYMENT INSTRUCTION" toggleable="true">
 		<p:panel header="Supplier / Factoring Company" />
-
 		<table style="width: 100%">
 			<tr>
 				<td style="width: 97px;"><p:outputLabel value="Factored?" /></td>
@@ -149,15 +144,13 @@
 					</p:selectOneRadio></td>
 				<td style="width: 140px;" valign="top" rowspan="4"><p:outputLabel
 						value="Bank Address" /></td>
-				<td rowspan="2"><p:inputTextarea  cols="36"
-						disabled="true" /></td>
+				<td rowspan="2"><p:inputTextarea cols="36" disabled="true" /></td>
 			</tr>
 			<tr>
 				<td><p:outputLabel value="Bank Code" /></td>
 				<td><p:selectOneMenu style="width: 207px;margin-bottom:5px;">
 						<f:selectItem itemLabel="Select One" itemValue="" />
 					</p:selectOneMenu></td>
-
 			</tr>
 			<tr>
 				<td><p:outputLabel value="Account NO" /></td>
@@ -172,9 +165,6 @@
 						size="1" value="MYR" /></td>
 			</tr>
 		</table>
-		<br />
-
-
 		<p:panel header="Commerce Dot Com" />
 		<table style="width: 100%">
 			<tr>

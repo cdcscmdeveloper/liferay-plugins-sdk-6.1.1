@@ -10,7 +10,8 @@
 	<ui:define name="resourceSection">
 	</ui:define>
 	<ui:define name="contentSection">
-	<p:messages id="messages" showDetail="true" autoUpdate="true" closable="true" severity="error, info" />
+		<p:messages id="messages" showDetail="true" autoUpdate="true"
+			closable="true" severity="error, info" />
 		<table style="width: 100%;">
 			<tr>
 				<td colspan="4" style="text-align: right;"><ui:repeat
@@ -40,18 +41,17 @@
 							</tr>
 							<tr>
 								<td><p:outputLabel value="SI Creation Date" /></td>
-								<td><p:inputText size="20"
-										value="12/10/2012 10:45 AM" disabled="true" /></td>
-							</tr>
-							<tr>
-								<td><p:outputLabel value="Name" /></td>
-								<td><p:inputText size="35" value="PTJ NAME"
+								<td><p:inputText size="20" value="12/10/2012 10:45 AM"
 										disabled="true" /></td>
 							</tr>
 							<tr>
+								<td><p:outputLabel value="Name" /></td>
+								<td><p:inputText size="35" value="PTJ NAME" disabled="true" /></td>
+							</tr>
+							<tr>
 								<td><p:outputLabel value="Address" /></td>
-								<td><p:inputText size="35" 
-										value="PTJ ADDRESS" disabled="true" /></td>
+								<td><p:inputText size="35" value="PTJ ADDRESS"
+										disabled="true" /></td>
 							</tr>
 							<tr>
 								<td><p:outputLabel value="Contact Person" /></td>
@@ -77,30 +77,27 @@
 							</tr>
 							<tr>
 								<td><p:outputLabel value="MTO Contr. Order No." /></td>
-								<td><p:inputText disabled="true" size="20"
-										value="" /></td>
+								<td><p:inputText disabled="true" size="20" value="" /></td>
 							</tr>
 							<tr>
 								<td><p:outputLabel value="MTO Contr. Order Amt." /></td>
-								<td><p:inputText disabled="true" size="20"
-										value="" /><p:spacer width="5"/>
-				<p:inputText disabled="true" style="width: 25px;" value="USD" /></td>
+								<td><p:inputText disabled="true" size="20" value="" />
+									<p:spacer width="5" /> <p:inputText disabled="true"
+										style="width: 25px;" value="USD" /></td>
 							</tr>
 							<tr>
 								<td><p:outputLabel value="Main Contr. Order No." /></td>
-								<td><p:inputText disabled="true" size="20"
-										value="" /></td>
+								<td><p:inputText disabled="true" size="20" value="" /></td>
 							</tr>
 							<tr>
 								<td><p:outputLabel value="Main Contr. Order Amt." /></td>
-								<td><p:inputText size="20" value=" "
-										disabled="true" /><p:spacer width="5"/>
-				<p:inputText disabled="true" style="width: 25px;" value="USD" /></td>
+								<td><p:inputText size="20" value=" " disabled="true" />
+									<p:spacer width="5" /> <p:inputText disabled="true"
+										style="width: 25px;" value="USD" /></td>
 							</tr>
 							<tr>
 								<td><p:outputLabel value="Payment Term" /></td>
-								<td><p:inputText size="35" value=" "
-										disabled="true" /></td>
+								<td><p:inputText size="35" value=" " disabled="true" /></td>
 							</tr>
 						</table>
 					</td>
@@ -111,37 +108,31 @@
 			<table style="width: 100%">
 				<tr>
 					<td><p:outputLabel value="Country of Origin" /></td>
-					<td><p:inputText disabled="true" size="35"
-							value=" " /></td>
+					<td><p:inputText disabled="true" size="35" value=" " /></td>
 					<td><p:outputLabel value="Comp. Name" /></td>
-					<td><p:inputText disabled="true" size="35"
-							value="" /></td>
+					<td><p:inputText disabled="true" size="35" value="" /></td>
 				</tr>
 				<tr>
 					<td><p:outputLabel value="Port of Loading" /></td>
-					<td><p:inputText disabled="true" size="35"
-							value="" /></td>
+					<td><p:inputText disabled="true" size="35" value="" /></td>
 					<td><p:outputLabel value="Contact Person" /></td>
-					<td><p:inputText disabled="true" size="20"
-							value="" /></td>
+					<td><p:inputText disabled="true" size="20" value="" /></td>
 				</tr>
 				<tr>
 					<td><p:outputLabel value="Port of Discharge" /></td>
 					<td><p:inputText disabled="true" size="35"
 							value="#{shipInstrBackingBean.managedBean.shippingInstr.portDischarge}" /></td>
 					<td><p:outputLabel value="Contact No." /></td>
-					<td><p:inputText size="20" value=""
-							disabled="true" /></td>
+					<td><p:inputText size="20" value="" disabled="true" /></td>
 				</tr>
 				<tr>
 					<td><p:outputLabel value="Final Dest. Address" /></td>
-					<td><p:inputText size="35" 
-							value="PTJ ADDRESS " disabled="true" /></td>
+					<td><p:inputText size="35" value="PTJ ADDRESS "
+							disabled="true" /></td>
 				</tr>
 				<tr>
 					<td><p:outputLabel value="Transport Mode" /></td>
-					<td><p:inputText disabled="true" size="35"
-							value="" /></td>
+					<td><p:inputText disabled="true" size="35" value="" /></td>
 				</tr>
 			</table>
 		</p:panel>
@@ -159,73 +150,72 @@
 					<td><p:separator id="customSeparator3"
 							style="width:100px;height:0px" /></td>
 				</tr>
-			</table >
+			</table>
 			<table style="width: 100%">
 				<tr>
 					<td style="width: 159px;"><p:outputLabel value="EP No." /></td>
 					<td><table style="width: 100%">
 							<tr>
-							<td style="width: 25px;"> <p:inputText size="5" disabled="true" /></td>
-							<td style="width: 65px;"><p:outputLabel value="MOF No." /></td>
-							<td  ><p:inputText size="10" disabled="true" /></td>
-						</tr>
+								<td style="width: 25px;"><p:inputText size="5"
+										disabled="true" /></td>
+								<td style="width: 65px;"><p:outputLabel value="MOF No." /></td>
+								<td><p:inputText size="10" disabled="true" /></td>
+							</tr>
 						</table></td>
 					<td style="width: 135px;"><p:outputLabel value="EP No." /></td>
 					<td><table style="width: 100%">
 							<tr>
-							<td style="width: 25px;"> <p:inputText size="5" disabled="true" /></td>
-							<td style="width: 65px;"><p:outputLabel value="MOF No." /></td>
-							<td  ><p:inputText size="10" disabled="true" /></td>
-						</tr>
+								<td style="width: 25px;"><p:inputText size="5"
+										disabled="true" /></td>
+								<td style="width: 65px;"><p:outputLabel value="MOF No." /></td>
+								<td><p:inputText size="10" disabled="true" /></td>
+							</tr>
 						</table></td>
 				</tr>
 				<tr>
 					<td><p:outputLabel value="Supplier Name" /></td>
-					<td><p:inputText size="35" value="KBB SDN BHD"
-							disabled="true" /></td>
+					<td><p:inputText size="35" value="KBB SDN BHD" disabled="true" /></td>
 					<td><p:outputLabel value="Supplier Name" /></td>
-					<td><p:inputText size="35" value="KBB SDN BHD"
-							disabled="true" /></td>
+					<td><p:inputText size="35" value="KBB SDN BHD" disabled="true" /></td>
 				</tr>
 				<tr>
 					<td><p:outputLabel value="Address" /></td>
-					<td><p:inputText size="35" 
-							value="Supplier Address" disabled="true" /></td>
+					<td><p:inputText size="35" value="Supplier Address"
+							disabled="true" /></td>
 					<td><p:outputLabel value="Address" /></td>
-					<td><p:inputText size="35"
-							value="Supplier Address" disabled="true" /></td>
+					<td><p:inputText size="35" value="Supplier Address"
+							disabled="true" /></td>
 				</tr>
 				<tr>
 					<td><p:outputLabel value="Email" /></td>
-					<td><p:inputText size="35"
-							value="KBB.XY@gmail.com" disabled="true" /></td>
+					<td><p:inputText size="35" value="KBB.XY@gmail.com"
+							disabled="true" /></td>
 					<td><p:outputLabel value="Email" /></td>
-					<td><p:inputText size="35"
-							value="KBB.XY@gmail.com" disabled="true" /></td>
+					<td><p:inputText size="35" value="KBB.XY@gmail.com"
+							disabled="true" /></td>
 				</tr>
 				<tr>
 					<td><p:outputLabel value="Tel No." /></td>
-					<td><p:inputText size="20" value="02-7324800 "
-							disabled="true" /></td>
+					<td><p:inputText size="20" value="02-7324800 " disabled="true" /></td>
 					<td><p:outputLabel value="Tel No." /></td>
-					<td><p:inputText size="20" value="02-7324800 "
-							disabled="true" /></td>
+					<td><p:inputText size="20" value="02-7324800 " disabled="true" /></td>
 				</tr>
 			</table>
 		</p:panel>
 		<p:panel header="PACKAGE DETAIL" toggleable="true">
 			<table style="width: 100%">
 				<tr>
-					<td valign="top" style="width: 157px;"><p:outputLabel value="Special Instruction" /></td>
-					<td><p:inputTextarea  cols="36" style="margin-bottom:5px;"
+					<td valign="top" style="width: 157px;"><p:outputLabel
+							value="Special Instruction" /></td>
+					<td><p:inputTextarea cols="36" style="margin-bottom:5px;"
 							value="#{shipInstrBackingBean.managedBean.shippingInstr.specialInstruction}" /></td>
-					<td valign="top" style="width: 130px;"><p:outputLabel value="Marks And Numbers" /></td>
-					<td><p:inputTextarea  cols="36" style="margin-bottom:5px;" /></td>
-
+					<td valign="top" style="width: 130px;"><p:outputLabel
+							value="Marks And Numbers" /></td>
+					<td><p:inputTextarea cols="36" style="margin-bottom:5px;" /></td>
 				</tr>
 			</table>
-			<p:dataTable id="packageDataTable" var="item" >
-			<ac:paginator for="addressDataTable"/>
+			<p:dataTable id="packageDataTable" var="item">
+				<ac:paginator for="addressDataTable" />
 				<p:column headerText="Product Code" width="90">
 					<h:outputText value="" />
 				</p:column>
@@ -240,14 +230,14 @@
 			</p:dataTable>
 		</p:panel>
 		<p:panel header="#{lbl['lbl.fl.remark.attachment']}" toggleable="true">
-		<table style="width: 100%">
-			<tr>
-				<td width="50%" valign="top"><ui:include
-						src="/xhtml/fl/shared/remark.xhtml" /></td>
-				<td width="50%" valign="top"><ui:include
-						src="/xhtml/fl/shared/attachment.xhtml" /></td>
-			</tr>
-		</table>
-	</p:panel>
+			<table style="width: 100%">
+				<tr>
+					<td width="50%" valign="top"><ui:include
+							src="/xhtml/fl/shared/remark.xhtml" /></td>
+					<td width="50%" valign="top"><ui:include
+							src="/xhtml/fl/shared/attachment.xhtml" /></td>
+				</tr>
+			</table>
+		</p:panel>
 	</ui:define>
 </ui:composition>

@@ -9,15 +9,15 @@
 		<table style="width: 100%">
 			<tr>
 				<td><p:outputLabel value="#{lbl['lbl.fl.ministry']}" /></td>
-				<td><p:inputText size="35" value="KEMENTERIAN KEWANGAN"
+				<td><p:inputText size="35" value="#{flOrderBB.managedBean.flRequest.createdOrgProfile.parentOrgProfile.parentOrgProfile.orgName}"
 						disabled="true" /></td>
 				<td><p:outputLabel value="#{lbl['lbl.fl.purchase.request.no']}" /></td>
-				<td><p:inputText disabled="true" size="20" value="PR10202-0202" /></td>
+				<td><p:inputText disabled="true" size="20" value="#{flOrderBB.managedBean.flRequest.issuedOrgProfile.orgName}" /></td>
 			</tr>
 			<tr>
 				<td><p:outputLabel value="#{lbl['lbl.fl.issued.jabatan']}" /></td>
 				<td><p:inputText size="35"
-						value="JABATAN KASTAM DAN EKSAIS DIRAJA" disabled="true" /></td>
+						value="#{flOrderBB.managedBean.flRequest.issuedOrgProfile.orgName}" disabled="true" /></td>
 				<td><p:outputLabel value="#{lbl['lbl.fl.req.note.no']}" /></td>
 				<td><p:inputText disabled="true" size="20" value="10202-0202" /></td>
 			</tr>
@@ -77,14 +77,8 @@
 
 		</table>
 	</p:panel>
-	<br />
-	<br />
-
 	<p:panel header="SUPPLIER DETAIL" toggleable="true">
 		<table style="width: 100%">
-			<tr>
-
-			</tr>
 			<tr>
 				<td style="width: 100px;"><p:outputLabel value="EP No." /></td>
 				<td><table style="width: 100%">

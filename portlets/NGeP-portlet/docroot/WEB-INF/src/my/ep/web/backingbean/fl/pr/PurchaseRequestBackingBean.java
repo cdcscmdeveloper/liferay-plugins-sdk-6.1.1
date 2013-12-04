@@ -21,6 +21,7 @@ import my.ep.biz.service.ct.maintain.IContractAmendmentSO;
 import my.ep.biz.service.fl.request.IFulfilmentRequestSO;
 import my.ep.biz.service.pm.authorization.orgprofile.IOrgProfileSO;
 import my.ep.biz.service.pm.authorization.user.IUserSO;
+import my.ep.biz.service.pm.common.maksud.IMaksudSO;
 import my.ep.biz.service.ss.directpurchase.IRequestNoteSO;
 import my.ep.dto.ct.maintain.ContractAmendmentReqDTO;
 import my.ep.dto.ct.maintain.ContractAmendmentResDTO;
@@ -30,6 +31,8 @@ import my.ep.dto.pm.authorization.orgprofile.OrgProfileReqDTO;
 import my.ep.dto.pm.authorization.orgprofile.OrgProfileResDTO;
 import my.ep.dto.pm.authorization.user.UserReqDTO;
 import my.ep.dto.pm.authorization.user.UserResDTO;
+import my.ep.dto.pm.common.maksud.MaksudReqDTO;
+import my.ep.dto.pm.common.maksud.MaksudResDTO;
 import my.ep.dto.ss.directpurchase.RequestNoteReqDTO;
 import my.ep.dto.ss.directpurchase.RequestNoteResDTO;
 import my.ep.exception.EpException;
@@ -41,6 +44,7 @@ import my.ep.persistence.entity.pm.authorization.PmOrgProfile;
 import my.ep.persistence.entity.pm.authorization.PmUserGroupUser;
 import my.ep.persistence.entity.pm.common.PmAddressType;
 import my.ep.persistence.entity.pm.common.PmCode;
+import my.ep.persistence.entity.pm.common.PmMaksud;
 import my.ep.persistence.entity.pm.common.PmStatus;
 import my.ep.persistence.entity.sm.SmSupplier;
 import my.ep.persistence.entity.ss.directpurchase.ScRequestNote;
@@ -288,6 +292,67 @@ public class PurchaseRequestBackingBean extends BaseBackingBean<PurchaseRequestM
 		getManagedBean().getSelectedRequestNote();
 		System.out.println("Req List ID ::: "+getManagedBean().getSelectedRequestNote().getScRequestList().getRequestListId());
 		return NAV_TO_CREATE_PURCHASE_REQUEST;
+	}
+	public List<SelectItem> getDivisionProfileList(){
+		List<SelectItem> retrieveDivisionList = new ArrayList<SelectItem>();
+		IOrgProfileSO orgProfileSO = BusinessDelegate.getInstance().getServiceObject("pm",IOrgProfileSO.class);
+		OrgProfileReqDTO orgProfileReqDTO = new OrgProfileReqDTO();
+		//TODO
+		orgProfileReqDTO.setParentOrgProfileId(1L);
+		orgProfileReqDTO.setOrgType(OrganizationType.DEPARTMENT.value());
+
+		OrgProfileResDTO resDTO = orgProfileSO.retrieveOrgProfileListByOrgType(orgProfileReqDTO);
+		if(resDTO.getOrgProfileList() != null && !resDTO.getOrgProfileList().isEmpty()){
+			retrieveDivisionList.add(new SelectItem("", "- Select One -"));
+			List<PmOrgProfile> listDB = resDTO.getOrgProfileList();
+			for(PmOrgProfile obj : listDB){
+				retrieveDivisionList.add(new SelectItem(obj.getOrgProfileId(),obj.getOrgName()));
+			}
+		}		
+
+		return retrieveDivisionList;
+	}
+	public void checkPtjFlg(){
+		getManagedBean().setCheckPtjFlg(false);
+	}
+	public List<SelectItem> getPTJList(){
+		List<SelectItem> retrievePTJList = new ArrayList<SelectItem>();
+		OrgProfileResDTO resDTO = new OrgProfileResDTO();
+		IOrgProfileSO orgProfileSO = (IOrgProfileSO)BusinessDelegate.getInstance().getServiceObject("pm",IOrgProfileSO.class);
+		OrgProfileReqDTO orgProfileReqDTO = new OrgProfileReqDTO();
+
+		if(getManagedBean().getFulfilmentRequest().getIssuedOrgProfile().getOrgProfileId() != null){
+			orgProfileReqDTO.setParentOrgProfileId(getManagedBean().getFulfilmentRequest().getIssuedOrgProfile().getOrgProfileId());
+			orgProfileReqDTO.setOrgType(OrganizationType.DIVISION.value());
+			resDTO = orgProfileSO.retrieveOrgProfileListByOrgType(orgProfileReqDTO);
+		}
+
+		if(resDTO.getOrgProfileList() != null && !resDTO.getOrgProfileList().isEmpty()){
+			retrievePTJList.add(new SelectItem("", "- Select One -"));
+			List<PmOrgProfile> listDB = resDTO.getOrgProfileList();
+			for(PmOrgProfile obj : listDB){
+				retrievePTJList.add(new SelectItem(obj.getOrgProfileId(),obj.getOrgName()));
+			}
+		}		
+
+		return retrievePTJList;
+	}
+	public List<SelectItem> getMaksudCodeList(){
+		List<SelectItem> maksudList = new ArrayList<SelectItem>();
+		MaksudReqDTO maksudDTO = new MaksudReqDTO();
+		maksudDTO.setOrgProfileId(1L);
+
+		IMaksudSO maksudSO = (IMaksudSO)BusinessDelegate.getInstance().getServiceObject("pm",IMaksudSO.class);	
+		MaksudResDTO resDTO = maksudSO.retrieveMaksudCodeList(maksudDTO);
+		if(resDTO.getMaksudCodeList() != null && !resDTO.getMaksudCodeList().isEmpty()){
+			maksudList.add(new SelectItem("", "- Select One -"));
+			List<PmMaksud> maksudListDB = resDTO.getMaksudCodeList();
+			for(PmMaksud obj : maksudListDB){
+				maksudList.add(new SelectItem(obj.getMaksudId(),obj.getMaksudCode()));
+			}
+		}		
+		return maksudList;
+
 	}
 	
 	

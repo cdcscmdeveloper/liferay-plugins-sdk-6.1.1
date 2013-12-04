@@ -202,8 +202,13 @@ public class FlDocumentBackingBean extends BaseBackingBean<FlDocumentManagedBean
 		System.out.println("=======get id value=====" + id);
 		if(id.equals("CO")){
 			this.getManagedBean().setCheckDocType(true);
+			this.getManagedBean().setCheckPoDocType(false);
+		}else if(id.equals("PO")){
+			this.getManagedBean().setCheckPoDocType(true);
+			this.getManagedBean().setCheckDocType(false);
 		}else{
 			this.getManagedBean().setCheckDocType(false);
+			this.getManagedBean().setCheckPoDocType(false);
 		}
 		getManagedBean().setSearchDocType(id);
 	}

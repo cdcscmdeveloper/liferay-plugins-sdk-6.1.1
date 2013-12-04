@@ -10,7 +10,6 @@
 
 	<ui:define name="resourceSection">
 	</ui:define>
-
 	<ui:define name="contentSection">
 		<p:messages id="messages" showDetail="true" autoUpdate="true"
 			closable="true" severity="error, info" />
@@ -33,88 +32,65 @@
 							value="#{danBackingBean.managedBean.adjustment.docNo}"
 							disabled="true" /></td>
 					<td><p:outputLabel value="DAN Amt." /></td>
-					<td><p:inputText size="20" value=""
-							disabled="true" /></td>
+					<td><p:inputText size="20" value="" disabled="true" /></td>
 				</tr>
 				<tr>
 					<td><p:outputLabel value="Created Date" /></td>
-					<td><p:inputText size="20" value=""
-							disabled="true" /></td>
+					<td><p:inputText size="20" value="" disabled="true" /></td>
 					<td><p:outputLabel value="Approved By" /></td>
-					<td><p:inputText size="35" value=""
-							disabled="true" /></td>
+					<td><p:inputText size="35" value="" disabled="true" /></td>
 				</tr>
-
 				<tr>
 					<td><p:outputLabel value="Approved Date" /></td>
-					<td><p:inputText size="20" value=""
-							disabled="true" /></td>
+					<td><p:inputText size="20" value="" disabled="true" /></td>
 					<td><p:outputLabel value="Order Amt" /></td>
 					<td colspan="2"><p:inputText size="35" value=""
 							disabled="true" /></td>
 				</tr>
 			</table>
 		</p:panel>
-
-
 		<p:panel header="FULFILMENT DETAIL" toggleable="true">
 			<table>
 				<tr>
 					<td><p:outputLabel value="Ministry" /></td>
-					<td><p:inputText size="35"
-							value="KEMENTERIAN KEWANGAN" disabled="true" /></td>
-					<td><p:outputLabel value="Invoice No." /></td>
-					<td><p:inputText size="20" value=""
+					<td><p:inputText size="35" value="KEMENTERIAN KEWANGAN"
 							disabled="true" /></td>
-
+					<td><p:outputLabel value="Invoice No." /></td>
+					<td><p:inputText size="20" value="" disabled="true" /></td>
 				</tr>
 				<tr>
 					<td><p:outputLabel value="Jabatan" /></td>
 					<td><p:inputText size="35"
 							value="JABATAN KASTAM DAN EKSAIS DIRAJA" disabled="true" /></td>
 					<td><p:outputLabel value="Invoice Date" /></td>
-					<td><p:inputText size="20" value=""
-							disabled="true" /></td>
-
+					<td><p:inputText size="20" value="" disabled="true" /></td>
 				</tr>
 				<tr>
 					<td><p:outputLabel value="Issued PTJ" /></td>
 					<td><p:inputText size="35"
 							value="IBU PEJABAT KASTAM (CHARGE PTJ)" disabled="true" /></td>
 					<td><p:outputLabel value="Contract No." /></td>
-					<td><p:inputText size="20" value=" "
-							disabled="true" /></td>
-
+					<td><p:inputText size="20" value=" " disabled="true" /></td>
 				</tr>
 				<tr>
 					<td><p:outputLabel value="Received PTJ" /></td>
 					<td><p:inputText size="35"
 							value="IBU PEJABAT KASTAM (RECEIVING PTJ)" disabled="true" /></td>
 					<td><p:outputLabel value="Order No." /></td>
-					<td><p:inputText size="20" value="0001010"
-							disabled="true" /></td>
-
+					<td><p:inputText size="20" value="0001010" disabled="true" /></td>
 				</tr>
 				<tr>
 					<td><p:outputLabel value="Charge PTJ" /></td>
 					<td><p:inputText size="35"
 							value="IBU PEJABAT KASTAM (Charge PTJ)" disabled="true" /></td>
 					<td><p:outputLabel value="Order Date" /></td>
-					<td><p:inputText size="20" value="0001010"
-							disabled="true" /></td>
-
+					<td><p:inputText size="20" value="0001010" disabled="true" /></td>
 				</tr>
-
 				<tr>
 					<td valign="top"><p:outputLabel value="Title" /></td>
-					<td><p:inputTextarea rows="8" size="35"
-							disabled="true" /></td>
-
+					<td><p:inputTextarea cols="36" disabled="true" /></td>
 				</tr>
-
-
 			</table>
-
 		</p:panel>
 		<p:panel header="SUPPLIER DETAIL" toggleable="true">
 			<table>
@@ -130,24 +106,21 @@
 				</tr>
 				<tr>
 					<td><p:outputLabel value="Supplier Name" /></td>
-					<td><p:inputText size="35" value=""
-							disabled="true" /></td>
+					<td><p:inputText size="35" value="" disabled="true" /></td>
 				</tr>
 				<tr>
 					<td rowspan="2" valign="top"><p:outputLabel value="Address" /></td>
-					<td rowspan="2"><p:inputTextarea  cols="36"
+					<td rowspan="2"><p:inputTextarea cols="36"
 							style="margin-bottom:5px;" disabled="true" /></td>
 				</tr>
 				<tr>
 					<td><p:outputLabel value="Email" /></td>
-					<td><p:inputText size="35"
-							value="KBB.XY@gmail.com" disabled="true" /></td>
+					<td><p:inputText size="35" value="KBB.XY@gmail.com"
+							disabled="true" /></td>
 				</tr>
-
 				<tr>
 					<td><p:outputLabel value="Tel No." /></td>
-					<td><p:inputText size="20" value="02-7324800 "
-							disabled="true" /></td>
+					<td><p:inputText size="20" value="02-7324800 " disabled="true" /></td>
 				</tr>
 			</table>
 		</p:panel>
@@ -175,13 +148,10 @@
 									<p:column headerText="Discount" rowspan="1" />
 								</p:row>
 							</p:columnGroup>
-
 						</p:dataTable></td>
 				</tr>
-
 			</table>
 		</p:panel>
-
 		<p:panel header="#{lbl['lbl.fl.remark.attachment']}" toggleable="true">
 			<table style="width: 100%">
 				<tr>
