@@ -261,108 +261,174 @@ public class TaskListBackingBean extends BaseBackingBean<TaskListManagedBean> {
 			UnspscCodeBackingBean unspscBB = new UnspscCodeBackingBean();
 			unspscBB.getManagedBean().setRequestCode(resDTO.getRequestCode());
 
-		} else if(res.getProcessName().equalsIgnoreCase(FlProcessNameConst.MTO_CONTRACT_REQ_CREATION_PROCESS_NAME) ||res.getProcessName().equalsIgnoreCase(FlProcessNameConst.CONTRACT_REQ_CREATION_PROCESS_NAME) 
-				|| res.getProcessName().equalsIgnoreCase(FlProcessNameConst.CONTRACT_REQ_INITIATION_PROCESS_NAME) || res.getProcessName().equalsIgnoreCase(FlProcessNameConst.MTO_CONTRACT_REQ_CREATION_PROCESS_NAME)){
-			
-			IFulfilmentRequestSO requestSO = (IFulfilmentRequestSO) BusinessDelegate.getInstance().getServiceObject("fl",IFulfilmentRequestSO.class);
-			IShippingInstructionSO shippingSO = (IShippingInstructionSO) BusinessDelegate.getInstance().getServiceObject("fl", IShippingInstructionSO.class);
+		} else if (res.getProcessName().equalsIgnoreCase(
+				FlProcessNameConst.MTO_CONTRACT_REQ_CREATION_PROCESS_NAME)
+				|| res.getProcessName().equalsIgnoreCase(
+						FlProcessNameConst.CONTRACT_REQ_CREATION_PROCESS_NAME)
+				|| res.getProcessName()
+						.equalsIgnoreCase(
+								FlProcessNameConst.CONTRACT_REQ_INITIATION_PROCESS_NAME)
+				|| res.getProcessName()
+						.equalsIgnoreCase(
+								FlProcessNameConst.MTO_CONTRACT_REQ_CREATION_PROCESS_NAME)) {
+
+			IFulfilmentRequestSO requestSO = (IFulfilmentRequestSO) BusinessDelegate
+					.getInstance().getServiceObject("fl",
+							IFulfilmentRequestSO.class);
+			IShippingInstructionSO shippingSO = (IShippingInstructionSO) BusinessDelegate
+					.getInstance().getServiceObject("fl",
+							IShippingInstructionSO.class);
 			FulfilmentReqDTO flReqDTO = new FulfilmentReqDTO();
 			FulfilmentResDTO resDTO = new FulfilmentResDTO();
-			
-			FLContractOrderDataType coObj = (FLContractOrderDataType)obj;
-			if(coObj.getContractRequestId().intValue() == 0){
+
+			FLContractOrderDataType coObj = (FLContractOrderDataType) obj;
+			if (coObj.getContractRequestId().intValue() == 0) {
 				flReqDTO.setFlRequestId(coObj.getParentContractRequestId());
-			}else{
+			} else {
 				flReqDTO.setFlRequestId(coObj.getContractRequestId());
 			}
-				
-			
+
 			flReqDTO.setSelectedApprovers(coObj.getApproverList());
-			
-			if(getManagedBean().getTaskName().equalsIgnoreCase(FlProcessNameConst.REVISE_SI_HT) || getManagedBean().getTaskName().equalsIgnoreCase(FlProcessNameConst.REVIEW_SI_HT)){
+
+			if (getManagedBean().getTaskName().equalsIgnoreCase(
+					FlProcessNameConst.REVISE_SI_HT)
+					|| getManagedBean().getTaskName().equalsIgnoreCase(
+							FlProcessNameConst.REVIEW_SI_HT)) {
 				resDTO = shippingSO.retrieveShippingInstruction(flReqDTO);
-			}else{
-			resDTO = requestSO.retrieveFulfilmentRequest(flReqDTO);
+			} else {
+				resDTO = requestSO.retrieveFulfilmentRequest(flReqDTO);
 			}
-			if(getManagedBean().getTaskName().equalsIgnoreCase(FlProcessNameConst.REVISE_SI_HT)|| getManagedBean().getTaskName().equalsIgnoreCase(FlProcessNameConst.REVIEW_SI_HT)){
+			if (getManagedBean().getTaskName().equalsIgnoreCase(
+					FlProcessNameConst.REVISE_SI_HT)
+					|| getManagedBean().getTaskName().equalsIgnoreCase(
+							FlProcessNameConst.REVIEW_SI_HT)) {
 				ShippingInstrBackingBean siBB = new ShippingInstrBackingBean();
-				siBB.getManagedBean().setShippingInstr(resDTO.getShippingInstr());
-				siBB.getManagedBean().setFlRequest(resDTO.getShippingInstr().getFlFulfilmentRequest());
+				siBB.getManagedBean().setShippingInstr(
+						resDTO.getShippingInstr());
+				siBB.getManagedBean().setFlRequest(
+						resDTO.getShippingInstr().getFlFulfilmentRequest());
 				siBB.getManagedBean().setBpmTaskId(taskId);
 				siBB.getManagedBean().setActions(res.getAction());
-				siBB.getManagedBean().setTempLogin(this.getManagedBean().getTempLoginId());
-				}else if (getManagedBean().getTaskName().equalsIgnoreCase(FlProcessNameConst.CREATE_SI_HT)){
-					ShippingInstrBackingBean siBB = new ShippingInstrBackingBean();
-					FlShippingInstr flSi = new FlShippingInstr();
-					flSi.setFlFulfilmentRequest(resDTO.getFlFulfilmentRequest());
-					siBB.getManagedBean().setShippingInstr(flSi);
-					siBB.getManagedBean().setBpmTaskId(taskId);
-					siBB.getManagedBean().setActions(res.getAction());
-					siBB.getManagedBean().setTempLogin(this.getManagedBean().getTempLoginId());
-				}
-				else if(res.getTaskName().equalsIgnoreCase(FlProcessNameConst.CREATE_NEW_CO_HT)||res.getTaskName().equalsIgnoreCase(FlProcessNameConst.CREATE_CO_HT) 
-						|| res.getTaskName().equalsIgnoreCase(FlProcessNameConst.REVIEW_CR_HT) || res.getTaskName().equalsIgnoreCase(FlProcessNameConst.REVISE_CR_HT) 
-						|| res.getTaskName().equalsIgnoreCase(FlProcessNameConst.CREATE_NORMAL_CO_HT) || res.getTaskName().equalsIgnoreCase(FlProcessNameConst.REVIEW_MTO_CR_HT)
-						|| res.getTaskName().equalsIgnoreCase(FlProcessNameConst.REVISE_MTO_CR_HT)|| res.getTaskName().equalsIgnoreCase(FlProcessNameConst.INTIATE_MTO_CR_HT)){
+				siBB.getManagedBean().setTempLogin(
+						this.getManagedBean().getTempLoginId());
+			} else if (getManagedBean().getTaskName().equalsIgnoreCase(
+					FlProcessNameConst.CREATE_SI_HT)) {
+				ShippingInstrBackingBean siBB = new ShippingInstrBackingBean();
+				FlShippingInstr flSi = new FlShippingInstr();
+				flSi.setFlFulfilmentRequest(resDTO.getFlFulfilmentRequest());
+				siBB.getManagedBean().setShippingInstr(flSi);
+				siBB.getManagedBean().setBpmTaskId(taskId);
+				siBB.getManagedBean().setActions(res.getAction());
+				siBB.getManagedBean().setTempLogin(
+						this.getManagedBean().getTempLoginId());
+			} else if (res.getTaskName().equalsIgnoreCase(
+					FlProcessNameConst.CREATE_NEW_CO_HT)
+					|| res.getTaskName().equalsIgnoreCase(
+							FlProcessNameConst.CREATE_CO_HT)
+					|| res.getTaskName().equalsIgnoreCase(
+							FlProcessNameConst.REVIEW_CR_HT)
+					|| res.getTaskName().equalsIgnoreCase(
+							FlProcessNameConst.REVISE_CR_HT)
+					|| res.getTaskName().equalsIgnoreCase(
+							FlProcessNameConst.CREATE_NORMAL_CO_HT)
+					|| res.getTaskName().equalsIgnoreCase(
+							FlProcessNameConst.REVIEW_MTO_CR_HT)
+					|| res.getTaskName().equalsIgnoreCase(
+							FlProcessNameConst.REVISE_MTO_CR_HT)
+					|| res.getTaskName().equalsIgnoreCase(
+							FlProcessNameConst.INTIATE_MTO_CR_HT)) {
 
 				ContractRequestBackingBean crBB = new ContractRequestBackingBean();
 				FulfilmentBackingBean flBB = new FulfilmentBackingBean();
 				flBB.getManagedBean().setRemarkList(resDTO.getRemarkList());
-				flBB.getManagedBean().setAttachmentList(resDTO.getAttachmentList());
-				flBB.initializeRemarkAndAttachement(flBB.getManagedBean().getRemarkList(), flBB.getManagedBean().getAttachmentList());
+				flBB.getManagedBean().setAttachmentList(
+						resDTO.getAttachmentList());
+				flBB.initializeRemarkAndAttachement(flBB.getManagedBean()
+						.getRemarkList(), flBB.getManagedBean()
+						.getAttachmentList());
 
-				IOrgProfileSO orgProfileSO = (IOrgProfileSO)BusinessDelegate.getInstance().getServiceObject("pm",IOrgProfileSO.class);
+				IOrgProfileSO orgProfileSO = (IOrgProfileSO) BusinessDelegate
+						.getInstance().getServiceObject("pm",
+								IOrgProfileSO.class);
 				OrgProfileReqDTO orgProfileReqDTO = new OrgProfileReqDTO();
-				//TODO
+				// TODO
 				orgProfileReqDTO.setOrgProfileId(4L);
-				OrgProfileResDTO pmResDTO = orgProfileSO.retrieveOrgProfileByProfileId(orgProfileReqDTO);
+				OrgProfileResDTO pmResDTO = orgProfileSO
+						.retrieveOrgProfileByProfileId(orgProfileReqDTO);
 
-				if(coObj.getContractRequestId().intValue() == 0){
+				if (coObj.getContractRequestId().intValue() == 0) {
 					FlFulfilmentRequest flRequest = new FlFulfilmentRequest();
-					
-					IContractSO contractSO = (IContractSO)BusinessDelegate.getInstance().getServiceObject("ct",IContractSO.class);
+
+					IContractSO contractSO = (IContractSO) BusinessDelegate
+							.getInstance().getServiceObject("ct",
+									IContractSO.class);
 					ContractReqDTO contractReqDTO = new ContractReqDTO();
-					contractReqDTO.setContractId(resDTO.getFlFulfilmentRequest().getCtContract().getContractId());
-					
-					flRequest.setCtContract(contractSO.retrieveNormalContractByMtoContract(contractReqDTO).getContract());
+					contractReqDTO.setContractId(resDTO
+							.getFlFulfilmentRequest().getCtContract()
+							.getContractId());
+
+					flRequest
+							.setCtContract(contractSO
+									.retrieveNormalContractByMtoContract(
+											contractReqDTO).getContract());
 
 					crBB.getManagedBean().setFlRequest(flRequest);
-					crBB.getManagedBean().getFlRequest().setPmDocStatus(new PmStatus());
-					crBB.getManagedBean().getFlRequest().setIssuedOrgProfile(new PmOrgProfile());
-					crBB.getManagedBean().getFlRequest().setChargeOrgProfile(new PmOrgProfile());
-					crBB.getManagedBean().getFlRequest().setReceivedOrgProfile(new PmOrgProfile());
-					crBB.getManagedBean().getFlRequest().setFlDeliveryAddresses(new ArrayList<FlDeliveryAddress>());
+					crBB.getManagedBean().getFlRequest()
+							.setPmDocStatus(new PmStatus());
+					crBB.getManagedBean().getFlRequest()
+							.setIssuedOrgProfile(new PmOrgProfile());
+					crBB.getManagedBean().getFlRequest()
+							.setChargeOrgProfile(new PmOrgProfile());
+					crBB.getManagedBean().getFlRequest()
+							.setReceivedOrgProfile(new PmOrgProfile());
+					crBB.getManagedBean()
+							.getFlRequest()
+							.setFlDeliveryAddresses(
+									new ArrayList<FlDeliveryAddress>());
 
-				} else{
-					crBB.getManagedBean().setFlRequest(resDTO.getFlFulfilmentRequest());
+				} else {
+					crBB.getManagedBean().setFlRequest(
+							resDTO.getFlFulfilmentRequest());
 				}
 				crBB.getManagedBean().setBpmTaskId(taskId);
 				crBB.getManagedBean().setActions(res.getAction());
-				crBB.getManagedBean().setTempLogin(this.getManagedBean().getTempLoginId());
-				crBB.getManagedBean().getApproverModel().setTarget(resDTO.getSelectedApproverList());
-				crBB.getManagedBean().getApproverModel().getSource().removeAll(resDTO.getSelectedApproverList());
-				if(pmResDTO.getPmOrgProfile() != null){
-					crBB.getManagedBean().getFlRequest().setCreatedOrgProfile(pmResDTO.getPmOrgProfile());
+				crBB.getManagedBean().setTempLogin(
+						this.getManagedBean().getTempLoginId());
+				crBB.getManagedBean().getApproverModel()
+						.setTarget(resDTO.getSelectedApproverList());
+				crBB.getManagedBean().getApproverModel().getSource()
+						.removeAll(resDTO.getSelectedApproverList());
+				if (pmResDTO.getPmOrgProfile() != null) {
+					crBB.getManagedBean().getFlRequest()
+							.setCreatedOrgProfile(pmResDTO.getPmOrgProfile());
 				}
-			}else if(res.getTaskName().equals(FlProcessNameConst.MTO_CO_ACK_HT) || res.getTaskName().equals(FlProcessNameConst.CO_ACK_HT)){
+			} else if (res.getTaskName().equals(
+					FlProcessNameConst.MTO_CO_ACK_HT)
+					|| res.getTaskName().equals(FlProcessNameConst.CO_ACK_HT)) {
 
-				FulfilmentOrderBackingBean florderBB  = new FulfilmentOrderBackingBean();
-				florderBB.getManagedBean().setFlRequest(resDTO.getFlFulfilmentRequest());
+				FulfilmentOrderBackingBean florderBB = new FulfilmentOrderBackingBean();
+				florderBB.getManagedBean().setFlRequest(
+						resDTO.getFlFulfilmentRequest());
 				florderBB.getManagedBean().setTaskId(taskId);
 				florderBB.getManagedBean().setActions(res.getAction());
 				florderBB.getManagedBean().setContractRequest(Boolean.TRUE);
 			}
 
-		}else if(res.getProcessName().equalsIgnoreCase(FlProcessNameConst.INVOICE_AND_PAYMENT_CREATION_PROCESS_NAME)){
+		} else if (res.getProcessName().equalsIgnoreCase(
+				FlProcessNameConst.INVOICE_AND_PAYMENT_CREATION_PROCESS_NAME)) {
 			FulfilmentReqDTO flReqDTO = new FulfilmentReqDTO();
 			FulfilmentResDTO resDTO = new FulfilmentResDTO();
-			FLInvoiceAndPaymentDataType paymentObj = (FLInvoiceAndPaymentDataType)obj;
+			FLInvoiceAndPaymentDataType paymentObj = (FLInvoiceAndPaymentDataType) obj;
 			flReqDTO.setFlOrderId(paymentObj.getFullfillmentRequestId());
-			if((res.getTaskName().equalsIgnoreCase(FlProcessNameConst.CREATE_INVOICE))){	
-				IFulfilmentOrderSO flOrderSO = (IFulfilmentOrderSO) BusinessDelegate.getInstance().getServiceObject("fl",IFulfilmentOrderSO.class);
+			if ((res.getTaskName()
+					.equalsIgnoreCase(FlProcessNameConst.CREATE_INVOICE))) {
+				IFulfilmentOrderSO flOrderSO = (IFulfilmentOrderSO) BusinessDelegate
+						.getInstance().getServiceObject("fl",
+								IFulfilmentOrderSO.class);
 
 				resDTO = flOrderSO.retrieveFulfilmentOrder(flReqDTO);
-				//				resDTO = invoiceSO.retrieveInvoice(flReqDTO);//if save button are exist
+				// resDTO = invoiceSO.retrieveInvoice(flReqDTO);//if save button
+				// are exist
 				FlInvoice inv = new FlInvoice();
 				inv.setFlFulfilmentOrder(resDTO.getFlOrder());
 
@@ -371,8 +437,10 @@ public class TaskListBackingBean extends BaseBackingBean<TaskListManagedBean> {
 				invBB.getManagedBean().setBpmTaskId(taskId);
 				invBB.getManagedBean().setActions(res.getAction());
 			}
-			if((res.getTaskName().equalsIgnoreCase(FlProcessNameConst.PERFORM_PAYMNET_MATCH_HT))){
-				IInvoiceSO invoiceSO = (IInvoiceSO) BusinessDelegate.getInstance().getServiceObject("fl",IInvoiceSO.class);
+			if ((res.getTaskName()
+					.equalsIgnoreCase(FlProcessNameConst.PERFORM_PAYMNET_MATCH_HT))) {
+				IInvoiceSO invoiceSO = (IInvoiceSO) BusinessDelegate
+						.getInstance().getServiceObject("fl", IInvoiceSO.class);
 
 				resDTO = invoiceSO.retrieveInvoiceByFlOrderId(flReqDTO);
 				FlPaymentAdvice paymentAdvice = new FlPaymentAdvice();
@@ -383,92 +451,123 @@ public class TaskListBackingBean extends BaseBackingBean<TaskListManagedBean> {
 				paymentBB.getManagedBean().setBpmTaskId(taskId);
 				paymentBB.getManagedBean().setActions(res.getAction());
 			}
-		}
-		else if(res.getProcessName().equalsIgnoreCase(FlProcessNameConst.DELIVERY_ORDER_FULFILMENT_PROCESS_NAME)){
+		} else if (res.getProcessName().equalsIgnoreCase(
+				FlProcessNameConst.DELIVERY_ORDER_FULFILMENT_PROCESS_NAME)) {
 			FulfilmentReqDTO flReqDTO = new FulfilmentReqDTO();
 			FulfilmentResDTO resDTO = new FulfilmentResDTO();
-			IFulfilmentRequestSO fulfilmentSO = (IFulfilmentRequestSO) BusinessDelegate.getInstance().getServiceObject("fl",IFulfilmentRequestSO.class);
-			IDeliveryOrderSO deliveryOrderSO = (IDeliveryOrderSO) BusinessDelegate.getInstance().getServiceObject("fl",IDeliveryOrderSO.class);
-			FLDOFullfillmentDataType flDeliveryOrder = (FLDOFullfillmentDataType)obj;
+			IFulfilmentRequestSO fulfilmentSO = (IFulfilmentRequestSO) BusinessDelegate
+					.getInstance().getServiceObject("fl",
+							IFulfilmentRequestSO.class);
+			IDeliveryOrderSO deliveryOrderSO = (IDeliveryOrderSO) BusinessDelegate
+					.getInstance().getServiceObject("fl",
+							IDeliveryOrderSO.class);
+			FLDOFullfillmentDataType flDeliveryOrder = (FLDOFullfillmentDataType) obj;
 			flReqDTO.setDeliveryOrderId(flDeliveryOrder.getDeliveryOrderId());
-			resDTO=deliveryOrderSO.retrieveDeliveryOrder(flReqDTO);
-			ReceivedNoteBackingBean createFRNBackingBean = new ReceivedNoteBackingBean();  
-			flReqDTO.setFlRequestId(resDTO.getFlDeliveryOrder().getFlFulfilmentOrder().getFlFulfilmentRequest().getFulfilmentReqId());
+			resDTO = deliveryOrderSO.retrieveDeliveryOrder(flReqDTO);
+			ReceivedNoteBackingBean createFRNBackingBean = new ReceivedNoteBackingBean();
+			flReqDTO.setFlRequestId(resDTO.getFlDeliveryOrder()
+					.getFlFulfilmentOrder().getFlFulfilmentRequest()
+					.getFulfilmentReqId());
 			resDTO = fulfilmentSO.retrieveFulfilmentRequest(flReqDTO);
 			FulfilmentBackingBean flBB = new FulfilmentBackingBean();
-			flBB.initializeRemarkAndAttachement(resDTO.getRemarkList(), flBB.getManagedBean().getAttachmentList());
-			createFRNBackingBean.getManagedBean().setFulfilmentRequest(resDTO.getFlFulfilmentRequest());
-			createFRNBackingBean.getManagedBean().setDeliveryOrderId(flDeliveryOrder.getDeliveryOrderId());
+			flBB.initializeRemarkAndAttachement(resDTO.getRemarkList(), flBB
+					.getManagedBean().getAttachmentList());
+			createFRNBackingBean.getManagedBean().setFulfilmentRequest(
+					resDTO.getFlFulfilmentRequest());
+			createFRNBackingBean.getManagedBean().setDeliveryOrderId(
+					flDeliveryOrder.getDeliveryOrderId());
 			createFRNBackingBean.getManagedBean().setTaskId(taskId);
 			createFRNBackingBean.getManagedBean().setActions(res.getAction());
-			
-		}else if(res.getProcessName().equalsIgnoreCase(FlProcessNameConst.DAN_GENERATION_PROCESS_NAME)){
+
+		} else if (res.getProcessName().equalsIgnoreCase(
+				FlProcessNameConst.DAN_GENERATION_PROCESS_NAME)) {
 
 			FulfilmentReqDTO flReqDTO = new FulfilmentReqDTO();
 			FulfilmentResDTO resDTO = new FulfilmentResDTO();
-			FLDanDataType danObj = (FLDanDataType)obj;
+			FLDanDataType danObj = (FLDanDataType) obj;
 			flReqDTO.setDanId(danObj.getDanId());
-				IAdjustmentSO adjustmentSO = (IAdjustmentSO) BusinessDelegate.getInstance().getServiceObject("fl",IAdjustmentSO.class);
+			IAdjustmentSO adjustmentSO = (IAdjustmentSO) BusinessDelegate
+					.getInstance().getServiceObject("fl", IAdjustmentSO.class);
 
-				resDTO = adjustmentSO.retrieveAdjustmentById(flReqDTO);
-				FlAdjustment adjust = resDTO.getAdjustment();
+			resDTO = adjustmentSO.retrieveAdjustmentById(flReqDTO);
+			FlAdjustment adjust = resDTO.getAdjustment();
 
-				DebitAdjustmentNoteBackingBean danBB = new DebitAdjustmentNoteBackingBean();
-				danBB.getManagedBean().setAdjustment(adjust);
-				danBB.getManagedBean().setBpmTaskId(taskId);
-				danBB.getManagedBean().setActions(res.getAction());
+			DebitAdjustmentNoteBackingBean danBB = new DebitAdjustmentNoteBackingBean();
+			danBB.getManagedBean().setAdjustment(adjust);
+			danBB.getManagedBean().setBpmTaskId(taskId);
+			danBB.getManagedBean().setActions(res.getAction());
 
-		}
-		else if(res.getProcessName().equalsIgnoreCase(FlProcessNameConst.PURCHASE_REQ_CREATION_PROCESS_NAME)){
+		} else if (res.getProcessName().equalsIgnoreCase(
+				FlProcessNameConst.PURCHASE_REQ_CREATION_PROCESS_NAME)) {
 			FulfilmentReqDTO flReqDTO = new FulfilmentReqDTO();
 			FulfilmentResDTO resDTO = new FulfilmentResDTO();
-			IFulfilmentRequestSO fulfilmentSO = (IFulfilmentRequestSO) BusinessDelegate.getInstance().getServiceObject("fl",IFulfilmentRequestSO.class);
-			FLPurchaseOrderDataType flPurchaseOrd = (FLPurchaseOrderDataType)obj;
+			IFulfilmentRequestSO fulfilmentSO = (IFulfilmentRequestSO) BusinessDelegate
+					.getInstance().getServiceObject("fl",
+							IFulfilmentRequestSO.class);
+			FLPurchaseOrderDataType flPurchaseOrd = (FLPurchaseOrderDataType) obj;
 			flReqDTO.setFlRequestId(flPurchaseOrd.getPurchaseRequestId());
 			flReqDTO.setSelectedApprovers(flPurchaseOrd.getApproverList());
 			resDTO = fulfilmentSO.retrieveFulfilmentRequest(flReqDTO);
 			flReqDTO.setFlFulfilmentRequest(resDTO.getFlFulfilmentRequest());
 			FulfilmentBackingBean flBB = new FulfilmentBackingBean();
-			flBB.initializeRemarkAndAttachement(resDTO.getRemarkList(), flBB.getManagedBean().getAttachmentList());
-			PurchaseRequestBackingBean purchaseRequestBackingBean = new PurchaseRequestBackingBean();  
-			purchaseRequestBackingBean.getManagedBean().setFulfilmentRequest(resDTO.getFlFulfilmentRequest());
+			flBB.initializeRemarkAndAttachement(resDTO.getRemarkList(), flBB
+					.getManagedBean().getAttachmentList());
+			PurchaseRequestBackingBean purchaseRequestBackingBean = new PurchaseRequestBackingBean();
+			purchaseRequestBackingBean.getManagedBean().setFulfilmentRequest(
+					resDTO.getFlFulfilmentRequest());
 			purchaseRequestBackingBean.getManagedBean().setTaskId(taskId);
-			purchaseRequestBackingBean.getManagedBean().setActions(res.getAction());
-			purchaseRequestBackingBean.getManagedBean().setTaskName(res.getTaskName());
-			purchaseRequestBackingBean.getManagedBean().setTempLoginId(this.getManagedBean().getTempLoginId());
-			List<String> source = new ArrayList<String>();   
-			List<String> target = new ArrayList<String>();  
-			purchaseRequestBackingBean.getManagedBean().setApproverModel(new DualListModel<String>(source, target));
-			purchaseRequestBackingBean.getManagedBean().getApproverModel().setTarget(resDTO.getSelectedApproverList());
-			purchaseRequestBackingBean.getManagedBean().getApproverModel().getSource().removeAll(resDTO.getSelectedApproverList());
-			if(null!=res.getAction() && !"".equals(res.getAction())){
-				purchaseRequestBackingBean.getManagedBean().setSubmitButtonStatus(false);
+			purchaseRequestBackingBean.getManagedBean().setActions(
+					res.getAction());
+			purchaseRequestBackingBean.getManagedBean().setTaskName(
+					res.getTaskName());
+			purchaseRequestBackingBean.getManagedBean().setTempLoginId(
+					this.getManagedBean().getTempLoginId());
+			List<String> source = new ArrayList<String>();
+			List<String> target = new ArrayList<String>();
+			purchaseRequestBackingBean.getManagedBean().setApproverModel(
+					new DualListModel<String>(source, target));
+			purchaseRequestBackingBean.getManagedBean().getApproverModel()
+					.setTarget(resDTO.getSelectedApproverList());
+			purchaseRequestBackingBean.getManagedBean().getApproverModel()
+					.getSource().removeAll(resDTO.getSelectedApproverList());
+			if (null != res.getAction() && !"".equals(res.getAction())) {
+				purchaseRequestBackingBean.getManagedBean()
+						.setSubmitButtonStatus(false);
 			}
-			if(res.getTaskName().equals(FlProcessNameConst.PR_ACK_HT) || res.getTaskName().equals(FlProcessNameConst.REVIEW_REJECTED_PO_HT)){
-				FulfilmentOrderBackingBean florderBB=new FulfilmentOrderBackingBean();
-				florderBB.getManagedBean().setFlRequest(resDTO.getFlFulfilmentRequest());
+			if (res.getTaskName().equals(FlProcessNameConst.PR_ACK_HT)
+					|| res.getTaskName().equals(
+							FlProcessNameConst.REVIEW_REJECTED_PO_HT)) {
+				FulfilmentOrderBackingBean florderBB = new FulfilmentOrderBackingBean();
+				florderBB.getManagedBean().setFlRequest(
+						resDTO.getFlFulfilmentRequest());
 				florderBB.getManagedBean().setTaskId(taskId);
 				florderBB.getManagedBean().setActions(res.getAction());
-				florderBB.getManagedBean().setTempLoginId(this.getManagedBean().getTempLoginId());
+				florderBB.getManagedBean().setTempLoginId(
+						this.getManagedBean().getTempLoginId());
 			}
-			
-		} else if (res.getProcessName().equalsIgnoreCase(FlProcessNameConst.STOP_FULFILMENT_REQUEST_PROCESS_NAME)){
-			IFulfilmentOrderSO orderSO = (IFulfilmentOrderSO) BusinessDelegate.getInstance().getServiceObject("fl",IFulfilmentOrderSO.class);
-			FLStopFullfillmentDataType stopFlData = (FLStopFullfillmentDataType)obj;
+
+		} else if (res.getProcessName().equalsIgnoreCase(
+				FlProcessNameConst.STOP_FULFILMENT_REQUEST_PROCESS_NAME)) {
+			IFulfilmentOrderSO orderSO = (IFulfilmentOrderSO) BusinessDelegate
+					.getInstance().getServiceObject("fl",
+							IFulfilmentOrderSO.class);
+			FLStopFullfillmentDataType stopFlData = (FLStopFullfillmentDataType) obj;
 			FulfilmentReqDTO flReqDTO = new FulfilmentReqDTO();
-			
+
 			flReqDTO.setFlOrderId(stopFlData.getFullfillmentRequestId());
-			FulfilmentResDTO resDTO = orderSO.retrieveFulfilmentOrderById(flReqDTO);
+			FulfilmentResDTO resDTO = orderSO
+					.retrieveFulfilmentOrderById(flReqDTO);
 			FulfilmentOrderBackingBean flOrderBB = new FulfilmentOrderBackingBean();
-			flOrderBB.getManagedBean().setStopRequestId(stopFlData.getStopRequestId().longValue());
+			flOrderBB.getManagedBean().setStopRequestId(
+					stopFlData.getStopRequestId().longValue());
 			flOrderBB.getManagedBean().setTaskId(taskId);
 			flOrderBB.getManagedBean().setActions(res.getAction());
 			flOrderBB.getManagedBean().setFulfilmentOrder(resDTO.getFlOrder());
-			flOrderBB.getManagedBean().setFlRequest(resDTO.getFlFulfilmentRequest());
-//			flOrderBB.getManagedBean().setFlRequest(resDTO.getFlOrder().getFlFulfilmentRequest());
+			flOrderBB.getManagedBean().setFlRequest(
+					resDTO.getFlFulfilmentRequest());
+			// flOrderBB.getManagedBean().setFlRequest(resDTO.getFlOrder().getFlFulfilmentRequest());
 			flOrderBB.getManagedBean().setContractRequest(Boolean.TRUE);
-			
-			
+
 		} else if (res.getProcessName().equalsIgnoreCase("Budget Endorsement")) {
 			log.info("task list loading " + res.getProcessName());
 			// Procurement Plan - Budget
@@ -530,19 +629,23 @@ public class TaskListBackingBean extends BaseBackingBean<TaskListManagedBean> {
 
 			CTAgreementDataType agDataType = (CTAgreementDataType) obj;
 
-			IAgreementSO agreementSO = (IAgreementSO) BusinessDelegate.getInstance().getServiceObject("ct", IAgreementSO.class);
+			IAgreementSO agreementSO = (IAgreementSO) BusinessDelegate
+					.getInstance().getServiceObject("ct", IAgreementSO.class);
 			ContractAgreementReqDTO ctReqDTO = new ContractAgreementReqDTO();
 
 			ctReqDTO.setContractId(agDataType.getContractId().longValue());
 			AgreementBackingBean ctaBB = new AgreementBackingBean();
-			ctaBB.getManagedBean().setContractId(agDataType.getContractId().longValue());
+			ctaBB.getManagedBean().setContractId(
+					agDataType.getContractId().longValue());
 			ctaBB.getManagedBean().setOutComes(res.getAction());
 			ctaBB.getManagedBean().setTaskId(taskId);
 			ctaBB.getManagedBean().setToken(ctx);
-			ctaBB.getManagedBean().setAgreementType(agDataType.getAgreementType());
+			ctaBB.getManagedBean().setAgreementType(
+					agDataType.getAgreementType());
 			if (agDataType.getAgreementId().intValue() != 0) {
 				ctReqDTO.setAgreementId(agDataType.getAgreementId().longValue());
-				ContractAgreementResDTO resDTO = agreementSO.retrieveAgreement(ctReqDTO);
+				ContractAgreementResDTO resDTO = agreementSO
+						.retrieveAgreement(ctReqDTO);
 				ctaBB.getManagedBean().setAgreement(resDTO.getAgreement());
 			}
 
@@ -551,42 +654,55 @@ public class TaskListBackingBean extends BaseBackingBean<TaskListManagedBean> {
 
 			CTContractSuspensionDataType ctsDataType = (CTContractSuspensionDataType) obj;
 
-			IContractSO contractSO = (IContractSO) BusinessDelegate.getInstance().getServiceObject("ct", IContractSO.class);
+			IContractSO contractSO = (IContractSO) BusinessDelegate
+					.getInstance().getServiceObject("ct", IContractSO.class);
 			ContractReqDTO contractReqDTO = new ContractReqDTO();
-			contractReqDTO.setContractVerId(new Long(ctsDataType.getContractId()));
-			ContractResDTO resDTO = contractSO.retrieveContractVer(contractReqDTO);
+			contractReqDTO.setContractVerId(new Long(ctsDataType
+					.getContractId()));
+			ContractResDTO resDTO = contractSO
+					.retrieveContractVer(contractReqDTO);
 
 			ContractDetailsBackingBean ctdBB = new ContractDetailsBackingBean();
-			ctdBB.getManagedBean().setCtContract(resDTO.getCtContractVer().getCtContract());
+			ctdBB.getManagedBean().setCtContract(
+					resDTO.getCtContractVer().getCtContract());
 			ctdBB.getManagedBean().setCtContractVer(resDTO.getCtContractVer());
 			ctdBB.getManagedBean().setOutComes(res.getAction());
 			ctdBB.getManagedBean().setTaskId(taskId);
 			ctdBB.getManagedBean().setToken(ctx);
 
-		} else if (res.getProcessName().equalsIgnoreCase("Bank Account Change Request")) {
+		} else if (res.getProcessName().equalsIgnoreCase(
+				"Bank Account Change Request")) {
 
 			CTBankAccountDataType ctsDataType = (CTBankAccountDataType) obj;
 
-			IContractSO contractSO = (IContractSO) BusinessDelegate.getInstance().getServiceObject("ct", IContractSO.class);
+			IContractSO contractSO = (IContractSO) BusinessDelegate
+					.getInstance().getServiceObject("ct", IContractSO.class);
 			ContractReqDTO contractReqDTO = new ContractReqDTO();
-			contractReqDTO.setContractVerId(new Long(ctsDataType.getContractId()));
-			ContractResDTO resDTO = contractSO.retrieveContractVer(contractReqDTO);
+			contractReqDTO.setContractVerId(new Long(ctsDataType
+					.getContractId()));
+			ContractResDTO resDTO = contractSO
+					.retrieveContractVer(contractReqDTO);
 
 			ContractDetailsBackingBean ctdBB = new ContractDetailsBackingBean();
-			ctdBB.getManagedBean().setCtContract(resDTO.getCtContractVer().getCtContract());
+			ctdBB.getManagedBean().setCtContract(
+					resDTO.getCtContractVer().getCtContract());
 			ctdBB.getManagedBean().setCtContractVer(resDTO.getCtContractVer());
 			ctdBB.getManagedBean().setOutComes(res.getAction());
 			ctdBB.getManagedBean().setTaskId(taskId);
 			ctdBB.getManagedBean().setToken(ctx);
 
-		} else if (res.getProcessName().equalsIgnoreCase("Factoring Company Request")) {
+		} else if (res.getProcessName().equalsIgnoreCase(
+				"Factoring Company Request")) {
 
 			CTFactoringDataType ctsDataType = (CTFactoringDataType) obj;
-            IContractSupplierSO factoringSO = (IContractSupplierSO) BusinessDelegate.getInstance().getServiceObject("ct",IContractSupplierSO.class);
+			IContractSupplierSO factoringSO = (IContractSupplierSO) BusinessDelegate
+					.getInstance().getServiceObject("ct",
+							IContractSupplierSO.class);
 			ContractSupplierReqDTO ctsReqDTO = new ContractSupplierReqDTO();
 			ctsReqDTO.setFactoringId(new Long(ctsDataType.getFactoringId()));
 			ctsReqDTO.setContractId(new Long(ctsDataType.getContractId()));
-			ContractSupplierResDTO resDTO = factoringSO.retrieveFactoringRequest(ctsReqDTO);
+			ContractSupplierResDTO resDTO = factoringSO
+					.retrieveFactoringRequest(ctsReqDTO);
 
 			SupplierBackingBean ctSBB = new SupplierBackingBean();
 			ctSBB.getManagedBean().setFactoring(resDTO.getFactoring());
@@ -599,16 +715,18 @@ public class TaskListBackingBean extends BaseBackingBean<TaskListManagedBean> {
 
 			CTContractAmendmentDataType dataType = (CTContractAmendmentDataType) obj;
 			ContractDetailsBackingBean ctdBB = new ContractDetailsBackingBean();
-//			ctdBB.taskListAmendmentAction(dataType.getAmendmentId().longValue(),
-//					dataType.getContractId().longValue());
+			// ctdBB.taskListAmendmentAction(dataType.getAmendmentId().longValue(),
+			// dataType.getContractId().longValue());
 			ctdBB.getManagedBean().setOutComes(res.getAction());
 			ctdBB.getManagedBean().setTaskId(taskId);
 			ctdBB.getManagedBean().setToken(ctx);
 
-		}else if (res.getProcessName().equalsIgnoreCase("Contract Termination")) {
+		} else if (res.getProcessName()
+				.equalsIgnoreCase("Contract Termination")) {
 			CTContractTerminationDataType dataType = (CTContractTerminationDataType) obj;
 			ContractDetailsBackingBean ctdBB = new ContractDetailsBackingBean();
-//			ctdBB.taskListTerminationAction(dataType.getTerminationId().longValue(), dataType.getContractId().longValue());
+			// ctdBB.taskListTerminationAction(dataType.getTerminationId().longValue(),
+			// dataType.getContractId().longValue());
 			ctdBB.getManagedBean().setOutComes(res.getAction());
 			ctdBB.getManagedBean().setTaskId(taskId);
 			ctdBB.getManagedBean().setToken(ctx);
@@ -630,7 +748,8 @@ public class TaskListBackingBean extends BaseBackingBean<TaskListManagedBean> {
 				sdoReviewBB.getManagedBean().setTaskId(taskId);
 			}
 			if (res.getTaskName().equalsIgnoreCase(
-					"Review Application (Escalated)")) {
+					"Review Application (Escalated)")
+					|| res.getTaskName().equalsIgnoreCase("Review Application")) {
 				System.out
 						.println("********Review Application Escalted for new mof********");
 				System.out.println("********getTaskId********" + taskId);
@@ -640,7 +759,7 @@ public class TaskListBackingBean extends BaseBackingBean<TaskListManagedBean> {
 				// TODO Change this impl to get values from DB and set
 				// smSupplier , smAppl of the managedBean
 				setNavigationForSmDecision(smObj.getAppType());
-				smApplBB.proceedToApplication(smObj.getAppType());
+				smApplBB.proceedToApplication(smObj.getAppType(),Boolean.TRUE);
 				smApplBB.getManagedBean().getSmAppl()
 						.setApplId(Long.parseLong(smObj.getAppId()));
 				smApplBB.getManagedBean().setBpmActions(res.getAction());
@@ -653,7 +772,8 @@ public class TaskListBackingBean extends BaseBackingBean<TaskListManagedBean> {
 			this.getManagedBean().setTaskName(res.getTaskName());
 
 			if (res.getTaskName().equalsIgnoreCase(
-					"Review Application (Escalated)")) {
+					"Review Application (Escalated)")
+					|| res.getTaskName().equalsIgnoreCase("Review Application")) {
 				System.out
 						.println("********Review Application Escalted for account maintain********"
 								+ smObj.getAppType());
@@ -664,7 +784,7 @@ public class TaskListBackingBean extends BaseBackingBean<TaskListManagedBean> {
 				// TODO Change this impl to get values from DB and set
 				// smSupplier , smAppl of the managedBean
 				setNavigationForSmDecision(smObj.getAppType());
-				smApplBB.proceedToApplication(smObj.getAppType());
+				smApplBB.proceedToApplication(smObj.getAppType(),Boolean.TRUE);
 				smApplBB.getManagedBean().getSmAppl()
 						.setApplId(Long.parseLong(smObj.getAppId()));
 				smApplBB.getManagedBean().setBpmActions(res.getAction());
@@ -684,7 +804,7 @@ public class TaskListBackingBean extends BaseBackingBean<TaskListManagedBean> {
 				SmApplicationBackingBean smApplBB = new SmApplicationBackingBean();
 				// TODO Change this impl to get values from DB and set
 				// smSupplier , smAppl of the managedBean
-				smApplBB.proceedToApplication(smObj.getAppType());
+				smApplBB.proceedToApplication(smObj.getAppType(),Boolean.TRUE);
 				setNavigationForSmDecision(smObj.getAppType());
 				smApplBB.getManagedBean().getSmAppl()
 						.setApplId(Long.parseLong(smObj.getAppId()));
@@ -710,7 +830,7 @@ public class TaskListBackingBean extends BaseBackingBean<TaskListManagedBean> {
 				SmApplicationBackingBean smApplBB = new SmApplicationBackingBean();
 				// TODO Change this impl to get values from DB and set
 				// smSupplier , smAppl of the managedBean
-				smApplBB.proceedToApplication("C");
+				smApplBB.proceedToApplication("C",Boolean.TRUE);
 				getManagedBean()
 						.setPageUrl(
 								"/xhtml/sm/approverDecisionPages/approverCanRegistration_DescisionPage.xhtml");

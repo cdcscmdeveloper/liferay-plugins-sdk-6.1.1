@@ -65,8 +65,11 @@ public class SmApplicationBackingBean extends
 	public SmApplicationBackingBean() {
 
 	}
-
 	public String proceedToApplication(String applicationType) {
+		return proceedToApplication(applicationType,Boolean.FALSE);
+	}
+	
+	public String proceedToApplication(String applicationType,boolean fromBpm) {
 		System.out
 				.println("**** ENTER Create Application Type Of  *************"
 						+ applicationType + "Application type = >>"
@@ -138,7 +141,7 @@ public class SmApplicationBackingBean extends
 						.println("****** INSERT A FRESH RECORD OF APPL TO SUUPPLIER ******** ");
 				smApplSupplier.getSmAppls().add(smAppl);
 			}
-			if (applicationType.equals("XX")) {
+			if (applicationType.equals("N") && !fromBpm) {
 				System.out
 						.println(" **** START INSERTING THE NEW APPLN FOR MOF REG ****");
 				reqDto.setSmSupplier(smApplSupplier);

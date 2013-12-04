@@ -157,6 +157,8 @@ public class SmApplicationManagedBean extends BaseManagedBean {
 	private String selectedBpmAction;
 
 	private String taskId;
+	
+	private String headerMsg;
 
 	public SmApplicationManagedBean() {
 		// TODO Checking the user role
@@ -829,6 +831,14 @@ public class SmApplicationManagedBean extends BaseManagedBean {
 
 	public void setDecisionAckMsg(String decisionAckMsg) {
 		this.decisionAckMsg = decisionAckMsg;
+	}
+
+	public String getHeaderMsg() {
+		return headerMsg;
+	}
+
+	public void setHeaderMsg(String headerMsg) {
+		this.headerMsg = headerMsg;
 	}
 
 }

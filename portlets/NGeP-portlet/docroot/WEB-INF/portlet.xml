@@ -2626,7 +2626,7 @@
 	 		<portlet-mode>view</portlet-mode>
 	 	</supports>
 	 	<portlet-info>
-	 		<title>MOF Application</title>
+	 		<title>Review Application</title>
 	 		<short-title>NewJSFPortlet</short-title>
 	 		<keywords></keywords>
 	 	</portlet-info>
