@@ -53,12 +53,8 @@
 			rendered="#{not empty contractRequestBackingBean.managedBean.flRequest.flDeliveryAddresses}">
 			<ac:paginator for="itemDataTable"/>
 			
-			<p:column headerText="Product Code">
-				<h:outputText value="#{item.contractedItem.itemCode}" />
-			</p:column>
-
 			<p:column headerText="Item Name">
-				<h:outputText value="#{item.contractedItem.itemName}" />
+				<h:outputText value="#{item.contractItem.itemName}" />
 			</p:column>
 
 			<p:column headerText="GOSODO">
@@ -128,7 +124,7 @@
 		
 		<p:dataTable id="contractedItemDt" var="contractedItem"
 			value="#{contractRequestBackingBean.managedBean.contractedItemList}"
-			rowKey="#{contractedItem.contractedItemId}"
+			rowKey="#{contractedItem.contractItemId}"
 			selection="#{contractRequestBackingBean.managedBean.selectedContractedItemList}">
 			<p:ajax event="rowSelect" update=":form:cotabs:addContractedItemDialog" process="@this"/>
 			<ac:paginator for="contractedItemDt"/>

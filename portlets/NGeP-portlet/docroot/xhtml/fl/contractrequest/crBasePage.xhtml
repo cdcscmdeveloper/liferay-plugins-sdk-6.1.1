@@ -11,12 +11,13 @@
 	</ui:define>
 
 	<ui:define name="contentSection">
+	<f:event listener="#{contractRequestBackingBean.preRenderView}" type="preRenderView" />	
 	<p:messages id="messages" showDetail="true" autoUpdate="true" closable="true" severity="error,info"></p:messages>
 		<table style="width:100%">
 			<tr>
 				<td colspan="4" style="text-align: right"><ui:repeat
 						var="bpmAction"
-						value="#{contractRequestBackingBean.managedBean.actions}">
+						value="#{contractRequestBackingBean.managedBean.outComes}">
 						<p:commandButton value="#{bpmAction}"
 							action="#{contractRequestBackingBean.submitAction(bpmAction)}" />
 					</ui:repeat></td>

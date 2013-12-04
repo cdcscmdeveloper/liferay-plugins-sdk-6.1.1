@@ -38,12 +38,8 @@
 			rendered="#{not empty flOrderBB.managedBean.flRequest.flDeliveryAddresses}">
 			<ac:paginator for="itemDataTable"/>
 			
-			<p:column headerText="Product Code">
-				<h:outputText value="#{item.contractedItem.itemCode}" />
-			</p:column>
-
 			<p:column headerText="Item Name">
-				<h:outputText value="#{item.contractedItem.itemName}" />
+				<h:outputText value="#{item.contractItem.itemName}" />
 			</p:column>
 
 			<p:column headerText="GOSODO">
