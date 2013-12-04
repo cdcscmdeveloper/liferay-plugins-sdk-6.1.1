@@ -36,17 +36,6 @@
 				<p:column headerText="Status">
 					<h:outputText value="PENDING" />
 				</p:column>
-			<p:column headerText="Action">
-					<p:commandLink
-						onclick="goToDetail([{name:'orderId', value:'#{pending.fulfilmentOrderId}'}])">
-						<p:graphicImage library="ep/images/design" name="cancel.png"
-							value="/resources/ep/images/design/cancel.png"
-							title="Stop Delivery" />
-					</p:commandLink>
-					<p:spacer width="7px"></p:spacer>
-				</p:column>
-				
-
 			</p:dataTable>
 			<p:remoteCommand action="#{flOrderBB.stopDelivery}"
 				name="goToDetail" update="pendingTable" process="@this"/>

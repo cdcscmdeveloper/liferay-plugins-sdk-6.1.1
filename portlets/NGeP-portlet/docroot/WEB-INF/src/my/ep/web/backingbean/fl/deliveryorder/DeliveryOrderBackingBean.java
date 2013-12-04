@@ -10,6 +10,7 @@ import javax.faces.bean.RequestScoped;
 import javax.faces.context.FacesContext;
 
 import my.ep.biz.service.fl.order.IDeliveryOrderSO;
+import my.ep.biz.service.fl.order.IFulfilmentOrderSO;
 import my.ep.dto.fl.FulfilmentReqDTO;
 import my.ep.dto.fl.FulfilmentResDTO;
 import my.ep.exception.EpException;
@@ -100,6 +101,22 @@ public class DeliveryOrderBackingBean extends BaseBackingBean<DeliveryOrderManag
 			deliveryOrderSO = null;
 		}
 		return null;
+	}
+	public void stopDelivery() {
+		
+		Long flOrderId;
+		flOrderId=getManagedBean().getFulfilmentOrder().getFulfilmentOrderId();
+		//System.out.println("Order Id In stopDelivery  :   "+flOrderId);
+		FulfilmentReqDTO reqDTO = new FulfilmentReqDTO();
+		//Long orderId = Long.parseLong(FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap().get("orderId"));
+		IFulfilmentOrderSO flOrderSO = BusinessDelegate.getInstance().getServiceObject("fl",IFulfilmentOrderSO.class);
+		FulfilmentReqDTO flDTO = new FulfilmentReqDTO();
+		flDTO.setFlOrderId(flOrderId);
+		getManagedBean().setFulfilmentOrder(flOrderSO.retrieveFulfilmentOrder(flDTO).getFlOrder());
+		reqDTO.setFulfilmentOrder(getManagedBean().getFulfilmentOrder());
+//		IFulfilmentOrderSO flOrderSO = (IFulfilmentOrderSO) BusinessDelegate.getInstance().getServiceObject("fl",IFulfilmentOrderSO.class);
+		flOrderSO.stopDeliveryWSDL(reqDTO);
+		
 	}
 	
 	
