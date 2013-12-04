@@ -425,7 +425,7 @@ public class ContractRequestBackingBean extends BaseBackingBean<ContractRequestM
 				contractReqDTO.setContractId(resDTO.getFlFulfilmentRequest().getCtContract().getContractId());
 
 				flRequest.setCtContract(contractSO.retrieveNormalContractByMtoContract(contractReqDTO).getContract());
-
+				System.out.println("flRequest ct id: "+flRequest.getCtContract().getContractId());
 				getManagedBean().setFlRequest(flRequest);
 				getManagedBean().getFlRequest().setPmDocStatus(new PmStatus());
 				getManagedBean().getFlRequest().setIssuedOrgProfile(new PmOrgProfile());

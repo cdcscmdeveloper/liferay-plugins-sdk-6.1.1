@@ -80,7 +80,9 @@ public class BPMTaskListBackingBean extends BaseBackingBean<BPMTaskListManagedBe
 		temp.put(FlProcessNameConst.MTO_CONTRACT_REQ_CREATION_PROCESS_NAME+FlProcessNameConst.REVISE_MTO_CR_HT, "contract-request");
 		temp.put(FlProcessNameConst.MTO_CONTRACT_REQ_CREATION_PROCESS_NAME+FlProcessNameConst.REVIEW_MTO_CR_HT, "contract-request");
 		temp.put(FlProcessNameConst.CONTRACT_REQ_CREATION_PROCESS_NAME+FlProcessNameConst.CREATE_CO_HT, "contract-request");
+		temp.put(FlProcessNameConst.CONTRACT_REQ_CREATION_PROCESS_NAME+FlProcessNameConst.CREATE_NEW_CO_HT, "contract-request");
 		temp.put(FlProcessNameConst.MTO_CONTRACT_REQ_CREATION_PROCESS_NAME+FlProcessNameConst.INTIATE_MTO_CR_HT, "contract-request");
+		temp.put(FlProcessNameConst.MTO_CONTRACT_REQ_CREATION_PROCESS_NAME+FlProcessNameConst.CREATE_NEW_CO_HT, "contract-request");
 		temp.put(FlProcessNameConst.CONTRACT_REQ_INITIATION_PROCESS_NAME+FlProcessNameConst.CREATE_NEW_CO_HT, "contract-request");
 
 		temp.put(FlProcessNameConst.MTO_CONTRACT_REQ_CREATION_PROCESS_NAME+FlProcessNameConst.CREATE_SI_HT, "shipping-instruction");
@@ -166,6 +168,7 @@ public class BPMTaskListBackingBean extends BaseBackingBean<BPMTaskListManagedBe
 			reqDTO.setTaskId(taskId);
 			BpmResponseDTO res = bpmSO.getTaskDetails(reqDTO);
 			System.out.println("********getProcessName********"+res.getProcessName());
+			System.out.println("********getTaskName********"+res.getTaskName());
 			System.out.println("********res.getAction()********"+res.getAction());
 			this.getManagedBean().setProcessName(res.getProcessName());
 			this.getManagedBean().setAction(res.getAction());

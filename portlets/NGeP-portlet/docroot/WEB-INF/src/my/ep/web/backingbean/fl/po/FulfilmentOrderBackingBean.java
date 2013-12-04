@@ -207,22 +207,17 @@ public class FulfilmentOrderBackingBean extends BaseBackingBean<FulfilmentOrderM
 	}
 
 	public void preRenderViewCR() {
-		//		BPMTaskListBackingBean bb = new BPMTaskListBackingBean();
 		HttpServletRequest servletRequest = PortalUtil
 				.getHttpServletRequest(new FacesScopes().getRequest());
 		HttpServletRequest originalServletRequest = PortalUtil
 				.getOriginalServletRequest(servletRequest);
 		String taskId = originalServletRequest.getParameter("taskId");
-		//		String loginId = originalServletRequest.getParameter("loginId");
 		System.out.println("taskId:" + taskId);
-		//		System.out.println("loginId:" + loginId);
 
 		IBpmSO bpmSO = (IBpmSO) EpBpmBusinessDelegate.getInstance()
 				.getServiceObject(IBpmSO.class);
 		String ctx = getFacesScopes().getBPMAuthenticationCtxToken();
 		BpmRequestDTO reqDTO = new BpmRequestDTO();
-		FacesScopes facesScopes = new FacesScopes();
-		String token = facesScopes.getBPMAuthenticationCtxToken();
 
 		reqDTO.setCtxToken(ctx);
 		reqDTO.setTaskId(taskId);
@@ -236,7 +231,6 @@ public class FulfilmentOrderBackingBean extends BaseBackingBean<FulfilmentOrderM
 
 			flReqDTO.setFlOrderId(stopFlData.getFullfillmentRequestId());
 			FulfilmentResDTO resDTO = orderSO.retrieveFulfilmentOrderById(flReqDTO);
-			//			FulfilmentOrderBackingBean flOrderBB = new FulfilmentOrderBackingBean();
 			getManagedBean().setStopRequestId(stopFlData.getStopRequestId().longValue());
 			getManagedBean().setTaskId(taskId);
 			getManagedBean().setOutComes(res.getAction());

@@ -38,6 +38,7 @@ public class ShippingInstrManagedBean extends BaseManagedBean {
 		private CtContract selectedContract;
 		private String tempLogin;
 		private FlFulfilmentRequest flRequest;
+		private CtContract importedGoodContract;
 		
 
 	/**
@@ -123,6 +124,20 @@ public class ShippingInstrManagedBean extends BaseManagedBean {
 	 */
 	public void setFlRequest(FlFulfilmentRequest flRequest) {
 		this.flRequest = flRequest;
+	}
+
+	/**
+	 * @return the importedGoodContract
+	 */
+	public CtContract getImportedGoodContract() {
+		return importedGoodContract;
+	}
+
+	/**
+	 * @param importedGoodContract the importedGoodContract to set
+	 */
+	public void setImportedGoodContract(CtContract importedGoodContract) {
+		this.importedGoodContract = importedGoodContract;
 	}
 
 

@@ -9,12 +9,14 @@ import javax.faces.bean.RequestScoped;
 import javax.faces.context.FacesContext;
 import javax.servlet.http.HttpServletRequest;
 
+import my.ep.biz.service.ct.IContractSO;
 import my.ep.biz.service.fl.request.IFulfilmentRequestSO;
 import my.ep.biz.service.fl.request.IShippingInstructionSO;
 import my.ep.bpm.dto.BpmRequestDTO;
 import my.ep.bpm.dto.BpmResponseDTO;
 import my.ep.bpm.service.IBpmSO;
 import my.ep.constants.FlProcessNameConst;
+import my.ep.dto.ct.ContractReqDTO;
 import my.ep.dto.fl.FulfilmentReqDTO;
 import my.ep.dto.fl.FulfilmentResDTO;
 import my.ep.exception.EpException;
@@ -141,6 +143,11 @@ public class ShippingInstrBackingBean extends BaseBackingBean<ShippingInstrManag
 		}else if (res.getTaskName().equalsIgnoreCase(FlProcessNameConst.CREATE_SI_HT)){
 			FlShippingInstr flSi = new FlShippingInstr();
 			flSi.setFlFulfilmentRequest(resDTO.getFlFulfilmentRequest());
+			IContractSO contractSO = (IContractSO)BusinessDelegate.getInstance().getServiceObject("ct",IContractSO.class);
+			ContractReqDTO contractReqDTO = new ContractReqDTO();
+			contractReqDTO.setContractId(resDTO.getFlFulfilmentRequest().getCtContract().getContractId());
+
+			getManagedBean().setImportedGoodContract(contractSO.retrieveNormalContractByMtoContract(contractReqDTO).getContract());
 			getManagedBean().setShippingInstr(flSi);
 			getManagedBean().setTaskId(taskId);
 			getManagedBean().setOutComes(res.getAction());
