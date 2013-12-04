@@ -51,19 +51,19 @@
 			</p:column>
 			<p:column>
 				<h:outputText
-					value="#{catBean.pmCategoryL1.cateogryL1Code}#{catBean.pmCategoryL2.cateogryL2Code}#{catBean.pmCategoryL3.cateogryL3Code}" />
+					value="#{catBean.pmCategoryL1.categoryL1Code}#{catBean.pmCategoryL2.categoryL2Code}#{catBean.pmCategoryL3.categoryL3Code}" />
 			</p:column>
 			<p:column>
 				<h:outputText
-					value="#{catBean.pmCategoryL1.cateogryL1Code} -  #{catBean.pmCategoryL1.categoryName}" />
+					value="#{catBean.pmCategoryL1.categoryL1Code} -  #{catBean.pmCategoryL1.categoryName}" />
 			</p:column>
 			<p:column>
 				<h:outputText
-					value="#{catBean.pmCategoryL2.cateogryL2Code} -  #{catBean.pmCategoryL2.categoryName}" />
+					value="#{catBean.pmCategoryL2.categoryL2Code} -  #{catBean.pmCategoryL2.categoryName}" />
 			</p:column>
 			<p:column>
 				<h:outputText
-					value="#{catBean.pmCategoryL3.cateogryL3Code} -  #{catBean.pmCategoryL3.categoryName}" />
+					value="#{catBean.pmCategoryL3.categoryL3Code} -  #{catBean.pmCategoryL3.categoryName}" />
 			</p:column>
 			<p:column>
 				<h:outputText value=" -- TBC -- " />
@@ -192,7 +192,7 @@
 								<f:selectItems
 									value="#{backingBean.managedBean.defaultParentCatList}"
 									var="parent" itemLabel="#{parent.categoryName}"
-									itemValue="#{parent.cateogryL1Code}" />
+									itemValue="#{parent.categoryL1Code}" />
 								<p:ajax event="change"
 									listener="#{backingBean.changeParentCategory}"
 									update="child,subChild" />
@@ -207,7 +207,7 @@
 								<f:selectItems
 									value="#{backingBean.managedBean.selectedCategory.pmCategoryL1.pmCategoryL2s}"
 									var="child" itemLabel="#{child.categoryName}"
-									itemValue="#{child.cateogryL2Code}" />
+									itemValue="#{child.categoryL2Code}" />
 								<p:ajax event="change"
 									listener="#{backingBean.changeChildCategory}" update="subChild" />
 							</p:selectOneMenu></td>
@@ -221,7 +221,7 @@
 								<f:selectItems
 									value="#{backingBean.managedBean.selectedCategory.pmCategoryL2.pmCategoryL3s}"
 									var="subChild" itemLabel="#{subChild.categoryName}"
-									itemValue="#{subChild.cateogryL3Code}" />
+									itemValue="#{subChild.categoryL3Code}" />
 								<p:ajax event="change"
 									listener="#{backingBean.changeSubChildCategory}" />
 							</p:selectOneMenu></td>
