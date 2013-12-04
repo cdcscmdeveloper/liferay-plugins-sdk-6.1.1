@@ -7,19 +7,29 @@ import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.RequestScoped;
 import javax.faces.context.FacesContext;
+import javax.servlet.http.HttpServletRequest;
 
+import my.ep.biz.service.fl.request.IFulfilmentRequestSO;
 import my.ep.biz.service.fl.request.IShippingInstructionSO;
+import my.ep.bpm.dto.BpmRequestDTO;
+import my.ep.bpm.dto.BpmResponseDTO;
+import my.ep.bpm.service.IBpmSO;
+import my.ep.constants.FlProcessNameConst;
 import my.ep.dto.fl.FulfilmentReqDTO;
 import my.ep.dto.fl.FulfilmentResDTO;
 import my.ep.exception.EpException;
-import my.ep.persistence.entity.fl.request.FlFulfilmentRequest;
+import my.ep.jaxb.fl.codata.FLContractOrderDataType;
 import my.ep.persistence.entity.fl.request.FlShippingInstr;
+import my.ep.util.lookupservice.EpBpmBusinessDelegate;
 import my.ep.web.backingbean.BaseBackingBean;
 import my.ep.web.constant.BpmOutcomeConst;
 import my.ep.web.managedbean.fl.shippingInstr.ShippingInstrManagedBean;
+import my.ep.web.util.FacesScopes;
 import my.ep.web.util.lookupservice.BusinessDelegate;
 
 import org.apache.log4j.Logger;
+
+import com.liferay.portal.util.PortalUtil;
 
 /**
  * Backing Bean for Shipping Instruction
@@ -33,33 +43,37 @@ import org.apache.log4j.Logger;
 public class ShippingInstrBackingBean extends BaseBackingBean<ShippingInstrManagedBean>{
 	private static Logger log = Logger.getLogger(ShippingInstrBackingBean.class);
 	public static final String NAV_TO_CREATE_CONTRACT_REQUEST = "/xhtml/fl/contractrequest/crBasePage.xhtml";
-
+	/**
+	 * get faces scopes
+	 * @return FacesScopes
+	 */
+	private FacesScopes getFacesScopes(){
+		FacesScopes facesScopes = new FacesScopes();
+		return facesScopes;
+	}
 
 	public ShippingInstrBackingBean(){
 
 	}
-	
+
 	public String submitShippingAction(String action){
 		System.out.println("-- shipping Instr --");
 		IShippingInstructionSO shippingInstrSO = null;
 		try {
+			String token = getFacesScopes().getBPMAuthenticationCtxToken();
 			FulfilmentReqDTO reqDTO = new FulfilmentReqDTO();
 			FlShippingInstr shippingInstr = getManagedBean().getShippingInstr();
 			shippingInstrSO = (IShippingInstructionSO) BusinessDelegate.getInstance().getServiceObject("fl",IShippingInstructionSO.class);
-//			reqDTO.setFlFulfilmentRequest(getManagedBean().getFlRequest());
+			//			reqDTO.setFlFulfilmentRequest(getManagedBean().getFlRequest());
 			reqDTO.setShippingInstr(shippingInstr);
 			if(action.equalsIgnoreCase(BpmOutcomeConst.BPM_SAVE)){
 				action = "";
 			}
 			reqDTO.setOutcome(action);
-			reqDTO.setTaskId(getManagedBean().getBpmTaskId());
-			if(getManagedBean().getTempLogin() == null){
-				reqDTO.setTempLogin("roslan");
-			}else{
-				reqDTO.setTempLogin(getManagedBean().getTempLogin());
-			}
+			reqDTO.setTaskId(getManagedBean().getTaskId());
+			reqDTO.setToken(token);
 			FulfilmentResDTO resDTO = shippingInstrSO.saveShippingInstruction(reqDTO);
-			
+
 			if(resDTO.isSuccessful()) {
 				log.info("Record saved successfully");
 				String message = "Shipping Instr Id. : "+shippingInstr.getShippingInstrId();
@@ -75,12 +89,62 @@ public class ShippingInstrBackingBean extends BaseBackingBean<ShippingInstrManag
 			log.error("Exception>>", e);
 			e.printStackTrace();
 			FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR,e.toString(), e.getMessage()));
-		
+
 		}finally {
 			shippingInstrSO = null;
 		}
 		return null;
 	}
 
+	public void preRenderView() {
+		HttpServletRequest servletRequest = PortalUtil
+				.getHttpServletRequest(new FacesScopes().getRequest());
+		HttpServletRequest originalServletRequest = PortalUtil
+				.getOriginalServletRequest(servletRequest);
+		String taskId = originalServletRequest.getParameter("taskId");
+		System.out.println("taskId:" + taskId);
+
+		IBpmSO bpmSO = (IBpmSO) EpBpmBusinessDelegate.getInstance()
+				.getServiceObject(IBpmSO.class);
+		String ctx = getFacesScopes().getBPMAuthenticationCtxToken();
+		BpmRequestDTO reqDTO = new BpmRequestDTO();
+
+		reqDTO.setCtxToken(ctx);
+		reqDTO.setTaskId(taskId);
+		BpmResponseDTO res = bpmSO.getTaskDetails(reqDTO);
+		Object obj = res.getPojo();
+
+		IFulfilmentRequestSO requestSO = (IFulfilmentRequestSO) BusinessDelegate.getInstance().getServiceObject("fl",IFulfilmentRequestSO.class);
+		IShippingInstructionSO shippingSO = (IShippingInstructionSO) BusinessDelegate.getInstance().getServiceObject("fl", IShippingInstructionSO.class);
+		FulfilmentReqDTO flReqDTO = new FulfilmentReqDTO();
+		FulfilmentResDTO resDTO = new FulfilmentResDTO();
+
+		FLContractOrderDataType coObj = (FLContractOrderDataType)obj;
+		if(coObj.getContractRequestId().intValue() == 0){
+			flReqDTO.setFlRequestId(coObj.getParentContractRequestId());
+		}else{
+			flReqDTO.setFlRequestId(coObj.getContractRequestId());
+		}
+
+		flReqDTO.setSelectedApprovers(coObj.getApproverList());
+
+		if(res.getTaskName().equalsIgnoreCase(FlProcessNameConst.REVISE_SI_HT) || res.getTaskName().equalsIgnoreCase(FlProcessNameConst.REVIEW_SI_HT)){
+			resDTO = shippingSO.retrieveShippingInstruction(flReqDTO);
+		}else{
+			resDTO = requestSO.retrieveFulfilmentRequest(flReqDTO);
+		}
+		if(res.getTaskName().equalsIgnoreCase(FlProcessNameConst.REVISE_SI_HT)|| res.getTaskName().equalsIgnoreCase(FlProcessNameConst.REVIEW_SI_HT)){
+			getManagedBean().setShippingInstr(resDTO.getShippingInstr());
+			getManagedBean().setFlRequest(resDTO.getShippingInstr().getFlFulfilmentRequest());
+			getManagedBean().setTaskId(taskId);
+			getManagedBean().setOutComes(res.getAction());
+		}else if (res.getTaskName().equalsIgnoreCase(FlProcessNameConst.CREATE_SI_HT)){
+			FlShippingInstr flSi = new FlShippingInstr();
+			flSi.setFlFulfilmentRequest(resDTO.getFlFulfilmentRequest());
+			getManagedBean().setShippingInstr(flSi);
+			getManagedBean().setTaskId(taskId);
+			getManagedBean().setOutComes(res.getAction());
+		}
+	}
 
 }

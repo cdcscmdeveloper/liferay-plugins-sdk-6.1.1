@@ -9,21 +9,27 @@ import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.RequestScoped;
 import javax.faces.context.FacesContext;
-
-import org.apache.log4j.Logger;
+import javax.servlet.http.HttpServletRequest;
 
 import my.ep.biz.service.fl.adjustment.IAdjustmentSO;
-import my.ep.biz.service.fl.order.IFulfilmentOrderSO;
-import my.ep.biz.service.fl.request.IFulfilmentRequestSO;
+import my.ep.bpm.dto.BpmRequestDTO;
+import my.ep.bpm.dto.BpmResponseDTO;
+import my.ep.bpm.service.IBpmSO;
 import my.ep.dto.fl.FulfilmentReqDTO;
 import my.ep.dto.fl.FulfilmentResDTO;
 import my.ep.exception.EpException;
+import my.ep.jaxb.fl.dandata.FLDanDataType;
 import my.ep.persistence.entity.fl.adjust.FlAdjustment;
-import my.ep.persistence.entity.fl.request.FlFulfilmentRequest;
+import my.ep.util.lookupservice.EpBpmBusinessDelegate;
 import my.ep.web.backingbean.BaseBackingBean;
 import my.ep.web.constant.BpmOutcomeConst;
 import my.ep.web.managedbean.fl.dan.DebitAdjustmentNoteManagedBean;
+import my.ep.web.util.FacesScopes;
 import my.ep.web.util.lookupservice.BusinessDelegate;
+
+import org.apache.log4j.Logger;
+
+import com.liferay.portal.util.PortalUtil;
 
 /**
  * Managed Bean for Debit Adjustment Note
@@ -36,11 +42,20 @@ import my.ep.web.util.lookupservice.BusinessDelegate;
 @RequestScoped
 public class DebitAdjustmentNoteBackingBean extends BaseBackingBean<DebitAdjustmentNoteManagedBean> {
 	private static Logger log = Logger.getLogger(DebitAdjustmentNoteBackingBean.class);
+	/**
+	 * get faces scopes
+	 * @return FacesScopes
+	 */
+	private FacesScopes getFacesScopes(){
+		FacesScopes facesScopes = new FacesScopes();
+		return facesScopes;
+	}
 	
 	public String submitAction(String action) throws ParseException {
 		System.out.println("--DAN submit--");
 		IAdjustmentSO adjustmentSO = null;
 		try {
+			String token = getFacesScopes().getBPMAuthenticationCtxToken();
 			FulfilmentReqDTO reqDTO = new FulfilmentReqDTO();
 			FlAdjustment adjustment = getManagedBean().getAdjustment();
 			adjustmentSO = (IAdjustmentSO) BusinessDelegate.getInstance().getServiceObject("fl", IAdjustmentSO.class);
@@ -49,7 +64,8 @@ public class DebitAdjustmentNoteBackingBean extends BaseBackingBean<DebitAdjustm
 				action = "";
 			}
 			reqDTO.setOutcome(action);
-			reqDTO.setTaskId(getManagedBean().getBpmTaskId());
+			reqDTO.setTaskId(getManagedBean().getTaskId());
+			reqDTO.setToken(token);
 			FulfilmentResDTO resDTO = adjustmentSO.saveAdjustment(reqDTO);
 			if(resDTO.isSuccessful()) {
 				log.info("Record saved successfully");
@@ -70,5 +86,42 @@ public class DebitAdjustmentNoteBackingBean extends BaseBackingBean<DebitAdjustm
 			adjustmentSO = null;
 		}
 		return null;
+	}
+	
+	public void preRenderView() {
+		//		BPMTaskListBackingBean bb = new BPMTaskListBackingBean();
+		HttpServletRequest servletRequest = PortalUtil
+				.getHttpServletRequest(new FacesScopes().getRequest());
+		HttpServletRequest originalServletRequest = PortalUtil
+				.getOriginalServletRequest(servletRequest);
+		String taskId = originalServletRequest.getParameter("taskId");
+		//		String loginId = originalServletRequest.getParameter("loginId");
+		System.out.println("taskId:" + taskId);
+		//		System.out.println("loginId:" + loginId);
+
+		IBpmSO bpmSO = (IBpmSO) EpBpmBusinessDelegate.getInstance()
+				.getServiceObject(IBpmSO.class);
+		String ctx = getFacesScopes().getBPMAuthenticationCtxToken();
+		BpmRequestDTO reqDTO = new BpmRequestDTO();
+
+		reqDTO.setCtxToken(ctx);
+		reqDTO.setTaskId(taskId);
+		BpmResponseDTO res = bpmSO.getTaskDetails(reqDTO);
+		Object obj = res.getPojo();
+
+		FulfilmentReqDTO flReqDTO = new FulfilmentReqDTO();
+		FulfilmentResDTO resDTO = new FulfilmentResDTO();
+		FLDanDataType danObj = (FLDanDataType)obj;
+		flReqDTO.setDanId(danObj.getDanId());
+		IAdjustmentSO adjustmentSO = (IAdjustmentSO) BusinessDelegate.getInstance().getServiceObject("fl",IAdjustmentSO.class);
+
+		resDTO = adjustmentSO.retrieveAdjustmentById(flReqDTO);
+		FlAdjustment adjust = resDTO.getAdjustment();
+
+		DebitAdjustmentNoteBackingBean danBB = new DebitAdjustmentNoteBackingBean();
+		danBB.getManagedBean().setAdjustment(adjust);
+		danBB.getManagedBean().setTaskId(taskId);
+		danBB.getManagedBean().setOutComes(res.getAction());
+
 	}
 }

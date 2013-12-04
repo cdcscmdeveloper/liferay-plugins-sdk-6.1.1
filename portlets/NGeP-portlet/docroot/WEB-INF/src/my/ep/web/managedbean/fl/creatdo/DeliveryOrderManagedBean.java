@@ -49,8 +49,6 @@ public class DeliveryOrderManagedBean extends BaseManagedBean {
 	private boolean checkPtjFlg = true;
 	
 	private String fulfillmentReqId;
-	private String taskId;
-	private String[] actions;
 	private String fulfilmentOrderId;
 	private String statusId;
 	private List<FlFulfilmentOrder> pendingDoList;
@@ -186,34 +184,6 @@ public class DeliveryOrderManagedBean extends BaseManagedBean {
 	 */
 	public void setCheckPtjFlg(boolean checkPtjFlg) {
 		this.checkPtjFlg = checkPtjFlg;
-	}
-
-	/**
-	 * @return the taskId
-	 */
-	public String getTaskId() {
-		return taskId;
-	}
-
-	/**
-	 * @param taskId the taskId to set
-	 */
-	public void setTaskId(String taskId) {
-		this.taskId = taskId;
-	}
-
-	/**
-	 * @return the actions
-	 */
-	public String[] getActions() {
-		return actions;
-	}
-
-	/**
-	 * @param actions the actions to set
-	 */
-	public void setActions(String[] actions) {
-		this.actions = actions;
 	}
 
 	/**

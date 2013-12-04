@@ -8,8 +8,6 @@ import java.util.Map;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
 
-import org.primefaces.model.DualListModel;
-
 import my.ep.bpm.vo.WorklistItemVO;
 import my.ep.persistence.entity.fl.FlAttachment;
 import my.ep.persistence.entity.fl.FlRemark;
@@ -19,6 +17,8 @@ import my.ep.persistence.entity.fl.request.FlDeliveryAddress;
 import my.ep.persistence.entity.fl.request.FlFulfilmentItem;
 import my.ep.persistence.entity.fl.request.FlFulfilmentRequest;
 import my.ep.web.managedbean.BaseManagedBean;
+
+import org.primefaces.model.DualListModel;
 
 @ManagedBean(name = "flOrderManagedBean")
 @SessionScoped
@@ -31,15 +31,11 @@ public class FulfilmentOrderManagedBean extends BaseManagedBean {
 	private List<WorklistItemVO> taskList;
 	private Map bpmMap = new HashMap();
 	private String processName;
-	private String[] action;
-	private String taskId;
 	private String status;
 	private String taskName;
-	private String[] actions;
 	private Long flOrderId;
 	private Long stopRequestId;
 	
-	private String tempLoginId; //TODO: temp and to be removed
 	private boolean contractRequest;
 	private String buttonVal;
 	
@@ -61,19 +57,6 @@ public class FulfilmentOrderManagedBean extends BaseManagedBean {
 	private DualListModel<String> approverModel;
 	private String selectedLovDelAddr;
 	
-	/**
-	 * @return the tempLoginId
-	 */
-	public String getTempLoginId() {
-		return tempLoginId;
-	}
-
-	/**
-	 * @param tempLoginId the tempLoginId to set
-	 */
-	public void setTempLoginId(String tempLoginId) {
-		this.tempLoginId = tempLoginId;
-	}
 
 	public String getTaskName() {
 		return taskName;
@@ -81,22 +64,6 @@ public class FulfilmentOrderManagedBean extends BaseManagedBean {
 
 	public void setTaskName(String taskName) {
 		this.taskName = taskName;
-	}
-
-	public String[] getAction() {
-		return action;
-	}
-
-	public void setAction(String[] action) {
-		this.action = action;
-	}
-
-	public String getTaskId() {
-		return taskId;
-	}
-
-	public void setTaskId(String taskId) {
-		this.taskId = taskId;
 	}
 
 	public String getProcessName() {
@@ -246,20 +213,6 @@ public class FulfilmentOrderManagedBean extends BaseManagedBean {
 	public void setDeliveryOrderStatusList(
 			List<FlDeliveryOrder> deliveryOrderStatusList) {
 		this.deliveryOrderStatusList = deliveryOrderStatusList;
-	}
-
-	/**
-	 * @return the actions
-	 */
-	public String[] getActions() {
-		return actions;
-	}
-
-	/**
-	 * @param actions the actions to set
-	 */
-	public void setActions(String[] actions) {
-		this.actions = actions;
 	}
 
 	/**

@@ -3,6 +3,7 @@
  */
 package my.ep.web.managedbean.fl.cr;
 
+import java.util.HashMap;
 import java.util.List;
 
 import javax.faces.bean.ManagedBean;
@@ -14,6 +15,7 @@ import my.ep.persistence.entity.fl.request.FlDeliveryAddress;
 import my.ep.persistence.entity.fl.request.FlFulfilmentItem;
 import my.ep.persistence.entity.fl.request.FlFulfilmentRequest;
 import my.ep.persistence.entity.fl.request.FlShippingInstr;
+import my.ep.persistence.entity.pm.authorization.PmUserGroupUser;
 import my.ep.persistence.entity.pm.common.PmAddressType;
 import my.ep.persistence.entity.pm.common.PmMaksud;
 import my.ep.web.managedbean.BaseManagedBean;
@@ -45,10 +47,8 @@ public class ContractRequestManagedBean extends BaseManagedBean {
 	private List<CtContractItem> selectedContractedItemList;
 	private DualListModel<String> approverModel;
 	private FlFulfilmentItem selectedItemRow;
+	private HashMap<String, PmUserGroupUser> approverMap;
 	
-	//getbpm
-	private String bpmTaskId;
-	private String[] actions;
 	
 	//getcontract
 	private CtContract ctContract = new CtContract();
@@ -208,38 +208,6 @@ public class ContractRequestManagedBean extends BaseManagedBean {
 	public void setCheckPtjFlg(boolean checkPtjFlg) {
 		this.checkPtjFlg = checkPtjFlg;
 	}
-
-	/**
-	 * @return the bpmTaskId
-	 */
-	public String getBpmTaskId() {
-		return bpmTaskId;
-	}
-
-
-	/**
-	 * @param bpmTaskId the bpmTaskId to set
-	 */
-	public void setBpmTaskId(String bpmTaskId) {
-		this.bpmTaskId = bpmTaskId;
-	}
-
-
-	/**
-	 * @return the actions
-	 */
-	public String[] getActions() {
-		return actions;
-	}
-
-
-	/**
-	 * @param actions the actions to set
-	 */
-	public void setActions(String[] actions) {
-		this.actions = actions;
-	}
-
 
 	/**
 	 * @return the shippingInstr
@@ -447,6 +415,25 @@ public class ContractRequestManagedBean extends BaseManagedBean {
 	 */
 	public void setSelectedItemRow(FlFulfilmentItem selectedItemRow) {
 		this.selectedItemRow = selectedItemRow;
+	}
+
+
+	/**
+	 * @return the approverMap
+	 */
+	public HashMap<String, PmUserGroupUser> getApproverMap() {
+		if(approverMap == null){
+			setApproverMap(new HashMap<String,PmUserGroupUser>());
+		}
+		return approverMap;
+	}
+
+
+	/**
+	 * @param approverMap the approverMap to set
+	 */
+	public void setApproverMap(HashMap<String, PmUserGroupUser> approverMap) {
+		this.approverMap = approverMap;
 	}
 
 }

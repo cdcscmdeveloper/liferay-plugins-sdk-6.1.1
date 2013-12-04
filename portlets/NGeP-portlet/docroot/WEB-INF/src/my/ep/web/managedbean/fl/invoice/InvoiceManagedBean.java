@@ -27,8 +27,6 @@ public class InvoiceManagedBean extends BaseManagedBean {
 	
 	private FlInvoice invoice;
 	
-	private String bpmTaskId;
-	private String[] actions;
 	private String DocProcess;
 	private String buttonVal;
 	
@@ -47,30 +45,6 @@ public class InvoiceManagedBean extends BaseManagedBean {
 	 */
 	public void setInvoice(FlInvoice invoice) {
 		this.invoice = invoice;
-	}
-	/**
-	 * @return the bpmTaskId
-	 */
-	public String getBpmTaskId() {
-		return bpmTaskId;
-	}
-	/**
-	 * @param bpmTaskId the bpmTaskId to set
-	 */
-	public void setBpmTaskId(String bpmTaskId) {
-		this.bpmTaskId = bpmTaskId;
-	}
-	/**
-	 * @return the actions
-	 */
-	public String[] getActions() {
-		return actions;
-	}
-	/**
-	 * @param actions the actions to set
-	 */
-	public void setActions(String[] actions) {
-		this.actions = actions;
 	}
 	/**
 	 * @return the docProcess

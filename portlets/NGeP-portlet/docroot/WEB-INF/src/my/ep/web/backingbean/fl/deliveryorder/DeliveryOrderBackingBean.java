@@ -22,6 +22,7 @@ import my.ep.web.backingbean.BaseBackingBean;
 import my.ep.web.backingbean.fl.FulfilmentBackingBean;
 import my.ep.web.constant.BpmOutcomeConst;
 import my.ep.web.managedbean.fl.creatdo.DeliveryOrderManagedBean;
+import my.ep.web.util.FacesScopes;
 import my.ep.web.util.lookupservice.BusinessDelegate;
 
 import org.apache.log4j.Logger;
@@ -36,6 +37,14 @@ import org.apache.log4j.Logger;
 @RequestScoped
 public class DeliveryOrderBackingBean extends BaseBackingBean<DeliveryOrderManagedBean> {
 	private static Logger log = Logger.getLogger(DeliveryOrderBackingBean.class);
+	/**
+	 * get faces scopes
+	 * @return FacesScopes
+	 */
+	private FacesScopes getFacesScopes(){
+		FacesScopes facesScopes = new FacesScopes();
+		return facesScopes;
+	}
 	
 	public DeliveryOrderBackingBean(){
 	}
@@ -54,6 +63,7 @@ public class DeliveryOrderBackingBean extends BaseBackingBean<DeliveryOrderManag
 	}
 
 	public String createDeliveryOrder(String action) {
+		String token = getFacesScopes().getBPMAuthenticationCtxToken();
 		IDeliveryOrderSO deliveryOrderSO = null;
 		FulfilmentBackingBean flBB = new FulfilmentBackingBean();
 		try {
@@ -78,6 +88,7 @@ public class DeliveryOrderBackingBean extends BaseBackingBean<DeliveryOrderManag
 			reqDTO.setOutcome(action);
 			reqDTO.setFlAttachmentList(flBB.getManagedBean().getAttachmentList());
 			reqDTO.setFlRemark(flBB.getManagedBean().getRemarkList().get(0));
+			reqDTO.setToken(token);
 			FulfilmentResDTO resDTO = deliveryOrderSO.saveDeliveryOrder(reqDTO);
 			if(resDTO.isSuccessful()) {
 				log.info("Record saved successfully");
@@ -121,7 +132,4 @@ public class DeliveryOrderBackingBean extends BaseBackingBean<DeliveryOrderManag
 	
 	
 
-	
-	
-	
 }

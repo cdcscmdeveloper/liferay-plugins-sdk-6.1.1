@@ -24,38 +24,6 @@ public class PaymentMatchManagedBean extends BaseManagedBean{
 
 	private FlPaymentAdvice paymentAdvice;
 	
-	//getbpm
-		private String bpmTaskId;
-		private String[] actions;
-
-
-	/**
-	 * @return the bpmTaskId
-	 */
-	public String getBpmTaskId() {
-		return bpmTaskId;
-	}
-
-	/**
-	 * @param bpmTaskId the bpmTaskId to set
-	 */
-	public void setBpmTaskId(String bpmTaskId) {
-		this.bpmTaskId = bpmTaskId;
-	}
-
-	/**
-	 * @return the actions
-	 */
-	public String[] getActions() {
-		return actions;
-	}
-
-	/**
-	 * @param actions the actions to set
-	 */
-	public void setActions(String[] actions) {
-		this.actions = actions;
-	}
 
 	/**
 	 * @return the paymentAdvice

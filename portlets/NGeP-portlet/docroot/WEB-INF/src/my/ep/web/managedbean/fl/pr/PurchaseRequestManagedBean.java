@@ -3,7 +3,7 @@
  */
 package my.ep.web.managedbean.fl.pr;
 
-import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 import javax.faces.bean.ManagedBean;
@@ -12,11 +12,11 @@ import javax.faces.bean.SessionScoped;
 import my.ep.persistence.entity.ct.CtContract;
 import my.ep.persistence.entity.fl.FlAttachment;
 import my.ep.persistence.entity.fl.FlRemark;
-import my.ep.persistence.entity.fl.frn.FlFulfilmentNote;
 import my.ep.persistence.entity.fl.request.FlDeliveryAddress;
 import my.ep.persistence.entity.fl.request.FlFulfilmentItem;
 import my.ep.persistence.entity.fl.request.FlFulfilmentRequest;
 import my.ep.persistence.entity.pm.authorization.PmOrgAddress;
+import my.ep.persistence.entity.pm.authorization.PmUserGroupUser;
 import my.ep.persistence.entity.pm.common.PmAddressType;
 import my.ep.persistence.entity.pm.common.PmMaksud;
 import my.ep.persistence.entity.ss.directpurchase.ScRequestNote;
@@ -58,16 +58,14 @@ public class PurchaseRequestManagedBean extends BaseManagedBean {
 	private ScRequestNote selectedRequestNote;
 	
 	private String fulfillmentReqId;
-	private String taskId;
-	private String[] actions;
 	private String taskName;
 	private String docProcess;
 	private String flDocId;
 	private String buttonVal;
 	private Boolean submitButtonStatus =true;
-	private String tempLoginId;
 	
 	private DualListModel<String> approverModel;
+	private HashMap<String, PmUserGroupUser> approverMap;
 	
 	//getcontract
 	private CtContract ctContract = new CtContract();
@@ -223,34 +221,6 @@ public class PurchaseRequestManagedBean extends BaseManagedBean {
 	}
 
 	/**
-	 * @return the taskId
-	 */
-	public String getTaskId() {
-		return taskId;
-	}
-
-	/**
-	 * @param taskId the taskId to set
-	 */
-	public void setTaskId(String taskId) {
-		this.taskId = taskId;
-	}
-
-	/**
-	 * @return the actions
-	 */
-	public String[] getActions() {
-		return actions;
-	}
-
-	/**
-	 * @param actions the actions to set
-	 */
-	public void setActions(String[] actions) {
-		this.actions = actions;
-	}
-
-	/**
 	 * @return the taskName
 	 */
 	public String getTaskName() {
@@ -347,20 +317,6 @@ public class PurchaseRequestManagedBean extends BaseManagedBean {
 	 */
 	public void setSubmitButtonStatus(Boolean submitButtonStatus) {
 		this.submitButtonStatus = submitButtonStatus;
-	}
-
-	/**
-	 * @return the tempLoginId
-	 */
-	public String getTempLoginId() {
-		return tempLoginId;
-	}
-
-	/**
-	 * @param tempLoginId the tempLoginId to set
-	 */
-	public void setTempLoginId(String tempLoginId) {
-		this.tempLoginId = tempLoginId;
 	}
 
 	/**
@@ -491,6 +447,23 @@ public class PurchaseRequestManagedBean extends BaseManagedBean {
 	 */
 	public void setApproverModel(DualListModel<String> approverModel) {
 		this.approverModel = approverModel;
+	}
+
+	/**
+	 * @return the approverMap
+	 */
+	public HashMap<String, PmUserGroupUser> getApproverMap() {
+		if(approverMap == null){
+			setApproverMap(new HashMap<String,PmUserGroupUser>());
+		}
+		return approverMap;
+	}
+
+	/**
+	 * @param approverMap the approverMap to set
+	 */
+	public void setApproverMap(HashMap<String, PmUserGroupUser> approverMap) {
+		this.approverMap = approverMap;
 	}
 
 	

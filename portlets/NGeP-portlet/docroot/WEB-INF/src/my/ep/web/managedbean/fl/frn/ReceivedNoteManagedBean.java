@@ -49,8 +49,6 @@ public class ReceivedNoteManagedBean extends BaseManagedBean {
 	private boolean checkPtjFlg = true;
 	
 	private String fulfillmentReqId;
-	private String taskId;
-	private String[] actions;
 	private String buttonVal;
 	private long deliveryOrderId;
 	
@@ -182,34 +180,6 @@ public class ReceivedNoteManagedBean extends BaseManagedBean {
 	 */
 	public void setCheckPtjFlg(boolean checkPtjFlg) {
 		this.checkPtjFlg = checkPtjFlg;
-	}
-
-	/**
-	 * @return the taskId
-	 */
-	public String getTaskId() {
-		return taskId;
-	}
-
-	/**
-	 * @param taskId the taskId to set
-	 */
-	public void setTaskId(String taskId) {
-		this.taskId = taskId;
-	}
-
-	/**
-	 * @return the actions
-	 */
-	public String[] getActions() {
-		return actions;
-	}
-
-	/**
-	 * @param actions the actions to set
-	 */
-	public void setActions(String[] actions) {
-		this.actions = actions;
 	}
 
 	/**

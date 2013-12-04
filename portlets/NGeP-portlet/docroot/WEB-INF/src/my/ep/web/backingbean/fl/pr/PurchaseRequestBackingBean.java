@@ -16,6 +16,7 @@ import javax.faces.bean.ManagedBean;
 import javax.faces.bean.RequestScoped;
 import javax.faces.context.FacesContext;
 import javax.faces.model.SelectItem;
+import javax.servlet.http.HttpServletRequest;
 
 import my.ep.biz.service.ct.maintain.IContractAmendmentSO;
 import my.ep.biz.service.fl.request.IFulfilmentRequestSO;
@@ -23,6 +24,10 @@ import my.ep.biz.service.pm.authorization.orgprofile.IOrgProfileSO;
 import my.ep.biz.service.pm.authorization.user.IUserSO;
 import my.ep.biz.service.pm.common.maksud.IMaksudSO;
 import my.ep.biz.service.ss.directpurchase.IRequestNoteSO;
+import my.ep.bpm.dto.BpmRequestDTO;
+import my.ep.bpm.dto.BpmResponseDTO;
+import my.ep.bpm.service.IBpmSO;
+import my.ep.constants.FlProcessNameConst;
 import my.ep.dto.ct.maintain.ContractAmendmentReqDTO;
 import my.ep.dto.ct.maintain.ContractAmendmentResDTO;
 import my.ep.dto.fl.FulfilmentReqDTO;
@@ -36,6 +41,8 @@ import my.ep.dto.pm.common.maksud.MaksudResDTO;
 import my.ep.dto.ss.directpurchase.RequestNoteReqDTO;
 import my.ep.dto.ss.directpurchase.RequestNoteResDTO;
 import my.ep.exception.EpException;
+import my.ep.jaxb.fl.codata.FLContractOrderDataType;
+import my.ep.jaxb.fl.podata.FLPurchaseOrderDataType;
 import my.ep.persistence.entity.ct.CtContract;
 import my.ep.persistence.entity.fl.request.FlDeliveryAddress;
 import my.ep.persistence.entity.fl.request.FlFulfilmentItem;
@@ -50,16 +57,21 @@ import my.ep.persistence.entity.sm.SmSupplier;
 import my.ep.persistence.entity.ss.directpurchase.ScRequestNote;
 import my.ep.persistence.entity.ss.directpurchase.ScRequestNoteDtl;
 import my.ep.type.pm.OrganizationType;
+import my.ep.util.lookupservice.EpBpmBusinessDelegate;
 import my.ep.web.backingbean.BaseBackingBean;
 import my.ep.web.backingbean.fl.FulfilmentBackingBean;
+import my.ep.web.backingbean.fl.po.FulfilmentOrderBackingBean;
 import my.ep.web.constant.BpmOutcomeConst;
 import my.ep.web.managedbean.fl.pr.PurchaseRequestManagedBean;
+import my.ep.web.util.FacesScopes;
 import my.ep.web.util.lookupservice.BusinessDelegate;
 
 import org.apache.log4j.Logger;
 import org.primefaces.event.FileUploadEvent;
 import org.primefaces.model.DualListModel;
 import org.primefaces.model.UploadedFile;
+
+import com.liferay.portal.util.PortalUtil;
 
 /**
  * Backing Bean for Create Purchase Order
@@ -72,6 +84,14 @@ import org.primefaces.model.UploadedFile;
 public class PurchaseRequestBackingBean extends BaseBackingBean<PurchaseRequestManagedBean> {
 	private static Logger log = Logger.getLogger(PurchaseRequestBackingBean.class);
 	public static final String NAV_TO_CREATE_PURCHASE_REQUEST = "/xhtml/fl/purchaserequest/prBasePage.xhtml";
+	/**
+	 * get faces scopes
+	 * @return FacesScopes
+	 */
+	private FacesScopes getFacesScopes(){
+		FacesScopes facesScopes = new FacesScopes();
+		return facesScopes;
+	}
 	
 	public PurchaseRequestBackingBean(){
 	}
@@ -105,10 +125,11 @@ public class PurchaseRequestBackingBean extends BaseBackingBean<PurchaseRequestM
 		retrieveRequestNoteList();
 	}
 
-	public String fulfillmentRequestAction(String action) throws ParseException {
+	public String fulfillmentRequestAction(String action){
 		IFulfilmentRequestSO fulfilmentRequestSO = null;
 		FulfilmentBackingBean flBB = new FulfilmentBackingBean();
 		try {
+			String token = getFacesScopes().getBPMAuthenticationCtxToken();
 			FulfilmentReqDTO reqDTO = new FulfilmentReqDTO();
 			FlFulfilmentRequest flFulfilmentRequest = getManagedBean().getFulfilmentRequest();
 			SmSupplier smSupplier = new SmSupplier();
@@ -123,12 +144,8 @@ public class PurchaseRequestBackingBean extends BaseBackingBean<PurchaseRequestM
 			reqDTO.setFlAttachmentList(flBB.getManagedBean().getAttachmentList());
 			reqDTO.setFlRemark(flBB.getManagedBean().getRemarkList().get(0));
 			reqDTO.setOutcome(action);
-			//System.out.println("temploginId: "+ getManagedBean().getTempLoginId());
-			if(null==getManagedBean().getTempLoginId() || "".equals(getManagedBean().getTempLoginId())){
-				reqDTO.setTempLogin("roslan");
-			}else{
-				reqDTO.setTempLogin(getManagedBean().getTempLoginId());
-			}
+			reqDTO.setToken(token);
+			reqDTO.setApproverMap(getManagedBean().getApproverMap());
 			FulfilmentResDTO resDTO = fulfilmentRequestSO.saveFulfillmentRequest(reqDTO);
 			if(resDTO.isSuccessful()) {
 				log.info("Record saved successfully");
@@ -239,6 +256,7 @@ public class PurchaseRequestBackingBean extends BaseBackingBean<PurchaseRequestM
 			reqDTO.setOrgProfileId(1250l);
 			UserResDTO resDTO = userSO.retrieveUserGroupList(reqDTO);
 			for(PmUserGroupUser user : resDTO.getUserGroupList().get(0).getPmUserGroupUsers()) {
+				getManagedBean().getApproverMap().put(user.getPmUser().getUserName(), user);
 				availableApprovers.add(user.getPmUser().getUserName());
 			}
 		} catch (Exception e) {
@@ -355,5 +373,50 @@ public class PurchaseRequestBackingBean extends BaseBackingBean<PurchaseRequestM
 
 	}
 	
+	public void preRenderView() {
+		HttpServletRequest servletRequest = PortalUtil
+				.getHttpServletRequest(new FacesScopes().getRequest());
+		HttpServletRequest originalServletRequest = PortalUtil
+				.getOriginalServletRequest(servletRequest);
+		String taskId = originalServletRequest.getParameter("taskId");
+		System.out.println("taskId:" + taskId);
+		if(taskId != null){
+
+			IBpmSO bpmSO = (IBpmSO) EpBpmBusinessDelegate.getInstance()
+					.getServiceObject(IBpmSO.class);
+			String ctx = getFacesScopes().getBPMAuthenticationCtxToken();
+			BpmRequestDTO reqDTO = new BpmRequestDTO();
+
+			reqDTO.setCtxToken(ctx);
+			reqDTO.setTaskId(taskId);
+			BpmResponseDTO res = bpmSO.getTaskDetails(reqDTO);
+			Object obj = res.getPojo();
+
+			FulfilmentReqDTO flReqDTO = new FulfilmentReqDTO();
+			FulfilmentResDTO resDTO = new FulfilmentResDTO();
+			IFulfilmentRequestSO fulfilmentSO = (IFulfilmentRequestSO) BusinessDelegate.getInstance().getServiceObject("fl",IFulfilmentRequestSO.class);
+			FLPurchaseOrderDataType flPurchaseOrd = (FLPurchaseOrderDataType)obj;
+
+			flReqDTO.setFlRequestId(flPurchaseOrd.getPurchaseRequestId());
+			flReqDTO.setSelectedApprovers(flPurchaseOrd.getApproverList());
+			resDTO = fulfilmentSO.retrieveFulfilmentRequest(flReqDTO);
+			flReqDTO.setFlFulfilmentRequest(resDTO.getFlFulfilmentRequest());
+
+			FulfilmentBackingBean flBB = new FulfilmentBackingBean();
+			flBB.initializeRemarkAndAttachement(resDTO.getRemarkList(), flBB.getManagedBean().getAttachmentList());
+			getManagedBean().setFulfilmentRequest(resDTO.getFlFulfilmentRequest());
+			getManagedBean().setTaskId(taskId);
+			getManagedBean().setOutComes(res.getAction());
+			getManagedBean().setTaskName(res.getTaskName());
+			List<String> source = new ArrayList<String>();   
+			List<String> target = new ArrayList<String>();
+			getManagedBean().setApproverModel(new DualListModel<String>(source, target));
+			getManagedBean().getApproverModel().setTarget(resDTO.getSelectedApproverList());
+			getManagedBean().getApproverModel().getSource().removeAll(resDTO.getSelectedApproverList());
+			if(null!=res.getAction() && !"".equals(res.getAction())){
+				getManagedBean().setSubmitButtonStatus(false);
+			}
+		}
+	}
 	
 }
