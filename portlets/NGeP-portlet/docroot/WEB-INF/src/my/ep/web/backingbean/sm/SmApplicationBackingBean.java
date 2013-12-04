@@ -13,13 +13,10 @@ import javax.faces.event.AjaxBehaviorEvent;
 
 import my.ep.biz.service.sm.mofRegistration.IMofRegistrationSO;
 import my.ep.biz.service.sm.reviewApplication.IReviewApplicationSO;
-import my.ep.biz.service.sm.sdoreview.ISdoReviewSO;
 import my.ep.dto.sm.mofRegistration.MofRegistrationReqDTO;
 import my.ep.dto.sm.mofRegistration.MofRegistrationResDTO;
 import my.ep.dto.sm.reviewApplication.ReviewApplicationReqDTO;
 import my.ep.dto.sm.reviewApplication.ReviewApplicationResDTO;
-import my.ep.dto.sm.sdoreview.SdoReviewReqDTO;
-import my.ep.dto.sm.sdoreview.SdoReviewResDTO;
 import my.ep.persistence.entity.pm.common.PmBank;
 import my.ep.persistence.entity.pm.common.PmCategoryL1;
 import my.ep.persistence.entity.pm.common.PmCategoryL2;
@@ -50,6 +47,7 @@ import my.ep.persistence.entity.sm.SmSupplierCert;
 import my.ep.web.backingbean.BaseBackingBean;
 import my.ep.web.constant.sm.SupplierManagementConst;
 import my.ep.web.managedbean.sm.SmApplicationManagedBean;
+import my.ep.web.util.FacesScopes;
 import my.ep.web.util.lookupservice.BusinessDelegate;
 
 import org.apache.log4j.Logger;
@@ -83,6 +81,7 @@ public class SmApplicationBackingBean extends
 			SmSupplier smApplSupplier = retriveSupplierById((long) 3)
 					.getSmSupplier();
 			if (smApplSupplier == null) {
+				System.out.println(" ******* NO RECORD FOUND IN DB *****");
 				smApplSupplier = new SmSupplier();
 				smApplSupplier.setSupplierName("My Sample Supplier");
 				smApplSupplier.setBusinessType("1");
@@ -607,7 +606,7 @@ public class SmApplicationBackingBean extends
 			getManagedBean().getSelectedCategory().setPmCategoryL1(p);
 		} else {
 			for (PmCategoryL1 p : getManagedBean().getDefaultParentCatList()) {
-				if (p.getCateogryL1Code().equalsIgnoreCase(selPmCatL1)) {
+				if (p.getCategoryL1Code().equalsIgnoreCase(selPmCatL1)) {
 					if (p.getPmCategoryL2s() == null) {
 						p.setPmCategoryL2s(new ArrayList<PmCategoryL2>());
 					}
@@ -636,7 +635,7 @@ public class SmApplicationBackingBean extends
 		} else {
 			for (PmCategoryL2 p2 : getManagedBean().getSelectedCategory()
 					.getPmCategoryL1().getPmCategoryL2s()) {
-				if (p2.getCateogryL2Code().equalsIgnoreCase(selPmCatL2)) {
+				if (p2.getCategoryL2Code().equalsIgnoreCase(selPmCatL2)) {
 					if (p2.getPmCategoryL3s() == null) {
 						p2.setPmCategoryL3s(new ArrayList<PmCategoryL3>());
 					}
@@ -660,7 +659,7 @@ public class SmApplicationBackingBean extends
 		} else {
 			for (PmCategoryL3 p3 : getManagedBean().getSelectedCategory()
 					.getPmCategoryL2().getPmCategoryL3s()) {
-				if (p3.getCateogryL3Code().equalsIgnoreCase(selPmCatL3)) {
+				if (p3.getCategoryL3Code().equalsIgnoreCase(selPmCatL3)) {
 					getManagedBean().getSelectedCategory().setPmCategoryL3(p3);
 
 				}
@@ -713,15 +712,15 @@ public class SmApplicationBackingBean extends
 		System.out.println(" ******* Save From Entry ****"
 				+ getManagedBean().getSelectedCategory().getCategoryType());
 		PmCategoryL1 p = new PmCategoryL1();
-		p.setCateogryL1Code(getManagedBean().getSelectedParentCat());
+		p.setCategoryL1Code(getManagedBean().getSelectedParentCat());
 		p.setCategoryName("ParentSample");
 		getManagedBean().getSelectedCategory().setPmCategoryL1(p);
 		PmCategoryL2 p2 = new PmCategoryL2();
-		p2.setCateogryL2Code(getManagedBean().getSelectedChildCat());
+		p2.setCategoryL2Code(getManagedBean().getSelectedChildCat());
 		p2.setCategoryName("ChildSample");
 		getManagedBean().getSelectedCategory().setPmCategoryL2(p2);
 		PmCategoryL3 p3 = new PmCategoryL3();
-		p3.setCateogryL3Code(getManagedBean().getSelectedSubChildCat());
+		p3.setCategoryL3Code(getManagedBean().getSelectedSubChildCat());
 		p3.setCategoryName("SubChildSample");
 		getManagedBean().getSelectedCategory().setPmCategoryL3(p3);
 		getManagedBean().getSmAppl().getSmSupplierCategories()
@@ -1106,9 +1105,28 @@ public class SmApplicationBackingBean extends
 			System.out.println(" ***** VALUE OF SELECTED OBJECT ***** "
 					+ getManagedBean().getSmSupplier().getSmAppls().size()
 					+ "  ---  " + bpmAppl.getApplId());
+			MofRegistrationReqDTO reqDTO = new MofRegistrationReqDTO();
+
+			// TODO Remove the hard code later
+			reqDTO.setOutcome("SUBMIT");
+			reqDTO.setApplId(this.getManagedBean().getSmAppl().getApplId());
+			reqDTO.setSupplierId(bpmAppl.getSmSupplier().getSupplierId());
+			reqDTO.setAppType(bpmAppl.getApplType());
+			reqDTO.setTaskId(this.getManagedBean().getTaskId());
+			reqDTO.setSmAppl(bpmAppl);
+			reqDTO.setUserName(new FacesScopes().getUserScreenName());
+
+			if (this.getManagedBean().getSmAppl().getSupportingDocMode()
+					.equalsIgnoreCase("O")) {
+				reqDTO.setOnlineDoc(true);
+			} else {
+				reqDTO.setOnlineDoc(false);
+			}
+
+			MofRegistrationResDTO resDTO;
 			regSo = (IMofRegistrationSO) BusinessDelegate.getInstance()
 					.getServiceObject("sm", IMofRegistrationSO.class);
-			regSo.initiateSmApplicationTask(bpmAppl);
+			resDTO = regSo.initiateSmApplicationTask(reqDTO);
 		} finally {
 			regSo = null;
 		}
@@ -1175,9 +1193,27 @@ public class SmApplicationBackingBean extends
 			} else {
 				// TODO remove hard code id later
 				bpmAppl.setApplId(7898);
+				MofRegistrationReqDTO reqDTO = new MofRegistrationReqDTO();
+				reqDTO.setApplId(this.getManagedBean().getSmAppl().getApplId());
+				// TODO remove hard code later
+				reqDTO.setOutcome("SUBMIT");
+				reqDTO.setSupplierId(this.getManagedBean().getSmAppl()
+						.getSmSupplier().getSupplierId());
+				reqDTO.setAppType(this.getManagedBean().getSmAppl()
+						.getApplType());
+				reqDTO.setTaskId(this.getManagedBean().getTaskId());
+				reqDTO.setUserName(new FacesScopes().getUserScreenName());
+
+				if (this.getManagedBean().getSmAppl().getSupportingDocMode() == "O") {
+					reqDTO.setOnlineDoc(true);
+				} else {
+					reqDTO.setOnlineDoc(false);
+				}
+
+				MofRegistrationResDTO resDTO;
 				regSo = (IMofRegistrationSO) BusinessDelegate.getInstance()
 						.getServiceObject("sm", IMofRegistrationSO.class);
-				regSo.initiateSmDelPendingApplicationTask(bpmAppl);
+				resDTO = regSo.initiateSmDelPendingApplicationTask(reqDTO);
 				getManagedBean()
 						.setDelPendAckMsg(
 								" is submitted successfully. Please wait for further notification.");
@@ -1205,6 +1241,7 @@ public class SmApplicationBackingBean extends
 					.getSupplierId());
 			reqDTO.setAppType(this.getManagedBean().getSmAppl().getApplType());
 			reqDTO.setTaskId(this.getManagedBean().getTaskId());
+			reqDTO.setUserName(new FacesScopes().getUserScreenName());
 
 			if (this.getManagedBean().getSmAppl().getSupportingDocMode() == "O") {
 				reqDTO.setOnlineDoc(true);

@@ -70,13 +70,13 @@ public class SmDeleteCategoryCodeBackingBean extends
 			List<SmSupplierCategory> catList = new ArrayList<SmSupplierCategory>();
 			for (int i = 0; i < 10; i++) {
 				PmCategoryL1 parent = new PmCategoryL1();
-				parent.setCateogryL1Code(String.valueOf(i + 1));
+				parent.setCategoryL1Code(String.valueOf(i + 1));
 				parent.setCategoryName("Parent" + (i + 1));
 				PmCategoryL2 clvl1 = new PmCategoryL2();
-				clvl1.setCateogryL2Code(String.valueOf(i + 1));
+				clvl1.setCategoryL2Code(String.valueOf(i + 1));
 				clvl1.setCategoryName("Child" + (i + 1));
 				PmCategoryL3 sublvl1 = new PmCategoryL3();
-				sublvl1.setCateogryL3Code(String.valueOf(i + 1));
+				sublvl1.setCategoryL3Code(String.valueOf(i + 1));
 				sublvl1.setCategoryName("Sub - Child" + (i + 1));
 				SmSupplierCategory cat = new SmSupplierCategory();
 				cat.setSupplierCategoryId((i + 1));
