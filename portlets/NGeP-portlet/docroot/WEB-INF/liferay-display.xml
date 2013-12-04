@@ -115,5 +115,6 @@
 		<portlet id="smApplyBumi"></portlet>
 		<portlet id="smUpdateMofDetails"></portlet>
 		<portlet id="SiteVisit"></portlet>
+		<portlet id="MOFApplication"></portlet>
 	</category>
 </display>
