@@ -48,6 +48,7 @@ public class BPMTaskListBackingBean extends BaseBackingBean<BPMTaskListManagedBe
 		temp.put("MOF Supplier Registration", "mof-application");
 		temp.put("MOF Account Maintain", "mof-application");
 		temp.put("DirectPurchase Creation", "review-directpuchase");
+		temp.put("Supplier Recommendation", "review-directpuchase");
 
 		//QuationTender 
 		temp.put("MITI Approval", "qtmaintanance");

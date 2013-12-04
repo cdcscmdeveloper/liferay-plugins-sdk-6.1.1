@@ -27,6 +27,13 @@
 			<to-view-id>/xhtml/tasklist/taskListView.xhtml</to-view-id>
 		</navigation-case>
 	</navigation-rule>
+	<navigation-rule>
+		<from-view-id>*</from-view-id>
+		<navigation-case>
+			<from-outcome>quoteBidSupplier</from-outcome>
+			<to-view-id>/xhtml/ss/directpurchase/simpleQuoteBidSupplier.xhtml</to-view-id>
+		</navigation-case>
+	</navigation-rule>
 	
 	<converter>
 		<converter-id>approverConverter</converter-id>

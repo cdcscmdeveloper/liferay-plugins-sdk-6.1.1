@@ -13,16 +13,20 @@ import javax.portlet.PortletSession;
 import javax.servlet.http.HttpServletRequest;
 
 import my.ep.biz.service.ss.directpurchase.IDirectPurchaseSO;
+import my.ep.biz.service.ss.directpurchase.IQuoteBidSO;
 import my.ep.bpm.dto.BpmRequestDTO;
 import my.ep.bpm.dto.BpmResponseDTO;
 import my.ep.bpm.service.IBpmSO;
 import my.ep.constant.ss.SourcingConstants;
 import my.ep.constants.SCProcessNameConst;
+import my.ep.dto.ss.directpurchase.QuoteBidReqDTO;
+import my.ep.dto.ss.directpurchase.QuoteBidResDTO;
 import my.ep.dto.ss.directpurchase.RequestListReqDTO;
 import my.ep.dto.ss.directpurchase.RequestListResDTO;
 import my.ep.jaxb.sc.directpurchasedata.SCDirectPurchaseDataType;
 import my.ep.persistence.entity.pm.common.PmStatus;
 import my.ep.persistence.entity.sm.SmSupplier;
+import my.ep.persistence.entity.ss.directpurchase.ScApprovalUser;
 import my.ep.persistence.entity.ss.directpurchase.ScDpRemark;
 import my.ep.persistence.entity.ss.directpurchase.ScPrInquiry;
 import my.ep.persistence.entity.ss.directpurchase.ScQuoteBid;
@@ -76,6 +80,28 @@ public class DirectPurchaseBackingBean extends BaseBackingBean<DirectPurchaseMan
 				}
 			}
 		}
+	}
+	public	String	submitAction(String action){
+		IDirectPurchaseSO directPurchaseSO = (IDirectPurchaseSO) BusinessDelegate.getInstance().getServiceObject(SourcingConst.SOURCING_MODULE, IDirectPurchaseSO.class);
+		RequestListReqDTO requestListReqDTO = new RequestListReqDTO();
+		ScRequestList requestList = getManagedBean().getRequestList();
+		if(this.getManagedBean().getRequestNoteDtls() != null && this.getManagedBean().getRequestNoteDtls().size() > 0){
+			requestList.setScRequestNotes(RequestNoteHelper.createRequestNoteFromRquestNoteDtls(this.getManagedBean().getRequestNoteDtls()));
+		}
+		if(this.getManagedBean().getApprovalUsers().getTarget() != null && this.getManagedBean().getApprovalUsers().getTarget().size() > 0){
+			requestList.setScApprovalUsers(ApprovalUserHelper.createApprovalUsers(this.getManagedBean().getApprovalUsers().getTarget()));
+		}
+		//change status to pending approval
+		PmStatus	status	=	new	PmStatus();
+		status.setStatusId(SourcingConstants.REQUEST_LIST_PENDING_APPROVAL);
+		requestListReqDTO.setRequestListDetail(requestList);
+		RequestListResDTO requestListResDTO = directPurchaseSO.saveRequestList(requestListReqDTO);
+		//submit BPM task
+		BpmResponseDTO res = createBPMTask(requestListResDTO, true);
+		getManagedBean().setTaskId(res.getTaskId());
+		this.getManagedBean().setRequestList(requestListResDTO.getRequestListDetail());
+		log.info("finish save request List, return directPurchase");
+		return "directPurchase";
 	}
 
 	public String saveRequestList(String action) {
@@ -144,6 +170,7 @@ public class DirectPurchaseBackingBean extends BaseBackingBean<DirectPurchaseMan
 		HttpServletRequest servletRequest = PortalUtil.getHttpServletRequest(new FacesScopes().getRequest());
 		HttpServletRequest originalServletRequest = PortalUtil.getOriginalServletRequest(servletRequest);
 		String taskId = originalServletRequest.getParameter("taskId");
+		String	returnString	=	"directPurchase";
 		this.getManagedBean().setTaskId(taskId);
 		log.info("taskId : "+ taskId);
 		IBpmSO bpmSO = (IBpmSO) EpBpmBusinessDelegate.getInstance().getServiceObject(IBpmSO.class);
@@ -156,24 +183,40 @@ public class DirectPurchaseBackingBean extends BaseBackingBean<DirectPurchaseMan
 		Object obj = res.getPojo();
 		
 		SCDirectPurchaseDataType directPurchaseDataType = (SCDirectPurchaseDataType)obj;
-		directPurchaseDataType.getRecommend();
-		log.info("requestList Id: ..........." + directPurchaseDataType.getDpId());
-		IDirectPurchaseSO directPurchaseSO = (IDirectPurchaseSO) BusinessDelegate.getInstance().getServiceObject(SourcingConst.SOURCING_MODULE, IDirectPurchaseSO.class);
-		RequestListReqDTO requestListReqDTO = new RequestListReqDTO();
-		requestListReqDTO.setRequestListId(Long.valueOf(directPurchaseDataType.getDpId()));
-		ScRequestList requestList = directPurchaseSO.getRequestListWithDtls(requestListReqDTO).getRequestListDetail();
-		this.getManagedBean().setRequestList(requestList);
-		if(requestList.getScRequestNotes() != null && requestList.getScRequestNotes().size() > 0){
-			List<ScRequestNoteDtl>	requestNoteDtls	=	new ArrayList<ScRequestNoteDtl>();
-			for(ScRequestNote requestNote: requestList.getScRequestNotes()){
-				requestNoteDtls.addAll(requestNote.getScRequestNoteDtls());
+		if("SQ".equalsIgnoreCase(directPurchaseDataType.getDpMode())){
+			IQuoteBidSO quoteBidSO = (IQuoteBidSO) BusinessDelegate.getInstance().getServiceObject(SourcingConst.SOURCING_MODULE, IQuoteBidSO.class);
+			QuoteBidReqDTO	quoteBidReqDTO	=	new QuoteBidReqDTO();
+			quoteBidReqDTO.setRequestListId(Long.valueOf(directPurchaseDataType.getDpId()));
+			QuoteBidResDTO	quoteBidResDTO	=	quoteBidSO.getQuoteBidDtl(quoteBidReqDTO);
+			PortletSession portletSession = (PortletSession) FacesContext.getCurrentInstance().getExternalContext().getSession(false);
+			SimpleQuoteBidBackingBean quoteBidBackingBean = (SimpleQuoteBidBackingBean) portletSession.getAttribute("simpleQuoteBidBackingBean");
+			if(quoteBidBackingBean == null){
+				quoteBidBackingBean = new SimpleQuoteBidBackingBean();
 			}
-			getManagedBean().setRequestNoteDtls(requestNoteDtls);
+			quoteBidBackingBean.getManagedBean().setScQuoteBid(quoteBidResDTO.getQuoteBidDtl());
+			quoteBidBackingBean.getManagedBean().setTaskId(String.valueOf(directPurchaseDataType.getDpId()));
+			quoteBidBackingBean.getManagedBean().getQuoteBidItems().addAll(quoteBidResDTO.getQuoteBidDtl().getScRequestList().getRequestItems());
+			FacesContext fc = FacesContext.getCurrentInstance();
+			fc.getApplication().getNavigationHandler().handleNavigation(fc, null, "quoteBidSupplier");
+		}else{
+			directPurchaseDataType.getRecommend();
+			log.info("requestList Id: ..........." + directPurchaseDataType.getDpId());
+			IDirectPurchaseSO directPurchaseSO = (IDirectPurchaseSO) BusinessDelegate.getInstance().getServiceObject(SourcingConst.SOURCING_MODULE, IDirectPurchaseSO.class);
+			RequestListReqDTO requestListReqDTO = new RequestListReqDTO();
+			requestListReqDTO.setRequestListId(Long.valueOf(directPurchaseDataType.getDpId()));
+			ScRequestList requestList = directPurchaseSO.getRequestListWithDtls(requestListReqDTO).getRequestListDetail();
+			this.getManagedBean().setRequestList(requestList);
+			if(requestList.getScRequestNotes() != null && requestList.getScRequestNotes().size() > 0){
+				List<ScRequestNoteDtl>	requestNoteDtls	=	new ArrayList<ScRequestNoteDtl>();
+				for(ScRequestNote requestNote: requestList.getScRequestNotes()){
+					requestNoteDtls.addAll(requestNote.getScRequestNoteDtls());
+				}
+				getManagedBean().setRequestNoteDtls(requestNoteDtls);
+			}
+			this.getManagedBean().initialInformation();
+			FacesContext fc = FacesContext.getCurrentInstance();
+			fc.getApplication().getNavigationHandler().handleNavigation(fc, null, "directPurchase");
 		}
-		this.getManagedBean().initialInformation();
-		
-		FacesContext fc = FacesContext.getCurrentInstance();
-		fc.getApplication().getNavigationHandler().handleNavigation(fc, null, "directPurchase");
 	}
 	public void prInquiryListener(ScRequestSupplierItem scRequestSupplierItem) {
 		getManagedBean().setInquirySupplierItem(scRequestSupplierItem);
@@ -320,12 +363,25 @@ public class DirectPurchaseBackingBean extends BaseBackingBean<DirectPurchaseMan
 		BpmRequestDTO reqDTO = new BpmRequestDTO();
 		reqDTO.setCtxToken(token);
 		reqDTO.setProcessId(SCProcessNameConst.DIRECTPURCHASE_CREATION_PROCESS_ID);
-		if(submit){
-			reqDTO.setOutcome("SUBMIT");
-		}
 		SCDirectPurchaseDataType obj = new SCDirectPurchaseDataType();
 		obj.setDpId(requestListResDTO.getRequestListDetail().getRequestListId().intValue());
 		obj.setPtj("Asdqwe");
+		if(submit){
+			String	approvaUserId	=	"";
+			if(getManagedBean().getRequestList().getScApprovalUsers() != null){
+				for(ScApprovalUser approvaUser: getManagedBean().getRequestList().getScApprovalUsers()){
+					approvaUserId	=	approvaUserId+approvaUser.getPmUser().getLoginId() + ",";
+				}
+				//remove last ,
+				if(approvaUserId.endsWith(",")){
+					approvaUserId = approvaUserId.substring(0,approvaUserId.length()-1);
+				}
+				obj.setApprover(approvaUserId);
+				//TODO pass in all the recommended supplier Id
+				obj.setRecommend(""+ getManagedBean().getRequestList().getRequestItems().get(0).getSupplierItems().get(0).getSmSupplier().getSupplierId());
+			}
+			reqDTO.setOutcome("SUBMIT");
+		}
 		// obj.getSuppliers().add(String.valueOf(
 		// this.getManagedBean().getSelectedItem().getSmSupplier().getSupplierId()));
 		if(getManagedBean().getTaskId() != null){
