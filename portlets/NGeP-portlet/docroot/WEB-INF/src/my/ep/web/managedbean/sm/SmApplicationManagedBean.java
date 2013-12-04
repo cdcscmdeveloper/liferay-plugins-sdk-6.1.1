@@ -282,31 +282,31 @@ public class SmApplicationManagedBean extends BaseManagedBean {
 		// Dummy data start
 		PmCategoryL3 sch1 = new PmCategoryL3();
 		sch1.setCategoryName("Child 1.1.1");
-		sch1.setCateogryL3Code("1");
+		sch1.setCategoryL3Code("1");
 		PmCategoryL3 sch2 = new PmCategoryL3();
 		sch2.setCategoryName("Child 1.1.2");
-		sch2.setCateogryL3Code("2");
+		sch2.setCategoryL3Code("2");
 
 		PmCategoryL3 sch3 = new PmCategoryL3();
 		sch3.setCategoryName("Child 1.2.1");
-		sch3.setCateogryL3Code("3");
+		sch3.setCategoryL3Code("3");
 		PmCategoryL3 sch4 = new PmCategoryL3();
 		sch4.setCategoryName("Child 1.2.2");
-		sch4.setCateogryL3Code("4");
+		sch4.setCategoryL3Code("4");
 
 		PmCategoryL3 sch5 = new PmCategoryL3();
 		sch5.setCategoryName("Child 2.1.1");
-		sch5.setCateogryL3Code("5");
+		sch5.setCategoryL3Code("5");
 		PmCategoryL3 sch6 = new PmCategoryL3();
 		sch6.setCategoryName("Child 2.1.2");
-		sch6.setCateogryL3Code("6");
+		sch6.setCategoryL3Code("6");
 
 		PmCategoryL3 sch7 = new PmCategoryL3();
 		sch7.setCategoryName("Child 2.2.1");
-		sch7.setCateogryL3Code("7");
+		sch7.setCategoryL3Code("7");
 		PmCategoryL3 sch8 = new PmCategoryL3();
 		sch8.setCategoryName("Child 2.2.2");
-		sch8.setCateogryL3Code("8");
+		sch8.setCategoryL3Code("8");
 
 		List<PmCategoryL3> c1list = new ArrayList<PmCategoryL3>();
 		c1list.add(sch1);
@@ -323,22 +323,22 @@ public class SmApplicationManagedBean extends BaseManagedBean {
 
 		PmCategoryL2 ch1 = new PmCategoryL2();
 		ch1.setCategoryName("Child 1.1");
-		ch1.setCateogryL2Code("1");
+		ch1.setCategoryL2Code("1");
 		ch1.setPmCategoryL3s(c1list);
 
 		PmCategoryL2 ch2 = new PmCategoryL2();
 		ch2.setCategoryName("Child 1.2");
-		ch2.setCateogryL2Code("2");
+		ch2.setCategoryL2Code("2");
 		ch2.setPmCategoryL3s(c2list);
 
 		PmCategoryL2 ch3 = new PmCategoryL2();
 		ch3.setCategoryName("Child 2.1");
-		ch3.setCateogryL2Code("3");
+		ch3.setCategoryL2Code("3");
 		ch3.setPmCategoryL3s(c3list);
 
 		PmCategoryL2 ch4 = new PmCategoryL2();
 		ch4.setCategoryName("Child 2.2");
-		ch4.setCateogryL2Code("4");
+		ch4.setCategoryL2Code("4");
 		ch4.setPmCategoryL3s(c4list);
 
 		List<PmCategoryL2> p1list = new ArrayList<PmCategoryL2>();
@@ -350,12 +350,12 @@ public class SmApplicationManagedBean extends BaseManagedBean {
 
 		PmCategoryL1 p1 = new PmCategoryL1();
 		p1.setCategoryName("Parent1");
-		p1.setCateogryL1Code("1");
+		p1.setCategoryL1Code("1");
 		p1.setPmCategoryL2s(p1list);
 
 		PmCategoryL1 p2 = new PmCategoryL1();
 		p2.setCategoryName("Parent2");
-		p2.setCateogryL1Code("2");
+		p2.setCategoryL1Code("2");
 		p2.setPmCategoryL2s(p2list);
 
 		// Dummy data end
