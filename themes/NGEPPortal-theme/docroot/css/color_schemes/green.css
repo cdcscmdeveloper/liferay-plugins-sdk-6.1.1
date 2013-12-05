@@ -33,7 +33,7 @@
 	border:0px!important;
 }
 
-.green .ui-button:hover, .green .dockbar .menu-button-active {
+.green .ui-button.ui-state-hover, .green .dockbar .menu-button-active {
 	background: none;
 	background-color: #8CC63E !important;
 }

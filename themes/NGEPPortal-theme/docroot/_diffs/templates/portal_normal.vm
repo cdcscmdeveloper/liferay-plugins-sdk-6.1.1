@@ -123,6 +123,8 @@ $theme.include($body_top_include)
             	<div class="middle-navi-right-wrapper">
                     <ul>
                     	<li class="divider"></li>
+                    	<li class="btn-help"><a href="#">Help</a></li>
+                    	<li class="divider"></li>
                         <li class="btn-language">
                             <a href="#" id="SelectedLanguage">English</a>
                             <div class="dropdown-language-wrapper">

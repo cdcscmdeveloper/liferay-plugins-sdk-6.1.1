@@ -121,6 +121,7 @@ ul.btn-section li a:hover{background-position:bottom;}
 .middle-navi-right-wrapper ul li.divider{background:url(../images/navi/divider2.jpg) repeat-y top center; height:20px; width:2px; padding:0 15px;}
 .middle-navi-right-wrapper ul li.divider-no-padding-right{padding-right:0; background-position:top right;}
 .middle-navi-right-wrapper ul li.btn-language{padding:0;}
+.middle-navi-right-wrapper ul li.btn-help{padding:2px 0 0 0;}
 .middle-navi-right-wrapper ul li.btn-reset{padding:2px 10px 0 0;}
 .middle-navi-right-wrapper ul li.btn-smaller{padding:3px 10px 0 0; font-size:11px;}
 .middle-navi-right-wrapper ul li.btn-larger{padding:1px 10px 0 0; font-size:13px;}
