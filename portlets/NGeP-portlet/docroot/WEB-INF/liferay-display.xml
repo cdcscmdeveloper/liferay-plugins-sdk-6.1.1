@@ -107,6 +107,7 @@
 		<portlet id="svcassignment"></portlet>
 		<portlet id="SvoSiteVisit"></portlet>
 		<portlet id="onlineRegistration"></portlet>
+		<portlet id="onlineAccountMaintenance"></portlet>
 		
 		<portlet id="sm" />
 		<portlet id="smAddtionalCatCodes"></portlet>
