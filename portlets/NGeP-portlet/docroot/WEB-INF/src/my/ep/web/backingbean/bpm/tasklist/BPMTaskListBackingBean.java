@@ -38,7 +38,7 @@ public class BPMTaskListBackingBean extends BaseBackingBean<BPMTaskListManagedBe
 
 		//Procurement Plan - Start
 		temp.put("Plan Preparation", "review-plan");
-		temp.put("Plan Revision", "review-plan");
+		temp.put("Plan Revision", "revise-plan");
 		temp.put("Budget Endorsement", "review-budget");
 		//Procurement Plan - End
 
