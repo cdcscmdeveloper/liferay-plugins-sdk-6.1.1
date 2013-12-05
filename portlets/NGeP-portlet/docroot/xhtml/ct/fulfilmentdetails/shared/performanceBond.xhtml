@@ -8,9 +8,9 @@
 	xmlns:ac="http://ac.my/jsf/composite/cc" >
 	<p:panel id="bondId" header="#{lbl['lbl.ct.pbd.panel.name']}" toggleable="true"  toggleSpeed="500" widgetVar="panelbond">
     <div style="overflow-x:auto">
-	<p:dataTable  id="tableBond" var="data" value="#{contractDetailsBackingBean.managedBean.ctContract.ctPerformanceBonds}" rowIndexVar="index" 
+	<p:dataTable  id="tableBond" var="data" value="#{contractDetailsBackingBean.managedBean.contractVer.ctPerformanceBonds}"  
 	lazy="false" widgetVar="dataTableObj" dynamic="true" paginator="true" paginatorPosition="bottom" 
-	paginatorAlwaysVisible="true" emptyMessage="No Records!" rows="10" styleClass="tablePanel">
+	paginatorAlwaysVisible="true" emptyMessage="No Records!">
 	    <ac:paginator for="tableBond" />
 	   <p:columnGroup type="header"> 
 	   <p:row> 
@@ -26,9 +26,13 @@
           <p:column><p:outputLabel value="#{data.refNo}" style="float:left;"/></p:column>	
           <p:column><p:outputLabel value="CIMB BERHAD" style="float:left;"/></p:column>	
           <p:column > <p:outputLabel value="MYR" style="float:left;"/></p:column> 							
-          <p:column><p:outputLabel value="#{data.bondAmount}" style="float:left;"/>  </p:column>	
-          <p:column><p:outputLabel value="11/11/2013" style="float:left;"/></p:column>	
-          <p:column><p:outputLabel value="10/11/2014" style="float:left;"/></p:column>	
+          <p:column><p:outputLabel value="#{data.bondAmount}" style="float:left;" />  </p:column>	
+          <p:column>
+                <h:outputText value="#{data.effDate}" style="float:left;">
+                <f:convertDateTime pattern="MM/dd/yyyy" /></h:outputText>
+          </p:column>	
+          <p:column><h:outputText value="#{data.expDate}" style="float:left;">
+          <f:convertDateTime pattern="MM/dd/yyyy" /></h:outputText></p:column>	
            <p:column>
              <p:commandLink id="downloadLink" onclick="PrimeFaces.monitorDownload(start, stop)">
 			   <p:graphicImage library="ep/images/design" name="download.png"

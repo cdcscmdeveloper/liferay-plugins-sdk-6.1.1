@@ -13,10 +13,10 @@ import javax.faces.bean.SessionScoped;
 import my.ep.biz.bean.search.SearchFilterBean;
 import my.ep.persistence.entity.ct.CtAttachment;
 import my.ep.persistence.entity.ct.CtContract;
+import my.ep.persistence.entity.ct.CtContractVer;
 import my.ep.persistence.entity.ct.CtRemark;
 import my.ep.persistence.entity.ct.agreement.CtAgreement;
 import my.ep.persistence.entity.ct.circular.CtCircular;
-import my.ep.persistence.entity.ct.dtl.CtContractValue;
 import my.ep.persistence.entity.ct.factoring.CtFactoring;
 import my.ep.persistence.entity.ct.terminate.CtTermination;
 import my.ep.persistence.entity.ct.terminate.CtTerminationReason;
@@ -53,8 +53,7 @@ public class SupplierManagedBean extends BaseManagedBean {
 	private List<CtRemark> remarkList;
 	private List<CtAttachment> attachmentList;
 	
-	private CtContractValue contractValues = new CtContractValue();
-	private CtContract ctContract;
+	private CtContractVer contractVer;
 	private CtCircular ctCircular = new CtCircular();
 	private CtAgreement ctAgreement = new CtAgreement();
 	
@@ -198,20 +197,12 @@ public class SupplierManagedBean extends BaseManagedBean {
 		this.attachmentList = attachmentList;
 	}
 
-	public CtContractValue getContractValues() {
-		return contractValues;
+	public CtContractVer getContractVer() {
+		return contractVer;
 	}
 
-	public void setContractValues(CtContractValue contractValues) {
-		this.contractValues = contractValues;
-	}
-
-	public CtContract getCtContract() {
-		return ctContract;
-	}
-
-	public void setCtContract(CtContract ctContract) {
-		this.ctContract = ctContract;
+	public void setContractVer(CtContractVer contractVer) {
+		this.contractVer = contractVer;
 	}
 
 	public CtCircular getCtCircular() {

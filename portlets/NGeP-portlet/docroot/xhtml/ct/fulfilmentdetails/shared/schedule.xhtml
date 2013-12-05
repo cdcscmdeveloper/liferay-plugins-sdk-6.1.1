@@ -6,7 +6,7 @@
 	xmlns:p="http://primefaces.org/ui"
 	xmlns:c="http://java.sun.com/jsp/jstl/core"
 	xmlns:ac="http://ac.my/jsf/composite/cc" >
-    <p:panel id="scheduleId" header="#{lbl['lbl.ct.sched.panel.name']}"  toggleable="true"  toggleSpeed="500" widgetVar="panelschedule">
+    <p:panel id="scheduleId" header="#{lbl['lbl.ct.sched.panel.name']}"  toggleable="true"  toggleSpeed="500">
     <h:panelGrid columns="4">
        <p:selectOneRadio id="options" value="#{contractDetailsBackingBean.managedBean.scheduleOption}" >  
             <f:selectItem itemLabel="#{lbl['lbl.ct.sched.fsched']}" itemValue="1" />  
@@ -14,11 +14,10 @@
             <p:ajax event="change"  listener="#{contractDetailsBackingBean.progressivePayment}" process="@this" update=":form:tabview:paymentSchedule"/> 
         </p:selectOneRadio> 
      </h:panelGrid>
-	
 	 <p:outputPanel id="paymentSchedule">  
 	 <p:spacer height="10"/>
 	 <h:panelGrid rendered="#{contractDetailsBackingBean.managedBean.chkSchedule}" style="width:780px;">   
-	 <p:dataTable id="tableSchedule" var="data" value="#{contractDetailsBackingBean.managedBean.ctContract.ctSchedules}" widgetVar="dataTableObj" 
+	 <p:dataTable id="tableSchedule" var="data" value="#{contractDetailsBackingBean.managedBean.contractVer.ctSchedules}" widgetVar="dataTableObj" 
 	    rowIndexVar="index" paginator="true" paginatorPosition="bottom" paginatorAlwaysVisible="true" emptyMessage="No Records!">
 	     <ac:paginator for="tableSchedule" />
 		<p:columnGroup type="header"> 
@@ -31,13 +30,13 @@
 		</p:columnGroup>  
 		<p:column><p:outputLabel value="Schedule #{index+1}" style="float:left;"/></p:column>
 		<p:column>
-		            <p:calendar value="#{data.startDate}" id="popupButtonSch" showOn="button" />
+		            <p:calendar value="#{data.fromDate}" id="popupButtonSch" showOn="button" />
 		</p:column>   
-        <p:column><p:calendar value="#{data.endDate}" id="popupButtonSch1" showOn="button" />
+        <p:column><p:calendar value="#{data.toDate}" id="popupButtonSch1" showOn="button" />
          </p:column>   
          <p:column styleClass="column-align-center">
 			 <p:commandLink partialSubmit="true" process="@this" onsuccess="schedule.show()">
-			        <f:setPropertyActionListener value="#{data}" target="#{contractDetailsBackingBean.managedBean.ctSchedules}" />
+			        <f:setPropertyActionListener value="#{data}" target="#{contractDetailsBackingBean.managedBean.ctSchedulesDel}" />
 		     <p:graphicImage library="ep/images/design" name="delete.png" value="/resources/ep/images/design/delete.png" title="Delete" />
 			  </p:commandLink>  
 			  </p:column>   
@@ -56,7 +55,7 @@
 			</p:confirmDialog>
 	 </h:panelGrid>         
 	 <h:panelGrid rendered="#{contractDetailsBackingBean.managedBean.chkProgressive}" style="width:100%">
-	    <p:dataTable id="tableProgress" var="data" value="#{contractDetailsBackingBean.managedBean.ctContract.ctProgressivePayments}" widgetVar="dataTableObj" 
+	    <p:dataTable id="tableProgress" var="data" value="#{contractDetailsBackingBean.managedBean.contractVer.ctProgressivePayments}" widgetVar="dataTableObj" 
 		   paginator="true" paginatorPosition="bottom" paginatorAlwaysVisible="true" emptyMessage="No Records!">
 		   <ac:paginator for="tableProgress" />
 		   <p:columnGroup type="header"> 
@@ -84,8 +83,8 @@
 			</p:column>
 			<p:column styleClass="column-align-center">
 			 <p:commandLink partialSubmit="true" process="@this" onsuccess="confirmation5.show()">
-			        <f:setPropertyActionListener value="#{data}" target="#{contractDetailsBackingBean.managedBean.ctProgressivePayment}" />
-		     <p:graphicImage library="ep/images/design" name="delete.png" value="/resources/ep/images/design/delete.png" title="Delete" />
+			      <f:setPropertyActionListener value="#{data}" target="#{contractDetailsBackingBean.managedBean.ctProgressivePaymentDel}" />
+		          <p:graphicImage library="ep/images/design" name="delete.png" value="/resources/ep/images/design/delete.png" title="Delete" />
 			  </p:commandLink>
 			</p:column>    
 		</p:dataTable>

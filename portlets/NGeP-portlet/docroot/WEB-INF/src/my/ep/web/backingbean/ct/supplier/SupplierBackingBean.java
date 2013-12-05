@@ -24,7 +24,9 @@ import my.ep.dto.ct.supplier.ContractSupplierResDTO;
 import my.ep.exception.EpException;
 import my.ep.persistence.entity.ct.CtContract;
 import my.ep.persistence.entity.ct.factoring.CtFactoring;
+import my.ep.persistence.entity.ct.terminate.CtTerminationReason;
 import my.ep.persistence.entity.pm.authorization.PmUser;
+import my.ep.persistence.entity.pm.common.PmCode;
 import my.ep.persistence.entity.pm.common.PmFinancialOrg;
 import my.ep.persistence.entity.pm.common.PmStatus;
 import my.ep.persistence.entity.sm.SmSupplier;
@@ -57,6 +59,7 @@ public class SupplierBackingBean extends BaseBackingBean<SupplierManagedBean> {
 	private static final String PROCESS_FACTORING_PAGE="/xhtml/ct/supplier/factoring/tabView.xhtml";
 	private static final String PROCESS_TERMINATION_PAGE="/xhtml/ct/supplier/termination/tabView.xhtml";
 	
+	
 	private Date date;
 	private ContractListItem contractListItem;
     private CheckBoxSelections checkBoxSelections;
@@ -74,8 +77,6 @@ public class SupplierBackingBean extends BaseBackingBean<SupplierManagedBean> {
 	
 	@PostConstruct
 	public void init(){
-		checkBoxSelections = new CheckBoxSelections();
-		contractListItem = new ContractListItem();
 			
 		if(this.getManagedBean().getFactoring() == null){
 			ContractBackingBean ctBB = new ContractBackingBean();
@@ -97,6 +98,13 @@ public class SupplierBackingBean extends BaseBackingBean<SupplierManagedBean> {
 			this.getManagedBean().getFactoring().setAuthRefNo("123-09234-76453");
 			this.getManagedBean().getFactoring().setEffDate(new Date());
 			this.getManagedBean().getFactoring().setExpDate(new Date());
+		}
+		
+		if(this.getManagedBean().getCtTerminationReason() == null){
+			
+			this.getManagedBean().setCtTerminationReason(new CtTerminationReason());
+			this.getManagedBean().getCtTerminationReason().setReasonType(new PmCode());
+			this.getManagedBean().getCtTerminationReason().getReasonType().setCodeId(1L);
 		}
 	}
 	
@@ -219,5 +227,7 @@ public class SupplierBackingBean extends BaseBackingBean<SupplierManagedBean> {
 	public String gotoTerminationPage() {	
 		return PROCESS_TERMINATION_PAGE;
 	}
+	
+	
 
 }

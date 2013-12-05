@@ -10,6 +10,7 @@ import org.apache.log4j.Logger;
 
 import my.ep.persistence.entity.ct.CtAttachment;
 import my.ep.persistence.entity.ct.CtContract;
+import my.ep.persistence.entity.ct.CtContractVer;
 import my.ep.persistence.entity.ct.CtRemark;
 import my.ep.persistence.entity.ct.agreement.CtAgreement;
 import my.ep.persistence.entity.ct.agreement.CtAgreementAppendix;
@@ -35,7 +36,8 @@ public class AgreementManagedBean extends BaseManagedBean {
 	private List<CtRemark> remarkList;
 	private List<CtAttachment> attachmentList;
 	
-	private CtContract contract  = new CtContract();
+	private CtContractVer contractVer;
+
 	private CtAgreement agreement;
 	private Long contractId;
 	private String agreementType ="supplemental";
@@ -88,12 +90,12 @@ public class AgreementManagedBean extends BaseManagedBean {
 		this.signSupplier = signSupplier;
 	}
 
-	public CtContract getContract() {
-		return contract;
+	public CtContractVer getContractVer() {
+		return contractVer;
 	}
 
-	public void setContract(CtContract contract) {
-		this.contract = contract;
+	public void setContractVer(CtContractVer contractVer) {
+		this.contractVer = contractVer;
 	}
 
 	public CtAgreement getAgreement() {

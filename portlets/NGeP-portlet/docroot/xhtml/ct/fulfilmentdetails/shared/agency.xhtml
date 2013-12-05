@@ -8,33 +8,32 @@
 	xmlns:ac="http://ac.my/jsf/composite/cc" >
    <p:panel id="agencyId" header="#{lbl['lbl.ct.agn.panel.name']}"   toggleable="true"  toggleSpeed="500">
      <div style="overflow-x:auto">
-    <p:treeTable id="treetableAgency" value="#{contractDetailsBackingBean.rootNodeAgency}" var="data"  
-       selection="#{contractDetailsBackingBean.selectedNode}"  selectionMode="single">
+    <p:treeTable id="treetableAgency" value="#{contractDetailsBackingBean.rootNodeAgency}" var="data">
           <p:column>  
             <f:facet name="header"> #{lbl['lbl.ct.agn.tree.name']} </f:facet>  
-             <h:outputText value="#{data.ministryName}" />  
+             <h:outputText />  
           </p:column>  
           <p:column>  
            <f:facet name="header"> #{lbl['lbl.ct.agn.tree.ptj.code']} </f:facet>  
-           <h:outputText value="#{data.ptjCode}" />  
+           <h:outputText />  
           </p:column>  
           <p:column >  
             <f:facet name="header"> #{lbl['lbl.ct.agn.tree.ptj.name']}  </f:facet>  
-            <h:outputText value="#{data.ptjName}" />  
+            <h:outputText />  
           </p:column>  
           <p:column>  
             <f:facet name="header"> #{lbl['lbl.ct.agn.tree.ptj.amount']}  </f:facet>  
-            <p:inputText value="#{data.selingAmount}" style="width:40; float:right;" rendered="#{data.selingAmount !=null}"></p:inputText>  
+            <p:inputText style="width:40; float:right;"></p:inputText>  
           </p:column>  
           <p:column>  
             <f:facet name="header"> #{lbl['lbl.ct.agn.tree.ptj.efdate']}  </f:facet>  
-            <p:calendar value="#{contractDetailsBackingBean.managedBean.createContractDetails.efdate}" 
-              id="popupButtonCal" showOn="button" rendered="#{data.efdate != null}"/> 
+            <p:calendar value="#{contractDetailsBackingBean.managedBean.contractVer.ctContractValue.effDate}" 
+              id="popupButtonCal" showOn="button" /> 
           </p:column>  
           <p:column>  
             <f:facet name="header"> #{lbl['lbl.ct.agn.tree.ptj.exdate']}  </f:facet>  
-              <p:calendar value="#{contractDetailsBackingBean.managedBean.createContractDetails.exdate}" 
-              id="popupButtonCal1" showOn="button" rendered="#{data.exdate != null}"/>
+              <p:calendar value="#{contractDetailsBackingBean.managedBean.contractVer.ctContractValue.expDate}" 
+              id="popupButtonCal1" showOn="button" />
           </p:column>  
           <p:column style="width:50"  styleClass="column-align-center">  
             <f:facet name="header"> #{lbl['lbl.ct.agn.tree.ptj.action']} </f:facet>  
@@ -52,7 +51,7 @@
 	   </p:panel>  
         <p:confirmDialog message="Do you want to delete the record?" 
 		  closable="true" appendToBody="true" header="Delete Confirmation" severity="alert" widgetVar="confirmation">
-             <h:panelGrid columns="2" columnClasses="column-align-right,column-align-left">
+             <h:panelGrid columns="2">
 				<p:commandButton value="Yes" icon="ui-icon-accept"
 					update="treetableAgency" partialSubmit="true" process="@this"	onclick="confirmation.hide();"/>
 				<p:commandButton value="No" icon="ui-icon-reject" onclick="confirmation.hide()" type="button" />
@@ -71,18 +70,13 @@
             					<f:selectItem itemLabel="--Please Select--" itemValue="" /> 
                 				</p:selectOneMenu>
 						</h:panelGrid>
-             <p:dataTable id="tableAgency" var="data" value="#{contractDetailsBackingBean.ctAgencyList}" rowIndexVar="index" widgetVar="dataTableObj"
-                lazy="false" dynamic="true" paginator="true" paginatorPosition="bottom" paginatorAlwaysVisible="true"  emptyMessage="No Records!" rows="10" 
-                selection="#{contractDetailsBackingBean.selectedAgencyList}" rowKey="#{data.agencyId}">
-                <p:column selectionMode="multiple" style="width:18px" />
-			        <p:column headerText="#{lbl['lbl.ct.agn.model.table.no']}">
-						<h:outputText value="#{index+1}" />
-					</p:column>
+             <p:dataTable id="tableAgency" var="data" value=" " rowIndexVar="index" widgetVar="dataTableObj"
+                lazy="false" dynamic="true" paginator="true" paginatorPosition="bottom" paginatorAlwaysVisible="true"  emptyMessage="No Records!">
                     <p:column headerText="#{lbl['lbl.ct.agn.model.table.code']}">
-                    <h:outputText value="#{data.orgProfile.orgCode}" />
+                    <h:outputText />
 					</p:column>
                     <p:column headerText="#{lbl['lbl.ct.agn.model.table.name']}" >
-                    <h:outputText value="#{data.orgProfile.orgName}" />
+                    <h:outputText />
 					</p:column>
 			 </p:dataTable>
              <f:facet name="footer">

@@ -7,7 +7,7 @@
 	xmlns:c="http://java.sun.com/jsp/jstl/core"
 	xmlns:ac="http://ac.my/jsf/composite/cc" >
     <p:panel id="deductionId" header="#{lbl['lbl.ct.ded.panel.name']}"   toggleable="true"  toggleSpeed="500">
-	<p:dataTable id="tableDeduction" var="data" value="#{contractDetailsBackingBean.managedBean.ctContract.ctDeductions}" 
+	<p:dataTable id="tableDeduction" var="data" value="#{contractDetailsBackingBean.managedBean.contractVer.ctDeductions}" 
 	   widgetVar="dataTableObj" editable="true" editMode="cell" paginator="true" paginatorPosition="bottom" 
 	   paginatorAlwaysVisible="true" emptyMessage="No Records!">
 	   <ac:paginator for="tableDeduction" />  
@@ -15,16 +15,16 @@
           <p:column headerText="#{lbl['lbl.ct.ded.table.type']}" style="width:150px;">  
                <p:cellEditor>  
                     <f:facet name="output"> 
-                    <h:outputText value="#{data.deductionTypeCode.category}" />
+                    <h:outputText value="#{data.deductionType.category}" />
                     </f:facet>  
                     <f:facet name="input">  
-                    <h:selectOneMenu value="#{data.deductionTypeCode.category}" style="width:100%">  
+                    <h:selectOneMenu value="#{data.deductionType.category}" style="width:100%">  
                     <f:selectItems value="#{contractDetailsBackingBean.deductions}" var="type" itemLabel="#{type}" itemValue="#{type}" />  
                     </h:selectOneMenu>  
                 </f:facet>   
                </p:cellEditor>  
            </p:column>  
-            <p:column headerText="#{lbl['lbl.ct.ded.table.desc']}" style="width:450px;">  
+            <p:column headerText="#{lbl['lbl.ct.ded.table.desc']}" style="width:500px;">  
                <p:cellEditor>  
                    <f:facet name="output">
                    <h:outputText value="#{data.description}" />
@@ -34,7 +34,7 @@
                    </f:facet>  
                </p:cellEditor>  
            </p:column>    
-           <p:column headerText="#{lbl['lbl.ct.ded.table.per']}" style="width:80px;">  
+           <p:column headerText="#{lbl['lbl.ct.ded.table.per']}" style="width:60px;">  
                <p:cellEditor>  
                    <f:facet name="output">
                    <h:outputText value="20" style="float:right;" />
@@ -44,7 +44,7 @@
                    </f:facet>  
                </p:cellEditor>  
            </p:column>  
-			<p:column headerText="#{lbl['lbl.ct.ded.table.ramt']}" style="width:100px;">  
+			<p:column headerText="#{lbl['lbl.ct.ded.table.ramt']}" style="width:70px;">  
                <p:cellEditor>  
                    <f:facet name="output">
                    <h:outputText value="#{data.amount}" style="float:right;" />
@@ -56,7 +56,7 @@
            </p:column>  
 			 <p:column headerText="#{lbl['lbl.ct.ded.table.action']}" styleClass="column-align-center">
 			  <p:commandLink partialSubmit="true" process="@this" onsuccess="deleteDeduct.show()">
-			        <f:setPropertyActionListener value="#{data}" target="#{contractDetailsBackingBean.managedBean.ctDeduction}" />
+			        <f:setPropertyActionListener value="#{data}" target="#{contractDetailsBackingBean.managedBean.ctDeductionDel}" />
 			        <p:graphicImage library="ep/images/design" name="delete.png" value="/resources/ep/images/design/delete.png" title="Delete" />
 			  </p:commandLink>
 			 </p:column>     
@@ -75,7 +75,7 @@
 			</p:confirmDialog>
 	 </p:panel>          
 	 <p:panel id="clauseId" header="#{lbl['lbl.ct.ded.panel1.name']}"    toggleable="true"  toggleSpeed="500">
-          <p:dataTable id="tableClause" var="data" value="#{contractDetailsBackingBean.managedBean.addDeductionClause}" widgetVar="dataTableObj" lazy="false" 
+          <p:dataTable id="tableClause" var="data" value="#{contractDetailsBackingBean.managedBean.ctDeductionClauseList}" widgetVar="dataTableObj" lazy="false" 
           dynamic="true" emptyMessage="No Records!" paginator="true" paginatorPosition="bottom" paginatorAlwaysVisible="true">
             <ac:paginator for="tableClause" />   
              <p:columnGroup type="header"> 
@@ -89,7 +89,7 @@
               <p:column><p:outputLabel value = "#{data.clauseDesc}" style="float:left;"/></p:column>    
               <p:column styleClass="column-align-center">
                <p:commandLink onsuccess="confirmation.show()" partialSubmit="true" process="@this" icon="ui-icon-delete">
-                <f:setPropertyActionListener value="#{data}" target="#{contractDetailsBackingBean.managedBean.deductionClause}" />
+                <f:setPropertyActionListener value="#{data}" target="#{contractDetailsBackingBean.managedBean.ctDeductionClauseDel}" />
                  <p:graphicImage library="ep/images/design" name="delete.png" value="/resources/ep/images/design/delete.png" title="Delete" />
 			  </p:commandLink>
               </p:column>  
@@ -112,7 +112,7 @@
 	 <p:dialog id="dialogClause" header="Add Deduction Clause" widgetVar="dlg2" modal="true" width="750" height="450">
 		<p:panel  id="clause">
 		<h:panelGrid style="width:700px;">
-         <p:dataTable id="tableClause1" var="data" value="#{contractDetailsBackingBean.managedBean.ctDeductionClause}" rowIndexVar="index" 
+         <p:dataTable id="tableClause1" var="data" value="#{contractDetailsBackingBean.managedBean.ctDeductionClauseList}" rowIndexVar="index" 
            widgetVar="dataTableObj" scrollable="false" lazy="false" dynamic="true" 
            selection="#{contractDetailsBackingBean.chkDeductionClause}" rowKey="#{data.deductionClauseId}">
               <p:column selectionMode="multiple" style="width:18px" />

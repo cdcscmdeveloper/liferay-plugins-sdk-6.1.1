@@ -11,112 +11,113 @@
     <style>
       .column-align-center { text-align: center !important;}
     </style>
-     <p:panel id="searchId" header="#{lbl['lbl.ct.search.panel.name']}" toggleable="true"  toggleSpeed="500" widgetVar="panelsearch">
-                           <h:panelGrid columns="4" style="width:900px;">
-                                <h:outputLabel value="#{lbl['lbl.ct.search.cno']}" />
-                                <p:inputText value="#{contractDetailsBackingBean.managedBean.contractNo}"  style="width:170px;"/>
-                                <h:outputLabel value="#{lbl['lbl.ct.search.cname']}" />
-                                <p:inputText value="#{contractDetailsBackingBean.managedBean.contractName}"  style="width:170px;"/>
-                                <h:outputLabel value="#{lbl['lbl.ct.search.clno']}" />
-                                <p:inputText  style="width:170px;" />
-                                <h:outputLabel value="#{lbl['lbl.ct.search.clname']}" />
-                                <p:inputText  style="width:170px;"/>
-                                <h:outputLabel value="#{lbl['lbl.ct.search.sid']}" />
-                                <p:inputText  style="width:170px;"/>
-                                <h:outputLabel value="#{lbl['lbl.ct.search.sname']}"/>
-                                <p:inputText  style="width:170px;"/> 
-                                 <h:outputLabel value="#{lbl['lbl.ct.search.cstart']}"/>
-                                <p:calendar style="width:130px;" value="#{contractDetailsBackingBean.managedBean.effDate}" id="popupButtonCal" showOn="button" />
-                                <h:outputLabel value="#{lbl['lbl.ct.search.cend']}" />
-                                <p:calendar style="width:130px;" value="#{contractDetailsBackingBean.managedBean.expDate}" id="popupButtonCal1" showOn="button" />
-                                <h:outputLabel value="#{lbl['lbl.ct.search.lno']}" />
-                                <p:inputText value="#{contractDetailsBackingBean.managedBean.qtLoaNo}" style="width:170px;"/>
+     <p:panel id="searchId" header="#{lbl['lbl.ct.search.panel.name']}" toggleable="true"  toggleSpeed="500">
+        <h:panelGrid columns="4" style="width:900px;">
+           <h:outputLabel value="#{lbl['lbl.ct.search.cno']}" />
+           <p:inputText value="#{contractDetailsBackingBean.managedBean.contractNo}"  style="width:170px;"/>
+           <h:outputLabel value="#{lbl['lbl.ct.search.cname']}" />
+           <p:inputText value="#{contractDetailsBackingBean.managedBean.contractName}"  style="width:170px;"/>
+           <h:outputLabel value="#{lbl['lbl.ct.search.clno']}" />
+           <p:inputText value="#{contractDetailsBackingBean.managedBean.circularNo}" style="width:170px;" />
+           <h:outputLabel value="#{lbl['lbl.ct.search.clname']}" />
+           <p:inputText value="#{contractDetailsBackingBean.managedBean.circularName}"  style="width:170px;"/>
+           <h:outputLabel value="#{lbl['lbl.ct.search.sid']}" />
+           <p:inputText value="#{contractDetailsBackingBean.managedBean.supplierId}" style="width:170px;"/>
+           <h:outputLabel value="#{lbl['lbl.ct.search.sname']}"/>
+           <p:inputText value="#{contractDetailsBackingBean.managedBean.supplierName}" style="width:170px;"/> 
+           <h:outputLabel value="#{lbl['lbl.ct.search.cstart']}"/>
+           <p:calendar style="width:130px;" value="#{contractDetailsBackingBean.managedBean.dateStart}" id="popupButtonCal" showOn="button" />
+           <h:outputLabel value="#{lbl['lbl.ct.search.cend']}" />
+           <p:calendar style="width:130px;" value="#{contractDetailsBackingBean.managedBean.dateEnd}" id="popupButtonCal1" showOn="button" />
+           <h:outputLabel value="#{lbl['lbl.ct.search.lno']}" />
+           <p:inputText value="#{contractDetailsBackingBean.managedBean.LOANo}" style="width:170px;"/>
                                 
-                                <p:outputLabel value="#{lbl['lbl.ct.search.pno']}" />
-							    <p:inputText id="productCode"  style="width:170px;" />
-
-						        <h:panelGroup>
-			                    <div style="height: 50px; vertical-align: top">
-			                     <p:outputLabel for="status" value="#{lbl['lbl.ct.search.status']}" />
-							    </div>
-						        </h:panelGroup>
-						        <h:panelGrid>
-                                <p:selectOneListbox id="status"   style="width:175px;"  >
-                                   <f:selectItem itemLabel="Pending Fulfillment Creation" itemValue="1"  />  
-                                   <f:selectItem itemLabel="Pending Approval" itemValue="2"  />  
-                                   <f:selectItem itemLabel="Approved" itemValue="3" />  
-                                </p:selectOneListbox>
-                                </h:panelGrid>
-                               
-						     </h:panelGrid>
-						     <div class="ppRightBtn"> 
-                               <p:commandButton value="#{lbl['lbl.ct.search.btn.search']}" actionListener="#{contractDetailsBackingBean.searchContract()}"
-                                    process="@this" partialSubmit="true"  icon="ui-icon-search"  update="dataTable"/>
-							        <p:commandButton value="#{lbl['lbl.ct.search.btn.reset']}"  process="@this" partialSubmit="true" icon="ui-icon-reset"  update="dataTable"/>
-						      </div>	
-			       </p:panel>
-				   <p:panel id="searchResulId" header="#{lbl['lbl.ct.search.panel.result']}"  toggleable="true"  toggleSpeed="500">
-                       <div style="overflow-x:auto">
-			                     <p:dataTable id="dataTable" var="data" value="#{contractDetailsBackingBean.managedBean.contractList}" rowIndexVar="index"
-							               widgetVar="dataTableObj" lazy="false" dynamic="true" paginator="true" paginatorPosition="bottom"
-							               paginatorAlwaysVisible="true" emptyMessage="No Records!">
-							               <ac:paginator for="dataTable"/>
-							               <p:columnGroup type="header"> 
-								                <p:row> 
-									                     <p:column headerText="#{lbl['lbl.ct.search.table.cname']}"   /> 
-									                     <p:column headerText="#{lbl['lbl.ct.search.table.clno']}" /> 
-									                     <p:column headerText="#{lbl['lbl.ct.search.table.sname']}"  /> 
-									                     <p:column headerText="#{lbl['lbl.ct.search.table.cstart']}"  /> 	
-									                     <p:column headerText="#{lbl['lbl.ct.search.table.cend']}"   /> 
-									                     <p:column headerText="#{lbl['lbl.ct.search.table.lno']}"  />
-									                     <p:column headerText="#{lbl['lbl.ct.search.table.status']}"  /> 
-									                     <p:column headerText="#{lbl['lbl.ct.search.table.action']}" />
-								               </p:row>							
-								               </p:columnGroup>
-							                            <p:column> <h:outputText value="#{data.contractName}" /></p:column>
-							                            <p:column><h:outputText value="CR-2013-0001" /></p:column>	
-							                            <p:column><h:outputText value="Khai Sdn Bhd" /></p:column>					
-							                            <p:column><h:outputText value="04/11/2013" /> </p:column>	
-							                            <p:column><h:outputText value="03/11/2014" /></p:column>	
-							                            <p:column><h:outputText value="#{data.qtLoaNo}" /></p:column>	
-							                            <p:column> <h:outputText value="Active"/> </p:column>	
-							                            <p:column styleClass="column-align-center">
-								                          <p:commandLink action="#{contractDetailsBackingBean.gotoSuspendPage}">
-								                                <f:setPropertyActionListener target="#{contractDetailsBackingBean.managedBean.ctContract}" value="#{data}" />
-					                                          <p:graphicImage library="ep/images/design" name="pause.png"
-					                                           	value="/resources/ep/images/design/pause.png" title="Suspend Contract" />
-				                                         </p:commandLink>
-				                                         <p:spacer width="7"/>
-				                                          <p:commandLink action="#{contractDetailsBackingBean.gotoTerminatePage}">
-				                                            <f:setPropertyActionListener target="#{contractDetailsBackingBean.managedBean.ctContract}" value="#{data}" />
-					                                          <p:graphicImage library="ep/images/design" name="terminate.png"
-					                                           	value="/resources/ep/images/design/terminate.png" title="Termination" />
-				                                         </p:commandLink>
-				                                         <p:spacer width="7"/>
-				                                        <p:commandLink action="#{contractDetailsBackingBean.gotoAmendPage}">
-					                                          <p:graphicImage library="ep/images/design" name="revise.png"
-					                                           	value="/resources/ep/images/design/revise.png" title="Amendment" />
-				                                         </p:commandLink>
-								                          <p:spacer width="7"/>
-								                       <p:commandLink action="#{contractDetailsBackingBean.gotoViewPage}">
-					                                          <p:graphicImage library="ep/images/design" name="document.png"
-					                                           	value="/resources/ep/images/design/document.png" title="View Agreement" />
-				                                         </p:commandLink>
-				                                          <p:spacer width="7"/>
-				                                            <p:commandLink action="#{contractDetailsBackingBean.gotoBankPage}">
-					                                          <p:graphicImage library="ep/images/design" name="revise.png"
-					                                           	value="/resources/ep/images/design/revise.png" title="Change Bank" />
-				                                         </p:commandLink>
-				                                          <p:spacer width="7"/>
-				                                            <p:commandLink action="#{contractDetailsBackingBean.gotoSupplierTerminatePage}">
-					                                          <p:graphicImage library="ep/images/design" name="terminate.png"
-					                                           	value="/resources/ep/images/design/terminate.png" title="Supplier Termination" />
-				                                         </p:commandLink>
-								                         
-								                      </p:column> 
-							              </p:dataTable>
-						       </div>
-						</p:panel>
+           <p:outputLabel value="#{lbl['lbl.ct.search.pno']}" />
+           <p:inputText id="productCode" value="#{contractDetailsBackingBean.managedBean.productCode}"  style="width:170px;" />
+         <h:panelGroup>
+		 <div style="height: 50px; vertical-align: top">
+			  <p:outputLabel for="status" value="#{lbl['lbl.ct.search.status']}" />
+         </div>
+	     </h:panelGroup>
+		 <h:panelGrid>
+            <p:selectOneListbox id="status" value="#{contractDetailsBackingBean.managedBean.contractStatus}"  style="width:175px;"  >
+               <f:selectItem itemLabel="Pending Fulfillment Creation" itemValue="1"  />  
+               <f:selectItem itemLabel="Pending Approval" itemValue="2"  />  
+               <f:selectItem itemLabel="Approved" itemValue="3" />  
+            </p:selectOneListbox>
+         </h:panelGrid>
+        </h:panelGrid>
+		  <div class="ppRightBtn"> 
+              <p:commandButton value="#{lbl['lbl.ct.search.btn.search']}" actionListener="#{contractDetailsBackingBean.searchContract()}"
+              process="@this" partialSubmit="true"  icon="ui-icon-search"  update="dataTable"/>
+              <p:commandButton value="#{lbl['lbl.ct.search.btn.reset']}"  process="@this" partialSubmit="true" icon="ui-icon-reset"  update="dataTable"/>
+		  </div>	
+	  </p:panel>
+	  <p:panel id="searchResulId" header="#{lbl['lbl.ct.search.panel.result']}"  toggleable="true"  toggleSpeed="500">
+         <div style="overflow-x:auto">
+		<p:dataTable id="dataTable" var="data" value="#{contractDetailsBackingBean.managedBean.contractList}" rowIndexVar="index"
+	       widgetVar="dataTableObj" lazy="false" dynamic="true" paginator="true" paginatorPosition="bottom"
+		   paginatorAlwaysVisible="true" emptyMessage="No Records!">
+	       <ac:paginator for="dataTable"/>
+		   <p:columnGroup type="header"> 
+           <p:row> 
+            <p:column headerText="#{lbl['lbl.ct.search.table.cname']}"   /> 
+	        <p:column headerText="#{lbl['lbl.ct.search.table.clno']}" /> 
+			<p:column headerText="#{lbl['lbl.ct.search.table.sname']}"  /> 
+	        <p:column headerText="#{lbl['lbl.ct.search.table.cstart']}"  /> 	
+			<p:column headerText="#{lbl['lbl.ct.search.table.cend']}"   /> 
+	        <p:column headerText="#{lbl['lbl.ct.search.table.lno']}"  />
+	        <p:column headerText="#{lbl['lbl.ct.search.table.status']}"  /> 
+		    <p:column headerText="#{lbl['lbl.ct.search.table.action']}" />
+		   </p:row>							
+		   </p:columnGroup>
+		     <p:column> <h:outputText value="#{data.contractName}" /></p:column>
+			 <p:column><h:outputText value="CR-2013-0001" /></p:column>	
+			 <p:column><h:outputText value="Khai Sdn Bhd" /></p:column>					
+			 <p:column><h:outputText value="04/11/2013" /> </p:column>	
+			 <p:column><h:outputText value="03/11/2014" /></p:column>	
+		     <p:column><h:outputText value="#{data.loaNo}" /></p:column>	
+			 <p:column> <h:outputText value="Active"/> </p:column>	
+			 <p:column styleClass="column-align-center">
+				<p:commandLink action="#{contractDetailsBackingBean.gotoSuspendPage}">
+				   <f:setPropertyActionListener target="#{contractDetailsBackingBean.managedBean.ctContract}" value="#{data}" />
+			    <p:graphicImage library="ep/images/design" name="pause.png" value="/resources/ep/images/design/pause.png" 
+			       title="Suspend Contract" />
+				</p:commandLink>
+				<p:spacer width="7"/>
+				<p:commandLink action="#{contractDetailsBackingBean.gotoTerminatePage}">
+				   <f:setPropertyActionListener target="#{contractDetailsBackingBean.managedBean.ctContract}" value="#{data}" />
+				   <p:graphicImage library="ep/images/design" name="terminate.png" value="/resources/ep/images/design/terminate.png" 
+				   title="Termination" />
+			    </p:commandLink>
+				<p:spacer width="7"/>
+				  <p:commandLink action="#{contractDetailsBackingBean.gotoAmendPage}">
+				     <f:setPropertyActionListener target="#{contractDetailsBackingBean.managedBean.ctContract}" value="#{data}" />
+					 <p:graphicImage library="ep/images/design" name="revise.png" value="/resources/ep/images/design/revise.png" 
+					 title="Amendment" />
+				   </p:commandLink>
+				   <p:spacer width="7"/>
+				   <p:commandLink action="#{contractDetailsBackingBean.gotoViewPage}">
+				    <f:setPropertyActionListener target="#{contractDetailsBackingBean.managedBean.ctContract}" value="#{data}" />
+					<p:graphicImage library="ep/images/design" name="document.png" value="/resources/ep/images/design/document.png" 
+					title="View Agreement" />
+				   </p:commandLink>
+				   <p:spacer width="7"/>
+				   <p:commandLink action="#{contractDetailsBackingBean.gotoBankPage}">
+				    <f:setPropertyActionListener target="#{contractDetailsBackingBean.managedBean.ctContract}" value="#{data}" />
+					  <p:graphicImage library="ep/images/design" name="revise.png" value="/resources/ep/images/design/revise.png" 
+					  title="Change Bank" />
+				   </p:commandLink>
+				   <p:spacer width="7"/>
+				   <p:commandLink action="#{contractDetailsBackingBean.gotoSupplierTerminatePage}">
+				    <f:setPropertyActionListener target="#{contractDetailsBackingBean.managedBean.ctContract}" value="#{data}" />
+					  <p:graphicImage library="ep/images/design" name="terminate.png" value="/resources/ep/images/design/terminate.png" 
+					  title="Supplier Termination" />
+				   </p:commandLink>
+				</p:column> 
+			</p:dataTable>
+			</div>
+		</p:panel>
    </ui:define>
 </ui:composition>
   

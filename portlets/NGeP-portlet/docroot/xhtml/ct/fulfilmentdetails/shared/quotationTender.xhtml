@@ -8,43 +8,34 @@
 	<p:panel id="qtnTenderPnl" header="Quotation / Tender Details" toggleable="true" toggleSpeed="500">
 		<h:panelGrid columns="4" style="width:100%" columnClasses="columnWidth15">
 			<p:outputLabel value="Procurement Mode" />
-			<p:selectOneMenu disabled="true" value="Tender" style="width:180px;">
-				<f:selectItems value="#{contractDetailsBackingBean.contractListItem.sourcingType}" />
-			</p:selectOneMenu>
+		    <p:inputText  style="width:170px;" disabled="true"/>
 			<p:outputLabel value="Published Date" />
 			<p:inputText style="width:170px;" disabled="true"
-				value="#{contractDetailsBackingBean.managedBean.ctContract.qtPublishDate}" >
+				value="#{contractDetailsBackingBean.managedBean.contractVer.ctContract.publishDate}">
 				<f:convertDateTime pattern="MM/dd/yyyy" />
 			</p:inputText>			
 			<p:outputLabel value="#{lbl['lbl.ct.loaNo']}" />
 			<p:inputText style="width:170px;" disabled="true" 
-				value="#{contractDetailsBackingBean.managedBean.ctContract.qtLoaNo}" />
+				value="#{contractDetailsBackingBean.managedBean.contractVer.ctContract.loaNo}" />
 			<p:outputLabel value="LOA Acknowledged Date" />
 			<p:inputText style="width:170px;" disabled="true"
-				value="#{contractDetailsBackingBean.managedBean.ctContract.qtLoaDate}" >
+				value="#{contractDetailsBackingBean.managedBean.contractVer.ctContract.ackDate}" >
 				<f:convertDateTime pattern="MM/dd/yyyy" />
 			</p:inputText>
 			<p:outputLabel value="Item Type" />
-			<p:selectOneMenu disabled="true" style="width:180px;">
-				<f:selectItems value="#{contractDetailsBackingBean.getDropdownValues(PmCodeCatConst.quotationCategory)}" />
-			</p:selectOneMenu>			
+			<p:inputText style="width:170px;" disabled="true"/>		
 			<p:outputLabel value="Item Origin" />
-			<p:selectOneMenu disabled="true" style="width:180px;">
-				<f:selectItems value="#{contractDetailsBackingBean.getDropdownValues(PmCodeCatConst.quotationCategory)}" />
-			</p:selectOneMenu>			
+			<p:inputText style="width:170px;" disabled="true"/>			
 			<p:outputLabel value="#{lbl['lbl.ct.fulfilmentType']}" />
-			<p:selectOneMenu disabled="true" style="width:180px;">
-				<f:selectItems value="#{contractDetailsBackingBean.getDropdownValues(PmCodeCatConst.fulfilmentType)}" />
-			</p:selectOneMenu>
+			<p:inputText style="width:170px;" disabled="true"/>			
 			<p:outputLabel value="#{lbl['lbl.ct.sfee']}" />
 			<h:panelGrid columns="2">
-			<p:inputText
-				value="#{contractDetailsBackingBean.managedBean.ctContract.serviceFee}"
+			<p:inputText value="#{contractDetailsBackingBean.managedBean.contractVer.ctContract.serviceFee}"
 				style="width:55px;" disabled="true" />	
 				<p:outputLabel value="%" />
 		</h:panelGrid>		
 		</h:panelGrid>
-	</p:panel>
+		</p:panel>
 </ui:composition>
 
 

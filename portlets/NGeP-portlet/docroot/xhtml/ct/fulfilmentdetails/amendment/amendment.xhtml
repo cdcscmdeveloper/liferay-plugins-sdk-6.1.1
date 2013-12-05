@@ -12,15 +12,15 @@
         <p:outputLabel value="Extension of Contract" />
 	   <p:selectBooleanCheckbox value=" " disabled="false" />
        <p:outputLabel for="txtrdate" value="#{lbl['lbl.ct.amend.txt.rdate']}" />
-       <p:inputText   id="txtrdate" value="#{contractDetailsBackingBean.managedBean.ctContract.createdDate}"  disabled="true" style="width:170px;" />
+       <p:inputText   id="txtrdate" value="#{contractDetailsBackingBean.managedBean.contractVer.createdDate}"  disabled="true" style="width:170px;" />
         <p:outputLabel value="Change of item price" />
 	   <p:selectBooleanCheckbox value=" " disabled="false" />
        <p:outputLabel for="txtname" value="#{lbl['lbl.ct.amend.txt.name']}" />
-       <p:inputText   id="txtname" value="#{contractDetailsBackingBean.managedBean.ctAmendment.title}" style="width:170px;" />
+       <p:inputText   id="txtname" value="#{contractDetailsBackingBean.managedBean.contractVer.ctAmendment.title}" style="width:170px;" />
        <p:outputLabel value="Change of quantity" />
 	   <p:selectBooleanCheckbox value=" " disabled="false" />
        <p:outputLabel for="txtfrno" value="#{lbl['lbl.ct.amend.txt.frno']}"  />
-       <p:inputText   id="txtfrno" value="#{contractDetailsBackingBean.managedBean.ctAmendment.fileRefNo}" style="width:170px;" /> 
+       <p:inputText   id="txtfrno" value="#{contractDetailsBackingBean.managedBean.contractVer.ctAmendment.fileRefNo}" style="width:170px;" /> 
        <p:outputLabel value="Change of contract value" />
 	   <p:selectBooleanCheckbox value=" " disabled="false" />
         <h:panelGroup>
@@ -29,12 +29,12 @@
             </div>
         </h:panelGroup>
        <h:panelGrid>
-          <p:inputTextarea id="txtdesc" value="#{contractDetailsBackingBean.managedBean.ctAmendment.description}"  rows="2" cols="31"/>
+          <p:inputTextarea id="txtdesc" value="#{contractDetailsBackingBean.managedBean.contractVer.ctAmendment.description}"  rows="2" cols="31"/>
 	   </h:panelGrid>
 	    <p:outputLabel value="#{lbl['lbl.ct.amend.txt.avalue']}" />
          <p:inputText  style="width:80px;"/> 
          <p:outputLabel value="#{lbl['lbl.ct.amend.txt.effdate']}" />
-       <p:calendar style="width:170px;" value="#{contractDetailsBackingBean.managedBean.ctAmendment.amendmentEffDate}" id="edateCal" showOn="button" />
+       <p:calendar style="width:170px;" value="#{contractDetailsBackingBean.managedBean.contractVer.ctAmendment.amendmentEffDate}" id="edateCal" showOn="button" />
 	   <p:outputLabel  value="#{lbl['lbl.ct.amend.txt.ceperiod']}" />
           <h:panelGrid columns="3">
              <p:inputText id="ceperiod"  style="width:80px;"/>
@@ -45,11 +45,11 @@
 		     </p:selectOneMenu>   
             </h:panelGrid>
             <p:outputLabel value="#{lbl['lbl.ct.amend.txt.cestart']}"/>
-            <p:calendar style="width:170px;" value="#{contractDetailsBackingBean.managedBean.contractValues.effDate}" id="efdateCal" showOn="button" /> 
+            <p:calendar style="width:170px;" value="#{contractDetailsBackingBean.managedBean.contractVer.ctContractValue.effDate}" id="efdateCal" showOn="button" /> 
             <p:outputLabel value="#{lbl['lbl.ct.amend.txt.ceend']}" />
-            <p:calendar style="width:170px;" value="#{contractDetailsBackingBean.managedBean.contractValues.expDate}" id="exdateCal" showOn="button" /> 
+            <p:calendar style="width:170px;" value="#{contractDetailsBackingBean.managedBean.contractVer.ctContractValue.expDate}" id="exdateCal" showOn="button" /> 
              <p:outputLabel value="#{lbl['lbl.ct.amend.txt.apr.date']}" />
-              <p:calendar style="width:170px;" value="#{contractDetailsBackingBean.managedBean.ctAmendment.approvedDate}" id="adateCal" showOn="button" />
+              <p:calendar style="width:170px;"  id="adateCal" showOn="button" />
              <p:outputLabel value="#{lbl['lbl.ct.amend.txt.apr.name']}" />
              <p:inputText   style="width:170px;" />
            </h:panelGrid>

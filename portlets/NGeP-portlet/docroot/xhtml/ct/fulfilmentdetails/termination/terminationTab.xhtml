@@ -20,6 +20,8 @@
 	</p:panel>
 	<p:tabView id="tabview" value="Termination" dynamic="true" orientation="left" >
 	   <p:tab title="#{lbl['lbl.ct.menu.fd']}" >
+	     <ui:include src="/xhtml/ct/fulfilmentdetails/shared/fulfilment.xhtml"/>
+	     <ui:include src="/xhtml/ct/fulfilmentdetails/shared/quotationTender.xhtml" />
          <ui:include src="termination.xhtml"/>
        </p:tab> 
        <p:tab title="#{lbl['lbl.ct.menu.sup']}" >
