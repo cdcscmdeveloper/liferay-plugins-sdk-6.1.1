@@ -2038,7 +2038,7 @@
 			<portlet-mode>view</portlet-mode>
 		</supports>
 		<portlet-info>
-			<title>onlineRegistration</title>
+			<title>Online Account Maintenance</title>
 			<short-title>NewJSFPortlet</short-title>
 			<keywords></keywords>
 		</portlet-info>
