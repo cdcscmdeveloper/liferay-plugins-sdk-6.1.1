@@ -1,5 +1,7 @@
 package my.ep.web.managedbean.sm.registration;
 
+import java.util.List;
+
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
 
@@ -10,6 +12,7 @@ import my.ep.persistence.entity.sm.SmPersonnel;
 import my.ep.persistence.entity.sm.SmPersonnelAddress;
 import my.ep.persistence.entity.sm.SmSupplier;
 import my.ep.persistence.entity.sm.SmSupplierBank;
+import my.ep.persistence.entity.sm.SmSupplierCert;
 import my.ep.persistence.entity.sm.SmSupplierOwner;
 import my.ep.web.managedbean.BaseManagedBean;
 
@@ -25,6 +28,7 @@ public class RegistrationManagedBean extends BaseManagedBean {
 	private SmSupplierOwner smSuppOwner;
 	private SmPersonnelAddress smPersonnelAdd;
 	private SmAppl smAppl;
+	private List<SmSupplierCert> smSuppCerts;
 
 	private SmAddress smBusinessAdd;
 	private SmAddress smRegAdd;
@@ -70,6 +74,14 @@ public class RegistrationManagedBean extends BaseManagedBean {
 
 	public void setSmSuppOwner(SmSupplierOwner smSuppOwner) {
 		this.smSuppOwner = smSuppOwner;
+	}
+
+	public List<SmSupplierCert> getSmSuppCerts() {
+		return smSuppCerts;
+	}
+
+	public void setSmSuppCerts(List<SmSupplierCert> smSuppCerts) {
+		this.smSuppCerts = smSuppCerts;
 	}
 
 	public SmPersonnelAddress getSmPersonnelAdd() {

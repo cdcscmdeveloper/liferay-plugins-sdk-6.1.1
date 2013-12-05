@@ -1,96 +1,160 @@
-<ui:composition
-	template="/WEB-INF/facelets/templates/basic_template.xhtml"
-	xmlns="http://www.w3.org/1999/xhtml"
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
 	xmlns:f="http://java.sun.com/jsf/core"
 	xmlns:h="http://java.sun.com/jsf/html"
 	xmlns:ui="http://java.sun.com/jsf/facelets"
 	xmlns:p="http://primefaces.org/ui"
 	xmlns:c="http://java.sun.com/jsp/jstl/core">
 
-	<ui:define name="contentSection">
-		<f:event listener="#{svoSiteVisitBackingBean.retrieveSiteVisitInfo}"
-			type="preRenderView"></f:event>
-		<p:panel header="Site Visit Details" toggleable="true">
-			<table style="width: 80%">
-				<tr>
-					<td><p:outputLabel value="Area" /></td>
-					<td><p:inputText value="Lembah Klang" disabled="true" /></td>
-				</tr>
+	<f:event listener="#{svoSiteVisitBackingBean.retrieveSiteVisitInfo}"
+		type="preRenderView"></f:event>
 
-				<tr>
-					<td><p:outputLabel value="Supplier Name" /></td>
-					<td><p:inputText
-							value="#{svoSiteVisitBackingBean.managedBean.smApplSv.smAppl.smSupplier.supplierName}"
-							disabled="true" /></td>
-					<td><p:outputLabel value="MOF Registration No." /></td>
-					<td><p:inputText value="Demo" disabled="true" /></td>
-				</tr>
+	<p:panel header="Site Visit Info" toggleable="true">
+		<table class="customTbl">
+			<tr>
+				<td id="tdTitle"><p:outputLabel value="MOF Registration No." /></td>
+				<td id="tdContent"><p:inputText value="Demo" disabled="true"
+						size="40" /></td>
 
-				<tr>
-					<td><p:outputLabel value="Application Reference" /></td>
-					<td><p:inputText value="Demo" disabled="true" /></td>
+				<td id="tdTitle"><p:outputLabel value="Supplier Name" /></td>
+				<td id="tdContent"><p:inputText
+						value="#{svoSiteVisitBackingBean.managedBean.smApplSv.smAppl.smSupplier.supplierName}"
+						disabled="true" size="40" /></td>
+			</tr>
 
-					<td><p:outputLabel value="Processing Officer" /></td>
-					<td><p:inputText value="Demo" disabled="true" /></td>
-				</tr>
+			<tr>
+				<td id="tdTitle"><p:outputLabel value="Application No." /></td>
+				<td id="tdContent"><p:inputText value="Demo" disabled="true"
+						size="40" /></td>
 
-				<tr>
-					<td><p:outputLabel value="Application Type" /></td>
-					<td><p:inputText value="Demo" disabled="true" /></td>
-				</tr>
-			</table>
-		</p:panel>
+				<td id="tdTitle"><p:outputLabel value="Application Type" /></td>
+				<td id="tdContent"><p:inputText value="Demo" disabled="true"
+						size="40" /></td>
+			</tr>
 
-		<p:panel header="Site(s)">
-			<p:dataTable var="svo"
-				value="#{svoSiteVisitBackingBean.managedBean.smApplSv.smSiteVisitAddresses}">
-				<p:column headerText="No">
-				#{rowIndex+1}
-				</p:column>
+			<tr>
+				<td id="tdTitle"><p:outputLabel value="Area" /></td>
+				<td id="tdContent"><p:inputText value="Lembah Klang"
+						disabled="true" size="40" /></td>
 
-				<p:column headerText="Address">
-					#{svo.smAddress.address1}<br />
-					#{svo.smAddress.address2}<br />
-					#{svo.smAddress.address3}<br />
-					#{svo.smAddress.address4}
-				</p:column>
+				<td id="tdTitle"><p:outputLabel value="Processing Officer" /></td>
+				<td id="tdContent"><p:inputText value="Demo" disabled="true"
+						size="40" /></td>
+			</tr>
+		</table>
+	</p:panel>
 
-				<p:column headerText="Post Code">
-				#{svo.smAddress.postcode}
-				</p:column>
+	<p:panel header="Site(s)" toggleable="true">
+		<table class="customTbl">
+			<tr>
+				<td id="tdTitle"><p:outputLabel value="Site" /></td>
+				<td id="tdContent"><p:selectOneMenu>
+						<f:selectItems
+							value="#{svoSiteVisitBackingBean.managedBean.smApplSv.smSiteVisitAddresses}"
+							var="c" itemLabel="#{c.smAddress.address1}"
+							itemValue="#{c.smAddress.address1}" />
+					</p:selectOneMenu></td>
+				<td id="tdTitle">
+				<p:commandLink value="Download Template" />
+				</td><td id="tdContent"></td>
 
-				<p:column headerText="City">
-				</p:column>
+			</tr>
+		</table>
+	</p:panel>
+
+	<p:panel header="Site Visit Details" toggleable="true">
+		<table class="customTbl">
+			<tr>
+				<td id="tdTitle"><p:outputLabel value="Address" /></td>
+				<td id="tdContent" colspan="3"><p:inputText disabled="true"
+						size="50" /></td>
+			</tr>
+			<tr>
+				<td id="tdTitle"></td>
+				<td id="tdContent" colspan="3"><p:inputText disabled="true"
+						size="50" /></td>
+			</tr>
+			<tr>
+				<td id="tdTitle"></td>
+				<td id="tdContent" colspan="3"><p:inputText disabled="true"
+						size="50" /></td>
+
+			</tr>
+			<tr>
+				<td id="tdTitle"></td>
+				<td id="tdContent" colspan="3"><p:inputText disabled="true"
+						size="50" /></td>
+			</tr>
+			<tr>
+				<td id="tdTitle"><p:outputLabel value="Postcode" /></td>
+				<td id="tdContent"><p:inputText disabled="true" size="40" /></td>
+
+				<td id="tdTitle"><p:outputLabel value="City" /></td>
+				<td id="tdContent"><p:inputText disabled="true" size="40" /></td>
+			</tr>
+
+			<tr>
+				<td id="tdTitle"><p:outputLabel value="District" /></td>
+				<td id="tdContent"><p:inputText disabled="true" size="40" /></td>
+
+				<td id="tdTitle"><p:outputLabel value="State" /></td>
+				<td id="tdContent"><p:inputText disabled="true" size="40" /></td>
+			</tr>
+
+			<tr>
+				<td id="tdTitle"><p:outputLabel value="County" /></td>
+				<td id="tdContent"><p:inputText disabled="true" size="40" /></td>
+
+				<td id="tdTitle"></td>
+				<td id="tdContent"></td>
+			</tr>
+		</table>
+		<!-- 		<p:dataTable var="svo" -->
+		<!-- 			value="#{svoSiteVisitBackingBean.managedBean.smApplSv.smSiteVisitAddresses}"> -->
+		<!-- 			<p:column headerText="No"> -->
+		<!-- 				#{rowIndex+1} -->
+		<!-- 				</p:column> -->
+
+		<!-- 			<p:column headerText="Address"> -->
+		<!-- 					#{svo.smAddress.address1}<br /> -->
+		<!-- 					#{svo.smAddress.address2}<br /> -->
+		<!-- 					#{svo.smAddress.address3}<br /> -->
+		<!-- 					#{svo.smAddress.address4} -->
+		<!-- 				</p:column> -->
+
+		<!-- 			<p:column headerText="Post Code"> -->
+		<!-- 				#{svo.smAddress.postcode} -->
+		<!-- 				</p:column> -->
+
+		<!-- 			<p:column headerText="City"> -->
+		<!-- 			</p:column> -->
 
 
-				<p:column headerText="District">
-				</p:column>
+		<!-- 			<p:column headerText="District"> -->
+		<!-- 			</p:column> -->
 
-				<p:column headerText="State">
-				</p:column>
+		<!-- 			<p:column headerText="State"> -->
+		<!-- 			</p:column> -->
 
-				<p:column headerText="Country">
-				#{svo.smAddress.pmCountry.countryName}
-				</p:column>
+		<!-- 			<p:column headerText="Country"> -->
+		<!-- 				#{svo.smAddress.pmCountry.countryName} -->
+		<!-- 				</p:column> -->
 
-				<p:column headerText="Action">
-					<p:commandButton value="Download Template" />
-					<p:commandButton value="Submit Report"
-						action="/xhtml/sm/svositevisit/siteVisitRptSubmission.xhtml" />
-					<!-- <p:commandButton id="modalDialogButton" value="View Report"
-						onclick="dlg2.show();" type="button" /> -->
-				</p:column>
-			</p:dataTable>
-		</p:panel>
+		<!-- 			<p:column headerText="Action"> -->
+		<!-- 				<p:commandButton value="Download Template" /> -->
+		<!-- 				<p:commandButton value="Submit Report" -->
+		<!-- 					action="/xhtml/sm/svositevisit/siteVisitRptSubmission.xhtml" /> -->
+		<!-- 				<p:commandButton id="modalDialogButton" value="View Report" -->
+		<!-- 						onclick="dlg2.show();" type="button" /> -->
+		<!-- 			</p:column> -->
+		<!-- 		</p:dataTable> -->
+	</p:panel>
 
-		<div align="right">
-			<ui:repeat value="#{svoSiteVisitBackingBean.managedBean.bpmAction}"
-				var="item">
-				<p:commandButton
-					action="#{svoSiteVisitBackingBean.submitSiteVisitReport(item)}"
-					value="#{item}" />
-			</ui:repeat>
-		</div>
-
-	</ui:define>
+	<div align="right">
+		<ui:repeat value="#{svoSiteVisitBackingBean.managedBean.bpmAction}"
+			var="item">
+			<p:commandButton
+				action="#{svoSiteVisitBackingBean.submitSiteVisitReport(item)}"
+				value="#{item}" />
+		</ui:repeat>
+	</div>
 </ui:composition>

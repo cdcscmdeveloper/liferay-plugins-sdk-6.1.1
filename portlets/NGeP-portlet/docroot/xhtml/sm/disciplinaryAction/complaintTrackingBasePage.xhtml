@@ -5,6 +5,9 @@
 	xmlns:p="http://primefaces.org/ui"
 	xmlns:c="http://java.sun.com/jsp/jstl/core">
 
-	<f:event listener="#{complaintBackingBean.preRenderView}"
-		type="preRenderView" />
+	<p:tabView>
+		<p:tab title="Review Complaint">
+			<ui:include src="complaintFirstReviewInfo.xhtml" />
+		</p:tab>
+	</p:tabView>
 </ui:composition>

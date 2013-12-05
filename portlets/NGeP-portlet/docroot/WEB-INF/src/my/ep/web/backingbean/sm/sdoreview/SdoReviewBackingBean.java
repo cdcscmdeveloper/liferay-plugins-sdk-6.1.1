@@ -37,8 +37,11 @@ public class SdoReviewBackingBean extends BaseBackingBean<SdoReviewManagedBean> 
 	}
 
 	public void viewSupportingDocument() {
-		log.info("----------appID------------" + this.getManagedBean().getAppId());
-		
+
+		//this.getManagedBean().setAppId(22);
+		log.info("----------appID------------"
+				+ this.getManagedBean().getAppId());
+
 		SdoReviewReqDTO reqDTO = new SdoReviewReqDTO();
 		ISdoReviewSO reqSO = (ISdoReviewSO) BusinessDelegate.getInstance()
 				.getServiceObject("sm", ISdoReviewSO.class);
@@ -49,43 +52,52 @@ public class SdoReviewBackingBean extends BaseBackingBean<SdoReviewManagedBean> 
 		log.info("----------------------supportingDocMode-------------------------"
 				+ resDTO.getSmAppl().getSupportingDocMode());
 
-		
 	}
 
 	public String submitSDOReviewAction(String res) {
 
-		/*if (res.equalsIgnoreCase("VERIFIED")) {
-			log.info("----------------------submitSDOReviewAction-------------------------"
-					+ res);*/
-			SdoReviewReqDTO reqDTO = new SdoReviewReqDTO();
-			ISdoReviewSO reqSO = (ISdoReviewSO) BusinessDelegate.getInstance()
-					.getServiceObject("sm", ISdoReviewSO.class);
-			reqDTO.setApplId(this.getManagedBean().getAppId());
-			reqDTO.setOutcome(res);
-			reqDTO.setSuppId(this.getManagedBean().getSmAppl().getSmSupplier().getSupplierId());
-			reqDTO.setAppType(this.getManagedBean().getSmAppl().getApplType());
-			reqDTO.setTaskId(this.getManagedBean().getTaskId());
-			
-			if(this.getManagedBean().getSmAppl().getSupportingDocMode() == "S"){
-				reqDTO.setOnlineDoc(true);
-			}else if(this.getManagedBean().getSmAppl().getSupportingDocMode() == "H"){
-				reqDTO.setOnlineDoc(false);
-			}
-			
-			SdoReviewResDTO resDTO = reqSO.submitBPMSdoReview(reqDTO);
-			
-			if (resDTO.isSuccessful()) {
-				FacesContext.getCurrentInstance().addMessage(null,
-						new FacesMessage(FacesMessage.SEVERITY_INFO, "Application has been updated successfully", ""));
-				return "/xhtml/sm/disciplinaryAction/outputMsg";
-			} else {
-				FacesContext.getCurrentInstance().addMessage(null,
-						new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error", ""));
-				return "";
-			}
-		//}
+		/*
+		 * if (res.equalsIgnoreCase("VERIFIED")) { log.info(
+		 * "----------------------submitSDOReviewAction-------------------------"
+		 * + res);
+		 */
+		String bpmUsrName = new FacesScopes().getUserScreenName();
+
+
+		SdoReviewReqDTO reqDTO = new SdoReviewReqDTO();
+		ISdoReviewSO reqSO = (ISdoReviewSO) BusinessDelegate.getInstance()
+				.getServiceObject("sm", ISdoReviewSO.class);
+		reqDTO.setApplId(this.getManagedBean().getAppId());
+		reqDTO.setOutcome(res);
+		reqDTO.setSuppId(this.getManagedBean().getSmAppl().getSmSupplier()
+				.getSupplierId());
+		reqDTO.setAppType(this.getManagedBean().getSmAppl().getApplType());
+		reqDTO.setTaskId(this.getManagedBean().getTaskId());
+
+		reqDTO.setBpmUserName(bpmUsrName);
+
+		if (this.getManagedBean().getSmAppl().getSupportingDocMode() == "S") {
+			reqDTO.setOnlineDoc(true);
+		} else if (this.getManagedBean().getSmAppl().getSupportingDocMode() == "H") {
+			reqDTO.setOnlineDoc(false);
+		}
+
+		SdoReviewResDTO resDTO = reqSO.submitBPMSdoReview(reqDTO);
+
+		if (resDTO.isSuccessful()) {
+			FacesContext.getCurrentInstance().addMessage(
+					null,
+					new FacesMessage(FacesMessage.SEVERITY_INFO,
+							"Application has been updated successfully", ""));
+			return "/xhtml/sm/disciplinaryAction/outputMsg";
+		} else {
+			FacesContext.getCurrentInstance().addMessage(null,
+					new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error", ""));
+			return "";
+		}
+		// }
 	}
-	
+
 	public void preRenderView() {
 		log.info("--------------SDO preRenderView--------------");
 		HttpServletRequest servletRequest = PortalUtil
@@ -93,35 +105,44 @@ public class SdoReviewBackingBean extends BaseBackingBean<SdoReviewManagedBean> 
 		HttpServletRequest originalServletRequest = PortalUtil
 				.getOriginalServletRequest(servletRequest);
 		String taskId = originalServletRequest.getParameter("taskId");
-		String loginId = originalServletRequest.getParameter("loginId");
+		String bpmUsrName = new FacesScopes().getUserScreenName();
 		
+		log.info("----------------BPMUSER-------------------" + bpmUsrName);
 		SdoReviewReqDTO reqDTO = new SdoReviewReqDTO();
 		reqDTO.setTaskId(taskId);
-		
+		reqDTO.setBpmUserName(bpmUsrName);
+
 		ISdoReviewSO reqSO = (ISdoReviewSO) BusinessDelegate.getInstance()
 				.getServiceObject("sm", ISdoReviewSO.class);
-		
-		BpmResponseDTO resDTO = (BpmResponseDTO) reqSO.getBPMTaskDetails(reqDTO);
+
+		BpmResponseDTO resDTO = (BpmResponseDTO) reqSO
+				.getBPMTaskDetails(reqDTO);
 		this.getManagedBean().setTaskName(resDTO.getTaskName());
 		this.getManagedBean().setBpmAction(resDTO.getAction());
 		this.getManagedBean().setTaskId(taskId);
 
-		//SMDisciplinaryActionDataType disActObj = (SMDisciplinaryActionDataType) resDTO.getPojo();
-		SMMOFRegDataType mofObj = (SMMOFRegDataType)resDTO.getPojo();
+		// SMDisciplinaryActionDataType disActObj =
+		// (SMDisciplinaryActionDataType) resDTO.getPojo();
+		SMMOFRegDataType mofObj = (SMMOFRegDataType) resDTO.getPojo();
+		log.info("--------------mofObj.getAppId()--------------------"+mofObj.getAppId());
 		this.getManagedBean().setAppId(Long.parseLong(mofObj.getAppId()));
-		
-		viewSupportingDocument();
-		
-//		if(resDTO.getTaskName().equalsIgnoreCase("Update Complaint")){
-//			FacesContext fc = FacesContext.getCurrentInstance();
-//			fc.getApplication().getNavigationHandler().handleNavigation(fc, null, "complaintFirstReviewInfo");
-//		}else if(resDTO.getTaskName().equalsIgnoreCase("Input PTPK Response")){
-//
-//			FacesContext fc = FacesContext.getCurrentInstance();
-//			fc.getApplication().getNavigationHandler().handleNavigation(fc, null, "updateComplaintFirstReview");
-//			
-//		}
-//		
-		//log.info("------------BpmResponseDTO TASKNAME-----------------" + resDTO.getTaskName());
+
+		//viewSupportingDocument();
+
+		// if(resDTO.getTaskName().equalsIgnoreCase("Update Complaint")){
+		// FacesContext fc = FacesContext.getCurrentInstance();
+		// fc.getApplication().getNavigationHandler().handleNavigation(fc, null,
+		// "complaintFirstReviewInfo");
+		// }else
+		// if(resDTO.getTaskName().equalsIgnoreCase("Input PTPK Response")){
+		//
+		// FacesContext fc = FacesContext.getCurrentInstance();
+		// fc.getApplication().getNavigationHandler().handleNavigation(fc, null,
+		// "updateComplaintFirstReview");
+		//
+		// }
+		//
+		// log.info("------------BpmResponseDTO TASKNAME-----------------" +
+		// resDTO.getTaskName());
 	}
 }

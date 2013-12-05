@@ -20,6 +20,7 @@ import my.ep.persistence.entity.sm.SmAppl;
 import my.ep.persistence.entity.sm.SmPersonnel;
 import my.ep.persistence.entity.sm.SmSupplier;
 import my.ep.persistence.entity.sm.SmSupplierBank;
+import my.ep.persistence.entity.sm.SmSupplierCert;
 import my.ep.persistence.entity.sm.SmSupplierOwner;
 import my.ep.web.backingbean.BaseBackingBean;
 import my.ep.web.managedbean.sm.registration.RegistrationManagedBean;
@@ -75,6 +76,7 @@ public class RegistrationBackingBean extends
 			this.getManagedBean().getSmSuppOwner().setIdentificationType("I");
 			this.getManagedBean().getSmSuppOwner()
 					.setOwnerName(smSupp.getSupplierName());
+			
 		}
 
 		return firstUserRegistration;
@@ -153,6 +155,8 @@ public class RegistrationBackingBean extends
 			this.getManagedBean().setSmResAdd(new SmAddress());
 			// this.getManagedBean().setSmPersonnelAdd(new
 			// SmPersonnelAddress());
+			
+			this.getManagedBean().setSmSuppCerts(new ArrayList<SmSupplierCert>());
 		}
 
 		this.getManagedBean().getSmAppl()
@@ -171,8 +175,9 @@ public class RegistrationBackingBean extends
 	}
 
 	public void addProfessionalCert() {
-		log.info("-------------------addProfessionalCert-----------");
+		log.info("-------------------addProfessionalCert-----------" + this.getManagedBean().getSmSuppCerts());
 
+		this.getManagedBean().getSmSuppCerts().add(new SmSupplierCert());
 		/*
 		 * if (this.getManagedBean().getPmOrgProfile().getSmSupplier()
 		 * .getSmSupplierCerts() == null) {

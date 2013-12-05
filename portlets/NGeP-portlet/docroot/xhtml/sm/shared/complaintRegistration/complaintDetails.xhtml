@@ -8,16 +8,16 @@
 	<p:panel header="Supplier Search" toggleable="true">
 		<table class="customTbl">
 			<tr>
-				<td id="tdTitle"><p:outputLabel value="* Search By" /></td>
-				<td id="tdContent"><p:selectOneMenu>
+				<td><p:outputLabel value="* Search By" /></td>
+				<td><p:selectOneMenu>
 						<f:selectItem itemLabel= "MOF No." itemValue="1"></f:selectItem>
 						<f:selectItem itemLabel= "eP No." itemValue="2"></f:selectItem>
 						<f:selectItem itemLabel= "Company Registration No." itemValue="3"></f:selectItem>
 						<f:selectItem itemLabel= "Company Name" itemValue="4"></f:selectItem>
 					</p:selectOneMenu></td>
 
-				<td id="tdTitle"><p:outputLabel value="* Value" /></td>
-				<td id="tdContent"><p:inputText /></td>
+				<td><p:outputLabel value="* Value" /></td>
+				<td><p:inputText /></td>
 			</tr>
 		</table>
 
@@ -57,9 +57,9 @@
 				<td><p:selectOneMenu
 						value="#{complaintBackingBean.managedBean.smComplaint.complaintCategory}">
 						<f:selectItem itemLabel="-- Select One -- " itemValue="" />
-						<f:selectItem itemLabel="Breach the obligation of registration" itemValue="1" />
-						<f:selectItem itemLabel="Breach the obligation of Tender/ Contract" itemValue="2" />
-						<f:selectItem itemLabel="Criminal or Civil Offenses" itemValue="3" />
+						<f:selectItem itemLabel="Breach the obligation of registration" itemValue="R" />
+						<f:selectItem itemLabel="Breach the obligation of Tender/ Contract" itemValue="T" />
+						<f:selectItem itemLabel="Criminal or Civil Offenses" itemValue="O" />
 					</p:selectOneMenu></td>
 			</tr>
 

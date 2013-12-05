@@ -9,7 +9,7 @@
 
 
 	<ui:define name="contentSection">
-		<p:panel header="User Information">
+		<p:panel header="User Information" toggleable="true">
 			<table class="customTbl">
 				<tr>
 					<td id="tdTitle"><p:outputLabel
@@ -39,7 +39,7 @@
 							<f:selectItem itemLabel="Passport" itemValue="P" />
 						</p:selectOneMenu></td>
 
-					<td><p:outputLabel value="#{lbl['lbl.sm.identificationno']}" /></td>
+					<td><p:outputLabel value="* #{lbl['lbl.sm.identificationno']}" /></td>
 					<td id="tdContent"><p:inputText id="txtIdNumber"
 							value="#{registrationBackingBean.managedBean.smPersonnel.identificationNo}" />
 					</td>
@@ -49,7 +49,7 @@
 				<c:if
 					test="#{registrationBackingBean.managedBean.smSupp.businessType != 'I'}">
 					<tr>
-						<td><p:outputLabel value="#{lbl['lbl.sm.permenantaddress']}" /></td>
+						<td><p:outputLabel value="* #{lbl['lbl.sm.permenantaddress']}" /></td>
 						<td id="tdContent" colspan="2"><p:inputText size="50" /></td>
 					</tr>
 
@@ -100,7 +100,7 @@
 			</table>
 		</p:panel>
 
-		<p:panel header="Contact Information">
+		<p:panel header="Contact Information" toggleable="true">
 			<table class="customTbl">
 				<tr>
 					<td id="tdTitle"><p:outputLabel

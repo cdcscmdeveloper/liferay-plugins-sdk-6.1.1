@@ -12,7 +12,7 @@ public class CommonSiteVisitManagedBean extends BaseManagedBean{
 
 	private String[] bpmAction;
 	private String taskName;
-	
+		
 	public String[] getBpmAction() {
 		return bpmAction;
 	}

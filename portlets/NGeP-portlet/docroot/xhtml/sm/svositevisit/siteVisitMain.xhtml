@@ -8,7 +8,7 @@
 	xmlns:c="http://java.sun.com/jsp/jstl/core">
 
 	<ui:define name="contentSection">
-		<p:tabView id="tvBudgetAlloc" dynamic="true" orientation="left">
+		<p:tabView id="tabSiteVisit" dynamic="true" orientation="left">
 
 			<p:tab title="Site Visit Info">
 				<ui:include src="siteVisitView.xhtml" />
@@ -17,6 +17,12 @@
 			<p:tab title="Site Visit Report">
 				<ui:include src="siteVisitRptSubmission.xhtml" />
 			</p:tab>
+
+			<p:tab title="Submission">
+				<ui:include src="siteVisitFinalSubmission.xhtml" />
+			</p:tab>
 		</p:tabView>
+
+
 	</ui:define>
 </ui:composition>

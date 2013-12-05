@@ -25,13 +25,9 @@
 
 	<c:if
 		test="#{registrationBackingBean.managedBean.smSupp.businessType == 'P'}">
-		<p:panel header="Professional Body Information" id="pnlProfCert">
+		<p:panel header="Professional Body Information" id="pnlProfCert" toggleable="true">
 			<p:dataTable var="suppCert"
-				value="#{registrationBackingBean.managedBean.smSupp.smSupplierCerts}">
-				<p:column headerText="Type of Certification">
-					<p:inputText value="#{suppCert.certType}" />
-				</p:column>
-
+				value="#{registrationBackingBean.managedBean.smSuppCerts}">
 				<p:column headerText="Certificate Name">
 					<p:inputText value="#{suppCert.certName}" />
 				</p:column>

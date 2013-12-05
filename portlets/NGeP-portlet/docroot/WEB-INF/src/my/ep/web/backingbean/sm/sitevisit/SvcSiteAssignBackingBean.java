@@ -11,6 +11,7 @@ import my.ep.dto.sm.siteVisit.SiteAssignResDTO;
 import my.ep.persistence.entity.sm.SmSiteVisitAddress;
 import my.ep.web.backingbean.BaseBackingBean;
 import my.ep.web.managedbean.sm.sitevisit.SvcSiteAssignManagedBean;
+import my.ep.web.util.FacesScopes;
 import my.ep.web.util.lookupservice.BusinessDelegate;
 
 import org.apache.log4j.Logger;
@@ -20,7 +21,7 @@ import org.apache.log4j.Logger;
 public class SvcSiteAssignBackingBean extends
 		BaseBackingBean<SvcSiteAssignManagedBean> {
 	public static Logger log = Logger.getLogger(SvcSiteAssignBackingBean.class);
-
+	
 	public SvcSiteAssignBackingBean() {
 
 	}
@@ -46,9 +47,12 @@ public class SvcSiteAssignBackingBean extends
 		SiteAssignReqDTO reqDTO = new SiteAssignReqDTO();
 		ISiteAssignSO reqSO = (ISiteAssignSO) BusinessDelegate.getInstance()
 				.getServiceObject("sm", ISiteAssignSO.class);
+		String bpmUsrName = new FacesScopes().getUserScreenName();
+		
 		reqDTO.setAppId(this.getManagedBean().getAppId());
 		reqDTO.setOutcome(action);
 		reqDTO.setTaskId(this.getManagedBean().getTaskId());
+		reqDTO.setBpmUserName(bpmUsrName);
 		SiteAssignResDTO resDTO = reqSO.submitBPMTaskAssignment(reqDTO);
 		
 		if (resDTO.isSuccessful()) {

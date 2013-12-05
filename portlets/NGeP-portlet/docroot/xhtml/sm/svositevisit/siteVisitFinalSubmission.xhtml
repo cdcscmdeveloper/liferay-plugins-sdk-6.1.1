@@ -1,0 +1,55 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:c="http://java.sun.com/jsp/jstl/core">
+
+	<p:panel header="Site Visit Report" toggleable="true">
+		<p:dataTable var="svo"
+			value="#{svoSiteVisitBackingBean.managedBean.smApplSv.smSiteVisitAddresses}">
+			<p:column headerText="No">
+						#{rowIndex+1}
+						</p:column>
+
+			<p:column headerText="Address">
+							#{svo.smAddress.address1}<br />
+							#{svo.smAddress.address2}<br />
+							#{svo.smAddress.address3}<br />
+							#{svo.smAddress.address4}
+						</p:column>
+
+			<p:column headerText="Post Code">
+						#{svo.smAddress.postcode}
+						</p:column>
+
+			<p:column headerText="City">
+			</p:column>
+
+
+			<p:column headerText="District">
+			</p:column>
+
+			<p:column headerText="State">
+			</p:column>
+
+			<p:column headerText="Country">
+						#{svo.smAddress.pmCountry.countryName}
+			</p:column>
+
+			<p:column headerText="Report Status">
+			</p:column>
+		</p:dataTable>
+	</p:panel>
+
+	<div align="right">
+		<div align="right">
+			<ui:repeat value="#{svoSiteVisitBackingBean.managedBean.bpmAction}"
+				var="item">
+				<p:commandButton
+					action="#{svoSiteVisitBackingBean.submitSiteVisitReport(item)}"
+					value="#{item}" />
+			</ui:repeat>
+		</div>
+	</div>
+</ui:composition>

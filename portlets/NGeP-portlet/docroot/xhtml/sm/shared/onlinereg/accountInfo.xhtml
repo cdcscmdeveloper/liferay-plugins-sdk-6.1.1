@@ -6,12 +6,14 @@
 	xmlns:p="http://primefaces.org/ui"
 	xmlns:c="http://java.sun.com/jsp/jstl/core">
 
-	<p:panel header="Account Information">
+	<p:panel header="Account Information" toggleable="true">
 		<table class="customTbl">
-			<c:if
-				test="#{registrationBackingBean.managedBean.smAppl.applType == 'N'}">
-				<tr>
-					<td id="tdTitle"><p:outputLabel value="* #{lbl['lbl.sm.mofsuppliertype']}" /></td>
+			<tr>
+				<c:if
+					test="#{registrationBackingBean.managedBean.smAppl.applType == 'N'}">
+
+					<td id="tdTitle"><p:outputLabel
+							value="* #{lbl['lbl.sm.mofsuppliertype']}" /></td>
 					<td id="tdContent"><p:selectOneMenu
 							value="#{registrationBackingBean.managedBean.smAppl.supplierType}">
 							<f:selectItem itemLabel="Select" itemValue="" />
@@ -19,10 +21,10 @@
 							<f:selectItem itemLabel="Consultant" itemValue="P" />
 							<f:selectItem itemLabel="Government Seller" itemValue="G" />
 						</p:selectOneMenu></td>
-				</tr>
-			</c:if>
-			<tr>
-				<td id="tdTitle"><p:outputLabel value="#{lbl['lbl.sm.businesscomptype']}" /></td>
+				</c:if>
+
+				<td id="tdTitle"><p:outputLabel
+						value="#{lbl['lbl.sm.businesscomptype']}" /></td>
 				<td id="tdContent"><p:selectOneMenu id="somId"
 						value="#{registrationBackingBean.managedBean.smSupp.businessType}">
 						<f:selectItem itemLabel="Select" itemValue="" />
@@ -36,6 +38,11 @@
 						<f:selectItem itemLabel="Professional Body" itemValue="P" />
 						<p:ajax event="change" update="@form" />
 					</p:selectOneMenu></td>
+			<c:if
+					test="#{registrationBackingBean.managedBean.smAppl.applType != 'N'}">
+					<td id="tdTitle"></td>
+					<td id="tdContent"></td>
+			</c:if>
 			</tr>
 		</table>
 	</p:panel>

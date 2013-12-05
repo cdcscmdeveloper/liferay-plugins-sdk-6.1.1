@@ -21,7 +21,8 @@ import com.liferay.portal.util.PortalUtil;
 @ManagedBean(name = "commSiteVisitBackingBean")
 @RequestScoped
 public class CommonSiteVisitBackingBean extends BaseBackingBean<CommonSiteVisitManagedBean>{
-public static Logger log = Logger.getLogger(CommonSiteVisitBackingBean.class);
+	public static Logger log = Logger.getLogger(CommonSiteVisitBackingBean.class);
+
 	public void preRenderView() {
 		log.info("-------ComAppl prerender view-------");
 		HttpServletRequest servletRequest = PortalUtil
@@ -29,11 +30,14 @@ public static Logger log = Logger.getLogger(CommonSiteVisitBackingBean.class);
 		HttpServletRequest originalServletRequest = PortalUtil
 				.getOriginalServletRequest(servletRequest);
 		String taskId = originalServletRequest.getParameter("taskId");
-		String loginId = originalServletRequest.getParameter("loginId");		
 		ComplaintReqDTO reqDTO = new ComplaintReqDTO();
+		String bpmUsrName = new FacesScopes().getUserScreenName();
 		
 		reqDTO.setTaskId(taskId);
-
+		reqDTO.setBpmUserName(bpmUsrName);
+		
+		log.info("-------BPM USER Backing Bean-------" + bpmUsrName);
+		
 		IComplaintSO reqSO = (IComplaintSO) BusinessDelegate.getInstance()
 				.getServiceObject("sm", IComplaintSO.class);
 		
@@ -55,6 +59,7 @@ public static Logger log = Logger.getLogger(CommonSiteVisitBackingBean.class);
 			FacesContext fc = FacesContext.getCurrentInstance();
 			fc.getApplication().getNavigationHandler().handleNavigation(fc, null, "/xhtml/sm/svcassignment/assignSiteVisitView");
 		}else if(resDTO.getTaskName().equalsIgnoreCase("Complete Site Visit Report")){
+			log.info("------Complete Site Visit Report-------------" + svObj.getAppId());
 			SvoSiteVisitBackingBean svoBB = new SvoSiteVisitBackingBean();
 			svoBB.getManagedBean().setAppId(
 					(Long.parseLong(svObj.getAppId())));
@@ -63,7 +68,7 @@ public static Logger log = Logger.getLogger(CommonSiteVisitBackingBean.class);
 			svoBB.retrieveSiteVisitInfo();
 			
 			FacesContext fc = FacesContext.getCurrentInstance();
-			fc.getApplication().getNavigationHandler().handleNavigation(fc, null, "/xhtml/sm/svositevisit/siteVisitView");
+			fc.getApplication().getNavigationHandler().handleNavigation(fc, null, "/xhtml/sm/svositevisit/siteVisitMain");
 		}
 		
 	}

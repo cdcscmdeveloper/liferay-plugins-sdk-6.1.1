@@ -26,6 +26,8 @@ public class ComplaintManagedBean extends BaseManagedBean {
 	private String taskId;
 	private String[] bpmAction;
 	private String taskName;
+	private List<SmComplaint> smComplLs;
+	private SmComplaint selectedComplaint;
 	
 	private PmCountry pmCountry;
 	private PmState pmState;
@@ -94,6 +96,22 @@ public class ComplaintManagedBean extends BaseManagedBean {
 
 	public void setTaskName(String taskName) {
 		this.taskName = taskName;
+	}
+
+	public List<SmComplaint> getSmComplLs() {
+		return smComplLs;
+	}
+
+	public void setSmComplLs(List<SmComplaint> smComplLs) {
+		this.smComplLs = smComplLs;
+	}
+
+	public SmComplaint getSelectedComplaint() {
+		return selectedComplaint;
+	}
+
+	public void setSelectedComplaint(SmComplaint selectedComplaint) {
+		this.selectedComplaint = selectedComplaint;
 	}
 
 	public PmCountry getPmCountry() {

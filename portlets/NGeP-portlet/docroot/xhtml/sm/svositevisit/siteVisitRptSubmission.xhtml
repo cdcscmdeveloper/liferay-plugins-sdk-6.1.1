@@ -1,51 +1,101 @@
-<ui:composition
-	template="/WEB-INF/facelets/templates/basic_template.xhtml"
-	xmlns="http://www.w3.org/1999/xhtml"
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
 	xmlns:f="http://java.sun.com/jsf/core"
 	xmlns:h="http://java.sun.com/jsf/html"
 	xmlns:ui="http://java.sun.com/jsf/facelets"
 	xmlns:p="http://primefaces.org/ui"
 	xmlns:c="http://java.sun.com/jsp/jstl/core">
 
-	<ui:define name="contentSection">
-		<p:panel header="Report Submission">
-			<table>
-				<tr>
-					<td><p:outputLabel value="Report Submit" /></td>
-					<td><p:selectOneRadio id="rdoMethod"
-							value="#{svoSiteVisitBackingBean.managedBean.rptSubsMethod}">
-							<f:selectItem itemLabel="Report Upload" itemValue="Upload" />
-							<f:selectItem itemLabel="Online Submit" itemValue="Online" />
-						</p:selectOneRadio></td>
+	<p:panel header="Site(s)" toggleable="true">
+		<table class="customTbl">
+			<tr>
+				<td id="tdTitle"><p:outputLabel value="Site" /></td>
+				<td id="tdContent"><p:selectOneMenu>
+						<f:selectItems
+							value="#{svoSiteVisitBackingBean.managedBean.smApplSv.smSiteVisitAddresses}"
+							var="c" itemLabel="#{c.smAddress.address1}"
+							itemValue="#{c.smAddress.address1}" />
+					</p:selectOneMenu></td>
+				<td id="tdTitle"></td>
+				<td id="tdContent"></td>
+			</tr>
+		</table>
+	</p:panel>
 
-					<td><p:commandButton value="Submit"
-							action="#{svoSiteVisitBackingBean.rptSubmitMethod}"
-							update="@form" /></td>
-
-				</tr>
-			</table>
-		</p:panel>
-
-
-		<p:panel header="Report Upload" id="pnlUpload"
-			rendered="#{svoSiteVisitBackingBean.managedBean.rptSubsMethod == 'Upload'}">
-			<p:fileUpload mode="simple" />
-			<p:commandButton value="Upload"
-				action="#{svoSiteVisitBackingBean.uploadSiteVisitReport}" />
-		</p:panel>
-
-
-		<!--  <table>
-		
-			<tr class="test">
-				<td><p:outputLabel value="Report Submit" /></td>
-				<td><p:selectOneRadio>
+	<p:panel header="Report Submission">
+		<table class="customTbl">
+			<tr>
+				<td id="tdTitle"><p:outputLabel value="Report Submit" /></td>
+				<td id="tdContent"><p:selectOneRadio id="rptMethod"
+						value="#{svoSiteVisitBackingBean.managedBean.rptSubsMethod}">
 						<f:selectItem itemLabel="Report Upload" itemValue="Upload" />
 						<f:selectItem itemLabel="Online Submit" itemValue="Online" />
+						<p:ajax event="change" update="svRptPanel"
+							listener="#{svoSiteVisitBackingBean.changeRptSubsMethod}" />
 					</p:selectOneRadio></td>
-				<td><p:commandButton value="Submit" /></td>
-			</tr>
-		</table>-->
 
-	</ui:define>
+				<td id="tdTitle"></td>
+				<td id="tdContent"></td>
+			</tr>
+		</table>
+	</p:panel>
+
+	<p:outputPanel id="svRptPanel">
+
+		<c:if
+			test="#{svoSiteVisitBackingBean.managedBean.rptSubsMethod == 'Upload'}">
+			<p:panel header="Report">
+				<p:fileUpload mode="simple" />
+				<p:commandButton value="Upload"
+					action="#{svoSiteVisitBackingBean.uploadSiteVisitReport}" />
+			</p:panel>
+		</c:if>
+
+
+
+		<c:if
+			test="#{svoSiteVisitBackingBean.managedBean.rptSubsMethod == 'Online'}">
+			<p:panel header="Report">
+				<div align="right">
+					<p:commandButton value="Save" />
+				</div>
+				<p:tabView id="tabView">
+
+					<p:tab title="Check List">
+						<ui:include src="submitOnlineRptCheckList.xhtml" />
+					</p:tab>
+
+					<p:tab title="Preparation Details">
+						<ui:include src="submitOnlineRptPreDetails.xhtml" />
+					</p:tab>
+
+					<p:tab title="Company Info">
+						<ui:include src="submitOnlineRptCompInfo.xhtml" />
+					</p:tab>
+
+					<p:tab title="Sec A">
+						<ui:include src="submitOnlineRptSectionA.xhtml" />
+					</p:tab>
+
+					<p:tab title="Sec B">
+						<ui:include src="submitOnlineRptSectionB.xhtml" />
+					</p:tab>
+
+					<p:tab title="Sec C">
+						<ui:include src="submitOnlineRptSectionC.xhtml" />
+					</p:tab>
+
+					<p:tab title="Sec D">
+						<ui:include src="submitOnlineRptSectionD.xhtml" />
+					</p:tab>
+
+					<p:tab title="Sec E">
+						<ui:include src="submitOnlineRptSectionE.xhtml" />
+					</p:tab>
+				</p:tabView>
+			</p:panel>
+		</c:if>
+	</p:outputPanel>
+
+
+
 </ui:composition>

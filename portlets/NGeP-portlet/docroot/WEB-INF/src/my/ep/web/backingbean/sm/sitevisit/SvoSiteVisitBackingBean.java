@@ -1,7 +1,5 @@
 package my.ep.web.backingbean.sm.sitevisit;
 
-import java.util.Map;
-
 import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.RequestScoped;
@@ -33,18 +31,12 @@ public class SvoSiteVisitBackingBean extends
 	}
 
 
-	public String rptSubmitMethod() {
-		log.info("-----------------rptSubmitMethod---------------"
-				+ this.getManagedBean().getRptSubsMethod());
-		if (this.getManagedBean().getRptSubsMethod().equals("Online")) {
-			log.info("-----------------Navito template-----------");
-			return NaviToSiteVisitTemplate;
-		} else if (this.getManagedBean().getRptSubsMethod().equals("Upload")) {
-			log.info("-----------------Navito template Upload-----------");
-			return "siteVisitRptSubmission";
-		} else {
-			return "siteVisitRptSubmission";
-		}
+	public void selectSubmissionMethod() {
+		log.info("-----------rptSubmitMethod current--------------" + this.getManagedBean().getRptSubsMethod());
+		log.info("-----------rptSubmitMethod--------------");
+		this.getManagedBean().setRptSubsMethod(this.getManagedBean().getRptSubsMethod());
+		log.info("-----------rptSubmitMethod newer--------------" + this.getManagedBean().getRptSubsMethod());
+		//this.getManagedBean().setRptSubsMethod(this.getManagedBean().getRptSubsMethod());
 	}
 
 	public String naviToSiteVisitTemplate() {
@@ -68,7 +60,7 @@ public class SvoSiteVisitBackingBean extends
 	}
 
 	public void retrieveSiteVisitInfo(){
-		this.getManagedBean().setAppId(22);
+		//this.getManagedBean().setAppId(22);
 		SiteVisitReqDTO reqDTO = new SiteVisitReqDTO();
 		reqDTO.setAppId(this.getManagedBean().getAppId());
 		//reqDTO.setAppId(2);
@@ -77,6 +69,10 @@ public class SvoSiteVisitBackingBean extends
 		SiteVisitResDTO resDTO = reqSO.retrieveSiteVisitInfoByAppId(reqDTO);
 		this.getManagedBean().setSmApplSv(resDTO.getSmApplSv());
 		log.info("----------retrieveSiteVisitInfo---------" + this.getManagedBean().getSmApplSv().getSmAppl().getSmSupplier().getSupplierName());
+		
+	}
+	
+	public void nextTab(){
 		
 	}
 	
@@ -89,9 +85,13 @@ public class SvoSiteVisitBackingBean extends
 		SiteVisitReqDTO reqDTO = new SiteVisitReqDTO();
 		ISiteVisitSO reqSO = (ISiteVisitSO) BusinessDelegate.getInstance()
 				.getServiceObject("sm", ISiteVisitSO.class);
+		
+		String bpmUsrName = new FacesScopes().getUserScreenName();
+		
 		reqDTO.setAppId(this.getManagedBean().getAppId());
 		reqDTO.setOutcome(action);
 		reqDTO.setTaskId(this.getManagedBean().getTaskId());
+		reqDTO.setBpmUserName(bpmUsrName);
 		SiteVisitResDTO resDTO = reqSO.submitSiteVisitReport(reqDTO);
 		
 		if (resDTO.isSuccessful()) {
@@ -107,11 +107,15 @@ public class SvoSiteVisitBackingBean extends
 	}
 	
 	public void uploadSiteVisitReport(){
-		
+		log.info("-----------uploadSiteVisitReport--------------");
 	}
 	
 	public String naviToSiteVisitView(){
 		return NaviToSiteVisitView;
+	}
+	
+	public void changeRptSubsMethod(){
+		log.info("----------Report Subs Method-------------" + this.getManagedBean().getRptSubsMethod());
 	}
 	
 }

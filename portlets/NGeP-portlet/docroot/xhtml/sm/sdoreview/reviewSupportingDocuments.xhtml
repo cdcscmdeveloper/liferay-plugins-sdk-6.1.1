@@ -8,8 +8,6 @@
 	xmlns:c="http://java.sun.com/jsp/jstl/core">
 
 	<ui:define name="contentSection">
-		<f:event listener="#{sdoReviewBackingBean.preRenderView}"
-			type="preRenderView"></f:event>
 		<!-- <p:panel>
 			<p>NOTE : The supplier has submitted the documents</p>
 			<p>
@@ -21,50 +19,50 @@
 			</p>
 		</p:panel> -->
 
-		<p:panel header="Maklumat Asas Syarikat">
+		<p:panel header="Maklumat Asas Syarikat" toggleable="true">
 			<table class="customTbl">
 				<tr>
-					<td id="tdTitle">Status Bayaran</td>
+					<td id="tdTitle"><p:outputLabel value="Status Bayaran" /></td>
 					<td id="tdContent"><p:inputText value="Belum Bayar"
-							disabled="true" /></td>
+							disabled="true"  size="50" /></td>
 
-					<td id="tdTitle">Supplier Name</td>
+					<td id="tdTitle"><p:outputLabel value="Supplier Name" /></td>
 					<td id="tdContent"><p:inputText
 							value="#{sdoReviewBackingBean.managedBean.smAppl.smSupplier.supplierName}"
-							disabled="true" /></td>
+							disabled="true" size="50" /></td>
 				</tr>
 
 				<tr>
-					<td id="tdTitle">Jenis Pendaftaran</td>
+					<td id="tdTitle"><p:outputLabel value="Jenis Pendaftaran" /></td>
 					<td id="tdContent"><p:inputText
 							value="#{sdoReviewBackingBean.managedBean.smAppl.smSupplier.businessType}"
-							disabled="true" /></td>
+							disabled="true" size="50" /></td>
 
-					<td id="tdTitle">No. ROC/ROBROS</td>
+					<td id="tdTitle"><p:outputLabel value="No. ROC/ROBROS" /></td>
 					<td id="tdContent"><p:inputText
 							value="#{sdoReviewBackingBean.managedBean.smAppl.smSupplier.regNo}"
-							disabled="true" /></td>
+							disabled="true" size="50" /></td>
 				</tr>
 
 				<tr>
-					<td id="tdTitle">No. Rujukan Cukai Pendapatan</td>
+					<td id="tdTitle"><p:outputLabel value="No. Rujukan Cukai Pendapatan" /></td>
 					<td id="tdContent"><p:inputText
 							value="#{sdoReviewBackingBean.managedBean.smAppl.smSupplier.incomeTaxNo}"
-							disabled="true" /></td>
+							disabled="true" size="50" /></td>
 
-					<td id="tdTitle">Tarikh Penubuhan</td>
+					<td id="tdTitle"><p:outputLabel value="Tarikh Penubuhan" /></td>
 					<td id="tdContent"><p:inputText
 							value="#{sdoReviewBackingBean.managedBean.smAppl.smSupplier.establishDate}"
-							disabled="true" /></td>
+							disabled="true"  size="50" /></td>
 				</tr>
 
 				<tr>
-					<td id="tdTitle">Jumlah Staf Syarikat</td>
+					<td id="tdTitle"><p:outputLabel value="Jumlah Staf Syarikat" /></td>
 					<td id="tdContent"><p:inputText value="Bumiputera 3orang"
-							disabled="true" /></td>
+							disabled="true" size="50" /></td>
 
-					<td id="tdTitle">Pendapatan Tahunan</td>
-					<td id="tdContent"><p:inputText value="a" disabled="true" /></td>
+					<td id="tdTitle"><p:outputLabel value="Pendapatan Tahunan" /></td>
+					<td id="tdContent"><p:inputText value="a" disabled="true" size="50" /></td>
 				</tr>
 			</table>
 		</p:panel>
@@ -72,40 +70,40 @@
 		<p:panel header="">
 			<table class="customTbl">
 				<tr>
-					<td id="tdTitle">Alamat</td>
-					<td id="tdContent"><p:inputText value="a" disabled="true" /></td>
+					<td id="tdTitle"><p:outputLabel value="Alamat" /></td>
+					<td id="tdContent"><p:inputText value="a" disabled="true" size="50" /></td>
 
-					<td id="tdTitle">Poskod</td>
-					<td id="tdContent"><p:inputText value="a" disabled="true" /></td>
+					<td id="tdTitle"><p:outputLabel value="Poskod" /></td>
+					<td id="tdContent"><p:inputText value="a" disabled="true" size="50" /></td>
 				</tr>
 
 				<tr>
-					<td id="tdTitle">Bandar</td>
-					<td id="tdContent"><p:inputText value="a" disabled="true" /></td>
+					<td id="tdTitle"><p:outputLabel value="Bandar" /></td>
+					<td id="tdContent"><p:inputText value="a" disabled="true" size="50" /></td>
 
-					<td id="tdTitle">Negeri</td>
-					<td id="tdContent"><p:inputText value="a" disabled="true" /></td>
+					<td id="tdTitle"><p:outputLabel value="Negeri" /></td>
+					<td id="tdContent"><p:inputText value="a" disabled="true" size="50" /></td>
 				</tr>
 
 				<tr>
-					<td id="tdTitle">Daerah</td>
-					<td id="tdContent"><p:inputText value="a" disabled="true" /></td>
+					<td id="tdTitle"><p:outputLabel value="Daerah" /></td>
+					<td id="tdContent"><p:inputText value="a" disabled="true" size="50" /></td>
 
-					<td>Negara</td>
-					<td id="tdContent"><p:inputText value="a" disabled="true" /></td>
+					<td id="tdTitle"><p:outputLabel value="Negara" /></td>
+					<td id="tdContent"><p:inputText value="a" disabled="true"  size="50" /></td>
 				</tr>
 
 				<tr>
-					<td id="tdTitle">No. Telefon</td>
-					<td id="tdContent"><p:inputText value="a" disabled="true" /></td>
+					<td id="tdTitle"><p:outputLabel value="No. Telefon" /></td>
+					<td id="tdContent"><p:inputText value="a" disabled="true" size="50" /></td>
 
-					<td id="tdTitle">No. Faks</td>
-					<td id="tdContent"><p:inputText value="a" disabled="true" /></td>
+					<td id="tdTitle"><p:outputLabel value="No. Faks" /></td>
+					<td id="tdContent"><p:inputText value="a" disabled="true" size="50" /></td>
 				</tr>
 
 				<tr>
-					<td id="tdTitle">Laman Web</td>
-					<td id="tdContent"><p:inputText value="a" disabled="true" /></td>
+					<td id="tdTitle"><p:outputLabel value="Laman Web" /></td>
+					<td id="tdContent"><p:inputText value="a" disabled="true" size="50" /></td>
 				</tr>
 			</table>
 		</p:panel>
@@ -115,21 +113,21 @@
 				<tr>
 					<td id="tdTitle">Contact Person</td>
 					<td id="tdContent"><p:inputText
-							value="KU MOHD KAMAL BIN KU SHAARI" disabled="true" /></td>
+							value="KU MOHD KAMAL BIN KU SHAARI" disabled="true" size="50" /></td>
 
 					<td id="tdTitle">Jawatan</td>
 					<td id="tdContent"><p:inputText value="MANAGER"
-							disabled="true" /></td>
+							disabled="true" size="50" /></td>
 				</tr>
 
 				<tr>
 					<td id="tdTitle">No. Telefon</td>
 					<td id="tdContent"><p:inputText value="012-4013352"
-							disabled="true" /></td>
+							disabled="true" size="50" /></td>
 
 					<td id="tdTitle">Alamat Emel</td>
 					<td id="tdContent"><p:inputText value="mantoyz@hotmail.com"
-							disabled="true" /></td>
+							disabled="true" size="50" /></td>
 				</tr>
 			</table>
 		</p:panel>
@@ -138,7 +136,7 @@
 			<!-- <c:if
 				test="#{sdoReviewBackingBean.managedBean.smAppl.supportingDocMode == 'H'}"> -->
 			<ui:include
-				src="/xhtml/sm/shared/mofSdoSharedPages/onlineSupportingDocsForm.xhtml" />
+				src="/xhtml/sm/shared/mofSdoSharedPages/offlineSupportingDocsForm.xhtml" />
 			<!-- </c:if> -->
 
 			<!--  <c:if

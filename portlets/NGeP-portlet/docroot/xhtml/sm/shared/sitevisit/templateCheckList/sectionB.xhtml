@@ -5,39 +5,35 @@
 	xmlns:p="http://primefaces.org/ui"
 	xmlns:c="http://java.sun.com/jsp/jstl/core">
 
-
-	<h:outputLabel value="Section B"
-		style="font-weight:bold;font-size:15px;" />
-
 	<p:panel header="Financial" toggleable="true">
-		<table class="test">
+		<table class="rptTbl">
 			<tr>
-				<td>Cheque Signatories</td>
+				<td><p:outputLabel value="Cheque Signatories" /></td>
 				<td><p:inputText /> person(s)</td>
 			</tr>
 
 			<tr>
-				<td>Bumiputera</td>
-				<td><p:inputText />(RM)</td>
+				<td><p:outputLabel value="Bumiputera (RM)" /></td>
+				<td><p:inputText /></td>
 				<td><p:inputText /> %</td>
 			</tr>
 
 			<tr>
-				<td>Non-Bumiputera</td>
-				<td><p:inputText />(RM)</td>
+				<td><p:outputLabel value="Non-Bumiputera (RM)" /></td>
+				<td><p:inputText /></td>
 				<td><p:inputText /> %</td>
 			</tr>
 
 			<tr>
-				<td>Non-Malaysian</td>
-				<td><p:inputText />(RM)</td>
+				<td><p:outputLabel value="Non-Malaysian (RM)" /></td>
+				<td><p:inputText /></td>
 				<td><p:inputText /> %</td>
 			</tr>
 		</table>
 
-		<p:panel>
+		<p:panel header="Bank Information">
 			<p:dataTable>
-				<f:facet name="header">Bank Information</f:facet>
+<!-- 				<f:facet name="header"></f:facet> -->
 				<p:column>
 					<f:facet name="header">Bank Name</f:facet>
 				</p:column>
@@ -63,44 +59,44 @@
 	</p:panel>
 
 	<p:panel header="Check List" toggleable="true">
-		<table class="test">
+		<table class="rptTbl">
 			<tr>
+				<td><p:outputLabel><p:selectBooleanCheckbox id="bs" /></p:outputLabel></td>
 				<td>Bank Statement</td>
-				<td><p:selectBooleanCheckbox /></td>
-
+				
+				<td><p:outputLabel><p:selectBooleanCheckbox id="cb" /></p:outputLabel></td>
 				<td>Cash Book</td>
-				<td><p:selectBooleanCheckbox /></td>
 			</tr>
 
 
 			<tr>
+			<td><p:outputLabel><p:selectBooleanCheckbox id="chequeb" /></p:outputLabel></td>
 				<td>Cheque Book</td>
-				<td><p:selectBooleanCheckbox /></td>
-
+				
+				<td><p:outputLabel><p:selectBooleanCheckbox id="ff"/></p:outputLabel></td>
 				<td>Financial Facilities</td>
-				<td><p:selectBooleanCheckbox /></td>
 			</tr>
 
 			<tr>
+				<td><p:outputLabel><p:selectBooleanCheckbox id="in"/></p:outputLabel></td>
 				<td>Invoice/Note</td>
-				<td><p:selectBooleanCheckbox /></td>
 
+				<td><p:outputLabel><p:selectBooleanCheckbox id="ks"/></p:outputLabel></td>
 				<td>KWSP/SOCSO</td>
-				<td><p:selectBooleanCheckbox /></td>
 			</tr>
 
 
 			<tr>
+				<td><p:outputLabel><p:selectBooleanCheckbox id="lb"/></p:outputLabel></td>
 				<td>Ledger Book</td>
-				<td><p:selectBooleanCheckbox /></td>
 
+				<td><p:outputLabel><p:selectBooleanCheckbox id="pv"/></p:outputLabel></td>
 				<td>Payment Voucher</td>
-				<td><p:selectBooleanCheckbox /></td>
 			</tr>
 
 			<tr>
-				<td>Unable To <br/>Verified The Document</td>
-				<td><p:selectBooleanCheckbox /></td>
+				<td><p:outputLabel><p:selectBooleanCheckbox id="uv"/></p:outputLabel></td>
+				<td colspan="2">Unable To Verified The Document</td>
 			</tr>
 		</table>
 	</p:panel>

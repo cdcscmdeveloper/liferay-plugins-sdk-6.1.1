@@ -1,44 +1,36 @@
-<ui:composition
-	template="/WEB-INF/facelets/templates/basic_template.xhtml"
-	xmlns="http://www.w3.org/1999/xhtml"
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
 	xmlns:f="http://java.sun.com/jsf/core"
 	xmlns:h="http://java.sun.com/jsf/html"
 	xmlns:ui="http://java.sun.com/jsf/facelets"
 	xmlns:p="http://primefaces.org/ui"
 	xmlns:c="http://java.sun.com/jsp/jstl/core">
 
-	<ui:define name="contentSection">
-		<f:event listener="#{complaintBackingBean.retrieveComplaintInfo}"
-			type="preRenderView"></f:event>
+	<f:event listener="#{complaintBackingBean.retrieveComplaintInfo}"
+		type="preRenderView"></f:event>
 
-		<p:panel header="Show Cause Letter Issuance" toggleable="true">
-			<ui:include
-				src="/xhtml/sm/shared/complaintRegistration/complaintBasicInfo.xhtml" />
-		</p:panel>
-
-		<p:panel header="Show Cause Letter" toggleable="true">
-			<table style="width: 100%">
-				<tr>
-					<td id="tdTitle"><p:outputLabel value="* Date of Issuance" /></td>
-					<td id="tdContent"><p:calendar showOn="button" /></td>
-					<td id="tdTitle"><p:outputLabel value="* Ref No" /></td>
-					<td id="tdContent"><p:inputText /></td>
-				</tr>
-
-			</table>
-		</p:panel>
-
+	<p:panel header="Show Cause Letter Issuance" toggleable="true">
 		<ui:include
-			src="/xhtml/sm/shared/complaintRegistration/complaintTracking.xhtml" />
+			src="/xhtml/sm/shared/complaintRegistration/complaintBasicInfo.xhtml" />
+	</p:panel>
 
+	<p:panel header="Show Cause Letter" toggleable="true">
+		<table style="width: 100%">
+			<tr>
+				<td id="tdTitle"><p:outputLabel value="* Date of Issuance" /></td>
+				<td id="tdContent"><p:calendar showOn="button" /></td>
+				<td id="tdTitle"><p:outputLabel value="* Ref No" /></td>
+				<td id="tdContent"><p:inputText /></td>
+			</tr>
 
-		<div align="right">
-			<ui:repeat value="#{complaintBackingBean.managedBean.bpmAction}"
-				var="item">
-				<p:commandButton
-					action="#{complaintBackingBean.updateLetterIssuance(item)}"
-					value="#{item}" />
-			</ui:repeat>
-		</div>
-	</ui:define>
+		</table>
+	</p:panel>
+
+	<ui:include
+		src="/xhtml/sm/shared/complaintRegistration/complaintTracking.xhtml" />
+
+	<div align="right">
+		<p:commandButton value="Update"
+			action="#{complaintBackingBean.updateComplaint}" />
+	</div>
+
 </ui:composition>

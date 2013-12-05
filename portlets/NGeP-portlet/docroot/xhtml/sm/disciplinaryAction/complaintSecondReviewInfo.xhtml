@@ -1,40 +1,32 @@
-<ui:composition
-	template="/WEB-INF/facelets/templates/basic_template.xhtml"
-	xmlns="http://www.w3.org/1999/xhtml"
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
 	xmlns:f="http://java.sun.com/jsf/core"
 	xmlns:h="http://java.sun.com/jsf/html"
 	xmlns:ui="http://java.sun.com/jsf/facelets"
 	xmlns:p="http://primefaces.org/ui"
 	xmlns:c="http://java.sun.com/jsp/jstl/core">
 
-	<ui:define name="contentSection">
-		<f:event listener="#{complaintBackingBean.retrieveComplaintInfo}"
-			type="preRenderView"></f:event>
-		<p:panel header="Complaint Details">
-			<ui:include
-				src="/xhtml/sm/shared/complaintRegistration/complaintBasicInfo.xhtml" />
-		</p:panel>
-		<p:panel header="Second Review Info" toggleable="true">
-			<table style="width: 100%">
-				<tr>
-					<td id="tdTitle"><p:outputLabel value="Report Sent to PTPK *" /></td>
-					<td id="tdContent"><p:calendar showOn="button" /></td>
-					<td id="tdTitle"><p:outputLabel value="Expected Convene Date *" /></td>
-					<td id="tdContent"><p:calendar showOn="button"
-							value="#{complaintBackingBean.managedBean.smComplReview.conveneDate}" /></td>
-				</tr>
-			</table>
-		</p:panel>
+	<f:event listener="#{complaintBackingBean.retrieveComplaintInfo}"
+		type="preRenderView"></f:event>
+	<p:panel header="Complaint Details">
 		<ui:include
-			src="/xhtml/sm/shared/complaintRegistration/complaintTracking.xhtml" />
-		<div align="right">
-			<ui:repeat value="#{complaintBackingBean.managedBean.bpmAction}"
-				var="item">
-				<p:commandButton
-					action="#{complaintBackingBean.updateComplaintSecReviewInfo(item)}"
-					value="#{item}" />
-			</ui:repeat>
-		</div>
+			src="/xhtml/sm/shared/complaintRegistration/complaintBasicInfo.xhtml" />
+	</p:panel>
+	<p:panel header="Second Review Info" toggleable="true">
+		<table style="width: 100%">
+			<tr>
+				<td id="tdTitle"><p:outputLabel value="Report Sent to PTPK *" /></td>
+				<td id="tdContent"><p:calendar showOn="button" /></td>
+				<td id="tdTitle"><p:outputLabel value="Expected Convene Date *" /></td>
+				<td id="tdContent"><p:calendar showOn="button"
+						value="#{complaintBackingBean.managedBean.smComplReview.conveneDate}" /></td>
+			</tr>
+		</table>
+	</p:panel>
+	<ui:include
+		src="/xhtml/sm/shared/complaintRegistration/complaintTracking.xhtml" />
+	<div align="right">
+		<p:commandButton value="Update"
+			action="#{complaintBackingBean.updateComplaint}" />
+	</div>
 
-	</ui:define>
 </ui:composition>

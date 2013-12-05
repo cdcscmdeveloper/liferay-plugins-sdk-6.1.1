@@ -11,7 +11,7 @@
 		<p:panel header="Acoount Type">
 			<table>
 				<tr>
-					<td><h:outputLabel value="#{lbl['lbl.sm.regtype']}" /></td>
+					<td><p:outputLabel value="#{lbl['lbl.sm.regtype']}" /></td>
 					<td><p:selectOneRadio
 							value="#{registrationBackingBean.managedBean.applType}">
 							<f:selectItem itemLabel="Register Online Account" itemValue="O" />
@@ -73,5 +73,6 @@
 			<p:commandButton value="Next"
 				action="#{registrationBackingBean.onlineAccountAgreement}" />
 		</div>
+		
 	</ui:define>
 </ui:composition>
