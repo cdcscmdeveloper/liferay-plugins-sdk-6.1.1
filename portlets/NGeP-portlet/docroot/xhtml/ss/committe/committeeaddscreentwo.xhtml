@@ -12,7 +12,7 @@
 
 			<h:panelGrid columns="2" style="width:100%;"
 				styleClass="noBorders tr,noBorders td">
-				<h:outputLabel value="* Selection  " />
+				<h:outputLabel value="#{lbl['lbl.sc.committe.addscreen.selection']}" />
 				<p:selectOneRadio
 					value="#{committeBackingBean.managedBean.committeMember.userSelection}">
 					<f:selectItems
@@ -34,7 +34,7 @@
 					test="#{committeBackingBean.managedBean.committeMember.userSelection eq 'P' }">
 
 					<h:panelGrid columns="2" styleClass="noBorders tr,noBorders td">
-						<h:outputLabel value="* Type of User  " />
+						<h:outputLabel value="#{lbl['lbl.sc.committe.addscreen.typeuser']}" />
 						<p:selectOneRadio 
 							value="#{committeBackingBean.managedBean.committeMember.govtUser}" disabled="true">
 							<f:selectItems
@@ -42,7 +42,7 @@
 						</p:selectOneRadio>
 					</h:panelGrid>
 					<h:panelGrid columns="2" styleClass="noBorders tr,noBorders td">
-						<h:outputLabel value="* Name " />
+						<h:outputLabel value="#{lbl['lbl.sc.committe.addscreen.name']}" />
 						<p:selectOneMenu value="#{committeBackingBean.managedBean.committeMember.pmUser.userId}">
 							<f:selectItem itemLabel="Select One" itemValue="#{null}" />
 							<f:selectItems
@@ -55,12 +55,12 @@
 					</h:panelGrid>
 					<h:panelGrid columns="4" styleClass="noBorders tr,noBorders td"
 						id="profileUser">
-						<h:outputLabel value="* Identification Type " />
+						<h:outputLabel value="#{lbl['lbl.sc.committe.addscreen.idtype']}" />
 						<p:inputText
 							value="#{committeBackingBean.managedBean.committeMember.idType}"
 							readonly="true" />
 
-						<h:outputLabel value="* Ministry" />
+						<h:outputLabel value="#{lbl['lbl.sc.committe.addscreen.ministry']}" />
 						<p:selectOneMenu id="minstrysDD"
 							value="#{committeBackingBean.managedBean.committeMember.ministryOrgProfile.orgProfileId}">
 							<f:selectItem itemLabel="Select One" itemValue="#{null}" />
@@ -74,12 +74,12 @@
 								
 						</p:selectOneMenu>
 
-						<h:outputLabel value="* Identification No. " />
+						<h:outputLabel value="#{lbl['lbl.sc.committe.addscreen.idno']}" />
 						<p:inputText id="ICno"
 							value="#{committeBackingBean.managedBean.committeMember.icPassport}"
 							readonly="true" />
 
-						<h:outputLabel value="* Department " />
+						<h:outputLabel value="#{lbl['lbl.sc.committe.addscreen.department']}" />
 						<p:selectOneMenu id="DepDD"
 							value="#{committeBackingBean.managedBean.committeMember.departmentOrgProfile.orgProfileId}">
 							<f:selectItem itemLabel="SelectOne" itemValue="#{null}" />
@@ -88,13 +88,13 @@
             				partialSubmit="true" process="@this" update="DivDD" />
 						</p:selectOneMenu>
 
-						<h:outputLabel value="* Designation " />
+						<h:outputLabel value="#{lbl['lbl.sc.committe.addscreen.designation']}" />
 						<p:inputText
 							value="#{committeBackingBean.managedBean.committeMember.designation}"
 							readonly="true" />
 
 
-						<h:outputLabel value="* Division " />
+						<h:outputLabel value="#{lbl['lbl.sc.committe.addscreen.division']}" />
 						<p:selectOneMenu id="DivDD"
 							value="#{committeBackingBean.managedBean.committeMember.pmOrgProfile.orgProfileId}"
 							>
@@ -103,12 +103,12 @@
 						
 						</p:selectOneMenu>
 
-						<h:outputLabel value="* Grade " />
+						<h:outputLabel value="#{lbl['lbl.sc.committe.addscreen.grade']}" />
 						<p:inputText
 							value="#{committeBackingBean.managedBean.committeMember.grade}"
 							readonly="true" />
 
-						<h:outputLabel value="* Role " />
+						<h:outputLabel value="#{lbl['lbl.sc.committe.addscreen.role']}" />
 						<p:selectOneMenu
 							value="#{committeBackingBean.managedBean.committeMember.memberRole}">
 							<f:selectItem itemLabel="" itemValue="1" />
@@ -116,7 +116,7 @@
 							<f:selectItem itemLabel="role 2" itemValue="3" />
 						</p:selectOneMenu>
 
-						<h:outputLabel value="* Access " />
+						<h:outputLabel value="#{lbl['lbl.sc.committe.addscreen.access']}" />
 						<p:selectOneMenu
 							value="#{committeBackingBean.managedBean.committeMember.accessRight}">
 							<f:selectItem itemLabel="" itemValue="1" />
@@ -127,9 +127,9 @@
 
 					<h:panelGrid columns="4" styleClass="noBorders tr,noBorders td">
 						<c:if
-							test="#{committeBackingBean.managedBean.scCommittee.committeeType eq '14' }">
+							test="#{committeBackingBean.managedBean.selectedCommitte eq 'SC' }">
 							<p:selectBooleanCheckbox value="" />
-							<h:outputLabel value="A Member for Evaluate Proposal" />
+							<h:outputLabel value="#{lbl['lbl.sc.committe.addscreen.sc.membertype']}" />
 							<p:selectOneMenu
 								value="#{committeBackingBean.managedBean.committeMember.memberType}">
 								<f:selectItem itemLabel="" itemValue="1" />
@@ -138,13 +138,16 @@
 							</p:selectOneMenu>
 						</c:if>
 						<c:if
-							test="#{committeBackingBean.managedBean.scCommittee.committeeType eq '8'
-		           or committeBackingBean.managedBean.scCommittee.committeeType eq '9'
-		           or committeBackingBean.managedBean.scCommittee.committeeType eq '10'
-		           or committeBackingBean.managedBean.scCommittee.committeeType eq '11'
-		           or committeBackingBean.managedBean.scCommittee.committeeType eq '12'
-		           or committeBackingBean.managedBean.scCommittee.committeeType eq '13' }">
-							<h:outputLabel value="* Member Type" />
+							test="#{committeBackingBean.managedBean.selectedCommitte eq 'MSC'
+		           			or committeBackingBean.managedBean.selectedCommitte eq 'QC'
+		           			or committeBackingBean.managedBean.selectedCommitte eq 'PBB'
+		           			or committeBackingBean.managedBean.selectedCommitte eq 'PBA'
+		           			or committeBackingBean.managedBean.selectedCommitte eq 'FPBSBH'
+		           			or committeBackingBean.managedBean.selectedCommitte eq 'FPBSRW'
+		           			or committeBackingBean.managedBean.selectedCommitte eq 'FPASBH'
+		           			or committeBackingBean.managedBean.selectedCommitte eq 'FPASRW'
+		           			or committeBackingBean.managedBean.selectedCommitte eq 'BPKPB' }">
+							<h:outputLabel value="#{lbl['lbl.sc.committe.addscreen.membertype']}" />
 							<p:selectOneMenu
 								value="#{CommitteBackingBean.managedBean.committeMember.memberType}">
 								<f:selectItem itemLabel="" itemValue="1" />
@@ -160,7 +163,7 @@
 				<c:if
 					test="#{committeBackingBean.managedBean.committeMember.userSelection eq 'E' }">
 					<h:panelGrid columns="2" styleClass="noBorders tr,noBorders td">
-						<h:outputLabel value="* Type of User  " />
+						<h:outputLabel value="#{lbl['lbl.sc.committe.addscreen.typeuser']}" />
 						<p:selectOneRadio
 							value="#{committeBackingBean.managedBean.committeMember.userType}">
 							<f:selectItems
@@ -168,7 +171,7 @@
 						</p:selectOneRadio>
 					</h:panelGrid>
 					<h:panelGrid columns="2" styleClass="noBorders tr,noBorders td">
-						<h:outputLabel value="* Name " />
+						<h:outputLabel value="#{lbl['lbl.sc.committe.addscreen.name']}" />
 						<p:selectOneMenu value="#{committeBackingBean.managedBean.userId}">
 							<f:selectItem itemLabel="Select One" itemValue="#{null}" />
 							<f:selectItems
@@ -181,12 +184,12 @@
 					</h:panelGrid>
 					<h:panelGrid columns="4" styleClass="noBorders tr,noBorders td"
 						id="externalUser">
-						<h:outputLabel value="* Identification Type " />
+						<h:outputLabel value="#{lbl['lbl.sc.committe.addscreen.idtype']}" />
 						<p:inputText
 							value="#{committeBackingBean.managedBean.committeMember.idType}"
 							/>
 
-						<h:outputLabel value="* Ministry" />
+						<h:outputLabel value="#{lbl['lbl.sc.committe.addscreen.ministry']}" />
 						<p:selectOneMenu id="minstrysDD"
 							value="#{committeBackingBean.managedBean.committeMember.ministryOrgProfile.orgProfileId}">
 							<f:selectItem itemLabel="Select One" itemValue="#{null}" />
@@ -200,12 +203,12 @@
 								
 						</p:selectOneMenu>
 
-						<h:outputLabel value="* Identification No. " />
+						<h:outputLabel value="#{lbl['lbl.sc.committe.addscreen.idno']}" />
 						<p:inputText id="ICno"
 							value="#{committeBackingBean.managedBean.committeMember.icPassport}"
 							 />
 
-						<h:outputLabel value="* Department " />
+						<h:outputLabel value="#{lbl['lbl.sc.committe.addscreen.department']}" />
 						<p:selectOneMenu id="DepDD"
 							value="#{committeBackingBean.managedBean.committeMember.departmentOrgProfile.orgProfileId}">
 							<f:selectItem itemLabel="SelectOne" itemValue="#{null}" />
@@ -214,13 +217,13 @@
             				partialSubmit="true" process="@this" update="DivDD" />
 						</p:selectOneMenu>
 
-						<h:outputLabel value="* Designation " />
+						<h:outputLabel value="#{lbl['lbl.sc.committe.addscreen.designation']}" />
 						<p:inputText
 							value="#{committeBackingBean.managedBean.committeMember.designation}"
 							 />
 
 
-						<h:outputLabel value="* Division " />
+						<h:outputLabel value="#{lbl['lbl.sc.committe.addscreen.division']}" />
 						<p:selectOneMenu id="DivDD"
 							value="#{committeBackingBean.managedBean.committeMember.pmOrgProfile.orgProfileId}"
 							>
@@ -229,12 +232,12 @@
 						
 						</p:selectOneMenu>
 
-						<h:outputLabel value="* Grade " />
+						<h:outputLabel value="#{lbl['lbl.sc.committe.addscreen.grade']}" />
 						<p:inputText
 							value="#{committeBackingBean.managedBean.committeMember.grade}"
 							 />
 
-						<h:outputLabel value="* Role " />
+						<h:outputLabel value="#{lbl['lbl.sc.committe.addscreen.role']}" />
 						<p:selectOneMenu
 							value="#{committeBackingBean.managedBean.committeMember.memberRole}">
 							<f:selectItem itemLabel="" itemValue="1" />
@@ -242,7 +245,7 @@
 							<f:selectItem itemLabel="role 2" itemValue="3" />
 						</p:selectOneMenu>
 
-						<h:outputLabel value="* Access " />
+						<h:outputLabel value="#{lbl['lbl.sc.committe.addscreen.access']}" />
 						<p:selectOneMenu
 							value="#{committeBackingBean.managedBean.committeMember.accessRight}">
 							<f:selectItem itemLabel="" itemValue="1" />
@@ -253,9 +256,9 @@
 
 					<h:panelGrid columns="4" styleClass="noBorders tr,noBorders td">
 						<c:if
-							test="#{committeBackingBean.managedBean.scCommittee.committeeType eq '14' }">
+							test="#{committeBackingBean.managedBean.selectedCommitte eq 'SC' }">
 							<p:selectBooleanCheckbox value="" />
-							<h:outputLabel value="A Member for Evaluate Proposal" />
+							<h:outputLabel value="#{lbl['lbl.sc.committe.addscreen.sc.membertype']}" />
 							<p:selectOneMenu
 								value="#{committeBackingBean.managedBean.committeMember.memberType}">
 								<f:selectItem itemLabel="" itemValue="1" />
@@ -264,13 +267,16 @@
 							</p:selectOneMenu>
 						</c:if>
 						<c:if
-							test="#{committeBackingBean.managedBean.scCommittee.committeeType eq '8'
-		           or committeBackingBean.managedBean.scCommittee.committeeType eq '9'
-		           or committeBackingBean.managedBean.scCommittee.committeeType eq '10'
-		           or committeBackingBean.managedBean.scCommittee.committeeType eq '11'
-		           or committeBackingBean.managedBean.scCommittee.committeeType eq '12'
-		           or committeBackingBean.managedBean.scCommittee.committeeType eq '13' }">
-							<h:outputLabel value="* Member Type" />
+							test="#{committeBackingBean.managedBean.selectedCommitte eq 'MSC'
+		           or committeBackingBean.managedBean.selectedCommitte eq 'QC'
+		           or committeBackingBean.managedBean.selectedCommitte eq 'PBB'
+		           or committeBackingBean.managedBean.selectedCommitte eq 'PBA'
+		           or committeBackingBean.managedBean.selectedCommitte eq 'FPBSBH'
+		           or committeBackingBean.managedBean.selectedCommitte eq 'FPBSRW'
+		           or committeBackingBean.managedBean.selectedCommitte eq 'FPASBH'
+		           or committeBackingBean.managedBean.selectedCommitte eq 'FPASRW'
+		           or committeBackingBean.managedBean.selectedCommitte eq 'BPKPB' }">
+							<h:outputLabel value="#{lbl['lbl.sc.committe.addscreen.membertype']}" />
 							<p:selectOneMenu
 								value="#{CommitteBackingBean.managedBean.committeMember.memberType}">
 								<f:selectItem itemLabel="" itemValue="1" />
@@ -285,7 +291,7 @@
 				<c:if
 					test="#{committeBackingBean.managedBean.committeMember.userSelection eq 'N'}">
 					<h:panelGrid columns="2" styleClass="noBorders tr,noBorders td">
-						<h:outputLabel value="* Type of User  " />
+						<h:outputLabel value="#{lbl['lbl.sc.committe.addscreen.typeuser']}" />
 						<p:selectOneRadio
 							value="#{committeBackingBean.managedBean.committeMember.userType}">
 							<f:selectItems
@@ -293,18 +299,18 @@
 						</p:selectOneRadio>
 					</h:panelGrid>
 					<h:panelGrid columns="2" styleClass="noBorders tr,noBorders td">
-						<h:outputLabel value="* Name " />
+						<h:outputLabel value="#{lbl['lbl.sc.committe.addscreen.name']}" />
 						<p:inputText value="#{committeBackingBean.managedBean.committeMember.memberName}"></p:inputText>
 						
 					</h:panelGrid>
 					<h:panelGrid columns="4" styleClass="noBorders tr,noBorders td"
 						id="externalUser">
-						<h:outputLabel value="* Identification Type " />
+						<h:outputLabel value="#{lbl['lbl.sc.committe.addscreen.idtype']}" />
 						<p:inputText
 							value="#{committeBackingBean.managedBean.committeMember.idType}"
 							/>
 
-						<h:outputLabel value="* Ministry" />
+						<h:outputLabel value="#{lbl['lbl.sc.committe.addscreen.ministry']}" />
 						<p:selectOneMenu id="minstrysDD"
 							value="#{committeBackingBean.managedBean.committeMember.ministryOrgProfile.orgProfileId}">
 							<f:selectItem itemLabel="Select One" itemValue="#{null}" />
@@ -318,12 +324,12 @@
 								
 						</p:selectOneMenu>
 
-						<h:outputLabel value="* Identification No. " />
+						<h:outputLabel value="#{lbl['lbl.sc.committe.addscreen.idno']}" />
 						<p:inputText id="ICno"
 							value="#{committeBackingBean.managedBean.committeMember.icPassport}"
 							 />
 
-						<h:outputLabel value="* Department " />
+						<h:outputLabel value="#{lbl['lbl.sc.committe.addscreen.department']}" />
 						<p:selectOneMenu id="DepDD"
 							value="#{committeBackingBean.managedBean.committeMember.departmentOrgProfile.orgProfileId}">
 							<f:selectItem itemLabel="SelectOne" itemValue="#{null}" />
@@ -332,13 +338,13 @@
             				partialSubmit="true" process="@this" update="DivDD" />
 						</p:selectOneMenu>
 
-						<h:outputLabel value="* Designation " />
+						<h:outputLabel value="#{lbl['lbl.sc.committe.addscreen.designation']}" />
 						<p:inputText
 							value="#{committeBackingBean.managedBean.committeMember.designation}"
 							 />
 
 
-						<h:outputLabel value="* Division " />
+						<h:outputLabel value="#{lbl['lbl.sc.committe.addscreen.division']}" />
 						<p:selectOneMenu id="DivDD"
 							value="#{committeBackingBean.managedBean.committeMember.pmOrgProfile.orgProfileId}"
 							>
@@ -347,12 +353,12 @@
 						
 						</p:selectOneMenu>
 
-						<h:outputLabel value="* Grade " />
+						<h:outputLabel value="#{lbl['lbl.sc.committe.addscreen.grade']}" />
 						<p:inputText
 							value="#{committeBackingBean.managedBean.committeMember.grade}"
 							 />
 
-						<h:outputLabel value="* Role " />
+						<h:outputLabel value="#{lbl['lbl.sc.committe.addscreen.role']}" />
 						<p:selectOneMenu
 							value="#{committeBackingBean.managedBean.committeMember.memberRole}">
 							<f:selectItem itemLabel="" itemValue="1" />
@@ -360,7 +366,7 @@
 							<f:selectItem itemLabel="role 2" itemValue="3" />
 						</p:selectOneMenu>
 
-						<h:outputLabel value="* Access " />
+						<h:outputLabel value="#{lbl['lbl.sc.committe.addscreen.access']}" />
 						<p:selectOneMenu
 							value="#{committeBackingBean.managedBean.committeMember.accessRight}">
 							<f:selectItem itemLabel="" itemValue="1" />
@@ -371,9 +377,9 @@
 
 					<h:panelGrid columns="4" styleClass="noBorders tr,noBorders td">
 						<c:if
-							test="#{committeBackingBean.managedBean.scCommittee.committeeType eq '14'}">
+							test="#{committeBackingBean.managedBean.selectedCommitte eq 'SC'}">
 							<p:selectBooleanCheckbox value="" />
-							<h:outputLabel value="A Member for Evaluate Proposal" />
+							<h:outputLabel value="#{lbl['lbl.sc.committe.addscreen.sc.membertype']}" />
 							<p:selectOneMenu
 								value="#{CommitteBackingBean.managedBean.memberType}">
 								<f:selectItem itemLabel="" itemValue="1" />
@@ -382,14 +388,17 @@
 							</p:selectOneMenu>
 						</c:if>
 						<c:if
-							test="#{committeBackingBean.managedBean.scCommittee.committeeType eq '8'
-		           or committeBackingBean.managedBean.scCommittee.committeeType eq '9'
-		           or committeBackingBean.managedBean.scCommittee.committeeType eq '10'
-		           or committeBackingBean.managedBean.scCommittee.committeeType eq '11'
-		           or committeBackingBean.managedBean.scCommittee.committeeType eq '12'
-		           or committeBackingBean.managedBean.scCommittee.committeeType eq '13' }">
+							test="#{committeBackingBean.managedBean.selectedCommitte eq 'MSC'
+		           		    or committeBackingBean.managedBean.selectedCommitte eq 'QC'
+		          		    or committeBackingBean.managedBean.selectedCommitte eq 'PBB'
+		           			or committeBackingBean.managedBean.selectedCommitte eq 'PBA'
+		           			or committeBackingBean.managedBean.selectedCommitte eq 'FPBSBH'
+		           			or committeBackingBean.managedBean.selectedCommitte eq 'FPBSRW'
+		          			or committeBackingBean.managedBean.selectedCommitte eq 'FPASBH'
+		           			or committeBackingBean.managedBean.selectedCommitte eq 'FPASRW'
+		          			or committeBackingBean.managedBean.selectedCommitte eq 'BPKPB' }">
 							<h:outputLabel
-								value="* Member Type&#160;&#160;&#160;&#160;&#160;" />
+								value="#{lbl['lbl.sc.committe.addscreen.membertype']}&#160;&#160;&#160;&#160;&#160;" />
 							<p:selectOneMenu
 								value="#{CommitteBackingBean.managedBean.memberType}">
 								<f:selectItem itemLabel="" itemValue="1" />
@@ -403,9 +412,9 @@
 				</c:if>
 
 			</p:panel>
-			<p:commandButton value="CANCEL" style="float:right;" action="#{committeBackingBean.cancelCommitteAction}"
+			<p:commandButton value="Cancel" style="float:right;" action="#{committeBackingBean.cancelCommitteAction}"
 				oncomplete="screen3.hide();" update="committeMember"></p:commandButton>
-			<p:commandButton value="OK" style="float:right;"				
+			<p:commandButton value="Ok" style="float:right;"				
 				onclick="screen3.hide();" update="committeMember"></p:commandButton>
 
 		</p:panel>
