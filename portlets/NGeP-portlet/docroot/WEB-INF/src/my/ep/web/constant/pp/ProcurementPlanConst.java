@@ -63,9 +63,9 @@ public class ProcurementPlanConst {
 	public static final String PROCUREMENT_EXISTING_CONTRACT = "E";
 	
 	//Fulfillment Type
-	public static final String FULFILLMENT_ONE_OFF = "O";
-	public static final String FULFILLMENT_AS_AND_WHEN = "P";
-	public static final String FULFILLMENT_SCHEDULE = "S";
+	public static final String FULFILLMENT_ONE_OFF = "OF";
+	public static final String FULFILLMENT_AS_AND_WHEN = "PA";
+	public static final String FULFILLMENT_SCHEDULE = "PS";
 	
 	//QT Type
 	public static final String QT_TYPE_BUMIPUTERA = "B";
@@ -140,10 +140,12 @@ public class ProcurementPlanConst {
 	public static final String PROG_BUDGET = "budget";
 	
 	//VOT type
-	public static final String VOT_PS = "PS";
-	public static final String VOT_BT = "BT";
-	public static final String VOT_AMANAH = "AV";
-	public static final String VOT_WITHOUT = "AW";
+	public static final String VOT_P = "P";
+	public static final String VOT_B = "B";
+	public static final String VOT_S = "S";
+	public static final String VOT_T = "T";
+	public static final String VOT_AMANAH = "A";
+
 	
 //	
 //	//Reason Code
@@ -169,30 +171,42 @@ public class ProcurementPlanConst {
 	public static final String CONTRACT_TYPE_MINISTRY = "168"; //refer to PM_CODE
 	public static final String CONTRACT_IND_CENTRAL = "169"; //refer to PM_CODE
 	
-	/**
-	 * @return the votPs
-	 */
-	public String getVotPs() {
-		return VOT_PS;
-	}
-	/**
-	 * @return the votBt
-	 */
-	public String getVotBt() {
-		return VOT_BT;
-	}
+	
 	/**
 	 * @return the votAmanah
 	 */
 	public String getVotAmanah() {
 		return VOT_AMANAH;
 	}
+	
 	/**
-	 * @return the votWithout
+	 * @return the votP
 	 */
-	public String getVotWithout() {
-		return VOT_WITHOUT;
+	public String getVotP() {
+		return VOT_P;
 	}
+
+	/**
+	 * @return the votB
+	 */
+	public String getVotB() {
+		return VOT_B;
+	}
+
+	/**
+	 * @return the votS
+	 */
+	public String getVotS() {
+		return VOT_S;
+	}
+
+	/**
+	 * @return the votT
+	 */
+	public String getVotT() {
+		return VOT_T;
+	}
+
 	/**
 	 * @return the contractTypeMinistry
 	 */

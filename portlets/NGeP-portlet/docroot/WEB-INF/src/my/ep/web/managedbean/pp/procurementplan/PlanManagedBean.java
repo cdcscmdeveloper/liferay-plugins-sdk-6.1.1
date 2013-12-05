@@ -26,40 +26,32 @@ public class PlanManagedBean extends BaseManagedBean{
 	private static final long serialVersionUID = 1L;
 
 	private boolean searchPlan;
-	
-//	private boolean withoutVot;
-	
-	private List <PpPlanMaster> planMasterList;
-	
-	private PpPlanMaster mtoPlanMaster;
-	
-	private PpPlan mtoPlan;
-	
-	private PpPlanMaster planMaster;
 
-	private PpPlan plan;
+	private List <PpPlanMaster> planMasterList;
+
+	private PpPlanMaster planMaster; //for main master plan
+
+	private PpPlan plan; //for main master plan
 	
 	private PmOrgProfile currentUser;
 
-	private PpPlanMaster selectedPlanMaster;
+	private PpPlanMaster selectedPlanMaster; //for ui master plan
 	
-	private PpPlan selectedPlan;
+	private PpPlan selectedPlan; //for ui plan
 	
-	private PpPlan selectedPlanItem;
+	private PpPlan selectedPlanItem; //for ui plan (multiple)
 
-	private PpPlanItem selectedItem;
+	private PpPlanItem selectedItem; //for ui item
 	
-	private PpRemark selectedItemRemark;
+	private PpRemark selectedItemRemark; //for ui item remark
 	
 	private String viewMode;
 	
-	private boolean enableDetail;
+	private boolean enableDetail; //enable the details tab
 	
-	private boolean enableMto;
-
+	private boolean enableChildDetail; //enable to add details' child 
+	
 	private String current;
-	
-	private String systemMsg = "";
 
 	private String[] actions;
 	
@@ -79,25 +71,7 @@ public class PlanManagedBean extends BaseManagedBean{
 	
 	private boolean reasonRejectOther;
 	
-	private Long tempId; //temp
 	
-	private String actionDesc; // temp
-	
-	private String loginUser;
-	
-	/**
-	 * @return the loginUser
-	 */
-	public String getLoginUser() {
-		return loginUser;
-	}
-
-	/**
-	 * @param loginUser the loginUser to set
-	 */
-	public void setLoginUser(String loginUser) {
-		this.loginUser = loginUser;
-	}
 
 	/**
 	 * @return the selectedTab
@@ -113,34 +87,6 @@ public class PlanManagedBean extends BaseManagedBean{
 		this.selectedTab = selectedTab;
 	}
 
-
-	/**
-	 * @return the actionDesc
-	 */
-	public String getActionDesc() {
-		return actionDesc;
-	}
-
-	/**
-	 * @param actionDesc the actionDesc to set
-	 */
-	public void setActionDesc(String actionDesc) {
-		this.actionDesc = actionDesc;
-	}
-
-	/**
-	 * @return the tempId
-	 */
-	public Long getTempId() {
-		return tempId;
-	}
-
-	/**
-	 * @param tempId the tempId to set
-	 */
-	public void setTempId(Long tempId) {
-		this.tempId = tempId;
-	}
 
 	/**
 	 * @return the planMasterList
@@ -257,31 +203,21 @@ public class PlanManagedBean extends BaseManagedBean{
 		this.bpmTaskId = bpmTaskId;
 	}
 
+	
 	/**
-	 * @return the systemMsg
+	 * @return the enableChildDetail
 	 */
-	public String getSystemMsg() {
-		return systemMsg;
-	}
-	/**
-	 * @param systemMsg the systemMsg to set
-	 */
-	public void setSystemMsg(String systemMsg) {
-		this.systemMsg = systemMsg;
+	public boolean isEnableChildDetail() {
+		return enableChildDetail;
 	}
 
 	/**
-	 * @return the enableMto
+	 * @param enableChildDetail the enableChildDetail to set
 	 */
-	public boolean isEnableMto() {
-		return enableMto;
+	public void setEnableChildDetail(boolean enableChildDetail) {
+		this.enableChildDetail = enableChildDetail;
 	}
-	/**
-	 * @param enableMto the enableMto to set
-	 */
-	public void setEnableMto(boolean enableMto) {
-		this.enableMto = enableMto;
-	}
+
 	/**
 	 * @return the enableDetail
 	 */
@@ -385,43 +321,6 @@ public class PlanManagedBean extends BaseManagedBean{
 		this.viewMode = viewMode;
 	}
 
-	
-//	/**
-//	 * @return the withoutVot
-//	 */
-//	public boolean isWithoutVot() {
-//		return withoutVot;
-//	}
-//	/**
-//	 * @param withoutVot the withoutVot to set
-//	 */
-//	public void setWithoutVot(boolean withoutVot) {
-//		this.withoutVot = withoutVot;
-//	}
-	/**
-	 * @return the mtoPlanMaster
-	 */
-	public PpPlanMaster getMtoPlanMaster() {
-		return mtoPlanMaster;
-	}
-	/**
-	 * @param mtoPlanMaster the mtoPlanMaster to set
-	 */
-	public void setMtoPlanMaster(PpPlanMaster mtoPlanMaster) {
-		this.mtoPlanMaster = mtoPlanMaster;
-	}
-	/**
-	 * @return the mtoPlan
-	 */
-	public PpPlan getMtoPlan() {
-		return mtoPlan;
-	}
-	/**
-	 * @param mtoPlan the mtoPlan to set
-	 */
-	public void setMtoPlan(PpPlan mtoPlan) {
-		this.mtoPlan = mtoPlan;
-	}
 	/**
 	 * @return the planMaster
 	 */

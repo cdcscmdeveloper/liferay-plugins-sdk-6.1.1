@@ -10,11 +10,7 @@
 
 	<p:outputPanel id="opViewPlanContent">
 
-		<!--  
-		id<p:inputText value="#{planBackingBean.managedBean.tempId}" />, 
-		<p:inputText value="#{planBackingBean.managedBean.actionDesc}" />
-		<p:commandButton value="Load" action="#{planBackingBean.dummyTask(planBackingBean.managedBean.tempId, planBackingBean.managedBean.actionDesc)}" 
-		update="@form"  />  -->
+	
 
 		<p:dataTable id="dtPlanResult" styleClass="ppTableFull" var="ppPlan"
 			value="#{planBackingBean.planDataModel}" lazy="true"
@@ -47,7 +43,7 @@
                  </h:outputText>
             </p:column>
 			<p:column headerText="#{lbl['lbl.pp.action']}">
-				<p:commandLink action="#{planBackingBean.redirectToPlanContent(ppPlan)}" >
+				<p:commandLink action="#{planBackingBean.redirectToPlanContent(ppPlan.planId)}" >
 					<p:graphicImage value="/resources/ep/images/design/edit.png"/>
 				</p:commandLink>
 			</p:column>

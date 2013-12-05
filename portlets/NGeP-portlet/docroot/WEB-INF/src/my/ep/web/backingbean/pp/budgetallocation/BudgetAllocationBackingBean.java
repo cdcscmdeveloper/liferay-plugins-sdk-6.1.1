@@ -69,7 +69,6 @@ import com.liferay.portal.util.PortalUtil;
 @ViewScoped
 public class BudgetAllocationBackingBean extends BaseBackingBean<BudgetAllocationManagedBean>{
 	private static Logger log = Logger.getLogger(BudgetAllocationBackingBean.class);
-//	private final static Long USER_ID_MIN = 3L; //TEMP
 	
 	private IPagingDataModel<PpBudget> budgetDataModel = new BudgetPagingDataModel();
 
@@ -83,22 +82,22 @@ public class BudgetAllocationBackingBean extends BaseBackingBean<BudgetAllocatio
 		return facesScopes;
 	}
 	
-	public String dummyTask(Long tskId, String action){
-		
-		BudgetAllocationReqDTO budgetReqDTO = new BudgetAllocationReqDTO();
-		budgetReqDTO.setBudgetAllocId(tskId);
-		IBudgetAllocationSO budgetSO = (IBudgetAllocationSO) BusinessDelegate.getInstance().getServiceObject("pp", IBudgetAllocationSO.class);
-		BudgetAllocationResDTO budgetResSO = budgetSO.retrieveBudgetAllocation(budgetReqDTO);
-
-		BudgetAllocationBackingBean budgetBB = new BudgetAllocationBackingBean();
-		budgetBB.getManagedBean().setBpmTaskId("RAIN");
-		budgetBB.getManagedBean().setActions(new String[]{"SUBMIT","REVISE"});
-		budgetBB.loadTask(budgetResSO.getBudgetAlloc(), action);
-		
-		
-		return ProcurementPlanConst.NAV_TO_BUDGET_ALLOCATION;
-	}
-	
+//	public String dummyTask(Long tskId, String action){
+//		
+//		BudgetAllocationReqDTO budgetReqDTO = new BudgetAllocationReqDTO();
+//		budgetReqDTO.setBudgetAllocId(tskId);
+//		IBudgetAllocationSO budgetSO = (IBudgetAllocationSO) BusinessDelegate.getInstance().getServiceObject("pp", IBudgetAllocationSO.class);
+//		BudgetAllocationResDTO budgetResSO = budgetSO.retrieveBudgetAllocation(budgetReqDTO);
+//
+//		BudgetAllocationBackingBean budgetBB = new BudgetAllocationBackingBean();
+//		budgetBB.getManagedBean().setBpmTaskId("RAIN");
+//		budgetBB.getManagedBean().setActions(new String[]{"SUBMIT","REVISE"});
+//		budgetBB.loadTask(budgetResSO.getBudgetAlloc(), action);
+//		
+//		
+//		return ProcurementPlanConst.NAV_TO_BUDGET_ALLOCATION;
+//	}
+//	
 	
 	/**
 	 * constructor of the budget allocation program
@@ -586,9 +585,11 @@ public class BudgetAllocationBackingBean extends BaseBackingBean<BudgetAllocatio
 		
 		return result;
 	}
-	
+
 	/**
 	 * generate available budget amount
+	 * @param budgetAmt
+	 * @param usedAmt
 	 * @return available budget amount
 	 */
 	public BigDecimal generateAvailableBudget(BigDecimal budgetAmt, BigDecimal usedAmt){
@@ -897,35 +898,7 @@ public class BudgetAllocationBackingBean extends BaseBackingBean<BudgetAllocatio
 
 	}
 	
-	
-//	
-//	
-//	private String getStatusDesc(){
-//
-//		log.info("getAllBudgets - Start");
-//		List <PpBudget> budgetList =  new ArrayList<PpBudget>();
-//		try{
-//			StatusReqDTO reqDTO = new StatusReqDTO();
-////			reqDTO.setLanguage("");
-//			reqDTO.setStatusId(ProcurementPlanConst.STATUS_PBA_NEW);
-//			reqDTO.setDocType(ProcurementPlanConst.DOCTYPE_BUDGET_ALLOC);
-//			reqDTO.setModuleCode("PP");
-//			IStatusSO statusSO = (IStatusSO) BusinessDelegate.getInstance().getServiceObject("pm", IStatusSO.class);
-//			StatusResDTO resDTO = statusSO.retrieveStatusByParams(reqDTO);
-////			if(resDTO.isSuccessful()){
-////				resDTO.getPmStatus().getPmStatusDescs().get();
-////			}
-//		}catch (Exception e){
-//			e.printStackTrace();
-//			
-//		}
-//		log.info("getAllBudgets - End");
-//		return "";
-//	}
-	
-	public void test(){
-		System.out.println("test");
-	}
+
 	private class BudgetPagingDataModel extends PagingDataModel<PpBudget> {
 		private static final long serialVersionUID = 1L;
 

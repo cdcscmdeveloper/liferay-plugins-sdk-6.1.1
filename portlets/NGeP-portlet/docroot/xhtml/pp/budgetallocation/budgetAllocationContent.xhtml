@@ -92,7 +92,10 @@ xmlns:fn="http://java.sun.com/jsp/jstl/functions"
                   		<p:commandLink
                         	action="#{budgetAllocationBackingBean.showBudgetAllocationItem(budgetAllocationDet)}" 
                         	oncomplete="dlItemDetailsBudgetModal.show();" update=":form:dlItemDetailsBudget">
-                        	<p:graphicImage value="/resources/ep/images/design/edit.png"/>
+                        	<p:graphicImage value="#{!(budgetAllocationDet.brandNew || 
+                        		(budgetAllocationBackingBean.managedBean.viewMode==PPConst.modeRevision 
+                        		&amp;&amp; budgetAllocationDet.revisionRequired )) ? '/resources/ep/images/design/document.png' 
+                        		:'/resources/ep/images/design/edit.png'}" />
                        	</p:commandLink>
                         &nbsp;
                         <p:commandLink

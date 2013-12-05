@@ -15,23 +15,12 @@ xmlns:tp="http://java.sun.com/jsf/composite/ppComponents/procurementPlan"
 		
     <ui:define name="contentSection">
     	<script type="text/javascript">
-   		    /**
-   			 * Disable/enable MTO without refreshing the whole tabs
-   			 */
-   			function updateMtoTab(){
-   			 	var enableTab= $("input[name$='enableMtoFlag']").val();
-   				if(enableTab=='true'){
-	 				tvPlanVar.enable(1);
-	 			}else{
-	 				tvPlanVar.disable(1);
-	 			}
-   				updateDetailTab();
-   		    }
-   		    
+
    			/**
    			 * Disable/enable details tab without refreshing the whole tabs
    			 */
    			function updateDetailTab(){
+   				
    			 	var enableTab= $("input[name$='enableDetailFlag']").val();
    				if(enableTab=='true'){
    					tvPlanContentVar.enable(1);
@@ -42,7 +31,7 @@ xmlns:tp="http://java.sun.com/jsf/composite/ppComponents/procurementPlan"
    		
 		</script>
 		
-	
+		<p:messages id="messages" showDetail="true" autoUpdate="true" closable="true" severity="error, info" />
 		<!-- Top Button -->
 		<ui:include src="headerSection.xhtml"/>
 		
@@ -50,27 +39,15 @@ xmlns:tp="http://java.sun.com/jsf/composite/ppComponents/procurementPlan"
 			<p:ajax event="tabChange" listener="#{planBackingBean.updateCurrentView}"/>  
 		    <p:tab id="#{PPConst.currentNew}" title="#{planBackingBean.generateHeader(planBackingBean.managedBean.viewMode)}">
 		    	<p:outputPanel id="opPlanContent">
+		    		<p:panel header="#{lbl['lbl.pp.budget.title.allocated.gosodo']}" toggleable="true">
+			    		<ui:include src="../budgetallocation/listAllocatedBudget.xhtml"/>
+			    	</p:panel>
+			    	<br/>
 	    		  	<tp:planContentComponent 
 			            selectedPlan="#{planBackingBean.managedBean.plan}" 
 			            selectedPlanMaster="#{planBackingBean.managedBean.planMaster}" 
-			            viewMode="#{planBackingBean.managedBean.viewMode}"
-			            tabId="#{PPConst.currentNew}"/>
+			            viewMode="#{planBackingBean.managedBean.viewMode}"/>
 	            </p:outputPanel>
-		    </p:tab>
-		    <p:tab id="#{PPConst.currentMto}" title="#{lbl['lbl.pp.plan.title.mto.plan']}" disabled="#{!planBackingBean.managedBean.enableMto}">
-		    	<p:outputPanel id="opMtoPlanContent">
-			      	<tp:planContentComponent 
-			            selectedPlan="#{planBackingBean.managedBean.mtoPlan}" 
-			            selectedPlanMaster="#{planBackingBean.managedBean.mtoPlanMaster}" 
-	 					viewMode="#{planBackingBean.managedBean.viewMode}"
-    					tabId="#{PPConst.currentMto}"/>
-				</p:outputPanel>
-		    </p:tab>
-		    <p:tab id="#{PPConst.currentAllocBudget}" title="#{lbl['lbl.pp.budget.title.allocated.gosodo']}">  
-		    	<br/>
-		    	<p:panel header="#{lbl['lbl.pp.budget.title.allocated.gosodo']}">
-		    		<ui:include src="../budgetallocation/listAllocatedBudget.xhtml"/>
-		    	</p:panel>
 		    </p:tab>
 		    <p:tab id="#{PPConst.currentPlan}" title="#{lbl['lbl.pp.plan.title.list']}"> 
 		    	<br/>

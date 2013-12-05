@@ -146,10 +146,9 @@ public class CommonMethod {
 		List<SelectItem> months = new ArrayList<SelectItem>();
 		String[] shortMonths = Arrays.copyOf(DateFormatSymbols.getInstance().getShortMonths(), 12);
 		Calendar cal = Calendar.getInstance();
-		Integer year = cal.get(Calendar.YEAR);
 		Integer i = 0;
 		for(String month:shortMonths){
-			months.add(new SelectItem(i, month + " " + year));
+			months.add(new SelectItem(i, month));
 			i++;
 		}
 		return months;
