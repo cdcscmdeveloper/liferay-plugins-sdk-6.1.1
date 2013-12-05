@@ -24,6 +24,7 @@ import my.ep.jaxb.fl.codata.FLContractOrderDataType;
 import my.ep.persistence.entity.fl.request.FlShippingInstr;
 import my.ep.util.lookupservice.EpBpmBusinessDelegate;
 import my.ep.web.backingbean.BaseBackingBean;
+import my.ep.web.backingbean.fl.FulfilmentBackingBean;
 import my.ep.web.constant.BpmOutcomeConst;
 import my.ep.web.managedbean.fl.shippingInstr.ShippingInstrManagedBean;
 import my.ep.web.util.FacesScopes;
@@ -61,6 +62,7 @@ public class ShippingInstrBackingBean extends BaseBackingBean<ShippingInstrManag
 	public String submitShippingAction(String action){
 		System.out.println("-- shipping Instr --");
 		IShippingInstructionSO shippingInstrSO = null;
+		FulfilmentBackingBean flBB = new FulfilmentBackingBean();
 		try {
 			String token = getFacesScopes().getBPMAuthenticationCtxToken();
 			FulfilmentReqDTO reqDTO = new FulfilmentReqDTO();
@@ -74,6 +76,8 @@ public class ShippingInstrBackingBean extends BaseBackingBean<ShippingInstrManag
 			reqDTO.setOutcome(action);
 			reqDTO.setTaskId(getManagedBean().getTaskId());
 			reqDTO.setToken(token);
+			reqDTO.setFlAttachmentList(flBB.getManagedBean().getAttachmentList());
+			reqDTO.setFlRemark(flBB.getManagedBean().getRemarkList().get(0));
 			FulfilmentResDTO resDTO = shippingInstrSO.saveShippingInstruction(reqDTO);
 
 			if(resDTO.isSuccessful()) {
@@ -152,6 +156,13 @@ public class ShippingInstrBackingBean extends BaseBackingBean<ShippingInstrManag
 			getManagedBean().setTaskId(taskId);
 			getManagedBean().setOutComes(res.getAction());
 		}
+		
+		// Get Remark and Attachment
+		
+			FulfilmentBackingBean flBB = new FulfilmentBackingBean();
+			flBB.getManagedBean().setRemarkList(resDTO.getRemarkList());
+			flBB.getManagedBean().setAttachmentList(resDTO.getAttachmentList());
+			flBB.initializeRemarkAndAttachement(flBB.getManagedBean().getRemarkList(), flBB.getManagedBean().getAttachmentList());
 	}
 
 }

@@ -21,6 +21,7 @@ import my.ep.jaxb.fl.invoicepaymentdata.FLInvoiceAndPaymentDataType;
 import my.ep.persistence.entity.fl.payment.FlPaymentAdvice;
 import my.ep.util.lookupservice.EpBpmBusinessDelegate;
 import my.ep.web.backingbean.BaseBackingBean;
+import my.ep.web.backingbean.fl.FulfilmentBackingBean;
 import my.ep.web.constant.BpmOutcomeConst;
 import my.ep.web.managedbean.fl.paymentmatch.PaymentMatchManagedBean;
 import my.ep.web.util.FacesScopes;
@@ -53,6 +54,7 @@ public class PaymentMatchBackingBean extends BaseBackingBean<PaymentMatchManaged
 
 	public String submitAction(String action){
 		IPaymentMatchSO paymentSO = null;
+		FulfilmentBackingBean flBB = new FulfilmentBackingBean();
 		try {
 			String token = getFacesScopes().getBPMAuthenticationCtxToken();
 			FulfilmentReqDTO reqDTO = new FulfilmentReqDTO();
@@ -66,6 +68,8 @@ public class PaymentMatchBackingBean extends BaseBackingBean<PaymentMatchManaged
 			reqDTO.setOutcome(action);
 			reqDTO.setTaskId(getManagedBean().getTaskId());
 			reqDTO.setToken(token);
+			reqDTO.setFlAttachmentList(flBB.getManagedBean().getAttachmentList());
+			reqDTO.setFlRemark(flBB.getManagedBean().getRemarkList().get(0));
 			System.out.println("action: "+action);
 			FulfilmentResDTO resDTO = paymentSO.createPaymentMatch(reqDTO);
 			if(resDTO.isSuccessful()) {
@@ -119,6 +123,12 @@ public class PaymentMatchBackingBean extends BaseBackingBean<PaymentMatchManaged
 		resDTO = invoiceSO.retrieveInvoiceByFlOrderId(flReqDTO);
 		FlPaymentAdvice paymentAdvice = new FlPaymentAdvice();
 		paymentAdvice.setFlInvoice(resDTO.getInvoice());
+		
+		// Get Remark and Attachment
+		FulfilmentBackingBean flBB = new FulfilmentBackingBean();
+		flBB.getManagedBean().setRemarkList(resDTO.getRemarkList());
+		flBB.getManagedBean().setAttachmentList(resDTO.getAttachmentList());
+		flBB.initializeRemarkAndAttachement(flBB.getManagedBean().getRemarkList(), flBB.getManagedBean().getAttachmentList());
 
 		//				PaymentMatchBackingBean paymentBB = new PaymentMatchBackingBean();
 		getManagedBean().setPaymentAdvice(paymentAdvice);
