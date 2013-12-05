@@ -3,10 +3,6 @@
  */
 package my.ep.web.backingbean.fl.pr;
 
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -27,7 +23,6 @@ import my.ep.biz.service.ss.directpurchase.IRequestNoteSO;
 import my.ep.bpm.dto.BpmRequestDTO;
 import my.ep.bpm.dto.BpmResponseDTO;
 import my.ep.bpm.service.IBpmSO;
-import my.ep.constants.FlProcessNameConst;
 import my.ep.dto.ct.maintain.ContractAmendmentReqDTO;
 import my.ep.dto.ct.maintain.ContractAmendmentResDTO;
 import my.ep.dto.fl.FulfilmentReqDTO;
@@ -41,7 +36,6 @@ import my.ep.dto.pm.common.maksud.MaksudResDTO;
 import my.ep.dto.ss.directpurchase.RequestNoteReqDTO;
 import my.ep.dto.ss.directpurchase.RequestNoteResDTO;
 import my.ep.exception.EpException;
-import my.ep.jaxb.fl.codata.FLContractOrderDataType;
 import my.ep.jaxb.fl.podata.FLPurchaseOrderDataType;
 import my.ep.persistence.entity.ct.CtContract;
 import my.ep.persistence.entity.fl.request.FlDeliveryAddress;
@@ -60,16 +54,13 @@ import my.ep.type.pm.OrganizationType;
 import my.ep.util.lookupservice.EpBpmBusinessDelegate;
 import my.ep.web.backingbean.BaseBackingBean;
 import my.ep.web.backingbean.fl.FulfilmentBackingBean;
-import my.ep.web.backingbean.fl.po.FulfilmentOrderBackingBean;
 import my.ep.web.constant.BpmOutcomeConst;
 import my.ep.web.managedbean.fl.pr.PurchaseRequestManagedBean;
 import my.ep.web.util.FacesScopes;
 import my.ep.web.util.lookupservice.BusinessDelegate;
 
 import org.apache.log4j.Logger;
-import org.primefaces.event.FileUploadEvent;
 import org.primefaces.model.DualListModel;
-import org.primefaces.model.UploadedFile;
 
 import com.liferay.portal.util.PortalUtil;
 
@@ -169,29 +160,6 @@ public class PurchaseRequestBackingBean extends BaseBackingBean<PurchaseRequestM
 			fulfilmentRequestSO = null;
 		}
 		return null;
-	}
-	public void fileUpload(FileUploadEvent event) {
-		UploadedFile file = event.getFile();
-		String fileName = file.getFileName();
-		byte[] fileBytes = file.getContents();
-		log.info("Processed uploaded file " + fileName + " of size:"+ fileBytes.length);
-		this.getManagedBean().getFlAttachment().setFileName(fileName);
-		this.getManagedBean().getFlAttachment().setFileDescription("File uploded for Contract Req Order");
-		this.getManagedBean().getFlAttachment().setFilePath("D:\\upload");
-		FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_INFO,"The file was uploaded successfully.", null);
-		FacesMessage msg = new FacesMessage("Succesful", event.getFile().getFileName() + " is uploaded.");
-		FacesContext.getCurrentInstance().addMessage(null, msg);
-		FileOutputStream fos;
-		try {
-			fos = new FileOutputStream("D:\\upload\\" + fileName);
-			fos.write(fileBytes);
-			fos.close();
-		} catch (FileNotFoundException e) {
-			e.printStackTrace();
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-		FacesContext.getCurrentInstance().addMessage(null, message);
 	}
 	public void updateDeliveryAddrDt(){
 		for(PmAddressType addrType : getManagedBean().getSelectedPmAddrTypeList()){
@@ -302,12 +270,14 @@ public class PurchaseRequestBackingBean extends BaseBackingBean<PurchaseRequestM
 		reqDTO.setFulfillmentType("O");
 		RequestNoteResDTO resDTO = requestNoteSO.retrievRequestNotes(reqDTO);
 		getManagedBean().setRequestNoteList(resDTO.getRequestNoteList());
+		
 		FulfilmentBackingBean flBackingBean = new FulfilmentBackingBean();
 		flBackingBean.initializeRemarkAndAttachement(flBB.getManagedBean().getRemarkList(), flBB.getManagedBean().getAttachmentList());
 	}
 	
 	public String navigateToPurchaseRequest() {
 		getManagedBean().getSelectedRequestNote();
+		this.getManagedBean().setOutComes(new String[]{"SUBMIT"}); 
 		System.out.println("Req List ID ::: "+getManagedBean().getSelectedRequestNote().getScRequestList().getRequestListId());
 		return NAV_TO_CREATE_PURCHASE_REQUEST;
 	}

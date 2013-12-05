@@ -15,15 +15,6 @@
 	<p:messages id="messages" showDetail="true" autoUpdate="true" closable="true" severity="error, info" />
 		<table style="width: 100%;">
 			<tr>
-			
-				<c:if
-					test="#{purchaseRequestBackingBean.managedBean.submitButtonStatus}">
-
-					<td colspan="4" style="text-align: right"><p:commandButton
-							value="SUBMIT" ajax='false'
-							action="#{purchaseRequestBackingBean.fulfillmentRequestAction('SUBMIT')}" />
-					</td>
-				</c:if>
 				<td colspan="4" style="text-align: right"><ui:repeat var="bpmAction"
 						value="#{purchaseRequestBackingBean.managedBean.outComes}">
 						
