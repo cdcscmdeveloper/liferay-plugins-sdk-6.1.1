@@ -329,7 +329,7 @@ public class RegistrationBackingBean extends
 		this.getManagedBean().setSmSuppOwner(new SmSupplierOwner());
 
 		RegistrationReqDTO reqDTO = new RegistrationReqDTO();
-		reqDTO.setSupplierId(10);
+		reqDTO.setSupplierId(30);
 
 		IRegistrationSO reqSO = (IRegistrationSO) BusinessDelegate
 				.getInstance().getServiceObject("sm", IRegistrationSO.class);
