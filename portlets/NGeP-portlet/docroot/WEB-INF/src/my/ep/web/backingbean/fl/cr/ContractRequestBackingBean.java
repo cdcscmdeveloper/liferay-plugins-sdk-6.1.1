@@ -151,10 +151,10 @@ public class ContractRequestBackingBean extends BaseBackingBean<ContractRequestM
 					message = message + ". Doc No. : "+resDTO.getFlFulfilmentRequest().getDocNo();
 				}
 				FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "Record saved successfully.",message));
-				if(!action.equalsIgnoreCase(BpmOutcomeConst.BPM_SAVE)) { // save action will remain in the same page
+//				if(!action.equalsIgnoreCase(BpmOutcomeConst.BPM_SAVE)) { // save action will remain in the same page
 					renewSesionObject();
 					return "/xhtml/shared/acknowledge.xhtml";
-				}
+//				}
 			} else {
 				throw new EpException("Failed.");
 			}

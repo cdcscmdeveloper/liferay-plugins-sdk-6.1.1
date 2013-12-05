@@ -89,39 +89,40 @@ public class DebitAdjustmentNoteBackingBean extends BaseBackingBean<DebitAdjustm
 	}
 	
 	public void preRenderView() {
-		//		BPMTaskListBackingBean bb = new BPMTaskListBackingBean();
 		HttpServletRequest servletRequest = PortalUtil
 				.getHttpServletRequest(new FacesScopes().getRequest());
 		HttpServletRequest originalServletRequest = PortalUtil
 				.getOriginalServletRequest(servletRequest);
 		String taskId = originalServletRequest.getParameter("taskId");
-		//		String loginId = originalServletRequest.getParameter("loginId");
 		System.out.println("taskId:" + taskId);
-		//		System.out.println("loginId:" + loginId);
+		if(taskId != null){
 
-		IBpmSO bpmSO = (IBpmSO) EpBpmBusinessDelegate.getInstance()
-				.getServiceObject(IBpmSO.class);
-		String ctx = getFacesScopes().getBPMAuthenticationCtxToken();
-		BpmRequestDTO reqDTO = new BpmRequestDTO();
 
-		reqDTO.setCtxToken(ctx);
-		reqDTO.setTaskId(taskId);
-		BpmResponseDTO res = bpmSO.getTaskDetails(reqDTO);
-		Object obj = res.getPojo();
+			IBpmSO bpmSO = (IBpmSO) EpBpmBusinessDelegate.getInstance()
+					.getServiceObject(IBpmSO.class);
+			String ctx = getFacesScopes().getBPMAuthenticationCtxToken();
+			BpmRequestDTO reqDTO = new BpmRequestDTO();
 
-		FulfilmentReqDTO flReqDTO = new FulfilmentReqDTO();
-		FulfilmentResDTO resDTO = new FulfilmentResDTO();
-		FLDanDataType danObj = (FLDanDataType)obj;
-		flReqDTO.setDanId(danObj.getDanId());
-		IAdjustmentSO adjustmentSO = (IAdjustmentSO) BusinessDelegate.getInstance().getServiceObject("fl",IAdjustmentSO.class);
+			reqDTO.setCtxToken(ctx);
+			reqDTO.setTaskId(taskId);
+			BpmResponseDTO res = bpmSO.getTaskDetails(reqDTO);
+			Object obj = res.getPojo();
 
-		resDTO = adjustmentSO.retrieveAdjustmentById(flReqDTO);
-		FlAdjustment adjust = resDTO.getAdjustment();
+			FulfilmentReqDTO flReqDTO = new FulfilmentReqDTO();
+			FulfilmentResDTO resDTO = new FulfilmentResDTO();
+			FLDanDataType danObj = (FLDanDataType)obj;
+			System.out.println("danObj.getDanId(): "+danObj.getDanId());
+			flReqDTO.setDanId(danObj.getDanId());
+			IAdjustmentSO adjustmentSO = (IAdjustmentSO) BusinessDelegate.getInstance().getServiceObject("fl",IAdjustmentSO.class);
 
-		DebitAdjustmentNoteBackingBean danBB = new DebitAdjustmentNoteBackingBean();
-		danBB.getManagedBean().setAdjustment(adjust);
-		danBB.getManagedBean().setTaskId(taskId);
-		danBB.getManagedBean().setOutComes(res.getAction());
+			resDTO = adjustmentSO.retrieveAdjustmentById(flReqDTO);
+			FlAdjustment adjust = resDTO.getAdjustment();
 
+			DebitAdjustmentNoteBackingBean danBB = new DebitAdjustmentNoteBackingBean();
+			danBB.getManagedBean().setAdjustment(adjust);
+			danBB.getManagedBean().setTaskId(taskId);
+			danBB.getManagedBean().setOutComes(res.getAction());
+
+		}
 	}
 }
