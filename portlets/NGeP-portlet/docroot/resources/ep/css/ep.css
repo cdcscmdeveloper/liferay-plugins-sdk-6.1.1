@@ -4457,14 +4457,29 @@ table.customTbl {
 
 .customTbl td {
 	/*padding: 5px;*/
+	/*width: 25%;*/ /* new added */
 }
 
 #tdContent {
 	text-align: left;
+	width:30%;
 }
 
 #tdTitle {
 	width: 20%;
 	text-align: right;
 }
+
+.rptTbl {
+	
+}
+
+table.rptTbl {
+	width: 100%;
+}
+
+.rptTbl td {
+	width:25%
+}
+
 /*---------------------------------------------------------------------------*/
