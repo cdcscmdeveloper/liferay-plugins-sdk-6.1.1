@@ -74,6 +74,7 @@ public class ComplaintBackingBean extends BaseBackingBean<ComplaintManagedBean> 
 
 		this.getManagedBean().getSmComplaint().setComplaintDate(currDate);
 		this.getManagedBean().getSmComplaint().setComplaintNo(complNo);
+		this.getManagedBean().getSmComplaint().setStatusId(1);
 
 		this.getManagedBean().getSmComplaint().getSmComplainant()
 				.setSmComplaint(this.getManagedBean().getSmComplaint());
