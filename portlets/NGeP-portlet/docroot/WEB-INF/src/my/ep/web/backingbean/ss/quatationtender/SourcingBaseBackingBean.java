@@ -11,20 +11,38 @@ import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.faces.context.FacesContext;
 import javax.faces.model.SelectItem;
-
-import org.primefaces.model.UploadedFile;
+import javax.servlet.http.HttpServletRequest;
 
 import my.ep.biz.service.pm.authorization.orgprofile.IOrgProfileSO;
+import my.ep.biz.service.ss.quationtender.IQTDetailSO;
+import my.ep.bpm.dto.BpmRequestDTO;
+import my.ep.bpm.dto.BpmResponseDTO;
+import my.ep.bpm.service.IBpmSO;
 import my.ep.dto.pm.authorization.orgprofile.OrgProfileReqDTO;
 import my.ep.dto.pm.authorization.orgprofile.OrgProfileResDTO;
+import my.ep.dto.ss.quationtender.QuationTenderReqDTO;
+import my.ep.dto.ss.quationtender.QuationTenderResDTO;
+import my.ep.jaxb.sc.quotationtenderdata.SCQuotationTenderDataType;
+import my.ep.jaxb.sc.sitevisitproposaldata.SCSiteVisitProposalDataType;
 import my.ep.persistence.entity.pm.authorization.PmOrgProfile;
 import my.ep.persistence.entity.pm.authorization.PmUser;
 import my.ep.persistence.entity.ss.quationtender.ScAttachment;
+import my.ep.persistence.entity.ss.quationtender.ScQt;
+import my.ep.util.lookupservice.EpBpmBusinessDelegate;
 import my.ep.util.lookupservice.EpEjbBusinessDelegate;
 import my.ep.web.backingbean.BaseBackingBean;
+import my.ep.web.backingbean.ss.approval.ApprovalBackingBean;
+import my.ep.web.backingbean.ss.specification.SpecificationBackingBean;
+import my.ep.web.backingbean.ss.supplierproposal.SPDetailBackingBean;
 import my.ep.web.managedbean.BaseManagedBean;
 import my.ep.web.ss.quationtender.common.QTConstants;
+import my.ep.web.util.FacesScopes;
+
+import org.primefaces.model.UploadedFile;
+
+import com.liferay.portal.util.PortalUtil;
 
 /**
  * @author VidyasagarReddy
@@ -71,7 +89,7 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 		String fileName = file.getFileName();
 		byte[] fileBytes = file.getContents();
 		Timestamp date = new Timestamp(System.currentTimeMillis());
-		
+
 		attachment.setCreatedBy(1L);
 		attachment.setCreatedDate(date);
 		attachment.setChangedBy(1L);
@@ -98,6 +116,83 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 			e.printStackTrace();
 		} catch (IOException e) {
 			e.printStackTrace();
+		}
+	}
+
+	public void preRenderView() {
+		HttpServletRequest servletRequest = PortalUtil
+				.getHttpServletRequest(new FacesScopes().getRequest());
+		HttpServletRequest originalServletRequest = PortalUtil
+				.getOriginalServletRequest(servletRequest);
+		String taskId = originalServletRequest.getParameter("taskId");
+
+		this.getManagedBean().setTaskId(taskId);
+
+		IBpmSO bpmSO = (IBpmSO) EpBpmBusinessDelegate.getInstance()
+				.getServiceObject(IBpmSO.class);
+		// TODO
+		FacesScopes facesScopes = new FacesScopes();
+		String ctx = facesScopes.getBPMAuthenticationCtxToken();
+		// String ctx = bpmSO.authenticate("roslan", "welcome1");
+		BpmRequestDTO reqDTO = new BpmRequestDTO();
+		reqDTO.setCtxToken(ctx);
+		reqDTO.setTaskId(taskId);
+		BpmResponseDTO res = bpmSO.getTaskDetails(reqDTO);
+		Object obj = res.getPojo();
+		this.getManagedBean().setOutComes(res.getAction());
+
+		IQTDetailSO detailSO = EpEjbBusinessDelegate.getInstance()
+				.getServiceObject(QTConstants.SS_MODULE, IQTDetailSO.class);
+		QuationTenderReqDTO tenderReqDTO = new QuationTenderReqDTO();
+		QTDetailBackingBean detailBackingBean = new QTDetailBackingBean();
+
+		if ("Proposal Preparation".equalsIgnoreCase(res.getProcessName())) {
+
+			SCSiteVisitProposalDataType proposalDateType = (SCSiteVisitProposalDataType) obj;
+			tenderReqDTO.setQtId(new Long(proposalDateType.getQtId())
+					.longValue());
+			QuationTenderResDTO tenderResDTO = detailSO
+					.retriveQTDetails(tenderReqDTO);
+			
+			detailBackingBean.getManagedBean()
+					.setQt(tenderResDTO.getQtDetail());
+
+			SPDetailBackingBean backingBean = new SPDetailBackingBean();
+			backingBean.getManagedBean().setProposalData(proposalDateType);
+			// detailBackingBean.populateParentOrgProfile(tenderResDTO.getQtDetail());
+			backingBean.retrieveTechnicalProposalList(1l);
+			FacesContext fc = FacesContext.getCurrentInstance();
+			fc.getApplication()
+					.getNavigationHandler()
+					.handleNavigation(
+							fc,
+							null,
+							"/xhtml/ss/supplierproposal/supplierProposalMain.xhtml"
+									+ "?faces-redirect=true");
+		}else if ("Service QuotationTender Creation".equalsIgnoreCase(res.getProcessName())) {
+
+			 SCQuotationTenderDataType datatype = (SCQuotationTenderDataType) obj;
+			tenderReqDTO.setQtId(new Long(datatype.getQtId())
+					.longValue());
+			QuationTenderResDTO tenderResDTO = detailSO
+					.retriveQTDetails(tenderReqDTO);
+			
+			detailBackingBean.getManagedBean()
+					.setQt(tenderResDTO.getQtDetail());
+			detailBackingBean.getManagedBean().setTaskId(taskId);			
+			detailBackingBean.getManagedBean().setQuotationTenderDataType(datatype);
+			detailBackingBean.populateParentOrgProfile(tenderResDTO.getQtDetail());
+			detailBackingBean.onChangeAction();
+			tenderResDTO = detailSO.retriveQTApprovalDetails(tenderReqDTO);
+			ApprovalBackingBean approvalBackingBean = new ApprovalBackingBean();
+			
+			// detailBackingBean.populateParentOrgProfile(tenderResDTO.getQtDetail());
+			
+			FacesContext fc = FacesContext.getCurrentInstance();
+			fc.getApplication()
+					.getNavigationHandler()
+					.handleNavigation(fc, null,
+							"/xhtml/ss/quatationtender/quatationtendercreation.xhtml" + "?faces-redirect=true");
 		}
 	}
 }
