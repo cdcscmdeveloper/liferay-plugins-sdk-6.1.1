@@ -282,12 +282,14 @@ public class PlanBackingBean extends BaseBackingBean<PlanManagedBean>{
 				
 				if(ProcurementPlanConst.BPM_TASK_PLAN_REVIEW.equalsIgnoreCase(taskName)){
 					log.info("Review Plan");
+					//Review Plan
 					this.getManagedBean().setViewMode(ProcurementPlanConst.MODE_APPROVAL);
-					this.getManagedBean().getPlan().setEditable(false); 
+					this.getManagedBean().getPlan().setEditable(true); 
 					this.getManagedBean().getPlanMaster().setPpPlans(new ArrayList<PpPlan>());
 					this.getManagedBean().getPlanMaster().addPpPlans(this.getManagedBean().getPlan());
 				}else if(ProcurementPlanConst.BPM_TASK_PLAN_REVISE.equals(taskName)){
 					log.info("Revise Plan");
+					//Revise Plan
 					this.getManagedBean().setViewMode(ProcurementPlanConst.MODE_REVISION);
 					this.getManagedBean().getPlan().setEditable(true); 
 					for(PpPlanItem item:ppPlan.getPpPlanItems()){
@@ -297,19 +299,25 @@ public class PlanBackingBean extends BaseBackingBean<PlanManagedBean>{
 					this.getManagedBean().getPlanMaster().addPpPlans(this.getManagedBean().getPlan());
 				}else if(ProcurementPlanConst.BPM_TASK_PLAN_VERIFY.equals(taskName)){
 					log.info("Verify Plan");
+					//Verify Plan
 					this.getManagedBean().setViewMode(ProcurementPlanConst.MODE_VERIFICATION);
-					this.getManagedBean().getPlan().setEditable(false); 
+					this.getManagedBean().getPlan().setEditable(true); 
 					this.getManagedBean().getPlanMaster().setPpPlans(new ArrayList<PpPlan>());
 					this.getManagedBean().getPlanMaster().addPpPlans(this.getManagedBean().getPlan());
 				}else{
 					log.info("Other Mode " + taskName);
 					if(ProcurementPlanConst.MODE_DRAFT.equals(taskName)){
+						log.info("Draft Plan");
+						//Draft Mode
 						this.getManagedBean().setViewMode(ProcurementPlanConst.MODE_DRAFT);
 						this.getManagedBean().getPlan().setEditable(true); 
 						this.getManagedBean().setActions(ProcurementPlanConst.BPM_DEFAULT_ACTIONS);
 					}else{
+						log.info("View Plan");
+						//View Mode
 						this.getManagedBean().setViewMode(ProcurementPlanConst.MODE_VIEW);
 						this.getManagedBean().setActions(null);
+						this.getManagedBean().getPlan().setEditable(false); 
 						this.getManagedBean().getPlanMaster().setPpPlans(new ArrayList<PpPlan>());
 						this.getManagedBean().getPlanMaster().addPpPlans(this.getManagedBean().getPlan());
 					}
@@ -322,7 +330,6 @@ public class PlanBackingBean extends BaseBackingBean<PlanManagedBean>{
 				//set empty view for ppPlan
 //				this.getManagedBean().setSelectedPlanItem(new PpPlan());
 				this.getManagedBean().setSelectedItem(new PpPlanItem());
-				this.getManagedBean().setSelectedItemRemark(new PpRemark());
 	
 				
 				//enable ep/pp fields, details, mto
@@ -344,10 +351,16 @@ public class PlanBackingBean extends BaseBackingBean<PlanManagedBean>{
 	public String redirectToPlanContent(Long planId){
 		log.info("redirectToPlanContent - Start");
 		boolean isComplete = false;
+		String taskName ="";
 		try{
 			if(planId!=null && planId>0L){
 				PpPlan ppPlan = retrievePlanById(planId);
-				String taskName = ppPlan.isDraft() ? ProcurementPlanConst.MODE_DRAFT : ProcurementPlanConst.MODE_VIEW;
+				if(this.getManagedBean().getViewMode()==null 
+						|| ProcurementPlanConst.MODE_LIST.equals(this.getManagedBean().getViewMode())){
+					taskName = ProcurementPlanConst.MODE_VIEW;
+				}else{
+					taskName = ppPlan.isDraft() ? ProcurementPlanConst.MODE_DRAFT : ProcurementPlanConst.MODE_VIEW;
+				}
 				loadTask(ppPlan, taskName);
 				isComplete = true;
 			}else{
@@ -623,7 +636,6 @@ public class PlanBackingBean extends BaseBackingBean<PlanManagedBean>{
 		System.out.println(this.getManagedBean().getSelectedPlanItem());
 		if(item==null){
 			log.info("new");
-			this.getManagedBean().setSelectedItemRemark(new PpRemark());
 			this.getManagedBean().setSelectedItem(new PpPlanItem());
 			this.getManagedBean().getSelectedItem().setBrandNew(true);
 			if(ProcurementPlanConst.PROCUREMENT_EXISTING_CONTRACT.equals(this.getManagedBean().getSelectedPlanMaster().getProcurementMode())){
@@ -660,7 +672,6 @@ public class PlanBackingBean extends BaseBackingBean<PlanManagedBean>{
 			}
 			
 			this.getManagedBean().setSelectedItem(item);
-			this.getManagedBean().setSelectedItemRemark(new PpRemark());
 		}
 		log.info("showPpItem - End");
 	}

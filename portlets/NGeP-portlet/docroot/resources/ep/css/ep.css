@@ -2261,7 +2261,7 @@ table.ppThreePartsTable td {
 
 .ui-dialog.ppDiaglogBg{
 	background: #FFFFFF;
-	width: 700px !important;
+	width: 900px !important;
 }
 
 .ui-dialog.ppDiaglogBigBg{
@@ -2292,6 +2292,10 @@ table.ppThreePartsTable td {
 }
 .ppDisplayTextS{
 	width: 100px;
+}
+
+.ppDisplayCalM input {
+	width: 200px;
 }
 .ui-selectonemenu.ppDropDownWidthM{
 	width: 210px !important;

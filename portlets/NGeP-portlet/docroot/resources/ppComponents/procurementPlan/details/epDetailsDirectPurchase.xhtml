@@ -24,13 +24,13 @@ xmlns:fn="http://java.sun.com/jsp/jstl/functions">
                 <p:selectBooleanCheckbox id="sbcbSubmit" value="#{ppPlan.submitPlan}"/>
             </p:column>      
         	<p:column headerText="#{lbl['lbl.pp.planned.activity.startmonth']}">  
-				<p:selectOneMenu value="#{ppPlan.planStartMonth}" disabled="#{!ppPlan.editable}">
+				<p:selectOneMenu value="#{ppPlan.planStartMonth}" disabled="#{!ppPlan.brandNew &amp;&amp; !ppPlan.editable}">
 					<f:selectItem itemLabel="#{lbl['lbl.select']}" itemValue="12"/>
 					<f:selectItems value="#{planBackingBean.shortMonths()}"/>
 				</p:selectOneMenu>
 	        </p:column>  
 	        <p:column headerText="#{lbl['lbl.pp.planned.activity.endmonth']}">  
-	            <p:selectOneMenu value="#{ppPlan.planEndMonth}" disabled="#{!ppPlan.editable}">
+	            <p:selectOneMenu value="#{ppPlan.planEndMonth}" disabled="#{!ppPlan.brandNew &amp;&amp; !ppPlan.editable}">
 					<f:selectItem itemLabel="#{lbl['lbl.select']}" itemValue="12"/>
 					<f:selectItems value="#{planBackingBean.shortMonths()}"/>
 				</p:selectOneMenu>
