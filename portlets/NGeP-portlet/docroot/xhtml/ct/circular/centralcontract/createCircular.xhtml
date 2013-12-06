@@ -80,26 +80,26 @@
 				</p:row>
 			</p:columnGroup>
 			<p:column>
-				<p:outputLabel value="#{data.ctContract.contractValue.contractNo}" />
+				<p:outputLabel value="#{data.ctContract.latestContractVer.ctContractValue.contractPhysicalNo}" />
 			</p:column>
 			<p:column>
 				<p:outputLabel value="#{data.ctContract.contractName}" />
 			</p:column>
 			<p:column>
-				<p:outputLabel value="#{data.ctContract.qtLoaNo}" />
+				<p:outputLabel value="#{data.ctContract.loaNo}" />
 			</p:column>
 			<p:column>
 				<p:outputLabel value="#{data.ctContract.smSupplier.supplierName}" />
 			</p:column>
 			<p:column>
-				<p:outputLabel value="#{data.ctContract.contractValue.effDate}" >
+				<h:outputText value="#{data.ctContract.latestContractVer.ctContractValue.effDate}" >
 					<f:convertDateTime pattern="dd/MM/yyyy" />
-				</p:outputLabel>
+				</h:outputText>
 			</p:column>
 			<p:column>
-				<p:outputLabel value="#{data.ctContract.contractValue.expDate}" >
+				<h:outputText value="#{data.ctContract.latestContractVer.ctContractValue.expDate}" >
 					<f:convertDateTime pattern="dd/MM/yyyy" />
-				</p:outputLabel>
+				</h:outputText>
 			</p:column>
 			<p:column styleClass="column-align-center">
 			<p:commandLink  oncomplete="delContractDlg.show()"  partialSubmit="true" process="@form">

@@ -49,7 +49,7 @@
 				 <p:column><h:outputText  value="#{data.contractStatus}"/></p:column>	
 				 <p:column styleClass="column-align-center">
 				   <p:commandLink partialSubmit="true" process="@this" onsuccess="confirmation.show()" >
-		              <f:setPropertyActionListener value="#{data}" target="#{contractDetailsBackingBean.managedBean.ctContract}" />
+		              <f:setPropertyActionListener value="#{data}" target="#{contractDetailsBackingBean.managedBean.assocoiateContractVer}" />
 			          <p:graphicImage library="ep/images/design" name="delete.png" value="/resources/ep/images/design/delete.png" title="Delete" />
 		           </p:commandLink>
 				</p:column>
@@ -74,13 +74,13 @@
 		   <p:panel id="advancePanel">
                <h:panelGrid columns="3">
                   <h:outputLabel value="#{lbl['lbl.ct.asearch.model.table2.cno']}" />
-                  <p:inputText value="#{contractDetailsBackingBean.managedBean.qtLoaNo}" style="width:150px;"/>
+                  <p:inputText value="#{contractDetailsBackingBean.managedBean.LOANo}" style="width:150px;"/>
                   <p:commandButton value="Search" process="@this" icon="ui-icon-search"
                     actionListener="#{contractDetailsBackingBean.advanceContractSearch()}" update="advanceCtSearch"/>
               </h:panelGrid>
 		     <p:spacer height="2"/>
                    <p:dataTable id="advanceCtSearch" var="data" value="#{contractDetailsBackingBean.managedBean.contractList}" rowIndexVar="index"
-                    widgetVar="dataTableObj"  lazy="false" dynamic="true" selection="#{contractDetailsBackingBean.selectedContractList}" rowKey="#{data.contractId}"
+                    widgetVar="dataTableObj"  lazy="false" dynamic="true" selection="#{contractDetailsBackingBean.selectedContractList}" rowKey="#{data.contractVerId}"
                     paginator="true" paginatorPosition="bottom" paginatorAlwaysVisible="true"  emptyMessage="No Records!">
                     <ac:paginator for="advanceCtSearch"/>
                 	<p:column selectionMode="multiple" style="width:18px" />
@@ -88,7 +88,7 @@
 						<h:outputText value="234ER5670" />
 					</p:column>
 					<p:column headerText="#{lbl['lbl.ct.asearch.model.table2.cname']}" >
-                    <h:outputText value="#{data.contractName}" />
+                    <h:outputText  />
 					</p:column> 
                     <p:column headerText="#{lbl['lbl.ct.asearch.model.table2.sname']}">
                     <h:outputText value="Khai Sdn Bhd" />
@@ -100,7 +100,7 @@
                     <h:outputText value="12/11/2015" />
 					</p:column> 
 					<p:column headerText="#{lbl['lbl.ct.asearch.model.table2.pname']}">
-                    <h:outputText value="#{data.contractStatus}" />
+                    <h:outputText  />
 					</p:column> 
 			  	 </p:dataTable>
 			 <f:facet name="footer">

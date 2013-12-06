@@ -16,15 +16,15 @@
                <h:outputLabel value="#{lbl['lbl.ct.asearch.pname']}"  />
                <p:inputText value="#{contractDetailsBackingBean.managedBean.projectName}"  style="width:170px;"/>
                <h:outputLabel value="#{lbl['lbl.ct.asearch.cname']}"  />
-               <p:inputText value="#{contractDetailsBackingBean.managedBean.projectDescription}"  style="width:170px;"/>
+               <p:inputText  value="#{contractDetailsBackingBean.managedBean.contractName}" style="width:170px;" />
                <h:outputLabel value="#{lbl['lbl.ct.asearch.pdes']}" />
-               <p:inputText  style="width:170px;" />
-               <h:outputLabel value="#{lbl['lbl.ct.asearch.sname']}"  />
-               <p:inputText  style="width:170px;"/>
+                <p:inputText value="#{contractDetailsBackingBean.managedBean.projectDescription}"  style="width:170px;"/>
+               <h:outputLabel  value="#{lbl['lbl.ct.asearch.sname']}"  />
+               <p:inputText value="#{contractDetailsBackingBean.managedBean.supplierName}" style="width:170px;"/>
                <h:outputLabel value="#{lbl['lbl.ct.asearch.cstart']}"  />
-               <p:calendar style="width:130px;" value="#{contractDetailsBackingBean.managedBean.effDate}" id="calefdate" showOn="button" />
+               <p:calendar style="width:130px;" value="#{contractDetailsBackingBean.managedBean.dateStart}" id="calefdate" showOn="button" />
                <h:outputLabel value="#{lbl['lbl.ct.asearch.cend']}" />
-               <p:calendar style="width:130px;" value="#{contractDetailsBackingBean.managedBean.expDate}" id="calepdate" showOn="button" />
+               <p:calendar style="width:130px;" value="#{contractDetailsBackingBean.managedBean.dateEnd}" id="calepdate" showOn="button" />
                <h:outputLabel value="#{lbl['lbl.ct.asearch.pcno']}"/>
                <p:inputText  style="width:170px;"/>
                <f:verbatim></f:verbatim>

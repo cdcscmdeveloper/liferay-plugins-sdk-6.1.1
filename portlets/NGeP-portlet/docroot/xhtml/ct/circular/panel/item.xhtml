@@ -55,7 +55,7 @@
 		
 		<h:panelGrid id="supplierItemPnl" columnClasses="ppRightBtn" >
 			<p:dataTable id="supplierItemDt" var="data" lazy="true" rowIndexVar="index"
-				 value="#{panelBackingBean.managedBean.selectedPanelItem.ctPanelSupplierItems}">	
+				 value="#{panelBackingBean.managedBean.selectedPanelItem.ctPanelSuppliers}">	
 				<ac:paginator for="supplierItemDt" />  	
 				<p:columnGroup type="header">
 					<p:row>
@@ -69,7 +69,7 @@
 					<h:outputText value="#{index+1}" />
 				</p:column>				
 				<p:column>
-					<p:selectOneMenu value="#{data.ctPanelSupplier.panelSupplierId}">
+					<p:selectOneMenu value="#{data.panelSupplierId}">
 						<f:selectItems value="#{panelBackingBean.getStateDropdownValues()}" />
 					</p:selectOneMenu>						
 				</p:column>
@@ -89,14 +89,14 @@
 				closable="true" appendToBody="true" header="Delete Confirmation" >
 				<h:panelGrid columns="2">
 					<p:commandButton value="Yes" icon="ui-icon-accept" partialSubmit="true" process="@this" update="supplierItemDt"
-						 action="#{panelBackingBean.deletePanelSupplierItem()}" oncomplete="delSupItemDlg.hide();"   /> 
+						 action="#{panelBackingBean.deletePanelSupplier()}" oncomplete="delSupItemDlg.hide();"   /> 
 					<p:commandButton value="No" icon="ui-icon-reject" onclick="delSupItemDlg.hide()" type="button" />
 				</h:panelGrid>
 			</p:confirmDialog>	
 			<p:spacer height="2" />
 			<p:commandButton value="Add" process="@form" partialSubmit="true" icon="ui-icon-add"
 				rendered="#{panelBackingBean.managedBean.selectedPanelItem != null}"
-				action="#{panelBackingBean.addPanelSupplierItem()}" update="supplierItemDt" />			
+				action="#{panelBackingBean.addPanelSupplier()}" update="supplierItemDt" />			
 		</h:panelGrid>
 	</p:panel>
 	

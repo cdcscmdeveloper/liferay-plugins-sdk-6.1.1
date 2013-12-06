@@ -118,7 +118,7 @@ public class CentralContractBackingBean extends BaseBackingBean<CentralContractM
 			
 			ISearchBean<CtContract> searchBean = new SearchBean<CtContract>();
 
-			searchBean.getDataFilterBeans().add(new SearchFilterBean("contractTypeCode.code",SearchOperator.OPERATOR_EQUALS.value(),PmCodeConst.CONTRACT_TYPE_CENTRAL));
+			searchBean.getDataFilterBeans().add(new SearchFilterBean("contractType.code",SearchOperator.OPERATOR_EQUALS.value(),PmCodeConst.CONTRACT_TYPE_CENTRAL));
 			searchBean.getDataFilterBeans().add(new SearchFilterBean("status.statusId",SearchOperator.OPERATOR_EQUALS.value(),ContractStatusConst.APPROVED));
 			//TODO shouldn't use this method as will cause performance issue. Please find a better way.
 			searchBean.getDataFilterBeans().add(new SearchFilterBean("contractId",SearchOperator.OPERATOR_NOT_IN.value(), circularSO.retrieveApprovedCircularContractId(null).getContractIdList()));

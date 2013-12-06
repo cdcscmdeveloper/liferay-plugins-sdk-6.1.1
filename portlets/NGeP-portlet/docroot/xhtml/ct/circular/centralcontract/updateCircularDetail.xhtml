@@ -21,7 +21,7 @@
 			<h:outputLabel value="#{lbl['lbl.ct.cc.frno']}" />
 			<p:inputText disabled="true" value="#{centralContractBackingBean.managedBean.circularVer.circularFileRefNo}" />			
 			<p:outputLabel value="Circular Type" />
-			<p:selectOneMenu value="#{centralContractBackingBean.managedBean.circularVer.circularTypeCode.codeId}">
+			<p:selectOneMenu value="#{centralContractBackingBean.managedBean.circularVer.updateType.codeId}">
 				<f:selectItems value="#{centralContractBackingBean.getDropdownValues(PmCodeCatConst.circularType)}" />
 			</p:selectOneMenu>
 			<h:outputLabel value="Update No." />

@@ -4,6 +4,7 @@
 package my.ep.web.managedbean.ct;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import javax.faces.bean.ManagedBean;
@@ -13,6 +14,7 @@ import my.ep.persistence.entity.ct.CtAttachment;
 import my.ep.persistence.entity.ct.CtContract;
 import my.ep.persistence.entity.ct.CtContractVer;
 import my.ep.persistence.entity.ct.CtRemark;
+import my.ep.persistence.entity.ct.assoc.CtAssociation;
 import my.ep.persistence.entity.ct.dtl.CtProgressivePayment;
 import my.ep.persistence.entity.ct.dtl.CtSchedule;
 import my.ep.persistence.entity.ct.dtl.deduction.CtDeduction;
@@ -76,6 +78,12 @@ public class ContractDetailsManagedBean extends BaseManagedBean{
 	private boolean activeSuspension;
 	private boolean booleanSuspendValue = false;
 	
+	private CtAssociation association = new CtAssociation();
+	private List<CtAssociation> associationList;
+	private List<CtContractVer> associateSearchList;
+	private CtContractVer assocoiateContractVer;
+	private List<CtContractVer> assocoiateContractVerList;
+	
 	private String contractNo;
 	private String contractName;
 	private String circularNo;
@@ -87,6 +95,10 @@ public class ContractDetailsManagedBean extends BaseManagedBean{
 	private String LOANo;
 	private String productCode;
 	private String contractStatus;
+	
+	private String projectName;
+	private String projectDescription;
+	
 	
 	public String[] getAction() {
 		return action;
@@ -427,5 +439,68 @@ public class ContractDetailsManagedBean extends BaseManagedBean{
 		this.booleanSuspendValue = booleanSuspendValue;
 	}
 
-    
+	public CtAssociation getAssociation() {
+		return association;
+	}
+
+	public void setAssociation(CtAssociation association) {
+		this.association = association;
+	}
+
+	public String getProjectName() {
+		return projectName;
+	}
+
+	public void setProjectName(String projectName) {
+		this.projectName = projectName;
+	}
+
+	public String getProjectDescription() {
+		return projectDescription;
+	}
+
+	public void setProjectDescription(String projectDescription) {
+		this.projectDescription = projectDescription;
+	}
+
+	public List<CtAssociation> getAssociationList() {
+		if(associationList == null)
+			associationList = new ArrayList<CtAssociation>();
+		return associationList;
+	}
+
+	public void setAssociationList(List<CtAssociation> associationList) {
+		this.associationList = associationList;
+	}
+
+	public List<CtContractVer> getAssociateSearchList() {
+		if(associateSearchList == null)
+			associateSearchList = new ArrayList<CtContractVer>();
+		return associateSearchList;
+	}
+
+	public void setAssociateSearchList(List<CtContractVer> associateSearchList) {
+		this.associateSearchList = associateSearchList;
+	}
+
+	public CtContractVer getAssocoiateContractVer() {
+		return assocoiateContractVer;
+	}
+
+	public void setAssocoiateContractVer(CtContractVer assocoiateContractVer) {
+		this.assocoiateContractVer = assocoiateContractVer;
+	}
+
+	public List<CtContractVer> getAssocoiateContractVerList() {
+		if(assocoiateContractVerList == null)
+			assocoiateContractVerList = new ArrayList<CtContractVer>();
+		return assocoiateContractVerList;
+	}
+
+	public void setAssocoiateContractVerList(
+			List<CtContractVer> assocoiateContractVerList) {
+		this.assocoiateContractVerList = assocoiateContractVerList;
+	}
+
+	
 }

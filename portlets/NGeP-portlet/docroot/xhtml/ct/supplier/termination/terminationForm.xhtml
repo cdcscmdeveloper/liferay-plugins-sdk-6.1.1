@@ -8,12 +8,11 @@
          <p:panel id="sTermination" header="Termination Request Details" toggleable="true"  toggleSpeed="500">
             <h:panelGrid columns="4" style="width:100%" columnClasses="columnWidth15">  
             <p:outputLabel  value="Termination Type"/>  
-              <p:selectOneMenu value="#{supplierBackingBean.managedBean.ctTerminationReason.typeCode.codeId}" style="width:180px;">
+              <p:selectOneMenu value="#{supplierBackingBean.managedBean.ctTerminationReason.reasonType.codeId}" style="width:180px;">
             	  <f:selectItems value="#{supplierBackingBean.getDropdownValues(PmCodeCatConst.ctTerminationReasonType)}" />
               </p:selectOneMenu>   
               <p:outputLabel value="Termination Date"/>
               <p:calendar size="22" value="#{supplierBackingBean.managedBean.termination.terminationDate}" id="popupButtonCal" showOn="button" />
-              
              <h:panelGroup>
 				<div style="height: 30px; vertical-align:top;">
                      <p:outputLabel for="rftermination" value="Termination Reason" />
