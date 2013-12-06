@@ -35,6 +35,10 @@ public class SPDetailManagedBean extends BaseManagedBean {
 	
 	private ScQtProposalChecklist selectDetails;
 	
+	//payLoad object Added By Vidyasagar.
+	private Object proposalData;
+	private String supplierId;
+	
 	//private ScAttachment scAttachment = new ScAttachment();
 	private List<ScAttachment> scAttachmentList; 
 	public SPDetailManagedBean() {
@@ -156,6 +160,22 @@ public class SPDetailManagedBean extends BaseManagedBean {
 
 	public void setQt(ScQt qt) {
 		this.qt = qt;
+	}
+
+	public Object getProposalData() {
+		return proposalData;
+	}
+
+	public void setProposalData(Object proposalData) {
+		this.proposalData = proposalData;
+	}
+
+	public String getSupplierId() {
+		return supplierId;
+	}
+
+	public void setSupplierId(String supplierId) {
+		this.supplierId = supplierId;
 	}
 
 }
