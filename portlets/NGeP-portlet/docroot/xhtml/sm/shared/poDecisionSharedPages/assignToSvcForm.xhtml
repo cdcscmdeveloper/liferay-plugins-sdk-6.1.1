@@ -17,8 +17,7 @@
 					<f:selectItem itemLabel="-- Select Value --" itemValue="X" />
 					<f:selectItem itemLabel="Before Approval" itemValue="B" />
 					<f:selectItem itemLabel="After Approval" itemValue="A" />
-					<p:ajax update="svcButPan" event="change"
-						listener="#{backingBean.officeFacilitySelected}" />
+					<p:ajax update="svcButPan" event="change"/>
 				</p:selectOneMenu></td>
 
 		</tr>
@@ -190,7 +189,7 @@
 
 	</table>
 	<br />
-	<p:outputPanel id="svcButPan">
+	<!-- <p:outputPanel id="svcButPan">
 		<div align="right">
 			<p:commandButton value="Submit" onclick="svcDialog.hide();"
 				disabled="true"
@@ -203,5 +202,11 @@
 				rendered="#{backingBean.managedBean.poSiteVisitType} eq 'A'}" />
 			<p:commandButton value="Cancel" onclick="svcDialog.hide();" />
 		</div>
-	</p:outputPanel>
+	</p:outputPanel> -->
+	<div align="right">
+		<p:commandButton value="Submit" onclick="svcDialog.hide();"
+			action="#{backingBean.submitPOorApproverReviewToBPM('SITE_VISIT')}" />
+
+		<p:commandButton value="Cancel" onclick="svcDialog.hide();" />
+	</div>
 </ui:composition>
