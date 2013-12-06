@@ -12,6 +12,7 @@ import my.ep.constants.SMProcessNameConst;
 import my.ep.dto.sm.complaint.ComplaintReqDTO;
 import my.ep.dto.sm.sdoreview.SdoReviewReqDTO;
 import my.ep.jaxb.sm.mofaccmaindata.SMMOFAccMainDataType;
+import my.ep.jaxb.sm.mofregcandata.SMMOFRegCanDataType;
 import my.ep.jaxb.sm.mofregdata.SMMOFRegDataType;
 import my.ep.web.backingbean.BaseBackingBean;
 import my.ep.web.backingbean.sm.SmApplicationBackingBean;
@@ -58,7 +59,7 @@ public class CommonApplBackingBean extends
 				.equalsIgnoreCase("Verify Supporting Documents")) {
 			SdoReviewBackingBean sdoBB = new SdoReviewBackingBean();
 			SMMOFRegDataType smMofObj = (SMMOFRegDataType) resDTO.getPojo();
-			
+
 			log.info("------Verify Supporting Documents-----------"
 					+ smMofObj.getAppId());
 			sdoBB.getManagedBean().setAppId(
@@ -79,7 +80,11 @@ public class CommonApplBackingBean extends
 					(Long.parseLong(smMofObj.getAppId())));
 			svoBB.getManagedBean().setBpmAction(resDTO.getAction());
 			svoBB.getManagedBean().setTaskId(taskId);
-
+			FacesContext fc = FacesContext.getCurrentInstance();
+			fc.getApplication()
+					.getNavigationHandler()
+					.handleNavigation(fc, null,
+							"/xhtml/sm/shared/paymentProcess/makePaymentForm.xhtml");
 			// FacesContext fc = FacesContext.getCurrentInstance();
 			// fc.getApplication().getNavigationHandler().handleNavigation(fc,
 			// null, "/xhtml/sm/svositevisit/siteVisitView");
@@ -120,15 +125,38 @@ public class CommonApplBackingBean extends
 				SmApplicationBackingBean smApplBB = new SmApplicationBackingBean();
 				// TODO Change this impl to get values from DB and set
 				// smSupplier , smAppl of the managedBean
-				
+
 				smApplBB.proceedToApplication(smObj.getAppType(), Boolean.TRUE);
 				smApplBB.getManagedBean().getSmAppl()
 						.setApplId(Long.parseLong(smObj.getAppId()));
 				smApplBB.getManagedBean().setBpmActions(resDTO.getAction());
 				smApplBB.getManagedBean().setTaskId(taskId);
-				setNavigationForSmDecision(smObj.getAppType(),smApplBB);
+				setNavigationForSmDecision(smObj.getAppType(), smApplBB);
 			}
 
+		} else if (resDTO.getTaskName().equalsIgnoreCase("Review Cancellation")) {
+			System.out
+					.println("**********MOF Registration Cancellation***********"
+							+ taskId);
+			SMMOFRegCanDataType srcObj = (SMMOFRegCanDataType) resDTO.getPojo();
+			this.getManagedBean().setTaskName(resDTO.getTaskName());
+			System.out.println("********Review Cancellation********");
+			System.out.println("********Assign Site Visit APPID********"
+					+ srcObj.getAppId());
+			SmApplicationBackingBean smApplBB = new SmApplicationBackingBean();
+			// TODO Change this impl to get values from DB and set
+			// smSupplier , smAppl of the managedBean
+			smApplBB.proceedToApplication("C", Boolean.TRUE);
+
+			smApplBB.getManagedBean().getSmAppl()
+					.setApplId(Long.parseLong(srcObj.getAppId()));
+			smApplBB.getManagedBean().setBpmActions(resDTO.getAction());
+			smApplBB.getManagedBean().setTaskId(taskId);
+			FacesContext fc = FacesContext.getCurrentInstance();
+			fc.getApplication()
+					.getNavigationHandler()
+					.handleNavigation(fc, null,
+							"/xhtml/sm/approverDecisionPages/approverCanRegistration_DescisionPage.xhtml");
 		}
 
 	}

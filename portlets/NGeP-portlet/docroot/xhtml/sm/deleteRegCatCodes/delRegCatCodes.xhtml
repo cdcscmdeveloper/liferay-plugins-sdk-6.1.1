@@ -18,7 +18,7 @@
 			<p:dataTable var="catBean" id="delCatDT"
 				value="#{deleteCategoryCodeBB.managedBean.smAppl.smSupplierCategories}"
 				selection="#{deleteCategoryCodeBB.managedBean.selectedCategories}"
-				rowKey="#{catBean.supplierCategoryId}" rowIndexVar="index">
+				rowKey="#{catBean.supplierCategoryId}" rowIndexVar="index" >
 				<p:ajax event="rowSelect"
 					listener="#{deleteCategoryCodeBB.onRowSelect}"
 					update=":form:catDelPan,:form:catDelConfirm" />

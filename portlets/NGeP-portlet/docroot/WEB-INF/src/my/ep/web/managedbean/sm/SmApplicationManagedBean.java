@@ -159,6 +159,8 @@ public class SmApplicationManagedBean extends BaseManagedBean {
 	private String taskId;
 	
 	private String headerMsg;
+	
+	private String poSiteVisitType;
 
 	public SmApplicationManagedBean() {
 		// TODO Checking the user role
@@ -839,6 +841,14 @@ public class SmApplicationManagedBean extends BaseManagedBean {
 
 	public void setHeaderMsg(String headerMsg) {
 		this.headerMsg = headerMsg;
+	}
+
+	public String getPoSiteVisitType() {
+		return poSiteVisitType;
+	}
+
+	public void setPoSiteVisitType(String poSiteVisitType) {
+		this.poSiteVisitType = poSiteVisitType;
 	}
 
 }
