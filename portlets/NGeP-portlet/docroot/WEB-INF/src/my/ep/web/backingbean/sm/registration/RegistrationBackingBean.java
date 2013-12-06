@@ -304,23 +304,33 @@ public class RegistrationBackingBean extends
 		// this.getManagedBean().getSmBusinessAdd().getSmAppls().add(this.getManagedBean().getSmAppl());
 	}
 
-	public void updateOnlineAccount() {
+	public String updateOnlineAccount() {
 		log.info("--------------------updateOnlineAccount----------------");
 		RegistrationReqDTO reqDTO = new RegistrationReqDTO();
 
-		this.getManagedBean().getSmSuppBank()
-				.setSmAppl(this.getManagedBean().getSmSupp().getSmAppl());
-		log.info("---------------getSmSuppBank----------------"
-				+ this.getManagedBean().getSmSuppBank().getAccountNo());
-		log.info("---------------getSmSuppBank----------------"
-				+ this.getManagedBean().getSmSuppBank().getSupplierBankId());
-		this.getManagedBean().getSmSupp().getSmAppl().getSmSupplierBanks()
-				.set(0, this.getManagedBean().getSmSuppBank());
+//		this.getManagedBean().getSmSuppBank()
+//				.setSmAppl(this.getManagedBean().getSmSupp().getSmAppl());
+//		log.info("---------------getSmSuppBank----------------"
+//				+ this.getManagedBean().getSmSuppBank().getAccountNo());
+//		log.info("---------------getSmSuppBank----------------"
+//				+ this.getManagedBean().getSmSuppBank().getSupplierBankId());
+//		this.getManagedBean().getSmSupp().getSmAppl().getSmSupplierBanks()
+//				.set(0, this.getManagedBean().getSmSuppBank());
 
 		reqDTO.setSmSupplier(this.getManagedBean().getSmSupp());
 		IRegistrationSO reqSO = (IRegistrationSO) BusinessDelegate
 				.getInstance().getServiceObject("sm", IRegistrationSO.class);
 		RegistrationResDTO resDTO = reqSO.updateOnlineAcc(reqDTO);
+		
+		if (resDTO.isSuccessful()){
+			FacesContext.getCurrentInstance().addMessage(null,
+					new FacesMessage(FacesMessage.SEVERITY_INFO, "Your account has been updated successfully.", ""));
+			return "/xhtml/sm/onlinereg/outputMsg";
+		} else {
+			FacesContext.getCurrentInstance().addMessage(null,
+					new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error", ""));
+			return "";
+		}
 	}
 
 	public void viewOnlineAccount() {
