@@ -4402,7 +4402,7 @@ label > span.ui-button-text {
 .navDiv {
 	float: left;
 	display: block;
-	margin: 0 0 30px 50px;
+	margin: 0 0 10px 0;
 }
 
 .menu-text {
