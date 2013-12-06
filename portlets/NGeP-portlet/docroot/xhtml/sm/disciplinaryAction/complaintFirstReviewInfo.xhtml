@@ -1,47 +1,45 @@
-<ui:composition
-	xmlns="http://www.w3.org/1999/xhtml"
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
 	xmlns:f="http://java.sun.com/jsf/core"
 	xmlns:h="http://java.sun.com/jsf/html"
 	xmlns:ui="http://java.sun.com/jsf/facelets"
 	xmlns:p="http://primefaces.org/ui"
 	xmlns:c="http://java.sun.com/jsp/jstl/core">
 
-		<f:event listener="#{complaintBackingBean.retrieveComplaintInfo}"
-			type="preRenderView"></f:event>
-		<p:panel
-			header="Complaint Details"
-			toggleable="true">
-			<ui:include
-				src="/xhtml/sm/shared/complaintRegistration/complaintBasicInfo.xhtml" />
-		</p:panel>
+	<f:event listener="#{complaintBackingBean.retrieveComplaintInfo}"
+		type="preRenderView"></f:event>
+	<div align="right">
+		<p:commandButton value="Update"
+			action="#{complaintBackingBean.updateComplaint}" />
+	</div>
+	<p:panel header="Complaint Details" toggleable="true">
+		<ui:include
+			src="/xhtml/sm/shared/complaintRegistration/complaintBasicInfo.xhtml" />
+	</p:panel>
 
-		<p:panel header=" Send To PTPK For Review -1 " toggleable="true">
-			<table class="customTbl">
-				<tr>
-					<td id="tdTitle"><p:outputLabel value="Report Sent to PTPK *" /></td>
-					<td id="tdContent"><p:calendar showOn="button" /></td>
-					<td id="tdTitle"><p:outputLabel value="Expected Conven Date *" /></td>
-					<td id="tdContent"><p:calendar showOn="button"
-							value="#{complaintBackingBean.managedBean.smComplReview.conveneDate}" /></td>
-				</tr>
-				<tr>
-					<td id="tdTitle"><p:outputLabel
-							value="Initial Invesitgation Report*"></p:outputLabel></td>
-					<td id="tdContent"><p:fileUpload mode="simple" /></td>
-					<td colspan="2"><p:commandLink value="Click Here" /> <h:outputText
-							value="To download investigation report template" /></td>
-				</tr>
-				<!-- 
+	<p:panel header=" Send To PTPK For Review -1 " toggleable="true">
+		<table class="customTbl">
+			<tr>
+				<td id="tdTitle"><p:outputLabel value="Report Sent to PTPK *" /></td>
+				<td id="tdContent"><p:calendar showOn="button" /></td>
+				<td id="tdTitle"><p:outputLabel value="Expected Conven Date *" /></td>
+				<td id="tdContent"><p:calendar showOn="button"
+						value="#{complaintBackingBean.managedBean.smComplReview.conveneDate}" /></td>
+			</tr>
+			<tr>
+				<td id="tdTitle"><p:outputLabel
+						value="Initial Invesitgation Report*"></p:outputLabel></td>
+				<td id="tdContent"><p:fileUpload mode="simple" /></td>
+				<td colspan="2"><p:commandLink value="Click Here" /> <h:outputText
+						value="To download investigation report template" /></td>
+			</tr>
+			<!-- 
 				<tr>
 					<td id="tdTitle"><p:outputLabel value="Supplier MOF NO. *"></p:outputLabel></td>
 					<td id="tdContent"><p:inputText /></td>
 				</tr> -->
 
-			</table>
-		</p:panel>
+		</table>
+	</p:panel>
 
-		<div align="right">
-			<p:commandButton value="Update"
-				action="#{complaintBackingBean.updateComplaint}" />
-		</div>
+
 </ui:composition>

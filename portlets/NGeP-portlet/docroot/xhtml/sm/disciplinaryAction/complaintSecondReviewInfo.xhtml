@@ -7,6 +7,10 @@
 
 	<f:event listener="#{complaintBackingBean.retrieveComplaintInfo}"
 		type="preRenderView"></f:event>
+	<div align="right">
+		<p:commandButton value="Update"
+			action="#{complaintBackingBean.updateComplaint}" />
+	</div>
 	<p:panel header="Complaint Details">
 		<ui:include
 			src="/xhtml/sm/shared/complaintRegistration/complaintBasicInfo.xhtml" />
@@ -24,9 +28,6 @@
 	</p:panel>
 	<ui:include
 		src="/xhtml/sm/shared/complaintRegistration/complaintTracking.xhtml" />
-	<div align="right">
-		<p:commandButton value="Update"
-			action="#{complaintBackingBean.updateComplaint}" />
-	</div>
+
 
 </ui:composition>
