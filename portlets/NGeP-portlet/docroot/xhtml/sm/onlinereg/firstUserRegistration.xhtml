@@ -9,11 +9,11 @@
 
 
 	<ui:define name="contentSection">
-		<p:panel header="User Information" toggleable="true">
+		<p:panel header="User Information" toggleable="true" id="pnlUsrInfo">
 			<table class="customTbl">
 				<tr>
 					<td id="tdTitle"><p:outputLabel
-							value="#{lbl['lbl.sm.fullname']}" /></td>
+							value="* #{lbl['lbl.sm.fullname']}" /></td>
 					<td id="tdContent" colspan="3"><p:inputText size="50"
 							value="#{registrationBackingBean.managedBean.smPersonnel.name}" />
 					</td>
@@ -21,7 +21,7 @@
 
 				<tr>
 					<td id="tdTitle"><p:outputLabel
-							value="#{lbl['lbl.sm.nationality']}" /></td>
+							value="* #{lbl['lbl.sm.nationality']}" /></td>
 					<td id="tdContent"><p:selectOneMenu id="nationalityId"
 							value="#{registrationBackingBean.managedBean.smPersonnel.nationalityId}">
 							<f:selectItem itemLabel="Select" itemValue="" />
@@ -31,7 +31,8 @@
 				</tr>
 
 				<tr>
-					<td><p:outputLabel value="#{lbl['lbl.sm.identificationtype']}" /></td>
+					<td><p:outputLabel
+							value="* #{lbl['lbl.sm.identificationtype']}" /></td>
 					<td id="tdContent"><p:selectOneMenu id="cmbUsrIdenType"
 							value="#{registrationBackingBean.managedBean.smPersonnel.identificationType}">
 							<f:selectItem itemLabel="Select" itemValue="" />
@@ -44,12 +45,12 @@
 							value="#{registrationBackingBean.managedBean.smPersonnel.identificationNo}" />
 					</td>
 				</tr>
-				<!-- <p:outputPanel
-					rendered="#{registrationBackingBean.managedBean.smSupp.businessType != 'I'}">-->
+
 				<c:if
 					test="#{registrationBackingBean.managedBean.smSupp.businessType != 'I'}">
 					<tr>
-						<td><p:outputLabel value="* #{lbl['lbl.sm.permenantaddress']}" /></td>
+						<td><p:outputLabel
+								value="* #{lbl['lbl.sm.permenantaddress']}" /></td>
 						<td id="tdContent" colspan="2"><p:inputText size="50" /></td>
 					</tr>
 
@@ -68,16 +69,16 @@
 						<td id="tdContent" colspan="2"><p:inputText size="50" /></td>
 					</tr>
 					<tr>
-						<td><p:outputLabel value="#{lbl['lbl.sm.postcode']}" /></td>
+						<td><p:outputLabel value="* #{lbl['lbl.sm.postcode']}" /></td>
 						<td id="tdContent"><p:inputText /></td>
-						<td><p:outputLabel value="#{lbl['lbl.sm.state']}" /></td>
+						<td><p:outputLabel value="* #{lbl['lbl.sm.state']}" /></td>
 						<td id="tdContent"><p:inputText /></td>
 					</tr>
 
 					<tr>
-						<td><p:outputLabel value="#{lbl['lbl.sm.district']}" /></td>
+						<td><p:outputLabel value="* #{lbl['lbl.sm.district']}" /></td>
 						<td id="tdContent"><p:inputText /></td>
-						<td><p:outputLabel value="#{lbl['lbl.sm.towncity']}" /></td>
+						<td><p:outputLabel value="* #{lbl['lbl.sm.towncity']}" /></td>
 						<td id="tdContent"><p:inputText /></td>
 					</tr>
 
@@ -96,19 +97,19 @@
 							</p:selectOneMenu></td>
 					</tr>
 				</c:if>
-<!-- 				</p:outputPanel> -->
+
 			</table>
 		</p:panel>
 
-		<p:panel header="Contact Information" toggleable="true">
+		<p:panel header="Contact Information" toggleable="true"
+			id="pnlContactInfo">
 			<table class="customTbl">
 				<tr>
 					<td id="tdTitle"><p:outputLabel
-							value="#{lbl['lbl.sm.correspondenceadd']}" /></td>
-					<td id="tdContent"><p:selectOneRadio>
-							<f:selectItem itemLabel="Permenant Address" itemValue="perm" />
-							<f:selectItem itemLabel="Different Address" itemValue="diff" />
-						</p:selectOneRadio></td>
+							value="* #{lbl['lbl.sm.correspondenceadd']}" /></td>
+					<td id="tdContent"><p:selectManyCheckbox id="chkAddMode">
+							<f:selectItem itemLabel="Same as Permenant Address" itemValue="0" />
+						</p:selectManyCheckbox></td>
 				</tr>
 
 				<tr>
@@ -133,18 +134,19 @@
 
 				<tr>
 					<td id="tdTitle"><p:outputLabel
-							value="#{lbl['lbl.sm.postcode']}" /></td>
+							value="* #{lbl['lbl.sm.postcode']}" /></td>
 					<td id="tdContent"><p:inputText /></td>
-					<td id="tdTitle"><p:outputLabel value="#{lbl['lbl.sm.state']}" /></td>
+					<td id="tdTitle"><p:outputLabel
+							value="* #{lbl['lbl.sm.state']}" /></td>
 					<td id="tdContent"><p:inputText /></td>
 				</tr>
 
 				<tr>
 					<td id="tdTitle"><p:outputLabel
-							value="#{lbl['lbl.sm.district']}" /></td>
+							value="* #{lbl['lbl.sm.district']}" /></td>
 					<td id="tdContent"><p:inputText /></td>
 					<td id="tdTitle"><p:outputLabel
-							value="#{lbl['lbl.sm.towncity']}" /></td>
+							value="* #{lbl['lbl.sm.towncity']}" /></td>
 					<td id="tdContent"><p:inputText /></td>
 				</tr>
 
@@ -158,30 +160,31 @@
 
 				<tr>
 					<td id="tdTitle"><p:outputLabel
-							value="#{lbl['lbl.sm.mobilenumber']}" /></td>
+							value="* #{lbl['lbl.sm.mobilenumber']}" /></td>
 					<td id="tdContent"><p:inputText
 							value="#{registrationBackingBean.managedBean.smResAdd.mobileNo}" /></td>
 				</tr>
 
 				<tr>
-					<td id="tdTitle"><p:outputLabel value="#{lbl['lbl.sm.email']}" /></td>
+					<td id="tdTitle"><p:outputLabel
+							value="* #{lbl['lbl.sm.email']}" /></td>
 					<td id="tdContent"><p:inputText
 							value="#{registrationBackingBean.managedBean.smPersonnel.email}" /></td>
 				</tr>
 
 				<tr>
 					<td id="tdTitle"><p:outputLabel
-							value="#{lbl['lbl.sm.confirmemail']}" /></td>
+							value="* #{lbl['lbl.sm.confirmemail']}" /></td>
 					<td id="tdContent"><p:inputText /></td>
 				</tr>
 
 				<tr>
 					<td id="tdTitle"><p:outputLabel
 							value="#{lbl['lbl.sm.notificationmode']}" /></td>
-					<td id="tdContent"><p:selectOneRadio>
+					<td id="tdContent"><p:selectManyCheckbox id="notificationMode">
 							<f:selectItem itemLabel="Email" itemValue="0" />
 							<f:selectItem itemLabel="SMS" itemValue="1" />
-						</p:selectOneRadio></td>
+						</p:selectManyCheckbox></td>
 				</tr>
 			</table>
 		</p:panel>
