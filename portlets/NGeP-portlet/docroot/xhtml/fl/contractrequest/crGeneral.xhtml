@@ -31,7 +31,7 @@
 						style="width: 207px;">
 						<f:selectItems
 							value="#{contractRequestBackingBean.divisionProfileList}" />
-						<p:ajax event="change" update="flDetails" process="@this"
+						<p:ajax event="change" update="issuePtjDD,chargePtjDD" process="@this"
 							listener="#{contractRequestBackingBean.checkPtjFlg}" />
 					</p:selectOneMenu></td>
 				<td><p:outputLabel value="#{lbl['lbl.fl.mto']}" /></td>
@@ -43,7 +43,7 @@
 			</tr>
 			<tr>
 				<td><p:outputLabel value="* #{lbl['lbl.fl.issued.ptj']}" /></td>
-				<td><p:selectOneMenu
+				<td><p:selectOneMenu id="issuePtjDD"
 						disabled="#{contractRequestBackingBean.managedBean.checkPtjFlg}"
 						value="#{contractRequestBackingBean.managedBean.flRequest.issuedOrgProfile.orgProfileId}"
 						style="width: 207px;">
@@ -61,6 +61,8 @@
 						style="width: 207px;">
 						<f:selectItems
 							value="#{contractRequestBackingBean.divisionProfileList}" />
+							<p:ajax event="change" update="receivePtjDD" process="@this"
+							listener="#{contractRequestBackingBean.checkPtjFlg}" />
 					</p:selectOneMenu></td>
 				<td><p:outputLabel value="#{lbl['lbl.fl.contract.type']}" /></td>
 				<td><p:inputText size="35"
@@ -69,7 +71,7 @@
 			</tr>
 			<tr>
 				<td><p:outputLabel value="* #{lbl['lbl.fl.received.ptj']}" /></td>
-				<td><p:selectOneMenu
+				<td><p:selectOneMenu id="receivePtjDD"
 						disabled="#{contractRequestBackingBean.managedBean.checkPtjFlg}"
 						value="#{contractRequestBackingBean.managedBean.flRequest.receivedOrgProfile.orgProfileId}"
 						style="width: 207px;">
@@ -104,7 +106,7 @@
 							value="#{contractRequestBackingBean.maksudCodeList}" />
 					</p:selectOneMenu></td>
 				<td><p:outputLabel value="* #{lbl['lbl.fl.charged.ptj']}" /></td>
-				<td><p:selectOneMenu
+				<td><p:selectOneMenu id="chargePtjDD"
 						disabled="#{contractRequestBackingBean.managedBean.checkPtjFlg}"
 						style="width: 207px;">
 						<f:selectItems value="#{contractRequestBackingBean.PTJList}" />

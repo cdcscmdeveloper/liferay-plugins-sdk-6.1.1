@@ -10,13 +10,11 @@
 	<p:panel id="delAddrPanel" header="DELIVERY ADDRESS" toggleable="true">
 
 		<p:dataTable id="addressDataTable" var="address"
-			value="#{contractRequestBackingBean.managedBean.flRequest.flDeliveryAddresses}"
-			selection="#{contractRequestBackingBean.managedBean.selectedDelAddr}" rowKey="#{address}" 
+			value="#{contractRequestBackingBean.managedBean.flRequest.flDeliveryAddresses}" rowIndexVar="index"
+			selection="#{contractRequestBackingBean.managedBean.selectedDelAddr}" rowKey="#{address}" lazy="true"
 			selectionMode="single">
 			<ac:paginator for="addressDataTable"/>
-			<p:ajax event="rowSelect" update=":form:cotabs:itemDetPanel" 
-			listener="#{contractRequestBackingBean.selectedAddrRow()}">
-			</p:ajax>
+			<p:ajax event="rowSelect" update=":form:cotabs:itemDetPanel"/>
 			<p:column headerText="Delivery Address">
 				<h:outputText value="#{address.addressType.pmAddress.address1}, #{address.addressType.pmAddress.address2}, #{address.addressType.pmAddress.address3}, #{address.addressType.pmAddress.address4}" />
 			</p:column>
@@ -48,13 +46,13 @@
 	</p:panel>
 	<p:panel id="itemDetPanel" header="ITEM DETAIL" toggleable="true">
 		
-		<p:dataTable id="itemDataTable" var="item"
-			value="#{contractRequestBackingBean.managedBean.flRequest.flFulfilmentItems}"
+		<p:dataTable id="itemDataTable" var="item" lazy="true" rowIndexVar="index"
+			value="#{contractRequestBackingBean.managedBean.selectedDelAddr.flFulfilmentItemAddr}"
 			rendered="#{not empty contractRequestBackingBean.managedBean.flRequest.flDeliveryAddresses}">
 			<ac:paginator for="itemDataTable"/>
 			
 			<p:column headerText="Item Name">
-				<h:outputText value="#{item.contractItem.itemName}" />
+				<h:outputText value="#{item.flFulfilmentItem.contractItem.itemName}" />
 			</p:column>
 
 			<p:column headerText="GOSODO">
@@ -93,8 +91,7 @@
 			value="#{contractRequestBackingBean.managedBean.addressTypesList}"
 			rowKey="#{delAddr.addressTypeId}"  
 			selection="#{contractRequestBackingBean.managedBean.selectedPmAddrTypeList}">
-			<p:ajax event="rowSelect" update=":form:cotabs:delAddr" 
-			listener="#{contractRequestBackingBean.selectedAddrRow()}"/>
+			<p:ajax event="rowSelect" update=":form:cotabs:delAddr"/>
 			<ac:paginator for="delAddr"/>
 			<p:columnGroup type="header">
 				<p:row>
@@ -111,7 +108,7 @@
 		<div style="width:100%;text-align: right">
 			<p:commandButton value="Add"
 				action="#{contractRequestBackingBean.updateDeliveryAddrDt}"
-				oncomplete="addDeliveryAddr.hide();" process="@this,delAddr"
+				oncomplete="addDeliveryAddr.hide();" 
 				update="addressDataTable">
 			</p:commandButton>
 		</div>

@@ -44,6 +44,7 @@ import my.ep.persistence.entity.ct.VCtActiveContract;
 import my.ep.persistence.entity.ct.dtl.item.CtContractItem;
 import my.ep.persistence.entity.fl.request.FlDeliveryAddress;
 import my.ep.persistence.entity.fl.request.FlFulfilmentItem;
+import my.ep.persistence.entity.fl.request.FlFulfilmentItemAddr;
 import my.ep.persistence.entity.fl.request.FlFulfilmentRequest;
 import my.ep.persistence.entity.pm.authorization.PmOrgProfile;
 import my.ep.persistence.entity.pm.authorization.PmUserGroupUser;
@@ -59,7 +60,6 @@ import my.ep.web.backingbean.BaseBackingBean;
 import my.ep.web.backingbean.fl.FulfilmentBackingBean;
 import my.ep.web.bean.paginator.IPagingDataModel;
 import my.ep.web.bean.paginator.PagingDataModel;
-import my.ep.web.constant.BpmOutcomeConst;
 import my.ep.web.managedbean.fl.cr.ContractRequestManagedBean;
 import my.ep.web.util.FacesScopes;
 import my.ep.web.util.lookupservice.BusinessDelegate;
@@ -261,11 +261,6 @@ public class ContractRequestBackingBean extends BaseBackingBean<ContractRequestM
 		return NAV_TO_CREATE_CONTRACT_REQUEST;
 	}
 
-	public void selectedAddrRow(){
-		//TODO
-		//		getManagedBean().setSelectedRowFlg(true);
-	}
-
 	public List<SelectItem> getMaksudCodeList(){
 		List<SelectItem> maksudList = new ArrayList<SelectItem>();
 		MaksudReqDTO maksudDTO = new MaksudReqDTO();
@@ -297,12 +292,25 @@ public class ContractRequestBackingBean extends BaseBackingBean<ContractRequestM
 	}
 
 	public void updateContractedItemDt(){
+		FlFulfilmentItem flItem = null;
 		for(CtContractItem contractedItems : getManagedBean().getSelectedContractedItemList()){
-			FlFulfilmentItem flItem = new FlFulfilmentItem();
-			flItem.setFlFulfilmentRequest(getManagedBean().getFlRequest());
-			flItem.setContractItem(contractedItems);
-			getManagedBean().getFlRequest().setFlFulfilmentItems(new ArrayList<FlFulfilmentItem>());
-			getManagedBean().getFlRequest().getFlFulfilmentItems().add(flItem);
+			if(getManagedBean().getFlItemMap().get(contractedItems.getContractItemId()) == null){
+				flItem = new FlFulfilmentItem();
+				flItem.setFlFulfilmentRequest(getManagedBean().getFlRequest());
+				flItem.setContractItem(contractedItems);
+				getManagedBean().getFlRequest().setFlFulfilmentItems(new ArrayList<FlFulfilmentItem>());
+				getManagedBean().getFlRequest().getFlFulfilmentItems().add(flItem);
+			}else{
+				flItem = getManagedBean().getFlItemMap().get(contractedItems.getContractItemId());
+				
+			}
+			FlFulfilmentItemAddr flItemAddr = new FlFulfilmentItemAddr();
+			flItemAddr.setFlFulfilmentItem(flItem);
+			flItemAddr.setFlDeliveryAddress(getManagedBean().getSelectedDelAddr());
+			getManagedBean().getSelectedDelAddr().setFlFulfilmentItemAddr(new ArrayList<FlFulfilmentItemAddr>());
+			getManagedBean().getSelectedDelAddr().getFlFulfilmentItemAddr().add(flItemAddr);
+
+			getManagedBean().getFlItemMap().put(contractedItems.getContractItemId(), flItem);
 		}
 	}
 

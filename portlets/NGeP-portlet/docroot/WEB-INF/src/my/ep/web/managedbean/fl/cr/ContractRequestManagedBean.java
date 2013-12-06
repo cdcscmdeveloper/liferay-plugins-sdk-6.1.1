@@ -42,12 +42,12 @@ public class ContractRequestManagedBean extends BaseManagedBean {
 	private boolean checkPtjFlg = true;
 	private List<PmAddressType> addressTypesList; 
 	private List<PmAddressType> selectedPmAddrTypeList;
-	private FlDeliveryAddress selectedAddr;
 	private List<CtContractItem> contractedItemList;
 	private List<CtContractItem> selectedContractedItemList;
 	private DualListModel<String> approverModel;
 	private FlFulfilmentItem selectedItemRow;
 	private HashMap<String, PmUserGroupUser> approverMap;
+	private HashMap<Long, FlFulfilmentItem> flItemMap;
 	
 	
 	//getcontract
@@ -338,22 +338,6 @@ public class ContractRequestManagedBean extends BaseManagedBean {
 
 
 	/**
-	 * @return the selectedAddr
-	 */
-	public FlDeliveryAddress getSelectedAddr() {
-		return selectedAddr;
-	}
-
-
-	/**
-	 * @param selectedAddr the selectedAddr to set
-	 */
-	public void setSelectedAddr(FlDeliveryAddress selectedAddr) {
-		this.selectedAddr = selectedAddr;
-	}
-
-
-	/**
 	 * @return the contractedItemList
 	 */
 	public List<CtContractItem> getContractedItemList() {
@@ -434,6 +418,25 @@ public class ContractRequestManagedBean extends BaseManagedBean {
 	 */
 	public void setApproverMap(HashMap<String, PmUserGroupUser> approverMap) {
 		this.approverMap = approverMap;
+	}
+
+
+	/**
+	 * @return the flItemMap
+	 */
+	public HashMap<Long, FlFulfilmentItem> getFlItemMap() {
+		if(flItemMap == null){
+			setFlItemMap(new HashMap<Long, FlFulfilmentItem>());
+		}
+		return flItemMap;
+	}
+
+
+	/**
+	 * @param flItemMap the flItemMap to set
+	 */
+	public void setFlItemMap(HashMap<Long, FlFulfilmentItem> flItemMap) {
+		this.flItemMap = flItemMap;
 	}
 
 }
