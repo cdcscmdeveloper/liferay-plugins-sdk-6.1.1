@@ -92,6 +92,7 @@ public class SvoSiteVisitBackingBean extends
 		reqDTO.setOutcome(action);
 		reqDTO.setTaskId(this.getManagedBean().getTaskId());
 		reqDTO.setBpmUserName(bpmUsrName);
+		reqDTO.setAppType(this.getManagedBean().getAppType());
 		SiteVisitResDTO resDTO = reqSO.submitSiteVisitReport(reqDTO);
 		
 		if (resDTO.isSuccessful()) {

@@ -53,6 +53,8 @@ public class SvcSiteAssignBackingBean extends
 		reqDTO.setOutcome(action);
 		reqDTO.setTaskId(this.getManagedBean().getTaskId());
 		reqDTO.setBpmUserName(bpmUsrName);
+		reqDTO.setAppType(this.getManagedBean().getAppType());
+		
 		SiteAssignResDTO resDTO = reqSO.submitBPMTaskAssignment(reqDTO);
 		
 		if (resDTO.isSuccessful()) {

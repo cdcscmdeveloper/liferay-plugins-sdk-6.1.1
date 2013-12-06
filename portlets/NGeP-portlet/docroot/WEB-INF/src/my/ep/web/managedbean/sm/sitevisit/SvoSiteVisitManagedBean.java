@@ -18,7 +18,16 @@ public class SvoSiteVisitManagedBean extends BaseManagedBean {
 	private long appId;
 	private String[] bpmAction;
 	private String taskId;
+	private String appType;
 	
+	public String getAppType() {
+		return appType;
+	}
+
+	public void setAppType(String appType) {
+		this.appType = appType;
+	}
+
 	public long getAppId() {
 		return appId;
 	}
