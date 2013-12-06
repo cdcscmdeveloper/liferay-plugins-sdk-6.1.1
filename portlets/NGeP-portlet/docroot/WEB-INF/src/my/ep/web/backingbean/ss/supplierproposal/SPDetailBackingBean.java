@@ -10,8 +10,11 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.URL;
 import java.net.URLConnection;
+import java.rmi.RemoteException;
 import java.sql.Timestamp;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 
 import javax.annotation.PostConstruct;
@@ -21,15 +24,21 @@ import javax.faces.bean.RequestScoped;
 import javax.faces.context.FacesContext;
 import javax.portlet.PortletResponse;
 import javax.servlet.http.HttpServletResponse;
+import javax.xml.rpc.ServiceException;
 
 import my.ep.biz.service.sm.registration.IRegistrationSO;
 import my.ep.biz.service.ss.quationtender.IQTProposalSO;
+import my.ep.biz.service.ss.quationtender.IQTSpecSO;
 import my.ep.constant.tpl.TemplateSpecConst;
+import my.ep.dto.BaseResponseDTO;
 import my.ep.dto.sm.registration.RegistrationReqDTO;
 import my.ep.dto.sm.registration.RegistrationResDTO;
 import my.ep.dto.ss.quationtender.ProposalReqDTO;
 import my.ep.dto.ss.quationtender.ProposalResDTO;
+import my.ep.dto.ss.specification.SpecificationReqDTO;
+import my.ep.dto.ss.specification.SpecificationResDTO;
 import my.ep.factory.EpLogger;
+import my.ep.jaxb.sc.sitevisitproposaldata.SCSiteVisitProposalDataType;
 import my.ep.persistence.entity.ss.quationtender.ScQtCheckList;
 import my.ep.persistence.entity.ss.quationtender.ScQtDoc;
 import my.ep.persistence.entity.ss.quationtender.ScQtProposal;
@@ -37,9 +46,14 @@ import my.ep.persistence.entity.ss.quationtender.ScQtProposalChecklist;
 import my.ep.persistence.entity.ss.quationtender.ScQtProposalChecklistAttachment;
 import my.ep.persistence.entity.tpl.spec.TplSpecMaster;
 import my.ep.persistence.entity.tpl.spec.TplSpecQuestion;
-import my.ep.web.backingbean.BaseBackingBean;
+import my.ep.sc.Data.SC_SiteVisitProposal_Data.SC_SiteVisitProposal_DataType;
+import my.ep.sc.bpmnProcess.ProposalPreparation.ProposalPreparationPortType;
+import my.ep.sc.bpmnProcess.ProposalPreparation.ProposalPreparationServiceLocator;
+import my.ep.util.lookupservice.EpEjbBusinessDelegate;
+import my.ep.web.backingbean.ss.quatationtender.SourcingBaseBackingBean;
 import my.ep.web.backingbean.tpl.spec.TemplateSpecBackingBean;
 import my.ep.web.managedbean.ss.supplierproposal.SPDetailManagedBean;
+import my.ep.web.ss.quationtender.common.QTConstants;
 import my.ep.web.util.FacesScopes;
 import my.ep.web.util.lookupservice.BusinessDelegate;
 
@@ -47,13 +61,14 @@ import org.apache.log4j.Logger;
 import org.primefaces.event.FileUploadEvent;
 import org.primefaces.model.UploadedFile;
 
+
 /**
  * @author Viswanath
  * 
  */
 @ManagedBean(name = "sPDetailBB")
 @RequestScoped
-public class SPDetailBackingBean extends BaseBackingBean<SPDetailManagedBean> {
+public class SPDetailBackingBean extends SourcingBaseBackingBean<SPDetailManagedBean> {
 	public static Logger log = EpLogger.getLogger(SPDetailBackingBean.class);
 
 	private static final String MODULE_NAME = "ss";
@@ -66,7 +81,7 @@ public class SPDetailBackingBean extends BaseBackingBean<SPDetailManagedBean> {
 		this.proposalSO = proposalSO;
 
 		if (getManagedBean().getQtProposal() == null) {
-			retrieveTechnicalProposalList();
+			retrieveTechnicalProposalList(1l);
 		}
 
 		log.info("inside constructor");
@@ -84,7 +99,7 @@ public class SPDetailBackingBean extends BaseBackingBean<SPDetailManagedBean> {
 	/**
 	 * retrieving Technical Proposal CheckList
 	 */
-	public void retrieveTechnicalProposalList() {
+	public void retrieveTechnicalProposalList(Long supplierId) {
 		debugLogger("retrieveTechnicalProposalList");
 
 		IQTProposalSO proposalSO = null;
@@ -94,7 +109,7 @@ public class SPDetailBackingBean extends BaseBackingBean<SPDetailManagedBean> {
 					MODULE_NAME, IQTProposalSO.class);
 
 			ProposalReqDTO reqDTO = new ProposalReqDTO();
-			reqDTO.setQtSupplierId(1L);
+			reqDTO.setQtSupplierId(supplierId);
 
 			ProposalResDTO resDTO = proposalSO
 					.retrieveProposalDtlByQtSupplierId(reqDTO);
@@ -319,5 +334,67 @@ public class SPDetailBackingBean extends BaseBackingBean<SPDetailManagedBean> {
 		out.flush();
 		out.close();
 
+	}
+	public String createProposal(){
+		System.out.println("@@@@@@@@@"+this.getManagedBean().getSupplierId());
+		ProposalPreparationServiceLocator locator= new ProposalPreparationServiceLocator();
+		//locator.setSiteVisitPortEndpointAddress("http://192.168.120.17:8001/soa-infra/services/default/Sourcing/SiteVisit.service");
+		
+			SC_SiteVisitProposal_DataType dataType=new SC_SiteVisitProposal_DataType();
+		System.out.println(dataType);
+		
+		dataType.setQt_id(146);
+		dataType.setSupplier(new FacesScopes().getUserScreenName());
+		Calendar c = Calendar.getInstance(); //gives u calendar with current time
+		
+		c.setTime(new Date(2012-12-12));
+		dataType.setClosing_time(c);
+		dataType.setApproval(true);
+		
+		try {
+			ProposalPreparationPortType port = locator.getProposalPreparationPort();
+			System.out.println(port);
+			System.out.println("before invoking");
+			port.start(dataType);
+			System.out.println("invoked successfully");
+		} catch (ServiceException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (RemoteException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return null;
+	}
+	public String updateBpmTask(String action){
+		
+		ProposalReqDTO prReqDTO= new ProposalReqDTO();
+		prReqDTO.setOutcome(action);
+		prReqDTO.setTaskId(this.getManagedBean().getTaskId());
+		FacesScopes facesScopes= new FacesScopes();
+		String ctx = facesScopes.getBPMAuthenticationCtxToken();
+		prReqDTO.setToken(ctx);
+		prReqDTO.setPayLoad(this.getManagedBean().getProposalData());
+		IQTProposalSO proSo= getProposalSO();
+		BaseResponseDTO resDTO = proSo.updateBPMAction(prReqDTO);
+		if (resDTO.isSuccessful()) {
+
+			FacesContext.getCurrentInstance().addMessage(
+					null,
+					new FacesMessage(FacesMessage.SEVERITY_INFO,
+							"Record saved successfully.",
+							" Type. : "
+
+					));
+
+			return "/xhtml/shared/acknowledge.xhtml";
+
+		}
+		return "";
+		
+	}
+	
+	private IQTProposalSO getProposalSO(){
+		return EpEjbBusinessDelegate.getInstance().getServiceObject(QTConstants.SS_MODULE,IQTProposalSO.class);
 	}
 }
