@@ -18,6 +18,9 @@
 			<p:column headerText="#{lbl['lbl.pp.plan.number']}">  
                		#{ppPlan.planNo}
             </p:column>
+            <p:column headerText="#{lbl['lbl.pp.plan.type']}">  
+               		#{ppPlan.ppPlanMaster.planType}
+            </p:column>
 			<p:column headerText="#{lbl['lbl.pp.procurement.mode']}">  
                		#{ppPlan.ppPlanMaster.procurementMode}
             </p:column>
@@ -41,8 +44,7 @@
             </p:column>
 			<p:column headerText="#{lbl['lbl.pp.action']}">
 				<p:commandLink action="#{planBackingBean.redirectToPlanContent(ppPlan.planId)}" >
-					<p:graphicImage value="#{(planBackingBean.managedBean.viewMode==PPConst.modeList 
-						|| planBackingBean.managedBean.viewMode==null)
+					<p:graphicImage value="#{(planBackingBean.managedBean.viewMode==PPConst.modeList)
                			? '/resources/ep/images/design/edit.png' 
                   		: '/resources/ep/images/design/document.png'}"/>
 				</p:commandLink>

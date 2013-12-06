@@ -10,11 +10,28 @@ public class ProcurementPlanSearchBean {
 	
 	private String planDesc;
 	
+	private String planType;
+	
 	private String procurementMode;
 	
 	private Date fromDate;
 	
 	private Date toDate;
+
+	
+	/**
+	 * @return the planType
+	 */
+	public String getPlanType() {
+		return planType;
+	}
+
+	/**
+	 * @param planType the planType to set
+	 */
+	public void setPlanType(String planType) {
+		this.planType = planType;
+	}
 
 	/**
 	 * @return the status

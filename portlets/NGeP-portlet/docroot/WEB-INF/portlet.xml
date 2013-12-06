@@ -428,7 +428,7 @@
 		<portlet-class>org.portletfaces.bridge.GenericFacesPortlet</portlet-class>
 		<init-param>
 			<name>javax.portlet.faces.defaultViewId.view</name>
-			<value>/xhtml/pp/procurementplan/listPlan.xhtml</value>
+			<value>/xhtml/pp/procurementplan/preRenderPlanList.xhtml</value>
 		</init-param>
 		<expiration-cache>0</expiration-cache>
 		<supports>
@@ -462,7 +462,7 @@
 		<init-param>
 			<name>javax.portlet.faces.defaultViewId.view</name>
 			<value>
-				/xhtml/pp/procurementplan/preRenderView.xhtml
+				/xhtml/pp/procurementplan/preRenderPlanDet.xhtml
 			</value>
 		</init-param>
 		<expiration-cache>0</expiration-cache>
@@ -497,7 +497,7 @@
 		<init-param>
 			<name>javax.portlet.faces.defaultViewId.view</name>
 			<value>
-				/xhtml/pp/procurementplan/preRenderView.xhtml
+				/xhtml/pp/procurementplan/preRenderPlanDet.xhtml
 			</value>
 		</init-param>
 		<expiration-cache>0</expiration-cache>
@@ -532,7 +532,7 @@
 		<init-param>
 			<name>javax.portlet.faces.defaultViewId.view</name>
 			<value>
-				/xhtml/pp/budgetallocation/preRenderView.xhtml
+				/xhtml/pp/budgetallocation/preRenderBudgetDet.xhtml
 			</value>
 		</init-param>
 		<expiration-cache>0</expiration-cache>

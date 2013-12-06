@@ -179,13 +179,23 @@ public class PlanBackingBean extends BaseBackingBean<PlanManagedBean>{
 				bean.setSearchValue(ppSearchBean.getPlanDesc());
 				searchBean.getDataFilterBeans().add(bean);
 			}
-			if(ppSearchBean.getProcurementMode()!=null && CommonMethod.isSelected(ppSearchBean.getProcurementMode())){
-				log.info("+ getProcurementMode " + ppSearchBean.getProcurementMode());
+			if(ppSearchBean.getPlanType()!=null && CommonMethod.isSelected(ppSearchBean.getPlanType())){
+				log.info("+ getPlanType " + ppSearchBean.getPlanType());
 				SearchFilterBean bean = new SearchFilterBean();
-				bean.setSearchField("ppPlanMaster.procurementMode");
-				bean.setSearchOperator(SearchOperator.OPERATOR_LIKE.value());
-				bean.setSearchValue(ppSearchBean.getProcurementMode());
+				bean.setSearchField("ppPlanMaster.planType");
+				bean.setSearchOperator(SearchOperator.OPERATOR_EQUALS.value());
+				bean.setSearchValue(ppSearchBean.getPlanType());
 				searchBean.getDataFilterBeans().add(bean);
+			}
+			if(ppSearchBean.getPlanType()!=null && CommonMethod.isSelected(ppSearchBean.getPlanType())){
+				if(ppSearchBean.getProcurementMode()!=null && CommonMethod.isSelected(ppSearchBean.getProcurementMode())){
+					log.info("+ getProcurementMode " + ppSearchBean.getProcurementMode());
+					SearchFilterBean bean = new SearchFilterBean();
+					bean.setSearchField("ppPlanMaster.procurementMode");
+					bean.setSearchOperator(SearchOperator.OPERATOR_EQUALS.value());
+					bean.setSearchValue(ppSearchBean.getProcurementMode());
+					searchBean.getDataFilterBeans().add(bean);
+				}
 			}
 			if(ppSearchBean.getFromDate()!=null && ppSearchBean.getToDate()!=null){
 				log.info("+ createDate " + ppSearchBean.getFromDate() + " - " + ppSearchBean.getToDate());
@@ -2028,12 +2038,19 @@ public class PlanBackingBean extends BaseBackingBean<PlanManagedBean>{
 		return this.getManagedBean().getCurrentUser();
 	}
 
-
+	/**
+	 * pre-render view for plan list
+	 */
+	public void preRenderPlanList(){
+		this.getManagedBean().setViewMode(ProcurementPlanConst.MODE_LIST);
+		FacesContext fc = FacesContext.getCurrentInstance();
+	    fc.getApplication().getNavigationHandler().handleNavigation(fc, null, ProcurementPlanConst.NAV_TO_LIST_PLAN);
+	}
 	/**
 	 * the pre-render view to load plan from bpm task
 	 */
-	public void preRenderView() {
-		log.info("preRenderView - Start");
+	public void preRenderPlanDet() {
+		log.info("preRenderPlanDet - Start");
 		HttpServletRequest servletRequest = PortalUtil
 				.getHttpServletRequest(new FacesScopes().getRequest());
 		HttpServletRequest originalServletRequest = PortalUtil
@@ -2061,7 +2078,7 @@ public class PlanBackingBean extends BaseBackingBean<PlanManagedBean>{
 		planBB.getManagedBean().setBpmTaskId(taskId);
 		planBB.getManagedBean().setActions(res.getAction());
 		planBB.loadTask(plan, res.getTaskName());
-		log.info("preRenderView - End");
+		log.info("preRenderPlanDet - End");
 
 
 		FacesContext fc = FacesContext.getCurrentInstance();

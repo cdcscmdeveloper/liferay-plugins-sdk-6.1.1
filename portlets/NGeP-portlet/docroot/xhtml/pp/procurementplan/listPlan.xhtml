@@ -51,10 +51,19 @@ xmlns:tp="http://java.sun.com/jsf/composite/ep"
 				<table class="ppThreePartsTable">
 					<tr>
 						<th><p:outputLabel value="#{lbl['lbl.pp.plan.number']}" /></th>
-						<td><p:inputText
+						<td><p:inputText styleClass="ppDisplayTextM"
 								value="#{planBackingBean.managedBean.ppSearchPlan.planNo}" /></td>
+						<th>&nbsp;</th>
+						<td>&nbsp;</td>
+						<td>&nbsp;</td>
+					</tr>
+					<tr>
+						<th><p:outputLabel value="#{lbl['lbl.pp.plan.description']}" /></th>
+						<td><p:inputText styleClass="ppDisplayTextM"
+								value="#{planBackingBean.managedBean.ppSearchPlan.planDesc}" />
+						</td>
 						<th><p:outputLabel value="#{lbl['lbl.pp.status']}" /></th>
-						<td><p:selectOneMenu
+						<td><p:selectOneMenu styleClass="ppDropDownWidthM"
 								value="#{planBackingBean.managedBean.ppSearchPlan.status}">
 								<f:selectItem itemLabel="#{lbl['lbl.select']}"
 									itemValue="#{null}" />
@@ -62,27 +71,34 @@ xmlns:tp="http://java.sun.com/jsf/composite/ep"
 								<f:selectItem itemLabel="Pending Approval" itemValue="30004" />
 							</p:selectOneMenu></td>
 						<td>&nbsp;</td>
+						
 					</tr>
 					<tr>
-						<th><p:outputLabel value="#{lbl['lbl.pp.plan.description']}" /></th>
-						<td><p:inputText
-								value="#{planBackingBean.managedBean.ppSearchPlan.planDesc}" />
+						<th><p:outputLabel value="#{lbl['lbl.pp.plan.type']}" /></th>
+						<td>
+							<p:selectOneMenu styleClass="ppDropDownWidthM"
+								value="#{planBackingBean.managedBean.ppSearchPlan.planType}">
+								<f:selectItem itemLabel="#{lbl['lbl.select']}" itemValue="#{null}" />
+								<f:selectItems value="#{planBackingBean.planTypeOptions()}"/>
+								<p:ajax event="change" update="somProcureMode" /> 
+							</p:selectOneMenu>
 						</td>
 						<th><p:outputLabel value="#{lbl['lbl.pp.procurement.mode']}" /></th>
-						<td><p:selectOneMenu
+						<td>
+							<p:selectOneMenu id="somProcureMode" styleClass="ppDropDownWidthM"
 								value="#{planBackingBean.managedBean.ppSearchPlan.procurementMode}">
-								<f:selectItem itemLabel="#{lbl['lbl.select']}"
-									itemValue="#{null}" />
-								
-							</p:selectOneMenu></td>
+								<f:selectItem itemLabel="#{lbl['lbl.select']}" itemValue="#{null}" />
+								<f:selectItems value="#{planBackingBean.procurementModeOptions(planBackingBean.managedBean.ppSearchPlan.planType)}"/>
+							</p:selectOneMenu>
+						</td>
 						<td>&nbsp;</td>
 					</tr>
 					<tr>
 						<th><p:outputLabel value="#{lbl['lbl.pp.from.created.date']}" /></th>
-						<td><p:calendar showOn="button" pattern="MM/dd/yyyy"
+						<td><p:calendar styleClass="ppDisplayCalM" showOn="button" pattern="MM/dd/yyyy"
 								value="#{planBackingBean.managedBean.ppSearchPlan.fromDate}" /></td>
 						<th><p:outputLabel value="#{lbl['lbl.pp.to.created.date']}" /></th>
-						<td><p:calendar showOn="button" pattern="MM/dd/yyyy"
+						<td><p:calendar styleClass="ppDisplayCalM" showOn="button" pattern="MM/dd/yyyy"
 								value="#{planBackingBean.managedBean.ppSearchPlan.toDate}" /></td>
 						<td>&nbsp;</td>
 					</tr>
