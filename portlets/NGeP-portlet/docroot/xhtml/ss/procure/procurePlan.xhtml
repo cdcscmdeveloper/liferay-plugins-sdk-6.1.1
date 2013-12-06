@@ -8,46 +8,48 @@
 		
     <p:panel header="Search Procurement" toggleable="true">
 	
-	<p:panelGrid columns="2" style="width:25%;" styleClass="noBorders tr,noBorders td">
+	<h:panelGrid columns="2" style="width:25%;" styleClass="noBorders tr,noBorders td">
 	
-	<h:outputText value="Plan Number:"></h:outputText>
-	<h:inputText value="#{procureCodeManagedBean.plannumber}"></h:inputText>
+	<h:outputLabel value="Plan Number:"></h:outputLabel>
+	<h:inputText value="#{procurementListBackingBean.managedBean.planSearchBean.planNo}"></h:inputText>
 	
-	<h:outputText value="Procurement Mode:"></h:outputText>
+	<h:outputLabel value="Procurement Mode:"></h:outputLabel>
 
-	 <p:selectOneMenu value="#{searchQtnTenderBB.managedBean.selectOption}" style="width:80%;">  
-            <f:selectItem itemLabel="Select One" itemValue="" />  
-            <f:selectItem itemLabel="Mode 1" itemValue="1" />  
-            <f:selectItem itemLabel="Mode 2" itemValue="2" />  
-            <f:selectItem itemLabel="Mode 3" itemValue="3" /> 
+	 <p:selectOneMenu value="#{procurementListBackingBean.managedBean.planSearchBean.procurementMode}" style="width:80%;">  
+           <f:selectItems value="#{procurementListBackingBean.getDropdownCodeValues(PmCodeCatConst.scProcurementMode)}" />
+		
         </p:selectOneMenu>
         
-	<h:outputText value="Plan Status:"></h:outputText>
+	<h:outputLabel value="Plan Status:"></h:outputLabel>
 
-	 <p:selectOneMenu value="#{searchQtnTenderBB.managedBean.selectOption}" style="width:80%;">  
-            <f:selectItem itemLabel="Select One" itemValue="" />  
-            <f:selectItem itemLabel="Status 1" itemValue="1" />  
-            <f:selectItem itemLabel="Status 2" itemValue="2" /> 
-            <f:selectItem itemLabel="Status 3" itemValue="3" />  
+	 <p:selectOneMenu value="#{procurementListBackingBean.managedBean.planSearchBean.status}" style="width:80%;">  
+         <f:selectItem itemLabel="Select One" itemValue="" />
+				<f:selectItem itemLabel="Option 1" itemValue="" />
+				<f:selectItem itemLabel="Option 2" itemValue="" />
+				<f:selectItem itemLabel="Option 3" itemValue="" />
      </p:selectOneMenu>            
 	
 
-	</p:panelGrid>
+	</h:panelGrid>
 	
-	<p:commandButton value="SEARCH" style="float:right;">
+	<p:commandButton value="#{lbl['lbl.so.searchbtn']}"
+			style="float:right;" action="#{procurementListBackingBean.retriveProcuremntPlanDtls}"
+			update="procureList">
+
+		</p:commandButton>
     
-</p:commandButton>
+
 	<br/>
 	<br/>
 	</p:panel>
 	
 	<p:panel header="Results" toggleable="true">
-	<p:dataTable value="#{procureMB.procurementPlanList}" var="procurementObj" id="procureList" resizableColumns="true" editable="true">
+	<p:dataTable value="#{procurementListBackingBean.managedBean.procurementPlanList}" var="procurementObj" id="procureList" resizableColumns="true" editable="true">
         
    <p:ajax event="rowEdit" />  
         <p:ajax event="rowEditCancel" />  
   
-        <p:column headerText="Planned Number" style="width:12%">  
+        <p:column headerText="Planned Number" style="width:15%">  
            <p:outputLabel value="#{procurementObj.planNo}"></p:outputLabel>
         </p:column>
           
@@ -67,23 +69,20 @@
            <p:outputLabel id="arr_date" value="#{procurementObj.createdDate}" /> 	 
         </p:column>
         
-        <p:column headerText="Notification Date" style="width:25%">  
-		   <p:calendar value="#{calendarBean.date3}" id="popupButtonCal" showOn="button" /> 	
-        </p:column> 
-
+       
         <p:column headerText="Notification Days" style="width:15%">  
            <p:outputLabel value="#{procurementObj.notificationDays}"></p:outputLabel>
         </p:column> 
         
         <p:column headerText="Plan Status" style="width:15%">  
-        	<!-- p:outputLabel value="#{procurementObj.statusCode}"></p:outputLabel	-->   
+        	 
         </p:column> 
         	
        <p:column headerText="Action" style="width:6%">  
             <p:rowEditor />  
-            <p:commandLink value="createBPMTask" actionListener="#{procurementListBackingBean.createBPMTask(procurementObj)}" 
+            <p:commandLink value="createBPMTask" action="#{procurementListBackingBean.initiateBPMTask(procurementObj)}" 
             	rendered="true" update="procureList" process="@this">
-            	<h:outputText value="create" /> 
+            	<h:outputLabel value="create" /> 
             </p:commandLink>
         </p:column> 
         
