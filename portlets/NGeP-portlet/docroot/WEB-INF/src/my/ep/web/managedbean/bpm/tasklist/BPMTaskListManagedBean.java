@@ -27,7 +27,7 @@ public class BPMTaskListManagedBean extends BaseManagedBean {
 	
 	private String taskId;
 	
-	private String status;
+	private String status="ASSIGNED";
 	
 	private String taskName;
 	
