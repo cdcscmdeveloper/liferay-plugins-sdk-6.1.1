@@ -22,13 +22,14 @@ import my.ep.web.util.FacesScopes;
 
 import org.apache.log4j.Logger;
 
-@ManagedBean(name="bpmTasklistBackingBean")
+@ManagedBean(name = "bpmTasklistBackingBean")
 @RequestScoped
-public class BPMTaskListBackingBean extends BaseBackingBean<BPMTaskListManagedBean>{
+public class BPMTaskListBackingBean extends
+		BaseBackingBean<BPMTaskListManagedBean> {
 
 	private static Logger log = Logger.getLogger(BPMTaskListBackingBean.class);
 
-	public BPMTaskListBackingBean(){
+	public BPMTaskListBackingBean() {
 		this.getManagedBean().setBpmMap(null);
 		Map temp = new HashMap();
 
@@ -36,19 +37,20 @@ public class BPMTaskListBackingBean extends BaseBackingBean<BPMTaskListManagedBe
 		temp.put("Extension Code Request", "review-extension");
 		temp.put("Extension Code Maintenance", "review-extension-maintenance");
 
-		//Procurement Plan - Start
+		// Procurement Plan - Start
 		temp.put("Plan Preparation", "review-plan");
 		temp.put("Plan Revision", "revise-plan");
 		temp.put("Budget Endorsement", "review-budget");
-		//Procurement Plan - End
+		// Procurement Plan - End
 
-		//Supplier Management - Start
+		// Supplier Management - Start
 		temp.put("Disciplinary Action", "disciplinary-action");
 		temp.put("Site Visit Manage", "site-visit");
 		temp.put("MOF Supplier Registration", "mof-application");
 		temp.put("MOF Account Maintain", "mof-application");
 		temp.put("MOF Registration Cancellation","mof-application");
 		temp.put("DirectPurchase Creation", "review-directpuchase");
+		
 		temp.put("Supplier Recommendation", "review-directpuchase");
 
 		//QuationTender 
@@ -60,6 +62,8 @@ public class BPMTaskListBackingBean extends BaseBackingBean<BPMTaskListManagedBe
 
 		temp.put("Specification Preparation", "qtsprecprepartaion");
 		temp.put("View Preparation", "qtsprecprepartaion");
+		temp.put("Site Visit", "sitevisit");
+		temp.put("Proposal Preparation","supplierpp");
 
 		temp.put("Circular Contract Maintenance", "create-central-contract-circular");
 		temp.put("Circular Contract Maintenance", "create-panel-circular");
@@ -108,8 +112,9 @@ public class BPMTaskListBackingBean extends BaseBackingBean<BPMTaskListManagedBe
 		temp.put(FlProcessNameConst.PURCHASE_REQ_CREATION_PROCESS_NAME+FlProcessNameConst.REVIEW_REJECTED_PO_HT, "purchase-order");
 
 
-		this.getManagedBean().setBpmMap(temp);
+		temp.put("Service QuotationTender Creation","supplierpp");
 
+		this.getManagedBean().setBpmMap(temp);
 
 		System.out.println("testing BPM******");
 
@@ -122,17 +127,16 @@ public class BPMTaskListBackingBean extends BaseBackingBean<BPMTaskListManagedBe
 		}
 	}
 
+	public BpmResponseDTO retrieveWorklistItems(String status, String viewBy) {
 
-	public BpmResponseDTO retrieveWorklistItems(String status, String viewBy){
+		IBpmSO bpmSO = (IBpmSO) EpBpmBusinessDelegate.getInstance()
+				.getServiceObject(IBpmSO.class);
 
-
-
-		IBpmSO bpmSO = (IBpmSO) EpBpmBusinessDelegate.getInstance().getServiceObject(IBpmSO.class);
-
+		// String token = bpmSO.authenticate("roslan", "welcome1");
 		FacesScopes face = new FacesScopes();
-		String token =face.getBPMAuthenticationCtxToken();
+		String token = face.getBPMAuthenticationCtxToken();
 
-		System.out.println("testing BPM auth******"+token);
+		System.out.println("testing BPM auth******" + token);
 		BpmRequestDTO reqDTO = new BpmRequestDTO();
 
 		reqDTO.setLimit(PagingConst.ROWS_PER_PAGE);
@@ -144,6 +148,7 @@ public class BPMTaskListBackingBean extends BaseBackingBean<BPMTaskListManagedBe
 
 		System.out.println("testing BPM******"+responseDTO.getWorklistVO().getWorklistItem().size());
 
+		
 
 
 		this.getManagedBean().setTaskList(responseDTO.getWorklistVO().getWorklistItem());
@@ -154,49 +159,46 @@ public class BPMTaskListBackingBean extends BaseBackingBean<BPMTaskListManagedBe
 		return responseDTO;
 	}
 
+	public void navigateToURL() {
 
-	public void navigateToURL(){
+		IBpmSO bpmSO = (IBpmSO) EpBpmBusinessDelegate.getInstance()
+				.getServiceObject(IBpmSO.class);
 
-		IBpmSO bpmSO = (IBpmSO) EpBpmBusinessDelegate.getInstance().getServiceObject(IBpmSO.class);
-
-		String taskId = FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap().get("taskId");
+		String taskId = FacesContext.getCurrentInstance().getExternalContext()
+				.getRequestParameterMap().get("taskId");
 		FacesScopes face = new FacesScopes();
-		String token =face.getBPMAuthenticationCtxToken();
+		String token = face.getBPMAuthenticationCtxToken();
 		BpmRequestDTO reqDTO = new BpmRequestDTO();
 
 		try {
-			log.info("taskId:"+taskId);
+			log.info("taskId:" + taskId);
 			reqDTO.setCtxToken(token);
 			reqDTO.setTaskId(taskId);
 			BpmResponseDTO res = bpmSO.getTaskDetails(reqDTO);
-			System.out.println("********getProcessName********"+res.getProcessName());
-			System.out.println("********getTaskName********"+res.getTaskName());
-			System.out.println("********res.getAction()********"+res.getAction());
+			System.out.println("********getProcessName********"
+					+ res.getProcessName());
+			System.out.println("********res.getAction()********"
+					+ res.getAction());
 			this.getManagedBean().setProcessName(res.getProcessName());
 			this.getManagedBean().setAction(res.getAction());
 			Object obj = res.getPojo();
 
-
-
 			String url = "";
 
-			if(!this.getManagedBean().getBpmMap().isEmpty() && this.getManagedBean().getBpmMap().size() > 0 ){ 
+			if (!this.getManagedBean().getBpmMap().isEmpty()
+					&& this.getManagedBean().getBpmMap().size() > 0) {
 
-				url= (String)this.getManagedBean().getBpmMap().get(res.getProcessName());
-				if(url == null || url.isEmpty()){
-					url= (String)this.getManagedBean().getBpmMap().get(res.getProcessName()+res.getTaskName());
-				}
+				url = (String) this.getManagedBean().getBpmMap()
+						.get(res.getProcessName());
 
 			}
-			log.info("url:"+url);
+			log.info("url:" + url);
 
-
-
-
+			
 			ExternalContext externalContext = FacesContext.getCurrentInstance().getExternalContext();
 
-//			externalContext.redirect("/web/guest/" +url +"?taskId="+taskId);
-			externalContext.redirect("/web/dashboard/" +url +"?taskId="+taskId);
+			externalContext.redirect("/web/guest/" +url +"?taskId="+taskId);
+			//externalContext.redirect("/web/dashboard/"+url+"?taskId="+taskId);
 			//externalContext.redirect("http://localhost:8080/web/guest/" +url +"?taskId="+taskId);
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
@@ -205,37 +207,34 @@ public class BPMTaskListBackingBean extends BaseBackingBean<BPMTaskListManagedBe
 
 	}
 
+	private int calculateFinalOffSet(int currentPage) {
 
-
-	private int calculateFinalOffSet(int currentPage){
-
-		int offSet = (currentPage-1) *PagingConst.ROWS_PER_PAGE;
+		int offSet = (currentPage - 1) * PagingConst.ROWS_PER_PAGE;
 
 		return offSet;
 	}
 
-	public void viewby(String viewBy){
-		System.out.println("viewBy:"+viewBy);
+	public void viewby(String viewBy) {
+		System.out.println("viewBy:" + viewBy);
 
-		BpmResponseDTO responseDTO = retrieveWorklistItems(this.getManagedBean().getStatus(), viewBy);
-
+		BpmResponseDTO responseDTO = retrieveWorklistItems(this
+				.getManagedBean().getStatus(), viewBy);
 
 	}
 
-	public void filterStatus(){
+	public void filterStatus() {
 
-		BpmResponseDTO responseDTO = retrieveWorklistItems(this.getManagedBean().getStatus(), "");
+		BpmResponseDTO responseDTO = retrieveWorklistItems(this
+				.getManagedBean().getStatus(), "");
 	}
 
-	public void tempFilterLogin(){
+	public void tempFilterLogin() {
 
-		BpmResponseDTO responseDTO = retrieveWorklistItems(this.getManagedBean().getStatus(), "");
+		BpmResponseDTO responseDTO = retrieveWorklistItems(this
+				.getManagedBean().getStatus(), "");
 	}
 
-
-
-
-	public String backToTaskList(){
+	public String backToTaskList() {
 
 		System.out.println("*******backToTaskList*******");
 
