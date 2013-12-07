@@ -155,7 +155,7 @@ public class SpecificationBackingBean extends
 			System.out.println("=====specSO===" + specSO);
 			SpecificationReqDTO specreqDTO = new SpecificationReqDTO();
 			specreqDTO.setScQtSpec(scqtSpec);
-			specSO.saveSpecDetails(specreqDTO);
+			specSO.saveQTDtl(specreqDTO);
 			System.out.println("====successfully saved in db====");
 
 		} catch (Exception e) {

@@ -28,17 +28,13 @@ import javax.xml.rpc.ServiceException;
 
 import my.ep.biz.service.sm.registration.IRegistrationSO;
 import my.ep.biz.service.ss.quationtender.IQTProposalSO;
-import my.ep.biz.service.ss.quationtender.IQTSpecSO;
 import my.ep.constant.tpl.TemplateSpecConst;
 import my.ep.dto.BaseResponseDTO;
 import my.ep.dto.sm.registration.RegistrationReqDTO;
 import my.ep.dto.sm.registration.RegistrationResDTO;
 import my.ep.dto.ss.quationtender.ProposalReqDTO;
 import my.ep.dto.ss.quationtender.ProposalResDTO;
-import my.ep.dto.ss.specification.SpecificationReqDTO;
-import my.ep.dto.ss.specification.SpecificationResDTO;
 import my.ep.factory.EpLogger;
-import my.ep.jaxb.sc.sitevisitproposaldata.SCSiteVisitProposalDataType;
 import my.ep.persistence.entity.ss.quationtender.ScQtCheckList;
 import my.ep.persistence.entity.ss.quationtender.ScQtDoc;
 import my.ep.persistence.entity.ss.quationtender.ScQtProposal;
@@ -171,7 +167,7 @@ public class SPDetailBackingBean extends SourcingBaseBackingBean<SPDetailManaged
 		scQtProposal.setScQtProposalChecklists(scQtProposalChecklists);
 
 		reqDTO.setScQtProposal(scQtProposal);
-		resDTO = proposalSO.saveProposalDtl(reqDTO);
+		resDTO = proposalSO.saveQTDtl(reqDTO);
 
 	}
 
