@@ -255,7 +255,8 @@ public class QTSupplierQulCriteriaBackingBean extends SourcingBaseBackingBean<QT
 		}catch(Exception ex){
 			ex.printStackTrace();
 		}
-		return resDTO.getSupplierList();
+		//return resDTO.getSupplierList();
+		return null;
 		//resDTO.getSearchResultBean().getResultList();
 	}
 	public void addState(){
