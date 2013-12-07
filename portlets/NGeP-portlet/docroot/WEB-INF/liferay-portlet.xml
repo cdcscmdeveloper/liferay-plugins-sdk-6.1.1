@@ -760,7 +760,28 @@
 			scbriefingsitevisitattendance-portlet
 		</css-class-wrapper>
 	</portlet>
-
+<portlet>
+		<portlet-name>scQTMaintenance</portlet-name>
+		<icon>/icon.png</icon>
+		<instanceable>false</instanceable>
+		<header-portlet-css>/css/main.css</header-portlet-css>
+		<footer-portlet-javascript>
+			/js/main.js
+		</footer-portlet-javascript>
+		<css-class-wrapper>
+			scQTMaintenance-portlet
+		</css-class-wrapper>
+	</portlet>
+	<portlet>
+		<portlet-name>commonAppl</portlet-name>
+		<icon>/icon.png</icon>
+		<instanceable>false</instanceable>
+		<header-portlet-css>/css/main.css</header-portlet-css>
+		<footer-portlet-javascript>
+			/js/main.js
+		</footer-portlet-javascript>
+		<css-class-wrapper>commonappl-portlet</css-class-wrapper>
+	</portlet>
 	<portlet>
 		<portlet-name>SiteVisit</portlet-name>
 		<icon>/icon.png</icon>
@@ -792,6 +813,69 @@
 			/js/main.js
 		</footer-portlet-javascript>
 		<css-class-wrapper>onlineaccountmaintenance-portlet</css-class-wrapper>
+	</portlet>
+	
+	<portlet>
+	<portlet-name>scQTReview</portlet-name>
+		<icon>/icon.png</icon>
+		<instanceable>false</instanceable>
+		<header-portlet-css>/css/main.css</header-portlet-css>
+		<footer-portlet-javascript>
+			/js/main.js
+		</footer-portlet-javascript>
+		<css-class-wrapper>
+			scQTReview-portlet
+		</css-class-wrapper>
+	</portlet>
+	<portlet>
+	<portlet-name>scQTPrepareSpec</portlet-name>
+		<icon>/icon.png</icon>
+		<instanceable>false</instanceable>
+		<header-portlet-css>/css/main.css</header-portlet-css>
+		<footer-portlet-javascript>
+			/js/main.js
+		</footer-portlet-javascript>
+		<css-class-wrapper>
+			scQTPrepareSpec-portlet
+		</css-class-wrapper>
+	</portlet>
+	
+	<portlet>
+	<portlet-name>scQTSiteVisit</portlet-name>
+		<icon>/icon.png</icon>
+		<instanceable>false</instanceable>
+		<header-portlet-css>/css/main.css</header-portlet-css>
+		<footer-portlet-javascript>
+			/js/main.js
+		</footer-portlet-javascript>
+		<css-class-wrapper>
+			scQTSiteVisit-portlet
+		</css-class-wrapper>
+	</portlet>
+		<portlet>
+	<portlet-name>scSupplierProposal</portlet-name>
+		<icon>/icon.png</icon>
+		<instanceable>false</instanceable>
+		<header-portlet-css>/css/main.css</header-portlet-css>
+		<footer-portlet-javascript>
+			/js/main.js
+		</footer-portlet-javascript>
+		<css-class-wrapper>
+			scSupplierProposal-portlet
+		</css-class-wrapper>
+	</portlet>
+	
+	<portlet>
+	<portlet-name>scSupplierNotification</portlet-name>
+		<icon>/icon.png</icon>
+		<instanceable>false</instanceable>
+		<header-portlet-css>/css/main.css</header-portlet-css>
+		<footer-portlet-javascript>
+			/js/main.js
+		</footer-portlet-javascript>
+		<css-class-wrapper>
+			scSupplierNotification-portlet
+		</css-class-wrapper>
 	</portlet>
 	
 	<portlet>

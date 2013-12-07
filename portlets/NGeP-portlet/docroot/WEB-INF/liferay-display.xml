@@ -46,9 +46,15 @@
 			<portlet id="scEvaluation" />
 			<portlet id="scBidding" />
 			<portlet id="scTemplateMaint" />
-           <portlet id="scTemplateDocument" />
+			
+			<portlet id="scQTMaintenance"/>
+			<portlet id="scQTReview"/>
+			<portlet id="scQTPrepareSpec"/>
+			<portlet id="scQTSiteVisit"/>
+			<portlet id="scSupplierProposal"/>
+			<portlet id="scSupplierNotification"/>
+  <portlet id="scTemplateDocument" />
            <portlet id="scBriefingSiteVisitAttendance" />
-
 
 		</category>
 
@@ -92,7 +98,6 @@
 		<portlet id="BpmTaskList"></portlet>
 		<portlet id="reviewExtensionRequest"></portlet>
 		<portlet id="reviewExtensionMaintenance"></portlet>
-
 	</category>
 
 	<category name="Template">

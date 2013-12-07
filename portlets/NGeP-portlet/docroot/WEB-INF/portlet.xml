@@ -594,7 +594,6 @@
 
 
 
-
 	<portlet>
 		<portlet-name>scQuotationTender</portlet-name>
 		<display-name>Quotation / Tender</display-name>
@@ -2054,7 +2053,7 @@
 		<security-role-ref>
 			<role-name>user</role-name>
 		</security-role-ref>
-</portlet>
+	</portlet>
 
 <portlet>
 		<portlet-name>sdoreview</portlet-name>
@@ -2640,7 +2639,39 @@
 			<role-name>user</role-name>
 		</security-role-ref>
 	</portlet>
-	
+	 <portlet>
+	 	<portlet-name>commonAppl</portlet-name>
+	 	<display-name>Common Appl</display-name>
+	 	<portlet-class>
+	 		org.portletfaces.bridge.GenericFacesPortlet
+	 	</portlet-class>
+	 	<init-param>
+	 		<name>javax.portlet.faces.defaultViewId.view</name>
+	 		<value>/xhtml/sm/commonappl/portletViewMode.xhtml</value>
+	 	</init-param>
+	 	<expiration-cache>0</expiration-cache>
+	 	<supports>
+	 		<mime-type>text/html</mime-type>
+	 		<portlet-mode>view</portlet-mode>
+	 	</supports>
+	 	<portlet-info>
+	 		<title>Common Appl</title>
+	 		<short-title>NewJSFPortlet</short-title>
+	 		<keywords></keywords>
+	 	</portlet-info>
+	 	<security-role-ref>
+	 		<role-name>administrator</role-name>
+	 	</security-role-ref>
+	 	<security-role-ref>
+	 		<role-name>guest</role-name>
+	 	</security-role-ref>
+	 	<security-role-ref>
+	 		<role-name>power-user</role-name>
+	 	</security-role-ref>
+	 	<security-role-ref>
+	 		<role-name>user</role-name>
+	 	</security-role-ref>
+	 </portlet>
 	 <portlet>
 	 	<portlet-name>SiteVisit</portlet-name>
 	 	<display-name>Site Visit</display-name>
@@ -2674,9 +2705,205 @@
 	 		<role-name>user</role-name>
 	 	</security-role-ref>
 	 </portlet>
-	 
-	 
 	 <portlet>
+	 	<portlet-name>scQTMaintenance</portlet-name>
+	 	<display-name>scQTMaintenance</display-name>
+	 	<portlet-class>
+	 		org.portletfaces.bridge.GenericFacesPortlet
+	 	</portlet-class>
+	 	<init-param>
+	 		<name>javax.portlet.faces.defaultViewId.view</name>
+	 		<value>/xhtml/ss/quatationtender/prerenderQtMaintance.xhtml</value>
+	 	</init-param>
+	 	<expiration-cache>0</expiration-cache>
+	 	<supports>
+	 		<mime-type>text/html</mime-type>
+	 		<portlet-mode>view</portlet-mode>
+	 	</supports>
+	 	<portlet-info>
+	 		<title>scQTMaintenance</title>
+	 		<short-title>NewJSFPortlet</short-title>
+	 		<keywords></keywords>
+	 	</portlet-info>
+	 	<security-role-ref>
+	 		<role-name>administrator</role-name>
+	 	</security-role-ref>
+	 	<security-role-ref>
+	 		<role-name>guest</role-name>
+	 	</security-role-ref>
+	 	<security-role-ref>
+	 		<role-name>power-user</role-name>
+	 	</security-role-ref>
+	 	<security-role-ref>
+	 		<role-name>user</role-name>
+	 	</security-role-ref>
+	 </portlet>
+	  <portlet>
+	 	<portlet-name>scQTReview</portlet-name>
+	 	<display-name>scQTReview</display-name>
+	 	<portlet-class>
+	 		org.portletfaces.bridge.GenericFacesPortlet
+	 	</portlet-class>
+	 	<init-param>
+	 		<name>javax.portlet.faces.defaultViewId.view</name>
+	 		<value>/xhtml/ss/quatationtender/prerenderQtReview.xhtml</value>
+	 	</init-param>
+	 	<expiration-cache>0</expiration-cache>
+	 	<supports>
+	 		<mime-type>text/html</mime-type>
+	 		<portlet-mode>view</portlet-mode>
+	 	</supports>
+	 	<portlet-info>
+	 		<title>scQTReview</title>
+	 		<short-title>NewJSFPortlet</short-title>
+	 		<keywords></keywords>
+	 	</portlet-info>
+	 	<security-role-ref>
+	 		<role-name>administrator</role-name>
+	 	</security-role-ref>
+	 	<security-role-ref>
+	 		<role-name>guest</role-name>
+	 	</security-role-ref>
+	 	<security-role-ref>
+	 		<role-name>power-user</role-name>
+	 	</security-role-ref>
+	 	<security-role-ref>
+	 		<role-name>user</role-name>
+	 	</security-role-ref>
+	 </portlet>
+	 <portlet>
+	 	<portlet-name>scQTPrepareSpec</portlet-name>
+	 	<display-name>scQTPrepareSpec</display-name>
+	 	<portlet-class>
+	 		org.portletfaces.bridge.GenericFacesPortlet
+	 	</portlet-class>
+	 	<init-param>
+	 		<name>javax.portlet.faces.defaultViewId.view</name>
+	 		<value>/xhtml/ss/specification/prerenderQtSpecPreparation.xhtml</value>
+	 	</init-param>
+	 	<expiration-cache>0</expiration-cache>
+	 	<supports>
+	 		<mime-type>text/html</mime-type>
+	 		<portlet-mode>view</portlet-mode>
+	 	</supports>
+	 	<portlet-info>
+	 		<title>scQTPrepareSpec</title>
+	 		<short-title>NewJSFPortlet</short-title>
+	 		<keywords></keywords>
+	 	</portlet-info>
+	 	<security-role-ref>
+	 		<role-name>administrator</role-name>
+	 	</security-role-ref>
+	 	<security-role-ref>
+	 		<role-name>guest</role-name>
+	 	</security-role-ref>
+	 	<security-role-ref>
+	 		<role-name>power-user</role-name>
+	 	</security-role-ref>
+	 	<security-role-ref>
+	 		<role-name>user</role-name>
+	 	</security-role-ref>
+	 </portlet>
+	  <portlet>
+	 	<portlet-name>scQTSiteVisit</portlet-name>
+	 	<display-name>scQTSiteVisit</display-name>
+	 	<portlet-class>
+	 		org.portletfaces.bridge.GenericFacesPortlet
+	 	</portlet-class>
+	 	<init-param>
+	 		<name>javax.portlet.faces.defaultViewId.view</name>
+	 		<value>/xhtml/ss/bsvattendance/prerenderQtSiteVisit.xhtml</value>
+	 	</init-param>
+	 	<expiration-cache>0</expiration-cache>
+	 	<supports>
+	 		<mime-type>text/html</mime-type>
+	 		<portlet-mode>view</portlet-mode>
+	 	</supports>
+	 	<portlet-info>
+	 		<title>scQTSiteVisit</title>
+	 		<short-title>NewJSFPortlet</short-title>
+	 		<keywords></keywords>
+	 	</portlet-info>
+	 	<security-role-ref>
+	 		<role-name>administrator</role-name>
+	 	</security-role-ref>
+	 	<security-role-ref>
+	 		<role-name>guest</role-name>
+	 	</security-role-ref>
+	 	<security-role-ref>
+	 		<role-name>power-user</role-name>
+	 	</security-role-ref>
+	 	<security-role-ref>
+	 		<role-name>user</role-name>
+	 	</security-role-ref>
+	 </portlet>
+	   <portlet>
+	 	<portlet-name>scSupplierProposal</portlet-name>
+	 	<display-name>scSupplierProposal</display-name>
+	 	<portlet-class>
+	 		org.portletfaces.bridge.GenericFacesPortlet
+	 	</portlet-class>
+	 	<init-param>
+	 		<name>javax.portlet.faces.defaultViewId.view</name>
+	 		<value>/xhtml/ss/supplierproposal/prerenderSupplierPropsal.xhtml</value>
+	 	</init-param>
+	 	<expiration-cache>0</expiration-cache>
+	 	<supports>
+	 		<mime-type>text/html</mime-type>
+	 		<portlet-mode>view</portlet-mode>
+	 	</supports>
+	 	<portlet-info>
+	 		<title>scSupplierProposal</title>
+	 		<short-title>NewJSFPortlet</short-title>
+	 		<keywords></keywords>
+	 	</portlet-info>
+	 	<security-role-ref>
+	 		<role-name>administrator</role-name>
+	 	</security-role-ref>
+	 	<security-role-ref>
+	 		<role-name>guest</role-name>
+	 	</security-role-ref>
+	 	<security-role-ref>
+	 		<role-name>power-user</role-name>
+	 	</security-role-ref>
+	 	<security-role-ref>
+	 		<role-name>user</role-name>
+	 	</security-role-ref>
+	 </portlet>
+	 <portlet>
+	 	<portlet-name>scSupplierNotification</portlet-name>
+	 	<display-name>scSupplierNotification</display-name>
+	 	<portlet-class>
+	 		org.portletfaces.bridge.GenericFacesPortlet
+	 	</portlet-class>
+	 	<init-param>
+	 		<name>javax.portlet.faces.defaultViewId.view</name>
+	 		<value>/xhtml/ss/supplierproposal/proposalCration.xhtml</value>
+	 	</init-param>
+	 	<expiration-cache>0</expiration-cache>
+	 	<supports>
+	 		<mime-type>text/html</mime-type>
+	 		<portlet-mode>view</portlet-mode>
+	 	</supports>
+	 	<portlet-info>
+	 		<title>scSupplierNotification</title>
+	 		<short-title>NewJSFPortlet</short-title>
+	 		<keywords></keywords>
+	 	</portlet-info>
+	 	<security-role-ref>
+	 		<role-name>administrator</role-name>
+	 	</security-role-ref>
+	 	<security-role-ref>
+	 		<role-name>guest</role-name>
+	 	</security-role-ref>
+	 	<security-role-ref>
+	 		<role-name>power-user</role-name>
+	 	</security-role-ref>
+	 	<security-role-ref>
+	 		<role-name>user</role-name>
+	 	</security-role-ref>
+	 </portlet>
+	  <portlet>
 		<portlet-name>scTemplateDocument</portlet-name>
 		<display-name>Template Document</display-name>
 		<portlet-class>org.portletfaces.bridge.GenericFacesPortlet</portlet-class>
