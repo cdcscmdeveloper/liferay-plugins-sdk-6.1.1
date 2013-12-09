@@ -161,20 +161,23 @@ public class QTSupplierQulCriteriaBackingBean extends SourcingBaseBackingBean<QT
 	public void addNewRestrictedCategoryItem() {
 		/*List<ScQtCategory> categories = this.getManagedBean().getQt()
 				.getScQtCategorys();*/
-		List<ScQtCategory> categories=this.getManagedBean().getRestrictedCategorys();
-		if (categories == null) {
-			categories = new ArrayList<ScQtCategory>();
-
+		List<ScQtCategory> restrictedcategories=this.getManagedBean().getRestrictedCategorys();
+		if (restrictedcategories == null) {
+			restrictedcategories = new ArrayList<ScQtCategory>();
+      // this.getManagedBean().setOpenCategorys(categories);
+			
 		} 
-		System.out.println("New Category Creation");
+		System.out.println("New Restricted Category Creation");
 		retriveQtCriteria();
-		ScQtCategory category = new ScQtCategory();
-		category.setPmCategoryL1(new PmCategoryL1());
-		categories.add(category);
-		this.getManagedBean().setRestrictedCategorys(categories);
+		ScQtCategory rescategory = new ScQtCategory();
+		rescategory.setPmCategoryL1(new PmCategoryL1());
+		rescategory.setPmCategoryL2(new PmCategoryL2());
+		rescategory.setPmCategoryL3(new PmCategoryL3());
+		restrictedcategories.add(rescategory);
+		this.getManagedBean().setRestrictedCategorys(restrictedcategories);
 		//this.getManagedBean().getQt().setScQtCategorys(categories);
 	}
-
+	
 
 	/*
 	 * To remove categoryCode from data table
@@ -467,8 +470,7 @@ public class QTSupplierQulCriteriaBackingBean extends SourcingBaseBackingBean<QT
 		 /* if(!"zone".equals(zonePage)){
 			  this.getManagedBean().setSelectedZone(null);
 		  }*/
-		  
-
+		
 	  }
 	 
 	  public void handleZoneChange(ValueChangeEvent event){
