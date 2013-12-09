@@ -28,17 +28,13 @@ import javax.xml.rpc.ServiceException;
 
 import my.ep.biz.service.sm.registration.IRegistrationSO;
 import my.ep.biz.service.ss.quationtender.IQTProposalSO;
-import my.ep.biz.service.ss.quationtender.IQTSpecSO;
 import my.ep.constant.tpl.TemplateSpecConst;
-import my.ep.dto.BaseResponseDTO;
 import my.ep.dto.sm.registration.RegistrationReqDTO;
 import my.ep.dto.sm.registration.RegistrationResDTO;
 import my.ep.dto.ss.quationtender.ProposalReqDTO;
 import my.ep.dto.ss.quationtender.ProposalResDTO;
-import my.ep.dto.ss.specification.SpecificationReqDTO;
-import my.ep.dto.ss.specification.SpecificationResDTO;
+import my.ep.exception.EpException;
 import my.ep.factory.EpLogger;
-import my.ep.jaxb.sc.sitevisitproposaldata.SCSiteVisitProposalDataType;
 import my.ep.persistence.entity.ss.quationtender.ScQtCheckList;
 import my.ep.persistence.entity.ss.quationtender.ScQtDoc;
 import my.ep.persistence.entity.ss.quationtender.ScQtProposal;
@@ -66,7 +62,7 @@ import org.primefaces.model.UploadedFile;
  * @author Viswanath
  * 
  */
-@ManagedBean(name = "sPDetailBB")
+@ManagedBean(name = "sPDetailBackingBean")
 @RequestScoped
 public class SPDetailBackingBean extends SourcingBaseBackingBean<SPDetailManagedBean> {
 	public static Logger log = EpLogger.getLogger(SPDetailBackingBean.class);
@@ -149,30 +145,49 @@ public class SPDetailBackingBean extends SourcingBaseBackingBean<SPDetailManaged
 	public void saveSPDetailsAction() {
 		debugLogger("saveSPDetailsAction");
 
-		List<ScQtProposalChecklist> scQtProposalChecklists = new ArrayList<ScQtProposalChecklist>();
+		try {
+			List<ScQtProposalChecklist> scQtProposalChecklists = new ArrayList<ScQtProposalChecklist>();
 
-		ScQtProposal scQtProposal = getManagedBean().getQtProposal();
-		List<ScQtProposalChecklist> tecQtProposalChecklists = getManagedBean()
-				.getTecCheckDetailsList();
-		scQtProposalChecklists.addAll(tecQtProposalChecklists);
+			ScQtProposal scQtProposal = getManagedBean().getQtProposal();
+			List<ScQtProposalChecklist> tecQtProposalChecklists = getManagedBean()
+					.getTecCheckDetailsList();
+			scQtProposalChecklists.addAll(tecQtProposalChecklists);
 
-		tecQtProposalChecklists = getManagedBean().getFinanceCheckDetailsList();
-		scQtProposalChecklists.addAll(tecQtProposalChecklists);
+			tecQtProposalChecklists = getManagedBean().getFinanceCheckDetailsList();
+			scQtProposalChecklists.addAll(tecQtProposalChecklists);
 
-		ProposalReqDTO reqDTO = new ProposalReqDTO();
-		reqDTO.setQtSupplierId(1L);
+			ProposalReqDTO reqDTO = new ProposalReqDTO();
+			reqDTO.setQtSupplierId(1L);
 
-		ProposalResDTO resDTO = new ProposalResDTO();
+			ProposalResDTO resDTO = new ProposalResDTO();
 
-		// Update Changes
-		for (ScQtProposalChecklist proposalChecklist : scQtProposalChecklists) {
-			proposalChecklist.setSubmitted(true);
+			// Update Changes
+			for (ScQtProposalChecklist proposalChecklist : scQtProposalChecklists) {
+				proposalChecklist.setSubmitted(true);
+			}
+			scQtProposal.setScQtProposalChecklists(scQtProposalChecklists);
+
+			reqDTO.setScQtProposal(scQtProposal);
+			resDTO = proposalSO.saveQTDtl(reqDTO);
+			
+			if (resDTO.isSuccessful()) {
+				log.info("Record saved successfully");
+				String message = "QT Proposal No. : "
+						+ scQtProposal.getQtProposalId();
+				FacesContext.getCurrentInstance().addMessage(
+						null,
+						new FacesMessage(FacesMessage.SEVERITY_INFO,
+								"Record saved successfully.", message));
+			} else {
+				throw new EpException("Failed.");
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+			FacesContext.getCurrentInstance().addMessage(
+					null,
+					new FacesMessage(FacesMessage.SEVERITY_ERROR, e.toString(),
+							e.getMessage()));
 		}
-		scQtProposal.setScQtProposalChecklists(scQtProposalChecklists);
-
-		reqDTO.setScQtProposal(scQtProposal);
-		resDTO = proposalSO.saveQTDtl(reqDTO);
-
 	}
 
 	public void handleFileUpload(FileUploadEvent event) {

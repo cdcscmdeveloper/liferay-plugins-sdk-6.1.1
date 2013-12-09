@@ -16,11 +16,18 @@
 		</p:tab>
 	</p:tabView>
 
-	<p:dialog id="popupDetails" widgetVar="popupDetails"
-		modal="false" resizable="false" header="SPECIFICATION CONTENT DETAILS"
-		width="950" height="550" hideEffect="true">
+	<p:dialog id="popupDetails" widgetVar="popupDetails" modal="true"
+		dynamic="true" hideEffect="explode" resizable="false"
+		header="SPECIFICATION CONTENT DETAILS" width="950" height="550">
 		<p:ajax event="close" />
 		<ui:include src="/xhtml/tpl/spec/specContent.xhtml" />
+		<div>
+			<p:button value="CLOSE" style="float:right;margin-right: 12px;" />
+			<p:commandButton value="SAVE" style="float:right;margin-right: 12px;"
+				action="#{templateSpecBackingBean.saveAction}" process="@all"
+				oncomplete="popupDetails.hide()" />
+			<br /> <br />
+		</div>
 	</p:dialog>
-	
+
 </ui:composition>

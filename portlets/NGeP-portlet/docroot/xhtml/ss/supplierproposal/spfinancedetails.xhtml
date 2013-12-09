@@ -10,8 +10,8 @@
 	<p:panel header="#{lbl['lbl.sc.sp.financepplcheklist']}"
 		toggleable="true">
 		<p:dataTable id="financeDeails" var="financeList"
-			value="#{sPDetailBB.managedBean.financeCheckDetailsList}" rows="10"
-			selection="#{sPDetailBB.managedBean.selectedCheckDetails}"
+			value="#{sPDetailBackingBean.managedBean.financeCheckDetailsList}" rows="10"
+			selection="#{sPDetailBackingBean.managedBean.selectedCheckDetails}"
 			rowKey="#{financeList.qtProposalChecklistId}" rowIndexVar="rowIndex">
 
 			<p:column selectionMode="multiple" style="width:2%" />
@@ -25,11 +25,11 @@
 					<p:graphicImage library="ep/images/design" name="upload.png"
 						value="/resources/ep/images/design/upload.png" />
 					<f:setPropertyActionListener value="#{financeList}"
-						target="#{sPDetailBB.managedBean.qtProposalChecklist}" />
+						target="#{sPDetailBackingBean.managedBean.qtProposalChecklist}" />
 				</p:commandLink>
 				<p:spacer width="10" height="5" />
 				<p:commandLink ajax="false"
-					action="#{sPDetailBB.downloadSPFile(financeList)}">
+					action="#{sPDetailBackingBean.downloadSPFile(financeList)}">
 					<h:outputText
 						value="#{financeList.scQtProposalChecklistAttachment.fileName}"
 						rendered="#{!empty financeList.scQtProposalChecklistAttachment}" />
@@ -37,7 +37,7 @@
 			</p:column>
 
 			<p:column headerText="#{lbl['lbl.sc.sp.download']}" style="width:10%">
-				<p:commandLink action="#{sPDetailBB.downloadPTJFile(financeList)}"
+				<p:commandLink action="#{sPDetailBackingBean.downloadPTJFile(financeList)}"
 					update="financeDeails">
 					<p:graphicImage library="ep/images/design" name="download.png"
 						value="/resources/ep/images/design/download.png"
@@ -47,7 +47,7 @@
 
 			<p:column headerText="#{lbl['lbl.sc.sp.online']}" style="width:10%">
 				<p:commandButton value="Online"
-					action="#{sPDetailBB.onlineAction(financeList)}"
+					action="#{sPDetailBackingBean.onlineAction(financeList)}"
 					oncomplete="popupDetails.show()"
 					rendered="#{financeList.scQtCheckList.checklistType == 'TS'}" update=":form:popupDetails"/>
 			</p:column>
@@ -55,15 +55,10 @@
 	</p:panel>
 
 	<p:panel header="#{lbl['lbl.sc.sp.termconds']}" toggleable="true">
-		<p:inputTextarea rows="5" cols="140" autoResize="false" value="XYZ"></p:inputTextarea>
-		<p:selectManyCheckbox
-			value="#{approvalBackingBean.managedBean.approvalTypelist}"
-			layout="pageDirection">
-			<p:spacer width="10" />
-			<f:selectItem
-				itemLabel=" I have read and agree with the Terms and Condition"
-				itemValue="I have read and agree with the Terms and Condition" />
-		</p:selectManyCheckbox>
+		<p:inputTextarea rows="5" cols="140" autoResize="false" value="XYZ"
+			disabled="true"></p:inputTextarea>
+		<p:spacer width="5" height="15" />
+		<h:selectBooleanCheckbox value="#{sPDetailBackingBean.managedBean.checkStatus}" style="margin-right: 5px;"/> I have read and agree with the Terms and Condition
 	</p:panel>
 
 	<p:dialog id="uploadFinanceDlg" widgetVar="uploadFinanceDlg"
@@ -72,7 +67,7 @@
 		header="#{lbl['lbl.bpm.choose.file']}">
 		<p:ajax event="close" />
 		<p:fileUpload style="display:inline;"
-			fileUploadListener="#{sPDetailBB.handleFileUpload}" mode="advanced"
+			fileUploadListener="#{sPDetailBackingBean.handleFileUpload}" mode="advanced"
 			id="uploadFinance"
 			allowTypes="/(\.|\/)(gif|jpe?g|png|bmp|txt|xls|xlsx|pdf|doc|docx|csv)$/"
 			invalidFileMessage="Only JPG, GIF, PNG, BMP, TXT, XLS, PDF, DOC, CSV files are accepted"
