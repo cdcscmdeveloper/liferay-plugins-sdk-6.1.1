@@ -1,0 +1,458 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:c="http://java.sun.com/jsp/jstl/core">
+
+	<ui:include src="/xhtml/ss/quatationtender/qtntenderheader.xhtml" />
+	<p:panel header="Supplier Details" toggleable="true">
+		<h:panelGrid border="0" cellpadding="0" cellspacing="0" width="100%"
+			columns="4"
+			columnClasses="columnWidth20,columnWidth30,columnWidth20,columnWidth30">
+			<h:column>
+				<h:outputLabel value="MOF No." />
+			</h:column>
+			<h:column>
+				<p:inputText
+					value="#{lOADetailBackingBean.managedBean.smMofAccount.mofNo}"
+					disabled="true" />
+			</h:column>
+			<h:column />
+			<h:column />
+			<h:column>
+				<h:outputLabel value="Supplier Name" />
+			</h:column>
+			<h:column>
+				<p:inputText
+					value="#{lOADetailBackingBean.managedBean.scQtProposalRanking.scQtProposal.scQtSupplier.smSupplier.supplierName}"
+					disabled="true" />
+			</h:column>
+			<h:column />
+			<h:column />
+			<h:column>
+				<h:outputLabel value="Branch" />
+			</h:column>
+			<h:column>
+				<p:selectOneMenu
+					value="#{lOADetailBackingBean.managedBean.scLoa.supplierName}"
+					styleClass="minstryclass" style="width: 124px;">
+					<f:selectItem itemLabel="Select One" itemValue="#{null}" />
+					<f:selectItems
+						value="#{lOADetailBackingBean.managedBean.branchsList}"
+						var="brList" itemLabel="#{brList.branchName}"
+						itemValue="#{brList.branchName}" />
+				</p:selectOneMenu>
+			</h:column>
+			<h:column />
+			<h:column />
+			<h:column>
+				<h:outputLabel value="Address" />
+			</h:column>
+			<h:column>
+				<p:inputTextarea rows="3" cols="30" autoResize="false"
+					value="#{lOADetailBackingBean.managedBean.scLoa.supplierAddress}"
+					disabled="true" />
+			</h:column>
+			<h:column />
+			<h:column />
+			<h:column>
+				<h:outputLabel value="Contact Person" />
+			</h:column>
+			<h:column>
+				<p:inputText
+					value="#{lOADetailBackingBean.managedBean.scLoa.supplierContact}"
+					disabled="true" />
+			</h:column>
+			<h:column />
+			<h:column />
+
+			<h:column>
+				<h:outputLabel value="Tel No (Office)" />
+			</h:column>
+			<h:column>
+				<p:inputText
+					value="#{lOADetailBackingBean.managedBean.scLoa.supplierPhoneNo}"
+					disabled="true" />
+			</h:column>
+			<h:column>
+				<h:outputLabel value="Fax No" />
+			</h:column>
+			<h:column>
+				<p:inputText
+					value="#{lOADetailBackingBean.managedBean.scLoa.supplierFaxNo}"
+					disabled="true" />
+			</h:column>
+			<h:column>
+				<h:outputLabel value="Tel No (HP)" />
+			</h:column>
+			<h:column>
+				<p:inputText
+					value="#{lOADetailBackingBean.managedBean.scLoa.supplierContactMobil}"
+					disabled="true" />
+			</h:column>
+			<h:column />
+			<h:column />
+			<h:column>
+				<h:outputLabel value="Email" />
+			</h:column>
+			<h:column>
+				<p:inputText
+					value="#{lOADetailBackingBean.managedBean.scLoa.supplierContactEmail}"
+					disabled="true" />
+			</h:column>
+			<h:column>
+				<h:outputLabel value="Remark" />
+			</h:column>
+			<h:column>
+				<p:inputTextarea rows="3" cols="30" autoResize="false"
+					value="#{lOADetailBackingBean.managedBean.scLoa.ackRemark}" />
+			</h:column>
+		</h:panelGrid>
+	</p:panel>
+	<p:panel header="LOA Details" toggleable="true">
+		<h:panelGrid border="0" cellpadding="0" cellspacing="0" width="100%"
+			columns="2" columnClasses="columnWidth20">
+			<h:column>
+				<h:outputLabel value="LOA Title" />
+			</h:column>
+			<h:column>
+				<p:inputText value="#{lOADetailBackingBean.managedBean.scLoa.title}"
+					size="103" />
+			</h:column>
+		</h:panelGrid>
+		<h:panelGrid border="0" cellpadding="0" cellspacing="0" width="100%"
+			columns="4"
+			columnClasses="columnWidth20,columnWidth30,columnWidth20,columnWidth30">
+			<h:column>
+				<h:outputLabel value="LOA No" />
+			</h:column>
+			<h:column>
+				<p:inputText value="" disabled="true" />
+			</h:column>
+			<h:column/>
+			<h:column/>
+			<h:column>
+				<h:outputLabel value="LOA Type" />
+			</h:column>
+			<h:column>
+				<p:inputText
+					value="#{lOADetailBackingBean.managedBean.scLoa.loaType}"
+					disabled="true" />
+			</h:column>
+			<h:column>
+				<h:outputLabel value="Required Agreement" />
+			</h:column>
+			<h:column>
+				<p:selectOneRadio
+					value="#{lOADetailBackingBean.managedBean.scLoa.reqAgreement}">
+					<f:selectItem itemLabel="Yes" itemValue="true" />
+					<f:selectItem itemLabel="No" itemValue="false" />
+				</p:selectOneRadio>
+			</h:column>
+			<h:column>
+				<h:outputLabel value="File No." />
+			</h:column>
+			<h:column>
+				<p:inputText value="#{lOADetailBackingBean.managedBean.qt.fileNo}"
+					disabled="true" />
+			</h:column>
+			<h:column>
+				<h:outputLabel value="Required Fulfillment" />
+			</h:column>
+			<h:column>
+				<p:selectOneRadio
+					value="#{lOADetailBackingBean.managedBean.scLoa.reqFulfilment}">
+					<f:selectItem itemLabel="Yes" itemValue="true" />
+					<f:selectItem itemLabel="No" itemValue="false" />
+				</p:selectOneRadio>
+			</h:column>
+			<h:column>
+				<h:outputLabel value="LOA Issue Date" />
+			</h:column>
+			<h:column>
+				<p:inputText
+					value="#{lOADetailBackingBean.managedBean.scLoa.issueDate}"
+					disabled="true" />
+			</h:column>
+			<h:column>
+				<h:outputLabel value="Fulfillment Type" />
+			</h:column>
+			<h:column>
+				<p:inputText
+					value="#{lOADetailBackingBean.managedBean.scQtSpec.fulfilmentType}"
+					disabled="true" />
+			</h:column>
+			<h:column>
+				<h:outputLabel value="LOA Acknowledged Date" />
+			</h:column>
+			<h:column>
+				<p:inputText
+					value="#{lOADetailBackingBean.managedBean.scLoa.ackDate}"
+					disabled="true" />
+			</h:column>
+			<h:column>
+				<h:outputLabel value="Completion Period"
+					rendered="#{lOADetailBackingBean.managedBean.scQtSpec.fulfilmentType == 'O'}" />
+				<h:outputLabel value="Contract Period"
+					rendered="#{lOADetailBackingBean.managedBean.scQtSpec.fulfilmentType == 'P'}" />
+			</h:column>
+			<h:column>
+				<p:inputText
+					value="#{lOADetailBackingBean.managedBean.scQtSpec.contractDuration}"
+					disabled="true" />
+			</h:column>
+			<h:column>
+				<h:outputLabel value="Required Insurance / Warranty" />
+			</h:column>
+			<h:column>
+				<p:selectOneRadio
+					value="#{lOADetailBackingBean.managedBean.scLoa.reqInsWarranty}">
+					<f:selectItem itemLabel="Yes" itemValue="true" />
+					<f:selectItem itemLabel="No" itemValue="false" />
+				</p:selectOneRadio>
+			</h:column>
+			<h:column>
+				<h:outputLabel value="Completion Effective Date"
+					rendered="#{lOADetailBackingBean.managedBean.scQtSpec.fulfilmentType == 'O'}" />
+				<h:outputLabel value="Contract Effective Date"
+					rendered="#{lOADetailBackingBean.managedBean.scQtSpec.fulfilmentType == 'P'}" />
+			</h:column>
+			<h:column>
+				<p:calendar
+					value="#{lOADetailBackingBean.managedBean.scLoa.contractEffDate}"
+					id="effdate" showOn="button" />
+			</h:column>
+			<h:column>
+				<h:outputLabel value="LOA Duration (Days)" />
+			</h:column>
+			<h:column>
+				<p:inputText
+					value="#{lOADetailBackingBean.managedBean.scLoa.loaDuration}"
+					disabled="true" />
+			</h:column>
+			<h:column>
+				<h:outputLabel value="Completion Expiry Date"
+					rendered="#{lOADetailBackingBean.managedBean.scQtSpec.fulfilmentType == 'O'}" />
+				<h:outputLabel value="Contract Expiry Date"
+					rendered="#{lOADetailBackingBean.managedBean.scQtSpec.fulfilmentType == 'P'}" />
+			</h:column>
+			<h:column>
+				<p:calendar
+					value="#{lOADetailBackingBean.managedBean.scLoa.contractExpDate}"
+					id="expdate" showOn="button" />
+			</h:column>
+			<h:column>
+				<h:outputLabel value="Proposal Offered Price (RM)" />
+			</h:column>
+			<h:column>
+				<p:inputText value="" disabled="true" />
+			</h:column>
+			<h:column>
+				<h:outputLabel value="Contract Type" />
+			</h:column>
+			<h:column>
+				<p:selectOneMenu
+					value="#{lOADetailBackingBean.managedBean.scLoa.contractType}">
+					<f:selectItem itemLabel="Central Contract" itemValue="1" />
+					<f:selectItem itemLabel="Ministry Contract" itemValue="2" />
+					<f:selectItem itemLabel="Panel BPK" itemValue="3" />
+					<f:selectItem itemLabel="Panel Ministry" itemValue="4" />
+				</p:selectOneMenu>
+			</h:column>
+			<h:column>
+				<h:outputLabel value="Bidding Amount (RM)" />
+			</h:column>
+			<h:column>
+				<p:inputText
+					value="#{lOADetailBackingBean.managedBean.scLoa.biddingAmount}" />
+			</h:column>
+			<h:column>
+				<h:outputLabel value="Contract Administrator" />
+			</h:column>
+			<h:column>
+				<p:selectOneMenu
+					value="#{lOADetailBackingBean.managedBean.scQtSpec.approverAction}">
+					<f:selectItem itemLabel="" itemValue="1" />
+				</p:selectOneMenu>
+			</h:column>
+			<h:column>
+				<h:outputLabel value="LOA Offered Price" />
+			</h:column>
+			<h:column>
+				<p:inputText
+					value="#{lOADetailBackingBean.managedBean.scLoa.loaAmount}"
+					disabled="true" />
+			</h:column>
+			<h:column>
+				<h:outputLabel value="Remark" />
+			</h:column>
+			<h:column>
+				<p:inputTextarea rows="3" cols="30" autoResize="false"
+					value="#{lOADetailBackingBean.managedBean.scLoa.remark}" />
+			</h:column>
+			<h:column>
+				<h:outputLabel value="Currency" />
+			</h:column>
+			<h:column>
+				<p:inputText value="" disabled="true" />
+			</h:column>
+			<h:column />
+			<h:column />
+			<h:column>
+				<h:outputLabel value="MTO Required" />
+			</h:column>
+			<h:column>
+				<p:selectOneRadio
+					value="#{lOADetailBackingBean.managedBean.scLoa.mtoReq}">
+					<f:selectItem itemLabel="Yes" itemValue="true" />
+					<f:selectItem itemLabel="No" itemValue="false" />
+				</p:selectOneRadio>
+			</h:column>
+			<h:column />
+			<h:column />
+		</h:panelGrid>
+	</p:panel>
+	<p:panel header="Officer Details" toggleable="true">
+		<h:panelGrid border="0" cellpadding="0" cellspacing="0" width="100%"
+			columns="4"
+			columnClasses="columnWidth20,columnWidth30,columnWidth20,columnWidth30">
+			<h:column>
+				<h:outputLabel value="Name" />
+			</h:column>
+			<h:column>
+				<p:inputText
+					value="#{lOADetailBackingBean.managedBean.scLoa.officierName}"
+					disabled="true" />
+				<!-- <p:selectOneMenu
+					value="#{lOADetailBackingBean.managedBean.scQtSpec.approverAction}">
+					<f:selectItem itemLabel="" itemValue="1" />
+				</p:selectOneMenu> -->
+			</h:column>
+			<h:column />
+			<h:column />
+			<h:column>
+				<h:outputLabel value="Designation" />
+			</h:column>
+			<h:column>
+				<p:inputText
+					value="#{lOADetailBackingBean.managedBean.scLoa.officerDesignation}"
+					disabled="true" />
+			</h:column>
+			<h:column />
+			<h:column />
+			<h:column>
+				<h:outputLabel value="Address" />
+			</h:column>
+			<h:column>
+				<p:inputTextarea rows="3" cols="30" autoResize="false"
+					value="#{lOADetailBackingBean.managedBean.address}" disabled="true" />
+			</h:column>
+			<h:column />
+			<h:column />
+			<h:column>
+				<h:outputLabel value="Tel No" />
+			</h:column>
+			<h:column>
+				<p:inputText
+					value="#{lOADetailBackingBean.managedBean.scLoa.officerPhoneNo}"
+					disabled="true" />
+			</h:column>
+			<h:column>
+				<h:outputLabel value="Fax No" />
+			</h:column>
+			<h:column>
+				<p:inputText
+					value="#{lOADetailBackingBean.managedBean.scLoa.officerFaxNo}"
+					disabled="true" />
+			</h:column>
+			<h:column>
+				<h:outputLabel value="Email" />
+			</h:column>
+			<h:column>
+				<p:inputText
+					value="#{lOADetailBackingBean.managedBean.scLoa.officerEmail}"
+					disabled="true" />
+			</h:column>
+			<h:column />
+			<h:column />
+		</h:panelGrid>
+	</p:panel>
+	<p:panel header="Send to Ketua Jabatan / PTJ for Signature"
+		toggleable="true">
+		<h:panelGrid border="0" cellpadding="0" cellspacing="0" width="100%"
+			columns="4"
+			columnClasses="columnWidth20,columnWidth30,columnWidth20,columnWidth30">
+			<h:column>
+				<h:outputLabel value="Approver Name" />
+			</h:column>
+			<h:column>
+				<p:selectOneMenu
+					value="#{lOADetailBackingBean.managedBean.scQtSpec.approverAction}">
+					<f:selectItems value="#{lOADetailBackingBean.approverNames}" />
+				</p:selectOneMenu>
+			</h:column>
+			<h:column>
+				<p:commandButton value="SIGN" />
+			</h:column>
+			<h:column />
+		</h:panelGrid>
+	</p:panel>
+	<p:panel header="Approval Details" toggleable="true">
+		<h:panelGrid border="0" cellpadding="0" cellspacing="0" width="100%"
+			columns="4"
+			columnClasses="columnWidth20,columnWidth30,columnWidth20,columnWidth30">
+			<h:column>
+				<h:outputLabel value="Approval LOA Required" />
+			</h:column>
+			<h:column>
+				<p:selectOneRadio
+					value="#{lOADetailBackingBean.managedBean.scLoa.reqApproval}">
+					<f:selectItem itemLabel="Yes" itemValue="true" />
+					<f:selectItem itemLabel="No" itemValue="false" />
+					<p:ajax event="change" update="app, appDate, appaction, appremark" />
+				</p:selectOneRadio>
+			</h:column>
+			<h:column />
+			<h:column />
+			<h:column>
+				<h:outputLabel value="Approver" />
+			</h:column>
+			<h:column>
+				<p:selectOneMenu id="app"
+					value="#{lOADetailBackingBean.managedBean.scQtSpec.approverName}"
+					disabled="#{lOADetailBackingBean.managedBean.scLoa.reqApproval ne 'true'}">
+					<f:selectItem itemLabel="" itemValue="1" />
+				</p:selectOneMenu>
+			</h:column>
+			<h:column>
+				<h:outputLabel value=" Approval Date : " />
+			</h:column>
+			<h:column>
+				<p:inputText id="appDate" readonly="true"
+					disabled="#{lOADetailBackingBean.managedBean.scLoa.reqApproval ne 'true'}"
+					value="#{lOADetailBackingBean.managedBean.scLoa.approverActionDate}"></p:inputText>
+			</h:column>
+			<h:column>
+				<h:outputLabel value=" Approver Action : " />
+			</h:column>
+			<h:column>
+				<p:selectOneMenu id="appaction"
+					value="#{lOADetailBackingBean.managedBean.scLoa.approverAction}"
+					disabled="#{lOADetailBackingBean.managedBean.scLoa.reqApproval ne 'true'}">
+					<f:selectItem itemLabel="Approver" itemValue="1" />
+					<f:selectItem itemLabel="Revise" itemValue="2" />
+				</p:selectOneMenu>
+			</h:column>
+			<h:column>
+				<h:outputLabel value=" Approval Remarks : " />
+			</h:column>
+			<h:column>
+				<p:inputTextarea id="appremark" rows="3" cols="30"
+					value="#{lOADetailBackingBean.managedBean.scLoa.approverRemark}"
+					autoResize="false"
+					disabled="#{lOADetailBackingBean.managedBean.scLoa.reqApproval ne 'true'}"></p:inputTextarea>
+			</h:column>
+		</h:panelGrid>
+	</p:panel>
+</ui:composition>

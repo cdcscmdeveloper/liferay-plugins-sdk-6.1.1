@@ -43,4 +43,15 @@ public interface QTConstants {
 	
 	public static final String PP_MODULE="pp";
 
+	public static final String LOI_PAGE = "loidetailspage";
+	public static final String LOA_PAGE = "loadetailspage";
+	
+	public static final String SC_LOI_TAB="LOI";
+	public static final String SC_AWARD_TAB="Award Details";
+	public static final String SC_NEGOTIATION_TAB="Negotiation Details";
+	
+	public static final String SC_LOA_TAB="LOA";
+	public static final String SC_PERFORMANCE_BOND_TAB="Performance Bond";
+	public static final String SC_PAYMENT_TAB="Payment Details";
+
 }

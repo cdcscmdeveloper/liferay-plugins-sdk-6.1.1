@@ -1,0 +1,69 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:c="http://java.sun.com/jsp/jstl/core">
+
+	<ui:include src="/xhtml/ss/quatationtender/qtntenderheader.xhtml" />
+	<p:panel header="Award Details" toggleable="true">
+		<h:panelGrid border="0" cellpadding="0" cellspacing="0" width="100%"
+			columns="4"
+			columnClasses="columnWidth20,columnWidth30,columnWidth20,columnWidth30">
+			<h:column>
+				<h:outputLabel value="Award Type" />
+			</h:column>
+			<h:column>
+				<p:inputText value="#{lOIDetailBackingBean.managedBean.scQtSpec.awardType}"
+					disabled="true" />
+			</h:column>
+			<h:column />
+			<h:column />
+		</h:panelGrid>
+	</p:panel>
+	<p:panel header="Location List" toggleable="false">
+		<h:panelGrid border="0" cellpadding="0" cellspacing="0" width="100%"
+			columns="4"
+			columnClasses="columnWidth20,columnWidth30,columnWidth20,columnWidth30">
+			<h:column>
+				<h:outputLabel value="Multiple Locality" />
+			</h:column>
+			<h:column>
+				<p:inputText value="#{lOIDetailBackingBean.managedBean.status}" disabled="true" />
+			</h:column>
+			<h:column />
+			<h:column />
+		</h:panelGrid>
+		<p:dataTable id="locationlisttbl" var="locationList"
+			value="#{bsvAttendanceBackingBean.managedBean.briefingAttendanceList}"
+			rows="10">
+
+			<p:column headerText="Location">
+				<p:inputText value="" />
+			</p:column>
+		</p:dataTable>
+	</p:panel>
+	<p:panel header="Item List" toggleable="fasle">
+		<p:dataTable id="itemlisttbl" var="itemList"
+			value="#{bsvAttendanceBackingBean.managedBean.briefingAttendanceList}"
+			rows="10">
+
+			<p:column headerText="Item">
+				<p:inputText value="" />
+			</p:column>
+
+			<p:column headerText="UOM">
+				<p:inputText value="" />
+			</p:column>
+
+			<p:column headerText="Item AWARD By">
+				<p:inputText value="" />
+			</p:column>
+
+			<p:column headerText="Value">
+				<p:inputText value="" />
+			</p:column>
+
+		</p:dataTable>
+	</p:panel>
+</ui:composition>

@@ -1,0 +1,121 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:c="http://java.sun.com/jsp/jstl/core">
+
+	<ui:include src="/xhtml/ss/quatationtender/qtntenderheader.xhtml" />
+	<p:panel header="Negotiation Details" toggleable="true">
+		<p:panel header="Negotiation Location" toggleable="false">
+			<p:dataTable id="negotiationloctbl" var="locList"
+				value="#{lOIDetailBackingBean.managedBean.negoLocationList}"
+				rows="10" rowIndexVar="rowIndex">
+
+				<p:column headerText="" style="width:2%">
+					<p:selectBooleanCheckbox value="1" />
+				</p:column>
+
+				<p:column headerText="Location" style="width:30%">
+					<p:inputText value="#{locList.negoLocation}" />
+				</p:column>
+
+				<p:column headerText="Date" style="width:30%">
+					<p:calendar value="#{locList.negoDate}" id="date" showOn="button" />
+				</p:column>
+
+				<p:column headerText="Remarks" style="width:30%">
+					<p:inputText value="#{locList.remark}" />
+				</p:column>
+
+				<p:column headerText="#{lbl['lbl.sc.bsv.attendance.action']}"
+					style="width:30%">
+					<p:commandLink>
+						<p:graphicImage library="ep/images/design" name="edit.png"
+							value="/resources/ep/images/design/edit.png" />
+					</p:commandLink>
+				</p:column>
+
+			</p:dataTable>
+
+			<div align="right">
+				<p:commandButton value="#{lbl['lbl.sc.bsv.attendance.add']}"
+					process="@this,negotiationloctbl" partialSubmit="true"
+					action="#{lOIDetailBackingBean.addNegotiationLocation}"
+					update="negotiationloctbl" />
+
+				<p:commandButton value="Delete" process="@this" partialSubmit="true" />
+			</div>
+
+		</p:panel>
+
+		<p:panel id="negoTermId" header="Negotiation Terms" toggleable="false">
+			<p:dataTable id="negotiationtermstbl" var="termsList"
+				value="#{lOIDetailBackingBean.managedBean.negoTermsList}" rows="10"
+				rowIndexVar="rowIndex">
+
+				<p:column headerText="" style="width:2%">
+					<p:selectBooleanCheckbox value="1" />
+				</p:column>
+
+				<p:column headerText="Terms" style="width:20%">
+					<p:inputText value="#{termsList.scTerm.scTermDescs[0].termDesc}" />
+				</p:column>
+
+				<p:column headerText="Amount" style="width:20%">
+					<p:inputText value="#{termsList.amount}" />
+				</p:column>
+
+				<p:column headerText="Feedback from Supplier" style="width:20%">
+					<p:inputText value="#{termsList.supplierFeedback}" />
+				</p:column>
+
+				<p:column headerText="Remarks" style="width:20%">
+					<p:inputText value="#{termsList.amount}" />
+				</p:column>
+
+				<p:column headerText="#{lbl['lbl.sc.bsv.attendance.action']}"
+					style="width:20%">
+					<p:commandLink>
+						<p:graphicImage library="ep/images/design" name="edit.png"
+							value="/resources/ep/images/design/edit.png" />
+					</p:commandLink>
+				</p:column>
+			</p:dataTable>
+
+			<div align="right">
+				<p:commandButton value="Populate Pre-Defined" process="@this"
+					action="#{lOIDetailBackingBean.populatePreDefinedDetails}"
+					partialSubmit="true" oncomplete="predefinedTerms.show();return false;" />
+
+				<p:commandButton value="#{lbl['lbl.sc.bsv.attendance.add']}"
+					process="@this, negotiationtermstbl" partialSubmit="true"
+					action="#{lOIDetailBackingBean.addNegotiationTerm}"
+					update="negotiationtermstbl" />
+
+				<p:commandButton value="Delete" process="@this" partialSubmit="true" />
+			</div>
+
+		</p:panel>
+	</p:panel>
+
+	<p:dialog id="predefinedTerms" widgetVar="predefinedTerms" modal="true"
+		dynamic="true" hideEffect="explode" resizable="false" width="700px"
+		height="200" styleClass="pop_up_top" header="Pre-Defined Terms">
+
+		<p:dataTable id="predefinedtermsid" var="predefinedList"
+			value="#{lOIDetailBackingBean.managedBean.scTermDescList}"
+			selection="#{lOIDetailBackingBean.managedBean.selectedCheckDetails}"
+			rowKey="#{predefinedList.termDescId}"
+			editable="true" rowIndexVar="index">
+			<p:column selectionMode="multiple" style="width:2%" />
+			<p:column headerText="Title">
+				<h:outputText value="#{predefinedList.termDesc}" />
+			</p:column>
+		</p:dataTable>
+		<p:commandButton value="OK" style="float:right;" process="@all"
+		action="#{lOIDetailBackingBean.addPredefinedTerms}"
+			partialSubmit="true" oncomplete="predefinedTerms.hide();"
+			update="negoTermId"></p:commandButton>
+	</p:dialog>
+</ui:composition>

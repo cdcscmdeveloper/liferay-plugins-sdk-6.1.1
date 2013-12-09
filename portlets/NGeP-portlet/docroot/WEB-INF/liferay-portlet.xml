@@ -426,6 +426,14 @@
 		<css-class-wrapper>proposal-portlet</css-class-wrapper>
 	</portlet>
 
+	<portlet>
+		<portlet-name>scLoiLoa</portlet-name>
+		<icon>/icon.png</icon>
+		<instanceable>false</instanceable>
+		<ajaxable>false</ajaxable>
+		<header-portlet-css>/css/ep/main.css</header-portlet-css>
+		<css-class-wrapper>proposal-portlet</css-class-wrapper>
+	</portlet>
 
 
 	<portlet>

@@ -43,6 +43,7 @@
 			<portlet id="scSpecification" />
 			<portlet id="scNoticeBoard" />
 			<portlet id="scProposal" />
+			<portlet id="scLoiLoa" />
 			<portlet id="scEvaluation" />
 			<portlet id="scBidding" />
 			<portlet id="scTemplateMaint" />
