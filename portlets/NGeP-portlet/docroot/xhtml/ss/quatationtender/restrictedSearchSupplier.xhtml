@@ -123,21 +123,32 @@
 			
 			
 			
-				<p:panelGrid columns="2" style="width:100%;" styleClass="noBorders tr,noBorders td" >
+				<h:panelGrid border="0" cellpadding="0" cellspacing="0" width="100%"
+			columns="2" columnClasses="columnWidth20">
+
+			<h:column>
 			
 			<h:outputLabel  value="#{lbl['lbl.so.paidup']}" />
+			</h:column>
+			<h:column>
 			<p:inputText  value="#{qTSupplierQulCriteriaBackingBean.managedBean.qtCriteria.paidUpCaptial}"/>
-           
+           </h:column>
+           <h:column>
 <h:outputLabel value="#{lbl['lbl.so.companyname']}" />
+            </h:column>
+            <h:column>
 			<p:inputText value="#{qTSupplierQulCriteriaBackingBean.managedBean.searchSupplier.pmOrgProfile.orgName}"/>
-
+            </h:column>
+            <h:column>
 <h:outputLabel value="#{lbl['lbl.so.mofno']}" />
+			</h:column>
+			<h:column>
 			<p:inputText  value="#{qTSupplierQulCriteriaBackingBean.managedBean.smMofAccounts[0].mofNo}"/>
-				
-			</p:panelGrid>
+			</h:column>	
+			</h:panelGrid>
 			
 			<p:commandButton  value="#{lbl['lbl.so.searchbtn']}"
-			styleClass="apply_button" style="float:right;" id="restrictSupplier" action="#{qTSupplierQulCriteriaBackingBean.searchQtPanelSupplier}" update="restrictedsupplier">
+			styleClass="apply_button" style="float:right;" id="restrictSupplier" icon="ui-icon-search" action="#{qTSupplierQulCriteriaBackingBean.searchQtPanelSupplier}" update="restrictedsupplier">
 		</p:commandButton>
 		
 				<br/>
@@ -147,7 +158,7 @@
 		<p:panelGrid columns="2" style="width:100%;"
 			id="restrictedsupplier" styleClass="noBorders tr,noBorders td">
 			
-			<p:dataTable value="#{qTSupplierQulCriteriaBackingBean.managedBean.smSupplierList}" var="supplier" resizableColumns="true" id="ressupplier"
+			<p:dataTable value="#{qTSupplierQulCriteriaBackingBean.managedBean.smSupplierList}" var="supplier"  id="ressupplier"
 				selection="#{qTSupplierQulCriteriaBackingBean.managedBean.selectedrestircedsupplier}"
 				rowKey="#{supplier}" rowIndexVar="rowIndex"
 				rows="10">
@@ -190,9 +201,9 @@
 </p:panelGrid>
 
 <div>           
-<p:commandButton value="#{lbl['lbl.so.cancelbtn']}" style="float:right;" oncomplete="suppdlg.hide()">
+<p:commandButton value="#{lbl['lbl.so.cancelbtn']}" icon="ui-icon-cancel"  style="float:right;" oncomplete="suppdlg.hide()">
 </p:commandButton>
-<p:commandButton value="#{lbl['lbl.so.okbtn']}" style="float:right;" oncomplete="suppdlg.hide()">
+<p:commandButton value="#{lbl['lbl.so.okbtn']}" icon="ui-icon-accept"   style="float:right;" oncomplete="suppdlg.hide()">
 </p:commandButton>
 </div> 
 </p:panel>

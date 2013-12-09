@@ -12,10 +12,14 @@
 	 <p:panel
 						header="Supplier Qualification Criteria" toggleable="true">
 						</p:panel>
-						<p:panelGrid columns="2" style="width:40%;"
-							styleClass="noBorders tr,noBorders td">
-						 <h:outputText value="* Qtn/Tender Type" />
-							<p:selectOneMenu
+						<h:panelGrid border="0" cellpadding="0" cellspacing="0" 
+			columns="2" columnClasses="columnWidth40,columnWidth60">
+						
+						<h:column>
+						 <h:outputLabel value="* Qtn/Tender Type" style="padding-right: 6px;padding-left: 68px"/>
+						 </h:column>
+						 <h:column>
+							<p:selectOneMenu 
 								value="#{qTSupplierQulCriteriaBackingBean.managedBean.qt.qtType}">
 								<f:selectItem itemLabel="Select One" itemValue="" />
 								<f:selectItem itemLabel="Open" itemValue="O" />
@@ -24,8 +28,8 @@
 								<f:selectItem itemLabel="Restricted Tender" itemValue="R" />
 								<p:ajax event="change" process="@this" update="parentText" listener="#{qTSupplierQulCriteriaBackingBean.tenderChange}"/>
 							</p:selectOneMenu>
-
-						</p:panelGrid>
+                         </h:column>
+						</h:panelGrid>
  <h:panelGroup id="parentText">
 						<h:panelGroup
 							rendered="#{qTSupplierQulCriteriaBackingBean.managedBean.isTender}">

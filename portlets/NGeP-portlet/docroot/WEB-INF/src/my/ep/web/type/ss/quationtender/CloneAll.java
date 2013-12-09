@@ -3,11 +3,13 @@
  */
 package my.ep.web.type.ss.quationtender;
 
+import my.ep.type.IEnumType;
+
 /**
  * @author SudheerKumar
  * 
  */
-public enum CloneAll {
+public enum CloneAll{
 	
 	QtnTenderTitle {
 		@Override
@@ -21,6 +23,8 @@ public enum CloneAll {
 			// TODO Auto-generated method stub
 			return "Qtn/Tender Title";
 		}
+
+		
 	},
 	QtnTenderDetails {
 

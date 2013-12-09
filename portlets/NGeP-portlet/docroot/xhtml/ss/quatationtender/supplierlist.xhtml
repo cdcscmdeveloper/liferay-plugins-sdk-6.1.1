@@ -60,7 +60,7 @@
     <p:row>
      <p:column width="100%" style="text-align:right">
     <p:commandButton  value="#{lbl['lbl.so.addbtn']}"
-		icon=".ui-icon-add"	styleClass="apply_button">
+		icon="ui-icon-add"	styleClass="apply_button">
 		</p:commandButton>
      </p:column>
    </p:row>
@@ -84,7 +84,7 @@
 			<p:panelGrid columns="1" style="width:100%;"
 			styleClass="noBorders tr,noBorders td">
 <p:commandButton  value="#{lbl['lbl.so.searchbtn']}"
-			styleClass="apply_button" style="float:right;" action="#{qTSupplierQulCriteriaBackingBean.searchQtPanelSupplier}" id="panelsupplier" update="mySupplierListId" icon=".ui-icon-search"> 
+			styleClass="apply_button" style="float:right;" action="#{qTSupplierQulCriteriaBackingBean.searchQtPanelSupplier}" id="panelsupplier" update="mySupplierListId" icon="ui-icon-search"> 
 		</p:commandButton>
 		</p:panelGrid>
 		</p:panel>
@@ -140,9 +140,9 @@
 
 
 <div>           
-<p:commandButton value="#{lbl['lbl.so.cancelbtn']}" style="float:right;" oncomplete="suppdlg.hide()">
+<p:commandButton value="#{lbl['lbl.so.cancelbtn']}" style="float:right;" icon="ui-icon-cancel"  oncomplete="suppdlg.hide()">
 </p:commandButton>
-<p:commandButton value="#{lbl['lbl.so.okbtn']}" style="float:right;" oncomplete="suppdlg.hide()" update="panelsuppliermain">
+<p:commandButton value="#{lbl['lbl.so.okbtn']}" style="float:right;" icon="ui-icon-accept"  oncomplete="suppdlg.hide()" update="panelsuppliermain">
 </p:commandButton>
 </div> 
 </p:panel>

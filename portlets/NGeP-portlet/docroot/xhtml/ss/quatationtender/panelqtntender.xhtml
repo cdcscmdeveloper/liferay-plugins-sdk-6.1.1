@@ -7,8 +7,9 @@
 
 		<p:panel header="Panel Qtn/Tender(for Qtn/Tender Type is Panel)" toggleable="true">
 
-   <p:panelGrid columns="3" style="width:75%;"
-				styleClass="noBorders tr,noBorders td">
+
+				<h:panelGrid border="0" cellpadding="0" cellspacing="0" width="100%"
+			columns="3" columnClasses="columnWidth20,columnWidth30">
 		<h:outputLabel value="#{lbl['lbl.so.circularno']}" />  
             <p:inputText value="#{qTSupplierQulCriteriaBackingBean.managedBean.qtCriteria.ctCircular.ctCircularVer.circularNo}" readonly="true"/> 
            
@@ -19,10 +20,10 @@
             <p:inputText value="#{qTSupplierQulCriteriaBackingBean.managedBean.qtCriteria.ctCircular.ctCircularVer.endDate}" readonly="true"/> 
          
     
-		</p:panelGrid>
+		</h:panelGrid>
 		<p:panelGrid columns="1" style="width:100%;"
 				styleClass="noBorders tr,noBorders td">
-		<p:commandButton value="#{lbl['lbl.so.searchbtn']}" icon=".ui-icon-search" style="float:right;"
+		<p:commandButton value="#{lbl['lbl.so.searchbtn']}" icon="ui-icon-search" style="float:right;"
 					onclick="suppdlg.show();"></p:commandButton>
 					</p:panelGrid>
 					</p:panel>
