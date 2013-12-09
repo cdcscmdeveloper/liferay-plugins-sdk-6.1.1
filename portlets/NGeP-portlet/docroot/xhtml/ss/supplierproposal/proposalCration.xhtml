@@ -1,0 +1,21 @@
+<ui:composition
+	template="/WEB-INF/facelets/templates/basic_template.xhtml"
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:c="http://java.sun.com/jsp/jstl/core">
+
+	<ui:define name="contentSection">
+<p:panel header="ProposalCreationNotification">
+<h:panelGrid columns="4">
+<h:outputLabel value="supplierId"></h:outputLabel>
+<p:inputText value="#{sPDetailBB.managedBean.supplierId}"></p:inputText>
+<p:commandButton action="#{sPDetailBB.createProposal}" value="ProposalCreation"></p:commandButton>
+</h:panelGrid>
+</p:panel>
+	</ui:define>
+
+
+</ui:composition>
