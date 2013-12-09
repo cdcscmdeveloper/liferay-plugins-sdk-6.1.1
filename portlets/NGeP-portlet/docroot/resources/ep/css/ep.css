@@ -3891,6 +3891,44 @@ important
 
 
 }
+
+.ui-icon-mail {
+	background-image: url(#{ resource [ 'ep/images/design:mail.png' ]
+}
+
+)
+!
+important
+;
+
+	
+background-position
+:
+ 
+center
+;
+
+	
+border-radius
+:
+ 
+0
+px
+;
+
+	
+height
+:
+ 
+16
+px
+ 
+!
+important
+;
+
+
+}
 /*--------------------------       End Custom Icons    ------------------------------ */
 
 /*--------------------------       Custom CSS          ------------------------------ */
