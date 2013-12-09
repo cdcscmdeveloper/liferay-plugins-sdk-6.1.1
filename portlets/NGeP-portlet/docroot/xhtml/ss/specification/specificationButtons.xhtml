@@ -10,12 +10,33 @@
 			styleClass="noBorders tr,noBorders td">
 			<p:row>
 				<p:column width="100%" style="text-align:right">
-					<p:commandButton value="Save" />
+					<p:commandButton value="Save" icon="ui-icon-save" />
 				
-			<ui:repeat var="action" value="#{specificationBackingBean.managedBean.outComes}">
-							<p:commandButton value="#{action}" process="@all"
+			<ui:repeat var="action" value="#{specificationBackingBean.managedBean.outComes}" >
+			   <ui:fragment rendred="#{action eq 'Submit'}">
+			<c:set var="iconVar" value="ui-icon-submit" scope="request"></c:set>
+		
+			</ui:fragment>
+			
+			   <ui:fragment rendred="#{action eq 'Reject'}">
+			<c:set var="iconVar" value="ui-icon-reject" scope="request"></c:set>
+		
+			</ui:fragment>
+			   <ui:fragment rendred="#{action eq 'Revise'}">
+			<c:set var="iconVar" value="ui-icon-revise" scope="request"></c:set>
+		
+			</ui:fragment>
+			   <ui:fragment rendred="#{action eq 'Approve'}">
+			<c:set var="iconVar" value="ui-icon-save" scope="request"></c:set>
+			
+			</ui:fragment>
+			
+			
+			
+							<p:commandButton value="#{action}" process="@all" 
 								styleClass="ui-button"
-								actionListener="#{specificationBackingBean.updateBpmTask(action)}"  icon="ui-icon-submit"/>
+								actionListener="#{specificationBackingBean.updateBpmTask(action)}"  icon="#{iconVar}"/>
+								
 						</ui:repeat>
 						</p:column>
 						</p:row>

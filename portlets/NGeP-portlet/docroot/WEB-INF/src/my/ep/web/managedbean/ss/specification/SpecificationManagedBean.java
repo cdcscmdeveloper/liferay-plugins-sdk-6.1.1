@@ -70,6 +70,11 @@ public class SpecificationManagedBean extends BaseManagedBean {
 	
 	public boolean isSampleReq=true;
 	public String approvalDate;
+	
+	
+	public SpecificationManagedBean(){
+		
+	}
 
 	/**
 	 * @return the scQtSpec
@@ -394,6 +399,13 @@ public class SpecificationManagedBean extends BaseManagedBean {
 	public void setSpecificationDataType(Object specificationDataType) {
 		this.specificationDataType = specificationDataType;
 	}
+
+	
+
+
+	
+
+	
 
 	
 
