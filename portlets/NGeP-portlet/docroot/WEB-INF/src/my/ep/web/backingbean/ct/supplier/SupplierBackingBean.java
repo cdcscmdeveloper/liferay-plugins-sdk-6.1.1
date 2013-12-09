@@ -48,11 +48,10 @@ import org.apache.log4j.Logger;
  * @author Alam
  * @since 7/11/2013	 
  */
-@ManagedBean(name = SupplierBackingBean.FACE_BEAN_NAME)
+@ManagedBean(name = "supplierBackingBean")
 @RequestScoped
 public class SupplierBackingBean extends BaseBackingBean<SupplierManagedBean> {
 	
-	public static final String FACE_BEAN_NAME = "supplierBackingBean";
 	private static Logger log = Logger.getLogger(SupplierBackingBean.class);
 
 	private static final String PROCESS_BANK_PAGE="/xhtml/ct/supplier/bank/tabView.xhtml";

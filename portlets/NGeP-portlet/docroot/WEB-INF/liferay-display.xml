@@ -10,6 +10,9 @@
 				<portlet id="ctPanelCircularMaintenance" />
 				<portlet id="ctCancelCircular" />
 			</category>
+			<category name="category.ep.pb">
+			  <portlet id="ctProcrumentBoard" />
+			</category>
 			<portlet id="ctContractMaintenance" />
 			<portlet id="ctAssociateContract" />
 			<portlet id="ctFulfilmentDetail" />

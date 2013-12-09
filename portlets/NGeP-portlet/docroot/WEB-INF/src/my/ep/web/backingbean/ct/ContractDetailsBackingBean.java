@@ -42,6 +42,7 @@ import my.ep.dto.pm.authorization.user.UserResDTO;
 import my.ep.jaxb.ct.contract.CTContractDataType;
 import my.ep.persistence.entity.ct.CtContract;
 import my.ep.persistence.entity.ct.CtContractVer;
+import my.ep.persistence.entity.ct.amend.CtAmendment;
 import my.ep.persistence.entity.ct.dtl.CtProgressivePayment;
 import my.ep.persistence.entity.ct.dtl.CtSchedule;
 import my.ep.persistence.entity.ct.dtl.deduction.CtDeduction;
@@ -85,6 +86,7 @@ public class ContractDetailsBackingBean extends BaseBackingBean<ContractDetailsM
 	private TreeNode rootNodeAgency;
 	private CtContractVer[] selectedContractList;
 	private CtDeductionClause[] chkDeductionClause;
+	private String editorValue;
 	
 	private String fulfillmentNo = "01234567889";
 	
@@ -117,6 +119,13 @@ public class ContractDetailsBackingBean extends BaseBackingBean<ContractDetailsM
 			List<String> source = getAvailableApproverList();
 			List<String> target = new ArrayList<String>();
 			this.getManagedBean().setApproverModel(new DualListModel<String>(source, target));
+		}
+		
+		if(this.getManagedBean().getContractVer() == null){
+			
+			this.getManagedBean().setContractVer(new CtContractVer());
+			this.getManagedBean().getContractVer().setCtContract(new CtContract());
+			this.getManagedBean().getContractVer().setCtAmendment(new CtAmendment());
 		}
 
 	}
@@ -560,6 +569,14 @@ public class ContractDetailsBackingBean extends BaseBackingBean<ContractDetailsM
 		this.selectedContractList = selectedContractList;
 	}
 
+	public String getEditorValue() {
+		return editorValue;
+	}
+
+	public void setEditorValue(String editorValue) {
+		this.editorValue = editorValue;
+	}
+
 	public String gotoTerminatePage() {
 
 		IContractSO contractSO = null;
@@ -628,6 +645,9 @@ public class ContractDetailsBackingBean extends BaseBackingBean<ContractDetailsM
 				if(this.getManagedBean().getContractVer().getCtTermination()==null) {
 					this.getManagedBean().getContractVer().setCtTermination(new CtTermination());
 					
+				}
+				if(this.getManagedBean().getContractVer().getCtAmendment() ==null) {
+					this.getManagedBean().getContractVer().setCtAmendment(new CtAmendment());
 				}
 			} catch (Exception e) {
 				e.printStackTrace();

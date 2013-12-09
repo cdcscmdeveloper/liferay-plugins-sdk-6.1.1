@@ -77,10 +77,10 @@
 			<p:column></p:column>              
 			<p:column></p:column>            
 			<p:column>
-			  <p:calendar style="width:130px;" value="#{contractDetailsBackingBean.managedBean.createContractDetails.date}" id="popupButtonCal" showOn="button" />
+			  <p:calendar style="width:130px;" value="#{contractDetailsBackingBean.managedBean.contractVer.ctContractValue.effDate}" id="popupButtonCal" showOn="button" />
 			</p:column>       
 			<p:column>
-			  <p:calendar style="width:130px;" value="#{contractDetailsBackingBean.managedBean.createContractDetails.date}" id="popupButtonCal1" showOn="button" />
+			  <p:calendar style="width:130px;" value="#{contractDetailsBackingBean.managedBean.contractVer.ctContractValue.expDate}" id="popupButtonCal1" showOn="button" />
 			</p:column>       
 			<p:column styleClass="column-align-center" rendered="#{!contractDetailsBackingBean.managedBean.itemCeilingQuantity}">
 			<p:commandLink>
