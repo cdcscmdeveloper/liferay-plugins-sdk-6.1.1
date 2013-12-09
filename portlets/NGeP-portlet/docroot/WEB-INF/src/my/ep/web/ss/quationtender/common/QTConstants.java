@@ -41,6 +41,6 @@ public interface QTConstants {
 	public static final Integer NB_PRICE_SCHEDULE_STATUS = 3;
 	public static final Integer NB_AWARDED_STATUS = 4;
 	
-	
+	public static final String PP_MODULE="pp";
 
 }

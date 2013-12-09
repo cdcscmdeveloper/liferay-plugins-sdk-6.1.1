@@ -64,6 +64,8 @@ public class SpecificationManagedBean extends BaseManagedBean {
 	 private List<SelectItem> currencyListDetails;
 	 private List<SelectItem> procurementListDetails;
 	 private List<ScCommitteeMember> committeeMemberList;
+	 
+	 private Object specificationDataType;
 	
 	
 	public boolean isSampleReq=true;
@@ -383,6 +385,14 @@ public class SpecificationManagedBean extends BaseManagedBean {
 	 */
 	public void setCommitteeMemberList(List<ScCommitteeMember> committeeMemberList) {
 		this.committeeMemberList = committeeMemberList;
+	}
+
+	public Object getSpecificationDataType() {
+		return specificationDataType;
+	}
+
+	public void setSpecificationDataType(Object specificationDataType) {
+		this.specificationDataType = specificationDataType;
 	}
 
 	

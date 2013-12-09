@@ -56,6 +56,9 @@ public class BSVAttendanceManagedBean extends BaseManagedBean {
 	private List<SmSupplier> smSuppliers;
 	private List<SmMofAccount> 	smMofAccounts;
 	
+	/** added by Vidyasagar */
+	private Object siteVisitPayLoad;
+	 
 	/**
 	 * @return  briefingDetailsList
 	 */
@@ -329,6 +332,14 @@ public class BSVAttendanceManagedBean extends BaseManagedBean {
 	 */
 	public void setSmSupplier(SmSupplier smSupplier) {
 		this.smSupplier = smSupplier;
+	}
+
+	public Object getSiteVisitPayLoad() {
+		return siteVisitPayLoad;
+	}
+
+	public void setSiteVisitPayLoad(Object siteVisitPayLoad) {
+		this.siteVisitPayLoad = siteVisitPayLoad;
 	}
 
 	

@@ -179,6 +179,10 @@ public class QTDetailManagedBean extends BaseManagedBean {
 	private String uploadUpdateId;
 	//Payload for BPM
 		private SCQuotationTenderDataType quotationTenderDataType;
+		
+		private List<ScQt> qtList = new ArrayList<ScQt>();
+
+		private List<CtPanelSupplier> panelSuppliers; 
 	
 	static{
 			PmZone zone=new PmZone();
@@ -406,16 +410,10 @@ public class QTDetailManagedBean extends BaseManagedBean {
 		this.selectedPmDistricts = selectedPmDistricts;
 	}
 
-	private List<ScQt> qtList = new ArrayList<ScQt>();
-
-	private List<SmSupplier> panelSuppliers; 
+	
 	
 
-	public void setPanelSuppliers(List<SmSupplier> panelSuppliers) {
-		this.panelSuppliers = panelSuppliers;
-	}
-
-
+	
 	public QTDetailManagedBean() {
 		log.info("inside ");
 		
@@ -822,9 +820,7 @@ public class QTDetailManagedBean extends BaseManagedBean {
 	}
 
 
-	public List<SmSupplier> getPanelSuppliers() {
-		return panelSuppliers;
-	}
+	
 
 	public SmSupplier getSearchSupplier() {
 		return searchSupplier;
@@ -1252,6 +1248,16 @@ public class QTDetailManagedBean extends BaseManagedBean {
 	 */
 	public void setUploadUpdateId(String uploadUpdateId) {
 		this.uploadUpdateId = uploadUpdateId;
+	}
+
+
+	public List<CtPanelSupplier> getPanelSuppliers() {
+		return panelSuppliers;
+	}
+
+
+	public void setPanelSuppliers(List<CtPanelSupplier> panelSuppliers) {
+		this.panelSuppliers = panelSuppliers;
 	}
        
 }
