@@ -71,7 +71,7 @@
 		</p:panel>
 		<p:spacer height="25" />
 		<p:panel header="Site Visit Details"
-			visible="#{bsvAttendanceBackingBean.managedBean.visibleState}">
+			visible="#{!bsvAttendanceBackingBean.managedBean.scQt.sameBsv}">
 			<p:dataTable id="sitevisitdetails" var="scQtsitevisit"
 				value="#{bsvAttendanceBackingBean.managedBean.siteVisitDetailsList}"
 				selection="#{bsvAttendanceBackingBean.managedBean.selectedSiteVisitDetails}"

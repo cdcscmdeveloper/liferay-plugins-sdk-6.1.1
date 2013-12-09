@@ -1,4 +1,5 @@
-<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+ 
+ <ui:composition xmlns="http://www.w3.org/1999/xhtml"
 	xmlns:f="http://java.sun.com/jsf/core"
 	xmlns:h="http://java.sun.com/jsf/html"
 	xmlns:ui="http://java.sun.com/jsf/facelets"
@@ -10,7 +11,9 @@
 			styleClass="noBorders tr,noBorders td">
 			<p:row>
 				<p:column width="100%" style="text-align:right">
-				     <p:commandButton value="#{lbl['lbl.sc.bsv.attendance.save']}" action="#{bsvAttendanceBackingBean.saveBriefSiteVisit}" />
+				     <p:commandButton value="#{lbl['lbl.sc.bsv.attendance.save']}" 
+				     	action="#{bsvAttendanceBackingBean.saveBriefSiteVisit}"
+				     	update="@form" />
 					<p:commandButton value="#{lbl['lbl.sc.bsv.attendance.submit']}" />
 				</p:column>
 			</p:row>

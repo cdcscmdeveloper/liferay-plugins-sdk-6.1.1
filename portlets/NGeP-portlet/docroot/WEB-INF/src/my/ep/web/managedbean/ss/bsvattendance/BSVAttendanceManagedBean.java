@@ -40,10 +40,6 @@ public class BSVAttendanceManagedBean extends BaseManagedBean {
 	
 	private ScQtBriefingRegistration  selectedbriefRegistration; // Selected Briefing Registration for Attendance List 
 	
-	private String briefSameAsSiteVisit; //  briefSameAsSiteVisit  for Briefing Same As Site Visit value
-	
-	private boolean visibleState=true; //  isVisible  for  site visit component visible or disable
-	
 	private ScQtBriefingRegistration scQtBriefingRegistration; 
 	private ScQtBriefingAttendance scQtBriefingAttendance;
 	private ScQt scQt;
@@ -160,34 +156,6 @@ public class BSVAttendanceManagedBean extends BaseManagedBean {
 	public void setBriefingAttendanceList(
 			List<ScQtBriefingAttendance> briefingAttendanceList) {
 		this.briefingAttendanceList = briefingAttendanceList;
-	}
-	
-	/**
-	 * @return briefSameAsSiteVisit
-	 */
-	public String getBriefSameAsSiteVisit() {
-		return briefSameAsSiteVisit;
-	}
-	
-	/**
-	 * @param briefSameAsSiteVisit the briefSameAsSiteVisit to set
-	 */
-	public void setBriefSameAsSiteVisit(String briefSameAsSiteVisit) {
-		this.briefSameAsSiteVisit = briefSameAsSiteVisit;
-	}
-	
-	/**
-	 * @return visibleState
-	 */
-	public boolean isVisibleState() {
-		return visibleState;
-	}
-	
-	/**
-	 * @param visibleState the visibleState to set
-	 */
-	public void setVisibleState(boolean visibleState) {
-		this.visibleState = visibleState;
 	}
 	
 	/**

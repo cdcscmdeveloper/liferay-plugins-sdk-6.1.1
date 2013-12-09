@@ -6,7 +6,6 @@
 	xmlns:c="http://java.sun.com/jsp/jstl/core"
 	xmlns:ac="http://ac.my/jsf/composite/cc">
 
-     <p:messages globalOnly="true"></p:messages>
 	<p:panel header="Briefing/Site Visit Attendance Register"
 		toggleable="true">
 
@@ -31,7 +30,7 @@
 			</h:column>
 
 			<p:column>
-				<p:inputText value="#{bsvAttendanceBackingBean.managedBean.briefSameAsSiteVisit}" readonly="true" disabled="true" size="6"></p:inputText>
+				<p:inputText value="#{bsvAttendanceBackingBean.managedBean.scQt.sameBsv ? 'Yes' : 'No'}" readonly="true" disabled="true" size="6"></p:inputText>
 			</p:column>
 		</h:panelGrid>
 
@@ -95,7 +94,7 @@
 
 		</p:panel>
 
-		<p:panel header="Site Visit Details" visible="#{bsvAttendanceBackingBean.managedBean.visibleState}">
+		<p:panel header="Site Visit Details" visible="#{!bsvAttendanceBackingBean.managedBean.scQt.sameBsv}">
 			<p:dataTable id="sitevisitdetails" var="scQtsitevisit"
 				value="#{bsvAttendanceBackingBean.managedBean.siteVisitDetailsList}"
 				selection="#{bsvAttendanceBackingBean.managedBean.selectedSiteVisitDetails}"
@@ -165,7 +164,10 @@
 			styleClass="noBorders tr,noBorders td">
 			<p:row>
 				<p:column width="100%" style="text-align:right">
-					<p:commandButton value="#{lbl['lbl.sc.bsv.attendance.save']}" />
+					<p:commandButton value="#{lbl['lbl.sc.bsv.attendance.save']}" 
+						action="#{bsvAttendanceBackingBean.saveBriefingAttendanceByCompany}"
+						oncomplete="popupAttendaceByComp.hide();"
+						update="@form" />
 					<p:commandButton value="#{lbl['lbl.sc.bsv.attendance.close']}" onclick="popupAttendaceByComp.hide()"/>
 					
 				</p:column>
@@ -179,13 +181,15 @@
 	<p:dialog id="popupAttendanceReg" widgetVar="popupAttendanceReg"
 		modal="false" resizable="false" header="Attendance Registration"   width="900" height="500" hideEffect="true">
 		<p:ajax event="close" />
-	
-		<ui:include src="bsvAttendanceRegisterPopup.xhtml" /><br />
-		  <p:panelGrid style="width:100%;"
+		<ui:include src="bsvAttendanceRegisterPopup.xhtml" />
+		<p:panelGrid style="width:100%;"
 			 styleClass="noBorders tr,noBorders td">
 			  <p:row>
 				<p:column width="100%" style="text-align:right">
-					<p:commandButton value="#{lbl['lbl.sc.bsv.attendance.save']}" action="#{bsvAttendanceBackingBean.saveBrifingRegistration}"/>
+					<p:commandButton value="#{lbl['lbl.sc.bsv.attendance.save']}" 
+						action="#{bsvAttendanceBackingBean.saveBriefingAttendance}"
+						oncomplete="popupAttendanceReg.hide();"
+						update="@form" />
 					<p:commandButton value="#{lbl['lbl.sc.bsv.attendance.close']}" onclick="popupAttendanceReg.hide()"/>
 				</p:column>
 			  </p:row>
