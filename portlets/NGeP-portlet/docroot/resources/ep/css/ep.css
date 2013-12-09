@@ -1540,7 +1540,11 @@ important
 
 .ui-inputfield.ui-inputtext.ui-state-disabled {
 	opacity: 1;
-	background-color: #f4f4f4;
+	background-color: #F4F4F4;
+}
+
+.ui-inputtextarea.ui-state-disabled {
+	background-color: #F4F4F4;
 }
 
 .ui-inputfield.ui-inputtext.ui-corner-all,.ui-selectonemenu.ui-corner-all,.ui-selectonemenu-panel.ui-corner-all,.ui-selectonemenu-label.ui-inputfield.ui-corner-all,.ui-selectonemenu-trigger.ui-state-default.ui-corner-right
