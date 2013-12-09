@@ -4,15 +4,16 @@
 	xmlns:h="http://java.sun.com/jsf/html"
 	xmlns:ui="http://java.sun.com/jsf/facelets"
 	xmlns:p="http://primefaces.org/ui"
-	xmlns:c="http://java.sun.com/jsp/jstl/core">
-
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:ac="http://ac.my/jsf/composite/cc">
+	
 		<p:panel header="Category Code List" toggleable="true">
 
   
 <p:panelGrid columns="2" style="width:38%;"
 				styleClass="noBorders tr,noBorders td">
-		<h:outputText value="Paid Up Capital (MYR)" />  
-            <p:inputText value="#{qTSupplierQulCriteriaBackingBean.managedBean.qtc.paidUpCaptial}"/> 
+		<h:outputText value="#{lbl['lbl.so.paidup']}"  />  
+            <p:inputText value="#{qTSupplierQulCriteriaBackingBean.managedBean.qtCriteria.paidUpCaptial}"/> 
             </p:panelGrid>
           
     
@@ -20,11 +21,16 @@
 
 <h:panelGroup  style="width:100%;">
 			<p:dataTable value="#{qTSupplierQulCriteriaBackingBean.managedBean.restrictedCategorys}"
-			var="ccode" resizableColumns="true" editable="true" id="catList2">
+			var="ccode" resizableColumns="true" editable="true"  styleClass="myCatList2" id="rescatcode"
+			selection="#{qTSupplierQulCriteriaBackingBean.managedBean.selectedrestrictedcCategories}"
+				rowKey="#{ccode}" rowIndexVar="rowIndex"
+				rows="10">
+				<p:column selectionMode="multiple" style="width:2%" />
+				<ac:paginator for="rescatcode" />
   
 				
 
-				<p:column headerText="Category Code">
+				<p:column headerText="#{lbl['lbl.so.category']}">
 				<p:cellEditor>
 					<f:facet name="output">
 						<h:outputText value="#{ccode.pmCategoryL1.categoryL1Id}" />
@@ -59,19 +65,19 @@
 					</f:facet>
 					</p:cellEditor>
 			 </p:column>
-			 <p:column headerText="Mandatory" style="width: 150px;">
+			 <p:column headerText="#{lbl['lbl.so.mandatory']}"  style="width: 150px;">
 				<p:cellEditor>
 					<f:facet name="output">
-						<h:outputText value="#{ccode.isMandatory}" />
+						<h:outputText value="#{ccode.mandatory}" />
 					</f:facet>
 					<f:facet name="input">
 
-						<p:selectManyCheckbox
-							value="#{qTSupplierQulCriteriaBackingBean.managedBean.qtcategory.isMandatory}">
+						<p:selectBooleanCheckbox
+							value="#{qTSupplierQulCriteriaBackingBean.managedBean.qtCategory.mandatory}">
 							<f:selectItem itemLabel="yes" />
 							<f:selectItem itemLabel="no" />
 
-						</p:selectManyCheckbox>
+						</p:selectBooleanCheckbox>
 					</f:facet>
 				</p:cellEditor>
 
@@ -85,14 +91,21 @@
 
 
 		</h:panelGroup>
-
+<p:panelGrid columns="2" style="width:100%;"
+			styleClass="noBorders tr,noBorders td">
+			<f:facet name="footer">
+						<div align="right">
 		<p:commandButton value="#{lbl['lbl.so.addbtn']}" style="float:right;"
-			actionListener="#{qTSupplierQulCriteriaBackingBean.addNewRestrictedCategoryItem}" update="catList2" />
+			actionListener="#{qTSupplierQulCriteriaBackingBean.addNewRestrictedCategoryItem}"  update="@(.myCatList2)"/>
+			
+					<p:commandButton value="#{lbl['lbl.so.delete']}" style="float:right;"/>
+			</div>
+			</f:facet>
+			</p:panelGrid>
 			<p:panelGrid columns="1" style="width:100%;"
 				styleClass="noBorders tr,noBorders td">
 <p:commandButton value="#{lbl['lbl.so.searchbtn']}" style="float:right;"
-					onclick="suppdlg.show();"></p:commandButton>
-				
+					onclick="suppdlg.show();"></p:commandButton>	
 				</p:panelGrid>
 			<br/>
 			<br/>
@@ -102,7 +115,7 @@
 	
 	 <p:panelGrid columns="3" style="width:45%;"
 				styleClass="noBorders tr,noBorders td">
-		<h:outputText value="Total Suppliers" />  
+		<h:outputText value="#{lbl['lbl.so.totalsup']}" />  
             <p:inputText  value="1" readonly="true"/> 
             
             

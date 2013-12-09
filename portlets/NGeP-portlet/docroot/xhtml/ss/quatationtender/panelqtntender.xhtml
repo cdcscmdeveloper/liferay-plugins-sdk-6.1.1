@@ -9,20 +9,20 @@
 
    <p:panelGrid columns="3" style="width:75%;"
 				styleClass="noBorders tr,noBorders td">
-		<h:outputLabel value="Circular No." />  
-            <p:inputText value="1" readonly="true"/> 
+		<h:outputLabel value="#{lbl['lbl.so.circularno']}" />  
+            <p:inputText value="#{qTSupplierQulCriteriaBackingBean.managedBean.qtCriteria.ctCircular.ctCircularVer.circularNo}" readonly="true"/> 
            
            <p:commandLink  style="margin-right:20px;">  
-        <h:outputText value="View Circular Attachment" />  
+        <h:outputText value="#{lbl['lbl.so.cirattach']}" />  
     </p:commandLink> 
-           <h:outputLabel value="Circular ExpiryDate." />  
-            <p:inputText value="#{searchQtnTenderBB.managedBean.date}" readonly="true"/> 
+           <h:outputLabel value="#{lbl['lbl.so.circularexp']}" />  
+            <p:inputText value="#{qTSupplierQulCriteriaBackingBean.managedBean.qtCriteria.ctCircular.ctCircularVer.endDate}" readonly="true"/> 
          
     
 		</p:panelGrid>
 		<p:panelGrid columns="1" style="width:100%;"
 				styleClass="noBorders tr,noBorders td">
-		<p:commandButton value="#{lbl['lbl.so.searchbtn']}" style="float:right;"
+		<p:commandButton value="#{lbl['lbl.so.searchbtn']}" icon=".ui-icon-search" style="float:right;"
 					onclick="suppdlg.show();"></p:commandButton>
 					</p:panelGrid>
 					</p:panel>
@@ -34,7 +34,7 @@
 	<ui:include src="/xhtml/ss/quatationtender/supplierlist.xhtml"></ui:include>	
 	 <p:panelGrid columns="3" style="width:42%;"
 				styleClass="noBorders tr,noBorders td">
-		<h:outputText value="Total Suppliers (s)" />  
+		<h:outputLabel value="#{lbl['lbl.so.totalsup']}" />  
             <p:inputText  value="1" readonly="true"/> 
             
             

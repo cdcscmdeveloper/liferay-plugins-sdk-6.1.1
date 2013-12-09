@@ -3,37 +3,31 @@
 	xmlns:h="http://java.sun.com/jsf/html"
 	xmlns:ui="http://java.sun.com/jsf/facelets"
 	xmlns:p="http://primefaces.org/ui"
-	xmlns:c="http://java.sun.com/jsp/jstl/core">
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:ac="http://ac.my/jsf/composite/cc">
 
 	<p:panel toggleable="true">
-				<p:dataTable value="#{searchQtnTenderBB.managedBean.categories}" var="ccode" resizableColumns="true"
+				<p:dataTable value="#{qTSupplierQulCriteriaBackingBean.managedBean.smMofAccounts}" var="panelsupplier" resizableColumns="true" id="panelsuppliermain"
 				>
 			
-				<p:column headerText="CompanyName" >
-				
-				 <p:tree value="#{companyBean.root2}" var="node"
-            selectionMode="checkbox"
-            selection="#{companyBean.selectedNodes}" style="border:none;">
+				<p:column headerText="#{lbl['lbl.so.suppliername']}" style="width:40%">  
+          <f:facet name="header">   </f:facet>  
+           <p:outputLabel value="#{ccode.zoneName}" style="float:left;"/>  
+       </p:column>  
+       
 
-        <p:treeNode>
-            <h:outputText value="#{node}" />
-        </p:treeNode>
-    </p:tree>
-
-				</p:column>
-
-				<p:column headerText="MOF No">
-				<h:outputText value="Mof001"></h:outputText>
+				<p:column headerText="#{lbl['lbl.so.mofno']}">
+				<h:outputText value="#{panelsupplier.mofNo}"></h:outputText>
 				</p:column>
 						
 
-<p:column headerText="MOF Expiry Date">
-				<h:outputText value="05/09/2013"></h:outputText>
+               <p:column headerText="#{lbl['lbl.so.mofexp']}">
+				<h:outputText value="#{panelsupplier.expDate}"></h:outputText>
 				</p:column>
 				
 				
 			
-				<p:column headerText="Status">
+				<p:column headerText="#{lbl['lbl.so.status']}">
 				<h:outputText value="Active/Expired"></h:outputText>
 				</p:column>
 				
@@ -44,19 +38,19 @@
 	
 		</p:panel>
 		
-		<p:dialog widgetVar="suppdlg" modal="true" appendToBody="true" width="800" height="400">
+		<p:dialog header="Search Supplier" widgetVar="suppdlg" modal="false" appendToBody="false" width="800" height="400">
 		
-          <p:panel header="Search Supplier" toggleable="true" size="100">
-				<p:panelGrid columns="2" style="width:50%;" styleClass="noBorders tr,noBorders td">
+          <p:panel  toggleable="true" size="100">
+				<p:panelGrid columns="2" style="width:50%;" styleClass="searchsupplierClass noBorders tr noBorders td" >
 				
-			<h:outputText  value="Circular No" />
-			<p:inputText  value="#{searchQtnTenderBB.managedBean.qtno}"/>
+			<h:outputLabel  value="#{lbl['lbl.so.circularno']}" />
+			<p:inputText  value="#{qTSupplierQulCriteriaBackingBean.managedBean.ctPanelSupplier.ctPanelItem.ctCircularVer.circularNo}"/>
 
-<h:outputText value="Circular Name" />
-			<p:inputText value="#{searchQtnTenderBB.managedBean.qtno}"/>
+<h:outputLabel value="#{lbl['lbl.so.cirname']}" />
+			<p:inputText value="#{qTSupplierQulCriteriaBackingBean.managedBean.ctPanelSupplier.ctPanelItem.ctCircularVer.circularFileName}"/>
 
-<h:outputText value="Item Name " />
-			<p:inputText  value="#{searchQtnTenderBB.managedBean.qtno}"/>
+<h:outputLabel value="#{lbl['lbl.so.itemname']}" />
+			<p:inputText  value="#{qTSupplierQulCriteriaBackingBean.managedBean.ctPanelSupplier.ctPanelItem.itemName}"/>
 	
 		
 	</p:panelGrid>
@@ -66,15 +60,15 @@
     <p:row>
      <p:column width="100%" style="text-align:right">
     <p:commandButton  value="#{lbl['lbl.so.addbtn']}"
-			styleClass="apply_button">
+		icon=".ui-icon-add"	styleClass="apply_button">
 		</p:commandButton>
      </p:column>
    </p:row>
    </p:panelGrid>		
 
 		
-<p:panelGrid columns="2" style="width:35%;" styleClass="noBorders tr,noBorders td">
-				 <h:outputText value="Circular Coverage" />  
+<p:panelGrid columns="2" style="width:35%;" styleClass="noBorders tr noBorders td">
+				 <h:outputLabel value="#{lbl['lbl.so.circularcoverage']}"/>  
         <p:selectOneMenu value="#{searchQtnTenderBB.managedBean.selectOption}">  
             <f:selectItem itemLabel="Select One" itemValue="" />  
             <f:selectItem itemLabel="ALL" itemValue="All" />  
@@ -90,43 +84,42 @@
 			<p:panelGrid columns="1" style="width:100%;"
 			styleClass="noBorders tr,noBorders td">
 <p:commandButton  value="#{lbl['lbl.so.searchbtn']}"
-			styleClass="apply_button" style="float:right;" >
+			styleClass="apply_button" style="float:right;" action="#{qTSupplierQulCriteriaBackingBean.searchQtPanelSupplier}" id="panelsupplier" update="mySupplierListId" icon=".ui-icon-search"> 
 		</p:commandButton>
 		</p:panelGrid>
 		</p:panel>
-			<p:panel header="Supplier List" toggleable="true">
+			<p:panel header="Supplier List Results" toggleable="true">
 		<p:panelGrid columns="2" style="width:100%;"
 			styleClass="noBorders tr,noBorders td">
 			
-			<p:dataTable value="#{searchQtnTenderBB.managedBean.categories}" var="ccode" resizableColumns="true"
-				>
+			<p:dataTable value="#{qTSupplierQulCriteriaBackingBean.managedBean.ctPanelSuppliers}" var="psupplier" id="mySupplierListId"
+			 selection="#{qTSupplierQulCriteriaBackingBean.managedBean.selectedpanelsupplier}"
+				rowKey="#{psupplier}" rowIndexVar="rowIndex"
+				rows="10">
+				<p:column selectionMode="multiple" style="width:2%" />
+				<ac:paginator for="mySupplierListId" />
 				
-
-				<p:column headerText="CompanyName">
+                  
+				<p:column headerText="#{lbl['lbl.so.suppliername']}">
 				
 				
-       <p:tree value="#{companyBean.root2}" var="node"
-            selectionMode="checkbox"
-            selection="#{companyBean.selectedNodes}" style="border:none;">
-
-        <p:treeNode>
-            <h:outputText value="#{node}" />
-        </p:treeNode>
-    </p:tree>
+      
+            <h:outputText value="#{psupplier.smSupplier.pmOrgProfile.orgName}" />
+        
 
 				</p:column>
-
-				<p:column headerText="MOF No">
-				<h:outputText value="Mof001"></h:outputText>
+				
+				<p:column headerText="#{lbl['lbl.so.mofno']}">
+				<h:outputText value="#{psupplier.smMofAccounts.mofNo}"></h:outputText>
 				</p:column>
-						
 
-<p:column headerText="MOF Expiry Date">
-				<h:outputText value="05/09/2013"></h:outputText>
+			     <p:column headerText="#{lbl['lbl.so.mofexp']}">
+				<h:outputText value="#{psupplier.smMofAccounts.expDate}"></h:outputText>
 				</p:column>
 				
 				
-				<p:column headerText="Status">
+			
+				<p:column headerText="#{lbl['lbl.so.status']}">
 				<h:outputText value="Active/Expired"></h:outputText>
 				</p:column>
 				
@@ -138,7 +131,7 @@
 
  <p:panelGrid columns="2" style="width:42%;"
 				styleClass="noBorders tr,noBorders td">
-		<h:outputText value="TotalSuppliers" />  
+		<h:outputText value="#{lbl['lbl.so.totalsup']}"/>  
             <p:inputText  value="1" readonly="true"/> 
  
  </p:panelGrid>
@@ -147,13 +140,13 @@
 
 
 <div>           
-<p:commandButton value="CANCEL" style="float:right;" oncomplete="suppdlg.hide()">
+<p:commandButton value="#{lbl['lbl.so.cancelbtn']}" style="float:right;" oncomplete="suppdlg.hide()">
 </p:commandButton>
-<p:commandButton value="OK" style="float:right;" oncomplete="suppdlg.hide()">
+<p:commandButton value="#{lbl['lbl.so.okbtn']}" style="float:right;" oncomplete="suppdlg.hide()" update="panelsuppliermain">
 </p:commandButton>
 </div> 
 </p:panel>
-		
+		 
 		
 	</p:dialog>
 	

@@ -3,7 +3,8 @@
 	xmlns:f="http://java.sun.com/jsf/core"
 	xmlns:h="http://java.sun.com/jsf/html"
 	xmlns:p="http://primefaces.org/ui"
-	xmlns:ui="http://java.sun.com/jsf/facelets">
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:ac="http://ac.my/jsf/composite/cc">
 <h:head>
 	<title>Include demo</title>
 </h:head>
@@ -73,14 +74,14 @@
 
 				
 					
-			<p:dataTable value="#{qTScheduleDetailBB.managedBean.briefings}"
-			id="briefdetaillist" var="briefdetails" editable="true" >
-
-					<p:ajax event="rowEdit" listener="#{searchQtnTenderBB.onEdit}" />
-					<p:ajax event="rowEditCancel"
-						listener="#{searchQtnTenderBB.onCancel}" />
-
-					<p:column headerText="#{lbl['lbl.so.desc']}">
+			<p:dataTable value="#{qTScheduleDetailBB.managedBean.briefings}" 
+			 id="briefdetaillist" var="briefdetails" 
+			 selection="#{qTScheduleDetailBB.managedBean.selectedBriefingDetails}"
+				rowKey="#{briefdetails}" rowIndexVar="rowIndex"
+				rows="10">
+				<p:column selectionMode="multiple" style="width:2%" />
+				<ac:paginator for="briefdetaillist"/>
+				<p:column>
 						<p:commandLink >
 								<h:outputText value="#{briefdetails.briefingDesc}"></h:outputText>
 								</p:commandLink>
@@ -113,9 +114,9 @@
 					<p:column headerText="#{lbl['lbl.so.briefstatus']}">
 		<h:outputText value="#{briefdetails.pmStatus}"></h:outputText>
 							</p:column>
-				<p:column headerText="#{lbl['lbl.so.action']}" style="width:6%">
+				<!-- <p:column headerText="#{lbl['lbl.so.action']}" style="width:6%">
 						<p:rowEditor />
-						</p:column>
+						</p:column>  -->
 
 				</p:dataTable>
 
@@ -125,7 +126,8 @@
 			<f:facet name="footer">
 						<div align="right">
 
-							<p:commandButton id="briefadd" value="#{lbl['lbl.so.addbtn']}" process="@this" action="#{qTScheduleDetailBB.addBriefingDetails}" oncomplete="dlg1.show();" update="@(.qtBriefDetails)"></p:commandButton>
+							<p:commandButton id="briefadd" value="#{lbl['lbl.so.addbtn']}" process="@this" action="#{qTScheduleDetailBB.addBriefingDetails}" oncomplete="dlg1.show();" update="@(.qtBriefDetails)" icon=".ui-icon-add"></p:commandButton>
+							<p:commandButton value="#{lbl['lbl.so.delete']}" icon=".ui-icon-delete"/>
 						</div>
 					</f:facet>
 			</p:panelGrid>
@@ -142,8 +144,14 @@
 			<p:panelGrid columns="2" style="width:100%;"
 				styleClass="noBorders tr,noBorders td">
 
-			<p:dataTable value="#{qTScheduleDetailBB.managedBean.siteBriefings}"
-			id="sitedetails" var="sitedetails" editable="true" styleClass="">
+			<p:dataTable value="#{qTScheduleDetailBB.managedBean.siteBriefings}" 
+			id="sitedetails" var="sitedetails"
+			selection="#{qTScheduleDetailBB.managedBean.selectedSiteVisitDetails}"
+				rowKey="#{sitedetails}" rowIndexVar="rowIndex"
+				rows="10">
+				<p:column selectionMode="multiple" style="width:2%" />
+				<ac:paginator for="sitedetails" />
+			
 			
 			<p:column headerText="#{lbl['lbl.so.desc']}">
 						<p:commandLink >
@@ -178,9 +186,9 @@
 					<p:column headerText="#{lbl['lbl.so.briefstatus']}">
 		<h:outputText value="#{sitedetails.pmStatus}"></h:outputText>
 							</p:column>
-				<p:column headerText="#{lbl['lbl.so.action']}" style="width:6%">
+			<!-- 	<p:column headerText="#{lbl['lbl.so.action']}" style="width:6%">
 						<p:rowEditor />
-						</p:column>
+						</p:column>  -->
 				</p:dataTable>
 
 				
@@ -190,8 +198,8 @@
 			<f:facet name="footer">
 						<div align="right">
 
-							<p:commandButton id="siteadd" value="#{lbl['lbl.so.addbtn']}" process="@this" action="#{qTScheduleDetailBB.addSiteDetails}" oncomplete="dlg2.show();" update="@(.qtSiteBriefDetails)"></p:commandButton>
-
+							<p:commandButton id="siteadd" value="#{lbl['lbl.so.addbtn']}" process="@this" action="#{qTScheduleDetailBB.addSiteDetails}" oncomplete="dlg2.show();" update="@(.qtSiteBriefDetails)" icon=".ui-icon-add"></p:commandButton>
+                            <p:commandButton value="#{lbl['lbl.so.delete']}" icon=".ui-icon-delete"/>
 						</div>
 					</f:facet>
 			</p:panelGrid>
@@ -202,11 +210,14 @@
 		<p:panelGrid columns="2" style="width:100%;"
 			styleClass="noBorders tr,noBorders td">
 			<p:dataTable id="cpersondetails"       styleClass="contactdetails" var="contactpersondetails"
-				value= "#{qTScheduleDetailBB.managedBean.scQtContactPersons}" editable="true">
+				value= "#{qTScheduleDetailBB.managedBean.scQtContactPersons}" 
+			    selection="#{qTScheduleDetailBB.managedBean.selectedContactPersons}"
+				rowKey="#{contactpersondetails}" rowIndexVar="rowIndex"
+				rows="10">
+				<p:column selectionMode="multiple" style="width:2%" />
+				<ac:paginator for="cpersondetails" />
 
-				<p:ajax event="rowEdit" listener="#{searchQtnTenderBB.onEdit}" />
-				<p:ajax event="rowEditCancel"
-					listener="#{searchQtnTenderBB.onCancel}" />
+				
 
 				
 				<p:column headerText="#{lbl['lbl.so.name']}">
@@ -230,24 +241,26 @@
 								</p:column>												
 				
 
-				<p:column headerText="#{lbl['lbl.so.action']}" style="width:6%">
+			<!--  	<p:column headerText="#{lbl['lbl.so.action']}" style="width:6%">
 					<p:rowEditor />
-            <!-- <ui:include src="/xhtml/ss/committe/clonecommitteescreen.xhtml" /> -->
+             <ui:include src="/xhtml/ss/committe/clonecommitteescreen.xhtml" />
 
-				</p:column>
+				</p:column> -->
 				
 
 			</p:dataTable>
-		</p:panelGrid>
-			<p:panelGrid columns="2" style="width:100%;"
+			</p:panelGrid>
+				<p:panelGrid columns="2" style="width:100%;"
 			styleClass="noBorders tr,noBorders td">
 			<f:facet name="footer">
-					<div align="right">
-					
-					<p:commandButton value="#{lbl['lbl.so.addbtn']}" action="#{qTScheduleDetailBB.addContactPerson}" update="@(.contactdetails)" style="float:right;" ></p:commandButton>
-					</div>
-				</f:facet>
-			</p:panelGrid>
+						<div align="right">
+                            
+							<p:commandButton value="#{lbl['lbl.so.addbtn']}" action="#{qTScheduleDetailBB.addContactPerson}" update="@(.contactdetails)" style="float:right;" icon=".ui-icon-add"></p:commandButton>
+                             <p:commandButton value="#{lbl['lbl.so.delete']}" icon=".ui-icon-delete"/>
+						</div>
+					</f:facet>
+		</p:panelGrid>
+			
 			
 	</p:panel>
 

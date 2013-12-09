@@ -9,11 +9,9 @@ import java.util.List;
 import javax.annotation.PostConstruct;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.RequestScoped;
-import javax.faces.context.FacesContext;
 import javax.faces.event.AjaxBehaviorEvent;
 import javax.faces.event.ValueChangeEvent;
 
-import my.ep.biz.bean.search.ISearchBean;
 import my.ep.biz.bean.search.SearchBean;
 import my.ep.biz.bean.search.SearchFilterBean;
 import my.ep.biz.service.ct.circular.ICircularSO;
@@ -26,12 +24,17 @@ import my.ep.dto.pm.common.categorys.CategorysResDTO;
 import my.ep.dto.pm.common.district.DistrictReqDTO;
 import my.ep.dto.pm.common.district.DistrictResDTO;
 import my.ep.factory.EpLogger;
+import my.ep.persistence.entity.ct.circular.CtCircular;
+import my.ep.persistence.entity.ct.circular.CtCircularVer;
+import my.ep.persistence.entity.ct.circular.panel.CtPanelItem;
 import my.ep.persistence.entity.ct.circular.panel.CtPanelSupplier;
+import my.ep.persistence.entity.pm.authorization.PmOrgProfile;
 import my.ep.persistence.entity.pm.common.PmCategoryL1;
 import my.ep.persistence.entity.pm.common.PmCategoryL2;
 import my.ep.persistence.entity.pm.common.PmCategoryL3;
 import my.ep.persistence.entity.pm.common.PmDistrict;
 import my.ep.persistence.entity.pm.common.PmState;
+import my.ep.persistence.entity.sm.SmMofAccount;
 import my.ep.persistence.entity.sm.SmSupplier;
 import my.ep.persistence.entity.ss.quationtender.ScQtCategory;
 import my.ep.persistence.entity.ss.quationtender.ScQtCriteria;
@@ -70,8 +73,36 @@ public class QTSupplierQulCriteriaBackingBean extends SourcingBaseBackingBean<QT
 		this.getManagedBean().setQtCriteria(new ScQtCriteria());
 		this.getManagedBean().setSearchSupplier(new SmSupplier());
 		
+		CtCircular searchCircular=new CtCircular();
+	     searchCircular.setLatestCircularVer(new CtCircularVer());
+	     this.getManagedBean().setSearchCircular(searchCircular);
+	     
+	     CtPanelSupplier ctPanelSupplier=new CtPanelSupplier();
+	     ctPanelSupplier.setCtPanelItem(new CtPanelItem());
+	     ctPanelSupplier.getCtPanelItem().setCtCircularVer(new CtCircularVer());
+	     this.getManagedBean().setCtPanelSupplier(ctPanelSupplier);
+	     
+	     CtPanelItem ctPanelItem=new CtPanelItem();
+	     ctPanelItem.setCtCircularVer(new CtCircularVer());
+	     this.getManagedBean().setCtPanelItem(ctPanelItem);
+	     
+	    SmSupplier searchSupplier = new SmSupplier();
+	    searchSupplier.setPmOrgProfile(new PmOrgProfile());
+	    this.getManagedBean().setSearchSupplier(searchSupplier);
+	    
+	    ScQtCategory qtCategory=new ScQtCategory();
+	    this.getManagedBean().setQtCategory(qtCategory);
+	    
+	   
+	    
+	    List<SmMofAccount> smMofAccounts=new ArrayList<SmMofAccount>();
+	    smMofAccounts.add(new SmMofAccount());
+	    this.getManagedBean().setSmMofAccounts(smMofAccounts);
+	    
+	    
+	    
+		
 	}
-	
 	/*
 	 * Method to load the categorieslist for suppliers screen
 	 */
@@ -91,6 +122,12 @@ public class QTSupplierQulCriteriaBackingBean extends SourcingBaseBackingBean<QT
 		}
 	}
 			
+	private void debugLogger(Object message) {
+		if (log.isDebugEnabled()) {
+			log.debug(message);
+		}
+		log.info(message);
+	}
 
 
 	
@@ -104,12 +141,15 @@ public class QTSupplierQulCriteriaBackingBean extends SourcingBaseBackingBean<QT
 		List<ScQtCategory> categories=this.getManagedBean().getOpenCategorys();
 		if (categories == null) {
 			categories = new ArrayList<ScQtCategory>();
-
+      // this.getManagedBean().setOpenCategorys(categories);
+			
 		} 
 		System.out.println("New Category Creation");
 		retriveQtCriteria();
 		ScQtCategory category = new ScQtCategory();
 		category.setPmCategoryL1(new PmCategoryL1());
+		category.setPmCategoryL2(new PmCategoryL2());
+		category.setPmCategoryL3(new PmCategoryL3());
 		categories.add(category);
 		this.getManagedBean().setOpenCategorys(categories);
 		//this.getManagedBean().getQt().setScQtCategorys(categories);
@@ -154,39 +194,76 @@ public class QTSupplierQulCriteriaBackingBean extends SourcingBaseBackingBean<QT
 	/*
 	 * Method to call onchange of L1category
 	 */
-	public void handleL2CategoryChange(AjaxBehaviorEvent event) {
-		//System.out.println(this.getManagedBean());
-		Object categoryL1Id=event.getComponent().getAttributes().get("value");
-		//PmCategoryL1 categoryL1 = (PmCategoryL1) changeEvent.getNewValue();
-		if (null != categoryL1Id) {
-			CategorysReqDTO reqDTO = new CategorysReqDTO();
-			reqDTO.setL1CategoryId((Long)categoryL1Id);
-			CategorysResDTO categorysResDTO = categorysSO
-					.retiveCategoryL2ListByL1CategoryId(reqDTO);
-			List<PmCategoryL2> catL2List = categorysResDTO.getCategoryL2List();
-			this.getManagedBean().getCategoryL2s().clear();
-			this.getManagedBean().setCategoryL2s(catL2List);
+	public void handleL1CategoryChange(ScQtCategory qtCategory) {
+		debugLogger("handleL1CategoryChange");
+		PmCategoryL1 categoryL1=qtCategory.getPmCategoryL1();
+		if(categoryL1 != null && categoryL1.getCategoryL1Id() != null){
+			List<PmCategoryL1> pmCategoryL1s=this.getManagedBean().getCategoryL1s();
+			for(PmCategoryL1 l1: pmCategoryL1s){
+				if(l1.getCategoryL1Id().longValue()==categoryL1.getCategoryL1Id().longValue()){
+					qtCategory.setPmCategoryL1(l1);
+					debugLogger("Set l1");
+					break;
+				}
+				
+			}
+			
+			CategorysReqDTO reqDTO= new CategorysReqDTO();
+			reqDTO.setL1CategoryId(categoryL1.getCategoryL1Id());
+			
+			ICategorysSO categorysSO =EpEjbBusinessDelegate.getInstance().getServiceObject("cat",ICategorysSO.class);
+			CategorysResDTO resDTO=categorysSO.retiveCategoryL2ListByL1CategoryId(reqDTO);
+			this.getManagedBean().setCategoryL2s(resDTO.getCategoryL2List());
 		}
+		else{
+			this.getManagedBean().setCategoryL2s(new ArrayList<PmCategoryL2>());
+		}
+		qtCategory.setPmCategoryL2(new PmCategoryL2());
+		//handleL1CategoryChange(qtCategory);
 	}
-
+	
 	/*
 	 * Method to call onchange of L2category
 	 */
-	public void handleL3CategoryChange(AjaxBehaviorEvent event) {
-		Object categoryL2Id=event.getComponent().getAttributes().get("value");
-	//	PmCategoryL2 categoryL2 = (PmCategoryL2) changeEvent.getNewValue();
-		if (null != categoryL2Id) {
-			CategorysReqDTO reqDTO = new CategorysReqDTO();
-			reqDTO.setL2CategoryId((Long)categoryL2Id);
-			CategorysResDTO categorysResDTO = categorysSO
-					.retiveCategoryL3ListByL2CategoryId(reqDTO);
-			List<PmCategoryL3> catL3List = categorysResDTO.getCategoryL3List();
-			this.getManagedBean().getCategoryL3s().clear();
-			this.getManagedBean().setCategoryL3s(catL3List);
+	public void handleL2CategoryChange(ScQtCategory qtCategory) {
+		debugLogger("handleL2CategoryChange");
+		
+		PmCategoryL2 categoryL2=qtCategory.getPmCategoryL2();
+		if(categoryL2 !=null && categoryL2.getCategoryL2Id() !=null){
+			List<PmCategoryL2> categoryL2s=this.getManagedBean().getCategoryL2s();
+			for(PmCategoryL2 l2: categoryL2s){
+				if(l2.getCategoryL2Id().longValue() == categoryL2.getCategoryL2Id().longValue()){
+					qtCategory.setPmCategoryL2(l2);
+					debugLogger("Set l2");
+					break;
+				}
+			}
+			CategorysReqDTO reqDTO=new CategorysReqDTO();
+			reqDTO.setL2CategoryId(categoryL2.getCategoryL2Id());
+			
+			ICategorysSO categorysSO =EpEjbBusinessDelegate.getInstance().getServiceObject("cat",ICategorysSO.class);
+			CategorysResDTO resDTO=categorysSO.retiveCategoryL3ListByL2CategoryId(reqDTO);
+			this.getManagedBean().setCategoryL3s(resDTO.getCategoryL3List());
+		}
+		else{
+			this.getManagedBean().setCategoryL3s(new ArrayList<PmCategoryL3>());
+		}
+		qtCategory.setPmCategoryL3(new PmCategoryL3());
+	}
+	
+	public void handleL3CategoryChange(ScQtCategory qtCategory){
+		
+		PmCategoryL3 categoryL3=qtCategory.getPmCategoryL3();
+		if(categoryL3 !=null && categoryL3.getCategoryL3Id()!=null){
+			List<PmCategoryL3> categoryL3s=this.getManagedBean().getCategoryL3s();
+			for(PmCategoryL3 l3:categoryL3s){
+				if(l3.getCategoryL3Id().equals(categoryL3.getCategoryL3Id())){
+					qtCategory.setPmCategoryL3(l3);
+				}
+			}
 		}
 	}
-
-		
+	
 	/**
 	 * To retrive districts based on state value changes.
 	 */
@@ -209,56 +286,92 @@ public class QTSupplierQulCriteriaBackingBean extends SourcingBaseBackingBean<QT
 	 * Method to search the supplier for panel and restricted tender.
 	 */
 	public void searchQtPanelSupplier(){
-	
-		List<SmSupplier> panelSupplier = retriverSuppliersForPanelQT();
+		 System.out.println(getManagedBean());
+			List<CtPanelSupplier> panelSupplierList = retriverSuppliersForPanelQT();
+			this.getManagedBean().setPanelSupplierList(panelSupplierList);
 		
-		if(!getManagedBean().getPanelSuppliers().isEmpty()){
-			getManagedBean().getPanelSuppliers().clear();
-		}
-		getManagedBean().getPanelSuppliers().addAll(panelSupplier);
-	}
-	/**
-	 * Method to search the supplier for normal tender
-	 */
-	public void searchNormalQtSupplier(){
-		
-	}
-	private List<SmSupplier> retriverSuppliersForPanelQT(){
-		
-		CircularReqDTO reqDTO = new CircularReqDTO();
-		ISearchBean<CtPanelSupplier> searchBean = new SearchBean<CtPanelSupplier>();
-		
-		SearchFilterBean equalFilterBean = new SearchFilterBean(SearchOperator.OPERATOR_EQUALS.value());
-		SearchFilterBean likeFilterBean = new SearchFilterBean(SearchOperator.OPERATOR_LIKE.value());
+		//if(!getManagedBean().getPanelSuppliers().isEmpty()){
+		//	getManagedBean().getPanelSuppliers().clear();
 			
-		equalFilterBean.setSearchField("ctCircular.circularNo");
-		equalFilterBean.setSearchValue("PCR_00001");
-		searchBean.getDataFilterBeans().add(equalFilterBean);
-		
-		likeFilterBean.setSearchField("ctPanelSupplierItems.ctPanelItem.itemName");
-		likeFilterBean.setSearchValue("Pen");
-		searchBean.getDataFilterBeans().add(likeFilterBean);
-		
-		equalFilterBean.setSearchField("ctCircular.name");
-		equalFilterBean.setSearchValue("");
-		searchBean.getDataFilterBeans().add(equalFilterBean);
-		
-		equalFilterBean.setSearchField("");
-		equalFilterBean.setSearchValue("");
-		searchBean.getDataFilterBeans().add(equalFilterBean);
-		
-		reqDTO.setSearchBean(searchBean);
-		CircularResDTO resDTO=null;
-		try{
-		ICircularSO circularSO= EpEjbBusinessDelegate.getInstance().getServiceObject("ct",ICircularSO.class);
-		resDTO = circularSO.searchPanelSuppliers(reqDTO);
-		}catch(Exception ex){
-			ex.printStackTrace();
+		/*	SmSupplier supp=new SmSupplier();
+			PmOrgProfile org=new PmOrgProfile();
+			org.setOrgName("Sample");
+			supp.setPmOrgProfile(org);
+			
+			List<SmMofAccount> accList=new ArrayList<SmMofAccount>();
+			SmMofAccount mofAcc=new SmMofAccount();
+			mofAcc.setMofNo("123");
+			mofAcc.setExpDate(new Date());
+			
+			supp.setStatusId(1L);
+			
+			accList.add(mofAcc);
+			supp.setSmMofAccounts(accList);
+			
+			getManagedBean().getPanelSuppliers().add(supp);
+			getManagedBean().getPanelSuppliers().addAll(panelSupplier);*/
+			
 		}
-		//return resDTO.getSupplierList();
-		return null;
-		//resDTO.getSearchResultBean().getResultList();
-	}
+		/**
+		 * Method to search the supplier for normal tender
+		 */
+		public void searchNormalQtSupplier(){
+			
+		}
+		private List<CtPanelSupplier> retriverSuppliersForPanelQT(){
+			
+			CircularReqDTO reqDTO = new CircularReqDTO();
+			SearchBean<CtPanelSupplier> searchBean = new SearchBean<CtPanelSupplier>();
+			searchBean.setNavigatable(false);
+			SearchFilterBean equalFilterBean = new SearchFilterBean(SearchOperator.OPERATOR_EQUALS.value());
+			SearchFilterBean likeFilterBean = new SearchFilterBean(SearchOperator.OPERATOR_LIKE.value());
+		 /*	if(null!=this.getManagedBean().getCtPanelItem().getCtCircularVer().getCircularNo() && !"".equals(this.getManagedBean().getCtPanelItem().getCtCircularVer().getCircularNo())){
+		 		equalFilterBean.setSearchField("ctCircularVer.circularNo");
+		 		equalFilterBean.setSearchValue(this.getManagedBean().getSearchCircular().getLatestCircularVer().getCircularNo());
+				searchBean.getDataFilterBeans().add(equalFilterBean);
+				
+		 	} */
+			
+			
+		 	if(null!=this.getManagedBean().getCtPanelItem().getCtCircularVer().getCircularFileName() && !"".equals(this.getManagedBean().getCtPanelItem().getCtCircularVer().getCircularFileName())){
+		 		likeFilterBean.setSearchField("ctCircularVer.name");
+		 		likeFilterBean.setSearchValue(this.getManagedBean().getSearchCircular().getLatestCircularVer().getCircularFileName());
+				searchBean.getDataFilterBeans().add(likeFilterBean);
+				 	}
+			
+		 	if(null!=this.getManagedBean().getCtPanelItem().getItemName() && !"".equals(this.getManagedBean().getCtPanelItem().getItemName())){
+		 	likeFilterBean.setSearchField("ctPanelItem.itemName");
+			likeFilterBean.setSearchValue("Pen");
+			searchBean.getDataFilterBeans().add(likeFilterBean);
+		 	}
+			
+			/*likeFilterBean.setSearchField("ctPanelSupplierItems.ctPanelItem.itemName");
+			likeFilterBean.setSearchValue(this.getManagedBean().getPanelSupplierVO().getItemName());
+			searchBean.getDataFilterBeans().add(likeFilterBean);
+			
+			
+			equalFilterBean.setSearchField("circular coverage");
+			equalFilterBean.setSearchValue(this.getManagedBean().getPanelSupplierVO().getCircularCoverage());
+			searchBean.getDataFilterBeans().add(equalFilterBean);*/
+		 	
+		 	
+		    reqDTO.setSearchBean(searchBean);
+			CircularResDTO resDTO=null;
+			try{
+			ICircularSO circularSO= BusinessDelegate.getInstance().getServiceObject("ct",ICircularSO.class);
+			resDTO = circularSO.searchPanelSuppliers(reqDTO);
+			
+			}catch(Exception ex){
+				ex.printStackTrace();
+			}
+			if(null!=resDTO && null!=resDTO.getPanelSupplierList()){
+				return resDTO.getPanelSupplierList();
+			}
+			//resDTO.getSearchResultBean().getResultList();
+			
+			return new ArrayList<CtPanelSupplier>();
+			
+		}
 	public void addState(){
 		  if(null!=this.getManagedBean().getSelectedPmStateList()){
 			  for(String stateId:this.getManagedBean().getSelectedPmStateList()){
@@ -441,9 +554,9 @@ public class QTSupplierQulCriteriaBackingBean extends SourcingBaseBackingBean<QT
 		System.out.println("====enter process checked===="
 				+ getManagedBean().getSelectedBoolean1());
 		// String dueDate = (String) ((UIOutput)e.getSource()).getValue();
-		String id = (String) e.getComponent().getAttributes().get("value");
+		Boolean id = (Boolean) e.getComponent().getAttributes().get("value");
 		System.out.println("=======get id value=====" + id);
-		getManagedBean().setSelectedBoolean1(id);
+		//getManagedBean().setSelectedBoolean(id);
 
 	}
 	

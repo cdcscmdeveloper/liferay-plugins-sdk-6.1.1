@@ -3,7 +3,8 @@
 	xmlns:f="http://java.sun.com/jsf/core"
 	xmlns:h="http://java.sun.com/jsf/html"
 	xmlns:p="http://primefaces.org/ui"
-	xmlns:ui="http://java.sun.com/jsf/facelets">
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:ac="http://ac.my/jsf/composite/cc">
 <h:head>
 	<title>Include demo</title>
 </h:head>
@@ -14,8 +15,13 @@
 	
 	<p:panelGrid columns="4" style="width:100%;"
 			styleClass="noBorders tr,noBorders td">
-			<p:dataTable  var="document"
-				value="#{qTDocumentsBB.managedBean.scQtChecklists}"  editable="false" styleClass="documentslist">
+			<p:dataTable  var="document" id="doclist"
+				value="#{qTDocumentsBB.managedBean.scQtChecklists}"  editable="false" styleClass="documentslist"
+			    rowKey="#{document}" rowIndexVar="rowIndex"
+				rows="10">
+				
+				<ac:paginator for="doclist" />
+			
 
          <p:column headerText="#{lbl['lbl.so.title']}">  
                     <h:outputText value="#{document.title}"></h:outputText>
@@ -24,27 +30,28 @@
           
 					
 
-    <p:column headerText="#{lbl['lbl.so.type']}" style="width:35%">
+    <p:column headerText="#{lbl['lbl.so.type']}" style="width:25%">
 				<h:outputText value="#{document.checklistType}"></h:outputText>
 					
 </p:column>
-     <p:column headerText="#{lbl['lbl.so.order']}" style="width:35%">
+     <p:column headerText="#{lbl['lbl.so.order']}" style="width:10%">
 				<h:outputText value="#{document.checklistSeq}" size="2"/>
 					
 </p:column>
- <p:column headerText="#{lbl['lbl.so.action']}" style="width:35%"> 
+ 
+ <!-- <p:column headerText="#{lbl['lbl.so.action']}" style="width:35%"> 
 				
 		<p:commandLink>
 					<p:graphicImage library="ep/images/design" name="delete.png"
 						value="/resources/ep/images/design/delete.png" />
 				</p:commandLink>			
-</p:column>
+</p:column> -->
   
 			</p:dataTable>
 			
 			
 	</p:panelGrid>
-<!-- <p:commandButton value="ADD" action="#{qTDocumentsBB.addDocuments}" update="@(.documentslist)" style="float:right;" ></p:commandButton>  -->	 
+	 
  
 	  <br/>
   <br/>

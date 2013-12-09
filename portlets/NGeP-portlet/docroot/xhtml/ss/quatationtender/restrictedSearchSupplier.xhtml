@@ -3,25 +3,22 @@
 	xmlns:h="http://java.sun.com/jsf/html"
 	xmlns:ui="http://java.sun.com/jsf/facelets"
 	xmlns:p="http://primefaces.org/ui"
-	xmlns:c="http://java.sun.com/jsp/jstl/core">
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:ac="http://ac.my/jsf/composite/cc">
 
 	<p:panel toggleable="true">
 		
 		
-				<p:dataTable value="#{searchQtnTenderBB.managedBean.categories}" var="ccode" resizableColumns="true"
-				>
-				<p:column headerText="No." style="width:05%" >
-				<h:outputText value="S001"></h:outputText>
-					
-				</p:column>
-
-				<p:column headerText="CompanyName">
+				<p:dataTable value="#{searchQtnTenderBB.managedBean.categories}" var="ccode" resizableColumns="true">
+				
+			
+				<p:column headerText="#{lbl['lbl.so.suppliername']}">
 				
 				<h:outputLink id="lnk" value="#">  
         <h:outputText value="XXXX"></h:outputText>  
     </h:outputLink>  
     <p:tooltip for="lnk"> 
-     <p:panel id="display" header="CompanyAddress" style="margin-top:10px;">  
+     <p:panel id="display" header="#{lbl['lbl.so.suppliername']}" style="margin-top:10px;">  
         <h:panelGrid columns="2">  
             <h:outputText value="Address: " />  
             <h:outputText id="txt1" value="CyberJaya" />               
@@ -35,18 +32,18 @@
 
 				</p:column>
 
-				<p:column headerText="MOF No">
+				<p:column headerText="#{lbl['lbl.so.mofno']}">
 				<h:outputText value="Mof001"></h:outputText>
 				</p:column>
 						
 
-<p:column headerText="MOF Expiry Date">
+<p:column headerText="#{lbl['lbl.so.mofexp']}">
 				<h:outputText value="05/09/2013"></h:outputText>
 				</p:column>
 				
 				
 			
-				<p:column headerText="Status">
+				<p:column headerText="#{lbl['lbl.so.status']}">
 				<h:outputText value="Active/Expired"></h:outputText>
 				</p:column>
 				
@@ -57,15 +54,18 @@
 	
 		</p:panel>
 		
-		<p:dialog header="Search Supplier" widgetVar="suppdlg" modal="true" appendToBody="true" width="800" height="400">
+		<p:dialog header="Search Supplier" widgetVar="suppdlg" modal="true"  width="800" height="400">
 		
 		
 				
 			<p:panel header="Category Code List" toggleable="true">	
-				<p:dataTable value="#{qTSupplierQulCriteriaBackingBean.managedBean.openCategorys}"
-			var="ccode" resizableColumns="true" editable="true" styleClass="myCatList">
-			<p:column headerText="Category Code">
+						<p:dataTable value="#{qTSupplierQulCriteriaBackingBean.managedBean.restrictedCategorys}"
+			var="ccode" resizableColumns="true" editable="true" >
+  
 				
+
+				<p:column headerText="#{lbl['lbl.so.category']}">
+				<p:cellEditor>
 					<f:facet name="output">
 						<h:outputText value="#{ccode.pmCategoryL1.categoryL1Id}" />
                 </f:facet>
@@ -97,46 +97,47 @@
 							<f:selectItems value="#{qTSupplierQulCriteriaBackingBean.managedBean.categoryL3s}" var="catL3Opt" itemLabel="#{catL3Opt.cateogryL3Code}" itemValue="#{catL3Opt.categoryL3Id}"/>
 						</p:selectOneMenu>
 					</f:facet>
-					
+					</p:cellEditor>
 			 </p:column>
-			 <p:column headerText="Mandatory" style="width: 150px;">
-				
+			 <p:column headerText="#{lbl['lbl.so.mandatory']}"  style="width: 150px;">
+				<p:cellEditor>
 					<f:facet name="output">
-						<h:outputText value="#{ccode.isMandatory}" />
+						<h:outputText value="#{ccode.mandatory}" />
 					</f:facet>
 					<f:facet name="input">
 
 						<p:selectManyCheckbox
-							value="#{searchQtnTenderBB.managedBean.selectOptions}">
+							value="#{qTSupplierQulCriteriaBackingBean.managedBean.qtCategory.mandatory}">
 							<f:selectItem itemLabel="yes" />
 							<f:selectItem itemLabel="no" />
 
 						</p:selectManyCheckbox>
 					</f:facet>
-				
+				</p:cellEditor>
 
 			</p:column>
-     		
+     		<p:column style="width:6%">
+				<p:rowEditor />
+			</p:column>
+			</p:dataTable>
+			
+			
+			
+				<p:panelGrid columns="2" style="width:100%;" styleClass="noBorders tr,noBorders td" >
+			
+			<h:outputLabel  value="#{lbl['lbl.so.paidup']}" />
+			<p:inputText  value="#{qTSupplierQulCriteriaBackingBean.managedBean.qtCriteria.paidUpCaptial}"/>
+           
+<h:outputLabel value="#{lbl['lbl.so.companyname']}" />
+			<p:inputText value="#{qTSupplierQulCriteriaBackingBean.managedBean.searchSupplier.pmOrgProfile.orgName}"/>
 
-		</p:dataTable>
-			
-			
-			
-				<p:panelGrid columns="2" style="width:100%;" styleClass="noBorders tr,noBorders td">
-			
-			<h:outputText  value="Paid Up Capital(MYR)" />
-			<p:inputText  value="#{searchQtnTenderBB.managedBean.qtno}"/>
-
-<h:outputText value="Company Name" />
-			<p:inputText value="#{searchQtnTenderBB.managedBean.qtno}"/>
-
-<h:outputText value="MOF No " />
-			<p:inputText  value="#{searchQtnTenderBB.managedBean.qtno}"/>
+<h:outputLabel value="#{lbl['lbl.so.mofno']}" />
+			<p:inputText  value="#{qTSupplierQulCriteriaBackingBean.managedBean.smMofAccounts[0].mofNo}"/>
 				
 			</p:panelGrid>
 			
 			<p:commandButton  value="#{lbl['lbl.so.searchbtn']}"
-			styleClass="apply_button" style="float:right;" >
+			styleClass="apply_button" style="float:right;" id="restrictSupplier" action="#{qTSupplierQulCriteriaBackingBean.searchQtPanelSupplier}" update="restrictedsupplier">
 		</p:commandButton>
 		
 				<br/>
@@ -144,19 +145,20 @@
 		</p:panel>
 			<p:panel header="Supplier List" toggleable="true">
 		<p:panelGrid columns="2" style="width:100%;"
-			styleClass="noBorders tr,noBorders td">
+			id="restrictedsupplier" styleClass="noBorders tr,noBorders td">
 			
-			<p:dataTable value="#{searchQtnTenderBB.managedBean.categories}" var="ccode" resizableColumns="true"
-				>
-				<p:column headerText="No.">
-				<h:outputText value="S001"></h:outputText>
-					
-				</p:column>
+			<p:dataTable value="#{qTSupplierQulCriteriaBackingBean.managedBean.smSupplierList}" var="supplier" resizableColumns="true" id="ressupplier"
+				selection="#{qTSupplierQulCriteriaBackingBean.managedBean.selectedrestircedsupplier}"
+				rowKey="#{supplier}" rowIndexVar="rowIndex"
+				rows="10">
+				<p:column selectionMode="multiple" style="width:2%" />
+				<ac:paginator for="ressupplier" />
+				
 
-				<p:column headerText="CompanyName">
+				<p:column headerText="#{lbl['lbl.so.suppliername']}">
 				
 				<h:outputLink id="lnk1" value="#">  
-        <h:outputText value="XXXX"></h:outputText>  
+        <h:outputText value="#{supplier.pmOrgProfile.orgName}"></h:outputText>  
     </h:outputLink>  
     <p:tooltip for="lnk1"> 
      <p:panel header="CompanyAddress" style="margin-top:10px;">  
@@ -172,25 +174,25 @@
 				
 				</p:column>
 
-				<p:column headerText="MOF No">
-				<h:outputText value="Mof001"></h:outputText>
+				<p:column headerText="#{lbl['lbl.so.mofno']}">
+				<h:outputText value="#{supplier.smMofAccounts[0].mofNo}"></h:outputText>
 				</p:column>
 	
-<p:column headerText="MOF Expiry Date">
-				<h:outputText value="05/09/2013"></h:outputText>
+<p:column headerText="#{lbl['lbl.so.mofexp']}">
+				<h:outputText value="#{supplier.smMofAccounts[0].expDate}"></h:outputText>
 				</p:column>
 			
-				<p:column headerText="Status">
-				<h:outputText value="Active/Expired"></h:outputText>
+				<p:column headerText="#{lbl['lbl.so.status']}">
+				<h:outputText value="#{supplier.smMofAccounts[0].statusId}"></h:outputText>
 				</p:column>
 				
 			</p:dataTable>
 </p:panelGrid>
 
 <div>           
-<p:commandButton value="CANCEL" style="float:right;" oncomplete="suppdlg.hide()">
+<p:commandButton value="#{lbl['lbl.so.cancelbtn']}" style="float:right;" oncomplete="suppdlg.hide()">
 </p:commandButton>
-<p:commandButton value="OK" style="float:right;" oncomplete="suppdlg.hide()">
+<p:commandButton value="#{lbl['lbl.so.okbtn']}" style="float:right;" oncomplete="suppdlg.hide()">
 </p:commandButton>
 </div> 
 </p:panel>
