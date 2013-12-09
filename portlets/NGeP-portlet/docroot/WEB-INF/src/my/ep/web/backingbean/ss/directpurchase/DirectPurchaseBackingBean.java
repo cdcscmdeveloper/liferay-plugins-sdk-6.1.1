@@ -94,6 +94,7 @@ public class DirectPurchaseBackingBean extends BaseBackingBean<DirectPurchaseMan
 		//change status to pending approval
 		PmStatus	status	=	new	PmStatus();
 		status.setStatusId(SourcingConstants.REQUEST_LIST_PENDING_APPROVAL);
+		requestList.setPmStatus(status);
 		requestListReqDTO.setRequestListDetail(requestList);
 		RequestListResDTO requestListResDTO = directPurchaseSO.saveRequestList(requestListReqDTO);
 		//submit BPM task
@@ -101,7 +102,7 @@ public class DirectPurchaseBackingBean extends BaseBackingBean<DirectPurchaseMan
 		getManagedBean().setTaskId(res.getTaskId());
 		this.getManagedBean().setRequestList(requestListResDTO.getRequestListDetail());
 		log.info("finish save request List, return directPurchase");
-		return "directPurchase";
+		return "/xhtml/shared/acknowledge.xhtml";
 	}
 
 	public String saveRequestList(String action) {
@@ -121,7 +122,7 @@ public class DirectPurchaseBackingBean extends BaseBackingBean<DirectPurchaseMan
 		getManagedBean().setTaskId(res.getTaskId());
 		this.getManagedBean().setRequestList(requestListResDTO.getRequestListDetail());
 		log.info("finish save request List, return directPurchase");
-		return "directPurchase";
+		return "/xhtml/shared/acknowledge.xhtml";
 	}
 	
 	public String	simpleQuoteBid(){
@@ -183,6 +184,7 @@ public class DirectPurchaseBackingBean extends BaseBackingBean<DirectPurchaseMan
 		Object obj = res.getPojo();
 		
 		SCDirectPurchaseDataType directPurchaseDataType = (SCDirectPurchaseDataType)obj;
+		getManagedBean().setOutComes(res.getAction());
 		if("SQ".equalsIgnoreCase(directPurchaseDataType.getDpMode())){
 			IQuoteBidSO quoteBidSO = (IQuoteBidSO) BusinessDelegate.getInstance().getServiceObject(SourcingConst.SOURCING_MODULE, IQuoteBidSO.class);
 			QuoteBidReqDTO	quoteBidReqDTO	=	new QuoteBidReqDTO();
@@ -239,7 +241,8 @@ public class DirectPurchaseBackingBean extends BaseBackingBean<DirectPurchaseMan
 		requestListReqDTO.setRequestListDetail(requestList);
 		//save	request	list
 		RequestListResDTO requestListResDTO = directPurchaseSO.saveRequestList(requestListReqDTO);
-		//TODO handle by Inbox, impl later
+		BpmResponseDTO res = createBPMTask(requestListResDTO, false);
+		getManagedBean().setTaskId(res.getTaskId());
 		
 	}
 	public void addRemark() {
@@ -297,6 +300,8 @@ public class DirectPurchaseBackingBean extends BaseBackingBean<DirectPurchaseMan
 		catalogueBackingBean.getManagedBean().getCartList().clear();
 		//TODO maybe have to merge RequestListItem with the existing requestListItem in RequestList
 		getManagedBean().getRequestList().getRequestItems().addAll(requestListItems);
+		//for grouping
+		getManagedBean().getItems().getSource().addAll(requestListItems);
 		return "directPurchase";
 	}
 	public	void	simpleQuoteAction(){
@@ -390,5 +395,9 @@ public class DirectPurchaseBackingBean extends BaseBackingBean<DirectPurchaseMan
 		reqDTO.setPojo(obj);
 		BpmResponseDTO res = bpmSO.initiateAndUpdateTask(reqDTO);
 		return res;
+	}
+	public	String	updateBpmTask(String action){
+		//
+		return null;
 	}
 }

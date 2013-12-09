@@ -8,49 +8,7 @@
 
 	<p:dialog header="GroupItem" widgetVar="groupItem" modal="true"
 		width="800" height="500">
-		<p:panel header="#{lbl['lbl.ss.simple.quote.purchase.group.panel']}">
-
-			<p:dataTable var="simpleQuote"
-				value="#{directPurchaseBackingBean.managedBean.requestList.requestItems}"
-				selection="#{simpleQuoteBidBackingBean.managedBean.selectedUtilList}"
-				rowKey="#{simpleQuote.seqNo}" rowIndexVar="index" editable="true">
-
-				<p:ajax event="rowEdit" listener="#{searchQtnTenderBB.onEdit}" />
-				<p:ajax event="rowEditCancel"
-					listener="#{searchQtnTenderBB.onCancel}" />
-
-				<p:column
-					headerText="#{lbl['lbl.ss.simple.quote.purchase.group.seq.no']}"
-					style="width:10%">
-
-
-					<h:outputText value="#{index+1}"></h:outputText>
-
-				</p:column>
-				<p:column
-					headerText=" #{lbl['lbl.ss.simple.quote.purchase.group.item.name']}"
-					style="width:70%">
-
-
-					<h:outputText value="#{simpleQuote.description}"></h:outputText>
-
-				</p:column>
-				<p:column headerText="#{lbl['lbl.ss.simple.quote.item.action']}"
-					style="width:20%">
-					<p:rowEditor />
-				</p:column>
-			</p:dataTable>
-			<div align="right">
-				<p:commandButton
-					value="#{lbl['lbl.ss.simple.quote.purchase.group.btn.add.group']}" />
-
-			</div>
-			<p:separator style="width:100%;height:1%"></p:separator>
-		</p:panel>
-
-
 		<p:panel>
-
 			<p:panelGrid style="width:50%;"
 				styleClass="noBorders tr,noBorders td">
 
@@ -62,28 +20,19 @@
 					<p:column>
 						<p:inputText></p:inputText>
 					</p:column>
-
-
 				</p:row>
 			</p:panelGrid>
 
-			<p:pickList id="pickList" value="#{simpleQuoteBidBackingBean.items}"
-				var="city" itemLabel="#{city}" itemValue="#{city}"
+			<p:pickList id="pickListGroupItem"
+				value="#{directPurchaseBackingBean.managedBean.items}" converter="sourcingItemConverter"
+				var="item" itemLabel="#{item.itemName}" itemValue="#{item}"
 				style="width:70%;height:30%" />
-
-			<div align="right">
-				<p:commandButton
-					value="#{lbl['lbl.ss.simple.quote.purchase.group.btn.add']}" />
-
-			</div>
+			
 			<p:separator style="width:100%;height:1%"></p:separator>
-
 		</p:panel>
-
 		<p:commandButton
 			value="#{lbl['lbl.ss.simple.quote.purchase.group.btn.confirm']}"
 			style="float:right;" onclick="groupItem.hide();"></p:commandButton>
-				&#160;&#160;
 				<p:commandButton
 			value="#{lbl['lbl.ss.simple.quote.purchase.btn.cancel']}"
 			style="float:right;" onclick="groupItem.hide();"></p:commandButton>

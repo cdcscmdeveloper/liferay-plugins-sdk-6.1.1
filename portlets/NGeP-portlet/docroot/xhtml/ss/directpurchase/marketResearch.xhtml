@@ -62,7 +62,7 @@
 		header="#{lbl['lbl.ss.panel.title.market.research']}"
 		toggleable="true" toggleSpeed="500">
 		<div align="right" id="div_j111">
-			<p:button disabled="#{directPurchaseBackingBean.managedBean.requestList.pmStatus.statusId ge SourcingConstants.requestListPendingApproval}" value="#{lbl['lbl.ss.action.search.catelogue']}" outcome="/xhtml/ss/directpurchase/searchCatalogue.xhtml"/>
+			<p:button rendered="#{directPurchaseBackingBean.managedBean.requestList.pmStatus.statusId lt SourcingConstants.requestListPendingApproval}" value="#{lbl['lbl.ss.action.search.catelogue']}" outcome="/xhtml/ss/directpurchase/searchCatalogue.xhtml"/>
 			<p:commandButton disabled="#{directPurchaseBackingBean.managedBean.requestList.pmStatus.statusId gt SourcingConstants.requestListRecommendedSupplier}" value="#{lbl['lbl.ss.action.simple.quote']}" actionListener="#{directPurchaseBackingBean.simpleQuoteAction}"
 				oncomplete="simpleQuoteBid.show();" />
 			<p:commandButton disabled="#{directPurchaseBackingBean.managedBean.requestList.pmStatus.statusId gt SourcingConstants.requestListRecommendedSupplier}" value="#{lbl['lbl.ss.action.simple.bid']}" actionListener="#{directPurchaseBackingBean.simpleBidAction}"
@@ -148,13 +148,12 @@
 				<TD width="50%">
 				</TD>
 				<TD width="30%" align="right">
-					<p:commandButton value="#{lbl['lbl.ss.action.apply']}" process="@all" action="#{directPurchaseBackingBean.applyRecommend}" update="@all"/>
 				</TD>
 			</TR>
 		</table>
 		</p:panel>
 		<h:panelGrid width="100%" style="margin-top:20px" rendered="#{!directPurchaseBackingBean.managedBean.multipleRecommend}">
-			<p:dataTable id="recommendSupplierItemTable" width="100%" cellpadding="1" rowIndexVar="rowIndex"
+			<p:dataTable id="recommendSupplierItemTable" width="100%" cellpadding="1" rowIndexVar="rowIndex" 
 				value="#{directPurchaseBackingBean.managedBean.requestSupplierItems}" rowKey="#{supplierItem.cmSupplierItem.supplierItemId}"
 				var="supplierItem" selection="#{directPurchaseBackingBean.managedBean.recommededRequestSupplierItem}" rendered="#{!directPurchaseBackingBean.managedBean.multipleRecommend}">
 				<p:columnGroup type="header">
@@ -208,7 +207,8 @@
 							actionListener="#{directPurchaseBackingBean.prInquiryListener(supplierItem)}">Inquiry
 				            	</p:commandLink>
 					</p:column>
-					<p:column selectionMode="single" style="width:2%" />
+					<p:column selectionMode="single" style="width:2%" /> 
+						<p:ajax event="rowSelectRadio" listener="#{directPurchaseBackingBean.applyRecommend}" update="@([id$=requestItemDataTable])"/>
 			</p:dataTable>
 		</h:panelGrid>
 		<div align="right">
@@ -218,5 +218,5 @@
 	</p:panel>
 	<ui:include src="/xhtml/ss/directpurchase/simpleQuoteBid.xhtml" />
 	<ui:include src="/xhtml/ss/directpurchase/prInquiry.xhtml" />
-	<!-- ui:include src="/xhtml/ss/directpurchase/groupItem.xhtml" /	-->
+	<ui:include src="/xhtml/ss/directpurchase/groupItem.xhtml" />
 </ui:composition>

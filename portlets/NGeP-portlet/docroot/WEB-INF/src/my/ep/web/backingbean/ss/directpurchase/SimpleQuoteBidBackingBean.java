@@ -1,6 +1,7 @@
 package my.ep.web.backingbean.ss.directpurchase;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -12,17 +13,17 @@ import my.ep.biz.service.ss.directpurchase.IQuoteBidSO;
 import my.ep.bpm.dto.BpmRequestDTO;
 import my.ep.bpm.dto.BpmResponseDTO;
 import my.ep.bpm.service.IBpmSO;
+import my.ep.constant.ss.SourcingConstants;
 import my.ep.constants.SCProcessNameConst;
 import my.ep.dto.ss.directpurchase.QuoteBidReqDTO;
 import my.ep.dto.ss.directpurchase.QuoteBidResDTO;
-import my.ep.dto.ss.directpurchase.RequestListResDTO;
 import my.ep.jaxb.sc.directpurchasedata.SCDirectPurchaseDataType;
 import my.ep.persistence.entity.pm.common.PmCity;
 import my.ep.persistence.entity.pm.common.PmDistrict;
 import my.ep.persistence.entity.pm.common.PmDivision;
 import my.ep.persistence.entity.pm.common.PmState;
-import my.ep.persistence.entity.ss.directpurchase.ScApprovalUser;
 import my.ep.persistence.entity.ss.directpurchase.ScBusinessNatureQuoteBidCriteria;
+import my.ep.persistence.entity.ss.directpurchase.ScQBZone;
 import my.ep.persistence.entity.ss.directpurchase.ScRequestListItem;
 import my.ep.util.lookupservice.EpBpmBusinessDelegate;
 import my.ep.web.backingbean.BaseBackingBean;
@@ -87,11 +88,30 @@ public class SimpleQuoteBidBackingBean extends BaseBackingBean<SimpleQuoteBidMan
 		getManagedBean().setScQuoteBid(reqDTO.getQuoteBidDtl());
 		createBPMTask(true);
 	}
-	public String updateZoneLocation() {
-		getManagedBean().getZoneTrees().add(
-				LocationSingleton.getInstance().buildZoneTree(getSelectedTreeNode()));
+	public void updateZoneLocation() {
+		List<LocationDTO>	locationDTOs	=	new ArrayList<LocationDTO>();
+		//TreeNode[]	listSelectedTreeNode	=	getManagedBean().getSelectedNodes().clone();
+		if (getManagedBean().getSelectedNodes() != null) {
+			for (TreeNode treeNode : getManagedBean().getSelectedNodes()) {
+				if (!treeNode.getParent().isSelected()) {
+					LocationDTO	locationDTO	=	(LocationDTO)treeNode.getData();
+					locationDTOs.add(locationDTO);
+				}
+			}
+		}
+		ScQBZone zone = new ScQBZone();
+		zone.setZoneName(getManagedBean().getZoneName());
+		getManagedBean().setZoneName(null);
+		
+		List<PmState>	states	=	SourcingLocationHelper.getStateFromLocationDTOs(locationDTOs);
+		List<PmDivision>	divisions	=	SourcingLocationHelper.getDivisionFromLocationDTOs(locationDTOs);
+		List<PmDistrict>	districts	=	SourcingLocationHelper.getDistrictFromLocationDTOs(locationDTOs);
+		List<PmCity>	cities	=	SourcingLocationHelper.getCityFromLocationDTOs(locationDTOs);
+		
+		getManagedBean().getZoneTrees().add(LocationSingleton.getInstance().buildZoneTree(zone, states, districts, divisions, cities));
+		getManagedBean().setRootLocationTree(LocationSingleton.getInstance().buildLocationTree(1L, null, null, null, null));
 		getManagedBean().setActiveTabIndex(1);
-		return "createSimpleQuoteBid";
+		//return "createSimpleQuoteBid";
 	}
 
 	public void addBusinessNature() {
@@ -117,23 +137,6 @@ public class SimpleQuoteBidBackingBean extends BaseBackingBean<SimpleQuoteBidMan
 	public void addItem() {
 		ScRequestListItem item = new ScRequestListItem();
 		getManagedBean().getQuoteBidItems().add(item);
-	}
-	private	Map<String,List<TreeNode>>	getSelectedTreeNode(){
-		Map<String,List<TreeNode>>	results	=	new HashMap<String, List<TreeNode>>();
-		List<TreeNode>	listTreeNode	=	new ArrayList<>();
-		//TreeNode[]	listSelectedTreeNode	=	getManagedBean().getSelectedNodes().clone();
-		if (getManagedBean().getSelectedNodes() != null) {
-			for (TreeNode treeNode : getManagedBean().getSelectedNodes()) {
-				if (!treeNode.getParent().isSelected()) {
-					TreeNode	tmpTreeNode	=	new DefaultTreeNode(treeNode.getData(), treeNode.getParent());
-					listTreeNode.add(tmpTreeNode);
-				}
-			}
-		}
-		results.put(getManagedBean().getZoneName(), listTreeNode);
-		//Reset manage bean
-		getManagedBean().setZoneName("");
-		return results;
 	}
 	private	List<LocationDTO>	getLocations(TreeNode zoneLocation){
 		List<LocationDTO> results	=	new ArrayList<LocationDTO>();
@@ -163,11 +166,16 @@ public class SimpleQuoteBidBackingBean extends BaseBackingBean<SimpleQuoteBidMan
 			obj.getSuppliers().clear();
 			//TODO hardcode supplier user to test BPM flow
 			obj.getSuppliers().add("user011");
-			if(getManagedBean().getScQuoteBid().getIsQuote() == 1){
+			if(SourcingConstants.CREATE_SIMPLE_QUOTE.equalsIgnoreCase(getManagedBean().getAction())){
 				obj.setDpMode("SQ");
 			}else{
 				obj.setDpMode("SB");
 			}
+			/*if(getManagedBean().getScQuoteBid().getIsQuote() == 1){
+				obj.setDpMode("SQ");
+			}else{
+				obj.setDpMode("SB");
+			}*/
 			reqDTO.setOutcome("SUBMIT");
 		}
 		if(getManagedBean().getTaskId() != null){

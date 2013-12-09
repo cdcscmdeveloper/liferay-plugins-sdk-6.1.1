@@ -8,8 +8,7 @@
 		<h:panelGrid width="100%" style="margin-top:20px">
 			<p:dataTable id="zoneLocationDataTable" value="#{simpleQuoteBidBackingBean.managedBean.zoneTrees}" var="zoneTree">
 				<p:column headerText="Location">
-					<p:tree value="#{zoneTree}"
-							var="location" >
+					<p:tree value="#{zoneTree}" var="location" datakey="location.rowKey">
 							<p:treeNode>
 								<h:outputText value="#{location.locationName}" />
 							</p:treeNode>

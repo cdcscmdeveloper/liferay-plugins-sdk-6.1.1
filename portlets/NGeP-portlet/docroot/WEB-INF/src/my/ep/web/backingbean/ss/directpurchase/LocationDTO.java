@@ -20,6 +20,7 @@ public class LocationDTO implements Serializable{
 	private	PmCity	city;
 	private	PmDivision division;
 	private	String	locationName;
+	private	int rowKey;
 	
 	public LocationDTO() {
 		super();
@@ -109,6 +110,21 @@ public class LocationDTO implements Serializable{
 		this.zone = zone;
 	}
 	
+	public int getRowKey() {
+		final int prime = 31;
+		int result = 1;
+		result = rowKey + prime * result;
+		result = prime * result + ((locationName == null) ? 0 : locationName.hashCode());
+		result = prime * result + ((zone == null) ? 0 : zone.hashCode());
+		result = prime * result + ((state == null) ? 0 : state.hashCode());
+		result = prime * result + ((district == null) ? 0 : district.hashCode());
+		result = prime * result + ((division == null) ? 0 : division.hashCode());
+		result = prime * result + ((city == null) ? 0 : city.hashCode());
+		return result;
+	}
+	public void setRowKey(int rowKey) {
+		this.rowKey = rowKey;
+	}
 	@Override
 	public int hashCode() {
 		final int prime = 31;

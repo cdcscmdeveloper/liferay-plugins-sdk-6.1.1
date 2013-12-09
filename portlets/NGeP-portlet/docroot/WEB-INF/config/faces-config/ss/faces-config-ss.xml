@@ -47,6 +47,10 @@
 		<converter-id>justificationTypeConverter</converter-id>
 		<converter-class>my.ep.web.ss.converter.JustificationTypeConverter</converter-class>
 	</converter>
+	<converter>
+		<converter-id>sourcingItemConverter</converter-id>
+		<converter-class>my.ep.web.ss.converter.SourcingItemPickListConverter</converter-class>
+	</converter>
 	<managed-bean>
 		<description>Sourcing Constants</description>
 		<managed-bean-name>SourcingConstants</managed-bean-name>

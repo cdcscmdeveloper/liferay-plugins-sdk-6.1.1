@@ -34,7 +34,8 @@
 			</table>
 		</p:panel>
 		<p:commandButton value="#{lbl['lbl.ss.simple.quote.purchase.btn.ok']}" style="float:right;"
-			onclick="ZoneLocation.hide();" process="@all" action="#{simpleQuoteBidBackingBean.updateZoneLocation}"></p:commandButton>
+			onclick="ZoneLocation.hide();" process="@all" update="zoneLocationDataTable,zonePopupPanel" actionListener="#{simpleQuoteBidBackingBean.updateZoneLocation}">
+		</p:commandButton>
 				&#160;&#160;
 		<p:commandButton value="#{lbl['lbl.ss.simple.quote.purchase.btn.cancel']}" style="float:right;"
 			onclick="ZoneLocation.hide();"></p:commandButton>

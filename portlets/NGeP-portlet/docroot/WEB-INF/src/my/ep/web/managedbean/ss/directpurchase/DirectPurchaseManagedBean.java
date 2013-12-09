@@ -61,6 +61,7 @@ public class DirectPurchaseManagedBean extends BaseManagedBean{
 	private	List<PmUser>	availableApprover;
 	private	List<PmUser>	selectedApprover;
 	private	DualListModel<PmUser>	approvalUsers;
+	private	DualListModel<ScRequestListItem>	items = new DualListModel<ScRequestListItem>();
 	private	List<PmUser>	govUsers	=	new ArrayList<>();
 	private	String	fulfillmentType;
 	private	Long	assignedToUserId;
@@ -379,5 +380,11 @@ public class DirectPurchaseManagedBean extends BaseManagedBean{
 	}
 	public void setSelectedRemarks(List<ScDpRemark> selectedRemarks) {
 		this.selectedRemarks = selectedRemarks;
+	}
+	public DualListModel<ScRequestListItem> getItems() {
+		return items;
+	}
+	public void setItems(DualListModel<ScRequestListItem> items) {
+		this.items = items;
 	}
 }

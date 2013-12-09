@@ -10,7 +10,7 @@
 		toggleSpeed="500">
 		<div style="width: 100%">
 			<p:pickList value="#{directPurchaseBackingBean.managedBean.approvalUsers}" var="approverUser"
-				showSourceFilter="true" showTargetControls="true" itemLabel="#{approverUser.userName}"
+				showTargetControls="true" itemLabel="#{approverUser.userName}"
 				itemValue="#{approverUser}" converter="approverConverter">
 				<f:facet name="sourceCaption">Available</f:facet>
 				<f:facet name="targetCaption">Selected</f:facet>
