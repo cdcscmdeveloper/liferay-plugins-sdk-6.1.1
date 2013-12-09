@@ -18,7 +18,7 @@ import org.apache.log4j.Logger;
  * @author Viswanath
  * 
  */
-@ManagedBean(name = "sPDetailMB")
+@ManagedBean(name = "sPDetailManagedBean")
 @SessionScoped
 public class SPDetailManagedBean extends BaseManagedBean {
 
@@ -34,6 +34,7 @@ public class SPDetailManagedBean extends BaseManagedBean {
 	private List<ScQtProposalChecklist> selectedCheckDetails;
 	
 	private ScQtProposalChecklist selectDetails;
+	public boolean checkStatus=true;
 	
 	//payLoad object Added By Vidyasagar.
 	private Object proposalData;
@@ -43,6 +44,20 @@ public class SPDetailManagedBean extends BaseManagedBean {
 	private List<ScAttachment> scAttachmentList; 
 	public SPDetailManagedBean() {
 		log.info("inside ");
+	}
+
+	/**
+	 * @return the checkStatus
+	 */
+	public boolean isCheckStatus() {
+		return checkStatus;
+	}
+
+	/**
+	 * @param checkStatus the checkStatus to set
+	 */
+	public void setCheckStatus(boolean checkStatus) {
+		this.checkStatus = checkStatus;
 	}
 
 	/**
