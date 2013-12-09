@@ -5,7 +5,9 @@ package my.ep.web.backingbean.ct.circular.panel;
 
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
@@ -39,10 +41,12 @@ import my.ep.persistence.entity.ct.circular.CtCircularVer;
 import my.ep.persistence.entity.ct.circular.dtl.CtCancelCircular;
 import my.ep.persistence.entity.ct.circular.dtl.CtContactPerson;
 import my.ep.persistence.entity.ct.circular.panel.CtPanelItem;
+import my.ep.persistence.entity.ct.circular.panel.CtPanelItemSpec;
 import my.ep.persistence.entity.ct.circular.panel.CtPanelState;
 import my.ep.persistence.entity.ct.circular.panel.CtPanelSupplier;
 import my.ep.persistence.entity.ct.circular.panel.CtPanelZone;
-import my.ep.persistence.entity.pm.authorization.PmOrgProfile;
+import my.ep.persistence.entity.pm.authorization.PmUser;
+import my.ep.persistence.entity.pm.authorization.PmUserGroup;
 import my.ep.persistence.entity.pm.authorization.PmUserGroupUser;
 import my.ep.persistence.entity.pm.common.PmCode;
 import my.ep.persistence.entity.pm.common.PmState;
@@ -54,6 +58,7 @@ import my.ep.web.backingbean.ct.ContractBackingBean;
 import my.ep.web.bean.paginator.IPagingDataModel;
 import my.ep.web.bean.paginator.PagingDataModel;
 import my.ep.web.managedbean.ct.circular.panel.PanelManagedBean;
+import my.ep.web.util.FacesScopes;
 import my.ep.web.util.lookupservice.BusinessDelegate;
 
 import org.apache.log4j.Logger;
@@ -85,36 +90,57 @@ public class PanelBackingBean extends BaseBackingBean<PanelManagedBean>{
 			ContractBackingBean ctBB = new ContractBackingBean();
 			ctBB.initializeRemarkAndAttachement(getManagedBean().getRemarkList(), getManagedBean().getAttachmentList());
 		}
-		if(getManagedBean().getApproverModel()==null) {
-			List<String> source = getAvailableApproverList();  
-	        List<String> target = new ArrayList<String>();  
-	        getManagedBean().setApproverModel(new DualListModel<String>(source, target));
+		if(getManagedBean().getUserGroupMap()==null) {
+			initializeApproverGroup();
 		}
 		if(getManagedBean().getCircularDocType()==null) {
 			getManagedBean().setCircularDocType(ContractConst.CIRCULAR_DOC_TYPE_PANEL);
 		}
 	}
 	
-	private List<String> getAvailableApproverList() {
-		List<String> availableApprovers = new ArrayList<String>(); 
+	private void initializeApproverGroup() {
 		IUserSO userSO = null;
 		try {
 			userSO = (IUserSO)BusinessDelegate.getInstance().getServiceObject("pm",IUserSO.class);
 			
 			UserReqDTO reqDTO = new UserReqDTO();
-			//TODO
-			reqDTO.setOrgProfileId(1250l);
-			UserResDTO resDTO = userSO.retrieveUserGroupList(reqDTO);
-			for(PmUserGroupUser user : resDTO.getUserGroupList().get(0).getPmUserGroupUsers()) {
-				availableApprovers.add(user.getPmUser().getUserName());
+			FacesScopes facesScopes = new FacesScopes();
+			reqDTO.setUserId(facesScopes.getUserSessionBean().getUserId());
+			UserResDTO resDTO = userSO.retrieveUserOrgListByUserId(reqDTO);
+			
+			reqDTO.setOrgProfileId(resDTO.getUserOrgList().get(0).getPmOrgProfile().getOrgProfileId());
+			resDTO = userSO.retrieveUserGroupList(reqDTO);
+			
+			if(getManagedBean().getCircularVer().getPmUserGroup()==null) {
+				PmUserGroup pmUserGroup = new PmUserGroup();
+				getManagedBean().getCircularVer().setPmUserGroup(pmUserGroup);
+			}
+			if(getManagedBean().getApproverModel()==null) {
+				List<String> source = new ArrayList<String>(); 
+		        List<String> target = new ArrayList<String>();  
+		        getManagedBean().setApproverModel(new DualListModel<String>(source, target));
+			}			
+			
+			getManagedBean().setUserGroupMap(new HashMap<Long, PmUserGroup>());
+			int i = 0;
+			for(PmUserGroup userGroup : resDTO.getUserGroupList()) {
+				getManagedBean().getUserGroupMap().put(userGroup.getUserGroupId(), userGroup);
+				if(i==0) {
+					getManagedBean().getCircularVer().getPmUserGroup().setUserGroupId(userGroup.getUserGroupId());
+					List<String> source = new ArrayList<String>();
+					for(PmUserGroupUser user : userGroup.getPmUserGroupUsers()) {
+						source.add(user.getPmUser().getUserName());
+					}
+					getManagedBean().getApproverModel().setSource(source);
+				}
+				i++;
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
-			FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR,e.toString(), "Circular save failed."));
+			FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR,e.toString(), e.getMessage()));
 		} finally {
 			userSO = null;
 		}
-		return availableApprovers;
 	}
 	
 	public String saveCircularPanel(String action) {
@@ -130,6 +156,12 @@ public class PanelBackingBean extends BaseBackingBean<PanelManagedBean>{
 				circular.setDocType(ContractConst.CIRCULAR_DOC_TYPE_PANEL);
 			}
 			CtCircularVer circularVer = getManagedBean().getCircularVer();
+			
+			if(!action.equalsIgnoreCase(BpmOutcomeConst.BPM_SAVE) && getManagedBean().getApproverModel().getTarget().size()==0) {
+				FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "Please select at least one approver.",""));
+				return null;
+			}
+			
 			if(circularLetter!=null) {
 				circularVer.setCircularFileName(circularLetter.getFileName());
 				circularVer.setCircularFilePath(circularLetter.getFileName());
@@ -139,14 +171,21 @@ public class PanelBackingBean extends BaseBackingBean<PanelManagedBean>{
 				circularVer.setCircularFilePath("tempPath");
 			}
 			
-			String token = getManagedBean().getToken();
-			if(token==null) {
-				IBpmSO bpmSO = (IBpmSO) EpBpmBusinessDelegate.getInstance().getServiceObject(IBpmSO.class);
-				token = bpmSO.authenticate("roslan", "welcome1");
-				if(token==null) {
-					throw new EpException("BPM token not found");
+			if(circularVer.getCtPanelZones().size()>0) {
+				Map<String, CtPanelZone> panelZoneMap = new HashMap<String, CtPanelZone>();
+				for(CtPanelZone ctPanelZone : circularVer.getCtPanelZones()) {
+					panelZoneMap.put(ctPanelZone.toString(), ctPanelZone);
+				}
+				for(CtPanelItem ctPanelItem : circularVer.getCtPanelItems()) {
+					for(CtPanelSupplier ctPanelSupplier : ctPanelItem.getCtPanelSuppliers()) {
+						if(panelZoneMap.get(ctPanelSupplier.getCtPanelZone().getObjectId())!=null) {
+							ctPanelSupplier.setCtPanelZone(panelZoneMap.get(ctPanelSupplier.getCtPanelZone().getObjectId()));
+						}
+					}
 				}
 			}
+			
+			FacesScopes facesScope = new FacesScopes();
 
 			CircularReqDTO reqDTO = new CircularReqDTO();
 			reqDTO.setSelectedApprovers(getManagedBean().getApproverModel().getTarget());
@@ -156,8 +195,17 @@ public class PanelBackingBean extends BaseBackingBean<PanelManagedBean>{
 			reqDTO.setCircular(circular);
 			reqDTO.setCircularVer(circularVer);
 			reqDTO.setOutcome(action);
-			reqDTO.setToken(token);
+			reqDTO.setToken(facesScope.getBPMAuthenticationCtxToken());
 			reqDTO.setTaskId(getManagedBean().getTaskId());
+			
+			if(circularVer.getPmUserGroup().getUserGroupId()!=null) {
+				PmUserGroup pmUserGroup = getManagedBean().getUserGroupMap().get(circularVer.getPmUserGroup().getUserGroupId());
+				Map<String, PmUser> userMap = new HashMap<String, PmUser>();
+				for(PmUserGroupUser userGroupUser : pmUserGroup.getPmUserGroupUsers()) {
+					userMap.put(userGroupUser.getPmUser().getUserName(), userGroupUser.getPmUser());
+				}
+				reqDTO.setUserMap(userMap);
+			}
 			
 			CircularResDTO resDTO = circularSO.saveCircular(reqDTO);
 			if(resDTO.isSuccessful()) {
@@ -167,14 +215,15 @@ public class PanelBackingBean extends BaseBackingBean<PanelManagedBean>{
 					message = message + ". Update No. : "+circularVer.getUpdateNo();
 				}
 				FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "Record saved successfully.",message));
-				if(!action.equalsIgnoreCase(BpmOutcomeConst.BPM_SAVE)) { // save action will remain in the same page
+				// save action with task ID not null will remain in the same page
+				if(!action.equalsIgnoreCase(BpmOutcomeConst.BPM_SAVE) || 
+					(action.equalsIgnoreCase(BpmOutcomeConst.BPM_SAVE) && getManagedBean().getTaskId()==null)) { 
 					renewSesionObject();
 					return "/xhtml/shared/acknowledge.xhtml";
 				}
 			} else {
 				throw new EpException("Failed.");
 			}
-			
 		} catch (Exception e) {
 			e.printStackTrace();
 			FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR,e.toString(), "Circular save failed."));
@@ -293,12 +342,8 @@ public class PanelBackingBean extends BaseBackingBean<PanelManagedBean>{
 		log.info("PanelBackingBean.addPanelSupplier()");
 		try {
 			CtPanelSupplier panelSupplier = new CtPanelSupplier();
-			// TODO supplir should selected from LOV
-			SmSupplier supplier = new SmSupplier();
-			supplier.setSupplierId(27l);
-			PmOrgProfile factoringOrgProfile = new PmOrgProfile();
-			factoringOrgProfile.setOrgProfileId(1245L);
-			panelSupplier.setSupplier(supplier);
+			panelSupplier.setSupplier(new SmSupplier());
+			panelSupplier.setCtPanelZone(new CtPanelZone());
 			getManagedBean().getSelectedPanelItem().getCtPanelSuppliers().add(panelSupplier);
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -310,6 +355,7 @@ public class PanelBackingBean extends BaseBackingBean<PanelManagedBean>{
 		log.info("PanelBackingBean.deletePanelSupplier()");
 		try {
 			getManagedBean().getSelectedPanelItem().getCtPanelSuppliers().remove(getManagedBean().getSelectedPanelSupplier());
+			getManagedBean().setSelectedPanelSupplier(null);
 		} catch (Exception e) {
 			e.printStackTrace();
 			FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR,e.toString(), e.getMessage()));
@@ -351,10 +397,16 @@ public class PanelBackingBean extends BaseBackingBean<PanelManagedBean>{
 		log.info("PanelBackingBean.deletePanelZone() : "+getManagedBean().getSelectedPanelZone());
 		try {
 			getManagedBean().getCircularVer().getCtPanelZones().remove(getManagedBean().getSelectedPanelZone());
+			getManagedBean().setSelectedPanelZone(null);
+			getManagedBean().setSelectedPanelState(null);
 		} catch (Exception e) {
 			e.printStackTrace();
 			FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR,e.toString(), e.getMessage()));
 		}
+	}
+	
+	public void selectZoneEvent() {
+		getManagedBean().setSelectedPanelState(null);
 	}
 	
 	public void addPanelState(){
@@ -373,6 +425,7 @@ public class PanelBackingBean extends BaseBackingBean<PanelManagedBean>{
 		log.info("PanelBackingBean.deletePanelState()");
 		try {
 			getManagedBean().getSelectedPanelZone().getCtPanelStates().remove(getManagedBean().getSelectedPanelState());
+			getManagedBean().setSelectedPanelState(null);
 		} catch (Exception e) {
 			e.printStackTrace();
 			FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR,e.toString(), e.getMessage()));
@@ -393,7 +446,26 @@ public class PanelBackingBean extends BaseBackingBean<PanelManagedBean>{
 	public void deletePanelItem(){
 		log.info("PanelBackingBean.deletePanelItem() : "+getManagedBean().getSelectedPanelItem());
 		try {
-			this.getManagedBean().getCircularVer().getCtPanelItems().remove(this.getManagedBean().getSelectedPanelItem());
+			getManagedBean().getCircularVer().getCtPanelItems().remove(this.getManagedBean().getSelectedPanelItem());
+			getManagedBean().setSelectedPanelItem(null);
+			getManagedBean().setSelectedPanelSupplier(null);
+		} catch (Exception e) {
+			e.printStackTrace();
+			FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR,e.toString(), e.getMessage()));
+		}
+	}
+	
+	public void selectPanelItemEvent() {
+		getManagedBean().setSelectedPanelSupplier(null);
+	}
+	
+	public void addPanelItemSpec(){
+		log.info("PanelBackingBean.addPanelItemSpec()");
+        try {	
+        	CtPanelItemSpec panelItemSpec = new CtPanelItemSpec();
+        	System.out.println("1###"+getManagedBean().getSelectedPanelItem());
+        	System.out.println("2###"+getManagedBean().getSelectedPanelItem().getCtPanelItemSpecs());
+			getManagedBean().getSelectedPanelItem().getCtPanelItemSpecs().add(panelItemSpec);
 		} catch (Exception e) {
 			e.printStackTrace();
 			FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR,e.toString(), e.getMessage()));
@@ -464,6 +536,67 @@ public class PanelBackingBean extends BaseBackingBean<PanelManagedBean>{
 	    return items;
 	}
 	
+	public SelectItem[] getUserGroupDropdown() {
+		SelectItem[] items = null;
+		try {
+			items = new SelectItem[getManagedBean().getUserGroupMap().values().size()];
+			int i = 0;
+			for(PmUserGroup userGroup : getManagedBean().getUserGroupMap().values()) {
+				items[i++] = new SelectItem(userGroup.getUserGroupId(), userGroup.getGroupName());
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+			FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR,e.toString(), e.getMessage()));
+		}
+	    return items;
+	}
+	
+	public void userGroupChangeListener() {
+		PmUserGroup selectedUserGroup = getManagedBean().getUserGroupMap().get(getManagedBean().getCircularVer().getPmUserGroup().getUserGroupId());
+		List<String> source = new ArrayList<String>(); 
+        List<String> target = new ArrayList<String>();  
+		for(PmUserGroupUser userGroupUser : selectedUserGroup.getPmUserGroupUsers()) {
+			source.add(userGroupUser.getPmUser().getUserName());
+		}
+		getManagedBean().getApproverModel().setSource(source);
+		getManagedBean().getApproverModel().setTarget(target);
+	}
+	
+	public SelectItem[] getPanelZoneDropdown() {
+		SelectItem[] items = null;
+		try {
+		    items = new SelectItem[getManagedBean().getCircularVer().getCtPanelZones().size()+1];
+		    items[0] = new SelectItem(null, "- Select One -");
+		    int i = 1;
+		    for(CtPanelZone panelZone : getManagedBean().getCircularVer().getCtPanelZones()) {
+		    	if(panelZone.getObjectId()==null) {
+		    		panelZone.setObjectId(panelZone.toString());
+		    	}
+		    	items[i++] = new SelectItem(panelZone.getObjectId(), panelZone.getName());
+		    }
+		} catch (Exception e) {
+			e.printStackTrace();
+			FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR,e.toString(), e.getMessage()));
+		}
+	    return items;
+	}
+	
+	// Temporary table. this should replace with supplier lov later
+	public SelectItem[] getPanelSupplierDropdown() {
+		SelectItem[] items = null;
+		try {
+		    items = new SelectItem[4];
+		    items[0] = new SelectItem(0L, "- Select One -");
+		    items[1] = new SelectItem(1L, "ABC News");
+		    items[2] = new SelectItem(2L, "Maxis Malaysia Berhad");
+		    items[3] = new SelectItem(3L, "MDEC malaysia");
+		} catch (Exception e) {
+			e.printStackTrace();
+			FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR,e.toString(), e.getMessage()));
+		}
+	    return items;
+	}
+	
 	public String gotoPage() {
 		String action = FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap().get("action");
 		Long circularVerId = Long.parseLong(FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap().get("circularVerId"));
@@ -476,6 +609,8 @@ public class PanelBackingBean extends BaseBackingBean<PanelManagedBean>{
 			reqDTO.setCircularVerId(circularVerId);
 			
 			CircularResDTO resDTO = null;
+			getManagedBean().setSelectedPanelZone(null);
+			getManagedBean().setSelectedPanelItem(null);
 			if(action.equalsIgnoreCase("view")) {
 				resDTO = circularSO.retrieveCircularVerById(reqDTO);
 				if(resDTO.getCircularVer().getUpdateType()==null) {
@@ -508,6 +643,16 @@ public class PanelBackingBean extends BaseBackingBean<PanelManagedBean>{
 			} else if(action.equalsIgnoreCase("cancel")) {
 				
 			}
+			
+			getManagedBean().getApproverModel().getSource().clear();
+			if(resDTO.getCircularVer().getPmUserGroup()!=null) {
+				for(PmUserGroupUser user : resDTO.getCircularVer().getPmUserGroup().getPmUserGroupUsers()) {
+					getManagedBean().getApproverModel().getSource().add(user.getPmUser().getUserName());
+				}
+			} else {
+				resDTO.getCircularVer().setPmUserGroup(new PmUserGroup());
+			}
+			
 			getManagedBean().getApproverModel().setTarget(resDTO.getApproverList());
 			getManagedBean().getApproverModel().getSource().removeAll(resDTO.getApproverList());
 			getManagedBean().setRemarkList(resDTO.getRemarkList());

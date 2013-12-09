@@ -7,86 +7,74 @@
 	xmlns:ac="http://ac.my/jsf/composite/cc" >
 
 	<p:panel id="zonePnl" header="#{lbl['lbl.ct.pc.panel.zone']}" toggleable="true" toggleSpeed="500" >
-		<p:dataTable id="panelZoneDt" var="data" rowKey="#{data}" rowIndexVar="index" lazy="true"
+		<p:dataTable id="panelZoneDt" var="data" rowKey="#{data}" lazy="true"
 			value="#{panelBackingBean.managedBean.circularVer.ctPanelZones}" selectionMode="single" 
 			selection="#{panelBackingBean.managedBean.selectedPanelZone}" >
 			<ac:paginator for="panelZoneDt" />
-			<p:ajax event="rowSelect" update=":form:tabview:panelStatePnl" />
+			<p:ajax event="rowSelect" update=":form:tabview:panelStatePnl,:form:tabview:deleteZoneBtn" 
+				listener="#{panelBackingBean.selectZoneEvent()}" />
 			<p:columnGroup type="header">
 				<p:row>
-					<p:column style="width:30px" headerText="#{lbl['lbl.ct.pc.no']}" />
 					<p:column style="width:600px" headerText="#{lbl['lbl.ct.pc.zone.name']}" />
-					<p:column style="width:100px" headerText="#{lbl['lbl.ct.pc.action']}" />
 				</p:row>
 			</p:columnGroup>
-			<p:column styleClass="column-align-center">
-				<h:outputText value="#{index+1}" />
-			</p:column>
 			<p:column>
-				<p:inputText value="#{data.name}" style="width:120px;" />
-			</p:column>
-			<p:column styleClass="column-align-center">
-			 <p:commandLink  oncomplete="delZoneDlg.show()" partialSubmit="true" process="@this">
-			    <f:setPropertyActionListener value="#{data}" target="#{panelBackingBean.managedBean.selectedPanelZone}" />
-				<p:graphicImage library="ep/images/design" name="delete.png" value="/resources/ep/images/design/delete.png" title="Delete" />
-		        </p:commandLink>			
+				<p:inputText value="#{data.name}" style="width:200px;" />
 			</p:column>
 		</p:dataTable>
-		<p:confirmDialog message="Do you want to delete the record?" severity="alert" widgetVar="delZoneDlg"
-			closable="true" appendToBody="true" header="Delete Confirmation" >
-			<h:panelGrid columns="2">
-				<p:commandButton value="Yes" icon="ui-icon-accept" update="panelZoneDt" partialSubmit="true" process="@this"
-					 action="#{panelBackingBean.deletePanelZone()}" oncomplete="delZoneDlg.hide();"   /> 
-				<p:commandButton value="No" icon="ui-icon-reject" onclick="delZoneDlg.hide()" type="button" />
-			</h:panelGrid>
-		</p:confirmDialog>	
 		<p:spacer height="2" />
 		<div class="ppRightBtn"> 
 			<p:commandButton value="Add" partialSubmit="false" icon="ui-icon-add"
 				action="#{panelBackingBean.addPanelZone()}" update="panelZoneDt" />
-		</div>
+			<p:commandButton id="deleteZoneBtn" value="Delete" icon="ui-icon-delete" onsuccess="delZoneDlg.show()" 
+				disabled="#{panelBackingBean.managedBean.selectedPanelZone == null}" />				
+		</div>		
+		<p:confirmDialog message="Do you want to delete the record?" severity="alert" widgetVar="delZoneDlg"
+			closable="true" appendToBody="true" header="Delete Confirmation" >
+			<h:panelGrid columns="2">
+				<p:commandButton value="Yes" icon="ui-icon-accept" update=":form:tabview:deleteZoneBtn,:form:tabview:panelStatePnl,panelZoneDt" partialSubmit="true" process="@this"
+					 action="#{panelBackingBean.deletePanelZone()}" oncomplete="delZoneDlg.hide();"   /> 
+				<p:commandButton value="No" icon="ui-icon-reject" onclick="delZoneDlg.hide()" type="button" />
+			</h:panelGrid>
+		</p:confirmDialog>	
 		
 		<p:spacer height="20" />
 		
-		<h:panelGrid id="panelStatePnl" columnClasses="ppRightBtn" >
-			<p:dataTable id="panelStateDt" var="data" lazy="true" rowIndexVar="index"
-				 value="#{panelBackingBean.managedBean.selectedPanelZone.ctPanelStates}">
+		<h:panelGroup id="panelStatePnl">
+			<p:dataTable id="panelStateDt" var="data" rowKey="#{data}" lazy="true" rowIndexVar="index"
+				value="#{panelBackingBean.managedBean.selectedPanelZone.ctPanelStates}" selectionMode="single" 
+				selection="#{panelBackingBean.managedBean.selectedPanelState}" >
 				<ac:paginator for="panelStateDt" /> 
+				<p:ajax event="rowSelect" update=":form:tabview:deleteStateBtn" />
 				<p:columnGroup type="header">
 					<p:row>
-						<p:column style="width:30px" headerText="#{lbl['lbl.ct.pc.no']}" />
 						<p:column style="width:600px" headerText="State" />
-						<p:column style="width:100px" headerText="#{lbl['lbl.ct.pc.action']}" />
 					</p:row>
 				</p:columnGroup>
-				<p:column styleClass="column-align-center">
-					<h:outputText value="#{index+1}" />
-				</p:column>
 				<p:column>
 					<p:selectOneMenu value="#{data.state.stateId}">
+						<p:ajax event="change" process="@this" />
 						<f:selectItems value="#{panelBackingBean.getStateDropdownValues()}" />
 					</p:selectOneMenu>			
 				</p:column>
-				<p:column styleClass="column-align-center">
-				<p:commandLink  oncomplete="delStateDlg.show()" partialSubmit="true" process="@this">
-			       <f:setPropertyActionListener value="#{data}" target="#{panelBackingBean.managedBean.selectedPanelState}" />
-				   <p:graphicImage library="ep/images/design" name="delete.png" value="/resources/ep/images/design/delete.png" title="Delete" />
-		        </p:commandLink>			
-				</p:column>			
 			</p:dataTable>
+			<p:spacer height="2" />
+			<div class="ppRightBtn"> 
+				<p:commandButton value="Add" process="@form" partialSubmit="true" icon="ui-icon-add"
+					disabled="#{panelBackingBean.managedBean.selectedPanelZone == null}"
+					action="#{panelBackingBean.addPanelState()}" update="panelStateDt" />	
+				<p:commandButton id="deleteStateBtn" value="Delete" icon="ui-icon-delete" onsuccess="delStateDlg.show()" 
+					disabled="#{panelBackingBean.managedBean.selectedPanelState == null}" />			
+			</div>							
 			<p:confirmDialog message="Do you want to delete the record?" severity="alert" widgetVar="delStateDlg"
 				closable="true" appendToBody="true" header="Delete Confirmation" >
 				<h:panelGrid columns="2">
-					<p:commandButton value="Yes" icon="ui-icon-accept" update="panelStateDt" partialSubmit="true" process="@this"
+					<p:commandButton value="Yes" icon="ui-icon-accept" update=":form:tabview:deleteStateBtn,panelStateDt" partialSubmit="true" process="@this"
 						 action="#{panelBackingBean.deletePanelState()}" oncomplete="delStateDlg.hide();"   /> 
 					<p:commandButton value="No" icon="ui-icon-reject" onclick="delStateDlg.hide()" type="button" />
 				</h:panelGrid>
 			</p:confirmDialog>	
-			<p:spacer height="2" />
-			<p:commandButton value="Add" process="@form" partialSubmit="true" icon="ui-icon-add"
-				rendered="#{panelBackingBean.managedBean.selectedPanelZone != null}"
-				action="#{panelBackingBean.addPanelState()}" update="panelStateDt" />
-		</h:panelGrid>
+		</h:panelGroup>
 	</p:panel>
 	
 </ui:composition>

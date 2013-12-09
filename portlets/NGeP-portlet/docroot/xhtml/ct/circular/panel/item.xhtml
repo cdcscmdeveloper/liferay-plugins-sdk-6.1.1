@@ -6,98 +6,137 @@
 	xmlns:c="http://java.sun.com/jsp/jstl/core" 
 	xmlns:ac="http://ac.my/jsf/composite/cc" >
 	<p:panel id="itemId" header="#{lbl['lbl.ct.pc.panel.item']}" toggleable="true" toggleSpeed="500">
-		<p:dataTable id="panelItemDt" var="data" rowIndexVar="index" rowKey="#{data}" lazy="true"
+		<p:dataTable id="panelItemDt" var="data" rowKey="#{data}" lazy="true"
 			value="#{panelBackingBean.managedBean.circularVer.ctPanelItems}" selectionMode="single"
 			selection="#{panelBackingBean.managedBean.selectedPanelItem}" >
-			<ac:paginator for="panelItemDt" /> 
-			<p:ajax event="rowSelect" update=":form:tabview:supplierItemPnl" />
+			<ac:paginator for="panelItemDt" />
+			<p:ajax event="rowSelect" 
+				update=":form:tabview:supplierItemPnl,:form:tabview:itemSpecDlg,:form:tabview:viewSpecBtn,:form:tabview:deleteItemBtn" 
+				listener="#{panelBackingBean.selectPanelItemEvent()}" />
 			<p:columnGroup type="header">
 				<p:row>
-					<p:column style="width:30px" headerText="#{lbl['lbl.ct.pc.no']}" />
-					<p:column style="width:150px" headerText="#{lbl['lbl.ct.pc.item.name']}" />
-					<p:column style="width:450px" headerText="Description" />
-					<p:column style="width:150px" headerText="Specification" />
-					<p:column style="width:100px" headerText="#{lbl['lbl.ct.pc.action']}" />
+					<p:column headerText="#{lbl['lbl.ct.pc.item.name']}" />
+					<p:column headerText="Description" />
+					<p:column headerText="Min. Order Qty" />
+					<p:column headerText="Max. Procure Amount" />
 				</p:row>
 			</p:columnGroup>
-			<p:column styleClass="column-align-center">
-				<h:outputText value="#{index+1}" />
-			</p:column>
 			<p:column>
-				<p:inputText value="#{data.itemName}" style="width:120px;" />
+				<p:inputText value="#{data.itemName}" style="width:150px;" />
 			</p:column>
 			<p:column>
 				<p:inputText value="#{data.itemDescription}" style="width:200px;" />
 			</p:column>
 			<p:column>
+				<p:inputText value="#{data.minimumOrderQty}" style="width:80px;text-align:right;" />
 			</p:column>
 			<p:column>
-			<p:commandLink onsuccess="delItemDlg.show()" partialSubmit="true" process="@this">
-			    <f:setPropertyActionListener value="#{data}" target="#{panelBackingBean.managedBean.selectedPanelItem}" />
-				<p:graphicImage library="ep/images/design" name="delete.png" value="/resources/ep/images/design/delete.png" title="Delete" />
-		    </p:commandLink>		
+				<p:inputText value="#{data.maxProcureAmount}" style="width:80px;text-align:right;" />
 			</p:column>			
 		</p:dataTable>
+		<p:spacer height="2" />
+		<div class="ppRightBtn">
+			<p:commandButton id="viewSpecBtn" value="View Specification" icon="ui-icon-action" onsuccess="itemSpecDlg.show()"
+				disabled="#{panelBackingBean.managedBean.selectedPanelItem == null}" /> 
+			<p:commandButton value="Add" process="@form" partialSubmit="true" icon="ui-icon-add"
+				update=":form:tabview:deleteItemBtn,:form:tabview:viewSpecBtn,panelItemDt"
+				action="#{panelBackingBean.addPanelItem()}" />
+			<p:commandButton id="deleteItemBtn" value="Delete" icon="ui-icon-delete" onsuccess="delItemDlg.show()" 
+				disabled="#{panelBackingBean.managedBean.selectedPanelItem == null}" />
+		</div>		
+		<p:dialog id="itemSpecDlg" header="Item Specification" widgetVar="itemSpecDlg" modal="true" width="550" height="350">
+			<p:panel id="itemSpec">
+				<p:dataTable id="itemSpecDt" var="data" lazy="false" 
+					value="#{panelBackingBean.managedBean.selectedPanelItem.ctPanelItemSpecs}" rowIndexVar="index" >
+					<ac:paginator for="itemSpecDt" />
+					<p:column style="#{(index == 0) ? 'background-color:#dddddd;' : ''}" >
+						<h:outputLabel value="No." style="width:0px;float:left;" rendered="#{index == 0}" />
+						<h:outputText value="#{index}" rendered="#{index != 0}" />
+					</p:column>					
+					<p:column style="#{(index == 0) ? 'background-color:#dddddd;' : ''}">
+						<p:inputText value="#{data.column1}" style="width:60px;" />
+					</p:column>
+					<p:column style="#{(index == 0) ? 'background-color:#dddddd;' : ''}">
+						<p:inputText value="#{data.column2}" style="width:60px;"  />
+					</p:column>
+					<p:column style="#{(index == 0) ? 'background-color:#dddddd;' : ''}">
+						<p:inputText value="#{data.column3}" style="width:60px;"  />
+					</p:column>		
+					<p:column style="#{(index == 0) ? 'background-color:#dddddd;' : ''}">
+						<p:inputText value="#{data.column4}" style="width:60px;"  />
+					</p:column>	
+					<p:column style="#{(index == 0) ? 'background-color:#dddddd;' : ''}">
+						<p:inputText value="#{data.column5}" style="width:60px;"  />
+					</p:column>																									
+				</p:dataTable>
+				<p:spacer height="2" />
+				<div class="ppRightBtn"> 
+					<p:commandButton value="Add" process="itemSpecDlg" partialSubmit="true" icon="ui-icon-add"
+						action="#{panelBackingBean.addPanelItemSpec()}" update="itemSpecDt" />	
+					<p:commandButton value="Delete" process="itemSpecDlg" partialSubmit="true" icon="ui-icon-delete"
+						action="#{panelBackingBean.addPanelItemSpec()}" update="itemSpecDt" />												
+				</div>				
+			</p:panel>
+			<f:facet name="footer">
+				<p:commandButton value="OK" process="itemSpecDlg" 
+					action="#{panelBackingBean.addCancelledCircular()}"
+					onclick="itemSpecDlg.hide();" icon="ui-icon-accept" />
+				<p:commandButton value="Cancel" icon="ui-icon-cancel" type="button" ajax="false" onclick="itemSpecDlg.hide();" />			
+			</f:facet>
+		</p:dialog>		
 		<p:confirmDialog message="Do you want to delete the record?" severity="alert" widgetVar="delItemDlg"
 			closable="true" appendToBody="true" header="Delete Confirmation" >
 			<h:panelGrid columns="2">
 				<p:commandButton value="Yes" icon="ui-icon-accept" partialSubmit="true" process="@this"
-				 update="panelItemDt" action="#{panelBackingBean.deletePanelItem()}" onsuccess="delItemDlg.hide();"   /> 
+				 update="panelItemDt,:form:tabview:deleteItemBtn,:form:tabview:viewSpecBtn,:form:tabview:supplierItemPnl" 
+				 action="#{panelBackingBean.deletePanelItem()}" onsuccess="delItemDlg.hide();"   /> 
 				<p:commandButton value="No" icon="ui-icon-reject" onclick="delItemDlg.hide()" type="button" />
 			</h:panelGrid>
 		</p:confirmDialog>	
-		<p:spacer height="2" />
-		<div class="ppRightBtn"> 
-			<p:commandButton value="Add" process="@form" partialSubmit="true" icon="ui-icon-add"
-				action="#{panelBackingBean.addPanelItem()}" update="panelItemDt" />
-		</div>		
 		<p:spacer height="20" />
 		
-		<h:panelGrid id="supplierItemPnl" columnClasses="ppRightBtn" >
-			<p:dataTable id="supplierItemDt" var="data" lazy="true" rowIndexVar="index"
-				 value="#{panelBackingBean.managedBean.selectedPanelItem.ctPanelSuppliers}">	
+		<h:panelGroup id="supplierItemPnl">
+			<p:dataTable id="supplierItemDt" var="data" lazy="true" rowKey="#{data}"
+				value="#{panelBackingBean.managedBean.selectedPanelItem.ctPanelSuppliers}" selectionMode="single"
+				selection="#{panelBackingBean.managedBean.selectedPanelSupplier}" >	
 				<ac:paginator for="supplierItemDt" />  	
+				<p:ajax event="rowSelect" update=":form:tabview:deleteSupplierBtn" />
 				<p:columnGroup type="header">
 					<p:row>
-						<p:column style="width:30px" headerText="#{lbl['lbl.ct.pc.no']}" />
 						<p:column style="width:300px" headerText="#{lbl['lbl.ct.pc.item.sname']}" />
 						<p:column style="width:300px" headerText="#{lbl['lbl.ct.pc.item.zone']}" />
-						<p:column style="width:100px" headerText="#{lbl['lbl.ct.pc.item.action']}" />
 					</p:row>
-				</p:columnGroup>
-				<p:column styleClass="column-align-center">
-					<h:outputText value="#{index+1}" />
-				</p:column>				
+				</p:columnGroup>		
 				<p:column>
-					<p:selectOneMenu value="#{data.panelSupplierId}">
-						<f:selectItems value="#{panelBackingBean.getStateDropdownValues()}" />
+					<p:selectOneMenu value="#{data.supplier.supplierId}">
+						<p:ajax event="change" process="@this" />
+						<f:selectItems value="#{panelBackingBean.getPanelSupplierDropdown()}" />
 					</p:selectOneMenu>						
 				</p:column>
 				<p:column>
-					<p:selectOneMenu value="#{data.ctPanelZone.panelZoneId}">
-						<f:selectItems value="#{panelBackingBean.getStateDropdownValues()}" />
+					<p:selectOneMenu value="#{data.ctPanelZone.objectId}">
+						<p:ajax event="change" process="@this" />
+						<f:selectItems value="#{panelBackingBean.getPanelZoneDropdown()}" />
 					</p:selectOneMenu>					
 				</p:column>
-				<p:column styleClass="column-align-center">
-				   <p:commandLink oncomplete="delSupItemDlg.show()" partialSubmit="true" process="@this">
-			          <f:setPropertyActionListener value="#{data}" target="#{panelBackingBean.managedBean.selectedPanelSupplierItem}" />
-				      <p:graphicImage library="ep/images/design" name="delete.png" value="/resources/ep/images/design/delete.png" title="Delete" />
-		           </p:commandLink>		
-				</p:column>
-			</p:dataTable>			
+			</p:dataTable>		
+			<p:spacer height="2" />
+			<div class="ppRightBtn">
+				<p:commandButton value="Add" process="@form" partialSubmit="true" icon="ui-icon-add"
+					disabled="#{panelBackingBean.managedBean.selectedPanelItem == null}"
+					action="#{panelBackingBean.addPanelSupplier()}" update="supplierItemDt" />	
+				<p:commandButton id="deleteSupplierBtn" value="Delete" icon="ui-icon-delete" onsuccess="delSupItemDlg.show()" 
+					disabled="#{panelBackingBean.managedBean.selectedPanelSupplier == null}" />						
+			</div>					
 			<p:confirmDialog message="Do you want to delete the record?" severity="alert" widgetVar="delSupItemDlg"
 				closable="true" appendToBody="true" header="Delete Confirmation" >
 				<h:panelGrid columns="2">
-					<p:commandButton value="Yes" icon="ui-icon-accept" partialSubmit="true" process="@this" update="supplierItemDt"
+					<p:commandButton value="Yes" icon="ui-icon-accept" partialSubmit="true" process="@this" update=":form:tabview:deleteSupplierBtn,supplierItemDt"
 						 action="#{panelBackingBean.deletePanelSupplier()}" oncomplete="delSupItemDlg.hide();"   /> 
 					<p:commandButton value="No" icon="ui-icon-reject" onclick="delSupItemDlg.hide()" type="button" />
 				</h:panelGrid>
 			</p:confirmDialog>	
-			<p:spacer height="2" />
-			<p:commandButton value="Add" process="@form" partialSubmit="true" icon="ui-icon-add"
-				rendered="#{panelBackingBean.managedBean.selectedPanelItem != null}"
-				action="#{panelBackingBean.addPanelSupplier()}" update="supplierItemDt" />			
-		</h:panelGrid>
+		</h:panelGroup>
 	</p:panel>
 	
 </ui:composition>

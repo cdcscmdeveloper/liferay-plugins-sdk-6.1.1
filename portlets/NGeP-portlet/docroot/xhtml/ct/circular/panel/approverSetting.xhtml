@@ -7,6 +7,14 @@
 
 	<p:panel id="settingId" header="Approver Setting" toggleable="true" toggleSpeed="500">
 		<h:panelGrid columns="1">
+			<h:panelGrid columns="2">
+				<h:outputLabel value="Approver Group"/>
+				<p:selectOneMenu value="#{panelBackingBean.managedBean.circularVer.pmUserGroup.userGroupId}" style="width:80px;">
+					<p:ajax event="change" listener="#{panelBackingBean.userGroupChangeListener()}" process="@this" update="approverpickList" />
+					<f:selectItems value="#{panelBackingBean.getUserGroupDropdown()}" />
+				</p:selectOneMenu>		
+			</h:panelGrid>
+			<p:spacer height="1" />
 			<h:panelGrid style="width:500px;">
 				<p:pickList id="approverpickList" value="#{panelBackingBean.managedBean.approverModel}"
 					var="data" itemValue="#{data}" itemLabel="#{data}" 
