@@ -368,7 +368,7 @@ public class SPDetailBackingBean extends SourcingBaseBackingBean<SPDetailManaged
 	}
 	public String updateBpmTask(String action){
 		
-		ProposalReqDTO prReqDTO= new ProposalReqDTO();
+		ProposalReqDTO prReqDTO= constructReqDTO();
 		prReqDTO.setOutcome(action);
 		prReqDTO.setTaskId(this.getManagedBean().getTaskId());
 		FacesScopes facesScopes= new FacesScopes();
@@ -376,7 +376,7 @@ public class SPDetailBackingBean extends SourcingBaseBackingBean<SPDetailManaged
 		prReqDTO.setToken(ctx);
 		prReqDTO.setPayLoad(this.getManagedBean().getProposalData());
 		IQTProposalSO proSo= getProposalSO();
-		BaseResponseDTO resDTO = proSo.updateBPMAction(prReqDTO);
+		ProposalResDTO resDTO = proSo.updateBPMAction(prReqDTO);
 		if (resDTO.isSuccessful()) {
 
 			FacesContext.getCurrentInstance().addMessage(
@@ -396,5 +396,30 @@ public class SPDetailBackingBean extends SourcingBaseBackingBean<SPDetailManaged
 	
 	private IQTProposalSO getProposalSO(){
 		return EpEjbBusinessDelegate.getInstance().getServiceObject(QTConstants.SS_MODULE,IQTProposalSO.class);
+	}
+	
+	private ProposalReqDTO constructReqDTO(){
+		List<ScQtProposalChecklist> scQtProposalChecklists = new ArrayList<ScQtProposalChecklist>();
+
+		ScQtProposal scQtProposal = getManagedBean().getQtProposal();
+		List<ScQtProposalChecklist> tecQtProposalChecklists = getManagedBean()
+				.getTecCheckDetailsList();
+		scQtProposalChecklists.addAll(tecQtProposalChecklists);
+
+		tecQtProposalChecklists = getManagedBean().getFinanceCheckDetailsList();
+		scQtProposalChecklists.addAll(tecQtProposalChecklists);
+
+		ProposalReqDTO reqDTO = new ProposalReqDTO();
+		reqDTO.setQtSupplierId(1L);
+
+		
+		// Update Changes
+		for (ScQtProposalChecklist proposalChecklist : scQtProposalChecklists) {
+			proposalChecklist.setSubmitted(true);
+		}
+		scQtProposal.setScQtProposalChecklists(scQtProposalChecklists);
+
+		reqDTO.setScQtProposal(scQtProposal);
+		return reqDTO;
 	}
 }
