@@ -1568,6 +1568,7 @@ important
 	border-radius: 0px;
 	border-collapse: separate;
 	display: block !important;
+	margin-right: 5px;
 }
 
 .ui-chkbox .ui-chkbox-box .ui-icon-check {
