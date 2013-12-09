@@ -3,7 +3,8 @@
 	xmlns:h="http://java.sun.com/jsf/html"
 	xmlns:ui="http://java.sun.com/jsf/facelets"
 	xmlns:p="http://primefaces.org/ui"
-	xmlns:c="http://java.sun.com/jsp/jstl/core">
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:ac="http://ac.my/jsf/composite/cc">
 
 
 	<br />
@@ -17,6 +18,7 @@
 					<f:selectItem itemLabel="-- Select Value --" itemValue="X" />
 					<f:selectItem itemLabel="Before Approval" itemValue="B" />
 					<f:selectItem itemLabel="After Approval" itemValue="A" />
+					<p:ajax update=":form:tt:svcButPan" event="change" />
 				</p:selectOneMenu></td>
 
 		</tr>
@@ -29,7 +31,7 @@
 		selection="#{backingBean.managedBean.selectedAssocCompanies}"
 		rowKey="#{assocBean.associateCompanyId}" rowIndexVar="index"
 		id="svdHeadOff">
-
+		<ac:paginator for="svdHeadOff" />
 		<p:column selectionMode="multiple" width="5%" />
 
 		<p:column headerText="NO.">
@@ -50,7 +52,7 @@
 		value="#{backingBean.managedBean.smAppl.smSupplierBranches}"
 		selection="#{backingBean.managedBean.selectedBranches}"
 		rowKey="#{branchBean.supplierBranchId}" rowIndexVar="index">
-
+		<ac:paginator for="svcBrDt" />
 		<p:column selectionMode="multiple" width="5%" />
 		<p:column headerText="NO.">
 			<h:outputText value="#{index+1}" />
@@ -70,7 +72,7 @@
 		value="#{backingBean.managedBean.smAppl.smFacilities}"
 		selection="#{backingBean.managedBean.selectedFactoryFacilities}"
 		rowKey="#{fac.facilityId}" rowIndexVar="index" id="svcFacDt">
-
+		<ac:paginator for="svcFacDt" />
 		<p:column selectionMode="multiple" width="5%" />
 
 		<p:column headerText="NO.">
@@ -98,6 +100,7 @@
 		selection="#{backingBean.managedBean.selectedCategories}"
 		rowKey="#{catBean.supplierCategoryId}" rowIndexVar="index"
 		id="svcCatDt">
+		<ac:paginator for="svcCatDt" />
 		<p:columnGroup type="header">
 			<p:row>
 				<p:column rowspan="2" selectionMode="multiple" width="5%" />
@@ -157,7 +160,8 @@
 	<p:dataTable var="template"
 		value="#{backingBean.managedBean.templateList}"
 		selection="#{backingBean.managedBean.selectedTemplateList}"
-		rowKey="#{template.templateSeq}" rowIndexVar="index">
+		rowKey="#{template.templateSeq}" rowIndexVar="index" id="svcTemId">
+		<ac:paginator for="svcTemId" />
 		<p:column selectionMode="multiple" width="5%" />
 		<p:column headerText="No.">  
                    #{template.templateSeq}  
@@ -188,24 +192,23 @@
 
 	</table>
 	<br />
-	<!-- <p:outputPanel id="svcButPan">
+	<p:outputPanel id="svcButPan">
 		<div align="right">
-			<p:commandButton value="Submit" onclick="svcDialog.hide();"
-				disabled="true"
-				rendered="#{backingBean.managedBean.poSiteVisitType} eq 'X'}" />
-			<p:commandButton value="Submit" onclick="svcDialog.hide();"
-				action="#{backingBean.submitPOorApproverReviewToBPM('SITE_VISIT')}"
-				rendered="#{backingBean.managedBean.poSiteVisitType} eq 'B'}" />
-			<p:commandButton value="Submitss" onclick="svcDialog.hide();"
-				action="#{backingBean.submitPOorApproverReviewToBPM('SITE_VISIT_AFTER_APPROVE')}"
-				rendered="#{backingBean.managedBean.poSiteVisitType} eq 'A'}" />
+			<c:choose>
+				<c:when test="#{backingBean.managedBean.poSiteVisitType eq 'B'}">
+					<p:commandButton value="Submit" onclick="svcDialog.hide();"
+						action="#{backingBean.submitPOorApproverReviewToBPM('SITE_VISIT')}" />
+				</c:when>
+				<c:when test="#{backingBean.managedBean.poSiteVisitType eq 'A'}">
+					<p:commandButton value="Submit" onclick="svcDialog.hide();"
+						action="#{backingBean.submitPOorApproverReviewToBPM('SITE_VISIT_AFTER_APPROVE')}" />
+				</c:when>
+				<c:otherwise>
+					<p:commandButton value="Submit" disabled="true" />
+				</c:otherwise>
+			</c:choose>
 			<p:commandButton value="Cancel" onclick="svcDialog.hide();" />
 		</div>
-	</p:outputPanel> -->
-	<div align="right">
-		<p:commandButton value="Submit" onclick="svcDialog.hide();"
-			action="#{backingBean.submitPOorApproverReviewToBPM('SITE_VISIT')}" />
-
-		<p:commandButton value="Cancel" onclick="svcDialog.hide();" />
-	</div>
+	</p:outputPanel>
+	
 </ui:composition>
