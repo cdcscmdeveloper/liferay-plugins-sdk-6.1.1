@@ -6,29 +6,29 @@
 	xmlns:c="http://java.sun.com/jsp/jstl/core">
 
 	<p:panel>
-		<div>
+		<div align="right">
 
 			<c:if test="#{qTDetailBB.managedBean.taskId eq null}">
 				<c:if test="#{qTDetailBB.managedBean.qt.brandNew}">
 					<p:commandButton action="#{qTDetailBB.clonePopupAction}"
-						value="CLONE" oncomplete="clonedlg.show();" styleClass="ui-button" />
+						value="Clone" oncomplete="clonedlg.show();" styleClass="ui-icon-clone" />
 					<ui:include
 						src="/xhtml/ss/quatationtender/cloneqtntenderscreen.xhtml" />
 				</c:if>
 				<c:if test="#{!qTDetailBB.managedBean.qt.brandNew}">
-					<p:button value="Cancel" style="float:right;margin-right: 12px;" />
+					<p:button value="Cancel" style="float:right;margin-right: 12px;ui-icon-cancel;"  />
 				</c:if>
-				<p:commandButton value="Submit" styleClass="ui-button"
-					action="#{qTDetailBB.submitQTDetailsAction}" process="@all" />
-				<p:commandButton value="Save" styleClass="ui-button"
-					action="#{qTDetailBB.saveQtDetailsAction}" process="@all" />
+				<p:commandButton value="Submit" 
+					action="#{qTDetailBB.submitQTDetailsAction}" process="@all" styleClass="ui-icon-submit" />
+				<p:commandButton value="Save" 
+					action="#{qTDetailBB.saveQtDetailsAction}" process="@all" styleClass="ui-icon-save"/>
 				<br />
 				<br />
 			</c:if>
 			<c:if
 				test="#{((qTDetailBB.managedBean.processName != 'QuotationTender Creation' ) and (qTDetailBB.managedBean.taskId != null))}">
-				<p:commandButton value="Submit" styleClass="ui-button"
-					action="#{qTDetailBB.updateBpmTask}" process="@all">
+				<p:commandButton value="Submit" 
+					action="#{qTDetailBB.updateBpmTask}" process="@all" styleClass="ui-icon-submit">
 
 				</p:commandButton>
 			</c:if>
