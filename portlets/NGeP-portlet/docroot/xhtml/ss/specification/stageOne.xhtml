@@ -64,8 +64,8 @@
 
 		<div align="right">
 			<p:commandButton value="#{lbl['lbl.sc.spec.stage.btn.add']}" process="@this" partialSubmit="true"
-				onclick="compliance.show();" />
-			<p:commandButton value="#{lbl['lbl.sc.spec.stage.btn.delete']}" />
+				onclick="compliance.show();"  icon="ui-icon-add" />
+			<p:commandButton value="#{lbl['lbl.sc.spec.stage.btn.delete']}"  icon="ui-icon-delete"/>
 
 		</div>
 
@@ -126,8 +126,8 @@
 			<p:commandButton value="#{lbl['lbl.sc.spec.stage.btn.add']}" process="@this,additionaltech"
 				partialSubmit="true"
 				action="#{specificationBackingBean.stageOneAdditionalAdd}"
-				update="additionaltech" />
-			<p:commandButton value="#{lbl['lbl.sc.spec.stage.btn.delete']}" />
+				update="additionaltech"  icon="ui-icon-add" />
+			<p:commandButton value="#{lbl['lbl.sc.spec.stage.btn.delete']}" icon="ui-icon-delete"/>
 
 		</div>
 
@@ -187,8 +187,8 @@
 			<p:commandButton value="#{lbl['lbl.sc.spec.stage.btn.add']}" process="@this,financeProposal"
 				partialSubmit="true"
 				action="#{specificationBackingBean.stageOneFiProposalAdd}"
-				update="financeProposal" />
-			<p:commandButton value="#{lbl['lbl.sc.spec.stage.btn.delete']}" />
+				update="financeProposal" icon="ui-icon-add"/>
+			<p:commandButton value="#{lbl['lbl.sc.spec.stage.btn.delete']}" icon="ui-icon-delete"/>
 
 		</div>
 
@@ -246,8 +246,8 @@
 			<p:commandButton value="#{lbl['lbl.sc.spec.stage.btn.add']}" process="@this,financeAdditional"
 				partialSubmit="true"
 				action="#{specificationBackingBean.stageOneFiAdditioalProposalAdd}"
-				update="financeAdditional" />
-			<p:commandButton value="#{lbl['lbl.sc.spec.stage.btn.delete']}" />
+				update="financeAdditional" icon="ui-icon-add"/>
+			<p:commandButton value="#{lbl['lbl.sc.spec.stage.btn.delete']}" icon="ui-icon-delete"/>
 
 		</div>
 		<h:panelGrid columns="2" styleClass="noBorders tr,noBorders td">

@@ -5,7 +5,7 @@
 	xmlns:p="http://primefaces.org/ui"
 	xmlns:c="http://java.sun.com/jsp/jstl/core">
 
-	<p:panel header="#{lbl['lbl.sc.spec.details']}"  toggleable="true">
+	<p:panel header="#{lbl['lbl.sc.spec.details']}" toggleable="true">
 
 		<h:panelGrid columns="4" style="width:100%;"
 			columnClasses="columnWidth20,columnWidth30,columnWidth20,columnWidth30"
@@ -69,14 +69,19 @@
 
 			<h:outputLabel value="*#{lbl['lbl.sc.spec.contrat.type']}" />
 			<h:panelGroup>
+				<table style="width:50%">
+					<tr>
+						<td><h:inputText size="4"
+								value="#{specificationBackingBean.managedBean.scQtSpec.contractDuration}" /></td>
+						<td><h:outputLabel
+								value="(#{lbl['lbl.sc.spec.contrat.year']})" /></td>
+						<td><h:inputText size="2"
+								value="#{specificationBackingBean.managedBean.scQtSpec.contractDuration}" /></td>
+						<td><h:outputLabel
+								value="(#{lbl['lbl.sc.spec.contrat.month']})" /></td>
+					</tr>
+				</table>
 
-				<h:inputText size="4"
-					value="#{specificationBackingBean.managedBean.scQtSpec.contractDuration}"></h:inputText>
-				<h:outputLabel value="(#{lbl['lbl.sc.spec.contrat.year']})" />
-
-				<h:inputText size="2"
-					value="#{specificationBackingBean.managedBean.scQtSpec.contractDuration}"></h:inputText>
-				<h:outputLabel value="(#{lbl['lbl.sc.spec.contrat.month']})" />
 			</h:panelGroup>
 
 
@@ -84,7 +89,8 @@
 
 	</p:panel>
 
-	<p:panel header="#{lbl['lbl.sc.spec.approve.details.section']}" toggleable="true">
+	<p:panel header="#{lbl['lbl.sc.spec.approve.details.section']}"
+		toggleable="true">
 
 		<h:panelGrid style="width:100%;" columns="4"
 			columnClasses="columnWidth20,columnWidth30,columnWidth20,columnWidth30">
