@@ -7,23 +7,19 @@
 
 <p:panel>
 <p:panelGrid style="width:100%;"
-    styleClass="noBorders tr,noBorders td">
-    <p:row>
-     <p:column width="100%" style="text-align:right">
-
-    	
-					
-           <p:commandButton  
-					value="#{lbl['lbl.sc.spec.btn.save']}" action="#{specificationBackingBean.save}" icon="ui-icon-save"/>
-					&#160;
-					
-					  <p:commandButton  
-					value="#{lbl['lbl.sc.spec.btn.submit']}" icon="ui-icon-submit"/>
-					
-					</p:column>
-					</p:row>
-
-</p:panelGrid>
+			styleClass="noBorders tr,noBorders td">
+			<p:row>
+				<p:column width="100%" style="text-align:right">
+					<p:commandButton value="Save" />
+				
+			<ui:repeat var="action" value="#{specificationBackingBean.managedBean.outComes}">
+							<p:commandButton value="#{action}" process="@all"
+								styleClass="ui-button"
+								actionListener="#{specificationBackingBean.updateBpmTask(action)}"  icon="ui-icon-submit"/>
+						</ui:repeat>
+						</p:column>
+						</p:row>
+		</p:panelGrid>
 
 </p:panel>
 
