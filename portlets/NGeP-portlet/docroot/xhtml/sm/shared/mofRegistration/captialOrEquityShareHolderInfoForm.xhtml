@@ -3,7 +3,8 @@
 	xmlns:h="http://java.sun.com/jsf/html"
 	xmlns:ui="http://java.sun.com/jsf/facelets"
 	xmlns:p="http://primefaces.org/ui"
-	xmlns:c="http://java.sun.com/jsp/jstl/core">
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:ac="http://ac.my/jsf/composite/cc">
 
 	<p:panel header="Capital / Equity Shareholders' ( Personnel)"
 		toggleable="true">
@@ -31,7 +32,7 @@
 			value="#{backingBean.managedBean.smapplShareHolders}"
 			selection="#{backingBean.managedBean.selectedShareHolders}"
 			rowKey="#{shareBean.personnelId}" rowIndexVar="index" id="shrPerDt">
-
+			<ac:paginator for="shrPerDt" />
 			<p:column selectionMode="multiple" width="5%" />
 
 			<p:column headerText="NO.">
@@ -62,6 +63,7 @@
 				</p:commandLink>
 			</p:column>
 		</p:dataTable>
+		<p:spacer height="2px;" />
 		<div align="right">
 			<p:commandButton value="Add" oncomplete="shareHolderDialog.show();"
 				action="#{backingBean.assignNewShareHolder}"

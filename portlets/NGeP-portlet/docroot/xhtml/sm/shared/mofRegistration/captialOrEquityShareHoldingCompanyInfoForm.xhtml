@@ -3,7 +3,8 @@
 	xmlns:h="http://java.sun.com/jsf/html"
 	xmlns:ui="http://java.sun.com/jsf/facelets"
 	xmlns:p="http://primefaces.org/ui"
-	xmlns:c="http://java.sun.com/jsp/jstl/core">
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:ac="http://ac.my/jsf/composite/cc">
 
 	<p:panel header="Capital/Equity Shareholding Companies"
 		toggleable="true">
@@ -32,7 +33,7 @@
 			selection="#{backingBean.managedBean.selectedEquityCompanies}"
 			selectionMode="multiple" rowKey="#{equiBean.equityCompanyId}"
 			rowIndexVar="index" id="eqiComDt">
-
+			<ac:paginator for="eqiComDt" />
 
 			<p:column headerText="NO.">
 				<h:outputText value="#{index+1}" />
@@ -63,6 +64,7 @@
 				</p:commandLink>
 			</p:column>
 		</p:dataTable>
+		<p:spacer height="2px;" />
 		<div align="right">
 			<p:commandButton value="Add"
 				action="#{backingBean.assignNewEquiCompBean}"
@@ -95,10 +97,9 @@
 			</table>
 		</p:outputPanel>
 	</p:panel>
-	<p:dialog width="450px" 
-		header="ShareHolding / Equity Company Page" id="eqiCompDialog"
-		widgetVar="eqiCompDialog" resizable="false" showEffect="fade"
-		hideEffect="fade" modal="true">
+	<p:dialog width="450px" header="ShareHolding / Equity Company Page"
+		id="eqiCompDialog" widgetVar="eqiCompDialog" resizable="false"
+		showEffect="fade" hideEffect="fade" modal="true">
 		<!-- <p:panel header="Associated Company Details"> -->
 
 		<table style="width: 100%">

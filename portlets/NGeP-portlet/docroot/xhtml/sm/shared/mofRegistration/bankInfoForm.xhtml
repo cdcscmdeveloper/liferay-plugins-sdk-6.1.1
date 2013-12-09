@@ -3,7 +3,8 @@
 	xmlns:h="http://java.sun.com/jsf/html"
 	xmlns:ui="http://java.sun.com/jsf/facelets"
 	xmlns:p="http://primefaces.org/ui"
-	xmlns:c="http://java.sun.com/jsp/jstl/core">
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:ac="http://ac.my/jsf/composite/cc">
 
 	<p:panel header=" Bank Account Details" toggleable="true">
 
@@ -31,7 +32,7 @@
 			value="#{backingBean.managedBean.smAppl.smSupplierBanks}"
 			selection="#{backingBean.managedBean.selectedBanks}"
 			rowKey="#{bankBean.supplierBankId}" rowIndexVar="index" id="bankDt">
-
+			<ac:paginator for="bankDt" />
 			<p:column selectionMode="multiple" width="5%" />
 
 			<p:column headerText="NO.">
@@ -71,6 +72,7 @@
 				<!-- oncomplete="updateSignatory();" /> -->
 			</p:column>
 		</p:dataTable>
+		<p:spacer height="2px;" />
 		<div align="right">
 			<p:commandButton value="Add" oncomplete="bankDialog.show();"
 				action="#{backingBean.assignNewBank}" update=":form:tt:bankDialog" />
@@ -83,6 +85,7 @@
 			<p:dataTable id="signatory" var="auth"
 				value="#{backingBean.managedBean.selectedSignatoryBankAcct.smChequeSignatories}"
 				rowKey="#{auth.chequeSignatoryId}" rowIndexVar="index">
+				<ac:paginator for="signatory"/>
 				<p:column headerText="NO.">
 					<h:outputText value="#{index+1}" />
 				</p:column>

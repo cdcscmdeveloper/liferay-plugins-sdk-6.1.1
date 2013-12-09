@@ -3,7 +3,8 @@
 	xmlns:h="http://java.sun.com/jsf/html"
 	xmlns:ui="http://java.sun.com/jsf/facelets"
 	xmlns:p="http://primefaces.org/ui"
-	xmlns:c="http://java.sun.com/jsp/jstl/core">
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:ac="http://ac.my/jsf/composite/cc">
 
 	<p:panel header=" Supporting Document " toggleable="true">
 		<br />
@@ -74,8 +75,9 @@
 
 		<p:panel
 			header="Offline Documents Check List - For Application No. - #{backingBean.managedBean.smAppl.applNo}">
-			<p:dataTable var="table"
+			<p:dataTable var="table" id="offSdList"
 				value="#{mofRegistrationBackingBean.dataList}">
+				<ac:paginator for="offSdList" />
 				<p:column headerText="No.">  
                    #{table.no}  
       		    </p:column>

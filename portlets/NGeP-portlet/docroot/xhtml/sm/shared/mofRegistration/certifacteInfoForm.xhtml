@@ -3,7 +3,8 @@
 	xmlns:h="http://java.sun.com/jsf/html"
 	xmlns:ui="http://java.sun.com/jsf/facelets"
 	xmlns:p="http://primefaces.org/ui"
-	xmlns:c="http://java.sun.com/jsp/jstl/core">
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:ac="http://ac.my/jsf/composite/cc">
 
 	<p:panel header="Certificate of Recognition" toggleable="true">
 		<table style="width: 250px">
@@ -30,7 +31,7 @@
 			value="#{backingBean.managedBean.smAppl.smSupplierCerts}"
 			selection="#{backingBean.managedBean.selectedCertList}"
 			rowKey="#{certBean.supplierCertId}" rowIndexVar="index" id="certDt">
-
+			<ac:paginator for="certDt" />
 			<p:column selectionMode="multiple" width="5%" />
 
 			<p:column headerText="NO.">
@@ -66,6 +67,7 @@
 				</p:commandLink>
 			</p:column>
 		</p:dataTable>
+		<p:spacer height="2px;" />
 		<div align="right">
 			<p:commandButton value="Add " oncomplete="certDialog.show();"
 				action="#{backingBean.assignNewCert}" update=":form:tt:certPop" />

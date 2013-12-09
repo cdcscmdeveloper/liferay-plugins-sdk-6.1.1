@@ -3,7 +3,8 @@
 	xmlns:h="http://java.sun.com/jsf/html"
 	xmlns:ui="http://java.sun.com/jsf/facelets"
 	xmlns:p="http://primefaces.org/ui"
-	xmlns:c="http://java.sun.com/jsp/jstl/core">
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:ac="http://ac.my/jsf/composite/cc">
 
 	<p:panel header="Factory / Workshop / Store / Dockyard Facilities"
 		toggleable="true">
@@ -31,7 +32,7 @@
 			value="#{backingBean.managedBean.smAppl.smFacilities}"
 			selection="#{backingBean.managedBean.selectedFactoryFacilities}"
 			rowKey="#{fac.facilityId}" rowIndexVar="index" id="facDt">
-
+			<ac:paginator for="facDt" />
 			<p:column selectionMode="multiple" width="5%" />
 
 			<p:column headerText="NO.">
@@ -56,6 +57,7 @@
 			</p:column>
 
 		</p:dataTable>
+		<p:spacer height="2px;" />
 		<div align="right">
 			<p:commandButton value="Add " oncomplete="factoryDialog.show();"
 				action="#{backingBean.assignNewFactoryBean}"
@@ -94,7 +96,8 @@
 			<tr>
 				<td><p:outputLabel value="* Facility Type" /></td>
 				<td><p:selectOneMenu
-						value="#{backingBean.managedBean.selectedFactoryFacility.facilityType}" style="width: 207px;margin-bottom: 5px;">
+						value="#{backingBean.managedBean.selectedFactoryFacility.facilityType}"
+						style="width: 207px;margin-bottom: 5px;">
 						<f:selectItem itemLabel="-- Select One -- " itemValue="" />
 						<f:selectItem itemLabel="Factory" itemValue="FA" />
 						<f:selectItem itemLabel="Workshop" itemValue="WO" />
@@ -105,28 +108,33 @@
 			<tr>
 				<td><p:outputLabel value="* Name" /></td>
 				<td><p:inputText
-						value="#{backingBean.managedBean.selectedFactoryFacility.smAddress.address1}" size="35"/></td>
+						value="#{backingBean.managedBean.selectedFactoryFacility.smAddress.address1}"
+						size="35" /></td>
 			</tr>
 			<tr>
 				<td><p:outputLabel value="* Address" /></td>
 				<td><p:inputText
-						value="#{backingBean.managedBean.selectedFactoryFacility.smAddress.address2}" size="35"/></td>
+						value="#{backingBean.managedBean.selectedFactoryFacility.smAddress.address2}"
+						size="35" /></td>
 			</tr>
 
 			<tr>
 				<td></td>
 				<td><p:inputText
-						value="#{backingBean.managedBean.selectedFactoryFacility.smAddress.address3}" size="35"/></td>
+						value="#{backingBean.managedBean.selectedFactoryFacility.smAddress.address3}"
+						size="35" /></td>
 			</tr>
 			<tr>
 				<td></td>
 				<td><p:inputText
-						value="#{backingBean.managedBean.selectedFactoryFacility.smAddress.address4}" size="35"/></td>
+						value="#{backingBean.managedBean.selectedFactoryFacility.smAddress.address4}"
+						size="35" /></td>
 			</tr>
 			<tr>
 				<td><p:outputLabel value="* Country" /></td>
 				<td><p:selectOneMenu
-						value="#{backingBean.managedBean.selectedFactoryFacility.smAddress.pmCountry.countryCode}" style="width: 207px;margin-bottom: 5px;">
+						value="#{backingBean.managedBean.selectedFactoryFacility.smAddress.pmCountry.countryCode}"
+						style="width: 207px;margin-bottom: 5px;">
 						<f:selectItem itemLabel="-- Select One -- " itemValue="" />
 						<f:selectItem itemLabel="Malaysia" itemValue="MY" />
 					</p:selectOneMenu></td>
@@ -134,39 +142,45 @@
 			<tr>
 				<td><p:outputLabel value="#{lbl['lbl.sm.postcode']}" /></td>
 				<td><p:inputText
-						value="#{backingBean.managedBean.selectedFactoryFacility.smAddress.postcode}" size="35"/></td>
+						value="#{backingBean.managedBean.selectedFactoryFacility.smAddress.postcode}"
+						size="35" /></td>
 			</tr>
 			<tr>
 				<td><p:outputLabel value="#{lbl['lbl.sm.state']}" /></td>
 				<td><p:inputText
-						value="#{backingBean.managedBean.selectedFactoryFacility.smAddress.pmState.stateCode}" size="35"/></td>
+						value="#{backingBean.managedBean.selectedFactoryFacility.smAddress.pmState.stateCode}"
+						size="35" /></td>
 			</tr>
 
 			<tr>
 				<td><p:outputLabel value="#{lbl['lbl.sm.district']}" /></td>
 				<td><p:inputText
-						value="#{backingBean.managedBean.selectedFactoryFacility.smAddress.pmDistrict.districtCode}" size="35"/></td>
+						value="#{backingBean.managedBean.selectedFactoryFacility.smAddress.pmDistrict.districtCode}"
+						size="35" /></td>
 			</tr>
 			<tr>
 				<td><p:outputLabel value="#{lbl['lbl.sm.towncity']}" /></td>
 				<td><p:inputText
-						value="#{backingBean.managedBean.selectedFactoryFacility.smAddress.pmCity.cityCode}" size="35"/></td>
+						value="#{backingBean.managedBean.selectedFactoryFacility.smAddress.pmCity.cityCode}"
+						size="35" /></td>
 			</tr>
 			<tr>
 				<td><p:outputLabel value="Phone NO." /></td>
 				<td><p:inputText
-						value="#{backingBean.managedBean.selectedFactoryFacility.smAddress.phoneNo}" size="35"/></td>
+						value="#{backingBean.managedBean.selectedFactoryFacility.smAddress.phoneNo}"
+						size="35" /></td>
 			</tr>
 			<tr>
 				<td><p:outputLabel value="Fax NO." /></td>
 				<td><p:inputText
-						value="#{backingBean.managedBean.selectedFactoryFacility.smAddress.faxNo}" size="35"/></td>
+						value="#{backingBean.managedBean.selectedFactoryFacility.smAddress.faxNo}"
+						size="35" /></td>
 			</tr>
 			<tr>
 				<td><p:outputLabel value="*Area(Sq Ft) *" /></td>
 				<td><p:inputText
-						value="#{backingBean.managedBean.selectedFactoryFacility.areaSquareFeet}" size="35"/>
-				</td>
+						value="#{backingBean.managedBean.selectedFactoryFacility.areaSquareFeet}"
+						size="35" /></td>
 			</tr>
 			<tr>
 				<td><p:outputLabel value="Ownership Type" /></td>
@@ -224,7 +238,8 @@
 				<td><p:outputLabel value="
 								Owner Name *" /></td>
 				<td><p:inputText
-						value="#{backingBean.managedBean.selectedFactoryFacility.ownerName}" size="35"/></td>
+						value="#{backingBean.managedBean.selectedFactoryFacility.ownerName}"
+						size="35" /></td>
 			</tr>
 
 		</table>

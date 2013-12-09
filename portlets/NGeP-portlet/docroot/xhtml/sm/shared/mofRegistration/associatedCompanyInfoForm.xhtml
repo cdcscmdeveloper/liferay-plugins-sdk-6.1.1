@@ -3,7 +3,8 @@
 	xmlns:h="http://java.sun.com/jsf/html"
 	xmlns:ui="http://java.sun.com/jsf/facelets"
 	xmlns:p="http://primefaces.org/ui"
-	xmlns:c="http://java.sun.com/jsp/jstl/core">
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:ac="http://ac.my/jsf/composite/cc">
 
 	<p:panel header="Associated Companies" toggleable="true"
 		id="assocPanel">
@@ -32,6 +33,7 @@
 			selection="#{backingBean.managedBean.selectedAssocCompanies}"
 			rowKey="#{assocBean.associateCompanyId}" rowIndexVar="index"
 			id="asoc">
+			<ac:paginator for="asoc" />
 
 			<p:column selectionMode="multiple" width="5%" />
 
@@ -54,11 +56,12 @@
 						value="/resources/ep/images/design/edit.png"
 						style="margin-right:2px;" />
 				</p:commandLink>
-				
+
 			</p:column>
 
 
 		</p:dataTable>
+		<p:spacer height="2px;" />
 		<div align="right">
 			<p:commandButton value="Add"
 				action="#{backingBean.assignNewAssocBean}"
