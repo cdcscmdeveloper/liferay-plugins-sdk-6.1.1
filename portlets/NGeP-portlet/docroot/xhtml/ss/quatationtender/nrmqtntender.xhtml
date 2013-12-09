@@ -77,19 +77,14 @@
 			</p:column>
 			
 		</p:dataTable>
-
-
-		<p:panelGrid columns="2" style="width:100%;"
-			styleClass="noBorders tr,noBorders td">
-			<f:facet name="footer">
+<p:spacer height="15"></p:spacer>		
 						<div align="right">
-			<p:commandButton value="#{lbl['lbl.so.addbtn']}" style="float:right;"   
+			<p:commandButton value="#{lbl['lbl.so.addbtn']}"  
 				actionListener="#{qTSupplierQulCriteriaBackingBean.addNewCategoryItem}"
-				update="@(.myCatList)" icon=".ui-icon-add"/>
-				<p:commandButton value="#{lbl['lbl.so.delete']}" icon=".ui-icon-delete"   style="float:right;"/>
+				update="@(.myCatList)" icon="ui-icon-add"/>
+				<p:commandButton value="#{lbl['lbl.so.delete']}" icon="ui-icon-delete"  />
 		</div>
-		</f:facet>
-		</p:panelGrid>
+		
 		
 
 		<h:panelGrid columns="2" style="width:40%;"
@@ -123,7 +118,7 @@
 		</p:panelGrid>
 		<p:panelGrid columns="1" style="width:100%;"
 			styleClass="noBorders tr,noBorders td">
-			<p:commandButton value="#{lbl['lbl.so.searchbtn']}" icon=".ui-icon-search"  style="float:right;" />
+			<p:commandButton value="#{lbl['lbl.so.searchbtn']}" icon="ui-icon-search"  style="float:right;" />
 		</p:panelGrid>
 	</p:panel>
 

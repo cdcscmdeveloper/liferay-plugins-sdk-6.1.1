@@ -187,16 +187,16 @@
 
 
 
-						<p:commandLink oncomplete="approvalUpload.show();return false;"
-							partialSubmit="true" process="@this">
-							<p:graphicImage library="ep/images/design" name="upload.png"
-								value="/resources/ep/images/design/upload.png" />
+						<p:commandButton value="Upload" oncomplete="approvalUpload.show();return false;"
+							partialSubmit="true" process="@this" icon="ui-icon-upload">
+							<!-- <p:graphicImage library="ep/images/design" name="upload.png"
+								value="/resources/ep/images/design/upload.png" /> -->
 							<f:setPropertyActionListener
 								value="#{approvalCategory.scQtApproval}"
 								target="#{approvalBackingBean.managedBean.scQtApproval}" />
 							<f:setPropertyActionListener value="@(.testClass)"
 								target="#{approvalBackingBean.managedBean.uploadUpdateId}" />
-						</p:commandLink>
+						</p:commandButton>
 
 						<p:outputPanel autoUpdate="true">
 							<h:outputText styleClass="testClass"
