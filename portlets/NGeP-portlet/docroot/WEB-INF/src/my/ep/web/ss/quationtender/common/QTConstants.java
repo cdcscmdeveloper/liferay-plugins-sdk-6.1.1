@@ -51,6 +51,7 @@ public interface QTConstants {
 	public static final String SC_NEGOTIATION_TAB="Negotiation Details";
 	
 	public static final String SC_LOA_TAB="LOA";
+	public static final String SC_LOA_AWARD_TAB = "Award Details";
 	public static final String SC_PERFORMANCE_BOND_TAB="Performance Bond";
 	public static final String SC_PAYMENT_TAB="Payment Details";
 
