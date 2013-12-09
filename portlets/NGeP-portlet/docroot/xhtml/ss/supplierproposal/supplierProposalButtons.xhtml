@@ -4,22 +4,37 @@
 	xmlns:ui="http://java.sun.com/jsf/facelets"
 	xmlns:p="http://primefaces.org/ui"
 	xmlns:c="http://java.sun.com/jsp/jstl/core">
-	
-<p:panel>
-<p:panelGrid style="width:100%;"
+
+	<p:panel>
+		<p:panelGrid style="width:100%;"
 			styleClass="noBorders tr,noBorders td">
 			<p:row>
 				<p:column width="100%" style="text-align:right">
-					<p:commandButton value="Save" action="#{sPDetailBB.saveSPDetailsAction}" process="@all"/>
-				
-			<ui:repeat var="action" value="#{sPDetailBB.managedBean.outComes}">
-							<p:commandButton value="#{action}" process="@all"
-								styleClass="ui-button"
-								actionListener="#{sPDetailBB.updateBpmTask(action)}" />
-						</ui:repeat>
-						</p:column>
-						</p:row>
-		</p:panelGrid>
+					<p:commandButton value="Save"
+						action="#{sPDetailBackingBean.saveSPDetailsAction}" process="@all" />
 
-</p:panel>
+					<ui:repeat var="action"
+						value="#{sPDetailBackingBean.managedBean.outComes}">
+
+						<ui:fragment rendred="#{action eq 'Submit'}">
+							<c:set var="iconVar" value="ui-icon-submit" scope="request"></c:set>
+						</ui:fragment>
+						<ui:fragment rendred="#{action eq 'Reject'}">
+							<c:set var="iconVar" value="ui-icon-reject" scope="request"></c:set>
+						</ui:fragment>
+						<ui:fragment rendred="#{action eq 'Revise'}">
+							<c:set var="iconVar" value="ui-icon-revise" scope="request"></c:set>
+						</ui:fragment>
+						<ui:fragment rendred="#{action eq 'Approve'}">
+							<c:set var="iconVar" value="ui-icon-save" scope="request"></c:set>
+						</ui:fragment>
+
+						<p:commandButton value="#{action}" process="@all"
+							styleClass="ui-button"
+							actionListener="#{sPDetailBB.updateBpmTask(action)}" />
+					</ui:repeat>
+				</p:column>
+			</p:row>
+		</p:panelGrid>
+	</p:panel>
 </ui:composition>
