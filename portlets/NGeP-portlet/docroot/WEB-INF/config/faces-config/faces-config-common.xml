@@ -28,6 +28,14 @@
 		<var>lbl</var>
 	   </resource-bundle>
      </application>
+     
+	 <managed-bean>
+		  <description>Common Constants</description>
+		  <managed-bean-name>CommonConstants</managed-bean-name>
+		  <managed-bean-class>my.ep.constants.CommonConstants</managed-bean-class>
+		  <managed-bean-scope>application</managed-bean-scope>
+	 </managed-bean>
+     
      <render-kit>
 		<renderer>
 			<component-family>org.primefaces.component</component-family>
