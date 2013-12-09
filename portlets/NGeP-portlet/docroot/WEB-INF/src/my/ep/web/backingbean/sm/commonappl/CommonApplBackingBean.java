@@ -207,6 +207,10 @@ public class CommonApplBackingBean extends
 					"Review Renew Mof Registration Applicatoin - ");
 			break;
 		default:
+			System.out
+					.println("***** THIS IS DEFAULT PAGE --- i.e. no matching type ---"
+							+ smApplBB.getManagedBean().getSmAppl()
+									.getApplType());
 			break;
 		}
 	}

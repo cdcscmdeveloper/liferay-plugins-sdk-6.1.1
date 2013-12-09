@@ -65,11 +65,12 @@ public class SmApplicationBackingBean extends
 	public SmApplicationBackingBean() {
 
 	}
+
 	public String proceedToApplication(String applicationType) {
-		return proceedToApplication(applicationType,Boolean.FALSE);
+		return proceedToApplication(applicationType, Boolean.FALSE);
 	}
-	
-	public String proceedToApplication(String applicationType,boolean fromBpm) {
+
+	public String proceedToApplication(String applicationType, boolean fromBpm) {
 		System.out
 				.println("**** ENTER Create Application Type Of  *************"
 						+ applicationType + "Application type = >>"
@@ -440,6 +441,12 @@ public class SmApplicationBackingBean extends
 				+ getManagedBean().getOfficeFacility().getOwnershipType());
 		System.out.println(" **** Values In loop *********"
 				+ getManagedBean().getOfficeFacility().getRentalRate());
+	}
+
+	public void svcSelected(AjaxBehaviorEvent e) {
+		System.out.println(" ******* On Change Office Facility ***** "
+				+ getManagedBean().getPoSiteVisitType());
+		
 	}
 
 	// -- Process Branches Start
