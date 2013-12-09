@@ -15,8 +15,8 @@
 			<h:outputLabel value="Approver Name"></h:outputLabel>
    
              <h:panelGroup id="sample1">
-				<c:if
-					test="${approvalCategory.scQtApproval.verifyOption eq 'O'}">
+				<ui:fragment 
+					rendered="#{approvalCategory.scQtApproval.verifyOption eq 'O'}">
 					<p:selectOneMenu
 						value="#{approvalCategory.scQtApproval.approverId}" style="width: 100px;">
 							<f:selectItem itemLabel="Select One" itemValue="" />
@@ -24,13 +24,13 @@
 						<f:selectItem itemLabel="ROSLAN" itemValue="2" />
 						<f:selectItem itemLabel="KHAIR" itemValue="3" />
 					</p:selectOneMenu>
-				</c:if>
-				<c:if
-					test="${approvalCategory.scQtApproval.verifyOption eq 'F'}">
+				</ui:fragment>
+				<ui:fragment 
+					rendered="#{approvalCategory.scQtApproval.verifyOption eq 'F'}">
 					<p:inputText
 						value="#{approvalCategory.scQtApproval.approverId}"
 						></p:inputText>
-				</c:if>
+				</ui:fragment>
 			</h:panelGroup>
 
 			<h:outputLabel value="Approver Date"></h:outputLabel>
@@ -51,7 +51,7 @@
 				<c:choose>
 
 					<c:when
-						test="${approvalBackingBean.managedBean.checkBoxBPK eq 'Restricted'}">
+						test="#{approvalBackingBean.managedBean.checkBoxBPK eq 'Restricted'}">
 						<p:selectOneMenu
 							value="#{approvalCategory.scQtApproval.approverAction}" style="width: 100px;">
 								<f:selectItem itemLabel="Select One" itemValue="" />
@@ -62,7 +62,7 @@
 						</p:selectOneMenu>
 					</c:when>
 					<c:when
-						test="${approvalBackingBean.managedBean.checkBoxBPK eq 'Direct'}">
+						test="#{approvalBackingBean.managedBean.checkBoxBPK eq 'Direct'}">
 						<p:selectOneMenu
 							value="#{approvalCategory.scQtApproval.approverAction}" style="width: 100px;">
 								<f:selectItem itemLabel="Select One" itemValue="" />
