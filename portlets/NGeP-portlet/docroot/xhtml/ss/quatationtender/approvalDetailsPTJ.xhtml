@@ -16,7 +16,7 @@
 			<h:panelGroup id="sample2">
 				<p:selectOneMenu
 					value="#{approvalCategory.scQtApproval.approverId}"
-					rendered="#{approvalCategory.scQtApproval.verifyOption eq 'O'}">
+					rendered="#{approvalCategory.scQtApproval.verifyOption eq 'O'}" style="width: 100px;">
 					<f:selectItems value="#{qTDetailBB.managedBean.approvers}" var="approver"   itemLabel="#{approver.userName}" itemValue="#{approver.userId}"></f:selectItems>
 				</p:selectOneMenu>
 
@@ -43,7 +43,7 @@
 			<h:outputLabel value="Action"></h:outputLabel>
 
 			<p:selectOneMenu
-				value="#{approvalCategory.scQtApproval.approverAction}">
+				value="#{approvalCategory.scQtApproval.approverAction}" style="width: 100px;">
 					<f:selectItem itemLabel="Select One" itemValue="" />
 				<f:selectItem itemLabel="APPROVER" itemValue="a" />
 				<f:selectItem itemLabel="REJECT" itemValue="r" />

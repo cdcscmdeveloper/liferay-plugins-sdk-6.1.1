@@ -18,7 +18,7 @@
 				<c:if
 					test="${approvalCategory.scQtApproval.verifyOption eq 'O'}">
 					<p:selectOneMenu
-						value="#{approvalCategory.scQtApproval.approverId}">
+						value="#{approvalCategory.scQtApproval.approverId}" style="width: 100px;">
 							<f:selectItem itemLabel="Select One" itemValue="" />
 						
 						<f:selectItem itemLabel="ROSLAN" itemValue="2" />
@@ -29,7 +29,7 @@
 					test="${approvalCategory.scQtApproval.verifyOption eq 'F'}">
 					<p:inputText
 						value="#{approvalCategory.scQtApproval.approverId}"
-						size="10"></p:inputText>
+						></p:inputText>
 				</c:if>
 			</h:panelGroup>
 
@@ -53,7 +53,7 @@
 					<c:when
 						test="${approvalBackingBean.managedBean.checkBoxBPK eq 'Restricted'}">
 						<p:selectOneMenu
-							value="#{approvalCategory.scQtApproval.approverAction}">
+							value="#{approvalCategory.scQtApproval.approverAction}" style="width: 100px;">
 								<f:selectItem itemLabel="Select One" itemValue="" />
 							<f:selectItem itemLabel="APPROVE" itemValue="a" />
 							<f:selectItem itemLabel="REJECT" itemValue="r" />
@@ -64,7 +64,7 @@
 					<c:when
 						test="${approvalBackingBean.managedBean.checkBoxBPK eq 'Direct'}">
 						<p:selectOneMenu
-							value="#{approvalCategory.scQtApproval.approverAction}">
+							value="#{approvalCategory.scQtApproval.approverAction}" style="width: 100px;">
 								<f:selectItem itemLabel="Select One" itemValue="" />
 							<f:selectItem itemLabel="APPROVE" itemValue="a" />
 							<f:selectItem itemLabel="REJECT" itemValue="r" />
@@ -74,7 +74,7 @@
 
 					<c:otherwise>
 						<p:selectOneMenu
-							value="#{approvalCategory.scQtApproval.approverAction}">
+							value="#{approvalCategory.scQtApproval.approverAction}" style="width: 100px;">
 								<f:selectItem itemLabel="Select One" itemValue="" />
 							<f:selectItem itemLabel="APPROVE" itemValue="a" />
 							<f:selectItem itemLabel="REJECT" itemValue="r" />
