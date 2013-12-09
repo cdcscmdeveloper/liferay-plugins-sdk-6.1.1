@@ -11,24 +11,24 @@
 			<c:if test="#{qTDetailBB.managedBean.taskId eq null}">
 				<c:if test="#{qTDetailBB.managedBean.qt.brandNew}">
 					<p:commandButton action="#{qTDetailBB.clonePopupAction}"
-						value="Clone" oncomplete="clonedlg.show();" styleClass="ui-icon-clone" />
+						value="Clone" oncomplete="clonedlg.show();" icon="ui-icon-clone" />
 					<ui:include
 						src="/xhtml/ss/quatationtender/cloneqtntenderscreen.xhtml" />
 				</c:if>
 				<c:if test="#{!qTDetailBB.managedBean.qt.brandNew}">
-					<p:button value="Cancel" style="float:right;margin-right: 12px;ui-icon-cancel;"  />
+					<p:button value="Cancel" style="float:right;margin-right: 12px;" icon="ui-icon-cancel"  />
 				</c:if>
 				<p:commandButton value="Submit" 
-					action="#{qTDetailBB.submitQTDetailsAction}" process="@all" styleClass="ui-icon-submit" />
+					action="#{qTDetailBB.submitQTDetailsAction}" process="@all" icon="ui-icon-submit" />
 				<p:commandButton value="Save" 
-					action="#{qTDetailBB.saveQtDetailsAction}" process="@all" styleClass="ui-icon-save"/>
+					action="#{qTDetailBB.saveQtDetailsAction}" process="@all" icon="ui-icon-save"/>
 				<br />
 				<br />
 			</c:if>
 			<c:if
 				test="#{((qTDetailBB.managedBean.processName != 'QuotationTender Creation' ) and (qTDetailBB.managedBean.taskId != null))}">
 				<p:commandButton value="Submit" 
-					action="#{qTDetailBB.updateBpmTask}" process="@all" styleClass="ui-icon-submit">
+					action="#{qTDetailBB.updateBpmTask}" process="@all" icon="ui-icon-submit">
 
 				</p:commandButton>
 			</c:if>
