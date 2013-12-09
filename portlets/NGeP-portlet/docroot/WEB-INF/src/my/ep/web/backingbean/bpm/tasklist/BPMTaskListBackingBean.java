@@ -50,10 +50,10 @@ public class BPMTaskListBackingBean extends
 		temp.put("MOF Account Maintain", "mof-application");
 		temp.put("MOF Registration Cancellation","mof-application");
 		temp.put("DirectPurchase Creation", "review-directpuchase");
-		
+
 		temp.put("Supplier Recommendation", "review-directpuchase");
 
-		//QuationTender 
+		// QuationTender
 		temp.put("MITI Approval", "qtmaintanance");
 		temp.put("Budget Approval", "qtmaintanance");
 		temp.put("ICT Approval", "qtmaintanance");
@@ -65,9 +65,9 @@ public class BPMTaskListBackingBean extends
 		temp.put("Site Visit", "sitevisit");
 		temp.put("Proposal Preparation","supplierpp");
 
-		temp.put("Circular Contract Maintenance", "create-central-contract-circular");
+		temp.put("Circular Contract Maintenance","create-central-contract-circular");
 		temp.put("Circular Contract Maintenance", "create-panel-circular");
-		temp.put("Circular Contract Maintenance", "central-contract-circular-maintenance");
+		temp.put("Circular Contract Maintenance","central-contract-circular-maintenance");
 		temp.put("Circular Contract Maintenance", "panel-circular-maintenance");
 		temp.put("Circular Contract Cancellation", "cancel-circular");
 		temp.put("Factoring Company Request", "request-factoring");
@@ -111,8 +111,8 @@ public class BPMTaskListBackingBean extends
 		temp.put(FlProcessNameConst.PURCHASE_REQ_CREATION_PROCESS_NAME+FlProcessNameConst.PR_ACK_HT, "purchase-order");
 		temp.put(FlProcessNameConst.PURCHASE_REQ_CREATION_PROCESS_NAME+FlProcessNameConst.REVIEW_REJECTED_PO_HT, "purchase-order");
 
-
-		temp.put("Service QuotationTender Creation","supplierpp");
+		temp.put("Service QuotationTender Creation", "supplierpp");
+		temp.put("Committee Approval", "committeMaintance");
 
 		this.getManagedBean().setBpmMap(temp);
 
@@ -190,6 +190,10 @@ public class BPMTaskListBackingBean extends
 
 				url = (String) this.getManagedBean().getBpmMap()
 						.get(res.getProcessName());
+				if (url == null || url.isEmpty()) {
+					url = (String) this.getManagedBean().getBpmMap()
+							.get(res.getProcessName() + res.getTaskName());
+				}
 
 			}
 			log.info("url:" + url);
