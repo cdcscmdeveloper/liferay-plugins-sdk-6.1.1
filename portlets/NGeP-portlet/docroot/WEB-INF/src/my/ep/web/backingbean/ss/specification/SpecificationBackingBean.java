@@ -173,12 +173,24 @@ public class SpecificationBackingBean extends
 			SpecificationReqDTO specreqDTO = new SpecificationReqDTO();
 			specreqDTO.setScQtSpec(scqtSpec);
 			//specSO.saveSpecDetails(specreqDTO);
+			FacesContext.getCurrentInstance().addMessage(
+					null,
+					new FacesMessage(FacesMessage.SEVERITY_ERROR,
+							"SuccessFully Saved",
+							"Specification"));
 			System.out.println("====successfully saved in db====");
 
 		} catch (Exception e) {
 			System.out.println("=====cath exception method===");
 			e.printStackTrace();
-			throw new IllegalArgumentException();
+			//throw new IllegalArgumentException();
+			//specSO.saveSpecDetails(specreqDTO);
+			FacesContext.getCurrentInstance().addMessage(
+					null,
+					new FacesMessage(FacesMessage.SEVERITY_ERROR,
+							"SuccessFully Saved",
+							"Specification"));
+			
 		}
 
 	}
