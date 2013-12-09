@@ -13,6 +13,7 @@ import javax.faces.model.SelectItem;
 import my.ep.factory.EpLogger;
 import my.ep.jaxb.sc.quotationtenderdata.SCQuotationTenderDataType;
 import my.ep.persistence.entity.ct.circular.CtCircular;
+import my.ep.persistence.entity.ct.circular.panel.CtPanelItem;
 import my.ep.persistence.entity.ct.circular.panel.CtPanelSupplier;
 import my.ep.persistence.entity.pm.authorization.PmOrgProfile;
 import my.ep.persistence.entity.pm.authorization.PmUser;
@@ -26,6 +27,7 @@ import my.ep.persistence.entity.pm.common.PmGo;
 import my.ep.persistence.entity.pm.common.PmSo;
 import my.ep.persistence.entity.pm.common.PmState;
 import my.ep.persistence.entity.pm.common.PmZone;
+import my.ep.persistence.entity.pp.procurementplan.PpPlan;
 import my.ep.persistence.entity.sm.SmMofAccount;
 import my.ep.persistence.entity.sm.SmSupplier;
 import my.ep.persistence.entity.ss.quationtender.ScQt;
@@ -49,6 +51,8 @@ import org.apache.log4j.Logger;
 import org.primefaces.model.DefaultTreeNode;
 import org.primefaces.model.TreeNode;
 
+import com.sun.org.apache.bcel.internal.generic.LUSHR;
+
 /**
  * @Author VidyasagarReddy
  */
@@ -67,6 +71,7 @@ public class QTDetailManagedBean extends BaseManagedBean {
 	private ScQtCategory qtCategory;
 	private CtCircular searchCircular;
 	private CtPanelSupplier ctPanelSupplier;
+	private CtPanelItem ctPanelItem;
 	private ScQtBriefing qtSiteBriefing;
 	private ScQtDoc qtDoc;
 	private ScQtRemark qtRemark;
@@ -74,6 +79,9 @@ public class QTDetailManagedBean extends BaseManagedBean {
 	private ScRemark scRemark;
 	private ScQtCheckList qtCheckList;
 	private ScQtContactPerson qtContactPerson;
+	private PpPlan ppPlan;
+	private PmOrgProfile pmOrgProfile;
+
 	
 	private String selectedBoolean1;
 	private String multiLoc;
@@ -108,12 +116,24 @@ public class QTDetailManagedBean extends BaseManagedBean {
 	public List<ScQtBriefing> briefings;
 	public List<ScQtBriefing> siteBriefings;
 	public List<ScQtDoc> scQtDocs;
-    public List<SelectItem> cloneAllList;
+    public List<CloneAll> cloneAllList;
     private List<ScQtContactPerson> scQtContactPersons;
     private List<CtCircular> ctCirculars;
     private List<ScQtRemark> scQtRemarks;
     private List<ScQtCheckList> scQtChecklists;
-   
+    private List<CtPanelSupplier> panelSupplierList;
+    
+    private List<ScQtBriefing> selectedBriefingDetails; 
+    private List<ScQtBriefing> selectedSiteVisitDetails; 
+    private List<ScQtContactPerson> selectedContactPersons;
+	private List<ScQtCheckList> selectedCheckLists;
+	private List<ScQtGosodoBudget> selectedGosodoBudgets;
+	private List<ScQtCategory> selectedopenCategories;
+	private List<ScQtCategory> selectedrestrictedcCategories;
+    private List<SmMofAccount> selectedrestircedsupplier;
+    private List<SmMofAccount> selectedpanelsupplier;
+    private List<ScQt> selectedCloneTenderList;
+    
 	private String qtNumber;
 	
 	private PmOrgProfile selectedUserMinistry;
@@ -175,14 +195,10 @@ public class QTDetailManagedBean extends BaseManagedBean {
 	private List<PmUser> bbkApprovers;
 	private String outCome;
 	private String processName;
-	private ScQtApproval scQtApproval;
-	private String uploadUpdateId;
+	private ScQtApproval scQtApproval;	 	
+    private String uploadUpdateId;
 	//Payload for BPM
 		private SCQuotationTenderDataType quotationTenderDataType;
-		
-		private List<ScQt> qtList = new ArrayList<ScQt>();
-
-		private List<CtPanelSupplier> panelSuppliers; 
 	
 	static{
 			PmZone zone=new PmZone();
@@ -410,10 +426,16 @@ public class QTDetailManagedBean extends BaseManagedBean {
 		this.selectedPmDistricts = selectedPmDistricts;
 	}
 
-	
+	private List<ScQt> qtList = new ArrayList<ScQt>();
+
+	private List<SmSupplier> panelSuppliers; 
 	
 
-	
+	public void setPanelSuppliers(List<SmSupplier> panelSuppliers) {
+		this.panelSuppliers = panelSuppliers;
+	}
+
+
 	public QTDetailManagedBean() {
 		log.info("inside ");
 		
@@ -820,7 +842,9 @@ public class QTDetailManagedBean extends BaseManagedBean {
 	}
 
 
-	
+	public List<SmSupplier> getPanelSuppliers() {
+		return panelSuppliers;
+	}
 
 	public SmSupplier getSearchSupplier() {
 		return searchSupplier;
@@ -1002,12 +1026,13 @@ public class QTDetailManagedBean extends BaseManagedBean {
 	}
 
 
-	public List<SelectItem> getCloneAllList() {
+
+	public List<CloneAll> getCloneAllList() {
 		return cloneAllList;
 	}
 
 
-	public void setCloneAllList(List<SelectItem> cloneAllList) {
+	public void setCloneAllList(List<CloneAll> cloneAllList) {
 		this.cloneAllList = cloneAllList;
 	}
 
@@ -1132,12 +1157,6 @@ public class QTDetailManagedBean extends BaseManagedBean {
 	}
 
 
-	public void populateCloneAll(){
-		CloneAll [] cloneAllValues=CloneAll.values();
-		Arrays.asList(cloneAllValues);
-	}
-
-
 	public ScQtContactPerson getQtContactPerson() {
 		return qtContactPerson;
 	}
@@ -1217,8 +1236,31 @@ public class QTDetailManagedBean extends BaseManagedBean {
 	public void setCountries(List<PmCountry> countries) {
 		this.countries = countries;
 	}
+       
+	public void populateCloneAll(){
+		CloneAll [] cloneAllValues=CloneAll.values();
+		Arrays.asList(cloneAllValues);
+	}
 
 
+	public PpPlan getPpPlan() {
+		return ppPlan;
+	}
+
+
+	public void setPpPlan(PpPlan ppPlan) {
+		this.ppPlan = ppPlan;
+	}
+
+
+	public PmOrgProfile getPmOrgProfile() {
+		return pmOrgProfile;
+	}
+
+
+	public void setPmOrgProfile(PmOrgProfile pmOrgProfile) {
+		this.pmOrgProfile = pmOrgProfile;
+	}
 	/**
 	 * @return the scQtApproval
 	 */
@@ -1251,13 +1293,129 @@ public class QTDetailManagedBean extends BaseManagedBean {
 	}
 
 
-	public List<CtPanelSupplier> getPanelSuppliers() {
-		return panelSuppliers;
+	public CtPanelItem getCtPanelItem() {
+		return ctPanelItem;
 	}
 
 
-	public void setPanelSuppliers(List<CtPanelSupplier> panelSuppliers) {
-		this.panelSuppliers = panelSuppliers;
+	public void setCtPanelItem(CtPanelItem ctPanelItem) {
+		this.ctPanelItem = ctPanelItem;
 	}
-       
+
+
+	public List<ScQtBriefing> getSelectedBriefingDetails() {
+		return selectedBriefingDetails;
+	}
+
+
+	public void setSelectedBriefingDetails(
+			List<ScQtBriefing> selectedBriefingDetails) {
+		this.selectedBriefingDetails = selectedBriefingDetails;
+	}
+
+
+	public List<ScQtBriefing> getSelectedSiteVisitDetails() {
+		return selectedSiteVisitDetails;
+	}
+
+
+	public void setSelectedSiteVisitDetails(
+			List<ScQtBriefing> selectedSiteVisitDetails) {
+		this.selectedSiteVisitDetails = selectedSiteVisitDetails;
+	}
+
+
+	public List<ScQtContactPerson> getSelectedContactPersons() {
+		return selectedContactPersons;
+	}
+
+
+	public void setSelectedContactPersons(
+			List<ScQtContactPerson> selectedContactPersons) {
+		this.selectedContactPersons = selectedContactPersons;
+	}
+
+
+	public List<ScQtCheckList> getSelectedCheckLists() {
+		return selectedCheckLists;
+	}
+
+
+	public void setSelectedCheckLists(List<ScQtCheckList> selectedCheckLists) {
+		this.selectedCheckLists = selectedCheckLists;
+	}
+
+
+	public List<ScQtGosodoBudget> getSelectedGosodoBudgets() {
+		return selectedGosodoBudgets;
+	}
+
+
+	public void setSelectedGosodoBudgets(
+			List<ScQtGosodoBudget> selectedGosodoBudgets) {
+		this.selectedGosodoBudgets = selectedGosodoBudgets;
+	}
+
+
+	public List<ScQtCategory> getSelectedopenCategories() {
+		return selectedopenCategories;
+	}
+
+
+	public void setSelectedopenCategories(List<ScQtCategory> selectedopenCategories) {
+		this.selectedopenCategories = selectedopenCategories;
+	}
+
+
+	public List<ScQtCategory> getSelectedrestrictedcCategories() {
+		return selectedrestrictedcCategories;
+	}
+
+
+	public void setSelectedrestrictedcCategories(
+			List<ScQtCategory> selectedrestrictedcCategories) {
+		this.selectedrestrictedcCategories = selectedrestrictedcCategories;
+	}
+
+
+	public List<SmMofAccount> getSelectedrestircedsupplier() {
+		return selectedrestircedsupplier;
+	}
+
+
+	public void setSelectedrestircedsupplier(
+			List<SmMofAccount> selectedrestircedsupplier) {
+		this.selectedrestircedsupplier = selectedrestircedsupplier;
+	}
+
+
+	public List<ScQt> getSelectedCloneTenderList() {
+		return selectedCloneTenderList;
+	}
+
+
+	public void setSelectedCloneTenderList(List<ScQt> selectedCloneTenderList) {
+		this.selectedCloneTenderList = selectedCloneTenderList;
+	}
+
+
+	public List<SmMofAccount> getSelectedpanelsupplier() {
+		return selectedpanelsupplier;
+	}
+
+
+	public void setSelectedpanelsupplier(List<SmMofAccount> selectedpanelsupplier) {
+		this.selectedpanelsupplier = selectedpanelsupplier;
+	}
+
+
+	public List<CtPanelSupplier> getPanelSupplierList() {
+		return panelSupplierList;
+	}
+
+
+	public void setPanelSupplierList(List<CtPanelSupplier> panelSupplierList) {
+		this.panelSupplierList = panelSupplierList;
+	}
+    	 
 }
