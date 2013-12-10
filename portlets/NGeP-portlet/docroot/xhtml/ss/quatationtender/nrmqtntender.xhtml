@@ -105,7 +105,7 @@
 
 
 			<p:selectOneRadio
-				value="#{qTSupplierQulCriteriaBackingBean.managedBean.qtCriteria.multiLocality}">
+				value="#{qTSupplierQulCriteriaBackingBean.managedBean.qtCriteria.multiLocality}" style="margin-bottom:5px;">
 				<f:selectItem itemLabel="yes" itemValue="true" />
 				<f:selectItem itemLabel="No" itemValue="false" />
 				<p:ajax event="change"
@@ -120,22 +120,24 @@
 					rendered="#{qTSupplierQulCriteriaBackingBean.managedBean.qtCriteria.multiLocality}">
 					<table style="width: 100%">
 						<tr>
-							<td><h:outputText value="#{lbl['lbl.so.allstate']}" /></td>
+							<td style="width: 64px; padding-left: 113px;"><h:outputLabel
+									value="#{lbl['lbl.so.allstate']}" /></td>
 							<td><p:selectBooleanCheckbox
 									value="#{qTSupplierQulCriteriaBackingBean.checked}" /></td>
-							
+
 						</tr>
 					</table>
 				</h:panelGroup>
 			</h:panelGroup>
 		</h:panelGrid>
-		<p:panelGrid columns="2" style="width:40%;"
-			styleClass="noBorders tr,noBorders td">
-			<h:outputLabel value="#{lbl['lbl.so.paidup']}"
-				style="padding-right: 6px;padding-left: 27px" />
-			<p:inputText
-				value="#{qTDetailBB.managedBean.qtCriteria.paidUpCaptial}" />
-		</p:panelGrid>
+		<h:panelGrid border="0" cellpadding="0" cellspacing="0" width="100%"
+			columns="2" columnClasses="columnWidth20">
+		<h:column>
+		<h:outputText value="#{lbl['lbl.so.paidup']}"  style="padding-right: 6px;padding-left: 81px" />  
+            <p:inputText value="#{qTSupplierQulCriteriaBackingBean.managedBean.qtCriteria.paidUpCaptial}" style="margin-right:5px;"/> 
+            <h:inputText value="MYR" disabled="true" size="1"></h:inputText>
+          </h:column>
+          </h:panelGrid>
 		<p:panelGrid columns="1" style="width:100%;"
 			styleClass="noBorders tr,noBorders td">
 			<p:commandButton value="#{lbl['lbl.so.searchbtn']}"
