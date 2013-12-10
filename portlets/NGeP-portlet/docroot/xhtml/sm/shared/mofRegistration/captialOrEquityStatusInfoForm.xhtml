@@ -68,107 +68,111 @@
 
 			</tr>
 			<tr>
-				<td colspan="4" align="center"><p:panelGrid>
-						<f:facet name="header">
+				<td colspan="4">
+					<div style="width: 98%" align="center">
+						<p:panelGrid>
+							<f:facet name="header">
+								<p:row>
+									<p:column>Composition of Capital Distribution</p:column>
+									<p:column>NO. Of Members</p:column>
+									<p:column>Value (MYR)</p:column>
+									<p:column>%</p:column>
+								</p:row>
+							</f:facet>
 							<p:row>
-								<p:column>Composition of Capital Distribution</p:column>
-								<p:column>NO. Of Members</p:column>
-								<p:column>Value (MYR)</p:column>
-								<p:column>%</p:column>
+								<p:column>Bumiputera</p:column>
+								<p:column>
+									<p:inputText id="bumiMem" />
+								</p:column>
+								<p:column>
+									<p:inputText id="bumiAmt" />
+								</p:column>
+								<p:column>
+									<p:inputText label="0.00" readonly="true" id="bumiPerc"
+										title="Auto calculated / populated value" />
+								</p:column>
 							</p:row>
-						</f:facet>
-						<p:row>
-							<p:column>Bumiputera</p:column>
-							<p:column>
-								<p:inputText id="bumiMem" />
-							</p:column>
-							<p:column>
-								<p:inputText id="bumiAmt" />
-							</p:column>
-							<p:column>
-								<p:inputText label="0.00" readonly="true" id="bumiPerc"
-									title="Auto calculated / populated value" />
-							</p:column>
-						</p:row>
-						<p:row>
-							<p:column>Non Bumiputera</p:column>
-							<p:column>
-								<p:inputText />
-							</p:column>
-							<p:column>
-								<p:inputText label="0.00" />
-							</p:column>
-							<p:column>
-								<p:inputText label="0.00" readonly="true"
-									title="Auto calculated / populated value" />
-							</p:column>
-						</p:row>
-						<p:row>
-							<p:column>Non - Malaysian</p:column>
-							<p:column>
-								<p:inputText />
-							</p:column>
-							<p:column>
-								<p:inputText label="0.00" />
-							</p:column>
-							<p:column>
-								<p:inputText label="0.00" readonly="true"
-									title="Auto calculated / populated value" />
-							</p:column>
-						</p:row>
-						<p:row>
-							<p:column>Equity Government / UT Agency</p:column>
-							<p:column>
-								<p:inputText />
-							</p:column>
-							<p:column>
-								<p:inputText label="0.00" />
-							</p:column>
-							<p:column>
-								<p:inputText label="0.00" readonly="true"
-									title="Auto calculated / populated value" />
-							</p:column>
-						</p:row>
-						<p:row>
-							<p:column>Government equity</p:column>
-							<p:column>
-								<p:inputText />
-							</p:column>
-							<p:column>
-								<p:inputText label="0.00" />
-							</p:column>
-							<p:column>
-								<p:inputText label="0.00" readonly="true"
-									title="Auto calculated / populated value" />
-							</p:column>
-						</p:row>
-						<p:row>
-							<p:column>Local Company</p:column>
-							<p:column>
-								<p:inputText />
-							</p:column>
-							<p:column>
-								<p:inputText label="0.00" />
-							</p:column>
-							<p:column>
-								<p:inputText label="0.00" readonly="true"
-									title="Auto calculated / populated value" />
-							</p:column>
-						</p:row>
-						<p:row>
-							<p:column>Foreign Company</p:column>
-							<p:column>
-								<p:inputText />
-							</p:column>
-							<p:column>
-								<p:inputText label="0.00" />
-							</p:column>
-							<p:column>
-								<p:inputText label="0.00" readonly="true"
-									title="Auto calculated / populated value" />
-							</p:column>
-						</p:row>
-					</p:panelGrid></td>
+							<p:row>
+								<p:column>Non Bumiputera</p:column>
+								<p:column>
+									<p:inputText />
+								</p:column>
+								<p:column>
+									<p:inputText label="0.00" />
+								</p:column>
+								<p:column>
+									<p:inputText label="0.00" readonly="true"
+										title="Auto calculated / populated value" />
+								</p:column>
+							</p:row>
+							<p:row>
+								<p:column>Non - Malaysian</p:column>
+								<p:column>
+									<p:inputText />
+								</p:column>
+								<p:column>
+									<p:inputText label="0.00" />
+								</p:column>
+								<p:column>
+									<p:inputText label="0.00" readonly="true"
+										title="Auto calculated / populated value" />
+								</p:column>
+							</p:row>
+							<p:row>
+								<p:column>Equity Government / UT Agency</p:column>
+								<p:column>
+									<p:inputText />
+								</p:column>
+								<p:column>
+									<p:inputText label="0.00" />
+								</p:column>
+								<p:column>
+									<p:inputText label="0.00" readonly="true"
+										title="Auto calculated / populated value" />
+								</p:column>
+							</p:row>
+							<p:row>
+								<p:column>Government equity</p:column>
+								<p:column>
+									<p:inputText />
+								</p:column>
+								<p:column>
+									<p:inputText label="0.00" />
+								</p:column>
+								<p:column>
+									<p:inputText label="0.00" readonly="true"
+										title="Auto calculated / populated value" />
+								</p:column>
+							</p:row>
+							<p:row>
+								<p:column>Local Company</p:column>
+								<p:column>
+									<p:inputText />
+								</p:column>
+								<p:column>
+									<p:inputText label="0.00" />
+								</p:column>
+								<p:column>
+									<p:inputText label="0.00" readonly="true"
+										title="Auto calculated / populated value" />
+								</p:column>
+							</p:row>
+							<p:row>
+								<p:column>Foreign Company</p:column>
+								<p:column>
+									<p:inputText />
+								</p:column>
+								<p:column>
+									<p:inputText label="0.00" />
+								</p:column>
+								<p:column>
+									<p:inputText label="0.00" readonly="true"
+										title="Auto calculated / populated value" />
+								</p:column>
+							</p:row>
+						</p:panelGrid>
+					</div>
+				</td>
 
 			</tr>
 			<tr>

@@ -32,7 +32,7 @@
 			rowKey="#{catBean.supplierCategoryId}" rowIndexVar="index" id="catDt">
 			<ac:paginator for="catDt" />
 			<p:columnGroup type="header">
-				<p:row>
+				<!-- <p:row>
 					<p:column rowspan="2" headerText="No." />
 					<p:column rowspan="2" headerText="Code" />
 					<p:column colspan="3" headerText="Category" />
@@ -40,12 +40,18 @@
 					<p:column rowspan="2" headerText="Category Type" />
 					<p:column rowspan="2" headerText="PO Action"
 						rendered="#{backingBean.managedBean.poUser}" />
-				</p:row>
+				</p:row> -->
 
 				<p:row>
+					<p:column headerText="No." />
+					<p:column headerText="Code" />
 					<p:column headerText="Parent" />
 					<p:column headerText="Child" />
 					<p:column headerText="Sub-Child" />
+					<p:column headerText="Business Type" />
+					<p:column headerText="Category Type" />
+					<p:column headerText="PO Action"
+						rendered="#{backingBean.managedBean.poUser}" />
 				</p:row>
 			</p:columnGroup>
 			<p:column>
