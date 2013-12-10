@@ -12,15 +12,15 @@
 			<p:panelGrid id="search" columns="4" styleClass="noBorders tr,noBorders td">
 
 
-				<h:outputLabel value="#{lbl['lbl.sc.committe.clone.comno']}"></h:outputLabel>
+				<h:outputLabel value="Committee No"></h:outputLabel>
 
 				<p:inputText value="#{committeBackingBean.managedBean.committeNo}"></p:inputText>
 
-				<h:outputLabel value="#{lbl['lbl.sc.committe.clone.qtntender']}"></h:outputLabel>
+				<h:outputLabel value="Qtn/Tender No"></h:outputLabel>
 				<p:inputText value="#{committeBackingBean.managedBean.qtNo}"
 					size="49"></p:inputText>
 
-				<h:outputLabel value="#{lbl['lbl.sc.committe.clone.comtype']}"></h:outputLabel>
+				<h:outputLabel value="Committe Type"></h:outputLabel>
 
 				<p:selectOneMenu
 					value="#{committeBackingBean.managedBean.selectedCommitte}">
@@ -28,11 +28,11 @@
 						value="#{committeBackingBean.managedBean.committeType}"></f:selectItems>
 				</p:selectOneMenu>
 
-				<h:outputLabel value="#{lbl['lbl.sc.committe.clone.datecreated']}"></h:outputLabel>
+				<h:outputLabel value="Date Created"></h:outputLabel>
 				<p:calendar value="#{committeBackingBean.managedBean.createdDt}"
 					showOn="button" />
 
-				<h:outputLabel value="#{lbl['lbl.sc.committe.clone.comstatus']}" ></h:outputLabel>
+				<h:outputLabel value="Committe Status" ></h:outputLabel>
 
 				<p:selectOneMenu 
 					value="#{committeBackingBean.managedBean.status}">
@@ -49,30 +49,30 @@
 			<br />
 		</p:panel>
 
-		<p:panel header="Search Committee" toggleable="true">
+		<p:panel header="Results" toggleable="true">
 			<p:dataTable id="clonesearchCommitte"
 				value="#{committeBackingBean.managedBean.cloneSearchCommittes}"
 				var="committe" styleClass="cloneResults">
 
 
-				<p:column headerText="#{lbl['lbl.sc.committe.result.comtype']}">
+				<p:column headerText="CommitteType">
 					<h:outputLabel value="#{committe.scCommittee.committeeType}"></h:outputLabel>
 				</p:column>
-				<p:column headerText="#{lbl['lbl.sc.committe.result.qtntender']}">
+				<p:column headerText="QTN/TenderNo">
 
 					<h:outputLabel value="#{committe.scQt.qtNo}"></h:outputLabel>
 
 				</p:column>
-				<p:column headerText="#{lbl['lbl.sc.committe.result.datecreated']}">
+				<p:column headerText="DateCreated">
 					<h:outputLabel value="#{committe.scCommittee.createdDate}"></h:outputLabel>
 				</p:column>
-				<p:column headerText="#{lbl['lbl.sc.committe.result.appstatus']}">
+				<p:column headerText="ApprovalStatus">
 					<h:outputLabel value="#{committe.scCommittee.approvalStatus}"></h:outputLabel>
 				</p:column>
-				<p:column headerText="#{lbl['lbl.sc.committe.result.recstatus']}">
+				<p:column headerText="RecordStatus">
 					<h:outputLabel value="#{committe.scCommittee.recordStatus}"></h:outputLabel>
 				</p:column>
-				<p:column headerText="#{lbl['lbl.sc.committe.result.action']}">
+				<p:column headerText="Action">
 					<p:commandButton value="ClONE" style="float:right;"
 						action="#{committeBackingBean.cloneCommitteMembersAcition(committe.scCommittee.committeeId)}" partialSubmit="true" process="@this" update="@(.cloneCommitteMembers)"
 						 />
@@ -87,25 +87,25 @@
 					var="member" rowKey="#{member.committeeMemberId}"
 					selection="#{committeBackingBean.managedBean.selectedCommitteMemebers}" styleClass="cloneResults,cloneCommitteMembers">
 					
-					<p:column selectionMode="multiple" />
+					<p:column selectionMode="multiple" style="width:2%" />
 
-					<p:column headerText="#{lbl['lbl.sc.committe.clonetable.name']}">
+					<p:column headerText="Name">
 						<h:outputLabel value="#{member.memberName}" />
 					</p:column>
 
-					<p:column headerText="#{lbl['lbl.sc.committe.clonetable.ministry']}">
+					<p:column headerText="Ministry">
 						<!--  <h:outputLabel value="#{member.pmOrgProfile.ministry}" />   -->
 					</p:column>
 
-					<p:column headerText="#{lbl['lbl.sc.committe.clonetable.division']}">
+					<p:column headerText="Division">
 						<!-- <h:outputLabel value="#{member.pmOrgProfile.division}" />  -->
 					</p:column>
 
-					<p:column headerText="#{lbl['lbl.sc.committe.clonetable.designation']}">
+					<p:column headerText="Designation">
 						<!-- <h:outputLabel value="#{member.pmOrgProfile.designation}" />   -->
 					</p:column>
 
-					<p:column headerText="#{lbl['lbl.sc.committe.clonetable.role']}">
+					<p:column headerText="Role">
 						<h:outputLabel value="#{memberR.memberRole}" />
 					</p:column>
 

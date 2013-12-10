@@ -16,23 +16,23 @@
 	<h:panelGrid id="search" columns="4" style="width:100%;" styleClass="noBorders tr,noBorders td">
 
 
-	<h:outputLabel value="#{lbl['lbl.sc.committe.comnno']}"></h:outputLabel>
+	<h:outputLabel value="Committee No"></h:outputLabel>
 	<p:inputText value="#{committeBackingBean.managedBean.committeNo}"></p:inputText>
 		
-	<h:outputLabel value="#{lbl['lbl.sc.committe.qtntenderno']}"></h:outputLabel>
+	<h:outputLabel value="Qtn/Tender No"></h:outputLabel>
 	<p:inputText value="#{committeBackingBean.managedBean.qtNo}" size="49"></p:inputText>
 	
-	<h:outputLabel value="#{lbl['lbl.sc.committe.comtype']}"></h:outputLabel>
+	<h:outputLabel value="Committe Type" ></h:outputLabel>
 
 	 <p:selectOneMenu value="#{committeBackingBean.managedBean.selectedCommitte}">  
             <f:selectItems value="#{committeBackingBean.managedBean.committeType}"></f:selectItems>
       </p:selectOneMenu> 
          
-	<h:outputLabel value="#{lbl['lbl.sc.committe.datecreated']}"></h:outputLabel>
+	<h:outputLabel value="Date Created"></h:outputLabel>
 	<p:calendar value="#{committeBackingBean.managedBean.createdDt}"
 				 showOn="button" />
 	
-	<h:outputLabel value="#{lbl['lbl.sc.committe.recordstatus']}"></h:outputLabel>
+	<h:outputLabel value="Record Status" ></h:outputLabel>
 
 	 <p:selectOneMenu style="width:61%;" value="#{committeBackingBean.managedBean.status}">  
             <f:selectItem itemLabel="Select One" itemValue="" />  
@@ -54,25 +54,25 @@
                  <p:ajax event="rowEditCancel"/> 
 				
  
-        <p:column headerText="#{lbl['lbl.sc.committe.resulttable.comtype']}"> 
+        <p:column headerText="CommitteType" > 
         <h:outputText value="#{committe.scCommittee.committeeType}"/>
         </p:column>
-         <p:column headerText="#{lbl['lbl.sc.committe.resulttable.qtntenderno']}"> 
+         <p:column headerText="QTN/TenderNo" > 
          <p:commandLink action="#{committeBackingBean.showQtDetailAction(committe.scQt.qtId)}"
 						style="margin-right:20px;" ajax1="false" oncomplete="screen5.show()" update="@(.qtCount)">
         <h:outputText value="#{committe.scQt.qtNo}"/>   
         </p:commandLink>
     </p:column>
-     <p:column headerText="#{lbl['lbl.sc.committe.resulttable.datecreated']}"> 
+     <p:column headerText="DateCreated" > 
         <h:outputText value="#{committe.scCommittee.createdDate}"/>  
     </p:column>
-     <p:column headerText="#{lbl['lbl.sc.committe.resulttable.comstatus']}"> 
+     <p:column headerText="CommitteStatus" > 
          <h:outputText value="#{committe.scCommittee.approvalStatus}"/>  
     </p:column>
-     <p:column headerText="#{lbl['lbl.sc.committe.resulttable.recstatus']}"> 
+     <p:column headerText="RecordStatus"> 
         <h:outputText value="#{committe.scCommittee.recordStatus}"/>
     </p:column>
-    <p:column headerText="#{lbl['lbl.sc.committe.resulttable.action']}">
+    <p:column headerText="Action">
     <p:rowEditor />
     </p:column>
      </p:dataTable>

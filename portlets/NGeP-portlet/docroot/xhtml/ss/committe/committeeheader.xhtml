@@ -8,52 +8,47 @@
 	<p:panel header="Header" toggleable="true">
 		<h:panelGrid columns="4" style="width:100%;" styleClass="noBorders tr,noBorders td">
 
-		<h:outputLabel value="#{lbl['lbl.sc.committe.header.comtype']}" />
-		 <p:selectOneMenu value="#{committeBackingBean.managedBean.selectedCommitte}">
+		<h:outputLabel value="Committee Type" />
+		 <p:selectOneMenu value="#{committeBackingBean.managedBean.scCommittee.committeeType}">
             <f:selectItem itemLabel="Select One" itemValue="-1" />  
-            <f:selectItem itemLabel="DOAA" itemValue="DOAA" /> 
-            <f:selectItem itemLabel="SC" itemValue="SC" />            
-            <f:selectItem itemLabel="OC" itemValue="OC" />  
-            <f:selectItem itemLabel="EC" itemValue="EC" /> 
-            <f:selectItem itemLabel="TEC" itemValue="TEC" />  
-            <f:selectItem itemLabel="FEC" itemValue="FEC" />  
-            <f:selectItem itemLabel="FC Secretary" itemValue="FCSecretary" />
-            <f:selectItem itemLabel="MSC" itemValue="MSC" />  
-            <f:selectItem itemLabel="QC" itemValue="QC" />
-            <f:selectItem itemLabel="PBB" itemValue="PBB" />
-            <f:selectItem itemLabel="PBA" itemValue="PBA" />
-            <f:selectItem itemLabel="FPB SBH" itemValue="FPBSBH" />
-            <f:selectItem itemLabel="FPB SRW" itemValue="FPBSRW" />
-            <f:selectItem itemLabel="FPA SBH" itemValue="FPASBH" />
-            <f:selectItem itemLabel="FPA SRW" itemValue="FPASRW" />
-            <f:selectItem itemLabel="BPK PB" itemValue="BPKPB" />            
-			<p:ajax event="change" update="parentText, approvaldetails,committecheckbox" />
+            <f:selectItem itemLabel="DOAA" itemValue="1" />  
+            <f:selectItem itemLabel="OC" itemValue="2" />  
+            <f:selectItem itemLabel="EC" itemValue="3" /> 
+            <f:selectItem itemLabel="TEC" itemValue="4" />  
+            <f:selectItem itemLabel="FEC" itemValue="5" />  
+            <f:selectItem itemLabel="FC Secretary" itemValue="6" />
+            <f:selectItem itemLabel="MSC" itemValue="7" />  
+            <f:selectItem itemLabel="QC" itemValue="8" />
+            <f:selectItem itemLabel="PBB" itemValue="9" />
+            <f:selectItem itemLabel="PBA" itemValue="10" />
+            <f:selectItem itemLabel="FPB SBH" itemValue="11" />
+            <f:selectItem itemLabel="FPB SRW" itemValue="12" />
+            <f:selectItem itemLabel="BPK PB" itemValue="13" />
+			<p:ajax event="change" update="parentText, approvaldetails,committecheckbox" listener="#{committeBackingBean.resetCommitteDetails}"/>
          </p:selectOneMenu>
 
-            <h:outputLabel value="#{lbl['lbl.sc.committe.header.ministrycodename']}" />  
+            <h:outputLabel value="Ministry Code/Name" />  
             <p:inputText readonly="true"/> 
+                     			
+			<h:outputLabel value="Qtn/Tender No" />  
+            <p:inputText value="#{committeBackingBean.managedBean.qtCommittee.scQt.qtNo}"/>            
             
-            <c:if test="#{committeBackingBean.managedBean.selectedCommitte != 'QC'}">                 			
-			<h:outputLabel value="#{lbl['lbl.sc.committe.header.qtntenderno']}" />  
-            <p:inputText value="#{committeBackingBean.managedBean.tenderNum}"/>            
-            </c:if>
-            
-            <h:outputLabel value="#{lbl['lbl.sc.committe.header.status']}" />  
+            <h:outputLabel value="Status" />  
             <p:inputText  readonly="true" />  
             
-            <h:outputLabel value="#{lbl['lbl.sc.committe.header.departcode']}" />  
+            <h:outputLabel value="Department Code/Name" />  
             <p:inputText readonly="true"/>  
            
-           <h:outputLabel value="#{lbl['lbl.sc.committe.header.createddate']}" /> 
+           <h:outputLabel value="Created Date"  /> 
    		   <p:inputText readonly="true"/>  
  
-           <h:outputLabel value="#{lbl['lbl.sc.committe.header.divcode']}" />  
+           <h:outputLabel value="Divison Code/Name" />  
            <p:inputText readonly="true"/>  
                           
-           <h:outputLabel value="#{lbl['lbl.sc.committe.header.comstatus']}" /> 
+           <h:outputLabel value="Committee Status" /> 
    		   <p:inputText readonly="true"/> 
    		   
-           <h:outputLabel value="#{lbl['lbl.sc.committe.header.recstatus']}" /> 
+           <h:outputLabel value="Record Status" /> 
    		   <p:inputText readonly="true"/>     		     		                                                                          
                       
       </h:panelGrid>
@@ -61,21 +56,20 @@
        
        <h:panelGroup id="parentText">
        
-	    <h:panelGroup rendered="#{committeBackingBean.managedBean.selectedCommitte eq 'DOAA' or committeBackingBean.managedBean.selectedCommitte eq 'SC'
-	                         or  committeBackingBean.managedBean.selectedCommitte eq 'OC' or committeBackingBean.managedBean.selectedCommitte eq 'EC'
-	                         or  committeBackingBean.managedBean.selectedCommitte eq 'FEC' or  committeBackingBean.managedBean.selectedCommitte eq 'TEC'}">
+	    <h:panelGroup rendered="#{committeBackingBean.managedBean.scCommittee.committeeType eq '1' or committeBackingBean.managedBean.scCommittee.committeeType eq '2'
+	                         or  committeBackingBean.managedBean.scCommittee.committeeType eq '3' or committeBackingBean.managedBean.scCommittee.committeeType eq '4'
+	                         or  committeBackingBean.managedBean.scCommittee.committeeType eq '4' or  committeBackingBean.managedBean.scCommittee.committeeType eq '5'}">
           <ui:include src="/xhtml/ss/committe/committeescselection.xhtml" />
 		</h:panelGroup>
 	    
-	    <h:panelGroup rendered="#{committeBackingBean.managedBean.selectedCommitte eq 'FCSecretary' }" >
+	    <h:panelGroup rendered="#{committeBackingBean.managedBean.scCommittee.committeeType eq '6' }" >
           <ui:include src="/xhtml/ss/committe/committeefcselection.xhtml" />
 		</h:panelGroup>
 
-        <h:panelGroup rendered="#{committeBackingBean.managedBean.selectedCommitte eq 'MSC' or committeBackingBean.managedBean.selectedCommitte eq 'QC'
-                             or committeBackingBean.managedBean.selectedCommitte eq 'PBB'  or  committeBackingBean.managedBean.selectedCommitte eq 'PBA' 
-                             or committeBackingBean.managedBean.selectedCommitte eq 'FPBSBH' or  committeBackingBean.managedBean.selectedCommitte eq 'FPBSRW' 
-                             or committeBackingBean.managedBean.selectedCommitte eq 'FPASBH' or committeBackingBean.managedBean.selectedCommitte eq 'FPASRW'
-                             or committeBackingBean.managedBean.selectedCommitte eq 'BPKPB'}">       
+        <h:panelGroup rendered="#{committeBackingBean.managedBean.scCommittee.committeeType eq '7' or committeBackingBean.managedBean.scCommittee.committeeType eq '8'
+                             or committeBackingBean.managedBean.scCommittee.committeeType eq '9'  or  committeBackingBean.managedBean.scCommittee.committeeType eq '10' 
+                             or committeBackingBean.managedBean.scCommittee.committeeType eq '11' or  committeBackingBean.managedBean.scCommittee.committeeType eq '12' 
+                             or committeBackingBean.managedBean.scCommittee.committeeType eq '13' }">       
 		  <ui:include src="/xhtml/ss/committe/committeeqcselection.xhtml" />
 	    </h:panelGroup>
 

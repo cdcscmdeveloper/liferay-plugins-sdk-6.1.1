@@ -334,7 +334,7 @@
 							value="#{committeBackingBean.managedBean.committeMember.departmentOrgProfile.orgProfileId}">
 							<f:selectItem itemLabel="SelectOne" itemValue="#{null}" />
 							<f:selectItems value="#{committeBackingBean.managedBean.deptList}" var="orgProfile" itemLabel="#{orgProfile.orgCode}- #{orgProfile.orgName}" itemValue="#{orgProfile.orgProfileId}"></f:selectItems>
-						<p:ajax event="change" listener="#{qTDetailBB.handleDepartmentProfileChanged}"
+						<p:ajax event="change" listener="#{committeBackingBean.handleDepartmentProfileChanged}"
             				partialSubmit="true" process="@this" update="DivDD" />
 						</p:selectOneMenu>
 
