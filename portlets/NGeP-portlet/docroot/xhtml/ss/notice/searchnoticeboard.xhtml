@@ -134,7 +134,7 @@
 			</h:column>
 
 			<h:column>
-				<h:outputLabel value="#{lbl['lbl.sc.notice.board.ctgcode1']}" />
+				<h:outputLabel value="#{lbl['lbl.sc.notice.board.ctgcode']}" />
 			</h:column>
 			<h:column>
 				<p:selectOneMenu
@@ -145,18 +145,15 @@
 					<f:selectItem itemLabel="Select One" itemValue="#{null}" />
 					<f:selectItems
 						value="#{noticeBoardBackingBean.managedBean.categoryL1s}"
-						var="catL1Opt" itemLabel="#{catL1Opt.cateogryL1Code}"
+						var="catL1Opt" itemLabel="#{catL1Opt.categoryL1Code}"
 						itemValue="#{catL1Opt.categoryL1Id}" />
 					<p:ajax event="change"
 						listener="#{noticeBoardBackingBean.handleL2CategoryChange}"
 						partialSubmit="true" process="@this"
 						update="@(.catcode1class, .catcode2class, .catcode3class)" />
 				</p:selectOneMenu>
-			</h:column>
-
-			<h:column>
-				<h:outputLabel value="#{lbl['lbl.sc.notice.board.ctgcode2']}" />
-			</h:column>
+			</h:column> 
+   
 			<h:column>
 				<p:selectOneMenu
 					value="#{noticeBoardBackingBean.managedBean.categoryL2Id}"
@@ -166,16 +163,13 @@
 					<f:selectItem itemLabel="Select One" itemValue="#{null}" />
 					<f:selectItems
 						value="#{noticeBoardBackingBean.managedBean.categoryL2s}"
-						var="catL2Opt" itemLabel="#{catL2Opt.cateogryL2Code}"
+						var="catL2Opt" itemLabel="#{catL2Opt.categoryL2Code}"
 						itemValue="#{catL2Opt.categoryL2Id}" />
 					<p:ajax event="change" partialSubmit="true" process="@this"
 						update="@(.catcode2class, .catcode3class)" />
 				</p:selectOneMenu>
-			</h:column>
+			</h:column> 
 
-			<h:column>
-				<h:outputLabel value="#{lbl['lbl.sc.notice.board.ctgcode3']}" />
-			</h:column>
 			<h:column>
 				<p:selectOneMenu
 					value="#{noticeBoardBackingBean.managedBean.categoryL3Id}"
@@ -183,7 +177,7 @@
 					<f:selectItem itemLabel="Select One" itemValue="#{null}" />
 					<f:selectItems
 						value="#{qTSupplierQulCriteriaBackingBean.managedBean.categoryL3s}"
-						var="catL3Opt" itemLabel="#{catL3Opt.cateogryL3Code}"
+						var="catL3Opt" itemLabel="#{catL3Opt.categoryL3Code}"
 						itemValue="#{catL3Opt.categoryL3Id}" />
 					<p:ajax event="change" partialSubmit="true" process="@this"
 						update="@(.catcode3class)" />
@@ -192,7 +186,7 @@
 			</h:column>
 
 		</h:panelGrid>
-
+        <p:spacer height="25px"/>
 
 		<p:panelGrid style="width:100%;"
 			styleClass="noBorders tr,noBorders td">
@@ -201,13 +195,14 @@
 					<p:commandButton value="#{lbl['lbl.sc.notice.board.searchbtn']}"
 						style="float:right;"
 						action="#{noticeBoardBackingBean.searchNoticeBoard}"
-						update=":form:nbqtsummary" />
+						update=":form:nbqtsummary"  icon="ui-icon-search"/>
 				</p:column>
 			</p:row>
 		</p:panelGrid>
 		
-		  <p:outputPanel id="nbqtsummary">
+		<p:spacer height="25px"/>
 		
+		  <p:outputPanel id="nbqtsummary">
 			<p:tabView id="tabViewInfo" var="qtntender" dynamic="true"
 				activeIndex="#{noticeBoardBackingBean.managedBean.activeTabIndex}"
 				cache="false" orientation="top"
