@@ -8,13 +8,21 @@ import javax.faces.bean.ManagedBean;
 import javax.faces.bean.RequestScoped;
 import javax.faces.context.FacesContext;
 import javax.naming.NamingException;
+import javax.servlet.http.HttpServletRequest;
 
 import my.ep.biz.service.pm.authorization.user.IUserSO;
 import my.ep.biz.service.ss.quationtender.IQTBriefingSO;
+import my.ep.biz.service.ss.quationtender.IQTDetailSO;
+import my.ep.bpm.dto.BpmRequestDTO;
+import my.ep.bpm.dto.BpmResponseDTO;
+import my.ep.bpm.service.IBpmSO;
 import my.ep.dto.pm.authorization.user.UserReqDTO;
 import my.ep.dto.pm.authorization.user.UserResDTO;
 import my.ep.dto.ss.quationtender.BriefingReqDTO;
 import my.ep.dto.ss.quationtender.BriefingResDTO;
+import my.ep.dto.ss.quationtender.QuationTenderReqDTO;
+import my.ep.dto.ss.quationtender.QuationTenderResDTO;
+import my.ep.jaxb.sc.sitevisitproposaldata.SCSiteVisitProposalDataType;
 import my.ep.persistence.entity.pm.authorization.PmUser;
 import my.ep.persistence.entity.sm.SmMofAccount;
 import my.ep.persistence.entity.sm.SmSupplier;
@@ -23,7 +31,11 @@ import my.ep.persistence.entity.ss.quationtender.ScQtBriefing;
 import my.ep.persistence.entity.ss.quationtender.ScQtBriefingAttendance;
 import my.ep.persistence.entity.ss.quationtender.ScQtBriefingRegistration;
 import my.ep.type.pm.RoleCode;
+import my.ep.util.lookupservice.EpBpmBusinessDelegate;
+import my.ep.util.lookupservice.EpEjbBusinessDelegate;
 import my.ep.web.backingbean.BaseBackingBean;
+import my.ep.web.backingbean.ss.quatationtender.QTDetailBackingBean;
+import my.ep.web.constant.SourcingConst;
 import my.ep.web.managedbean.ss.bsvattendance.BSVAttendanceManagedBean;
 import my.ep.web.ss.quationtender.common.QTConstants;
 import my.ep.web.util.FacesScopes;
@@ -32,6 +44,9 @@ import my.ep.web.util.lookupservice.BusinessDelegate;
 import org.apache.commons.beanutils.BeanUtils;
 import org.apache.log4j.Logger;
 import org.primefaces.event.SelectEvent;
+import org.primefaces.event.SelectEvent;
+
+import com.liferay.portal.util.PortalUtil;
 
 /**
  * @author sri Briefing Attendance Backing Bean
@@ -40,11 +55,12 @@ import org.primefaces.event.SelectEvent;
 @RequestScoped
 public class BSVAttendanceBackingBean extends
 		BaseBackingBean<BSVAttendanceManagedBean> {
+	private static final String NAV_TO_BSV_ATTENDANCE_MAIN_PAGE = "bsvAttendanceRegisterMain";
 	public static Logger log = Logger.getLogger(BSVAttendanceBackingBean.class);
 
 	public BSVAttendanceBackingBean() throws NamingException  {
 		if (getManagedBean().getScQt() == null) {
-			retrieveBriefingSiteVisitList(146L);	
+			//retrieveBriefingSiteVisitList(146L);	
 		}
 	}
 
@@ -207,12 +223,14 @@ public class BSVAttendanceBackingBean extends
 		// Attendance List For Company listing 
 		BriefingReqDTO reqDTO = new BriefingReqDTO();
 		reqDTO.setQtBriefingRegistrationId(briefReg.getQtBriefingRegistrationId());
-
+		
 		BriefingResDTO resDTO = qTBriefingSO.retrieveBriefingAttendanceList(reqDTO);
 		List<ScQtBriefingAttendance> briefingAttList = resDTO.getBriefingAttResultBean().getResultList();
 		this.getManagedBean().setBriefingAttendanceList(briefingAttList);
 
 	}
+	
+
 	
 
 	/**
@@ -231,6 +249,7 @@ public class BSVAttendanceBackingBean extends
 			attendacelist.setScQtBriefingRegistration(selectedbriefRegistration);
 			attendaceDetails.add(attendacelist);
 			this.getManagedBean().setBriefingAttendanceList(attendaceDetails);
+	
 		} catch (Exception e) {
 			// e.printStackTrace();
 			throw new IllegalArgumentException();
@@ -485,4 +504,109 @@ public class BSVAttendanceBackingBean extends
 		SmSupplier.setSmMofAccounts(smMofAccounts2);
 		this.getManagedBean().setSmSuppliers(smSuppliers);
 	}
+	
+	public void preRenderView() {
+		HttpServletRequest servletRequest = PortalUtil
+				.getHttpServletRequest(new FacesScopes().getRequest());
+		HttpServletRequest originalServletRequest = PortalUtil
+				.getOriginalServletRequest(servletRequest);
+		String taskId = originalServletRequest.getParameter("taskId");
+		this.getManagedBean().setTaskId(taskId);
+
+		log.info("taskId : " + taskId);
+		IBpmSO bpmSO = (IBpmSO) EpBpmBusinessDelegate.getInstance()
+				.getServiceObject(IBpmSO.class);
+		// TODO
+		FacesScopes facesScopes = new FacesScopes();
+		String ctx = facesScopes.getBPMAuthenticationCtxToken();
+		// String ctx = bpmSO.authenticate("roslan", "welcome1");
+		BpmRequestDTO reqDTO = new BpmRequestDTO();
+		reqDTO.setCtxToken(ctx);
+		reqDTO.setTaskId(taskId);
+		BpmResponseDTO res = bpmSO.getTaskDetails(reqDTO);
+		Object obj = res.getPojo();
+		this.getManagedBean().setOutComes(res.getAction());
+		SCSiteVisitProposalDataType siteVisitDatatype = (SCSiteVisitProposalDataType) obj;
+		this.getManagedBean().setSiteVisitPayLoad(siteVisitDatatype);
+		IQTDetailSO detailSO = EpEjbBusinessDelegate.getInstance()
+				.getServiceObject(QTConstants.SS_MODULE, IQTDetailSO.class);
+		QuationTenderReqDTO tenderReqDTO = new QuationTenderReqDTO();
+		tenderReqDTO.setQtId(new Long(siteVisitDatatype.getQtId())
+				.longValue());
+		QuationTenderResDTO tenderResDTO = detailSO
+				.retriveQTDetails(tenderReqDTO);
+		QTDetailBackingBean detailBackingBean = new QTDetailBackingBean();
+		detailBackingBean.getManagedBean().setQt(tenderResDTO.getQtDetail());
+		detailBackingBean.populateParentOrgProfile(tenderResDTO.getQtDetail());
+		retrieveBriefingSiteVisitList(siteVisitDatatype.getQtId().longValue());
+		
+				FacesContext fc = FacesContext.getCurrentInstance();
+		fc.getApplication()
+				.getNavigationHandler()
+				.handleNavigation(
+						fc,
+						null,
+						NAV_TO_BSV_ATTENDANCE_MAIN_PAGE
+								+ "?faces-redirect=true");
+	}
+
+public String updateBpmTask(String action) {
+		System.out.println("Succeesfully update the task");
+		BriefingReqDTO briefingReqDTO = prepareBriefingDtls();
+		briefingReqDTO.setOutcome(action);
+		briefingReqDTO.setTaskId(this.getManagedBean().getTaskId());
+		FacesScopes facesScopes = new FacesScopes();
+		String ctx = facesScopes.getBPMAuthenticationCtxToken();
+		briefingReqDTO.setToken(ctx);
+		briefingReqDTO.setPayLoad(this.getManagedBean().getSiteVisitPayLoad());
+		IQTBriefingSO briefingSO = getBriefingSO();
+		BriefingResDTO resDTO = briefingSO.updateBPMAction(briefingReqDTO);
+		if (resDTO.isSuccessful()) {
+
+			FacesContext.getCurrentInstance().addMessage(
+					null,
+					new FacesMessage(FacesMessage.SEVERITY_INFO,
+							"Record saved successfully.", " Type. : "
+
+					));
+
+			return "/xhtml/shared/acknowledge.xhtml";
+
+		}
+		return null;
+	}
+
+	private IQTBriefingSO getBriefingSO() {
+		return EpEjbBusinessDelegate.getInstance().getServiceObject(
+				SourcingConst.SOURCING_MODULE, IQTBriefingSO.class);
+
+	}
+	private BriefingReqDTO prepareBriefingDtls(){
+		List<ScQtBriefing> briefingDetails=new ArrayList<ScQtBriefing>();
+		
+		// Save Briefing Details Status
+		List<ScQtBriefing> list = getManagedBean().getBriefingDetailsList();
+		if (list != null){
+		    System.out.println("briefing list size"+ list.size());
+		    briefingDetails.addAll(list);
+		}
+		
+		// Save Site visit Details Status
+		list = getManagedBean().getSiteVisitDetailsList();
+        if (list != null){
+		     System.out.println("site visit list size"+ list.size());
+		     briefingDetails.addAll(list);
+		}
+        
+        for (ScQtBriefing scQtBriefing : briefingDetails) {
+        	scQtBriefing.setScQtBriefingRegistrations(null);
+		}
+        
+               	BriefingReqDTO reqDTO = new BriefingReqDTO();
+        	reqDTO.setQtBriefingList(briefingDetails);
+	
+        
+        return reqDTO;
+	}
+	
 }

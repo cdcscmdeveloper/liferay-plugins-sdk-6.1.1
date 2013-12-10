@@ -11,6 +11,7 @@ import javax.faces.bean.RequestScoped;
 import javax.faces.context.FacesContext;
 import javax.faces.event.AjaxBehaviorEvent;
 import javax.faces.model.SelectItem;
+import javax.servlet.http.HttpServletRequest;
 
 import my.ep.biz.bean.search.ISearchBean;
 import my.ep.biz.bean.search.SearchBean;
@@ -19,6 +20,9 @@ import my.ep.biz.service.pm.authorization.orgprofile.IOrgProfileSO;
 import my.ep.biz.service.pm.authorization.user.IUserSO;
 import my.ep.biz.service.ss.committe.ICommitteSO;
 import my.ep.biz.service.ss.quationtender.IQTDetailSO;
+import my.ep.bpm.dto.BpmRequestDTO;
+import my.ep.bpm.dto.BpmResponseDTO;
+import my.ep.bpm.service.IBpmSO;
 import my.ep.dto.pm.authorization.orgprofile.OrgProfileReqDTO;
 import my.ep.dto.pm.authorization.orgprofile.OrgProfileResDTO;
 import my.ep.dto.pm.authorization.user.UserReqDTO;
@@ -29,6 +33,7 @@ import my.ep.dto.ss.quationtender.QuationTenderReqDTO;
 import my.ep.dto.ss.quationtender.QuationTenderResDTO;
 import my.ep.exception.EpException;
 import my.ep.factory.EpLogger;
+import my.ep.jaxb.sc.committeedata.SCCommitteeDataType;
 import my.ep.persistence.entity.pm.authorization.PmOrgProfile;
 import my.ep.persistence.entity.pm.authorization.PmUser;
 import my.ep.persistence.entity.pm.authorization.PmUserOrg;
@@ -38,6 +43,7 @@ import my.ep.persistence.entity.ss.quationtender.ScQt;
 import my.ep.persistence.entity.ss.quationtender.ScQtCommittee;
 import my.ep.type.aut.SearchOperator;
 import my.ep.type.pm.OrganizationType;
+import my.ep.util.lookupservice.EpBpmBusinessDelegate;
 import my.ep.util.lookupservice.EpEjbBusinessDelegate;
 import my.ep.web.backingbean.ss.quatationtender.SourcingBaseBackingBean;
 import my.ep.web.constant.BpmOutcomeConst;
@@ -54,6 +60,8 @@ import my.ep.web.util.FacesScopes;
 
 import org.apache.log4j.Logger;
 import org.primefaces.event.RowEditEvent;
+
+import com.liferay.portal.util.PortalUtil;
 
 /**
  * @author VidyasagarReddy
@@ -89,8 +97,13 @@ public class CommitteBackingBean extends
 	}
 
 	private void updateCommitteBpmTask(String action) {
-		CommitteReqDTO committeReqDTO = constructSaveCommitte();
-
+		
+		
+		CommitteReqDTO committeReqDTO = new CommitteReqDTO();
+		committeReqDTO.setQtCommittee(this.getManagedBean().getQtCommittee());
+		FacesScopes facesScopes = new FacesScopes();
+		String ctxToken = facesScopes.getBPMAuthenticationCtxToken();
+		committeReqDTO.setToken(ctxToken);
 		committeReqDTO.setTaskId(this.getManagedBean().getTaskId());
 		committeReqDTO.setOutcome(action);
 		ICommitteSO commso = EpEjbBusinessDelegate.getInstance()
@@ -116,8 +129,8 @@ public class CommitteBackingBean extends
 					null,
 					new FacesMessage(FacesMessage.SEVERITY_INFO,
 							"Record saved successfully.", "Committe Type. : "
-									+ this.getManagedBean().getScCommittee().getCommitteeType()
-											));
+									+ this.getManagedBean().getScCommittee()
+											.getCommitteeType()));
 
 			return "/xhtml/shared/acknowledge.xhtml";
 
@@ -130,7 +143,11 @@ public class CommitteBackingBean extends
 	 * Method to save and submit the data to BPM
 	 */
 	public String submitCommitteDetails() {
+
 		CommitteReqDTO committeReqDTO = constructSaveCommitte();
+		FacesScopes facesScopes = new FacesScopes();
+		String ctxToken = facesScopes.getBPMAuthenticationCtxToken();
+		committeReqDTO.setToken(ctxToken);
 		ICommitteSO commso = EpEjbBusinessDelegate.getInstance()
 				.getServiceObject(QTConstants.SS_MODULE, ICommitteSO.class);
 
@@ -141,8 +158,8 @@ public class CommitteBackingBean extends
 					null,
 					new FacesMessage(FacesMessage.SEVERITY_INFO,
 							"Record saved successfully.", "Committe Type. : "
-									+ this.getManagedBean().getScCommittee().getCommitteeType()
-											));
+									+ this.getManagedBean().getScCommittee()
+											.getCommitteeType()));
 
 			return "/xhtml/shared/acknowledge.xhtml";
 
@@ -191,7 +208,10 @@ public class CommitteBackingBean extends
 
 		scQtCommittee.setScCommittee(committee);
 
+		FacesScopes facesScopes = new FacesScopes();
+		String ctxToken = facesScopes.getBPMAuthenticationCtxToken();
 		CommitteReqDTO committeReqDTO = new CommitteReqDTO();
+		committeReqDTO.setToken(ctxToken);
 		committeReqDTO.setQtCommittee(scQtCommittee);
 		/*
 		 * ICommitteSO committeSO = EpEjbBusinessDelegate.getInstance()
@@ -624,7 +644,8 @@ public class CommitteBackingBean extends
 			this.getManagedBean().setDeptList(resDTO.getOrgProfileList());
 
 		} else {
-			this.getManagedBean().setDeptList(new ArrayList<PmOrgProfile>());
+			this.getManagedBean()
+					.setDivisionList(new ArrayList<PmOrgProfile>());
 		}
 
 		this.getManagedBean().getCommitteMember().getDepartmentOrgProfile()
@@ -728,5 +749,50 @@ public class CommitteBackingBean extends
 				.getCurrentInstance().getApplication().getNavigationHandler();
 		handler.performNavigation("committeemaintanancepage");
 
+	}
+
+	public void preRenderView() {
+		HttpServletRequest servletRequest = PortalUtil
+				.getHttpServletRequest(new FacesScopes().getRequest());
+		HttpServletRequest originalServletRequest = PortalUtil
+				.getOriginalServletRequest(servletRequest);
+		String taskId = originalServletRequest.getParameter("taskId");
+		this.getManagedBean().setTaskId(taskId);
+
+		IBpmSO bpmSO = (IBpmSO) EpBpmBusinessDelegate.getInstance()
+				.getServiceObject(IBpmSO.class);
+		// TODO
+		FacesScopes facesScopes = new FacesScopes();
+		String ctx = facesScopes.getBPMAuthenticationCtxToken();
+		// String ctx = bpmSO.authenticate("roslan", "welcome1");
+		BpmRequestDTO reqDTO = new BpmRequestDTO();
+		reqDTO.setCtxToken(ctx);
+		reqDTO.setTaskId(taskId);
+		BpmResponseDTO res = bpmSO.getTaskDetails(reqDTO);
+		Object obj = res.getPojo();
+		this.getManagedBean().setOutComes(res.getAction());
+		SCCommitteeDataType committeDataType = (SCCommitteeDataType) obj;
+		
+		ICommitteSO committeSO = EpEjbBusinessDelegate.getInstance()
+				.getServiceObject(QTConstants.SS_MODULE, ICommitteSO.class);
+
+		CommitteReqDTO committeReqDTO = new CommitteReqDTO();
+		committeReqDTO.setCommitteId(new Long(committeDataType.getComId()).longValue());
+		CommitteResDTO resDTO = committeSO
+				.retriveQTCommitteDetails(committeReqDTO);
+
+		this.getManagedBean().setQtCommittee(resDTO.getCommittee());
+		this.getManagedBean().setScCommittee(
+				resDTO.getCommittee().getScCommittee());
+		this.getManagedBean().setCommittemembers(
+				resDTO.getCommittee().getScCommittee().getScCommitteeMembers());
+		this.getManagedBean().setApprovers(resDTO.getCommitteApprovers());
+		this.getManagedBean().setCommitteMember(new ScCommitteeMember());
+
+		FacesContext fc = FacesContext.getCurrentInstance();
+		fc.getApplication()
+				.getNavigationHandler()
+				.handleNavigation(fc, null,
+						"committeemaintanancepage" + "?faces-redirect=true");
 	}
 }
