@@ -8,8 +8,9 @@
 <p:panel>
 	 <div class="ppRightBtn"> 
 	  	<ui:repeat var="action"	value="#{committeBackingBean.managedBean.outComes}">
-			<p:commandButton value="#{action}" process="@all" styleClass="ui-button" actionListener="#{committeBackingBean.invokeCommitteAction(action)}" />
+			<p:commandButton value="#{action}" icon="ui-icon-submit" process="@all" styleClass="ui-button" actionListener="#{committeBackingBean.invokeCommitteAction(action)}"  />
 	    </ui:repeat>		
     </div>
 	</p:panel>
 	</ui:composition>
+	

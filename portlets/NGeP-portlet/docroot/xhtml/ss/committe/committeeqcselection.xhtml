@@ -7,9 +7,9 @@
 	xmlns:c="http://java.sun.com/jsp/jstl/core">
 
   <p:panel header="Committee Details" toggleable="true">
-  <div align ="right">
+<!--    <div align ="right">
   	<p:commandLink value="View Qtn/Tender" onclick="screen5.show();" />
-  </div>
+  </div> -->
  <br /> 
   <h:panelGroup  style="width:100%;" >
     <p:dataTable id="committeQc" value="#{committeBackingBean.managedBean.committemembers}"  var="committeqc" resizableColumns="true" editable="true">
@@ -17,34 +17,34 @@
 	    <p:ajax event="rowEdit" />  
         <p:ajax event="rowEditCancel" />
                              
-        <p:column headerText="No">  
+        <p:column headerText="#{lbl['lbl.sc.committe.qctable.detailsno']}">  
 		  <h:outputText value="#{index + 1}" />  
         </p:column>  
   
-        <p:column headerText="Name"> <p:commandLink  actionListener="#{pprBean.savePerson}" style="margin-right:20px;" ajax="false">  
+        <p:column headerText="#{lbl['lbl.sc.committe.qctable.detailsname']}"> <p:commandLink  actionListener="#{pprBean.savePerson}" style="margin-right:20px;" ajax="false">  
           <h:outputText value="#{committeqc.memberName}" />  
         </p:commandLink>  
      
              
         </p:column>  
   
-		<p:column headerText="IC/PassPort No">
+		<p:column headerText="#{lbl['lbl.sc.committe.qctable.detailsicno']}">
 	      <h:outputText value="#{committeqc.icPassport}" />
 		</p:column> 
         
-		<p:column headerText="Role">
+		<p:column headerText="#{lbl['lbl.sc.committe.qctable.detailsrole']}">
 		  <h:outputText value="#{committeqc.memberRole}" />
 		</p:column> 
         
-        <p:column headerText="Member Type" > 
+        <p:column headerText="#{lbl['lbl.sc.committe.qctable.detailsmembertype']}" > 
            <h:outputText value="#{committeqc.memberType}" />       
         </p:column>                  
               
-         <p:column headerText="Access" >  
+         <p:column headerText="#{lbl['lbl.sc.committe.qctable.detailsaccess']}" >  
            <h:outputText value="#{committeqc.accessRight}" />
          </p:column>  
         
-       <p:column headerText="Action">  
+       <p:column headerText="#{lbl['lbl.sc.committe.qctable.detailsaction']}">  
             <p:rowEditor />  
         </p:column> 
           
@@ -52,10 +52,13 @@
     </p:dataTable>
   </h:panelGroup>
 
-	<div align="right">
-	    <p:commandButton value="ADD" onclick="screen1.show();" ></p:commandButton>  
-	    <p:commandButton value="CLONE" onclick="screen2.show();"></p:commandButton>  
-    </div>
+		<div align="right">
+			<p:commandButton value="Add"
+				action="#{committeBackingBean.addCommitteMember}"
+				 process="@this" oncomplete="screen3.show();" update="@(.qtAddMember)" icon="ui-icon-add"></p:commandButton>
+
+			<p:commandButton value="Clone" onclick="screen2.show();" process="@this" icon="ui-icon-clone"></p:commandButton>
+		</div>
    <br/>
   </p:panel>
 		</ui:composition>

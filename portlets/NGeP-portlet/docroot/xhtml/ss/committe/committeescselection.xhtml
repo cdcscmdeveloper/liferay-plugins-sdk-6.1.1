@@ -7,17 +7,17 @@
 
 	<p:panel header="Committee Details" toggleable="true">
 		<h:panelGrid columns="4" style="width:100%;" cellpadding="3"
-			id="committecheckbox"
+			id="committecheckbox" 
 			rendered="#{committeBackingBean.managedBean.scCommittee.committeeType eq '4'
     	         or committeBackingBean.managedBean.scCommittee.committeeType eq '5'}">
-    	         <h:outputLabel value="Change To EC" />  
+    	         <h:outputLabel value="#{lbl['lbl.sc.committe.changeec.ec']}" />  
  <p:selectBooleanCheckbox value="#{committeBackingBean.managedBean.ecType}" /> 
 
 		</h:panelGrid>
-		<h:panelGrid columns="4" style="width:100%;" cellpadding="3"
+		<h:panelGrid columns="4" style="width:100%;" cellpadding="3" 
 			
 			rendered="#{committeBackingBean.managedBean.scCommittee.committeeType eq '3' }">
-			<h:outputLabel value="Change to TEC/FEC: " />  
+			<h:outputLabel value="#{lbl['lbl.sc.committe.changeec.tecfec']}" />  
 			<p:selectBooleanCheckbox value="#{committeBackingBean.managedBean.tecType}" /> 
 		</h:panelGrid>
 		<br />
@@ -30,17 +30,17 @@
                  <p:ajax event="rowEditCancel" listener="#{committeBackingBean.onRowCancel}" update="committeMember"/> 
 				
 
-				<p:column headerText="Name">
+				<p:column headerText="#{lbl['lbl.sc.committe.sctable.detailsname']}">
 					<h:outputText value="#{committemember.memberName}" />
 				</p:column>
 
-				<p:column headerText="IC/PassPort No">
+				<p:column headerText="#{lbl['lbl.sc.committe.sctable.detailsicno']}">
 					<h:outputText value="#{committemember.icPassport}" />
 				</p:column>
-				<p:column headerText="Role">
+				<p:column headerText="#{lbl['lbl.sc.committe.sctable.detailsrole']}">
 					<h:outputText value="#{committemember.memberRole}" />
 				</p:column>
-				<p:column headerText="Access">
+				<p:column headerText="#{lbl['lbl.sc.committe.sctable.detailsaccess']}">
 					<h:outputText value="#{committemember.accessRight}" />
 				</p:column>
 				<p:column style="width:6%">  
@@ -51,11 +51,11 @@
 		
 
 		<div align="right">
-			<p:commandButton value="ADD"
+			<p:commandButton value="Add"
 				action="#{committeBackingBean.addCommitteMember}"
-				 process="@this" oncomplete="screen3.show();" update="@(.qtAddMember)"></p:commandButton>
+				 process="@this" oncomplete="screen3.show();" update="@(.qtAddMember)" icon="ui-icon-add"></p:commandButton>
 
-			<p:commandButton value="CLONE" onclick="screen2.show();" process="@this"></p:commandButton>
+			<p:commandButton value="Clone" onclick="screen2.show();" process="@this" icon="ui-icon-clone"></p:commandButton>
 		</div>
 		<br />
 	</p:panel>
@@ -70,18 +70,18 @@
 
 		<h:panelGrid columns="4" style="margin-bottom:10px;width:100%;"
 			cellpadding="3">
-			<h:outputLabel style="bold" value="Approver Name: " />
+			<h:outputLabel style="bold" value="#{lbl['lbl.sc.committe.appdetails.appname']}" />
 			<p:selectOneMenu
 				value="#{committeBackingBean.managedBean.scCommittee.pmUser.userId}"
 				style="width: 120px;">
 				<f:selectItems value="#{committeBackingBean.managedBean.approvers}" var="approver" itemLabel="#{approver.userName}" itemValue="#{approver.userId}"></f:selectItems>
 			</p:selectOneMenu>
 
-			<h:outputLabel style="bold" value="Approver Date: " />
+			<h:outputLabel style="bold" value="#{lbl['lbl.sc.committe.appdetails.appdate']}" />
 			<p:calendar value="#{committeBackingBean.managedBean.scCommittee.approvalDate}" showOn="button"></p:calendar>
 			
 
-			<h:outputLabel style="bold" value="Approver Action: " />
+			<h:outputLabel style="bold" value="#{lbl['lbl.sc.committe.appdetails.appaction']}" />
 			<p:selectOneMenu
 							value="#{committeBackingBean.managedBean.scCommittee.approverAction}">
 							<f:selectItem itemLabel="SelectOne" itemValue="0" />
@@ -89,7 +89,7 @@
 							<f:selectItem itemLabel="Reject" itemValue="3" />
 						</p:selectOneMenu>
 
-			<h:outputLabel style="bold" value="Approval Remarks: " />
+			<h:outputLabel style="bold" value="#{lbl['lbl.sc.committe.appdetails.appremarks']}" />
 			<p:inputText id="appRemark"
 				value="#{committeBackingBean.managedBean.scCommittee.approvalRemark}"
 				/>

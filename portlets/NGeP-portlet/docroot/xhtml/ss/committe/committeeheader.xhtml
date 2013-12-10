@@ -8,8 +8,8 @@
 	<p:panel header="Header" toggleable="true">
 		<h:panelGrid columns="4" style="width:100%;" styleClass="noBorders tr,noBorders td">
 
-		<h:outputLabel value="Committee Type" />
-		 <p:selectOneMenu value="#{committeBackingBean.managedBean.scCommittee.committeeType}">
+		<h:outputLabel value="#{lbl['lbl.sc.committe.header.comtype']}"  />
+		 <p:selectOneMenu value="#{committeBackingBean.managedBean.scCommittee.committeeType}" style="width:150px">
             <f:selectItem itemLabel="Select One" itemValue="-1" />  
             <f:selectItem itemLabel="DOAA" itemValue="1" />  
             <f:selectItem itemLabel="OC" itemValue="2" />  
@@ -27,28 +27,28 @@
 			<p:ajax event="change" update="parentText, approvaldetails,committecheckbox" listener="#{committeBackingBean.resetCommitteDetails}"/>
          </p:selectOneMenu>
 
-            <h:outputLabel value="Ministry Code/Name" />  
+            <h:outputLabel value="#{lbl['lbl.sc.committe.header.ministrycodename']}" />  
             <p:inputText readonly="true"/> 
                      			
-			<h:outputLabel value="Qtn/Tender No" />  
+			<h:outputLabel value="#{lbl['lbl.sc.committe.header.qtntenderno']}" />  
             <p:inputText value="#{committeBackingBean.managedBean.qtCommittee.scQt.qtNo}"/>            
             
-            <h:outputLabel value="Status" />  
+            <h:outputLabel value="#{lbl['lbl.sc.committe.header.status']}" />  
             <p:inputText  readonly="true" />  
             
-            <h:outputLabel value="Department Code/Name" />  
+            <h:outputLabel value="#{lbl['lbl.sc.committe.header.departcode']}" />  
             <p:inputText readonly="true"/>  
            
-           <h:outputLabel value="Created Date"  /> 
+           <h:outputLabel value="#{lbl['lbl.sc.committe.header.createddate']}"  /> 
    		   <p:inputText readonly="true"/>  
  
-           <h:outputLabel value="Divison Code/Name" />  
+           <h:outputLabel value="#{lbl['lbl.sc.committe.header.divcode']}" />  
            <p:inputText readonly="true"/>  
                           
-           <h:outputLabel value="Committee Status" /> 
+           <h:outputLabel value="#{lbl['lbl.sc.committe.header.comstatus']}" /> 
    		   <p:inputText readonly="true"/> 
    		   
-           <h:outputLabel value="Record Status" /> 
+           <h:outputLabel value="#{lbl['lbl.sc.committe.header.recstatus']}" /> 
    		   <p:inputText readonly="true"/>     		     		                                                                          
                       
       </h:panelGrid>

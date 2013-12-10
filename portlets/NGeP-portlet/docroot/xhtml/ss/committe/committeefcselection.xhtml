@@ -15,30 +15,10 @@
 				<p:ajax event="rowEdit" />
 				<p:ajax event="rowEditCancel" />
 
-
-				<p:column headerText="No">
-					<h:outputText value="#{committeqc.committeeMemberId}" />
-				</p:column>
-				<p:column headerText="No">
-					<h:outputText value="#{index + 1}" />
-
-				</p:column>
-
-				<p:column headerText="Group">
-					<p:selectOneMenu value="#{committesecretary.number}">
-						<f:selectItem itemLabel="Select One" itemValue="" />
-						<f:selectItem itemLabel="QC" itemValue="1" />
-						<f:selectItem itemLabel="PBB" itemValue="2" />
-						<f:selectItem itemLabel="PBA" itemValue="3" />
-						<f:selectItem itemLabel="FBP Sabah" itemValue="4" />
-						<f:selectItem itemLabel="FBP Sarawak" itemValue="5" />
-					</p:selectOneMenu>
-				</p:column>
-
-				<p:column headerText="Secretary Name">
+				<p:column headerText="#{lbl['lbl.sc.committe.fctable.detailssecname']}">
 					<p:cellEditor>
 						<f:facet name="output">
-							<h:outputText value="#{committesecretary.memberName}" />
+							<h:outputText value="#{lbl['lbl.sc.committe.fctable.detailscomtype']}" />
 						</f:facet>
 						<f:facet name="input">
 							<p:selectOneMenu value="#{committeBackingBean.managedBean.qtno}">
@@ -49,9 +29,23 @@
 						</f:facet>
 					</p:cellEditor>
 				</p:column>
-			</p:dataTable>
-			<p:commandButton value="ADD" style="float:right;"></p:commandButton>
 
+				<p:column headerText="#{lbl['lbl.sc.committe.fctable.detailscomtype']}">
+					<p:selectOneMenu value="#{committesecretary.number}">
+						<f:selectItem itemLabel="Select One" itemValue="" />
+						<f:selectItem itemLabel="QC" itemValue="1" />
+						<f:selectItem itemLabel="PBB" itemValue="2" />
+						<f:selectItem itemLabel="PBA" itemValue="3" />
+						<f:selectItem itemLabel="FBP Sabah" itemValue="4" />
+						<f:selectItem itemLabel="FBP Sarawak" itemValue="5" />
+					</p:selectOneMenu>
+				</p:column>
+				
+				<p:column headerText="#{lbl['lbl.sc.committe.fctable.detailsorgtype']}">
+					<h:outputText  />
+
+				</p:column>				
+			</p:dataTable>
 		</h:panelGroup>
 
 	</p:panel>
