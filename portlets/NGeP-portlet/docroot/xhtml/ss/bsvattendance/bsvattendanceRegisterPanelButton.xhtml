@@ -6,32 +6,43 @@
 	xmlns:c="http://java.sun.com/jsp/jstl/core">
 
 	<p:panel header="Attendance Registration">
-		<!-- <p:panelGrid  styleClass="noBorders tr,noBorders td">
-	 <p:row >  
-   <p:column >
-     <div style="position:absolute;top:210px;right:220px;"   >
-           <p:commandButton  
-					value="#{lbl['lbl.so.submit']}"/>
-					</div>
-					</p:column>
-					</p:row>
-
-</p:panelGrid>
- -->
+	
 		<p:panelGrid style="width:100%;"
 			styleClass="noBorders tr,noBorders td">
 			<p:row>
 				<p:column width="100%" style="text-align:right">
-					<p:commandButton value="Save" />
-				
-			<ui:repeat var="action" value="#{bsvAttendanceBackingBean.managedBean.outComes}">
-							<p:commandButton value="#{action}" process="@all"
-								styleClass="ui-button"
-								actionListener="#{bsvAttendanceBackingBean.updateBpmTask(action)}" />
-						</ui:repeat>
-						</p:column>
-						</p:row>
+					<p:commandButton value="Save" icon="ui-icon-save" />
+
+					<ui:repeat var="action"
+						value="#{bsvAttendanceBackingBean.managedBean.outComes}">
+						<ui:fragment rendred="#{action eq 'SUBMIT'}">
+							<c:set var="iconVar" value="ui-icon-submit" scope="request"></c:set>
+
+						</ui:fragment>
+
+						<ui:fragment rendred="#{action eq 'REJECT'}">
+							<c:set var="iconVar" value="ui-icon-reject" scope="request"></c:set>
+
+						</ui:fragment>
+						<ui:fragment rendred="#{action eq 'REVISE'}">
+							<c:set var="iconVar" value="ui-icon-revise" scope="request"></c:set>
+
+						</ui:fragment>
+						<ui:fragment rendred="#{action eq 'APPROVE'}">
+							<c:set var="iconVar" value="ui-icon-approve" scope="request"></c:set>
+
+						</ui:fragment>
+
+						<p:commandButton value="#{action}" process="@all"
+							styleClass="ui-button"
+							actionListener="#{bsvAttendanceBackingBean.updateBpmTask(action)}"
+							icon="#{iconVar}" />
+
+					</ui:repeat>
+				</p:column>
+			</p:row>
 		</p:panelGrid>
+
 
 	</p:panel>
 
