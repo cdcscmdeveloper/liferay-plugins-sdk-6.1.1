@@ -31,9 +31,11 @@
 				
 <p:column headerText="#{lbl['lbl.so.category']}">
 				
-						<h:outputText value="#{ccode.pmCategoryL1.categoryL1Id}" />
+						<h:outputText value="#{ccode.pmCategoryL1.categoryL1Id}"  
+						rendered="#{rowIndex lt qTSupplierQulCriteriaBackingBean.managedBean.restrictedCategorys.size()-1}" />
 				
-						<p:selectOneMenu value="#{ccode.pmCategoryL1.categoryL1Id}">
+						<p:selectOneMenu value="#{ccode.pmCategoryL1.categoryL1Id}"
+						rendered="#{rowIndex eq qTSupplierQulCriteriaBackingBean.managedBean.restrictedCategorys.size()-1}">
 							<f:selectItem itemLabel="Select One" itemValue="#{null}" />
 							<f:selectItems
 								value="#{qTSupplierQulCriteriaBackingBean.managedBean.categoryL1s}"
@@ -43,11 +45,13 @@
 						listener="#{qTSupplierQulCriteriaBackingBean.handleL1CategoryChange(ccode)}"
 					partialSubmit="true" process="@this" update="categoryL2s, categoryL3s" />
 						</p:selectOneMenu>
-					
-						<h:outputText value="#{ccode.pmCategoryL2.categoryL2Id}" />
+					</p:column>	
+					<p:column>
+						<h:outputText value="#{ccode.pmCategoryL2.categoryL2Id}" 
+						rendered="#{rowIndex lt qTSupplierQulCriteriaBackingBean.managedBean.restrictedCategorys.size()-1}"/>
                
 						<p:selectOneMenu id="categoryL2s" value="#{ccode.pmCategoryL2.categoryL2Id}"
-							effect="fold" editable="true">
+						rendered="#{rowIndex eq qTSupplierQulCriteriaBackingBean.managedBean.restrictedCategorys.size()-1}"	effect="fold" editable="true">
 							<f:selectItem itemLabel="Select One" itemValue="#{null}" />
 							<f:selectItems
 								value="#{qTSupplierQulCriteriaBackingBean.managedBean.categoryL2s}"
@@ -57,11 +61,13 @@
 						listener="#{qTSupplierQulCriteriaBackingBean.handleL2CategoryChange(ccode)}"
 					partialSubmit="true" process="@this" update="categoryL3s" />
 						</p:selectOneMenu>
-					
-						<h:outputText value="#{ccode.pmCategoryL3.categoryL3Id}" />
+					</p:column>
+					<p:column>
+						<h:outputText value="#{ccode.pmCategoryL3.categoryL3Id}" 
+						rendered="#{rowIndex lt qTSupplierQulCriteriaBackingBean.managedBean.restrictedCategorys.size()-1}" />
 				
 						<p:selectOneMenu id="categoryL3s" value="#{ccode.pmCategoryL3.categoryL3Id}"
-							effect="fold" editable="true">
+						rendered="#{rowIndex eq qTSupplierQulCriteriaBackingBean.managedBean.restrictedCategorys.size()-1}"	effect="fold" editable="true">
 							<f:selectItem itemLabel="Select One" itemValue="#{null}" />
 							<f:selectItems
 								value="#{qTSupplierQulCriteriaBackingBean.managedBean.categoryL3s}"
