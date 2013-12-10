@@ -10,6 +10,7 @@ import javax.faces.bean.ManagedBean;
 import javax.faces.bean.RequestScoped;
 import javax.faces.context.FacesContext;
 import javax.faces.event.ValueChangeEvent;
+import javax.faces.model.SelectItem;
 import javax.servlet.http.HttpServletRequest;
 
 import my.ep.biz.bean.search.SearchBean;
@@ -65,6 +66,7 @@ import my.ep.web.bean.ss.quatationtender.TabBean;
 import my.ep.web.managedbean.ss.quationtender.QTDetailManagedBean;
 import my.ep.web.ss.quationtender.common.QTConstants;
 import my.ep.web.type.ss.quationtender.BPMOutComeTypes;
+import my.ep.web.type.ss.quationtender.CloneAll;
 import my.ep.web.util.FacesScopes;
 import my.ep.web.util.lookupservice.BusinessDelegate;
 
@@ -1055,4 +1057,14 @@ public class QTDetailBackingBean extends
 					resDTO.getRemarkResultBean().getResultList());
 		}
 	}
+	/*private void populateCloneAll() {
+		List<SelectItem> cloneAllList = new ArrayList<SelectItem>();
+		cloneAllList.add(new SelectItem("", "Select One"));
+		CloneAll[] cloneAll = CloneAll.values();
+		for (CloneAll clone : cloneAll) {
+			cloneAllList.add(new SelectItem(clone.getValue(),clone.getDisplayName()));
+		}
+		this.getManagedBean().setCloneAllList(cloneAllList);
+
+	}*/
 }
