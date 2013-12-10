@@ -44,7 +44,6 @@ import my.ep.web.util.lookupservice.BusinessDelegate;
 import org.apache.commons.beanutils.BeanUtils;
 import org.apache.log4j.Logger;
 import org.primefaces.event.SelectEvent;
-import org.primefaces.event.SelectEvent;
 
 import com.liferay.portal.util.PortalUtil;
 
@@ -152,7 +151,6 @@ public class BSVAttendanceBackingBean extends
 
 				List<ScQtBriefingRegistration> briefRegList = resDTO
 						.getBriefingRegResultBean().getResultList();
-				 System.out.println("======briefRegList======"+briefRegList.size());
 				 
 				 List<ScQtBriefingRegistration> list =new ArrayList<ScQtBriefingRegistration>();
 				 for(ScQtBriefingRegistration scqtbriefReg :briefRegList){
