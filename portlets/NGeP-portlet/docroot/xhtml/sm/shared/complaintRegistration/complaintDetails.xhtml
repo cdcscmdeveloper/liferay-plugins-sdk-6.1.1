@@ -3,17 +3,18 @@
 	xmlns:h="http://java.sun.com/jsf/html"
 	xmlns:ui="http://java.sun.com/jsf/facelets"
 	xmlns:p="http://primefaces.org/ui"
-	xmlns:c="http://java.sun.com/jsp/jstl/core">
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:ac="http://ac.my/jsf/composite/cc">
 
 	<p:panel header="Supplier Search" toggleable="true">
 		<table class="customTbl">
 			<tr>
 				<td><p:outputLabel value="* Search By" /></td>
 				<td><p:selectOneMenu>
-						<f:selectItem itemLabel= "MOF No." itemValue="1"></f:selectItem>
-						<f:selectItem itemLabel= "eP No." itemValue="2"></f:selectItem>
-						<f:selectItem itemLabel= "Company Registration No." itemValue="3"></f:selectItem>
-						<f:selectItem itemLabel= "Company Name" itemValue="4"></f:selectItem>
+						<f:selectItem itemLabel="MOF No." itemValue="1"></f:selectItem>
+						<f:selectItem itemLabel="eP No." itemValue="2"></f:selectItem>
+						<f:selectItem itemLabel="Company Registration No." itemValue="3"></f:selectItem>
+						<f:selectItem itemLabel="Company Name" itemValue="4"></f:selectItem>
 					</p:selectOneMenu></td>
 
 				<td><p:outputLabel value="* Value" /></td>
@@ -29,10 +30,12 @@
 	</p:panel>
 
 	<p:panel header="Search Result" toggleable="true" id="suppSearchRes">
-		<p:dataTable var="supp"
+		<p:dataTable var="supp" id="compSuppLs"
 			value="#{complaintBackingBean.managedBean.smSupplierLs}"
 			selection="#{complaintBackingBean.managedBean.selectedSupplier}"
 			rowKey="#{supp.supplierId}" selectionMode="single">
+			<ac:paginator for="compSuppLs" />
+			
 			<p:ajax event="rowSelect"
 				listener="#{complaintBackingBean.onSupplierRowSelect}"
 				update=":form:complDtl" />
@@ -57,8 +60,11 @@
 				<td><p:selectOneMenu
 						value="#{complaintBackingBean.managedBean.smComplaint.complaintCategory}">
 						<f:selectItem itemLabel="-- Select One -- " itemValue="" />
-						<f:selectItem itemLabel="Breach the obligation of registration" itemValue="R" />
-						<f:selectItem itemLabel="Breach the obligation of Tender/ Contract" itemValue="T" />
+						<f:selectItem itemLabel="Breach the obligation of registration"
+							itemValue="R" />
+						<f:selectItem
+							itemLabel="Breach the obligation of Tender/ Contract"
+							itemValue="T" />
 						<f:selectItem itemLabel="Criminal or Civil Offenses" itemValue="O" />
 					</p:selectOneMenu></td>
 			</tr>
