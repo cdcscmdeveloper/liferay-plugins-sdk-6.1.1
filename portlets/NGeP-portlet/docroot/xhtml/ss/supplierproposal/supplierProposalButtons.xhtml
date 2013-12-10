@@ -16,22 +16,22 @@
 					<ui:repeat var="action"
 						value="#{sPDetailBackingBean.managedBean.outComes}">
 
-						<ui:fragment rendred="#{action eq 'Submit'}">
+						<ui:fragment rendred="#{action eq 'SUBMIT'}">
 							<c:set var="iconVar" value="ui-icon-submit" scope="request"></c:set>
 						</ui:fragment>
-						<ui:fragment rendred="#{action eq 'Reject'}">
+						<ui:fragment rendred="#{action eq 'REJECT'}">
 							<c:set var="iconVar" value="ui-icon-reject" scope="request"></c:set>
 						</ui:fragment>
-						<ui:fragment rendred="#{action eq 'Revise'}">
+						<ui:fragment rendred="#{action eq 'REVISE'}">
 							<c:set var="iconVar" value="ui-icon-revise" scope="request"></c:set>
 						</ui:fragment>
-						<ui:fragment rendred="#{action eq 'Approve'}">
+						<ui:fragment rendred="#{action eq 'APPROVE'}">
 							<c:set var="iconVar" value="ui-icon-save" scope="request"></c:set>
 						</ui:fragment>
 
 						<p:commandButton value="#{action}" process="@all"
 							styleClass="ui-button"
-							actionListener="#{sPDetailBB.updateBpmTask(action)}" />
+							actionListener="#{sPDetailBackingBean.updateBpmTask(action)}" icon="#{iconVar}"/>
 					</ui:repeat>
 				</p:column>
 			</p:row>

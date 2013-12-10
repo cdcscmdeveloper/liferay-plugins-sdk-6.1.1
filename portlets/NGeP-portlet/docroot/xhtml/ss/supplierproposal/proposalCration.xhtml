@@ -11,8 +11,8 @@
 <p:panel header="ProposalCreationNotification">
 <h:panelGrid columns="4">
 <h:outputLabel value="supplierId"></h:outputLabel>
-<p:inputText value="#{sPDetailBB.managedBean.supplierId}"></p:inputText>
-<p:commandButton action="#{sPDetailBB.createProposal}" value="ProposalCreation"></p:commandButton>
+<p:inputText value="#{sPDetailBackingBean.managedBean.supplierId}"></p:inputText>
+<p:commandButton action="#{sPDetailBackingBean.createProposal}" value="ProposalCreation"></p:commandButton>
 </h:panelGrid>
 </p:panel>
 	</ui:define>
