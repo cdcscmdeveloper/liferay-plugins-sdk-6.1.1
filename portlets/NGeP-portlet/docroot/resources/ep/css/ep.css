@@ -1632,7 +1632,7 @@ important
 	border: 0px solid #f4f4f4 !important;
 	background: #ffffff !important;
 	color: #4f4f4f !important;
-	margin: 0 0 0 10px;
+	padding: 5px !important;
 }
 
 .ui-panel .ui-panel-titlebar-icon .ui-state-default {
@@ -4103,7 +4103,6 @@ textarea[disabled],input[type="text"][disabled],input[type="password"][disabled]
 
 .ui-menu {
 	background-color: #F9F9F9;
-	width: 90%;
 }
 
 .ui-menuitem-text {
