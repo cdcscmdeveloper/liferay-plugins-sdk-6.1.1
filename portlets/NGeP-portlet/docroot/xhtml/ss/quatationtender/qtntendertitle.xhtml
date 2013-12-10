@@ -46,7 +46,8 @@
 			</h:column>
 			<h:column>
 				<p:inputText id="estprice"
-					value="#{qTDetailBB.managedBean.qt.qtAmount}" />
+					value="#{qTDetailBB.managedBean.qt.qtAmount}" disabled="true"  style="margin-right:5px;"/>
+					<h:inputText value="MYR" disabled="true" size="2"></h:inputText>
 			</h:column>
 			<h:column>
 				<h:outputLabel value="* #{lbl['lbl.so.procmode']}" />

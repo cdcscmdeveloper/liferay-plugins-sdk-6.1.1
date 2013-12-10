@@ -11,13 +11,13 @@
 				<h:panelGrid border="0" cellpadding="0" cellspacing="0" width="100%"
 			columns="3" columnClasses="columnWidth20,columnWidth30">
 		<h:outputLabel value="#{lbl['lbl.so.circularno']}" />  
-            <p:inputText value="#{qTSupplierQulCriteriaBackingBean.managedBean.qtCriteria.ctCircular.ctCircularVer.circularNo}" readonly="true"/> 
+            <p:inputText value="#{qTSupplierQulCriteriaBackingBean.managedBean.qtCriteria.ctCircular.ctCircularVer.circularNo}" disabled="true"/> 
            
            <p:commandLink  style="margin-right:20px;">  
         <h:outputText value="#{lbl['lbl.so.cirattach']}" />  
     </p:commandLink> 
            <h:outputLabel value="#{lbl['lbl.so.circularexp']}" />  
-            <p:inputText value="#{qTSupplierQulCriteriaBackingBean.managedBean.qtCriteria.ctCircular.ctCircularVer.endDate}" readonly="true"/> 
+            <p:inputText value="#{qTSupplierQulCriteriaBackingBean.managedBean.qtCriteria.ctCircular.ctCircularVer.endDate}" disabled="true"/> 
          
     
 		</h:panelGrid>
@@ -36,7 +36,7 @@
 	 <p:panelGrid columns="3" style="width:42%;"
 				styleClass="noBorders tr,noBorders td">
 		<h:outputLabel value="#{lbl['lbl.so.totalsup']}" />  
-            <p:inputText  value="1" readonly="true"/> 
+            <p:inputText  value="1" disabled="true"/> 
             
             
 

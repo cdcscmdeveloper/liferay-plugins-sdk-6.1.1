@@ -10,11 +10,14 @@
 		<p:panel header="Category Code List" toggleable="true">
 
   
-<p:panelGrid columns="2" style="width:38%;"
-				styleClass="noBorders tr,noBorders td">
-		<h:outputText value="#{lbl['lbl.so.paidup']}"  />  
-            <p:inputText value="#{qTSupplierQulCriteriaBackingBean.managedBean.qtCriteria.paidUpCaptial}"/> 
-            </p:panelGrid>
+<h:panelGrid border="0" cellpadding="0" cellspacing="0" width="100%"
+			columns="2" columnClasses="columnWidth20">
+		<h:column>
+		<h:outputText value="#{lbl['lbl.so.paidup']}"  style="padding-right: 6px;padding-left: 81px" />  
+            <p:inputText value="#{qTSupplierQulCriteriaBackingBean.managedBean.qtCriteria.paidUpCaptial}" style="margin-right:5px;"/> 
+            <h:inputText value="MYR" disabled="true" size="1"></h:inputText>
+          </h:column>
+          </h:panelGrid>
           
     
 			
@@ -119,7 +122,7 @@
 	 <p:panelGrid columns="3" style="width:45%;"
 				styleClass="noBorders tr,noBorders td">
 		<h:outputText value="#{lbl['lbl.so.totalsup']}" />  
-            <p:inputText  value="1" readonly="true"/> 
+            <p:inputText  value="1" disabled="true"/> 
             
             
 

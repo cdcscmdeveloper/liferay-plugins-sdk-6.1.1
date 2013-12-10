@@ -29,7 +29,7 @@
 			
 			<h:outputLabel  value="#{lbl['lbl.so.publsihperiod']}" escape="false" />
 					
-			<p:inputText value="#{qTScheduleDetailBB.managedBean.qt.qtValidityPeriod}"  readonly="true" id="publishingperiod" />
+			<p:inputText value="#{qTScheduleDetailBB.managedBean.qt.qtValidityPeriod}"  readonly="true" id="publishingperiod" disabled="true"/>
 			
 			<h:outputLabel value="#{lbl['lbl.so.expectloadate']}"/>
 			
@@ -74,14 +74,15 @@
 
 				
 					
-			<p:dataTable value="#{qTScheduleDetailBB.managedBean.briefings}" 
+			<p:dataTable value="#{qTScheduleDetailBB.managedBean.briefings}" scrollable="true" scrollWidth="796" 
 			 id="briefdetaillist" var="briefdetails" 
 			 selection="#{qTScheduleDetailBB.managedBean.selectedBriefingDetails}"
 				rowKey="#{briefdetails}" rowIndexVar="rowIndex"
 				rows="10">
-				<p:column selectionMode="multiple" style="width:2%" />
+				<p:column selectionMode="multiple" style="width:5%" />
 				<ac:paginator for="briefdetaillist"/>
-				<p:column>
+				
+					<p:column headerText="#{lbl['lbl.so.desc']}">
 						<p:commandLink >
 								<h:outputText value="#{briefdetails.briefingDesc}"></h:outputText>
 								</p:commandLink>
@@ -112,7 +113,7 @@
 							
 					</p:column>
 					<p:column headerText="#{lbl['lbl.so.briefstatus']}">
-		<h:outputText value="#{briefdetails.pmStatus}"></h:outputText>
+		<h:outputText value="#{briefdetails.pmStatus.statusId}"></h:outputText>
 							</p:column>
 				<!-- <p:column headerText="#{lbl['lbl.so.action']}" style="width:6%">
 						<p:rowEditor />
@@ -144,12 +145,12 @@
 			<p:panelGrid columns="2" style="width:100%;"
 				styleClass="noBorders tr,noBorders td">
 
-			<p:dataTable value="#{qTScheduleDetailBB.managedBean.siteBriefings}" 
+			<p:dataTable value="#{qTScheduleDetailBB.managedBean.siteBriefings}" scrollable="true" scrollWidth="796" 
 			id="sitedetails" var="sitedetails"
 			selection="#{qTScheduleDetailBB.managedBean.selectedSiteVisitDetails}"
 				rowKey="#{sitedetails}" rowIndexVar="rowIndex"
 				rows="10">
-				<p:column selectionMode="multiple" style="width:2%" />
+				<p:column selectionMode="multiple" style="width:5%" />
 				<ac:paginator for="sitedetails" />
 			
 			
@@ -184,7 +185,7 @@
 							
 					</p:column>
 					<p:column headerText="#{lbl['lbl.so.briefstatus']}">
-		<h:outputText value="#{sitedetails.pmStatus}"></h:outputText>
+		<h:outputText value="#{sitedetails.pmStatus.statusId}"></h:outputText>
 							</p:column>
 			<!-- 	<p:column headerText="#{lbl['lbl.so.action']}" style="width:6%">
 						<p:rowEditor />
