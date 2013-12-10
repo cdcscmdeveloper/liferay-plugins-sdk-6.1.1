@@ -101,11 +101,14 @@ public class SpecificationBackingBean extends
 		// retriveSpecdetails();
 	}
 
-	public void save() {
+	public SpecificationReqDTO prepareSpecReq() {
+		SpecificationReqDTO specreqDTO = new SpecificationReqDTO();
 		try {
+			
 			ScQtSpec scqtSpec = this.getManagedBean().getScQtSpec();
 			scqtSpec.setApprovalDate(new Date());
 			scqtSpec.setAwardType("L");
+			scqtSpec.setContractDuration(1);
 			scqtSpec.getScQt()
 					.setQtAmount(
 							this.getManagedBean().getScQtSpec().getScQt()
@@ -167,19 +170,21 @@ public class SpecificationBackingBean extends
 			System.out.println("scQtSpec Object====="
 					+ scqtSpec.getScQtCheckLists().size());
 
-			IQTSpecSO specSO = BusinessDelegate.getInstance().getServiceObject(
-					"ss", IQTSpecSO.class);
-			System.out.println("=====specSO===" + specSO);
-			SpecificationReqDTO specreqDTO = new SpecificationReqDTO();
+			/*
+			 * IQTSpecSO specSO =
+			 * BusinessDelegate.getInstance().getServiceObject( "ss",
+			 * IQTSpecSO.class); System.out.println("=====specSO===" + specSO);
+			 */
+			
 			specreqDTO.setScQtSpec(scqtSpec);
-			//specSO.saveSpecDetails(specreqDTO);
+			// specSO.saveSpecDetails(specreqDTO);
 			FacesContext.getCurrentInstance().addMessage(
 					null,
 					new FacesMessage(FacesMessage.SEVERITY_ERROR,
 							"SuccessFully Saved",
 							"Specification"));
 			System.out.println("====successfully saved in db====");
-
+			return specreqDTO;
 		} catch (Exception e) {
 			System.out.println("=====cath exception method===");
 			e.printStackTrace();
@@ -192,6 +197,7 @@ public class SpecificationBackingBean extends
 							"Specification"));
 			
 		}
+		return specreqDTO;
 
 	}
 
@@ -203,7 +209,7 @@ public class SpecificationBackingBean extends
 			this.getManagedBean().setApprovalDate(sdf.format(d));
 			compilenceList();
 			if (getManagedBean().getScQtSpec() == null) {
-				retriveSpecdetails(146L);	
+				//retriveSpecdetails(146L);
 			}
 
 		} catch (Exception e) {
@@ -230,9 +236,10 @@ public class SpecificationBackingBean extends
 				IQTDetailSO QtDetailsSO = BusinessDelegate.getInstance()
 						.getServiceObject("ss", IQTDetailSO.class);
 				QuationTenderReqDTO tenderReqDTO = new QuationTenderReqDTO();
-				tenderReqDTO.setQtTndrNo("xxx");
+				tenderReqDTO.setQtId(qtId);
+				//tenderReqDTO.setQtTndrNo("xxx");
 				QuationTenderResDTO tenderResDTO = new QuationTenderResDTO();
-				tenderResDTO = QtDetailsSO.retriveQtByQtNumber(tenderReqDTO);
+				tenderResDTO = QtDetailsSO.retriveQtById(tenderReqDTO);
 				getManagedBean().getScQtSpec().setScQt(
 						tenderResDTO.getQtDetail());
 				getManagedBean().setScQtRemarks(new ScQtRemark());
@@ -657,22 +664,21 @@ public class SpecificationBackingBean extends
 				+ scQtChecklist.getScQtCheckListAttachment().getFileName());
 	}
 
-	
 	public void preRenderView() {
 		HttpServletRequest servletRequest = PortalUtil
 				.getHttpServletRequest(new FacesScopes().getRequest());
 		HttpServletRequest originalServletRequest = PortalUtil
 				.getOriginalServletRequest(servletRequest);
 		String taskId = originalServletRequest.getParameter("taskId");
-		
+
 		this.getManagedBean().setTaskId(taskId);
-		
+
 		IBpmSO bpmSO = (IBpmSO) EpBpmBusinessDelegate.getInstance()
 				.getServiceObject(IBpmSO.class);
-		// TODO	
-		FacesScopes facesScopes= new FacesScopes();
+		// TODO
+		FacesScopes facesScopes = new FacesScopes();
 		String ctx = facesScopes.getBPMAuthenticationCtxToken();
-		//String ctx = bpmSO.authenticate("roslan", "welcome1");
+		// String ctx = bpmSO.authenticate("roslan", "welcome1");
 		BpmRequestDTO reqDTO = new BpmRequestDTO();
 		reqDTO.setCtxToken(ctx);
 		reqDTO.setTaskId(taskId);
@@ -680,10 +686,9 @@ public class SpecificationBackingBean extends
 		Object obj = res.getPojo();
 		this.getManagedBean().setOutComes(res.getAction());
 		SCSpecificationDataType specificationDataType = (SCSpecificationDataType) obj;
-		
 
 		this.getManagedBean().setSpecificationDataType(specificationDataType);
-				
+
 		IQTDetailSO detailSO = EpEjbBusinessDelegate.getInstance()
 				.getServiceObject(QTConstants.SS_MODULE, IQTDetailSO.class);
 		QuationTenderReqDTO tenderReqDTO = new QuationTenderReqDTO();
@@ -693,36 +698,41 @@ public class SpecificationBackingBean extends
 				.retriveQTDetails(tenderReqDTO);
 		QTDetailBackingBean detailBackingBean = new QTDetailBackingBean();
 		detailBackingBean.getManagedBean().setQt(tenderResDTO.getQtDetail());
-	
-		//detailBackingBean.populateParentOrgProfile(tenderResDTO.getQtDetail());
+		detailBackingBean.populateParentOrgProfile(tenderResDTO.getQtDetail());
+		// detailBackingBean.populateParentOrgProfile(tenderResDTO.getQtDetail());
 		retriveSpecdetails(specificationDataType.getQtId().longValue());
-				FacesContext fc = FacesContext.getCurrentInstance();
+		FacesContext fc = FacesContext.getCurrentInstance();
 		fc.getApplication()
 				.getNavigationHandler()
-				.handleNavigation(fc, null,
-						"/xhtml/ss/specification/specificationview.xhtml" + "?faces-redirect=true");
+				.handleNavigation(
+						fc,
+						null,
+						"/xhtml/ss/specification/specificationview.xhtml"
+								+ "?faces-redirect=true");
 	}
-	
-	public String submitSpecDetails(String outCome){
-		SpecificationReqDTO specReqDTO =new SpecificationReqDTO();
-		FacesScopes facesScopes= new FacesScopes();
+
+	public String submitSpecDetails(String outCome) {
+		
+		SpecificationReqDTO specReqDTO = prepareSpecReq();
+		FacesScopes facesScopes = new FacesScopes();
 		String ctxToken = facesScopes.getBPMAuthenticationCtxToken();
 		specReqDTO.setToken(ctxToken);
 
 		specReqDTO.setTaskId(this.getManagedBean().getTaskId());
-		
-		specReqDTO.setScSpecificationDataType(this.getManagedBean().getSpecificationDataType());
+
+		specReqDTO.setScSpecificationDataType(this.getManagedBean()
+				.getSpecificationDataType());
 		specReqDTO.setOutcome(outCome);
-		IQTSpecSO iqtSpecSO= BusinessDelegate.getInstance().getServiceObject(QTConstants.SS_MODULE,IQTSpecSO.class);
-	
+		IQTSpecSO iqtSpecSO = BusinessDelegate.getInstance().getServiceObject(
+				QTConstants.SS_MODULE, IQTSpecSO.class);
+
 		BaseResponseDTO resDTO = iqtSpecSO.updateBPMAction(specReqDTO);
 		if (resDTO.isSuccessful()) {
 
 			FacesContext.getCurrentInstance().addMessage(
 					null,
 					new FacesMessage(FacesMessage.SEVERITY_INFO,
-							"Record saved successfully.",
-							"Committe Type. : "
+							"Record saved successfully.", "Committe Type. : "
 
 					));
 
@@ -732,8 +742,7 @@ public class SpecificationBackingBean extends
 			throw new EpException("Failed.");
 		}
 	}
-	
-	
+
 	/**
 	 * @return the selctValue
 	 */
@@ -907,24 +916,25 @@ public class SpecificationBackingBean extends
 			ScQtCheckList[] selectedst1TechProposal) {
 		this.selectedst1TechProposal = selectedst1TechProposal;
 	}
-	public String updateBpmTask(String action){
+
+	public String updateBpmTask(String action) {
 		System.out.println("Succeesfully update the task");
-		SpecificationReqDTO spReqDTO= new SpecificationReqDTO();
+		SpecificationReqDTO spReqDTO = prepareSpecReq();
 		spReqDTO.setOutcome(action);
 		spReqDTO.setTaskId(this.getManagedBean().getTaskId());
 		spReqDTO.setPayLoad(this.getManagedBean().getSpecificationDataType());
-		FacesScopes facesScopes= new FacesScopes();
+		FacesScopes facesScopes = new FacesScopes();
 		String ctx = facesScopes.getBPMAuthenticationCtxToken();
 		spReqDTO.setToken(ctx);
-		IQTSpecSO specSO= getSpecSO();
-		BaseResponseDTO resDTO =  specSO.updateBPMAction(spReqDTO);
+		IQTSpecSO specSO = getSpecSO();
+
+		SpecificationResDTO resDTO = specSO.updateBPMAction(spReqDTO);
 		if (resDTO.isSuccessful()) {
 
 			FacesContext.getCurrentInstance().addMessage(
 					null,
 					new FacesMessage(FacesMessage.SEVERITY_INFO,
-							"Record saved successfully.",
-							" Type. : "
+							"Record saved successfully.", " Type. : "
 
 					));
 
@@ -932,11 +942,12 @@ public class SpecificationBackingBean extends
 
 		}
 		return "";
-		
+
 	}
-	
-	private IQTSpecSO getSpecSO(){
-		return EpEjbBusinessDelegate.getInstance().getServiceObject(QTConstants.SS_MODULE,IQTSpecSO.class);
+
+	private IQTSpecSO getSpecSO() {
+		return EpEjbBusinessDelegate.getInstance().getServiceObject(
+				QTConstants.SS_MODULE, IQTSpecSO.class);
 	}
 
 }
