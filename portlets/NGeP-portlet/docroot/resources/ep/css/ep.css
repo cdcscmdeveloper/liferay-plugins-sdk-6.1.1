@@ -2142,6 +2142,10 @@ important
 .border0 {
 	border: 0px !important;
 }
+.cmColumnWidth {
+	border: 0px !important;
+	width:20px;
+}
 
 td {
 
