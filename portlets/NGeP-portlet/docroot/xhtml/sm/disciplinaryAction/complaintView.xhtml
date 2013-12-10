@@ -5,37 +5,42 @@
 	xmlns:h="http://java.sun.com/jsf/html"
 	xmlns:ui="http://java.sun.com/jsf/facelets"
 	xmlns:p="http://primefaces.org/ui"
-	xmlns:c="http://java.sun.com/jsp/jstl/core">
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:ac="http://ac.my/jsf/composite/cc">
 
 	<ui:define name="contentSection">
 		<f:event listener="#{complaintBackingBean.retrieveAllActiveComplaint}"
 			type="preRenderView" />
 
-		<p:panel header="Search" toggleable="true">
+		<p:panel header="Search" toggleable="true" id="pnlSearch">
 			<table class="rptTbl">
 				<tr>
 					<td><p:outputLabel value="Complaint No" /></td>
-					<td><p:inputText  /></td>
+					<td><p:inputText /></td>
 					<td><p:outputLabel value="MOF No" /></td>
-					<td><p:inputText  /></td>
+					<td><p:inputText /></td>
 				</tr>
 			</table>
-			<div align="right"><p:commandButton value="Search" /></div>
+			<div align="right">
+				<p:commandButton value="Search" />
+			</div>
 		</p:panel>
 		<p:remoteCommand name="viewComplaint"
 			action="#{complaintBackingBean.onComplaintRowSelect}" />
-		<p:panel header="Complaint" toggleable="true">
+		<p:panel header="Complaint" toggleable="true" id="pnlCompList">
 			<p:dataTable value="#{complaintBackingBean.managedBean.smComplLs}"
-				var="compl"
+				var="compl" id="complaintDt"
 				selection="#{complaintBackingBean.managedBean.selectedComplaint}"
 				rowKey="#{compl.complaintId}" selectionMode="single">
+				<ac:paginator for="complaintDt" />
+				
 				<p:ajax event="rowSelect" oncomplete="viewComplaint();" />
 				<p:column headerText="Complaint No">
 					#{compl.complaintNo}
 				</p:column>
 
 				<p:column headerText="Complaint Date">
-					#{compl.complaintDate}
+					#{compl.createdDate}
 				</p:column>
 
 				<p:column headerText="Complaint Type">
