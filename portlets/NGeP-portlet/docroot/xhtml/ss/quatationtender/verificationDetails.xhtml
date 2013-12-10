@@ -27,7 +27,7 @@
 			<h:outputLabel value="Verifier Name"></h:outputLabel>
 
 			<h:panelGroup id="sample">
-				<p:selectOneMenu value="#{approvalCategory.scQtApproval.verifierId}"
+				<p:selectOneMenu value="#{approvalCategory.scQtApproval.verifierId}"					
 					rendered="#{approvalCategory.scQtApproval.verifyOption eq 'O'}" style="width: 100px;">
 					<f:selectItems value="#{qTDetailBB.managedBean.veryfiers}" var="verifyer"   itemLabel="#{verifyer.userName}" itemValue="#{verifyer.userId}"></f:selectItems>
 				

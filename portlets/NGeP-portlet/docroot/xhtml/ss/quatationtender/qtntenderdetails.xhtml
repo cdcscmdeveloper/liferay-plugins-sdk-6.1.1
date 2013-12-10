@@ -22,7 +22,7 @@
 				<h:outputLabel value="#{lbl['lbl.so.itemorg']}"  />
 			</h:column>
 			<h:column>
-				<p:selectOneMenu value="#{qTDetailBB.managedBean.qt.itemOrigin}">
+				<p:selectOneMenu value="#{qTDetailBB.managedBean.qt.itemOrigin}" style="margin-bottom:5px;">
 					<f:selectItems value="#{qTDetailBB.getDropdownCodeValues(PmCodeCatConst.itemOrigin)}" />
 				<p:ajax event="change" partialSubmit="true" process="@this" update="approvalWorkFlow" listener="#{qTDetailBB.onChangeAction}"/>
 			
