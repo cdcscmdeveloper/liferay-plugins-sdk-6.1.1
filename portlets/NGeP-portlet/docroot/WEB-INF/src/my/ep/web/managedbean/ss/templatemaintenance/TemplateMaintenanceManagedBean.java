@@ -38,7 +38,7 @@ public class TemplateMaintenanceManagedBean extends BaseManagedBean  {
 	private List<SelectItem> checkListItem;
 	private List<SelectItem>  zoneList;
 	public TemplateMaintenanceManagedBean(){
-		scqtDoc=new ScQtDoc();
+		//scqtDoc=new ScQtDoc();
 		/*getScqtDoc().setTplSpecMaster(new TplSpecMaster());
 		getScqtDoc().getTplSpecMaster().setItemTypeCode(new PmCode());
 		getScqtDoc().getTplSpecMaster().setProcurementCategory(new PmCode());

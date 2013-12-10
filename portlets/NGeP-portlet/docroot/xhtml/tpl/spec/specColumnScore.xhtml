@@ -1,0 +1,26 @@
+<ui:composition
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:p="http://primefaces.org/ui">
+	
+	<p:column style="#{columnStyle}width:70px;" rendered="#{isEstCostReq and isSpecTypeFinancial}">
+		<h:outputLabel value="Estimate Cost" style="float: left" rendered="#{isQuestionTypeHeader}" />
+		<p:inputText style="min-width:0px !important" size="10" dir="rtl" value="#{question.clEstimatedCost}" rendered="#{!isQuestionTypeHeader}" disabled="true" />
+	</p:column>
+	<p:column style="#{columnStyle}width:70px;">
+		<h:outputLabel value="System Score" style="float: left" rendered="#{isQuestionTypeHeader}" />
+		<p:inputText style="min-width:0px !important" size="6" dir="rtl" value="#{question.tplSpecAnswer.autoScore}"
+			rendered="#{!isQuestionTypeHeader and !empty question.tplSpecAnswer and isScoring}" disabled="true" />
+	</p:column>
+	<p:column style="#{columnStyle}width:50px;">
+		<h:outputLabel value="User Score" style="float: left" rendered="#{isQuestionTypeHeader}" />
+		<p:inputText style="min-width:0px !important" size="6" dir="rtl" value="#{question.tplSpecAnswer.userScore}"
+			rendered="#{!isQuestionTypeHeader and !empty question.tplSpecAnswer and !isScoring}" />
+	</p:column>
+	<p:column style="#{columnStyle}width:130px;">
+		<h:outputLabel value="Remark" style="float: left" rendered="#{isQuestionTypeHeader}" />
+		<p:inputText value="#{question.tplSpecAnswer.userRemark}" rendered="#{!isQuestionTypeHeader and !empty question.tplSpecAnswer}" />
+	</p:column>
+</ui:composition>

@@ -80,7 +80,7 @@
 				<tr>
 					<td colspan="4">
 						<p:commandButton value="Render Table" actionListener="#{templateSpecBackingBean.renderTable}" 
-							process="@this" update="spg" />
+							partialSubmit="true" process="smpg" update="spg" />
 					</td>
 				</tr>
 			</table>

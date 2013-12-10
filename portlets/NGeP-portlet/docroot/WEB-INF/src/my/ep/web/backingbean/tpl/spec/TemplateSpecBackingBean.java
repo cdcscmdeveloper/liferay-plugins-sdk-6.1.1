@@ -3,6 +3,7 @@
  */
 package my.ep.web.backingbean.tpl.spec;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -19,6 +20,7 @@ import my.ep.biz.bean.search.SearchFilterBean;
 import my.ep.biz.service.pm.authorization.orgprofile.IOrgProfileSO;
 import my.ep.biz.service.pm.common.codecategory.ICodeCategorySO;
 import my.ep.biz.service.pm.common.uom.IUomSO;
+import my.ep.biz.service.sm.registration.IRegistrationSO;
 import my.ep.biz.service.tpl.spec.ITemplateSpecSO;
 import my.ep.constant.pm.PmCodeCategoryConst;
 import my.ep.constant.pm.PmCodeConst;
@@ -28,6 +30,8 @@ import my.ep.dto.pm.authorization.orgprofile.OrgProfileResDTO;
 import my.ep.dto.pm.common.codecategory.CodeCategoryReqDTO;
 import my.ep.dto.pm.common.codecategory.CodeCategoryResDTO;
 import my.ep.dto.pm.common.uom.UomResDTO;
+import my.ep.dto.sm.registration.RegistrationReqDTO;
+import my.ep.dto.sm.registration.RegistrationResDTO;
 import my.ep.dto.tpl.spec.TemplateSpecReqDTO;
 import my.ep.dto.tpl.spec.TemplateSpecResDTO;
 import my.ep.persistence.entity.pm.authorization.PmOrgProfile;
@@ -59,14 +63,13 @@ public class TemplateSpecBackingBean extends BaseBackingBean<TemplateSpecManaged
 	
 	public String retrieveTemplateSpecMaster() {
 		ITemplateSpecSO templateSpecSO = null;
-		ICodeCategorySO codeCategorySO = null;
 		TplSpecMaster specMaster = this.getManagedBean().getSpecMaster();
 		
-		/*IRegistrationSO registrationSO = BusinessDelegate.getInstance().getServiceObject("sm", IRegistrationSO.class);
+		IRegistrationSO registrationSO = BusinessDelegate.getInstance().getServiceObject("sm", IRegistrationSO.class);
 		RegistrationReqDTO registrationReqDTO = new RegistrationReqDTO();
 		registrationReqDTO.setSupplierId(1L);
 		RegistrationResDTO registrationResDTO = registrationSO.retrieveSuppOnlineAcc(registrationReqDTO);
-		getManagedBean().setSupplier(registrationResDTO.getSmSupp());*/
+		getManagedBean().setSupplier(registrationResDTO.getSmSupp());
 		
 		SmSupplier smSupplier = this.getManagedBean().getSupplier();
 		try {
@@ -81,24 +84,16 @@ public class TemplateSpecBackingBean extends BaseBackingBean<TemplateSpecManaged
 			TemplateSpecResDTO resDTO = templateSpecSO.getTemplateMaster(reqDTO);
 			if(resDTO.isSuccessful()) {
 				getManagedBean().setSpecMaster(resDTO.getSpecMaster());
-				addQuestion(-1, TemplateSpecConst.QUESTION_TYPE_HEADER);
-				getManagedBean().setSelectedSpecQuestion(new TplSpecQuestion());
-				
-				codeCategorySO = BusinessDelegate.getInstance().getServiceObject("pm", ICodeCategorySO.class);
-				CodeCategoryReqDTO codeCategoryReqDTO = new CodeCategoryReqDTO();
-				codeCategoryReqDTO.setCategory(PmCodeCategoryConst.ANSWER_TYPE);
-				codeCategoryReqDTO.setCode(PmCodeConst.ANSWER_TYPE_TEXT);
-				CodeCategoryResDTO codeCategoryResDTO = codeCategorySO.retrieveCodeByCategoryAndCode(codeCategoryReqDTO);
-				
-				getManagedBean().getSelectedSpecQuestion().setAnswerTypeCode(codeCategoryResDTO.getPmCode());	
 				
 				if (!TemplateSpecConst.CONTENT_TYPE_QUESTION.equals(getManagedBean().getContentType())) {
 					populateSpecAnswer(getManagedBean().getSpecMaster().getTplSpecQuestions());
 				}
+				
+				addQuestion(-1, TemplateSpecConst.QUESTION_TYPE_HEADER);
+				getManagedBean().setSelectedSpecQuestion(new TplSpecQuestion());
 			}
 		} finally {
 			templateSpecSO = null;
-			codeCategorySO = null;
 		}
 		return "maintenance";
 	}
@@ -161,10 +156,10 @@ public class TemplateSpecBackingBean extends BaseBackingBean<TemplateSpecManaged
 		List<TplSpecQuestion> specQuestionList = getManagedBean().getSpecMaster().getTplSpecQuestions();
 		TplSpecQuestion questionToDelete = specQuestionList.get(getManagedBean().getSelectedIndex());
 
-		if(questionToDelete.getQuestionType().equalsIgnoreCase(TemplateSpecConst.QUESTION_TYPE_SECTION)) {
+		if(questionToDelete.getQuestionType().equalsIgnoreCase(TemplateSpecConst.QUESTION_TYPE_ITEM)) {
 			for(int i = getManagedBean().getSelectedIndex() + 1; i < specQuestionList.size(); i++) {
 				TplSpecQuestion childToDelete = specQuestionList.get(i);
-				if(childToDelete.getQuestionType().equalsIgnoreCase(TemplateSpecConst.QUESTION_TYPE_SECTION)) {
+				if(childToDelete.getQuestionType().equalsIgnoreCase(TemplateSpecConst.QUESTION_TYPE_ITEM)) {
 					break;
 				}
 				if(!childToDelete.isBrandNew()) {
@@ -185,27 +180,16 @@ public class TemplateSpecBackingBean extends BaseBackingBean<TemplateSpecManaged
 	}
 
 	public String newAction() {
-		getManagedBean().setSpecMaster(new TplSpecMaster());
-		PmCode code = new PmCode();
-		code.setCodeId(0l);
-		getManagedBean().getSpecMaster().setProcurementCategory(code);
-		code = new PmCode();
-		code.setCodeId(0l);
-		getManagedBean().getSpecMaster().setItemTypeCode(code);
-		code = new PmCode();
-		code.setCodeId(0l);
-		getManagedBean().getSpecMaster().setTemplateTypeCode(code);
-		code = new PmCode();
-		code.setCodeId(0l);
-		getManagedBean().getSpecMaster().setSpecTypeCode(code);
-		PmOrgProfile orgProfile = new PmOrgProfile();
-		orgProfile.setOrgProfileId(0l);
-		getManagedBean().getSpecMaster().setOrgProfile(orgProfile);
+		TplSpecMaster specMaster = new TplSpecMaster();
 		
+		specMaster.setProcurementCategory(new PmCode());
+		specMaster.setItemTypeCode(new PmCode());
+		specMaster.setTemplateTypeCode(new PmCode());
+		specMaster.setSpecTypeCode(new PmCode());
+		specMaster.setOrgProfile(new PmOrgProfile());
+		
+		getManagedBean().setSpecMaster(specMaster);
 		getManagedBean().setSelectedSpecQuestion(new TplSpecQuestion());
-		code = new PmCode();
-		code.setCodeId(0l);
-		getManagedBean().getSelectedSpecQuestion().setAnswerTypeCode(code);
 		
 		return "maintenance"; 
 	}
@@ -275,14 +259,14 @@ public class TemplateSpecBackingBean extends BaseBackingBean<TemplateSpecManaged
 			for(int x = 0; x < getManagedBean().getSpecMaster().getTplSpecQuestions().size(); x++) {
 				numbering = "";
 				TplSpecQuestion question = getManagedBean().getSpecMaster().getTplSpecQuestions().get(x);
-				if(question.getQuestionType().equalsIgnoreCase(TemplateSpecConst.QUESTION_TYPE_SECTION)) {
+				if(question.getQuestionType().equalsIgnoreCase(TemplateSpecConst.QUESTION_TYPE_ITEM)) {
 					if(x==0) {
 						firstRowisSection = true;
 					}
 					sectionNumber++;
 					question.setQuestionNumber(sectionNumber+"");
 				}
-				if(question.getQuestionType().equalsIgnoreCase(TemplateSpecConst.QUESTION_TYPE_LINE_ITEM)) {
+				if(question.getQuestionType().equalsIgnoreCase(TemplateSpecConst.QUESTION_TYPE_ITEM_SPEC)) {
 					level2Number++;
 					numbering = firstRowisSection?sectionNumber+"."+level2Number:level2Number+"";
 					question.setQuestionNumber(numbering);
@@ -408,15 +392,56 @@ public class TemplateSpecBackingBean extends BaseBackingBean<TemplateSpecManaged
 		
 	}
 	
+	public void calcTotalAmount(TplSpecAnswer specAnswer, boolean isItemTypeService) {
+		TplSpecQuestion specQuestion = specAnswer.getTplSpecQuestion();
+		BigDecimal quantity = specQuestion.getClQuantity();
+		BigDecimal ratePerUom = specAnswer.getRatePerUom();
+		
+		BigDecimal totalPrice = quantity;
+		
+		if (ratePerUom != null) {
+			totalPrice = totalPrice.multiply(ratePerUom);	
+		}
+		
+		if (isItemTypeService) {
+			Integer uomFrequency = specQuestion.getClUomFrequency();
+			Integer uomPerDay = specQuestion.getClUomPerDay();
+			Integer uomPerMonth = specQuestion.getClUomPerMonth();
+			Integer monthPerYear = specQuestion.getClMonthPerYear();
+			BigDecimal amountPerYear = specAnswer.getAmountPerYear();
+			
+			if (uomFrequency != null) {
+				totalPrice = totalPrice.multiply(BigDecimal.valueOf(uomFrequency));
+			}
+			
+			if (uomPerDay != null) {
+				totalPrice = totalPrice.multiply(BigDecimal.valueOf(uomPerDay));
+			}
+			
+			if (uomPerMonth != null) {
+				totalPrice = totalPrice.multiply(BigDecimal.valueOf(uomPerMonth));
+			}
+			
+			if (monthPerYear != null) {
+				totalPrice = totalPrice.multiply(BigDecimal.valueOf(monthPerYear));
+			}
+			
+			if (amountPerYear != null) {
+				totalPrice = totalPrice.multiply(amountPerYear);
+			} else {
+				totalPrice = null;
+			}
+		}
+		specAnswer.setAnswerNumeric(totalPrice);
+	}
+	
 	private void populateSpecAnswer(List<TplSpecQuestion> questions) {		
 		TplSpecAnswer tplSpecAnswer = null;
 		
 		for (TplSpecQuestion question : questions) {
 			if (question.getTplSpecAnswers() != null && question.getTplSpecAnswers().size() > 0) {
 				question.setTplSpecAnswer(question.getTplSpecAnswers().iterator().next());
-			} else if (TemplateSpecConst.CONTENT_TYPE_ANSWER.equals(getManagedBean().getContentType()) && 
-				question.getQuestionType().equals(TemplateSpecConst.QUESTION_TYPE_LINE_ITEM)) {
-						
+			} else if (TemplateSpecConst.CONTENT_TYPE_ANSWER.equals(getManagedBean().getContentType())) {
 				tplSpecAnswer = new TplSpecAnswer();
 				tplSpecAnswer.setSupplier(getManagedBean().getSupplier());
 				tplSpecAnswer.setTplSpecQuestion(question);
