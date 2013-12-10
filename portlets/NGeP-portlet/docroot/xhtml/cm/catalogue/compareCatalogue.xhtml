@@ -22,47 +22,87 @@
 				action="#{catalogueBackingBean.compareIndxeAction()}">
 			</p:remoteCommand>
 
+			<h:panelGrid columns="2" style="width:100%;">
 
-			<p:dataGrid id="compareDataList" rowIndexVar="compareKey"
-				paginator="true"
-				value="#{catalogueBackingBean.managedBean.selectedSupplierItemList}"
-				var="compare" columns="4" rows="4" paginatorPosition="bottom">
+				<h:panelGroup style="width:20%;">
+					<table>
+						<tr>
+							<td height="70px"></td>
+						</tr>
+					</table>
+					<ui:repeat var="label"
+						value="#{catalogueBackingBean.managedBean.compareLabel}">
+						<p:panel styleClass="comparePanelLabel">
+							<h:outputLabel value="#{label}" />
+						</p:panel>
+					</ui:repeat>
 
-				<table>
-					<tr>
-						<td rowspan="3"><p:graphicImage
-								value="/image?imageName=#{compare.cmImages[0].imagePath}"
-								height="100px" width="100px" /></td>
-						<td><h:selectOneRadio
-								value="#{catalogueBackingBean.managedBean.compareIndex}"
-								onclick="compareRow([{name: 'name1', value: '#{compareKey}'}])">
-								<f:selectItem itemValue="#{compareKey}" />
-							</h:selectOneRadio></td>
-						<td colspan="1"><p:commandLink
-								action="#{catalogueBackingBean.deleteComparedItem(compareKey)}" update=":form:compareDataList">
-								<p:graphicImage value="/resources/ep/images/design/trash.png"></p:graphicImage>
-							</p:commandLink></td>
-					</tr>
-				</table>
+				</h:panelGroup>
 
 
 
-				<h:panelGrid
-					styleClass="#{compare.cmItem.itemName == catalogueBackingBean.managedBean.catalogueObj.cmItem.itemName ?'comparePanel':'comparePanel1'}">
+				<p:dataGrid id="compareDataList" rowIndexVar="compareKey"
+					paginator="true"
+					value="#{catalogueBackingBean.managedBean.selectedSupplierItemList}"
+					var="compare" columns="4" rows="4" paginatorPosition="bottom"
+					style="width:80%;">
+					<h:panelGroup style="text-align:left;">
+						<table>
+							<tr>
+								<td rowspan="3"><p:graphicImage
+										value="/resources/ep/images/product/computer/879949914_125.jpg"
+										height="100px" width="100px" /></td>
+								<td><h:selectOneRadio
+										value="#{catalogueBackingBean.managedBean.compareIndex}"
+										onclick="compareRow([{name: 'name1', value: '#{compareKey}'}])">
+										<f:selectItem itemValue="#{compareKey}" />
+									</h:selectOneRadio></td>
+								<td colspan="1"><p:commandLink
+										action="#{catalogueBackingBean.deleteComparedItem(compareKey)}"
+										update=":form:compareDataList">
+										<p:graphicImage value="/resources/ep/images/design/trash.png"></p:graphicImage>
+									</p:commandLink></td>
+							</tr>
+						</table>
+
+
+
+						<h:panelGrid
+							styleClass="#{compare.cmItem.itemName == catalogueBackingBean.managedBean.catalogueObj.cmItem.itemName ?'comparePanel':'comparePanel1'}">
 					#{compare.cmItem.itemName}
 				</h:panelGrid>
-				<h:panelGrid styleClass="comparePanel">
+						<h:panelGrid styleClass="#{compare.cmItem.itemName == catalogueBackingBean.managedBean.catalogueObj.cmItem.itemName ?'comparePanel':'comparePanel1'}">
 					#{compare.cmItem.itemDesc}
 				</h:panelGrid>
 
-				<h:panelGrid
-					styleClass="#{compare.skuNumber == catalogueBackingBean.managedBean.catalogueObj.skuNumber ?'comparePanel':'comparePanel1'}">
+						<h:panelGrid
+							styleClass="#{compare.smSupplier.supplierName == catalogueBackingBean.managedBean.catalogueObj.smSupplier.supplierName ?'comparePanel':'comparePanel1'}">
+					#{compare.smSupplier.supplierName}
+				</h:panelGrid>
+						
+						<h:panelGrid
+							styleClass="#{compare.skuNumber == catalogueBackingBean.managedBean.catalogueObj.skuNumber ?'comparePanel':'comparePanel1'}">
 					#{compare.skuNumber}
 				</h:panelGrid>
+						<h:panelGrid
+							styleClass="#{compare.paymentTerms == catalogueBackingBean.managedBean.catalogueObj.paymentTerms ?'comparePanel':'comparePanel1'}">
+					#{compare.paymentTerms}
+				</h:panelGrid>
+
+						<h:panelGrid
+							styleClass="#{compare.itemDesc == catalogueBackingBean.managedBean.catalogueObj.itemDesc ?'comparePanel':'comparePanel1'}">
+					#{compare.itemDesc}
+				</h:panelGrid>
+
+					</h:panelGroup>
+				</p:dataGrid>
 
 
 
-			</p:dataGrid>
+			</h:panelGrid>
+
+
+
 
 
 		</h:panelGroup>

@@ -16,9 +16,6 @@
 			<p:fileDownload value="#{catalogueBackingBean.file}" />
 		</p:commandButton>
 
-		<p:commandButton value="#{lbl['lbl.cm.save']}" icon="ui-icon-save"
-			action="#{catalogueBackingBean.saveCatalogItem}"
-			update=":form:catalogFileMsg"></p:commandButton>
 
 		<p:commandButton value="#{lbl['lbl.cm.submit']}" icon="ui-icon-submit"
 			action="#{catalogueBackingBean.submitToReviewItems}"
@@ -50,18 +47,25 @@
 			<p:inputText></p:inputText>
 
 		</p:column>
+			<p:column>
+			<f:facet name="header">
+				#{lbl['lbl.cm.uom']}
+			</f:facet>
+			<p:inputText></p:inputText>
+
+		</p:column>
 		<p:column>
 			<f:facet name="header">
 				#{lbl['lbl.cm.start.date']}
 			</f:facet>
-			<p:calendar></p:calendar>
+			<p:calendar showOn="button"></p:calendar>
 
 		</p:column>
 		<p:column>
 			<f:facet name="header">
 				#{lbl['lbl.cm.end.date']}
 			</f:facet>
-			<p:calendar></p:calendar>
+			<p:calendar showOn="button"></p:calendar>
 
 		</p:column>
 		<p:column>

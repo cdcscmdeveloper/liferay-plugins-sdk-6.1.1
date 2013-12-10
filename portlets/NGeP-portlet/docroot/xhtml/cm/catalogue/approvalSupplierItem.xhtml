@@ -8,12 +8,13 @@
 
 
 	<p:dataTable id="approvalSupplierItemID"
-		value="#{catalogueBackingBean.managedBean.approvalItemList}" rowIndexVar="rowIndex"
-		var="approval" rowKey="#{approval.supplierItemId}"
+		value="#{catalogueBackingBean.managedBean.approvalItemList}"
+		rowIndexVar="rowIndex" var="approval"
+		rowKey="#{approval.supplierItemId}"
 		selection="#{catalogueBackingBean.managedBean.selectedApprovalItems}">
 
 		<p:column selectionMode="multiple" style="width:2%" />
-		
+
 		<p:column>
 			<f:facet name="header">
 				#{lbl['lbl.cm.item.name']}
@@ -26,20 +27,27 @@
 			<f:facet name="header">
 				#{lbl['lbl.cm.price']}
 			</f:facet>
+			<p:inputText></p:inputText>
+		</p:column>
+		<p:column>
+			<f:facet name="header">
+				#{lbl['lbl.cm.uom']}
+			</f:facet>
+			<p:inputText></p:inputText>
 
 		</p:column>
 		<p:column>
 			<f:facet name="header">
 				#{lbl['lbl.cm.start.date']}
 			</f:facet>
-
+			<p:calendar showOn="button"></p:calendar>
 
 		</p:column>
 		<p:column>
 			<f:facet name="header">
 				#{lbl['lbl.cm.end.date']}
 			</f:facet>
-
+			<p:calendar showOn="button"></p:calendar>
 
 		</p:column>
 		<p:column>
@@ -50,8 +58,8 @@
 				action="#{catalogueBackingBean.navigateToApprovalItemDet(rowIndex)}">
 				<p:graphicImage value="/resources/ep/images/design/edit.png"></p:graphicImage>
 			</p:commandLink>
-		
+
 		</p:column>
 	</p:dataTable>
-	
+
 </ui:composition>

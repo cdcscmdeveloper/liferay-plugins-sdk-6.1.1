@@ -16,14 +16,12 @@ import java.util.List;
 import java.util.Map;
 import java.util.Vector;
 
-import javax.annotation.PostConstruct;
 import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.RequestScoped;
 import javax.faces.context.FacesContext;
 import javax.portlet.PortletRequest;
 import javax.portlet.PortletResponse;
-import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import my.ep.biz.bean.search.ISearchBean;
@@ -32,12 +30,15 @@ import my.ep.biz.bean.search.SearchFilterBean;
 import my.ep.biz.service.cm.catalogue.ICatalogueSO;
 import my.ep.biz.service.cm.catalogue.IFavoriteSupplierSO;
 import my.ep.biz.service.cm.catalogue.IWishListSO;
+import my.ep.biz.service.sm.registration.IRegistrationSO;
 import my.ep.dto.cm.catalogue.CatalogueReqDTO;
 import my.ep.dto.cm.catalogue.CatalogueResDTO;
 import my.ep.dto.cm.catalogue.FavoriteSupplierReqDTO;
 import my.ep.dto.cm.catalogue.FavoriteSupplierResDTO;
 import my.ep.dto.cm.catalogue.WishListReqDTO;
 import my.ep.dto.cm.catalogue.WishListResDTO;
+import my.ep.dto.sm.registration.RegistrationReqDTO;
+import my.ep.dto.sm.registration.RegistrationResDTO;
 import my.ep.persistence.entity.cm.catalog.CmImage;
 import my.ep.persistence.entity.cm.catalog.CmItem;
 import my.ep.persistence.entity.cm.catalog.CmPricing;
@@ -47,7 +48,6 @@ import my.ep.type.aut.SearchOperator;
 import my.ep.web.backingbean.BaseBackingBean;
 import my.ep.web.backingbean.cm.codification.CodificationBackingBean;
 import my.ep.web.managedbean.cm.catalogue.CatalogueManagedBean;
-import my.ep.web.util.FacesScopes;
 import my.ep.web.util.lookupservice.BusinessDelegate;
 import my.ep.web.vo.AdvanceSearchVO;
 import my.ep.web.vo.PricingVO;
@@ -65,9 +65,6 @@ import org.primefaces.model.StreamedContent;
 import org.primefaces.model.TreeNode;
 import org.primefaces.model.UploadedFile;
 
-import com.liferay.portal.kernel.util.WebKeys;
-import com.liferay.portal.model.Layout;
-import com.liferay.portal.theme.ThemeDisplay;
 import com.liferay.portal.util.PortalUtil;
 
 @ManagedBean(name="catalogueBackingBean")
@@ -117,9 +114,18 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean>{
 	public void addToMaintain(){
 
 		ICatalogueSO catalogueSO = (ICatalogueSO)BusinessDelegate.getInstance().getServiceObject("cm",ICatalogueSO.class);
+
+		IRegistrationSO smSO = (IRegistrationSO)BusinessDelegate.getInstance().getServiceObject("sm",IRegistrationSO.class);
+		
+		RegistrationReqDTO smReqDTO = new RegistrationReqDTO();
+		smReqDTO.setSupplierId(new Long(1));
+		
+		RegistrationResDTO smResDTO = smSO.retrieveSuppOnlineAcc(smReqDTO);
+		
 		CodificationBackingBean bb = new CodificationBackingBean();
 
 		CatalogueReqDTO reqDTO = new CatalogueReqDTO();
+		
 		log.info("addToMaintain:"+bb.getManagedBean().getSelectedItems().length);
 		if(bb.getManagedBean().getSelectedItems() !=null && bb.getManagedBean().getSelectedItems().length>0){
 			for(int i = 0; i < bb.getManagedBean().getSelectedItems().length; i++) {
@@ -129,7 +135,7 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean>{
 				log.info("item:"+item);
 				supplierItem.setCmItem(item);
 				supplierItem.setItemStatus("D");
-				supplierItem.setSupplierId(new Long(1));
+				supplierItem.setSmSupplier(smResDTO.getSmSupp());
 				supplierItem.setRecordStatus(true);
 				reqDTO.getSupplierItem().add(supplierItem);
 
@@ -189,6 +195,15 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean>{
 
 
 		this.getManagedBean().setSelectedMaintainItem(this.getManagedBean().getPublishedItemList().get(index));
+
+		return "addCatalogItem";
+
+	}
+	
+	public String navigateToExpiredItemDet(int index){
+
+
+		this.getManagedBean().setSelectedMaintainItem(this.getManagedBean().getExpiredItemList().get(index));
 
 		return "addCatalogItem";
 
@@ -295,6 +310,7 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean>{
 	public String okToMaintenanceFile(){
 
 		log.info("*********okToMaintenanceFile*************");
+
 
 		for(CmPricing price : this.getManagedBean().getSelectedMaintainItem().getCmPricings()){
 			System.out.println("price.getPrice()"+price.getPrice());
@@ -636,30 +652,36 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean>{
 			CatalogueReqDTO reqDTO  = new CatalogueReqDTO();
 
 
-			log.info("length:"+this.getManagedBean().getSelectedMaintainItems().length);
+			log.info("isRecordStatus:"+this.getManagedBean().getSelectedMaintainItem().isRecordStatus());
 			log.info("length:"+this.getManagedBean().getSelectedMaintainItem().getCmImages().size());
 
-			for(CmSupplierItem catalog : this.getManagedBean().getMaintainItemList()){
+			//for(CmSupplierItem catalog : this.getManagedBean().getMaintainItemList()){
 
 
-				reqDTO.getSaveSupplierItems().add(catalog);
+			reqDTO.getSaveSupplierItems().add(this.getManagedBean().getSelectedMaintainItem());
 
 
-			}
+			//}
 
 			catalogueSO.updateSupplierItem(reqDTO);
 			
 			FacesContext facesContext = FacesContext.getCurrentInstance();
 			facesContext.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO," Saved Successfully", ""));
 
-		} finally {
+		}catch(Exception ex){
+			
+			FacesContext facesContext = FacesContext.getCurrentInstance();
+			facesContext.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR," Error", ""));
+			
+			return "addCatalogDet";
+		}finally {
 			catalogueSO = null;
 		}
 
 		log.info("Exit saveCatalogItem");
 
-		return "catalogMaintenanceFile";
 		//return "catalogMaintenanceFile?faces-redirect=true";
+		return "preRenderCatalogueMaintenanceFile";
 	}
 
 
@@ -905,11 +927,12 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean>{
 
 
 
-	public void addToCart(){
+	public void addToCart(int index){
 
-		for(CmSupplierItem supplierItem : this.getManagedBean().getSelectedSupplierItemList()){
-			this.getManagedBean().getTempList().add(supplierItem);
-		}
+		//for(CmSupplierItem supplierItem : this.getManagedBean().getSelectedSupplierItemList()){
+		
+			this.getManagedBean().getTempList().add(this.getManagedBean().getSupplierItemList().get(index));
+	//	}
 
 
 

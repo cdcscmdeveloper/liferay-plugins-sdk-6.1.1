@@ -1,0 +1,65 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:c="http://java.sun.com/jsp/jstl/core">
+
+
+
+	<p:dataTable id="expiredSupplierItemID"
+		value="#{catalogueBackingBean.managedBean.expiredItemList}"
+		rowIndexVar="rowIndex" var="expired"
+		rowKey="#{expired.supplierItemId}"
+		selection="#{catalogueBackingBean.managedBean.selectedExpiredItems}">
+
+		<p:column selectionMode="multiple" style="width:2%" />
+
+		<p:column>
+			<f:facet name="header">
+				#{lbl['lbl.cm.item.name']}
+			</f:facet>
+			
+			#{expired.cmItem.itemName}
+
+		</p:column>
+		<p:column>
+			<f:facet name="header">
+				#{lbl['lbl.cm.price']}
+			</f:facet>
+
+		</p:column>
+		<p:column>
+			<f:facet name="header">
+				#{lbl['lbl.cm.uom']}
+			</f:facet>
+			<p:inputText></p:inputText>
+
+		</p:column>
+		<p:column>
+			<f:facet name="header">
+				#{lbl['lbl.cm.start.date']}
+			</f:facet>
+
+
+		</p:column>
+		<p:column>
+			<f:facet name="header">
+				#{lbl['lbl.cm.end.date']}
+			</f:facet>
+
+
+		</p:column>
+		<p:column>
+			<f:facet name="header">
+				#{lbl['lbl.cm.action']}
+			</f:facet>
+			<p:commandLink
+				action="#{catalogueBackingBean.navigateToExpiredItemDet(rowIndex)}">
+				<p:graphicImage value="/resources/ep/images/design/edit.png"></p:graphicImage>
+			</p:commandLink>
+			
+		</p:column>
+	</p:dataTable>
+
+</ui:composition>

@@ -19,28 +19,58 @@
 
 				<table style="width: 100%;">
 					<tr>
-						<td><p:outputLabel value="#{lbl['lbl.cm.unspsc.code']}"></p:outputLabel></td>
+						<td><p:outputLabel value="#{lbl['lbl.cm.segment.code']}"></p:outputLabel></td>
+						<td colspan="1"><p:inputText
+								value="#{codificationBackingBean.managedBean.segmentCode}"
+								size="50" disabled="true" /></td>
+						<td><p:outputLabel value="#{lbl['lbl.cm.segment.title']}"></p:outputLabel></td>
+						<td colspan="1"><p:inputText
+								value="#{codificationBackingBean.managedBean.segmentTitle}"
+								size="50" disabled="true" /></td>
+					</tr>
+					<tr>
+						<td><p:outputLabel value="#{lbl['lbl.cm.family.code']}"></p:outputLabel></td>
+						<td colspan="1"><p:inputText
+								value="#{codificationBackingBean.managedBean.familyCode}"
+								size="50" disabled="true" /></td>
+						<td><p:outputLabel value="#{lbl['lbl.cm.family.title']}"></p:outputLabel></td>
+						<td colspan="1"><p:inputText
+								value="#{codificationBackingBean.managedBean.familyTitle}"
+								size="50" disabled="true" /></td>
+					</tr>
+					<tr>
+						<td><p:outputLabel value="#{lbl['lbl.cm.class.code']}"></p:outputLabel></td>
+						<td colspan="1"><p:inputText
+								value="#{codificationBackingBean.managedBean.classCode}"
+								size="50" disabled="true" /></td>
+						<td><p:outputLabel value="#{lbl['lbl.cm.class.title']}"></p:outputLabel></td>
+						<td colspan="1"><p:inputText
+								value="#{codificationBackingBean.managedBean.classTitle}"
+								size="50" disabled="true" /></td>
+					</tr>
+					<tr>
+						<td><p:outputLabel value="#{lbl['lbl.cm.commodity.code']}"></p:outputLabel></td>
 						<td colspan="1"><p:inputText
 								value="#{codificationBackingBean.managedBean.selectedUNSPSCObj.unspscCode}"
-								size="40" disabled="true" /></td>
-						<td><p:outputLabel value="#{lbl['lbl.cm.unspsc.title']}"></p:outputLabel></td>
+								size="50" disabled="true" /></td>
+						<td><p:outputLabel value="#{lbl['lbl.cm.commodity.title']}"></p:outputLabel></td>
 						<td colspan="1"><p:inputText
 								value="#{codificationBackingBean.managedBean.selectedUNSPSCObj.unspscTitle}"
-								size="40" disabled="true" /></td>
+								size="50" disabled="true" /></td>
 					</tr>
 
 					<tr>
 						<td><p:outputLabel value="#{lbl['lbl.cm.type']}"></p:outputLabel></td>
 						<td colspan="1"><p:selectOneMenu
 								value="#{codificationBackingBean.typeFilterBean.searchValue}"
-								style="width:228px;">
+								style="width:278px;">
 								<f:selectItems
 									value="#{codificationBackingBean.managedBean.typeCriteria}" />
 							</p:selectOneMenu></td>
 						<td><p:outputLabel value="#{lbl['lbl.cm.brand']}"></p:outputLabel></td>
 						<td colspan="1"><p:selectOneMenu
 								value="#{codificationBackingBean.brandFilterBean.searchValue}"
-								style="width:228px;">
+								style="width:278px;">
 								<f:selectItems
 									value="#{codificationBackingBean.managedBean.brandCriteria}" />
 							</p:selectOneMenu></td>
@@ -50,27 +80,29 @@
 						<td><p:outputLabel value="#{lbl['lbl.cm.measurement']}"></p:outputLabel></td>
 						<td colspan="1"><p:selectOneMenu
 								value="#{codificationBackingBean.measurementFilterBean.searchValue}"
-								style="width:228px;">
+								style="width:278px;">
 								<f:selectItems
 									value="#{codificationBackingBean.managedBean.measurementCriteria}" />
 							</p:selectOneMenu></td>
 						<td><p:outputLabel value="#{lbl['lbl.cm.color']}"></p:outputLabel></td>
 						<td><p:selectOneMenu
 								value="#{codificationBackingBean.colorFilterBean.searchValue}"
-								style="width:228px;">
+								style="width:278px;">
 								<f:selectItems
 									value="#{codificationBackingBean.managedBean.colorCriteria}" />
 							</p:selectOneMenu></td>
 					</tr>
 				</table>
 			</p:panel>
+		
+				<div style="text-align: right;">
+					<p:commandButton value="Search" icon="ui-icon-search"
+						action="#{codificationBackingBean.itemSearch}"
+						update="itemTableID" />
+					<p:commandButton value="Back" icon="ui-icon-prev"
+						action="#{codificationBackingBean.backToPrev}" />
+				</div>
 
-			<div style="text-align: right;">
-				<p:commandButton value="Search" icon="ui-icon-search"
-					action="#{codificationBackingBean.itemSearch}" update="itemTableID" />
-				<p:commandButton value="Back" icon="ui-icon-prev"
-					action="#{codificationBackingBean.backToPrev}" />
-			</div>
 
 			<p:panel header="SEARCH RESULTS" toggleable="true">
 
@@ -110,7 +142,10 @@
 						</f:facet>
 						#{item.cmColor.colorName}
 					</p:column>
-					<p:column>
+
+
+					<p:column
+						rendered="#{unspscCodeBackingBean.codeAdmin}">
 						<f:facet name="header">
 							#{lbl['lbl.cm.action']}
 						</f:facet>
@@ -131,8 +166,11 @@
 
 					</p:column>
 
+
 				</p:dataTable>
 				<div style="text-align: right;">
+					<p:commandButton value="Request Extension"
+						action="#{unspscCodeBackingBean.requestExtensionCode}" />
 					<p:commandButton value="Maintenance FIle" icon="ui-icon-folder"
 						action="#{catalogueBackingBean.GoToMaintain()}" />
 					<p:commandButton value="Add" icon="ui-icon-add"

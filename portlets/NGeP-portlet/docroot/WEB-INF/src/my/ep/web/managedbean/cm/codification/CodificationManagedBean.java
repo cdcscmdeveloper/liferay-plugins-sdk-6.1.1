@@ -56,6 +56,15 @@ public class CodificationManagedBean extends BaseManagedBean {
 	private String familyCode;
 	private String classCode;
 	private String commodityCode;
+	
+	private String segmentTitle;
+	private String familyTitle;
+	private String classTitle;
+	private String commodityTitle;
+	
+	
+	
+	
 	private String brandCode;
 	private String typeCode;
 	private String colorCode;
@@ -69,10 +78,53 @@ public class CodificationManagedBean extends BaseManagedBean {
 	private String editMeasurementName;
 	private String editBrandName;
 	
+	private List<CmUnspsc> unspscPopUpList;
+	
+	private String popUpUnspscCode;
+	private String popUpUnspscTitle;
+	
+	private List<CmUnspsc> recommendUnspscList;
+	
 
 	
 	
 	
+
+	public List<CmUnspsc> getRecommendUnspscList() {
+		if(recommendUnspscList==null)
+			recommendUnspscList = new ArrayList<CmUnspsc>();
+		return recommendUnspscList;
+	}
+
+	public void setRecommendUnspscList(List<CmUnspsc> recommendUnspscList) {
+		this.recommendUnspscList = recommendUnspscList;
+	}
+
+	public String getPopUpUnspscCode() {
+		return popUpUnspscCode;
+	}
+
+	public void setPopUpUnspscCode(String popUpUnspscCode) {
+		this.popUpUnspscCode = popUpUnspscCode;
+	}
+
+	public String getPopUpUnspscTitle() {
+		return popUpUnspscTitle;
+	}
+
+	public void setPopUpUnspscTitle(String popUpUnspscTitle) {
+		this.popUpUnspscTitle = popUpUnspscTitle;
+	}
+
+	public List<CmUnspsc> getUnspscPopUpList() {
+		if(unspscPopUpList==null)
+			unspscPopUpList = new ArrayList<CmUnspsc>();
+		return unspscPopUpList;
+	}
+
+	public void setUnspscPopUpList(List<CmUnspsc> unspscPopUpList) {
+		this.unspscPopUpList = unspscPopUpList;
+	}
 
 	public String getEditTypeName() {
 		return editTypeName;
@@ -389,8 +441,40 @@ public class CodificationManagedBean extends BaseManagedBean {
 		this.itemList = itemList;
 	}
 
+	public String getSegmentTitle() {
+		return segmentTitle;
+	}
+
+	public void setSegmentTitle(String segmentTitle) {
+		this.segmentTitle = segmentTitle;
+	}
+
+	public String getFamilyTitle() {
+		return familyTitle;
+	}
+
+	public void setFamilyTitle(String familyTitle) {
+		this.familyTitle = familyTitle;
+	}
+
+	public String getClassTitle() {
+		return classTitle;
+	}
+
+	public void setClassTitle(String classTitle) {
+		this.classTitle = classTitle;
+	}
+
+	public String getCommodityTitle() {
+		return commodityTitle;
+	}
+
+	public void setCommodityTitle(String commodityTitle) {
+		this.commodityTitle = commodityTitle;
+	}
 
 
+	
 
 
 

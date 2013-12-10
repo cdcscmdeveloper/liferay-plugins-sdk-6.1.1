@@ -1,0 +1,92 @@
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns="http://www.w3.org/1999/xhtml">
+
+	<h:panelGroup id="codificationPopUpId">
+
+		<table width="100%;">
+			
+					<tr>
+						<td><p:outputLabel value="#{lbl['lbl.cm.segment.code']}"></p:outputLabel></td>
+						<td colspan="1"><p:inputText
+								value="#{codificationBackingBean.managedBean.segmentCode}"
+								size="50" disabled="true" /></td>
+						<td><p:outputLabel value="#{lbl['lbl.cm.segment.title']}"></p:outputLabel></td>
+						<td colspan="1"><p:inputText
+								value="#{codificationBackingBean.managedBean.segmentTitle}"
+								size="50" disabled="true" /></td>
+					</tr>
+					<tr>
+						<td><p:outputLabel value="#{lbl['lbl.cm.family.code']}"></p:outputLabel></td>
+						<td colspan="1"><p:inputText
+								value="#{codificationBackingBean.managedBean.familyCode}"
+								size="50" disabled="true" /></td>
+						<td><p:outputLabel value="#{lbl['lbl.cm.family.title']}"></p:outputLabel></td>
+						<td colspan="1"><p:inputText
+								value="#{codificationBackingBean.managedBean.familyTitle}"
+								size="50" disabled="true" /></td>
+					</tr>
+					<tr>
+						<td><p:outputLabel value="#{lbl['lbl.cm.class.code']}"></p:outputLabel></td>
+						<td colspan="1"><p:inputText
+								value="#{codificationBackingBean.managedBean.classCode}"
+								size="50" disabled="true" /></td>
+						<td><p:outputLabel value="#{lbl['lbl.cm.class.title']}"></p:outputLabel></td>
+						<td colspan="1"><p:inputText
+								value="#{codificationBackingBean.managedBean.classTitle}"
+								size="50" disabled="true" /></td>
+					</tr>
+		</table>
+		
+		<div style="padding: 2px;"></div>
+
+
+		<p:dataTable id="unspscTablePopUpId"
+			value="#{codificationBackingBean.managedBean.unspscPopUpList}"
+			var="unspscObj1" width="100%" paginator="true" rows="10"
+			paginatorPosition="bottom"
+			paginatorTemplate="{LastPageLink} {NextPageLink} {PreviousPageLink} {FirstPageLink} Page {JumpToPageDropdown} {CurrentPageReport}"
+			currentPageReportTemplate="/ {totalPages}"
+			rowsPerPageTemplate="5,10,15">
+
+			<p:column>
+				<f:facet name="header">
+					#{lbl['lbl.cm.unspsc.code']}
+				</f:facet>
+
+				<p:commandLink
+					action="#{codificationBackingBean.goToRecommend(unspscObj1)}"
+					rendered="#{unspscObj1.unspscLevel eq 3}">
+							#{unspscObj1.unspscCode}
+							</p:commandLink>
+
+				<p:commandLink
+					action="#{codificationBackingBean.unspscPopUpSearch(unspscObj1)}"
+					rendered="#{unspscObj1.unspscLevel ne 3}"
+					update=":form:codificationPopUpId">
+							#{unspscObj1.unspscCode}
+							</p:commandLink>
+
+
+			</p:column>
+			<p:column>
+				<f:facet name="header">
+					#{lbl['lbl.cm.unspsc.title']}
+				</f:facet>
+				#{unspscObj1.unspscTitle}
+			</p:column>
+
+		</p:dataTable>
+
+
+	</h:panelGroup>
+
+
+
+
+
+</ui:composition>

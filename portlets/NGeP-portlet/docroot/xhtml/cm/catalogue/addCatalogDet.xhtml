@@ -6,28 +6,53 @@
 	xmlns:h="http://java.sun.com/jsf/html"
 	xmlns:ui="http://java.sun.com/jsf/facelets"
 	xmlns:fn="http://java.sun.com/jsp/jstl/functions"
-	xmlns:c="http://java.sun.com/jsp/jstl/core">
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:ac="http://ac.my/jsf/composite/cc">
 
 
-
+	<p:messages id="catalogDetMsgId" globalOnly="true"></p:messages>
 	<p:outputPanel id="addCatDet">
 
 		<div style="text-align: right;">
-			<p:commandButton value="#{lbl['lbl.cm.ok']}" icon="ui-icon-accept"
-				action="#{catalogueBackingBean.okToMaintenanceFile()}"></p:commandButton>
-			<p:commandButton value="#{lbl['lbl.cm.cancel']}"
-				icon="ui-icon-cancel"
-				action="#{catalogueBackingBean.cancelToMaintenanceFile()}"
-				immediate="true"></p:commandButton>
-			<p:commandButton value="Approve" icon="ui-icon-approve"
-				action="#{reviewCatBackingBean.approveCatalogueItem}"></p:commandButton>
-			<p:commandButton value="Reject" icon="ui-icon-reject"
-				action="#{reviewCatBackingBean.rejectCatalogueItem}"></p:commandButton>
+
+			<h:panelGroup
+				rendered="#{unspscCodeBackingBean.supplierUser or unspscCodeBackingBean.supplierAdmin}">
+				<p:commandButton value="#{lbl['lbl.cm.save']}" icon="ui-icon-save"
+					action="#{catalogueBackingBean.saveCatalogItem}"></p:commandButton>
+				<p:commandButton value="#{lbl['lbl.cm.cancel']}"
+					icon="ui-icon-cancel"
+					action="#{catalogueBackingBean.cancelToMaintenanceFile()}"
+					immediate="true"></p:commandButton>
+
+			</h:panelGroup>
+
+
+			<h:panelGroup rendered="#{unspscCodeBackingBean.catalogueAdmin}">
+
+				<p:commandButton value="Approve" icon="ui-icon-approve"
+					action="#{reviewCatBackingBean.approveCatalogueItem}"></p:commandButton>
+				<p:commandButton value="Reject" icon="ui-icon-reject"
+					action="#{reviewCatBackingBean.rejectCatalogueItem}"></p:commandButton>
+			</h:panelGroup>
 		</div>
 
 
 		<p:panel header="#{lbl['lbl.cm.item.details']}" toggleable="true">
 
+			<h:panelGroup
+				rendered="#{unspscCodeBackingBean.supplierUser or unspscCodeBackingBean.supplierAdmin}">
+				<table width="100%;">
+					<tr>
+						<td style="width: 90px;"></td>
+						<td><p:outputLabel value="#{lbl['lbl.cm.item.status']}" /></td>
+						<td><p:selectOneRadio
+								value="#{catalogueBackingBean.managedBean.selectedMaintainItem.recordStatus}">
+								<f:selectItem itemLabel="Active" itemValue="true"></f:selectItem>
+								<f:selectItem itemLabel="Inactive" itemValue="false"></f:selectItem>
+							</p:selectOneRadio></td>
+					</tr>
+				</table>
+			</h:panelGroup>
 
 			<table style="width: 100%; margin-top: 10px;">
 				<tr style="height: 30px;">
@@ -54,7 +79,16 @@
 					<td><p:outputLabel value="#{lbl['lbl.cm.price']}" /></td>
 					<td><p:inputText size="35"></p:inputText></td>
 					<td><p:outputLabel value="#{lbl['lbl.cm.currency']}" /></td>
-					<td colspan="1"><p:inputText size="35" /></td>
+					<td colspan="1"><p:inputText value="MYR" size="35"
+							disabled="true" /></td>
+				</tr>
+
+				<tr style="height: 30px;">
+
+					<td><p:outputLabel value="#{lbl['lbl.cm.start.date']}" /></td>
+					<td><p:calendar showOn="button" size="30"></p:calendar></td>
+					<td><p:outputLabel value="#{lbl['lbl.cm.end.date']}" /></td>
+					<td colspan="1"><p:calendar showOn="button" size="30"></p:calendar></td>
 				</tr>
 
 
@@ -63,12 +97,10 @@
 				<tr style="height: 30px;">
 
 					<td><p:outputLabel value="#{lbl['lbl.cm.payment.term']}" /></td>
-					<td><p:selectOneMenu
+					<td><p:inputText
 							value="#{catalogueBackingBean.managedBean.selectedMaintainItem.paymentTerms}"
-							style="width:200px;">
-							<f:selectItems
-								value="#{catalogueBackingBean.managedBean.paymentTermCriteria}" />
-						</p:selectOneMenu></td>
+							size="26" /> <p:inputText style="margin-left: 2px;" size="3"
+							value="days" /></td>
 					<td><p:outputLabel value="#{lbl['lbl.cm.sku']}" /></td>
 					<td><p:inputText size="35"
 							value="#{catalogueBackingBean.managedBean.selectedMaintainItem.skuNumber}"></p:inputText></td>
@@ -89,19 +121,19 @@
 
 					<td><p:outputLabel
 							value="#{lbl['lbl.cm.unit.of.measurement']}" /></td>
-					<td><p:selectOneMenu style="width:200px;"></p:selectOneMenu></td>
+					<td><ac:lov id="uomLovId" lovId="PM_UOM" size="26"
+							headerText="UOM Lov" update=":form:addCatDet"
+							saveObject="catalogueBackingBean.managedBean.selectedLovUom"
+							value="#{catalogueBackingBean.managedBean.selectedLovUom.uomName}"
+							conditionField="recordStatus^1">
+						</ac:lov> <ac:lovPopup /></td>
 					<td><p:outputLabel value="#{lbl['lbl.cm.lead.time']}" /></td>
-					<td><p:selectOneMenu style="width:200px;"></p:selectOneMenu></td>
+					<td><p:inputText size="26"
+							value="#{catalogueBackingBean.managedBean.selectedMaintainItem.leadTime}" />
+						<p:inputText style="margin-left: 2px;" size="3" value="days" /></td>
 					<td></td>
 				</tr>
-				<tr style="height: 30px;">
 
-					<td><p:outputLabel value="#{lbl['lbl.cm.item.status']}" /></td>
-					<td><p:selectOneMenu style="width:200px;"></p:selectOneMenu></td>
-					<td><p:outputLabel value="#{lbl['lbl.cm.frequency']}" /></td>
-					<td><p:inputText size="35"></p:inputText></td>
-					<td></td>
-				</tr>
 
 				<tr style="height: 30px;">
 					<td><p:outputLabel

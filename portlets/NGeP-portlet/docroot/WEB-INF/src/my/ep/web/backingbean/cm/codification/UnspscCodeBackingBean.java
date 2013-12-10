@@ -1,7 +1,10 @@
 package my.ep.web.backingbean.cm.codification;
 
 import java.io.FileInputStream;
+import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 
 import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
@@ -17,6 +20,7 @@ import my.ep.biz.service.cm.codification.IRequestCodeSO;
 import my.ep.bpm.dto.BpmRequestDTO;
 import my.ep.bpm.dto.BpmResponseDTO;
 import my.ep.bpm.service.IBpmSO;
+import my.ep.constants.CDProcessNameConst;
 import my.ep.dto.cm.codification.CodificationReqDTO;
 import my.ep.dto.cm.codification.CodificationResDTO;
 import my.ep.dto.cm.codification.RequestCodeReqDTO;
@@ -47,8 +51,6 @@ import org.apache.poi.ss.usermodel.Row;
 import org.primefaces.event.FileUploadEvent;
 import org.primefaces.model.UploadedFile;
 
-import sun.org.mozilla.javascript.internal.regexp.SubString;
-
 import com.liferay.portal.model.Role;
 import com.liferay.portal.util.PortalUtil;
 
@@ -76,6 +78,21 @@ public class UnspscCodeBackingBean extends BaseBackingBean<UnspscCodeManagedBean
 		return fs.hasRoleUser("CM_ADMIN");
 	}
 
+	public boolean isSupplierUser(){
+		FacesScopes fs = new FacesScopes();
+		return fs.hasRoleUser("SUPPLIER_USER");
+	}
+
+	public boolean isSupplierAdmin(){
+		FacesScopes fs = new FacesScopes();
+		return fs.hasRoleUser("SUPPLIER_ADMIN");
+	}
+
+	public boolean isCodeAdmin(){
+		FacesScopes fs = new FacesScopes();
+		return fs.hasRoleUser("CD_OFFICER");
+	}
+
 
 
 	public String submitForRequest(String action)throws Exception{
@@ -93,7 +110,7 @@ public class UnspscCodeBackingBean extends BaseBackingBean<UnspscCodeManagedBean
 			reqDTO.setRequestCode(this.getManagedBean().getRequestCode());
 			reqDTO.setTaskId(this.getManagedBean().getTaskId());
 			reqDTO.setOutCome(action);
-			reqDTO.setProcessId("Codification.UNSPSCCodeRequest");
+			reqDTO.setProcessId(CDProcessNameConst.UNSPSC_CODE_REQUEST_PROCESS_ID);
 			reqDTO.setToken(token);
 			CodificationResDTO resDTO = null;
 
@@ -149,26 +166,26 @@ public class UnspscCodeBackingBean extends BaseBackingBean<UnspscCodeManagedBean
 			reqDTO.setToken(token);
 			reqDTO.setTaskId(this.getManagedBean().getTaskId());
 			reqDTO.setOutCome(action);
-			reqDTO.setProcessId("Codification.UNSPSCCodeRequest");
+			reqDTO.setProcessId(CDProcessNameConst.UNSPSC_CODE_REQUEST_PROCESS_ID);
 			CodificationResDTO resDTO = null;
 
-			if(action.equalsIgnoreCase("SUBMIT")){
 
-				if(this.getManagedBean().getRequestCode().isBrandNew()){
 
-					resDTO = unspscSO.addCodificationRequest(reqDTO);
+			if(this.getManagedBean().getRequestCode().isBrandNew()){
 
-					FacesContext facesContext = FacesContext.getCurrentInstance();
-					facesContext.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO,"Submitted Successfully", ""));
+				resDTO = unspscSO.addCodificationRequest(reqDTO);
 
-					return "unspscRequestForm";
+				FacesContext facesContext = FacesContext.getCurrentInstance();
+				facesContext.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO,"Submitted Successfully", ""));
 
-				}else{
-					log.info("***update***");
-					resDTO = unspscSO.updateCodificationRequest(reqDTO);
-				}
+				return "unspscRequestForm";
 
+			}else{
+				log.info("***update***");
+				resDTO = unspscSO.updateCodificationRequest(reqDTO);
 			}
+
+
 
 			FacesContext facesContext = FacesContext.getCurrentInstance();
 			facesContext.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO," Submitted Successfully", ""));
@@ -522,6 +539,23 @@ public class UnspscCodeBackingBean extends BaseBackingBean<UnspscCodeManagedBean
 
 	public String navigateToSearch(){
 		log.info("*****navigateToSearch******");
+		CodificationBackingBean codeBB = new CodificationBackingBean();
+		if(codeBB.getManagedBean().getRecommendUnspscList()!=null && codeBB.getManagedBean().getRecommendUnspscList().size()>0){
+
+
+			FacesContext facesContext = FacesContext.getCurrentInstance();
+			facesContext.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR,"CM ADMIN Only Can Have 1 Recommendation",""));
+			return "reviewUnspscCode";
+		}
+
+
+		return "verifyUnspscSearch?faces-redirect=true";
+	}
+
+	public String navigateCodeAdminToSearch(){
+		log.info("*****navigateCodeAdminToSearch******");
+
+
 
 		return "verifyUnspscSearch?faces-redirect=true";
 	}
@@ -534,7 +568,7 @@ public class UnspscCodeBackingBean extends BaseBackingBean<UnspscCodeManagedBean
 		return "unspscSingleUpload?faces-redirect=true";
 	}
 
-	public String savetempCode(){
+	public String savetempCode(String outcome){
 
 		ICodificationSO unspscSO = (ICodificationSO) BusinessDelegate.getInstance().getServiceObject("cm",ICodificationSO.class);
 		FacesScopes face = new FacesScopes();
@@ -542,76 +576,79 @@ public class UnspscCodeBackingBean extends BaseBackingBean<UnspscCodeManagedBean
 		CodificationReqDTO reqDTO = new CodificationReqDTO();
 		CodificationResDTO resDTO = null;
 		try {
-			CmUnspsc unspsc = new CmUnspsc();
-			
-			
-			unspsc.setUnspscCode(this.getManagedBean().getSelectedLovUnspscSegment().getUnspscCode());	
-			unspsc.setUnspscKey(this.getManagedBean().getSelectedLovUnspscSegment().getUnspscKey());
-			unspsc.setUnspscTitle(this.getManagedBean().getSelectedLovUnspscSegment().getUnspscTitle());
-			unspsc.setUnspscDescription(this.getManagedBean().getSelectedLovUnspscSegment().getUnspscDescription());
-			unspsc.setUnspscLevel(0);
 
-			reqDTO.setCmUnspsc(unspsc);
-			reqDTO.getUnspscList().add(reqDTO.getCmUnspsc());
+			if(outcome.equalsIgnoreCase("SUBMIT")){
+				CmUnspsc unspsc = new CmUnspsc();
 
-			resDTO =  unspscSO.saveUnspsc(reqDTO);
-			////// start family
 
-			unspsc.setUnspscCode(this.getManagedBean().getSelectedLovUnspscfamily().getUnspscCode());	
-			unspsc.setUnspscKey(this.getManagedBean().getSelectedLovUnspscfamily().getUnspscKey());
-			unspsc.setUnspscTitle(this.getManagedBean().getSelectedLovUnspscfamily().getUnspscTitle());
-			unspsc.setUnspscDescription(this.getManagedBean().getSelectedLovUnspscfamily().getUnspscDescription());
-			unspsc.setUnspscLevel(1);
-			unspsc.setUnspscParentCode(this.getManagedBean().getSelectedLovUnspscSegment().getUnspscCode());
+				unspsc.setUnspscCode(this.getManagedBean().getSelectedLovUnspscSegment().getUnspscCode());	
+				unspsc.setUnspscKey(this.getManagedBean().getSelectedLovUnspscSegment().getUnspscKey());
+				unspsc.setUnspscTitle(this.getManagedBean().getSelectedLovUnspscSegment().getUnspscTitle());
+				unspsc.setUnspscDescription(this.getManagedBean().getSelectedLovUnspscSegment().getUnspscDescription());
+				unspsc.setUnspscLevel(0);
 
-			reqDTO.setCmUnspsc(unspsc);
-			reqDTO.getFamilyList().add(reqDTO.getCmUnspsc());
-			resDTO = unspscSO.saveFamilyList(reqDTO);
+				reqDTO.setCmUnspsc(unspsc);
+				reqDTO.getUnspscList().add(reqDTO.getCmUnspsc());
 
-			/////start class	
+				resDTO =  unspscSO.saveUnspsc(reqDTO);
+				////// start family
 
-			unspsc.setUnspscCode(this.getManagedBean().getSelectedLovUnspscClass().getUnspscCode());	
-			unspsc.setUnspscKey(this.getManagedBean().getSelectedLovUnspscClass().getUnspscKey());
-			unspsc.setUnspscTitle(this.getManagedBean().getSelectedLovUnspscClass().getUnspscTitle());
-			unspsc.setUnspscDescription(this.getManagedBean().getSelectedLovUnspscClass().getUnspscDescription());
-			unspsc.setUnspscLevel(2);
-			unspsc.setUnspscParentCode(this.getManagedBean().getSelectedLovUnspscfamily().getUnspscCode());
+				unspsc.setUnspscCode(this.getManagedBean().getSelectedLovUnspscfamily().getUnspscCode());	
+				unspsc.setUnspscKey(this.getManagedBean().getSelectedLovUnspscfamily().getUnspscKey());
+				unspsc.setUnspscTitle(this.getManagedBean().getSelectedLovUnspscfamily().getUnspscTitle());
+				unspsc.setUnspscDescription(this.getManagedBean().getSelectedLovUnspscfamily().getUnspscDescription());
+				unspsc.setUnspscLevel(1);
+				unspsc.setUnspscParentCode(this.getManagedBean().getSelectedLovUnspscSegment().getUnspscCode());
 
-			reqDTO.setCmUnspsc(unspsc);
-			reqDTO.getClassList().add(reqDTO.getCmUnspsc());
-			resDTO = unspscSO.saveClassList(reqDTO);
+				reqDTO.setCmUnspsc(unspsc);
+				reqDTO.getFamilyList().add(reqDTO.getCmUnspsc());
+				resDTO = unspscSO.saveFamilyList(reqDTO);
 
-			////start commodity
+				/////start class	
 
-			unspsc.setUnspscCode(this.getManagedBean().getSelectedLovUnspsc().getUnspscCode());	
-			unspsc.setUnspscKey(this.getManagedBean().getSelectedLovUnspsc().getUnspscKey());
-			unspsc.setUnspscTitle(this.getManagedBean().getSelectedLovUnspsc().getUnspscTitle());
-			unspsc.setUnspscDescription(this.getManagedBean().getSelectedLovUnspsc().getUnspscDescription());
-			unspsc.setUnspscLevel(3);
-			unspsc.setUnspscParentCode(this.getManagedBean().getSelectedLovUnspscClass().getUnspscCode());
+				unspsc.setUnspscCode(this.getManagedBean().getSelectedLovUnspscClass().getUnspscCode());	
+				unspsc.setUnspscKey(this.getManagedBean().getSelectedLovUnspscClass().getUnspscKey());
+				unspsc.setUnspscTitle(this.getManagedBean().getSelectedLovUnspscClass().getUnspscTitle());
+				unspsc.setUnspscDescription(this.getManagedBean().getSelectedLovUnspscClass().getUnspscDescription());
+				unspsc.setUnspscLevel(2);
+				unspsc.setUnspscParentCode(this.getManagedBean().getSelectedLovUnspscfamily().getUnspscCode());
 
-			reqDTO.setCmUnspsc(unspsc);
-			reqDTO.getCommodityList().add(reqDTO.getCmUnspsc());
+				reqDTO.setCmUnspsc(unspsc);
+				reqDTO.getClassList().add(reqDTO.getCmUnspsc());
+				resDTO = unspscSO.saveClassList(reqDTO);
 
-			resDTO = unspscSO.saveCommodityList(reqDTO);
+				////start commodity
 
-			String check68 = (String)String.valueOf(this.getManagedBean().getSelectedLovUnspsc().getUnspscCode()).substring(6, 8);
-			String check46 = (String)String.valueOf(this.getManagedBean().getSelectedLovUnspscClass().getUnspscCode()).substring(4, 6);
-			String check24 = (String)String.valueOf(this.getManagedBean().getSelectedLovUnspscfamily().getUnspscCode()).substring(2, 4);
-			String check02 = (String)String.valueOf(this.getManagedBean().getSelectedLovUnspscSegment().getUnspscCode()).substring(0, 2);
+				unspsc.setUnspscCode(this.getManagedBean().getSelectedLovUnspsc().getUnspscCode());	
+				unspsc.setUnspscKey(this.getManagedBean().getSelectedLovUnspsc().getUnspscKey());
+				unspsc.setUnspscTitle(this.getManagedBean().getSelectedLovUnspsc().getUnspscTitle());
+				unspsc.setUnspscDescription(this.getManagedBean().getSelectedLovUnspsc().getUnspscDescription());
+				unspsc.setUnspscLevel(3);
+				unspsc.setUnspscParentCode(this.getManagedBean().getSelectedLovUnspscClass().getUnspscCode());
 
-			String tempCode = check02 + check24 +check46 +check68;
-			log.info(tempCode);
+				reqDTO.setCmUnspsc(unspsc);
+				reqDTO.getCommodityList().add(reqDTO.getCmUnspsc());
 
-			this.getManagedBean().getRequestCode().setTempCode(tempCode);
-			this.getManagedBean().getRequestCode().setTempTitle(this.getManagedBean().getSelectedLovUnspsc().getUnspscTitle());
-			reqDTO.setRequestCode(this.getManagedBean().getRequestCode());
-			reqDTO.setToken(token);
-			reqDTO.setTaskId(this.getManagedBean().getTaskId());
-			reqDTO.setOutCome("CREATE");
-			System.out.println("**********savetempCode************");
+				resDTO = unspscSO.saveCommodityList(reqDTO);
 
-			resDTO = unspscSO.updateCodificationRequest(reqDTO);
+				String check68 = (String)String.valueOf(this.getManagedBean().getSelectedLovUnspsc().getUnspscCode()).substring(6, 8);
+				String check46 = (String)String.valueOf(this.getManagedBean().getSelectedLovUnspscClass().getUnspscCode()).substring(4, 6);
+				String check24 = (String)String.valueOf(this.getManagedBean().getSelectedLovUnspscfamily().getUnspscCode()).substring(2, 4);
+				String check02 = (String)String.valueOf(this.getManagedBean().getSelectedLovUnspscSegment().getUnspscCode()).substring(0, 2);
+
+				String tempCode = check02 + check24 +check46 +check68;
+				log.info(tempCode);
+
+				this.getManagedBean().getRequestCode().setTempCode(tempCode);
+				this.getManagedBean().getRequestCode().setTempTitle(this.getManagedBean().getSelectedLovUnspsc().getUnspscTitle());
+				reqDTO.setRequestCode(this.getManagedBean().getRequestCode());
+				reqDTO.setToken(token);
+				reqDTO.setTaskId(this.getManagedBean().getTaskId());
+				reqDTO.setOutCome(outcome);
+				System.out.println("**********savetempCode************");
+
+				resDTO = unspscSO.updateCodificationRequest(reqDTO);
+			}
 		} catch (Exception ex) {
 
 			System.out.println("***************Exception*****************");
@@ -682,7 +719,7 @@ public class UnspscCodeBackingBean extends BaseBackingBean<UnspscCodeManagedBean
 		//item.setCmBrand(resBrandDTO.getCmBrand());
 		/////////////type//////////////////
 		CmType cmType = new CmType();
-		
+
 		cmType.setTypeName(this.getManagedBean().getRequestCode().getTypeName());
 		cmType.setTypeCode(type);
 		cmType.setUnspscId(resDTO.getCommodityObj());
@@ -692,7 +729,7 @@ public class UnspscCodeBackingBean extends BaseBackingBean<UnspscCodeManagedBean
 		//CodificationResDTO resTypeDTO = unspscSO.addNewType(reqDTO);
 		//item.setCmType(resTypeDTO.getCmType());
 		/////////////measurement///////////////////////////
-		
+
 		CmMeasurement cmMeasurement = new CmMeasurement();
 
 		cmMeasurement.setMeasurementName(this.getManagedBean().getRequestCode().getMeasurementName());
@@ -750,7 +787,7 @@ public class UnspscCodeBackingBean extends BaseBackingBean<UnspscCodeManagedBean
 
 		CodificationReqDTO reqDTO = new CodificationReqDTO();
 		//reqDTO.setParentCode(this.getManagedBean().getUnspscCode());
-		reqDTO.setUnspscCode("10161509");
+		reqDTO.setUnspscCode(this.getManagedBean().getSelectedLovUnspsc().getUnspscCode());
 
 		CodificationResDTO resDTO = codificationSO.searchCommodityObj(reqDTO);
 
@@ -779,9 +816,9 @@ public class UnspscCodeBackingBean extends BaseBackingBean<UnspscCodeManagedBean
 		reqDTO.setRequestExtList(this.getManagedBean().getRequestExtCodeList());
 		reqDTO.setToken(token);
 
-		
 
-	
+
+
 
 
 		CodificationResDTO resDTO = unspscSO.addExtensionRequest(reqDTO);
@@ -951,7 +988,7 @@ public class UnspscCodeBackingBean extends BaseBackingBean<UnspscCodeManagedBean
 		reqDTO.setTaskId(this.getManagedBean().getTaskId());
 		reqDTO.setOutCome(action);
 		reqDTO.setToken(token);
-		
+
 		StringBuffer buffer = new StringBuffer();
 		List<Role> userRoleList = face.getUserRoleList();
 		for (Role role : userRoleList) {
@@ -960,10 +997,45 @@ public class UnspscCodeBackingBean extends BaseBackingBean<UnspscCodeManagedBean
 		}
 
 		System.out.println("*******buffer*******"+buffer.toString());
-		
+
 		System.out.println(buffer.toString().substring(0,buffer.toString().length()-1));
+		
+		System.out.println("face.getUserScreenName()"+face.getUserScreenName()); 
+		System.out.println("CM_ADMIN:"+face.hasRoleUser("CM_ADMIN"));
+		System.out.println("CD_OFFICER:"+face.hasRoleUser("CD_OFFICER"));
+		
+		Map temp = new HashMap();
 
+		temp.put("user003", "user003");
+		temp.put("user051", "user051");
+		
+		if(face.hasRoleUser("CM_ADMIN")){
+			System.out.println("*******CM ADMIN*********");
+			reqDTO.setCodeCommittees("user003,user051");
+		}else if(face.hasRoleUser("CD_COMMITTEE")){
+			System.out.println("*******CD_COMMITTEE*********:"+temp.size());
+			if(!temp.isEmpty() && temp.size() > 0 ){ 
 
+				Iterator itMap = temp.entrySet().iterator();
+
+				while(itMap.hasNext()) {
+					Map.Entry entry = (Map.Entry)itMap.next();
+					String key = (String)entry.getKey();
+					log.info("mapKey:"+key);
+					if(!key.equalsIgnoreCase(face.getUserScreenName())){
+						reqDTO.setCodeCommittees((String)entry.getValue());
+					}
+				}
+
+			}
+		}
+		
+		
+		
+		
+		
+		
+		System.out.println("getCodeCommittees"+reqDTO.getCodeCommittees());
 		resDTO = unspscSO.updateExtensionRequest(reqDTO);
 
 		FacesContext facesContext = FacesContext.getCurrentInstance();
@@ -1059,6 +1131,20 @@ public class UnspscCodeBackingBean extends BaseBackingBean<UnspscCodeManagedBean
 
 		this.getManagedBean().setAction(res.getAction());
 		this.getManagedBean().setTaskId(taskId);
+
+		System.out.println("********res.getTaskName()********"+res.getTaskName());
+		if(res.getTaskName().equalsIgnoreCase("Approve Request I")){
+			FacesContext fc = FacesContext.getCurrentInstance();
+			fc.getApplication().getNavigationHandler().handleNavigation(fc, null, "reviewApproveExtensionCode.xhtml");
+		}else if(res.getTaskName().equalsIgnoreCase("Approve Request II")){
+			FacesContext fc = FacesContext.getCurrentInstance();
+			fc.getApplication().getNavigationHandler().handleNavigation(fc, null, "reviewApproveExtensionCodeII.xhtml");
+		}else{
+			FacesContext fc = FacesContext.getCurrentInstance();
+			fc.getApplication().getNavigationHandler().handleNavigation(fc, null, "reviewExtensionCodeFlow.xhtml");
+		}
+
+
 	}
 
 
@@ -1136,7 +1222,7 @@ public class UnspscCodeBackingBean extends BaseBackingBean<UnspscCodeManagedBean
 			reqDTO.setTaskId(this.getManagedBean().getTaskId());
 			reqDTO.setOutCome("SUBMIT");
 			reqDTO.setRequestCode(code);
-			reqDTO.setProcessId("Codification.ExtensionCodeMaintenance");
+			reqDTO.setProcessId(CDProcessNameConst.EXTENSION_CODE_MAINTENANCE_PROCESS_ID);
 
 
 
@@ -1202,11 +1288,31 @@ public class UnspscCodeBackingBean extends BaseBackingBean<UnspscCodeManagedBean
 		this.measurementFilterBean = measurementFilterBean;
 	}
 
-	
+
 	public String backToReviewUnspsc(){
-		
-		
+
+
 		return "reviewBeforeCreateTempCode?faces-redirect=true";
+	}
+
+
+	public String requestExtensionCode(){
+		CodificationBackingBean codeBB = new CodificationBackingBean();
+
+		this.getManagedBean().getSelectedLovUnspsc().setUnspscCode(codeBB.getManagedBean().getSelectedUNSPSCObj().getUnspscCode());
+		this.getManagedBean().getSelectedLovUnspsc().setUnspscTitle(codeBB.getManagedBean().getSelectedUNSPSCObj().getUnspscTitle());
+		return "extensionCodeRequestForm?faces-redirect=true";
+	}
+
+	public String backToExtensionSearch(){
+
+		return "extensionSearch?faces-redirect=true";
+	}
+
+	public void removeRecommendCode(int index){
+		CodificationBackingBean codeBB = new CodificationBackingBean();
+		codeBB.getManagedBean().getRecommendUnspscList().remove(index);
+
 	}
 
 

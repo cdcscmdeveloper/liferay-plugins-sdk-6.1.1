@@ -111,11 +111,7 @@
 												<tr>
 													<td style="font-weight: bold; width: 15%;"><p:outputLabel
 															value="Supplier:"></p:outputLabel></td>
-													<td>ABC SDN BHD<p:commandButton icon="ui-icon-add" value="Bookmark"
-															action="#{favoriteSupplierBackingBean.addToFavoriteSupplier(supplierItem.supplierId)}"
-															update=":form:supplierItemViewID">
-														
-														</p:commandButton></td>
+													<td>ABC SDN BHD</td>
 
 												</tr>
 											</table>
@@ -125,17 +121,19 @@
 											style="background-color: #EEEEEE; padding-left: 5px;">
 											<table>
 												<tr>
-													<td style="font-weight: bold !important; border-bottom: 1px solid"><p:outputLabel> Price
+													<td
+														style="font-weight: bold !important; border-bottom: 1px solid"><p:outputLabel> Price
 														(MYR)</p:outputLabel></td>
-													<td rowspan="2" style="padding-left: 6px;width: 20%;"><p:commandLink
-															action="#{catalogueBackingBean.addToCart}"
+													<td rowspan="2" style="padding-left: 6px; width: 20%;"><p:commandLink
+															action="#{catalogueBackingBean.addToCart(rowIndex)}"
 															update=":form:supplierItemViewID">
 															<p:graphicImage
 																value="/resources/ep/images/design/cart_add.png"></p:graphicImage>
 														</p:commandLink></td>
 												</tr>
 												<tr>
-													<td><p:outputLabel style="font-size: 14px;" value="1000.00"></p:outputLabel></td>
+													<td><p:outputLabel style="font-size: 14px;"
+															value="1000.00"></p:outputLabel></td>
 													<td></td>
 												</tr>
 
@@ -167,12 +165,10 @@
 
 									<table style="width: 100%;">
 										<tr>
-											<td width="80%"><p:commandLink value="#{type.wishlistDesc}"
-													update=":form:supplierItemID"
+											<td width="80%"><p:commandLink
+													value="#{type.wishlistDesc}" update=":form:supplierItemID"
 													action="#{wishListBackingBean.filterWishListType(rowIndex)}" /></td>
-											<td><p:commandLink
-													action="#{wishListBackingBean.deleteFavoriteWishList(rowIndex)}"
-													update=":form:supplierItemViewID">
+											<td><p:commandLink action="#{wishListBackingBean.deleteFavoriteWishList(rowIndex)}" update=":form:supplierItemViewID">
 													<p:graphicImage
 														value="/resources/ep/images/design/trash.png"></p:graphicImage>
 												</p:commandLink></td>
@@ -185,40 +181,6 @@
 							action="#{catalogueBackingBean.addIntoWishList}"
 							onclick="wishListPopUp.show()"
 							update="selectWishList, allWishListId" />
-						<p:accordionPanel multiple="true">
-							<p:tab
-								title="Supplier ( #{fn:length(catalogueBackingBean.managedBean.favoriteSupplierList)} )">
-
-								<table style="width: 100%;">
-									<tr>
-										<td><p:dataGrid var="favor" rowIndexVar="rowIndex"
-												value="#{catalogueBackingBean.managedBean.favoriteSupplierList}"
-												columns="1" style="width: 100%;">
-												<table style="width: 100%;">
-													<tr>
-														<td width="80%"><p:commandLink value="ABC SDN BHD"
-																update=":form:supplierItemID"
-																action="#{favoriteSupplierBackingBean.filterFavoriteSupplierItems(favor.supplierId)}" /></td>
-														<td><p:commandLink
-																action="#{favoriteSupplierBackingBean.deleteFavoriteSupplier(rowIndex)}"
-																update=":form:supplierItemViewID">
-																<p:graphicImage
-																	value="/resources/ep/images/design/trash.png"></p:graphicImage>
-															</p:commandLink></td>
-													</tr>
-												</table>
-
-
-											</p:dataGrid></td>
-
-									</tr>
-								</table>
-
-
-
-
-							</p:tab>
-						</p:accordionPanel>
 					</div></td>
 
 			</tr>
@@ -226,14 +188,16 @@
 		</table>
 
 
-		<p:dialog id="wishListDialog" widgetVar="wishListPopUp" width="500px">
+		<p:dialog id="wishListDialog" widgetVar="wishListPopUp" width="500px" modal="true">
 
 			<ui:include src="wishListPopUp.xhtml" />
 
 		</p:dialog>
+
+		<p:dialog id="deleteWishListDialog" widgetVar="deleteWishListPopUp" width="500px" modal="true">
+			<ui:include src="viewWishListItem.xhtml"></ui:include>
+		</p:dialog>
 	</h:panelGroup>
-
-
 
 
 

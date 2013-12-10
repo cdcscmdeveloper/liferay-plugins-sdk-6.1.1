@@ -11,11 +11,9 @@
 
 		<p:messages globalOnly="true"></p:messages>
 		<h:panelGroup id="cmReviewUnspsc">
-			
-		
+
+
 			<div style="text-align: right;">
-				<p:commandButton value="#{lbl['lbl.cm.search']}"
-					action="#{unspscCodeBackingBean.navigateToSearch}"></p:commandButton>
 				<ui:repeat var="action"
 					value="#{unspscCodeBackingBean.managedBean.action}">
 					<p:commandButton value="#{action}"
@@ -24,57 +22,110 @@
 				</ui:repeat>
 
 			</div>
-			
-		
-			<table style="width: 66%;margin-bottom: 4px;">
-				<tr>
-					<td><p:outputLabel value="Item Type"></p:outputLabel></td>
-					<td><p:selectOneMenu value="#{unspscCodeBackingBean.managedBean.requestCode.itemType}" style="width:228px;">
-							<f:selectItem itemValue="P" itemLabel="Product " />
-							<f:selectItem itemValue="S" itemLabel="Service" />
-						</p:selectOneMenu></td>
-				</tr>
-			</table>
+
+			<p:panel header="Review Info" toggleable="true">
+
+				<table style="width: 66%; margin-bottom: 4px;">
+					<tr>
+						<td><p:outputLabel value="Item Type"></p:outputLabel></td>
+						<td><p:selectOneMenu
+								value="#{unspscCodeBackingBean.managedBean.requestCode.itemType}"
+								style="width:228px;">
+								<f:selectItem itemValue="P" itemLabel="Product " />
+								<f:selectItem itemValue="S" itemLabel="Service" />
+							</p:selectOneMenu></td>
+					</tr>
+				</table>
+
+
+
+				<table style="width: 100%;">
+
+
+					<tr>
+						<td><p:outputLabel value="* #{lbl['lbl.cm.item.name']}"></p:outputLabel></td>
+						<td><p:inputText
+								value="#{unspscCodeBackingBean.managedBean.requestCode.itemName}"
+								size="40"></p:inputText></td>
+						<td><p:outputLabel value="* #{lbl['lbl.cm.item.details']}"></p:outputLabel></td>
+						<td><p:inputText
+								value="#{unspscCodeBackingBean.managedBean.requestCode.itemDetail}"
+								size="40"></p:inputText></td>
+					</tr>
+					<tr>
+						<td><p:outputLabel value="* #{lbl['lbl.cm.type']}"></p:outputLabel></td>
+						<td><p:inputText
+								value="#{unspscCodeBackingBean.managedBean.requestCode.typeName}"
+								size="40"></p:inputText></td>
+						<td><p:outputLabel value="* #{lbl['lbl.cm.brand']}"></p:outputLabel></td>
+						<td><p:inputText
+								value="#{unspscCodeBackingBean.managedBean.requestCode.brandName}"
+								size="40"></p:inputText></td>
+					</tr>
+					<tr>
+						<td><p:outputLabel value="* #{lbl['lbl.cm.measurement']}"></p:outputLabel></td>
+						<td><p:inputText
+								value="#{unspscCodeBackingBean.managedBean.requestCode.measurementName}"
+								size="40"></p:inputText></td>
+						<td><p:outputLabel value="* #{lbl['lbl.cm.color']}"></p:outputLabel></td>
+						<td><p:inputText
+								value="#{unspscCodeBackingBean.managedBean.requestCode.colorName}"
+								size="40"></p:inputText></td>
+					</tr>
+
+				</table>
+
+			</p:panel>
+
+			<p:panel header="Search and Recommend" toggleable="true">
+
+				<div style="text-align: right;">
+					<p:commandButton value="#{lbl['lbl.cm.search']}" update="@form"
+						action="#{unspscCodeBackingBean.navigateToSearch}"
+						icon="ui-icon-search"></p:commandButton>
+				</div>
+
+				<p:dataTable id="recomemendUnspscId" rowIndexVar="rowIndex"
+					value="#{codificationBackingBean.managedBean.recommendUnspscList}"
+					var="unspscObj" width="100%">
+
+
+
+					<p:column>
+						<f:facet name="header">
+					Recommended #{lbl['lbl.cm.unspsc.code']}
+				</f:facet>
 
 				
+						#{unspscObj.unspscCode}
+						
 
-			<table style="width: 100%;">
-			
-				
-				<tr>
-					<td><p:outputLabel value="* #{lbl['lbl.cm.item.name']}"></p:outputLabel></td>
-					<td><p:inputText
-							value="#{unspscCodeBackingBean.managedBean.requestCode.itemName}"
-							size="40"></p:inputText></td>
-					<td><p:outputLabel value="* #{lbl['lbl.cm.item.details']}"></p:outputLabel></td>
-					<td><p:inputText
-							value="#{unspscCodeBackingBean.managedBean.requestCode.itemDetail}"
-							size="40"></p:inputText></td>
-				</tr>
-				<tr>
-					<td><p:outputLabel value="* #{lbl['lbl.cm.type']}"></p:outputLabel></td>
-					<td><p:inputText
-							value="#{unspscCodeBackingBean.managedBean.requestCode.typeName}"
-							size="40"></p:inputText></td>
-					<td><p:outputLabel value="* #{lbl['lbl.cm.brand']}"></p:outputLabel></td>
-					<td><p:inputText
-							value="#{unspscCodeBackingBean.managedBean.requestCode.brandName}"
-							size="40"></p:inputText></td>
-				</tr>
-				<tr>
-					<td><p:outputLabel value="* #{lbl['lbl.cm.measurement']}"></p:outputLabel></td>
-					<td><p:inputText
-							value="#{unspscCodeBackingBean.managedBean.requestCode.measurementName}"
-							size="40"></p:inputText></td>
-					<td><p:outputLabel value="* #{lbl['lbl.cm.color']}"></p:outputLabel></td>
-					<td><p:inputText
-							value="#{unspscCodeBackingBean.managedBean.requestCode.colorName}"
-							size="40"></p:inputText></td>
-				</tr>
 
-			</table>
-			
+				</p:column>
+					<p:column>
+						<f:facet name="header">
+					Recommended #{lbl['lbl.cm.unspsc.title']}
+				</f:facet>
+				#{unspscObj.unspscTitle}
+			</p:column>
 
+					<p:column>
+						<f:facet name="header">
+							#{lbl['lbl.cm.action']}
+						</f:facet>
+						<p:commandLink
+							action="#{unspscCodeBackingBean.removeRecommendCode(rowIndex)}" update=":form:recomemendUnspscId">
+							<p:graphicImage value="/resources/ep/images/design/trash.png"></p:graphicImage>
+						</p:commandLink>
+
+
+
+					</p:column>
+
+				</p:dataTable>
+
+
+			</p:panel>
 
 
 		</h:panelGroup>

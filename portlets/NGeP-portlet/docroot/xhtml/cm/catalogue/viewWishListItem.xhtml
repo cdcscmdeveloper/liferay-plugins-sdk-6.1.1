@@ -1,6 +1,4 @@
-<ui:composition
-	template="/WEB-INF/facelets/templates/basic_template.xhtml"
-	xmlns="http://www.w3.org/1999/xhtml"
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
 	xmlns:f="http://java.sun.com/jsf/core"
 	xmlns:h="http://java.sun.com/jsf/html"
 	xmlns:ui="http://java.sun.com/jsf/facelets"
@@ -8,57 +6,69 @@
 	xmlns:c="http://java.sun.com/jsp/jstl/core"
 	xmlns:fn="http://java.sun.com/jsp/jstl/functions">
 
-	<ui:define name="contentSection">
-
-		<h:panelGroup id="viewWishListItemId">
 
 
+	<h:panelGroup id="viewWishListItemId">
 
-			<ui:include src="catalogueMenuBar.xhtml"></ui:include>
+		<div style="text-align: right;">
+			<p:commandButton value="#{lbl['lbl.cm.ok']}" icon="ui-icon-approve" update=":form:supplierItemViewID"
+				onclick="deleteWishListPopUp.hide()"></p:commandButton>
+		</div>
 
-
-			<h:panelGrid columns="2" columnClasses="cmLeft,cmRight" width="100%">
-
-
-				<p:dataGrid var="type" rowIndexVar="rowIndex"
-					value="#{catalogueBackingBean.managedBean.wishLists}" columns="1"
-					style="width: 100%;">
-					<p:commandLink value="#{type.wishlistDesc}"
-						action="#{wishListBackingBean.filterWishListType(rowIndex)}"
-						update=":form:datagrid" />
-				</p:dataGrid>
+		<h:panelGrid columns="2" columnClasses="cmLeft,cmRight" width="100%">
 
 
-				<p:dataGrid var="wishLists"
-					value="#{wishListBackingBean.managedBean.selectedWishList.cmWishlistDtls}"
-					rowIndexVar="rowIndex" columns="1" rows="3" id="datagrid">
+			<p:dataGrid var="type" rowIndexVar="rowIndex"
+				value="#{catalogueBackingBean.managedBean.wishLists}" columns="1"
+				style="width: 100%;">
 
-					<p:panel header="#{wishLists.cmWishlist.wishlistDesc}">
-						<table style="width: 100%;">
-							<tr>
-								<td style="width: 30%;"><p:graphicImage height="50" width="50" /></td>
-								<td style="width: 50%;"><p:commandLink
-										value="#{wishLists.cmSupplierItem.cmItem.itemName}" /></td>
-								<td style="width: 20%;"><p:splitButton value="Action" icon="ui-icon-action">
-										<p:menuitem value="Add To Cart" />
-										<p:menuitem value="Delete"
-											action="#{wishListBackingBean.deleteWishListItem(rowIndex)}"
-											icon="ui-icon-delete" update="datagrid" />
-									</p:splitButton></td>
-
-							</tr>
-						</table>
-					</p:panel>
+				<table style="width: 100%;">
+					<tr>
+						<td width="80%;"><p:commandLink value="#{type.wishlistDesc}"
+								action="#{wishListBackingBean.filterWishListTypePopUp(rowIndex)}"
+								update=":form:viewWishListItemId" /></td>
+						<td><p:commandLink
+								action="#{wishListBackingBean.deleteFavoriteWishList(rowIndex)}"
+								update=":form:viewWishListItemId">
+								<p:graphicImage value="/resources/ep/images/design/trash.png"></p:graphicImage>
+							</p:commandLink></td>
+					</tr>
+				</table>
 
 
-				</p:dataGrid>
+			</p:dataGrid>
 
 
-			</h:panelGrid>
+			<p:dataGrid var="wishLists"
+				value="#{wishListBackingBean.managedBean.selectedWishList.cmWishlistDtls}"
+				rowIndexVar="rowIndex" columns="1" rows="3" id="datagrid">
+
+				<p:panel header="#{wishLists.cmWishlist.wishlistDesc}">
+					<table style="width: 100%;">
+						<tr>
+							<td style="width: 30%;"><p:graphicImage height="50"
+									width="50" /></td>
+							<td style="width: 50%;"><p:commandLink
+									value="#{wishLists.cmSupplierItem.cmItem.itemName}" /></td>
+							<td style="width: 20%;"><p:commandLink
+									action="#{wishListBackingBean.deleteWishListItem(rowIndex)}"
+									update=":form:viewWishListItemId">
+									<p:graphicImage value="/resources/ep/images/design/trash.png"></p:graphicImage>
+								</p:commandLink></td>
+
+						</tr>
+					</table>
+				</p:panel>
 
 
-		</h:panelGroup>
+			</p:dataGrid>
 
-	</ui:define>
+
+		</h:panelGrid>
+
+
+	</h:panelGroup>
+
+
 
 </ui:composition>
