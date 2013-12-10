@@ -110,7 +110,7 @@
 			</div>
 			<p:panelGrid columns="1" style="width:100%;"
 				styleClass="noBorders tr,noBorders td">
-<p:commandButton value="#{lbl['lbl.so.searchbtn']}" style="float:right;" icon="ui-icon-search"
+<p:commandButton value="#{lbl['lbl.so.searchbtn']}" style="float:right;" icon="ui-icon-search"  update="rescatcodelist" process="@(.myResCatList)" 
 					onclick="suppdlg.show();"></p:commandButton>	
 				</p:panelGrid>
 			<br/>

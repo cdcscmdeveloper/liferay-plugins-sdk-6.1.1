@@ -60,67 +60,77 @@
 				
 			<p:panel header="Category Code List" toggleable="true">	
 						<p:dataTable value="#{qTSupplierQulCriteriaBackingBean.managedBean.restrictedCategorys}"
-			var="ccode" resizableColumns="true" editable="true" >
-  
+			var="ccode" editable="true"  styleClass="myResCatList" id="rescatcodelist">
+               <ac:paginator for="rescatcodelist" />
 				
 
 				<p:column headerText="#{lbl['lbl.so.category']}">
-				<p:cellEditor>
-					<f:facet name="output">
-						<h:outputText value="#{ccode.pmCategoryL1.categoryL1Id}" />
-                </f:facet>
-					<f:facet name="input">
-						<p:selectOneMenu value="#{ccode.pmCategoryL1.categoryL1Id}" >
-						<p:ajax event="change" listener="#{qTSupplierQulCriteriaBackingBean.handleL2CategoryChange}"/>
-						<f:selectItem itemLabel="Select One" itemValue="#{null}" />
-							<f:selectItems value="#{qTSupplierQulCriteriaBackingBean.managedBean.categoryL1s}" var="catL1Opt" itemLabel="#{catL1Opt.cateogryL1Code}" itemValue="#{catL1Opt.categoryL1Id}"/>
-						</p:selectOneMenu>
-					</f:facet>
-					<f:facet name="output">
-						<h:outputText value="#{ccode.pmCategoryL2.categoryL2Id}" />,
-                </f:facet>
-					<f:facet name="input">
-						<p:selectOneMenu value="#{ccode.pmCategoryL2.categoryL2Id}"
-							effect="fold" editable="true">
-							<p:ajax event="change" listener="#{qTSupplierQulCriteriaBackingBean.handleL3CategoryChange}"/>
+				
+						<h:outputText value="#{ccode.pmCategoryL1.categoryL1Id}"  
+						rendered="#{rowIndex lt qTSupplierQulCriteriaBackingBean.managedBean.restrictedCategorys.size()-1}" />
+				
+						<p:selectOneMenu value="#{ccode.pmCategoryL1.categoryL1Id}"
+						rendered="#{rowIndex eq qTSupplierQulCriteriaBackingBean.managedBean.restrictedCategorys.size()-1}">
 							<f:selectItem itemLabel="Select One" itemValue="#{null}" />
-							<f:selectItems value="#{qTSupplierQulCriteriaBackingBean.managedBean.categoryL2s}" var="catL2Opt" itemLabel="#{catL2Opt.cateogryL2Code}" itemValue="#{catL2Opt.categoryL2Id}"/>
+							<f:selectItems
+								value="#{qTSupplierQulCriteriaBackingBean.managedBean.categoryL1s}"
+								var="catL1Opt" itemLabel="#{catL1Opt.categoryL1Code}"
+								itemValue="#{catL1Opt.categoryL1Id}" />
+								<p:ajax event="change"
+						listener="#{qTSupplierQulCriteriaBackingBean.handleL1CategoryChange(ccode)}"
+					partialSubmit="true" process="@this" update="categoryL2s, categoryL3s" />
 						</p:selectOneMenu>
-					</f:facet>
-					<f:facet name="output">
-						<h:outputText value="#{ccode.pmCategoryL3.cateogryL3Id}" />
-					</f:facet>
-					<f:facet name="input">
-						<p:selectOneMenu value="#{ccode.pmCategoryL3.cateogryL3Id}"
-							effect="fold" editable="true">
+					</p:column>	
+					<p:column>
+						<h:outputText value="#{ccode.pmCategoryL2.categoryL2Id}" 
+						rendered="#{rowIndex lt qTSupplierQulCriteriaBackingBean.managedBean.restrictedCategorys.size()-1}"/>
+               
+						<p:selectOneMenu id="categoryL2s" value="#{ccode.pmCategoryL2.categoryL2Id}"
+						rendered="#{rowIndex eq qTSupplierQulCriteriaBackingBean.managedBean.restrictedCategorys.size()-1}"	effect="fold" editable="true">
 							<f:selectItem itemLabel="Select One" itemValue="#{null}" />
-							<f:selectItems value="#{qTSupplierQulCriteriaBackingBean.managedBean.categoryL3s}" var="catL3Opt" itemLabel="#{catL3Opt.cateogryL3Code}" itemValue="#{catL3Opt.categoryL3Id}"/>
+							<f:selectItems
+								value="#{qTSupplierQulCriteriaBackingBean.managedBean.categoryL2s}"
+								var="catL2Opt" itemLabel="#{catL2Opt.categoryL2Code}"
+								itemValue="#{catL2Opt.categoryL2Id}" />
+								<p:ajax event="change"
+						listener="#{qTSupplierQulCriteriaBackingBean.handleL2CategoryChange(ccode)}"
+					partialSubmit="true" process="@this" update="categoryL3s" />
 						</p:selectOneMenu>
-					</f:facet>
-					</p:cellEditor>
-			 </p:column>
-			 <p:column headerText="#{lbl['lbl.so.mandatory']}"  style="width: 150px;">
-				<p:cellEditor>
-					<f:facet name="output">
+					</p:column>
+					<p:column>
+						<h:outputText value="#{ccode.pmCategoryL3.categoryL3Id}" 
+						rendered="#{rowIndex lt qTSupplierQulCriteriaBackingBean.managedBean.restrictedCategorys.size()-1}" />
+				
+						<p:selectOneMenu id="categoryL3s" value="#{ccode.pmCategoryL3.categoryL3Id}"
+						rendered="#{rowIndex eq qTSupplierQulCriteriaBackingBean.managedBean.restrictedCategorys.size()-1}"	effect="fold" editable="true">
+							<f:selectItem itemLabel="Select One" itemValue="#{null}" />
+							<f:selectItems
+								value="#{qTSupplierQulCriteriaBackingBean.managedBean.categoryL3s}"
+								var="catL3Opt" itemLabel="#{catL3Opt.categoryL3Code}"
+								itemValue="#{catL3Opt.categoryL3Id}" />
+								<p:ajax event="change"
+						listener="#{qTSupplierQulCriteriaBackingBean.handleL3CategoryChange(ccode)}"
+					partialSubmit="true" process="@this" />
+				</p:selectOneMenu>
+						
+			</p:column>
+			<p:column headerText="#{lbl['lbl.so.mandatory']}" style="width: 150px;">
+				
 						<h:outputText value="#{ccode.mandatory}" />
-					</f:facet>
-					<f:facet name="input">
-
-						<p:selectManyCheckbox
+					
+						<p:selectBooleanCheckbox
 							value="#{qTSupplierQulCriteriaBackingBean.managedBean.qtCategory.mandatory}">
 							<f:selectItem itemLabel="yes" />
 							<f:selectItem itemLabel="no" />
 
-						</p:selectManyCheckbox>
-					</f:facet>
-				</p:cellEditor>
+					</p:selectBooleanCheckbox>
+				
 
 			</p:column>
-     		<p:column style="width:6%">
-				<p:rowEditor />
-			</p:column>
 			</p:dataTable>
-			
+			<br/>
+			<br/>
+			<br/>
 			
 			
 				<h:panelGrid border="0" cellpadding="0" cellspacing="0" width="100%"
@@ -128,7 +138,7 @@
 
 			<h:column>
 			
-			<h:outputLabel  value="#{lbl['lbl.so.paidup']}" />
+			<h:outputLabel  value="#{lbl['lbl.so.paidup']}" style="margin-bottom:30px;"/>
 			</h:column>
 			<h:column>
 			<h:inputText  value="#{qTSupplierQulCriteriaBackingBean.managedBean.qtCriteria.paidUpCaptial}" disabled="true" style="margin-right:5px;margin-bottom:30px;"/>
