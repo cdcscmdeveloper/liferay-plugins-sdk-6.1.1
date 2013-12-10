@@ -25,7 +25,7 @@
 			</h:column>
 			<h:column>
 				<p:inputText
-					value="#{lOIDetailBackingBean.managedBean.scQtProposalRanking.scQtProposal.scQtSupplier.smSupplier.supplierName}"
+					value="#{lOIDetailBackingBean.managedBean.scLoi.supplierName}"
 					disabled="true" />
 			</h:column>
 			<h:column />
@@ -39,7 +39,7 @@
 					<f:selectItem itemLabel="HQ" itemValue="1" />
 				</p:selectOneMenu>
  -->
-				<p:selectOneMenu
+				<!-- <p:selectOneMenu
 					value="#{lOIDetailBackingBean.managedBean.scLoi.supplierName}"
 					styleClass="minstryclass" style="width: 124px;">
 					<f:selectItem itemLabel="Select One" itemValue="#{null}" />
@@ -47,7 +47,7 @@
 						value="#{lOIDetailBackingBean.managedBean.branchsList}"
 						var="brList" itemLabel="#{brList.branchName}"
 						itemValue="#{brList.branchName}" />
-				</p:selectOneMenu>
+				</p:selectOneMenu> -->
 			</h:column>
 			<h:column />
 			<h:column />
@@ -196,7 +196,7 @@
 			</h:column>
 			<h:column>
 				<p:inputTextarea rows="3" cols="30" autoResize="false"
-					value="#{lOIDetailBackingBean.managedBean.address}" disabled="true" />
+					value="#{lOIDetailBackingBean.managedBean.scLoi.officerAddress}" disabled="true" />
 			</h:column>
 			<h:column />
 			<h:column />
@@ -257,14 +257,14 @@
 			</h:column>
 			<h:column>
 				<p:inputText id="appDate" readonly="true" disabled="true"
-					value="#{lOIDetailBackingBean.managedBean.approvalDate}"></p:inputText>
+					value="#{lOIDetailBackingBean.managedBean.scLoi.approverActionDate}"></p:inputText>
 			</h:column>
 			<h:column>
 				<h:outputLabel value=" Approver Action : " />
 			</h:column>
 			<h:column>
 				<p:selectOneMenu id="appaction"
-					value="#{lOIDetailBackingBean.managedBean.scQtSpec.approverAction}">
+					value="#{lOIDetailBackingBean.managedBean.scLoi.approverAction}">
 					<f:selectItem itemLabel="Approver" itemValue="1" />
 					<f:selectItem itemLabel="Revise" itemValue="2" />
 				</p:selectOneMenu>
@@ -274,7 +274,7 @@
 			</h:column>
 			<h:column>
 				<p:inputTextarea id="appremark" rows="3" cols="30"
-					value="#{lOIDetailBackingBean.managedBean.scQtSpec.justificationRemark}"
+					value="#{lOIDetailBackingBean.managedBean.scLoi.approverRemark}"
 					autoResize="false"></p:inputTextarea>
 			</h:column>
 		</h:panelGrid>

@@ -1,43 +1,39 @@
 package my.ep.web.backingbean.ss.loiloa;
 
+import java.sql.Timestamp;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import javax.annotation.PostConstruct;
+import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.RequestScoped;
+import javax.faces.context.FacesContext;
 import javax.faces.model.SelectItem;
 
 import my.ep.biz.service.pm.authorization.user.IUserSO;
-import my.ep.biz.service.pm.common.address.IAddressSO;
+import my.ep.biz.service.pm.common.status.IStatusSO;
 import my.ep.biz.service.ss.quationtender.IQTAwardSO;
-import my.ep.biz.service.ss.quationtender.IQTDetailSO;
-import my.ep.biz.service.ss.quationtender.IQTSpecSO;
 import my.ep.dto.pm.authorization.user.UserReqDTO;
 import my.ep.dto.pm.authorization.user.UserResDTO;
-import my.ep.dto.pm.common.address.AddressReqDTO;
-import my.ep.dto.pm.common.address.AddressResDTO;
+import my.ep.dto.pm.common.status.StatusReqDTO;
+import my.ep.dto.pm.common.status.StatusResDTO;
 import my.ep.dto.ss.quationtender.AwardSupplierReqDTO;
 import my.ep.dto.ss.quationtender.AwardSupplierResDTO;
-import my.ep.dto.ss.quationtender.QuationTenderReqDTO;
-import my.ep.dto.ss.quationtender.QuationTenderResDTO;
-import my.ep.dto.ss.specification.SpecificationReqDTO;
-import my.ep.dto.ss.specification.SpecificationResDTO;
 import my.ep.factory.EpLogger;
 import my.ep.persistence.entity.pm.authorization.PmUser;
-import my.ep.persistence.entity.pm.common.PmAddressType;
+import my.ep.persistence.entity.pm.common.PmStatus;
 import my.ep.persistence.entity.sm.SmMofAccount;
-import my.ep.persistence.entity.sm.SmSupplierBranch;
 import my.ep.persistence.entity.ss.quationtender.ScLoi;
 import my.ep.persistence.entity.ss.quationtender.ScNegoLocation;
 import my.ep.persistence.entity.ss.quationtender.ScNegoTerm;
 import my.ep.persistence.entity.ss.quationtender.ScQt;
-import my.ep.persistence.entity.ss.quationtender.ScQtCriteria;
+import my.ep.persistence.entity.ss.quationtender.ScQtItem;
 import my.ep.persistence.entity.ss.quationtender.ScQtProposalRanking;
 import my.ep.persistence.entity.ss.quationtender.ScQtSpec;
 import my.ep.persistence.entity.ss.quationtender.ScTerm;
 import my.ep.persistence.entity.ss.quationtender.ScTermDesc;
-import my.ep.type.pm.AddressType;
 import my.ep.type.pm.RoleCode;
 import my.ep.type.ss.LoiLoaDocType;
 import my.ep.type.ss.TermType;
@@ -48,7 +44,6 @@ import my.ep.web.util.FacesScopes;
 import my.ep.web.util.lookupservice.BusinessDelegate;
 
 import org.apache.log4j.Logger;
-import org.primefaces.event.TabChangeEvent;
 
 /**
  * @author Viswanath
@@ -65,48 +60,7 @@ public class LOIDetailBackingBean extends BaseBackingBean<LOIDetailManagedBean> 
 	public LOIDetailBackingBean() {
 		log.info("inside LOIDetailBackingBean constructor");
 
-		// getManagedBean().setQt(new ScQt());
-
-		
-		getManagedBean().setScLoi(new ScLoi());
-		getManagedBean().getScLoi().setReqApproval(true);
-
-		/*
-		 * getManagedBean().setSmSupplier(new SmSupplier());
-		 * getManagedBean().getSmSupplier().setSupplierName("Award Type");
-		 * 
-		 * getManagedBean().setSmMofAccount(new SmMofAccount());
-		 * getManagedBean().getSmMofAccount().setMofNo("MOF000001");
-		 * 
-		 * getManagedBean().setScLoi(new ScLoi());
-		 * getManagedBean().getScLoi().setReqApproval(true);
-		 * 
-		 * System.out.println(" Is Approval : " +
-		 * getManagedBean().getScLoi().isReqApproval());
-		 * 
-		 * if (getManagedBean().getScQtSpec() == null) {
-		 * getManagedBean().setScQtSpec(new ScQtSpec()); IQTSpecSO specSO =
-		 * BusinessDelegate.getInstance().getServiceObject( MODULE_NAME,
-		 * IQTSpecSO.class); SpecificationReqDTO reqDTO = new
-		 * SpecificationReqDTO(); SpecificationResDTO resDTO = null;
-		 * reqDTO.setQtId(144L); resDTO = specSO.retrieveSpecDetails(reqDTO); if
-		 * (resDTO.getScQtSpec() != null) {
-		 * 
-		 * getManagedBean().setScQtSpec(new ScQtSpec()); //
-		 * getManagedBean().getScQtSpec().setAwardType("L");
-		 * getManagedBean().getScQtSpec().setAwardType(
-		 * resDTO.getScQtSpec().getAwardType());
-		 * System.out.println(" Award Type : " +
-		 * getManagedBean().getScQtSpec().getAwardType()); } }
-		 * 
-		 * getManagedBean().setScQtCriteria(new ScQtCriteria());
-		 * 
-		 * getManagedBean().getScQtCriteria().setMultiLocality(true);
-		 * 
-		 * if (getManagedBean().getScQtCriteria().isMultiLocality()) {
-		 * getManagedBean().setStatus("1"); } else {
-		 * getManagedBean().setStatus("0"); }
-		 */
+		getManagedBean().setScQtSpec(new ScQtSpec());
 	}
 
 	private void debugLogger(Object message) {
@@ -118,127 +72,6 @@ public class LOIDetailBackingBean extends BaseBackingBean<LOIDetailManagedBean> 
 
 	@PostConstruct
 	public void init() {
-		/*
-		 * if (getManagedBean().getQt() == null) { getManagedBean().setQt(new
-		 * ScQt());
-		 * 
-		 * IQTDetailSO QtDetailsSO = BusinessDelegate.getInstance()
-		 * .getServiceObject(MODULE_NAME, IQTDetailSO.class);
-		 * System.out.println("manga Details Object" + QtDetailsSO);
-		 * QuationTenderReqDTO tenderReqDTO = new QuationTenderReqDTO();
-		 * 
-		 * tenderReqDTO.setQtTndrNo("qt123");
-		 * 
-		 * QuationTenderResDTO tenderResDTO = new QuationTenderResDTO();
-		 * 
-		 * tenderResDTO = QtDetailsSO.retriveQtByQtNumber(tenderReqDTO);
-		 * 
-		 * System.out.println("====tenderResDTO.getQtDetail()." +
-		 * tenderResDTO.getQtDetail().getQtNo());
-		 * getManagedBean().getQt().setFileNo(
-		 * tenderResDTO.getQtDetail().getFileNo());
-		 * 
-		 * }
-		 */
-	}
-
-	public void onTabChangeAction(TabChangeEvent event) {
-		String tabTitle = event.getTab().getTitle();
-
-		if (QTConstants.SC_LOI_TAB.equalsIgnoreCase(tabTitle)) {
-
-		} else if (QTConstants.SC_AWARD_TAB.equalsIgnoreCase(tabTitle)) {
-			retrieveAwardDetailsTabDtl();
-		} else if (QTConstants.SC_NEGOTIATION_TAB.equalsIgnoreCase(tabTitle)) {
-			retrieveNegoLocationTabDtl();
-		}
-
-	}
-
-	/**
-	 * 
-	 */
-	private void retrieveAwardDetailsTabDtl() {
-		IQTSpecSO specSO = null;
-		try {
-			getManagedBean().setScQtSpec(new ScQtSpec());
-			if (getManagedBean().getScQtSpec() == null) {
-				getManagedBean().setScQtSpec(new ScQtSpec());
-				specSO = BusinessDelegate.getInstance().getServiceObject(
-						MODULE_NAME, IQTSpecSO.class);
-				SpecificationReqDTO reqDTO = new SpecificationReqDTO();
-				SpecificationResDTO resDTO = null;
-				reqDTO.setQtId(144L);
-				resDTO = specSO.retrieveSpecDetails(reqDTO);
-				if (resDTO.getScQtSpec() != null) {
-					getManagedBean().setScQtSpec(new ScQtSpec());
-					// getManagedBean().getScQtSpec().setAwardType("L");
-					getManagedBean().getScQtSpec().setAwardType(
-							resDTO.getScQtSpec().getAwardType());
-					System.out.println(" Award Type : "
-							+ getManagedBean().getScQtSpec().getAwardType());
-				}
-			}
-
-			getManagedBean().setScQtCriteria(new ScQtCriteria());
-
-			getManagedBean().getScQtCriteria().setMultiLocality(true);
-
-			if (getManagedBean().getScQtCriteria().isMultiLocality()) {
-				getManagedBean().setStatus("1");
-			} else {
-				getManagedBean().setStatus("0");
-			}
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-	}
-
-	/**
-	 * 
-	 */
-	private void retrieveNegoLocationTabDtl() {
-		IQTAwardSO iqtAwardSO = null;
-		try {
-			iqtAwardSO = BusinessDelegate.getInstance().getServiceObject(
-					MODULE_NAME, IQTAwardSO.class);
-			AwardSupplierReqDTO reqDTO = new AwardSupplierReqDTO();
-			reqDTO.setDocType(LoiLoaDocType.DOCTYPE_QUOTATION_TENDER.value());
-			reqDTO.setDocId(1L);
-
-			String language = new FacesScopes().getUserLocale().getLanguage();
-			reqDTO.setLanguageCode(language);
-
-			// String docType = reqDTO.getDocType();
-
-			AwardSupplierResDTO resDTO = iqtAwardSO.retrieveLOIDtl(reqDTO);
-
-			ScLoi scLoi = resDTO.getScLoi();
-
-			List<ScNegoLocation> negoLocList = resDTO.getNegoLocResultBean()
-					.getResultList();
-			System.out.println("list: " + negoLocList.size());
-
-			List<ScNegoTerm> negoTermList = resDTO.getNegoTermResultBean()
-					.getResultList();
-			System.out.println("negoTermlist: " + negoTermList.size());
-
-			System.out.println(" Term Decription : "
-					+ negoTermList.get(0).getScTerm().getScTermDescs().get(0)
-							.getTermDesc());
-
-			if (scLoi != null) {
-				getManagedBean().setNegoLocationList(negoLocList);
-				getManagedBean().setNegoTermsList(negoTermList);
-
-			} else {
-				System.out.println(" No Information ");
-			}
-
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-
 	}
 
 	public List<SelectItem> getApproverNames() {
@@ -352,8 +185,8 @@ public class LOIDetailBackingBean extends BaseBackingBean<LOIDetailManagedBean> 
 			String docType) {
 		debugLogger("createLOIAction");
 		IQTAwardSO iqtAwardSO = null;
-		IAddressSO addressSO = null;
-		List<SmSupplierBranch> bList = new ArrayList<SmSupplierBranch>();
+//		IAddressSO addressSO = null;
+//		List<SmSupplierBranch> bList = new ArrayList<SmSupplierBranch>();
 		try {
 
 			long id = scQtProposalRanking.getQtProposalRankingId();
@@ -371,122 +204,48 @@ public class LOIDetailBackingBean extends BaseBackingBean<LOIDetailManagedBean> 
 
 			AwardSupplierResDTO resDTO = iqtAwardSO.retrieveLOIDtl(reqDTO);
 
-			// getManagedBean().setScLoi(resDTO.getScLoi());
-			ScLoi scLoi = resDTO.getScLoi();
+			ScQt scQt = resDTO.getScQt();
+			if (scQt != null) {
+				System.out.println("Qt Id and Qt No : " + scQt.getQtId() + "|" + scQt.getQtNo());
+			}
 
+			List<ScQtItem> itemList = resDTO.getItemResultBean().getResultList();
+			System.out.println("itemlist: " + itemList.size());
+			
+			List<ScNegoLocation> negoLocationList = resDTO.getNegoLocResultBean().getResultList();
+			System.out.println("list: " + negoLocationList.size());
+			
+			List<ScNegoTerm> negoTermList = resDTO.getNegoTermResultBean().getResultList();
+			System.out.println("negoTermlist: " + negoTermList.size());
+			
+			ScLoi scLoi = resDTO.getScLoi();
+			
 			if (scLoi != null) {
+				System.out.println("Loi Id : " + scLoi.getLoiId());
 				getManagedBean().setScLoi(scLoi);
 				getManagedBean().setScQtProposalRanking(scQtProposalRanking);
 				getManagedBean().getScLoi().setSupplierName(
 						getManagedBean().getScQtProposalRanking()
 								.getScQtProposal().getScQtSupplier()
 								.getSmSupplier().getSupplierName());
-				/*
-				 * System.out.println("Mof No : " +
-				 * getManagedBean().getScQtProposalRanking()
-				 * .getScQtProposal().getScQtSupplier()
-				 * .getSmSupplier().getSmMofAccounts().get(0).getMofNo());
-				 */
 
 				getManagedBean().setSmMofAccount(new SmMofAccount());
 				getManagedBean().getSmMofAccount().setMofNo("MOF000001");
-
-				getManagedBean().setQt(new ScQt());
-
-				IQTDetailSO QtDetailsSO = BusinessDelegate.getInstance()
-						.getServiceObject(MODULE_NAME, IQTDetailSO.class);
-				QuationTenderReqDTO tenderReqDTO = new QuationTenderReqDTO();
-
-				tenderReqDTO.setQtTndrNo("qt123");
-
-				QuationTenderResDTO tenderResDTO = new QuationTenderResDTO();
-
-				tenderResDTO = QtDetailsSO.retriveQtByQtNumber(tenderReqDTO);
-
-				getManagedBean().getQt().setFileNo(
-						tenderResDTO.getQtDetail().getFileNo());
+				
+				getManagedBean().setQt(scQt);
+				
+				PmUser user = new FacesScopes().getUserSessionBean();
+				getManagedBean().getScLoi().setCreatedBy(user.getUserId());
+				getManagedBean().getScLoi().setChangedBy(user.getUserId());
+				getManagedBean().getScLoi().setCreatedDate(new Timestamp(System.currentTimeMillis()));
+				
+				getManagedBean().setScQtItemList(itemList);
+				
+				getManagedBean().setNegoLocationList(negoLocationList);
+				getManagedBean().setNegoTermsList(negoTermList);
 
 			} else {
-				getManagedBean().setQt(new ScQt());
-
-				IQTDetailSO QtDetailsSO = BusinessDelegate.getInstance()
-						.getServiceObject(MODULE_NAME, IQTDetailSO.class);
-				System.out.println("manga Details Object" + QtDetailsSO);
-				QuationTenderReqDTO tenderReqDTO = new QuationTenderReqDTO();
-
-				tenderReqDTO.setQtTndrNo("qt123");
-
-				QuationTenderResDTO tenderResDTO = new QuationTenderResDTO();
-
-				tenderResDTO = QtDetailsSO.retriveQtByQtNumber(tenderReqDTO);
-
-				System.out.println("====tenderResDTO.getQtDetail()."
-						+ tenderResDTO.getQtDetail().getQtNo());
-				getManagedBean().getQt().setFileNo(
-						tenderResDTO.getQtDetail().getFileNo());
-
-				getManagedBean().setScQtProposalRanking(scQtProposalRanking);
-
-				getManagedBean().getScLoi().setSupplierName(
-						getManagedBean().getScQtProposalRanking()
-								.getScQtProposal().getScQtSupplier()
-								.getSmSupplier().getSupplierName());
-
-				/*
-				 * System.out.println("Mof No : " +
-				 * getManagedBean().getScQtProposalRanking()
-				 * .getScQtProposal().getScQtSupplier()
-				 * .getSmSupplier().getSmMofAccounts().get(0).getMofNo());
-				 */
-
-				SmSupplierBranch branch = new SmSupplierBranch();
-				SmSupplierBranch branch1 = new SmSupplierBranch();
-				branch.setBranchName("HQ");
-				branch1.setBranchName("SET");
-				bList.add(branch);
-				bList.add(branch1);
-				getManagedBean().setBranchsList(bList);
-
-				branch.setSmAppl(getManagedBean().getScQtProposalRanking()
-						.getScQtProposal().getScQtSupplier().getSmSupplier()
-						.getSmAppl());
-
-				PmUser user = new FacesScopes().getUserSessionBean();
-				getManagedBean().setPmUser(user);
-				getManagedBean().getScLoi().setOfficierName(user.getUserName());
-				getManagedBean().getScLoi().setOfficerDesignation(
-						user.getDesignation());
-				addressSO = BusinessDelegate.getInstance().getServiceObject(
-						"pm", IAddressSO.class);
-				AddressReqDTO addReqDTO = new AddressReqDTO();
-				addReqDTO.setUserId(user.getUserId());
-				addReqDTO.setAddressType(AddressType.BILLING_ADDRESS.value());
-
-				AddressResDTO addResDTO = addressSO
-						.retrieveAddressTypeList(addReqDTO);
-
-				List<PmAddressType> addList = addResDTO.getAddressTypeList();
-				addList.get(0).getPmAddress().getAddress1();
-				addList.get(0).getPmAddress().getAddress2();
-				addList.get(0).getPmAddress().getAddress3();
-				addList.get(0).getPmAddress().getAddress4();
-
-				getManagedBean().setAddress(
-						addList.get(0).getPmAddress().getAddress1() + ","
-								+ addList.get(0).getPmAddress().getAddress2()
-								+ ","
-								+ addList.get(0).getPmAddress().getAddress3()
-								+ ","
-								+ addList.get(0).getPmAddress().getAddress4());
-				System.out
-						.println("Address : " + getManagedBean().getAddress());
-				getManagedBean().getScLoi().setOfficerAddress(
-						addList.get(0).getPmAddress().getAddress1());
-				getManagedBean().getScLoi().setOfficerFaxNo(
-						addList.get(0).getPmAddress().getFaxNo());
-				getManagedBean().getScLoi().setOfficerPhoneNo(
-						addList.get(0).getPmAddress().getPhoneNo());
-
+				System.out.println(" Inside if else Condition");
 			}
 
 		} catch (Exception e) {
@@ -494,81 +253,61 @@ public class LOIDetailBackingBean extends BaseBackingBean<LOIDetailManagedBean> 
 		}
 		return QTConstants.LOI_PAGE;
 	}
-	/*
-	 * public String createLOIAction(ScQtProposalRanking scQtProposalRanking) {
-	 * debugLogger("createLOIAction"); IAddressSO addressSO;
-	 * 
-	 * List<SmSupplierBranch> bList = new ArrayList<SmSupplierBranch>(); try {
-	 * 
-	 * getManagedBean().setScQtProposalRanking(scQtProposalRanking);
-	 * 
-	 * getManagedBean().getScLoi().setSupplierName(
-	 * getManagedBean().getScQtProposalRanking().getScQtProposal()
-	 * .getScQtSupplier().getSmSupplier() .getSupplierName());
-	 * 
-	 * 
-	 * SmSupplierBranch branch = new SmSupplierBranch(); SmSupplierBranch
-	 * branch1 = new SmSupplierBranch(); branch.setBranchName("HQ");
-	 * branch1.setBranchName("SET"); bList.add(branch); bList.add(branch1);
-	 * getManagedBean().setBranchsList(bList);
-	 * 
-	 * branch.setSmAppl(getManagedBean().getScQtProposalRanking().getScQtProposal
-	 * () .getScQtSupplier().getSmSupplier().getSmAppl());
-	 * 
-	 * if (getManagedBean().getScQtSpec() != null) {
-	 * getManagedBean().setScQtSpec(new ScQtSpec()); IQTSpecSO specSO =
-	 * BusinessDelegate.getInstance() .getServiceObject(MODULE_NAME,
-	 * IQTSpecSO.class); SpecificationReqDTO reqDTO = new SpecificationReqDTO();
-	 * SpecificationResDTO resDTO = null; reqDTO.setQtId(146L); resDTO =
-	 * specSO.retrieveSpecDetails(reqDTO); if (resDTO.getScQtSpec() != null) {
-	 * 
-	 * getManagedBean().setScQtSpec(new ScQtSpec()); //
-	 * getManagedBean().getScQtSpec().setAwardType("L");
-	 * getManagedBean().getScQtSpec().setFulfilmentType(
-	 * resDTO.getScQtSpec().getFulfilmentType());
-	 * System.out.println(" Fulfilment Type : " + getManagedBean().getScQtSpec()
-	 * .getFulfilmentType()); } }
-	 * 
-	 * PmUser user = new FacesScopes().getUserSessionBean();
-	 * getManagedBean().setPmUser(user);
-	 * getManagedBean().getScLoi().setOfficierName(user.getUserName());
-	 * getManagedBean().getScLoi().setOfficerDesignation(
-	 * user.getDesignation());
-	 * 
-	 * addressSO = BusinessDelegate.getInstance().getServiceObject("pm",
-	 * IAddressSO.class); AddressReqDTO reqDTO = new AddressReqDTO();
-	 * reqDTO.setUserId(user.getUserId());
-	 * reqDTO.setAddressType(AddressType.BILLING_ADDRESS.value());
-	 * 
-	 * AddressResDTO resDTO = addressSO.retrieveAddressTypeList(reqDTO);
-	 * 
-	 * List<PmAddressType> list = resDTO.getAddressTypeList();
-	 * list.get(0).getPmAddress().getAddress1();
-	 * list.get(0).getPmAddress().getAddress2();
-	 * list.get(0).getPmAddress().getAddress3();
-	 * list.get(0).getPmAddress().getAddress4();
-	 * 
-	 * getManagedBean().setAddress( list.get(0).getPmAddress().getAddress1() +
-	 * "," + list.get(0).getPmAddress().getAddress2() + "," +
-	 * list.get(0).getPmAddress().getAddress3() + "," +
-	 * list.get(0).getPmAddress().getAddress4());
-	 * System.out.println("Address : " + getManagedBean().getAddress());
-	 * getManagedBean().getScLoi().setOfficerAddress(
-	 * list.get(0).getPmAddress().getAddress1());
-	 * getManagedBean().getScLoi().setOfficerFaxNo(
-	 * list.get(0).getPmAddress().getFaxNo());
-	 * getManagedBean().getScLoi().setOfficerPhoneNo(
-	 * list.get(0).getPmAddress().getPhoneNo());
-	 * 
-	 * getManagedBean().setScQtCriteria(new ScQtCriteria());
-	 * 
-	 * getManagedBean().getScQtCriteria().setMultiLocality(true);
-	 * 
-	 * if (getManagedBean().getScQtCriteria().isMultiLocality()) {
-	 * getManagedBean().setStatus("1"); } else {
-	 * getManagedBean().setStatus("0"); } } catch (Exception e) {
-	 * e.printStackTrace(); }
-	 * 
-	 * return QTConstants.LOI_PAGE; }
+
+	/**
+	 * Method to save the LOI details
 	 */
+	public void saveLOIDetailsAction() {
+		debugLogger("saveLOIDetailsAction");
+		IStatusSO statusSO = null;
+		IQTAwardSO iqtAwardSO = null;
+		try {
+
+			iqtAwardSO = BusinessDelegate.getInstance().getServiceObject(
+					MODULE_NAME, IQTAwardSO.class);
+
+			AwardSupplierReqDTO awardSupplierReqDTO = new AwardSupplierReqDTO();
+			awardSupplierReqDTO
+					.setDocType(LoiLoaDocType.DOCTYPE_QUOTATION_TENDER.value());
+
+			statusSO = BusinessDelegate.getInstance().getServiceObject("pm",
+					IStatusSO.class);
+
+			ScLoi scLoi = this.getManagedBean().getScLoi();
+			scLoi.setIssueDate(new Date());
+
+			// Setting the pm status for LOI details
+			StatusReqDTO reqDTO = new StatusReqDTO();
+			reqDTO.setStatusId(1l);
+			StatusResDTO pmStatus = statusSO.retrieveStatusByStatusId(reqDTO);
+			PmStatus status = pmStatus.getPmStatus();
+			scLoi.setPmStatus(status);
+
+			List<ScNegoLocation> negoLocations = this.getManagedBean()
+					.getNegoLocationList();
+			scLoi.setScNegoLocations(negoLocations);
+
+			List<ScNegoTerm> negoTerms = this.getManagedBean()
+					.getNegoTermsList();
+			scLoi.setScNegoTerms(negoTerms);
+
+			awardSupplierReqDTO.setScLoi(scLoi);
+
+			AwardSupplierResDTO awardSupplierResDTO = iqtAwardSO
+					.saveLOIDtl(awardSupplierReqDTO);
+
+			this.getManagedBean().setScLoi(awardSupplierResDTO.getScLoi());
+
+			FacesContext.getCurrentInstance().addMessage(
+					null,
+					new FacesMessage(FacesMessage.SEVERITY_ERROR,
+							"SuccessFully Saved", "LOI"));
+		} catch (Exception ex) {
+			ex.printStackTrace();
+			FacesContext.getCurrentInstance().addMessage(
+					null,
+					new FacesMessage(FacesMessage.SEVERITY_ERROR,
+							ex.toString(), ex.getMessage()));
+		}
+	}
 }

@@ -20,7 +20,7 @@
 				<h:outputLabel value="Bond Duration (Days)" />
 			</h:column>
 			<h:column>
-				<p:inputText value="30" />
+				<p:inputText value="#{lOADetailBackingBean.managedBean.scLoa.bondDuration}" />
 			</h:column>
 			<h:column>
 				<h:outputLabel value="Bond Amount (RM)" />
@@ -36,48 +36,60 @@
 			</h:column>
 		</h:panelGrid>
 	</p:panel>
-	<p:dataTable id="itemlisttbl" var="itemList"
-		value="#{bsvAttendanceBackingBean.managedBean.briefingAttendanceList}"
-		rows="10">
+	<p:dataTable id="performancebondtbl" var="bondList"
+		value="#{lOADetailBackingBean.managedBean.scBondDtlList}" rows="10"
+		rowIndexVar="rowIndex">
 
-		<p:column headerText="Reference No">
-			<p:inputText value="" />
+		<p:column headerText="" style="width:2%">
+			<p:selectBooleanCheckbox value="1" />
 		</p:column>
 
-		<p:column headerText="Financial Institution">
-			<p:inputText value="" />
+		<p:column headerText="Reference No" style="width:5%">
+			<p:inputText value="#{bondList.bondRefNo}" style="width:95%" />
 		</p:column>
 
-		<p:column headerText="Amount">
-			<p:inputText value="" />
+		<p:column headerText="Financial Institution" style="width:5%">
+			<p:inputText value="#{bondList.institutionName}" style="width:95%" />
 		</p:column>
 
-		<p:column headerText="Effective Date">
-			<p:inputText value="" />
+		<p:column headerText="Amount" style="width:5%">
+			<p:inputText value="#{bondList.bondAmount}" style="width:95%" />
 		</p:column>
 
-		<p:column headerText="Expiry Date">
-			<p:inputText value="" />
+		<p:column headerText="Effective Date" style="width:5%">
+			<p:calendar value="#{bondList.bondEffDate}" id="bondeffdate"
+				showOn="button" style="width:85%" />
 		</p:column>
 
-		<p:column headerText="Attachment">
-			<p:inputText value="" />
+		<p:column headerText="Expiry Date" style="width:5%">
+			<p:calendar value="#{bondList.bondExpDate}" id="bondexpdate"
+				showOn="button" style="width:85%" />
 		</p:column>
 
-		<p:column headerText="Action">
-			<!-- <p:commandLink>
+		<p:column headerText="Attachment" style="width:5%">
+			<p:inputText value="#{bondList.bondRefNo}" style="width:95%" />
+		</p:column>
+
+		<p:column headerText="Action" style="width:5%">
+			<p:commandLink>
 				<p:graphicImage library="ep/images/design" name="edit.png"
 					value="/resources/ep/images/design/edit.png" />
-			</p:commandLink> -->
-			<p:commandLink>
+			</p:commandLink>
+			<!-- <p:commandLink>
 				<p:graphicImage library="ep/images/design" name="delete.png"
 					value="/resources/ep/images/design/delete.png" />
-			</p:commandLink>
+			</p:commandLink> -->
 
 		</p:column>
 	</p:dataTable>
 	<div align="right">
 		<p:commandButton value="#{lbl['lbl.sc.bsv.attendance.add']}"
-			process="@this" partialSubmit="true" />
+			process="@this,performancebondtbl" partialSubmit="true"
+			action="#{lOADetailBackingBean.addPerformanceBond}"
+			update="performancebondtbl" icon="ui-icon-add" />
+
+		<p:commandButton value="Delete" process="@this" partialSubmit="true"
+			icon="ui-icon-delete" />
 	</div>
+
 </ui:composition>

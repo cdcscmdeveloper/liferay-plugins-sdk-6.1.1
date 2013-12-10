@@ -7,13 +7,18 @@ import javax.faces.bean.SessionScoped;
 import javax.faces.model.SelectItem;
 
 import my.ep.persistence.entity.pm.authorization.PmUser;
+import my.ep.persistence.entity.pm.common.PmCurrency;
 import my.ep.persistence.entity.sm.SmMofAccount;
 import my.ep.persistence.entity.sm.SmSupplier;
 import my.ep.persistence.entity.sm.SmSupplierBranch;
+import my.ep.persistence.entity.ss.quationtender.ScBondDtl;
 import my.ep.persistence.entity.ss.quationtender.ScLoa;
 import my.ep.persistence.entity.ss.quationtender.ScQt;
+import my.ep.persistence.entity.ss.quationtender.ScQtCriteria;
+import my.ep.persistence.entity.ss.quationtender.ScQtItem;
 import my.ep.persistence.entity.ss.quationtender.ScQtProposalRanking;
 import my.ep.persistence.entity.ss.quationtender.ScQtSpec;
+import my.ep.persistence.entity.ss.quationtender.ScQtZoneCriteria;
 import my.ep.web.managedbean.BaseManagedBean;
 
 /**
@@ -36,8 +41,102 @@ public class LOADetailManagedBean extends BaseManagedBean {
 	private PmUser pmUser;
 	private ScQtProposalRanking scQtProposalRanking;
 	private List<SmSupplierBranch> branchsList;
-	
+
 	public String address;
+	private String status;
+	private ScQtCriteria scQtCriteria;
+
+	private List<ScBondDtl> scBondDtlList;
+	private List<ScQtZoneCriteria> zonelist;
+	private List<ScQtItem> scQtItemList;
+	private PmCurrency pmCurrency;
+	
+	/**
+	 * @return the pmCurrency
+	 */
+	public PmCurrency getPmCurrency() {
+		return pmCurrency;
+	}
+
+	/**
+	 * @param pmCurrency the pmCurrency to set
+	 */
+	public void setPmCurrency(PmCurrency pmCurrency) {
+		this.pmCurrency = pmCurrency;
+	}
+
+	/**
+	 * @return the scQtItemList
+	 */
+	public List<ScQtItem> getScQtItemList() {
+		return scQtItemList;
+	}
+
+	/**
+	 * @param scQtItemList the scQtItemList to set
+	 */
+	public void setScQtItemList(List<ScQtItem> scQtItemList) {
+		this.scQtItemList = scQtItemList;
+	}
+
+	/**
+	 * @return the zonelist
+	 */
+	public List<ScQtZoneCriteria> getZonelist() {
+		return zonelist;
+	}
+
+	/**
+	 * @param zonelist the zonelist to set
+	 */
+	public void setZonelist(List<ScQtZoneCriteria> zonelist) {
+		this.zonelist = zonelist;
+	}
+
+	/**
+	 * @return the scBondDtlList
+	 */
+	public List<ScBondDtl> getScBondDtlList() {
+		return scBondDtlList;
+	}
+
+	/**
+	 * @param scBondDtlList
+	 *            the scBondDtlList to set
+	 */
+	public void setScBondDtlList(List<ScBondDtl> scBondDtlList) {
+		this.scBondDtlList = scBondDtlList;
+	}
+
+	/**
+	 * @return the status
+	 */
+	public String getStatus() {
+		return status;
+	}
+
+	/**
+	 * @param status
+	 *            the status to set
+	 */
+	public void setStatus(String status) {
+		this.status = status;
+	}
+
+	/**
+	 * @return the scQtCriteria
+	 */
+	public ScQtCriteria getScQtCriteria() {
+		return scQtCriteria;
+	}
+
+	/**
+	 * @param scQtCriteria
+	 *            the scQtCriteria to set
+	 */
+	public void setScQtCriteria(ScQtCriteria scQtCriteria) {
+		this.scQtCriteria = scQtCriteria;
+	}
 
 	/**
 	 * @return the branchsList
@@ -47,7 +146,8 @@ public class LOADetailManagedBean extends BaseManagedBean {
 	}
 
 	/**
-	 * @param branchsList the branchsList to set
+	 * @param branchsList
+	 *            the branchsList to set
 	 */
 	public void setBranchsList(List<SmSupplierBranch> branchsList) {
 		this.branchsList = branchsList;

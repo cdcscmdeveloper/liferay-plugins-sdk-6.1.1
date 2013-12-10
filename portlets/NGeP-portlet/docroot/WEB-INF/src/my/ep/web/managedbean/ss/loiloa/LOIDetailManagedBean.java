@@ -15,9 +15,10 @@ import my.ep.persistence.entity.ss.quationtender.ScNegoLocation;
 import my.ep.persistence.entity.ss.quationtender.ScNegoTerm;
 import my.ep.persistence.entity.ss.quationtender.ScQt;
 import my.ep.persistence.entity.ss.quationtender.ScQtCriteria;
-import my.ep.persistence.entity.ss.quationtender.ScQtProposalChecklist;
+import my.ep.persistence.entity.ss.quationtender.ScQtItem;
 import my.ep.persistence.entity.ss.quationtender.ScQtProposalRanking;
 import my.ep.persistence.entity.ss.quationtender.ScQtSpec;
+import my.ep.persistence.entity.ss.quationtender.ScQtZoneCriteria;
 import my.ep.persistence.entity.ss.quationtender.ScTermDesc;
 import my.ep.web.managedbean.BaseManagedBean;
 
@@ -54,6 +55,38 @@ public class LOIDetailManagedBean extends BaseManagedBean {
 	private String status;
 	public String reqApprove;
 	public String Address;
+
+	private List<ScQtZoneCriteria> zonelist;
+	
+	private List<ScQtItem> scQtItemList;
+	
+	/**
+	 * @return the scQtItemList
+	 */
+	public List<ScQtItem> getScQtItemList() {
+		return scQtItemList;
+	}
+
+	/**
+	 * @param scQtItemList the scQtItemList to set
+	 */
+	public void setScQtItemList(List<ScQtItem> scQtItemList) {
+		this.scQtItemList = scQtItemList;
+	}
+
+	/**
+	 * @return the zonelist
+	 */
+	public List<ScQtZoneCriteria> getZonelist() {
+		return zonelist;
+	}
+
+	/**
+	 * @param zonelist the zonelist to set
+	 */
+	public void setZonelist(List<ScQtZoneCriteria> zonelist) {
+		this.zonelist = zonelist;
+	}
 
 	/**
 	 * @return the scTermDesc

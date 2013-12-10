@@ -25,7 +25,7 @@
 			</h:column>
 			<h:column>
 				<p:inputText
-					value="#{lOADetailBackingBean.managedBean.scQtProposalRanking.scQtProposal.scQtSupplier.smSupplier.supplierName}"
+					value="#{lOADetailBackingBean.managedBean.scLoa.supplierName}"
 					disabled="true" />
 			</h:column>
 			<h:column />
@@ -34,7 +34,7 @@
 				<h:outputLabel value="Branch" />
 			</h:column>
 			<h:column>
-				<p:selectOneMenu
+				<!-- <p:selectOneMenu
 					value="#{lOADetailBackingBean.managedBean.scLoa.supplierName}"
 					styleClass="minstryclass" style="width: 124px;">
 					<f:selectItem itemLabel="Select One" itemValue="#{null}" />
@@ -42,7 +42,7 @@
 						value="#{lOADetailBackingBean.managedBean.branchsList}"
 						var="brList" itemLabel="#{brList.branchName}"
 						itemValue="#{brList.branchName}" />
-				</p:selectOneMenu>
+				</p:selectOneMenu> -->
 			</h:column>
 			<h:column />
 			<h:column />
@@ -130,13 +130,13 @@
 			<h:column>
 				<p:inputText value="" disabled="true" />
 			</h:column>
-			<h:column/>
-			<h:column/>
+			<h:column />
+			<h:column />
 			<h:column>
 				<h:outputLabel value="LOA Type" />
 			</h:column>
 			<h:column>
-				<p:inputText
+				<p:inputText id="loatype"
 					value="#{lOADetailBackingBean.managedBean.scLoa.loaType}"
 					disabled="true" />
 			</h:column>
@@ -219,9 +219,9 @@
 					rendered="#{lOADetailBackingBean.managedBean.scQtSpec.fulfilmentType == 'P'}" />
 			</h:column>
 			<h:column>
-				<p:calendar
-					value="#{lOADetailBackingBean.managedBean.scLoa.contractEffDate}"
-					id="effdate" showOn="button" />
+				<p:calendar id="effdate"
+					pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}" showOn="button"
+					value="#{lOADetailBackingBean.managedBean.scLoa.contractEffDate}" />
 			</h:column>
 			<h:column>
 				<h:outputLabel value="LOA Duration (Days)" />
@@ -295,14 +295,18 @@
 				<h:outputLabel value="Currency" />
 			</h:column>
 			<h:column>
-				<p:inputText value="" disabled="true" />
+				<p:inputText
+					value="#{lOADetailBackingBean.managedBean.scQtSpec.pmCurrency.currencyName}"
+					disabled="true" />
 			</h:column>
 			<h:column />
 			<h:column />
-			<h:column>
+			<h:column
+				rendered="#{lOADetailBackingBean.managedBean.scLoa.loaType eq 'Standard'}">
 				<h:outputLabel value="MTO Required" />
 			</h:column>
-			<h:column>
+			<h:column
+				rendered="#{lOADetailBackingBean.managedBean.scLoa.loaType eq 'Standard'}">
 				<p:selectOneRadio
 					value="#{lOADetailBackingBean.managedBean.scLoa.mtoReq}">
 					<f:selectItem itemLabel="Yes" itemValue="true" />
@@ -311,6 +315,7 @@
 			</h:column>
 			<h:column />
 			<h:column />
+
 		</h:panelGrid>
 	</p:panel>
 	<p:panel header="Officer Details" toggleable="true">
@@ -346,7 +351,8 @@
 			</h:column>
 			<h:column>
 				<p:inputTextarea rows="3" cols="30" autoResize="false"
-					value="#{lOADetailBackingBean.managedBean.address}" disabled="true" />
+					value="#{lOADetailBackingBean.managedBean.scLoa.officerAddress}"
+					disabled="true" />
 			</h:column>
 			<h:column />
 			<h:column />

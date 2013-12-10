@@ -7,9 +7,12 @@
 
 	<p:tabView dynamic="true" cache="true" orientation="left">
 
-		<p:ajax event="tabChange" listener="#{lOADetailBackingBean.onTabChangeAction}" />
 		<p:tab title="LOA">
 			<ui:include src="/xhtml/ss/loiloa/loadetails.xhtml" />
+		</p:tab>
+
+		<p:tab title="Award Details">
+			<ui:include src="/xhtml/ss/loiloa/loaawarddetails.xhtml" />
 		</p:tab>
 
 		<p:tab title="Performance Bond">

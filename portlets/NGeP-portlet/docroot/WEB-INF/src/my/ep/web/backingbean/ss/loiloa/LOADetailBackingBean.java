@@ -1,37 +1,39 @@
 package my.ep.web.backingbean.ss.loiloa;
 
+import java.sql.Timestamp;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
-import javax.annotation.PostConstruct;
+import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.RequestScoped;
+import javax.faces.context.FacesContext;
 import javax.faces.model.SelectItem;
 
 import my.ep.biz.service.pm.authorization.user.IUserSO;
-import my.ep.biz.service.pm.common.address.IAddressSO;
+import my.ep.biz.service.pm.common.status.IStatusSO;
 import my.ep.biz.service.ss.quationtender.IQTAwardSO;
-import my.ep.biz.service.ss.quationtender.IQTDetailSO;
 import my.ep.biz.service.ss.quationtender.IQTSpecSO;
 import my.ep.dto.pm.authorization.user.UserReqDTO;
 import my.ep.dto.pm.authorization.user.UserResDTO;
-import my.ep.dto.pm.common.address.AddressReqDTO;
-import my.ep.dto.pm.common.address.AddressResDTO;
+import my.ep.dto.pm.common.status.StatusReqDTO;
+import my.ep.dto.pm.common.status.StatusResDTO;
 import my.ep.dto.ss.quationtender.AwardSupplierReqDTO;
 import my.ep.dto.ss.quationtender.AwardSupplierResDTO;
-import my.ep.dto.ss.quationtender.QuationTenderReqDTO;
-import my.ep.dto.ss.quationtender.QuationTenderResDTO;
 import my.ep.dto.ss.specification.SpecificationReqDTO;
 import my.ep.dto.ss.specification.SpecificationResDTO;
 import my.ep.factory.EpLogger;
 import my.ep.persistence.entity.pm.authorization.PmUser;
-import my.ep.persistence.entity.pm.common.PmAddressType;
-import my.ep.persistence.entity.sm.SmSupplierBranch;
+import my.ep.persistence.entity.pm.common.PmCurrency;
+import my.ep.persistence.entity.pm.common.PmStatus;
+import my.ep.persistence.entity.sm.SmMofAccount;
+import my.ep.persistence.entity.ss.quationtender.ScBondDtl;
 import my.ep.persistence.entity.ss.quationtender.ScLoa;
 import my.ep.persistence.entity.ss.quationtender.ScQt;
+import my.ep.persistence.entity.ss.quationtender.ScQtItem;
 import my.ep.persistence.entity.ss.quationtender.ScQtProposalRanking;
 import my.ep.persistence.entity.ss.quationtender.ScQtSpec;
-import my.ep.type.pm.AddressType;
 import my.ep.type.pm.RoleCode;
 import my.ep.type.ss.LoiLoaDocType;
 import my.ep.web.backingbean.BaseBackingBean;
@@ -41,7 +43,6 @@ import my.ep.web.util.FacesScopes;
 import my.ep.web.util.lookupservice.BusinessDelegate;
 
 import org.apache.log4j.Logger;
-import org.primefaces.event.TabChangeEvent;
 
 /**
  * @author Viswanath
@@ -57,7 +58,6 @@ public class LOADetailBackingBean extends BaseBackingBean<LOADetailManagedBean> 
 	public LOADetailBackingBean() {
 		log.info("inside LOADetailBackingBean constructor");
 		getManagedBean().setScQtSpec(new ScQtSpec());
-		getManagedBean().setScLoa(new ScLoa());
 	}
 
 	private void debugLogger(Object message) {
@@ -67,40 +67,21 @@ public class LOADetailBackingBean extends BaseBackingBean<LOADetailManagedBean> 
 		log.info(message);
 	}
 
-	@PostConstruct
-	public void init() {
-/*		if (getManagedBean().getQt() == null) {
-			getManagedBean().setQt(new ScQt());
+	public void addPerformanceBond() {
+		debugLogger("addPerformanceBond");
+		ScBondDtl scBondDtl = new ScBondDtl();
+		try {
 
-			IQTDetailSO QtDetailsSO = BusinessDelegate.getInstance()
-					.getServiceObject(MODULE_NAME, IQTDetailSO.class);
-			System.out.println("manga Details Object" + QtDetailsSO);
-			QuationTenderReqDTO tenderReqDTO = new QuationTenderReqDTO();
-
-			tenderReqDTO.setQtTndrNo("qt123");
-
-			QuationTenderResDTO tenderResDTO = new QuationTenderResDTO();
-
-			tenderResDTO = QtDetailsSO.retriveQtByQtNumber(tenderReqDTO);
-
-			System.out.println("====tenderResDTO.getQtDetail()."
-					+ tenderResDTO.getQtDetail().getQtNo());
-			getManagedBean().getQt().setFileNo(
-					tenderResDTO.getQtDetail().getFileNo());
-
+			List<ScBondDtl> bondDtlList = getManagedBean().getScBondDtlList();
+			if (null == bondDtlList) {
+				bondDtlList = new ArrayList<ScBondDtl>();
+			}
+			bondDtlList.add(scBondDtl);
+			this.getManagedBean().setScBondDtlList(bondDtlList);
+		} catch (Exception e) {
+			// e.printStackTrace();
+			throw new IllegalArgumentException();
 		}
-*/
-	}
-
-	public void onTabChangeAction(TabChangeEvent event) {
-		String tabTitle = event.getTab().getTitle();
-
-		if (QTConstants.SC_LOA_TAB.equalsIgnoreCase(tabTitle)) {
-		} else if (QTConstants.SC_PERFORMANCE_BOND_TAB
-				.equalsIgnoreCase(tabTitle)) {
-		} else if (QTConstants.SC_PAYMENT_TAB.equalsIgnoreCase(tabTitle)) {
-		}
-
 	}
 
 	public List<SelectItem> getApproverNames() {
@@ -130,86 +111,96 @@ public class LOADetailBackingBean extends BaseBackingBean<LOADetailManagedBean> 
 		return getManagedBean().getComitteeUsers();
 	}
 
-	public String createLOAAction(ScQtProposalRanking scQtProposalRanking, String docType) {
+	public String createLOAAction(ScQtProposalRanking scQtProposalRanking,
+			String docType) {
 		debugLogger("createLOAAction");
 		IQTAwardSO iqtAwardSO = null;
-		IAddressSO addressSO;
-		List<SmSupplierBranch> bList = new ArrayList<SmSupplierBranch>();
+//		IAddressSO addressSO;
+//		List<SmSupplierBranch> bList = new ArrayList<SmSupplierBranch>();
 		try {
-			
+
 			long id = scQtProposalRanking.getQtProposalRankingId();
-			
+
 			iqtAwardSO = BusinessDelegate.getInstance().getServiceObject(
 					MODULE_NAME, IQTAwardSO.class);
 			AwardSupplierReqDTO reqDTO = new AwardSupplierReqDTO();
 			reqDTO.setDocType(LoiLoaDocType.DOCTYPE_QUOTATION_TENDER.value());
 			reqDTO.setDocId(id);
-			
+
 			String language = new FacesScopes().getUserLocale().getLanguage();
 			reqDTO.setLanguageCode(language);
-			
+
 			docType = reqDTO.getDocType();
-			
+
 			AwardSupplierResDTO resDTO = iqtAwardSO.retrieveLOADtl(reqDTO);
+			
+			ScQt scQt = resDTO.getScQt();
+			if (scQt != null) {
+				System.out.println("Qt Id and Qt No : " + scQt.getQtId() + "|" + scQt.getQtNo());
+			}
+			
+			List<ScQtItem> itemList = resDTO.getItemResultBean().getResultList();
+			System.out.println("ItemList: " + itemList.size());
 			
 			ScLoa scLoa = resDTO.getScLoa();
 			
 			if (scLoa != null) {
+				System.out.println("Loi Id : " + scLoa.getLoaId());
 				getManagedBean().setScLoa(scLoa);
+				getManagedBean().setScQtProposalRanking(scQtProposalRanking);
+				getManagedBean().getScLoa().setSupplierName(
+						getManagedBean().getScQtProposalRanking()
+								.getScQtProposal().getScQtSupplier()
+								.getSmSupplier().getSupplierName());
+
+				getManagedBean().setSmMofAccount(new SmMofAccount());
+				getManagedBean().getSmMofAccount().setMofNo("MOF000001");
+				
+				getManagedBean().setQt(scQt);
+				
+				PmUser user = new FacesScopes().getUserSessionBean();
+				getManagedBean().getScLoa().setCreatedBy(user.getUserId());
+				getManagedBean().getScLoa().setChangedBy(user.getUserId());
+				getManagedBean().getScLoa().setCreatedDate(new Timestamp(System.currentTimeMillis()));
+				
+				getManagedBean().setScQtItemList(itemList);
 			} else {
 				
 				getManagedBean().setQt(new ScQt());
-				
-				IQTDetailSO QtDetailsSO = BusinessDelegate.getInstance()
-						.getServiceObject(MODULE_NAME, IQTDetailSO.class);
-				System.out.println("manga Details Object" + QtDetailsSO);
-				QuationTenderReqDTO tenderReqDTO = new QuationTenderReqDTO();
-
-				tenderReqDTO.setQtTndrNo("qt123");
-
-				QuationTenderResDTO tenderResDTO = new QuationTenderResDTO();
-
-				tenderResDTO = QtDetailsSO.retriveQtByQtNumber(tenderReqDTO);
-
-				System.out.println("====tenderResDTO.getQtDetail()."
-						+ tenderResDTO.getQtDetail().getQtNo());
-				getManagedBean().getQt().setFileNo(
-						tenderResDTO.getQtDetail().getFileNo());
+				getManagedBean().setScLoa(new ScLoa());
 				
 				getManagedBean().setScQtProposalRanking(scQtProposalRanking);
 
 				getManagedBean().getScLoa().setSupplierName(
-						getManagedBean().getScQtProposalRanking().getScQtProposal()
-								.getScQtSupplier().getSmSupplier()
-								.getSupplierName());
-
-				SmSupplierBranch branch = new SmSupplierBranch();
-				SmSupplierBranch branch1 = new SmSupplierBranch();
-				branch.setBranchName("HQ");
-				branch1.setBranchName("SET");
-				bList.add(branch);
-				bList.add(branch1);
-				getManagedBean().setBranchsList(bList);
-
-				branch.setSmAppl(getManagedBean().getScQtProposalRanking()
-						.getScQtProposal().getScQtSupplier().getSmSupplier()
-						.getSmAppl());
-
+						getManagedBean().getScQtProposalRanking()
+								.getScQtProposal().getScQtSupplier()
+								.getSmSupplier().getSupplierName());
+				
+				getManagedBean().getScLoa().setLoaType("Standard");
+				getManagedBean().getScLoa().setLoaDuration(14);
+				getManagedBean().getScLoa().setBondDuration(30);
+				
+				getManagedBean().setSmMofAccount(new SmMofAccount());
+				getManagedBean().getSmMofAccount().setMofNo("MOF000001");
+				
 				if (getManagedBean().getScQtSpec() != null) {
 					getManagedBean().setScQtSpec(new ScQtSpec());
 					IQTSpecSO specSO = BusinessDelegate.getInstance()
 							.getServiceObject(MODULE_NAME, IQTSpecSO.class);
 					SpecificationReqDTO specReqDTO = new SpecificationReqDTO();
 					SpecificationResDTO specResDTO = null;
-					specReqDTO.setQtId(146L);
+					specReqDTO.setQtId(1L);
 					specResDTO = specSO.retrieveSpecDetails(specReqDTO);
 					if (specResDTO.getScQtSpec() != null) {
 
-						getManagedBean().setScQtSpec(new ScQtSpec());
+						getManagedBean().setScQtSpec(specResDTO.getScQtSpec());
 						getManagedBean().getScQtSpec().setFulfilmentType(
 								specResDTO.getScQtSpec().getFulfilmentType());
 						getManagedBean().getScQtSpec().setContractDuration(
 								specResDTO.getScQtSpec().getContractDuration());
+						getManagedBean().setPmCurrency(new PmCurrency());
+						getManagedBean().getScQtSpec().getPmCurrency().setCurrencyCode(specResDTO.getScQtSpec().getPmCurrency().getCurrencyCode());
+						getManagedBean().getScQtSpec().getPmCurrency().setCurrencyName(specResDTO.getScQtSpec().getPmCurrency().getCurrencyName());
 					}
 				}
 
@@ -219,41 +210,60 @@ public class LOADetailBackingBean extends BaseBackingBean<LOADetailManagedBean> 
 				getManagedBean().getScLoa().setOfficerDesignation(
 						user.getDesignation());
 
-				addressSO = BusinessDelegate.getInstance().getServiceObject("pm",
-						IAddressSO.class);
-				AddressReqDTO addReqDTO = new AddressReqDTO();
-				addReqDTO.setUserId(user.getUserId());
-				addReqDTO.setAddressType(AddressType.BILLING_ADDRESS.value());
-
-				AddressResDTO addResDTO = addressSO.retrieveAddressTypeList(addReqDTO);
-
-				List<PmAddressType> addList = addResDTO.getAddressTypeList();
-				addList.get(0).getPmAddress().getAddress1();
-				addList.get(0).getPmAddress().getAddress2();
-				addList.get(0).getPmAddress().getAddress3();
-				addList.get(0).getPmAddress().getAddress4();
-
-				getManagedBean().setAddress(
-						addList.get(0).getPmAddress().getAddress1() + ","
-								+ addList.get(0).getPmAddress().getAddress2() + ","
-								+ addList.get(0).getPmAddress().getAddress3() + ","
-								+ addList.get(0).getPmAddress().getAddress4());
-
-				getManagedBean().getScLoa().setOfficerAddress(
-						addList.get(0).getPmAddress().getAddress1());
-				getManagedBean().getScLoa().setOfficerFaxNo(
-						addList.get(0).getPmAddress().getFaxNo());
-				getManagedBean().getScLoa().setOfficerPhoneNo(
-						addList.get(0).getPmAddress().getPhoneNo());
-				getManagedBean().getScLoa().setOfficerEmail(
-						addList.get(0).getPmAddress().getEmail());
 			}
-
 
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
 
 		return QTConstants.LOA_PAGE;
+	}
+
+	/**
+	 * Method to save the LOA details
+	 */
+	public void saveLOADetailsAction() {
+		debugLogger("saveLOADetailsAction");
+		IQTAwardSO iqtAwardSO = null;
+		IStatusSO statusSO = null;
+		try {
+
+			iqtAwardSO = BusinessDelegate.getInstance().getServiceObject(
+					MODULE_NAME, IQTAwardSO.class);
+			AwardSupplierReqDTO awardSupplierReqDTO = new AwardSupplierReqDTO();
+			awardSupplierReqDTO.setDocType(LoiLoaDocType.DOCTYPE_QUOTATION_TENDER.value());
+
+			statusSO = BusinessDelegate.getInstance().getServiceObject("pm",
+					IStatusSO.class);
+
+			ScLoa scLoa = this.getManagedBean().getScLoa();
+			scLoa.setIssueDate(new Date());
+
+			// Setting the pm status for LOI details
+			StatusReqDTO reqDTO = new StatusReqDTO();
+			reqDTO.setStatusId(1l);
+			StatusResDTO pmStatus = statusSO.retrieveStatusByStatusId(reqDTO);
+			PmStatus status = pmStatus.getPmStatus();
+			scLoa.setPmStatus(status);
+
+			awardSupplierReqDTO.setScLoa(scLoa);
+
+			AwardSupplierResDTO awardSupplierResDTO = iqtAwardSO
+					.saveLOADtl(awardSupplierReqDTO);
+
+			this.getManagedBean().setScLoa(awardSupplierResDTO.getScLoa());
+
+			FacesContext.getCurrentInstance().addMessage(
+					null,
+					new FacesMessage(FacesMessage.SEVERITY_ERROR,
+							"SuccessFully Saved", "LOA"));
+
+		} catch (Exception ex) {
+			ex.printStackTrace();
+			FacesContext.getCurrentInstance().addMessage(
+					null,
+					new FacesMessage(FacesMessage.SEVERITY_ERROR,
+							ex.toString(), ex.getMessage()));
+		}
 	}
 }

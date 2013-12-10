@@ -142,10 +142,10 @@ public class LOILOADetailsBackingBean extends
 
 				getManagedBean().setScQtSpec(new ScQtSpec());
 				// getManagedBean().getScQtSpec().setAwardType("L");
-				getManagedBean().getScQtSpec().setAwardType(
+				/*getManagedBean().getScQtSpec().setAwardType(
 						resDTO.getScQtSpec().getAwardType());
 				System.out.println(" Award Type : "
-						+ getManagedBean().getScQtSpec().getAwardType());
+						+ getManagedBean().getScQtSpec().getAwardType());*/
 			}
 		}
 
