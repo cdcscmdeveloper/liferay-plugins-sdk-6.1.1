@@ -10,6 +10,7 @@ body{margin:0 auto;}
 .icon{margin:0 0 5px 0;}
 
 nav#navigation ul li{padding:6px 0 6px 0; text-shadow: 1px 1px #333333;}
+nav#navigation > ul > li:last-child {float: right;}
 nav#navigation ul li:hover{background-color:#5ba218; text-decoration:none;}
 nav#navigation ul li.selected{background-color:#5ba218;}
 nav#navigation ul li a{font-family:'notosans-bold', Arial, Helvetica, sans-serif; font-size:14px; color:#FFF; padding:0 20px 0 20px; margin:10px 0 0 0;}

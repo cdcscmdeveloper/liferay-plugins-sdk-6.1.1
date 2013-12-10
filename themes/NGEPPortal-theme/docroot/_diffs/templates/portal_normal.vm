@@ -123,7 +123,7 @@ $theme.include($body_top_include)
             	<div class="middle-navi-right-wrapper">
                     <ul>
                     	<li class="divider"></li>
-                    	<li class="btn-help"><a href="#">Help</a></li>
+                    	<li class="btn-help"><a href="http://ngepdevwps01.ngep.com:8080/web/eperolehan/help">Help</a></li>
                     	<li class="divider"></li>
                         <li class="btn-language">
                             <a href="#" id="SelectedLanguage">English</a>
