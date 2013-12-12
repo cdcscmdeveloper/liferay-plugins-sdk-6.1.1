@@ -8,7 +8,7 @@
 	
 	<table style="width: 25%">
 		<tr>
-			<td><h:outputText value="Submission Type " /></td>
+			<td><h:outputText value="#{lbl['lbl.sm.submissionType']}" /></td>
 			<td><p:selectOneRadio id="suppDocs"
 					value="#{backingBean.managedBean.smAppl.supportingDocMode}">
 					<f:selectItem itemLabel="Offline" itemValue="F" />
@@ -24,14 +24,14 @@
 				src="/xhtml/sm/shared/mofRegistration/offlineSupportingDocsForm.xhtml" />
 			<table>
 				<tr>
-					<td><p:commandButton value="Previous"
+					<td><p:commandButton value="#{lbl['lbl.sm.prev']}"
 							actionListener="#{backingBean.setTabValue('7','6')}"
 							action="#{backingBean.updateSmAppl}" update=":form"
 							icon="ui-icon-prev" /></td>
-					<td><p:commandButton value="Print List">
+					<td><p:commandButton value="#{lbl['lbl.sm.printList']}">
 							<p:printer target="supDocPan" />
 						</p:commandButton></td>
-					<td><p:commandButton value="Submit MOF Application"
+					<td><p:commandButton value="#{lbl['lbl.sm.submitMofAppl']}"
 							actionListener="#{backingBean.setTabValue('7','8')}"
 							action="#{backingBean.updateSmAppl}" update=":form" /></td>
 				</tr>
@@ -43,14 +43,14 @@
 				src="/xhtml/sm/shared/mofRegistration/onlineSupportingDocsForm.xhtml" />
 			<table>
 				<tr>
-					<td><p:commandButton value="Previous"
+					<td><p:commandButton value="#{lbl['lbl.sm.prev']}"
 							actionListener="#{backingBean.setTabValue('7','6')}"
 							action="#{backingBean.updateSmAppl}" update=":form"
 							icon="ui-icon-prev" /></td>
-					<td><p:commandButton value="Print List">
+					<td><p:commandButton value="#{lbl['lbl.sm.printList']}">
 							<p:printer target="supDocPan" />
 						</p:commandButton></td>
-					<td><p:commandButton value="Submit MOF Application"
+					<td><p:commandButton value="#{lbl['lbl.sm.submitMofAppl']}"
 							actionListener="#{backingBean.setTabValue('7','8')}"
 							action="#{backingBean.updateSmAppl}" update=":form" /></td>
 				</tr>
