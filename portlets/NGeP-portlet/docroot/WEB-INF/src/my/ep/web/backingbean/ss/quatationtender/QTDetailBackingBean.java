@@ -1057,14 +1057,5 @@ public class QTDetailBackingBean extends
 					resDTO.getRemarkResultBean().getResultList());
 		}
 	}
-	/*private void populateCloneAll() {
-		List<SelectItem> cloneAllList = new ArrayList<SelectItem>();
-		cloneAllList.add(new SelectItem("", "Select One"));
-		CloneAll[] cloneAll = CloneAll.values();
-		for (CloneAll clone : cloneAll) {
-			cloneAllList.add(new SelectItem(clone.getValue(),clone.getDisplayName()));
-		}
-		this.getManagedBean().setCloneAllList(cloneAllList);
-
-	}*/
+	
 }

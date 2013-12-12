@@ -36,11 +36,11 @@
 
 				<h:outputLabel value="#{lbl['lbl.so.creatdtfrom']}" />
 				<p:calendar value="#{qTDetailBB.managedBean.cloneQtnTenderSearchBean.fromCreatedDate}"
-					id="clncrdateFrm" showOn="button" />
+					id="clncrdateFrm" pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}" showOn="button" />
 
 				<h:outputLabel value="#{lbl['lbl.so.creatdtto']}" />
 				<p:calendar value="#{qTDetailBB.managedBean.cloneQtnTenderSearchBean.toCreatedDate}"
-					id="clncrdateTo" showOn="button" />
+					id="clncrdateTo" pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}" showOn="button" />
 
 
 				<h:outputLabel value="#{lbl['lbl.so.status']}" />
@@ -107,7 +107,12 @@
 
 
 				<p:dataTable id="clonesection" var="clone"
-					value="#{qTDetailBB.managedBean.cloneAllList}" >
+					value="#{qTDetailBB.managedBean.cloneAllData}" 
+					selection="#{qTDetailBB.managedBean.selectedCloneAllList}"
+				rowKey="#{clone}" rowIndexVar="rowIndex"
+				rows="10">
+				<p:column selectionMode="multiple" style="width:2%" />
+				
 					 
 					<p:column headerText="Clone All" style="width:25%">
 						<h:outputText value="#{clone.displayName}"></h:outputText>

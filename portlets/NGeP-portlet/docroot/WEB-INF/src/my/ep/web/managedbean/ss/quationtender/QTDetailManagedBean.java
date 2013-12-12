@@ -965,9 +965,8 @@ public class QTDetailManagedBean extends BaseManagedBean {
 		this.countries = countries;
 	}
        
-	public void populateCloneAll(){
-		CloneAll [] cloneAllValues=CloneAll.values();
-		Arrays.asList(cloneAllValues);
+	public CloneAll [] getCloneAllData(){
+		return CloneAll.values();
 	}
 
 
