@@ -17,7 +17,7 @@
 		
 		<h:outputLabel value="#{lbl['lbl.so.sitevisitdate']}"/>
 			<p:calendar value="#{qTScheduleDetailBB.managedBean.qtSiteBriefing.briefingDate}"
-				id="sitebriefDate" pattern="MM/dd/yyyy HH:mm a" showOn="button" />	
+				id="sitebriefDate" pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}" showOn="button" />	
 				
 				<h:outputLabel value="#{lbl['lbl.so.location']}" />
                <p:inputText value="#{qTScheduleDetailBB.managedBean.qtSiteBriefing.location}" style="margin-top:5px;"/> 
