@@ -34,7 +34,7 @@
 
 				<h:outputLabel value="#{lbl['lbl.sc.committe.clone.comstatus']}" ></h:outputLabel>
 
-				<p:selectOneMenu style="width:160px"
+				<p:selectOneMenu style="width:192px"
 					value="#{committeBackingBean.managedBean.status}">
 					<f:selectItem itemLabel="Select One" itemValue="" />
 					<f:selectItem itemLabel="Active" itemValue="1" />
@@ -42,7 +42,7 @@
 				</p:selectOneMenu>
 
 			</p:panelGrid>
-			<p:commandButton value="Search" style="float:right;"
+			<p:commandButton value="Search" style="float:right;" icon="ui-icon-search"
 				action="#{committeBackingBean.cloneSearchCommitteAction}"
 				update="@(.cloneResults)" partialSubmit="true" process="@parent"/>
 			<br />
@@ -73,7 +73,7 @@
 					<h:outputLabel value="#{committe.scCommittee.recordStatus}"></h:outputLabel>
 				</p:column>
 				<p:column headerText="#{lbl['lbl.sc.committe.result.action']}">
-					<p:commandButton value="ClONE" style="float:right;"
+					<p:commandButton value="ClONE" style="float:right;" 
 						action="#{committeBackingBean.cloneCommitteMembersAcition(committe.scCommittee.committeeId)}" partialSubmit="true" process="@this" update="@(.cloneCommitteMembers)"
 						 />
 				</p:column>
@@ -111,7 +111,7 @@
 
 
 				</p:dataTable>
-				<p:commandButton value="Cancel" style="float:right;"
+				<p:commandButton value="Cancel" style="float:right;" icon="ui-icon-cancel"
 					onclick="screen2.hide();"></p:commandButton>
 				<p:commandButton value="Clone" style="float:right;"
 					action="#{committeBackingBean.addCloneCommitteeMembersAction}"
