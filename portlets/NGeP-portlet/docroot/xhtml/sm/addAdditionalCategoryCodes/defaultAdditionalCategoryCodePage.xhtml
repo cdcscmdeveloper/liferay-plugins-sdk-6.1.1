@@ -9,26 +9,20 @@
 
 
 	<ui:define name="contentSection">
-		<p:panel header="Add Additional Category Code(s)">
+		<p:panel header="#{lbl['lbl.sm.addnlCat.headerLbl']}">
 			<table style="width: 100%">
 				<tr>
 					<td><p:outputPanel>
 							<p>
-								To Add new category codes,the following data needs to be
-								accurate and updated : <br /> 1. Company Information<br /> 2.
-								Bank - Associated Company Info <br /> 3.Capital - Equity Status<br />
-								4. Personnel Information<br /> 5.Register Category Codes<br />
-								5.1. Factory / Equipment Details ( If necessary )<br /> 6.
-								Provide Necessary Supporting Documents.<br /> Please fill in
-								the necessary information and submit the application for further
-								processing.
+								<h:outputText value="#{lbl['lbl.sm.addnlCat.descData']}"
+									escape="false" />
 							</p>
 						</p:outputPanel></td>
 				</tr>
 			</table>
 		</p:panel>
 		<div align="right">
-			<p:commandButton value="Proceed"
+			<p:commandButton value="#{lbl['lbl.sm.proceed']}"
 				action="#{backingBean.proceedToApplication('A')}" />
 			<!-- <p:commandButton value="Cancel"
 				action="/xhtml/sm/homeScreen/defaultVirtualCertPage.xhtml" /> -->

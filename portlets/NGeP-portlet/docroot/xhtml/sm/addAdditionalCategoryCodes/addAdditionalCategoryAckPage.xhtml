@@ -12,21 +12,24 @@
 
 
 	<ui:define name="contentSection">
-		<p:panel header="Add Additional Category Code(s)">
+		<p:panel header="#{lbl['lbl.sm.addnlCat.headerLbl']}">
 			<div align="left" style="margin: 10px;">
 				<p:outputPanel>
 					<p>
-						The Add Additional Category Code(s) Application No :
+						<h:outputText value="#{lbl['lbl.sm.addnlCat.ackDesc1']}"
+						escape="false" />
+
 						<h:outputText value="#{backingBean.managedBean.smAppl.applNo}"
 							style="color: blue; font-weight: bold;" />
-						is submitted successfully. <br /> Please wait for further
-						notification.
+						<h:outputText value="#{lbl['lbl.sm.addnlCat.ackDesc2']}"
+							escape="false" />
+
 					</p>
 
 				</p:outputPanel>
 			</div>
 			<div align="center">
-				<p:commandButton value="OK"
+				<p:commandButton value="#{lbl['lbl.sm.ok']}"
 					action="/xhtml/sm/homeScreen/defaultVirtualCertPage.xhtml" />
 			</div>
 		</p:panel>
