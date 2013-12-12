@@ -11,11 +11,11 @@
 	<ui:define name="resourceSection">
 	</ui:define>
 	<ui:define name="contentSection">
-		<p:tabView id="tabView">
+		<p:tabView id="tabView" style="width:965px">
 			<p:tab id="tab1" title="Contract List">
 				<p:panel header="CONTRACT LIST" toggleable="true">
 					<p:dataTable id="contractListTable" var="data" lazy="true"
-						value="#{contractRequestBackingBean.activeContractPagingDataModel}">
+						value="#{contractRequestBackingBean.activeContractPagingDataModel}" >
 						<ac:paginator for="contractListTable" />
 						<p:column headerText="Contract No.">
 							<h:outputText value="#{data.contract.latestContractVer.ctContractValue.contractPhysicalNo}" />

@@ -56,15 +56,34 @@
 			</p:column>
 
 			<p:column headerText="GOSODO">
+				<p:selectOneMenu id="goId" value="#{contractRequestBackingBean.managedBean.goId}">
+				<f:selectItems value="#{contractRequestBackingBean.goList}" />
+				<p:ajax event="change" update="soId,doId"></p:ajax>
+				</p:selectOneMenu><br />
+				<p:selectOneMenu id="soId" value="#{contractRequestBackingBean.managedBean.soId}">
+				<f:selectItems value="#{contractRequestBackingBean.soList}" />
+				<p:ajax event="change" update="doId"></p:ajax>
+				</p:selectOneMenu><br />
+				<p:selectOneMenu id="doId" value="#{contractRequestBackingBean.managedBean.doId}">
+				<f:selectItems value="#{contractRequestBackingBean.doList}" />
+				</p:selectOneMenu>
 			</p:column>
 
 			<p:column headerText="Activity Code">
+				<p:selectOneMenu id="actCode" value="#{contractRequestBackingBean.managedBean.goId}">
+				<f:selectItems value="#{contractRequestBackingBean.goList}" />
+				</p:selectOneMenu>
 			</p:column>
 			<p:column headerText="Unit Price (MYR)">
+				<p:inputText disabled="true"></p:inputText>
 			</p:column>
 			<p:column headerText="Ord. Qty.">
+				<p:inputText value="#{item.orderedQty}">
+				<p:ajax update="subTotalTxt" listener="#{contractRequestBackingBean.calculateSubTotal(item.orderedQty)}"></p:ajax>
+				</p:inputText>
 			</p:column>
 			<p:column headerText="Sub Total">
+				<p:inputText id="subTotalTxt" value="#{contractRequestBackingBean.managedBean.subTotal}" disabled="true"></p:inputText>
 			</p:column>
 			<p:column headerText="Action">
 				<p:commandLink id="deleteLink" styleClass="ui-icon ui-icon-trash" update="itemDataTable" process="@this"
