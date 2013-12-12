@@ -6,20 +6,6 @@
 	xmlns:c="http://java.sun.com/jsp/jstl/core"
 	xmlns:ac="http://ac.my/jsf/composite/cc"
 	xmlns:p="http://primefaces.org/ui">
-
-		<script>
-			$(document).ready(function() {
-				updateColspan = function() {
-					$(".colspan2").attr('colspan', 2);
-					$(".colspan3").attr('colspan', 3);
-					$(".colspan4").attr('colspan', 4);
-					$(".colspan5").attr('colspan', 5);
-					$(".colspan6").attr('colspan', 6);
-					$(".colspan7").attr('colspan', 7);
-				};
-				updateColspan();
-			});
-		</script>
 		
 		<p:panel id="spg" header="Specification Content" toggleable="true">
 			<h:panelGroup rendered="false">
@@ -40,7 +26,7 @@
 			</h:panelGroup>
 			<p:dataTable id="questionTbl" var="question" rowIndexVar="row"
 				value="#{templateSpecBackingBean.managedBean.specMaster.tplSpecQuestions}"
-				scrollable="true" scrollWidth="940">
+				scrollable="true" scrollWidth="965">
 				
 				<ui:param name="isQuestionTypeHeader" value="#{question.questionType == TplSpecConst.questionTypeHeader}" />
 				<ui:param name="isQuestionTypeItem" value="#{question.questionType == TplSpecConst.questionTypeItem}" />
@@ -56,6 +42,7 @@
 				<ui:param name="isSpecTypeFinancial" value="#{templateSpecBackingBean.managedBean.specMaster.specTypeCode.code == TplSpecConst.specTypeFinancial}" />
 				<ui:param name="isEstCostReq" value="#{templateSpecBackingBean.managedBean.specMaster.estCostReq}" />
 				<ui:param name="isScoring" value="#{question.scoring}" />
+				<ui:param name="noOfYear" value="#{templateSpecBackingBean.managedBean.specMaster.noOfYear}" />
 				<ui:param name="columnStyle" value="#{isQuestionTypeHeader ? 'background-color:#dddddd;' : ''}" />
 				
 				<c:if test="#{isContentTypeQuestion and isSpecTypeTechnical}">
@@ -70,11 +57,9 @@
 					<ui:decorate template="specColumnReview.xhtml" />
 				</c:if>
 				<c:if test="#{isContentTypeAnswer}">
-					<ui:decorate template="specColumnQuestionView.xhtml" />
 					<ui:decorate template="specColumnAnswer.xhtml" />
 				</c:if>
 				<c:if test="#{isContentTypeScore}">
-					<ui:decorate template="specColumnQuestionView.xhtml" />
 					<ui:decorate template="specColumnAnswerView.xhtml" />
 					<ui:decorate template="specColumnScore.xhtml" />
 				</c:if>
@@ -90,8 +75,8 @@
 			<br />
 			<h:outputText value="All child nodes belong to this node will be deleted as well" />
 			<br />
-			<p:commandButton value="Ok" onclick="pp2.hide();" immediate="true" action="#{templateSpecBackingBean.deleteQuestion}"
-				process="@this,spg" update="spg" oncomplete="updateColspan();" />
+			<p:commandButton value="Ok" oncomplete="pp2.hide();" immediate1="true" action="#{templateSpecBackingBean.deleteQuestion}"
+				partialSubmit="true" pprocess="@this,spg" update="spg" />
 			<p:commandButton value="Cancel" onclick="pp2.hide();return false" />
 		</p:dialog>
 

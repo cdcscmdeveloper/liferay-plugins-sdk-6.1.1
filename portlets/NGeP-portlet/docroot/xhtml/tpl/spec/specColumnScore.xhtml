@@ -20,7 +20,7 @@
 			rendered="#{!isQuestionTypeHeader and !empty question.tplSpecAnswer and !isScoring}" />
 	</p:column>
 	<p:column style="#{columnStyle}width:130px;">
-		<h:outputLabel value="Remark" style="float: left" rendered="#{isQuestionTypeHeader}" />
-		<p:inputText value="#{question.tplSpecAnswer.userRemark}" rendered="#{!isQuestionTypeHeader and !empty question.tplSpecAnswer}" />
+		<h:outputLabel value="Comment" style="float: left" rendered="#{isQuestionTypeHeader}" />
+		<p:inputText size="19" value="#{question.tplSpecAnswer.userRemark}" rendered="#{!isQuestionTypeHeader and !empty question.tplSpecAnswer}" />
 	</p:column>
 </ui:composition>

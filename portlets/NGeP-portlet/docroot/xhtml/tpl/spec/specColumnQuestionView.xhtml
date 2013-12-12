@@ -7,32 +7,38 @@
 	
 	<p:column style="#{columnStyle}width:130px;">
 		<h:outputLabel value="Item" style="float: left" rendered="#{isQuestionTypeHeader}" />	
-		<p:inputText value="#{question.clItem}" rendered="#{isQuestionTypeItem}" disabled="true" />
+		<p:inputText size="19" value="#{question.clItem}" rendered="#{isQuestionTypeItem}" disabled="true" />
 	</p:column>
 	<p:column style="#{columnStyle}width:130px;">
 		<h:outputLabel value="Specification" style="float: left" rendered="#{isQuestionTypeHeader}" />
-		<p:inputText value="#{question.clSpecDetail}" rendered="#{!isQuestionTypeHeader}" disabled="true" />
+		<p:inputText size="19" value="#{question.clSpecDetail}" rendered="#{!isQuestionTypeHeader}" disabled="true" />
 	</p:column>
-	<p:column style="#{columnStyle}width:110px;">
-		<h:outputLabel value="Uom" style="float: left" rendered="#{isQuestionTypeHeader}" />
-		<p:inputText style="min-width:0px !important" size="10" value="#{question.clUom.uomName}" rendered="#{isQuestionTypeItem}" disabled="true" />
+	<p:column style="#{columnStyle}width:70px;">
+		<h:outputLabel value="UOM" style="float: left" rendered="#{isQuestionTypeHeader}" />
+		<p:inputText style="min-width:0px !important" size="9" value="#{question.clUom.uomName}" rendered="#{isQuestionTypeItem}" disabled="true" />
 	</p:column>
-	<p:column style="#{columnStyle}width:50px;" rendered="#{isItemTypeService}">
-		<h:outputLabel value="Frequency" style="float: left" rendered="#{isQuestionTypeHeader}" />
-		<p:inputText style="min-width:0px !important" size="6" dir="rtl" value="#{question.clUomFrequency}" rendered="#{isQuestionTypeItem}" disabled="true" />
-	</p:column>
-	<p:column style="#{columnStyle}width:50px;" rendered="#{isItemTypeService}">
-		<h:outputLabel value="UOM/Day" style="float: left" rendered="#{isQuestionTypeHeader}" />
-		<p:inputText style="min-width:0px !important" size="6" dir="rtl" value="#{question.clUomPerDay}" rendered="#{isQuestionTypeItem}" disabled="true" />
-	</p:column>
-	<p:column style="#{columnStyle}width:55px;" rendered="#{isItemTypeService}">
-		<h:outputLabel value="UOM/Month" style="float: left" rendered="#{isQuestionTypeHeader}" />
-		<p:inputText style="min-width:0px !important" size="6" dir="rtl" value="#{question.clUomPerMonth}" rendered="#{isQuestionTypeItem}" disabled="true" />
-	</p:column>
-	<p:column style="#{columnStyle}width:50px;" rendered="#{isItemTypeService}">
-		<h:outputLabel value="Month/Year" style="float: left" rendered="#{isQuestionTypeHeader}" />
-		<p:inputText style="min-width:0px !important" size="6" dir="rtl" value="#{question.clMonthPerYear}" rendered="#{isQuestionTypeItem}" disabled="true" />
-	</p:column>
+	
+	<ui:insert name="answerSection"/>	
+	
+	<c:if test="#{isItemTypeService}">
+		<p:column style="#{columnStyle}width:50px;">
+			<h:outputLabel value="Frequency per UOM" style="float: left; white-space: normal !important;" rendered="#{isQuestionTypeHeader}" />
+			<p:inputText style="min-width:0px !important" size="6" dir="rtl" value="#{question.clUomFrequency}" rendered="#{isQuestionTypeItem}" disabled="true" />
+		</p:column>
+		<p:column style="#{columnStyle}width:55px;">
+			<h:outputLabel value="No. UOM per day" style="float: left; white-space: normal !important;" rendered="#{isQuestionTypeHeader}" />
+			<p:inputText style="min-width:0px !important" size="6" dir="rtl" value="#{question.clUomPerDay}" rendered="#{isQuestionTypeItem}" disabled="true" />
+		</p:column>
+		<p:column style="#{columnStyle}width:60px;">
+			<h:outputLabel value="No. UOM per month" style="float: left; white-space: normal !important;" rendered="#{isQuestionTypeHeader}" />
+			<p:inputText style="min-width:0px !important" size="6" dir="rtl" value="#{question.clUomPerMonth}" rendered="#{isQuestionTypeItem}" disabled="true" />
+		</p:column>
+		<p:column style="#{columnStyle}width:70px;">
+			<h:outputLabel value="No. Months per year" style="float: left; white-space: normal !important;" rendered="#{isQuestionTypeHeader}" />
+			<p:inputText style="min-width:0px !important" size="6" dir="rtl" value="#{question.clMonthPerYear}" rendered="#{isQuestionTypeItem}" disabled="true" />
+		</p:column>
+	</c:if>
+	
 	<p:column style="#{columnStyle}width:50px;">
 		<h:outputLabel value="Quantity" style="float: left" rendered="#{isQuestionTypeHeader}" />
 		<p:inputText style="min-width:0px !important" size="6" dir="rtl" value="#{question.clQuantity}" rendered="#{isQuestionTypeItem}" disabled="true" />

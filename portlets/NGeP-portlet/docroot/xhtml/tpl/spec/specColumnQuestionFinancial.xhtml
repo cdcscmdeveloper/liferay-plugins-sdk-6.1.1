@@ -6,16 +6,16 @@
 	xmlns:p="http://primefaces.org/ui">
 	
 	<p:column style="#{columnStyle}width:155px;">
-		<h:outputLabel value="Total Price" style="float: left" rendered="#{isQuestionTypeHeader}" />
+		<h:outputLabel value="Total Amount" style="float: left" rendered="#{isQuestionTypeHeader}" />
 		<p:inputText size="18" 
-			rendered="#{!isQuestionTypeHeader}" disabled="true" />&#160;		
-		<p:commandLink id="scoringBtn" rendered="#{!isQuestionTypeHeader}" disabled="#{(isAnswerTypeText)}" 
-			action="#{templateSpecBackingBean.setIndex(row)}" oncomplete="scoringSetting.show();">
-			<p:graphicImage library="ep/images/design" name="edit.png"
-				value="/resources/ep/images/design/edit.png" />
-		</p:commandLink>
+			rendered="#{!isQuestionTypeHeader}" disabled="true" />	
+		<p:commandButton icon="ui-icon-pencil" style="background-color:transparent !important; border:0px none;" id="scoringBtn" rendered="#{!isQuestionTypeHeader}" disabled="#{(isAnswerTypeText)}" 
+			oncomplete="scoringSetting.show();"
+			partialSubmit="true" process="@this" update="@this">
+			<f:setPropertyActionListener target="#{templateSpecBackingBean.managedBean.selectedIndex}" value="#{row}" />
+		</p:commandButton>
 	</p:column>
-	<p:column style="#{columnStyle}width:70px;" rendered="#{isEstCostReq and isSpecTypeFinancial}">
+	<p:column style="#{columnStyle}width:80px;" rendered="#{isEstCostReq and isSpecTypeFinancial}">
 		<h:outputLabel value="Estimate Cost" style="float: left" rendered="#{isQuestionTypeHeader}" />
 		<p:inputText style="min-width:0px !important" size="10" dir="rtl" value="#{question.clEstimatedCost}" rendered="#{!isQuestionTypeHeader}" required="true" />
 	</p:column>
