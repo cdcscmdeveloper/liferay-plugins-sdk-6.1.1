@@ -134,7 +134,7 @@ public class WishListBackingBean extends BaseBackingBean<WishListManagedBean>{
 		
 		reqDTO.setCmWishListDet(this.getManagedBean().getSelectedWishList().getCmWishlistDtls().get(index));
 		
-		WishListResDTO resDTO = wishListSO.deleteWishListDetail(reqDTO);
+		//WishListResDTO resDTO = wishListSO.deleteWishListDetail(reqDTO);
 		
 	}
 	
