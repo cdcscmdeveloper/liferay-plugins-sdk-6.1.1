@@ -312,17 +312,14 @@ public class TemplateSpecBackingBean extends BaseBackingBean<TemplateSpecManaged
 				TplSpecQuestion question = questionList.get(i);
 				question.setQuestionOrder(i);
 			}
+			
+			newQuestion.setClAnswerRequired(true);
 		} catch (Exception e) {
 			e.printStackTrace();
 			FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR,e.toString(), e.getMessage()));
 		} finally {
 			codeCategorySO = null;
 		}
-	}		
-	
-	public void setIndex(Integer index) {
-		log.info("setIndex() "+index);
-		getManagedBean().setSelectedIndex(index);
 	}
 	
 	public SelectItem[] getUomList() {
@@ -373,16 +370,16 @@ public class TemplateSpecBackingBean extends BaseBackingBean<TemplateSpecManaged
 	    return items;
 	}
 	
-	public void answerTypeChange(int row) {
+	public void answerTypeChange(TplSpecQuestion specQuestion) {
 		ICodeCategorySO codeCategorySO = null;
 		try {
-			Long codeId = getManagedBean().getSpecMaster().getTplSpecQuestions().get(row).getAnswerTypeCode().getCodeId();
+			Long codeId = specQuestion.getAnswerTypeCode().getCodeId();
 			
 			codeCategorySO = BusinessDelegate.getInstance().getServiceObject("pm", ICodeCategorySO.class);
 			CodeCategoryReqDTO reqDTO = new CodeCategoryReqDTO();
 			reqDTO.setCodeId(codeId);
 			CodeCategoryResDTO resDTO = codeCategorySO.retrieveCodeById(reqDTO);
-			getManagedBean().getSpecMaster().getTplSpecQuestions().get(row).getAnswerTypeCode().setCode(resDTO.getPmCode().getCode());
+			specQuestion.setAnswerTypeCode(resDTO.getPmCode());
 		} catch (Exception e) {
 			e.printStackTrace();
 			FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR,e.toString(), e.getMessage()));
@@ -394,6 +391,7 @@ public class TemplateSpecBackingBean extends BaseBackingBean<TemplateSpecManaged
 	
 	public void calcTotalAmount(TplSpecAnswer specAnswer, boolean isItemTypeService) {
 		TplSpecQuestion specQuestion = specAnswer.getTplSpecQuestion();
+		TplSpecMaster specMaster = specQuestion.getTplSpecMaster();
 		BigDecimal quantity = specQuestion.getClQuantity();
 		BigDecimal ratePerUom = specAnswer.getRatePerUom();
 		
@@ -408,7 +406,7 @@ public class TemplateSpecBackingBean extends BaseBackingBean<TemplateSpecManaged
 			Integer uomPerDay = specQuestion.getClUomPerDay();
 			Integer uomPerMonth = specQuestion.getClUomPerMonth();
 			Integer monthPerYear = specQuestion.getClMonthPerYear();
-			BigDecimal amountPerYear = specAnswer.getAmountPerYear();
+			int noOfYear = specMaster.getNoOfYear();
 			
 			if (uomFrequency != null) {
 				totalPrice = totalPrice.multiply(BigDecimal.valueOf(uomFrequency));
@@ -426,10 +424,10 @@ public class TemplateSpecBackingBean extends BaseBackingBean<TemplateSpecManaged
 				totalPrice = totalPrice.multiply(BigDecimal.valueOf(monthPerYear));
 			}
 			
-			if (amountPerYear != null) {
-				totalPrice = totalPrice.multiply(amountPerYear);
-			} else {
-				totalPrice = null;
+			specAnswer.setAmountPerYear(totalPrice);
+			
+			if (noOfYear > 0) {
+				totalPrice = totalPrice.multiply(BigDecimal.valueOf(noOfYear));
 			}
 		}
 		specAnswer.setAnswerNumeric(totalPrice);
