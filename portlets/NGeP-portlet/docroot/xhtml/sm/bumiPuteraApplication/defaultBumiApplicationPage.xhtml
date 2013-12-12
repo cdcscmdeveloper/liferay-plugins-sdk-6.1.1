@@ -12,24 +12,20 @@
 
 
 	<ui:define name="contentSection">
-		<p:panel header="Apply Bumiputera Status">
+		<p:panel header="#{lbl['lbl.sm.bumi.headerLbl']}">
 			<table style="width: 100%">
 				<tr>
 					<td><p:outputPanel>
 							<p>
-								To Apply Bumiputera status ,the following data needs to be
-								accurate and updated :<br /> 1. Company Information<br /> 2.
-								Capital / Equity Status<br /> 3. Personnel Information<br />
-								4. Bank / Financial Information<br /> 5. Provide Necessary
-								Supporting Documents.<br /> Please fill in the necessary
-								information and Submit the application for further processing.
+								<h:outputText value="#{lbl['lbl.sm.bumi.descData']}"
+									escape="false" />
 							</p>
 						</p:outputPanel></td>
 				</tr>
 			</table>
 		</p:panel>
 		<div align="right">
-			<p:commandButton value="Proceed"
+			<p:commandButton value="#{lbl['lbl.sm.proceed']}"
 				action="#{backingBean.proceedToApplication('B')}" />
 			<!-- <p:commandButton value="Cancel"
 				action="/xhtml/sm/homeScreen/defaultVirtualCertPage.xhtml" /> -->
