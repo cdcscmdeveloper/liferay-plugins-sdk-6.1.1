@@ -84,9 +84,9 @@
 			
 			<p:column headerText="GO Code">
 				<h:outputText value="#{gosodo.pmGo.goCode}"
-					rendered="#{rowIndex lt qTDetailBB.managedBean.qt.scQtGosodoBudgets.size()-1}" />
+					rendered="#{rowIndex lt qTDetailBB.managedBean.qt.scQtGosodoBudgets.size()-1 or !gosodo.brandNew}" />
 				<p:selectOneMenu value="#{gosodo.pmGo.goId}"
-					rendered="#{rowIndex eq qTDetailBB.managedBean.qt.scQtGosodoBudgets.size()-1}">
+					rendered="#{rowIndex eq qTDetailBB.managedBean.qt.scQtGosodoBudgets.size()-1 and gosodo.brandNew}">
 					<f:selectItem itemLabel="Select One" itemValue="#{null}" />
 					<f:selectItems value="#{qTDetailBB.goList}" var="go"
 						itemLabel="#{go.goCode}" itemValue="#{go.goId}" />
@@ -97,9 +97,9 @@
 			</p:column>
 			<p:column headerText="SO Code">
 				<h:outputText value="#{gosodo.pmSo.soCode}"
-					rendered="#{rowIndex lt qTDetailBB.managedBean.qt.scQtGosodoBudgets.size()-1}" />
+					rendered="#{rowIndex lt qTDetailBB.managedBean.qt.scQtGosodoBudgets.size()-1 or !gosodo.brandNew}" />
 				<p:selectOneMenu id="solist" value="#{gosodo.pmSo.soId}"
-					rendered="#{rowIndex eq qTDetailBB.managedBean.qt.scQtGosodoBudgets.size()-1}">
+					rendered="#{rowIndex eq qTDetailBB.managedBean.qt.scQtGosodoBudgets.size()-1 and gosodo.brandNew}">
 					<f:selectItem itemLabel="Select One" itemValue="#{null}" />
 					<f:selectItems value="#{qTDetailBB.managedBean.soList}" var="so"
 						itemLabel="#{so.soCode}" itemValue="#{so.soId}" />
@@ -110,9 +110,9 @@
 			</p:column>
 			<p:column headerText="DO Code">
 				<h:outputText value="#{gosodo.pmDo.doCode}"
-					rendered="#{rowIndex lt qTDetailBB.managedBean.qt.scQtGosodoBudgets.size()-1}" />
+					rendered="#{rowIndex lt qTDetailBB.managedBean.qt.scQtGosodoBudgets.size()-1 or !gosodo.brandNew}" />
 				<p:selectOneMenu id="dolist" value="#{gosodo.pmDo.doId}"
-					rendered="#{rowIndex eq qTDetailBB.managedBean.qt.scQtGosodoBudgets.size()-1}">
+					rendered="#{rowIndex eq qTDetailBB.managedBean.qt.scQtGosodoBudgets.size()-1 and gosodo.brandNew}">
 					<f:selectItem itemLabel="Select One" itemValue="#{null}" />
 					<f:selectItems value="#{qTDetailBB.managedBean.doList}" var="do"
 						itemLabel="#{do.doCode}" itemValue="#{do.doId}" />
