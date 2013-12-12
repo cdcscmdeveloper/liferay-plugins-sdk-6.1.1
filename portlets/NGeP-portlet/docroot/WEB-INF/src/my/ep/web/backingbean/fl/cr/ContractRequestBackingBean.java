@@ -3,6 +3,7 @@
  */
 package my.ep.web.backingbean.fl.cr;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -22,6 +23,7 @@ import my.ep.biz.service.fl.request.IFulfilmentRequestSO;
 import my.ep.biz.service.pm.authorization.orgprofile.IOrgProfileSO;
 import my.ep.biz.service.pm.authorization.user.IUserSO;
 import my.ep.biz.service.pm.common.maksud.IMaksudSO;
+import my.ep.biz.service.pm.common.object.IObjectSO;
 import my.ep.bpm.dto.BpmRequestDTO;
 import my.ep.bpm.dto.BpmResponseDTO;
 import my.ep.bpm.service.IBpmSO;
@@ -37,6 +39,8 @@ import my.ep.dto.pm.authorization.user.UserReqDTO;
 import my.ep.dto.pm.authorization.user.UserResDTO;
 import my.ep.dto.pm.common.maksud.MaksudReqDTO;
 import my.ep.dto.pm.common.maksud.MaksudResDTO;
+import my.ep.dto.pm.common.object.ObjectReqDTO;
+import my.ep.dto.pm.common.object.ObjectResDTO;
 import my.ep.exception.EpException;
 import my.ep.jaxb.fl.codata.FLContractOrderDataType;
 import my.ep.persistence.entity.ct.CtContract;
@@ -50,7 +54,10 @@ import my.ep.persistence.entity.pm.authorization.PmOrgProfile;
 import my.ep.persistence.entity.pm.authorization.PmUserGroupUser;
 import my.ep.persistence.entity.pm.common.PmAddressType;
 import my.ep.persistence.entity.pm.common.PmCode;
+import my.ep.persistence.entity.pm.common.PmDo;
+import my.ep.persistence.entity.pm.common.PmGo;
 import my.ep.persistence.entity.pm.common.PmMaksud;
+import my.ep.persistence.entity.pm.common.PmSo;
 import my.ep.persistence.entity.pm.common.PmStatus;
 import my.ep.persistence.entity.sm.SmSupplier;
 import my.ep.type.aut.SearchOperator;
@@ -111,7 +118,6 @@ public class ContractRequestBackingBean extends BaseBackingBean<ContractRequestM
 		}
 
 		if(getManagedBean().getApproverModel()==null) {
-			System.out.println("--renew--");
 			List<String> source = getAvailableApproverList();  
 			List<String> target = new ArrayList<String>();  
 			getManagedBean().setApproverModel(new DualListModel<String>(source, target));
@@ -127,8 +133,7 @@ public class ContractRequestBackingBean extends BaseBackingBean<ContractRequestM
 			String token = getFacesScopes().getBPMAuthenticationCtxToken();
 			FulfilmentReqDTO reqDTO = new FulfilmentReqDTO();
 			FlFulfilmentRequest flRequest = getManagedBean().getFlRequest();
-			System.out.println("title: "+flRequest.getTitle());
-
+			
 			reqDTO.setFlFulfilmentRequest(flRequest);
 			reqDTO.setContractRequest(Boolean.TRUE);
 			reqDTO.setMto(getManagedBean().isMto());
@@ -140,7 +145,7 @@ public class ContractRequestBackingBean extends BaseBackingBean<ContractRequestM
 			reqDTO.setFlRemark(flBB.getManagedBean().getRemarkList().get(0));
 			reqDTO.setToken(token);
 			reqDTO.setApproverMap(getManagedBean().getApproverMap());
-			
+
 			iFulfilmentRequestSO = (IFulfilmentRequestSO) BusinessDelegate.getInstance().getServiceObject("fl", IFulfilmentRequestSO.class);
 			FulfilmentResDTO resDTO = iFulfilmentRequestSO.saveFulfillmentRequest(reqDTO);
 
@@ -151,10 +156,8 @@ public class ContractRequestBackingBean extends BaseBackingBean<ContractRequestM
 					message = message + ". Doc No. : "+resDTO.getFlFulfilmentRequest().getDocNo();
 				}
 				FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "Record saved successfully.",message));
-//				if(!action.equalsIgnoreCase(BpmOutcomeConst.BPM_SAVE)) { // save action will remain in the same page
-					renewSesionObject();
-					return "/xhtml/shared/acknowledge.xhtml";
-//				}
+				renewSesionObject();
+				return "/xhtml/shared/acknowledge.xhtml";
 			} else {
 				throw new EpException("Failed.");
 			}
@@ -244,9 +247,7 @@ public class ContractRequestBackingBean extends BaseBackingBean<ContractRequestM
 		IContractSO contractSO = BusinessDelegate.getInstance().getServiceObject("ct",IContractSO.class);
 		ContractReqDTO ctDTO = new ContractReqDTO();
 		ctDTO.setContractId(contractId);
-		System.out.println("contractId: "+contractId);
 		getManagedBean().getFlRequest().setCtContract(contractSO.retrieveContract(ctDTO).getContract());
-		System.out.println("getManagedBean().getFlRequest().setCtContract: "+getManagedBean().getFlRequest().getCtContract());
 		IOrgProfileSO orgProfileSO = BusinessDelegate.getInstance().getServiceObject("pm",IOrgProfileSO.class);
 		OrgProfileReqDTO orgProfileReqDTO = new OrgProfileReqDTO();
 		orgProfileReqDTO.setOrgProfileId(4L);// set current login user org profile ID
@@ -262,14 +263,15 @@ public class ContractRequestBackingBean extends BaseBackingBean<ContractRequestM
 	}
 
 	public List<SelectItem> getMaksudCodeList(){
+
 		List<SelectItem> maksudList = new ArrayList<SelectItem>();
 		MaksudReqDTO maksudDTO = new MaksudReqDTO();
 		maksudDTO.setOrgProfileId(1L);
 
 		IMaksudSO maksudSO = (IMaksudSO)BusinessDelegate.getInstance().getServiceObject("pm",IMaksudSO.class);	
 		MaksudResDTO resDTO = maksudSO.retrieveMaksudCodeList(maksudDTO);
+		maksudList.add(new SelectItem("", "- Select One -"));
 		if(resDTO.getMaksudCodeList() != null && !resDTO.getMaksudCodeList().isEmpty()){
-			maksudList.add(new SelectItem("", "- Select One -"));
 			List<PmMaksud> maksudListDB = resDTO.getMaksudCodeList();
 			for(PmMaksud obj : maksudListDB){
 				maksudList.add(new SelectItem(obj.getMaksudId(),obj.getMaksudCode()));
@@ -302,7 +304,7 @@ public class ContractRequestBackingBean extends BaseBackingBean<ContractRequestM
 				getManagedBean().getFlRequest().getFlFulfilmentItems().add(flItem);
 			}else{
 				flItem = getManagedBean().getFlItemMap().get(contractedItems.getContractItemId());
-				
+
 			}
 			FlFulfilmentItemAddr flItemAddr = new FlFulfilmentItemAddr();
 			flItemAddr.setFlFulfilmentItem(flItem);
@@ -433,7 +435,6 @@ public class ContractRequestBackingBean extends BaseBackingBean<ContractRequestM
 				contractReqDTO.setContractId(resDTO.getFlFulfilmentRequest().getCtContract().getContractId());
 
 				flRequest.setCtContract(contractSO.retrieveNormalContractByMtoContract(contractReqDTO).getContract());
-				System.out.println("flRequest ct id: "+flRequest.getCtContract().getContractId());
 				getManagedBean().setFlRequest(flRequest);
 				getManagedBean().getFlRequest().setPmDocStatus(new PmStatus());
 				getManagedBean().getFlRequest().setIssuedOrgProfile(new PmOrgProfile());
@@ -453,6 +454,62 @@ public class ContractRequestBackingBean extends BaseBackingBean<ContractRequestM
 			}
 
 		}
+	}
+	
+	public List<SelectItem> getGoList(){
+		List<SelectItem> goList = new ArrayList<SelectItem>();
+		IObjectSO objectSO = (IObjectSO)BusinessDelegate.getInstance().getServiceObject("pm",IObjectSO.class);	
+		ObjectResDTO resDTO = objectSO.retrieveGOList();
+		goList.add(new SelectItem("", "- Select One -"));
+		if(resDTO.getPmGoList() != null && !resDTO.getPmGoList().isEmpty()){
+			List<PmGo> goDB = resDTO.getPmGoList();
+			for(PmGo obj : goDB){
+				goList.add(new SelectItem(obj.getGoId(),obj.getGoCode()));
+			}
+		}
+		return goList;
+		
+	}
+	
+	public List<SelectItem> getSoList(){
+		List<SelectItem> soList = new ArrayList<SelectItem>();
+		IObjectSO objectSO = (IObjectSO)BusinessDelegate.getInstance().getServiceObject("pm",IObjectSO.class);	
+		ObjectReqDTO reqDTO = new ObjectReqDTO();
+		soList.add(new SelectItem("", "- Select One -"));
+		if(getManagedBean().getGoId() != null){
+
+			reqDTO.setGoId(getManagedBean().getGoId());
+			ObjectResDTO resDTO = objectSO.retrieveSOListByGOCode(reqDTO);
+			if(resDTO.getPmSoList() != null && !resDTO.getPmSoList().isEmpty()){
+				List<PmSo> soDB = resDTO.getPmSoList();
+				for(PmSo obj : soDB){
+					soList.add(new SelectItem(obj.getSoId(),obj.getSoCode()));
+				}
+			}
+		}
+		return soList;
+	}
+	
+	public List<SelectItem> getDoList(){
+		List<SelectItem> doList = new ArrayList<SelectItem>();
+		IObjectSO objectSO = (IObjectSO)BusinessDelegate.getInstance().getServiceObject("pm",IObjectSO.class);	
+		ObjectReqDTO reqDTO = new ObjectReqDTO();
+		doList.add(new SelectItem("", "- Select One -"));
+		if(getManagedBean().getSoId() != null){
+			reqDTO.setSoId(getManagedBean().getSoId());
+			ObjectResDTO resDTO = objectSO.retrieveDOListBySOCode(reqDTO);
+			if(resDTO.getPmDoList() != null && !resDTO.getPmDoList().isEmpty()){
+				List<PmDo> doDB = resDTO.getPmDoList();
+				for(PmDo obj : doDB){
+					doList.add(new SelectItem(obj.getDoId(),obj.getDoCode()));
+				}
+			}	
+		}
+		return doList;
+	}
+	
+	public void calculateSubTotal(BigDecimal quantity){
+		getManagedBean().setSubTotal(quantity);
 	}
 
 }

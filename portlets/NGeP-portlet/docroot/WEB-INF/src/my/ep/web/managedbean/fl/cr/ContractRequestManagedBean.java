@@ -3,6 +3,7 @@
  */
 package my.ep.web.managedbean.fl.cr;
 
+import java.math.BigDecimal;
 import java.util.HashMap;
 import java.util.List;
 
@@ -48,6 +49,7 @@ public class ContractRequestManagedBean extends BaseManagedBean {
 	private FlFulfilmentItem selectedItemRow;
 	private HashMap<String, PmUserGroupUser> approverMap;
 	private HashMap<Long, FlFulfilmentItem> flItemMap;
+	private BigDecimal subTotal;
 	
 	
 	//getcontract
@@ -68,6 +70,11 @@ public class ContractRequestManagedBean extends BaseManagedBean {
 	private String buttonVal;
 	private boolean isMto = false;
 		
+	//get GOSODO
+	private Long goId;
+	private Long soId;
+	private Long doId;
+	
 	public ContractRequestManagedBean(){
 		
 	}
@@ -437,6 +444,70 @@ public class ContractRequestManagedBean extends BaseManagedBean {
 	 */
 	public void setFlItemMap(HashMap<Long, FlFulfilmentItem> flItemMap) {
 		this.flItemMap = flItemMap;
+	}
+
+
+	/**
+	 * @return the goId
+	 */
+	public Long getGoId() {
+		return goId;
+	}
+
+
+	/**
+	 * @param goId the goId to set
+	 */
+	public void setGoId(Long goId) {
+		this.goId = goId;
+	}
+
+
+	/**
+	 * @return the soId
+	 */
+	public Long getSoId() {
+		return soId;
+	}
+
+
+	/**
+	 * @param soId the soId to set
+	 */
+	public void setSoId(Long soId) {
+		this.soId = soId;
+	}
+
+
+	/**
+	 * @return the doId
+	 */
+	public Long getDoId() {
+		return doId;
+	}
+
+
+	/**
+	 * @param doId the doId to set
+	 */
+	public void setDoId(Long doId) {
+		this.doId = doId;
+	}
+
+
+	/**
+	 * @return the subTotal
+	 */
+	public BigDecimal getSubTotal() {
+		return subTotal;
+	}
+
+
+	/**
+	 * @param subTotal the subTotal to set
+	 */
+	public void setSubTotal(BigDecimal subTotal) {
+		this.subTotal = subTotal;
 	}
 
 }

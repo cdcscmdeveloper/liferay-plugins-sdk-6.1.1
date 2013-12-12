@@ -117,7 +117,6 @@ public class DeliveryOrderBackingBean extends BaseBackingBean<DeliveryOrderManag
 		
 		Long flOrderId;
 		flOrderId=getManagedBean().getFulfilmentOrder().getFulfilmentOrderId();
-		//System.out.println("Order Id In stopDelivery  :   "+flOrderId);
 		FulfilmentReqDTO reqDTO = new FulfilmentReqDTO();
 		//Long orderId = Long.parseLong(FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap().get("orderId"));
 		IFulfilmentOrderSO flOrderSO = BusinessDelegate.getInstance().getServiceObject("fl",IFulfilmentOrderSO.class);
@@ -125,7 +124,6 @@ public class DeliveryOrderBackingBean extends BaseBackingBean<DeliveryOrderManag
 		flDTO.setFlOrderId(flOrderId);
 		getManagedBean().setFulfilmentOrder(flOrderSO.retrieveFulfilmentOrder(flDTO).getFlOrder());
 		reqDTO.setFulfilmentOrder(getManagedBean().getFulfilmentOrder());
-//		IFulfilmentOrderSO flOrderSO = (IFulfilmentOrderSO) BusinessDelegate.getInstance().getServiceObject("fl",IFulfilmentOrderSO.class);
 		flOrderSO.stopDeliveryWSDL(reqDTO);
 		
 	}
