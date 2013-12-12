@@ -375,47 +375,7 @@ public class QTSupplierQulCriteriaBackingBean extends SourcingBaseBackingBean<QT
 			return new ArrayList<CtPanelSupplier>();
 			
 		}
-	public void addState(){
-		  if(null!=this.getManagedBean().getSelectedPmStateList()){
-			  for(String stateId:this.getManagedBean().getSelectedPmStateList()){
-				  Node selectedZone=this.getManagedBean().getSelectedZone();
-				  TreeNode root=this.getManagedBean().getRoot3();
-				  List<TreeNode> nodeList=root.getChildren();
-				  if(null!=nodeList){
-					  for(TreeNode treeNode:nodeList){
-						  Node node=(Node) treeNode.getData();
-						  if(selectedZone.getNodeName().equals(node.getNodeName())){
-							 PmState state=QTDetailManagedBean.stateMap.get(new Long(stateId));
-									 TreeNode stateNode=new DefaultTreeNode(new Node(state.getStateId(),state.getStateName(),"State"), treeNode);
-									 treeNode.setExpanded(true);
-									 break;
-						  }
-					  }
-				  }
-			  }
-		  }
-	  }
 		
-		public void addDistrict() {
-			System.out.println("Hi");
-			if (null != this.getManagedBean().getSelectedPmDistricts()) {
-				TreeNode root = this.getManagedBean().getRoot3();
-				Node selectedState = this.getManagedBean().getSelectedState();
-				TreeNode selectedTreeNode = getSeletedTreeNode(root, selectedState);
-				if (null == selectedTreeNode) {
-					return;
-				}
-				for (String districtId : this.getManagedBean()
-						.getSelectedPmDistricts()) {
-					PmDistrict district = QTDetailManagedBean.districtMap
-							.get(new Long(districtId));
-					TreeNode stateNode = new DefaultTreeNode(new Node(
-							district.getDistrictId(), district.getDistrictName(),
-							"District"), selectedTreeNode);
-					selectedTreeNode.setExpanded(true);
-				}
-			}
-		}
 	  
 	  public TreeNode getSeletedTreeNode(TreeNode treeNode,Node selectedNode){
 		  TreeNode selecetedTreeNode=null;
@@ -437,50 +397,8 @@ public class QTSupplierQulCriteriaBackingBean extends SourcingBaseBackingBean<QT
 		  }
 		  
 	  
-	  public void displayPmStateDlg(Node selectedNode){
-		  //List<PmZone> pmZoneList =QTDetailManagedBean.pmZoneList;
-		 /* this.getManagedBean().getPmZoneOptions().clear();
-		  this.getManagedBean().getPmZoneOptions().add(new SelectItem(0,"Select Zone"));
-			if(null!=pmZoneList){
-				for(PmZone zone:pmZoneList){
-					this.getManagedBean().getPmZoneOptions().add(new SelectItem(zone.getZoneId(),zone.getZoneName()));
-				}
-			}*/
-		  System.out.println("State");
-		  if(null!=selectedNode){
-			  this.getManagedBean().setSelectedZone(selectedNode);
-			  List<PmState> pmStates=QTDetailManagedBean.zoneStateMap.get(selectedNode.getNodeId());
-			  this.getManagedBean().setPmStates(pmStates);
-		  }
-		  
-
-	  }
-	  public void displayPmDistrictDlg(Node selectedNode){
-		 if(null!=selectedNode){
-			  this.getManagedBean().setSelectedState(selectedNode);
-			  List<PmDistrict> pmDistricts=QTDetailManagedBean.stateDistrictMap.get(selectedNode.getNodeId());
-			  this.getManagedBean().setPmDistricts(pmDistricts);
-		  }
-		 TreeNode treeNode=this.getManagedBean().getRoot3().getChildren().get(0);
-		  if("State".equals(((Node)treeNode.getData()).getNodeType())){
-			 renderZone=false;
-		  } else {
-			  renderZone=true;
-		  }
-		 /* if(!"zone".equals(zonePage)){
-			  this.getManagedBean().setSelectedZone(null);
-		  }*/
-		
-	  }
+	  
 	 
-	  public void handleZoneChange(ValueChangeEvent event){
-		  System.out.println(event.getNewValue());
-		  
-	  }
-	  public void onNodeSelect(NodeSelectEvent event) { 
-		  Node selectedNode=(Node) event.getTreeNode().getData();
-		  this.getManagedBean().setSelectedZone(selectedNode);
-	  }
 	  
 		public void multiLocationChange(AjaxBehaviorEvent event) {
 			System.out.println("ADSFAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA");
@@ -514,27 +432,8 @@ public class QTSupplierQulCriteriaBackingBean extends SourcingBaseBackingBean<QT
 			this.getManagedBean().setRoot3(root3);*/
 
 		}
-	public void addNewZone(){
-		if(null!=this.getManagedBean().getSelectedPmZone() && null!=this.getManagedBean().getSelectedPmZone().getZoneName()){
-			TreeNode root=this.getManagedBean().getRoot3();
-			Node node=new Node();
-			node.setNodeName(this.getManagedBean().getSelectedPmZone().getZoneName());
-			node.setNodeType("Zone");
-			node.setNodeId(new Long (this.getManagedBean().pmZoneList.size()+1));
-			TreeNode newZone= new DefaultTreeNode(node, root);
-		}
-	}
-	 
-	public void addNewState(){
-		if(null!=this.getManagedBean().getSelectedPmState() && null!=this.getManagedBean().getSelectedPmState().getStateName()){
-			TreeNode root=this.getManagedBean().getRoot3();
-			Node node=new Node();
-			node.setNodeName(this.getManagedBean().getSelectedPmState().getStateName());
-			node.setNodeType("State");
-			node.setNodeId(new Long (this.getManagedBean().pmStateList.size()+1));
-			TreeNode newZone= new DefaultTreeNode(node, root);
-		}
-	}
+
+	
 
 	public Boolean getRenderZone() {
 		return renderZone;

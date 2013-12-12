@@ -133,6 +133,7 @@ public class QTDetailManagedBean extends BaseManagedBean {
     private List<SmMofAccount> selectedrestircedsupplier;
     private List<SmMofAccount> selectedpanelsupplier;
     private List<ScQt> selectedCloneTenderList;
+    private List<CloneAll> selectedCloneAllList;
     
 	private String qtNumber;
 	
@@ -158,25 +159,7 @@ public class QTDetailManagedBean extends BaseManagedBean {
 	private List<ScQt> cloneTenderList = new ArrayList<ScQt>();
 	private ScQt tenderCriteria = new ScQt();
 
-	private List<PmZone> zoneList = new ArrayList<PmZone>();
-	private List<PmState> stateList = new ArrayList<PmState>();
-	public static List<PmZone> pmZoneList=new ArrayList<PmZone>();
-	public static List<PmState> pmStateList=new ArrayList<PmState>();
-	public static Map<Long, List<PmState>> zoneStateMap=new HashMap<Long, List<PmState>>();
-	public static Map<Long, List<PmDistrict>> stateDistrictMap=new HashMap<Long, List<PmDistrict>>();
-	public static Map<Long,PmState> stateMap=new HashMap<Long,PmState>();
-	public static Map<Long,PmDistrict> districtMap=new HashMap<Long,PmDistrict>();
-	private PmZone pmZone;
-	private Node selectedZone;
-	private Node selectedState;
-	private String selectedPmZoneId;
-	private PmZone selectedPmZone =new PmZone();
-	private PmState selectedPmState=new PmState();
-	private List<SelectItem> pmZoneOptions=new ArrayList<SelectItem>();
-	private List<PmState> pmStates=new ArrayList<PmState>();
-	private List<PmDistrict> pmDistricts=new ArrayList<PmDistrict>();
-	private List<String> selectedPmStateList=new ArrayList<String>();
-	private List<String> selectedPmDistricts=new ArrayList<String>();
+	
 	private Boolean isTender=false;
 	private Boolean isPanel=false;
 	private Boolean isResctricted=false;
@@ -199,233 +182,9 @@ public class QTDetailManagedBean extends BaseManagedBean {
     private String uploadUpdateId;
 	//Payload for BPM
 		private SCQuotationTenderDataType quotationTenderDataType;
+	private boolean isEditable;
 	
-	static{
-			PmZone zone=new PmZone();
-			zone.setZoneName("India");
-			zone.setZoneId(1);
-		    pmZoneList.add(zone);
-		    PmZone malysiaZone=new PmZone();
-		    malysiaZone.setZoneName("Malaysia");
-		    malysiaZone.setZoneId(2);
-		    pmZoneList.add(malysiaZone);
-		    
-		    List<PmState> stateList=new ArrayList<PmState>();
-		    PmState state=new PmState();
-		    state.setStateName("AP");
-		    state.setStateId(1L);
-		    stateList.add(state);
-		    pmStateList.add(state);
-		    stateMap.put(state.getStateId(),state);
-		    
-		    PmState state1=new PmState();
-		    state1.setStateName("TN");
-		    state1.setStateId(2L);
-		    stateList.add(state1);
-		    pmStateList.add(state1);
-		    stateMap.put(state1.getStateId(),state1);
-		    zoneStateMap.put(new Long(1), stateList);
-		    
-		    List<PmState> stateList1=new ArrayList<PmState>();
-		    PmState state3=new PmState();
-		    state3.setStateName("KL");
-		    state3.setStateId(3L);
-		    stateList1.add(state3);
-		    pmStateList.add(state3);
-		    stateMap.put(state3.getStateId(),state3);
-		    PmState state4=new PmState();
-		    state4.setStateName("CJ");
-		    state4.setStateId(4L);
-		    stateList1.add(state4);
-		    pmStateList.add(state4);
-		    stateMap.put(state4.getStateId(),state4);
-		    zoneStateMap.put(new Long(2), stateList1);
-		    
-		    List<PmDistrict> distrcitList= new ArrayList<PmDistrict>();
-		    PmDistrict district=new PmDistrict();
-		    district.setDistrictName("Hyd");
-		    district.setDistrictId(1L);
-		    distrcitList.add(district);
-		    districtMap.put(district.getDistrictId(),district);
-		    stateDistrictMap.put(new Long(1), distrcitList);
-		    
-		    List<PmDistrict> districtList1 =new ArrayList<PmDistrict>();
-		    PmDistrict district2=new PmDistrict();
-		    district2.setDistrictName("Brick");
-		    district2.setDistrictId(2L);
-		    districtList1.add(district2);
-		    districtMap.put(district2.getDistrictId(),district2);
-		    stateDistrictMap.put(new Long(3), distrcitList);
-		    
-	}
 	
-	public static List<PmZone> getPmZoneList() {
-		return pmZoneList;
-	}
-
-
-	public static void setPmZoneList(List<PmZone> pmZoneList) {
-		QTDetailManagedBean.pmZoneList = pmZoneList;
-	}
-
-
-	public static List<PmState> getPmStateList() {
-		return pmStateList;
-	}
-
-
-	public Node getSelectedZone() {
-		return selectedZone;
-	}
-
-
-	public Node getSelectedState() {
-		return selectedState;
-	}
-
-
-	public static void setPmStateList(List<PmState> pmStateList) {
-		QTDetailManagedBean.pmStateList = pmStateList;
-	}
-
-
-	public PmZone getPmZone() {
-		return pmZone;
-	}
-	
-	public void setPmZone(PmZone pmZone) {
-		this.pmZone = pmZone;
-	}
-	
-	public static Map<Long, List<PmState>> getZoneStateMap() {
-		return zoneStateMap;
-	}
-
-
-	public static void setZoneStateMap(Map<Long, List<PmState>> zoneStateMap) {
-		QTDetailManagedBean.zoneStateMap = zoneStateMap;
-	}
-
-
-	public static Map<Long, List<PmDistrict>> getStateDistrictMap() {
-		return stateDistrictMap;
-	}
-
-
-	public static void setStateDistrictMap(
-			Map<Long, List<PmDistrict>> stateDistrictMap) {
-		QTDetailManagedBean.stateDistrictMap = stateDistrictMap;
-	}
-
-
-	public static Map<Long, PmState> getStateMap() {
-		return stateMap;
-	}
-
-
-	public static void setStateMap(Map<Long, PmState> stateMap) {
-		QTDetailManagedBean.stateMap = stateMap;
-	}
-
-
-	public static Map<Long, PmDistrict> getDistrictMap() {
-		return districtMap;
-	}
-
-
-	public static void setDistrictMap(Map<Long, PmDistrict> districtMap) {
-		QTDetailManagedBean.districtMap = districtMap;
-	}
-
-
-	public void setSelectedZone(Node selectedZone) {
-		this.selectedZone = selectedZone;
-	}	
-
-	public void setSelectedState(Node selectedState) {
-		this.selectedState = selectedState;
-	}
-
-
-	public String getSelectedPmZoneId() {
-		return selectedPmZoneId;
-	}
-
-
-	public void setSelectedPmZoneId(String selectedPmZoneId) {
-		this.selectedPmZoneId = selectedPmZoneId;
-	}
-
-
-	public PmZone getSelectedPmZone() {
-		return selectedPmZone;
-	}
-
-
-	public void setSelectedPmZone(PmZone selectedPmZone) {
-		this.selectedPmZone = selectedPmZone;
-	}
-
-
-	public PmState getSelectedPmState() {
-		return selectedPmState;
-	}
-
-
-	public void setSelectedPmState(PmState selectedPmState) {
-		this.selectedPmState = selectedPmState;
-	}
-
-
-	public List<SelectItem> getPmZoneOptions() {
-		return pmZoneOptions;
-	}
-
-
-	public void setPmZoneOptions(List<SelectItem> pmZoneOptions) {
-		this.pmZoneOptions = pmZoneOptions;
-	}
-
-
-	public List<PmState> getPmStates() {
-		return pmStates;
-	}
-
-
-	public void setPmStates(List<PmState> pmStates) {
-		this.pmStates = pmStates;
-	}
-
-
-	public List<PmDistrict> getPmDistricts() {
-		return pmDistricts;
-	}
-
-
-	public void setPmDistricts(List<PmDistrict> pmDistricts) {
-		this.pmDistricts = pmDistricts;
-	}
-
-
-	public List<String> getSelectedPmStateList() {
-		return selectedPmStateList;
-	}
-
-
-	public void setSelectedPmStateList(List<String> selectedPmStateList) {
-		this.selectedPmStateList = selectedPmStateList;
-	}
-
-
-	public List<String> getSelectedPmDistricts() {
-		return selectedPmDistricts;
-	}
-
-
-	public void setSelectedPmDistricts(List<String> selectedPmDistricts) {
-		this.selectedPmDistricts = selectedPmDistricts;
-	}
-
 	private List<ScQt> qtList = new ArrayList<ScQt>();
 
 	private List<SmSupplier> panelSuppliers; 
@@ -451,22 +210,6 @@ public class QTDetailManagedBean extends BaseManagedBean {
 			TreeNode node1 = new DefaultTreeNode(cloneValue.getDisplayName(), node0);
 		}
 
-	
-		//location 
-		root3 = new DefaultTreeNode("Root", null);
-		TreeNode documents = new DefaultTreeNode(("Zone1"), root3);
-		documents.setExpanded(true);
-
-		TreeNode states = new DefaultTreeNode(("State1"), documents);
-		states.setExpanded(true);
-		TreeNode districts = new DefaultTreeNode(("State2"), documents);
-		districts.setExpanded(true);
-
-		// Documents
-		TreeNode d1 = new DefaultTreeNode(("District1"), states);
-		TreeNode d2 = new DefaultTreeNode(("District2"), states);
-		TreeNode d = new DefaultTreeNode(("District1"), districts);
-		
 
 	}
 
@@ -696,22 +439,7 @@ public class QTDetailManagedBean extends BaseManagedBean {
 		this.tenderCriteria = tenderCriteria;
 	}
 
-	public List<PmZone> getZoneList() {
-		return zoneList;
-	}
-
-	public void setZoneList(List<PmZone> zoneList) {
-		this.zoneList = zoneList;
-	}
-
-	public List<PmState> getStateList() {
-		return stateList;
-	}
-
-	public void setStateList(List<PmState> stateList) {
-		this.stateList = stateList;
-	}
-
+	
 	public List<ScQt> getQtList() {
 		return qtList;
 	}
@@ -1417,5 +1145,26 @@ public class QTDetailManagedBean extends BaseManagedBean {
 	public void setPanelSupplierList(List<CtPanelSupplier> panelSupplierList) {
 		this.panelSupplierList = panelSupplierList;
 	}
+
+
+	public List<CloneAll> getSelectedCloneAllList() {
+		return selectedCloneAllList;
+	}
+
+
+	public void setSelectedCloneAllList(List<CloneAll> selectedCloneAllList) {
+		this.selectedCloneAllList = selectedCloneAllList;
+	}
+
+
+	public boolean isEditable() {
+		return isEditable;
+	}
+
+
+	public void setEditable(boolean isEditable) {
+		this.isEditable = isEditable;
+	}
+	
     	 
 }

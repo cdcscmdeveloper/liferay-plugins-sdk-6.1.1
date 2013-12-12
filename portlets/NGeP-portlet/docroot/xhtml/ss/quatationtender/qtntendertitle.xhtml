@@ -88,7 +88,7 @@
 				<p:selectOneMenu value="#{gosodo.pmGo.goId}"
 					rendered="#{rowIndex eq qTDetailBB.managedBean.qt.scQtGosodoBudgets.size()-1}">
 					<f:selectItem itemLabel="Select One" itemValue="#{null}" />
-					<f:selectItems value="#{qTDetailBB.managedBean.goList}" var="go"
+					<f:selectItems value="#{qTDetailBB.goList}" var="go"
 						itemLabel="#{go.goCode}" itemValue="#{go.goId}" />
 					<p:ajax event="change"
 						listener="#{qTDetailBB.handleGoChanged(gosodo)}"
