@@ -5,7 +5,6 @@ package my.ep.web.backingbean.fl.doc;
 
 import java.util.Date;
 
-import javax.annotation.PostConstruct;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.RequestScoped;
 import javax.faces.context.FacesContext;
@@ -70,19 +69,6 @@ public class FlDocumentBackingBean extends BaseBackingBean<FlDocumentManagedBean
 
 	public void searchDocument(){
 		flDocumentDataModel.reloadData();
-	}
-	
-	@PostConstruct
-	public void init() {
-		getManagedBean().setSearchDocType(null);
-		getManagedBean().setSearchDocNo(null);
-		getManagedBean().setSearchStartDate(null);
-		getManagedBean().setSearchEndDate(null);
-		getManagedBean().setSearchOrderType(null);
-		getManagedBean().setSearchLoaNo(null);
-		getManagedBean().setSearchProcurementType(null);
-		getManagedBean().setSearchStatusId(null);
-		getManagedBean().setSearchType(null);
 	}
 	
 	//public S
@@ -235,7 +221,6 @@ public class FlDocumentBackingBean extends BaseBackingBean<FlDocumentManagedBean
 			}
 			try {
 				searchBean.getDataFilterBeans().add(new SearchFilterBean("orderType",SearchOperator.OPERATOR_EQUALS.value(),getManagedBean().getSearchOrderType()));
-
 				if(getManagedBean().getSearchDocType()!=null) {
 					searchBean.getDataFilterBeans().add(new SearchFilterBean("docType",SearchOperator.OPERATOR_EQUALS.value(),getManagedBean().getSearchDocType()));
 				}

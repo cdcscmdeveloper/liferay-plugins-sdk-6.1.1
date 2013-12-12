@@ -41,11 +41,14 @@ public class PurchaseRequestManagedBean extends BaseManagedBean {
 	private FlAttachment flAttachment = new FlAttachment();
 	private FlFulfilmentRequest fulfilmentRequest;
 
-	//private List<DeliveryAddressPopup> daPopupList;
-	//private List<DeliveryAddressPopup> selectedPopupAddress;
+	//remove multiple selection from data table
+	private List<FlDeliveryAddress> selectedAddressRows;
+	private List<FlFulfilmentItem> selectedItemsRows;
 	
 	private FlDeliveryAddress selectedAddrRow;
 	private FlDeliveryAddress selectedDelAddr;
+	
+	private List<FlDeliveryAddress> selectedAddrList;
 	
 	private List<PmOrgAddress> selectedPmDelAddrList;
 	private List<PmOrgAddress> delAddrList;
@@ -464,6 +467,48 @@ public class PurchaseRequestManagedBean extends BaseManagedBean {
 	 */
 	public void setApproverMap(HashMap<String, PmUserGroupUser> approverMap) {
 		this.approverMap = approverMap;
+	}
+
+	/**
+	 * @return the selectedAddrList
+	 */
+	public List<FlDeliveryAddress> getSelectedAddrList() {
+		return selectedAddrList;
+	}
+
+	/**
+	 * @param selectedAddrList the selectedAddrList to set
+	 */
+	public void setSelectedAddrList(List<FlDeliveryAddress> selectedAddrList) {
+		this.selectedAddrList = selectedAddrList;
+	}
+
+	/**
+	 * @return the selectedAddressRows
+	 */
+	public List<FlDeliveryAddress> getSelectedAddressRows() {
+		return selectedAddressRows;
+	}
+
+	/**
+	 * @param selectedAddressRows the selectedAddressRows to set
+	 */
+	public void setSelectedAddressRows(List<FlDeliveryAddress> selectedAddressRows) {
+		this.selectedAddressRows = selectedAddressRows;
+	}
+
+	/**
+	 * @return the selectedItemsRows
+	 */
+	public List<FlFulfilmentItem> getSelectedItemsRows() {
+		return selectedItemsRows;
+	}
+
+	/**
+	 * @param selectedItemsRows the selectedItemsRows to set
+	 */
+	public void setSelectedItemsRows(List<FlFulfilmentItem> selectedItemsRows) {
+		this.selectedItemsRows = selectedItemsRows;
 	}
 
 	

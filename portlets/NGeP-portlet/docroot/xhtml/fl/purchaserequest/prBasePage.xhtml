@@ -11,17 +11,31 @@
 	</ui:define>
 
 	<ui:define name="contentSection">
-	<f:event listener="#{purchaseRequestBackingBean.preRenderView}" type="preRenderView" />	
-	<p:messages id="messages" showDetail="true" autoUpdate="true" closable="true" severity="error, info" />
+		<f:event listener="#{purchaseRequestBackingBean.preRenderView}"
+			type="preRenderView" />
+		<p:messages id="messages" showDetail="true" autoUpdate="true"
+			closable="true" severity="error, info" />
 		<table style="width: 100%;">
 			<tr>
-				<td colspan="4" style="text-align: right"><ui:repeat var="bpmAction"
+				<td colspan="4" style="text-align: right"><ui:repeat
+						var="bpmAction"
 						value="#{purchaseRequestBackingBean.managedBean.outComes}">
-						
-							<p:commandButton value="#{bpmAction}" ajax='false'
-								action="#{purchaseRequestBackingBean.fulfillmentRequestAction(bpmAction)}"
-								process="@this" />
-						
+						<ui:fragment rendred="#{bpmAction.equalsIgnoreCase('Submit')}">
+							<c:set var="iconVar" value="ui-icon-submit" scope="request"></c:set>
+						</ui:fragment>
+						<ui:fragment rendred="#{bpmAction.equalsIgnoreCase('Reject')}">
+							<c:set var="iconVar" value="ui-icon-reject" scope="request"></c:set>
+						</ui:fragment>
+						<ui:fragment rendred="#{bpmAction.equalsIgnoreCase('Revise')}">
+							<c:set var="iconVar" value="ui-icon-revise" scope="request"></c:set>
+						</ui:fragment>
+						<ui:fragment rendred="#{bpmAction.equalsIgnoreCase('Approve')}">
+							<c:set var="iconVar" value="ui-icon-approve" scope="request"></c:set>
+						</ui:fragment>
+						<p:commandButton value="#{bpmAction}" ajax='false'
+							styleClass="ui-button" icon="#{iconVar}"
+							action="#{purchaseRequestBackingBean.fulfillmentRequestAction(bpmAction)}"
+							process="@this" />
 					</ui:repeat></td>
 			</tr>
 		</table>
@@ -29,32 +43,30 @@
 			<tr>
 				<c:if
 					test='#{purchaseRequestBackingBean.managedBean.buttonVal eq "Update"}'>
-					<td colspan="4" style="text-align: right">
-							<p:commandButton value="UPDATE"
-								action="#{purchaseRequestBackingBean.fulfillmentRequestAction('UPDATE')}">
-								<f:param name="actionName" value="UPDATE" />
-							</p:commandButton>
-					</td>
+					<td colspan="4" style="text-align: right"><p:commandButton
+							value="UPDATE"
+							action="#{purchaseRequestBackingBean.fulfillmentRequestAction('UPDATE')}">
+							<f:param name="actionName" value="UPDATE" />
+						</p:commandButton></td>
 				</c:if>
 				<c:if
 					test='#{purchaseRequestBackingBean.managedBean.buttonVal eq "Cancel"}'>
-					<td colspan="4" style="text-align: right">
-							<p:commandButton value="CANCEL"
-								action="#{purchaseRequestBackingBean.fulfillmentRequestAction('CANCEL')}">
-								<f:param name="actionName" value="CANCEL" />
-							</p:commandButton>
-						</td>
+					<td colspan="4" style="text-align: right"><p:commandButton
+							value="CANCEL"
+							action="#{purchaseRequestBackingBean.fulfillmentRequestAction('CANCEL')}">
+							<f:param name="actionName" value="CANCEL" />
+						</p:commandButton></td>
 				</c:if>
 			</tr>
 		</table>
 		<p:tabView id="prtabs" orientation="left" dynamic="true" cache="true">
-			<p:tab id= "tab1" title="General">
+			<p:tab id="tab1" title="General">
 				<ui:include src="prGeneral.xhtml" />
 			</p:tab>
-			<p:tab  id="tab2" title="Item">
+			<p:tab id="tab2" title="Item">
 				<ui:include src="prItem.xhtml" />
 			</p:tab>
 		</p:tabView>
-		
+
 	</ui:define>
 </ui:composition>

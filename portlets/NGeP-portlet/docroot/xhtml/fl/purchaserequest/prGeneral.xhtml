@@ -22,7 +22,7 @@
 						style="width: 207px;">
 						<f:selectItems
 							value="#{purchaseRequestBackingBean.divisionProfileList}" />
-						<p:ajax event="change" update="flDetails" process="@this"
+						<p:ajax event="change" update="issuePtjDD,chargePtjDD" process="@this"
 							listener="#{purchaseRequestBackingBean.checkPtjFlg}" />
 					</p:selectOneMenu></td>
 				<td><p:outputLabel value="#{lbl['lbl.fl.req.note.no']}" /></td>
@@ -32,14 +32,15 @@
 			</tr>
 			<tr>
 				<td><p:outputLabel value="* #{lbl['lbl.fl.issued.ptj']}" /></td>
-				<td><p:selectOneMenu
+				<td><p:selectOneMenu id="issuePtjDD"
+						disabled="#{purchaseRequestBackingBean.managedBean.checkPtjFlg}"
 						value="#{purchaseRequestBackingBean.managedBean.fulfilmentRequest.issuedOrgProfile.orgProfileId}"
 						style="width: 207px;">
 						<f:selectItems value="#{purchaseRequestBackingBean.PTJList}" />
 					</p:selectOneMenu></td>
 				<td><p:outputLabel value="#{lbl['lbl.fl.plan.no']}" /></td>
 				<td><p:inputText size="20"
-						value="#{purchaseRequestBackingBean.managedBean.selectedRequestNote.scRequestList.ppPlan.planNo}"
+						value="#{purchaseRequestBackingBean.managedBean.fulfilmentRequest.planId}"
 						disabled="true" /></td>
 			</tr>
 			<tr>
@@ -49,6 +50,8 @@
 						style="width: 207px;">
 						<f:selectItems
 							value="#{purchaseRequestBackingBean.divisionProfileList}" />
+						<p:ajax event="change" update="receivePtjDD" process="@this"
+							listener="#{purchaseRequestBackingBean.checkPtjFlg}" />	
 					</p:selectOneMenu></td>
 				<td><p:outputLabel value="#{lbl['lbl.fl.procurement.type']}" /></td>
 				<td><p:inputText size="35"
@@ -57,7 +60,8 @@
 			</tr>
 			<tr>
 				<td><p:outputLabel value="* #{lbl['lbl.fl.received.ptj']}" /></td>
-				<td><p:selectOneMenu
+				<td><p:selectOneMenu id="receivePtjDD"
+						disabled="#{purchaseRequestBackingBean.managedBean.checkPtjFlg}"
 						value="#{purchaseRequestBackingBean.managedBean.fulfilmentRequest.receivedOrgProfile.orgProfileId}"
 						style="width: 207px; margin-bottom:5px;">
 						<f:selectItems value="#{purchaseRequestBackingBean.PTJList}" />
@@ -97,7 +101,7 @@
 						<f:selectItem itemLabel="No" itemValue="false" />
 					</p:selectOneRadio></td>
 					<td><p:outputLabel value="* #{lbl['lbl.fl.charged.ptj']}" /></td>
-				<td><p:selectOneMenu style="width: 207px;margin-bottom:5px;">
+				<td><p:selectOneMenu id="chargePtjDD" disabled="#{purchaseRequestBackingBean.managedBean.checkPtjFlg}" style="width: 207px;margin-bottom:5px;" >
 						<f:selectItems value="#{purchaseRequestBackingBean.PTJList}" />
 					</p:selectOneMenu></td>
 			</tr>
