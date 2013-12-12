@@ -16,51 +16,51 @@
 		<p:tabView id="tt" orientation="left" widgetVar="tt"
 			activeIndex="#{backingBean.managedBean.tabActiveIndex}">
 
-			<p:tab title="Company Basic Information">
+			<p:tab title="#{lbl['lbl.sm.companyStepLbl']}">
 				<ui:include src="step1RenewAppln_CompanyInfo.xhtml" />
 			</p:tab>
-			<p:tab title="Branch /Assoc Company">
+			<p:tab title="#{lbl['lbl.sm.branchStepLbl']}">
 				<ui:include src="step2RenewAppln_BranchCompanyInfo.xhtml" />
 			</p:tab>
-			<p:tab title="Capital / Equity Status">
+			<p:tab title="#{lbl['lbl.sm.capitalStepLbl']}">
 				<ui:include src="step3RenewAppln_CaptialAndEquityStatusInfo.xhtml" />
 			</p:tab>
-			<p:tab title="Personnel Info">
+			<p:tab title="#{lbl['lbl.sm.personStepLbl']}">
 				<ui:include src="step4RenewAppln_PersonnelInfo.xhtml" />
 			</p:tab>
-			<p:tab title="Bank Information">
+			<p:tab title="#{lbl['lbl.sm.bankStepLbl']}">
 				<ui:include src="step5RenewAppln_BankInfo.xhtml" />
 			</p:tab>
-			<p:tab title="Register Category Code(s)">
+			<p:tab title="#{lbl['lbl.sm.catCodeStepLbl']}">
 				<ui:include src="step6RenewAppln_RegisterCategoryCodesInfo.xhtml" />
 			</p:tab>
-			<p:tab title="Factory / Equipment Details">
+			<p:tab title="#{lbl['lbl.sm.factoryStepLbl']}">
 				<ui:include src="step6.1RenewAppln_FactoryInfo.xhtml" />
 			</p:tab>
-			<p:tab title="Support Document(s)"
+			<p:tab title="#{lbl['lbl.sm.supDocStepLbl']}"
 				rendered="#{backingBean.managedBean.supplierUser}">
 				<ui:include src="step7RenewAppln_SupportingDocumentsInfo.xhtml" />
 			</p:tab>
-			<p:tab title="Processing Fee Payment"
+			<p:tab title="#{lbl['lbl.sm.paymentLbl']}"
 				rendered="#{backingBean.managedBean.supplierUser}">
 				<ui:include src="step8RenewAppln_ProcessingFeePaymentInfo.xhtml" />
 			</p:tab>
-			<p:tab title="Support Document(s) Review"
+			<p:tab title="#{lbl['lbl.sm.docsReviewLbl']}"
 				rendered="#{backingBean.managedBean.poUser}">
 				<ui:include
 					src="/xhtml/sm/poDecisionPages/poReviewSupportingDocuments.xhtml" />
 			</p:tab>
-			<p:tab title="PO Decision"
+			<p:tab title="#{lbl['lbl.sm.poDecisionLbl']}"
 				rendered="#{backingBean.managedBean.poUser}">
 				<ui:include
 					src="/xhtml/sm/poDecisionPages/poDefault_DescisionPage.xhtml" />
 			</p:tab>
-			<p:tab title="Support Document(s) Review"
+			<p:tab title="#{lbl['lbl.sm.docsReviewLbl']}"
 				rendered="#{backingBean.managedBean.approverUser}">
 				<ui:include
 					src="/xhtml/sm/approverDecisionPages/approverReviewSupportingDocuments.xhtml" />
 			</p:tab>
-			<p:tab title="Approver Decision"
+			<p:tab title="#{lbl['lbl.sm.aprvrDecisionLbl']}"
 				rendered="#{backingBean.managedBean.approverUser}">
 				<ui:include
 					src="/xhtml/sm/approverDecisionPages/approverDefault_DescisionPage.xhtml" />
