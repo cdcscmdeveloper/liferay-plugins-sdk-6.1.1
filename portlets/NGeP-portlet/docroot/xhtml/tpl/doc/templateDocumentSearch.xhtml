@@ -1,0 +1,61 @@
+<ui:composition
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:ac="http://ac.my/jsf/composite/cc"
+	xmlns:p="http://primefaces.org/ui">
+
+		<p:panel id="panel1" header="Search" toggleable="true">
+			<table style="width:100%">
+				<tr>
+					<td class="TableFieldLeft" style="width:120px">
+						<!-- <h:outputLabel value="#{lbl['lbl.template.doc.category']}" /> -->
+						<h:outputLabel value=" Template Category" />
+					</td>
+					<td class="TableFieldRight">
+						<p:selectOneMenu value="#{templateDocBackingBean.managedBean.categoryId}" id="templateCategory">
+							  <f:selectItems value="#{templateDocBackingBean.managedBean.templateCategoryList}" />
+						</p:selectOneMenu>
+					</td>
+					<td class="TableFieldLeft" style="width:120px">
+						<h:outputLabel value=" Process Type" />
+					</td>
+					<td class="TableFieldRight">
+						<p:selectOneMenu value="#{templateDocBackingBean.managedBean.processType}">
+						<f:selectItems value="#{templateDocBackingBean.getDropdownCodeValues('TDP')}" />
+						</p:selectOneMenu>
+					</td>
+				</tr>
+				<tr style="height: 5px;"></tr>
+				<tr>
+					<td class="TableFieldLeft" style="width:120px">
+					      <h:outputLabel value=" Title" />
+					</td>
+					<td class="TableFieldRight">
+					     <p:inputText value="#{templateDocBackingBean.managedBean.title}" style="width:280px" />
+					</td>
+					<td class="TableFieldLeft" style="width:120px">
+					     <h:outputLabel value=" Decription" />
+					</td>
+					<td class="TableFieldRight">
+					    <p:inputTextarea value="#{templateDocBackingBean.managedBean.desc}" style="width:280px" cols="33" rows="2" />
+					</td>
+				</tr>
+				<tr style="height: 3px;"></tr>
+				<tr>
+					<td colspan="4" style="text-align:right;">
+						<p:commandButton value="Search"
+							action="#{templateDocBackingBean.tempDocSearch}"
+							  process="@this,templateCategory" update="resultID" />
+					</td>
+					<td colspan="4" style="text-align:right;">
+						<p:commandButton value="Reset" action="#{templateDocBackingBean.reset}" 
+							   update="panel1,panel2" icon="ui-icon-reset" resetValues="true" partialSubmit="true" process="@this">
+							   <!--  <p:ajax update="panel1" resetValues="true" /> --> 
+					    </p:commandButton>						 
+					 
+					</td>
+				 </tr>
+			</table> 
+		</p:panel>
+</ui:composition>

@@ -1,0 +1,59 @@
+<ui:composition
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:ac="http://ac.my/jsf/composite/cc"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:fn="http://java.sun.com/jsp/jstl/functions">
+	
+   
+		<p:panel id="panel2" header="Result" toggleable="true">
+			<table style="width:100%">
+				<tr>
+					<td>
+						<p:dataTable id="resultID" selectionMode="single" 
+							value="#{templateDocBackingBean.managedBean.templateSearchList}" 
+							var="tplMasterObj" rowKey="#{tplMasterObj.docMasterId}"  selection="#{templateDocBackingBean.managedBean.selectedTemplate}" 
+							 width="100%" editable="true">
+							   <p:ajax event="rowEdit" listener="#{templateDocBackingBean.goToMaint}" />  
+							   <p:ajax event="rowEditCancel"></p:ajax>
+							   <p:columnGroup type="header">
+								<p:row>
+									<p:column rowspan="1" headerText="Title"></p:column>
+									<p:column rowspan="1" headerText="Category"></p:column>
+									<p:column rowspan="1" headerText="Process Type"></p:column>
+									<p:column rowspan="1" headerText="Type"></p:column>
+									<p:column rowspan="1" headerText="View/Edit"></p:column>
+									
+								</p:row>
+							</p:columnGroup>
+							<p:column>
+								<h:outputText value="#{tplMasterObj.docTitle}" />
+							</p:column>
+							<p:column>
+								<h:outputText value="#{tplMasterObj.tplCategory.categoryDesc}" />
+							</p:column>
+							<p:column>
+								 <h:outputText value="#{tplMasterObj.processType.code}" /> 
+							</p:column>   
+							<p:column>
+								<h:outputText value="#{tplMasterObj.templateType.category}" />
+							</p:column>
+							<p:column>
+                                <p:commandLink action="#{templateDocBackingBean.goToMaint}">
+                                      <p:graphicImage library="ep/images/design/edit.png" 
+                                       value="/resources/ep/images/design/edit.png" update="resultID" />
+                                </p:commandLink>
+							 </p:column>
+						</p:dataTable>
+					</td>
+				</tr>
+				<tr>
+					<td style="text-align:right">
+						<p:commandButton value="Create" update="resultID"
+							action="#{templateDocBackingBean.createNewTemplate}" />
+					</td>
+				</tr>
+			</table>
+		</p:panel>
+</ui:composition>

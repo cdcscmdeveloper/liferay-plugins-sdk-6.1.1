@@ -6,106 +6,11 @@
 	xmlns:ac="http://ac.my/jsf/composite/cc"
 	xmlns:p="http://primefaces.org/ui">
 
-	<ui:define name="resourceSection"></ui:define>
-
+	<ui:define name="resourceSection"/>
 	<ui:define name="contentSection">
 		<h:outputText value="Template Document" styleClass="pageTitle" />					
-		<p:panel id="panel1" header="Search" toggleable="true">
-			<table style="width:100%">
-				<tr>
-					<td class="TableFieldLeft" style="width:120px">
-						<h:outputLabel value="#{lbl['lbl.template.doc.category']}" />
-					</td>
-					<td class="TableFieldRight">
-						<p:selectOneMenu value="#{templateDocBackingBean.managedBean.categoryId}" id="templateCategory">
-							<f:selectItems value="#{templateDocBackingBean.templateCategoryList}" />
-						</p:selectOneMenu>
-					</td>
-					<td class="TableFieldLeft" style="width:120px">
-						<h:outputLabel value="*Process Type" />
-					</td>
-					<td class="TableFieldRight">
-						<p:selectOneMenu value="#{templateDocBackingBean.managedBean.categoryId}">
-							<f:selectItems value="#{templateDocBackingBean.managedBean.templateTypeList}" />
-						</p:selectOneMenu>
-					</td>
-				</tr>
-				<tr>
-					<td class="TableFieldLeft" style="width:120px"><h:outputLabel value="*Title" /></td>
-					<td class="TableFieldRight"><p:inputText style="width:280px" /></td>
-					<td class="TableFieldLeft" style="width:120px"><h:outputLabel value="Decription" /></td>
-					<td class="TableFieldRight"><p:inputTextarea style="width:280px" cols="33" rows="2" /></td>
-				</tr>
-				<tr>
-					<td colspan="4" style="text-align:right;">
-						<p:commandButton value="Search"
-							action="#{templateDocBackingBean.searchResult}"
-							process="@this,templateCategory" update="resultID" />
-					</td>
-				</tr>
-			</table>
-		</p:panel>
-
-		<p:panel id="panel2" header="Search Results" toggleable="true">
-			<table style="width:100%">
-				<tr>
-					<td>
-						<p:dataTable id="resultID" selectionMode="single" selection="#{templateDocBackingBean.managedBean.selectedTemplate}"
-							value="#{templateDocBackingBean.managedBean.templateMasterList}" 
-							var="tplMasterObj" rowKey="#{tplMasterObj.docMasterId}" width="100%">
-							<p:columnGroup type="header">
-								<p:row>
-									<p:column rowspan="1" headerText="Key"></p:column>
-									<p:column rowspan="1" headerText="Category"></p:column>
-									<p:column rowspan="1" headerText="Process Type"></p:column>
-									<p:column rowspan="1" headerText="Title"></p:column>
-									<p:column rowspan="1" headerText="Description"></p:column>
-									<p:column rowspan="1" headerText="Type"></p:column>
-									<p:column rowspan="1" headerText="Created User"></p:column>
-									<p:column rowspan="1" headerText="Created Date"></p:column>
-								</p:row>
-							</p:columnGroup>
-							<p:column>
-								<h:outputText value="#{tplMasterObj.docMasterId}" />
-							</p:column>
-							<p:column>
-								<h:outputText value="#{tplMasterObj.tplCategory.categoryCode}" />
-							</p:column>
-							<p:column>
-								<h:outputText value="#{tplMasterObj.templateType}" />
-							</p:column>
-							<p:column>
-								<h:outputText value="#{tplMasterObj.docTitle}" />
-							</p:column>
-							<p:column>
-								<h:outputText value="#{tplMasterObj.docDesc}" />
-							</p:column>
-							<p:column>
-								<h:outputText value="#{templateDocBackingBean.managedBean.templateTypeMap[tplMasterObj.templateType]}" />
-							</p:column>
-							<p:column>
-								<h:outputText value="#{tplMasterObj.createdUserId}" />
-							</p:column>
-							<p:column>
-								<h:outputText value="#{tplMasterObj.createdDate}" />
-							</p:column>
-						</p:dataTable>
-					</td>
-				</tr>
-				<tr>
-					<td style="text-align:right">
-						<p:commandButton value="Create New" update="resultID"
-							action="#{templateDocBackingBean.createNewTemplate}" />
-						<p:spacer width="5px"></p:spacer>
-						<p:commandButton value="View / Edit" action="#{templateDocBackingBean.goToMaint}" />
-						<p:commandButton value="Concatenate PDF" action="#{templateDocBackingBean.combinePDF}"></p:commandButton>
-					</td>
-				</tr>
-			</table>
-		</p:panel>
-		
+		<ui:include src="templateDocumentSearch.xhtml"></ui:include>
+	    <ui:include src="templateDocSearchResults.xhtml"></ui:include> 
 	</ui:define>
-	
-	<ui:define name="footerSection"></ui:define>
-	
+	<ui:define name="footerSection"/>
 </ui:composition>
