@@ -20,7 +20,6 @@ import my.ep.biz.bean.search.SearchFilterBean;
 import my.ep.biz.service.pm.authorization.orgprofile.IOrgProfileSO;
 import my.ep.biz.service.pm.common.codecategory.ICodeCategorySO;
 import my.ep.biz.service.pm.common.uom.IUomSO;
-import my.ep.biz.service.sm.registration.IRegistrationSO;
 import my.ep.biz.service.tpl.spec.ITemplateSpecSO;
 import my.ep.constant.pm.PmCodeCategoryConst;
 import my.ep.constant.pm.PmCodeConst;
@@ -30,8 +29,6 @@ import my.ep.dto.pm.authorization.orgprofile.OrgProfileResDTO;
 import my.ep.dto.pm.common.codecategory.CodeCategoryReqDTO;
 import my.ep.dto.pm.common.codecategory.CodeCategoryResDTO;
 import my.ep.dto.pm.common.uom.UomResDTO;
-import my.ep.dto.sm.registration.RegistrationReqDTO;
-import my.ep.dto.sm.registration.RegistrationResDTO;
 import my.ep.dto.tpl.spec.TemplateSpecReqDTO;
 import my.ep.dto.tpl.spec.TemplateSpecResDTO;
 import my.ep.persistence.entity.pm.authorization.PmOrgProfile;
@@ -65,19 +62,20 @@ public class TemplateSpecBackingBean extends BaseBackingBean<TemplateSpecManaged
 		ITemplateSpecSO templateSpecSO = null;
 		TplSpecMaster specMaster = this.getManagedBean().getSpecMaster();
 		
-		IRegistrationSO registrationSO = BusinessDelegate.getInstance().getServiceObject("sm", IRegistrationSO.class);
+		/*IRegistrationSO registrationSO = BusinessDelegate.getInstance().getServiceObject("sm", IRegistrationSO.class);
 		RegistrationReqDTO registrationReqDTO = new RegistrationReqDTO();
 		registrationReqDTO.setSupplierId(1L);
 		RegistrationResDTO registrationResDTO = registrationSO.retrieveSuppOnlineAcc(registrationReqDTO);
-		getManagedBean().setSupplier(registrationResDTO.getSmSupp());
+		getManagedBean().setSupplier(registrationResDTO.getSmSupp());*/
 		
-		SmSupplier smSupplier = this.getManagedBean().getSupplier();
 		try {
 			templateSpecSO = (ITemplateSpecSO)BusinessDelegate.getInstance().getServiceObject("cc",ITemplateSpecSO.class);
 			TemplateSpecReqDTO reqDTO = new TemplateSpecReqDTO();
 			reqDTO.setSpecMaster(specMaster);
 			reqDTO.setContentType(getManagedBean().getContentType());
 			if (!TemplateSpecConst.CONTENT_TYPE_QUESTION.equals(getManagedBean().getContentType())) {
+				SmSupplier smSupplier = this.getManagedBean().getSupplier();
+				
 				reqDTO.setSupplier(smSupplier);
 			}
 
