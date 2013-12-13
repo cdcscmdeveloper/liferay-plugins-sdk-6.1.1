@@ -8,10 +8,13 @@
 	xmlns:c="http://java.sun.com/jsp/jstl/core">  
 	<ui:define name="contentSection">
 	<p:panel>
+	 <c:if test='#{supplierBackingBean.managedBean.chkRenderPage eq  "BPM"}'>
+        <f:event listener="#{supplierBackingBean.preRenderView}" type="preRenderView" />
+	</c:if>
 	 <p:messages id="messages" showDetail="true" autoUpdate="true" closable="true" severity="error, info" />
 	 <div class="ppRightBtn">
-	  <ui:repeat var="action"	value="#{supplierBackingBean.managedBean.outComes}">
-		<p:commandButton value="#{action}" process="@this" styleClass="ui-button" action="#{supplierBackingBean.saveChangeBankRequest(action)}" />
+	  <ui:repeat var="outcome"	value="#{supplierBackingBean.managedBean.action}">
+		<p:commandButton value="#{outcome}" process="@this" styleClass="ui-button" action="#{supplierBackingBean.saveChangeBankRequest(outcome)}" />
 	  </ui:repeat>		
     </div>
 	</p:panel>

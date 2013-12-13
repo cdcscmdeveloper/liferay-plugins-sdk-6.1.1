@@ -31,7 +31,7 @@
               <p:outputLabel  value="#{lbl['lbl.ct.su.name']}" />  
               <p:inputText value="CDC Sdn Bhd"  disabled="true" style="width:170px;" />  
               <p:outputLabel  value="Bank A/C" />  
-                <p:selectOneMenu value=" " style="width:110px;">
+                <p:selectOneMenu value="#{supplierBackingBean.managedBean.contractVer.ctContractValue.supplierBankAccountNo}" style="width:110px;">
             	   <f:selectItem itemLabel="-Please Select--" itemValue="" /> 
             	   <f:selectItem itemLabel="011234560987" itemValue="1" /> 
             	   <f:selectItem itemLabel="011234560986" itemValue="2" /> 

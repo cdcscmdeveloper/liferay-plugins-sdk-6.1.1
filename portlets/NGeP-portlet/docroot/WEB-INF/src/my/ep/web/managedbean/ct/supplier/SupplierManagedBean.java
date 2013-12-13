@@ -34,8 +34,8 @@ public class SupplierManagedBean extends BaseManagedBean {
 
 	private static final long serialVersionUID = 1L;
 	
-	private String taskId;
-	private String[] outComes;
+	private String[] action;
+	private String taskName;
 	
 	private Date endDate;
 	private String loaNo;
@@ -43,6 +43,7 @@ public class SupplierManagedBean extends BaseManagedBean {
 	private Long contractNo;
 	private String contractName;
 	private String loginUser;
+	private String chkRenderPage ="BPM";
 	
 	private int selectedIndex;
 	private CtFactoring factoring;
@@ -61,22 +62,14 @@ public class SupplierManagedBean extends BaseManagedBean {
 		
 	}
 	
-	public String getTaskId() {
-		return taskId;
+	public String[] getAction() {
+		return action;
 	}
-	
-	public void setTaskId(String taskId) {
-		this.taskId = taskId;
+
+	public void setAction(String[] action) {
+		this.action = action;
 	}
-	
-	public String[] getOutComes() {
-		return outComes;
-	}
-	
-	public void setOutComes(String[] outComes) {
-		this.outComes = outComes;
-	}
-	
+
 	public String getLoaNo() {
 		return loaNo;
 	}
@@ -220,7 +213,21 @@ public class SupplierManagedBean extends BaseManagedBean {
 	public void setCtAgreement(CtAgreement ctAgreement) {
 		this.ctAgreement = ctAgreement;
 	}
-	
-	
+
+	public String getTaskName() {
+		return taskName;
+	}
+
+	public void setTaskName(String taskName) {
+		this.taskName = taskName;
+	}
+
+	public String getChkRenderPage() {
+		return chkRenderPage;
+	}
+
+	public void setChkRenderPage(String chkRenderPage) {
+		this.chkRenderPage = chkRenderPage;
+	}
 	
 }

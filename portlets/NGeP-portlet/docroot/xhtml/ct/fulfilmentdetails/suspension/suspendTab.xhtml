@@ -10,11 +10,15 @@
 	<style>
       .column-align-center { text-align: center !important;}
     </style>
+    <c:if test='#{contractDetailsBackingBean.managedBean.chkRenderPage eq  "BPM"}'>
+     <f:event listener="#{contractDetailsBackingBean.preRenderView}" type="preRenderView" />
+	</c:if>
+   
 	<p:panel>
 	<p:messages id="messages" showDetail="true" autoUpdate="true" closable="true" severity="error, info" />
 	 <div class="ppRightBtn"> 
-	  			<ui:repeat var="action"	value="#{contractSuspendBackingBean.managedBean.outComes}">
-					<p:commandButton value="#{action}" process="@this" styleClass="ui-button" action="#{contractSuspendBackingBean.createSuspend(action)}" />
+	  			<ui:repeat var="outcome" value="#{contractDetailsBackingBean.managedBean.action}">
+					<p:commandButton value="#{outcome}" process="@this" styleClass="ui-button" action="#{contractDetailsBackingBean.saveContract(outcome)}" />
 				</ui:repeat>		
     </div>
 	</p:panel>

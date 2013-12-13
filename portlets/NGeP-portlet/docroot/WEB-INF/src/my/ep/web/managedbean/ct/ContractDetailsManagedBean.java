@@ -4,8 +4,9 @@
 package my.ep.web.managedbean.ct;
 
 import java.util.ArrayList;
-import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
@@ -19,9 +20,12 @@ import my.ep.persistence.entity.ct.dtl.CtProgressivePayment;
 import my.ep.persistence.entity.ct.dtl.CtSchedule;
 import my.ep.persistence.entity.ct.dtl.deduction.CtDeduction;
 import my.ep.persistence.entity.ct.dtl.deduction.CtDeductionClause;
+import my.ep.persistence.entity.ct.suspend.CtSuspendActive;
 import my.ep.persistence.entity.ct.terminate.CtTermination;
 import my.ep.persistence.entity.ct.terminate.CtTerminationClause;
 import my.ep.persistence.entity.ct.terminate.CtTerminationReason;
+import my.ep.persistence.entity.pm.authorization.PmUserGroup;
+import my.ep.persistence.entity.pm.authorization.PmUserGroupUser;
 import my.ep.web.managedbean.BaseManagedBean;
 
 import org.apache.log4j.Logger;
@@ -43,6 +47,7 @@ public class ContractDetailsManagedBean extends BaseManagedBean{
 	private String[] action;
 	private String processName;
 	private int selectedIndex;
+	private String chkRenderPage ="BPM";
 	
 	private String showItem ="Item  Pricing";
 	private boolean itemPricing = true;
@@ -61,6 +66,8 @@ public class ContractDetailsManagedBean extends BaseManagedBean{
 	private CtProgressivePayment ctProgressivePaymentDel = new CtProgressivePayment();
 	
 	private DualListModel<String> approverModel;
+	private HashMap<String, PmUserGroupUser> approverMap;
+	private Map<Long, PmUserGroup> userGroupMap;
 	
 	private List<CtRemark> remarkList;
 	private List<CtAttachment> attachmentList;
@@ -77,6 +84,7 @@ public class ContractDetailsManagedBean extends BaseManagedBean{
 	
 	private boolean activeSuspension;
 	private boolean booleanSuspendValue = false;
+	private CtSuspendActive ctSuspendActive;
 	
 	private CtAssociation association = new CtAssociation();
 	private List<CtAssociation> associationList;
@@ -98,7 +106,6 @@ public class ContractDetailsManagedBean extends BaseManagedBean{
 	
 	private String projectName;
 	private String projectDescription;
-	
 	
 	public String[] getAction() {
 		return action;
@@ -501,6 +508,46 @@ public class ContractDetailsManagedBean extends BaseManagedBean{
 			List<CtContractVer> assocoiateContractVerList) {
 		this.assocoiateContractVerList = assocoiateContractVerList;
 	}
+	
+	/**
+	 * @return the approverMap
+	 */
+	public HashMap<String, PmUserGroupUser> getApproverMap() {
+		if(approverMap == null){
+			setApproverMap(new HashMap<String,PmUserGroupUser>());
+		}
+		return approverMap;
+	}
 
+	/**
+	 * @param approverMap the approverMap to set
+	 */
+	public void setApproverMap(HashMap<String, PmUserGroupUser> approverMap) {
+		this.approverMap = approverMap;
+	}
+
+	public Map<Long, PmUserGroup> getUserGroupMap() {
+		return userGroupMap;
+	}
+
+	public void setUserGroupMap(Map<Long, PmUserGroup> userGroupMap) {
+		this.userGroupMap = userGroupMap;
+	}
+
+	public CtSuspendActive getCtSuspendActive() {
+		return ctSuspendActive;
+	}
+
+	public void setCtSuspendActive(CtSuspendActive ctSuspendActive) {
+		this.ctSuspendActive = ctSuspendActive;
+	}
+
+	public String getChkRenderPage() {
+		return chkRenderPage;
+	}
+
+	public void setChkRenderPage(String chkRenderPage) {
+		this.chkRenderPage = chkRenderPage;
+	}
 	
 }
