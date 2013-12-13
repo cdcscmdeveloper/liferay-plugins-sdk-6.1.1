@@ -24,7 +24,6 @@ import my.ep.biz.bean.search.SearchFilterBean;
 import my.ep.biz.service.ct.circular.ICircularSO;
 import my.ep.biz.service.pm.authorization.user.IUserSO;
 import my.ep.biz.service.pm.common.state.IStateSO;
-import my.ep.bpm.service.IBpmSO;
 import my.ep.constant.BpmOutcomeConst;
 import my.ep.constant.ct.ContractConst;
 import my.ep.constant.ct.ContractStatusConst;
@@ -52,7 +51,6 @@ import my.ep.persistence.entity.pm.common.PmCode;
 import my.ep.persistence.entity.pm.common.PmState;
 import my.ep.persistence.entity.sm.SmSupplier;
 import my.ep.type.aut.SearchOperator;
-import my.ep.util.lookupservice.EpBpmBusinessDelegate;
 import my.ep.web.backingbean.BaseBackingBean;
 import my.ep.web.backingbean.ct.ContractBackingBean;
 import my.ep.web.bean.paginator.IPagingDataModel;
@@ -186,7 +184,6 @@ public class PanelBackingBean extends BaseBackingBean<PanelManagedBean>{
 			}
 			
 			FacesScopes facesScope = new FacesScopes();
-
 			CircularReqDTO reqDTO = new CircularReqDTO();
 			reqDTO.setSelectedApprovers(getManagedBean().getApproverModel().getTarget());
 			reqDTO.setAvailableApprovers(getManagedBean().getApproverModel().getSource());
@@ -240,15 +237,7 @@ public class PanelBackingBean extends BaseBackingBean<PanelManagedBean>{
 		try {
 			circularSO = (ICircularSO)BusinessDelegate.getInstance().getServiceObject("ct",ICircularSO.class);
 			
-			String token = getManagedBean().getToken();
-			if(token==null) {
-				IBpmSO bpmSO = (IBpmSO) EpBpmBusinessDelegate.getInstance().getServiceObject(IBpmSO.class);
-				token = bpmSO.authenticate("roslan", "welcome1");
-				if(token==null) {
-					throw new EpException("BPM token not found");
-				}
-			}
-
+			FacesScopes facesScope = new FacesScopes();
 			CircularReqDTO reqDTO = new CircularReqDTO();
 			reqDTO.setCancelCircularReq(getManagedBean().getCancelCircularReq());
 			reqDTO.setSelectedApprovers(getManagedBean().getApproverModel().getTarget());
@@ -257,14 +246,26 @@ public class PanelBackingBean extends BaseBackingBean<PanelManagedBean>{
 			reqDTO.setAttachments(getManagedBean().getAttachmentList());			
 			reqDTO.setDocType(getManagedBean().getCircularDocType());
 			reqDTO.setOutcome(action);
-			reqDTO.setToken(token);
+			reqDTO.setToken(facesScope.getBPMAuthenticationCtxToken());
 			reqDTO.setTaskId(getManagedBean().getTaskId());
+			
+			if(getManagedBean().getCircularVer().getPmUserGroup().getUserGroupId()!=null) {
+				getManagedBean().getCancelCircularReq().setPmUserGroup(getManagedBean().getCircularVer().getPmUserGroup());
+				PmUserGroup pmUserGroup = getManagedBean().getUserGroupMap().get(getManagedBean().getCancelCircularReq().getPmUserGroup().getUserGroupId());
+				Map<String, PmUser> userMap = new HashMap<String, PmUser>();
+				for(PmUserGroupUser userGroupUser : pmUserGroup.getPmUserGroupUsers()) {
+					userMap.put(userGroupUser.getPmUser().getUserName(), userGroupUser.getPmUser());
+				}
+				reqDTO.setUserMap(userMap);
+			}
 			
 			CircularResDTO resDTO = circularSO.saveCancelCircularRequest(reqDTO);
 			if(resDTO.isSuccessful()) {
 				log.info("Record saved successfully");
 				FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "Record saved successfully.","Cancel Circular Request"));
-				if(!action.equalsIgnoreCase(BpmOutcomeConst.BPM_SAVE)) { // save action will remain in the same page
+				// save action with task ID not null will remain in the same page
+				if(!action.equalsIgnoreCase(BpmOutcomeConst.BPM_SAVE) || 
+					(action.equalsIgnoreCase(BpmOutcomeConst.BPM_SAVE) && getManagedBean().getTaskId()==null)) { 
 					renewSesionObject();
 					return "/xhtml/shared/acknowledge.xhtml";
 				}

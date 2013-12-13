@@ -70,32 +70,33 @@
 					<h:outputText value="#{data.name}" />
 				</p:column>
 				<p:column>
-					<h:outputText value="#{data.updateType.code}" />
+					<h:outputText value="#{data.updateType.pmCodeDescs[0].codeName}" />
 				</p:column>
 				<p:column>
 					<h:outputText value="#{data.updateNo}" />
 				</p:column>
 				<p:column>
-					<h:outputText value="#{data.status.statusId}" />
+					<h:outputText value="#{data.status.pmStatusDescs[0].statusName}" />
 				</p:column>
 				<p:column>
 					<h:outputText value="#{data.startDate}" >
-						<f:convertDateTime pattern="dd/MM/yyyy" />
+						<f:convertDateTime pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}" />
 					</h:outputText>
 				</p:column>
 				<p:column>
 					<h:outputText value="#{data.endDate}" >
-						<f:convertDateTime pattern="dd/MM/yyyy" />
+						<f:convertDateTime pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}" />
 					</h:outputText>
 				</p:column>
 				<p:column styleClass="column-align-center">
-				<p:commandLink onclick="gotoPage([{name:'action',value:'update'},{name:'circularVerId',value:'#{data.circularVerId}'}])">
-				 <p:graphicImage library="ep/images/design" name="edit.png" value="/resources/ep/images/design/edit.png" title="Update" />
-				</p:commandLink>
-				<p:spacer width="5" />	
-				<p:commandLink onclick="gotoPage([{name:'action',value:'view'},{name:'circularVerId',value:'#{data.circularVerId}'}])">
-				 <p:graphicImage library="ep/images/design" name="document.png" value="/resources/ep/images/design/document.png" title="View" />
-				</p:commandLink>	
+					<p:commandLink rendered="#{data.status.statusId==CtStatusConst.approved}"
+						onclick="gotoPage([{name:'action',value:'update'},{name:'circularVerId',value:'#{data.circularVerId}'}])">
+						<p:graphicImage library="ep/images/design" name="edit.png" value="/resources/ep/images/design/edit.png" title="Update" />
+					</p:commandLink>
+					<p:spacer width="5" />
+					<p:commandLink onclick="gotoPage([{name:'action',value:'view'},{name:'circularVerId',value:'#{data.circularVerId}'}])">
+						<p:graphicImage library="ep/images/design" name="document.png" value="/resources/ep/images/design/document.png" title="View" />
+					</p:commandLink>
 				</p:column>
 			</p:dataTable>		
 			<p:remoteCommand name="gotoPage" action="#{centralContractBackingBean.gotoPage}" />

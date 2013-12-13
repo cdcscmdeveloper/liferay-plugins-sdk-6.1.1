@@ -93,12 +93,12 @@
 			</p:column>
 			<p:column>
 				<h:outputText value="#{data.ctContract.latestContractVer.ctContractValue.effDate}" >
-					<f:convertDateTime pattern="dd/MM/yyyy" />
+					<f:convertDateTime pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}" />
 				</h:outputText>
 			</p:column>
 			<p:column>
 				<h:outputText value="#{data.ctContract.latestContractVer.ctContractValue.expDate}" >
-					<f:convertDateTime pattern="dd/MM/yyyy" />
+					<f:convertDateTime pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}" />
 				</h:outputText>
 			</p:column>
 			<p:column styleClass="column-align-center">
@@ -140,22 +140,22 @@
 				<ac:paginator for="contractDt" />
 				<p:column selectionMode="multiple" style="width:18px" />
 				<p:column headerText="Contract No">
-					<h:outputText value="#{data.contractValue.contractNo}" />
+					<h:outputText value="#{data.latestContractVer.ctContractValue.contractPhysicalNo}" />
 				</p:column>
 				<p:column headerText="Contract Name">
 					<h:outputText value="#{data.contractName}" />
 				</p:column>
 				<p:column headerText="LOA No">
-					<h:outputText value="#{data.qtLoaNo}" />
+					<h:outputText value="#{data.loaNo}" />
 				</p:column>
 				<p:column headerText="Contract Start">
-					<h:outputText value="#{data.contractValue.effDate}" >
-						<f:convertDateTime pattern="dd/MM/yyyy" />
+					<h:outputText value="#{data.latestContractVer.ctContractValue.effDate}" >
+						<f:convertDateTime pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}" />
 					</h:outputText>
 				</p:column>
 				<p:column headerText="Contract End">
-					<h:outputText value="#{data.contractValue.expDate}" >
-						<f:convertDateTime pattern="dd/MM/yyyy" />
+					<h:outputText value="#{data.latestContractVer.ctContractValue.expDate}" >
+						<f:convertDateTime pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}" />
 					</h:outputText>
 				</p:column>
 			</p:dataTable>

@@ -23,7 +23,6 @@ import my.ep.biz.bean.search.SearchFilterBean;
 import my.ep.biz.service.ct.IContractSO;
 import my.ep.biz.service.ct.circular.ICircularSO;
 import my.ep.biz.service.pm.authorization.user.IUserSO;
-import my.ep.bpm.service.IBpmSO;
 import my.ep.constant.BpmOutcomeConst;
 import my.ep.constant.ct.ContractConst;
 import my.ep.constant.ct.ContractStatusConst;
@@ -44,12 +43,12 @@ import my.ep.persistence.entity.ct.circular.dtl.CtContactPerson;
 import my.ep.persistence.entity.pm.authorization.PmUserGroupUser;
 import my.ep.persistence.entity.pm.common.PmCode;
 import my.ep.type.aut.SearchOperator;
-import my.ep.util.lookupservice.EpBpmBusinessDelegate;
 import my.ep.web.backingbean.BaseBackingBean;
 import my.ep.web.backingbean.ct.ContractBackingBean;
 import my.ep.web.bean.paginator.IPagingDataModel;
 import my.ep.web.bean.paginator.PagingDataModel;
 import my.ep.web.managedbean.ct.circular.cc.CentralContractManagedBean;
+import my.ep.web.util.FacesScopes;
 import my.ep.web.util.lookupservice.BusinessDelegate;
 
 import org.apache.log4j.Logger;
@@ -119,9 +118,12 @@ public class CentralContractBackingBean extends BaseBackingBean<CentralContractM
 			ISearchBean<CtContract> searchBean = new SearchBean<CtContract>();
 
 			searchBean.getDataFilterBeans().add(new SearchFilterBean("contractType.code",SearchOperator.OPERATOR_EQUALS.value(),PmCodeConst.CONTRACT_TYPE_CENTRAL));
-			searchBean.getDataFilterBeans().add(new SearchFilterBean("status.statusId",SearchOperator.OPERATOR_EQUALS.value(),ContractStatusConst.APPROVED));
+			searchBean.getDataFilterBeans().add(new SearchFilterBean("latestContractVer.status.statusId",SearchOperator.OPERATOR_EQUALS.value(),ContractStatusConst.APPROVED));
 			//TODO shouldn't use this method as will cause performance issue. Please find a better way.
-			searchBean.getDataFilterBeans().add(new SearchFilterBean("contractId",SearchOperator.OPERATOR_NOT_IN.value(), circularSO.retrieveApprovedCircularContractId(null).getContractIdList()));
+			List<Long> contractIdList = circularSO.retrieveApprovedCircularContractId(null).getContractIdList();
+			if(contractIdList!=null && contractIdList.size()>0) {
+				searchBean.getDataFilterBeans().add(new SearchFilterBean("contractId",SearchOperator.OPERATOR_NOT_IN.value(), contractIdList));
+			}
 			
 			if(getManagedBean().getSearchContractNo()!=null && getManagedBean().getSearchContractNo().length()>0) {
 				searchBean.getDataFilterBeans().add(new SearchFilterBean("contractNo",SearchOperator.OPERATOR_EQUALS.value(),getManagedBean().getSearchContractNo()));	
@@ -323,14 +325,7 @@ public class CentralContractBackingBean extends BaseBackingBean<CentralContractM
 			circularVer.setCircularFileName("temp");
 			circularVer.setCircularFilePath("tempPath");
 			
-			String token = getManagedBean().getToken();
-			if(token==null) {
-				IBpmSO bpmSO = (IBpmSO) EpBpmBusinessDelegate.getInstance().getServiceObject(IBpmSO.class);
-				token = bpmSO.authenticate("roslan", "welcome1");
-				if(token==null) {
-					throw new EpException("BPM token not found");
-				}
-			}
+			FacesScopes facesScope = new FacesScopes();
 
 			CircularReqDTO reqDTO = new CircularReqDTO();
 			reqDTO.setSelectedApprovers(getManagedBean().getApproverModel().getTarget());
@@ -340,7 +335,7 @@ public class CentralContractBackingBean extends BaseBackingBean<CentralContractM
 			reqDTO.setCircular(circular);
 			reqDTO.setCircularVer(circularVer);
 			reqDTO.setOutcome(outcome);
-			reqDTO.setToken(token);
+			reqDTO.setToken(facesScope.getBPMAuthenticationCtxToken());
 			reqDTO.setTaskId(getManagedBean().getTaskId());
 			
 			CircularResDTO resDTO = circularSO.saveCircular(reqDTO);
@@ -351,14 +346,15 @@ public class CentralContractBackingBean extends BaseBackingBean<CentralContractM
 					message = message + ". Update No. : "+circularVer.getUpdateNo();
 				}
 				FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "Record saved successfully.",message));
-				if(!token.equalsIgnoreCase(BpmOutcomeConst.BPM_SAVE)) { // save action will remain in the same page
+				// save action with task ID not null will remain in the same page
+				if(!outcome.equalsIgnoreCase(BpmOutcomeConst.BPM_SAVE) || 
+					(outcome.equalsIgnoreCase(BpmOutcomeConst.BPM_SAVE) && getManagedBean().getTaskId()==null)) { 
 					renewSesionObject();
 					return "/xhtml/shared/acknowledge.xhtml";
-				}
+				}				
 			} else {
 				throw new EpException("Failed.");
 			}
-			
 		} catch (Exception e) {
 			e.printStackTrace();
 			FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR,e.toString(), "Circular save failed."));

@@ -14,22 +14,18 @@
 			<f:selectItems value="#{panelBackingBean.getCircularDocTypeValues()}" />
 		</p:selectOneMenu>		
 		<p:spacer height="10" />
-		<p:dataTable id="cancelCcrDt" var="data" lazy="true" rowIndexVar="index" paginator="true"
+		<p:dataTable id="cancelCcrDt" var="data" lazy="true" paginator="true"
 			value="#{panelBackingBean.managedBean.cancelCircularReq.ctCancelCircularList}" >
 			<ac:paginator for="cancelCcrDt" />
 			<p:columnGroup type="header">
 				<p:row>
-					<p:column style="width:30px" headerText="#{lbl['lbl.ct.pc.no']}" />
 					<p:column style="width:140px" headerText="#{lbl['lbl.ct.pc.cno']}" />
 					<p:column style="width:200px" headerText="#{lbl['lbl.ct.pc.cname']}" />
-					<p:column style="width:100px" headerText="#{lbl['lbl.ct.pc.ctype']}" />
+					<p:column style="width:100px" headerText="Update Type" />
 					<p:column style="width:100px" headerText="Update No." />
 					<p:column style="width:80px" headerText="#{lbl['lbl.ct.pc.action']}" />
 				</p:row>
 			</p:columnGroup>
-			<p:column styleClass="column-align-center">
-				<h:outputText value="#{index+1}" />
-			</p:column>
 			<p:column>
 				<h:outputText value="#{data.ctCancelCircularVer.circularNo}" />
 			</p:column>
@@ -37,7 +33,7 @@
 				<h:outputText value="#{data.ctCancelCircularVer.name}" />
 			</p:column>
 			<p:column>
-				<h:outputText value="#{data.ctCancelCircularVer.circularTypeCode.code}" />
+				<h:outputText value="#{data.ctCancelCircularVer.updateType.pmCodeDescs[0].codeName}" />
 			</p:column>
 			<p:column>
 				<h:outputText value="#{data.ctCancelCircularVer.updateNo}" />
@@ -68,12 +64,9 @@
 			<p:panel id="circular">
 				<p:dataTable id="circularVerDt" var="data" lazy="true" rowKey="#{data.circularVerId}" 
 					selection="#{panelBackingBean.managedBean.selectedCircularVerList}"
-					value="#{panelBackingBean.managedBean.circularVerList}" rowIndexVar="index" >
+					value="#{panelBackingBean.managedBean.circularVerList}" >
 					<ac:paginator for="circularVerDt" />
 					<p:column selectionMode="multiple" style="width:18px" />
-					<p:column headerText="No.">
-						<h:outputText value="#{index+1}" />
-					</p:column>
 					<p:column headerText="Circular No.">
 						<h:outputText value="#{data.circularNo}" />
 					</p:column>
@@ -81,7 +74,7 @@
 						<h:outputText value="#{data.name}" />
 					</p:column>
 					<p:column headerText="Update Type">
-						<h:outputText value="#{data.circularTypeCode.code}" />
+						<h:outputText value="#{data.updateType.pmCodeDescs[0].codeName}" />
 					</p:column>
 					<p:column headerText="Update No.">
 						<h:outputText value="#{data.updateNo}" />

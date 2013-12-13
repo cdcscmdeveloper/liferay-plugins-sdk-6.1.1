@@ -13,15 +13,17 @@
 			<h:outputLabel value="#{lbl['lbl.ct.cc.cname']}" />
 			<p:inputText disabled="true" value="#{panelBackingBean.managedBean.circularVer.name}" />
 			<h:outputLabel value="#{lbl['lbl.ct.cc.csdate']}" />
-			<p:calendar disabled="true" value="#{panelBackingBean.managedBean.circularVer.startDate}" id="popupButtonCal" showOn="button" />
+			<p:calendar disabled="true" value="#{panelBackingBean.managedBean.circularVer.startDate}" 
+				pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}" id="popupButtonCal" showOn="button" />
 			<h:outputLabel value="#{lbl['lbl.ct.cc.cedate']}" />
-			<p:calendar disabled="true" value="#{panelBackingBean.managedBean.circularVer.endDate}" id="popupButtonCal1" showOn="button" />
+			<p:calendar disabled="true" value="#{panelBackingBean.managedBean.circularVer.endDate}" 
+				pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}" id="popupButtonCal1" showOn="button" />
 			<h:outputLabel value="#{lbl['lbl.ct.cc.upload']}" />
 			<p:fileUpload disabled="true" value="#{panelBackingBean.circularLetter}" mode="simple" cancelLabel="true" />
 			<h:outputLabel value="#{lbl['lbl.ct.cc.frno']}" />
 			<p:inputText disabled="true" value="#{panelBackingBean.managedBean.circularVer.circularFileRefNo}" />			
 			<p:outputLabel value="Circular Type" />
-			<p:selectOneMenu value="#{panelBackingBean.managedBean.circularVer.circularTypeCode.codeId}">
+			<p:selectOneMenu value="#{panelBackingBean.managedBean.circularVer.updateType.codeId}">
 				<f:selectItems value="#{panelBackingBean.getDropdownValues(PmCodeCatConst.circularType)}" />
 			</p:selectOneMenu>
 			<h:outputLabel value="Update No." />
@@ -39,9 +41,11 @@
 			<f:verbatim />
 			<f:verbatim />			
 			<h:outputLabel value="Extension Start Date" />
-			<p:calendar style="width:150px;" value="#{panelBackingBean.managedBean.circularVer.extStartDate}" id="popupButtonCal3" showOn="button" />
+			<p:calendar style="width:150px;" value="#{panelBackingBean.managedBean.circularVer.extStartDate}"
+				pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}" id="popupButtonCal3" showOn="button" />
 			<h:outputLabel value="Extension End Date" />
-			<p:calendar style="width:150px;" value="#{panelBackingBean.managedBean.circularVer.extEndDate}" id="popupButtonCal4" showOn="button" />				
+			<p:calendar style="width:150px;" value="#{panelBackingBean.managedBean.circularVer.extEndDate}" 
+				pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}" id="popupButtonCal4" showOn="button" />				
 		</h:panelGrid>
 		<h:panelGrid columns="1" style="width:120px;">
 			<p:outputLabel value="#{lbl['lbl.ct.cc.coverage']}" />

@@ -79,16 +79,16 @@
 					<h:outputText value="#{data.updateNo}" />
 				</p:column>
 				<p:column>
-					<h:outputText value="#{data.status.statusId}" />
+					<h:outputText value="#{data.status.pmStatusDescs[0].statusName}" />
 				</p:column>
 				<p:column>
 					<h:outputText value="#{data.startDate}" >
-						<f:convertDateTime pattern="dd/MM/yyyy" />
+						<f:convertDateTime pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}" />
 					</h:outputText>
 				</p:column>
 				<p:column>
 					<h:outputText value="#{data.endDate}" >
-						<f:convertDateTime pattern="dd/MM/yyyy" />
+						<f:convertDateTime pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}" />
 					</h:outputText>
 				</p:column>
 				<p:column styleClass="column-align-center">
