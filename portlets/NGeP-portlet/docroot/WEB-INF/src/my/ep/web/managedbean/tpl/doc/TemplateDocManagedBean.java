@@ -11,6 +11,7 @@ import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
 import javax.faces.model.SelectItem;
 
+import my.ep.persistence.entity.tpl.TplCategory;
 import my.ep.persistence.entity.tpl.doc.TplDocMaster;
 import my.ep.persistence.entity.tpl.doc.TplDocSection;
 import my.ep.web.managedbean.BaseManagedBean;
@@ -31,8 +32,16 @@ public class TemplateDocManagedBean extends BaseManagedBean {
 	private static final long serialVersionUID = 1L;
 
 	private Long categoryId;
+	private String processType;
+	private String title;
+	private String desc;
+	private String templCategory;
+	
+
 	private Long impCategoryId;
 	private Long docMasterId;	
+	
+	private TplCategory category;
 	
 	private TplDocMaster selectedTemplate;
 	private TplDocMaster selectedImpMaster;
@@ -60,15 +69,29 @@ public class TemplateDocManagedBean extends BaseManagedBean {
 	private String selectedVariable;
 	private boolean showTemplateList = false;
 	
-	private List<SelectItem> templateTypeList;
-	private Map<String, String> templateTypeMap;
+	private String selectedSectionText;
 	
-	/**
+		private List<SelectItem> templateTypeList;
+	    private Map<String, String> templateTypeMap;
+	
+	
+	private List<SelectItem> templateCategoryList; 
+	
+	private List<SelectItem> templateProcessTypeList;
+	
+	//private List<TplSearch> templateDocSearch;
+	
+	
+	// for search in data table
+	private List<TplDocMaster> templateSearchList;
+	
+		/**
 	 * TemplateManagedBean constructor.
 	 */	
 	public TemplateDocManagedBean() {
 	}
 
+	
 	public List<TplDocSection> getFullTemplateList() {
 		return fullTemplateList;
 	}
@@ -287,6 +310,98 @@ public class TemplateDocManagedBean extends BaseManagedBean {
 
 	public void setSelectedSectionContent(String selectedSectionContent) {
 		this.selectedSectionContent = selectedSectionContent;
+	}
+
+	public TplCategory getCategory() {
+		return category;
+	}
+
+	public void setCategory(TplCategory category) {
+		this.category = category;
+	}
+
+	public List<SelectItem> getTemplateCategoryList() {
+		return templateCategoryList;
+	}
+
+	public void setTemplateCategoryList(List<SelectItem> templateCategoryList) {
+		this.templateCategoryList = templateCategoryList;
+	}
+
+	public List<SelectItem> getTemplateProcessTypeList() {
+		return templateProcessTypeList;
+	}
+
+	public void setTemplateProcessTypeList(List<SelectItem> templateProcessTypeList) {
+		this.templateProcessTypeList = templateProcessTypeList;
+	}
+
+	/*public List<TplSearch> getTemplateDocSearch() {
+		return templateDocSearch;
+	}
+
+	public void setTemplateDocSearch(List<TplSearch> templateDocSearch) {
+		this.templateDocSearch = templateDocSearch;
+	}*/
+
+
+	public String getProcessType() {
+		return processType;
+	}
+
+
+	public void setProcessType(String processType) {
+		this.processType = processType;
+	}
+
+
+	public String getTemplCategory() {
+		return templCategory;
+	}
+
+
+	public void setTemplCategory(String templCategory) {
+		this.templCategory = templCategory;
+	}
+
+
+	public List<TplDocMaster> getTemplateSearchList() {
+		return templateSearchList;
+	}
+
+
+	public void setTemplateSearchList(List<TplDocMaster> templateSearchList) {
+		this.templateSearchList = templateSearchList;
+	}
+
+
+	public String getSelectedSectionText() {
+		return selectedSectionText;
+	}
+
+
+	public void setSelectedSectionText(String selectedSectionText) {
+		this.selectedSectionText = selectedSectionText;
+	}
+
+
+	public String getTitle() {
+		return title;
+	}
+
+
+	public void setTitle(String title) {
+		this.title = title;
+	}
+
+
+	public String getDesc() {
+		return desc;
+	}
+
+
+	public void setDesc(String desc) {
+		this.desc = desc;
 	}
 
 }
