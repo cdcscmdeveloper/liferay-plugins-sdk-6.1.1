@@ -87,7 +87,7 @@ public class BPMTaskListBackingBean extends
 		temp.put(FlProcessNameConst.CONTRACT_REQ_CREATION_PROCESS_NAME+FlProcessNameConst.CREATE_CO_HT, "contract-request");
 		temp.put(FlProcessNameConst.CONTRACT_REQ_CREATION_PROCESS_NAME+FlProcessNameConst.CREATE_NEW_CO_HT, "contract-request");
 		temp.put(FlProcessNameConst.MTO_CONTRACT_REQ_CREATION_PROCESS_NAME+FlProcessNameConst.INTIATE_MTO_CR_HT, "contract-request");
-		temp.put(FlProcessNameConst.MTO_CONTRACT_REQ_CREATION_PROCESS_NAME+FlProcessNameConst.CREATE_NEW_CO_HT, "contract-request");
+		temp.put(FlProcessNameConst.MTO_CONTRACT_REQ_CREATION_PROCESS_NAME+FlProcessNameConst.CREATE_NEW_MTO_CO_HT, "contract-request");
 		temp.put(FlProcessNameConst.CONTRACT_REQ_INITIATION_PROCESS_NAME+FlProcessNameConst.CREATE_NEW_CO_HT, "contract-request");
 		temp.put(FlProcessNameConst.CONTRACT_REQ_INITIATION_PROCESS_NAME+FlProcessNameConst.CREATE_NORMAL_CO_HT, "contract-request");
 
@@ -179,6 +179,8 @@ public class BPMTaskListBackingBean extends
 					+ res.getProcessName());
 			System.out.println("********res.getAction()********"
 					+ res.getAction());
+			System.out.println("********getTaskName********"
+					+ res.getTaskName());
 			this.getManagedBean().setProcessName(res.getProcessName());
 			this.getManagedBean().setAction(res.getAction());
 			Object obj = res.getPojo();

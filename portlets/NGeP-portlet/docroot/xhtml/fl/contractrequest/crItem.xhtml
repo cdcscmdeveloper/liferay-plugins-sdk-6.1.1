@@ -48,7 +48,7 @@
 		
 		<p:dataTable id="itemDataTable" var="item" lazy="true" rowIndexVar="index"
 			value="#{contractRequestBackingBean.managedBean.selectedDelAddr.flFulfilmentItemAddr}"
-			rendered="#{not empty contractRequestBackingBean.managedBean.flRequest.flDeliveryAddresses}">
+			rendered="#{not empty contractRequestBackingBean.managedBean.selectedDelAddr}">
 			<ac:paginator for="itemDataTable"/>
 			
 			<p:column headerText="Item Name">
@@ -96,7 +96,7 @@
 		<p:spacer height="2px"></p:spacer>
 		<div style="width: 100%;text-align:right" >
 				<p:commandButton id="addItems" value="ADD ITEMS" action="#{contractRequestBackingBean.addContractedItems}"
-				rendered="#{not empty contractRequestBackingBean.managedBean.flRequest.flDeliveryAddresses}" 
+				rendered="#{not empty contractRequestBackingBean.managedBean.selectedDelAddr}" 
 				update="contractedItemDt" process="@this,contractedItemDt" oncomplete="addItems.show();"/>
 				
 		</div>

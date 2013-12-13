@@ -27,6 +27,7 @@ import my.ep.biz.service.pm.common.object.IObjectSO;
 import my.ep.bpm.dto.BpmRequestDTO;
 import my.ep.bpm.dto.BpmResponseDTO;
 import my.ep.bpm.service.IBpmSO;
+import my.ep.constants.FlProcessNameConst;
 import my.ep.dto.ct.ContractReqDTO;
 import my.ep.dto.ct.ContractResDTO;
 import my.ep.dto.ct.maintain.ContractAmendmentReqDTO;
@@ -397,63 +398,66 @@ public class ContractRequestBackingBean extends BaseBackingBean<ContractRequestM
 					.getServiceObject(IBpmSO.class);
 			String ctx = getFacesScopes().getBPMAuthenticationCtxToken();
 			BpmRequestDTO reqDTO = new BpmRequestDTO();
-			System.out.println("ctx: "+ctx);
 			reqDTO.setCtxToken(ctx);
 			reqDTO.setTaskId(taskId);
 			BpmResponseDTO res = bpmSO.getTaskDetails(reqDTO);
 			Object obj = res.getPojo();
+//			if(!res.getTaskName().equalsIgnoreCase(FlProcessNameConst.CREATE_NEW_CO_HT)){
 
-			IFulfilmentRequestSO requestSO = (IFulfilmentRequestSO) BusinessDelegate.getInstance().getServiceObject("fl",IFulfilmentRequestSO.class);
-			FulfilmentReqDTO flReqDTO = new FulfilmentReqDTO();
-			FulfilmentResDTO resDTO = new FulfilmentResDTO();
-			FLContractOrderDataType coObj = (FLContractOrderDataType)obj;
-			if(coObj.getContractRequestId().intValue() == 0){
-				flReqDTO.setFlRequestId(coObj.getParentContractRequestId());
-			}else{
-				flReqDTO.setFlRequestId(coObj.getContractRequestId());
+				IFulfilmentRequestSO requestSO = (IFulfilmentRequestSO) BusinessDelegate.getInstance().getServiceObject("fl",IFulfilmentRequestSO.class);
+				FulfilmentReqDTO flReqDTO = new FulfilmentReqDTO();
+				FulfilmentResDTO resDTO = new FulfilmentResDTO();
+				FLContractOrderDataType coObj = (FLContractOrderDataType)obj;
+				if(coObj.getContractRequestId().intValue() == 0){
+//					flReqDTO.setFlRequestId(coObj.getParentContractRequestId());
+					flReqDTO.setFlRequestId(coObj.getAssociatedContractRequestId());
+					
+				}else{
+					flReqDTO.setFlRequestId(coObj.getContractRequestId());
+				}
+
+
+				flReqDTO.setSelectedApprovers(coObj.getApproverList());
+				resDTO = requestSO.retrieveFulfilmentRequest(flReqDTO);
+
+				FulfilmentBackingBean flBB = new FulfilmentBackingBean();
+				flBB.getManagedBean().setRemarkList(resDTO.getRemarkList());
+				flBB.getManagedBean().setAttachmentList(resDTO.getAttachmentList());
+				flBB.initializeRemarkAndAttachement(flBB.getManagedBean().getRemarkList(), flBB.getManagedBean().getAttachmentList());
+
+				IOrgProfileSO orgProfileSO = (IOrgProfileSO)BusinessDelegate.getInstance().getServiceObject("pm",IOrgProfileSO.class);
+				OrgProfileReqDTO orgProfileReqDTO = new OrgProfileReqDTO();
+				//TODO
+				orgProfileReqDTO.setOrgProfileId(4L);
+				OrgProfileResDTO pmResDTO = orgProfileSO.retrieveOrgProfileByProfileId(orgProfileReqDTO);
+
+				if(coObj.getContractRequestId().intValue() == 0){
+					FlFulfilmentRequest flRequest = new FlFulfilmentRequest();
+					IContractSO contractSO = (IContractSO)BusinessDelegate.getInstance().getServiceObject("ct",IContractSO.class);
+					ContractReqDTO contractReqDTO = new ContractReqDTO();
+					contractReqDTO.setContractId(resDTO.getFlFulfilmentRequest().getCtContract().getContractId());
+
+					flRequest.setCtContract(contractSO.retrieveNormalContractByMtoContract(contractReqDTO).getContract());
+					getManagedBean().setFlRequest(flRequest);
+					getManagedBean().getFlRequest().setPmDocStatus(new PmStatus());
+					getManagedBean().getFlRequest().setIssuedOrgProfile(new PmOrgProfile());
+					getManagedBean().getFlRequest().setChargeOrgProfile(new PmOrgProfile());
+					getManagedBean().getFlRequest().setReceivedOrgProfile(new PmOrgProfile());
+					getManagedBean().getFlRequest().setFlDeliveryAddresses(new ArrayList<FlDeliveryAddress>());
+
+				} else{
+					getManagedBean().setFlRequest(resDTO.getFlFulfilmentRequest());
+				}
+				getManagedBean().setTaskId(taskId);
+				getManagedBean().setOutComes(res.getAction());
+				getManagedBean().getApproverModel().setTarget(resDTO.getSelectedApproverList());
+				getManagedBean().getApproverModel().getSource().removeAll(resDTO.getSelectedApproverList());
+				if(pmResDTO.getPmOrgProfile() != null){
+					getManagedBean().getFlRequest().setCreatedOrgProfile(pmResDTO.getPmOrgProfile());
+				}
 			}
 
-			flReqDTO.setSelectedApprovers(coObj.getApproverList());
-
-			resDTO = requestSO.retrieveFulfilmentRequest(flReqDTO);
-
-			FulfilmentBackingBean flBB = new FulfilmentBackingBean();
-			flBB.getManagedBean().setRemarkList(resDTO.getRemarkList());
-			flBB.getManagedBean().setAttachmentList(resDTO.getAttachmentList());
-			flBB.initializeRemarkAndAttachement(flBB.getManagedBean().getRemarkList(), flBB.getManagedBean().getAttachmentList());
-
-			IOrgProfileSO orgProfileSO = (IOrgProfileSO)BusinessDelegate.getInstance().getServiceObject("pm",IOrgProfileSO.class);
-			OrgProfileReqDTO orgProfileReqDTO = new OrgProfileReqDTO();
-			//TODO
-			orgProfileReqDTO.setOrgProfileId(4L);
-			OrgProfileResDTO pmResDTO = orgProfileSO.retrieveOrgProfileByProfileId(orgProfileReqDTO);
-
-			if(coObj.getContractRequestId().intValue() == 0){
-				FlFulfilmentRequest flRequest = new FlFulfilmentRequest();
-				IContractSO contractSO = (IContractSO)BusinessDelegate.getInstance().getServiceObject("ct",IContractSO.class);
-				ContractReqDTO contractReqDTO = new ContractReqDTO();
-				contractReqDTO.setContractId(resDTO.getFlFulfilmentRequest().getCtContract().getContractId());
-
-				flRequest.setCtContract(contractSO.retrieveNormalContractByMtoContract(contractReqDTO).getContract());
-				getManagedBean().setFlRequest(flRequest);
-				getManagedBean().getFlRequest().setPmDocStatus(new PmStatus());
-				getManagedBean().getFlRequest().setIssuedOrgProfile(new PmOrgProfile());
-				getManagedBean().getFlRequest().setChargeOrgProfile(new PmOrgProfile());
-				getManagedBean().getFlRequest().setReceivedOrgProfile(new PmOrgProfile());
-				getManagedBean().getFlRequest().setFlDeliveryAddresses(new ArrayList<FlDeliveryAddress>());
-
-			} else{
-				getManagedBean().setFlRequest(resDTO.getFlFulfilmentRequest());
-			}
-			getManagedBean().setTaskId(taskId);
-			getManagedBean().setOutComes(res.getAction());
-			getManagedBean().getApproverModel().setTarget(resDTO.getSelectedApproverList());
-			getManagedBean().getApproverModel().getSource().removeAll(resDTO.getSelectedApproverList());
-			if(pmResDTO.getPmOrgProfile() != null){
-				getManagedBean().getFlRequest().setCreatedOrgProfile(pmResDTO.getPmOrgProfile());
-			}
-
-		}
+//		}
 	}
 	
 	public List<SelectItem> getGoList(){
