@@ -2,7 +2,6 @@ package my.ep.web.backingbean.bpm.tasklist;
 
 import java.io.IOException;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.Map;
 
 import javax.faces.bean.ManagedBean;
@@ -72,11 +71,12 @@ public class BPMTaskListBackingBean extends
 		temp.put("Circular Contract Cancellation", "cancel-circular");
 		temp.put("Factoring Company Request", "request-factoring");
 		temp.put("Contract Creation", "fulfilment-details");
-		temp.put("Contract Activation Suspension Request", "contract-maintenance");
-		temp.put("Contract Amendment Request", "contract-maintenance");
-		temp.put("Contract Termination", "contract-maintenance");
+		temp.put("Contract Activation Suspension Request", "contract-suspension");
+		temp.put("Contract Amendment Request", "contract-amendment");
+		temp.put("Contract Termination", "contract-termination");
 		temp.put("Agreement Creation", "agreement");
 		temp.put("Agreement Creation", "supplemental-agreement");
+		temp.put("Bank Account Change Request", "change-bank-account");
 
 		//Fulfilment Management - Start
 		temp.put(FlProcessNameConst.CONTRACT_REQ_CREATION_PROCESS_NAME+FlProcessNameConst.REVIEW_CR_HT, "contract-request");
