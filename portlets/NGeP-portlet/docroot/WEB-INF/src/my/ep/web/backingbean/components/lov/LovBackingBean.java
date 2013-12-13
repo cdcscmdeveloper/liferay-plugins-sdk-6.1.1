@@ -35,6 +35,7 @@ import my.ep.web.util.lookupservice.BusinessDelegate;
 
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
+import org.primefaces.context.RequestContext;
 import org.springframework.web.context.WebApplicationContext;
 import org.springframework.web.context.support.WebApplicationContextUtils;
 
@@ -162,7 +163,10 @@ public class LovBackingBean implements Serializable {
 			lovBean.setConditionField(conditionField);
 			lovBean.setUpdate(update);
 			
-			lovBean.setClientId(clientId.substring(clientId.indexOf(":")).concat(":").concat(componentId).concat("lov"));
+//			lovBean.setClientId(clientId.substring(clientId.indexOf(":")).concat(":").concat(componentId));
+			lovBean.setClientId("@(:input[id*=" + StringUtils.replace(clientId.substring(clientId.indexOf(":") + 1).concat(":").concat(componentId), ":", "\\\\:") + "])");
+
+			debugLogger("client id: " + lovBean.getClientId());
 			
 			prepareColumnTitle(lovBean);
 			createSearchOptions(lovBean);
@@ -296,6 +300,9 @@ public class LovBackingBean implements Serializable {
 			if(selectedEntity != null) {
 				valueExpression.setValue(context.getELContext(), selectedEntity);
 			}
+			
+//			RequestContext.getCurrentInstance().update(this.getLovBean().getClientId());
+
 			
 //			this.resetAction();
 //			this.setLovBean(new LovBean());

@@ -20,7 +20,7 @@
 	<p:dialog id="lovPopup" widgetVar="lovPopup" modal="true" width="700" position="top" onHide="resetAllData();">
 	
 		<f:facet name="header">
-			<h:outputLabel id="lovTitle" styleClass="ui-panel-title" value="#{lovBackingBean.lovBean.title}" />
+			<h:panelGroup id="lovTitle">#{lovBackingBean.lovBean.title}</h:panelGroup>
 		</f:facet>
 		
 		<p:panel header="Search" toggleable="true">
@@ -82,6 +82,7 @@
 
 			<table style="width:100%;"><tr><TD style="text-align:right;">
 				<p:commandButton 
+					id="slbtn"
 					value="Select"
 					action="#{lovBackingBean.populateToSaveObject}"
 					update="lovTb searchPanel #{lovBackingBean.lovBean.clientId} #{lovBackingBean.lovBean.update}"
