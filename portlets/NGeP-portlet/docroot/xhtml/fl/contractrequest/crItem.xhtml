@@ -48,6 +48,7 @@
 		
 		<p:dataTable id="itemDataTable" var="item" lazy="true" rowIndexVar="index"
 			value="#{contractRequestBackingBean.managedBean.selectedDelAddr.flFulfilmentItemAddr}"
+			selection="#{contractRequestBackingBean.managedBean.selectedItemAddr}"
 			rendered="#{not empty contractRequestBackingBean.managedBean.selectedDelAddr}">
 			<ac:paginator for="itemDataTable"/>
 			
@@ -83,7 +84,7 @@
 				</p:inputText>
 			</p:column>
 			<p:column headerText="Sub Total">
-				<p:inputText id="subTotalTxt" value="#{contractRequestBackingBean.managedBean.subTotal}" disabled="true"></p:inputText>
+				<p:inputText id="subTotalTxt" value="#{contractRequestBackingBean.managedBean.selectedItemAddr.subTotal}" disabled="true"></p:inputText>
 			</p:column>
 			<p:column headerText="Action">
 				<p:commandLink id="deleteLink" styleClass="ui-icon ui-icon-trash" update="itemDataTable" process="@this"

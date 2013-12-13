@@ -213,58 +213,61 @@ public class FulfilmentOrderBackingBean extends BaseBackingBean<FulfilmentOrderM
 				.getOriginalServletRequest(servletRequest);
 		String taskId = originalServletRequest.getParameter("taskId");
 		System.out.println("taskId:" + taskId);
+		if(taskId != null){
 
-		IBpmSO bpmSO = (IBpmSO) EpBpmBusinessDelegate.getInstance()
-				.getServiceObject(IBpmSO.class);
-		String ctx = getFacesScopes().getBPMAuthenticationCtxToken();
-		BpmRequestDTO reqDTO = new BpmRequestDTO();
+			IBpmSO bpmSO = (IBpmSO) EpBpmBusinessDelegate.getInstance()
+					.getServiceObject(IBpmSO.class);
+			String ctx = getFacesScopes().getBPMAuthenticationCtxToken();
+			BpmRequestDTO reqDTO = new BpmRequestDTO();
 
-		reqDTO.setCtxToken(ctx);
-		reqDTO.setTaskId(taskId);
-		BpmResponseDTO res = bpmSO.getTaskDetails(reqDTO);
-		Object obj = res.getPojo();
+			reqDTO.setCtxToken(ctx);
+			reqDTO.setTaskId(taskId);
+			BpmResponseDTO res = bpmSO.getTaskDetails(reqDTO);
+			Object obj = res.getPojo();
+			System.out.println("res.getProcessName(): "+res.getProcessName());
+			if (res.getProcessName().equalsIgnoreCase(FlProcessNameConst.STOP_FULFILMENT_REQUEST_PROCESS_NAME)){
+				IFulfilmentOrderSO orderSO = (IFulfilmentOrderSO) BusinessDelegate.getInstance().getServiceObject("fl",IFulfilmentOrderSO.class);
+				FLStopFullfillmentDataType stopFlData = (FLStopFullfillmentDataType)obj;
+				FulfilmentReqDTO flReqDTO = new FulfilmentReqDTO();
 
-		if (res.getProcessName().equalsIgnoreCase(FlProcessNameConst.STOP_FULFILMENT_REQUEST_PROCESS_NAME)){
-			IFulfilmentOrderSO orderSO = (IFulfilmentOrderSO) BusinessDelegate.getInstance().getServiceObject("fl",IFulfilmentOrderSO.class);
-			FLStopFullfillmentDataType stopFlData = (FLStopFullfillmentDataType)obj;
-			FulfilmentReqDTO flReqDTO = new FulfilmentReqDTO();
+				flReqDTO.setFlOrderId(stopFlData.getFullfillmentRequestId());
+				FulfilmentResDTO resDTO = orderSO.retrieveFulfilmentOrderById(flReqDTO);
+				getManagedBean().setStopRequestId(stopFlData.getStopRequestId().longValue());
+				getManagedBean().setTaskId(taskId);
+				getManagedBean().setOutComes(res.getAction());
+				getManagedBean().setFulfilmentOrder(resDTO.getFlOrder());
+				getManagedBean().setFlRequest(resDTO.getFlFulfilmentRequest());
+				//			flOrderBB.getManagedBean().setFlRequest(resDTO.getFlOrder().getFlFulfilmentRequest());
+				getManagedBean().setContractRequest(Boolean.TRUE);
 
-			flReqDTO.setFlOrderId(stopFlData.getFullfillmentRequestId());
-			FulfilmentResDTO resDTO = orderSO.retrieveFulfilmentOrderById(flReqDTO);
-			getManagedBean().setStopRequestId(stopFlData.getStopRequestId().longValue());
-			getManagedBean().setTaskId(taskId);
-			getManagedBean().setOutComes(res.getAction());
-			getManagedBean().setFulfilmentOrder(resDTO.getFlOrder());
-			getManagedBean().setFlRequest(resDTO.getFlFulfilmentRequest());
-			//			flOrderBB.getManagedBean().setFlRequest(resDTO.getFlOrder().getFlFulfilmentRequest());
-			getManagedBean().setContractRequest(Boolean.TRUE);
+			}else {
+				IFulfilmentRequestSO requestSO = (IFulfilmentRequestSO) BusinessDelegate.getInstance().getServiceObject("fl",IFulfilmentRequestSO.class);
+				FulfilmentReqDTO flReqDTO = new FulfilmentReqDTO();
+				FulfilmentResDTO resDTO = new FulfilmentResDTO();
 
-		}else {
-			IFulfilmentRequestSO requestSO = (IFulfilmentRequestSO) BusinessDelegate.getInstance().getServiceObject("fl",IFulfilmentRequestSO.class);
-			FulfilmentReqDTO flReqDTO = new FulfilmentReqDTO();
-			FulfilmentResDTO resDTO = new FulfilmentResDTO();
+				FLContractOrderDataType coObj = (FLContractOrderDataType)obj;
+				if(coObj.getContractRequestId().intValue() == 0){
+					flReqDTO.setFlRequestId(coObj.getParentContractRequestId());
+				}else{
+					flReqDTO.setFlRequestId(coObj.getContractRequestId());
+				}
 
-			FLContractOrderDataType coObj = (FLContractOrderDataType)obj;
-			if(coObj.getContractRequestId().intValue() == 0){
-				flReqDTO.setFlRequestId(coObj.getParentContractRequestId());
-			}else{
-				flReqDTO.setFlRequestId(coObj.getContractRequestId());
-			}
+				flReqDTO.setSelectedApprovers(coObj.getApproverList());
 
-			flReqDTO.setSelectedApprovers(coObj.getApproverList());
+				resDTO = requestSO.retrieveFulfilmentRequest(flReqDTO);
 
-			resDTO = requestSO.retrieveFulfilmentRequest(flReqDTO);
-
-			//			FulfilmentOrderBackingBean florderBB  = new FulfilmentOrderBackingBean();
-			getManagedBean().setFlRequest(resDTO.getFlFulfilmentRequest());
-			getManagedBean().setTaskId(taskId);
-			getManagedBean().setOutComes(res.getAction());
-			getManagedBean().setContractRequest(Boolean.TRUE);
+				//			FulfilmentOrderBackingBean florderBB  = new FulfilmentOrderBackingBean();
+				getManagedBean().setFlRequest(resDTO.getFlFulfilmentRequest());
+				getManagedBean().setTaskId(taskId);
+				getManagedBean().setOutComes(res.getAction());
+				getManagedBean().setContractRequest(Boolean.TRUE);
 
 
-			//			FacesContext fc = FacesContext.getCurrentInstance();
-			//			fc.getApplication().getNavigationHandler().handleNavigation(fc, null, "/xhtml/fl/contractorder/coBasePage.xhtml");
-		}  
+				//			FacesContext fc = FacesContext.getCurrentInstance();
+				//			fc.getApplication().getNavigationHandler().handleNavigation(fc, null, "/xhtml/fl/contractorder/coBasePage.xhtml");
+			}  
+		}
+		
 	}
 
 	public void preRenderViewPR() {

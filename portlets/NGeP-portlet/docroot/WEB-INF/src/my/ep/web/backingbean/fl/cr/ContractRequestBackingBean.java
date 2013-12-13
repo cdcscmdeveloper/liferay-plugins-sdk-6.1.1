@@ -513,7 +513,7 @@ public class ContractRequestBackingBean extends BaseBackingBean<ContractRequestM
 	}
 	
 	public void calculateSubTotal(BigDecimal quantity){
-		getManagedBean().setSubTotal(quantity);
+		getManagedBean().getSelectedItemAddr().setSubTotal(quantity);
 	}
 
 }

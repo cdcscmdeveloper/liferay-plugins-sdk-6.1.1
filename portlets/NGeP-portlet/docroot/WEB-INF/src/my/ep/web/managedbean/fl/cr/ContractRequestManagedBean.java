@@ -14,6 +14,7 @@ import my.ep.persistence.entity.ct.CtContract;
 import my.ep.persistence.entity.ct.dtl.item.CtContractItem;
 import my.ep.persistence.entity.fl.request.FlDeliveryAddress;
 import my.ep.persistence.entity.fl.request.FlFulfilmentItem;
+import my.ep.persistence.entity.fl.request.FlFulfilmentItemAddr;
 import my.ep.persistence.entity.fl.request.FlFulfilmentRequest;
 import my.ep.persistence.entity.fl.request.FlShippingInstr;
 import my.ep.persistence.entity.pm.authorization.PmUserGroupUser;
@@ -50,6 +51,7 @@ public class ContractRequestManagedBean extends BaseManagedBean {
 	private HashMap<String, PmUserGroupUser> approverMap;
 	private HashMap<Long, FlFulfilmentItem> flItemMap;
 	private BigDecimal subTotal;
+	private FlFulfilmentItemAddr selectedItemAddr;
 	
 	
 	//getcontract
@@ -508,6 +510,22 @@ public class ContractRequestManagedBean extends BaseManagedBean {
 	 */
 	public void setSubTotal(BigDecimal subTotal) {
 		this.subTotal = subTotal;
+	}
+
+
+	/**
+	 * @return the selectedItemAddr
+	 */
+	public FlFulfilmentItemAddr getSelectedItemAddr() {
+		return selectedItemAddr;
+	}
+
+
+	/**
+	 * @param selectedItemAddr the selectedItemAddr to set
+	 */
+	public void setSelectedItemAddr(FlFulfilmentItemAddr selectedItemAddr) {
+		this.selectedItemAddr = selectedItemAddr;
 	}
 
 }

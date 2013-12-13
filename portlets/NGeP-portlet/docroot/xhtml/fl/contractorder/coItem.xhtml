@@ -11,11 +11,10 @@
 
 		<p:dataTable id="addressDataTable" var="address"
 			value="#{flOrderBB.managedBean.flRequest.flDeliveryAddresses}"
-			selection="#{flOrderBB.managedBean.selectedDelAddr}" rowKey="#{address}" 
+			selection="#{flOrderBB.managedBean.selectedDelAddr}" rowKey="#{address}" lazy="true"
 			selectionMode="single">
 			<ac:paginator for="addressDataTable"/>
-			<p:ajax event="rowSelect" update=":form:cotabs:itemDetPanel" 
-			listener="#{flOrderBB.selectedAddrRow()}">
+			<p:ajax event="rowSelect" update=":form:cotabs:itemDetPanel">
 			</p:ajax>
 			<p:column headerText="#{lbl['lbl.fl.del.addr']}">
 				<h:outputText value="#{address.addressType.pmAddress.address1}, #{address.addressType.pmAddress.address2}, #{address.addressType.pmAddress.address3}, #{address.addressType.pmAddress.address4}" />
@@ -33,13 +32,12 @@
 	</p:panel>
 	<p:panel id="itemDetPanel" header="ITEM DETAIL" toggleable="true">
 		
-		<p:dataTable id="itemDataTable" var="item"
-			value="#{flOrderBB.managedBean.flRequest.flFulfilmentItems}"
-			rendered="#{not empty flOrderBB.managedBean.flRequest.flDeliveryAddresses}">
+		<p:dataTable id="itemDataTable" var="item" lazy="true"
+			value="#{flOrderBB.managedBean.selectedDelAddr.flFulfilmentItemAddr}">
 			<ac:paginator for="itemDataTable"/>
 			
 			<p:column headerText="Item Name">
-				<h:outputText value="#{item.contractItem.itemName}" />
+				<h:outputText value="#{item.flFulfilmentItem.contractItem.itemName}" />
 			</p:column>
 
 			<p:column headerText="GOSODO">
@@ -48,10 +46,13 @@
 			<p:column headerText="Activity Code">
 			</p:column>
 			<p:column headerText="Unit Price (MYR)">
+				<p:inputText disabled="true"></p:inputText>
 			</p:column>
 			<p:column headerText="Ord. Qty.">
+				<p:inputText value="#{item.orderedQty}" disabled="true"/>
 			</p:column>
 			<p:column headerText="Sub Total">
+				<p:inputText value="#{item.subTotal}" disabled="true"/>
 			</p:column>
 		</p:dataTable>
 	</p:panel>
