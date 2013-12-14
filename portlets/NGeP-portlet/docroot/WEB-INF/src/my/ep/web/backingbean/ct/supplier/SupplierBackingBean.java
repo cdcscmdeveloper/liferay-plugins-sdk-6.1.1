@@ -63,8 +63,8 @@ public class SupplierBackingBean extends BaseBackingBean<SupplierManagedBean> {
 	public SupplierBackingBean(){
 		
 		
-		if(this.getManagedBean().getAction()==null) {
-			this.getManagedBean().setAction(new String[]{BpmOutcomeConst.BPM_SAVE, BpmOutcomeConst.BPM_SUBMIT});
+		if(this.getManagedBean().getOutComes()==null) {
+			this.getManagedBean().setOutComes(new String[]{BpmOutcomeConst.BPM_SAVE, BpmOutcomeConst.BPM_SUBMIT});
 		}
 	}
 	
@@ -165,7 +165,7 @@ public class SupplierBackingBean extends BaseBackingBean<SupplierManagedBean> {
     		this.getManagedBean().setTaskName(res.getTaskName());
     		this.getManagedBean().setContractVer(resDTO.getCtContractVer());
     		this.getManagedBean().setTaskId(taskId);
-    		this.getManagedBean().setAction(res.getAction());
+    		this.getManagedBean().setOutComes(res.getAction());
     		
     		if(res.getProcessName().equalsIgnoreCase("Bank Account Change Request")){
     			
@@ -292,20 +292,12 @@ public class SupplierBackingBean extends BaseBackingBean<SupplierManagedBean> {
 			 supplierSO = (IContractSupplierSO)BusinessDelegate.getInstance().getServiceObject("ct", IContractSupplierSO.class);
 		   	 reqDTO.setFactoring(this.getManagedBean().getFactoring());
 			
-		   	String token = this.getManagedBean().getToken();
-			if (token == null) {
-				IBpmSO bpmSO = (IBpmSO) EpBpmBusinessDelegate.getInstance().getServiceObject(IBpmSO.class);
-				token = bpmSO.authenticate("khai", "welcome1");
-				if (token == null) {
-					throw new EpException("BPM token not found");
-				}
-			}
-
 			reqDTO.setOutcome(action);
 			if (action == BpmOutcomeConst.BPM_SAVE) {
 				reqDTO.setOutcome("");
 			}
-			reqDTO.setToken(token);
+			FacesScopes facesScopes = new FacesScopes();
+			reqDTO.setToken(facesScopes.getBPMAuthenticationCtxToken());
 			reqDTO.setTaskId(this.getManagedBean().getTaskId());
 
 			  
@@ -313,7 +305,9 @@ public class SupplierBackingBean extends BaseBackingBean<SupplierManagedBean> {
 			 if(resDTO.isSuccessful()) {
 					log.info("Record saved successfully");
 					FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "Record saved successfully.","Factoring Request. : "));
-					if(!action.equalsIgnoreCase(BpmOutcomeConst.BPM_SAVE)) { 
+					// save action with task ID not null will remain in the same page
+					if(!action.equalsIgnoreCase(BpmOutcomeConst.BPM_SAVE) || 
+						(action.equalsIgnoreCase(BpmOutcomeConst.BPM_SAVE) && getManagedBean().getTaskId()==null)) { 
 						renewSesionObject();
 						return "/xhtml/shared/acknowledge.xhtml";
 					}
