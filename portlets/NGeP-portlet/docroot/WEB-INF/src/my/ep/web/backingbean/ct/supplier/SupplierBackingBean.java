@@ -261,7 +261,9 @@ public class SupplierBackingBean extends BaseBackingBean<SupplierManagedBean> {
  			 if(resDTO.isSuccessful()) {
  					log.info("Record saved successfully");
  					FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "Record saved successfully.","Contract Termination. : "));
- 					if(!outcome.equalsIgnoreCase(BpmOutcomeConst.BPM_SAVE)) { // save action will remain in the same page
+					// save action with task ID not null will remain in the same page
+					if(!outcome.equalsIgnoreCase(BpmOutcomeConst.BPM_SAVE) || 
+						(outcome.equalsIgnoreCase(BpmOutcomeConst.BPM_SAVE) && getManagedBean().getTaskId()==null)) { 	 						
  						renewSesionObject();
  						return "/xhtml/shared/acknowledge.xhtml";
  					}

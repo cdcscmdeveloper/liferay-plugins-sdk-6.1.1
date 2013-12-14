@@ -206,12 +206,14 @@ public class ContractDetailsBackingBean extends BaseBackingBean<ContractDetailsM
 			System.out.println("dataType.getContractId()>>"+dataType.getContractId());
 			ctReqDTO.setContractVerId(new Long(dataType.getContractId()));
 			ctReqDTO.setContractId(new Long(dataType.getContractId()));
+			this.getManagedBean().setChkRenderPage(ContractConst.DOC_TYPE_CONTRACT_SUSPEND_ACTIVE);
 		
 		} else if(res.getProcessName().equalsIgnoreCase("Contract Termination")){
 			CTContractTerminationDataType dataType = (CTContractTerminationDataType)obj;
 			System.out.println("dataType.getContractId()>>"+dataType.getContractId());
 			ctReqDTO.setContractVerId(new Long(dataType.getContractId()));
 			ctReqDTO.setContractId(new Long(dataType.getContractId()));
+			this.getManagedBean().setChkRenderPage(ContractConst.DOC_TYPE_CONTRACT_TERMINATION);
 		}
 
 		IContractSO contractSO = (IContractSO) BusinessDelegate.getInstance().getServiceObject("ct",IContractSO.class);
@@ -590,7 +592,10 @@ public class ContractDetailsBackingBean extends BaseBackingBean<ContractDetailsM
 				  log.info("Record saved successfully");
 				  FacesContext.getCurrentInstance().addMessage(null,new FacesMessage(FacesMessage.SEVERITY_INFO,"Record saved successfully.","Contract Name. : "+ 
 				   this.getManagedBean().getContractVer().getContractVerId()));
-				  if (!action.equalsIgnoreCase(BpmOutcomeConst.BPM_SAVE)) { 
+				  
+					// save action with task ID not null will remain in the same page
+					if(!action.equalsIgnoreCase(BpmOutcomeConst.BPM_SAVE) || 
+						(action.equalsIgnoreCase(BpmOutcomeConst.BPM_SAVE) && getManagedBean().getTaskId()==null)) { 				  
 						renewSesionObject();
 						return "/xhtml/shared/acknowledge.xhtml";
 				   }
@@ -729,7 +734,7 @@ public class ContractDetailsBackingBean extends BaseBackingBean<ContractDetailsM
 				contractSO = (IContractSO) BusinessDelegate.getInstance().getServiceObject("ct", IContractSO.class);
 				reqDTO.setContractVerId(this.getManagedBean().getCtContract().getContractId());
 				resDTO = contractSO.retrieveContractVer(reqDTO);
-				this.getManagedBean().setChkRenderPage("TER");
+				this.getManagedBean().setChkRenderPage(ContractConst.DOC_TYPE_CONTRACT_TERMINATION);
 				this.getManagedBean().setContractVer(resDTO.getCtContractVer());	
 				if(this.getManagedBean().getContractVer().getCtTermination()==null) {
 					this.getManagedBean().getContractVer().setCtTermination(new CtTermination());
