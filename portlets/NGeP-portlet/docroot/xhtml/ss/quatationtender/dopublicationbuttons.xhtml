@@ -37,18 +37,34 @@
 			<tr>
 				<td align="right"><c:if
 						test="#{qTDetailBB.managedBean.processName eq 'QuotationTender Creation'}">
-						<ui:repeat var="action" value="#{qTDetailBB.managedBean.outComes}">
-						 <ui:fragment rendred="#{action eq 'APPROVE'}">
-			       <c:set var="iconVar" value="ui-icon-approve" scope="request"></c:set>
-			</ui:fragment>
-						<ui:fragment rendred="#{action eq 'REVISE'}">
-			<c:set var="iconVar" value="ui-icon-revise" scope="request"></c:set>
-			</ui:fragment>
-			  
+						<c:forEach items="#{qTDetailBB.managedBean.outComes}"
+						var="action">
+
+						<c:if test="${action == 'SUBMIT'}">
+							<ui:param name="iconVar" value="ui-icon-submit" />
+
+						</c:if>
+
+						<c:if test="${action == 'REJECT'}">
+							<ui:param name="iconVar" value="ui-icon-reject" />
+
+						</c:if>
+						<c:if test="${action == 'REVISE'}">
+							<ui:param name="iconVar" value="ui-icon-revise" />
+
+						</c:if>
+						<c:if test="${action == 'APPROVE'}">
+							<ui:param name="iconVar" value="ui-icon-approve" />
+
+						</c:if>
+						<c:if test="${action == 'ACCEPT'}">
+							<ui:param name="iconVar" value="ui-icon-approve" />
+
+						</c:if>
 							<p:commandButton value="#{action}" process="@all"
 								styleClass="ui-button" icon="#{iconVar}"
 								actionListener="#{qTDetailBB.updateBpmTask(action)}" />
-						</ui:repeat>
+						</c:forEach>
 
 
 					</c:if></td>

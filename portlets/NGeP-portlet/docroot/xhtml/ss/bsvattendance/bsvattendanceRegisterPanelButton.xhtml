@@ -13,32 +13,37 @@
 				<p:column width="100%" style="text-align:right">
 					<p:commandButton value="Save" icon="ui-icon-save" />
 
-					<ui:repeat var="action"
-						value="#{bsvAttendanceBackingBean.managedBean.outComes}">
-						<ui:fragment rendred="#{action eq 'SUBMIT'}">
-							<c:set var="iconVar" value="ui-icon-submit" scope="request"></c:set>
+					<c:forEach items="#{bsvAttendanceBackingBean.managedBean.outComes}"
+						var="action">
 
-						</ui:fragment>
+						<c:if test="${action == 'SUBMIT'}">
+							<ui:param name="iconVar" value="ui-icon-submit" />
 
-						<ui:fragment rendred="#{action eq 'REJECT'}">
-							<c:set var="iconVar" value="ui-icon-reject" scope="request"></c:set>
+						</c:if>
 
-						</ui:fragment>
-						<ui:fragment rendred="#{action eq 'REVISE'}">
-							<c:set var="iconVar" value="ui-icon-revise" scope="request"></c:set>
+						<c:if test="${action == 'REJECT'}">
+							<ui:param name="iconVar" value="ui-icon-reject" />
 
-						</ui:fragment>
-						<ui:fragment rendred="#{action eq 'APPROVE'}">
-							<c:set var="iconVar" value="ui-icon-approve" scope="request"></c:set>
+						</c:if>
+						<c:if test="${action == 'REVISE'}">
+							<ui:param name="iconVar" value="ui-icon-revise" />
 
-						</ui:fragment>
+						</c:if>
+						<c:if test="${action == 'APPROVE'}">
+							<ui:param name="iconVar" value="ui-icon-approve" />
+
+						</c:if>
+						<c:if test="${action == 'ACCEPT'}">
+							<ui:param name="iconVar" value="ui-icon-approve" />
+
+						</c:if>
 
 						<p:commandButton value="#{action}" process="@all"
 							styleClass="ui-button"
 							actionListener="#{bsvAttendanceBackingBean.updateBpmTask(action)}"
 							icon="#{iconVar}" />
 
-					</ui:repeat>
+					</c:forEach>
 				</p:column>
 			</p:row>
 		</p:panelGrid>

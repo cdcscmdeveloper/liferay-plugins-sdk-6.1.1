@@ -13,26 +13,36 @@
 					<p:commandButton value="Save"
 						action="#{sPDetailBackingBean.saveSPDetailsAction}" process="@all" />
 
-					<ui:repeat var="action"
-						value="#{sPDetailBackingBean.managedBean.outComes}">
+					<c:forEach items="#{sPDetailBackingBean.managedBean.outComes}"
+						var="action">
 
-						<ui:fragment rendred="#{action eq 'SUBMIT'}">
-							<c:set var="iconVar" value="ui-icon-submit" scope="request"></c:set>
-						</ui:fragment>
-						<ui:fragment rendred="#{action eq 'REJECT'}">
-							<c:set var="iconVar" value="ui-icon-reject" scope="request"></c:set>
-						</ui:fragment>
-						<ui:fragment rendred="#{action eq 'REVISE'}">
-							<c:set var="iconVar" value="ui-icon-revise" scope="request"></c:set>
-						</ui:fragment>
-						<ui:fragment rendred="#{action eq 'APPROVE'}">
-							<c:set var="iconVar" value="ui-icon-approve" scope="request"></c:set>
-						</ui:fragment>
+						<c:if test="${action == 'SUBMIT'}">
+							<ui:param name="iconVar" value="ui-icon-submit" />
+
+						</c:if>
+
+						<c:if test="${action == 'REJECT'}">
+							<ui:param name="iconVar" value="ui-icon-reject" />
+
+						</c:if>
+						<c:if test="${action == 'REVISE'}">
+							<ui:param name="iconVar" value="ui-icon-revise" />
+
+						</c:if>
+						<c:if test="${action == 'APPROVE'}">
+							<ui:param name="iconVar" value="ui-icon-approve" />
+
+						</c:if>
+						<c:if test="${action == 'ACCEPT'}">
+							<ui:param name="iconVar" value="ui-icon-approve" />
+
+						</c:if>
 
 						<p:commandButton value="#{action}" process="@all"
 							styleClass="ui-button"
-							actionListener="#{sPDetailBackingBean.updateBpmTask(action)}" icon="#{iconVar}"/>
-					</ui:repeat>
+							actionListener="#{sPDetailBackingBean.updateBpmTask(action)}"
+							icon="#{iconVar}" />
+					</c:forEach>
 				</p:column>
 			</p:row>
 		</p:panelGrid>

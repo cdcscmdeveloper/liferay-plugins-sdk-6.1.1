@@ -1,3 +1,4 @@
+
 <ui:composition xmlns="http://www.w3.org/1999/xhtml"
 	xmlns:f="http://java.sun.com/jsf/core"
 	xmlns:h="http://java.sun.com/jsf/html"
@@ -10,7 +11,7 @@
 		<p:dataTable id="techDeails" var="techList"
 			value="#{sPDetailBackingBean.managedBean.tecCheckDetailsList}" rows="10"
 			selection="#{sPDetailBackingBean.managedBean.selectedCheckDetails}"
-			rowKey="#{techList.qtProposalChecklistId}" rowIndexVar="rowIndex">
+			rowKey="#{techList}" rowIndexVar="rowIndex">
 
 			<p:column selectionMode="multiple" style="width:2%" />
 			<p:column headerText="#{lbl['lbl.sc.sp.desc']}" style="width:68%">

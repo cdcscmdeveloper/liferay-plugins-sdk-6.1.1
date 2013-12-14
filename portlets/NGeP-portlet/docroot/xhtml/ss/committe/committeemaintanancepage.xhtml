@@ -9,9 +9,12 @@
 
 		
 	<ui:define name="contentSection">
-	<table style="border: 0px;width:1000 px; align:center">
+	<table style="border: 0px;width:100%; align:center">
 			<tr>
-				<td width="1000px"><ui:include src="/xhtml/ss/committe/committedetails.xhtml" /></td>
+			<td width="100%">
+			<p:messages id="specmessages" showDetail="true" autoUpdate="true"
+    closable="true" />
+				<ui:include src="/xhtml/ss/committe/committedetails.xhtml" /></td>
 			</tr>
 		</table>
 	
