@@ -5,9 +5,8 @@ package my.ep.web.backingbean.ct;
 
 import java.awt.event.ActionEvent;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-
+import java.util.HashMap;
 import javax.annotation.PostConstruct;
 import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
@@ -43,6 +42,7 @@ import my.ep.dto.pm.authorization.user.UserReqDTO;
 import my.ep.dto.pm.authorization.user.UserResDTO;
 import my.ep.exception.EpException;
 import my.ep.jaxb.ct.contract.CTContractDataType;
+import my.ep.jaxb.ct.contract.amendment.CTContractAmendmentDataType;
 import my.ep.jaxb.ct.suspension.CTContractSuspensionDataType;
 import my.ep.jaxb.ct.termination.CTContractTerminationDataType;
 import my.ep.persistence.entity.ct.CtContract;
@@ -176,11 +176,9 @@ public class ContractDetailsBackingBean extends BaseBackingBean<ContractDetailsM
 		HttpServletRequest originalServletRequest = PortalUtil.getOriginalServletRequest(servletRequest);
 		String taskId = originalServletRequest.getParameter("taskId");
 		System.out.println("taskId:"+taskId);
-
 		if(taskId==null) {
 			return;
 		}
-		
 		FacesScopes face = new FacesScopes();
 		String token =face.getBPMAuthenticationCtxToken();
 		IBpmSO bpmSO = (IBpmSO) EpBpmBusinessDelegate.getInstance().getServiceObject(IBpmSO.class);
@@ -207,6 +205,7 @@ public class ContractDetailsBackingBean extends BaseBackingBean<ContractDetailsM
 			ctReqDTO.setContractVerId(new Long(dataType.getContractId()));
 			ctReqDTO.setContractId(new Long(dataType.getContractId()));
 			this.getManagedBean().setChkRenderPage(ContractConst.DOC_TYPE_CONTRACT_SUSPEND_ACTIVE);
+			
 		
 		} else if(res.getProcessName().equalsIgnoreCase("Contract Termination")){
 			CTContractTerminationDataType dataType = (CTContractTerminationDataType)obj;
@@ -214,6 +213,12 @@ public class ContractDetailsBackingBean extends BaseBackingBean<ContractDetailsM
 			ctReqDTO.setContractVerId(new Long(dataType.getContractId()));
 			ctReqDTO.setContractId(new Long(dataType.getContractId()));
 			this.getManagedBean().setChkRenderPage(ContractConst.DOC_TYPE_CONTRACT_TERMINATION);
+		
+		} else if(res.getProcessName().equalsIgnoreCase("Contract Amendment Request")){
+			CTContractAmendmentDataType dataType = (CTContractAmendmentDataType)obj;
+			System.out.println("dataType.getContractId()>>"+dataType.getContractId());
+			ctReqDTO.setContractVerId(new Long(dataType.getContractId()));
+			ctReqDTO.setContractId(new Long(dataType.getContractId()));
 		}
 
 		IContractSO contractSO = (IContractSO) BusinessDelegate.getInstance().getServiceObject("ct",IContractSO.class);
@@ -234,13 +239,42 @@ public class ContractDetailsBackingBean extends BaseBackingBean<ContractDetailsM
 		}else if(res.getProcessName().equalsIgnoreCase("Contract Activation Suspension Request")){
 			
 			FacesContext fc = FacesContext.getCurrentInstance();
+			this.getManagedBean().setChkRenderPage(ContractConst.DOC_TYPE_CONTRACT_SUSPEND_ACTIVE);
 			fc.getApplication().getNavigationHandler().handleNavigation(fc, null, ContractManagementConst.NAV_TO_CONTRACT_SUSPENSION);
 		
 		}else if(res.getProcessName().equalsIgnoreCase("Contract Termination")){
 			
 			FacesContext fc = FacesContext.getCurrentInstance();
+			this.getManagedBean().setChkRenderPage(ContractConst.DOC_TYPE_CONTRACT_TERMINATION);
 			fc.getApplication().getNavigationHandler().handleNavigation(fc, null, ContractManagementConst.NAV_TO_CONTRACT_TERMINATION);
 		
+		}else if(res.getProcessName().equalsIgnoreCase("Contract Amendment Request")){
+			  this.getManagedBean().setChkRenderPage(ContractConst.DOC_TYPE_CONTRACT_AMENDMENT);
+			  
+			  if(res.getTaskName().equalsIgnoreCase("Confirm Amendment Meeting") || res.getTaskName().equalsIgnoreCase("Update Amendment Result")
+				   || res.getTaskName().equalsIgnoreCase("Prepare LOA")){
+				   FacesContext fc = FacesContext.getCurrentInstance();
+				   this.getManagedBean().setAmendDisable(false);
+			       fc.getApplication().getNavigationHandler().handleNavigation(fc, null, ContractManagementConst.NAV_TO_CONTRACT_AMENDMENT_PBQCC);
+		
+			  }if(res.getTaskName().equalsIgnoreCase("View Amendment Details")){
+				  
+				  FacesContext fc = FacesContext.getCurrentInstance();
+				  this.getManagedBean().setAmendDisable(true);
+			      fc.getApplication().getNavigationHandler().handleNavigation(fc, null, ContractManagementConst.NAV_TO_CONTRACT_AMENDMENT_PBQCC);
+			
+			  }if(res.getTaskName().equalsIgnoreCase("Sign Off")){
+				  
+				  FacesContext fc = FacesContext.getCurrentInstance();
+				  this.getManagedBean().setAmendDisable(true);
+				  this.getManagedBean().setAmendAckw(true);
+			      fc.getApplication().getNavigationHandler().handleNavigation(fc, null, ContractManagementConst.NAV_TO_CONTRACT_AMENDMENT_PBQCC);
+				  
+			  } else{
+			
+			       FacesContext fc = FacesContext.getCurrentInstance();
+			       fc.getApplication().getNavigationHandler().handleNavigation(fc, null, ContractManagementConst.NAV_TO_CONTRACT_AMENDMENT);
+			}
 		}else{
 		
 			FacesContext fc = FacesContext.getCurrentInstance();
@@ -574,9 +608,14 @@ public class ContractDetailsBackingBean extends BaseBackingBean<ContractDetailsM
           
             } else if(this.getManagedBean().getChkRenderPage().equalsIgnoreCase(ContractConst.DOC_TYPE_CONTRACT_TERMINATION)){
             	 this.getManagedBean().getContractVer().setDocType(ContractConst.DOC_TYPE_CONTRACT_TERMINATION);
-            	// this.getManagedBean().getContractVer().setCtTermination(this.getManagedBean().getTermination());
             	 this.getManagedBean().getContractVer().getCtContract().setContractId(this.getManagedBean().getCtContract().getContractId());
-            } else {
+          
+            } else if(this.getManagedBean().getChkRenderPage().equalsIgnoreCase(ContractConst.DOC_TYPE_CONTRACT_AMENDMENT)){
+		
+            	 this.getManagedBean().getContractVer().setDocType(ContractConst.DOC_TYPE_CONTRACT_AMENDMENT);
+            	// this.getManagedBean().getContractVer().getCtContract().setContractId(this.getManagedBean().getCtContract().getContractId());
+		 
+            }else {
             	 this.getManagedBean().getContractVer().setDocType(ContractConst.DOC_TYPE_CONTRACT_CREATION);	
             	 this.getManagedBean().getContractVer().getCtContract().setAgreement(true);
             }
@@ -592,10 +631,8 @@ public class ContractDetailsBackingBean extends BaseBackingBean<ContractDetailsM
 				  log.info("Record saved successfully");
 				  FacesContext.getCurrentInstance().addMessage(null,new FacesMessage(FacesMessage.SEVERITY_INFO,"Record saved successfully.","Contract Name. : "+ 
 				   this.getManagedBean().getContractVer().getContractVerId()));
-				  
-					// save action with task ID not null will remain in the same page
 					if(!action.equalsIgnoreCase(BpmOutcomeConst.BPM_SAVE) || 
-						(action.equalsIgnoreCase(BpmOutcomeConst.BPM_SAVE) && getManagedBean().getTaskId()==null)) { 				  
+							(action.equalsIgnoreCase(BpmOutcomeConst.BPM_SAVE) && getManagedBean().getTaskId()==null)) { 				  
 						renewSesionObject();
 						return "/xhtml/shared/acknowledge.xhtml";
 				   }
@@ -763,7 +800,7 @@ public class ContractDetailsBackingBean extends BaseBackingBean<ContractDetailsM
 			contractSO = (IContractSO) BusinessDelegate.getInstance().getServiceObject("ct", IContractSO.class);
 			reqDTO.setContractVerId(this.getManagedBean().getCtContract().getContractId());
 			resDTO = contractSO.retrieveContractVer(reqDTO);
-			this.getManagedBean().setChkRenderPage("SAC");
+			this.getManagedBean().setChkRenderPage(ContractConst.DOC_TYPE_CONTRACT_SUSPEND_ACTIVE);
 			this.getManagedBean().setContractVer(resDTO.getCtContractVer());	
 			if(this.getManagedBean().getContractVer().getCtSuspendActive() == null){
 				this.getManagedBean().getContractVer().setCtSuspendActive(new CtSuspendActive());
@@ -794,11 +831,8 @@ public class ContractDetailsBackingBean extends BaseBackingBean<ContractDetailsM
 				contractSO = (IContractSO) BusinessDelegate.getInstance().getServiceObject("ct", IContractSO.class);
 				reqDTO.setContractVerId(this.getManagedBean().getCtContract().getContractId());
 				resDTO = contractSO.retrieveContractVer(reqDTO);
+				this.getManagedBean().setChkRenderPage(ContractConst.DOC_TYPE_CONTRACT_AMENDMENT);
 				this.getManagedBean().setContractVer(resDTO.getCtContractVer());	
-				if(this.getManagedBean().getContractVer().getCtTermination()==null) {
-					this.getManagedBean().getContractVer().setCtTermination(new CtTermination());
-					
-				}
 				if(this.getManagedBean().getContractVer().getCtAmendment() ==null) {
 					this.getManagedBean().getContractVer().setCtAmendment(new CtAmendment());
 				}
@@ -851,7 +885,7 @@ public class ContractDetailsBackingBean extends BaseBackingBean<ContractDetailsM
 				reqDTO.setContractVerId(this.getManagedBean().getCtContract().getContractId());
 				resDTO = contractSO.retrieveContractVer(reqDTO);
 				SupplierBackingBean aBB = new SupplierBackingBean();
-				aBB.getManagedBean().setChkRenderPage("SBA");
+				aBB.getManagedBean().setChkRenderPage(ContractConst.DOC_TYPE_CHANGE_BANK_ACCOUNT);
 				aBB.getManagedBean().setContractVer(resDTO.getCtContractVer());	
 				this.getManagedBean().getContractVer().getCtContract().setContractId(this.getManagedBean().getCtContract().getContractId());
 				
