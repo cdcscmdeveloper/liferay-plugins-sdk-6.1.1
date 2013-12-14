@@ -1,0 +1,140 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:ac="http://ac.my/jsf/composite/cc">
+
+
+	<ui:include src="/xhtml/ss/evaluation/evaluationHeader.xhtml" />
+
+	<p:panel header="#{lbl['lbl.sc.eva.summary.head']}" toggleable="true">
+		<p:commandLink value="#{lbl['lbl.sc.eva.summary.list']}"></p:commandLink>
+		<h:panelGrid columns="2" columnClasses="columnWidth50,columnWidth20">
+			<h:outputLabel value="#{lbl['lbl.sc.eva.summary.multile']}"></h:outputLabel>
+			<p:inputText value="#{evaluationBackingBean.managedBean.scqt.scQtCriterias.multiLocality ? 'Yes' : 'No'}" readonly="true" disabled="true"></p:inputText>
+		</h:panelGrid>
+		
+		<p:dataTable id="evaluationsummarystage2Location" var="zones"
+			rowKey="#{zones}" rowIndexVar="index"
+			value="#{evaluationBackingBean.managedBean.locationList}">
+			<ac:paginator for="evaluationsummarystage2Location" />
+
+			<p:column headerText="#{lbl['lbl.sc.eva.summary.loc']}"
+				style="width:20%">
+				<h:outputText value="#{zones.zoneName}"></h:outputText>
+			</p:column>
+
+		</p:dataTable>
+		
+		<p:spacer height="20" />
+		<p:commandLink value="#{lbl['lbl.sc.eva.summary.item.list']}"></p:commandLink>
+
+		<p:dataTable id="evaluationsummarystage2Item" var="item"
+			rowKey="#{item}" rowIndexVar="index"
+			value="#{evaluationBackingBean.managedBean.scQtItemList}">
+			<ac:paginator for="evaluationsummarystage2Item" />
+
+			<p:column headerText="#{lbl['lbl.sc.eva.summary.item']}"
+				style="width:20%">
+				<h:outputText value="#{item.itemName}"></h:outputText>
+			</p:column>
+
+		</p:dataTable>
+		<p:spacer height="20" />
+		<p:commandLink value="#{lbl['lbl.sc.eva.summary.qualified']}"></p:commandLink>
+		<p:dataTable id="evaluationsummarystage2supplier" var="qualified"
+		value="#{evaluationBackingBean.managedBean.qualifiedList}"
+			rowKey="#{qualified}" rowIndexVar="index">
+			<ac:paginator for="evaluationsummarystage2supplier" />
+
+			<p:column headerText="#{lbl['lbl.sc.eva.summary.ranking']}"
+				style="width:10%">
+				<h:outputText value="#{qualified.autoRank}"></h:outputText>
+			</p:column>
+			<p:column headerText="#{lbl['lbl.sc.eva.s1.manual.supplier']}"
+				style="width:20%">
+				<h:outputText value="#{qualified.scQtProposal.supplierNo}"></h:outputText>
+			</p:column>
+
+
+
+			<p:column headerText="#{lbl['lbl.sc.eva.s1.tech.score']}"
+				style="width:10%">
+				<h:outputText value="#{qualified.autoRank}"></h:outputText>
+			</p:column>
+
+
+
+			<p:column headerText="#{lbl['lbl.sc.eva.s1.manual.remarks']}"
+				style="width:25%">
+				<p:inputTextarea rows="2" value="#{qualified.userRemark}"></p:inputTextarea>
+			</p:column>
+
+		</p:dataTable>
+
+		<h:panelGrid columns="2" columnClasses="columnWidth50,columnWidth20">
+
+
+			<h:outputLabel value="#{lbl['lbl.sc.eva.summary.total']}"></h:outputLabel>
+			<p:inputText></p:inputText>
+
+
+
+		</h:panelGrid>
+		<p:spacer height="20" />
+		<p:commandLink value="#{lbl['lbl.sc.eva.summary.disqualified']}"></p:commandLink>
+
+		<p:dataTable id="evaluationsummarystage2disqualified" var="disqualified"
+		value="#{evaluationBackingBean.managedBean.qualifiedList}"
+			rowKey="#{qualified}" rowIndexVar="index">
+			<ac:paginator for="evaluationsummarystage2disqualified" />
+			<p:column headerText="#{lbl['lbl.sc.eva.summary.ranking']}"
+				style="width:35%">
+				<h:outputText value="#{disqualified.autoRank}"></h:outputText>
+			</p:column>
+			<p:column headerText="#{lbl['lbl.sc.eva.s1.manual.supplier']}"
+				style="width:30%">
+				<h:outputText value="#{disqualified.scQtProposal.supplierNo}"></h:outputText>
+			</p:column>
+
+
+
+			<p:column headerText="#{lbl['lbl.sc.eva.s1.tech.score']}"
+				style="width:35%">
+				<h:outputText value="#{disqualified.autoRank}"></h:outputText>
+			</p:column>
+
+
+
+		</p:dataTable>
+
+		<h:panelGrid columns="2" columnClasses="columnWidth50,columnWidth20">
+
+
+			<h:outputLabel value="Total"></h:outputLabel>
+			<p:inputText></p:inputText>
+
+
+
+		</h:panelGrid>
+	</p:panel>
+	<table style="width: 100%">
+		<tr>
+			<td><div align="left" style="width: 99%">
+					<p:commandButton value="#{lbl['lbl.sm.prev']}"
+						actionListener="#{evaluationBackingBean.setTabValue('4','3')}"
+						action="#{evaluationBackingBean.updateSmAppl}" icon="ui-icon-prev"
+						update=":form" />
+				</div></td>
+			<td><div align="right" style="width: 99%">
+					<p:commandButton value="#{lbl['lbl.sm.next']}"
+						actionListener="#{evaluationBackingBean.setTabValue('4','5')}"
+						action="#{evaluationBackingBean.updateSmAppl}" icon="ui-icon-next"
+						iconPos="right" update=":form" />
+				</div></td>
+		</tr>
+	</table>
+
+</ui:composition>

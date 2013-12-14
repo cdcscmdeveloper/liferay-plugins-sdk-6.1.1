@@ -3,104 +3,85 @@
 	xmlns:h="http://java.sun.com/jsf/html"
 	xmlns:ui="http://java.sun.com/jsf/facelets"
 	xmlns:p="http://primefaces.org/ui"
-	xmlns:c="http://java.sun.com/jsp/jstl/core">
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:ac="http://ac.my/jsf/composite/cc">
 
 
-	<p:dialog header="Evaluation" widgetVar="evaluation"
-		modal="true" width="800" height="250">
-		<p:panel header="stage1-compliance checklist" toggleable="true">
-		
-		<p:panelGrid  style="width:50%" styleClass="noBorders tr,noBorders td">
-                <p:row>
-                <p:column>
-                <p:outputLabel value="Supplier No"></p:outputLabel>
-                </p:column>
-                
-                <p:column>
-               
-                <p:inputText value="Readonly" readonly="true"></p:inputText>
-                
-                </p:column>
-                
-                
-                </p:row>
-				 
-					
-					
-					  <p:row>
-                <p:column>
-                <p:outputLabel value="Overall Result" />
-                </p:column>
-                
-                <p:column>
-               
-                <p:inputText value="Readonly" readonly="true"></p:inputText>
-                
-                </p:column>
-                
-                
-                </p:row> 
-	        
-	        </p:panelGrid>
-		
+	<p:dialog header="Evaluation" widgetVar="evaluation" modal="true"
+		width="800" height="500">
+		<p:panel id="s1popup" header="#{lbl['lbl.sc.eva.s1.tech.compliance.head']}"
+			toggleable="true">
 
-			<p:dataTable  var="simpleQuote5"
-				value="#{simpleQuoteBidBackingBean.utilList}"
-				selection="#{simpleQuoteBidBackingBean.managedBean.selectedUtilList}"
-				rowKey="#{simpleQuote5.seqNo}" rowIndexVar="index">
+			<h:panelGrid columns="2">
 
-				<p:column headerText=" No" style="width:5%">
-					<h:outputText value="#{index+1}"></h:outputText>
+				<h:outputLabel value="#{lbl['lbl.sc.eva.s1.manual.supplier']}"></h:outputLabel>
+
+				<p:inputText value="#{evaluationBackingBean.managedBean.checklistEvaluation.scQtProposal.supplierNo}" readonly="true"></p:inputText>
+
+				<h:outputLabel value="#{lbl['lbl.sc.eva.s1.tech.ovearall']}" />
+
+
+				<p:inputText value="Failed/Success" readonly="true"></p:inputText>
+
+
+			</h:panelGrid>
+
+
+			<p:dataTable id="evaluationresults" var="evaluations1"
+				rowKey="#{evaluations1}" rowIndexVar="index"
+				  value="#{evaluationBackingBean.managedBean.complianceList}">
+              
+				<ac:paginator for="evaluationresults" />
+
+				<p:column headerText="#{lbl['lbl.sc.eva.s1.tech.title']}"
+					style="width:35%">
+					<h:outputText value="#{evaluations1.scQtCheckList.title}"></h:outputText>
 				</p:column>
 
-				<p:column headerText="Title" style="width:35%">
-					<h:outputText value="Title#{index+1}"></h:outputText>
+				<p:column headerText="#{lbl['lbl.sc.eva.s1.tech.system']}"
+					style="width:20%">
+					<h:outputText value="#{evaluations1.autoScore}"></h:outputText>
 				</p:column>
 
-				<p:column headerText="System Score" style="width:20%">
-					<h:outputText value="90#{index+1}"></h:outputText>
-				</p:column>
-				
-				<p:column headerText="User Score" style="width:20%">
-					<h:outputText value="10t#{index+1}@"></h:outputText>
-				</p:column>
-				
-				<p:column headerText="Remarks" style="width:20%">
-					<h:outputText value="Remark#{index+1}"></h:outputText>
+				<p:column headerText="#{lbl['lbl.sc.eva.s1.tech.user']}"
+					style="width:20%">
+					<p:selectOneMenu value="#{evaluations1.userScore}">
+						<f:selectItem itemLabel="Select One" itemValue="" />
+						<f:selectItem itemLabel="M" itemValue="M" />
+						<f:selectItem itemLabel="TL" itemValue="TL" />
+						<f:selectItem itemLabel="TM" itemValue="TM" />
+						<f:selectItem itemLabel="TH" itemValue="TH" />
+					</p:selectOneMenu>
 				</p:column>
 
-				</p:dataTable>
-            <p:commandButton value="SHOW RESULT" style="float:right;"></p:commandButton>
+				<p:column headerText="#{lbl['lbl.sc.eva.s1.manual.remarks']}"
+					style="width:25%">
+					<p:inputTextarea value="#{evaluations1.remark}"></p:inputTextarea>
+				</p:column>
+
+			</p:dataTable>
+			<p:spacer height="15"></p:spacer>
+			<div align="right">
+				<p:commandButton value="#{lbl['lbl.sc.eva.btn.show']}"></p:commandButton>
+			</div>
+
+
 		
 
-
-		 <p:panelGrid  style="width:50%" styleClass="noBorders tr,noBorders td">
-                <p:row>
-                <p:column>
-                <p:outputLabel value="Overall Result"></p:outputLabel>
-                </p:column>
-                
-                <p:column>
-               
-                <p:inputText value="500" readonly="true"></p:inputText>
-                
-                </p:column>
-                
-                </p:row>
-                
-	        				
-	          
-				</p:panelGrid>
-		
 		</p:panel>
 
- 
-		<p:commandButton value="OK" style="float:right;"
-			onclick="evaluation.hide();" oncomplete="simpleQuoteBid.hide();"></p:commandButton>
-				&#160;;
-				<p:commandButton value="CANCEL" style="float:right;"
-			onclick="evaluation.hide();"></p:commandButton>
+		<div align="left">
+			<p:commandButton value="#{lbl['lbl.sc.eva.btn.cancel']}"
+				style="float:right;" onclick="evaluation.hide();" icon="ui-icon-cancel"></p:commandButton>
+
+			<p:commandButton value="#{lbl['lbl.sc.eva.btn.save']}"
+				style="float:right;" onclick="evaluation.hide();"
+				 icon="ui-icon-save" action="#{evaluationBackingBean.complianceSaveAction}"></p:commandButton>
 
 
+		</div>
 	</p:dialog>
+	
+	
+	
 </ui:composition>

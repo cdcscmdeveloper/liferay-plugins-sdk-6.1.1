@@ -1,0 +1,239 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:c="http://java.sun.com/jsp/jstl/core">
+	<ui:define name="resourceSection">
+	</ui:define>
+
+	<ui:include src="/xhtml/ss/evaluation/evaluationButtons.xhtml" />
+
+	<table style="width: 100%">
+		<tr>
+			<td><div class="navDiv" id="menuDiv" align="center">
+					<ul class="menu-text">
+						<li><h:outputText value="Preparation"
+								rendered="#{evaluationBackingBean.managedBean.tabActiveIndex eq 0}" />
+							<p:commandLink value="Preparation"
+								actionListener="#{evaluationBackingBean.setTabValue(evaluationBackingBean.managedBean.tabActiveIndex,'0')}"
+								action="#{evaluationBackingBean.updateSmAppl}" update=":form"
+								rendered="#{evaluationBackingBean.managedBean.tabActiveIndex gt 0}" /></li>
+
+						<li><h:outputText value="Stage1"
+								rendered="#{evaluationBackingBean.managedBean.tabActiveIndex le 1}" />
+							<p:commandLink value="Stage1"
+								actionListener="#{evaluationBackingBean.setTabValue(evaluationBackingBean.managedBean.tabActiveIndex,'1')}"
+								action="#{evaluationBackingBean.updateSmAppl}" update=":form"
+								rendered="#{evaluationBackingBean.managedBean.tabActiveIndex gt 1}" /></li>
+                       
+						<li><h:outputText value="Stage2" 
+								rendered="#{evaluationBackingBean.managedBean.tabActiveIndex le 2}" />
+							<p:commandLink value="Stage2" 
+								actionListener="#{evaluationBackingBean.setTabValue(evaluationBackingBean.managedBean.tabActiveIndex,'2')}"
+								action="#{evaluationBackingBean.updateSmAppl}" update=":form"
+								rendered="#{evaluationBackingBean.managedBean.tabActiveIndex gt 2}" /></li>
+
+						<li><h:outputText value="Summary(Stage 1)"
+								rendered="#{evaluationBackingBean.managedBean.tabActiveIndex le 3}" />
+							<p:commandLink value="Summary(Stage 1)"
+								actionListener="#{evaluationBackingBean.setTabValue(evaluationBackingBean.managedBean.tabActiveIndex,'3')}"
+								action="#{evaluationBackingBean.updateSmAppl}" update=":form"
+								rendered="#{evaluationBackingBean.managedBean.tabActiveIndex gt 3}" /></li>
+								
+									<li><h:outputText value="Summary(Stage 2)"
+								rendered="#{evaluationBackingBean.managedBean.tabActiveIndex le 4}" />
+							<p:commandLink value="Summary(Stage 2)"
+								actionListener="#{evaluationBackingBean.setTabValue(evaluationBackingBean.managedBean.tabActiveIndex,'4')}"
+								action="#{evaluationBackingBean.updateSmAppl}" update=":form"
+								rendered="#{evaluationBackingBean.managedBean.tabActiveIndex gt 4}" /></li>
+								
+
+						<li><h:outputText value="Report"
+								rendered="#{evaluationBackingBean.managedBean.tabActiveIndex le 5}" />
+							<p:commandLink value="Report"
+								actionListener="#{evaluationBackingBean.setTabValue(evaluationBackingBean.managedBean.tabActiveIndex,'5')}"
+								action="#{evaluationBackingBean.updateSmAppl}" update=":form"
+								rendered="#{evaluationBackingBean.managedBean.tabActiveIndex gt 5}" /></li>
+
+						<li><h:outputText value="Sign-Off" /></li>
+
+
+					</ul>
+					<ul id="tripMeter" class="menu-line">
+						<c:choose>
+							<c:when
+								test="#{evaluationBackingBean.managedBean.tabActiveIndex eq 0}">
+								<li class="space red-dot"></li>
+							</c:when>
+							<c:otherwise>
+								<li class="space green-dot"></li>
+
+							</c:otherwise>
+						</c:choose>
+						<c:choose>
+							<c:when
+								test="#{evaluationBackingBean.managedBean.tabActiveIndex lt 1}">
+								<li class="space black-dot"></li>
+							</c:when>
+							<c:when
+								test="#{evaluationBackingBean.managedBean.tabActiveIndex gt 1}">
+								<li class="space green-dot"></li>
+							</c:when>
+							<c:otherwise>
+								<li class="space red-dot"></li>
+							</c:otherwise>
+						</c:choose>
+						<c:choose>
+							<c:when
+								test="#{evaluationBackingBean.managedBean.tabActiveIndex lt 2}">
+								<li class="space black-dot"></li>
+							</c:when>
+							<c:when
+								test="#{evaluationBackingBean.managedBean.tabActiveIndex gt 2}">
+								<li class="space green-dot"></li>
+							</c:when>
+							<c:otherwise>
+								<li class="space red-dot"></li>
+							</c:otherwise>
+						</c:choose>
+						<c:choose>
+							<c:when
+								test="#{evaluationBackingBean.managedBean.tabActiveIndex lt 3}">
+								<li class="space black-dot"></li>
+							</c:when>
+							<c:when
+								test="#{evaluationBackingBean.managedBean.tabActiveIndex gt 3}">
+								<li class="space green-dot"></li>
+							</c:when>
+							<c:otherwise>
+								<li class="space red-dot"></li>
+							</c:otherwise>
+						</c:choose>
+						<c:choose>
+							<c:when
+								test="#{evaluationBackingBean.managedBean.tabActiveIndex lt 4}">
+								<li class="space black-dot"></li>
+							</c:when>
+							<c:when
+								test="#{evaluationBackingBean.managedBean.tabActiveIndex gt 4}">
+								<li class="space green-dot"></li>
+							</c:when>
+							<c:otherwise>
+								<li class="space red-dot"></li>
+							</c:otherwise>
+						</c:choose>
+						
+						<c:choose>
+							<c:when
+								test="#{evaluationBackingBean.managedBean.tabActiveIndex lt 5}">
+								<li class="space black-dot"></li>
+							</c:when>
+							<c:when
+								test="#{evaluationBackingBean.managedBean.tabActiveIndex gt 5}">
+								<li class="space green-dot"></li>
+							</c:when>
+							<c:otherwise>
+								<li class="space red-dot"></li>
+							</c:otherwise>
+						</c:choose>
+						<c:choose>
+							<c:when
+								test="#{evaluationBackingBean.managedBean.tabActiveIndex lt 6}">
+								<li class="black-dot"></li>
+							</c:when>
+							<c:otherwise>
+								<li class="red-dot"></li>
+							</c:otherwise>
+						</c:choose>
+					</ul>
+				</div></td>
+			<td></td>
+		</tr>
+	</table>
+
+
+	<c:if test="#{evaluationBackingBean.managedBean.tabActiveIndex eq 0}">
+		<ui:include src="/xhtml/ss/evaluation/prepare.xhtml" />
+		<!--  <ui:include src="/xhtml/ss/evaluation/sendEmail.xhtml" /> -->
+	</c:if>
+	<c:if test="#{evaluationBackingBean.managedBean.tabActiveIndex eq 1}">
+		<ui:include src="/xhtml/ss/evaluation/stage1.xhtml" />
+		<ui:include src="/xhtml/ss/evaluation/manualsubmission.xhtml" />
+		<ui:include src="/xhtml/ss/evaluation/evaluationpopup.xhtml" />
+	</c:if>
+	<c:if test="#{evaluationBackingBean.managedBean.tabActiveIndex eq 2}">
+		<ui:include src="/xhtml/ss/evaluation/stage2.xhtml" />
+		<ui:include src="/xhtml/ss/evaluation/peringkat2.xhtml" />
+		<!-- <ui:include src="/xhtml/ss/evaluation/pengritFin.xhtml" /> -->
+	</c:if>
+	<c:if test="#{evaluationBackingBean.managedBean.tabActiveIndex eq 3}">
+		 <ui:include src="/xhtml/ss/evaluation/summary.xhtml" /> 
+		
+
+	</c:if>
+	<c:if test="#{evaluationBackingBean.managedBean.tabActiveIndex eq 4}">
+	
+		<ui:include src="/xhtml/ss/evaluation/summary(stage2).xhtml" />
+
+	</c:if>
+	<c:if test="#{evaluationBackingBean.managedBean.tabActiveIndex eq 5}">
+		<ui:include src="/xhtml/ss/evaluation/report.xhtml" />
+	</c:if>
+	<c:if test="#{evaluationBackingBean.managedBean.tabActiveIndex eq 6}">
+		<ui:include src="/xhtml/ss/evaluation/signoff.xhtml" />
+	</c:if>
+
+	<!-- <p:wizard flowListener="#{evaluationevaluationBackingBean.onFlowProcess}"> 
+  
+    <p:tab  title="Preparation" styleClass="noBorders tr,noBorders td" >  
+    <p:panel>	
+        <ui:include src="/xhtml/ss/evaluation/preparation.xhtml" />
+         <ui:include src="/xhtml/ss/evaluation/sendEmail.xhtml" />
+         
+         </p:panel>
+    </p:tab>  
+  
+    <p:tab  title="Stage1" styleClass="noBorders tr,noBorders td" >  
+    <p:panel>	
+         <ui:include src="/xhtml/ss/evaluation/stage1.xhtml" />
+         <ui:include src="/xhtml/ss/evaluation/evaluationpopup.xhtml" />
+         </p:panel>
+    </p:tab>  
+  
+   
+    
+    <p:tab  title="Stage2" styleClass="noBorders tr,noBorders td" >  
+          <p:panel>	
+             <ui:include src="/xhtml/ss/evaluation/stage2.xhtml" /> 
+             <ui:include src="/xhtml/ss/evaluation/peringkat2.xhtml" /> 
+              </p:panel>
+    </p:tab>  
+      <p:tab  title="Summary" styleClass="noBorders tr,noBorders td" >  
+      <p:panel>	
+           <ui:include src="/xhtml/ss/evaluation/summary.xhtml" />   
+          </p:panel>  
+    </p:tab>  
+    
+      <p:tab  title="Report" styleClass="noBorders tr,noBorders td" > 
+      <p:panel>	 
+           <ui:include src="/xhtml/ss/evaluation/report.xhtml" />
+           </p:panel> 
+    </p:tab>  
+    
+      <p:tab  title="Sign-Off" styleClass="noBorders tr,noBorders td" >  
+      <p:panel>	
+           <ui:include src="/xhtml/ss/evaluation/signoff.xhtml" />
+         </p:panel>   
+    </p:tab>  
+    
+
+	
+</p:wizard>	
+ -->
+
+
+
+
+
+</ui:composition>

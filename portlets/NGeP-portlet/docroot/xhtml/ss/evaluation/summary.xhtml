@@ -3,98 +3,96 @@
 	xmlns:h="http://java.sun.com/jsf/html"
 	xmlns:ui="http://java.sun.com/jsf/facelets"
 	xmlns:p="http://primefaces.org/ui"
-	xmlns:c="http://java.sun.com/jsp/jstl/core">
-	
-	<div align="right">
-				<p:commandButton value="SUBMIT" />
-				
-			</div>
-
-   <ui:include src="/xhtml/ss/quatationtender/qtntenderheader.xhtml" /> 
-	
-
-<p:panel header="SUMMARY" toggleable="true">
-<p:commandLink value="Qualified Supplier List"></p:commandLink>
-			<p:dataTable  var="simpleQuote"
-				value="#{simpleQuoteBidBackingBean.utilList}"
-				selection="#{simpleQuoteBidBackingBean.managedBean.selectedUtilList}"
-				rowKey="#{simpleQuote.seqNo}" rowIndexVar="index">
-
-			 
-				<p:column headerText="Ranking" style="width:20%">
-					<h:outputText value="101#{index+1}"></h:outputText>
-				</p:column>
-	             <p:column headerText="Supplier No" style="width:20%">
-					<h:outputText value="60#{index+1}"></h:outputText>
-				</p:column>
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:ac="http://ac.my/jsf/composite/cc">
 
 
-				
-				<p:column headerText="Total Score" style="width:25%">
-					<h:outputText value="30#{index+1}"></h:outputText>
-				</p:column>
-              
-				<p:column headerText="Prefarable Supplier" style="width:35%">
-					<p:selectOneMenu>
-					<f:selectItem itemLabel="" itemValue=""></f:selectItem>
-					<f:selectItem itemLabel="Supplier" itemValue="S"></f:selectItem>
-					</p:selectOneMenu>
-				</p:column>
-            
-						</p:dataTable>
-
-		 <p:panelGrid columns="2" styleClass="noBorders tr,noBorders td">
-                
-				 
-					<p:outputLabel value="Total"></p:outputLabel>
-           <p:inputText></p:inputText> 
-	        
-	        				
-	          
-				</p:panelGrid>
-				
-				<p:commandLink value="Disqualified Supplier List"></p:commandLink>
-
-			<p:dataTable  var="simpleQuote2"
-				value="#{simpleQuoteBidBackingBean.utilList}"
-				selection="#{simpleQuoteBidBackingBean.managedBean.selectedUtilList}"
-				rowKey="#{simpleQuote2.seqNo}" rowIndexVar="index">
-
-			<p:column headerText="Ranking" style="width:35%">
-					<h:outputText value="101#{index+1}"></h:outputText>
-				</p:column>
-	             <p:column headerText="Supplier No" style="width:30%">
-					<h:outputText value="60#{index+1}"></h:outputText>
-				</p:column>
+	<ui:include src="/xhtml/ss/evaluation/evaluationHeader.xhtml" />
 
 
-				
-				<p:column headerText="Total Score" style="width:35%">
-					<h:outputText value="30#{index+1}"></h:outputText>
-				</p:column>
-              
+	<p:panel header="#{lbl['lbl.sc.eva.summary.head']}" toggleable="true">
+		<p:commandLink value="#{lbl['lbl.sc.eva.summary.list']}"></p:commandLink>
+		<h:panelGrid columns="2" columnClasses="columnWidth50,columnWidth20">
+			<h:outputLabel value="#{lbl['lbl.sc.eva.summary.multile']}"></h:outputLabel>
+			<p:inputText value="#{evaluationBackingBean.managedBean.scqt.scQtCriterias.multiLocality ? 'Yes' : 'No'}" readonly="true" disabled="true"></p:inputText>
+		</h:panelGrid>
+		<ui:fragment rendered="#{evaluationBackingBean.managedBean.scqt.scQtCriterias.multiLocality ne 'No'}">
+		<p:dataTable id="evaluationsummaryLocation" var="zones" 
+			rowKey="#{zones}" rowIndexVar="index"
+			value="#{evaluationBackingBean.managedBean.locationList}">
+			<ac:paginator for="evaluationsummaryLocation" />
+
+			<p:column headerText="#{lbl['lbl.sc.eva.summary.loc']}"
+				style="width:20%">
+				<h:outputText value="#{zones.zoneName}"></h:outputText>
+			</p:column>
+
+		</p:dataTable>
+		</ui:fragment>
+		<p:spacer height="20" />
+		<p:commandLink value="#{lbl['lbl.sc.eva.summary.qualified']}"></p:commandLink>
+		<p:dataTable id="evaluationsummarysupplier" var="qualified"
+		value="#{evaluationBackingBean.managedBean.qualifiedList}"
+			rowKey="#{qualified}" rowIndexVar="index">
+			<ac:paginator for="evaluationsummarysupplier" />
+
 			
+			<p:column headerText="#{lbl['lbl.sc.eva.s1.manual.supplier']}"
+				style="width:20%">
+				<h:outputText value="#{qualified.scQtProposal.supplierNo}"></h:outputText>
+			</p:column>
 
-			</p:dataTable>
+		</p:dataTable>
+
+		<h:panelGrid columns="2" columnClasses="columnWidth50,columnWidth20">
+
+
+			<h:outputLabel value="#{lbl['lbl.sc.eva.summary.total']}"></h:outputLabel>
+			<p:inputText></p:inputText>
+
+
+
+		</h:panelGrid>
+		<p:spacer height="20" />
+		<p:commandLink value="#{lbl['lbl.sc.eva.summary.disqualified']}"></p:commandLink>
+
+		<p:dataTable id="evaluationsummarydisqualified" var="disqualified"
+		value="#{evaluationBackingBean.managedBean.qualifiedList}"
+			rowKey="#{qualified}" rowIndexVar="index">
+			<ac:paginator for="evaluationsummarydisqualified" />
 			
-			<p:panelGrid columns="2" styleClass="noBorders tr,noBorders td">
-                
-				 
-					<p:outputLabel value="Total"></p:outputLabel>
-           <p:inputText></p:inputText> 
-	        
-	        				
-	          
-				</p:panelGrid>
-				
+			<p:column headerText="#{lbl['lbl.sc.eva.s1.manual.supplier']}"
+				style="width:30%">
+				<h:outputText value="#{disqualified.scQtProposal.supplierNo}"></h:outputText>
+			</p:column>
 
-		</p:panel>
-		
-					
-					
-				
-				
-				
-				
-					
+		</p:dataTable>
+
+		<h:panelGrid columns="2" columnClasses="columnWidth50,columnWidth20">
+
+
+			<h:outputLabel value="Total"></h:outputLabel>
+			<p:inputText></p:inputText>
+
+
+
+		</h:panelGrid>
+	</p:panel>
+	<table style="width: 100%">
+		<tr>
+			<td><div align="left" style="width: 99%">
+					<p:commandButton value="#{lbl['lbl.sm.prev']}"
+						actionListener="#{evaluationBackingBean.setTabValue('3','2')}"
+						action="#{evaluationBackingBean.updateSmAppl}" icon="ui-icon-prev"
+						update=":form" />
+				</div></td>
+			<td><div align="right" style="width: 99%">
+					<p:commandButton value="#{lbl['lbl.sm.next']}"
+						actionListener="#{evaluationBackingBean.setTabValue('3','4')}"
+						action="#{evaluationBackingBean.updateSmAppl}" icon="ui-icon-next"
+						iconPos="right" update=":form" />
+				</div></td>
+		</tr>
+	</table>
+
 </ui:composition>
