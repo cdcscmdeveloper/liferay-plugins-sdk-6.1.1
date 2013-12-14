@@ -57,6 +57,7 @@ import my.ep.persistence.entity.pm.common.PmCode;
 import my.ep.persistence.entity.pm.common.PmState;
 import my.ep.persistence.entity.sm.SmSupplier;
 import my.ep.type.aut.SearchOperator;
+import my.ep.type.pm.RoleCode;
 import my.ep.util.lookupservice.EpBpmBusinessDelegate;
 import my.ep.web.backingbean.BaseBackingBean;
 import my.ep.web.backingbean.ct.ContractBackingBean;
@@ -156,17 +157,17 @@ public class PanelBackingBean extends BaseBackingBean<PanelManagedBean>{
 	
 	public boolean isPanelAdmin() {
 		FacesScopes facesScopes = new FacesScopes();
-		return facesScopes.hasRoleUser("BPK_PCA_HQ") || facesScopes.hasRoleUser("BPK_PCA_SA") || facesScopes.hasRoleUser("BPK_PCA_SK");
+		return facesScopes.hasRoleUser(RoleCode.BPK_PCA_HQ.value()) || facesScopes.hasRoleUser(RoleCode.BPK_PCA_SA.value()) || facesScopes.hasRoleUser(RoleCode.BPK_PCA_SK.value());
 	}
 	
 	public boolean isCentralContractAdmin() {
 		FacesScopes facesScopes = new FacesScopes();
-		return facesScopes.hasRoleUser("BPK_CCA_HQ") || facesScopes.hasRoleUser("BPK_CCA_SA") || facesScopes.hasRoleUser("BPK_CCA_SK");
+		return facesScopes.hasRoleUser(RoleCode.BPK_CCA_HQ.value()) || facesScopes.hasRoleUser(RoleCode.BPK_CCA_SA.value()) || facesScopes.hasRoleUser(RoleCode.BPK_CCA_SK.value());
 	}
 	
 	public boolean isBPKApprover() {
 		FacesScopes facesScopes = new FacesScopes();
-		return facesScopes.hasRoleUser("BPK_APPROVER") || facesScopes.hasRoleUser("BPK_APPROVER_SA") || facesScopes.hasRoleUser("BPK_APPROVER_SK");
+		return facesScopes.hasRoleUser(RoleCode.BPK_APPROVER.value()) || facesScopes.hasRoleUser(RoleCode.BPK_APPROVER_SA.value()) || facesScopes.hasRoleUser(RoleCode.BPK_APPROVER_SK.value());
 	}
 	
 	public String saveCircularPanel(String action) {

@@ -53,6 +53,7 @@ import my.ep.persistence.entity.pm.authorization.PmUserGroup;
 import my.ep.persistence.entity.pm.authorization.PmUserGroupUser;
 import my.ep.persistence.entity.pm.common.PmCode;
 import my.ep.type.aut.SearchOperator;
+import my.ep.type.pm.RoleCode;
 import my.ep.util.lookupservice.EpBpmBusinessDelegate;
 import my.ep.web.backingbean.BaseBackingBean;
 import my.ep.web.backingbean.ct.ContractBackingBean;
@@ -373,12 +374,7 @@ public class CentralContractBackingBean extends BaseBackingBean<CentralContractM
 	
 	public boolean isCentralContractAdmin() {
 		FacesScopes facesScopes = new FacesScopes();
-		return facesScopes.hasRoleUser("BPK_CCA_HQ") || facesScopes.hasRoleUser("BPK_CCA_SA") || facesScopes.hasRoleUser("BPK_CCA_SK");
-	}
-	
-	public boolean isCentralContractApprover() {
-		FacesScopes facesScopes = new FacesScopes();
-		return facesScopes.hasRoleUser("BPK_APPROVER") || facesScopes.hasRoleUser("BPK_APPROVER_SA") || facesScopes.hasRoleUser("BPK_APPROVER_SK");
+		return facesScopes.hasRoleUser(RoleCode.BPK_CCA_HQ.value()) || facesScopes.hasRoleUser(RoleCode.BPK_CCA_SA.value()) || facesScopes.hasRoleUser(RoleCode.BPK_CCA_SK.value());
 	}
 	
 	public String saveCircular(String outcome){
