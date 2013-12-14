@@ -37,6 +37,8 @@ import my.ep.persistence.entity.ss.quationtender.ScQtCategory;
 import my.ep.persistence.entity.ss.quationtender.ScQtCheckList;
 import my.ep.persistence.entity.ss.quationtender.ScQtContactPerson;
 import my.ep.persistence.entity.ss.quationtender.ScQtCriteria;
+import my.ep.persistence.entity.ss.quationtender.ScQtDeduction;
+import my.ep.persistence.entity.ss.quationtender.ScQtDeductionClause;
 import my.ep.persistence.entity.ss.quationtender.ScQtDoc;
 import my.ep.persistence.entity.ss.quationtender.ScQtGosodoBudget;
 import my.ep.persistence.entity.ss.quationtender.ScQtRemark;
@@ -79,6 +81,7 @@ public class QTDetailManagedBean extends BaseManagedBean {
 	private ScRemark scRemark;
 	private ScQtCheckList qtCheckList;
 	private ScQtContactPerson qtContactPerson;
+	private ScQtDeduction qtDeduction;
 	private PpPlan ppPlan;
 	private PmOrgProfile pmOrgProfile;
 
@@ -121,6 +124,8 @@ public class QTDetailManagedBean extends BaseManagedBean {
     private List<CtCircular> ctCirculars;
     private List<ScQtRemark> scQtRemarks;
     private List<ScQtCheckList> scQtChecklists;
+    private List<ScQtDeduction> scQtDeductions;
+    private List<ScQtDeductionClause> scQtDeductionClauses;
     private List<CtPanelSupplier> panelSupplierList;
     
     private List<ScQtBriefing> selectedBriefingDetails; 
@@ -134,6 +139,8 @@ public class QTDetailManagedBean extends BaseManagedBean {
     private List<SmMofAccount> selectedpanelsupplier;
     private List<ScQt> selectedCloneTenderList;
     private List<CloneAll> selectedCloneAllList;
+    private List<ScQtDeduction> selectedScQtDeductions;
+    private List<ScQtDeductionClause> selectedDeductionClauses;
     
 	private String qtNumber;
 	
@@ -182,7 +189,8 @@ public class QTDetailManagedBean extends BaseManagedBean {
     private String uploadUpdateId;
 	//Payload for BPM
 		private SCQuotationTenderDataType quotationTenderDataType;
-	private boolean isEditable;
+	private boolean isEditable=true;
+	private boolean isPlayButtonEnabled=true;
 	
 	
 	private List<ScQt> qtList = new ArrayList<ScQt>();
@@ -1164,6 +1172,67 @@ public class QTDetailManagedBean extends BaseManagedBean {
 	public void setEditable(boolean isEditable) {
 		this.isEditable = isEditable;
 	}
-	
-    	 
+
+
+	public boolean isPlayButtonEnabled() {
+		return isPlayButtonEnabled;
+	}
+
+
+	public void setPlayButtonEnabled(boolean isPlayButtonEnabled) {
+		this.isPlayButtonEnabled = isPlayButtonEnabled;
+	}
+
+
+	public List<ScQtDeduction> getScQtDeductions() {
+		return scQtDeductions;
+	}
+
+
+	public void setScQtDeductions(List<ScQtDeduction> scQtDeductions) {
+		this.scQtDeductions = scQtDeductions;
+	}
+
+
+	public List<ScQtDeduction> getSelectedScQtDeductions() {
+		return selectedScQtDeductions;
+	}
+
+
+	public void setSelectedScQtDeductions(List<ScQtDeduction> selectedScQtDeductions) {
+		this.selectedScQtDeductions = selectedScQtDeductions;
+	}
+
+
+	public List<ScQtDeductionClause> getScQtDeductionClauses() {
+		return scQtDeductionClauses;
+	}
+
+
+	public void setScQtDeductionClauses(
+			List<ScQtDeductionClause> scQtDeductionClauses) {
+		this.scQtDeductionClauses = scQtDeductionClauses;
+	}
+
+
+	public List<ScQtDeductionClause> getSelectedDeductionClauses() {
+		return selectedDeductionClauses;
+	}
+
+
+	public void setSelectedDeductionClauses(
+			List<ScQtDeductionClause> selectedDeductionClauses) {
+		this.selectedDeductionClauses = selectedDeductionClauses;
+	}
+
+
+	public ScQtDeduction getQtDeduction() {
+		return qtDeduction;
+	}
+
+
+	public void setQtDeduction(ScQtDeduction qtDeduction) {
+		this.qtDeduction = qtDeduction;
+	}
+		 
 }

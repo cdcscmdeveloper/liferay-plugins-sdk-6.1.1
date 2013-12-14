@@ -480,6 +480,9 @@ public class QTDetailBackingBean extends
 		scQt.setMinistryOrgProfile(new PmOrgProfile());
 		scQt.setDepartmentOrgProfile(new PmOrgProfile());
 		scQt.setPmOrgProfile(new PmOrgProfile());
+		
+		boolean isEditable = false;
+		boolean isPlayButtonEnabled =false;
 
 		populateUserMinistryList();
 		IQTDetailSO detailSO = BusinessDelegate.getInstance().getServiceObject(
