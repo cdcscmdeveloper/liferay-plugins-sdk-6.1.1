@@ -5,6 +5,7 @@ package my.ep.web.backingbean.ct;
 
 import java.awt.event.ActionEvent;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 import javax.annotation.PostConstruct;
@@ -134,6 +135,13 @@ public class ContractDetailsBackingBean extends BaseBackingBean<ContractDetailsM
 			this.getManagedBean().getContractVer().setCtAmendment(new CtAmendment());
 		}
 
+		if(getManagedBean().getUserGroupMap()==null) {
+			getManagedBean().setUserGroupMap(new HashMap<Long, PmUserGroup>());
+		}
+		if(getManagedBean().getContractVer().getPmUserGroup()==null) {
+			PmUserGroup pmUserGroup = new PmUserGroup();
+			getManagedBean().getContractVer().setPmUserGroup(pmUserGroup);
+		}
 	}
 	
 	private FacesScopes getFacesScopes(){
@@ -169,6 +177,10 @@ public class ContractDetailsBackingBean extends BaseBackingBean<ContractDetailsM
 		String taskId = originalServletRequest.getParameter("taskId");
 		System.out.println("taskId:"+taskId);
 
+		if(taskId==null) {
+			return;
+		}
+		
 		FacesScopes face = new FacesScopes();
 		String token =face.getBPMAuthenticationCtxToken();
 		IBpmSO bpmSO = (IBpmSO) EpBpmBusinessDelegate.getInstance().getServiceObject(IBpmSO.class);
@@ -207,6 +219,7 @@ public class ContractDetailsBackingBean extends BaseBackingBean<ContractDetailsM
 
 
 		this.getManagedBean().setTaskName(res.getTaskName());
+		this.getManagedBean().setCtContract(resDTO.getCtContractVer().getCtContract());
 		this.getManagedBean().setContractVer(resDTO.getCtContractVer());
 		this.getManagedBean().setTaskId(taskId);
 		this.getManagedBean().setAction(res.getAction());
@@ -566,6 +579,7 @@ public class ContractDetailsBackingBean extends BaseBackingBean<ContractDetailsM
             	 this.getManagedBean().getContractVer().getCtContract().setAgreement(true);
             }
             
+            reqDTO.setCtContract(this.getManagedBean().getCtContract());
             reqDTO.setCtContractVer(this.getManagedBean().getContractVer());
 			reqDTO.setTaskId(this.getManagedBean().getTaskId());
 			reqDTO.setOutcome(action);
