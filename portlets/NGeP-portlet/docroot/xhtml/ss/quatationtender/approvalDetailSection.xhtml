@@ -12,7 +12,7 @@
 		<h:panelGrid columns="4"
 			columnClasses="columnWidth25,columnWidth25,columnWidth20,columnWidth30">
 
-			<h:outputLabel value="Approver Name"></h:outputLabel>
+			<h:outputLabel value="#{lbl['lbl.sc.qt.appname']}"></h:outputLabel>
    
              <h:panelGroup id="sample1">
 				<ui:fragment 
@@ -33,10 +33,10 @@
 				</ui:fragment>
 			</h:panelGroup>
 
-			<h:outputLabel value="Approver Date"></h:outputLabel>
+			<h:outputLabel value="#{lbl['lbl.sc.qt.appdate']}"></h:outputLabel>
 
 			<p:calendar
-				value="#{approvalCategory.scQtApproval.approverActionDate}"
+				value="#{approvalCategory.scQtApproval.approverActionDate}" disabled="#{!qTDetailBB.managedBean.editable}" 
 				showOn="button"></p:calendar>
 
 
@@ -45,7 +45,7 @@
 
 
 
-			<h:outputLabel value="Action"></h:outputLabel>
+			<h:outputLabel value="#{lbl['lbl.sc.qt.action']}"></h:outputLabel>
 
 			<h:panelGroup id="checkboxBPK">
 				<c:choose>
@@ -85,10 +85,10 @@
 				</c:choose>
 			</h:panelGroup>
 
-			<h:outputLabel value="Remarks"></h:outputLabel>
+			<h:outputLabel value="#{lbl['lbl.sc.qt.remarks']}"></h:outputLabel>
 
 			<p:inputTextarea
-				value="#{approvalCategory.scQtApproval.approverRemark}"
+				value="#{approvalCategory.scQtApproval.approverRemark}" disabled="#{!qTDetailBB.managedBean.editable}" 
 				rows="3" cols="50" autoResize="false"></p:inputTextarea>
 
 

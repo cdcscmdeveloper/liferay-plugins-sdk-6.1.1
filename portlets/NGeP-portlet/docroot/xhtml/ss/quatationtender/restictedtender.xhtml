@@ -14,7 +14,7 @@
 			columns="2" columnClasses="columnWidth20">
 		<h:column>
 		<h:outputText value="#{lbl['lbl.so.paidup']}"  style="padding-right: 6px;padding-left: 81px" />  
-            <p:inputText value="#{qTSupplierQulCriteriaBackingBean.managedBean.qtCriteria.paidUpCaptial}" style="margin-right:5px;"/> 
+            <p:inputText value="#{qTSupplierQulCriteriaBackingBean.managedBean.qtCriteria.paidUpCaptial}" disabled="#{!qTDetailBB.managedBean.editable}" style="margin-right:5px;"/> 
             <h:inputText value="MYR" disabled="true" size="1"></h:inputText>
           </h:column>
           </h:panelGrid>
@@ -103,15 +103,15 @@
 		</h:panelGroup>
  <p:spacer height="15"></p:spacer>
 						<div align="right">
-		<p:commandButton value="#{lbl['lbl.so.addbtn']}"  icon="ui-icon-add"
+		<p:commandButton value="#{lbl['lbl.so.addbtn']}"  icon="ui-icon-add" rendered="#{qTDetailBB.managedBean.playButtonEnabled}"
 			actionListener="#{qTSupplierQulCriteriaBackingBean.addNewRestrictedCategoryItem}"  update="@(.myCatList2)"/>
 			
-					<p:commandButton value="#{lbl['lbl.so.delete']}" icon="ui-icon-delete"  />
+					<p:commandButton value="#{lbl['lbl.so.delete']}" icon="ui-icon-delete" rendered="#{qTDetailBB.managedBean.playButtonEnabled}"  />
 			</div>
 			<p:panelGrid columns="1" style="width:100%;"
 				styleClass="noBorders tr,noBorders td">
 <p:commandButton value="#{lbl['lbl.so.searchbtn']}" style="float:right;" icon="ui-icon-search"  update="rescatcodelist" process="@(.myResCatList)" 
-					onclick="suppdlg.show();"></p:commandButton>	
+					onclick="suppdlg.show();" rendered="#{qTDetailBB.managedBean.playButtonEnabled}"></p:commandButton>	
 				</p:panelGrid>
 			<br/>
 			<br/>

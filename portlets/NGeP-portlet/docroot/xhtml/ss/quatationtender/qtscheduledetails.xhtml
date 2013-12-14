@@ -16,16 +16,16 @@
 
 			<h:outputLabel value="#{lbl['lbl.so.noticepublish']}" />
 			<p:calendar value="#{qTScheduleDetailBB.managedBean.qt.publishDate}"
-				id="noticePublish" showOn="button" pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}"/>
+				id="noticePublish" showOn="button" pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}" disabled="#{!qTDetailBB.managedBean.editable}"/>
 	
 	        <h:outputLabel value="#{lbl['lbl.so.propredate']}" />
 	
-			 <p:calendar value="#{qTScheduleDetailBB.managedBean.qt.proposalStartDate}"  id="proposalPreparation" pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}" showOn="button"/> 
+			 <p:calendar value="#{qTScheduleDetailBB.managedBean.qt.proposalStartDate}"  id="proposalPreparation" pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}" disabled="#{!qTDetailBB.managedBean.editable}" showOn="button"/> 
 			
 			
 			<h:outputLabel value="#{lbl['lbl.so.closingdate']}"/>
 			
-			 <p:calendar value="#{qTScheduleDetailBB.managedBean.qt.closingDate}" id="closingDate" pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}" showOn="button"/>
+			 <p:calendar value="#{qTScheduleDetailBB.managedBean.qt.closingDate}" id="closingDate" pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}" disabled="#{!qTDetailBB.managedBean.editable}" showOn="button"/>
 			
 			<h:outputLabel  value="#{lbl['lbl.so.publsihperiod']}" escape="false" />
 					
@@ -33,11 +33,11 @@
 			
 			<h:outputLabel value="#{lbl['lbl.so.expectloadate']}"/>
 			
-			<p:calendar value="#{qTScheduleDetailBB.managedBean.qt.expectedLoaDate}"  id="loaDate" pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}" showOn="button"/>
+			<p:calendar value="#{qTScheduleDetailBB.managedBean.qt.expectedLoaDate}"  id="loaDate" pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}" disabled="#{!qTDetailBB.managedBean.editable}" showOn="button"/>
 			
 			<h:outputLabel value="#{lbl['lbl.so.expectdeldate']}"/>
 			
-			<p:calendar value="#{qTScheduleDetailBB.managedBean.qt.expectedDeliveryDate}"  id="deliveryDate" pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}" showOn="button"/>
+			<p:calendar value="#{qTScheduleDetailBB.managedBean.qt.expectedDeliveryDate}"  id="deliveryDate" pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}" disabled="#{!qTDetailBB.managedBean.editable}" showOn="button"/>
 		
 	</h:panelGrid>
 	</p:panel>
@@ -48,15 +48,15 @@
 
 		 	<h:outputLabel value="#{lbl['lbl.so.briefsitereq']}" />
 		 <p:selectOneRadio
-				value="#{qTScheduleDetailBB.managedBean.qt.bsvRequired}">
-				<f:selectItem itemLabel="yes" itemValue="true" />
+				value="#{qTScheduleDetailBB.managedBean.qt.bsvRequired}" disabled="#{!qTDetailBB.managedBean.editable}" >
+				<f:selectItem itemLabel="Yes" itemValue="true" />
 				<f:selectItem itemLabel="No" itemValue="false" />
 				<p:ajax update="bsvrequire" listener="#{qTSupplierQulCriteriaBackingBean.processChecked}"/>
 			</p:selectOneRadio>
 			<h:outputLabel value="#{lbl['lbl.so.briefsamevisit']}" />
 			<p:selectOneRadio
-				value="#{qTScheduleDetailBB.managedBean.qt.sameBsv}">
-				<f:selectItem itemLabel="yes" itemValue="true" />
+				value="#{qTScheduleDetailBB.managedBean.qt.sameBsv}"  disabled="#{!qTDetailBB.managedBean.editable}">
+				<f:selectItem itemLabel="Yes" itemValue="true" />
 				<f:selectItem itemLabel="No" itemValue="false" />
 				<p:ajax update="samebsv" listener="#{qTSupplierQulCriteriaBackingBean.processChecked}"/>
 
@@ -128,8 +128,8 @@
 			<f:facet name="footer">
 						<div align="right">
 
-							<p:commandButton id="briefadd" value="#{lbl['lbl.so.addbtn']}" process="@this" action="#{qTScheduleDetailBB.addBriefingDetails}" oncomplete="dlg1.show();" update="@(.qtBriefDetails)" icon="ui-icon-add"></p:commandButton>
-							<p:commandButton value="#{lbl['lbl.so.delete']}" icon="ui-icon-delete"/>
+							<p:commandButton id="briefadd" value="#{lbl['lbl.so.addbtn']}" process="@this" action="#{qTScheduleDetailBB.addBriefingDetails}" oncomplete="dlg1.show();" update="@(.qtBriefDetails)" rendered="#{qTDetailBB.managedBean.playButtonEnabled}" icon="ui-icon-add"></p:commandButton>
+							<p:commandButton value="#{lbl['lbl.so.delete']}" rendered="#{qTDetailBB.managedBean.playButtonEnabled}" icon="ui-icon-delete"/>
 						</div>
 					</f:facet>
 			</p:panelGrid>
@@ -201,8 +201,8 @@
 			<f:facet name="footer">
 						<div align="right">
 
-							<p:commandButton id="siteadd" value="#{lbl['lbl.so.addbtn']}" process="@this" action="#{qTScheduleDetailBB.addSiteDetails}" oncomplete="dlg2.show();" update="@(.qtSiteBriefDetails)" icon="ui-icon-add"></p:commandButton>
-                            <p:commandButton value="#{lbl['lbl.so.delete']}" icon="ui-icon-delete"/>
+							<p:commandButton id="siteadd" value="#{lbl['lbl.so.addbtn']}" process="@this" action="#{qTScheduleDetailBB.addSiteDetails}" rendered="#{qTDetailBB.managedBean.playButtonEnabled}" oncomplete="dlg2.show();" update="@(.qtSiteBriefDetails)" icon="ui-icon-add"></p:commandButton>
+                            <p:commandButton value="#{lbl['lbl.so.delete']}" rendered="#{qTDetailBB.managedBean.playButtonEnabled}" icon="ui-icon-delete"/>
 						</div>
 					</f:facet>
 			</p:panelGrid>
@@ -225,22 +225,22 @@
 				
 				<p:column headerText="#{lbl['lbl.so.name']}">
                   <!--  <h:outputText value="#{contactpersondetails.name}"></h:outputText> -->
-					<h:inputText value="#{contactpersondetails.name}" size="50"/>
+					<h:inputText value="#{contactpersondetails.name}" size="50" disabled="#{!qTDetailBB.managedBean.editable}"/>
 								</p:column>
 				
 				<p:column headerText="#{lbl['lbl.so.phone']}" style="width:15%">
                   <!--  <h:outputText value="#{contactpersondetails.name}"></h:outputText> -->
-					<h:inputText value="#{contactpersondetails.phoneNo}" size="10"/>
+					<h:inputText value="#{contactpersondetails.phoneNo}" size="10" disabled="#{!qTDetailBB.managedBean.editable}"/>
 								</p:column>
 								
 				<p:column headerText="#{lbl['lbl.so.fax']}" style="width:15%">
                   <!--  <h:outputText value="#{contactpersondetails.name}"></h:outputText> -->
-					<h:inputText value="#{contactpersondetails.faxNo}" size="10"/>
+					<h:inputText value="#{contactpersondetails.faxNo}" size="10" disabled="#{!qTDetailBB.managedBean.editable}"/>
 								</p:column>
 				
 				<p:column headerText="#{lbl['lbl.so.mail']}" style="width:15%"> 
                   <!--  <h:outputText value="#{contactpersondetails.name}"></h:outputText> -->
-					<h:inputText value="#{contactpersondetails.email}"/>
+					<h:inputText value="#{contactpersondetails.email}" disabled="#{!qTDetailBB.managedBean.editable}"/>
 								</p:column>												
 				
 
@@ -258,8 +258,8 @@
 			<f:facet name="footer">
 						<div align="right">
                             
-							<p:commandButton value="#{lbl['lbl.so.addbtn']}" action="#{qTScheduleDetailBB.addContactPerson}" update="@(.contactdetails)" icon="ui-icon-add"></p:commandButton>
-                             <p:commandButton value="#{lbl['lbl.so.delete']}" icon="ui-icon-delete"/>
+							<p:commandButton value="#{lbl['lbl.so.addbtn']}" action="#{qTScheduleDetailBB.addContactPerson}" update="@(.contactdetails)" icon="ui-icon-add" rendered="#{qTDetailBB.managedBean.playButtonEnabled}"></p:commandButton>
+                             <p:commandButton value="#{lbl['lbl.so.delete']}" icon="ui-icon-delete" rendered="#{qTDetailBB.managedBean.playButtonEnabled}"/>
 						</div>
 					</f:facet>
 		</p:panelGrid>

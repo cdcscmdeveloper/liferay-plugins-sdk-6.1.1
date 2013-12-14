@@ -11,7 +11,7 @@
 			columnClasses="columnWidth25,columnWidth25,columnWidth20,columnWidth30">
 
 
-			<h:outputLabel value="Approver Name"></h:outputLabel>
+			<h:outputLabel value="#{lbl['lbl.sc.qt.appname']}"></h:outputLabel>
 
 			<h:panelGroup id="sample2">
 				<p:selectOneMenu
@@ -25,10 +25,10 @@
 					rendered="#{approvalCategory.scQtApproval.verifyOption eq 'F'}"></p:inputText>
 			</h:panelGroup>
 
-			<h:outputLabel value="Approver Date"></h:outputLabel>
+			<h:outputLabel value="#{lbl['lbl.sc.qt.appdate']}"></h:outputLabel>
 
 			<p:calendar
-				value="#{approvalCategory.scQtApproval.approverActionDate}"
+				value="#{approvalCategory.scQtApproval.approverActionDate}" disabled="#{!qTDetailBB.managedBean.editable}" 
 				showOn="button"></p:calendar>
 
 
@@ -40,7 +40,7 @@
 
 
 
-			<h:outputLabel value="Action"></h:outputLabel>
+			<h:outputLabel value="#{lbl['lbl.sc.qt.action']}"></h:outputLabel>
 
 			<p:selectOneMenu
 				value="#{approvalCategory.scQtApproval.approverAction}" style="width: 100px;">
@@ -50,7 +50,7 @@
 
 			</p:selectOneMenu>
 
-			<h:outputLabel value="Remarks"></h:outputLabel>
+			<h:outputLabel value="#{lbl['lbl.sc.qt.remarks']}"></h:outputLabel>
 
 			<p:inputTextarea rows="3" cols="50"
 				value="#{approvalCategory.scQtApproval.approverRemark}"

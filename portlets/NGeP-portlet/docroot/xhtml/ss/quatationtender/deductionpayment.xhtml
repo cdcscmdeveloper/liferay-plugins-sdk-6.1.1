@@ -1,0 +1,101 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:ac="http://ac.my/jsf/composite/cc">
+
+<ui:include src="/xhtml/ss/quatationtender/qtntenderheader.xhtml" />
+<p:panel header="Deduction Payment" toggleable="true">
+
+         
+         <p:commandLink value="Deduction Payment"></p:commandLink>
+         <p:panelGrid columns="2" style="width:100%;"
+				styleClass="noBorders tr,noBorders td">
+            
+            
+			<p:dataTable value="#{qTDeductionBB.managedBean.scQtDeductions}"  
+			id="deductpayments" var="dpayment" styleClass="deductiondetails"
+			selection="#{qTDeductionBB.managedBean.selectedScQtDeductions}"
+				rowKey="#{dpayment}" rowIndexVar="rowIndex"
+				rows="10">
+				<p:column selectionMode="multiple" style="width:5%" />
+				<ac:paginator for="deductpayments" />
+				
+				<p:column headerText="Deduction Type">
+                   <h:outputLabel value="#{dpayment.deductionType}"/>
+                   <p:selectOneMenu value="#{qTDeductionBB.managedBean.qt.itemType}">
+					<f:selectItems value="#{qTDetailBB.getDropdownCodeValues(PmCodeCatConst.deductionType)}" />
+				
+			
+				</p:selectOneMenu>
+			
+								</p:column>
+								
+								<p:column headerText="Description">
+					<h:outputLabel value="desc"/>
+							</p:column>
+							
+							<p:column headerText="Percentage">
+
+								<h:outputLabel value="percentage"/>
+
+					</p:column>
+					
+					<p:column headerText="Amount">
+
+								<h:outputLabel value="#{dpayment.deductionAmount}"/>
+
+					</p:column>
+					</p:dataTable>
+					</p:panelGrid>
+					<p:panelGrid columns="2" style="width:100%;"
+			styleClass="noBorders tr,noBorders td">
+			<f:facet name="footer">
+						<div align="right">
+                            
+							<p:commandButton value="#{lbl['lbl.so.addbtn']}" action="#{qTDeductionBB.addDedcutionPayment}" update="@(.deductiondetails)" icon="ui-icon-add" />
+                             <p:commandButton value="#{lbl['lbl.so.delete']}" icon="ui-icon-delete" />
+						</div>
+					</f:facet>
+		</p:panelGrid>
+		
+			<p:commandLink value="Deduction Clause"></p:commandLink>
+		<p:panelGrid columns="2" style="width:100%;"
+				styleClass="noBorders tr,noBorders td">
+			
+				
+			<p:dataTable value="#{qTDeductionBB.managedBean.scQtDeductionClauses}"  
+			id="deductclause" var="dclause"
+			selection="#{qTDeductionBB.managedBean.selectedDeductionClauses}"
+				rowKey="#{dpayment}" rowIndexVar="rowIndex"
+				rows="10">
+				<p:column selectionMode="multiple" style="width:5%" />
+				<ac:paginator for="deductclause" />
+				
+				<p:column headerText="Deduction Clause">
+                   <h:outputLabel value="#{dclause.deductionType}"/>
+								</p:column>
+								
+								<p:column headerText="Description">
+					<h:outputLabel value="desc"/>
+							</p:column>
+						
+					</p:dataTable>
+					</p:panelGrid>
+					<p:panelGrid columns="2" style="width:100%;"
+			styleClass="noBorders tr,noBorders td">
+			<f:facet name="footer">
+						<div align="right">
+                            
+							<p:commandButton value="#{lbl['lbl.so.addbtn']}" icon="ui-icon-add" ></p:commandButton>
+                             <p:commandButton value="#{lbl['lbl.so.delete']}" icon="ui-icon-delete" />
+						</div>
+					</f:facet>
+		</p:panelGrid>
+					
+
+</p:panel>
+
+</ui:composition>
