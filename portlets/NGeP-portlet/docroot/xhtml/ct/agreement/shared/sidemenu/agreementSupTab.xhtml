@@ -11,6 +11,7 @@
       .column-align-right { text-align: right !important;}
     </style>
 	 <p:panel>
+	  <f:event listener="#{agreementBackingBean.preRenderView}" type="preRenderView" />	
 	 <div class="ppRightBtn">
 				<ui:repeat var="action"	value="#{agreementBackingBean.managedBean.outComes}">
 					<p:commandButton value="#{action}" process="@this" styleClass="ui-button" actionListener="#{agreementBackingBean.createSupAgreement(action)}" />
@@ -20,6 +21,8 @@
 	<p:tabView id="agreementSubTab" orientation="left" >
 	    <p:tab id="agDetail" title="Fulfilment Details" >
             <ui:include src="/xhtml/ct/agreement/agreementDetails.xhtml"/>
+             <ui:include src="/xhtml/ct/agreement/signingAgreement.xhtml"/>  
+              <ui:include src="/xhtml/ct/agreement/agreementSupDetails.xhtml"/>  
         </p:tab> 
 	     <p:tab id="agCreate" title="Create Agreement">
             <ui:include src="/xhtml/ct/agreement/createAgreement.xhtml"/>

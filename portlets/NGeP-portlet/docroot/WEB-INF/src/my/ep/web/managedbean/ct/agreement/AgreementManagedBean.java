@@ -25,7 +25,8 @@ public class AgreementManagedBean extends BaseManagedBean {
 	private static Logger log = Logger.getLogger(AgreementManagedBean.class);
 	
 	private String taskId;
-	private String[] outComes;
+	private String[] action;
+	private String taskName;
 	private List<CtSignParty> signPartyList;
 	private List<CtSignParty> signSupplierList;
 	private CtSignParty signParty = new CtSignParty();
@@ -36,7 +37,7 @@ public class AgreementManagedBean extends BaseManagedBean {
 	private List<CtRemark> remarkList;
 	private List<CtAttachment> attachmentList;
 	
-	private CtContractVer contractVer;
+	private CtContract ctContract;
 
 	private CtAgreement agreement;
 	private Long contractId;
@@ -46,13 +47,15 @@ public class AgreementManagedBean extends BaseManagedBean {
 		
 	}
 	
-	public String[] getOutComes() {
-		return outComes;
+	public String[] getAction() {
+		return action;
 	}
 
-	public void setOutComes(String[] outComes) {
-		this.outComes = outComes;
+	public void setAction(String[] action) {
+		this.action = action;
 	}
+
+
 
 	public List<CtSignParty> getSignPartyList() {
 		if(signPartyList == null)
@@ -88,14 +91,6 @@ public class AgreementManagedBean extends BaseManagedBean {
 
 	public void setSignSupplier(CtSignParty signSupplier) {
 		this.signSupplier = signSupplier;
-	}
-
-	public CtContractVer getContractVer() {
-		return contractVer;
-	}
-
-	public void setContractVer(CtContractVer contractVer) {
-		this.contractVer = contractVer;
 	}
 
 	public CtAgreement getAgreement() {
@@ -167,6 +162,23 @@ public class AgreementManagedBean extends BaseManagedBean {
 	public void setAttachmentList(List<CtAttachment> attachmentList) {
 		this.attachmentList = attachmentList;
 	}
+
+	public String getTaskName() {
+		return taskName;
+	}
+
+	public void setTaskName(String taskName) {
+		this.taskName = taskName;
+	}
+
+	public CtContract getCtContract() {
+		return ctContract;
+	}
+
+	public void setCtContract(CtContract ctContract) {
+		this.ctContract = ctContract;
+	}
+	
 	
 		
 }

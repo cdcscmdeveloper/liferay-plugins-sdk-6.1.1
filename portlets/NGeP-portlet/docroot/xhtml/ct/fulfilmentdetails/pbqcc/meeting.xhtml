@@ -19,6 +19,10 @@
 			  </p:row>							
 			 </p:columnGroup>
         </p:dataTable>
+          <div class="ppRightBtn"> 
+		       <p:commandButton value="Add" process="@this" partialSubmit="true"  icon="ui-icon-add" update="meetingTable"/>
+		       <p:commandButton value="Delete" process="@this" partialSubmit="true"  icon="ui-icon-delete" update="meetingTable"/>
+		  </div>
       	</p:panel>
       <p:panel id="committePanel" header="Committe Member" toggleable="true"  toggleSpeed="500">
       <p:dataTable id="committeTable" var="data" value=" " paginator="true" 
@@ -28,8 +32,13 @@
 			  <p:row> 
 				 <p:column style="width:375px;" headerText="Name" /> 
 				 <p:column style="width:375px;" headerText="Role"  /> 
+				  <p:column style="width:375px;" headerText="Attendance"  /> 
 			  </p:row>							
 			 </p:columnGroup>
             </p:dataTable>
+              <div class="ppRightBtn"> 
+		          <p:commandButton value="Add" process="@this" partialSubmit="true"  icon="ui-icon-add" update="committeTable"/>
+		          <p:commandButton value="Delete" process="@this" partialSubmit="true"  icon="ui-icon-delete" update="committeTable"/>
+		  </div>
       	</p:panel>
 </ui:composition>

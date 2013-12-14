@@ -561,7 +561,10 @@ public class ContractDetailsBackingBean extends BaseBackingBean<ContractDetailsM
             	 this.getManagedBean().getContractVer().setDocType(ContractConst.DOC_TYPE_CONTRACT_TERMINATION);
             	// this.getManagedBean().getContractVer().setCtTermination(this.getManagedBean().getTermination());
             	 this.getManagedBean().getContractVer().getCtContract().setContractId(this.getManagedBean().getCtContract().getContractId());
-            } 
+            } else {
+            	 this.getManagedBean().getContractVer().setDocType(ContractConst.DOC_TYPE_CONTRACT_CREATION);	
+            	 this.getManagedBean().getContractVer().getCtContract().setAgreement(true);
+            }
             
             reqDTO.setCtContractVer(this.getManagedBean().getContractVer());
 			reqDTO.setTaskId(this.getManagedBean().getTaskId());
@@ -572,7 +575,7 @@ public class ContractDetailsBackingBean extends BaseBackingBean<ContractDetailsM
 				
 				  log.info("Record saved successfully");
 				  FacesContext.getCurrentInstance().addMessage(null,new FacesMessage(FacesMessage.SEVERITY_INFO,"Record saved successfully.","Contract Name. : "+ 
-				   this.getManagedBean().getContractVer().getCtSuspendActive().getSuspendActiveId()));
+				   this.getManagedBean().getContractVer().getContractVerId()));
 				  if (!action.equalsIgnoreCase(BpmOutcomeConst.BPM_SAVE)) { 
 						renewSesionObject();
 						return "/xhtml/shared/acknowledge.xhtml";
@@ -801,9 +804,9 @@ public class ContractDetailsBackingBean extends BaseBackingBean<ContractDetailsM
 				reqDTO = new ContractReqDTO();
 				contractSO = (IContractSO) BusinessDelegate.getInstance().getServiceObject("ct", IContractSO.class);
 				reqDTO.setContractVerId(this.getManagedBean().getCtContract().getContractId());
-				resDTO = contractSO.retrieveContractVer(reqDTO);
+				resDTO = contractSO.retrieveContract(reqDTO);
 				AgreementBackingBean aBB = new AgreementBackingBean();
-				aBB.getManagedBean().setContractVer(resDTO.getCtContractVer());	
+				aBB.getManagedBean().setCtContract(resDTO.getContract());	
 				
 			} catch (Exception e) {
 				e.printStackTrace();

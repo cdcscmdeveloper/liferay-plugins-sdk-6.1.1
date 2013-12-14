@@ -11,16 +11,18 @@
       .column-align-right { text-align: right !important;}
     </style>
 	 <p:panel>
+	 <f:event listener="#{agreementBackingBean.preRenderView}" type="preRenderView" />	
 	  <p:messages id="messages" showDetail="true" autoUpdate="true" closable="true" severity="error, info" />
 	 <div class="ppRightBtn">
-				<ui:repeat var="action"	value="#{agreementBackingBean.managedBean.outComes}">
-					<p:commandButton value="#{action}" process="@this" styleClass="ui-button" action="#{agreementBackingBean.createAgreement(action)}" />
+				<ui:repeat var="outcome"	value="#{agreementBackingBean.managedBean.action}">
+					<p:commandButton value="#{outcome}" process="@this" styleClass="ui-button" action="#{agreementBackingBean.createAgreement(outcome)}" />
 				</ui:repeat>		
     </div>
 	</p:panel>
-	<p:tabView id="agreementTab" orientation="left" >
+	<p:tabView id="agreementTab" orientation="left">
 	    <p:tab id="agDetail" title="Fulfilment Details" >
             <ui:include src="/xhtml/ct/agreement/agreementDetails.xhtml"/>
+             <ui:include src="/xhtml/ct/agreement/signingAgreement.xhtml"/>  
         </p:tab> 
 	    <p:tab id="agCreate" title="Create Agreement">
             <ui:include src="/xhtml/ct/agreement/createAgreement.xhtml"/>

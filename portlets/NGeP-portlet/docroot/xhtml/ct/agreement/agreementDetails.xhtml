@@ -5,59 +5,98 @@
 	xmlns:ui="http://java.sun.com/jsf/facelets"
 	xmlns:p="http://primefaces.org/ui"
 	xmlns:c="http://java.sun.com/jsp/jstl/core">
-    <p:panel id="fd" header="#{lbl['lbl.ct.panel.name']}"   toggleable="true"  toggleSpeed="500">
-       <h:panelGrid columns="4" style="width:100%" columnClasses="columnWidth15">  
-         <p:outputLabel value="#{lbl['lbl.ct.cname']}"/>  
-         <p:inputText value="Bekalan Pen Bebola" style="width:170px;" disabled="true" />
-         <p:outputLabel value="#{lbl['lbl.ct.cno']}" />  
-         <h:inputText style="width:170px;" value="234ER5670" disabled="true"/>
-         <p:outputLabel value="#{lbl['lbl.ct.ministry']}" />  
-         <p:selectOneMenu  disabled="false"  style="width:130px;">
-			<f:selectItems value="#{agreementBackingBean.contractListItem.contractOwnerJabatan}" />
-	     </p:selectOneMenu>
-	     <p:outputLabel value="#{lbl['lbl.ct.phyno']}" />  
-         <p:inputText style="width:170px;" value="234ER5670" disabled="true" />
-	     <p:outputLabel value="#{lbl['lbl.ct.dname']}"/>  
-         <p:selectOneMenu disabled="false" style="width:130px;">
-		   <f:selectItems value="#{agreementBackingBean.contractListItem.contractOwnerJabatan}" />
-	     </p:selectOneMenu>
-		 <p:outputLabel value="#{lbl['lbl.ct.company']}" />  
-         <p:inputText style="width:170px;" value="Xyz Sdn Bhd" disabled="true" />
-         <p:outputLabel value="#{lbl['lbl.ct.ptj.name']}" /> 
-  	     <p:selectOneMenu disabled="false" style="width:130px;">
-		  <f:selectItems value="#{agreementBackingBean.contractListItem.contractOwnerPtj}" />
-  		 </p:selectOneMenu>
-  		 <p:outputLabel value="#{lbl['lbl.ct.ptj.sname']}"/>  
-         <p:inputText value="Khai Sdn Bhd"  style="width:150px;" disabled="true" />
-         <p:outputLabel value="#{lbl['lbl.ct.ptj.ceff.date']}"/>  
-         <p:inputText value="01 DEC 2013" disabled="true" style="width:150px;" />
-         <p:outputLabel value="#{lbl['lbl.ct.ptj.cexp.date']}" />  
-         <p:inputText value ="30 NOV 2014" disabled="true" style="width:150px;" />
-         <p:outputLabel value="#{lbl['lbl.ct.cperiod']}" />  
-         <h:panelGrid columns="2">
-         <p:inputText style="width:60px;" value="14"  disabled="true" />
-         <p:selectOneMenu disabled="false" style="width:20px;">
-			<f:selectItem itemLabel="Month" itemValue="Month" /> 
-		    <f:selectItem itemLabel="Years" itemValue="Years" /> 
-  	     </p:selectOneMenu>
-         </h:panelGrid>
-         <h:outputLabel value="#{lbl['lbl.ct.camount']}"/>  
-           <p:inputText style="width:60px;" value="3000.00" disabled="true" />
-         <p:outputLabel value="#{lbl['lbl.ct.ft.no']}" />  
-         <p:commandLink>  
-          <p:outputLabel value="2348-5674874" style="float:left;"/>  
-         </p:commandLink> 
-         <p:outputLabel value="#{lbl['lbl.ct.final.ag']}"  />  
-         <p:selectBooleanCheckbox value="true"  disabled="false"/> 
-         <f:verbatim></f:verbatim>
-         <f:verbatim></f:verbatim>
-         <p:outputLabel value="#{lbl['lbl.ct.circular']}"  />  
-         <p:commandLink>  
-          <p:outputLabel value="CR-2013-PTJ-0001" style="float:left;"  />  
-         </p:commandLink> 
-       </h:panelGrid>
-      </p:panel>
+   <p:panel id="fd" header="#{lbl['lbl.ct.panel.name']}" toggleable="true" toggleSpeed="500">
+		<h:panelGrid columns="4" style="width:100%" columnClasses="columnWidth15">
+			<p:outputLabel value="#{lbl['lbl.ct.cno']}" />
+			<p:inputText value="#{agreementBackingBean.managedBean.ctContract.latestContractVer.ctContractValue.contractPhysicalNo}" style="width:170px;" />
+			<p:outputLabel value="#{lbl['lbl.ct.physicalNo']}" />
+			<p:inputText value="#{agreementBackingBean.managedBean.ctContract.latestContractVer.ctContractValue.contractPhysicalNo}" style="width:170px;" />				
+			<p:outputLabel value="#{lbl['lbl.ct.contractType']}" />
+			<p:inputText value="#{agreementBackingBean.managedBean.ctContract.contractType.codeId}" style="width:170px;" />					
+			<p:outputLabel value="Created Date" />
+			<p:inputText style="width:170px;" disabled="true" value="#{agreementBackingBean.managedBean.ctContract.publishDate}" >
+				<f:convertDateTime pattern="MM/dd/yyyy" />
+			</p:inputText>				
+			<p:outputLabel value="#{lbl['lbl.ct.effectiveDate']}" />
+			<p:calendar style="width:170px;"
+				value="#{agreementBackingBean.managedBean.ctContract.latestContractVer.ctContractValue.effDate}"
+				id="popupCal1" showOn="button" />
+			<h:outputLabel value="#{lbl['lbl.ct.edate']}" />
+			<p:calendar style="width:170px;"
+				value="#{agreementBackingBean.managedBean.ctContract.latestContractVer.ctContractValue.expDate}"
+				id="popupCal" showOn="button" />			
+			<p:outputLabel value="#{lbl['lbl.ct.cur']}" />
+			<p:inputText value="#{agreementBackingBean.managedBean.ctContract.currency.currencyName}" style="width:70px;" />				
+			<p:outputLabel value="#{lbl['lbl.ct.contractAmount']}" />
+			<p:inputText
+				value="#{agreementBackingBean.managedBean.ctContract.latestContractVer.ctContractValue.contractAmount}"
+				size="8" disabled="true" />			
+			<h:outputLabel value="#{lbl['lbl.ct.liquidated']}" />
+			<p:inputText
+				value="#{agreementBackingBean.managedBean.ctContract.latestContractVer.ctContractValue.liquidatedDamage}"
+				size="8" disabled="true" />
+			<h:outputLabel value="#{lbl['lbl.ct.dperiod']}" />
+			<h:panelGrid columns="2">
+				<p:inputText size="8" value="#{agreementBackingBean.managedBean.ctContract.latestContractVer.ctContractValue.deliveryTerm}" />
+				<p:outputLabel value="Days" />
+			</h:panelGrid>
+			 <h:panelGroup>
+		      <div style="height: 40px; vertical-align: top;">
+			  <p:outputLabel for="contractName" value="Contract Title" />
+			</div>
+			</h:panelGroup>
+			 <h:panelGrid>
+			<p:inputTextarea id="contractName"
+				value="#{agreementBackingBean.managedBean.ctContract.contractName}"
+				required="false" rows="2" cols="30" disabled="true"
+				autoResize="false" />	
+			</h:panelGrid>		
+			<f:verbatim />
+			<f:verbatim />
+			<h:outputLabel
+				rendered="#{agreementBackingBean.managedBean.ctContract.circular.latestCircularVer.circularNo != null}"
+				value="#{lbl['lbl.ct.circularNo']}" />
+			<p:commandLink
+				rendered="#{agreementBackingBean.managedBean.ctContract.circular.latestCircularVer.circularNo != null}"
+				style="margin-right:20px;" ajax="false">
+				<h:outputText
+					value="#{agreementBackingBean.managedBean.ctContract.circular.latestCircularVer.circularNo}"
+					styleClass="linkcommand" />
+			</p:commandLink>
+		</h:panelGrid>
+	</p:panel>
+	<p:panel id="qtnTenderPnl" header="Quotation / Tender Details" toggleable="true" toggleSpeed="500">
+		<h:panelGrid columns="4" style="width:100%" columnClasses="columnWidth15">
+			<p:outputLabel value="Procurement Mode" />
+		    <p:inputText  style="width:170px;" disabled="true"/>
+			<p:outputLabel value="Published Date" />
+			<p:inputText style="width:170px;" disabled="true"
+				value="#{agreementBackingBean.managedBean.ctContract.publishDate}">
+				<f:convertDateTime pattern="MM/dd/yyyy" />
+			</p:inputText>			
+			<p:outputLabel value="#{lbl['lbl.ct.loaNo']}" />
+			<p:inputText style="width:170px;" disabled="true" 
+				value="#{agreementBackingBean.managedBean.ctContract.loaNo}" />
+			<p:outputLabel value="LOA Acknowledged Date" />
+			<p:inputText style="width:170px;" disabled="true"
+				value="#{agreementBackingBean.managedBean.ctContract.ackDate}" >
+				<f:convertDateTime pattern="MM/dd/yyyy" />
+			</p:inputText>
+			<p:outputLabel value="Item Type" />
+			<p:inputText style="width:170px;" disabled="true"/>		
+			<p:outputLabel value="Item Origin" />
+			<p:inputText style="width:170px;" disabled="true"/>			
+			<p:outputLabel value="#{lbl['lbl.ct.fulfilmentType']}" />
+			<p:inputText style="width:170px;" disabled="true"/>			
+			<p:outputLabel value="#{lbl['lbl.ct.sfee']}" />
+			<h:panelGrid columns="2">
+			<p:inputText value="#{agreementBackingBean.managedBean.ctContract.serviceFee}"
+				style="width:55px;" disabled="true" />	
+				<p:outputLabel value="%" />
+		</h:panelGrid>		
+		</h:panelGrid>
+		</p:panel>
                
-		 <ui:include src="/xhtml/ct/agreement/signingAgreement.xhtml"/>  
+		
 </ui:composition>
 	  
