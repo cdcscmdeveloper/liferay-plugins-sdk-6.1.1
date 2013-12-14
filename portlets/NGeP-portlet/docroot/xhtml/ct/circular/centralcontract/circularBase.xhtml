@@ -8,6 +8,7 @@
 	xmlns:c="http://java.sun.com/jsp/jstl/core">
 	
     <ui:define name="contentSection">
+    	<f:event listener="#{centralContractBackingBean.preRenderView}" type="preRenderView" />	
 		<p:panel>
 			<p:messages id="messages" showDetail="true" autoUpdate="true" closable="true" severity="error, info" />
 			<div class="ppRightBtn"> 
@@ -20,7 +21,7 @@
 			<p:tab id="tabcd" title="Circular Details" >
 	       		<ui:include src="/xhtml/ct/circular/centralcontract/createCircular.xhtml"/>
 	       	</p:tab> 
-		 	<p:tab id="tabSetting" title="Setting" >
+		 	<p:tab id="tabSetting" title="Setting" rendered="#{centralContractBackingBean.isCentralContractAdmin()}" >
 	       		<ui:include src="/xhtml/ct/circular/centralcontract/approverSetting.xhtml" />  
 	       	</p:tab>   
 			<p:tab id="tabSchedule" title="#{lbl['lbl.ct.menu.remark']}" >

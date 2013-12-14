@@ -15,6 +15,7 @@ import javax.faces.bean.RequestScoped;
 import javax.faces.context.FacesContext;
 import javax.faces.event.ActionEvent;
 import javax.faces.model.SelectItem;
+import javax.servlet.http.HttpServletRequest;
 
 import my.ep.biz.bean.search.ISearchBean;
 import my.ep.biz.bean.search.ISearchResultBean;
@@ -24,6 +25,9 @@ import my.ep.biz.bean.search.SearchFilterBean;
 import my.ep.biz.service.ct.circular.ICircularSO;
 import my.ep.biz.service.pm.authorization.user.IUserSO;
 import my.ep.biz.service.pm.common.state.IStateSO;
+import my.ep.bpm.dto.BpmRequestDTO;
+import my.ep.bpm.dto.BpmResponseDTO;
+import my.ep.bpm.service.IBpmSO;
 import my.ep.constant.BpmOutcomeConst;
 import my.ep.constant.ct.ContractConst;
 import my.ep.constant.ct.ContractStatusConst;
@@ -34,6 +38,8 @@ import my.ep.dto.pm.authorization.user.UserResDTO;
 import my.ep.dto.pm.common.state.StateReqDTO;
 import my.ep.dto.pm.common.state.StateResDTO;
 import my.ep.exception.EpException;
+import my.ep.jaxb.ct.circular.CTCircularContractDataType;
+import my.ep.jaxb.ct.circular.cancellation.CTCircularCancellationDataType;
 import my.ep.persistence.entity.ct.circular.CtCancelCircularReq;
 import my.ep.persistence.entity.ct.circular.CtCircular;
 import my.ep.persistence.entity.ct.circular.CtCircularVer;
@@ -51,6 +57,7 @@ import my.ep.persistence.entity.pm.common.PmCode;
 import my.ep.persistence.entity.pm.common.PmState;
 import my.ep.persistence.entity.sm.SmSupplier;
 import my.ep.type.aut.SearchOperator;
+import my.ep.util.lookupservice.EpBpmBusinessDelegate;
 import my.ep.web.backingbean.BaseBackingBean;
 import my.ep.web.backingbean.ct.ContractBackingBean;
 import my.ep.web.bean.paginator.IPagingDataModel;
@@ -62,6 +69,8 @@ import my.ep.web.util.lookupservice.BusinessDelegate;
 import org.apache.log4j.Logger;
 import org.primefaces.model.DualListModel;
 import org.primefaces.model.UploadedFile;
+
+import com.liferay.portal.util.PortalUtil;
 
 /**
  * Circular Panel Backingbean
@@ -93,6 +102,10 @@ public class PanelBackingBean extends BaseBackingBean<PanelManagedBean>{
 		}
 		if(getManagedBean().getCircularDocType()==null) {
 			getManagedBean().setCircularDocType(ContractConst.CIRCULAR_DOC_TYPE_PANEL);
+		}
+		if(isPanelAdmin() || isCentralContractAdmin()) {
+			FacesScopes facesScopes = new FacesScopes();
+			getManagedBean().setCircularAdmin(facesScopes.getUserSessionBean().getLoginId());
 		}
 	}
 	
@@ -139,6 +152,21 @@ public class PanelBackingBean extends BaseBackingBean<PanelManagedBean>{
 		} finally {
 			userSO = null;
 		}
+	}
+	
+	public boolean isPanelAdmin() {
+		FacesScopes facesScopes = new FacesScopes();
+		return facesScopes.hasRoleUser("BPK_PCA_HQ") || facesScopes.hasRoleUser("BPK_PCA_SA") || facesScopes.hasRoleUser("BPK_PCA_SK");
+	}
+	
+	public boolean isCentralContractAdmin() {
+		FacesScopes facesScopes = new FacesScopes();
+		return facesScopes.hasRoleUser("BPK_CCA_HQ") || facesScopes.hasRoleUser("BPK_CCA_SA") || facesScopes.hasRoleUser("BPK_CCA_SK");
+	}
+	
+	public boolean isBPKApprover() {
+		FacesScopes facesScopes = new FacesScopes();
+		return facesScopes.hasRoleUser("BPK_APPROVER") || facesScopes.hasRoleUser("BPK_APPROVER_SA") || facesScopes.hasRoleUser("BPK_APPROVER_SK");
 	}
 	
 	public String saveCircularPanel(String action) {
@@ -194,15 +222,19 @@ public class PanelBackingBean extends BaseBackingBean<PanelManagedBean>{
 			reqDTO.setOutcome(action);
 			reqDTO.setToken(facesScope.getBPMAuthenticationCtxToken());
 			reqDTO.setTaskId(getManagedBean().getTaskId());
+			reqDTO.setCircularAdmin(getManagedBean().getCircularAdmin());
 			
 			if(circularVer.getPmUserGroup().getUserGroupId()!=null) {
 				PmUserGroup pmUserGroup = getManagedBean().getUserGroupMap().get(circularVer.getPmUserGroup().getUserGroupId());
 				Map<String, PmUser> userMap = new HashMap<String, PmUser>();
-				for(PmUserGroupUser userGroupUser : pmUserGroup.getPmUserGroupUsers()) {
-					userMap.put(userGroupUser.getPmUser().getUserName(), userGroupUser.getPmUser());
+				if(pmUserGroup!=null) {
+					for(PmUserGroupUser userGroupUser : pmUserGroup.getPmUserGroupUsers()) {
+						userMap.put(userGroupUser.getPmUser().getUserName(), userGroupUser.getPmUser());
+					}
 				}
 				reqDTO.setUserMap(userMap);
 			}
+			
 			
 			CircularResDTO resDTO = circularSO.saveCircular(reqDTO);
 			if(resDTO.isSuccessful()) {
@@ -248,13 +280,16 @@ public class PanelBackingBean extends BaseBackingBean<PanelManagedBean>{
 			reqDTO.setOutcome(action);
 			reqDTO.setToken(facesScope.getBPMAuthenticationCtxToken());
 			reqDTO.setTaskId(getManagedBean().getTaskId());
+			reqDTO.setCircularAdmin(getManagedBean().getCircularAdmin());
 			
 			if(getManagedBean().getCircularVer().getPmUserGroup().getUserGroupId()!=null) {
 				getManagedBean().getCancelCircularReq().setPmUserGroup(getManagedBean().getCircularVer().getPmUserGroup());
 				PmUserGroup pmUserGroup = getManagedBean().getUserGroupMap().get(getManagedBean().getCancelCircularReq().getPmUserGroup().getUserGroupId());
 				Map<String, PmUser> userMap = new HashMap<String, PmUser>();
-				for(PmUserGroupUser userGroupUser : pmUserGroup.getPmUserGroupUsers()) {
-					userMap.put(userGroupUser.getPmUser().getUserName(), userGroupUser.getPmUser());
+				if(pmUserGroup!=null) {
+					for(PmUserGroupUser userGroupUser : pmUserGroup.getPmUserGroupUsers()) {
+						userMap.put(userGroupUser.getPmUser().getUserName(), userGroupUser.getPmUser());
+					}
 				}
 				reqDTO.setUserMap(userMap);
 			}
@@ -527,9 +562,17 @@ public class PanelBackingBean extends BaseBackingBean<PanelManagedBean>{
 	public SelectItem[] getCircularDocTypeValues() {
 		SelectItem[] items = null;
 		try {
-		    items = new SelectItem[2];
-		    items[0] = new SelectItem(ContractConst.CIRCULAR_DOC_TYPE_PANEL, "Panel Circular");
-		    items[1] = new SelectItem(ContractConst.CIRCULAR_DOC_TYPE_CENTRAL_CONTRACT, "Central Contract Circular");
+		    if(isPanelAdmin() && isCentralContractAdmin()) { 
+		    	items = new SelectItem[2];
+		    	items[0] = new SelectItem(ContractConst.CIRCULAR_DOC_TYPE_PANEL, "Panel Circular");
+		    	items[1] = new SelectItem(ContractConst.CIRCULAR_DOC_TYPE_CENTRAL_CONTRACT, "Central Contract Circular");
+		    } else if(isPanelAdmin()) {
+		    	items = new SelectItem[1];
+		    	items[0] = new SelectItem(ContractConst.CIRCULAR_DOC_TYPE_PANEL, "Panel Circular");
+		    } else if(isCentralContractAdmin()) {
+		    	items = new SelectItem[1];
+		    	items[0] = new SelectItem(ContractConst.CIRCULAR_DOC_TYPE_CENTRAL_CONTRACT, "Central Contract Circular");
+		    }
 		} catch (Exception e) {
 			e.printStackTrace();
 			FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR,e.toString(), e.getMessage()));
@@ -672,15 +715,40 @@ public class PanelBackingBean extends BaseBackingBean<PanelManagedBean>{
 		return null;
 	}
 	
-	public void taskListAction(Long circularVerId) {
+	public void preRenderView() {
 		ICircularSO circularSO = null;
 		try {
+			System.out.println("**********preRenderView**************");
+			// BPMTaskListBackingBean bb = new BPMTaskListBackingBean();
+			HttpServletRequest servletRequest = PortalUtil.getHttpServletRequest(new FacesScopes().getRequest());
+			HttpServletRequest originalServletRequest = PortalUtil.getOriginalServletRequest(servletRequest);
+			String taskId = originalServletRequest.getParameter("taskId");
+			System.out.println("taskId:" + taskId);
+
+			if(taskId==null) {
+				return;
+			}
+			
 			circularSO = (ICircularSO)BusinessDelegate.getInstance().getServiceObject("ct",ICircularSO.class);
+			FacesScopes face = new FacesScopes();
+			String token = face.getBPMAuthenticationCtxToken();
+			IBpmSO bpmSO = (IBpmSO) EpBpmBusinessDelegate.getInstance().getServiceObject(IBpmSO.class);
+
+			BpmRequestDTO reqDTO = new BpmRequestDTO();
+			reqDTO.setCtxToken(token);
+			reqDTO.setTaskId(taskId);
+			BpmResponseDTO res = bpmSO.getTaskDetails(reqDTO);
+			Object obj = res.getPojo();			
+			CTCircularContractDataType dataType = (CTCircularContractDataType) obj;
 			
-			CircularReqDTO reqDTO = new CircularReqDTO();
-			reqDTO.setCircularVerId(circularVerId);
+			getManagedBean().setCircularAdmin(dataType.getContractAdmin());
+			getManagedBean().setTaskId(taskId);
+			getManagedBean().setOutComes(res.getAction());
 			
-			CircularResDTO resDTO = circularSO.retrieveCircularVerById(reqDTO);
+			CircularReqDTO circularReqDTO = new CircularReqDTO();
+			circularReqDTO.setCircularVerId(dataType.getCircularId().longValue());
+			
+			CircularResDTO resDTO = circularSO.retrieveCircularVerById(circularReqDTO);
 			if(resDTO.getCircularVer().getUpdateType()==null) {
 				PmCode code = new PmCode();
 				code.setCodeId(-1L);
@@ -711,15 +779,40 @@ public class PanelBackingBean extends BaseBackingBean<PanelManagedBean>{
 		}
 	}
 	
-	public void taskListCancelCircularAction(Long cancelCircularReqId) {
+	public void preRenderViewCancelReq() {
 		ICircularSO circularSO = null;
 		try {
+			System.out.println("**********preRenderView**************");
+			// BPMTaskListBackingBean bb = new BPMTaskListBackingBean();
+			HttpServletRequest servletRequest = PortalUtil.getHttpServletRequest(new FacesScopes().getRequest());
+			HttpServletRequest originalServletRequest = PortalUtil.getOriginalServletRequest(servletRequest);
+			String taskId = originalServletRequest.getParameter("taskId");
+			System.out.println("taskId:" + taskId);
+
+			if(taskId==null) {
+				return;
+			}
+			
 			circularSO = (ICircularSO)BusinessDelegate.getInstance().getServiceObject("ct",ICircularSO.class);
+			FacesScopes face = new FacesScopes();
+			String token = face.getBPMAuthenticationCtxToken();
+			IBpmSO bpmSO = (IBpmSO) EpBpmBusinessDelegate.getInstance().getServiceObject(IBpmSO.class);
+
+			BpmRequestDTO reqDTO = new BpmRequestDTO();
+			reqDTO.setCtxToken(token);
+			reqDTO.setTaskId(taskId);
+			BpmResponseDTO res = bpmSO.getTaskDetails(reqDTO);
+			Object obj = res.getPojo();			
+			CTCircularCancellationDataType dataType = (CTCircularCancellationDataType) obj;
 			
-			CircularReqDTO reqDTO = new CircularReqDTO();
-			reqDTO.setCancelCircularReqId(cancelCircularReqId);
+			getManagedBean().setCircularAdmin(dataType.getContractAdmin());
+			getManagedBean().setTaskId(taskId);
+			getManagedBean().setOutComes(res.getAction());
 			
-			CircularResDTO resDTO = circularSO.retrieveCancelCircularReqById(reqDTO);
+			CircularReqDTO cancelReqDTO = new CircularReqDTO();
+			cancelReqDTO.setCancelCircularReqId(dataType.getCircularIds().get(0).longValue());
+			
+			CircularResDTO resDTO = circularSO.retrieveCancelCircularReqById(cancelReqDTO);
 			getManagedBean().getApproverModel().setTarget(resDTO.getApproverList());
 			getManagedBean().getApproverModel().getSource().removeAll(resDTO.getApproverList());
 			getManagedBean().setRemarkList(resDTO.getRemarkList());
@@ -734,7 +827,7 @@ public class PanelBackingBean extends BaseBackingBean<PanelManagedBean>{
 			FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR,e.toString(), e.getMessage()));
 		} finally {
 			circularSO = null;
-		}
+		}		
 	}
 	
 	private class CancelledCircularPagingDataModel extends PagingDataModel<CtCancelCircular> {

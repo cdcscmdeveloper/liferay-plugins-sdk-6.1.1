@@ -7,14 +7,12 @@
 	xmlns:ac="http://ac.my/jsf/composite/cc" >
 
 	<p:panel id="ccc" header="#{lbl['lbl.ct.cc.panel.ccd']}" toggleable="true" toggleSpeed="500">
-		<c:choose>
-			<c:when test="#{!centralContractBackingBean.managedBean.updateAction and centralContractBackingBean.managedBean.circularVer.updateNo == null}">
-				<ui:include src="createCircularDetail.xhtml" />
-			</c:when>	
-			<c:otherwise>
-				<ui:include src="updateCircularDetail.xhtml" />
-			</c:otherwise>	
-		</c:choose>
+		<h:panelGroup rendered="#{!centralContractBackingBean.managedBean.updateAction and (centralContractBackingBean.managedBean.circularVer.updateNo == null)}">
+			<ui:include src="createCircularDetail.xhtml" />
+		</h:panelGroup>
+		<h:panelGroup rendered="#{centralContractBackingBean.managedBean.updateAction || (centralContractBackingBean.managedBean.circularVer.updateNo != null)}">
+			<ui:include src="updateCircularDetail.xhtml" />
+		</h:panelGroup>		
 	</p:panel>
 	
 	<p:panel id="contactPerson" header="#{lbl['lbl.ct.pc.cpd']}" toggleable="true" toggleSpeed="500" widgetVar="panelcontactPerson">

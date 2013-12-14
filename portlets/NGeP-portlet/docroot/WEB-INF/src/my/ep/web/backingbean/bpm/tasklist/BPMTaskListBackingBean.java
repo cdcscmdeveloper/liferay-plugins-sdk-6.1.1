@@ -12,7 +12,9 @@ import javax.faces.context.FacesContext;
 import my.ep.bpm.dto.BpmRequestDTO;
 import my.ep.bpm.dto.BpmResponseDTO;
 import my.ep.bpm.service.IBpmSO;
+import my.ep.bpm.vo.WorklistItemVO;
 import my.ep.constants.FlProcessNameConst;
+import my.ep.jaxb.ct.circular.CTCircularContractDataType;
 import my.ep.util.lookupservice.EpBpmBusinessDelegate;
 import my.ep.web.backingbean.BaseBackingBean;
 import my.ep.web.constant.PagingConst;
@@ -64,10 +66,10 @@ public class BPMTaskListBackingBean extends
 		temp.put("Site Visit", "sitevisit");
 		temp.put("Proposal Preparation","supplierpp");
 
-		temp.put("Circular Contract Maintenance","create-central-contract-circular");
-		temp.put("Circular Contract Maintenance", "create-panel-circular");
-		temp.put("Circular Contract Maintenance","central-contract-circular-maintenance");
-		temp.put("Circular Contract Maintenance", "panel-circular-maintenance");
+		temp.put("Circular Contract Maintenance","central-contract-circular");
+		temp.put("Circular Contract Maintenance", "panel-circular");
+//		temp.put("Circular Contract Maintenance","central-contract-circular-maintenance");
+//		temp.put("Circular Contract Maintenance", "panel-circular-maintenance");
 		temp.put("Circular Contract Cancellation", "cancel-circular");
 		temp.put("Factoring Company Request", "request-factoring");
 		temp.put("Contract Creation", "fulfilment-details");
@@ -154,8 +156,6 @@ public class BPMTaskListBackingBean extends
 		this.getManagedBean().setTaskList(responseDTO.getWorklistVO().getWorklistItem());
 
 
-
-
 		return responseDTO;
 	}
 
@@ -200,6 +200,15 @@ public class BPMTaskListBackingBean extends
 			}
 			log.info("url:" + url);
 
+			// TODO
+			if(res.getProcessName().equalsIgnoreCase("Circular Contract Maintenance")) {
+				CTCircularContractDataType dataType = (CTCircularContractDataType) obj;
+				if(dataType.getType().equalsIgnoreCase("Central")) {
+					url = "central-contract-circular";
+				} else {
+					url = "panel-circular";
+				}
+			}
 			
 			ExternalContext externalContext = FacesContext.getCurrentInstance().getExternalContext();
 

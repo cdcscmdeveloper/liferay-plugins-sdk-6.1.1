@@ -4,9 +4,9 @@
 	<category name="NGeP">
 		<category name="category.ep.ct">
 			<category name="category.ep.cr">
-				<portlet id="ctCreateCcCircular" />
+				<portlet id="ctCcCircular" />
 				<portlet id="ctCcCircularMaintenance" />
-				<portlet id="ctCreatePanelCircular" />
+				<portlet id="ctPanelCircular" />
 				<portlet id="ctPanelCircularMaintenance" />
 				<portlet id="ctCancelCircular" />
 			</category>

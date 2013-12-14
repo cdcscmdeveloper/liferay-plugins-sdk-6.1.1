@@ -6,6 +6,7 @@ package my.ep.web.managedbean.ct.circular.cc;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
@@ -18,6 +19,7 @@ import my.ep.persistence.entity.ct.circular.CtCircularVer;
 import my.ep.persistence.entity.ct.circular.cc.CtCircularContract;
 import my.ep.persistence.entity.ct.circular.dtl.CtCancelCircular;
 import my.ep.persistence.entity.ct.circular.dtl.CtContactPerson;
+import my.ep.persistence.entity.pm.authorization.PmUserGroup;
 import my.ep.web.managedbean.BaseManagedBean;
 
 import org.primefaces.model.DualListModel;
@@ -34,6 +36,8 @@ public class CentralContractManagedBean extends BaseManagedBean {
 
 	private static final long serialVersionUID = 1L;
 
+	private String circularAdmin;
+	
 	private boolean updateAction;
 	
 	private CtCircular circular;
@@ -46,6 +50,7 @@ public class CentralContractManagedBean extends BaseManagedBean {
 	private CtContract[] selectedContractList;
 	private List<CtContract> contractList;
 	private DualListModel<String> approverModel;
+	private Map<Long, PmUserGroup> userGroupMap;	
 	
 	// Search
 	private String searchCircularNo;
@@ -198,6 +203,18 @@ public class CentralContractManagedBean extends BaseManagedBean {
 
 	public void setAttachmentList(List<CtAttachment> attachmentList) {
 		this.attachmentList = attachmentList;
+	}
+	public Map<Long, PmUserGroup> getUserGroupMap() {
+		return userGroupMap;
+	}
+	public void setUserGroupMap(Map<Long, PmUserGroup> userGroupMap) {
+		this.userGroupMap = userGroupMap;
+	}
+	public String getCircularAdmin() {
+		return circularAdmin;
+	}
+	public void setCircularAdmin(String circularAdmin) {
+		this.circularAdmin = circularAdmin;
 	}
 	
 }

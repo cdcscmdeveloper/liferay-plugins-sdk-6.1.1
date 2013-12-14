@@ -40,6 +40,7 @@ public class PanelManagedBean extends BaseManagedBean {
 	private static final long serialVersionUID = 1L;
 
 	private String circularDocType;
+	private String circularAdmin;
 	
 	private boolean updateAction;
 	
@@ -293,6 +294,14 @@ public class PanelManagedBean extends BaseManagedBean {
 
 	public void setUserGroupMap(Map<Long, PmUserGroup> userGroupMap) {
 		this.userGroupMap = userGroupMap;
+	}
+
+	public String getCircularAdmin() {
+		return circularAdmin;
+	}
+
+	public void setCircularAdmin(String circularAdmin) {
+		this.circularAdmin = circularAdmin;
 	}
 
 }

@@ -233,8 +233,8 @@
 	</portlet>
 
 	<portlet>
-		<portlet-name>ctCreateCcCircular</portlet-name>
-		<display-name>Create Central Contract Circular</display-name>
+		<portlet-name>ctCcCircular</portlet-name>
+		<display-name>Central Contract Circular</display-name>
 		<portlet-class>org.portletfaces.bridge.GenericFacesPortlet</portlet-class>
 		<init-param>
 			<name>javax.portlet.faces.defaultViewId.view</name>
@@ -246,7 +246,7 @@
 			<portlet-mode>view</portlet-mode>
 		</supports>
 		<portlet-info>
-			<title>Create Central Contract Circular</title>
+			<title>Central Contract Circular</title>
 			<short-title>NewJSFPortlet</short-title>
 			<keywords></keywords>
 		</portlet-info>
@@ -297,8 +297,8 @@
 	</portlet>
 	
 	<portlet>
-		<portlet-name>ctCreatePanelCircular</portlet-name>
-		<display-name>Create Panel Circular</display-name>
+		<portlet-name>ctPanelCircular</portlet-name>
+		<display-name>Panel Circular</display-name>
 		<portlet-class>org.portletfaces.bridge.GenericFacesPortlet</portlet-class>
 		<init-param>
 			<name>javax.portlet.faces.defaultViewId.view</name>
@@ -310,7 +310,7 @@
 			<portlet-mode>view</portlet-mode>
 		</supports>
 		<portlet-info>
-			<title>Create Panel Circular</title>
+			<title>Panel Circular</title>
 			<short-title>NewJSFPortlet</short-title>
 			<keywords></keywords>
 		</portlet-info>

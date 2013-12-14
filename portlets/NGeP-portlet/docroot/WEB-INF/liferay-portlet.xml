@@ -60,7 +60,7 @@
 		<css-class-wrapper>ct-portlet</css-class-wrapper>
 	</portlet>
 	<portlet>
-		<portlet-name>ctCreateCcCircular</portlet-name>
+		<portlet-name>ctCcCircular</portlet-name>
 		<icon>/icon.png</icon>
 		<instanceable>false</instanceable>
 		<ajaxable>false</ajaxable>
@@ -76,7 +76,7 @@
 		<css-class-wrapper>ct-portlet</css-class-wrapper>
 	</portlet>
 	<portlet>
-		<portlet-name>ctCreatePanelCircular</portlet-name>
+		<portlet-name>ctPanelCircular</portlet-name>
 		<icon>/icon.png</icon>
 		<instanceable>false</instanceable>
 		<ajaxable>false</ajaxable>
