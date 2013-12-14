@@ -82,6 +82,7 @@ public class QTDetailManagedBean extends BaseManagedBean {
 	private ScQtCheckList qtCheckList;
 	private ScQtContactPerson qtContactPerson;
 	private ScQtDeduction qtDeduction;
+	private ScQtDeductionClause qtDeductionClause;
 	private PpPlan ppPlan;
 	private PmOrgProfile pmOrgProfile;
 
@@ -190,7 +191,7 @@ public class QTDetailManagedBean extends BaseManagedBean {
 	//Payload for BPM
 		private SCQuotationTenderDataType quotationTenderDataType;
 	private boolean isEditable=true;
-	private boolean isPlayButtonEnabled=true;
+	
 	
 	
 	private List<ScQt> qtList = new ArrayList<ScQt>();
@@ -1174,16 +1175,6 @@ public class QTDetailManagedBean extends BaseManagedBean {
 	}
 
 
-	public boolean isPlayButtonEnabled() {
-		return isPlayButtonEnabled;
-	}
-
-
-	public void setPlayButtonEnabled(boolean isPlayButtonEnabled) {
-		this.isPlayButtonEnabled = isPlayButtonEnabled;
-	}
-
-
 	public List<ScQtDeduction> getScQtDeductions() {
 		return scQtDeductions;
 	}
@@ -1233,6 +1224,16 @@ public class QTDetailManagedBean extends BaseManagedBean {
 
 	public void setQtDeduction(ScQtDeduction qtDeduction) {
 		this.qtDeduction = qtDeduction;
+	}
+
+
+	public ScQtDeductionClause getQtDeductionClause() {
+		return qtDeductionClause;
+	}
+
+
+	public void setQtDeductionClause(ScQtDeductionClause qtDeductionClause) {
+		this.qtDeductionClause = qtDeductionClause;
 	}
 		 
 }

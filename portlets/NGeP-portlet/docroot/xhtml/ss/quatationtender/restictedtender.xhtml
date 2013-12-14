@@ -103,15 +103,15 @@
 		</h:panelGroup>
  <p:spacer height="15"></p:spacer>
 						<div align="right">
-		<p:commandButton value="#{lbl['lbl.so.addbtn']}"  icon="ui-icon-add" rendered="#{qTDetailBB.managedBean.playButtonEnabled}"
+		<p:commandButton value="#{lbl['lbl.so.addbtn']}"  icon="ui-icon-add" rendered="#{qTDetailBB.managedBean.editable}"
 			actionListener="#{qTSupplierQulCriteriaBackingBean.addNewRestrictedCategoryItem}"  update="@(.myCatList2)"/>
 			
-					<p:commandButton value="#{lbl['lbl.so.delete']}" icon="ui-icon-delete" rendered="#{qTDetailBB.managedBean.playButtonEnabled}"  />
+					<p:commandButton value="#{lbl['lbl.so.delete']}" icon="ui-icon-delete" rendered="#{qTDetailBB.managedBean.editable}"  />
 			</div>
 			<p:panelGrid columns="1" style="width:100%;"
 				styleClass="noBorders tr,noBorders td">
 <p:commandButton value="#{lbl['lbl.so.searchbtn']}" style="float:right;" icon="ui-icon-search"  update="rescatcodelist" process="@(.myResCatList)" 
-					onclick="suppdlg.show();" rendered="#{qTDetailBB.managedBean.playButtonEnabled}"></p:commandButton>	
+					onclick="suppdlg.show();" rendered="#{qTDetailBB.managedBean.editable}"></p:commandButton>	
 				</p:panelGrid>
 			<br/>
 			<br/>

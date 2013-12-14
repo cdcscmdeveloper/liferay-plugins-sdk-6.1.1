@@ -188,7 +188,7 @@
 
 
 						<p:commandButton value="#{lbl['lbl.sc.qt.upload']}" oncomplete="approvalUpload.show();return false;"
-							partialSubmit="true" process="@this" icon="ui-icon-upload" rendered="#{qTDetailBB.managedBean.playButtonEnabled}">
+							partialSubmit="true" process="@this" icon="ui-icon-upload" rendered="#{qTDetailBB.managedBean.editable}">
 							<!-- <p:graphicImage library="ep/images/design" name="upload.png"
 								value="/resources/ep/images/design/upload.png" /> -->
 							<f:setPropertyActionListener
@@ -234,7 +234,7 @@
 
 
 				</p:dataTable>
-				<p:commandButton value="Upload" style="float:right;" icon="ui-icon-upload" rendered="#{qTDetailBB.managedBean.playButtonEnabled}"></p:commandButton>
+				<p:commandButton value="Upload" style="float:right;" icon="ui-icon-upload" rendered="#{qTDetailBB.managedBean.editable}"></p:commandButton>
 			</h:panelGroup>
 
 
