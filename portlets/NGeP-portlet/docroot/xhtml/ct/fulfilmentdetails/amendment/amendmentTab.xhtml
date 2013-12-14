@@ -8,18 +8,21 @@
 	xmlns:c="http://java.sun.com/jsp/jstl/core">  
 	<ui:define name="contentSection">
 	 <p:panel>
+	  <c:if test='#{contractDetailsBackingBean.managedBean.chkRenderPage eq  "BPM"}'>
+     <f:event listener="#{contractDetailsBackingBean.preRenderView}" type="preRenderView" />
+	</c:if>
 	  <p:messages id="messages" showDetail="true" autoUpdate="true" closable="true" severity="error, info" />
 	 <div class="ppRightBtn"> 
-	     <ui:repeat var="action" value="#{contractDetailsBackingBean.managedBean.outComes}">
-			<p:commandButton value="#{action}" process="@this"  action="#{contractDetailsBackingBean.amendContract(action)}" />
+	     <ui:repeat var="outcome" value="#{contractDetailsBackingBean.managedBean.action}">
+			<p:commandButton value="#{outcome}" process="@this"  action="#{contractDetailsBackingBean.saveContract(outcome)}" />
 		 </ui:repeat>		
     </div>
 	</p:panel>
 	<p:tabView id="tabview" value="Termination" dynamic="true" orientation="left" >
 	   <p:tab title="#{lbl['lbl.ct.menu.fd']}" >
 	     <ui:include src="/xhtml/ct/fulfilmentdetails/shared/fulfilment.xhtml"/>
+	      <ui:include src="amendment.xhtml"/>
 	     <ui:include src="/xhtml/ct/fulfilmentdetails/shared/quotationTender.xhtml" />
-         <ui:include src="amendment.xhtml"/>
          <ui:include src="/xhtml/ct/fulfilmentdetails/shared/supplier.xhtml"/>                 
          <ui:include src="/xhtml/ct/fulfilmentdetails/shared/factoring.xhtml"/>     
          <ui:include src="bond.xhtml"/>                      
@@ -27,6 +30,9 @@
        <p:tab title="#{lbl['lbl.ct.menu.agency']}" >
          <ui:include src="/xhtml/ct/fulfilmentdetails/shared/agency.xhtml"/>
        </p:tab> 
+        <p:tab title="#{lbl['lbl.ct.menu.zone']}">
+         <ui:include src="/xhtml/ct/fulfilmentdetails/shared/zone.xhtml" />    
+     </p:tab> 
 	   <p:tab title="#{lbl['lbl.ct.menu.item']}">
          <ui:include src="item.xhtml"/>
        </p:tab>  
@@ -43,9 +49,6 @@
       <p:tab title="#{lbl['lbl.ct.menu.pay']}" >
          <ui:include src="/xhtml/ct/fulfilmentdetails/shared/payment.xhtml" />    
        </p:tab>  
-	   <p:tab title="#{lbl['lbl.ct.menu.zone']}">
-         <ui:include src="/xhtml/ct/fulfilmentdetails/shared/zone.xhtml" />    
-     </p:tab> 
      <p:tab title="#{lbl['lbl.ct.menu.remark']}">
          <ui:include src="/xhtml/ct/shared/remarkAndAttachment.xhtml" />   
      </p:tab> 

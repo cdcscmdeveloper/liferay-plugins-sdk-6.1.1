@@ -52,7 +52,8 @@ public class ContractDetailsManagedBean extends BaseManagedBean{
 	private String showItem ="Item  Pricing";
 	private boolean itemPricing = true;
 	private boolean itemCeilingQuantity;
-	
+	private boolean amendDisable;
+	private boolean amendAckw;
 	
 	private CtContractVer contractVer;
 	private CtDeduction ctDeductionDel = new CtDeduction();
@@ -548,6 +549,22 @@ public class ContractDetailsManagedBean extends BaseManagedBean{
 
 	public void setChkRenderPage(String chkRenderPage) {
 		this.chkRenderPage = chkRenderPage;
+	}
+
+	public boolean isAmendDisable() {
+		return amendDisable;
+	}
+
+	public void setAmendDisable(boolean amendDisable) {
+		this.amendDisable = amendDisable;
+	}
+
+	public boolean isAmendAckw() {
+		return amendAckw;
+	}
+
+	public void setAmendAckw(boolean amendAckw) {
+		this.amendAckw = amendAckw;
 	}
 	
 }

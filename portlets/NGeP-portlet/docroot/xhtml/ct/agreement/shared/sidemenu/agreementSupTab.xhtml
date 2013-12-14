@@ -13,16 +13,17 @@
 	 <p:panel>
 	  <f:event listener="#{agreementBackingBean.preRenderView}" type="preRenderView" />	
 	 <div class="ppRightBtn">
-				<ui:repeat var="action"	value="#{agreementBackingBean.managedBean.outComes}">
-					<p:commandButton value="#{action}" process="@this" styleClass="ui-button" actionListener="#{agreementBackingBean.createSupAgreement(action)}" />
+				<ui:repeat var="outcome"	value="#{agreementBackingBean.managedBean.action}">
+					<p:commandButton value="#{outcome}" process="@this" styleClass="ui-button" actionListener="#{agreementBackingBean.createSupAgreement(outcome)}" />
 				</ui:repeat>		
     </div>
 	</p:panel>
 	<p:tabView id="agreementSubTab" orientation="left" >
 	    <p:tab id="agDetail" title="Fulfilment Details" >
             <ui:include src="/xhtml/ct/agreement/agreementDetails.xhtml"/>
-             <ui:include src="/xhtml/ct/agreement/signingAgreement.xhtml"/>  
               <ui:include src="/xhtml/ct/agreement/agreementSupDetails.xhtml"/>  
+             <ui:include src="/xhtml/ct/agreement/signingAgreement.xhtml"/>  
+            
         </p:tab> 
 	     <p:tab id="agCreate" title="Create Agreement">
             <ui:include src="/xhtml/ct/agreement/createAgreement.xhtml"/>

@@ -162,15 +162,16 @@ public class AgreementBackingBean extends BaseBackingBean<AgreementManagedBean> 
 				
 				if(res.getProcessName().equalsIgnoreCase("Agreement Creation")){
 					
+				if(dataType.getAgreementType().equalsIgnoreCase("supplemental")){	
+					FacesContext fc = FacesContext.getCurrentInstance();
+					this.getManagedBean().setAgreementType("supplemental");
+					fc.getApplication().getNavigationHandler().handleNavigation(fc, null,  ContractManagementConst.NAV_TO_CONTRACT_SUP_AGREEMENT);
+				}else{
 					FacesContext fc = FacesContext.getCurrentInstance();
 					fc.getApplication().getNavigationHandler().handleNavigation(fc, null,  ContractManagementConst.NAV_TO_CONTRACT_AGREEMENT);
-			
-				}else{
-				
-					FacesContext fc = FacesContext.getCurrentInstance();
-					fc.getApplication().getNavigationHandler().handleNavigation(fc, null, "navigation");
 				}
-		      } catch(Exception e){
+		      }
+			}catch(Exception e){
 					e.printStackTrace();
 				}
 
@@ -220,35 +221,22 @@ public class AgreementBackingBean extends BaseBackingBean<AgreementManagedBean> 
 		ContractAgreementReqDTO reqDTO = null;
 		try {
 			reqDTO = new ContractAgreementReqDTO();
+			String token = getFacesScopes().getBPMAuthenticationCtxToken();
 			agreementSO = (IAgreementSO) BusinessDelegate.getInstance().getServiceObject("ct", IAgreementSO.class);
-			this.getManagedBean().getAgreement().setCtAmendment(new CtAmendment());
-			this.getManagedBean().getAgreement().getCtAmendment()
-					.setAmendmentId(1L);
+			this.getManagedBean().getAgreement().setCtAmendment(this.getManagedBean().getCtContract().getLatestContractVer().getCtAmendment());
 			this.getManagedBean().getAgreement().setCtAgreementAppendixs(this.getManagedBean().getAppendixList());
+			this.getManagedBean().getAgreement().setCtContract(this.getManagedBean().getCtContract());
 			reqDTO.setAgreement(this.getManagedBean().getAgreement());
-			reqDTO.setOutcome(action);
 			reqDTO.setTaskId(this.getManagedBean().getTaskId());
-
-			String token = getManagedBean().getToken();
-			if (token == null) {
-				IBpmSO bpmSO = (IBpmSO) EpBpmBusinessDelegate.getInstance().getServiceObject(IBpmSO.class);
-				token = bpmSO.authenticate("roslan", "welcome1");
-				if (token == null) {
-					throw new EpException("BPM token not found");
-				}
-			}
-
 			reqDTO.setOutcome(action);
-			if (action == BpmOutcomeConst.BPM_SAVE) {
-				reqDTO.setOutcome("");
-			}
 			reqDTO.setToken(token);
-			reqDTO.setTaskId(getManagedBean().getTaskId());
-
+			reqDTO.setAgreementType(this.getManagedBean().getAgreementType());
+		    
 			ContractAgreementResDTO resDTO = agreementSO.saveAgreement(reqDTO);
+			
 			if (resDTO.isSuccessful()) {
-				log.info("Record saved successfully");
-				FacesContext.getCurrentInstance().addMessage(null,new FacesMessage(FacesMessage.SEVERITY_INFO,"Record saved successfully.","Agreement Saved. : "));
+				log.info("Record saved successfully1");
+				FacesContext.getCurrentInstance().addMessage(null,new FacesMessage(FacesMessage.SEVERITY_INFO,"Record saved successfully.","Agreement Name. : "+ this.getManagedBean().getCtContract().getContractId()));
 				renewSesionObject();
 				return "/xhtml/shared/acknowledge.xhtml";
 			} else {
@@ -256,7 +244,7 @@ public class AgreementBackingBean extends BaseBackingBean<AgreementManagedBean> 
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
-			FacesContext.getCurrentInstance().addMessage(null,new FacesMessage(FacesMessage.SEVERITY_ERROR, e.toString(),"Contract save failed."));
+			FacesContext.getCurrentInstance().addMessage(null,new FacesMessage(FacesMessage.SEVERITY_ERROR, e.toString(),"Agreement save failed."));
 		} finally {
 			agreementSO = null;
 			reqDTO = null;

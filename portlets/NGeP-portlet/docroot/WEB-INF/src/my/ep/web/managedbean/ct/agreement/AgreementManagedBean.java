@@ -41,7 +41,7 @@ public class AgreementManagedBean extends BaseManagedBean {
 
 	private CtAgreement agreement;
 	private Long contractId;
-	private String agreementType ="supplemental";
+	private String agreementType;
 	
 	public AgreementManagedBean(){
 		

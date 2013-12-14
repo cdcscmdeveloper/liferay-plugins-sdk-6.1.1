@@ -14,7 +14,9 @@ import my.ep.bpm.dto.BpmResponseDTO;
 import my.ep.bpm.service.IBpmSO;
 import my.ep.bpm.vo.WorklistItemVO;
 import my.ep.constants.FlProcessNameConst;
+import my.ep.jaxb.ct.agreement.CTAgreementDataType;
 import my.ep.jaxb.ct.circular.CTCircularContractDataType;
+import my.ep.jaxb.ct.contract.amendment.CTContractAmendmentDataType;
 import my.ep.util.lookupservice.EpBpmBusinessDelegate;
 import my.ep.web.backingbean.BaseBackingBean;
 import my.ep.web.constant.PagingConst;
@@ -76,8 +78,7 @@ public class BPMTaskListBackingBean extends
 		temp.put("Contract Activation Suspension Request", "contract-suspension");
 		temp.put("Contract Amendment Request", "contract-amendment");
 		temp.put("Contract Termination", "contract-termination");
-		temp.put("Agreement Creation", "agreement");
-		temp.put("Agreement Creation", "supplemental-agreement");
+		temp.put("Agreement Creation", "contract-agreement");
 		temp.put("Bank Account Change Request", "change-bank-account");
 
 		//Fulfilment Management - Start
@@ -89,7 +90,6 @@ public class BPMTaskListBackingBean extends
 		temp.put(FlProcessNameConst.CONTRACT_REQ_CREATION_PROCESS_NAME+FlProcessNameConst.CREATE_CO_HT, "contract-request");
 		temp.put(FlProcessNameConst.CONTRACT_REQ_CREATION_PROCESS_NAME+FlProcessNameConst.CREATE_NEW_CO_HT, "contract-request");
 		temp.put(FlProcessNameConst.MTO_CONTRACT_REQ_CREATION_PROCESS_NAME+FlProcessNameConst.INTIATE_MTO_CR_HT, "contract-request");
-		temp.put(FlProcessNameConst.MTO_CONTRACT_REQ_CREATION_PROCESS_NAME+FlProcessNameConst.CREATE_NEW_MTO_CO_HT, "contract-request");
 		temp.put(FlProcessNameConst.CONTRACT_REQ_INITIATION_PROCESS_NAME+FlProcessNameConst.CREATE_NEW_CO_HT, "contract-request");
 		temp.put(FlProcessNameConst.CONTRACT_REQ_INITIATION_PROCESS_NAME+FlProcessNameConst.CREATE_NORMAL_CO_HT, "contract-request");
 
@@ -208,6 +208,22 @@ public class BPMTaskListBackingBean extends
 				} else {
 					url = "panel-circular";
 				}
+				
+			}
+			
+			if(res.getProcessName().equalsIgnoreCase("Agreement Creation")) {
+				CTAgreementDataType dataType = (CTAgreementDataType) obj;
+				if(dataType.getAgreementType().equalsIgnoreCase("supplemental")) {
+					url = "supplemental-agreement";
+				} 
+				
+			}
+			
+			
+			if(res.getTaskName().equalsIgnoreCase("Confirm Amendment Meeting") || res.getTaskName().equalsIgnoreCase("Update Amendment Result") ||
+					res.getTaskName().equalsIgnoreCase("Sign Off") || res.getTaskName().equalsIgnoreCase("Prepare LOA") ||
+					res.getTaskName().equalsIgnoreCase("View Amendment Details")) {
+				url = "procurement-board";
 			}
 			
 			ExternalContext externalContext = FacesContext.getCurrentInstance().getExternalContext();
