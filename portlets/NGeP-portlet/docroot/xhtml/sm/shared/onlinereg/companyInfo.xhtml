@@ -10,7 +10,7 @@
 	<p:panel header="Company Information" toggleable="true">
 		<table class="customTbl">
 			<tr>
-				<td id="tdTitle"><p:outputLabel value="#{lbl['lbl.sm.businessregno']}" /></td>
+				<td id="tdTitle"><p:outputLabel value="* #{lbl['lbl.sm.businessregno']}" /></td>
 				<td id="tdContent"><p:inputText
 						value="#{registrationBackingBean.managedBean.smSupp.regNo}"  size="40"/></td>
 
@@ -100,7 +100,7 @@
 			</tr>
 			<tr>
 
-				<td id="tdTitle"><p:outputLabel value="Nature of Business" /></td>
+				<td id="tdTitle"><p:outputLabel value="* Nature of Business" /></td>
 				<td id="tdContent" colspan="3">
 				 <p:inputText  size="40" />
 				<!-- <p:inputText value="#{registrationBackingBean.managedBean.smBusNature.businessNatureId}" /> -->
