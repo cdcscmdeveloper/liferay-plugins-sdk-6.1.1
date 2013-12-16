@@ -51,6 +51,7 @@ import my.ep.persistence.entity.ss.quationtender.ScQtDoc;
 import my.ep.persistence.entity.ss.quationtender.ScQtEvaluationResult;
 import my.ep.persistence.entity.ss.quationtender.ScQtMeeting;
 import my.ep.persistence.entity.ss.quationtender.ScQtProposal;
+import my.ep.persistence.entity.ss.quationtender.ScQtZoneCriteria;
 import my.ep.persistence.entity.tpl.spec.TplSpecMaster;
 import my.ep.persistence.entity.tpl.spec.TplSpecQuestion;
 import my.ep.util.lookupservice.EpEjbBusinessDelegate;
@@ -207,22 +208,12 @@ public class EvaluationBackingBean extends
 	}
 
 	public void retrivesummary() {
-		IQTSuppFinalizationSO qtSuppFinalizationSO;
+		
 		IQTEvaluationSO evaluationSO;
 		try {
-			qtSuppFinalizationSO = EpEjbBusinessDelegate.getInstance()
-					.getServiceObject("ss", IQTSuppFinalizationSO.class);
-
-			SuppFinalizationReqDTO finalreqDTO = new SuppFinalizationReqDTO();
+			
 			EvaluationReqDTO reqDTO = new EvaluationReqDTO();
 			EvaluationResDTO resDTO = new EvaluationResDTO();
-			finalreqDTO.setQtId(146L);
-			finalreqDTO.setCommitteeType("QC");
-
-			SuppFinalizationResDTO finalresDTO = qtSuppFinalizationSO
-					.retrieveItemSupplierDtlByZone(finalreqDTO);
-			ScQt scQt = finalresDTO.getScQt();
-			this.getManagedBean().setScqt(scQt);
 			evaluationSO = EpEjbBusinessDelegate.getInstance()
 					.getServiceObject(QTConstants.SS_MODULE,
 							IQTEvaluationSO.class);
@@ -230,6 +221,10 @@ public class EvaluationBackingBean extends
 			reqDTO.setCommType("QC");
 			resDTO = evaluationSO
 					.retrieveEvaluationPreparationDtlsByQtId(reqDTO);
+			ScQt scQt = resDTO.getScQt();
+			this.getManagedBean().setScqt(scQt);
+			
+			//List<ScQtZoneCriteria> list = scQt.getScQtCriterias().getScQtZoneCriterias();
 			this.getManagedBean().setLocationList(
 					scQt.getScQtCriterias().getScQtZoneCriterias());
 			this.getManagedBean().setScQtItemList(
@@ -242,7 +237,7 @@ public class EvaluationBackingBean extends
 		} catch (Exception e) {
 			e.printStackTrace();
 		} finally {
-			qtSuppFinalizationSO = null;
+			
 			evaluationSO = null;
 		}
 	}
@@ -374,11 +369,11 @@ public class EvaluationBackingBean extends
 				EvaluationReqDTO reqDTO = new EvaluationReqDTO();
 				reqDTO.setEvaluationCheckList(manualList);
 				EvaluationResDTO resdto = so.saveCheckListEvaluationDtl(reqDTO);
-				FacesContext.getCurrentInstance().addMessage(
+			/*	FacesContext.getCurrentInstance().addMessage(
 						null,
-						new FacesMessage(FacesMessage.SEVERITY_ERROR,
+						new FacesMessage(FacesMessage.SEVERITY_INFO,
 								"Evaluation Manual SuccessFully Saved",
-								"Evaluation"));
+								"Evaluation"));*/
 				System.out
 						.println("====manual list successfully saved in db===");
 			}
