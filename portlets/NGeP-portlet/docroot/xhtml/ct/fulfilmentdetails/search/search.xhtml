@@ -14,33 +14,33 @@
      <p:panel id="searchId" header="#{lbl['lbl.ct.search.panel.name']}" toggleable="true"  toggleSpeed="500">
         <h:panelGrid columns="4" style="width:900px;">
            <h:outputLabel value="#{lbl['lbl.ct.search.cno']}" />
-           <p:inputText value="#{contractDetailsBackingBean.managedBean.contractNo}"  style="width:170px;"/>
+           <p:inputText value="#{contractDetailsBackingBean.managedBean.ctNumber}"  style="width:170px;"/>
            <h:outputLabel value="#{lbl['lbl.ct.search.cname']}" />
-           <p:inputText value="#{contractDetailsBackingBean.managedBean.contractName}"  style="width:170px;"/>
+           <p:inputText value="#{contractDetailsBackingBean.managedBean.ctName}"  style="width:170px;"/>
            <h:outputLabel value="#{lbl['lbl.ct.search.clno']}" />
-           <p:inputText value="#{contractDetailsBackingBean.managedBean.circularNo}" style="width:170px;" />
+           <p:inputText value="#{contractDetailsBackingBean.managedBean.ctCircularNo}" style="width:170px;" />
            <h:outputLabel value="#{lbl['lbl.ct.search.clname']}" />
-           <p:inputText value="#{contractDetailsBackingBean.managedBean.circularName}"  style="width:170px;"/>
+           <p:inputText value="#{contractDetailsBackingBean.managedBean.ctCircularName}"  style="width:170px;"/>
            <h:outputLabel value="#{lbl['lbl.ct.search.sid']}" />
-           <p:inputText value="#{contractDetailsBackingBean.managedBean.supplierId}" style="width:170px;"/>
+           <p:inputText value="#{contractDetailsBackingBean.managedBean.ctSupplierId}" style="width:170px;"/>
            <h:outputLabel value="#{lbl['lbl.ct.search.sname']}"/>
-           <p:inputText value="#{contractDetailsBackingBean.managedBean.supplierName}" style="width:170px;"/> 
+           <p:inputText value="#{contractDetailsBackingBean.managedBean.ctSupplierName}" style="width:170px;"/> 
            <h:outputLabel value="#{lbl['lbl.ct.search.cstart']}"/>
-           <p:calendar style="width:130px;" value="#{contractDetailsBackingBean.managedBean.dateStart}" id="popupButtonCal" showOn="button" />
+           <p:calendar style="width:130px;" value="#{contractDetailsBackingBean.managedBean.ctDateStart}" id="popupButtonCal" showOn="button" />
            <h:outputLabel value="#{lbl['lbl.ct.search.cend']}" />
-           <p:calendar style="width:130px;" value="#{contractDetailsBackingBean.managedBean.dateEnd}" id="popupButtonCal1" showOn="button" />
+           <p:calendar style="width:130px;" value="#{contractDetailsBackingBean.managedBean.ctDateEnd}" id="popupButtonCal1" showOn="button" />
            <h:outputLabel value="#{lbl['lbl.ct.search.lno']}" />
-           <p:inputText value="#{contractDetailsBackingBean.managedBean.LOANo}" style="width:170px;"/>
+           <p:inputText value="#{contractDetailsBackingBean.managedBean.ctLOANo}" style="width:170px;"/>
                                 
            <p:outputLabel value="#{lbl['lbl.ct.search.pno']}" />
-           <p:inputText id="productCode" value="#{contractDetailsBackingBean.managedBean.productCode}"  style="width:170px;" />
+           <p:inputText id="productCode" value="#{contractDetailsBackingBean.managedBean.ctProductCode}"  style="width:170px;" />
          <h:panelGroup>
 		 <div style="height: 50px; vertical-align: top">
 			  <p:outputLabel for="status" value="#{lbl['lbl.ct.search.status']}" />
          </div>
 	     </h:panelGroup>
 		 <h:panelGrid>
-            <p:selectOneListbox id="status" value="#{contractDetailsBackingBean.managedBean.contractStatus}"  style="width:175px;"  >
+            <p:selectOneListbox id="status" value="#{contractDetailsBackingBean.managedBean.ctContractStatus}"  style="width:175px;"  >
                <f:selectItem itemLabel="Pending Fulfillment Creation" itemValue="1"  />  
                <f:selectItem itemLabel="Pending Approval" itemValue="2"  />  
                <f:selectItem itemLabel="Approved" itemValue="3" />  

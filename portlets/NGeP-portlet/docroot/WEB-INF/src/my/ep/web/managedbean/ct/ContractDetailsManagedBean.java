@@ -98,17 +98,18 @@ public class ContractDetailsManagedBean extends BaseManagedBean{
 	private List<CtContractItem> ctContractItem;
 	private List<CtSuspendLoc> ctSuspendLoc;
 
-	private String contractNo;
-	private String contractName;
-	private String circularNo;
-	private String circularName;
-	private String supplierId;
-	private String supplierName;
-	private String dateStart;
-	private String dateEnd;
-	private String LOANo;
-	private String productCode;
-	private String contractStatus;
+	private String ctNumber;
+	private String ctName;
+	private String ctCircularNo;
+	private String ctCircularName;
+	private String ctSupplierId;
+	private String ctSupplierName;
+	private String ctDateStart;
+	private String ctDateEnd;
+	private String ctLOANo;
+	private String ctProductCode;
+	private String ctContractStatus;
+	
 	
 	private String projectName;
 	private String projectDescription;
@@ -265,92 +266,94 @@ public class ContractDetailsManagedBean extends BaseManagedBean{
 		this.attachmentList = attachmentList;
 	}
 
-	public String getContractNo() {
-		return contractNo;
+	
+
+	public String getCtNumber() {
+		return ctNumber;
 	}
 
-	public void setContractNo(String contractNo) {
-		this.contractNo = contractNo;
+	public void setCtNumber(String ctNumber) {
+		this.ctNumber = ctNumber;
 	}
 
-	public String getContractName() {
-		return contractName;
+	public String getCtName() {
+		return ctName;
 	}
 
-	public void setContractName(String contractName) {
-		this.contractName = contractName;
+	public void setCtName(String ctName) {
+		this.ctName = ctName;
 	}
 
-	public String getCircularNo() {
-		return circularNo;
+	public String getCtCircularNo() {
+		return ctCircularNo;
 	}
 
-	public void setCircularNo(String circularNo) {
-		this.circularNo = circularNo;
+	public void setCtCircularNo(String ctCircularNo) {
+		this.ctCircularNo = ctCircularNo;
 	}
 
-	public String getCircularName() {
-		return circularName;
+	public String getCtCircularName() {
+		return ctCircularName;
 	}
 
-	public void setCircularName(String circularName) {
-		this.circularName = circularName;
+	public void setCtCircularName(String ctCircularName) {
+		this.ctCircularName = ctCircularName;
 	}
 
-	public String getSupplierId() {
-		return supplierId;
+	public String getCtSupplierId() {
+		return ctSupplierId;
 	}
 
-	public void setSupplierId(String supplierId) {
-		this.supplierId = supplierId;
+	public void setCtSupplierId(String ctSupplierId) {
+		this.ctSupplierId = ctSupplierId;
 	}
 
-	public String getSupplierName() {
-		return supplierName;
+	public String getCtSupplierName() {
+		return ctSupplierName;
 	}
 
-	public void setSupplierName(String supplierName) {
-		this.supplierName = supplierName;
+	public void setCtSupplierName(String ctSupplierName) {
+		this.ctSupplierName = ctSupplierName;
 	}
 
-	public String getDateStart() {
-		return dateStart;
+	public String getCtDateStart() {
+		return ctDateStart;
 	}
 
-	public void setDateStart(String dateStart) {
-		this.dateStart = dateStart;
+	public void setCtDateStart(String ctDateStart) {
+		this.ctDateStart = ctDateStart;
 	}
 
-	public String getDateEnd() {
-		return dateEnd;
+	public String getCtDateEnd() {
+		return ctDateEnd;
 	}
 
-	public void setDateEnd(String dateEnd) {
-		this.dateEnd = dateEnd;
+	public void setCtDateEnd(String ctDateEnd) {
+		this.ctDateEnd = ctDateEnd;
 	}
 
-	public String getLOANo() {
-		return LOANo;
+	public String getCtLOANo() {
+		return ctLOANo;
 	}
 
-	public void setLOANo(String lOANo) {
-		LOANo = lOANo;
+	public void setCtLOANo(String ctLOANo) {
+		this.ctLOANo = ctLOANo;
 	}
 
-	public String getProductCode() {
-		return productCode;
+	public String getCtProductCode() {
+		return ctProductCode;
 	}
 
-	public void setProductCode(String productCode) {
-		this.productCode = productCode;
+	public void setCtProductCode(String ctProductCode) {
+		this.ctProductCode = ctProductCode;
 	}
 
-	public String getContractStatus() {
-		return contractStatus;
+	public String getCtContractStatus() {
+		return ctContractStatus;
 	}
 
-	public void setContractStatus(String contractStatus) {
-		this.contractStatus = contractStatus;
+	public void setCtContractStatus(String ctContractStatus) {
+		this.ctContractStatus = ctContractStatus;
 	}
 
 	public List<CtContract> getContractList() {

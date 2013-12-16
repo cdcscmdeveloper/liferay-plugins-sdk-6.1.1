@@ -420,14 +420,15 @@ public class ContractDetailsBackingBean extends BaseBackingBean<ContractDetailsM
 
 		ISearchBean<CtContract> searchBean = new SearchBean<CtContract>();
 		SearchFilterBean equalFilterBean = new SearchFilterBean(SearchOperator.OPERATOR_EQUALS.value());
-		if (this.getManagedBean().getLOANo() != null) {
+		if (this.getManagedBean().getCtLOANo() != null && !this.getManagedBean().getCtLOANo().equalsIgnoreCase("")) {
+			System.out.println("==============="+this.getManagedBean().getCtLOANo());
 			equalFilterBean.setSearchField("qtLoaId");
-			equalFilterBean.setSearchValue(this.getManagedBean().getLOANo());
+			equalFilterBean.setSearchValue(this.getManagedBean().getCtLOANo());
 			searchBean.getDataFilterBeans().add(equalFilterBean);
 		}
-		if (this.getManagedBean().getContractName() != null) {
+		if (this.getManagedBean().getCtName() != null && !this.getManagedBean().getCtName().equalsIgnoreCase("")) {
 			equalFilterBean.setSearchField("contractName");
-			equalFilterBean.setSearchValue(getManagedBean().getContractName());
+			equalFilterBean.setSearchValue(getManagedBean().getCtName());
 			searchBean.getDataFilterBeans().add(equalFilterBean);
 		}
 
@@ -447,6 +448,7 @@ public class ContractDetailsBackingBean extends BaseBackingBean<ContractDetailsM
 			log.error("Exception>>", ex);
 		} finally {
 			contractSO = null;
+			
 		}
 	}
 	
