@@ -20,7 +20,10 @@ import my.ep.persistence.entity.ct.dtl.CtProgressivePayment;
 import my.ep.persistence.entity.ct.dtl.CtSchedule;
 import my.ep.persistence.entity.ct.dtl.deduction.CtDeduction;
 import my.ep.persistence.entity.ct.dtl.deduction.CtDeductionClause;
+import my.ep.persistence.entity.ct.dtl.item.CtContractItem;
+import my.ep.persistence.entity.ct.dtl.zone.CtContractZone;
 import my.ep.persistence.entity.ct.suspend.CtSuspendActive;
+import my.ep.persistence.entity.ct.suspend.CtSuspendLoc;
 import my.ep.persistence.entity.ct.terminate.CtTermination;
 import my.ep.persistence.entity.ct.terminate.CtTerminationClause;
 import my.ep.persistence.entity.ct.terminate.CtTerminationReason;
@@ -61,7 +64,7 @@ public class ContractDetailsManagedBean extends BaseManagedBean{
 	private CtDeductionClause ctDeductionClauseDel = new CtDeductionClause();
 	
 	private String scheduleOption;
-	private boolean chkSchedule;
+	private boolean chkSchedule= true;
 	private boolean chkProgressive;
 	private CtSchedule ctSchedulesDel = new CtSchedule();
 	private CtProgressivePayment ctProgressivePaymentDel = new CtProgressivePayment();
@@ -92,7 +95,9 @@ public class ContractDetailsManagedBean extends BaseManagedBean{
 	private List<CtContractVer> associateSearchList;
 	private CtContractVer assocoiateContractVer;
 	private List<CtContractVer> assocoiateContractVerList;
-	
+	private List<CtContractItem> ctContractItem;
+	private List<CtSuspendLoc> ctSuspendLoc;
+
 	private String contractNo;
 	private String contractName;
 	private String circularNo;
@@ -566,5 +571,23 @@ public class ContractDetailsManagedBean extends BaseManagedBean{
 	public void setAmendAckw(boolean amendAckw) {
 		this.amendAckw = amendAckw;
 	}
+
+	public List<CtContractItem> getCtContractItem() {
+		return ctContractItem;
+	}
+
+	public void setCtContractItem(List<CtContractItem> ctContractItem) {
+		this.ctContractItem = ctContractItem;
+	}
+
+	public List<CtSuspendLoc> getCtSuspendLoc() {
+		return ctSuspendLoc;
+	}
+
+	public void setCtSuspendLoc(List<CtSuspendLoc> ctSuspendLoc) {
+		this.ctSuspendLoc = ctSuspendLoc;
+	}
+	
+	
 	
 }

@@ -10,8 +10,8 @@
 	  <style>
       .column-align-center { text-align: center !important;}
     </style> 
-	<ui:include	src="/xhtml/ct/fulfilmentdetails/shared/preRenderView.xhtml" />
 		<p:panel>
+		<ui:include	src="/xhtml/ct/fulfilmentdetails/shared/preRenderView.xhtml" />
 		<p:messages id="messages" showDetail="true" autoUpdate="true" closable="true" severity="error, info" />
 		<div class="ppRightBtn">
 				<ui:repeat var="outComes" value="#{contractDetailsBackingBean.managedBean.action}">

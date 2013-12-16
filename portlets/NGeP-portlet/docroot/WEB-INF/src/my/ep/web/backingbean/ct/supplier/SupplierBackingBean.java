@@ -63,8 +63,8 @@ public class SupplierBackingBean extends BaseBackingBean<SupplierManagedBean> {
 	public SupplierBackingBean(){
 		
 		
-		if(this.getManagedBean().getOutComes()==null) {
-			this.getManagedBean().setOutComes(new String[]{BpmOutcomeConst.BPM_SAVE, BpmOutcomeConst.BPM_SUBMIT});
+		if(this.getManagedBean().getAction() == null) {
+			this.getManagedBean().setAction(new String[]{BpmOutcomeConst.BPM_SAVE, BpmOutcomeConst.BPM_SUBMIT});
 		}
 	}
 	

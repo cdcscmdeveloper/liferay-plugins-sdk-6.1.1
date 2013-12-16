@@ -7,6 +7,10 @@
 	xmlns:p="http://primefaces.org/ui"
 	xmlns:c="http://java.sun.com/jsp/jstl/core">  
 	<ui:define name="contentSection">
+	  <style>
+      .column-align-center { text-align: center !important;}
+    </style> 
+	
 	<c:if test='#{contractDetailsBackingBean.managedBean.chkRenderPage eq  "BPM"}'>
      <f:event listener="#{contractDetailsBackingBean.preRenderView}" type="preRenderView" />
 	</c:if>

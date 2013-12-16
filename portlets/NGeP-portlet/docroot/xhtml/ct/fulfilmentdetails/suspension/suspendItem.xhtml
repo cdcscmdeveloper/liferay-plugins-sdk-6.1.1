@@ -8,8 +8,9 @@
 	xmlns:ac="http://ac.my/jsf/composite/cc" >
 	   <p:panel id="itemId" header="Item" toggleable="true"  toggleSpeed="500">
 	   <div style="overflow-x:auto">
-       <p:dataTable id="itemTable" var="data" value="" rowIndexVar="index" widgetVar="dataTableObj" lazy="false" paginator="true" 
-          paginatorPosition="bottom" paginatorAlwaysVisible="true" emptyMessage="No Records!">
+       <p:dataTable id="itemTable" var="data" value="#{contractDetailsBackingBean.managedBean.ctContractItem}" rowIndexVar="index" 
+         widgetVar="dataTableObj" lazy="false" paginator="true"  paginatorPosition="bottom" paginatorAlwaysVisible="true"
+         emptyMessage="No Records!">
 		  <ac:paginator for="itemTable"/>
             <p:columnGroup type="header"> 
 			 <p:row> 
@@ -21,17 +22,24 @@
 			 </p:row>							
 		   </p:columnGroup>
 		   <p:column><p:outputLabel value ="Product" style="float:left;"/> </p:column> 
-		   <p:column width="100"> <p:outputLabel value ="EP 308X3120P" style="float:left;"/></p:column> 
-		   <p:column width="100" > <p:calendar value="#{contractSuspendBackingBean.managedBean.startDate}" id="calItem" showOn="button"/>  </p:column> 
-		   <p:column> <p:calendar value="#{contractSuspendBackingBean.managedBean.endDate}" id="calItem1" showOn="button"/>  </p:column> 
+		   <p:column width="100"> 
+		       <p:outputLabel value ="EP 308X3120P" style="float:left;"/>
+		   </p:column> 
+		   <p:column width="100">
+		     <p:calendar value="#{data.suspendFrom}" id="calItem" showOn="button"/>
+		   </p:column> 
+		   <p:column> 
+		      <p:calendar value="#{data.suspendTo}" id="calItem1" showOn="button"/>
+		   </p:column> 
 		   <p:column>  <p:selectOneMenu disabled="false" style="width:110px;">
 				<f:selectItem itemLabel="-Select One-" itemValue="" />	
 				<f:selectItem itemLabel="Active" itemValue="Active" />	
 				<f:selectItem itemLabel="Suspend" itemValue="Suspend" />	
 				<f:selectItem itemLabel="Extend" itemValue="Extend" />			
-			</p:selectOneMenu>  </p:column>
+			</p:selectOneMenu> 
+		  </p:column>
 		 </p:dataTable>	
-		 </div>	
+	  </div>	
 		 <p:spacer width="12"/>	
 		 <div style="overflow-x:auto">
 		 <p:dataTable id="itemTableDetails" var="data"  value="" rowIndexVar="index" widgetVar="dataTableObj"

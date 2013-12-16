@@ -32,7 +32,6 @@ import my.ep.jaxb.ct.agreement.CTAgreementDataType;
 import my.ep.persistence.entity.ct.agreement.CtAgreement;
 import my.ep.persistence.entity.ct.agreement.CtAgreementAppendix;
 import my.ep.persistence.entity.ct.agreement.CtSignParty;
-import my.ep.persistence.entity.ct.amend.CtAmendment;
 import my.ep.persistence.entity.tpl.doc.TplDocMaster;
 import my.ep.util.lookupservice.EpBpmBusinessDelegate;
 import my.ep.web.backingbean.BaseBackingBean;
@@ -83,7 +82,7 @@ public class AgreementBackingBean extends BaseBackingBean<AgreementManagedBean> 
 		
 		agreementDetails = new AgreementDetails();
 		contractListItem = new ContractListItem();
-		if(this.getManagedBean().getAction()==null) {
+		if(this.getManagedBean().getAction() == null) {
 			this.getManagedBean().setOutComes(new String[]{BpmOutcomeConst.BPM_SAVE, BpmOutcomeConst.BPM_SUBMIT});
 		}
 	}
@@ -191,7 +190,7 @@ public class AgreementBackingBean extends BaseBackingBean<AgreementManagedBean> 
 
 			this.getManagedBean().getAgreement().setCtContract(this.getManagedBean().getCtContract());
 			reqDTO.setAgreement(this.getManagedBean().getAgreement());
-
+			reqDTO.setAgreementType("agreement");
 			reqDTO.setTaskId(this.getManagedBean().getTaskId());
 			reqDTO.setOutcome(action);
 			reqDTO.setToken(token);
@@ -231,7 +230,6 @@ public class AgreementBackingBean extends BaseBackingBean<AgreementManagedBean> 
 			reqDTO.setOutcome(action);
 			reqDTO.setToken(token);
 			reqDTO.setAgreementType(this.getManagedBean().getAgreementType());
-		    
 			ContractAgreementResDTO resDTO = agreementSO.saveAgreement(reqDTO);
 			
 			if (resDTO.isSuccessful()) {
