@@ -10,7 +10,6 @@ import javax.faces.bean.ManagedBean;
 import javax.faces.bean.RequestScoped;
 import javax.faces.context.FacesContext;
 import javax.faces.event.ValueChangeEvent;
-import javax.faces.model.SelectItem;
 import javax.servlet.http.HttpServletRequest;
 
 import my.ep.biz.bean.search.SearchBean;
@@ -66,7 +65,6 @@ import my.ep.web.bean.ss.quatationtender.TabBean;
 import my.ep.web.managedbean.ss.quationtender.QTDetailManagedBean;
 import my.ep.web.ss.quationtender.common.QTConstants;
 import my.ep.web.type.ss.quationtender.BPMOutComeTypes;
-import my.ep.web.type.ss.quationtender.CloneAll;
 import my.ep.web.util.FacesScopes;
 import my.ep.web.util.lookupservice.BusinessDelegate;
 
@@ -265,6 +263,11 @@ public class QTDetailBackingBean extends
 
 			this.getManagedBean().setQt(quationTenderResDTO.getQtDetail());
 
+			FacesContext.getCurrentInstance().addMessage(null,
+					new FacesMessage(
+							FacesMessage.SEVERITY_INFO,
+							"Record saved successfully.",
+							"Quotation/Tender"));
 		} catch (Exception ex) {
 			ex.printStackTrace();
 			FacesContext.getCurrentInstance().addMessage(
@@ -278,6 +281,10 @@ public class QTDetailBackingBean extends
 
 	public String submitQTDetailsAction() {
 		QuationTenderReqDTO quationTenderReqDTO = prepareQTInfo();
+		
+		FacesScopes facesScopes = new FacesScopes();
+		String ctxToken = facesScopes.getBPMAuthenticationCtxToken();
+		quationTenderReqDTO.setToken(ctxToken);
 		quationTenderReqDTO.setTaskId(this.getManagedBean().getTaskId());
 		quationTenderReqDTO.setPayLoad(this.getManagedBean()
 				.getQuotationTenderDataType());
@@ -480,9 +487,6 @@ public class QTDetailBackingBean extends
 		scQt.setMinistryOrgProfile(new PmOrgProfile());
 		scQt.setDepartmentOrgProfile(new PmOrgProfile());
 		scQt.setPmOrgProfile(new PmOrgProfile());
-		
-		boolean isEditable = false;
-		boolean isPlayButtonEnabled =false;
 
 		populateUserMinistryList();
 		IQTDetailSO detailSO = BusinessDelegate.getInstance().getServiceObject(
@@ -492,6 +496,7 @@ public class QTDetailBackingBean extends
 		this.getManagedBean().setGoList(dto.getGoList());
 
 		this.getManagedBean().setQt(scQt);
+		//this.getManagedBean().setQtCriteria(new ScQtCriteria());
 		onChangeAction();
 		return QTConstants.MAINTANANCE_PAGE + "?faces-redirect=true";
 	}
@@ -577,20 +582,23 @@ public class QTDetailBackingBean extends
 		PmStatus status = pmStatus.getPmStatus();
 		scQt.setPmStatus(status);
 
-		// Setting the category codes to qtdetails
-		// TODO need to get it from managed bean and set it.
-		List<ScQtCategory> categorys = null;
-		scQt.setScQtCategorys(categorys);
 		// Setting the suppliers to qtdetails
-		// TODO need to get it form managed bean and set it
-		List<ScQtSupplier> suppliers = null;
+		List<ScQtSupplier> suppliers = getManagedBean().getQtSupplierList();
 		scQt.setScQtSuppliers(suppliers);
-		// Setting the qtcriteria to qtdetails
-		// TODO need to get it form managed bean and set it.
+		
+		ScQtCriteria qtCriteria = getManagedBean().getQtCriteria();
+		// Only save criteria details if search button not clicked. 
+		// If search button clicked previously with supplier list, when criteria details had changed wont save.
+		if (qtCriteria.isBrandNew() || suppliers.size() == 0) {
+			// Setting the qtcriteria to qtdetails
+			scQt.setScQtCriterias(qtCriteria);
 
-		scQt.setScQtCriterias(null);
+			// Setting the category codes to qtdetails
+			List<ScQtCategory> categorys = getManagedBean().getQtCategoryList();
+			scQt.setScQtCategorys(categorys);
+		}
+		
 		// Setting the approvalist to Qtdetails
-		// TODO Need to get it from managed bean and set it.
 		List<TabBean> tabBeans = getManagedBean().getTabList();
 		List<ScQtApproval> approvals = new ArrayList<ScQtApproval>();
 		if (tabBeans != null) {
@@ -624,9 +632,6 @@ public class QTDetailBackingBean extends
 		QuationTenderReqDTO quationTenderReqDTO = new QuationTenderReqDTO();
 		quationTenderReqDTO.setQtdetail(scQt);
 
-		FacesScopes facesScopes = new FacesScopes();
-		String ctxToken = facesScopes.getBPMAuthenticationCtxToken();
-		quationTenderReqDTO.setToken(ctxToken);
 		return quationTenderReqDTO;
 
 	}
@@ -1001,8 +1006,9 @@ public class QTDetailBackingBean extends
 
 	private void retrieveSuppQualificationTabDtl() {
 		if (getManagedBean().getQtCriteria() == null) {
+			ScQt scQt = getManagedBean().getQt();
 			QuationTenderReqDTO reqDTO = new QuationTenderReqDTO();
-			reqDTO.setQtId(getManagedBean().getQt().getQtId());
+			reqDTO.setQtId(scQt.getQtId());
 
 			QuationTenderResDTO resDTO = detailSO
 					.retriveQTSuppQulCriDetails(reqDTO);
@@ -1010,8 +1016,14 @@ public class QTDetailBackingBean extends
 			ScQtCriteria scQtCriteria = resDTO.getCriteria();
 			if (scQtCriteria == null) {
 				scQtCriteria = new ScQtCriteria();
+				scQtCriteria.setScQt(scQt);
+			} else {
+				getManagedBean().setQtCategoryList(resDTO.getCategoryResultBean().getResultList());
+				getManagedBean().setQtSupplierList(resDTO.getSupplierResultBean().getResultList());
+				getManagedBean().setTotalSupplier(resDTO.getSupplierResultBean().getTotalRecord());
 			}
 
+			getManagedBean().setQtCriteria(scQtCriteria);
 			getManagedBean().setStates(resDTO.getStates());
 			getManagedBean().setCategoryL1s((resDTO.getCategoryL1()));
 		}

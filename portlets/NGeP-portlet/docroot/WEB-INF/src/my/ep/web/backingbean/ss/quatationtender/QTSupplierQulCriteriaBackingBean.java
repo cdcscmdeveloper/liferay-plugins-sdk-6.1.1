@@ -4,11 +4,15 @@
 package my.ep.web.backingbean.ss.quatationtender;
 
 import java.util.ArrayList;
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
 
-import javax.annotation.PostConstruct;
+import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.RequestScoped;
+import javax.faces.context.FacesContext;
 import javax.faces.event.AjaxBehaviorEvent;
 import javax.faces.event.ValueChangeEvent;
 
@@ -17,6 +21,7 @@ import my.ep.biz.bean.search.SearchFilterBean;
 import my.ep.biz.service.ct.circular.ICircularSO;
 import my.ep.biz.service.pm.common.categorys.ICategorysSO;
 import my.ep.biz.service.pm.common.district.IDistrictSO;
+import my.ep.constant.pm.PmCodeConst;
 import my.ep.dto.ct.circular.CircularReqDTO;
 import my.ep.dto.ct.circular.CircularResDTO;
 import my.ep.dto.pm.common.categorys.CategorysReqDTO;
@@ -25,27 +30,25 @@ import my.ep.dto.pm.common.district.DistrictReqDTO;
 import my.ep.dto.pm.common.district.DistrictResDTO;
 import my.ep.factory.EpLogger;
 import my.ep.persistence.entity.ct.circular.CtCircular;
-import my.ep.persistence.entity.ct.circular.CtCircularVer;
-import my.ep.persistence.entity.ct.circular.panel.CtPanelItem;
 import my.ep.persistence.entity.ct.circular.panel.CtPanelSupplier;
-import my.ep.persistence.entity.pm.authorization.PmOrgProfile;
 import my.ep.persistence.entity.pm.common.PmCategoryL1;
 import my.ep.persistence.entity.pm.common.PmCategoryL2;
 import my.ep.persistence.entity.pm.common.PmCategoryL3;
-import my.ep.persistence.entity.pm.common.PmDistrict;
 import my.ep.persistence.entity.pm.common.PmState;
-import my.ep.persistence.entity.sm.SmMofAccount;
 import my.ep.persistence.entity.sm.SmSupplier;
+import my.ep.persistence.entity.ss.quationtender.ScQt;
 import my.ep.persistence.entity.ss.quationtender.ScQtCategory;
 import my.ep.persistence.entity.ss.quationtender.ScQtCriteria;
+import my.ep.persistence.entity.ss.quationtender.ScQtSupplier;
 import my.ep.type.aut.SearchOperator;
 import my.ep.util.lookupservice.EpEjbBusinessDelegate;
+import my.ep.web.bean.tree.TreeNodeBean;
 import my.ep.web.managedbean.ss.quationtender.Node;
 import my.ep.web.managedbean.ss.quationtender.QTDetailManagedBean;
 import my.ep.web.util.lookupservice.BusinessDelegate;
 
+import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
-import org.primefaces.event.NodeSelectEvent;
 import org.primefaces.model.DefaultTreeNode;
 import org.primefaces.model.TreeNode;
 
@@ -60,66 +63,8 @@ public class QTSupplierQulCriteriaBackingBean extends SourcingBaseBackingBean<QT
 	private Boolean renderZone;
 	private Boolean checked;
 	
-	private ICategorysSO categorysSO = null;
 	public QTSupplierQulCriteriaBackingBean(){
-		System.out.println("::::::::::::::::::::::;");
-    System.out.println("Supplier Object Created");		
-	}
-	@PostConstruct
-	public void initializeObejcts() {
-		ICategorysSO categorysSO = BusinessDelegate.getInstance()
-				.getServiceObject("pm", ICategorysSO.class);
-		this.categorysSO=categorysSO;
-		this.getManagedBean().setQtCriteria(new ScQtCriteria());
-		this.getManagedBean().setSearchSupplier(new SmSupplier());
-		
-		CtCircular searchCircular=new CtCircular();
-	     searchCircular.setLatestCircularVer(new CtCircularVer());
-	     this.getManagedBean().setSearchCircular(searchCircular);
-	     
-	     CtPanelSupplier ctPanelSupplier=new CtPanelSupplier();
-	     ctPanelSupplier.setCtPanelItem(new CtPanelItem());
-	     ctPanelSupplier.getCtPanelItem().setCtCircularVer(new CtCircularVer());
-	     this.getManagedBean().setCtPanelSupplier(ctPanelSupplier);
-	     
-	     CtPanelItem ctPanelItem=new CtPanelItem();
-	     ctPanelItem.setCtCircularVer(new CtCircularVer());
-	     this.getManagedBean().setCtPanelItem(ctPanelItem);
-	     
-	    SmSupplier searchSupplier = new SmSupplier();
-	    searchSupplier.setPmOrgProfile(new PmOrgProfile());
-	    this.getManagedBean().setSearchSupplier(searchSupplier);
-	    
-	    ScQtCategory qtCategory=new ScQtCategory();
-	    this.getManagedBean().setQtCategory(qtCategory);
-	    
-	   
-	    
-	    List<SmMofAccount> smMofAccounts=new ArrayList<SmMofAccount>();
-	    smMofAccounts.add(new SmMofAccount());
-	    this.getManagedBean().setSmMofAccounts(smMofAccounts);
-	    
-	    
-	    
-		
-	}
-	/*
-	 * Method to load the categorieslist for suppliers screen
-	 */
-	public void retriveQtCriteria() {
-
-		// Retrive categoryL1 and set to managedbean for firsttime other wise
-		// skip
-		List<PmCategoryL1> l1categoryList = this.getManagedBean()
-				.getCategoryL1s();
-		if (l1categoryList == null || !l1categoryList.isEmpty()) {
-			CategorysResDTO catResDTO = categorysSO.retiveCategoryL1List();
-			if (catResDTO.getCategoryL1List() != null
-					&& !catResDTO.getCategoryL1List().isEmpty()) {
-				this.getManagedBean().setCategoryL1s(
-						catResDTO.getCategoryL1List());
-			}
-		}
+		debugLogger("QTSupplierQulCriteriaBackingBean");
 	}
 			
 	private void debugLogger(Object message) {
@@ -132,50 +77,25 @@ public class QTSupplierQulCriteriaBackingBean extends SourcingBaseBackingBean<QT
 
 	
 
-	/*
+	/**
 	 * To add empty row to category open code data table
 	 */
-	public void addNewCategoryItem() {
-		/*List<ScQtCategory> categories = this.getManagedBean().getQt()
-				.getScQtCategorys();*/
-		List<ScQtCategory> categories=this.getManagedBean().getOpenCategorys();
-		if (categories == null) {
-			categories = new ArrayList<ScQtCategory>();
-      // this.getManagedBean().setOpenCategorys(categories);
-			
+	public void addNewCategoryAction() {
+		debugLogger("addNewCategoryAction");
+		
+		ScQt scQt = getManagedBean().getQt();
+		List<ScQtCategory> qtCategoryList = this.getManagedBean().getQtCategoryList();
+		if (qtCategoryList == null) {
+			qtCategoryList = new ArrayList<ScQtCategory>();
+			this.getManagedBean().setQtCategoryList(qtCategoryList);			
 		} 
-		System.out.println("New Category Creation");
-		retriveQtCriteria();
+		
 		ScQtCategory category = new ScQtCategory();
+		category.setScQt(scQt);
 		category.setPmCategoryL1(new PmCategoryL1());
 		category.setPmCategoryL2(new PmCategoryL2());
 		category.setPmCategoryL3(new PmCategoryL3());
-		categories.add(category);
-		this.getManagedBean().setOpenCategorys(categories);
-		//this.getManagedBean().getQt().setScQtCategorys(categories);
-	}
-	
-	/*
-	 * To add empty row to category restricted code data table
-	 */
-	public void addNewRestrictedCategoryItem() {
-		/*List<ScQtCategory> categories = this.getManagedBean().getQt()
-				.getScQtCategorys();*/
-		List<ScQtCategory> restrictedcategories=this.getManagedBean().getRestrictedCategorys();
-		if (restrictedcategories == null) {
-			restrictedcategories = new ArrayList<ScQtCategory>();
-      // this.getManagedBean().setOpenCategorys(categories);
-			
-		} 
-		System.out.println("New Restricted Category Creation");
-		retriveQtCriteria();
-		ScQtCategory rescategory = new ScQtCategory();
-		rescategory.setPmCategoryL1(new PmCategoryL1());
-		rescategory.setPmCategoryL2(new PmCategoryL2());
-		rescategory.setPmCategoryL3(new PmCategoryL3());
-		restrictedcategories.add(rescategory);
-		this.getManagedBean().setRestrictedCategorys(restrictedcategories);
-		//this.getManagedBean().getQt().setScQtCategorys(categories);
+		qtCategoryList.add(category);
 	}
 	
 
@@ -222,7 +142,7 @@ public class QTSupplierQulCriteriaBackingBean extends SourcingBaseBackingBean<QT
 			this.getManagedBean().setCategoryL2s(new ArrayList<PmCategoryL2>());
 		}
 		qtCategory.setPmCategoryL2(new PmCategoryL2());
-		//handleL1CategoryChange(qtCategory);
+		handleL2CategoryChange(qtCategory);
 	}
 	
 	/*
@@ -255,13 +175,16 @@ public class QTSupplierQulCriteriaBackingBean extends SourcingBaseBackingBean<QT
 	}
 	
 	public void handleL3CategoryChange(ScQtCategory qtCategory){
+		debugLogger("handleL3CategoryChange");
 		
 		PmCategoryL3 categoryL3=qtCategory.getPmCategoryL3();
 		if(categoryL3 !=null && categoryL3.getCategoryL3Id()!=null){
 			List<PmCategoryL3> categoryL3s=this.getManagedBean().getCategoryL3s();
 			for(PmCategoryL3 l3:categoryL3s){
-				if(l3.getCategoryL3Id().equals(categoryL3.getCategoryL3Id())){
+				if(l3.getCategoryL3Id().longValue() == categoryL3.getCategoryL3Id().longValue()){
 					qtCategory.setPmCategoryL3(l3);
+					debugLogger("Set l3");
+					break;
 				}
 			}
 		}
@@ -284,97 +207,287 @@ public class QTSupplierQulCriteriaBackingBean extends SourcingBaseBackingBean<QT
 			}
 		}
 	}
+	
+	public void searchPanelSupplierPopupAction() {
+		debugLogger("searchPanelSupplierPopupAction");
+		
+		getManagedBean().setCircularNo(null);
+		getManagedBean().setCircularName(null);
+		getManagedBean().setItemName(null);
+		getManagedBean().setCircularCoverage(null);
+		getManagedBean().setTotalSearchSupplier(0);
+		getManagedBean().setSearchPanelSuppliersNode(null);
+	}
 
 	/**
-	 * Method to search the supplier for panel and restricted tender.
+	 * Method to search th*e supplier for panel and restricted tender.
 	 */
-	public void searchQtPanelSupplier(){
-		 System.out.println(getManagedBean());
-			List<CtPanelSupplier> panelSupplierList = retriverSuppliersForPanelQT();
-			this.getManagedBean().setPanelSupplierList(panelSupplierList);
+	public void searchPanelSupplierAction() {
+		debugLogger("searchPanelSupplierAction");
 		
-		//if(!getManagedBean().getPanelSuppliers().isEmpty()){
-		//	getManagedBean().getPanelSuppliers().clear();
+		int totalSearchSupplier = 0;
+		TreeNode searchPanelSuppliersNode = null;
+		List<CtPanelSupplier> panelSupplierList = retriverSuppliersForPanelQT();
+		
+		if (panelSupplierList != null && panelSupplierList.size() > 0) {
+			Map<String, List<CtPanelSupplier>> zoneMap = new LinkedHashMap<String, List<CtPanelSupplier>>();
 			
-		/*	SmSupplier supp=new SmSupplier();
-			PmOrgProfile org=new PmOrgProfile();
-			org.setOrgName("Sample");
-			supp.setPmOrgProfile(org);
+			// Group Supplier by zone
+			for (CtPanelSupplier panelSupplier : panelSupplierList) {
+				String panelZone = panelSupplier.getCtPanelZone().getName();
+				List<CtPanelSupplier> zonePanelSuppliers = zoneMap.get(panelZone);
+				
+				if (zonePanelSuppliers == null) {
+					zonePanelSuppliers = new ArrayList<CtPanelSupplier>();
+					zoneMap.put(panelZone, zonePanelSuppliers);
+				}
+				zonePanelSuppliers.add(panelSupplier);
+			}
 			
-			List<SmMofAccount> accList=new ArrayList<SmMofAccount>();
-			SmMofAccount mofAcc=new SmMofAccount();
-			mofAcc.setMofNo("123");
-			mofAcc.setExpDate(new Date());
-			
-			supp.setStatusId(1L);
-			
-			accList.add(mofAcc);
-			supp.setSmMofAccounts(accList);
-			
-			getManagedBean().getPanelSuppliers().add(supp);
-			getManagedBean().getPanelSuppliers().addAll(panelSupplier);*/
-			
+			searchPanelSuppliersNode = new DefaultTreeNode();
+			totalSearchSupplier = populateSupplierTreeNode(zoneMap, searchPanelSuppliersNode);	
 		}
-		/**
-		 * Method to search the supplier for normal tender
-		 */
-		public void searchNormalQtSupplier(){
+		
+		this.getManagedBean().setTotalSearchSupplier(totalSearchSupplier);
+		this.getManagedBean().setSearchPanelSuppliersNode(searchPanelSuppliersNode);
+	}
+	
+	/**
+	 * Method to search the supplier for normal tender
+	 */
+	public void searchNormalSupplierAction(){
+		debugLogger("searchNormalSupplierAction");
+		
+		ScQtCriteria scQtCriteria = getManagedBean().getQtCriteria();
+		
+		if (!scQtCriteria.isMultiLocality()) {
+			// TODO Temporary get from panel supplier.
+			List<CtPanelSupplier> panelSupplierList = retriverSuppliersForPanelQT();
+			List<SmSupplier> supplierList = new ArrayList<SmSupplier>();
 			
+			for (CtPanelSupplier panelSupplier : panelSupplierList) {
+				supplierList.add(panelSupplier.getSupplier());
+			}
+			
+			populateQtSupplierList(supplierList);
 		}
-		private List<CtPanelSupplier> retriverSuppliersForPanelQT(){
+	}
+	
+	public void searchRestrictedSupplierPopupAction() {
+		debugLogger("searchRestrictedSupplierPopupAction");
+		
+		getManagedBean().setSupplierName(null);
+		getManagedBean().setMofAccountNo(null);
+		getManagedBean().setSearchSupplierList(null);
+		getManagedBean().setSelectedSupplierList(null);
+	}
+	
+	/**
+	 * Method to search the supplier for restricted tender
+	 */
+	public void searchRestrictedSupplierAction(){
+		debugLogger("searchRestrictedSupplierAction");
+		
+		// TODO Temporary get from panel supplier.
+		List<CtPanelSupplier> panelSupplierList = retriverSuppliersForPanelQT();
+		List<SmSupplier> searchSupplierList = new ArrayList<SmSupplier>();
+		
+		for (CtPanelSupplier panelSupplier : panelSupplierList) {
+			searchSupplierList.add(panelSupplier.getSupplier());
+		}
+		
+		getManagedBean().setSearchSupplierList(searchSupplierList);
+	}
+	
+	public void addPanelToSupplierListAction() {
+		debugLogger("addPanelToSupplierListAction");
+		
+		TreeNode searchPanelSuppliersNode = getManagedBean().getSearchPanelSuppliersNode();
+		
+		if (searchPanelSuppliersNode != null) {
+			SmSupplier smSupplier = null;
+			CtCircular ctCircular = null;
+			List<SmSupplier> supplierList = new ArrayList<SmSupplier>();
+			TreeNode suppliersNode = new DefaultTreeNode();
 			
+			for (TreeNode searchZoneNode : searchPanelSuppliersNode.getChildren()) {
+				@SuppressWarnings("unchecked")
+				TreeNodeBean<String> zoneBean = (TreeNodeBean<String>)searchZoneNode.getData();
+				
+				// Add selected zone into supplier list.
+				if (zoneBean.isSelected()) {
+					// build zone tree node.
+					TreeNode zoneNode = new DefaultTreeNode(zoneBean, suppliersNode);
+					zoneBean.setSelected(false);
+					
+					for (TreeNode searchSupplierNode : searchZoneNode.getChildren()) {
+						@SuppressWarnings("unchecked")
+						TreeNodeBean<CtPanelSupplier> supplierBean = (TreeNodeBean<CtPanelSupplier>)searchSupplierNode.getData();
+						CtCircular searchCtCircular = supplierBean.getObject().getCtPanelItem().getCtCircularVer().getCtCircular();
+						
+						if (ctCircular == null) {
+							// Get selected circular number.
+							ctCircular = supplierBean.getObject().getCtPanelItem().getCtCircularVer().getCtCircular();		
+						} else {
+							// All supplier must be same circular.
+							if (ctCircular.getCircularId().longValue() != searchCtCircular.getCircularId().longValue()) {
+								FacesContext.getCurrentInstance().addMessage(
+										null,
+										new FacesMessage(FacesMessage.SEVERITY_ERROR,
+												"Supplier must be same circular.", null));
+								return;
+							}
+						}
+					
+						// build supplier tree node.
+						smSupplier = supplierBean.getObject().getSupplier();
+						new DefaultTreeNode(new TreeNodeBean<SmSupplier>(
+								supplierBean.getType(), 
+								smSupplier), 
+								zoneNode);
+						
+						// Add to qt supplier list for save.
+						supplierList.add(smSupplier);
+					}
+				}
+			}
+			
+			getManagedBean().getQtCriteria().setCtCircular(ctCircular);
+			getManagedBean().setSuppliersNode(suppliersNode);
+			
+			populateQtSupplierList(supplierList);
+		}
+	}
+	
+	public void addRestrictedToSupplierListAction() {
+		debugLogger("addRestrictedToSupplierListAction");
+		
+		List<SmSupplier> selectedSupplierList = getManagedBean().getSelectedSupplierList();
+		
+		populateQtSupplierList(selectedSupplierList);
+	}
+	
+	private List<CtPanelSupplier> retriverSuppliersForPanelQT(){
+		ICircularSO circularSO = null;
+		List<CtPanelSupplier> ctPanelSuppliers = null;
+		
+		try{
+			circularSO = BusinessDelegate.getInstance().getServiceObject("ct",ICircularSO.class);
 			CircularReqDTO reqDTO = new CircularReqDTO();
 			SearchBean<CtPanelSupplier> searchBean = new SearchBean<CtPanelSupplier>();
-			searchBean.setNavigatable(false);
-			SearchFilterBean equalFilterBean = new SearchFilterBean(SearchOperator.OPERATOR_EQUALS.value());
-			SearchFilterBean likeFilterBean = new SearchFilterBean(SearchOperator.OPERATOR_LIKE.value());
-		 /*	if(null!=this.getManagedBean().getCtPanelItem().getCtCircularVer().getCircularNo() && !"".equals(this.getManagedBean().getCtPanelItem().getCtCircularVer().getCircularNo())){
-		 		equalFilterBean.setSearchField("ctCircularVer.circularNo");
-		 		equalFilterBean.setSearchValue(this.getManagedBean().getSearchCircular().getLatestCircularVer().getCircularNo());
-				searchBean.getDataFilterBeans().add(equalFilterBean);
 				
-		 	} */
+			searchBean.setNavigatable(false);
 			
-			
-		 	if(null!=this.getManagedBean().getCtPanelItem().getCtCircularVer().getCircularFileName() && !"".equals(this.getManagedBean().getCtPanelItem().getCtCircularVer().getCircularFileName())){
-		 		likeFilterBean.setSearchField("ctCircularVer.name");
-		 		likeFilterBean.setSearchValue(this.getManagedBean().getSearchCircular().getLatestCircularVer().getCircularFileName());
-				searchBean.getDataFilterBeans().add(likeFilterBean);
-				 	}
-			
-		 	if(null!=this.getManagedBean().getCtPanelItem().getItemName() && !"".equals(this.getManagedBean().getCtPanelItem().getItemName())){
-		 	likeFilterBean.setSearchField("ctPanelItem.itemName");
-			likeFilterBean.setSearchValue("Pen");
-			searchBean.getDataFilterBeans().add(likeFilterBean);
-		 	}
-			
-			/*likeFilterBean.setSearchField("ctPanelSupplierItems.ctPanelItem.itemName");
-			likeFilterBean.setSearchValue(this.getManagedBean().getPanelSupplierVO().getItemName());
-			searchBean.getDataFilterBeans().add(likeFilterBean);
-			
-			
-			equalFilterBean.setSearchField("circular coverage");
-			equalFilterBean.setSearchValue(this.getManagedBean().getPanelSupplierVO().getCircularCoverage());
-			searchBean.getDataFilterBeans().add(equalFilterBean);*/
-		 	
-		 	
-		    reqDTO.setSearchBean(searchBean);
-			CircularResDTO resDTO=null;
-			try{
-			ICircularSO circularSO= BusinessDelegate.getInstance().getServiceObject("ct",ICircularSO.class);
-			resDTO = circularSO.searchPanelSuppliers(reqDTO);
-			
-			}catch(Exception ex){
-				ex.printStackTrace();
+			// Filter By - circularNo
+			String circularNo = getManagedBean().getCircularNo();
+			if (StringUtils.isNotBlank(circularNo)) {
+				searchBean.getDataFilterBeans().add(new SearchFilterBean(
+						"ctPanelItem.ctCircularVer.circularNo",
+						SearchOperator.OPERATOR_EQUALS.value(),
+						circularNo));	
 			}
-			if(null!=resDTO && null!=resDTO.getPanelSupplierList()){
-				return resDTO.getPanelSupplierList();
+			
+			// Filter By - circularName
+			String circularName = getManagedBean().getCircularName();
+			if (StringUtils.isNotBlank(circularName)) {
+				searchBean.getDataFilterBeans().add(new SearchFilterBean(
+						"ctPanelItem.ctCircularVer.name",
+						SearchOperator.OPERATOR_LIKE.value(),
+						circularName));	
 			}
-			//resDTO.getSearchResultBean().getResultList();
 			
-			return new ArrayList<CtPanelSupplier>();
+			// Filter By - itemName
+			String itemName = getManagedBean().getItemName();
+			if (StringUtils.isNotBlank(itemName)) {
+				searchBean.getDataFilterBeans().add(new SearchFilterBean(
+						"ctPanelItem.itemName",
+						SearchOperator.OPERATOR_LIKE.value(),
+						itemName));	
+			}
 			
+			// Filter By - circularCoverage
+			String circularCoverage = getManagedBean().getCircularCoverage();
+			if (StringUtils.isNotBlank(circularCoverage)) {
+				if (PmCodeConst.COVERAGE_PENINSULAR.equals(circularCoverage)) {
+					searchBean.getDataFilterBeans().add(new SearchFilterBean(
+							"ctPanelItem.ctCircularVer.peninsular",
+							SearchOperator.OPERATOR_EQUALS.value(),
+							true));	
+				} else if (PmCodeConst.COVERAGE_SABAH.equals(circularCoverage)) {
+					searchBean.getDataFilterBeans().add(new SearchFilterBean(
+							"ctPanelItem.ctCircularVer.sabah",
+							SearchOperator.OPERATOR_EQUALS.value(),
+							true));	
+				} else if (PmCodeConst.COVERAGE_SARAWAK.equals(circularCoverage)) {
+					searchBean.getDataFilterBeans().add(new SearchFilterBean(
+							"ctPanelItem.ctCircularVer.sarawak",
+							SearchOperator.OPERATOR_EQUALS.value(),
+							true));	
+				}
+			}
+			
+			reqDTO.setSearchBean(searchBean);
+			
+			CircularResDTO resDTO = circularSO.searchPanelSuppliers(reqDTO);
+			
+			ctPanelSuppliers = resDTO.getPanelSupplierList();	
+			
+		} catch(Exception ex){
+			ex.printStackTrace();
+			FacesContext.getCurrentInstance().addMessage(
+					null,
+					new FacesMessage(FacesMessage.SEVERITY_ERROR,
+							ex.toString(), ex.getMessage()));
+		} finally {
+			circularSO = null;
 		}
+		
+		return ctPanelSuppliers;
+	}
+	
+	private int populateSupplierTreeNode(Map<String, List<CtPanelSupplier>> zoneMap, TreeNode suppliersNode) {
+		int totalSupplier = 0;
+		
+		for (Entry<String, List<CtPanelSupplier>> zoneEntry : zoneMap.entrySet()) {
+			String zone = zoneEntry.getKey();
+			List<CtPanelSupplier> zonePanelSuppliers = zoneEntry.getValue();
+			
+			TreeNode supplierNode = new DefaultTreeNode(
+					new TreeNodeBean<String>("zone", zone), suppliersNode);
+			for (CtPanelSupplier supplier : zonePanelSuppliers) {
+				new DefaultTreeNode(
+						new TreeNodeBean<CtPanelSupplier>("supplier", supplier), 
+						supplierNode);
+				totalSupplier++;
+			}
+		}
+		
+		return totalSupplier;
+	}
+	
+	private void populateQtSupplierList(List<SmSupplier> suppliers) {
+		ScQtSupplier qtSupplier;
+		ScQt scQt = getManagedBean().getQt();
+		ScQtCriteria scQtCriteria = getManagedBean().getQtCriteria();
+		List<ScQtCategory> qtCategoryList = getManagedBean().getQtCategoryList();
+		List<ScQtSupplier> qtSupplierList = new ArrayList<ScQtSupplier>();
+		
+		for (SmSupplier smSupplier : suppliers) {
+			qtSupplier = new ScQtSupplier();
+			qtSupplier.setSmSupplier(smSupplier);
+			qtSupplier.setScQt(scQt);
+			
+			qtSupplierList.add(qtSupplier);
+		}
+		
+		// update qt supplier list.
+		getManagedBean().setTotalSupplier(qtSupplierList.size());
+		getManagedBean().setQtSupplierList(qtSupplierList);
+		
+		// For save the criteria details when search button if clicked.
+		scQt.setScQtCriterias(scQtCriteria);
+		scQt.setScQtCategorys(qtCategoryList);
+	}
 		
 	  
 	  public TreeNode getSeletedTreeNode(TreeNode treeNode,Node selectedNode){
@@ -460,26 +573,4 @@ public class QTSupplierQulCriteriaBackingBean extends SourcingBaseBackingBean<QT
 		//getManagedBean().setSelectedBoolean(id);
 
 	}
-	
-	public void tenderChange(AjaxBehaviorEvent event) {
-		System.out.println("HIIIIIIIIIIIIIIII");
-		Object selectedValue = event.getComponent().getAttributes()
-				.get("value");
-		if ("B".equalsIgnoreCase((String) selectedValue)
-				|| "O".equalsIgnoreCase((String) selectedValue)) {
-			this.getManagedBean().setIsTender(true);
-			this.getManagedBean().setIsPanel(false);
-			this.getManagedBean().setIsResctricted(false);
-		} else if("P".equalsIgnoreCase((String) selectedValue)) {
-			this.getManagedBean().setIsTender(false);
-			this.getManagedBean().setIsPanel(true);
-			this.getManagedBean().setIsResctricted(false);
-		} else if("R".equalsIgnoreCase((String) selectedValue)){
-			this.getManagedBean().setIsTender(false);
-			this.getManagedBean().setIsPanel(false);
-			this.getManagedBean().setIsResctricted(true);
-		}
-	}
-
-
 }

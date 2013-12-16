@@ -6,48 +6,20 @@
 	xmlns:p="http://primefaces.org/ui"
 	xmlns:c="http://java.sun.com/jsp/jstl/core">
 
-
+	<ui:include src="/xhtml/ss/quatationtender/qtntenderheader.xhtml" /> 
 	
-	 <ui:include src="/xhtml/ss/quatationtender/qtntenderheader.xhtml" /> 
-	 <p:panel
-						header="Supplier Qualification Criteria" toggleable="true">
-						</p:panel>
-						<h:panelGrid border="0" cellpadding="0" cellspacing="0" 
-			columns="2" columnClasses="columnWidth40,columnWidth60">
-						
-						<h:column>
-						 <h:outputLabel value="* Qtn/Tender Type" style="padding-right: 6px;padding-left: 81px"/>
-						 </h:column>
-						 <h:column>
-							<p:selectOneMenu 
-								value="#{qTSupplierQulCriteriaBackingBean.managedBean.qt.qtType}">
-								<f:selectItem itemLabel="Select One" itemValue="" />
-								<f:selectItem itemLabel="Open" itemValue="O" />
-								<f:selectItem itemLabel="Bumiputra" itemValue="B" />
-								<f:selectItem itemLabel="Panel" itemValue="P" />
-								<f:selectItem itemLabel="Restricted Tender" itemValue="R" />
-								<p:ajax event="change" process="@this" update="parentText" listener="#{qTSupplierQulCriteriaBackingBean.tenderChange}"/>
-							</p:selectOneMenu>
-                         </h:column>
-						</h:panelGrid>
- <h:panelGroup id="parentText">
-						<h:panelGroup
-							rendered="#{qTSupplierQulCriteriaBackingBean.managedBean.isTender}">
-							<ui:include src="/xhtml/ss/quatationtender/nrmqtntender.xhtml" />
-						</h:panelGroup>
-						<h:panelGroup
-							rendered="#{qTSupplierQulCriteriaBackingBean.managedBean.isPanel}">
-
-							<ui:include src="/xhtml/ss/quatationtender/panelqtntender.xhtml" />
-						</h:panelGroup>
-
-						<h:panelGroup
-							rendered="#{qTSupplierQulCriteriaBackingBean.managedBean.isResctricted}">
-							<ui:include src="/xhtml/ss/quatationtender/restictedtender.xhtml" />
-						</h:panelGroup>
-
-				</h:panelGroup>	
-
+	<h:panelGroup id="suppQualPG">
+		<c:if test="#{qTSupplierQulCriteriaBackingBean.managedBean.qt.qtType == PmCodeConst.quotationTenderTypeOpen 
+					or qTSupplierQulCriteriaBackingBean.managedBean.qt.qtType == PmCodeConst.quotationTenderTypeBumiputra}">
+			<ui:include src="nrmqtntender.xhtml" />
+		</c:if>
+		<c:if test="#{qTSupplierQulCriteriaBackingBean.managedBean.qt.qtType == PmCodeConst.quotationTenderTypePanel}">
+			<ui:include src="panelqtntender.xhtml" />
+		</c:if>
+		<c:if test="#{qTSupplierQulCriteriaBackingBean.managedBean.qt.qtType == PmCodeConst.quotationTenderTypeRestrictedTender}">
+			<ui:include src="restictedtender.xhtml" />
+		</c:if>
+	</h:panelGroup>
 </ui:composition>
 
 					

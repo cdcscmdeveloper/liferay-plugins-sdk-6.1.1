@@ -1557,7 +1557,7 @@ important
 
 /* --------------------------          Check Box         ------------------------------ */
 .ui-chkbox {
-	display: block !important;	
+	/* display: block !important; */	
 }
 
 .ui-chkbox .ui-chkbox-box {
@@ -1567,7 +1567,7 @@ important
 	-webkit-border-radius: 0px;
 	border-radius: 0px;
 	border-collapse: separate;
-	display: block !important;
+	/* display: block !important; */
 	margin-right: 5px;
 }
 
@@ -4506,6 +4506,12 @@ label > span.ui-button-text {
 /*--------------------------    End Breadcrumb Wizard   --------------------------- */
 .columnWidth20 {
 	width: 20%;
+}
+
+.columnWidth20AlignTop {
+	width: 20%;
+	vertical-align: top;
+	padding: 5px 0px;
 }
 
 .columnWidth30 {

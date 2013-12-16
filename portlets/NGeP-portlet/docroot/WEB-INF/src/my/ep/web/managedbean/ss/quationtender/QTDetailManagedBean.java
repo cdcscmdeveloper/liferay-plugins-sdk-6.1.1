@@ -1,19 +1,14 @@
 package my.ep.web.managedbean.ss.quationtender;
 
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
-import javax.faces.model.SelectItem;
 
 import my.ep.factory.EpLogger;
 import my.ep.jaxb.sc.quotationtenderdata.SCQuotationTenderDataType;
 import my.ep.persistence.entity.ct.circular.CtCircular;
-import my.ep.persistence.entity.ct.circular.panel.CtPanelItem;
 import my.ep.persistence.entity.ct.circular.panel.CtPanelSupplier;
 import my.ep.persistence.entity.pm.authorization.PmOrgProfile;
 import my.ep.persistence.entity.pm.authorization.PmUser;
@@ -26,7 +21,6 @@ import my.ep.persistence.entity.pm.common.PmDo;
 import my.ep.persistence.entity.pm.common.PmGo;
 import my.ep.persistence.entity.pm.common.PmSo;
 import my.ep.persistence.entity.pm.common.PmState;
-import my.ep.persistence.entity.pm.common.PmZone;
 import my.ep.persistence.entity.pp.procurementplan.PpPlan;
 import my.ep.persistence.entity.sm.SmMofAccount;
 import my.ep.persistence.entity.sm.SmSupplier;
@@ -42,6 +36,7 @@ import my.ep.persistence.entity.ss.quationtender.ScQtDeductionClause;
 import my.ep.persistence.entity.ss.quationtender.ScQtDoc;
 import my.ep.persistence.entity.ss.quationtender.ScQtGosodoBudget;
 import my.ep.persistence.entity.ss.quationtender.ScQtRemark;
+import my.ep.persistence.entity.ss.quationtender.ScQtSupplier;
 import my.ep.persistence.entity.ss.quationtender.ScRemark;
 import my.ep.web.backingbean.ss.quatationtender.CloneAllDataModel;
 import my.ep.web.bean.ss.quatationtender.QtnTenderSearchBean;
@@ -52,8 +47,6 @@ import my.ep.web.type.ss.quationtender.CloneAll;
 import org.apache.log4j.Logger;
 import org.primefaces.model.DefaultTreeNode;
 import org.primefaces.model.TreeNode;
-
-import com.sun.org.apache.bcel.internal.generic.LUSHR;
 
 /**
  * @Author VidyasagarReddy
@@ -70,10 +63,6 @@ public class QTDetailManagedBean extends BaseManagedBean {
 	private ScQt qt;
 	private ScQtCriteria qtCriteria;
 	private ScQtBriefing qtBriefing;
-	private ScQtCategory qtCategory;
-	private CtCircular searchCircular;
-	private CtPanelSupplier ctPanelSupplier;
-	private CtPanelItem ctPanelItem;
 	private ScQtBriefing qtSiteBriefing;
 	private ScQtDoc qtDoc;
 	private ScQtRemark qtRemark;
@@ -89,11 +78,6 @@ public class QTDetailManagedBean extends BaseManagedBean {
 	
 	private String selectedBoolean1;
 	private String multiLoc;
-	private List<ScQtCategory> openCategorys;
-	private List<ScQtCategory> restrictedCategorys;
-	private SmSupplier searchSupplier;
-	private List<SmSupplier> smSupplierList;
-	private List<SmMofAccount> smMofAccounts;
 	private List<CtPanelSupplier> ctPanelSuppliers;
 	
 	
@@ -116,7 +100,6 @@ public class QTDetailManagedBean extends BaseManagedBean {
 	private List<PmDistrict> districts;
 
 	public List<ScQtGosodoBudget> gosodos;
-	public List<ScQtCategory> categorys;
 	public List<ScQtBriefing> briefings;
 	public List<ScQtBriefing> siteBriefings;
 	public List<ScQtDoc> scQtDocs;
@@ -134,9 +117,6 @@ public class QTDetailManagedBean extends BaseManagedBean {
     private List<ScQtContactPerson> selectedContactPersons;
 	private List<ScQtCheckList> selectedCheckLists;
 	private List<ScQtGosodoBudget> selectedGosodoBudgets;
-	private List<ScQtCategory> selectedopenCategories;
-	private List<ScQtCategory> selectedrestrictedcCategories;
-    private List<SmMofAccount> selectedrestircedsupplier;
     private List<SmMofAccount> selectedpanelsupplier;
     private List<ScQt> selectedCloneTenderList;
     private List<CloneAll> selectedCloneAllList;
@@ -167,10 +147,6 @@ public class QTDetailManagedBean extends BaseManagedBean {
 	private List<ScQt> cloneTenderList = new ArrayList<ScQt>();
 	private ScQt tenderCriteria = new ScQt();
 
-	
-	private Boolean isTender=false;
-	private Boolean isPanel=false;
-	private Boolean isResctricted=false;
 	private List<TabBean> tabList ;	
 	
 	private String checkBoxBPK;
@@ -198,6 +174,25 @@ public class QTDetailManagedBean extends BaseManagedBean {
 
 	private List<SmSupplier> panelSuppliers; 
 	
+	// For Circular Panel Search Criteria
+	private String circularNo;
+	private String circularName;
+	private String itemName;
+	private String circularCoverage;
+	
+	// For Restricted Tender Search Criteria
+	private String supplierName;
+	private String mofAccountNo;
+	
+	private int totalSearchSupplier;
+	private int totalSupplier;
+	private TreeNode searchPanelSuppliersNode;
+	private TreeNode suppliersNode;
+	private List<SmSupplier> searchSupplierList;
+	private List<SmSupplier> selectedSupplierList;
+	private List<ScQtSupplier> qtSupplierList;
+	private List<ScQtCategory> selectedCategoryList;
+	private List<ScQtCategory> qtCategoryList;
 
 	public void setPanelSuppliers(List<SmSupplier> panelSuppliers) {
 		this.panelSuppliers = panelSuppliers;
@@ -345,14 +340,6 @@ public class QTDetailManagedBean extends BaseManagedBean {
 
 	public void setGosodos(List<ScQtGosodoBudget> gosodos) {
 		this.gosodos = gosodos;
-	}
-
-	public List<ScQtCategory> getCategorys() {
-		return categorys;
-	}
-
-	public void setCategorys(List<ScQtCategory> categorys) {
-		this.categorys = categorys;
 	}
 
 	
@@ -529,77 +516,8 @@ public class QTDetailManagedBean extends BaseManagedBean {
 	}
 
 
-	public Boolean getIsTender() {
-		return isTender;
-	}
-
-
-	public void setIsTender(Boolean isTender) {
-		this.isTender = isTender;
-	}
-
-
-	public Boolean getIsPanel() {
-		return isPanel;
-	}
-
-
-	public void setIsPanel(Boolean isPanel) {
-		this.isPanel = isPanel;
-	}
-
-
-	public Boolean getIsResctricted() {
-		return isResctricted;
-	}
-
-
-	public void setIsResctricted(Boolean isResctricted) {
-		this.isResctricted = isResctricted;
-	}
-
-
-	public List<ScQtCategory> getOpenCategorys() {
-		return openCategorys;
-	}
-
-
-	public void setOpenCategorys(List<ScQtCategory> openCategorys) {
-		this.openCategorys = openCategorys;
-	}
-
-
-	public List<ScQtCategory> getRestrictedCategorys() {
-		return restrictedCategorys;
-	}
-
-
-	public void setRestrictedCategorys(List<ScQtCategory> restrictedCategorys) {
-		this.restrictedCategorys = restrictedCategorys;
-	}
-
-
 	public List<SmSupplier> getPanelSuppliers() {
 		return panelSuppliers;
-	}
-
-	public SmSupplier getSearchSupplier() {
-		return searchSupplier;
-	}
-
-
-	public void setSearchSupplier(SmSupplier searchSupplier) {
-		this.searchSupplier = searchSupplier;
-	}
-
-
-	public List<SmSupplier> getSmSupplierList() {
-		return smSupplierList;
-	}
-
-
-	public void setSmSupplierList(List<SmSupplier> smSupplierList) {
-		this.smSupplierList = smSupplierList;
 	}
 
 
@@ -693,26 +611,6 @@ public class QTDetailManagedBean extends BaseManagedBean {
 	}
 
 
-	public ScQtCategory getQtCategory() {
-		return qtCategory;
-	}
-
-
-	public void setQtCategory(ScQtCategory qtCategory) {
-		this.qtCategory = qtCategory;
-	}
-
-
-	public CtCircular getSearchCircular() {
-		return searchCircular;
-	}
-
-
-	public void setSearchCircular(CtCircular searchCircular) {
-		this.searchCircular = searchCircular;
-	}
-
-
 	public ScQtBriefing getQtSiteBriefing() {
 		return qtSiteBriefing;
 	}
@@ -771,16 +669,6 @@ public class QTDetailManagedBean extends BaseManagedBean {
 
 	public void setCloneAllList(List<CloneAll> cloneAllList) {
 		this.cloneAllList = cloneAllList;
-	}
-
-
-	public List<SmMofAccount> getSmMofAccounts() {
-		return smMofAccounts;
-	}
-
-
-	public void setSmMofAccounts(List<SmMofAccount> smMofAccounts) {
-		this.smMofAccounts = smMofAccounts;
 	}
 
 
@@ -851,16 +739,6 @@ public class QTDetailManagedBean extends BaseManagedBean {
 
 	public void setCtPanelSuppliers(List<CtPanelSupplier> ctPanelSuppliers) {
 		this.ctPanelSuppliers = ctPanelSuppliers;
-	}
-
-
-	public CtPanelSupplier getCtPanelSupplier() {
-		return ctPanelSupplier;
-	}
-
-
-	public void setCtPanelSupplier(CtPanelSupplier ctPanelSupplier) {
-		this.ctPanelSupplier = ctPanelSupplier;
 	}
 
 	 
@@ -1029,16 +907,6 @@ public class QTDetailManagedBean extends BaseManagedBean {
 	}
 
 
-	public CtPanelItem getCtPanelItem() {
-		return ctPanelItem;
-	}
-
-
-	public void setCtPanelItem(CtPanelItem ctPanelItem) {
-		this.ctPanelItem = ctPanelItem;
-	}
-
-
 	public List<ScQtBriefing> getSelectedBriefingDetails() {
 		return selectedBriefingDetails;
 	}
@@ -1090,38 +958,6 @@ public class QTDetailManagedBean extends BaseManagedBean {
 	public void setSelectedGosodoBudgets(
 			List<ScQtGosodoBudget> selectedGosodoBudgets) {
 		this.selectedGosodoBudgets = selectedGosodoBudgets;
-	}
-
-
-	public List<ScQtCategory> getSelectedopenCategories() {
-		return selectedopenCategories;
-	}
-
-
-	public void setSelectedopenCategories(List<ScQtCategory> selectedopenCategories) {
-		this.selectedopenCategories = selectedopenCategories;
-	}
-
-
-	public List<ScQtCategory> getSelectedrestrictedcCategories() {
-		return selectedrestrictedcCategories;
-	}
-
-
-	public void setSelectedrestrictedcCategories(
-			List<ScQtCategory> selectedrestrictedcCategories) {
-		this.selectedrestrictedcCategories = selectedrestrictedcCategories;
-	}
-
-
-	public List<SmMofAccount> getSelectedrestircedsupplier() {
-		return selectedrestircedsupplier;
-	}
-
-
-	public void setSelectedrestircedsupplier(
-			List<SmMofAccount> selectedrestircedsupplier) {
-		this.selectedrestircedsupplier = selectedrestircedsupplier;
 	}
 
 
@@ -1225,8 +1061,8 @@ public class QTDetailManagedBean extends BaseManagedBean {
 	public void setQtDeduction(ScQtDeduction qtDeduction) {
 		this.qtDeduction = qtDeduction;
 	}
-
-
+	
+	
 	public ScQtDeductionClause getQtDeductionClause() {
 		return qtDeductionClause;
 	}
@@ -1235,5 +1071,246 @@ public class QTDetailManagedBean extends BaseManagedBean {
 	public void setQtDeductionClause(ScQtDeductionClause qtDeductionClause) {
 		this.qtDeductionClause = qtDeductionClause;
 	}
-		 
+
+
+	/**
+	 * @return the circularNo
+	 */
+	public String getCircularNo() {
+		return circularNo;
+	}
+
+
+	/**
+	 * @param circularNo the circularNo to set
+	 */
+	public void setCircularNo(String circularNo) {
+		this.circularNo = circularNo;
+	}
+
+
+	/**
+	 * @return the circularName
+	 */
+	public String getCircularName() {
+		return circularName;
+	}
+
+
+	/**
+	 * @param circularName the circularName to set
+	 */
+	public void setCircularName(String circularName) {
+		this.circularName = circularName;
+	}
+
+
+	/**
+	 * @return the itemName
+	 */
+	public String getItemName() {
+		return itemName;
+	}
+
+
+	/**
+	 * @param itemName the itemName to set
+	 */
+	public void setItemName(String itemName) {
+		this.itemName = itemName;
+	}
+
+
+	/**
+	 * @return the circularCoverage
+	 */
+	public String getCircularCoverage() {
+		return circularCoverage;
+	}
+
+
+	/**
+	 * @param circularCoverage the circularCoverage to set
+	 */
+	public void setCircularCoverage(String circularCoverage) {
+		this.circularCoverage = circularCoverage;
+	}
+
+
+	/**
+	 * @return the supplierName
+	 */
+	public String getSupplierName() {
+		return supplierName;
+	}
+
+
+	/**
+	 * @param supplierName the supplierName to set
+	 */
+	public void setSupplierName(String supplierName) {
+		this.supplierName = supplierName;
+	}
+
+
+	/**
+	 * @return the mofAccountNo
+	 */
+	public String getMofAccountNo() {
+		return mofAccountNo;
+	}
+
+
+	/**
+	 * @param mofAccountNo the mofAccountNo to set
+	 */
+	public void setMofAccountNo(String mofAccountNo) {
+		this.mofAccountNo = mofAccountNo;
+	}
+
+
+	/**
+	 * @return the totalSearchSupplier
+	 */
+	public int getTotalSearchSupplier() {
+		return totalSearchSupplier;
+	}
+
+
+	/**
+	 * @param totalSearchSupplier the totalSearchSupplier to set
+	 */
+	public void setTotalSearchSupplier(int totalSearchSupplier) {
+		this.totalSearchSupplier = totalSearchSupplier;
+	}
+
+
+	/**
+	 * @return the totalSupplier
+	 */
+	public int getTotalSupplier() {
+		return totalSupplier;
+	}
+
+
+	/**
+	 * @param totalSupplier the totalSupplier to set
+	 */
+	public void setTotalSupplier(int totalSupplier) {
+		this.totalSupplier = totalSupplier;
+	}
+
+
+	/**
+	 * @return the searchPanelSuppliersNode
+	 */
+	public TreeNode getSearchPanelSuppliersNode() {
+		return searchPanelSuppliersNode;
+	}
+
+
+	/**
+	 * @param searchPanelSuppliersNode the searchPanelSuppliersNode to set
+	 */
+	public void setSearchPanelSuppliersNode(TreeNode searchPanelSuppliersNode) {
+		this.searchPanelSuppliersNode = searchPanelSuppliersNode;
+	}
+
+
+	/**
+	 * @return the suppliersNode
+	 */
+	public TreeNode getSuppliersNode() {
+		return suppliersNode;
+	}
+
+
+	/**
+	 * @param suppliersNode the suppliersNode to set
+	 */
+	public void setSuppliersNode(TreeNode suppliersNode) {
+		this.suppliersNode = suppliersNode;
+	}
+
+
+	/**
+	 * @return the searchSupplierList
+	 */
+	public List<SmSupplier> getSearchSupplierList() {
+		return searchSupplierList;
+	}
+
+
+	/**
+	 * @param searchSupplierList the searchSupplierList to set
+	 */
+	public void setSearchSupplierList(List<SmSupplier> searchSupplierList) {
+		this.searchSupplierList = searchSupplierList;
+	}
+
+
+	/**
+	 * @return the selectedSupplierList
+	 */
+	public List<SmSupplier> getSelectedSupplierList() {
+		return selectedSupplierList;
+	}
+
+
+	/**
+	 * @param selectedSupplierList the selectedSupplierList to set
+	 */
+	public void setSelectedSupplierList(List<SmSupplier> selectedSupplierList) {
+		this.selectedSupplierList = selectedSupplierList;
+	}
+
+
+	/**
+	 * @return the qtSupplierList
+	 */
+	public List<ScQtSupplier> getQtSupplierList() {
+		return qtSupplierList;
+	}
+
+
+	/**
+	 * @param qtSupplierList the qtSupplierList to set
+	 */
+	public void setQtSupplierList(List<ScQtSupplier> qtSupplierList) {
+		this.qtSupplierList = qtSupplierList;
+	}
+
+
+	/**
+	 * @return the selectedCategoryList
+	 */
+	public List<ScQtCategory> getSelectedCategoryList() {
+		return selectedCategoryList;
+	}
+
+
+	/**
+	 * @param selectedCategoryList the selectedCategoryList to set
+	 */
+	public void setSelectedCategoryList(List<ScQtCategory> selectedCategoryList) {
+		this.selectedCategoryList = selectedCategoryList;
+	}
+
+
+	/**
+	 * @return the qtCategoryList
+	 */
+	public List<ScQtCategory> getQtCategoryList() {
+		return qtCategoryList;
+	}
+
+
+	/**
+	 * @param qtCategoryList the qtCategoryList to set
+	 */
+	public void setQtCategoryList(List<ScQtCategory> qtCategoryList) {
+		this.qtCategoryList = qtCategoryList;
+	}
+	
+    	 
 }

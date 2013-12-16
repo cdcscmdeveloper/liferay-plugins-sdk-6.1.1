@@ -15,7 +15,7 @@
 			 <c:if test="#{qTDetailBB.managedBean.qt.brandNew}">
 				<p:selectOneMenu value="#{qTDetailBB.managedBean.qt.qtType}">
 					<f:selectItems value="#{qTDetailBB.getDropdownCodeValues(PmCodeCatConst.quotationTenderType)}" />
-				<p:ajax event="change" partialSubmit="true" process="@this" update="approvalWorkFlow" listener="#{qTDetailBB.onChangeAction}"/>
+				<p:ajax event="change" partialSubmit="true" process="@this" update="approvalWorkFlow, suppQualPG" listener="#{qTDetailBB.onChangeAction}"/>
 			
 				</p:selectOneMenu>
 				</c:if>
