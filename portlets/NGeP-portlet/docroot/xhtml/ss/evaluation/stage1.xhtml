@@ -42,6 +42,8 @@
 	</p:dataTable>
 	</p:panel>
 
+<!-- 	<c:if
+							test="#{evaluationBackingBean.managedBean.committeeType eq'EC' or evaluationBackingBean.managedBean.committeeType eq'TEC' }"> -->
 
 	<p:panel header="#{lbl['lbl.sc.eva.s1.tech.head']}" toggleable="true">
 
@@ -81,9 +83,10 @@
 		</p:dataTable>
 
 	</p:panel>
+<!-- </c:if> -->
 
-
-
+<!-- <c:if
+							test="#{evaluationBackingBean.managedBean.committeeType eq'EC' or evaluationBackingBean.managedBean.committeeType eq'FEC' }"> -->
 	<p:panel header="#{lbl['lbl.sc.eva.s1.fin.head']}" toggleable="true">
 
 		<p:dataTable id="evaluationst1Financial" var="s1evalFin"
@@ -123,6 +126,7 @@
 		</p:dataTable>
 
 	</p:panel>
+	<!-- </c:if> -->
 	<table style="width: 100%">
 		<tr>
 			<td><div align="left" style="width: 99%">
@@ -132,10 +136,19 @@
 						update=":form" />
 				</div></td>
 			<td><div align="right" style="width: 99%">
+			 <c:if test="#{evaluationBackingBean.managedBean.committeeType eq'OC'}">
+					<p:commandButton value="#{lbl['lbl.sm.next']}"
+						actionListener="#{evaluationBackingBean.setTabValue('1','3')}"
+						action="#{evaluationBackingBean.updateSmAppl}" icon="ui-icon-next"
+						iconPos="right" update=":form" />
+						</c:if>
+						
+						<c:if test="#{evaluationBackingBean.managedBean.committeeType ne'OC'}">
 					<p:commandButton value="#{lbl['lbl.sm.next']}"
 						actionListener="#{evaluationBackingBean.setTabValue('1','2')}"
 						action="#{evaluationBackingBean.updateSmAppl}" icon="ui-icon-next"
 						iconPos="right" update=":form" />
+						</c:if>
 				</div></td>
 		</tr>
 	</table>

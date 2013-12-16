@@ -65,10 +65,16 @@
 	<table style="width: 100%">
 		<tr>
 			<td><div align="left" style="width: 99%">
+			<c:if test="#{evaluationBackingBean.managedBean.committeeType eq'OC'}">
+					<p:commandButton value="#{lbl['lbl.sm.prev']}"
+						actionListener="#{evaluationBackingBean.setTabValue('5','3')}"
+						action="#{evaluationBackingBean.updateSmAppl}" icon="ui-icon-prev"
+						update=":form" /></c:if>
+						<c:if test="#{evaluationBackingBean.managedBean.committeeType ne'OC'}">
 					<p:commandButton value="#{lbl['lbl.sm.prev']}"
 						actionListener="#{evaluationBackingBean.setTabValue('5','4')}"
 						action="#{evaluationBackingBean.updateSmAppl}" icon="ui-icon-prev"
-						update=":form" />
+						update=":form" /></c:if>
 				</div></td>
 			<td><div align="right" style="width: 99%">
 					<p:commandButton value="#{lbl['lbl.sm.next']}"

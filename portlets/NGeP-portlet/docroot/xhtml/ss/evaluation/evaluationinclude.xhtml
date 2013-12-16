@@ -6,14 +6,14 @@
 	xmlns:c="http://java.sun.com/jsp/jstl/core">
 	<ui:define name="resourceSection">
 	</ui:define>
- <p:messages id="evaluateMessages" showDetail="true" autoUpdate="true"
-				closable="true" />
+	<!--  <p:messages id="evaluateMessages" showDetail="true" autoUpdate="true"
+				closable="true" /> -->
 	<ui:include src="/xhtml/ss/evaluation/evaluationButtons.xhtml" />
 
 	<table style="width: 100%">
 		<tr>
 			<td><div class="navDiv" id="menuDiv" align="center">
-					<ul class="menu-text">
+					<ul class="menu-text" style="float: center">
 						<li><h:outputText value="Preparation"
 								rendered="#{evaluationBackingBean.managedBean.tabActiveIndex eq 0}" />
 							<p:commandLink value="Preparation"
@@ -27,28 +27,33 @@
 								actionListener="#{evaluationBackingBean.setTabValue(evaluationBackingBean.managedBean.tabActiveIndex,'1')}"
 								action="#{evaluationBackingBean.updateSmAppl}" update=":form"
 								rendered="#{evaluationBackingBean.managedBean.tabActiveIndex gt 1}" /></li>
-                       
-						<li><h:outputText value="Stage2" 
-								rendered="#{evaluationBackingBean.managedBean.tabActiveIndex le 2}" />
-							<p:commandLink value="Stage2" 
-								actionListener="#{evaluationBackingBean.setTabValue(evaluationBackingBean.managedBean.tabActiveIndex,'2')}"
-								action="#{evaluationBackingBean.updateSmAppl}" update=":form"
-								rendered="#{evaluationBackingBean.managedBean.tabActiveIndex gt 2}" /></li>
-
-						<li><h:outputText value="Summary(Stage 1)"
-								rendered="#{evaluationBackingBean.managedBean.tabActiveIndex le 3}" />
-							<p:commandLink value="Summary(Stage 1)"
-								actionListener="#{evaluationBackingBean.setTabValue(evaluationBackingBean.managedBean.tabActiveIndex,'3')}"
-								action="#{evaluationBackingBean.updateSmAppl}" update=":form"
-								rendered="#{evaluationBackingBean.managedBean.tabActiveIndex gt 3}" /></li>
-								
-									<li><h:outputText value="Summary(Stage 2)"
-								rendered="#{evaluationBackingBean.managedBean.tabActiveIndex le 4}" />
-							<p:commandLink value="Summary(Stage 2)"
-								actionListener="#{evaluationBackingBean.setTabValue(evaluationBackingBean.managedBean.tabActiveIndex,'4')}"
-								action="#{evaluationBackingBean.updateSmAppl}" update=":form"
-								rendered="#{evaluationBackingBean.managedBean.tabActiveIndex gt 4}" /></li>
-								
+						<c:if
+							test="#{evaluationBackingBean.managedBean.committeeType ne'OC'}">
+							<li><h:outputText value="Stage2"
+									rendered="#{evaluationBackingBean.managedBean.tabActiveIndex le 2}" />
+								<p:commandLink value="Stage2"
+									actionListener="#{evaluationBackingBean.setTabValue(evaluationBackingBean.managedBean.tabActiveIndex,'2')}"
+									action="#{evaluationBackingBean.updateSmAppl}" update=":form"
+									rendered="#{evaluationBackingBean.managedBean.tabActiveIndex gt 2}" /></li>
+						</c:if>
+						<c:if
+							test="#{evaluationBackingBean.managedBean.committeeType eq'OC'}">
+							<li><h:outputText value="Summary(Stage 1)"
+									rendered="#{evaluationBackingBean.managedBean.tabActiveIndex le 3}" />
+								<p:commandLink value="Summary(Stage 1)"
+									actionListener="#{evaluationBackingBean.setTabValue(evaluationBackingBean.managedBean.tabActiveIndex,'3')}"
+									action="#{evaluationBackingBean.updateSmAppl}" update=":form"
+									rendered="#{evaluationBackingBean.managedBean.tabActiveIndex gt 3}" /></li>
+						</c:if>
+						<c:if
+							test="#{evaluationBackingBean.managedBean.committeeType ne'OC'}">
+							<li><h:outputText value="Summary(Stage 2)"
+									rendered="#{evaluationBackingBean.managedBean.tabActiveIndex le 4}" />
+								<p:commandLink value="Summary(Stage 2)"
+									actionListener="#{evaluationBackingBean.setTabValue(evaluationBackingBean.managedBean.tabActiveIndex,'4')}"
+									action="#{evaluationBackingBean.updateSmAppl}" update=":form"
+									rendered="#{evaluationBackingBean.managedBean.tabActiveIndex gt 4}" /></li>
+						</c:if>
 
 						<li><h:outputText value="Report"
 								rendered="#{evaluationBackingBean.managedBean.tabActiveIndex le 5}" />
@@ -85,46 +90,54 @@
 								<li class="space red-dot"></li>
 							</c:otherwise>
 						</c:choose>
-						<c:choose>
-							<c:when
-								test="#{evaluationBackingBean.managedBean.tabActiveIndex lt 2}">
-								<li class="space black-dot"></li>
-							</c:when>
-							<c:when
-								test="#{evaluationBackingBean.managedBean.tabActiveIndex gt 2}">
-								<li class="space green-dot"></li>
-							</c:when>
-							<c:otherwise>
-								<li class="space red-dot"></li>
-							</c:otherwise>
-						</c:choose>
-						<c:choose>
-							<c:when
-								test="#{evaluationBackingBean.managedBean.tabActiveIndex lt 3}">
-								<li class="space black-dot"></li>
-							</c:when>
-							<c:when
-								test="#{evaluationBackingBean.managedBean.tabActiveIndex gt 3}">
-								<li class="space green-dot"></li>
-							</c:when>
-							<c:otherwise>
-								<li class="space red-dot"></li>
-							</c:otherwise>
-						</c:choose>
-						<c:choose>
-							<c:when
-								test="#{evaluationBackingBean.managedBean.tabActiveIndex lt 4}">
-								<li class="space black-dot"></li>
-							</c:when>
-							<c:when
-								test="#{evaluationBackingBean.managedBean.tabActiveIndex gt 4}">
-								<li class="space green-dot"></li>
-							</c:when>
-							<c:otherwise>
-								<li class="space red-dot"></li>
-							</c:otherwise>
-						</c:choose>
-						
+						<c:if
+							test="#{evaluationBackingBean.managedBean.committeeType ne'OC'}">
+							<c:choose>
+								<c:when
+									test="#{evaluationBackingBean.managedBean.tabActiveIndex lt 2}">
+									<li class="space black-dot"></li>
+								</c:when>
+								<c:when
+									test="#{evaluationBackingBean.managedBean.tabActiveIndex gt 2}">
+									<li class="space green-dot"></li>
+								</c:when>
+								<c:otherwise>
+									<li class="space red-dot"></li>
+								</c:otherwise>
+							</c:choose>
+						</c:if>
+						<c:if
+							test="#{evaluationBackingBean.managedBean.committeeType eq'OC'}">
+							<c:choose>
+								<c:when
+									test="#{evaluationBackingBean.managedBean.tabActiveIndex lt 3}">
+									<li class="space black-dot"></li>
+								</c:when>
+								<c:when
+									test="#{evaluationBackingBean.managedBean.tabActiveIndex gt 3}">
+									<li class="space green-dot"></li>
+								</c:when>
+								<c:otherwise>
+									<li class="space red-dot"></li>
+								</c:otherwise>
+							</c:choose>
+						</c:if>
+						<c:if
+							test="#{evaluationBackingBean.managedBean.committeeType ne'OC'}">
+							<c:choose>
+								<c:when
+									test="#{evaluationBackingBean.managedBean.tabActiveIndex lt 4}">
+									<li class="space black-dot"></li>
+								</c:when>
+								<c:when
+									test="#{evaluationBackingBean.managedBean.tabActiveIndex gt 4}">
+									<li class="space green-dot"></li>
+								</c:when>
+								<c:otherwise>
+									<li class="space red-dot"></li>
+								</c:otherwise>
+							</c:choose>
+						</c:if>
 						<c:choose>
 							<c:when
 								test="#{evaluationBackingBean.managedBean.tabActiveIndex lt 5}">
@@ -163,20 +176,22 @@
 		<ui:include src="/xhtml/ss/evaluation/manualsubmission.xhtml" />
 		<ui:include src="/xhtml/ss/evaluation/evaluationpopup.xhtml" />
 	</c:if>
-	<c:if test="#{evaluationBackingBean.managedBean.tabActiveIndex eq 2}">
-		<ui:include src="/xhtml/ss/evaluation/stage2.xhtml" />
-		<ui:include src="/xhtml/ss/evaluation/peringkat2.xhtml" />
-		<!-- <ui:include src="/xhtml/ss/evaluation/pengritFin.xhtml" /> -->
+	<c:if test="#{evaluationBackingBean.managedBean.committeeType ne'OC'}">
+		<c:if test="#{evaluationBackingBean.managedBean.tabActiveIndex eq 2}">
+			<ui:include src="/xhtml/ss/evaluation/stage2.xhtml" />
+			<ui:include src="/xhtml/ss/evaluation/peringkat2.xhtml" />
+			<!-- <ui:include src="/xhtml/ss/evaluation/pengritFin.xhtml" /> -->
+		</c:if>
 	</c:if>
-	<c:if test="#{evaluationBackingBean.managedBean.tabActiveIndex eq 3}">
-		 <ui:include src="/xhtml/ss/evaluation/summary.xhtml" /> 
-		
-
+	<c:if test="#{evaluationBackingBean.managedBean.committeeType eq'OC'}">
+		<c:if test="#{evaluationBackingBean.managedBean.tabActiveIndex eq 3}">
+			<ui:include src="/xhtml/ss/evaluation/summary.xhtml" />
+		</c:if>
 	</c:if>
-	<c:if test="#{evaluationBackingBean.managedBean.tabActiveIndex eq 4}">
-	
-		<ui:include src="/xhtml/ss/evaluation/summary(stage2).xhtml" />
-
+	<c:if test="#{evaluationBackingBean.managedBean.committeeType ne'OC'}">
+		<c:if test="#{evaluationBackingBean.managedBean.tabActiveIndex eq 4}">
+			<ui:include src="/xhtml/ss/evaluation/summary(stage2).xhtml" />
+		</c:if>
 	</c:if>
 	<c:if test="#{evaluationBackingBean.managedBean.tabActiveIndex eq 5}">
 		<ui:include src="/xhtml/ss/evaluation/report.xhtml" />

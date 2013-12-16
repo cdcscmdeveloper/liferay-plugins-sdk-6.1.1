@@ -1,3 +1,4 @@
+ 
 <ui:composition xmlns="http://www.w3.org/1999/xhtml"
 	xmlns:f="http://java.sun.com/jsf/core"
 	xmlns:h="http://java.sun.com/jsf/html"
@@ -8,6 +9,8 @@
 
 	<ui:include src="/xhtml/ss/evaluation/evaluationHeader.xhtml" />
 
+<!-- <c:if
+							test="#{evaluationBackingBean.managedBean.committeeType eq'EC' or evaluationBackingBean.managedBean.committeeType eq'TEC' }"> -->
 
 	<p:panel header="#{lbl['lbl.sc.eva.s2.tech.head']}" toggleable="true">
 
@@ -87,7 +90,9 @@
 		</p:dataTable>
 
 	</p:panel>
-
+<!-- </c:if> -->
+<!-- <c:if
+	test="#{evaluationBackingBean.managedBean.committeeType eq'EC' or evaluationBackingBean.managedBean.committeeType eq'FEC' }"> -->
 	<p:panel header="#{lbl['lbl.sc.eva.s2.fin.head']}" toggleable="true">
 
 		<p:dataTable id="finanicalst2supplierList" var="s2finsupplier"
@@ -155,6 +160,7 @@
 		</p:dataTable>
 
 	</p:panel>
+	<!-- </c:if> -->
 	<table style="width: 100%">
 		<tr>
 			<td><div align="left" style="width: 99%">
@@ -163,13 +169,22 @@
 						action="#{evaluationBackingBean.updateSmAppl}" icon="ui-icon-prev"
 						update=":form" />
 				</div></td>
+				
 			<td><div align="right" style="width: 99%">
+			 <c:if test="#{evaluationBackingBean.managedBean.committeeType eq'OC'}">
 					<p:commandButton value="#{lbl['lbl.sm.next']}"
 						actionListener="#{evaluationBackingBean.setTabValue('2','3')}"
 						action="#{evaluationBackingBean.updateSmAppl}" icon="ui-icon-next"
-						iconPos="right" update=":form" />
+						iconPos="right" update=":form" /></c:if>
+						 <c:if test="#{evaluationBackingBean.managedBean.committeeType ne'OC'}">
+					<p:commandButton value="#{lbl['lbl.sm.next']}"
+						actionListener="#{evaluationBackingBean.setTabValue('2','4')}"
+						action="#{evaluationBackingBean.updateSmAppl}" icon="ui-icon-next"
+						iconPos="right" update=":form" /></c:if>
 				</div></td>
 		</tr>
+		
+		
 	</table>
 
 </ui:composition>
