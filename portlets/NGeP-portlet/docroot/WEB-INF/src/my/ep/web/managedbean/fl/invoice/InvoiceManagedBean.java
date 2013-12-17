@@ -33,6 +33,8 @@ public class InvoiceManagedBean extends BaseManagedBean {
 	private boolean isDan = false;
 	private boolean isUpdateDan = false;
 	
+	private String factoringCheck="false";
+	
 	
 	/**
 	 * @return the invoice
@@ -93,5 +95,17 @@ public class InvoiceManagedBean extends BaseManagedBean {
 	 */
 	public void setUpdateDan(boolean isUpdateDan) {
 		this.isUpdateDan = isUpdateDan;
+	}
+	/**
+	 * @return the factoringCheck
+	 */
+	public String getFactoringCheck() {
+		return factoringCheck;
+	}
+	/**
+	 * @param factoringCheck the factoringCheck to set
+	 */
+	public void setFactoringCheck(String factoringCheck) {
+		this.factoringCheck = factoringCheck;
 	}
 }

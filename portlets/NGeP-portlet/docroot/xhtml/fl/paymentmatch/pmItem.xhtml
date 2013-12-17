@@ -68,7 +68,7 @@
 		<br />
 
 	</p:panel>
-	<p:panel header="DEDUCTION" toggleable="true">
+	<p:panel header="DEDUCTION" toggleable="true" rendered="#{paymentMatchBackingBean.managedBean.docType eq 'CR'}">
 		<p:dataTable id="deductionDataTable" var="deduction">
 			<ac:paginator for="itemDataTable" />
 			<p:column headerText="Type">

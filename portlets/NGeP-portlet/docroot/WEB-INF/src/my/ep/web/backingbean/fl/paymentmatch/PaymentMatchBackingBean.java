@@ -134,7 +134,10 @@ public class PaymentMatchBackingBean extends BaseBackingBean<PaymentMatchManaged
 		getManagedBean().setPaymentAdvice(paymentAdvice);
 		getManagedBean().setTaskId(taskId);
 		getManagedBean().setOutComes(res.getAction());
-
+		
+		// For PO No Deduction Panel 
+		getManagedBean().setDocType(resDTO.getFlFulfilmentRequest().getDocType());
+		
 		//		FacesContext fc = FacesContext.getCurrentInstance();
 		//	    fc.getApplication().getNavigationHandler().handleNavigation(fc, null, "/xhtml/fl/invoice/invBasePage.xhtml");
 	}

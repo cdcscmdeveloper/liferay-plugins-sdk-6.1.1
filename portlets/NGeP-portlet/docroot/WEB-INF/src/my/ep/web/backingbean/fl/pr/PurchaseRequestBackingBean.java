@@ -136,10 +136,22 @@ public class PurchaseRequestBackingBean extends BaseBackingBean<PurchaseRequestM
 			reqDTO.setSelectedApprovers(getManagedBean().getApproverModel().getTarget());
 			reqDTO.setAvailableApprovers(getManagedBean().getApproverModel().getSource());
 			reqDTO.setFlAttachmentList(flBB.getManagedBean().getAttachmentList());
+			System.out.println("SIZE attachements   ::: "+flBB.getManagedBean().getAttachmentList().size());
+			System.out.println("SIZE remarks list   ::: "+flBB.getManagedBean().getRemarkList().size());
 			reqDTO.setFlRemark(flBB.getManagedBean().getRemarkList().get(0));
 			reqDTO.setOutcome(action);
 			reqDTO.setToken(token);
 			reqDTO.setApproverMap(getManagedBean().getApproverMap());
+			
+			//attachement
+			
+			String fileName = flBB.getManagedBean().getFlAttachment().getFileName();
+			String fileDesc = flBB.getManagedBean().getFlAttachment().getFileDescription();
+			String filePath = flBB.getManagedBean().getFlAttachment().getFilePath();
+			reqDTO.setFlAttachment(flBB.getManagedBean().getFlAttachment());
+			System.out.println("fileName::: "+fileName);
+			System.out.println("fileDesc::: "+fileDesc);
+			System.out.println("filePath::: "+filePath);
 			FulfilmentResDTO resDTO = fulfilmentRequestSO.saveFulfillmentRequest(reqDTO);
 			if (resDTO.isSuccessful()) {
 				log.info("Record saved successfully");
@@ -211,6 +223,9 @@ public class PurchaseRequestBackingBean extends BaseBackingBean<PurchaseRequestM
 		reqDTO.setRequestNoteId(getManagedBean().getSelectedRequestNote().getRequestNoteId());
 		RequestNoteResDTO resDTO = requestNoteSO.retrievRequestNoteWithDtls(reqDTO);
 		resDTO.getRequestNoteList().get(0).getRequestNoteId();
+		//System.out.println("Purchase item list size::: "+resDTO.getRequestNoteList().size());
+		//System.out.println("PurchaseList getScRequestList ::: "+resDTO.getRequestNoteList().get(0).getScRequestList());
+		//System.out.println("Purchase item Req note ID size::: "+resDTO.getRequestNoteList().get(0).getScRequestList().getRequestListId());
 		getManagedBean().setRequestNoteWithDtlsList(resDTO.getRequestNoteList());
 	}
 
@@ -314,7 +329,7 @@ public class PurchaseRequestBackingBean extends BaseBackingBean<PurchaseRequestM
 		if(resDTO.getPmOrgProfile() != null){
 			getManagedBean().getFulfilmentRequest().setCreatedOrgProfile(resDTO.getPmOrgProfile());
 		}
-		this.getManagedBean().setOutComes(new String[] {"Submit"});
+		this.getManagedBean().setOutComes(new String[] {"Save","Submit"});
 		//System.out.println("Req List ID ::: "+ getManagedBean().getSelectedRequestNote().getScRequestList().getRequestListNo());
 		return NAV_TO_CREATE_PURCHASE_REQUEST;
 	}
@@ -411,7 +426,7 @@ public class PurchaseRequestBackingBean extends BaseBackingBean<PurchaseRequestM
 			flReqDTO.setFlFulfilmentRequest(resDTO.getFlFulfilmentRequest());
 
 			FulfilmentBackingBean flBB = new FulfilmentBackingBean();
-			flBB.initializeRemarkAndAttachement(resDTO.getRemarkList(), flBB.getManagedBean().getAttachmentList());
+			flBB.initializeRemarkAndAttachement(resDTO.getRemarkList(), resDTO.getAttachmentList());
 			getManagedBean().setFulfilmentRequest(resDTO.getFlFulfilmentRequest());
 			getManagedBean().setTaskId(taskId);
 			getManagedBean().setOutComes(res.getAction());

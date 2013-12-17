@@ -7,10 +7,12 @@ import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.RequestScoped;
 import javax.faces.context.FacesContext;
+import javax.faces.event.AjaxBehaviorEvent;
 import javax.servlet.http.HttpServletRequest;
 
 import my.ep.biz.service.fl.invoice.IInvoiceSO;
 import my.ep.biz.service.fl.order.IFulfilmentOrderSO;
+import my.ep.biz.service.fl.request.IFulfilmentRequestSO;
 import my.ep.bpm.dto.BpmRequestDTO;
 import my.ep.bpm.dto.BpmResponseDTO;
 import my.ep.bpm.service.IBpmSO;
@@ -21,6 +23,7 @@ import my.ep.jaxb.fl.invoicepaymentdata.FLInvoiceAndPaymentDataType;
 import my.ep.persistence.entity.fl.payment.FlInvoice;
 import my.ep.util.lookupservice.EpBpmBusinessDelegate;
 import my.ep.web.backingbean.BaseBackingBean;
+import my.ep.web.backingbean.fl.FulfilmentBackingBean;
 import my.ep.web.constant.BpmOutcomeConst;
 import my.ep.web.managedbean.fl.invoice.InvoiceManagedBean;
 import my.ep.web.util.FacesScopes;
@@ -124,17 +127,28 @@ public class InvoiceBackingBean extends BaseBackingBean<InvoiceManagedBean> {
 			FLInvoiceAndPaymentDataType paymentObj = (FLInvoiceAndPaymentDataType)obj;
 			flReqDTO.setFlOrderId(paymentObj.getFullfillmentRequestId());
 			IFulfilmentOrderSO flOrderSO = (IFulfilmentOrderSO) BusinessDelegate.getInstance().getServiceObject("fl",IFulfilmentOrderSO.class);
-
+			IFulfilmentRequestSO fulfilmentSO = (IFulfilmentRequestSO) BusinessDelegate.getInstance().getServiceObject("fl",IFulfilmentRequestSO.class);
 			resDTO = flOrderSO.retrieveFulfilmentOrder(flReqDTO);
 			//				resDTO = invoiceSO.retrieveInvoice(flReqDTO);//if save button are exist
 			FlInvoice inv = new FlInvoice();
 			inv.setFlFulfilmentOrder(resDTO.getFlOrder());
-
 			getManagedBean().setInvoice(inv);
 			getManagedBean().setTaskId(taskId);
 			System.out.println("res.getAction(): "+res.getAction());
 			getManagedBean().setOutComes(res.getAction());
+			flReqDTO.setFlRequestId(resDTO.getFlOrder().getFlFulfilmentRequest().getFulfilmentReqId());
+			resDTO = fulfilmentSO.retrieveFulfilmentRequest(flReqDTO);
+			FulfilmentBackingBean flBB = new FulfilmentBackingBean();
+			flBB.initializeRemarkAndAttachement(resDTO.getRemarkList(), flBB.getManagedBean().getAttachmentList());
 
 		}
+	}
+	public void factoringChecked(AjaxBehaviorEvent e) {
+		System.out.println("====enter process checked====");
+		// String dueDate = (String) ((UIOutput)e.getSource()).getValue();
+		String id = (String) e.getComponent().getAttributes().get("value");
+		System.out.println("=======get id value=====" + id);
+		getManagedBean().setFactoringCheck(id);
+
 	}
 }

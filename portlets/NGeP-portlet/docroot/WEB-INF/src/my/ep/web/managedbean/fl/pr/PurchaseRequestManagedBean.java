@@ -81,6 +81,8 @@ public class PurchaseRequestManagedBean extends BaseManagedBean {
 	private FlFulfilmentItem  selectedItemRow;
 	
 	
+	
+	
 	/**
 	 * @return the flRemark
 	 */

@@ -4,6 +4,7 @@
 package my.ep.web.backingbean.fl;
 
 import java.io.BufferedInputStream;
+import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
@@ -43,6 +44,8 @@ import my.ep.persistence.entity.fl.request.FlFulfilmentRequest;
 import my.ep.persistence.entity.fl.request.FlShippingInstr;
 import my.ep.persistence.entity.pm.authorization.PmOrgProfile;
 import my.ep.persistence.entity.pm.common.PmStatus;
+import my.ep.persistence.entity.ss.quationtender.ScQtCheckList;
+import my.ep.persistence.entity.ss.quationtender.ScQtCheckListAttachment;
 import my.ep.util.lookupservice.EpBpmBusinessDelegate;
 import my.ep.web.backingbean.BaseBackingBean;
 import my.ep.web.backingbean.fl.cr.ContractRequestBackingBean;
@@ -73,31 +76,54 @@ public class FulfilmentBackingBean extends BaseBackingBean<FulfilmentManagedBean
 	public FulfilmentBackingBean(){
 
 	}
+	public void handleFileUpload(FileUploadEvent event) {
+		FlAttachment attachment = new FlAttachment();
 
-	public void fileUpload(FileUploadEvent event) {
-		UploadedFile file = event.getFile();
+		List<FlAttachment> attachmentList=this.getManagedBean().getAttachmentList();
+		
+		FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_INFO,	"The file was uploaded successfully.", null);
+		FacesContext.getCurrentInstance().addMessage(null, message);
+		
+		fileUpload(event.getFile(), attachment);
+		attachmentList.add(attachment);
+		System.out.println("Attach size ::: "+attachmentList.size());
+		System.out.println("file name "+attachment.getFileName());
+		
+	}
+
+	public void fileUpload(UploadedFile file, FlAttachment attachment) {
+		
 		String fileName = file.getFileName();
 		byte[] fileBytes = file.getContents();
-		log.info("Processed uploaded file " + fileName + " of size:"+ fileBytes.length);
-		this.getManagedBean().getFlAttachment().setFileName(fileName);
-		this.getManagedBean().getFlAttachment().setFileDescription("File uploded for Fulfilment Req Order");
-		this.getManagedBean().getFlAttachment().setFilePath("D:\\upload");
-		FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_INFO,"The file was uploaded successfully.", null);
-		FacesMessage msg = new FacesMessage("Succesful", event.getFile().getFileName() + " is uploaded.");  
-		FacesContext.getCurrentInstance().addMessage(null, msg);  
+		Timestamp date = new Timestamp(System.currentTimeMillis());
+
+		attachment.setCreatedBy(1L);
+		attachment.setCreatedDate(date);
+		attachment.setChangedBy(1L);
+
+		attachment.setFileName(fileName);
+		attachment.setFileDescription("File uploded for Fulfilment Req Order");
+		File theDir = new File("\\upload\\");
+
+		// if the directory does not exist, create it
+		if (!theDir.exists()) {
+
+			theDir.mkdir();
+			System.out.println("creating directory: " + theDir);
+		}
+		attachment.setFilePath(theDir + "\\" + fileName);
+		System.out.println("=======get File path===="
+				+ attachment.getFilePath());
 		FileOutputStream fos;
 		try {
-			fos = new FileOutputStream("D:\\upload\\" + fileName);
+			fos = new FileOutputStream(theDir + "\\" + fileName);
 			fos.write(fileBytes);
 			fos.close();
 		} catch (FileNotFoundException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		FacesContext.getCurrentInstance().addMessage(null, message);
 	}
 
 	public String determineIcon(FlAttachment attachment) {

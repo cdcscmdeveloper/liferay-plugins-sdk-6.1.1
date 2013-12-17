@@ -57,6 +57,9 @@ public class FulfilmentOrderManagedBean extends BaseManagedBean {
 	private DualListModel<String> approverModel;
 	private String selectedLovDelAddr;
 	
+	private String factoringCheck="false";
+	private String docType;
+	
 
 	public String getTaskName() {
 		return taskName;
@@ -383,5 +386,32 @@ public class FulfilmentOrderManagedBean extends BaseManagedBean {
 		this.stopRequestId = stopRequestId;
 	}
 
-	
+	/**
+	 * @return the factoringCheck
+	 */
+	public String getFactoringCheck() {
+		return factoringCheck;
+	}
+
+	/**
+	 * @param factoringCheck the factoringCheck to set
+	 */
+	public void setFactoringCheck(String factoringCheck) {
+		this.factoringCheck = factoringCheck;
+	}
+
+	/**
+	 * @return the docType
+	 */
+	public String getDocType() {
+		return docType;
+	}
+
+	/**
+	 * @param docType the docType to set
+	 */
+	public void setDocType(String docType) {
+		this.docType = docType;
+	}
+
 }

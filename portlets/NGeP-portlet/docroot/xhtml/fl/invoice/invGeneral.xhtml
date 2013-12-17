@@ -83,7 +83,7 @@
 				<td><p:outputLabel value="Email" /></td>
 				<td><p:inputText size="35" value="KBB.XY@gmail.com"
 						disabled="true" /></td>
-				<td><p:outputLabel value="Invoice Date" /></td>
+				<td><p:outputLabel value="Submission Date" /></td>
 				<td><p:inputText size="20" value=" - SYSTEM DATE - "
 						disabled="true" /></td>
 			</tr>
@@ -137,10 +137,11 @@
 		<p:panel header="Supplier / Factoring Company" />
 		<table style="width: 100%">
 			<tr>
-				<td style="width: 97px;"><p:outputLabel value="Factored?" /></td>
-				<td><p:selectOneRadio value="No">
+				<td style="width: 97px;"><p:outputLabel value="Factored" /></td>
+				<td><p:selectOneRadio value="#{invoiceBackingBean.managedBean.factoringCheck}">
 						<f:selectItem itemLabel="Yes" itemValue="true" />
 						<f:selectItem itemLabel="No" itemValue="false" />
+						<p:ajax event="change" process="@this" listener="#{invoiceBackingBean.factoringChecked}" update="@(.factStyle)" partialSubmit="true" />
 					</p:selectOneRadio></td>
 				<td style="width: 140px;" valign="top" rowspan="4"><p:outputLabel
 						value="Bank Address" /></td>
@@ -148,13 +149,13 @@
 			</tr>
 			<tr>
 				<td><p:outputLabel value="Bank Code" /></td>
-				<td><p:selectOneMenu style="width: 207px;margin-bottom:5px;">
+				<td><p:selectOneMenu style="width: 207px;margin-bottom:5px;"  disabled="#{invoiceBackingBean.managedBean.factoringCheck eq 'false'}" styleClass="factStyle">
 						<f:selectItem itemLabel="Select One" itemValue="" />
 					</p:selectOneMenu></td>
 			</tr>
 			<tr>
 				<td><p:outputLabel value="Account NO" /></td>
-				<td><p:selectOneMenu style="width: 207px;margin-bottom:5px;">
+				<td><p:selectOneMenu style="width: 207px;margin-bottom:5px;" disabled="#{invoiceBackingBean.managedBean.factoringCheck eq 'false'}" styleClass="factStyle">
 						<f:selectItem itemLabel="Select One" itemValue="" />
 					</p:selectOneMenu></td>
 			</tr>

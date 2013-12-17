@@ -23,7 +23,24 @@ public class PaymentMatchManagedBean extends BaseManagedBean{
 	private static final long serialVersionUID = 1L;
 
 	private FlPaymentAdvice paymentAdvice;
+
+	// for Deduction panel display	
+	private String docType;
 	
+
+	/**
+	 * @return the docType
+	 */
+	public String getDocType() {
+		return docType;
+	}
+
+	/**
+	 * @param docType the docType to set
+	 */
+	public void setDocType(String docType) {
+		this.docType = docType;
+	}
 
 	/**
 	 * @return the paymentAdvice
