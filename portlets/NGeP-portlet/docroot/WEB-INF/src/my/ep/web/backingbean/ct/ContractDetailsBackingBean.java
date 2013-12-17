@@ -945,7 +945,7 @@ public class ContractDetailsBackingBean extends BaseBackingBean<ContractDetailsM
 	
 	public boolean isSupplier() {
 		FacesScopes facesScopes = new FacesScopes();
-		return facesScopes.hasRoleUser(RoleCode.OC_CHAIRPERSON.value());
+		return (facesScopes.hasRoleUser(RoleCode.SUPPLIER_ADMIN.value()) ||(facesScopes.hasRoleUser(RoleCode.SUPPLIER_USER.value())));
 	}
 	
 	public String gotoAssociatePage() {

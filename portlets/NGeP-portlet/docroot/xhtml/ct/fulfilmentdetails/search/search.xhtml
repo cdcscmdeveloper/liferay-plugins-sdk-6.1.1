@@ -79,25 +79,25 @@
 		     <p:column><h:outputText value="#{data.loaNo}" /></p:column>	
 			 <p:column> <h:outputText value="Active"/> </p:column>	
 			 <p:column styleClass="column-align-center">
-				<p:commandLink action="#{contractDetailsBackingBean.gotoSuspendPage}" rendered="#{contractDetailsBackingBean.isContractAdmin()}">
+				<p:commandLink action="#{contractDetailsBackingBean.gotoSuspendPage}" rendered="#{!contractDetailsBackingBean.isSupplier()}">
 				   <f:setPropertyActionListener target="#{contractDetailsBackingBean.managedBean.ctContract}" value="#{data}" />
 			    <p:graphicImage library="ep/images/design" name="pause.png" value="/resources/ep/images/design/pause.png" 
 			       title="Suspend Contract" />
 				</p:commandLink>
 				<p:spacer width="7"/>
-				<p:commandLink action="#{contractDetailsBackingBean.gotoTerminatePage}" rendered="#{contractDetailsBackingBean.isContractAdmin()}">
+				<p:commandLink action="#{contractDetailsBackingBean.gotoTerminatePage}" rendered="#{!contractDetailsBackingBean.isSupplier()}">
 				   <f:setPropertyActionListener target="#{contractDetailsBackingBean.managedBean.ctContract}" value="#{data}" />
 				   <p:graphicImage library="ep/images/design" name="terminate.png" value="/resources/ep/images/design/terminate.png" 
 				   title="Termination" />
 			    </p:commandLink>
 				<p:spacer width="7"/>
-				  <p:commandLink action="#{contractDetailsBackingBean.gotoAmendPage}" rendered="#{contractDetailsBackingBean.isContractAdmin()}">
+				  <p:commandLink action="#{contractDetailsBackingBean.gotoAmendPage}" rendered="#{!contractDetailsBackingBean.isSupplier()}">
 				     <f:setPropertyActionListener target="#{contractDetailsBackingBean.managedBean.ctContract}" value="#{data}" />
 					 <p:graphicImage library="ep/images/design" name="revise.png" value="/resources/ep/images/design/revise.png" 
 					 title="Amendment" />
 				   </p:commandLink>
 				   <p:spacer width="7"/>
-				   <p:commandLink action="#{contractDetailsBackingBean.gotoViewPage}" rendered="#{contractDetailsBackingBean.isContractAdmin()}">
+				   <p:commandLink action="#{contractDetailsBackingBean.gotoViewPage}">
 				    <f:setPropertyActionListener target="#{contractDetailsBackingBean.managedBean.ctContract}" value="#{data}" />
 					<p:graphicImage library="ep/images/design" name="document.png" value="/resources/ep/images/design/document.png" 
 					title="View Agreement" />
