@@ -219,7 +219,7 @@ public class SupplierBackingBean extends BaseBackingBean<SupplierManagedBean> {
             	 this.getManagedBean().getContractVer().setDocType(ContractConst.DOC_TYPE_CONTRACT_TERMINATION);
             	// this.getManagedBean().getContractVer().setCtTermination(this.getManagedBean().getTermination());
             } 
-            
+            reqDTO.setCtContract(this.getManagedBean().getContractVer().getCtContract());
             reqDTO.setCtContractVer(this.getManagedBean().getContractVer());
 			reqDTO.setTaskId(this.getManagedBean().getTaskId());
 			reqDTO.setOutcome(action);
