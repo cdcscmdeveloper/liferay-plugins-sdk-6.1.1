@@ -27,7 +27,7 @@
 				value="#{specificationBackingBean.managedBean.scQtSpec.evaluationType}">
 				<f:selectItem itemLabel="One Tier" itemValue="1" />
 				<f:selectItem itemLabel="Two Tier" itemValue="2" />
-
+               <p:ajax event="change" update="weightage" listener="#{specificationBackingBean.tierEvent}"></p:ajax>
 			</p:selectOneRadio>
 
 
@@ -55,17 +55,6 @@
 				value="#{specificationBackingBean.managedBean.scQtSpec.justificationRemark}"></p:inputText>
 
 
-			<h:outputLabel value="#{lbl['lbl.sc.spec.req.approval']}" />
-			<p:selectOneRadio
-				value="#{specificationBackingBean.managedBean.scQtSpec.approvalReq}">
-				<f:selectItem itemLabel="Yes" itemValue="true" />
-				<f:selectItem itemLabel="No" itemValue="false" />
-
-			</p:selectOneRadio>
-
-			<h:outputLabel value="#{lbl['lbl.sc.spec.status']}" />
-			<p:inputText
-				value="#{specificationBackingBean.managedBean.scQtSpec.pmStatus.statusId}"></p:inputText>
 
 			<h:outputLabel value="*#{lbl['lbl.sc.spec.contrat.type']}" />
 			<h:panelGroup>
@@ -116,7 +105,6 @@
 
 			<h:outputLabel value="#{lbl['lbl.sc.spec.approve.remarks']}" />
 			<p:inputTextarea rows="3" cols="117"
-				value="#{specificationBackingBean.managedBean.scQtSpec.justificationRemark}"
 				autoResize="false"></p:inputTextarea>
 
 		</h:panelGrid>

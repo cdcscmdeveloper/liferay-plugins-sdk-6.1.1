@@ -3,193 +3,136 @@
 	xmlns:h="http://java.sun.com/jsf/html"
 	xmlns:ui="http://java.sun.com/jsf/facelets"
 	xmlns:p="http://primefaces.org/ui"
-	xmlns:c="http://java.sun.com/jsp/jstl/core">
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:ac="http://ac.my/jsf/composite/cc">
+
+
+
+
+
+	<p:panel header="#{lbl['lbl.sc.spec.weight.tech']}" toggleable="true">
+	
+	<h:panelGrid columns="3" id="weightage" rendered="#{specificationBackingBean.managedBean.scQtSpec.evaluationType eq'2'}">
+
+			
+					<h:outputText value="Passing Score(%)" />
+			
+					<p:inputText  ></p:inputText>
+			        <h:outputText value="/100 "/>
+
+	
+		</h:panelGrid>
+	
+		<p:dataTable id="technicalWeigtage" var="Technical" 
+			  value="#{specificationBackingBean.managedBean.weightageTechnical}" 
+			 selection="#{specificationBackingBean.managedBean.weightageTechnicalSelect}" rowIndexVar="index"
+			 editable="true"
+			  rowkey="#{Technicall}">
+			 <ac:paginator for="technicalWeigtage"></ac:paginator>
+		<!--  <p:column selectionMode="multiple" style="width:2%;"/> -->
+			<p:column headerText="#{lbl['lbl.sc.spec.weight.weight']}">
+				<p:inputText value="#{Technical.weightageTitle}" size="50"/>
+			</p:column>
+			<p:column headerText="#{lbl['lbl.sc.spec.weight.percent']}">
+				<p:inputText value="#{Technical.weightagePercentage}" />
+			</p:column>
+			<!-- <p:column headerText="#{lbl['lbl.sc.spec.stage.action']}" style="width:10%">
+				<p:commandLink>
+					<p:graphicImage library="ep/images/design" name="edit.png"
+						value="/resources/ep/images/design/edit.png" />
+
+				</p:commandLink>
+			</p:column> -->
+
+		</p:dataTable>
+      <p:spacer height="15"></p:spacer>
+		<div align="right">
+			<p:commandButton value="#{lbl['lbl.sc.spec.stage.btn.add']}" process="@this,technicalWeigtage" partialSubmit="true"
+			action="#{specificationBackingBean.weightageTechnical}"  icon="ui-icon-add" update="technicalWeigtage" />
+			<p:commandButton value="#{lbl['lbl.sc.spec.stage.btn.delete']}"  icon="ui-icon-delete"/>
+
+		</div>
+	</p:panel>
+
+
+
 
 
 	
-		
-		
-		<p:panel header="TECHNICAL EVALUATION" toggleable="true">
-<p:dataTable var="specificationdetails" value="#{searchQtnTenderBB.managedBean.qtnTenders}" editable="true">
 
-<p:ajax event="rowEdit" listener="#{searchQtnTenderBB.onEdit}"  />  
- <p:ajax event="rowEditCancel" listener="#{searchQtnTenderBB.onCancel}"  /> 
+		<h:panelGrid columns="3">
 
-<p:column headerText="No" >
-<!-- <h:outputText value="1"></h:outputText> -->
- <p:cellEditor>  
-                <f:facet name="output">  
-                   <h:outputText value="1"></h:outputText> 
-                </f:facet>  
-                <f:facet name="input">  
-                    <p:inputText value="2" />  
-                </f:facet>  
-            </p:cellEditor> 
-</p:column>
+			
+					<h:outputText value="#{lbl['lbl.sc.spec.weight.total']} " />
+			
+					<p:inputText  readonly="true" disabled="true"></p:inputText>
+			         <h:outputText value="/100 " />
 
-<p:column headerText="Weightage Group" style="width:100%">
-						<!-- <h:outputText value="Arjun"></h:outputText> -->
-						 <p:cellEditor>  
-                <f:facet name="output">  
-                   <h:outputText value="Weightage 123456789062 Group"></h:outputText> 
-                </f:facet>  
-                <f:facet name="input">  
-                    <p:inputText value="Weightage 12345 Group" />  
-                </f:facet>  
-            </p:cellEditor> 
-				</p:column>
-				  
-				   <p:column headerText="Weight">              
-                
-               <!--    <h:outputText value="4355446727" />   -->
-                <p:cellEditor>  
-                <f:facet name="output">  
-                   <h:outputText value="435"></h:outputText> 
-                </f:facet>  
-                <f:facet name="input">  
-                    <p:inputText value="4355446" />  
-                </f:facet>  
-            </p:cellEditor> 
-                
-        </p:column>
-         
-        
-         <p:column headerText="Action" style="width:10%">  
-            <p:rowEditor />  
-           
-                
-        </p:column>  
 
-</p:dataTable>
-       
-       
-        <div align="right"  >
-					<p:commandButton  value="ADD" />
-					
-					</div>
-</p:panel>
-	      
-					
-					
+		</h:panelGrid>
 
-	
-		<p:panel >
 
-			<p:panelGrid  style="width:50%;" styleClass="noBorders tr,noBorders td">
+
+
+
+
+	<p:panel header="#{lbl['lbl.sc.spec.weight.finnance']}" toggleable="true">
+		<p:dataTable id="financialweightage" var="financial" 
+			 editable="true" value="#{specificationBackingBean.managedBean.weightageFinancial}" 
+			 selection="#{specificationBackingBean.managedBean.weightageFinancialSelect}" rowIndexVar="index"
+			  rowkey="#{financial}">
+
+       <ac:paginator for="financialweightage"></ac:paginator>
+          <!-- 	 <p:column selectionMode="multiple" style="width:2%;"/>  -->
+			<p:column headerText="#{lbl['lbl.sc.spec.weight.weight']}">
+				<p:inputText value="#{financial.weightageTitle}" size="50" />
+			</p:column>
+			<p:column headerText="#{lbl['lbl.sc.spec.weight.percent']}">
+				<p:inputText value="#{financial.weightagePercentage}" />
+			</p:column>
+		<!-- 	<p:column headerText="#{lbl['lbl.sc.spec.stage.action']}" style="width:10%">
+				<p:commandLink>
+					<p:graphicImage library="ep/images/design" name="edit.png"
+						value="/resources/ep/images/design/edit.png" />
+
+				</p:commandLink>
+			</p:column> -->
+
+		</p:dataTable>
+		 <p:spacer height="15"></p:spacer>
+		<div align="right">
+			<p:commandButton value="#{lbl['lbl.sc.spec.stage.btn.add']}" process="@this,financialweightage" partialSubmit="true"
+			action="#{specificationBackingBean.weightageFinancial}"	 icon="ui-icon-add" update="financialweightage"/>
+			<p:commandButton value="#{lbl['lbl.sc.spec.stage.btn.delete']}"  icon="ui-icon-delete"/>
+
+		</div>
+	</p:panel>
+
+
+
+
+
+	<p:panel>
+
+		<h:panelGrid columns="3">
+
+			
+					<h:outputText value="#{lbl['lbl.sc.spec.weight.total']} " />
 				
-				<p:row>
-                <p:column>
-				<h:outputLabel  value="Total " />
-				</p:column>
-				 <p:column>
-				  <p:inputText value="123456789" readonly="true"></p:inputText>
-	          </p:column>
-	        
-	           </p:row>
-                
-                  
-</p:panelGrid>
-
-</p:panel>					
-					
+					<p:inputText readonly="true" disabled="true"></p:inputText>
+			
+                     <h:outputText value="/100 " />
 
 
 
-		<p:panel header="FINANCIAL EVALUATION" toggleable="true">
-<p:dataTable var="specificationdetails" value="#{searchQtnTenderBB.managedBean.qtnTenders}" editable="true">
 
-<p:ajax event="rowEdit" listener="#{searchQtnTenderBB.onEdit}"  />  
- <p:ajax event="rowEditCancel" listener="#{searchQtnTenderBB.onCancel}"  /> 
+		</h:panelGrid>
 
-<p:column headerText="No" >
-<!-- <h:outputText value="1"></h:outputText> -->
- <p:cellEditor>  
-                <f:facet name="output">  
-                   <h:outputText value="1"></h:outputText> 
-                </f:facet>  
-                <f:facet name="input">  
-                    <p:inputText value="2" />  
-                </f:facet>  
-            </p:cellEditor> 
-</p:column>
+	</p:panel>
 
-<p:column headerText="Weightage Group" style="width:100%">
-						<!-- <h:outputText value="Arjun"></h:outputText> -->
-						 <p:cellEditor>  
-                <f:facet name="output">  
-                   <h:outputText value="Weightage 1234567890622344 Group"></h:outputText> 
-                </f:facet>  
-                <f:facet name="input">  
-                    <p:inputText value="Weightage 1234523443234 Group" />  
-                </f:facet>  
-            </p:cellEditor> 
-				</p:column>
-				  
-				   <p:column headerText="Weight">              
-                
-               <!--    <h:outputText value="4355446727" />   -->
-                <p:cellEditor>  
-                <f:facet name="output">  
-                   <h:outputText value="435345543"></h:outputText> 
-                </f:facet>  
-                <f:facet name="input">  
-                    <p:inputText value="43554461233" />  
-                </f:facet>  
-            </p:cellEditor> 
-                
-        </p:column>
-         
-        
-         <p:column headerText="Action" style="width:10%">  
-            <p:rowEditor />  
-           
-                
-        </p:column>  
 
-</p:dataTable>
-    <div align="right"  >
-					<p:commandButton  value="ADD" />
-					
-					</div>   
-</p:panel>
-	       
-					
-					
 
-	
-		<p:panel >
 
-			<p:panelGrid  style="width:50%;" styleClass="noBorders tr,noBorders td">
-				
-				<p:row>
-                <p:column>
-				<h:outputLabel  value="Total " />
-				</p:column>
-				 <p:column>
-				  <p:inputText value="123456789123" readonly="true"></p:inputText>
-	          </p:column>
-	        
-	           </p:row>
-                
-                
-                
-                <p:row>
-                <p:column>
-				<h:outputLabel  value="Total Weightage " />
-				</p:column>
-				 <p:column>
-				  <p:inputText value="1234567894567890" readonly="true"></p:inputText>
-	          </p:column>
-	        
-	           </p:row>
-                  
-</p:panelGrid>
 
-</p:panel>					
-									
-				
-				
-				
-				
-					
+
 </ui:composition>

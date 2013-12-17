@@ -26,6 +26,13 @@
 			<p:column headerText="#{lbl['lbl.sc.spec.stage.type']}" style="width:40%">
 				<h:outputText value="Upload"></h:outputText>
 			</p:column>
+			<p:column headerText="#{lbl['lbl.sc.spec.stage.mandatory']}" style="width:40%">
+			<p:selectOneMenu value="#{stageoneTechnical.manditory}">
+					<f:selectItem itemLabel="Select One" itemValue="null" />
+					<f:selectItem itemLabel="Yes" itemValue="1" />
+					<f:selectItem itemLabel="No" itemValue="0" />
+					</p:selectOneMenu>
+			</p:column>
 
 			<p:column headerText="#{lbl['lbl.sc.spec.stage.document']}" style="width:40%">
 				<ui:include src="/xhtml/ss/specification/upload.xhtml" />
@@ -45,7 +52,7 @@
 			<p:column headerText="#{lbl['lbl.sc.spec.stage.order']}">
 				<p:inputText value="#{stageoneTechnical.checklistSeq}"></p:inputText>
 			</p:column>
-			<p:column headerText="#{lbl['lbl.sc.spec.stage.action']}" style="width:10%">
+			<!-- <p:column headerText="#{lbl['lbl.sc.spec.stage.action']}" style="width:10%">
 				<p:commandLink>
 					<p:graphicImage library="ep/images/design" name="edit.png"
 						value="/resources/ep/images/design/edit.png" />
@@ -55,10 +62,10 @@
 					<p:graphicImage library="ep/images/design" name="delete.png"
 						value="/resources/ep/images/design/delete.png" />
 
-				</p:commandLink>
+				</p:commandLink> 
 
 
-			</p:column>
+			</p:column>-->
 		</p:dataTable>
 		<p:spacer height="20"></p:spacer>
 
@@ -87,6 +94,13 @@
 			<p:column headerText="#{lbl['lbl.sc.spec.stage.type']}" style="width:40%">
 				<h:outputText value="Upload"></h:outputText>
 			</p:column>
+			<p:column headerText="#{lbl['lbl.sc.spec.stage.mandatory']}" style="width:40%">
+			<p:selectOneMenu value="#{stageoneaddTechnical.manditory}">
+					<f:selectItem itemLabel="Select One" itemValue="null" />
+					<f:selectItem itemLabel="Yes" itemValue="1" />
+					<f:selectItem itemLabel="No" itemValue="0" />
+					</p:selectOneMenu>
+			</p:column>
 			<p:column headerText="#{lbl['lbl.sc.spec.stage.document']}" style="width:40%">
 				<ui:include src="/xhtml/ss/specification/upload.xhtml" />
 				<p:commandLink oncomplete="uploadS1TechAdd.show();return false;"
@@ -105,7 +119,7 @@
 				<p:inputText value="#{stageoneaddTechnical.checklistSeq}"></p:inputText>
 			</p:column>
 
-			<p:column headerText="#{lbl['lbl.sc.spec.stage.action']}" style="width:10%">
+			<!-- <p:column headerText="#{lbl['lbl.sc.spec.stage.action']}" style="width:10%">
 				<p:commandLink>
 					<p:graphicImage library="ep/images/design" name="edit.png"
 						value="/resources/ep/images/design/edit.png" />
@@ -118,7 +132,7 @@
 				</p:commandLink>
 
 
-			</p:column>
+			</p:column> -->
 
 		</p:dataTable>
 		<p:spacer height="20"></p:spacer>
@@ -149,6 +163,13 @@
 			<p:column headerText="#{lbl['lbl.sc.spec.stage.type']}" style="width:40%">
 				<h:outputText value="Upload"></h:outputText>
 			</p:column>
+		<p:column headerText="#{lbl['lbl.sc.spec.stage.mandatory']}" style="width:40%">
+			<p:selectOneMenu value="#{stageonefinanceProp.manditory}">
+					<f:selectItem itemLabel="Select One" itemValue="null" />
+					<f:selectItem itemLabel="Yes" itemValue="1" />
+					<f:selectItem itemLabel="No" itemValue="0" />
+					</p:selectOneMenu>
+			</p:column>
 			<p:column headerText="#{lbl['lbl.sc.spec.stage.document']}" style="width:40%">
 				<ui:include src="/xhtml/ss/specification/upload.xhtml" />
 				<p:commandLink oncomplete="uploadS1Fin.show();return false;"
@@ -167,7 +188,7 @@
 			<p:column headerText="#{lbl['lbl.sc.spec.stage.order']}">
 				<p:inputText value="#{stageonefinanceProp.checklistSeq}"></p:inputText>
 			</p:column>
-			<p:column headerText="#{lbl['lbl.sc.spec.stage.action']}" style="width:10%">
+			<!-- <p:column headerText="#{lbl['lbl.sc.spec.stage.action']}" style="width:10%">
 				<p:commandLink>
 					<p:graphicImage library="ep/images/design" name="edit.png"
 						value="/resources/ep/images/design/edit.png" />
@@ -178,7 +199,7 @@
 						value="/resources/ep/images/design/delete.png" />
 
 				</p:commandLink>
-			</p:column>
+			</p:column> -->
 
 		</p:dataTable>
 		<p:spacer height="20"></p:spacer>
@@ -209,6 +230,13 @@
 			<p:column headerText="#{lbl['lbl.sc.spec.stage.type']}" style="width:40%">
 				<h:outputText value="Upload"></h:outputText>
 			</p:column>
+			<p:column headerText="#{lbl['lbl.sc.spec.stage.mandatory']}" style="width:40%">
+			<p:selectOneMenu value="#{stageonefinanceAdd.manditory}">
+					<f:selectItem itemLabel="Select One" itemValue="null" />
+					<f:selectItem itemLabel="Yes" itemValue="1" />
+					<f:selectItem itemLabel="No" itemValue="0" />
+					</p:selectOneMenu>
+			</p:column>
 			<p:column headerText="#{lbl['lbl.sc.spec.stage.document']}" style="width:40%">
 				<ui:include src="/xhtml/ss/specification/upload.xhtml" />
 				<p:commandLink oncomplete="uploadS1FinAdd.show();return false;"
@@ -227,7 +255,7 @@
 			<p:column headerText="#{lbl['lbl.sc.spec.stage.order']}">
 				<p:inputText value="#{stageonefinanceAdd.checklistSeq}"></p:inputText>
 			</p:column>
-			<p:column headerText="#{lbl['lbl.sc.spec.stage.action']}" style="width:10%">
+			<!-- <p:column headerText="#{lbl['lbl.sc.spec.stage.action']}" style="width:10%">
 				<p:commandLink>
 					<p:graphicImage library="ep/images/design" name="edit.png"
 						value="/resources/ep/images/design/edit.png" />
@@ -238,7 +266,7 @@
 						value="/resources/ep/images/design/delete.png" />
 
 				</p:commandLink>
-			</p:column>
+			</p:column> -->
 
 		</p:dataTable>
 		<p:spacer height="20"></p:spacer>
@@ -259,10 +287,10 @@
 			</p:selectOneRadio>
 			<h:outputText value="#{lbl['lbl.sc.spec.stage.sample.date.time']}" />
 			<p:calendar
-				value="#{specificationBackingBean.managedBean.scQtSpec.approvalDate}"
+				value="#{specificationBackingBean.managedBean.scQtSpec.sampleClosingDate}"
 				showOn="button"></p:calendar>
 			<h:outputText value="#{lbl['lbl.sc.spec.stage.sample.info']}" />
-			<p:inputTextarea rows="3" cols="40" autoResize="false"></p:inputTextarea>
+			<p:inputTextarea rows="3" cols="40" value="#{specificationBackingBean.managedBean.scQtSpec.sampleRemark}" autoResize="false"></p:inputTextarea>
 		</h:panelGrid>
 	</p:panel>
 </ui:composition>
