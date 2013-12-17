@@ -136,8 +136,6 @@ public class PurchaseRequestBackingBean extends BaseBackingBean<PurchaseRequestM
 			reqDTO.setSelectedApprovers(getManagedBean().getApproverModel().getTarget());
 			reqDTO.setAvailableApprovers(getManagedBean().getApproverModel().getSource());
 			reqDTO.setFlAttachmentList(flBB.getManagedBean().getAttachmentList());
-			System.out.println("SIZE attachements   ::: "+flBB.getManagedBean().getAttachmentList().size());
-			System.out.println("SIZE remarks list   ::: "+flBB.getManagedBean().getRemarkList().size());
 			reqDTO.setFlRemark(flBB.getManagedBean().getRemarkList().get(0));
 			reqDTO.setOutcome(action);
 			reqDTO.setToken(token);
@@ -149,9 +147,6 @@ public class PurchaseRequestBackingBean extends BaseBackingBean<PurchaseRequestM
 			String fileDesc = flBB.getManagedBean().getFlAttachment().getFileDescription();
 			String filePath = flBB.getManagedBean().getFlAttachment().getFilePath();
 			reqDTO.setFlAttachment(flBB.getManagedBean().getFlAttachment());
-			System.out.println("fileName::: "+fileName);
-			System.out.println("fileDesc::: "+fileDesc);
-			System.out.println("filePath::: "+filePath);
 			FulfilmentResDTO resDTO = fulfilmentRequestSO.saveFulfillmentRequest(reqDTO);
 			if (resDTO.isSuccessful()) {
 				log.info("Record saved successfully");
@@ -194,7 +189,7 @@ public class PurchaseRequestBackingBean extends BaseBackingBean<PurchaseRequestM
 		ctReqDTO.setCtContract(getManagedBean().getCtContract());
 		IContractAmendmentSO ctAmendmentSO = (IContractAmendmentSO) BusinessDelegate.getInstance().getServiceObject("ct",IContractAmendmentSO.class);
 		ContractAmendmentResDTO resDTO = ctAmendmentSO.getActiveLocation(ctReqDTO);
-		System.out.println("Size Of List ::: "	+ resDTO.getAddressTypeList().size());
+		//System.out.println("Size Of List ::: "	+ resDTO.getAddressTypeList().size());
 		getManagedBean().setAddressTypesList(resDTO.getAddressTypeList());
 	}
 
@@ -205,9 +200,7 @@ public class PurchaseRequestBackingBean extends BaseBackingBean<PurchaseRequestM
 	public String removeAddRow() {
 		System.out.println("we are in Remove Function:::: ");
 		int delAddressListSize = getManagedBean().getSelectedAddressRows().size();
-		System.out.println("selected list size is:::: "+delAddressListSize);
 		if(delAddressListSize==getManagedBean().getFulfilmentRequest().getFlDeliveryAddresses().size()){
-			System.out.println("Size is equal::::::: ");
 			getManagedBean().getFulfilmentRequest().getFlDeliveryAddresses().clear();
 		}else{
 			for (FlDeliveryAddress flDeliveryAddress : getManagedBean().getSelectedAddressRows()) {
@@ -245,7 +238,6 @@ public class PurchaseRequestBackingBean extends BaseBackingBean<PurchaseRequestM
 	}
 
 	public String removeItemRow() {
-		System.out.println("we are in Item  Remove Function:::: ");
 		int delItemsListSize=getManagedBean().getSelectedItemsRows().size();
 		if(delItemsListSize==getManagedBean().getFulfilmentRequest().getFlFulfilmentItems().size()){
 			getManagedBean().getFulfilmentRequest().getFlFulfilmentItems().clear();
