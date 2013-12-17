@@ -74,7 +74,7 @@
 		   <p:panel id="advancePanel">
                <h:panelGrid columns="3">
                   <h:outputLabel value="#{lbl['lbl.ct.asearch.model.table2.cno']}" />
-                  <p:inputText value="#{contractDetailsBackingBean.managedBean.LOANo}" style="width:150px;"/>
+                  <p:inputText value="#{contractDetailsBackingBean.managedBean.ctLOANo}" style="width:150px;"/>
                   <p:commandButton value="Search" process="@this" icon="ui-icon-search"
                     actionListener="#{contractDetailsBackingBean.advanceContractSearch()}" update="advanceCtSearch"/>
               </h:panelGrid>
