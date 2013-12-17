@@ -7,6 +7,7 @@ import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.RequestScoped;
 import javax.faces.context.FacesContext;
+import javax.faces.event.AjaxBehaviorEvent;
 import javax.servlet.http.HttpServletRequest;
 
 import my.ep.biz.service.fl.order.IFulfilmentOrderSO;
@@ -308,7 +309,9 @@ public class FulfilmentOrderBackingBean extends BaseBackingBean<FulfilmentOrderM
 			getManagedBean().setFlRequest(resDTO.getFlFulfilmentRequest());
 			//			flOrderBB.getManagedBean().setFlRequest(resDTO.getFlOrder().getFlFulfilmentRequest());
 			getManagedBean().setContractRequest(Boolean.TRUE);
-
+		}else if(null==res.getProcessName() || res.getProcessName().equalsIgnoreCase("")){
+			System.out.println("Process name is NUllllllllllllllll");
+			
 		}else {
 			FulfilmentReqDTO flReqDTO = new FulfilmentReqDTO();
 			FulfilmentResDTO resDTO = new FulfilmentResDTO();
@@ -321,16 +324,34 @@ public class FulfilmentOrderBackingBean extends BaseBackingBean<FulfilmentOrderM
 			flReqDTO.setFlFulfilmentRequest(resDTO.getFlFulfilmentRequest());
 
 			FulfilmentBackingBean flBB = new FulfilmentBackingBean();
-			flBB.initializeRemarkAndAttachement(resDTO.getRemarkList(), flBB.getManagedBean().getAttachmentList());
+			if(resDTO.getFlFulfilmentRequest().getDocType().equalsIgnoreCase("PR")){
+				flBB.initializeRemarkAndAttachement(flBB.getManagedBean().getRemarkList(), flBB.getManagedBean().getAttachmentList());
+			}else{
+				flBB.initializeRemarkAndAttachement(resDTO.getRemarkList(), flBB.getManagedBean().getAttachmentList());
+			}
+			
 			//		FulfilmentOrderBackingBean florderBB = new FulfilmentOrderBackingBean();
 			getManagedBean().setFlRequest(resDTO.getFlFulfilmentRequest());
 			getManagedBean().setTaskId(taskId);
 			getManagedBean().setOutComes(res.getAction());
+			System.out.println("doc type::::: "+resDTO.getFlFulfilmentRequest().getDocType());
+			getManagedBean().setDocType(resDTO.getFlFulfilmentRequest().getDocType());
+			
 			//			florderBB.getManagedBean().setTempLoginId(this.getManagedBean().getTempLoginId());
 
 			//			FacesContext fc = FacesContext.getCurrentInstance();
 			//			fc.getApplication().getNavigationHandler().handleNavigation(fc, null, "/xhtml/fl/contractorder/coBasePage.xhtml");
 		}  
+	}
+	
+	public void factoringChecked(AjaxBehaviorEvent e) {
+		
+		System.out.println("====enter process checked====");
+		// String dueDate = (String) ((UIOutput)e.getSource()).getValue();
+		String id = (String) e.getComponent().getAttributes().get("value");
+		System.out.println("=======get id value=====" + id);
+		getManagedBean().setFactoringCheck(id);
+
 	}
 
 }
