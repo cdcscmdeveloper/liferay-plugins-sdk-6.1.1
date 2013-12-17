@@ -16,6 +16,7 @@ import my.ep.persistence.entity.ss.quationtender.ScQtCheckList;
 import my.ep.persistence.entity.ss.quationtender.ScQtDeduction;
 import my.ep.persistence.entity.ss.quationtender.ScQtRemark;
 import my.ep.persistence.entity.ss.quationtender.ScQtSpec;
+import my.ep.persistence.entity.ss.quationtender.ScQtWeightage;
 import my.ep.persistence.entity.ss.quationtender.ScRemark;
 import my.ep.web.backingbean.ss.specification.SpecificationCompilanceBean;
 import my.ep.web.managedbean.BaseManagedBean;
@@ -70,7 +71,10 @@ public class SpecificationManagedBean extends BaseManagedBean {
 	
 	public boolean isSampleReq=true;
 	public String approvalDate;
-	
+	private List<ScQtWeightage> weightageTechnical;
+	private List<ScQtWeightage> weightageFinancial;
+	private List<ScQtWeightage> weightageTechnicalSelect;
+	private List<ScQtWeightage> weightageFinancialSelect;
 	
 	public SpecificationManagedBean(){
 		
@@ -398,6 +402,64 @@ public class SpecificationManagedBean extends BaseManagedBean {
 
 	public void setSpecificationDataType(Object specificationDataType) {
 		this.specificationDataType = specificationDataType;
+	}
+
+	/**
+	 * @return the weightageTechnical
+	 */
+	public List<ScQtWeightage> getWeightageTechnical() {
+		return weightageTechnical;
+	}
+
+	/**
+	 * @param weightageTechnical the weightageTechnical to set
+	 */
+	public void setWeightageTechnical(List<ScQtWeightage> weightageTechnical) {
+		this.weightageTechnical = weightageTechnical;
+	}
+
+	/**
+	 * @return the weightageFinancial
+	 */
+	public List<ScQtWeightage> getWeightageFinancial() {
+		return weightageFinancial;
+	}
+
+	/**
+	 * @param weightageFinancial the weightageFinancial to set
+	 */
+	public void setWeightageFinancial(List<ScQtWeightage> weightageFinancial) {
+		this.weightageFinancial = weightageFinancial;
+	}
+
+	/**
+	 * @return the weightageTechnicalSelect
+	 */
+	public List<ScQtWeightage> getWeightageTechnicalSelect() {
+		return weightageTechnicalSelect;
+	}
+
+	/**
+	 * @param weightageTechnicalSelect the weightageTechnicalSelect to set
+	 */
+	public void setWeightageTechnicalSelect(
+			List<ScQtWeightage> weightageTechnicalSelect) {
+		this.weightageTechnicalSelect = weightageTechnicalSelect;
+	}
+
+	/**
+	 * @return the weightageFinancialSelect
+	 */
+	public List<ScQtWeightage> getWeightageFinancialSelect() {
+		return weightageFinancialSelect;
+	}
+
+	/**
+	 * @param weightageFinancialSelect the weightageFinancialSelect to set
+	 */
+	public void setWeightageFinancialSelect(
+			List<ScQtWeightage> weightageFinancialSelect) {
+		this.weightageFinancialSelect = weightageFinancialSelect;
 	}
 
 	
