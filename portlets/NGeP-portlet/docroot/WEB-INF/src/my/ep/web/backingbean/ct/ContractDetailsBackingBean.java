@@ -59,6 +59,7 @@ import my.ep.persistence.entity.pm.authorization.PmUserGroup;
 import my.ep.persistence.entity.pm.authorization.PmUserGroupUser;
 import my.ep.persistence.entity.pm.common.PmCode;
 import my.ep.type.aut.SearchOperator;
+import my.ep.type.pm.RoleCode;
 import my.ep.util.lookupservice.EpBpmBusinessDelegate;
 import my.ep.web.backingbean.BaseBackingBean;
 import my.ep.web.backingbean.ct.agreement.AgreementBackingBean;
@@ -853,6 +854,7 @@ public class ContractDetailsBackingBean extends BaseBackingBean<ContractDetailsM
 		IContractSO contractSO = null;
 		ContractResDTO resDTO  = null;
 		ContractReqDTO reqDTO  = null;
+		AgreementBackingBean aBB = null;
 		
 		try {
 
@@ -860,7 +862,7 @@ public class ContractDetailsBackingBean extends BaseBackingBean<ContractDetailsM
 				contractSO = (IContractSO) BusinessDelegate.getInstance().getServiceObject("ct", IContractSO.class);
 				reqDTO.setContractId(this.getManagedBean().getCtContract().getContractId());
 				resDTO = contractSO.retrieveContract(reqDTO);
-				AgreementBackingBean aBB = new AgreementBackingBean();
+				aBB = new AgreementBackingBean();
 				aBB.getManagedBean().setCtContract(resDTO.getContract());	
 				
 			} catch (Exception e) {
@@ -869,6 +871,7 @@ public class ContractDetailsBackingBean extends BaseBackingBean<ContractDetailsM
 				contractSO = null;
 				resDTO = null;
 				reqDTO = null;
+				aBB= null;
 			}
 
 		return PROCESS_VIEW_PAGE;
@@ -879,6 +882,7 @@ public class ContractDetailsBackingBean extends BaseBackingBean<ContractDetailsM
 		IContractSO contractSO = null;
 		ContractResDTO resDTO  = null;
 		ContractReqDTO reqDTO  = null;
+		SupplierBackingBean sBB = null;
 		
 		try {
 
@@ -886,9 +890,11 @@ public class ContractDetailsBackingBean extends BaseBackingBean<ContractDetailsM
 				contractSO = (IContractSO) BusinessDelegate.getInstance().getServiceObject("ct", IContractSO.class);
 				reqDTO.setContractVerId(this.getManagedBean().getCtContract().getContractId());
 				resDTO = contractSO.retrieveContractVer(reqDTO);
-				SupplierBackingBean aBB = new SupplierBackingBean();
-				aBB.getManagedBean().setChkRenderPage(ContractConst.DOC_TYPE_CHANGE_BANK_ACCOUNT);
-				aBB.getManagedBean().setContractVer(resDTO.getCtContractVer());	
+				if(sBB == null){
+				    sBB = new SupplierBackingBean();
+				}
+				sBB.getManagedBean().setChkRenderPage(ContractConst.DOC_TYPE_CHANGE_BANK_ACCOUNT);
+				sBB.getManagedBean().setContractVer(resDTO.getCtContractVer());	
 				this.getManagedBean().getContractVer().getCtContract().setContractId(this.getManagedBean().getCtContract().getContractId());
 				
 			} catch (Exception e) {
@@ -897,6 +903,7 @@ public class ContractDetailsBackingBean extends BaseBackingBean<ContractDetailsM
 				contractSO = null;
 				resDTO = null;
 				reqDTO = null;
+				sBB = null;
 			}
 
 		return PROCESS_BANK_PAGE;
@@ -907,6 +914,7 @@ public class ContractDetailsBackingBean extends BaseBackingBean<ContractDetailsM
 		IContractSO contractSO = null;
 		ContractResDTO resDTO  = null;
 		ContractReqDTO reqDTO  = null;
+		SupplierBackingBean sBB = null;
 		
 		try {
 
@@ -914,8 +922,10 @@ public class ContractDetailsBackingBean extends BaseBackingBean<ContractDetailsM
 				contractSO = (IContractSO) BusinessDelegate.getInstance().getServiceObject("ct", IContractSO.class);
 				reqDTO.setContractVerId(this.getManagedBean().getCtContract().getContractId());
 				resDTO = contractSO.retrieveContractVer(reqDTO);
-				SupplierBackingBean aBB = new SupplierBackingBean();
-				aBB.getManagedBean().setContractVer(resDTO.getCtContractVer());	
+				if(sBB == null){
+				    sBB = new SupplierBackingBean();
+				}
+				sBB.getManagedBean().setContractVer(resDTO.getCtContractVer());	
 				
 			} catch (Exception e) {
 				e.printStackTrace();
@@ -923,8 +933,19 @@ public class ContractDetailsBackingBean extends BaseBackingBean<ContractDetailsM
 				contractSO = null;
 				resDTO = null;
 				reqDTO = null;
+				sBB = null;
 			}
 		return PROCESS_SUPPLIER_TERMINATE_PAGE;
+	}
+	
+	public boolean isContractAdmin() {
+		FacesScopes facesScopes = new FacesScopes();
+		return facesScopes.hasRoleUser(RoleCode.MIN_CONTRACT_ADMIN.value());
+	}
+	
+	public boolean isSupplier() {
+		FacesScopes facesScopes = new FacesScopes();
+		return facesScopes.hasRoleUser(RoleCode.OC_CHAIRPERSON.value());
 	}
 	
 	public String gotoAssociatePage() {

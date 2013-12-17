@@ -28,7 +28,7 @@ import my.ep.web.managedbean.BaseManagedBean;
  * @author Alam
  * @since 7/11/2013	 
  */
-@ManagedBean
+@ManagedBean (name ="supplierManagedBean")
 @SessionScoped
 public class SupplierManagedBean extends BaseManagedBean {
 

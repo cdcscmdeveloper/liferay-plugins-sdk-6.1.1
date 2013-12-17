@@ -24,6 +24,7 @@ import my.ep.dto.ct.supplier.ContractSupplierReqDTO;
 import my.ep.dto.ct.supplier.ContractSupplierResDTO;
 import my.ep.exception.EpException;
 import my.ep.jaxb.ct.bankaccount.CTBankAccountDataType;
+import my.ep.jaxb.ct.factoring.CTFactoringDataType;
 import my.ep.jaxb.ct.termination.CTContractTerminationDataType;
 import my.ep.persistence.entity.ct.CtContract;
 import my.ep.persistence.entity.ct.CtContractVer;
@@ -63,9 +64,7 @@ public class SupplierBackingBean extends BaseBackingBean<SupplierManagedBean> {
 	public SupplierBackingBean(){
 		
 		
-		if(this.getManagedBean().getAction() == null) {
-			this.getManagedBean().setAction(new String[]{BpmOutcomeConst.BPM_SAVE, BpmOutcomeConst.BPM_SUBMIT});
-		}
+		
 	}
 	
 	private FacesScopes getFacesScopes(){
@@ -115,7 +114,10 @@ public class SupplierBackingBean extends BaseBackingBean<SupplierManagedBean> {
 			
 		}
 		
-		
+         if(this.getManagedBean().getAction() == null) {
+ 			this.getManagedBean().setAction(new String[]{BpmOutcomeConst.BPM_SAVE, BpmOutcomeConst.BPM_SUBMIT});
+ 		}
+         
 		ContractBackingBean ctBB = new ContractBackingBean();
 		ctBB.initializeRemarkAndAttachement(getManagedBean().getRemarkList(), getManagedBean().getAttachmentList());
 
@@ -130,6 +132,8 @@ public class SupplierBackingBean extends BaseBackingBean<SupplierManagedBean> {
     		HttpServletRequest servletRequest = PortalUtil.getHttpServletRequest(new FacesScopes().getRequest());
     		HttpServletRequest originalServletRequest = PortalUtil.getOriginalServletRequest(servletRequest);
     		String taskId = originalServletRequest.getParameter("taskId");
+    		if(taskId == null)
+    		return;
     		System.out.println("taskId:"+taskId);
 
     		FacesScopes face = new FacesScopes();
@@ -156,26 +160,31 @@ public class SupplierBackingBean extends BaseBackingBean<SupplierManagedBean> {
     			System.out.println("dataType.getContractId()>>"+dataType.getContractId());
     			ctReqDTO.setContractVerId(new Long(dataType.getContractId()));
     			ctReqDTO.setContractId(new Long(dataType.getContractId()));
+    		
+    		}else if(res.getProcessName().equalsIgnoreCase("Factoring Company Request")){
+    			CTFactoringDataType dataType = (CTFactoringDataType)obj;
+    			System.out.println("dataType.getContractId()>>"+dataType.getContractId());
+    			ctReqDTO.setContractId(new Long(dataType.getContractId()));
+    			ctReqDTO.setContractVerId(new Long(dataType.getContractId()));
     		}
 
     		IContractSO contractSO = (IContractSO) BusinessDelegate.getInstance().getServiceObject("ct",IContractSO.class);
     		ContractResDTO resDTO = contractSO.retrieveContractVer(ctReqDTO);
+    		this.getManagedBean().setContractVer(resDTO.getCtContractVer());
 
 
     		this.getManagedBean().setTaskName(res.getTaskName());
-    		this.getManagedBean().setContractVer(resDTO.getCtContractVer());
     		this.getManagedBean().setTaskId(taskId);
-    		this.getManagedBean().setOutComes(res.getAction());
-    		
+    		this.getManagedBean().setAction(res.getAction());
     		if(res.getProcessName().equalsIgnoreCase("Bank Account Change Request")){
     			
     			FacesContext fc = FacesContext.getCurrentInstance();
     			fc.getApplication().getNavigationHandler().handleNavigation(fc, null,  ContractManagementConst.NAV_TO_BANK_ACCOUNT);
     	
-    		}else if(res.getProcessName().equalsIgnoreCase("Contract Activation Suspension Request")){
+    		}else if(res.getProcessName().equalsIgnoreCase("Factoring Company Request")){
     			
     			FacesContext fc = FacesContext.getCurrentInstance();
-    			fc.getApplication().getNavigationHandler().handleNavigation(fc, null, ContractManagementConst.NAV_TO_CONTRACT_SUSPENSION);
+    			fc.getApplication().getNavigationHandler().handleNavigation(fc, null, ContractManagementConst.NAV_TO_CONTRACT_FACTORING);
     		
     		}else if(res.getProcessName().equalsIgnoreCase("Contract Termination")){
     			

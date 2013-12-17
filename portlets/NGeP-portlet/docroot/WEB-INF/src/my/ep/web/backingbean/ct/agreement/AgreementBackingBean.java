@@ -82,9 +82,11 @@ public class AgreementBackingBean extends BaseBackingBean<AgreementManagedBean> 
 		
 		agreementDetails = new AgreementDetails();
 		contractListItem = new ContractListItem();
-		if(this.getManagedBean().getAction() == null) {
-			this.getManagedBean().setOutComes(new String[]{BpmOutcomeConst.BPM_SAVE, BpmOutcomeConst.BPM_SUBMIT});
-		}
+		
+		 if(this.getManagedBean().getAction() == null) {
+				this.getManagedBean().setOutComes(new String[]{BpmOutcomeConst.BPM_SAVE, BpmOutcomeConst.BPM_SUBMIT});
+				 }
+	
 	}
 	
 	@PostConstruct
@@ -100,6 +102,8 @@ public class AgreementBackingBean extends BaseBackingBean<AgreementManagedBean> 
 			sourcingFiles.add(doc2);
 			sourcingFiles.add(doc3);
 		}
+		
+		
 		
 		ContractBackingBean ctBB = new ContractBackingBean();
 		ctBB.initializeRemarkAndAttachement(getManagedBean().getRemarkList(), getManagedBean().getAttachmentList());

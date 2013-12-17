@@ -10,14 +10,13 @@ import org.apache.log4j.Logger;
 
 import my.ep.persistence.entity.ct.CtAttachment;
 import my.ep.persistence.entity.ct.CtContract;
-import my.ep.persistence.entity.ct.CtContractVer;
 import my.ep.persistence.entity.ct.CtRemark;
 import my.ep.persistence.entity.ct.agreement.CtAgreement;
 import my.ep.persistence.entity.ct.agreement.CtAgreementAppendix;
 import my.ep.persistence.entity.ct.agreement.CtSignParty;
 import my.ep.web.managedbean.BaseManagedBean;
 
-@ManagedBean
+@ManagedBean(name ="agreementManagedBean")
 @SessionScoped
 public class AgreementManagedBean extends BaseManagedBean {
 
@@ -41,7 +40,7 @@ public class AgreementManagedBean extends BaseManagedBean {
 
 	private CtAgreement agreement;
 	private Long contractId;
-	private String agreementType;
+	private String agreementType="view";
 	
 	public AgreementManagedBean(){
 		
@@ -178,7 +177,6 @@ public class AgreementManagedBean extends BaseManagedBean {
 	public void setCtContract(CtContract ctContract) {
 		this.ctContract = ctContract;
 	}
+
 	
-	
-		
 }

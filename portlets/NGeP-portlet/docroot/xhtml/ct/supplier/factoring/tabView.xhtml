@@ -11,6 +11,7 @@
       .column-align-center { text-align: center !important;}
     </style> 
 	<p:panel>
+     <f:event listener="#{supplierBackingBean.preRenderView}" type="preRenderView" />
 	 <p:messages id="messages" showDetail="true" autoUpdate="true" closable="true" severity="error, info" />
 	  <div class="ppRightBtn">
 				<ui:repeat var="outcome"	value="#{supplierBackingBean.managedBean.action}">
