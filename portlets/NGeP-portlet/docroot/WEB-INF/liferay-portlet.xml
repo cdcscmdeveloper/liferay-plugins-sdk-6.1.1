@@ -12,7 +12,7 @@
 		<css-class-wrapper>ct-portlet</css-class-wrapper>
 	</portlet>
 	<portlet>
-		<portlet-name>ctProcrumentBoard</portlet-name>
+		<portlet-name>ctReviewAmendment</portlet-name>
 		<icon>/icon.png</icon>
 		<instanceable>false</instanceable>
 		<ajaxable>false</ajaxable>

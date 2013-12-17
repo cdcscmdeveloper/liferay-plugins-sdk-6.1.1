@@ -73,7 +73,7 @@ public class BPMTaskListBackingBean extends
 //		temp.put("Circular Contract Maintenance","central-contract-circular-maintenance");
 //		temp.put("Circular Contract Maintenance", "panel-circular-maintenance");
 		temp.put("Circular Contract Cancellation", "cancel-circular");
-		temp.put("Factoring Company Request", "request-factoring");
+		temp.put("Factoring Company Request", "review-factoring-request");
 		temp.put("Contract Creation", "fulfilment-details");
 		temp.put("Contract Activation Suspension Request", "contract-suspension");
 		temp.put("Contract Amendment Request", "contract-amendment");
@@ -223,7 +223,7 @@ public class BPMTaskListBackingBean extends
 			if(res.getTaskName().equalsIgnoreCase("Confirm Amendment Meeting") || res.getTaskName().equalsIgnoreCase("Update Amendment Result") ||
 					res.getTaskName().equalsIgnoreCase("Sign Off") || res.getTaskName().equalsIgnoreCase("Prepare LOA") ||
 					res.getTaskName().equalsIgnoreCase("View Amendment Details")) {
-				url = "procurement-board";
+				url = "review-amendment";
 			}
 			
 			ExternalContext externalContext = FacesContext.getCurrentInstance().getExternalContext();

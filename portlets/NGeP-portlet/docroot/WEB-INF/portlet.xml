@@ -169,12 +169,12 @@
 	
 	
 	<portlet>
-		<portlet-name>ctProcrumentBoard</portlet-name>
-		<display-name>PB / QCC </display-name>
+		<portlet-name>ctReviewAmendment</portlet-name>
+		<display-name>Review Amendment</display-name>
 		<portlet-class>org.portletfaces.bridge.GenericFacesPortlet</portlet-class>
 		<init-param>
 			<name>javax.portlet.faces.defaultViewId.view</name>
-			<value>/xhtml/ct/fulfilmentdetails/amendment/amendmentTab.xhtml</value>
+			<value>/xhtml/ct/fulfilmentdetails/pbqcc/pbqccTab.xhtml</value>
 		</init-param>
 		<expiration-cache>0</expiration-cache>
 		<supports>
@@ -182,7 +182,7 @@
 			<portlet-mode>view</portlet-mode>
 		</supports>
 		<portlet-info>
-			<title>PB / QCC </title>
+			<title>Review Amendment</title>
 			<short-title>NewJSFPortlet</short-title>
 			<keywords></keywords>
 		</portlet-info>
