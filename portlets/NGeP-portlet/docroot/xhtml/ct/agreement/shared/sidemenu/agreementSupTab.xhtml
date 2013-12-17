@@ -14,7 +14,7 @@
 	  <f:event listener="#{agreementBackingBean.preRenderView}" type="preRenderView" />	
 	 <div class="ppRightBtn">
 				<ui:repeat var="outcome"	value="#{agreementBackingBean.managedBean.action}">
-					<p:commandButton value="#{outcome}" process="@this" styleClass="ui-button" actionListener="#{agreementBackingBean.createSupAgreement(outcome)}" />
+					<p:commandButton value="#{outcome}" process="@this" styleClass="ui-button" action="#{agreementBackingBean.createSupAgreement(outcome)}" />
 				</ui:repeat>		
     </div>
 	</p:panel>
