@@ -322,6 +322,7 @@ public class ContractDetailsBackingBean extends BaseBackingBean<ContractDetailsM
 	}
     
     private void flush() {
+    	
 		this.getManagedBean().setItemPricing(false);
 		this.getManagedBean().setItemCeilingQuantity(false);
 		this.getManagedBean().setChkSchedule(false);
@@ -380,8 +381,7 @@ public class ContractDetailsBackingBean extends BaseBackingBean<ContractDetailsM
     
     public void addFrequencyDetails(){
 		CtSchedule ctSchedules = new CtSchedule();
-		this.getManagedBean().getContractVer().getCtSchedules().add(ctSchedules);
-		
+		this.getManagedBean().getContractVer().getCtSchedules().add(ctSchedules);	
 	}
 	
 	public void deleteFrequencyDetails(){
@@ -391,13 +391,11 @@ public class ContractDetailsBackingBean extends BaseBackingBean<ContractDetailsM
 
 	public void addScheduleDetails() {
 		CtProgressivePayment ctProgressivePayment = new CtProgressivePayment();
-		this.getManagedBean().getContractVer().getCtProgressivePayments()
-				.add(ctProgressivePayment);
+		this.getManagedBean().getContractVer().getCtProgressivePayments().add(ctProgressivePayment);
 	}
 
 	public void deleteScheduleDetails() {
-		this.getManagedBean().getContractVer().getCtProgressivePayments()
-				.remove(this.getManagedBean().getCtProgressivePaymentDel());
+		this.getManagedBean().getContractVer().getCtProgressivePayments().remove(this.getManagedBean().getCtProgressivePaymentDel());
 	}/*End schedule*/
 	
 	/*Termination start*/
