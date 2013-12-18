@@ -24,6 +24,12 @@
 			<portlet id="ctChangeBankAccount" />
 			
 		</category>
+		
+		<!-- Profile Management - START -->
+		<category name="category.ep.pm">
+			<portlet id="pmUserprofiles"></portlet>
+		</category>
+		<!-- Profile Management - END -->		
 
 		<!-- Procurement Plan - START -->
 		<category name="category.ep.pp">
@@ -62,7 +68,6 @@
 			<portlet id="scSupplierNotification"/>
   <portlet id="scTemplateDocument" />
            <portlet id="scBriefingSiteVisitAttendance" />
-           <portlet id="scUserprofiles" />
 
 		</category>
 
@@ -89,6 +94,7 @@
 		<portlet id="Catalogue"></portlet>
 		<portlet id="ReviewUNSPSC"></portlet>
 		<portlet id="catalogueTaskList"></portlet>
+		
 
 	</category>
 
@@ -132,5 +138,5 @@
 		<portlet id="smUpdateMofDetails"></portlet>
 		<portlet id="SiteVisit"></portlet>
 		<portlet id="MOFApplication"></portlet>
-	</category>
+	</category>	
 </display>

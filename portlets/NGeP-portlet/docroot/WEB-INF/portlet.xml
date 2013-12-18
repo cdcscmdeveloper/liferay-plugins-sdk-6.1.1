@@ -750,7 +750,7 @@
 		<security-role-ref>
 			<role-name>user</role-name>
 		</security-role-ref>
-	</portlet>
+	</portlet>		
 	<!-- Procurement Plan - END -->
 
 
@@ -3161,15 +3161,15 @@
 	 	<security-role-ref>
 	 		<role-name>user</role-name>
 	 	</security-role-ref>
-	 </portlet>
-	 
+	 </portlet> 
+<!-- Profile Management - start - david-->
 	<portlet>
-		<portlet-name>scUserprofiles</portlet-name>
+		<portlet-name>pmUserprofiles</portlet-name>
 		<display-name>Userprofiles</display-name>
 		<portlet-class>org.portletfaces.bridge.GenericFacesPortlet</portlet-class>
 		<init-param>
 			<name>javax.portlet.faces.defaultViewId.view</name>
-			<value>/xhtml/ss/userprofiles/userprofilesmain.xhtml</value>
+			<value>/xhtml/pm/userprofiles/userprofilesmain.xhtml</value>
 		</init-param>
 		<expiration-cache>0</expiration-cache>
 		<supports>
@@ -3193,5 +3193,6 @@
 		<security-role-ref>
 			<role-name>user</role-name>
 		</security-role-ref>
-	</portlet>	 
+	</portlet>
+<!-- profile management - end - david-->		 
 </portlet-app>
