@@ -238,7 +238,7 @@ public class SpecificationBackingBean extends
 			compilenceList();
 			System.out.println("====init constructor executed===");
 			if (getManagedBean().getScQtSpec() == null) {
-				retriveSpecdetails(146L);
+				//retriveSpecdetails(146L);
 				System.out.println("====spec null constructor executed===");
 			}
 
@@ -267,6 +267,7 @@ public class SpecificationBackingBean extends
 			QTDetailBackingBean detailBackingBean = new QTDetailBackingBean();
 			detailBackingBean.getManagedBean().setQt(tenderResDTO.getQtDetail());
 			detailBackingBean.populateParentOrgProfile(tenderResDTO.getQtDetail());
+			this.getManagedBean().setSpecStatus(true);
 			// detailBackingBean.populateParentOrgProfile(tenderResDTO.getQtDetail());
 			//retriveSpecdetails(specificationDataType.getQtId().longValue());
 			if (resDTO.getScQtSpec() == null) {

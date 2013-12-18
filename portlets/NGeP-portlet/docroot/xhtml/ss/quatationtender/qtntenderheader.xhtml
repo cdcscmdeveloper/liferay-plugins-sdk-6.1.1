@@ -94,7 +94,15 @@
             			disabled="true"
             			size="35" />
             	</c:if>
-            </h:column>       
+            </h:column> 
+            <c:if test="#{specificationBackingBean.managedBean.specStatus}"> 
+              <h:column>
+           		<h:outputLabel value="Specification Status" /> 
+           	</h:column>
+           	<h:column>
+           		<p:inputText   disabled="true"/>  
+ 			</h:column> 
+ 			</c:if>      
   		</h:panelGrid>
 	</p:panel>
 </ui:composition>

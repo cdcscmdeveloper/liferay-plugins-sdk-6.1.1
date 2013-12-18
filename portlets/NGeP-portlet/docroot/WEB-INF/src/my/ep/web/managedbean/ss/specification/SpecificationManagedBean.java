@@ -75,6 +75,7 @@ public class SpecificationManagedBean extends BaseManagedBean {
 	private List<ScQtWeightage> weightageFinancial;
 	private List<ScQtWeightage> weightageTechnicalSelect;
 	private List<ScQtWeightage> weightageFinancialSelect;
+	 private boolean isSpecStatus;
 	
 	public SpecificationManagedBean(){
 		
@@ -460,6 +461,20 @@ public class SpecificationManagedBean extends BaseManagedBean {
 	public void setWeightageFinancialSelect(
 			List<ScQtWeightage> weightageFinancialSelect) {
 		this.weightageFinancialSelect = weightageFinancialSelect;
+	}
+
+	/**
+	 * @return the isSpecStatus
+	 */
+	public boolean isSpecStatus() {
+		return isSpecStatus;
+	}
+
+	/**
+	 * @param isSpecStatus the isSpecStatus to set
+	 */
+	public void setSpecStatus(boolean isSpecStatus) {
+		this.isSpecStatus = isSpecStatus;
 	}
 
 	
