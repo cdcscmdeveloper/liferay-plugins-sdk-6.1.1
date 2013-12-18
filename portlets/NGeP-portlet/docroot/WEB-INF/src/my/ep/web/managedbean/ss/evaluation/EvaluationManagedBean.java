@@ -12,7 +12,9 @@ import my.ep.persistence.entity.ss.quationtender.ScQtChecklistEvaluation;
 import my.ep.persistence.entity.ss.quationtender.ScQtCommitteeActivity;
 import my.ep.persistence.entity.ss.quationtender.ScQtEvaluationResult;
 import my.ep.persistence.entity.ss.quationtender.ScQtItem;
+import my.ep.persistence.entity.ss.quationtender.ScQtManualEvaluation;
 import my.ep.persistence.entity.ss.quationtender.ScQtMeeting;
+import my.ep.persistence.entity.ss.quationtender.ScQtProposalLabel;
 import my.ep.persistence.entity.ss.quationtender.ScQtProposalRanking;
 import my.ep.persistence.entity.ss.quationtender.ScQtSpec;
 import my.ep.persistence.entity.ss.quationtender.ScQtZoneCriteria;
@@ -31,7 +33,7 @@ public class EvaluationManagedBean extends BaseManagedBean {
 	 private List<ScQtCommitteeActivity> committeeMemberList;
 	 private ScQtChecklistEvaluation checklistEvaluation;
 	private List<ScQtChecklistEvaluation> manuals1EvaluationList;
-	private List<ScQtChecklistEvaluation> manualMultiSelect;
+	private List<ScQtManualEvaluation> manualMultiSelect;
 	private List<ScQtEvaluationResult> s1TechEvalList;
 	private List<ScQtEvaluationResult>  s1FinEvalList;
 	private List<ScQtEvaluationResult> s2TechSupplier;
@@ -54,6 +56,10 @@ public class EvaluationManagedBean extends BaseManagedBean {
 	private ScQt scqt;
 	private String committeeType="TEC";
 	private List<ScQtEvaluationResult> manuals1SupplierList;
+	private List<ScQtProposalLabel> manualProposalLabel;
+	private List<ScQtManualEvaluation> manualEvaluateList;
+	private boolean isEvaluateStatus;
+	private Long proposalId;
 	public EvaluationManagedBean() {
 		super();
 		prepareDummyData1();
@@ -233,28 +239,6 @@ public class EvaluationManagedBean extends BaseManagedBean {
 	public List<ScQtMeeting> getMeetingMultiSelect() {
 		return meetingMultiSelect;
 	}
-
-
-
-
-
-	/**
-	 * @return the manualMultiSelect
-	 */
-	public List<ScQtChecklistEvaluation> getManualMultiSelect() {
-		return manualMultiSelect;
-	}
-
-
-
-	/**
-	 * @param manualMultiSelect the manualMultiSelect to set
-	 */
-	public void setManualMultiSelect(List<ScQtChecklistEvaluation> manualMultiSelect) {
-		this.manualMultiSelect = manualMultiSelect;
-	}
-
-
 
 
 	/**
@@ -679,6 +663,96 @@ public class EvaluationManagedBean extends BaseManagedBean {
 	public void setManuals1SupplierList(
 			List<ScQtEvaluationResult> manuals1SupplierList) {
 		this.manuals1SupplierList = manuals1SupplierList;
+	}
+
+
+
+	/**
+	 * @return the isEvaluateStatus
+	 */
+	public boolean isEvaluateStatus() {
+		return isEvaluateStatus;
+	}
+
+
+
+	/**
+	 * @param isEvaluateStatus the isEvaluateStatus to set
+	 */
+	public void setEvaluateStatus(boolean isEvaluateStatus) {
+		this.isEvaluateStatus = isEvaluateStatus;
+	}
+
+
+
+	/**
+	 * @return the manualProposalLabel
+	 */
+	public List<ScQtProposalLabel> getManualProposalLabel() {
+		return manualProposalLabel;
+	}
+
+
+
+	/**
+	 * @param manualProposalLabel the manualProposalLabel to set
+	 */
+	public void setManualProposalLabel(List<ScQtProposalLabel> manualProposalLabel) {
+		this.manualProposalLabel = manualProposalLabel;
+	}
+
+
+
+	/**
+	 * @return the manualEvaluateList
+	 */
+	public List<ScQtManualEvaluation> getManualEvaluateList() {
+		return manualEvaluateList;
+	}
+
+
+
+	/**
+	 * @param manualEvaluateList the manualEvaluateList to set
+	 */
+	public void setManualEvaluateList(List<ScQtManualEvaluation> manualEvaluateList) {
+		this.manualEvaluateList = manualEvaluateList;
+	}
+
+
+
+	/**
+	 * @return the manualMultiSelect
+	 */
+	public List<ScQtManualEvaluation> getManualMultiSelect() {
+		return manualMultiSelect;
+	}
+
+
+
+	/**
+	 * @param manualMultiSelect the manualMultiSelect to set
+	 */
+	public void setManualMultiSelect(List<ScQtManualEvaluation> manualMultiSelect) {
+		this.manualMultiSelect = manualMultiSelect;
+	}
+
+
+
+	/**
+	 * @return the proposalId
+	 */
+	public Long getProposalId() {
+		return proposalId;
+	}
+
+
+
+	/**
+	 * @param proposalId the proposalId to set
+	 */
+	public void setProposalId(Long proposalId) {
+		this.proposalId = proposalId;
 	}
 
 
