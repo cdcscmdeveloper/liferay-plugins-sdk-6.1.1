@@ -13,13 +13,17 @@
 			styleClass="noBorders tr,noBorders td">
 			<p:row>
 				<p:column style="width:100%">
-					<p:selectBooleanCheckbox itemLabel="By Business Nature"></p:selectBooleanCheckbox>
+					<p:selectBooleanCheckbox
+						value="false" disabled="false" />
+					<p:spacer width="2" />
+					<h:outputText value="By Business Nature"></h:outputText>
 				</p:column>
 			</p:row>
 		</p:panelGrid>
-		<p:dataTable id="businessNatureTable"
-			value="#{simpleQuoteBidBackingBean.managedBean.businessNatureCriterias}"
-			var="businessNatureCriteria" editable="true">
+		<p:dataTable id="businessNatureTable" value="#{simpleQuoteBidBackingBean.managedBean.businessNatureCriterias}"
+			selection="#{simpleQuoteBidBackingBean.managedBean.selectedBusinessNatureCriterias}" rowIndexVar="rowIndex"
+			var="businessNatureCriteria" editable="true" rowKey="#{businessNatureCriteria.criteriaValue}">
+			<p:column selectionMode="multiple" style="width:2%" />
 			<p:column headerText="Code">
 				<p:cellEditor>
 					<f:facet name="output">
@@ -39,31 +43,43 @@
 		<div align="right">
 			<p:commandButton value="#{lbl['lbl.ct.ded.btn.add']}" process="@this" partialSubmit="true"  icon="ui-icon-add"
 			  action="#{simpleQuoteBidBackingBean.addBusinessNature()}" update="businessNatureTable"/>
+			  <p:commandButton value="#{lbl['lbl.sc.sf.delete']}" icon="ui-icon-delete"/>
 		</div>
 		<p:panelGrid style="width:100%;"
 			styleClass="noBorders tr,noBorders td">
 			<p:row>
 				<p:column style="width:100%">
-					<p:selectBooleanCheckbox itemLabel="By Locality"></p:selectBooleanCheckbox>
+					<p:selectBooleanCheckbox value="false" disabled="false"></p:selectBooleanCheckbox>
+					<p:spacer width="2px;"></p:spacer>
+					<h:outputText value="By Locality"></h:outputText>
 				</p:column>
 			</p:row>
 		</p:panelGrid>
 		<p:panelGrid style="width:100%;"
 			styleClass="noBorders tr,noBorders td">
 			<p:row>
-				<p:column style="width:15%">
-					<p:selectBooleanCheckbox itemLabel="By Supplier"></p:selectBooleanCheckbox>
+				<p:column style="width:60%">
+					<p:selectBooleanCheckbox value="false" disabled="false"></p:selectBooleanCheckbox>
+					<p:spacer width="2px;"></p:spacer>
+					<h:outputText value="By Supplier"></h:outputText>
+					<p:spacer width="4px;"></p:spacer>
 					<p:selectOneMenu value="#{simpleQuoteBidBackingBean.managedBean.supplierFilterType}">
 						<f:selectItem itemValue="MOF" itemLabel="MOF Reg. No."></f:selectItem>
 						<f:selectItem itemValue="RN" itemLabel="Registration No."></f:selectItem>
 					</p:selectOneMenu>
+					<p:spacer width="2px;"></p:spacer>
 					<p:inputText value="#{simpleQuoteBidBackingBean.managedBean.supplierFilterValue}"></p:inputText>
 				</p:column>
-				<p:column style="width:15%">
-					<p:selectBooleanCheckbox itemLabel="By Product"></p:selectBooleanCheckbox>
+				<p:column style="width:40%">
+					<p:selectBooleanCheckbox value="false" disabled="false"></p:selectBooleanCheckbox>
+					<p:spacer width="2px;"></p:spacer>
+					<h:outputText value="By Product"></h:outputText>
 				</p:column>
 			</p:row>
 		</p:panelGrid>
+		<div align="right">
+			<p:commandButton value="#{lbl['lbl.sc.action.search']}" icon="ui-icon-search" />
+		</div>
 	</p:panel>
 	<p:panel header="SUPPLIER" toggleable="true">
 

@@ -1,34 +1,37 @@
-<ui:composition
-	xmlns="http://www.w3.org/1999/xhtml"
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
 	xmlns:f="http://java.sun.com/jsf/core"
 	xmlns:h="http://java.sun.com/jsf/html"
 	xmlns:ui="http://java.sun.com/jsf/facelets"
 	xmlns:p="http://primefaces.org/ui"
 	xmlns:c="http://java.sun.com/jsp/jstl/core">
-		<p:panel label="#{lbl['lbl.ss.panel.title.remarks']}" header="#{lbl['lbl.ss.panel.title.remarks']}" toggleable="true">
-			<h:panelGrid columns="1" width="100%">
-				<p:dataTable id="remarkDataTable" width="100%" rowIndexVar="index"
-			        value="#{directPurchaseBackingBean.managedBean.requestList.scDpRemarks}" var="remark"
-					selection="#{directPurchaseBackingBean.managedBean.selectedRemarks}" cellpadding="1" columnClasses="at-dataTable-columnClass">
-					<p:column selectionMode="multiple" style="width:2%" />
-					<p:column width="15%" rendered="true" headerText="#{lbl['lbl.sc.purchase.remark.comment']}">
-						<p:cellEditor>
-							<f:facet name="output">
-								<h:outputText value="#{remark.remark}"></h:outputText>
-							</f:facet>
-							<f:facet name="input">
-								<p:inputText value="#{remark.remark}" style="width:96%" />
-							</f:facet>
-						</p:cellEditor>  
-					</p:column>
-					<p:column width="10%" rendered="true" headerText="#{lbl['lbl.ss.purchase.remark.createdby']}">
-					</p:column>
-					<p:column width="15%" rendered="true" headerText="#{lbl['lbl.ss.purchase.remark.createddate']}">
-					</p:column>
-				</p:dataTable>
-			</h:panelGrid>
-			<div align="right" style="width: 100%">
-				<p:commandButton value="#{lbl['lbl.ct.ded.btn.add']}" partialSubmit="true" process="@this" update="@([id$=remarkDataTable])" actionListener="#{directPurchaseBackingBean.addRemark()}"/>
-			</div>
-		</p:panel>
+	<table style="width: 100%">
+		<tr>
+			<td class="TableFieldLeft" width="20%"><h:outputLabel value="Remark" /></td>
+			<td class="TableFieldRight">
+				<p:dataGrid id="catatan" value="#{directPurchaseBackingBean.managedBean.requestList.scDpRemarks}" var="remarkVar" rowIndexVar="remarkIndex" columns="1" >
+					<table>
+						<tr>
+							<td rowspan="2" valign="top">
+								<h:graphicImage value="#{ctBackingBean.userImagePath(remarkVar.user.loginId)}" height="30" width="30" />
+							</td>
+							<td width="5"></td>
+							<td>
+								<h:outputText value="#{remarkVar.user.userName}"></h:outputText>,
+								<h:outputText id="remarkDate" value="#{remarkVar.changedDate}">
+									<f:convertDateTime pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}" />
+								</h:outputText>
+							</td>
+						</tr>
+						<tr>
+							<td></td>
+							<td>
+								<p:inputTextarea style="width:350px;" value="#{remarkVar.remark}" rendered="#{remarkIndex==0}" />
+								<h:outputText value="#{remarkVar.remark}" rendered="#{remarkIndex>0}" style="display: inline-block; width:220px;word-wrap: break-word;" />
+							</td>
+						</tr>
+					</table>
+				</p:dataGrid>
+			</td>
+		</tr>
+	</table>
 </ui:composition>
