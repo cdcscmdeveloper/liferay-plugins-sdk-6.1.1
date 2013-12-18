@@ -3,6 +3,7 @@
  */
 package my.ep.web.backingbean.fl.pr;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -19,6 +20,7 @@ import my.ep.biz.service.fl.request.IFulfilmentRequestSO;
 import my.ep.biz.service.pm.authorization.orgprofile.IOrgProfileSO;
 import my.ep.biz.service.pm.authorization.user.IUserSO;
 import my.ep.biz.service.pm.common.maksud.IMaksudSO;
+import my.ep.biz.service.pm.common.object.IObjectSO;
 import my.ep.biz.service.ss.directpurchase.IRequestNoteSO;
 import my.ep.bpm.dto.BpmRequestDTO;
 import my.ep.bpm.dto.BpmResponseDTO;
@@ -33,6 +35,8 @@ import my.ep.dto.pm.authorization.user.UserReqDTO;
 import my.ep.dto.pm.authorization.user.UserResDTO;
 import my.ep.dto.pm.common.maksud.MaksudReqDTO;
 import my.ep.dto.pm.common.maksud.MaksudResDTO;
+import my.ep.dto.pm.common.object.ObjectReqDTO;
+import my.ep.dto.pm.common.object.ObjectResDTO;
 import my.ep.dto.ss.directpurchase.RequestNoteReqDTO;
 import my.ep.dto.ss.directpurchase.RequestNoteResDTO;
 import my.ep.exception.EpException;
@@ -45,7 +49,10 @@ import my.ep.persistence.entity.pm.authorization.PmOrgProfile;
 import my.ep.persistence.entity.pm.authorization.PmUserGroupUser;
 import my.ep.persistence.entity.pm.common.PmAddressType;
 import my.ep.persistence.entity.pm.common.PmCode;
+import my.ep.persistence.entity.pm.common.PmDo;
+import my.ep.persistence.entity.pm.common.PmGo;
 import my.ep.persistence.entity.pm.common.PmMaksud;
+import my.ep.persistence.entity.pm.common.PmSo;
 import my.ep.persistence.entity.pm.common.PmStatus;
 import my.ep.persistence.entity.sm.SmSupplier;
 import my.ep.persistence.entity.ss.directpurchase.ScRequestNote;
@@ -60,6 +67,7 @@ import my.ep.web.util.FacesScopes;
 import my.ep.web.util.lookupservice.BusinessDelegate;
 
 import org.apache.log4j.Logger;
+import org.primefaces.event.SelectEvent;
 import org.primefaces.model.DualListModel;
 
 import com.liferay.portal.util.PortalUtil;
@@ -141,12 +149,13 @@ public class PurchaseRequestBackingBean extends BaseBackingBean<PurchaseRequestM
 			reqDTO.setToken(token);
 			reqDTO.setApproverMap(getManagedBean().getApproverMap());
 			
-			//attachement
+			/*//attachement
 			
 			String fileName = flBB.getManagedBean().getFlAttachment().getFileName();
 			String fileDesc = flBB.getManagedBean().getFlAttachment().getFileDescription();
 			String filePath = flBB.getManagedBean().getFlAttachment().getFilePath();
-			reqDTO.setFlAttachment(flBB.getManagedBean().getFlAttachment());
+			reqDTO.setFlAttachment(flBB.getManagedBean().getFlAttachment());*/
+			
 			FulfilmentResDTO resDTO = fulfilmentRequestSO.saveFulfillmentRequest(reqDTO);
 			if (resDTO.isSuccessful()) {
 				log.info("Record saved successfully");
@@ -197,7 +206,7 @@ public class PurchaseRequestBackingBean extends BaseBackingBean<PurchaseRequestM
 		getManagedBean().setSelectedRowFlg(true);
 	}
 
-	public String removeAddRow() {
+	/*public String removeAddRow() {
 		System.out.println("we are in Remove Function:::: ");
 		int delAddressListSize = getManagedBean().getSelectedAddressRows().size();
 		if(delAddressListSize==getManagedBean().getFulfilmentRequest().getFlDeliveryAddresses().size()){
@@ -208,6 +217,9 @@ public class PurchaseRequestBackingBean extends BaseBackingBean<PurchaseRequestM
 			}
 		}
 		return null;
+	}*/
+	public void removeAddRow(){
+		getManagedBean().getFulfilmentRequest().getFlDeliveryAddresses().remove(getManagedBean().getSelectedAddrRow());
 	}
 
 	public void addPurchsedItems() {
@@ -321,7 +333,7 @@ public class PurchaseRequestBackingBean extends BaseBackingBean<PurchaseRequestM
 		if(resDTO.getPmOrgProfile() != null){
 			getManagedBean().getFulfilmentRequest().setCreatedOrgProfile(resDTO.getPmOrgProfile());
 		}
-		this.getManagedBean().setOutComes(new String[] {"Save","Submit"});
+		this.getManagedBean().setOutComes(new String[] {"Submit"});
 		//System.out.println("Req List ID ::: "+ getManagedBean().getSelectedRequestNote().getScRequestList().getRequestListNo());
 		return NAV_TO_CREATE_PURCHASE_REQUEST;
 	}
@@ -433,5 +445,61 @@ public class PurchaseRequestBackingBean extends BaseBackingBean<PurchaseRequestM
 			}
 		}
 	}
+	public List<SelectItem> getGoList(){
+		List<SelectItem> goList = new ArrayList<SelectItem>();
+		IObjectSO objectSO = (IObjectSO)BusinessDelegate.getInstance().getServiceObject("pm",IObjectSO.class);	
+		ObjectResDTO resDTO = objectSO.retrieveGOList();
+		goList.add(new SelectItem("", "- Select One -"));
+		if(resDTO.getPmGoList() != null && !resDTO.getPmGoList().isEmpty()){
+			List<PmGo> goDB = resDTO.getPmGoList();
+			for(PmGo obj : goDB){
+				goList.add(new SelectItem(obj.getGoId(),obj.getGoCode()));
+			}
+		}
+		return goList;
+		
+	}
+	
+	public List<SelectItem> getSoList(){
+		List<SelectItem> soList = new ArrayList<SelectItem>();
+		IObjectSO objectSO = (IObjectSO)BusinessDelegate.getInstance().getServiceObject("pm",IObjectSO.class);	
+		ObjectReqDTO reqDTO = new ObjectReqDTO();
+		soList.add(new SelectItem("", "- Select One -"));
+		if(getManagedBean().getGoId() != null){
+
+			reqDTO.setGoId(getManagedBean().getGoId());
+			ObjectResDTO resDTO = objectSO.retrieveSOListByGOCode(reqDTO);
+			if(resDTO.getPmSoList() != null && !resDTO.getPmSoList().isEmpty()){
+				List<PmSo> soDB = resDTO.getPmSoList();
+				for(PmSo obj : soDB){
+					soList.add(new SelectItem(obj.getSoId(),obj.getSoCode()));
+				}
+			}
+		}
+		return soList;
+	}
+	
+	public List<SelectItem> getDoList(){
+		List<SelectItem> doList = new ArrayList<SelectItem>();
+		IObjectSO objectSO = (IObjectSO)BusinessDelegate.getInstance().getServiceObject("pm",IObjectSO.class);	
+		ObjectReqDTO reqDTO = new ObjectReqDTO();
+		doList.add(new SelectItem("", "- Select One -"));
+		if(getManagedBean().getSoId() != null){
+			reqDTO.setSoId(getManagedBean().getSoId());
+			ObjectResDTO resDTO = objectSO.retrieveDOListBySOCode(reqDTO);
+			if(resDTO.getPmDoList() != null && !resDTO.getPmDoList().isEmpty()){
+				List<PmDo> doDB = resDTO.getPmDoList();
+				for(PmDo obj : doDB){
+					doList.add(new SelectItem(obj.getDoId(),obj.getDoCode()));
+				}
+			}	
+		}
+		return doList;
+	}
+	
+	public void calculateSubTotal(BigDecimal quantity){
+		getManagedBean().getSelectedItemAddr().setSubTotal(quantity);
+	}
+
 
 }

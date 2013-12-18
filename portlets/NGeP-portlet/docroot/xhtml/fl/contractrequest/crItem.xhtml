@@ -10,69 +10,80 @@
 	<p:panel id="delAddrPanel" header="DELIVERY ADDRESS" toggleable="true">
 
 		<p:dataTable id="addressDataTable" var="address"
-			value="#{contractRequestBackingBean.managedBean.flRequest.flDeliveryAddresses}" rowIndexVar="index"
-			selection="#{contractRequestBackingBean.managedBean.selectedDelAddr}" rowKey="#{address}" lazy="true"
-			selectionMode="single">
-			<ac:paginator for="addressDataTable"/>
-			<p:ajax event="rowSelect" update=":form:cotabs:itemDetPanel"/>
+			value="#{contractRequestBackingBean.managedBean.flRequest.flDeliveryAddresses}"
+			rowIndexVar="index"
+			selection="#{contractRequestBackingBean.managedBean.selectedDelAddr}"
+			rowKey="#{address}" lazy="true">
+			<ac:paginator for="addressDataTable" />
+			<p:ajax event="rowSelectRadio" update=":form:cotabs:itemDetPanel"
+				process="@this" />
+			<p:column selectionMode="single" width="5%" />
 			<p:column headerText="Delivery Address">
-				<h:outputText value="#{address.addressType.pmAddress.address1}, #{address.addressType.pmAddress.address2}, #{address.addressType.pmAddress.address3}, #{address.addressType.pmAddress.address4}" />
+				<h:outputText
+					value="#{address.addressType.pmAddress.address1}, #{address.addressType.pmAddress.address2}, #{address.addressType.pmAddress.address3}, #{address.addressType.pmAddress.address4}" />
 			</p:column>
 
 			<p:column headerText="Exp. Delivery (Start)">
-				 <p:calendar value="#{address.startDate}" id="calStartDate" showOn="button" pattern="dd/mm/yyyy"/>  
+				<p:calendar value="#{address.startDate}" id="calStartDate"
+					showOn="button" pattern="dd/mm/yyyy" />
 			</p:column>
 
 			<p:column headerText="Exp. Delivery (End)">
-				<p:calendar value="#{address.endDate}" id="calEndDate" showOn="button" pattern="dd/mm/yyyy"/>  
-			</p:column>
-
-			<p:column headerText="Action">
-				<p:commandLink id="deleteLink" styleClass="ui-icon ui-icon-trash" update="addressDataTable" process="@this"
-					action="#{contractRequestBackingBean.removeAddRow}" >
-					<f:setPropertyActionListener value="#{address}"
-						target="#{contractRequestBackingBean.managedBean.selectedAddrRow}" />
-				</p:commandLink>
+				<p:calendar value="#{address.endDate}" id="calEndDate"
+					showOn="button" pattern="dd/mm/yyyy" />
 			</p:column>
 		</p:dataTable>
 		<p:spacer height="2px"></p:spacer>
-		<div style="width:100%;text-align:right">
-				<p:commandButton value="ADD" 
-						action="#{contractRequestBackingBean.flDeliveryAddrList}"
-						update="delAddr" process="@this,delAddr"
-						oncomplete="addDeliveryAddr.show();" />
+		<div style="width: 100%; text-align: right">
+			<p:commandButton value="ADD" icon="ui-icon-add"
+				action="#{contractRequestBackingBean.flDeliveryAddrList}"
+				update="delAddr" process="@this,delAddr"
+				oncomplete="addDeliveryAddr.show();" />
+			<p:commandButton value="Delete" icon="ui-icon-delete"
+				action="#{contractRequestBackingBean.removeAddRow}"
+				update="addressDataTable" partialSubmit="true">
+				<f:setPropertyActionListener value="#{address}"
+					target="#{contractRequestBackingBean.managedBean.selectedAddrRow}" />
+			</p:commandButton>
 
 		</div>
 	</p:panel>
 	<p:panel id="itemDetPanel" header="ITEM DETAIL" toggleable="true">
-		
-		<p:dataTable id="itemDataTable" var="item" lazy="true" rowIndexVar="index"
+
+		<p:dataTable id="itemDataTable" var="item" lazy="true"
+			rowIndexVar="index" rowKey="#{item}"
 			value="#{contractRequestBackingBean.managedBean.selectedDelAddr.flFulfilmentItemAddr}"
-			selection="#{contractRequestBackingBean.managedBean.selectedItemAddr}"
+			selection="#{contractRequestBackingBean.managedBean.selectedItemsRows}"
 			rendered="#{not empty contractRequestBackingBean.managedBean.selectedDelAddr}">
-			<ac:paginator for="itemDataTable"/>
-			
+			<ac:paginator for="itemDataTable" />
+			<p:column selectionMode="multiple" width="5%" />
 			<p:column headerText="Item Name">
 				<h:outputText value="#{item.flFulfilmentItem.contractItem.itemName}" />
 			</p:column>
 
 			<p:column headerText="GOSODO">
-				<p:selectOneMenu id="goId" value="#{contractRequestBackingBean.managedBean.goId}">
-				<f:selectItems value="#{contractRequestBackingBean.goList}" />
-				<p:ajax event="change" update="soId,doId"></p:ajax>
-				</p:selectOneMenu><br />
-				<p:selectOneMenu id="soId" value="#{contractRequestBackingBean.managedBean.soId}">
-				<f:selectItems value="#{contractRequestBackingBean.soList}" />
-				<p:ajax event="change" update="doId"></p:ajax>
-				</p:selectOneMenu><br />
-				<p:selectOneMenu id="doId" value="#{contractRequestBackingBean.managedBean.doId}">
-				<f:selectItems value="#{contractRequestBackingBean.doList}" />
+				<p:selectOneMenu id="goId"
+					value="#{contractRequestBackingBean.managedBean.goId}">
+					<f:selectItems value="#{contractRequestBackingBean.goList}" />
+					<p:ajax event="change" update="soId,doId"></p:ajax>
+				</p:selectOneMenu>
+				<br />
+				<p:selectOneMenu id="soId"
+					value="#{contractRequestBackingBean.managedBean.soId}">
+					<f:selectItems value="#{contractRequestBackingBean.soList}" />
+					<p:ajax event="change" update="doId"></p:ajax>
+				</p:selectOneMenu>
+				<br />
+				<p:selectOneMenu id="doId"
+					value="#{contractRequestBackingBean.managedBean.doId}">
+					<f:selectItems value="#{contractRequestBackingBean.doList}" />
 				</p:selectOneMenu>
 			</p:column>
 
 			<p:column headerText="Activity Code">
-				<p:selectOneMenu id="actCode" value="#{contractRequestBackingBean.managedBean.goId}">
-				<f:selectItems value="#{contractRequestBackingBean.goList}" />
+				<p:selectOneMenu id="actCode"
+					value="#{contractRequestBackingBean.managedBean.goId}">
+					<f:selectItems value="#{contractRequestBackingBean.goList}" />
 				</p:selectOneMenu>
 			</p:column>
 			<p:column headerText="Unit Price (MYR)">
@@ -80,39 +91,40 @@
 			</p:column>
 			<p:column headerText="Ord. Qty.">
 				<p:inputText value="#{item.orderedQty}">
-				<p:ajax update="subTotalTxt" listener="#{contractRequestBackingBean.calculateSubTotal(item.orderedQty)}"></p:ajax>
+					<p:ajax update="subTotalTxt"
+						listener="#{contractRequestBackingBean.calculateSubTotal(item.orderedQty)}"></p:ajax>
 				</p:inputText>
 			</p:column>
 			<p:column headerText="Sub Total">
-				<p:inputText id="subTotalTxt" value="#{contractRequestBackingBean.managedBean.selectedItemAddr.subTotal}" disabled="true"></p:inputText>
-			</p:column>
-			<p:column headerText="Action">
-				<p:commandLink id="deleteLink" styleClass="ui-icon ui-icon-trash" update="itemDataTable" process="@this"
-					action="#{contractRequestBackingBean.removeItemRow}" >
-					<f:setPropertyActionListener value="#{item}"
-						target="#{contractRequestBackingBean.managedBean.selectedItemRow}" />
-				</p:commandLink>
+				<p:inputText id="subTotalTxt"
+					value="#{contractRequestBackingBean.managedBean.selectedItemAddr.subTotal}"
+					disabled="true"></p:inputText>
 			</p:column>
 		</p:dataTable>
 		<p:spacer height="2px"></p:spacer>
-		<div style="width: 100%;text-align:right" >
-				<p:commandButton id="addItems" value="ADD ITEMS" action="#{contractRequestBackingBean.addContractedItems}"
-				rendered="#{not empty contractRequestBackingBean.managedBean.selectedDelAddr}" 
-				update="contractedItemDt" process="@this,contractedItemDt" oncomplete="addItems.show();"/>
-				
+		<div style="width: 100%; text-align: right">
+			<p:commandButton id="addItems" value="ADD" icon="ui-icon-add"
+				action="#{contractRequestBackingBean.addContractedItems}"
+				rendered="#{not empty contractRequestBackingBean.managedBean.selectedDelAddr}"
+				update="contractedItemDt" process="@this,contractedItemDt"
+				oncomplete="addItems.show();" />
+			<p:commandButton value="Delete" icon="ui-icon-delete"
+				action="#{contractRequestBackingBean.removeItemRow}"
+				update="itemDataTable" partialSubmit="true" />	
+
 		</div>
 	</p:panel>
 
-	<p:dialog id="addDelAddrDialog" header="Add Delivery Address" widgetVar="addDeliveryAddr"
-		showEffect="fade" hideEffect="fade" modal="true" height="450"
-		width="600" resizable="false">
-		
+	<p:dialog id="addDelAddrDialog" header="Add Delivery Address"
+		widgetVar="addDeliveryAddr" showEffect="fade" hideEffect="fade"
+		modal="true" height="450" width="600" resizable="false">
+
 		<p:dataTable id="delAddr" var="delAddr"
 			value="#{contractRequestBackingBean.managedBean.addressTypesList}"
-			rowKey="#{delAddr.addressTypeId}"  
+			rowKey="#{delAddr.addressTypeId}"
 			selection="#{contractRequestBackingBean.managedBean.selectedPmAddrTypeList}">
-			<p:ajax event="rowSelect" update=":form:cotabs:delAddr"/>
-			<ac:paginator for="delAddr"/>
+			<p:ajax event="rowSelect" update=":form:cotabs:delAddr" />
+			<ac:paginator for="delAddr" />
 			<p:columnGroup type="header">
 				<p:row>
 					<p:column rowspan="1" headerText=""></p:column>
@@ -121,30 +133,32 @@
 			</p:columnGroup>
 			<p:column selectionMode="multiple" />
 			<p:column>
-				<h:outputText value="#{delAddr.pmAddress.address1}, #{delAddr.pmAddress.address2}, #{delAddr.pmAddress.address3}, #{delAddr.pmAddress.address4}" escape="false"/>
+				<h:outputText
+					value="#{delAddr.pmAddress.address1}, #{delAddr.pmAddress.address2}, #{delAddr.pmAddress.address3}, #{delAddr.pmAddress.address4}"
+					escape="false" />
 			</p:column>
 		</p:dataTable>
 		<p:spacer height="2px"></p:spacer>
-		<div style="width:100%;text-align: right">
-			<p:commandButton value="Add"
+		<div style="width: 100%; text-align: right">
+			<p:commandButton value="ADD" icon="ui-icon-add"
 				action="#{contractRequestBackingBean.updateDeliveryAddrDt}"
-				oncomplete="addDeliveryAddr.hide();" 
-				update="addressDataTable">
+				oncomplete="addDeliveryAddr.hide();" update="addressDataTable">
 			</p:commandButton>
 		</div>
-		
+
 
 	</p:dialog>
-	<p:dialog id="addContractedItemDialog" header="Add Contract Items" widgetVar="addItems"
-		showEffect="fade" hideEffect="fade" modal="true" height="450"
-		width="600" resizable="false">
-		
+	<p:dialog id="addContractedItemDialog" header="Add Contract Items"
+		widgetVar="addItems" showEffect="fade" hideEffect="fade" modal="true"
+		height="450" width="600" resizable="false">
+
 		<p:dataTable id="contractedItemDt" var="contractedItem"
 			value="#{contractRequestBackingBean.managedBean.contractedItemList}"
 			rowKey="#{contractedItem.contractItemId}"
 			selection="#{contractRequestBackingBean.managedBean.selectedContractedItemList}">
-			<p:ajax event="rowSelect" update=":form:cotabs:addContractedItemDialog" process="@this"/>
-			<ac:paginator for="contractedItemDt"/>
+			<p:ajax event="rowSelect"
+				update=":form:cotabs:addContractedItemDialog" process="@this" />
+			<ac:paginator for="contractedItemDt" />
 			<p:columnGroup type="header">
 				<p:row>
 					<p:column rowspan="1" headerText=""></p:column>
@@ -157,14 +171,14 @@
 			</p:column>
 		</p:dataTable>
 		<p:spacer height="2px"></p:spacer>
-		<div style="width:100%;text-align: right">
-			<p:commandButton value="Add"
+		<div style="width: 100%; text-align: right">
+			<p:commandButton value="ADD"
 				action="#{contractRequestBackingBean.updateContractedItemDt}"
-				oncomplete="addItems.hide();"
-				update="itemDataTable" process="@this,contractedItemDt">
+				oncomplete="addItems.hide();" update="itemDataTable"
+				process="@this,contractedItemDt">
 			</p:commandButton>
 		</div>
-		
+
 
 	</p:dialog>
 </ui:composition>

@@ -3,6 +3,7 @@
  */
 package my.ep.web.managedbean.fl.pr;
 
+import java.math.BigDecimal;
 import java.util.HashMap;
 import java.util.List;
 
@@ -14,6 +15,7 @@ import my.ep.persistence.entity.fl.FlAttachment;
 import my.ep.persistence.entity.fl.FlRemark;
 import my.ep.persistence.entity.fl.request.FlDeliveryAddress;
 import my.ep.persistence.entity.fl.request.FlFulfilmentItem;
+import my.ep.persistence.entity.fl.request.FlFulfilmentItemAddr;
 import my.ep.persistence.entity.fl.request.FlFulfilmentRequest;
 import my.ep.persistence.entity.pm.authorization.PmOrgAddress;
 import my.ep.persistence.entity.pm.authorization.PmUserGroupUser;
@@ -79,6 +81,13 @@ public class PurchaseRequestManagedBean extends BaseManagedBean {
 	private List<ScRequestNote> requestNoteWithDtlsList;
 	private List<ScRequestNote> selectedPurchasedItemList;
 	private FlFulfilmentItem  selectedItemRow;
+	
+	//get GOSODO
+	private Long goId;
+	private Long soId;
+	private Long doId;
+	private BigDecimal subTotal;
+	private FlFulfilmentItemAddr selectedItemAddr;
 	
 	
 	
@@ -511,6 +520,76 @@ public class PurchaseRequestManagedBean extends BaseManagedBean {
 	 */
 	public void setSelectedItemsRows(List<FlFulfilmentItem> selectedItemsRows) {
 		this.selectedItemsRows = selectedItemsRows;
+	}
+
+	/**
+	 * @return the goId
+	 */
+	public Long getGoId() {
+		return goId;
+	}
+
+	/**
+	 * @param goId the goId to set
+	 */
+	public void setGoId(Long goId) {
+		this.goId = goId;
+	}
+
+	/**
+	 * @return the soId
+	 */
+	public Long getSoId() {
+		return soId;
+	}
+
+	/**
+	 * @param soId the soId to set
+	 */
+	public void setSoId(Long soId) {
+		this.soId = soId;
+	}
+
+	/**
+	 * @return the doId
+	 */
+	public Long getDoId() {
+		return doId;
+	}
+
+	/**
+	 * @param doId the doId to set
+	 */
+	public void setDoId(Long doId) {
+		this.doId = doId;
+	}
+
+	/**
+	 * @return the subTotal
+	 */
+	public BigDecimal getSubTotal() {
+		return subTotal;
+	}
+
+	/**
+	 * @param subTotal the subTotal to set
+	 */
+	public void setSubTotal(BigDecimal subTotal) {
+		this.subTotal = subTotal;
+	}
+
+	/**
+	 * @return the selectedItemAddr
+	 */
+	public FlFulfilmentItemAddr getSelectedItemAddr() {
+		return selectedItemAddr;
+	}
+
+	/**
+	 * @param selectedItemAddr the selectedItemAddr to set
+	 */
+	public void setSelectedItemAddr(FlFulfilmentItemAddr selectedItemAddr) {
+		this.selectedItemAddr = selectedItemAddr;
 	}
 
 	

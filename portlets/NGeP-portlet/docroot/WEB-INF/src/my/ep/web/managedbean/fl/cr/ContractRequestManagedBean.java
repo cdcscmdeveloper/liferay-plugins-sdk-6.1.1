@@ -53,6 +53,9 @@ public class ContractRequestManagedBean extends BaseManagedBean {
 	private BigDecimal subTotal;
 	private FlFulfilmentItemAddr selectedItemAddr;
 	
+	private List <FlFulfilmentItemAddr>  selectedItemsRows;
+	//private List<FlFulfilmentItem> selectedItemsRows;
+	
 	
 	//getcontract
 	private CtContract ctContract = new CtContract();
@@ -76,6 +79,10 @@ public class ContractRequestManagedBean extends BaseManagedBean {
 	private Long goId;
 	private Long soId;
 	private Long doId;
+	
+	//remove multiple selection from data table
+	private List<FlDeliveryAddress> selectedAddressRows;
+	//private List<FlFulfilmentItem> selectedItemsRows;
 	
 	public ContractRequestManagedBean(){
 		
@@ -528,4 +535,39 @@ public class ContractRequestManagedBean extends BaseManagedBean {
 		this.selectedItemAddr = selectedItemAddr;
 	}
 
-}
+
+	/**
+	 * @return the selectedAddressRows
+	 */
+	public List<FlDeliveryAddress> getSelectedAddressRows() {
+		return selectedAddressRows;
+	}
+
+
+	/**
+	 * @param selectedAddressRows the selectedAddressRows to set
+	 */
+	public void setSelectedAddressRows(List<FlDeliveryAddress> selectedAddressRows) {
+		this.selectedAddressRows = selectedAddressRows;
+	}
+
+
+	/**
+	 * @return the selectedItemsRows
+	 */
+	public List<FlFulfilmentItemAddr> getSelectedItemsRows() {
+		return selectedItemsRows;
+	}
+
+
+	/**
+	 * @param selectedItemsRows the selectedItemsRows to set
+	 */
+	public void setSelectedItemsRows(List<FlFulfilmentItemAddr> selectedItemsRows) {
+		this.selectedItemsRows = selectedItemsRows;
+	}
+
+
+	
+
+	}

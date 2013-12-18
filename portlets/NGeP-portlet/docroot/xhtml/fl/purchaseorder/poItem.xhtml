@@ -41,15 +41,33 @@
 			</p:column>
 
 			<p:column headerText="GOSODO">
+				<p:selectOneMenu id="goId" value="#{purchaseRequestBackingBean.managedBean.goId}">
+				<f:selectItems value="#{purchaseRequestBackingBean.goList}" />
+				<p:ajax event="change" update="soId,doId"></p:ajax>
+				</p:selectOneMenu><br />
+				<p:selectOneMenu id="soId" value="#{purchaseRequestBackingBean.managedBean.soId}">
+				<f:selectItems value="#{purchaseRequestBackingBean.soList}" />
+				<p:ajax event="change" update="doId"></p:ajax>
+				</p:selectOneMenu><br />
+				<p:selectOneMenu id="doId" value="#{purchaseRequestBackingBean.managedBean.doId}">
+				<f:selectItems value="#{purchaseRequestBackingBean.doList}" />
+				</p:selectOneMenu>
 			</p:column>
 
 			<p:column headerText="Activity Code">
+				<p:selectOneMenu id="actCode" value="#{purchaseRequestBackingBean.managedBean.goId}">
+				<f:selectItems value="#{purchaseRequestBackingBean.goList}" />
+				</p:selectOneMenu>
 			</p:column>
 			<p:column headerText="Unit Price (MYR)">
+				<p:inputText disabled="true"></p:inputText>
 			</p:column>
 			<p:column headerText="Ord. Qty.">
+				<p:inputText value="#{flItem.scRequestNoteDtl.scRequestSupplierItem.scRequestListItem.quantity}">
+				</p:inputText>
 			</p:column>
 			<p:column headerText="Sub Total">
+				<p:inputText id="subTotalTxt" value="#{purchaseRequestBackingBean.managedBean.selectedItemAddr.subTotal}" disabled="true"></p:inputText>
 			</p:column>
 		</p:dataTable>
 		

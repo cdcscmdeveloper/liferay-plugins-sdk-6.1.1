@@ -6,19 +6,17 @@
 	xmlns:c="http://java.sun.com/jsp/jstl/core"
 	xmlns:ac="http://ac.my/jsf/composite/cc">
 
-
 	<p:panel id="delAddrPanel" header="DELIVERY ADDRESS" toggleable="true">
 
 		<p:dataTable id="addressDataTable" var="address"
 			value="#{purchaseRequestBackingBean.managedBean.fulfilmentRequest.flDeliveryAddresses}"
-			selection="#{purchaseRequestBackingBean.managedBean.selectedAddressRows}"
-			rowKey="#{address}" >
+			selection="#{purchaseRequestBackingBean.managedBean.selectedDelAddr}"
+			rowKey="#{address}" lazy="true">
 			<ac:paginator for="addressDataTable" />
-			<p:ajax event="rowSelect" update=":form:prtabs:itemDetPanel"
-				process="@this"
-				listener="#{purchaseRequestBackingBean.selectedAddrRow()}">
-			</p:ajax>
-			<p:column selectionMode="multiple" width="5%" />
+			<p:ajax event="rowSelectRadio" update=":form:prtabs:itemDetPanel"
+				process="@this" />
+			<p:column selectionMode="single" width="5%" />
+
 			<p:column headerText="Delivery Address">
 				<h:outputText
 					value="#{address.addressType.pmAddress.address1}, #{address.addressType.pmAddress.address2}, #{address.addressType.pmAddress.address3}, #{address.addressType.pmAddress.address4}" />
@@ -40,19 +38,21 @@
 				action="#{purchaseRequestBackingBean.flDeliveryAddrList}"
 				update="delAddr" process="@this,delAddr"
 				oncomplete="addDeliveryAddr.show();" />
-			<p:commandButton value="Delete" icon="ui-icon-delete"     
+			<p:commandButton value="Delete" icon="ui-icon-delete"
 				action="#{purchaseRequestBackingBean.removeAddRow}"
-				update="addressDataTable" partialSubmit="true" />
-
+				update="addressDataTable" partialSubmit="true">
+				<f:setPropertyActionListener value="#{address}"
+					target="#{purchaseRequestBackingBean.managedBean.selectedAddrRow}" />
+			</p:commandButton>
 		</div>
 	</p:panel>
 	<p:panel id="itemDetPanel" header="ITEM DETAIL" toggleable="true">
 
-		<p:dataTable id="itemDataTable" var="flItem"
+		<p:dataTable id="itemDataTable" var="flItem" lazy="true" rowIndexVar="index"
 			value="#{purchaseRequestBackingBean.managedBean.fulfilmentRequest.flFulfilmentItems}"
 			selection="#{purchaseRequestBackingBean.managedBean.selectedItemsRows}"
-			rendered="#{not empty purchaseRequestBackingBean.managedBean.fulfilmentRequest.flDeliveryAddresses}"
-			rowKey="#{flItem}" >
+			rendered="#{not empty purchaseRequestBackingBean.managedBean.selectedDelAddr}"
+			rowKey="#{flItem}">
 			<ac:paginator for="itemDataTable" />
 			<p:column selectionMode="multiple" width="5%" />
 			<p:column headerText="Product Code">
@@ -66,17 +66,35 @@
 			</p:column>
 
 			<p:column headerText="GOSODO">
+				<p:selectOneMenu id="goId" value="#{purchaseRequestBackingBean.managedBean.goId}">
+				<f:selectItems value="#{purchaseRequestBackingBean.goList}" />
+				<p:ajax event="change" update="soId,doId"></p:ajax>
+				</p:selectOneMenu><br />
+				<p:selectOneMenu id="soId" value="#{purchaseRequestBackingBean.managedBean.soId}">
+				<f:selectItems value="#{purchaseRequestBackingBean.soList}" />
+				<p:ajax event="change" update="doId"></p:ajax>
+				</p:selectOneMenu><br />
+				<p:selectOneMenu id="doId" value="#{purchaseRequestBackingBean.managedBean.doId}">
+				<f:selectItems value="#{purchaseRequestBackingBean.doList}" />
+				</p:selectOneMenu>
 			</p:column>
 
 			<p:column headerText="Activity Code">
+				<p:selectOneMenu id="actCode" value="#{purchaseRequestBackingBean.managedBean.goId}">
+				<f:selectItems value="#{purchaseRequestBackingBean.goList}" />
+				</p:selectOneMenu>
 			</p:column>
 			<p:column headerText="Unit Price (MYR)">
+				<p:inputText disabled="true"></p:inputText>
 			</p:column>
 			<p:column headerText="Ord. Qty.">
+				<p:inputText value="#{flItem.scRequestNoteDtl.scRequestSupplierItem.scRequestListItem.quantity}">
+				</p:inputText>
 			</p:column>
 			<p:column headerText="Sub Total">
+				<p:inputText id="subTotalTxt" value="#{purchaseRequestBackingBean.managedBean.selectedItemAddr.subTotal}" disabled="true"></p:inputText>
 			</p:column>
-			
+
 		</p:dataTable>
 		<p:spacer height="2px"></p:spacer>
 		<div style="width: 100%; text-align: right">
@@ -85,9 +103,9 @@
 				rendered="#{not empty purchaseRequestBackingBean.managedBean.fulfilmentRequest.flDeliveryAddresses}"
 				update="purchasedItemDt" process="@this,purchasedItemDt"
 				oncomplete="addItems.show();" />
-			<p:commandButton value="Delete" icon="ui-icon-delete"    
+			<p:commandButton value="Delete" icon="ui-icon-delete"
 				action="#{purchaseRequestBackingBean.removeItemRow}"
-				update="itemDataTable" partialSubmit="true" />	
+				update="itemDataTable" partialSubmit="true" />
 
 		</div>
 	</p:panel>
@@ -119,7 +137,7 @@
 		</p:dataTable>
 		<p:spacer height="2px"></p:spacer>
 		<div style="width: 100%; text-align: right">
-			<p:commandButton value="Add" icon="ui-icon-add"
+			<p:commandButton value="ADD" icon="ui-icon-add"
 				action="#{purchaseRequestBackingBean.updateDeliveryAddrDt}"
 				oncomplete="addDeliveryAddr.hide();" process="@this,delAddr"
 				update="addressDataTable">
@@ -134,7 +152,7 @@
 
 		<p:dataTable id="purchasedItemDt" var="purchasedItem"
 			value="#{purchaseRequestBackingBean.managedBean.requestNoteWithDtlsList}"
-			rowKey="#{purchasedItem.scRequestList.requestItems[0].requestListItemId}"
+			rowKey="#{purchasedItem}"
 			selection="#{purchaseRequestBackingBean.managedBean.selectedPurchasedItemList}">
 			<p:ajax event="rowSelect"
 				update=":form:prtabs:addPurchasedItemDialog" process="@this" />
@@ -159,7 +177,6 @@
 				process="@this,purchasedItemDt">
 			</p:commandButton>
 		</div>
-
 
 	</p:dialog>
 </ui:composition>

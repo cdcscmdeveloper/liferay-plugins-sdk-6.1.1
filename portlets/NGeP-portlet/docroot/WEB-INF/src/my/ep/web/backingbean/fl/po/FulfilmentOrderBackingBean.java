@@ -293,8 +293,10 @@ public class FulfilmentOrderBackingBean extends BaseBackingBean<FulfilmentOrderM
 		reqDTO.setTaskId(taskId);
 		BpmResponseDTO res = bpmSO.getTaskDetails(reqDTO);
 		Object obj = res.getPojo();
-		
-		if (res.getProcessName().equalsIgnoreCase(FlProcessNameConst.STOP_FULFILMENT_REQUEST_PROCESS_NAME)){
+		if(null==res.getProcessName() || res.getProcessName().equalsIgnoreCase("")){
+			System.out.println("Process name is NUllllllllllllllll");
+		}	
+		else if (FlProcessNameConst.STOP_FULFILMENT_REQUEST_PROCESS_NAME.equalsIgnoreCase(res.getProcessName())){
 			IFulfilmentOrderSO orderSO = (IFulfilmentOrderSO) BusinessDelegate.getInstance().getServiceObject("fl",IFulfilmentOrderSO.class);
 			FLStopFullfillmentDataType stopFlData = (FLStopFullfillmentDataType)obj;
 			FulfilmentReqDTO flReqDTO = new FulfilmentReqDTO();
@@ -309,8 +311,6 @@ public class FulfilmentOrderBackingBean extends BaseBackingBean<FulfilmentOrderM
 			getManagedBean().setFlRequest(resDTO.getFlFulfilmentRequest());
 			//			flOrderBB.getManagedBean().setFlRequest(resDTO.getFlOrder().getFlFulfilmentRequest());
 			getManagedBean().setContractRequest(Boolean.TRUE);
-		}else if(null==res.getProcessName() || res.getProcessName().equalsIgnoreCase("")){
-			System.out.println("Process name is NUllllllllllllllll");
 			
 		}else {
 			FulfilmentReqDTO flReqDTO = new FulfilmentReqDTO();
