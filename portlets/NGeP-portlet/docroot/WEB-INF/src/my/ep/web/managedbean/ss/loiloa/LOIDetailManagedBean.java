@@ -6,6 +6,7 @@ import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
 import javax.faces.model.SelectItem;
 
+import my.ep.persistence.entity.pm.authorization.PmOrgProfile;
 import my.ep.persistence.entity.pm.authorization.PmUser;
 import my.ep.persistence.entity.sm.SmMofAccount;
 import my.ep.persistence.entity.sm.SmSupplier;
@@ -43,8 +44,10 @@ public class LOIDetailManagedBean extends BaseManagedBean {
 	private ScQtCriteria scQtCriteria;
 	private ScNegoLocation scNegoLocation;
 	private List<ScNegoLocation> negoLocationList;
+	private List<ScNegoLocation> selectedNegoLocationList;
 	private ScNegoTerm scNegoTerm;
 	private List<ScNegoTerm> negoTermsList;
+	private List<ScNegoTerm> selectedNegoTermsList;
 	private ScTermDesc scTermDesc;
 	private List<ScTermDesc> scTermDescList;
 	private List<ScTermDesc> selectedCheckDetails;
@@ -60,6 +63,112 @@ public class LOIDetailManagedBean extends BaseManagedBean {
 	
 	private List<ScQtItem> scQtItemList;
 	
+	private List<PmOrgProfile> userMinistryList;
+	private List<PmOrgProfile> userDepartmentList;
+	private List<PmOrgProfile> userDivisionList;
+
+	private SmSupplierBranch smSupplierBranch;
+	private String branchName;
+	
+	/**
+	 * @return the selectedNegoTermsList
+	 */
+	public List<ScNegoTerm> getSelectedNegoTermsList() {
+		return selectedNegoTermsList;
+	}
+
+	/**
+	 * @param selectedNegoTermsList the selectedNegoTermsList to set
+	 */
+	public void setSelectedNegoTermsList(List<ScNegoTerm> selectedNegoTermsList) {
+		this.selectedNegoTermsList = selectedNegoTermsList;
+	}
+
+	/**
+	 * @return the selectedNegoLocationList
+	 */
+	public List<ScNegoLocation> getSelectedNegoLocationList() {
+		return selectedNegoLocationList;
+	}
+
+	/**
+	 * @param selectedNegoLocationList the selectedNegoLocationList to set
+	 */
+	public void setSelectedNegoLocationList(
+			List<ScNegoLocation> selectedNegoLocationList) {
+		this.selectedNegoLocationList = selectedNegoLocationList;
+	}
+
+	/**
+	 * @return the branchName
+	 */
+	public String getBranchName() {
+		return branchName;
+	}
+
+	/**
+	 * @param branchName the branchName to set
+	 */
+	public void setBranchName(String branchName) {
+		this.branchName = branchName;
+	}
+
+	/**
+	 * @return the smSupplierBranch
+	 */
+	public SmSupplierBranch getSmSupplierBranch() {
+		return smSupplierBranch;
+	}
+
+	/**
+	 * @param smSupplierBranch the smSupplierBranch to set
+	 */
+	public void setSmSupplierBranch(SmSupplierBranch smSupplierBranch) {
+		this.smSupplierBranch = smSupplierBranch;
+	}
+
+	/**
+	 * @return the userMinistryList
+	 */
+	public List<PmOrgProfile> getUserMinistryList() {
+		return userMinistryList;
+	}
+
+	/**
+	 * @param userMinistryList the userMinistryList to set
+	 */
+	public void setUserMinistryList(List<PmOrgProfile> userMinistryList) {
+		this.userMinistryList = userMinistryList;
+	}
+
+	/**
+	 * @return the userDepartmentList
+	 */
+	public List<PmOrgProfile> getUserDepartmentList() {
+		return userDepartmentList;
+	}
+
+	/**
+	 * @param userDepartmentList the userDepartmentList to set
+	 */
+	public void setUserDepartmentList(List<PmOrgProfile> userDepartmentList) {
+		this.userDepartmentList = userDepartmentList;
+	}
+
+	/**
+	 * @return the userDivisionList
+	 */
+	public List<PmOrgProfile> getUserDivisionList() {
+		return userDivisionList;
+	}
+
+	/**
+	 * @param userDivisionList the userDivisionList to set
+	 */
+	public void setUserDivisionList(List<PmOrgProfile> userDivisionList) {
+		this.userDivisionList = userDivisionList;
+	}
+
 	/**
 	 * @return the scQtItemList
 	 */

@@ -6,6 +6,7 @@ import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
 import javax.faces.model.SelectItem;
 
+import my.ep.persistence.entity.pm.authorization.PmOrgProfile;
 import my.ep.persistence.entity.pm.authorization.PmUser;
 import my.ep.persistence.entity.pm.common.PmCurrency;
 import my.ep.persistence.entity.sm.SmMofAccount;
@@ -15,6 +16,7 @@ import my.ep.persistence.entity.ss.quationtender.ScBondDtl;
 import my.ep.persistence.entity.ss.quationtender.ScLoa;
 import my.ep.persistence.entity.ss.quationtender.ScQt;
 import my.ep.persistence.entity.ss.quationtender.ScQtCriteria;
+import my.ep.persistence.entity.ss.quationtender.ScQtDeduction;
 import my.ep.persistence.entity.ss.quationtender.ScQtItem;
 import my.ep.persistence.entity.ss.quationtender.ScQtProposalRanking;
 import my.ep.persistence.entity.ss.quationtender.ScQtSpec;
@@ -47,10 +49,101 @@ public class LOADetailManagedBean extends BaseManagedBean {
 	private ScQtCriteria scQtCriteria;
 
 	private List<ScBondDtl> scBondDtlList;
+	private List<ScBondDtl> selectScBondDtlList;
 	private List<ScQtZoneCriteria> zonelist;
 	private List<ScQtItem> scQtItemList;
 	private PmCurrency pmCurrency;
 	
+	private List<PmOrgProfile> userMinistryList;
+	private List<PmOrgProfile> userDepartmentList;
+	private List<PmOrgProfile> userDivisionList;
+	private String branchName;
+	private List<ScQtDeduction> scQtDeductionList;
+
+	/**
+	 * @return the scQtDeductionList
+	 */
+	public List<ScQtDeduction> getScQtDeductionList() {
+		return scQtDeductionList;
+	}
+
+	/**
+	 * @param scQtDeductionList the scQtDeductionList to set
+	 */
+	public void setScQtDeductionList(List<ScQtDeduction> scQtDeductionList) {
+		this.scQtDeductionList = scQtDeductionList;
+	}
+
+	/**
+	 * @return the selectScBondDtlList
+	 */
+	public List<ScBondDtl> getSelectScBondDtlList() {
+		return selectScBondDtlList;
+	}
+
+	/**
+	 * @param selectScBondDtlList the selectScBondDtlList to set
+	 */
+	public void setSelectScBondDtlList(List<ScBondDtl> selectScBondDtlList) {
+		this.selectScBondDtlList = selectScBondDtlList;
+	}
+
+	/**
+	 * @return the branchName
+	 */
+	public String getBranchName() {
+		return branchName;
+	}
+
+	/**
+	 * @param branchName the branchName to set
+	 */
+	public void setBranchName(String branchName) {
+		this.branchName = branchName;
+	}
+
+	/**
+	 * @return the userMinistryList
+	 */
+	public List<PmOrgProfile> getUserMinistryList() {
+		return userMinistryList;
+	}
+
+	/**
+	 * @param userMinistryList the userMinistryList to set
+	 */
+	public void setUserMinistryList(List<PmOrgProfile> userMinistryList) {
+		this.userMinistryList = userMinistryList;
+	}
+
+	/**
+	 * @return the userDepartmentList
+	 */
+	public List<PmOrgProfile> getUserDepartmentList() {
+		return userDepartmentList;
+	}
+
+	/**
+	 * @param userDepartmentList the userDepartmentList to set
+	 */
+	public void setUserDepartmentList(List<PmOrgProfile> userDepartmentList) {
+		this.userDepartmentList = userDepartmentList;
+	}
+
+	/**
+	 * @return the userDivisionList
+	 */
+	public List<PmOrgProfile> getUserDivisionList() {
+		return userDivisionList;
+	}
+
+	/**
+	 * @param userDivisionList the userDivisionList to set
+	 */
+	public void setUserDivisionList(List<PmOrgProfile> userDivisionList) {
+		this.userDivisionList = userDivisionList;
+	}
+
 	/**
 	 * @return the pmCurrency
 	 */

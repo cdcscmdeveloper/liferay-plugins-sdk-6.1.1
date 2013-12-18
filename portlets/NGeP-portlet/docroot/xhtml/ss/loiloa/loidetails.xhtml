@@ -5,278 +5,213 @@
 	xmlns:p="http://primefaces.org/ui"
 	xmlns:c="http://java.sun.com/jsp/jstl/core">
 
-	<ui:include src="/xhtml/ss/quatationtender/qtntenderheader.xhtml" />
-	<p:panel header="Supplier Details" toggleable="true">
-		<h:panelGrid border="0" cellpadding="0" cellspacing="0" width="100%"
-			columns="4"
-			columnClasses="columnWidth20,columnWidth30,columnWidth20,columnWidth30">
-			<h:column>
-				<h:outputLabel value="MOF No." />
-			</h:column>
-			<h:column>
-				<p:inputText
-					value="#{lOIDetailBackingBean.managedBean.smMofAccount.mofNo}"
-					disabled="true" />
-			</h:column>
-			<h:column />
-			<h:column />
-			<h:column>
-				<h:outputLabel value="Supplier Name" />
-			</h:column>
-			<h:column>
-				<p:inputText
-					value="#{lOIDetailBackingBean.managedBean.scLoi.supplierName}"
-					disabled="true" />
-			</h:column>
-			<h:column />
-			<h:column />
-			<h:column>
-				<h:outputLabel value="Branch" />
-			</h:column>
-			<h:column>
-				<!-- 				<p:selectOneMenu
-					value="#{lOIDetailBackingBean.managedBean.scQtSpec.approverAction}">
-					<f:selectItem itemLabel="HQ" itemValue="1" />
-				</p:selectOneMenu>
- -->
-				<!-- <p:selectOneMenu
-					value="#{lOIDetailBackingBean.managedBean.scLoi.supplierName}"
-					styleClass="minstryclass" style="width: 124px;">
-					<f:selectItem itemLabel="Select One" itemValue="#{null}" />
-					<f:selectItems
-						value="#{lOIDetailBackingBean.managedBean.branchsList}"
-						var="brList" itemLabel="#{brList.branchName}"
-						itemValue="#{brList.branchName}" />
-				</p:selectOneMenu> -->
-			</h:column>
-			<h:column />
-			<h:column />
-			<h:column>
-				<h:outputLabel value="Address" />
-			</h:column>
-			<h:column>
-				<p:inputTextarea rows="3" cols="30" autoResize="false"
-					value="#{lOIDetailBackingBean.managedBean.scLoi.supplierAddress}"
-					disabled="true" />
-			</h:column>
-			<h:column />
-			<h:column />
-			<h:column>
-				<h:outputLabel value="Contact Person" />
-			</h:column>
-			<h:column>
-				<p:inputText value="" disabled="true" />
-			</h:column>
-			<h:column />
-			<h:column />
+	<ui:include src="/xhtml/ss/loiloa/loiheader.xhtml" />
+	<p:panel header="#{lbl['lbl.sc.loiloa.supp.details']}" id="branchids"
+		toggleable="true">
+		<table style="width: 100%" border="1">
+			<tr>
+				<td style="width: 160px;"><p:outputLabel
+						value="#{lbl['lbl.sc.loiloa.mofno']}" /></td>
+				<td colspan="2"><p:inputText size="30"
+						value="#{lOIDetailBackingBean.managedBean.smMofAccount.mofNo}"
+						disabled="true" /></td>
+			</tr>
+			<tr>
+				<td><p:outputLabel value="#{lbl['lbl.sc.loiloa.supp.name']}" /></td>
+				<td colspan="2"><p:inputText size="30"
+						value="#{lOIDetailBackingBean.managedBean.scLoi.supplierName}"
+						disabled="true" /></td>
+			</tr>
+			<tr>
+				<td><p:outputLabel value="#{lbl['lbl.sc.loiloa.branch']}" /></td>
+				<td colspan="2"><p:selectOneMenu
+						value="#{lOIDetailBackingBean.managedBean.branchName}"
+						style="width: 178px;margin-bottom: 5px;">
+						<f:selectItem itemLabel="-- Select -- " itemValue="" />
+						<f:selectItems
+							value="#{lOIDetailBackingBean.managedBean.branchsList}"
+							var="brList" itemLabel="#{brList.branchName}"
+							itemValue="#{brList.branchName}" />
+						<p:ajax event="change"
+							listener="#{lOIDetailBackingBean.handleBranchDetailsChanged}"
+							partialSubmit="true" process="@this" update="branchids" />
+					</p:selectOneMenu></td>
+			</tr>
+			<p:spacer height="5px" />
+			<tr>
+				<td rowspan="3" valign="top"><p:outputLabel
+						value="#{lbl['lbl.sc.loiloa.address']}" /></td>
+				<td rowspan="3"><p:inputTextarea id="delAddrText" cols="30"
+						rows="5"
+						value="#{lOIDetailBackingBean.managedBean.scLoi.supplierAddress}"
+						style=" margin-bottom:5px;" disabled="true" /></td>
+				<td style="width: 100px;"><p:outputLabel
+						value="#{lbl['lbl.sc.loiloa.tel.no']}" /></td>
+				<td><p:inputText size="30"
+						value="#{lOIDetailBackingBean.managedBean.scLoi.supplierPhoneNo}"
+						disabled="true" /></td>
+			</tr>
+			<tr>
+				<td><p:outputLabel value="#{lbl['lbl.sc.loiloa.fax.no']}" /></td>
+				<td><p:inputText size="30"
+						value="#{lOIDetailBackingBean.managedBean.scLoi.supplierFaxNo}"
+						disabled="true" /></td>
+			</tr>
+			<tr>
+				<td><p:outputLabel value="#{lbl['lbl.sc.loiloa.mobile.no']}" /></td>
+				<td><p:inputText size="30" value="" disabled="true" /></td>
+			</tr>
+			<tr>
+				<td><p:outputLabel
+						value="#{lbl['lbl.sc.loiloa.contact.person']}" /></td>
+				<td><p:inputText size="30" value="" disabled="true" /></td>
+				<td><p:outputLabel value="#{lbl['lbl.sc.loiloa.email']}" /></td>
+				<td><p:inputText size="30" style=" margin-bottom:5px;" value=""
+						disabled="true" /></td>
+			</tr>
+			<tr>
+				<td rowspan="2" valign="top"><p:outputLabel
+						value="#{lbl['lbl.sc.loiloa.remark']}" /></td>
+				<td rowspan="2"><p:inputTextarea id="remark" cols="30"
+						value="#{lOIDetailBackingBean.managedBean.scLoi.ackRemark}"
+						style=" margin-bottom:5px;" /></td>
+			</tr>
+		</table>
+	</p:panel>
 
-			<h:column>
-				<h:outputLabel value="Tel No (Office)" />
-			</h:column>
-			<h:column>
-				<p:inputText
-					value="#{lOIDetailBackingBean.managedBean.scLoi.supplierPhoneNo}"
-					disabled="true" />
-			</h:column>
-			<h:column>
-				<h:outputLabel value="Fax No" />
-			</h:column>
-			<h:column>
-				<p:inputText
-					value="#{lOIDetailBackingBean.managedBean.scLoi.supplierFaxNo}"
-					disabled="true" />
-			</h:column>
-			<h:column>
-				<h:outputLabel value="Tel No (HP)" />
-			</h:column>
-			<h:column>
-				<p:inputText value="" disabled="true" />
-			</h:column>
-			<h:column />
-			<h:column />
-			<h:column>
-				<h:outputLabel value="Email" />
-			</h:column>
-			<h:column>
-				<p:inputText value="" disabled="true" />
-			</h:column>
-			<h:column>
-				<h:outputLabel value="Remark" />
-			</h:column>
-			<h:column>
-				<p:inputTextarea rows="3" cols="30" autoResize="false"
-					value="#{lOIDetailBackingBean.managedBean.scLoi.ackRemark}" />
-			</h:column>
-		</h:panelGrid>
+	<p:panel header="#{lbl['lbl.sc.loiloa.loi.details']}" toggleable="true">
+		<table style="width: 100%" border="1">
+			<tr>
+				<td style="width: 160px;"><p:outputLabel
+						value="#{lbl['lbl.sc.loiloa.loi.title']}" /></td>
+				<td colspan="3"><c:if
+						test="#{lOIDetailBackingBean.managedBean.scLoi.brandNew}">
+						<p:inputText
+							value="#{lOIDetailBackingBean.managedBean.scLoi.title}" size="99" />
+					</c:if> <c:if test="#{!lOIDetailBackingBean.managedBean.scLoi.brandNew}">
+						<p:inputText
+							value="#{lOIDetailBackingBean.managedBean.scLoi.title}" size="99"
+							readonly="true" disabled="true" />
+					</c:if></td>
+			</tr>
+			<tr>
+				<td><p:outputLabel value="#{lbl['lbl.sc.loiloa.loi.no']}" /></td>
+				<td><p:inputText disabled="true" readonly="true"
+						value="#{lOIDetailBackingBean.managedBean.scLoi.loiNo}" size="30" /></td>
+				<td style="width: 100px;"><p:outputLabel
+						value="#{lbl['lbl.sc.loiloa.file.no']}" /></td>
+				<td><p:inputText disabled="true" readonly="true"
+						value="#{lOIDetailBackingBean.managedBean.qt.fileNo}" size="30" /></td>
+			</tr>
+			<tr>
+				<td><p:outputLabel value="#{lbl['lbl.sc.loiloa.loi.issue']}" /></td>
+				<td><p:inputText size="30"
+						value="#{lOIDetailBackingBean.managedBean.scLoi.issueDate}"
+						disabled="true" /></td>
+				<td rowspan="2" valign="top"><p:outputLabel
+						value="#{lbl['lbl.sc.loiloa.remark']}" /></td>
+				<td rowspan="2"><p:inputTextarea id="remarks" cols="30"
+						value="#{lOIDetailBackingBean.managedBean.scLoi.remark}"
+						style=" margin-bottom:5px;" /></td>
+			</tr>
+			<tr>
+				<td><p:outputLabel
+						value="#{lbl['lbl.sc.loiloa.loi.res.due.date']}" /></td>
+				<td><p:inputText size="30"
+						value="#{lOIDetailBackingBean.managedBean.scLoi.loiDuration}"
+						disabled="true" /></td>
+			</tr>
+		</table>
 	</p:panel>
-	<p:panel header="LOI Details" toggleable="true">
-		<h:panelGrid border="0" cellpadding="0" cellspacing="0" width="100%"
-			columns="2" columnClasses="columnWidth20">
-			<h:column>
-				<h:outputLabel value="LOI Title" />
-			</h:column>
-			<h:column>
-				<p:inputText value="#{lOIDetailBackingBean.managedBean.scLoi.title}"
-					size="103" />
-			</h:column>
-		</h:panelGrid>
-		<h:panelGrid border="0" cellpadding="0" cellspacing="0" width="100%"
-			columns="4"
-			columnClasses="columnWidth20,columnWidth30,columnWidth20,columnWidth30">
-			<h:column>
-				<h:outputLabel value="LOI No" />
-			</h:column>
-			<h:column>
-				<p:inputText value="" disabled="true" />
-			</h:column>
-			<h:column/>
-			<h:column/>
-			<h:column>
-				<h:outputLabel value="File No." />
-			</h:column>
-			<h:column>
-				<p:inputText value="#{lOIDetailBackingBean.managedBean.qt.fileNo}"
-					disabled="true" />
-			</h:column>
-			<h:column />
-			<h:column />
-			<h:column>
-				<h:outputLabel value="LOI Issue Date" />
-			</h:column>
-			<h:column>
-				<p:inputText
-					value="#{lOIDetailBackingBean.managedBean.scLoi.issueDate}"
-					disabled="true" />
-			</h:column>
-			<h:column>
-				<h:outputLabel value="Remark" />
-			</h:column>
-			<h:column>
-				<p:inputTextarea rows="3" cols="30" autoResize="false"
-					value="#{lOIDetailBackingBean.managedBean.scLoi.remark}" />
-			</h:column>
-			<h:column>
-				<h:outputLabel value="LOI Duration (Days)" />
-			</h:column>
-			<h:column>
-				<p:inputText
-					value="#{lOIDetailBackingBean.managedBean.scLoi.loiDuration}"
-					disabled="true" />
-			</h:column>
-			<h:column />
-			<h:column />
-		</h:panelGrid>
+
+	<p:panel header="#{lbl['lbl.sc.loiloa.loi.off.detail']}"
+		toggleable="true">
+		<table style="width: 100%" border="1">
+			<tr>
+				<td style="width: 160px;"><p:outputLabel
+						value="#{lbl['lbl.sc.loiloa.loi.off.name']}" /></td>
+				<td><p:inputText disabled="true" readonly="true"
+						value="#{lOIDetailBackingBean.managedBean.scLoi.officierName}"
+						size="30" /></td>
+				<td style="width: 100px;"><p:outputLabel
+						value="#{lbl['lbl.sc.loiloa.loi.off.designation']}" /></td>
+				<td><p:inputText disabled="true" readonly="true"
+						value="#{lOIDetailBackingBean.managedBean.scLoi.officerDesignation}"
+						size="30" /></td>
+			</tr>
+			<tr>
+				<td rowspan="3" valign="top"><p:outputLabel
+						value="#{lbl['lbl.sc.loiloa.address']}" /></td>
+				<td rowspan="3"><p:inputTextarea id="offaddr" cols="30"
+						rows="5"
+						value="#{lOIDetailBackingBean.managedBean.scLoi.officerAddress}"
+						style=" margin-bottom:5px;" disabled="true" /></td>
+				<td><p:outputLabel value="#{lbl['lbl.sc.loiloa.tel.no']}" /></td>
+				<td><p:inputText size="30"
+						value="#{lOIDetailBackingBean.managedBean.scLoi.officerPhoneNo}"
+						disabled="true" /></td>
+			</tr>
+			<tr>
+				<td valign="top"><p:outputLabel
+						value="#{lbl['lbl.sc.loiloa.fax.no']}" /></td>
+				<td><p:inputText size="30"
+						value="#{lOIDetailBackingBean.managedBean.scLoi.officerFaxNo}"
+						disabled="true" /></td>
+			</tr>
+			<tr>
+				<td><p:outputLabel value="#{lbl['lbl.sc.loiloa.email']}" /></td>
+				<td><p:inputText size="30"
+						value="#{lOIDetailBackingBean.managedBean.scLoi.officerEmail}"
+						disabled="true" /></td>
+			</tr>
+		</table>
 	</p:panel>
-	<p:panel header="Officer Details" toggleable="true">
-		<h:panelGrid border="0" cellpadding="0" cellspacing="0" width="100%"
-			columns="4"
-			columnClasses="columnWidth20,columnWidth30,columnWidth20,columnWidth30">
-			<h:column>
-				<h:outputLabel value="Name" />
-			</h:column>
-			<h:column>
-				<p:inputText
-					value="#{lOIDetailBackingBean.managedBean.scLoi.officierName}"
-					disabled="true" />
-			</h:column>
-			<h:column />
-			<h:column />
-			<h:column>
-				<h:outputLabel value="Designation" />
-			</h:column>
-			<h:column>
-				<p:inputText
-					value="#{lOIDetailBackingBean.managedBean.scLoi.officerDesignation}"
-					disabled="true" />
-			</h:column>
-			<h:column />
-			<h:column />
-			<h:column>
-				<h:outputLabel value="Address" />
-			</h:column>
-			<h:column>
-				<p:inputTextarea rows="3" cols="30" autoResize="false"
-					value="#{lOIDetailBackingBean.managedBean.scLoi.officerAddress}" disabled="true" />
-			</h:column>
-			<h:column />
-			<h:column />
-			<h:column>
-				<h:outputLabel value="Tel No" />
-			</h:column>
-			<h:column>
-				<p:inputText
-					value="#{lOIDetailBackingBean.managedBean.scLoi.officerPhoneNo}"
-					disabled="true" />
-			</h:column>
-			<h:column>
-				<h:outputLabel value="Fax No" />
-			</h:column>
-			<h:column>
-				<p:inputText
-					value="#{lOIDetailBackingBean.managedBean.scLoi.officerFaxNo}"
-					disabled="true" />
-			</h:column>
-			<h:column>
-				<h:outputLabel value="Email" />
-			</h:column>
-			<h:column>
-				<p:inputText value="" disabled="true" />
-			</h:column>
-			<h:column />
-			<h:column />
-		</h:panelGrid>
-	</p:panel>
-	<p:panel header="Approval Details" toggleable="true">
-		<h:panelGrid border="0" cellpadding="0" cellspacing="0" width="100%"
-			columns="4"
-			columnClasses="columnWidth20,columnWidth30,columnWidth20,columnWidth30">
-			<h:column>
-				<h:outputLabel value="Approval LOI Required" />
-			</h:column>
-			<h:column>
-				<p:selectOneRadio
-					value="#{lOIDetailBackingBean.managedBean.scLoi.reqApproval}">
-					<f:selectItem itemLabel="Yes" itemValue="true" />
-					<f:selectItem itemLabel="No" itemValue="false" />
-					<p:ajax event="change" update="app, appDate, appaction, appremark" />
-				</p:selectOneRadio>
-			</h:column>
-			<h:column />
-			<h:column />
-			<h:column>
-				<h:outputLabel value="Approver" />
-			</h:column>
-			<h:column>
-				<p:selectOneMenu id="app"
-					value="#{lOIDetailBackingBean.managedBean.scQtSpec.approverName}">
-					<f:selectItems value="#{lOIDetailBackingBean.approverNames}" />
-				</p:selectOneMenu>
-			</h:column>
-			<h:column>
-				<h:outputLabel value=" Approval Date : " />
-			</h:column>
-			<h:column>
-				<p:inputText id="appDate" readonly="true" disabled="true"
-					value="#{lOIDetailBackingBean.managedBean.scLoi.approverActionDate}"></p:inputText>
-			</h:column>
-			<h:column>
-				<h:outputLabel value=" Approver Action : " />
-			</h:column>
-			<h:column>
-				<p:selectOneMenu id="appaction"
-					value="#{lOIDetailBackingBean.managedBean.scLoi.approverAction}">
-					<f:selectItem itemLabel="Approver" itemValue="1" />
-					<f:selectItem itemLabel="Revise" itemValue="2" />
-				</p:selectOneMenu>
-			</h:column>
-			<h:column>
-				<h:outputLabel value=" Approval  Remarks : " />
-			</h:column>
-			<h:column>
-				<p:inputTextarea id="appremark" rows="3" cols="30"
-					value="#{lOIDetailBackingBean.managedBean.scLoi.approverRemark}"
-					autoResize="false"></p:inputTextarea>
-			</h:column>
-		</h:panelGrid>
+	<p:panel header="#{lbl['lbl.sc.loiloa.approve.details']}"
+		toggleable="true">
+		<table style="width: 100%" border="1">
+			<tr>
+				<td><p:outputLabel value="#{lbl['lbl.sc.loiloa.loi.appr.req']}" /></td>
+				<td colspan="3"><p:selectOneRadio
+						value="#{lOIDetailBackingBean.managedBean.scLoi.reqApproval}">
+						<f:selectItem itemLabel="Yes" itemValue="true" />
+						<f:selectItem itemLabel="No" itemValue="false" />
+						<p:ajax event="change" update="app, appDate, appaction, appremark" />
+					</p:selectOneRadio></td>
+			</tr>
+			<tr>
+				<td style="width: 160px;"><p:outputLabel
+						value="#{lbl['lbl.sc.loiloa.loi.approver']}" /></td>
+				<td><p:selectOneMenu id="app"
+						value="#{lOIDetailBackingBean.managedBean.scQtSpec.approverAction}"
+						disabled="#{lOIDetailBackingBean.managedBean.scLoi.reqApproval ne 'true'}"
+						style="width: 178px;margin-bottom: 5px;">
+						<f:selectItems value="#{lOIDetailBackingBean.approverNames}" />
+					</p:selectOneMenu></td>
+				<td style="width: 100px;"><p:outputLabel
+						value="#{lbl['lbl.sc.loiloa.loi.approval.date']}" /></td>
+				<td><p:inputText id="appDate" readonly="true"
+						disabled="#{lOIDetailBackingBean.managedBean.scLoi.reqApproval ne 'true'}"
+						value="#{lOIDetailBackingBean.managedBean.scLoi.approverActionDate}"
+						size="30"></p:inputText></td>
+			</tr>
+			<tr>
+				<td valign="top"><p:outputLabel
+						value="#{lbl['lbl.sc.loiloa.loi.approval.action']}" /></td>
+				<td valign="top"><p:selectOneMenu id="appaction"
+						value="#{lOIDetailBackingBean.managedBean.scLoi.approverAction}"
+						disabled="#{lOIDetailBackingBean.managedBean.scLoi.reqApproval ne 'true'}"
+						style="width: 178px;margin-bottom: 5px;">
+						<f:selectItem itemLabel="-- Select -- " itemValue="" />
+						<f:selectItem itemLabel="Approver" itemValue="1" />
+						<f:selectItem itemLabel="Revise" itemValue="2" />
+					</p:selectOneMenu></td>
+				<td valign="top"><p:outputLabel
+						value="#{lbl['lbl.sc.loiloa.loi.approval.remarks']}" /></td>
+				<td><p:inputTextarea id="appremark" rows="3" cols="30"
+						value="#{lOIDetailBackingBean.managedBean.scLoi.approverRemark}"
+						autoResize="false"
+						disabled="#{lOIDetailBackingBean.managedBean.scLoi.reqApproval ne 'true'}"></p:inputTextarea></td>
+			</tr>
+		</table>
 	</p:panel>
 </ui:composition>

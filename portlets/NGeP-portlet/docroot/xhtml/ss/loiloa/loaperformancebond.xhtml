@@ -3,93 +3,101 @@
 	xmlns:h="http://java.sun.com/jsf/html"
 	xmlns:ui="http://java.sun.com/jsf/facelets"
 	xmlns:p="http://primefaces.org/ui"
-	xmlns:c="http://java.sun.com/jsp/jstl/core">
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:ac="http://ac.my/jsf/composite/cc">
 
-	<ui:include src="/xhtml/ss/quatationtender/qtntenderheader.xhtml" />
-	<p:panel header="Performance Bond" toggleable="true">
+	<ui:include src="/xhtml/ss/loiloa/loaheader.xhtml" />
+	<p:panel header="#{lbl['lbl.sc.loiloa.loa.perform.bond']}"
+		toggleable="true">
 		<h:panelGrid border="0" cellpadding="0" cellspacing="0" width="100%"
 			columns="2" columnClasses="columnWidth20">
 			<h:column>
-				<h:outputLabel value="Required Performance Bond" />
+				<h:outputLabel value="#{lbl['lbl.sc.loiloa.loa.req.perform.bond']}" />
 			</h:column>
 			<h:column>
-				<p:inputText value="" disabled="true" />
+				<p:inputText value="" disabled="true" size="30" readonly="true" />
 			</h:column>
 
 			<h:column>
-				<h:outputLabel value="Bond Duration (Days)" />
+				<h:outputLabel value="#{lbl['lbl.sc.loiloa.loa.bond.res.due.date']}" />
 			</h:column>
 			<h:column>
-				<p:inputText value="#{lOADetailBackingBean.managedBean.scLoa.bondDuration}" />
+				<p:inputText
+					value="#{lOADetailBackingBean.managedBean.scLoa.bondDuration}"
+					size="30" />
 			</h:column>
 			<h:column>
-				<h:outputLabel value="Bond Amount (RM)" />
+				<h:outputLabel value="#{lbl['lbl.sc.loiloa.loa.bond.amt']}" />
 			</h:column>
 			<h:column>
-				<p:inputText value="" disabled="true" />
+				<p:inputText value="" disabled="true" size="30" readonly="true" />
 			</h:column>
 			<h:column>
-				<h:outputLabel value="Percentage Bond" />
+				<h:outputLabel value="#{lbl['lbl.sc.loiloa.loa.bond.percentage']}" />
 			</h:column>
 			<h:column>
-				<p:inputText value="" disabled="true" />
+				<p:inputText value="" disabled="true" size="30" readonly="true" />
 			</h:column>
 		</h:panelGrid>
 	</p:panel>
 	<p:dataTable id="performancebondtbl" var="bondList"
-		value="#{lOADetailBackingBean.managedBean.scBondDtlList}" rows="10"
-		rowIndexVar="rowIndex">
+		value="#{lOADetailBackingBean.managedBean.scBondDtlList}"
+		selection="#{lOADetailBackingBean.managedBean.selectScBondDtlList}"
+		rows="10" rowKey="#{bondList}" rowIndexVar="rowIndex">
 
-		<p:column headerText="" style="width:2%">
-			<p:selectBooleanCheckbox value="1" />
-		</p:column>
+		<ac:paginator for="performId" />
 
-		<p:column headerText="Reference No" style="width:5%">
+		<p:column selectionMode="multiple" style="width:2%" />
+
+		<p:column headerText="#{lbl['lbl.sc.loiloa.loa.bond.ref.no']}"
+			style="width:5%">
 			<p:inputText value="#{bondList.bondRefNo}" style="width:95%" />
 		</p:column>
 
-		<p:column headerText="Financial Institution" style="width:5%">
+		<p:column headerText="#{lbl['lbl.sc.loiloa.loa.finan.inst']}"
+			style="width:5%">
 			<p:inputText value="#{bondList.institutionName}" style="width:95%" />
 		</p:column>
 
-		<p:column headerText="Amount" style="width:5%">
+		<p:column headerText="#{lbl['lbl.sc.loiloa.loa.amt']}"
+			style="width:5%">
 			<p:inputText value="#{bondList.bondAmount}" style="width:95%" />
 		</p:column>
 
-		<p:column headerText="Effective Date" style="width:5%">
+		<p:column headerText="#{lbl['lbl.sc.loiloa.loa.eff.date']}"
+			style="width:5%">
 			<p:calendar value="#{bondList.bondEffDate}" id="bondeffdate"
 				showOn="button" style="width:85%" />
 		</p:column>
 
-		<p:column headerText="Expiry Date" style="width:5%">
+		<p:column headerText="#{lbl['lbl.sc.loiloa.loa.exp.date']}"
+			style="width:5%">
 			<p:calendar value="#{bondList.bondExpDate}" id="bondexpdate"
 				showOn="button" style="width:85%" />
 		</p:column>
 
-		<p:column headerText="Attachment" style="width:5%">
+		<p:column headerText="#{lbl['lbl.sc.loiloa.loa.att']}"
+			style="width:5%">
 			<p:inputText value="#{bondList.bondRefNo}" style="width:95%" />
 		</p:column>
 
-		<p:column headerText="Action" style="width:5%">
+		<p:column headerText="#{lbl['lbl.sc.loiloa.action']}" style="width:5%">
 			<p:commandLink>
 				<p:graphicImage library="ep/images/design" name="edit.png"
 					value="/resources/ep/images/design/edit.png" />
 			</p:commandLink>
-			<!-- <p:commandLink>
-				<p:graphicImage library="ep/images/design" name="delete.png"
-					value="/resources/ep/images/design/delete.png" />
-			</p:commandLink> -->
 
 		</p:column>
 	</p:dataTable>
+	<p:spacer height="20px" />
 	<div align="right">
-		<p:commandButton value="#{lbl['lbl.sc.bsv.attendance.add']}"
+		<p:commandButton value="#{lbl['lbl.sc.loiloa.add']}"
 			process="@this,performancebondtbl" partialSubmit="true"
 			action="#{lOADetailBackingBean.addPerformanceBond}"
 			update="performancebondtbl" icon="ui-icon-add" />
 
-		<p:commandButton value="Delete" process="@this" partialSubmit="true"
-			icon="ui-icon-delete" />
+		<p:commandButton value="#{lbl['lbl.sc.loiloa.delete']}"
+			process="@this" partialSubmit="true" icon="ui-icon-delete" />
 	</div>
 
 </ui:composition>

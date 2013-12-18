@@ -9,46 +9,47 @@
 
 	<ui:define name="contentSection">
 		<ui:include src="/xhtml/ss/quatationtender/qtntenderheader.xhtml" />
-		<p:panel header="Award Details" toggleable="true">
+		<p:panel header="#{lbl['lbl.sc.loiloa.award.details']}"
+			toggleable="true">
 			<h:panelGrid border="0" cellpadding="0" cellspacing="0" width="100%"
 				columns="2" columnClasses="columnWidth20">
 
 				<h:column>
-					<h:outputLabel value="Award Type" />
+					<h:outputLabel value="#{lbl['lbl.sc.loiloa.award.type']}" />
 				</h:column>
 				<h:column>
 					<p:inputText value="1" disabled="true" />
-					
+
 				</h:column>
 			</h:panelGrid>
 		</p:panel>
-		<p:panel header="Recommended Supplier List" toggleable="false">
+		<p:panel header="#{lbl['lbl.sc.loiloa.recom.supp.list']}"
+			toggleable="false">
 			<p:dataTable id="list" var="proposalRankingList"
 				value="#{loiLoaDetailBackingBean.managedBean.scQtProposalRankingList}"
 				rows="10" rowIndexVar="rowIndex">
 
-				<p:column headerText="Supplier Name" style="width:40%">
+				<p:column headerText="#{lbl['lbl.sc.loiloa.supp.name']}"
+					style="width:40%">
 					<h:outputText
-						value="#{proposalRankingList.scQtProposal.scQtSupplier.smSupplier.supplierName}" />
+						value="#{proposalRankingList.scQtProposalEvaluate.scQtProposal.scQtSupplier.smSupplier.supplierName}" />
 				</p:column>
 
-				<!-- 				<p:column headerText="MOF No" style="width:20%">
-					<h:outputText
-						value="#{loiLoaDetailBackingBean.managedBean.smMofAccount.mofNo}" />
-				</p:column> -->
-
-				<p:column headerText="LOI Status" style="width:20%">
-					<h:outputText value="" />
+				<p:column headerText="#{lbl['lbl.sc.loiloa.loi.status']}"
+					style="width:20%">
+					<h:outputText value="#{proposalRankingList.scLoi.pmStatus.pmStatusDescs[0].statusName}" />
 				</p:column>
 
-				<p:column headerText="LOA Status" style="width:20%">
-					<h:outputText value="" />
+				<p:column headerText="#{lbl['lbl.sc.loiloa.loa.status']}"
+					style="width:20%">
+					<h:outputText value="#{proposalRankingList.scLoa.pmStatus.pmStatusDescs[0].statusName}" />
 				</p:column>
 
-				<p:column headerText="Action" style="width:20%">
-					<p:commandButton value="LOI"
+				<p:column headerText="#{lbl['lbl.sc.loiloa.action']}"
+					style="width:20%">
+					<p:commandButton value="#{lbl['lbl.sc.loiloa.loi']}"
 						action="#{lOIDetailBackingBean.createLOIAction(proposalRankingList, doctype)}" />
-					<p:commandButton value="LOA"
+					<p:commandButton value="#{lbl['lbl.sc.loiloa.loa']}"
 						action="#{lOADetailBackingBean.createLOAAction(proposalRankingList, doctype)}" />
 				</p:column>
 
