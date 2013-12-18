@@ -102,7 +102,15 @@
            	<h:column>
            		<p:inputText   disabled="true"/>  
  			</h:column> 
- 			</c:if>      
+ 			</c:if>
+ 			 <c:if test="#{evaluationBackingBean.managedBean.evaluateStatus}">
+ 			<h:column>
+           		<h:outputLabel value="Evaluation Status" /> 
+           	</h:column>
+           	<h:column>
+           		<p:inputText   disabled="true"/>  
+ 			</h:column>   
+ 			</c:if>       
   		</h:panelGrid>
 	</p:panel>
 </ui:composition>
