@@ -34,8 +34,8 @@ public class ReceivedNoteManagedBean extends BaseManagedBean {
 
 	private FlRemark flRemark = new FlRemark();
 	private FlAttachment flAttachment = new FlAttachment();
-	private FlFulfilmentNote fulfilmentNote=new FlFulfilmentNote();
-	private FlFulfilmentNoteItem fulfilmentNoteItem=new FlFulfilmentNoteItem();
+	private FlFulfilmentNote fulfilmentNote = new FlFulfilmentNote();
+	private FlFulfilmentNoteItem fulfilmentNoteItem = new FlFulfilmentNoteItem();
 	private FlFulfilmentRequest fulfilmentRequest;
 
 	//private List<DeliveryAddressPopup> daPopupList;

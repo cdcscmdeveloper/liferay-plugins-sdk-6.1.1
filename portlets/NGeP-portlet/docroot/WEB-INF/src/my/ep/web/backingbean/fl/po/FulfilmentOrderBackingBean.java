@@ -136,13 +136,7 @@ public class FulfilmentOrderBackingBean extends BaseBackingBean<FulfilmentOrderM
 		return resDTO;
 
 	}
-	public void delAddrList(){
-		IFulfilmentOrderSO filmentOrderSO = (IFulfilmentOrderSO) BusinessDelegate.getInstance().getServiceObject("fl", IFulfilmentOrderSO.class);
-		FulfilmentReqDTO reqDTO = new FulfilmentReqDTO();
-		reqDTO.setFlRequestId(getManagedBean().getFulfilmentOrder().getFlFulfilmentRequest().getFulfilmentReqId());
-		FulfilmentResDTO resDTO = filmentOrderSO.getDeliveryAddressListById(reqDTO);
-		this.getManagedBean().setDeliveryAddressList(resDTO.getDelAddrList());
-	}
+	
 	public FulfilmentResDTO getDeliveryOrderStatus() {
 		IFulfilmentOrderSO filmentOrderSO = (IFulfilmentOrderSO) BusinessDelegate.getInstance().getServiceObject("fl", IFulfilmentOrderSO.class);
 		FulfilmentResDTO resDTO = new FulfilmentResDTO();
@@ -175,7 +169,7 @@ public class FulfilmentOrderBackingBean extends BaseBackingBean<FulfilmentOrderM
 
 		DeliveryOrderBackingBean doMB = new DeliveryOrderBackingBean();
 		doMB.getManagedBean().setFulfilmentOrder(getManagedBean().getFulfilmentOrder());
-		//		doMB.getManagedBean().setDeliveryAddress(this.getManagedBean().getDeliveryAddressList().get(index));
+		doMB.getManagedBean().setFulfilmentRequest(resDTO.getFlFulfilmentRequest());
 
 		return NAV_TO_CREATE_DO;
 
@@ -199,13 +193,7 @@ public class FulfilmentOrderBackingBean extends BaseBackingBean<FulfilmentOrderM
 		//		getManagedBean().setSelectedRowFlg(true);
 	}
 
-	public void updateDeliveryAddrText(){
-		getManagedBean().setSelectedLovDelAddr(getManagedBean().getSelectedDelAddr().getAddressType().getPmAddress().getAddress1()
-				+" "+getManagedBean().getSelectedDelAddr().getAddressType().getPmAddress().getAddress2()
-				+" "+getManagedBean().getSelectedDelAddr().getAddressType().getPmAddress().getAddress3()
-				+" "+getManagedBean().getSelectedDelAddr().getAddressType().getPmAddress().getAddress4());
-
-	}
+	
 
 	public void preRenderViewCR() {
 		HttpServletRequest servletRequest = PortalUtil

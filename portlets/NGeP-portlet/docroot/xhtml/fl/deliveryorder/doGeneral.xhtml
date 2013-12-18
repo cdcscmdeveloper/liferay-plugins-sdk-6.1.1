@@ -32,7 +32,7 @@
 				<td rowspan="2" valign="top"><p:outputLabel
 						value="#{lbl['lbl.fl.supp.address']}" /></td>
 				<td rowspan="2"><p:inputTextarea id="delAddrText"  cols="36"
-						value="#{flOrderBB.managedBean.selectedLovDelAddr}"
+						value="#{createDOBackingBean.managedBean.selectedLovDelAddr}"
 						style=" margin-bottom:5px;" disabled="true" /></td>
 				<td><p:outputLabel
 						value="#{lbl['lbl.fl.supp.supp.del.ord.no']}" /></td>
@@ -54,7 +54,7 @@
 			<tr>
 				<td><p:outputLabel value="" /></td>
 				<td><p:commandButton value="Select Delivery Address"
-						action="#{flOrderBB.delAddrList}" update="delAddr"
+						action="#{createDOBackingBean.delAddrList}" update="delAddr"
 						oncomplete="delAddrList.show();" process="@this,delAddr" /></td>
 				<td><p:outputLabel value="#{lbl['lbl.fl.supp.status']}" /></td>
 				<td><p:inputText size="35" disabled="true" /></td>
@@ -127,9 +127,9 @@
 		modal="true" height="450" width="600" resizable="false">
 
 		<p:dataTable id="delAddr" var="delivery"
-			value="#{flOrderBB.managedBean.deliveryAddressList}"
+			value="#{createDOBackingBean.managedBean.fulfilmentRequest.flDeliveryAddresses}"
 			rowKey="#{delivery}"
-			selection="#{flOrderBB.managedBean.selectedDelAddr}">
+			selection="#{createDOBackingBean.managedBean.selectedDelAddr}">
 			<p:ajax event="rowSelect" update=":form:dotabs:delAddr" />
 			<ac:paginator for="delAddr" />
 			<p:columnGroup type="header">
@@ -166,9 +166,9 @@
 		<p:spacer height="2px"></p:spacer>
 		<div style="width: 100%; text-align: right">
 			<p:commandButton value="Add"
-				action="#{flOrderBB.updateDeliveryAddrText}"
+				action="#{createDOBackingBean.updateDeliveryAddrText}"
 				oncomplete="delAddrList.hide();" process="@this,delAddr"
-				update="delAddrText">
+				update="delAddrText,:form:dotabs:itemDataTable">
 			</p:commandButton>
 		</div>
 

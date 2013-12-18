@@ -10,6 +10,7 @@ import javax.faces.bean.SessionScoped;
 
 import my.ep.persistence.entity.fl.FlAttachment;
 import my.ep.persistence.entity.fl.FlRemark;
+import my.ep.persistence.entity.fl.order.FlDelOrderItem;
 import my.ep.persistence.entity.fl.order.FlDeliveryOrder;
 import my.ep.persistence.entity.fl.order.FlFulfilmentOrder;
 import my.ep.persistence.entity.fl.request.FlDeliveryAddress;
@@ -38,6 +39,7 @@ public class DeliveryOrderManagedBean extends BaseManagedBean {
 	private FlDeliveryAddress deliveryAddress;
 	private FlFulfilmentOrder fulfilmentOrder;
     private FlFulfilmentRequest fulfilmentRequest;
+    private FlDelOrderItem delOrderItem = new FlDelOrderItem();
 	//private List<DeliveryAddressPopup> daPopupList;
 	//private List<DeliveryAddressPopup> selectedPopupAddress;
 	
@@ -55,6 +57,7 @@ public class DeliveryOrderManagedBean extends BaseManagedBean {
 	private List<FlDeliveryAddress>deliveryAddressList;
 	private String docProcess;
 	private String buttonVal;
+	private String selectedLovDelAddr;
 
 	/**
 	 * @return the flRemark
@@ -324,6 +327,34 @@ public class DeliveryOrderManagedBean extends BaseManagedBean {
 	 */
 	public void setButtonVal(String buttonVal) {
 		this.buttonVal = buttonVal;
+	}
+
+	/**
+	 * @return the selectedLovDelAddr
+	 */
+	public String getSelectedLovDelAddr() {
+		return selectedLovDelAddr;
+	}
+
+	/**
+	 * @param selectedLovDelAddr the selectedLovDelAddr to set
+	 */
+	public void setSelectedLovDelAddr(String selectedLovDelAddr) {
+		this.selectedLovDelAddr = selectedLovDelAddr;
+	}
+
+	/**
+	 * @return the delOrderItem
+	 */
+	public FlDelOrderItem getDelOrderItem() {
+		return delOrderItem;
+	}
+
+	/**
+	 * @param delOrderItem the delOrderItem to set
+	 */
+	public void setDelOrderItem(FlDelOrderItem delOrderItem) {
+		this.delOrderItem = delOrderItem;
 	}
 
 }

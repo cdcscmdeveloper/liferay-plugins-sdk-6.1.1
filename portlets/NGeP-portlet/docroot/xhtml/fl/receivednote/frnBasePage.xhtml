@@ -11,15 +11,15 @@
 	</ui:define>
 
 	<ui:define name="contentSection">
-	<f:event listener="#{recievedNoteBackingBean.preRenderView}" type="preRenderView" />	
+	<f:event listener="#{receivedNoteBackingBean.preRenderView}" type="preRenderView" />	
 	<p:messages id="messages" showDetail="true" autoUpdate="true" closable="true" severity="error, info" />
 		<table style="width: 100%;">
 			<tr>
 				<td colspan="4" style="text-align: right"><ui:repeat
 						var="bpmAction"
-						value="#{recievedNoteBackingBean.managedBean.outComes}">
+						value="#{receivedNoteBackingBean.managedBean.outComes}">
 						<p:commandButton value="#{bpmAction}" ajax='false'
-							action="#{recievedNoteBackingBean.submitAction(bpmAction)}"
+							action="#{receivedNoteBackingBean.submitAction(bpmAction)}"
 							process="@this" />
 					</ui:repeat></td>
 			</tr>
@@ -27,18 +27,18 @@
 		<table style="width: 100%;">
 			<tr>
 				<c:if
-					test='#{recievedNoteBackingBean.managedBean.buttonVal eq "Update"}'>
+					test='#{receivedNoteBackingBean.managedBean.buttonVal eq "Update"}'>
 					<td colspan="4" style="text-align: right"><p:commandButton
 							value="UPDATE"
-							action="#{recievedNoteBackingBean.submitAction('UPDATE')}">
+							action="#{receivedNoteBackingBean.submitAction('UPDATE')}">
 							<f:param name="actionName" value="UPDATE" />
 						</p:commandButton></td>
 				</c:if>
 				<c:if
-					test='#{recievedNoteBackingBean.managedBean.buttonVal eq "Cancel"}'>
+					test='#{receivedNoteBackingBean.managedBean.buttonVal eq "Cancel"}'>
 					<td colspan="4" style="text-align: right"><p:commandButton
 							value="CANCEL"
-							action="#{recievedNoteBackingBean.submitAction('CANCEL')}">
+							action="#{receivedNoteBackingBean.submitAction('CANCEL')}">
 							<f:param name="actionName" value="CANCEL" />
 						</p:commandButton></td>
 				</c:if>

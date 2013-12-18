@@ -94,51 +94,49 @@ public class PaymentMatchBackingBean extends BaseBackingBean<PaymentMatchManaged
 	}
 
 	public void preRenderView() {
-		//		BPMTaskListBackingBean bb = new BPMTaskListBackingBean();
 		HttpServletRequest servletRequest = PortalUtil
 				.getHttpServletRequest(new FacesScopes().getRequest());
 		HttpServletRequest originalServletRequest = PortalUtil
 				.getOriginalServletRequest(servletRequest);
 		String taskId = originalServletRequest.getParameter("taskId");
-		//		String loginId = originalServletRequest.getParameter("loginId");
 		System.out.println("taskId:" + taskId);
-		//		System.out.println("loginId:" + loginId);
+		if(taskId != null){
 
-		IBpmSO bpmSO = (IBpmSO) EpBpmBusinessDelegate.getInstance()
-				.getServiceObject(IBpmSO.class);
-		String ctx = getFacesScopes().getBPMAuthenticationCtxToken();
-		BpmRequestDTO reqDTO = new BpmRequestDTO();
+			IBpmSO bpmSO = (IBpmSO) EpBpmBusinessDelegate.getInstance()
+					.getServiceObject(IBpmSO.class);
+			String ctx = getFacesScopes().getBPMAuthenticationCtxToken();
+			BpmRequestDTO reqDTO = new BpmRequestDTO();
 
-		reqDTO.setCtxToken(ctx);
-		reqDTO.setTaskId(taskId);
-		BpmResponseDTO res = bpmSO.getTaskDetails(reqDTO);
-		Object obj = res.getPojo();
+			reqDTO.setCtxToken(ctx);
+			reqDTO.setTaskId(taskId);
+			BpmResponseDTO res = bpmSO.getTaskDetails(reqDTO);
+			Object obj = res.getPojo();
 
-		FulfilmentReqDTO flReqDTO = new FulfilmentReqDTO();
-		FulfilmentResDTO resDTO = new FulfilmentResDTO();
-		FLInvoiceAndPaymentDataType paymentObj = (FLInvoiceAndPaymentDataType)obj;
-		flReqDTO.setFlOrderId(paymentObj.getFullfillmentRequestId());
-		IInvoiceSO invoiceSO = (IInvoiceSO) BusinessDelegate.getInstance().getServiceObject("fl",IInvoiceSO.class);
+			FulfilmentReqDTO flReqDTO = new FulfilmentReqDTO();
+			FulfilmentResDTO resDTO = new FulfilmentResDTO();
+			FLInvoiceAndPaymentDataType paymentObj = (FLInvoiceAndPaymentDataType)obj;
+			flReqDTO.setFlOrderId(paymentObj.getFullfillmentRequestId());
+			IInvoiceSO invoiceSO = (IInvoiceSO) BusinessDelegate.getInstance().getServiceObject("fl",IInvoiceSO.class);
 
-		resDTO = invoiceSO.retrieveInvoiceByFlOrderId(flReqDTO);
-		FlPaymentAdvice paymentAdvice = new FlPaymentAdvice();
-		paymentAdvice.setFlInvoice(resDTO.getInvoice());
-		
-		// Get Remark and Attachment
-		FulfilmentBackingBean flBB = new FulfilmentBackingBean();
-		flBB.getManagedBean().setRemarkList(resDTO.getRemarkList());
-		flBB.getManagedBean().setAttachmentList(resDTO.getAttachmentList());
-		flBB.initializeRemarkAndAttachement(flBB.getManagedBean().getRemarkList(), flBB.getManagedBean().getAttachmentList());
+			resDTO = invoiceSO.retrieveInvoiceByFlOrderId(flReqDTO);
+			FlPaymentAdvice paymentAdvice = new FlPaymentAdvice();
+			paymentAdvice.setFlInvoice(resDTO.getInvoice());
 
-		//				PaymentMatchBackingBean paymentBB = new PaymentMatchBackingBean();
-		getManagedBean().setPaymentAdvice(paymentAdvice);
-		getManagedBean().setTaskId(taskId);
-		getManagedBean().setOutComes(res.getAction());
-		
-		// For PO No Deduction Panel 
-		getManagedBean().setDocType(resDTO.getFlFulfilmentRequest().getDocType());
-		
-		//		FacesContext fc = FacesContext.getCurrentInstance();
-		//	    fc.getApplication().getNavigationHandler().handleNavigation(fc, null, "/xhtml/fl/invoice/invBasePage.xhtml");
+			// Get Remark and Attachment
+			FulfilmentBackingBean flBB = new FulfilmentBackingBean();
+			flBB.getManagedBean().setRemarkList(resDTO.getRemarkList());
+			flBB.getManagedBean().setAttachmentList(resDTO.getAttachmentList());
+			flBB.initializeRemarkAndAttachement(flBB.getManagedBean().getRemarkList(), flBB.getManagedBean().getAttachmentList());
+
+			getManagedBean().setPaymentAdvice(paymentAdvice);
+			getManagedBean().setTaskId(taskId);
+			getManagedBean().setOutComes(res.getAction());
+
+			// For PO No Deduction Panel 
+			getManagedBean().setDocType(resDTO.getFlFulfilmentRequest().getDocType());
+			
+			
+
+		}
 	}
 }

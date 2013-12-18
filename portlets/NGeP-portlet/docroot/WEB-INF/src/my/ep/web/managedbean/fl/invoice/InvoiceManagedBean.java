@@ -8,6 +8,7 @@ import javax.faces.bean.SessionScoped;
 
 import my.ep.persistence.entity.fl.adjust.FlAdjustment;
 import my.ep.persistence.entity.fl.payment.FlInvoice;
+import my.ep.persistence.entity.fl.payment.FlInvoiceItem;
 import my.ep.web.managedbean.BaseManagedBean;
 
 /**
@@ -25,7 +26,8 @@ public class InvoiceManagedBean extends BaseManagedBean {
 	 */
 	private static final long serialVersionUID = 1L;
 	
-	private FlInvoice invoice;
+	private FlInvoice invoice = new FlInvoice();
+	private FlInvoiceItem invItem = new FlInvoiceItem();
 	
 	private String DocProcess;
 	private String buttonVal;
@@ -107,5 +109,17 @@ public class InvoiceManagedBean extends BaseManagedBean {
 	 */
 	public void setFactoringCheck(String factoringCheck) {
 		this.factoringCheck = factoringCheck;
+	}
+	/**
+	 * @return the invItem
+	 */
+	public FlInvoiceItem getInvItem() {
+		return invItem;
+	}
+	/**
+	 * @param invItem the invItem to set
+	 */
+	public void setInvItem(FlInvoiceItem invItem) {
+		this.invItem = invItem;
 	}
 }

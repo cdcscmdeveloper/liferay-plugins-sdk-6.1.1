@@ -8,51 +8,42 @@
 
 	<p:panel header="ITEM DETAIL" toggleable="true">
 		<br />
-		<p:dataTable id="itemDataTable" var="item" width="100%">
+		<p:dataTable id="itemDataTable" var="item" width="100%" value="#{createDOBackingBean.managedBean.delOrderItem}">
 			<ac:paginator for="itemDataTable" />
 			<p:columnGroup type="header">
 				<p:row>
-					<p:column rowspan="2" headerText="Product Code" />
 					<p:column rowspan="2" headerText="Item Name" />
-					<p:column colspan="4" headerText="Unit Price" />
-					<p:column rowspan="2" headerText="Unit Price (MYR" />
+					<p:column rowspan="2" headerText="Ord. Qty" />
+					<p:column rowspan="2" headerText="Recv. Qty" />
+					<p:column rowspan="2" headerText="Del. Qty" />
+					<p:column rowspan="2" headerText="Unit Price (MYR)" />
 					<p:column colspan="2" headerText="* Delivery" />
 				</p:row>
 				<p:row>
-					<p:column headerText="(MYR)" />
-					<p:column headerText="Ord." />
-					<p:column headerText="Recv." />
-					<p:column headerText="Del." />
 					<p:column headerText="Quantity" />
 					<p:column headerText="Amount (MYR)" />
 				</p:row>
 			</p:columnGroup>
 			<p:column>
-				<p:outputLabel />
+				<p:outputLabel value="#{item.flFulfilmentItemAddr.flFulfilmentItem.contractItem.itemName}" />
 			</p:column>
 			<p:column>
-				<p:outputLabel />
+				<p:outputLabel value="#{item.flFulfilmentItemAddr.orderedQty}" />
 			</p:column>
 			<p:column>
-				<p:outputLabel />
+				<p:outputLabel value="#{item.flFulfilmentItemAddr.receivedQty}" />
 			</p:column>
 			<p:column>
-				<p:outputLabel />
+				<p:outputLabel value="#{item.deliveredQty}" />
 			</p:column>
 			<p:column>
-				<p:outputLabel />
+				<p:outputLabel value="#{item.flFulfilmentItemAddr.unitPrice}"/>
 			</p:column>
 			<p:column>
-				<p:outputLabel />
+				<p:inputText value="#{item.deliveredQty}" />
 			</p:column>
 			<p:column>
-				<p:outputLabel />
-			</p:column>
-			<p:column>
-				<p:outputLabel />
-			</p:column>
-			<p:column>
-				<p:outputLabel />
+				<p:inputText value="#{item.deliveredAmt}" />
 			</p:column>
 		</p:dataTable>
 	</p:panel>

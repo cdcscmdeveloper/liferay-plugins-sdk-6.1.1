@@ -9,22 +9,17 @@
 
 		<p:panel header="ITEM DETAIL" toggleable="true">
 
-			<p:dataTable id="itemDataTable" var="item" value="" paginator="true"
-			rows="10">
-			<ac:paginator for="itemDataTable"/>
+			<p:dataTable id="invItemDt" var="item" value="#{invoiceBackingBean.managedBean.invItem}" >
+			<ac:paginator for="invItemDt"/>
 			<p:columnGroup type="header">
 				<p:row>
-					<p:column rowspan="2" headerText="Product Code" />
 					<p:column rowspan="2" headerText="Item Name" />
-					<p:column colspan="4" headerText="Unit Price" />
-					<p:column rowspan="2" headerText="Unit Price (MYR" />
+					<p:column rowspan="2" headerText="Ord. Qty" />
+					<p:column rowspan="2" headerText="Recv. Qty" />
+					<p:column rowspan="2" headerText="Del. Qty" />
 					<p:column colspan="4" headerText="Amount (MYR)" />
 				</p:row>
 				<p:row>
-					<p:column headerText="(MYR)" />
-					<p:column headerText="Ord." />
-					<p:column headerText="Recv." />
-					<p:column headerText="Del." />
 					<p:column headerText="Ordered" />
 					<p:column headerText="Delivered" />
 					<p:column headerText="Ori. Sub Total" />
@@ -32,37 +27,28 @@
 				</p:row>
 			</p:columnGroup>
 			<p:column>
-				<p:outputLabel />
+				<p:outputLabel value="#{item.flFulfilmentItem.contractItem.itemName}" />
 			</p:column>
 			<p:column>
-				<p:outputLabel />
+				<p:outputLabel value="#{item.flFulfilmentItem.sumOrderedQty}" />
 			</p:column>
 			<p:column>
-				<p:outputLabel />
+				<p:outputLabel value="#{item.flFulfilmentItem.sumReceivedQty}" />
 			</p:column>
 			<p:column>
-				<p:outputLabel />
+				<p:outputLabel value="#{item.flFulfilmentItem.sumDeliveredQty}" />
 			</p:column>
 			<p:column>
-				<p:outputLabel />
+				<p:outputLabel value="#{item.flFulfilmentItem.sumOrderedQty}" />
 			</p:column>
 			<p:column>
-				<p:outputLabel />
+				<p:outputLabel value="#{item.flFulfilmentItem.sumDeliveredQty}" />
 			</p:column>
 			<p:column>
-				<p:outputLabel />
+				<p:inputText value="#{item.itemAmtOri}" />
 			</p:column>
 			<p:column>
-				<p:outputLabel />
-			</p:column>
-			<p:column>
-				<p:outputLabel />
-			</p:column>
-			<p:column>
-				<p:outputLabel />
-			</p:column>
-			<p:column>
-				<p:outputLabel />
+				<p:inputText value="#{item.itemAmtNew}" />
 			</p:column>
 		</p:dataTable>
 		<br />

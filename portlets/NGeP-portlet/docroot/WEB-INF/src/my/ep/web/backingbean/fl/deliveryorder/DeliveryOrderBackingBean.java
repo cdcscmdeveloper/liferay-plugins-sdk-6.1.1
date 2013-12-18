@@ -3,6 +3,8 @@
  */
 package my.ep.web.backingbean.fl.deliveryorder;
 
+import java.util.ArrayList;
+
 import javax.annotation.PostConstruct;
 import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
@@ -14,9 +16,11 @@ import my.ep.biz.service.fl.order.IFulfilmentOrderSO;
 import my.ep.dto.fl.FulfilmentReqDTO;
 import my.ep.dto.fl.FulfilmentResDTO;
 import my.ep.exception.EpException;
+import my.ep.persistence.entity.fl.order.FlDelOrderItem;
 import my.ep.persistence.entity.fl.order.FlDeliveryOrder;
 import my.ep.persistence.entity.fl.order.FlFulfilmentOrder;
 import my.ep.persistence.entity.fl.request.FlDeliveryAddress;
+import my.ep.persistence.entity.fl.request.FlFulfilmentItemAddr;
 import my.ep.persistence.entity.fl.request.FlFulfilmentRequest;
 import my.ep.web.backingbean.BaseBackingBean;
 import my.ep.web.backingbean.fl.FulfilmentBackingBean;
@@ -47,11 +51,13 @@ public class DeliveryOrderBackingBean extends BaseBackingBean<DeliveryOrderManag
 	}
 	
 	public DeliveryOrderBackingBean(){
+		
 	}
 	@PostConstruct
 	public void init() {
 		if (getManagedBean().getFlDeliveryOrder() == null) {
 			getManagedBean().setFlDeliveryOrder(new FlDeliveryOrder());
+			getManagedBean().getFlDeliveryOrder().setFlDelOrderItem(new ArrayList<FlDelOrderItem>());
 		}
 		if (getManagedBean().getFulfilmentOrder() == null) {
 			getManagedBean().setFulfilmentRequest(new FlFulfilmentRequest());
@@ -67,17 +73,17 @@ public class DeliveryOrderBackingBean extends BaseBackingBean<DeliveryOrderManag
 		IDeliveryOrderSO deliveryOrderSO = null;
 		FulfilmentBackingBean flBB = new FulfilmentBackingBean();
 		try {
-			String actionName=FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap().get("actionName");
+			String actionName = FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap().get("actionName");
 			Long flOrderId;
-			if(actionName!=null && actionName!=""){
-				flOrderId=this.getManagedBean().getFlDeliveryOrder().getFlFulfilmentOrder().getFulfilmentOrderId();
+			if(actionName != null && actionName != ""){
+				flOrderId = this.getManagedBean().getFlDeliveryOrder().getFlFulfilmentOrder().getFulfilmentOrderId();
 			}else{
-				flOrderId=getManagedBean().getFulfilmentOrder().getFulfilmentOrderId();
+				flOrderId = getManagedBean().getFulfilmentOrder().getFulfilmentOrderId();
 			}
 			
-			Long fulfilmentOrderId=Long.valueOf(flOrderId);
+			Long fulfilmentOrderId = Long.valueOf(flOrderId);
 			log.info("fulfilmentOrderId::: "+fulfilmentOrderId);
-			String  statusId=this.getManagedBean().getStatusId();
+			String  statusId = this.getManagedBean().getStatusId();
 			FulfilmentReqDTO reqDTO = new FulfilmentReqDTO();
 			FlDeliveryOrder flDeliveryOrder = getManagedBean().getFlDeliveryOrder();
 			deliveryOrderSO = (IDeliveryOrderSO) BusinessDelegate.getInstance().getServiceObject("fl",IDeliveryOrderSO.class);
@@ -126,6 +132,32 @@ public class DeliveryOrderBackingBean extends BaseBackingBean<DeliveryOrderManag
 		reqDTO.setFulfilmentOrder(getManagedBean().getFulfilmentOrder());
 		flOrderSO.stopDeliveryWSDL(reqDTO);
 		
+	}
+	
+	public void updateDeliveryAddrText(){
+		getManagedBean().setSelectedLovDelAddr(getManagedBean().getSelectedDelAddr().getAddressType().getPmAddress().getAddress1()
+				+" "+getManagedBean().getSelectedDelAddr().getAddressType().getPmAddress().getAddress2()
+				+" "+getManagedBean().getSelectedDelAddr().getAddressType().getPmAddress().getAddress3()
+				+" "+getManagedBean().getSelectedDelAddr().getAddressType().getPmAddress().getAddress4());
+		
+		System.out.println("getDeliveryAddressId: "+getManagedBean().getSelectedDelAddr().getDeliveryAddressId());
+		getManagedBean().getFlDeliveryOrder().setFlDeliveryAddress(getManagedBean().getSelectedDelAddr());
+		
+		for(FlFulfilmentItemAddr flFulfilmentItemAddr : getManagedBean().getSelectedDelAddr().getFlFulfilmentItemAddr()){
+			getManagedBean().getDelOrderItem().setFlFulfilmentItemAddr(flFulfilmentItemAddr);
+			getManagedBean().getDelOrderItem().setFlDeliveryOrder(getManagedBean().getFlDeliveryOrder());
+		}
+		getManagedBean().getFlDeliveryOrder().getFlDelOrderItem().add(getManagedBean().getDelOrderItem());
+		
+
+	}
+	
+	public void delAddrList(){
+		IFulfilmentOrderSO filmentOrderSO = (IFulfilmentOrderSO) BusinessDelegate.getInstance().getServiceObject("fl", IFulfilmentOrderSO.class);
+		FulfilmentReqDTO reqDTO = new FulfilmentReqDTO();
+		reqDTO.setFlRequestId(getManagedBean().getFulfilmentOrder().getFlFulfilmentRequest().getFulfilmentReqId());
+		FulfilmentResDTO resDTO = filmentOrderSO.getDeliveryAddressListById(reqDTO);
+		this.getManagedBean().setDeliveryAddressList(resDTO.getDelAddrList());
 	}
 	
 	
