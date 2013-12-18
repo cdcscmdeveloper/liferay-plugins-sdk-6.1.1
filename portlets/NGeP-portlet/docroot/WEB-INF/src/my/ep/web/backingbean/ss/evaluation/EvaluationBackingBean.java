@@ -29,7 +29,7 @@ import my.ep.biz.service.sm.registration.IRegistrationSO;
 import my.ep.biz.service.ss.quationtender.IQTDetailSO;
 import my.ep.biz.service.ss.quationtender.IQTEvaluationSO;
 import my.ep.biz.service.ss.quationtender.IQTMeetingSO;
-import my.ep.biz.service.ss.quationtender.IQTSuppFinalizationSO;
+import my.ep.biz.service.ss.quationtender.IQTSpecSO;
 import my.ep.biz.service.ss.quationtender.IQTTemplateSO;
 import my.ep.constant.tpl.TemplateSpecConst;
 import my.ep.dto.sm.registration.RegistrationReqDTO;
@@ -41,17 +41,18 @@ import my.ep.dto.ss.quationtender.QTTemplateDocReqDTO;
 import my.ep.dto.ss.quationtender.QTTemplateDocResDTO;
 import my.ep.dto.ss.quationtender.QuationTenderReqDTO;
 import my.ep.dto.ss.quationtender.QuationTenderResDTO;
-import my.ep.dto.ss.quationtender.SuppFinalizationReqDTO;
-import my.ep.dto.ss.quationtender.SuppFinalizationResDTO;
+import my.ep.dto.ss.specification.SpecificationReqDTO;
+import my.ep.dto.ss.specification.SpecificationResDTO;
 import my.ep.persistence.entity.ss.quationtender.ScEvaluationResult;
 import my.ep.persistence.entity.ss.quationtender.ScQt;
 import my.ep.persistence.entity.ss.quationtender.ScQtCheckList;
 import my.ep.persistence.entity.ss.quationtender.ScQtChecklistEvaluation;
 import my.ep.persistence.entity.ss.quationtender.ScQtDoc;
 import my.ep.persistence.entity.ss.quationtender.ScQtEvaluationResult;
+import my.ep.persistence.entity.ss.quationtender.ScQtManualEvaluation;
 import my.ep.persistence.entity.ss.quationtender.ScQtMeeting;
 import my.ep.persistence.entity.ss.quationtender.ScQtProposal;
-import my.ep.persistence.entity.ss.quationtender.ScQtZoneCriteria;
+import my.ep.persistence.entity.ss.quationtender.ScQtProposalLabel;
 import my.ep.persistence.entity.tpl.spec.TplSpecMaster;
 import my.ep.persistence.entity.tpl.spec.TplSpecQuestion;
 import my.ep.util.lookupservice.EpEjbBusinessDelegate;
@@ -128,12 +129,12 @@ public class EvaluationBackingBean extends
 			evaluationSO = EpEjbBusinessDelegate.getInstance()
 					.getServiceObject(QTConstants.SS_MODULE,
 							IQTEvaluationSO.class);
-
+			this.getManagedBean().setEvaluateStatus(true);
 			if (this.getManagedBean().getScQtMeetings() == null) {
 				reqDTO.setQtId(146L);
 				reqDTO.setCommType("QC");
-				 resDTO = evaluationSO
-				 .retrieveEvaluationPreparationDtlsByQtId(reqDTO);
+				resDTO = evaluationSO
+						.retrieveEvaluationPreparationDtlsByQtId(reqDTO);
 
 				if (resDTO.getMettingDls() != null) {
 
@@ -208,10 +209,10 @@ public class EvaluationBackingBean extends
 	}
 
 	public void retrivesummary() {
-		
+
 		IQTEvaluationSO evaluationSO;
 		try {
-			
+
 			EvaluationReqDTO reqDTO = new EvaluationReqDTO();
 			EvaluationResDTO resDTO = new EvaluationResDTO();
 			evaluationSO = EpEjbBusinessDelegate.getInstance()
@@ -223,8 +224,9 @@ public class EvaluationBackingBean extends
 					.retrieveEvaluationPreparationDtlsByQtId(reqDTO);
 			ScQt scQt = resDTO.getScQt();
 			this.getManagedBean().setScqt(scQt);
-			
-			//List<ScQtZoneCriteria> list = scQt.getScQtCriterias().getScQtZoneCriterias();
+
+			// List<ScQtZoneCriteria> list =
+			// scQt.getScQtCriterias().getScQtZoneCriterias();
 			this.getManagedBean().setLocationList(
 					scQt.getScQtCriterias().getScQtZoneCriterias());
 			this.getManagedBean().setScQtItemList(
@@ -237,7 +239,7 @@ public class EvaluationBackingBean extends
 		} catch (Exception e) {
 			e.printStackTrace();
 		} finally {
-			
+
 			evaluationSO = null;
 		}
 	}
@@ -270,7 +272,7 @@ public class EvaluationBackingBean extends
 
 	public void onRowSelect(SelectEvent selectEvent) {
 		try {
-			
+
 			ScQtEvaluationResult result = (ScQtEvaluationResult) selectEvent
 					.getObject();
 
@@ -296,7 +298,7 @@ public class EvaluationBackingBean extends
 	}
 
 	public void onFinRowSelect(SelectEvent selectEvent) {
-		
+
 		try {
 			ScQtEvaluationResult result = (ScQtEvaluationResult) selectEvent
 					.getObject();
@@ -323,7 +325,7 @@ public class EvaluationBackingBean extends
 	}
 
 	public void complianceSaveAction() {
-	
+
 		try {
 			List<ScQtChecklistEvaluation> complianceList = this
 					.getManagedBean().getComplianceList();
@@ -350,30 +352,47 @@ public class EvaluationBackingBean extends
 	public void manualSaveAction() {
 		System.out.println("======enter complieance save action method===");
 		try {
-			List<ScQtChecklistEvaluation> manualList = this.getManagedBean()
-					.getManuals1EvaluationList();
-			List<ScQtChecklistEvaluation> localmanualList = new ArrayList<ScQtChecklistEvaluation>();
+			IQTSpecSO specSO = BusinessDelegate.getInstance().getServiceObject(
+					"ss", IQTSpecSO.class);
+			SpecificationReqDTO specreqDTO = new SpecificationReqDTO();
+			SpecificationResDTO resDTO = null;
+			List<ScQtManualEvaluation> manualList = this.getManagedBean()
+					.getManualEvaluateList();
+			List<ScQtManualEvaluation> localmanualList = new ArrayList<ScQtManualEvaluation>();
 			if (null != manualList) {
-				for (ScQtChecklistEvaluation checklistEvaluation : manualList) {
+				for (ScQtManualEvaluation checklistEvaluation : manualList) {
 
 					ScQtProposal proposal = new ScQtProposal();
-					proposal.setQtProposalId(1L);
-					// proposal.getScQtSupplier().setQtSupplierId(1L);
-					checklistEvaluation.setAutoScore("10");
+					System.out.println("=======proposal id===="
+							+ this.getManagedBean().getProposalId());
+
+					proposal.setQtProposalId(this.getManagedBean()
+							.getProposalId());
+					ScQtProposalLabel label = new ScQtProposalLabel();
+					label.setProposalLabelId(new Long(checklistEvaluation
+							.getProposalLabel().getLabelNumber()));
+					specreqDTO.setQtId(146L);
+					resDTO = specSO.retrieveSpecDetails(specreqDTO);
+					System.out.println("====resDTO spec id==="
+							+ resDTO.getScQtSpec().getQtSpecId());
 					checklistEvaluation.setScQtProposal(proposal);
+					checklistEvaluation.setProposalLabel(label);
+					checklistEvaluation.setScQtSpec(resDTO.getScQtSpec());
 					localmanualList.add(checklistEvaluation);
 				}
+
 				IQTEvaluationSO so = EpEjbBusinessDelegate.getInstance()
 						.getServiceObject("ss", IQTEvaluationSO.class);
 				System.out.println(so);
 				EvaluationReqDTO reqDTO = new EvaluationReqDTO();
-				reqDTO.setEvaluationCheckList(manualList);
-				EvaluationResDTO resdto = so.saveCheckListEvaluationDtl(reqDTO);
-			/*	FacesContext.getCurrentInstance().addMessage(
-						null,
-						new FacesMessage(FacesMessage.SEVERITY_INFO,
-								"Evaluation Manual SuccessFully Saved",
-								"Evaluation"));*/
+				reqDTO.setManualEvaluations(localmanualList);
+				EvaluationResDTO resdto = so
+						.saveOrUpdateManualEvaluationDtl(reqDTO);
+				/*
+				 * FacesContext.getCurrentInstance().addMessage( null, new
+				 * FacesMessage(FacesMessage.SEVERITY_INFO,
+				 * "Evaluation Manual SuccessFully Saved", "Evaluation"));
+				 */
 				System.out
 						.println("====manual list successfully saved in db===");
 			}
@@ -558,18 +577,19 @@ public class EvaluationBackingBean extends
 	public void adds1ManualAction() {
 		System.out.println("=======enter method====");
 		try {
-			List<ScQtChecklistEvaluation> manuals1List = getManagedBean()
-					.getManuals1EvaluationList();
+			List<ScQtManualEvaluation> manuals1List = getManagedBean()
+					.getManualEvaluateList();
 
 			if (null == manuals1List) {
-				manuals1List = new ArrayList<ScQtChecklistEvaluation>();
+				manuals1List = new ArrayList<ScQtManualEvaluation>();
 			}
 
-			ScQtChecklistEvaluation manual = new ScQtChecklistEvaluation();
-			manual.setScQtProposal(this.getManagedBean()
-					.getChecklistEvaluation().getScQtProposal());
+			ScQtManualEvaluation manual = new ScQtManualEvaluation();
+			System.out.println("====manual object====");
+			manual.setProposalLabel(new ScQtProposalLabel());
 			manuals1List.add(manual);
-			this.getManagedBean().setManuals1EvaluationList(manuals1List);
+			System.out.println("===exit method===");
+			this.getManagedBean().setManualEvaluateList(manuals1List);
 
 		} catch (Exception e) {
 			// e.printStackTrace();
@@ -594,7 +614,8 @@ public class EvaluationBackingBean extends
 			FacesContext.getCurrentInstance().addMessage(
 					null,
 					new FacesMessage(FacesMessage.SEVERITY_INFO,
-							"Evaluation Meeting Saved Successfully", "Evaluation"));
+							"Evaluation Meeting Saved Successfully",
+							"Evaluation"));
 		} catch (Exception e) {
 			System.out.println("this is error");
 			e.printStackTrace();
@@ -658,14 +679,27 @@ public class EvaluationBackingBean extends
 			ScQtProposal proposal = this.getManagedBean()
 					.getChecklistEvaluation().getScQtProposal();
 			reqDTO.setScQtProposal(results.getScQtProposal());
-			reqDTO.setEvaluationStg("1");
-			List<String> docType = new ArrayList<String>();
-			docType.add("1");
-			docType.add("2");
-			reqDTO.setCheckListType(docType);
-			EvaluationResDTO dto = so.retrieveEvaluationByProposal(reqDTO);
-			this.getManagedBean().setManuals1EvaluationList(
-					dto.getEvaluationCheckList());
+			System.out.println("========manual evaluate proposal id===="
+					+ results.getScQtProposal().getQtProposalId());
+			// System.out.println("========manual evaluate Qt id===="+results.getScQtProposal().getScQtSupplier().getScQt().getQtId());
+			// reqDTO.setEvaluationStg("1");
+			// List<String> docType = new ArrayList<String>();
+			// docType.add("1");
+			// docType.add("2");
+			// reqDTO.setCheckListType(docType);
+			// EvaluationResDTO dto = so.retrieveEvaluationByProposal(reqDTO);
+			EvaluationResDTO dto = so.retriveManualEvaluationByProposal(reqDTO);
+			System.out.println("===========proposal label list size==="
+					+ dto.getProposalLabelResultBean().getResultList().size());
+			// getLabelDetails(results);
+			this.getManagedBean().setManualProposalLabel(
+					dto.getProposalLabelResultBean().getResultList());
+			/*
+			 * this.getManagedBean().setManualEvaluateList(dto.get)
+			 * dto.getProposalLabelResultBean().getResultList());
+			 */
+			this.getManagedBean().setProposalId(
+					results.getScQtProposal().getQtProposalId());
 			this.getManagedBean().getChecklistEvaluation().getScQtProposal()
 					.setSupplierNo(results.getScQtProposal().getSupplierNo());
 
@@ -676,6 +710,31 @@ public class EvaluationBackingBean extends
 		}
 
 	}
+
+	/*
+	 * public List<SelectItem> getLabelDetails(ScQtEvaluationResult results) {
+	 * List<SelectItem> selectItems = new ArrayList<SelectItem>();
+	 * 
+	 * try { IQTEvaluationSO so = EpEjbBusinessDelegate.getInstance()
+	 * .getServiceObject("ss", IQTEvaluationSO.class); System.out.println(so);
+	 * EvaluationReqDTO reqDTO = new EvaluationReqDTO(); ScQtProposal proposal =
+	 * this.getManagedBean() .getChecklistEvaluation().getScQtProposal();
+	 * reqDTO.setScQtProposal(results.getScQtProposal());
+	 * 
+	 * 
+	 * EvaluationResDTO dto=so.retriveManualEvaluationByProposal(reqDTO);
+	 * selectItems.add(new SelectItem(null, "--Select One--")); for (int i = 0;
+	 * i < dto.getProposalLabelResultBean().getResultList().size(); i++) {
+	 * ScQtProposalLabel label =
+	 * (ScQtProposalLabel)dto.getProposalLabelResultBean
+	 * ().getResultList().get(i);
+	 * 
+	 * selectItems.add(new SelectItem(label.getProposalLabelId(),
+	 * label.getLabelNumber())); }
+	 * this.getManagedBean().setCurrencyListDetails(selectItems); } catch
+	 * (Exception e) { e.printStackTrace(); } return
+	 * getManagedBean().getCurrencyListDetails(); }
+	 */
 
 	public void evaluations1TechAction(ScQtEvaluationResult results) {
 		try {
