@@ -56,6 +56,7 @@ import my.ep.persistence.entity.ss.quationtender.ScQtProposalLabel;
 import my.ep.persistence.entity.tpl.spec.TplSpecMaster;
 import my.ep.persistence.entity.tpl.spec.TplSpecQuestion;
 import my.ep.util.lookupservice.EpEjbBusinessDelegate;
+import my.ep.web.backingbean.ss.quatationtender.QTDetailBackingBean;
 import my.ep.web.backingbean.ss.quatationtender.SourcingBaseBackingBean;
 import my.ep.web.backingbean.tpl.spec.TemplateSpecBackingBean;
 import my.ep.web.bean.paginator.IPagingDataModel;
@@ -135,6 +136,15 @@ public class EvaluationBackingBean extends
 				reqDTO.setCommType("QC");
 				resDTO = evaluationSO
 						.retrieveEvaluationPreparationDtlsByQtId(reqDTO);
+				IQTDetailSO detailSO = EpEjbBusinessDelegate.getInstance()
+						.getServiceObject(QTConstants.SS_MODULE, IQTDetailSO.class);
+				QuationTenderReqDTO tenderReqDTO = new QuationTenderReqDTO();
+				tenderReqDTO.setQtId(146L);
+				QuationTenderResDTO tenderResDTO = detailSO
+						.retriveQTDetails(tenderReqDTO);
+				QTDetailBackingBean detailBackingBean = new QTDetailBackingBean();
+				detailBackingBean.getManagedBean().setQt(tenderResDTO.getQtDetail());
+				detailBackingBean.populateParentOrgProfile(tenderResDTO.getQtDetail());
 
 				if (resDTO.getMettingDls() != null) {
 
