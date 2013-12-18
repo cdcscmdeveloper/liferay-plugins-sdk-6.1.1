@@ -27,7 +27,6 @@ import my.ep.biz.service.pm.common.object.IObjectSO;
 import my.ep.bpm.dto.BpmRequestDTO;
 import my.ep.bpm.dto.BpmResponseDTO;
 import my.ep.bpm.service.IBpmSO;
-import my.ep.constants.FlProcessNameConst;
 import my.ep.dto.ct.ContractReqDTO;
 import my.ep.dto.ct.ContractResDTO;
 import my.ep.dto.ct.maintain.ContractAmendmentReqDTO;
@@ -219,8 +218,23 @@ public class ContractRequestBackingBean extends BaseBackingBean<ContractRequestM
 		getManagedBean().getFlRequest().getFlDeliveryAddresses().remove(getManagedBean().getSelectedAddrRow());
 	}
 
-	public void removeItemRow(){
-		getManagedBean().getFlRequest().getFlFulfilmentItems().remove(getManagedBean().getSelectedItemRow());
+	/*public void removeItemRow(){
+		System.out.println("we are in Remove function");
+		System.out.println("selected Item Row   "+getManagedBean().getSelectedItemAddr());
+		System.out.println("Original Item Row    "+getManagedBean().getFlRequest().getFlFulfilmentItems().size());
+		getManagedBean().getFlRequest().getFlFulfilmentItems().remove(getManagedBean().getSelectedItemAddr());
+	}*/
+	public String removeItemRow() {
+		int delItemsListSize=getManagedBean().getSelectedItemsRows().size();
+		if(delItemsListSize==getManagedBean().getSelectedDelAddr().getFlFulfilmentItemAddr().size()){
+			getManagedBean().getSelectedDelAddr().getFlFulfilmentItemAddr().clear();
+		}else{
+			for(FlFulfilmentItemAddr fulfilmentItem: getManagedBean().getSelectedItemsRows()){
+				getManagedBean().getSelectedDelAddr().getFlFulfilmentItemAddr().remove(fulfilmentItem);
+				
+			}
+		}
+		return null;
 	}
 
 	public void updateDeliveryAddrDt(){
@@ -315,6 +329,10 @@ public class ContractRequestBackingBean extends BaseBackingBean<ContractRequestM
 
 			getManagedBean().getFlItemMap().put(contractedItems.getContractItemId(), flItem);
 		}
+		
+		
+		
+		
 	}
 
 	private List<String> getAvailableApproverList() {
