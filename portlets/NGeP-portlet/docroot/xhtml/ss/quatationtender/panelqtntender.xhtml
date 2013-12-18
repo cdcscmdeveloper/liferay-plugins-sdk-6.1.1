@@ -5,7 +5,6 @@
 	xmlns:p="http://primefaces.org/ui"
 	xmlns:c="http://java.sun.com/jsp/jstl/core">
 
-	<p:panel id="suppQualPnl" header="Supplier Qualification Criteria" toggleable="true">
 		<h:panelGrid border="0" cellpadding="0" cellspacing="0" width="100%"
 			columns="2" columnClasses="columnWidth20">
 			
@@ -37,7 +36,6 @@
 				oncomplete="suppdlg.show();" 
 				rendered="#{qTDetailBB.managedBean.editable}" />
 		</p:panelGrid>
-	</p:panel>
 	
 	<ui:include src="supplierlist.xhtml" />	
 	

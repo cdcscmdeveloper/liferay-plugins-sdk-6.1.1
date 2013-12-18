@@ -9,12 +9,40 @@
 
 		
 	<ui:define name="contentSection">
-	
-		<table style="border: 0px;width:1000 px; align:center">
-			<tr>
-		<td width="1000 px" ><ui:include src="/xhtml/ss/supplierreview/spreviewmain.xhtml" /></td>
-			</tr>
-		</table>
-						
+		<p:panel id="suppQualPnl" header="Supplier Qualification Criteria" toggleable="true">
+			<h:panelGrid border="0" cellpadding="0" cellspacing="0" width="100%"
+				columns="2" columnClasses="columnWidth20">
+				
+				<h:column>
+					<h:outputLabel value="* #{lbl['lbl.so.qttentype']}" />
+				</h:column>
+				<h:column>
+					<p:selectOneMenu value="#{supplierReviewBackingBean.managedBean.qt.qtType}">
+						<f:selectItems value="#{supplierReviewBackingBean.getDropdownCodeValues(PmCodeCatConst.quotationTenderType)}" />
+						<p:ajax event="change" partialSubmit="true" process="@this" update="suppQualPG" />
+					</p:selectOneMenu>
+				</h:column>
+			</h:panelGrid>
+					
+			<h:panelGroup id="suppQualPG">
+				<c:if test="#{qTSupplierQulCriteriaBackingBean.managedBean.qt.qtType == PmCodeConst.quotationTenderTypeOpen 
+						or qTSupplierQulCriteriaBackingBean.managedBean.qt.qtType == PmCodeConst.quotationTenderTypeBumiputra}">
+				<ui:include src="/xhtml/ss/quatationtender/nrmqtntender.xhtml" />
+				</c:if>
+				<c:if test="#{qTSupplierQulCriteriaBackingBean.managedBean.qt.qtType == PmCodeConst.quotationTenderTypePanel}">
+					<ui:include src="/xhtml/ss/quatationtender/panelqtntender.xhtml" />
+				</c:if>
+				<c:if test="#{qTSupplierQulCriteriaBackingBean.managedBean.qt.qtType == PmCodeConst.quotationTenderTypeRestrictedTender}">
+					<ui:include src="/xhtml/ss/quatationtender/restictedtender.xhtml" />
+				</c:if>
+			</h:panelGroup>
+			
+			<p:commandButton value="#{lbl['lbl.so.qtmscreen']}"
+				style="float:right;"
+				action="#{qTDetailBB.newAction}" icon="ui-icon-add" />
+				
+			<br />
+			<br />
+		</p:panel>
 	</ui:define>
 </ui:composition>

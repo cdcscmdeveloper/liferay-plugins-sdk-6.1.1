@@ -8,18 +8,20 @@
 
 	<ui:include src="/xhtml/ss/quatationtender/qtntenderheader.xhtml" /> 
 	
-	<h:panelGroup id="suppQualPG">
-		<c:if test="#{qTSupplierQulCriteriaBackingBean.managedBean.qt.qtType == PmCodeConst.quotationTenderTypeOpen 
-					or qTSupplierQulCriteriaBackingBean.managedBean.qt.qtType == PmCodeConst.quotationTenderTypeBumiputra}">
-			<ui:include src="nrmqtntender.xhtml" />
-		</c:if>
-		<c:if test="#{qTSupplierQulCriteriaBackingBean.managedBean.qt.qtType == PmCodeConst.quotationTenderTypePanel}">
-			<ui:include src="panelqtntender.xhtml" />
-		</c:if>
-		<c:if test="#{qTSupplierQulCriteriaBackingBean.managedBean.qt.qtType == PmCodeConst.quotationTenderTypeRestrictedTender}">
-			<ui:include src="restictedtender.xhtml" />
-		</c:if>
-	</h:panelGroup>
+	<p:panel id="suppQualPnl" header="Supplier Qualification Criteria" toggleable="true">
+		<h:panelGroup id="suppQualPG">
+			<c:if test="#{qTSupplierQulCriteriaBackingBean.managedBean.qt.qtType == PmCodeConst.quotationTenderTypeOpen 
+						or qTSupplierQulCriteriaBackingBean.managedBean.qt.qtType == PmCodeConst.quotationTenderTypeBumiputra}">
+				<ui:include src="nrmqtntender.xhtml" />
+			</c:if>
+			<c:if test="#{qTSupplierQulCriteriaBackingBean.managedBean.qt.qtType == PmCodeConst.quotationTenderTypePanel}">
+				<ui:include src="panelqtntender.xhtml" />
+			</c:if>
+			<c:if test="#{qTSupplierQulCriteriaBackingBean.managedBean.qt.qtType == PmCodeConst.quotationTenderTypeRestrictedTender}">
+				<ui:include src="restictedtender.xhtml" />
+			</c:if>
+		</h:panelGroup>
+	</p:panel>
 </ui:composition>
 
 					
