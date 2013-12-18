@@ -7,7 +7,7 @@
 	xmlns:c="http://java.sun.com/jsp/jstl/core"
 	xmlns:ac="http://ac.my/jsf/composite/cc">
 
-	<ui:include src="/xhtml/ss/evaluation/evaluationHeader.xhtml" />
+	 <ui:include src="/xhtml/ss/quatationtender/qtntenderheader.xhtml" /> 
 
 <!-- <c:if
 							test="#{evaluationBackingBean.managedBean.committeeType eq'EC' or evaluationBackingBean.managedBean.committeeType eq'TEC' }"> -->
@@ -31,9 +31,9 @@
 					<p:column headerText="#{lbl['lbl.sc.eva.s1.tech.status']}"
 						style="width:35%">
 					</p:column>
-					<p:column headerText="#{lbl['lbl.sc.eva.s1.tech.score']}"
+					<!-- <p:column headerText="#{lbl['lbl.sc.eva.s1.tech.score']}"
 						style="width:30%">
-					</p:column>
+					</p:column> -->
 				</p:row>
 			</p:columnGroup>
 			<p:column style="width:30%">
@@ -41,13 +41,13 @@
 			</p:column>
 
 			<p:column style="width:35%">
-				<h:outputText value="Pending"></h:outputText>
+				<h:outputText value="Pending/Complate"></h:outputText>
 			</p:column>
 
 
-			<p:column style="width:30%">
+			<!-- <p:column style="width:30%">
 				<h:outputText value="#{s2techSupplier.totalScore}"></h:outputText>
-			</p:column>
+			</p:column> -->
 		</p:dataTable>
 
 	</p:panel>
@@ -67,11 +67,11 @@
 			</p:column>
 
 
-
+<!-- 
 			<p:column headerText="#{lbl['lbl.sc.eva.s1.tech.score']}"
 				style="width:25%">
 				<h:outputText value="#{s2techlist.userScore}"></h:outputText>
-			</p:column>
+			</p:column> -->
 
 			<p:column headerText="#{lbl['lbl.sc.eva.s2.checklist.status']}"
 				style="width:30%">
@@ -109,14 +109,14 @@
 
 			<p:column headerText="#{lbl['lbl.sc.eva.s1.tech.status']}"
 				style="width:35%">
-				<h:outputText value="Pending"></h:outputText>
+				<h:outputText value="Pending/Complete"></h:outputText>
 			</p:column>
 
 
-			<p:column headerText="#{lbl['lbl.sc.eva.s1.tech.score']}"
+			<!-- <p:column headerText="#{lbl['lbl.sc.eva.s1.tech.score']}"
 				style="width:30%">
 				<h:outputText value="#{s2finsupplier.totalScore}"></h:outputText>
-			</p:column>
+			</p:column> -->
 
 		</p:dataTable>
 
@@ -137,11 +137,11 @@
 			</p:column>
 
 
-
+<!-- 
 			<p:column headerText="#{lbl['lbl.sc.eva.s1.tech.score']}"
 				style="width:25%">
 				<h:outputText value="#{s2finchecklist.userScore}"></h:outputText>
-			</p:column>
+			</p:column> -->
 
 			<p:column headerText="#{lbl['lbl.sc.eva.s2.checklist.status']}"
 				style="width:30%">

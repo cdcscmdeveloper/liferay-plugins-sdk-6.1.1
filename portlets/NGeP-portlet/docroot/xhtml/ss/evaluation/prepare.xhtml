@@ -6,7 +6,7 @@
 	xmlns:c="http://java.sun.com/jsp/jstl/core"
 	xmlns:ac="http://ac.my/jsf/composite/cc">
 
-	<ui:include src="/xhtml/ss/evaluation/evaluationHeader.xhtml" />
+	 <ui:include src="/xhtml/ss/quatationtender/qtntenderheader.xhtml" /> 
 	<p:panel header="#{lbl['lbl.sc.eva.prepare.meeting']}"
 		toggleable="true">
 
@@ -22,7 +22,7 @@
 				style="width:30%">
 
 
-				<p:calendar value="#{meeting.meetingDate}" showOn="button"></p:calendar>
+				<p:calendar value="#{meeting.meetingDate}" showOn="button" pattern="MM/dd/yyyy HH:mm"></p:calendar>
 
 			</p:column>
 			<p:column headerText="#{lbl['lbl.sc.eva.prepare.meeting.loc']}">

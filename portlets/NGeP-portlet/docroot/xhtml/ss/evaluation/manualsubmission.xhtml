@@ -29,14 +29,19 @@
 
 			<p:dataTable id="manualpopupresults" var="manuals1evaluation"
 				rowKey="#{manuals1evaluation}" rowIndexVar="index"
-				 value="#{evaluationBackingBean.managedBean.manuals1EvaluationList}"
+				 value="#{evaluationBackingBean.managedBean.manualEvaluateList}"
 				  	selection="#{evaluationBackingBean.managedBean.manualMultiSelect}">
               
 				<ac:paginator for="manualpopupresults" />
                  <p:column selectionMode="multiple" style="width:2%;text-align:center;" />
 				<p:column headerText="#{lbl['lbl.sc.eva.s1.manual.label']}"
 					style="width:35%">
-					<p:inputText value="#{manuals1evaluation.labelNo}"></p:inputText>
+					<p:selectOneMenu  value="#{manuals1evaluation.proposalLabel.labelNumber}">
+						<f:selectItem itemLabel="Select One" itemValue="" />
+						<f:selectItems value="#{evaluationBackingBean.managedBean.manualProposalLabel}" var="label" 
+                       itemValue="#{label.proposalLabelId}" 
+                       itemLabel="#{label.labelNumber}" />
+					</p:selectOneMenu>
 				</p:column>
 
 				
@@ -57,14 +62,6 @@
 					<p:inputTextarea value="#{manuals1evaluation.remark}"></p:inputTextarea>
 				</p:column>
 				
-				<p:column headerText="#{lbl['lbl.sc.eva.prepare.meeting.action']}"
-					style="width:20%">
-					  <p:commandLink>
-					<p:graphicImage library="ep/images/design" name="edit.png"
-						value="/resources/ep/images/design/edit.png" />
-
-				</p:commandLink>
-				</p:column>
 
 			</p:dataTable>
 			<p:spacer height="10"></p:spacer>
