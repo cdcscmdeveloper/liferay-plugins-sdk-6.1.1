@@ -27,8 +27,10 @@
 				
 				 <p:poll interval="3" update="bidchart" rendered="false" />  
   
-    <p:lineChart id="bidchart" value="#{biddingBB.linearModel}" legendPosition="e"  
-	     		title="Bidding Statistic Graph" minY="80000" maxY="110000" style="width:500px;height:300px"/>
+    			<p:lineChart id="bidchart" value="#{biddingBB.linearModel}" legendPosition="e"  
+		     		title="Bidding Statistic Graph" minY="80000" maxY="110000" style="width:500px;height:300px">
+		     		<f:convertDateTime pattern="HH:mm:ss"/>
+		     	</p:lineChart>
      </p:panelGrid>  
 				</p:panel>
 				</ui:composition>
