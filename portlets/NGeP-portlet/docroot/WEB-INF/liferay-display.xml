@@ -66,8 +66,10 @@
 			<portlet id="scQTSiteVisit"/>
 			<portlet id="scSupplierProposal"/>
 			<portlet id="scSupplierNotification"/>
-  <portlet id="scTemplateDocument" />
+           <portlet id="scTemplateDocument" />
            <portlet id="scBriefingSiteVisitAttendance" />
+             <portlet id="Supplier Finalization"></portlet>
+           <portlet id="Pre-Supplier Finalization"></portlet>
 
 		</category>
 
