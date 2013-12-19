@@ -43,7 +43,7 @@ public class UserprofileBackingBean extends BaseBackingBean<UserprofileManagedBe
 				.getServiceObject("pm", IUserSO.class);
 
 		UserReqDTO reqDTO = new UserReqDTO();
-		reqDTO.setUserName(new FacesScopes().getUserScreenName());
+ 		reqDTO.setUserName(new FacesScopes().getUserScreenName());
 
 		UserResDTO resDTO1 = userSO.retrieveUserByName(reqDTO);
 
