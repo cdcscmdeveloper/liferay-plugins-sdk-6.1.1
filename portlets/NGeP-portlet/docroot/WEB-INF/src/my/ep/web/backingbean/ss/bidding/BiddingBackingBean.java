@@ -31,23 +31,23 @@ public class BiddingBackingBean extends BaseBackingBean<BiddingManagedBean> {
 		series1.set(c1.getTime(), 100000);
 		
 		int random = (int) (Math.random() * 1000);
-		random = random % 10;
-		c1.add(Calendar.MINUTE, random);
+		random = random % 600;
+		c1.add(Calendar.SECOND, random);
 		series1.set(c1.getTime(), 98000);
 		
 		random = (int) (Math.random() * 1000);
-		random = random % 10;
-		c1.add(Calendar.MINUTE, random);
+		random = random % 600;
+		c1.add(Calendar.SECOND, random);
 		series1.set(c1.getTime(), 95000);
 		
 		random = (int) (Math.random() * 1000);
-		random = random % 10;
-		c1.add(Calendar.MINUTE, random);
+		random = random % 600;
+		c1.add(Calendar.SECOND, random);
 		series1.set(c1.getTime(), 90000);
 		
 		random = (int) (Math.random() * 1000);
-		random = random % 10;
-		c1.add(Calendar.MINUTE, random);
+		random = random % 600;
+		c1.add(Calendar.SECOND, random);
 		series1.set(c1.getTime(), 89000);
 		
 		linearModel.addSeries(series1);
