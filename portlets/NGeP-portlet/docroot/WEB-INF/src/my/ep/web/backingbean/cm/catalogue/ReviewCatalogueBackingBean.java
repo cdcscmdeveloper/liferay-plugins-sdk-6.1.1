@@ -68,7 +68,12 @@ public class ReviewCatalogueBackingBean extends BaseBackingBean<ReviewCatalogueM
 		bb.getManagedBean().getSelectedMaintainItem().setItemStatus("A");
 		reqDTO.getSaveSupplierItems().add(bb.getManagedBean().getSelectedMaintainItem());
 
-		catalogueSO.updateSupplierItem(reqDTO);
+		try {
+			catalogueSO.updateSupplierItem(reqDTO);
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 		
 		return "catalogueTaskList?faces-redirect=true";
 
@@ -84,7 +89,12 @@ public class ReviewCatalogueBackingBean extends BaseBackingBean<ReviewCatalogueM
 		bb.getManagedBean().getSelectedMaintainItem().setItemStatus("R");
 		reqDTO.getSaveSupplierItems().add(bb.getManagedBean().getSelectedMaintainItem());
 
-		catalogueSO.updateSupplierItem(reqDTO);
+		try {
+			catalogueSO.updateSupplierItem(reqDTO);
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 		
 		return "catalogueTaskList?faces-redirect=true";
 
