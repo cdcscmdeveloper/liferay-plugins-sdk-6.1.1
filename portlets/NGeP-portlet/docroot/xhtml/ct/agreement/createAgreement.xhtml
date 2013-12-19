@@ -32,6 +32,11 @@
 				    <p:commandLink partialSubmit="true" process="@this" rendered="#{data.agrementTitle == 'Agreement Clause'}">
 			        <p:graphicImage library="ep/images/design" name="edit.png" value="/resources/ep/images/design/edit.png" title="Edit" />
 			      </p:commandLink>
+			      <p:spacer width="2"/>
+			       <p:commandLink partialSubmit="true" process="@this">
+			        <p:graphicImage library="ep/images/design" name="download.png"
+					    value="/resources/ep/images/design/download.png" title="File Download" />
+			      </p:commandLink>
 				  </p:column> 
 				</p:dataTable>
 			 </h:panelGrid>

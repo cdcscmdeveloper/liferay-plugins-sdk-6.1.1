@@ -27,6 +27,7 @@
          <ui:include src="/xhtml/ct/fulfilmentdetails/shared/factoring.xhtml"/>     
          <ui:include src="bond.xhtml"/>                      
       </p:tab>
+      
        <p:tab title="#{lbl['lbl.ct.menu.agency']}" >
          <ui:include src="/xhtml/ct/fulfilmentdetails/shared/agency.xhtml"/>
        </p:tab> 
@@ -35,6 +36,9 @@
      </p:tab> 
 	   <p:tab title="#{lbl['lbl.ct.menu.item']}">
          <ui:include src="item.xhtml"/>
+       </p:tab>  
+        <p:tab title="Approval Letter" rendered="#{contractDetailsBackingBean.managedBean.approvrLetter}">
+         <ui:include src="approvalLetter.xhtml"/>
        </p:tab>  
 	   <p:tab title="#{lbl['lbl.ct.menu.dedu']}">
          <ui:include src="/xhtml/ct/fulfilmentdetails/shared/deduction.xhtml" />  

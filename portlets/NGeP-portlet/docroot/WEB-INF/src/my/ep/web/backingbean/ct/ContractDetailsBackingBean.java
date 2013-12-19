@@ -252,25 +252,41 @@ public class ContractDetailsBackingBean extends BaseBackingBean<ContractDetailsM
 		}else if(res.getProcessName().equalsIgnoreCase("Contract Amendment Request")){
 			  this.getManagedBean().setChkRenderPage(ContractConst.DOC_TYPE_CONTRACT_AMENDMENT);
 			  
-			  if(res.getTaskName().equalsIgnoreCase("Confirm Amendment Meeting") || res.getTaskName().equalsIgnoreCase("Update Amendment Result")
-				   || res.getTaskName().equalsIgnoreCase("Prepare LOA")){
+			  if(res.getTaskName().equalsIgnoreCase("Confirm Amendment Meeting") || res.getTaskName().equalsIgnoreCase("Update Amendment Result")){
 				   FacesContext fc = FacesContext.getCurrentInstance();
-				   this.getManagedBean().setAmendDisable(false);
+				   this.getManagedBean().setAmendAckw(true);
+				   this.getManagedBean().setAmendDisable(true);  
 			       fc.getApplication().getNavigationHandler().handleNavigation(fc, null, ContractManagementConst.NAV_TO_CONTRACT_AMENDMENT_PBQCC);
 		
-			  }if(res.getTaskName().equalsIgnoreCase("View Amendment Details")){
+			  }if(res.getTaskName().equalsIgnoreCase("Prepare LOA")){
 				  
 				  FacesContext fc = FacesContext.getCurrentInstance();
-				  this.getManagedBean().setAmendDisable(true);
+				   this.getManagedBean().setAmendDisable(false);  
+				   this.getManagedBean().setApprovrLetter(true);
+				   this.getManagedBean().setAmendAckw(true);
+			       fc.getApplication().getNavigationHandler().handleNavigation(fc, null, ContractManagementConst.NAV_TO_CONTRACT_AMENDMENT_PBQCC);
+				 
+			  } if(res.getTaskName().equalsIgnoreCase("View Amendment Details")){
+				  
+				  FacesContext fc = FacesContext.getCurrentInstance();
 			      fc.getApplication().getNavigationHandler().handleNavigation(fc, null, ContractManagementConst.NAV_TO_CONTRACT_AMENDMENT_PBQCC);
 			
 			  }if(res.getTaskName().equalsIgnoreCase("Sign Off")){
 				  
 				  FacesContext fc = FacesContext.getCurrentInstance();
-				  this.getManagedBean().setAmendDisable(true);
 				  this.getManagedBean().setAmendAckw(true);
+				  this.getManagedBean().setAmendDisable(false);  
 			      fc.getApplication().getNavigationHandler().handleNavigation(fc, null, ContractManagementConst.NAV_TO_CONTRACT_AMENDMENT_PBQCC);
 				  
+			  }if(res.getTaskName().equalsIgnoreCase("Update Amendment Details")){
+				  FacesContext fc = FacesContext.getCurrentInstance();
+				  this.getManagedBean().setApprovrLetter(true);
+			      fc.getApplication().getNavigationHandler().handleNavigation(fc, null, ContractManagementConst.NAV_TO_CONTRACT_AMENDMENT);
+				  
+			  }  if(res.getTaskName().equalsIgnoreCase("Review Breached Amendment Request")){
+				  FacesContext fc = FacesContext.getCurrentInstance();
+				  this.getManagedBean().setAmendAckw(true);
+				  fc.getApplication().getNavigationHandler().handleNavigation(fc, null, ContractManagementConst.NAV_TO_CONTRACT_AMENDMENT_PBQCC);
 			  } else{
 			
 			       FacesContext fc = FacesContext.getCurrentInstance();

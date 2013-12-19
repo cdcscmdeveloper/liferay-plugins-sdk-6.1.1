@@ -21,7 +21,6 @@ import my.ep.persistence.entity.ct.dtl.CtSchedule;
 import my.ep.persistence.entity.ct.dtl.deduction.CtDeduction;
 import my.ep.persistence.entity.ct.dtl.deduction.CtDeductionClause;
 import my.ep.persistence.entity.ct.dtl.item.CtContractItem;
-import my.ep.persistence.entity.ct.dtl.zone.CtContractZone;
 import my.ep.persistence.entity.ct.suspend.CtSuspendActive;
 import my.ep.persistence.entity.ct.suspend.CtSuspendLoc;
 import my.ep.persistence.entity.ct.terminate.CtTermination;
@@ -56,7 +55,9 @@ public class ContractDetailsManagedBean extends BaseManagedBean{
 	private boolean itemPricing = true;
 	private boolean itemCeilingQuantity;
 	private boolean amendDisable;
+	private boolean approvrLetter;
 	private boolean amendAckw;
+	private boolean bpkApprover=true;
 	
 	private CtContractVer contractVer;
 	private CtDeduction ctDeductionDel = new CtDeduction();
@@ -589,6 +590,22 @@ public class ContractDetailsManagedBean extends BaseManagedBean{
 
 	public void setCtSuspendLoc(List<CtSuspendLoc> ctSuspendLoc) {
 		this.ctSuspendLoc = ctSuspendLoc;
+	}
+
+	public boolean isBpkApprover() {
+		return bpkApprover;
+	}
+
+	public void setBpkApprover(boolean bpkApprover) {
+		this.bpkApprover = bpkApprover;
+	}
+
+	public boolean isApprovrLetter() {
+		return approvrLetter;
+	}
+
+	public void setApprovrLetter(boolean approvrLetter) {
+		this.approvrLetter = approvrLetter;
 	}
 	
 	

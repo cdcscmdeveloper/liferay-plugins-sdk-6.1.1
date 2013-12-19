@@ -48,8 +48,8 @@
 				   <f:selectItem itemLabel="Khan" itemValue="khan" /> 
 				  </p:selectOneMenu>
                 </p:column>	
-                <p:column width="120"> <h:outputLabel value="6404-03-6843"/> </p:column>
-                <p:column width="180"><h:outputLabel value="PTJ Head"/></p:column>	
+                <p:column width="120"> <p:outputLabel value="6404-03-6843" /> </p:column>
+                <p:column width="180"><p:outputLabel value="PTJ Head" style="float:left;"/></p:column>	
                  <p:column width="50" styleClass="column-align-center">
                   <p:commandLink partialSubmit="true" process="@this"  onsuccess="confirmation2.show()">
 					     <f:setPropertyActionListener value="#{data}" target="#{agreementBackingBean.managedBean.signParty}" />
@@ -78,13 +78,13 @@
                    <p:column colspan="1" style="width:50px" headerText="Action"  />    
 			  </p:row>	
 		    </p:columnGroup>						
-                <p:column><h:outputLabel value="64043-03-6843"/> </p:column>
+                <p:column><p:outputLabel value="XYZ SDN BHD" style="float:left;"/> </p:column>
                 <p:column><p:selectOneMenu disabled="false"  value="" style="width:150px;">
 					      <f:selectItem itemLabel="Alam" itemValue="khan" /> 
 					      </p:selectOneMenu>
 			     </p:column>	
-                 <p:column><h:outputLabel value="64043-03-6843"/> </p:column>
-                <p:column><h:outputLabel value="Sales Manager"/></p:column>	
+                 <p:column><p:outputLabel value="64043-03-6843" style="float:right;"/> </p:column>
+                <p:column><p:outputLabel value="Sales Manager" style="float:left;"/></p:column>	
                <p:column styleClass="column-align-center">
                 <p:commandLink partialSubmit="true" process="@this"  onsuccess="confirmation1.show()">
 				   <f:setPropertyActionListener value="#{data}" target="#{agreementBackingBean.managedBean.signSupplier}" />

@@ -14,7 +14,7 @@
 	<c:if test='#{contractDetailsBackingBean.managedBean.chkRenderPage eq  "BPM"}'>
      <f:event listener="#{contractDetailsBackingBean.preRenderView}" type="preRenderView" />
 	</c:if>
-	 <p:panel rendered="#{!contractDetailsBackingBean.managedBean.amendDisable or contractDetailsBackingBean.managedBean.amendAckw}">
+	 <p:panel rendered="#{contractDetailsBackingBean.managedBean.amendAckw}">
 	  <p:messages id="messages" showDetail="true" autoUpdate="true" closable="true" severity="error,info" />
 	 <div class="ppRightBtn"> 
 	     <ui:repeat var="outcome" value="#{contractDetailsBackingBean.managedBean.action}">
@@ -27,14 +27,12 @@
 	     <ui:include src="/xhtml/ct/fulfilmentdetails/shared/fulfilment.xhtml"/>
 	     <ui:include src="/xhtml/ct/fulfilmentdetails/shared/quotationTender.xhtml" />
          <ui:include src="/xhtml/ct/fulfilmentdetails/amendment/amendment.xhtml"/>
-         <ui:include src="/xhtml/ct/fulfilmentdetails/shared/supplier.xhtml"/>                 
-         <ui:include src="/xhtml/ct/fulfilmentdetails/shared/factoring.xhtml"/>     
-         <ui:include src="/xhtml/ct/fulfilmentdetails/amendment/bond.xhtml"/>                      
+         <ui:include src="/xhtml/ct/fulfilmentdetails/shared/supplier.xhtml"/>                                     
       </p:tab>
-       <p:tab title="Meeting Details" rendered="#{!contractDetailsBackingBean.managedBean.amendDisable}">
+       <p:tab title="Meeting Details" rendered="#{contractDetailsBackingBean.managedBean.amendDisable}">
          <ui:include src="meeting.xhtml"/>
        </p:tab>  
-        <p:tab title="Approval Letter" rendered="#{contractDetailsBackingBean.managedBean.amendDisable}">
+        <p:tab title="Approval Letter" rendered="#{contractDetailsBackingBean.managedBean.approvrLetter}">
          <ui:include src="approvalLetter.xhtml"/>
        </p:tab>  
        <p:tab title="#{lbl['lbl.ct.menu.agency']}" >

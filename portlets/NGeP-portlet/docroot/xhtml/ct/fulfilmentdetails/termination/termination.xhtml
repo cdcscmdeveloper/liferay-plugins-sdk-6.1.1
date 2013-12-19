@@ -9,7 +9,6 @@
             <h:panelGrid columns="4" style="width:100%" columnClasses="columnWidth15">  
                <p:outputLabel value="#{lbl['lbl.ct.tr.mutual']}"/>  
                <p:selectBooleanCheckbox value="#{contractDetailsBackingBean.managedBean.contractVer.ctTermination.mutualTerminate}" disabled="true"/> 
-               <f:verbatim></f:verbatim> <f:verbatim></f:verbatim>
                <p:outputLabel  value="#{lbl['lbl.ct.tr.recom']}"/>  
                <p:selectOneMenu value="#{contractDetailsBackingBean.managedBean.termination.caRecommendation.code}" style="width:170px;">
                   <f:selectItems value="#{contractDetailsBackingBean.getDropdownValues(PmCodeCatConst.ctTerminationRecommendType)}" />
