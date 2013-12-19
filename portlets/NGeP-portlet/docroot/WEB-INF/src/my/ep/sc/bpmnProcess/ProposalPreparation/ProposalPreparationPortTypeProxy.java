@@ -44,10 +44,10 @@ public class ProposalPreparationPortTypeProxy implements my.ep.sc.bpmnProcess.Pr
     return proposalPreparationPortType;
   }
   
-  public void start(my.ep.sc.Data.SC_SiteVisitProposal_Data.SC_SiteVisitProposal_DataType SC_SiteVisitProposal_Data) throws java.rmi.RemoteException{
+  public void start(my.ep.sc.Data.SC_SiteVisitProposal_Data.SC_SiteVisitProposal_DataType SC_SiteVisitProposal_Data, java.lang.String document_number) throws java.rmi.RemoteException{
     if (proposalPreparationPortType == null)
       _initProposalPreparationPortTypeProxy();
-    proposalPreparationPortType.start(SC_SiteVisitProposal_Data);
+    proposalPreparationPortType.start(SC_SiteVisitProposal_Data, document_number);
   }
   
   

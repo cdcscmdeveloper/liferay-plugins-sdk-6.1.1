@@ -16,6 +16,8 @@ public class SC_SiteVisitProposal_DataType  implements java.io.Serializable {
 
     private java.util.Calendar closing_time;
 
+    private java.lang.Boolean site_visit;
+
     private java.lang.String[] recommended_suppliers;
 
     public SC_SiteVisitProposal_DataType() {
@@ -26,11 +28,13 @@ public class SC_SiteVisitProposal_DataType  implements java.io.Serializable {
            java.lang.String supplier,
            java.lang.Boolean approval,
            java.util.Calendar closing_time,
+           java.lang.Boolean site_visit,
            java.lang.String[] recommended_suppliers) {
            this.qt_id = qt_id;
            this.supplier = supplier;
            this.approval = approval;
            this.closing_time = closing_time;
+           this.site_visit = site_visit;
            this.recommended_suppliers = recommended_suppliers;
     }
 
@@ -116,6 +120,26 @@ public class SC_SiteVisitProposal_DataType  implements java.io.Serializable {
 
 
     /**
+     * Gets the site_visit value for this SC_SiteVisitProposal_DataType.
+     * 
+     * @return site_visit
+     */
+    public java.lang.Boolean getSite_visit() {
+        return site_visit;
+    }
+
+
+    /**
+     * Sets the site_visit value for this SC_SiteVisitProposal_DataType.
+     * 
+     * @param site_visit
+     */
+    public void setSite_visit(java.lang.Boolean site_visit) {
+        this.site_visit = site_visit;
+    }
+
+
+    /**
      * Gets the recommended_suppliers value for this SC_SiteVisitProposal_DataType.
      * 
      * @return recommended_suppliers
@@ -166,6 +190,9 @@ public class SC_SiteVisitProposal_DataType  implements java.io.Serializable {
             ((this.closing_time==null && other.getClosing_time()==null) || 
              (this.closing_time!=null &&
               this.closing_time.equals(other.getClosing_time()))) &&
+            ((this.site_visit==null && other.getSite_visit()==null) || 
+             (this.site_visit!=null &&
+              this.site_visit.equals(other.getSite_visit()))) &&
             ((this.recommended_suppliers==null && other.getRecommended_suppliers()==null) || 
              (this.recommended_suppliers!=null &&
               java.util.Arrays.equals(this.recommended_suppliers, other.getRecommended_suppliers())));
@@ -191,6 +218,9 @@ public class SC_SiteVisitProposal_DataType  implements java.io.Serializable {
         }
         if (getClosing_time() != null) {
             _hashCode += getClosing_time().hashCode();
+        }
+        if (getSite_visit() != null) {
+            _hashCode += getSite_visit().hashCode();
         }
         if (getRecommended_suppliers() != null) {
             for (int i=0;
@@ -235,6 +265,12 @@ public class SC_SiteVisitProposal_DataType  implements java.io.Serializable {
         elemField.setFieldName("closing_time");
         elemField.setXmlName(new javax.xml.namespace.QName("http://xmlns.oracle.com/bpm/bpmobject/Data/SC_SiteVisitProposal_Data", "closing_time"));
         elemField.setXmlType(new javax.xml.namespace.QName("http://www.w3.org/2001/XMLSchema", "dateTime"));
+        elemField.setNillable(true);
+        typeDesc.addFieldDesc(elemField);
+        elemField = new org.apache.axis.description.ElementDesc();
+        elemField.setFieldName("site_visit");
+        elemField.setXmlName(new javax.xml.namespace.QName("http://xmlns.oracle.com/bpm/bpmobject/Data/SC_SiteVisitProposal_Data", "site_visit"));
+        elemField.setXmlType(new javax.xml.namespace.QName("http://www.w3.org/2001/XMLSchema", "boolean"));
         elemField.setNillable(true);
         typeDesc.addFieldDesc(elemField);
         elemField = new org.apache.axis.description.ElementDesc();

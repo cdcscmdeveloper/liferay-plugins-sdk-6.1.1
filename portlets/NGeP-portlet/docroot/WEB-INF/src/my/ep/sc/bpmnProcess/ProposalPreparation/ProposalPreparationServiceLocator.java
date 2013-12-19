@@ -22,7 +22,7 @@ public class ProposalPreparationServiceLocator extends org.apache.axis.client.Se
     }
 
     // Use to get a proxy class for ProposalPreparationPort
-    private java.lang.String ProposalPreparationPort_address = "http://192.168.120.17:8001/soa-infra/services/default/Sourcing/ProposalPreparation.service";
+    private java.lang.String ProposalPreparationPort_address = "http://192.168.120.22:8002/soa-infra/services/default/Sourcing/ProposalPreparation.service";
 
     public java.lang.String getProposalPreparationPortAddress() {
         return ProposalPreparationPort_address;

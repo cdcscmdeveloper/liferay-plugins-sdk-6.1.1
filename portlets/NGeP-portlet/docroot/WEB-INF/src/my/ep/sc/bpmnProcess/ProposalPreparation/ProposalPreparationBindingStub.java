@@ -27,6 +27,8 @@ public class ProposalPreparationBindingStub extends org.apache.axis.client.Stub 
         oper.setName("start");
         param = new org.apache.axis.description.ParameterDesc(new javax.xml.namespace.QName("http://xmlns.oracle.com/bpm/bpmobject/Data/SC_SiteVisitProposal_Data", "SC_SiteVisitProposal_Data"), org.apache.axis.description.ParameterDesc.IN, new javax.xml.namespace.QName("http://xmlns.oracle.com/bpm/bpmobject/Data/SC_SiteVisitProposal_Data", "SC_SiteVisitProposal_DataType"), my.ep.sc.Data.SC_SiteVisitProposal_Data.SC_SiteVisitProposal_DataType.class, false, false);
         oper.addParameter(param);
+        param = new org.apache.axis.description.ParameterDesc(new javax.xml.namespace.QName("", "document_number"), org.apache.axis.description.ParameterDesc.IN, new javax.xml.namespace.QName("http://www.w3.org/2001/XMLSchema", "string"), java.lang.String.class, false, false);
+        oper.addParameter(param);
         oper.setReturnType(org.apache.axis.encoding.XMLType.AXIS_VOID);
         oper.setStyle(org.apache.axis.constants.Style.WRAPPED);
         oper.setUse(org.apache.axis.constants.Use.LITERAL);
@@ -136,7 +138,7 @@ public class ProposalPreparationBindingStub extends org.apache.axis.client.Stub 
         }
     }
 
-    public void start(my.ep.sc.Data.SC_SiteVisitProposal_Data.SC_SiteVisitProposal_DataType SC_SiteVisitProposal_Data) throws java.rmi.RemoteException {
+    public void start(my.ep.sc.Data.SC_SiteVisitProposal_Data.SC_SiteVisitProposal_DataType SC_SiteVisitProposal_Data, java.lang.String document_number) throws java.rmi.RemoteException {
         if (super.cachedEndpoint == null) {
             throw new org.apache.axis.NoEndPointException();
         }
@@ -152,7 +154,7 @@ public class ProposalPreparationBindingStub extends org.apache.axis.client.Stub 
 
         setRequestHeaders(_call);
         setAttachments(_call);
-        _call.invokeOneWay(new java.lang.Object[] {SC_SiteVisitProposal_Data});
+        _call.invokeOneWay(new java.lang.Object[] {SC_SiteVisitProposal_Data, document_number});
 
     }
 
