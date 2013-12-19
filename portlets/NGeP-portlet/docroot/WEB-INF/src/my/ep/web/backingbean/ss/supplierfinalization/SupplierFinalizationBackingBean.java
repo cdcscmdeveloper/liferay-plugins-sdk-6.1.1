@@ -39,7 +39,6 @@ public class SupplierFinalizationBackingBean extends
 		BaseBackingBean<SupplierFinalizationManagedBean> {
 	private static final Logger log = EpLogger
 			.getLogger(SupplierFinalizationBackingBean.class);
-
 	
 	public SupplierFinalizationBackingBean() {
 		optionsEvent();
@@ -94,6 +93,20 @@ public class SupplierFinalizationBackingBean extends
 			ScQt scQt = resDTO.getScQt();
 			populateParentOrgProfile(scQt);
 		    this.getManagedBean().setScQt(scQt);
+		    
+		    if (!scQt.getScQtCriterias().isMultiLocality()){ 
+		    	
+				// Recommended Supplier Listing
+				List<ScQtProposalRanking> recommendedSuppList = resDTO.getQualifiedSuppResultBean().getResultList();
+				System.out.println("RecommendedSuppList: " + recommendedSuppList.size());
+				this.getManagedBean().setRecommendedSuppList(recommendedSuppList);
+				
+				//  Shortlisted Supplier Listing
+				List<ScQtProposalRanking> shortlistedSuppList = resDTO.getQualifiedSuppResultBean().getResultList();
+				System.out.println("ShortlistedSuppList: " + shortlistedSuppList.size());
+				this.getManagedBean().setShortlistedSuppList(shortlistedSuppList);
+				this.getManagedBean().setTotalSelectedSupplier(shortlistedSuppList.size());
+		    }
 
 			} catch (Exception ex) {
 				ex.printStackTrace();
@@ -130,6 +143,8 @@ public class SupplierFinalizationBackingBean extends
 				System.out.println("ShortlistedSuppList: " + shortlistedSuppList.size());
 				this.getManagedBean().setShortlistedSuppList(shortlistedSuppList);
 				this.getManagedBean().setTotalSelectedSupplier(shortlistedSuppList.size());
+				this.getManagedBean().setScQtZoneCriteria(scQtZoneCriteria);
+				
 			}
 			} catch (Exception ex) {
 				ex.printStackTrace();
@@ -276,6 +291,24 @@ public class SupplierFinalizationBackingBean extends
 			ScQt scQt = resDTO.getScQt();
 			populateParentOrgProfile(scQt);
 		    this.getManagedBean().setScQt(scQt);
+		    
+		    if (!scQt.getScQtCriterias().isMultiLocality()){
+		    	
+		       if (resDTO.getQualifiedSuppResultBean() != null) {
+					List<ScQtProposalRanking> qualifiedSupplist = resDTO.getQualifiedSuppResultBean().getResultList();
+					System.out.println("qualifiedSupplist: " + qualifiedSupplist.size());
+				       this.getManagedBean().setQualifiedSupplist(qualifiedSupplist);
+				       this.getManagedBean().setTotalQulifiedSupplier(qualifiedSupplist.size());
+				  }
+					
+			   if (resDTO.getDisqualifiedSuppResultBean() != null) {
+					List<ScQtProposalRanking> disqualifiedSupplist = resDTO.getDisqualifiedSuppResultBean().getResultList();
+					System.out.println("disqualifiedSupplist: " + disqualifiedSupplist.size());
+					this.getManagedBean().setDisQualifiedSupplist(disqualifiedSupplist);
+					this.getManagedBean().setTotalDisQualifiedSupplier(disqualifiedSupplist.size());
+				 }
+		    }
+		    
 			
 			} catch (Exception ex) {
 				ex.printStackTrace();
@@ -316,6 +349,8 @@ public class SupplierFinalizationBackingBean extends
 					this.getManagedBean().setDisQualifiedSupplist(disqualifiedSupplist);
 					this.getManagedBean().setTotalDisQualifiedSupplier(disqualifiedSupplist.size());
 			   }
+			  
+			  this.getManagedBean().setScQtZoneCriteria(scQtZoneCriteria);
 			}
 			} catch (Exception ex) {
 				ex.printStackTrace();
@@ -447,7 +482,6 @@ public class SupplierFinalizationBackingBean extends
 			this.getManagedBean().setScQtProposalRanking(getManagedBean().getScQtProposalRanking());
 	    }
      }
-	
 	
 	private void debugLogger(Object message) {
 		if (log.isDebugEnabled()) {
