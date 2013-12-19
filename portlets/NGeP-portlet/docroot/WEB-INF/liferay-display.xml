@@ -9,8 +9,8 @@
 				<portlet id="ctPanelCircular" />
 				<portlet id="ctPanelCircularMaintenance" />
 				<portlet id="ctCancelCircular" />
-			</category>
-			<portlet id="ctReviewAmendment" />
+			</category>		
+			<portlet id="ctReviewAmendment" />			
 			<portlet id="ctContractMaintenance" />
 			<portlet id="ctAssociateContract" />
 			<portlet id="ctFulfilmentDetail" />
@@ -66,11 +66,12 @@
 			<portlet id="scQTSiteVisit"/>
 			<portlet id="scSupplierProposal"/>
 			<portlet id="scSupplierNotification"/>
-           <portlet id="scTemplateDocument" />
+            <portlet id="scTemplateDocument" />
            <portlet id="scBriefingSiteVisitAttendance" />
-             <portlet id="Supplier Finalization"></portlet>
+            <portlet id="scCommitteMaintance" />
+           <portlet id="scUserprofiles" />
+            <portlet id="Supplier Finalization"></portlet>
            <portlet id="Pre-Supplier Finalization"></portlet>
-
 		</category>
 
 		<!-- Fulfilment Start Added by Giri -->
@@ -96,7 +97,6 @@
 		<portlet id="Catalogue"></portlet>
 		<portlet id="ReviewUNSPSC"></portlet>
 		<portlet id="catalogueTaskList"></portlet>
-		
 
 	</category>
 
@@ -140,5 +140,5 @@
 		<portlet id="smUpdateMofDetails"></portlet>
 		<portlet id="SiteVisit"></portlet>
 		<portlet id="MOFApplication"></portlet>
-	</category>	
+	</category>
 </display>
