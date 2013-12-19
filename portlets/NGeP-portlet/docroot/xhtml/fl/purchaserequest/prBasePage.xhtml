@@ -22,10 +22,9 @@
 						var="bpmAction"
 						value="#{purchaseRequestBackingBean.managedBean.outComes}">
 						
-						<p:commandButton value="#{bpmAction}" ajax='false'
+						<p:commandButton value="#{bpmAction}"
 							styleClass="ui-button" icon="#{iconVar}"
-							action="#{purchaseRequestBackingBean.fulfillmentRequestAction(bpmAction)}"
-							process="@all" />
+							action="#{purchaseRequestBackingBean.fulfillmentRequestAction(bpmAction)}"/>
 					</ui:repeat></td>
 			</tr>
 		</table>
