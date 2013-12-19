@@ -204,10 +204,10 @@
 										<tr>
 											<td width="80%"><p:commandLink
 													value="#{type.wishlistDesc}" update=":form:supplierItemID"
-													action="#{wishListBackingBean.filterWishListType(rowIndex)}" partialSubmit="true" process="@this" /></td>
+													action="#{wishListBackingBean.filterWishListType(rowIndex)}"  /></td>
 											<td><p:commandLink
 													action="#{wishListBackingBean.deleteFavoriteWishList(rowIndex)}"
-													update=":form:supplierItemViewID" partialSubmit="true" process="@this">
+													update=":form:supplierItemViewID" >
 													<p:graphicImage
 														value="/resources/ep/images/design/trash.png"></p:graphicImage>
 												</p:commandLink></td>

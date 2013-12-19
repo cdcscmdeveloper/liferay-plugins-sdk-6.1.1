@@ -818,13 +818,20 @@ public class CodificationBackingBean extends BaseBackingBean<CodificationManaged
 
 
 	public void unspscPopUpSearch(CmUnspsc obj){
+		
+
+		this.getManagedBean().setClassCode("");
+		this.getManagedBean().setClassTitle("");
+
+		this.getManagedBean().setFamilyCode("");
+		this.getManagedBean().setFamilyTitle("");
+
+		this.getManagedBean().setSegmentCode("");
+		this.getManagedBean().setSegmentTitle("");
+
 
 		ICodificationSO unspscSO =  (ICodificationSO) BusinessDelegate.getInstance().getServiceObject("cm",ICodificationSO.class);
 		CodificationReqDTO reqDTO = new CodificationReqDTO();
-
-
-
-
 
 		Integer level = checkUnspscLevel(new Long(obj.getUnspscCode()));
 

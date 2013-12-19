@@ -13,7 +13,7 @@
 			<td><p:outputLabel value="#{lbl['lbl.cm.wish.list']}"></p:outputLabel></td>
 			<td><p:inputText
 					value="#{wishListBackingBean.managedBean.wishList.wishlistDesc}"></p:inputText></td>
-			<td><p:commandButton value="create" partialSubmit="true" process="wishListPopUpId"
+			<td><p:commandButton value="create" 
 					onclick="wishListPopUp.hide()" update="supplierItemViewID"
 					action="#{wishListBackingBean.saveWishList}"></p:commandButton></td>
 		</tr>
@@ -53,7 +53,7 @@
 
 			</p:dataTable>
 			<p:commandButton value="#{lbl['lbl.cm.ok']}" icon="ui-icon-approve"
-				action="#{wishListBackingBean.addItemIntoWishList}"  partialSubmit="true" process="wishListPopUpId"
+				action="#{wishListBackingBean.addItemIntoWishList}"  
 				onclick="wishListPopUp.hide()"></p:commandButton>
 		</div>
 	</div>
