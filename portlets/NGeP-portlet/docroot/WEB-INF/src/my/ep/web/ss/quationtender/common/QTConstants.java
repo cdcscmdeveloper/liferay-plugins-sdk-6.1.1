@@ -54,5 +54,19 @@ public interface QTConstants {
 	public static final String SC_LOA_AWARD_TAB = "Award Details";
 	public static final String SC_PERFORMANCE_BOND_TAB="Performance Bond";
 	public static final String SC_PAYMENT_TAB="Payment Details";
+	
+	// Supplier Finalization Constants
+	public static final String SF_FORWARD_TO_HIGHER_AUTH = "Forward Higher Authority";
+	public static final String SF_RE_EVALUATION = "Re-Evaluation";
+	public static final String SF_ONLINE_BIDDING = "Online Bidding";
+	public static final String SF_MULTIPLE_LOI = "Multiple LOI";
+	public static final String SF_AWARD = "Award";
+	public static final String SF_BASIC = "Basic";
+	public static final String SF_MULTIPLE_ITEMS = "Multiple Items";
+	public static final String SF_BY_SUPPLIER = "By Supplier";
+	public static final String SF_SINGLE = "single";
+	public static final String SF_MULTIPLE = "multiple";
+	
+	
 
 }
