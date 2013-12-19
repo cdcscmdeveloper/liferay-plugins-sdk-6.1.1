@@ -17,11 +17,6 @@
 			</div>
 
 
-			<p:remoteCommand id="compareRow" name="compareRow"
-				update="compareCatalogueId" process="@this"
-				action="#{catalogueBackingBean.compareIndxeAction()}">
-			</p:remoteCommand>
-
 			<h:panelGrid columns="2" style="width:100%;" columnClasses="comparelabelCss compareValueCss">
 
 				<h:panelGroup>
@@ -51,11 +46,7 @@
 								<td rowspan="3"><p:graphicImage
 										value="/resources/ep/images/product/computer/879949914_125.jpg"
 										height="100px" width="100px" /></td>
-								<td><h:selectOneRadio
-										value="#{catalogueBackingBean.managedBean.compareIndex}"
-										onclick="compareRow([{name: 'name1', value: '#{compareKey}'}])">
-										<f:selectItem itemValue="#{compareKey}" />
-									</h:selectOneRadio></td>
+								<td></td>
 								<td colspan="1"><p:commandLink
 										action="#{catalogueBackingBean.deleteComparedItem(compareKey)}"
 										update=":form:compareDataList">
@@ -67,29 +58,29 @@
 
 
 						<h:panelGrid
-							styleClass="#{compare.cmItem.itemName == catalogueBackingBean.managedBean.catalogueObj.cmItem.itemName ?'comparePanel':'comparePanel1'}">
+							styleClass="comparePanel">
 					#{compare.cmItem.itemName}
 				</h:panelGrid>
-						<h:panelGrid styleClass="#{compare.cmItem.itemName == catalogueBackingBean.managedBean.catalogueObj.cmItem.itemName ?'comparePanel':'comparePanel1'}">
+						<h:panelGrid styleClass="comparePanel">
 					#{compare.cmItem.itemDesc}
 				</h:panelGrid>
 
 						<h:panelGrid
-							styleClass="#{compare.smSupplier.supplierName == catalogueBackingBean.managedBean.catalogueObj.smSupplier.supplierName ?'comparePanel':'comparePanel1'}">
+							styleClass="comparePanel">
 					#{compare.smSupplier.supplierName}
 				</h:panelGrid>
 						
 						<h:panelGrid
-							styleClass="#{compare.skuNumber == catalogueBackingBean.managedBean.catalogueObj.skuNumber ?'comparePanel':'comparePanel1'}">
+							styleClass="comparePanel">
 					#{compare.skuNumber}
 				</h:panelGrid>
 						<h:panelGrid
-							styleClass="#{compare.paymentTerms == catalogueBackingBean.managedBean.catalogueObj.paymentTerms ?'comparePanel':'comparePanel1'}">
+							styleClass="comparePanel">
 					#{compare.paymentTerms}
 				</h:panelGrid>
 
 						<h:panelGrid
-							styleClass="#{compare.itemDesc == catalogueBackingBean.managedBean.catalogueObj.itemDesc ?'comparePanel':'comparePanel1'}">
+							styleClass="comparePanel">
 					#{compare.itemDesc}
 				</h:panelGrid>
 
