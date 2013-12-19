@@ -27,12 +27,15 @@ import javax.servlet.http.HttpServletResponse;
 import javax.xml.rpc.ServiceException;
 
 import my.ep.biz.service.sm.registration.IRegistrationSO;
+import my.ep.biz.service.ss.quationtender.IQTDetailSO;
 import my.ep.biz.service.ss.quationtender.IQTProposalSO;
 import my.ep.constant.tpl.TemplateSpecConst;
 import my.ep.dto.sm.registration.RegistrationReqDTO;
 import my.ep.dto.sm.registration.RegistrationResDTO;
 import my.ep.dto.ss.quationtender.ProposalReqDTO;
 import my.ep.dto.ss.quationtender.ProposalResDTO;
+import my.ep.dto.ss.quationtender.QuationTenderReqDTO;
+import my.ep.dto.ss.quationtender.QuationTenderResDTO;
 import my.ep.exception.EpException;
 import my.ep.factory.EpLogger;
 import my.ep.persistence.entity.ss.quationtender.ScQtCheckList;
@@ -57,14 +60,14 @@ import org.apache.log4j.Logger;
 import org.primefaces.event.FileUploadEvent;
 import org.primefaces.model.UploadedFile;
 
-
 /**
  * @author Viswanath
  * 
  */
 @ManagedBean(name = "sPDetailBackingBean")
 @RequestScoped
-public class SPDetailBackingBean extends SourcingBaseBackingBean<SPDetailManagedBean> {
+public class SPDetailBackingBean extends
+		SourcingBaseBackingBean<SPDetailManagedBean> {
 	public static Logger log = EpLogger.getLogger(SPDetailBackingBean.class);
 
 	private static final String MODULE_NAME = "ss";
@@ -153,7 +156,8 @@ public class SPDetailBackingBean extends SourcingBaseBackingBean<SPDetailManaged
 					.getTecCheckDetailsList();
 			scQtProposalChecklists.addAll(tecQtProposalChecklists);
 
-			tecQtProposalChecklists = getManagedBean().getFinanceCheckDetailsList();
+			tecQtProposalChecklists = getManagedBean()
+					.getFinanceCheckDetailsList();
 			scQtProposalChecklists.addAll(tecQtProposalChecklists);
 
 			ProposalReqDTO reqDTO = new ProposalReqDTO();
@@ -169,7 +173,7 @@ public class SPDetailBackingBean extends SourcingBaseBackingBean<SPDetailManaged
 
 			reqDTO.setScQtProposal(scQtProposal);
 			resDTO = proposalSO.saveQTDtl(reqDTO);
-			
+
 			if (resDTO.isSuccessful()) {
 				log.info("Record saved successfully");
 				String message = "QT Proposal No. : "
@@ -235,10 +239,11 @@ public class SPDetailBackingBean extends SourcingBaseBackingBean<SPDetailManaged
 	public void downloadPTJFile(ScQtProposalChecklist scQtProposalChecklist)
 			throws IOException {
 		debugLogger("downloadFile");
-		File file = new File("E:\\upload\\" + scQtProposalChecklist.getScQtCheckList()
-				.getScQtCheckListAttachment().getFileName());
+		File file = new File("E:\\upload\\"
+				+ scQtProposalChecklist.getScQtCheckList()
+						.getScQtCheckListAttachment().getFileName());
 		InputStream input = new FileInputStream(file);
-		
+
 		PortletResponse portletResponse = (PortletResponse) FacesContext
 				.getCurrentInstance().getExternalContext().getResponse();
 		HttpServletResponse res = com.liferay.portal.util.PortalUtil
@@ -350,70 +355,112 @@ public class SPDetailBackingBean extends SourcingBaseBackingBean<SPDetailManaged
 		out.close();
 
 	}
-	public String createProposal(){
-		System.out.println("@@@@@@@@@"+this.getManagedBean().getSupplierId());
-		ProposalPreparationServiceLocator locator= new ProposalPreparationServiceLocator();
-		//locator.setSiteVisitPortEndpointAddress("http://192.168.120.17:8001/soa-infra/services/default/Sourcing/SiteVisit.service");
-		
-			SC_SiteVisitProposal_DataType dataType=new SC_SiteVisitProposal_DataType();
+
+	public String createProposal() {
+		ProposalPreparationServiceLocator locator = new ProposalPreparationServiceLocator();
+		// locator.setSiteVisitPortEndpointAddress("http://192.168.120.17:8001/soa-infra/services/default/Sourcing/SiteVisit.service");
+
+		SC_SiteVisitProposal_DataType dataType = new SC_SiteVisitProposal_DataType();
 		System.out.println(dataType);
-		
-		dataType.setQt_id(146);
-		dataType.setSupplier(new FacesScopes().getUserScreenName());
-		Calendar c = Calendar.getInstance(); //gives u calendar with current time
-		
-		c.setTime(new Date(2012-12-12));
-		dataType.setClosing_time(c);
-		dataType.setApproval(true);
-		
+		String qtno = this.getManagedBean().getSupplierId();
+
 		try {
-			ProposalPreparationPortType port = locator.getProposalPreparationPort();
-			System.out.println(port);
-			System.out.println("before invoking");
-			port.start(dataType);
-			System.out.println("invoked successfully");
+			if (qtno == null) {
+				throw new EpException("");
+			} else {
+				dataType.setQt_id(new Integer(qtno));
+
+			}
+			dataType.setSupplier(new FacesScopes().getUserScreenName());
+			Calendar c = Calendar.getInstance(); // gives u calendar with
+			Calendar calendar = Calendar.getInstance();
+
+			// Set the time for the notification to occur.
+			calendar.set(Calendar.YEAR, 2013);
+			calendar.set(Calendar.MONTH, 12);
+			calendar.set(Calendar.DAY_OF_MONTH, 13);
+			calendar.set(Calendar.HOUR_OF_DAY, 10);
+			calendar.set(Calendar.MINUTE, 45);
+			calendar.set(Calendar.SECOND, 0); // current time
+
+			dataType.setClosing_time(calendar);
+			dataType.setApproval(true);
+
+			ProposalPreparationPortType port = locator
+					.getProposalPreparationPort();
+
+			String docnumber = "123we34";
+			port.start(dataType, docnumber);
+
+			FacesContext fc = FacesContext.getCurrentInstance();
+			fc.getApplication()
+					.getNavigationHandler()
+					.handleNavigation(fc, null,
+							"/xhtml/shared/acknowledge.xhtml");
 		} catch (ServiceException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			FacesContext.getCurrentInstance().addMessage(
+					null,
+					new FacesMessage(FacesMessage.SEVERITY_ERROR,
+							"Unable to process.", ""));
 		} catch (RemoteException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			FacesContext.getCurrentInstance().addMessage(
+					null,
+					new FacesMessage(FacesMessage.SEVERITY_ERROR,
+							"Unable to process.", ""));
+		} catch (Exception e) {
+			FacesContext.getCurrentInstance().addMessage(
+					null,
+					new FacesMessage(FacesMessage.SEVERITY_ERROR,
+							"Unable to process.", ""));
 		}
 		return null;
 	}
-	public String updateBpmTask(String action){
-		
-		ProposalReqDTO prReqDTO= constructReqDTO();
+
+	public String updateBpmTask(String action) {
+
+		ProposalReqDTO prReqDTO = constructReqDTO();
 		prReqDTO.setOutcome(action);
 		prReqDTO.setTaskId(this.getManagedBean().getTaskId());
-		FacesScopes facesScopes= new FacesScopes();
+		FacesScopes facesScopes = new FacesScopes();
 		String ctx = facesScopes.getBPMAuthenticationCtxToken();
 		prReqDTO.setToken(ctx);
 		prReqDTO.setPayLoad(this.getManagedBean().getProposalData());
-		IQTProposalSO proSo= getProposalSO();
-		ProposalResDTO resDTO = proSo.updateBPMAction(prReqDTO);
-		if (resDTO.isSuccessful()) {
+		IQTProposalSO proSo = getProposalSO();
+		try {
+			ProposalResDTO resDTO = proSo.updateBPMAction(prReqDTO);
+			if (resDTO.isSuccessful()) {
 
+				FacesContext.getCurrentInstance().addMessage(
+						null,
+						new FacesMessage(FacesMessage.SEVERITY_INFO,
+								"Record saved successfully.", " Type. : "
+
+						));
+
+				FacesContext fc = FacesContext.getCurrentInstance();
+				fc.getApplication()
+						.getNavigationHandler()
+						.handleNavigation(fc, null,
+								"/xhtml/shared/acknowledge.xhtml");
+			}
+		} catch (Exception ex) {
 			FacesContext.getCurrentInstance().addMessage(
 					null,
-					new FacesMessage(FacesMessage.SEVERITY_INFO,
-							"Record saved successfully.",
-							" Type. : "
+					new FacesMessage(FacesMessage.SEVERITY_ERROR,
+							"Sorry We are unable to Process", " Type. : "
 
 					));
-
-			return "/xhtml/shared/acknowledge.xhtml";
-
 		}
-		return "";
-		
+		return null;
+
 	}
-	
-	private IQTProposalSO getProposalSO(){
-		return EpEjbBusinessDelegate.getInstance().getServiceObject(QTConstants.SS_MODULE,IQTProposalSO.class);
+
+	private IQTProposalSO getProposalSO() {
+		return EpEjbBusinessDelegate.getInstance().getServiceObject(
+				QTConstants.SS_MODULE, IQTProposalSO.class);
 	}
-	
-	private ProposalReqDTO constructReqDTO(){
+
+	private ProposalReqDTO constructReqDTO() {
 		List<ScQtProposalChecklist> scQtProposalChecklists = new ArrayList<ScQtProposalChecklist>();
 
 		ScQtProposal scQtProposal = getManagedBean().getQtProposal();
@@ -427,7 +474,6 @@ public class SPDetailBackingBean extends SourcingBaseBackingBean<SPDetailManaged
 		ProposalReqDTO reqDTO = new ProposalReqDTO();
 		reqDTO.setQtSupplierId(1L);
 
-		
 		// Update Changes
 		for (ScQtProposalChecklist proposalChecklist : scQtProposalChecklists) {
 			proposalChecklist.setSubmitted(true);

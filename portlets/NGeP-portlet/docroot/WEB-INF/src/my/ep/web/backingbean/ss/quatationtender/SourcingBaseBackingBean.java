@@ -149,18 +149,18 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 		if ("Proposal Preparation".equalsIgnoreCase(res.getProcessName())) {
 
 			SCSiteVisitProposalDataType proposalDateType = (SCSiteVisitProposalDataType) obj;
-			tenderReqDTO.setQtId(new Long(proposalDateType.getQtId())
+			/*tenderReqDTO.setQtId(new Long(proposalDateType.getQtId())
 					.longValue());
 			QuationTenderResDTO tenderResDTO = detailSO
 					.retriveQTDetails(tenderReqDTO);
 			
 			detailBackingBean.getManagedBean()
-					.setQt(tenderResDTO.getQtDetail());
+					.setQt(tenderResDTO.getQtDetail());*/
 
 			SPDetailBackingBean backingBean = new SPDetailBackingBean();
 			backingBean.getManagedBean().setProposalData(proposalDateType);
 			// detailBackingBean.populateParentOrgProfile(tenderResDTO.getQtDetail());
-			backingBean.retrieveTechnicalProposalList(1l);
+			backingBean.retrieveTechnicalProposalList(proposalDateType.getQtId().longValue());
 			FacesContext fc = FacesContext.getCurrentInstance();
 			fc.getApplication()
 					.getNavigationHandler()

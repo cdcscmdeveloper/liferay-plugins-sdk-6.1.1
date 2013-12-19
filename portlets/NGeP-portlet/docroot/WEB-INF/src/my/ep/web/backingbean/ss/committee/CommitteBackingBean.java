@@ -84,21 +84,28 @@ public class CommitteBackingBean extends
 		}
 	}
 
-	public void invokeCommitteAction(String action) {
+	public String invokeCommitteAction(String action) {
+
+		String page = null;
 		if (action.equalsIgnoreCase(BpmOutcomeConst.BPM_SAVE)) {
-			saveCommitteDetails();
+			page = saveCommitteDetails();
 		} else if (action.equalsIgnoreCase(BpmOutcomeConst.BPM_SUBMIT)) {
-			submitCommitteDetails();
+			page = submitCommitteDetails();
+
 		} else if (action.equalsIgnoreCase(BpmOutcomeConst.BPM_REVISE)) {
-			updateCommitteBpmTask(action);
+			page = updateCommitteBpmTask(action);
 		} else if (action.equalsIgnoreCase(BpmOutcomeConst.BPM_APPROVE)) {
-			updateCommitteBpmTask(action);
+			page = updateCommitteBpmTask(action);
 		}
+		FacesContext fc = FacesContext.getCurrentInstance();
+		fc.getApplication().getNavigationHandler()
+				.handleNavigation(fc, null, "/xhtml/shared/acknowledge.xhtml");
+		return page;
+
 	}
 
-	private void updateCommitteBpmTask(String action) {
-		
-		
+	private String updateCommitteBpmTask(String action) {
+
 		CommitteReqDTO committeReqDTO = new CommitteReqDTO();
 		committeReqDTO.setQtCommittee(this.getManagedBean().getQtCommittee());
 		FacesScopes facesScopes = new FacesScopes();
@@ -108,8 +115,29 @@ public class CommitteBackingBean extends
 		committeReqDTO.setOutcome(action);
 		ICommitteSO commso = EpEjbBusinessDelegate.getInstance()
 				.getServiceObject(QTConstants.SS_MODULE, ICommitteSO.class);
+		try {
+			commso.updateBPMTask(committeReqDTO);
+			if (true) {
 
-		commso.updateBPMTask(committeReqDTO);
+				FacesContext.getCurrentInstance().addMessage(
+						null,
+						new FacesMessage(FacesMessage.SEVERITY_INFO,
+								"Record saved successfully.",
+								"Committe Type. : "
+										+ this.getManagedBean()
+												.getScCommittee()
+												.getCommitteeType()));
+
+				return "/xhtml/shared/acknowledge.xhtml";
+
+			}
+		} catch (Exception ex) {
+			FacesContext.getCurrentInstance().addMessage(
+					null,
+					new FacesMessage(FacesMessage.SEVERITY_INFO,
+							"Sorry For the inconvinence", ""));
+		}
+		return null;
 
 	}
 
@@ -122,21 +150,32 @@ public class CommitteBackingBean extends
 		CommitteReqDTO committeReqDTO = constructSaveCommitte();
 		ICommitteSO committeSO = EpEjbBusinessDelegate.getInstance()
 				.getServiceObject(QTConstants.SS_MODULE, ICommitteSO.class);
-		CommitteResDTO resDTO = committeSO.saveOrUpdateCommitte(committeReqDTO);
-		if (resDTO.isSuccessful()) {
+		try {
+			CommitteResDTO resDTO = committeSO
+					.saveOrUpdateCommitte(committeReqDTO);
+			if (resDTO.isSuccessful()) {
 
+				FacesContext.getCurrentInstance().addMessage(
+						null,
+						new FacesMessage(FacesMessage.SEVERITY_INFO,
+								"Record saved successfully.",
+								"Committe Type. : "
+										+ this.getManagedBean()
+												.getScCommittee()
+												.getCommitteeType()));
+
+				return "/xhtml/shared/acknowledge.xhtml";
+
+			} else {
+				throw new EpException("");
+			}
+		} catch (Exception ex) {
 			FacesContext.getCurrentInstance().addMessage(
 					null,
 					new FacesMessage(FacesMessage.SEVERITY_INFO,
-							"Record saved successfully.", "Committe Type. : "
-									+ this.getManagedBean().getScCommittee()
-											.getCommitteeType()));
-
-			return "/xhtml/shared/acknowledge.xhtml";
-
-		} else {
-			throw new EpException("Failed.");
+							"Sorry For the inconvinence", ""));
 		}
+		return null;
 	}
 
 	/**
@@ -150,22 +189,33 @@ public class CommitteBackingBean extends
 		committeReqDTO.setToken(ctxToken);
 		ICommitteSO commso = EpEjbBusinessDelegate.getInstance()
 				.getServiceObject(QTConstants.SS_MODULE, ICommitteSO.class);
+		CommitteResDTO resDTO = null;
 
-		CommitteResDTO resDTO = commso.submitCommitteeDetails(committeReqDTO);
-		if (resDTO.isSuccessful()) {
+		try {
+			resDTO = commso.submitCommitteeDetails(committeReqDTO);
+			if (resDTO.isSuccessful()) {
 
+				FacesContext.getCurrentInstance().addMessage(
+						null,
+						new FacesMessage(FacesMessage.SEVERITY_INFO,
+								"Record saved successfully.",
+								"Committe Type. : "
+										+ this.getManagedBean()
+												.getScCommittee()
+												.getCommitteeType()));
+
+				return "/xhtml/shared/acknowledge.xhtml";
+
+			} else {
+				throw new EpException("");
+			}
+		} catch (Exception ex) {
 			FacesContext.getCurrentInstance().addMessage(
 					null,
 					new FacesMessage(FacesMessage.SEVERITY_INFO,
-							"Record saved successfully.", "Committe Type. : "
-									+ this.getManagedBean().getScCommittee()
-											.getCommitteeType()));
-
-			return "/xhtml/shared/acknowledge.xhtml";
-
-		} else {
-			throw new EpException("Failed.");
+							"Sorry For the inconvinence", ""));
 		}
+		return null;
 	}
 
 	private CommitteReqDTO constructSaveCommitte() {
@@ -357,6 +407,7 @@ public class CommitteBackingBean extends
 		committeeMember.setPmOrgProfile(new PmOrgProfile());
 		committeeMember.setDepartmentOrgProfile(new PmOrgProfile());
 		committeeMember.setUserSelection("P");
+		committeeMember.setGovtUser(true);
 		retriveGovUsers();
 		this.getManagedBean().setCommitteMember(committeeMember);
 		getSelectionTypes();
@@ -772,12 +823,13 @@ public class CommitteBackingBean extends
 		Object obj = res.getPojo();
 		this.getManagedBean().setOutComes(res.getAction());
 		SCCommitteeDataType committeDataType = (SCCommitteeDataType) obj;
-		
+
 		ICommitteSO committeSO = EpEjbBusinessDelegate.getInstance()
 				.getServiceObject(QTConstants.SS_MODULE, ICommitteSO.class);
 
 		CommitteReqDTO committeReqDTO = new CommitteReqDTO();
-		committeReqDTO.setCommitteId(new Long(committeDataType.getComId()).longValue());
+		committeReqDTO.setCommitteId(new Long(committeDataType.getComId())
+				.longValue());
 		CommitteResDTO resDTO = committeSO
 				.retriveQTCommitteDetails(committeReqDTO);
 

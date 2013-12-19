@@ -22,6 +22,7 @@ import my.ep.dto.ss.quationtender.BriefingReqDTO;
 import my.ep.dto.ss.quationtender.BriefingResDTO;
 import my.ep.dto.ss.quationtender.QuationTenderReqDTO;
 import my.ep.dto.ss.quationtender.QuationTenderResDTO;
+import my.ep.exception.EpException;
 import my.ep.jaxb.sc.sitevisitproposaldata.SCSiteVisitProposalDataType;
 import my.ep.persistence.entity.pm.authorization.PmUser;
 import my.ep.persistence.entity.sm.SmMofAccount;
@@ -545,7 +546,7 @@ public class BSVAttendanceBackingBean extends
 						fc,
 						null,
 						NAV_TO_BSV_ATTENDANCE_MAIN_PAGE
-								+ "?faces-redirect=true");
+								);
 	}
 
 public String updateBpmTask(String action) {
@@ -558,6 +559,7 @@ public String updateBpmTask(String action) {
 		briefingReqDTO.setToken(ctx);
 		briefingReqDTO.setPayLoad(this.getManagedBean().getSiteVisitPayLoad());
 		IQTBriefingSO briefingSO = getBriefingSO();
+		try{
 		BriefingResDTO resDTO = briefingSO.updateBPMAction(briefingReqDTO);
 		if (resDTO.isSuccessful()) {
 
@@ -568,8 +570,23 @@ public String updateBpmTask(String action) {
 
 					));
 
-			return "/xhtml/shared/acknowledge.xhtml";
+			FacesContext fc = FacesContext.getCurrentInstance();
+			fc.getApplication()
+					.getNavigationHandler()
+					.handleNavigation(fc, null,
+							"/xhtml/shared/acknowledge.xhtml");
 
+		}else{
+			throw new EpException("");
+		}
+		}
+		catch(Exception ex){
+			FacesContext.getCurrentInstance().addMessage(
+					null,
+					new FacesMessage(FacesMessage.SEVERITY_ERROR,
+							"Unable to process now",""
+
+					));
 		}
 		return null;
 	}
