@@ -11,7 +11,7 @@
 	<p:panelGrid columns="3" style="width:100%;"
 			styleClass="noBorders tr,noBorders td">
 	
-	<p:dataTable id="biddetail"  value="" style="width:80%;">
+	<p:dataTable id="biddetail"  value="">
 <p:column headerText="No" style="width:2%;" >
 <h:outputText value="1"></h:outputText>
 
@@ -25,10 +25,10 @@
 				
 				</p:dataTable>
 				
-				 <p:poll interval="3" update="votes" />  
+				 <p:poll interval="3" update="bidchart" rendered="false" />  
   
-    <p:pieChart id="votes" value="#{bidChartBean.livePieModel}" title="Live Chart"  
-                legendPosition="nw" style="width:400px;height:200px"/> 
+    <p:lineChart id="bidchart" value="#{biddingBB.linearModel}" legendPosition="e"  
+	     		title="Bidding Statistic Graph" minY="80000" maxY="110000" style="width:500px;height:300px"/>
      </p:panelGrid>  
 				</p:panel>
 				</ui:composition>
