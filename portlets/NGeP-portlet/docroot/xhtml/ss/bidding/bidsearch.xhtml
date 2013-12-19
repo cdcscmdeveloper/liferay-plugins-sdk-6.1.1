@@ -7,85 +7,74 @@
 
 
 	<p:panel header="Search Criteria" toggleable="true">
-	
-	<p:panelGrid columns="2" style="width:100%;"
-			styleClass="noBorders tr,noBorders td">
-			
-		<h:outputText value="Document No." />
-		
+		<h:panelGrid border="0" cellpadding="0" cellspacing="0" width="100%"
+			columns="2" columnClasses="columnWidth20">
+			<h:column>
+				<h:outputText value="Document No." />
+			</h:column>
+			<h:column>
 				<p:inputText id="DocNo" value="#{biddingBB.managedBean.docNo}" />
-				
-		<h:outputText value="Bid No." />
-		
+			</h:column>
+			<h:column>
+				<h:outputText value="Bid No." />
+			</h:column>
+			<h:column>
 				<p:inputText id="BidNo" value="#{biddingBB.managedBean.bidNo}"/>
-				
-	    			
-		<h:outputText value="Bid Title" />
-		
-				<p:inputText id="BidTitle" value="#{biddingBB.managedBean.bidTitle}"  />
-				
-			<h:outputText value="Bidding Date "></h:outputText>
+			</h:column>
+		</h:panelGrid>
+		<h:panelGrid border="0" cellpadding="0" cellspacing="0" width="100%"
+			columns="2" columnClasses="columnWidth20">
+			<h:column>
+				<h:outputText value="Bid Title" />
+			</h:column>
+			<h:column>
+				<p:inputText id="BidTitle" value="#{biddingBB.managedBean.bidTitle}" size="125" />
+			</h:column>
+		</h:panelGrid>
+		<h:panelGrid border="0" cellpadding="0" cellspacing="0" width="100%"
+			columns="4" columnClasses="columnWidth20,columnWidth30,columnWidth20,columnWidth30">
+			<h:column>
+				<h:outputText value="Bidding Date (From) " />
+			</h:column>
+			<h:column>
+				<p:calendar value="#{biddingBB.managedBean.createdDate}" pattern="MM/dd/yyyy" id="bidFromDate" showOn="button"/>
+			</h:column>
+			<h:column>
+				<h:outputText value="Bidding Date (To)" />
+			</h:column>
+			<h:column>
+				<p:calendar value="#{biddingBB.managedBean.createdDate}" pattern="MM/dd/yyyy" id="bidToDate" showOn="button"/>
+			</h:column>
+	    </h:panelGrid>
+	    
+	    <p:commandButton value="#{lbl['lbl.so.searchbtn']}"
+			style="float:right;" />
 			
-			<p:calendar value="#{biddingBB.managedBean.createdDate}" pattern="MM/dd/yyyy" id="bidDate" showOn="button"/>
-				
-	 <h:outputText  value="Award Type" /> 
-        
-        <p:selectOneRadio id="optionradio" value="#{searchQtnTenderBB.managedBean.qtno}">  
-            <f:selectItem itemLabel="Item" itemValue="1" />  
-            <f:selectItem itemLabel="Package" itemValue="2" />  
-             
-        </p:selectOneRadio>  
-        </p:panelGrid>		
-    <p:panelGrid columns="1" style="width:100%;"
-			styleClass="noBorders tr,noBorders td">    
-        <p:commandButton value="#{lbl['lbl.so.searchbtn']}"
-			style="float:right;">
-
-		</p:commandButton>
-    </p:panelGrid>    	
+		<br />
+		<br />
 	</p:panel>
-	<p:panel header="Search Results" toggleable="true">
 	
-		<h:panelGroup id="table-wrapper" style="width:100%;">
-			<p:dataTable value="#{searchQtnTenderBB.managedBean.qtnTenders}"
-				var="tenders" resizableColumns="true">
+	<p:panel header="Search Results" toggleable="true">
+		<p:dataTable value="#{searchQtnTenderBB.managedBean.qtnTenders}"
+			var="tenders" resizableColumns="true">
 
-				<p:column headerText="#{lbl['lbl.so.no']}" style="width:5%;">
-					<h:outputText value="1" />
-				</p:column>
-
-				 <p:column headerText="Document No." >              
-                <p:commandLink  action="viewbiddinglist.xhtml?faces-redirect=true">
-                  <h:outputText value="#{biddingBB.managedBean.docNo}"  style="width:100%"/>  
-                 </p:commandLink> 
-                 </p:column>
-				<p:column headerText="Bid No">
-					<h:outputText value="#{biddingBB.managedBean.bidNo}" />
-				</p:column>
-				<p:column headerText="Bid Title">
-					<h:outputText value="#{biddingBB.managedBean.bidTitle}" />
-				</p:column>
-
-                <p:column headerText="Award Type">
-					<h:outputText value="Item/Package" />
-				</p:column>
-
-				<p:column headerText="#{lbl['lbl.so.crtdt']}">
-					<h:outputText value="#{biddingBB.managedBean.createdDate}" />
-				</p:column>
-
-				
-				<p:column headerText="Created By">
-					<h:outputText value="#{biddingBB.managedBean.createdBy}" />
-				</p:column>
-
-			</p:dataTable>
-		</h:panelGroup>
-			<p:panelGrid columns="1" style="width:100%;"
-			styleClass="noBorders tr,noBorders td">	
-		  <p:commandButton value="BID MENU"
-			style="float:right;" 	action="bidcreation?faces-redirect=true">
-			</p:commandButton>
-			</p:panelGrid>
+			<p:column headerText="Document No." >              
+				<p:commandLink  action="viewbiddinglist.xhtml?faces-redirect=true">
+					<h:outputText value="QT00001"  style="width:100%"/>  
+				</p:commandLink> 
+			</p:column>
+			<p:column headerText="Bid No">
+				<h:outputText value="B00005" />
+			</p:column>
+			<p:column headerText="Bid Title">
+				<h:outputText value="Purchase Computer Server" />
+			</p:column>
+			<p:column headerText="#{lbl['lbl.so.crtdt']}">
+				<h:outputText value="#{biddingBB.managedBean.createdDate}" />
+			</p:column>
+			<p:column headerText="Created By">
+				<h:outputText value="#{biddingBB.managedBean.createdBy}" />
+			</p:column>
+		</p:dataTable>
      </p:panel>
 </ui:composition>   
