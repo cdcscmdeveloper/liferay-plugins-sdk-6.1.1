@@ -53,7 +53,7 @@
 				#{lbl['lbl.cm.uom']}
 			</f:facet>
 			<ac:lov id="draftUomLovId" lovId="PM_UOM" size="20" headerText="UOM Lov"
-				update=":form:addCatDet"
+				update=":form:maintenanceTabId:draftSupplierItemID"
 				saveObject="selectedSuppCat.pmUom"
 				value="#{selectedSuppCat.pmUom.uomName}"
 				conditionField="recordStatus^1">
