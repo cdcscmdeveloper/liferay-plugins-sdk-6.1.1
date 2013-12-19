@@ -18,7 +18,8 @@
 			<h:panelGroup
 				rendered="#{unspscCodeBackingBean.supplierUser or unspscCodeBackingBean.supplierAdmin}">
 				<p:commandButton value="#{lbl['lbl.cm.save']}" icon="ui-icon-save"
-					action="#{catalogueBackingBean.saveCatalogItem}"></p:commandButton>
+					action="#{catalogueBackingBean.saveCatalogItem}"
+					update="@form"></p:commandButton>
 				<p:commandButton value="#{lbl['lbl.cm.cancel']}"
 					icon="ui-icon-cancel"
 					action="#{catalogueBackingBean.cancelToMaintenanceFile()}"
@@ -77,7 +78,9 @@
 				<tr style="height: 30px;">
 
 					<td><p:outputLabel value="#{lbl['lbl.cm.price']}" /></td>
-					<td><p:inputText size="35"></p:inputText></td>
+					<td><p:inputText
+							value="#{catalogueBackingBean.managedBean.selectedMaintainItem.price}"
+							size="35"></p:inputText></td>
 					<td><p:outputLabel value="#{lbl['lbl.cm.currency']}" /></td>
 					<td colspan="1"><p:inputText value="MYR" size="35"
 							disabled="true" /></td>
@@ -86,9 +89,13 @@
 				<tr style="height: 30px;">
 
 					<td><p:outputLabel value="#{lbl['lbl.cm.start.date']}" /></td>
-					<td><p:calendar showOn="button" size="30"></p:calendar></td>
+					<td><p:calendar
+							value="#{catalogueBackingBean.managedBean.selectedMaintainItem.startDate}"
+							showOn="button" size="30"></p:calendar></td>
 					<td><p:outputLabel value="#{lbl['lbl.cm.end.date']}" /></td>
-					<td colspan="1"><p:calendar showOn="button" size="30"></p:calendar></td>
+					<td colspan="1"><p:calendar
+							value="#{catalogueBackingBean.managedBean.selectedMaintainItem.endDate}"
+							showOn="button" size="30"></p:calendar></td>
 				</tr>
 
 
@@ -123,8 +130,8 @@
 							value="#{lbl['lbl.cm.unit.of.measurement']}" /></td>
 					<td><ac:lov id="uomLovId" lovId="PM_UOM" size="26"
 							headerText="UOM Lov" update=":form:addCatDet"
-							saveObject="catalogueBackingBean.managedBean.selectedLovUom"
-							value="#{catalogueBackingBean.managedBean.selectedLovUom.uomName}"
+							saveObject="catalogueBackingBean.managedBean.selectedMaintainItem.pmUom"
+							value="#{catalogueBackingBean.managedBean.selectedMaintainItem.pmUom.uomName}"
 							conditionField="recordStatus^1">
 						</ac:lov> <ac:lovPopup /></td>
 					<td><p:outputLabel value="#{lbl['lbl.cm.lead.time']}" /></td>
@@ -133,7 +140,6 @@
 						<p:inputText style="margin-left: 2px;" size="3" value="days" /></td>
 					<td></td>
 				</tr>
-
 
 				<tr style="height: 30px;">
 					<td><p:outputLabel
@@ -162,16 +168,42 @@
 		</p:dialog>
 
 
-		<p:tabView id="pricingTabID">
+
+
+		<p:tabView id="pricingTabID" orientation="left">
 
 			<p:tab id="pricing1" title="#{lbl['lbl.cm.pricing']}">
-				<ui:include src="pricingTab.xhtml" />
+
+				<p:tabView id="subPricingTabId">
+					<p:tab title="#{lbl['lbl.cm.promotion']}">
+						<ui:include src="pricingTab.xhtml" />
+					</p:tab>
+					<p:tab title="#{lbl['lbl.cm.tier']}">
+						<ui:include src="pricingTierTab.xhtml" />
+					</p:tab>
+					<p:tab title="#{lbl['lbl.cm.promotion.tier']}">
+						<ui:include src="pricingPromotionTierTab.xhtml" />
+					</p:tab>
+					<p:tab title="Zonal Normal">
+						<ui:include src="zonalStandardPricingTab.xhtml"></ui:include>
+					</p:tab>
+					<p:tab title="Zonal Promotion">
+						<ui:include src="zonalPromotionPricingTab.xhtml"></ui:include>
+
+					</p:tab>
+					<p:tab title="Zonal Tier">
+
+					</p:tab>
+					<p:tab title="Zonal Promotion Tier">
+
+					</p:tab>
+				</p:tabView>
 			</p:tab>
-			<p:tab id="pricing2" title="Zonal Price">
-				<ui:include src="zonalPricingTab.xhtml" />
+			<p:tab id="supplierInfoId" title="Supplier Info">
+
 			</p:tab>
 
-			<p:tab id="pricing3" title="Supplier Info">
+			<p:tab id="remarkId" title="Remarks" rendered="#{unspscCodeBackingBean.catalogueAdmin or unspscCodeBackingBean.supplierUser or unspscCodeBackingBean.supplierAdmin}">
 
 			</p:tab>
 

@@ -12,59 +12,34 @@
 
 	<p:outputPanel id="pricePageID">
 		<p:dataTable id="pricingID"
-			value="#{catalogueBackingBean.managedBean.selectedMaintainItem.cmPricings}" width="100%"
+			value="#{catalogueBackingBean.managedBean.selectedMaintainItem.cmPromotionPricings}" width="100%"
 			var="price">
 
 			<p:column>
 				<f:facet name="header">
-					<p:outputLabel value="#{lbl['lbl.cm.pricing.type']}" />
+					#{lbl['lbl.cm.price']}
 				</f:facet>
-				<p:selectOneMenu value="#{price.pricingType}">
-					<f:selectItems
-						value="#{catalogueBackingBean.managedBean.pricingCriteria}" />
-				</p:selectOneMenu>
-
-			</p:column>
-
-
-			<p:column>
-				<f:facet name="header">
-					<p:outputLabel value="#{lbl['lbl.cm.price']}" />
-				</f:facet>
-				<p:inputText value="#{price.price}"></p:inputText>
+				<p:inputText value="#{price.price}" size="10"></p:inputText>
 			</p:column>
 			<p:column>
 				<f:facet name="header">
-					<p:outputLabel value="#{lbl['lbl.cm.tier.from']}" />
+					#{lbl['lbl.cm.start.date']}
 				</f:facet>
-				<p:inputText value="#{price.fromQty}"></p:inputText>
+				<p:calendar value="#{price.startDate}" showOn="button"></p:calendar>
 
 			</p:column>
 			<p:column>
 				<f:facet name="header">
-					<p:outputLabel value="#{lbl['lbl.cm.tier.to']}" />
+					#{lbl['lbl.cm.end.date']}
 				</f:facet>
-				<p:inputText value="#{price.toQty}"></p:inputText>
-			</p:column>
-			<p:column>
-				<f:facet name="header">
-					<p:outputLabel value="#{lbl['lbl.cm.start.date']}" />
-				</f:facet>
-				<p:calendar value="#{price.startDate}"></p:calendar>
-
-			</p:column>
-			<p:column>
-				<f:facet name="header">
-					<p:outputLabel value="#{lbl['lbl.cm.end.date']}" />
-				</f:facet>
-				<p:calendar value="#{price.endDate}"></p:calendar>
+				<p:calendar value="#{price.endDate}" showOn="button"></p:calendar>
 
 			</p:column>
 
 		</p:dataTable>
 		<div align="right">
 			<p:commandButton value="#{lbl['lbl.cm.add']}" icon="ui-icon-add"
-				action="#{catalogueBackingBean.addNewPricing()}" update="pricePageID"
+				action="#{catalogueBackingBean.addNewPromotionPricing()}" update="pricePageID"
 				process="@this"></p:commandButton>
 		</div>
 

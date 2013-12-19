@@ -95,7 +95,9 @@ public class WishListBackingBean extends BaseBackingBean<WishListManagedBean>{
 		CatalogueBackingBean catBB = new CatalogueBackingBean();
 
 		catBB.getManagedBean().setSupplierItemList(null);
-		for(CmWishlistDtl det :catBB.getManagedBean().getWishLists().get(index).getCmWishlistDtls()){
+		System.out.println("wishlist==============" + catBB.getManagedBean().getWishLists().get(index).getCmWishlistDtls() + "  " + catBB.getManagedBean().getWishLists().get(index).getCmWishlistDtls().size());
+		
+		for(CmWishlistDtl det : catBB.getManagedBean().getWishLists().get(index).getCmWishlistDtls()){
 			
 			catBB.getManagedBean().getSupplierItemList().add(det.getCmSupplierItem());
 		}

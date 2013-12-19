@@ -22,9 +22,9 @@
 				action="#{catalogueBackingBean.compareIndxeAction()}">
 			</p:remoteCommand>
 
-			<h:panelGrid columns="2" style="width:100%;">
+			<h:panelGrid columns="2" style="width:100%;" columnClasses="comparelabelCss compareValueCss">
 
-				<h:panelGroup style="width:20%;">
+				<h:panelGroup>
 					<table>
 						<tr>
 							<td height="70px"></td>
@@ -44,9 +44,8 @@
 				<p:dataGrid id="compareDataList" rowIndexVar="compareKey"
 					paginator="true"
 					value="#{catalogueBackingBean.managedBean.selectedSupplierItemList}"
-					var="compare" columns="4" rows="4" paginatorPosition="bottom"
-					style="width:80%;">
-					<h:panelGroup style="text-align:left;">
+					var="compare" columns="4" rows="4" paginatorPosition="bottom">
+					<h:panelGroup >
 						<table>
 							<tr>
 								<td rowspan="3"><p:graphicImage

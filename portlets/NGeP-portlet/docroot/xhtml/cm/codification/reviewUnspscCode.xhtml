@@ -81,12 +81,12 @@
 
 				<div style="text-align: right;">
 					<p:commandButton value="#{lbl['lbl.cm.search']}" update="@form"
-						action="#{unspscCodeBackingBean.navigateToSearch}"
+						action="#{unspscCodeBackingBean.navigateToSearch}" rendered="#{unspscCodeBackingBean.catalogueAdmin}"
 						icon="ui-icon-search"></p:commandButton>
 				</div>
 
 				<p:dataTable id="recomemendUnspscId" rowIndexVar="rowIndex"
-					value="#{codificationBackingBean.managedBean.recommendUnspscList}"
+					value="#{unspscCodeBackingBean.managedBean.requestCode.cmRecommendCodes}"
 					var="unspscObj" width="100%">
 
 
@@ -109,7 +109,7 @@
 				#{unspscObj.unspscTitle}
 			</p:column>
 
-					<p:column>
+					<p:column rendered="#{unspscCodeBackingBean.catalogueAdmin}">
 						<f:facet name="header">
 							#{lbl['lbl.cm.action']}
 						</f:facet>

@@ -37,7 +37,7 @@
 						<p:tab id="tab2" title="Advance Search">
 							<table style="margin-top: 10px;">
 								<tr>
-									<td style="padding-left: 64px;"><p:outputLabel
+									<td style="padding-left: 56px;"><p:outputLabel
 											value="#{lbl['lbl.cm.item.name']}" /></td>
 									<td><p:inputText size="50"
 											value="#{catalogueBackingBean.managedBean.itemName}"></p:inputText></td>
@@ -65,10 +65,13 @@
 						</p:tab>
 
 					</p:tabView></td>
-				<td><p:commandLink
-						action="#{catalogueBackingBean.viewCartListItem}">
-						<p:graphicImage value="/resources/ep/images/design/cart1.png"></p:graphicImage>( #{fn:length(catalogueBackingBean.managedBean.cartList)} )
-		</p:commandLink></td>
+
+				<td><h:panelGroup
+						rendered="#{unspscCodeBackingBean.requisitioner}">
+						<p:commandLink action="#{catalogueBackingBean.viewCartListItem}">
+							<p:graphicImage value="/resources/ep/images/design/cart1.png"></p:graphicImage>( #{fn:length(catalogueBackingBean.managedBean.cartList)} )
+		</p:commandLink>
+					</h:panelGroup></td>
 			</tr>
 		</table>
 
@@ -83,14 +86,24 @@
 								value="#{lbl['lbl.cm.compare']} ( #{fn:length(catalogueBackingBean.managedBean.selectedSupplierItemList)} )"
 								disabled="#{2 > fn:length(catalogueBackingBean.managedBean.selectedSupplierItemList)}" />
 						</div>
-						<p:dataGrid
+						<p:dataTable
 							value="#{catalogueBackingBean.managedBean.supplierItemList}"
 							id="supplierItemID" var="supplierItem" rowIndexVar="rowIndex"
-							width="70%" columns="1">
-							<div style="border-bottom: 1px solid #EEE;">
+							width="70%" paginatorPosition="bottom" paginator="true" rows="5"
+							paginatorTemplate="{LastPageLink} {NextPageLink} {PreviousPageLink} {FirstPageLink} Page {JumpToPageDropdown} {CurrentPageReport}"
+							currentPageReportTemplate="/ {totalPages}"
+							rowsPerPageTemplate="5,10,15">
+
+							<p:ajax event="rowToggle" update=":form:supplierItemID" />
+							<p:column style="width:2%">
+								<p:rowToggler />
+							</p:column>
+
+							<p:column headerText="Catalogue Item">
+
 								<table style="width: 100%;">
 									<tr>
-										<td width="80%">
+										<td width="70%">
 
 											<table style="width: 100%;">
 												<tr>
@@ -114,32 +127,36 @@
 													<td>ABC SDN BHD</td>
 
 												</tr>
+												<tr>
+													<td><p:outputLabel value="UOM:"></p:outputLabel></td>
+													<td>#{supplierItem.pmUom.uomName}</td>
+												</tr>
 											</table>
 
 										</td>
-										<td width="20%"
-											style="background-color: #EEEEEE; padding-left: 5px;">
-											<table>
+										<td width="25%"
+											style="background-color: #EEEEEE; padding-left: 5px;width: 1%;">
+											<table >
+
 												<tr>
-													<td
-														style="font-weight: bold !important; border-bottom: 1px solid"><p:outputLabel> Price
-														(MYR)</p:outputLabel></td>
-													<td rowspan="2" style="padding-left: 6px; width: 20%;"><p:commandLink
-															action="#{catalogueBackingBean.addToCart(rowIndex)}"
-															update=":form:supplierItemViewID">
-															<p:graphicImage
-																value="/resources/ep/images/design/cart_add.png"></p:graphicImage>
-														</p:commandLink></td>
+													<td><p:outputLabel value="Price (MYR)" /></td>
+
 												</tr>
 												<tr>
 													<td><p:outputLabel style="font-size: 14px;"
 															value="1000.00"></p:outputLabel></td>
-													<td></td>
 												</tr>
 
 											</table>
 
 										</td>
+										<td width="2%" style="padding-left: 5px;"><p:commandLink
+												action="#{catalogueBackingBean.addToCart(rowIndex)}"
+												update=":form:supplierItemViewID">
+												<p:graphicImage
+													rendered="#{unspscCodeBackingBean.requisitioner}"
+													value="/resources/ep/images/design/cart_add.png"></p:graphicImage>
+											</p:commandLink></td>
 										<td width="2%" style="padding-left: 5px;"><p:selectBooleanCheckbox
 												value="#{supplierItem.selected}">
 												<p:ajax update=":form:compareButton"
@@ -148,8 +165,28 @@
 
 									</tr>
 								</table>
-							</div>
-						</p:dataGrid>
+							</p:column>
+
+							<p:rowExpansion>
+
+
+								<p:dataTable value="#{supplierItem.cmPricings}" var="price">
+
+									<p:column headerText="Price">
+							#{price.price}
+							</p:column>
+
+
+
+								</p:dataTable>
+
+
+
+							</p:rowExpansion>
+
+
+
+						</p:dataTable>
 
 					</p:panel></td>
 				<td width="30%" style="vertical-align: top;"><div
@@ -167,8 +204,10 @@
 										<tr>
 											<td width="80%"><p:commandLink
 													value="#{type.wishlistDesc}" update=":form:supplierItemID"
-													action="#{wishListBackingBean.filterWishListType(rowIndex)}" /></td>
-											<td><p:commandLink action="#{wishListBackingBean.deleteFavoriteWishList(rowIndex)}" update=":form:supplierItemViewID">
+													action="#{wishListBackingBean.filterWishListType(rowIndex)}" partialSubmit="true" process="@this" /></td>
+											<td><p:commandLink
+													action="#{wishListBackingBean.deleteFavoriteWishList(rowIndex)}"
+													update=":form:supplierItemViewID" partialSubmit="true" process="@this">
 													<p:graphicImage
 														value="/resources/ep/images/design/trash.png"></p:graphicImage>
 												</p:commandLink></td>
@@ -188,13 +227,15 @@
 		</table>
 
 
-		<p:dialog id="wishListDialog" widgetVar="wishListPopUp" width="500px" modal="true">
+		<p:dialog id="wishListDialog" widgetVar="wishListPopUp" width="500px"
+			modal="true">
 
 			<ui:include src="wishListPopUp.xhtml" />
 
 		</p:dialog>
 
-		<p:dialog id="deleteWishListDialog" widgetVar="deleteWishListPopUp" width="500px" modal="true">
+		<p:dialog id="deleteWishListDialog" widgetVar="deleteWishListPopUp"
+			width="500px" modal="true">
 			<ui:include src="viewWishListItem.xhtml"></ui:include>
 		</p:dialog>
 	</h:panelGroup>

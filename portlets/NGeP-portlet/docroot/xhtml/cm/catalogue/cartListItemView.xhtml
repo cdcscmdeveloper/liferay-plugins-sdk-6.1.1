@@ -12,31 +12,35 @@
 
 		<h:panelGroup id="viewCartListId">
 
+			<div style="text-align: right;">
+				<p:commandButton value="Back" icon="ui-icon-prev"
+					action="#{catalogueBackingBean.backToPrev}" />
+
+			</div>
+			<p:dataTable var="cartList" rowIndexVar="rowIndex"
+				value="#{catalogueBackingBean.managedBean.cartList}">
+
+				<p:column headerText="Item Name">
+				
+				#{cartList.cmItem.itemName}
+				</p:column>
+
+				<p:column headerText="Supplier Name">
+				
+				#{cartList.smSupplier.supplierName}
+				</p:column>
+
+				<p:column headerText="Action">
+
+					<p:commandLink
+						action="#{catalogueBackingBean.deleteCartItem(rowIndex)}"
+						update=":form:viewCartListId">
+						<p:graphicImage value="/resources/ep/images/design/trash.png"></p:graphicImage>
+					</p:commandLink>
+				</p:column>
 
 
-			<ui:include src="catalogueMenuBar.xhtml"></ui:include>
-
-
-			<p:dataGrid var="cartList"
-				value="#{catalogueBackingBean.managedBean.cartList}"
-				rowIndexVar="rowIndex" columns="1"  id="cartID">
-
-
-				<table style="width: 100%;">
-					<tr>
-						<td style="width: 30%;"><p:graphicImage height="50" width="50" /></td>
-						<td style="width: 50%;"><p:commandLink value="#{cartList.cmItem.itemName}" /></td>
-						<td style="width: 20%;"> <p:splitButton value="Action" icon="ui-icon-action">
-								<p:menuitem value="Delete"
-									action="#{catalogueBackingBean.deleteCartItem(rowIndex)}"
-									icon="ui-icon-delete" update=":form:viewCartListId" />
-
-							</p:splitButton></td>
-
-					</tr>
-				</table>
-
-			</p:dataGrid>
+			</p:dataTable>
 
 
 

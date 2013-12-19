@@ -11,24 +11,34 @@
 
 
 	<p:outputPanel id="zonalPricePageID">
-		<p:dataTable id="zonalPricingID" 
-			value="#{catalogueBackingBean.managedBean.zonalPricingList}" var="zonal"  rowKey="#{zonal.pricingSeq}"
-			selection="#{catalogueBackingBean.managedBean.selectedPricing}"  width="100%" selectionMode="single">
-			
-			
+		<p:dataTable id="zonalPricingID"
+			value="#{catalogueBackingBean.managedBean.zonalPricingList}"
+			var="zonal" rowKey="#{zonal}"
+			selection="#{catalogueBackingBean.managedBean.selectedPricing}"
+			width="100%" selectionMode="single">
 
-			<p:ajax event="rowSelect" process="@this" listener="#{catalogueBackingBean.districtChecked()}"
-						update=":form:pricingTabID:zonalPricePageID"></p:ajax>
+
+
+			<p:ajax event="rowSelect" process="@this"
+				listener="#{catalogueBackingBean.districtChecked()}"
+				update=":form:pricingTabID:zonalPricingTabId:zonalPricePageID"></p:ajax>
 			<p:column>
 				<f:facet name="header">
-					<p:outputLabel value="#{lbl['lbl.cm.state']}" />
+					#{lbl['lbl.cm.state.name']}
 				</f:facet>
-				<p:selectOneMenu></p:selectOneMenu>
+				<p:selectOneMenu style="width: 128px;"
+						value="#{}">
+						<f:selectItem itemLabel="Select One" itemValue="" />
+						<f:selectItems
+							value="#{unspscCodeBackingBean.managedBean.stateList}"
+							var="state" itemLabel="#{state.stateName}"
+							itemValue="#{state.stateId}"></f:selectItems>
+					</p:selectOneMenu>
 
 			</p:column>
 			<p:column>
 				<f:facet name="header">
-					<p:outputLabel value="#{lbl['lbl.cm.district']}" />
+					#{lbl['lbl.cm.district']}
 				</f:facet>
 				<p:selectBooleanCheckbox value="#{zonal.selected}">
 
@@ -36,51 +46,35 @@
 
 			</p:column>
 
-
-
 			<p:column>
 				<f:facet name="header">
-					<p:outputLabel value="#{lbl['lbl.cm.pricing.type']}" />
+					#{lbl['lbl.cm.district.name']}
 				</f:facet>
-				<p:selectOneMenu value="#{zonal.pricingType}">
-					<f:selectItems
-						value="#{catalogueBackingBean.managedBean.pricingCriteria}" />
-				</p:selectOneMenu>
+				<p:selectOneMenu></p:selectOneMenu>
 
 			</p:column>
 
 
 			<p:column>
 				<f:facet name="header">
-					<p:outputLabel value="#{lbl['lbl.cm.price']}" />
+					#{lbl['lbl.cm.price']}
 				</f:facet>
-				<h:inputText value="#{zonal.price}"></h:inputText>
+				<h:inputText value="#{zonal.price}" size="10"></h:inputText>
 			</p:column>
+		
+			
 			<p:column>
 				<f:facet name="header">
-					<p:outputLabel value="#{lbl['lbl.cm.tier.from']}" />
+					#{lbl['lbl.cm.start.date']}
 				</f:facet>
-				<h:inputText value="#{zonal.tierFrom}"></h:inputText>
+				<p:calendar value="#{zonal.startDate}" showOn="button"></p:calendar>
 
 			</p:column>
 			<p:column>
 				<f:facet name="header">
-					<p:outputLabel value="#{lbl['lbl.cm.tier.to']}" />
+					#{lbl['lbl.cm.end.date']}
 				</f:facet>
-				<h:inputText value="#{zonal.tierTo}"></h:inputText>
-			</p:column>
-			<p:column>
-				<f:facet name="header">
-					<p:outputLabel value="#{lbl['lbl.cm.start.date']}" />
-				</f:facet>
-				<p:calendar value="#{zonal.startDate}"></p:calendar>
-
-			</p:column>
-			<p:column>
-				<f:facet name="header">
-					<p:outputLabel value="#{lbl['lbl.cm.end.date']}" />
-				</f:facet>
-				<p:calendar value="#{zonal.endDate}"></p:calendar>
+				<p:calendar value="#{zonal.endDate}" showOn="button"></p:calendar>
 
 			</p:column>
 
@@ -94,74 +88,6 @@
 
 
 
-		<p:dataTable id="districtID" width="100%"
-			value="#{catalogueBackingBean.managedBean.districtPricingList}"
-			var="districtObj"
-			rendered="#{catalogueBackingBean.managedBean.districtIND}">
-
-			<p:column>
-				<f:facet name="header">
-					<p:outputLabel value="#{lbl['lbl.cm.district']}" />
-				</f:facet>
-				<p:selectOneMenu></p:selectOneMenu>
-
-			</p:column>
-
-
-
-			<p:column>
-				<f:facet name="header">
-					<p:outputLabel value="#{lbl['lbl.cm.pricing.type']}" />
-				</f:facet>
-				<p:selectOneMenu value="#{districtObj.pricingType}">
-					<f:selectItems
-						value="#{catalogueBackingBean.managedBean.pricingCriteria}" />
-				</p:selectOneMenu>
-
-			</p:column>
-
-
-			<p:column>
-				<f:facet name="header">
-					<p:outputLabel value="#{lbl['lbl.cm.price']}" />
-				</f:facet>
-				<p:inputText value="#{districtObj.price}"></p:inputText>
-			</p:column>
-
-			<p:column>
-				<f:facet name="header">
-					<p:outputLabel value="#{lbl['lbl.cm.tier.from']}" />
-				</f:facet>
-				<p:inputText value="#{districtObj.tierFrom}"></p:inputText>
-
-			</p:column>
-			<p:column>
-				<f:facet name="header">
-					<p:outputLabel value="#{lbl['lbl.cm.tier.to']}" />
-				</f:facet>
-				<p:inputText value="#{districtObj.tierTo}"></p:inputText>
-			</p:column>
-			<p:column>
-				<f:facet name="header">
-					<p:outputLabel value="#{lbl['lbl.cm.start.date']}" />
-				</f:facet>
-				<p:calendar value="#{districtObj.startDate}"></p:calendar>
-
-			</p:column>
-			<p:column>
-				<f:facet name="header">
-					<p:outputLabel value="#{lbl['lbl.cm.end.date']}" />
-				</f:facet>
-				<p:calendar value="#{districtObj.endDate}"></p:calendar>
-
-			</p:column>
-
-		</p:dataTable>
-		<div align="right">
-			<p:commandButton value="#{lbl['lbl.cm.add']}" icon="ui-icon-add"
-				action="#{catalogueBackingBean.addNewDistrictPricing()}"
-				update="zonalPricePageID" process="@this" rendered="#{catalogueBackingBean.managedBean.districtIND}"></p:commandButton>
-		</div>
 
 	</p:outputPanel>
 

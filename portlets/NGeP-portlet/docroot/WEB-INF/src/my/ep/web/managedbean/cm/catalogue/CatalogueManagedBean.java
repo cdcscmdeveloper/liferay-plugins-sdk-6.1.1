@@ -14,6 +14,9 @@ import my.ep.persistence.entity.cm.catalog.CmPricing;
 import my.ep.persistence.entity.cm.catalog.CmSupplierItem;
 import my.ep.persistence.entity.cm.catalog.CmUnspsc;
 import my.ep.persistence.entity.cm.catalog.CmWishlist;
+import my.ep.persistence.entity.pm.common.PmDistrict;
+import my.ep.persistence.entity.pm.common.PmState;
+import my.ep.persistence.entity.pm.common.PmUom;
 import my.ep.web.managedbean.BaseManagedBean;
 import my.ep.web.vo.AdvanceSearchVO;
 import my.ep.web.vo.PricingVO;
@@ -59,24 +62,129 @@ public class CatalogueManagedBean extends BaseManagedBean {
 	private List<CmSupplierItem> approvalItemList;
 	private List<CmSupplierItem> approvedItemList;
 	private List<CmSupplierItem> publishedItemList;
+	private List<CmSupplierItem> expiredItemList;
+	
 	
 	private CmSupplierItem[] selectedRejectedItems;
 	private CmSupplierItem[] selectedApprovalItems;
 	private CmSupplierItem[] selectedApprovedItems;
 	private CmSupplierItem[] selectedPublishedItems;
+	private CmSupplierItem[] selectedExpiredItems;
 	
 	private List<CmSupplierItem> cartList;
 	private List<CmSupplierItem> tempList;
 	
 	private List<CmFavoriteSupplier>favoriteSupplierList;
 	
+	private List<SelectItem> paymentTermCriteria;
+	
+	private List<String> compareLabel;
+	
+	private PmUom selectedLovUom;
+	
 	private Map tempMap = new HashMap();
 	
+	private List<CmPricing> promotionPriceList;
+	private List<CmPricing> tierPriceList;
+	private List<CmPricing> promotionTierPriceList;
+	
+	private List<PmState> stateList;
+
+	private List<PmDistrict> districtList;
 	
 	
 	
-	
-	
+
+	public List<PmDistrict> getDistrictList() {
+		if(districtList==null)
+			districtList = new ArrayList<PmDistrict>();
+		return districtList;
+	}
+
+	public void setDistrictList(List<PmDistrict> districtList) {
+		this.districtList = districtList;
+	}
+
+	public List<PmState> getStateList() {
+		if(stateList==null)
+			stateList = new ArrayList<PmState>();
+		return stateList;
+	}
+
+	public void setStateList(List<PmState> stateList) {
+		this.stateList = stateList;
+	}
+
+	public List<CmPricing> getPromotionPriceList() {
+		if(promotionPriceList==null)
+			promotionPriceList = new ArrayList<CmPricing>();
+		return promotionPriceList;
+	}
+
+	public void setPromotionPriceList(List<CmPricing> promotionPriceList) {
+		this.promotionPriceList = promotionPriceList;
+	}
+
+	public List<CmPricing> getTierPriceList() {
+		if(tierPriceList==null)
+			tierPriceList = new ArrayList<CmPricing>();
+		return tierPriceList;
+	}
+
+	public void setTierPriceList(List<CmPricing> tierPriceList) {
+		this.tierPriceList = tierPriceList;
+	}
+
+	public List<CmPricing> getPromotionTierPriceList() {
+		if(promotionTierPriceList==null)
+			promotionTierPriceList = new ArrayList<CmPricing>();
+		return promotionTierPriceList;
+	}
+
+	public void setPromotionTierPriceList(List<CmPricing> promotionTierPriceList) {
+		this.promotionTierPriceList = promotionTierPriceList;
+	}
+
+	public PmUom getSelectedLovUom() {
+		if(selectedLovUom==null)
+			selectedLovUom = new PmUom();
+		return selectedLovUom;
+	}
+
+	public void setSelectedLovUom(PmUom selectedLovUom) {
+		this.selectedLovUom = selectedLovUom;
+	}
+
+	public List<String> getCompareLabel() {
+		compareLabel = new ArrayList<String>();
+		compareLabel.add("Item Name");
+		compareLabel.add("Price");
+		compareLabel.add("Supplier Name");
+		compareLabel.add("UOM");
+		compareLabel.add("Payment Term");
+		compareLabel.add("Additional Desc");
+		
+		
+		
+		return compareLabel;
+	}
+
+	public void setCompareLabel(List<String> compareLabel) {
+		this.compareLabel = compareLabel;
+	}
+
+	public List<SelectItem> getPaymentTermCriteria() {
+		paymentTermCriteria = new ArrayList<SelectItem>();
+		paymentTermCriteria.add(new SelectItem("01", "3 MONTHS"));
+		paymentTermCriteria.add(new SelectItem("02", "6 MONTHS"));
+		paymentTermCriteria.add(new SelectItem("03", "9 MONTHS"));
+		paymentTermCriteria.add(new SelectItem("04", "12 MONTHS"));
+		return paymentTermCriteria;
+	}
+
+	public void setPaymentTermCriteria(List<SelectItem> paymentTermCriteria) {
+		this.paymentTermCriteria = paymentTermCriteria;
+	}
 
 	public List<CmFavoriteSupplier> getFavoriteSupplierList() {
 		if(favoriteSupplierList==null)
@@ -226,6 +334,8 @@ public class CatalogueManagedBean extends BaseManagedBean {
 	}
 
 	public CmSupplierItem getSelectedMaintainItem() {
+		if(selectedMaintainItem==null)
+			selectedMaintainItem = new CmSupplierItem();
 		return selectedMaintainItem;
 	}
 
@@ -408,6 +518,24 @@ public class CatalogueManagedBean extends BaseManagedBean {
 		this.navigationURL = navigationURL;
 	}
 
+	public List<CmSupplierItem> getExpiredItemList() {
+		if(expiredItemList==null)
+			expiredItemList = new ArrayList<CmSupplierItem>();
+		return expiredItemList;
+	}
 
+	public void setExpiredItemList(List<CmSupplierItem> expiredItemList) {
+		this.expiredItemList = expiredItemList;
+	}
+
+	public CmSupplierItem[] getSelectedExpiredItems() {
+		return selectedExpiredItems;
+	}
+
+	public void setSelectedExpiredItems(CmSupplierItem[] selectedExpiredItems) {
+		this.selectedExpiredItems = selectedExpiredItems;
+	}
+
+	
 
 }

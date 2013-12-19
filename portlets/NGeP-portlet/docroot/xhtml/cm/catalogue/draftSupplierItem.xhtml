@@ -3,7 +3,8 @@
 	xmlns:h="http://java.sun.com/jsf/html"
 	xmlns:ui="http://java.sun.com/jsf/facelets"
 	xmlns:p="http://primefaces.org/ui"
-	xmlns:c="http://java.sun.com/jsp/jstl/core">
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:ac="http://ac.my/jsf/composite/cc">
 
 
 
@@ -44,28 +45,34 @@
 			<f:facet name="header">
 				#{lbl['lbl.cm.price']}
 			</f:facet>
-			<p:inputText></p:inputText>
+			<p:inputText value="#{selectedSuppCat.price}"></p:inputText>
 
 		</p:column>
-			<p:column>
+		<p:column>
 			<f:facet name="header">
 				#{lbl['lbl.cm.uom']}
 			</f:facet>
-			<p:inputText></p:inputText>
+			<ac:lov id="draftUomLovId" lovId="PM_UOM" size="20" headerText="UOM Lov"
+				update=":form:addCatDet"
+				saveObject="selectedSuppCat.pmUom"
+				value="#{selectedSuppCat.pmUom.uomName}"
+				conditionField="recordStatus^1">
+			</ac:lov>
+			<ac:lovPopup />
 
 		</p:column>
 		<p:column>
 			<f:facet name="header">
 				#{lbl['lbl.cm.start.date']}
 			</f:facet>
-			<p:calendar showOn="button"></p:calendar>
+			<p:calendar value="#{selectedSuppCat.startDate}" showOn="button" size="10" ></p:calendar>
 
 		</p:column>
 		<p:column>
 			<f:facet name="header">
 				#{lbl['lbl.cm.end.date']}
 			</f:facet>
-			<p:calendar showOn="button"></p:calendar>
+			<p:calendar value="#{selectedSuppCat.endDate}" showOn="button" size="10"></p:calendar>
 
 		</p:column>
 		<p:column>

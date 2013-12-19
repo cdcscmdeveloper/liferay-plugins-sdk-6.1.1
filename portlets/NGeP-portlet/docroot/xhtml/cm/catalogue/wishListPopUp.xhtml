@@ -7,12 +7,13 @@
 	xmlns="http://www.w3.org/1999/xhtml">
 
 
+<h:panelGroup id="wishListPopUpId">
 	<table>
 		<tr>
 			<td><p:outputLabel value="#{lbl['lbl.cm.wish.list']}"></p:outputLabel></td>
 			<td><p:inputText
 					value="#{wishListBackingBean.managedBean.wishList.wishlistDesc}"></p:inputText></td>
-			<td><p:commandButton value="create"
+			<td><p:commandButton value="create" partialSubmit="true" process="wishListPopUpId"
 					onclick="wishListPopUp.hide()" update="supplierItemViewID"
 					action="#{wishListBackingBean.saveWishList}"></p:commandButton></td>
 		</tr>
@@ -52,13 +53,13 @@
 
 			</p:dataTable>
 			<p:commandButton value="#{lbl['lbl.cm.ok']}" icon="ui-icon-approve"
-				action="#{wishListBackingBean.addItemIntoWishList}"
+				action="#{wishListBackingBean.addItemIntoWishList}"  partialSubmit="true" process="wishListPopUpId"
 				onclick="wishListPopUp.hide()"></p:commandButton>
 		</div>
 	</div>
 
 
-
+</h:panelGroup>
 
 
 
