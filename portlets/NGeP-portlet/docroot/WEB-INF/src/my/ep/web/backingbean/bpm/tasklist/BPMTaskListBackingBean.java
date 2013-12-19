@@ -12,11 +12,9 @@ import javax.faces.context.FacesContext;
 import my.ep.bpm.dto.BpmRequestDTO;
 import my.ep.bpm.dto.BpmResponseDTO;
 import my.ep.bpm.service.IBpmSO;
-import my.ep.bpm.vo.WorklistItemVO;
 import my.ep.constants.FlProcessNameConst;
 import my.ep.jaxb.ct.agreement.CTAgreementDataType;
 import my.ep.jaxb.ct.circular.CTCircularContractDataType;
-import my.ep.jaxb.ct.contract.amendment.CTContractAmendmentDataType;
 import my.ep.util.lookupservice.EpBpmBusinessDelegate;
 import my.ep.web.backingbean.BaseBackingBean;
 import my.ep.web.constant.PagingConst;
@@ -63,10 +61,10 @@ public class BPMTaskListBackingBean extends
 		temp.put("BPK Approval", "qtmaintanance");
 		temp.put("QuotationTender Creation", "qtreview");
 
-		temp.put("Specification Preparation", "qtsprecprepartaion");
-		temp.put("View Preparation", "qtsprecprepartaion");
+		temp.put("Specification Preparation", "qtspecprepartaion");
+		temp.put("View Preparation", "qtspecprepartaion");
 		temp.put("Site Visit", "sitevisit");
-		temp.put("Proposal Preparation","supplierpp");
+		temp.put("Proposal Preparation","supplierproposal");
 
 		temp.put("Circular Contract Maintenance","central-contract-circular");
 		temp.put("Circular Contract Maintenance", "panel-circular");
@@ -116,7 +114,7 @@ public class BPMTaskListBackingBean extends
 
 		temp.put("Service QuotationTender Creation", "supplierpp");
 		temp.put("Committee Approval", "committeMaintance");
-
+		
 		this.getManagedBean().setBpmMap(temp);
 
 		System.out.println("testing BPM******");
@@ -155,6 +153,8 @@ public class BPMTaskListBackingBean extends
 
 
 		this.getManagedBean().setTaskList(responseDTO.getWorklistVO().getWorklistItem());
+
+
 
 
 		return responseDTO;
