@@ -95,22 +95,6 @@
             			size="35" />
             	</c:if>
             </h:column> 
-            <c:if test="#{specificationBackingBean.managedBean.specStatus}"> 
-              <h:column>
-           		<h:outputLabel value="Specification Status" /> 
-           	</h:column>
-           	<h:column>
-           		<p:inputText   disabled="true"/>  
- 			</h:column> 
- 			</c:if>
- 			 <c:if test="#{evaluationBackingBean.managedBean.evaluateStatus}">
- 			<h:column>
-           		<h:outputLabel value="Evaluation Status" /> 
-           	</h:column>
-           	<h:column>
-           		<p:inputText   disabled="true"/>  
- 			</h:column>   
- 			</c:if>       
-  		</h:panelGrid>
+              		</h:panelGrid>
 	</p:panel>
 </ui:composition>
