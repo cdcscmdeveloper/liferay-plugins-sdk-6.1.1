@@ -14,11 +14,11 @@ public class BiddingManagedBean extends BaseManagedBean{
 
 private static final long serialVersionUID = 1L; 
 	
-		private long docNo = 0; 
-		private long bidNo = 342; 
-		private String bidTitle = "xxx"; 
-		private Date createdDate = new Date(); 
-		private String createdBy = "Officer"; 
+		private long docNo; 
+		private long bidNo; 
+		private String bidTitle; 
+		private Date createdDate; 
+		private String createdBy; 
 		private int spinNumber1; 
 		private int spinNumber2; 
 		private int spinNumber3; 
