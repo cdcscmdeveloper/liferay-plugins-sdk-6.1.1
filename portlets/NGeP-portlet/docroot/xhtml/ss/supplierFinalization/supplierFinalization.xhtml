@@ -1,0 +1,183 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:ac="http://ac.my/jsf/composite/cc">
+	<ui:include
+		src="/xhtml/ss/supplierFinalization/suppFinalizationHeader.xhtml" />
+	<p:panel header="Supplier Finalization " toggleable="true">
+	<h4><u>View Kertas Taklimat:</u></h4>
+		<p:spacer height="5px" />
+		<h:panelGrid border="0" cellpadding="0" cellspacing="4" width="100%"
+			columns="4"
+			columnClasses="columnWidth20,columnWidth30,columnWidth20,columnWidth30">
+
+			<h:column>
+				<p:outputLabel value="#{lbl['lbl.sc.sf.award.type']}" />
+			</h:column>
+			<h:column>
+				<p:selectOneRadio value="#{sfBackingBean.managedBean.awardType}"
+					rendered="true">
+					<f:selectItem itemLabel="#{lbl['lbl.sc.sf.by.item']}"
+						itemValue="true" />
+					<f:selectItem itemLabel="#{lbl['lbl.sc.sf.by.package']}"
+						itemValue="false" />
+					<p:ajax event="change" update="byItemPackage"
+						listener="#{sfBackingBean.awardTypeEvent}" process="@this" />
+				</p:selectOneRadio>
+			</h:column>
+			<h:column>
+				<p:outputLabel value="" />
+			</h:column>
+			<h:column>
+				<p:outputLabel value="" />
+			</h:column>
+
+		</h:panelGrid>
+
+		<p:spacer height="20px" />
+		<table style="border: 0px; width: 1000 px; align: center">
+			<tr align="center">
+				<td valign="top"><p:spacer width="100px" /></td>
+				<td valign="top"><h:outputText
+						value="#{lbl['lbl.sc.sf.decision']}" /></td>
+				<td align="left" valign="top"><p:selectManyMenu id="basic"
+						value="#{sfBackingBean.managedBean.decisionArray}">
+						<f:selectItem itemLabel="#{lbl['lbl.sc.sf.award']}"
+							itemValue="Award" />
+						<f:selectItem
+							itemLabel="#{lbl['lbl.sc.sf.forward.higher.authority']}"
+							itemValue="Forward Higher Authority" />
+						<f:selectItem itemLabel="#{lbl['lbl.sc.sf.online.bidding']}"
+							itemValue="Online Bidding" />
+						<f:selectItem itemLabel="#{lbl['lbl.sc.sf.multiple.loi']}"
+							itemValue="Multiple LOI" />
+						<f:selectItem itemLabel="#{lbl['lbl.sc.sf.re.quote.tender']}"
+							itemValue="Re-Quote/Re-Tender" />
+						<f:selectItem itemLabel="#{lbl['lbl.sc.sf.re.evaluation']}"
+							itemValue="Re-Evaluation" />
+						<f:selectItem itemLabel="#{lbl['lbl.sc.sf.cancel']}"
+							itemValue="Cancel" />
+
+						<p:ajax event="change" update="evalfha ,byItemPackage"
+							listener="#{sfBackingBean.decisionEvent}" process="@this" />
+					</p:selectManyMenu></td>
+
+				<td valign="top"><p:spacer width="100px" /> <p:spacer
+						width="100px" /></td>
+
+				<td valign="top"><h:outputText
+						value="#{lbl['lbl.sc.sf.remarks']}" /></td>
+
+				<td align="left" valign="top"><p:inputTextarea rows="10"
+						cols="28" /></td>
+			</tr>
+		</table>
+
+		<p:spacer height="25px" />
+		<h:panelGroup id="evalfha">
+			<h:panelGrid border="0" cellpadding="0" cellspacing="4" width="100%"
+				columns="4"
+				columnClasses="columnWidth20,columnWidth30,columnWidth20,columnWidth30"
+				rendered="#{sfBackingBean.managedBean.reEvaluation}">
+
+				<h:column>
+					<p:outputLabel value="#{lbl['lbl.sc.sf.cmt.for.re.eval']}" />
+				</h:column>
+
+				<h:column>
+					<p:selectOneRadio
+						value="#{sfBackingBean.managedBean.scQt.reEvaluateCommitteeType}">
+						<f:selectItem itemLabel="#{lbl['lbl.sc.sf.existing']}"
+							itemValue="E" />
+						<f:selectItem itemLabel="#{lbl['lbl.sc.sf.new.committee']}"
+							itemValue="N" />
+					</p:selectOneRadio>
+				</h:column>
+				<h:column>
+					<p:outputLabel value="" />
+				</h:column>
+				<h:column>
+					<p:outputLabel value="" />
+				</h:column>
+			</h:panelGrid>
+
+			<p:spacer height="15px" />
+			<h:panelGrid border="0" cellpadding="0" cellspacing="0" width="100%"
+				columns="4"
+				columnClasses="columnWidth20,columnWidth30,columnWidth20,columnWidth30"
+				rendered="#{sfBackingBean.managedBean.fhAuthority }">
+				<h:column>
+					<p:outputLabel
+						value="#{lbl['lbl.sc.sf.forward.to.higher.authority']}" />
+				</h:column>
+				<h:column>
+					<p:selectOneMenu value="#{sfBackingBean.managedBean.selectItem}">
+						<f:selectItem itemLabel="#{lbl['lbl.sc.sf.qc']}" itemValue="1" />
+						<f:selectItem itemLabel="#{lbl['lbl.sc.sf.pbb']}" itemValue="2" />
+						<f:selectItem itemLabel="#{lbl['lbl.sc.sf.pba']}" itemValue="3" />
+						<f:selectItem itemLabel="#{lbl['lbl.sc.sf.fpb.sbh']}"
+							itemValue="4" />
+						<f:selectItem itemLabel="#{lbl['lbl.sc.sf.fpb.srw']}"
+							itemValue="5" />
+						<f:selectItem itemLabel="#{lbl['lbl.sc.sf.bpk.pb']}" itemValue="6" />
+					</p:selectOneMenu>
+
+					<p:inputText value="-" readonly="true" />
+				</h:column>
+				<h:column>
+					<p:outputLabel value="" />
+				</h:column>
+				<h:column>
+					<p:outputLabel value="" />
+				</h:column>
+			</h:panelGrid>
+
+		</h:panelGroup>
+
+		<p:spacer height="20px" />
+			<h4><u>Location List:</u></h4>
+			<h:panelGrid border="0" cellpadding="0" cellspacing="0" width="50%"
+				columns="2" columnClasses="columnWidth20,columnWidth30">
+				<h:outputLabel value="#{lbl['lbl.sc.sf.multiple.locality']}" />
+				<p:inputText
+					value="#{sfBackingBean.managedBean.scQt.scQtCriterias.multiLocality ? 'Yes' : 'No' }"
+					readonly="true" />
+			</h:panelGrid>
+          
+           <p:panel visible=" #{sfBackingBean.managedBean.scQt.scQtCriterias.multiLocality}">
+			<p:dataTable id="zoneinfo" var="zone"
+				value="#{sfBackingBean.managedBean.zonelist}" rows="10"
+				rowKey="#{zone}" rowIndexVar="rowIndex">
+				<ac:paginator for="zoneinfo" />
+
+				<p:column headerText="#{lbl['lbl.sc.sf.location']}">
+					<p:commandLink update="zoneinfo, @([id$=byItemPackage])" oncomplete="popQtn.show();"
+						action="#{sfBackingBean.shortlistedRecommendedSuppDtl(zone)}">
+						<h:outputText value="#{zone.zoneName}" />
+					</p:commandLink>
+				</p:column>
+			</p:dataTable>
+          </p:panel>
+		<p:spacer height="20px" />
+
+		<h:panelGroup id="byItemPackage">
+
+			<h:panelGroup id="byitemId"
+				rendered="#{sfBackingBean.managedBean.byItemStatus}">
+				<ui:include
+					src="/xhtml/ss/supplierFinalization/supplierFinalizationByItem.xhtml" />
+			</h:panelGroup>
+
+			<h:panelGroup id="bypackageId"
+				rendered="#{sfBackingBean.managedBean.byPackageStatus}">
+				<ui:include
+					src="/xhtml/ss/supplierFinalization/supplierFinalizationByPackage.xhtml" />
+			</h:panelGroup>
+		</h:panelGroup>
+
+	</p:panel>
+
+</ui:composition>

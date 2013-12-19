@@ -1,0 +1,46 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:ac="http://ac.my/jsf/composite/cc">
+	<ui:include src="/xhtml/ss/supplierFinalization/suppFinalizationHeader.xhtml"/>
+
+	<p:panel header="Sign-Off" toggleable="true">
+		<p:dataTable id="signoffid" var="signoff"
+			value="#{sfBackingBean.managedBean.committeeSignOffMemberlist}"
+			rows="10" rowKey="#{signoff.qtCommitteeActivityId}"
+			rowIndexVar="rowIndex">
+			<ac:paginator for="signoffid" />
+
+			<p:column headerText="#{lbl['lbl.sc.sf.committee.member']}"
+				style="width:100px;">
+				<h:outputText value="#{signoff.scCommitteeMember.memberName}" />
+			</p:column>
+
+			<p:column headerText="#{lbl['lbl.sc.sf.sign.off']}"
+				style="width:120px;">
+				<h:outputText value="#{signoff.attended ? 'Yes' : 'No' }" />
+			</p:column>
+
+		</p:dataTable>
+		<p:spacer height="10px" />
+
+		<div align="right">
+			<p:commandButton value="#{lbl['lbl.sc.sf.reminder']}" update="popupReminder"
+				oncomplete="popupReminder.show();return false;" />
+		</div>
+
+	</p:panel>
+
+	<!--  Reminder dialog -->
+	<p:dialog id="popupReminder" widgetVar="popupReminder" modal="false"
+		resizable="false" height="350" width="400" hideEffect="true">
+		<p:ajax event="close" />
+		<ui:include src="suppFinalizationReminderPopUp.xhtml" />
+		
+	</p:dialog>
+
+
+</ui:composition>

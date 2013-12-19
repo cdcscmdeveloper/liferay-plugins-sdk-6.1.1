@@ -1,0 +1,20 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:c="http://java.sun.com/jsp/jstl/core">
+	
+   <p:messages showDetail="true" autoUpdate="true" closable="true" severity="error, info" />
+	 <p:panelGrid style="width:100%;"
+			styleClass="noBorders tr,noBorders td">
+			<p:row>
+				<p:column width="100%" style="text-align:right">
+				     <p:commandButton value="#{lbl['lbl.sc.sf.save']}" icon="ui-icon-save" action="#{sfBackingBean.saveSupplierFinalization}"/>
+					<p:commandButton value="#{lbl['lbl.sc.sf.submit']}" icon="ui-icon-submit" />
+				</p:column>
+			</p:row>
+		</p:panelGrid>
+	
+		
+</ui:composition>
