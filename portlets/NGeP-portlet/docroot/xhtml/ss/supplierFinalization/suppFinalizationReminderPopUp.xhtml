@@ -31,13 +31,13 @@
 	
 		</h:panelGrid>
 		</p:panel>
-        <p:spacer height="20px"/>
+        <p:spacer height="10px"/>
        	 <p:panelGrid style="width:100%;"
 			styleClass="noBorders tr,noBorders td">
 			<p:row>
 				<p:column width="100%" style="text-align:right">
-				     <p:commandButton value="Send" icon="ui-icon-sign" />
-					<p:commandButton value="Cancel" icon="ui-icon-cancel" onclick="popupReminder.hide();" />
+				     <p:commandButton value="#{lbl['lbl.sc.sf.send']}" icon="ui-icon-sign" />
+					<p:commandButton value="#{lbl['lbl.sc.sf.cancel']}" icon="ui-icon-cancel" onclick="popupReminder.hide();" />
 				</p:column>
 			</p:row>
 		</p:panelGrid>

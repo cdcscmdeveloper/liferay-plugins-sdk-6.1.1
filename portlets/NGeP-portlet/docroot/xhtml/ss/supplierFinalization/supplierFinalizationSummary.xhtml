@@ -10,9 +10,8 @@
 	<ui:include
 		src="/xhtml/ss/supplierFinalization/supplierFinalizationZonePopUp.xhtml" />
 	<p:panel header="Summary " toggleable="true">
-		<p:spacer height="20px" />
-		<h2><u>Location List</u></h2>
-		<p:spacer height="15px" />
+	   <h4><u>Location List:</u></h4>
+		<p:spacer height="10px" />
 		<h:panelGrid border="0" cellpadding="0" cellspacing="0" width="50%"
 			columns="2" columnClasses="columnWidth20,columnWidth30">
 			<h:outputLabel value="#{lbl['lbl.sc.sf.multiple.locality']}" />
@@ -21,22 +20,20 @@
 				readonly="true" />
 		</h:panelGrid>
 		 
-	    <p:panel visible="#{sfBackingBean.managedBean.scQt.scQtCriterias.multiLocality}">
-		 <p:dataTable id="zoneId" var="zone" 
+		 <p:dataTable id="zoneId" var="zone"  rendered="#{sfBackingBean.managedBean.scQt.scQtCriterias.multiLocality}"
 				value="#{sfBackingBean.managedBean.zonelist}" 
 				rowKey="#{zone}" rowIndexVar="rowIndex">
 				<ac:paginator for="zoneId" />
 
 			  <p:column headerText="#{lbl['lbl.sc.sf.location']}">
-				<p:commandLink oncomplete="popQtn.show();"
-                  	update="zoneId, @([id$=qdisqdtl])" 
+				<p:commandLink oncomplete="popZone.show();"
+                  	update="zoneId, :form:popZone, @([id$=qdisqdtl])" 
                   	action="#{sfBackingBean.qualifiedDisQualifiedSuppDtl(zone)}" >  
                    <h:outputText value="#{zone.zoneName}" />
                </p:commandLink> 
 			</p:column>
-			
 			</p:dataTable>
-        </p:panel>
+			
 		<p:spacer height="35px" />
 		<p:panel header="Item List">
 			<p:dataTable id="itemTblId" var="item"
@@ -51,7 +48,6 @@
 				</p:column>
 			</p:dataTable>
 		</p:panel>
-        
       
  		<p:outputPanel id="qdisqdtl">
 		  <p:spacer height="25px" />
@@ -63,7 +59,7 @@
 
 				<p:column headerText="#{lbl['lbl.sc.sf.ranking']}"
 					style="width:120px;">
-					<h:outputText value="#{qsupplier.userRank}" />
+					<h:outputText value="#{qsupplier.autoRank}" />
 				</p:column>
 
 				<p:column headerText="#{lbl['lbl.sc.sf.supplier.code']}"
@@ -97,7 +93,7 @@
 
 				<p:column headerText="#{lbl['lbl.sc.sf.finalization.remarks']}"
 					style="width:100px;">
-					<p:inputTextarea value="#{qsupplier.userRemark}" cols="60" rows="1" />
+					<p:inputTextarea value="#{qsupplier.scQtProposalEvaluate.disQualifiedStage}" cols="60" rows="1" />
 				</p:column>
 
 			</p:dataTable>
@@ -124,7 +120,7 @@
 				<ac:paginator for="dqsupplierId" />
 
 				<p:column headerText="#{lbl['lbl.sc.sf.ranking']}">
-					<h:outputText value="#{dqsupplier.userRank}" />
+					<h:outputText value="#{dqsupplier.autoRank}" />
 				</p:column>
 
 				<p:column headerText="#{lbl['lbl.sc.sf.supplier.code']}">

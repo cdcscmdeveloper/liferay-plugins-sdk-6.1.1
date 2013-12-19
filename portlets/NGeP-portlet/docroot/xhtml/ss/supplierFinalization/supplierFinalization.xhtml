@@ -147,20 +147,28 @@
 					readonly="true" />
 			</h:panelGrid>
           
-           <p:panel visible=" #{sfBackingBean.managedBean.scQt.scQtCriterias.multiLocality}">
-			<p:dataTable id="zoneinfo" var="zone"
+			<p:dataTable id="zoneinfo" var="zone" rendered="#{sfBackingBean.managedBean.scQt.scQtCriterias.multiLocality}"
 				value="#{sfBackingBean.managedBean.zonelist}" rows="10"
 				rowKey="#{zone}" rowIndexVar="rowIndex">
 				<ac:paginator for="zoneinfo" />
 
 				<p:column headerText="#{lbl['lbl.sc.sf.location']}">
-					<p:commandLink update="zoneinfo, @([id$=byItemPackage])" oncomplete="popQtn.show();"
+					<p:commandLink update="zoneinfo, :form:popZone, @([id$=byItemPackage])" oncomplete="popZone.show();"
 						action="#{sfBackingBean.shortlistedRecommendedSuppDtl(zone)}">
 						<h:outputText value="#{zone.zoneName}" />
 					</p:commandLink>
+					
+						<p:commandLink update=":form:popupSuppDtl"
+							action="#{sfBackingBean.showSupplierDetails}"
+							oncomplete="suppDetails.show();">
+							<f:setPropertyActionListener value="#{shortlistedSupp}"
+								target="#{sfBackingBean.managedBean.scQtProposalRanking}" />
+							<h:outputText value="#{shortlistedSupp.scQtProposalEvaluate.scQtProposal.supplierNo}" />
+						</p:commandLink>
+					
+					
 				</p:column>
 			</p:dataTable>
-          </p:panel>
 		<p:spacer height="20px" />
 
 		<h:panelGroup id="byItemPackage">
