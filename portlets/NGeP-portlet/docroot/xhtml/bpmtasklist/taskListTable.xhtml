@@ -8,64 +8,86 @@
 
 
 	<h:panelGroup id="taskListID">
-	
-	
+
+
 
 		<div style="text-align: left; float: right;">
 			<p:selectOneMenu value="#{bpmTasklistBackingBean.managedBean.status}">
 				<f:selectItem itemLabel="ASSIGNED" itemValue="ASSIGNED"></f:selectItem>
 				<f:selectItem itemLabel="COMPLETED" itemValue="COMPLETED"></f:selectItem>
 				<p:ajax event="change"
-							listener="#{bpmTasklistBackingBean.filterStatus}"
-							update="taskListID"></p:ajax>
+					listener="#{bpmTasklistBackingBean.filterStatus}"
+					update="taskListID"></p:ajax>
 			</p:selectOneMenu>
 		</div>
-		
-		
-		
+
+
+
 
 
 		<div class="clear"></div>
 
-		<p:dataTable value="#{bpmTasklistBackingBean.managedBean.taskList}" style="width:100%;"
-			var="tasks" paginator="true" rows="10" paginatorPosition="bottom"
+		<p:dataTable value="#{bpmTasklistBackingBean.managedBean.taskList}"
+			style="width:100%;" var="tasks" paginator="true" rows="10"
+			paginatorPosition="bottom"
 			paginatorTemplate="{LastPageLink} {NextPageLink} {PreviousPageLink} {FirstPageLink} Page {JumpToPageDropdown} {CurrentPageReport}"
 			currentPageReportTemplate="/ {totalPages}"
 			rowsPerPageTemplate="5,10,15">
 
-			<p:column>
+			<p:column width="5%;">
 				<f:facet name="header">
-					#{lbl['lbl.bpm.task.number']}
+					#{lbl['lbl.bpm.doc.no']}
 				</f:facet>
-				<p:commandLink value="#{tasks.taskNumber}"
+				<p:commandLink value="#{tasks.docNumber}"
 					action="#{bpmTasklistBackingBean.navigateToURL}">
 					<f:param name="taskId" value="#{tasks.taskId}" />
 				</p:commandLink>
 			</p:column>
+			<p:column width="5%;">
+				<f:facet name="header">
+					#{lbl['lbl.bpm.doc.type']}
+				</f:facet>
+				#{tasks.docType}
+			</p:column>
+
 			<p:column>
 				<f:facet name="header">
-					#{lbl['lbl.bpm.task.title']}
+					#{lbl['lbl.bpm.description']}
 				</f:facet>
-				#{tasks.title}
+				<p:commandLink value="#{tasks.title}"
+					action="#{bpmTasklistBackingBean.navigateToURL}">
+					<f:param name="taskId" value="#{tasks.taskId}" />
+				</p:commandLink>
+
 			</p:column>
-			<p:column>
+			<p:column width="12%;">
 				<f:facet name="header">
 					#{lbl['lbl.bpm.created.date']}
 				</f:facet>
-				#{tasks.createDate.time}
+				<h:outputText value="#{tasks.createDate.time}">
+					<f:convertDateTime pattern="#{CommonConstants.DEFAULT_DATETIME_FORMAT}"  />
+				</h:outputText>
+				
+			</p:column>
+			<p:column width="12%;">
+				<f:facet name="header">
+					#{lbl['lbl.bpm.due.date']}
+				</f:facet>
+				<h:outputText value="#{tasks.dueDate.time}">
+					<f:convertDateTime pattern="#{CommonConstants.DEFAULT_DATETIME_FORMAT}"  />
+				</h:outputText>
+
 			</p:column>
 			<p:column>
 				<f:facet name="header">
-					#{lbl['lbl.bpm.state']}
+					#{lbl['lbl.bpm.status']}
 				</f:facet>
-				#{tasks.state}
+				
+				#{tasks.docStatus}
+
 			</p:column>
-			<p:column>
-				<f:facet name="header">
-					#{lbl['lbl.bpm.process']}
-				</f:facet>
-				#{tasks.process}
-			</p:column>
+
+
 
 
 		</p:dataTable>
