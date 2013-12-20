@@ -30,6 +30,7 @@ import my.ep.persistence.entity.pm.authorization.PmOrgProfile;
 import my.ep.persistence.entity.pm.authorization.PmUser;
 import my.ep.persistence.entity.ss.quationtender.ScAttachment;
 import my.ep.persistence.entity.ss.quationtender.ScQt;
+import my.ep.type.pm.OrganizationType;
 import my.ep.util.lookupservice.EpBpmBusinessDelegate;
 import my.ep.util.lookupservice.EpEjbBusinessDelegate;
 import my.ep.web.backingbean.BaseBackingBean;
@@ -193,6 +194,29 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 					.getNavigationHandler()
 					.handleNavigation(fc, null,
 							"/xhtml/ss/quatationtender/quatationtendercreation.xhtml" + "?faces-redirect=true");
+		}
+	}
+	
+	/**
+	 * Method to populate parent orgprofiles for scqt.
+	 */
+	public void populateParentOrgProfile(ScQt scQt) {
+		PmOrgProfile parentOrgProfile = scQt.getPmOrgProfile()
+				.getParentOrgProfile();
+
+		while (parentOrgProfile != null) {
+			// Ministry
+			if (OrganizationType.MINISTRY.value().equals(
+					parentOrgProfile.getPmCode().getCode())) {
+				scQt.setMinistryOrgProfile(parentOrgProfile);
+			}
+			// Department
+			else if (OrganizationType.DEPARTMENT.value().equals(
+					parentOrgProfile.getPmCode().getCode())) {
+				scQt.setDepartmentOrgProfile(parentOrgProfile);
+			}
+
+			parentOrgProfile = parentOrgProfile.getParentOrgProfile();
 		}
 	}
 }
