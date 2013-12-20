@@ -19,6 +19,7 @@ import my.ep.persistence.entity.ss.quationtender.ScQtProposalRanking;
 import my.ep.util.lookupservice.EpEjbBusinessDelegate;
 import my.ep.web.backingbean.BaseBackingBean;
 import my.ep.web.backingbean.ss.quatationtender.QTDetailBackingBean;
+import my.ep.web.backingbean.ss.quatationtender.SourcingBaseBackingBean;
 import my.ep.web.managedbean.ss.loiloa.LOILOADetailManagedBean;
 import my.ep.web.ss.quationtender.common.QTConstants;
 import my.ep.web.util.lookupservice.BusinessDelegate;
@@ -32,7 +33,7 @@ import org.apache.log4j.Logger;
 @ManagedBean(name = "loiLoaDetailBackingBean")
 @RequestScoped
 public class LOILOADetailsBackingBean extends
-		BaseBackingBean<LOILOADetailManagedBean> {
+		SourcingBaseBackingBean<LOILOADetailManagedBean> {
 	public static Logger log = EpLogger
 			.getLogger(LOILOADetailsBackingBean.class);
 
@@ -44,38 +45,7 @@ public class LOILOADetailsBackingBean extends
 
 	}
 
-	/**
-	 * 
-	 */
-	private void retrieveQTDtls() {
-		debugLogger("retrieveQTDtls");
-
-		IQTDetailSO detailSO = null;
-		try {
-			detailSO = EpEjbBusinessDelegate.getInstance().getServiceObject(
-					QTConstants.SS_MODULE, IQTDetailSO.class);
-			QuationTenderReqDTO tenderReqDTO = new QuationTenderReqDTO();
-			tenderReqDTO.setQtId(146L);
-			QuationTenderResDTO tenderResDTO = detailSO
-					.retriveQTDetails(tenderReqDTO);
-			QTDetailBackingBean detailBackingBean = new QTDetailBackingBean();
-			detailBackingBean.getManagedBean()
-					.setQt(tenderResDTO.getQtDetail());
-			detailBackingBean.populateParentOrgProfile(tenderResDTO
-					.getQtDetail());
-
-			System.out.println("Qtn/Tender No : "
-					+ detailBackingBean.getManagedBean().getQt().getQtNo());
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-
-	}
-
-	@PostConstruct
-	public void init() {
-		retrieveQTDtls();
-	}
+		
 
 	private void debugLogger(Object message) {
 		if (log.isDebugEnabled()) {
@@ -111,6 +81,8 @@ public class LOILOADetailsBackingBean extends
 			System.out.println("LOA Status : " + list.get(0).getScLoa().getPmStatus().getPmStatusDescs().get(0).getStatusName());
 			
 			getManagedBean().setScQtProposalRankingList(list);
+			getManagedBean().setQt(resDTO.getScQt());
+			populateParentOrgProfile(resDTO.getScQt());
 		} catch (Exception ex) {
 			ex.printStackTrace();
 			FacesContext.getCurrentInstance().addMessage(
