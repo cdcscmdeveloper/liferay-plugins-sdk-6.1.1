@@ -95,6 +95,7 @@ public class ReceivedNoteBackingBean extends BaseBackingBean<ReceivedNoteManaged
 	}
 	
 	public void preRenderView() {
+		System.out.println("Prerender");
 		//		BPMTaskListBackingBean bb = new BPMTaskListBackingBean();
 		HttpServletRequest servletRequest = PortalUtil
 				.getHttpServletRequest(new FacesScopes().getRequest());
@@ -134,6 +135,8 @@ public class ReceivedNoteBackingBean extends BaseBackingBean<ReceivedNoteManaged
 			getManagedBean().setDeliveryOrderId(flDeliveryOrder.getDeliveryOrderId());
 			getManagedBean().setTaskId(taskId);
 			getManagedBean().setOutComes(res.getAction());
+			System.out.println("Doc type in FRN::: "+resDTO.getFlFulfilmentRequest().getDocType());
+			getManagedBean().setDocType(resDTO.getFlFulfilmentRequest().getDocType());
 			
 			getManagedBean().getFulfilmentNote().setFlDeliveryOrder(delOrderResDTO.getFlDeliveryOrder());
 			for (FlDelOrderItem delOrderItem : delOrderResDTO.getFlDeliveryOrder().getFlDelOrderItem()){

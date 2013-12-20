@@ -170,6 +170,7 @@ public class FulfilmentOrderBackingBean extends BaseBackingBean<FulfilmentOrderM
 		DeliveryOrderBackingBean doMB = new DeliveryOrderBackingBean();
 		doMB.getManagedBean().setFulfilmentOrder(getManagedBean().getFulfilmentOrder());
 		doMB.getManagedBean().setFulfilmentRequest(resDTO.getFlFulfilmentRequest());
+		doMB.getManagedBean().setDocType(resDTO.getFlFulfilmentRequest().getDocType());
 
 		return NAV_TO_CREATE_DO;
 

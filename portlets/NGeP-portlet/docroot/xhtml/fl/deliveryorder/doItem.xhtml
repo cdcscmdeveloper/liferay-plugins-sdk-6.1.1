@@ -24,9 +24,15 @@
 					<p:column headerText="Amount (MYR)" />
 				</p:row>
 			</p:columnGroup>
-			<p:column>
-				<p:outputLabel value="#{item.flFulfilmentItemAddr.flFulfilmentItem.contractItem.itemName}" />
-			</p:column>
+				<p:column>
+			<p:outputLabel
+					value="#{item.flFulfilmentItemAddr.flFulfilmentItem.scRequestNoteDtl.scRequestNote.scRequestList.requestItems[0].itemName}"
+					rendered="#{createDOBackingBean.managedBean.docType eq 'PR'}" />
+				<p:outputLabel
+					value="#{item.flFulfilmentItemAddr.flFulfilmentItem.contractItem.itemName}"
+					rendered="#{createDOBackingBean.managedBean.docType eq 'CR'}" />
+			</p:column>		
+			
 			<p:column>
 				<p:outputLabel value="#{item.flFulfilmentItemAddr.orderedQty}" />
 			</p:column>

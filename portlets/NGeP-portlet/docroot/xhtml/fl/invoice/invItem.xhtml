@@ -27,6 +27,14 @@
 				</p:row>
 			</p:columnGroup>
 			<p:column>
+				<p:outputLabel
+					value="#{item.flFulfilmentItem.scRequestNoteDtl.scRequestNote.scRequestList.requestItems[0].itemName}"
+					rendered="#{invoiceBackingBean.managedBean.docType eq 'PR'}" />
+				<p:outputLabel
+					value="#{item.flFulfilmentItem.contractItem.itemName}"
+					rendered="#{invoiceBackingBean.managedBean.docType eq 'CR'}" />
+			</p:column>
+			<p:column>
 				<p:outputLabel value="#{item.flFulfilmentItem.contractItem.itemName}" />
 			</p:column>
 			<p:column>

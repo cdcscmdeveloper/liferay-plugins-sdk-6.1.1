@@ -36,8 +36,21 @@ public class InvoiceManagedBean extends BaseManagedBean {
 	private boolean isUpdateDan = false;
 	
 	private String factoringCheck="false";
+	private String docType;
 	
 	
+	/**
+	 * @return the docType
+	 */
+	public String getDocType() {
+		return docType;
+	}
+	/**
+	 * @param docType the docType to set
+	 */
+	public void setDocType(String docType) {
+		this.docType = docType;
+	}
 	/**
 	 * @return the invoice
 	 */

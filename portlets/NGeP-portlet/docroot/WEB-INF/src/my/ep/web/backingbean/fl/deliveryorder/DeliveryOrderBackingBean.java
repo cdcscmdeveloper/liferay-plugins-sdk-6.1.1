@@ -148,7 +148,6 @@ public class DeliveryOrderBackingBean extends BaseBackingBean<DeliveryOrderManag
 			getManagedBean().getDelOrderItem().setFlDeliveryOrder(getManagedBean().getFlDeliveryOrder());
 		}
 		getManagedBean().getFlDeliveryOrder().getFlDelOrderItem().add(getManagedBean().getDelOrderItem());
-		
 
 	}
 	

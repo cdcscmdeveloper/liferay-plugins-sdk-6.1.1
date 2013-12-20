@@ -58,6 +58,8 @@ public class DeliveryOrderManagedBean extends BaseManagedBean {
 	private String docProcess;
 	private String buttonVal;
 	private String selectedLovDelAddr;
+	
+	private String docType;
 
 	/**
 	 * @return the flRemark
@@ -355,6 +357,20 @@ public class DeliveryOrderManagedBean extends BaseManagedBean {
 	 */
 	public void setDelOrderItem(FlDelOrderItem delOrderItem) {
 		this.delOrderItem = delOrderItem;
+	}
+
+	/**
+	 * @return the docType
+	 */
+	public String getDocType() {
+		return docType;
+	}
+
+	/**
+	 * @param docType the docType to set
+	 */
+	public void setDocType(String docType) {
+		this.docType = docType;
 	}
 
 }

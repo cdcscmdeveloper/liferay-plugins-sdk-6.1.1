@@ -52,6 +52,8 @@ public class ReceivedNoteManagedBean extends BaseManagedBean {
 	private String buttonVal;
 	private long deliveryOrderId;
 	
+	private String docType;
+	
 	/**
 	 * @return the flRemark
 	 */
@@ -250,6 +252,20 @@ public class ReceivedNoteManagedBean extends BaseManagedBean {
 	 */
 	public void setFulfilmentRequest(FlFulfilmentRequest fulfilmentRequest) {
 		this.fulfilmentRequest = fulfilmentRequest;
+	}
+
+	/**
+	 * @return the docType
+	 */
+	public String getDocType() {
+		return docType;
+	}
+
+	/**
+	 * @param docType the docType to set
+	 */
+	public void setDocType(String docType) {
+		this.docType = docType;
 	}
 
 

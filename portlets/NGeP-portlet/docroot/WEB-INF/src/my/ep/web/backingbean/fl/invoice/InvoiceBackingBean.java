@@ -149,6 +149,8 @@ public class InvoiceBackingBean extends BaseBackingBean<InvoiceManagedBean> {
 			flBB.initializeRemarkAndAttachement(resDTO.getRemarkList(), flBB.getManagedBean().getAttachmentList());
 			
 			getInvoiceTable(resDTO);
+			System.out.println("Doc type in inv pre render page "+resDTO.getFlFulfilmentRequest().getDocType());
+			getManagedBean().setDocType(resDTO.getFlFulfilmentRequest().getDocType());
 			
 			if(getManagedBean().getInvoice().getFlInvoiceItem() == null){
 				getManagedBean().getInvoice().setFlInvoiceItem(new ArrayList<FlInvoiceItem>());

@@ -8,7 +8,9 @@
 
 	<p:panel header="ITEM DETAIL" toggleable="true">
 		<br />
-		<p:dataTable id="frnItemDt" width="100%" value="#{receivedNoteBackingBean.managedBean.fulfilmentNoteItem}" var="item">
+		<p:dataTable id="frnItemDt" width="100%"
+			value="#{receivedNoteBackingBean.managedBean.fulfilmentNoteItem}"
+			var="item">
 			<ac:paginator for="frnItemDt" />
 			<p:columnGroup type="header">
 				<p:row>
@@ -25,10 +27,18 @@
 				</p:row>
 			</p:columnGroup>
 			<p:column>
-				<p:outputLabel value="#{item.flDelOrderItem.flFulfilmentItemAddr.flFulfilmentItem.contractItem.itemName}" />
+				<p:outputLabel
+					value="#{item.flDelOrderItem.flFulfilmentItemAddr.flFulfilmentItem.scRequestNoteDtl.scRequestNote.scRequestList.requestItems[0].itemName}"
+					rendered="#{receivedNoteBackingBean.managedBean.docType eq 'PR'}" />
+				<p:outputLabel
+					value="#{item.flDelOrderItem.flFulfilmentItemAddr.flFulfilmentItem.contractItem.itemName}"
+					rendered="#{receivedNoteBackingBean.managedBean.docType eq 'CR'}" />
 			</p:column>
+
+
 			<p:column>
-				<p:outputLabel value="#{item.flDelOrderItem.flFulfilmentItemAddr.orderedQty}" />
+				<p:outputLabel
+					value="#{item.flDelOrderItem.flFulfilmentItemAddr.orderedQty}" />
 			</p:column>
 			<p:column>
 				<p:outputLabel value="#{item.receivedQty}" />
@@ -37,7 +47,8 @@
 				<p:outputLabel value="#{item.flDelOrderItem.deliveredQty}" />
 			</p:column>
 			<p:column>
-				<p:outputLabel value="#{item.flDelOrderItem.flFulfilmentItemAddr.unitPrice}"/>
+				<p:outputLabel
+					value="#{item.flDelOrderItem.flFulfilmentItemAddr.unitPrice}" />
 			</p:column>
 			<p:column>
 				<p:inputText value="#{item.receivedQty}" />
@@ -48,12 +59,11 @@
 		</p:dataTable>
 		<br />
 		<br />
-		
+
 		<table>
 			<tr>
 				<td valign="top"><p:outputLabel value="* Remarks" /></td>
-				<td><p:inputTextarea cols="36"
-						disabled="true" /></td>
+				<td><p:inputTextarea cols="36" disabled="true" /></td>
 			</tr>
 		</table>
 

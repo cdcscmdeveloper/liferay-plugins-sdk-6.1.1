@@ -44,6 +44,7 @@ import my.ep.jaxb.fl.podata.FLPurchaseOrderDataType;
 import my.ep.persistence.entity.ct.CtContract;
 import my.ep.persistence.entity.fl.request.FlDeliveryAddress;
 import my.ep.persistence.entity.fl.request.FlFulfilmentItem;
+import my.ep.persistence.entity.fl.request.FlFulfilmentItemAddr;
 import my.ep.persistence.entity.fl.request.FlFulfilmentRequest;
 import my.ep.persistence.entity.pm.authorization.PmOrgProfile;
 import my.ep.persistence.entity.pm.authorization.PmUserGroupUser;
@@ -67,7 +68,6 @@ import my.ep.web.util.FacesScopes;
 import my.ep.web.util.lookupservice.BusinessDelegate;
 
 import org.apache.log4j.Logger;
-import org.primefaces.event.SelectEvent;
 import org.primefaces.model.DualListModel;
 
 import com.liferay.portal.util.PortalUtil;
@@ -149,12 +149,6 @@ public class PurchaseRequestBackingBean extends BaseBackingBean<PurchaseRequestM
 			reqDTO.setToken(token);
 			reqDTO.setApproverMap(getManagedBean().getApproverMap());
 			
-			/*//attachement
-			
-			String fileName = flBB.getManagedBean().getFlAttachment().getFileName();
-			String fileDesc = flBB.getManagedBean().getFlAttachment().getFileDescription();
-			String filePath = flBB.getManagedBean().getFlAttachment().getFilePath();
-			reqDTO.setFlAttachment(flBB.getManagedBean().getFlAttachment());*/
 			
 			FulfilmentResDTO resDTO = fulfilmentRequestSO.saveFulfillmentRequest(reqDTO);
 			if (resDTO.isSuccessful()) {
@@ -228,20 +222,42 @@ public class PurchaseRequestBackingBean extends BaseBackingBean<PurchaseRequestM
 		reqDTO.setRequestNoteId(getManagedBean().getSelectedRequestNote().getRequestNoteId());
 		RequestNoteResDTO resDTO = requestNoteSO.retrievRequestNoteWithDtls(reqDTO);
 		resDTO.getRequestNoteList().get(0).getRequestNoteId();
-		//System.out.println("Purchase item list size::: "+resDTO.getRequestNoteList().size());
-		//System.out.println("PurchaseList getScRequestList ::: "+resDTO.getRequestNoteList().get(0).getScRequestList());
-		//System.out.println("Purchase item Req note ID size::: "+resDTO.getRequestNoteList().get(0).getScRequestList().getRequestListId());
+		System.out.println("Purchase item list size::: "+resDTO.getRequestNoteList().size());
+		System.out.println("PurchaseList getScRequestList ::: "+resDTO.getRequestNoteList().get(0).getScRequestList());
+		System.out.println("Purchase item Req note ID size::: "+resDTO.getRequestNoteList().get(0).getScRequestList().getRequestListId());
 		getManagedBean().setRequestNoteWithDtlsList(resDTO.getRequestNoteList());
 	}
 
 	public void updatePurchasedItemDt() {
+		System.out.println("we are in update method:::: ");
 		ScRequestNote requestnote = getManagedBean().getSelectedPurchasedItemList().get(0);
-		getManagedBean().getFulfilmentRequest().setFlFulfilmentItems(new ArrayList<FlFulfilmentItem>());
+		/*getManagedBean().getFulfilmentRequest().setFlFulfilmentItems(new ArrayList<FlFulfilmentItem>());
 		for (ScRequestNoteDtl rnDtl : requestnote.getScRequestNoteDtls()) {
 			FlFulfilmentItem flItem = new FlFulfilmentItem();
 			flItem.setFlFulfilmentRequest(getManagedBean().getFulfilmentRequest());
 			flItem.setScRequestNoteDtl(rnDtl);
 			getManagedBean().getFulfilmentRequest().getFlFulfilmentItems().add(flItem);
+		}*/
+		
+		FlFulfilmentItem flItem = null;
+		for (ScRequestNoteDtl rnDtl : requestnote.getScRequestNoteDtls()) {
+			if(getManagedBean().getFlItemMap().get(rnDtl.getRequestNoteDtlId()) == null){
+				flItem = new FlFulfilmentItem();
+				flItem.setFlFulfilmentRequest(getManagedBean().getFulfilmentRequest());
+				flItem.setScRequestNoteDtl(rnDtl);
+				getManagedBean().getFulfilmentRequest().setFlFulfilmentItems(new ArrayList<FlFulfilmentItem>());
+				getManagedBean().getFulfilmentRequest().getFlFulfilmentItems().add(flItem);
+			}else{
+				flItem = getManagedBean().getFlItemMap().get(rnDtl.getRequestNoteDtlId());
+
+			}
+			FlFulfilmentItemAddr flItemAddr = new FlFulfilmentItemAddr();
+			flItemAddr.setFlFulfilmentItem(flItem);
+			flItemAddr.setFlDeliveryAddress(getManagedBean().getSelectedDelAddr());
+			getManagedBean().getSelectedDelAddr().setFlFulfilmentItemAddr(new ArrayList<FlFulfilmentItemAddr>());
+			getManagedBean().getSelectedDelAddr().getFlFulfilmentItemAddr().add(flItemAddr);
+
+			getManagedBean().getFlItemMap().put(rnDtl.getRequestNoteDtlId(), flItem);
 		}
 	}
 
@@ -435,9 +451,13 @@ public class PurchaseRequestBackingBean extends BaseBackingBean<PurchaseRequestM
 			getManagedBean().setTaskId(taskId);
 			getManagedBean().setOutComes(res.getAction());
 			getManagedBean().setTaskName(res.getTaskName());
-			List<String> source = new ArrayList<String>();
+			
+			/*List<String> source = new ArrayList<String>();
 			List<String> target = new ArrayList<String>();
 			getManagedBean().setApproverModel(new DualListModel<String>(source, target));
+			getManagedBean().getApproverModel().setTarget(resDTO.getSelectedApproverList());
+			getManagedBean().getApproverModel().getSource().removeAll(resDTO.getSelectedApproverList());*/
+			
 			getManagedBean().getApproverModel().setTarget(resDTO.getSelectedApproverList());
 			getManagedBean().getApproverModel().getSource().removeAll(resDTO.getSelectedApproverList());
 			if (null != res.getAction() && !"".equals(res.getAction())) {

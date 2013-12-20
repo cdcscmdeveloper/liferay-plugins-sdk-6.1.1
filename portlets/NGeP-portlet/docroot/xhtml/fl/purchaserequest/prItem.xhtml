@@ -49,7 +49,7 @@
 	<p:panel id="itemDetPanel" header="ITEM DETAIL" toggleable="true">
 
 		<p:dataTable id="itemDataTable" var="flItem" lazy="true" rowIndexVar="index"
-			value="#{purchaseRequestBackingBean.managedBean.fulfilmentRequest.flFulfilmentItems}"
+			value="#{purchaseRequestBackingBean.managedBean.selectedDelAddr.flFulfilmentItemAddr}"
 			selection="#{purchaseRequestBackingBean.managedBean.selectedItemsRows}"
 			rendered="#{not empty purchaseRequestBackingBean.managedBean.selectedDelAddr}"
 			rowKey="#{flItem}">
@@ -57,12 +57,12 @@
 			<p:column selectionMode="multiple" width="5%" />
 			<p:column headerText="Product Code">
 				<h:outputText
-					value="#{flItem.scRequestNoteDtl.scRequestSupplierItem.scRequestListItem.requestListItemId}" />
+					value="#{flItem.flFulfilmentItem.scRequestNoteDtl.scRequestNote.scRequestList.requestItems[0].requestListItemId}" />
 			</p:column>
 
 			<p:column headerText="Item Name">
 				<h:outputText
-					value="#{flItem.scRequestNoteDtl.scRequestSupplierItem.scRequestListItem.itemName}" />
+					value="#{flItem.flFulfilmentItem.scRequestNoteDtl.scRequestNote.scRequestList.requestItems[0].itemName}" />
 			</p:column>
 
 			<p:column headerText="GOSODO">
@@ -88,7 +88,10 @@
 				<p:inputText disabled="true"></p:inputText>
 			</p:column>
 			<p:column headerText="Ord. Qty.">
-				<p:inputText value="#{flItem.scRequestNoteDtl.scRequestSupplierItem.scRequestListItem.quantity}">
+				<p:inputText value="#{flItem.orderedQty}">
+									  
+				<p:ajax update="subTotalTxt"
+						listener="#{contractRequestBackingBean.calculateSubTotal(flItem.orderedQty)}"></p:ajax>
 				</p:inputText>
 			</p:column>
 			<p:column headerText="Sub Total">

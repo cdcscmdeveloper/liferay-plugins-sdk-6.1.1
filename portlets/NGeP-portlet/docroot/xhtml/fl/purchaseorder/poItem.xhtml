@@ -9,67 +9,52 @@
 
 		<p:dataTable id="addressDataTable" var="address"
 			value="#{flOrderBB.managedBean.flRequest.flDeliveryAddresses}"
-			>
-			<ac:paginator for="addressDataTable"/>
+			selection="#{flOrderBB.managedBean.selectedDelAddr}"
+			rowKey="#{address}" lazy="true" selectionMode="single">
+			<ac:paginator for="addressDataTable" />
+			<p:ajax event="rowSelect" update=":form:poTabs:itemDetPanel"/>
 			<p:column headerText="Delivery Address">
-				<h:outputText value="#{address.addressType.pmAddress.address1}, #{address.addressType.pmAddress.address2}, #{address.addressType.pmAddress.address3}, #{address.addressType.pmAddress.address4}" />
+				<h:outputText
+					value="#{address.addressType.pmAddress.address1}, #{address.addressType.pmAddress.address2}, #{address.addressType.pmAddress.address3}, #{address.addressType.pmAddress.address4}" />
 			</p:column>
 
 			<p:column headerText="Exp. Delivery (Start)">
-				 <p:calendar value="#{address.startDate}" pattern="dd/mm/yyyy" id="calStartDate" showOn="button" />  
+				<p:calendar value="#{address.startDate}" pattern="dd/mm/yyyy"
+					id="calStartDate" showOn="button" />
 			</p:column>
 
 			<p:column headerText="Exp. Delivery (End)">
-				<p:calendar value="#{address.endDate}" pattern="dd/mm/yyyy" id="calEndDate" showOn="button" />  
+				<p:calendar value="#{address.endDate}" pattern="dd/mm/yyyy"
+					id="calEndDate" showOn="button" />
 			</p:column>
 
 		</p:dataTable>
 	</p:panel>
 	<p:panel id="itemDetPanel" header="ITEM DETAIL" toggleable="true">
-		
-		<p:dataTable id="itemDataTable" var="flItem"
-			value="#{flOrderBB.managedBean.flRequest.flFulfilmentItems}"
-			rendered="#{not empty flOrderBB.managedBean.flRequest.flDeliveryAddresses}">
-			<ac:paginator for="itemDataTable"/>
-			
-			<p:column headerText="Product Code">
-				<h:outputText  value="#{flItem.scRequestNoteDtl.scRequestSupplierItem.scRequestListItem.requestListItemId}" />
-			</p:column>
 
+		<p:dataTable id="itemDataTable" var="flItem" lazy="true"
+			value="#{flOrderBB.managedBean.selectedDelAddr.flFulfilmentItemAddr}">
+			<ac:paginator for="itemDataTable" />
 			<p:column headerText="Item Name">
-				<h:outputText value="#{flItem.scRequestNoteDtl.scRequestSupplierItem.scRequestListItem.itemName}" />
+				<h:outputText
+					value="#{flItem.flFulfilmentItem.scRequestNoteDtl.scRequestNote.scRequestList.requestItems[0].itemName}" />
 			</p:column>
-
 			<p:column headerText="GOSODO">
-				<p:selectOneMenu id="goId" value="#{purchaseRequestBackingBean.managedBean.goId}">
-				<f:selectItems value="#{purchaseRequestBackingBean.goList}" />
-				<p:ajax event="change" update="soId,doId"></p:ajax>
-				</p:selectOneMenu><br />
-				<p:selectOneMenu id="soId" value="#{purchaseRequestBackingBean.managedBean.soId}">
-				<f:selectItems value="#{purchaseRequestBackingBean.soList}" />
-				<p:ajax event="change" update="doId"></p:ajax>
-				</p:selectOneMenu><br />
-				<p:selectOneMenu id="doId" value="#{purchaseRequestBackingBean.managedBean.doId}">
-				<f:selectItems value="#{purchaseRequestBackingBean.doList}" />
-				</p:selectOneMenu>
 			</p:column>
-
 			<p:column headerText="Activity Code">
-				<p:selectOneMenu id="actCode" value="#{purchaseRequestBackingBean.managedBean.goId}">
-				<f:selectItems value="#{purchaseRequestBackingBean.goList}" />
-				</p:selectOneMenu>
 			</p:column>
 			<p:column headerText="Unit Price (MYR)">
 				<p:inputText disabled="true"></p:inputText>
 			</p:column>
 			<p:column headerText="Ord. Qty.">
-				<p:inputText value="#{flItem.scRequestNoteDtl.scRequestSupplierItem.scRequestListItem.quantity}">
+				<p:inputText value="#{flItem.orderedQty}">
 				</p:inputText>
 			</p:column>
 			<p:column headerText="Sub Total">
-				<p:inputText id="subTotalTxt" value="#{purchaseRequestBackingBean.managedBean.selectedItemAddr.subTotal}" disabled="true"></p:inputText>
+				<p:inputText id="subTotalTxt" value="#{flItem.subTotal}"
+					disabled="true"></p:inputText>
 			</p:column>
 		</p:dataTable>
-		
+
 	</p:panel>
 </ui:composition>
