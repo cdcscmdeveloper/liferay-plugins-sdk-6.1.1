@@ -44,7 +44,6 @@ import my.ep.web.util.lookupservice.BusinessDelegate;
 
 import org.apache.commons.beanutils.BeanUtils;
 import org.apache.log4j.Logger;
-import org.primefaces.event.SelectEvent;
 
 import com.liferay.portal.util.PortalUtil;
 
@@ -60,7 +59,7 @@ public class BSVAttendanceBackingBean extends
 
 	public BSVAttendanceBackingBean() throws NamingException  {
 		if (getManagedBean().getScQt() == null) {
-			//retrieveBriefingSiteVisitList(146L);	
+			retrieveBriefingSiteVisitList(146L);	
 		}
 	}
 
@@ -203,34 +202,7 @@ public class BSVAttendanceBackingBean extends
 			throw new IllegalArgumentException();
 		}
 	}
-	
-	
-	/**
-	 * onRowSelect event - For datatable row selection for Attendance List For Company 
-	 * in Attendance Registration popup 
-	 */
-	public void onRowSelect(SelectEvent event) { 
-		IQTBriefingSO qTBriefingSO = null;
-		log.info("** onRowSelecte event  **");
-		qTBriefingSO = BusinessDelegate.getInstance().getServiceObject(
-				QTConstants.SS_MODULE, IQTBriefingSO.class);
-		ScQtBriefingRegistration briefReg = this.getManagedBean()
-				.getSelectedbriefRegistration();
-		System.out.println("selected briefReg "
-				+ briefReg.getSmSupplier().getSupplierName());
 
-		// Attendance List For Company listing 
-		BriefingReqDTO reqDTO = new BriefingReqDTO();
-		reqDTO.setQtBriefingRegistrationId(briefReg.getQtBriefingRegistrationId());
-		
-		BriefingResDTO resDTO = qTBriefingSO.retrieveBriefingAttendanceList(reqDTO);
-		List<ScQtBriefingAttendance> briefingAttList = resDTO.getBriefingAttResultBean().getResultList();
-		this.getManagedBean().setBriefingAttendanceList(briefingAttList);
-
-	}
-	
-
-	
 
 	/**
 	 * Adding new row for Attendance List for Company in in Briefing Attendance Registration
@@ -247,7 +219,6 @@ public class BSVAttendanceBackingBean extends
 			}
 			attendacelist.setScQtBriefingRegistration(selectedbriefRegistration);
 			attendaceDetails.add(attendacelist);
-			this.getManagedBean().setBriefingAttendanceList(attendaceDetails);
 	
 		} catch (Exception e) {
 			// e.printStackTrace();
