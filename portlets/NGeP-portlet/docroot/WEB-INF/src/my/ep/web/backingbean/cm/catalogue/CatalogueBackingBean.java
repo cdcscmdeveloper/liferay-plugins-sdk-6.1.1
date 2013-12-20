@@ -28,15 +28,12 @@ import my.ep.biz.bean.search.ISearchBean;
 import my.ep.biz.bean.search.SearchBean;
 import my.ep.biz.bean.search.SearchFilterBean;
 import my.ep.biz.service.cm.catalogue.ICatalogueSO;
-import my.ep.biz.service.cm.catalogue.IFavoriteSupplierSO;
 import my.ep.biz.service.cm.catalogue.IWishListSO;
 import my.ep.biz.service.pm.common.district.IDistrictSO;
 import my.ep.biz.service.pm.common.state.IStateSO;
 import my.ep.biz.service.sm.registration.IRegistrationSO;
 import my.ep.dto.cm.catalogue.CatalogueReqDTO;
 import my.ep.dto.cm.catalogue.CatalogueResDTO;
-import my.ep.dto.cm.catalogue.FavoriteSupplierReqDTO;
-import my.ep.dto.cm.catalogue.FavoriteSupplierResDTO;
 import my.ep.dto.cm.catalogue.WishListReqDTO;
 import my.ep.dto.cm.catalogue.WishListResDTO;
 import my.ep.dto.pm.common.district.DistrictReqDTO;
@@ -53,11 +50,11 @@ import my.ep.persistence.entity.cm.catalog.CmPromotionTierPricing;
 import my.ep.persistence.entity.cm.catalog.CmSupplierItem;
 import my.ep.persistence.entity.cm.catalog.CmTierPricing;
 import my.ep.persistence.entity.cm.catalog.CmZonalPromotionPricing;
+import my.ep.persistence.entity.cm.catalog.CmZonalPromotionTierPricing;
 import my.ep.persistence.entity.cm.catalog.CmZonalStandardPricing;
-import my.ep.persistence.entity.pm.common.PmState;
+import my.ep.persistence.entity.cm.catalog.CmZonalTierPricing;
 import my.ep.persistence.logging.LogKey;
 import my.ep.type.aut.SearchOperator;
-import my.ep.util.lookupservice.EpEjbBusinessDelegate;
 import my.ep.web.backingbean.BaseBackingBean;
 import my.ep.web.backingbean.cm.codification.CodificationBackingBean;
 import my.ep.web.managedbean.cm.catalogue.CatalogueManagedBean;
@@ -306,6 +303,28 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean>{
 
 
 
+
+	public void addNewZonalTierPricing(){
+
+
+
+		CmZonalTierPricing price = new CmZonalTierPricing();
+
+
+		this.getManagedBean().getSelectedMaintainItem().getCmZonalTierPricings().add(price);
+
+	}
+
+	public void addNewZonalPromotionTierPricing(){
+
+
+
+		CmZonalPromotionTierPricing price = new CmZonalPromotionTierPricing();
+
+
+		this.getManagedBean().getSelectedMaintainItem().getCmZonalPromotionTierPricings().add(price);
+
+	}
 
 
 
@@ -730,6 +749,22 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean>{
 				}
 			}
 
+			for(CmZonalTierPricing promotion: this.getManagedBean().getSelectedMaintainItem().getCmZonalTierPricings()){
+
+				promotion.setCmSupplierItem(this.getManagedBean().getSelectedMaintainItem());
+				if(promotion.getPmDistrict().getDistrictId() == null) {
+					promotion.setPmDistrict(null);
+				}
+			}
+
+			for(CmZonalPromotionTierPricing promotion: this.getManagedBean().getSelectedMaintainItem().getCmZonalPromotionTierPricings()){
+
+				promotion.setCmSupplierItem(this.getManagedBean().getSelectedMaintainItem());
+				if(promotion.getPmDistrict().getDistrictId() == null) {
+					promotion.setPmDistrict(null);
+				}
+			}
+
 
 
 
@@ -789,11 +824,11 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean>{
 			resDTO = catalogueSO.searchSupplierItemByStatus(reqDTO);
 
 			this.getManagedBean().setMaintainItemList(resDTO.getSupplierItemList());
-			
+
 			FacesContext facesContext = FacesContext.getCurrentInstance();
 			facesContext.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO," Submitted Successfully", ""));
 
-			
+
 
 		}
 	}
@@ -991,7 +1026,7 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean>{
 			resDTO = catalogueSO.searchSupplierItemByStatus(reqDTO);
 
 			this.getManagedBean().setApprovedItemList(resDTO.getSupplierItemList());
-			
+
 			FacesContext facesContext = FacesContext.getCurrentInstance();
 			facesContext.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO," Published Successfully", ""));
 
@@ -1125,42 +1160,88 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean>{
 	}
 
 
-	public void retrieveDistrict(CmZonalStandardPricing pricing){
+	public void retrieveDistrict(int index){
 
 		System.out.println("**********retrieveDistrict******************");
 
 
+
 		DistrictReqDTO reqDTO = new DistrictReqDTO();
-		System.out.println("pricing.getPmState().getStateId()"+pricing.getPmState().getStateId());
+		System.out.println("pricing.getPmState().getStateId()"+this.getManagedBean().getSelectedMaintainItem().getCmZonalStandardPricings().get(index).getPmState().getStateId());
 
 
-		reqDTO.setStateId(pricing.getPmState().getStateId());
+		reqDTO.setStateId(this.getManagedBean().getSelectedMaintainItem().getCmZonalStandardPricings().get(index).getPmState().getStateId());
 		IDistrictSO districtSO = (IDistrictSO) BusinessDelegate.getInstance().getServiceObject("pm",IDistrictSO.class);
 
 		DistrictResDTO resDTO = districtSO
 				.retriveDistrictListByStateID(reqDTO);
 		System.out.println("resDTO.getDistrictList()"+resDTO.getDistrictList().size());
-		this.getManagedBean().setDistrictList(resDTO.getDistrictList());
+
+		this.getManagedBean().getSelectedMaintainItem().getCmZonalStandardPricings().get(index).setPmDistricts(resDTO.getDistrictList());
+		if(resDTO.getDistrictList()!=null && resDTO.getDistrictList().size()>0){
+			this.getManagedBean().getSelectedMaintainItem().getCmZonalStandardPricings().get(index).setDistrictDisabled(false);
+		}else{
+			this.getManagedBean().getSelectedMaintainItem().getCmZonalStandardPricings().get(index).setDistrictDisabled(true);
+		}
 	}
 
 
-	public void retrievePromotionDistrict(CmZonalPromotionPricing pricing){
+	public void retrievePromotionDistrict(int index ){
+
+		System.out.println("**********retrievePromotionDistrict******************");
+
+		DistrictReqDTO reqDTO = new DistrictReqDTO();
+		System.out.println("pricing.getPmState().getStateId()"+this.getManagedBean().getSelectedMaintainItem().getCmZonalPromotionPricings().get(index).getPmState().getStateId());
+
+
+		reqDTO.setStateId(this.getManagedBean().getSelectedMaintainItem().getCmZonalPromotionPricings().get(index).getPmState().getStateId());
+		IDistrictSO districtSO = (IDistrictSO) BusinessDelegate.getInstance().getServiceObject("pm",IDistrictSO.class);
+
+		DistrictResDTO resDTO = districtSO
+				.retriveDistrictListByStateID(reqDTO);
+		System.out.println("resDTO.getDistrictList()"+resDTO.getDistrictList().size());
+		this.getManagedBean().getSelectedMaintainItem().getCmZonalPromotionPricings().get(index).setPmDistricts(resDTO.getDistrictList());
+
+	}
+
+
+	public void retrieveTierDistrict(int index){
 
 		System.out.println("**********retrieveDistrict******************");
 
 		this.getManagedBean().setDistrictList(null);
 		DistrictReqDTO reqDTO = new DistrictReqDTO();
-		System.out.println("pricing.getPmState().getStateId()"+pricing.getPmState().getStateId());
+		System.out.println("pricing.getPmState().getStateId()"+this.getManagedBean().getSelectedMaintainItem().getCmZonalTierPricings().get(index).getPmState().getStateId());
 
 
-		reqDTO.setStateId(pricing.getPmState().getStateId());
+		reqDTO.setStateId(this.getManagedBean().getSelectedMaintainItem().getCmZonalTierPricings().get(index).getPmState().getStateId());
 		IDistrictSO districtSO = (IDistrictSO) BusinessDelegate.getInstance().getServiceObject("pm",IDistrictSO.class);
 
 		DistrictResDTO resDTO = districtSO
 				.retriveDistrictListByStateID(reqDTO);
 		System.out.println("resDTO.getDistrictList()"+resDTO.getDistrictList().size());
-		this.getManagedBean().setDistrictList(resDTO.getDistrictList());
+		this.getManagedBean().getSelectedMaintainItem().getCmZonalTierPricings().get(index).setPmDistricts(resDTO.getDistrictList());
+
 	}
+
+
+	public void retrievePromotionTierDistrict(int index){
+		System.out.println("**********retrieveDistrict******************");
+
+		this.getManagedBean().setDistrictList(null);
+		DistrictReqDTO reqDTO = new DistrictReqDTO();
+
+
+		reqDTO.setStateId(this.getManagedBean().getSelectedMaintainItem().getCmZonalPromotionTierPricings().get(index).getPmState().getStateId());
+		IDistrictSO districtSO = (IDistrictSO) BusinessDelegate.getInstance().getServiceObject("pm",IDistrictSO.class);
+
+		DistrictResDTO resDTO = districtSO
+				.retriveDistrictListByStateID(reqDTO);
+		System.out.println("resDTO.getDistrictList()"+resDTO.getDistrictList().size());
+		this.getManagedBean().getSelectedMaintainItem().getCmZonalPromotionTierPricings().get(index).setPmDistricts(resDTO.getDistrictList());
+
+	}
+
 
 
 
