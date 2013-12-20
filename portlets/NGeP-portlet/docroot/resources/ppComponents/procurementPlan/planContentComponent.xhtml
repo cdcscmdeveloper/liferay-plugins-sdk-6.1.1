@@ -60,7 +60,6 @@ xmlns:fn="http://java.sun.com/jsp/jstl/functions">
 									disabled="#{!cc.attrs.selectedPlanMaster.brandNew}">
 									<f:selectItem itemLabel="#{lbl['lbl.select']}" itemValue="#{null}" />
 									<f:selectItems value="#{planBackingBean.votTypeOptions()}"/>
-									<p:ajax event="change" update="somMaksudCode"  /> 
 								</p:selectOneMenu>
 								<br/>
 							</td>
@@ -154,26 +153,6 @@ xmlns:fn="http://java.sun.com/jsp/jstl/functions">
 								</p:selectOneMenu>
 							</td>
 						</tr>
-						<p:outputPanel rendered="#{cc.attrs.selectedPlanMaster.planType==PPConst.planTypeExpenditure}">
-							<tr>
-								<th><p:outputLabel value="#{lbl['lbl.pp.maksud.code']}"/></th>
-								<td>
-									<p:selectOneMenu id="somMaksudCode" value="#{cc.attrs.selectedPlanMaster.maksudId}"  styleClass="ppDropDownWidthM"
-										disabled="#{!cc.attrs.selectedPlanMaster.brandNew || cc.attrs.selectedPlanMaster.votType!=PPConst.votAmanah}">
-										<f:selectItem itemLabel="#{lbl['lbl.select']}" itemValue="#{null}" />
-										<f:selectItems var="obj" itemLabel="#{obj.maksudCode}" itemValue="#{obj.maksudId}" 
-											value="#{planBackingBean.maksudCodeOptions()}"/> 
-										<p:ajax event="change" update="pTabPlanDetails" />
-									</p:selectOneMenu>
-								</td>
-								
-								<th>&nbsp;</th>
-								<td>&nbsp;</td>
-							</tr>
-				
-						</p:outputPanel>
-						
-
 						<p:outputPanel rendered="#{cc.attrs.selectedPlanMaster.planType==PPConst.planTypeProcurement}">
 							<tr>
 								<th><p:outputLabel value="* #{lbl['lbl.pp.quotation.tender.type']}"/></th>

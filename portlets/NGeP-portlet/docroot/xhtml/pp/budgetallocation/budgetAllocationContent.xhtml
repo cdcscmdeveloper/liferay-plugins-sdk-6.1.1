@@ -17,14 +17,15 @@ xmlns:fn="http://java.sun.com/jsp/jstl/functions"
 					<th><p:outputLabel value="#{lbl['lbl.pp.ministry.code.name']}"/></th>
 					<td>
 						<p:inputText value="#{budgetAllocationBackingBean.managedBean.selectedBudgetAllocation.ptjOrgProfile.parentOrgProfile.parentOrgProfile.orgCode} / #{budgetAllocationBackingBean.managedBean.selectedBudgetAllocation.ptjOrgProfile.parentOrgProfile.parentOrgProfile.orgName}"  
-							styleClass="ppDisplayTextL" disabled="true"/>
+							styleClass="ppDisplayTextM" disabled="true"/>
 					</td>
 		
 				</tr>
 				<tr>
 					<th><p:outputLabel value="#{lbl['lbl.pp.jabatan.code.name']}"/></th>
 					<td>
-						<p:selectOneMenu id="somJbt" value="#{budgetAllocationBackingBean.managedBean.selectedBudgetAllocation.ptjOrgProfile.parentOrgProfile.orgProfileId}"
+						<p:selectOneMenu id="somJbt" styleClass="ppDropDownWidthM"
+							value="#{budgetAllocationBackingBean.managedBean.selectedBudgetAllocation.ptjOrgProfile.parentOrgProfile.orgProfileId}"
 							disabled="#{!budgetAllocationBackingBean.managedBean.selectedBudgetAllocation.editable}">
 							<f:selectItem itemLabel="#{lbl['lbl.select']}" itemValue="#{null}"/>
 							<f:selectItems value="#{budgetAllocationBackingBean.populateJabatan()}" 
@@ -36,7 +37,8 @@ xmlns:fn="http://java.sun.com/jsp/jstl/functions"
 				<tr>
 					<th><p:outputLabel value="#{lbl['lbl.pp.ptj.code.name']}"/></th>
 					<td>
-						<p:selectOneMenu id="somPtj" value="#{budgetAllocationBackingBean.managedBean.selectedBudgetAllocation.ptjOrgProfile.orgProfileId}" 
+						<p:selectOneMenu id="somPtj" styleClass="ppDropDownWidthM"
+							value="#{budgetAllocationBackingBean.managedBean.selectedBudgetAllocation.ptjOrgProfile.orgProfileId}" 
 							disabled="#{!budgetAllocationBackingBean.managedBean.selectedBudgetAllocation.editable 
 							|| budgetAllocationBackingBean.managedBean.selectedBudgetAllocation.ptjOrgProfile.parentOrgProfile.orgProfileId==null}">
 							<f:selectItem itemLabel="#{lbl['lbl.select']}" itemValue="#{null}"/>
@@ -49,13 +51,14 @@ xmlns:fn="http://java.sun.com/jsp/jstl/functions"
 					<th><p:outputLabel value="#{lbl['lbl.pp.status']}"/></th>
 					<td>
 						<p:inputText value="#{budgetAllocationBackingBean.managedBean.selectedBudgetAllocation.statusId}"  
-							styleClass="ppDisplayTextL" disabled="true"/>
+							styleClass="ppDisplayTextM" disabled="true"/>
 					</td>
 				</tr>
 				<tr>
 					<th><p:outputLabel value="* #{lbl['lbl.pp.plan.approver']}"/></th>
 					<td>
-						<p:selectOneMenu value="#{budgetAllocationBackingBean.managedBean.selectedBudgetAllocation.approverUser.userId}" 
+						<p:selectOneMenu styleClass="ppDropDownWidthM"
+							value="#{budgetAllocationBackingBean.managedBean.selectedBudgetAllocation.approverUser.userId}" 
 							disabled="#{!budgetAllocationBackingBean.managedBean.selectedBudgetAllocation.editable}">
 							<f:selectItem itemLabel="#{lbl['lbl.select']}" itemValue="#{null}"/>
 							<f:selectItem itemLabel="USER0018" itemValue="52"/>
