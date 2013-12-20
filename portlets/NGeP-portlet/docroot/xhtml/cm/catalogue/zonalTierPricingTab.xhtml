@@ -1,0 +1,107 @@
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns:p="http://primefaces.org/ui"
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:fn="http://java.sun.com/jsp/jstl/functions"
+	xmlns:c="http://java.sun.com/jsp/jstl/core">
+
+
+
+	<p:outputPanel id="cmZonalTierPricings">
+		<p:dataTable id="cmZonalTierPricingsId"
+			value="#{catalogueBackingBean.managedBean.selectedMaintainItem.cmZonalTierPricings}"
+			var="tier" rowKey="#{tier}"  rowIndexVar="rowIndex"
+			width="100%" >
+
+
+
+			<p:column>
+				<f:facet name="header">
+					#{lbl['lbl.cm.state.name']}
+				</f:facet>
+				<p:selectOneMenu  style="width: 128px;" 
+						value="#{tier.pmState.stateId}"> 
+						<f:selectItem itemLabel="Select One" itemValue="" />
+						<f:selectItems
+							value="#{catalogueBackingBean.managedBean.stateList}"
+							var="state" itemLabel="#{state.stateName}"
+							itemValue="#{state.stateId}"></f:selectItems>
+							<p:ajax event="change" listener="#{catalogueBackingBean.retrieveTierDistrict(rowIndex)}" update=":form:pricingTabID:subPricingTabId:cmZonalTierPricingsId:zonalTierDistrictDDId"/>
+					</p:selectOneMenu>
+
+			</p:column>
+			
+			<p:column>
+				<f:facet name="header">
+					#{lbl['lbl.cm.district.name']}
+				</f:facet>
+					<p:selectOneMenu id="zonalTierDistrictDDId" style="width: 128px;" 
+						value="#{tier.pmDistrict.districtId}"> 
+						<f:selectItem itemLabel="Select One" itemValue="" />
+						<f:selectItems
+							value="#{tier.pmDistricts}"
+							var="district" itemLabel="#{district.districtName}"
+							itemValue="#{district.districtId}"></f:selectItems>
+							
+					</p:selectOneMenu>
+
+			</p:column>
+
+
+
+
+
+			<p:column>
+				<f:facet name="header">
+					#{lbl['lbl.cm.price']}
+				</f:facet>
+				<h:inputText value="#{tier.price}" size="10"></h:inputText>
+			</p:column>
+			
+			<p:column>
+				<f:facet name="header">
+					#{lbl['lbl.cm.tier.from']}
+				</f:facet>
+				<p:inputText value="#{tier.fromQty}" size="4"></p:inputText>
+
+			</p:column>
+			<p:column>
+				<f:facet name="header">
+					#{lbl['lbl.cm.tier.to']}
+				</f:facet>
+				<p:inputText value="#{tier.toQty}" size="4"></p:inputText>
+			</p:column>
+		
+			<p:column>
+				<f:facet name="header">
+					#{lbl['lbl.cm.start.date']}
+				</f:facet>
+				<p:calendar value="#{tier.startDate}"  showOn="button" size="10" pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}"></p:calendar>
+
+			</p:column>
+			<p:column>
+				<f:facet name="header">
+					#{lbl['lbl.cm.end.date']}
+				</f:facet>
+				<p:calendar value="#{tier.endDate}" showOn="button" size="10" pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}"></p:calendar>
+
+			</p:column>
+
+		</p:dataTable>
+
+		<div align="right">
+			<p:commandButton value="#{lbl['lbl.cm.add']}"
+				action="#{catalogueBackingBean.addNewZonalTierPricing()}"
+				update="cmZonalTierPricingsId" process="@this"></p:commandButton>
+		</div>
+
+
+
+
+	</p:outputPanel>
+
+
+</ui:composition>

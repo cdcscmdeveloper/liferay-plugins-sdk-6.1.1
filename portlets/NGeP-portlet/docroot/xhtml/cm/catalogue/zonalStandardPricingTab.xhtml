@@ -16,7 +16,7 @@
 	
 		<p:dataTable id="zonalStandardPricingtableId"
 			value="#{catalogueBackingBean.managedBean.selectedMaintainItem.cmZonalStandardPricings}"
-			var="zonal" rowKey="#{zonal}"
+			var="zonal" rowKey="#{zonal}" rowIndexVar="rowIndex"
 			width="100%">
 			
 			<p:column>
@@ -30,7 +30,7 @@
 							value="#{catalogueBackingBean.managedBean.stateList}"
 							var="state" itemLabel="#{state.stateName}"
 							itemValue="#{state.stateId}"></f:selectItems>
-							<p:ajax event="change" listener="#{catalogueBackingBean.retrieveDistrict(zonal)}" update=":form:pricingTabID:subPricingTabId:zonalStandardPricingtableId:districtDDId"/>
+							<p:ajax event="change" listener="#{catalogueBackingBean.retrieveDistrict(rowIndex)}" update=":form:pricingTabID:subPricingTabId:zonalStandardPricingtableId:districtDDId"/>
 					</p:selectOneMenu>
 
 			</p:column>
@@ -45,7 +45,7 @@
 						value="#{zonal.pmDistrict.districtId}"> 
 						<f:selectItem itemLabel="Select One" itemValue="" />
 						<f:selectItems
-							value="#{catalogueBackingBean.managedBean.districtList}"
+							value="#{zonal.pmDistricts}"
 							var="district" itemLabel="#{district.districtName}"
 							itemValue="#{district.districtId}"></f:selectItems>
 							
@@ -68,14 +68,14 @@
 				<f:facet name="header">
 					#{lbl['lbl.cm.start.date']}
 				</f:facet>
-				<p:calendar value="#{zonal.startDate}" showOn="button" size="10"></p:calendar>
+				<p:calendar value="#{zonal.startDate}" showOn="button" size="10" pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}"></p:calendar>
 
 			</p:column>
 			<p:column>
 				<f:facet name="header">
 					#{lbl['lbl.cm.end.date']}
 				</f:facet>
-				<p:calendar value="#{zonal.endDate}" showOn="button" size="10"></p:calendar>
+				<p:calendar value="#{zonal.endDate}" showOn="button" size="10" pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}"></p:calendar>
 
 			</p:column>
 
@@ -84,7 +84,7 @@
 		<div align="right">
 			<p:commandButton value="#{lbl['lbl.cm.add']}"
 				action="#{catalogueBackingBean.addNewZonalStandardPricing()}"
-				update="zonalStandardPricingtableId" process="@this"></p:commandButton>
+				update="zonalStandardPricingtableId" process="zonalStandardPricingtableId @this"></p:commandButton>
 		</div>
 
 

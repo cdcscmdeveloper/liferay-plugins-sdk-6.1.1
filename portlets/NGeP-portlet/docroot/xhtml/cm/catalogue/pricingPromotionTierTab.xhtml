@@ -32,20 +32,20 @@
 				<f:facet name="header">
 					#{lbl['lbl.cm.tier.to']}
 				</f:facet>
-				<p:inputText value="#{price.toQty}" size="5"></p:inputText>
+				<p:inputText value="#{price.toQty}" size="5" ></p:inputText>
 			</p:column>
 			<p:column>
 				<f:facet name="header">
 					#{lbl['lbl.cm.start.date']}
 				</f:facet>
-				<p:calendar value="#{price.startDate}" showOn="button"></p:calendar>
+				<p:calendar value="#{price.startDate}" showOn="button" pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}"></p:calendar>
 
 			</p:column>
 			<p:column>
 				<f:facet name="header">
 					#{lbl['lbl.cm.end.date']}
 				</f:facet>
-				<p:calendar value="#{price.endDate}" showOn="button"></p:calendar>
+				<p:calendar value="#{price.endDate}" showOn="button" pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}"></p:calendar>
 
 			</p:column>
 

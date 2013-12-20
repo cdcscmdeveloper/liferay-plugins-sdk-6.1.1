@@ -18,8 +18,7 @@
 			<h:panelGroup
 				rendered="#{unspscCodeBackingBean.supplierUser or unspscCodeBackingBean.supplierAdmin}">
 				<p:commandButton value="#{lbl['lbl.cm.save']}" icon="ui-icon-save"
-					action="#{catalogueBackingBean.saveCatalogItem}"
-					update="@form"></p:commandButton>
+					action="#{catalogueBackingBean.saveCatalogItem}" update="@form"></p:commandButton>
 				<p:commandButton value="#{lbl['lbl.cm.cancel']}"
 					icon="ui-icon-cancel"
 					action="#{catalogueBackingBean.cancelToMaintenanceFile()}"
@@ -91,11 +90,13 @@
 					<td><p:outputLabel value="#{lbl['lbl.cm.start.date']}" /></td>
 					<td><p:calendar
 							value="#{catalogueBackingBean.managedBean.selectedMaintainItem.startDate}"
-							showOn="button" size="30"></p:calendar></td>
+							pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}" showOn="button"
+							size="30"></p:calendar></td>
 					<td><p:outputLabel value="#{lbl['lbl.cm.end.date']}" /></td>
 					<td colspan="1"><p:calendar
 							value="#{catalogueBackingBean.managedBean.selectedMaintainItem.endDate}"
-							showOn="button" size="30"></p:calendar></td>
+							pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}" showOn="button"
+							size="30"></p:calendar></td>
 				</tr>
 
 
@@ -192,9 +193,11 @@
 
 					</p:tab>
 					<p:tab title="Zonal Tier">
+						<ui:include src="zonalTierPricingTab.xhtml"></ui:include>
 
 					</p:tab>
 					<p:tab title="Zonal Promotion Tier">
+						<ui:include src="zonalPromotionTierPricingTab.xhtml"></ui:include>
 
 					</p:tab>
 				</p:tabView>
@@ -203,7 +206,8 @@
 
 			</p:tab>
 
-			<p:tab id="remarkId" title="Remarks" rendered="#{unspscCodeBackingBean.catalogueAdmin or unspscCodeBackingBean.supplierUser or unspscCodeBackingBean.supplierAdmin}">
+			<p:tab id="remarkId" title="Remarks"
+				rendered="#{unspscCodeBackingBean.catalogueAdmin or unspscCodeBackingBean.supplierUser or unspscCodeBackingBean.supplierAdmin}">
 
 			</p:tab>
 
