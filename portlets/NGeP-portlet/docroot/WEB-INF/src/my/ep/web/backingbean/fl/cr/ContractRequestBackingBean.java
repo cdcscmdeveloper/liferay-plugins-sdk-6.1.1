@@ -270,7 +270,7 @@ public class ContractRequestBackingBean extends BaseBackingBean<ContractRequestM
 		if(resDTO.getPmOrgProfile() != null){
 			getManagedBean().getFlRequest().setCreatedOrgProfile(resDTO.getPmOrgProfile());
 		}
-		this.getManagedBean().setOutComes(new String[]{"SAVE", "SUBMIT"}); 
+		this.getManagedBean().setOutComes(new String[]{"Save", "Submit"}); 
 		FulfilmentBackingBean flBackingBean = new FulfilmentBackingBean();
 		flBackingBean.initializeRemarkAndAttachement(flBB.getManagedBean().getRemarkList(), flBB.getManagedBean().getAttachmentList());
 

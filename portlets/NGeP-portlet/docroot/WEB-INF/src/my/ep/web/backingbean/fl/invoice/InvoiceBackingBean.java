@@ -170,12 +170,15 @@ public class InvoiceBackingBean extends BaseBackingBean<InvoiceManagedBean> {
 	}
 	
 	public void getInvoiceTable(FulfilmentResDTO resDTO){
+		System.out.println("--calculate sum invoice--");
 		BigDecimal sumOrderedQty = new BigDecimal("0");
 		BigDecimal sumReceivedQty = new BigDecimal("0");
 		BigDecimal sumDeliveredQty = new BigDecimal("0");
+		System.out.println("getInvoiceTable: getFlFulfilmentItems: "+resDTO.getFlFulfilmentRequest().getFlFulfilmentItems().size());
 		for(FlFulfilmentItem flItem : resDTO.getFlFulfilmentRequest().getFlFulfilmentItems()){
 			getManagedBean().getInvItem().setFlFulfilmentItem(flItem);
 			getManagedBean().getInvItem().setFlInvoice(getManagedBean().getInvoice());
+			System.out.println("getInvoiceTable: getFlFulfilmentItemAddr: "+flItem.getFlFulfilmentItemAddr().size());
 			for(FlFulfilmentItemAddr itemAddr : flItem.getFlFulfilmentItemAddr()){
 				System.out.println("getOrderedQty(): "+itemAddr.getOrderedQty());
 				System.out.println("getReceivedQty(): "+itemAddr.getReceivedQty());
