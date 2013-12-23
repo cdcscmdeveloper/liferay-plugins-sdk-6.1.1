@@ -45,7 +45,7 @@
 			<f:facet name="header">
 				#{lbl['lbl.cm.price']}
 			</f:facet>
-			<p:inputText value="#{selectedSuppCat.price}"></p:inputText>
+			<p:inputText value="#{selectedSuppCat.cmStandardPricing.price}"></p:inputText>
 
 		</p:column>
 		<p:column>
@@ -65,14 +65,14 @@
 			<f:facet name="header">
 				#{lbl['lbl.cm.start.date']}
 			</f:facet>
-			<p:calendar value="#{selectedSuppCat.startDate}" showOn="button" size="10" pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}"></p:calendar>
+			<p:calendar value="#{selectedSuppCat.cmStandardPricing.startDate}" showOn="button" size="10" pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}"></p:calendar>
 
 		</p:column>
 		<p:column>
 			<f:facet name="header">
 				#{lbl['lbl.cm.end.date']}
 			</f:facet>
-			<p:calendar value="#{selectedSuppCat.endDate}" showOn="button" size="10" pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}"></p:calendar>
+			<p:calendar value="#{selectedSuppCat.cmStandardPricing.endDate}" showOn="button" size="10" pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}"></p:calendar>
 
 		</p:column>
 		<p:column>

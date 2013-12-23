@@ -16,7 +16,7 @@
 		<h:panelGroup>
 			<p:tabView id="maintenanceTabId" dynamic="true" cache="false">
 
-				<p:ajax event="tabChange" listener="#{catalogueBackingBean.onTabChange}" update=":form:maintenanceTabId"/>
+				<p:ajax event="tabChange" listener="#{catalogueBackingBean.onTabChange}" update=":form:maintenanceTabId :form:catalogFileMsg"/>
 					
 				<p:tab id="tab1" title="#{lbl['lbl.cm.draft']}">
 					<ui:include src="draftSupplierItem.xhtml" />

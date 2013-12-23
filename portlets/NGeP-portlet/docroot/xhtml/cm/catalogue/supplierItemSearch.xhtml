@@ -17,24 +17,7 @@
 			<tr>
 				<td><p:tabView style="width: 70%;" id="searchTabId">
 
-						<p:tab id="tab1" title="Search">
-
-							<table style="width: 100%; margin-top: 10px;">
-								<tr>
-									<td><p:outputLabel value="#{lbl['lbl.cm.item.name']}" /></td>
-									<td><p:inputText size="50"
-											value="#{catalogueBackingBean.managedBean.itemName}"></p:inputText></td>
-
-								</tr>
-							</table>
-							<div style="text-align: right;">
-								<p:commandButton value="Search" icon="ui-icon-search"
-									action="#{catalogueBackingBean.searchCatalogue}"
-									update=":form:supplierItemID" />
-							</div>
-						</p:tab>
-
-						<p:tab id="tab2" title="Advance Search">
+						<p:tab id="tab2" title="Search">
 							<table style="margin-top: 10px;">
 								<tr>
 									<td style="padding-left: 56px;"><p:outputLabel

@@ -74,30 +74,6 @@
 							value="#{catalogueBackingBean.managedBean.selectedMaintainItem.cmItem.itemName}"></p:inputText></td>
 
 				</tr>
-				<tr style="height: 30px;">
-
-					<td><p:outputLabel value="#{lbl['lbl.cm.price']}" /></td>
-					<td><p:inputText
-							value="#{catalogueBackingBean.managedBean.selectedMaintainItem.price}"
-							size="35"></p:inputText></td>
-					<td><p:outputLabel value="#{lbl['lbl.cm.currency']}" /></td>
-					<td colspan="1"><p:inputText value="MYR" size="35"
-							disabled="true" /></td>
-				</tr>
-
-				<tr style="height: 30px;">
-
-					<td><p:outputLabel value="#{lbl['lbl.cm.start.date']}" /></td>
-					<td><p:calendar
-							value="#{catalogueBackingBean.managedBean.selectedMaintainItem.startDate}"
-							pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}" showOn="button"
-							size="30"></p:calendar></td>
-					<td><p:outputLabel value="#{lbl['lbl.cm.end.date']}" /></td>
-					<td colspan="1"><p:calendar
-							value="#{catalogueBackingBean.managedBean.selectedMaintainItem.endDate}"
-							pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}" showOn="button"
-							size="30"></p:calendar></td>
-				</tr>
 
 
 
@@ -176,7 +152,7 @@
 			<p:tab id="pricing1" title="#{lbl['lbl.cm.pricing']}">
 
 				<p:tabView id="subPricingTabId">
-					<p:tab title="#{lbl['lbl.cm.promotion']}">
+					<p:tab title="Normal">
 						<ui:include src="pricingTab.xhtml" />
 					</p:tab>
 					<p:tab title="#{lbl['lbl.cm.tier']}">
@@ -187,11 +163,9 @@
 					</p:tab>
 					<p:tab title="Zonal Normal">
 						<ui:include src="zonalStandardPricingTab.xhtml"></ui:include>
-					</p:tab>
-					<p:tab title="Zonal Promotion">
-						<ui:include src="zonalPromotionPricingTab.xhtml"></ui:include>
 
 					</p:tab>
+					
 					<p:tab title="Zonal Tier">
 						<ui:include src="zonalTierPricingTab.xhtml"></ui:include>
 

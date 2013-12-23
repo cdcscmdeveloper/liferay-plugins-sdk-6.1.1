@@ -10,40 +10,84 @@
 
 
 
-	<p:outputPanel id="pricePageID">
-		<p:dataTable id="pricingID"
-			value="#{catalogueBackingBean.managedBean.selectedMaintainItem.cmPromotionPricings}" width="100%"
-			var="price">
 
+
+
+
+
+
+	<p:panelGrid styleClass="tablePanel">
+		<f:facet name="header">
+			<p:row>
+				<p:column>
+							Pricing Type
+						</p:column>
+				<p:column>
+							Price
+						</p:column>
+				<p:column>
+							Start Date
+						</p:column>
+				<p:column>
+							End Date
+						</p:column>
+			</p:row>
+
+		</f:facet>
+
+		<p:row>
 			<p:column>
-				<f:facet name="header">
-					#{lbl['lbl.cm.price']}
-				</f:facet>
-				<p:inputText value="#{price.price}" size="10"></p:inputText>
+				<p:outputLabel value="Standard" />
 			</p:column>
 			<p:column>
-				<f:facet name="header">
-					#{lbl['lbl.cm.start.date']}
-				</f:facet>
-				<p:calendar value="#{price.startDate}" showOn="button" pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}"></p:calendar>
+				<p:inputText
+					value="#{catalogueBackingBean.managedBean.selectedMaintainItem.cmStandardPricing.price}"></p:inputText>
+			</p:column>
+			<p:column>
+				<p:calendar
+					value="#{catalogueBackingBean.managedBean.selectedMaintainItem.cmStandardPricing.startDate}"
+					showOn="button" pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}"></p:calendar>
 
 			</p:column>
 			<p:column>
-				<f:facet name="header">
-					#{lbl['lbl.cm.end.date']}
-				</f:facet>
-				<p:calendar value="#{price.endDate}" showOn="button" pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}"></p:calendar>
+				<p:calendar
+					value="#{catalogueBackingBean.managedBean.selectedMaintainItem.cmStandardPricing.endDate}"
+					showOn="button" pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}"></p:calendar>
 
 			</p:column>
+		</p:row>
 
-		</p:dataTable>
-		<div align="right">
-			<p:commandButton value="#{lbl['lbl.cm.add']}" icon="ui-icon-add"
-				action="#{catalogueBackingBean.addNewPromotionPricing()}" update="pricePageID"
-				process="@this"></p:commandButton>
-		</div>
 
-	</p:outputPanel>
+		<p:row>
+			<p:column>
+				<p:outputLabel value="Promotion" />
+			</p:column>
+			<p:column>
+				<p:inputText
+					value="#{catalogueBackingBean.managedBean.selectedMaintainItem.cmPromotionPricing.price}"></p:inputText>
+			</p:column>
+			<p:column>
+				<p:calendar
+					value="#{catalogueBackingBean.managedBean.selectedMaintainItem.cmPromotionPricing.startDate}"
+					showOn="button" pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}"></p:calendar>
+
+			</p:column>
+			<p:column>
+				<p:calendar
+					value="#{catalogueBackingBean.managedBean.selectedMaintainItem.cmPromotionPricing.endDate}"
+					showOn="button" pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}"></p:calendar>
+
+			</p:column>
+		</p:row>
+
+
+
+	</p:panelGrid>
+
+
+
+
+
 
 
 </ui:composition>
