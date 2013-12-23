@@ -20,42 +20,16 @@
 	</p:panel>
 	<p:tabView id="tabview" value="Termination" dynamic="true" orientation="left" >
 	   <p:tab title="#{lbl['lbl.ct.menu.fd']}" >
-	     <ui:include src="/xhtml/ct/fulfilmentdetails/shared/fulfilment.xhtml"/>
-	     <ui:include src="/xhtml/ct/fulfilmentdetails/shared/quotationTender.xhtml" />
-	     <ui:include src="amendment.xhtml"/>
-         <ui:include src="/xhtml/ct/fulfilmentdetails/shared/supplier.xhtml"/>                 
-         <ui:include src="/xhtml/ct/fulfilmentdetails/shared/factoring.xhtml"/>     
-         <ui:include src="bond.xhtml"/>                      
+	     <ui:include src="contractDetails.xhtml"/>
+	      <ui:include src="amendment.xhtml"/>
+	      <ui:include src="/xhtml/ct/shared/remarkAndAttachment.xhtml" />
       </p:tab>
-      
-       <p:tab title="#{lbl['lbl.ct.menu.agency']}" >
-         <ui:include src="/xhtml/ct/fulfilmentdetails/shared/agency.xhtml"/>
-       </p:tab> 
-        <p:tab title="#{lbl['lbl.ct.menu.zone']}">
-         <ui:include src="/xhtml/ct/fulfilmentdetails/shared/zone.xhtml" />    
-     </p:tab> 
 	   <p:tab title="#{lbl['lbl.ct.menu.item']}">
          <ui:include src="item.xhtml"/>
        </p:tab>  
         <p:tab title="Approval Letter" rendered="#{contractDetailsBackingBean.managedBean.approvrLetter}">
          <ui:include src="approvalLetter.xhtml"/>
        </p:tab>  
-	   <p:tab title="#{lbl['lbl.ct.menu.dedu']}">
-         <ui:include src="/xhtml/ct/fulfilmentdetails/shared/deduction.xhtml" />  
-       </p:tab>   
-	   <p:tab title="#{lbl['lbl.ct.menu.sched']}" >
-         <ui:include src="/xhtml/ct/fulfilmentdetails/shared/schedule.xhtml" />    
-       </p:tab>  
-	   <p:tab title="#{lbl['lbl.ct.menu.sett']}">
-         <ui:include src="/xhtml/ct/fulfilmentdetails/shared/approverSetting.xhtml" />  
-          <ui:include src="/xhtml/ct/fulfilmentdetails/shared/fulfilmentSetting.xhtml" />     
-     </p:tab> 
-      <p:tab title="#{lbl['lbl.ct.menu.pay']}" >
-         <ui:include src="/xhtml/ct/fulfilmentdetails/shared/payment.xhtml" />    
-       </p:tab>  
-     <p:tab title="#{lbl['lbl.ct.menu.remark']}">
-         <ui:include src="/xhtml/ct/shared/remarkAndAttachment.xhtml" />   
-     </p:tab> 
 	</p:tabView>
    </ui:define>  
 </ui:composition>
