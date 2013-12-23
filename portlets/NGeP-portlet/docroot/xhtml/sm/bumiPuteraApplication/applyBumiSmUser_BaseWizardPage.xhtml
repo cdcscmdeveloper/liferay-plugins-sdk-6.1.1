@@ -19,98 +19,66 @@
 				<tr>
 					<td><div class="navDiv" id="menuDiv" align="center">
 							<ul class="menu-text">
-								<li><h:outputText
+								<li>
+									<!-- <h:outputText
 										value="#{lbl['lbl.sm.wizard.companyStepLbl']}"
-										rendered="#{backingBean.managedBean.tabActiveIndex eq 0}" />
+										rendered="#{backingBean.managedBean.tabActiveIndex eq 0}" /> -->
 									<p:commandLink value="#{lbl['lbl.sm.wizard.companyStepLbl']}"
 										actionListener="#{backingBean.setTabValue(backingBean.managedBean.tabActiveIndex,'0')}"
 										action="#{backingBean.updateSmAppl}" update=":form"
-										rendered="#{backingBean.managedBean.tabActiveIndex gt 0}" /></li>
+										rendered="#{backingBean.managedBean.smAppl.currentActiveTab ge 0}"
+										styleClass="#{backingBean.managedBean.tabActiveIndex eq 0 ? 'currentStep' : ''}" />
+								</li>
 
 								<li><h:outputText
 										value="#{lbl['lbl.sm.wizard.capitalStepLbl']}"
-										rendered="#{backingBean.managedBean.tabActiveIndex le 1}" />
+										rendered="#{backingBean.managedBean.smAppl.currentActiveTab lt 1}" />
 									<p:commandLink value="#{lbl['lbl.sm.wizard.capitalStepLbl']}"
 										actionListener="#{backingBean.setTabValue(backingBean.managedBean.tabActiveIndex,'1')}"
 										action="#{backingBean.updateSmAppl}" update=":form"
-										rendered="#{backingBean.managedBean.tabActiveIndex gt 1}" /></li>
+										rendered="#{backingBean.managedBean.smAppl.currentActiveTab ge 1}"
+										styleClass="#{backingBean.managedBean.tabActiveIndex eq 1 ? 'currentStep' : ''}" /></li>
 
 								<li><h:outputText
 										value="#{lbl['lbl.sm.wizard.personStepLbl']}"
-										rendered="#{backingBean.managedBean.tabActiveIndex le 2}" />
+										rendered="#{backingBean.managedBean.smAppl.currentActiveTab lt 2}" />
 									<p:commandLink value="#{lbl['lbl.sm.wizard.personStepLbl']}"
 										actionListener="#{backingBean.setTabValue(backingBean.managedBean.tabActiveIndex,'2')}"
 										action="#{backingBean.updateSmAppl}" update=":form"
-										rendered="#{backingBean.managedBean.tabActiveIndex gt 2}" /></li>
+										rendered="#{backingBean.managedBean.smAppl.currentActiveTab ge 2}"
+										styleClass="#{backingBean.managedBean.tabActiveIndex eq 2 ? 'currentStep' : ''}" /></li>
 
 								<li><h:outputText
 										value="#{lbl['lbl.sm.wizard.bankStepLbl']}"
-										rendered="#{backingBean.managedBean.tabActiveIndex le 3}" />
+										rendered="#{backingBean.managedBean.smAppl.currentActiveTab lt 3}" />
 									<p:commandLink value="#{lbl['lbl.sm.wizard.bankStepLbl']}"
 										actionListener="#{backingBean.setTabValue(backingBean.managedBean.tabActiveIndex,'3')}"
 										action="#{backingBean.updateSmAppl}" update=":form"
-										rendered="#{backingBean.managedBean.tabActiveIndex gt 3}" /></li>
+										rendered="#{backingBean.managedBean.smAppl.currentActiveTab ge 3}"
+										styleClass="#{backingBean.managedBean.tabActiveIndex eq 3 ? 'currentStep' : ''}" /></li>
 
 								<li><h:outputText
 										value="#{lbl['lbl.sm.wizard.supDocStepLbl']}"
-										rendered="#{backingBean.managedBean.tabActiveIndex le 4}" />
+										rendered="#{backingBean.managedBean.smAppl.currentActiveTab lt 4}" />
 									<p:commandLink value="#{lbl['lbl.sm.wizard.supDocStepLbl']}"
 										actionListener="#{backingBean.setTabValue(backingBean.managedBean.tabActiveIndex,'4')}"
 										action="#{backingBean.updateSmAppl}" update=":form"
-										rendered="#{backingBean.managedBean.tabActiveIndex gt 4}" /></li>
+										rendered="#{backingBean.managedBean.smAppl.currentActiveTab ge 4}"
+										styleClass="#{backingBean.managedBean.tabActiveIndex eq 4 ? 'currentStep' : ''}" /></li>
 
 
 							</ul>
 							<ul id="tripMeter" class="menu-line">
-								<c:choose>
-									<c:when test="#{backingBean.managedBean.tabActiveIndex eq 0}">
-										<li class="space red-dot"></li>
-									</c:when>
-									<c:otherwise>
-										<li class="space green-dot"></li>
-									</c:otherwise>
-								</c:choose>
-								<c:choose>
-									<c:when test="#{backingBean.managedBean.tabActiveIndex lt 1}">
-										<li class="space black-dot"></li>
-									</c:when>
-									<c:when test="#{backingBean.managedBean.tabActiveIndex gt 1}">
-										<li class="space green-dot"></li>
-									</c:when>
-									<c:otherwise>
-										<li class="space red-dot"></li>
-									</c:otherwise>
-								</c:choose>
-								<c:choose>
-									<c:when test="#{backingBean.managedBean.tabActiveIndex lt 2}">
-										<li class="space black-dot"></li>
-									</c:when>
-									<c:when test="#{backingBean.managedBean.tabActiveIndex gt 2}">
-										<li class="space green-dot"></li>
-									</c:when>
-									<c:otherwise>
-										<li class="space red-dot"></li>
-									</c:otherwise>
-								</c:choose>
-								<c:choose>
-									<c:when test="#{backingBean.managedBean.tabActiveIndex lt 3}">
-										<li class="space black-dot"></li>
-									</c:when>
-									<c:when test="#{backingBean.managedBean.tabActiveIndex gt 3}">
-										<li class="space green-dot"></li>
-									</c:when>
-									<c:otherwise>
-										<li class="space red-dot"></li>
-									</c:otherwise>
-								</c:choose>
-								<c:choose>
-									<c:when test="#{backingBean.managedBean.tabActiveIndex lt 4}">
-										<li class="black-dot"></li>
-									</c:when>
-									<c:otherwise>
-										<li class="red-dot"></li>
-									</c:otherwise>
-								</c:choose>
+								<li
+									class="#{backingBean.managedBean.tabActiveIndex eq 0 ? 'space red-dot' : 'space green-dot'}" />
+								<li
+									class="#{backingBean.managedBean.tabActiveIndex eq 1 ? 'space red-dot' :  (backingBean.managedBean.smAppl.currentActiveTab ge 1 ? 'space green-dot':'space black-dot')}" />
+								<li
+									class="#{backingBean.managedBean.tabActiveIndex eq 2 ? 'space red-dot' :  (backingBean.managedBean.smAppl.currentActiveTab ge 2 ? 'space green-dot':'space black-dot')}" />
+								<li
+									class="#{backingBean.managedBean.tabActiveIndex eq 3 ? 'space red-dot' :  (backingBean.managedBean.smAppl.currentActiveTab ge 3 ? 'space green-dot':'space black-dot')}" />
+								<li
+									class="#{backingBean.managedBean.tabActiveIndex eq 4 ? 'red-dot' :  (backingBean.managedBean.smAppl.currentActiveTab ge 4 ? 'green-dot':'black-dot')}" />
 
 							</ul>
 						</div></td>
@@ -120,7 +88,7 @@
 						</div></td>
 				</tr>
 			</table>
-
+			
 			<p:messages id="messages" showDetail="true" autoUpdate="true"
 				closable="true" />
 
