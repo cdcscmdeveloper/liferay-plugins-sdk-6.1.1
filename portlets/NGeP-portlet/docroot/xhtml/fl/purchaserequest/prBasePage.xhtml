@@ -18,14 +18,18 @@
 			closable="true" severity="error, info" />
 		<table style="width: 100%;">
 			<tr>
+				<td style="text-align: left; width: 66px;"><p:outputLabel
+						value="DOC NO:" /></td>
+				<td style="width: 70px"><p:outputLabel
+						value="#{purchaseRequestBackingBean.managedBean.fulfilmentRequest.docNo}" />
+				</td>
 				<td colspan="4" style="text-align: right"><ui:repeat
 						var="bpmAction"
 						value="#{purchaseRequestBackingBean.managedBean.outComes}">
-						
+
 						<p:commandButton value="#{bpmAction}" ajax='false'
 							styleClass="ui-button" icon="#{iconVar}"
-							action="#{purchaseRequestBackingBean.fulfillmentRequestAction(bpmAction)}"
-							 />
+							action="#{purchaseRequestBackingBean.fulfillmentRequestAction(bpmAction)}" />
 					</ui:repeat></td>
 			</tr>
 		</table>
