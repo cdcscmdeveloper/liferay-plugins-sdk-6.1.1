@@ -16,54 +16,33 @@
 				<p:spacer width="2" />
 				<p:outputLabel value="Concession" />
 			</h:panelGrid>
-			<p:outputLabel value="#{lbl['lbl.ct.contractType']}" />
-			<p:inputText value="#{contractDetailsBackingBean.managedBean.contractVer.ctContract.contractType.codeId}" style="width:170px;" />					
-			<p:outputLabel value="Created Date" />
-			<p:inputText style="width:170px;" disabled="true" value="#{contractDetailsBackingBean.managedBean.contractVer.ctContract.publishDate}" >
-				<f:convertDateTime pattern="MM/dd/yyyy" />
-			</p:inputText>				
+				<p:outputLabel value="#{lbl['lbl.ct.contractAmount']}" />
+			<p:inputText value="#{contractDetailsBackingBean.managedBean.contractVer.ctContractValue.contractAmount}"
+				 disabled="true" style="width:170px;"/>		
+				 <h:outputLabel value="#{lbl['lbl.ct.dperiod']}" />
+			<h:panelGrid columns="2">
+				<p:inputText size="8" value="#{contractDetailsBackingBean.managedBean.contractVer.ctContractValue.deliveryTerm}" />
+				<p:outputLabel value="Days" />
+			</h:panelGrid>			
 			<h:panelGrid columns="3">
 				<p:selectBooleanCheckbox value="true" disabled="true" />
 				<p:spacer width="2" />	
 				<p:outputLabel value="Exempted" />
 			</h:panelGrid>
-			<p:outputLabel value="#{lbl['lbl.ct.effectiveDate']}" />
+		    <p:outputLabel value="#{lbl['lbl.ct.effectiveDate']}" />
 			<p:calendar style="width:170px;"
 				value="#{contractDetailsBackingBean.managedBean.contractVer.ctContractValue.effDate}"
 				id="popupCal1" showOn="button" />
 			<h:outputLabel value="#{lbl['lbl.ct.edate']}" />
 			<p:calendar style="width:170px;"
 				value="#{contractDetailsBackingBean.managedBean.contractVer.ctContractValue.expDate}"
-				id="popupCal" showOn="button" />			
+				id="popupCal" showOn="button" />	
 			<h:panelGrid columns="3">
 				<p:selectBooleanCheckbox
 					value="#{contractDetailsBackingBean.managedBean.contractVer.ctContract.agreement}" disabled="true" />
 				<p:spacer width="2" />	
 				<p:outputLabel value="#{lbl['lbl.ct.agreement']}" />
-			</h:panelGrid>
-			<p:outputLabel value="#{lbl['lbl.ct.cur']}" />
-			<p:inputText value="#{contractDetailsBackingBean.managedBean.contractVer.ctContract.currency.currencyName}" style="width:70px;" />				
-			<p:outputLabel value="#{lbl['lbl.ct.contractAmount']}" />
-			<p:inputText
-				value="#{contractDetailsBackingBean.managedBean.contractVer.ctContractValue.contractAmount}"
-				size="8" disabled="true" />			
-			<h:panelGrid columns="3">
-				<p:selectBooleanCheckbox
-					value="#{contractDetailsBackingBean.managedBean.contractVer.ctContract.mto}"
-					disabled="true" />
-				<p:spacer width="2" />	
-				<p:outputLabel value="#{lbl['lbl.ct.mto']}" />
-			</h:panelGrid>
-			<h:outputLabel value="#{lbl['lbl.ct.liquidated']}" />
-			<p:inputText
-				value="#{contractDetailsBackingBean.managedBean.contractVer.ctContractValue.liquidatedDamage}"
-				size="8" disabled="true" />
-			<h:outputLabel value="#{lbl['lbl.ct.dperiod']}" />
-			<h:panelGrid columns="2">
-				<p:inputText size="8" value="#{contractDetailsBackingBean.managedBean.contractVer.ctContractValue.deliveryTerm}" />
-				<p:outputLabel value="Days" />
-			</h:panelGrid>
-			<f:verbatim />
+			</h:panelGrid>	
 			 <h:panelGroup>
 		      <div style="height: 40px; vertical-align: top;">
 			  <p:outputLabel for="contractName" value="Contract Title" />
@@ -72,12 +51,18 @@
 			 <h:panelGrid>
 			<p:inputTextarea id="contractName"
 				value="#{contractDetailsBackingBean.managedBean.contractVer.ctContract.contractName}"
-				required="false" rows="2" cols="30" disabled="true"
+				required="false" rows="2" cols="35" disabled="true"
 				autoResize="false" />	
 			</h:panelGrid>		
 			<f:verbatim />
 			<f:verbatim />
-			<f:verbatim />
+			<h:panelGrid columns="3">
+				<p:selectBooleanCheckbox
+					value="#{contractDetailsBackingBean.managedBean.contractVer.ctContract.mto}"
+					disabled="true" />
+				<p:spacer width="2" />	
+				<p:outputLabel value="#{lbl['lbl.ct.mto']}" />
+			</h:panelGrid>
 			<h:outputLabel
 				rendered="#{contractDetailsBackingBean.managedBean.contractVer.ctContract.circular.latestCircularVer.circularNo != null}"
 				value="#{lbl['lbl.ct.circularNo']}" />

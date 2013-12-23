@@ -20,6 +20,14 @@
 		<css-class-wrapper>ct-portlet</css-class-wrapper>
 	</portlet>
 	<portlet>
+		<portlet-name>ctRequestTermination</portlet-name>
+		<icon>/icon.png</icon>
+		<instanceable>false</instanceable>
+		<ajaxable>false</ajaxable>
+		<header-portlet-css>/css/ep/main.css</header-portlet-css>
+		<css-class-wrapper>ct-portlet</css-class-wrapper>
+	</portlet>
+	<portlet>
 		<portlet-name>ctChangeBankAccount</portlet-name>
 		<icon>/icon.png</icon>
 		<instanceable>false</instanceable>

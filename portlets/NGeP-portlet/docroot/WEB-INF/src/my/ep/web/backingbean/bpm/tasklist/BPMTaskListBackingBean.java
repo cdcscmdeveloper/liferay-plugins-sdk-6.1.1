@@ -227,6 +227,10 @@ public class BPMTaskListBackingBean extends
 				url = "review-amendment";
 			}
 			
+			if(res.getTaskName().equalsIgnoreCase("Review Breached Amendment Request")) {
+				url = "procurement-board";
+			}
+			
 			ExternalContext externalContext = FacesContext.getCurrentInstance().getExternalContext();
 
 			//externalContext.redirect("/web/guest/" +url +"?taskId="+taskId);

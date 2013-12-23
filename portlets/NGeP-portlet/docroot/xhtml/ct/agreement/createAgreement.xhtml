@@ -40,12 +40,6 @@
 				  </p:column> 
 				</p:dataTable>
 			 </h:panelGrid>
-			 <h:panelGrid style="width:100%" columnClasses="column-align-right">
-			<p:commandButton id="downloadLink" value="Download" ajax="false" onclick="PrimeFaces.monitorDownload(start, stop)"   
-                      icon="ui-icon-download">  
-                <p:fileDownload value="#{agreementBackingBean.download}" />  
-            </p:commandButton>  
-			 </h:panelGrid>
 			 <h:panelGrid style="width:100%">  
                <p:spacer height="5"/>
                  <p:outputLabel value="#{lbl['lbl.ct.ag.appendixes']}" style="float:left;" />

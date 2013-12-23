@@ -21,8 +21,8 @@
      <p:panel id="trReason" header="#{lbl['lbl.ct.tr.reason']}" toggleable="true"  toggleSpeed="500">
        <h:panelGrid style="width:100%">
 			<p:dataTable id="dataTable" var="data" value="#{contractDetailsBackingBean.managedBean.termination.ctTerminationReasons}" rowIndexVar="index" 
-			  widgetVar="dataTableObj" lazy="false" dynamic="true" paginator="true" paginatorPosition="bottom" paginatorAlwaysVisible="true"
-			  emptyMessage="No Records!" rows="10">
+			  widgetVar="dataTableObj" lazy="false" dynamic="true" 
+			  emptyMessage="No Records!">
 			   <p:columnGroup type="header"> 
 				<p:row> 
 				  <p:column style="width:200px;" headerText="#{lbl['lbl.ct.tr.table.reason']}"  /> 
@@ -57,55 +57,5 @@
 				  <p:commandButton value="No" 	onclick="confirmation.hide()" type="button" />
 				</h:panelGrid>
 			</p:confirmDialog>
-		</p:panel>
-		<p:panel id="panelClause" header="#{lbl['lbl.ct.tr.panel.claus']}"  toggleable="true"  toggleSpeed="500">
-        <h:panelGrid style="width:100%">
-		<p:dataTable id="clauseTable" var="data" value="#{contractDetailsBackingBean.managedBean.terminationClauseList}" rowIndexVar="index"
-		   widgetVar="dataTableObj" lazy="false" dynamic="true" paginator="true" paginatorPosition="bottom"
-		   paginatorAlwaysVisible="true" emptyMessage="No Records!" rows="10">
-		   <p:columnGroup type="header"> 
-		    <p:row> 
-			   <p:column style="width:200px;" headerText="#{lbl['lbl.ct.tr.table1.clausNo']}" /> 
-			   <p:column style="width:450px;" headerText="#{lbl['lbl.ct.tr.table1.clausDesc']}" /> 
-		       <p:column style="width:50px;" headerText="#{lbl['lbl.ct.tr.table1.action']}" />
-		    </p:row>							
-		   </p:columnGroup>
-		   <p:column><h:outputLabel value="#{data.clauseName}" style="float:left;"/></p:column>	
-		   <p:column><h:outputLabel value="#{data.clauseDesc}" style="float:left;"/></p:column> 	
-		   <p:column styleClass="column-align-center">
-		     <p:commandLink partialSubmit="true" process="@this"  onsuccess="confirmation.show()">
-		       <f:setPropertyActionListener value="#{data}" target="#{contractDetailsBackingBean.managedBean.terminationClause}" />
-		       <p:graphicImage library="ep/images/design" name="delete.png" value="/resources/ep/images/design/delete.png" title="Delete" />
-		  </p:commandLink>
-		   </p:column>						
-		  </p:dataTable>
-		 </h:panelGrid>
-		 <h:panelGrid style="width:100%" columnClasses="column-align-right">
-			<p:commandButton value="Add" process="@this" partialSubmit="true" 
-			   icon="ui-icon-add" onclick="dlg2.show();">
-			</p:commandButton>
-		 </h:panelGrid>
-		  <p:confirmDialog message="Do you want to delete the record?"  closable="true" appendToBody="true" header="Delete Confirmation"
-			   severity="alert" widgetVar="confirmation1">
-                 <h:panelGrid columns="2">
-				 <p:commandButton value="Yes" update="clauseTable" partialSubmit="true" process="@this"
-				    onclick="confirmation1.hide();" actionListener="#{contractDetailsBackingBean.deleteTerminateCaluse()}"/>
-				  <p:commandButton value="No" 	onclick="confirmation1.hide()" type="button" />
-				</h:panelGrid>
-			</p:confirmDialog>
-		</p:panel>
-        <p:dialog id="modalDialog" widgetVar="dlg2" modal="true" width="600" height="400">
-		   <p:panel  id="popupTableTr">
-             <p:dataTable id="dataTable2" var="data" value="" rowIndexVar="index" widgetVar="dataTableObj"
-                paginator="true" paginatorPosition="bottom" paginatorAlwaysVisible="true" emptyMessage="No Records!" rows="10">
-                	   <f:facet name="header">Section</f:facet>
-			 </p:dataTable>
-			 <f:facet name="footer">
-			 <h:panelGrid columns="2"  style="height:40px;vertical-align: middle;float:right;">
-			   <p:commandButton value="Select" icon="ui-icon-select"  process="modalDialog" update="clauseTable,modalDialog" onclick="dlg2.hide();"/>
-               <p:commandButton value="Cancel" icon="ui-icon-cancel" type="button" ajax="false" onclick="dlg2.hide();" />
-			</h:panelGrid>
-			</f:facet>
-		</p:panel>
-	</p:dialog>                          
+		</p:panel>      
 </ui:composition>
