@@ -161,6 +161,7 @@ public class SmApplicationBackingBean extends
 			}
 			smAppl = defaultSmAppl(smAppl);
 			smAppl.setSmStaffTotals(getStaffList(smAppl.getSupplierType()));
+			smAppl.setCurrentActiveTab(0);
 			getManagedBean().setSmAppl(smAppl);
 			getManagedBean().setTabActiveIndex(0);
 			getManagedBean().setOfficeFacility(new SmFacility());
@@ -362,6 +363,11 @@ public class SmApplicationBackingBean extends
 			// .add(getManagedBean().getSmAppl());
 			// }
 			// TODO to be confirmed whether reqd to save the appln as draft
+			if (getManagedBean().getSmAppl().getCurrentActiveTab() < outputTab) {
+				getManagedBean().getSmAppl().setCurrentActiveTab(outputTab);
+			} else {
+				System.out.println(" ****** REMAIN PREV VALUE ********");
+			}
 			getManagedBean().setTabActiveIndex(outputTab);
 			// return SupplierManagementConst.PROCEED_MOF_REG;
 
@@ -446,7 +452,7 @@ public class SmApplicationBackingBean extends
 	public void svcSelected(AjaxBehaviorEvent e) {
 		System.out.println(" ******* On Change Office Facility ***** "
 				+ getManagedBean().getPoSiteVisitType());
-		
+
 	}
 
 	// -- Process Branches Start

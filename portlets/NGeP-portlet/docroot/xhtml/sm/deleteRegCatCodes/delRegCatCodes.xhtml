@@ -7,7 +7,6 @@
 	xmlns:p="http://primefaces.org/ui"
 	xmlns:c="http://java.sun.com/jsp/jstl/core">
 	<ui:define name="resourceSection">
-
 	</ui:define>
 
 	<ui:define name="contentSection">
@@ -18,8 +17,14 @@
 			<p:dataTable var="catBean" id="delCatDT"
 				value="#{deleteCategoryCodeBB.managedBean.smAppl.smSupplierCategories}"
 				selection="#{deleteCategoryCodeBB.managedBean.selectedCategories}"
-				rowKey="#{catBean.supplierCategoryId}" rowIndexVar="index" >
+				rowKey="#{catBean.supplierCategoryId}" rowIndexVar="index">
 				<p:ajax event="rowSelect"
+					listener="#{deleteCategoryCodeBB.onRowSelect}"
+					update=":form:catDelPan,:form:catDelConfirm" />
+				<p:ajax event="rowUnselectCheckbox"
+					listener="#{deleteCategoryCodeBB.onRowUnSelect}"
+					update=":form:catDelPan,:form:catDelConfirm" />
+				<p:ajax event="rowSelectCheckbox"
 					listener="#{deleteCategoryCodeBB.onRowSelect}"
 					update=":form:catDelPan,:form:catDelConfirm" />
 				<p:ajax event="rowUnselect"

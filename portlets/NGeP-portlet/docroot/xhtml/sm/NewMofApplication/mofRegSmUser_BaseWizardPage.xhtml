@@ -21,74 +21,74 @@
 							<ul class="menu-text">
 								<li><h:outputText
 										value="#{lbl['lbl.sm.wizard.companyStepLbl']}"
-										rendered="#{backingBean.managedBean.tabActiveIndex eq 0}" />
+										rendered="#{backingBean.managedBean.smAppl.currentActiveTab eq 0}" />
 									<p:commandLink value="#{lbl['lbl.sm.wizard.companyStepLbl']}"
 										actionListener="#{backingBean.setTabValue(backingBean.managedBean.tabActiveIndex,'0')}"
 										action="#{backingBean.updateSmAppl}" update=":form"
-										rendered="#{backingBean.managedBean.tabActiveIndex gt 0}" /></li>
+										rendered="#{backingBean.managedBean.smAppl.currentActiveTab gt 0}" /></li>
 
 								<li><h:outputText
 										value="#{lbl['lbl.sm.wizard.branchStepLbl']}"
-										rendered="#{backingBean.managedBean.tabActiveIndex le 1}" />
+										rendered="#{backingBean.managedBean.smAppl.currentActiveTab le 1}" />
 									<p:commandLink value="#{lbl['lbl.sm.wizard.branchStepLbl']}"
 										actionListener="#{backingBean.setTabValue(backingBean.managedBean.tabActiveIndex,'1')}"
 										action="#{backingBean.updateSmAppl}" update=":form"
-										rendered="#{backingBean.managedBean.tabActiveIndex gt 1}" /></li>
+										rendered="#{backingBean.managedBean.smAppl.currentActiveTab gt 1}" /></li>
 
 								<li><h:outputText
 										value="#{lbl['lbl.sm.wizard.capitalStepLbl']}"
-										rendered="#{backingBean.managedBean.tabActiveIndex le 2}" />
+										rendered="#{backingBean.managedBean.smAppl.currentActiveTab le 2}" />
 									<p:commandLink value="#{lbl['lbl.sm.wizard.capitalStepLbl']}"
 										actionListener="#{backingBean.setTabValue(backingBean.managedBean.tabActiveIndex,'2')}"
 										action="#{backingBean.updateSmAppl}" update=":form"
-										rendered="#{backingBean.managedBean.tabActiveIndex gt 2}" /></li>
+										rendered="#{backingBean.managedBean.smAppl.currentActiveTab gt 2}" /></li>
 
 								<li><h:outputText
 										value="#{lbl['lbl.sm.wizard.personStepLbl']}"
-										rendered="#{backingBean.managedBean.tabActiveIndex le 3}" />
+										rendered="#{backingBean.managedBean.smAppl.currentActiveTab le 3}" />
 									<p:commandLink value="#{lbl['lbl.sm.wizard.personStepLbl']}"
 										actionListener="#{backingBean.setTabValue(backingBean.managedBean.tabActiveIndex,'3')}"
 										action="#{backingBean.updateSmAppl}" update=":form"
-										rendered="#{backingBean.managedBean.tabActiveIndex gt 3}" /></li>
+										rendered="#{backingBean.managedBean.smAppl.currentActiveTab gt 3}" /></li>
 
 								<li><h:outputText
 										value="#{lbl['lbl.sm.wizard.bankStepLbl']}"
-										rendered="#{backingBean.managedBean.tabActiveIndex le 4}" />
+										rendered="#{backingBean.managedBean.smAppl.currentActiveTab le 4}" />
 									<p:commandLink value="#{lbl['lbl.sm.wizard.bankStepLbl']}"
 										actionListener="#{backingBean.setTabValue(backingBean.managedBean.tabActiveIndex,'4')}"
 										action="#{backingBean.updateSmAppl}" update=":form"
-										rendered="#{backingBean.managedBean.tabActiveIndex gt 4}" /></li>
+										rendered="#{backingBean.managedBean.smAppl.currentActiveTab gt 4}" /></li>
 
 								<li><h:outputText
 										value="#{lbl['lbl.sm.wizard.catCodeStepLbl']}"
-										rendered="#{backingBean.managedBean.tabActiveIndex le 5}" />
+										rendered="#{backingBean.managedBean.smAppl.currentActiveTab le 5}" />
 									<p:commandLink value="#{lbl['lbl.sm.wizard.catCodeStepLbl']}"
 										actionListener="#{backingBean.setTabValue(backingBean.managedBean.tabActiveIndex,'5')}"
 										action="#{backingBean.updateSmAppl}" update=":form"
-										rendered="#{backingBean.managedBean.tabActiveIndex gt 5}" /></li>
+										rendered="#{backingBean.managedBean.smAppl.currentActiveTab gt 5}" /></li>
 
 								<li><h:outputText
 										value="#{lbl['lbl.sm.wizard.factoryStepLbl']}"
-										rendered="#{backingBean.managedBean.tabActiveIndex le 6}" />
+										rendered="#{backingBean.managedBean.smAppl.currentActiveTab le 6}" />
 									<p:commandLink value="#{lbl['lbl.sm.wizard.factoryStepLbl']}"
 										actionListener="#{backingBean.setTabValue(backingBean.managedBean.tabActiveIndex,'6')}"
 										action="#{backingBean.updateSmAppl}" update=":form"
-										rendered="#{backingBean.managedBean.tabActiveIndex gt 6}" /></li>
+										rendered="#{backingBean.managedBean.smAppl.currentActiveTab gt 6}" /></li>
 
 								<li><h:outputText
 										value="#{lbl['lbl.sm.wizard.supDocStepLbl']}"
-										rendered="#{backingBean.managedBean.tabActiveIndex le 7}" />
+										rendered="#{backingBean.managedBean.smAppl.currentActiveTab le 7}" />
 									<p:commandLink value="#{lbl['lbl.sm.wizard.supDocStepLbl']}"
 										actionListener="#{backingBean.setTabValue(backingBean.managedBean.tabActiveIndex,'7')}"
 										action="#{backingBean.updateSmAppl}" update=":form"
-										rendered="#{backingBean.managedBean.tabActiveIndex gt 7}" /></li>
+										rendered="#{backingBean.managedBean.smAppl.currentActiveTab gt 7}" /></li>
 
 								<li><h:outputText
 										value="#{lbl['lbl.sm.wizard.paymentLbl']}" /></li>
 							</ul>
 							<ul id="tripMeter" class="menu-line">
 								<c:choose>
-									<c:when test="#{backingBean.managedBean.tabActiveIndex eq 0}">
+									<c:when test="#{backingBean.managedBean.smAppl.currentActiveTab eq 0}">
 										<li class="space red-dot"></li>
 									</c:when>
 									<c:otherwise>
@@ -96,10 +96,10 @@
 									</c:otherwise>
 								</c:choose>
 								<c:choose>
-									<c:when test="#{backingBean.managedBean.tabActiveIndex lt 1}">
+									<c:when test="#{backingBean.managedBean.smAppl.currentActiveTab lt 1}">
 										<li class="space black-dot"></li>
 									</c:when>
-									<c:when test="#{backingBean.managedBean.tabActiveIndex gt 1}">
+									<c:when test="#{backingBean.managedBean.smAppl.currentActiveTab gt 1}">
 										<li class="space green-dot"></li>
 									</c:when>
 									<c:otherwise>
@@ -107,10 +107,10 @@
 									</c:otherwise>
 								</c:choose>
 								<c:choose>
-									<c:when test="#{backingBean.managedBean.tabActiveIndex lt 2}">
+									<c:when test="#{backingBean.managedBean.smAppl.currentActiveTab lt 2}">
 										<li class="space black-dot"></li>
 									</c:when>
-									<c:when test="#{backingBean.managedBean.tabActiveIndex gt 2}">
+									<c:when test="#{backingBean.managedBean.smAppl.currentActiveTab gt 2}">
 										<li class="space green-dot"></li>
 									</c:when>
 									<c:otherwise>
@@ -118,10 +118,10 @@
 									</c:otherwise>
 								</c:choose>
 								<c:choose>
-									<c:when test="#{backingBean.managedBean.tabActiveIndex lt 3}">
+									<c:when test="#{backingBean.managedBean.smAppl.currentActiveTab lt 3}">
 										<li class="space black-dot"></li>
 									</c:when>
-									<c:when test="#{backingBean.managedBean.tabActiveIndex gt 3}">
+									<c:when test="#{backingBean.managedBean.smAppl.currentActiveTab gt 3}">
 										<li class="space green-dot"></li>
 									</c:when>
 									<c:otherwise>
@@ -129,10 +129,10 @@
 									</c:otherwise>
 								</c:choose>
 								<c:choose>
-									<c:when test="#{backingBean.managedBean.tabActiveIndex lt 4}">
+									<c:when test="#{backingBean.managedBean.smAppl.currentActiveTab lt 4}">
 										<li class="space black-dot"></li>
 									</c:when>
-									<c:when test="#{backingBean.managedBean.tabActiveIndex gt 4}">
+									<c:when test="#{backingBean.managedBean.smAppl.currentActiveTab gt 4}">
 										<li class="space green-dot"></li>
 									</c:when>
 									<c:otherwise>
@@ -140,10 +140,10 @@
 									</c:otherwise>
 								</c:choose>
 								<c:choose>
-									<c:when test="#{backingBean.managedBean.tabActiveIndex lt 5}">
+									<c:when test="#{backingBean.managedBean.smAppl.currentActiveTab lt 5}">
 										<li class="space black-dot"></li>
 									</c:when>
-									<c:when test="#{backingBean.managedBean.tabActiveIndex gt 5}">
+									<c:when test="#{backingBean.managedBean.smAppl.currentActiveTab gt 5}">
 										<li class="space green-dot"></li>
 									</c:when>
 									<c:otherwise>
@@ -151,10 +151,10 @@
 									</c:otherwise>
 								</c:choose>
 								<c:choose>
-									<c:when test="#{backingBean.managedBean.tabActiveIndex lt 6}">
+									<c:when test="#{backingBean.managedBean.smAppl.currentActiveTab lt 6}">
 										<li class="space black-dot"></li>
 									</c:when>
-									<c:when test="#{backingBean.managedBean.tabActiveIndex gt 6}">
+									<c:when test="#{backingBean.managedBean.smAppl.currentActiveTab gt 6}">
 										<li class="space green-dot"></li>
 									</c:when>
 									<c:otherwise>
@@ -162,10 +162,10 @@
 									</c:otherwise>
 								</c:choose>
 								<c:choose>
-									<c:when test="#{backingBean.managedBean.tabActiveIndex lt 7}">
+									<c:when test="#{backingBean.managedBean.smAppl.currentActiveTab lt 7}">
 										<li class="space black-dot"></li>
 									</c:when>
-									<c:when test="#{backingBean.managedBean.tabActiveIndex gt 7}">
+									<c:when test="#{backingBean.managedBean.smAppl.currentActiveTab gt 7}">
 										<li class="space green-dot"></li>
 									</c:when>
 									<c:otherwise>
@@ -173,7 +173,7 @@
 									</c:otherwise>
 								</c:choose>
 								<c:choose>
-									<c:when test="#{backingBean.managedBean.tabActiveIndex lt 8}">
+									<c:when test="#{backingBean.managedBean.smAppl.currentActiveTab lt 8}">
 										<li class="black-dot"></li>
 									</c:when>
 									<c:otherwise>

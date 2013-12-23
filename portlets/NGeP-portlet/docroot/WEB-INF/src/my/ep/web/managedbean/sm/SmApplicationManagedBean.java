@@ -157,10 +157,12 @@ public class SmApplicationManagedBean extends BaseManagedBean {
 	private String selectedBpmAction;
 
 	private String taskId;
-	
+
 	private String headerMsg;
-	
+
 	private String poSiteVisitType;
+
+	private boolean testBlock;
 
 	public SmApplicationManagedBean() {
 		// TODO Checking the user role
@@ -370,6 +372,8 @@ public class SmApplicationManagedBean extends BaseManagedBean {
 		// For CategoryCodes End
 
 		prepareTemplateList();
+
+		testBlock = Boolean.TRUE;
 
 		System.out.println(" ********* END MANAGED BEAN CREATION ****** ");
 	}
@@ -849,6 +853,15 @@ public class SmApplicationManagedBean extends BaseManagedBean {
 
 	public void setPoSiteVisitType(String poSiteVisitType) {
 		this.poSiteVisitType = poSiteVisitType;
+	}
+
+	public boolean isTestBlock() {
+		return testBlock;
+	}
+
+	public void setTestBlock(boolean testBlock) {
+		this.testBlock = testBlock;
+
 	}
 
 }
