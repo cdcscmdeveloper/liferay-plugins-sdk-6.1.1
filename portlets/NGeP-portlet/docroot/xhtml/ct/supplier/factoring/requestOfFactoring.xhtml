@@ -30,15 +30,15 @@
 		   </tr>
 	       <tr>
 		       <td>	<p:outputLabel value="Contract No." /></td>
-		       <td>	<p:inputText style="width:170px;"  disabled="true"/> </td>
+		       <td>	<p:inputText style="width:130px;"  disabled="true"/> </td>
 		       <td>	<p:outputLabel value="Contract Name" /></td>
 		       <td>	<p:inputText style="width:170px;"  disabled="true"/> </td>
 	      </tr>
 	      <tr>
 	           <td>	<p:outputLabel value="Contract Effective Date" /></td>
-	           <td>	<p:inputText style="width:170px;"  disabled="true"/> </td>
+	           <td>	<p:inputText style="width:130px;"  disabled="true"/> </td>
 	           <td>	<p:outputLabel value="Contract Expiry Date" /></td>
-	           <td>	<p:inputText style="width:170px;"  disabled="true"/> </td>
+	           <td>	<p:inputText style="width:130px;"  disabled="true"/> </td>
 	     </tr>
 	   </table>
    </p:panel>
@@ -52,13 +52,16 @@
                         <f:selectItem itemLabel="CIMB Group" itemValue="2" /> 
                         </p:selectOneMenu>     </td>
 		          <td style="width:200px;">	 <p:outputLabel  value="Authorized Ref No."/>  </td>
-                  <td>  <p:inputText value="#{supplierBackingBean.managedBean.factoring.authRefNo}" style="width:170px;" disabled="true"/></td>
+                  <td>  <p:inputText value="#{supplierBackingBean.managedBean.factoring.authRefNo}" style="width:170px;" disabled="false"/></td>
              </tr>
              <tr>
                   <td>  <p:outputLabel value="Effective Date"/></td>
-                  <td>  <p:inputText style="width:120px;" value="#{supplierBackingBean.managedBean.factoring.effDate}" disabled="true"/></td>
+                  <td>  <p:calendar style="width:170px;" pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}"
+				          value="#{supplierBackingBean.managedBean.factoring.effDate}"
+				id="effdateCal" showOn="button" /></td>
                   <td> <p:outputLabel value="Expiry Date"/></td>
-                  <td> <p:inputText style="width:120px;" value="#{supplierBackingBean.managedBean.factoring.expDate}" disabled="true"/></td>
+                  <td> <p:calendar style="width:170px;" pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}"
+				          value="#{supplierBackingBean.managedBean.factoring.expDate}" id="expdateCal" showOn="button" /></td>
              </tr>
              <tr>
                   <td> <p:outputLabel value="Account No." />  </td>
@@ -79,6 +82,18 @@
 	               <td></td>
 	               <td></td>
 	       </tr>
+	    </table>
+	    <p:spacer height="8"/>
+	    <table style="width: 92%">
+	     <tr>
+	         <td style="width:200px;"><f:verbatim/></td>
+	         <td><p:outputLabel value="Therefore, according to the terms related to the payment for the requisition below, 
+	               The Government need to pay all that is needed to Us under the specific requisition directly to the (fill in the factoring company)"/></td>
+	     </tr>
+	     <tr>
+	       <td><p:outputLabel value="I Agree With Term"/></td>
+	        <td><p:selectBooleanCheckbox/>  </td>
+	        </tr>
 	    </table>
      </p:panel>
        <ui:include src="/xhtml/ct/shared/remarkAndAttachment.xhtml" />
