@@ -15,7 +15,7 @@
 
 		<table style="width: 100%">
 			<tr>
-				<td><p:tabView style="width: 70%;" id="searchTabId">
+				<td><p:tabView style="width: 100%;" id="searchTabId">
 
 						<p:tab id="tab2" title="Search">
 							<table style="margin-top: 10px;">
@@ -48,13 +48,6 @@
 						</p:tab>
 
 					</p:tabView></td>
-
-				<td><h:panelGroup
-						rendered="#{unspscCodeBackingBean.requisitioner}">
-						<p:commandLink action="#{catalogueBackingBean.viewCartListItem}">
-							<p:graphicImage value="/resources/ep/images/design/cart1.png"></p:graphicImage>( #{fn:length(catalogueBackingBean.managedBean.cartList)} )
-		</p:commandLink>
-					</h:panelGroup></td>
 			</tr>
 		</table>
 
@@ -86,7 +79,7 @@
 
 								<table style="width: 100%;">
 									<tr>
-										<td width="70%">
+										<td>
 
 											<table style="width: 100%;">
 												<tr>
@@ -172,38 +165,6 @@
 						</p:dataTable>
 
 					</p:panel></td>
-				<td width="30%" style="vertical-align: top;"><div
-						class="accordian-panel" style="width: 80%;">
-						<p:outputLabel styleClass="accordian-title" value="Watchlists"></p:outputLabel>
-						<p:accordionPanel multiple="true">
-							<p:tab
-								title="WishList ( #{fn:length(catalogueBackingBean.managedBean.wishLists)} ) ">
-								<p:dataGrid var="type" rowIndexVar="rowIndex"
-									value="#{catalogueBackingBean.managedBean.wishLists}"
-									columns="1" style="width: 100%;">
-
-
-									<table style="width: 100%;">
-										<tr>
-											<td width="80%"><p:commandLink
-													value="#{type.wishlistDesc}" update=":form:supplierItemID"
-													action="#{wishListBackingBean.filterWishListType(rowIndex)}"  /></td>
-											<td><p:commandLink
-													action="#{wishListBackingBean.deleteFavoriteWishList(rowIndex)}"
-													update=":form:supplierItemViewID" >
-													<p:graphicImage
-														value="/resources/ep/images/design/trash.png"></p:graphicImage>
-												</p:commandLink></td>
-										</tr>
-									</table>
-								</p:dataGrid>
-							</p:tab>
-						</p:accordionPanel>
-						<p:commandButton icon="ui-icon-add" value="Wishlist"
-							action="#{catalogueBackingBean.addIntoWishList}"
-							onclick="wishListPopUp.show()"
-							update="selectWishList, allWishListId" />
-					</div></td>
 
 			</tr>
 
