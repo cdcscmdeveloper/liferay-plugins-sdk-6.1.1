@@ -23,12 +23,8 @@
 	</p:panel>
 	<p:tabView id="tabview" value="Termination" dynamic="true" orientation="left" >
 	   <p:tab title="#{lbl['lbl.ct.menu.fd']}" >
-	     <ui:include src="/xhtml/ct/fulfilmentdetails/shared/fulfilment.xhtml"/>
-	     <ui:include src="/xhtml/ct/fulfilmentdetails/shared/quotationTender.xhtml" />
          <ui:include src="termination.xhtml"/>
-       </p:tab> 
-       <p:tab title="#{lbl['lbl.ct.menu.sup']}" >
-         <ui:include src="/xhtml/ct/fulfilmentdetails/shared/supplier.xhtml"/>    
+         <ui:include src="/xhtml/ct/shared/remarkAndAttachment.xhtml" /> 
        </p:tab> 
 	   <p:tab title="#{lbl['lbl.ct.menu.wletter']}" rendered="#{contractDetailsBackingBean.managedBean.terminateWarningLetter}" >
          <ui:include src="/xhtml/ct/fulfilmentdetails/termination/warningLetter.xhtml"/>
@@ -39,9 +35,6 @@
 	   <p:tab title="#{lbl['lbl.ct.menu.rletter']}" rendered="#{contractDetailsBackingBean.managedBean.terminateRejectLetter}">
          <ui:include src="/xhtml/ct/fulfilmentdetails/termination/rejectionLetter.xhtml" />    
        </p:tab>  
-	   <p:tab title="#{lbl['lbl.ct.menu.remark']}">
-         <ui:include src="/xhtml/ct/shared/remarkAndAttachment.xhtml" /> 
-     </p:tab> 
 	</p:tabView>
    </ui:define>  
 </ui:composition>

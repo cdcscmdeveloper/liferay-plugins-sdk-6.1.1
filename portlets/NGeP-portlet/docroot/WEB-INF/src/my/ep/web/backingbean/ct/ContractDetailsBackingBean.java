@@ -312,6 +312,21 @@ public class ContractDetailsBackingBean extends BaseBackingBean<ContractDetailsM
 		return list;
 	}
     
+    public void changeSuspensionType(){
+    
+       try {
+			flush();
+    	    if(this.getManagedBean().getSuspensionType().equalsIgnoreCase("Contract Activation")){
+			    this.getManagedBean().setActivation(true);
+			
+		  }else if(this.getManagedBean().getSuspensionType().equalsIgnoreCase("Contract Suspension")){
+			this.getManagedBean().setSuspension(true);
+			
+		  }
+       }catch (Exception e) {
+			System.out.println(e);
+		}
+    }
     public void changeField() {
 
 		try {
@@ -331,11 +346,26 @@ public class ContractDetailsBackingBean extends BaseBackingBean<ContractDetailsM
 			} else if (this.getManagedBean().getTermination().getCaRecommendation().getCode().equalsIgnoreCase("156")) {
 				this.getManagedBean().setTerminateRejectLetter(true);
 
-			}
+			} 
 		} catch (Exception e) {
 			System.out.println(e);
 		}
 	}
+    
+    private void flushDiscip() {
+    	this.getManagedBean().setDisciplinaryValue(false);
+    }
+    public void ChkDisciplinaryAction(){
+    	
+    	try {
+    		flushDiscip();
+			if(this.getManagedBean().isDisciplinaryAction()){
+				this.getManagedBean().setDisciplinaryValue(true);
+			}
+    	} catch (Exception e) {
+			System.out.println(e);
+		}
+    }
     
     private void flush() {
     	
@@ -346,6 +376,8 @@ public class ContractDetailsBackingBean extends BaseBackingBean<ContractDetailsM
 		this.getManagedBean().setTerminateNotice(false);
 		this.getManagedBean().setTerminateRejectLetter(false);
 		this.getManagedBean().setTerminateWarningLetter(false);
+		this.getManagedBean().setSuspension(false);
+		this.getManagedBean().setActivation(false);
 	}
     
     public void onRowSelect(SelectEvent event) {
@@ -429,6 +461,16 @@ public class ContractDetailsBackingBean extends BaseBackingBean<ContractDetailsM
 	}
 
 	/*End*/
+	
+	/* Suspension Start */
+	 public List<SelectItem> getSuspentionTypes() {
+
+			List<SelectItem> list = new ArrayList<SelectItem>();
+			list.add(new SelectItem("Contract Activation", "Contract Activation"));
+			list.add(new SelectItem("Contract Suspension", "Contract Suspension"));
+			return list;
+		}
+	    
 	
 	/*Implementation of search methode*/
 	public void searchContract() {

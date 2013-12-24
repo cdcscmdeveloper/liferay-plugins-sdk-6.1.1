@@ -6,32 +6,32 @@
 	xmlns:p="http://primefaces.org/ui"
 	xmlns:c="http://java.sun.com/jsp/jstl/core"
 	xmlns:ac="http://ac.my/jsf/composite/cc" >
-	   <p:panel id="itemId" header="Item" toggleable="true"  toggleSpeed="500">
+	   <p:panel id="itemId" header="Item Details" toggleable="true"  toggleSpeed="500">
 	   <div style="overflow-x:auto">
-       <p:dataTable id="itemTable" var="data" value="#{contractDetailsBackingBean.managedBean.ctContractItem}" rowIndexVar="index" 
+       <p:dataTable id="itemTable" var="data" value=" " rowIndexVar="index" 
          widgetVar="dataTableObj" lazy="false" paginator="true"  paginatorPosition="bottom" paginatorAlwaysVisible="true"
          emptyMessage="No Records!">
 		  <ac:paginator for="itemTable"/>
             <p:columnGroup type="header"> 
 			 <p:row> 
-				<p:column rowspan="1" headerText="Item Type" /> 
-				<p:column rowspan="1" headerText="Item Code" /> 
-				<p:column rowspan="1" headerText="Start Date" /> 	
-				<p:column rowspan="1" headerText="End Date" /> 							
-				<p:column colspan="1" headerText="Action"/>
+				<p:column rowspan="1" style="width:150px;" headerText="Item Type" /> 
+				<p:column rowspan="1" style="width:200px;" headerText="Item Name" /> 
+				<p:column rowspan="1" style="width:150px;" headerText="Effective Date" /> 	
+				<p:column rowspan="1" style="width:150px;" headerText="Expiry Date" /> 							
+				<p:column colspan="1" style="width:100px;" headerText="Action"/>
 			 </p:row>							
 		   </p:columnGroup>
-		   <p:column><p:outputLabel value ="Product" style="float:left;"/> </p:column> 
-		   <p:column width="100"> 
-		       <p:outputLabel value ="EP 308X3120P" style="float:left;"/>
+		   <p:column><p:outputLabel value="Product" style="float:left;"/> </p:column> 
+		   <p:column> 
+		       <p:outputLabel value ="EP 308X3120P" style="float:left;width:250px;"/>
 		   </p:column> 
-		   <p:column width="100">
-		     <p:calendar value="#{data.suspendFrom}" id="calItem" showOn="button"/>
+		   <p:column>
+		     <p:calendar value="12/12/2013" id="calItem" size="15" showOn="button"/>
 		   </p:column> 
 		   <p:column> 
-		      <p:calendar value="#{data.suspendTo}" id="calItem1" showOn="button"/>
+		      <p:calendar value="11/12/2014" id="calItem1" size="15" showOn="button"/>
 		   </p:column> 
-		   <p:column>  <p:selectOneMenu disabled="false" style="width:110px;">
+		   <p:column>  <p:selectOneMenu disabled="false" style="width:90px;">
 				<f:selectItem itemLabel="-Select One-" itemValue="" />	
 				<f:selectItem itemLabel="Active" itemValue="Active" />	
 				<f:selectItem itemLabel="Suspend" itemValue="Suspend" />	
@@ -40,30 +40,5 @@
 		  </p:column>
 		 </p:dataTable>	
 	  </div>	
-		 <p:spacer width="12"/>	
-		 <div style="overflow-x:auto">
-		 <p:dataTable id="itemTableDetails" var="data"  value="" rowIndexVar="index" widgetVar="dataTableObj"
-	        lazy="false" paginator="true" paginatorPosition="bottom" paginatorAlwaysVisible="true" emptyMessage="No Records!">
-			  <ac:paginator for="itemTableDetails"/>
-			<p:columnGroup type="header"> 
-			<p:row> 
-				<p:column  headerText="Item Code" /> 
-				<p:column headerText="Item Name" /> 	
-				<p:column headerText="Supplier's SKU" /> 		
-				<p:column headerText="Currency" /> 					
-				<p:column headerText="Price" />
-				<p:column headerText="UOM" />	
-				<p:column headerText="Minimum Order"/>
-			</p:row>
-			</p:columnGroup>
-			<p:column> <p:outputLabel value ="EP 308X3120P" style="float:left;"/> </p:column>
-			<p:column> <p:outputLabel value ="DESKTOP" style="float:left;"/> </p:column>
-			<p:column> <p:outputLabel value ="KHAI" style="float:left;"/> </p:column>
-			<p:column> <p:outputLabel value ="MYR" style="float:left;"/> </p:column>
-			<p:column> <p:outputLabel value ="2300" style="float:left;"/> </p:column>
-			<p:column> <p:outputLabel value ="UNIT" style="float:left;"/> </p:column>
-			<p:column> <p:outputLabel value ="10" style="float:left;"/> </p:column>
-		 </p:dataTable>	
-		 </div>		
 		</p:panel>            
 </ui:composition>

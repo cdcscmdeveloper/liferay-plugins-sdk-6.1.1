@@ -118,8 +118,8 @@ public class SupplierBackingBean extends BaseBackingBean<SupplierManagedBean> {
  			this.getManagedBean().setAction(new String[]{BpmOutcomeConst.BPM_SAVE, BpmOutcomeConst.BPM_SUBMIT});
  		}
          
-		ContractBackingBean ctBB = new ContractBackingBean();
-		ctBB.initializeRemarkAndAttachement(getManagedBean().getRemarkList(), getManagedBean().getAttachmentList());
+	//	ContractBackingBean ctBB = new ContractBackingBean();
+	//	ctBB.initializeRemarkAndAttachement(getManagedBean().getRemarkList(), getManagedBean().getAttachmentList());
 
 	}
 	

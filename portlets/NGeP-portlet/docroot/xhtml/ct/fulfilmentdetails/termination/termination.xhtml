@@ -5,20 +5,132 @@
 	xmlns:ui="http://java.sun.com/jsf/facelets"
 	xmlns:p="http://primefaces.org/ui"
 	xmlns:c="http://java.sun.com/jsp/jstl/core">
+	<p:panel id="fd" header="#{lbl['lbl.ct.panel.name']}" toggleable="true"  toggleSpeed="500">
+		<h:panelGrid columns="5" style="width:100%" columnClasses="columnWidth15">
+			<p:outputLabel value="#{lbl['lbl.ct.cno']}" />
+			<p:inputText value="#{contractDetailsBackingBean.managedBean.contractVer.ctContractValue.contractPhysicalNo}" style="width:170px;" disabled="true" />
+			<p:outputLabel value="#{lbl['lbl.ct.physicalNo']}" />
+			<p:inputText value="#{contractDetailsBackingBean.managedBean.contractVer.ctContractValue.contractPhysicalNo}" style="width:170px;" disabled="true" />				
+			<h:panelGrid columns="3">
+				<p:selectBooleanCheckbox
+					value="false" disabled="false" />
+				<p:spacer width="2" />
+				<p:outputLabel value="Concession" />
+			</h:panelGrid>
+			<p:outputLabel value="#{lbl['lbl.ct.effectiveDate']}" />
+			<h:inputText style="width:130px;" disabled="true"
+				value="#{contractDetailsBackingBean.managedBean.contractVer.ctContractValue.effDate}" >
+				<f:convertDateTime pattern="dd/MM/yyyy"></f:convertDateTime>
+				</h:inputText>
+			<p:outputLabel value="#{lbl['lbl.ct.edate']}" />
+			<h:inputText style="width:130px;" disabled="true"
+				value="#{contractDetailsBackingBean.managedBean.contractVer.ctContractValue.expDate}" >
+				<f:convertDateTime pattern="dd/MM/yyyy"></f:convertDateTime>
+				</h:inputText>
+			
+			<h:panelGrid columns="3">
+				<p:selectBooleanCheckbox value="true" disabled="true" />
+				<p:spacer width="2" />	
+				<p:outputLabel value="Exempted" />
+			</h:panelGrid>
+			
+				<p:outputLabel value="#{lbl['lbl.ct.contractAmount']}" />
+			<p:inputText value="#{contractDetailsBackingBean.managedBean.contractVer.ctContractValue.contractAmount}"
+				 disabled="true" style="width:130px;"/>	
+				 <p:outputLabel value="#{lbl['lbl.ct.loaNo']}" />
+		    	<p:inputText style="width:130px;" disabled="true" 
+				    value="#{contractDetailsBackingBean.managedBean.contractVer.ctContract.loaNo}" />	
+			<h:panelGrid columns="3">
+				<p:selectBooleanCheckbox
+					value="#{contractDetailsBackingBean.managedBean.contractVer.ctContract.agreement}" disabled="true" />
+				<p:spacer width="2" />	
+				<p:outputLabel value="#{lbl['lbl.ct.agreement']}" />
+			</h:panelGrid>
+			 <p:outputLabel value="Supplier Name" />  
+              <p:inputText value="KHAI SDN BHD" disabled="true" style="width:170px;"/> 	
+			
+			 <p:outputLabel value="#{lbl['lbl.ct.dperiod']}" />
+			<h:panelGrid columns="2">
+				<p:inputText size="8" value="#{contractDetailsBackingBean.managedBean.contractVer.ctContractValue.deliveryTerm}" disabled="true"/>
+				<p:outputLabel value="Days" />
+			</h:panelGrid>	
+			<h:panelGrid columns="3">
+				<p:selectBooleanCheckbox
+					value="#{contractDetailsBackingBean.managedBean.contractVer.ctContract.mto}"
+					disabled="true" style="text-align:top;" />
+				<p:spacer width="2" />	
+				<p:outputLabel value="#{lbl['lbl.ct.mto']}" style="text-align:top;" />
+			</h:panelGrid>		
+			 <h:panelGroup>
+		      <div style="height: 40px; vertical-align: top;">
+			  <p:outputLabel for="contractName" value="Contract Title" />
+			</div>
+			</h:panelGroup>
+			 <h:panelGrid>
+			<h:inputTextarea id="contractName"
+				value="#{contractDetailsBackingBean.managedBean.contractVer.ctContract.contractName}"
+				required="false" rows="3" cols="35" disabled="true"
+				autoResize="false" />	
+			</h:panelGrid>		
+			<f:verbatim /><f:verbatim /> <f:verbatim /><f:verbatim /><f:verbatim />
+			
+			<h:outputLabel
+				rendered="#{contractDetailsBackingBean.managedBean.contractVer.ctContract.circular.latestCircularVer.circularNo != null}"
+				value="#{lbl['lbl.ct.circularNo']}" />
+			<p:commandLink
+				rendered="#{contractDetailsBackingBean.managedBean.contractVer.ctContract.circular.latestCircularVer.circularNo != null}"
+				style="margin-right:20px;" ajax="false">
+				<h:outputText
+					value="#{contractDetailsBackingBean.managedBean.contractVer.ctContract.circular.latestCircularVer.circularNo}"
+					styleClass="linkcommand" />
+			</p:commandLink>
+		</h:panelGrid>
+	</p:panel>
     <p:panel id="terCont" header="#{lbl['lbl.ct.tr.panel.header']}" toggleable="true"  toggleSpeed="500">
-            <h:panelGrid columns="4" style="width:100%" columnClasses="columnWidth15">  
-               <p:outputLabel value="#{lbl['lbl.ct.tr.mutual']}"/>  
-               <p:selectBooleanCheckbox value="#{contractDetailsBackingBean.managedBean.contractVer.ctTermination.mutualTerminate}" disabled="true"/> 
-               <p:outputLabel  value="#{lbl['lbl.ct.tr.recom']}"/>  
-               <p:selectOneMenu value="#{contractDetailsBackingBean.managedBean.termination.caRecommendation.code}" style="width:170px;">
+        <table style="width: 100%">
+            <tr>
+               <td style="width:115px;"> <p:outputLabel  value="#{lbl['lbl.ct.tr.recom']}"/>  </td>
+               <td> <p:selectOneMenu value="#{contractDetailsBackingBean.managedBean.termination.caRecommendation.code}" style="width:180px;">
                   <f:selectItems value="#{contractDetailsBackingBean.getDropdownValues(PmCodeCatConst.ctTerminationRecommendType)}" />
             	   <p:ajax event="change" update=":form:tabview" listener="#{contractDetailsBackingBean.changeField}" process="@this"/>  
-               </p:selectOneMenu>    
-               <p:outputLabel value="#{lbl['lbl.ct.tr.date']}"/>
-               <p:calendar style="width:120px;" value="#{contractDetailsBackingBean.managedBean.termination.terminationDate}" id="popupButtonCal3" showOn="button" />
-	         </h:panelGrid> 
-     </p:panel>
-     <p:panel id="trReason" header="#{lbl['lbl.ct.tr.reason']}" toggleable="true"  toggleSpeed="500">
+               </p:selectOneMenu>   </td>
+               </tr> 
+                 <tr><td><p:spacer height="2"/></td></tr>
+               <tr>
+                    <td style="width:115px;"><p:outputLabel value="Disciplinary Action"/>  </td>
+                    <td><p:selectBooleanCheckbox value="#{contractDetailsBackingBean.managedBean.disciplinaryAction}">
+                         <p:ajax event="change" update=":form:tabview" listener="#{contractDetailsBackingBean.ChkDisciplinaryAction}" process="@this"/> 
+                        </p:selectBooleanCheckbox>
+               </td> 
+            </tr>
+            </table>
+             <p:spacer height="2"/>
+             <p:outputPanel rendered="#{contractDetailsBackingBean.managedBean.disciplinaryValue}">
+               <table style="width: 100%">
+               <tr>
+                   <td style="width:115px;"> <p:outputLabel value="Complaint Against Supplier" /></td>
+			       <td>   <p:inputText  style="width:170px;" /></td>
+			       <td>   <p:outputLabel value="Complaint Type" /></td>
+			       <td>   <p:selectOneMenu value=" " style="width:170px;">
+                          <f:selectItem itemValue="-Select One-" itemLabel="-Select One-" />
+                              <f:selectItem itemValue="Breach The Obligation Of Tender / Contract" itemLabel="Breach The Obligation Of Tender / Contract" />
+                          </p:selectOneMenu></td>
+                          <td style="width:130px;"><f:verbatim></f:verbatim></td>
+                  </tr>
+                  </table>
+                  <h:panelGrid columns="2">
+                   <h:panelGroup>
+		                <div style="height:90px;width:115px; vertical-align: top;">
+			               <p:outputLabel for="complaintDesc" value="Complaint Details" />
+			            </div>
+			       </h:panelGroup>
+			       <h:panelGrid>
+			       <h:inputTextarea id="complaintDesc"
+				             value=" " rows="7" cols="103" disabled="false" autoResize="false" />	
+			</h:panelGrid>		
+           </h:panelGrid>       
+		</p:outputPanel>
+       <p:spacer height="10"/>
        <h:panelGrid style="width:100%">
 			<p:dataTable id="dataTable" var="data" value="#{contractDetailsBackingBean.managedBean.termination.ctTerminationReasons}" rowIndexVar="index" 
 			  widgetVar="dataTableObj" lazy="false" dynamic="true" 

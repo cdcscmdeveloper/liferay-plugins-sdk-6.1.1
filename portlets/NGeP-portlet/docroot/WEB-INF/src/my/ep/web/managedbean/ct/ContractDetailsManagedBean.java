@@ -79,6 +79,8 @@ public class ContractDetailsManagedBean extends BaseManagedBean{
 	private List<CtContract> contractList = new ArrayList<CtContract>();
 	private CtContract ctContract;
 	
+	private boolean disciplinaryAction;
+	private boolean disciplinaryValue;
 	private boolean terminateNotice;
 	private boolean terminateRejectLetter;
 	private boolean terminateWarningLetter;
@@ -114,6 +116,9 @@ public class ContractDetailsManagedBean extends BaseManagedBean{
 	
 	private String projectName;
 	private String projectDescription;
+	private String suspensionType;
+	private boolean activation = true;
+	private boolean suspension;
 	
 	public String[] getAction() {
 		return action;
@@ -607,7 +612,46 @@ public class ContractDetailsManagedBean extends BaseManagedBean{
 	public void setApprovrLetter(boolean approvrLetter) {
 		this.approvrLetter = approvrLetter;
 	}
-	
+
+	public String getSuspensionType() {
+		return suspensionType;
+	}
+
+	public void setSuspensionType(String suspensionType) {
+		this.suspensionType = suspensionType;
+	}
+
+	public boolean isActivation() {
+		return activation;
+	}
+
+	public void setActivation(boolean activation) {
+		this.activation = activation;
+	}
+
+	public boolean isSuspension() {
+		return suspension;
+	}
+
+	public void setSuspension(boolean suspension) {
+		this.suspension = suspension;
+	}
+
+	public boolean isDisciplinaryAction() {
+		return disciplinaryAction;
+	}
+
+	public void setDisciplinaryAction(boolean disciplinaryAction) {
+		this.disciplinaryAction = disciplinaryAction;
+	}
+
+	public boolean isDisciplinaryValue() {
+		return disciplinaryValue;
+	}
+
+	public void setDisciplinaryValue(boolean disciplinaryValue) {
+		this.disciplinaryValue = disciplinaryValue;
+	}
 	
 	
 }
