@@ -96,6 +96,38 @@
 			
 		}
 	</script>
+	<script language="javascript">
+	function date_time(id)
+{
+        date = new Date;
+        year = date.getFullYear();
+        month = date.getMonth();
+        months = new Array('January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December');
+        d = date.getDate();
+        day = date.getDay();
+        days = new Array('Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday');
+        h = date.getHours();
+        if(h<10)
+        {
+                h = "0"+h;
+        }
+        m = date.getMinutes();
+        if(m<10)
+        {
+                m = "0"+m;
+        }
+        s = date.getSeconds();
+        if(s<10)
+        {
+                s = "0"+s;
+        }
+        result = ''+days[day]+', '+d+' '+months[month]+' '+year+', '+h+':'+m+':'+s;
+        document.getElementById(id).innerHTML = result;
+        setTimeout('date_time("'+id+'");','1000');
+        return true;
+}
+	</script>
+
 </head>
 
 <body class="$css_class">
@@ -122,7 +154,16 @@ $theme.include($body_top_include)
             	#if ($is_signed_in)
 					<div class="middle-navi-right-wrapper">
                     <ul>
-                    	<li class="divider"></li>
+                        <li class="hide"><a href="#"><img src="$images_folder/navi/btn-disabled.png" /></a></li>
+                        <li class="divider hide"></li>
+                        <li class="btn-smaller hide"><a href="javascript:resizeText(-1);">A-</a></li>
+                        <li class="btn-reset hide"><a href="javascript:resetText();">A</a></li>
+                        <li class="btn-larger hide"><a href="javascript:resizeText(1);">A+</a></li>
+                        <li class="divider hide"></li>
+                    	<li class="btn-red hide"><a href="#"><img src="$images_folder/navi/color-red.jpg" title="Red"/></a></li>
+                    	<li class="btn-green hide"><a href="#"><img src="$images_folder/navi/color-green.jpg" title="Green" /></a></li>
+                    	<li class="btn-blue hide"><a href="#"><img src="$images_folder/navi/color-blue.jpg" title="Blue" /></a></li>
+                    	<li class="divider hide"></li>
                         <li class="btn-language">
                             <a href="#" id="SelectedLanguage">English</a>
                             <div class="dropdown-language-wrapper">
@@ -131,7 +172,6 @@ $theme.include($body_top_include)
 								<a href="javascript:selectLanguage('ms');"><p>Bahasa Melayu</p></a>                            
                             </div>
                         </li>
-                    	<li class="divider"></li>
                     	#if (!$is_signed_in)
                     	<li class="btn-login-register divider-no-padding-right">
                     		<a class="btn-login-register" href="$sign_in_url" id="sign-in" rel="nofollow">Login or Register</a>	
@@ -147,8 +187,8 @@ $theme.include($body_top_include)
                     <ul>
                         <li><a href="#"><img src="$images_folder/navi/btn-disabled.png" /></a></li>
                         <li class="divider"></li>
-                        <li class="btn-reset"><a href="javascript:resetText();">Reset</a></li>
                         <li class="btn-smaller"><a href="javascript:resizeText(-1);">A-</a></li>
+                        <li class="btn-reset"><a href="javascript:resetText();">A</a></li>
                         <li class="btn-larger"><a href="javascript:resizeText(1);">A+</a></li>
                         <li class="divider"></li>
                     	<li class="btn-red"><a href="#"><img src="$images_folder/navi/color-red.jpg" title="Red"/></a></li>
@@ -165,7 +205,7 @@ $theme.include($body_top_include)
                         </li>
                     	#if (!$is_signed_in)
                     	<li class="btn-login-register divider-no-padding-right">
-                    		<a class="btn-login-register" href="$sign_in_url" id="sign-in" rel="nofollow">Login or Register</a>	
+                    		<a class="btn-login-register" href="$sign_in_url" id="sign-in" rel="nofollow" target="_blank">Login or Register</a>	
                     	</li>
                     	#end
                     </ul>
@@ -195,7 +235,13 @@ $theme.include($body_top_include)
                 </div>                
             	<div class="clear"></div>
             </div>
+                <div class="datetime">
+                    <span id="date_time">
+            		<script type="text/javascript">window.onload = date_time('date_time');</script>
+            		</span>
+            	</div>
         </div>
+        
 				
         	#if($has_navigation)
 			#parse("$full_templates_path/navigation.vm")

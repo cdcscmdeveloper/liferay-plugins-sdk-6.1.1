@@ -205,7 +205,7 @@ $theme.include($body_top_include)
                         </li>
                     	#if (!$is_signed_in)
                     	<li class="btn-login-register divider-no-padding-right">
-                    		<a class="btn-login-register" href="$sign_in_url" id="sign-in" rel="nofollow">Login or Register</a>	
+                    		<a class="btn-login-register" href="$sign_in_url" id="sign-in" rel="nofollow" target="_blank">Login or Register</a>	
                     	</li>
                     	#end
                     </ul>
