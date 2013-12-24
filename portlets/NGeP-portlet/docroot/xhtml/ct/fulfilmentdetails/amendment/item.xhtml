@@ -31,10 +31,6 @@
 			 <p:commandLink>
 			        <p:graphicImage library="ep/images/design" name="edit.png" value="/resources/ep/images/design/edit.png" title="Edit" />
 			  </p:commandLink>
-			<p:spacer width="2"/>
-			 <p:commandLink partialSubmit="true" process="@this" onsuccess="confirmation6.show()">
-			        <p:graphicImage library="ep/images/design" name="delete.png" value="/resources/ep/images/design/delete.png" title="Delete" />
-			  </p:commandLink>
 			</p:column>  
 		</p:dataTable>
 		<h:panelGrid columns="2" style="height:50px;text-align:bottom;">
@@ -85,10 +81,6 @@
 			<p:column styleClass="column-align-center" rendered="#{!contractDetailsBackingBean.managedBean.itemCeilingQuantity}">
 			<p:commandLink>
 			        <p:graphicImage library="ep/images/design" name="edit.png" value="/resources/ep/images/design/edit.png" title="Edit" />
-			  </p:commandLink>
-			<p:spacer width="2"/>
-			 <p:commandLink partialSubmit="true" process="@this" onsuccess="confirmation6.show()">
-			        <p:graphicImage library="ep/images/design" name="delete.png" value="/resources/ep/images/design/delete.png" title="Delete" />
 			  </p:commandLink>
 			</p:column>          
 		</p:dataTable>
