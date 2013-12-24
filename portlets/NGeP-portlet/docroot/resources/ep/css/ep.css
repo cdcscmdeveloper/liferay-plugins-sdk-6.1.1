@@ -1172,6 +1172,7 @@ repeat-x
 	padding: 0px;
 	background: #FFFFFF !important;
 	min-width: 40px;
+	height: 20px;
 }
 
 .ui-icon-seek-first {
