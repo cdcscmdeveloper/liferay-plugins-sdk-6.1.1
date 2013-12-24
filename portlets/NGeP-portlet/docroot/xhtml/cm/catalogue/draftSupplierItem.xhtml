@@ -23,7 +23,7 @@
 			update="draftSupplierItemID"></p:commandButton>
 	</div>
 
-
+<ac:lovPopup />
 
 	<p:dataTable id="draftSupplierItemID"
 		value="#{catalogueBackingBean.managedBean.maintainItemList}"
@@ -54,12 +54,10 @@
 			</f:facet>
 			<ac:lov id="draftUomLovId" lovId="PM_UOM" size="20" headerText="UOM Lov"
 				update=":form:maintenanceTabId:draftSupplierItemID"
-				saveObject="selectedSuppCat.pmUom"
+				saveObject="catalogueBackingBean.managedBean.maintainItemList[#{rowIndex}].pmUom"
 				value="#{selectedSuppCat.pmUom.uomName}"
 				conditionField="recordStatus^1">
 			</ac:lov>
-			<ac:lovPopup />
-
 		</p:column>
 		<p:column>
 			<f:facet name="header">
