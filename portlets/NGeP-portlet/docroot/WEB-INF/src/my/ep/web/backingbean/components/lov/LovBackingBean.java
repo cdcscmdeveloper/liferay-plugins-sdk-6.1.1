@@ -8,6 +8,7 @@ import java.util.ResourceBundle;
 import javax.el.ValueExpression;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
+import javax.faces.component.UIComponent;
 import javax.faces.context.FacesContext;
 import javax.faces.model.SelectItem;
 import javax.portlet.PortletRequest;
@@ -35,6 +36,7 @@ import my.ep.web.util.lookupservice.BusinessDelegate;
 
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
+import org.primefaces.component.datatable.DataTable;
 import org.primefaces.context.RequestContext;
 import org.springframework.web.context.WebApplicationContext;
 import org.springframework.web.context.support.WebApplicationContextUtils;
@@ -107,6 +109,9 @@ public class LovBackingBean implements Serializable {
 				
 				lovSO = (ILovSO)BusinessDelegate.getInstance().getServiceObject("cc", ILovSO.class);
 //				ISearchResultBean resultBean = lovSO.getSearchList(lovSearchBean);
+				
+				debugLogger("reqDTO: " + reqDTO);
+				debugLogger("reqDTO.getSearchBean(): " + reqDTO.getSearchBean());
 				
 				LovResDTO resDTO = lovSO.getSearchList(reqDTO);
 				ISearchResultBean resultBean = resDTO.getResultBean();	
@@ -212,6 +217,7 @@ public class LovBackingBean implements Serializable {
 
 	public void resetAction() {
 //		this.setResultList(new ArrayList());
+		this.getSearchDataModel().updatePagingResults(null);
 		this.setSearchDataModel(new SearchPagingDataModel());
 		this.setLovSearchBean(new SearchBean());
 //		this.setLovBean(new LovBean());
@@ -301,14 +307,12 @@ public class LovBackingBean implements Serializable {
 				valueExpression.setValue(context.getELContext(), selectedEntity);
 			}
 			
-//			RequestContext.getCurrentInstance().update(this.getLovBean().getClientId());
-
-			
-//			this.resetAction();
-//			this.setLovBean(new LovBean());
+			this.resetAction();
+			this.setLovBean(new LovBean());
 			
 //			TODO: postUpdateListener(entity)
 		}
+		
 	}
 	
 	private void prepareColumnTitle(LovBean lovBean) {
