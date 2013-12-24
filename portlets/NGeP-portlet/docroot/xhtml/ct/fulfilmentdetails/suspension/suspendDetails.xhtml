@@ -36,7 +36,9 @@
 			
 		    <p:outputLabel value="#{lbl['lbl.ct.contractAmount']}" />
 			<p:inputText value="#{contractDetailsBackingBean.managedBean.contractVer.ctContractValue.contractAmount}"
-				 disabled="true" style="width:130px;"/>		
+				 disabled="true" style="width:130px;" styleClass="ppRightBtn">
+				  <f:convertNumber pattern="#,###.00" />
+				 </p:inputText>		
 				<p:outputLabel value="#{lbl['lbl.ct.loaNo']}" />
 		    	<p:inputText style="width:130px;" disabled="true" 
 				    value="#{contractDetailsBackingBean.managedBean.contractVer.ctContract.loaNo}" />

@@ -36,7 +36,9 @@
 			
 				<p:outputLabel value="#{lbl['lbl.ct.contractAmount']}" />
 			<p:inputText value="#{contractDetailsBackingBean.managedBean.contractVer.ctContractValue.contractAmount}"
-				 disabled="true" style="width:130px;"/>	
+				 disabled="true" style="width:130px;"  styleClass="ppRightBtn">
+				  <f:convertNumber pattern="#,###.00" />
+				 </p:inputText>	
 				 <p:outputLabel value="#{lbl['lbl.ct.loaNo']}" />
 		    	<p:inputText style="width:130px;" disabled="true" 
 				    value="#{contractDetailsBackingBean.managedBean.contractVer.ctContract.loaNo}" />	
@@ -108,14 +110,11 @@
              <p:outputPanel rendered="#{contractDetailsBackingBean.managedBean.disciplinaryValue}">
                <table style="width: 100%">
                <tr>
-                   <td style="width:115px;"> <p:outputLabel value="Complaint Against Supplier" /></td>
-			       <td>   <p:inputText  style="width:170px;" /></td>
+                   <td style="width:115px;"> <p:outputLabel value="Supplier Name" /></td>
+			       <td>   <p:inputText  style="width:170px;" disabled="true" /></td>
 			       <td>   <p:outputLabel value="Complaint Type" /></td>
-			       <td>   <p:selectOneMenu value=" " style="width:170px;">
-                          <f:selectItem itemValue="-Select One-" itemLabel="-Select One-" />
-                              <f:selectItem itemValue="Breach The Obligation Of Tender / Contract" itemLabel="Breach The Obligation Of Tender / Contract" />
-                          </p:selectOneMenu></td>
-                          <td style="width:130px;"><f:verbatim></f:verbatim></td>
+			       <td>   <p:inputText value="Breach The Obligation Of Tender / Contract" style="width:220px;" disabled="true"/> </td>
+                          <td style="width:110px;"><f:verbatim></f:verbatim></td>
                   </tr>
                   </table>
                   <h:panelGrid columns="2">
@@ -126,7 +125,7 @@
 			       </h:panelGroup>
 			       <h:panelGrid>
 			       <h:inputTextarea id="complaintDesc"
-				             value=" " rows="7" cols="103" disabled="false" autoResize="false" />	
+				             value=" " rows="7" cols="110" disabled="false" autoResize="false" />	
 			</h:panelGrid>		
            </h:panelGrid>       
 		</p:outputPanel>
