@@ -112,6 +112,36 @@
 	</property>
 </bean>
 
+<bean id="SM_SUPPLIER" class="my.ep.web.bean.LovBean">
+	<property name="pk" value="supplierId" />
 
+	<property name="daoClass" value="my.ep.persistence.dao.sm.SmSupplierDAO" />
+	<!-- <property name="searchMethod" value="findColor" /> -->
+	<property name="columns">
+		<list>
+			<bean class="my.ep.web.bean.LovColumnBean">
+		        <property name="columnName" 	value="supplierName" />
+      			<property name="bundleFile" 	value="messageprovider-config.bundles.labels.labels" />
+      			<property name="bundleKey" 		value="lbl.sm.companyname" />
+      			<property name="columnWidth" 	value="150" />
+      			<!-- <property name="columnTitle" 	value="Color Code" /> -->
+			</bean>
+			<bean class="my.ep.web.bean.LovColumnBean">
+		        <property name="columnName" 	value="epNo" />
+      			<property name="bundleFile" 	value="messageprovider-config.bundles.labels.labels" />
+      			<property name="bundleKey" 		value="lbl.sm.epno" />
+      			<property name="columnWidth" 	value="150" />
+      			<!-- <property name="columnTitle" 	value="Color Name" /> -->
+			</bean>
+			<bean class="my.ep.web.bean.LovColumnBean">
+		        <property name="columnName" 	value="regNo" />
+      			<property name="bundleFile" 	value="messageprovider-config.bundles.labels.labels" />
+      			<property name="bundleKey" 		value="lbl.sm.businessregno" />
+      			<property name="columnWidth" 	value="150" />
+      			<!-- <property name="columnTitle" 	value="Color Name" /> -->
+			</bean>
+		</list>
+	</property>
+</bean>
 
 </beans>
