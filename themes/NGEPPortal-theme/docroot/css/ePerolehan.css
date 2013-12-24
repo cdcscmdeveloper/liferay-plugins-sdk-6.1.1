@@ -107,7 +107,7 @@ ul.btn-section li a:hover{background-position:bottom;}
 
 .top-navi-right ul li.sign-out{float:left; margin-top:10px; padding:0 10px; text-decoration:none;}
 
-.middle-navi{background:#FFF; height:100px; position:relative; font-size:12px;}
+.middle-navi{background:#FFF; position:relative; font-size:12px;}
 .middle-navi-wrapper{width:1250px; margin:0 auto; position:relative;}
 .middle-navi-left-wrapper{float:left;}
 .middle-navi-left-wrapper a.logo{margin-top:15px; float:left;}
@@ -125,7 +125,7 @@ ul.btn-section li a:hover{background-position:bottom;}
 .middle-navi-right-wrapper ul li.btn-red{padding:4px 4px 0 0;}
 .middle-navi-right-wrapper ul li.btn-green{padding:4px 4px 0 0;}
 .middle-navi-right-wrapper ul li.btn-blue{padding:4px 0 0 0;}
-.middle-navi-right-wrapper ul li.btn-reset{padding:2px 10px 0 0;}
+.middle-navi-right-wrapper ul li.btn-reset{padding:3px 10px 0 0;}
 .middle-navi-right-wrapper ul li.btn-smaller{padding:3px 10px 0 0; font-size:11px;}
 .middle-navi-right-wrapper ul li.btn-larger{padding:1px 0 0 0; font-size:13px;}
 .middle-navi-right-wrapper ul li.btn-login-register{padding:3px 20px 5px 20px; font-size:11px; color:#FFF; background:#5ca218; -webkit-border-bottom-right-radius:5px; -webkit-border-bottom-left-radius:5px; -moz-border-radius-bottomright:5px; -moz-border-radius-bottomleft:5px; border-bottom-right-radius:5px; border-bottom-left-radius:5px;}
@@ -182,7 +182,7 @@ nav ul li{float:left;}
 .middle-navi-right-wrapper ul li.user-thumb{float:left; margin-top:6px;}
 .middle-navi-right-wrapper ul li.btn-language a{float:left; padding:2px 11px; text-decoration:none; margin:0 -15px;}
 .middle-navi-right-wrapper ul li.btn-language a:hover{text-decoration:underline; background:#000; color:#FFF; padding:0 -15px;}
-.middle-navi-right-wrapper ul li.btn-language div.dropdown-language-wrapper{display:none; position:absolute; z-index:20; background:#000; padding:10px; top:20px; right:-15px; width:100px;}
+.middle-navi-right-wrapper ul li.btn-language div.dropdown-language-wrapper{display:none; position:absolute; z-index:20; background:#000; padding:10px; top:20px; right:0; width:100px;}
 .middle-navi-right-wrapper ul li.btn-language div.dropdown-language-wrapper a{color:#fff; text-decoration:none; padding:0; margin:0; cursor:pointer;}
 .middle-navi-right-wrapper ul li.btn-language div.dropdown-language-wrapper a:hover{color:#8cc63e; padding:0; margin:0;}
 .middle-navi-right-wrapper ul li.btn-language div.dropdown-language-wrapper a.active{color:#8cc63e; padding:0; margin:0;}
@@ -192,7 +192,7 @@ nav ul li{float:left;}
 .middle-navi-right-wrapper ul li.btn-language:hover > div.dropdown-language-wrapper{display:block;}
 .middle-navi-right-wrapper ul li.btn-language:hover a{text-decoration:underline; background:#000; color:#FFF; padding:0 -15px;}
 
-.middle-search-wrapper{float:left; background:url(../images/general/search-bar.png) no-repeat top center; width:190px; height:31px; border:none; margin:30px 0 0 215px; position:relative;}
+.middle-search-wrapper{float:left; background:url(../images/general/search-bar.png) no-repeat top center; width:190px; height:31px; border:none; margin:30px 0 0 400px; position:relative;}
 .middle-search-wrapper input{border:none; padding:8px 30px 0 18px; background-color:transparent; font-family:Arial, Helvetica, sans-serif; width:136px; color:#333; font-family:'notosans-regular', Arial, Helvetica, sans-serif; background-image:none;}
 .middle-search-wrapper a.btn-search{background:url(../images/general/search-icon.png) no-repeat center center; width:18px; height:31px; position:absolute; cursor:pointer; right:12px;}
 
@@ -293,7 +293,7 @@ footer.footer-home{width:100%; position:relative; background:url(../images/login
 .footer-disclaimer{float:left; margin-top:30px; width:350px; margin-right:70px;}
 .footer-disclaimer h3{margin-bottom:10px; font-size:17px; text-transform:uppercase; font-family:'notosans-bold', Arial, Helvetica, sans-serif; color:#D0D2D3;}
 .footer-disclaimer p{color:#D0D2D3; margin-bottom:10px; font-size:11px;}
-.footer-links{float:left; margin-top:30px; width:240px; margin-right:10px;}
+.footer-links{float:left; margin-top:30px; width:240px; margin-left: 130px; margin-right:130px;}
 .footer-links h3{margin-bottom:10px; font-size:17px; text-transform:uppercase; font-family:'notosans-bold', Arial, Helvetica, sans-serif; color:#D0D2D3;}
 .footer-links ul li{float:left; width:110px; margin:0 10px 5px 0;}
 .footer-links ul li a{color:#A3CD39; text-decoration:none !important;}

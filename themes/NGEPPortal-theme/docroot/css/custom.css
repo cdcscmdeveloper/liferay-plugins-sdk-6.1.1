@@ -20,7 +20,8 @@ ul.child-menu li:hover {border: 1px solid #3B3B3B;}
 #navigation ul li:hover > ul.child-menu li:hover > ul.child-menu {display: block; float: none; margin: 0; background-color:#3B3B3B; position:absolute; z-index:50; top: 0; left: 149px;}
 #navigation ul li:hover > ul.child-menu li:hover > ul.child-menu li:hover > ul.child-menu {top: 0; left: 250px;}
 
-
+.hide {visibility: hidden;}
+.datetime {margin: 0 auto; width: 1250px;}
 
 
 /*  ----   dockbar   --------  */
