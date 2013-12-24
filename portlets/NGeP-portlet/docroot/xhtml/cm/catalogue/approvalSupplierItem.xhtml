@@ -3,9 +3,10 @@
 	xmlns:h="http://java.sun.com/jsf/html"
 	xmlns:ui="http://java.sun.com/jsf/facelets"
 	xmlns:p="http://primefaces.org/ui"
-	xmlns:c="http://java.sun.com/jsp/jstl/core">
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:ac="http://ac.my/jsf/composite/cc">
 
-
+<ac:lovPopup />
 
 	<p:dataTable id="approvalSupplierItemID"
 		value="#{catalogueBackingBean.managedBean.approvalItemList}"
@@ -14,7 +15,8 @@
 		selection="#{catalogueBackingBean.managedBean.selectedApprovalItems}">
 
 		<p:column selectionMode="multiple" style="width:2%" />
-
+		
+		
 		<p:column>
 			<f:facet name="header">
 				#{lbl['lbl.cm.item.name']}
@@ -27,39 +29,47 @@
 			<f:facet name="header">
 				#{lbl['lbl.cm.price']}
 			</f:facet>
-			<p:inputText></p:inputText>
+			<p:inputText value="#{approval.cmStandardPricing.price}"></p:inputText>
+
 		</p:column>
 		<p:column>
 			<f:facet name="header">
 				#{lbl['lbl.cm.uom']}
 			</f:facet>
-			<p:inputText></p:inputText>
+			<ac:lov id="approvalUomLovId" lovId="PM_UOM" size="20" headerText="UOM Lov"
+				saveObject="catalogueBackingBean.managedBean.approvalItemList[#{rowIndex}].pmUom"
+				value="#{approval.pmUom.uomName}"
+				conditionField="recordStatus^1">
+			</ac:lov>
+			
 
 		</p:column>
 		<p:column>
 			<f:facet name="header">
 				#{lbl['lbl.cm.start.date']}
 			</f:facet>
-			<p:calendar showOn="button"></p:calendar>
+			<p:calendar value="#{approval.cmStandardPricing.startDate}" showOn="button" size="10" pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}"></p:calendar>
 
 		</p:column>
 		<p:column>
 			<f:facet name="header">
 				#{lbl['lbl.cm.end.date']}
 			</f:facet>
-			<p:calendar showOn="button"></p:calendar>
+			<p:calendar value="#{approval.cmStandardPricing.endDate}" showOn="button" size="10" pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}"></p:calendar>
 
 		</p:column>
 		<p:column>
 			<f:facet name="header">
 				#{lbl['lbl.cm.action']}
 			</f:facet>
+
 			<p:commandLink
 				action="#{catalogueBackingBean.navigateToApprovalItemDet(rowIndex)}">
 				<p:graphicImage value="/resources/ep/images/design/edit.png"></p:graphicImage>
 			</p:commandLink>
-
 		</p:column>
+
+		
 	</p:dataTable>
 
 </ui:composition>
