@@ -119,11 +119,9 @@ $theme.include($body_top_include)
                     </a>
             	</div>
             	
-                
-            	<div class="middle-navi-right-wrapper">
+            	#if ($is_signed_in)
+					<div class="middle-navi-right-wrapper">
                     <ul>
-                    	<li class="divider"></li>
-                    	<li class="btn-help"><a href="http://ngepdevwps01.ngep.com:8080/web/eperolehan/help">Help</a></li>
                     	<li class="divider"></li>
                         <li class="btn-language">
                             <a href="#" id="SelectedLanguage">English</a>
@@ -134,11 +132,6 @@ $theme.include($body_top_include)
                             </div>
                         </li>
                     	<li class="divider"></li>
-                        <li><a href="#"><img src="$images_folder/navi/btn-disabled.png" /></a></li>
-                    	<li class="divider"></li>
-                        <li class="btn-reset"><a href="javascript:resetText();">Reset</a></li>
-                        <li class="btn-smaller"><a href="javascript:resizeText(-1);">A-</a></li>
-                        <li class="btn-larger"><a href="javascript:resizeText(1);">A+</a></li>
                     	#if (!$is_signed_in)
                     	<li class="btn-login-register divider-no-padding-right">
                     		<a class="btn-login-register" href="$sign_in_url" id="sign-in" rel="nofollow">Login or Register</a>	
@@ -147,6 +140,38 @@ $theme.include($body_top_include)
                     </ul>
                     <div class="clear"></div>
                 </div>
+				#end
+                
+                #if (!$is_signed_in)
+            	<div class="middle-navi-right-wrapper">
+                    <ul>
+                        <li><a href="#"><img src="$images_folder/navi/btn-disabled.png" /></a></li>
+                        <li class="divider"></li>
+                        <li class="btn-reset"><a href="javascript:resetText();">Reset</a></li>
+                        <li class="btn-smaller"><a href="javascript:resizeText(-1);">A-</a></li>
+                        <li class="btn-larger"><a href="javascript:resizeText(1);">A+</a></li>
+                        <li class="divider"></li>
+                    	<li class="btn-red"><a href="#"><img src="$images_folder/navi/color-red.jpg" title="Red"/></a></li>
+                    	<li class="btn-green"><a href="#"><img src="$images_folder/navi/color-green.jpg" title="Green" /></a></li>
+                    	<li class="btn-blue"><a href="#"><img src="$images_folder/navi/color-blue.jpg" title="Blue" /></a></li>
+                    	<li class="divider"></li>
+                        <li class="btn-language">
+                            <a href="#" id="SelectedLanguage">English</a>
+                            <div class="dropdown-language-wrapper">
+								<a href="javascript:selectLanguage('en');"><p>English</p></a> 
+                                <div class="clear"></div>                           
+								<a href="javascript:selectLanguage('ms');"><p>Bahasa Melayu</p></a>                            
+                            </div>
+                        </li>
+                    	#if (!$is_signed_in)
+                    	<li class="btn-login-register divider-no-padding-right">
+                    		<a class="btn-login-register" href="$sign_in_url" id="sign-in" rel="nofollow">Login or Register</a>	
+                    	</li>
+                    	#end
+                    </ul>
+                    <div class="clear"></div>
+                </div>
+                #end
                 
                 
                 	#if (!$is_signed_in)
