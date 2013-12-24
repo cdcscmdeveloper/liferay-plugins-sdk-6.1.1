@@ -121,7 +121,7 @@ public class BPMTaskListBackingBean extends
 
 		String viewBy = "";
 		try{
-			BpmResponseDTO responseDTO = retrieveWorklistItems(this.getManagedBean().getStatus(), viewBy);
+			BpmResponseDTO responseDTO = retrieveWorklistItems("ASSIGNED",this.getManagedBean().getViewBy());
 		}catch(Exception e){
 			log.info("BPM Errors");
 			e.printStackTrace();
@@ -250,31 +250,38 @@ public class BPMTaskListBackingBean extends
 		return offSet;
 	}
 
-	public void viewby(String viewBy) {
-		System.out.println("viewBy:" + viewBy);
-
-		BpmResponseDTO responseDTO = retrieveWorklistItems(this
-				.getManagedBean().getStatus(), viewBy);
+	public void filterViewby() {
+		System.out.println("this.getManagedBean().getViewBy()"+this.getManagedBean().getViewBy());
+		BpmResponseDTO responseDTO = retrieveWorklistItems("ASSIGNED",this.getManagedBean().getViewBy());
 
 	}
 
-	public void filterStatus() {
+/*	public void filterStatus() {
 
-		BpmResponseDTO responseDTO = retrieveWorklistItems(this
-				.getManagedBean().getStatus(), "");
+		BpmResponseDTO responseDTO = retrieveWorklistItems("ASSIGNED" ,this
+				.getManagedBean().getStatus());
+	}*/
+
+/*	public void tempFilterLogin() {
+
+		BpmResponseDTO responseDTO = retrieveWorklistItems("ASSIGNED" ,this
+				.getManagedBean().getStatus());
 	}
-
-	public void tempFilterLogin() {
-
-		BpmResponseDTO responseDTO = retrieveWorklistItems(this
-				.getManagedBean().getStatus(), "");
-	}
-
+*/
 	public String backToTaskList() {
 
 		System.out.println("*******backToTaskList*******");
 
 		return "/xhtml/bpmtasklist/taskListView";
 	}
+	
+	
+	public String applicationStatus(Integer docInt){
+		
+		
+		System.out.println("docInt:"+docInt);
+		return "Review";
+	}
+	
 
 }

@@ -27,11 +27,13 @@ public class BPMTaskListManagedBean extends BaseManagedBean {
 	
 	private String taskId;
 	
-	private String status="ASSIGNED";
+	//private String status="ASSIGNED";
 	
 	private String taskName;
 	
 	private String tempLoginId; //TODO: temp and to be removed
+	
+	private String viewBy="DAY";
 
 	public List<WorklistItemVO> getTaskList() {
 		return taskList;
@@ -73,13 +75,13 @@ public class BPMTaskListManagedBean extends BaseManagedBean {
 		this.taskId = taskId;
 	}
 
-	public String getStatus() {
+	/*public String getStatus() {
 		return status;
 	}
 
 	public void setStatus(String status) {
 		this.status = status;
-	}
+	}*/
 
 	public String getTaskName() {
 		return taskName;
@@ -95,6 +97,14 @@ public class BPMTaskListManagedBean extends BaseManagedBean {
 
 	public void setTempLoginId(String tempLoginId) {
 		this.tempLoginId = tempLoginId;
+	}
+
+	public String getViewBy() {
+		return viewBy;
+	}
+
+	public void setViewBy(String viewBy) {
+		this.viewBy = viewBy;
 	}
 	
 	
