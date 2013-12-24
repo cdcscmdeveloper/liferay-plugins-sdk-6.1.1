@@ -118,7 +118,7 @@ public abstract class BaseBackingBean<T extends BaseManagedBean> {
 			FacesScopes facesScopes = new FacesScopes();
 			facesScopes.setSessionScope(managedBeanName, managedBean);
 		}catch(Exception ex){
-			//log.error("Failed to renew managed bean: " + managedBeanName, ex);
+			log.error("Failed to renew managed bean: " + managedBeanName, ex);
 		}
 		return managedBean;
 	}
