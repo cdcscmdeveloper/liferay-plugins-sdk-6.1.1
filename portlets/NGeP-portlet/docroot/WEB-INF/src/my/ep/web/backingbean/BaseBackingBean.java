@@ -6,6 +6,7 @@ package my.ep.web.backingbean;
 import java.io.Serializable;
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
+import java.util.List;
 
 import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
@@ -14,17 +15,15 @@ import javax.faces.model.SelectItem;
 
 import my.ep.biz.bean.search.ISearchBean;
 import my.ep.biz.bean.search.SearchBean;
-import my.ep.biz.service.pm.common.codecategory.ICodeCategorySO;
-import my.ep.dto.pm.common.codecategory.CodeCategoryReqDTO;
-import my.ep.dto.pm.common.codecategory.CodeCategoryResDTO;
-import my.ep.persistence.entity.pm.common.PmCodeDesc;
+import my.ep.persistence.entity.pm.common.PmParameter;
+import my.ep.persistence.entity.pm.common.PmParameterDesc;
 import my.ep.type.IEnumType;
 import my.ep.web.managedbean.BaseManagedBean;
 import my.ep.web.util.EpPortletUtil;
 import my.ep.web.util.FacesScopes;
 import my.ep.web.util.ResourceBundleUtils;
 import my.ep.web.util.SecurityFilterUtil;
-import my.ep.web.util.lookupservice.BusinessDelegate;
+import my.ep.web.util.pm.ParameterUtils;
 
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
@@ -258,53 +257,65 @@ public abstract class BaseBackingBean<T extends BaseManagedBean> {
 		return null;
 	}
 	
-	public SelectItem[] getDropdownValues(String category) {
+	public SelectItem[] getDropdownValues(String parameterType) {
 		SelectItem[] items = null;
+		
 		try {
-			ICodeCategorySO codeCategorySO = BusinessDelegate.getInstance().getServiceObject("pm", ICodeCategorySO.class);
-			String language = new FacesScopes().getUserLocale().getLanguage();
+			List<PmParameterDesc> parameterDescs = new ParameterUtils().getParameterDescList(parameterType);
 			
-			CodeCategoryReqDTO reqDTO = new CodeCategoryReqDTO();
-			
-			reqDTO.setCategory(category);
-			reqDTO.setLanguage(language);
-			CodeCategoryResDTO resDTO = codeCategorySO.retrieveCodeDescListByCategory(reqDTO);
-			
-		    items = new SelectItem[resDTO.getPmCodeDescList().size()+1];
+		    items = new SelectItem[parameterDescs.size()+1];
 		    items[0] = new SelectItem(null, "- Select One -");
 		    int i = 1;
-		    for(PmCodeDesc codeDesc : resDTO.getPmCodeDescList()) {
-		    	items[i++] = new SelectItem(codeDesc.getPmCode().getCodeId(), codeDesc.getCodeName());
+		    for(PmParameterDesc parameterDesc : parameterDescs) {
+		    	items[i++] = new SelectItem(parameterDesc.getPmParameter().getParameterId(), parameterDesc.getCodeName());
 		    }
 		} catch (Exception e) {
 			e.printStackTrace();
 			FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR,e.toString(), e.getMessage()));
 		}
+		
 	    return items;
 	}
 	
-	public SelectItem[] getDropdownCodeValues(String category) {
+	public SelectItem[] getDropdownCodeValues(String parameterType) {
 		SelectItem[] items = null;
+		
 		try {
-			ICodeCategorySO codeCategorySO = BusinessDelegate.getInstance().getServiceObject("pm", ICodeCategorySO.class);
-			String language = new FacesScopes().getUserLocale().getLanguage();
+			List<PmParameterDesc> parameterDescs = new ParameterUtils().getParameterDescList(parameterType);
 			
-			CodeCategoryReqDTO reqDTO = new CodeCategoryReqDTO();
-			
-			reqDTO.setCategory(category);
-			reqDTO.setLanguage(language);
-			CodeCategoryResDTO resDTO = codeCategorySO.retrieveCodeDescListByCategory(reqDTO);
-			
-		    items = new SelectItem[resDTO.getPmCodeDescList().size()+1];
+		    items = new SelectItem[parameterDescs.size()+1];
 		    items[0] = new SelectItem(null, "- Select One -");
 		    int i = 1;
-		    for(PmCodeDesc codeDesc : resDTO.getPmCodeDescList()) {
-		    	items[i++] = new SelectItem(codeDesc.getPmCode().getCode(), codeDesc.getCodeName());
+		    for(PmParameterDesc parameterDesc : parameterDescs) {
+		    	items[i++] = new SelectItem(parameterDesc.getPmParameter().getParameterCode(), parameterDesc.getCodeName());
 		    }
 		} catch (Exception e) {
 			e.printStackTrace();
 			FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR,e.toString(), e.getMessage()));
 		}
+		
 	    return items;
+	}
+	
+	public String getParameterDesc(PmParameter parameter) {
+		return getParameterDesc(parameter.getPmParameterType().getParameterType(),
+				parameter.getParameterCode());
+	}
+	
+	public String getParameterDesc(String parameterType, String parameterCode) {		
+		String parameterDesc = null;
+		
+		// Get the parameter description list.
+		List<PmParameterDesc> list = new ParameterUtils().getParameterDescList(parameterType);
+		
+		for (PmParameterDesc pmParameterDesc : list) {
+			// compare matched parameterCode.
+			if (pmParameterDesc.getPmParameter().getParameterCode().equals(parameterCode)) {
+				parameterDesc = pmParameterDesc.getCodeName();
+				break;
+			}
+		}
+		
+		return parameterDesc;
 	}
 }
