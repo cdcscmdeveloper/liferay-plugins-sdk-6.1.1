@@ -25,7 +25,7 @@ ul.child-menu li:hover {border: 1px solid #3B3B3B;}
 
 .sticky {position:fixed; margin:0 0 0 0; z-index:1; top:130px; right:0;}
 .sticky > a > img {width:250px;}
-#close {cursor:pointer; position:absolute; top:40px; right:15px;}
+#close {cursor:pointer; position:absolute; top:42px; right:15px;}
 
 
 /*  ----   dockbar   --------  */
