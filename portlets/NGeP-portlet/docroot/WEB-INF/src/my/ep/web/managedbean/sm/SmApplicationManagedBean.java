@@ -16,6 +16,7 @@ import my.ep.persistence.entity.pm.common.PmDistrict;
 import my.ep.persistence.entity.pm.common.PmState;
 import my.ep.persistence.entity.sm.SmAddress;
 import my.ep.persistence.entity.sm.SmAppl;
+import my.ep.persistence.entity.sm.SmApplSectionReview;
 import my.ep.persistence.entity.sm.SmAssociateCompany;
 import my.ep.persistence.entity.sm.SmChequeSignatory;
 import my.ep.persistence.entity.sm.SmContractExperience;
@@ -164,13 +165,20 @@ public class SmApplicationManagedBean extends BaseManagedBean {
 
 	private boolean testBlock;
 
+	private int maxReviewCount;
+
+	private SmApplSectionReview poSecReview;
+
+	private SmApplSectionReview apprvrSecReview;
+
 	public SmApplicationManagedBean() {
 		// TODO Checking the user role
 		FacesScopes sc = new FacesScopes();
 		System.out.println(" << ======= Login USer === >>  "
 				+ sc.getUserScreenName());
 		List<Role> loginUserRoles = sc.getUserRoleList();
-
+		poSecReview = new SmApplSectionReview();
+		apprvrSecReview = new SmApplSectionReview();
 		List<String> roleNames = new ArrayList<String>();
 		for (Role r : loginUserRoles) {
 			System.out.println(" Role ===  >> " + r.getName());
@@ -862,6 +870,30 @@ public class SmApplicationManagedBean extends BaseManagedBean {
 	public void setTestBlock(boolean testBlock) {
 		this.testBlock = testBlock;
 
+	}
+
+	public int getMaxReviewCount() {
+		return maxReviewCount;
+	}
+
+	public void setMaxReviewCount(int maxReviewCount) {
+		this.maxReviewCount = maxReviewCount;
+	}
+
+	public SmApplSectionReview getPoSecReview() {
+		return poSecReview;
+	}
+
+	public void setPoSecReview(SmApplSectionReview poSecReview) {
+		this.poSecReview = poSecReview;
+	}
+
+	public SmApplSectionReview getApprvrSecReview() {
+		return apprvrSecReview;
+	}
+
+	public void setApprvrSecReview(SmApplSectionReview apprvrSecReview) {
+		this.apprvrSecReview = apprvrSecReview;
 	}
 
 }

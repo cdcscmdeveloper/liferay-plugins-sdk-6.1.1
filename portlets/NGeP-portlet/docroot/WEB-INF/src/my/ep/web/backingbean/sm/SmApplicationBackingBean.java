@@ -27,6 +27,7 @@ import my.ep.persistence.entity.pm.common.PmDistrict;
 import my.ep.persistence.entity.pm.common.PmState;
 import my.ep.persistence.entity.sm.SmAddress;
 import my.ep.persistence.entity.sm.SmAppl;
+import my.ep.persistence.entity.sm.SmApplSectionReview;
 import my.ep.persistence.entity.sm.SmAssociateCompany;
 import my.ep.persistence.entity.sm.SmChequeSignatory;
 import my.ep.persistence.entity.sm.SmContractExperience;
@@ -51,6 +52,7 @@ import my.ep.web.util.FacesScopes;
 import my.ep.web.util.lookupservice.BusinessDelegate;
 
 import org.apache.log4j.Logger;
+import org.primefaces.event.TabChangeEvent;
 
 @ManagedBean(name = "backingBean")
 @RequestScoped
@@ -100,6 +102,7 @@ public class SmApplicationBackingBean extends
 			System.out.println("******** SIZE ********** "
 					+ smApplSupplier.getSmAppls().size());
 			SmAppl smAppl = new SmAppl();
+			// TO Use the private generate application num
 			if (applicationType.equalsIgnoreCase("N")) {
 				smAppl.setApplNo("KN-20102013-1111");
 			} else if (applicationType.equalsIgnoreCase("B")) {
@@ -168,23 +171,29 @@ public class SmApplicationBackingBean extends
 
 			System.out
 					.println(" **** APPLICATION TYPE **** " + applicationType);
-			if (applicationType.equalsIgnoreCase("B")) {
-				return SupplierManagementConst.PROCEED_BUMI_APPLN;
-			} else if (applicationType.equalsIgnoreCase("N")) {
-				return SupplierManagementConst.PROCEED_MOF_REG;
-			} else if (applicationType.equalsIgnoreCase("U")) {
-				return SupplierManagementConst.PROCEED_UPDATE_MOF_APPLN;
-			} else if (applicationType.equalsIgnoreCase("A")) {
-				return SupplierManagementConst.PROCEED_ADDTNLCAT_MOF_APPLN;
-			} else if (applicationType.equalsIgnoreCase("R")) {
-				return SupplierManagementConst.PROCEED_RENEW_MOF_APPLN;
-			} else if (applicationType.equalsIgnoreCase("C")) {
-				return SupplierManagementConst.PROCEED_CANCEL_MOF_APPLN;
-			}
+			if (fromBpm) {
+				getManagedBean().setMaxReviewCount(
+						assignMaxReviewCount(applicationType));
+				// TODO increase the count by 1 for if status is review after
+				// site visit
+				if (smAppl.getStatusId() == 11) {
+					getManagedBean().setMaxReviewCount(
+							getManagedBean().getMaxReviewCount() + 1);
+				}
+				if (smAppl.getSmApplSectionReviews() == null) {
+					smAppl.setSmApplSectionReviews(new ArrayList<SmApplSectionReview>());
+				}
+				if (getManagedBean().isPoUser()) {
+					smAppl.getSmApplSectionReviews().add(
+							getManagedBean().getPoSecReview());
+				}
 
-			else {
-				return null;
+				if (getManagedBean().isApproverUser()) {
+					smAppl.getSmApplSectionReviews().add(
+							getManagedBean().getApprvrSecReview());
+				}
 			}
+			return setNavigationForAppl(applicationType);
 
 		} catch (Exception e) {
 			System.out.println(" **** Unknown Expection ******* ");
@@ -1259,7 +1268,8 @@ public class SmApplicationBackingBean extends
 			reqDTO.setTaskId(this.getManagedBean().getTaskId());
 			reqDTO.setUserName(new FacesScopes().getUserScreenName());
 
-			if (this.getManagedBean().getSmAppl().getSupportingDocMode() == "O") {
+			if (this.getManagedBean().getSmAppl().getSupportingDocMode()
+					.equalsIgnoreCase("O")) {
 				reqDTO.setOnlineDoc(true);
 			} else {
 				reqDTO.setOnlineDoc(false);
@@ -1318,6 +1328,110 @@ public class SmApplicationBackingBean extends
 		} finally {
 			reqSO = null;
 		}
+
+	}
+
+	public void changeVerifyAll(Boolean isVerifiedAll) {
+		System.out.println(" **** Enter to  verified all ***** "
+				+ isVerifiedAll);
+		SmApplSectionReview sec = new SmApplSectionReview();
+
+		if (getManagedBean().isPoUser()) {
+			System.out.println(" *** PO VERIFIED ALL *******");
+			sec = getManagedBean().getPoSecReview();
+			getManagedBean().setPoSecReview(
+					setVerificationValues(sec, isVerifiedAll));
+		} else if (getManagedBean().isApproverUser()) {
+			System.out.println(" *** APPROVER VERIFIED ALL *******");
+			sec = getManagedBean().getApprvrSecReview();
+			getManagedBean().setApprvrSecReview(
+					setVerificationValues(sec, isVerifiedAll));
+		}
+
+	}
+
+	public void changeVerifySection(Boolean isSectionVerified) {
+		System.out.println(" **** Enter to  verified all ***** "
+				+ isSectionVerified);
+		SmApplSectionReview sec = new SmApplSectionReview();
+
+		if (getManagedBean().isPoUser()) {
+			System.out.println(" *** PO VERIFIED ALL *******");
+			sec = getManagedBean().getPoSecReview();
+			getManagedBean().setPoSecReview(
+					assignVerificationCount(sec, isSectionVerified));
+		} else if (getManagedBean().isApproverUser()) {
+			System.out.println(" *** APPROVER VERIFIED ALL *******");
+			sec = getManagedBean().getApprvrSecReview();
+			getManagedBean().setApprvrSecReview(
+					assignVerificationCount(sec, isSectionVerified));
+		}
+	}
+
+	private SmApplSectionReview assignVerificationCount(
+			SmApplSectionReview sec, Boolean isSectionVerified) {
+		System.out.println("**** Intial Check Count ==== "
+				+ sec.getCheckCount());
+		if (isSectionVerified) {
+			sec.setCheckCount(sec.getCheckCount() + 1);
+
+		} else {
+			sec.setCheckCount(sec.getCheckCount() - 1);
+
+		}
+		System.out.println("**** Count After checking **** "
+				+ sec.getCheckCount());
+		if (sec.getCheckCount() >= getManagedBean().getMaxReviewCount()) {
+			sec.setVerifiedAll(Boolean.TRUE);
+		} else {
+			sec.setVerifiedAll(Boolean.FALSE);
+		}
+
+		return sec;
+	}
+
+	private SmApplSectionReview setVerificationValues(SmApplSectionReview sec,
+			Boolean isVerifiedAll) {
+
+		if (isVerifiedAll) {
+			sec.setCheckCount(getManagedBean().getMaxReviewCount());
+
+		} else {
+			sec.setCheckCount(0);
+
+		}
+		sec.setBasicVerified(isVerifiedAll);
+		sec.setOfficeFacilityVerfied(isVerifiedAll);
+		sec.setStaffVerified(isVerifiedAll);
+
+		sec.setTrnsNetworkVerified(isVerifiedAll);
+		sec.setBranchVerified(isVerifiedAll);
+		sec.setAssociateVerified(isVerifiedAll);
+
+		sec.setCertVerified(isVerifiedAll);
+		sec.setExperienceVerified(isVerifiedAll);
+		sec.setCaptialVerified(isVerifiedAll);
+
+		sec.setShareholderVerifed(isVerifiedAll);
+		sec.setEquityCompVerifed(isVerifiedAll);
+		sec.setPersonnelVerified(isVerifiedAll);
+
+		sec.setBankVerified(isVerifiedAll);
+		sec.setCategoryVerified(isVerifiedAll);
+		sec.setSitevisitVerified(isVerifiedAll);
+		return sec;
+	}
+
+	public void onTabChange(TabChangeEvent event) {
+		String tabTitle = event.getTab().getTitle();
+		System.out.println("Active Tab: " + tabTitle);
+		if (tabTitle.equalsIgnoreCase("Company Basic Information")) {
+			getManagedBean().setTabActiveIndex(0);
+		} else if (tabTitle.equalsIgnoreCase("Branch /Assoc Company")) {
+			getManagedBean().setTabActiveIndex(1);
+		}
+		System.out.println("Active Tab Index === "
+				+ getManagedBean().getTabActiveIndex());
 
 	}
 
@@ -1425,5 +1539,65 @@ public class SmApplicationBackingBean extends
 		} finally {
 
 		}
+	}
+
+	private String generateApplicationNum(String applType) {
+		return null;
+
+	}
+
+	private int assignMaxReviewCount(String appType) {
+		int i = 0;
+		switch (appType) {
+
+		case "N":
+			i = SupplierManagementConst.NEW_APPL_REVIEW_MAXCOUNT;
+			break;
+		case "A":
+			i = SupplierManagementConst.ADDLN_CATCODES_APPL_REVIEW_MAXCOUNT;
+			break;
+		case "B":
+			i = SupplierManagementConst.BUMI_APPL_REVIEW_MAXCOUNT;
+			break;
+		case "U":
+			i = SupplierManagementConst.UPDATE_MOF_APPL_REVIEW_MAXCOUNT;
+			break;
+		case "R":
+			i = SupplierManagementConst.RENEW_APPL_REVIEW_MAXCOUNT;
+			break;
+		default:
+			break;
+
+		}
+		return i;
+	}
+
+	private String setNavigationForAppl(String appType) {
+		String s = null;
+		switch (appType) {
+
+		case "N":
+			s = SupplierManagementConst.PROCEED_MOF_REG;
+			break;
+		case "A":
+			s = SupplierManagementConst.PROCEED_ADDTNLCAT_MOF_APPLN;
+			break;
+		case "B":
+			s = SupplierManagementConst.PROCEED_BUMI_APPLN;
+			break;
+		case "U":
+			s = SupplierManagementConst.PROCEED_UPDATE_MOF_APPLN;
+			break;
+		case "R":
+			s = SupplierManagementConst.PROCEED_RENEW_MOF_APPLN;
+			break;
+		case "C":
+			s = SupplierManagementConst.PROCEED_CANCEL_MOF_APPLN;
+			break;
+		default:
+			break;
+
+		}
+		return s;
 	}
 }
