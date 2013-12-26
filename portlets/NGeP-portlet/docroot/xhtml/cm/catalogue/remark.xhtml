@@ -12,14 +12,20 @@
 
 		<table style="width: 100%">
 			<tr>
-				<td><p:selectOneMenu>
+				<td width="30%"><p:selectOneMenu disabled="#{!remarkVar.brandNew}"
+						value="#{remarkVar.pmStatus.statusId}">
 						<f:selectItem itemLabel="Select One" itemValue="" />
 						<f:selectItems
 							value="#{catalogueBackingBean.managedBean.statusDescList}"
 							var="remark" itemLabel="#{remark.statusName}"
 							itemValue="#{remark.statusDescId}"></f:selectItems>
+						<p:ajax event="change"
+							listener="#{catalogueBackingBean.enableRemark(remarkVar)}"
+							update=":form:pricingTabID:catalogueRemarkId:remarkInputId" />
+
 					</p:selectOneMenu></td>
-				<td><p:inputText></p:inputText></td>
+				<td><p:inputTextarea id="remarkInputId" value="#{remarkVar.remark}" disabled="#{remarkVar.remarkDisabled}"
+						style="width: 95%;"></p:inputTextarea></td>
 			</tr>
 		</table>
 

@@ -788,6 +788,12 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean>{
 					promotion.setPmDistrict(null);
 				}
 			}
+			
+			
+			for(CmItemRejectReason reason : this.getManagedBean().getSelectedMaintainItem().getCmItemRejectReasons()){
+				
+				reason.setCmSupplierItem(this.getManagedBean().getSelectedMaintainItem());
+			}
 
 
 
@@ -1323,6 +1329,17 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean>{
 		
 		
 		return "supplierItemView";
+	}
+	
+	public void enableRemark(CmItemRejectReason reason){
+		System.out.println("getPmStatus().getStatusId()"+reason.getPmStatus().getStatusId());
+		if(reason.getPmStatus().getStatusId().longValue()  == 10010){
+			System.out.println("*********false*********");
+			reason.setRemarkDisabled(false);
+		}else{
+			System.out.println("**********true*************");
+			reason.setRemarkDisabled(true);
+		}
 	}
 
 
