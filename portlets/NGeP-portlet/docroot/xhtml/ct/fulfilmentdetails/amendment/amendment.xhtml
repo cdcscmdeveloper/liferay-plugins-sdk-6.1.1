@@ -10,53 +10,62 @@
 	     <f:verbatim/>
 	     <h:panelGrid columns="3">
 				<p:selectBooleanCheckbox
-					value="#{contractDetailsBackingBean.managedBean.contractVer.ctAmendment.contractExtend}" />
+					value="#{contractDetailsBackingBean.managedBean.contractVer.ctAmendment.contractExtend}" >
+					 <p:ajax event="change" update=":form:tabview" listener="#{contractDetailsBackingBean.ChkAmendmentAction}" process="@this"/> 
+					</p:selectBooleanCheckbox>
 				<p:spacer width="2" />
+				
 				<p:outputLabel value="Contract extension" />
 			</h:panelGrid>
 			<f:verbatim/>
 			<h:panelGrid columns="3">
 				<p:selectBooleanCheckbox
-					value="#{contractDetailsBackingBean.managedBean.contractVer.ctAmendment.priceChange}" />
+					value="#{contractDetailsBackingBean.managedBean.contractVer.ctAmendment.priceChange}" >
+					 <p:ajax event="change" update=":form:tabview" listener="#{contractDetailsBackingBean.ChkAmendmentAction}" process="@this"/> 
+					 </p:selectBooleanCheckbox>
 				<p:spacer width="2" />
 				<p:outputLabel value="Change item price" />
 			</h:panelGrid>
 			<f:verbatim/>
 		    <h:panelGrid columns="3">
 				<p:selectBooleanCheckbox
-					value="#{contractDetailsBackingBean.managedBean.contractVer.ctAmendment.quantityChange}" />
+					value="#{contractDetailsBackingBean.managedBean.contractVer.ctAmendment.quantityChange}" >
+					<p:ajax event="change" update=":form:tabview" listener="#{contractDetailsBackingBean.ChkAmendmentAction}" process="@this"/> 
+					</p:selectBooleanCheckbox>
 				<p:spacer width="2" />
 				<p:outputLabel value="Change quantity"  />
 			</h:panelGrid>
 			<f:verbatim/>
 			<h:panelGrid columns="3">
 				<p:selectBooleanCheckbox
-					value="#{contractDetailsBackingBean.managedBean.contractVer.ctAmendment.valueChange}"  />
+					value="#{contractDetailsBackingBean.managedBean.contractVer.ctAmendment.valueChange}"  >
+					<p:ajax event="change" update=":form:tabview" listener="#{contractDetailsBackingBean.ChkAmendmentAction}" process="@this"/> 
+					</p:selectBooleanCheckbox>
 				<p:spacer width="2" />
 				<p:outputLabel value="Change contract value" />
 			</h:panelGrid>
 			<f:verbatim/>
 			<h:panelGrid columns="3">
 				<p:selectBooleanCheckbox
-					value="#{contractDetailsBackingBean.managedBean.contractVer.ctAmendment.valueChange}" />
+					value="#{contractDetailsBackingBean.managedBean.contractVer.ctAmendment.clauseChange}" >
+					<p:ajax event="change" update=":form:tabview" listener="#{contractDetailsBackingBean.ChkAmendmentAction}" process="@this"/> 
+				</p:selectBooleanCheckbox>
 				<p:spacer width="2" />
 				<p:outputLabel value="Change clause"  />
 			</h:panelGrid>
 	     </h:panelGrid>
-	<table style="width: 100%">
-	  <tr>
-	      <td style="width:115px;"><p:outputLabel for="txtname" value="#{lbl['lbl.ct.amend.txt.name']}" /></td>		
-	      <td> <p:inputText id="txtname" style="width:170px;"
-				value="#{contractDetailsBackingBean.managedBean.contractVer.ctAmendment.title}"  /></td>	
-		  <td> <p:outputLabel for="txtfrno" value="#{lbl['lbl.ct.amend.txt.frno']}" /> </td>
-		  <td> <p:inputText id="txtfrno"
+	    <h:panelGrid columns="5" style="width:100%" columnClasses="columnWidth15">
+	      <p:outputLabel for="txtname" value="#{lbl['lbl.ct.amend.txt.name']}" />
+	      <p:inputText id="txtname" style="width:170px;"
+				value="#{contractDetailsBackingBean.managedBean.contractVer.ctAmendment.title}"  />
+		      <p:outputLabel for="txtfrno" value="#{lbl['lbl.ct.amend.txt.frno']}" /> 
+		      <p:inputText id="txtfrno"
 				value="#{contractDetailsBackingBean.managedBean.contractVer.ctAmendment.fileRefNo}"
 				style="width:150px;"/>
-		  </td>
-		  <td style="width:115px;"><f:verbatim/></td>
-	 </tr>
-	 </table>
-	  <h:panelGrid columns="2">
+			    <f:verbatim></f:verbatim>
+				
+	 </h:panelGrid>
+	  <h:panelGrid columns="3" style="width:100%" columnClasses="columnWidth15">
 	     <h:panelGroup>
 				 <div style="height:70px;width:115px; vertical-align: top;">
 					<p:outputLabel for="txtdesc" value="#{lbl['lbl.ct.amend.txt.desc']}" /></div>
@@ -65,44 +74,43 @@
 				<h:inputTextarea id="txtdesc" rows="5" cols="103"
 					value="#{contractDetailsBackingBean.managedBean.contractVer.ctAmendment.description}"  />
 			  </h:panelGrid>
+			  
 		   </h:panelGrid>
-	  <p:outputPanel>
-	  <table style="width: 100%">
-	  <tr>
-	      <td style="width:115px;"> <p:outputLabel value="#{lbl['lbl.ct.amend.txt.effdate']}" /></td>
-		 <td> <p:calendar style="width:170px;" pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}"
+	    <h:panelGrid columns="5" style="width:100%" columnClasses="columnWidth15">
+	     <p:outputLabel value="#{lbl['lbl.ct.amend.txt.effdate']}" />
+		 <p:calendar style="width:170px;" pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}"
 				value="#{contractDetailsBackingBean.managedBean.contractVer.ctAmendment.amendmentEffDate}"
-				id="edateCal" showOn="button" /> </td>
-		 <td> <h:outputLabel value="#{lbl['lbl.ct.amend.txt.ceperiod']}" /></td>
-		 <td> <h:panelGrid columns="3">
+				id="edateCal" showOn="button" /> 
+		 <h:outputLabel value="#{lbl['lbl.ct.amend.txt.ceperiod']}" rendered="#{contractDetailsBackingBean.managedBean.contractVer.ctAmendment.contractExtend}" />
+		 <h:panelGrid columns="3" rendered="#{contractDetailsBackingBean.managedBean.contractVer.ctAmendment.contractExtend}">
 				<p:inputText id="ceperiod" style="width:65px;" />
 				<p:spacer width="1" />
-				<p:outputLabel value="Months" />
-			 </h:panelGrid></td>
-			  <td style="width:130px;"><f:verbatim/></td>
-		</tr>
-	  
-		<tr>
-		<td><p:outputLabel value="#{lbl['lbl.ct.amend.txt.cestart']}" /></td>	
-		<td><p:calendar style="width:170px;" pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}"
+				<p:outputLabel value="Months" /> 
+			 </h:panelGrid>
+			 <f:verbatim/>
+		   <p:outputLabel value="#{lbl['lbl.ct.amend.txt.cestart']}" 
+		     rendered="#{contractDetailsBackingBean.managedBean.contractVer.ctAmendment.contractExtend}" />	
+		   <p:calendar style="width:170px;" pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}"
 				value="#{contractDetailsBackingBean.managedBean.contractVer.ctContractValue.effDate}"
-				id="efdateCal" showOn="button" /></td>
-		<td><p:outputLabel value="#{lbl['lbl.ct.amend.txt.ceend']}" /></td>
-		<td><p:calendar style="width:170px;" pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}"
+				id="efdateCal" showOn="button"
+			    rendered="#{contractDetailsBackingBean.managedBean.contractVer.ctAmendment.contractExtend}" /> 
+		     <p:outputLabel value="#{lbl['lbl.ct.amend.txt.ceend']}" 
+		      rendered="#{contractDetailsBackingBean.managedBean.contractVer.ctAmendment.contractExtend}" /> 
+		  <p:calendar style="width:170px;" pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}"
 				value="#{contractDetailsBackingBean.managedBean.contractVer.ctContractValue.expDate}"
-				id="exdateCal" showOn="button" /></td>
-				 <td style="width:130px;"><f:verbatim/></td>
-		</tr>
-		<tr>
-		<td><p:outputLabel value="#{lbl['lbl.ct.amend.txt.avalue']}" /></td>
-		<td><p:inputText style="width:150px;" /></td>
-		<td><p:outputLabel value="New Contract Value" /></td>
-		<td><p:inputText style="width:150px;" disabled="true" /></td>
-		 <td style="width:130px;"><f:verbatim/></td>
-	    </tr>
-	    
-	   </table>
-	   </p:outputPanel>
+				id="exdateCal" showOn="button" 
+				rendered="#{contractDetailsBackingBean.managedBean.contractVer.ctAmendment.contractExtend}" />
+				<f:verbatim/>
+		 <p:outputLabel value="#{lbl['lbl.ct.amend.txt.avalue']}" 
+		   rendered="#{contractDetailsBackingBean.managedBean.contractVer.ctAmendment.valueChange}" />
+		 <p:inputText style="width:150px;" 
+		     rendered="#{contractDetailsBackingBean.managedBean.contractVer.ctAmendment.valueChange}" />
+		 <p:outputLabel value="New Contract Value"
+		    rendered="#{contractDetailsBackingBean.managedBean.contractVer.ctAmendment.valueChange}" />
+		 <p:inputText style="width:150px;" disabled="true" 
+		   rendered="#{contractDetailsBackingBean.managedBean.contractVer.ctAmendment.valueChange}" />
+		  <f:verbatim/>
+	   </h:panelGrid>
 	   <h:panelGrid columns="2" style="width:100%"
 			columnClasses="columnWidth15">
 			<h:panelGroup>

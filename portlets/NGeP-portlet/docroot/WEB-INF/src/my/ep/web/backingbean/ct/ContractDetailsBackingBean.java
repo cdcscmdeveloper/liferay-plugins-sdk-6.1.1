@@ -312,6 +312,14 @@ public class ContractDetailsBackingBean extends BaseBackingBean<ContractDetailsM
 		return list;
 	}
     
+    public List<SelectItem> getItemTypeMethode(){
+    	
+    	List<SelectItem> list = new ArrayList<SelectItem>();
+		list.add(new SelectItem("Item", "Item"));
+		list.add(new SelectItem("Service", "Service"));
+		return list;
+    }
+    
     public void changeSuspensionType(){
     
        try {
@@ -346,11 +354,88 @@ public class ContractDetailsBackingBean extends BaseBackingBean<ContractDetailsM
 			} else if (this.getManagedBean().getTermination().getCaRecommendation().getCode().equalsIgnoreCase("156")) {
 				this.getManagedBean().setTerminateRejectLetter(true);
 
-			} 
+			}
+			
 		} catch (Exception e) {
 			System.out.println(e);
 		}
 	}
+    
+    public void changeItemTypes(){
+    	
+    	try{
+    		flushItem();
+    		if (this.getManagedBean().getItemType().equalsIgnoreCase("Service")) {
+				this.getManagedBean().setServiceItem(true);
+
+			} else if (this.getManagedBean().getItemType().equalsIgnoreCase("Item")) {
+				this.getManagedBean().setProductItem(true);
+
+			}
+    	} catch (Exception e) {
+			System.out.println(e);
+		}
+    }
+    
+    public void flushItem(){
+    	this.getManagedBean().setServiceItem(false);
+    	this.getManagedBean().setProductItem(false);
+    	this.getManagedBean().setItemPricing(false);
+    	this.getManagedBean().setItemCeilingQuantity(false);
+    }
+  
+   public void ChkAmendmentAction(){
+    	
+    	try {
+			if(this.getManagedBean().getContractVer().getCtAmendment().isContractExtend()){
+				this.getManagedBean().getContractVer().getCtAmendment().setContractExtend(true);
+				/*this.getManagedBean().getContractVer().getCtAmendment().setPriceChange(false);
+		    	this.getManagedBean().getContractVer().getCtAmendment().setQuantityChange(false);
+		    	this.getManagedBean().getContractVer().getCtAmendment().setClauseChange(false);
+		    	this.getManagedBean().getContractVer().getCtAmendment().setValueChange(false);*/
+			
+			}else if(this.getManagedBean().getContractVer().getCtAmendment().isPriceChange()){
+				this.getManagedBean().getContractVer().getCtAmendment().setPriceChange(true);
+				/*this.getManagedBean().getContractVer().getCtAmendment().setContractExtend(false);
+				this.getManagedBean().getContractVer().getCtAmendment().setQuantityChange(false);
+		    	this.getManagedBean().getContractVer().getCtAmendment().setClauseChange(false);
+		    	this.getManagedBean().getContractVer().getCtAmendment().setValueChange(false);*/
+		
+			}else if(this.getManagedBean().getContractVer().getCtAmendment().isQuantityChange()){
+	
+				this.getManagedBean().getContractVer().getCtAmendment().setQuantityChange(true);
+				/*this.getManagedBean().getContractVer().getCtAmendment().setPriceChange(false);
+				this.getManagedBean().getContractVer().getCtAmendment().setContractExtend(false);
+		    	this.getManagedBean().getContractVer().getCtAmendment().setClauseChange(false);
+		    	this.getManagedBean().getContractVer().getCtAmendment().setValueChange(false);*/
+			
+			}else if(this.getManagedBean().getContractVer().getCtAmendment().isClauseChange()){
+				this.getManagedBean().getContractVer().getCtAmendment().setClauseChange(true);
+				/*this.getManagedBean().getContractVer().getCtAmendment().setPriceChange(false);
+				this.getManagedBean().getContractVer().getCtAmendment().setContractExtend(false);
+				this.getManagedBean().getContractVer().getCtAmendment().setQuantityChange(false);
+		    	this.getManagedBean().getContractVer().getCtAmendment().setValueChange(false);*/
+			
+			}else if(this.getManagedBean().getContractVer().getCtAmendment().isValueChange()){
+				this.getManagedBean().getContractVer().getCtAmendment().setValueChange(true);
+				/*this.getManagedBean().getContractVer().getCtAmendment().setPriceChange(false);
+				this.getManagedBean().getContractVer().getCtAmendment().setContractExtend(false);
+				this.getManagedBean().getContractVer().getCtAmendment().setQuantityChange(false);
+		    	this.getManagedBean().getContractVer().getCtAmendment().setClauseChange(false);*/
+			}
+    	   } catch (Exception e) {
+			System.out.println(e);
+		}
+    }
+   public void selectedItemList(){
+    	  this.getManagedBean().setServiceItem(false);
+    	  this.getManagedBean().setProductItem(true);
+    }
+    
+   public void  selectedServiceList(){
+	   this.getManagedBean().setServiceItem(true);
+ 	  this.getManagedBean().setProductItem(false);
+    }
     
     private void flushDiscip() {
     	this.getManagedBean().setDisciplinaryValue(false);

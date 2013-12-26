@@ -59,6 +59,14 @@ public class ContractDetailsManagedBean extends BaseManagedBean{
 	private boolean amendAckw;
 	private boolean bpkApprover=true;
 	
+	private String itemType;
+	private boolean serviceItem;
+	private boolean productItem = true;
+	private CtContractItem selectedItem;
+	private CtContractItem SelectedServiceItem;
+	private boolean amendmentAction;
+	
+	
 	private CtContractVer contractVer;
 	private CtDeduction ctDeductionDel = new CtDeduction();
 	private List<CtDeductionClause> ctDeductionClauseList;
@@ -652,6 +660,53 @@ public class ContractDetailsManagedBean extends BaseManagedBean{
 	public void setDisciplinaryValue(boolean disciplinaryValue) {
 		this.disciplinaryValue = disciplinaryValue;
 	}
-	
+
+	public String getItemType() {
+		return itemType;
+	}
+
+	public void setItemType(String itemType) {
+		this.itemType = itemType;
+	}
+
+	public boolean isServiceItem() {
+		return serviceItem;
+	}
+
+	public void setServiceItem(boolean serviceItem) {
+		this.serviceItem = serviceItem;
+	}
+
+	public boolean isProductItem() {
+		return productItem;
+	}
+
+	public void setProductItem(boolean productItem) {
+		this.productItem = productItem;
+	}
+
+	public CtContractItem getSelectedItem() {
+		return selectedItem;
+	}
+
+	public void setSelectedItem(CtContractItem selectedItem) {
+		this.selectedItem = selectedItem;
+	}
+
+	public CtContractItem getSelectedServiceItem() {
+		return SelectedServiceItem;
+	}
+
+	public void setSelectedServiceItem(CtContractItem selectedServiceItem) {
+		SelectedServiceItem = selectedServiceItem;
+	}
+
+	public boolean isAmendmentAction() {
+		return amendmentAction;
+	}
+
+	public void setAmendmentAction(boolean amendmentAction) {
+		this.amendmentAction = amendmentAction;
+	}
 	
 }

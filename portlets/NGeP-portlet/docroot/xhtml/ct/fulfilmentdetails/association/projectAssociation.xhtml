@@ -12,7 +12,7 @@
       .column-align-center { text-align: center !important;}
     </style>
           <p:panel id="associatePanelId" header="Project Association"   toggleable="true"  toggleSpeed="500">
-            <h:panelGrid columns="4" style="width:900px;">
+            <h:panelGrid columns="4" style="width:100%;">
                <h:outputLabel value="#{lbl['lbl.ct.asearch.pname']}"  />
                <p:inputText value="#{contractDetailsBackingBean.managedBean.projectName}"  style="width:170px;"/>
                <h:outputLabel value="#{lbl['lbl.ct.asearch.cname']}"  />
@@ -37,7 +37,7 @@
 		 </p:panel>
 		 <p:panel id="associateResultId" header="#{lbl['lbl.ct.asearch.panel.result']}"   toggleable="true"  toggleSpeed="500">
             <div style="overflow-x:auto">
-			    <h:panelGrid  style="width:930px;">          
+			    <h:panelGrid  style="width:100%;">          
 			        <p:dataTable id="associateSearch" var="data" value="#{contractDetailsBackingBean.managedBean.associationList}" rowIndexVar="index"
 			         widgetVar="dataTableObj" lazy="false" dynamic="true" paginator="true" paginatorPosition="bottom" paginatorAlwaysVisible="true" 
 			         emptyMessage="No Records!">
@@ -65,7 +65,7 @@
 		                           </p:commandLink>
 								</p:column>
 					      </p:dataTable>
-						    <h:panelGrid style="width:940px;">
+						    <h:panelGrid style="width:100%;">
 							  <p:commandButton value="Create"  style="float:right;" icon="ui-icon-add" action="#{contractDetailsBackingBean.gotoAssociatePage}"/>
 						    </h:panelGrid>
 				    </h:panelGrid>
