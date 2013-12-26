@@ -23,13 +23,17 @@
 			update="draftSupplierItemID"></p:commandButton>
 	</div>
 
-<ac:lovPopup />
+	<ac:lovPopup />
 
 	<p:dataTable id="draftSupplierItemID"
 		value="#{catalogueBackingBean.managedBean.maintainItemList}"
 		rowIndexVar="rowIndex" var="selectedSuppCat"
 		rowKey="#{selectedSuppCat.supplierItemId}"
-		selection="#{catalogueBackingBean.managedBean.selectedMaintainItems}">
+		selection="#{catalogueBackingBean.managedBean.selectedMaintainItems}"
+		paginator="true" rows="10" paginatorPosition="bottom"
+		paginatorTemplate="{LastPageLink} {NextPageLink} {PreviousPageLink} {FirstPageLink} Page {JumpToPageDropdown} {CurrentPageReport}"
+		currentPageReportTemplate="/ {totalPages}"
+		rowsPerPageTemplate="5,10,15">
 
 		<p:column selectionMode="multiple" style="width:2%" />
 
@@ -52,8 +56,8 @@
 			<f:facet name="header">
 				#{lbl['lbl.cm.uom']}
 			</f:facet>
-			<ac:lov id="draftUomLovId" lovId="PM_UOM" size="20" headerText="UOM Lov"
-				update=":form:maintenanceTabId:draftSupplierItemID"
+			<ac:lov id="draftUomLovId" lovId="PM_UOM" size="20"
+				headerText="UOM Lov"
 				saveObject="catalogueBackingBean.managedBean.maintainItemList[#{rowIndex}].pmUom"
 				value="#{selectedSuppCat.pmUom.uomName}"
 				conditionField="recordStatus^1">
@@ -63,14 +67,18 @@
 			<f:facet name="header">
 				#{lbl['lbl.cm.start.date']}
 			</f:facet>
-			<p:calendar value="#{selectedSuppCat.cmStandardPricing.startDate}" showOn="button" size="10" pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}"></p:calendar>
+			<p:calendar value="#{selectedSuppCat.cmStandardPricing.startDate}"
+				showOn="button" size="10"
+				pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}"></p:calendar>
 
 		</p:column>
 		<p:column>
 			<f:facet name="header">
 				#{lbl['lbl.cm.end.date']}
 			</f:facet>
-			<p:calendar value="#{selectedSuppCat.cmStandardPricing.endDate}" showOn="button" size="10" pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}"></p:calendar>
+			<p:calendar value="#{selectedSuppCat.cmStandardPricing.endDate}"
+				showOn="button" size="10"
+				pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}"></p:calendar>
 
 		</p:column>
 		<p:column>
@@ -84,6 +92,16 @@
 			</p:commandLink>
 		</p:column>
 	</p:dataTable>
+	
+	<div class="clear"> </div>
+
+	<div style="text-align: right;">
+		<p:commandButton value="Add" icon="ui-icon-add"
+			action="#{catalogueBackingBean.navigateToSearchCode}" />
+
+	</div>
+
+
 	<p:dialog id="excelDialog" widgetVar="excelDialog" modal="true"
 		resizable="false" appendToBody="true">
 

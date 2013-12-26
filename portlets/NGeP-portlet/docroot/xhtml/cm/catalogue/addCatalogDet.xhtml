@@ -180,8 +180,10 @@
 
 			</p:tab>
 
-			<p:tab id="remarkId" title="Remarks"
+			<p:tab id="remarkId" title="Reject Reason"
 				rendered="#{unspscCodeBackingBean.catalogueAdmin or unspscCodeBackingBean.supplierUser or unspscCodeBackingBean.supplierAdmin}">
+				
+				<ui:include src="remark.xhtml"></ui:include>
 
 			</p:tab>
 

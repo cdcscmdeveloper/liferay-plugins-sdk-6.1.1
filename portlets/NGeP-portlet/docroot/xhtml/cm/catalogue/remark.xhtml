@@ -1,0 +1,36 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui">
+
+	<p:dataGrid id="catalogueRemarkId"
+		value="#{catalogueBackingBean.managedBean.selectedMaintainItem.cmItemRejectReasons}"
+		var="remarkVar" rowIndexVar="remarkIndex" columns="1">
+
+
+
+		<table style="width: 100%">
+			<tr>
+				<td><p:selectOneMenu>
+						<f:selectItem itemLabel="Select One" itemValue="" />
+						<f:selectItems
+							value="#{catalogueBackingBean.managedBean.statusDescList}"
+							var="remark" itemLabel="#{remark.statusName}"
+							itemValue="#{remark.statusDescId}"></f:selectItems>
+					</p:selectOneMenu></td>
+				<td><p:inputText></p:inputText></td>
+			</tr>
+		</table>
+
+
+	</p:dataGrid>
+
+	<div align="right">
+		<p:commandButton value="#{lbl['lbl.cm.add']}"
+			action="#{catalogueBackingBean.addCatalogueRemarks()}"
+			update="catalogueRemarkId" process="@this"></p:commandButton>
+	</div>
+
+
+</ui:composition>

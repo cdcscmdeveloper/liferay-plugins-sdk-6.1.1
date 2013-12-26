@@ -31,27 +31,26 @@ import my.ep.biz.service.cm.catalogue.ICatalogueSO;
 import my.ep.biz.service.cm.catalogue.IWishListSO;
 import my.ep.biz.service.pm.common.district.IDistrictSO;
 import my.ep.biz.service.pm.common.state.IStateSO;
+import my.ep.biz.service.pm.common.status.IStatusSO;
 import my.ep.biz.service.sm.registration.IRegistrationSO;
 import my.ep.dto.cm.catalogue.CatalogueReqDTO;
 import my.ep.dto.cm.catalogue.CatalogueResDTO;
-import my.ep.dto.cm.catalogue.WishListReqDTO;
-import my.ep.dto.cm.catalogue.WishListResDTO;
 import my.ep.dto.pm.common.district.DistrictReqDTO;
 import my.ep.dto.pm.common.district.DistrictResDTO;
 import my.ep.dto.pm.common.state.StateReqDTO;
 import my.ep.dto.pm.common.state.StateResDTO;
+import my.ep.dto.pm.common.status.StatusReqDTO;
+import my.ep.dto.pm.common.status.StatusResDTO;
 import my.ep.dto.sm.registration.RegistrationReqDTO;
 import my.ep.dto.sm.registration.RegistrationResDTO;
 import my.ep.persistence.entity.cm.catalog.CmImage;
 import my.ep.persistence.entity.cm.catalog.CmItem;
+import my.ep.persistence.entity.cm.catalog.CmItemRejectReason;
 import my.ep.persistence.entity.cm.catalog.CmPricing;
-import my.ep.persistence.entity.cm.catalog.CmPromotionPricing;
 import my.ep.persistence.entity.cm.catalog.CmPromotionTierPricing;
 import my.ep.persistence.entity.cm.catalog.CmSupplierItem;
 import my.ep.persistence.entity.cm.catalog.CmTierPricing;
-import my.ep.persistence.entity.cm.catalog.CmZonalPromotionPricing;
 import my.ep.persistence.entity.cm.catalog.CmZonalPromotionTierPricing;
-import my.ep.persistence.entity.cm.catalog.CmZonalStandardPricing;
 import my.ep.persistence.entity.cm.catalog.CmZonalTierPricing;
 import my.ep.persistence.logging.LogKey;
 import my.ep.type.aut.SearchOperator;
@@ -100,12 +99,12 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean>{
 			MDC.put(LogKey.USER_ID, 1L);
 		}
 
-		this.getManagedBean().setWishLists(null);
+		/*this.getManagedBean().setWishLists(null);
 
 		WishListReqDTO reqDTO = new WishListReqDTO();
 
 		WishListResDTO resDTO = wishListSO.retrieveWishList(reqDTO);
-		this.getManagedBean().setWishLists(resDTO.getWishLists());
+		this.getManagedBean().setWishLists(resDTO.getWishLists());*/
 
 
 
@@ -126,7 +125,7 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean>{
 
 
 
-	public void addToMaintain(){
+	public String addToMaintain(){
 
 		ICatalogueSO catalogueSO = (ICatalogueSO)BusinessDelegate.getInstance().getServiceObject("cm",ICatalogueSO.class);
 
@@ -162,7 +161,7 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean>{
 
 
 
-		//return "catalogueMaintenanceFile";
+		return "../catalogue/preRenderCatalogueMaintenanceFile.xhtml";
 	}
 
 
@@ -200,7 +199,23 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean>{
 
 		log.info("*****this.getManagedBean().getMaintainItemList().get(index).getCmImages().size()*****:"+this.getManagedBean().getMaintainItemList().get(index).getCmImages().size());
 
+		IStatusSO statusSO = (IStatusSO) BusinessDelegate.getInstance().getServiceObject("pm",IStatusSO.class);
+		
+		StatusReqDTO statusReqDTO = new StatusReqDTO();
+		
+		statusReqDTO.setDocType("CMR");
+		statusReqDTO.setModuleCode("CM");
+		statusReqDTO.setLanguageCode("en");
+		
+		StatusResDTO resDTO = statusSO.retrieveStatusDescList(statusReqDTO);
+		
+		
+		this.getManagedBean().setStatusDescList(resDTO.getStatusDescList());
 		this.getManagedBean().setSelectedMaintainItem(this.getManagedBean().getMaintainItemList().get(index));
+		
+		
+		
+		
 
 		return "addCatalogItem";
 
@@ -273,7 +288,7 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean>{
 
 		this.getManagedBean().setSelectedMaintainItem(this.getManagedBean().getSupplierItemList().get(index));
 
-		return "addCatalogItem";
+		return "supplierItemDetView?faces-redirect=true";
 	}
 
 	/*public void addNewPromotionPricing(){
@@ -1276,7 +1291,27 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean>{
 
 	}
 
+	
+	public void addCatalogueRemarks(){
+		
+		CmItemRejectReason reason = new CmItemRejectReason();
+		
+		this.getManagedBean().getSelectedMaintainItem().getCmItemRejectReasons().add(reason);
+		
+	}
+	
+	public String navigateToSearchCode(){
+		
+		
+		return "codificationView";
+	}
 
+	
+	public String cancelToSupplierItemSearch(){
+		
+		
+		return "supplierItemView";
+	}
 
 
 }
