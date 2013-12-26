@@ -9,7 +9,13 @@
 		<table style="width: 250px">
 			<p:outputPanel rendered="#{backingBean.managedBean.poUser}">
 				<tr>
-					<td width="10px" style="padding-right: 2px;"><p:selectBooleanCheckbox /></td>
+					<td width="10px" style="padding-right: 2px;"><p:selectBooleanCheckbox
+							value="#{backingBean.managedBean.poSecReview.officeFacilityVerfied}"
+							id="poOffVer">
+							<p:ajax update=":form:tt:offInfPan,:form:revPanHdr"
+								event="change"
+								listener="#{backingBean.changeVerifySection(backingBean.managedBean.poSecReview.officeFacilityVerfied)}" />
+						</p:selectBooleanCheckbox></td>
 					<td valign="top"><h:outputText
 							value=" Section Verified By PO: "
 							title="For PO to highlight the verified section " /></td>
@@ -26,144 +32,148 @@
 			</p:outputPanel>
 		</table>
 		<br />
-		<table style="width: 100%">
+		<p:panel id="offInfPan">
+			<p:blockUI block=":form:tt:offInfPan" widgetVar="buiPoOff" id="poOffBlc"
+				blocked="#{backingBean.managedBean.poSecReview.officeFacilityVerfied and backingBean.managedBean.poUser}" />
 
-			<tr>
-				<td width="127px;"><p:outputLabel value="Ownership Type" /></td>
-				<td colspan="3"><p:selectOneRadio id="options"
-						value="#{backingBean.managedBean.officeFacility.ownershipType}">
-						<f:selectItem itemLabel="Owned" itemValue="O" />
-						<f:selectItem itemLabel="Rented" itemValue="R" />
-						<p:ajax update="ofp" event="change"
-							listener="#{backingBean.officeFacilitySelected}" />
-					</p:selectOneRadio></td>
-
-			</tr>
-		</table>
-		<ui:fragment
-			rendered="#{backingBean.managedBean.officeFacility.ownershipType eq 'R'}">
 			<table style="width: 100%">
-				<tr>
-					<td><p:outputLabel value="* Landlord's Name" /></td>
-					<td><p:inputText
-							value="#{backingBean.managedBean.officeFacility.ownerName}"
-							size="40" /></td>
-					<td><p:outputLabel value="* Monthly Rental" /></td>
-					<td>
-						<table>
-							<tr>
-								<td style="padding-right: 5px;"><p:inputText
-										value="#{backingBean.managedBean.officeFacility.rentalRate}"
-										size="25" /></td>
-								<td valign="top"><p:selectOneMenu
-										style="margin-bottom:5px;">
-										<f:selectItem itemLabel="MYR" itemValue="1" />
-									</p:selectOneMenu></td>
-							</tr>
-						</table>
-					</td>
-				</tr>
-				<tr>
-					<td><p:outputLabel value="#{lbl['lbl.sm.companyaddress']}" /></td>
-					<td><p:inputText size="40" colspan="3" /></td>
-				</tr>
-				<tr>
-					<td></td>
-					<td><p:inputText size="40" colspan="3" /></td>
-				</tr>
-				<tr>
-					<td></td>
-					<td><p:inputText size="40" colspan="3" /></td>
-				</tr>
-				<tr>
-					<td><p:outputLabel value="#{lbl['lbl.sm.postcode']}" /></td>
-					<td><p:inputText size="40" /></td>
-					<td><p:outputLabel value="#{lbl['lbl.sm.state']}" /></td>
-					<td><p:inputText size="40" /></td>
-				</tr>
 
 				<tr>
-					<td><p:outputLabel value="#{lbl['lbl.sm.district']}" /></td>
-					<td><p:inputText size="40" /></td>
-					<td><p:outputLabel value="#{lbl['lbl.sm.towncity']}" /></td>
-					<td><p:inputText size="40" /></td>
+					<td width="127px;"><p:outputLabel value="Ownership Type" /></td>
+					<td colspan="3"><p:selectOneRadio id="options"
+							value="#{backingBean.managedBean.officeFacility.ownershipType}">
+							<f:selectItem itemLabel="Owned" itemValue="O" />
+							<f:selectItem itemLabel="Rented" itemValue="R" />
+							<p:ajax update="ofp" event="change"
+								listener="#{backingBean.officeFacilitySelected}" />
+						</p:selectOneRadio></td>
+
 				</tr>
-				<p:outputPanel rendered="#{backingBean.managedBean.poUser}">
-
-					<tr>
-						<td><p:outputLabel value="PO Remarks" /></td>
-						<td colspan="3"><p:inputTextarea autoResize="true" cols="41" /></td>
-					</tr>
-
-				</p:outputPanel>
-				<p:outputPanel rendered="#{backingBean.managedBean.approverUser}">
-
-					<tr>
-						<td><p:outputLabel value="PO Remarks" /></td>
-						<td><p:inputTextarea autoResize="true" readonly="true"
-								disabled="true" cols="41" /></td>
-						<td><p:outputLabel value="Approver Remarks" /></td>
-						<td><p:inputTextarea autoResize="true" cols="41" /></td>
-
-					</tr>
-
-				</p:outputPanel>
 			</table>
-		</ui:fragment>
-		<ui:fragment
-			rendered="#{backingBean.managedBean.officeFacility.ownershipType eq 'O'}">
-			<table style="width: 100%">
-				<tr>
-					<td width="127px;"><p:outputLabel value="* Owner Name" /></td>
-					<td colspan="3"><p:inputText
-							value="#{backingBean.managedBean.officeFacility.ownerName}"
-							size="40" /></td>
-				</tr>
-				<tr>
-					<td width="127px;"><p:outputLabel value="* Purchase Date" /></td>
-					<td colspan="3"><p:calendar showOn="button"
-							value="#{backingBean.managedBean.officeFacility.purchaseDate}"
-							style="margin-bottom:5px;" /></td>
-				</tr>
-				<tr>
-					<td width="127px;"><p:outputLabel value="* Purchase Price" /></td>
-					<td colspan="3">
-						<table>
-							<tr>
-								<td style="padding-right: 5px;"><p:inputText size="26"
-										value="#{backingBean.managedBean.officeFacility.purchasePrice}" />
-								</td>
-								<td valign="top"><p:selectOneMenu
-										style="margin-bottom:5px;">
-										<f:selectItem itemLabel="MYR" itemValue="1" />
-									</p:selectOneMenu></td>
-							</tr>
-						</table>
-					</td>
-
-				</tr>
-				<p:outputPanel rendered="#{backingBean.managedBean.poUser}">
-
+			<ui:fragment
+				rendered="#{backingBean.managedBean.officeFacility.ownershipType eq 'R'}">
+				<table style="width: 100%">
 					<tr>
-						<td><p:outputLabel value="PO Remarks" /></td>
-						<td colspan="3"><p:inputTextarea autoResize="true" cols="41" /></td>
+						<td><p:outputLabel value="* Landlord's Name" /></td>
+						<td><p:inputText
+								value="#{backingBean.managedBean.officeFacility.ownerName}"
+								size="40" /></td>
+						<td><p:outputLabel value="* Monthly Rental" /></td>
+						<td>
+							<table>
+								<tr>
+									<td style="padding-right: 5px;"><p:inputText
+											value="#{backingBean.managedBean.officeFacility.rentalRate}"
+											size="25" /></td>
+									<td valign="top"><p:selectOneMenu
+											style="margin-bottom:5px;">
+											<f:selectItem itemLabel="MYR" itemValue="1" />
+										</p:selectOneMenu></td>
+								</tr>
+							</table>
+						</td>
+					</tr>
+					<tr>
+						<td><p:outputLabel value="#{lbl['lbl.sm.companyaddress']}" /></td>
+						<td><p:inputText size="40" colspan="3" /></td>
+					</tr>
+					<tr>
+						<td></td>
+						<td><p:inputText size="40" colspan="3" /></td>
+					</tr>
+					<tr>
+						<td></td>
+						<td><p:inputText size="40" colspan="3" /></td>
+					</tr>
+					<tr>
+						<td><p:outputLabel value="#{lbl['lbl.sm.postcode']}" /></td>
+						<td><p:inputText size="40" /></td>
+						<td><p:outputLabel value="#{lbl['lbl.sm.state']}" /></td>
+						<td><p:inputText size="40" /></td>
 					</tr>
 
-				</p:outputPanel>
-				<p:outputPanel rendered="#{backingBean.managedBean.approverUser}">
-
 					<tr>
-						<td><p:outputLabel value="PO Remarks" /></td>
-						<td><p:inputTextarea autoResize="true" readonly="true"
-								disabled="true" cols="41" /></td>
-						<td><p:outputLabel value="Approver Remarks" /></td>
-						<td><p:inputTextarea autoResize="true" cols="41" /></td>
+						<td><p:outputLabel value="#{lbl['lbl.sm.district']}" /></td>
+						<td><p:inputText size="40" /></td>
+						<td><p:outputLabel value="#{lbl['lbl.sm.towncity']}" /></td>
+						<td><p:inputText size="40" /></td>
+					</tr>
+					<p:outputPanel rendered="#{backingBean.managedBean.poUser}">
+
+						<tr>
+							<td><p:outputLabel value="PO Remarks" /></td>
+							<td colspan="3"><p:inputTextarea autoResize="true" cols="41" /></td>
+						</tr>
+
+					</p:outputPanel>
+					<p:outputPanel rendered="#{backingBean.managedBean.approverUser}">
+
+						<tr>
+							<td><p:outputLabel value="PO Remarks" /></td>
+							<td><p:inputTextarea autoResize="true" readonly="true"
+									disabled="true" cols="41" /></td>
+							<td><p:outputLabel value="Approver Remarks" /></td>
+							<td><p:inputTextarea autoResize="true" cols="41" /></td>
+
+						</tr>
+
+					</p:outputPanel>
+				</table>
+			</ui:fragment>
+			<ui:fragment
+				rendered="#{backingBean.managedBean.officeFacility.ownershipType eq 'O'}">
+				<table style="width: 100%">
+					<tr>
+						<td width="127px;"><p:outputLabel value="* Owner Name" /></td>
+						<td colspan="3"><p:inputText
+								value="#{backingBean.managedBean.officeFacility.ownerName}"
+								size="40" /></td>
+					</tr>
+					<tr>
+						<td width="127px;"><p:outputLabel value="* Purchase Date" /></td>
+						<td colspan="3"><p:calendar showOn="button"
+								value="#{backingBean.managedBean.officeFacility.purchaseDate}"
+								style="margin-bottom:5px;" /></td>
+					</tr>
+					<tr>
+						<td width="127px;"><p:outputLabel value="* Purchase Price" /></td>
+						<td colspan="3">
+							<table>
+								<tr>
+									<td style="padding-right: 5px;"><p:inputText size="26"
+											value="#{backingBean.managedBean.officeFacility.purchasePrice}" />
+									</td>
+									<td valign="top"><p:selectOneMenu
+											style="margin-bottom:5px;">
+											<f:selectItem itemLabel="MYR" itemValue="1" />
+										</p:selectOneMenu></td>
+								</tr>
+							</table>
+						</td>
 
 					</tr>
+					<p:outputPanel rendered="#{backingBean.managedBean.poUser}">
 
-				</p:outputPanel>
-			</table>
-		</ui:fragment>
+						<tr>
+							<td><p:outputLabel value="PO Remarks" /></td>
+							<td colspan="3"><p:inputTextarea autoResize="true" cols="41" /></td>
+						</tr>
 
+					</p:outputPanel>
+					<p:outputPanel rendered="#{backingBean.managedBean.approverUser}">
+
+						<tr>
+							<td><p:outputLabel value="PO Remarks" /></td>
+							<td><p:inputTextarea autoResize="true" readonly="true"
+									disabled="true" cols="41" /></td>
+							<td><p:outputLabel value="Approver Remarks" /></td>
+							<td><p:inputTextarea autoResize="true" cols="41" /></td>
+
+						</tr>
+
+					</p:outputPanel>
+				</table>
+			</ui:fragment>
+		</p:panel>
 	</p:panel>
 </ui:composition>

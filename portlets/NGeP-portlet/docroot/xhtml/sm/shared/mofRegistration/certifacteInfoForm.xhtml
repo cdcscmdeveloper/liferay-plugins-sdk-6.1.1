@@ -10,7 +10,13 @@
 		<table style="width: 250px">
 			<p:outputPanel rendered="#{backingBean.managedBean.poUser}">
 				<tr>
-					<td width="10px" style="padding-right: 2px;"><p:selectBooleanCheckbox /></td>
+					<td width="10px" style="padding-right: 2px;"><p:selectBooleanCheckbox
+							value="#{backingBean.managedBean.poSecReview.certVerified}"
+							id="poCertVer">
+							<p:ajax update=":form:tt:certInfPan,:form:revPanHdr"
+								event="change"
+								listener="#{backingBean.changeVerifySection(backingBean.managedBean.poSecReview.certVerified)}" />
+						</p:selectBooleanCheckbox></td>
 					<td valign="top"><h:outputText
 							value=" Section Verified By PO: "
 							title="For PO to highlight the verified section " /></td>
@@ -27,77 +33,83 @@
 			</p:outputPanel>
 		</table>
 		<br />
-		<p:dataTable var="certBean"
-			value="#{backingBean.managedBean.smAppl.smSupplierCerts}"
-			selection="#{backingBean.managedBean.selectedCertList}"
-			rowKey="#{certBean.supplierCertId}" rowIndexVar="index" id="certDt">
-			<ac:paginator for="certDt" />
-			<p:column selectionMode="multiple" width="5%" />
+		<p:panel id="certInfPan">
+			<p:blockUI block=":form:tt:certInfPan" widgetVar="buiPoCert"
+				id="poCertBlc"
+				blocked="#{backingBean.managedBean.poSecReview.certVerified and backingBean.managedBean.poUser}" />
 
-			<p:column headerText="NO.">
-				<h:outputText value="#{index+1}" />
-			</p:column>
+			<p:dataTable var="certBean"
+				value="#{backingBean.managedBean.smAppl.smSupplierCerts}"
+				selection="#{backingBean.managedBean.selectedCertList}"
+				rowKey="#{certBean.supplierCertId}" rowIndexVar="index" id="certDt">
+				<ac:paginator for="certDt" />
+				<p:column selectionMode="multiple" width="5%" />
 
-			<p:column headerText="Cert Name">
-				<h:outputText value="#{certBean.certName}" />
-			</p:column>
+				<p:column headerText="NO.">
+					<h:outputText value="#{index+1}" />
+				</p:column>
 
-			<p:column headerText="Cert Type">
-				<h:outputText value="-- TBC --" />
-			</p:column>
+				<p:column headerText="Cert Name">
+					<h:outputText value="#{certBean.certName}" />
+				</p:column>
 
-			<p:column headerText="Issue Date">
-				<h:outputText value="#{certBean.certStartDate}">
-					<f:convertDateTime type="date" pattern="dd-MMM-yyyy" />
-				</h:outputText>
-			</p:column>
+				<p:column headerText="Cert Type">
+					<h:outputText value="-- TBC --" />
+				</p:column>
 
-			<p:column headerText="Expiry Date">
-				<h:outputText value="#{certBean.certEndDate}">
-					<f:convertDateTime type="date" pattern="dd-MMM-yyyy" />
-				</h:outputText>
+				<p:column headerText="Issue Date">
+					<h:outputText value="#{certBean.certStartDate}">
+						<f:convertDateTime type="date" pattern="dd-MMM-yyyy" />
+					</h:outputText>
+				</p:column>
 
-			</p:column>
-			<p:column headerText="Action">
-				<p:commandLink action="#{backingBean.assignSelCert(certBean)}"
-					oncomplete="certDialog.show();" update=":form:tt:certPop">
-					<p:graphicImage library="ep/images/design" name="edit.png"
-						value="/resources/ep/images/design/edit.png"
-						style="margin-right:2px;" />
-				</p:commandLink>
-			</p:column>
-		</p:dataTable>
-		<p:spacer height="2px;" />
-		<div align="right">
-			<p:commandButton value="Add " oncomplete="certDialog.show();"
-				action="#{backingBean.assignNewCert}" update=":form:tt:certPop" />
-			<p:commandButton value="Delete " />
+				<p:column headerText="Expiry Date">
+					<h:outputText value="#{certBean.certEndDate}">
+						<f:convertDateTime type="date" pattern="dd-MMM-yyyy" />
+					</h:outputText>
 
-		</div>
-		<br />
-		<p:outputPanel rendered="#{backingBean.managedBean.poUser}">
-			<table style="width: 50%">
-				<tr>
-					<td style="padding-left: 38px;"><p:outputLabel
-							value="PO Remarks" /></td>
-					<td><p:inputTextarea autoResize="true" cols="41" /></td>
-				</tr>
-			</table>
-		</p:outputPanel>
-		<p:outputPanel rendered="#{backingBean.managedBean.approverUser}">
-			<table style="width: 100%">
-				<tr>
-					<td style="padding-left: 38px;"><p:outputLabel
-							value="PO Remarks" /></td>
-					<td><p:inputTextarea autoResize="true" readonly="true"
-							disabled="true" cols="41" /></td>
-					<td style="padding-left: 22px;"><p:outputLabel
-							value="Approver Remarks" /></td>
-					<td><p:inputTextarea autoResize="true" cols="41" /></td>
+				</p:column>
+				<p:column headerText="Action">
+					<p:commandLink action="#{backingBean.assignSelCert(certBean)}"
+						oncomplete="certDialog.show();" update=":form:tt:certPop">
+						<p:graphicImage library="ep/images/design" name="edit.png"
+							value="/resources/ep/images/design/edit.png"
+							style="margin-right:2px;" />
+					</p:commandLink>
+				</p:column>
+			</p:dataTable>
+			<p:spacer height="2px;" />
+			<div align="right">
+				<p:commandButton value="Add " oncomplete="certDialog.show();"
+					action="#{backingBean.assignNewCert}" update=":form:tt:certPop" />
+				<p:commandButton value="Delete " />
 
-				</tr>
-			</table>
-		</p:outputPanel>
+			</div>
+			<br />
+			<p:outputPanel rendered="#{backingBean.managedBean.poUser}">
+				<table style="width: 50%">
+					<tr>
+						<td style="padding-left: 38px;"><p:outputLabel
+								value="PO Remarks" /></td>
+						<td><p:inputTextarea autoResize="true" cols="41" /></td>
+					</tr>
+				</table>
+			</p:outputPanel>
+			<p:outputPanel rendered="#{backingBean.managedBean.approverUser}">
+				<table style="width: 100%">
+					<tr>
+						<td style="padding-left: 38px;"><p:outputLabel
+								value="PO Remarks" /></td>
+						<td><p:inputTextarea autoResize="true" readonly="true"
+								disabled="true" cols="41" /></td>
+						<td style="padding-left: 22px;"><p:outputLabel
+								value="Approver Remarks" /></td>
+						<td><p:inputTextarea autoResize="true" cols="41" /></td>
+
+					</tr>
+				</table>
+			</p:outputPanel>
+		</p:panel>
 	</p:panel>
 	<p:dialog width="500px" header="Company Certificate Page"
 		widgetVar="certDialog" resizable="false" showEffect="fade"

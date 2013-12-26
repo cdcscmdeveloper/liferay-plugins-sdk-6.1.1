@@ -9,7 +9,13 @@
 		<table style="width: 250px">
 			<p:outputPanel rendered="#{backingBean.managedBean.poUser}">
 				<tr>
-					<td width="10px" style="padding-right: 2px;"><p:selectBooleanCheckbox /></td>
+					<td width="10px" style="padding-right: 2px;"><p:selectBooleanCheckbox
+							value="#{backingBean.managedBean.poSecReview.staffVerified}"
+							id="poStfVer">
+							<p:ajax update=":form:tt:stfInfPan,:form:revPanHdr"
+								event="change"
+								listener="#{backingBean.changeVerifySection(backingBean.managedBean.poSecReview.staffVerified)}" />
+						</p:selectBooleanCheckbox></td>
 					<td valign="top"><h:outputText
 							value=" Section Verified By PO: "
 							title="For PO to highlight the verified section " /></td>
@@ -26,58 +32,63 @@
 			</p:outputPanel>
 		</table>
 		<br />
-		<p:dataGrid value="#{backingBean.managedBean.smAppl.smStaffTotals}"
-			var="staff" columns="1">
+		<p:panel id="stfInfPan">
+			<p:blockUI block=":form:tt:stfInfPan" widgetVar="buiPoStf" id="poStfBlc"
+				blocked="#{backingBean.managedBean.poSecReview.staffVerified and backingBean.managedBean.poUser}" />
+			<p:dataGrid value="#{backingBean.managedBean.smAppl.smStaffTotals}"
+				var="staff" columns="1">
 
-			<table style="width: 800px;">
-				<tr>
-					<td width="160px"><p:outputLabel value="Total No. Of Staff : "
-							rendered="#{staff.staffCategory eq 'C'}" /> <p:outputLabel
-							value="Total Professional Staff : "
-							rendered="#{staff.staffCategory eq 'P'}" /> <p:outputLabel
-							value="Total Semi Professional Staff : "
-							rendered="#{staff.staffCategory eq 'S'}" /> <p:outputLabel
-							value="Total Clerical Staff : "
-							rendered="#{staff.staffCategory eq 'L'}" /></td>
-					<td width="50px"><p:outputLabel value="* Bumi" /></td>
-					<td width="60px"><p:inputText size="4"
-							value="#{staff.totalBumi}" maxlength="4"
-							style="min-width: 0px !important;" /></td>
-					<td width="80px"><p:outputLabel value="* Non-Bumi " /></td>
-					<td width="60px"><p:inputText size="4"
-							style="min-width: 0px !important;" value="#{staff.totalNonBumi}"
-							maxlength="4" /></td>
-					<td width="80px"><p:outputLabel value="* Foreigner " /></td>
-					<td width="60px" style="padding-right: 20px;"><p:inputText
-							size="4" value="#{staff.totalForeigner}" maxlength="4"
-							style="min-width: 0px !important;" /></td>
-				</tr>
+				<table style="width: 800px;">
+					<tr>
+						<td width="160px"><p:outputLabel
+								value="Total No. Of Staff : "
+								rendered="#{staff.staffCategory eq 'C'}" /> <p:outputLabel
+								value="Total Professional Staff : "
+								rendered="#{staff.staffCategory eq 'P'}" /> <p:outputLabel
+								value="Total Semi Professional Staff : "
+								rendered="#{staff.staffCategory eq 'S'}" /> <p:outputLabel
+								value="Total Clerical Staff : "
+								rendered="#{staff.staffCategory eq 'L'}" /></td>
+						<td width="50px"><p:outputLabel value="* Bumi" /></td>
+						<td width="60px"><p:inputText size="4"
+								value="#{staff.totalBumi}" maxlength="4"
+								style="min-width: 0px !important;" /></td>
+						<td width="80px"><p:outputLabel value="* Non-Bumi " /></td>
+						<td width="60px"><p:inputText size="4"
+								style="min-width: 0px !important;" value="#{staff.totalNonBumi}"
+								maxlength="4" /></td>
+						<td width="80px"><p:outputLabel value="* Foreigner " /></td>
+						<td width="60px" style="padding-right: 20px;"><p:inputText
+								size="4" value="#{staff.totalForeigner}" maxlength="4"
+								style="min-width: 0px !important;" /></td>
+					</tr>
 
-			</table>
-		</p:dataGrid>
-		<br />
-		<p:outputPanel rendered="#{backingBean.managedBean.poUser}">
-			<table style="width: 50%">
-				<tr>
-					<td style="padding-left: 38px;"><p:outputLabel
-							value="PO Remarks" /></td>
-					<td><p:inputTextarea autoResize="true" cols="41" /></td>
-				</tr>
-			</table>
-		</p:outputPanel>
-		<p:outputPanel rendered="#{backingBean.managedBean.approverUser}">
-			<table style="width: 100%">
-				<tr>
-					<td style="padding-left: 38px;"><p:outputLabel
-							value="PO Remarks" /></td>
-					<td><p:inputTextarea autoResize="true" readonly="true"
-							disabled="true" cols="41" /></td>
-					<td style="padding-left: 22px;"><p:outputLabel
-							value="Approver Remarks" /></td>
-					<td><p:inputTextarea autoResize="true" cols="41" /></td>
+				</table>
+			</p:dataGrid>
+			<br />
+			<p:outputPanel rendered="#{backingBean.managedBean.poUser}">
+				<table style="width: 50%">
+					<tr>
+						<td style="padding-left: 38px;"><p:outputLabel
+								value="PO Remarks" /></td>
+						<td><p:inputTextarea autoResize="true" cols="41" /></td>
+					</tr>
+				</table>
+			</p:outputPanel>
+			<p:outputPanel rendered="#{backingBean.managedBean.approverUser}">
+				<table style="width: 100%">
+					<tr>
+						<td style="padding-left: 38px;"><p:outputLabel
+								value="PO Remarks" /></td>
+						<td><p:inputTextarea autoResize="true" readonly="true"
+								disabled="true" cols="41" /></td>
+						<td style="padding-left: 22px;"><p:outputLabel
+								value="Approver Remarks" /></td>
+						<td><p:inputTextarea autoResize="true" cols="41" /></td>
 
-				</tr>
-			</table>
-		</p:outputPanel>
+					</tr>
+				</table>
+			</p:outputPanel>
+		</p:panel>
 	</p:panel>
 </ui:composition>

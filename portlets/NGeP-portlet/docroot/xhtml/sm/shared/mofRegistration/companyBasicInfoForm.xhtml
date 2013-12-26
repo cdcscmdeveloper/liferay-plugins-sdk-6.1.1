@@ -10,8 +10,10 @@
 			<p:outputPanel rendered="#{backingBean.managedBean.poUser}">
 				<tr>
 					<td width="10px" style="padding-right: 2px;"><p:selectBooleanCheckbox
-							value="#{backingBean.managedBean.testBlock}" id="poBasVer">
-							<p:ajax update=":form:tt:bsInfPan" event="change" />
+							value="#{backingBean.managedBean.poSecReview.basicVerified}"
+							id="poBasVer">
+							<p:ajax update=":form:tt:bsInfPan,:form:revPanHdr" event="change"
+								listener="#{backingBean.changeVerifySection(backingBean.managedBean.poSecReview.basicVerified)}" />
 						</p:selectBooleanCheckbox></td>
 					<td valign="top"><h:outputText
 							value=" Section Verified By PO: "
@@ -31,8 +33,10 @@
 		<br />
 
 		<p:panel id="bsInfPan">
-			<p:blockUI block=":form:tt:bsInfPan" widgetVar="bui" id="poBasBlc"
-				blocked="#{backingBean.managedBean.testBlock and (backingBean.managedBean.poUser)}" />
+			<p:blockUI block=":form:tt:bsInfPan" widgetVar="buiPoBas"
+				id="poBasBlc"
+				blocked="#{backingBean.managedBean.poSecReview.basicVerified and backingBean.managedBean.poUser}"
+				rendered="#{backingBean.managedBean.poSecReview.basicVerified and backingBean.managedBean.poUser}" />
 			<table style="width: 100%">
 				<tr>
 

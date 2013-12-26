@@ -16,6 +16,11 @@
 
 		<p:messages id="messages" showDetail="true" autoUpdate="true"
 			closable="true" />
+		<p:outputPanel
+			rendered="#{backingBean.managedBean.approverUser or backingBean.managedBean.poUser}"
+			id="revPanHdr">
+			<ui:include src="mofReviewHeaderPage.xhtml" />
+		</p:outputPanel>
 		<p:tabView id="tt" widgetVar="tt" orientation="left"
 			activeIndex="#{backingBean.managedBean.tabActiveIndex}">
 
