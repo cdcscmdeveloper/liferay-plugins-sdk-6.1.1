@@ -24,20 +24,6 @@
  	
  	<managed-bean>
 		  <description>Profile Management Parameter Type Constants</description>
-		  <managed-bean-name>PmParamTypeConst</managed-bean-name>
-		  <managed-bean-class>my.ep.constant.pm.PmParamTypeConst</managed-bean-class>
-		  <managed-bean-scope>application</managed-bean-scope>
- 	</managed-bean>
- 	
-	<managed-bean>
-		  <description>Profile Management Parameter Constants</description>
-		  <managed-bean-name>PmParamConst</managed-bean-name>
-		  <managed-bean-class>my.ep.constant.pm.PmParamConst</managed-bean-class>
-		  <managed-bean-scope>application</managed-bean-scope>
- 	</managed-bean>
- 	
- 	<managed-bean>
-		  <description>Profile Management Parameter Type Constants</description>
 		  <managed-bean-name>ParameterTypeConst</managed-bean-name>
 		  <managed-bean-class>my.ep.constant.pm.ParameterTypeConst</managed-bean-class>
 		  <managed-bean-scope>application</managed-bean-scope>
