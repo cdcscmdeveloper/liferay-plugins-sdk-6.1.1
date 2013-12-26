@@ -54,7 +54,7 @@
 				<p:outputLabel value="Change clause"  />
 			</h:panelGrid>
 	     </h:panelGrid>
-	    <h:panelGrid columns="5" style="width:100%" columnClasses="columnWidth15">
+	    <h:panelGrid columns="4" style="width:75%" columnClasses="columnWidth20">
 	      <p:outputLabel for="txtname" value="#{lbl['lbl.ct.amend.txt.name']}" />
 	      <p:inputText id="txtname" style="width:170px;"
 				value="#{contractDetailsBackingBean.managedBean.contractVer.ctAmendment.title}"  />
@@ -62,21 +62,20 @@
 		      <p:inputText id="txtfrno"
 				value="#{contractDetailsBackingBean.managedBean.contractVer.ctAmendment.fileRefNo}"
 				style="width:150px;"/>
-			    <f:verbatim></f:verbatim>
 				
 	 </h:panelGrid>
 	  <h:panelGrid columns="3" style="width:100%" columnClasses="columnWidth15">
 	     <h:panelGroup>
-				 <div style="height:70px;width:115px; vertical-align: top;">
-					<p:outputLabel for="txtdesc" value="#{lbl['lbl.ct.amend.txt.desc']}" /></div>
+				 <div style="height:70px;width:115px; float:right; vertical-align: top;">
+					<p:outputLabel for="txtdesc" value="#{lbl['lbl.ct.amend.txt.desc']}"  /></div>
 			  </h:panelGroup>
 		   <h:panelGrid>
-				<h:inputTextarea id="txtdesc" rows="5" cols="103"
+				<h:inputTextarea id="txtdesc" rows="5" cols="100"
 					value="#{contractDetailsBackingBean.managedBean.contractVer.ctAmendment.description}"  />
 			  </h:panelGrid>
 			  
 		   </h:panelGrid>
-	    <h:panelGrid columns="5" style="width:100%" columnClasses="columnWidth15">
+	    <h:panelGrid columns="4" style="width:75%" columnClasses="columnWidth20">
 	     <p:outputLabel value="#{lbl['lbl.ct.amend.txt.effdate']}" />
 		 <p:calendar style="width:170px;" pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}"
 				value="#{contractDetailsBackingBean.managedBean.contractVer.ctAmendment.amendmentEffDate}"
@@ -87,7 +86,7 @@
 				<p:spacer width="1" />
 				<p:outputLabel value="Months" /> 
 			 </h:panelGrid>
-			 <f:verbatim/>
+
 		   <p:outputLabel value="#{lbl['lbl.ct.amend.txt.cestart']}" 
 		     rendered="#{contractDetailsBackingBean.managedBean.contractVer.ctAmendment.contractExtend}" />	
 		   <p:calendar style="width:170px;" pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}"
@@ -100,7 +99,7 @@
 				value="#{contractDetailsBackingBean.managedBean.contractVer.ctContractValue.expDate}"
 				id="exdateCal" showOn="button" 
 				rendered="#{contractDetailsBackingBean.managedBean.contractVer.ctAmendment.contractExtend}" />
-				<f:verbatim/>
+
 		 <p:outputLabel value="#{lbl['lbl.ct.amend.txt.avalue']}" 
 		   rendered="#{contractDetailsBackingBean.managedBean.contractVer.ctAmendment.valueChange}" />
 		 <p:inputText style="width:150px;" 
@@ -109,14 +108,14 @@
 		    rendered="#{contractDetailsBackingBean.managedBean.contractVer.ctAmendment.valueChange}" />
 		 <p:inputText style="width:150px;" disabled="true" 
 		   rendered="#{contractDetailsBackingBean.managedBean.contractVer.ctAmendment.valueChange}" />
-		  <f:verbatim/>
+		 
 	   </h:panelGrid>
 	   <h:panelGrid columns="2" style="width:100%"
 			columnClasses="columnWidth15">
 			<h:panelGroup>
-				<div style="height: 35px; float: right; vertical-align: top">
+				<div style="height: 35px; vertical-align: top">
 					<p:outputLabel for="contractHistory"
-						value="#{lbl['lbl.ct.amend.txt.history']}" />
+						value="#{lbl['lbl.ct.amend.txt.history']}" style="text-align:right;" />
 				</div>
 			</h:panelGroup>
 			<h:panelGrid id="contractHistory" columns="1">
