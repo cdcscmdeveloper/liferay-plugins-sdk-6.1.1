@@ -57,6 +57,7 @@ import my.ep.type.aut.SearchOperator;
 import my.ep.web.backingbean.BaseBackingBean;
 import my.ep.web.backingbean.cm.codification.CodificationBackingBean;
 import my.ep.web.managedbean.cm.catalogue.CatalogueManagedBean;
+import my.ep.web.util.FacesScopes;
 import my.ep.web.util.lookupservice.BusinessDelegate;
 import my.ep.web.vo.AdvanceSearchVO;
 import my.ep.web.vo.PricingVO;
@@ -860,12 +861,23 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean>{
 	public void searchCatalogue(){
 		log.info("*******searchCatalogue************");  
 
+		FacesScopes facesScopes = new FacesScopes();
+		String unspscCode = facesScopes.getParameter("unspscCode");
+		System.out.println("unspscCode: " + unspscCode + ">>>>>>>>>>>>>>>>>>>>>>>>>>>>");
+		
 		ICatalogueSO catalogueSO = (ICatalogueSO) BusinessDelegate.getInstance().getServiceObject("cm",ICatalogueSO.class);
 
 		ISearchBean<CmSupplierItem> searchBean = new SearchBean<CmSupplierItem>();
 		statusFilterBean.setSearchField("itemStatus");
 		statusFilterBean.setSearchValue("D");
 		searchBean.getDataFilterBeans().add(statusFilterBean);
+		
+		if(unspscCode != null && !unspscCode.equals("null") && unspscCode.length() > 0) {
+			SearchFilterBean unspscFilterBean = new SearchFilterBean(SearchOperator.OPERATOR_EQUALS.value());
+			unspscFilterBean.setSearchField("cmItem.cmUnspsc.unspscCode");
+			unspscFilterBean.setSearchValue(unspscCode);
+			searchBean.getDataFilterBeans().add(unspscFilterBean);	
+		}
 
 		CatalogueReqDTO reqDTO = new CatalogueReqDTO();
 
