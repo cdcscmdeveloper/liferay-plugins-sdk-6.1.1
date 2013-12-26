@@ -33,7 +33,7 @@ public class BPMTaskListManagedBean extends BaseManagedBean {
 	
 	private String tempLoginId; //TODO: temp and to be removed
 	
-	private String viewBy="DAY";
+	private String viewBy="ALL";
 
 	public List<WorklistItemVO> getTaskList() {
 		return taskList;

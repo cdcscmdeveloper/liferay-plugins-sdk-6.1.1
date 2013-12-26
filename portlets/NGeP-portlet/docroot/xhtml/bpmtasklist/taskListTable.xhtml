@@ -23,12 +23,16 @@
 		</div>
 
 
+		<div style="text-align: left; float: left;">
+			<p:commandButton action="#{bpmTasklistBackingBean.refreshTaskList}" value="REFRESH" icon="ui-icon-reset" update="taskListId"></p:commandButton>
+		</div>
+
 
 
 
 		<div class="clear"></div>
 
-		<p:dataTable value="#{bpmTasklistBackingBean.managedBean.taskList}"
+		<p:dataTable value="#{bpmTasklistBackingBean.managedBean.taskList}" id="taskListId"
 			style="width:100%;" var="tasks" paginator="true" rows="10"
 			paginatorPosition="bottom"
 			paginatorTemplate="{LastPageLink} {NextPageLink} {PreviousPageLink} {FirstPageLink} Page {JumpToPageDropdown} {CurrentPageReport}"
@@ -66,16 +70,18 @@
 					#{lbl['lbl.bpm.created.date']}
 				</f:facet>
 				<h:outputText value="#{tasks.createDate.time}">
-					<f:convertDateTime pattern="#{CommonConstants.DEFAULT_DATETIME_FORMAT}"  />
+					<f:convertDateTime
+						pattern="#{CommonConstants.DEFAULT_DATETIME_FORMAT}" />
 				</h:outputText>
-				
+
 			</p:column>
 			<p:column width="12%;">
 				<f:facet name="header">
 					#{lbl['lbl.bpm.due.date']}
 				</f:facet>
 				<h:outputText value="#{tasks.dueDate.time}">
-					<f:convertDateTime pattern="#{CommonConstants.DEFAULT_DATETIME_FORMAT}"  />
+					<f:convertDateTime
+						pattern="#{CommonConstants.DEFAULT_DATETIME_FORMAT}" />
 				</h:outputText>
 
 			</p:column>

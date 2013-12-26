@@ -283,5 +283,10 @@ public class BPMTaskListBackingBean extends
 		return "Review";
 	}
 	
+	public void refreshTaskList(){
+		
+		BpmResponseDTO responseDTO = retrieveWorklistItems("ASSIGNED",this.getManagedBean().getViewBy());
+	}
+	
 
 }
