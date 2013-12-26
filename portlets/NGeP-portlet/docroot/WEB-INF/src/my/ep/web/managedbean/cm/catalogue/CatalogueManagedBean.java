@@ -16,6 +16,7 @@ import my.ep.persistence.entity.cm.catalog.CmUnspsc;
 import my.ep.persistence.entity.cm.catalog.CmWishlist;
 import my.ep.persistence.entity.pm.common.PmDistrict;
 import my.ep.persistence.entity.pm.common.PmState;
+import my.ep.persistence.entity.pm.common.PmStatusDesc;
 import my.ep.persistence.entity.pm.common.PmUom;
 import my.ep.web.managedbean.BaseManagedBean;
 import my.ep.web.vo.AdvanceSearchVO;
@@ -91,6 +92,9 @@ public class CatalogueManagedBean extends BaseManagedBean {
 	private List<PmState> stateList;
 
 	private List<PmDistrict> districtList;
+	
+	private List<PmStatusDesc> statusDescList;
+
 	
 	
 	
@@ -535,6 +539,18 @@ public class CatalogueManagedBean extends BaseManagedBean {
 	public void setSelectedExpiredItems(CmSupplierItem[] selectedExpiredItems) {
 		this.selectedExpiredItems = selectedExpiredItems;
 	}
+
+	public List<PmStatusDesc> getStatusDescList() {
+		if(statusDescList==null)
+			statusDescList = new ArrayList<PmStatusDesc>();
+		return statusDescList;
+	}
+
+	public void setStatusDescList(List<PmStatusDesc> statusDescList) {
+		this.statusDescList = statusDescList;
+	}
+	
+	
 
 	
 
