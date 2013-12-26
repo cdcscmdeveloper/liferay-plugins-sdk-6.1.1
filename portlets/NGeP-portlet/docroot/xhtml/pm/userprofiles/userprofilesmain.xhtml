@@ -16,22 +16,22 @@
 	<br />
 	
 	<h:panelGrid columns="2" border="0" cellpadding="0" cellspacing="0" width="100%" columnClasses="columnWidth30">   
-	<h:outputLabel style="height:15px;" value="Login ID: "/>
+	<h:outputLabel style="height:15px;font-weight:bold;" value="Login ID: "/>
 	<h:outputText  value="#{userprofileBackingBean.managedBean.pmUser.loginId}"></h:outputText>
    
-	<h:outputLabel style="height:15px;" value="Name: "/>
+	<h:outputLabel style="height:15px;font-weight:bold;" value="Name: "/>
 	<h:outputText  value="#{userprofileBackingBean.managedBean.pmUser.userName}"></h:outputText>
     		
-	<h:outputLabel style="height:15px;" value="Designation: "/>
+	<h:outputLabel style="height:15px;font-weight:bold;" value="Designation: "/>
 	<h:outputText  value="#{userprofileBackingBean.managedBean.pmUser.designation}"></h:outputText>
     				
-	<h:outputLabel style="height:15px;" value="Email: "/>
+	<h:outputLabel style="height:15px;font-weight:bold;" value="Email: "/>
 	<h:outputText  value="#{userprofileBackingBean.managedBean.pmAddress.email}"></h:outputText>
 
-	<h:outputLabel style="height:15px;" value="Mobile No.: "/>
+	<h:outputLabel style="height:15px;font-weight:bold;" value="Mobile No.: "/>
 	<h:outputText  value="#{userprofileBackingBean.managedBean.pmAddress.mobileNo}"></h:outputText>	
 	
-	<h:outputLabel style="height:15px;" value="City: "/>
+	<h:outputLabel style="height:15px;font-weight:bold;" value="City: "/>
 	<h:outputText  value="#{userprofileBackingBean.managedBean.pmUser.pmCountry.countryCode} , #{userprofileBackingBean.managedBean.pmAddress.pmCity.cityName}" ></h:outputText>	
 	
 	
