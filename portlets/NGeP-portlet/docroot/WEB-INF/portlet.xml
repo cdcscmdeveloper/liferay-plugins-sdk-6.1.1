@@ -1833,8 +1833,8 @@
 	</portlet>
 
 	<portlet>
-		<portlet-name>scEvaluation</portlet-name>
-		<display-name>Evaluation</display-name>
+		<portlet-name>scEvaluation Stage2</portlet-name>
+		<display-name>Evaluation Stage2</display-name>
 		<portlet-class>org.portletfaces.bridge.GenericFacesPortlet</portlet-class>
 		<init-param>
 			<name>javax.portlet.faces.defaultViewId.view</name>
@@ -1846,8 +1846,41 @@
 			<portlet-mode>view</portlet-mode>
 		</supports>
 		<portlet-info>
-			<title>Evaluation</title>
-			<short-title>Evaluation</short-title>
+			<title>Evaluation Stage2</title>
+			<short-title>Evaluation Stage2</short-title>
+			<keywords></keywords>
+		</portlet-info>
+		<security-role-ref>
+			<role-name>administrator</role-name>
+		</security-role-ref>
+		<security-role-ref>
+			<role-name>guest</role-name>
+		</security-role-ref>
+		<security-role-ref>
+			<role-name>power-user</role-name>
+		</security-role-ref>
+		<security-role-ref>
+			<role-name>user</role-name>
+		</security-role-ref>
+	</portlet>
+
+
+<portlet>
+		<portlet-name>scEvaluation Stage1</portlet-name>
+		<display-name>Evaluation Stage1</display-name>
+		<portlet-class>org.portletfaces.bridge.GenericFacesPortlet</portlet-class>
+		<init-param>
+			<name>javax.portlet.faces.defaultViewId.view</name>
+			<value>/xhtml/ss/evaluation/evaluationstage1view.xhtml</value>
+		</init-param>
+		<expiration-cache>0</expiration-cache>
+		<supports>
+			<mime-type>text/html</mime-type>
+			<portlet-mode>view</portlet-mode>
+		</supports>
+		<portlet-info>
+			<title>Evaluation Stage1</title>
+			<short-title>Evaluation Stage1</short-title>
 			<keywords></keywords>
 		</portlet-info>
 		<security-role-ref>

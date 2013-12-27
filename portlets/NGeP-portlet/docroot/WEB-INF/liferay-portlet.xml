@@ -485,12 +485,21 @@
 
 
 	<portlet>
-		<portlet-name>scEvaluation</portlet-name>
+		<portlet-name>scEvaluation Stage2</portlet-name>
 		<icon>/icon.png</icon>
 		<instanceable>false</instanceable>
 		<ajaxable>false</ajaxable>
 		<header-portlet-css>/css/ep/main.css</header-portlet-css>
-		<css-class-wrapper>evaluation-portlet</css-class-wrapper>
+		<css-class-wrapper>evaluation stage2-portlet</css-class-wrapper>
+	</portlet>
+	
+	<portlet>
+		<portlet-name>scEvaluation Stage1</portlet-name>
+		<icon>/icon.png</icon>
+		<instanceable>false</instanceable>
+		<ajaxable>false</ajaxable>
+		<header-portlet-css>/css/ep/main.css</header-portlet-css>
+		<css-class-wrapper>evaluation stage1-portlet</css-class-wrapper>
 	</portlet>
 
 	<portlet>
