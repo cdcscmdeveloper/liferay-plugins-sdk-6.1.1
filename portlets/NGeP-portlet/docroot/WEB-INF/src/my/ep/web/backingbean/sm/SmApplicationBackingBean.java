@@ -425,7 +425,7 @@ public class SmApplicationBackingBean extends
 		System.out.println(" ***** Tab Values *** " + currentTab + outputTab);
 		this.currentTab = currentTab;
 		this.outputTab = outputTab;
-		getManagedBean().setTabActiveIndex(outputTab);
+		// getManagedBean().setTabActiveIndex(outputTab);
 	}
 
 	public void assignReviewSupportingNav(String navType) {
@@ -1261,6 +1261,7 @@ public class SmApplicationBackingBean extends
 			reqSO = (IReviewApplicationSO) BusinessDelegate.getInstance()
 					.getServiceObject("sm", IReviewApplicationSO.class);
 			reqDTO.setApplId(this.getManagedBean().getSmAppl().getApplId());
+			reqDTO.setApplNo(this.getManagedBean().getSmAppl().getApplNo());
 			reqDTO.setOutcome(res);
 			reqDTO.setSuppId(this.getManagedBean().getSmAppl().getSmSupplier()
 					.getSupplierId());

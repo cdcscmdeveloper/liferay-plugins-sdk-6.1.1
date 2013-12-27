@@ -61,9 +61,8 @@ public class CommonApplBackingBean extends
 			SMMOFRegDataType smMofObj = (SMMOFRegDataType) resDTO.getPojo();
 
 			log.info("------Verify Supporting Documents-----------"
-					+ smMofObj.getAppId());
-			sdoBB.getManagedBean().setAppId(
-					(Long.parseLong(smMofObj.getAppId())));
+					+ smMofObj.getDocumentId());
+			sdoBB.getManagedBean().setAppId(smMofObj.getDocumentId());
 			sdoBB.getManagedBean().setBpmAction(resDTO.getAction());
 			sdoBB.getManagedBean().setTaskId(taskId);
 			sdoBB.viewSupportingDocument();
@@ -76,8 +75,7 @@ public class CommonApplBackingBean extends
 		} else if (resDTO.getTaskName().equalsIgnoreCase("Make Payment")) {
 			SMMOFRegDataType smMofObj = (SMMOFRegDataType) resDTO.getPojo();
 			SvoSiteVisitBackingBean svoBB = new SvoSiteVisitBackingBean();
-			svoBB.getManagedBean().setAppId(
-					(Long.parseLong(smMofObj.getAppId())));
+			svoBB.getManagedBean().setAppId(smMofObj.getDocumentId());
 			svoBB.getManagedBean().setBpmAction(resDTO.getAction());
 			svoBB.getManagedBean().setTaskId(taskId);
 			FacesContext fc = FacesContext.getCurrentInstance();
@@ -93,14 +91,16 @@ public class CommonApplBackingBean extends
 				|| resDTO.getTaskName().equalsIgnoreCase("Review Application")) {
 			System.out.println(" ******* The selected process name is ******"
 					+ resDTO.getProcessName());
-
+			String applicationType = "";
 			if (resDTO.getProcessName()
 					.equalsIgnoreCase("MOF Account Maintain")) {
 				SMMOFAccMainDataType smObj = (SMMOFAccMainDataType) resDTO
 						.getPojo();
+				// TODO Remove this code and get the applicationType From DB
+				applicationType = retriveApplicationById(smObj.getDocumentId());
 				System.out
 						.println("********Review Application Escalted for account maintain********"
-								+ smObj.getAppType());
+								+ applicationType);
 				System.out.println("********getTaskId********" + taskId);
 				System.out.println("********getTaskName********"
 						+ this.getManagedBean().getTaskName());
@@ -108,15 +108,17 @@ public class CommonApplBackingBean extends
 				// TODO Change this impl to get values from DB and set
 				// smSupplier , smAppl of the managedBean
 
-				smApplBB.proceedToApplication(smObj.getAppType(), Boolean.TRUE);
+				smApplBB.proceedToApplication(applicationType, Boolean.TRUE);
 				smApplBB.getManagedBean().getSmAppl()
-						.setApplId(Long.parseLong(smObj.getAppId()));
+						.setApplId(smObj.getDocumentId());
 				smApplBB.getManagedBean().setBpmActions(resDTO.getAction());
 				smApplBB.getManagedBean().setTaskId(taskId);
-				setNavigationForSmDecision(smObj.getAppType(), smApplBB);
+				setNavigationForSmDecision(applicationType, smApplBB);
 			} else if (resDTO.getProcessName().equalsIgnoreCase(
 					"MOF Supplier Registration")) {
 				SMMOFRegDataType smObj = (SMMOFRegDataType) resDTO.getPojo();
+				// TODO Remove this code and get the applicationType From DB
+				applicationType = retriveApplicationById(smObj.getDocumentId());
 				System.out
 						.println("********Review Application Escalted for new mof********");
 				System.out.println("********getTaskId********" + taskId);
@@ -126,12 +128,12 @@ public class CommonApplBackingBean extends
 				// TODO Change this impl to get values from DB and set
 				// smSupplier , smAppl of the managedBean
 
-				smApplBB.proceedToApplication(smObj.getAppType(), Boolean.TRUE);
+				smApplBB.proceedToApplication(applicationType, Boolean.TRUE);
 				smApplBB.getManagedBean().getSmAppl()
-						.setApplId(Long.parseLong(smObj.getAppId()));
+						.setApplId(smObj.getDocumentId());
 				smApplBB.getManagedBean().setBpmActions(resDTO.getAction());
 				smApplBB.getManagedBean().setTaskId(taskId);
-				setNavigationForSmDecision(smObj.getAppType(), smApplBB);
+				setNavigationForSmDecision(applicationType, smApplBB);
 			}
 
 		} else if (resDTO.getTaskName().equalsIgnoreCase("Review Cancellation")) {
@@ -142,14 +144,14 @@ public class CommonApplBackingBean extends
 			this.getManagedBean().setTaskName(resDTO.getTaskName());
 			System.out.println("********Review Cancellation********");
 			System.out.println("********Assign Site Visit APPID********"
-					+ srcObj.getAppId());
+					+ srcObj.getDocumentId());
 			SmApplicationBackingBean smApplBB = new SmApplicationBackingBean();
 			// TODO Change this impl to get values from DB and set
 			// smSupplier , smAppl of the managedBean
 			smApplBB.proceedToApplication("C", Boolean.TRUE);
 
 			smApplBB.getManagedBean().getSmAppl()
-					.setApplId(Long.parseLong(srcObj.getAppId()));
+					.setApplId(srcObj.getDocumentId());
 			smApplBB.getManagedBean().setBpmActions(resDTO.getAction());
 			smApplBB.getManagedBean().setTaskId(taskId);
 			FacesContext fc = FacesContext.getCurrentInstance();
@@ -213,6 +215,35 @@ public class CommonApplBackingBean extends
 									.getApplType());
 			break;
 		}
+	}
+
+	private String retriveApplicationById(int applId) {
+		String appType = "";
+		switch (applId) {
+		case 111:
+			appType = "N";
+			break;
+		case 222:
+			appType = "B";
+			break;
+		case 333:
+			appType = "U";
+			break;
+		case 444:
+			appType = "A";
+			break;
+		case 555:
+			appType = "R";
+			break;
+		case 666:
+			appType = "C";
+			break;
+		default:
+			appType = "N";
+			break;
+
+		}
+		return appType;
 	}
 
 	// public void preRender(){
