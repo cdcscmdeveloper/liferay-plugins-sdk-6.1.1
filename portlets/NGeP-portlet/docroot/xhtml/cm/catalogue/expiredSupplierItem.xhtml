@@ -27,19 +27,24 @@
 			<f:facet name="header">
 				#{lbl['lbl.cm.price']}
 			</f:facet>
+			<p:inputText value="#{expired.cmStandardPricing.price}"
+				disabled="true"></p:inputText>
 
 		</p:column>
 		<p:column>
 			<f:facet name="header">
 				#{lbl['lbl.cm.uom']}
 			</f:facet>
-			<p:inputText></p:inputText>
+			<p:inputText value="#{expired.pmUom.uomName}" disabled="true"></p:inputText>
 
 		</p:column>
 		<p:column>
 			<f:facet name="header">
 				#{lbl['lbl.cm.start.date']}
 			</f:facet>
+			<p:calendar value="#{expired.cmStandardPricing.startDate}"
+				showOn="button" size="10"
+				pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}" disabled="true"></p:calendar>
 
 
 		</p:column>
@@ -47,7 +52,9 @@
 			<f:facet name="header">
 				#{lbl['lbl.cm.end.date']}
 			</f:facet>
-
+			<p:calendar value="#{expired.cmStandardPricing.endDate}"
+				showOn="button" size="10"
+				pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}" disabled="true"></p:calendar>
 
 		</p:column>
 		<p:column>
@@ -58,7 +65,7 @@
 				action="#{catalogueBackingBean.navigateToExpiredItemDet(rowIndex)}">
 				<p:graphicImage value="/resources/ep/images/design/edit.png"></p:graphicImage>
 			</p:commandLink>
-			
+
 		</p:column>
 	</p:dataTable>
 

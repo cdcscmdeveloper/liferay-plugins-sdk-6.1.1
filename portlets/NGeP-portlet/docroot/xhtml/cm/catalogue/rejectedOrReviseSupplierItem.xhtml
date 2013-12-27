@@ -27,27 +27,32 @@
 			<f:facet name="header">
 				#{lbl['lbl.cm.price']}
 			</f:facet>
-			<p:inputText></p:inputText>
+			<p:inputText value="#{rejected.cmStandardPricing.price}"
+				disabled="true"></p:inputText>
 		</p:column>
 		<p:column>
 			<f:facet name="header">
 				#{lbl['lbl.cm.uom']}
 			</f:facet>
-			<p:inputText></p:inputText>
+			<p:inputText value="#{rejected.pmUom.uomName}" disabled="true"></p:inputText>
 
 		</p:column>
 		<p:column>
 			<f:facet name="header">
 				#{lbl['lbl.cm.start.date']}
 			</f:facet>
-			<p:calendar showOn="button"></p:calendar>
+			<p:calendar value="#{rejected.cmStandardPricing.startDate}"
+				showOn="button" size="10"
+				pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}" disabled="true"></p:calendar>
 
 		</p:column>
 		<p:column>
 			<f:facet name="header">
 				#{lbl['lbl.cm.end.date']}
 			</f:facet>
-			<p:calendar showOn="button"></p:calendar>
+			<p:calendar value="#{rejected.cmStandardPricing.endDate}"
+				showOn="button" size="10"
+				pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}" disabled="true"></p:calendar>
 
 		</p:column>
 		<p:column>
