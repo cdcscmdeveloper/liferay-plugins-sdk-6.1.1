@@ -31,7 +31,7 @@ import my.ep.exception.EpException;
 import my.ep.jaxb.ct.agreement.CTAgreementDataType;
 import my.ep.persistence.entity.ct.agreement.CtAgreement;
 import my.ep.persistence.entity.ct.agreement.CtAgreementAppendix;
-import my.ep.persistence.entity.ct.agreement.CtSignParty;
+import my.ep.persistence.entity.ct.agreement.CtAgreementParty;
 import my.ep.persistence.entity.tpl.doc.TplDocMaster;
 import my.ep.util.lookupservice.EpBpmBusinessDelegate;
 import my.ep.web.backingbean.BaseBackingBean;
@@ -111,7 +111,7 @@ public class AgreementBackingBean extends BaseBackingBean<AgreementManagedBean> 
 		if(this.getManagedBean().getAgreement() == null){
 			this.getManagedBean().setAgreement(new CtAgreement());
 			this.getManagedBean().getAgreement().setCtAgreementAppendixs(new ArrayList<CtAgreementAppendix>());
-			this.getManagedBean().getAgreement().setCtSignParties(new ArrayList<CtSignParty>());
+			this.getManagedBean().getAgreement().setCtSignParties(new ArrayList<CtAgreementParty>());
 			this.getManagedBean().getAgreement().setClauseDocMaster(new TplDocMaster());
 			this.getManagedBean().getAgreement().getClauseDocMaster().setDocMasterId(1L);
 		}
@@ -263,8 +263,6 @@ public class AgreementBackingBean extends BaseBackingBean<AgreementManagedBean> 
 		String fileName = file.getFileName();
 		byte[] fileBytes = file.getContents();
 		log.info("Processed uploaded file " + fileName + " of size:"+ fileBytes.length);
-		this.getManagedBean().getAgreement().setFileName(fileName);
-		this.getManagedBean().getAgreement().setFilePath("C:\\upload");
 		FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_INFO,"The file was uploaded successfully.", null);
 		FacesMessage msg = new FacesMessage("Succesful", event.getFile().getFileName() + " is uploaded.");
 		FacesContext.getCurrentInstance().addMessage(null, msg); 
@@ -349,7 +347,7 @@ public class AgreementBackingBean extends BaseBackingBean<AgreementManagedBean> 
       }
 	
      public void addSignParty(){
- 		CtSignParty signParty = new CtSignParty();
+ 		CtAgreementParty signParty = new CtAgreementParty();
  		this.getManagedBean().getSignPartyList().add(signParty);
  	}
  	
@@ -359,7 +357,7 @@ public class AgreementBackingBean extends BaseBackingBean<AgreementManagedBean> 
  	}
  	
  	public void addSignSupplier(){
- 		CtSignParty signParty = new CtSignParty();
+ 		CtAgreementParty signParty = new CtAgreementParty();
  		this.getManagedBean().getSignSupplierList().add(signParty);
  	}
  	

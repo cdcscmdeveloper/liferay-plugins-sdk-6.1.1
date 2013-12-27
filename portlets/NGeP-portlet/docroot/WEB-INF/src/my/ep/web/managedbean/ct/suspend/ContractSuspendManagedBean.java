@@ -18,7 +18,6 @@ import my.ep.web.managedbean.BaseManagedBean;
 import my.ep.persistence.entity.ct.CtAttachment;
 import my.ep.persistence.entity.ct.CtContract;
 import my.ep.persistence.entity.ct.CtRemark;
-import my.ep.persistence.entity.ct.suspend.CtSuspendActive;
 import my.ep.persistence.entity.pm.common.PmCountry;
 /**
  * Managed Bean For Contract Suspension
@@ -46,7 +45,6 @@ public class ContractSuspendManagedBean  extends BaseManagedBean {
 	private Long contractId;
 	
 	private CtContract contract = new CtContract();
-	private CtSuspendActive suspendActive;
 	
 	private List<CtRemark> remarkList;
 	private List<CtAttachment> attachmentList;
@@ -101,14 +99,6 @@ public class ContractSuspendManagedBean  extends BaseManagedBean {
 
 	public void setSuspendLocTN(TreeNode suspendLocTN) {
 		this.suspendLocTN = suspendLocTN;
-	}
-
-	public CtSuspendActive getSuspendActive() {
-		return suspendActive;
-	}
-
-	public void setSuspendActive(CtSuspendActive suspendActive) {
-		this.suspendActive = suspendActive;
 	}
 
 	public boolean isBooleanSuspendValue() {

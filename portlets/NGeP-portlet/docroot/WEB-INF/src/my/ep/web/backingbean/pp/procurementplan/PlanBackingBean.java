@@ -1620,7 +1620,7 @@ public class PlanBackingBean extends BaseBackingBean<PlanManagedBean>{
 		List<CtCircular> options = new ArrayList<CtCircular>();
 		try{
 			CircularReqDTO reqDTO = new CircularReqDTO();
-			reqDTO.setDocType(ContractConst.CIRCULAR_DOC_TYPE_CENTRAL_CONTRACT);
+			reqDTO.setCircularType(ContractConst.CIRCULAR_DOC_TYPE_CENTRAL_CONTRACT);
 			ICircularSO circularSO = (ICircularSO) BusinessDelegate.getInstance().getServiceObject("ct", ICircularSO.class);
 			CircularResDTO resDTO = circularSO.retrieveCircularListByType(reqDTO);
 			if(resDTO.isSuccessful()){

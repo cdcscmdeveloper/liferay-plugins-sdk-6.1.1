@@ -21,10 +21,7 @@ import my.ep.persistence.entity.ct.dtl.CtSchedule;
 import my.ep.persistence.entity.ct.dtl.deduction.CtDeduction;
 import my.ep.persistence.entity.ct.dtl.deduction.CtDeductionClause;
 import my.ep.persistence.entity.ct.dtl.item.CtContractItem;
-import my.ep.persistence.entity.ct.suspend.CtSuspendActive;
-import my.ep.persistence.entity.ct.suspend.CtSuspendLoc;
 import my.ep.persistence.entity.ct.terminate.CtTermination;
-import my.ep.persistence.entity.ct.terminate.CtTerminationClause;
 import my.ep.persistence.entity.ct.terminate.CtTerminationReason;
 import my.ep.persistence.entity.pm.authorization.PmUserGroup;
 import my.ep.persistence.entity.pm.authorization.PmUserGroupUser;
@@ -94,12 +91,9 @@ public class ContractDetailsManagedBean extends BaseManagedBean{
 	private boolean terminateWarningLetter;
 	private CtTermination termination;
 	private CtTerminationReason terminationReason;
-	private List<CtTerminationClause> terminationClauseList;
-	private CtTerminationClause terminationClause = new CtTerminationClause();
 	
 	private boolean activeSuspension;
 	private boolean booleanSuspendValue = false;
-	private CtSuspendActive ctSuspendActive;
 	
 	private CtAssociation association = new CtAssociation();
 	private List<CtAssociation> associationList;
@@ -107,7 +101,6 @@ public class ContractDetailsManagedBean extends BaseManagedBean{
 	private CtContractVer assocoiateContractVer;
 	private List<CtContractVer> assocoiateContractVerList;
 	private List<CtContractItem> ctContractItem;
-	private List<CtSuspendLoc> ctSuspendLoc;
 
 	private String ctNumber;
 	private String ctName;
@@ -434,25 +427,6 @@ public class ContractDetailsManagedBean extends BaseManagedBean{
 		this.terminationReason = terminationReason;
 	}
 	
-	public List<CtTerminationClause> getTerminationClauseList() {
-		if(terminationClauseList == null)
-			terminationClauseList = new ArrayList<CtTerminationClause>();
-		return terminationClauseList;
-	}
-
-	public void setTerminationClauseList(
-			List<CtTerminationClause> terminationClauseList) {
-		this.terminationClauseList = terminationClauseList;
-	}
-
-	public CtTerminationClause getTerminationClause() {
-		return terminationClause;
-	}
-
-	public void setTerminationClause(CtTerminationClause terminationClause) {
-		this.terminationClause = terminationClause;
-	}
-
 	public boolean isActiveSuspension() {
 		return activeSuspension;
 	}
@@ -557,14 +531,6 @@ public class ContractDetailsManagedBean extends BaseManagedBean{
 		this.userGroupMap = userGroupMap;
 	}
 
-	public CtSuspendActive getCtSuspendActive() {
-		return ctSuspendActive;
-	}
-
-	public void setCtSuspendActive(CtSuspendActive ctSuspendActive) {
-		this.ctSuspendActive = ctSuspendActive;
-	}
-
 	public String getChkRenderPage() {
 		return chkRenderPage;
 	}
@@ -595,14 +561,6 @@ public class ContractDetailsManagedBean extends BaseManagedBean{
 
 	public void setCtContractItem(List<CtContractItem> ctContractItem) {
 		this.ctContractItem = ctContractItem;
-	}
-
-	public List<CtSuspendLoc> getCtSuspendLoc() {
-		return ctSuspendLoc;
-	}
-
-	public void setCtSuspendLoc(List<CtSuspendLoc> ctSuspendLoc) {
-		this.ctSuspendLoc = ctSuspendLoc;
 	}
 
 	public boolean isBpkApprover() {

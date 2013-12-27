@@ -53,6 +53,7 @@ import my.ep.persistence.entity.pm.common.PmCode;
 import my.ep.persistence.entity.pm.common.PmDo;
 import my.ep.persistence.entity.pm.common.PmGo;
 import my.ep.persistence.entity.pm.common.PmMaksud;
+import my.ep.persistence.entity.pm.common.PmParameter;
 import my.ep.persistence.entity.pm.common.PmSo;
 import my.ep.persistence.entity.pm.common.PmStatus;
 import my.ep.persistence.entity.sm.SmSupplier;
@@ -115,8 +116,8 @@ public class PurchaseRequestBackingBean extends BaseBackingBean<PurchaseRequestM
 			getManagedBean().getFulfilmentRequest().setFlDeliveryAddresses(new ArrayList<FlDeliveryAddress>());
 			getManagedBean().getFulfilmentRequest().setFlFulfilmentItems(new ArrayList<FlFulfilmentItem>());
 			getManagedBean().getFulfilmentRequest().setCtContract(new CtContract());
-			getManagedBean().getFulfilmentRequest().getCtContract().setContractType(new PmCode());
-			getManagedBean().getFulfilmentRequest().getCtContract().setFulfillmentType(new PmCode());
+			getManagedBean().getFulfilmentRequest().getCtContract().setContractType(new PmParameter());
+			getManagedBean().getFulfilmentRequest().getCtContract().setFulfillmentType(new PmParameter());
 		}
 		if (getManagedBean().getApproverModel() == null) {
 			System.out.println("--renew--");
