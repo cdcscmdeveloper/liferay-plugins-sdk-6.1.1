@@ -8,7 +8,7 @@
 	xmlns:ac="http://ac.my/jsf/composite/cc" >
         <p:panel id="signingAgreements" header="Signing Agreement Details"  toggleable="true"  toggleSpeed="500">
         <h:panelGrid style="width:100%">
-			<p:dataTable id="signTable" var="data" value="#{agreementBackingBean.managedBean.signPartyList}" 
+			<p:dataTable id="signTable" var="data" value="#{agreementBackingBean.managedBean.signOfficerList}" 
 			  paginator="true" paginatorPosition="bottom" paginatorAlwaysVisible="true" 
 			  emptyMessage="No Records!">
 			  <ac:paginator for="signTable"/>
@@ -52,7 +52,7 @@
                 <p:column width="180"><p:outputLabel value="PTJ Head" style="float:left;"/></p:column>	
                  <p:column width="50" styleClass="column-align-center">
                   <p:commandLink partialSubmit="true" process="@this"  onsuccess="confirmation2.show()">
-					     <f:setPropertyActionListener value="#{data}" target="#{agreementBackingBean.managedBean.signParty}" />
+					     <f:setPropertyActionListener value="#{data}" target="#{agreementBackingBean.managedBean.signOfficerParty}" />
 			             <p:graphicImage library="ep/images/design" name="delete.png" value="/resources/ep/images/design/delete.png" title="Delete" />
 			          </p:commandLink>
                  </p:column> 
@@ -87,7 +87,7 @@
                 <p:column><p:outputLabel value="Sales Manager" style="float:left;"/></p:column>	
                <p:column styleClass="column-align-center">
                 <p:commandLink partialSubmit="true" process="@this"  onsuccess="confirmation1.show()">
-				   <f:setPropertyActionListener value="#{data}" target="#{agreementBackingBean.managedBean.signSupplier}" />
+				   <f:setPropertyActionListener value="#{data}" target="#{agreementBackingBean.managedBean.signSupplierParty}" />
 			       <p:graphicImage library="ep/images/design" name="delete.png" value="/resources/ep/images/design/delete.png" title="Delete" />
 			    </p:commandLink>
                 </p:column> 

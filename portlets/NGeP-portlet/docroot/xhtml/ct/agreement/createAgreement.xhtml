@@ -80,17 +80,7 @@
                          User is required to upload the modified agreement document in this section. If there is no modification on the agreement generated, 
                          system will automatic generate the agreement in word format for approver review during submission." />
                   </h:panelGrid>
-                  <p:spacer width="5"/>
-                  <h:panelGrid id="uploadID" columns="3">
-                           <p:outputLabel value="#{lbl['lbl.ct.ag.doc']} :"/>
-                           <p:commandLink>  
-                           <p:outputLabel value="#{agreementBackingBean.managedBean.agreement.fileName}"/>  
-                           </p:commandLink> 
-                            <p:fileUpload fileUploadListener="#{agreementBackingBean.fileUpload}" mode="advanced" id="uploadFile"
-		                         allowTypes="/(\.|\/)(gif|jpe?g|png|bmp|txt|xls|xlsx|pdf|doc|docx|csv)$/" 
-		                        invalidFileMessage="Only JPG, GIF, PNG, BMP, TXT, XLS, PDF, DOC, CSV files are accepted" update="uploadID" >
-	                      </p:fileUpload> 
-			      </h:panelGrid>
+           
                 </p:panel>
                 <p:confirmDialog message="Do you want to delete the record?"
 				  closable="true" appendToBody="true" header="Delete Confirmation"

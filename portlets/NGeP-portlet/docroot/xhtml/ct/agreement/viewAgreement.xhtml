@@ -9,40 +9,32 @@
    <p:panel id="fd" header="#{lbl['lbl.ct.panel.name']}" toggleable="true" toggleSpeed="500">
 		<h:panelGrid columns="4" style="width:100%" columnClasses="columnWidth15">
 			<p:outputLabel value="#{lbl['lbl.ct.cno']}" />
-			<p:inputText value="#{agreementBackingBean.managedBean.ctContract.latestContractVer.ctContractValue.contractPhysicalNo}" style="width:170px;" />
+			<p:inputText value="#{agreementBackingBean.managedBean.ctContract.latestContractVer.ctContractValue.contractPhysicalNo}" style="width:170px;" disabled="true" />
 			<p:outputLabel value="#{lbl['lbl.ct.physicalNo']}" />
-			<p:inputText value="#{agreementBackingBean.managedBean.ctContract.latestContractVer.ctContractValue.contractPhysicalNo}" style="width:170px;" />				
+			<p:inputText value="#{agreementBackingBean.managedBean.ctContract.latestContractVer.ctContractValue.contractPhysicalNo}" style="width:170px;" disabled="true" />				
 			<p:outputLabel value="#{lbl['lbl.ct.contractType']}" />
-			<p:inputText value="#{agreementBackingBean.managedBean.ctContract.contractType.codeId}" style="width:170px;" />					
-			<p:outputLabel value="Created Date" />
-			<p:inputText style="width:170px;" disabled="true" value="#{agreementBackingBean.managedBean.ctContract.publishDate}" >
-				<f:convertDateTime pattern="MM/dd/yyyy" />
-			</p:inputText>				
+			<p:inputText value="#{agreementBackingBean.managedBean.ctContract.contractType.parameterCode}" style="width:170px;" />					
+			<p:outputLabel value="LOA No." />
+			<p:inputText style="width:170px;" disabled="true"/>				
 			<p:outputLabel value="#{lbl['lbl.ct.effectiveDate']}" />
 			<p:calendar style="width:170px;"
 				value="#{agreementBackingBean.managedBean.ctContract.latestContractVer.ctContractValue.effDate}"
 				id="popupCal1" showOn="button" />
-			<h:outputLabel value="#{lbl['lbl.ct.edate']}" />
+			<p:outputLabel value="#{lbl['lbl.ct.edate']}" />
 			<p:calendar style="width:170px;"
 				value="#{agreementBackingBean.managedBean.ctContract.latestContractVer.ctContractValue.expDate}"
-				id="popupCal" showOn="button" />			
-			<p:outputLabel value="#{lbl['lbl.ct.cur']}" />
-			<p:inputText value="#{agreementBackingBean.managedBean.ctContract.currency.currencyName}" style="width:70px;" />				
+				id="popupCal" showOn="button" />							
 			<p:outputLabel value="#{lbl['lbl.ct.contractAmount']}" />
 			<p:inputText
 				value="#{agreementBackingBean.managedBean.ctContract.latestContractVer.ctContractValue.contractAmount}"
 				size="8" disabled="true" />			
-			<h:outputLabel value="#{lbl['lbl.ct.liquidated']}" />
-			<p:inputText
-				value="#{agreementBackingBean.managedBean.ctContract.latestContractVer.ctContractValue.liquidatedDamage}"
-				size="8" disabled="true" />
-			<h:outputLabel value="#{lbl['lbl.ct.dperiod']}" />
+			<p:outputLabel value="#{lbl['lbl.ct.dperiod']}" />
 			<h:panelGrid columns="2">
 				<p:inputText size="8" value="#{agreementBackingBean.managedBean.ctContract.latestContractVer.ctContractValue.deliveryTerm}" />
 				<p:outputLabel value="Days" />
 			</h:panelGrid>
 			 <h:panelGroup>
-		      <div style="height: 40px; vertical-align: top;">
+		      <div style="height: 30px; vertical-align: top;">
 			  <p:outputLabel for="contractName" value="Contract Title" />
 			</div>
 			</h:panelGroup>
@@ -91,60 +83,6 @@
        </p:commandLink> 
        </h:panelGrid>
 	 </p:panel>
-	<p:panel id="qtnTenderPnl" header="Quotation / Tender Details" toggleable="true" toggleSpeed="500">
-		<h:panelGrid columns="4" style="width:100%" columnClasses="columnWidth15">
-			<p:outputLabel value="Procurement Mode" />
-		    <p:inputText  style="width:170px;" disabled="true"/>
-			<p:outputLabel value="Published Date" />
-			<p:inputText style="width:170px;" disabled="true"
-				value="#{agreementBackingBean.managedBean.ctContract.publishDate}">
-				<f:convertDateTime pattern="MM/dd/yyyy" />
-			</p:inputText>			
-			<p:outputLabel value="#{lbl['lbl.ct.loaNo']}" />
-			<p:inputText style="width:170px;" disabled="true" 
-				value="#{agreementBackingBean.managedBean.ctContract.loaNo}" />
-			<p:outputLabel value="LOA Acknowledged Date" />
-			<p:inputText style="width:170px;" disabled="true"
-				value="#{agreementBackingBean.managedBean.ctContract.ackDate}" >
-				<f:convertDateTime pattern="MM/dd/yyyy" />
-			</p:inputText>
-			<p:outputLabel value="Item Type" />
-			<p:inputText style="width:170px;" disabled="true"/>		
-			<p:outputLabel value="Item Origin" />
-			<p:inputText style="width:170px;" disabled="true"/>			
-			<p:outputLabel value="#{lbl['lbl.ct.fulfilmentType']}" />
-			<p:inputText style="width:170px;" disabled="true"/>			
-			<p:outputLabel value="#{lbl['lbl.ct.sfee']}" />
-			<h:panelGrid columns="2">
-			<p:inputText value="#{agreementBackingBean.managedBean.ctContract.serviceFee}"
-				style="width:55px;" disabled="true" />	
-				<p:outputLabel value="%" />
-		</h:panelGrid>		
-		</h:panelGrid>
-		</p:panel>
-	 <p:panel id="supAgreement" header="Supplemental Agreement"   toggleable="true"  toggleSpeed="500" widgetVar="panelsupAgreement">
-        <p:dataTable id="dataTable" var="data" value=" " widgetVar="dataTableObj" lazy="false" dynamic="true"
-		   paginator="true" paginatorPosition="bottom" paginatorAlwaysVisible="true" emptyMessage="No Records!" rows="10" >
-		  <ac:paginator for="dataTable"/>
-		   <p:columnGroup type="header"> 
-			<p:row> 
-               <p:column style="width:150px" headerText="Agreement No" /> 
-               <p:column style="width:280px" headerText="Fulfillment Amendment No" /> 	
-               <p:column style="width:100px" headerText="Created User"  /> 
-               <p:column style="width:100px" headerText="Created Date"  /> 
-            </p:row>	
-			</p:columnGroup>						
-			<p:column> <p:commandLink style="margin-right:20px;" sajax="false">  
-            <h:outputText value="AG-2013-0001"  styleClass="linkcommand" />  
-            </p:commandLink> 
-            </p:column>
-			<p:column> <p:commandLink style="margin-right:20px;" sajax="false">  
-             <h:outputText value="FA-2012-3-5234"  styleClass="linkcommand" />  
-             </p:commandLink> </p:column>	
-			 <p:column> </p:column>
-			<p:column></p:column>	
-		</p:dataTable>
-	    </p:panel>
 		 <ui:include src="/xhtml/ct/agreement/signingAgreement.xhtml"/>
 </ui:composition>
 	  

@@ -34,6 +34,7 @@ import my.ep.persistence.entity.ct.terminate.CtTerminationReason;
 import my.ep.persistence.entity.pm.authorization.PmUser;
 import my.ep.persistence.entity.pm.common.PmCode;
 import my.ep.persistence.entity.pm.common.PmFinancialOrg;
+import my.ep.persistence.entity.pm.common.PmParameter;
 import my.ep.persistence.entity.pm.common.PmStatus;
 import my.ep.persistence.entity.sm.SmSupplier;
 import my.ep.util.lookupservice.EpBpmBusinessDelegate;
@@ -100,17 +101,16 @@ public class SupplierBackingBean extends BaseBackingBean<SupplierManagedBean> {
 		if(this.getManagedBean().getCtTerminationReason() == null){
 			
 			this.getManagedBean().setCtTerminationReason(new CtTerminationReason());
-			this.getManagedBean().getCtTerminationReason().setReasonType(new PmCode());
-			this.getManagedBean().getCtTerminationReason().getReasonType().setCodeId(1L);
+			this.getManagedBean().getCtTerminationReason().setReasonType(new PmParameter());
+			this.getManagedBean().getCtTerminationReason().getReasonType().setParameterId(1L);
 		}
 		
          if(this.getManagedBean().getTermination() == null){
 			
 			this.getManagedBean().setTermination(new CtTermination());
 			this.getManagedBean().getTermination().setCtContractVer(new CtContractVer());
-            this.getManagedBean().getTermination().setCaRecommendation(new PmCode());
-			this.getManagedBean().getTermination().setMutualTerminate(true);
-			//this.getManagedBean().getTermination().getCaRecommendation().setCodeId(1L);
+            this.getManagedBean().getTermination().setDecisionType(new PmParameter());
+			this.getManagedBean().getTermination().getDecisionType().setParameterId(1L);
 			
 		}
 		
@@ -259,7 +259,7 @@ public class SupplierBackingBean extends BaseBackingBean<SupplierManagedBean> {
  			 supplierSO = (IContractSupplierSO)BusinessDelegate.getInstance().getServiceObject("ct", IContractSupplierSO.class);
  			 this.getManagedBean().getCtTerminationReason().setCtTermination(this.getManagedBean().getTermination());
  			 this.getManagedBean().getTermination().getCtTerminationReasons().add(this.getManagedBean().getCtTerminationReason());
- 			 this.getManagedBean().getTermination().getCaRecommendation().setCodeId(155L);
+ 			 this.getManagedBean().getTermination().getDecisionType().setParameterId(155L);
  			 this.getManagedBean().getTermination().getCtContractVer().setContractVerId(this.getManagedBean().getContractVer().getContractVerId());
  			 reqDTO.setTerminationRequest(this.getManagedBean().getTermination());
  			

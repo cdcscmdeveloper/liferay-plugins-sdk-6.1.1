@@ -16,16 +16,16 @@
      </h:panelGrid>
 	 <p:outputPanel id="paymentSchedule">  
 	 <p:spacer height="10"/>
-	 <h:panelGrid rendered="#{contractDetailsBackingBean.managedBean.chkSchedule}" style="width:780px;">   
+	 <h:panelGrid rendered="#{contractDetailsBackingBean.managedBean.chkSchedule}" style="width:100%;">   
 	 <p:dataTable id="tableSchedule" var="data" value="#{contractDetailsBackingBean.managedBean.contractVer.ctSchedules}" widgetVar="dataTableObj" 
 	    rowIndexVar="index" paginator="true" paginatorPosition="bottom" paginatorAlwaysVisible="true" emptyMessage="No Records!">
 	     <ac:paginator for="tableSchedule" />
 		<p:columnGroup type="header"> 
 		 <p:row> 
 		  <p:column style="width:250px" headerText="#{lbl['lbl.ct.sched.table.schedno']}" /> 
-		  <p:column style="width:150px" headerText="#{lbl['lbl.ct.sched.table.sdate']}" /> 	
-		  <p:column style="width:150px" headerText="#{lbl['lbl.ct.sched.table.edate']}"  /> 
-		  	  <p:column style="width:150px" headerText="#{lbl['lbl.ct.sched.table1.action']}"  /> 
+		  <p:column style="width:200px" headerText="#{lbl['lbl.ct.sched.table.sdate']}" /> 	
+		  <p:column style="width:200px" headerText="#{lbl['lbl.ct.sched.table.edate']}"  /> 
+		  	  <p:column style="width:50px" headerText="#{lbl['lbl.ct.sched.table1.action']}" styleClass="column-align-center" /> 
 		</p:row>	
 		</p:columnGroup>  
 		<p:column><p:outputLabel value="Schedule #{index+1}" style="float:left;"/></p:column>
@@ -41,10 +41,11 @@
 			  </p:commandLink>  
 			  </p:column>   
 	  </p:dataTable>  
-	  <h:panelGrid style="width:760px" columnClasses="column-align-right">
+	  	<p:spacer height="2" />
+           <div class="ppRightBtn"> 
 		  <p:commandButton value="#{lbl['lbl.ct.ded.btn.add']}" process="@this" partialSubmit="true" icon="ui-icon-add"
 		  action="#{contractDetailsBackingBean.addFrequencyDetails()}" update="tableSchedule"/>
-		</h:panelGrid>
+	    </div>
 		<p:confirmDialog message="Do you want to delete the record?"  closable="true" appendToBody="true" header="Delete Confirmation"
 			   severity="alert" widgetVar="schedule">
                  <h:panelGrid columns="2">
@@ -88,10 +89,11 @@
 			  </p:commandLink>
 			</p:column>    
 		</p:dataTable>
-		<h:panelGrid style="width:760px" columnClasses="column-align-right">
+		<p:spacer height="2" />
+         <div class="ppRightBtn"> 
 		  <p:commandButton value="#{lbl['lbl.ct.ded.btn.add']}" process="@this" partialSubmit="true" icon="ui-icon-add"
-		  action="#{contractDetailsBackingBean.addScheduleDetails()}" update="tableProgress"/>
-		</h:panelGrid>
+		       action="#{contractDetailsBackingBean.addScheduleDetails()}" update="tableProgress"/>
+		</div>
 		<p:confirmDialog message="Do you want to delete the record?"  closable="true" appendToBody="true" header="Delete Confirmation"
 			   severity="alert" widgetVar="confirmation5">
                  <h:panelGrid columns="2">
