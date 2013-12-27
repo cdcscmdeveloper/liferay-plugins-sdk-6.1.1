@@ -97,6 +97,13 @@
 			
 		}
 	</script>
+	<script type="text/javascript">  
+	$(function() {  
+    $('#close').click(function() {  
+        $('.sticky').remove();  
+    	});  
+	});  
+	</script>
 
 </head>
 
@@ -111,6 +118,12 @@ $theme.include($body_top_include)
 #end
 
 	<header>
+	#if (!$is_signed_in)
+	<div class="sticky">
+		<img src="$images_folder/general/QRep.png" />
+		<div id="close"><img src="$images_folder/general/close.png" /></div>
+	</div>
+	#end
 	
         <div class="middle-navi login-top-navi">
             <div class="middle-navi-wrapper">
