@@ -26,10 +26,10 @@
 	<ac:lovPopup />
 
 	<p:dataTable id="draftSupplierItemID"
-		value="#{catalogueBackingBean.searchSuppItemDataModel}"
+		value="#{catalogueBackingBean.managedBean.maintainItemList}"
 		rowIndexVar="rowIndex" var="selectedSuppCat"
 		rowKey="#{selectedSuppCat.supplierItemId}"
-		selection="#{catalogueBackingBean.managedBean.selectedMaintainItems}" lazy="true">
+		selection="#{catalogueBackingBean.managedBean.selectedMaintainItems}" >
 		
 		<ac:paginator for="draftSupplierItemID"></ac:paginator>
 

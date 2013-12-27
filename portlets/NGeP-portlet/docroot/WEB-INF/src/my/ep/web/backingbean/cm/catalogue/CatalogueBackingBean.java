@@ -93,56 +93,6 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean>{
 	private TreeNode root2; 
 
 	private SearchFilterBean statusFilterBean = new SearchFilterBean(SearchOperator.OPERATOR_EQUALS.value());
-	private IPagingDataModel<CmSupplierItem> searchSuppItemDataModel = new SearchSuppItemPagingDataModel();
-	
-	
-	private class SearchSuppItemPagingDataModel extends PagingDataModel<CmSupplierItem> {
-
-		private static final long serialVersionUID = 1L;
-
-		public SearchSuppItemPagingDataModel() {
-			super("draftSupplierItemID");
-			// TODO Auto-generated constructor stub
-		}
-
-		@Override
-		protected ISearchResultBean<CmSupplierItem> pageChangeListener(
-				ISearchBean<CmSupplierItem> searchBean) {
-
-
-			/*if(StringUtils.isBlank((String)colorFilterBean.getSearchValue()) 
-					&& StringUtils.isBlank((String)typeFilterBean.getSearchValue())
-					&& StringUtils.isBlank((String)brandFilterBean.getSearchValue())
-					&& StringUtils.isBlank((String)measurementFilterBean.getSearchValue())) {
-				return new SearchResultBean();
-			}*/
-
-
-			ICatalogueSO catalogueSO = (ICatalogueSO) BusinessDelegate.getInstance().getServiceObject("cm",ICatalogueSO.class);
-
-			statusFilterBean.setSearchField("itemStatus");
-			statusFilterBean.setSearchValue("D");
-			searchBean.getDataFilterBeans().add(statusFilterBean);
-
-
-
-			CatalogueReqDTO reqDTO = new CatalogueReqDTO();
-
-			reqDTO.setSearchBean(searchBean);
-			log.info("catalogueSO:"+catalogueSO);
-
-			CatalogueResDTO resDTO = catalogueSO.searchSupplierItemByStatus(reqDTO);
-			System.out.println("resDTO.getSuppItemResultBean():"+resDTO.getSuppItemResultBean());
-			
-			try {
-				
-				return resDTO.getSuppItemResultBean();
-			} finally {
-				catalogueSO = null;
-			}
-		}
-
-	}
 
 
 	public CatalogueBackingBean(){
@@ -224,10 +174,12 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean>{
 
 	public String GoToMaintain(){
 
-/*
+
 		ICatalogueSO catalogueSO = (ICatalogueSO) BusinessDelegate.getInstance().getServiceObject("cm",ICatalogueSO.class);
 
-		ISearchBean<CmSupplierItem> searchBean = new SearchBean<CmSupplierItem>();
+		SearchBean<CmSupplierItem> searchBean = new SearchBean<CmSupplierItem>();
+		
+		searchBean.setNavigatable(false);
 		statusFilterBean.setSearchField("itemStatus");
 		statusFilterBean.setSearchValue("D");
 		searchBean.getDataFilterBeans().add(statusFilterBean);
@@ -241,7 +193,7 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean>{
 
 		CatalogueResDTO resDTO = catalogueSO.searchSupplierItemByStatus(reqDTO);
 		System.out.println("resDTO.getSupplierItemList():"+resDTO.getSupplierItemList().size());
-		this.getManagedBean().setMaintainItemList(resDTO.getSupplierItemList());*/
+		this.getManagedBean().setMaintainItemList(resDTO.getSupplierItemList());
 
 
 
@@ -982,8 +934,8 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean>{
 
 		ICatalogueSO catalogueSO = (ICatalogueSO) BusinessDelegate.getInstance().getServiceObject("cm",ICatalogueSO.class);
 		CatalogueReqDTO reqDTO = new CatalogueReqDTO();
-		ISearchBean<CmSupplierItem> searchBean = new SearchBean<CmSupplierItem>();
-
+		SearchBean<CmSupplierItem> searchBean = new SearchBean<CmSupplierItem>();
+		searchBean.setNavigatable(false);
 
 		if(event.getTab().getTitle().equalsIgnoreCase("Draft")){
 
@@ -1226,12 +1178,12 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean>{
 
 		ICatalogueSO catalogueSO = (ICatalogueSO) BusinessDelegate.getInstance().getServiceObject("cm",ICatalogueSO.class);
 
-		ISearchBean<CmSupplierItem> searchBean = new SearchBean<CmSupplierItem>();
+		SearchBean<CmSupplierItem> searchBean = new SearchBean<CmSupplierItem>();
 		statusFilterBean.setSearchField("itemStatus");
 		statusFilterBean.setSearchValue("D");
 		searchBean.getDataFilterBeans().add(statusFilterBean);
 
-
+		searchBean.setNavigatable(false);
 
 		CatalogueReqDTO reqDTO = new CatalogueReqDTO();
 
@@ -1399,18 +1351,6 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean>{
 
 
 
-	public IPagingDataModel<CmSupplierItem> getSearchSuppItemDataModel() {
-		return searchSuppItemDataModel;
-	}
-
-
-
-	public void setSearchSuppItemDataModel(
-			IPagingDataModel<CmSupplierItem> searchSuppItemDataModel) {
-		this.searchSuppItemDataModel = searchSuppItemDataModel;
-	}
-
-	
 	
 
 }

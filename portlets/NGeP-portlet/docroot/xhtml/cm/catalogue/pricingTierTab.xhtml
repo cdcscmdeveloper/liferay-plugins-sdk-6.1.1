@@ -6,7 +6,8 @@
 	xmlns:h="http://java.sun.com/jsf/html"
 	xmlns:ui="http://java.sun.com/jsf/facelets"
 	xmlns:fn="http://java.sun.com/jsp/jstl/functions"
-	xmlns:c="http://java.sun.com/jsp/jstl/core">
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:ac="http://ac.my/jsf/composite/cc">
 
 
 
@@ -15,6 +16,7 @@
 			value="#{catalogueBackingBean.managedBean.selectedMaintainItem.cmTierPricings}" width="100%"
 			var="price">
 
+			<ac:paginator for="pricingTierID"></ac:paginator>
 			<p:column>
 				<f:facet name="header">
 					#{lbl['lbl.cm.price']}
@@ -50,6 +52,9 @@
 			</p:column>
 
 		</p:dataTable>
+		
+		<div class="clear"></div>
+		
 		<div align="right">
 			<p:commandButton value="#{lbl['lbl.cm.add']}" icon="ui-icon-add"
 				action="#{catalogueBackingBean.addNewTierPricing()}" update="priceTierPageID"
