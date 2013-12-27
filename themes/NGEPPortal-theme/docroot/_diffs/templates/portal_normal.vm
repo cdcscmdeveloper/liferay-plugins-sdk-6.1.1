@@ -9,6 +9,8 @@
 
 	$theme.include($top_head_include)
 	
+	#js ("$javascript_folder/jquery.min.js")
+ 	#js ("$javascript_folder/jquery.cookie.js")
 	<script language="javascript">
 		function resizeText(multiplier) 
 		{
@@ -135,7 +137,11 @@
     	});  
 	});  
 	</script>
-
+	<script>
+ 	jQuery(document).ready(function(){
+ 
+   var colorscheme = jQuery.cookie('colorscheme_');
+	</script>
 </head>
 
 <body class="$css_class">
@@ -149,10 +155,10 @@ $theme.include($body_top_include)
 #end
 
 	<header>
-	       <div class="sticky">
+	       <!--<div class="sticky">
 		<img src="$images_folder/general/QRep.png" />
 		<div id="close"><img src="$images_folder/general/close.png" /></div>
-	</div>
+	</div>-->
 	
         <div class="middle-navi login-top-navi">
             <div class="middle-navi-wrapper">
