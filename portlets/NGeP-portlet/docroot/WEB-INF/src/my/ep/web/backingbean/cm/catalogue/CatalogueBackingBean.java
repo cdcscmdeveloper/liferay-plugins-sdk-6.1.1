@@ -25,10 +25,13 @@ import javax.portlet.PortletResponse;
 import javax.servlet.http.HttpServletResponse;
 
 import my.ep.biz.bean.search.ISearchBean;
+import my.ep.biz.bean.search.ISearchResultBean;
 import my.ep.biz.bean.search.SearchBean;
 import my.ep.biz.bean.search.SearchFilterBean;
+import my.ep.biz.bean.search.SearchResultBean;
 import my.ep.biz.service.cm.catalogue.ICatalogueSO;
 import my.ep.biz.service.cm.catalogue.IWishListSO;
+import my.ep.biz.service.cm.codification.ICodificationSO;
 import my.ep.biz.service.pm.common.district.IDistrictSO;
 import my.ep.biz.service.pm.common.state.IStateSO;
 import my.ep.biz.service.pm.common.status.IStatusSO;
@@ -56,6 +59,8 @@ import my.ep.persistence.logging.LogKey;
 import my.ep.type.aut.SearchOperator;
 import my.ep.web.backingbean.BaseBackingBean;
 import my.ep.web.backingbean.cm.codification.CodificationBackingBean;
+import my.ep.web.bean.paginator.IPagingDataModel;
+import my.ep.web.bean.paginator.PagingDataModel;
 import my.ep.web.managedbean.cm.catalogue.CatalogueManagedBean;
 import my.ep.web.util.FacesScopes;
 import my.ep.web.util.lookupservice.BusinessDelegate;
@@ -88,6 +93,56 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean>{
 	private TreeNode root2; 
 
 	private SearchFilterBean statusFilterBean = new SearchFilterBean(SearchOperator.OPERATOR_EQUALS.value());
+	private IPagingDataModel<CmSupplierItem> searchSuppItemDataModel = new SearchSuppItemPagingDataModel();
+	
+	
+	private class SearchSuppItemPagingDataModel extends PagingDataModel<CmSupplierItem> {
+
+		private static final long serialVersionUID = 1L;
+
+		public SearchSuppItemPagingDataModel() {
+			super("draftSupplierItemID");
+			// TODO Auto-generated constructor stub
+		}
+
+		@Override
+		protected ISearchResultBean<CmSupplierItem> pageChangeListener(
+				ISearchBean<CmSupplierItem> searchBean) {
+
+
+			/*if(StringUtils.isBlank((String)colorFilterBean.getSearchValue()) 
+					&& StringUtils.isBlank((String)typeFilterBean.getSearchValue())
+					&& StringUtils.isBlank((String)brandFilterBean.getSearchValue())
+					&& StringUtils.isBlank((String)measurementFilterBean.getSearchValue())) {
+				return new SearchResultBean();
+			}*/
+
+
+			ICatalogueSO catalogueSO = (ICatalogueSO) BusinessDelegate.getInstance().getServiceObject("cm",ICatalogueSO.class);
+
+			statusFilterBean.setSearchField("itemStatus");
+			statusFilterBean.setSearchValue("D");
+			searchBean.getDataFilterBeans().add(statusFilterBean);
+
+
+
+			CatalogueReqDTO reqDTO = new CatalogueReqDTO();
+
+			reqDTO.setSearchBean(searchBean);
+			log.info("catalogueSO:"+catalogueSO);
+
+			CatalogueResDTO resDTO = catalogueSO.searchSupplierItemByStatus(reqDTO);
+			System.out.println("resDTO.getSuppItemResultBean():"+resDTO.getSuppItemResultBean());
+			
+			try {
+				
+				return resDTO.getSuppItemResultBean();
+			} finally {
+				catalogueSO = null;
+			}
+		}
+
+	}
 
 
 	public CatalogueBackingBean(){
@@ -169,7 +224,7 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean>{
 
 	public String GoToMaintain(){
 
-
+/*
 		ICatalogueSO catalogueSO = (ICatalogueSO) BusinessDelegate.getInstance().getServiceObject("cm",ICatalogueSO.class);
 
 		ISearchBean<CmSupplierItem> searchBean = new SearchBean<CmSupplierItem>();
@@ -186,7 +241,7 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean>{
 
 		CatalogueResDTO resDTO = catalogueSO.searchSupplierItemByStatus(reqDTO);
 		System.out.println("resDTO.getSupplierItemList():"+resDTO.getSupplierItemList().size());
-		this.getManagedBean().setMaintainItemList(resDTO.getSupplierItemList());
+		this.getManagedBean().setMaintainItemList(resDTO.getSupplierItemList());*/
 
 
 
@@ -1342,5 +1397,20 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean>{
 		}
 	}
 
+
+
+	public IPagingDataModel<CmSupplierItem> getSearchSuppItemDataModel() {
+		return searchSuppItemDataModel;
+	}
+
+
+
+	public void setSearchSuppItemDataModel(
+			IPagingDataModel<CmSupplierItem> searchSuppItemDataModel) {
+		this.searchSuppItemDataModel = searchSuppItemDataModel;
+	}
+
+	
+	
 
 }

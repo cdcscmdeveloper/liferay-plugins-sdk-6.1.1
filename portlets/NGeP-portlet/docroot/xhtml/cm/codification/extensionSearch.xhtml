@@ -106,7 +106,7 @@
 
 			<p:panel header="SEARCH RESULTS" toggleable="true">
 
-				<p:dataTable id="itemTableID"
+				<p:dataTable id="itemTableID" lazy="true"
 					value="#{codificationBackingBean.searchItemDataModel}"
 					rowKey="#{item.itemId}" var="item" rowIndexVar="rowIndex"
 					selection="#{codificationBackingBean.managedBean.selectedItems}">

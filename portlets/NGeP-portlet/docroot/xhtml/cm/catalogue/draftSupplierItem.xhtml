@@ -26,14 +26,12 @@
 	<ac:lovPopup />
 
 	<p:dataTable id="draftSupplierItemID"
-		value="#{catalogueBackingBean.managedBean.maintainItemList}"
+		value="#{catalogueBackingBean.searchSuppItemDataModel}"
 		rowIndexVar="rowIndex" var="selectedSuppCat"
 		rowKey="#{selectedSuppCat.supplierItemId}"
-		selection="#{catalogueBackingBean.managedBean.selectedMaintainItems}"
-		paginator="true" rows="10" paginatorPosition="bottom"
-		paginatorTemplate="{LastPageLink} {NextPageLink} {PreviousPageLink} {FirstPageLink} Page {JumpToPageDropdown} {CurrentPageReport}"
-		currentPageReportTemplate="/ {totalPages}"
-		rowsPerPageTemplate="5,10,15">
+		selection="#{catalogueBackingBean.managedBean.selectedMaintainItems}" lazy="true">
+		
+		<ac:paginator for="draftSupplierItemID"></ac:paginator>
 
 		<p:column selectionMode="multiple" style="width:2%" />
 

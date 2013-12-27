@@ -28,7 +28,7 @@
 
 		<div style="text-align: right;">
 			<p:commandButton icon="ui-icon-search" value="Search"
-				action="#{codificationBackingBean.unspscSearch}"
+				action="#{codificationBackingBean.unspscSearch}" 
 				update="cmUNSPSCsearchID" />
 
 		</div>
@@ -38,9 +38,9 @@
 
 		<p:panel header="SEARCH RESULTS" toggleable="true">
 
-			<p:dataTable id="unspscTableID"
+			<p:dataTable id="unspscTableID" lazy="true"
 				value="#{codificationBackingBean.searchDataModel}" var="unspscObj"	
-				width="100%">
+				width="100%" >
 
 
 

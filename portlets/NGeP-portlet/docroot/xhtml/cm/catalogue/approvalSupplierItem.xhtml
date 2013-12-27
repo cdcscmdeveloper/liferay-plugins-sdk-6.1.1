@@ -29,18 +29,15 @@
 			<f:facet name="header">
 				#{lbl['lbl.cm.price']}
 			</f:facet>
-			<p:inputText value="#{approval.cmStandardPricing.price}"></p:inputText>
+			<p:inputText value="#{approval.cmStandardPricing.price}" disabled="true"></p:inputText>
 
 		</p:column>
 		<p:column>
 			<f:facet name="header">
 				#{lbl['lbl.cm.uom']}
 			</f:facet>
-			<ac:lov id="approvalUomLovId" lovId="PM_UOM" size="20" headerText="UOM Lov"
-				saveObject="catalogueBackingBean.managedBean.approvalItemList[#{rowIndex}].pmUom"
-				value="#{approval.pmUom.uomName}"
-				conditionField="recordStatus^1">
-			</ac:lov>
+			
+			<p:inputText value="#{approval.pmUom.uomName}" disabled="true"></p:inputText>
 			
 
 		</p:column>
@@ -48,14 +45,14 @@
 			<f:facet name="header">
 				#{lbl['lbl.cm.start.date']}
 			</f:facet>
-			<p:calendar value="#{approval.cmStandardPricing.startDate}" showOn="button" size="10" pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}"></p:calendar>
+			<p:calendar value="#{approval.cmStandardPricing.startDate}" showOn="button" size="10" pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}" disabled="true"></p:calendar>
 
 		</p:column>
 		<p:column>
 			<f:facet name="header">
 				#{lbl['lbl.cm.end.date']}
 			</f:facet>
-			<p:calendar value="#{approval.cmStandardPricing.endDate}" showOn="button" size="10" pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}"></p:calendar>
+			<p:calendar value="#{approval.cmStandardPricing.endDate}" showOn="button" size="10" pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}" disabled="true"></p:calendar>
 
 		</p:column>
 		<p:column>
