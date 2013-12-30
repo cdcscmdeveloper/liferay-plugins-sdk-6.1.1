@@ -11,24 +11,17 @@ import javax.faces.context.FacesContext;
 import javax.portlet.PortletRequest;
 import javax.portlet.PortletSession;
 
-import my.ep.biz.service.pm.authorization.user.IUserSO;
 import my.ep.bpm.service.IBpmSO;
-import my.ep.dto.pm.authorization.user.UserReqDTO;
-import my.ep.dto.pm.authorization.user.UserResDTO;
 import my.ep.persistence.entity.pm.authorization.PmUser;
 import my.ep.util.lookupservice.EpBpmBusinessDelegate;
-import my.ep.web.util.lookupservice.BusinessDelegate;
+import my.ep.web.util.pm.helper.UserHelper;
 
 import org.apache.log4j.Logger;
 
 import com.liferay.portal.kernel.util.WebKeys;
 import com.liferay.portal.model.Role;
 import com.liferay.portal.model.User;
-import com.liferay.portal.model.UserGroup;
-import com.liferay.portal.service.PermissionServiceUtil;
-import com.liferay.portal.service.RoleServiceUtil;
 import com.liferay.portal.service.UserGroupRoleLocalServiceUtil;
-import com.liferay.portal.service.UserGroupRoleServiceUtil;
 import com.liferay.portal.service.UserServiceUtil;
 import com.liferay.portal.theme.ThemeDisplay;
 
@@ -174,24 +167,21 @@ public class FacesScopes {
 		System.out.println("user:" + user);
 		if (user == null) {
 			try {
-				IUserSO userSO = BusinessDelegate.getInstance()
-						.getServiceObject("pm", IUserSO.class);
-
-				UserReqDTO reqDTO = new UserReqDTO();
-				reqDTO.setUserName(new FacesScopes().getUserScreenName());
-
-				UserResDTO resDTO = userSO.retrieveUserByName(reqDTO);
-
-				user = resDTO.getPmUser();
-				System.out.println("id " + user.getUserId());
-				facesScopes.setSessionScope(SESS_USER_SESSION_BEAN, user);
+				String loginId = getUserScreenName();
+				
+				user = UserHelper.getInstance().getUserByLoginId(loginId);
+				
+				if (user == null) {
+					user = new PmUser();
+				}
 			} catch (Exception e) {
 				e.printStackTrace();
 
 				FacesContext.getCurrentInstance().addMessage(
-						null,
-						new FacesMessage(FacesMessage.SEVERITY_ERROR, e
-								.toString(), e.getMessage()));
+						null, new FacesMessage(
+								FacesMessage.SEVERITY_ERROR, 
+								e.toString(), 
+								e.getMessage()));
 
 				user = new PmUser();
 			}
@@ -203,8 +193,6 @@ public class FacesScopes {
 	public String getUserScreenName() {
 		String screenName = "";
 		try {
-
-			// FacesScopes facesScopes = new FacesScopes();
 			User user = UserServiceUtil.getUserById(Long.valueOf(this
 					.getRequest().getRemoteUser()));
 			screenName = user.getScreenName();
