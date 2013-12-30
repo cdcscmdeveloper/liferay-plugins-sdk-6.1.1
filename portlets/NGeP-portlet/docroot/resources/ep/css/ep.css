@@ -4262,6 +4262,7 @@ textarea[disabled],input[type="text"][disabled],input[type="password"][disabled]
 	text-align: left;
 	font-family: Tahoma;
 	font-size: 11px;
+	border: none;
 	background: #BCE18A; /* Old browsers */
 	background: -moz-linear-gradient(top, #FFFFFF 0%, #BCE18A 100%);
 	/* FF3.6+ */
@@ -4277,6 +4278,18 @@ textarea[disabled],input[type="text"][disabled],input[type="password"][disabled]
 	/* W3C */
 	filter: progid:DXImageTransform.Microsoft.gradient(  startColorstr='#FFFFFF',
 		endColorstr='#BCE18A', GradientType=0 ); /* IE6-8 */
+}
+
+.tablePanel > thead > tr {
+	border: none;
+}
+
+.tablePanel > tbody > tr {
+	border: none;
+}
+
+.tablePanel > tbody > tr > td {
+	border: none;
 }
 
 .ui-button-icon-only > .ui-button-text {
