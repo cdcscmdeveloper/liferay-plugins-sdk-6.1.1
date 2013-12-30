@@ -66,6 +66,8 @@ public class LovBackingBean implements Serializable {
 	private List resultList = new ArrayList();
 	private BaseEntity selectedEntity;
 	
+	private List<LovColumnBean> columnsToDisplay = new ArrayList<LovColumnBean>();
+	
 	private void debugLogger(Object message) {
         if(log.isDebugEnabled()) {
             log.debug(message);
@@ -175,6 +177,13 @@ public class LovBackingBean implements Serializable {
 			
 			prepareColumnTitle(lovBean);
 			createSearchOptions(lovBean);
+			
+			columnsToDisplay.clear();
+			for(LovColumnBean column : lovBean.getColumns()) {
+				if(column.isViewable()) {
+					columnsToDisplay.add(column);
+				}
+			}
 			
 //			constructSearchBean(conditionField);
 //			initSearchBean();
@@ -377,4 +386,12 @@ public class LovBackingBean implements Serializable {
 		this.selectedEntity = selectedEntity;
 	}
 
+	public List<LovColumnBean> getColumnsToDisplay() {
+		return columnsToDisplay;
+	}
+
+	public void setColumnsToDisplay(List<LovColumnBean> columnsToDisplay) {
+		this.columnsToDisplay = columnsToDisplay;
+	}
+	
 }

@@ -70,7 +70,7 @@
 					<p:outputLabel value="#{rowIndex + 1}" />
 				</p:column> -->
 				
-				<p:columns var="column" value="#{lovBackingBean.lovBean.columns}">
+				<p:columns var="column" value="#{lovBackingBean.columnsToDisplay}">
 				
 					<f:facet name="header">  
 		                <p:outputLabel value="#{column.columnTitle}" />  

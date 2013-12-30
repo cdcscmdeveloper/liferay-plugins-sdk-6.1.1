@@ -19,12 +19,12 @@ public class LovColumnBean {
 
 	private String propertyType;
 	private boolean searchable;
-	private boolean visible;
+	private boolean viewable;
 	private Integer columnWidth;
 	
 	
 	public LovColumnBean() {
-		visible = true;
+		viewable = true;
 		searchable = true;
 		propertyType = "String";
 	}
@@ -78,16 +78,16 @@ public class LovColumnBean {
 	public void setSearchable(boolean searchable) {
 		this.searchable = searchable;
 	}
-	public boolean isVisible() {
-		return visible;
-	}
-	public void setVisible(boolean visible) {
-		this.visible = visible;
-	}
 	public Integer getColumnWidth() {
 		return columnWidth;
 	}
 	public void setColumnWidth(Integer columnWidth) {
 		this.columnWidth = columnWidth;
+	}
+	public boolean isViewable() {
+		return viewable;
+	}
+	public void setViewable(boolean viewable) {
+		this.viewable = viewable;
 	}	
 }
