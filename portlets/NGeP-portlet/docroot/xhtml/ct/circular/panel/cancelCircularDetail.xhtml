@@ -75,7 +75,8 @@
 						<h:outputText value="#{data.name}" />
 					</p:column>
 					<p:column headerText="Update Type">
-						<h:outputText value="#{data.updateType.pmCodeDescs[0].codeName}" />
+						<h:outputText rendered="#{data.updateType != null}" 
+							value="#{panelBackingBean.getParameterDesc(data.updateType)}" />					
 					</p:column>
 					<p:column headerText="Update No.">
 						<h:outputText value="#{data.updateNo}" />

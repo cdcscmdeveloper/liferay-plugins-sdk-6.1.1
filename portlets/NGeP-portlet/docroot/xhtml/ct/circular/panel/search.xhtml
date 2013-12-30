@@ -21,27 +21,20 @@
 				<p:inputText value="#{panelBackingBean.managedBean.searchFileRefNo}" style="width:200px;" />
 				<h:outputLabel value="Item Name" />
 				<p:inputText value="#{panelBackingBean.managedBean.searchItemName}" style="width:200px;" />
-				<p:outputLabel value="Circular Type" />
-				<p:selectOneMenu value="#{panelBackingBean.managedBean.searchCircularTypeCodeId}">
-					<f:selectItems value="#{panelBackingBean.getDropdownValues(PmCodeCatConst.circularType)}" />
-				</p:selectOneMenu>					
+				<p:outputLabel value="Update Type" />
+				<p:selectOneMenu value="#{panelBackingBean.managedBean.searchUpdateType}">
+					<f:selectItems value="#{panelBackingBean.getDropdownValues(ParameterTypeConst.circularUpdateType)}" />
+				</p:selectOneMenu>								
 				<h:outputLabel value="Circular Start Date" />
-				<p:calendar style="width:150px;" value="#{panelBackingBean.managedBean.searchStartDate}" id="popupButtonCal" showOn="button" />
+				<p:calendar style="width:150px;" pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}"
+					value="#{panelBackingBean.managedBean.searchStartDate}" id="popupButtonCal" showOn="button" />
 				<h:outputLabel value="Circular End Date" />
-				<p:calendar style="width:150px;" value="#{panelBackingBean.managedBean.searchEndDate}" id="popupButtonCal1" showOn="button" />
-				<h:panelGroup>
-					<div style="height: 70px; vertical-align: top">
-						<p:outputLabel for="status" value="Status" />
-					</div>
-				</h:panelGroup>
-				<h:panelGrid>
-					<p:selectOneListbox id="status" value="#{panelBackingBean.managedBean.searchStatusId}" style="width:200px;">
-						<f:selectItem itemLabel="Pending Approval" itemValue="1" />
-						<f:selectItem itemLabel="Approved" itemValue="2" />
-						<f:selectItem itemLabel="Cancelled" itemValue="3" />
-						<f:selectItem itemLabel="All" itemValue="4" />
-					</p:selectOneListbox>
-				</h:panelGrid>
+				<p:calendar style="width:150px;" pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}"
+					value="#{panelBackingBean.managedBean.searchEndDate}" id="popupButtonCal1" showOn="button" />
+				<p:outputLabel for="status" value="Status" />
+				<p:selectOneMenu id="status" value="#{panelBackingBean.managedBean.searchStatusId}" style="width:200px;">
+					<f:selectItems value="#{panelBackingBean.getStatusDropdown()}" />
+				</p:selectOneMenu>				
 				<f:verbatim></f:verbatim>
 				<f:verbatim></f:verbatim>
 				<f:verbatim></f:verbatim>
@@ -73,7 +66,8 @@
 					<h:outputText value="#{data.name}" />
 				</p:column>
 				<p:column>
-					<h:outputText value="#{data.updateType.pmCodeDescs[0].codeName}" />
+					<h:outputText rendered="#{data.updateType != null}" 
+						value="#{panelBackingBean.getParameterDesc(data.updateType)}" />
 				</p:column>
 				<p:column>
 					<h:outputText value="#{data.updateNo}" />

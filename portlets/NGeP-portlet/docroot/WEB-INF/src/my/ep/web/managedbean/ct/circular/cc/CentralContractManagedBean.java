@@ -58,7 +58,7 @@ public class CentralContractManagedBean extends BaseManagedBean {
 	private String searchFileRefNo;
 	private Date searchStartDate;
 	private Date searchEndDate;	
-	private Long searchCircularTypeCodeId;
+	private Long searchUpdateType;
 	private Long searchStatusId;
 	private String searchContractNo;
 	private String searchContractName;
@@ -131,12 +131,6 @@ public class CentralContractManagedBean extends BaseManagedBean {
 	}
 	public void setSearchEndDate(Date searchEndDate) {
 		this.searchEndDate = searchEndDate;
-	}
-	public Long getSearchCircularTypeCodeId() {
-		return searchCircularTypeCodeId;
-	}
-	public void setSearchCircularTypeCodeId(Long searchCircularTypeCodeId) {
-		this.searchCircularTypeCodeId = searchCircularTypeCodeId;
 	}
 	public Long getSearchStatusId() {
 		return searchStatusId;
@@ -215,6 +209,12 @@ public class CentralContractManagedBean extends BaseManagedBean {
 	}
 	public void setCircularAdmin(String circularAdmin) {
 		this.circularAdmin = circularAdmin;
+	}
+	public Long getSearchUpdateType() {
+		return searchUpdateType;
+	}
+	public void setSearchUpdateType(Long searchUpdateType) {
+		this.searchUpdateType = searchUpdateType;
 	}
 	
 }

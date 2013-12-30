@@ -70,7 +70,7 @@ public class PanelManagedBean extends BaseManagedBean {
 	private String searchItemName;
 	private Date searchStartDate;
 	private Date searchEndDate;	
-	private Long searchCircularTypeCodeId;
+	private Long searchUpdateType;
 	private Long searchStatusId;
 
 	public CtCircular getCircular() {
@@ -210,14 +210,6 @@ public class PanelManagedBean extends BaseManagedBean {
 		this.searchItemName = searchItemName;
 	}
 
-	public Long getSearchCircularTypeCodeId() {
-		return searchCircularTypeCodeId;
-	}
-
-	public void setSearchCircularTypeCodeId(Long searchCircularTypeCodeId) {
-		this.searchCircularTypeCodeId = searchCircularTypeCodeId;
-	}
-
 	public Long getSearchStatusId() {
 		return searchStatusId;
 	}
@@ -302,6 +294,14 @@ public class PanelManagedBean extends BaseManagedBean {
 
 	public void setCircularAdmin(String circularAdmin) {
 		this.circularAdmin = circularAdmin;
+	}
+
+	public Long getSearchUpdateType() {
+		return searchUpdateType;
+	}
+
+	public void setSearchUpdateType(Long searchUpdateType) {
+		this.searchUpdateType = searchUpdateType;
 	}
 
 }

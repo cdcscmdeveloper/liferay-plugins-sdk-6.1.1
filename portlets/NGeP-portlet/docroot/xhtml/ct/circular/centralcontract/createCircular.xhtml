@@ -78,16 +78,16 @@
 				</p:row>
 			</p:columnGroup>
 			<p:column>
-				<p:outputLabel value="#{data.ctContract.latestContractVer.ctContractValue.contractPhysicalNo}" />
+				<h:outputText value="#{data.ctContract.latestContractVer.ctContractValue.contractPhysicalNo}" />
 			</p:column>
 			<p:column>
-				<p:outputLabel value="#{data.ctContract.contractName}" />
+				<h:outputText value="#{data.ctContract.contractName}" />
 			</p:column>
 			<p:column>
-				<p:outputLabel value="#{data.ctContract.loaNo}" />
+				<h:outputText value="#{data.ctContract.loaNo}" />
 			</p:column>
 			<p:column>
-				<p:outputLabel value="#{data.ctContract.smSupplier.supplierName}" />
+				<h:outputText value="#{data.ctContract.smSupplier.supplierName}" />
 			</p:column>
 			<p:column>
 				<h:outputText value="#{data.ctContract.latestContractVer.ctContractValue.effDate}" >
@@ -168,7 +168,7 @@
 		</p:panel>
 	</p:dialog>
 	
-	<p:panel id="concelCircularPnl" header="Related Cancelled Circular" toggleable="true" toggleSpeed="500" 
+	<p:panel id="cancelCircularPnl" header="Related Cancelled Circular" toggleable="true" toggleSpeed="500" 
 		rendered="#{!centralContractBackingBean.managedBean.updateAction and centralContractBackingBean.managedBean.circularVer.updateNo == null}" >
 		<p:dataTable id="cancelCircularDt" var="data" value="#{centralContractBackingBean.managedBean.circularVer.ctCancelCircularList}"
 			lazy="true" rowIndexVar="index" >

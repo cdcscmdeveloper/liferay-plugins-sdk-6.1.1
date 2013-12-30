@@ -19,12 +19,12 @@ import javax.servlet.http.HttpServletRequest;
 
 import my.ep.biz.bean.search.ISearchBean;
 import my.ep.biz.bean.search.ISearchResultBean;
-import my.ep.biz.bean.search.SearchBean;
 import my.ep.biz.bean.search.SearchBetweenValue;
 import my.ep.biz.bean.search.SearchFilterBean;
 import my.ep.biz.service.ct.circular.ICircularSO;
 import my.ep.biz.service.pm.authorization.user.IUserSO;
 import my.ep.biz.service.pm.common.state.IStateSO;
+import my.ep.biz.service.pm.common.status.IStatusSO;
 import my.ep.bpm.dto.BpmRequestDTO;
 import my.ep.bpm.dto.BpmResponseDTO;
 import my.ep.bpm.service.IBpmSO;
@@ -37,6 +37,8 @@ import my.ep.dto.pm.authorization.user.UserReqDTO;
 import my.ep.dto.pm.authorization.user.UserResDTO;
 import my.ep.dto.pm.common.state.StateReqDTO;
 import my.ep.dto.pm.common.state.StateResDTO;
+import my.ep.dto.pm.common.status.StatusReqDTO;
+import my.ep.dto.pm.common.status.StatusResDTO;
 import my.ep.exception.EpException;
 import my.ep.jaxb.ct.circular.CTCircularContractDataType;
 import my.ep.jaxb.ct.circular.cancellation.CTCircularCancellationDataType;
@@ -53,8 +55,9 @@ import my.ep.persistence.entity.ct.circular.panel.CtPanelZone;
 import my.ep.persistence.entity.pm.authorization.PmUser;
 import my.ep.persistence.entity.pm.authorization.PmUserGroup;
 import my.ep.persistence.entity.pm.authorization.PmUserGroupUser;
-import my.ep.persistence.entity.pm.common.PmCode;
+import my.ep.persistence.entity.pm.common.PmParameter;
 import my.ep.persistence.entity.pm.common.PmState;
+import my.ep.persistence.entity.pm.common.PmStatusDesc;
 import my.ep.persistence.entity.sm.SmSupplier;
 import my.ep.type.aut.SearchOperator;
 import my.ep.type.pm.RoleCode;
@@ -180,9 +183,12 @@ public class PanelBackingBean extends BaseBackingBean<PanelManagedBean>{
 			CtCircular circular = getManagedBean().getCircular();
 			if(circular==null) {
 				circular = new CtCircular();
-				circular.setDocType(ContractConst.CIRCULAR_DOC_TYPE_PANEL);
+				circular.setCircularType(ContractConst.CIRCULAR_DOC_TYPE_PANEL);
 			}
 			CtCircularVer circularVer = getManagedBean().getCircularVer();
+			if(circularVer.getDocType()==null) {
+				circularVer.setDocType(ContractConst.DOC_TYPE_PANEL_CIRCULAR_CREATION);
+			}
 			
 			if(!action.equalsIgnoreCase(BpmOutcomeConst.BPM_SAVE) && getManagedBean().getApproverModel().getTarget().size()==0) {
 				FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "Please select at least one approver.",""));
@@ -331,20 +337,13 @@ public class PanelBackingBean extends BaseBackingBean<PanelManagedBean>{
 		try { 
 			circularSO = (ICircularSO)BusinessDelegate.getInstance().getServiceObject("ct",ICircularSO.class);
 
-			ISearchBean<CtCircularVer> searchBean = new SearchBean<CtCircularVer>();
-			if(getManagedBean().getCircularDocType()!=null) {
-				searchBean.getDataFilterBeans().add(new SearchFilterBean("ctCircular.docType",SearchOperator.OPERATOR_EQUALS.value(),getManagedBean().getCircularDocType()));
-			}
-			if(getManagedBean().getSearchStatusId()!=null) {
-				searchBean.getDataFilterBeans().add(new SearchFilterBean("status.statusId",SearchOperator.OPERATOR_EQUALS.value(),getManagedBean().getSearchStatusId()));	
-			}					
-			
 			CircularReqDTO reqDTO = new CircularReqDTO();
-			reqDTO.setCircularVerSearchBean(searchBean);
+			reqDTO.setCircularType(getManagedBean().getCircularDocType());
+			reqDTO.setFilterStatusId(ContractStatusConst.APPROVED);
 			
-			CircularResDTO resDTO = circularSO.searchCircularVer(reqDTO);
+			CircularResDTO resDTO = circularSO.retrieveCircularVerList(reqDTO);
 			if(resDTO.isSuccessful()) {
-				getManagedBean().setCircularVerList(resDTO.getCircularVerResultBean().getResultList());
+				getManagedBean().setCircularVerList(resDTO.getCircularVerList());
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -581,6 +580,44 @@ public class PanelBackingBean extends BaseBackingBean<PanelManagedBean>{
 	    return items;
 	}
 	
+	public SelectItem[] getStatusDropdown() {
+		IStatusSO statusSO = null;
+		SelectItem[] items = null;
+		try {
+			statusSO = (IStatusSO)BusinessDelegate.getInstance().getServiceObject("pm",IStatusSO.class);
+			String languageCode = new FacesScopes().getUserLocale().getLanguage();
+			
+			List<Long> statusIdList = new ArrayList<Long>();
+			statusIdList.add(ContractStatusConst.PENDING_SUBMISSION);
+			statusIdList.add(ContractStatusConst.PENDING_REVISION);
+			statusIdList.add(ContractStatusConst.PENDING_APPROVAL);
+			statusIdList.add(ContractStatusConst.PENDING_REVISION_APPROVAL);
+			statusIdList.add(ContractStatusConst.APPROVED);
+			statusIdList.add(ContractStatusConst.REJECTED);
+			statusIdList.add(ContractStatusConst.CANCELLED);
+			
+			StatusReqDTO reqDTO = new StatusReqDTO();
+			reqDTO.setModuleCode("CT");
+			reqDTO.setLanguageCode(languageCode);
+			StatusResDTO resDTO = statusSO.retrieveStatusDescList(reqDTO);
+			
+			items = new SelectItem[statusIdList.size()+1];
+			int i = 0;
+			items[i++] = new SelectItem(null, "- Select One -");
+			for(PmStatusDesc statusDesc : resDTO.getStatusDescList()) {
+				if(statusIdList.contains(statusDesc.getPmStatus().getStatusId())) {
+					items[i++] = new SelectItem(statusDesc.getPmStatus().getStatusId(), statusDesc.getStatusName());
+				}
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+			FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR,e.toString(), e.getMessage()));
+		} finally {
+			statusSO = null;
+		}
+	    return items;
+	}
+	
 	public SelectItem[] getUserGroupDropdown() {
 		SelectItem[] items = null;
 		try {
@@ -659,9 +696,9 @@ public class PanelBackingBean extends BaseBackingBean<PanelManagedBean>{
 			if(action.equalsIgnoreCase("view")) {
 				resDTO = circularSO.retrieveCircularVerById(reqDTO);
 				if(resDTO.getCircularVer().getUpdateType()==null) {
-					PmCode code = new PmCode();
-					code.setCodeId(-1L);
-					resDTO.getCircularVer().setUpdateType(code);
+					PmParameter parameter = new PmParameter();
+					parameter.setParameterId(-1L);
+					resDTO.getCircularVer().setUpdateType(parameter);					
 				}
 				for(CtPanelItem panelItem : resDTO.getCircularVer().getCtPanelItems()) {
 					for(CtPanelSupplier panelSupplier : panelItem.getCtPanelSuppliers()) {
@@ -677,9 +714,9 @@ public class PanelBackingBean extends BaseBackingBean<PanelManagedBean>{
 				reqDTO.setUpdateAction(true);
 				resDTO = circularSO.retrieveCircularVerById(reqDTO);
 				if(resDTO.getCircularVer().getUpdateType()==null) {
-					PmCode code = new PmCode();
-					code.setCodeId(-1L);
-					resDTO.getCircularVer().setUpdateType(code);
+					PmParameter parameter = new PmParameter();
+					parameter.setParameterId(-1L);
+					resDTO.getCircularVer().setUpdateType(parameter);
 				}				
 				getManagedBean().setCircular(resDTO.getCircular());
 				getManagedBean().setCircularVer(resDTO.getCircularVer());
@@ -744,16 +781,22 @@ public class PanelBackingBean extends BaseBackingBean<PanelManagedBean>{
 			
 			getManagedBean().setCircularAdmin(dataType.getContractAdmin());
 			getManagedBean().setTaskId(taskId);
-			getManagedBean().setOutComes(res.getAction());
+			String[] outcome = new String[res.getAction().length+1];
+			outcome[0] = "Save";
+			int i = 1;
+			for(String action : res.getAction()) {
+				outcome[i++]= action;
+			}
+			getManagedBean().setOutComes(outcome);			
 			
 			CircularReqDTO circularReqDTO = new CircularReqDTO();
-			circularReqDTO.setCircularVerId(dataType.getCircularId().longValue());
+			circularReqDTO.setCircularVerId(dataType.getDocId().longValue());
 			
 			CircularResDTO resDTO = circularSO.retrieveCircularVerById(circularReqDTO);
 			if(resDTO.getCircularVer().getUpdateType()==null) {
-				PmCode code = new PmCode();
-				code.setCodeId(-1L);
-				resDTO.getCircularVer().setUpdateType(code);
+				PmParameter parameter = new PmParameter();
+				parameter.setParameterId(-1L);
+				resDTO.getCircularVer().setUpdateType(parameter);
 			}
 			for(CtPanelItem panelItem : resDTO.getCircularVer().getCtPanelItems()) {
 				for(CtPanelSupplier panelSupplier : panelItem.getCtPanelSuppliers()) {
@@ -808,7 +851,13 @@ public class PanelBackingBean extends BaseBackingBean<PanelManagedBean>{
 			
 			getManagedBean().setCircularAdmin(dataType.getContractAdmin());
 			getManagedBean().setTaskId(taskId);
-			getManagedBean().setOutComes(res.getAction());
+			String[] outcome = new String[res.getAction().length+1];
+			outcome[0] = "Save";
+			int i = 1;
+			for(String action : res.getAction()) {
+				outcome[i++]= action;
+			}
+			getManagedBean().setOutComes(outcome);	
 			
 			CircularReqDTO cancelReqDTO = new CircularReqDTO();
 			cancelReqDTO.setCancelCircularReqId(dataType.getCircularIds().get(0).longValue());
@@ -876,7 +925,7 @@ public class PanelBackingBean extends BaseBackingBean<PanelManagedBean>{
 				log.debug("pageChangeListener");
 			}
 			try {				
-				searchBean.getDataFilterBeans().add(new SearchFilterBean("ctCircular.docType",SearchOperator.OPERATOR_EQUALS.value(),ContractConst.CIRCULAR_DOC_TYPE_PANEL));
+				searchBean.getDataFilterBeans().add(new SearchFilterBean("ctCircular.circularType",SearchOperator.OPERATOR_EQUALS.value(),ContractConst.CIRCULAR_DOC_TYPE_PANEL));
 				if(getManagedBean().getSearchCircularNo()!=null && getManagedBean().getSearchCircularNo().length()>0) {
 					searchBean.getDataFilterBeans().add(new SearchFilterBean("circularNo",SearchOperator.OPERATOR_EQUALS.value(),getManagedBean().getSearchCircularNo()));	
 				}
@@ -892,17 +941,17 @@ public class PanelBackingBean extends BaseBackingBean<PanelManagedBean>{
 				if(getManagedBean().getSearchItemName()!=null && getManagedBean().getSearchItemName().length()>0) {
 					searchBean.getDataFilterBeans().add(new SearchFilterBean("ctPanelItems.itemName",SearchOperator.OPERATOR_LIKE.value(),getManagedBean().getSearchItemName()));	
 				}		
-				if(getManagedBean().getSearchCircularTypeCodeId()!=null) {
-					searchBean.getDataFilterBeans().add(new SearchFilterBean("circularTypeCode.codeId",SearchOperator.OPERATOR_EQUALS.value(),getManagedBean().getSearchCircularTypeCodeId()));	
-				}				
+				if(getManagedBean().getSearchUpdateType()!=null) {
+					searchBean.getDataFilterBeans().add(new SearchFilterBean("updateType.parameterId",SearchOperator.OPERATOR_EQUALS.value(),getManagedBean().getSearchUpdateType()));	
+				}					
 				if(getManagedBean().getSearchStartDate()!=null && getManagedBean().getSearchEndDate()!=null) {
 					SearchBetweenValue<Date> betweenValue = new SearchBetweenValue<Date>(getManagedBean().getSearchStartDate(), getManagedBean().getSearchEndDate());
 					searchBean.getDataFilterBeans().add(new SearchFilterBean("startDate",SearchOperator.OPERATOR_BETWEEN.value(),betweenValue));
 					searchBean.getDataFilterBeans().add(new SearchFilterBean("endDate",SearchOperator.OPERATOR_BETWEEN.value(),betweenValue));
 				}	
-				if(getManagedBean().getSearchStatusId()!=null) {
-					searchBean.getDataFilterBeans().add(new SearchFilterBean("status.statusId",SearchOperator.OPERATOR_EQUALS.value(),getManagedBean().getSearchStatusId()));	
-				}					
+//				if(getManagedBean().getSearchStatusId()!=null) {
+//					searchBean.getDataFilterBeans().add(new SearchFilterBean("status.statusId",SearchOperator.OPERATOR_EQUALS.value(),getManagedBean().getSearchStatusId()));	
+//				}					
 				
 				CircularReqDTO reqDTO = new CircularReqDTO();
 				reqDTO.setCircularVerSearchBean(searchBean);

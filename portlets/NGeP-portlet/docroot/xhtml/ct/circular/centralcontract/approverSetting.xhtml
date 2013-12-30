@@ -15,7 +15,8 @@
 					<f:selectItems value="#{centralContractBackingBean.getUserGroupDropdown()}" />
 				</p:selectOneMenu>		
 			</h:panelGrid>
-			<h:panelGrid style="width:500px;">
+			<p:spacer height="1" />
+			<h:panelGrid>
 				<p:pickList id="approverpickList" value="#{centralContractBackingBean.managedBean.approverModel}"
 					var="data" itemValue="#{data}" itemLabel="#{data}" 
 					showTargetControls="true" filterMatchMode="contains">

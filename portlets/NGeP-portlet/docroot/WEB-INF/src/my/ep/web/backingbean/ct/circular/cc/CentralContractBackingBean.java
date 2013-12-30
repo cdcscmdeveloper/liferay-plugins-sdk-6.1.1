@@ -27,19 +27,22 @@ import my.ep.biz.bean.search.SearchFilterBean;
 import my.ep.biz.service.ct.IContractSO;
 import my.ep.biz.service.ct.circular.ICircularSO;
 import my.ep.biz.service.pm.authorization.user.IUserSO;
+import my.ep.biz.service.pm.common.status.IStatusSO;
 import my.ep.bpm.dto.BpmRequestDTO;
 import my.ep.bpm.dto.BpmResponseDTO;
 import my.ep.bpm.service.IBpmSO;
 import my.ep.constant.BpmOutcomeConst;
 import my.ep.constant.ct.ContractConst;
 import my.ep.constant.ct.ContractStatusConst;
-import my.ep.constant.pm.PmCodeConst;
+import my.ep.constant.pm.ParameterConst;
 import my.ep.dto.ct.ContractReqDTO;
 import my.ep.dto.ct.ContractResDTO;
 import my.ep.dto.ct.circular.CircularReqDTO;
 import my.ep.dto.ct.circular.CircularResDTO;
 import my.ep.dto.pm.authorization.user.UserReqDTO;
 import my.ep.dto.pm.authorization.user.UserResDTO;
+import my.ep.dto.pm.common.status.StatusReqDTO;
+import my.ep.dto.pm.common.status.StatusResDTO;
 import my.ep.exception.EpException;
 import my.ep.jaxb.ct.circular.CTCircularContractDataType;
 import my.ep.persistence.entity.ct.CtContract;
@@ -51,7 +54,8 @@ import my.ep.persistence.entity.ct.circular.dtl.CtContactPerson;
 import my.ep.persistence.entity.pm.authorization.PmUser;
 import my.ep.persistence.entity.pm.authorization.PmUserGroup;
 import my.ep.persistence.entity.pm.authorization.PmUserGroupUser;
-import my.ep.persistence.entity.pm.common.PmCode;
+import my.ep.persistence.entity.pm.common.PmParameter;
+import my.ep.persistence.entity.pm.common.PmStatusDesc;
 import my.ep.type.aut.SearchOperator;
 import my.ep.type.pm.RoleCode;
 import my.ep.util.lookupservice.EpBpmBusinessDelegate;
@@ -172,6 +176,44 @@ public class CentralContractBackingBean extends BaseBackingBean<CentralContractM
 		getManagedBean().getApproverModel().setTarget(target);
 	}
 	
+	public SelectItem[] getStatusDropdown() {
+		IStatusSO statusSO = null;
+		SelectItem[] items = null;
+		try {
+			statusSO = (IStatusSO)BusinessDelegate.getInstance().getServiceObject("pm",IStatusSO.class);
+			String languageCode = new FacesScopes().getUserLocale().getLanguage();
+			
+			List<Long> statusIdList = new ArrayList<Long>();
+			statusIdList.add(ContractStatusConst.PENDING_SUBMISSION);
+			statusIdList.add(ContractStatusConst.PENDING_REVISION);
+			statusIdList.add(ContractStatusConst.PENDING_APPROVAL);
+			statusIdList.add(ContractStatusConst.PENDING_REVISION_APPROVAL);
+			statusIdList.add(ContractStatusConst.APPROVED);
+			statusIdList.add(ContractStatusConst.REJECTED);
+			statusIdList.add(ContractStatusConst.CANCELLED);
+			
+			StatusReqDTO reqDTO = new StatusReqDTO();
+			reqDTO.setModuleCode("CT");
+			reqDTO.setLanguageCode(languageCode);
+			StatusResDTO resDTO = statusSO.retrieveStatusDescList(reqDTO);
+			
+			items = new SelectItem[statusIdList.size()+1];
+			int i = 0;
+			items[i++] = new SelectItem(null, "- Select One -");
+			for(PmStatusDesc statusDesc : resDTO.getStatusDescList()) {
+				if(statusIdList.contains(statusDesc.getPmStatus().getStatusId())) {
+					items[i++] = new SelectItem(statusDesc.getPmStatus().getStatusId(), statusDesc.getStatusName());
+				}
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+			FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR,e.toString(), e.getMessage()));
+		} finally {
+			statusSO = null;
+		}
+	    return items;
+	}
+	
 	public void searchContract(){
 		IContractSO contractSO = null;
 		ICircularSO circularSO = null;
@@ -181,8 +223,8 @@ public class CentralContractBackingBean extends BaseBackingBean<CentralContractM
 			
 			ISearchBean<CtContract> searchBean = new SearchBean<CtContract>();
 
-			searchBean.getDataFilterBeans().add(new SearchFilterBean("contractType.code",SearchOperator.OPERATOR_EQUALS.value(),PmCodeConst.CONTRACT_TYPE_CENTRAL));
-			searchBean.getDataFilterBeans().add(new SearchFilterBean("latestContractVer.status.statusId",SearchOperator.OPERATOR_EQUALS.value(),ContractStatusConst.APPROVED));
+			searchBean.getDataFilterBeans().add(new SearchFilterBean("contractType.parameterCode",SearchOperator.OPERATOR_EQUALS.value(),ParameterConst.CONTRACT_TYPE_CENTRAL));
+			searchBean.getDataFilterBeans().add(new SearchFilterBean("latestContractVer.contractVerId",SearchOperator.OPERATOR_IS_NOT_NULL.value(),null));
 			//TODO shouldn't use this method as will cause performance issue. Please find a better way.
 			List<Long> contractIdList = circularSO.retrieveApprovedCircularContractId(null).getContractIdList();
 			if(contractIdList!=null && contractIdList.size()>0) {
@@ -334,7 +376,7 @@ public class CentralContractBackingBean extends BaseBackingBean<CentralContractM
 				log.debug("pageChangeListener");
 			}
 			try {				
-				searchBean.getDataFilterBeans().add(new SearchFilterBean("ctCircular.docType",SearchOperator.OPERATOR_EQUALS.value(),ContractConst.CIRCULAR_DOC_TYPE_CENTRAL_CONTRACT));
+				searchBean.getDataFilterBeans().add(new SearchFilterBean("ctCircular.circularType",SearchOperator.OPERATOR_EQUALS.value(),ContractConst.CIRCULAR_DOC_TYPE_CENTRAL_CONTRACT));
 				if(getManagedBean().getSearchCircularNo()!=null && getManagedBean().getSearchCircularNo().length()>0) {
 					searchBean.getDataFilterBeans().add(new SearchFilterBean("circularNo",SearchOperator.OPERATOR_EQUALS.value(),getManagedBean().getSearchCircularNo()));	
 				}
@@ -344,17 +386,17 @@ public class CentralContractBackingBean extends BaseBackingBean<CentralContractM
 				if(getManagedBean().getSearchFileRefNo()!=null && getManagedBean().getSearchFileRefNo().length()>0) {
 					searchBean.getDataFilterBeans().add(new SearchFilterBean("circularFileRefNo",SearchOperator.OPERATOR_EQUALS.value(),getManagedBean().getSearchFileRefNo()));	
 				}		
-				if(getManagedBean().getSearchCircularTypeCodeId()!=null) {
-					searchBean.getDataFilterBeans().add(new SearchFilterBean("circularTypeCode.codeId",SearchOperator.OPERATOR_EQUALS.value(),getManagedBean().getSearchCircularTypeCodeId()));	
+				if(getManagedBean().getSearchUpdateType()!=null) {
+					searchBean.getDataFilterBeans().add(new SearchFilterBean("updateType.parameterId",SearchOperator.OPERATOR_EQUALS.value(),getManagedBean().getSearchUpdateType()));	
 				}				
 				if(getManagedBean().getSearchStartDate()!=null && getManagedBean().getSearchEndDate()!=null) {
 					SearchBetweenValue<Date> betweenValue = new SearchBetweenValue<Date>(getManagedBean().getSearchStartDate(), getManagedBean().getSearchEndDate());
 					searchBean.getDataFilterBeans().add(new SearchFilterBean("startDate",SearchOperator.OPERATOR_BETWEEN.value(),betweenValue));
 					searchBean.getDataFilterBeans().add(new SearchFilterBean("endDate",SearchOperator.OPERATOR_BETWEEN.value(),betweenValue));
 				}	
-				if(getManagedBean().getSearchStatusId()!=null) {
-					searchBean.getDataFilterBeans().add(new SearchFilterBean("status.statusId",SearchOperator.OPERATOR_EQUALS.value(),getManagedBean().getSearchStatusId()));	
-				}					
+//				if(getManagedBean().getSearchStatusId()!=null) {
+//					searchBean.getDataFilterBeans().add(new SearchFilterBean("status.statusId",SearchOperator.OPERATOR_EQUALS.value(),getManagedBean().getSearchStatusId()));	
+//				}					
 				
 				CircularReqDTO reqDTO = new CircularReqDTO();
 				reqDTO.setCircularVerSearchBean(searchBean);
@@ -387,9 +429,12 @@ public class CentralContractBackingBean extends BaseBackingBean<CentralContractM
 			CtCircular circular = this.getManagedBean().getCircular();
 			if(circular==null) {
 				circular = new CtCircular();
-				circular.setDocType(ContractConst.CIRCULAR_DOC_TYPE_CENTRAL_CONTRACT);
+				circular.setCircularType(ContractConst.CIRCULAR_DOC_TYPE_CENTRAL_CONTRACT);
 			}
 			CtCircularVer circularVer = getManagedBean().getCircularVer();
+			if(circularVer.getDocType()==null) {
+				circularVer.setDocType(ContractConst.DOC_TYPE_CC_CIRCULAR_CREATION);
+			}
 			// TODO
 			circularVer.setCircularFileName("temp");
 			circularVer.setCircularFilePath("tempPath");
@@ -483,9 +528,9 @@ public class CentralContractBackingBean extends BaseBackingBean<CentralContractM
 			if(action.equalsIgnoreCase("view")) {
 				resDTO = circularSO.retrieveCircularVerById(reqDTO);
 				if(resDTO.getCircularVer().getUpdateType()==null) {
-					PmCode code = new PmCode();
-					code.setCodeId(-1L);
-					resDTO.getCircularVer().setUpdateType(code);
+					PmParameter parameter = new PmParameter();
+					parameter.setParameterId(-1L);
+					resDTO.getCircularVer().setUpdateType(parameter);
 				}
 				getManagedBean().setCircular(resDTO.getCircularVer().getCtCircular());
 				getManagedBean().setCircularVer(resDTO.getCircularVer());
@@ -494,9 +539,9 @@ public class CentralContractBackingBean extends BaseBackingBean<CentralContractM
 				reqDTO.setUpdateAction(true);
 				resDTO = circularSO.retrieveCircularVerById(reqDTO);
 				if(resDTO.getCircularVer().getUpdateType()==null) {
-					PmCode code = new PmCode();
-					code.setCodeId(-1L);
-					resDTO.getCircularVer().setUpdateType(code);
+					PmParameter parameter = new PmParameter();
+					parameter.setParameterId(-1L);
+					resDTO.getCircularVer().setUpdateType(parameter);
 				}				
 				getManagedBean().setCircular(resDTO.getCircular());
 				getManagedBean().setCircularVer(resDTO.getCircularVer());
@@ -544,16 +589,22 @@ public class CentralContractBackingBean extends BaseBackingBean<CentralContractM
 			
 			getManagedBean().setCircularAdmin(dataType.getContractAdmin());
 			getManagedBean().setTaskId(taskId);
-			getManagedBean().setOutComes(res.getAction());
+			String[] outcome = new String[res.getAction().length+1];
+			outcome[0] = "Save";
+			int i = 1;
+			for(String action : res.getAction()) {
+				outcome[i++]= action;
+			}
+			getManagedBean().setOutComes(outcome);
 			
 			CircularReqDTO circularReqDTO = new CircularReqDTO();
-			circularReqDTO.setCircularVerId(dataType.getCircularId().longValue());
+			circularReqDTO.setCircularVerId(dataType.getDocId().longValue());
 			
 			CircularResDTO resDTO = circularSO.retrieveCircularVerById(circularReqDTO);
 			if(resDTO.getCircularVer().getUpdateType()==null) {
-				PmCode code = new PmCode();
-				code.setCodeId(-1L);
-				resDTO.getCircularVer().setUpdateType(code);
+				PmParameter parameter = new PmParameter();
+				parameter.setParameterId(-1L);
+				resDTO.getCircularVer().setUpdateType(parameter);				
 			}
 			getManagedBean().getApproverModel().setTarget(resDTO.getApproverList());
 			getManagedBean().getApproverModel().getSource().removeAll(resDTO.getApproverList());
