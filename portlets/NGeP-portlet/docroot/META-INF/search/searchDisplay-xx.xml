@@ -140,6 +140,14 @@
       			<property name="columnWidth" 	value="150" />
       			<!-- <property name="columnTitle" 	value="Color Name" /> -->
 			</bean>
+			<bean class="my.ep.web.bean.LovColumnBean">
+		        <property name="columnName" 	value="smMofAccounts.mofNo" />
+      			<property name="bundleFile" 	value="messageprovider-config.bundles.labels.labels" />
+      			<property name="bundleKey" 		value="lbl.sm.mofno" />
+      			<property name="columnWidth" 	value="150" />
+      			<property name="viewable" 	value="false" />
+      			<!-- <property name="columnTitle" 	value="Color Name" /> -->
+			</bean>
 		</list>
 	</property>
 </bean>
