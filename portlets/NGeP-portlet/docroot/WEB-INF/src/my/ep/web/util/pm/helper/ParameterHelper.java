@@ -1,4 +1,7 @@
-package my.ep.web.util.pm;
+/**
+ *  Copyright © 2013 Archisoft. All rights reserved.
+ */
+package my.ep.web.util.pm.helper;
 
 import java.util.HashMap;
 import java.util.List;
@@ -15,14 +18,40 @@ import my.ep.web.util.lookupservice.BusinessDelegate;
 
 import org.apache.log4j.Logger;
 
-
-public class ParameterUtils {
-	private static Logger log = EpLogger.getLogger(ParameterUtils.class);
+/**
+ * Singleton Helper For Parameter.
+ * 
+ * @author kenny
+ * @since 29.12.2013
+ * 
+ */
+public class ParameterHelper {
+	private static Logger log = EpLogger.getLogger(ParameterHelper.class);
 	
 	public static final String KEY_SEPARATOR = "_";
 	
+	private static ParameterHelper instance;	
 	private static Map<String, List<PmParameterDesc>> parameterMap = new HashMap<String, List<PmParameterDesc>>();
 	
+	/**
+	 * Get singleton of ParameterHelper
+	 * 
+	 * @return ParameterHelper singleton
+	 */
+	public static ParameterHelper getInstance(){
+		if (instance == null){
+			instance = new ParameterHelper();
+		}
+		return instance;
+	}
+	
+	/**
+	 * Get a list of parameter description by parameter type
+	 * 
+	 * @param parameterType
+	 * 			the parameter type
+	 * @return list of PmParameterDesc
+	 */
 	public List<PmParameterDesc> getParameterDescList(String parameterType) {
 		debugLogger("getParameterDescList.parameterType: " + parameterType);
 		
