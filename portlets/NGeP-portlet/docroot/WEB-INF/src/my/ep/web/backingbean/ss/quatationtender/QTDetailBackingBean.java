@@ -525,25 +525,7 @@ public class QTDetailBackingBean extends
 		return QTConstants.MAINTANANCE_PAGE;
 	}
 
-	public void populateParentOrgProfile(ScQt scQt) {
-		PmOrgProfile parentOrgProfile = scQt.getPmOrgProfile()
-				.getParentOrgProfile();
-
-		while (parentOrgProfile != null) {
-			// Ministry
-			if (OrganizationType.MINISTRY.value().equals(
-					parentOrgProfile.getPmCode().getCode())) {
-				scQt.setMinistryOrgProfile(parentOrgProfile);
-			}
-			// Department
-			else if (OrganizationType.DEPARTMENT.value().equals(
-					parentOrgProfile.getPmCode().getCode())) {
-				scQt.setDepartmentOrgProfile(parentOrgProfile);
-			}
-
-			parentOrgProfile = parentOrgProfile.getParentOrgProfile();
-		}
-	}
+	
 
 	/**
 	 * Method to prepare scqt object with all dependent object.

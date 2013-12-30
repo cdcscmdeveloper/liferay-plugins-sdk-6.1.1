@@ -780,8 +780,8 @@ public class CommitteBackingBean extends
 				.remove(this.getManagedBean().getCommitteMember());
 	}
 
-	public void goToMaintainceAction(RowEditEvent editEvent) {
-		ScQtCommittee committee = (ScQtCommittee) editEvent.getObject();
+	public void goToMaintainceAction(ScQtCommittee qtCommitte) {
+		ScQtCommittee committee = qtCommitte;
 		CommitteReqDTO committeReqDTO = new CommitteReqDTO();
 		committeReqDTO.setCommitteId(committee.getQtCommitteeId());
 		// committeReqDTO.setQtCommittee(committee);

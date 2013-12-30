@@ -962,5 +962,8 @@ public class SpecificationBackingBean extends
 		return EpEjbBusinessDelegate.getInstance().getServiceObject(
 				QTConstants.SS_MODULE, IQTSpecSO.class);
 	}
-
+	public void tierEvent(AjaxBehaviorEvent event){
+		  String type = (String) event.getComponent().getAttributes().get("value");
+		  this.getManagedBean().getScQtSpec().setEvaluationType(type);
+		 }
 }
