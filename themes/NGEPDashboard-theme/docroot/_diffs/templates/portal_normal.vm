@@ -140,7 +140,7 @@ $theme.include($body_top_include)
 #end
 
 	<header>
-    	        
+	    	        
         <div class="middle-navi login-top-navi">
             <div class="middle-navi-wrapper">
             	
@@ -254,6 +254,8 @@ $theme.include($body_top_include)
 	</div>
 
 
+#if (!$is_signed_in)
+
 		<footer id="footer" role="contentinfo" class="footer-home">
 <div class="footer-wrapper">
 		
@@ -295,6 +297,25 @@ $theme.include($body_top_include)
             <div class="clear"></div>
         </div>
 	</footer>
+	
+#end
+
+#if ($is_signed_in)
+
+		<footer id="footer" role="contentinfo" class="footer-home-sign-in">
+<div class="footer-wrapper">
+			
+            <div class="footer-eperolehan-sign-in">
+            	<img src="$images_folder/general/eperolehan-footer.png" />
+                <p>
+                    Copyright &copy; 2013, ePerolehan, Ministry of Finance, Malaysia. <br/>Maintained by Commerce Dot Com Sdn Bhd.
+                </p>
+            </div>
+            <div class="clear"></div>
+        </div>
+	</footer>	
+
+#end
 
 $theme.include($body_bottom_include)
 </body>
