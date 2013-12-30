@@ -5,7 +5,8 @@
 	xmlns:p="http://primefaces.org/ui"
 	xmlns:c="http://java.sun.com/jsp/jstl/core"
 	xmlns:fn="http://java.sun.com/jsp/jstl/functions"
-	xmlns:cc="http://java.sun.com/jsf/composite">
+	xmlns:cc="http://java.sun.com/jsf/composite"
+	xmlns:ac="http://ac.my/jsf/composite/cc">
 
 
 	<h:panelGroup id="supplierItemViewID">
@@ -68,11 +69,9 @@
 						</div>
 						<p:dataTable
 							value="#{catalogueBackingBean.managedBean.supplierItemList}"
-							id="supplierItemID" var="supplierItem" rowIndexVar="rowIndex"
-							width="70%" paginatorPosition="bottom" paginator="true" rows="5"
-							paginatorTemplate="{LastPageLink} {NextPageLink} {PreviousPageLink} {FirstPageLink} Page {JumpToPageDropdown} {CurrentPageReport}"
-							currentPageReportTemplate="/ {totalPages}"
-							rowsPerPageTemplate="5,10,15">
+							id="supplierItemID" var="supplierItem" rowIndexVar="rowIndex">
+							
+							<ac:paginator for="supplierItemID"></ac:paginator>
 
 							<p:ajax event="rowToggle"
 								update="@(.ui-datatable[id$=supplierItemID])" />
@@ -113,17 +112,37 @@
 
 							<p:rowExpansion>
 
-								<p:dataTable value="#{supplierItem.cmPricings}" var="price">
-
-									<p:column headerText="Price">
-							#{price.price}
-							</p:column>
 
 
 
-								</p:dataTable>
+								<p:tabView id="catalogueViewPricingId">
+									<p:tab title="Normal">
+										<ui:include src="/xhtml/cm/pricing/pricingTab.xhtml" />
+									</p:tab>
+									<p:tab title="#{lbl['lbl.cm.tier']}" rendered="#{fn:length(supplierItem.cmTierPricings) > 0}">
+										<ui:include src="/xhtml/cm/pricing/pricingTierTab.xhtml" />
+									</p:tab>
+									<p:tab title="#{lbl['lbl.cm.promotion.tier']}" rendered="#{fn:length(supplierItem.cmPromotionTierPricings) > 0}">
+										<ui:include src="/xhtml/cm/pricing/pricingPromotionTierTab.xhtml" />
+									</p:tab>
+									<p:tab title="Zonal Standard" rendered="#{fn:length(supplierItem.cmZonalStandardPricings) > 0}">
+										<ui:include src="/xhtml/cm/pricing/zonalStandardPricingTab.xhtml"></ui:include>
 
+									</p:tab>
+									<p:tab title="Zonal Promotion" rendered="#{fn:length(supplierItem.cmZonalPromotionPricings) > 0}">
+										<ui:include src="/xhtml/cm/pricing/zonalPromotionPricingTab.xhtml"></ui:include>
 
+									</p:tab>
+
+									<p:tab title="Zonal Tier" rendered="#{fn:length(supplierItem.cmZonalTierPricings) > 0}">
+										<ui:include src="/xhtml/cm/pricing/zonalTierPricingTab.xhtml"></ui:include>
+
+									</p:tab>
+									<p:tab title="Zonal Promotion Tier" rendered="#{fn:length(supplierItem.cmZonalPromotionTierPricings) > 0}">
+										<ui:include src="/xhtml/cm/pricing/zonalPromotionTierPricingTab.xhtml"></ui:include>
+
+									</p:tab>
+								</p:tabView>
 
 							</p:rowExpansion>
 

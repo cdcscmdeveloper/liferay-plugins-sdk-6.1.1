@@ -563,8 +563,9 @@ public class UnspscCodeBackingBean extends BaseBackingBean<UnspscCodeManagedBean
 
 	public String navigateToSearch(){
 		log.info("*****navigateToSearch******");
-		CodificationBackingBean codeBB = new CodificationBackingBean();
-		if(codeBB.getManagedBean().getRecommendUnspscList()!=null && codeBB.getManagedBean().getRecommendUnspscList().size()>0){
+		
+		
+		if(this.getManagedBean().getRequestCode().getCmRecommendCodes()!=null && this.getManagedBean().getRequestCode().getCmRecommendCodes().size()>0){
 
 
 			FacesContext facesContext = FacesContext.getCurrentInstance();
@@ -1433,9 +1434,9 @@ public class UnspscCodeBackingBean extends BaseBackingBean<UnspscCodeManagedBean
 	}
 
 	public void removeRecommendCode(int index){
-		CodificationBackingBean codeBB = new CodificationBackingBean();
-		codeBB.getManagedBean().getRecommendUnspscList().remove(index);
-
+		
+		this.getManagedBean().getRequestCode().getCmRecommendCodes().remove(index);
+	
 	}
 
 

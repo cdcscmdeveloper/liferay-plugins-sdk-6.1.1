@@ -106,38 +106,9 @@
 
 		<p:tabView id="pricingTabID" orientation="left">
 
-			<p:tab id="pricing1" title="#{lbl['lbl.cm.pricing']}">
-
-				<p:tabView id="subPricingTabId">
-					<p:tab title="Normal">
-						<ui:include src="pricingTab.xhtml" />
-					</p:tab>
-					<p:tab title="#{lbl['lbl.cm.tier']}">
-						<ui:include src="pricingTierTab.xhtml" />
-					</p:tab>
-					<p:tab title="#{lbl['lbl.cm.promotion.tier']}">
-						<ui:include src="pricingPromotionTierTab.xhtml" />
-					</p:tab>
-					<p:tab title="Zonal Normal">
-						<ui:include src="zonalStandardPricingTab.xhtml"></ui:include>
-
-					</p:tab>
-
-					<p:tab title="Zonal Tier">
-						<ui:include src="zonalTierPricingTab.xhtml"></ui:include>
-
-					</p:tab>
-					<p:tab title="Zonal Promotion Tier">
-						<ui:include src="zonalPromotionTierPricingTab.xhtml"></ui:include>
-
-					</p:tab>
-				</p:tabView>
-			</p:tab>
 			<p:tab id="supplierInfoId" title="Supplier Info">
 
 			</p:tab>
-
-
 
 		</p:tabView>
 

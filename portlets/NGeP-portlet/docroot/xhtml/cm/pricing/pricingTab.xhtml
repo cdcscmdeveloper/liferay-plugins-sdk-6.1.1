@@ -1,0 +1,93 @@
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns:p="http://primefaces.org/ui"
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:fn="http://java.sun.com/jsp/jstl/functions"
+	xmlns:c="http://java.sun.com/jsp/jstl/core">
+
+
+
+
+
+
+
+
+
+	<p:panelGrid styleClass="tablePanel">
+		<f:facet name="header">
+			<p:row>
+				<p:column>
+							Pricing Type
+						</p:column>
+				<p:column>
+							Price
+						</p:column>
+				<p:column>
+							Start Date
+						</p:column>
+				<p:column>
+							End Date
+						</p:column>
+			</p:row>
+
+		</f:facet>
+
+		<p:row>
+			<p:column>
+				<p:outputLabel value="Standard" />
+			</p:column>
+			<p:column>
+				<p:inputText
+					value="#{supplierItem.cmStandardPricing.price}" disabled="true"></p:inputText>
+			</p:column>
+			<p:column>
+				<p:calendar
+					value="#{supplierItem.cmStandardPricing.startDate}" disabled="true"
+					showOn="button" pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}"></p:calendar>
+
+			</p:column>
+			<p:column>
+				<p:calendar
+					value="#{supplierItem.cmStandardPricing.endDate}" disabled="true"
+					showOn="button" pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}"></p:calendar>
+
+			</p:column>
+		</p:row>
+
+
+		<p:row>
+			<p:column>
+				<p:outputLabel value="Promotion" />
+			</p:column>
+			<p:column>
+				<p:inputText
+					value="#{supplierItem.cmPromotionPricing.price}" disabled="true"></p:inputText>
+			</p:column>
+			<p:column>
+				<p:calendar
+					value="#{supplierItem.cmPromotionPricing.startDate}" disabled="true"
+					showOn="button" pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}"></p:calendar>
+
+			</p:column>
+			<p:column>
+				<p:calendar
+					value="#{supplierItem.cmPromotionPricing.endDate}" disabled="true"
+					showOn="button" pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}"></p:calendar>
+
+			</p:column>
+		</p:row>
+
+
+
+	</p:panelGrid>
+
+
+
+
+
+
+
+</ui:composition>

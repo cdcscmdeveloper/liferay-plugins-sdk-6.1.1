@@ -6,151 +6,92 @@
 	xmlns:h="http://java.sun.com/jsf/html"
 	xmlns:ui="http://java.sun.com/jsf/facelets"
 	xmlns:fn="http://java.sun.com/jsp/jstl/functions"
-	xmlns:c="http://java.sun.com/jsp/jstl/core">
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:ac="http://ac.my/jsf/composite/cc">
 
 
 
-	<p:panelGrid styleClass="tablePanel">
-		<f:facet name="header">
-			<p:row>
-				<p:column>
-							Pricing Type
-						</p:column>
-				<p:column>
-							State
-						</p:column>
-				<p:column>
-							District
-						</p:column>
-				<p:column>
-							Price
-						</p:column>
-				<p:column>
-							Start Date
-						</p:column>
-				<p:column>
-							End Date
-						</p:column>
-			</p:row>
+	<p:outputPanel id="zStanPriceId">
+		<p:dataTable id="zStanPriceTableId"
+			value="#{catalogueBackingBean.managedBean.selectedMaintainItem.cmZonalStandardPricings}"
+			var="standard" rowKey="#{standard}" rowIndexVar="rowIndex" width="100%">
 
-		</f:facet>
 
-		<p:row>
+			<ac:paginator for="zStanPriceTableId"></ac:paginator>
 			<p:column>
-				<p:outputLabel value="Standard" />
-			</p:column>
-
-			<p:column>
-				<p:selectOneMenu id="stateDDId"
-					disabled="#{catalogueBackingBean.managedBean.selectedMaintainItem.cmZonalStandardPricing.stateDisabled}"
-					style="width: 128px;"
-					value="#{catalogueBackingBean.managedBean.selectedMaintainItem.cmZonalStandardPricing.pmState.stateId}">
-					<f:selectItem itemLabel="Select One" itemValue="" />
-					<f:selectItems
-						value="#{catalogueBackingBean.managedBean.stateList}" var="state"
-						itemLabel="#{state.stateName}" itemValue="#{state.stateId}"></f:selectItems>
-					<p:ajax event="change"
-						listener="#{catalogueBackingBean.retrieveDistrict()}"
-						update=":form:pricingTabID:subPricingTabId:districtDDId" />
-				</p:selectOneMenu>
-
-			</p:column>
-			<p:column>
-				<p:selectOneMenu id="districtDDId"
-					disabled="#{catalogueBackingBean.managedBean.selectedMaintainItem.cmZonalStandardPricing.districtDisabled}"
-					style="width: 128px;"
-					value="#{catalogueBackingBean.managedBean.selectedMaintainItem.cmZonalStandardPricing.pmDistrict.districtId}">
-					<f:selectItem itemLabel="Select One" itemValue="" />
-					<f:selectItems
-						value="#{catalogueBackingBean.managedBean.selectedMaintainItem.cmZonalStandardPricing.pmDistricts}"
-						var="district" itemLabel="#{district.districtName}"
-						itemValue="#{district.districtId}"></f:selectItems>
-				</p:selectOneMenu>
-
-			</p:column>
-
-			<p:column>
-				<p:inputText
-					value="#{catalogueBackingBean.managedBean.selectedMaintainItem.cmZonalStandardPricing.price}"
-					size="10"></p:inputText>
-			</p:column>
-			<p:column>
-				<p:calendar
-					value="#{catalogueBackingBean.managedBean.selectedMaintainItem.cmZonalStandardPricing.startDate}"
-					size="10" showOn="button"
-					pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}"></p:calendar>
-
-			</p:column>
-			<p:column>
-				<p:calendar
-					value="#{catalogueBackingBean.managedBean.selectedMaintainItem.cmZonalStandardPricing.endDate}"
-					size="10" showOn="button"
-					pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}"></p:calendar>
-
-			</p:column>
-		</p:row>
-
-
-		<p:row>
-			<p:column>
-				<p:outputLabel value="Promotion" />
-			</p:column>
-
-			<p:column>
+				<f:facet name="header">
+					#{lbl['lbl.cm.state.name']}
+				</f:facet>
 				<p:selectOneMenu style="width: 128px;"
-					value="#{catalogueBackingBean.managedBean.selectedMaintainItem.cmZonalPromotionPricing.pmState.stateId}">
+					value="#{standard.pmState.stateId}">
 					<f:selectItem itemLabel="Select One" itemValue="" />
 					<f:selectItems
 						value="#{catalogueBackingBean.managedBean.stateList}" var="state"
 						itemLabel="#{state.stateName}" itemValue="#{state.stateId}"></f:selectItems>
 					<p:ajax event="change"
-						listener="#{catalogueBackingBean.retrievePromotionDistrict()}"
-						update=":form:pricingTabID:subPricingTabId:zonalDistrictDDId" />
+						listener="#{catalogueBackingBean.retrieveStandardDistrict(rowIndex)}" update=":form:pricingTabID:subPricingTabId:zStanPriceTableId:zStandardDistrictDDId"/>
 				</p:selectOneMenu>
 
 			</p:column>
+
 			<p:column>
-				<p:selectOneMenu id="zonalDistrictDDId" style="width: 128px;"
-					disabled="#{catalogueBackingBean.managedBean.selectedMaintainItem.cmZonalPromotionPricing.districtDisabled}"
-					value="#{catalogueBackingBean.managedBean.selectedMaintainItem.cmZonalPromotionPricing.pmDistrict.districtId}">
+				<f:facet name="header">
+					#{lbl['lbl.cm.district.name']}
+				</f:facet>
+				<p:selectOneMenu id="zStandardDistrictDDId" style="width: 128px;"
+					value="#{standard.pmDistrict.districtId}">
 					<f:selectItem itemLabel="Select One" itemValue="" />
-					<f:selectItems
-						value="#{catalogueBackingBean.managedBean.selectedMaintainItem.cmZonalPromotionPricing.pmDistricts}"
-						var="district" itemLabel="#{district.districtName}"
+					<f:selectItems value="#{standard.pmDistricts}" var="district"
+						itemLabel="#{district.districtName}"
 						itemValue="#{district.districtId}"></f:selectItems>
 
 				</p:selectOneMenu>
 
 			</p:column>
 
+
+
+
+
 			<p:column>
-				<p:inputText
-					value="#{catalogueBackingBean.managedBean.selectedMaintainItem.cmZonalPromotionPricing.price}"
-					size="10"></p:inputText>
+				<f:facet name="header">
+					#{lbl['lbl.cm.price']}
+				</f:facet>
+				<h:inputText value="#{standard.price}" size="10"></h:inputText>
 			</p:column>
+
+
 			<p:column>
-				<p:calendar
-					value="#{catalogueBackingBean.managedBean.selectedMaintainItem.cmZonalPromotionPricing.startDate}"
-					size="10" showOn="button"
+				<f:facet name="header">
+					#{lbl['lbl.cm.start.date']}
+				</f:facet>
+				<p:calendar value="#{standard.startDate}" showOn="button" size="10"
 					pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}"></p:calendar>
 
 			</p:column>
 			<p:column>
-				<p:calendar
-					value="#{catalogueBackingBean.managedBean.selectedMaintainItem.cmZonalPromotionPricing.endDate}"
-					size="10" showOn="button"
+				<f:facet name="header">
+					#{lbl['lbl.cm.end.date']}
+				</f:facet>
+				<p:calendar value="#{standard.endDate}" showOn="button" size="10"
 					pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}"></p:calendar>
 
 			</p:column>
-		</p:row>
+
+		</p:dataTable>
+
+		<div class="clear"></div>
+
+		<div align="right">
+			<p:commandButton value="#{lbl['lbl.cm.add']}"
+				action="#{catalogueBackingBean.addNewZonalStandardPricing()}"
+				update="zStanPriceTableId" process="@this"></p:commandButton>
+		</div>
 
 
 
 
-
-	</p:panelGrid>
-
-
+	</p:outputPanel>
 
 
 </ui:composition>

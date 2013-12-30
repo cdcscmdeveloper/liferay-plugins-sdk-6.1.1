@@ -943,9 +943,13 @@ public class CodificationBackingBean extends BaseBackingBean<CodificationManaged
 	}
 
 	public String backToReviewUnspsc(){
-
-
-		return "reviewBeforeCreateTempCode?faces-redirect=true";
+		FacesScopes fs = new FacesScopes();
+		
+		System.out.println("CD_ADMIN"+fs.hasRoleUser("CM_ADMIN"));
+		
+		
+		
+		return fs.hasRoleUser("CM_ADMIN")==true?"reviewUnspscCode?faces-redirect=true":"reviewBeforeCreateTempCode?faces-redirect=true";
 	}
 
 
