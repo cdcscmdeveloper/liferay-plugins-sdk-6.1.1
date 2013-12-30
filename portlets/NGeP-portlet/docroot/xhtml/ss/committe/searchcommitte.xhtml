@@ -73,7 +73,10 @@
         <h:outputText value="#{committe.scCommittee.recordStatus}"/>
     </p:column>
     <p:column headerText="#{lbl['lbl.sc.committe.resulttable.action']}">
-    <p:rowEditor />
+    <p:commandLink action="#{committeBackingBean.goToMaintainceAction(committe)}">
+     <p:graphicImage library="ep/images/design" name="edit.png"
+      value="/resources/ep/images/design/edit.png" />
+    </p:commandLink>
     </p:column>
      </p:dataTable>
 	</p:panel>
