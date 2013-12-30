@@ -5,7 +5,8 @@
 	xmlns:p="http://primefaces.org/ui"
 	xmlns:c="http://java.sun.com/jsp/jstl/core"
 	xmlns:ac="http://ac.my/jsf/composite/cc">
-	<ui:include src="/xhtml/ss/supplierFinalization/suppFinalizationHeader.xhtml"/>
+	<ui:param name="scQt" value="#{sfBackingBean.managedBean.scQt}" />
+	<ui:include src="/xhtml/ss/common/commonHeader.xhtml" />
 
 	<p:panel header="Sign-Off" toggleable="true">
 		<p:dataTable id="signoffid" var="signoff"
