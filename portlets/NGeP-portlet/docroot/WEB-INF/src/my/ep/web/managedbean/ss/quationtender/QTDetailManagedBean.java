@@ -121,6 +121,7 @@ public class QTDetailManagedBean extends BaseManagedBean {
     private List<ScQt> selectedCloneTenderList;
     private List<CloneAll> selectedCloneAllList;
     private List<ScQtDeduction> selectedScQtDeductions;
+    private ScQtDeduction selectedScQtDeduction;
     private List<ScQtDeductionClause> selectedDeductionClauses;
     
 	private String qtNumber;
@@ -1310,6 +1311,16 @@ public class QTDetailManagedBean extends BaseManagedBean {
 	 */
 	public void setQtCategoryList(List<ScQtCategory> qtCategoryList) {
 		this.qtCategoryList = qtCategoryList;
+	}
+
+
+	public ScQtDeduction getSelectedScQtDeduction() {
+		return selectedScQtDeduction;
+	}
+
+
+	public void setSelectedScQtDeduction(ScQtDeduction selectedScQtDeduction) {
+		this.selectedScQtDeduction = selectedScQtDeduction;
 	}
 	
     	 

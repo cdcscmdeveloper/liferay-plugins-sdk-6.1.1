@@ -12,8 +12,10 @@ import javax.faces.bean.RequestScoped;
 import org.apache.log4j.Logger;
 
 import my.ep.factory.EpLogger;
+import my.ep.persistence.entity.ss.quationtender.ScQt;
 import my.ep.persistence.entity.ss.quationtender.ScQtContactPerson;
 import my.ep.persistence.entity.ss.quationtender.ScQtDeduction;
+import my.ep.persistence.entity.ss.quationtender.ScQtDeductionClause;
 import my.ep.web.managedbean.ss.quationtender.QTDetailManagedBean;
 
 /**
@@ -27,7 +29,9 @@ public class QTDeductionPaymentBackingBean extends SourcingBaseBackingBean<QTDet
 		
 		public QTDeductionPaymentBackingBean(){
 			
-		
+			ScQtDeduction qtDeduction= new ScQtDeduction();
+			
+		   
 	}
 		
 		 public void addDedcutionPayment(){
@@ -38,13 +42,30 @@ public class QTDeductionPaymentBackingBean extends SourcingBaseBackingBean<QTDet
     		 }
     		this.getManagedBean().setQtDeduction(null);
     		ScQtDeduction qtDeduction=new ScQtDeduction();
-    		
+    		qtDeduction.setScQt(new ScQt());
     		this.getManagedBean().setQtDeduction(qtDeduction);
     		deduction.add(this.getManagedBean().getQtDeduction());
     		this.getManagedBean().setScQtDeductions(deduction);
     
     		 
     		} 
+		 
+		 public void addDedcutionClause(){
+    		 List<ScQtDeductionClause> clauses=this.getManagedBean().getScQtDeductionClauses();
+    		 if(clauses == null){
+    			clauses= new ArrayList<ScQtDeductionClause>();
+    			 
+    		 }
+    		this.getManagedBean().setQtDeductionClause(null);
+    		ScQtDeductionClause qtDeductionClause=new ScQtDeductionClause();
+    		
+    		this.getManagedBean().setQtDeductionClause(qtDeductionClause);
+    		clauses.add(this.getManagedBean().getQtDeductionClause());
+    		this.getManagedBean().setScQtDeductionClauses(clauses);
+    
+    		 
+    		} 
+    
        
       
 
