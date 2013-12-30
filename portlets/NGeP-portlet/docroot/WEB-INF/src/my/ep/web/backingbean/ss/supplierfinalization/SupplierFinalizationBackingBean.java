@@ -15,15 +15,13 @@ import my.ep.dto.ss.quationtender.EvaluationReportResDTO;
 import my.ep.dto.ss.quationtender.SuppFinalizationReqDTO;
 import my.ep.dto.ss.quationtender.SuppFinalizationResDTO;
 import my.ep.factory.EpLogger;
-import my.ep.persistence.entity.pm.authorization.PmOrgProfile;
 import my.ep.persistence.entity.ss.quationtender.ScQt;
 import my.ep.persistence.entity.ss.quationtender.ScQtCommitteeActivity;
 import my.ep.persistence.entity.ss.quationtender.ScQtItem;
 import my.ep.persistence.entity.ss.quationtender.ScQtMeeting;
 import my.ep.persistence.entity.ss.quationtender.ScQtProposalRanking;
 import my.ep.persistence.entity.ss.quationtender.ScQtZoneCriteria;
-import my.ep.type.pm.OrganizationType;
-import my.ep.web.backingbean.BaseBackingBean;
+import my.ep.web.backingbean.ss.quatationtender.SourcingBaseBackingBean;
 import my.ep.web.managedbean.ss.supplierfinalization.SupplierFinalizationManagedBean;
 import my.ep.web.ss.quationtender.common.QTConstants;
 import my.ep.web.util.lookupservice.BusinessDelegate;
@@ -36,7 +34,7 @@ import org.apache.log4j.Logger;
 @ManagedBean(name = "sfBackingBean")
 @RequestScoped
 public class SupplierFinalizationBackingBean extends
-		BaseBackingBean<SupplierFinalizationManagedBean> {
+		SourcingBaseBackingBean<SupplierFinalizationManagedBean> {
 	private static final Logger log = EpLogger
 			.getLogger(SupplierFinalizationBackingBean.class);
 	
@@ -340,29 +338,6 @@ public class SupplierFinalizationBackingBean extends
 			} finally {
 				suppFinalizationSO = null;
 			}
-	}
-	
-	/**
-	 * Supplier Finalization Header Details
-	 */
-	public void populateParentOrgProfile(ScQt scQt) {
-		PmOrgProfile parentOrgProfile = scQt.getPmOrgProfile()
-				.getParentOrgProfile();
-
-		while (parentOrgProfile != null) {
-			// Ministry
-			if (OrganizationType.MINISTRY.value().equals(
-					parentOrgProfile.getPmCode().getCode())) {
-				scQt.setMinistryOrgProfile(parentOrgProfile);
-			}
-			// Department
-			else if (OrganizationType.DEPARTMENT.value().equals(
-					parentOrgProfile.getPmCode().getCode())) {
-				scQt.setDepartmentOrgProfile(parentOrgProfile);
-			}
-
-			parentOrgProfile = parentOrgProfile.getParentOrgProfile();
-		}
 	}
 	
 	/**

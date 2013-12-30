@@ -49,7 +49,7 @@ import my.ep.type.pm.RoleCode;
 import my.ep.type.ss.LoiLoaDocType;
 import my.ep.type.ss.TermType;
 import my.ep.util.lookupservice.EpEjbBusinessDelegate;
-import my.ep.web.backingbean.BaseBackingBean;
+import my.ep.web.backingbean.ss.quatationtender.SourcingBaseBackingBean;
 import my.ep.web.managedbean.ss.loiloa.LOIDetailManagedBean;
 import my.ep.web.ss.quationtender.common.QTConstants;
 import my.ep.web.util.FacesScopes;
@@ -63,7 +63,7 @@ import org.apache.log4j.Logger;
  */
 @ManagedBean(name = "lOIDetailBackingBean")
 @RequestScoped
-public class LOIDetailBackingBean extends BaseBackingBean<LOIDetailManagedBean> {
+public class LOIDetailBackingBean extends SourcingBaseBackingBean<LOIDetailManagedBean> {
 	public static Logger log = EpLogger
 			.getLogger(LOILOADetailsBackingBean.class);
 
@@ -268,26 +268,6 @@ public class LOIDetailBackingBean extends BaseBackingBean<LOIDetailManagedBean> 
 		}
 
 		this.getManagedBean().getQt().getPmOrgProfile().setOrgProfileId(null);
-	}
-
-	public void populateParentOrgProfile(ScQt scQt) {
-		PmOrgProfile parentOrgProfile = scQt.getPmOrgProfile()
-				.getParentOrgProfile();
-
-		while (parentOrgProfile != null) {
-			// Ministry
-			if (OrganizationType.MINISTRY.value().equals(
-					parentOrgProfile.getPmCode().getCode())) {
-				scQt.setMinistryOrgProfile(parentOrgProfile);
-			}
-			// Department
-			else if (OrganizationType.DEPARTMENT.value().equals(
-					parentOrgProfile.getPmCode().getCode())) {
-				scQt.setDepartmentOrgProfile(parentOrgProfile);
-			}
-
-			parentOrgProfile = parentOrgProfile.getParentOrgProfile();
-		}
 	}
 	
 	public String createLOIAction(ScQtProposalRanking scQtProposalRanking,

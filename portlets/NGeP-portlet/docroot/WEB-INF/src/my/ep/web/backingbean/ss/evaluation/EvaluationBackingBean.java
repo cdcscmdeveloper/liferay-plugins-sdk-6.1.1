@@ -144,7 +144,7 @@ public class EvaluationBackingBean extends
 						.retriveQTDetails(tenderReqDTO);
 				QTDetailBackingBean detailBackingBean = new QTDetailBackingBean();
 				detailBackingBean.getManagedBean().setQt(tenderResDTO.getQtDetail());
-				detailBackingBean.populateParentOrgProfile(tenderResDTO.getQtDetail());
+				populateParentOrgProfile(tenderResDTO.getQtDetail());
 
 				if (resDTO.getMettingDls() != null) {
 

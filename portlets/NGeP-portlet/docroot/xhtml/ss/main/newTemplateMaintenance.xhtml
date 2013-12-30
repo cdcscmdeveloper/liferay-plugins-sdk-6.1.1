@@ -41,7 +41,7 @@
 					<f:selectItem itemLabel="Financial" itemValue="2" />
 					<p:ajax update="estimated,price"></p:ajax>
 				</p:selectOneMenu> --> <p:inputText
-							value="#{TemplateMBB.managedBean.scqtDoc.tplSpecMaster.specTypeCode.codeId}"
+							value="#{TemplateMBB.managedBean.scqtDoc.tplSpecMaster.specTypeCode.parameterId}"
 							readonly="true" disabled="true"></p:inputText>
 					</td>
 				</tr>
@@ -50,12 +50,12 @@
 							value="#{lbl['lbl.sc.tpl.search.procure.category']}"></h:outputLabel>
 					</td>
 					<td><p:inputText
-							value="#{TemplateMBB.managedBean.scqtDoc.tplSpecMaster.procurementCategory.codeId}"
+							value="#{TemplateMBB.managedBean.scqtDoc.tplSpecMaster.procurementCategory.parameterId}"
 							readonly="true" disabled="true" /></td>
 					<td><h:outputLabel value="#{lbl['lbl.sc.tpl.search.item']}"></h:outputLabel>
 					</td>
 					<td><p:inputText
-							value="#{TemplateMBB.managedBean.scqtDoc.tplSpecMaster.itemTypeCode.codeId}"
+							value="#{TemplateMBB.managedBean.scqtDoc.tplSpecMaster.itemTypeCode.parameterId}"
 							readonly="true" disabled="true" /></td>
 				</tr>
 				<!-- </h:panelGrid>

@@ -17,13 +17,13 @@ import my.ep.biz.bean.search.ISearchBean;
 import my.ep.biz.bean.search.SearchBean;
 import my.ep.persistence.entity.pm.common.PmParameter;
 import my.ep.persistence.entity.pm.common.PmParameterDesc;
-import my.ep.type.IEnumType;
+import my.ep.persistence.entity.pm.common.PmStatusDesc;
 import my.ep.web.managedbean.BaseManagedBean;
 import my.ep.web.util.EpPortletUtil;
 import my.ep.web.util.FacesScopes;
-import my.ep.web.util.ResourceBundleUtils;
 import my.ep.web.util.SecurityFilterUtil;
-import my.ep.web.util.pm.ParameterUtils;
+import my.ep.web.util.pm.helper.ParameterHelper;
+import my.ep.web.util.pm.helper.StatusHelper;
 
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
@@ -45,12 +45,13 @@ public abstract class BaseBackingBean<T extends BaseManagedBean> {
 	private String managedBeanName;
 	private T managedBean;
 	
+	@SuppressWarnings("unchecked")
 	public BaseBackingBean(){
 		if (log.isDebugEnabled()){
 			log.debug("In BaseBackingBean constructor");
 			
 		}
-		Class clazz = this.getClass();
+		Class<?> clazz = this.getClass();
 		Type type = clazz.getGenericSuperclass();
 		//while (true) {
 		    if(log.isDebugEnabled()) { 
@@ -240,82 +241,172 @@ public abstract class BaseBackingBean<T extends BaseManagedBean> {
 				SecurityFilterUtil.getDataFilterScreenMetadatas(componentId));
 	}
 	
-	protected String getResourceBundleByEnumType(String prefix, IEnumType[] types, String value) {
-		String name = null;
-		for (IEnumType type : types) {
-			if (type.value().equals(value)) {
-				name = type.name().toLowerCase();
-			}
-		}
-		
-		if (StringUtils.isNotBlank(name)) {
-			return ResourceBundleUtils.getMessage(prefix + "." + name, 
-					ResourceBundleUtils.BUNDLE_COMMON_LABELS, 
-					new FacesScopes().getUserLocale());
-		}
-		
-		return null;
-	}
-	
+	/**
+	 * Get parameter id select items by parameter type for dropdown.
+	 * 
+	 * @param parameterType
+	 * 			the parameter type
+	 * @return array of SelectItem
+	 */
 	public SelectItem[] getDropdownValues(String parameterType) {
 		SelectItem[] items = null;
 		
 		try {
-			List<PmParameterDesc> parameterDescs = new ParameterUtils().getParameterDescList(parameterType);
+			List<PmParameterDesc> parameterDescs = ParameterHelper.getInstance()
+					.getParameterDescList(parameterType);
 			
 		    items = new SelectItem[parameterDescs.size()+1];
 		    items[0] = new SelectItem(null, "- Select One -");
 		    int i = 1;
 		    for(PmParameterDesc parameterDesc : parameterDescs) {
-		    	items[i++] = new SelectItem(parameterDesc.getPmParameter().getParameterId(), parameterDesc.getCodeName());
+		    	items[i++] = new SelectItem(
+		    			parameterDesc.getPmParameter().getParameterId(), 
+		    			parameterDesc.getCodeName());
 		    }
 		} catch (Exception e) {
 			e.printStackTrace();
-			FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR,e.toString(), e.getMessage()));
+			FacesContext.getCurrentInstance().addMessage(
+					null, 
+					new FacesMessage(
+							FacesMessage.SEVERITY_ERROR,
+							e.toString(),
+							e.getMessage()));
 		}
 		
 	    return items;
 	}
 	
+	/**
+	 * Get parameter code select items by parameter type for dropdown.
+	 * 
+	 * @param parameterType
+	 * 			the parameter type
+	 * @return array of SelectItem
+	 */
 	public SelectItem[] getDropdownCodeValues(String parameterType) {
 		SelectItem[] items = null;
 		
 		try {
-			List<PmParameterDesc> parameterDescs = new ParameterUtils().getParameterDescList(parameterType);
+			List<PmParameterDesc> parameterDescs = ParameterHelper.getInstance()
+					.getParameterDescList(parameterType);
 			
 		    items = new SelectItem[parameterDescs.size()+1];
 		    items[0] = new SelectItem(null, "- Select One -");
 		    int i = 1;
 		    for(PmParameterDesc parameterDesc : parameterDescs) {
-		    	items[i++] = new SelectItem(parameterDesc.getPmParameter().getParameterCode(), parameterDesc.getCodeName());
+		    	items[i++] = new SelectItem(
+		    			parameterDesc.getPmParameter().getParameterCode(), 
+		    			parameterDesc.getCodeName());
 		    }
 		} catch (Exception e) {
 			e.printStackTrace();
-			FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR,e.toString(), e.getMessage()));
+			FacesContext.getCurrentInstance().addMessage(
+					null, 
+					new FacesMessage(
+							FacesMessage.SEVERITY_ERROR,
+							e.toString(), 
+							e.getMessage()));
 		}
 		
 	    return items;
 	}
 	
+	/**
+	 * Get Parameter description by parameter.
+	 * 
+	 * @param parameter
+	 * 			the PmParameter instance.
+	 * @return parameter description
+	 */
 	public String getParameterDesc(PmParameter parameter) {
-		return getParameterDesc(parameter.getPmParameterType().getParameterType(),
+		return getParameterDesc(
+				parameter.getPmParameterType().getParameterType(),
 				parameter.getParameterCode());
 	}
 	
+	/**
+	 * Get Parameter description by type and code.
+	 * 
+	 * @param parameterType
+	 * 			the parameter type
+	 * @param parameterCode
+	 * 			the parameter code
+	 * @return parameter description
+	 */
 	public String getParameterDesc(String parameterType, String parameterCode) {		
 		String parameterDesc = null;
 		
 		// Get the parameter description list.
-		List<PmParameterDesc> list = new ParameterUtils().getParameterDescList(parameterType);
+		List<PmParameterDesc> list = ParameterHelper.getInstance()
+				.getParameterDescList(parameterType);
 		
 		for (PmParameterDesc pmParameterDesc : list) {
 			// compare matched parameterCode.
-			if (pmParameterDesc.getPmParameter().getParameterCode().equals(parameterCode)) {
+			if (pmParameterDesc.getPmParameter().getParameterCode()
+					.equals(parameterCode)) {
 				parameterDesc = pmParameterDesc.getCodeName();
 				break;
 			}
 		}
 		
 		return parameterDesc;
+	}
+	
+	/**
+	 * Get status select items by module and doc type for dropdown.
+	 * 
+	 * @param parameterType
+	 * 			the parameter type
+	 * @return array of SelectItem
+	 */
+	public SelectItem[] getStatusDropdownValues(String moduleCode, 
+			String docType) {
+		SelectItem[] items = null;
+		
+		try {
+			List<PmStatusDesc> statusDescs = StatusHelper.getInstance()
+					.getStatusDescList(moduleCode, docType);
+			
+		    items = new SelectItem[statusDescs.size()+1];
+		    items[0] = new SelectItem(null, "- Select One -");
+		    int i = 1;
+		    for(PmStatusDesc statusDesc : statusDescs) {
+		    	items[i++] = new SelectItem(
+		    			statusDesc.getPmStatus().getStatusId(), 
+		    			statusDesc.getStatusName());
+		    }
+		} catch (Exception e) {
+			e.printStackTrace();
+			FacesContext.getCurrentInstance().addMessage(
+					null, new FacesMessage(
+							FacesMessage.SEVERITY_ERROR, 
+							e.toString(), 
+							e.getMessage()));
+		}
+		
+	    return items;
+	}
+	
+	/**
+	 * Get Status description by status id.
+	 * 
+	 * @param statusId
+	 * 			the status id.
+	 * @return status description
+	 */
+	public String getStatusDescById(Long statusId) {		
+		String statusDesc = null;
+		
+		if (statusId != null) {
+			// Get the status description.
+			PmStatusDesc pmStatusDesc = StatusHelper.getInstance()
+					.getStatusDescById(statusId);
+			
+			if (pmStatusDesc != null) {
+				statusDesc = pmStatusDesc.getStatusName();
+			}
+		}
+		
+		return statusDesc;
 	}
 }

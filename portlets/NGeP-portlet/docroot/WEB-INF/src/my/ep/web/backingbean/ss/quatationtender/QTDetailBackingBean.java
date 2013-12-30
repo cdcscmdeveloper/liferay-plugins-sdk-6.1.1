@@ -17,10 +17,7 @@ import my.ep.biz.bean.search.SearchBetweenValue;
 import my.ep.biz.bean.search.SearchFilterBean;
 import my.ep.biz.service.pm.authorization.orgprofile.IOrgProfileSO;
 import my.ep.biz.service.pm.authorization.user.IUserSO;
-import my.ep.biz.service.pm.common.categorys.ICategorysSO;
-import my.ep.biz.service.pm.common.district.IDistrictSO;
 import my.ep.biz.service.pm.common.object.IObjectSO;
-import my.ep.biz.service.pm.common.state.IStateSO;
 import my.ep.biz.service.pm.common.status.IStatusSO;
 import my.ep.biz.service.ss.quationtender.IQTDetailSO;
 import my.ep.bpm.dto.BpmRequestDTO;
@@ -39,8 +36,6 @@ import my.ep.dto.ss.quationtender.QuationTenderResDTO;
 import my.ep.exception.EpException;
 import my.ep.factory.EpLogger;
 import my.ep.jaxb.sc.quotationtenderdata.SCQuotationTenderDataType;
-import my.ep.persistence.entity.fl.FlAttachment;
-import my.ep.persistence.entity.fl.FlRemark;
 import my.ep.persistence.entity.pm.authorization.PmOrgProfile;
 import my.ep.persistence.entity.pm.authorization.PmUser;
 import my.ep.persistence.entity.pm.common.PmDo;
@@ -92,39 +87,8 @@ public class QTDetailBackingBean extends
 			.getLogger(QTDetailBackingBean.class);
 
 	private static final String MODULE_NAME = "ss";
-	private IQTDetailSO detailSO = null;
-	private ICategorysSO categorysSO = null;
-	private IStateSO stateSo = null;
-	private IDistrictSO districtSO = null;
-	private IOrgProfileSO orgUnitSO = null;
-	private IStatusSO statusSO = null;
-
+	
 	public QTDetailBackingBean() {
-
-		IQTDetailSO detailSO = BusinessDelegate.getInstance().getServiceObject(
-				MODULE_NAME, IQTDetailSO.class);
-
-		ICategorysSO categorysSO = BusinessDelegate.getInstance()
-				.getServiceObject("pm", ICategorysSO.class);
-
-		IStateSO stateSO = BusinessDelegate.getInstance().getServiceObject(
-				"pm", IStateSO.class);
-		IDistrictSO districtSO = BusinessDelegate.getInstance()
-				.getServiceObject("pm", IDistrictSO.class);
-
-		IOrgProfileSO orgUnitSO = BusinessDelegate.getInstance()
-				.getServiceObject("pm", IOrgProfileSO.class);
-
-		IStatusSO statusSO = BusinessDelegate.getInstance().getServiceObject(
-				"pm", IStatusSO.class);
-
-		this.detailSO = detailSO;
-
-		this.categorysSO = categorysSO;
-		this.stateSo = stateSO;
-		this.districtSO = districtSO;
-		this.orgUnitSO = orgUnitSO;
-		this.statusSO = statusSO;
 		log.info("inside constructor");
 	}
 
@@ -260,9 +224,14 @@ public class QTDetailBackingBean extends
 	public String saveQtDetailsAction() {
 		debugLogger("saveQtDetailsAction");
 
-		QuationTenderReqDTO quationTenderReqDTO = prepareQTInfo();
+		IQTDetailSO detailSO;
 
 		try {
+			detailSO = BusinessDelegate.getInstance().getServiceObject(
+					MODULE_NAME, IQTDetailSO.class);
+
+			QuationTenderReqDTO quationTenderReqDTO = prepareQTInfo();
+			
 			QuationTenderResDTO quationTenderResDTO = (QuationTenderResDTO) detailSO
 					.saveQTDtl(quationTenderReqDTO);
 
@@ -276,20 +245,27 @@ public class QTDetailBackingBean extends
 							ex.toString(),
 							"Sorry we are Unable to Save the Details"));
 
+		} finally {
+			detailSO = null;
 		}
 		return "";
 	}
 
 	public String submitQTDetailsAction() {
-		QuationTenderReqDTO quationTenderReqDTO = prepareQTInfo();
-
-		FacesScopes facesScopes = new FacesScopes();
-		String ctxToken = facesScopes.getBPMAuthenticationCtxToken();
-		quationTenderReqDTO.setToken(ctxToken);
-		quationTenderReqDTO.setTaskId(this.getManagedBean().getTaskId());
-		quationTenderReqDTO.setPayLoad(this.getManagedBean()
-				.getQuotationTenderDataType());
+		IQTDetailSO detailSO;
 		try {
+			detailSO = BusinessDelegate.getInstance().getServiceObject(
+					MODULE_NAME, IQTDetailSO.class);
+			
+			QuationTenderReqDTO quationTenderReqDTO = prepareQTInfo();
+
+			FacesScopes facesScopes = new FacesScopes();
+			String ctxToken = facesScopes.getBPMAuthenticationCtxToken();
+			quationTenderReqDTO.setToken(ctxToken);
+			quationTenderReqDTO.setTaskId(this.getManagedBean().getTaskId());
+			quationTenderReqDTO.setPayLoad(this.getManagedBean()
+					.getQuotationTenderDataType());
+			
 			QuationTenderResDTO quationTenderResDTO = detailSO
 					.submitQT(quationTenderReqDTO);
 			if (quationTenderResDTO.isSuccessful()) {
@@ -312,6 +288,8 @@ public class QTDetailBackingBean extends
 					new FacesMessage(FacesMessage.SEVERITY_ERROR,
 							"Sorry We are unable to process.", ""));
 			ex.printStackTrace();
+		} finally {
+			detailSO = null;
 		}
 		return null;
 	}
@@ -510,22 +488,35 @@ public class QTDetailBackingBean extends
 	 * @return maintanacepage
 	 */
 	public String editAction(ScQt scQt) {
+		IQTDetailSO detailSO;
+		try {
+			detailSO = BusinessDelegate.getInstance().getServiceObject(
+					MODULE_NAME, IQTDetailSO.class);
 
-		QuationTenderReqDTO reqDTO = new QuationTenderReqDTO();
-		reqDTO.setQtId(scQt.getQtId());
-		QuationTenderResDTO resDTO = detailSO.retriveQTDetails(reqDTO);
+			QuationTenderReqDTO reqDTO = new QuationTenderReqDTO();
+			reqDTO.setQtId(scQt.getQtId());
+			QuationTenderResDTO resDTO = detailSO.retriveQTDetails(reqDTO);
 
-		ScQt selectedScQt = resDTO.getQtDetail();
+			ScQt selectedScQt = resDTO.getQtDetail();
 
-		populateParentOrgProfile(selectedScQt);
+			populateParentOrgProfile(selectedScQt);
 
-		this.getManagedBean().setQt(selectedScQt);
+			this.getManagedBean().setQt(selectedScQt);
 
-		onChangeAction();
+			onChangeAction();
+		} catch (Exception ex) {
+			ex.printStackTrace();
+			FacesContext.getCurrentInstance().addMessage(
+					null,
+					new FacesMessage(FacesMessage.SEVERITY_ERROR,
+							ex.toString(),
+							"Sorry We are unable to process."));
+
+		} finally {
+			detailSO = null;
+		}
 		return QTConstants.MAINTANANCE_PAGE;
 	}
-
-	
 
 	/**
 	 * Method to prepare scqt object with all dependent object.
@@ -562,9 +553,20 @@ public class QTDetailBackingBean extends
 		// Setting the pm status for qt details
 		StatusReqDTO reqDTO = new StatusReqDTO();
 		reqDTO.setStatusId(1l);
-		StatusResDTO pmStatus = statusSO.retrieveStatusByStatusId(reqDTO);
-		PmStatus status = pmStatus.getPmStatus();
-		scQt.setPmStatus(status);
+		
+		IStatusSO statusSO;
+		PmStatus status = null;
+		try {
+			statusSO = BusinessDelegate.getInstance().getServiceObject(
+					"pm", IStatusSO.class);
+			StatusResDTO pmStatus = statusSO.retrieveStatusByStatusId(reqDTO);
+			status = pmStatus.getPmStatus();
+			scQt.setPmStatus(status);	
+		} catch (Exception e) {
+			
+		} finally {
+			statusSO = null;
+		}
 
 		// Setting the category codes to qtdetails
 		// TODO need to get it from managed bean and set it.
@@ -716,7 +718,11 @@ public class QTDetailBackingBean extends
 			reqDTO.setQtSearchBean(qtSearchBean);
 		}
 		QuationTenderResDTO dto = null;
+		IQTDetailSO detailSO;
 		try {
+			detailSO = BusinessDelegate.getInstance().getServiceObject(
+					MODULE_NAME, IQTDetailSO.class);
+			
 			dto = detailSO.getQuationTenders(reqDTO);
 		} catch (Exception ex) {
 			ex.printStackTrace();
@@ -725,6 +731,8 @@ public class QTDetailBackingBean extends
 					new FacesMessage(FacesMessage.SEVERITY_ERROR,
 							ex.toString(), ex.getMessage()));
 
+		} finally {
+			detailSO = null;
 		}
 
 		return null != dto.getQtResultBean().getResultList() ? dto
@@ -982,91 +990,170 @@ public class QTDetailBackingBean extends
 
 	private void retrieveApprovalTabDtl() {
 		if (this.getManagedBean().getTabList() == null) {
-			QuationTenderReqDTO reqDTO = new QuationTenderReqDTO();
-			reqDTO.setQtdetail(getManagedBean().getQt());
-			QuationTenderResDTO resDTO = detailSO
-					.retriveQTApprovalDetails(reqDTO);
-			List<ScQtApproval> requiredApproval = resDTO.getApproval();
-			List<TabBean> tabBeans = new ArrayList<TabBean>();
+			IQTDetailSO detailSO;
+			try {
+				detailSO = BusinessDelegate.getInstance().getServiceObject(
+						MODULE_NAME, IQTDetailSO.class);
+			
+				QuationTenderReqDTO reqDTO = new QuationTenderReqDTO();
+				reqDTO.setQtdetail(getManagedBean().getQt());
+				QuationTenderResDTO resDTO = detailSO
+						.retriveQTApprovalDetails(reqDTO);
+				List<ScQtApproval> requiredApproval = resDTO.getApproval();
+				List<TabBean> tabBeans = new ArrayList<TabBean>();
 
-			if (requiredApproval != null) {
+				if (requiredApproval != null) {
 
-				for (ScQtApproval qtApproval : requiredApproval) {
-					qtApproval.setApprovalType(ApprovalCategory
-							.getDisplayName(qtApproval.getApprovalCategory()));
-					qtApproval.setVerifyOption("O");
-					qtApproval
-							.setScQtApprovalAttachment(new ScQtApprovalAttachment());
-					tabBeans.add(new TabBean(qtApproval.getApprovalType(),
-							qtApproval));
+					for (ScQtApproval qtApproval : requiredApproval) {
+						qtApproval.setApprovalType(ApprovalCategory
+								.getDisplayName(qtApproval.getApprovalCategory()));
+						qtApproval.setVerifyOption("O");
+						qtApproval
+								.setScQtApprovalAttachment(new ScQtApprovalAttachment());
+						tabBeans.add(new TabBean(qtApproval.getApprovalType(),
+								qtApproval));
+					}
+					this.getManagedBean().setTabList(tabBeans);
 				}
-				this.getManagedBean().setTabList(tabBeans);
+			} catch (Exception ex) {
+				ex.printStackTrace();
+				FacesContext.getCurrentInstance().addMessage(
+						null,
+						new FacesMessage(FacesMessage.SEVERITY_ERROR,
+								ex.toString(),
+								"Sorry We are unable to process."));
+
+			} finally {
+				detailSO = null;
 			}
 		}
 	}
 
 	private void retrieveSuppQualificationTabDtl() {
 		if (getManagedBean().getQtCriteria() == null) {
-			QuationTenderReqDTO reqDTO = new QuationTenderReqDTO();
-			reqDTO.setQtId(getManagedBean().getQt().getQtId());
+			IQTDetailSO detailSO;
+			try {
+				detailSO = BusinessDelegate.getInstance().getServiceObject(
+						MODULE_NAME, IQTDetailSO.class);
+				
+				QuationTenderReqDTO reqDTO = new QuationTenderReqDTO();
+				reqDTO.setQtId(getManagedBean().getQt().getQtId());
 
-			QuationTenderResDTO resDTO = detailSO
-					.retriveQTSuppQulCriDetails(reqDTO);
+				QuationTenderResDTO resDTO = detailSO
+						.retriveQTSuppQulCriDetails(reqDTO);
 
-			ScQtCriteria scQtCriteria = resDTO.getCriteria();
-			if (scQtCriteria == null) {
-				scQtCriteria = new ScQtCriteria();
+				ScQtCriteria scQtCriteria = resDTO.getCriteria();
+				if (scQtCriteria == null) {
+					scQtCriteria = new ScQtCriteria();
+				}
+				getManagedBean().setQtCriteria(scQtCriteria);
+				getManagedBean().setStates(resDTO.getStates());
+				getManagedBean().setCategoryL1s((resDTO.getCategoryL1()));
+			} catch (Exception ex) {
+				ex.printStackTrace();
+				FacesContext.getCurrentInstance().addMessage(
+						null,
+						new FacesMessage(FacesMessage.SEVERITY_ERROR,
+								ex.toString(),
+								"Sorry We are unable to process."));
+
+			} finally {
+				detailSO = null;
 			}
-			getManagedBean().setQtCriteria(scQtCriteria);
-			getManagedBean().setStates(resDTO.getStates());
-			getManagedBean().setCategoryL1s((resDTO.getCategoryL1()));
 		}
 	}
 
 	private void retrieveScheduleTabDtl() {
 		if (getManagedBean().getCountries() == null) {
+			IQTDetailSO detailSO;
+			try {
+				detailSO = BusinessDelegate.getInstance().getServiceObject(
+						MODULE_NAME, IQTDetailSO.class);
+				
+				QuationTenderReqDTO reqDTO = new QuationTenderReqDTO();
+				reqDTO.setQtId(getManagedBean().getQt().getQtId());
 
-			QuationTenderReqDTO reqDTO = new QuationTenderReqDTO();
-			reqDTO.setQtId(getManagedBean().getQt().getQtId());
+				QuationTenderResDTO resDTO = detailSO
+						.retriveQTScheduleDetails(reqDTO);
 
-			QuationTenderResDTO resDTO = detailSO
-					.retriveQTScheduleDetails(reqDTO);
+				getManagedBean().setCountries(resDTO.getCountries());
+				getManagedBean().setBriefings(
+						resDTO.getBriefingResultBean().getResultList());
+				getManagedBean().setSiteBriefings(
+						resDTO.getSiteVisitResultBean().getResultList());
+				getManagedBean().setScQtContactPersons(
+						resDTO.getContactPersonResultBean().getResultList());
+			} catch (Exception ex) {
+				ex.printStackTrace();
+				FacesContext.getCurrentInstance().addMessage(
+						null,
+						new FacesMessage(FacesMessage.SEVERITY_ERROR,
+								ex.toString(),
+								"Sorry We are unable to process."));
 
-			getManagedBean().setCountries(resDTO.getCountries());
-			getManagedBean().setBriefings(
-					resDTO.getBriefingResultBean().getResultList());
-			getManagedBean().setSiteBriefings(
-					resDTO.getSiteVisitResultBean().getResultList());
-			getManagedBean().setScQtContactPersons(
-					resDTO.getContactPersonResultBean().getResultList());
+			} finally {
+				detailSO = null;
+			}
 		}
 	}
 
 	private void retrieveDocumentTabDtl() {
 		if (getManagedBean().getScQtChecklists() == null) {
-			QuationTenderReqDTO reqDTO = new QuationTenderReqDTO();
-			reqDTO.setQtId(getManagedBean().getQt().getQtId());
-			// reqDTO.setQtId(328L);
+			IQTDetailSO detailSO;
+			try {
+				detailSO = BusinessDelegate.getInstance().getServiceObject(
+						MODULE_NAME, IQTDetailSO.class);
+				
+				QuationTenderReqDTO reqDTO = new QuationTenderReqDTO();
+				reqDTO.setQtId(getManagedBean().getQt().getQtId());
+				// reqDTO.setQtId(328L);
 
-			QuationTenderResDTO resDTO = detailSO.retriveQTDocDetails(reqDTO);
+				QuationTenderResDTO resDTO = detailSO.retriveQTDocDetails(reqDTO);
 
-			getManagedBean().setScQtChecklists(
-					resDTO.getDocumentResultBean().getResultList());
+				getManagedBean().setScQtChecklists(
+						resDTO.getDocumentResultBean().getResultList());
+			} catch (Exception ex) {
+				ex.printStackTrace();
+				FacesContext.getCurrentInstance().addMessage(
+						null,
+						new FacesMessage(FacesMessage.SEVERITY_ERROR,
+								ex.toString(),
+								"Sorry We are unable to process."));
+
+			} finally {
+				detailSO = null;
+			}
 		}
 	}
 
 	private void retrieveRemarkTabDtl() {
 		if (getManagedBean().getScQtRemarks() == null) {
-			QuationTenderReqDTO reqDTO = new QuationTenderReqDTO();
-			reqDTO.setQtId(getManagedBean().getQt().getQtId());
+			IQTDetailSO detailSO;
+			try {
+				detailSO = BusinessDelegate.getInstance().getServiceObject(
+						MODULE_NAME, IQTDetailSO.class);
+				
+				QuationTenderReqDTO reqDTO = new QuationTenderReqDTO();
+				reqDTO.setQtId(getManagedBean().getQt().getQtId());
 
-			QuationTenderResDTO resDTO = detailSO.retriveQtRemarks(reqDTO);
-			List<ScQtRemark> remarkList = resDTO.getRemarkResultBean()
-					.getResultList();
+				QuationTenderResDTO resDTO = detailSO.retriveQtRemarks(reqDTO);
+				List<ScQtRemark> remarkList = resDTO.getRemarkResultBean()
+						.getResultList();
 
-			getManagedBean().setScQtRemarks(
-					resDTO.getRemarkResultBean().getResultList());
-			initializeRemarkAndAttachement(getManagedBean().getScQtRemarks());
+				getManagedBean().setScQtRemarks(
+						resDTO.getRemarkResultBean().getResultList());
+				initializeRemarkAndAttachement(getManagedBean().getScQtRemarks());
+			} catch (Exception ex) {
+				ex.printStackTrace();
+				FacesContext.getCurrentInstance().addMessage(
+						null,
+						new FacesMessage(FacesMessage.SEVERITY_ERROR,
+								ex.toString(),
+								"Sorry We are unable to process."));
+
+			} finally {
+				detailSO = null;
+			}
 		} else {
 			initializeRemarkAndAttachement(getManagedBean().getScQtRemarks());
 		}

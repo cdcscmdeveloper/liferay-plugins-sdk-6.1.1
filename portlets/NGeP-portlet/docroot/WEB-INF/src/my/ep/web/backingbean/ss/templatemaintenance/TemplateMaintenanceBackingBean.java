@@ -16,14 +16,14 @@ import my.ep.biz.bean.search.ISearchBean;
 import my.ep.biz.bean.search.SearchBean;
 import my.ep.biz.bean.search.SearchFilterBean;
 import my.ep.biz.service.pm.authorization.orgprofile.IOrgProfileSO;
-import my.ep.biz.service.pm.common.codecategory.ICodeCategorySO;
+import my.ep.biz.service.pm.common.parameter.IParameterSO;
 import my.ep.biz.service.pm.common.status.IStatusSO;
 import my.ep.biz.service.ss.quationtender.IQTDetailSO;
 import my.ep.biz.service.ss.quationtender.IQTTemplateSO;
 import my.ep.dto.pm.authorization.orgprofile.OrgProfileReqDTO;
 import my.ep.dto.pm.authorization.orgprofile.OrgProfileResDTO;
-import my.ep.dto.pm.common.codecategory.CodeCategoryReqDTO;
-import my.ep.dto.pm.common.codecategory.CodeCategoryResDTO;
+import my.ep.dto.pm.common.parameter.ParameterReqDTO;
+import my.ep.dto.pm.common.parameter.ParameterResDTO;
 import my.ep.dto.pm.common.status.StatusReqDTO;
 import my.ep.dto.pm.common.status.StatusResDTO;
 import my.ep.dto.ss.quationtender.QTTemplateDocReqDTO;
@@ -31,7 +31,7 @@ import my.ep.dto.ss.quationtender.QTTemplateDocResDTO;
 import my.ep.dto.ss.quationtender.QuationTenderReqDTO;
 import my.ep.dto.ss.quationtender.QuationTenderResDTO;
 import my.ep.persistence.entity.pm.authorization.PmOrgProfile;
-import my.ep.persistence.entity.pm.common.PmCode;
+import my.ep.persistence.entity.pm.common.PmParameter;
 import my.ep.persistence.entity.pm.common.PmStatus;
 import my.ep.persistence.entity.ss.quationtender.ScQt;
 import my.ep.persistence.entity.ss.quationtender.ScQtCheckList;
@@ -84,21 +84,21 @@ public class TemplateMaintenanceBackingBean extends
 					.getProcurementCategory() == null) {
 
 				getManagedBean().getScqtDoc().getTplSpecMaster()
-						.setProcurementCategory(new PmCode());
+						.setProcurementCategory(new PmParameter());
 
 			}
 			if (getManagedBean().getScqtDoc().getTplSpecMaster()
 					.getItemTypeCode() == null) {
 
 				getManagedBean().getScqtDoc().getTplSpecMaster()
-						.setItemTypeCode(new PmCode());
+						.setItemTypeCode(new PmParameter());
 
 			}
 			if (getManagedBean().getScqtDoc().getTplSpecMaster()
 					.getSpecTypeCode() == null) {
 
 				getManagedBean().getScqtDoc().getTplSpecMaster()
-						.setSpecTypeCode(new PmCode());
+						.setSpecTypeCode(new PmParameter());
 
 			}
 			if (getManagedBean().getScqtDoc().getTplSpecMaster()
@@ -112,7 +112,7 @@ public class TemplateMaintenanceBackingBean extends
 					.getTemplateTypeCode() == null) {
 
 				getManagedBean().getScqtDoc().getTplSpecMaster()
-						.setTemplateTypeCode(new PmCode());
+						.setTemplateTypeCode(new PmParameter());
 
 			}
 
@@ -163,23 +163,23 @@ public class TemplateMaintenanceBackingBean extends
 					.getScqtDoc()
 					.getTplSpecMaster()
 					.getProcurementCategory()
-					.setCodeId(
+					.setParameterId(
 							scqtDoc.getTplSpecMaster().getProcurementCategory()
-									.getCodeId());
+									.getParameterId());
 			this.getManagedBean()
 					.getScqtDoc()
 					.getTplSpecMaster()
 					.getItemTypeCode()
-					.setCodeId(
+					.setParameterId(
 							scqtDoc.getTplSpecMaster().getItemTypeCode()
-									.getCodeId());
+									.getParameterId());
 			this.getManagedBean()
 					.getScqtDoc()
 					.getTplSpecMaster()
 					.getSpecTypeCode()
-					.setCodeId(
+					.setParameterId(
 							scqtDoc.getTplSpecMaster().getSpecTypeCode()
-									.getCodeId());
+									.getParameterId());
 			this.getManagedBean()
 					.getScqtDoc()
 					.getTplSpecMaster()
@@ -190,7 +190,7 @@ public class TemplateMaintenanceBackingBean extends
 			this.getManagedBean().getScqtDoc().getScQt()
 					.setQtNo(scqtDoc.getScQt().getQtNo());
 			System.out.println("====edit specification type==="
-					+ scqtDoc.getTplSpecMaster().getSpecTypeCode().getCodeId());
+					+ scqtDoc.getTplSpecMaster().getSpecTypeCode().getParameterId());
 			qtTemplateReqDTO.setQtId(146L);
 			qtTemplateReqDTO.setDocType("1");
 			qtTemplateReqDTO.setSpecMaster(scqtDoc.getTplSpecMaster());
@@ -305,38 +305,38 @@ public class TemplateMaintenanceBackingBean extends
 	public void save() {
 		try {
 
-			ICodeCategorySO codeCategorySO = BusinessDelegate.getInstance()
-					.getServiceObject("pm", ICodeCategorySO.class);
+			IParameterSO parameterSO = BusinessDelegate.getInstance()
+					.getServiceObject("pm", IParameterSO.class);
 
-			CodeCategoryReqDTO reqDTO = new CodeCategoryReqDTO();
-			System.out.println("manga template construcoor" + codeCategorySO);
-			reqDTO.setCodeId(this.getManagedBean().getScqtDoc()
-					.getTplSpecMaster().getProcurementCategory().getCodeId());
-			CodeCategoryResDTO resprocure = codeCategorySO
-					.retrieveCodeById(reqDTO);
+			ParameterReqDTO reqDTO = new ParameterReqDTO();
+			System.out.println("manga template construcoor" + parameterSO);
+			reqDTO.setParameterId(this.getManagedBean().getScqtDoc()
+					.getTplSpecMaster().getProcurementCategory().getParameterId());
+			ParameterResDTO resprocure = parameterSO
+					.retrieveParameterById(reqDTO);
 			System.out.println("===resprocure===="
-					+ resprocure.getPmCode().getCodeId());
-			CodeCategoryReqDTO reqDTOItem = new CodeCategoryReqDTO();
-			reqDTOItem.setCodeId(this.getManagedBean().getScqtDoc()
-					.getTplSpecMaster().getItemTypeCode().getCodeId());
-			CodeCategoryResDTO resItem = codeCategorySO
-					.retrieveCodeById(reqDTOItem);
+					+ resprocure.getPmParameter().getParameterId());
+			ParameterReqDTO reqDTOItem = new ParameterReqDTO();
+			reqDTOItem.setParameterId(this.getManagedBean().getScqtDoc()
+					.getTplSpecMaster().getItemTypeCode().getParameterId());
+			ParameterResDTO resItem = parameterSO
+					.retrieveParameterById(reqDTOItem);
 			System.out.println("===resItem===="
-					+ resItem.getPmCode().getCodeId());
-			CodeCategoryReqDTO reqDTOTemp = new CodeCategoryReqDTO();
-			reqDTOTemp.setCodeId(1L);
-			CodeCategoryResDTO resTemp = codeCategorySO
-					.retrieveCodeById(reqDTOTemp);
+					+ resItem.getPmParameter().getParameterId());
+			ParameterReqDTO reqDTOTemp = new ParameterReqDTO();
+			reqDTOTemp.setParameterId(1L);
+			ParameterResDTO resTemp = parameterSO
+					.retrieveParameterById(reqDTOTemp);
 			System.out.println("===resTemp===="
-					+ resTemp.getPmCode().getCodeId());
-			CodeCategoryReqDTO reqDTOSpec = new CodeCategoryReqDTO();
+					+ resTemp.getPmParameter().getParameterId());
+			ParameterReqDTO reqDTOSpec = new ParameterReqDTO();
 
-			reqDTOSpec.setCodeId(this.getManagedBean().getScqtDoc()
-					.getTplSpecMaster().getSpecTypeCode().getCodeId());
-			CodeCategoryResDTO resSpec = codeCategorySO
-					.retrieveCodeById(reqDTOSpec);
+			reqDTOSpec.setParameterId(this.getManagedBean().getScqtDoc()
+					.getTplSpecMaster().getSpecTypeCode().getParameterId());
+			ParameterResDTO resSpec = parameterSO
+					.retrieveParameterById(reqDTOSpec);
 			System.out.println("===resSpec===="
-					+ resSpec.getPmCode().getCodeId());
+					+ resSpec.getPmParameter().getParameterId());
 			IStatusSO statussO = BusinessDelegate.getInstance()
 					.getServiceObject("pm", IStatusSO.class);
 
@@ -355,17 +355,17 @@ public class TemplateMaintenanceBackingBean extends
 					.retrieveOrgProfileByProfileId(profileReq);
 
 			TplSpecMaster specMaster = new TplSpecMaster();
-			specMaster.setProcurementCategory(resprocure.getPmCode());
+			specMaster.setProcurementCategory(resprocure.getPmParameter());
 
 			specMaster.setProcessType("SC");
 
-			specMaster.setTemplateTypeCode(resTemp.getPmCode());
+			specMaster.setTemplateTypeCode(resTemp.getPmParameter());
 
 			specMaster.setOrgProfile(profileRes.getPmOrgProfile());
 
-			specMaster.setItemTypeCode(resItem.getPmCode());
+			specMaster.setItemTypeCode(resItem.getPmParameter());
 
-			specMaster.setSpecTypeCode(resSpec.getPmCode());
+			specMaster.setSpecTypeCode(resSpec.getPmParameter());
 
 			specMaster.setSpecName(this.getManagedBean().getScqtDoc()
 					.getTplSpecMaster().getSpecName());

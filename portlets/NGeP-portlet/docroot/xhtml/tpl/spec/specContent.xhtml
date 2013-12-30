@@ -34,12 +34,12 @@
 				<ui:param name="isContentTypeReview" value="#{templateSpecBackingBean.managedBean.contentType == TplSpecConst.contentTypeReview}" />
 				<ui:param name="isContentTypeAnswer" value="#{templateSpecBackingBean.managedBean.contentType == TplSpecConst.contentTypeAnswer}" />
 				<ui:param name="isContentTypeScore" value="#{templateSpecBackingBean.managedBean.contentType == TplSpecConst.contentTypeScore}" />
-				<ui:param name="isAnswerTypeDropdown" value="#{question.answerTypeCode.code == PmCodeConst.answerTypeDropdown}" />
-				<ui:param name="isAnswerTypeText" value="#{question.answerTypeCode.code == PmCodeConst.answerTypeText}" />
-				<ui:param name="isAnswerTypeNumeric" value="#{question.answerTypeCode.code == PmCodeConst.answerTypeNumeric}" />
-				<ui:param name="isItemTypeService" value="#{templateSpecBackingBean.managedBean.specMaster.itemTypeCode.code == TplSpecConst.itemTypeService}" />
-				<ui:param name="isSpecTypeTechnical" value="#{templateSpecBackingBean.managedBean.specMaster.specTypeCode.code == TplSpecConst.specTypeTechnical}" />
-				<ui:param name="isSpecTypeFinancial" value="#{templateSpecBackingBean.managedBean.specMaster.specTypeCode.code == TplSpecConst.specTypeFinancial}" />
+				<ui:param name="isAnswerTypeDropdown" value="#{question.answerTypeCode.parameterCode == ParameterConst.answerTypeDropdown}" />
+				<ui:param name="isAnswerTypeText" value="#{question.answerTypeCode.parameterCode == ParameterConst.answerTypeText}" />
+				<ui:param name="isAnswerTypeNumeric" value="#{question.answerTypeCode.parameterCode == ParameterConst.answerTypeNumeric}" />
+				<ui:param name="isItemTypeService" value="#{templateSpecBackingBean.managedBean.specMaster.itemTypeCode.parameterCode == TplSpecConst.itemTypeService}" />
+				<ui:param name="isSpecTypeTechnical" value="#{templateSpecBackingBean.managedBean.specMaster.specTypeCode.parameterCode == TplSpecConst.specTypeTechnical}" />
+				<ui:param name="isSpecTypeFinancial" value="#{templateSpecBackingBean.managedBean.specMaster.specTypeCode.parameterCode == TplSpecConst.specTypeFinancial}" />
 				<ui:param name="isEstCostReq" value="#{templateSpecBackingBean.managedBean.specMaster.estCostReq}" />
 				<ui:param name="isScoring" value="#{question.scoring}" />
 				<ui:param name="noOfYear" value="#{templateSpecBackingBean.managedBean.specMaster.noOfYear}" />

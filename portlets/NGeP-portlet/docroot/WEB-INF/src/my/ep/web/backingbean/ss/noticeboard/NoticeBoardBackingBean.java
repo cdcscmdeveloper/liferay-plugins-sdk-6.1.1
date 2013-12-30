@@ -15,7 +15,7 @@ import my.ep.biz.bean.search.ISearchBean;
 import my.ep.biz.bean.search.SearchBean;
 import my.ep.biz.bean.search.SearchFilterBean;
 import my.ep.biz.service.pm.authorization.orgprofile.IOrgProfileSO;
-import my.ep.biz.service.pm.common.categorys.ICategorysSO;
+import my.ep.biz.service.pm.common.categorycode.ICategoryCodeSO;
 import my.ep.biz.service.pm.common.district.IDistrictSO;
 import my.ep.biz.service.pm.common.state.IStateSO;
 import my.ep.biz.service.ss.quationtender.IQTDetailSO;
@@ -23,8 +23,8 @@ import my.ep.biz.service.ss.quationtender.IQTNoticeBoardSO;
 import my.ep.constant.ss.QTStatusConst;
 import my.ep.dto.pm.authorization.orgprofile.OrgProfileReqDTO;
 import my.ep.dto.pm.authorization.orgprofile.OrgProfileResDTO;
-import my.ep.dto.pm.common.categorys.CategorysReqDTO;
-import my.ep.dto.pm.common.categorys.CategorysResDTO;
+import my.ep.dto.pm.common.categorycode.CategoryCodeReqDTO;
+import my.ep.dto.pm.common.categorycode.CategoryCodeResDTO;
 import my.ep.dto.pm.common.district.DistrictReqDTO;
 import my.ep.dto.pm.common.district.DistrictResDTO;
 import my.ep.dto.pm.common.state.StateReqDTO;
@@ -454,13 +454,13 @@ public class NoticeBoardBackingBean extends
 		 * Method to load the categories list for notice board
 		 */
 		public void retriveCategories1() {
-			ICategorysSO categorysSO = BusinessDelegate.getInstance()
-					.getServiceObject("pm", ICategorysSO.class);
+			ICategoryCodeSO categoryCodeSO = BusinessDelegate.getInstance()
+					.getServiceObject("pm", ICategoryCodeSO.class);
 		
 			List<PmCategoryL1> l1categoryList = this.getManagedBean()
 					.getCategoryL1s();
 			if (l1categoryList == null || !l1categoryList.isEmpty()) {
-				CategorysResDTO catResDTO = categorysSO.retiveCategoryL1List();
+				CategoryCodeResDTO catResDTO = categoryCodeSO.retrieveCategoryL1List();
 				if (catResDTO.getCategoryL1List() != null
 						&& !catResDTO.getCategoryL1List().isEmpty()) {
 					this.getManagedBean().setCategoryL1s(
@@ -473,15 +473,15 @@ public class NoticeBoardBackingBean extends
 		 * Method to call onchange of L1category
 		 */
 		public void handleL2CategoryChange() {
-			ICategorysSO categorysSO = BusinessDelegate.getInstance()
-					.getServiceObject("pm", ICategorysSO.class);
+			ICategoryCodeSO categoryCodeSO = BusinessDelegate.getInstance()
+					.getServiceObject("pm", ICategoryCodeSO.class);
 			Long categoryL1Id = this.getManagedBean().getPmCategoryL1().getCategoryL1Id();
 			
 			if (null != categoryL1Id) {
-				CategorysReqDTO reqDTO = new CategorysReqDTO();
-				reqDTO.setL1CategoryId(categoryL1Id);
-				CategorysResDTO categorysResDTO = categorysSO
-						.retiveCategoryL2ListByL1CategoryId(reqDTO);
+				CategoryCodeReqDTO reqDTO = new CategoryCodeReqDTO();
+				reqDTO.setCategoryL1Id(categoryL1Id);
+				CategoryCodeResDTO categorysResDTO = categoryCodeSO
+						.retrieveCategoryL2ListByL1Id(reqDTO);
 				List<PmCategoryL2> catL2List = categorysResDTO.getCategoryL2List();
 				this.getManagedBean().setCategoryL2s(catL2List);
 			}
@@ -491,14 +491,14 @@ public class NoticeBoardBackingBean extends
 		 * Method to call onchange of L2category
 		 */
 		public void handleL3CategoryChange(AjaxBehaviorEvent event) {
-			ICategorysSO categorysSO = BusinessDelegate.getInstance()
-					.getServiceObject("pm", ICategorysSO.class);
+			ICategoryCodeSO categoryCodeSO = BusinessDelegate.getInstance()
+					.getServiceObject("pm", ICategoryCodeSO.class);
 			Long categoryL2Id = this.getManagedBean().getPmCategoryL2().getCategoryL2Id();
 			if (null != categoryL2Id) {
-				CategorysReqDTO reqDTO = new CategorysReqDTO();
-				reqDTO.setL2CategoryId((Long)categoryL2Id);
-				CategorysResDTO categorysResDTO = categorysSO
-						.retiveCategoryL3ListByL2CategoryId(reqDTO);
+				CategoryCodeReqDTO reqDTO = new CategoryCodeReqDTO();
+				reqDTO.setCategoryL2Id(categoryL2Id);
+				CategoryCodeResDTO categorysResDTO = categoryCodeSO
+						.retrieveCategoryL3ListByL2Id(reqDTO);
 				List<PmCategoryL3> catL3List = categorysResDTO.getCategoryL3List();
 				this.getManagedBean().getCategoryL3s().clear();
 				this.getManagedBean().setCategoryL3s(catL3List);

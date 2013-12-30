@@ -16,7 +16,7 @@
 					<td class="TableFieldLeft" style="width:120px"><h:outputLabel value="Template Category" /></td>
 					<td class="TableFieldRight">
 						<p:selectOneMenu style="width:200px" value="#{templateSpecBackingBean.managedBean.searchProcurementCategoryId}">
-							<f:selectItems value="#{templateSpecBackingBean.getDropdownValues(PmCodeCatConst.procurementCategory)}" />
+							<f:selectItems value="#{templateSpecBackingBean.getDropdownValues(ParameterTypeConst.procurementCategory)}" />
 						</p:selectOneMenu>
 					</td>
 					<td class="TableFieldLeft" style="width:120px"><h:outputLabel value="Title" /></td>
@@ -28,13 +28,13 @@
 					<td class="TableFieldLeft"><h:outputLabel value="Item Type" /></td>
 					<td class="TableFieldRight">
 						<p:selectOneMenu value="#{templateSpecBackingBean.managedBean.searchItemTypeId}" >
-							<f:selectItems value="#{templateSpecBackingBean.getDropdownValues(PmCodeCatConst.itemType)}" />
+							<f:selectItems value="#{templateSpecBackingBean.getDropdownValues(ParameterTypeConst.itemType)}" />
 						</p:selectOneMenu>
 					</td>
 					<td class="TableFieldLeft"><h:outputLabel value="Specification Type" /></td>
 					<td class="TableFieldRight">
 						<p:selectOneMenu value="#{templateSpecBackingBean.managedBean.searchSpecTypeId}">
-							<f:selectItems value="#{templateSpecBackingBean.getDropdownValues(PmCodeCatConst.specificationType)}" />
+							<f:selectItems value="#{templateSpecBackingBean.getDropdownValues(ParameterTypeConst.specificationType)}" />
 						</p:selectOneMenu>
 					</td>
 				</tr>				
@@ -42,7 +42,7 @@
 					<td class="TableFieldLeft"><h:outputLabel value="Template Type" /></td>
 					<td class="TableFieldRight">
 						<p:selectOneMenu value="#{templateSpecBackingBean.managedBean.searchTemplateTypeId}" >
-							<f:selectItems value="#{templateSpecBackingBean.getDropdownValues(PmCodeCatConst.templateType)}" />
+							<f:selectItems value="#{templateSpecBackingBean.getDropdownValues(ParameterTypeConst.templateType)}" />
 						</p:selectOneMenu>
 					</td>
 					<td class="TableFieldLeft"><h:outputLabel value="Ministry Id" /></td>
@@ -84,10 +84,10 @@
 								<h:outputText value="#{tplMasterObj.specMasterId}" />
 							</p:column>
 							<p:column>
-								<h:outputText value="#{tplMasterObj.procurementCategory.code}" />
+								<h:outputText value="#{tplMasterObj.procurementCategory.parameterCode}" />
 							</p:column>
 							<p:column>
-								<h:outputText value="#{tplMasterObj.templateTypeCode.code}" />
+								<h:outputText value="#{tplMasterObj.templateTypeCode.parameterCode}" />
 							</p:column>
 							<p:column>
 								<h:outputText value="#{tplMasterObj.specName}" />
@@ -96,7 +96,7 @@
 								<h:outputText value="#{tplMasterObj.specDesc}" />
 							</p:column>
 							<p:column>
-								<h:outputText value="#{tplMasterObj.itemTypeCode.code}" />
+								<h:outputText value="#{tplMasterObj.itemTypeCode.parameterCode}" />
 							</p:column>
 							<p:column>
 								<h:outputText value="#{tplMasterObj.createdBy}" />

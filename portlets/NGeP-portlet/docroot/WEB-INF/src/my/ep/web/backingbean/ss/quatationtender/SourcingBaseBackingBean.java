@@ -35,7 +35,6 @@ import my.ep.util.lookupservice.EpBpmBusinessDelegate;
 import my.ep.util.lookupservice.EpEjbBusinessDelegate;
 import my.ep.web.backingbean.BaseBackingBean;
 import my.ep.web.backingbean.ss.approval.ApprovalBackingBean;
-import my.ep.web.backingbean.ss.specification.SpecificationBackingBean;
 import my.ep.web.backingbean.ss.supplierproposal.SPDetailBackingBean;
 import my.ep.web.managedbean.BaseManagedBean;
 import my.ep.web.ss.quationtender.common.QTConstants;
@@ -182,7 +181,7 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 					.setQt(tenderResDTO.getQtDetail());
 			detailBackingBean.getManagedBean().setTaskId(taskId);			
 			detailBackingBean.getManagedBean().setQuotationTenderDataType(datatype);
-			detailBackingBean.populateParentOrgProfile(tenderResDTO.getQtDetail());
+			populateParentOrgProfile(tenderResDTO.getQtDetail());
 			detailBackingBean.onChangeAction();
 			tenderResDTO = detailSO.retriveQTApprovalDetails(tenderReqDTO);
 			ApprovalBackingBean approvalBackingBean = new ApprovalBackingBean();
@@ -207,12 +206,12 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 		while (parentOrgProfile != null) {
 			// Ministry
 			if (OrganizationType.MINISTRY.value().equals(
-					parentOrgProfile.getPmCode().getCode())) {
+					parentOrgProfile.getOrgTypeCode().getParameterCode())) {
 				scQt.setMinistryOrgProfile(parentOrgProfile);
 			}
 			// Department
 			else if (OrganizationType.DEPARTMENT.value().equals(
-					parentOrgProfile.getPmCode().getCode())) {
+					parentOrgProfile.getOrgTypeCode().getParameterCode())) {
 				scQt.setDepartmentOrgProfile(parentOrgProfile);
 			}
 

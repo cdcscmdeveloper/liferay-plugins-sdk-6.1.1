@@ -50,8 +50,8 @@
 	</p:column>
 	<p:column style="#{columnStyle}width:155px;">
 		<h:outputLabel value="Answer" style="float: left" rendered="#{isQuestionTypeHeader}" />
-		<h:selectOneMenu id="answerTypeId" rendered="#{!isQuestionTypeHeader}" value="#{question.answerTypeCode.codeId}" required="true">
-			<f:selectItems value="#{templateSpecBackingBean.getDropdownValues(PmCodeCatConst.answerType)}" />
+		<h:selectOneMenu id="answerTypeId" rendered="#{!isQuestionTypeHeader}" value="#{question.answerTypeCode.parameterId}" required="true">
+			<f:selectItems value="#{templateSpecBackingBean.getDropdownValues(ParameterTypeConst.answerType)}" />
 			<p:ajax event="change" listener="#{templateSpecBackingBean.answerTypeChange(question)}" update="scoringBtn" />
 		</h:selectOneMenu>	
 		<p:commandButton icon="ui-icon-pencil" style="background-color:transparent !important; border:0px none;" id="scoringBtn" rendered="#{!isQuestionTypeHeader}" disabled="#{(isAnswerTypeText)}" 

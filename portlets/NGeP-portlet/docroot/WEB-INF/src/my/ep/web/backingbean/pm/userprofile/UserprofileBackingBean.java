@@ -35,10 +35,10 @@ public class UserprofileBackingBean extends
 
 	private void retriveUserDtls() {
 		FacesScopes facesScopes = new FacesScopes();
-		PmUser pmUser = facesScopes.getUserSessionBean();
-		if (null != pmUser.getUserId()) {
-			this.getManagedBean().setPmUser(pmUser);
-			List<PmAddressType> addressType = pmUser.getPmAddressTypes();
+		PmUser user = facesScopes.getUserSessionBean();
+		if (user != null && null != user.getUserId()) {
+			this.getManagedBean().setPmUser(user);
+			List<PmAddressType> addressType = user.getPmAddressTypes();
 			logger.info(addressType.size());
 			if (addressType != null) {
 				for (PmAddressType addressType2 : addressType) {

@@ -34,8 +34,8 @@ import my.ep.persistence.entity.ss.quationtender.ScQtBriefingRegistration;
 import my.ep.type.pm.RoleCode;
 import my.ep.util.lookupservice.EpBpmBusinessDelegate;
 import my.ep.util.lookupservice.EpEjbBusinessDelegate;
-import my.ep.web.backingbean.BaseBackingBean;
 import my.ep.web.backingbean.ss.quatationtender.QTDetailBackingBean;
+import my.ep.web.backingbean.ss.quatationtender.SourcingBaseBackingBean;
 import my.ep.web.constant.SourcingConst;
 import my.ep.web.managedbean.ss.bsvattendance.BSVAttendanceManagedBean;
 import my.ep.web.ss.quationtender.common.QTConstants;
@@ -53,7 +53,7 @@ import com.liferay.portal.util.PortalUtil;
 @ManagedBean(name = "bsvAttendanceBackingBean")
 @RequestScoped
 public class BSVAttendanceBackingBean extends
-		BaseBackingBean<BSVAttendanceManagedBean> {
+		SourcingBaseBackingBean<BSVAttendanceManagedBean> {
 	private static final String NAV_TO_BSV_ATTENDANCE_MAIN_PAGE = "bsvAttendanceRegisterMain";
 	public static Logger log = Logger.getLogger(BSVAttendanceBackingBean.class);
 
@@ -507,7 +507,7 @@ public class BSVAttendanceBackingBean extends
 				.retriveQTDetails(tenderReqDTO);
 		QTDetailBackingBean detailBackingBean = new QTDetailBackingBean();
 		detailBackingBean.getManagedBean().setQt(tenderResDTO.getQtDetail());
-		detailBackingBean.populateParentOrgProfile(tenderResDTO.getQtDetail());
+		populateParentOrgProfile(tenderResDTO.getQtDetail());
 		retrieveBriefingSiteVisitList(siteVisitDatatype.getQtId().longValue());
 		
 				FacesContext fc = FacesContext.getCurrentInstance();

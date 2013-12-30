@@ -18,21 +18,21 @@ import my.ep.biz.bean.search.ISearchBean;
 import my.ep.biz.bean.search.SearchBean;
 import my.ep.biz.bean.search.SearchFilterBean;
 import my.ep.biz.service.pm.authorization.orgprofile.IOrgProfileSO;
-import my.ep.biz.service.pm.common.codecategory.ICodeCategorySO;
+import my.ep.biz.service.pm.common.parameter.IParameterSO;
 import my.ep.biz.service.pm.common.uom.IUomSO;
 import my.ep.biz.service.tpl.spec.ITemplateSpecSO;
-import my.ep.constant.pm.PmCodeCategoryConst;
-import my.ep.constant.pm.PmCodeConst;
+import my.ep.constant.pm.ParameterConst;
+import my.ep.constant.pm.ParameterTypeConst;
 import my.ep.constant.tpl.TemplateSpecConst;
 import my.ep.dto.pm.authorization.orgprofile.OrgProfileReqDTO;
 import my.ep.dto.pm.authorization.orgprofile.OrgProfileResDTO;
-import my.ep.dto.pm.common.codecategory.CodeCategoryReqDTO;
-import my.ep.dto.pm.common.codecategory.CodeCategoryResDTO;
+import my.ep.dto.pm.common.parameter.ParameterReqDTO;
+import my.ep.dto.pm.common.parameter.ParameterResDTO;
 import my.ep.dto.pm.common.uom.UomResDTO;
 import my.ep.dto.tpl.spec.TemplateSpecReqDTO;
 import my.ep.dto.tpl.spec.TemplateSpecResDTO;
 import my.ep.persistence.entity.pm.authorization.PmOrgProfile;
-import my.ep.persistence.entity.pm.common.PmCode;
+import my.ep.persistence.entity.pm.common.PmParameter;
 import my.ep.persistence.entity.pm.common.PmUom;
 import my.ep.persistence.entity.sm.SmSupplier;
 import my.ep.persistence.entity.tpl.spec.TplSpecAnswer;
@@ -180,10 +180,10 @@ public class TemplateSpecBackingBean extends BaseBackingBean<TemplateSpecManaged
 	public String newAction() {
 		TplSpecMaster specMaster = new TplSpecMaster();
 		
-		specMaster.setProcurementCategory(new PmCode());
-		specMaster.setItemTypeCode(new PmCode());
-		specMaster.setTemplateTypeCode(new PmCode());
-		specMaster.setSpecTypeCode(new PmCode());
+		specMaster.setProcurementCategory(new PmParameter());
+		specMaster.setItemTypeCode(new PmParameter());
+		specMaster.setTemplateTypeCode(new PmParameter());
+		specMaster.setSpecTypeCode(new PmParameter());
 		specMaster.setOrgProfile(new PmOrgProfile());
 		
 		getManagedBean().setSpecMaster(specMaster);
@@ -199,12 +199,12 @@ public class TemplateSpecBackingBean extends BaseBackingBean<TemplateSpecManaged
 		SearchFilterBean likeFilterBean = new SearchFilterBean(SearchOperator.OPERATOR_LIKE.value());
 		
 		if(getManagedBean().getSearchProcurementCategoryId()!=null) {
-			equalFilterBean.setSearchField("procurementCategory.codeId");
+			equalFilterBean.setSearchField("procurementCategory.parameterId");
 			equalFilterBean.setSearchValue(getManagedBean().getSearchProcurementCategoryId());
 			searchBean.getDataFilterBeans().add(equalFilterBean);
 		}
 		if(getManagedBean().getSearchTemplateTypeId()!=null) {
-			equalFilterBean.setSearchField("templateTypeCode.codeId");
+			equalFilterBean.setSearchField("templateTypeCode.parameterId");
 			equalFilterBean.setSearchValue(getManagedBean().getSearchTemplateTypeId());
 			searchBean.getDataFilterBeans().add(equalFilterBean);
 		}
@@ -214,12 +214,12 @@ public class TemplateSpecBackingBean extends BaseBackingBean<TemplateSpecManaged
 			searchBean.getDataFilterBeans().add(equalFilterBean);
 		}		
 		if(getManagedBean().getSearchItemTypeId()!=null) {
-			equalFilterBean.setSearchField("itemTypeCode.codeId");
+			equalFilterBean.setSearchField("itemTypeCode.parameterId");
 			equalFilterBean.setSearchValue(getManagedBean().getSearchItemTypeId());
 			searchBean.getDataFilterBeans().add(equalFilterBean);
 		}
 		if(getManagedBean().getSearchSpecTypeId()!=null) {
-			equalFilterBean.setSearchField("specTypeCode.codeId");
+			equalFilterBean.setSearchField("specTypeCode.parameterId");
 			equalFilterBean.setSearchValue(getManagedBean().getSearchSpecTypeId());
 			searchBean.getDataFilterBeans().add(equalFilterBean);
 		}			
@@ -291,17 +291,17 @@ public class TemplateSpecBackingBean extends BaseBackingBean<TemplateSpecManaged
 	}
 
 	private void addQuestion(List<TplSpecQuestion> questionList, Integer row, String questionType) {
-		ICodeCategorySO codeCategorySO = null;
+		IParameterSO parameterSO = null;
 		try {
 			TplSpecQuestion newQuestion = new TplSpecQuestion();
 			newQuestion.setQuestionType(questionType);
 			
-			codeCategorySO = BusinessDelegate.getInstance().getServiceObject("pm", ICodeCategorySO.class);
-			CodeCategoryReqDTO reqDTO = new CodeCategoryReqDTO();
-			reqDTO.setCategory(PmCodeCategoryConst.ANSWER_TYPE);
-			reqDTO.setCode(PmCodeConst.ANSWER_TYPE_TEXT);
-			CodeCategoryResDTO resDTO = codeCategorySO.retrieveCodeByCategoryAndCode(reqDTO);
-			newQuestion.setAnswerTypeCode(resDTO.getPmCode());
+			parameterSO = BusinessDelegate.getInstance().getServiceObject("pm", IParameterSO.class);
+			ParameterReqDTO reqDTO = new ParameterReqDTO();
+			reqDTO.setParameterType(ParameterTypeConst.ANSWER_TYPE);
+			reqDTO.setParameterCode(ParameterConst.ANSWER_TYPE_TEXT);
+			ParameterResDTO resDTO = parameterSO.retrieveParameterByTypeAndCode(reqDTO);
+			newQuestion.setAnswerTypeCode(resDTO.getPmParameter());
 			
 			PmUom uom = new PmUom();
 			newQuestion.setClUom(uom);
@@ -316,7 +316,7 @@ public class TemplateSpecBackingBean extends BaseBackingBean<TemplateSpecManaged
 			e.printStackTrace();
 			FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR,e.toString(), e.getMessage()));
 		} finally {
-			codeCategorySO = null;
+			parameterSO = null;
 		}
 	}
 	
@@ -350,7 +350,7 @@ public class TemplateSpecBackingBean extends BaseBackingBean<TemplateSpecManaged
 			orgProfileSO = (IOrgProfileSO)BusinessDelegate.getInstance().getServiceObject("pm",IOrgProfileSO.class);
 			
 			OrgProfileReqDTO reqDTO = new OrgProfileReqDTO();
-			reqDTO.setOrgType(PmCodeConst.ORG_TYPE_MINISTRY);
+			reqDTO.setOrgType(ParameterConst.ORG_TYPE_MINISTRY);
 			OrgProfileResDTO resDTO = orgProfileSO.retrieveOrgProfileListByOrgType(reqDTO);
 			
 			items = new SelectItem[resDTO.getOrgProfileList().size()+1];
@@ -369,20 +369,20 @@ public class TemplateSpecBackingBean extends BaseBackingBean<TemplateSpecManaged
 	}
 	
 	public void answerTypeChange(TplSpecQuestion specQuestion) {
-		ICodeCategorySO codeCategorySO = null;
+		IParameterSO parameterSO = null;
 		try {
-			Long codeId = specQuestion.getAnswerTypeCode().getCodeId();
+			Long parameterId = specQuestion.getAnswerTypeCode().getParameterId();
 			
-			codeCategorySO = BusinessDelegate.getInstance().getServiceObject("pm", ICodeCategorySO.class);
-			CodeCategoryReqDTO reqDTO = new CodeCategoryReqDTO();
-			reqDTO.setCodeId(codeId);
-			CodeCategoryResDTO resDTO = codeCategorySO.retrieveCodeById(reqDTO);
-			specQuestion.setAnswerTypeCode(resDTO.getPmCode());
+			parameterSO = BusinessDelegate.getInstance().getServiceObject("pm", IParameterSO.class);
+			ParameterReqDTO reqDTO = new ParameterReqDTO();
+			reqDTO.setParameterId(parameterId);
+			ParameterResDTO resDTO = parameterSO.retrieveParameterById(reqDTO);
+			specQuestion.setAnswerTypeCode(resDTO.getPmParameter());
 		} catch (Exception e) {
 			e.printStackTrace();
 			FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR,e.toString(), e.getMessage()));
 		} finally {
-			codeCategorySO = null;
+			parameterSO = null;
 		}
 		
 	}
