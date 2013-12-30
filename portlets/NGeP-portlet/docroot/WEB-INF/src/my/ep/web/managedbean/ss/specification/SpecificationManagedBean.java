@@ -11,7 +11,9 @@ import javax.faces.bean.SessionScoped;
 import javax.faces.model.SelectItem;
 
 import my.ep.factory.EpLogger;
+import my.ep.persistence.entity.pm.common.PmCheckListCategory;
 import my.ep.persistence.entity.ss.quationtender.ScCommitteeMember;
+import my.ep.persistence.entity.ss.quationtender.ScQt;
 import my.ep.persistence.entity.ss.quationtender.ScQtCheckList;
 import my.ep.persistence.entity.ss.quationtender.ScQtDeduction;
 import my.ep.persistence.entity.ss.quationtender.ScQtRemark;
@@ -76,7 +78,24 @@ public class SpecificationManagedBean extends BaseManagedBean {
 	private List<ScQtWeightage> weightageTechnicalSelect;
 	private List<ScQtWeightage> weightageFinancialSelect;
 	 private boolean isSpecStatus;
-	
+	 private Long procurementId;
+	 private List<SelectItem> approvalList;
+	 private String evaluationType;
+	private ScQt qt;
+	private List<PmCheckListCategory> stageOneComplianceList;
+	private List<PmCheckListCategory> stageOneComplianceSelect;
+	private List<PmCheckListCategory> stageTwoTechComplianceList;
+	private List<PmCheckListCategory> stageTwoTechComplianceSelect;
+	private List<PmCheckListCategory> stageTwoFinComplianceList;
+	private List<PmCheckListCategory> stageTwoFinComplianceSelect;
+	private List<ScQtCheckList> s1TechSelect;
+	private List<ScQtCheckList> s1TechAddSelect;
+	private List<ScQtCheckList> s1FinSelect;
+	private List<ScQtCheckList> s1FinAddSelect;
+	private List<ScQtCheckList> s2TechSelect;
+	private List<ScQtCheckList> s2TechAddSelect;
+	private List<ScQtCheckList> s2FinSelect;
+	private List<ScQtCheckList> s2FinAddSelect;
 	public SpecificationManagedBean(){
 		
 	}
@@ -475,6 +494,264 @@ public class SpecificationManagedBean extends BaseManagedBean {
 	 */
 	public void setSpecStatus(boolean isSpecStatus) {
 		this.isSpecStatus = isSpecStatus;
+	}
+
+	/**
+	 * @return the procurementId
+	 */
+	public Long getProcurementId() {
+		return procurementId;
+	}
+
+	/**
+	 * @param procurementId the procurementId to set
+	 */
+	public void setProcurementId(Long procurementId) {
+		this.procurementId = procurementId;
+	}
+
+	/**
+	 * @return the approvalList
+	 */
+	public List<SelectItem> getApprovalList() {
+		return approvalList;
+	}
+
+	/**
+	 * @param approvalList the approvalList to set
+	 */
+	public void setApprovalList(List<SelectItem> approvalList) {
+		this.approvalList = approvalList;
+	}
+
+	/**
+	 * @return the evaluationType
+	 */
+	public String getEvaluationType() {
+		return evaluationType;
+	}
+
+	/**
+	 * @param evaluationType the evaluationType to set
+	 */
+	public void setEvaluationType(String evaluationType) {
+		this.evaluationType = evaluationType;
+	}
+
+	/**
+	 * @return the qt
+	 */
+	public ScQt getQt() {
+		return qt;
+	}
+
+	/**
+	 * @param qt the qt to set
+	 */
+	public void setQt(ScQt qt) {
+		this.qt = qt;
+	}
+
+	/**
+	 * @return the stageOneComplianceList
+	 */
+	public List<PmCheckListCategory> getStageOneComplianceList() {
+		return stageOneComplianceList;
+	}
+
+	/**
+	 * @param stageOneComplianceList the stageOneComplianceList to set
+	 */
+	public void setStageOneComplianceList(
+			List<PmCheckListCategory> stageOneComplianceList) {
+		this.stageOneComplianceList = stageOneComplianceList;
+	}
+
+	/**
+	 * @return the stageOneComplianceSelect
+	 */
+	public List<PmCheckListCategory> getStageOneComplianceSelect() {
+		return stageOneComplianceSelect;
+	}
+
+	/**
+	 * @param stageOneComplianceSelect the stageOneComplianceSelect to set
+	 */
+	public void setStageOneComplianceSelect(
+			List<PmCheckListCategory> stageOneComplianceSelect) {
+		this.stageOneComplianceSelect = stageOneComplianceSelect;
+	}
+
+	/**
+	 * @return the stageTwoTechComplianceList
+	 */
+	public List<PmCheckListCategory> getStageTwoTechComplianceList() {
+		return stageTwoTechComplianceList;
+	}
+
+	/**
+	 * @param stageTwoTechComplianceList the stageTwoTechComplianceList to set
+	 */
+	public void setStageTwoTechComplianceList(
+			List<PmCheckListCategory> stageTwoTechComplianceList) {
+		this.stageTwoTechComplianceList = stageTwoTechComplianceList;
+	}
+
+	/**
+	 * @return the stageTwoTechComplianceSelect
+	 */
+	public List<PmCheckListCategory> getStageTwoTechComplianceSelect() {
+		return stageTwoTechComplianceSelect;
+	}
+
+	/**
+	 * @param stageTwoTechComplianceSelect the stageTwoTechComplianceSelect to set
+	 */
+	public void setStageTwoTechComplianceSelect(
+			List<PmCheckListCategory> stageTwoTechComplianceSelect) {
+		this.stageTwoTechComplianceSelect = stageTwoTechComplianceSelect;
+	}
+
+	/**
+	 * @return the stageTwoFinComplianceList
+	 */
+	public List<PmCheckListCategory> getStageTwoFinComplianceList() {
+		return stageTwoFinComplianceList;
+	}
+
+	/**
+	 * @param stageTwoFinComplianceList the stageTwoFinComplianceList to set
+	 */
+	public void setStageTwoFinComplianceList(
+			List<PmCheckListCategory> stageTwoFinComplianceList) {
+		this.stageTwoFinComplianceList = stageTwoFinComplianceList;
+	}
+
+	/**
+	 * @return the stageTwoFinComplianceSelect
+	 */
+	public List<PmCheckListCategory> getStageTwoFinComplianceSelect() {
+		return stageTwoFinComplianceSelect;
+	}
+
+	/**
+	 * @param stageTwoFinComplianceSelect the stageTwoFinComplianceSelect to set
+	 */
+	public void setStageTwoFinComplianceSelect(
+			List<PmCheckListCategory> stageTwoFinComplianceSelect) {
+		this.stageTwoFinComplianceSelect = stageTwoFinComplianceSelect;
+	}
+
+	/**
+	 * @return the s1TechSelect
+	 */
+	public List<ScQtCheckList> getS1TechSelect() {
+		return s1TechSelect;
+	}
+
+	/**
+	 * @param s1TechSelect the s1TechSelect to set
+	 */
+	public void setS1TechSelect(List<ScQtCheckList> s1TechSelect) {
+		this.s1TechSelect = s1TechSelect;
+	}
+
+	/**
+	 * @return the s1TechAddSelect
+	 */
+	public List<ScQtCheckList> getS1TechAddSelect() {
+		return s1TechAddSelect;
+	}
+
+	/**
+	 * @param s1TechAddSelect the s1TechAddSelect to set
+	 */
+	public void setS1TechAddSelect(List<ScQtCheckList> s1TechAddSelect) {
+		this.s1TechAddSelect = s1TechAddSelect;
+	}
+
+	/**
+	 * @return the s1FinSelect
+	 */
+	public List<ScQtCheckList> getS1FinSelect() {
+		return s1FinSelect;
+	}
+
+	/**
+	 * @param s1FinSelect the s1FinSelect to set
+	 */
+	public void setS1FinSelect(List<ScQtCheckList> s1FinSelect) {
+		this.s1FinSelect = s1FinSelect;
+	}
+
+	/**
+	 * @return the s1FinAddSelect
+	 */
+	public List<ScQtCheckList> getS1FinAddSelect() {
+		return s1FinAddSelect;
+	}
+
+	/**
+	 * @param s1FinAddSelect the s1FinAddSelect to set
+	 */
+	public void setS1FinAddSelect(List<ScQtCheckList> s1FinAddSelect) {
+		this.s1FinAddSelect = s1FinAddSelect;
+	}
+
+	/**
+	 * @return the s2TechSelect
+	 */
+	public List<ScQtCheckList> getS2TechSelect() {
+		return s2TechSelect;
+	}
+
+	/**
+	 * @param s2TechSelect the s2TechSelect to set
+	 */
+	public void setS2TechSelect(List<ScQtCheckList> s2TechSelect) {
+		this.s2TechSelect = s2TechSelect;
+	}
+
+	/**
+	 * @return the s2TechAddSelect
+	 */
+	public List<ScQtCheckList> getS2TechAddSelect() {
+		return s2TechAddSelect;
+	}
+
+	/**
+	 * @param s2TechAddSelect the s2TechAddSelect to set
+	 */
+	public void setS2TechAddSelect(List<ScQtCheckList> s2TechAddSelect) {
+		this.s2TechAddSelect = s2TechAddSelect;
+	}
+
+	/**
+	 * @return the s2FinSelect
+	 */
+	public List<ScQtCheckList> getS2FinSelect() {
+		return s2FinSelect;
+	}
+
+	/**
+	 * @param s2FinSelect the s2FinSelect to set
+	 */
+	public void setS2FinSelect(List<ScQtCheckList> s2FinSelect) {
+		this.s2FinSelect = s2FinSelect;
+	}
+
+	/**
+	 * @return the s2FinAddSelect
+	 */
+	public List<ScQtCheckList> getS2FinAddSelect() {
+		return s2FinAddSelect;
+	}
+
+	/**
+	 * @param s2FinAddSelect the s2FinAddSelect to set
+	 */
+	public void setS2FinAddSelect(List<ScQtCheckList> s2FinAddSelect) {
+		this.s2FinAddSelect = s2FinAddSelect;
 	}
 
 	
