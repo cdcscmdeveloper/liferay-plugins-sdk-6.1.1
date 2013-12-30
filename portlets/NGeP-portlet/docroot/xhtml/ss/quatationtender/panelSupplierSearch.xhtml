@@ -65,7 +65,7 @@
             
 			<p:column headerText="#{lbl['lbl.so.suppliername']}">
 				<p:selectBooleanCheckbox value="#{supplierNode.selected}" rendered="#{supplierNode.type == 'zone'}" />
-				<h:outputText value="#{supplierNode.object}" rendered="#{supplierNode.type == 'zone'}" />
+				<h:outputText value="#{supplierNode.object.name}" rendered="#{supplierNode.type == 'zone'}" />
 				<h:outputText value="#{supplierNode.object.supplier.supplierName}" rendered="#{supplierNode.type == 'supplier'}" />
 			</p:column>
 			<p:column headerText="#{lbl['lbl.so.mofno']}">
