@@ -4,99 +4,244 @@
 	xmlns:ui="http://java.sun.com/jsf/facelets"
 	xmlns:p="http://primefaces.org/ui"
 	xmlns:c="http://java.sun.com/jsp/jstl/core">
-	<p:dialog header="PR Inquiry" widgetVar="prInquiry" modal="true"
-		width="800" height="500">
-			<div align="right" id="div_globe_11">
-				<p:commandButton value="#{lbl['lbl.ss.simple.quote.purchase.btn.cancel']}" style="float:right;" onclick="prInquiry.hide();"></p:commandButton>
-				<p:commandButton value="#{lbl['lbl.ss.submit']}" action="#{directPurchaseBackingBean.savePrInquiry()}" oncomplete="prInquiry.hide();"/>
-			</div>
-			<p:panel label="#{lbl['lbl.ss.panel.title.general']}"
-				header="#{lbl['lbl.ss.panel.title.general']}" toggleable="true">
+	<p:dialog header="Purchase Inquiry" widgetVar="prInquiry" modal="true"
+		width="850" height="500" resizable="false">
+
+		<div align="right" id="div_globe_11">
+			<p:commandButton value="#{lbl['lbl.ss.price.inquiry.back.btn']}"
+				onclick="prInquiry.hide();" style="float:left;" />
+				
+            <p:commandButton value="#{lbl['lbl.ss.price.inquiry.proceed.btn']}" />
+             
+			<p:commandButton
+				value="#{lbl['lbl.ss.simple.quote.purchase.btn.cancel']}"
+				 onclick="prInquiry.hide();" />
+
+			<p:commandButton value="#{lbl['lbl.ss.submit']}"
+				action="#{directPurchaseBackingBean.savePrInquiry()}"
+				oncomplete="prInquiry.hide();"  style="float:right;" />
+		</div>
+
+		<p:panel>
+			<p:spacer height="15px" />
+			<p:panelGrid styleClass="noBorders tr,noBorders td">
+				<p:row>
+					<p:column>
+						<p:outputLabel
+							value="#{lbl['lbl.ss.price.inquiry.purchase.inquiry.no']}" />
+					</p:column>
+					<p:column width="25%">
+						<p:inputText readonly="true" />
+					</p:column>
+
+					<p:column>
+						<p:outputLabel value="#{lbl['lbl.ss.price.inquiry.ptj.name']}" />
+					</p:column>
+
+					<p:column width="25%">
+						<p:inputText readonly="true" />
+					</p:column>
+
+					<p:column>
+						<p:outputLabel value="#{lbl['lbl.ss.price.inquiry.status']}" />
+					</p:column>
+					<p:column width="25%">
+						<p:inputText readonly="true" />
+					</p:column>
+				</p:row>
+			</p:panelGrid>
+
+			<p:spacer height="15px" />
+			<p:panel header=" Inquiry Details" toggleable="true">
 				<p:panelGrid styleClass="noBorders tr,noBorders td">
 					<p:row>
 						<p:column width="25%">
+							<p:outputLabel value="#{lbl['lbl.ss.price.inquiry.supp.name']}" />
+						</p:column>
+						<p:column width="25%">
+							<p:inputText readonly="true"
+								value="#{directPurchaseBackingBean.managedBean.inquirySupplierItem.cmSupplierItem.smSupplier.supplierName}" />
+						</p:column>
+					</p:row>
+
+					<p:row>
+						<p:column width="20%">
 							<p:outputLabel
-								value="#{lbl['lbl.ss.simple.quote.ministry.code']}" />
+								value="#{lbl['lbl.ss.price.inquiry.product.code']}" />
 						</p:column>
 						<p:column width="25%">
-							<p:inputText readonly="true" />
+							<p:inputText readonly="true"
+								value="#{directPurchaseBackingBean.managedBean.inquirySupplierItem.cmSupplierItem.cmItem.extensionCode}" />
+						</p:column>
+
+						<p:column width="25%">
+							<p:outputLabel value="#{lbl['lbl.ss.price.inquiry.item.name']}" />
 						</p:column>
 						<p:column width="25%">
-							<p:outputLabel value="#{lbl['lbl.ss.simple.quote.department']}" />
+							<p:inputText readonly="true"
+								value="#{directPurchaseBackingBean.managedBean.inquirySupplierItem.cmSupplierItem.cmItem.itemName}" />
 						</p:column>
-						<p:column width="25%">
-							<p:inputText readonly="true" />
-						</p:column>
+
 					</p:row>
 					<p:row>
 						<p:column>
-							<p:outputLabel value="#{lbl['lbl.ss.simple.quote.devision']}" />
-						</p:column>
-						<p:column>
-							<p:inputText readonly="true" />
-						</p:column>
-						<p:column>
-							<p:outputLabel
-								value="#{lbl['lbl.ss.simple.quote.requisitioner']}" />
-						</p:column>
-						<p:column>
-							<p:inputText readonly="true" />
-						</p:column>
-					</p:row>
-				</p:panelGrid>
-			</p:panel>
-			<p:panel label="#{lbl['lbl.ss.panel.title.detail']}"
-				header="#{lbl['lbl.ss.panel.title.detail']}" toggleable="true">
-				<p:panelGrid styleClass="noBorders tr,noBorders td">
-					<p:row>
-						<p:column width="25%">
-							<p:outputLabel
-								value="#{lbl['lbl.ss.item.detail.item.name']}" />
-						</p:column>
-						<p:column width="25%">
-							<p:inputText readonly="true" value="#{directPurchaseBackingBean.managedBean.inquirySupplierItem.cmSupplierItem.cmItem.itemName}"/>
-						</p:column>
-						<p:column width="25%">
-							<p:outputLabel value="#{lbl['lbl.ss.simple.quote.item.product.code']}" />
-						</p:column>
-						<p:column width="25%">
-							<p:inputText readonly="true" value="#{directPurchaseBackingBean.managedBean.inquirySupplierItem.cmSupplierItem.cmItem.extensionCode}"/>
-						</p:column>
-					</p:row>
-					<p:row>
-						<p:column>
-							<p:outputLabel value="#{lbl['lbl.ss.item.detail.desc']}" />
+							<p:outputLabel value="#{lbl['lbl.ss.price.inquiry.desc']}" />
 						</p:column>
 						<p:column colspan="3">
-							<p:inputTextarea readonly="true" value="#{directPurchaseBackingBean.managedBean.inquirySupplierItem.cmSupplierItem.itemDesc}" style="width:80%;"></p:inputTextarea>
+							<p:inputTextarea readonly="true"
+								value="#{directPurchaseBackingBean.managedBean.inquirySupplierItem.cmSupplierItem.itemDesc}"
+								style="width:83%;" />
 						</p:column>
 					</p:row>
+
 					<p:row>
 						<p:column>
-							<p:outputLabel value="#{lbl['lbl.cm.price']}" />
+							<p:outputLabel value="#{lbl['lbl.ss.price.inquiry.uom']}" />
+						</p:column>
+						<p:column width="25%">
+							<p:inputText readonly="true"
+								value="#{directPurchaseBackingBean.managedBean.inquirySupplierItem.cmSupplierItem.uom}">
+							</p:inputText>
+						</p:column>
+					</p:row>
+
+					<p:row>
+						<p:column>
+							<p:outputLabel value="#{lbl['lbl.ss.price.inquiry.min.qty']}" />
+						</p:column>
+						<p:column width="25%">
+							<p:inputText readonly="true"
+								value="#{directPurchaseBackingBean.managedBean.inquirySupplierItem.cmSupplierItem.minOrder}">
+							</p:inputText>
+						</p:column>
+					</p:row>
+
+					<p:row>
+						<p:column>
+							<p:outputLabel value="#{lbl['lbl.ss.price.inquiry.order.qty']}" />
+						</p:column>
+						<p:column width="25%">
+							<p:inputText readonly="true"
+								value="#{directPurchaseBackingBean.managedBean.inquirySupplierItem.cmSupplierItem.maxOrder}">
+							</p:inputText>
+						</p:column>
+					</p:row>
+
+					<p:row>
+						<p:column>
+							<p:outputLabel value="#{lbl['lbl.ss.price.inquiry.price.type']}" />
+						</p:column>
+						<p:column width="25%">
+							<p:selectOneMenu
+								value="#{directPurchaseBackingBean.managedBean.stockAvailability}">
+								<f:selectItem itemLabel="Zone And Tier" />
+							</p:selectOneMenu>
+						</p:column>
+					</p:row>
+
+					<p:row>
+						<p:column>
+							<p:outputLabel
+								value="#{lbl['lbl.ss.price.inquiry.delivery.term']}" />
 						</p:column>
 						<p:column colspan="3">
+							<p:inputText readonly="true"
+								value="#{directPurchaseBackingBean.managedBean.inquirySupplierItem.cmSupplierItem.maxOrder}">
+							</p:inputText>
+						</p:column>
+					</p:row>
+
+					<p:row>
+						<p:column>
+							<p:outputLabel
+								value="#{lbl['lbl.ss.price.inquiry.inquiry.date']}" />
+						</p:column>
+						<p:column width="25%">
 							<p:inputText readonly="true">
 							</p:inputText>
 						</p:column>
 					</p:row>
+
 					<p:row>
 						<p:column>
-							<p:outputLabel value="#{lbl['lbl.sc.item.date.deliver']}" />
+							<p:outputLabel value="#{lbl['lbl.ss.price.inquiry.day.to.resp']}" />
 						</p:column>
-						<p:column colspan="3">
-							<p:calendar value="#{directPurchaseBackingBean.managedBean.scPrInquiry.dateToDeliver}"></p:calendar>
-						</p:column>
-					</p:row>
-					<p:row>
-						<p:column>
-							<p:outputLabel value="#{lbl['lbl.ss.simple.quote.remark']}"/>
-						</p:column>
-						<p:column colspan="3">
-							<p:inputTextarea value="#{directPurchaseBackingBean.managedBean.scPrInquiry.remark}" style="width:80%;"></p:inputTextarea>
+						<p:column width="25%" colspan="2">
+							<p:inputText value="5" size="3" />
+							<p:inputText readonly="true" />
 						</p:column>
 					</p:row>
 				</p:panelGrid>
 			</p:panel>
+
+			<p:panel header="Response Details" toggleable="true">
+				<p:panelGrid style="width:50%;"
+					styleClass="noBorders tr,noBorders td">
+					<p:row>
+						<p:column>
+							<p:outputLabel value="#{lbl['lbl.ss.price.inquiry.stock.avail']}" />
+						</p:column>
+
+						<p:column colspan="3">
+							<p:selectOneRadio
+								value="#{directPurchaseBackingBean.managedBean.stockAvailability}"
+								rendered="true">
+								<f:selectItem itemLabel="Yes" itemValue="true" />
+								<f:selectItem itemLabel="No" itemValue="false" />
+							</p:selectOneRadio>
+						</p:column>
+
+					</p:row>
+				</p:panelGrid>
+				<p:spacer height="15px" />
+				
+				<p:dataTable id="respDtl" var="supplierItemPrice"
+				value="#{directPurchaseBackingBean.managedBean.supplierItemPrices}"
+				rowKey="#{supplierItemPrice.supplierItemPriceId}" rowIndexVar="index">
+
+					<p:column headerText="#{lbl['lbl.ss.price.inquiry.state']}">
+						<h:outputText value="kl" />
+					</p:column>
+
+					<p:column headerText="#{lbl['lbl.ss.price.inquiry.district']}">
+						<h:outputText value="-" />
+					</p:column>
+
+					<p:column headerText="#{lbl['lbl.ss.price.inquiry.from.qty']}">
+						<h:outputText value="#{supplierItemPrice.scQBZoneTier.fromQty}" />
+					</p:column>
+
+					<p:column headerText="#{lbl['lbl.ss.price.inquiry.to.qty']}">
+						<h:outputText value="#{supplierItemPrice.scQBZoneTier.toQty}" />
+					</p:column>
+
+					<p:column
+						headerText="#{lbl['lbl.ss.price.inquiry.price.published']}">
+						<h:outputText value="433" />
+					</p:column>
+
+					<p:column headerText="#{lbl['lbl.ss.price.inquiry.price.offered']}">
+						<h:outputText value="43" />
+					</p:column>
+
+				</p:dataTable>
+			</p:panel>
+
+			<p:spacer height="15px" />
+			<p:panel header="Remarks" toggleable="true">
+				<p:panelGrid style="width:50%;"
+					styleClass="noBorders tr,noBorders td">
+					<p:row>
+						<p:column width="25%">
+							<p:outputLabel value="Remarks" />
+						</p:column>
+
+						<p:column width="25%">
+							<p:inputTextarea readonly="true" cols="35" rows="3" />
+						</p:column>
+					</p:row>
+				</p:panelGrid>
+			</p:panel>
+		</p:panel>
 	</p:dialog>
 </ui:composition>
