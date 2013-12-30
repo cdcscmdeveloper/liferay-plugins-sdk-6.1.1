@@ -45,10 +45,7 @@
 			<h:outputLabel value="#{lbl['lbl.so.status']}" />
 			<p:selectOneMenu
 				value="#{qTDetailBB.managedBean.qtnTenderSearchBean.qtStatus}" style="margin-top:5px;">
-				<f:selectItem itemLabel="Select One" itemValue="" />
-				<f:selectItem itemLabel="Option 1" itemValue="" />
-				<f:selectItem itemLabel="Option 2" itemValue="" />
-				<f:selectItem itemLabel="Option 3" itemValue="" />
+				<f:selectItems value="#{qTDetailBB.getStatusDropdownValues('SC', 'QT')}" />
 			</p:selectOneMenu>
 		</h:panelGrid>
 
@@ -84,7 +81,7 @@
 					<h:outputText value="#{scQt.qtTitle}" />
 				</p:column>
 				<p:column headerText="#{lbl['lbl.so.procmode']}" style="width:100px;">
-					<h:outputText value="#{scQt.procurementMode}" />
+					<h:outputText value="#{qTDetailBB.getParameterDesc(ParameterTypeConst.scProcurementMode, scQt.procurementMode)}" />
 				</p:column>
 
 				<p:column headerText="#{lbl['lbl.so.crtdt']}" style="width:120px;">
