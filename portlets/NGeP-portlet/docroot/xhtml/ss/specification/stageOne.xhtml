@@ -12,7 +12,7 @@
 		<p:dataTable id="compilence" var="stageoneTechnical"
 			value="#{specificationBackingBean.managedBean.scQtCheckSt1techProposal}"
 			editable="true" rowIndexVar="index" style="width:100%"
-			selection="#{specificationBackingBean.selectedst1TechProposal}"
+			selection="#{specificationBackingBean.managedBean.s1TechSelect}"
 			rowKey="{stageoneTechnical}">
 			<ac:paginator for="compilence" />
 
@@ -71,7 +71,7 @@
 
 		<div align="right">
 			<p:commandButton value="#{lbl['lbl.sc.spec.stage.btn.add']}" process="@this" partialSubmit="true"
-				onclick="compliance.show();"  icon="ui-icon-add" />
+				oncomplete="compliance.show();"  icon="ui-icon-add" actionListener="#{specificationBackingBean.stageOnecompilenceList}" update="compilencestageone" />
 			<p:commandButton value="#{lbl['lbl.sc.spec.stage.btn.delete']}"  icon="ui-icon-delete"/>
 
 		</div>
@@ -80,7 +80,7 @@
 <p:dataTable id="additionaltech" var="stageoneaddTechnical"
 			rowKey="#{stageoneaddTechnical}"
 			value="#{specificationBackingBean.managedBean.scQtCheckSt1techAdditionalProposalList}"
-			selection="#{specificationBackingBean.selectedst1TechAddProposal}"
+			selection="#{specificationBackingBean.managedBean.s1TechAddSelect}"
 			rowIndexVar="index" style="width:100%">
 			<ac:paginator for="additionaltech" />
 			<p:column selectionMode="multiple" style="text-align:center;" />
@@ -151,7 +151,7 @@
 		<p:dataTable id="financeProposal" var="stageonefinanceProp"
 			value="#{specificationBackingBean.managedBean.scQtCheckSt1financeProposalList}"
 			rowKey="#{stageonefinanceProp}"
-			selection="#{specificationBackingBean.selectedst1FinanceProposal}"
+			selection="#{specificationBackingBean.managedBean.s1FinSelect}"
 			style="width:100%" rowIndexVar="index">
 			<ac:paginator for="financeProposal" />
 			<p:column selectionMode="multiple" style="text-align:center;" />
@@ -217,7 +217,7 @@
 		<p:dataTable id="financeAdditional" var="stageonefinanceAdd"
 			value="#{specificationBackingBean.managedBean.scQtCheckSt1financeAdditionalProposalList}"
 			rowKey="#{stageonefinanceAdd}"
-			selection="#{specificationBackingBean.selectedst1FinanceAddProposal}"
+			selection="#{specificationBackingBean.managedBean.s1FinAddSelect}"
 			editable="true" style="width:100%" rowIndexVar="index">
 			<ac:paginator for="financeAdditional" />
 			<p:column selectionMode="multiple" style="text-align:center;" />

@@ -12,9 +12,9 @@
 			styleClass="noBorders tr,noBorders td">
 			<h:outputLabel value="*#{lbl['lbl.sc.spec.peocure.category']}" />
 			<p:selectOneMenu
-				value="#{specificationBackingBean.managedBean.scQtSpec.pmProcurementCategory.procurementCategoryId}">
-				<f:selectItem itemLabel="01 kawalan keselamatan" itemValue="1" />
-				<f:selectItem itemLabel="02 kawalan keselamatan" itemValue="2" />
+				value="#{specificationBackingBean.managedBean.procurementId}">
+					<f:selectItems
+							value="#{specificationBackingBean.getDropdownValues(PmCodeCatConst.procurementCategory)}" />
 
 			</p:selectOneMenu>
 			<h:outputLabel value="#{lbl['lbl.sc.spec.max.proposal']}" />
@@ -27,7 +27,7 @@
 				value="#{specificationBackingBean.managedBean.scQtSpec.evaluationType}">
 				<f:selectItem itemLabel="One Tier" itemValue="1" />
 				<f:selectItem itemLabel="Two Tier" itemValue="2" />
-               <p:ajax event="change" update="weightage" listener="#{specificationBackingBean.tierEvent}"></p:ajax>
+               <p:ajax event="change" process="@this" partialSubmit="true" update="weightage" listener="#{specificationBackingBean.tierEvent}"></p:ajax>
 			</p:selectOneRadio>
 
 
@@ -89,7 +89,7 @@
 
 			<p:selectOneMenu
 				value="#{specificationBackingBean.managedBean.scQtSpec.approverName}">
-				<f:selectItems value="#{specificationBackingBean.approverNames}" />
+				<f:selectItems value="#{specificationBackingBean.managedBean.approvalList}" />
 
 			</p:selectOneMenu>
 

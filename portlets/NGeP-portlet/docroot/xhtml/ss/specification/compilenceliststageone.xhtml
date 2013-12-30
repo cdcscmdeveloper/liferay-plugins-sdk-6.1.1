@@ -12,14 +12,14 @@
 		<p:panel header="#{lbl['lbl.sc.spec.stage.compilence']}" toggleable="true">
 
 			<p:dataTable id="compilencestageone" var="compilance"
-				value="#{specificationBackingBean.managedBean.compilaenceList}"
+				value="#{specificationBackingBean.managedBean.stageOneComplianceList}"
 				editable="true"
-				selection="#{specificationBackingBean.selectedCompilenceList}"
-				rowKey="#{compilance.compilanceId}" rowIndexVar="index">
+				selection="#{specificationBackingBean.managedBean.stageOneComplianceSelect}"
+				rowKey="#{compilance.checkListCategoryId}" rowIndexVar="index">
 
 				<p:column selectionMode="multiple" style="width:2%;text-align:center;" />
 				<p:column headerText="#{lbl['lbl.sc.spec.stage.title']}">
-					<h:outputText value="#{compilance.compilanceTitle}"></h:outputText>
+					<h:outputText value="#{compilance.pmCheckList.checkListName}"></h:outputText>
 				</p:column>
 			</p:dataTable>
 
