@@ -96,7 +96,7 @@
 		<p:spacer height="20" />
 		
 		<h:panelGroup id="supplierItemPnl">
-			<p:dataTable id="supplierItemDt" var="data" lazy="true" rowKey="#{data}"
+			<p:dataTable id="supplierItemDt" var="data" lazy="true" rowKey="#{data}" rowIndexVar="index"
 				value="#{panelBackingBean.managedBean.selectedPanelItem.ctPanelSuppliers}" selectionMode="single"
 				selection="#{panelBackingBean.managedBean.selectedPanelSupplier}" >	
 				<ac:paginator for="supplierItemDt" />  	
@@ -108,10 +108,11 @@
 					</p:row>
 				</p:columnGroup>		
 				<p:column>
-					<p:selectOneMenu value="#{data.supplier.supplierId}">
-						<p:ajax event="change" process="@this" />
-						<f:selectItems value="#{panelBackingBean.getPanelSupplierDropdown()}" />
-					</p:selectOneMenu>						
+					<ac:lov id="supplier" lovId="SM_SUPPLIER"
+						headerText="Supplier Lov" 
+						saveObject="panelBackingBean.managedBean.selectedPanelItem.ctPanelSuppliers[#{index}].supplier"
+						value="#{data.supplier.supplierName}"
+						conditionField="recordStatus^1" /> 						
 				</p:column>
 				<p:column>
 					<p:selectOneMenu value="#{data.ctPanelZone.objectId}">
@@ -120,6 +121,7 @@
 					</p:selectOneMenu>					
 				</p:column>
 			</p:dataTable>		
+			<ac:lovPopup />
 			<p:spacer height="2" />
 			<div class="ppRightBtn">
 				<p:commandButton value="Add" process="@form" partialSubmit="true" icon="ui-icon-add"
@@ -138,5 +140,46 @@
 			</p:confirmDialog>	
 		</h:panelGroup>
 	</p:panel>
+	
+	<p:panel header="#{lbl['lbl.ct.remarks']}" toggleable="true">
+		<table style="width: 100%">
+			<tr>
+				<td width="50%" valign="top">
+					<table style="width: 100%">
+						<tr>
+							<td class="TableFieldLeft" width="24%"><h:outputLabel value="Remark" /></td>
+							<td class="TableFieldRight">
+								<p:dataGrid value="#{ctBackingBean.managedBean.remarkList}" var="remarkVar" rowIndexVar="remarkIndex" columns="1" >
+									<table>
+										<tr>
+											<td rowspan="2" valign="top">
+												<h:graphicImage value="#{ctBackingBean.userImagePath(remarkVar.createdUser.loginId)}" height="30" width="30" />
+											</td>
+											<td width="5"></td>
+											<td>
+												<h:outputText value="#{remarkVar.createdUser.userName}"></h:outputText>,
+												<h:outputText value="#{remarkVar.changedDate}">
+													<f:convertDateTime pattern="dd/MM/yyyy hh:mm aaa" />
+												</h:outputText>
+											</td>
+										</tr>
+										<tr>
+											<td></td>
+											<td>
+												<h:inputTextarea cols="40" value="#{remarkVar.remark}" rendered="#{remarkIndex==0}" /> 
+												<h:outputText value="#{remarkVar.remark}" rendered="#{remarkIndex>0}" style="display: inline-block; width:220px;word-wrap: break-word;" />
+											</td>
+										</tr>
+									</table>
+								</p:dataGrid>
+							</td>
+						</tr>
+					</table>    					
+				</td>
+				<td width="50%" valign="top">
+				</td>
+			</tr>
+		</table>
+	</p:panel>	
 	
 </ui:composition>

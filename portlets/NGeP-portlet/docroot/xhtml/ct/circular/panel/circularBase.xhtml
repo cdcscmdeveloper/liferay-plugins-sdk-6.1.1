@@ -19,6 +19,7 @@
 		<p:tabView id="tabview" orientation="left" >
 			<p:tab id="tabcd" title="Circular Details" >
 	       		<ui:include src="/xhtml/ct/circular/panel/circularDetail.xhtml"/>
+	       		<ui:include src="/xhtml/ct/shared/remarkAndAttachment.xhtml" />
 	       	</p:tab> 
 		 	<p:tab id="tabAgency" title="Zone" >
 	       		<ui:include src="/xhtml/ct/circular/panel/zone.xhtml"/>
@@ -29,9 +30,6 @@
 		 	<p:tab id="tabSetting" title="Setting" rendered="#{panelBackingBean.isPanelAdmin()}" >
 	       		<ui:include src="/xhtml/ct/circular/panel/approverSetting.xhtml" />  
 	       	</p:tab>   
-			<p:tab id="tabSchedule" title="#{lbl['lbl.ct.menu.remark']}" >
-		    	<ui:include src="/xhtml/ct/shared/remarkAndAttachment.xhtml" />   
-		    </p:tab>  
 		</p:tabView>
 	</ui:define>
 		    

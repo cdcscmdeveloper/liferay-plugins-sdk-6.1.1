@@ -3,6 +3,7 @@
  */
 package my.ep.web.backingbean.ct.circular.panel;
 
+import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
@@ -42,6 +43,7 @@ import my.ep.dto.pm.common.status.StatusResDTO;
 import my.ep.exception.EpException;
 import my.ep.jaxb.ct.circular.CTCircularContractDataType;
 import my.ep.jaxb.ct.circular.cancellation.CTCircularCancellationDataType;
+import my.ep.persistence.entity.ct.CtRemark;
 import my.ep.persistence.entity.ct.circular.CtCancelCircularReq;
 import my.ep.persistence.entity.ct.circular.CtCircular;
 import my.ep.persistence.entity.ct.circular.CtCircularVer;
@@ -97,6 +99,7 @@ public class PanelBackingBean extends BaseBackingBean<PanelManagedBean>{
 		if(getManagedBean().getOutComes()==null) {
 			getManagedBean().setOutComes(new String[]{"SAVE","SUBMIT"});
 			getManagedBean().setCircularVer(new CtCircularVer());
+			initializeRemarks();
 			
 			ContractBackingBean ctBB = new ContractBackingBean();
 			ctBB.initializeRemarkAndAttachement(getManagedBean().getRemarkList(), getManagedBean().getAttachmentList());
@@ -111,6 +114,10 @@ public class PanelBackingBean extends BaseBackingBean<PanelManagedBean>{
 			FacesScopes facesScopes = new FacesScopes();
 			getManagedBean().setCircularAdmin(facesScopes.getUserSessionBean().getLoginId());
 		}
+	}
+	
+	private FacesScopes getFacesScopes() {
+		return new FacesScopes();
 	}
 	
 	private void initializeApproverGroup() {
@@ -155,6 +162,19 @@ public class PanelBackingBean extends BaseBackingBean<PanelManagedBean>{
 			FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR,e.toString(), e.getMessage()));
 		} finally {
 			userSO = null;
+		}
+	}
+	
+	private void initializeRemarks() {
+		List<CtRemark> zoneRemarks = getManagedBean().getCircularVer().getZoneRemarks();
+		if(zoneRemarks.size()==0) {
+			CtRemark remark = new CtRemark();
+			remark.setCreatedBy(getFacesScopes().getUserSessionBean().getUserId());
+			remark.setCreatedDate(new Timestamp(System.currentTimeMillis()));
+			remark.setChangedBy(remark.getCreatedBy());
+			remark.setChangedDate(remark.getCreatedDate());
+			remark.setCreatedUser(getFacesScopes().getUserSessionBean());
+			zoneRemarks.add(0, remark);
 		}
 	}
 	
@@ -656,22 +676,6 @@ public class PanelBackingBean extends BaseBackingBean<PanelManagedBean>{
 		    	}
 		    	items[i++] = new SelectItem(panelZone.getObjectId(), panelZone.getName());
 		    }
-		} catch (Exception e) {
-			e.printStackTrace();
-			FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR,e.toString(), e.getMessage()));
-		}
-	    return items;
-	}
-	
-	// Temporary table. this should replace with supplier lov later
-	public SelectItem[] getPanelSupplierDropdown() {
-		SelectItem[] items = null;
-		try {
-		    items = new SelectItem[4];
-		    items[0] = new SelectItem(0L, "- Select One -");
-		    items[1] = new SelectItem(1L, "ABC News");
-		    items[2] = new SelectItem(2L, "Maxis Malaysia Berhad");
-		    items[3] = new SelectItem(3L, "MDEC malaysia");
 		} catch (Exception e) {
 			e.printStackTrace();
 			FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR,e.toString(), e.getMessage()));
