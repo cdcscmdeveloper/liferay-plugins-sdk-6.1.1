@@ -12,7 +12,6 @@
 	#js ("$javascript_folder/date_time.js")
 	#js ("$javascript_folder/jquery.min.js")
 	#js ("$javascript_folder/jquery.cookie.js")
-	#js ("$javascript_folder/close.js")
 	<script language="javascript">
 		function resizeText(multiplier) 
 		{
@@ -112,7 +111,7 @@
 		<script>
 	jQuery(document).ready(function(){
 	
-   var colorscheme = jQuery.cookie('colorscheme_');
+   var colorscheme = jQuery.cookie('colorscheme');
    
    if (colorscheme === "undefined"){
 	
@@ -135,7 +134,7 @@
    
   jQuery("#bgreen").click(function(){
    
-	jQuery.cookie('colorscheme_', "green", { expires: 7 });
+	jQuery.cookie('colorscheme', "green", { expires: 7 });
 	
 	location.reload();
   });
@@ -143,7 +142,7 @@
   
   jQuery("#bblue").click(function(){
     
-	jQuery.cookie('colorscheme_', "blue", { expires: 7 });
+	jQuery.cookie('colorscheme', "blue", { expires: 7 });
 	
 	location.reload();
   });
