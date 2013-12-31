@@ -10,8 +10,6 @@
 	$theme.include($top_head_include)
 	
 	#js ("$javascript_folder/date_time.js")
-	#js ("$javascript_folder/jquery.min.js")
- 	#js ("$javascript_folder/jquery.cookie.js")
 	<script language="javascript">
 		function resizeText(multiplier) 
 		{

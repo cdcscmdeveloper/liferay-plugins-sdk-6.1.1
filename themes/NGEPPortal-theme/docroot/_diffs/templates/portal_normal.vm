@@ -105,6 +105,12 @@
     	});  
 	});  
 	</script>
+	
+	<script>
+ 		jQuery(document).ready(function(){
+ 
+   			var colorscheme = jQuery.cookie('colorscheme_')});   
+	</script>
 
 </head>
 
