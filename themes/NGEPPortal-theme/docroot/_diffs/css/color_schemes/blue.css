@@ -72,3 +72,7 @@
 .blue .footer-links ul li a, .blue #dockbar .aui-menu a:HOVER ,.blue .middle-navi-wrapper a:HOVER ,.blue .middle-navi-right-wrapper ul li.btn-language div.dropdown-language-wrapper a:hover,.blue .middle-navi-right-wrapper ul li.btn-language div.dropdown-language-wrapper a.active{
 	color: #0BAADF;
 }
+
+.blue .middle-navi-right-wrapper ul li.btn-login-register{
+	background: #0BAADF;
+}
