@@ -2,23 +2,17 @@ package my.ep.web.backingbean.ss.loiloa;
 
 import java.util.List;
 
-import javax.annotation.PostConstruct;
 import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.RequestScoped;
 import javax.faces.context.FacesContext;
 
 import my.ep.biz.service.ss.quationtender.IQTAwardSO;
-import my.ep.biz.service.ss.quationtender.IQTDetailSO;
 import my.ep.dto.ss.quationtender.AwardSupplierReqDTO;
 import my.ep.dto.ss.quationtender.AwardSupplierResDTO;
-import my.ep.dto.ss.quationtender.QuationTenderReqDTO;
-import my.ep.dto.ss.quationtender.QuationTenderResDTO;
 import my.ep.factory.EpLogger;
+import my.ep.persistence.entity.ss.quationtender.ScQt;
 import my.ep.persistence.entity.ss.quationtender.ScQtProposalRanking;
-import my.ep.util.lookupservice.EpEjbBusinessDelegate;
-import my.ep.web.backingbean.BaseBackingBean;
-import my.ep.web.backingbean.ss.quatationtender.QTDetailBackingBean;
 import my.ep.web.backingbean.ss.quatationtender.SourcingBaseBackingBean;
 import my.ep.web.managedbean.ss.loiloa.LOILOADetailManagedBean;
 import my.ep.web.ss.quationtender.common.QTConstants;
@@ -37,15 +31,13 @@ public class LOILOADetailsBackingBean extends
 	public static Logger log = EpLogger
 			.getLogger(LOILOADetailsBackingBean.class);
 
-	private static final String MODULE_NAME = "ss";
+	//private static final String MODULE_NAME = "ss";
 
 	public LOILOADetailsBackingBean() {
 		log.info("inside LOILOADetailsBackingBean constructor");
 		retrieveLOILOAList();
 
 	}
-
-		
 
 	private void debugLogger(Object message) {
 		if (log.isDebugEnabled()) {
@@ -63,26 +55,29 @@ public class LOILOADetailsBackingBean extends
 		IQTAwardSO qtAwardSO = null;
 		try {
 			qtAwardSO = BusinessDelegate.getInstance().getServiceObject(
-					MODULE_NAME, IQTAwardSO.class);
+					QTConstants.SS_MODULE, IQTAwardSO.class);
 			AwardSupplierReqDTO reqDTO = new AwardSupplierReqDTO();
 			reqDTO.setQtId(146L);
 
 			AwardSupplierResDTO resDTO = qtAwardSO.retrieveLOILOAList(reqDTO);
+			
+			ScQt scQt = resDTO.getScQt();
+			if (scQt != null) {
+				System.out.println("Qt Id and Qt No : " + scQt.getQtId() + "|"
+						+ scQt.getQtNo());
+				System.out.println("Award Type : " + scQt.getAwardType());
+			}
+			getManagedBean().setQt(scQt);
+
 
 			List<ScQtProposalRanking> list = resDTO
 					.getProposalRankingResultBean().getResultList();
 			System.out.println("list: " + list.size());
-			for (ScQtProposalRanking scQtProposalRanking : list) {
-				System.out.println("Proposal Ranking Id : "
-						+ scQtProposalRanking.getQtProposalRankingId());
-			}
-			System.out.println("Supplier Name : " + list.get(0).getScQtProposalEvaluate().getScQtProposal().getScQtSupplier().getSmSupplier().getSupplierName());
-			System.out.println("LOI Status : " + list.get(0).getScLoi().getPmStatus().getPmStatusDescs().get(0).getStatusName());
-			System.out.println("LOA Status : " + list.get(0).getScLoa().getPmStatus().getPmStatusDescs().get(0).getStatusName());
-			
+
 			getManagedBean().setScQtProposalRankingList(list);
 			getManagedBean().setQt(resDTO.getScQt());
 			populateParentOrgProfile(resDTO.getScQt());
+
 		} catch (Exception ex) {
 			ex.printStackTrace();
 			FacesContext.getCurrentInstance().addMessage(
