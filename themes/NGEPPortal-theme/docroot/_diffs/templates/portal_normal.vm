@@ -109,11 +109,49 @@
 	});  
 	</script>
 	
-	<script>
- 		jQuery(document).ready(function(){
- 
-   			var colorscheme = jQuery.cookie('colorscheme_')});   
-	</script>
+		<script>
+	jQuery(document).ready(function(){
+	
+   var colorscheme = jQuery.cookie('colorscheme_');
+   
+   if (colorscheme === "undefined"){
+	
+   }
+   else
+   {
+   		if(!jQuery('body').hasClass(colorscheme))
+		   		{
+		   			if(colorscheme==="green")
+		   			{
+		   				jQuery('body').removeClass('blue');
+		   			}
+		   			else
+		   			{
+		   				jQuery('body').removeClass('green');
+		   			}
+		   			jQuery('body').addClass(colorscheme);
+		   		};
+   };
+   
+  jQuery("#bgreen").click(function(){
+   
+	jQuery.cookie('colorscheme_', "green", { expires: 7 });
+	
+	location.reload();
+  });
+  
+  
+  jQuery("#bblue").click(function(){
+    
+	jQuery.cookie('colorscheme_', "blue", { expires: 7 });
+	
+	location.reload();
+  });
+  
+  
+  
+});
+</script>
 
 </head>
 
@@ -188,9 +226,9 @@ $theme.include($body_top_include)
                         <li class="btn-reset"><a href="javascript:resetText();">A</a></li>
                         <li class="btn-larger"><a href="javascript:resizeText(1);">A+</a></li>
                         <li class="divider"></li>
-                    	<li class="btn-red"><a href="#"><img src="$images_folder/navi/color-red.jpg" title="Red"/></a></li>
-                    	<li class="btn-green"><a href="#"><img src="$images_folder/navi/color-green.jpg" title="Green" /></a></li>
-                    	<li class="btn-blue"><a href="#"><img src="$images_folder/navi/color-blue.jpg" title="Blue" /></a></li>
+                    	<li class="btn-red"><div id="bred"><img src="$images_folder/navi/color-red.jpg" title="Red"/></div></li>
+                    	<li class="btn-green"><div id="bgreen"><img src="$images_folder/navi/color-green.jpg" title="Green" /></div></li>
+                    	<li class="btn-blue"><div id="bblue"><img src="$images_folder/navi/color-blue.jpg" title="Blue" /></div></li>
                     	<li class="divider"></li>
                         <li class="btn-language">
                             <a href="#" id="SelectedLanguage">English</a>

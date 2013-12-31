@@ -122,9 +122,9 @@ ul.btn-section li a:hover{background-position:bottom;}
 .middle-navi-right-wrapper ul li.divider-no-padding-right{padding-right:0; background-position:top right;}
 .middle-navi-right-wrapper ul li.btn-language{padding:0 15px 0 0;}
 .middle-navi-right-wrapper ul li.btn-help{padding:2px 0 0 0;}
-.middle-navi-right-wrapper ul li.btn-red{padding:4px 4px 0 0;}
-.middle-navi-right-wrapper ul li.btn-green{padding:4px 4px 0 0;}
-.middle-navi-right-wrapper ul li.btn-blue{padding:4px 0 0 0;}
+.middle-navi-right-wrapper ul li.btn-red{padding:4px 4px 0 0; cursor:pointer;}
+.middle-navi-right-wrapper ul li.btn-green{padding:4px 4px 0 0; cursor:pointer;}
+.middle-navi-right-wrapper ul li.btn-blue{padding:4px 0 0 0; cursor:pointer;}
 .middle-navi-right-wrapper ul li.btn-reset{padding:3px 10px 0 0;}
 .middle-navi-right-wrapper ul li.btn-smaller{padding:3px 10px 0 0; font-size:11px;}
 .middle-navi-right-wrapper ul li.btn-larger{padding:1px 0 0 0; font-size:13px;}
