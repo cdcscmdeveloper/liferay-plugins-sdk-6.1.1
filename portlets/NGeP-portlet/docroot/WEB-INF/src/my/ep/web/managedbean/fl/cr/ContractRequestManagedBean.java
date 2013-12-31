@@ -74,6 +74,7 @@ public class ContractRequestManagedBean extends BaseManagedBean {
 	private String flDocId;
 	private String buttonVal;
 	private boolean isMto = false;
+	private boolean isImportedItems = false;
 		
 	//get GOSODO
 	private Long goId;
@@ -565,6 +566,22 @@ public class ContractRequestManagedBean extends BaseManagedBean {
 	 */
 	public void setSelectedItemsRows(List<FlFulfilmentItemAddr> selectedItemsRows) {
 		this.selectedItemsRows = selectedItemsRows;
+	}
+
+
+	/**
+	 * @return the isImportedItems
+	 */
+	public boolean isImportedItems() {
+		return isImportedItems;
+	}
+
+
+	/**
+	 * @param isImportedItems the isImportedItems to set
+	 */
+	public void setImportedItems(boolean isImportedItems) {
+		this.isImportedItems = isImportedItems;
 	}
 
 

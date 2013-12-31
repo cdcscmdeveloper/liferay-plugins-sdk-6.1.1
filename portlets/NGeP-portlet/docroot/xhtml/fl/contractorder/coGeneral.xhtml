@@ -65,7 +65,7 @@
 						disabled="true"></p:inputText></td>
 				<td><p:outputLabel value="#{lbl['lbl.fl.contract.type']}" /></td>
 				<td><p:inputText size="35"
-						value="#{flOrderBB.managedBean.flRequest.ctContract.contractType.code}"
+						value="#{flOrderBB.getParameterDesc(flOrderBB.managedBean.flRequest.ctContract.contractType)}"
 						disabled="true" /></td>
 			</tr>
 			<tr>
@@ -75,7 +75,7 @@
 						disabled="true"></p:inputText></td>
 				<td><p:outputLabel value="#{lbl['lbl.fl.fulfilment.type']}" /></td>
 				<td><p:inputText size="35"
-						value="#{flOrderBB.managedBean.flRequest.ctContract.fulfillmentType.code}"
+						value="#{flOrderBB.getParameterDesc(flOrderBB.managedBean.flRequest.ctContract.fulfillmentType)}"
 						disabled="true" /></td>
 			</tr>
 			<tr>

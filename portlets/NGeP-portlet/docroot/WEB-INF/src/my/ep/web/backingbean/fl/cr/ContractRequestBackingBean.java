@@ -137,6 +137,7 @@ public class ContractRequestBackingBean extends BaseBackingBean<ContractRequestM
 			reqDTO.setFlFulfilmentRequest(flRequest);
 			reqDTO.setContractRequest(Boolean.TRUE);
 			reqDTO.setMto(getManagedBean().isMto());
+			reqDTO.setImportedItems(getManagedBean().isImportedItems());
 			reqDTO.setOutcome(action);
 			reqDTO.setTaskId(getManagedBean().getTaskId());
 			reqDTO.setSelectedApprovers(getManagedBean().getApproverModel().getTarget());
@@ -270,7 +271,7 @@ public class ContractRequestBackingBean extends BaseBackingBean<ContractRequestM
 		if(resDTO.getPmOrgProfile() != null){
 			getManagedBean().getFlRequest().setCreatedOrgProfile(resDTO.getPmOrgProfile());
 		}
-		this.getManagedBean().setOutComes(new String[]{"Save", "Submit"}); 
+		this.getManagedBean().setOutComes(new String[]{"Submit"}); 
 		FulfilmentBackingBean flBackingBean = new FulfilmentBackingBean();
 		flBackingBean.initializeRemarkAndAttachement(flBB.getManagedBean().getRemarkList(), flBB.getManagedBean().getAttachmentList());
 
@@ -383,8 +384,8 @@ public class ContractRequestBackingBean extends BaseBackingBean<ContractRequestM
 				//TODO Change the orgProfileId value
 				String language = new FacesScopes().getUserLocale().getLanguage();
 				searchBean.getDataFilterBeans().add(new SearchFilterBean("contract.latestContractVer.ctAgencies.orgProfile.orgProfileId",SearchOperator.OPERATOR_EQUALS.value(),1147L));
-				searchBean.getDataFilterBeans().add(new SearchFilterBean("contract.fulfillmentType.pmCodeDescs.languageCode",SearchOperator.OPERATOR_EQUALS.value(),language));
-				searchBean.getDataFilterBeans().add(new SearchFilterBean("contract.contractType.pmCodeDescs.languageCode",SearchOperator.OPERATOR_EQUALS.value(),language));
+				searchBean.getDataFilterBeans().add(new SearchFilterBean("contract.fulfillmentType.pmParameterDescs.languageCode",SearchOperator.OPERATOR_EQUALS.value(),language));
+				searchBean.getDataFilterBeans().add(new SearchFilterBean("contract.contractType.pmParameterDescs.languageCode",SearchOperator.OPERATOR_EQUALS.value(),language));
 
 				ContractReqDTO reqDTO = new ContractReqDTO();
 				reqDTO.setActiveContractSearchBean(searchBean);
