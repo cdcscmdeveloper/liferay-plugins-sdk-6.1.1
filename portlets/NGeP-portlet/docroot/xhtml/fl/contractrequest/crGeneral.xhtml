@@ -9,9 +9,14 @@
 	<p:messages id="msgs" />
 	<table>
 		<tr>
-			<td><p:outputLabel value="For Mto Testing Purpose: " /></td>
+			<td><p:outputLabel value="Is Mto: " /></td>
 			<td><p:selectBooleanCheckbox
 					value="#{contractRequestBackingBean.managedBean.mto}" /></td>
+		</tr>
+		<tr>
+			<td><p:outputLabel value="Have Imported Items: " /></td>
+			<td><p:selectBooleanCheckbox
+					value="#{contractRequestBackingBean.managedBean.importedItems}" /></td>
 		</tr>
 	</table>
 	<p:panel header="FULFILMENT DETAIL" toggleable="true" id="flDetails">
@@ -66,7 +71,7 @@
 					</p:selectOneMenu></td>
 				<td><p:outputLabel value="#{lbl['lbl.fl.contract.type']}" /></td>
 				<td><p:inputText size="35"
-						value="#{contractRequestBackingBean.managedBean.flRequest.ctContract.contractType.code}"
+						value="#{contractRequestBackingBean.getParameterDesc(contractRequestBackingBean.managedBean.flRequest.ctContract.contractType)}"
 						disabled="true" /></td>
 			</tr>
 			<tr>
@@ -79,7 +84,7 @@
 					</p:selectOneMenu></td>
 				<td><p:outputLabel value="#{lbl['lbl.fl.fulfilment.type']}" /></td>
 				<td><p:inputText size="35"
-						value="#{contractRequestBackingBean.managedBean.flRequest.ctContract.fulfillmentType.code}"
+						value="#{contractRequestBackingBean.getParameterDesc(contractRequestBackingBean.managedBean.flRequest.ctContract.fulfillmentType)}"
 						disabled="true" /></td>
 			</tr>
 			<tr>

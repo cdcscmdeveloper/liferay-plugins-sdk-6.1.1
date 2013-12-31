@@ -91,13 +91,12 @@
 			</p:column>
 			<p:column headerText="Ord. Qty.">
 				<p:inputText value="#{item.orderedQty}">
-					<p:ajax update="subTotalTxt"
-						listener="#{contractRequestBackingBean.calculateSubTotal(item.orderedQty)}"></p:ajax>
+					<p:ajax update="subTotalTxt"></p:ajax>
 				</p:inputText>
 			</p:column>
 			<p:column headerText="Sub Total">
 				<p:inputText id="subTotalTxt"
-					value="#{contractRequestBackingBean.managedBean.selectedItemAddr.subTotal}"
+					value="#{item.orderedQty}"
 					disabled="true"></p:inputText>
 			</p:column>
 		</p:dataTable>
