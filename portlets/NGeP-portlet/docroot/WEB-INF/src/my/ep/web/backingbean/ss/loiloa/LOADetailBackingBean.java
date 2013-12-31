@@ -3,6 +3,7 @@ package my.ep.web.backingbean.ss.loiloa;
 import java.math.BigDecimal;
 import java.sql.Timestamp;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
@@ -11,7 +12,6 @@ import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.RequestScoped;
 import javax.faces.context.FacesContext;
-import javax.faces.model.SelectItem;
 
 import my.ep.biz.service.pm.authorization.orgprofile.IOrgProfileSO;
 import my.ep.biz.service.pm.authorization.user.IUserSO;
@@ -31,6 +31,7 @@ import my.ep.dto.ss.quationtender.AwardSupplierResDTO;
 import my.ep.factory.EpLogger;
 import my.ep.persistence.entity.pm.authorization.PmOrgProfile;
 import my.ep.persistence.entity.pm.authorization.PmUser;
+import my.ep.persistence.entity.pm.authorization.PmUserOrg;
 import my.ep.persistence.entity.pm.common.PmAddressType;
 import my.ep.persistence.entity.pm.common.PmStatus;
 import my.ep.persistence.entity.sm.SmMofAccount;
@@ -48,7 +49,7 @@ import my.ep.type.pm.OrganizationType;
 import my.ep.type.pm.RoleCode;
 import my.ep.type.ss.LoiLoaDocType;
 import my.ep.util.lookupservice.EpEjbBusinessDelegate;
-import my.ep.web.backingbean.ss.quatationtender.SourcingBaseBackingBean;
+import my.ep.web.backingbean.BaseBackingBean;
 import my.ep.web.managedbean.ss.loiloa.LOADetailManagedBean;
 import my.ep.web.ss.quationtender.common.QTConstants;
 import my.ep.web.util.FacesScopes;
@@ -62,10 +63,8 @@ import org.apache.log4j.Logger;
  */
 @ManagedBean(name = "lOADetailBackingBean")
 @RequestScoped
-public class LOADetailBackingBean extends SourcingBaseBackingBean<LOADetailManagedBean> {
+public class LOADetailBackingBean extends BaseBackingBean<LOADetailManagedBean> {
 	public static Logger log = EpLogger.getLogger(LOADetailBackingBean.class);
-
-	private static final String MODULE_NAME = "ss";
 
 	public LOADetailBackingBean() {
 		log.info("inside LOADetailBackingBean constructor");
@@ -99,65 +98,38 @@ public class LOADetailBackingBean extends SourcingBaseBackingBean<LOADetailManag
 		}
 	}
 
-	public List<SelectItem> getApproverNames() {
-		debugLogger("getApproverNames");
-		List<SelectItem> selectItems = new ArrayList<SelectItem>();
+	/**
+	 * getting Approver drop down listing
+	 */
+	public List<PmUser> getApproverNames() {
+		List<PmUser> approverUserNames = this.getManagedBean().getApproverName();
 
-		try {
-			IUserSO userSO = BusinessDelegate.getInstance().getServiceObject(
-					"pm", IUserSO.class);
-			List<PmUser> comitteeUsersUsers = new ArrayList<PmUser>();
-			if (getManagedBean().getComitteeUsers() == null) {
+		if (approverUserNames == null) {
+			IUserSO userSO = null;
+			try {
+				userSO = BusinessDelegate.getInstance().getServiceObject(
+						QTConstants.PM_MODULE, IUserSO.class);
+
+				// Get Approver Users
 				UserReqDTO reqDTO = new UserReqDTO();
 				reqDTO.setRoleCode(RoleCode.APPROVER.value());
+
 				UserResDTO resDTO = userSO.retrieveUserListByRole(reqDTO);
-				comitteeUsersUsers = resDTO.getUserList();
+				approverUserNames = resDTO.getUserList();
+				System.out.println("Approver List: " + approverUserNames.size());
+				this.getManagedBean().setApproverName(approverUserNames);
+
+			} catch (Exception ex) {
+				ex.printStackTrace();
+				FacesContext.getCurrentInstance().addMessage(
+						null,
+						new FacesMessage(FacesMessage.SEVERITY_ERROR, ex
+								.toString(), ex.getMessage()));
+			} finally {
+				userSO = null;
 			}
-			selectItems.add(new SelectItem(null, "--Select One--"));
-			for (int i = 0; i < comitteeUsersUsers.size(); i++) {
-				PmUser user = (PmUser) comitteeUsersUsers.get(i);
-				selectItems.add(new SelectItem(user.getUserId(), user
-						.getUserName()));
-			}
-			this.getManagedBean().setComitteeUsers(selectItems);
-		} catch (Exception e) {
-			e.printStackTrace();
 		}
-		return getManagedBean().getComitteeUsers();
-	}
-	
-	
-	public void handleContractPTJ() {
-		debugLogger("handleContractPTJ");
-		
-		IOrgProfileSO orgProfileSO;
-		try {
-			orgProfileSO = EpEjbBusinessDelegate.getInstance()
-					.getServiceObject("pm", IOrgProfileSO.class);
-			
-			OrgProfileReqDTO reqDTO = new OrgProfileReqDTO();
-			reqDTO.setUserId(1L);
-			reqDTO.setOrgType(OrganizationType.MINISTRY.value());
-			
-			OrgProfileResDTO resDTO = orgProfileSO
-					.retrieveOrgProfileListByOrgType(reqDTO);
-			
-			List<PmOrgProfile> list = resDTO.getOrgProfileList();
-			System.out.println("Ministry List: " + list.size());
-			
-			reqDTO.setOrgType(OrganizationType.DIVISION.value());
-			resDTO = orgProfileSO.retrieveOrgProfileListByOrgType(reqDTO);
-			list = resDTO.getOrgProfileList();
-			System.out.println("Division List: " + list.size());
-			for (PmOrgProfile orgProfile : list) {
-				System.out.println(orgProfile.getOrgProfileId() + "|"
-						+ orgProfile.getOrgCode() + "|" + orgProfile.getOrgName());
-			}
-			getManagedBean().setUserDivisionList(list);
-		} catch (Exception e) {
-			
-		}
-		
+		return approverUserNames;
 	}
 
 	/**
@@ -181,7 +153,7 @@ public class LOADetailBackingBean extends SourcingBaseBackingBean<LOADetailManag
 				reqDTO.setParentOrgProfileId(parentOrgProfileId);
 
 				IOrgProfileSO orgProfileSO = EpEjbBusinessDelegate
-						.getInstance().getServiceObject("pm",
+						.getInstance().getServiceObject(QTConstants.PM_MODULE,
 								IOrgProfileSO.class);
 				OrgProfileResDTO resDTO = orgProfileSO
 						.retrieveOrgProfileListByOrgType(reqDTO);
@@ -221,7 +193,7 @@ public class LOADetailBackingBean extends SourcingBaseBackingBean<LOADetailManag
 				reqDTO.setParentOrgProfileId(parentOrgProfileId);
 
 				IOrgProfileSO orgProfileSO = EpEjbBusinessDelegate
-						.getInstance().getServiceObject("pm",
+						.getInstance().getServiceObject(QTConstants.PM_MODULE,
 								IOrgProfileSO.class);
 				OrgProfileResDTO resDTO = orgProfileSO
 						.retrieveOrgProfileListByOrgType(reqDTO);
@@ -237,6 +209,26 @@ public class LOADetailBackingBean extends SourcingBaseBackingBean<LOADetailManag
 		this.getManagedBean().getQt().getPmOrgProfile().setOrgProfileId(null);
 	}
 
+	public void populateParentOrgProfile(ScQt scQt) {
+		PmOrgProfile parentOrgProfile = scQt.getPmOrgProfile()
+				.getParentOrgProfile();
+
+		while (parentOrgProfile != null) {
+			// Ministry
+			if (OrganizationType.MINISTRY.value().equals(
+					parentOrgProfile.getOrgTypeCode().getParameterCode())) {
+				scQt.setMinistryOrgProfile(parentOrgProfile);
+			}
+			// Department
+			else if (OrganizationType.DEPARTMENT.value().equals(
+					parentOrgProfile.getOrgTypeCode().getParameterCode())) {
+				scQt.setDepartmentOrgProfile(parentOrgProfile);
+			}
+
+			parentOrgProfile = parentOrgProfile.getParentOrgProfile();
+		}
+	}
+
 	public String createLOAAction(ScQtProposalRanking scQtProposalRanking,
 			String docType) {
 		debugLogger("createLOAAction");
@@ -247,7 +239,7 @@ public class LOADetailBackingBean extends SourcingBaseBackingBean<LOADetailManag
 			long id = scQtProposalRanking.getQtProposalRankingId();
 
 			iqtAwardSO = BusinessDelegate.getInstance().getServiceObject(
-					MODULE_NAME, IQTAwardSO.class);
+					QTConstants.SS_MODULE, IQTAwardSO.class);
 			AwardSupplierReqDTO reqDTO = new AwardSupplierReqDTO();
 			reqDTO.setDocType(LoiLoaDocType.DOCTYPE_QUOTATION_TENDER.value());
 			reqDTO.setDocId(id);
@@ -266,19 +258,12 @@ public class LOADetailBackingBean extends SourcingBaseBackingBean<LOADetailManag
 			}
 
 			ScLoa scLoa = resDTO.getScLoa();
-
 			if (scLoa != null) {
-				System.out.println("Loi Id : " + scLoa.getLoaId());
+				System.out.println("LOA Id : " + scLoa.getLoaId());
 				scLoa.setLoaNo("12345");
 				getManagedBean().setScLoa(scLoa);
 
 				getManagedBean().setScQtProposalRanking(scQtProposalRanking);
-				/*
-				 * getManagedBean().getScLoa().setSupplierName(
-				 * getManagedBean().getScQtProposalRanking()
-				 * .getScQtProposal().getScQtSupplier()
-				 * .getSmSupplier().getSupplierName());
-				 */
 
 				getManagedBean().setSmMofAccount(new SmMofAccount());
 				getManagedBean().getSmMofAccount().setMofNo("MOF000001");
@@ -289,6 +274,12 @@ public class LOADetailBackingBean extends SourcingBaseBackingBean<LOADetailManag
 
 				populateParentOrgProfile(getManagedBean().getQt());
 
+				System.out.println("Fulfilment Type : "
+						+ getManagedBean().getQt().getScQtSpec()
+								.getFulfilmentType());
+				System.out.println("Status : " +
+						getManagedBean().getScLoa().getPmStatus().getPmStatusDescs().get(0).getStatusName());
+				
 				// System.out.println("Status : " +
 				// getManagedBean().getScLoa().getPmStatus().getPmStatusDescs().get(0).getStatusName());
 				// System.out.println("Award Type : " +
@@ -324,11 +315,46 @@ public class LOADetailBackingBean extends SourcingBaseBackingBean<LOADetailManag
 						.getDeductionResultBean().getResultList();
 				System.out.println("DeductionList : " + deductionList.size());
 				getManagedBean().setScQtDeductionList(deductionList);
-				
-				handleContractPTJ();
 
+				getManagedBean().setApproverName(getApproverNames());
+				System.out.println("Approver User Id : "
+						+ getManagedBean().getScLoa().getApproverUser()
+								.getUserId());
+				getManagedBean().setContractSignerList(getContractSigners());
+
+				System.out.println("LOA Offered Price : "
+						+ getManagedBean().getScLoa().getLoaAmount());
+				if (getManagedBean().getScLoa().getLoaAmount().intValue() > 500000) {
+					getManagedBean().setBondPercentage("5%");
+					getManagedBean().setPercentageBond(0.05);
+					System.out.println("Bond Percentage : "
+							+ getManagedBean().getPercentageBond());
+				} else if (getManagedBean().getScLoa().getLoaAmount()
+						.intValue() > 200000
+						&& getManagedBean().getScLoa().getLoaAmount()
+								.intValue() < 500000) {
+					getManagedBean().setBondPercentage("2.5%");
+					getManagedBean().setPercentageBond(0.025);
+					System.out.println("Bond Percentage : "
+							+ getManagedBean().getPercentageBond());
+				}
+
+				System.out.println("Contract Duration : "
+						+ getManagedBean().getQt().getScQtSpec()
+								.getContractDuration());
+
+				int amt = (int) (((getManagedBean().getScLoa().getLoaAmount()
+						.intValue() / getManagedBean().getQt().getScQtSpec()
+						.getContractDuration().intValue()) * 12) * getManagedBean()
+						.getPercentageBond());
+
+				System.out.println("D :" + amt);
+				getManagedBean().setBondAmount(amt);
+				System.out.println("bond amount : "
+						+ getManagedBean().getBondAmount());
+
+				retrieveBondDtls(getManagedBean().getScLoa());
 			} else {
-
 				getManagedBean().setQt(scQt);
 
 				populateParentOrgProfile(getManagedBean().getQt());
@@ -336,6 +362,9 @@ public class LOADetailBackingBean extends SourcingBaseBackingBean<LOADetailManag
 				getManagedBean().setScLoa(new ScLoa());
 
 				getManagedBean().setScQtProposalRanking(scQtProposalRanking);
+
+				PmOrgProfile orgProfile = new PmOrgProfile();
+				getManagedBean().getScLoa().setContractPTJProfile(orgProfile);
 
 				getManagedBean().getScLoa().setSmSupplier(
 						getManagedBean().getScQtProposalRanking()
@@ -356,38 +385,107 @@ public class LOADetailBackingBean extends SourcingBaseBackingBean<LOADetailManag
 				getManagedBean().getScLoa().setLoaDuration(14);
 				getManagedBean().getScLoa().setBondDuration(30);
 				getManagedBean().getScLoa().setLoaNo("12345");
-				getManagedBean().getScLoa().setLoaAmount(new BigDecimal(10000));
+				getManagedBean().getScLoa().setLoaAmount(
+						new BigDecimal(1000000));
+				getManagedBean().getScLoa().setMtoDuration(14);
 
 				getManagedBean().setSmMofAccount(new SmMofAccount());
 				getManagedBean().getSmMofAccount().setMofNo("MOF000001");
 
-				// System.out.println("Fulfilment Type : " +
-				// getManagedBean().getQt().getScQtSpec().getFulfilmentType());
-				// System.out.println("Contract Duration : " +
-				// getManagedBean().getQt().getScQtSpec().getContractDuration());
-				// System.out.println("Multiple Locality : " +
-				// getManagedBean().getQt().getScQtCriterias().isMultiLocality());
-
 				showOfficerDetails();
+
+				PmUser pmUser = new PmUser();
+				getManagedBean().getScLoa().setApproverUser(pmUser);
+				getManagedBean().setApproverName(getApproverNames());
+				System.out.println("Approver User Id : "
+						+ getManagedBean().getScLoa().getApproverUser()
+								.getUserId());
+
+				getManagedBean().getScLoa().setContractSignerUser(pmUser);
+				getManagedBean().setContractSignerList(getContractSigners());
 
 				getManagedBean().setScQtDeductionList(null);
 
 				SmSupplierBranch branch = new SmSupplierBranch();
 				SmSupplierBranch branch1 = new SmSupplierBranch();
+				SmSupplierBranch branch2 = new SmSupplierBranch();
 				branch.setBranchName("HQ");
-				branch1.setBranchName("SET");
+				branch1.setBranchName("Putrajaya");
+				branch2.setBranchName("Ampang");
 				bList.add(branch);
 				bList.add(branch1);
+				bList.add(branch2);
 				getManagedBean().setBranchsList(bList);
 
 				branch.setSmAppl(getManagedBean().getScQtProposalRanking()
 						.getScQtProposalEvaluate().getScQtProposal()
 						.getScQtSupplier().getSmSupplier().getSmAppl());
+
+				System.out.println("LOA Offered Price : "
+						+ getManagedBean().getScLoa().getLoaAmount());
+				if (getManagedBean().getScLoa().getLoaAmount().intValue() > 500000) {
+					getManagedBean().setBondPercentage("5%");
+					getManagedBean().setPercentageBond(0.05);
+					System.out.println("Bond Percentage : "
+							+ getManagedBean().getPercentageBond());
+				} else if (getManagedBean().getScLoa().getLoaAmount()
+						.intValue() > 200000
+						&& getManagedBean().getScLoa().getLoaAmount()
+								.intValue() < 500000) {
+					getManagedBean().setBondPercentage("2.5%");
+					getManagedBean().setPercentageBond(0.025);
+					System.out.println("Bond Percentage : "
+							+ getManagedBean().getPercentageBond());
+				}
+
+				System.out.println("Contract Duration : "
+						+ getManagedBean().getQt().getScQtSpec()
+								.getContractDuration());
+
+				int amt = (int) (((getManagedBean().getScLoa().getLoaAmount()
+						.intValue() / getManagedBean().getQt().getScQtSpec()
+						.getContractDuration().intValue()) * 12) * getManagedBean()
+						.getPercentageBond());
+
+				getManagedBean().setBondAmount(amt);
+				System.out.println("bond amount : "
+						+ getManagedBean().getBondAmount());
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
 		return QTConstants.LOA_PAGE;
+	}
+
+	/**
+	 * @param scLoa
+	 */
+	private void retrieveBondDtls(ScLoa scLoa) {
+		debugLogger("retrieveBondDtls");
+		IQTAwardSO qtAwardSO = null;
+		try {
+			qtAwardSO = BusinessDelegate.getInstance().getServiceObject(
+					QTConstants.SS_MODULE, IQTAwardSO.class);
+			AwardSupplierReqDTO reqDTO = new AwardSupplierReqDTO();
+			ScLoa loa = new ScLoa();
+			loa.setLoaId(scLoa.getLoaId());
+			reqDTO.setScLoa(loa);
+			AwardSupplierResDTO resDTO = qtAwardSO.retrieveBondDtls(reqDTO);
+
+			List<ScBondDtl> bondDtl = resDTO.getBondDtls();
+			System.out.println("Bond Details : " + bondDtl.size());
+
+			for (ScBondDtl dtl : bondDtl) {
+				System.out.println("Ref No : " + dtl.getBondRefNo());
+				System.out.println("Institution Name : "
+						+ dtl.getInstitutionName());
+			}
+
+			getManagedBean().setScBondDtlList(bondDtl);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+
 	}
 
 	/**
@@ -402,8 +500,8 @@ public class LOADetailBackingBean extends SourcingBaseBackingBean<LOADetailManag
 			getManagedBean().getScLoa().setOfficerDesignation(
 					user.getDesignation());
 
-			addressSO = BusinessDelegate.getInstance().getServiceObject("pm",
-					IAddressSO.class);
+			addressSO = BusinessDelegate.getInstance().getServiceObject(
+					QTConstants.PM_MODULE, IAddressSO.class);
 			AddressReqDTO addReqDTO = new AddressReqDTO();
 			addReqDTO.setUserId(user.getUserId());
 			addReqDTO.setAddressType(AddressType.BILLING_ADDRESS.value());
@@ -438,13 +536,22 @@ public class LOADetailBackingBean extends SourcingBaseBackingBean<LOADetailManag
 			getManagedBean().getScLoa().setSupplierContact("KBB SDN BHD");
 			getManagedBean().getScLoa().setSupplierContactMobil(7324810l);
 			getManagedBean().getScLoa().setSupplierContactEmail("hq@gmail.com");
-		} else {
+		} else if (name.equalsIgnoreCase("Putrajaya")) {
 			getManagedBean().getScLoa().setSupplierAddress("xyz");
 			getManagedBean().getScLoa().setSupplierPhoneNo(6789L);
 			getManagedBean().getScLoa().setSupplierFaxNo(4567L);
 			getManagedBean().getScLoa().setSupplierContact("KBB SDN BHD");
 			getManagedBean().getScLoa().setSupplierContactMobil(7324811l);
-			getManagedBean().getScLoa().setSupplierContactEmail("hq@gmail.com");
+			getManagedBean().getScLoa().setSupplierContactEmail(
+					"putra@gmail.com");
+		} else {
+			getManagedBean().getScLoa().setSupplierAddress("aaaaa");
+			getManagedBean().getScLoa().setSupplierPhoneNo(23489L);
+			getManagedBean().getScLoa().setSupplierFaxNo(65432L);
+			getManagedBean().getScLoa().setSupplierContact("XYZ SDN BHD");
+			getManagedBean().getScLoa().setSupplierContactMobil(732111l);
+			getManagedBean().getScLoa().setSupplierContactEmail(
+					"sara@gmail.com");
 		}
 
 	}
@@ -455,20 +562,50 @@ public class LOADetailBackingBean extends SourcingBaseBackingBean<LOADetailManag
 	public void saveLOADetailsAction() {
 		debugLogger("saveLOADetailsAction");
 		IQTAwardSO iqtAwardSO = null;
+		IUserSO userSO;
 		IStatusSO statusSO = null;
 		try {
 
 			iqtAwardSO = BusinessDelegate.getInstance().getServiceObject(
-					MODULE_NAME, IQTAwardSO.class);
+					QTConstants.SS_MODULE, IQTAwardSO.class);
 			AwardSupplierReqDTO awardSupplierReqDTO = new AwardSupplierReqDTO();
 			awardSupplierReqDTO
 					.setDocType(LoiLoaDocType.DOCTYPE_QUOTATION_TENDER.value());
 
-			statusSO = BusinessDelegate.getInstance().getServiceObject("pm",
-					IStatusSO.class);
+			statusSO = BusinessDelegate.getInstance().getServiceObject(
+					QTConstants.PM_MODULE, IStatusSO.class);
+			userSO = BusinessDelegate.getInstance().getServiceObject(
+					QTConstants.PM_MODULE, IUserSO.class);
 
 			ScLoa scLoa = this.getManagedBean().getScLoa();
 			scLoa.setIssueDate(new Date());
+
+			// Date date = new Date();
+			System.out.println("Date : " + scLoa.getIssueDate());
+			Calendar cal = Calendar.getInstance();
+			cal.setTime(scLoa.getIssueDate());
+			cal.add(Calendar.DATE, 14);
+			System.out.println("Date : " + cal.getTime());
+			scLoa.setAckDueDate(cal.getTime());
+			System.out.println("LOA Response Due Date : "
+					+ scLoa.getAckDueDate());
+
+			System.out
+					.println("Approver User Id : "
+							+ getManagedBean().getScLoa().getApproverUser()
+									.getUserId());
+			// Setting the pm user id for LOI details
+			UserReqDTO userReqDTO = new UserReqDTO();
+			userReqDTO.setUserId(getManagedBean().getScLoa().getApproverUser()
+					.getUserId());
+
+			UserResDTO userResDTO = userSO.retrieveUserDetails(userReqDTO);
+
+			PmUser user = userResDTO.getPmUser();
+			System.out.println("User id and Name" + user.getUserId() + "|"
+					+ user.getUserName());
+			scLoa.setApproverUser(user);
+			scLoa.setContractSignerUser(user);
 
 			// Setting the pm status for LOI details
 			StatusReqDTO reqDTO = new StatusReqDTO();
@@ -497,4 +634,96 @@ public class LOADetailBackingBean extends SourcingBaseBackingBean<LOADetailManag
 							ex.toString(), ex.getMessage()));
 		}
 	}
+
+	public void retrieveContractType() {
+		debugLogger("retrieveContractType");
+		IUserSO userSO;
+		try {
+			userSO = BusinessDelegate.getInstance().getServiceObject(
+					QTConstants.PM_MODULE, IUserSO.class);
+
+			UserReqDTO reqDTO = new UserReqDTO();
+			reqDTO.setOrgProfileId(1l);
+			reqDTO.setOrgType(getManagedBean().getScLoa().getContractType());
+			UserResDTO dto = userSO
+					.retrieveUserListByOrgProfileAndContractType(reqDTO);
+			List<PmUser> userList = dto.getUserList();
+			System.out.println("PmUser List : " + userList.size());
+			// System.out.println(dto.getUserList().size());
+			getManagedBean().setPmUserList(userList);
+
+			System.out.println("User Id : "
+					+ getManagedBean().getPmUserList().get(0).getUserId());
+			// handleContractPTJ();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+
+	public void handleContractPTJ() {
+		debugLogger("handleContractPTJ");
+
+		IUserSO userSO;
+		try {
+			userSO = BusinessDelegate.getInstance().getServiceObject(
+					QTConstants.PM_MODULE, IUserSO.class);
+
+			UserReqDTO reqDTO = new UserReqDTO();
+			System.out.println("User Id : "
+					+ getManagedBean().getPmUserList().get(0).getUserId());
+			reqDTO.setUserId(getManagedBean().getPmUserList().get(0)
+					.getUserId());
+			UserResDTO resDTO = userSO.retrieveUserOrgListByUserId(reqDTO);
+			List<PmUserOrg> list = resDTO.getUserOrgList();
+			System.out.println("List: " + list.size());
+			for (PmUserOrg userOrg : list) {
+				System.out.println(userOrg.getUserOrgId() + "|"
+						+ userOrg.getPmUser().getUserId() + "|"
+						+ userOrg.getPmUser().getUserName() + "|"
+						+ userOrg.getPmOrgProfile().getOrgProfileId() + "|"
+						+ userOrg.getPmOrgProfile().getOrgCode() + "|"
+						+ userOrg.getPmOrgProfile().getOrgName());
+			}
+			getManagedBean().setPmUserOrgList(list);
+
+			// handleContractPTJ();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+
+	}
+
+	public List<PmUser> getContractSigners() {
+		List<PmUser> contractUsers = this.getManagedBean()
+				.getContractSignerList();
+
+		if (contractUsers == null) {
+			IUserSO userSO = null;
+			try {
+				userSO = BusinessDelegate.getInstance().getServiceObject(
+						QTConstants.PM_MODULE, IUserSO.class);
+
+				// Get Approver Users
+				UserReqDTO reqDTO = new UserReqDTO();
+				reqDTO.setRoleCode(RoleCode.CONTRACT_SIGNER.value());
+
+				UserResDTO resDTO = userSO.retrieveUserListByRole(reqDTO);
+				contractUsers = resDTO.getUserList();
+				System.out.println("Contract Signers List: "
+						+ contractUsers.size());
+				this.getManagedBean().setContractSignerList(contractUsers);
+
+			} catch (Exception ex) {
+				ex.printStackTrace();
+				FacesContext.getCurrentInstance().addMessage(
+						null,
+						new FacesMessage(FacesMessage.SEVERITY_ERROR, ex
+								.toString(), ex.getMessage()));
+			} finally {
+				userSO = null;
+			}
+		}
+		return contractUsers;
+	}
+
 }

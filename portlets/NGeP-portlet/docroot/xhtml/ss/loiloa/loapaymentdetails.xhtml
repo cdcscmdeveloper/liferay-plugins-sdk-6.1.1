@@ -44,63 +44,77 @@
 			</h:column>
 		</h:panelGrid>
 	</p:panel>
-	<p:panel header="#{lbl['lbl.sc.loiloa.loa.ded.pay']}" toggleable="true">
-		<p:panel header="#{lbl['lbl.sc.loiloa.loa.ded.pay']}"
-			toggleable="false">
-			<p:dataTable id="deductionpaymenttbl" var="deductionpaymentList"
-				value="#{bsvAttendanceBackingBean.managedBean.briefingAttendanceList}"
-				rows="10">
-				<ac:paginator for="deductpayId" />
 
-				<p:column headerText="#{lbl['lbl.sc.loiloa.loa.ded.type']}">
-					<p:inputText value="" />
-				</p:column>
+	<p:panel header="#{lbl['lbl.sc.loiloa.loa.ded.pay']}" toggleable="true"
+		id="deductID">
 
-				<p:column headerText="#{lbl['lbl.sc.loiloa.loa.ded.desp']}">
-					<p:inputText value="" />
-				</p:column>
+		<p:commandLink value="#{lbl['lbl.sc.loiloa.loa.ded.pay']}"></p:commandLink>
 
-				<p:column headerText="#{lbl['lbl.sc.loiloa.loa.ded.percentage']}">
-					<p:inputText value="" />
-				</p:column>
 
-				<p:column headerText="#{lbl['lbl.sc.loiloa.loa.amt']}">
-					<p:inputText value="" />
-				</p:column>
+		<p:dataTable id="deducttbl" var="deductList"
+			value="#{lOADetailBackingBean.managedBean.scQtDeductionList}"
+			selection="#{lOADetailBackingBean.managedBean.selectedScQtDeduction}"
+			rowKey="#{deductList}" selectionMode="single">
 
-			</p:dataTable>
-		</p:panel>
-		<p:panel header="#{lbl['lbl.sc.loiloa.loa.ded.clause']}"
-			toggleable="false">
-			<p:dataTable id="deductionclausetbl" var="deductionclauseList"
-				value="#{bsvAttendanceBackingBean.managedBean.briefingAttendanceList}"
-				rows="10">
-				<ac:paginator for="deductId" />
+			<p:ajax event="rowSelect" update=":form:tt:deductclause" />
 
-				<p:column headerText="#{lbl['lbl.sc.loiloa.loa.ded.clause']}">
-					<p:inputText value="" />
-				</p:column>
+			<ac:paginator for="deductpayments" />
 
-				<p:column headerText="#{lbl['lbl.sc.loiloa.loa.ded.desp']}">
-					<p:inputText value="" />
-				</p:column>
+			<p:column headerText="#{lbl['lbl.sc.loiloa.loa.ded.type']}">
+				<h:outputText value="#{deductList.deductionType.code}" />
+			</p:column>
 
-				<p:column headerText="#{lbl['lbl.sc.loiloa.action']}">
-					<p:commandLink>
-						<p:graphicImage library="ep/images/design" name="edit.png"
-							value="/resources/ep/images/design/edit.png" />
-					</p:commandLink>
-				</p:column>
+			<p:column headerText="#{lbl['lbl.sc.loiloa.loa.ded.desp']}">
+				<h:outputText value="Purchase Request" />
+			</p:column>
 
-			</p:dataTable>
-			<p:spacer height="20px" />
-			<div align="right">
-				<p:commandButton value="#{lbl['lbl.sc.loiloa.add']}" process="@this"
-					partialSubmit="true" icon="ui-icon-add" />
-				<p:commandButton value="#{lbl['lbl.sc.loiloa.delete']}"
-					process="@this" partialSubmit="true" icon="ui-icon-delete" />
-			</div>
-		</p:panel>
+			<p:column headerText="#{lbl['lbl.sc.loiloa.loa.ded.percentage']}">
+				<h:outputText value="Percentage" />
+			</p:column>
+
+			<p:column headerText="#{lbl['lbl.sc.loiloa.loa.amt']}">
+				<h:outputText value="#{deductList.deductionAmount}" />
+			</p:column>
+
+		</p:dataTable>
+		<p:spacer height="30px" />
+		<p:commandLink value="#{lbl['lbl.sc.loiloa.loa.ded.clause']}" />
+		<p:dataTable
+			value="#{lOADetailBackingBean.managedBean.selectedScQtDeduction.scQtDeductionClauses}"
+			id="deductclause" var="dclauseList" rowKey="#{dclauseList}"
+			rowIndexVar="rowIndex" rows="10">
+
+			<ac:paginator for="deductId" />
+			
+			<p:column selectionMode="multiple" style="width:2%" />
+			
+			<!-- <p:column headerText="#{lbl['lbl.sc.loiloa.loa.ded.clause']}">
+				<h:outputText value="" />
+			</p:column> -->
+
+			<p:column headerText="#{lbl['lbl.sc.loiloa.loa.ded.desp']}">
+				<h:outputText value="Percentage" />
+			</p:column>
+
+			<p:column headerText="#{lbl['lbl.sc.loiloa.action']}">
+				<p:commandLink>
+					<p:graphicImage library="ep/images/design" name="edit.png"
+						value="/resources/ep/images/design/edit.png" />
+				</p:commandLink>
+			</p:column>
+
+		</p:dataTable>
+		<p:panelGrid columns="2" style="width:100%;"
+			styleClass="noBorders tr,noBorders td">
+			<f:facet name="footer">
+				<div align="right">
+					<p:commandButton value="#{lbl['lbl.sc.loiloa.add']}"
+						process="@this" partialSubmit="true" icon="ui-icon-add" />
+					<p:commandButton value="#{lbl['lbl.sc.loiloa.delete']}"
+						process="@this" partialSubmit="true" icon="ui-icon-delete" />
+				</div>
+			</f:facet>
+		</p:panelGrid>
+
 	</p:panel>
-
 </ui:composition>

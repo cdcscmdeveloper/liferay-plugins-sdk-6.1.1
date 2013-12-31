@@ -60,10 +60,10 @@
 
 		<p:panel id="negoTermId" header="#{lbl['lbl.sc.loiloa.nego.term']}"
 			toggleable="false">
-			<p:dataTable id="negotiationtermstbl" var="termsList"
+			<p:dataTable id="negotiationtermstbl" var="negoTerms"
 				value="#{lOIDetailBackingBean.managedBean.negoTermsList}" 
 				selection="#{lOIDetailBackingBean.managedBean.selectedNegoTermsList}"
- 				rows="10" rowKey="#{termsList}" rowIndexVar="rowIndex">
+ 				rows="10" rowKey="#{negoTerms}" rowIndexVar="rowIndex">
 				
 				<ac:paginator for="termId" />
 
@@ -72,25 +72,25 @@
 				<p:column headerText="#{lbl['lbl.sc.loiloa.nego.terms']}"
 					style="width:30%">
 					<p:inputTextarea id="negoterms" cols="30" rows="1"
-						value="#{termsList.scTerm.scTermDescs[0].termDesc}"
+						value="#{negoTerms.scTerm.scTermDescs[0].termDesc}"
 						autoResize="false" />
 				</p:column>
 
 				<p:column headerText="#{lbl['lbl.sc.loiloa.nego.amount']}"
 					style="width:10%">
-					<p:inputText value="#{termsList.amount}" size="10" />
+					<p:inputText value="#{negoTerms.amount}" size="10" />
 				</p:column>
 
 				<p:column headerText="#{lbl['lbl.sc.loiloa.nego.feed.supp']}"
 					style="width:30%">
 					<p:inputTextarea id="feedback" cols="30" rows="1"
-						value="#{termsList.supplierFeedback}" autoResize="false" />
+						value="#{negoTerms.supplierFeedback}" autoResize="false" />
 				</p:column>
 
 				<p:column headerText="#{lbl['lbl.sc.loiloa.nego.remarks']}"
 					style="width:30%">
 					<p:inputTextarea id="appremarks" cols="30" rows="1"
-						value="#{termsList.amount}" autoResize="false" />
+						value="#{negoTerms.officerRemark}" autoResize="false" />
 				</p:column>
 
 				<!-- <p:column headerText="#{lbl['lbl.sc.loiloa.action']}"

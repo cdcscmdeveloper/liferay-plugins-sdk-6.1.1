@@ -69,7 +69,37 @@ public class LOIDetailManagedBean extends BaseManagedBean {
 
 	private SmSupplierBranch smSupplierBranch;
 	private String branchName;
+	private List<SelectItem> selectItemList;
+	private List<PmUser>  approverNames; // Drop down Listing for Approver Names
 	
+	/**
+	 * @return the approverNames
+	 */
+	public List<PmUser> getApproverNames() {
+		return approverNames;
+	}
+
+	/**
+	 * @param approverNames the approverNames to set
+	 */
+	public void setApproverNames(List<PmUser> approverNames) {
+		this.approverNames = approverNames;
+	}
+
+	/**
+	 * @return the selectItemList
+	 */
+	public List<SelectItem> getSelectItemList() {
+		return selectItemList;
+	}
+
+	/**
+	 * @param selectItemList the selectItemList to set
+	 */
+	public void setSelectItemList(List<SelectItem> selectItemList) {
+		this.selectItemList = selectItemList;
+	}
+
 	/**
 	 * @return the selectedNegoTermsList
 	 */
