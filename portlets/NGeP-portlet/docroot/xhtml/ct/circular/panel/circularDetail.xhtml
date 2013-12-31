@@ -18,7 +18,6 @@
 	<p:panel id="contactPerson" header="#{lbl['lbl.ct.pc.cpd']}" toggleable="true" toggleSpeed="500" widgetVar="panelcontactPerson">
 		<p:dataTable id="contactPersonDt" var="data" value="#{panelBackingBean.managedBean.circularVer.ctContactPersons}"
 			rowIndexVar="index" lazy="true">
-			<ac:paginator for="contactPersonDt" />
 			<p:columnGroup type="header">
 				<p:row>
 					<p:column style="width:150px;" headerText="#{lbl['lbl.ct.pc.cperson']}" />
@@ -66,7 +65,6 @@
 		rendered="#{!panelBackingBean.managedBean.updateAction and panelBackingBean.managedBean.circularVer.updateNo == null}" >
 		<p:dataTable id="cancelCircularDt" var="data" value="#{panelBackingBean.managedBean.circularVer.ctCancelCircularList}"
 			lazy="true" rowIndexVar="index" >
-			<ac:paginator for="cancelCircularDt" />
 			<p:columnGroup type="header">
 				<p:row>
 					<p:column style="width:80px" headerText="Circular No." />
