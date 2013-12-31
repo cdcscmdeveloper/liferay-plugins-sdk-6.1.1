@@ -2,7 +2,9 @@ package my.ep.web.backingbean.sm;
 
 import java.text.ParseException;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
+import java.util.GregorianCalendar;
 import java.util.List;
 
 import javax.faces.application.FacesMessage;
@@ -119,6 +121,12 @@ public class SmApplicationBackingBean extends
 				smAppl.setApplNo("UNKNOWNAPPL");
 			}
 			smApplSupplier.setEstablishDate(new Date());
+			Calendar c = new GregorianCalendar();
+			c.add(Calendar.DATE, 60);
+			Date d = c.getTime();
+			smAppl.setDraftExpiryDate(d);
+			System.out.println("******* EXPIRY DATE ********" + d);
+
 			smAppl.setSmSupplier(smApplSupplier);
 			if (!applicationType.equalsIgnoreCase("N")) {
 				// mofRegAppl.setSmAddress(smAddress);

@@ -171,6 +171,8 @@ public class SmApplicationManagedBean extends BaseManagedBean {
 
 	private SmApplSectionReview apprvrSecReview;
 
+	private boolean termsAccepted;
+
 	public SmApplicationManagedBean() {
 		// TODO Checking the user role
 		FacesScopes sc = new FacesScopes();
@@ -894,6 +896,14 @@ public class SmApplicationManagedBean extends BaseManagedBean {
 
 	public void setApprvrSecReview(SmApplSectionReview apprvrSecReview) {
 		this.apprvrSecReview = apprvrSecReview;
+	}
+
+	public boolean isTermsAccepted() {
+		return termsAccepted;
+	}
+
+	public void setTermsAccepted(boolean termsAccepted) {
+		this.termsAccepted = termsAccepted;
 	}
 
 }
