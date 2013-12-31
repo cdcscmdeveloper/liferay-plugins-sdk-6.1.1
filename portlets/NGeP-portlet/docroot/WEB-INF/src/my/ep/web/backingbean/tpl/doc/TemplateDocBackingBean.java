@@ -5,6 +5,9 @@ package my.ep.web.backingbean.tpl.doc;
 
 
 import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.sql.Timestamp;
@@ -99,10 +102,9 @@ public class TemplateDocBackingBean extends
 		}
 		if (this.getManagedBean().getTemplateProcessTypeList() == null) {
 			SelectItem[] procesCodes = getDropdownValues("TDP");
-			if(procesCodes !=null){
-				List<SelectItem>procesCode=Arrays.asList(procesCodes);
-			this.getManagedBean().setTemplateProcessTypeList(procesCode);
-			}
+			/*if(procesCodes !=null){
+				List<SelectItem>procesCode=Arrays.asList(procesCodes);*/
+			this.getManagedBean().setTemplateProcessTypeList(procesCodes);
 			
 		}
 		
@@ -264,24 +266,24 @@ public class TemplateDocBackingBean extends
 		TemplateDocReqDTO reqDTO1 = new TemplateDocReqDTO();
 		reqDTO1.setDocMasterId(getManagedBean().getSelectedTemplate()
 				.getDocMasterId());
-		TemplateDocResDTO resDTO = templateSO
-				.getTemplateCategoryById(reqDTO1);
+//		TemplateDocResDTO resDTO = templateSO
+//				.getTemplateCategoryById(reqDTO1);
 		TemplateDocResDTO resDTO1= templateSO.getTemplateSectionListByMaster(reqDTO1);
 		List<TplDocSection> templateSectionList = resDTO1.getDocSectionList();
 		TplDocMaster tplDocMaster1 = resDTO1.getTplDocMaster();
-				if (tplDocMaster1.getTplCategory() == null) {
-			tplDocMaster1.setTplCategory(getManagedBean().getSelectedTemplate()
-					.getTplCategory());
-		}
-		if(tplDocMaster1.getProcessType() == null){
-			tplDocMaster1.setProcessType(getManagedBean().getSelectedTemplate().getProcessType());
-		}
+//				if (tplDocMaster1.getTplCategory() == null) {
+//			tplDocMaster1.setTplCategory(getManagedBean().getSelectedTemplate()
+//					.getTplCategory());
+//		}
+//		if(tplDocMaster1.getProcessType() == null){
+//			tplDocMaster1.setProcessType(getManagedBean().getSelectedTemplate().getProcessType());
+//		}
 		getTemplateDatatableList(templateSectionList);
 		getManagedBean().setSelectedTemplate(tplDocMaster1);
 		getManagedBean().setDeletedList(new ArrayList<TplDocSection>());
-		TplDocMaster tplDocMaster = new TplDocMaster();
-		TemplateDocReqDTO reqDTO = new TemplateDocReqDTO();
-		reqDTO.setTplDocMaster(this.getManagedBean().getSelectedTemplate());
+//		TplDocMaster tplDocMaster = new TplDocMaster();
+//		TemplateDocReqDTO reqDTO = new TemplateDocReqDTO();
+//		reqDTO.setTplDocMaster(this.getManagedBean().getSelectedTemplate());
 		return NAV_TO_MAINT;
 	}
 
@@ -546,11 +548,9 @@ public void destroyWorld(ActionEvent actionEvent){
 			}
 
 			if (ind.equalsIgnoreCase("update")) {
-				tplDocMaster = tplDocMasterE;
-				
+				tplDocMaster = tplDocMasterE;				
 				tplDocMaster.setBrandNew(false);
-				tplDocMaster.setCategoryId(tplDocMasterE.getCategoryId());
-				
+				tplDocMaster.setCategoryId(tplDocMasterE.getCategoryId());				
 				tplDocMaster.setProcessType(tplDocMasterE.getProcessType());
 				tplDocMaster.setDocName(tplDocMaster.getDocTitle());
 				PmCode code = null;
@@ -907,7 +907,6 @@ public void destroyWorld(ActionEvent actionEvent){
 
 	public void tempDocSearch() {
 		
-		
 		ITemplateDocSO  templateDocSO = null;
 		try {
 			System.out.println("!!!!!!!!!! Enter Template Doc Search Method !!!!!!!!");
@@ -915,21 +914,22 @@ public void destroyWorld(ActionEvent actionEvent){
 			TemplateDocReqDTO reqDTO = new TemplateDocReqDTO();
 			
 			SearchBean<TplDocMaster> searchBean = new SearchBean<TplDocMaster>();
+			searchBean.setNavigatable(false);
 			Long templLong = this.getManagedBean().getCategoryId();
 			if(null != templLong){
 			searchBean.getDataFilterBeans().add(new SearchFilterBean("categoryId",SearchOperator.OPERATOR_EQUALS.value(),templLong));
 			}
-			String processType =this.getManagedBean().getProcessType();
-			if(null != processType){
-				searchBean.getDataFilterBeans().add(new SearchFilterBean("processType",SearchOperator.OPERATOR_EQUALS.value(),processType));
+			String processValue =this.getManagedBean().getProcessValue();
+			if(null != processValue){
+				searchBean.getDataFilterBeans().add(new SearchFilterBean("processType.codeId",SearchOperator.OPERATOR_EQUALS.value(),processValue));
 				}
 			String title=this.getManagedBean().getTitle();
 			if(null != title){
-				searchBean.getDataFilterBeans().add(new SearchFilterBean("docTitle",SearchOperator.OPERATOR_EQUALS.value(),title));
+				searchBean.getDataFilterBeans().add(new SearchFilterBean("docTitle",SearchOperator.OPERATOR_LIKE.value(),title));
 				}
 			String desc=this.getManagedBean().getDesc();
 			if(null != desc){
-				searchBean.getDataFilterBeans().add(new SearchFilterBean("docDesc",SearchOperator.OPERATOR_EQUALS.value(),desc));
+				searchBean.getDataFilterBeans().add(new SearchFilterBean("docDesc",SearchOperator.OPERATOR_LIKE.value(),desc));
 				}
 			reqDTO.setSearchBean(searchBean);
 			TemplateDocResDTO resDTO = templateDocSO.TemplateDocSearch(reqDTO);
@@ -939,8 +939,86 @@ public void destroyWorld(ActionEvent actionEvent){
 			templateDocSO = null;
 		}
 		
+		this.getManagedBean().setProcessType(null);
+		this.getManagedBean().setCategory(null);
+		this.getManagedBean().setTitle(null);
+		
+	}
+	
+	public String createPDF() throws Exception {
+	
+		FacesContext context = FacesContext.getCurrentInstance();
+            
+		    String outputFileName = "Document" + "_"
+				+ DateUtils.dateToString("yyMMddHHmmssZ", new Date());
+			String html =  MergeDocx.mergePreviewAction(
+					getManagedBean().getDocSectionTN(), outputFileName, "P");
+	        WordprocessingMLPackage wordMLPackage = WordprocessingMLPackage.createPackage();
+		
+		    /*XWPFDocument document = new XWPFDocument();
+		    String outputFileName = "Document" + "_"
+					+ DateUtils.dateToString("yyMMddHHmmssZ", new Date());
+		    String combinedContentHtml = MergeDocx.mergePreviewAction(
+					getManagedBean().getDocSectionTN(), outputFileName, "P");
+		 
+	        XWPFParagraph paragraphOne = document.createParagraph();
+	        XWPFRun paragraphOneRunOne = paragraphOne.createRun();
+	        paragraphOneRunOne.setText(combinedContentHtml);
+	        XWPFRun paragraphOneRunTwo = paragraphOne.createRun();
+	        paragraphOneRunTwo.setText(" ");
+	        System.out.println(combinedContentHtml);*/
+	 
+	       /* XWPFParagraph paragraphTwo = document.createParagraph();
+	        XWPFRun paragraphTwoRunOne = paragraphTwo.createRun();
+	        paragraphTwoRunOne.setText("And this is paragraph two.");*/
+	       
+	        
+	        wordMLPackage.getMainDocumentPart().getContent()
+            .addAll(XHTMLImporter.convert(html, null, wordMLPackage));
+	        File f =new File("sectionContent.docx");
+	        wordMLPackage.save(f);
+	        
+	        
+		try {
+
+			// Writting to Response code
+			PortletResponse portletResponse = (PortletResponse) context
+					.getExternalContext().getResponse();
+			HttpServletResponse res = com.liferay.portal.util.PortalUtil
+					.getHttpServletResponse(portletResponse);
+			res.setContentType("application/msword");
+			res.setHeader("Expires", "0");
+			res.setHeader("Cache-Control",
+					"must-revalidate, post-check=0, pre-check=0");
+			res.setHeader("Pragma", "public");
+			res.setHeader("Content-disposition",
+					"attachment;filename=sectionContent.docx");
+			OutputStream out = res.getOutputStream();
+			FileInputStream fin=new FileInputStream(f);
+			int i=-1;
+			while( (i=fin.read())!=-1){
+				out.write(i);	
+			}
+			
+			//document.write(out);
+			out.flush();
+			res.flushBuffer();
+			out.close();
+			fin.close();
+			context.responseComplete();
+			
+		} catch (FileNotFoundException e) {
+	            e.printStackTrace();
+	        } catch (IOException e) {
+	            e.printStackTrace();
+	        }
+	
+		 return null;
+		
+		
 		
 		
 	}
+	
 	
 }
