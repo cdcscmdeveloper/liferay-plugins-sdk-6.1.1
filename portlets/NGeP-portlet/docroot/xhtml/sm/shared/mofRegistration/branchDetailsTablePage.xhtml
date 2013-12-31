@@ -1,0 +1,81 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:ac="http://ac.my/jsf/composite/cc">
+	<table style="width: 100%">
+		<tr>
+			<td><p:outputLabel value="* Branch Name" /></td>
+			<td><p:inputText
+					value="#{backingBean.managedBean.selectedBranch.branchName}"
+					size="35" /></td>
+		</tr>
+		<tr>
+			<td><p:outputLabel value="* Address" /></td>
+			<td><p:inputText
+					value="#{backingBean.managedBean.selectedBranch.smAddress.address1}"
+					size="35" /></td>
+		</tr>
+
+		<tr>
+			<td></td>
+			<td><p:inputText
+					value="#{backingBean.managedBean.selectedBranch.smAddress.address2}"
+					size="35" /></td>
+		</tr>
+		<tr>
+			<td></td>
+			<td><p:inputText
+					value="#{backingBean.managedBean.selectedBranch.smAddress.address3}"
+					size="35" /></td>
+		</tr>
+		<tr>
+			<td><p:outputLabel value="* Country" /></td>
+			<td><p:selectOneMenu
+					value="#{backingBean.managedBean.selectedBranch.smAddress.pmCountry.countryCode}"
+					style="width: 207px;margin-bottom: 5px;">
+					<f:selectItem itemLabel="Malaysia" itemValue="MY" />
+				</p:selectOneMenu></td>
+		</tr>
+		<tr>
+			<td><p:outputLabel value="#{lbl['lbl.sm.postcode']}" /></td>
+			<td><p:inputText
+					value="#{backingBean.managedBean.selectedBranch.smAddress.postcode}"
+					size="35" /></td>
+		</tr>
+		<tr>
+			<td><p:outputLabel value="#{lbl['lbl.sm.state']}" /></td>
+			<td><p:inputText
+					value="#{backingBean.managedBean.selectedBranch.smAddress.pmState.stateCode}"
+					size="35" readonly="true" disabled="true" /></td>
+		</tr>
+
+		<tr>
+			<td><p:outputLabel value="#{lbl['lbl.sm.district']}" /></td>
+			<td><p:inputText
+					value="#{backingBean.managedBean.selectedBranch.smAddress.pmDistrict.districtCode}"
+					size="35" /></td>
+		</tr>
+		<tr>
+			<td><p:outputLabel value="#{lbl['lbl.sm.towncity']}" /></td>
+			<td><p:inputText
+					value="#{backingBean.managedBean.selectedBranch.smAddress.pmCity.cityCode}"
+					size="35" /></td>
+		</tr>
+		<tr>
+			<td><p:outputLabel value="Phone NO." /></td>
+			<td><p:inputText
+					value="#{backingBean.managedBean.selectedBranch.smAddress.phoneNo}"
+					size="35" /></td>
+		</tr>
+		<tr>
+			<td><p:outputLabel value="Fax NO." /></td>
+			<td><p:inputText
+					value="#{backingBean.managedBean.selectedBranch.smAddress.faxNo}"
+					size="35" /></td>
+		</tr>
+
+	</table>
+</ui:composition>

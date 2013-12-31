@@ -128,10 +128,22 @@
 					<td></td>
 				</tr>
 			</table>
-			<div align="right" style="width: 99%">
-				<p:commandButton value="#{lbl['lbl.sm.saveAsDraft']}"
-					icon="ui-icon-save" style="margin-bottom:5px;" />
-			</div>
+
+			<table style="width: 99%">
+				<tr>
+					<td
+						style="color: red; font-weight: bolder; padding-right: 10px; text-align: right;"><h:outputText
+							value="Expiry Date : " /></td>
+					<td
+						style="color: red; font-weight: bolder; padding-right: 10px; width: 85px;"><h:outputText
+							value="#{backingBean.managedBean.smAppl.draftExpiryDate}">
+							<f:convertDateTime type="date" pattern="dd-MMM-yyyy" />
+						</h:outputText></td>
+					<td style="width: 50px;"><p:commandButton
+							value="#{lbl['lbl.sm.saveAsDraft']}" icon="ui-icon-save"
+							style="margin-bottom:5px;" /></td>
+				</tr>
+			</table>
 			<p:messages id="messages" showDetail="true" autoUpdate="true"
 				closable="true" />
 

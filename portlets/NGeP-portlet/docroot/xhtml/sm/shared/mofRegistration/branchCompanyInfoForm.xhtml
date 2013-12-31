@@ -13,7 +13,8 @@
 					<td width="10px" style="padding-right: 2px;"><p:selectBooleanCheckbox
 							value="#{backingBean.managedBean.poSecReview.branchVerified}"
 							id="poBrcVer">
-							<p:ajax update=":form:tt:brnInfPan,:form:revPanHdr" event="change"
+							<p:ajax update=":form:tt:brnInfPan,:form:revPanHdr"
+								event="change"
 								listener="#{backingBean.changeVerifySection(backingBean.managedBean.poSecReview.branchVerified)}" />
 						</p:selectBooleanCheckbox></td>
 					<td valign="top"><h:outputText
@@ -34,8 +35,10 @@
 		<br />
 
 		<p:panel id="brnInfPan">
-			<p:blockUI block=":form:tt:brnInfPan" widgetVar="buiPoBrn" id="poBrnBlc"
-				blocked="#{backingBean.managedBean.poSecReview.branchVerified and backingBean.managedBean.poUser}" />
+			<p:blockUI block=":form:tt:brnInfPan" widgetVar="buiPoBrn"
+				id="poBrnBlc"
+				blocked="#{backingBean.managedBean.poSecReview.branchVerified and backingBean.managedBean.poUser}"
+				rendered="#{backingBean.managedBean.poSecReview.branchVerified and backingBean.managedBean.poUser}" />
 			<p:dataTable var="branchBean" id="dt"
 				value="#{backingBean.managedBean.smAppl.smSupplierBranches}"
 				selection="#{backingBean.managedBean.selectedBranches}"
@@ -104,82 +107,68 @@
 	<p:dialog width="450px" header="Branch Details" widgetVar="banchDialog"
 		id="display" resizable="false" showEffect="fade" hideEffect="fade"
 		modal="true">
-		<!-- <p:panel header="Branch Details"> -->
-		<table style="width: 100%">
-			<tr>
-				<td><p:outputLabel value="* Branch Name" /></td>
-				<td><p:inputText
-						value="#{backingBean.managedBean.selectedBranch.branchName}"
-						size="35" /></td>
-			</tr>
-			<tr>
-				<td><p:outputLabel value="* Address" /></td>
-				<td><p:inputText
-						value="#{backingBean.managedBean.selectedBranch.smAddress.address1}"
-						size="35" /></td>
-			</tr>
+		<p:panel
+			rendered="#{backingBean.managedBean.smAppl.supplierType eq '1'}">
+			<ui:include src="branchDetailsTablePage.xhtml" />
+		</p:panel>
+		<p:panel header="Branch Details"
+			rendered="#{backingBean.managedBean.smAppl.supplierType eq '2'}"
+			toggleable="true">
+			<ui:include src="branchDetailsTablePage.xhtml" />
+		</p:panel>
+		<p:panel header="Point Of Contact"
+			rendered="#{backingBean.managedBean.smAppl.supplierType eq '2'}"
+			toggleable="true">
+			<table style="width: 100%">
 
-			<tr>
-				<td></td>
-				<td><p:inputText
-						value="#{backingBean.managedBean.selectedBranch.smAddress.address2}"
-						size="35" /></td>
-			</tr>
-			<tr>
-				<td></td>
-				<td><p:inputText
-						value="#{backingBean.managedBean.selectedBranch.smAddress.address3}"
-						size="35" /></td>
-			</tr>
-			<tr>
-				<td><p:outputLabel value="* Country" /></td>
-				<td><p:selectOneMenu
-						value="#{backingBean.managedBean.selectedBranch.smAddress.pmCountry.countryCode}"
-						style="width: 207px;margin-bottom: 5px;">
-						<f:selectItem itemLabel="-- Select -- " itemValue="" />
-						<f:selectItem itemLabel="Malaysia" itemValue="MY" />
-					</p:selectOneMenu></td>
-			</tr>
-			<tr>
-				<td><p:outputLabel value="#{lbl['lbl.sm.postcode']}" /></td>
-				<td><p:inputText
-						value="#{backingBean.managedBean.selectedBranch.smAddress.postcode}"
-						size="35" /></td>
-			</tr>
-			<tr>
-				<td><p:outputLabel value="#{lbl['lbl.sm.state']}" /></td>
-				<td><p:inputText
-						value="#{backingBean.managedBean.selectedBranch.smAddress.pmState.stateCode}"
-						size="35" /></td>
-			</tr>
+				<tr>
+					<td><p:outputLabel value="* Name" /></td>
+					<td><p:inputText size="35" /></td>
+				</tr>
+				<tr>
+					<td><p:outputLabel value="* Position" /></td>
+					<td><p:inputText
+							value="#{backingBean.managedBean.selectedBranch.smAddress.address1}"
+							size="35" /></td>
+				</tr>
 
-			<tr>
-				<td><p:outputLabel value="#{lbl['lbl.sm.district']}" /></td>
-				<td><p:inputText
-						value="#{backingBean.managedBean.selectedBranch.smAddress.pmDistrict.districtCode}"
-						size="35" /></td>
-			</tr>
-			<tr>
-				<td><p:outputLabel value="#{lbl['lbl.sm.towncity']}" /></td>
-				<td><p:inputText
-						value="#{backingBean.managedBean.selectedBranch.smAddress.pmCity.cityCode}"
-						size="35" /></td>
-			</tr>
-			<tr>
-				<td><p:outputLabel value="Phone NO." /></td>
-				<td><p:inputText
-						value="#{backingBean.managedBean.selectedBranch.smAddress.phoneNo}"
-						size="35" /></td>
-			</tr>
-			<tr>
-				<td><p:outputLabel value="Fax NO." /></td>
-				<td><p:inputText
-						value="#{backingBean.managedBean.selectedBranch.smAddress.faxNo}"
-						size="35" /></td>
-			</tr>
+				<tr>
+					<td><p:outputLabel value="* Nationality" /></td>
+					<td><p:selectOneMenu
+							value="#{backingBean.managedBean.selectedPersonnel.nationalityId}"
+							style="width: 207px;margin-bottom: 5px;">
+							<f:selectItem itemLabel="-- Select One--" itemValue="1" />
+							<f:selectItem itemLabel="Malaysian" itemValue="2" />
+							<f:selectItem itemLabel="Chinese" itemValue="3" />
+							<f:selectItem itemLabel="Indian" itemValue="4" />
+						</p:selectOneMenu></td>
+				</tr>
+				<tr>
+					<td><p:outputLabel value="* IC/Pspt No." /></td>
+					<td><p:inputText
+							value="#{backingBean.managedBean.selectedPersonnel.identificationNo}"
+							size="35" /></td>
+				</tr>
+				<tr>
+					<td><p:outputLabel value=" Bumi " title="For Malaysian Only" /></td>
+					<td><p:selectOneRadio>
+							<f:selectItem itemLabel="Yes" itemValue="1" />
+							<f:selectItem itemLabel="No" itemValue="0" />
+						</p:selectOneRadio></td>
+				</tr>
 
-		</table>
-		<!-- </p:panel> -->
+				<tr>
+					<td><p:outputLabel value="Qualification"
+							title="For Malaysian Only" /></td>
+					<td><p:selectOneMenu>
+							<f:selectItem itemLabel="-- Others--" itemValue="1" />
+							<f:selectItem itemLabel="Graduate" itemValue="1" />
+							<f:selectItem itemLabel="Post Graduate" itemValue="1" />
+						</p:selectOneMenu></td>
+				</tr>
+
+			</table>
+		</p:panel>
 		<br />
 		<div align="right">
 			<p:commandButton value="Save"

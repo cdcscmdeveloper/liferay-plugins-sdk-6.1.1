@@ -23,10 +23,24 @@
 						</p:outputPanel></td>
 				</tr>
 			</table>
+			<br />
+			<p:separator />
+			<table>
+				<tr>
+
+					<td width="10px" style="padding: 4px 2px 0px 8px;"><p:selectBooleanCheckbox
+							value="#{backingBean.managedBean.termsAccepted}">
+							<p:ajax event="change" update=":form:bumCmdBtn" />
+						</p:selectBooleanCheckbox></td>
+					<td><p:outputLabel value="#{lbl['lbl.sm.termsConditions']}" /></td>
+				</tr>
+
+			</table>
 		</p:panel>
 		<div align="right">
-			<p:commandButton value="#{lbl['lbl.sm.proceed']}"
-				action="#{backingBean.proceedToApplication('B')}" />
+			<p:commandButton value="#{lbl['lbl.sm.proceed']}" id="bumCmdBtn"
+				action="#{backingBean.proceedToApplication('B')}"
+				disabled="#{!backingBean.managedBean.termsAccepted}" />
 			<!-- <p:commandButton value="Cancel"
 				action="/xhtml/sm/homeScreen/defaultVirtualCertPage.xhtml" /> -->
 		</div>

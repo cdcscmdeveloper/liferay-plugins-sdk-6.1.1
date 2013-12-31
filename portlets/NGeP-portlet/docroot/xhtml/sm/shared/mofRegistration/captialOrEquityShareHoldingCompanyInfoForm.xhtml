@@ -49,7 +49,7 @@
 					#{equiBean.smAddress.address2},#{equiBean.smAddress.address3}" />
 			</p:column>
 
-			<p:column headerText="Share Amt(MYR.)">
+			<p:column headerText="Share Amt (RM.)">
 				<h:outputText value="#{equiBean.shareAmount}" />
 			</p:column>
 			<p:column headerText="Share holding(%)">
@@ -116,7 +116,7 @@
 						size="35" /></td>
 			</tr>
 			<tr>
-				<td><p:outputLabel value="* Share Amount(MYR)" /></td>
+				<td><p:outputLabel value="* Share Amount (RM.)" /></td>
 				<td><p:inputText
 						value="#{backingBean.managedBean.selectedEquityCompany.shareAmount}"
 						size="35" /></td>
@@ -151,7 +151,6 @@
 				<td><p:selectOneMenu
 						value="#{backingBean.managedBean.selectedEquityCompany.smAddress.pmCountry.countryCode}"
 						style="width: 207px;margin-bottom: 5px;">
-						<f:selectItem itemLabel="-- Select -- " itemValue="" />
 						<f:selectItem itemLabel="Malaysia" itemValue="1" />
 					</p:selectOneMenu></td>
 			</tr>
@@ -165,7 +164,7 @@
 				<td><p:outputLabel value="#{lbl['lbl.sm.state']}" /></td>
 				<td><p:inputText
 						value="#{backingBean.managedBean.selectedEquityCompany.smAddress.pmState.stateCode}"
-						size="35" /></td>
+						size="35" readonly="true" disabled="true" /></td>
 			</tr>
 
 			<tr>

@@ -23,7 +23,7 @@
 							<p>Note : Before proceed please select the Supplier Type</p>
 							<br />
 
-							<table style="width: 35%">
+							<table style="width: 21%">
 								<tr>
 									<td><p:outputLabel
 											value="* #{lbl['lbl.sm.mofsuppliertype']}" /></td>
@@ -35,12 +35,26 @@
 								</tr>
 							</table>
 						</p:outputPanel></td>
+
 				</tr>
+			</table>
+			<table>
+				<tr>
+
+					<td width="10px" style="padding: 4px 2px 0px 8px;"><p:selectBooleanCheckbox
+							value="#{backingBean.managedBean.termsAccepted}">
+							<p:ajax event="change" update=":form:basCmdBtn" />
+						</p:selectBooleanCheckbox></td>
+					<td><p:outputLabel
+							value="#{lbl['lbl.sm.termsConditions']}" /></td>
+				</tr>
+
 			</table>
 		</p:panel>
 		<div align="right">
-			<p:commandButton value="#{lbl['lbl.sm.proceed']}"
-				action="#{backingBean.proceedToApplication('N')}" />
+			<p:commandButton value="#{lbl['lbl.sm.proceed']}" id="basCmdBtn"
+				action="#{backingBean.proceedToApplication('N')}"
+				disabled="#{!backingBean.managedBean.termsAccepted}" />
 			<!-- <p:commandButton value="Cancel" /> -->
 		</div>
 	</ui:define>

@@ -33,7 +33,8 @@
 		</table>
 		<br />
 		<p:panel id="trxInfPan">
-			<p:blockUI block=":form:tt:trxInfPan" widgetVar="buiPoTrx" id="poTrxBlc"
+			<p:blockUI block=":form:tt:trxInfPan" widgetVar="buiPoTrx"
+				id="poTrxBlc"
 				blocked="#{backingBean.managedBean.poSecReview.trnsNetworkVerified and backingBean.managedBean.poUser}" />
 
 			<table style="width: 100%">
@@ -41,13 +42,23 @@
 				<tr>
 					<td width="10px" style="padding-right: 2px;"><p:selectBooleanCheckbox
 							value="#{backingBean.managedBean.smAppl.withFederal}" /></td>
-					<td valign="middle"><h:outputText value=" Fedral Govt " /></td>
+					<td valign="middle" width="150px;"><h:outputText
+							value=" Fedral Govt " /></td>
+
 					<td width="10px" style="padding-right: 2px;"><p:selectBooleanCheckbox
 							value="#{backingBean.managedBean.smAppl.withState}" /></td>
-					<td valign="middle"><h:outputText value=" State Govt " /></td>
+					<td valign="middle" width="150px;"><h:outputText
+							value=" State Govt " /></td>
+
 					<td width="10px" style="padding-right: 2px;"><p:selectBooleanCheckbox
 							value="#{backingBean.managedBean.smAppl.withFederal}" /></td>
-					<td valign="middle"><h:outputText value=" Statutory Bodies " /></td>
+					<td valign="middle" width="150px;"><h:outputText
+							value=" Statutory Bodies " /></td>
+
+					<td width="10px" style="padding-right: 2px;"><p:selectBooleanCheckbox
+							value="#{backingBean.managedBean.smAppl.withStatutory}" /></td>
+					<td valign="middle" width="100px;"><h:outputText value=" GLC " /></td>
+
 					<td width="10px" style="padding-right: 2px;"><p:selectBooleanCheckbox
 							value="#{backingBean.managedBean.smAppl.withStatutory}" /></td>
 					<td valign="middle"><h:outputText value=" Others " /></td>

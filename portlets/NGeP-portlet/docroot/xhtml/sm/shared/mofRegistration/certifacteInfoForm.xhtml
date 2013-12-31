@@ -127,7 +127,7 @@
 					</p:selectOneMenu></td>
 			</tr>
 			<tr>
-				<td><p:outputLabel value="Certificate Name *" /></td>
+				<td><p:outputLabel value="* Certificate Name" /></td>
 				<td><p:inputText
 						value="#{backingBean.managedBean.selectedCert.certName}" size="35" /></td>
 			</tr>
@@ -156,6 +156,10 @@
 				<td><p:outputLabel value="* Expiry Date" /></td>
 				<td><p:calendar showOn="button"
 						value="#{backingBean.managedBean.selectedCert.certEndDate}" /></td>
+			</tr>
+			<tr>
+				<td><p:outputLabel value="Rating" /></td>
+				<td><p:inputText size="35" /></td>
 			</tr>
 
 		</table>

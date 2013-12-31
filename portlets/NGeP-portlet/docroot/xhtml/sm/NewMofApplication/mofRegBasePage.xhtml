@@ -23,7 +23,8 @@
 		</p:outputPanel>
 		<p:tabView id="tt" widgetVar="tt" orientation="left"
 			activeIndex="#{backingBean.managedBean.tabActiveIndex}">
-
+			<p:ajax event="tabChange" listener="#{backingBean.onTabChange}"
+				update=":form:tt:brnInfPan" />
 			<p:tab title="#{lbl['lbl.sm.companyStepLbl']}">
 				<ui:include src="step1CompanyInfo.xhtml" />
 			</p:tab>
