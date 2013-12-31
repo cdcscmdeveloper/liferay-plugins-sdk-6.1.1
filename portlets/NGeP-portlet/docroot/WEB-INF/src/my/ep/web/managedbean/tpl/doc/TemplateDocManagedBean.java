@@ -37,6 +37,7 @@ public class TemplateDocManagedBean extends BaseManagedBean {
 	private String desc;
 	private String templCategory;
 	
+	private String processValue;
 
 	private Long impCategoryId;
 	private Long docMasterId;	
@@ -77,7 +78,7 @@ public class TemplateDocManagedBean extends BaseManagedBean {
 	
 	private List<SelectItem> templateCategoryList; 
 	
-	private List<SelectItem> templateProcessTypeList;
+	private SelectItem[] templateProcessTypeList;
 	
 	//private List<TplSearch> templateDocSearch;
 	
@@ -328,14 +329,7 @@ public class TemplateDocManagedBean extends BaseManagedBean {
 		this.templateCategoryList = templateCategoryList;
 	}
 
-	public List<SelectItem> getTemplateProcessTypeList() {
-		return templateProcessTypeList;
-	}
-
-	public void setTemplateProcessTypeList(List<SelectItem> templateProcessTypeList) {
-		this.templateProcessTypeList = templateProcessTypeList;
-	}
-
+	
 	/*public List<TplSearch> getTemplateDocSearch() {
 		return templateDocSearch;
 	}
@@ -402,6 +396,26 @@ public class TemplateDocManagedBean extends BaseManagedBean {
 
 	public void setDesc(String desc) {
 		this.desc = desc;
+	}
+
+
+	public SelectItem[] getTemplateProcessTypeList() {
+		return templateProcessTypeList;
+	}
+
+
+	public void setTemplateProcessTypeList(SelectItem[] templateProcessTypeList) {
+		this.templateProcessTypeList = templateProcessTypeList;
+	}
+
+
+	public String getProcessValue() {
+		return processValue;
+	}
+
+
+	public void setProcessValue(String processValue) {
+		this.processValue = processValue;
 	}
 
 }
