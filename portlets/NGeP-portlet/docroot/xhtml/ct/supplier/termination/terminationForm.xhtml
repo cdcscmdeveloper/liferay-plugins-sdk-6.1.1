@@ -20,23 +20,27 @@
     </div>
 	</p:panel>
 	 <p:panel id="fd" header="#{lbl['lbl.ct.panel.name']}" toggleable="true" toggleSpeed="500">
+	    <p:outputPanel id="terminationRequest">
 	    <table style="width: 100%">
             <tr>
-                <td style="width:200px;">  <p:outputLabel value="Contract No." /></td>
-			    <td> <p:selectOneMenu style="width:180px;" value="#{supplierBackingBean.managedBean.contractVer.ctContractValue.contractPhysicalNo}" >
-				     <f:selectItem itemLabel="-Please Select--" itemValue="" />
-				     <f:selectItem itemLabel="CT-123-0578" itemValue="1" />
-				     <f:selectItem itemLabel="CT-123-0579" itemValue="2" />
+                <td style="width:200px;">  
+                <h:outputLabel for="contractId" value="Contract No." /></td>
+			    <td> <p:selectOneMenu id="contractId" value="#{supplierBackingBean.managedBean.contractNo}" style="width:180px;" disabled="false">
+				     <f:selectItem itemLabel="-Select One-" itemValue="" />
+				      <f:selectItems value="#{supplierBackingBean.populateContractList}"/>
+				      <p:ajax event="change" process="@this" update="terminationRequest" listener="#{supplierBackingBean.changeContractActionListener}"/>
 			         </p:selectOneMenu></td>
 		         <td style="width:200px;">	<p:outputLabel value="#{lbl['lbl.ct.physicalNo']}" /></td>
 		         <td>	<p:inputText disabled="true" style="width:170px;"
-			               value="#{supplierBackingBean.managedBean.contractVer.ctContractValue.contractPhysicalNo}"/>	</td>
+			               value="#{supplierBackingBean.managedBean.ctContract.latestContractVer.ctContractValue.contractPhysicalNo}"/>	</td>
 		   </tr>
 		   <tr>		
 			     <td><p:outputLabel value="#{lbl['lbl.ct.effectiveDate']}" /></td>
-			     <td> <p:inputText disabled="true" style="width:110px;" value="#{supplierBackingBean.managedBean.contractVer.ctContractValue.effDate}"/> </td>
+			     <td> <p:inputText disabled="true" style="width:110px;" 
+			          value="#{supplierBackingBean.managedBean.ctContract.latestContractVer.ctContractValue.effDate}"/> </td>
 			     <td><h:outputLabel value="#{lbl['lbl.ct.edate']}" /></td>
-			     <td><p:inputText disabled="true" style="width:110px;" value="#{supplierBackingBean.managedBean.contractVer.ctContractValue.expDate}"/>	</td>
+			     <td><p:inputText disabled="true" style="width:110px;" 
+			          value="#{supplierBackingBean.managedBean.ctContract.latestContractVer.ctContractValue.expDate}"/>	</td>
 		   </tr>
 		   <tr>
 			    <td>		
@@ -47,15 +51,15 @@
 		    
 			   </td>
 		   	   <td>
-		   	         
-			            <h:inputTextarea id="contractName" value="Test" rows="3" cols="34" disabled="true"
-				            autoResize="false" />	
+			           <h:inputTextarea id="contractName" value="#{supplierBackingBean.managedBean.ctContract.contractName}" 
+			           rows="3" cols="34" disabled="true" autoResize="false" />	
 			      
 			 </td>
 			 <td></td>
 			 <td></td>
 			 </tr>
 		  </table>
+		</p:outputPanel>
 		 </p:panel>
          <p:panel id="sTermination" header="Termination Request Details" toggleable="true"  toggleSpeed="500">
             <table style="width: 100%">

@@ -30,6 +30,7 @@ import my.ep.biz.bean.search.ISearchBean;
 import my.ep.biz.bean.search.SearchBean;
 import my.ep.biz.bean.search.SearchFilterBean;
 import my.ep.biz.service.ct.IContractSO;
+import my.ep.biz.service.ct.maintain.IContractAssociationSO;
 import my.ep.biz.service.pm.authorization.user.IUserSO;
 import my.ep.bpm.dto.BpmRequestDTO;
 import my.ep.bpm.dto.BpmResponseDTO;
@@ -38,6 +39,8 @@ import my.ep.constant.BpmOutcomeConst;
 import my.ep.constant.ct.ContractConst;
 import my.ep.dto.ct.ContractReqDTO;
 import my.ep.dto.ct.ContractResDTO;
+import my.ep.dto.ct.maintain.ContractAssociationReqDTO;
+import my.ep.dto.ct.maintain.ContractAssociationResDTO;
 import my.ep.dto.pm.authorization.user.UserReqDTO;
 import my.ep.dto.pm.authorization.user.UserResDTO;
 import my.ep.exception.EpException;
@@ -48,6 +51,7 @@ import my.ep.jaxb.ct.termination.CTContractTerminationDataType;
 import my.ep.persistence.entity.ct.CtContract;
 import my.ep.persistence.entity.ct.CtContractVer;
 import my.ep.persistence.entity.ct.amend.CtAmendment;
+import my.ep.persistence.entity.ct.assoc.CtAssocContract;
 import my.ep.persistence.entity.ct.dtl.CtProgressivePayment;
 import my.ep.persistence.entity.ct.dtl.CtSchedule;
 import my.ep.persistence.entity.ct.dtl.deduction.CtDeduction;
@@ -58,11 +62,9 @@ import my.ep.persistence.entity.pm.authorization.PmUserGroup;
 import my.ep.persistence.entity.pm.authorization.PmUserGroupUser;
 import my.ep.persistence.entity.pm.common.PmParameter;
 import my.ep.type.aut.SearchOperator;
-import my.ep.type.pm.RoleCode;
 import my.ep.util.lookupservice.EpBpmBusinessDelegate;
 import my.ep.web.backingbean.BaseBackingBean;
 import my.ep.web.backingbean.ct.agreement.AgreementBackingBean;
-import my.ep.web.backingbean.ct.supplier.SupplierBackingBean;
 import my.ep.web.constant.ct.ContractManagementConst;
 import my.ep.web.managedbean.ct.ContractDetailsManagedBean;
 import my.ep.web.util.FacesScopes;
@@ -83,15 +85,13 @@ public class ContractDetailsBackingBean extends BaseBackingBean<ContractDetailsM
 	private static final String PROCESS_SUSPEND_PAGE = "/xhtml/ct/fulfilmentdetails/suspension/suspendTab.xhtml";
 	private static final String PROCESS_AMEND_PAGE = "/xhtml/ct/fulfilmentdetails/amendment/amendmentTab.xhtml";
 	private static final String PROCESS_VIEW_PAGE = "/xhtml/ct/agreement/shared/sidemenu/agreementViewTab.xhtml";
-	private static final String PROCESS_SUPPLIER_TERMINATE_PAGE = "/xhtml/ct/supplier/termination/tabView.xhtml";
 	private static final String PROCESS_ASSOCIATE_PAGE = "/xhtml/ct/fulfilmentdetails/association/projectCreation.xhtml";
-	private static final String PROCESS_BANK_PAGE = "/xhtml/ct/supplier/bank/tabView.xhtml";
 	private static final String PROCESS_ASSOCIATE_CANCEL_PAGE = "/xhtml/ct/fulfilmentdetails/association/projectAssociation.xhtml";
 	
 	private TreeNode rootNode;
 	private TreeNode selectedNode;
 	private TreeNode rootNodeAgency;
-	private CtContractVer[] selectedContractList;
+	private CtContract[] selectedContractList;
 	private CtDeductionClause[] chkDeductionClause;
 	private String editorValue;
 	
@@ -114,7 +114,7 @@ public class ContractDetailsBackingBean extends BaseBackingBean<ContractDetailsM
 		rootNodeAgency = new DefaultTreeNode("root", null);
 		
 		if (this.getManagedBean().getAction() == null) {
-			this.getManagedBean().setAction(new String[] { BpmOutcomeConst.BPM_SAVE,BpmOutcomeConst.BPM_SUBMIT });
+			this.getManagedBean().setAction(new String[] {BpmOutcomeConst.BPM_SAVE,BpmOutcomeConst.BPM_SUBMIT});
 		}
 		
 		if (this.getManagedBean().getApproverModel() == null) {
@@ -381,43 +381,22 @@ public class ContractDetailsBackingBean extends BaseBackingBean<ContractDetailsM
    public void ChkAmendmentAction(){
     	
     	try {
-			if(this.getManagedBean().getContractVer().getCtAmendment().isContractExtend()){
+			if(this.getManagedBean().getContractVer().getCtAmendment().isContractExtend())
 				this.getManagedBean().getContractVer().getCtAmendment().setContractExtend(true);
-				/*this.getManagedBean().getContractVer().getCtAmendment().setPriceChange(false);
-		    	this.getManagedBean().getContractVer().getCtAmendment().setQuantityChange(false);
-		    	this.getManagedBean().getContractVer().getCtAmendment().setClauseChange(false);
-		    	this.getManagedBean().getContractVer().getCtAmendment().setValueChange(false);*/
 			
-			}else if(this.getManagedBean().getContractVer().getCtAmendment().isPriceChange()){
+			else if(this.getManagedBean().getContractVer().getCtAmendment().isPriceChange())
 				this.getManagedBean().getContractVer().getCtAmendment().setPriceChange(true);
-				/*this.getManagedBean().getContractVer().getCtAmendment().setContractExtend(false);
-				this.getManagedBean().getContractVer().getCtAmendment().setQuantityChange(false);
-		    	this.getManagedBean().getContractVer().getCtAmendment().setClauseChange(false);
-		    	this.getManagedBean().getContractVer().getCtAmendment().setValueChange(false);*/
-		
-			}else if(this.getManagedBean().getContractVer().getCtAmendment().isQuantityChange()){
-	
+		  
+			else if(this.getManagedBean().getContractVer().getCtAmendment().isQuantityChange())
 				this.getManagedBean().getContractVer().getCtAmendment().setQuantityChange(true);
-				/*this.getManagedBean().getContractVer().getCtAmendment().setPriceChange(false);
-				this.getManagedBean().getContractVer().getCtAmendment().setContractExtend(false);
-		    	this.getManagedBean().getContractVer().getCtAmendment().setClauseChange(false);
-		    	this.getManagedBean().getContractVer().getCtAmendment().setValueChange(false);*/
-			
-			}else if(this.getManagedBean().getContractVer().getCtAmendment().isClauseChange()){
+		  
+			else if(this.getManagedBean().getContractVer().getCtAmendment().isClauseChange())
 				this.getManagedBean().getContractVer().getCtAmendment().setClauseChange(true);
-				/*this.getManagedBean().getContractVer().getCtAmendment().setPriceChange(false);
-				this.getManagedBean().getContractVer().getCtAmendment().setContractExtend(false);
-				this.getManagedBean().getContractVer().getCtAmendment().setQuantityChange(false);
-		    	this.getManagedBean().getContractVer().getCtAmendment().setValueChange(false);*/
 			
-			}else if(this.getManagedBean().getContractVer().getCtAmendment().isValueChange()){
+			else if(this.getManagedBean().getContractVer().getCtAmendment().isValueChange())
 				this.getManagedBean().getContractVer().getCtAmendment().setValueChange(true);
-				/*this.getManagedBean().getContractVer().getCtAmendment().setPriceChange(false);
-				this.getManagedBean().getContractVer().getCtAmendment().setContractExtend(false);
-				this.getManagedBean().getContractVer().getCtAmendment().setQuantityChange(false);
-		    	this.getManagedBean().getContractVer().getCtAmendment().setClauseChange(false);*/
-			}
-    	   } catch (Exception e) {
+			
+    	} catch (Exception e) {
 			System.out.println(e);
 		}
     }
@@ -552,20 +531,47 @@ public class ContractDetailsBackingBean extends BaseBackingBean<ContractDetailsM
 	public void searchContract() {
 
 		ISearchBean<CtContract> searchBean = new SearchBean<CtContract>();
-		SearchFilterBean equalFilterBean = new SearchFilterBean(SearchOperator.OPERATOR_EQUALS.value());
-		if (this.getManagedBean().getCtLOANo() != null && !this.getManagedBean().getCtLOANo().equalsIgnoreCase("")) {
-			System.out.println("==============="+this.getManagedBean().getCtLOANo());
-			equalFilterBean.setSearchField("qtLoaId");
-			equalFilterBean.setSearchValue(this.getManagedBean().getCtLOANo());
-			searchBean.getDataFilterBeans().add(equalFilterBean);
+		if(this.getManagedBean().getCtNumber()!=null && this.getManagedBean().getCtNumber().length()>0) {
+			searchBean.getDataFilterBeans().add(new SearchFilterBean("latestContractVer.docNo",SearchOperator.OPERATOR_EQUALS.value(),
+			getManagedBean().getCtNumber()));	
 		}
-		if (this.getManagedBean().getCtName() != null && !this.getManagedBean().getCtName().equalsIgnoreCase("")) {
-			equalFilterBean.setSearchField("contractName");
-			equalFilterBean.setSearchValue(getManagedBean().getCtName());
-			searchBean.getDataFilterBeans().add(equalFilterBean);
+		if(this.getManagedBean().getCtName()!=null && this.getManagedBean().getCtName().length()>0) {
+			searchBean.getDataFilterBeans().add(new SearchFilterBean("contractName",SearchOperator.OPERATOR_LIKE.value(),
+			this.getManagedBean().getCtName()));	
 		}
-
-		log.info("searchAction starts");
+		if(this.getManagedBean().getCtCircularNo()!=null && this.getManagedBean().getCtCircularNo().length()>0) {
+			searchBean.getDataFilterBeans().add(new SearchFilterBean("circular.latestCircularVer.circularNo",SearchOperator.OPERATOR_LIKE.value(),
+			getManagedBean().getCtCircularNo()));	
+		}			
+		if(getManagedBean().getCtCircularName()!=null && getManagedBean().getCtCircularName().length()>0) {
+			searchBean.getDataFilterBeans().add(new SearchFilterBean("circular.latestCircularVer.name",SearchOperator.OPERATOR_EQUALS.value(),
+			getManagedBean().getCtCircularName()));	
+		}	
+		if(getManagedBean().getCtSupplierId()!=null && getManagedBean().getCtSupplierId().length()>0) {
+			searchBean.getDataFilterBeans().add(new SearchFilterBean("SmSupplier.supplierId",SearchOperator.OPERATOR_LIKE.value(),
+			getManagedBean().getCtSupplierId()));	
+		}		
+		if(getManagedBean().getCtSupplierName()!=null && getManagedBean().getCtSupplierName().length()>0) {
+			searchBean.getDataFilterBeans().add(new SearchFilterBean("SmSupplier.supplierName",SearchOperator.OPERATOR_EQUALS.value(),
+			getManagedBean().getCtSupplierName()));	
+		}	
+		if(this.getManagedBean().getCtDateStart()!=null && this.getManagedBean().getCtDateStart().length()>0) {
+			searchBean.getDataFilterBeans().add(new SearchFilterBean("latestContractVer.ctContractValue.effDate",SearchOperator.OPERATOR_LIKE.value(),
+			getManagedBean().getCtDateStart()));	
+		}			
+		if(getManagedBean().getCtDateEnd()!=null && getManagedBean().getCtDateEnd().length()>0) {
+			searchBean.getDataFilterBeans().add(new SearchFilterBean("latestContractVer.ctContractValue.expDate",SearchOperator.OPERATOR_EQUALS.value(),
+			getManagedBean().getCtDateEnd()));	
+		}	
+		if(getManagedBean().getCtProductCode()!=null && getManagedBean().getCtProductCode().length()>0) {
+			searchBean.getDataFilterBeans().add(new SearchFilterBean("latestContractVer.ctContractValue.contractPhysicalNo",SearchOperator.OPERATOR_LIKE.value(),
+			getManagedBean().getCtProductCode()));	
+		}	
+		if(getManagedBean().getCtLOANo()!=null && getManagedBean().getCtLOANo().length()>0) {
+			searchBean.getDataFilterBeans().add(new SearchFilterBean("loaNo",SearchOperator.OPERATOR_LIKE.value(),
+			getManagedBean().getCtLOANo()));	
+		}	
+				
 		IContractSO contractSO = null;
 		try {
 
@@ -586,32 +592,45 @@ public class ContractDetailsBackingBean extends BaseBackingBean<ContractDetailsM
 	}
 	
 	public void searchAssociation() {
+		
 
-	/*	IContractAssociationSO contractAssociationSO = null;
-		ISearchBean<CtAssociation> searchBean = new SearchBean<CtAssociation>();
+		IContractAssociationSO contractAssociationSO = null;
+		ISearchBean<CtAssocContract> searchBean = new SearchBean<CtAssocContract>();
 
 		try {
-
-			SearchFilterBean equalFilterBean = new SearchFilterBean(
-					SearchOperator.OPERATOR_EQUALS.value());
-			// SearchFilterBean likeFilterBean = new
-			// SearchFilterBean(SearchOperator.OPERATOR_LIKE.value());
-
-			if (this.getManagedBean().getProjectName() != null) {
-				equalFilterBean.setSearchField("projectName");
-				equalFilterBean.setSearchValue(this.getManagedBean().getProjectName());
-				searchBean.getDataFilterBeans().add(equalFilterBean);
+			
+			if(this.getManagedBean().getProjectName()!=null && this.getManagedBean().getProjectName().length()>0) {
+				searchBean.getDataFilterBeans().add(new SearchFilterBean("ctAssociation.projectName",	SearchOperator.OPERATOR_EQUALS.value(),
+				getManagedBean().getProjectName()));	
 			}
-
-			if (this.getManagedBean().getProjectDescription() != null) {
-				equalFilterBean.setSearchField("description");
-				equalFilterBean.setSearchValue(getManagedBean().getProjectDescription());
-				searchBean.getDataFilterBeans().add(equalFilterBean);
+			if(this.getManagedBean().getCtName()!=null && this.getManagedBean().getCtName().length()>0) {
+				searchBean.getDataFilterBeans().add(new SearchFilterBean("ctContract.contractName",SearchOperator.OPERATOR_LIKE.value(),
+				this.getManagedBean().getCtName()));	
 			}
+			if(this.getManagedBean().getProjectDescription()!=null && this.getManagedBean().getProjectDescription().length()>0) {
+				searchBean.getDataFilterBeans().add(new SearchFilterBean("ctAssociation.description",SearchOperator.OPERATOR_LIKE.value(),
+				getManagedBean().getProjectDescription()));	
+			}			
+			if(getManagedBean().getCtSupplierName()!=null && getManagedBean().getCtSupplierName().length()>0) {
+				searchBean.getDataFilterBeans().add(new SearchFilterBean("ctContract.SmSupplier.supplierName",SearchOperator.OPERATOR_EQUALS.value(),
+				getManagedBean().getCtSupplierName()));	
+			}
+			if(this.getManagedBean().getCtDateStart()!=null && this.getManagedBean().getCtDateStart().length()>0) {
+				searchBean.getDataFilterBeans().add(new SearchFilterBean("ctContract.latestContractVer.ctContractValue.effDate",
+				SearchOperator.OPERATOR_LIKE.value(),getManagedBean().getCtDateStart()));	
+			}			
+			if(getManagedBean().getCtDateEnd()!=null && getManagedBean().getCtDateEnd().length()>0) {
+				searchBean.getDataFilterBeans().add(new SearchFilterBean("ctContract.latestContractVer.ctContractValue.expDate",
+				SearchOperator.OPERATOR_EQUALS.value(),getManagedBean().getCtDateEnd()));	
+			}	
+			if(getManagedBean().getCtProductCode()!=null && getManagedBean().getCtProductCode().length()>0) {
+				searchBean.getDataFilterBeans().add(new SearchFilterBean("ctContract.latestContractVer.ctContractValue.contractPhysicalNo",
+				SearchOperator.OPERATOR_LIKE.value(),getManagedBean().getCtProductCode()));	
+			}	
 
 			ContractAssociationReqDTO reqDTO = new ContractAssociationReqDTO();
 			contractAssociationSO = (IContractAssociationSO) BusinessDelegate.getInstance().getServiceObject("ct",IContractAssociationSO.class);
-			reqDTO.setSearchBean(super.createSearchBean(CtAssociation.class,"associateSearch"));
+			reqDTO.setSearchBean(super.createSearchBean(CtAssocContract.class,"associateSearch"));
 			reqDTO.setSearchBean(searchBean);
 			ContractAssociationResDTO ResDTO = contractAssociationSO.searchAssociation(reqDTO);
 			this.getManagedBean().setAssociationList(ResDTO.getResultBean().getResultList());
@@ -623,109 +642,78 @@ public class ContractDetailsBackingBean extends BaseBackingBean<ContractDetailsM
 		} finally {
 			contractAssociationSO = null;
 			searchBean = null;
-		} */
+		} 
 	}
 	
-	public void createAssociation() {
-
-	/*	List<CtAssocContract> assocContract = new ArrayList<CtAssocContract>();
-		CtAssocContract association = new CtAssocContract();
-		IContractAssociationSO contractAssociationSO = null;
-
-		try {
-
-			this.getManagedBean().getAssociation().setProjectName(this.getManagedBean().getProjectName());
-			this.getManagedBean().getAssociation().setDescription(this.getManagedBean().getProjectDescription());
-			for (CtContract ctContract : this.getManagedBean().getAssociateSearchList()) {
-				association.setCtContract(ctContract);
-				association.setCtAssociation(this.getManagedBean().getAssociation());
-				assocContract.add(association);
-			}
-			this.getManagedBean().getAssociation().setCtAssocContracts(assocContract);
-
-			ContractAssociationReqDTO reqDTO = new ContractAssociationReqDTO();
-			contractAssociationSO = (IContractAssociationSO) BusinessDelegate.getInstance().getServiceObject("ct",IContractAssociationSO.class);
-			reqDTO.setAssociation(this.getManagedBean().getAssociation());
-			contractAssociationSO.createAssociation(reqDTO);
-
-		} catch (Exception ex) {
-			log.error("Exception>>>" + ex);
-
-		} finally {
-			contractAssociationSO = null;
-			assocContract = null;
-			association = null;
-		}*/
-
-	}
-	
-	public void advanceContractSearch() {
-
-	/*	log.info("searchAction starts");
-		IContractSO contractSO = null;
-		try {
-
-			ISearchBean<CtContract> searchBean = new SearchBean<CtContract>();
-			SearchFilterBean equalFilterBean = new SearchFilterBean(SearchOperator.OPERATOR_EQUALS.value());
-			if (this.getManagedBean().getQtLoaNo() != null) {
-				equalFilterBean.setSearchField("qtLoaId");
-				equalFilterBean.setSearchValue(this.getManagedBean().getQtLoaNo());
-				searchBean.getDataFilterBeans().add(equalFilterBean);
-			}
-
-			contractSO = (IContractSO) BusinessDelegate.getInstance().getServiceObject("ct", IContractSO.class);
-			ContractReqDTO reqDTO = new ContractReqDTO();
-			reqDTO.setContractSearchBean(super.createSearchBean(CtContract.class, "advanceCtSearch"));
-			reqDTO.setContractSearchBean(searchBean);
-			ContractResDTO ResDTO = contractSO.searchContract(reqDTO);
-			this.getManagedBean().setContractList(ResDTO.getContractResultBean().getResultList());
-			this.getManagedBean().setSelectedIndex(0);
-
-		} catch (Exception ex) {
-			log.error("Exception>>", ex);
-		} finally {
-			contractSO = null;
-		}*/
-	}
-	
-	public void addAdvanceContract(ActionEvent event) {
+	public void addAdvanceContract() {
 
 		for (int i = 0; i < selectedContractList.length; i++) {
-			CtContractVer ad = selectedContractList[i];
+			CtContract ad = selectedContractList[i];
 			this.getManagedBean().getAssociateSearchList().add(ad);
 		}
 		selectedContractList = null;
 	}
 
 	public void deleteAdvanceContract() {
-		this.getManagedBean().getAssociateSearchList().remove(this.getManagedBean().getCtContract());
+		this.getManagedBean().getAssociateSearchList().remove(this.getManagedBean().getAssocoiateCtContract());
 	}
 	
 	public void deleteAssociation() {
 
-	/*	IContractAssociationSO contractAssociationSO = null;
+		IContractAssociationSO contractAssociationSO = null;
 
 		try {
 
 			ContractAssociationReqDTO reqDTO = new ContractAssociationReqDTO();
 			contractAssociationSO = (IContractAssociationSO) BusinessDelegate.getInstance().getServiceObject("ct",IContractAssociationSO.class);
-			reqDTO.setAssociation(this.getManagedBean().getAssociation());
-			log.info("deleteing value>>>>>>>"
-					+ this.getManagedBean().getAssociation().getAssociationId());
+			reqDTO.setCtDelAssocContract(this.getManagedBean().getCtDelAssocContract());
 			contractAssociationSO.deleteAssociation(reqDTO);
-
 		} catch (Exception ex) {
 			log.error("Exception>>", ex);
 
 		} finally {
 			contractAssociationSO = null;
-		} */
+		} 
 	}
+	
+	public String createAssociation() {
 
-	
-	/*Search methode finshed*/
-	
-	/* Testing purpose End */
+		IContractAssociationSO contractAssociationSO = null;
+        List<CtAssocContract> contractAssociationList = new ArrayList<CtAssocContract>();
+        CtAssocContract ctAssocContract = new CtAssocContract();
+		try {
+              for(CtContract contract : this.getManagedBean().getAssociateSearchList()){
+            	  ctAssocContract.setCtContract(contract);
+            	  ctAssocContract.setCtAssociation(this.getManagedBean().getCtAssociation());
+            	  contractAssociationList.add(ctAssocContract);  
+              }
+              
+            this.getManagedBean().getCtAssociation().setCtAssocContracts(contractAssociationList);
+			ContractAssociationReqDTO reqDTO = new ContractAssociationReqDTO();
+			contractAssociationSO = (IContractAssociationSO) BusinessDelegate.getInstance().getServiceObject("ct",IContractAssociationSO.class);
+			reqDTO.setAssociation(this.getManagedBean().getCtAssociation());
+			ContractAssociationResDTO resDTO = contractAssociationSO.createAssociation(reqDTO);
+			if (resDTO.isSuccessful()) {
+				
+				  log.info("Record saved successfully");
+				  FacesContext.getCurrentInstance().addMessage(null,new FacesMessage(FacesMessage.SEVERITY_INFO,"Record saved successfully.","Contract Association : "+ 
+				   this.getManagedBean().getCtAssociation().getProjectName()));
+					
+			  } else {
+					throw new EpException("Failed.");
+				}
+
+		} catch (Exception ex) {
+			log.error("Exception>>>" + ex);
+			ex.printStackTrace();
+			FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR,ex.toString(), ex.getMessage()));
+		} finally {
+			contractAssociationSO = null;
+			contractAssociationList = null;
+			ctAssocContract = null;
+		}
+       return null;
+	}
 	
     public String saveContract(String action){
 		
@@ -741,15 +729,13 @@ public class ContractDetailsBackingBean extends BaseBackingBean<ContractDetailsM
 			    this.getManagedBean().getContractVer().setDocType(ContractConst.DOC_TYPE_CONTRACT_SUSPEND_ACTIVE);
 			    this.getManagedBean().getContractVer().getCtContract().setContractId(this.getManagedBean().getCtContract().getContractId());
           
-            } else if(this.getManagedBean().getChkRenderPage().equalsIgnoreCase(ContractConst.DOC_TYPE_CONTRACT_TERMINATION)){
+            }else if(this.getManagedBean().getChkRenderPage().equalsIgnoreCase(ContractConst.DOC_TYPE_CONTRACT_TERMINATION)){
             	 this.getManagedBean().getContractVer().setDocType(ContractConst.DOC_TYPE_CONTRACT_TERMINATION);
             	 this.getManagedBean().getContractVer().getCtContract().setContractId(this.getManagedBean().getCtContract().getContractId());
           
-            } else if(this.getManagedBean().getChkRenderPage().equalsIgnoreCase(ContractConst.DOC_TYPE_CONTRACT_AMENDMENT)){
-		
-            	 this.getManagedBean().getContractVer().setDocType(ContractConst.DOC_TYPE_CONTRACT_AMENDMENT);
-            	// this.getManagedBean().getContractVer().getCtContract().setContractId(this.getManagedBean().getCtContract().getContractId());
-		 
+            }else if(this.getManagedBean().getChkRenderPage().equalsIgnoreCase(ContractConst.DOC_TYPE_CONTRACT_AMENDMENT)){
+		         this.getManagedBean().getContractVer().setDocType(ContractConst.DOC_TYPE_CONTRACT_AMENDMENT);
+                
             }else {
             	 this.getManagedBean().getContractVer().setDocType(ContractConst.DOC_TYPE_CONTRACT_CREATION);	
             	 this.getManagedBean().getContractVer().getCtContract().setAgreement(true);
@@ -785,14 +771,14 @@ public class ContractDetailsBackingBean extends BaseBackingBean<ContractDetailsM
 		
 	}
 	
+    /*Approver details start*/
     private List<String> getAvailableApproverList() {
-		List<String> availableApprovers = new ArrayList<String>(); 
+		
+    	List<String> availableApprovers = new ArrayList<String>(); 
 		IUserSO userSO = null;
 		try {
 			userSO = (IUserSO)BusinessDelegate.getInstance().getServiceObject("pm",IUserSO.class);
-
 			UserReqDTO reqDTO = new UserReqDTO();
-			//TODO
 			reqDTO.setOrgProfileId(1250l);
 			UserResDTO resDTO = userSO.retrieveUserGroupList(reqDTO);
 			for(PmUserGroupUser user : resDTO.getUserGroupList().get(0).getPmUserGroupUsers()) {
@@ -810,6 +796,7 @@ public class ContractDetailsBackingBean extends BaseBackingBean<ContractDetailsM
 
 	
 	public void userGroupChangeListener() {
+		
 		PmUserGroup selectedUserGroup = getManagedBean().getUserGroupMap().get(getManagedBean().getContractVer().getPmUserGroup().getUserGroupId());
 		List<String> source = new ArrayList<String>(); 
         List<String> target = new ArrayList<String>();  
@@ -821,79 +808,20 @@ public class ContractDetailsBackingBean extends BaseBackingBean<ContractDetailsM
 	}
 	
 	public SelectItem[] getUserGroupDropdown() {
+		
 		SelectItem[] items = null;
 		try {
 			items = new SelectItem[getManagedBean().getUserGroupMap().values().size()];
 			int i = 0;
-			for(PmUserGroup userGroup : getManagedBean().getUserGroupMap().values()) {
+			for(PmUserGroup userGroup : getManagedBean().getUserGroupMap().values()) 
 				items[i++] = new SelectItem(userGroup.getUserGroupId(), userGroup.getGroupName());
-			}
 		} catch (Exception e) {
 			e.printStackTrace();
 			FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR,e.toString(), e.getMessage()));
 		}
 	    return items;
-	}
+	}/*End approval details*/
 	
-	
-	public TreeNode getSelectedNode() {
-		return selectedNode;
-	}
-
-	public void setSelectedNode(TreeNode selectedNode) {
-		this.selectedNode = selectedNode;
-	}
-
-	public TreeNode getRootNodeAgency() {
-		return rootNodeAgency;
-	}
-
-	public void setRootNodeAgency(TreeNode rootNodeAgency) {
-		this.rootNodeAgency = rootNodeAgency;
-	}
-
-	public TreeNode getRootNode() {
-		return rootNode;
-	}
-
-	public void setRootNode(TreeNode rootNode) {
-		this.rootNode = rootNode;
-	}
-
-	public CtDeductionClause[] getChkDeductionClause() {
-		return chkDeductionClause;
-	}
-
-	public void setChkDeductionClause(CtDeductionClause[] chkDeductionClause) {
-		this.chkDeductionClause = chkDeductionClause;
-	}
-
-	public String getFulfillmentNo() {
-		return fulfillmentNo;
-	}
-
-	public void setFulfillmentNo(String fulfillmentNo) {
-		this.fulfillmentNo = fulfillmentNo;
-	}
-	
-	
-	
-	public CtContractVer[] getSelectedContractList() {
-		return selectedContractList;
-	}
-
-	public void setSelectedContractList(CtContractVer[] selectedContractList) {
-		this.selectedContractList = selectedContractList;
-	}
-
-	public String getEditorValue() {
-		return editorValue;
-	}
-
-	public void setEditorValue(String editorValue) {
-		this.editorValue = editorValue;
-	}
-
 	public String gotoTerminatePage() {
 
 		IContractSO contractSO = null;
@@ -1003,82 +931,67 @@ public class ContractDetailsBackingBean extends BaseBackingBean<ContractDetailsM
 		return PROCESS_VIEW_PAGE;
 	}
 	
-	public String gotoBankPage(){
-		
-		IContractSO contractSO = null;
-		ContractResDTO resDTO  = null;
-		ContractReqDTO reqDTO  = null;
-		SupplierBackingBean sBB = null;
-		
-		try {
-
-				reqDTO = new ContractReqDTO();
-				contractSO = (IContractSO) BusinessDelegate.getInstance().getServiceObject("ct", IContractSO.class);
-				reqDTO.setContractVerId(this.getManagedBean().getCtContract().getContractId());
-				resDTO = contractSO.retrieveContractVer(reqDTO);
-				if(sBB == null){
-				    sBB = new SupplierBackingBean();
-				}
-				sBB.getManagedBean().setChkRenderPage(ContractConst.DOC_TYPE_CHANGE_BANK_ACCOUNT);
-				sBB.getManagedBean().setContractVer(resDTO.getCtContractVer());	
-				this.getManagedBean().getContractVer().getCtContract().setContractId(this.getManagedBean().getCtContract().getContractId());
-				
-			} catch (Exception e) {
-				e.printStackTrace();
-			} finally {
-				contractSO = null;
-				resDTO = null;
-				reqDTO = null;
-				sBB = null;
-			}
-
-		return PROCESS_BANK_PAGE;
-	}
-	
-	public String gotoSupplierTerminatePage(){
-		
-		IContractSO contractSO = null;
-		ContractResDTO resDTO  = null;
-		ContractReqDTO reqDTO  = null;
-		SupplierBackingBean sBB = null;
-		
-		try {
-
-				reqDTO = new ContractReqDTO();
-				contractSO = (IContractSO) BusinessDelegate.getInstance().getServiceObject("ct", IContractSO.class);
-				reqDTO.setContractVerId(this.getManagedBean().getCtContract().getContractId());
-				resDTO = contractSO.retrieveContractVer(reqDTO);
-				if(sBB == null){
-				    sBB = new SupplierBackingBean();
-				}
-				sBB.getManagedBean().setContractVer(resDTO.getCtContractVer());	
-				
-			} catch (Exception e) {
-				e.printStackTrace();
-			} finally {
-				contractSO = null;
-				resDTO = null;
-				reqDTO = null;
-				sBB = null;
-			}
-		return PROCESS_SUPPLIER_TERMINATE_PAGE;
-	}
-	
-	public boolean isContractAdmin() {
-		FacesScopes facesScopes = new FacesScopes();
-		return facesScopes.hasRoleUser(RoleCode.MIN_CONTRACT_ADMIN.value());
-	}
-	
-	public boolean isSupplier() {
-		FacesScopes facesScopes = new FacesScopes();
-		return (facesScopes.hasRoleUser(RoleCode.SUPPLIER_ADMIN.value()) ||(facesScopes.hasRoleUser(RoleCode.SUPPLIER_USER.value())));
-	}
-	
 	public String gotoAssociatePage() {
 		return PROCESS_ASSOCIATE_PAGE;
 	}
 	
 	public String gotoCancelPage() {
 		return PROCESS_ASSOCIATE_CANCEL_PAGE;
+	}
+	
+	public TreeNode getSelectedNode() {
+		return selectedNode;
+	}
+
+	public void setSelectedNode(TreeNode selectedNode) {
+		this.selectedNode = selectedNode;
+	}
+
+	public TreeNode getRootNodeAgency() {
+		return rootNodeAgency;
+	}
+
+	public void setRootNodeAgency(TreeNode rootNodeAgency) {
+		this.rootNodeAgency = rootNodeAgency;
+	}
+
+	public TreeNode getRootNode() {
+		return rootNode;
+	}
+
+	public void setRootNode(TreeNode rootNode) {
+		this.rootNode = rootNode;
+	}
+
+	public CtDeductionClause[] getChkDeductionClause() {
+		return chkDeductionClause;
+	}
+
+	public void setChkDeductionClause(CtDeductionClause[] chkDeductionClause) {
+		this.chkDeductionClause = chkDeductionClause;
+	}
+
+	public String getFulfillmentNo() {
+		return fulfillmentNo;
+	}
+
+	public void setFulfillmentNo(String fulfillmentNo) {
+		this.fulfillmentNo = fulfillmentNo;
+	}
+
+	public CtContract[] getSelectedContractList() {
+		return selectedContractList;
+	}
+
+	public void setSelectedContractList(CtContract[] selectedContractList) {
+		this.selectedContractList = selectedContractList;
+	}
+
+	public String getEditorValue() {
+		return editorValue;
+	}
+
+	public void setEditorValue(String editorValue) {
+		this.editorValue = editorValue;
 	}
 }

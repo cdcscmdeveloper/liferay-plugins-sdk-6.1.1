@@ -13,7 +13,7 @@
               <f:selectItems value="#{contractDetailsBackingBean.itemTypeMethode}" />
             	 <p:ajax event="change" update="changeItemType" listener="#{contractDetailsBackingBean.changeItemTypes}" process="@this"/>  
 	       </p:selectOneMenu>         
-	       <p:message for="show"/>  
+	       <p:message for="itemTypes"/>  
         </h:panelGrid>
         <p:outputPanel id="changeItemType">
            <h:panelGrid columns="1" style="width:100%" 

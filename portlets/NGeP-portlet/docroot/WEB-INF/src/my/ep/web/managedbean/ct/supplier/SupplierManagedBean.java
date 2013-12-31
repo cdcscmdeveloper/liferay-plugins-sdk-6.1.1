@@ -36,15 +36,14 @@ public class SupplierManagedBean extends BaseManagedBean {
 	
 	private String[] action;
 	private String taskName;
-	
+
 	private Date endDate;
 	private String loaNo;
 	private Date startDate;
 	private Long contractNo;
 	private String contractName;
 	private String loginUser;
-	private String chkRenderPage ="BPM";
-	
+	private String chkRenderPage ="BPM1";
 	private int selectedIndex;
 	private CtFactoring factoring;
 	private CtTermination termination;
@@ -57,6 +56,7 @@ public class SupplierManagedBean extends BaseManagedBean {
 	private CtContractVer contractVer;
 	private CtCircular ctCircular = new CtCircular();
 	private CtAgreement ctAgreement = new CtAgreement();
+	private CtContract ctContract;
 	
 	public SupplierManagedBean(){
 		
@@ -69,30 +69,6 @@ public class SupplierManagedBean extends BaseManagedBean {
 	public void setAction(String[] action) {
 		this.action = action;
 	}
-
-	public String getLoaNo() {
-		return loaNo;
-	}
-	
-	public void setLoaNo(String loaNo) {
-		this.loaNo = loaNo;
-	}
-	
-	public Date getEndDate() {
-		return endDate;
-	}
-	
-	public void setEndDate(Date endDate) {
-		this.endDate = endDate;
-	}
-	
-	public Date getStartDate() {
-		return startDate;
-	}
-	
-	public void setStartDate(Date startDate) {
-		this.startDate = startDate;
-	}
 	
 	public Long getContractNo() {
 		return contractNo;
@@ -100,14 +76,6 @@ public class SupplierManagedBean extends BaseManagedBean {
 	
 	public void setContractNo(Long contractNo) {
 		this.contractNo = contractNo;
-	}
-	
-	public String getContractName() {
-		return contractName;
-	}
-	
-	public void setContractName(String contractName) {
-		this.contractName = contractName;
 	}
 	
 	public int getSelectedIndex() {
@@ -222,6 +190,38 @@ public class SupplierManagedBean extends BaseManagedBean {
 		this.taskName = taskName;
 	}
 
+	public Date getEndDate() {
+		return endDate;
+	}
+
+	public void setEndDate(Date endDate) {
+		this.endDate = endDate;
+	}
+
+	public String getLoaNo() {
+		return loaNo;
+	}
+
+	public void setLoaNo(String loaNo) {
+		this.loaNo = loaNo;
+	}
+
+	public Date getStartDate() {
+		return startDate;
+	}
+
+	public void setStartDate(Date startDate) {
+		this.startDate = startDate;
+	}
+
+	public String getContractName() {
+		return contractName;
+	}
+
+	public void setContractName(String contractName) {
+		this.contractName = contractName;
+	}
+
 	public String getChkRenderPage() {
 		return chkRenderPage;
 	}
@@ -229,5 +229,12 @@ public class SupplierManagedBean extends BaseManagedBean {
 	public void setChkRenderPage(String chkRenderPage) {
 		this.chkRenderPage = chkRenderPage;
 	}
-	
+
+	public CtContract getCtContract() {
+		return ctContract;
+	}
+
+	public void setCtContract(CtContract ctContract) {
+		this.ctContract = ctContract;
+	}
 }
