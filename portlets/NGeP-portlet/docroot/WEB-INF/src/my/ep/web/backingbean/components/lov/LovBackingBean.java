@@ -90,6 +90,13 @@ public class LovBackingBean implements Serializable {
 				return new SearchResultBean();
 			}
 			
+			if(getLovBean().getLovId() == null) {
+				debugLogger("=======================lovId null, return empty result ===========================");
+				SearchResultBean srb = new SearchResultBean();
+				srb.setResultList(new ArrayList());
+				return srb;
+			}
+			
 			debugLogger("pageChangeListener");
 			
 			ILovSO lovSO = null;
