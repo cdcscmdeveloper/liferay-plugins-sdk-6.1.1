@@ -45,10 +45,6 @@
 				<ac:paginator for="consDt" />
 				<p:column selectionMode="multiple" width="5%" />
 
-				<p:column headerText="NO.">
-					<h:outputText value="#{index+1}" />
-				</p:column>
-
 				<p:column headerText="Project Title">
 					<h:outputText value="#{consBean.projectName}" />
 				</p:column>
@@ -170,6 +166,51 @@
 							<td><p:outputLabel value="* Appointment Date" /></td>
 							<td><p:calendar showOn="button"
 									value="#{backingBean.managedBean.selectedConstProj.appointmentDate}" /></td>
+						</tr>
+						<tr>
+							<td><p:outputLabel value="
+										* Main Category" /></td>
+							<td><p:selectOneMenu
+									value="#{backingBean.managedBean.selectedParentCat}"
+									style="width: 207px;margin-bottom: 5px;">
+									<f:selectItem itemLabel="-- Select One -- " itemValue="" />
+									<f:selectItems
+										value="#{backingBean.managedBean.defaultParentCatList}"
+										var="parent" itemLabel="#{parent.categoryName}"
+										itemValue="#{parent.categoryL1Code}" />
+									<p:ajax event="change"
+										listener="#{backingBean.changeParentCategory}"
+										update="conslChild,conslSubChild" />
+								</p:selectOneMenu></td>
+						</tr>
+						<tr>
+							<td><p:outputLabel value="* Sub Category" /></td>
+							<td><p:selectOneMenu
+									value="#{backingBean.managedBean.selectedChildCat}" id="conslChild"
+									style="width: 207px;margin-bottom: 5px;">
+									<f:selectItem itemLabel=" -- Select  -- " itemValue="" />
+									<f:selectItems
+										value="#{backingBean.managedBean.selectedCategory.pmCategoryL1.pmCategoryL2s}"
+										var="child" itemLabel="#{child.categoryName}"
+										itemValue="#{child.categoryL2Code}" />
+									<p:ajax event="change"
+										listener="#{backingBean.changeChildCategory}"
+										update="conslSubChild" />
+								</p:selectOneMenu></td>
+						</tr>
+						<tr>
+							<td><p:outputLabel value="* Sub Category Division" /></td>
+							<td><p:selectOneMenu
+									value="#{backingBean.managedBean.selectedSubChildCat}"
+									id="conslSubChild" style="width: 207px;margin-bottom: 5px;">
+									<f:selectItem itemLabel=" -- Select One --  " itemValue="" />
+									<f:selectItems
+										value="#{backingBean.managedBean.selectedCategory.pmCategoryL2.pmCategoryL3s}"
+										var="subChild" itemLabel="#{subChild.categoryName}"
+										itemValue="#{subChild.categoryL3Code}" />
+									<p:ajax event="change"
+										listener="#{backingBean.changeSubChildCategory}" />
+								</p:selectOneMenu></td>
 						</tr>
 					</table>
 

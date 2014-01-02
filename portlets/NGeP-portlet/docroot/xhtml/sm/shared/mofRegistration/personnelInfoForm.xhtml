@@ -101,9 +101,6 @@
 			<ac:paginator for="personDt" />
 			<p:column selectionMode="multiple" width="5%" />
 
-			<p:column headerText="NO.">
-				<h:outputText value="#{index+1}" />
-			</p:column>
 
 			<p:column headerText="Name">
 
@@ -118,15 +115,15 @@
 			<p:column headerText="Roles In Company">
 				<h:outputText value="#{person.designation}" />
 			</p:column>
-			<p:column headerText="Equity Owner ?">
+			<p:column headerText="Is Equity Owner">
 				<h:outputText value="Yes" rendered="#{person.equityOwner == true}" />
 				<h:outputText value="No" rendered="#{person.equityOwner == false}" />
 			</p:column>
-			<p:column headerText="Authorized ?">
+			<p:column headerText="Is Authorized">
 				<h:outputText value="Yes" rendered="#{person.authorized == true}" />
 				<h:outputText value="No" rendered="#{person.authorized == false}" />
 			</p:column>
-			<p:column headerText="Soft Cert Issued?">
+			<p:column headerText="Is Cert Issued">
 				<h:outputText value="Yes" rendered="#{person.softcert == true}" />
 				<h:outputText value="No" rendered="#{person.softcert == false}" />
 			</p:column>

@@ -35,10 +35,6 @@
 			<ac:paginator for="bankDt" />
 			<p:column selectionMode="multiple" width="5%" />
 
-			<p:column headerText="NO.">
-				<h:outputText value="#{index+1}" />
-			</p:column>
-
 			<p:column headerText="Account NO.">
 				<h:outputText value="#{bankBean.accountNo}" />
 			</p:column>
@@ -46,12 +42,16 @@
 				<h:outputText value="#{bankBean.pmbank.bankCode}" />
 			</p:column>
 
-			<p:column headerText="Designated Bank">
-				<h:outputText value="Yes"
-					rendered="#{bankBean.defaultAccount == true}" />
-				<h:outputText value="No"
-					rendered="#{bankBean.defaultAccount == false}" />
+			<p:column headerText="Registration Account"
+				style="text-align: center;width: 15%">
+				<p:selectBooleanCheckbox />
 			</p:column>
+
+			<p:column headerText="Payment Account"
+				style="text-align: center;width: 15%">
+				<p:selectBooleanCheckbox />
+			</p:column>
+
 			<p:column headerText="Action">
 				<p:commandLink action="#{backingBean.viewSignatories(bankBean)}"
 					update=":form:tt:sfieldset" style="padding-right :5px;">
@@ -85,7 +85,7 @@
 			<p:dataTable id="signatory" var="auth"
 				value="#{backingBean.managedBean.selectedSignatoryBankAcct.smChequeSignatories}"
 				rowKey="#{auth.chequeSignatoryId}" rowIndexVar="index">
-				<ac:paginator for="signatory"/>
+				<ac:paginator for="signatory" />
 				<p:column headerText="NO.">
 					<h:outputText value="#{index+1}" />
 				</p:column>
@@ -177,7 +177,6 @@
 				<td><p:selectOneMenu
 						value="#{backingBean.managedBean.selectedBank.smAddress.pmCountry.countryCode}"
 						style="width: 207px;margin-bottom: 5px;">
-						<f:selectItem itemLabel="-- Select One -- " itemValue="" />
 						<f:selectItem itemLabel="Malaysia" itemValue="1" />
 					</p:selectOneMenu></td>
 			</tr>
@@ -191,7 +190,7 @@
 				<td><p:outputLabel value="#{lbl['lbl.sm.state']}" /></td>
 				<td><p:inputText
 						value="#{backingBean.managedBean.selectedBank.smAddress.pmState.stateCode}"
-						size="35" /></td>
+						size="35" readonly="true" disabled="true" /></td>
 			</tr>
 
 			<tr>
@@ -206,14 +205,14 @@
 						value="#{backingBean.managedBean.selectedBank.smAddress.pmCity.cityCode}"
 						size="35" /></td>
 			</tr>
-			<tr>
+			<!-- <tr>
 				<td><p:outputLabel value="* Account Purpose *" /></td>
 				<td><p:selectOneMenu style="width: 207px;margin-bottom: 5px;">
-						<f:selectItem itemLabel="-- Select  -- " itemValue="" />
+						<f:selectItem itemLabel="Select " itemValue="" />
 						<f:selectItem itemLabel="Registration" itemValue="1" />
 						<f:selectItem itemLabel="Payment" itemValue="1" />
 					</p:selectOneMenu></td>
-			</tr>
+			</tr> -->
 
 			<tr>
 				<td style="float: right; padding-right: 20px;"><p:selectBooleanCheckbox
@@ -223,7 +222,7 @@
 			<tr>
 				<td><p:outputLabel value="* Associated Branch" /></td>
 				<td><p:selectOneMenu style="width: 207px;margin-bottom: 5px;">
-						<f:selectItem itemLabel="-- Select --" itemValue="1" />
+						<f:selectItem itemLabel="-- Select One--" itemValue="1" />
 						<f:selectItems
 							value="#{backingBean.managedBean.smAppl.smSupplierBranches}"
 							var="supBean" itemLabel="#{supBean.branchName}"

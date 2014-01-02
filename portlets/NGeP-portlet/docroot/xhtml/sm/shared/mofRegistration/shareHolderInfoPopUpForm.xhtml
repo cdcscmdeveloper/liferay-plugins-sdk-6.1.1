@@ -93,14 +93,6 @@
 
 					</tr>
 					<tr>
-						<td style="float: right; padding-right: 20px;"><p:selectBooleanCheckbox
-								value="#{backingBean.managedBean.selectedShareHolder.authorized}" /></td>
-						<td><h:outputText value="Authorized User" /></td>
-						<td style="float: right; padding-right: 20px;"><p:selectBooleanCheckbox
-								value="#{backingBean.managedBean.selectedShareHolder.softcert}" /></td>
-						<td><h:outputText value="Issue Soft Cert" /></td>
-					</tr>
-					<tr>
 						<td><p:outputLabel value="Bumi" title="For Malaysian Only" /></td>
 						<td><p:selectOneRadio>
 								<f:selectItem itemLabel="Yes" itemValue="1" />
@@ -114,6 +106,35 @@
 							</p:selectOneRadio></td>
 
 					</tr>
+					<tr>
+						<td style="float: right; padding-right: 10px;"><p:selectBooleanCheckbox
+								value="#{backingBean.managedBean.selectedShareHolder.authorized}">
+								<p:ajax event="change" update="shrCertBox,shrSignBox" />
+							</p:selectBooleanCheckbox></td>
+						<td><h:outputText value="Authorized User" /></td>
+
+						<td style="float: right; padding-right: 10px;"><p:selectBooleanCheckbox
+								id="shrCertBox"
+								value="#{backingBean.managedBean.selectedShareHolder.softcert}"
+								disabled="#{!(backingBean.managedBean.selectedShareHolder.authorized)}"
+								rendered="#{backingBean.managedBean.smAppl.applType eq 'R' or backingBean.managedBean.smAppl.applType eq 'N'}">
+								<p:ajax event="change" update="shrSignBox" />
+							</p:selectBooleanCheckbox></td>
+						<td><h:outputText value="Issue Soft Cert"
+								rendered="#{backingBean.managedBean.smAppl.applType eq 'R' or backingBean.managedBean.smAppl.applType eq 'N'}" />
+						</td>
+					</tr>
+					<tr>
+						<td style="float: right; padding-right: 10px;"><p:selectBooleanCheckbox
+								id="shrSignBox"
+								disabled="#{!(backingBean.managedBean.selectedShareHolder.authorized and backingBean.managedBean.selectedShareHolder.softcert)}"
+								rendered="#{backingBean.managedBean.smAppl.applType eq 'R' or backingBean.managedBean.smAppl.applType eq 'N'}">
+							</p:selectBooleanCheckbox></td>
+						<td colspan="3"><h:outputText value="Contract Singer"
+								rendered="#{backingBean.managedBean.smAppl.applType eq 'R' or backingBean.managedBean.smAppl.applType eq 'N'}" />
+						</td>
+					</tr>
+
 
 				</table>
 			</p:panel>
