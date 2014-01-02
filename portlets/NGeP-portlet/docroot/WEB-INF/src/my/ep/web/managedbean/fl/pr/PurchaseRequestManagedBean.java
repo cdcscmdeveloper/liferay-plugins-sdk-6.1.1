@@ -6,6 +6,7 @@ package my.ep.web.managedbean.fl.pr;
 import java.math.BigDecimal;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
@@ -18,6 +19,7 @@ import my.ep.persistence.entity.fl.request.FlFulfilmentItem;
 import my.ep.persistence.entity.fl.request.FlFulfilmentItemAddr;
 import my.ep.persistence.entity.fl.request.FlFulfilmentRequest;
 import my.ep.persistence.entity.pm.authorization.PmOrgAddress;
+import my.ep.persistence.entity.pm.authorization.PmUserGroup;
 import my.ep.persistence.entity.pm.authorization.PmUserGroupUser;
 import my.ep.persistence.entity.pm.common.PmAddressType;
 import my.ep.persistence.entity.pm.common.PmMaksud;
@@ -91,7 +93,9 @@ public class PurchaseRequestManagedBean extends BaseManagedBean {
 	
 	private HashMap<Long, FlFulfilmentItem> flItemMap;
 	
-	
+	// getUserGroup
+	private Map<Long, PmUserGroup> userGroupMap;
+	private String fulfilmentRequisitioner;
 	
 	
 	/**
@@ -612,6 +616,34 @@ public class PurchaseRequestManagedBean extends BaseManagedBean {
 		this.flItemMap = flItemMap;
 	}
 
+	/**
+	 * @return the userGroupMap
+	 */
+	public Map<Long, PmUserGroup> getUserGroupMap() {
+		return userGroupMap;
+	}
+
+	/**
+	 * @param userGroupMap the userGroupMap to set
+	 */
+	public void setUserGroupMap(Map<Long, PmUserGroup> userGroupMap) {
+		this.userGroupMap = userGroupMap;
+	}
+
+	/**
+	 * @return the fulfilmentRequisitioner
+	 */
+	public String getFulfilmentRequisitioner() {
+		return fulfilmentRequisitioner;
+	}
+
+	/**
+	 * @param fulfilmentRequisitioner the fulfilmentRequisitioner to set
+	 */
+	public void setFulfilmentRequisitioner(String fulfilmentRequisitioner) {
+		this.fulfilmentRequisitioner = fulfilmentRequisitioner;
+	}
 
 	
+
 }

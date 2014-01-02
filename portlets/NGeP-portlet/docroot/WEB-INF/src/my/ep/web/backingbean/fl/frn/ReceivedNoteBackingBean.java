@@ -130,7 +130,7 @@ public class ReceivedNoteBackingBean extends BaseBackingBean<ReceivedNoteManaged
 			flReqDTO.setFlRequestId(delOrderResDTO.getFlDeliveryOrder().getFlFulfilmentOrder().getFlFulfilmentRequest().getFulfilmentReqId());
 			resDTO = fulfilmentSO.retrieveFulfilmentRequest(flReqDTO);
 			FulfilmentBackingBean flBB = new FulfilmentBackingBean();
-			flBB.initializeRemarkAndAttachement(resDTO.getRemarkList(), flBB.getManagedBean().getAttachmentList());
+			flBB.initializeRemarkAndAttachement(resDTO.getRemarkList(), resDTO.getAttachmentList());
 			getManagedBean().setFulfilmentRequest(resDTO.getFlFulfilmentRequest());
 			getManagedBean().setDeliveryOrderId(flDeliveryOrder.getDeliveryOrderId());
 			getManagedBean().setTaskId(taskId);

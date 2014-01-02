@@ -23,7 +23,7 @@
 					<p:selectOneMenu
 						value="#{flDocumentBackingBean.managedBean.searchOrderType}" style="width: 207px;">
 						<f:selectItems
-							value="#{flDocumentBackingBean.getDropdownCodeValues(PmCodeCatConst.fulfilmentOrderType)}" />
+							value="#{flDocumentBackingBean.getDropdownCodeValues(ParameterTypeConst.fulfilmentOrderType)}"/>
 					</p:selectOneMenu>
 				</h:panelGrid>
 				<h:panelGrid columns="4" columnClasses="cmWidth1">
@@ -31,7 +31,7 @@
 					<p:selectOneMenu
 						value="#{flDocumentBackingBean.managedBean.searchDocType}" style="width: 207px;">
 						<f:selectItems
-							value="#{flDocumentBackingBean.getDropdownCodeValues(PmCodeCatConst.fulfilmentDocumentType)}" />
+							value="#{flDocumentBackingBean.getDropdownCodeValues(ParameterTypeConst.fulfilmentDocumentType)}" />
 						<p:ajax event="change" update="docTypeSearch"
 							listener="#{flDocumentBackingBean.selectedDoctype}" />
 					</p:selectOneMenu>
@@ -61,7 +61,7 @@
 					<p:inputText size="35"
 						value="#{flDocumentBackingBean.managedBean.searchLoaNo}"></p:inputText>
 				</h:panelGrid>
-				<h:panelGrid columns="4" columnClasses="cmWidth1"
+				<h:panelGrid columns="4" columnClasses="cmWidth1" 
 					rendered="#{flDocumentBackingBean.managedBean.checkPoDocType}">
 					<p:outputLabel value="#{lbl['lbl.fl.doc.search.procurement.type']}" />
 					<p:inputText size="35"
@@ -88,7 +88,7 @@
 				<ac:paginator for="flDocListDt" />
 
 				<p:column headerText="Document Type">
-					<h:outputText value="#{flDocument.docType}" />
+					<h:outputText value="#{flDocumentBackingBean.getParameterDesc(ParameterTypeConst.fulfilmentDocumentType, flDocument.docType)}" />
 				</p:column>
 				<p:column headerText="Doc No">
 					<h:outputText value="#{flDocument.docNo}" />
@@ -100,7 +100,7 @@
 					<h:outputText value="#{flDocument.circularNo}" />
 				</p:column>
 				<p:column headerText="Status">
-					<h:outputText value="#{flDocument.status.statusId}" />
+				<h:outputText value="#{flDocument.workflowStatus}" />
 				</p:column>
 
 				<p:column headerText="Action" style="text-align: center">

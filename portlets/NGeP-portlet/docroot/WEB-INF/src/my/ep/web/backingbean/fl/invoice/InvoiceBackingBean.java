@@ -135,7 +135,7 @@ public class InvoiceBackingBean extends BaseBackingBean<InvoiceManagedBean> {
 			FulfilmentResDTO resDTO = new FulfilmentResDTO();
 			FulfilmentResDTO flOrderResDTO = new FulfilmentResDTO();
 			FLInvoiceAndPaymentDataType paymentObj = (FLInvoiceAndPaymentDataType)obj;
-			flReqDTO.setFlOrderId(paymentObj.getFullfillmentRequestId());
+			flReqDTO.setFlOrderId(paymentObj.getFulfillmentOrderId());
 			IFulfilmentOrderSO flOrderSO = (IFulfilmentOrderSO) BusinessDelegate.getInstance().getServiceObject("fl",IFulfilmentOrderSO.class);
 			IFulfilmentRequestSO fulfilmentSO = (IFulfilmentRequestSO) BusinessDelegate.getInstance().getServiceObject("fl",IFulfilmentRequestSO.class);
 			flOrderResDTO = flOrderSO.retrieveFulfilmentOrder(flReqDTO);
@@ -143,10 +143,11 @@ public class InvoiceBackingBean extends BaseBackingBean<InvoiceManagedBean> {
 			getManagedBean().getInvoice().setFlFulfilmentOrder(flOrderResDTO.getFlOrder());
 			getManagedBean().setTaskId(taskId);
 			getManagedBean().setOutComes(res.getAction());
-			flReqDTO.setFlRequestId(flOrderResDTO.getFlOrder().getFlFulfilmentRequest().getFulfilmentReqId());
+			//flReqDTO.setFlRequestId(flOrderResDTO.getFlOrder().getFlFulfilmentRequest().getFulfilmentReqId());
+			flReqDTO.setFlRequestId(paymentObj.getFullfillmentRequestId());
 			resDTO = fulfilmentSO.retrieveFulfilmentRequest(flReqDTO);
 			FulfilmentBackingBean flBB = new FulfilmentBackingBean();
-			flBB.initializeRemarkAndAttachement(resDTO.getRemarkList(), flBB.getManagedBean().getAttachmentList());
+			flBB.initializeRemarkAndAttachement(resDTO.getRemarkList(), resDTO.getAttachmentList());
 			
 			getInvoiceTable(resDTO);
 			System.out.println("Doc type in inv pre render page "+resDTO.getFlFulfilmentRequest().getDocType());

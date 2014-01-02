@@ -20,10 +20,13 @@ import my.ep.biz.service.fl.invoice.IInvoiceSO;
 import my.ep.biz.service.fl.order.IDeliveryOrderSO;
 import my.ep.biz.service.fl.order.IFulfilmentOrderSO;
 import my.ep.biz.service.fl.request.IFulfilmentRequestSO;
+import my.ep.biz.service.pm.common.parameter.IParameterSO;
 import my.ep.dto.fl.FlDocumentReqDTO;
 import my.ep.dto.fl.FlDocumentResDTO;
 import my.ep.dto.fl.FulfilmentReqDTO;
 import my.ep.dto.fl.FulfilmentResDTO;
+import my.ep.dto.pm.common.parameter.ParameterReqDTO;
+import my.ep.dto.pm.common.parameter.ParameterResDTO;
 import my.ep.persistence.entity.fl.VFlDocument;
 import my.ep.type.aut.SearchOperator;
 import my.ep.web.backingbean.BaseBackingBean;
@@ -171,6 +174,25 @@ public class FlDocumentBackingBean extends BaseBackingBean<FlDocumentManagedBean
 		}
 		return NavgPage;
 	}
+	public String getParameterDesc(String parameterType, String parameterCode){
+		IParameterSO parameterSO = (IParameterSO) BusinessDelegate.getInstance().getServiceObject("pm", IParameterSO.class);
+		String desc="";
+		//System.out.println("parameterType::: "+parameterType);
+		//System.out.println("parameterCode::: "+parameterCode);
+		ParameterReqDTO reqDTO=new ParameterReqDTO();
+		reqDTO.setParameterCode(parameterCode);
+		reqDTO.setParameterType(parameterType);
+		ParameterResDTO resDTO=parameterSO.retrieveParameterByTypeAndCode(reqDTO);
+		//System.out.println("parameter id:::::: "+resDTO.getPmParameter().getParameterId());
+		reqDTO.setParameterId(resDTO.getPmParameter().getParameterId());
+		if(null!=resDTO.getPmParameter().getPmParameterDescs()){
+			//System.out.println(resDTO.getPmParameter().getPmParameterDescs().size());
+			desc=resDTO.getPmParameter().getPmParameterDescs().get(0).getCodeName();
+		} else{
+			System.out.println("Parameters Description is Empty");
+		}
+		return desc;
+	}
 	
 	public void selectedUser(AjaxBehaviorEvent e) {
 		// doing some stuff here
@@ -241,7 +263,7 @@ public class FlDocumentBackingBean extends BaseBackingBean<FlDocumentManagedBean
 					searchBean.getDataFilterBeans().add(new SearchFilterBean("startDate",SearchOperator.OPERATOR_BETWEEN.value(),betweenValue));
 					searchBean.getDataFilterBeans().add(new SearchFilterBean("endDate",SearchOperator.OPERATOR_BETWEEN.value(),betweenValue));
 				}		
-				if(getManagedBean().getSearchProcurementType()!=null) {
+				if(getManagedBean().getSearchProcurementType()!=null && getManagedBean().getSearchProcurementType()!="") {
 					searchBean.getDataFilterBeans().add(new SearchFilterBean("procurementType",SearchOperator.OPERATOR_EQUALS.value(),getManagedBean().getSearchProcurementType()));
 				}			
 				if(getManagedBean().getSearchStatusId()!=null) {

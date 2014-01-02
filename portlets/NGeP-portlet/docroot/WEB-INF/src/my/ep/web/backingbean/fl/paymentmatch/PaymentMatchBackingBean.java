@@ -11,6 +11,7 @@ import javax.servlet.http.HttpServletRequest;
 
 import my.ep.biz.service.fl.invoice.IInvoiceSO;
 import my.ep.biz.service.fl.payment.IPaymentMatchSO;
+import my.ep.biz.service.fl.request.IFulfilmentRequestSO;
 import my.ep.bpm.dto.BpmRequestDTO;
 import my.ep.bpm.dto.BpmResponseDTO;
 import my.ep.bpm.service.IBpmSO;
@@ -115,13 +116,17 @@ public class PaymentMatchBackingBean extends BaseBackingBean<PaymentMatchManaged
 			FulfilmentReqDTO flReqDTO = new FulfilmentReqDTO();
 			FulfilmentResDTO resDTO = new FulfilmentResDTO();
 			FLInvoiceAndPaymentDataType paymentObj = (FLInvoiceAndPaymentDataType)obj;
-			flReqDTO.setFlOrderId(paymentObj.getFullfillmentRequestId());
+			flReqDTO.setFlOrderId(paymentObj.getFulfillmentOrderId());
 			IInvoiceSO invoiceSO = (IInvoiceSO) BusinessDelegate.getInstance().getServiceObject("fl",IInvoiceSO.class);
-
 			resDTO = invoiceSO.retrieveInvoiceByFlOrderId(flReqDTO);
 			FlPaymentAdvice paymentAdvice = new FlPaymentAdvice();
 			paymentAdvice.setFlInvoice(resDTO.getInvoice());
-
+			IFulfilmentRequestSO fulfilmentSO = (IFulfilmentRequestSO) BusinessDelegate.getInstance().getServiceObject("fl",IFulfilmentRequestSO.class);
+			System.out.println("fulfilment req id::: "+paymentObj.getFullfillmentRequestId());
+			flReqDTO.setFlRequestId(paymentObj.getFullfillmentRequestId());
+			resDTO = fulfilmentSO.retrieveFulfilmentRequest(flReqDTO);
+			System.out.println("remarks list size:::: "+resDTO.getRemarkList().size());
+			System.out.println("attachemtn list size:::: "+resDTO.getAttachmentList().size());
 			// Get Remark and Attachment
 			FulfilmentBackingBean flBB = new FulfilmentBackingBean();
 			flBB.getManagedBean().setRemarkList(resDTO.getRemarkList());

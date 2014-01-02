@@ -147,9 +147,16 @@
 		</table>
 	</p:panel>
 
-	<p:panel id="settingId" header="Approver Setting" toggleable="true"
+	<p:panel id="settingId" header="Approver Setting" toggleable="true" rendered="#{purchaseRequestBackingBean.isFlFulfilmentRequisitioner()}"
 		toggleSpeed="500">
 		<h:panelGrid columns="1">
+			<h:panelGrid columns="2" >
+				<h:outputLabel value="Approver Group"/>
+				<p:selectOneMenu value="#{purchaseRequestBackingBean.managedBean.fulfilmentRequest.pmUserGroup.userGroupId}" style="width:80px; margin-bottom:5px;">
+					<p:ajax event="change" listener="#{purchaseRequestBackingBean.userGroupChangeListener()}" process="@this" update="approverpickList" />
+					<f:selectItems value="#{purchaseRequestBackingBean.getUserGroupDropdown()}" />
+				</p:selectOneMenu>		
+			</h:panelGrid>
 			<h:panelGrid style="width:500px">
 				<p:pickList id="approverpickList"
 					value="#{purchaseRequestBackingBean.managedBean.approverModel}"

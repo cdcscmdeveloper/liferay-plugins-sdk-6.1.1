@@ -5,7 +5,9 @@ package my.ep.web.backingbean.fl.pr;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import javax.annotation.PostConstruct;
 import javax.faces.application.FacesMessage;
@@ -47,9 +49,10 @@ import my.ep.persistence.entity.fl.request.FlFulfilmentItem;
 import my.ep.persistence.entity.fl.request.FlFulfilmentItemAddr;
 import my.ep.persistence.entity.fl.request.FlFulfilmentRequest;
 import my.ep.persistence.entity.pm.authorization.PmOrgProfile;
+import my.ep.persistence.entity.pm.authorization.PmUser;
+import my.ep.persistence.entity.pm.authorization.PmUserGroup;
 import my.ep.persistence.entity.pm.authorization.PmUserGroupUser;
 import my.ep.persistence.entity.pm.common.PmAddressType;
-import my.ep.persistence.entity.pm.common.PmCode;
 import my.ep.persistence.entity.pm.common.PmDo;
 import my.ep.persistence.entity.pm.common.PmGo;
 import my.ep.persistence.entity.pm.common.PmMaksud;
@@ -60,6 +63,7 @@ import my.ep.persistence.entity.sm.SmSupplier;
 import my.ep.persistence.entity.ss.directpurchase.ScRequestNote;
 import my.ep.persistence.entity.ss.directpurchase.ScRequestNoteDtl;
 import my.ep.type.pm.OrganizationType;
+import my.ep.type.pm.RoleCode;
 import my.ep.util.lookupservice.EpBpmBusinessDelegate;
 import my.ep.web.backingbean.BaseBackingBean;
 import my.ep.web.backingbean.fl.FulfilmentBackingBean;
@@ -96,7 +100,16 @@ public class PurchaseRequestBackingBean extends BaseBackingBean<PurchaseRequestM
 	}
 
 	public PurchaseRequestBackingBean() {
+		
+		if(isFlFulfilmentRequisitioner()) {
+			FacesScopes facesScopes = new FacesScopes();
+			getManagedBean().setFulfilmentRequisitioner(facesScopes.getUserSessionBean().getLoginId());
+		}
+		if(getManagedBean().getUserGroupMap()==null && isFlFulfilmentRequisitioner()) {
+			initializeApproverGroup();
+		}
 	}
+	
 
 	@PostConstruct
 	public void init() {
@@ -149,8 +162,6 @@ public class PurchaseRequestBackingBean extends BaseBackingBean<PurchaseRequestM
 			reqDTO.setOutcome(action);
 			reqDTO.setToken(token);
 			reqDTO.setApproverMap(getManagedBean().getApproverMap());
-			
-			
 			FulfilmentResDTO resDTO = fulfilmentRequestSO.saveFulfillmentRequest(reqDTO);
 			if (resDTO.isSuccessful()) {
 				log.info("Record saved successfully");
@@ -444,6 +455,7 @@ public class PurchaseRequestBackingBean extends BaseBackingBean<PurchaseRequestM
 			flReqDTO.setFlRequestId(flPurchaseOrd.getPurchaseRequestId());
 			flReqDTO.setSelectedApprovers(flPurchaseOrd.getApproverList());
 			resDTO = fulfilmentSO.retrieveFulfilmentRequest(flReqDTO);
+			
 			flReqDTO.setFlFulfilmentRequest(resDTO.getFlFulfilmentRequest());
 
 			FulfilmentBackingBean flBB = new FulfilmentBackingBean();
@@ -521,6 +533,81 @@ public class PurchaseRequestBackingBean extends BaseBackingBean<PurchaseRequestM
 	public void calculateSubTotal(BigDecimal quantity){
 		getManagedBean().getSelectedItemAddr().setSubTotal(quantity);
 	}
+	
+	private void initializeApproverGroup() {
+		IUserSO userSO = null;
+		try {
+			userSO = (IUserSO)BusinessDelegate.getInstance().getServiceObject("pm",IUserSO.class);
+			
+			UserReqDTO reqDTO = new UserReqDTO();
+			FacesScopes facesScopes = new FacesScopes();
+			reqDTO.setUserId(facesScopes.getUserSessionBean().getUserId());
+			UserResDTO resDTO = userSO.retrieveUserOrgListByUserId(reqDTO);
+			
+			reqDTO.setOrgProfileId(resDTO.getUserOrgList().get(0).getPmOrgProfile().getOrgProfileId());
+			resDTO = userSO.retrieveUserGroupList(reqDTO);
+			if(getManagedBean().getFulfilmentRequest().getPmUserGroup()==null) {
+				PmUserGroup pmUserGroup = new PmUserGroup();
+				getManagedBean().getFulfilmentRequest().setPmUserGroup(pmUserGroup);
+			}
+			if(getManagedBean().getApproverModel()==null) {
+				List<String> source = new ArrayList<String>(); 
+		        List<String> target = new ArrayList<String>();  
+		        getManagedBean().setApproverModel(new DualListModel<String>(source, target));
+			}			
+			
+			getManagedBean().setUserGroupMap(new HashMap<Long, PmUserGroup>());
+			int i = 0;
+			for(PmUserGroup userGroup : resDTO.getUserGroupList()) {
+				getManagedBean().getUserGroupMap().put(userGroup.getUserGroupId(), userGroup);
+				if(i==0) {
+					getManagedBean().getFulfilmentRequest().getPmUserGroup().setUserGroupId(userGroup.getUserGroupId());
+					List<String> source = new ArrayList<String>();
+					for(PmUserGroupUser user : userGroup.getPmUserGroupUsers()) {
+						source.add(user.getPmUser().getUserName());
+					}
+					getManagedBean().getApproverModel().setSource(source);
+				}
+				i++;
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+			FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR,e.toString(), e.getMessage()));
+		} finally {
+			userSO = null;
+		}
+	}
+	
+	public SelectItem[] getUserGroupDropdown() {
+		SelectItem[] items = null;
+		try {
+			items = new SelectItem[getManagedBean().getUserGroupMap().values().size()];
+			int i = 0;
+			for(PmUserGroup userGroup : getManagedBean().getUserGroupMap().values()) {
+				items[i++] = new SelectItem(userGroup.getUserGroupId(), userGroup.getGroupName());
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+			FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR,e.toString(), e.getMessage()));
+		}
+	    return items;
+	}
+	
+	public void userGroupChangeListener() {
+		PmUserGroup selectedUserGroup = getManagedBean().getUserGroupMap().get(getManagedBean().getFulfilmentRequest().getPmUserGroup().getUserGroupId());
+		List<String> source = new ArrayList<String>(); 
+        List<String> target = new ArrayList<String>();  
+		for(PmUserGroupUser userGroupUser : selectedUserGroup.getPmUserGroupUsers()) {
+			source.add(userGroupUser.getPmUser().getUserName());
+		}
+		getManagedBean().getApproverModel().setSource(source);
+		getManagedBean().getApproverModel().setTarget(target);
+	}
+	public boolean isFlFulfilmentRequisitioner() {
+		FacesScopes facesScopes = new FacesScopes();
+		return facesScopes.hasRoleUser(RoleCode.REQUISITIONER.value());
+	}
+	
 
 
 }

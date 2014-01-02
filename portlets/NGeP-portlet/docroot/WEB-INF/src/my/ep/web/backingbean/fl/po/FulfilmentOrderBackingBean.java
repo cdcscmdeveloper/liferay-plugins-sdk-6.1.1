@@ -164,7 +164,7 @@ public class FulfilmentOrderBackingBean extends BaseBackingBean<FulfilmentOrderM
 		IFulfilmentRequestSO fulfilmentSO = (IFulfilmentRequestSO) BusinessDelegate.getInstance().getServiceObject("fl",IFulfilmentRequestSO.class);
 		resDTO = fulfilmentSO.retrieveFulfilmentRequest(flReqDTO);
 		FulfilmentBackingBean flBB = new FulfilmentBackingBean();
-		flBB.initializeRemarkAndAttachement(resDTO.getRemarkList(), flBB.getManagedBean().getAttachmentList());
+		flBB.initializeRemarkAndAttachement(resDTO.getRemarkList(), resDTO.getAttachmentList());
 		getManagedBean().setFulfilmentOrder(getManagedBean().getSelectedFlOrder());
 
 		DeliveryOrderBackingBean doMB = new DeliveryOrderBackingBean();
@@ -314,10 +314,11 @@ public class FulfilmentOrderBackingBean extends BaseBackingBean<FulfilmentOrderM
 			flReqDTO.setFlFulfilmentRequest(resDTO.getFlFulfilmentRequest());
 
 			FulfilmentBackingBean flBB = new FulfilmentBackingBean();
+			System.out.println("attachement list size:::: "+resDTO.getAttachmentList().size());
 			if(resDTO.getFlFulfilmentRequest().getDocType().equalsIgnoreCase("PR")){
-				flBB.initializeRemarkAndAttachement(flBB.getManagedBean().getRemarkList(), flBB.getManagedBean().getAttachmentList());
+				flBB.initializeRemarkAndAttachement(flBB.getManagedBean().getRemarkList(), resDTO.getAttachmentList());
 			}else{
-				flBB.initializeRemarkAndAttachement(resDTO.getRemarkList(), flBB.getManagedBean().getAttachmentList());
+				flBB.initializeRemarkAndAttachement(resDTO.getRemarkList(),resDTO.getAttachmentList());
 			}
 			
 			//		FulfilmentOrderBackingBean florderBB = new FulfilmentOrderBackingBean();
