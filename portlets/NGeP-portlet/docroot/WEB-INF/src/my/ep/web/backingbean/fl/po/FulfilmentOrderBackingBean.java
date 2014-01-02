@@ -220,7 +220,7 @@ public class FulfilmentOrderBackingBean extends BaseBackingBean<FulfilmentOrderM
 				FLStopFullfillmentDataType stopFlData = (FLStopFullfillmentDataType)obj;
 				FulfilmentReqDTO flReqDTO = new FulfilmentReqDTO();
 
-				flReqDTO.setFlOrderId(stopFlData.getFullfillmentRequestId());
+				flReqDTO.setFlOrderId(stopFlData.getFulfillmentOrderId());
 				FulfilmentResDTO resDTO = orderSO.retrieveFulfilmentOrderById(flReqDTO);
 				getManagedBean().setStopRequestId(stopFlData.getStopRequestId().longValue());
 				getManagedBean().setTaskId(taskId);
