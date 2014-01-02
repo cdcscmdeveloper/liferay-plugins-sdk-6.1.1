@@ -15,9 +15,9 @@
 	<p:messages id="messages" showDetail="true" autoUpdate="true" closable="true" severity="error, info" />
 		<table style="width: 100%;">
 		<tr>
-				<td style="text-align: left; width: 66px;"><p:outputLabel
-						value="DOC NO:" /></td>
-				<td style="width: 70px"><p:outputLabel
+				<td><h:outputText
+						value="Document Number: " />
+				<h:outputText
 						value="#{flOrderBB.managedBean.flRequest.docNo}" />
 				</td>
 			</tr>

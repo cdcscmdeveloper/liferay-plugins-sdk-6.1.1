@@ -15,9 +15,10 @@
 	<p:messages id="messages" showDetail="true" autoUpdate="true" closable="true" severity="error,info"></p:messages>
 		<table style="width:100%">
 			<tr>
-				<td style="text-align: left; width: 66px;"><p:outputLabel
-						value="DOC NO:" /></td>
-				<td style="width: 70px"><p:outputLabel
+				<td>
+				<h:outputText
+						value="Document Number: " />
+				<h:outputText
 						value="#{contractRequestBackingBean.managedBean.flRequest.docNo}" />
 				</td>
 			</tr>

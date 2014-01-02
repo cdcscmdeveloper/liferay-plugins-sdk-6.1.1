@@ -92,6 +92,7 @@
 			<portlet id="flPurchaseRequest" />
 			<portlet id="flShippingInstruction" />
 			<portlet id="flStopDelivery" />
+			<portlet id="flDebitAdjustmentNote" />
 		</category>
 		<!-- Fulfilment End Added by Giri -->
 		<portlet id="NGeP" />

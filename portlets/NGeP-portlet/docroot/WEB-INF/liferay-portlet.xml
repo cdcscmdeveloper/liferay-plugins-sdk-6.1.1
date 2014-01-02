@@ -340,6 +340,13 @@
 		<header-portlet-css>/css/main.css</header-portlet-css>
 		<css-class-wrapper>flsi-portlet</css-class-wrapper>
 	</portlet>
+	<portlet>
+		<portlet-name>flDebitAdjustmentNote</portlet-name>
+		<icon>/icon.png</icon>
+		<instanceable>false</instanceable>
+		<header-portlet-css>/css/main.css</header-portlet-css>
+		<css-class-wrapper>fldan-portlet</css-class-wrapper>
+	</portlet>
 	<!-- Fulfilment End Added by Giri -->
 
 	<portlet>
