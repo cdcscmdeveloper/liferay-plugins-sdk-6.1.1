@@ -67,7 +67,7 @@ public class InvoiceBackingBean extends BaseBackingBean<InvoiceManagedBean> {
 		String token = getFacesScopes().getBPMAuthenticationCtxToken();
 		IInvoiceSO invoiceSO = null;
 		FulfilmentReqDTO reqDTO = new FulfilmentReqDTO();
-		
+		FulfilmentBackingBean flBB = new FulfilmentBackingBean();
 		try {
 
 			FlInvoice invoice = getManagedBean().getInvoice();
@@ -84,6 +84,8 @@ public class InvoiceBackingBean extends BaseBackingBean<InvoiceManagedBean> {
 			reqDTO.setDanRequired(getManagedBean().isDan());// for current testing DAN purpose in SO
 			reqDTO.setUpdateDan(getManagedBean().isUpdateDan());
 			reqDTO.setToken(token);
+			reqDTO.setFlAttachmentList(flBB.getManagedBean().getAttachmentList());
+			reqDTO.setFlRemark(flBB.getManagedBean().getRemarkList().get(0));
 			FulfilmentResDTO resDTO = invoiceSO.saveInvoice(reqDTO);
 
 			if(resDTO.isSuccessful()) {

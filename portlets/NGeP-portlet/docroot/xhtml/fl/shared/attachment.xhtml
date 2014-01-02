@@ -44,11 +44,12 @@
 		</tr>
 	</table>
 
-	<p:dialog id="uploadDlg" widgetVar="uploadDlg" modal="false" resizable="false" width="700px" height="350" styleClass="pop_up_top" header="#{lbl['lbl.bpm.choose.file']}">
+	<p:dialog id="uploadDlg" widgetVar="uploadDlg" modal="true" 
+	resizable="false" width="700px" height="350" styleClass="pop_up_top" header="#{lbl['lbl.bpm.choose.file']}">
 		<p:ajax event="close" />
 		<p:fileUpload style="display:inline;"
-			fileUploadListener="#{fulfilmentBackingBean.fileUpload}"
-			mode="advanced" id="upload"
+			fileUploadListener="#{fulfilmentBackingBean.handleFileUpload}"
+			mode="advanced" id="upload" fileLimit="2"
 			allowTypes="/(\.|\/)(gif|jpe?g|png|bmp|txt|xls|xlsx|pdf|doc|docx|csv)$/" 
 			invalidFileMessage="Only JPG, GIF, PNG, BMP, TXT, XLS, PDF, DOC, CSV files are accepted"
 			update="lampiran" >
