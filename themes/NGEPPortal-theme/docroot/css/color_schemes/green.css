@@ -42,7 +42,7 @@
 	background-color:#5BA218 !important; 
 }
 
-.green .middle-navi-wrapper a:HOVER ,.green .middle-navi-right-wrapper ul li.btn-language div.dropdown-language-wrapper a:hover ,.green .middle-navi-right-wrapper ul li.btn-language div.dropdown-language-wrapper a.active{
+.green .middle-navi-right-wrapper ul li.btn-language div.dropdown-language-wrapper a:hover ,.green .middle-navi-right-wrapper ul li.btn-language div.dropdown-language-wrapper a.active{
 	color: #8CC63E;
 }
 
