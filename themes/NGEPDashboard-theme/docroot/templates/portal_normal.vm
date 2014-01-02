@@ -215,9 +215,7 @@ $theme.include($body_top_include)
                 #end
                 
                 
-                	<div class="middle-search-wrapper">
-                    	<input name="search" type="text" placeholder="Search"><a class="btn-search" href="#"></a>
-                	</div>
+                	
                 
                 
                 <div class="middle-logo-wrapper">

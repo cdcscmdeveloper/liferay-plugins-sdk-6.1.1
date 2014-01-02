@@ -37,7 +37,7 @@
 			}
 			else if(curURL.indexOf("8080/ms")!=-1)
 			{
-				document.getElementById("SelectedLanguage").innerHTML="Melayu";
+				document.getElementById("SelectedLanguage").innerHTML="Bahasa Malaysia";
 			}
 		}
 		
@@ -111,6 +111,8 @@
 		<script>
 	jQuery(document).ready(function(){
 	
+	onPageLoad();
+	
    var colorscheme = jQuery.cookie('colorscheme');
    
    if (colorscheme === "undefined"){
@@ -159,18 +161,18 @@
 $theme.include($body_top_include)
 
 #if ($is_signed_in)
-
-	#dockbar
-	
+	#if ($permissionChecker.isOmniadmin())
+		#dockbar
+	#end
 #end
 
 	<header>
-	#if (!$is_signed_in)
+	
 	<div class="sticky">
 		<img src="$images_folder/general/QRep.png" />
 		<div id="close"><img src="$images_folder/general/close.png" /></div>
 	</div>
-	#end
+	
 	
         <div class="middle-navi login-top-navi">
             <div class="middle-navi-wrapper">
@@ -181,44 +183,12 @@ $theme.include($body_top_include)
                     </a>
             	</div>
             	
-            	#if ($is_signed_in)
-					<div class="middle-navi-right-wrapper">
-                    <ul>
-                        <li class="hide"><a href="#"><img src="$images_folder/navi/btn-disabled.png" /></a></li>
-                        <li class="divider hide"></li>
-                        <li class="btn-smaller hide"><a href="javascript:resizeText(-1);">A-</a></li>
-                        <li class="btn-reset hide"><a href="javascript:resetText();">A</a></li>
-                        <li class="btn-larger hide"><a href="javascript:resizeText(1);">A+</a></li>
-                        <li class="divider hide"></li>
-                    	<li class="btn-red hide"><a href="#"><img src="$images_folder/navi/color-red.jpg" title="Red"/></a></li>
-                    	<li class="btn-green hide"><a href="#"><img src="$images_folder/navi/color-green.jpg" title="Green" /></a></li>
-                    	<li class="btn-blue hide"><a href="#"><img src="$images_folder/navi/color-blue.jpg" title="Blue" /></a></li>
-                    	<li class="divider hide"></li>
-                    	<li class="btn-help"><a href="#">Online Help</a></li>
-                        <li class="divider"></li>
-                        <li class="btn-language">
-                            <a href="#" id="SelectedLanguage">English</a>
-                            <div class="dropdown-language-wrapper">
-								<a href="javascript:selectLanguage('en');"><p>English</p></a> 
-                                <div class="clear"></div>                           
-								<a href="javascript:selectLanguage('ms');"><p>Bahasa Melayu</p></a>                            
-                            </div>
-                        </li>
-                    	#if (!$is_signed_in)
-                    	<li class="btn-login-register divider-no-padding-right">
-                    		<a class="btn-login-register" href="$sign_in_url" id="sign-in" rel="nofollow">Login or Register</a>	
-                    	</li>
-                    	#end
-                    </ul>
-                    <div class="clear"></div>
-                </div>
-				#end
+            	
                 
-                #if (!$is_signed_in)
+                
             	<div class="middle-navi-right-wrapper">
                     <ul>
-                        <li class="btn-help"><a href="#">Online Help</a></li>
-                        <li class="divider"></li>
+                        
                         <li><a href="#"><img src="$images_folder/navi/btn-disabled.png" /></a></li>
                         <li class="divider"></li>
                         <li class="btn-smaller"><a href="javascript:resizeText(-1);">A-</a></li>
@@ -234,31 +204,26 @@ $theme.include($body_top_include)
                             <div class="dropdown-language-wrapper">
 								<a href="javascript:selectLanguage('en');"><p>English</p></a> 
                                 <div class="clear"></div>                           
-								<a href="javascript:selectLanguage('ms');"><p>Bahasa Melayu</p></a>                            
+								<a href="javascript:selectLanguage('ms');"><p>Bahasa Malaysia</p></a>                            
                             </div>
                         </li>
-                    	#if (!$is_signed_in)
+                    	
                     	<li class="btn-login-register divider-no-padding-right">
                     		<a class="btn-login-register" href="$sign_in_url" id="sign-in" rel="nofollow" target="_blank">Login or Register</a>	
                     	</li>
-                    	#end
+                    
                     </ul>
                     <div class="clear"></div>
                 </div>
-                #end
                 
                 
-                	#if (!$is_signed_in)
+                
                 	<div class="middle-search-wrapper">
                     	<input name="search" type="text" placeholder="Search"><a class="btn-search" href="#"></a>
                 	</div>
-                	#end
                 	
-                  	#if ($is_signed_in)
-                	<div class="middle-search-wrapper-sign-in">
-                    	<input name="search" type="text" placeholder="Search"><a class="btn-search" href="#"></a>
-                	</div>
-                	#end
+                	
+                  	
                 
                 
                 <div class="middle-logo-wrapper">
