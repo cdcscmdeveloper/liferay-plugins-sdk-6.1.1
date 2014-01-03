@@ -1865,7 +1865,7 @@
 
 	<portlet>
 		<portlet-name>scEvaluation Stage2</portlet-name>
-		<display-name>Evaluation Stage2</display-name>
+		<display-name>Evaluation Stage 2</display-name>
 		<portlet-class>org.portletfaces.bridge.GenericFacesPortlet</portlet-class>
 		<init-param>
 			<name>javax.portlet.faces.defaultViewId.view</name>
@@ -1877,8 +1877,8 @@
 			<portlet-mode>view</portlet-mode>
 		</supports>
 		<portlet-info>
-			<title>Evaluation Stage2</title>
-			<short-title>Evaluation Stage2</short-title>
+			<title>Evaluation Stage 2</title>
+			<short-title>Evaluation Stage 2</short-title>
 			<keywords></keywords>
 		</portlet-info>
 		<security-role-ref>
@@ -1898,7 +1898,7 @@
 
 <portlet>
 		<portlet-name>scEvaluation Stage1</portlet-name>
-		<display-name>Evaluation Stage1</display-name>
+		<display-name>Evaluation Stage 1</display-name>
 		<portlet-class>org.portletfaces.bridge.GenericFacesPortlet</portlet-class>
 		<init-param>
 			<name>javax.portlet.faces.defaultViewId.view</name>
@@ -1910,8 +1910,8 @@
 			<portlet-mode>view</portlet-mode>
 		</supports>
 		<portlet-info>
-			<title>Evaluation Stage1</title>
-			<short-title>Evaluation Stage1</short-title>
+			<title>Evaluation Stage 1</title>
+			<short-title>Evaluation Stage 1</short-title>
 			<keywords></keywords>
 		</portlet-info>
 		<security-role-ref>
