@@ -407,8 +407,6 @@ public class QTSupplierQulCriteriaBackingBean extends SourcingBaseBackingBean<QT
 			circularSO = BusinessDelegate.getInstance().getServiceObject("ct",ICircularSO.class);
 			CircularReqDTO reqDTO = new CircularReqDTO();
 			SearchBean<CtPanelSupplier> searchBean = new SearchBean<CtPanelSupplier>();
-				
-			searchBean.setNavigatable(false);
 			
 			// Filter By - circularNo
 			String circularNo = getManagedBean().getCircularNo();

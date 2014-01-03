@@ -154,6 +154,7 @@ public abstract class PagingDataModel<T> extends LazyDataModel<T> implements IPa
 		debugLogger("sortField:" + sortField);
 		debugLogger("sortOrder:" + sortOrder);
 		
+		searchBean.setNavigatable(true);
 		searchBean.setPageNo(pageNo);
 		searchBean.setNoOfRowsPerPage(pageSize);
 		
