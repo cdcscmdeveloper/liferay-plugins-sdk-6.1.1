@@ -70,7 +70,7 @@
 
 		<div align="right">
 			<p:commandButton value="#{lbl['lbl.sc.tpl.btn.search']}"
-				action="#{TemplateMBB.searchCreateListAction}" update="searchDoc" />
+				action="#{TemplateMBB.searchCreateListAction}" update="searchDoc" icon="ui-icon-search"/>
 		</div>
 
 	</p:panel>
@@ -114,7 +114,7 @@
 			</p:dataTable>
 		</h:panelGrid>
 		<div align="right" style="width: 950px;">
-			<p:commandButton value="#{lbl['lbl.sc.tpl.btn.create']}" onclick="create.show();" />
+			<p:commandButton value="#{lbl['lbl.sc.tpl.btn.create']}" onclick="create.show();" icon="ui-icon-add"/>
 
 		</div>
 		<ui:include src="/xhtml/ss/main/createTemplate.xhtml" />

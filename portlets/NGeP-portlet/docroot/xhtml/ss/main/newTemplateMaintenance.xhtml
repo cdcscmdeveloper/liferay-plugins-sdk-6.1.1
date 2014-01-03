@@ -14,9 +14,9 @@
 
 		<div align="right">
 			<p:commandButton value="#{lbl['lbl.sc.tpl.btn.save']}"
-				style="margin-right:30px;" action="#{TemplateMBB.save}" />
+				style="margin-right:30px;" action="#{TemplateMBB.save}" icon="ui-icon-save"/>
 			<p:commandButton value="#{lbl['lbl.sc.tpl.btn.submit']}"
-				style="margin-right:30px;" />
+				style="margin-right:30px;" icon="ui-icon-submit"/>
 
 		</div>
 		<p:panel header="#{lbl['lbl.sc.tpl.head.section']}" toggleable="true">
@@ -63,9 +63,9 @@
 				<tr>
 					<td><h:outputLabel value="#{lbl['lbl.sc.tpl.check.list']}"></h:outputLabel>
 					</td>
-					<td><p:selectOneMenu
+					<td><p:selectOneMenu style="margin-bottom:5px;"
 							value="#{TemplateMBB.managedBean.specificationType}">
-							<f:selectItem itemLabel="Select One" itemValue=" " />
+							<f:selectItem itemLabel="Select One" itemValue="" />
 							<f:selectItems value="#{TemplateMBB.managedBean.checkListItem}" />
 							<p:ajax event="change" listener="#{TemplateMBB.selectChecklist}"
 								update="checkList"></p:ajax>
@@ -74,15 +74,25 @@
 				<tr>
 					<td><h:outputLabel value="#{lbl['lbl.sc.tpl.main.title']}"></h:outputLabel>
 					</td>
-					<td><p:inputText size="50" id="checkList"
-							disabled="#{TemplateMBB.managedBean.specificationType !=null}"
+					<td>
+					<h:panelGroup  id="checkList">
+					<ui:fragment rendered="#{TemplateMBB.managedBean.specificationType !=null}">
+						<p:inputText size="50" 
+							disabled="true"
 							value="#{TemplateMBB.managedBean.scqtDoc.tplSpecMaster.specName}" />
+					</ui:fragment>
+					<ui:fragment rendered="#{TemplateMBB.managedBean.specificationType ==null}">
+					<p:inputText size="50" 
+							
+							value="#{TemplateMBB.managedBean.scqtDoc.tplSpecMaster.specName}" />
+					</ui:fragment>
+					</h:panelGroup>
 					</td>
 				</tr>
 				<tr>
 					<td><h:outputLabel value="#{lbl['lbl.sc.tpl.desc']}"></h:outputLabel>
 					</td>
-					<td><p:inputTextarea rows="3" cols="50" autoResize="false"
+					<td><p:inputTextarea rows="3" cols="50" autoResize="false" style="margin-bottom:5px;"
 							value="#{TemplateMBB.managedBean.scqtDoc.tplSpecMaster.specDesc}" />
 					</td>
 				</tr>
@@ -93,7 +103,7 @@
 					<p:column> -->
 				<tr>
 					<td><h:outputLabel value="#{lbl['lbl.sc.tpl.zone']}" /></td>
-					<td><p:selectOneMenu id="zone"
+					<td><p:selectOneMenu id="zone" style="margin-bottom:5px;"
 							value="#{TemplateMBB.managedBean.scqtDoc.scQtZoneCriteria.qtZoneCriteriaId}">
 							<f:selectItem itemLabel="Select One" itemValue="0" />
 							<f:selectItems value="#{TemplateMBB.managedBean.zoneList}" />

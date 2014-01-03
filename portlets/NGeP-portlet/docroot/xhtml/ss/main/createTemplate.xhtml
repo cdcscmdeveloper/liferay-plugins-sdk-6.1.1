@@ -52,7 +52,7 @@
 			</table>
 			<div align="right">
 				<p:commandButton value="#{lbl['lbl.sc.tpl.btn.search']}"
-					action="#{TemplateMBB.searchScqtDocAction}" update="createList" />
+					action="#{TemplateMBB.searchScqtDocAction}" update="createList" icon="ui-icon-search"/>
 			</div>
 
 		</p:panel>
@@ -89,7 +89,7 @@
 					<p:column headerText="#{lbl['lbl.sc.tpl.search.action']}">
 						<p:commandButton value="#{lbl['lbl.sc.tpl.search.btn.clone']}"
 							action="#{TemplateMBB.cloneAction(scQtDoc)}"
-							oncomplete="create.hide();"></p:commandButton>
+							oncomplete="create.hide();" icon="ui-icon-clone"></p:commandButton>
 					</p:column>
 				</p:dataTable>
 			</h:panelGrid>
