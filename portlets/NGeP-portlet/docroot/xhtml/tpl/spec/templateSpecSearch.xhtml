@@ -84,10 +84,10 @@
 								<h:outputText value="#{tplMasterObj.specMasterId}" />
 							</p:column>
 							<p:column>
-								<h:outputText value="#{tplMasterObj.procurementCategory.parameterCode}" />
+								<h:outputText value="#{templateSpecBackingBean.getParameterDesc(tplMasterObj.procurementCategory)}" />
 							</p:column>
 							<p:column>
-								<h:outputText value="#{tplMasterObj.templateTypeCode.parameterCode}" />
+								<h:outputText value="#{templateSpecBackingBean.getParameterDesc(tplMasterObj.templateTypeCode)}" />
 							</p:column>
 							<p:column>
 								<h:outputText value="#{tplMasterObj.specName}" />
@@ -96,7 +96,7 @@
 								<h:outputText value="#{tplMasterObj.specDesc}" />
 							</p:column>
 							<p:column>
-								<h:outputText value="#{tplMasterObj.itemTypeCode.parameterCode}" />
+								<h:outputText value="#{templateSpecBackingBean.getParameterDesc(tplMasterObj.itemTypeCode)}" />
 							</p:column>
 							<p:column>
 								<h:outputText value="#{tplMasterObj.createdBy}" />
