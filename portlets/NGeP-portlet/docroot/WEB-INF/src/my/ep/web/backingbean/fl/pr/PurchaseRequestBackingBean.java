@@ -115,7 +115,6 @@ public class PurchaseRequestBackingBean extends BaseBackingBean<PurchaseRequestM
 	public void init() {
 		if (getManagedBean().getFulfilmentRequest() == null) {
 			getManagedBean().setFulfilmentRequest(new FlFulfilmentRequest());
-			getManagedBean().getFulfilmentRequest().setPmDocStatus(new PmStatus());
 			getManagedBean().getFulfilmentRequest().setIssuedOrgProfile(new PmOrgProfile());
 			getManagedBean().getFulfilmentRequest().getIssuedOrgProfile().setOrgProfileId(1L);
 			getManagedBean().getFulfilmentRequest().setChargeOrgProfile(new PmOrgProfile());

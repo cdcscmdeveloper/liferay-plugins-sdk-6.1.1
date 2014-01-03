@@ -103,7 +103,6 @@ public class ContractRequestBackingBean extends BaseBackingBean<ContractRequestM
 		if(getManagedBean().getFlRequest() == null){
 			System.out.println("==contructor==");
 			getManagedBean().setFlRequest(new FlFulfilmentRequest());
-			getManagedBean().getFlRequest().setPmDocStatus(new PmStatus());
 			getManagedBean().getFlRequest().setIssuedOrgProfile(new PmOrgProfile());
 			getManagedBean().getFlRequest().setChargeOrgProfile(new PmOrgProfile());
 			getManagedBean().getFlRequest().setReceivedOrgProfile(new PmOrgProfile());
@@ -458,7 +457,6 @@ public class ContractRequestBackingBean extends BaseBackingBean<ContractRequestM
 
 					flRequest.setCtContract(contractSO.retrieveNormalContractByMtoContract(contractReqDTO).getContract());
 					getManagedBean().setFlRequest(flRequest);
-					getManagedBean().getFlRequest().setPmDocStatus(new PmStatus());
 					getManagedBean().getFlRequest().setIssuedOrgProfile(new PmOrgProfile());
 					getManagedBean().getFlRequest().setChargeOrgProfile(new PmOrgProfile());
 					getManagedBean().getFlRequest().setReceivedOrgProfile(new PmOrgProfile());
