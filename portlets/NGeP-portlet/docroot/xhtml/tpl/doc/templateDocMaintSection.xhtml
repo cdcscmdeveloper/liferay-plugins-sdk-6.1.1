@@ -1,12 +1,11 @@
-<ui:composition template="/WEB-INF/facelets/templates/basic_template.xhtml"
+<ui:composition 
 	xmlns:f="http://java.sun.com/jsf/core"
 	xmlns:h="http://java.sun.com/jsf/html"
 	xmlns:ui="http://java.sun.com/jsf/facelets"
 	xmlns:ac="http://ac.my/jsf/composite/cc"
 	xmlns:p="http://primefaces.org/ui" >
 
-	<ui:define name="resourceSection"/>
-	<ui:define name="contentSection">
+	
 		<h:outputText value="New Template Document" styleClass="pageTitle" />
 		<p:panel id="panel2" header="Contents" toggleable="true">
 			<h:panelGrid width="100%">
@@ -88,7 +87,153 @@
 		</p:panel>
 	        <p:dialog header="Content" widgetVar="dlg" modal="true" height="450" width="600" resizable="true" >  
 	        <h:outputText id="display" value="#{templateDocBackingBean.managedBean.previewValue}" escape="false" />  
+	           <p:commandButton style="float: right;" value="Generate" action="#{templateDocBackingBean.generatePDF(templateDocBackingBean.managedBean.previewValue)}"></p:commandButton>
 	    </p:dialog>
-	</ui:define>
-	<ui:define name="footerSection"></ui:define>
+	    
+	<p:dialog id="popupEdit" widgetVar="popupEdit" modal="false"
+			resizable="false" header="Edit Content" width="650" height="460">
+			<p:ajax event="close" />
+			
+			<h:panelGroup id="docs">
+				<h:panelGrid width="100%">
+					<h:outputLabel value="Name" style="float: left;" />
+				</h:panelGrid>
+				<h:panelGrid width="100%">
+					<h:inputText id="sectionName"
+						value="#{templateDocBackingBean.managedBean.selectedSectionName}"
+						maxlength="100" style="width: 100%;" />
+				</h:panelGrid>
+				<h:panelGrid style="width:100%;">
+					<h:outputLabel value="#{lbl['lbl.template.doc.section.title']}" style="float: left;" />
+				</h:panelGrid>
+				<h:panelGrid width="100%">
+					<h:inputText id="sectionTitle"
+						value="#{templateDocBackingBean.managedBean.selectedSectionTitle}"
+						maxlength="100" style="width: 100%; float: left;" />
+				</h:panelGrid>
+				<p:spacer height="5px" />
+				<h:panelGrid width="100%">
+					 <p:selectOneRadio id="options" style="width:130px" value="#{templateDocBackingBean.managedBean.selectedOption}" >  
+           				 <f:selectItem itemLabel="Content" itemValue="1" /> 
+           				 <f:selectItem itemLabel="Variable" itemValue="2" />  
+           				 <p:ajax listener="#{templateDocBackingBean.viewContent}" update="contentID,variableID" process="@this" />
+       				 </p:selectOneRadio>  
+				</h:panelGrid>
+				<p:spacer height="5px" />
+				<h:panelGrid width="100%">
+					<h:outputLabel value="#{lbl['lbl.template.doc.section.contents']}" style="float: left;" />
+				</h:panelGrid>
+				<h:panelGrid id="contentID" width="100%">
+					<p:editor id="editor" width="600" height="200"
+						value="#{templateDocBackingBean.managedBean.selectedSectionText}"
+						controls="bold italic color underline alignleft center alignright justify" rendered="#{templateDocBackingBean.managedBean.selectedOption == '1'}">
+					</p:editor>
+				</h:panelGrid>
+				<h:panelGrid id="variableID" width="100%" >
+					<p:dataTable rendered="#{templateDocBackingBean.managedBean.selectedOption == '2'}"
+						value="#{templateDocBackingBean.managedBean.variableList}"
+						var="variableObj" width="100%">
+						<p:columnGroup type="header">
+							<p:row>
+								<p:column rowspan="2" headerText="Name" />
+								<p:column rowspan="2" headerText="Value" />
+								<p:column rowspan="2" headerText="Action" />
+							</p:row>
+						</p:columnGroup>
+						<p:column>
+							<h:outputText value="#{variableObj.sectionNumber}" />
+						</p:column>
+						<p:column>
+							<h:outputText value="#{variableObj.sectionName}" />
+						</p:column>
+						<p:column>
+							<h:outputText value="#{variableObj.sectionNumber}" />
+						</p:column>
+					</p:dataTable>
+				</h:panelGrid>
+			</h:panelGroup>
+			<h:panelGroup>		
+				<p:commandButton id="editlinkM" action="#{templateDocBackingBean.saveContent}"
+					value="OK" oncomplete="popupEdit.hide()" update=":form:sampleTT" />
+				<p:commandButton id="editl" action="#{templateDocBackingBean.saveContent}"
+					value="Cancel" oncomplete="popupEdit.hide()" update=":form:sampleTT" />									
+			</h:panelGroup>
+		</p:dialog>
+		
+		
+		<p:dialog id="popupImportSec" widgetVar="popupImportSec" modal="false" 
+			resizable="false" header="Import Section" width="650" height="460">
+			<table>
+				<tr>
+					<td class="TableFieldLeft" style="width: 120px"><h:outputLabel value="Name" /></td>
+					<td class="TableFieldRight">
+						<p:selectOneMenu id="imptTemplateCategory" style="width:100px;"
+							value="#{templateDocBackingBean.managedBean.impCategoryId}">
+							<f:selectItems value="#{templateDocBackingBean.templateCategoryList}" />
+						</p:selectOneMenu>
+					</td>
+					<td class="TableFieldLeft" style="width: 120px"><h:outputLabel value="Process Type" /></td>
+					<td class="TableFieldRight">
+						<p:selectOneMenu style="width:100px;"
+							value="#{templateDocBackingBean.managedBean.impCategoryId}">
+							<f:selectItems value="#{templateDocBackingBean.templateCategoryList}" />
+						</p:selectOneMenu>
+					</td>
+					<td class="TableFieldLeft" style="width: 120px"><h:outputLabel value="Title" /></td>
+					<td class="TableFieldRight"><p:inputText style="width:180px" /></td>
+					<td>
+						<p:commandLink action="#{templateDocBackingBean.imptSearchResult}" 
+							process="@this,imptTemplateCategory" update="impMasterList">
+							<h:graphicImage library="ep/images/design" name="Search-icon.png"/> 
+						</p:commandLink> 
+					</td>
+				</tr>
+				<tr>
+					<td colspan="7">
+						<p:dataTable id="impMasterList"
+							selection="#{templateDocBackingBean.managedBean.selectedImpMaster}"
+							value="#{templateDocBackingBean.managedBean.importMasterList}"
+							var="tplMasterObj" rowKey="#{tplMasterObj.docMasterId}"
+							width="100%">
+							<p:ajax event="rowSelectRadio" update=":form:impSectionList" listener="#{templateDocBackingBean.selectedSectionTree}"/>
+							<p:columnGroup type="header">
+								<p:row>
+									<p:column rowspan="1" />
+									<p:column rowspan="1" headerText="Template Document" />
+								</p:row>
+							</p:columnGroup>
+							<p:column selectionMode="single" style="width:2%" />
+							<p:column>
+								<h:outputText value="#{tplMasterObj.docTitle}" />
+							</p:column>
+						</p:dataTable>
+					</td>
+				</tr>
+				<tr><td><br></br></td></tr>
+				<tr>
+					<td colspan="7">
+						<p:treeTable id="impSectionList" value="#{templateDocBackingBean.managedBean.imptSectionTN}"
+							var="document">
+							<p:column style="width:150px">
+								<f:facet name="header">Section</f:facet>
+	            				<p:selectBooleanCheckbox value="#{templateDocBackingBean.uncheck}">
+	            					<p:ajax listener="#{templateDocBackingBean.checkRow(document)}" />
+	            				</p:selectBooleanCheckbox>
+								<h:outputText value="#{document.sectionNumber}" />
+								<p:spacer width="5px" />
+								<h:outputText value="#{document.sectionName}" />
+							</p:column>
+							<f:facet name="footer" />
+						</p:treeTable>
+					</td>
+				</tr>
+				<tr>
+					<td>
+						<p:commandButton value="Select" action="#{templateDocBackingBean.addSelectedImptNodes}" 
+							update=":form:sampleTT"	oncomplete="popupImportSec.hide();" />
+					</td>
+				</tr>
+			</table>
+		</p:dialog>
+		
 </ui:composition>
