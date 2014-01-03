@@ -133,7 +133,14 @@
 		   			jQuery('body').addClass(colorscheme);
 		   		};
    };
-   
+
+  jQuery("#bred").click(function(){
+    
+	jQuery.cookie('colorscheme', "red", { expires: 7 });
+	
+	location.reload();
+  });
+     
   jQuery("#bgreen").click(function(){
    
 	jQuery.cookie('colorscheme', "green", { expires: 7 });
