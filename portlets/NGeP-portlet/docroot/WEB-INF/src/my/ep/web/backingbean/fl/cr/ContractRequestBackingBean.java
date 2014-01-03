@@ -106,7 +106,6 @@ public class ContractRequestBackingBean extends BaseBackingBean<ContractRequestM
 			getManagedBean().getFlRequest().setIssuedOrgProfile(new PmOrgProfile());
 			getManagedBean().getFlRequest().setChargeOrgProfile(new PmOrgProfile());
 			getManagedBean().getFlRequest().setReceivedOrgProfile(new PmOrgProfile());
-			getManagedBean().getFlRequest().setCreatedOrgProfile(new PmOrgProfile());
 			getManagedBean().getFlRequest().setCtContract(new CtContract());
 			getManagedBean().getFlRequest().getCtContract().setContractType(new PmParameter());
 			getManagedBean().getFlRequest().getCtContract().setFulfillmentType(new PmParameter());
@@ -267,9 +266,6 @@ public class ContractRequestBackingBean extends BaseBackingBean<ContractRequestM
 		OrgProfileReqDTO orgProfileReqDTO = new OrgProfileReqDTO();
 		orgProfileReqDTO.setOrgProfileId(4L);// set current login user org profile ID
 		OrgProfileResDTO resDTO = orgProfileSO.retrieveOrgProfileByProfileId(orgProfileReqDTO);
-		if(resDTO.getPmOrgProfile() != null){
-			getManagedBean().getFlRequest().setCreatedOrgProfile(resDTO.getPmOrgProfile());
-		}
 		this.getManagedBean().setOutComes(new String[]{"Submit"}); 
 		FulfilmentBackingBean flBackingBean = new FulfilmentBackingBean();
 		flBackingBean.initializeRemarkAndAttachement(flBB.getManagedBean().getRemarkList(), flBB.getManagedBean().getAttachmentList());
@@ -469,9 +465,6 @@ public class ContractRequestBackingBean extends BaseBackingBean<ContractRequestM
 				getManagedBean().setOutComes(res.getAction());
 				getManagedBean().getApproverModel().setTarget(resDTO.getSelectedApproverList());
 				getManagedBean().getApproverModel().getSource().removeAll(resDTO.getSelectedApproverList());
-				if(pmResDTO.getPmOrgProfile() != null){
-					getManagedBean().getFlRequest().setCreatedOrgProfile(pmResDTO.getPmOrgProfile());
-				}
 			}
 
 //		}

@@ -121,8 +121,6 @@ public class PurchaseRequestBackingBean extends BaseBackingBean<PurchaseRequestM
 			getManagedBean().getFulfilmentRequest().getChargeOrgProfile().setOrgProfileId(1L);
 			getManagedBean().getFulfilmentRequest().setReceivedOrgProfile(new PmOrgProfile());
 			getManagedBean().getFulfilmentRequest().getReceivedOrgProfile().setOrgProfileId(1L);
-			getManagedBean().getFulfilmentRequest().setCreatedOrgProfile(new PmOrgProfile());
-			getManagedBean().getFulfilmentRequest().getCreatedOrgProfile().setOrgProfileId(1L);
 			getManagedBean().getFulfilmentRequest().setSmSupplier(new SmSupplier());
 			getManagedBean().getFulfilmentRequest().getSmSupplier().setSupplierId(27L);
 			getManagedBean().getFulfilmentRequest().setFlDeliveryAddresses(new ArrayList<FlDeliveryAddress>());
@@ -357,9 +355,6 @@ public class PurchaseRequestBackingBean extends BaseBackingBean<PurchaseRequestM
 		OrgProfileReqDTO orgProfileReqDTO = new OrgProfileReqDTO();
 		orgProfileReqDTO.setOrgProfileId(4L);// set current login user org profile ID
 		OrgProfileResDTO resDTO = orgProfileSO.retrieveOrgProfileByProfileId(orgProfileReqDTO);
-		if(resDTO.getPmOrgProfile() != null){
-			getManagedBean().getFulfilmentRequest().setCreatedOrgProfile(resDTO.getPmOrgProfile());
-		}
 		this.getManagedBean().setOutComes(new String[] {"Submit"});
 		//System.out.println("Req List ID ::: "+ getManagedBean().getSelectedRequestNote().getScRequestList().getRequestListNo());
 		return NAV_TO_CREATE_PURCHASE_REQUEST;
