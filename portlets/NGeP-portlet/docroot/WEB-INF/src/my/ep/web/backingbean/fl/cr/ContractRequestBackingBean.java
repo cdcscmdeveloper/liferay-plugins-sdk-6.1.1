@@ -17,6 +17,7 @@ import javax.servlet.http.HttpServletRequest;
 import my.ep.biz.bean.search.ISearchBean;
 import my.ep.biz.bean.search.ISearchResultBean;
 import my.ep.biz.bean.search.SearchFilterBean;
+import my.ep.biz.service.IPmSO;
 import my.ep.biz.service.ct.IContractSO;
 import my.ep.biz.service.ct.maintain.IContractAmendmentSO;
 import my.ep.biz.service.fl.request.IFulfilmentRequestSO;
@@ -51,7 +52,10 @@ import my.ep.persistence.entity.fl.request.FlFulfilmentItem;
 import my.ep.persistence.entity.fl.request.FlFulfilmentItemAddr;
 import my.ep.persistence.entity.fl.request.FlFulfilmentRequest;
 import my.ep.persistence.entity.pm.authorization.PmOrgProfile;
+import my.ep.persistence.entity.pm.authorization.PmUser;
+import my.ep.persistence.entity.pm.authorization.PmUserGroup;
 import my.ep.persistence.entity.pm.authorization.PmUserGroupUser;
+import my.ep.persistence.entity.pm.authorization.PmUserOrg;
 import my.ep.persistence.entity.pm.common.PmAddressType;
 import my.ep.persistence.entity.pm.common.PmDo;
 import my.ep.persistence.entity.pm.common.PmGo;
@@ -120,7 +124,17 @@ public class ContractRequestBackingBean extends BaseBackingBean<ContractRequestM
 			List<String> target = new ArrayList<String>();  
 			getManagedBean().setApproverModel(new DualListModel<String>(source, target));
 		}
-
+		
+		 PmUser user = getFacesScopes().getUserSessionBean();
+		 
+		 UserReqDTO reqDTO = new UserReqDTO();
+		 reqDTO.setUserId(user.getUserId());
+		 IUserSO userSO = (IUserSO ) BusinessDelegate.getInstance().getServiceObject("pm", IUserSO .class);
+		 UserResDTO resDTO = userSO.retrieveUserOrgListByUserId(reqDTO);
+		 
+		 PmUserOrg userOrg = resDTO.getUserOrgList().get(0);
+		 System.out.println("getOrgName: "+userOrg.getPmOrgProfile().getParentOrgProfile().getParentOrgProfile().getOrgName());
+		 getManagedBean().getFlRequest().setIssuedOrgProfile(userOrg.getPmOrgProfile());
 	}
 
 
@@ -269,7 +283,7 @@ public class ContractRequestBackingBean extends BaseBackingBean<ContractRequestM
 		this.getManagedBean().setOutComes(new String[]{"Submit"}); 
 		FulfilmentBackingBean flBackingBean = new FulfilmentBackingBean();
 		flBackingBean.initializeRemarkAndAttachement(flBB.getManagedBean().getRemarkList(), flBB.getManagedBean().getAttachmentList());
-
+//		getManagedBean().getFlRequest().setStatus();//TODO
 		return NAV_TO_CREATE_CONTRACT_REQUEST;
 	}
 
