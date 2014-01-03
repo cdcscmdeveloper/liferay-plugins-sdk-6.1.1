@@ -132,7 +132,7 @@ public class ContractBackingBean extends BaseBackingBean<ContractManagedBean> {
 		FacesScopes facesScopes = new FacesScopes();
 		
 		UploadedFile item = event.getFile();
-		String filePath = "\\"+item.getFileName();
+		String filePath = "C:/projects/uploads/"+item.getFileName();
 		FileOutputStream fileOuputStream = new FileOutputStream(filePath); 
 	    fileOuputStream.write(item.getContents());
 	    fileOuputStream.close();

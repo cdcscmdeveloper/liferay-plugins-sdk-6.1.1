@@ -126,8 +126,7 @@ public class PanelBackingBean extends BaseBackingBean<PanelManagedBean>{
 			userSO = (IUserSO)BusinessDelegate.getInstance().getServiceObject("pm",IUserSO.class);
 			
 			UserReqDTO reqDTO = new UserReqDTO();
-			FacesScopes facesScopes = new FacesScopes();
-			reqDTO.setUserId(facesScopes.getUserSessionBean().getUserId());
+			reqDTO.setUserId(getFacesScopes().getUserSessionBean().getUserId());
 			UserResDTO resDTO = userSO.retrieveUserOrgListByUserId(reqDTO);
 			
 			reqDTO.setOrgProfileId(resDTO.getUserOrgList().get(0).getPmOrgProfile().getOrgProfileId());
@@ -166,31 +165,69 @@ public class PanelBackingBean extends BaseBackingBean<PanelManagedBean>{
 	}
 	
 	private void initializeRemarks() {
-		List<CtRemark> zoneRemarks = getManagedBean().getCircularVer().getZoneRemarks();
-		if(zoneRemarks.size()==0) {
+		initiateRemark(getManagedBean().getCircularVer().getCircularRemarks());
+		initiateRemark(getManagedBean().getCircularVer().getZoneRemarks());
+		initiateRemark(getManagedBean().getCircularVer().getItemRemarks());
+	}
+	
+	private void initiateRemark(List<CtRemark> remarks) {
+		if(remarks.size()==0 || !compareUserName(remarks.get(0).getCreatedUser().getLoginId())) {
 			CtRemark remark = new CtRemark();
 			remark.setCreatedBy(getFacesScopes().getUserSessionBean().getUserId());
 			remark.setCreatedDate(new Timestamp(System.currentTimeMillis()));
 			remark.setChangedBy(remark.getCreatedBy());
 			remark.setChangedDate(remark.getCreatedDate());
 			remark.setCreatedUser(getFacesScopes().getUserSessionBean());
-			zoneRemarks.add(0, remark);
+			remarks.add(0, remark);
 		}
 	}
 	
 	public boolean isPanelAdmin() {
-		FacesScopes facesScopes = new FacesScopes();
-		return facesScopes.hasRoleUser(RoleCode.BPK_PCA_HQ.value()) || facesScopes.hasRoleUser(RoleCode.BPK_PCA_SA.value()) || facesScopes.hasRoleUser(RoleCode.BPK_PCA_SK.value());
+		return getFacesScopes().hasRoleUser(RoleCode.BPK_PCA_HQ.value()) || getFacesScopes().hasRoleUser(RoleCode.BPK_PCA_SA.value()) || getFacesScopes().hasRoleUser(RoleCode.BPK_PCA_SK.value());
 	}
 	
 	public boolean isCentralContractAdmin() {
-		FacesScopes facesScopes = new FacesScopes();
-		return facesScopes.hasRoleUser(RoleCode.BPK_CCA_HQ.value()) || facesScopes.hasRoleUser(RoleCode.BPK_CCA_SA.value()) || facesScopes.hasRoleUser(RoleCode.BPK_CCA_SK.value());
+		return getFacesScopes().hasRoleUser(RoleCode.BPK_CCA_HQ.value()) || getFacesScopes().hasRoleUser(RoleCode.BPK_CCA_SA.value()) || getFacesScopes().hasRoleUser(RoleCode.BPK_CCA_SK.value());
 	}
 	
 	public boolean isBPKApprover() {
-		FacesScopes facesScopes = new FacesScopes();
-		return facesScopes.hasRoleUser(RoleCode.BPK_APPROVER.value()) || facesScopes.hasRoleUser(RoleCode.BPK_APPROVER_SA.value()) || facesScopes.hasRoleUser(RoleCode.BPK_APPROVER_SK.value());
+		return getFacesScopes().hasRoleUser(RoleCode.BPK_APPROVER.value()) || getFacesScopes().hasRoleUser(RoleCode.BPK_APPROVER_SA.value()) || getFacesScopes().hasRoleUser(RoleCode.BPK_APPROVER_SK.value());
+	}
+	
+	private String getUserRole() {
+		if(getManagedBean().getCircularDocType()!=null) { // Cancellation Request
+			if(getManagedBean().getCircularDocType()!=null && getManagedBean().getCircularDocType().equalsIgnoreCase(ContractConst.CIRCULAR_DOC_TYPE_PANEL)) {
+				if(getFacesScopes().hasRoleUser(RoleCode.BPK_PCA_HQ.value())) 
+					return RoleCode.BPK_PCA_HQ.value();
+				else if(getFacesScopes().hasRoleUser(RoleCode.BPK_PCA_SA.value()))
+					return RoleCode.BPK_PCA_SA.value();
+				else if(getFacesScopes().hasRoleUser(RoleCode.BPK_PCA_SK.value()))
+					return RoleCode.BPK_PCA_SK.value();
+			} else if(getManagedBean().getCircularDocType()!=null && getManagedBean().getCircularDocType().equalsIgnoreCase(ContractConst.CIRCULAR_DOC_TYPE_CENTRAL_CONTRACT)) {
+				if(getFacesScopes().hasRoleUser(RoleCode.BPK_CCA_HQ.value())) 
+					return RoleCode.BPK_CCA_HQ.value();
+				else if(getFacesScopes().hasRoleUser(RoleCode.BPK_CCA_SA.value()))
+					return RoleCode.BPK_CCA_SA.value();
+				else if(getFacesScopes().hasRoleUser(RoleCode.BPK_CCA_SK.value()))
+					return RoleCode.BPK_CCA_SK.value();
+			}
+		} else { // Panel Circular Creation
+			if(getFacesScopes().hasRoleUser(RoleCode.BPK_PCA_HQ.value())) 
+				return RoleCode.BPK_PCA_HQ.value();
+			else if(getFacesScopes().hasRoleUser(RoleCode.BPK_PCA_SA.value()))
+				return RoleCode.BPK_PCA_SA.value();
+			else if(getFacesScopes().hasRoleUser(RoleCode.BPK_PCA_SK.value()))
+				return RoleCode.BPK_PCA_SK.value();
+		}
+		
+		if(getFacesScopes().hasRoleUser(RoleCode.BPK_APPROVER.value())) 
+			return RoleCode.BPK_APPROVER.value();
+		else if(getFacesScopes().hasRoleUser(RoleCode.BPK_APPROVER_SA.value()))
+			return RoleCode.BPK_APPROVER_SA.value();
+		else if(getFacesScopes().hasRoleUser(RoleCode.BPK_APPROVER_SK.value()))
+			return RoleCode.BPK_APPROVER_SK.value();	
+		else 
+			return null;
 	}
 	
 	public String saveCircularPanel(String action) {
@@ -238,7 +275,6 @@ public class PanelBackingBean extends BaseBackingBean<PanelManagedBean>{
 				}
 			}
 			
-			FacesScopes facesScope = new FacesScopes();
 			CircularReqDTO reqDTO = new CircularReqDTO();
 			reqDTO.setSelectedApprovers(getManagedBean().getApproverModel().getTarget());
 			reqDTO.setAvailableApprovers(getManagedBean().getApproverModel().getSource());
@@ -247,9 +283,14 @@ public class PanelBackingBean extends BaseBackingBean<PanelManagedBean>{
 			reqDTO.setCircular(circular);
 			reqDTO.setCircularVer(circularVer);
 			reqDTO.setOutcome(action);
-			reqDTO.setToken(facesScope.getBPMAuthenticationCtxToken());
+			reqDTO.setToken(getFacesScopes().getBPMAuthenticationCtxToken());
 			reqDTO.setTaskId(getManagedBean().getTaskId());
 			reqDTO.setCircularAdmin(getManagedBean().getCircularAdmin());
+			reqDTO.setUserRole(getUserRole());
+			if(isBPKApprover()) {
+				reqDTO.getCircularVer().setApprover(getFacesScopes().getUserSessionBean());
+				reqDTO.getCircularVer().setApprovedDate(new Date());
+			}
 			
 			if(circularVer.getPmUserGroup().getUserGroupId()!=null) {
 				PmUserGroup pmUserGroup = getManagedBean().getUserGroupMap().get(circularVer.getPmUserGroup().getUserGroupId());
@@ -296,7 +337,6 @@ public class PanelBackingBean extends BaseBackingBean<PanelManagedBean>{
 		try {
 			circularSO = (ICircularSO)BusinessDelegate.getInstance().getServiceObject("ct",ICircularSO.class);
 			
-			FacesScopes facesScope = new FacesScopes();
 			CircularReqDTO reqDTO = new CircularReqDTO();
 			reqDTO.setCancelCircularReq(getManagedBean().getCancelCircularReq());
 			reqDTO.setSelectedApprovers(getManagedBean().getApproverModel().getTarget());
@@ -305,9 +345,14 @@ public class PanelBackingBean extends BaseBackingBean<PanelManagedBean>{
 			reqDTO.setAttachments(getManagedBean().getAttachmentList());			
 			reqDTO.setDocType(getManagedBean().getCircularDocType());
 			reqDTO.setOutcome(action);
-			reqDTO.setToken(facesScope.getBPMAuthenticationCtxToken());
+			reqDTO.setToken(getFacesScopes().getBPMAuthenticationCtxToken());
 			reqDTO.setTaskId(getManagedBean().getTaskId());
 			reqDTO.setCircularAdmin(getManagedBean().getCircularAdmin());
+			reqDTO.setUserRole(getUserRole());
+			if(isBPKApprover()) {
+				reqDTO.getCancelCircularReq().setApprover(getFacesScopes().getUserSessionBean());
+				reqDTO.getCancelCircularReq().setApprovedDate(new Date());
+			}
 			
 			if(getManagedBean().getCircularVer().getPmUserGroup().getUserGroupId()!=null) {
 				getManagedBean().getCancelCircularReq().setPmUserGroup(getManagedBean().getCircularVer().getPmUserGroup());
@@ -725,7 +770,7 @@ public class PanelBackingBean extends BaseBackingBean<PanelManagedBean>{
 				getManagedBean().setCircular(resDTO.getCircular());
 				getManagedBean().setCircularVer(resDTO.getCircularVer());
 				getManagedBean().setUpdateAction(true);
-				getManagedBean().setOutComes(new String[]{"SAVE","SUBMIT"});
+				getManagedBean().setOutComes(new String[]{"Save","Submit"});
 			} else if(action.equalsIgnoreCase("cancel")) {
 				
 			}
@@ -744,6 +789,7 @@ public class PanelBackingBean extends BaseBackingBean<PanelManagedBean>{
 			getManagedBean().setRemarkList(resDTO.getRemarkList());
 			getManagedBean().setAttachmentList(resDTO.getAttachmentList());
 			
+			initializeRemarks();
 			ContractBackingBean ctBB = new ContractBackingBean();
 			ctBB.initializeRemarkAndAttachement(getManagedBean().getRemarkList(), getManagedBean().getAttachmentList());
 			
@@ -809,6 +855,16 @@ public class PanelBackingBean extends BaseBackingBean<PanelManagedBean>{
 					}
 				}
 			}
+			
+			getManagedBean().getApproverModel().getSource().clear();
+			if(resDTO.getCircularVer().getPmUserGroup()!=null) {
+				for(PmUserGroupUser user : resDTO.getCircularVer().getPmUserGroup().getPmUserGroupUsers()) {
+					getManagedBean().getApproverModel().getSource().add(user.getPmUser().getUserName());
+				}
+			} else {
+				resDTO.getCircularVer().setPmUserGroup(new PmUserGroup());
+			}
+			
 			getManagedBean().getApproverModel().setTarget(resDTO.getApproverList());
 			getManagedBean().getApproverModel().getSource().removeAll(resDTO.getApproverList());
 			getManagedBean().setRemarkList(resDTO.getRemarkList());
@@ -816,6 +872,7 @@ public class PanelBackingBean extends BaseBackingBean<PanelManagedBean>{
 			getManagedBean().setCircular(resDTO.getCircularVer().getCtCircular());
 			getManagedBean().setCircularVer(resDTO.getCircularVer());
 			
+			initializeRemarks();
 			ContractBackingBean ctBB = new ContractBackingBean();
 			ctBB.initializeRemarkAndAttachement(getManagedBean().getRemarkList(), getManagedBean().getAttachmentList());
 			
@@ -873,6 +930,7 @@ public class PanelBackingBean extends BaseBackingBean<PanelManagedBean>{
 			getManagedBean().setAttachmentList(resDTO.getAttachmentList());
 			getManagedBean().setCancelCircularReq(resDTO.getCancelCircularReq());
 			
+			initializeRemarks();
 			ContractBackingBean ctBB = new ContractBackingBean();
 			ctBB.initializeRemarkAndAttachement(getManagedBean().getRemarkList(), getManagedBean().getAttachmentList());
 			

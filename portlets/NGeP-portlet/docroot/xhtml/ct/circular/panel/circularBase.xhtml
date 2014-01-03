@@ -10,6 +10,10 @@
     	<f:event listener="#{panelBackingBean.preRenderView}" type="preRenderView" />	
 		<p:panel>
 			<p:messages id="messages" showDetail="true" autoUpdate="true" closable="true" severity="error, info" />
+			<p:panel styleClass="ppRightBtn" rendered="#{panelBackingBean.managedBean.circularVer.status != null}">
+				<h:outputText value="Status : " />
+				<h:outputText value="#{panelBackingBean.getStatusDescById(panelBackingBean.managedBean.circularVer.status.statusId)}" /> 
+			</p:panel>			
 			<div class="ppRightBtn"> 
 	  			<ui:repeat var="action"	value="#{panelBackingBean.managedBean.outComes}">
 					<p:commandButton value="#{action}" ajax="false" styleClass="ui-button" action="#{panelBackingBean.saveCircularPanel(action)}" />
@@ -19,7 +23,6 @@
 		<p:tabView id="tabview" orientation="left" >
 			<p:tab id="tabcd" title="Circular Details" >
 	       		<ui:include src="/xhtml/ct/circular/panel/circularDetail.xhtml"/>
-	       		<ui:include src="/xhtml/ct/shared/remarkAndAttachment.xhtml" />
 	       	</p:tab> 
 		 	<p:tab id="tabAgency" title="Zone" >
 	       		<ui:include src="/xhtml/ct/circular/panel/zone.xhtml"/>

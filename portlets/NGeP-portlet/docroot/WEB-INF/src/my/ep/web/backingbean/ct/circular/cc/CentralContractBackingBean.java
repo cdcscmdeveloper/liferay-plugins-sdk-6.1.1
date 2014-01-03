@@ -100,9 +100,12 @@ public class CentralContractBackingBean extends BaseBackingBean<CentralContractM
 			initializeApproverGroup();
 		}
 		if(isCentralContractAdmin()) {
-			FacesScopes facesScopes = new FacesScopes();
-			getManagedBean().setCircularAdmin(facesScopes.getUserSessionBean().getLoginId());
+			getManagedBean().setCircularAdmin(getFacesScopes().getUserSessionBean().getLoginId());
 		}
+	}
+	
+	private FacesScopes getFacesScopes() {
+		return new FacesScopes();
 	}
 	
 	private void initializeApproverGroup() {
@@ -111,8 +114,7 @@ public class CentralContractBackingBean extends BaseBackingBean<CentralContractM
 			userSO = (IUserSO)BusinessDelegate.getInstance().getServiceObject("pm",IUserSO.class);
 			
 			UserReqDTO reqDTO = new UserReqDTO();
-			FacesScopes facesScopes = new FacesScopes();
-			reqDTO.setUserId(facesScopes.getUserSessionBean().getUserId());
+			reqDTO.setUserId(getFacesScopes().getUserSessionBean().getUserId());
 			UserResDTO resDTO = userSO.retrieveUserOrgListByUserId(reqDTO);
 			
 			reqDTO.setOrgProfileId(resDTO.getUserOrgList().get(0).getPmOrgProfile().getOrgProfileId());
@@ -181,7 +183,7 @@ public class CentralContractBackingBean extends BaseBackingBean<CentralContractM
 		SelectItem[] items = null;
 		try {
 			statusSO = (IStatusSO)BusinessDelegate.getInstance().getServiceObject("pm",IStatusSO.class);
-			String languageCode = new FacesScopes().getUserLocale().getLanguage();
+			String languageCode = getFacesScopes().getUserLocale().getLanguage();
 			
 			List<Long> statusIdList = new ArrayList<Long>();
 			statusIdList.add(ContractStatusConst.PENDING_SUBMISSION);
@@ -415,8 +417,28 @@ public class CentralContractBackingBean extends BaseBackingBean<CentralContractM
 	}
 	
 	public boolean isCentralContractAdmin() {
-		FacesScopes facesScopes = new FacesScopes();
-		return facesScopes.hasRoleUser(RoleCode.BPK_CCA_HQ.value()) || facesScopes.hasRoleUser(RoleCode.BPK_CCA_SA.value()) || facesScopes.hasRoleUser(RoleCode.BPK_CCA_SK.value());
+		return getFacesScopes().hasRoleUser(RoleCode.BPK_CCA_HQ.value()) || getFacesScopes().hasRoleUser(RoleCode.BPK_CCA_SA.value()) || getFacesScopes().hasRoleUser(RoleCode.BPK_CCA_SK.value());
+	}
+	
+	public boolean isBPKApprover() {
+		return getFacesScopes().hasRoleUser(RoleCode.BPK_APPROVER.value()) || getFacesScopes().hasRoleUser(RoleCode.BPK_APPROVER_SA.value()) || getFacesScopes().hasRoleUser(RoleCode.BPK_APPROVER_SK.value());
+	}
+	
+	private String getUserRole() {		
+		if(getFacesScopes().hasRoleUser(RoleCode.BPK_CCA_HQ.value())) 
+			return RoleCode.BPK_CCA_HQ.value();
+		else if(getFacesScopes().hasRoleUser(RoleCode.BPK_CCA_SA.value()))
+			return RoleCode.BPK_CCA_SA.value();
+		else if(getFacesScopes().hasRoleUser(RoleCode.BPK_CCA_SK.value()))
+			return RoleCode.BPK_CCA_SK.value();		
+		else if(getFacesScopes().hasRoleUser(RoleCode.BPK_APPROVER.value())) 
+			return RoleCode.BPK_APPROVER.value();
+		else if(getFacesScopes().hasRoleUser(RoleCode.BPK_APPROVER_SA.value()))
+			return RoleCode.BPK_APPROVER_SA.value();
+		else if(getFacesScopes().hasRoleUser(RoleCode.BPK_APPROVER_SK.value()))
+			return RoleCode.BPK_APPROVER_SK.value();	
+		else 
+			return null;
 	}
 	
 	public String saveCircular(String outcome){
@@ -439,8 +461,6 @@ public class CentralContractBackingBean extends BaseBackingBean<CentralContractM
 			circularVer.setCircularFileName("temp");
 			circularVer.setCircularFilePath("tempPath");
 			
-			FacesScopes facesScope = new FacesScopes();
-
 			CircularReqDTO reqDTO = new CircularReqDTO();
 			reqDTO.setSelectedApprovers(getManagedBean().getApproverModel().getTarget());
 			reqDTO.setAvailableApprovers(getManagedBean().getApproverModel().getSource());
@@ -449,9 +469,14 @@ public class CentralContractBackingBean extends BaseBackingBean<CentralContractM
 			reqDTO.setCircular(circular);
 			reqDTO.setCircularVer(circularVer);
 			reqDTO.setOutcome(outcome);
-			reqDTO.setToken(facesScope.getBPMAuthenticationCtxToken());
+			reqDTO.setToken(getFacesScopes().getBPMAuthenticationCtxToken());
 			reqDTO.setTaskId(getManagedBean().getTaskId());
 			reqDTO.setCircularAdmin(getManagedBean().getCircularAdmin());
+			reqDTO.setUserRole(getUserRole());
+			if(isBPKApprover()) {
+				reqDTO.getCircularVer().setApprover(getFacesScopes().getUserSessionBean());
+				reqDTO.getCircularVer().setApprovedDate(new Date());
+			}
 			
 			if(circularVer.getPmUserGroup().getUserGroupId()!=null) {
 				PmUserGroup pmUserGroup = getManagedBean().getUserGroupMap().get(circularVer.getPmUserGroup().getUserGroupId());
@@ -550,8 +575,24 @@ public class CentralContractBackingBean extends BaseBackingBean<CentralContractM
 			} else if(action.equalsIgnoreCase("cancel")) {
 				
 			}
+			
+			getManagedBean().getApproverModel().getSource().clear();
+			if(resDTO.getCircularVer().getPmUserGroup()!=null) {
+				for(PmUserGroupUser user : resDTO.getCircularVer().getPmUserGroup().getPmUserGroupUsers()) {
+					getManagedBean().getApproverModel().getSource().add(user.getPmUser().getUserName());
+				}
+			} else {
+				resDTO.getCircularVer().setPmUserGroup(new PmUserGroup());
+			}
+			
 			getManagedBean().getApproverModel().setTarget(resDTO.getApproverList());
 			getManagedBean().getApproverModel().getSource().removeAll(resDTO.getApproverList());
+			getManagedBean().setRemarkList(resDTO.getRemarkList());
+			getManagedBean().setAttachmentList(resDTO.getAttachmentList());		
+			
+			ContractBackingBean ctBB = new ContractBackingBean();
+			ctBB.initializeRemarkAndAttachement(getManagedBean().getRemarkList(), getManagedBean().getAttachmentList());
+			
 			return "circularBase";
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -566,7 +607,7 @@ public class CentralContractBackingBean extends BaseBackingBean<CentralContractM
 		ICircularSO circularSO = null;
 		try {
 			System.out.println("**********preRenderView**************");
-			HttpServletRequest servletRequest = PortalUtil.getHttpServletRequest(new FacesScopes().getRequest());
+			HttpServletRequest servletRequest = PortalUtil.getHttpServletRequest(getFacesScopes().getRequest());
 			HttpServletRequest originalServletRequest = PortalUtil.getOriginalServletRequest(servletRequest);
 			String taskId = originalServletRequest.getParameter("taskId");
 			System.out.println("taskId:" + taskId);
@@ -576,8 +617,7 @@ public class CentralContractBackingBean extends BaseBackingBean<CentralContractM
 			}
 			
 			circularSO = (ICircularSO)BusinessDelegate.getInstance().getServiceObject("ct",ICircularSO.class);
-			FacesScopes face = new FacesScopes();
-			String token = face.getBPMAuthenticationCtxToken();
+			String token = getFacesScopes().getBPMAuthenticationCtxToken();
 			IBpmSO bpmSO = (IBpmSO) EpBpmBusinessDelegate.getInstance().getServiceObject(IBpmSO.class);
 
 			BpmRequestDTO reqDTO = new BpmRequestDTO();
@@ -606,6 +646,16 @@ public class CentralContractBackingBean extends BaseBackingBean<CentralContractM
 				parameter.setParameterId(-1L);
 				resDTO.getCircularVer().setUpdateType(parameter);				
 			}
+			
+			getManagedBean().getApproverModel().getSource().clear();
+			if(resDTO.getCircularVer().getPmUserGroup()!=null) {
+				for(PmUserGroupUser user : resDTO.getCircularVer().getPmUserGroup().getPmUserGroupUsers()) {
+					getManagedBean().getApproverModel().getSource().add(user.getPmUser().getUserName());
+				}
+			} else {
+				resDTO.getCircularVer().setPmUserGroup(new PmUserGroup());
+			}
+			
 			getManagedBean().getApproverModel().setTarget(resDTO.getApproverList());
 			getManagedBean().getApproverModel().getSource().removeAll(resDTO.getApproverList());
 			getManagedBean().setRemarkList(resDTO.getRemarkList());

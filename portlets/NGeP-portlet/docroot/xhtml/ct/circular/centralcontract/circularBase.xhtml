@@ -13,7 +13,7 @@
 			<p:messages id="messages" showDetail="true" autoUpdate="true" closable="true" severity="error, info" />
 			<p:panel styleClass="ppRightBtn" rendered="#{centralContractBackingBean.managedBean.circularVer.status != null}">
 				<h:outputText value="Status : " />
-				<h:outputText value="#{centralContractBackingBean.managedBean.circularVer.status.statusId}" /> 
+				<h:outputText value="#{centralContractBackingBean.getStatusDescById(centralContractBackingBean.managedBean.circularVer.status.statusId)}" /> 
 			</p:panel>
 			<div class="ppRightBtn"> 
 	  			<ui:repeat var="action"	value="#{centralContractBackingBean.managedBean.outComes}">

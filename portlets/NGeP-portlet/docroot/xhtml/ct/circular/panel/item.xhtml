@@ -149,11 +149,11 @@
 						<tr>
 							<td class="TableFieldLeft" width="24%"><h:outputLabel value="Remark" /></td>
 							<td class="TableFieldRight">
-								<p:dataGrid value="#{ctBackingBean.managedBean.remarkList}" var="remarkVar" rowIndexVar="remarkIndex" columns="1" >
+								<p:dataGrid value="#{panelBackingBean.managedBean.circularVer.itemRemarks}" var="remarkVar" rowIndexVar="remarkIndex" columns="1" >
 									<table>
 										<tr>
 											<td rowspan="2" valign="top">
-												<h:graphicImage value="#{ctBackingBean.userImagePath(remarkVar.createdUser.loginId)}" height="30" width="30" />
+												<h:graphicImage value="#{panelBackingBean.userImagePath(remarkVar.createdUser.loginId)}" height="30" width="30" />
 											</td>
 											<td width="5"></td>
 											<td>
