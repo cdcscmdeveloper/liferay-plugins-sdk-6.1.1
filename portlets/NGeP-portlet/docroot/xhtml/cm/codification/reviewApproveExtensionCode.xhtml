@@ -13,8 +13,7 @@
 	<ui:define name="contentSection">
 
 		<h:panelGroup id="extensionFlowReviewID">
-			<p:outputLabel styleClass="screen-title"
-				value="Extension Code Review"></p:outputLabel>
+
 
 			<div style="text-align: right;">
 				<ui:repeat var="action"
@@ -24,105 +23,152 @@
 				</ui:repeat>
 			</div>
 
-			<table style="width: 100%;">
-				<tr>
-					<td><p:outputLabel value="#{lbl['lbl.cm.unspsc.code']}"></p:outputLabel></td>
-					<td><p:inputText
-							value="#{unspscCodeBackingBean.managedBean.reviewExtCodeList[0].tempCode}"
-							size="40" /></td>
-					<td><p:outputLabel value="#{lbl['lbl.cm.unspsc.title']}"></p:outputLabel></td>
-					<td><p:inputText
-							value="#{unspscCodeBackingBean.managedBean.reviewExtCodeList[0].tempTitle}"
-							size="40" /></td>
-				</tr>
-			</table>
+			<p:panel header="Extension Code Review" toggleable="true">
 
-			<p:dataTable style="width:100%;"
-				value="#{unspscCodeBackingBean.managedBean.reviewExtCodeList}"
-				var="review">
+				<table style="width: 100%;">
+					<tr>
+						<td><p:outputLabel value="#{lbl['lbl.cm.unspsc.code']}"></p:outputLabel></td>
+						<td><p:inputText
+								value="#{unspscCodeBackingBean.managedBean.reviewExtCodeList[0].tempCode}"
+								size="40" disabled="true" /></td>
+						<td><p:outputLabel value="#{lbl['lbl.cm.unspsc.title']}"></p:outputLabel></td>
+						<td><p:inputText
+								value="#{unspscCodeBackingBean.managedBean.reviewExtCodeList[0].tempTitle}"
+								size="40" disabled="true" /></td>
+					</tr>
+				</table>
 
-				<p:column>
-					<f:facet name="header">
+				<p:dataTable style="width:100%;"
+					value="#{unspscCodeBackingBean.managedBean.reviewExtCodeList}"
+					var="review">
+
+					<p:column>
+						<f:facet name="header">
 							#{lbl['lbl.cm.item.description']}
 						</f:facet>
 					#{review.itemDetail}
 				</p:column>
-				<p:column>
-					<f:facet name="header">
+					<p:column>
+						<f:facet name="header">
 							Extension
 						</f:facet>
 
-					<table>
-						<tr>
-							<td>#{lbl['lbl.cm.type']}</td>
-							<td><h:panelGrid columns="2"
-									columnClasses="cmColumnWidth, border0">
-									<p:inputText value="#{review.typeName}" disabled="true"></p:inputText>
+						<table>
+							<tr>
+								<td>#{lbl['lbl.cm.type']}</td>
+								<td><h:panelGrid columns="2"
+										columnClasses="cmColumnWidth, border0">
+										<p:inputText value="#{review.typeName}" disabled="true"></p:inputText>
 
-									<p:graphicImage value="/resources/ep/images/design/add.png"
-										rendered="#{review.requestType}" />
+										<p:graphicImage value="/resources/ep/images/design/add.png"
+											rendered="#{review.requestType}" />
 
-								</h:panelGrid></td>
-						</tr>
-						<tr>
-							<td>#{lbl['lbl.cm.brand']}</td>
-							<td><h:panelGrid columns="2"
-									columnClasses="cmColumnWidth, border0">
-									<p:inputText value="#{review.brandName}" disabled="true"></p:inputText>
-
-
-									<p:graphicImage value="/resources/ep/images/design/add.png"
-										rendered="#{review.requestBrand}" />
-								</h:panelGrid></td>
-						</tr>
-						<tr>
-							<td>#{lbl['lbl.cm.measurement']}</td>
-							<td><h:panelGrid columns="2"
-									columnClasses="cmColumnWidth, border0">
-									<p:inputText value="#{review.measurementName}" disabled="true"></p:inputText>
-									<p:graphicImage value="/resources/ep/images/design/add.png"
-										rendered="#{review.requestMeasurement}" />
+									</h:panelGrid></td>
+							</tr>
+							<tr>
+								<td>#{lbl['lbl.cm.brand']}</td>
+								<td><h:panelGrid columns="2"
+										columnClasses="cmColumnWidth, border0">
+										<p:inputText value="#{review.brandName}" disabled="true"></p:inputText>
 
 
-								</h:panelGrid></td>
-						</tr>
-						<tr>
-							<td>#{lbl['lbl.cm.color']}</td>
-							<td><h:panelGrid columns="2"
-									columnClasses="cmColumnWidth, border0">
-									<p:inputText value="#{review.colorName}" disabled="true"></p:inputText>
-									<p:graphicImage value="/resources/ep/images/design/add.png"
-										rendered="#{review.requestColor}" />
+										<p:graphicImage value="/resources/ep/images/design/add.png"
+											rendered="#{review.requestBrand}" />
+									</h:panelGrid></td>
+							</tr>
+							<tr>
+								<td>#{lbl['lbl.cm.measurement']}</td>
+								<td><h:panelGrid columns="2"
+										columnClasses="cmColumnWidth, border0">
+										<p:inputText value="#{review.measurementName}" disabled="true"></p:inputText>
+										<p:graphicImage value="/resources/ep/images/design/add.png"
+											rendered="#{review.requestMeasurement}" />
 
-								</h:panelGrid></td>
-						</tr>
-					</table>
 
-				</p:column>
-				<p:column>
-					<f:facet name="header">
+									</h:panelGrid></td>
+							</tr>
+							<tr>
+								<td>#{lbl['lbl.cm.color']}</td>
+								<td><h:panelGrid columns="2"
+										columnClasses="cmColumnWidth, border0">
+										<p:inputText value="#{review.colorName}" disabled="true"></p:inputText>
+										<p:graphicImage value="/resources/ep/images/design/add.png"
+											rendered="#{review.requestColor}" />
+
+									</h:panelGrid></td>
+							</tr>
+						</table>
+
+					</p:column>
+					<p:column>
+						<f:facet name="header">
 						Committe Review
 					</f:facet>
 
-					<table>
-						<tr>
-							<td><p:inputText value="#{review.reviewedTypeName}"></p:inputText>
-							</td>
-						</tr>
-						<tr>
-							<td><p:inputText value="#{review.reviewedBrandName}"></p:inputText></td>
-						</tr>
-						<tr>
-							<td><p:inputText value="#{review.reviewedMeasurementName}"></p:inputText></td>
-						</tr>
-						<tr>
-							<td><p:inputText value="#{review.reviewedColorName}"></p:inputText></td>
-						</tr>
-					</table>
+						<table>
+							<tr>
+								<td><h:panelGrid columns="2"
+										columnClasses="cmColumnWidth, border0">
+										<p:inputText value="#{review.reviewedTypeName}"
+											disabled="#{!review.requestType}"></p:inputText>
+									</h:panelGrid></td>
+							</tr>
+							<tr>
+								<td><h:panelGrid columns="2"
+										columnClasses="cmColumnWidth, border0">
+										<p:inputText value="#{review.reviewedBrandName}"
+											disabled="#{!review.requestBrand}"></p:inputText>
+									</h:panelGrid></td>
+							</tr>
+							<tr>
+								<td><h:panelGrid columns="2"
+										columnClasses="cmColumnWidth, border0">
+										<p:inputText value="#{review.reviewedMeasurementName}"
+											disabled="#{!review.requestMeasurement}"></p:inputText>
+									</h:panelGrid></td>
+							</tr>
+							<tr>
+								<td><h:panelGrid columns="2"
+										columnClasses="cmColumnWidth, border0">
+										<p:inputText value="#{review.reviewedColorName}"
+											disabled="#{!review.requestColor}"></p:inputText>
+									</h:panelGrid></td>
+							</tr>
+						</table>
 
-				</p:column>
+					</p:column>
 
-			</p:dataTable>
+				</p:dataTable>
+
+			</p:panel>
+
+
+			<p:panel header="Remarks" toggleable="true">
+
+				<p:dataTable id="bpmRemarkId"
+					value="#{unspscCodeBackingBean.managedBean.reviewExtCodeList[0].cmRequestRemarks}"
+					var="bpmRemark">
+
+					<p:column headerText="User" width="20%">
+						#{bpmRemark.createdUser}
+					</p:column>
+
+					<p:column headerText="Remark">
+						<p:inputTextarea value="#{bpmRemark.remark}" style="width:75%;"></p:inputTextarea>
+
+					</p:column>
+
+
+				</p:dataTable>
+
+				<div style="text-align: right;">
+					<p:commandButton value="Add"
+						action="#{unspscCodeBackingBean.addNewBpmRemark}"
+						update="bpmRemarkId" />
+
+				</div>
+
+			</p:panel>
 
 
 		</h:panelGroup>

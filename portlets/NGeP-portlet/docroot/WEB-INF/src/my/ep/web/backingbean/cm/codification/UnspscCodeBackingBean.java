@@ -3,7 +3,6 @@ package my.ep.web.backingbean.cm.codification;
 import java.io.FileInputStream;
 import java.util.HashMap;
 import java.util.Iterator;
-import java.util.List;
 import java.util.Map;
 
 import javax.faces.application.FacesMessage;
@@ -17,6 +16,7 @@ import my.ep.biz.bean.search.SearchBean;
 import my.ep.biz.bean.search.SearchFilterBean;
 import my.ep.biz.service.cm.codification.ICodificationSO;
 import my.ep.biz.service.cm.codification.IRequestCodeSO;
+import my.ep.biz.service.pm.authorization.user.IUserSO;
 import my.ep.bpm.dto.BpmRequestDTO;
 import my.ep.bpm.dto.BpmResponseDTO;
 import my.ep.bpm.service.IBpmSO;
@@ -25,6 +25,8 @@ import my.ep.dto.cm.codification.CodificationReqDTO;
 import my.ep.dto.cm.codification.CodificationResDTO;
 import my.ep.dto.cm.codification.RequestCodeReqDTO;
 import my.ep.dto.cm.codification.RequestCodeResDTO;
+import my.ep.dto.pm.authorization.user.UserReqDTO;
+import my.ep.dto.pm.authorization.user.UserResDTO;
 import my.ep.jaxb.cd.requestdata.CDRequestDataType;
 import my.ep.persistence.entity.cm.catalog.CmBrand;
 import my.ep.persistence.entity.cm.catalog.CmColor;
@@ -32,8 +34,10 @@ import my.ep.persistence.entity.cm.catalog.CmItem;
 import my.ep.persistence.entity.cm.catalog.CmMeasurement;
 import my.ep.persistence.entity.cm.catalog.CmRecommendCode;
 import my.ep.persistence.entity.cm.catalog.CmRequestCode;
+import my.ep.persistence.entity.cm.catalog.CmRequestRemark;
 import my.ep.persistence.entity.cm.catalog.CmType;
 import my.ep.persistence.entity.cm.catalog.CmUnspsc;
+import my.ep.persistence.entity.pm.authorization.PmUser;
 import my.ep.persistence.logging.LogKey;
 import my.ep.type.aut.SearchOperator;
 import my.ep.util.lookupservice.EpBpmBusinessDelegate;
@@ -52,7 +56,6 @@ import org.apache.poi.ss.usermodel.Row;
 import org.primefaces.event.FileUploadEvent;
 import org.primefaces.model.UploadedFile;
 
-import com.liferay.portal.model.Role;
 import com.liferay.portal.util.PortalUtil;
 
 @ManagedBean(name="unspscCodeBackingBean")
@@ -93,14 +96,14 @@ public class UnspscCodeBackingBean extends BaseBackingBean<UnspscCodeManagedBean
 		FacesScopes fs = new FacesScopes();
 		return fs.hasRoleUser("CD_OFFICER");
 	}
-	
+
 	public boolean isRequisitioner(){
 		FacesScopes fs = new FacesScopes();
 		return fs.hasRoleUser("REQUISITIONER");
 	}
-	
-	
-	
+
+
+
 
 
 
@@ -171,25 +174,25 @@ public class UnspscCodeBackingBean extends BaseBackingBean<UnspscCodeManagedBean
 
 			CodificationReqDTO reqDTO = new CodificationReqDTO();
 			log.info("new:"+this.getManagedBean().getRequestCode().isBrandNew());
-			
+
 			reqDTO.setToken(token);
 			reqDTO.setTaskId(this.getManagedBean().getTaskId());
 			reqDTO.setOutCome(action);
 			reqDTO.setProcessId(CDProcessNameConst.UNSPSC_CODE_REQUEST_PROCESS_ID);
-			
+
 			if(action.equalsIgnoreCase("RECOMMEND")){
-				
+
 				for(CmRecommendCode unspsc: this.getManagedBean().getRequestCode().getCmRecommendCodes()){
-					
+
 					unspsc.setCmRequestCode(this.getManagedBean().getRequestCode());
-					
+
 				}
-				
+
 			}
-			
+
 			System.out.println("size:"+this.getManagedBean().getRequestCode().getCmRecommendCodes().size()); 
 			reqDTO.setRequestCode(this.getManagedBean().getRequestCode());
-			
+
 			CodificationResDTO resDTO = null;
 
 
@@ -563,8 +566,8 @@ public class UnspscCodeBackingBean extends BaseBackingBean<UnspscCodeManagedBean
 
 	public String navigateToSearch(){
 		log.info("*****navigateToSearch******");
-		
-		
+
+
 		if(this.getManagedBean().getRequestCode().getCmRecommendCodes()!=null && this.getManagedBean().getRequestCode().getCmRecommendCodes().size()>0){
 
 
@@ -666,7 +669,7 @@ public class UnspscCodeBackingBean extends BaseBackingBean<UnspscCodeManagedBean
 
 				this.getManagedBean().getRequestCode().setTempCode(tempCode);
 				this.getManagedBean().getRequestCode().setTempTitle(this.getManagedBean().getSelectedLovUnspsc().getUnspscTitle());
-				
+
 				this.getManagedBean().getRequestCode().setRequestType(true);
 				this.getManagedBean().getRequestCode().setRequestBrand(true);
 				this.getManagedBean().getRequestCode().setRequestColor(true);
@@ -682,21 +685,21 @@ public class UnspscCodeBackingBean extends BaseBackingBean<UnspscCodeManagedBean
 
 				resDTO = unspscSO.updateCodificationRequest(reqDTO);
 			}else if(outcome.equalsIgnoreCase("RECOMMEND")){
-				
-					
-					for(CmRecommendCode code: this.getManagedBean().getRequestCode().getCmRecommendCodes()){
-						
-						code.setCmRequestCode(this.getManagedBean().getRequestCode());
-						
-					}
-					
-					reqDTO.setRequestCode(this.getManagedBean().getRequestCode());
-					reqDTO.setToken(token);
-					reqDTO.setTaskId(this.getManagedBean().getTaskId());
-					reqDTO.setOutCome(outcome);
 
-					resDTO = unspscSO.updateCodificationRequest(reqDTO);
-				
+
+				for(CmRecommendCode code: this.getManagedBean().getRequestCode().getCmRecommendCodes()){
+
+					code.setCmRequestCode(this.getManagedBean().getRequestCode());
+
+				}
+
+				reqDTO.setRequestCode(this.getManagedBean().getRequestCode());
+				reqDTO.setToken(token);
+				reqDTO.setTaskId(this.getManagedBean().getTaskId());
+				reqDTO.setOutCome(outcome);
+
+				resDTO = unspscSO.updateCodificationRequest(reqDTO);
+
 			}
 		} catch (Exception ex) {
 
@@ -1080,25 +1083,21 @@ public class UnspscCodeBackingBean extends BaseBackingBean<UnspscCodeManagedBean
 				}
 
 
-				/*if(code.getReviewedBrandNameII().equalsIgnoreCase(code.getReviewedBrandName())){
-					System.out.println("********brand true**********");
-					if(code.getReviewedTypeNameII().equalsIgnoreCase(code.getReviewedTypeName())){
-						System.out.println("********type true**********");
-						if(code.getReviewedMeasurementNameII().equalsIgnoreCase(code.getReviewedMeasurementName())){
-							System.out.println("********measurement true**********");
-							if(code.getReviewedColorNameII().equalsIgnoreCase(code.getReviewedColorName())){
-								System.out.println("********color true**********");
-								reqDTO.setConsensus(true);
-							}
-						}
-					}
-				}*/
+
 			}
 
 
 			reqDTO.getRequestExtList().add(code);
 
 		}
+
+		for(CmRequestRemark remark: this.getManagedBean().getReviewExtCodeList().get(0).getCmRequestRemarks()){
+			remark.setCmRequestCode(this.getManagedBean().getReviewExtCodeList().get(0));
+		}
+
+
+
+
 		reqDTO.setTaskId(this.getManagedBean().getTaskId());
 		reqDTO.setOutCome(action);
 		reqDTO.setToken(token);
@@ -1190,6 +1189,10 @@ public class UnspscCodeBackingBean extends BaseBackingBean<UnspscCodeManagedBean
 	public void preRenderExtensionView(){
 
 		System.out.println("**********preRenderExtensionView**************");
+
+		IUserSO userSO = (IUserSO) BusinessDelegate.getInstance().getServiceObject("pm",IUserSO.class);
+		UserReqDTO userReqDTO = new UserReqDTO();
+
 		BPMTaskListBackingBean bb = new BPMTaskListBackingBean();
 		HttpServletRequest servletRequest = PortalUtil.getHttpServletRequest(new FacesScopes().getRequest());
 		HttpServletRequest originalServletRequest = PortalUtil.getOriginalServletRequest(servletRequest);
@@ -1232,7 +1235,41 @@ public class UnspscCodeBackingBean extends BaseBackingBean<UnspscCodeManagedBean
 			this.getManagedBean().getReviewExtCodeList().add(resDTO.getRequestCode());
 		}
 
-		
+
+		for(CmRequestCode code : this.getManagedBean().getReviewExtCodeList()){
+
+			if(!code.isRequestColor()){
+				code.setReviewedColorName(code.getColorName());
+				code.setReviewedColorNameII(code.getColorName());
+			}
+
+			if(!code.isRequestBrand()){
+				code.setReviewedBrandName(code.getBrandName());
+				code.setReviewedBrandNameII(code.getBrandName());
+			}
+
+			if(!code.isRequestType()){
+				code.setReviewedTypeName(code.getTypeName());
+				code.setReviewedTypeNameII(code.getTypeName());
+			}
+
+			if(!code.isRequestMeasurement()){
+				code.setReviewedMeasurementName(code.getMeasurementName());
+				code.setReviewedMeasurementNameII(code.getMeasurementName());
+			}
+			
+			for(CmRequestRemark remark: code.getCmRequestRemarks()){
+				
+				
+				userReqDTO.setUserId(remark.getChangedBy());
+				System.out.println("remark.getChangedBy()"+remark.getChangedBy());
+				UserResDTO userResDTO = userSO.retrieveUserDetails(userReqDTO);
+				System.out.println("userResDTO.getPmUser().getUserName():"+userResDTO.getPmUser().getUserName());
+				remark.setCreatedUser(userResDTO.getPmUser().getUserName());
+			}
+
+		}
+
 
 		reqCodeDTO.setUnspscCode(resDTO.getRequestCode().getTempCode());
 		CodificationResDTO resCodeDTO = codificationSO.searchCommodityObj(reqCodeDTO);
@@ -1303,7 +1340,7 @@ public class UnspscCodeBackingBean extends BaseBackingBean<UnspscCodeManagedBean
 		/*if(resDTO.getRequestCode().getCmRecommendCodes()!=null && resDTO.getRequestCode().getCmRecommendCodes().size()>0){
 			//codeBB.getManagedBean().setRecommendUnspscList(recommendUnspscList)
 		}*/
-		
+
 		this.getManagedBean().setTaskId(taskId);
 		this.getManagedBean().setAction(res.getAction());
 
@@ -1434,12 +1471,29 @@ public class UnspscCodeBackingBean extends BaseBackingBean<UnspscCodeManagedBean
 	}
 
 	public void removeRecommendCode(int index){
-		
+
 		this.getManagedBean().getRequestCode().getCmRecommendCodes().remove(index);
-	
+
 	}
 
 
+	public void addNewBpmRemark(){
+
+
+
+		CmRequestRemark remark = new CmRequestRemark();
+		PmUser pmUser = new FacesScopes().getUserSessionBean();
+		System.out.println("pmUser:"+pmUser);
+		if (pmUser != null) {	
+			System.out.println("pmUser.getUserName():"+pmUser.getUserName());
+			remark.setCreatedUser(pmUser.getUserName());
+		}
+
+
+		System.out.println("remark.getCreatedUser():"+remark.getCreatedUser());
+
+		this.getManagedBean().getReviewExtCodeList().get(0).getCmRequestRemarks().add(remark);
+	}
 
 
 
