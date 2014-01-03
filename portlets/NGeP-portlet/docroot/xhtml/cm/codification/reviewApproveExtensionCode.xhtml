@@ -150,11 +150,20 @@
 					var="bpmRemark">
 
 					<p:column headerText="User" width="20%">
-						#{bpmRemark.createdUser}
+						<table>
+							<tr>
+								<td>#{bpmRemark.createdUser}</td>
+							</tr>
+							<tr>
+								<td><h:outputText value="#{bpmRemark.createdDate}">
+									<f:convertDateTime pattern="dd/MM/yyyy hh:mm aaa" />
+								</h:outputText></td>
+							</tr>
+						</table>
 					</p:column>
 
 					<p:column headerText="Remark">
-						<p:inputTextarea value="#{bpmRemark.remark}" style="width:75%;"></p:inputTextarea>
+						<p:inputTextarea value="#{bpmRemark.remark}" style="width:75%;" disabled="#{!bpmRemark.brandNew}"></p:inputTextarea>
 
 					</p:column>
 

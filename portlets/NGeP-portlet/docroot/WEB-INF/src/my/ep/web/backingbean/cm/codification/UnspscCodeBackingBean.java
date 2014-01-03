@@ -230,6 +230,62 @@ public class UnspscCodeBackingBean extends BaseBackingBean<UnspscCodeManagedBean
 	}
 
 
+	public String selectSubmitRecommend(String action)throws Exception{
+
+		try{
+			
+			System.out.println("this.getManagedBean().getRequestCode().getCmRecommendCodes().size()"+this.getManagedBean().getRequestCode().getCmRecommendCodes().size());
+			if(this.getManagedBean().getRequestCode().getCmRecommendCodes().size()>1 ){
+				System.out.println("***************more than 1*****************");
+				FacesContext facesContext = FacesContext.getCurrentInstance();
+				facesContext.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR,"Please Select 1 recommendation to proceed",""));
+				
+				return "selectRecommendUnspscCode";
+			}
+
+			CodificationBackingBean codeBB = new CodificationBackingBean();
+			ICodificationSO unspscSO = (ICodificationSO) BusinessDelegate.getInstance().getServiceObject("cm",ICodificationSO.class);
+			FacesScopes face = new FacesScopes();
+			String token =face.getBPMAuthenticationCtxToken();
+
+			CodificationReqDTO reqDTO = new CodificationReqDTO();
+			log.info("new:"+this.getManagedBean().getRequestCode().isBrandNew());
+
+			reqDTO.setToken(token);
+			reqDTO.setTaskId(this.getManagedBean().getTaskId());
+			reqDTO.setOutCome(action);
+			reqDTO.setProcessId(CDProcessNameConst.UNSPSC_CODE_REQUEST_PROCESS_ID);
+
+
+			reqDTO.setRequestCode(this.getManagedBean().getRequestCode());
+
+			CodificationResDTO resDTO = null;
+
+
+			log.info("***update***");
+			System.out.println("size:"+reqDTO.getRequestCode().getCmRecommendCodes().size()); 
+			resDTO = unspscSO.updateCodificationRequest(reqDTO);
+
+
+
+
+			FacesContext facesContext = FacesContext.getCurrentInstance();
+			facesContext.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO," Submitted Successfully", ""));
+		}catch(Exception ex){
+			System.out.println("***************Exception*****************");
+			FacesContext facesContext = FacesContext.getCurrentInstance();
+			facesContext.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR,"BPM  ERROR", ex.getMessage()));
+
+			return "selectRecommendUnspscCode";
+		}
+
+		return "BPMtesting";
+
+
+	}
+
+
+
 	public String submitForMaintenanceRequest(String action)throws Exception{
 
 		try{
@@ -1257,10 +1313,10 @@ public class UnspscCodeBackingBean extends BaseBackingBean<UnspscCodeManagedBean
 				code.setReviewedMeasurementName(code.getMeasurementName());
 				code.setReviewedMeasurementNameII(code.getMeasurementName());
 			}
-			
+
 			for(CmRequestRemark remark: code.getCmRequestRemarks()){
-				
-				
+
+
 				userReqDTO.setUserId(remark.getChangedBy());
 				System.out.println("remark.getChangedBy()"+remark.getChangedBy());
 				UserResDTO userResDTO = userSO.retrieveUserDetails(userReqDTO);
@@ -1350,6 +1406,9 @@ public class UnspscCodeBackingBean extends BaseBackingBean<UnspscCodeManagedBean
 		}else if(res.getTaskName().equalsIgnoreCase("Create Extension Code")){
 			FacesContext fc = FacesContext.getCurrentInstance();
 			fc.getApplication().getNavigationHandler().handleNavigation(fc, null, "reviewBeforeCreateExtCode");
+		}else if(res.getTaskName().equalsIgnoreCase("Select Recommended")){
+			FacesContext fc = FacesContext.getCurrentInstance();
+			fc.getApplication().getNavigationHandler().handleNavigation(fc, null, "selectRecommendUnspscCode.xhtml");
 		}else{
 			FacesContext fc = FacesContext.getCurrentInstance();
 			fc.getApplication().getNavigationHandler().handleNavigation(fc, null, "navigation");
@@ -1496,5 +1555,10 @@ public class UnspscCodeBackingBean extends BaseBackingBean<UnspscCodeManagedBean
 	}
 
 
+	public void selectRecommendCode(){
+		
+		this.getManagedBean().getRequestCode().setCmRecommendCodes(null);
+		this.getManagedBean().getRequestCode().getCmRecommendCodes().add(this.getManagedBean().getSelectedRecommendCode());
+	}
 
 }
