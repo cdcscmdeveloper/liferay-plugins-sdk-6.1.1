@@ -29,8 +29,8 @@
 		value="#{catalogueBackingBean.managedBean.maintainItemList}"
 		rowIndexVar="rowIndex" var="selectedSuppCat"
 		rowKey="#{selectedSuppCat.supplierItemId}"
-		selection="#{catalogueBackingBean.managedBean.selectedMaintainItems}" >
-		
+		selection="#{catalogueBackingBean.managedBean.selectedMaintainItems}">
+
 		<ac:paginator for="draftSupplierItemID"></ac:paginator>
 
 		<p:column selectionMode="multiple" style="width:2%" />
@@ -88,10 +88,15 @@
 				action="#{catalogueBackingBean.navigateToCatalogDet(rowIndex)}">
 				<p:graphicImage value="/resources/ep/images/design/edit.png"></p:graphicImage>
 			</p:commandLink>
+			<p:commandLink style="margin-left: 10px;"
+				action="#{catalogueBackingBean.deleteDraftItem(rowIndex)}"
+				update=":form:maintenanceTabId:draftSupplierItemID :form:catalogFileMsg">
+				<p:graphicImage value="/resources/ep/images/design/trash.png"></p:graphicImage>
+			</p:commandLink>
 		</p:column>
 	</p:dataTable>
-	
-	<div class="clear"> </div>
+
+	<div class="clear"></div>
 
 	<div style="text-align: right;">
 		<p:commandButton value="Add" icon="ui-icon-add"

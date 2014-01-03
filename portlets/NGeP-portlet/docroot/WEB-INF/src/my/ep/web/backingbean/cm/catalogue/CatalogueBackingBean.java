@@ -199,6 +199,26 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean>{
 	}
 
 
+	public void deleteDraftItem(int index){
+		
+		ICatalogueSO catalogueSO = (ICatalogueSO) BusinessDelegate.getInstance().getServiceObject("cm",ICatalogueSO.class);
+		
+		CatalogueReqDTO reqDTO = new CatalogueReqDTO();
+		
+		reqDTO.setCmSupplierItemObj(this.getManagedBean().getMaintainItemList().get(index));
+		
+		CatalogueResDTO resDTO = catalogueSO.deleteDraftItem(reqDTO);
+		
+		if(resDTO.isSuccessful()){
+			
+			this.getManagedBean().getMaintainItemList().remove(index);
+			
+			FacesContext facesContext = FacesContext.getCurrentInstance();
+			facesContext.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO," Deleted Successfully", ""));
+		}
+		
+	}
+	
 
 	public String navigateToCatalogDet(int index){
 
