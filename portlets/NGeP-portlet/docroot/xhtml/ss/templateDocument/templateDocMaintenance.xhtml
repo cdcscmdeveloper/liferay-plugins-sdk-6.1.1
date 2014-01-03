@@ -1,0 +1,76 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	template="/WEB-INF/facelets/templates/basic_template.xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:c="http://java.sun.com/jsp/jstl/core">
+
+	<ui:define name="resourceSection">
+	</ui:define>
+
+
+	<ui:define name="contentSection">
+
+		<div align="right">
+			<p:commandButton value="#{lbl['lbl.sc.tpl.doc.btn.save']}"
+				style="margin-right:30px;" action="#{sourcingTemplateDBB.saveAction}" icon="ui-icon-save"/>
+			<p:commandButton value="#{lbl['lbl.sc.tpl.doc.btn.submit']}"
+				style="margin-right:30px;" icon="ui-icon-submit"/>
+
+		</div>
+		<p:panel header="#{lbl['lbl.sc.tpl.doc.section']}" toggleable="true">
+	
+		
+			<table>
+				<tr>
+					<td><h:outputLabel value="#{lbl['lbl.sc.tpl.doc.qtn.no']}"></h:outputLabel>
+					</td>
+					<td><p:inputText value="#{sourcingTemplateDBB.managedBean.scQtDoc.scQt.qtNo}"  readonly="true" disabled="true" /></td>
+
+				</tr>
+
+
+				<tr>
+					<td><h:outputLabel value="#{lbl['lbl.sc.tpl.doc.title']}"></h:outputLabel>
+					</td>
+					<td><p:inputText size="50" value="#{sourcingTemplateDBB.managedBean.scQtDoc.tplDocMaster.docTitle}" /></td>
+				</tr>
+				<tr>
+					<td><h:outputLabel value="#{lbl['lbl.sc.tpl.doc.desc']}"></h:outputLabel>
+					</td>
+					<td><p:inputTextarea rows="3" cols="50" autoResize="false" value="#{sourcingTemplateDBB.managedBean.scQtDoc.tplDocMaster.docDesc}" style="margin-bottom:5px;"/>
+					</td>
+				</tr>
+
+				<tr>
+					<td><h:outputLabel value="#{lbl['lbl.sc.tpl.doc.status']}" />
+					</td>
+					<td><p:inputText readonly="true" disabled="true"></p:inputText></td>
+
+				</tr>
+				<tr>
+					<td class="TableFieldLeft"><h:outputLabel
+							value="#{lbl['lbl.sc.tpl.doc.record.status']}"></h:outputLabel>
+
+					</td>
+					<td class="TableFieldRight"><p:selectOneMenu>
+
+							<f:selectItem itemLabel="Active" itemValue="1" />
+							<f:selectItem itemLabel="Inactive" itemValue="0" />
+						</p:selectOneMenu></td>
+				</tr>
+			</table>
+
+
+
+		</p:panel>
+
+<p:panel>
+	<ui:include src="/xhtml/tpl/doc/templateDocMaintSection.xhtml" /> 
+		<!-- <ui:include src="/xhtml/tpl/doc/templateDocMaint.xhtml" /> -->
+	</p:panel>	
+	</ui:define>
+
+
+</ui:composition>
