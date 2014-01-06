@@ -9,6 +9,9 @@
 
 	$theme.include($top_head_include)
 	
+	#js ("$javascript_folder/date_time.js")
+	#js ("$javascript_folder/jquery.min.js")
+	#js ("$javascript_folder/jquery.cookie.js")
 	<script language="javascript">
 		function resizeText(multiplier) 
 		{
@@ -34,7 +37,7 @@
 			}
 			else if(curURL.indexOf("8080/ms")!=-1)
 			{
-				document.getElementById("SelectedLanguage").innerHTML="Melayu";
+				document.getElementById("SelectedLanguage").innerHTML="Bahasa Malaysia";
 			}
 		}
 		
@@ -96,37 +99,68 @@
 			
 		}
 	</script>
-	<script language="javascript">
-		function date_time(id)
-{
-        date = new Date;
-        year = date.getFullYear();
-        month = date.getMonth();
-        months = new Array('January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December');
-        d = date.getDate();
-        day = date.getDay();
-        days = new Array('Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday');
-        h = date.getHours();
-        if(h<10)
-        {
-                h = "0"+h;
-        }
-        m = date.getMinutes();
-        if(m<10)
-        {
-                m = "0"+m;
-        }
-        s = date.getSeconds();
-        if(s<10)
-        {
-                s = "0"+s;
-        }
-        result = ''+days[day]+', '+d+' '+months[month]+' '+year+', '+h+':'+m+':'+s;
-        document.getElementById(id).innerHTML = result;
-        setTimeout('date_time("'+id+'");','1000');
-        return true;
-}
+	
+	<script type="text/javascript">  
+	$(function() {  
+    $('#close').click(function() {  
+        $('.sticky').remove();  
+    	});  
+	});  
+	</script>
+	
+		<script>
+	jQuery(document).ready(function(){
+	
+	onPageLoad();
+	
+   var colorscheme = jQuery.cookie('colorscheme');
+   
+   if (colorscheme === "undefined"){
+	
+   }
+   else
+   {
+   		if(!jQuery('body').hasClass(colorscheme))
+		   		{
+		   			if(colorscheme==="green")
+		   			{
+		   				jQuery('body').removeClass('blue');
+		   			}
+		   			else
+		   			{
+		   				jQuery('body').removeClass('green');
+		   			}
+		   			jQuery('body').addClass(colorscheme);
+		   		};
+   };
+
+  jQuery("#bred").click(function(){
+    
+	jQuery.cookie('colorscheme', "red", { expires: 7 });
+	
+	location.reload();
+  });
+     
+  jQuery("#bgreen").click(function(){
+   
+	jQuery.cookie('colorscheme', "green", { expires: 7 });
+	
+	location.reload();
+  });
+  
+  
+  jQuery("#bblue").click(function(){
+    
+	jQuery.cookie('colorscheme', "blue", { expires: 7 });
+	
+	location.reload();
+  });
+  
+  
+  
+});
 </script>
+
 </head>
 
 <body class="$css_class">
