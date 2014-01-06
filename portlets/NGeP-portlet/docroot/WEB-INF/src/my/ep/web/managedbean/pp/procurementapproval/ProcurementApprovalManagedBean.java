@@ -11,8 +11,7 @@ import javax.faces.bean.SessionScoped;
 import my.ep.persistence.entity.pm.authorization.PmOrgProfile;
 import my.ep.persistence.entity.pp.PpRemark;
 import my.ep.persistence.entity.pp.procurementplan.PpPlan;
-import my.ep.persistence.entity.pp.procurementplan.PpPlanItem;
-import my.ep.persistence.entity.pp.procurementplan.PpPlanMaster;
+import my.ep.persistence.entity.pp.procurementplan.PpPlanDtl;
 import my.ep.web.managedbean.BaseManagedBean;
 
 
@@ -25,13 +24,13 @@ public class ProcurementApprovalManagedBean extends BaseManagedBean{
 	
 	private List<PpPlan> pendingApprovalPlans;
 	
-	private PpPlanMaster selectedPlanMaster;
+//	private PpPlanMaster selectedPlanMaster;
 
 	private PpPlan selectedPlan;
 	
 	private PpPlan selectedPlanItem;
 
-	private PpPlanItem selectedItem;
+	private PpPlanDtl selectedItem;
 	
 	private PpRemark selectedItemRemark;
 	
@@ -63,19 +62,19 @@ public class ProcurementApprovalManagedBean extends BaseManagedBean{
 		this.currentUser = currentUser;
 	}
 	
-	/**
-	 * @return the selectedPlanMaster
-	 */
-	public PpPlanMaster getSelectedPlanMaster() {
-		return selectedPlanMaster;
-	}
-
-	/**
-	 * @param selectedPlanMaster the selectedPlanMaster to set
-	 */
-	public void setSelectedPlanMaster(PpPlanMaster selectedPlanMaster) {
-		this.selectedPlanMaster = selectedPlanMaster;
-	}
+//	/**
+//	 * @return the selectedPlanMaster
+//	 */
+//	public PpPlanMaster getSelectedPlanMaster() {
+//		return selectedPlanMaster;
+//	}
+//
+//	/**
+//	 * @param selectedPlanMaster the selectedPlanMaster to set
+//	 */
+//	public void setSelectedPlanMaster(PpPlanMaster selectedPlanMaster) {
+//		this.selectedPlanMaster = selectedPlanMaster;
+//	}
 
 	/**
 	 * @return the selectedPlan
@@ -108,14 +107,14 @@ public class ProcurementApprovalManagedBean extends BaseManagedBean{
 	/**
 	 * @return the selectedItem
 	 */
-	public PpPlanItem getSelectedItem() {
+	public PpPlanDtl getSelectedItem() {
 		return selectedItem;
 	}
 
 	/**
 	 * @param selectedItem the selectedItem to set
 	 */
-	public void setSelectedItem(PpPlanItem selectedItem) {
+	public void setSelectedItem(PpPlanDtl selectedItem) {
 		this.selectedItem = selectedItem;
 	}
 

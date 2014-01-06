@@ -1,0 +1,66 @@
+<?xml version="1.0"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition
+xmlns="http://www.w3.org/1999/xhtml"
+xmlns:f="http://java.sun.com/jsf/core"
+xmlns:h="http://java.sun.com/jsf/html"
+xmlns:ui="http://java.sun.com/jsf/facelets"
+xmlns:p="http://primefaces.org/ui"
+xmlns:c="http://java.sun.com/jsp/jstl/core"
+xmlns:ac="http://ac.my/jsf/composite/cc">
+
+	<p:outputPanel id="opBudgetDisburseTrans">
+		<br/>
+		<table class="ppTwoTable">
+			<tr>
+				<th><p:outputLabel value="#{lbl['lbl.pp.verify.status']}"/></th>
+				<td>
+					<p:inputText id="itVerified" 
+						value="#{budgetDisburseBackingBean.managedBean.selectedPpBudgetDtl.verify==true ? 'Verified' : 
+						(budgetDisburseBackingBean.managedBean.selectedPpBudgetDtl.verify==false ? 'Invalid' : 'None')}"  
+						styleClass="ppDisplayTextL" disabled="true"/>
+				</td>
+				<th>&nbsp;</th>
+				<td>&nbsp;</td>
+			</tr>
+		</table>
+		<br/>
+		<p:dataTable id="dtTransBudget" styleClass="ppTableFull" rowIndexVar="rowIndex" 
+			value="#{budgetDisburseBackingBean.managedBean.selectedPpBudgetDtl.ppBudgetTrans}"
+		 	var="ppBudgetTran" emptyMessage="#{lbl['lbl.pp.no.record.found']}">
+	        <p:column headerText="#{lbl['lbl.pp.so.code']}">  
+	          	#{budgetDisburseBackingBean.managedBean.selectedPpBudgetDtl.pmSo.soCode}
+	        </p:column>  
+	        <p:column headerText="#{lbl['lbl.pp.so.name']}">  
+	            #{budgetDisburseBackingBean.managedBean.selectedPpBudgetDtl.pmSo.soName}
+	        </p:column> 
+	        <p:column headerText="#{lbl['lbl.pp.alloc.amount']}" styleClass="ppNumericAlign">  
+	            <p:inputText value="#{ppBudgetTran.allocAmt}"  styleClass="ppDisplayTextM" disabled="#{!ppBudgetTran.brandNew}"/>
+	        </p:column>  
+	        <p:column headerText="#{lbl['lbl.pp.accum.amount']}" styleClass="ppNumericAlign">  
+	            #{ppBudgetTran.accumAmt}
+	        </p:column>  
+	        <p:column headerText="#{lbl['lbl.pp.status']}">  
+	      		#{ppBudgetTran.brandNew ? lbl['lbl.pp.budget.tran.new'] : lbl['lbl.pp.budget.tran.submitted']}
+	        </p:column>  
+          	<p:column headerText="#{lbl['lbl.pp.action']}"> 
+                <p:commandLink 
+                  	update="@([id$=pTransaction])" disabled="#{!ppBudgetTran.brandNew}" 	 
+                  	action="#{budgetDisburseBackingBean.deleteBudgetTran(ppBudgetTran)}">
+                  	<p:graphicImage value="/resources/ep/images/design/trash.png"/>
+                 	</p:commandLink>
+            </p:column>  
+	   	</p:dataTable> 
+	   	<br/>
+	   	<!-- Button -->
+	  	<div class="ppRightBtn">
+			<p:commandButton value="#{lbl['lbl.pp.add']}" icon="ui-icon-add" 
+				disabled="#{budgetDisburseBackingBean.managedBean.selectedPpBudgetDtl==null}"
+				action="#{budgetDisburseBackingBean.addBudgetTrans}" update="pTransaction"/> &nbsp;
+			<p:commandButton value="#{lbl['lbl.pp.verify.confirm']}" icon="ui-icon-accept" 
+				disabled="#{!(budgetDisburseBackingBean.managedBean.selectedPpBudgetDtl!=null &amp;&amp; 
+				budgetDisburseBackingBean.managedBean.selectedPpBudgetDtl.verifyRequired)}"
+				action="#{budgetDisburseBackingBean.confirmBudgetTrans}" update="dtTransBudget, pSummary, itVerified, itBudgetBalanceAmt"/>&nbsp;
+		</div>
+   	</p:outputPanel>
+</ui:composition>

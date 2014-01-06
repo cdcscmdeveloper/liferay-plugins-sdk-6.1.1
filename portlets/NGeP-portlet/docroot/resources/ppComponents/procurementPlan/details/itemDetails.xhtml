@@ -9,7 +9,7 @@ xmlns:p="http://primefaces.org/ui"
 xmlns:c="http://java.sun.com/jsp/jstl/core">
 	<p:outputPanel id="pItemDetails">
 
-		<table class="ppTwoPartsTable">
+		<table class="ppOneTable">
 			<c:if test="#{cc.attrs.viewMode==PPConst.modeApproval || cc.attrs.viewMode==PPConst.modeVerification}">
 	    		<tr>
 	    			<th><p:outputLabel value="#{lbl['lbl.pp.require.revision']}"/></th>
@@ -23,7 +23,7 @@ xmlns:c="http://java.sun.com/jsp/jstl/core">
 			<tr>
 				<td colspan="4">
 					<p:panel  header="#{lbl['lbl.pp.item.details']}" toggleable="true" >
-						<table class="ppThreePartsTable">
+						<table class="ppTwoTable">
 						<tr>
 							<th><p:outputLabel value="* #{lbl['lbl.pp.gosodo.code']}"/></th>
 							<td>
@@ -77,52 +77,6 @@ xmlns:c="http://java.sun.com/jsp/jstl/core">
 										!planBackingBean.managedBean.selectedItem.editable}"/>
 							</td>
 				   		</tr>
-						
-						<!-- UNSPSC Product -->
-						<c:if test="#{cc.attrs.selectedPlanMaster.procurementMode==PPConst.procurementDirectPurchase}">
-							<tr>
-								<th><p:outputLabel value="* #{lbl['lbl.pp.product.segment']}"/></th>
-								<td colspan="3">
-									<p:selectOneMenu styleClass="ppDropDownWidthM"
-										value="#{planBackingBean.managedBean.selectedItem.unspscSegmentCode}"
-										disabled="#{!planBackingBean.managedBean.selectedItem.brandNew &amp;&amp; 
-										!planBackingBean.managedBean.selectedItem.editable}">
-										<f:selectItem itemLabel="#{lbl['lbl.select']}" itemValue="#{null}"/>
-										<f:selectItems value="#{planBackingBean.unspscSegmentOptions(planBackingBean.managedBean.selectedItem.unspscSegmentCode)}" 
-											var="obj" itemLabel="#{obj.unspscTitle}" itemValue="#{obj.unspscCode}"/>
-										<p:ajax event="change" update="somEpProdFamily" />
-									</p:selectOneMenu>
-								</td>
-							</tr>
-							<tr>
-								<th><p:outputLabel value="* #{lbl['lbl.pp.product.family']}"/></th>
-								<td colspan="3">
-									<p:selectOneMenu styleClass="ppDropDownWidthM"
-										id="somEpProdFamily" value="#{planBackingBean.managedBean.selectedItem.unspscFamilyCode}"
-										disabled="#{planBackingBean.managedBean.selectedItem.unspscSegmentCode==null
-										|| (!planBackingBean.managedBean.selectedItem.brandNew &amp;&amp; !planBackingBean.managedBean.selectedItem.editable)}">
-										<f:selectItem itemLabel="#{lbl['lbl.select']}" itemValue="#{null}"/>
-										<f:selectItems value="#{planBackingBean.unspscFamilyOptions(planBackingBean.managedBean.selectedItem.unspscSegmentCode)}" 
-											var="obj" itemLabel="#{obj.unspscTitle}" itemValue="#{obj.unspscCode}"/>
-										<p:ajax event="change" update="somProdClass" />
-									</p:selectOneMenu>
-								</td>	
-							</tr>
-							<tr>
-								<th><p:outputLabel value="* #{lbl['lbl.pp.product.class']}"/></th>
-								<td colspan="3">
-									<p:selectOneMenu styleClass="ppDropDownWidthM"
-										id="somProdClass" value="#{planBackingBean.managedBean.selectedItem.unspscClassCode}"
-										disabled="#{planBackingBean.managedBean.selectedItem.unspscFamilyCode==null
-										|| (!planBackingBean.managedBean.selectedItem.brandNew &amp;&amp; !planBackingBean.managedBean.selectedItem.editable)}">
-										<f:selectItem itemLabel="#{lbl['lbl.select']}" itemValue="#{null}"/>
-										<f:selectItems value="#{planBackingBean.unspscClassOptions(planBackingBean.managedBean.selectedItem.unspscFamilyCode)}" 
-											var="obj" itemLabel="#{obj.unspscTitle}" itemValue="#{obj.unspscCode}"/>
-										<p:ajax event="change" listener="#{planBackingBean.selectedProduct()}"/>
-									</p:selectOneMenu>
-								</td>
-							</tr>
-						</c:if>
 						</table>
 					</p:panel>
 				</td>

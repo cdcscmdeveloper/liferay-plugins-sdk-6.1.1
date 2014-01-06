@@ -18,16 +18,14 @@ xmlns:ac="http://ac.my/jsf/composite/cc">
 			 	<ac:paginator for="dtBudgetAlloc" />
 			 	
 		        <p:column headerText="#{lbl['lbl.pp.gosodo.code']}">  
-		          <!--#{obj.pmDo.pmSo.pmGo.goCode}/#{obj.pmDo.pmSo.soCode}/-->
 		            #{obj.pmDo.doCode}
 		        </p:column>  
 		        	
 		        <p:column headerText="#{lbl['lbl.pp.gosodo.name']}">  
-		            <!-- #{obj.pmDo.pmSo.pmGo.goName} #{obj.pmDo.pmSo.soName} -->
 		            #{obj.pmDo.doName}
 		        </p:column> 
 		       
-		        <p:column headerText="#{lbl['lbl.pp.budgeted.amount']}" styleClass="ppNumericAlign">  
+		        <p:column headerText="#{lbl['lbl.pp.budget.amount']}" styleClass="ppNumericAlign">  
 		            #{obj.allocAmount}    
 		        </p:column>  
 		        <p:column headerText="#{lbl['lbl.pp.available.amount']}" styleClass="ppNumericAlign"> 

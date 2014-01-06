@@ -22,7 +22,7 @@ xmlns:c="http://java.sun.com/jsp/jstl/core"
 								<td><p:outputLabel value="#{lbl['lbl.pp.ministry.code.name']}" /></td>
 								<td>
 									<p:inputText disabled="true" styleClass="ppDisplayTextL"
-										value="#{budgetAllocationBackingBean.managedBean.currentUser.orgCode} / #{budgetAllocationBackingBean.managedBean.currentUser.orgName}" />
+										value="#{budgetAllocBackingBean.managedBean.currentUser.orgCode} / #{budgetAllocBackingBean.managedBean.currentUser.orgName}" />
 									
 								</td>
 							</tr>
@@ -42,7 +42,7 @@ xmlns:c="http://java.sun.com/jsp/jstl/core"
 			<!-- Bottom Button(s) -->
 			<div class="ppRightBtn">
 				<p:commandButton value="#{lbl['lbl.pp.new.budget.allocation']}" id="cbNewBudgetAlloc"
-			 		action="#{budgetAllocationBackingBean.redirectToBudgetAllocation}" icon="ui-icon-add"   /> 
+			 		action="#{budgetAllocBackingBean.redirectToBudgetAllocation}" icon="ui-icon-add"   /> 
 			</div>
 			
 			<br/>

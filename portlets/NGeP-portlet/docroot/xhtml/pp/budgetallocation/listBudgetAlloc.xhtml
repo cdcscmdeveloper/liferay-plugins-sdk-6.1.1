@@ -1,0 +1,71 @@
+<?xml version="1.0"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<ui:composition
+template="/WEB-INF/facelets/templates/basic_template.xhtml"
+xmlns="http://www.w3.org/1999/xhtml"
+xmlns:f="http://java.sun.com/jsf/core"
+xmlns:h="http://java.sun.com/jsf/html"
+xmlns:ui="http://java.sun.com/jsf/facelets"
+xmlns:p="http://primefaces.org/ui"
+xmlns:c="http://java.sun.com/jsp/jstl/core"
+>
+	<ui:define name="contentSection">
+		<br/>
+		<!-- Search Plan -->
+		<p:panel header="#{lbl['lbl.pp.search.budget.alloc']}" toggleable="true">
+			<br />
+			<table class="ppTwoTable">
+				<tr>
+					<th><p:outputLabel value="#{lbl['lbl.pp.budget.alloc.no']}" /></th>
+					<td><p:inputText styleClass="ppDisplayTextM"
+							value="-" /></td>
+					<th><p:outputLabel value="#{lbl['lbl.pp.ptj.code']}" /></th>
+					<td><p:inputText styleClass="ppDisplayTextM"
+							value="-" /></td>
+				</tr>
+				<tr>
+					<th><p:outputLabel value="#{lbl['lbl.pp.gosodo.code']}" /></th>
+					<td><p:inputText styleClass="ppDisplayTextM"
+							value="-" /></td>
+					<th><p:outputLabel value="#{lbl['lbl.pp.amanah.code']}" /></th>
+					<td><p:inputText styleClass="ppDisplayTextM"
+							value="-" /></td>
+				</tr>
+				<tr>
+					<td colspan="4">
+						<div class="ppRightBtn">
+							<p:commandButton value="#{lbl['lbl.pp.search']}"
+								icon="ui-icon-search" update="dtBudgetAllocResult"
+								/>
+						</div>
+					</td>
+				</tr>
+			</table>
+			<br />
+		</p:panel>
+		
+		<!-- Result List -->
+		<p:panel header="#{lbl['lbl.pp.result']}" toggleable="true">
+			<br />
+   			<ui:include src="listBudgetAllocContent.xhtml"/>
+   			<br/>
+ 		</p:panel>
+			
+		<!-- Bottom Button(s) -->
+		<div class="ppRightBtn">
+			<p:selectOneMenu styleClass="ppDropDownWidthM" 
+				value="#{budgetAllocBackingBean.managedBean.amanahFlag}">  <!-- disable if not brandNew -->
+				<f:selectItem itemLabel="#{lbl['lbl.select']}" itemValue="#{null}"/>
+				<f:selectItem itemLabel="Without Vot (Amanah)" itemValue="true"/>
+				<f:selectItem itemLabel="With Vot" itemValue="false"/>
+				<p:ajax event="change" update="cbNewBudgetAlloc" />
+			</p:selectOneMenu>
+			<p:commandButton id="cbNewBudgetAlloc" value="#{lbl['lbl.pp.new.budget.allocation']}" disabled="#{budgetAllocBackingBean.managedBean.amanahFlag==null}"
+		 		action="#{budgetAllocBackingBean.redirectToBudgetAllocation}" />&nbsp;
+		</div>
+		<br/>
+
+	</ui:define>
+
+</ui:composition>

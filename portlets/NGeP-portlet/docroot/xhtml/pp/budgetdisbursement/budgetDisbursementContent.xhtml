@@ -1,0 +1,63 @@
+<?xml version="1.0"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition
+xmlns="http://www.w3.org/1999/xhtml"
+xmlns:f="http://java.sun.com/jsf/core"
+xmlns:h="http://java.sun.com/jsf/html"
+xmlns:ui="http://java.sun.com/jsf/facelets"
+xmlns:p="http://primefaces.org/ui"
+xmlns:c="http://java.sun.com/jsp/jstl/core"
+>
+	<p:outputPanel id="opBudgetDisburseContent">
+		<!-- Header -->
+		<p:panel id="pHeader" toggleable="true" header="#{lbl['lbl.pp.budget.details']}">
+			<table class="ppOneTable">
+				<tr>
+					<th><p:outputLabel value="#{lbl['lbl.pp.go.code']}"/></th>
+					<td>
+						<p:inputText value="#{budgetDisburseBackingBean.managedBean.selectedPpBudget.pmGo.goCode}"  
+							styleClass="ppDisplayTextL" disabled="true"/>
+					</td>
+				</tr>
+				<tr>
+					<th><p:outputLabel value="#{lbl['lbl.pp.go.name']}"/></th>
+					<td>
+						<p:inputText value="#{budgetDisburseBackingBean.managedBean.selectedPpBudget.pmGo.goName}"
+						  	styleClass="ppDisplayTextL" disabled="true"/>
+					</td>
+				</tr>
+				<tr>
+					<th><p:outputLabel value="#{lbl['lbl.pp.budget.amount']}"/></th>
+					<td>
+						<p:inputText value="#{budgetDisburseBackingBean.managedBean.selectedPpBudget.budgetAmt}" 
+							styleClass="ppDisplayTextL" disabled="true"/>
+					</td>
+				</tr>
+				<tr>
+					<th><p:outputLabel value="#{lbl['lbl.pp.balance.amount']}"/></th>
+					<td>
+						<p:inputText id="itBudgetBalanceAmt" value="#{budgetDisburseBackingBean.balanceAmount(
+							budgetDisburseBackingBean.managedBean.selectedPpBudget.budgetAmt
+							, budgetDisburseBackingBean.managedBean.selectedPpBudget.usedAmt)}"  
+							styleClass="ppDisplayTextL" disabled="true"/>
+					</td>
+				</tr>
+			</table>
+		</p:panel>
+		
+		<!-- Disbursement Summary -->
+		<p:panel id="pSummary" toggleable="true" header="#{lbl['lbl.pp.budget.disbursement.summary']}">
+			<br/>
+			<ui:include src="budgetDisbursementSummary.xhtml"/>
+			<br/>
+		</p:panel>
+		
+		<!-- Disbursement Transaction -->
+		<p:panel id="pTransaction" toggleable="true" header="#{lbl['lbl.pp.budget.disbursement.transaction']}">
+			<br/>
+			<ui:include src="budgetDisbursementTrans.xhtml"/>
+			<br/>
+		</p:panel>
+	</p:outputPanel>
+</ui:composition>
+

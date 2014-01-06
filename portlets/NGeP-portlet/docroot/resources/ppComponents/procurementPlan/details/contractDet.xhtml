@@ -9,7 +9,7 @@ xmlns:p="http://primefaces.org/ui"
 xmlns:c="http://java.sun.com/jsp/jstl/core">
 
 	<p:outputPanel id="opEpExistingContract">
-		<table class="ppThreePartsTable">
+		<table class="ppTwoTable">
 			<tr>
 				<th><p:outputLabel value="* #{lbl['lbl.pp.doc.type']}"/></th>
 				<td>
@@ -59,7 +59,9 @@ xmlns:c="http://java.sun.com/jsp/jstl/core">
 				</td>
 			</tr>
 			<tr>
-				<th><p:outputLabel value="#{lbl['lbl.pp.pkp.number']}"/></th>
+				<th>
+					<p:outputLabel value="#{lbl['lbl.pp.pkp.number']}"/>
+				</th>
 				<td>
 					<p:selectOneMenu styleClass="ppDropDownWidthM"
 						value="#{planBackingBean.managedBean.selectedPlanItem.circularId}"
@@ -83,7 +85,10 @@ xmlns:c="http://java.sun.com/jsp/jstl/core">
 				</td>
 			</tr>
 			<tr>
-				<th><p:outputLabel value="#{lbl['lbl.pp.contract.number']}"/></th>
+				<th>
+					
+					<p:outputLabel value="#{lbl['lbl.pp.contract.number']}"/>
+				</th>
 				<td>
 					<p:outputPanel rendered="#{planBackingBean.managedBean.selectedPlanItem.contractInd==PPConst.contractIndPkp}">
 						<p:selectOneMenu id="somPkpContractNum" styleClass="ppDropDownWidthM"
@@ -110,38 +115,14 @@ xmlns:c="http://java.sun.com/jsp/jstl/core">
 						</p:selectOneMenu>
 					</p:outputPanel>
 				</td>
-				<th>
-					<p:outputLabel value="* #{planBackingBean.managedBean.selectedPlanItem.ctContract.fulfillmentType.code==PPConst.fulfillmentSchedule ? 
-						lbl['lbl.pp.planned.activity.startdate'] : lbl['lbl.pp.planned.activity.startmonth']}" />
-				</th>
-				<td>
-					<p:outputPanel id="opStartMonth">
-						<p:calendar styleClass="ppDisplayCalM"
-							showOn="button" value="#{planBackingBean.managedBean.selectedPlanItem.planStartDate}" 
-							rendered="#{planBackingBean.managedBean.selectedPlanItem.ctContract.fulfillmentType.code==PPConst.fulfillmentSchedule}" pattern="#{PPConst.dateDisplayPattern}" 
-			             	disabled="#{planBackingBean.managedBean.selectedPlanItem.ctContract.contractId==null 
-			             	 	|| (!planBackingBean.managedBean.selectedPlanItem.brandNew 
-			             		&amp;&amp; !planBackingBean.managedBean.selectedPlanItem.editable)}">
-			             	<p:ajax event="dateSelect" update="opEndDate" listener="#{planBackingBean.calculatePlanEndDate()}"  />              	
-		           			<p:ajax event="change" update="opEndDate" listener="#{planBackingBean.calculatePlanEndDate()}" />
-			             </p:calendar>
-						<p:selectOneMenu styleClass="ppDropDownWidthM"
-							rendered="#{planBackingBean.managedBean.selectedPlanItem.ctContract.fulfillmentType.code!=PPConst.fulfillmentSchedule}"
-							value="#{planBackingBean.managedBean.selectedPlanItem.planStartMonth}"
-						 	disabled="#{planBackingBean.managedBean.selectedPlanItem.ctContract.contractId==null 
-						 		|| (!planBackingBean.managedBean.selectedPlanItem.brandNew 
-			             		&amp;&amp; !planBackingBean.managedBean.selectedPlanItem.editable)}">
-							<f:selectItem itemLabel="#{lbl['lbl.select']}" itemValue="12"/>
-							<f:selectItems value="#{planBackingBean.shortMonths()}"/>
-							<p:ajax event="change" update="opEndDate"
-							 listener="#{planBackingBean.calculatePlanEndDate()}"/>
-						</p:selectOneMenu>
-					</p:outputPanel>
-				</td>
-				
+				<th>&nbsp;</th>
+				<td>&nbsp;</td>
 			</tr>
 			<tr>
-				<th><p:outputLabel value="#{lbl['lbl.pp.loa.number']}"/></th>
+				<th>
+					
+					<p:outputLabel value="#{lbl['lbl.pp.loa.number']}"/>
+				</th>
 				<td>
 					<p:selectOneMenu styleClass="ppDropDownWidthM"
 						value="#{planBackingBean.managedBean.selectedPlanItem.loaId}"
@@ -152,33 +133,11 @@ xmlns:c="http://java.sun.com/jsp/jstl/core">
 						<f:selectItem itemLabel="1" itemValue="1"/>
 					</p:selectOneMenu>
 				</td>
-				<th>
-					<p:outputLabel value="#{planBackingBean.managedBean.selectedPlanItem.ctContract.fulfillmentType.code==PPConst.fulfillmentSchedule ? 
-						lbl['lbl.pp.planned.activity.enddate'] : lbl['lbl.pp.planned.activity.endmonth']}"/>
-				</th>
-				<td>
-					<p:outputPanel id="opEndDate">
-						<p:inputText disabled="true" styleClass="ppDisplayTextM"
-							rendered="#{planBackingBean.managedBean.selectedPlanItem.ctContract.fulfillmentType.code!=PPConst.fulfillmentSchedule}"
-							value="#{planBackingBean.managedBean.selectedPlanItem.planEndMonthString}"/>
-						<p:inputText disabled="true" styleClass="ppDisplayTextM" 
-							rendered="#{planBackingBean.managedBean.selectedPlanItem.ctContract.fulfillmentType.code==PPConst.fulfillmentSchedule}"
-							value="#{planBackingBean.managedBean.selectedPlanItem.planEndDate}">
-							<f:convertDateTime pattern="#{PPConst.dateDisplayPattern}" />
-						</p:inputText>
-					</p:outputPanel>
-				</td>
+				<th>&nbsp;</th>
+				<td>&nbsp;</td>
 			</tr>
 		</table>
-		<!-- Top Button -->
-		<div class="ppRightBtn">
-			<p:commandButton id="cbConfirm" value="#{lbl['lbl.pp.confirm']}" action="#{planBackingBean.addPlanToList()}"
-			  onclick="dlExistingContractModal.hide()" oncomplete="dlExistingContractModal.hide()"  process="opEpExistingContract"
-			  update="dtEpPlanItem" icon="ui-icon-accept" />
-			&nbsp; 
-			<p:commandButton id="cbCancel" value="#{lbl['lbl.pp.cancel']}" onclick="dlExistingContractModal.hide()" 
-				icon="ui-icon-cancel" immediate="true"/>
-		</div>
+		
 	</p:outputPanel>
 
 </ui:composition>

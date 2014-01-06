@@ -14,7 +14,7 @@ import my.ep.dto.pp.procurementplan.ProcurementPlanReqDTO;
 import my.ep.dto.pp.procurementplan.ProcurementPlanResDTO;
 import my.ep.persistence.entity.pm.authorization.PmOrgProfile;
 import my.ep.persistence.entity.pp.procurementplan.PpPlan;
-import my.ep.persistence.entity.pp.procurementplan.PpPlanItem;
+import my.ep.persistence.entity.pp.procurementplan.PpPlanDtl;
 import my.ep.persistence.logging.LogKey;
 import my.ep.type.pm.OrganizationType;
 import my.ep.web.backingbean.BaseBackingBean;
@@ -77,11 +77,11 @@ public class ProcurementApprovalBackingBean extends BaseBackingBean<ProcurementA
 		ProcurementPlanReqDTO planReqDTO = new ProcurementPlanReqDTO();
 		planReqDTO.setLoginPtj(loginUser);
 		IProcurementPlanSO planSO = (IProcurementPlanSO) BusinessDelegate.getInstance().getServiceObject("pp", IProcurementPlanSO.class);
-		ProcurementPlanResDTO planResDTO = planSO.retrievePendingApprovalList(planReqDTO);
-		if(planResDTO.isSuccessful()){
-			log.info("success");
-			planList = planResDTO.getPlanList();
-		}
+//		ProcurementPlanResDTO planResDTO = planSO.retrievePendingApprovalList(planReqDTO);
+//		if(planResDTO.isSuccessful()){
+//			log.info("success");
+//			planList = planResDTO.getPlanList();
+//		}
 		this.getManagedBean().setPendingApprovalPlans(planList);
 		log.info("retrievePendingApprovalList - End");
 

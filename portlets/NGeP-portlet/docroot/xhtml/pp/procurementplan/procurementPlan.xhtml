@@ -46,7 +46,8 @@ xmlns:tp="http://java.sun.com/jsf/composite/ppComponents/procurementPlan"
 	    		  	<tp:planContentComponent 
 			            selectedPlan="#{planBackingBean.managedBean.plan}" 
 			            selectedPlanMaster="#{planBackingBean.managedBean.planMaster}" 
-			            viewMode="#{planBackingBean.managedBean.viewMode}"/>
+			            viewMode="#{planBackingBean.managedBean.viewMode}"
+			            tabId="#{PPConst.currentNew}" />
 	            </p:outputPanel>
 		    </p:tab>
 		    <p:tab id="#{PPConst.currentPlan}" title="#{lbl['lbl.pp.plan.title.list']}"> 

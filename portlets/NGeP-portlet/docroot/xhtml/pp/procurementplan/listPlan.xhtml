@@ -48,7 +48,7 @@ xmlns:tp="http://java.sun.com/jsf/composite/ep"
    			<!-- Search -->
 			<p:panel header="#{lbl['lbl.pp.search.plan']}" toggleable="true">
 				<br />
-				<table class="ppThreePartsTable">
+				<table class="ppTwoTable">
 					<tr>
 						<th><p:outputLabel value="#{lbl['lbl.pp.plan.number']}" /></th>
 						<td><p:inputText styleClass="ppDisplayTextM"
@@ -123,10 +123,17 @@ xmlns:tp="http://java.sun.com/jsf/composite/ep"
    			
    			<!-- Bottom Button(s) -->
    			<div class="ppRightBtn">
+   				<p:selectOneMenu styleClass="ppDropDownWidthM" 
+					value="#{planBackingBean.managedBean.amanahFlag}"> 
+					<f:selectItem itemLabel="#{lbl['lbl.select']}" itemValue="#{null}"/>
+					<f:selectItem itemLabel="Without Vot (Amanah)" itemValue="true"/>
+					<f:selectItem itemLabel="With Vot" itemValue="false"/>
+				</p:selectOneMenu>
+				<!-- Enable for Org Profile PTJ -->
 				<p:commandButton value="#{lbl['lbl.pp.create.new.plan']}" 
-				id="cbNewPlan" icon="ui-icon-add"
-				disabled="#{planBackingBean.managedBean.currentUser.pmCode.code!='FPJ'}"
-		 		action="#{planBackingBean.redirectToPlanContent(null)}"   /> 
+					id="cbNewPlan" icon="ui-icon-add"
+					disabled="#{planBackingBean.managedBean.currentUser.pmCode.code!='FPJ'}"
+			 		action="#{planBackingBean.redirectToPlanContent(null)}"   /> 
 			</div>
   
 	</ui:define>

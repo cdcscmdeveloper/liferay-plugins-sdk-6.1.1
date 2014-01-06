@@ -8,14 +8,12 @@ import java.util.List;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
 
-import my.ep.jaxb.pp.plandata.PPPlanDataType;
 import my.ep.persistence.entity.pm.authorization.PmOrgProfile;
 import my.ep.persistence.entity.pp.PpRemark;
 import my.ep.persistence.entity.pp.budgetallocation.PpBudgetAllocDtl;
 import my.ep.persistence.entity.pp.procurementplan.PpPlan;
-import my.ep.persistence.entity.pp.procurementplan.PpPlanItem;
-import my.ep.persistence.entity.pp.procurementplan.PpPlanMaster;
-import my.ep.persistence.entity.pp.procurementplan.PpQtActivity;
+import my.ep.persistence.entity.pp.procurementplan.PpPlanActivity;
+import my.ep.persistence.entity.pp.procurementplan.PpPlanDtl;
 import my.ep.web.bean.pp.ProcurementPlanSearchBean;
 import my.ep.web.managedbean.BaseManagedBean;
 
@@ -27,21 +25,21 @@ public class PlanManagedBean extends BaseManagedBean{
 
 	private boolean searchPlan;
 
-	private List <PpPlanMaster> planMasterList;
-
-	private PpPlanMaster planMaster; //for main master plan
+//	private List <PpPlanMaster> planMasterList;
+//
+//	private PpPlanMaster planMaster; //for main master plan
 
 	private PpPlan plan; //for main master plan
 	
 	private PmOrgProfile currentUser;
 
-	private PpPlanMaster selectedPlanMaster; //for ui master plan
+//	private PpPlanMaster selectedPlanMaster; //for ui master plan
 	
 	private PpPlan selectedPlan; //for ui plan
 	
 	private PpPlan selectedPlanItem; //for ui plan (multiple)
 
-	private PpPlanItem selectedItem; //for ui item
+	private PpPlanDtl selectedItem; //for ui item
 	
 	private PpRemark selectedItemRemark; //for ui item remark
 	
@@ -57,7 +55,7 @@ public class PlanManagedBean extends BaseManagedBean{
 	
 	private String bpmTaskId; 
 	
-	private List <PpQtActivity> allTaskActivity;
+	private List <PpPlanActivity> allTaskActivity;
 	
 	private String dynamicDetailsName;
 
@@ -71,7 +69,23 @@ public class PlanManagedBean extends BaseManagedBean{
 	
 	private boolean reasonRejectOther;
 	
+	private Boolean amanahFlag;
 	
+	
+
+	/**
+	 * @return the amanahFlag
+	 */
+	public Boolean getAmanahFlag() {
+		return amanahFlag;
+	}
+
+	/**
+	 * @param amanahFlag the amanahFlag to set
+	 */
+	public void setAmanahFlag(Boolean amanahFlag) {
+		this.amanahFlag = amanahFlag;
+	}
 
 	/**
 	 * @return the selectedTab
@@ -88,19 +102,19 @@ public class PlanManagedBean extends BaseManagedBean{
 	}
 
 
-	/**
-	 * @return the planMasterList
-	 */
-	public List<PpPlanMaster> getPlanMasterList() {
-		return planMasterList;
-	}
-
-	/**
-	 * @param planMasterList the planMasterList to set
-	 */
-	public void setPlanMasterList(List<PpPlanMaster> planMasterList) {
-		this.planMasterList = planMasterList;
-	}
+//	/**
+//	 * @return the planMasterList
+//	 */
+//	public List<PpPlanMaster> getPlanMasterList() {
+//		return planMasterList;
+//	}
+//
+//	/**
+//	 * @param planMasterList the planMasterList to set
+//	 */
+//	public void setPlanMasterList(List<PpPlanMaster> planMasterList) {
+//		this.planMasterList = planMasterList;
+//	}
 
 	/**
 	 * @return the planList
@@ -178,14 +192,14 @@ public class PlanManagedBean extends BaseManagedBean{
 	/**
 	 * @return the allTaskActivity
 	 */
-	public List<PpQtActivity> getAllTaskActivity() {
+	public List<PpPlanActivity> getAllTaskActivity() {
 		return allTaskActivity;
 	}
 
 	/**
 	 * @param allTaskActivity the allTaskActivity to set
 	 */
-	public void setAllTaskActivity(List<PpQtActivity> allTaskActivity) {
+	public void setAllTaskActivity(List<PpPlanActivity> allTaskActivity) {
 		this.allTaskActivity = allTaskActivity;
 	}
 
@@ -234,13 +248,13 @@ public class PlanManagedBean extends BaseManagedBean{
 	/**
 	 * @return the selectedItem
 	 */
-	public PpPlanItem getSelectedItem() {
+	public PpPlanDtl getSelectedItem() {
 		return selectedItem;
 	}
 	/**
 	 * @param selectedItem the selectedItem to set
 	 */
-	public void setSelectedItem(PpPlanItem selectedItem) {
+	public void setSelectedItem(PpPlanDtl selectedItem) {
 		this.selectedItem = selectedItem;
 	}
 	
@@ -257,19 +271,19 @@ public class PlanManagedBean extends BaseManagedBean{
 		this.selectedItemRemark = selectedItemRemark;
 	}
 
-
-	/**
-	 * @return the selectedPlanMaster
-	 */
-	public PpPlanMaster getSelectedPlanMaster() {
-		return selectedPlanMaster;
-	}
-	/**
-	 * @param selectedPlanMaster the selectedPlanMaster to set
-	 */
-	public void setSelectedPlanMaster(PpPlanMaster selectedPlanMaster) {
-		this.selectedPlanMaster = selectedPlanMaster;
-	}
+//
+//	/**
+//	 * @return the selectedPlanMaster
+//	 */
+//	public PpPlanMaster getSelectedPlanMaster() {
+//		return selectedPlanMaster;
+//	}
+//	/**
+//	 * @param selectedPlanMaster the selectedPlanMaster to set
+//	 */
+//	public void setSelectedPlanMaster(PpPlanMaster selectedPlanMaster) {
+//		this.selectedPlanMaster = selectedPlanMaster;
+//	}
 
 	/**
 	 * @return the searchPlan
@@ -321,18 +335,18 @@ public class PlanManagedBean extends BaseManagedBean{
 		this.viewMode = viewMode;
 	}
 
-	/**
-	 * @return the planMaster
-	 */
-	public PpPlanMaster getPlanMaster() {
-		return planMaster;
-	}
-	/**
-	 * @param planMaster the planMaster to set
-	 */
-	public void setPlanMaster(PpPlanMaster planMaster) {
-		this.planMaster = planMaster;
-	}
+//	/**
+//	 * @return the planMaster
+//	 */
+//	public PpPlanMaster getPlanMaster() {
+//		return planMaster;
+//	}
+//	/**
+//	 * @param planMaster the planMaster to set
+//	 */
+//	public void setPlanMaster(PpPlanMaster planMaster) {
+//		this.planMaster = planMaster;
+//	}
 	/**
 	 * @return the plan
 	 */

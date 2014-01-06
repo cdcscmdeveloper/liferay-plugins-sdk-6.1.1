@@ -9,7 +9,7 @@ xmlns:p="http://primefaces.org/ui"
 xmlns:c="http://java.sun.com/jsp/jstl/core">
 
 	<div class="ppRightBtn">
-		<ui:repeat var="bpmAction" value="#{planBackingBean.managedBean.actions}">
+		<ui:repeat var="bpmAction" value="#{planBackingBean.managedBean.outComes}">
 			<p:commandButton value="#{bpmAction}" action="#{planBackingBean.submitPlan(bpmAction)}" />&nbsp;
 		</ui:repeat>	
 	</div>

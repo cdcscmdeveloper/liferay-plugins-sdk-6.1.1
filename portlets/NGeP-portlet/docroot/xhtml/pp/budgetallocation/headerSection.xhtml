@@ -9,8 +9,8 @@ xmlns:p="http://primefaces.org/ui"
 xmlns:c="http://java.sun.com/jsp/jstl/core">
  
 	<div class="ppRightBtn">
-		<ui:repeat var="bpmAction" value="#{budgetAllocationBackingBean.managedBean.actions}">
-			<p:commandButton value="#{bpmAction}" action="#{budgetAllocationBackingBean.submitBudgetAllocation(bpmAction)}" />&nbsp;
+		<ui:repeat var="bpmAction" value="#{budgetAllocBackingBean.managedBean.outComes}">
+			<p:commandButton value="#{bpmAction}" action="#{budgetAllocBackingBean.submitBudgetAllocation(bpmAction)}" />&nbsp;
 		</ui:repeat>
 	</div>
 </ui:composition>

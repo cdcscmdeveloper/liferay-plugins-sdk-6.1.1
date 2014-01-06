@@ -1,25 +1,36 @@
-/*
+/**
  * Copyright © 2012 Archisoft Consulting Sdn Bhd. All rights reserved.
  */
 package my.ep.web.constant.pp;
 
+/**
+ * Constant Value for Procurement Plan Module
+ * 
+ * @author RainPoh
+ * @since 19/12/2013
+ */
 public class ProcurementPlanConst {
 
-	//Navigation
-	public static final String NAV_TO_LIST_BUDGET_ALLOCATION = "listBudget";
-	public static final String NAV_TO_BUDGET_ALLOCATION = "budgetAllocation";
+	//Budget Disbursement Navigation
+	public static final String NAV_TO_LIST_BUDGET = "listBudget";
+	public static final String NAV_TO_BUDGET_DISBURSEMENT = "budgetDisbursement";
 	
+	//Budget Allocation Navigation
+	public static final String NAV_TO_LIST_BUDGET_ALLOCATION = "listBudgetAlloc";
+	public static final String NAV_TO_BUDGET_ALLOCATION = "budgetAlloc";
+	
+	//Prepare Plan Navigation
 	public static final String NAV_TO_LIST_PLAN = "listPlan";
 	public static final String NAV_TO_PLAN_DET = "procurementPlan";
 	
+	//Common Navigation
 	public static final String NAV_TO_TASK_LIST = "/xhtml/shared/acknowledge";
 	
-	
+	//Plan Details
 	public static final String PP_DET = "details/ppDetails.xhtml";
-	public static final String EP_EXISTING_CONTRACT_DET = "details/epDetailsExistingContract.xhtml";
+	public static final String EP_EXISTING_CONTRACT_DET = "details/epDetailsContract.xhtml";
 	public static final String EP_DIRECT_PURCHASE_DET = "details/epDetailsDirectPurchase.xhtml";
-	public static final String EP_FAVOURITE_PLAN_DET = "details/epDetailsFavourPlan.xhtml";
-	public static final String EP_FAVOURITE_ITEM_DET = "details/epDetailsFavourItem.xhtml";
+
 	
 
 	//Submission Type
@@ -98,7 +109,7 @@ public class ProcurementPlanConst {
 	public static final String BPM_TASK_PLAN_REVIEW = "Review Plan";
 	public static final String BPM_TASK_PLAN_VERIFY = "Verify Plan";
 
-	
+	public static final String BACK = "Back";
 
 	//Default BPM Actions
 	public static final String[] BPM_DEFAULT_ACTIONS = new String[]{BPM_SAVE, BPM_SUBMIT};
@@ -132,7 +143,8 @@ public class ProcurementPlanConst {
 	public static final String DOCTYPE_PLAN = "PPL";
 	public static final String DOCTYPE_PLAN_ITEM = "PPI";
 	public static final String DOCTYPE_BUDGET_ALLOC = "PBA";
-	public static final String DOCTYPE_BUDGET_ALLOC_ITEM = "PBD";
+	public static final String DOCTYPE_BUDGET_ALLOC_DTL = "PBD";
+	public static final String DOCTYPE_BUDGET_ALLOC_ORG = "PBO";
 
 	
 	//PP Programs
@@ -145,7 +157,13 @@ public class ProcurementPlanConst {
 	public static final String VOT_S = "S";
 	public static final String VOT_T = "T";
 	public static final String VOT_AMANAH = "A";
-
+	
+	//BUDGET update mode
+	public static final String CHANGE = "C";
+	public static final String ADD = "A";
+	public static final String REMOVE = "R";
+	public static final String UPDATE = "U";
+	public static final String INIT = "I";
 	
 //	
 //	//Reason Code
@@ -153,12 +171,15 @@ public class ProcurementPlanConst {
 //	public static final String REASON_CANCEL = "PPC";
 	
 	
-	/** refer to PM_CODE **/
+	/** refer to PM_PARAMETER **/
 	//PM Status Budget Allocation
 	public static final Long STATUS_PBA_PENDING_SUBMIT = 30020L;
 
 	//PM Status Budget Allocation Dtl
-	public static final Long STATUS_PBD_PENDING_SUBMIT = 30025L; 
+	public static final Long STATUS_PBD_PENDING_SUBMIT = 30024L; 
+	
+	//PM Status Budget Allocation Org
+	public static final Long STATUS_PBO_PENDING_SUBMIT = 30028L; 
 	
 	//PM Status Plan
 	public static final Long STATUS_PPL_PENDING_SUBMIT = 30001L;
@@ -168,8 +189,8 @@ public class ProcurementPlanConst {
 
 	
 	//Contract Type
-	public static final String CONTRACT_TYPE_MINISTRY = "168"; //refer to PM_CODE
-	public static final String CONTRACT_IND_CENTRAL = "169"; //refer to PM_CODE
+	public static final String CONTRACT_TYPE_MINISTRY = "168"; //refer to PM_PARAMETER
+	public static final String CONTRACT_IND_CENTRAL = "169"; //refer to PM_PARAMETER
 	
 	
 	/**
@@ -235,7 +256,6 @@ public class ProcurementPlanConst {
 		return SO_PP;
 	}
 	
-	
 	/**
 	 * @return the progPlan
 	 */
@@ -267,13 +287,28 @@ public class ProcurementPlanConst {
 	public String getDoctypeBudgetAlloc() {
 		return DOCTYPE_BUDGET_ALLOC;
 	}
+
 	/**
-	 * @return the doctypeBudgetAllocItem
+	 * @return the doctypeBudgetAllocDtl
 	 */
-	public String getDoctypeBudgetAllocItem() {
-		return DOCTYPE_BUDGET_ALLOC_ITEM;
+	public String getDoctypeBudgetAllocDtl() {
+		return DOCTYPE_BUDGET_ALLOC_DTL;
 	}
-	
+
+	/**
+	 * @return the doctypeBudgetAllocOrg
+	 */
+	public String getDoctypeBudgetAllocOrg() {
+		return DOCTYPE_BUDGET_ALLOC_ORG;
+	}
+
+	/**
+	 * @return the statusPboPendingSubmit
+	 */
+	public Long getStatusPboPendingSubmit() {
+		return STATUS_PBO_PENDING_SUBMIT;
+	}
+
 	/**
 	 * @return the unspscSegment
 	 */
@@ -642,18 +677,6 @@ public class ProcurementPlanConst {
 	 */
 	public String getNavToTaskList() {
 		return NAV_TO_TASK_LIST;
-	}
-	/**
-	 * @return the epFavouritePlanDet
-	 */
-	public String getEpFavouritePlanDet() {
-		return EP_FAVOURITE_PLAN_DET;
-	}
-	/**
-	 * @return the epFavouriteItemDet
-	 */
-	public String getEpFavouriteItemDet() {
-		return EP_FAVOURITE_ITEM_DET;
 	}
 	/**
 	 * @return the submitApproval

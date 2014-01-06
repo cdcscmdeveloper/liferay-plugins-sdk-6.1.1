@@ -1,0 +1,40 @@
+<?xml version="1.0"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<ui:composition
+template="/WEB-INF/facelets/templates/basic_template.xhtml"
+xmlns="http://www.w3.org/1999/xhtml"
+xmlns:f="http://java.sun.com/jsf/core"
+xmlns:h="http://java.sun.com/jsf/html"
+xmlns:ui="http://java.sun.com/jsf/facelets"
+xmlns:p="http://primefaces.org/ui"
+xmlns:c="http://java.sun.com/jsp/jstl/core"
+>
+	
+	<ui:define name="contentSection">
+		<br/>
+		<p:panelGrid styleClass="ppPanelGrid">  
+			<p:row>  
+            	<p:column>
+            		<table class="ppHalf">
+						<tr>
+							<td><p:outputLabel value="#{lbl['lbl.pp.ministry.code.name']}" /></td>
+							<td>
+								<p:inputText disabled="true" styleClass="ppDisplayTextL"
+									value="#{budgetDisburseBackingBean.managedBean.currentUser.orgCode} / #{budgetDisburseBackingBean.managedBean.currentUser.orgName}" />
+								
+							</td>
+						</tr>
+					</table>
+            	</p:column>
+           	</p:row>
+           	<p:row>  
+            	<p:column>
+            		<ui:include src="listBudgetContent.xhtml"/>
+            	</p:column>
+           	</p:row>
+		</p:panelGrid>
+		<br/>
+	</ui:define>
+
+</ui:composition>
