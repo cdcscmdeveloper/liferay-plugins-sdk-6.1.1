@@ -1,0 +1,129 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:c="http://java.sun.com/jsp/jstl/core">
+	<p:panel id="glb_panel_request_list"
+		label="#{lbl['lbl.sc.panel.title.item.detail']}"
+		header="#{lbl['lbl.sc.panel.title.item.detail']}" toggleable="true"
+		toggleSpeed="500">
+		<h:panelGrid width="100%" style="margin-top:20px">
+			<p:dataTable id="requestListDataTable" width="100%" cellpadding="1"
+				value="#{directPurchaseBackingBean.managedBean.requestNoteDtls}" rowKey="#{requestNoteDtl.scRequestSupplierItem.cmSupplierItem.supplierItemId}"
+				rowIndexVar="rowIndex" selection="#{directPurchaseBackingBean.managedBean.selectedRequestNoteDtls}"
+				var="requestNoteDtl">
+				<p:columnGroup type="header">
+					<p:row>
+						<p:column>
+						</p:column>
+						<p:column colspan="1" rendered="true"
+							style="text-align:center; vertical-align:top;"
+							headerText="#{lbl['lbl.ss.item.detail.item.name']}">
+						</p:column>
+						<p:column colspan="1" rendered="true"
+							style="text-align:center; vertical-align:top;"
+							headerText="#{lbl['lbl.sc.purchase.procurement.type']}">
+						</p:column>
+						<p:column colspan="1" rendered="true"
+							style="text-align:center; vertical-align:top;"
+							headerText="Price Table">
+						</p:column>
+						<p:column colspan="1" width="15%" rendered="true"
+							style="text-align:center; vertical-align:top;"
+							headerText="#{lbl['lbl.sc.item.detail.recommend.supplier']}">
+						</p:column>
+						<p:column colspan="1" width="10%" rendered="true"
+							style="text-align:center; vertical-align:top;"
+							headerText="#{lbl['lbl.ss.item.detail.price.offered']}">
+						</p:column>
+						<p:column colspan="1" width="10%" rendered="true"
+							style="text-align:center; vertical-align:top;"
+							headerText="#{lbl['lbl.ss.item.detail.fulfillment.type']}">
+						</p:column>
+						<p:column colspan="1" width="10%" rendered="true"
+							style="text-align:center; vertical-align:top;"
+							headerText="#{lbl['lbl.ss.item.detail.prepare.by']}">
+						</p:column>
+						<p:column colspan="1" width="20%" rendered="true"
+							style="text-align:center; vertical-align:top;"
+							headerText="#{lbl['lbl.sc.purchase.deliver.period']}">
+						</p:column>
+					</p:row>
+				</p:columnGroup>
+				<p:column selectionMode="multiple" style="width:2%" /> 
+				
+				<p:column>
+					#{requestNoteDtl.scRequestSupplierItem.cmSupplierItem.itemDesc} 
+				</p:column>
+				<p:column>
+					<!-- procurement type -->
+				</p:column>
+				<p:column>  
+					#{requestNoteDtl.scRequestSupplierItem.smSupplier.supplierName}
+				</p:column>
+				<p:column>
+				</p:column>
+				<p:column>
+					<p:selectOneMenu style="width: auto;" value="#{requestNoteDtl.fulfillmentType}" 
+						required="false" disabled="false">
+						<f:selectItem itemLabel="One Off" itemValue="O"></f:selectItem>
+						<f:selectItem itemLabel="Periodic" itemValue="P"></f:selectItem>
+					</p:selectOneMenu>
+				</p:column>
+				<p:column>
+					<p:selectOneMenu style="width: auto;" value="#{requestNoteDtl.assignedUserId}"
+						required="false" disabled="false">
+						<f:selectItems value="#{directPurchaseBackingBean.managedBean.govUsers}" var="govUser" itemLabel="#{govUser.userName}" itemValue="#{govUser.userId}"></f:selectItems>
+					</p:selectOneMenu>
+				</p:column>
+				<p:column>
+					<p:inputText style="width:20px;" required="false" value="#{requestNoteDtl.deliverPeriod}"/>
+					<p:spacer width="2px;"></p:spacer>
+					<p:selectOneMenu id="periodMode" style="width: auto;" value="#{requestNoteDtl.deliverPeriodType}">
+						<f:selectItem itemLabel="Day" itemValue="D"></f:selectItem>
+						<f:selectItem itemLabel="Month" itemValue="M"></f:selectItem>
+						<f:selectItem itemLabel="Year" itemValue="Y"></f:selectItem>
+					</p:selectOneMenu>
+				</p:column>
+			</p:dataTable>
+		</h:panelGrid>
+		<br />
+		<br />
+		<p:panelGrid styleClass="noBorders tr,noBorders td">
+			<p:row>
+				<p:column>
+					<h:outputText value="#{lbl['lbl.sc.purchase.fulfillment.type']}"></h:outputText>
+					<!-- p:outputLabel value="#{lbl['lbl.sc.purchase.fulfillment.type']}"></p:outputLabel -->
+					<p:spacer width="6px;"></p:spacer>
+					<p:selectOneMenu id="fulfillmentType" value="#{directPurchaseBackingBean.managedBean.fulfillmentType}"
+						style="width: auto; min-width: 150px;" required="false"
+						disabled="false">
+						<f:selectItem itemLabel="One Off" itemValue="O" />
+						<f:selectItem itemLabel="Periodic" itemValue="P" />
+					</p:selectOneMenu>
+					<p:spacer width="6px;"></p:spacer>
+					<h:outputText value="#{lbl['lbl.sc.purchase.prepare']}"></h:outputText>
+					<p:spacer width="6px;"></p:spacer>
+					<p:selectOneMenu id="prepareBy" value="#{directPurchaseBackingBean.managedBean.assignedToUserId}"
+						style="width: auto; min-width: 150px;" required="false"
+						disabled="false">
+						<f:selectItems value="#{directPurchaseBackingBean.managedBean.govUsers}" var="govUser" itemLabel="#{govUser.userName}" itemValue="#{govUser.userId}"></f:selectItems>
+					</p:selectOneMenu>
+					<p:spacer width="6px;"></p:spacer>
+					<h:outputText value="#{lbl['lbl.sc.purchase.deliver.period']}"></h:outputText>
+					<p:spacer width="6px;"></p:spacer>
+					<p:inputText id="periodId" style="width:20px;" required="false" value="#{directPurchaseBackingBean.managedBean.periodValue}"/>
+					<p:spacer width="4px;"/>
+					<p:selectOneMenu id="periodMode" style="width: auto;" value="#{directPurchaseBackingBean.managedBean.periodType}">
+						<f:selectItem itemLabel="Day" itemValue="D"></f:selectItem>
+						<f:selectItem itemLabel="Month" itemValue="M"></f:selectItem>
+						<f:selectItem itemLabel="Year" itemValue="Y"></f:selectItem>
+					</p:selectOneMenu>
+					<p:spacer width="6px;"></p:spacer>
+					<p:commandButton value="#{lbl['lbl.ss.action.apply']}" process="@all" action="#{directPurchaseBackingBean.applyForRequestNote}" update="@([id$=requestListDataTable])"/>
+				</p:column>
+			</p:row>
+		</p:panelGrid>
+	</p:panel>
+</ui:composition>	

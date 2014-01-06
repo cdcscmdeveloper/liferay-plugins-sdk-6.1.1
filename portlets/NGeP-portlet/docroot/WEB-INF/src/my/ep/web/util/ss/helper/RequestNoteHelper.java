@@ -1,77 +1,88 @@
 package my.ep.web.util.ss.helper;
 
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
-import my.ep.persistence.entity.pm.authorization.PmUser;
-import my.ep.persistence.entity.ss.directpurchase.ScRequestNote;
-import my.ep.persistence.entity.ss.directpurchase.ScRequestNoteDtl;
+import my.ep.persistence.entity.cm.catalog.CmItem;
+import my.ep.persistence.entity.cm.catalog.CmSupplierItem;
+import my.ep.persistence.entity.ss.directpurchase.ScRequestItem;
 import my.ep.persistence.entity.ss.directpurchase.ScRequestSupplierItem;
-import my.ep.web.backingbean.ss.directpurchase.RequestNotePk;
 
 public class RequestNoteHelper {
 	
-	public static	List<ScRequestNote>	createRequestNotes(List<ScRequestSupplierItem>	supplierItems){
-		List<ScRequestNote>	results	=	new ArrayList<ScRequestNote>();
-		for(ScRequestSupplierItem supplierItem: supplierItems){
-			results.add(createRequestNote(supplierItem));
-		}
-		return results;
-	}
-	
-	public	static	ScRequestNote	createRequestNote(ScRequestSupplierItem supplierItem){
-		ScRequestNote	result	=	new ScRequestNote();
-		ScRequestNoteDtl	requestNoteDtl	=	new ScRequestNoteDtl();
-		List<ScRequestNoteDtl> requestNoteDtls	=	new ArrayList<ScRequestNoteDtl>();
-		requestNoteDtl.setScRequestSupplierItem(supplierItem);
-		requestNoteDtls.add(requestNoteDtl);
-		result.setScRequestNoteDtls(requestNoteDtls);
-		return result;
-	}
-	
-	public	static	List<ScRequestNote>	createRequestNoteFromRquestNoteDtls(List<ScRequestNoteDtl>	requestNoteDtls){
-		List<ScRequestNote>	results	=	new ArrayList<ScRequestNote>();
-		Map<RequestNotePk, List<ScRequestNoteDtl>>	uniqueRequestNotePkMap	=	new HashMap<RequestNotePk, List<ScRequestNoteDtl>>();
-		for(ScRequestNoteDtl requestNoteDtl: requestNoteDtls){
-			RequestNotePk requestNotePk	=	createRequestNotePk(requestNoteDtl);
-			if(uniqueRequestNotePkMap.get(requestNotePk) != null){
-				uniqueRequestNotePkMap.get(requestNotePk).add(requestNoteDtl);
+	public static	List<ScRequestItem>		getUniqueItemList(List<CmSupplierItem> supplierItems){
+		List<ScRequestItem>	results	=	new ArrayList<ScRequestItem>();
+		Map<CmItem, List<CmSupplierItem>>	uniqueItemList	=	new HashMap<CmItem, List<CmSupplierItem>>();
+		
+		for(CmSupplierItem supplierItem: supplierItems){
+			if(uniqueItemList.get(supplierItem.getCmItem()) != null){
+				uniqueItemList.get(supplierItem.getCmItem()).add(supplierItem);
 			}else{
-				List<ScRequestNoteDtl>	listRequestNoteDtls	=	new ArrayList<ScRequestNoteDtl>();
-				listRequestNoteDtls.add(requestNoteDtl);
-				uniqueRequestNotePkMap.put(requestNotePk, listRequestNoteDtls);
+				List<CmSupplierItem>	supplierItemList	=	new ArrayList<CmSupplierItem>();
+				supplierItemList.add(supplierItem);
+				uniqueItemList.put(supplierItem.getCmItem(), supplierItemList);
 			}
 		}
-		Collection<RequestNotePk> uniqueRequestNotePks	=	uniqueRequestNotePkMap.keySet();
-		for(RequestNotePk requestNotePk: uniqueRequestNotePks){
-			ScRequestNote	scRequestNote	=	createRequestNoteFromRequestNotePk(requestNotePk);
-			scRequestNote.setScRequestNoteDtls(uniqueRequestNotePkMap.get(requestNotePk));
-			PmUser	pmUser	=	new PmUser();
-			Long userId	=	uniqueRequestNotePkMap.get(requestNotePk).get(0).getAssignedUserId();
-			pmUser.setUserId(userId);
-			scRequestNote.setAssignTo(pmUser);
-			results.add(scRequestNote);
+		Set<CmItem>	cmItems	=	uniqueItemList.keySet();
+		for(CmItem cmItem: cmItems){
+			List<CmSupplierItem>	supplierItemList	=	uniqueItemList.get(cmItem);
+			ScRequestItem	requestListItem	=	RequestListItemHelper.createRequestListItem(cmItem);
+			requestListItem.setSupplierItems(RequestSupplierItemHelper.createRequestSupplierItems(requestListItem, supplierItemList));
+			results.add(requestListItem);
 		}
 		return results;
 	}
-	
-	private	static	ScRequestNote	createRequestNoteFromRequestNotePk(RequestNotePk requestNotePk){
-		ScRequestNote result	=	new ScRequestNote();
-		result.setFulfillmentType(requestNotePk.getFulfillmentType());
-		result.setSmSupplier(requestNotePk.getSupplier());
-		result.setDeliverPeriodType(requestNotePk.getDeliverPeriodType());
-		result.setDeliverPeriod(requestNotePk.getDeliveryPeriodValue().intValue());
+	public	static	List<ScRequestItem>	mergeItem(List<ScRequestItem> requestItems1, List<ScRequestItem> requestItems2){
+		List<ScRequestItem>	results	=	requestItems1;
+		if(requestItems2 != null){
+			for(ScRequestItem requestItem: requestItems2){
+				if(!isContain(requestItems1, requestItem)){
+					results.add(requestItem);
+				}
+			}
+		}
+		return results;
+	}
+	private	static	boolean	isContain(List<ScRequestItem> requestItems, ScRequestItem requestItem){
+		boolean	result	=	false;
+		if(requestItem != null && requestItems != null){
+			CmItem	cmItem	=	requestItem.getCmItem();
+			Long	cmItemId	=	cmItem.getItemId();
+			for(ScRequestItem requestItem2: requestItems){
+				if(cmItemId.equals(requestItem2.getCmItem().getItemId())){
+					result	=	true;
+					break;
+				}
+			}
+		}
 		return result;
 	}
-	private	static	RequestNotePk createRequestNotePk(ScRequestNoteDtl requestNoteDtl){
-		RequestNotePk	result	=	new RequestNotePk();
-		result.setFulfillmentType(requestNoteDtl.getFulfillmentType());
-		result.setSupplier(requestNoteDtl.getScRequestSupplierItem().getSmSupplier());
-		result.setDeliverPeriodType(requestNoteDtl.getDeliverPeriodType());
-		result.setDeliveryPeriodValue(new Double(requestNoteDtl.getDeliverPeriod()));
+	private	static	List<ScRequestSupplierItem>		mergeSupplierItem(List<ScRequestSupplierItem> listSupplierItems1, List<ScRequestSupplierItem> listSupplierItems2){
+		List<ScRequestSupplierItem>	results	=	listSupplierItems1;
+		if(listSupplierItems2 != null){
+			for(ScRequestSupplierItem supplierItem: listSupplierItems2){
+				if(!isContain(listSupplierItems1, supplierItem)){
+					results.add(supplierItem);
+				}
+			}
+		}
+		return results;
+	}
+	private	static	boolean	isContain(List<ScRequestSupplierItem> supplierItems, ScRequestSupplierItem supplierItem){
+		boolean	result	=	false;
+		if(supplierItem != null && supplierItems != null){
+			CmSupplierItem	cmSupplierItem	=	supplierItem.getCmSupplierItem();
+			Long	supplierItemId = cmSupplierItem.getSupplierItemId();
+			for(ScRequestSupplierItem supplierItem2: supplierItems){
+				if(supplierItemId.equals(Long.valueOf(supplierItem2.getCmSupplierItem().getSupplierItemId()))){
+					result	=	true;
+					break;
+				}
+			}
+		}
 		return result;
 	}
 }

@@ -12,29 +12,16 @@
 		<h:outputStylesheet library="ep/css" name="ep.css" />
 	</h:head>
 	<ui:define name="contentSection">
-			<div align="right" id="div_globe_11">
-				<c:if test="#{directPurchaseBackingBean.managedBean.requestList.pmStatus.statusId eq SourcingConstants.requestListPendingApproval}">
-					<ui:repeat var="action" value="#{directPurchaseBackingBean.managedBean.outComes}">
-							<p:commandButton value="#{action}" process="@all"
-								styleClass="ui-button"
-								actionListener="#{directPurchaseBackingBean.updateBpmTask(action)}" />
-						</ui:repeat>
-				</c:if>
-				<p:commandButton process="@all" value="#{lbl['lbl.ss.submit']}" rendered="#{directPurchaseBackingBean.managedBean.requestList.pmStatus.statusId ne SourcingConstants.requestListPendingApproval}"  action="#{directPurchaseBackingBean.submitAction('submit')}" icon="icon-submit"></p:commandButton>
-				<p:commandButton disabled="#{directPurchaseBackingBean.managedBean.requestList.pmStatus.statusId gt SourcingConstants.requestListRecommendedSupplier}" value="#{lbl['lbl.ss.action.simple.quote']}" actionListener="#{directPurchaseBackingBean.simpleQuoteAction}"
-				oncomplete="simpleQuoteBid.show();" />
-			<p:commandButton disabled="#{directPurchaseBackingBean.managedBean.requestList.pmStatus.statusId gt SourcingConstants.requestListRecommendedSupplier}" value="#{lbl['lbl.ss.action.simple.bid']}" actionListener="#{directPurchaseBackingBean.simpleBidAction}"
-				onclick="simpleQuoteBid.show();" />
-			<p:button disabled="#{directPurchaseBackingBean.managedBean.requestList.pmStatus.statusId ge SourcingConstants.requestListPendingApproval}" value="#{lbl['lbl.ss.action.clone']}" icon="icon-clone"/>
-			</div>
-			<ui:include src="/xhtml/ss/directpurchase/marketResearch.xhtml"></ui:include>
-		<!-- p:tabView id="dpwidget" dynamic="true" orientation="left" widgetVar="dpwidget" activeIndex="#{directPurchaseBackingBean.managedBean.activeTabIndex}">
-			<p:tab id="marketResearch" title="#{lbl['lbl.ss.sidemenu.market.research']}">
-				
+		<p:tabView id="dpwidget" dynamic="true" orientation="top" widgetVar="dpwidget" activeIndex="#{directPurchaseBackingBean.managedBean.activeTabIndex}">
+			<!-- p:tab id="planInfo" title="#{lbl['lbl.sc.tab.title.plan.info']}" rendered="#{directPurchaseBackingBean.managedBean.requestNote.ppPlan ne null}">
+				<ui:include src="/xhtml/ss/directpurchase/planInfo.xhtml"></ui:include>
+			</p:tab --> 
+			<p:tab id="catalogue" title="#{lbl['lbl.ss.tab.search.catalogue']}">
+				<ui:include src="/xhtml/cm/catalogue/supplierItemSearch.xhtml"></ui:include>
 			</p:tab>
-			<p:tab id="requestList" title="#{lbl['lbl.ss.sidemenu.request.list']}">
+			<p:tab id="marketResearchTab" title="#{lbl['lbl.sc.tab.request.note']}">
 				<ui:include src="/xhtml/ss/directpurchase/requestList.xhtml"></ui:include>
 			</p:tab>
-		</p:tabView -->
+		</p:tabView>
 	</ui:define>
 </ui:composition>

@@ -13,7 +13,7 @@ import my.ep.persistence.entity.pm.common.PmCity;
 import my.ep.persistence.entity.pm.common.PmDistrict;
 import my.ep.persistence.entity.pm.common.PmDivision;
 import my.ep.persistence.entity.pm.common.PmState;
-import my.ep.persistence.entity.ss.directpurchase.ScQBZone;
+import my.ep.persistence.entity.ss.directpurchase.ScQuoteZone;
 import my.ep.web.backingbean.ss.directpurchase.LocationDTO;
 import my.ep.web.util.lookupservice.BusinessDelegate;
 
@@ -73,7 +73,7 @@ public class LocationSingleton {
 			//update the relationship for the parent
 			if(pmState.getPmDistricts() != null && !pmState.getPmDistricts().isEmpty()){
 				for(PmDistrict district: pmState.getPmDistricts()){
-					district.setPmState(pmState);
+					//district.setPmState(pmState);
 					if(district.getPmCities() != null && !district.getPmCities().isEmpty()){
 						for(PmCity city: district.getPmCities()){
 							city.setPmDistrict(district);
@@ -86,7 +86,7 @@ public class LocationSingleton {
 					division.setPmState(pmState);
 					if(division.getPmDistricts() != null && !division.getPmDistricts().isEmpty()){
 						for(PmDistrict district: division.getPmDistricts()){
-							district.setPmState(pmState);
+							//district.setPmState(pmState);
 							if(district.getPmCities() != null && !district.getPmCities().isEmpty()){
 								for(PmCity city: district.getPmCities()){
 									city.setPmDistrict(district);
@@ -193,7 +193,7 @@ public class LocationSingleton {
 	 * @param listCities
 	 * @return
 	 */
-	public TreeNode buildZoneTree(ScQBZone zone, List<PmState> listStates, List<PmDistrict> listDistricts, List<PmDivision> listDivisions, List<PmCity> listCities) {
+	public TreeNode buildZoneTree(ScQuoteZone zone, List<PmState> listStates, List<PmDistrict> listDistricts, List<PmDivision> listDivisions, List<PmCity> listCities) {
 		TreeNode rootLocationTree = new DefaultTreeNode("root", null);
 		Map<PmState, Map<PmDistrict,List<PmCity>>> mapStatesDistrictsCities = getUniqueStateDistrictsCities(listDistricts, listCities);
 		Map<PmState,Map<PmDivision,Map<PmDistrict,List<PmCity>>>> mapStatesDivisionsDistrictsCities = getUniqueStatesDivisionsDistrictsCities(listDistricts, listCities);

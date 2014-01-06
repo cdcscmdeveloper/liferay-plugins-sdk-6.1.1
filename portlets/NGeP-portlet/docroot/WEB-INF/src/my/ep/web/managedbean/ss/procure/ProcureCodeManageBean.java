@@ -24,6 +24,7 @@ public class ProcureCodeManageBean extends BaseManagedBean {
 	private ProcurementPlanSearchBean planSearchBean;
 
 	private List<PpPlan> procurementPlanList;
+	private	PpPlan		currentPlan = new PpPlan();
 
 	public ProcureCodeManageBean() throws Exception {
 		super();
@@ -45,4 +46,13 @@ public class ProcureCodeManageBean extends BaseManagedBean {
 	public void setPlanSearchBean(ProcurementPlanSearchBean planSearchBean) {
 		this.planSearchBean = planSearchBean;
 	}
+
+	public PpPlan getCurrentPlan() {
+		return currentPlan;
+	}
+
+	public void setCurrentPlan(PpPlan currentPlan) {
+		this.currentPlan = currentPlan;
+	}
+	
 }

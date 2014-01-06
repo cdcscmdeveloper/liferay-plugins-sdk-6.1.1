@@ -93,7 +93,9 @@
 			</p:column>
 
 			<p:column headerText="Action" style="width:6%">
-				<p:graphicImage value="/resources/ep/images/design/edit.png"></p:graphicImage>
+				<p:commandLink actionListener="#{procurementListBackingBean.editPlan(procurementObj)}" update="@([id$=planInforDialog])" oncomplete="procurePlanPopup.show();">
+					<p:graphicImage value="/resources/ep/images/design/edit.png"></p:graphicImage>
+				</p:commandLink>
 				<p:commandLink value="createBPMTask"
 					action="#{procurementListBackingBean.initiateBPMTask(procurementObj)}"
 					rendered="true" update="procureList" process="@this">
@@ -103,5 +105,5 @@
 
 		</p:dataTable>
 	</p:panel>
-
+	<ui:include src="/xhtml/ss/procure/procurePlanPopup.xhtml"></ui:include>
 </ui:composition>

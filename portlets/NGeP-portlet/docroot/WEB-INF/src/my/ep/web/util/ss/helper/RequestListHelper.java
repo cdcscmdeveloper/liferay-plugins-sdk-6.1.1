@@ -9,15 +9,16 @@ import java.util.Set;
 
 import my.ep.persistence.entity.cm.catalog.CmItem;
 import my.ep.persistence.entity.cm.catalog.CmSupplierItem;
+import my.ep.persistence.entity.pm.authorization.PmOrgProfile;
 import my.ep.persistence.entity.sm.SmSupplier;
 import my.ep.persistence.entity.ss.directpurchase.ScRequestList;
-import my.ep.persistence.entity.ss.directpurchase.ScRequestListItem;
+import my.ep.persistence.entity.ss.directpurchase.ScRequestItem;
 import my.ep.persistence.entity.ss.directpurchase.ScRequestSupplierItem;
 
 public class RequestListHelper {
 	public	static	List<ScRequestSupplierItem>	getRecommendRequestSupplierItems(ScRequestList requestList){
 		List<ScRequestSupplierItem>	results	=	new ArrayList<ScRequestSupplierItem>();
-		for(ScRequestListItem requestListItem: requestList.getRequestItems()){
+		for(ScRequestItem requestListItem: requestList.getRequestItems()){
 			for(ScRequestSupplierItem supplierItem: requestListItem.getSupplierItems()){
 				if(supplierItem.getIsRecommended()){
 					results.add(supplierItem);
@@ -27,9 +28,9 @@ public class RequestListHelper {
 		return results;
 	}
 	
-	public	static	boolean	isMultipleRecommend(List<ScRequestListItem> requestListItems){
+	public	static	boolean	isMultipleRecommend(List<ScRequestItem> requestListItems){
 		int numberOfSelectedItem	= 0;
-		for(ScRequestListItem requestListItem: requestListItems){
+		for(ScRequestItem requestListItem: requestListItems){
 			if(requestListItem.isSelectedCheckBox()){
 				numberOfSelectedItem = numberOfSelectedItem + 1;
 			}
@@ -41,8 +42,8 @@ public class RequestListHelper {
 		}
 	}
 	
-	public	static	List<ScRequestListItem>	removeSelectedItem(List<ScRequestListItem> requestListItems){
-		for(ScRequestListItem requestListItem: requestListItems){
+	public	static	List<ScRequestItem>	removeSelectedItem(List<ScRequestItem> requestListItems){
+		for(ScRequestItem requestListItem: requestListItems){
 			if(requestListItem.isSelectedCheckBox()){
 				requestListItems.remove(requestListItem);
 			}
@@ -50,9 +51,9 @@ public class RequestListHelper {
 		return requestListItems;
 	}
 	
-	public	static	Collection<SmSupplier>	getRecommendSupplier(List<ScRequestListItem> requestListItems){
+	public	static	Collection<SmSupplier>	getRecommendSupplier(List<ScRequestItem> requestListItems){
 		Map<Long,SmSupplier>	uniqueSmSuppliers	=	new HashMap<Long,SmSupplier>();
-		for(ScRequestListItem requestListItem: requestListItems){
+		for(ScRequestItem requestListItem: requestListItems){
 			if(requestListItem.isSelectedCheckBox()){
 				for(ScRequestSupplierItem requestSupplierItem: requestListItem.getSupplierItems()){
 					uniqueSmSuppliers.put(requestSupplierItem.getSmSupplier().getSupplierId(), requestSupplierItem.getSmSupplier());
@@ -61,8 +62,8 @@ public class RequestListHelper {
 		}
 		return uniqueSmSuppliers.values();
 	}
-	public static	List<ScRequestListItem>		getUniqueItemList(List<CmSupplierItem> supplierItems){
-		List<ScRequestListItem>	results	=	new ArrayList<ScRequestListItem>();
+	public static	List<ScRequestItem>		getUniqueItemList(List<CmSupplierItem> supplierItems){
+		List<ScRequestItem>	results	=	new ArrayList<ScRequestItem>();
 		Map<CmItem, List<CmSupplierItem>>	uniqueItemList	=	new HashMap<CmItem, List<CmSupplierItem>>();
 		
 		for(CmSupplierItem supplierItem: supplierItems){
@@ -77,10 +78,18 @@ public class RequestListHelper {
 		Set<CmItem>	cmItems	=	uniqueItemList.keySet();
 		for(CmItem cmItem: cmItems){
 			List<CmSupplierItem>	supplierItemList	=	uniqueItemList.get(cmItem);
-			ScRequestListItem	requestListItem	=	RequestListItemHelper.createRequestListItem(cmItem);
+			ScRequestItem	requestListItem	=	RequestListItemHelper.createRequestListItem(cmItem);
 			requestListItem.setSupplierItems(RequestSupplierItemHelper.createRequestSupplierItems(requestListItem, supplierItemList));
 			results.add(requestListItem);
 		}
 		return results;
+	}
+	
+	public	static	PmOrgProfile	getMinistryOrgProfile(PmOrgProfile requestListOrgProfile){
+		if(requestListOrgProfile != null && requestListOrgProfile.getParentOrgProfile() != null){
+			return getMinistryOrgProfile(requestListOrgProfile.getParentOrgProfile());
+		}else{
+			return requestListOrgProfile;
+		}
 	}
 }

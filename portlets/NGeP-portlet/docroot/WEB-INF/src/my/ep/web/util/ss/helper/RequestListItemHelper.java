@@ -1,11 +1,11 @@
 package my.ep.web.util.ss.helper;
 
 import my.ep.persistence.entity.cm.catalog.CmItem;
-import my.ep.persistence.entity.ss.directpurchase.ScRequestListItem;
+import my.ep.persistence.entity.ss.directpurchase.ScRequestItem;
 
 public class RequestListItemHelper {
-	public	static	ScRequestListItem	createRequestListItem(CmItem cmItem){
-		ScRequestListItem result	=	new ScRequestListItem();
+	public	static	ScRequestItem	createRequestListItem(CmItem cmItem){
+		ScRequestItem result	=	new ScRequestItem();
 		result.setCmItem(cmItem);
 		result.setItemName(cmItem.getItemName());
 		result.setItemDesc(cmItem.getItemDesc());

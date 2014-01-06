@@ -21,15 +21,12 @@ import my.ep.dto.pm.common.status.StatusReqDTO;
 import my.ep.dto.pm.common.status.StatusResDTO;
 import my.ep.dto.pp.procurementplan.ProcurementPlanReqDTO;
 import my.ep.dto.pp.procurementplan.ProcurementPlanResDTO;
-import my.ep.dto.ss.directpurchase.RequestListReqDTO;
-import my.ep.dto.ss.directpurchase.RequestListResDTO;
 import my.ep.dto.ss.quationtender.QuationTenderReqDTO;
 import my.ep.dto.ss.quationtender.QuationTenderResDTO;
 import my.ep.jaxb.sc.directpurchasedata.SCDirectPurchaseDataType;
 import my.ep.persistence.entity.pm.authorization.PmOrgProfile;
 import my.ep.persistence.entity.pm.common.PmStatus;
 import my.ep.persistence.entity.pp.procurementplan.PpPlan;
-import my.ep.persistence.entity.ss.directpurchase.ScRequestList;
 import my.ep.persistence.entity.ss.quationtender.ScQt;
 import my.ep.util.lookupservice.EpBpmBusinessDelegate;
 import my.ep.util.lookupservice.EpEjbBusinessDelegate;
@@ -61,21 +58,13 @@ public class ProcurementListBackingBean extends BaseBackingBean<ProcureCodeManag
 		if (ProcurementPlanConst.PROCUREMENT_DIRECT_PURCHASE.equalsIgnoreCase(ppPlan.getPpPlanMaster().getProcurementMode())) {
 			IDirectPurchaseSO directPurchaseSO = (IDirectPurchaseSO) BusinessDelegate.getInstance().getServiceObject(SourcingConst.SOURCING_MODULE, IDirectPurchaseSO.class);
 			// direct purchase, create empty request list and initial BPM task
-			ScRequestList	requestList	=	new ScRequestList();
-			requestList.setPpPlan(ppPlan);
-			requestList.setProcurementType("N");//hard code to normal first
 			//set status to new
 			PmStatus	status	=	new	PmStatus();
 			status.setStatusId(SourcingConstants.REQUEST_LIST_NEW);
-			requestList.setPmStatus(status);
 			
 			//TODO hard code org profile first
 			PmOrgProfile	orgProfile	=	new PmOrgProfile();
 			orgProfile.setOrgProfileId(1L);
-			requestList.setPmOrgProfile(orgProfile);
-			RequestListReqDTO requestListReqDTO = new RequestListReqDTO();
-			requestListReqDTO.setRequestListDetail(requestList);
-			RequestListResDTO requestListResDTO = directPurchaseSO.saveRequestList(requestListReqDTO);
 			// Initial BPM task
 			IBpmSO bpmSO = (IBpmSO) EpBpmBusinessDelegate.getInstance().getServiceObject(IBpmSO.class);
 			FacesScopes facesScopes = new FacesScopes();
@@ -85,7 +74,8 @@ public class ProcurementListBackingBean extends BaseBackingBean<ProcureCodeManag
 			reqDTO.setCtxToken(token);
 			reqDTO.setProcessId(SCProcessNameConst.DIRECTPURCHASE_CREATION_PROCESS_ID);
 			SCDirectPurchaseDataType obj = new SCDirectPurchaseDataType();
-			obj.setDpId(requestListResDTO.getRequestListDetail().getRequestListId().intValue());
+			obj.setDpId(ppPlan.getPlanId().intValue());
+			obj.setDpMode("PP");
 			obj.setPtj("Asdqwe");
 			// obj.getSuppliers().add(String.valueOf(
 			// this.getManagedBean().getSelectedItem().getSmSupplier().getSupplierId()));
@@ -118,9 +108,9 @@ public class ProcurementListBackingBean extends BaseBackingBean<ProcureCodeManag
 			StatusResDTO pmStatus = iStatusSO.retrieveStatusByStatusId(reqDTO);
 			PmStatus status = pmStatus.getPmStatus();
 			scQt.setPmStatus(status);
-		QTDetailBackingBean backingBean= new QTDetailBackingBean();
-		backingBean.getManagedBean().setQt(scQt);
-		QuationTenderReqDTO tenderReqDTO = backingBean.prepareQTInfo();
+			QTDetailBackingBean backingBean= new QTDetailBackingBean();
+			backingBean.getManagedBean().setQt(scQt);
+			QuationTenderReqDTO tenderReqDTO = backingBean.prepareQTInfo();
 			IQTDetailSO detailSO= EpEjbBusinessDelegate.getInstance().getServiceObject(QTConstants.SS_MODULE,IQTDetailSO.class);
 			
 			QuationTenderResDTO tenderResDTO = (QuationTenderResDTO) detailSO.createQTforPPlan(tenderReqDTO);
@@ -145,21 +135,12 @@ public class ProcurementListBackingBean extends BaseBackingBean<ProcureCodeManag
 		}
 	}
 
-
-	public void test() {
-		IBpmSO bpmSO = (IBpmSO) EpBpmBusinessDelegate.getInstance().getServiceObject(IBpmSO.class);
-		String ctx = bpmSO.authenticate("roslan", "welcome1");
-		BpmRequestDTO reqDTO = new BpmRequestDTO();
-		reqDTO.setCtxToken(ctx);
-
-		reqDTO.setProcessId("Quotation_Tender.DirectPurchase");
-		reqDTO.setOutcome("");
-		// PSBudgetDataType obj = new PSBudgetDataType();
-		// obj.setApprover("Asdqwe");
-		// obj.setBudgetId("Asdqwe");
-		// obj.setPtj("Asdqwe");
-		// reqDTO.setPojo(obj);
-		BpmResponseDTO res = bpmSO.initiateAndUpdateTask(reqDTO);
+	public	void	editPlan(PpPlan plan){
+		getManagedBean().setCurrentPlan(plan);
+	}
+	
+	public	String	updatePlan(){
+		return "/xhtml/shared/acknowledge.xhtml";
 	}
 
 	/**

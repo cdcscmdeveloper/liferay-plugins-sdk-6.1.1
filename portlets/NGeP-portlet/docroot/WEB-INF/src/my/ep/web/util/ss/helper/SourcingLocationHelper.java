@@ -7,14 +7,14 @@ import my.ep.persistence.entity.pm.common.PmCity;
 import my.ep.persistence.entity.pm.common.PmDistrict;
 import my.ep.persistence.entity.pm.common.PmDivision;
 import my.ep.persistence.entity.pm.common.PmState;
-import my.ep.persistence.entity.ss.directpurchase.ScQBZone;
-import my.ep.persistence.entity.ss.directpurchase.ScQBZoneLocation;
+import my.ep.persistence.entity.ss.directpurchase.ScQuoteZone;
+import my.ep.persistence.entity.ss.directpurchase.ScQuoteZoneLocation;
 import my.ep.web.backingbean.ss.directpurchase.LocationDTO;
 
 public class SourcingLocationHelper {
-	public	static	List<PmState>	getStates(ScQBZone zone){
+	public	static	List<PmState>	getStates(ScQuoteZone zone){
 		List<PmState>	results	=	new ArrayList<>();
-		for(ScQBZoneLocation location: zone.getScQBZoneLocations()){
+		for(ScQuoteZoneLocation location: zone.getScQBZoneLocations()){
 			if(location.getPmState() != null){
 				results.add(location.getPmState());
 			}
@@ -30,9 +30,9 @@ public class SourcingLocationHelper {
 		}
 		return results;
 	}
-	public	static	List<PmDistrict>	getDistricts(ScQBZone zone){
+	public	static	List<PmDistrict>	getDistricts(ScQuoteZone zone){
 		List<PmDistrict>	results	=	new ArrayList<PmDistrict>();
-		for(ScQBZoneLocation location: zone.getScQBZoneLocations()){
+		for(ScQuoteZoneLocation location: zone.getScQBZoneLocations()){
 			if(location.getPmDistrict() != null){
 				results.add(location.getPmDistrict());
 			}
@@ -48,9 +48,9 @@ public class SourcingLocationHelper {
 		}
 		return results;
 	}
-	public	static	List<PmDivision>	getDivisions(ScQBZone zone){
+	public	static	List<PmDivision>	getDivisions(ScQuoteZone zone){
 		List<PmDivision>	results	=	new ArrayList<PmDivision>();
-		for(ScQBZoneLocation location: zone.getScQBZoneLocations()){
+		for(ScQuoteZoneLocation location: zone.getScQBZoneLocations()){
 			if(location.getDivision() != null){
 				results.add(location.getDivision());
 			}
@@ -66,9 +66,19 @@ public class SourcingLocationHelper {
 		}
 		return results;
 	}
-	public	static	List<PmCity>	getCities(ScQBZone zone){
+	public	static	ScQuoteZone	getZoneFromLocationDTOs(List<LocationDTO> locationDTOs){
+		ScQuoteZone result	=	null;
+		for(LocationDTO locationDTO: locationDTOs){
+			if(locationDTO.getZone() != null){
+				result = locationDTO.getZone();
+				break;
+			}
+		}
+		return result;
+	}
+	public	static	List<PmCity>	getCities(ScQuoteZone zone){
 		List<PmCity>	results	=	new ArrayList<PmCity>();
-		for(ScQBZoneLocation location: zone.getScQBZoneLocations()){
+		for(ScQuoteZoneLocation location: zone.getScQBZoneLocations()){
 			if(location.getCity() != null){
 				results.add(location.getCity());
 			}

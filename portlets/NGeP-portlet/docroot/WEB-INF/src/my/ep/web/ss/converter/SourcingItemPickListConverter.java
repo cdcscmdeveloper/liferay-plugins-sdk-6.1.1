@@ -5,7 +5,7 @@ import javax.faces.context.FacesContext;
 import javax.faces.convert.Converter;
 import javax.faces.convert.FacesConverter;
 
-import my.ep.persistence.entity.ss.directpurchase.ScRequestListItem;
+import my.ep.persistence.entity.ss.directpurchase.ScRequestItem;
 
 import org.primefaces.component.picklist.PickList;
 import org.primefaces.model.DualListModel;
@@ -19,7 +19,7 @@ public class SourcingItemPickListConverter implements Converter {
 			Object dualList = ((PickList) arg1).getValue();
 			DualListModel dl = (DualListModel) dualList;
 			for (Object o : dl.getSource()) {
-				ScRequestListItem	item	=	(ScRequestListItem) o;
+				ScRequestItem	item	=	(ScRequestItem) o;
 				String id = "";
 				//item must be catalogue item or bid/quote item 
 				if(item.getRequestListItemId() != null){
@@ -35,7 +35,7 @@ public class SourcingItemPickListConverter implements Converter {
 			}
 			if (ret == null)
 				for (Object o : dl.getTarget()) {
-					ScRequestListItem	item	=	(ScRequestListItem) o;
+					ScRequestItem	item	=	(ScRequestItem) o;
 					String id = "";
 					//item must be catalogue item or bid/quote item 
 					if(item.getRequestListItemId() != null){
@@ -55,8 +55,8 @@ public class SourcingItemPickListConverter implements Converter {
 	@Override
 	public String getAsString(FacesContext arg0, UIComponent arg1, Object arg2) {
 		String str = "";
-		if (arg2 instanceof ScRequestListItem) {
-			ScRequestListItem	item	=	(ScRequestListItem) arg2;
+		if (arg2 instanceof ScRequestItem) {
+			ScRequestItem	item	=	(ScRequestItem) arg2;
 			if(item.getRequestListItemId() != null){
 				str = str + item.getRequestListItemId();
 			}else{
