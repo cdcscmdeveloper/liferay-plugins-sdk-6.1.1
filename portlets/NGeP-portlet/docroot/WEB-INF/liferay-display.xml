@@ -117,6 +117,7 @@
 		<portlet id="BpmTaskList"></portlet>
 		<portlet id="reviewExtensionRequest"></portlet>
 		<portlet id="reviewExtensionMaintenance"></portlet>
+		<portlet id="Welcome"></portlet>
 	</category>
 
 	<category name="Template">
