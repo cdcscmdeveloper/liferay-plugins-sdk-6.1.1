@@ -30,72 +30,90 @@
 				<td><p:inputText /> %</td>
 			</tr>
 		</table>
+	</p:panel>
 
-		<p:panel header="Bank Information">
-			<p:dataTable>
-<!-- 				<f:facet name="header"></f:facet> -->
-				<p:column>
-					<f:facet name="header">Bank Name</f:facet>
-				</p:column>
+	<p:panel header="Bank Information" toggleable="true">
+		<p:dataTable>
+			<!-- 				<f:facet name="header"></f:facet> -->
+			<p:column>
+				<f:facet name="header">Bank Name</f:facet>
+			</p:column>
 
-				<p:column>
-					<f:facet name="header">Account No.</f:facet>
-				</p:column>
+			<p:column>
+				<f:facet name="header">Account No.</f:facet>
+			</p:column>
 
-				<p:column>
-					<f:facet name="header">Cheque Signatory Name</f:facet>
-				</p:column>
+			<p:column>
+				<f:facet name="header">Cheque Signatory Name</f:facet>
+			</p:column>
 
-				<p:column>
-					<f:facet name="header">Terms and Conditions</f:facet>
-				</p:column>
-			</p:dataTable>
+			<p:column>
+				<f:facet name="header">Terms and Conditions</f:facet>
+			</p:column>
+		</p:dataTable>
 
-			<div align="right">
-				<p:commandButton value="Add" />
-				<p:commandButton value="Remove" />
-			</div>
-		</p:panel>
+		<div align="right">
+			<p:commandButton value="Add" />
+			<p:commandButton value="Remove" />
+		</div>
 	</p:panel>
 
 	<p:panel header="Check List" toggleable="true">
 		<table class="rptTbl">
 			<tr>
-				<td><p:outputLabel><p:selectBooleanCheckbox id="bs" /></p:outputLabel></td>
+				<td><p:outputLabel>
+						<p:selectBooleanCheckbox id="bs" />
+					</p:outputLabel></td>
 				<td>Bank Statement</td>
-				
-				<td><p:outputLabel><p:selectBooleanCheckbox id="cb" /></p:outputLabel></td>
+
+				<td><p:outputLabel>
+						<p:selectBooleanCheckbox id="cb" />
+					</p:outputLabel></td>
 				<td>Cash Book</td>
 			</tr>
 
 
 			<tr>
-			<td><p:outputLabel><p:selectBooleanCheckbox id="chequeb" /></p:outputLabel></td>
+				<td><p:outputLabel>
+						<p:selectBooleanCheckbox id="chequeb" />
+					</p:outputLabel></td>
 				<td>Cheque Book</td>
-				
-				<td><p:outputLabel><p:selectBooleanCheckbox id="ff"/></p:outputLabel></td>
+
+				<td><p:outputLabel>
+						<p:selectBooleanCheckbox id="ff" />
+					</p:outputLabel></td>
 				<td>Financial Facilities</td>
 			</tr>
 
 			<tr>
-				<td><p:outputLabel><p:selectBooleanCheckbox id="in"/></p:outputLabel></td>
+				<td><p:outputLabel>
+						<p:selectBooleanCheckbox id="in" />
+					</p:outputLabel></td>
 				<td>Invoice/Note</td>
 
-				<td><p:outputLabel><p:selectBooleanCheckbox id="ks"/></p:outputLabel></td>
+				<td><p:outputLabel>
+						<p:selectBooleanCheckbox id="ks" />
+					</p:outputLabel></td>
 				<td>KWSP/SOCSO</td>
 			</tr>
 
 
 			<tr>
-				<td><p:outputLabel><p:selectBooleanCheckbox id="lb"/></p:outputLabel></td>
+				<td><p:outputLabel>
+						<p:selectBooleanCheckbox id="lb" />
+					</p:outputLabel></td>
 				<td>Ledger Book</td>
 
-				<td><p:outputLabel><p:selectBooleanCheckbox id="pv"/></p:outputLabel></td>
+				<td><p:outputLabel>
+						<p:selectBooleanCheckbox id="pv" />
+					</p:outputLabel></td>
 				<td>Payment Voucher</td>
 			</tr>
 
 			<tr>
-				<td><p:outputLabel><p:selectBooleanCheckbox id="uv"/></p:outputLabel></td>
+				<td><p:outputLabel>
+						<p:selectBooleanCheckbox id="uv" />
+					</p:outputLabel></td>
 				<td colspan="2">Unable To Verified The Document</td>
 			</tr>
 		</table>
