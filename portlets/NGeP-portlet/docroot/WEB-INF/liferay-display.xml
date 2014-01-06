@@ -34,7 +34,8 @@
 
 		<!-- Procurement Plan - START -->
 		<category name="category.ep.pp">
-			<portlet id="ppBudget"></portlet>
+			<portlet id="ppBudgetAlloc"></portlet>
+			<portlet id="ppBudgetDisburse"></portlet>
 			<portlet id="ppPlan"></portlet>
 			<portlet id="ppProcurementApproval"></portlet>
 			<portlet id="reviewBudgetAllocation"></portlet>

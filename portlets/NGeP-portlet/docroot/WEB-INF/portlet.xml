@@ -618,12 +618,12 @@
 
 	<!-- Procurement Plan - START -->
 	<portlet>
-		<portlet-name>ppBudget</portlet-name>
+		<portlet-name>ppBudgetAlloc</portlet-name>
 		<display-name>Budget Allocation</display-name>
 		<portlet-class>org.portletfaces.bridge.GenericFacesPortlet</portlet-class>
 		<init-param>
 			<name>javax.portlet.faces.defaultViewId.view</name>
-			<value>/xhtml/pp/budgetallocation/listBudget.xhtml</value>
+			<value>/xhtml/pp/budgetallocation/listBudgetAlloc.xhtml</value>
 		</init-param>
 		<expiration-cache>0</expiration-cache>
 		<supports>
@@ -632,7 +632,38 @@
 		</supports>
 		<portlet-info>
 			<title>Budget Allocation</title>
-			<short-title>ProcurementPlanBudget</short-title>
+			<short-title>ProcurementPlanBudgetAlloc</short-title>
+			<keywords></keywords>
+		</portlet-info>
+		<security-role-ref>
+			<role-name>administrator</role-name>
+		</security-role-ref>
+		<security-role-ref>
+			<role-name>guest</role-name>
+		</security-role-ref>
+		<security-role-ref>
+			<role-name>power-user</role-name>
+		</security-role-ref>
+		<security-role-ref>
+			<role-name>user</role-name>
+		</security-role-ref>
+	</portlet>
+	<portlet>
+		<portlet-name>ppBudgetDisburse</portlet-name>
+		<display-name>Budget Disbursement</display-name>
+		<portlet-class>org.portletfaces.bridge.GenericFacesPortlet</portlet-class>
+		<init-param>
+			<name>javax.portlet.faces.defaultViewId.view</name>
+			<value>/xhtml/pp/budgetdisbursement/listBudget.xhtml</value>
+		</init-param>
+		<expiration-cache>0</expiration-cache>
+		<supports>
+			<mime-type>text/html</mime-type>
+			<portlet-mode>view</portlet-mode>
+		</supports>
+		<portlet-info>
+			<title>Budget Disbursement</title>
+			<short-title>ProcurementPlanBudgetDisburse</short-title>
 			<keywords></keywords>
 		</portlet-info>
 		<security-role-ref>

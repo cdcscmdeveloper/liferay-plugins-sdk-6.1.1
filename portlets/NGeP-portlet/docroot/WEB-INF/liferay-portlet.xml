@@ -151,14 +151,24 @@
 
 	<!-- Procurement Plan - START -->
 	<portlet>
-		<portlet-name>ppBudget</portlet-name>
+		<portlet-name>ppBudgetAlloc</portlet-name>
 		<icon>/icon.png</icon>
 		<instanceable>false</instanceable>
 		<header-portlet-css>/css/ep/main.css</header-portlet-css>
 		<footer-portlet-javascript>
 			/js/main.js
 		</footer-portlet-javascript>
-		<css-class-wrapper>pp-bud-portlet</css-class-wrapper>
+		<css-class-wrapper>pp-budget-alloc-portlet</css-class-wrapper>
+	</portlet>
+	<portlet>
+		<portlet-name>ppBudgetDisburse</portlet-name>
+		<icon>/icon.png</icon>
+		<instanceable>false</instanceable>
+		<header-portlet-css>/css/ep/main.css</header-portlet-css>
+		<footer-portlet-javascript>
+			/js/main.js
+		</footer-portlet-javascript>
+		<css-class-wrapper>pp-budget-disburse-portlet</css-class-wrapper>
 	</portlet>
 	<portlet>
 		<portlet-name>ppPlan</portlet-name>
