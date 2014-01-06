@@ -20,11 +20,14 @@
 	  <table style="width: 100%">
 			<tr>
 			    <td style="width:200px;">  <p:outputLabel value="LOA No." /></td>
-			    <td> <p:selectOneMenu style="width:180px;" value="#{supplierBackingBean.managedBean.factoring.loa.loaId}" >
+			    <td> <p:selectOneMenu style="width:180px;" value="#{supplierBackingBean.managedBean.factoring.loa.loaId}"
+			         rendered="#{supplierBackingBean.managedBean.chkMenuOrTxtBox == null}" >
 				     <f:selectItem itemLabel="-Please Select--" itemValue="" />
 				     <f:selectItem itemLabel="LOA-123" itemValue="1" />
 				     <f:selectItem itemLabel="LOA-456" itemValue="2" />
-			         </p:selectOneMenu></td>
+			         </p:selectOneMenu>
+			          <p:inputText value="LOA-123" style="width:170px;" disabled="true"
+			           rendered="#{supplierBackingBean.managedBean.chkMenuOrTxtBox == 'BPM'}"></p:inputText></td>
 		       <td style="width:200px;"> 	<p:outputLabel value="LOA Date" /></td>
 		       <td><p:inputText style="width:170px;"  disabled="true"/> </td>
 		   </tr>

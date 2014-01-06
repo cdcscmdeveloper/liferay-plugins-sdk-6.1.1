@@ -36,14 +36,13 @@ public class SupplierManagedBean extends BaseManagedBean {
 	
 	private String[] action;
 	private String taskName;
-
+    private String chkMenuOrTxtBox;;
 	private Date endDate;
 	private String loaNo;
 	private Date startDate;
 	private Long contractNo;
 	private String contractName;
 	private String loginUser;
-	private String chkRenderPage ="BPM1";
 	private int selectedIndex;
 	private CtFactoring factoring;
 	private CtTermination termination;
@@ -222,14 +221,6 @@ public class SupplierManagedBean extends BaseManagedBean {
 		this.contractName = contractName;
 	}
 
-	public String getChkRenderPage() {
-		return chkRenderPage;
-	}
-
-	public void setChkRenderPage(String chkRenderPage) {
-		this.chkRenderPage = chkRenderPage;
-	}
-
 	public CtContract getCtContract() {
 		return ctContract;
 	}
@@ -237,4 +228,14 @@ public class SupplierManagedBean extends BaseManagedBean {
 	public void setCtContract(CtContract ctContract) {
 		this.ctContract = ctContract;
 	}
+
+	public String getChkMenuOrTxtBox() {
+		return chkMenuOrTxtBox;
+	}
+
+	public void setChkMenuOrTxtBox(String chkMenuOrTxtBox) {
+		this.chkMenuOrTxtBox = chkMenuOrTxtBox;
+	}
+	
+	
 }

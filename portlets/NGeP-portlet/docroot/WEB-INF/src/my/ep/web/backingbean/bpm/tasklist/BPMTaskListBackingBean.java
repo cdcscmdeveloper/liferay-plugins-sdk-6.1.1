@@ -13,6 +13,7 @@ import my.ep.biz.service.pm.common.status.IStatusSO;
 import my.ep.bpm.dto.BpmRequestDTO;
 import my.ep.bpm.dto.BpmResponseDTO;
 import my.ep.bpm.service.IBpmSO;
+import my.ep.constants.CTProcessNameConst;
 import my.ep.constants.FlProcessNameConst;
 import my.ep.dto.pm.common.status.StatusReqDTO;
 import my.ep.dto.pm.common.status.StatusResDTO;
@@ -75,13 +76,14 @@ public class BPMTaskListBackingBean extends
 //		temp.put("Circular Contract Maintenance","central-contract-circular-maintenance");
 //		temp.put("Circular Contract Maintenance", "panel-circular-maintenance");
 		temp.put("Circular Contract Cancellation", "cancel-circular");
-		temp.put("Factoring Company Request", "review-factoring-request");
+		temp.put(CTProcessNameConst.FACTORING_REQUEST_PROCESS_NAME+CTProcessNameConst.ACK_FACTORING_REQUEST_HT_NAME, "review-factoring-request");
+		temp.put(CTProcessNameConst.FACTORING_REQUEST_PROCESS_NAME+CTProcessNameConst.ENDORSE_FACTORING_REQUEST_HT_NAME, "review-factoring-request");
 		temp.put("Contract Creation", "fulfilment-details");
 		temp.put("Contract Activation Suspension Request", "contract-suspension");
 		temp.put("Contract Amendment Request", "contract-amendment");
 		temp.put("Contract Termination", "contract-termination");
 		temp.put("Agreement Creation", "contract-agreement");
-		temp.put("Bank Account Change Request", "change-bank-account");
+		temp.put(CTProcessNameConst.BANK_ACCOUNT_CHANGE_PROCESS_NAME+CTProcessNameConst.REVIEW_CB_REQUEST_HT_NAME, "change-bank-account");
 
 		//Fulfilment Management - Start
 		temp.put(FlProcessNameConst.CONTRACT_REQ_CREATION_PROCESS_NAME+FlProcessNameConst.REVIEW_CR_HT, "contract-request");

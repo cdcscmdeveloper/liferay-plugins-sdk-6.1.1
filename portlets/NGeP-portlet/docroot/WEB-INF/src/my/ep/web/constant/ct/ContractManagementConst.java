@@ -10,7 +10,7 @@ public class ContractManagementConst {
 	public static final String NAV_TO_BANK_ACCOUNT = "change-bank-account";
 	public static final String NAV_TO_CONTRACT_AGREEMENT = "contract-agreement";
 	public static final String NAV_TO_CONTRACT_SUP_AGREEMENT ="supplemental-agreement";
-	public static final String NAV_TO_CONTRACT_FACTORING = "request-factoring";
+	public static final String NAV_TO_CONTRACT_FACTORING = "review-factoring-request";
 	
 	
 	public static final String PROCESS_CONTRACT_CREATION = "Contract Creation";

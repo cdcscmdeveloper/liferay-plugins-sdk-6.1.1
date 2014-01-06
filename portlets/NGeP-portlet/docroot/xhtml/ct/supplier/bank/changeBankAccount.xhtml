@@ -22,11 +22,15 @@
             <tr>
                 <td style="width:200px;">  
                 <h:outputLabel for="contractId" value="Contract No." /></td>
-			    <td> <p:selectOneMenu id="contractId" value="#{supplierBackingBean.managedBean.contractNo}" style="width:180px;" disabled="false">
-				     <f:selectItem itemLabel="-Select One-" itemValue="" />
-				      <f:selectItems value="#{supplierBackingBean.populateContractList}"/>
+			    <td> <p:selectOneMenu id="contractId" value="#{supplierBackingBean.managedBean.contractNo}" 
+			          style="width:180px;" rendered="#{supplierBackingBean.managedBean.chkMenuOrTxtBox == null}">
+			           <f:selectItem itemLabel="-Select One-" itemValue="" />
+				       <f:selectItems value="#{supplierBackingBean.populateContractList}"/>
 				      <p:ajax event="change" process="@this" update="ChangeBankAcc" listener="#{supplierBackingBean.changeContractActionListener}"/>
-			         </p:selectOneMenu></td>
+			         </p:selectOneMenu>
+			         <p:inputText value="#{supplierBackingBean.managedBean.ctContract.latestContractVer.docNo}" style="width:170px;" disabled="true"
+			           rendered="#{supplierBackingBean.managedBean.chkMenuOrTxtBox == 'BPM'}"></p:inputText>
+			         </td>
 		         <td style="width:200px;">	<p:outputLabel value="#{lbl['lbl.ct.physicalNo']}" /></td>
 		         <td>	<p:inputText disabled="true" style="width:170px;"
 			               value="#{supplierBackingBean.managedBean.ctContract.latestContractVer.ctContractValue.contractPhysicalNo}"/>	</td>

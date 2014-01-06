@@ -79,18 +79,25 @@ public class SupplierBackingBean extends BaseBackingBean<SupplierManagedBean> {
 	@PostConstruct
 	public void init(){
 	    
+		if(this.getManagedBean().getCtContract() == null){
+			this.getManagedBean().setCtContract(new CtContract());
+			this.getManagedBean().getCtContract().setLatestContractVer(new CtContractVer());
+			
+		}
+		
 		if(this.getManagedBean().getFactoring() == null){
 			ContractBackingBean ctBB = new ContractBackingBean();
 			ctBB.initializeRemarkAndAttachement(getManagedBean().getRemarkList(), getManagedBean().getAttachmentList());
 			
 			this.getManagedBean().setFactoring(new CtFactoring());
 			this.getManagedBean().getFactoring().setCtContract(new CtContract());
+			this.getManagedBean().getFactoring().getCtContract().setLatestContractVer(new CtContractVer());
 			this.getManagedBean().getFactoring().setFinancialOrg(new PmFinancialOrg());
 			this.getManagedBean().getFactoring().setContractAdmin(new PmUser());
 			this.getManagedBean().getFactoring().setSmSupplier(new SmSupplier());
 			this.getManagedBean().getFactoring().setStatus(new PmStatus());
 			
-			this.getManagedBean().getFactoring().getCtContract().setContractId(1L);
+			this.getManagedBean().getFactoring().getCtContract().setContractId(11L);
 			this.getManagedBean().getFactoring().getFinancialOrg().setFinancialOrgId(1L);
 			this.getManagedBean().getFactoring().getContractAdmin().setUserId(27L);
 			this.getManagedBean().getFactoring().getStatus().setStatusId(1L);
@@ -99,6 +106,12 @@ public class SupplierBackingBean extends BaseBackingBean<SupplierManagedBean> {
 			this.getManagedBean().getFactoring().setAuthRefNo("123-09234-76453");
 			this.getManagedBean().getFactoring().setEffDate(new Date());
 			this.getManagedBean().getFactoring().setExpDate(new Date());
+			
+			this.getManagedBean().getFactoring().getCtContract().getLatestContractVer().setContractVerId(11L);
+			this.getManagedBean().getFactoring().getCtContract().getLatestContractVer().setStatus(new PmStatus());
+			this.getManagedBean().getFactoring().getCtContract().getLatestContractVer().getStatus().setStatusId(1L);
+			this.getManagedBean().getFactoring().getCtContract().getLatestContractVer().setDocType("RF");
+			this.getManagedBean().getFactoring().getCtContract().getLatestContractVer().setDocNo("8888878");
 		}
 		
 		if(this.getManagedBean().getCtTerminationReason() == null){
@@ -171,13 +184,13 @@ public class SupplierBackingBean extends BaseBackingBean<SupplierManagedBean> {
     		}
 
     		IContractSO contractSO = (IContractSO) BusinessDelegate.getInstance().getServiceObject("ct",IContractSO.class);
-    		ContractResDTO resDTO = contractSO.retrieveContractVer(ctReqDTO);
-    		this.getManagedBean().setContractVer(resDTO.getCtContractVer());
-
+    		ContractResDTO resDTO = contractSO.retrieveContract(ctReqDTO);
+    		this.getManagedBean().setCtContract(resDTO.getContract());
 
     		this.getManagedBean().setTaskName(res.getTaskName());
     		this.getManagedBean().setTaskId(taskId);
     		this.getManagedBean().setAction(res.getAction());
+    		this.getManagedBean().setChkMenuOrTxtBox("BPM");
     		if(res.getProcessName().equalsIgnoreCase("Bank Account Change Request")){
     			
     			FacesContext fc = FacesContext.getCurrentInstance();
@@ -245,6 +258,7 @@ public class SupplierBackingBean extends BaseBackingBean<SupplierManagedBean> {
 			 ContractSupplierResDTO resDTO = supplierSO.retrieveContractById(reqDTO);
 			 if(resDTO.isSuccessful()){
 			     this.getManagedBean().setCtContract(resDTO.getCtContract());
+			     this.getManagedBean().setContractNo(new Long(this.getManagedBean().getCtContract().getLatestContractVer().getDocNo()));
 			 }
 		} catch (Exception ex) {
 			log.error("Exception", ex);
@@ -273,8 +287,7 @@ public class SupplierBackingBean extends BaseBackingBean<SupplierManagedBean> {
 		    if (resDTO.isSuccessful()) {
 				
 				  log.info("Record saved successfully");
-				  FacesContext.getCurrentInstance().addMessage(null,new FacesMessage(FacesMessage.SEVERITY_INFO,"Record saved successfully.","Change Bank Account. : "+ 
-						  resDTO.getCtContractVer().getDocNo()));
+				  FacesContext.getCurrentInstance().addMessage(null,new FacesMessage(FacesMessage.SEVERITY_INFO,"Record saved successfully.","Change Bank Account. : "));
 				  if (!action.equalsIgnoreCase(BpmOutcomeConst.BPM_SAVE)) { 
 						renewSesionObject();
 						return "/xhtml/shared/acknowledge.xhtml";
@@ -344,16 +357,12 @@ public class SupplierBackingBean extends BaseBackingBean<SupplierManagedBean> {
 			 reqDTO = new ContractSupplierReqDTO();
 			 supplierSO = (IContractSupplierSO)BusinessDelegate.getInstance().getServiceObject("ct", IContractSupplierSO.class);
 		   	 reqDTO.setFactoring(this.getManagedBean().getFactoring());
-			
-			reqDTO.setOutcome(action);
-			if (action == BpmOutcomeConst.BPM_SAVE) {
-				reqDTO.setOutcome("");
-			}
-			FacesScopes facesScopes = new FacesScopes();
-			reqDTO.setToken(facesScopes.getBPMAuthenticationCtxToken());
-			reqDTO.setTaskId(this.getManagedBean().getTaskId());
-
-			  
+			 
+		   	 FacesScopes facesScopes = new FacesScopes();
+			 reqDTO.setToken(facesScopes.getBPMAuthenticationCtxToken());
+			 reqDTO.setOutcome(action);
+			 reqDTO.setTaskId(this.getManagedBean().getTaskId());
+			 reqDTO.setSupplierUserId(getFacesScopes().getUserSessionBean().getLoginId());
 			 ContractSupplierResDTO resDTO = supplierSO.saveFactoringRequest(reqDTO);
 			 if(resDTO.isSuccessful()) {
 					log.info("Record saved successfully");
