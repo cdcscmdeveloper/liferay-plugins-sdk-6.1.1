@@ -12,9 +12,9 @@
 			<tr>
 				<td id="tdTitle"><p:outputLabel value="* #{lbl['lbl.sm.businessregno']}" /></td>
 				<td id="tdContent"><p:inputText
-						value="#{registrationBackingBean.managedBean.smSupp.regNo}"  size="40"/></td>
+						value="#{registrationBackingBean.managedBean.smSupp.regNo}"  size="40" disabled="#{!registrationBackingBean.managedBean.smSupp.brandNew}"/></td>
 
-				<td id="tdTitle"><p:outputLabel value="Owner Name" /></td>
+				<td id="tdTitle"><p:outputLabel value="* Owner Name" /></td>
 				<td id="tdContent"><p:inputText
 						value="#{registrationBackingBean.managedBean.smSuppOwner.ownerName}"   size="40"/></td>
 			</tr>

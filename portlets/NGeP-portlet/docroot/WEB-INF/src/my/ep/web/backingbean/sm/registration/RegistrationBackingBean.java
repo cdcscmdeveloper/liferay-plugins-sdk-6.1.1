@@ -2,7 +2,6 @@ package my.ep.web.backingbean.sm.registration;
 
 import java.sql.Timestamp;
 import java.util.ArrayList;
-import java.util.List;
 
 import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
@@ -12,8 +11,6 @@ import javax.faces.context.FacesContext;
 import my.ep.biz.service.sm.registration.IRegistrationSO;
 import my.ep.dto.sm.registration.RegistrationReqDTO;
 import my.ep.dto.sm.registration.RegistrationResDTO;
-import my.ep.ntf.dto.NtfRequestDTO;
-import my.ep.ntf.service.INtfSO;
 import my.ep.persistence.entity.sm.SmAddress;
 import my.ep.persistence.entity.sm.SmAppl;
 import my.ep.persistence.entity.sm.SmPersonnel;
@@ -22,22 +19,12 @@ import my.ep.persistence.entity.sm.SmSupplierBank;
 import my.ep.persistence.entity.sm.SmSupplierCert;
 import my.ep.persistence.entity.sm.SmSupplierOwner;
 import my.ep.persistence.logging.LogKey;
-import my.ep.util.lookupservice.EpNtfBusinessDelegate;
 import my.ep.web.backingbean.BaseBackingBean;
 import my.ep.web.managedbean.sm.registration.RegistrationManagedBean;
 import my.ep.web.util.lookupservice.BusinessDelegate;
-import my.gov.ep.www.Schema._1_0.RetrieveMyIdentity.EPMFRq_Type;
-import my.gov.ep.www.Schema._1_0.RetrieveMyIdentity.EPMFRs_Type;
-import my.gov.ep.www.Schema._1_0.RetrieveMyIdentity.RetrieveMyIdentityRq_Type;
-import my.gov.ep.www.Schema._1_0.epmf.RqHeader_Type;
-import my.gov.ep.www.Schema._1_0.epmf.RqUID_Type;
 
 import org.apache.log4j.Logger;
 import org.apache.log4j.MDC;
-
-import RetrieveMyIdentity.RetrieveMyIdentityServiceBindingStub;
-import RetrieveMyIdentity.RetrieveMyIdentityServicePortType_PortType;
-import RetrieveMyIdentity.RetrieveMyIdentityServicePortType_ServiceLocator;
 
 @ManagedBean(name = "registrationBackingBean")
 @RequestScoped
@@ -319,7 +306,7 @@ public class RegistrationBackingBean extends
 		log.info("-----------------End submitRegisteration---------------");
 
 		if (resDTO.isSuccessful()) {
-			this.sendEmail();
+			//this.sendEmail();
 			FacesContext.getCurrentInstance().addMessage(
 					null,
 					new FacesMessage(FacesMessage.SEVERITY_INFO,
@@ -406,84 +393,84 @@ public class RegistrationBackingBean extends
 				+ this.getManagedBean().isSameAddress());
 	}
 
-	public void myIdentityVerification() {
-		log.info("-------myIdentityVerification-----------");
-		RetrieveMyIdentityServicePortType_ServiceLocator locator = new RetrieveMyIdentityServicePortType_ServiceLocator();
-		locator.setRetrieveMyIdentityServicePortTypePortEndpointAddress("http://192.168.120.14:8011/RetrieveMyIdentityService/Proxy_Services/RetrieveMyIdentity");
-		// EPMFRq_Type data = new EPMFRq_Type();
-		// RetrieveMyIdentityRq_Type rqType = new RetrieveMyIdentityRq_Type();
-		// rqType.setUserID("123456");
-		// data.setRetrieveMyIdentityRq(rqType);
-
-		try {
-			String URL = "http://192.168.120.14:8011/RetrieveMyIdentityService/Proxy_Services/RetrieveMyIdentity";
-
-			RetrieveMyIdentityServicePortType_ServiceLocator service = new RetrieveMyIdentityServicePortType_ServiceLocator();
-			service.setRetrieveMyIdentityServicePortTypePortEndpointAddress(URL);
-
-			RetrieveMyIdentityServicePortType_PortType port = service
-					.getRetrieveMyIdentityServicePortTypePort();
-
-			RetrieveMyIdentityServiceBindingStub binding = (RetrieveMyIdentityServiceBindingStub) port;
-			binding.setTimeout(1000);
-
-			RqUID_Type uid = new RqUID_Type();
-			uid.setAsyncRqUID("String");
-			uid.setRqUID("String");
-
-			RqHeader_Type rqHdr = new RqHeader_Type();
-			rqHdr.setConsumerID("String");
-			rqHdr.setGovOrgUnit("String");
-			rqHdr.setIpAddress("String");
-			rqHdr.setSegment("String");
-			rqHdr.setUID(uid);
-
-			RetrieveMyIdentityRq_Type retRq = new RetrieveMyIdentityRq_Type();
-			retRq.setICNumber("12345");
-
-			EPMFRq_Type rq = new EPMFRq_Type();
-			rq.setRqHeader(rqHdr);
-			rq.setRetrieveMyIdentityRq(retRq);
-
-			EPMFRs_Type epmfrs = port.inquire(rq);
-
-			System.out
-					.println(epmfrs.getRsHeader().getStatus().getStatusCode());
-			System.out.println(epmfrs.getRetrieveMyIdentityRs().getName());
-			System.out.println(epmfrs.getRetrieveMyIdentityRs()
-					.getPermanentAddrStateCode());
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-	}
-
-	private void sendEmail() {
-		System.out.println("initiateTask******");
-		INtfSO ntfSO = (INtfSO) EpNtfBusinessDelegate.getInstance()
-				.getOSBServiceObject(INtfSO.class);
-
-		NtfRequestDTO reqDTO = new NtfRequestDTO();
-		reqDTO.setTemplateId("399999");
-		reqDTO.setSenderId("4");
-		// reqDTO.setSendEmailOnly(true);
-
-		List<String> usrLst = new ArrayList<String>();
-		usrLst.add("27");
-		usrLst.add("28");
-		reqDTO.setUserIdArr(usrLst.toArray(new String[usrLst.size()]));
-
-		List<String> subParaLst = new ArrayList<String>();
-		subParaLst.add("#SM#");
-		reqDTO.setSubParaArr(subParaLst.toArray(new String[subParaLst.size()]));
-		List<String> cntParaLst = new ArrayList<String>();
-		cntParaLst.add("Jenson");
-
-		cntParaLst.add("http://google.com.my/andrew");
-		cntParaLst.add("U_0001_andrew");
-		cntParaLst.add("23434");
-		reqDTO.setCntParaArr(cntParaLst.toArray(new String[cntParaLst.size()]));
-
-		ntfSO.processAndPublish(reqDTO);
-	}
+//	public void myIdentityVerification() {
+//		log.info("-------myIdentityVerification-----------");
+//		RetrieveMyIdentityServicePortType_ServiceLocator locator = new RetrieveMyIdentityServicePortType_ServiceLocator();
+//		locator.setRetrieveMyIdentityServicePortTypePortEndpointAddress("http://192.168.120.14:8011/RetrieveMyIdentityService/Proxy_Services/RetrieveMyIdentity");
+//		// EPMFRq_Type data = new EPMFRq_Type();
+//		// RetrieveMyIdentityRq_Type rqType = new RetrieveMyIdentityRq_Type();
+//		// rqType.setUserID("123456");
+//		// data.setRetrieveMyIdentityRq(rqType);
+//
+//		try {
+//			String URL = "http://192.168.120.14:8011/RetrieveMyIdentityService/Proxy_Services/RetrieveMyIdentity";
+//
+//			RetrieveMyIdentityServicePortType_ServiceLocator service = new RetrieveMyIdentityServicePortType_ServiceLocator();
+//			service.setRetrieveMyIdentityServicePortTypePortEndpointAddress(URL);
+//
+//			RetrieveMyIdentityServicePortType_PortType port = service
+//					.getRetrieveMyIdentityServicePortTypePort();
+//
+//			RetrieveMyIdentityServiceBindingStub binding = (RetrieveMyIdentityServiceBindingStub) port;
+//			binding.setTimeout(1000);
+//
+//			RqUID_Type uid = new RqUID_Type();
+//			uid.setAsyncRqUID("String");
+//			uid.setRqUID("String");
+//
+//			RqHeader_Type rqHdr = new RqHeader_Type();
+//			rqHdr.setConsumerID("String");
+//			rqHdr.setGovOrgUnit("String");
+//			rqHdr.setIpAddress("String");
+//			rqHdr.setSegment("String");
+//			rqHdr.setUID(uid);
+//
+//			RetrieveMyIdentityRq_Type retRq = new RetrieveMyIdentityRq_Type();
+//			retRq.setICNumber("12345");
+//
+//			EPMFRq_Type rq = new EPMFRq_Type();
+//			rq.setRqHeader(rqHdr);
+//			rq.setRetrieveMyIdentityRq(retRq);
+//
+//			EPMFRs_Type epmfrs = port.inquire(rq);
+//
+//			System.out
+//					.println(epmfrs.getRsHeader().getStatus().getStatusCode());
+//			System.out.println(epmfrs.getRetrieveMyIdentityRs().getName());
+//			System.out.println(epmfrs.getRetrieveMyIdentityRs()
+//					.getPermanentAddrStateCode());
+//		} catch (Exception e) {
+//			e.printStackTrace();
+//		}
+//	}
+//
+//	private void sendEmail() {
+//		System.out.println("initiateTask******");
+//		INtfSO ntfSO = (INtfSO) EpNtfBusinessDelegate.getInstance()
+//				.getOSBServiceObject(INtfSO.class);
+//
+//		NtfRequestDTO reqDTO = new NtfRequestDTO();
+//		reqDTO.setTemplateId("399999");
+//		reqDTO.setSenderId("4");
+//		// reqDTO.setSendEmailOnly(true);
+//
+//		List<String> usrLst = new ArrayList<String>();
+//		usrLst.add("27");
+//		usrLst.add("28");
+//		reqDTO.setUserIdArr(usrLst.toArray(new String[usrLst.size()]));
+//
+//		List<String> subParaLst = new ArrayList<String>();
+//		subParaLst.add("#SM#");
+//		reqDTO.setSubParaArr(subParaLst.toArray(new String[subParaLst.size()]));
+//		List<String> cntParaLst = new ArrayList<String>();
+//		cntParaLst.add("Jenson");
+//
+//		cntParaLst.add("http://google.com.my/andrew");
+//		cntParaLst.add("U_0001_andrew");
+//		cntParaLst.add("23434");
+//		reqDTO.setCntParaArr(cntParaLst.toArray(new String[cntParaLst.size()]));
+//
+//		ntfSO.processAndPublish(reqDTO);
+//	}
 
 }

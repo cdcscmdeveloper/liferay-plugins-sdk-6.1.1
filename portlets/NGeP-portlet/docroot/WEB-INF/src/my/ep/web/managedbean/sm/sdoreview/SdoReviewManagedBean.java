@@ -3,6 +3,8 @@ package my.ep.web.managedbean.sm.sdoreview;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
 
+import my.ep.bpm.dto.BpmResponseDTO;
+import my.ep.jaxb.sm.mofregdata.SMMOFRegDataType;
 import my.ep.persistence.entity.sm.SmAppl;
 import my.ep.web.managedbean.BaseManagedBean;
 
@@ -16,6 +18,7 @@ public class SdoReviewManagedBean extends BaseManagedBean{
 	private String[] bpmAction;
 	private String taskId;
 	private String taskName;
+	private SMMOFRegDataType bpmPojo;
 
 	public SmAppl getSmAppl() {
 		return smAppl;
@@ -56,5 +59,14 @@ public class SdoReviewManagedBean extends BaseManagedBean{
 	public void setTaskName(String taskName) {
 		this.taskName = taskName;
 	}
+
+	public SMMOFRegDataType getBpmPojo() {
+		return bpmPojo;
+	}
+
+	public void setBpmPojo(SMMOFRegDataType bpmPojo) {
+		this.bpmPojo = bpmPojo;
+	}
+
 	
 }

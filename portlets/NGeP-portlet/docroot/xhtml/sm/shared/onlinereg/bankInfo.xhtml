@@ -5,7 +5,8 @@
 	xmlns:p="http://primefaces.org/ui"
 	xmlns:c="http://java.sun.com/jsp/jstl/core">
 
-	<p:panel header="Bank Information" toggleable="true">
+
+	<!-- <p:panel header="Bank Information" toggleable="true">
 		<table class="customTbl">
 			<tr>
 				<td id="tdTitle"><p:outputLabel
@@ -19,7 +20,31 @@
 				<td id="tdContent"><p:inputText /></td>
 			</tr>
 		</table>
+	</p:panel> -->
+	<p:panel header="Bank Information" toggleable="true" id="pnlBankInfo">
+		<p:dataTable var="bankInfo"
+			value="#{registrationBackingBean.managedBean.smAppl.smSupplierBanks}">
+			<p:column headerText="Bank Name">
+				<p:selectOneMenu>
+					<f:selectItem itemLabel="Select" itemValue="" />
+					<f:selectItem itemLabel="CIMB" itemValue="1" />
+				</p:selectOneMenu>
+			</p:column>
+			<p:column headerText="Account Number">
+				<p:inputText />
+			</p:column>
+		</p:dataTable>
+
+		<div align="right">
+			<p:commandButton value="Add"
+				action="#{registrationBackingBean.addSupplierBank}"
+				update="pnlBankInfo" />
+			<p:commandButton value="Remove"
+				action="#{registrationBackingBean.removeSupplierBank}"
+				update="pnlBankInfo" />
+		</div>
 	</p:panel>
+	<br />
 	<!-- <p:selectOneMenu value="#{registrationBackingBean.managedBean.smSuppBank.pmbank.bankId}">
 	<p:inputText value="#{registrationBackingBean.managedBean.smSuppBank.accountNo}"/>
 	-->

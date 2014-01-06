@@ -25,7 +25,7 @@
 				<td id="tdTitle"><p:outputLabel
 						value="* #{lbl['lbl.sm.businesscomptype']}" /></td>
 				<td id="tdContent"><p:selectOneMenu id="somId"
-						value="#{registrationBackingBean.managedBean.smSupp.businessType}">
+						value="#{registrationBackingBean.managedBean.smSupp.businessType}" disabled="#{!registrationBackingBean.managedBean.smSupp.brandNew}">
 						<f:selectItem itemLabel="Select" itemValue="" />
 						<f:selectItem itemLabel="ROB-Semenanjung" itemValue="G" />
 						<f:selectItem itemLabel="ROB-Sabah" itemValue="H" />

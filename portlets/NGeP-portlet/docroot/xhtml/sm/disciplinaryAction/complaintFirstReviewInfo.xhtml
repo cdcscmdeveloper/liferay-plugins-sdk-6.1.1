@@ -16,7 +16,13 @@
 			src="/xhtml/sm/shared/complaintRegistration/complaintBasicInfo.xhtml" />
 	</p:panel>
 
-	<p:panel header=" Send To PTPK For Review -1 " toggleable="true">
+	<p:panel header="First Review Info" toggleable="true">
+		<div align="right">
+			<p:commandLink value="Click Here" />
+			<p:outputLabel value="To download investigation report template" />
+		</div>
+		<br />
+		
 		<table class="customTbl">
 			<tr>
 				<td id="tdTitle"><p:outputLabel value="Report Sent to PTPK *" /></td>
@@ -29,8 +35,6 @@
 				<td id="tdTitle"><p:outputLabel
 						value="Initial Invesitgation Report*"></p:outputLabel></td>
 				<td id="tdContent"><p:fileUpload mode="simple" /></td>
-				<td colspan="2"><p:commandLink value="Click Here" /> <h:outputText
-						value="To download investigation report template" /></td>
 			</tr>
 			<!-- 
 				<tr>

@@ -42,8 +42,8 @@
 
 					<td><p:outputLabel value="* #{lbl['lbl.sm.identificationno']}" /></td>
 					<td id="tdContent"><p:inputText id="txtIdNumber"
-							value="#{registrationBackingBean.managedBean.smPersonnel.identificationNo}" size="40" />
-					</td>
+							value="#{registrationBackingBean.managedBean.smPersonnel.identificationNo}"
+							size="40" /></td>
 				</tr>
 
 				<c:if
@@ -155,7 +155,7 @@
 					<td id="tdContent"><p:inputText size="40" /></td>
 
 					<td id="tdTitle"><p:outputLabel value="Fax No" /></td>
-					<td id="tdContent"><p:inputText size="40" id="txtFaxNo"/></td>
+					<td id="tdContent"><p:inputText size="40" id="txtFaxNo" /></td>
 				</tr>
 
 				<tr>
@@ -175,16 +175,23 @@
 				<tr>
 					<td id="tdTitle"><p:outputLabel
 							value="* #{lbl['lbl.sm.confirmemail']}" /></td>
-					<td id="tdContent"><p:inputText size="40" id="conEmail"/></td>
+					<td id="tdContent"><p:inputText size="40" id="conEmail" /></td>
 				</tr>
 
 				<tr>
 					<td id="tdTitle"><p:outputLabel
 							value="#{lbl['lbl.sm.notificationmode']}" /></td>
-					<td id="tdContent"><p:selectManyCheckbox id="notificationMode">
-							<f:selectItem itemLabel="Email" itemValue="0" />
+					<td id="tdContent">
+						<!-- <p:selectManyCheckbox id="notificationMode">
+							<f:selectItem itemLabel="Email" itemValue="0" disabled ="true"/>
 							<f:selectItem itemLabel="SMS" itemValue="1" />
-						</p:selectManyCheckbox></td>
+						</p:selectManyCheckbox> --> 
+						<p:selectBooleanCheckbox
+							id="emailNotice" value="true" disabled="true" />Email
+						
+						<p:selectBooleanCheckbox
+							id="smsNotice" value="false" disabled="false" />SMS
+					</td>
 				</tr>
 			</table>
 		</p:panel>
