@@ -24,9 +24,10 @@ ul.child-menu li:hover {border: 1px solid #3B3B3B;}
 .hide {visibility: hidden;}
 .datetime {margin: 0 auto; width: 1250px; padding: 0 0 5px 0;}
 
-.sticky {position:fixed; margin:0 0 0 0; z-index:1; top:130px; right:0;}
+.sticky {position:fixed; margin:0 0 0 0; z-index:1; top:130px; right:0; width: 200px; background-color: #FFFFFF;}
 .sticky > a > img {width:250px;}
-#close {cursor:pointer; position:absolute; top:42px; right:15px;}
+#close {cursor:pointer; position:absolute; top:5px; right:3px;}
+.pqrcode {margin-top: -20px; margin-left: 5px; color: #FF0000; font-size: 16px; font-weight: bold;}
 
 
 /*  ----   dockbar   --------  */

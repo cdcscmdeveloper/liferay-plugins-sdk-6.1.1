@@ -176,7 +176,7 @@ $theme.include($body_top_include)
 	<header>
 	
 	<div class="sticky">
-		<img src="$images_folder/general/QRep.png" />
+		<img src="$images_folder/general/QRep.png" /><p class="pqrcode">Please scan QR Code for mobile devices.</p>
 		<div id="close"><img src="$images_folder/general/close.png" /></div>
 	</div>
 	
@@ -209,9 +209,9 @@ $theme.include($body_top_include)
                         <li class="btn-language">
                             <a href="#" id="SelectedLanguage">English</a>
                             <div class="dropdown-language-wrapper">
-								<a href="javascript:selectLanguage('en');"><p>English</p></a> 
+                            	<a href="javascript:selectLanguage('ms');"><p>Bahasa Malaysia</p></a> 
                                 <div class="clear"></div>                           
-								<a href="javascript:selectLanguage('ms');"><p>Bahasa Malaysia</p></a>                            
+								<a href="javascript:selectLanguage('en');"><p>English</p></a>                            
                             </div>
                         </li>
                     	
@@ -283,7 +283,7 @@ $theme.include($body_top_include)
                 	<li><a href="#">Media</a></li>
                 	<li><a href="#">Circular</a></li>
                 	<li><a href="#">Agency Policy</a></li>
-                	<li><a href="#">Help</a></li>
+                	<li><a href="#">FAQ</a></li>
                 	<li><a href="#">Privacy Policy</a></li>
                 	<li><a href="#">Sitemap</a></li>
                 	<li><a href="#">Security Policy</a></li>

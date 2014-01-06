@@ -168,9 +168,9 @@ $theme.include($body_top_include)
                         <li class="btn-language">
                             <a href="#" id="SelectedLanguage">English</a>
                             <div class="dropdown-language-wrapper">
-								<a href="javascript:selectLanguage('en');"><p>English</p></a> 
+                            	<a href="javascript:selectLanguage('ms');"><p>Bahasa Melayu</p></a>
                                 <div class="clear"></div>                           
-								<a href="javascript:selectLanguage('ms');"><p>Bahasa Melayu</p></a>                            
+								<a href="javascript:selectLanguage('en');"><p>English</p></a>                             
                             </div>
                         </li>
                     	#if (!$is_signed_in)
@@ -199,9 +199,9 @@ $theme.include($body_top_include)
                         <li class="btn-language">
                             <a href="#" id="SelectedLanguage">English</a>
                             <div class="dropdown-language-wrapper">
-								<a href="javascript:selectLanguage('en');"><p>English</p></a> 
+                            	<a href="javascript:selectLanguage('ms');"><p>Bahasa Melayu</p></a> 
                                 <div class="clear"></div>                           
-								<a href="javascript:selectLanguage('ms');"><p>Bahasa Melayu</p></a>                            
+								<a href="javascript:selectLanguage('en');"><p>English</p></a>                             
                             </div>
                         </li>
                     	#if (!$is_signed_in)
@@ -214,7 +214,9 @@ $theme.include($body_top_include)
                 </div>
                 #end
                 
-                
+                	<div class="middle-search-wrapper hide">
+                    	<input name="search" type="text" placeholder="Search"><a class="btn-search" href="#"></a>
+                	</div>                
                 	
                 
                 
