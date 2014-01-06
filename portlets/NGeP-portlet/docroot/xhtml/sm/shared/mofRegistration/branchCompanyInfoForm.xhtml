@@ -37,8 +37,7 @@
 		<p:panel id="brnInfPan">
 			<p:blockUI block=":form:tt:brnInfPan" widgetVar="buiPoBrn"
 				id="poBrnBlc"
-				blocked="#{backingBean.managedBean.poSecReview.branchVerified and backingBean.managedBean.poUser}"
-				rendered="#{backingBean.managedBean.poSecReview.branchVerified and backingBean.managedBean.poUser}" />
+				blocked="#{backingBean.managedBean.poSecReview.branchVerified and backingBean.managedBean.poUser}" />
 			<p:dataTable var="branchBean" id="dt"
 				value="#{backingBean.managedBean.smAppl.smSupplierBranches}"
 				selection="#{backingBean.managedBean.selectedBranches}"
