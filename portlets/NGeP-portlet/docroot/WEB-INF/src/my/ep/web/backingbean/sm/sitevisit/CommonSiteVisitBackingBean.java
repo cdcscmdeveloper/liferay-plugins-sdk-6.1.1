@@ -49,24 +49,22 @@ public class CommonSiteVisitBackingBean extends BaseBackingBean<CommonSiteVisitM
 		if(resDTO.getTaskName().equalsIgnoreCase("Assign Site Visit")){
 			SvcSiteAssignBackingBean svcBB = new SvcSiteAssignBackingBean();
 			
-			log.info("------Assign Site Visit AppID-------------" + svObj.getAppId());
-			svcBB.getManagedBean().setAppId(
-					(Long.parseLong(svObj.getAppId())));
+			log.info("------Assign Site Visit AppID-------------" + svObj.getDocumentId());
+			svcBB.getManagedBean().setAppId(svObj.getDocumentId());
 			svcBB.getManagedBean().setBpmAction(resDTO.getAction());
 			svcBB.getManagedBean().setTaskId(taskId);
-			svcBB.getManagedBean().setAppType(svObj.getAppType());
+			//svcBB.getManagedBean().setAppType(svObj.getAppType());
 			svcBB.retrieveSiteAssignInfo();
 			
 			FacesContext fc = FacesContext.getCurrentInstance();
 			fc.getApplication().getNavigationHandler().handleNavigation(fc, null, "/xhtml/sm/svcassignment/assignSiteVisitView");
 		}else if(resDTO.getTaskName().equalsIgnoreCase("Complete Site Visit Report")){
-			log.info("------Complete Site Visit Report-------------" + svObj.getAppId());
+			log.info("------Complete Site Visit Report-------------" + svObj.getDocumentId());
 			SvoSiteVisitBackingBean svoBB = new SvoSiteVisitBackingBean();
-			svoBB.getManagedBean().setAppId(
-					(Long.parseLong(svObj.getAppId())));
+			svoBB.getManagedBean().setAppId(svObj.getDocumentId());
 			svoBB.getManagedBean().setBpmAction(resDTO.getAction());
 			svoBB.getManagedBean().setTaskId(taskId);
-			svoBB.getManagedBean().setAppType(svObj.getAppType());
+			//svoBB.getManagedBean().setAppType(svObj.getAppType());
 			svoBB.retrieveSiteVisitInfo();
 			
 			FacesContext fc = FacesContext.getCurrentInstance();

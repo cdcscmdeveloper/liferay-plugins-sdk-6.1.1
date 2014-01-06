@@ -1,6 +1,7 @@
 package my.ep.web.backingbean.sm.complaint;
 
 import java.sql.Timestamp;
+import java.util.ArrayList;
 import java.util.Date;
 
 import javax.faces.application.FacesMessage;
@@ -116,6 +117,7 @@ public class ComplaintBackingBean extends BaseBackingBean<ComplaintManagedBean> 
 
 		this.getManagedBean().setSmComplaint(resDTO.getSmComplaint());
 		this.getManagedBean().setSmComplReview(new SmComplaintReview());
+		this.getManagedBean().getSmComplaint().setSmComplaintReviews(new ArrayList<SmComplaintReview>());
 
 		// this.getManagedBean().getSmComplaint().setSmComplaintReviews(new
 		// ArrayList<SmComplaintReview>());
@@ -143,7 +145,7 @@ public class ComplaintBackingBean extends BaseBackingBean<ComplaintManagedBean> 
 		this.getManagedBean().setComplaintId(
 				this.getManagedBean().getSelectedComplaint().getComplaintId());
 		this.retrieveComplaintInfo();
-		return "complaintMain";
+		return "complaintNewMain";
 	}
 
 	public String outputMsg(boolean succ, String msg) {
@@ -172,20 +174,23 @@ public class ComplaintBackingBean extends BaseBackingBean<ComplaintManagedBean> 
 		ComplaintReqDTO reqDTO = new ComplaintReqDTO();
 		IComplaintSO reqSO = (IComplaintSO) BusinessDelegate.getInstance()
 				.getServiceObject("sm", IComplaintSO.class);
-		long count = this.getManagedBean().getSmComplaint().getStatusId() + 1;
-		
-		if (this.getManagedBean().getSmComplaint().getStatusId() < 9) {
-			this.getManagedBean().getSmComplaint().setStatusId(count);
-		}else if (this.getManagedBean().getSmComplaint().getStatusId() == 9) {
-			log.info("------currStat Id---------" + this.getManagedBean().getSmComplaint().getStatusId() + "--count--" + count);
-			this.getManagedBean().getSmComplaint().setRecordStatus(false);
-			this.getManagedBean().getSmComplaint().setStatusId(count);
+		//long count = this.getManagedBean().getSmComplaint().getStatusId() + 1;
+		long curStatus = this.getManagedBean().getSmComplaint().getStatusId();
+		if(curStatus == 29001){
+			this.getManagedBean().getSmComplaint().setStatusId(29002);
+			this.getManagedBean().getSmComplReview().setReviewCommittee("P1");
+			this.getManagedBean().getSmComplReview().setSmComplaint(this.getManagedBean().getSmComplaint());
+			this.getManagedBean().getSmComplaint().getSmComplaintReviews().add(this.getManagedBean().getSmComplReview());
+		}else if(curStatus == 29002){
+			this.getManagedBean().getSmComplaint().setStatusId(29003);
+			this.getManagedBean().getSmComplReview().setReviewCommittee("P1");
+			this.getManagedBean().getSmComplReview().setSmComplaint(this.getManagedBean().getSmComplaint());
+			this.getManagedBean().getSmComplaint().getSmComplaintReviews().add(this.getManagedBean().getSmComplReview());
 		}
 
 		reqDTO.setSmComplaint(this.getManagedBean().getSmComplaint());
-
 		ComplaintResDTO resDTO = reqSO.updateComplaint(reqDTO);
-
+		
 		return outputMsg(resDTO.isSuccessful(), "Complaint has been updated.");
 	}
 

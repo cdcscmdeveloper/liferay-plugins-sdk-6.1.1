@@ -14,7 +14,6 @@ import my.ep.bpm.service.IBpmSO;
 import my.ep.dto.sm.complaint.ComplaintReqDTO;
 import my.ep.dto.sm.sdoreview.SdoReviewReqDTO;
 import my.ep.dto.sm.sdoreview.SdoReviewResDTO;
-import my.ep.jaxb.sm.disciplinaryactiondata.SMDisciplinaryActionDataType;
 import my.ep.jaxb.sm.mofregdata.SMMOFRegDataType;
 import my.ep.util.lookupservice.EpBpmBusinessDelegate;
 import my.ep.web.backingbean.BaseBackingBean;
@@ -67,20 +66,18 @@ public class SdoReviewBackingBean extends BaseBackingBean<SdoReviewManagedBean> 
 		SdoReviewReqDTO reqDTO = new SdoReviewReqDTO();
 		ISdoReviewSO reqSO = (ISdoReviewSO) BusinessDelegate.getInstance()
 				.getServiceObject("sm", ISdoReviewSO.class);
-		reqDTO.setApplId(this.getManagedBean().getAppId());
+//		reqDTO.setApplId(this.getManagedBean().getAppId());
 		reqDTO.setOutcome(res);
-		reqDTO.setSuppId(this.getManagedBean().getSmAppl().getSmSupplier()
-				.getSupplierId());
-		reqDTO.setAppType(this.getManagedBean().getSmAppl().getApplType());
+//		reqDTO.setSuppId(this.getManagedBean().getSmAppl().getSmSupplier()
+//				.getSupplierId());
+		//reqDTO.setAppType(this.getManagedBean().getSmAppl().getApplType());
 		reqDTO.setTaskId(this.getManagedBean().getTaskId());
+		
+		System.out.println("-----------SDO----------" + reqDTO.getOutcome());
+		System.out.println("-----------SDO Review----------" + reqDTO.getTaskId());
 
 		reqDTO.setBpmUserName(bpmUsrName);
-
-		if (this.getManagedBean().getSmAppl().getSupportingDocMode() == "S") {
-			reqDTO.setOnlineDoc(true);
-		} else if (this.getManagedBean().getSmAppl().getSupportingDocMode() == "H") {
-			reqDTO.setOnlineDoc(false);
-		}
+		reqDTO.setBpmPojo(this.getManagedBean().getBpmPojo());
 
 		SdoReviewResDTO resDTO = reqSO.submitBPMSdoReview(reqDTO);
 
@@ -120,14 +117,13 @@ public class SdoReviewBackingBean extends BaseBackingBean<SdoReviewManagedBean> 
 		this.getManagedBean().setTaskName(resDTO.getTaskName());
 		this.getManagedBean().setBpmAction(resDTO.getAction());
 		this.getManagedBean().setTaskId(taskId);
-
-		// SMDisciplinaryActionDataType disActObj =
-		// (SMDisciplinaryActionDataType) resDTO.getPojo();
+		
+		//Old BPM working set
 		SMMOFRegDataType mofObj = (SMMOFRegDataType) resDTO.getPojo();
-		log.info("--------------mofObj.getAppId()--------------------"+mofObj.getAppId());
-		this.getManagedBean().setAppId(Long.parseLong(mofObj.getAppId()));
-
-		//viewSupportingDocument();
+		log.info("--------------mofObj.getAppId()--------------------"+mofObj.getDocumentId());
+		this.getManagedBean().setAppId(mofObj.getDocumentId());
+		//this.getManagedBean().setBpmPojo(mofObj);
+		viewSupportingDocument();
 
 		// if(resDTO.getTaskName().equalsIgnoreCase("Update Complaint")){
 		// FacesContext fc = FacesContext.getCurrentInstance();

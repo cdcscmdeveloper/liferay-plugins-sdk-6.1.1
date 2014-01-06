@@ -35,6 +35,8 @@ public class RegistrationManagedBean extends BaseManagedBean {
 	private SmAddress smResAdd;
 	
 	private String applType;
+	private boolean sameAddress;
+	
 
 	public SmSupplier getSmSupp() {
 		return smSupp;
@@ -130,6 +132,14 @@ public class RegistrationManagedBean extends BaseManagedBean {
 
 	public void setApplType(String applType) {
 		this.applType = applType;
+	}
+
+	public boolean isSameAddress() {
+		return sameAddress;
+	}
+
+	public void setSameAddress(boolean sameAddress) {
+		this.sameAddress = sameAddress;
 	}
 
 }

@@ -2,6 +2,7 @@ package my.ep.web.backingbean.sm.registration;
 
 import java.sql.Timestamp;
 import java.util.ArrayList;
+import java.util.List;
 
 import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
@@ -11,10 +12,8 @@ import javax.faces.context.FacesContext;
 import my.ep.biz.service.sm.registration.IRegistrationSO;
 import my.ep.dto.sm.registration.RegistrationReqDTO;
 import my.ep.dto.sm.registration.RegistrationResDTO;
-import my.ep.persistence.entity.pm.common.PmCity;
-import my.ep.persistence.entity.pm.common.PmCountry;
-import my.ep.persistence.entity.pm.common.PmDistrict;
-import my.ep.persistence.entity.pm.common.PmState;
+import my.ep.ntf.dto.NtfRequestDTO;
+import my.ep.ntf.service.INtfSO;
 import my.ep.persistence.entity.sm.SmAddress;
 import my.ep.persistence.entity.sm.SmAppl;
 import my.ep.persistence.entity.sm.SmPersonnel;
@@ -22,11 +21,23 @@ import my.ep.persistence.entity.sm.SmSupplier;
 import my.ep.persistence.entity.sm.SmSupplierBank;
 import my.ep.persistence.entity.sm.SmSupplierCert;
 import my.ep.persistence.entity.sm.SmSupplierOwner;
+import my.ep.persistence.logging.LogKey;
+import my.ep.util.lookupservice.EpNtfBusinessDelegate;
 import my.ep.web.backingbean.BaseBackingBean;
 import my.ep.web.managedbean.sm.registration.RegistrationManagedBean;
 import my.ep.web.util.lookupservice.BusinessDelegate;
+import my.gov.ep.www.Schema._1_0.RetrieveMyIdentity.EPMFRq_Type;
+import my.gov.ep.www.Schema._1_0.RetrieveMyIdentity.EPMFRs_Type;
+import my.gov.ep.www.Schema._1_0.RetrieveMyIdentity.RetrieveMyIdentityRq_Type;
+import my.gov.ep.www.Schema._1_0.epmf.RqHeader_Type;
+import my.gov.ep.www.Schema._1_0.epmf.RqUID_Type;
 
 import org.apache.log4j.Logger;
+import org.apache.log4j.MDC;
+
+import RetrieveMyIdentity.RetrieveMyIdentityServiceBindingStub;
+import RetrieveMyIdentity.RetrieveMyIdentityServicePortType_PortType;
+import RetrieveMyIdentity.RetrieveMyIdentityServicePortType_ServiceLocator;
 
 @ManagedBean(name = "registrationBackingBean")
 @RequestScoped
@@ -38,15 +49,16 @@ public class RegistrationBackingBean extends
 	public static Logger log = Logger.getLogger(RegistrationBackingBean.class);
 	public static String newICMasking = "999999999999";
 	private static String accountRegistration = "registrationInfo";
+	// private static String accountRegistration = "testSignUp";
 	private static String firstUserRegistration = "firstUserRegistration";
 	private static int nationality = 1;
-	
+
 	private static long tempId = 1;
 
 	public RegistrationBackingBean() {
-		// if (MDC.get(LogKey.USER_ID) == null) {
-		// MDC.put(LogKey.USER_ID, 1L);
-		// }
+		if (MDC.get(LogKey.USER_ID) == null) {
+			MDC.put(LogKey.USER_ID, 1L);
+		}
 	}
 
 	public void proceedToCompanyInfo() {
@@ -76,7 +88,7 @@ public class RegistrationBackingBean extends
 			this.getManagedBean().getSmSuppOwner().setIdentificationType("I");
 			this.getManagedBean().getSmSuppOwner()
 					.setOwnerName(smSupp.getSupplierName());
-			
+
 		}
 
 		return firstUserRegistration;
@@ -155,8 +167,9 @@ public class RegistrationBackingBean extends
 			this.getManagedBean().setSmResAdd(new SmAddress());
 			// this.getManagedBean().setSmPersonnelAdd(new
 			// SmPersonnelAddress());
-			
-			this.getManagedBean().setSmSuppCerts(new ArrayList<SmSupplierCert>());
+
+			this.getManagedBean().setSmSuppCerts(
+					new ArrayList<SmSupplierCert>());
 		}
 
 		this.getManagedBean().getSmAppl()
@@ -175,7 +188,8 @@ public class RegistrationBackingBean extends
 	}
 
 	public void addProfessionalCert() {
-		log.info("-------------------addProfessionalCert-----------" + this.getManagedBean().getSmSuppCerts());
+		log.info("-------------------addProfessionalCert-----------"
+				+ this.getManagedBean().getSmSuppCerts());
 
 		this.getManagedBean().getSmSuppCerts().add(new SmSupplierCert());
 		/*
@@ -203,26 +217,25 @@ public class RegistrationBackingBean extends
 		log.info("-----------------submitRegisteration---------------");
 		SmSupplier smSupp = this.getManagedBean().getSmSupp();
 		smSupp.setCatalogueUploaded(false);
-		
-		
-		java.util.Date date= new java.util.Date();
+
+		java.util.Date date = new java.util.Date();
 		Timestamp ts = new Timestamp(date.getTime());
-		 
+
 		smSupp.setCreatedBy(tempId);
 		smSupp.setChangedBy(tempId);
 		smSupp.setCreatedDate(ts);
 		smSupp.setChangedDate(ts);
-		
+
 		this.getManagedBean().getSmAppl().setCreatedBy(tempId);
 		this.getManagedBean().getSmAppl().setChangedBy(tempId);
 		this.getManagedBean().getSmAppl().setCreatedDate(ts);
 		this.getManagedBean().getSmAppl().setChangedDate(ts);
-		
+
 		this.getManagedBean().getSmPersonnel().setCreatedBy(tempId);
 		this.getManagedBean().getSmPersonnel().setChangedBy(tempId);
 		this.getManagedBean().getSmPersonnel().setCreatedDate(ts);
 		this.getManagedBean().getSmPersonnel().setChangedDate(ts);
-		
+
 		this.getManagedBean().getSmSuppOwner().setCreatedBy(tempId);
 		this.getManagedBean().getSmSuppOwner().setChangedBy(tempId);
 		this.getManagedBean().getSmSuppOwner().setCreatedDate(ts);
@@ -259,6 +272,23 @@ public class RegistrationBackingBean extends
 		 * this.getManagedBean().getSmPersonnel().getSmPersonnelAddresses().add(
 		 * resAdd);
 		 */
+
+		// for individual registration
+		if (this.getManagedBean().getSmSupp().getBusinessType().equals("I")) {
+			this.getManagedBean().getSmPersonnel()
+					.setIdentificationNo(smSupp.getRegNo());
+			this.getManagedBean().getSmPersonnel()
+					.setName(smSupp.getSupplierName());
+			this.getManagedBean().getSmPersonnel().setIdentificationType("I");
+
+			this.getManagedBean().getSmSuppOwner()
+					.setIdentificationNo(smSupp.getRegNo());
+			this.getManagedBean().getSmSuppOwner().setIdentificationType("I");
+			this.getManagedBean().getSmSuppOwner()
+					.setOwnerName(smSupp.getSupplierName());
+
+		}
+
 		this.getManagedBean().getSmPersonnel().setEpRole("A");
 		this.getManagedBean().getSmPersonnel()
 				.setSmAppl(this.getManagedBean().getSmAppl());
@@ -288,10 +318,13 @@ public class RegistrationBackingBean extends
 		RegistrationResDTO resDTO = reqSO.createSupplier(reqDTO);
 		log.info("-----------------End submitRegisteration---------------");
 
-		
-		if (resDTO.isSuccessful()){
-			FacesContext.getCurrentInstance().addMessage(null,
-					new FacesMessage(FacesMessage.SEVERITY_INFO, "Your account has been registered successfully.", ""));
+		if (resDTO.isSuccessful()) {
+			this.sendEmail();
+			FacesContext.getCurrentInstance().addMessage(
+					null,
+					new FacesMessage(FacesMessage.SEVERITY_INFO,
+							"Your account has been registered successfully.",
+							""));
 			return "/xhtml/sm/onlinereg/outputMsg";
 		} else {
 			FacesContext.getCurrentInstance().addMessage(null,
@@ -308,23 +341,25 @@ public class RegistrationBackingBean extends
 		log.info("--------------------updateOnlineAccount----------------");
 		RegistrationReqDTO reqDTO = new RegistrationReqDTO();
 
-//		this.getManagedBean().getSmSuppBank()
-//				.setSmAppl(this.getManagedBean().getSmSupp().getSmAppl());
-//		log.info("---------------getSmSuppBank----------------"
-//				+ this.getManagedBean().getSmSuppBank().getAccountNo());
-//		log.info("---------------getSmSuppBank----------------"
-//				+ this.getManagedBean().getSmSuppBank().getSupplierBankId());
-//		this.getManagedBean().getSmSupp().getSmAppl().getSmSupplierBanks()
-//				.set(0, this.getManagedBean().getSmSuppBank());
+		// this.getManagedBean().getSmSuppBank()
+		// .setSmAppl(this.getManagedBean().getSmSupp().getSmAppl());
+		// log.info("---------------getSmSuppBank----------------"
+		// + this.getManagedBean().getSmSuppBank().getAccountNo());
+		// log.info("---------------getSmSuppBank----------------"
+		// + this.getManagedBean().getSmSuppBank().getSupplierBankId());
+		// this.getManagedBean().getSmSupp().getSmAppl().getSmSupplierBanks()
+		// .set(0, this.getManagedBean().getSmSuppBank());
 
 		reqDTO.setSmSupplier(this.getManagedBean().getSmSupp());
 		IRegistrationSO reqSO = (IRegistrationSO) BusinessDelegate
 				.getInstance().getServiceObject("sm", IRegistrationSO.class);
 		RegistrationResDTO resDTO = reqSO.updateOnlineAcc(reqDTO);
-		
-		if (resDTO.isSuccessful()){
-			FacesContext.getCurrentInstance().addMessage(null,
-					new FacesMessage(FacesMessage.SEVERITY_INFO, "Your account has been updated successfully.", ""));
+
+		if (resDTO.isSuccessful()) {
+			FacesContext.getCurrentInstance().addMessage(
+					null,
+					new FacesMessage(FacesMessage.SEVERITY_INFO,
+							"Your account has been updated successfully.", ""));
 			return "/xhtml/sm/onlinereg/outputMsg";
 		} else {
 			FacesContext.getCurrentInstance().addMessage(null,
@@ -339,7 +374,8 @@ public class RegistrationBackingBean extends
 		this.getManagedBean().setSmSuppOwner(new SmSupplierOwner());
 
 		RegistrationReqDTO reqDTO = new RegistrationReqDTO();
-		reqDTO.setSupplierId(30);
+		// reqDTO.setSupplierId(30);
+		reqDTO.setSupplierId(80);
 
 		IRegistrationSO reqSO = (IRegistrationSO) BusinessDelegate
 				.getInstance().getServiceObject("sm", IRegistrationSO.class);
@@ -354,5 +390,100 @@ public class RegistrationBackingBean extends
 		// return "onlineAccount/accountMaintenance";
 	}
 
+	public void addSupplierBank() {
+		SmSupplierBank suppBank = new SmSupplierBank();
+		suppBank.setSmAppl(this.getManagedBean().getSmAppl());
+		suppBank.setDefaultAccount(false);
+		this.getManagedBean().getSmAppl().getSmSupplierBanks().add(suppBank);
+	}
+
+	public void removeSupplierBank() {
+		// this.getManagedBean().getSmAppl().getSmSupplierBanks().remove();
+	}
+
+	public void sameAsPermenantAddress() {
+		log.info("----------same permenant add----------"
+				+ this.getManagedBean().isSameAddress());
+	}
+
+	public void myIdentityVerification() {
+		log.info("-------myIdentityVerification-----------");
+		RetrieveMyIdentityServicePortType_ServiceLocator locator = new RetrieveMyIdentityServicePortType_ServiceLocator();
+		locator.setRetrieveMyIdentityServicePortTypePortEndpointAddress("http://192.168.120.14:8011/RetrieveMyIdentityService/Proxy_Services/RetrieveMyIdentity");
+		// EPMFRq_Type data = new EPMFRq_Type();
+		// RetrieveMyIdentityRq_Type rqType = new RetrieveMyIdentityRq_Type();
+		// rqType.setUserID("123456");
+		// data.setRetrieveMyIdentityRq(rqType);
+
+		try {
+			String URL = "http://192.168.120.14:8011/RetrieveMyIdentityService/Proxy_Services/RetrieveMyIdentity";
+
+			RetrieveMyIdentityServicePortType_ServiceLocator service = new RetrieveMyIdentityServicePortType_ServiceLocator();
+			service.setRetrieveMyIdentityServicePortTypePortEndpointAddress(URL);
+
+			RetrieveMyIdentityServicePortType_PortType port = service
+					.getRetrieveMyIdentityServicePortTypePort();
+
+			RetrieveMyIdentityServiceBindingStub binding = (RetrieveMyIdentityServiceBindingStub) port;
+			binding.setTimeout(1000);
+
+			RqUID_Type uid = new RqUID_Type();
+			uid.setAsyncRqUID("String");
+			uid.setRqUID("String");
+
+			RqHeader_Type rqHdr = new RqHeader_Type();
+			rqHdr.setConsumerID("String");
+			rqHdr.setGovOrgUnit("String");
+			rqHdr.setIpAddress("String");
+			rqHdr.setSegment("String");
+			rqHdr.setUID(uid);
+
+			RetrieveMyIdentityRq_Type retRq = new RetrieveMyIdentityRq_Type();
+			retRq.setICNumber("12345");
+
+			EPMFRq_Type rq = new EPMFRq_Type();
+			rq.setRqHeader(rqHdr);
+			rq.setRetrieveMyIdentityRq(retRq);
+
+			EPMFRs_Type epmfrs = port.inquire(rq);
+
+			System.out
+					.println(epmfrs.getRsHeader().getStatus().getStatusCode());
+			System.out.println(epmfrs.getRetrieveMyIdentityRs().getName());
+			System.out.println(epmfrs.getRetrieveMyIdentityRs()
+					.getPermanentAddrStateCode());
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+
+	private void sendEmail() {
+		System.out.println("initiateTask******");
+		INtfSO ntfSO = (INtfSO) EpNtfBusinessDelegate.getInstance()
+				.getOSBServiceObject(INtfSO.class);
+
+		NtfRequestDTO reqDTO = new NtfRequestDTO();
+		reqDTO.setTemplateId("399999");
+		reqDTO.setSenderId("4");
+		// reqDTO.setSendEmailOnly(true);
+
+		List<String> usrLst = new ArrayList<String>();
+		usrLst.add("27");
+		usrLst.add("28");
+		reqDTO.setUserIdArr(usrLst.toArray(new String[usrLst.size()]));
+
+		List<String> subParaLst = new ArrayList<String>();
+		subParaLst.add("#SM#");
+		reqDTO.setSubParaArr(subParaLst.toArray(new String[subParaLst.size()]));
+		List<String> cntParaLst = new ArrayList<String>();
+		cntParaLst.add("Jenson");
+
+		cntParaLst.add("http://google.com.my/andrew");
+		cntParaLst.add("U_0001_andrew");
+		cntParaLst.add("23434");
+		reqDTO.setCntParaArr(cntParaLst.toArray(new String[cntParaLst.size()]));
+
+		ntfSO.processAndPublish(reqDTO);
+	}
 
 }
