@@ -2199,6 +2199,12 @@ td {
 }
 /* --------------------------       PP Related     ------------------------------ */
 
+
+
+.ppPanelGrid td, .ppPanelGrid tr{
+	border: 0;
+}
+
 .ppProfileInfo{
 	width: 100%;
 }
@@ -2209,29 +2215,29 @@ table.ppRmkTable td {
 	padding: 2px;
 }
 
-table.ppTwoPartsTable, .ppThreePartsTable, .ppRmkTable{
+table.ppOneTable, .ppTwoTable, .ppRmkTable{
 	width:100%;
 }
 
-table.ppTwoPartsTable th {
+table.ppOneTable th {
  	/*text-align: right;*/
 	width: 25%;
 	vertical-align: top;
 	padding: 2px;
 }
-table.ppTwoPartsTable td {
+table.ppOneTable td {
 	border: medium none;
 	vertical-align: top;
 	padding: 2px;
 }
 
-table.ppThreePartsTable th {
+table.ppTwoTable th {
  	/*text-align: right;*/
 	width: 20%;
 	vertical-align: top;
 	padding: 2px;
 }
-table.ppThreePartsTable td {
+table.ppTwoTable td {
 	border: medium none;
 	vertical-align: top;
 	padding: 2px;
@@ -2275,6 +2281,11 @@ table.ppThreePartsTable td {
 	width: 900px !important;
 }
 
+.ui-dialog.ppDiaglogSmallBg{
+	background: #FFFFFF;
+	width: 600px !important;
+}
+
 .ui-dialog.ppDiaglogBigBg{
 	background: #FFFFFF;
 	height:80% !important;
@@ -2306,7 +2317,7 @@ table.ppThreePartsTable td {
 }
 
 .ppDisplayCalM input {
-	width: 200px;
+	width: 180px;
 }
 .ui-selectonemenu.ppDropDownWidthM{
 	width: 210px !important;
