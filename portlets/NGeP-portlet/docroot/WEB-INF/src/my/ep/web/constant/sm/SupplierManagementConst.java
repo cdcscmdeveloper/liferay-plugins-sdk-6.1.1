@@ -45,11 +45,10 @@ public class SupplierManagementConst {
 	public static final String DELETE_PENDING_MOF_APPL_SUCCESS = "deletePendingMofApplnAckPage";
 	public static final String APPROVER_DECISION_ACK = "/xhtml/sm/approverDecisionPages/approverDecisionAckPage.xhtml";
 	public static final String PO_DECISION_ACK = "/xhtml/sm/poDecisionPages/poDecisionAckPage.xhtml";
-	public static final int NEW_APPL_REVIEW_MAXCOUNT=15;
-	public static final int BUMI_APPL_REVIEW_MAXCOUNT=15;
-	public static final int UPDATE_MOF_APPL_REVIEW_MAXCOUNT=15;
-	public static final int RENEW_APPL_REVIEW_MAXCOUNT=15;
-	public static final int ADDLN_CATCODES_APPL_REVIEW_MAXCOUNT=15;
-	
+	public static final int NEW_APPL_REVIEW_MAXCOUNT = 15;
+	public static final int BUMI_APPL_REVIEW_MAXCOUNT = 8;
+	public static final int UPDATE_MOF_APPL_REVIEW_MAXCOUNT = 15;
+	public static final int RENEW_APPL_REVIEW_MAXCOUNT = 15;
+	public static final int ADDLN_CATCODES_APPL_REVIEW_MAXCOUNT = 15;
 
 }

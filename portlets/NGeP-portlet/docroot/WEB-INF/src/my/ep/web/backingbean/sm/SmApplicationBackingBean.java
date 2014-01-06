@@ -88,6 +88,7 @@ public class SmApplicationBackingBean extends
 			MofRegistrationReqDTO reqDto = new MofRegistrationReqDTO();
 			SmSupplier smApplSupplier = retriveSupplierById((long) 3)
 					.getSmSupplier();
+
 			if (smApplSupplier == null) {
 				System.out.println(" ******* NO RECORD FOUND IN DB *****");
 				smApplSupplier = new SmSupplier();
@@ -103,6 +104,8 @@ public class SmApplicationBackingBean extends
 					+ smApplSupplier.getEstablishDate());
 			System.out.println("******** SIZE ********** "
 					+ smApplSupplier.getSmAppls().size());
+			System.out.println("latest sm appl ===== >>"
+					+ smApplSupplier.getSmAppls().get(0).getApplId());
 			SmAppl smAppl = new SmAppl();
 			// TO Use the private generate application num
 			if (applicationType.equalsIgnoreCase("N")) {
@@ -1431,18 +1434,6 @@ public class SmApplicationBackingBean extends
 		return sec;
 	}
 
-	public void onTabChange(TabChangeEvent event) {
-		String tabTitle = event.getTab().getTitle();
-		System.out.println("Active Tab: " + tabTitle);
-		if (tabTitle.equalsIgnoreCase("Company Basic Information")) {
-			getManagedBean().setTabActiveIndex(0);
-		} else if (tabTitle.equalsIgnoreCase("Branch /Assoc Company")) {
-			getManagedBean().setTabActiveIndex(1);
-		}
-		System.out.println("Active Tab Index === "
-				+ getManagedBean().getTabActiveIndex());
-
-	}
 
 	public String submitUpdateMofApplToBpm() {
 		try {

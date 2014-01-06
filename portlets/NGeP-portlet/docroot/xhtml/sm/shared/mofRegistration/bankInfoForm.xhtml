@@ -11,7 +11,13 @@
 		<table style="width: 250px">
 			<p:outputPanel rendered="#{backingBean.managedBean.poUser}">
 				<tr>
-					<td width="10px" style="padding-right: 2px;"><p:selectBooleanCheckbox /></td>
+					<td width="10px" style="padding-right: 2px;"><p:selectBooleanCheckbox
+							value="#{backingBean.managedBean.poSecReview.bankVerified}"
+							id="poBankVer">
+							<p:ajax update=":form:tt:bankInfPan,:form:revPanHdr"
+								event="change"
+								listener="#{backingBean.changeVerifySection(backingBean.managedBean.poSecReview.bankVerified)}" />
+						</p:selectBooleanCheckbox></td>
 					<td valign="top"><h:outputText
 							value=" Section Verified By PO: "
 							title="For PO to highlight the verified section " /></td>
@@ -28,104 +34,111 @@
 			</p:outputPanel>
 		</table>
 		<br />
-		<p:dataTable var="bankBean"
-			value="#{backingBean.managedBean.smAppl.smSupplierBanks}"
-			selection="#{backingBean.managedBean.selectedBanks}"
-			rowKey="#{bankBean.supplierBankId}" rowIndexVar="index" id="bankDt">
-			<ac:paginator for="bankDt" />
-			<p:column selectionMode="multiple" width="5%" />
+		<p:panel id="bankInfPan">
+			<p:blockUI block=":form:tt:bankInfPan" widgetVar="buiPoBank"
+				id="poBankBlc"
+				blocked="#{backingBean.managedBean.poSecReview.bankVerified and backingBean.managedBean.poUser}" />
 
-			<p:column headerText="Account NO.">
-				<h:outputText value="#{bankBean.accountNo}" />
-			</p:column>
-			<p:column headerText="Bank Name">
-				<h:outputText value="#{bankBean.pmbank.bankCode}" />
-			</p:column>
+			<p:dataTable var="bankBean"
+				value="#{backingBean.managedBean.smAppl.smSupplierBanks}"
+				selection="#{backingBean.managedBean.selectedBanks}"
+				rowKey="#{bankBean.supplierBankId}" rowIndexVar="index" id="bankDt">
+				<ac:paginator for="bankDt" />
+				<p:column selectionMode="multiple" width="5%" />
 
-			<p:column headerText="Registration Account"
-				style="text-align: center;width: 15%">
-				<p:selectBooleanCheckbox />
-			</p:column>
-
-			<p:column headerText="Payment Account"
-				style="text-align: center;width: 15%">
-				<p:selectBooleanCheckbox />
-			</p:column>
-
-			<p:column headerText="Action">
-				<p:commandLink action="#{backingBean.viewSignatories(bankBean)}"
-					update=":form:tt:sfieldset" style="padding-right :5px;">
-					<p:graphicImage library="ep/images/design" name="seller_detail.png"
-						value="/resources/ep/images/design/seller_detail.png"
-						title="View Signatories" />
-				</p:commandLink>
-				<p:commandLink oncomplete="bankDialog.show();"
-					action="#{backingBean.assignSelBank(bankBean)}"
-					update=":form:tt:bankDialog" style="padding-right :5px;">
-					<p:graphicImage library="ep/images/design" name="edit.png"
-						value="/resources/ep/images/design/edit.png" />
-				</p:commandLink>
-				<p:commandLink>
-					<p:graphicImage library="ep/images/design" name="delete.png"
-						value="/resources/ep/images/design/delete.png" />
-				</p:commandLink>
-				<!-- oncomplete="updateSignatory();" /> -->
-			</p:column>
-		</p:dataTable>
-		<p:spacer height="2px;" />
-		<div align="right">
-			<p:commandButton value="Add" oncomplete="bankDialog.show();"
-				action="#{backingBean.assignNewBank}" update=":form:tt:bankDialog" />
-			<p:commandButton value="Delete" />
-		</div>
-		<p:panel id="sfieldset"
-			header="Cheque Signatories Composition For Account No.  :  
-			#{backingBean.managedBean.selectedSignatoryBankAcct.accountNo}">
-			<!-- <p:remoteCommand name="updateSignatory" update="signatory" /> -->
-			<p:dataTable id="signatory" var="auth"
-				value="#{backingBean.managedBean.selectedSignatoryBankAcct.smChequeSignatories}"
-				rowKey="#{auth.chequeSignatoryId}" rowIndexVar="index">
-				<ac:paginator for="signatory" />
-
-				<p:column headerText="Name">
-					<h:outputText value="#{auth.smPersonnel.name}" />
+				<p:column headerText="Account NO.">
+					<h:outputText value="#{bankBean.accountNo}" />
+				</p:column>
+				<p:column headerText="Bank Name">
+					<h:outputText value="#{bankBean.pmbank.bankCode}" />
 				</p:column>
 
-				<p:column headerText="IC/Passport No.">
-					<h:outputText value="#{auth.smPersonnel.identificationNo}" />
+				<p:column headerText="Registration Account"
+					style="text-align: center;width: 15%">
+					<p:selectBooleanCheckbox />
 				</p:column>
 
-				<p:column headerText="Bumiputera?">
-
-					<h:outputText value="Yes" />
+				<p:column headerText="Payment Account"
+					style="text-align: center;width: 15%">
+					<p:selectBooleanCheckbox />
 				</p:column>
 
-				<p:column headerText="Position">
-					<h:outputText value="#{auth.smPersonnel.designation}" />
+				<p:column headerText="Action">
+					<p:commandLink action="#{backingBean.viewSignatories(bankBean)}"
+						update=":form:tt:sfieldset" style="padding-right :5px;">
+						<p:graphicImage library="ep/images/design"
+							name="seller_detail.png"
+							value="/resources/ep/images/design/seller_detail.png"
+							title="View Signatories" />
+					</p:commandLink>
+					<p:commandLink oncomplete="bankDialog.show();"
+						action="#{backingBean.assignSelBank(bankBean)}"
+						update=":form:tt:bankDialog" style="padding-right :5px;">
+						<p:graphicImage library="ep/images/design" name="edit.png"
+							value="/resources/ep/images/design/edit.png" />
+					</p:commandLink>
+					<p:commandLink>
+						<p:graphicImage library="ep/images/design" name="delete.png"
+							value="/resources/ep/images/design/delete.png" />
+					</p:commandLink>
+					<!-- oncomplete="updateSignatory();" /> -->
 				</p:column>
 			</p:dataTable>
-		</p:panel>
-		<br />
-		<p:outputPanel rendered="#{backingBean.managedBean.poUser}">
-			<table style="width: 50%">
-				<tr>
-					<td><p:outputLabel value="PO Remarks" /></td>
-					<td><p:inputTextarea autoResize="true" cols="41"/></td>
-				</tr>
-			</table>
-		</p:outputPanel>
-		<p:outputPanel rendered="#{backingBean.managedBean.approverUser}">
-			<table style="width: 100%">
-				<tr>
-					<td><p:outputLabel value="PO Remarks" /></td>
-					<td><p:inputTextarea autoResize="true" readonly="true"
-							disabled="true" cols="41"/></td>
-					<td><p:outputLabel value="Approver Remarks" /></td>
-					<td><p:inputTextarea autoResize="true" cols="41"/></td>
+			<p:spacer height="2px;" />
+			<div align="right">
+				<p:commandButton value="Add" oncomplete="bankDialog.show();"
+					action="#{backingBean.assignNewBank}" update=":form:tt:bankDialog" />
+				<p:commandButton value="Delete" />
+			</div>
+			<p:panel id="sfieldset"
+				header="Cheque Signatories Composition For Account No.  :  
+			#{backingBean.managedBean.selectedSignatoryBankAcct.accountNo}">
+				<!-- <p:remoteCommand name="updateSignatory" update="signatory" /> -->
+				<p:dataTable id="signatory" var="auth"
+					value="#{backingBean.managedBean.selectedSignatoryBankAcct.smChequeSignatories}"
+					rowKey="#{auth.chequeSignatoryId}" rowIndexVar="index">
+					<ac:paginator for="signatory" />
 
-				</tr>
-			</table>
-		</p:outputPanel>
+					<p:column headerText="Name">
+						<h:outputText value="#{auth.smPersonnel.name}" />
+					</p:column>
+
+					<p:column headerText="IC/Passport No.">
+						<h:outputText value="#{auth.smPersonnel.identificationNo}" />
+					</p:column>
+
+					<p:column headerText="Bumiputera?">
+
+						<h:outputText value="Yes" />
+					</p:column>
+
+					<p:column headerText="Position">
+						<h:outputText value="#{auth.smPersonnel.designation}" />
+					</p:column>
+				</p:dataTable>
+			</p:panel>
+			<br />
+			<p:outputPanel rendered="#{backingBean.managedBean.poUser}">
+				<table style="width: 50%">
+					<tr>
+						<td><p:outputLabel value="PO Remarks" /></td>
+						<td><p:inputTextarea autoResize="true" cols="41" /></td>
+					</tr>
+				</table>
+			</p:outputPanel>
+			<p:outputPanel rendered="#{backingBean.managedBean.approverUser}">
+				<table style="width: 100%">
+					<tr>
+						<td><p:outputLabel value="PO Remarks" /></td>
+						<td><p:inputTextarea autoResize="true" readonly="true"
+								disabled="true" cols="41" /></td>
+						<td><p:outputLabel value="Approver Remarks" /></td>
+						<td><p:inputTextarea autoResize="true" cols="41" /></td>
+
+					</tr>
+				</table>
+			</p:outputPanel>
+		</p:panel>
 	</p:panel>
 	<p:dialog width="500px" height="470px" header="Bank Info Page"
 		widgetVar="bankDialog" resizable="false" showEffect="fade"

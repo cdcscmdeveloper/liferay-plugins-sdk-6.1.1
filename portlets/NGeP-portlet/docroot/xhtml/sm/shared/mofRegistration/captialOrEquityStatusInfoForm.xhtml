@@ -9,7 +9,13 @@
 		<table style="width: 250px">
 			<p:outputPanel rendered="#{backingBean.managedBean.poUser}">
 				<tr>
-					<td width="10px" style="padding-right: 2px;"><p:selectBooleanCheckbox /></td>
+					<td width="10px" style="padding-right: 2px;"><p:selectBooleanCheckbox
+							value="#{backingBean.managedBean.poSecReview.captialVerified}"
+							id="poCapVer">
+							<p:ajax update=":form:tt:capInfPan,:form:revPanHdr"
+								event="change"
+								listener="#{backingBean.changeVerifySection(backingBean.managedBean.poSecReview.captialVerified)}" />
+						</p:selectBooleanCheckbox></td>
 					<td valign="top"><h:outputText
 							value=" Section Verified By PO: "
 							title="For PO to highlight the verified section " /></td>
@@ -26,166 +32,172 @@
 			</p:outputPanel>
 		</table>
 		<br />
-		<table style="width: 100%">
-			<tr>
-				<td><p:outputLabel value="* Authorized Capital (RM.)" /></td>
-				<td style="width: 60%;"><p:inputText
-						title="This field is applicable for companies of type ROC Only"
-						size="10" /></td>
-
-				<td><p:outputLabel value="* Paid-Up Capital (RM.)" /></td>
-				<td><p:inputText
-						title="This field is applicable for companies of type ROC Only"
-						size="10" /></td>
-			</tr>
-			<tr>
-				<td><p:outputLabel value="Accumulated Capital (RM.)" /></td>
-				<td><p:inputText
-						title="This field is applicable and 
-						data is auto populated for companies other than ROC"
-						readonly="true" size="10" disabled="true" /></td>
-				<td><p:outputLabel value="Accumulated Share (RM.)" /></td>
-				<td><p:inputText
-						title="This field is applicable and 
-						data is auto populated for companies other than ROC"
-						readonly="true" size="10" disabled="true" /></td>
-
-			</tr>
-			<tr>
-				<td colspan="4">
-					<div style="width: 98%" align="center">
-						<p:panelGrid>
-							<f:facet name="header">
-								<p:row>
-									<p:column>Composition of Capital Distribution</p:column>
-									<!-- <p:column>NO. Of Members</p:column> -->
-									<p:column>Value (MYR)</p:column>
-									<p:column>%</p:column>
-								</p:row>
-							</f:facet>
-							<p:row>
-								<p:column>Bumiputera</p:column>
-								<!-- <p:column>
-									<p:inputText id="bumiMem" />
-								</p:column> -->
-								<p:column>
-									<p:inputText id="bumiAmt" />
-								</p:column>
-								<p:column>
-									<p:inputText label="0.00" readonly="true" id="bumiPerc"
-										title="Auto calculated / populated value" />
-								</p:column>
-							</p:row>
-							<p:row>
-								<p:column>Non Bumiputera</p:column>
-								<!-- <p:column>
-									<p:inputText />
-								</p:column> -->
-								<p:column>
-									<p:inputText label="0.00" />
-								</p:column>
-								<p:column>
-									<p:inputText label="0.00" readonly="true"
-										title="Auto calculated / populated value" />
-								</p:column>
-							</p:row>
-							<p:row>
-								<p:column>Non - Malaysian</p:column>
-								<!-- <p:column>
-									<p:inputText />
-								</p:column> -->
-								<p:column>
-									<p:inputText label="0.00" />
-								</p:column>
-								<p:column>
-									<p:inputText label="0.00" readonly="true"
-										title="Auto calculated / populated value" />
-								</p:column>
-							</p:row>
-							<p:row>
-								<p:column>Equity Government / UT Agency</p:column>
-								<!-- <p:column>
-									<p:inputText />
-								</p:column> -->
-								<p:column>
-									<p:inputText label="0.00" />
-								</p:column>
-								<p:column>
-									<p:inputText label="0.00" readonly="true"
-										title="Auto calculated / populated value" />
-								</p:column>
-							</p:row>
-							<p:row>
-								<p:column>Government equity</p:column>
-								<!-- <p:column>
-									<p:inputText />
-								</p:column> -->
-								<p:column>
-									<p:inputText label="0.00" />
-								</p:column>
-								<p:column>
-									<p:inputText label="0.00" readonly="true"
-										title="Auto calculated / populated value" />
-								</p:column>
-							</p:row>
-							<p:row>
-								<p:column>Local Company</p:column>
-								<!-- <p:column>
-									<p:inputText />
-								</p:column> -->
-								<p:column>
-									<p:inputText label="0.00" />
-								</p:column>
-								<p:column>
-									<p:inputText label="0.00" readonly="true"
-										title="Auto calculated / populated value" />
-								</p:column>
-							</p:row>
-							<p:row>
-								<p:column>Foreign Company</p:column>
-								<!-- 	<p:column>
-									<p:inputText />
-								</p:column> -->
-								<p:column>
-									<p:inputText label="0.00" />
-								</p:column>
-								<p:column>
-									<p:inputText label="0.00" readonly="true"
-										title="Auto calculated / populated value" />
-								</p:column>
-							</p:row>
-						</p:panelGrid>
-					</div>
-				</td>
-
-			</tr>
-			<tr>
-				<td><br /></td>
-			</tr>
-		</table>
-		<br />
-		<p:outputPanel rendered="#{backingBean.managedBean.poUser}">
-			<table style="width: 50%">
-				<tr>
-					<td style="padding-left: 38px;"><p:outputLabel
-							value="PO Remarks" /></td>
-					<td><p:inputTextarea autoResize="true" cols="41" /></td>
-				</tr>
-			</table>
-		</p:outputPanel>
-		<p:outputPanel rendered="#{backingBean.managedBean.approverUser}">
+		<p:panel id="capInfPan">
+			<p:blockUI block=":form:tt:capInfPan" widgetVar="buiPoCap"
+				id="poCapBlc"
+				blocked="#{backingBean.managedBean.poSecReview.captialVerified and backingBean.managedBean.poUser}" />
 			<table style="width: 100%">
 				<tr>
-					<td style="padding-left: 38px;"><p:outputLabel
-							value="PO Remarks" /></td>
-					<td><p:inputTextarea autoResize="true" readonly="true"
-							disabled="true" cols="41" /></td>
-					<td style="padding-left: 22px;"><p:outputLabel
-							value="Approver Remarks" /></td>
-					<td><p:inputTextarea autoResize="true" cols="41" /></td>
+					<td><p:outputLabel value="* Authorized Capital (RM.)" /></td>
+					<td style="width: 60%;"><p:inputText
+							title="This field is applicable for companies of type ROC Only"
+							size="10" /></td>
+
+					<td><p:outputLabel value="* Paid-Up Capital (RM.)" /></td>
+					<td><p:inputText
+							title="This field is applicable for companies of type ROC Only"
+							size="10" /></td>
+				</tr>
+				<tr>
+					<td><p:outputLabel value="Accumulated Capital (RM.)" /></td>
+					<td><p:inputText
+							title="This field is applicable and 
+						data is auto populated for companies other than ROC"
+							readonly="true" size="10" disabled="true" /></td>
+					<td><p:outputLabel value="Accumulated Share (RM.)" /></td>
+					<td><p:inputText
+							title="This field is applicable and 
+						data is auto populated for companies other than ROC"
+							readonly="true" size="10" disabled="true" /></td>
 
 				</tr>
+				<tr>
+					<td colspan="4">
+						<div style="width: 98%" align="center">
+							<p:panelGrid>
+								<f:facet name="header">
+									<p:row>
+										<p:column>Composition of Capital Distribution</p:column>
+										<!-- <p:column>NO. Of Members</p:column> -->
+										<p:column>Value (MYR)</p:column>
+										<p:column>%</p:column>
+									</p:row>
+								</f:facet>
+								<p:row>
+									<p:column>Bumiputera</p:column>
+									<!-- <p:column>
+									<p:inputText id="bumiMem" />
+								</p:column> -->
+									<p:column>
+										<p:inputText id="bumiAmt" />
+									</p:column>
+									<p:column>
+										<p:inputText label="0.00" readonly="true" id="bumiPerc"
+											title="Auto calculated / populated value" />
+									</p:column>
+								</p:row>
+								<p:row>
+									<p:column>Non Bumiputera</p:column>
+									<!-- <p:column>
+									<p:inputText />
+								</p:column> -->
+									<p:column>
+										<p:inputText label="0.00" />
+									</p:column>
+									<p:column>
+										<p:inputText label="0.00" readonly="true"
+											title="Auto calculated / populated value" />
+									</p:column>
+								</p:row>
+								<p:row>
+									<p:column>Non - Malaysian</p:column>
+									<!-- <p:column>
+									<p:inputText />
+								</p:column> -->
+									<p:column>
+										<p:inputText label="0.00" />
+									</p:column>
+									<p:column>
+										<p:inputText label="0.00" readonly="true"
+											title="Auto calculated / populated value" />
+									</p:column>
+								</p:row>
+								<p:row>
+									<p:column>Equity Government / UT Agency</p:column>
+									<!-- <p:column>
+									<p:inputText />
+								</p:column> -->
+									<p:column>
+										<p:inputText label="0.00" />
+									</p:column>
+									<p:column>
+										<p:inputText label="0.00" readonly="true"
+											title="Auto calculated / populated value" />
+									</p:column>
+								</p:row>
+								<p:row>
+									<p:column>Government equity</p:column>
+									<!-- <p:column>
+									<p:inputText />
+								</p:column> -->
+									<p:column>
+										<p:inputText label="0.00" />
+									</p:column>
+									<p:column>
+										<p:inputText label="0.00" readonly="true"
+											title="Auto calculated / populated value" />
+									</p:column>
+								</p:row>
+								<p:row>
+									<p:column>Local Company</p:column>
+									<!-- <p:column>
+									<p:inputText />
+								</p:column> -->
+									<p:column>
+										<p:inputText label="0.00" />
+									</p:column>
+									<p:column>
+										<p:inputText label="0.00" readonly="true"
+											title="Auto calculated / populated value" />
+									</p:column>
+								</p:row>
+								<p:row>
+									<p:column>Foreign Company</p:column>
+									<!-- 	<p:column>
+									<p:inputText />
+								</p:column> -->
+									<p:column>
+										<p:inputText label="0.00" />
+									</p:column>
+									<p:column>
+										<p:inputText label="0.00" readonly="true"
+											title="Auto calculated / populated value" />
+									</p:column>
+								</p:row>
+							</p:panelGrid>
+						</div>
+					</td>
+
+				</tr>
+				<tr>
+					<td><br /></td>
+				</tr>
 			</table>
-		</p:outputPanel>
+
+			<br />
+			<p:outputPanel rendered="#{backingBean.managedBean.poUser}">
+				<table style="width: 50%">
+					<tr>
+						<td style="padding-left: 38px;"><p:outputLabel
+								value="PO Remarks" /></td>
+						<td><p:inputTextarea autoResize="true" cols="41" /></td>
+					</tr>
+				</table>
+			</p:outputPanel>
+			<p:outputPanel rendered="#{backingBean.managedBean.approverUser}">
+				<table style="width: 100%">
+					<tr>
+						<td style="padding-left: 38px;"><p:outputLabel
+								value="PO Remarks" /></td>
+						<td><p:inputTextarea autoResize="true" readonly="true"
+								disabled="true" cols="41" /></td>
+						<td style="padding-left: 22px;"><p:outputLabel
+								value="Approver Remarks" /></td>
+						<td><p:inputTextarea autoResize="true" cols="41" /></td>
+
+					</tr>
+				</table>
+			</p:outputPanel>
+		</p:panel>
 	</p:panel>
 </ui:composition>

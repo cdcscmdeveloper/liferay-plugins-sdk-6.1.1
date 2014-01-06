@@ -11,7 +11,13 @@
 		<table style="width: 250px">
 			<p:outputPanel rendered="#{backingBean.managedBean.poUser}">
 				<tr>
-					<td width="10px" style="padding-right: 2px;"><p:selectBooleanCheckbox /></td>
+					<td width="10px" style="padding-right: 2px;"><p:selectBooleanCheckbox
+							value="#{backingBean.managedBean.poSecReview.equityCompVerifed}"
+							id="poEquiVer">
+							<p:ajax update=":form:tt:equiInfPan,:form:revPanHdr"
+								event="change"
+								listener="#{backingBean.changeVerifySection(backingBean.managedBean.poSecReview.equityCompVerifed)}" />
+						</p:selectBooleanCheckbox></td>
 					<td valign="top"><h:outputText
 							value=" Section Verified By PO: "
 							title="For PO to highlight the verified section " /></td>
@@ -28,70 +34,75 @@
 			</p:outputPanel>
 		</table>
 		<br />
-		<p:dataTable var="equiBean"
-			value="#{backingBean.managedBean.smAppl.smEquityCompanies}"
-			selection="#{backingBean.managedBean.selectedEquityCompanies}"
-			selectionMode="multiple" rowKey="#{equiBean.equityCompanyId}"
-			rowIndexVar="index" id="eqiComDt">
-			<ac:paginator for="eqiComDt" />
+		<p:panel id="equiInfPan">
+			<p:blockUI block=":form:tt:equiInfPan" widgetVar="buiPoEqui"
+				id="poBasEqui"
+				blocked="#{backingBean.managedBean.poSecReview.equityCompVerifed and backingBean.managedBean.poUser}" />
+			<p:dataTable var="equiBean"
+				value="#{backingBean.managedBean.smAppl.smEquityCompanies}"
+				selection="#{backingBean.managedBean.selectedEquityCompanies}"
+				selectionMode="multiple" rowKey="#{equiBean.equityCompanyId}"
+				rowIndexVar="index" id="eqiComDt">
+				<ac:paginator for="eqiComDt" />
 
-			<p:column headerText="Company Name">
-				<h:outputText value="#{equiBean.companyName}" />
-			</p:column>
+				<p:column headerText="Company Name">
+					<h:outputText value="#{equiBean.companyName}" />
+				</p:column>
 
-			<p:column headerText="Address">
-				<h:outputText
-					value="#{equiBean.smAddress.address1},
+				<p:column headerText="Address">
+					<h:outputText
+						value="#{equiBean.smAddress.address1},
 					#{equiBean.smAddress.address2},#{equiBean.smAddress.address3}" />
-			</p:column>
+				</p:column>
 
-			<p:column headerText="Share Amt (RM.)">
-				<h:outputText value="#{equiBean.shareAmount}" />
-			</p:column>
-			<p:column headerText="Share holding(%)">
-				<h:outputText value="#{equiBean.sharePercentage}" />
-			</p:column>
-			<p:column headerText="Action">
-				<p:commandLink update=":form:tt:eqiCompDialog"
-					oncomplete="eqiCompDialog.show();"
-					action="#{backingBean.assignSelEquiCompany(equiBean)}">
-					<p:graphicImage library="ep/images/design" name="edit.png"
-						value="/resources/ep/images/design/edit.png" />
-				</p:commandLink>
-			</p:column>
-		</p:dataTable>
-		<p:spacer height="2px;" />
-		<div align="right">
-			<p:commandButton value="Add"
-				action="#{backingBean.assignNewEquiCompBean}"
-				oncomplete="eqiCompDialog.show();" update=":form:tt:eqiCompDialog" />
-			<p:commandButton value="Delete" />
+				<p:column headerText="Share Amt (RM.)">
+					<h:outputText value="#{equiBean.shareAmount}" />
+				</p:column>
+				<p:column headerText="Share holding(%)">
+					<h:outputText value="#{equiBean.sharePercentage}" />
+				</p:column>
+				<p:column headerText="Action">
+					<p:commandLink update=":form:tt:eqiCompDialog"
+						oncomplete="eqiCompDialog.show();"
+						action="#{backingBean.assignSelEquiCompany(equiBean)}">
+						<p:graphicImage library="ep/images/design" name="edit.png"
+							value="/resources/ep/images/design/edit.png" />
+					</p:commandLink>
+				</p:column>
+			</p:dataTable>
+			<p:spacer height="2px;" />
+			<div align="right">
+				<p:commandButton value="Add"
+					action="#{backingBean.assignNewEquiCompBean}"
+					oncomplete="eqiCompDialog.show();" update=":form:tt:eqiCompDialog" />
+				<p:commandButton value="Delete" />
 
-		</div>
-		<br />
-		<p:outputPanel rendered="#{backingBean.managedBean.poUser}">
-			<table style="width: 50%">
-				<tr>
-					<td style="padding-left: 38px;"><p:outputLabel
-							value="PO Remarks" /></td>
-					<td><p:inputTextarea autoResize="true" cols="41" /></td>
-				</tr>
-			</table>
-		</p:outputPanel>
-		<p:outputPanel rendered="#{backingBean.managedBean.approverUser}">
-			<table style="width: 100%">
-				<tr>
-					<td style="padding-left: 38px;"><p:outputLabel
-							value="PO Remarks" /></td>
-					<td><p:inputTextarea autoResize="true" readonly="true"
-							disabled="true" cols="41" /></td>
-					<td style="padding-left: 22px;"><p:outputLabel
-							value="Approver Remarks" /></td>
-					<td><p:inputTextarea autoResize="true" cols="41" /></td>
+			</div>
+			<br />
+			<p:outputPanel rendered="#{backingBean.managedBean.poUser}">
+				<table style="width: 50%">
+					<tr>
+						<td style="padding-left: 38px;"><p:outputLabel
+								value="PO Remarks" /></td>
+						<td><p:inputTextarea autoResize="true" cols="41" /></td>
+					</tr>
+				</table>
+			</p:outputPanel>
+			<p:outputPanel rendered="#{backingBean.managedBean.approverUser}">
+				<table style="width: 100%">
+					<tr>
+						<td style="padding-left: 38px;"><p:outputLabel
+								value="PO Remarks" /></td>
+						<td><p:inputTextarea autoResize="true" readonly="true"
+								disabled="true" cols="41" /></td>
+						<td style="padding-left: 22px;"><p:outputLabel
+								value="Approver Remarks" /></td>
+						<td><p:inputTextarea autoResize="true" cols="41" /></td>
 
-				</tr>
-			</table>
-		</p:outputPanel>
+					</tr>
+				</table>
+			</p:outputPanel>
+		</p:panel>
 	</p:panel>
 	<p:dialog width="450px" header="ShareHolding / Equity Company Page"
 		id="eqiCompDialog" widgetVar="eqiCompDialog" resizable="false"

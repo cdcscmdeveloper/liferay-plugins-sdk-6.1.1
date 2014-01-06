@@ -19,8 +19,10 @@
 			id="revPanHdr">
 			<ui:include src="applyBumiReviewHeaderPage.xhtml" />
 		</p:outputPanel>
+		<p:remoteCommand name="updateBlockUI" update="@(.ui-panel)" />
 		<p:tabView id="tt" orientation="left" widgetVar="tt"
-			activeIndex="#{backingBean.managedBean.tabActiveIndex}">
+			activeIndex="#{backingBean.managedBean.tabActiveIndex}"
+			onTabShow="updateBlockUI();">
 
 			<p:tab title="#{lbl['lbl.sm.companyStepLbl']}">
 				<ui:include src="step1BumiAppln_CompanyInfo.xhtml" />
