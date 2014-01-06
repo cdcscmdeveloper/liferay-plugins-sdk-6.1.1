@@ -19,7 +19,8 @@
 			<p:calendar disabled="true" value="#{panelBackingBean.managedBean.circularVer.endDate}" 
 				pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}" id="popupButtonCal4" showOn="button" />
 			<h:outputLabel value="#{lbl['lbl.ct.cc.upload']}" />
-			<p:fileUpload disabled="true" value="#{panelBackingBean.circularLetter}" mode="simple" cancelLabel="true" />
+			<h:commandLink value="#{panelBackingBean.managedBean.circularVer.circularFileName}" styleClass="blue_font" 
+				action="#{panelBackingBean.downloadFile(1)}" />			
 			<h:outputLabel value="#{lbl['lbl.ct.cc.frno']}" />
 			<p:inputText disabled="true" value="#{panelBackingBean.managedBean.circularVer.circularFileRefNo}" />			
 			<p:outputLabel value="Update Type" />
@@ -33,7 +34,13 @@
 			<h:outputLabel value="Update Description" />
 			<p:inputText value="#{panelBackingBean.managedBean.circularVer.updateDescription}" />								
 			<h:outputLabel value="Update Letter" />
-			<p:fileUpload value="#{panelBackingBean.circularLetter}" mode="simple" cancelLabel="true" />
+			<h:panelGroup id="uploadUpdCcrPg">
+				<p:commandButton oncomplete="uploadUpdCcrDlg.show();return false;" icon="iconAttachment" 
+					update="uploadUpdCcrPg" value="Choose file" 
+					rendered="#{panelBackingBean.isCentralContractAdmin()}" />	
+				<h:commandLink value="#{panelBackingBean.managedBean.circularVer.updateFileName}" styleClass="blue_font" 
+					action="#{panelBackingBean.downloadFile(2)}" />					
+			</h:panelGroup>
 			<h:outputLabel value="Update File Ref. No." />
 			<p:inputText value="#{panelBackingBean.managedBean.circularVer.updateFileRefNo}" />
 			<h:outputLabel value="Extension Period" />
@@ -69,5 +76,15 @@
 			</h:panelGrid>
 		</h:panelGrid>
 	</h:panelGrid>
+	
+	<p:dialog id="uploadUpdCcrDlg" widgetVar="uploadUpdCcrDlg" modal="false" resizable="false" width="700px" height="350" styleClass="pop_up_top" header="#{lbl['lbl.bpm.choose.file']}">
+		<p:ajax event="close" />
+		<p:fileUpload style="display:inline;" mode="advanced" 
+			fileUploadListener="#{panelBackingBean.fileUpload}" 
+			allowTypes="/(\.|\/)(gif|jpe?g|png|bmp|txt|xls|xlsx|pdf|doc|docx|csv)$/" 
+			invalidFileMessage="Only JPG, GIF, PNG, BMP, TXT, XLS, PDF, DOC, CSV files are accepted"
+			update="uploadUpdCcrPg" >
+		</p:fileUpload> 
+	</p:dialog>
 
 </ui:composition>

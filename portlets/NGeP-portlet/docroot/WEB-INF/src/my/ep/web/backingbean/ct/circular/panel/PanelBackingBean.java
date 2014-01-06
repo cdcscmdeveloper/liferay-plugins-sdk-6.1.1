@@ -3,6 +3,14 @@
  */
 package my.ep.web.backingbean.ct.circular.panel;
 
+import java.io.BufferedInputStream;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
+import java.net.URL;
+import java.net.URLConnection;
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Date;
@@ -16,7 +24,9 @@ import javax.faces.bean.RequestScoped;
 import javax.faces.context.FacesContext;
 import javax.faces.event.ActionEvent;
 import javax.faces.model.SelectItem;
+import javax.portlet.PortletResponse;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
 import my.ep.biz.bean.search.ISearchBean;
 import my.ep.biz.bean.search.ISearchResultBean;
@@ -61,6 +71,7 @@ import my.ep.persistence.entity.pm.common.PmParameter;
 import my.ep.persistence.entity.pm.common.PmState;
 import my.ep.persistence.entity.pm.common.PmStatusDesc;
 import my.ep.persistence.entity.sm.SmSupplier;
+import my.ep.persistence.logging.LogKey;
 import my.ep.type.aut.SearchOperator;
 import my.ep.type.pm.RoleCode;
 import my.ep.util.lookupservice.EpBpmBusinessDelegate;
@@ -73,6 +84,8 @@ import my.ep.web.util.FacesScopes;
 import my.ep.web.util.lookupservice.BusinessDelegate;
 
 import org.apache.log4j.Logger;
+import org.apache.log4j.MDC;
+import org.primefaces.event.FileUploadEvent;
 import org.primefaces.model.DualListModel;
 import org.primefaces.model.UploadedFile;
 
@@ -92,8 +105,6 @@ public class PanelBackingBean extends BaseBackingBean<PanelManagedBean>{
 	
 	private IPagingDataModel<CtCancelCircular> cancelledCircularDataModel = new CancelledCircularPagingDataModel();
 	private IPagingDataModel<CtCircularVer> circularVerPagingDataModel = new CircularVerPagingDataModel();
-	
-	private UploadedFile circularLetter;
 	
 	public PanelBackingBean(){
 		if(getManagedBean().getOutComes()==null) {
@@ -237,6 +248,10 @@ public class PanelBackingBean extends BaseBackingBean<PanelManagedBean>{
 		try {
 			circularSO = (ICircularSO)BusinessDelegate.getInstance().getServiceObject("ct",ICircularSO.class);
 			
+			if(MDC.get(LogKey.USER_ID)==null) {
+				new LogKey(getFacesScopes().getUserSessionBean().getUserId());
+			}
+			
 			CtCircular circular = getManagedBean().getCircular();
 			if(circular==null) {
 				circular = new CtCircular();
@@ -251,12 +266,9 @@ public class PanelBackingBean extends BaseBackingBean<PanelManagedBean>{
 				FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "Please select at least one approver.",""));
 				return null;
 			}
-			
-			if(circularLetter!=null) {
-				circularVer.setCircularFileName(circularLetter.getFileName());
-				circularVer.setCircularFilePath(circularLetter.getFileName());
-			} else {
-				// TODO
+
+			// TODO
+			if(circularVer.getCircularFileName()==null) {
 				circularVer.setCircularFileName("temp");
 				circularVer.setCircularFilePath("tempPath");
 			}
@@ -847,7 +859,10 @@ public class PanelBackingBean extends BaseBackingBean<PanelManagedBean>{
 				PmParameter parameter = new PmParameter();
 				parameter.setParameterId(-1L);
 				resDTO.getCircularVer().setUpdateType(parameter);
+			} else {
+				getManagedBean().setUpdateAction(true);
 			}
+			
 			for(CtPanelItem panelItem : resDTO.getCircularVer().getCtPanelItems()) {
 				for(CtPanelSupplier panelSupplier : panelItem.getCtPanelSuppliers()) {
 					if(panelSupplier.getCtPanelZone()==null) {
@@ -942,6 +957,61 @@ public class PanelBackingBean extends BaseBackingBean<PanelManagedBean>{
 		}		
 	}
 	
+	public void fileUpload(FileUploadEvent event) throws Exception {
+		UploadedFile item = event.getFile();
+		String filePath = "C:/projects/uploads/"+item.getFileName();
+		FileOutputStream fileOuputStream = new FileOutputStream(filePath); 
+	    fileOuputStream.write(item.getContents());
+	    fileOuputStream.close();
+	    if(getManagedBean().isUpdateAction()) {
+			getManagedBean().getCircularVer().setUpdateFileName(item.getFileName());
+			getManagedBean().getCircularVer().setUpdateFilePath(filePath);
+	    } else {
+			getManagedBean().getCircularVer().setCircularFileName(item.getFileName());
+			getManagedBean().getCircularVer().setCircularFilePath(filePath);
+	    }
+	}
+	
+	public void downloadFile(int type) throws IOException {
+		PortletResponse  portletResponse = (PortletResponse) FacesContext.getCurrentInstance().getExternalContext().getResponse();  
+		HttpServletResponse res = com.liferay.portal.util.PortalUtil.getHttpServletResponse(portletResponse);
+		
+		String fileName = null;
+		String filePath = null;
+		if(type==1) {
+			fileName = getManagedBean().getCircularVer().getCircularFileName();
+			filePath = getManagedBean().getCircularVer().getCircularFilePath();
+		} else {
+			fileName = getManagedBean().getCircularVer().getUpdateFileName();
+			filePath = getManagedBean().getCircularVer().getUpdateFilePath();
+		}
+		
+		res.setHeader( "Content-Disposition", "attachment; filename=\"" + fileName + "\"" );//
+		res.setHeader( "Content-Transfer-Encoding", "binary" );
+		res.setContentType("application/octet-stream");
+		res.flushBuffer();
+		OutputStream out = res.getOutputStream();   
+		if(filePath!=null) {
+			InputStream input = null;
+			try {
+				URLConnection uc = new URL(filePath).openConnection();
+				input = new BufferedInputStream(uc.getInputStream()); 
+			} catch (Exception e) {
+				// Cannot open connection, maybe local file
+				input = new FileInputStream(filePath);
+			}
+			byte[] buffer = new byte[4096];
+			int bytesRead;
+			while ((bytesRead = input.read( buffer )) != -1){ 
+				out.write( buffer, 0, bytesRead ); buffer = new byte[4096]; 
+			}
+			input.close();			
+		}
+		out.flush();
+		out.close(); 
+		FacesContext.getCurrentInstance().responseComplete();
+	}	
+	
 	private class CancelledCircularPagingDataModel extends PagingDataModel<CtCancelCircular> {
 		private static final long serialVersionUID = 1L;
 
@@ -1017,6 +1087,7 @@ public class PanelBackingBean extends BaseBackingBean<PanelManagedBean>{
 				
 				CircularReqDTO reqDTO = new CircularReqDTO();
 				reqDTO.setCircularVerSearchBean(searchBean);
+				reqDTO.setFilterStatusId(getManagedBean().getSearchStatusId());
 				
 				ICircularSO circularSO = (ICircularSO) BusinessDelegate.getInstance().getServiceObject("ct",ICircularSO.class);
 				CircularResDTO resDTO = circularSO.searchCircularVer(reqDTO);
@@ -1029,14 +1100,6 @@ public class PanelBackingBean extends BaseBackingBean<PanelManagedBean>{
 			}
 			return null;
 		}
-	}
-	
-	public UploadedFile getCircularLetter() {
-		return circularLetter;
-	}
-
-	public void setCircularLetter(UploadedFile circularLetter) {
-		this.circularLetter = circularLetter;
 	}
 
 	public IPagingDataModel<CtCancelCircular> getCancelledCircularDataModel() {

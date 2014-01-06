@@ -3,9 +3,14 @@
  */
 package my.ep.web.backingbean.ct.circular.cc;
 
-import java.io.FileNotFoundException;
+import java.io.BufferedInputStream;
+import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
+import java.net.URL;
+import java.net.URLConnection;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
@@ -17,7 +22,9 @@ import javax.faces.bean.ManagedBean;
 import javax.faces.bean.RequestScoped;
 import javax.faces.context.FacesContext;
 import javax.faces.model.SelectItem;
+import javax.portlet.PortletResponse;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
 import my.ep.biz.bean.search.ISearchBean;
 import my.ep.biz.bean.search.ISearchResultBean;
@@ -56,6 +63,7 @@ import my.ep.persistence.entity.pm.authorization.PmUserGroup;
 import my.ep.persistence.entity.pm.authorization.PmUserGroupUser;
 import my.ep.persistence.entity.pm.common.PmParameter;
 import my.ep.persistence.entity.pm.common.PmStatusDesc;
+import my.ep.persistence.logging.LogKey;
 import my.ep.type.aut.SearchOperator;
 import my.ep.type.pm.RoleCode;
 import my.ep.util.lookupservice.EpBpmBusinessDelegate;
@@ -68,6 +76,7 @@ import my.ep.web.util.FacesScopes;
 import my.ep.web.util.lookupservice.BusinessDelegate;
 
 import org.apache.log4j.Logger;
+import org.apache.log4j.MDC;
 import org.primefaces.event.FileUploadEvent;
 import org.primefaces.model.DualListModel;
 import org.primefaces.model.UploadedFile;
@@ -402,6 +411,7 @@ public class CentralContractBackingBean extends BaseBackingBean<CentralContractM
 				
 				CircularReqDTO reqDTO = new CircularReqDTO();
 				reqDTO.setCircularVerSearchBean(searchBean);
+				reqDTO.setFilterStatusId(getManagedBean().getSearchStatusId());
 				
 				ICircularSO circularSO = (ICircularSO) BusinessDelegate.getInstance().getServiceObject("ct",ICircularSO.class);
 				CircularResDTO resDTO = circularSO.searchCircularVer(reqDTO);
@@ -448,6 +458,10 @@ public class CentralContractBackingBean extends BaseBackingBean<CentralContractM
 		try {
 			circularSO = (ICircularSO)BusinessDelegate.getInstance().getServiceObject("ct",ICircularSO.class);
 			
+			if(MDC.get(LogKey.USER_ID)==null) {
+				new LogKey(getFacesScopes().getUserSessionBean().getUserId());
+			}
+			
 			CtCircular circular = this.getManagedBean().getCircular();
 			if(circular==null) {
 				circular = new CtCircular();
@@ -458,8 +472,10 @@ public class CentralContractBackingBean extends BaseBackingBean<CentralContractM
 				circularVer.setDocType(ContractConst.DOC_TYPE_CC_CIRCULAR_CREATION);
 			}
 			// TODO
-			circularVer.setCircularFileName("temp");
-			circularVer.setCircularFilePath("tempPath");
+			if(circularVer.getCircularFileName()==null) {
+				circularVer.setCircularFileName("temp");
+				circularVer.setCircularFilePath("tempPath");
+			}
 			
 			CircularReqDTO reqDTO = new CircularReqDTO();
 			reqDTO.setSelectedApprovers(getManagedBean().getApproverModel().getTarget());
@@ -515,28 +531,60 @@ public class CentralContractBackingBean extends BaseBackingBean<CentralContractM
 		return null;
 	}
 
-	public void fileUpload(FileUploadEvent event) {
-		UploadedFile file = event.getFile();
-		String fileName = file.getFileName();
-		byte[] fileBytes = file.getContents();
-		log.info("Processed uploaded file " + fileName + " of size:" + fileBytes.length);
-		this.getManagedBean().getCircularVer().setCircularFileName(fileName);
-		this.getManagedBean().getCircularVer().setCircularFilePath("C:\\upload");
-		FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_INFO,	"The file was uploaded successfully.", null);
-		FacesMessage msg = new FacesMessage("Succesful", event.getFile().getFileName() + " is uploaded.");
-		FacesContext.getCurrentInstance().addMessage(null, msg);
-		FileOutputStream fos;
-		try {
-			fos = new FileOutputStream("C:\\upload\\" + fileName);
-			fos.write(fileBytes);
-			fos.close();
-		} catch (FileNotFoundException e) {
-			e.printStackTrace();
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-		FacesContext.getCurrentInstance().addMessage(null, message);
+	public void fileUpload(FileUploadEvent event) throws Exception {
+		UploadedFile item = event.getFile();
+		String filePath = "C:/projects/uploads/"+item.getFileName();
+		FileOutputStream fileOuputStream = new FileOutputStream(filePath); 
+	    fileOuputStream.write(item.getContents());
+	    fileOuputStream.close();
+	    if(getManagedBean().isUpdateAction()) {
+			getManagedBean().getCircularVer().setUpdateFileName(item.getFileName());
+			getManagedBean().getCircularVer().setUpdateFilePath(filePath);
+	    } else {
+			getManagedBean().getCircularVer().setCircularFileName(item.getFileName());
+			getManagedBean().getCircularVer().setCircularFilePath(filePath);
+	    }
 	}
+	
+	public void downloadFile(int type) throws IOException {
+		PortletResponse  portletResponse = (PortletResponse) FacesContext.getCurrentInstance().getExternalContext().getResponse();  
+		HttpServletResponse res = com.liferay.portal.util.PortalUtil.getHttpServletResponse(portletResponse);
+		
+		String fileName = null;
+		String filePath = null;
+		if(type==1) {
+			fileName = getManagedBean().getCircularVer().getCircularFileName();
+			filePath = getManagedBean().getCircularVer().getCircularFilePath();
+		} else {
+			fileName = getManagedBean().getCircularVer().getUpdateFileName();
+			filePath = getManagedBean().getCircularVer().getUpdateFilePath();
+		}
+		
+		res.setHeader( "Content-Disposition", "attachment; filename=\"" + fileName + "\"" );//
+		res.setHeader( "Content-Transfer-Encoding", "binary" );
+		res.setContentType("application/octet-stream");
+		res.flushBuffer();
+		OutputStream out = res.getOutputStream();   
+		if(filePath!=null) {
+			InputStream input = null;
+			try {
+				URLConnection uc = new URL(filePath).openConnection();
+				input = new BufferedInputStream(uc.getInputStream()); 
+			} catch (Exception e) {
+				// Cannot open connection, maybe local file
+				input = new FileInputStream(filePath);
+			}
+			byte[] buffer = new byte[4096];
+			int bytesRead;
+			while ((bytesRead = input.read( buffer )) != -1){ 
+				out.write( buffer, 0, bytesRead ); buffer = new byte[4096]; 
+			}
+			input.close();			
+		}
+		out.flush();
+		out.close(); 
+		FacesContext.getCurrentInstance().responseComplete();
+	}	
 	
 	public String gotoPage() {
 		String action = FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap().get("action");
@@ -645,6 +693,8 @@ public class CentralContractBackingBean extends BaseBackingBean<CentralContractM
 				PmParameter parameter = new PmParameter();
 				parameter.setParameterId(-1L);
 				resDTO.getCircularVer().setUpdateType(parameter);				
+			} else {
+				getManagedBean().setUpdateAction(true);
 			}
 			
 			getManagedBean().getApproverModel().getSource().clear();
