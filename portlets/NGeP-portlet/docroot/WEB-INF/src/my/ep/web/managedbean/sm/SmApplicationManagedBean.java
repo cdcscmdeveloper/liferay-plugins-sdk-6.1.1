@@ -151,8 +151,6 @@ public class SmApplicationManagedBean extends BaseManagedBean {
 	// TODO change the type later
 	private List<SvcTemplateBean> selectedTemplateList;
 
-	private List<SvcTemplateBean> templateList = new ArrayList<SvcTemplateBean>();
-
 	private String[] bpmActions;
 
 	private String selectedBpmAction;
@@ -381,22 +379,9 @@ public class SmApplicationManagedBean extends BaseManagedBean {
 		defaultParentCatList.add(p2);
 		// For CategoryCodes End
 
-		prepareTemplateList();
-
 		testBlock = Boolean.TRUE;
 
 		System.out.println(" ********* END MANAGED BEAN CREATION ****** ");
-	}
-
-	private List<SvcTemplateBean> prepareTemplateList() {
-		templateList.add(new SvcTemplateBean(1, "Status Bumiputera"));
-		templateList.add(new SvcTemplateBean(2, "Status Pembuatan"));
-		templateList.add(new SvcTemplateBean(3, "Insurans"));
-		templateList.add(new SvcTemplateBean(4, "Limbungan"));
-		templateList.add(new SvcTemplateBean(5, "Percetaken"));
-		templateList.add(new SvcTemplateBean(6, "Pengangkut"));
-
-		return templateList;
 	}
 
 	public SmSupplierCategory getSelectedCategory() {
@@ -798,14 +783,6 @@ public class SmApplicationManagedBean extends BaseManagedBean {
 	public void setSelectedTemplateList(
 			List<SvcTemplateBean> selectedTemplateList) {
 		this.selectedTemplateList = selectedTemplateList;
-	}
-
-	public List<SvcTemplateBean> getTemplateList() {
-		return templateList;
-	}
-
-	public void setTemplateList(List<SvcTemplateBean> templateList) {
-		this.templateList = templateList;
 	}
 
 	public List<SmSupplierCategory> getSelectedCategories() {

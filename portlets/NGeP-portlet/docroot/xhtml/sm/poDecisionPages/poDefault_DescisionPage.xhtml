@@ -63,10 +63,14 @@
 		<div style="width: 100%" align="right">
 			<p:commandButton value="Approve" onclick="approveDialog.show();" />
 			<p:commandButton value="Reject" onclick="rejectDialog.show();" />
-			<p:commandButton value="Escalate To Approver"
+			<p:commandButton value="Recommend To Approve"
 				onclick="submitApprvrDialog.show();" />
-			<p:commandButton value="Recommend Site Visit"
-				onclick="svcDialog.show();" />
+			<p:commandButton value="Recommend To Reject"
+				onclick="submitApprvrDialog.show();" />
+			<c:if test="#{backingBean.managedBean.smAppl.applType eq 'B'}">
+				<p:commandButton value="Recommend Site Visit"
+					onclick="svcDialog.show();" />
+			</c:if>
 			<p:commandButton value="Send Enquiry" />
 		</div>
 	</p:panel>
@@ -76,7 +80,7 @@
 
 		<ui:include
 			src="/xhtml/sm/shared/poDecisionSharedPages/assignToSvcForm.xhtml" />
-		
+
 	</p:dialog>
 	<p:dialog width="650px" header="Submit To Approver"
 		widgetVar="submitApprvrDialog" resizable="false" showEffect="fade"

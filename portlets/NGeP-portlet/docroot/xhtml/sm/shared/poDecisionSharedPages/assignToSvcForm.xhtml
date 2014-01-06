@@ -75,9 +75,6 @@
 		<ac:paginator for="svcFacDt" />
 		<p:column selectionMode="multiple" width="5%" />
 
-		<p:column headerText="NO.">
-			<h:outputText value="#{index+1}" />
-		</p:column>
 
 		<p:column headerText="Factory Name">
 			<p:commandLink value="#{fac.smAddress.address1}"
@@ -102,36 +99,19 @@
 		id="svcCatDt">
 		<ac:paginator for="svcCatDt" />
 		<p:columnGroup type="header">
-			<!-- <p:row>
-				<p:column rowspan="2" selectionMode="multiple" width="5%" />
-				<p:column rowspan="2" headerText="No." />
-				<p:column rowspan="2" headerText="Code" />
-				<p:column colspan="3" headerText="Category" />
-				<p:column rowspan="2" headerText="Business Type" />
-				<p:column rowspan="2" headerText="Category Type" />
-				<p:column rowspan="2" headerText="PO Action" />
-			</p:row> -->
+
 
 			<p:row>
 				<p:column selectionMode="multiple" width="5%" />
-				<p:column headerText="No." />
-				<p:column headerText="Code" />
-				<p:column headerText="Parent" />
-				<p:column headerText="Child" />
-				<p:column headerText="Sub-Child" />
+				<p:column headerText="Main Category" />
+				<p:column headerText="Sub Category" />
+				<p:column headerText="Sub Category Division" />
 				<p:column headerText="Business Type" />
 				<p:column headerText="Category Type" />
 				<p:column headerText="PO Action" />
 			</p:row>
 		</p:columnGroup>
 		<p:column selectionMode="multiple" width="5%" />
-		<p:column>
-			<h:outputText value="#{index+1}" />
-		</p:column>
-		<p:column>
-			<h:outputText
-				value="#{catBean.pmCategoryL1.cateogryL1Code}#{catBean.pmCategoryL2.cateogryL2Code}#{catBean.pmCategoryL3.cateogryL3Code}" />
-		</p:column>
 		<p:column>
 			<h:outputText
 				value="#{catBean.pmCategoryL1.cateogryL1Code} -  #{catBean.pmCategoryL1.categoryName}" />
@@ -162,43 +142,32 @@
 		</p:column>
 	</p:dataTable>
 	<br />
-	<p:separator />
-	<p:dataTable var="template"
-		value="#{backingBean.managedBean.templateList}"
-		selection="#{backingBean.managedBean.selectedTemplateList}"
-		rowKey="#{template.templateSeq}" rowIndexVar="index" id="svcTemId">
-		<ac:paginator for="svcTemId" />
-		<p:column selectionMode="multiple" width="5%" />
-		<p:column headerText="No.">  
-                   #{template.templateSeq}  
-      		    </p:column>
-		<p:column headerText="Category">  
-		            #{template.templateName}
-		        </p:column>
-
-	</p:dataTable>
-	<br />
 	<table style="width: 100%">
 
 		<tr>
 			<td><p:outputLabel value="Remarks For SVC" /></td>
 			<td><p:inputTextarea cols="70" style="margin-bottom:5px;" /></td>
 		</tr>
-		<tr>
-			<td><p:outputLabel value="Remarks For Approver" /></td>
-			<td><p:inputTextarea cols="70" style="margin-bottom:5px;" /></td>
-		</tr>
-		<tr>
-			<td><p:outputLabel value="Recommendation For Approver" /></td>
-			<td><p:selectOneRadio>
-					<f:selectItem itemLabel="Approve" />
-					<f:selectItem itemLabel="Reject" />
-				</p:selectOneRadio></td>
-		</tr>
-
 	</table>
+
 	<br />
 	<p:outputPanel id="svcButPan">
+		<p:panel rendered="#{backingBean.managedBean.poSiteVisitType eq 'A'}">
+			<table>
+				<tr>
+					<td><p:outputLabel value="Remarks For Approver" /></td>
+					<td><p:inputTextarea cols="70" style="margin-bottom:5px;" /></td>
+				</tr>
+				<tr>
+					<td><p:outputLabel value="Recommendation For Approver" /></td>
+					<td><p:selectOneRadio>
+							<f:selectItem itemLabel="Approve" />
+							<f:selectItem itemLabel="Reject" />
+						</p:selectOneRadio></td>
+				</tr>
+
+			</table>
+		</p:panel>
 		<div align="right">
 			<c:choose>
 				<c:when test="#{backingBean.managedBean.poSiteVisitType eq 'B'}">

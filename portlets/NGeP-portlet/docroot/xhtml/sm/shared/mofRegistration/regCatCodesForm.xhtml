@@ -43,24 +43,17 @@
 				</p:row> -->
 
 				<p:row>
-					<p:column headerText="No." />
-					<p:column headerText="Code" />
-					<p:column headerText="Parent" />
-					<p:column headerText="Child" />
-					<p:column headerText="Sub-Child" />
+					<p:column headerText="Main Category" />
+					<p:column headerText="Sub Category" />
+					<p:column headerText="Sub Category Division" />
 					<p:column headerText="Business Type" />
 					<p:column headerText="Category Type" />
 					<p:column headerText="PO Action"
 						rendered="#{backingBean.managedBean.poUser}" />
+					<p:column headerText="Remarks"
+						rendered="#{backingBean.managedBean.poUser}" />
 				</p:row>
 			</p:columnGroup>
-			<p:column>
-				<h:outputText value="#{index+1}" />
-			</p:column>
-			<p:column>
-				<h:outputText
-					value="#{catBean.pmCategoryL1.categoryL1Code}#{catBean.pmCategoryL2.categoryL2Code}#{catBean.pmCategoryL3.categoryL3Code}" />
-			</p:column>
 			<p:column>
 				<h:outputText
 					value="#{catBean.pmCategoryL1.categoryL1Code} -  #{catBean.pmCategoryL1.categoryName}" />
@@ -84,10 +77,14 @@
 					rendered="#{catBean.categoryType eq 'S'}" />
 			</p:column>
 			<p:column rendered="#{backingBean.managedBean.poUser}">
-				<p:selectOneRadio>
+				<p:selectOneRadio value="#{catBean.no}" layout="pageDirection"
+					id="catPoAppr">
 					<f:selectItem itemLabel="Approve" itemValue="1" />
 					<f:selectItem itemLabel="Reject" itemValue="2" />
 				</p:selectOneRadio>
+			</p:column>
+			<p:column rendered="#{backingBean.managedBean.poUser}">
+				<p:inputTextarea />
 			</p:column>
 		</p:dataTable>
 		<p:spacer height="2px;" />
@@ -102,7 +99,7 @@
 			<table style="width: 50%">
 				<tr>
 					<td><p:outputLabel value="PO Remarks" /></td>
-					<td><p:inputTextarea autoResize="true" /></td>
+					<td><p:inputTextarea autoResize="true" cols="41" /></td>
 				</tr>
 			</table>
 		</p:outputPanel>
@@ -111,9 +108,9 @@
 				<tr>
 					<td><p:outputLabel value="PO Remarks" /></td>
 					<td><p:inputTextarea autoResize="true" readonly="true"
-							disabled="true" /></td>
+							disabled="true" cols="41" /></td>
 					<td><p:outputLabel value="Approver Remarks" /></td>
-					<td><p:inputTextarea autoResize="true" /></td>
+					<td><p:inputTextarea autoResize="true" cols="41" /></td>
 
 				</tr>
 			</table>
@@ -193,7 +190,7 @@
 					</tr>
 					<tr>
 						<td><p:outputLabel value="
-										* Parent Category" /></td>
+										* Main Category" /></td>
 						<td><p:selectOneMenu
 								value="#{backingBean.managedBean.selectedParentCat}"
 								style="width: 207px;margin-bottom: 5px;">
@@ -208,7 +205,7 @@
 							</p:selectOneMenu></td>
 					</tr>
 					<tr>
-						<td><p:outputLabel value="* Child Category" /></td>
+						<td><p:outputLabel value="* Sub Category" /></td>
 						<td><p:selectOneMenu
 								value="#{backingBean.managedBean.selectedChildCat}" id="child"
 								style="width: 207px;margin-bottom: 5px;">
@@ -222,7 +219,7 @@
 							</p:selectOneMenu></td>
 					</tr>
 					<tr>
-						<td><p:outputLabel value="* Sub Child Category" /></td>
+						<td><p:outputLabel value="* Sub Category Division" /></td>
 						<td><p:selectOneMenu
 								value="#{backingBean.managedBean.selectedSubChildCat}"
 								id="subChild" style="width: 207px;margin-bottom: 5px;">

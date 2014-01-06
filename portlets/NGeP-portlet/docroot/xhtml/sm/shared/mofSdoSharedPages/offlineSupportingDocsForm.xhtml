@@ -9,35 +9,25 @@
 		header="Offline Supporting Documents List For Application No. - #{backingBean.managedBean.smAppl.applNo} ">
 
 
-		<table style="width: 100%">
-			<tr>
-				<td><p:dataTable var="table"
-						value="#{mofRegistrationBackingBean.dataList}">
-						<p:column headerText="No.">  
-                   #{table.no}  
-      		    </p:column>
+		<p:dataTable var="table"
+			value="#{mofRegistrationBackingBean.dataList}">
 
-						<p:column headerText="Document Name">  
+			<p:column headerText="Document Name">  
 		            #{table.documentName} 
 		        </p:column>
-						<p:column headerText="Document Description">  
+			<p:column headerText="Document Description">  
 		            #{table.documentdescription} 
 		        </p:column>
-						<p:column headerText="Is Sent By Supplier?">
+			<p:column headerText="Is Sent By Supplier?">
 					#{table.isSentBySupplier}
 				</p:column>
-						<p:column headerText="Is Valid?">
-							<p:selectBooleanCheckbox value="#{table.docSent}" />
-						</p:column>
+			<p:column headerText="Is Valid?">
+				<p:selectBooleanCheckbox value="#{table.docSent}" />
+			</p:column>
 
 
-					</p:dataTable> <br /></td>
-			</tr>
-		</table>
-
-
-
-
+		</p:dataTable>
+		<br />
 
 
 

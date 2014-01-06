@@ -29,9 +29,6 @@
 			<p:dataTable var="table" id="onSdList"
 				value="#{mofRegistrationBackingBean.dataList}">
 				<ac:paginator for="onSdList" />
-				<p:column headerText="No.">  
-                   #{table.no}  
-      		    </p:column>
 
 				<p:column headerText="Document Name">  
 		            #{table.documentName} 

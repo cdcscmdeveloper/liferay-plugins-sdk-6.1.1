@@ -53,6 +53,24 @@
 
 			</td>
 		</tr>
+		<c:if test="#{backingBean.managedBean.approverUser}">
+			<tr>
+
+				<td>
+					<h6 style="color: blue;">
+						<h:outputText value="PO Recommendation" />
+					</h6>
+				</td>
+				<td>
+					<h6>
+						<h:outputText
+							value="#{backingBean.managedBean.poSecReview.recommendation}" />
+					</h6>
+
+				</td>
+
+			</tr>
+		</c:if>
 	</table>
 	<br />
 	<table style="width: 250px;">

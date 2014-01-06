@@ -86,9 +86,6 @@
 				value="#{backingBean.managedBean.selectedSignatoryBankAcct.smChequeSignatories}"
 				rowKey="#{auth.chequeSignatoryId}" rowIndexVar="index">
 				<ac:paginator for="signatory" />
-				<p:column headerText="NO.">
-					<h:outputText value="#{index+1}" />
-				</p:column>
 
 				<p:column headerText="Name">
 					<h:outputText value="#{auth.smPersonnel.name}" />
@@ -113,7 +110,7 @@
 			<table style="width: 50%">
 				<tr>
 					<td><p:outputLabel value="PO Remarks" /></td>
-					<td><p:inputTextarea autoResize="true" /></td>
+					<td><p:inputTextarea autoResize="true" cols="41"/></td>
 				</tr>
 			</table>
 		</p:outputPanel>
@@ -122,9 +119,9 @@
 				<tr>
 					<td><p:outputLabel value="PO Remarks" /></td>
 					<td><p:inputTextarea autoResize="true" readonly="true"
-							disabled="true" /></td>
+							disabled="true" cols="41"/></td>
 					<td><p:outputLabel value="Approver Remarks" /></td>
-					<td><p:inputTextarea autoResize="true" /></td>
+					<td><p:inputTextarea autoResize="true" cols="41"/></td>
 
 				</tr>
 			</table>
