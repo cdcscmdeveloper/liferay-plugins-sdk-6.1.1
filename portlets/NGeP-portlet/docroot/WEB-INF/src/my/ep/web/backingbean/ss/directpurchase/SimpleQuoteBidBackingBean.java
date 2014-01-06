@@ -8,23 +8,24 @@ import java.util.Map;
 
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.RequestScoped;
+import javax.faces.context.FacesContext;
 
-import my.ep.biz.service.ss.directpurchase.IQuoteBidSO;
+import my.ep.biz.service.ss.directpurchase.IQuoteSO;
 import my.ep.bpm.dto.BpmRequestDTO;
 import my.ep.bpm.dto.BpmResponseDTO;
 import my.ep.bpm.service.IBpmSO;
 import my.ep.constant.ss.SourcingConstants;
 import my.ep.constants.SCProcessNameConst;
-import my.ep.dto.ss.directpurchase.QuoteBidReqDTO;
-import my.ep.dto.ss.directpurchase.QuoteBidResDTO;
+import my.ep.dto.ss.directpurchase.QuoteReqDTO;
+import my.ep.dto.ss.directpurchase.QuoteResDTO;
 import my.ep.jaxb.sc.directpurchasedata.SCDirectPurchaseDataType;
 import my.ep.persistence.entity.pm.common.PmCity;
 import my.ep.persistence.entity.pm.common.PmDistrict;
 import my.ep.persistence.entity.pm.common.PmDivision;
 import my.ep.persistence.entity.pm.common.PmState;
-import my.ep.persistence.entity.ss.directpurchase.ScBusinessNatureQuoteBidCriteria;
-import my.ep.persistence.entity.ss.directpurchase.ScQBZone;
-import my.ep.persistence.entity.ss.directpurchase.ScRequestListItem;
+import my.ep.persistence.entity.ss.directpurchase.ScBusinessNatureQuoteCriteria;
+import my.ep.persistence.entity.ss.directpurchase.ScQuoteZone;
+import my.ep.persistence.entity.ss.directpurchase.ScRequestItem;
 import my.ep.util.lookupservice.EpBpmBusinessDelegate;
 import my.ep.web.backingbean.BaseBackingBean;
 import my.ep.web.constant.SourcingConst;
@@ -46,15 +47,15 @@ public class SimpleQuoteBidBackingBean extends BaseBackingBean<SimpleQuoteBidMan
 		super();
 		
 	}
-
+	public	void	openMarketResearch(){
+		FacesContext fc = FacesContext.getCurrentInstance();
+		fc.getApplication().getNavigationHandler().handleNavigation(fc, null, "directPurchase");
+	}
 	public void saveQuoteBid(String action) {
-		QuoteBidReqDTO reqDTO = new QuoteBidReqDTO();
+		QuoteReqDTO reqDTO = new QuoteReqDTO();
 		reqDTO.setQuoteBidDtl(this.getManagedBean().getScQuoteBid());
-		IQuoteBidSO quoteBidSO = (IQuoteBidSO) BusinessDelegate.getInstance().getServiceObject(SourcingConst.SOURCING_MODULE, IQuoteBidSO.class);
-		if ("saveQuote".equalsIgnoreCase(action)) {
-			reqDTO.getQuoteBidDtl().setIsQuote(1);
-		}
-		QuoteBidResDTO resDTO = quoteBidSO.saveQuoteBidDtl(reqDTO);
+		IQuoteSO quoteBidSO = (IQuoteSO) BusinessDelegate.getInstance().getServiceObject(SourcingConst.SOURCING_MODULE, IQuoteSO.class);
+		QuoteResDTO resDTO = quoteBidSO.saveQuoteDtl(reqDTO);
 		getManagedBean().setScQuoteBid(reqDTO.getQuoteBidDtl());
 
 	}
@@ -67,7 +68,7 @@ public class SimpleQuoteBidBackingBean extends BaseBackingBean<SimpleQuoteBidMan
 		reqDTO.setCtxToken(token);
 		reqDTO.setProcessId(SCProcessNameConst.DIRECTPURCHASE_CREATION_PROCESS_ID);
 		SCDirectPurchaseDataType obj = new SCDirectPurchaseDataType();
-		obj.setDpId(getManagedBean().getScQuoteBid().getScRequestList().getRequestListId().intValue());
+		obj.setDpId(getManagedBean().getScQuoteBid().getQuoteId().intValue());
 		obj.setPtj("Asdqwe");
 		reqDTO.setOutcome("SUBMIT");
 		if(getManagedBean().getTaskId() != null){
@@ -78,13 +79,10 @@ public class SimpleQuoteBidBackingBean extends BaseBackingBean<SimpleQuoteBidMan
 		log.info("done submit.....");
 	}
 	public	void	submitQuoteBid(String action){
-		QuoteBidReqDTO reqDTO = new QuoteBidReqDTO();
+		QuoteReqDTO reqDTO = new QuoteReqDTO();
 		reqDTO.setQuoteBidDtl(this.getManagedBean().getScQuoteBid());
-		IQuoteBidSO quoteBidSO = (IQuoteBidSO) BusinessDelegate.getInstance().getServiceObject(SourcingConst.SOURCING_MODULE, IQuoteBidSO.class);
-		if ("saveQuote".equalsIgnoreCase(action)) {
-			reqDTO.getQuoteBidDtl().setIsQuote(1);
-		}
-		QuoteBidResDTO resDTO = quoteBidSO.saveQuoteBidDtl(reqDTO);
+		IQuoteSO quoteBidSO = (IQuoteSO) BusinessDelegate.getInstance().getServiceObject(SourcingConst.SOURCING_MODULE, IQuoteSO.class);
+		QuoteResDTO resDTO = quoteBidSO.saveQuoteDtl(reqDTO);
 		getManagedBean().setScQuoteBid(reqDTO.getQuoteBidDtl());
 		createBPMTask(true);
 	}
@@ -99,7 +97,7 @@ public class SimpleQuoteBidBackingBean extends BaseBackingBean<SimpleQuoteBidMan
 				}
 			}
 		}
-		ScQBZone zone = new ScQBZone();
+		ScQuoteZone zone = new ScQuoteZone();
 		zone.setZoneName(getManagedBean().getZoneName());
 		getManagedBean().setZoneName(null);
 		
@@ -115,27 +113,27 @@ public class SimpleQuoteBidBackingBean extends BaseBackingBean<SimpleQuoteBidMan
 	}
 
 	public void addBusinessNature() {
-		ScBusinessNatureQuoteBidCriteria businessNature = new ScBusinessNatureQuoteBidCriteria();
+		ScBusinessNatureQuoteCriteria businessNature = new ScBusinessNatureQuoteCriteria();
 		getManagedBean().getBusinessNatureCriterias().add(businessNature);
 	}
 	public	void	editZoneLocation(TreeNode rootZoneLocation){
 		List<LocationDTO>	locationDTOs	=	getLocations(rootZoneLocation);
+		ScQuoteZone	zone	=	getZone(rootZoneLocation);
 		List<PmState>	states	=	SourcingLocationHelper.getStateFromLocationDTOs(locationDTOs);
 		List<PmDivision>	divisions	=	SourcingLocationHelper.getDivisionFromLocationDTOs(locationDTOs);
 		List<PmDistrict>	districts	=	SourcingLocationHelper.getDistrictFromLocationDTOs(locationDTOs);
 		List<PmCity>	cities	=	SourcingLocationHelper.getCityFromLocationDTOs(locationDTOs);
 		getManagedBean().setRootLocationTree(LocationSingleton.getInstance().buildLocationTree(1L, states, districts, divisions, cities));
-	}
-	public	void	zoneLocationPopup(){
-		log.info("start show Zone location");
-		log.info("success");
+		if(zone != null){
+			getManagedBean().setZoneName(zone.getZoneName());
+		}
 	}
 	public	void	showZoneLocationPopup(){
 		getManagedBean().setRootLocationTree(LocationSingleton.getInstance().buildLocationTree(1L, null, null, null, null));
 	}
 
 	public void addItem() {
-		ScRequestListItem item = new ScRequestListItem();
+		ScRequestItem item = new ScRequestItem();
 		getManagedBean().getQuoteBidItems().add(item);
 	}
 	private	List<LocationDTO>	getLocations(TreeNode zoneLocation){
@@ -150,7 +148,29 @@ public class SimpleQuoteBidBackingBean extends BaseBackingBean<SimpleQuoteBidMan
 		}
 		return results;
 	}
-	
+	private	ScQuoteZone	getZone(TreeNode zoneLocation){
+		ScQuoteZone result	=	null;
+		if(zoneLocation.getData() instanceof LocationDTO){
+			LocationDTO locationDTO	=	(LocationDTO)zoneLocation.getData();
+			if(locationDTO.getZone() != null){
+				result = locationDTO.getZone();
+			}else{
+				if(zoneLocation.getChildren() != null && zoneLocation.getChildren().size() > 0){
+					for(TreeNode childLocationNode: zoneLocation.getChildren()){
+						result	=	getZone(childLocationNode);
+					}
+				}
+			}
+		}else{
+			if(zoneLocation.getChildren() != null && zoneLocation.getChildren().size() > 0){
+				for(TreeNode childLocationNode: zoneLocation.getChildren()){
+					result	=	getZone(childLocationNode);
+				}
+			}
+		}
+		
+		return result;
+	}
 	private	BpmResponseDTO	createBPMTask(Boolean submit){
 		IBpmSO bpmSO = (IBpmSO) EpBpmBusinessDelegate.getInstance().getServiceObject(IBpmSO.class);
 		FacesScopes facesScopes = new FacesScopes();
@@ -160,7 +180,7 @@ public class SimpleQuoteBidBackingBean extends BaseBackingBean<SimpleQuoteBidMan
 		reqDTO.setCtxToken(token);
 		reqDTO.setProcessId(SCProcessNameConst.DIRECTPURCHASE_CREATION_PROCESS_ID);
 		SCDirectPurchaseDataType obj = new SCDirectPurchaseDataType();
-		obj.setDpId(getManagedBean().getScQuoteBid().getScRequestList().getRequestListId().intValue());
+		obj.setDpId(getManagedBean().getScQuoteBid().getQuoteId().intValue());
 		obj.setPtj("Asdqwe");
 		if(submit){
 			obj.getSuppliers().clear();

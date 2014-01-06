@@ -6,7 +6,7 @@ import my.ep.persistence.entity.pm.common.PmCity;
 import my.ep.persistence.entity.pm.common.PmDistrict;
 import my.ep.persistence.entity.pm.common.PmDivision;
 import my.ep.persistence.entity.pm.common.PmState;
-import my.ep.persistence.entity.ss.directpurchase.ScQBZone;
+import my.ep.persistence.entity.ss.directpurchase.ScQuoteZone;
 
 public class LocationDTO implements Serializable{
 
@@ -14,7 +14,7 @@ public class LocationDTO implements Serializable{
 	 * 
 	 */
 	private static final long serialVersionUID = -8954854049553749821L;
-	private	ScQBZone	zone;
+	private	ScQuoteZone	zone;
 	private	PmState	state;
 	private	PmDistrict	district;
 	private	PmCity	city;
@@ -25,7 +25,7 @@ public class LocationDTO implements Serializable{
 	public LocationDTO() {
 		super();
 	}
-	public LocationDTO(ScQBZone zone) {
+	public LocationDTO(ScQuoteZone zone) {
 		super();
 		this.zone = zone;
 	}
@@ -102,11 +102,11 @@ public class LocationDTO implements Serializable{
 		this.division = division;
 	}
 
-	public ScQBZone getZone() {
+	public ScQuoteZone getZone() {
 		return zone;
 	}
 
-	public void setZone(ScQBZone zone) {
+	public void setZone(ScQuoteZone zone) {
 		this.zone = zone;
 	}
 	

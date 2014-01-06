@@ -6,11 +6,11 @@ import java.util.List;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
 
-import my.ep.persistence.entity.ss.directpurchase.ScBusinessNatureQuoteBidCriteria;
-import my.ep.persistence.entity.ss.directpurchase.ScQuoteBid;
-import my.ep.persistence.entity.ss.directpurchase.ScQuoteBidSupplier;
-import my.ep.persistence.entity.ss.directpurchase.ScRequestList;
-import my.ep.persistence.entity.ss.directpurchase.ScRequestListItem;
+import my.ep.persistence.entity.ss.directpurchase.ScBusinessNatureQuoteCriteria;
+import my.ep.persistence.entity.ss.directpurchase.ScQuote;
+import my.ep.persistence.entity.ss.directpurchase.ScQuoteSupplier;
+import my.ep.persistence.entity.ss.directpurchase.ScRequestNote;
+import my.ep.persistence.entity.ss.directpurchase.ScRequestItem;
 import my.ep.web.managedbean.BaseManagedBean;
 import my.ep.web.util.ss.helper.LocationSingleton;
 
@@ -18,15 +18,17 @@ import org.primefaces.model.TreeNode;
 @ManagedBean
 @SessionScoped
 public class SimpleQuoteBidManagedBean extends BaseManagedBean{
-	private	ScRequestList	scRequestList;
-	private	ScQuoteBid		scQuoteBid;
+	private	ScRequestNote	scRequestList;
+	private	ScQuote		scQuoteBid;
 	private	String	action = "";
 	
-	private	List<ScRequestListItem>	quoteBidItems = new ArrayList<ScRequestListItem>();
-	private	List<ScRequestListItem>	selectedItems	=	new ArrayList<ScRequestListItem>();
+	private	List<ScRequestItem>	quoteBidItems = new ArrayList<ScRequestItem>();
+	private	List<ScRequestItem>	selectedItems	=	new ArrayList<ScRequestItem>();
 	
-	private	List<ScQuoteBidSupplier>	quoteBidSuppliers	=	new ArrayList<ScQuoteBidSupplier>();
-	private	List<ScBusinessNatureQuoteBidCriteria>	businessNatureCriterias	=	new ArrayList<ScBusinessNatureQuoteBidCriteria>();
+	private	List<ScQuoteSupplier>	quoteBidSuppliers	=	new ArrayList<ScQuoteSupplier>();
+	private	List<ScBusinessNatureQuoteCriteria>	businessNatureCriterias	=	new ArrayList<ScBusinessNatureQuoteCriteria>();
+	private	List<ScBusinessNatureQuoteCriteria>	selectedBusinessNatureCriterias	=	new ArrayList<ScBusinessNatureQuoteCriteria>();
+	
 	private	String	zoneName;
 	private List<TreeNode>	zoneTrees = new ArrayList<TreeNode>();
 	private	List<TreeNode>	selectedZoneTree	=	new ArrayList<TreeNode>();
@@ -46,7 +48,7 @@ public class SimpleQuoteBidManagedBean extends BaseManagedBean{
 	
 	private	void	prepareDummyData(){
 		//TODO	hard code dummy data, remove it later
-		ScBusinessNatureQuoteBidCriteria	criteria1	=	new ScBusinessNatureQuoteBidCriteria();
+		ScBusinessNatureQuoteCriteria	criteria1	=	new ScBusinessNatureQuoteCriteria();
 		criteria1.setCriteriaValue("100201");
 		businessNatureCriterias.add(criteria1);
 	}
@@ -55,35 +57,35 @@ public class SimpleQuoteBidManagedBean extends BaseManagedBean{
 		rootLocationTree = LocationSingleton.getInstance().buildLocationTree(1L,null, null, null, null);
 	}
 	
-	public ScRequestList getScRequestList() {
+	public ScRequestNote getScRequestList() {
 		return scRequestList;
 	}
 
-	public void setScRequestList(ScRequestList scRequestList) {
+	public void setScRequestList(ScRequestNote scRequestList) {
 		this.scRequestList = scRequestList;
 	}
 
-	public ScQuoteBid getScQuoteBid() {
+	public ScQuote getScQuoteBid() {
 		return scQuoteBid;
 	}
 
-	public void setScQuoteBid(ScQuoteBid scQuoteBid) {
+	public void setScQuoteBid(ScQuote scQuoteBid) {
 		this.scQuoteBid = scQuoteBid;
 	}
 
-	public List<ScRequestListItem> getQuoteBidItems() {
+	public List<ScRequestItem> getQuoteBidItems() {
 		return quoteBidItems;
 	}
 
-	public void setQuoteBidItems(List<ScRequestListItem> quoteBidItems) {
+	public void setQuoteBidItems(List<ScRequestItem> quoteBidItems) {
 		this.quoteBidItems = quoteBidItems;
 	}
 
-	public List<ScBusinessNatureQuoteBidCriteria> getBusinessNatureCriterias() {
+	public List<ScBusinessNatureQuoteCriteria> getBusinessNatureCriterias() {
 		return businessNatureCriterias;
 	}
 
-	public void setBusinessNatureCriterias(List<ScBusinessNatureQuoteBidCriteria> businessNatureCriterias) {
+	public void setBusinessNatureCriterias(List<ScBusinessNatureQuoteCriteria> businessNatureCriterias) {
 		this.businessNatureCriterias = businessNatureCriterias;
 	}
 
@@ -103,11 +105,11 @@ public class SimpleQuoteBidManagedBean extends BaseManagedBean{
 		this.supplierFilterValue = supplierFilterValue;
 	}
 
-	public List<ScQuoteBidSupplier> getQuoteBidSuppliers() {
+	public List<ScQuoteSupplier> getQuoteBidSuppliers() {
 		return quoteBidSuppliers;
 	}
 
-	public void setQuoteBidSuppliers(List<ScQuoteBidSupplier> quoteBidSuppliers) {
+	public void setQuoteBidSuppliers(List<ScQuoteSupplier> quoteBidSuppliers) {
 		this.quoteBidSuppliers = quoteBidSuppliers;
 	}
 
@@ -143,11 +145,11 @@ public class SimpleQuoteBidManagedBean extends BaseManagedBean{
 		this.action = action;
 	}
 
-	public List<ScRequestListItem> getSelectedItems() {
+	public List<ScRequestItem> getSelectedItems() {
 		return selectedItems;
 	}
 
-	public void setSelectedItems(List<ScRequestListItem> selectedItems) {
+	public void setSelectedItems(List<ScRequestItem> selectedItems) {
 		this.selectedItems = selectedItems;
 	}
 
@@ -173,6 +175,14 @@ public class SimpleQuoteBidManagedBean extends BaseManagedBean{
 
 	public void setActiveTabIndex(int activeTabIndex) {
 		this.activeTabIndex = activeTabIndex;
+	}
+
+	public List<ScBusinessNatureQuoteCriteria> getSelectedBusinessNatureCriterias() {
+		return selectedBusinessNatureCriterias;
+	}
+
+	public void setSelectedBusinessNatureCriterias(List<ScBusinessNatureQuoteCriteria> selectedBusinessNatureCriterias) {
+		this.selectedBusinessNatureCriterias = selectedBusinessNatureCriterias;
 	}
 	
 }

@@ -16,11 +16,11 @@ import my.ep.persistence.entity.pm.authorization.PmOrgProfile;
 import my.ep.persistence.entity.pm.authorization.PmUser;
 import my.ep.persistence.entity.pm.common.PmStatus;
 import my.ep.persistence.entity.sm.SmSupplier;
-import my.ep.persistence.entity.ss.directpurchase.ScDpRemark;
+import my.ep.persistence.entity.ss.directpurchase.ScRequestNoteRemark;
 import my.ep.persistence.entity.ss.directpurchase.ScPrInquiry;
-import my.ep.persistence.entity.ss.directpurchase.ScRequestList;
-import my.ep.persistence.entity.ss.directpurchase.ScRequestListItem;
+import my.ep.persistence.entity.ss.directpurchase.ScRequestNote;
 import my.ep.persistence.entity.ss.directpurchase.ScRequestNoteDtl;
+import my.ep.persistence.entity.ss.directpurchase.ScRequestItem;
 import my.ep.persistence.entity.ss.directpurchase.ScRequestSupplierItem;
 import my.ep.type.pm.RoleCode;
 import my.ep.web.constant.SourcingConst;
@@ -42,33 +42,28 @@ public class DirectPurchaseManagedBean extends BaseManagedBean{
 	
 	
 	private	String	action	=	SourcingConst.CREATE_DIRECT_PURCHASE;
-	private	ScRequestList	requestList = new	ScRequestList(); //contain request list information
-	private	ScRequestListItem	selectedRequestListItem;//selected request list item (data table)
+	private	ScRequestNote	requestNote = new	ScRequestNote(); //contain request list information
+	private	ScRequestItem	selectedRequestListItem;//selected request list item (data table)
 	
 	private	List<ScRequestSupplierItem>	requestSupplierItems	=	new ArrayList<ScRequestSupplierItem>(); // list of request supplier item to be recommend
-	private	ScRequestSupplierItem	recommededRequestSupplierItem	=	new ScRequestSupplierItem();// item selected in recommend supplier table
 	private	ScRequestSupplierItem	inquirySupplierItem;
-	private	Long	recommendedSupplierId; //Apply recommend supplier for all the selected Item
 	private	List<SmSupplier>	supplierList = new ArrayList<SmSupplier>();// List of suppliers to be recommend apply for all selected item
 	
 	private	List<ScRequestSupplierItem>	selectedSupplierItems	=	new ArrayList<ScRequestSupplierItem>(); // contain list of supplier selected item carry to simple quote/bid
+	private	ScRequestSupplierItem		recommededRequestSupplierItem;
 	
 	private	List<ScRequestNoteDtl>	requestNoteDtls	=	new ArrayList<ScRequestNoteDtl>();//list request Note Dtl.
 	private	List<ScRequestNoteDtl>	selectedRequestNoteDtls	=	new ArrayList<ScRequestNoteDtl>();
 	
-	private	List<ScDpRemark>	selectedRemarks	=	new	ArrayList<ScDpRemark>();
+	private	List<ScRequestNoteRemark>	selectedRemarks	=	new	ArrayList<ScRequestNoteRemark>();
 	
-	private	List<PmUser>	availableApprover;
-	private	List<PmUser>	selectedApprover;
 	private	DualListModel<PmUser>	approvalUsers;
-	private	DualListModel<ScRequestListItem>	items = new DualListModel<ScRequestListItem>();
 	private	List<PmUser>	govUsers	=	new ArrayList<>();
 	private	String	fulfillmentType;
 	private	Long	assignedToUserId;
 	private	String	periodType;
 	private	int		periodValue;
 	
-	private	String	requestListRemark;
 	private	String	recommendAction;
 	private	Boolean	multipleRecommend = Boolean.FALSE;
 	private	ScPrInquiry	scPrInquiry = new ScPrInquiry();
@@ -77,24 +72,21 @@ public class DirectPurchaseManagedBean extends BaseManagedBean{
 	private static Map<String, List<SelectOptionDTO>> justificationMap = null;
 	private List<SelectOptionDTO> justificationTypes = new ArrayList<SelectOptionDTO>();
 	
+	private List<PmOrgProfile> userDivisionList;
+	
 	private	int	activeTabIndex = 0;
 	
 	public DirectPurchaseManagedBean() {
 		super();
-		requestList = new	ScRequestList();
-		PmStatus	status	=	new	PmStatus();
-		status.setStatusId(SourcingConstants.REQUEST_LIST_NEW);
-		requestList.setPmStatus(status);
 		initialInformation();
-		prepareDummyData();
 	}
 	public	void	initialInformation(){
 		IUserSO iUserSO	=	(IUserSO)BusinessDelegate.getInstance().getServiceObject("pm", IUserSO.class);
 		UserReqDTO userReqDto = new UserReqDTO();
 		userReqDto.setRoleCode(RoleCode.APPROVER.value());
 		UserResDTO userResDTO = iUserSO.retrieveUserListByRole(userReqDto);
-		availableApprover	=	userResDTO.getUserList();
-		selectedApprover	=	new ArrayList<PmUser>();
+		List<PmUser> availableApprover	=	userResDTO.getUserList();
+		List<PmUser> selectedApprover	=	new ArrayList<PmUser>();
 		approvalUsers =	new DualListModel<PmUser>(availableApprover, selectedApprover);
 		userResDTO = iUserSO.retrieveGovUserList();
 		this.govUsers	=	userResDTO.getUserList();
@@ -108,33 +100,18 @@ public class DirectPurchaseManagedBean extends BaseManagedBean{
 		this.action = action;
 	}
 
-	public List<ScRequestListItem> getRequestListItems() {
-		return this.requestList.getRequestItems();
+	public List<ScRequestItem> getRequestListItems() {
+		return this.requestNote.getRequestNoteItems();
 	}
 
 	public List<ScRequestSupplierItem>	getScRequestSupplierItems(){
 		List<ScRequestSupplierItem> results	=	new ArrayList<ScRequestSupplierItem>();
-		if(requestList.getRequestItems() != null && requestList.getRequestItems().size() > 0){
-			for(ScRequestListItem requestItem: requestList.getRequestItems()){
+		if(requestNote.getRequestNoteItems() != null && requestNote.getRequestNoteItems().size() > 0){
+			for(ScRequestItem requestItem: requestNote.getRequestNoteItems()){
 				results.addAll(requestItem.getSupplierItems());
 			}
 		}
 		return results;
-	}
-
-	private	void prepareDummyData(){
-		
-		//TODO hard code org profile first
-		PmOrgProfile	orgProfile	=	new PmOrgProfile();
-		orgProfile.setOrgProfileId(1L);
-		requestList.setPmOrgProfile(orgProfile);
-	}
-	public ScRequestList getRequestList() {
-		return requestList;
-	}
-
-	public void setRequestList(ScRequestList requestList) {
-		this.requestList = requestList;
 	}
 
 	public ScPrInquiry getScPrInquiry() {
@@ -143,14 +120,6 @@ public class DirectPurchaseManagedBean extends BaseManagedBean{
 
 	public void setScPrInquiry(ScPrInquiry scPrInquiry) {
 		this.scPrInquiry = scPrInquiry;
-	}
-
-	public String getRequestListRemark() {
-		return requestListRemark;
-	}
-
-	public void setRequestListRemark(String requestListRemark) {
-		this.requestListRemark = requestListRemark;
 	}
 
 	public List<ScRequestSupplierItem> getSelectedSupplierItems() {
@@ -177,11 +146,11 @@ public class DirectPurchaseManagedBean extends BaseManagedBean{
 		this.selectedRequestNoteDtls = selectedRequestNoteDtls;
 	}
 
-	public ScRequestListItem getSelectedRequestListItem() {
+	public ScRequestItem getSelectedRequestListItem() {
 		return selectedRequestListItem;
 	}
 
-	public void setSelectedRequestListItem(ScRequestListItem selectedRequestListItem) {
+	public void setSelectedRequestListItem(ScRequestItem selectedRequestListItem) {
 		this.selectedRequestListItem = selectedRequestListItem;
 	}
 
@@ -207,22 +176,6 @@ public class DirectPurchaseManagedBean extends BaseManagedBean{
 
 	public void setRecommendAction(String recommendAction) {
 		this.recommendAction = recommendAction;
-	}
-
-	public ScRequestSupplierItem getRecommededRequestSupplierItem() {
-		return recommededRequestSupplierItem;
-	}
-
-	public void setRecommededRequestSupplierItem(ScRequestSupplierItem recommededRequestSupplierItem) {
-		this.recommededRequestSupplierItem = recommededRequestSupplierItem;
-	}
-
-	public Long getRecommendedSupplierId() {
-		return recommendedSupplierId;
-	}
-
-	public void setRecommendedSupplierId(Long recommendedSupplierId) {
-		this.recommendedSupplierId = recommendedSupplierId;
 	}
 
 	public List<SmSupplier> getSupplierList() {
@@ -278,18 +231,6 @@ public class DirectPurchaseManagedBean extends BaseManagedBean{
 
 	public void setPeriodValue(int periodValue) {
 		this.periodValue = periodValue;
-	}
-	public List<PmUser> getAvailableApprover() {
-		return availableApprover;
-	}
-	public void setAvailableApprover(List<PmUser> availableApprover) {
-		this.availableApprover = availableApprover;
-	}
-	public List<PmUser> getSelectedApprover() {
-		return selectedApprover;
-	}
-	public void setSelectedApprover(List<PmUser> selectedApprover) {
-		this.selectedApprover = selectedApprover;
 	}
 	public int getActiveTabIndex() {
 		return activeTabIndex;
@@ -375,16 +316,29 @@ public class DirectPurchaseManagedBean extends BaseManagedBean{
 	public void setInquirySupplierItem(ScRequestSupplierItem inquirySupplierItem) {
 		this.inquirySupplierItem = inquirySupplierItem;
 	}
-	public List<ScDpRemark> getSelectedRemarks() {
+	public List<ScRequestNoteRemark> getSelectedRemarks() {
 		return selectedRemarks;
 	}
-	public void setSelectedRemarks(List<ScDpRemark> selectedRemarks) {
+	public void setSelectedRemarks(List<ScRequestNoteRemark> selectedRemarks) {
 		this.selectedRemarks = selectedRemarks;
 	}
-	public DualListModel<ScRequestListItem> getItems() {
-		return items;
+	public List<PmOrgProfile> getUserDivisionList() {
+		return userDivisionList;
 	}
-	public void setItems(DualListModel<ScRequestListItem> items) {
-		this.items = items;
+	public void setUserDivisionList(List<PmOrgProfile> userDivisionList) {
+		this.userDivisionList = userDivisionList;
 	}
+	public ScRequestNote getRequestNote() {
+		return requestNote;
+	}
+	public void setRequestNote(ScRequestNote requestNote) {
+		this.requestNote = requestNote;
+	}
+	public ScRequestSupplierItem getRecommededRequestSupplierItem() {
+		return recommededRequestSupplierItem;
+	}
+	public void setRecommededRequestSupplierItem(ScRequestSupplierItem recommededRequestSupplierItem) {
+		this.recommededRequestSupplierItem = recommededRequestSupplierItem;
+	}
+	
 }
