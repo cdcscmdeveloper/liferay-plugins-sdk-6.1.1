@@ -124,17 +124,6 @@ public class ContractRequestBackingBean extends BaseBackingBean<ContractRequestM
 			List<String> target = new ArrayList<String>();  
 			getManagedBean().setApproverModel(new DualListModel<String>(source, target));
 		}
-		
-		 PmUser user = getFacesScopes().getUserSessionBean();
-		 
-		 UserReqDTO reqDTO = new UserReqDTO();
-		 reqDTO.setUserId(user.getUserId());
-		 IUserSO userSO = (IUserSO ) BusinessDelegate.getInstance().getServiceObject("pm", IUserSO .class);
-		 UserResDTO resDTO = userSO.retrieveUserOrgListByUserId(reqDTO);
-		 
-		 PmUserOrg userOrg = resDTO.getUserOrgList().get(0);
-		 System.out.println("getOrgName: "+userOrg.getPmOrgProfile().getParentOrgProfile().getParentOrgProfile().getOrgName());
-		 getManagedBean().getFlRequest().setIssuedOrgProfile(userOrg.getPmOrgProfile());
 	}
 
 
@@ -276,10 +265,22 @@ public class ContractRequestBackingBean extends BaseBackingBean<ContractRequestM
 		ContractReqDTO ctDTO = new ContractReqDTO();
 		ctDTO.setContractId(contractId);
 		getManagedBean().getFlRequest().setCtContract(contractSO.retrieveContract(ctDTO).getContract());
-		IOrgProfileSO orgProfileSO = BusinessDelegate.getInstance().getServiceObject("pm",IOrgProfileSO.class);
-		OrgProfileReqDTO orgProfileReqDTO = new OrgProfileReqDTO();
-		orgProfileReqDTO.setOrgProfileId(4L);// set current login user org profile ID
-		OrgProfileResDTO resDTO = orgProfileSO.retrieveOrgProfileByProfileId(orgProfileReqDTO);
+//		IOrgProfileSO orgProfileSO = BusinessDelegate.getInstance().getServiceObject("pm",IOrgProfileSO.class);
+//		OrgProfileReqDTO orgProfileReqDTO = new OrgProfileReqDTO();
+//		orgProfileReqDTO.setOrgProfileId(4L);// set current login user org profile ID
+//		OrgProfileResDTO resDTO = orgProfileSO.retrieveOrgProfileByProfileId(orgProfileReqDTO);
+		
+		PmUser user = getFacesScopes().getUserSessionBean();
+
+		UserReqDTO reqDTO = new UserReqDTO();
+		reqDTO.setUserId(user.getUserId());
+		IUserSO userSO = (IUserSO ) BusinessDelegate.getInstance().getServiceObject("pm", IUserSO .class);
+		UserResDTO resDTO = userSO.retrieveUserOrgListByUserId(reqDTO);
+
+		PmUserOrg userOrg = resDTO.getUserOrgList().get(0);
+		System.out.println("getOrgName: "+userOrg.getPmOrgProfile().getParentOrgProfile().getParentOrgProfile().getOrgName());
+		getManagedBean().getFlRequest().setIssuedOrgProfile(userOrg.getPmOrgProfile());
+
 		this.getManagedBean().setOutComes(new String[]{"Submit"}); 
 		FulfilmentBackingBean flBackingBean = new FulfilmentBackingBean();
 		flBackingBean.initializeRemarkAndAttachement(flBB.getManagedBean().getRemarkList(), flBB.getManagedBean().getAttachmentList());
@@ -324,7 +325,7 @@ public class ContractRequestBackingBean extends BaseBackingBean<ContractRequestM
 			if(getManagedBean().getFlItemMap().get(contractedItems.getContractItemId()) == null){
 				flItem = new FlFulfilmentItem();
 				flItem.setFlFulfilmentRequest(getManagedBean().getFlRequest());
-				flItem.setContractItem(contractedItems);
+				flItem.setQtItem(contractedItems.getQtItem());
 				getManagedBean().getFlRequest().setFlFulfilmentItems(new ArrayList<FlFulfilmentItem>());
 				getManagedBean().getFlRequest().getFlFulfilmentItems().add(flItem);
 			}else{
