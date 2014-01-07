@@ -15,7 +15,9 @@ import my.ep.persistence.entity.ct.CtAttachment;
 import my.ep.persistence.entity.ct.CtContract;
 import my.ep.persistence.entity.ct.CtContractVer;
 import my.ep.persistence.entity.ct.CtRemark;
+import my.ep.persistence.entity.ct.assoc.CtAssocContract;
 import my.ep.persistence.entity.ct.assoc.CtAssociation;
+import my.ep.persistence.entity.ct.dtl.CtPerformanceBond;
 import my.ep.persistence.entity.ct.dtl.CtProgressivePayment;
 import my.ep.persistence.entity.ct.dtl.CtSchedule;
 import my.ep.persistence.entity.ct.dtl.deduction.CtDeduction;
@@ -25,6 +27,7 @@ import my.ep.persistence.entity.ct.terminate.CtTermination;
 import my.ep.persistence.entity.ct.terminate.CtTerminationReason;
 import my.ep.persistence.entity.pm.authorization.PmUserGroup;
 import my.ep.persistence.entity.pm.authorization.PmUserGroupUser;
+import my.ep.persistence.entity.ss.quationtender.ScQt;
 import my.ep.web.managedbean.BaseManagedBean;
 
 import org.apache.log4j.Logger;
@@ -68,6 +71,7 @@ public class ContractDetailsManagedBean extends BaseManagedBean{
 	private CtDeduction ctDeductionDel = new CtDeduction();
 	private List<CtDeductionClause> ctDeductionClauseList;
 	private CtDeductionClause ctDeductionClauseDel = new CtDeductionClause();
+	private CtDeduction[] selectedDeductionList;
 	
 	private String scheduleOption;
 	private boolean chkSchedule= true;
@@ -91,15 +95,15 @@ public class ContractDetailsManagedBean extends BaseManagedBean{
 	private boolean terminateWarningLetter;
 	private CtTermination termination;
 	private CtTerminationReason terminationReason;
-	
+
 	private boolean activeSuspension;
 	private boolean booleanSuspendValue = false;
 	
-	private CtAssociation association = new CtAssociation();
-	private List<CtAssociation> associationList;
-	private List<CtContractVer> associateSearchList;
-	private CtContractVer assocoiateContractVer;
-	private List<CtContractVer> assocoiateContractVerList;
+	private CtAssociation ctAssociation = new CtAssociation();
+	private CtAssocContract ctDelAssocContract = new CtAssocContract();
+	private List<CtAssocContract> associationList;
+	private List<CtContract> associateSearchList;
+	private CtContract assocoiateCtContract;
 	private List<CtContractItem> ctContractItem;
 
 	private String ctNumber;
@@ -121,6 +125,9 @@ public class ContractDetailsManagedBean extends BaseManagedBean{
 	private boolean activation = true;
 	private boolean suspension;
 	
+	private String supplierAddress;
+	private CtPerformanceBond ctPerformanceBond;
+	private CtPerformanceBond[] selectedBondList;
 	public String[] getAction() {
 		return action;
 	}
@@ -426,7 +433,7 @@ public class ContractDetailsManagedBean extends BaseManagedBean{
 	public void setTerminationReason(CtTerminationReason terminationReason) {
 		this.terminationReason = terminationReason;
 	}
-	
+
 	public boolean isActiveSuspension() {
 		return activeSuspension;
 	}
@@ -443,12 +450,12 @@ public class ContractDetailsManagedBean extends BaseManagedBean{
 		this.booleanSuspendValue = booleanSuspendValue;
 	}
 
-	public CtAssociation getAssociation() {
-		return association;
+	public CtAssociation getCtAssociation() {
+		return ctAssociation;
 	}
 
-	public void setAssociation(CtAssociation association) {
-		this.association = association;
+	public void setCtAssociation(CtAssociation ctAssociation) {
+		this.ctAssociation = ctAssociation;
 	}
 
 	public String getProjectName() {
@@ -467,43 +474,32 @@ public class ContractDetailsManagedBean extends BaseManagedBean{
 		this.projectDescription = projectDescription;
 	}
 
-	public List<CtAssociation> getAssociationList() {
+	public List<CtAssocContract> getAssociationList() {
 		if(associationList == null)
-			associationList = new ArrayList<CtAssociation>();
+			associationList = new ArrayList<CtAssocContract>();
 		return associationList;
 	}
 
-	public void setAssociationList(List<CtAssociation> associationList) {
+	public void setAssociationList(List<CtAssocContract> associationList) {
 		this.associationList = associationList;
 	}
 
-	public List<CtContractVer> getAssociateSearchList() {
+	public List<CtContract> getAssociateSearchList() {
 		if(associateSearchList == null)
-			associateSearchList = new ArrayList<CtContractVer>();
+			associateSearchList = new ArrayList<CtContract>();
 		return associateSearchList;
 	}
 
-	public void setAssociateSearchList(List<CtContractVer> associateSearchList) {
+	public void setAssociateSearchList(List<CtContract> associateSearchList) {
 		this.associateSearchList = associateSearchList;
 	}
 
-	public CtContractVer getAssocoiateContractVer() {
-		return assocoiateContractVer;
+	public CtContract getAssocoiateCtContract() {
+		return assocoiateCtContract;
 	}
 
-	public void setAssocoiateContractVer(CtContractVer assocoiateContractVer) {
-		this.assocoiateContractVer = assocoiateContractVer;
-	}
-
-	public List<CtContractVer> getAssocoiateContractVerList() {
-		if(assocoiateContractVerList == null)
-			assocoiateContractVerList = new ArrayList<CtContractVer>();
-		return assocoiateContractVerList;
-	}
-
-	public void setAssocoiateContractVerList(
-			List<CtContractVer> assocoiateContractVerList) {
-		this.assocoiateContractVerList = assocoiateContractVerList;
+	public void setAssocoiateCtContract(CtContract assocoiateCtContract) {
+		this.assocoiateCtContract = assocoiateCtContract;
 	}
 	
 	/**
@@ -666,5 +662,47 @@ public class ContractDetailsManagedBean extends BaseManagedBean{
 	public void setAmendmentAction(boolean amendmentAction) {
 		this.amendmentAction = amendmentAction;
 	}
+
+	public CtDeduction[] getSelectedDeductionList() {
+		return selectedDeductionList;
+	}
+
+	public void setSelectedDeductionList(CtDeduction[] selectedDeductionList) {
+		this.selectedDeductionList = selectedDeductionList;
+	}
+
+	public CtAssocContract getCtDelAssocContract() {
+		return ctDelAssocContract;
+	}
+
+	public void setCtDelAssocContract(CtAssocContract ctDelAssocContract) {
+		this.ctDelAssocContract = ctDelAssocContract;
+	}
+
+	public String getSupplierAddress() {
+		return supplierAddress;
+	}
+
+	public void setSupplierAddress(String supplierAddress) {
+		this.supplierAddress = supplierAddress;
+	}
+
+	public CtPerformanceBond getCtPerformanceBond() {
+		return ctPerformanceBond;
+	}
+
+	public void setCtPerformanceBond(CtPerformanceBond ctPerformanceBond) {
+		this.ctPerformanceBond = ctPerformanceBond;
+	}
+
+	public CtPerformanceBond[] getSelectedBondList() {
+		return selectedBondList;
+	}
+
+	public void setSelectedBondList(CtPerformanceBond[] selectedBondList) {
+		this.selectedBondList = selectedBondList;
+	}
+
 	
+
 }

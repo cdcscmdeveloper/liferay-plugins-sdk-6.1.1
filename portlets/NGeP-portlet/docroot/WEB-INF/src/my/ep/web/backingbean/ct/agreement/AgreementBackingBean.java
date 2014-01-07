@@ -31,7 +31,6 @@ import my.ep.exception.EpException;
 import my.ep.jaxb.ct.agreement.CTAgreementDataType;
 import my.ep.persistence.entity.ct.agreement.CtAgreement;
 import my.ep.persistence.entity.ct.agreement.CtAgreementAppendix;
-import my.ep.persistence.entity.ct.agreement.CtAgreementParty;
 import my.ep.persistence.entity.tpl.doc.TplDocMaster;
 import my.ep.util.lookupservice.EpBpmBusinessDelegate;
 import my.ep.web.backingbean.BaseBackingBean;
@@ -111,7 +110,6 @@ public class AgreementBackingBean extends BaseBackingBean<AgreementManagedBean> 
 		if(this.getManagedBean().getAgreement() == null){
 			this.getManagedBean().setAgreement(new CtAgreement());
 			this.getManagedBean().getAgreement().setCtAgreementAppendixs(new ArrayList<CtAgreementAppendix>());
-			this.getManagedBean().getAgreement().setCtSignParties(new ArrayList<CtAgreementParty>());
 			this.getManagedBean().getAgreement().setClauseDocMaster(new TplDocMaster());
 			this.getManagedBean().getAgreement().getClauseDocMaster().setDocMasterId(1L);
 		}
@@ -346,26 +344,6 @@ public class AgreementBackingBean extends BaseBackingBean<AgreementManagedBean> 
          }
       }
 	
-     public void addSignParty(){
- 		CtAgreementParty signParty = new CtAgreementParty();
- 		this.getManagedBean().getSignPartyList().add(signParty);
- 	}
- 	
- 	public void deleteSignParty(){
- 		System.out.println("-------------------inside delete------------");
- 		this.getManagedBean().getSignPartyList().remove(this.getManagedBean().getSignParty());
- 	}
- 	
- 	public void addSignSupplier(){
- 		CtAgreementParty signParty = new CtAgreementParty();
- 		this.getManagedBean().getSignSupplierList().add(signParty);
- 	}
- 	
- 	public void deleteSignSupplier(){
- 		System.out.println("-------------------inside delete1------------");
- 		this.getManagedBean().getSignSupplierList().remove(this.getManagedBean().getSignSupplier());
- 	}
- 	
 	public List<AgreementDetails> getAgreementList() {
 		List<AgreementDetails> agreementList = new ArrayList<AgreementDetails>();
 

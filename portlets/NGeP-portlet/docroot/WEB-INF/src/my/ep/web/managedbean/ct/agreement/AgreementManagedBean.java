@@ -26,12 +26,13 @@ public class AgreementManagedBean extends BaseManagedBean {
 	private String taskId;
 	private String[] action;
 	private String taskName;
-	private List<CtAgreementParty> signPartyList;
-	private List<CtAgreementParty> signSupplierList;
-	private CtAgreementParty signParty = new CtAgreementParty();
-	private CtAgreementParty signSupplier = new CtAgreementParty();
 	private CtAgreementAppendix agreementAppendix = new CtAgreementAppendix();
 	private List<CtAgreementAppendix> appendixList = new ArrayList<CtAgreementAppendix>();
+	CtAgreementParty ctAgreementPartyList;
+	private List<CtAgreementParty> signOfficerList;
+	private List<CtAgreementParty> signSupplierList;
+	private CtAgreementParty signOfficerParty = new CtAgreementParty();
+	private CtAgreementParty signSupplierParty = new CtAgreementParty();
 	
 	private List<CtRemark> remarkList;
 	private List<CtAttachment> attachmentList;
@@ -52,44 +53,6 @@ public class AgreementManagedBean extends BaseManagedBean {
 
 	public void setAction(String[] action) {
 		this.action = action;
-	}
-
-
-
-	public List<CtAgreementParty> getSignPartyList() {
-		if(signPartyList == null)
-	     signPartyList = new ArrayList<CtAgreementParty>();
-		return signPartyList;
-	}
-	
-	public void setSignPartyList(List<CtAgreementParty> signPartyList) {
-		this.signPartyList = signPartyList;
-	}
-	
-	public CtAgreementParty getSignParty() {
-		return signParty;
-	}
-	
-	public void setSignParty(CtAgreementParty signParty) {
-		this.signParty = signParty;
-	}
-
-	public List<CtAgreementParty> getSignSupplierList() {
-		if(signSupplierList == null)
-			signSupplierList = new ArrayList<CtAgreementParty>();
-		return signSupplierList;
-	}
-
-	public void setSignSupplierList(List<CtAgreementParty> signSupplierList) {
-		this.signSupplierList = signSupplierList;
-	}
-
-	public CtAgreementParty getSignSupplier() {
-		return signSupplier;
-	}
-
-	public void setSignSupplier(CtAgreementParty signSupplier) {
-		this.signSupplier = signSupplier;
 	}
 
 	public CtAgreement getAgreement() {
@@ -176,6 +139,42 @@ public class AgreementManagedBean extends BaseManagedBean {
 
 	public void setCtContract(CtContract ctContract) {
 		this.ctContract = ctContract;
+	}
+
+	public List<CtAgreementParty> getSignOfficerList() {
+		if(signOfficerList == null)
+			signOfficerList = new ArrayList<CtAgreementParty>();
+		return signOfficerList;
+	}
+
+	public void setSignOfficerList(List<CtAgreementParty> signOfficerList) {
+		this.signOfficerList = signOfficerList;
+	}
+
+	public List<CtAgreementParty> getSignSupplierList() {
+		if(signSupplierList == null)
+			signSupplierList = new ArrayList<CtAgreementParty>();
+		return signSupplierList;
+	}
+
+	public void setSignSupplierList(List<CtAgreementParty> signSupplierList) {
+		this.signSupplierList = signSupplierList;
+	}
+
+	public CtAgreementParty getSignOfficerParty() {
+		return signOfficerParty;
+	}
+
+	public void setSignOfficerParty(CtAgreementParty signOfficerParty) {
+		this.signOfficerParty = signOfficerParty;
+	}
+
+	public CtAgreementParty getSignSupplierParty() {
+		return signSupplierParty;
+	}
+
+	public void setSignSupplierParty(CtAgreementParty signSupplierParty) {
+		this.signSupplierParty = signSupplierParty;
 	}
 
 	
