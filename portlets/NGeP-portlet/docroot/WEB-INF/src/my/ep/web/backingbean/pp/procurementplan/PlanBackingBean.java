@@ -9,6 +9,8 @@ import java.util.List;
 
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
+import javax.faces.context.FacesContext;
+import javax.faces.model.SelectItem;
 
 import my.ep.biz.bean.search.ISearchBean;
 import my.ep.biz.bean.search.ISearchResultBean;
@@ -1015,36 +1017,36 @@ public class PlanBackingBean extends BaseBackingBean<PlanManagedBean>{
 //		return options;
 //	}
 //	
-//	/**
-//	 * retrieve plan type options
-//	 * @return List<SelectItem>
-//	 */
-//	public List<SelectItem> planTypeOptions() {
-//		List<SelectItem>options = new ArrayList<SelectItem>();
-//		options.add(new SelectItem(ProcurementPlanConst.PLAN_TYPE_PROCUREMENT, "Procurement"));
-//		options.add(new SelectItem(ProcurementPlanConst.PLAN_TYPE_EXPENDITURE, "Expenditure"));
-//		return options;
-//	}
-//	
-//	
-//	/**
-//	 * retrieve procurement mode options
-//	 * @return List<SelectItem>
-//	 */
-//	public List<SelectItem> procurementModeOptions(String type) {
-//		List<SelectItem>options = new ArrayList<SelectItem>();
-//		if(type!=null){
-//			if(ProcurementPlanConst.PLAN_TYPE_EXPENDITURE.equals(type)){
-//				options.add(new SelectItem(ProcurementPlanConst.PROCUREMENT_EXISTING_CONTRACT, "Contract"));
-//				options.add(new SelectItem(ProcurementPlanConst.PROCUREMENT_DIRECT_PURCHASE, "Direct Purchase"));
-//			}else if(ProcurementPlanConst.PLAN_TYPE_PROCUREMENT.equals(type)){
-//				options.add(new SelectItem(ProcurementPlanConst.PROCUREMENT_QUOTATION, "Quotation"));
-//				options.add(new SelectItem(ProcurementPlanConst.PROCUREMENT_DIRECT_NEGO, "Direct Negotiation"));
-//				options.add(new SelectItem(ProcurementPlanConst.PROCUREMENT_TENDER, "Tender"));
-//			}
-//		}
-//		return options;
-//	}
+	/**
+	 * retrieve plan type options
+	 * @return List<SelectItem>
+	 */
+	public List<SelectItem> planTypeOptions() {
+		List<SelectItem>options = new ArrayList<SelectItem>();
+		options.add(new SelectItem(ProcurementPlanConst.PLAN_TYPE_PROCUREMENT, "Procurement"));
+		options.add(new SelectItem(ProcurementPlanConst.PLAN_TYPE_EXPENDITURE, "Expenditure"));
+		return options;
+	}
+	
+	
+	/**
+	 * retrieve procurement mode options
+	 * @return List<SelectItem>
+	 */
+	public List<SelectItem> procurementModeOptions(String type) {
+		List<SelectItem>options = new ArrayList<SelectItem>();
+		if(type!=null){
+			if(ProcurementPlanConst.PLAN_TYPE_EXPENDITURE.equals(type)){
+				options.add(new SelectItem(ProcurementPlanConst.PROCUREMENT_EXISTING_CONTRACT, "Contract"));
+				options.add(new SelectItem(ProcurementPlanConst.PROCUREMENT_DIRECT_PURCHASE, "Direct Purchase"));
+			}else if(ProcurementPlanConst.PLAN_TYPE_PROCUREMENT.equals(type)){
+				options.add(new SelectItem(ProcurementPlanConst.PROCUREMENT_QUOTATION, "Quotation"));
+				options.add(new SelectItem(ProcurementPlanConst.PROCUREMENT_DIRECT_NEGO, "Direct Negotiation"));
+				options.add(new SelectItem(ProcurementPlanConst.PROCUREMENT_TENDER, "Tender"));
+			}
+		}
+		return options;
+	}
 //	
 //
 //	/**
@@ -1993,15 +1995,15 @@ public class PlanBackingBean extends BaseBackingBean<PlanManagedBean>{
 		return this.getManagedBean().getCurrentUser();
 	}
 
-//	/**
-//	 * pre-render view for plan list
-//	 */
-//	public void preRenderPlanList(){
-//		log.info("preRenderPlanList");
-//		this.getManagedBean().setViewMode(ProcurementPlanConst.MODE_LIST);
-//		FacesContext fc = FacesContext.getCurrentInstance();
-//	    fc.getApplication().getNavigationHandler().handleNavigation(fc, null, ProcurementPlanConst.NAV_TO_LIST_PLAN);
-//	}
+	/**
+	 * pre-render view for plan list
+	 */
+	public void preRenderPlanList(){
+		log.info("preRenderPlanList");
+		this.getManagedBean().setViewMode(ProcurementPlanConst.MODE_LIST);
+		FacesContext fc = FacesContext.getCurrentInstance();
+	    fc.getApplication().getNavigationHandler().handleNavigation(fc, null, ProcurementPlanConst.NAV_TO_LIST_PLAN);
+	}
 //	/**
 //	 * the pre-render view to load plan from bpm task
 //	 */

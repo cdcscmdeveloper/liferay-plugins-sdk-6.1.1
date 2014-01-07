@@ -19,20 +19,20 @@
                		#{ppPlan.planNo}
             </p:column>
             <p:column headerText="#{lbl['lbl.pp.plan.type']}">  
-               		#{ppPlan.ppPlanMaster.planType}
+               		#{ppPlan.planTypeParam.parameterId}
             </p:column>
 			<p:column headerText="#{lbl['lbl.pp.procurement.mode']}">  
-               		#{ppPlan.ppPlanMaster.procurementMode}
+               		#{ppPlan.procurementModeParam.parameterId}
             </p:column>
 			<p:column headerText="#{lbl['lbl.pp.plan.description']}">  
                     #{ppPlan.planDesc}
             </p:column>
 			<p:column headerText="#{lbl['lbl.pp.short.total.estimated.amount']}"
 				styleClass="ppNumericAlign">  
-                    #{ppPlan.estimatedAmount}
+                    #{ppPlan.estimatedAmt}
             </p:column>
 			<p:column headerText="#{lbl['lbl.pp.status']}">  
-                    #{ppPlan.statusId}
+                    TODO
             </p:column>
 			<p:column headerText="#{lbl['lbl.pp.created.by']}">  
                     #{ppPlan.createdBy}
