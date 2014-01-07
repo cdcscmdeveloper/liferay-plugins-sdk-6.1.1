@@ -10,8 +10,6 @@
 	$theme.include($top_head_include)
 	
 	#js ("$javascript_folder/date_time.js")
-	#js ("$javascript_folder/jquery.min.js")
-	#js ("$javascript_folder/jquery.cookie.js")
 	<script language="javascript">
 		function resizeText(multiplier) 
 		{
@@ -97,69 +95,8 @@
 			
 			window.location.href=newURL;
 			
-		}
-	</script>
-	
-	<script type="text/javascript">  
-	$(function() {  
-    $('#close').click(function() {  
-        $('.sticky').remove();  
-    	});  
-	});  
-	</script>
-	
-		<script>
-	jQuery(document).ready(function(){
-	
-	onPageLoad();
-	
-   var colorscheme = jQuery.cookie('colorscheme');
-   
-   if (colorscheme === "undefined"){
-	
-   }
-   else
-   {
-   		if(!jQuery('body').hasClass(colorscheme))
-		   		{
-		   			if(colorscheme==="green")
-		   			{
-		   				jQuery('body').removeClass('blue');
-		   			}
-		   			else
-		   			{
-		   				jQuery('body').removeClass('green');
-		   			}
-		   			jQuery('body').addClass(colorscheme);
-		   		};
-   };
+		} 
 
-  jQuery("#bred").click(function(){
-    
-	jQuery.cookie('colorscheme', "red", { expires: 7 });
-	
-	location.reload();
-  });
-     
-  jQuery("#bgreen").click(function(){
-   
-	jQuery.cookie('colorscheme', "green", { expires: 7 });
-	
-	location.reload();
-  });
-  
-  
-  jQuery("#bblue").click(function(){
-    
-	jQuery.cookie('colorscheme', "blue", { expires: 7 });
-	
-	location.reload();
-  });
-  
-  
-  
-});
-</script>
 
 </head>
 
