@@ -4,6 +4,13 @@
 package my.ep.web.backingbean.ct;
 
 import java.awt.event.ActionEvent;
+import java.io.BufferedInputStream;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
+import java.net.URL;
+import java.net.URLConnection;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.HashMap;
@@ -13,7 +20,9 @@ import javax.faces.bean.ManagedBean;
 import javax.faces.bean.RequestScoped;
 import javax.faces.context.FacesContext;
 import javax.faces.model.SelectItem;
+import javax.portlet.PortletResponse;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
 import org.apache.log4j.Logger;
 import org.primefaces.event.RowEditEvent;
@@ -52,6 +61,7 @@ import my.ep.persistence.entity.ct.CtContract;
 import my.ep.persistence.entity.ct.CtContractVer;
 import my.ep.persistence.entity.ct.amend.CtAmendment;
 import my.ep.persistence.entity.ct.assoc.CtAssocContract;
+import my.ep.persistence.entity.ct.dtl.CtPerformanceBond;
 import my.ep.persistence.entity.ct.dtl.CtProgressivePayment;
 import my.ep.persistence.entity.ct.dtl.CtSchedule;
 import my.ep.persistence.entity.ct.dtl.deduction.CtDeduction;
@@ -189,7 +199,6 @@ public class ContractDetailsBackingBean extends BaseBackingBean<ContractDetailsM
 		
 		if(res.getProcessName().equalsIgnoreCase("Contract Creation")){
 			CTContractDataType dataType = (CTContractDataType)obj;
-			System.out.println("dataType.getContractId()>>"+dataType.getContractId());
 			ctReqDTO.setContractVerId(new Long(dataType.getContractId()));
 			ctReqDTO.setContractId(new Long(dataType.getContractId()));
 		}
@@ -218,11 +227,12 @@ public class ContractDetailsBackingBean extends BaseBackingBean<ContractDetailsM
 
 		IContractSO contractSO = (IContractSO) BusinessDelegate.getInstance().getServiceObject("ct",IContractSO.class);
 		ContractResDTO resDTO = contractSO.retrieveContractVer(ctReqDTO);
-
-
+		this.getManagedBean().setContractVer(resDTO.getCtContractVer());
+	    CombineSupAddress(resDTO.getCtContractVer());
+		
 		this.getManagedBean().setTaskName(res.getTaskName());
 		this.getManagedBean().setCtContract(resDTO.getCtContractVer().getCtContract());
-		this.getManagedBean().setContractVer(resDTO.getCtContractVer());
+		
 		this.getManagedBean().setTaskId(taskId);
 		this.getManagedBean().setAction(res.getAction());
 		
@@ -295,6 +305,54 @@ public class ContractDetailsBackingBean extends BaseBackingBean<ContractDetailsM
 			e.printStackTrace();
 		}
 
+	}
+    
+    public void CombineSupAddress(CtContractVer ctContractVer){
+    	
+    	StringBuilder address = new StringBuilder();
+    	String strSpace = " ";
+    	if(ctContractVer.getCtContractValue().getSupplierAddress().getAddress1() != null){
+    		address.append(ctContractVer.getCtContractValue().getSupplierAddress().getAddress1());
+    		address.append(strSpace);
+    	
+    	}if(ctContractVer.getCtContractValue().getSupplierAddress().getAddress2() != null){
+    		address.append(ctContractVer.getCtContractValue().getSupplierAddress().getAddress2());
+    		address.append(strSpace);
+    	
+    	}if(ctContractVer.getCtContractValue().getSupplierAddress().getAddress3() != null){
+    		address.append(ctContractVer.getCtContractValue().getSupplierAddress().getAddress3());
+    		address.append(strSpace);
+    	
+    	}if(ctContractVer.getCtContractValue().getSupplierAddress().getAddress4() != null){
+    		address.append(ctContractVer.getCtContractValue().getSupplierAddress().getAddress4());
+    		address.append(strSpace);
+    		
+    	}if(ctContractVer.getCtContractValue().getSupplierAddress().getPmDistrict().getDistrictName() != null){
+    		address.append(ctContractVer.getCtContractValue().getSupplierAddress().getPmDistrict().getDistrictName());
+    		address.append(strSpace);
+    	
+    	}if(ctContractVer.getCtContractValue().getSupplierAddress().getPmState().getStateName() != null){
+    		address.append(ctContractVer.getCtContractValue().getSupplierAddress().getPmState().getStateName());
+    		address.append(strSpace);
+    	
+    	}if(ctContractVer.getCtContractValue().getSupplierAddress().getPmCountry().getCountryName() != null){
+    		address.append(ctContractVer.getCtContractValue().getSupplierAddress().getPmCountry().getCountryName());
+    		address.append("\n");
+    	}if(ctContractVer.getCtContractValue().getSupplierAddress().getPostcode() != null){
+    		address.append(ctContractVer.getCtContractValue().getSupplierAddress().getPostcode());
+    	}
+    	
+    	this.getManagedBean().setSupplierAddress(address.toString());
+    }
+    
+    /*Deduction component start*/
+    public void addBondDetails() {
+		CtPerformanceBond ctPerformanceBond = new CtPerformanceBond();
+		this.getManagedBean().getContractVer().getCtPerformanceBonds().add(ctPerformanceBond);
+	}
+    
+    public void delBondDetails() {
+		
 	}
     
     /*Implementation for item details*/
@@ -822,6 +880,36 @@ public class ContractDetailsBackingBean extends BaseBackingBean<ContractDetailsM
 	    return items;
 	}/*End approval details*/
 	
+	public void downloadFile(String filePath) throws IOException {
+		PortletResponse  portletResponse = (PortletResponse) FacesContext.getCurrentInstance().getExternalContext().getResponse();  
+		HttpServletResponse res = com.liferay.portal.util.PortalUtil.getHttpServletResponse(portletResponse);
+		res.setHeader( "Content-Disposition", "attachment; filepathe=\"" + filePath + "\"" );//
+		res.setHeader( "Content-Transfer-Encoding", "binary" );
+		res.setContentType("application/octet-stream");
+		res.flushBuffer();
+		OutputStream out = res.getOutputStream();   
+		if(filePath!=null) {
+			InputStream input = null;
+			try {
+				URLConnection uc = new URL(filePath).openConnection();
+				input = new BufferedInputStream(uc.getInputStream()); 
+			} catch (Exception e) {
+				// Cannot open connection, maybe local file
+				input = new FileInputStream(filePath);
+			}
+			byte[] buffer = new byte[4096];
+			int bytesRead;
+			while ((bytesRead = input.read( buffer )) != -1){ 
+				out.write( buffer, 0, bytesRead ); buffer = new byte[4096]; 
+			}
+			input.close();			
+		} else {
+			//out.write(attachment.getFileByte());
+		}
+		out.flush();
+		out.close(); 
+		FacesContext.getCurrentInstance().responseComplete();
+	}	
 	public String gotoTerminatePage() {
 
 		IContractSO contractSO = null;

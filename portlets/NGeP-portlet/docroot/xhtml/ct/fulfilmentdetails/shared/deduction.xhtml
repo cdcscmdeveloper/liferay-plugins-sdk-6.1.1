@@ -7,57 +7,52 @@
 	xmlns:c="http://java.sun.com/jsp/jstl/core"
 	xmlns:ac="http://ac.my/jsf/composite/cc" >
     <p:panel id="deductionId" header="#{lbl['lbl.ct.ded.panel.name']}"   toggleable="true"  toggleSpeed="500">
-	<p:dataTable id="tableDeduction" var="data" value="#{contractDetailsBackingBean.managedBean.contractVer.ctDeductions}" 
-	   editable="true" rowKey="#{data}" selection="#{contractDetailsBackingBean.managedBean.selectedDeductionList}"  
+	<p:dataTable id="tableDeduction" var="datas" value="#{contractDetailsBackingBean.managedBean.contractVer.ctDeductions}" 
+	   rowKey="#{datas}" selection="#{contractDetailsBackingBean.managedBean.selectedDeductionList}"  editable="true"
 	   paginator="true" paginatorPosition="bottom" paginatorAlwaysVisible="true" emptyMessage="No Records!">
 	   <ac:paginator for="tableDeduction" />
-	    <p:ajax event="rowEdit" listener="#{contractDetailsBackingBean.onEdit}" update="tableDeduction" />  
-        <p:ajax event="rowEditCancel" listener="#{contractDetailsBackingBean.onCancel}" update="tableDeduction" />
-        <p:column selectionMode="multiple" style="width:18px" disabledSelection="true"/>
-          <p:column headerText="#{lbl['lbl.ct.ded.table.type']}" style="width:150px;">  
-               <p:cellEditor>  
-                    <f:facet name="output"> 
-                    <h:outputText value="#{data.deductionType.category}" />
-                    </f:facet>  
-                    <f:facet name="input">  
-                    <h:selectOneMenu value="#{data.deductionType.category}" style="width:100%">  
-                    <f:selectItems value="#{contractDetailsBackingBean.deductions}" var="type" itemLabel="#{type}" itemValue="#{type}" />  
-                    </h:selectOneMenu>  
-                </f:facet>   
-               </p:cellEditor>  
+	    <p:columnGroup type="header"> 
+	       <p:row> 
+	                 <p:column headerText="Select"  /> 
+                    <p:column headerText="#{lbl['lbl.ct.ded.table.type']}"  /> 
+                    <p:column headerText="#{lbl['lbl.ct.ded.table.desc']}" /> 
+                    <p:column headerText="#{lbl['lbl.ct.ded.table.ramt']}" /> 
+  
+		  </p:row>
+	   </p:columnGroup>
+	    <p:column selectionMode="multiple" style="width:18px" rendered="#{datas.deductionId != null}" disabledSelection="true"/>      
+	    <p:column style="width:150px;" rendered="#{datas.deductionId != null}">
+                 <p:outputLabel value="#{datas.deductionType.pmParameterType.parameterName}"  style="float:left;" /></p:column> 
+	    <p:column rendered="#{datas.deductionId != null}" style="width:500px;">  
+	             <p:outputLabel value="#{datas.deductionType.pmParameterType.parameterName}"  style="float:left;"/></p:column>
+	     <p:column rendered="#{datas.deductionId != null}" style="width:150px;">
+	       <h:outputLabel value="#{datas.amount}" rendered="#{datas.deductionId != null}" >
+	        <f:convertNumber pattern="#,###.00" /></h:outputLabel>
+	      </p:column>  
+	     
+	     <p:column selectionMode="multiple" style="width:18px" rendered="#{datas.deductionId == null}"/>  
+        <p:column style="width:150px;" rendered="#{datas.deductionId == null}">
+              <h:selectOneMenu style="width:100%" rendered="#{datas.deductionId == null}">  
+                 <f:selectItem itemLabel="-Select One-" itemValue=""/>  
+                  <f:selectItems value="#{contractDetailsBackingBean.deductions}"/>  
+             </h:selectOneMenu>  
+        </p:column>
+        <p:column style="width:500px;" rendered="#{datas.deductionId == null}">  
+                  <p:inputText id="desInput" value="#{datas.description}" style="width:96%"/>
+        </p:column>    
+	    <p:column style="width:70px;" rendered="#{datas.deductionId == null}">  
+                <p:inputText id="amtInput" value="#{datas.amount}" style="width:90%;" styleClass="ppRightBtn">
+                   <f:convertNumber pattern="#,###.00" />
+                </p:inputText>
            </p:column>  
-            <p:column headerText="#{lbl['lbl.ct.ded.table.desc']}" style="width:500px;">  
-               <p:cellEditor>  
-                   <f:facet name="output">
-                   <h:outputText value="#{data.description}" />
-                   </f:facet>  
-                   <f:facet name="input">
-                   <p:inputText id="desInput" value="#{data.description}" style="width:96%"/>
-                   </f:facet>  
-               </p:cellEditor>  
-           </p:column>    
-			<p:column headerText="#{lbl['lbl.ct.ded.table.ramt']}" style="width:70px;">  
-               <p:cellEditor>  
-                   <f:facet name="output">
-                   <h:outputText value="#{data.amount}" style="float:right;" />
-                   </f:facet>  
-                   <f:facet name="input">
-                   <p:inputText id="amtInput" value="#{data.amount}" style="width:90%;float:right;"/>
-                   </f:facet>  
-               </p:cellEditor>  
-           </p:column>  
-		  <p:column headerText="#{lbl['lbl.ct.ded.table.action']}" colspan="2" styleClass="column-align-center" style="width:70px;" >
-			 <p:rowEditor  />  
-		  </p:column> 
-			  
-			</p:dataTable>
+	</p:dataTable>
 			<p:spacer height="2" />
 		   <div class="ppRightBtn"> 
-		       <p:commandButton value="#{lbl['lbl.ct.ded.btn.add']}" process="@this" partialSubmit="true"  icon="ui-icon-add"
+		       <p:commandButton value="#{lbl['lbl.ct.ded.btn.add']}" process="@form" partialSubmit="true"  icon="ui-icon-add"
 		         action="#{contractDetailsBackingBean.addDeductionDetails()}" update="tableDeduction"/>
 		        <p:spacer width="2"/>
 		        <p:commandButton value="Delete" icon="ui-icon-delete" partialSubmit="true" process="@this" onsuccess="deleteDeduct.show()">
-			        <f:setPropertyActionListener value="#{data}" target="#{contractDetailsBackingBean.managedBean.ctDeductionDel}" />
+			        <f:setPropertyActionListener value="#{datas}" target="#{contractDetailsBackingBean.managedBean.ctDeductionDel}" />
 			    </p:commandButton> 
 	   	 </div>
 		  <p:confirmDialog message="Do you want to delete the record?"  closable="true" appendToBody="true" header="Delete Confirmation"

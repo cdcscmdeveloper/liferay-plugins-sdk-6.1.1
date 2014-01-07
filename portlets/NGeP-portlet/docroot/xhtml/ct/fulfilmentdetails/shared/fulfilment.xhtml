@@ -35,8 +35,10 @@
 			</h:panelGrid>
 			
 				<p:outputLabel value="#{lbl['lbl.ct.contractAmount']}" />
-			<p:inputText value="#{contractDetailsBackingBean.managedBean.contractVer.ctContractValue.contractAmount}"
-				 disabled="true" style="width:130px;"/>		
+			<p:inputText styleClass="ppRightBtn" value="#{contractDetailsBackingBean.managedBean.contractVer.ctContractValue.contractAmount}"
+				 disabled="true" style="width:130px;">
+				   <f:convertNumber pattern="#,###.00" />
+			</p:inputText>		
 				<f:verbatim></f:verbatim><f:verbatim></f:verbatim>		
 			<h:panelGrid columns="3">
 				<p:selectBooleanCheckbox
