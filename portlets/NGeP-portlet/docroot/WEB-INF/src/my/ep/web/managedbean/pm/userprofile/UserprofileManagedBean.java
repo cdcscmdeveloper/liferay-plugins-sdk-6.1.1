@@ -32,11 +32,8 @@ public class UserprofileManagedBean extends BaseManagedBean {
 	private PmAddress pmAddress;
 	
 	private String loginId;	
-	
-	private String userName;	
-		
-	
-	
+
+
 	public String getLoginId() {
 		return loginId;
 	}
@@ -45,18 +42,6 @@ public class UserprofileManagedBean extends BaseManagedBean {
 
 	public void setLoginId(String loginId) {
 		this.loginId = loginId;
-	}
-
-
-
-	public String getUserName() {
-		return userName;
-	}
-
-
-
-	public void setUserName(String userName) {
-		this.userName = userName;
 	}
 
 
