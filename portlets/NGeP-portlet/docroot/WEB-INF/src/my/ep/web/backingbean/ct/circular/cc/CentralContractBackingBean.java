@@ -518,7 +518,15 @@ public class CentralContractBackingBean extends BaseBackingBean<CentralContractM
 					(outcome.equalsIgnoreCase(BpmOutcomeConst.BPM_SAVE) && getManagedBean().getTaskId()==null)) { 
 					renewSesionObject();
 					return "/xhtml/shared/acknowledge.xhtml";
-				}				
+				}
+				
+				getManagedBean().setCircular(resDTO.getCircular());
+				getManagedBean().setCircularVer(resDTO.getCircularVer());
+				getManagedBean().setRemarkList(resDTO.getRemarkList());
+				getManagedBean().setAttachmentList(resDTO.getAttachmentList());		
+				
+				ContractBackingBean ctBB = new ContractBackingBean();
+				ctBB.initializeRemarkAndAttachement(getManagedBean().getRemarkList(), getManagedBean().getAttachmentList());				
 			} else {
 				throw new EpException("Failed.");
 			}
