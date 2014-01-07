@@ -42,6 +42,7 @@ import my.ep.constant.BpmOutcomeConst;
 import my.ep.constant.ct.ContractConst;
 import my.ep.constant.ct.ContractStatusConst;
 import my.ep.constant.pm.ParameterConst;
+import my.ep.constant.pm.ParameterTypeConst;
 import my.ep.dto.ct.ContractReqDTO;
 import my.ep.dto.ct.ContractResDTO;
 import my.ep.dto.ct.circular.CircularReqDTO;
@@ -100,7 +101,7 @@ public class CentralContractBackingBean extends BaseBackingBean<CentralContractM
 	
 	public CentralContractBackingBean(){
 		if(getManagedBean().getOutComes()==null) {
-			getManagedBean().setOutComes(new String[]{"SAVE","SUBMIT"});
+			getManagedBean().setOutComes(new String[]{"Save","Submit"});
 			getManagedBean().setCircularVer(new CtCircularVer());
 			ContractBackingBean ctBB = new ContractBackingBean();
 			ctBB.initializeRemarkAndAttachement(getManagedBean().getRemarkList(), getManagedBean().getAttachmentList());
@@ -227,23 +228,16 @@ public class CentralContractBackingBean extends BaseBackingBean<CentralContractM
 	
 	public void searchContract(){
 		IContractSO contractSO = null;
-		ICircularSO circularSO = null;
 		try { 
 			contractSO = (IContractSO)BusinessDelegate.getInstance().getServiceObject("ct",IContractSO.class);
-			circularSO = (ICircularSO)BusinessDelegate.getInstance().getServiceObject("ct",ICircularSO.class);
 			
 			ISearchBean<CtContract> searchBean = new SearchBean<CtContract>();
-
+			searchBean.getDataFilterBeans().add(new SearchFilterBean("contractType.pmParameterType.parameterType",SearchOperator.OPERATOR_EQUALS.value(),ParameterTypeConst.CONTRACT_TYPE));
 			searchBean.getDataFilterBeans().add(new SearchFilterBean("contractType.parameterCode",SearchOperator.OPERATOR_EQUALS.value(),ParameterConst.CONTRACT_TYPE_CENTRAL));
 			searchBean.getDataFilterBeans().add(new SearchFilterBean("latestContractVer.contractVerId",SearchOperator.OPERATOR_IS_NOT_NULL.value(),null));
-			//TODO shouldn't use this method as will cause performance issue. Please find a better way.
-			List<Long> contractIdList = circularSO.retrieveApprovedCircularContractId(null).getContractIdList();
-			if(contractIdList!=null && contractIdList.size()>0) {
-				searchBean.getDataFilterBeans().add(new SearchFilterBean("contractId",SearchOperator.OPERATOR_NOT_IN.value(), contractIdList));
-			}
 			
 			if(getManagedBean().getSearchContractNo()!=null && getManagedBean().getSearchContractNo().length()>0) {
-				searchBean.getDataFilterBeans().add(new SearchFilterBean("contractNo",SearchOperator.OPERATOR_EQUALS.value(),getManagedBean().getSearchContractNo()));	
+				searchBean.getDataFilterBeans().add(new SearchFilterBean("latestContractVer.ctContractValue.contractPhysicalNo",SearchOperator.OPERATOR_EQUALS.value(),getManagedBean().getSearchContractNo()));	
 			}
 			if(getManagedBean().getSearchContractName()!=null && getManagedBean().getSearchContractName().length()>0) {
 				searchBean.getDataFilterBeans().add(new SearchFilterBean("contractName",SearchOperator.OPERATOR_LIKE.value(),getManagedBean().getSearchContractName()));	
@@ -251,6 +245,7 @@ public class CentralContractBackingBean extends BaseBackingBean<CentralContractM
 			
 			ContractReqDTO reqDTO = new ContractReqDTO();
 			reqDTO.setContractSearchBean(searchBean);
+			reqDTO.setFilterByCircularContract(true);
 			
 			ContractResDTO resDTO = contractSO.searchContract(reqDTO);
 			if(resDTO.isSuccessful()) {
@@ -261,7 +256,6 @@ public class CentralContractBackingBean extends BaseBackingBean<CentralContractM
 			FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR,e.toString(), "contract search failed."));
 		} finally {
 			contractSO = null;
-			circularSO = null;
 		}
 	}
 	

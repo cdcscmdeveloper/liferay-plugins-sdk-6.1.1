@@ -108,7 +108,7 @@ public class PanelBackingBean extends BaseBackingBean<PanelManagedBean>{
 	
 	public PanelBackingBean(){
 		if(getManagedBean().getOutComes()==null) {
-			getManagedBean().setOutComes(new String[]{"SAVE","SUBMIT"});
+			getManagedBean().setOutComes(new String[]{"Save","Submit"});
 			getManagedBean().setCircularVer(new CtCircularVer());
 			initializeRemarks();
 			
