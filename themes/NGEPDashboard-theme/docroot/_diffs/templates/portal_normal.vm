@@ -96,7 +96,7 @@
 			window.location.href=newURL;
 			
 		} 
-
+</script>
 
 </head>
 
