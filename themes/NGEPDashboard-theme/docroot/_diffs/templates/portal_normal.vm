@@ -8,8 +8,16 @@
 	<title>$the_title - $company_name</title>
 
 	$theme.include($top_head_include)
-	
+	#js ("$javascript_folder/jquery.min.js")
 	#js ("$javascript_folder/date_time.js")
+	<script>
+	jQuery(document).ready(function(){
+	
+	onPageLoad();
+	
+  
+});
+	</script>
 	<script language="javascript">
 		function resizeText(multiplier) 
 		{
@@ -98,6 +106,8 @@
 		} 
 </script>
 
+
+
 </head>
 
 <body class="$css_class">
@@ -139,7 +149,7 @@ $theme.include($body_top_include)
                         <li class="btn-language">
                             <a href="#" id="SelectedLanguage">English</a>
                             <div class="dropdown-language-wrapper">
-                            	<a href="javascript:selectLanguage('ms');"><p>Bahasa Melayu</p></a>
+                            	<a href="javascript:selectLanguage('ms');"><p>Bahasa Malaysia</p></a>
                                 <div class="clear"></div>                           
 								<a href="javascript:selectLanguage('en');"><p>English</p></a>                             
                             </div>
