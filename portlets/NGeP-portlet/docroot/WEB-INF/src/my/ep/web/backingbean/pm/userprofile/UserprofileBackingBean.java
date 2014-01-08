@@ -39,7 +39,7 @@ public class UserprofileBackingBean extends
 		if (user != null && null != user.getUserId()) {
 			this.getManagedBean().setPmUser(user);
 			List<PmAddressType> addressType = user.getPmAddressTypes();
-			logger.info(addressType.get(0).getAddressType());
+			
 			if (addressType != null) {
 				for (PmAddressType addressType2 : addressType) {
 					if (addressType2.getAddressType().equalsIgnoreCase("C")) {
