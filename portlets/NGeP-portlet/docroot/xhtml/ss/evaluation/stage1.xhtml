@@ -7,7 +7,7 @@
 	xmlns:ac="http://ac.my/jsf/composite/cc">
 
 
- <ui:include src="/xhtml/ss/quatationtender/qtntenderheader.xhtml" /> 
+ <!-- <ui:include src="/xhtml/ss/quatationtender/qtntenderheader.xhtml" /> --> 
 
 
 	<p:panel header="#{lbl['lbl.sc.eva.s1.manual.head']}" toggleable="true">
@@ -26,12 +26,12 @@
 			
 				<p:column headerText="#{lbl['lbl.sc.eva.s1.tech.status']}"
 				style="width:30%">
-				<h:outputText value="Pending/Complete"></h:outputText>
+				<h:outputText value="#{manuals1Evaluation.evaluationStatus.statusId}"></h:outputText>
 			</p:column>
 
 			<p:column headerText="#{lbl['lbl.sc.eva.s1.tech.result']}"
 				style="width:30%">
-				<h:outputText value="Failed/Success"></h:outputText>
+				<h:outputText value="Failed"></h:outputText>
 			</p:column>
 			<p:column headerText="#{lbl['lbl.sc.eva.prepare.meeting.action']}"
 				style="width:20%">
@@ -60,7 +60,7 @@
 
 			<p:column headerText="#{lbl['lbl.sc.eva.s1.tech.status']}"
 				style="width:30%">
-				<h:outputText value="Pending/complete"></h:outputText>
+				<h:outputText value="#{evaluations1Tech.evaluationStatus.statusId}"></h:outputText>
 			</p:column>
 
 
@@ -71,7 +71,7 @@
 
 			<p:column headerText="#{lbl['lbl.sc.eva.s1.tech.result']}"
 				style="width:15%">
-				<h:outputText value="Failed/Success"></h:outputText>
+				<h:outputText value="Failed"></h:outputText>
 			</p:column>
 			<p:column headerText="#{lbl['lbl.sc.eva.prepare.meeting.action']}"
 				style="width:20%">
@@ -103,7 +103,7 @@
 
 			<p:column headerText="#{lbl['lbl.sc.eva.s1.tech.status']}"
 				style="width:30%">
-				<h:outputText value="Pending/complete"></h:outputText>
+				<h:outputText value="#{manuals1Evaluation.evaluationStatus.statusId}"></h:outputText>
 			</p:column>
 
 
@@ -114,7 +114,7 @@
 
 			<p:column headerText="#{lbl['lbl.sc.eva.s1.tech.result']}"
 				style="width:15%">
-				<h:outputText value="Failed/Success"></h:outputText>
+				<h:outputText value="Failed"></h:outputText>
 			</p:column>
 			<p:column headerText="#{lbl['lbl.sc.eva.prepare.meeting.action']}"
 				style="width:20%">

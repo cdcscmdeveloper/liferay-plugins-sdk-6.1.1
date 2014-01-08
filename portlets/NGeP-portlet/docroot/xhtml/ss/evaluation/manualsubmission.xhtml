@@ -16,12 +16,12 @@
 
 				<h:outputLabel value="#{lbl['lbl.sc.eva.s1.manual.supplier']}"></h:outputLabel>
 
-				<p:inputText value="#{evaluationBackingBean.managedBean.checklistEvaluation.scQtProposal.supplierNo}" readonly="true"></p:inputText>
+				<p:inputText value="#{evaluationBackingBean.managedBean.scQtEvaluationResult.scQtProposal.supplierNo}" readonly="true"></p:inputText>
 
 				<h:outputLabel value="#{lbl['lbl.sc.eva.s1.tech.ovearall']}" />
 
 
-				<p:inputText value="Failed/Success" readonly="true"></p:inputText>
+				<p:inputText id="overAllResult" value="#{evaluationBackingBean.managedBean.overAllResult}" readonly="true"></p:inputText>
 
 
 			</h:panelGrid>
@@ -76,7 +76,7 @@
 		</div>
 			<p:spacer height="15"></p:spacer>
 			<div align="right">
-				<p:commandButton value="#{lbl['lbl.sc.eva.btn.show']}"></p:commandButton>
+				<p:commandButton value="#{lbl['lbl.sc.eva.btn.show']}" update="overAllResult" action="#{evaluationBackingBean.manualShowResult}"></p:commandButton>
 			</div>
 
 

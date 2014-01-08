@@ -7,7 +7,7 @@
 	xmlns:ac="http://ac.my/jsf/composite/cc">
 
 
- <ui:include src="/xhtml/ss/quatationtender/qtntenderheader.xhtml" /> 
+ <!-- <ui:include src="/xhtml/ss/quatationtender/qtntenderheader.xhtml" />  -->
 
 	<p:panel header="#{lbl['lbl.sc.eva.summary.head']}" toggleable="true">
 		<p:commandLink value="#{lbl['lbl.sc.eva.summary.list']}"></p:commandLink>
@@ -50,18 +50,18 @@
 
 			<p:column headerText="#{lbl['lbl.sc.eva.summary.ranking']}"
 				style="width:10%">
-				<h:outputText value="#{qualified.autoRank}"></h:outputText>
+			
 			</p:column>
 			<p:column headerText="#{lbl['lbl.sc.eva.s1.manual.supplier']}"
 				style="width:20%">
-				<h:outputText value="#{qualified.scQtProposalEvaluate.scQtProposal.supplierNo}"></h:outputText>
+				<h:outputText value="#{qualified.scQtProposal.supplierNo}"></h:outputText>
 			</p:column>
 
 
 
 			<p:column headerText="#{lbl['lbl.sc.eva.s1.tech.score']}"
 				style="width:10%">
-				<h:outputText value="#{qualified.autoRank}"></h:outputText>
+		
 			</p:column>
 
 
@@ -86,23 +86,23 @@
 		<p:commandLink value="#{lbl['lbl.sc.eva.summary.disqualified']}"></p:commandLink>
 
 		<p:dataTable id="evaluationsummarystage2disqualified" var="disqualified"
-		value="#{evaluationBackingBean.managedBean.qualifiedList}"
+		value="#{evaluationBackingBean.managedBean.disQualifiedList}"
 			rowKey="#{qualified}" rowIndexVar="index">
 			<ac:paginator for="evaluationsummarystage2disqualified" />
 			<p:column headerText="#{lbl['lbl.sc.eva.summary.ranking']}"
 				style="width:35%">
-				<h:outputText value="#{disqualified.autoRank}"></h:outputText>
+			
 			</p:column>
 			<p:column headerText="#{lbl['lbl.sc.eva.s1.manual.supplier']}"
 				style="width:30%">
-				<h:outputText value="#{disqualified.scQtProposalEvaluate.scQtProposal.supplierNo}"></h:outputText>
+				<h:outputText value="#{disqualified.scQtProposal.supplierNo}"></h:outputText>
 			</p:column>
 
 
 
 			<p:column headerText="#{lbl['lbl.sc.eva.s1.tech.score']}"
 				style="width:35%">
-				<h:outputText value="#{disqualified.autoRank}"></h:outputText>
+		
 			</p:column>
 
 

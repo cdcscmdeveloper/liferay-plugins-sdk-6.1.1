@@ -14,7 +14,7 @@
 
 				<h:outputLabel value="#{lbl['lbl.sc.eva.s1.manual.supplier']}"></h:outputLabel>
 
-				<p:inputText value="#{evaluationBackingBean.managedBean.checklistEvaluation.scQtProposal.supplierNo}" readonly="true"></p:inputText>
+				<p:inputText value="#{evaluationBackingBean.managedBean.scQtEvaluationResult.scQtProposal.supplierNo}" readonly="true"></p:inputText>
 
 
 				<p:outputLabel value="#{lbl['lbl.sc.eva.s1.tech.ovearall.score']}" />
@@ -31,7 +31,7 @@
 		<div align="right">
 			<p:commandButton value="#{lbl['lbl.sc.eva.btn.cancel']}" style="float:right;"
 				onclick="peringkat2.hide();" icon="ui-icon-cancel"></p:commandButton>
-			<p:commandButton value="#{lbl['lbl.sc.eva.btn.save']}" style="float:right;" action="#{templateSpecBackingBean.saveAnswerAction}" process="@all"
+			<p:commandButton value="#{lbl['lbl.sc.eva.btn.save']}" style="float:right;" action="#{evaluationBackingBean.stageTwoSaveAction}" process="@all"
 				oncomplete="peringkat2.hide()"
 			 icon="ui-icon-save"></p:commandButton>
 

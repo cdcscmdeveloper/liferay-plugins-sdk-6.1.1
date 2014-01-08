@@ -6,7 +6,7 @@
 	xmlns:c="http://java.sun.com/jsp/jstl/core"
 	xmlns:ac="http://ac.my/jsf/composite/cc">
 
-	 <ui:include src="/xhtml/ss/quatationtender/qtntenderheader.xhtml" /> 
+	<!--  <ui:include src="/xhtml/ss/quatationtender/qtntenderheader.xhtml" />  -->
 
 
 	<p:panel header="#{lbl['lbl.sc.eva.report.head']}" toggleable="true">
@@ -17,12 +17,12 @@
 			<ac:paginator for="evaluationreport" />
 			<p:columnGroup type="header">
 				<p:row>
-					<p:column colspan="1" width="60%" rendered="true"
-						style="text-align:center; vertical-align:top;"
+					<p:column colspan="1" rendered="true"
+						style="text-align:left; vertical-align:top;"
 						headerText="#{lbl['lbl.sc.eva.report.content']}">
 					</p:column>
-					<p:column colspan="1" width="40%" rendered="true"
-						style="text-align:center; vertical-align:top;"
+					<p:column colspan="1"  rendered="true"
+						style="text-align:left; vertical-align:top;"
 						headerText="#{lbl['lbl.sc.eva.prepare.meeting.action']}">
 					</p:column>
 
@@ -30,10 +30,10 @@
 			</p:columnGroup>
 			<p:subTable id="supplierItemTable1#{rowIndex}" var="supplierItem1"
 				value="#{item1.supplierItems}">
-				<f:facet name="header">
+				<!-- <f:facet name="header">
 					<h:outputText value="#{item1.itemName}" /> :   
 				            	
-				            </f:facet>
+				            </f:facet> -->
 				<p:column>  
 				                #{supplierItem1.remarks}  
 				            </p:column>
