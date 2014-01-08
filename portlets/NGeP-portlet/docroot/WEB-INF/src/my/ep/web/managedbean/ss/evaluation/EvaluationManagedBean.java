@@ -11,13 +11,15 @@ import my.ep.persistence.entity.ss.quationtender.ScQt;
 import my.ep.persistence.entity.ss.quationtender.ScQtChecklistEvaluation;
 import my.ep.persistence.entity.ss.quationtender.ScQtCommitteeActivity;
 import my.ep.persistence.entity.ss.quationtender.ScQtEvaluationResult;
+import my.ep.persistence.entity.ss.quationtender.ScQtEvaluationResultDtl;
 import my.ep.persistence.entity.ss.quationtender.ScQtItem;
 import my.ep.persistence.entity.ss.quationtender.ScQtManualEvaluation;
 import my.ep.persistence.entity.ss.quationtender.ScQtMeeting;
+import my.ep.persistence.entity.ss.quationtender.ScQtProposalChecklist;
 import my.ep.persistence.entity.ss.quationtender.ScQtProposalLabel;
-import my.ep.persistence.entity.ss.quationtender.ScQtProposalRanking;
 import my.ep.persistence.entity.ss.quationtender.ScQtSpec;
 import my.ep.persistence.entity.ss.quationtender.ScQtZoneCriteria;
+import my.ep.persistence.entity.tpl.spec.TplSpecMaster;
 import my.ep.web.managedbean.BaseManagedBean;
 
 @ManagedBean(name="evaluationMB")
@@ -37,17 +39,17 @@ public class EvaluationManagedBean extends BaseManagedBean {
 	private List<ScQtEvaluationResult> s1TechEvalList;
 	private List<ScQtEvaluationResult>  s1FinEvalList;
 	private List<ScQtEvaluationResult> s2TechSupplier;
-	private List<ScQtChecklistEvaluation> s2TechChecklist;
+	private List<ScQtProposalChecklist> s2TechChecklist;
 	private List<ScQtEvaluationResult> s2FinSupplier;
-	private List<ScQtChecklistEvaluation> s2FinChecklist;
+	private List<ScQtProposalChecklist> s2FinChecklist;
 	private List<ScQtCommitteeActivity> committeeActivitymultiSelect;
 	private ScQtEvaluationResult s2techSingleSelect;
 	private ScQtEvaluationResult s2finSingleSelect;
 	private ScEvaluationResult evaluationResult; 
-	private List<ScQtChecklistEvaluation> complianceList; 
+	private List<ScQtProposalChecklist> complianceList; 
 	 private List<ScQtCommitteeActivity> signOffMemberList;
-	 private List<ScQtProposalRanking> qualifiedList;
-	 private List<ScQtProposalRanking> disQualifiedList;
+	 private List<ScQtEvaluationResult> qualifiedList;
+	 private List<ScQtEvaluationResult> disQualifiedList;
 	 private ScQtEvaluationResult scQtEvaluationResult;
 	private int tabActiveIndex;
 	private   List<ScQtItem> scQtItemList;
@@ -59,7 +61,13 @@ public class EvaluationManagedBean extends BaseManagedBean {
 	private List<ScQtProposalLabel> manualProposalLabel;
 	private List<ScQtManualEvaluation> manualEvaluateList;
 	private boolean isEvaluateStatus;
-	private Long proposalId;
+	private Long evaluationResultId;
+	private int tempTab;
+	private TplSpecMaster specMaster;
+	private String overAllResult;
+	private String stageOneoverAllResult;
+	private int result=1;
+	//private String stage1committeeType="OC";
 	public EvaluationManagedBean() {
 		super();
 		prepareDummyData1();
@@ -257,44 +265,6 @@ public class EvaluationManagedBean extends BaseManagedBean {
 		this.signOffMemberList = signOffMemberList;
 	}
 
-
-
-	/**
-	 * @return the qualifiedList
-	 */
-	public List<ScQtProposalRanking> getQualifiedList() {
-		return qualifiedList;
-	}
-
-
-
-	/**
-	 * @param qualifiedList the qualifiedList to set
-	 */
-	public void setQualifiedList(List<ScQtProposalRanking> qualifiedList) {
-		this.qualifiedList = qualifiedList;
-	}
-
-
-
-	/**
-	 * @return the disQualifiedList
-	 */
-	public List<ScQtProposalRanking> getDisQualifiedList() {
-		return disQualifiedList;
-	}
-
-
-
-	/**
-	 * @param disQualifiedList the disQualifiedList to set
-	 */
-	public void setDisQualifiedList(List<ScQtProposalRanking> disQualifiedList) {
-		this.disQualifiedList = disQualifiedList;
-	}
-
-
-
 	/**
 	 * @return the tabActiveIndex
 	 */
@@ -468,21 +438,7 @@ public class EvaluationManagedBean extends BaseManagedBean {
 
 
 
-	/**
-	 * @return the complianceList
-	 */
-	public List<ScQtChecklistEvaluation> getComplianceList() {
-		return complianceList;
-	}
-
-
-
-	/**
-	 * @param complianceList the complianceList to set
-	 */
-	public void setComplianceList(List<ScQtChecklistEvaluation> complianceList) {
-		this.complianceList = complianceList;
-	}
+	
 
 
 
@@ -518,42 +474,6 @@ public class EvaluationManagedBean extends BaseManagedBean {
 	 */
 	public void setS2finSingleSelect(ScQtEvaluationResult s2finSingleSelect) {
 		this.s2finSingleSelect = s2finSingleSelect;
-	}
-
-
-
-	/**
-	 * @return the s2TechChecklist
-	 */
-	public List<ScQtChecklistEvaluation> getS2TechChecklist() {
-		return s2TechChecklist;
-	}
-
-
-
-	/**
-	 * @param s2TechChecklist the s2TechChecklist to set
-	 */
-	public void setS2TechChecklist(List<ScQtChecklistEvaluation> s2TechChecklist) {
-		this.s2TechChecklist = s2TechChecklist;
-	}
-
-
-
-	/**
-	 * @return the s2FinChecklist
-	 */
-	public List<ScQtChecklistEvaluation> getS2FinChecklist() {
-		return s2FinChecklist;
-	}
-
-
-
-	/**
-	 * @param s2FinChecklist the s2FinChecklist to set
-	 */
-	public void setS2FinChecklist(List<ScQtChecklistEvaluation> s2FinChecklist) {
-		this.s2FinChecklist = s2FinChecklist;
 	}
 
 
@@ -739,20 +659,203 @@ public class EvaluationManagedBean extends BaseManagedBean {
 
 
 
+	
+
+
 	/**
-	 * @return the proposalId
+	 * @return the tempTab
 	 */
-	public Long getProposalId() {
-		return proposalId;
+	public int getTempTab() {
+		return tempTab;
 	}
 
 
 
 	/**
-	 * @param proposalId the proposalId to set
+	 * @param tempTab the tempTab to set
 	 */
-	public void setProposalId(Long proposalId) {
-		this.proposalId = proposalId;
+	public void setTempTab(int tempTab) {
+		this.tempTab = tempTab;
+	}
+
+
+
+	/**
+	 * @return the complianceList
+	 */
+	public List<ScQtProposalChecklist> getComplianceList() {
+		return complianceList;
+	}
+
+
+
+	/**
+	 * @param complianceList the complianceList to set
+	 */
+	public void setComplianceList(List<ScQtProposalChecklist> complianceList) {
+		this.complianceList = complianceList;
+	}
+
+
+
+	/**
+	 * @return the evaluationResultId
+	 */
+	public Long getEvaluationResultId() {
+		return evaluationResultId;
+	}
+
+
+
+	/**
+	 * @param evaluationResultId the evaluationResultId to set
+	 */
+	public void setEvaluationResultId(Long evaluationResultId) {
+		this.evaluationResultId = evaluationResultId;
+	}
+
+
+
+	/**
+	 * @return the s2TechChecklist
+	 */
+	public List<ScQtProposalChecklist> getS2TechChecklist() {
+		return s2TechChecklist;
+	}
+
+
+
+	/**
+	 * @param s2TechChecklist the s2TechChecklist to set
+	 */
+	public void setS2TechChecklist(List<ScQtProposalChecklist> s2TechChecklist) {
+		this.s2TechChecklist = s2TechChecklist;
+	}
+
+
+
+	/**
+	 * @return the s2FinChecklist
+	 */
+	public List<ScQtProposalChecklist> getS2FinChecklist() {
+		return s2FinChecklist;
+	}
+
+
+
+	/**
+	 * @param s2FinChecklist the s2FinChecklist to set
+	 */
+	public void setS2FinChecklist(List<ScQtProposalChecklist> s2FinChecklist) {
+		this.s2FinChecklist = s2FinChecklist;
+	}
+
+
+
+	/**
+	 * @return the qualifiedList
+	 */
+	public List<ScQtEvaluationResult> getQualifiedList() {
+		return qualifiedList;
+	}
+
+
+
+	/**
+	 * @param qualifiedList the qualifiedList to set
+	 */
+	public void setQualifiedList(List<ScQtEvaluationResult> qualifiedList) {
+		this.qualifiedList = qualifiedList;
+	}
+
+
+
+	/**
+	 * @return the disQualifiedList
+	 */
+	public List<ScQtEvaluationResult> getDisQualifiedList() {
+		return disQualifiedList;
+	}
+
+
+
+	/**
+	 * @param disQualifiedList the disQualifiedList to set
+	 */
+	public void setDisQualifiedList(List<ScQtEvaluationResult> disQualifiedList) {
+		this.disQualifiedList = disQualifiedList;
+	}
+
+
+
+	/**
+	 * @return the specMaster
+	 */
+	public TplSpecMaster getSpecMaster() {
+		return specMaster;
+	}
+
+
+
+	/**
+	 * @param specMaster the specMaster to set
+	 */
+	public void setSpecMaster(TplSpecMaster specMaster) {
+		this.specMaster = specMaster;
+	}
+
+
+
+	/**
+	 * @return the overAllResult
+	 */
+	public String getOverAllResult() {
+		return overAllResult;
+	}
+
+
+
+	/**
+	 * @param overAllResult the overAllResult to set
+	 */
+	public void setOverAllResult(String overAllResult) {
+		this.overAllResult = overAllResult;
+	}
+
+
+
+	/**
+	 * @return the stageOneoverAllResult
+	 */
+	public String getStageOneoverAllResult() {
+		return stageOneoverAllResult;
+	}
+
+
+
+	/**
+	 * @param stageOneoverAllResult the stageOneoverAllResult to set
+	 */
+	public void setStageOneoverAllResult(String stageOneoverAllResult) {
+		this.stageOneoverAllResult = stageOneoverAllResult;
+	}
+
+
+
+	/**
+	 * @return the result
+	 */
+	public int getResult() {
+		return result;
+	}
+
+
+
+	/**
+	 * @param result the result to set
+	 */
+	public void setResult(int result) {
+		this.result = result;
 	}
 
 
