@@ -24,7 +24,7 @@
 			<tr>
 				<td><p:outputLabel value="#{lbl['lbl.fl.ministry']}" /></td>
 				<td><p:inputText size="35"
-						value="#{contractRequestBackingBean.managedBean.flRequest.issuedOrgProfile.parentOrgProfile.parentOrgProfile.orgName}"
+						value="#{contractRequestBackingBean.managedBean.ministryName}"
 						disabled="true" /></td>
 				<td><p:outputLabel value="#{lbl['lbl.fl.contract.request.no']}" /></td>
 				<td><p:inputText size="20" disabled="true" /></td>
@@ -32,11 +32,9 @@
 			<tr>
 				<td><p:outputLabel value="* #{lbl['lbl.fl.issued.jabatan']}" /></td>
 				<td><p:selectOneMenu
-						value="#{contractRequestBackingBean.managedBean.flRequest.issuedOrgProfile.orgProfileId}"
-						style="width: 207px;">
-						<f:selectItems
-							value="#{contractRequestBackingBean.divisionProfileList}" />
-						<p:ajax event="change" update="issuePtjDD,chargePtjDD" process="@this"
+						value="#{contractRequestBackingBean.managedBean.issuedJabatanId}" style="width: 207px;">
+						<f:selectItems value="#{contractRequestBackingBean.issuedDivisionProfileList}" />
+						<p:ajax event="change" update="issuePtjDD,chargePtjDD"
 							listener="#{contractRequestBackingBean.checkPtjFlg}" />
 					</p:selectOneMenu></td>
 				<td><p:outputLabel value="#{lbl['lbl.fl.mto']}" /></td>
@@ -50,9 +48,9 @@
 				<td><p:outputLabel value="* #{lbl['lbl.fl.issued.ptj']}" /></td>
 				<td><p:selectOneMenu id="issuePtjDD"
 						disabled="#{contractRequestBackingBean.managedBean.checkPtjFlg}"
-						value="#{contractRequestBackingBean.managedBean.flRequest.issuedOrgProfile.orgProfileId}"
+						value="#{contractRequestBackingBean.managedBean.issuedPtjId}"
 						style="width: 207px;">
-						<f:selectItems value="#{contractRequestBackingBean.PTJList}" />
+						<f:selectItems value="#{contractRequestBackingBean.issuedPTJList}" />
 					</p:selectOneMenu></td>
 				<td><p:outputLabel value="#{lbl['lbl.fl.contract.no']}" /></td>
 				<td><p:inputText size="20"
@@ -62,10 +60,10 @@
 			<tr>
 				<td><p:outputLabel value="* #{lbl['lbl.fl.received.jabatan']}" /></td>
 				<td><p:selectOneMenu
-						value="#{contractRequestBackingBean.managedBean.flRequest.receivedOrgProfile.orgProfileId}"
+						value="#{contractRequestBackingBean.managedBean.receivedJabatanId}"
 						style="width: 207px;">
 						<f:selectItems
-							value="#{contractRequestBackingBean.divisionProfileList}" />
+							value="#{contractRequestBackingBean.receivedDivisionProfileList}" />
 							<p:ajax event="change" update="receivePtjDD" process="@this"
 							listener="#{contractRequestBackingBean.checkPtjFlg}" />
 					</p:selectOneMenu></td>
@@ -78,9 +76,9 @@
 				<td><p:outputLabel value="* #{lbl['lbl.fl.received.ptj']}" /></td>
 				<td><p:selectOneMenu id="receivePtjDD"
 						disabled="#{contractRequestBackingBean.managedBean.checkPtjFlg}"
-						value="#{contractRequestBackingBean.managedBean.flRequest.receivedOrgProfile.orgProfileId}"
+						value="#{contractRequestBackingBean.managedBean.receivedPtjId}"
 						style="width: 207px;">
-						<f:selectItems value="#{contractRequestBackingBean.PTJList}" />
+						<f:selectItems value="#{contractRequestBackingBean.receivedPTJList}" />
 					</p:selectOneMenu></td>
 				<td><p:outputLabel value="#{lbl['lbl.fl.fulfilment.type']}" /></td>
 				<td><p:inputText size="35"
@@ -114,7 +112,7 @@
 				<td><p:selectOneMenu id="chargePtjDD"
 						disabled="#{contractRequestBackingBean.managedBean.checkPtjFlg}"
 						style="width: 207px;">
-						<f:selectItems value="#{contractRequestBackingBean.PTJList}" />
+						<f:selectItems value="#{contractRequestBackingBean.issuedPTJList}" />
 					</p:selectOneMenu></td>
 			</tr>
 			<tr>

@@ -17,7 +17,9 @@ import my.ep.persistence.entity.fl.request.FlFulfilmentItem;
 import my.ep.persistence.entity.fl.request.FlFulfilmentItemAddr;
 import my.ep.persistence.entity.fl.request.FlFulfilmentRequest;
 import my.ep.persistence.entity.fl.request.FlShippingInstr;
+import my.ep.persistence.entity.pm.authorization.PmOrgProfile;
 import my.ep.persistence.entity.pm.authorization.PmUserGroupUser;
+import my.ep.persistence.entity.pm.authorization.PmUserOrg;
 import my.ep.persistence.entity.pm.common.PmAddressType;
 import my.ep.persistence.entity.pm.common.PmMaksud;
 import my.ep.web.managedbean.BaseManagedBean;
@@ -52,43 +54,48 @@ public class ContractRequestManagedBean extends BaseManagedBean {
 	private HashMap<Long, FlFulfilmentItem> flItemMap;
 	private BigDecimal subTotal;
 	private FlFulfilmentItemAddr selectedItemAddr;
-	
+
 	private List <FlFulfilmentItemAddr>  selectedItemsRows;
 	//private List<FlFulfilmentItem> selectedItemsRows;
+	private PmOrgProfile pmOrgProfile;
+	private PmUserOrg pmUserOrg = new PmUserOrg();
 	
+	private String ministryName;
+	private Long issuedJabatanId;
+	private Long receivedJabatanId;
 	
 	//getcontract
 	private CtContract ctContract = new CtContract();
 	private List <CtContract> contractList;
 	private CtContract selectedContract;
-	
+
 	//getSI
 	private FlShippingInstr shippingInstr;
-	
+
 	private boolean selectedRowFlg;
-	
+
 	private String tempLogin; //TODO: temp and to be removed
-	
+
 	//doc search
 	private String docProcess;
 	private String flDocId;
 	private String buttonVal;
 	private boolean isMto = false;
 	private boolean isImportedItems = false;
-		
+
 	//get GOSODO
 	private Long goId;
 	private Long soId;
 	private Long doId;
-	
+
 	//remove multiple selection from data table
 	private List<FlDeliveryAddress> selectedAddressRows;
 	//private List<FlFulfilmentItem> selectedItemsRows;
-	
+
 	public ContractRequestManagedBean(){
-		
+
 	}
-	
+
 
 	public FlFulfilmentRequest getFlRequest() {
 		return flRequest;
@@ -585,6 +592,81 @@ public class ContractRequestManagedBean extends BaseManagedBean {
 	}
 
 
-	
-
+	/**
+	 * @return the pmOrgProfile
+	 */
+	public PmOrgProfile getPmOrgProfile() {
+		return pmOrgProfile;
 	}
+
+
+	/**
+	 * @param pmOrgProfile the pmOrgProfile to set
+	 */
+	public void setPmOrgProfile(PmOrgProfile pmOrgProfile) {
+		this.pmOrgProfile = pmOrgProfile;
+	}
+
+	/**
+	 * @return the issuedJabatanId
+	 */
+	public Long getIssuedJabatanId() {
+		return issuedJabatanId;
+	}
+
+
+	/**
+	 * @param issuedJabatanId the issuedJabatanId to set
+	 */
+	public void setIssuedJabatanId(Long issuedJabatanId) {
+		this.issuedJabatanId = issuedJabatanId;
+	}
+
+
+	/**
+	 * @return the receivedJabatanId
+	 */
+	public Long getReceivedJabatanId() {
+		return receivedJabatanId;
+	}
+
+
+	/**
+	 * @param receivedJabatanId the receivedJabatanId to set
+	 */
+	public void setReceivedJabatanId(Long receivedJabatanId) {
+		this.receivedJabatanId = receivedJabatanId;
+	}
+
+
+	/**
+	 * @return the ministryName
+	 */
+	public String getMinistryName() {
+		return ministryName;
+	}
+
+
+	/**
+	 * @param ministryName the ministryName to set
+	 */
+	public void setMinistryName(String ministryName) {
+		this.ministryName = ministryName;
+	}
+
+	/**
+	 * @return the pmUserOrg
+	 */
+	public PmUserOrg getPmUserOrg() {
+		return pmUserOrg;
+	}
+
+
+	/**
+	 * @param pmUserOrg the pmUserOrg to set
+	 */
+	public void setPmUserOrg(PmUserOrg pmUserOrg) {
+		this.pmUserOrg = pmUserOrg;
+	}
+
+}
