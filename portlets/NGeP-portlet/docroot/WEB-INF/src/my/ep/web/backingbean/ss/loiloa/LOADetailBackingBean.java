@@ -37,6 +37,7 @@ import my.ep.persistence.entity.pm.common.PmStatus;
 import my.ep.persistence.entity.sm.SmMofAccount;
 import my.ep.persistence.entity.sm.SmSupplierBranch;
 import my.ep.persistence.entity.ss.quationtender.ScBondDtl;
+import my.ep.persistence.entity.ss.quationtender.ScBondDtlAttachment;
 import my.ep.persistence.entity.ss.quationtender.ScLoa;
 import my.ep.persistence.entity.ss.quationtender.ScQt;
 import my.ep.persistence.entity.ss.quationtender.ScQtDeduction;
@@ -49,13 +50,14 @@ import my.ep.type.pm.OrganizationType;
 import my.ep.type.pm.RoleCode;
 import my.ep.type.ss.LoiLoaDocType;
 import my.ep.util.lookupservice.EpEjbBusinessDelegate;
-import my.ep.web.backingbean.BaseBackingBean;
+import my.ep.web.backingbean.ss.quatationtender.SourcingBaseBackingBean;
 import my.ep.web.managedbean.ss.loiloa.LOADetailManagedBean;
 import my.ep.web.ss.quationtender.common.QTConstants;
 import my.ep.web.util.FacesScopes;
 import my.ep.web.util.lookupservice.BusinessDelegate;
 
 import org.apache.log4j.Logger;
+import org.primefaces.event.FileUploadEvent;
 
 /**
  * @author Viswanath
@@ -63,7 +65,7 @@ import org.apache.log4j.Logger;
  */
 @ManagedBean(name = "lOADetailBackingBean")
 @RequestScoped
-public class LOADetailBackingBean extends BaseBackingBean<LOADetailManagedBean> {
+public class LOADetailBackingBean extends SourcingBaseBackingBean<LOADetailManagedBean> {
 	public static Logger log = EpLogger.getLogger(LOADetailBackingBean.class);
 
 	public LOADetailBackingBean() {
@@ -91,6 +93,7 @@ public class LOADetailBackingBean extends BaseBackingBean<LOADetailManagedBean> 
 			if (null == bondDtlList) {
 				bondDtlList = new ArrayList<ScBondDtl>();
 			}
+			scBondDtl.setScLoa(getManagedBean().getScLoa());
 			bondDtlList.add(scBondDtl);
 			this.getManagedBean().setScBondDtlList(bondDtlList);
 		} catch (Exception e) {
@@ -260,7 +263,7 @@ public class LOADetailBackingBean extends BaseBackingBean<LOADetailManagedBean> 
 			ScLoa scLoa = resDTO.getScLoa();
 			if (scLoa != null) {
 				System.out.println("LOA Id : " + scLoa.getLoaId());
-				scLoa.setLoaNo("12345");
+				scLoa.setLoaNo("1234");
 				getManagedBean().setScLoa(scLoa);
 
 				getManagedBean().setScQtProposalRanking(scQtProposalRanking);
@@ -274,24 +277,18 @@ public class LOADetailBackingBean extends BaseBackingBean<LOADetailManagedBean> 
 
 				populateParentOrgProfile(getManagedBean().getQt());
 
-				System.out.println("Fulfilment Type : "
-						+ getManagedBean().getQt().getScQtSpec()
-								.getFulfilmentType());
 				System.out.println("Status : " +
 						getManagedBean().getScLoa().getPmStatus().getPmStatusDescs().get(0).getStatusName());
-				
-				// System.out.println("Status : " +
-				// getManagedBean().getScLoa().getPmStatus().getPmStatusDescs().get(0).getStatusName());
-				// System.out.println("Award Type : " +
-				// getManagedBean().getQt().getAwardType());
-				// System.out.println("Fulfilment Type : " +
-				// getManagedBean().getQt().getScQtSpec().getFulfilmentType());
-				// System.out.println("Contract Duration : " +
-				// getManagedBean().getQt().getScQtSpec().getContractDuration());
-				// System.out.println("Multiple Locality : " +
-				// getManagedBean().getQt().getScQtCriterias().isMultiLocality());
-				// System.out.println("Currency Name : " +
-				// getManagedBean().getQt().getScQtSpec().getPmCurrency().getCurrencyName());
+				System.out.println("Award Type : " +
+						getManagedBean().getQt().getAwardType());
+				System.out.println("Fulfilment Type : " +
+						getManagedBean().getQt().getScQtSpec().getFulfilmentType());
+				System.out.println("Contract Duration : " +
+						getManagedBean().getQt().getScQtSpec().getContractDuration());
+				System.out.println("Multiple Locality : " +
+						getManagedBean().getQt().getScQtCriterias().isMultiLocality());
+				System.out.println("Currency Name : " +
+						getManagedBean().getQt().getScQtSpec().getPmCurrency().getCurrencyName());
 
 				PmUser user = new FacesScopes().getUserSessionBean();
 				getManagedBean().getScLoa().setCreatedBy(user.getUserId());
@@ -614,6 +611,9 @@ public class LOADetailBackingBean extends BaseBackingBean<LOADetailManagedBean> 
 			PmStatus status = pmStatus.getPmStatus();
 			scLoa.setPmStatus(status);
 
+			List<ScBondDtl> bondDtls = this.getManagedBean().getScBondDtlList();
+			scLoa.setScBondDtls(bondDtls);
+			
 			awardSupplierReqDTO.setScLoa(scLoa);
 
 			AwardSupplierResDTO awardSupplierResDTO = iqtAwardSO
@@ -662,7 +662,6 @@ public class LOADetailBackingBean extends BaseBackingBean<LOADetailManagedBean> 
 
 	public void handleContractPTJ() {
 		debugLogger("handleContractPTJ");
-
 		IUserSO userSO;
 		try {
 			userSO = BusinessDelegate.getInstance().getServiceObject(
@@ -726,4 +725,21 @@ public class LOADetailBackingBean extends BaseBackingBean<LOADetailManagedBean> 
 		return contractUsers;
 	}
 
+	public void handleFileAttachment(FileUploadEvent event) {
+		debugLogger("handleFileAttachment");
+		ScBondDtl bondDtl = getManagedBean().getScBondDtl();
+		FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_INFO,
+				"The file was Attached successfully.", null);
+		FacesContext.getCurrentInstance().addMessage(null, message);
+		ScBondDtlAttachment attachment = bondDtl.getScBondDtlAttachment();
+		if (null == attachment) {
+			attachment = new ScBondDtlAttachment();
+			attachment.setScBondDtl(bondDtl);
+		}
+
+		uploadAttachment(event.getFile(), attachment);
+
+		bondDtl.setScBondDtlAttachment(attachment);
+
+	}
 }

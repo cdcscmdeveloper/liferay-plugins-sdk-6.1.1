@@ -13,8 +13,9 @@
 			<tr>
 				<td style="width: 154px;"><p:outputLabel
 						value="#{lbl['lbl.sc.loiloa.loa.req.perform.bond']}" /></td>
-				<td colspan="3" style="width: 128px;"><p:inputText value=""
-						disabled="true" size="30" readonly="true" /></td>
+				<td colspan="3" style="width: 128px;"><p:inputText
+						value="#{lOADetailBackingBean.managedBean.scLoa.bondReq ? 'Yes' : 'No'}"
+						readonly="true" disabled="true" size="30" /></td>
 			</tr>
 			<tr>
 				<td><p:outputLabel
@@ -85,16 +86,34 @@
 
 		<p:column headerText="#{lbl['lbl.sc.loiloa.loa.att']}"
 			style="width:5%">
-			<h:outputText value="#{bondList.bondRefNo}" style="width:95%" />
+			<h:outputText value="#{bondList.scBondDtlAttachment.fileName}"
+				rendered="#{!empty bondList.scBondDtlAttachment}" />
 		</p:column>
 
-		<p:column headerText="#{lbl['lbl.sc.loiloa.action']}" style="width:5%">
+		<p:column headerText="#{lbl['lbl.sc.loiloa.action']}"
+			style="width:15%">
+			<p:commandLink oncomplete="attachDlg.show();return false;"
+				update="performancebondtbl">
+				<p:graphicImage library="ep/images/design" name="upload.png"
+					value="/resources/ep/images/design/upload.png" />
+				<f:setPropertyActionListener value="#{bondList}"
+					target="#{lOADetailBackingBean.managedBean.scBondDtl}" />
+			</p:commandLink>
+			<p:spacer width="10" height="5" />
+			<p:commandLink>
+				<p:graphicImage library="ep/images/design" name="edit.png"
+					value="/resources/ep/images/design/edit.png" />
+			</p:commandLink>
+		</p:column>
+
+		<!-- <p:column headerText="#{lbl['lbl.sc.loiloa.action']}" style="width:5%">
 			<p:commandLink>
 				<p:graphicImage library="ep/images/design" name="edit.png"
 					value="/resources/ep/images/design/edit.png" />
 			</p:commandLink>
 
-		</p:column>
+		</p:column> -->
+
 	</p:dataTable>
 	<p:spacer height="20px" />
 	<div align="right">
@@ -107,4 +126,17 @@
 			process="@this" partialSubmit="true" icon="ui-icon-delete" />
 	</div>
 
+	<p:dialog id="attachDlg" widgetVar="attachDlg" modal="true"
+		dynamic="true" hideEffect="explode" resizable="false" width="700px"
+		height="200" styleClass="pop_up_top"
+		header="#{lbl['lbl.bpm.choose.file']}">
+		<p:ajax event="close" />
+		<p:fileUpload style="display:inline;"
+			fileUploadListener="#{lOADetailBackingBean.handleFileAttachment}"
+			mode="advanced" id="upload"
+			allowTypes="/(\.|\/)(gif|jpe?g|png|bmp|txt|xls|xlsx|pdf|doc|docx|csv)$/"
+			invalidFileMessage="Only JPG, GIF, PNG, BMP, TXT, XLS, PDF, DOC, CSV files are accepted"
+			update="performancebondtbl" oncomplete="attachDlg.hide()">
+		</p:fileUpload>
+	</p:dialog>
 </ui:composition>

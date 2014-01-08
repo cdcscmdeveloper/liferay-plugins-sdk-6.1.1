@@ -28,7 +28,7 @@
 				<td colspan="2"><p:selectOneMenu
 						value="#{lOADetailBackingBean.managedBean.branchName}"
 						style="width: 178px;margin-bottom: 5px;">
-						<f:selectItem itemLabel="-- Select -- " itemValue="" />
+						<f:selectItem itemLabel="-- Select -- " itemValue="#{null}" />
 						<f:selectItems
 							value="#{lOADetailBackingBean.managedBean.branchsList}"
 							var="brList" itemLabel="#{brList.branchName}"
@@ -369,7 +369,7 @@
 				<td colspan="3"><p:selectOneMenu
 						value="#{lOADetailBackingBean.managedBean.scLoa.contractSignerUser.userId}"
 						style="width: 178px;margin-bottom: 5px;">
-						<f:selectItem itemLabel="-- Select -- " itemValue="" />
+						<f:selectItem itemLabel="-- Select -- " itemValue="#{null}" />
 						<f:selectItems value="#{lOADetailBackingBean.managedBean.contractSignerList}"
 							var="contractUser" itemLabel="#{contractUser.userName}"
 							itemValue="#{contractUser.userId}" />
@@ -417,7 +417,7 @@
 						value="#{lOADetailBackingBean.managedBean.scLoa.approverAction}"
 						disabled="#{lOADetailBackingBean.managedBean.scLoa.reqApproval ne 'true'}"
 						style="width: 178px;margin-bottom: 5px;">
-						<f:selectItem itemLabel="-- Select -- " itemValue="" />
+						<f:selectItem itemLabel="-- Select -- " itemValue="#{null}" />
 						<f:selectItem itemLabel="Approver" itemValue="1" />
 						<f:selectItem itemLabel="Revise" itemValue="2" />
 					</p:selectOneMenu></td>

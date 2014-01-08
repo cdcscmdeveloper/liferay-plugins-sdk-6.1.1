@@ -50,6 +50,7 @@ public class LOADetailManagedBean extends BaseManagedBean {
 	private String status;
 	private ScQtCriteria scQtCriteria;
 
+	private ScBondDtl scBondDtl;
 	private List<ScBondDtl> scBondDtlList;
 	private List<ScBondDtl> selectScBondDtlList;
 	private List<ScQtZoneCriteria> zonelist;
@@ -75,6 +76,20 @@ public class LOADetailManagedBean extends BaseManagedBean {
 	private List<PmUser>  approverName; // Drop down Listing for Approver Names
 	private List<PmUser> contractSignerList;
 	
+	/**
+	 * @return the scBondDtl
+	 */
+	public ScBondDtl getScBondDtl() {
+		return scBondDtl;
+	}
+
+	/**
+	 * @param scBondDtl the scBondDtl to set
+	 */
+	public void setScBondDtl(ScBondDtl scBondDtl) {
+		this.scBondDtl = scBondDtl;
+	}
+
 	/**
 	 * @return the approverName
 	 */
