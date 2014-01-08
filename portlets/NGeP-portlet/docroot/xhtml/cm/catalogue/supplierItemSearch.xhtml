@@ -70,7 +70,7 @@
 						<p:dataTable
 							value="#{catalogueBackingBean.managedBean.supplierItemList}"
 							id="supplierItemID" var="supplierItem" rowIndexVar="rowIndex">
-							
+
 							<ac:paginator for="supplierItemID"></ac:paginator>
 
 							<p:ajax event="rowToggle"
@@ -79,25 +79,63 @@
 								<p:rowToggler />
 							</p:column>
 
-							<p:column headerText="Image">
+							<p:column headerText="Image" width="80px;">
 								<p:graphicImage
 									value="/resources/ep/images/product/computer/879949914_125.jpg"
 									height="80" width="80" />
 							</p:column>
 
 							<p:column headerText="Item Name">
-								<p:commandLink value="#{supplierItem.cmItem.itemName}"
-									action="#{catalogueBackingBean.navigateToSupplierItemDet(rowIndex)}" />
-								<cc:renderFacet name="simpleBidQuoteButton" />
+
+								<table>
+									<tr>
+										<td>#{supplierItem.cmItem.itemName}</td>
+									</tr>
+									<tr>
+										<td><cc:renderFacet name="simpleQuoteButton" /></td>
+									</tr>
+								</table>
+
 							</p:column>
 
 							<p:column headerText="Supplier Name">
-							ABC SDN BHD
+								<p:commandLink value="ANDREW PAT SDN BHD"
+									action="#{catalogueBackingBean.navigateToSupplierItemDet(rowIndex)}" />
 							</p:column>
 
 							<p:column headerText="UOM">
 							#{supplierItem.pmUom.uomName}
 							</p:column>
+
+							<p:column headerText="Pricing Type">
+
+								<p:selectOneMenu>
+									<f:selectItem itemLabel="Normal" itemValue="Normal"></f:selectItem>
+									<f:selectItem itemLabel="Promotion" itemValue="Promotion"></f:selectItem>
+									<f:selectItem itemLabel="Tier" itemValue="Tier"></f:selectItem>
+									<f:selectItem itemLabel="PromotionTier" itemValue="PromotionTier"></f:selectItem>
+								</p:selectOneMenu>
+
+							</p:column>
+
+							<p:column width="2%">
+								<table>
+									<tr>
+										<td><cc:renderFacet name="recentPrice" /></td>
+									</tr>
+									<tr>
+										<td><cc:renderFacet name="purchaseInquiry" /></td>
+									</tr>
+									<tr>
+										<td><cc:renderFacet name="purchaseInDefault" /></td>
+									</tr>
+								</table>
+
+
+
+							</p:column>
+
+
 
 							<p:column width="2%">
 								<p:selectBooleanCheckbox value="#{supplierItem.selected}">
@@ -119,27 +157,37 @@
 									<p:tab title="Normal">
 										<ui:include src="/xhtml/cm/pricing/pricingTab.xhtml" />
 									</p:tab>
-									<p:tab title="#{lbl['lbl.cm.tier']}" rendered="#{fn:length(supplierItem.cmTierPricings) > 0}">
+									<p:tab title="#{lbl['lbl.cm.tier']}"
+										rendered="#{fn:length(supplierItem.cmTierPricings) > 0}">
 										<ui:include src="/xhtml/cm/pricing/pricingTierTab.xhtml" />
 									</p:tab>
-									<p:tab title="#{lbl['lbl.cm.promotion.tier']}" rendered="#{fn:length(supplierItem.cmPromotionTierPricings) > 0}">
-										<ui:include src="/xhtml/cm/pricing/pricingPromotionTierTab.xhtml" />
+									<p:tab title="#{lbl['lbl.cm.promotion.tier']}"
+										rendered="#{fn:length(supplierItem.cmPromotionTierPricings) > 0}">
+										<ui:include
+											src="/xhtml/cm/pricing/pricingPromotionTierTab.xhtml" />
 									</p:tab>
-									<p:tab title="Zonal Standard" rendered="#{fn:length(supplierItem.cmZonalStandardPricings) > 0}">
-										<ui:include src="/xhtml/cm/pricing/zonalStandardPricingTab.xhtml"></ui:include>
+									<p:tab title="Zonal Standard"
+										rendered="#{fn:length(supplierItem.cmZonalStandardPricings) > 0}">
+										<ui:include
+											src="/xhtml/cm/pricing/zonalStandardPricingTab.xhtml"></ui:include>
 
 									</p:tab>
-									<p:tab title="Zonal Promotion" rendered="#{fn:length(supplierItem.cmZonalPromotionPricings) > 0}">
-										<ui:include src="/xhtml/cm/pricing/zonalPromotionPricingTab.xhtml"></ui:include>
+									<p:tab title="Zonal Promotion"
+										rendered="#{fn:length(supplierItem.cmZonalPromotionPricings) > 0}">
+										<ui:include
+											src="/xhtml/cm/pricing/zonalPromotionPricingTab.xhtml"></ui:include>
 
 									</p:tab>
 
-									<p:tab title="Zonal Tier" rendered="#{fn:length(supplierItem.cmZonalTierPricings) > 0}">
+									<p:tab title="Zonal Tier"
+										rendered="#{fn:length(supplierItem.cmZonalTierPricings) > 0}">
 										<ui:include src="/xhtml/cm/pricing/zonalTierPricingTab.xhtml"></ui:include>
 
 									</p:tab>
-									<p:tab title="Zonal Promotion Tier" rendered="#{fn:length(supplierItem.cmZonalPromotionTierPricings) > 0}">
-										<ui:include src="/xhtml/cm/pricing/zonalPromotionTierPricingTab.xhtml"></ui:include>
+									<p:tab title="Zonal Promotion Tier"
+										rendered="#{fn:length(supplierItem.cmZonalPromotionTierPricings) > 0}">
+										<ui:include
+											src="/xhtml/cm/pricing/zonalPromotionTierPricingTab.xhtml"></ui:include>
 
 									</p:tab>
 								</p:tabView>

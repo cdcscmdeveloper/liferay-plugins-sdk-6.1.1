@@ -13,31 +13,40 @@
 
 	<ui:define name="contentSection">
 
-		
 
-			
 
-			<!-- <ui:include src="supplierItemSearch.xhtml"></ui:include> -->
-			
 
-			<ac:catalogueSearch unspscCode="10161509">
-			
-				
-				<f:facet name="cartButton">
-					<p:commandLink
-						action="#{catalogueBackingBean.addToCart(rowIndex)}"
-						update="@(.ui-datatable[id$=supplierItemID])">
-						<p:graphicImage	library="ep/images/design" name="cart_add.png" />
-					</p:commandLink>
-				</f:facet>
 
-				<f:facet name="simpleBidQuoteButton">
-					<p:commandButton value="Simple Bid/Simple Quote" />
-				</f:facet>
-				
-			</ac:catalogueSearch>
-				
-	
+		<!-- <ui:include src="supplierItemSearch.xhtml"></ui:include> -->
+
+
+		<ac:catalogueSearch unspscCode="10161509">
+
+
+			<f:facet name="cartButton">
+				<p:commandLink action="#{catalogueBackingBean.addToCart(rowIndex)}"
+					update="@(.ui-datatable[id$=supplierItemID])">
+					<p:graphicImage library="ep/images/design" name="cart_add.png" />
+				</p:commandLink>
+			</f:facet>
+
+			<f:facet name="simpleQuoteButton">
+				<p:commandButton value="Simple Quote" />
+			</f:facet>
+
+			<f:facet name="recentPrice">
+				<p:commandButton value="Recent Price" />
+			</f:facet>
+			<f:facet name="purchaseInquiry">
+				<p:commandButton value="Purchase Inquiry" />
+			</f:facet>
+			<f:facet name="purchaseInDefault">
+				<p:commandButton value="Purchase In Default" />
+			</f:facet>
+
+		</ac:catalogueSearch>
+
+
 
 
 	</ui:define>
