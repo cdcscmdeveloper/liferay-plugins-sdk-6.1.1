@@ -21,15 +21,13 @@
 		        <property name="columnName" 	value="colorName" />
       			<property name="bundleFile" 	value="messageprovider-config.bundles.labels.labels" />
       			<property name="bundleKey" 		value="lbl.cm.color.name" />
-      			<property name="columnWidth" 	value="150" />
-      			<!-- <property name="columnTitle" 	value="Color Name" /> -->
+      			<!-- <property name="columnWidth" 	value="150" /> -->
 			</bean>
 			<bean class="my.ep.web.bean.LovColumnBean">
 		        <property name="columnName" 	value="colorCode" />
       			<property name="bundleFile" 	value="messageprovider-config.bundles.labels.labels" />
       			<property name="bundleKey" 		value="lbl.cm.color.code" />
-      			<property name="columnWidth" 	value="150" />
-      			<!-- <property name="columnTitle" 	value="Color Code" /> -->
+      			<!-- <property name="columnWidth" 	value="150" /> -->
 			</bean>
 		</list>
 	</property>
@@ -47,15 +45,13 @@
 		        <property name="columnName" 	value="unspscCode" />
       			<property name="bundleFile" 	value="messageprovider-config.bundles.labels.labels" />
       			<property name="bundleKey" 		value="lbl.cm.unspsc.code" />
-      			<property name="columnWidth" 	value="150" />
-      			<!-- <property name="columnTitle" 	value="UNSPSC Code" /> -->
+      			<!-- <property name="columnWidth" 	value="150" /> -->
 			</bean>
 			<bean class="my.ep.web.bean.LovColumnBean">
 		        <property name="columnName" 	value="unspscTitle" />
       			<property name="bundleFile" 	value="messageprovider-config.bundles.labels.labels" />
       			<property name="bundleKey" 		value="lbl.cm.unspsc.title" />
-      			<property name="columnWidth" 	value="150" />
-      			<!-- <property name="columnTitle" 	value="UNSPSC Title" /> -->
+      			<!-- <property name="columnWidth" 	value="150" /> -->
 			</bean>
 		</list>
 	</property>
@@ -72,15 +68,13 @@
 		        <property name="columnName" 	value="cityCode" />
       			<property name="bundleFile" 	value="messageprovider-config.bundles.labels.labels" />
       			<property name="bundleKey" 		value="lbl.pm.city.code" />
-      			<property name="columnWidth" 	value="150" />
-      			<!-- <property name="columnTitle" 	value="Color Name" /> -->
+      			<!-- <property name="columnWidth" 	value="150" /> -->
 			</bean>
 			<bean class="my.ep.web.bean.LovColumnBean">
 		        <property name="columnName" 	value="cityName" />
       			<property name="bundleFile" 	value="messageprovider-config.bundles.labels.labels" />
       			<property name="bundleKey" 		value="lbl.pm.city.name" />
-      			<property name="columnWidth" 	value="150" />
-      			<!-- <property name="columnTitle" 	value="Color Code" /> -->
+      			<!-- <property name="columnWidth" 	value="150" /> -->
 			</bean>
 		</list>
 	</property>
@@ -98,15 +92,13 @@
 		        <property name="columnName" 	value="uomCode" />
       			<property name="bundleFile" 	value="messageprovider-config.bundles.labels.labels" />
       			<property name="bundleKey" 		value="lbl.pm.uom.code" />
-      			<property name="columnWidth" 	value="150" />
-      			<!-- <property name="columnTitle" 	value="UNSPSC Code" /> -->
+      			<!-- <property name="columnWidth" 	value="150" /> -->
 			</bean>
 			<bean class="my.ep.web.bean.LovColumnBean">
 		        <property name="columnName" 	value="uomName" />
       			<property name="bundleFile" 	value="messageprovider-config.bundles.labels.labels" />
       			<property name="bundleKey" 		value="lbl.pm.uom.name" />
-      			<property name="columnWidth" 	value="150" />
-      			<!-- <property name="columnTitle" 	value="UNSPSC Title" /> -->
+      			<!-- <property name="columnWidth" 	value="150" /> -->
 			</bean>
 		</list>
 	</property>
@@ -123,30 +115,26 @@
 		        <property name="columnName" 	value="supplierName" />
       			<property name="bundleFile" 	value="messageprovider-config.bundles.labels.labels" />
       			<property name="bundleKey" 		value="lbl.sm.companyname" />
-      			<property name="columnWidth" 	value="150" />
-      			<!-- <property name="columnTitle" 	value="Color Code" /> -->
+      			<!-- <property name="columnWidth" 	value="150" /> -->
 			</bean>
 			<bean class="my.ep.web.bean.LovColumnBean">
 		        <property name="columnName" 	value="epNo" />
       			<property name="bundleFile" 	value="messageprovider-config.bundles.labels.labels" />
       			<property name="bundleKey" 		value="lbl.sm.epno" />
-      			<property name="columnWidth" 	value="150" />
-      			<!-- <property name="columnTitle" 	value="Color Name" /> -->
+      			<!-- <property name="columnWidth" 	value="150" /> -->
 			</bean>
 			<bean class="my.ep.web.bean.LovColumnBean">
 		        <property name="columnName" 	value="regNo" />
       			<property name="bundleFile" 	value="messageprovider-config.bundles.labels.labels" />
       			<property name="bundleKey" 		value="lbl.sm.businessregno" />
-      			<property name="columnWidth" 	value="150" />
-      			<!-- <property name="columnTitle" 	value="Color Name" /> -->
+      			<!-- <property name="columnWidth" 	value="150" /> -->
 			</bean>
 			<bean class="my.ep.web.bean.LovColumnBean">
 		        <property name="columnName" 	value="smMofAccounts.mofNo" />
       			<property name="bundleFile" 	value="messageprovider-config.bundles.labels.labels" />
       			<property name="bundleKey" 		value="lbl.sm.mofno" />
-      			<property name="columnWidth" 	value="150" />
+      			<!-- <property name="columnWidth" 	value="150" /> -->
       			<property name="viewable" 	value="false" />
-      			<!-- <property name="columnTitle" 	value="Color Name" /> -->
 			</bean>
 		</list>
 	</property>
@@ -163,15 +151,13 @@
 		        <property name="columnName" 	value="categoryL1Code" />
       			<property name="bundleFile" 	value="messageprovider-config.bundles.labels.labels" />
       			<property name="bundleKey" 		value="lbl.pm.main.category.code" />
-      			<property name="columnWidth" 	value="150" />
-      			<!-- <property name="columnTitle" 	value="Color Code" /> -->
+      			<!-- <property name="columnWidth" 	value="150" /> -->
 			</bean>
 			<bean class="my.ep.web.bean.LovColumnBean">
 		        <property name="columnName" 	value="categoryName" />
       			<property name="bundleFile" 	value="messageprovider-config.bundles.labels.labels" />
       			<property name="bundleKey" 		value="lbl.pm.main.category" />
-      			<property name="columnWidth" 	value="150" />
-      			<!-- <property name="columnTitle" 	value="Color Name" /> -->
+      			<!-- <property name="columnWidth" 	value="150" /> -->
 			</bean>
 		</list>
 	</property>
@@ -188,15 +174,13 @@
 		        <property name="columnName" 	value="categoryL2Code" />
       			<property name="bundleFile" 	value="messageprovider-config.bundles.labels.labels" />
       			<property name="bundleKey" 		value="lbl.pm.sub.category.code" />
-      			<property name="columnWidth" 	value="150" />
-      			<!-- <property name="columnTitle" 	value="Color Code" /> -->
+      			<!-- <property name="columnWidth" 	value="150" /> -->
 			</bean>
 			<bean class="my.ep.web.bean.LovColumnBean">
 		        <property name="columnName" 	value="categoryName" />
       			<property name="bundleFile" 	value="messageprovider-config.bundles.labels.labels" />
       			<property name="bundleKey" 		value="lbl.pm.sub.category" />
-      			<property name="columnWidth" 	value="150" />
-      			<!-- <property name="columnTitle" 	value="Color Name" /> -->
+      			<!-- <property name="columnWidth" 	value="150" /> -->
 			</bean>
 		</list>
 	</property>
@@ -213,15 +197,13 @@
 		        <property name="columnName" 	value="categoryL3Code" />
       			<property name="bundleFile" 	value="messageprovider-config.bundles.labels.labels" />
       			<property name="bundleKey" 		value="lbl.pm.sub.category.div.code" />
-      			<property name="columnWidth" 	value="150" />
-      			<!-- <property name="columnTitle" 	value="Color Code" /> -->
+      			<!-- <property name="columnWidth" 	value="150" /> -->
 			</bean>
 			<bean class="my.ep.web.bean.LovColumnBean">
 		        <property name="columnName" 	value="categoryName" />
       			<property name="bundleFile" 	value="messageprovider-config.bundles.labels.labels" />
       			<property name="bundleKey" 		value="lbl.pm.sub.category.div" />
-      			<property name="columnWidth" 	value="150" />
-      			<!-- <property name="columnTitle" 	value="Color Name" /> -->
+      			<!-- <property name="columnWidth" 	value="150" /> -->
 			</bean>
 		</list>
 	</property>
