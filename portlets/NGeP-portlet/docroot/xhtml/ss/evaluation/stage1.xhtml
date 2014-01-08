@@ -8,6 +8,11 @@
 
 
  <!-- <ui:include src="/xhtml/ss/quatationtender/qtntenderheader.xhtml" /> --> 
+<div align="right">
+	
+		<p:commandButton value="#{lbl['lbl.sc.eva.btn.generate']}"  action="#{evaluationBackingBean.generateStageTwoEvaluationAction}"  icon="ui-icon-evaluate" />
+		
+	</div>
 
 
 	<p:panel header="#{lbl['lbl.sc.eva.s1.manual.head']}" toggleable="true">
@@ -31,6 +36,7 @@
 
 			<p:column headerText="#{lbl['lbl.sc.eva.s1.tech.result']}"
 				style="width:30%">
+				
 				<h:outputText value="Failed"></h:outputText>
 			</p:column>
 			<p:column headerText="#{lbl['lbl.sc.eva.prepare.meeting.action']}"
