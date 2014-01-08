@@ -65,7 +65,7 @@
 	background-color: #EE0101 !important;
 }
 
-.red #sign-in, .red nav#navigation ul li:hover, .red nav#navigation ul li.selected ,.red #navigation .child-menu li a:hover,.red #navigation li a.active {
+.red #sign-in, .red nav#navigation ul li:hover, .red nav#navigation ul li.selected ,.red #navigation .child-menu li a:hover,.red #navigation li a.active, .red .my-sites-menu .current-site a {
 	background-color: #EE0101;
 }
 
@@ -73,6 +73,6 @@
 	color: #EE0101;
 }
 
-.red .middle-navi-right-wrapper ul li.btn-login-register{
+.red .middle-navi-right-wrapper ul li.btn-login-register, .red .dockbar .menu-button-active {
 	background: #EE0101;
 }
