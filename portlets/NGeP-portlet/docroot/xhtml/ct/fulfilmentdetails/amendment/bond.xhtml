@@ -8,33 +8,33 @@
 	xmlns:ac="http://ac.my/jsf/composite/cc" >
 	<p:panel id="bondId" header="#{lbl['lbl.ct.pbd.panel.name']}" toggleable="true"  toggleSpeed="500">
     <div style="overflow-x:auto">
-	<p:dataTable id="tableBond" var="data" value="#{contractDetailsBackingBean.managedBean.contractVer.ctPerformanceBonds}"
-	lazy="false" widgetVar="dataTableObj" dynamic="true" paginator="true" paginatorPosition="bottom" 
-	paginatorAlwaysVisible="true" emptyMessage="No Records!" rows="10">
-	    <ac:paginator for="tableBond" />
-	   <p:columnGroup type="header"> 
-	   <p:row> 
-         <p:column headerText="#{lbl['lbl.ct.pbd.table.rno']}"  /> 
-         <p:column headerText="#{lbl['lbl.ct.pbd.table.fi']}" /> 
-         <p:column headerText="#{lbl['lbl.ct.pbd.table.cur']}"  /> 
-         <p:column headerText="#{lbl['lbl.ct.pbd.table.amt']}" /> 
-         <p:column headerText="#{lbl['lbl.ct.pbd.table.efdate']}" /> 	
-		 <p:column headerText="#{lbl['lbl.ct.pbd.table.edate']}" />
-		 <p:column headerText="#{lbl['lbl.ct.pbd.table.download']}"  /> 
-       </p:row>							
-	  </p:columnGroup>
-          <p:column><p:outputLabel value="#{data.refNo}" style="float:left;"/></p:column>	
-          <p:column><p:outputLabel value="CIMB BERHAD" style="float:left;"/></p:column>	
-          <p:column > <p:outputLabel value="MYR" style="float:left;"/></p:column> 							
-          <p:column><p:outputLabel value="#{data.bondAmount}" style="float:left;"/>  </p:column>	
-          <p:column><p:outputLabel value="11/11/2013" style="float:left;"/></p:column>	
-          <p:column><p:outputLabel value="10/11/2014" style="float:left;"/></p:column>	
-           <p:column>
-             <p:commandLink id="downloadLink" onclick="PrimeFaces.monitorDownload(start, stop)">
-			   <p:graphicImage library="ep/images/design" name="download.png"
-					    value="/resources/ep/images/design/download.png" title="File Download" />
-			    <p:fileDownload value="#{contractDetailsBackingBean.download}"/> 
-		     </p:commandLink>
+	     <p:dataTable id="tableBond" var="data" value="#{contractDetailsBackingBean.managedBean.contractVer.ctPerformanceBonds}"
+	       lazy="false" widgetVar="dataTableObj" dynamic="true" paginator="true" paginatorPosition="bottom" 
+	       paginatorAlwaysVisible="true" emptyMessage="No Records!" rows="10">
+	       <ac:paginator for="tableBond" />
+	          <p:columnGroup type="header"> 
+	           <p:row> 
+                       <p:column headerText="#{lbl['lbl.ct.pbd.table.rno']}"  /> 
+                       <p:column headerText="#{lbl['lbl.ct.pbd.table.fi']}" /> 
+                       <p:column headerText="#{lbl['lbl.ct.pbd.table.cur']}"  /> 
+                       <p:column headerText="#{lbl['lbl.ct.pbd.table.amt']}" /> 
+                       <p:column headerText="#{lbl['lbl.ct.pbd.table.efdate']}" /> 	
+	                   <p:column headerText="#{lbl['lbl.ct.pbd.table.edate']}" />
+	                   <p:column headerText="#{lbl['lbl.ct.pbd.table.download']}"  /> 
+             </p:row>							
+	         </p:columnGroup>
+                      <p:column><p:outputLabel value="#{data.refNo}" style="float:left;"/></p:column>	
+                      <p:column><p:outputLabel value="CIMB BERHAD" style="float:left;"/></p:column>	
+                      <p:column > <p:outputLabel value="MYR" style="float:left;"/></p:column> 							
+                      <p:column><p:outputLabel value="#{data.bondAmount}" style="float:left;"/>  </p:column>	
+                      <p:column><p:outputLabel value="11/11/2013" style="float:left;"/></p:column>	
+                      <p:column><p:outputLabel value="10/11/2014" style="float:left;"/></p:column>	
+                      <p:column>
+                            <p:commandLink id="downloadLink" onclick="PrimeFaces.monitorDownload(start, stop)">
+			                   <p:graphicImage library="ep/images/design" name="download.png"
+					              value="/resources/ep/images/design/download.png" title="File Download" />
+			                      <p:fileDownload value="#{contractDetailsBackingBean.download}"/> 
+		                         </p:commandLink>
 		     <p:spacer width="5"/>
 		      <p:commandLink id="uploadLink">
 			   <p:graphicImage library="ep/images/design" name="upload.png"
@@ -42,6 +42,14 @@
 		     </p:commandLink>
           </p:column>
 	</p:dataTable>
+	  <div class="ppRightBtn"> 
+		       <p:commandButton value="Add" process="@this" partialSubmit="true"  icon="ui-icon-add"
+		         action=" " update="tableBond"/>
+		        <p:spacer width="2"/>
+		        <p:commandButton value="Delete" icon="ui-icon-delete" partialSubmit="true" process="@this" onsuccess="">
+			        <f:setPropertyActionListener value="#{data}" target="#{contractDetailsBackingBean.managedBean.ctDeductionDel}" />
+			    </p:commandButton> 
+	   	 </div>
    </div>
   </p:panel>
 </ui:composition>

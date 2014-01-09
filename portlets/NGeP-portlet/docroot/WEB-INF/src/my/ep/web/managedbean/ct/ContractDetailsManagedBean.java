@@ -23,11 +23,12 @@ import my.ep.persistence.entity.ct.dtl.CtSchedule;
 import my.ep.persistence.entity.ct.dtl.deduction.CtDeduction;
 import my.ep.persistence.entity.ct.dtl.deduction.CtDeductionClause;
 import my.ep.persistence.entity.ct.dtl.item.CtContractItem;
+import my.ep.persistence.entity.ct.dtl.zone.CtContractZone;
+import my.ep.persistence.entity.ct.dtl.zone.CtContractZoneDtl;
 import my.ep.persistence.entity.ct.terminate.CtTermination;
 import my.ep.persistence.entity.ct.terminate.CtTerminationReason;
 import my.ep.persistence.entity.pm.authorization.PmUserGroup;
 import my.ep.persistence.entity.pm.authorization.PmUserGroupUser;
-import my.ep.persistence.entity.ss.quationtender.ScQt;
 import my.ep.web.managedbean.BaseManagedBean;
 
 import org.apache.log4j.Logger;
@@ -73,9 +74,11 @@ public class ContractDetailsManagedBean extends BaseManagedBean{
 	private CtDeductionClause ctDeductionClauseDel = new CtDeductionClause();
 	private CtDeduction[] selectedDeductionList;
 	
-	private String scheduleOption;
-	private boolean chkSchedule= true;
+	private String scheduleOption="1";
+	private boolean chkSchedule = true;
 	private boolean chkProgressive;
+	private boolean chkScheduleNulValue;
+	private boolean chkProgressiveNulValue;
 	private CtSchedule ctSchedulesDel = new CtSchedule();
 	private CtProgressivePayment ctProgressivePaymentDel = new CtProgressivePayment();
 	
@@ -128,6 +131,14 @@ public class ContractDetailsManagedBean extends BaseManagedBean{
 	private String supplierAddress;
 	private CtPerformanceBond ctPerformanceBond;
 	private CtPerformanceBond[] selectedBondList;
+	private CtContractZone selectedCtZone;
+	private List<CtContractZoneDtl> ctContractZoneDtls;
+	private boolean showZoneDetails;
+	
+	
+	private boolean disableScheduleRadio;
+	private boolean disableProgessiveRadio;
+	private boolean chkButton;
 	public String[] getAction() {
 		return action;
 	}
@@ -703,6 +714,68 @@ public class ContractDetailsManagedBean extends BaseManagedBean{
 		this.selectedBondList = selectedBondList;
 	}
 
-	
+	public CtContractZone getSelectedCtZone() {
+		return selectedCtZone;
+	}
 
+	public void setSelectedCtZone(CtContractZone selectedCtZone) {
+		this.selectedCtZone = selectedCtZone;
+	}
+
+	public List<CtContractZoneDtl> getCtContractZoneDtls() {
+		return ctContractZoneDtls;
+	}
+
+	public void setCtContractZoneDtls(List<CtContractZoneDtl> ctContractZoneDtls) {
+		this.ctContractZoneDtls = ctContractZoneDtls;
+	}
+
+	public boolean isShowZoneDetails() {
+		return showZoneDetails;
+	}
+
+	public void setShowZoneDetails(boolean showZoneDetails) {
+		this.showZoneDetails = showZoneDetails;
+	}
+
+	public boolean isDisableScheduleRadio() {
+		return disableScheduleRadio;
+	}
+
+	public void setDisableScheduleRadio(boolean disableScheduleRadio) {
+		this.disableScheduleRadio = disableScheduleRadio;
+	}
+
+	public boolean isDisableProgessiveRadio() {
+		return disableProgessiveRadio;
+	}
+
+	public void setDisableProgessiveRadio(boolean disableProgessiveRadio) {
+		this.disableProgessiveRadio = disableProgessiveRadio;
+	}
+
+	public boolean isChkButton() {
+		return chkButton;
+	}
+
+	public void setChkButton(boolean chkButton) {
+		this.chkButton = chkButton;
+	}
+
+	public boolean isChkScheduleNulValue() {
+		return chkScheduleNulValue;
+	}
+
+	public void setChkScheduleNulValue(boolean chkScheduleNulValue) {
+		this.chkScheduleNulValue = chkScheduleNulValue;
+	}
+
+	public boolean isChkProgressiveNulValue() {
+		return chkProgressiveNulValue;
+	}
+
+	public void setChkProgressiveNulValue(boolean chkProgressiveNulValue) {
+		this.chkProgressiveNulValue = chkProgressiveNulValue;
+	}
+	
 }

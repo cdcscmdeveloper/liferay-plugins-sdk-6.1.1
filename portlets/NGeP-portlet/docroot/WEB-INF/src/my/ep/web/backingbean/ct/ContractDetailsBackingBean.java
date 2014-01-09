@@ -104,8 +104,10 @@ public class ContractDetailsBackingBean extends BaseBackingBean<ContractDetailsM
 	private CtContract[] selectedContractList;
 	private CtDeductionClause[] chkDeductionClause;
 	private String editorValue;
-	
+	private boolean showZoneDetails;
 	private String fulfillmentNo = "01234567889";
+	private CtSchedule[] selectedSchedule;
+	private CtProgressivePayment[] selectedProgressive;
 	
 	private final static String[] deductions;
 	static {
@@ -228,7 +230,7 @@ public class ContractDetailsBackingBean extends BaseBackingBean<ContractDetailsM
 		IContractSO contractSO = (IContractSO) BusinessDelegate.getInstance().getServiceObject("ct",IContractSO.class);
 		ContractResDTO resDTO = contractSO.retrieveContractVer(ctReqDTO);
 		this.getManagedBean().setContractVer(resDTO.getCtContractVer());
-	    CombineSupAddress(resDTO.getCtContractVer());
+	    //CombineSupAddress(resDTO.getCtContractVer());
 		
 		this.getManagedBean().setTaskName(res.getTaskName());
 		this.getManagedBean().setCtContract(resDTO.getCtContractVer().getCtContract());
@@ -237,7 +239,23 @@ public class ContractDetailsBackingBean extends BaseBackingBean<ContractDetailsM
 		this.getManagedBean().setAction(res.getAction());
 		
 		if(res.getProcessName().equalsIgnoreCase("Contract Creation")){
-			
+		/*	for(CtSchedule ctSchedule :this.getManagedBean().getContractVer().getCtSchedules()){
+			if(ctSchedule.getScheduleId() !=null){
+				this.getManagedBean().setDisableScheduleRadio(true);
+				this.getManagedBean().setScheduleOption("1");
+				this.getManagedBean().setChkScheduleNulValue(true);
+				this.getManagedBean().setChkSchedule(false);
+			}
+			}
+        for(CtProgressivePayment ctProgressivePayment :this.getManagedBean().getContractVer().getCtProgressivePayments()){
+        	if(ctProgressivePayment.getProgressivePaymentId() !=null){
+        	    this.getManagedBean().setDisableScheduleRadio(true);
+				this.getManagedBean().setScheduleOption("2");
+				this.getManagedBean().setChkProgressiveNulValue(true);
+				this.getManagedBean().setChkSchedule(false);
+				
+			}
+        }*/
 			FacesContext fc = FacesContext.getCurrentInstance();
 			fc.getApplication().getNavigationHandler().handleNavigation(fc, null,  ContractManagementConst.NAV_TO_CONTRACT_DETAILS);
 	
@@ -306,6 +324,12 @@ public class ContractDetailsBackingBean extends BaseBackingBean<ContractDetailsM
 		}
 
 	}
+    
+    public void selectedZoneValue(){
+    	this.getManagedBean().setShowZoneDetails(true);
+    	log.info("============111================"+this.getManagedBean().getSelectedCtZone().getContractZoneId());
+    	this.getManagedBean().setCtContractZoneDtls(this.getManagedBean().getSelectedCtZone().getCtContractZoneDtls());
+    }
     
     public void CombineSupAddress(CtContractVer ctContractVer){
     	
@@ -544,23 +568,30 @@ public class ContractDetailsBackingBean extends BaseBackingBean<ContractDetailsM
 			this.getManagedBean().setChkProgressive(true);
 	}
     
-    public void addFrequencyDetails(){
+    public void addScheduleDetails(){
 		CtSchedule ctSchedules = new CtSchedule();
 		this.getManagedBean().getContractVer().getCtSchedules().add(ctSchedules);	
 	}
 	
-	public void deleteFrequencyDetails(){
-		this.getManagedBean().getContractVer().getCtSchedules().remove(this.getManagedBean().getCtSchedulesDel());
-		
+	public void deleteScheduleDetails(){
+		for (int i = 0; i < selectedSchedule.length; i++) {
+			CtSchedule ctSchedule = selectedSchedule[i];
+			this.getManagedBean().getContractVer().getCtSchedules().remove(ctSchedule);
+		}
+		selectedSchedule = null;	
 	}
 
-	public void addScheduleDetails() {
+	public void addFrequencyDetails() {
 		CtProgressivePayment ctProgressivePayment = new CtProgressivePayment();
 		this.getManagedBean().getContractVer().getCtProgressivePayments().add(ctProgressivePayment);
 	}
 
-	public void deleteScheduleDetails() {
-		this.getManagedBean().getContractVer().getCtProgressivePayments().remove(this.getManagedBean().getCtProgressivePaymentDel());
+	public void deleteFrequencyDetails() {
+		for (int i = 0; i < selectedProgressive.length; i++) {
+			CtProgressivePayment ctProgressivePayment = selectedProgressive[i];
+			this.getManagedBean().getContractVer().getCtProgressivePayments().remove(ctProgressivePayment);
+		}
+		selectedProgressive = null;
 	}/*End schedule*/
 	
 	/*Termination start*/
@@ -799,11 +830,14 @@ public class ContractDetailsBackingBean extends BaseBackingBean<ContractDetailsM
             	 this.getManagedBean().getContractVer().getCtContract().setAgreement(true);
             }
             
+            reqDTO.setToken(token);
+            reqDTO.setOutcome(action);
+            reqDTO.setTaskId(this.getManagedBean().getTaskId());
+            reqDTO.setUserLoginId(getFacesScopes().getUserSessionBean().getLoginId());
+			
             reqDTO.setCtContract(this.getManagedBean().getCtContract());
             reqDTO.setCtContractVer(this.getManagedBean().getContractVer());
-			reqDTO.setTaskId(this.getManagedBean().getTaskId());
-			reqDTO.setOutcome(action);
-			reqDTO.setToken(token);
+			
 		    ContractResDTO resDTO = contractSO.saveContractVer(reqDTO);
 		    if (resDTO.isSuccessful()) {
 				
@@ -1081,5 +1115,29 @@ public class ContractDetailsBackingBean extends BaseBackingBean<ContractDetailsM
 
 	public void setEditorValue(String editorValue) {
 		this.editorValue = editorValue;
+	}
+	
+	public boolean isShowZoneDetails() {
+		return showZoneDetails;
+	}
+
+	public void setShowZoneDetails(boolean showZoneDetails) {
+		this.showZoneDetails = showZoneDetails;
+	}
+	
+	public CtSchedule[] getSelectedSchedule() {
+		return selectedSchedule;
+	}
+
+	public void setSelectedSchedule(CtSchedule[] selectedSchedule) {
+		this.selectedSchedule = selectedSchedule;
+	}
+	
+	public CtProgressivePayment[] getSelectedProgressive() {
+		return selectedProgressive;
+	}
+
+	public void setSelectedProgressive(CtProgressivePayment[] selectedProgressive) {
+		this.selectedProgressive = selectedProgressive;
 	}
 }
