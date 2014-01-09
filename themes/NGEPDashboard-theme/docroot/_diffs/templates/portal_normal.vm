@@ -8,7 +8,7 @@
 	<title>$the_title - $company_name</title>
 
 	$theme.include($top_head_include)
-	#js ("$javascript_folder/jquery.min.js")
+	
 	#js ("$javascript_folder/date_time.js")
 	<script>
 	jQuery(document).ready(function(){
