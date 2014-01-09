@@ -216,7 +216,7 @@ $theme.include($body_top_include)
                         </li>
                     	
                     	<li class="btn-login-register divider-no-padding-right">
-                    		<a class="btn-login-register" href="$sign_in_url" id="sign-in" rel="nofollow" target="_blank">Login or Register</a>	
+                    		<a class="btn-login-register" href="http://ngepdevwps01.ngep.com:8080/web/dashboard/dashboard" id="sign-in" rel="nofollow" target="_blank">Login or Register</a>	
                     	</li>
                     
                     </ul>
