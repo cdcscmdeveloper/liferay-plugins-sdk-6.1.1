@@ -37,8 +37,16 @@ xmlns:c="http://java.sun.com/jsp/jstl/core"
 					<th><p:outputLabel value="#{lbl['lbl.pp.balance.amount']}"/></th>
 					<td>
 						<p:inputText id="itBudgetBalanceAmt" value="#{budgetDisburseBackingBean.balanceAmount(
-							budgetDisburseBackingBean.managedBean.selectedPpBudget.budgetAmt
-							, budgetDisburseBackingBean.managedBean.selectedPpBudget.usedAmt)}"  
+							budgetDisburseBackingBean.managedBean.selectedPpBudget.budgetAmt, 
+							budgetDisburseBackingBean.managedBean.selectedPpBudget.usedAmt ,
+							budgetDisburseBackingBean.managedBean.selectedPpBudget.floatingAllocAmt)}"  
+							styleClass="ppDisplayTextL" disabled="true"/>
+					</td>
+				</tr>
+				<tr>
+					<th><p:outputLabel value="#{lbl['lbl.pp.financial.year']}"/></th>
+					<td>
+						<p:inputText value="#{budgetDisburseBackingBean.managedBean.selectedPpBudget.financialYear}"  
 							styleClass="ppDisplayTextL" disabled="true"/>
 					</td>
 				</tr>

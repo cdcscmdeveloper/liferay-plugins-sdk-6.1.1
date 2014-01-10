@@ -26,8 +26,6 @@ public class BudgetAllocationManagedBean extends BaseManagedBean{
 	private Boolean amanahFlag;
 
 	private Map<Long, BigDecimal> budgetAllocDtlMapper = new HashMap<Long, BigDecimal>();
-	
-	private Map<Long, BigDecimal> budgetAllocOrgMapper = new HashMap<Long, BigDecimal>();
 
 	private List <PpBudget> budgetList; 
 
@@ -43,11 +41,13 @@ public class BudgetAllocationManagedBean extends BaseManagedBean{
 	
 	private String bpmTaskId; 
 	
-	private PmOrgProfile currentUser;
+	private List <PmOrgProfile> currentProfiles;
 	
 //	private PpBudgetAlloc retrieveBudgetAlloc;
 	
 	private String loginUser;
+	
+	private boolean confirm;
 	
 	/**
 	 * @return the amanahFlag
@@ -77,6 +77,20 @@ public class BudgetAllocationManagedBean extends BaseManagedBean{
 		this.loginUser = loginUser;
 	}
 	
+
+	/**
+	 * @return the confirm
+	 */
+	public boolean isConfirm() {
+		return confirm;
+	}
+
+	/**
+	 * @param confirm the confirm to set
+	 */
+	public void setConfirm(boolean confirm) {
+		this.confirm = confirm;
+	}
 
 	/**
 	 * @return the budgetList
@@ -200,33 +214,18 @@ public class BudgetAllocationManagedBean extends BaseManagedBean{
 	}
 
 	/**
-	 * @return the budgetAllocOrgMapper
+	 * @return the currentProfiles
 	 */
-	public Map<Long, BigDecimal> getBudgetAllocOrgMapper() {
-		return budgetAllocOrgMapper;
+	public List<PmOrgProfile> getCurrentProfiles() {
+		return currentProfiles;
 	}
 
 	/**
-	 * @param budgetAllocOrgMapper the budgetAllocOrgMapper to set
+	 * @param currentProfiles the currentProfiles to set
 	 */
-	public void setBudgetAllocOrgMapper(Map<Long, BigDecimal> budgetAllocOrgMapper) {
-		this.budgetAllocOrgMapper = budgetAllocOrgMapper;
+	public void setCurrentProfiles(List<PmOrgProfile> currentProfiles) {
+		this.currentProfiles = currentProfiles;
 	}
 
-	/**
-	 * @return the currentUser
-	 */
-	public PmOrgProfile getCurrentUser() {
-		return currentUser;
-	}
-
-	/**
-	 * @param currentUser the currentUser to set
-	 */
-	public void setCurrentUser(PmOrgProfile currentUser) {
-		this.currentUser = currentUser;
-	}
-
-	
 	
 }

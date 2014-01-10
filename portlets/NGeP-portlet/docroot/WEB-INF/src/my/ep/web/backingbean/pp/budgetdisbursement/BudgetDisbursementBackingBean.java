@@ -11,25 +11,23 @@ import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
 import javax.faces.context.FacesContext;
+import javax.faces.event.ValueChangeEvent;
 
 import my.ep.biz.bean.search.ISearchBean;
 import my.ep.biz.bean.search.ISearchResultBean;
 import my.ep.biz.bean.search.SearchFilterBean;
-import my.ep.biz.service.pm.authorization.orgprofile.IOrgProfileSO;
 import my.ep.biz.service.pm.common.object.IObjectSO;
 import my.ep.biz.service.pp.budgetallocation.IBudgetDisbursementSO;
-import my.ep.dto.pm.authorization.orgprofile.OrgProfileReqDTO;
-import my.ep.dto.pm.authorization.orgprofile.OrgProfileResDTO;
 import my.ep.dto.pm.common.object.ObjectReqDTO;
 import my.ep.dto.pm.common.object.ObjectResDTO;
 import my.ep.dto.pp.budgetallocation.BudgetDisbursementReqDTO;
 import my.ep.dto.pp.budgetallocation.BudgetDisbursementResDTO;
 import my.ep.persistence.entity.pm.authorization.PmOrgProfile;
+import my.ep.persistence.entity.pm.authorization.PmUserOrg;
 import my.ep.persistence.entity.pm.common.PmSo;
 import my.ep.persistence.entity.pp.budgetallocation.PpBudget;
 import my.ep.persistence.entity.pp.budgetallocation.PpBudgetDtl;
 import my.ep.persistence.entity.pp.budgetallocation.PpBudgetTran;
-import my.ep.persistence.logging.LogKey;
 import my.ep.type.aut.SearchOperator;
 import my.ep.type.pm.OrganizationType;
 import my.ep.web.backingbean.BaseBackingBean;
@@ -42,7 +40,6 @@ import my.ep.web.util.lookupservice.BusinessDelegate;
 import my.ep.web.util.pp.common.CommonMethod;
 
 import org.apache.log4j.Logger;
-import org.apache.log4j.MDC;
 
 /**
  * Backing Bean For Budget Disbursement
@@ -68,15 +65,18 @@ public class BudgetDisbursementBackingBean extends BaseBackingBean<BudgetDisburs
 	 * constructor of the budget allocation program
 	 */
 	public BudgetDisbursementBackingBean(){
-		log.info("BudgetDisbursementBackingBean - Start");
-		if(this.getManagedBean().getViewMode()==null || ProcurementPlanConst.MODE_LIST.equals(this.getManagedBean().getViewMode())){			
-			//set current user profile
-			if(getFacesScopes().getUserSessionBean()!=null){
-				List <PmOrgProfile> ministryProfiles = getOrgProfiles(getFacesScopes().getUserSessionBean().getUserId(), OrganizationType.MINISTRY.value());// TODO dynamic
-				this.getManagedBean().setCurrentUser(ministryProfiles!=null ? ministryProfiles.get(0) : new PmOrgProfile());
-			}
-		}
-		log.info("BudgetDisbursementBackingBean - End");
+//		log.info("BudgetDisbursementBackingBean - Start");
+//		if(this.getManagedBean().getViewMode()==null || ProcurementPlanConst.MODE_LIST.equals(this.getManagedBean().getViewMode())){			
+//			//set current user profile - TODO
+//			if(getFacesScopes().getUserSessionBean()!=null){
+////				for(PmUserOrg pmUserOrg:getFacesScopes().getUserSessionBean()getPmUserOrgs()){
+////					pmUserOrg.get
+////				}
+//				List <PmOrgProfile> ministryProfiles = CommonMethod.getOrgProfiles(getFacesScopes().getUserSessionBean().getUserId(), OrganizationType.MINISTRY.value());// TODO dynamic
+//				this.getManagedBean().setCurrentUser(ministryProfiles!=null ? ministryProfiles.get(0) : new PmOrgProfile());
+//			}
+//		}
+//		log.info("BudgetDisbursementBackingBean - End");
 	}
 	
 
@@ -124,6 +124,9 @@ public class BudgetDisbursementBackingBean extends BaseBackingBean<BudgetDisburs
 		this.getManagedBean().getSelectedGoMapper().clear();
 		this.getManagedBean().setSelectedPpBudget(ppBudget); //populate selected GO
 		this.getManagedBean().setSelectedPpBudgetDtl(null);
+		this.getManagedBean().setVerify(false);
+		this.getManagedBean().setVerifyRequired(false);
+		this.getManagedBean().setConfirm(true);
 		log.info("cleanBudgetDisburse - End");
 	}
 	
@@ -133,13 +136,54 @@ public class BudgetDisbursementBackingBean extends BaseBackingBean<BudgetDisburs
 	 */
 	public void addBudgetDtls(){
 		log.info("addBudgetDtls - Start");
+		boolean isValid = true;
+		String invalidMsg = "";
 		if(this.getManagedBean().getSelectedPpBudget().getPpBudgetDtls()==null){
 			this.getManagedBean().getSelectedPpBudget().setPpBudgetDtls(new ArrayList<PpBudgetDtl>());
 		}
-		this.getManagedBean().getSelectedPpBudget().addPpBudgetDtls(new PpBudgetDtl());
-		this.getManagedBean().setSelectedPpBudgetDtl(
-				this.getManagedBean().getSelectedPpBudget().getPpBudgetDtls().get(
-						this.getManagedBean().getSelectedPpBudget().getPpBudgetDtls().size()-1));
+		
+		//ensure the previous entry is not null
+		if(!this.getManagedBean().getSelectedPpBudget().getPpBudgetDtls().isEmpty()){
+			PpBudgetDtl tempPpBudgetDtl = new PpBudgetDtl();
+			tempPpBudgetDtl = this.getManagedBean().getSelectedPpBudget().getPpBudgetDtls().get(
+					this.getManagedBean().getSelectedPpBudget().getPpBudgetDtls().size()-1);
+			
+
+			//SO must be selected
+			if(tempPpBudgetDtl.getPmSo().getSoId()==null){
+				isValid = false;
+				invalidMsg = "SO is not selected.";
+			}else{
+				//TODO this can be commented away if user prefers to add multiple summary 1st then only transaction, before submit we will validate this logic again.
+				if(this.getManagedBean().isVerifyRequired() && !this.getManagedBean().isVerify()){
+					//all transaction must not be empty or invalid 
+					if(tempPpBudgetDtl.getPpBudgetTrans()==null 
+							|| (tempPpBudgetDtl.getPpBudgetTrans()!=null && tempPpBudgetDtl.getPpBudgetTrans().isEmpty())){
+						isValid = false;
+						invalidMsg = "GOSO Disbursement Transaction is empty";
+					}
+//					else{
+//						if(this.getManagedBean().isVerifyRequired() && !this.getManagedBean().isVerify()){
+//							isValid = false;
+//							invalidMsg = "GOSO Disbursement Transaction is invalid or yet to verify.";
+//						}
+//					}
+				}
+			}
+		}
+		//only allowed new entry if valid
+		if(isValid){
+			this.getManagedBean().getSelectedPpBudget().addPpBudgetDtls(new PpBudgetDtl());
+			this.getManagedBean().setSelectedPpBudgetDtl(
+					this.getManagedBean().getSelectedPpBudget().getPpBudgetDtls().get(
+							this.getManagedBean().getSelectedPpBudget().getPpBudgetDtls().size()-1));
+			this.getManagedBean().getSelectedPpBudgetDtl().setUsedAmt(new BigDecimal(0));
+			this.getManagedBean().setVerify(false);
+			this.getManagedBean().setVerifyRequired(true);
+		}else{
+			FacesContext.getCurrentInstance().addMessage(null,new FacesMessage(
+					FacesMessage.SEVERITY_ERROR,"GOSO Disbursement Summary.", invalidMsg));
+		}
 		log.info("addBudgetDtls - End");
 	}
 	
@@ -167,12 +211,32 @@ public class BudgetDisbursementBackingBean extends BaseBackingBean<BudgetDisburs
 	 */
 	public void addBudgetTrans(){
 		log.info("addBudgetTrans - Start");
+		boolean isValid = true;
+		String invalidMsg = "";
 		if(this.getManagedBean().getSelectedPpBudgetDtl().getPpBudgetTrans()==null){
 			this.getManagedBean().getSelectedPpBudgetDtl().setPpBudgetTrans(new ArrayList<PpBudgetTran>());
 		}
-		this.getManagedBean().getSelectedPpBudgetDtl().addPpBudgetTrans(new PpBudgetTran());
-		this.getManagedBean().getSelectedPpBudgetDtl().setVerify(false);
-		this.getManagedBean().getSelectedPpBudgetDtl().setVerifyRequired(true);
+//		//ensure the previous entry is not null
+//		if(!this.getManagedBean().getSelectedPpBudgetDtl().getPpBudgetTrans().isEmpty()){
+//			PpBudgetTran tempPpBudgetTran = new PpBudgetTran();
+//			tempPpBudgetTran = this.getManagedBean().getSelectedPpBudgetDtl().getPpBudgetTrans().get(
+//					this.getManagedBean().getSelectedPpBudgetDtl().getPpBudgetTrans().size()-1);
+//			//allocation amount must be entered
+//			if(tempPpBudgetTran.getAllocAmt()==null || new BigDecimal(1).compareTo(tempPpBudgetTran.getAllocAmt())==1){
+//				isValid = false;
+//				invalidMsg = "Alloc Amount is empty or 0.";
+//			}
+//		}
+		//only allowed new entry if valid
+		if(isValid){
+			this.getManagedBean().getSelectedPpBudgetDtl().addPpBudgetTrans(new PpBudgetTran());
+			this.getManagedBean().setVerify(false);
+			this.getManagedBean().setVerifyRequired(true);
+		}else{
+			FacesContext.getCurrentInstance().addMessage(null,new FacesMessage(
+					FacesMessage.SEVERITY_ERROR,"GOSO Disbursement Transaction.", invalidMsg));
+		}
+
 		log.info("addBudgetTrans - End");
 	}
 	
@@ -182,46 +246,184 @@ public class BudgetDisbursementBackingBean extends BaseBackingBean<BudgetDisburs
 	 */
 	public void deleteBudgetTran(PpBudgetTran ppBudgetTran){
 		log.info("deleteBudgetTran - Start");
-		if(ppBudgetTran!=null){
-			if(ppBudgetTran.isBrandNew()){
-				this.getManagedBean().getSelectedPpBudgetDtl().getPpBudgetTrans().remove(ppBudgetTran);
-				this.getManagedBean().getSelectedPpBudgetDtl().setVerify(false);
-				this.getManagedBean().getSelectedPpBudgetDtl().setVerifyRequired(true);
+		boolean isValid = false;
+		isValid = verifyBudgetTran(
+				ppBudgetTran.getAllocAmt(), 
+				null,
+				this.getManagedBean().getSelectedPpBudgetDtl().getUsedAmt(),
+				true);
+		if(isValid){
+			if(ppBudgetTran!=null){
+				if(ppBudgetTran.isBrandNew()){
+					this.getManagedBean().getSelectedPpBudgetDtl().getPpBudgetTrans().remove(ppBudgetTran);
+					this.getManagedBean().setVerify(false);
+					this.getManagedBean().setVerifyRequired(true);
+				}
 			}
 		}
+		
 		log.info("deleteBudgetTran - End");
 	}
 	
 	/**
-	 * confirm the list of new PpBudgetTran 
+	 * validate alloc amount when value change
+	 * @param event
 	 */
-	public void confirmBudgetTrans(){
-		log.info("confirmBudgetTrans - Start");
+	public void budgetChangeListener(ValueChangeEvent event){
+		log.info("budgetChangeListener - Start");
+		Object oldValueObj = event.getOldValue();
+	    Object newValueObj = event.getNewValue();
+	    BigDecimal oldValue = oldValueObj!=null ? (BigDecimal)oldValueObj : new BigDecimal(0);
+		BigDecimal newValue = newValueObj!=null ? (BigDecimal)newValueObj : new BigDecimal(0);
+		BigDecimal diffValue = new BigDecimal(0);
+		diffValue =  CommonMethod.substractBigDecimalNullable(newValue, oldValue);
+		System.out.println(oldValue);
+		System.out.println(newValue);
 		boolean isValid = false;
-		if(this.getManagedBean().getSelectedPpBudgetDtl()!=null && this.getManagedBean().getSelectedPpBudgetDtl().getPpBudgetTrans()!=null){
-			//calculate and add new entry to summary
-			BigDecimal newAllocAmt = new BigDecimal(0);
-			BigDecimal totalAllocAmt = new BigDecimal(0);
-			BigDecimal claimBudgetAmt = new BigDecimal(0);
-			for(PpBudgetTran budgetTran: this.getManagedBean().getSelectedPpBudgetDtl().getPpBudgetTrans()){
-				newAllocAmt = CommonMethod.addBigDecimalNullable(newAllocAmt,budgetTran.getAllocAmt());
-				budgetTran.setAccumAmt(newAllocAmt);
-				
-				if(budgetTran.isBrandNew()){
-					claimBudgetAmt = CommonMethod.addBigDecimalNullable(claimBudgetAmt,budgetTran.getAllocAmt());
+		isValid = verifyBudgetTran(newValue, oldValue, this.getManagedBean().getSelectedPpBudgetDtl().getUsedAmt(), false);
+		if(isValid){
+			//update floating budget
+			claimBudget(diffValue);
+		}
+		log.info("budgetChangeListener - End");
+	}
+	
+	/**
+	 * verify budget transaction
+	 * @param newTranAllocAmt
+	 * @param oldTranAllocAmt
+	 * @param budgetDtlUsedAmt
+	 * @param isRemove
+	 * @return boolean
+	 */
+	public boolean verifyBudgetTran(BigDecimal newTranAllocAmt, BigDecimal oldTranAllocAmt,
+			BigDecimal budgetDtlUsedAmt, boolean isRemove){
+		log.info("verifyBudgetTran - Start");
+		PpBudget ppBudget = this.getManagedBean().getSelectedPpBudget();
+		BigDecimal bMapperFloatAmt = new BigDecimal(0);
+		BigDecimal btAllocAmt = new BigDecimal(0);
+		BigDecimal bFloatAllocAmt = new BigDecimal(0);
+		BigDecimal bBalanceAmt = new BigDecimal(0);
+		
+		boolean isValid = false;
+		
+		
+		btAllocAmt = newTranAllocAmt;
+		
+		if(isRemove){
+			//find the difference (0-oriAllocAmt)
+			btAllocAmt = CommonMethod.substractBigDecimalNullable(
+					newTranAllocAmt,
+					newTranAllocAmt);
+//			
+//			//remove the old amt from floating
+//			bMapperFloatAmt = CommonMethod.substractBigDecimalNullable(
+//					ppBudget.getFloatingAllocAmt(),
+//					newTranAllocAmt);
+		}
+		System.out.println("btAllocAmt " + btAllocAmt);
+		
+		//remove the old amt from floating
+		bMapperFloatAmt = CommonMethod.substractBigDecimalNullable(
+				ppBudget.getFloatingAllocAmt(),
+				oldTranAllocAmt);
+		
+		//actual balance amt (alloc amt - used amt)
+		bBalanceAmt = CommonMethod.substractBigDecimalNullable(
+				ppBudget.getBudgetAmt(),
+				ppBudget.getUsedAmt());
+		System.out.println("bBalanceAmt " + bBalanceAmt);
+
+		//actual balance amt - floating amt
+		bFloatAllocAmt =  CommonMethod.substractBigDecimalNullable(
+				bBalanceAmt,
+				bMapperFloatAmt);
+		System.out.println("bFloatAllocAmt " + bFloatAllocAmt);
+
+		if(btAllocAmt.compareTo(bFloatAllocAmt) == 1){
+			isValid = false;
+			FacesContext.getCurrentInstance().addMessage(null,new FacesMessage(
+					FacesMessage.SEVERITY_ERROR, "GOSO Disbursement Transaction invalid." ," Insufficient budget amount."));
+		}else if(budgetDtlUsedAmt.compareTo(btAllocAmt) == 1){
+			isValid = false;
+			FacesContext.getCurrentInstance().addMessage(null,new FacesMessage(
+					FacesMessage.SEVERITY_ERROR, "GOSO Disbursement Transaction invalid." ,"Allocate Amount had been used."));
+		}else{
+			isValid = true;
+		}
+		this.getManagedBean().setVerify(isValid);
+//		if(isValid){
+//			ppBudget.setFloatingAllocAmt(bMapperFloatAmt)
+//		}
+		log.info("isValid " + isValid);
+		log.info("verifyBudgetTran - Start");
+		return isValid;
+	}
+	
+	public boolean uniqueSO(Long soId){
+		log.info("uniqueSO - Start");
+		boolean isValid = true;
+		int size = this.getManagedBean().getSelectedPpBudget().getPpBudgetDtls().size();
+		int index = 0;
+		//validate the last record with previous entered records
+		if(soId!=null && size>1){
+			for(PpBudgetDtl ppBudgetDtl:this.getManagedBean().getSelectedPpBudget().getPpBudgetDtls()){	
+				index++;
+	
+				if(soId.equals(ppBudgetDtl.getPmSo().getSoId()) && (index!=size)){
+					System.out.println("3");
+					this.getManagedBean().setVerify(false);
+					this.getManagedBean().setVerifyRequired(true);
+					isValid = false;
+					FacesContext.getCurrentInstance().addMessage(null,new FacesMessage(
+							FacesMessage.SEVERITY_ERROR, "GOSO Disbursement Summary." ,"Duplicate SO Code is selected."));
+					break;
 				}
-			}
-			totalAllocAmt = CommonMethod.addBigDecimalNullable(this.getManagedBean().getSelectedPpBudget().getUsedAmt(),newAllocAmt);
-			isValid = verifyBudgetTrans(totalAllocAmt, this.getManagedBean().getSelectedPpBudget());
-			this.getManagedBean().getSelectedPpBudgetDtl().setVerify(isValid);
-			if(isValid){
-				this.getManagedBean().getSelectedPpBudget().setUsedAmt(totalAllocAmt); //update budget amount
-				this.getManagedBean().getSelectedPpBudgetDtl().setAllocAmt(newAllocAmt); //update budget dtl amount
-				claimBudget(claimBudgetAmt); //claim budget
+				
 			}
 		}
-		log.info("confirmBudgetTrans - End");
+		if(isValid){
+			this.getManagedBean().setVerify(true);
+			this.getManagedBean().setVerifyRequired(true);
+		}
+		log.info("isValid " + isValid);
+		log.info("uniqueSO - End ");
+		return isValid;
 	}
+	
+//	
+//	/**
+//	 * confirm the list of new PpBudgetTran 
+//	 */
+//	public void confirmBudgetTrans(){
+//		log.info("confirmBudgetTrans - Start");
+//		boolean isValid = false;
+//		if(this.getManagedBean().getSelectedPpBudgetDtl()!=null 
+//				&& this.getManagedBean().getSelectedPpBudgetDtl().getPpBudgetTrans()!=null
+//				&& ! this.getManagedBean().getSelectedPpBudgetDtl().getPpBudgetTrans().isEmpty()){
+//			//calculate and add new entry to summary
+//			BigDecimal newAllocAmt = new BigDecimal(0);
+//			BigDecimal totalAllocAmt = new BigDecimal(0);
+//			BigDecimal claimBudgetAmt = new BigDecimal(0);
+//			for(PpBudgetTran budgetTran: this.getManagedBean().getSelectedPpBudgetDtl().getPpBudgetTrans()){
+//				newAllocAmt = CommonMethod.addBigDecimalNullable(newAllocAmt,budgetTran.getAllocAmt());
+//				budgetTran.setAccumAmt(newAllocAmt);
+//				
+//				if(budgetTran.isBrandNew()){
+//					claimBudgetAmt = CommonMethod.addBigDecimalNullable(claimBudgetAmt,budgetTran.getAllocAmt());
+//				}
+//			}
+//			totalAllocAmt = CommonMethod.addBigDecimalNullable(this.getManagedBean().getSelectedPpBudget().getUsedAmt(),newAllocAmt);
+//			isValid = verifyBudgetTrans(totalAllocAmt, this.getManagedBean().getSelectedPpBudget());
+//			this.getManagedBean().setVerify(isValid);
+//			if(isValid){
+//				this.getManagedBean().getSelectedPpBudget().setUsedAmt(totalAllocAmt); //update budget amount
+//				this.getManagedBean().getSelectedPpBudgetDtl().setAllocAmt(newAllocAmt); //update budget dtl amount
+//				claimBudget(claimBudgetAmt); //claim budget
+//			}
+//		}
+//		log.info("confirmBudgetTrans - End");
+//	}
 	
 	/**
 	 * claim budget
@@ -231,41 +433,42 @@ public class BudgetDisbursementBackingBean extends BaseBackingBean<BudgetDisburs
 		log.info("claimBudget - Start");
 		log.info("claimAmt " + claimAmt);
 		PpBudget budget = this.getManagedBean().getSelectedPpBudget();
+		budget.setFloatingAllocAmt(CommonMethod.addBigDecimalNullable(budget.getFloatingAllocAmt(), claimAmt));
 
-		this.getManagedBean().getSelectedGoMapper().put(
-				budget.getBudgetId(),
-				CommonMethod.addBigDecimalNullable(
-					this.getManagedBean().getSelectedGoMapper().get(budget.getBudgetId()),
-					claimAmt)
-		);
-		
+//		this.getManagedBean().getSelectedGoMapper().put(
+//				budget.getBudgetId(),
+//				CommonMethod.addBigDecimalNullable(
+//					this.getManagedBean().getSelectedGoMapper().get(budget.getBudgetId()),
+//					claimAmt)
+//		);
+//		
 		
 		log.info("claimBudget - End");
 	}
 
-	/**
-	 * verify budget trans amount
-	 * @param totalAllocAmt
-	 * @param ppBudget
-	 * @return isValid
-	 */
-	private boolean verifyBudgetTrans(BigDecimal totalAllocAmt, PpBudget ppBudget){
-		log.info("verifyBudgetTrans - Start");
-		//totalAllocAmt > budgetAmt = false
-		//totalAllocAmt < useAmt = false
-		boolean isValid = false;
-		
-		if(totalAllocAmt.compareTo(ppBudget.getBudgetAmt()) == 1){
-			isValid = false;
-		}else if(ppBudget.getUsedAmt().compareTo(totalAllocAmt) == 1){
-			isValid = false;
-		}else{
-			isValid = true;
-		}
-		log.info("isValid " + isValid);
-		log.info("verifyBudgetTrans - Start");
-		return isValid;
-	}
+//	/**
+//	 * verify budget trans amount
+//	 * @param totalAllocAmt
+//	 * @param ppBudget
+//	 * @return isValid
+//	 */
+//	private boolean verifyBudgetTrans(BigDecimal totalAllocAmt, PpBudget ppBudget){
+//		log.info("verifyBudgetTrans - Start");
+//		//totalAllocAmt > budgetAmt = false
+//		//totalAllocAmt < useAmt = false
+//		boolean isValid = false;
+//		
+//		if(totalAllocAmt.compareTo(ppBudget.getBudgetAmt()) == 1){
+//			isValid = false;
+//		}else if(ppBudget.getUsedAmt().compareTo(totalAllocAmt) == 1){
+//			isValid = false;
+//		}else{
+//			isValid = true;
+//		}
+//		log.info("isValid " + isValid);
+//		log.info("verifyBudgetTrans - Start");
+//		return isValid;
+//	}
 	
 //	private boolean verifyBudgetDtl(PpBudget ppBudget){
 //		log.info("verifyBudgetDtl - Start");
@@ -280,61 +483,7 @@ public class BudgetDisbursementBackingBean extends BaseBackingBean<BudgetDisburs
 //		return isValid;
 //	}
 //	
-	/**
-	 * submit/save budget disbursement
-	 * @return xhtml
-	 */
-	public String submitBudgetDisbursement(){
-		log.info("submitBudgetDisbursement - Start");
-		boolean isSuccess = false;
-		try{
-			isSuccess = saveBudgetDisbursement();
-		}catch (Exception e){
-			e.printStackTrace();	
-		}
-		log.info("isSuccess " + isSuccess);
-		log.info("submitBudgetDisbursement - End");
-		if(isSuccess){
-			return ProcurementPlanConst.NAV_TO_LIST_BUDGET;
-		}else{
-			return "";
-		}
-	}
 	
-	/**
-	 * retrieve org profile by login user and type
-	 * @param userId
-	 * @param type
-	 * @return org profile
-	 */
-	private List <PmOrgProfile> getOrgProfiles(Long userId, String orgType){
-		log.info("getOrgProfiles - Start");
-		log.info("userId " + userId);
-		List <PmOrgProfile> profileList =  new ArrayList<PmOrgProfile>();
-		try{
-			if(CommonMethod.isSelected(userId) && CommonMethod.isSelected(orgType)){
-				OrgProfileReqDTO reqDTO = new OrgProfileReqDTO();
-				reqDTO.setUserId(userId);
-				reqDTO.setOrgType(orgType);
-				
-				IOrgProfileSO orgProfileSO = BusinessDelegate.getInstance().getServiceObject("pm", IOrgProfileSO.class);
-				OrgProfileResDTO resDTO = orgProfileSO.retrieveOrgProfileListByOrgType(reqDTO);
-//				if(resDTO.isSuccessful()){
-					profileList = resDTO.getOrgProfileList();
-				
-					System.out.println("profile size" + profileList.size());
-					for(PmOrgProfile o :profileList){
-						System.out.println("org id" + o.getOrgProfileId());
-					}
-//				}
-			}
-		}catch (Exception e){
-			e.printStackTrace();
-			
-		}
-		log.info("getOrgProfiles - End");
-		return profileList;
-	}
 
 	/**
 	 * populate SO by GO
@@ -352,6 +501,7 @@ public class BudgetDisbursementBackingBean extends BaseBackingBean<BudgetDisburs
 				ObjectResDTO resDTO = objectSO.retrieveSOListByGOCode(reqDTO);
 		//		if(resDTO.isSuccessful()){
 					pmSos = resDTO.getPmSoList();
+
 		//		}
 			}
 		}catch(Exception e){
@@ -370,15 +520,17 @@ public class BudgetDisbursementBackingBean extends BaseBackingBean<BudgetDisburs
 		PmSo pmSo = new PmSo();
 		try{
 			if(soId!=null){
-				ObjectReqDTO reqDTO = new ObjectReqDTO();
-				reqDTO.setSoId(soId);
-				IObjectSO objectSO = (IObjectSO) BusinessDelegate.getInstance().getServiceObject("pm", IObjectSO.class);
-				ObjectResDTO resDTO = objectSO.retrieveSOBYSOId(reqDTO);
-	//			if(resDTO.isSuccessful()){
-					pmSo = resDTO.getPmSo();
-					this.getManagedBean().getSelectedPpBudgetDtl().setPmSo(pmSo);
-	//			}
+				if(uniqueSO(soId)){
+					ObjectReqDTO reqDTO = new ObjectReqDTO();
+					reqDTO.setSoId(soId);
+					IObjectSO objectSO = (IObjectSO) BusinessDelegate.getInstance().getServiceObject("pm", IObjectSO.class);
+					ObjectResDTO resDTO = objectSO.retrieveSOBYSOId(reqDTO);
+		//			if(resDTO.isSuccessful()){
+						pmSo = resDTO.getPmSo();
+		//			}
+				}
 			}
+			this.getManagedBean().getSelectedPpBudgetDtl().setPmSo(pmSo);
 		}catch(Exception e){
 			e.printStackTrace();
 		}
@@ -395,6 +547,22 @@ public class BudgetDisbursementBackingBean extends BaseBackingBean<BudgetDisburs
 		return CommonMethod.substractBigDecimalNullable(budgetAmount,usedAmount);
 	}
 
+	/**
+	 * calculate balance amount included floating amt
+	 * @param budgetAmount
+	 * @param usedAmount
+	 * @param floatingAmount
+	 * @return
+	 */
+	public BigDecimal balanceAmount(BigDecimal budgetAmount, BigDecimal usedAmount, BigDecimal floatingAmount){
+		BigDecimal usedFloatAmt = CommonMethod.addBigDecimalNullable(floatingAmount,usedAmount);
+		System.out.println("budgetAmount " + budgetAmount);
+		System.out.println("usedAmount " + usedAmount);
+		System.out.println("floatingAmount " + floatingAmount);
+		return CommonMethod.substractBigDecimalNullable(budgetAmount,usedFloatAmt);
+	}
+
+	
 	/**
 	 * retrieve budget by id
 	 * @param budgetId
@@ -451,6 +619,82 @@ public class BudgetDisbursementBackingBean extends BaseBackingBean<BudgetDisburs
 //		return budgetTrans;
 //	}
 //	
+	/**
+	 * submit/save budget disbursement
+	 * @return xhtml
+	 */
+	public String submitBudgetDisbursement(){
+		log.info("submitBudgetDisbursement - Start");
+		boolean isSuccess = false;
+		boolean isValid = true;
+		String invalidMsg = "";
+		try{
+			//summary is empty
+			if(this.getManagedBean().getSelectedPpBudget().getPpBudgetDtls()==null
+					|| (this.getManagedBean().getSelectedPpBudget().getPpBudgetDtls()!=null && this.getManagedBean().getSelectedPpBudget().getPpBudgetDtls().isEmpty()) ){
+				
+				isValid = false;
+				invalidMsg = "GOSODO Disbursement Summary is empty.";
+				
+			}else{
+				//transaction is empty
+				for(PpBudgetDtl ppBudgetDtl:this.getManagedBean().getSelectedPpBudget().getPpBudgetDtls()){
+					if(ppBudgetDtl.getPpBudgetTrans()==null || (ppBudgetDtl.getPpBudgetTrans()!=null && ppBudgetDtl.getPpBudgetTrans().isEmpty())){
+						isValid = false;
+						System.out.println("2");
+						invalidMsg = "GOSODO Disbursement Transaction for SO: " + ppBudgetDtl.getPmSo().getSoCode() + " is empty.";
+						break;
+						
+					}
+				}
+				if(isValid){
+					//verify is required and invalid
+					if(this.getManagedBean().isVerifyRequired() && !this.getManagedBean().isVerify()){
+						isValid = false;
+						invalidMsg = "GOSODO Disbursement Transaction is invalid or yet to verify.";
+						System.out.println("3");
+						
+					}
+				}
+			}
+
+			if(isValid){
+				if(this.getManagedBean().isConfirm()){
+					confirmUpdateBudgetDisburse();
+				}
+				isSuccess = saveBudgetDisbursement();
+			}else{
+				FacesContext.getCurrentInstance().addMessage(null,new FacesMessage(
+						FacesMessage.SEVERITY_ERROR,"Budget Disbursement submit failed.",invalidMsg));
+			}	
+		}catch (Exception e){
+			e.printStackTrace();	
+		}
+		log.info("isSuccess " + isSuccess);
+		log.info("submitBudgetDisbursement - End");
+		if(isSuccess){
+			return ProcurementPlanConst.NAV_TO_LIST_BUDGET;
+		}else{
+			return "";
+		}
+	}
+	
+	/**
+	 * calculate and update budget dtl
+	 */
+	private void confirmUpdateBudgetDisburse(){
+		log.info("confirmUpdateBudgetAlloc - Start");
+		
+		this.getManagedBean().getSelectedPpBudget().setUsedAmt(
+					CommonMethod.addBigDecimalNullable(
+							this.getManagedBean().getSelectedPpBudget().getUsedAmt(), 
+							this.getManagedBean().getSelectedPpBudget().getFloatingAllocAmt())
+							);
+		
+		this.getManagedBean().setConfirm(true);
+		log.info("confirmUpdateBudgetAlloc - End");
+	}
+	
 	/**
 	 * save budget disbursement
 	 * @return isSuccess
@@ -509,14 +753,16 @@ public class BudgetDisbursementBackingBean extends BaseBackingBean<BudgetDisburs
 
 			try {				
 				
-				List <PmOrgProfile> ministryProfiles = getOrgProfiles(getFacesScopes().getUserSessionBean().getUserId(), OrganizationType.MINISTRY.value());// TODO dynamic
-				Long ministryId = ministryProfiles!=null ? ministryProfiles.get(0).getOrgProfileId() : 0L;
-
+				List <PmOrgProfile> ministryProfiles = CommonMethod.getOrgProfiles(getFacesScopes().getUserSessionBean().getUserId(), OrganizationType.MINISTRY.value());// TODO dynamic
+//				Long ministryId = ministryProfiles!=null ? ministryProfiles.get(0).getOrgProfileId() : 0L;
+//				for(PmOrgProfile pmOrgProfile:ministryProfiles){
+//					System.out.println("pmOrgProfile "  + pmOrgProfile.getOrgName());
+//				}
 				BudgetDisbursementReqDTO reqDTO = new BudgetDisbursementReqDTO();
 				searchBean.getDataFilterBeans().add(new SearchFilterBean(
-						"orgProfileId", 
-						SearchOperator.OPERATOR_EQUALS.value(), 
-						ministryId));
+						"pmOrgProfile", 
+						SearchOperator.OPERATOR_IN.value(), 
+						ministryProfiles));
 				reqDTO.setBudgetSearchBean(searchBean);	
 				IBudgetDisbursementSO reqSO = (IBudgetDisbursementSO) BusinessDelegate.getInstance().getServiceObject(ProcurementPlanConst.SO_PP, IBudgetDisbursementSO.class);	
 				BudgetDisbursementResDTO resDTO = reqSO.retrieveBudgetsByMinistry(reqDTO);

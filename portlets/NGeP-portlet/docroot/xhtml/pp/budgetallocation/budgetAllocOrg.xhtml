@@ -14,12 +14,27 @@ xmlns:fn="http://java.sun.com/jsp/jstl/functions"
 	<p:panel id="pBudgetAllocOrg" toggleable="true" header="#{lbl['lbl.pp.budget.ptj.alloc']}">
 		<br/>
 		<table class="ppTwoTable">
+		
 			<tr>
-				<th><p:outputLabel value="#{lbl['lbl.pp.verify.status']}"/></th>
+				<th><p:outputLabel value="#{budgetAllocBackingBean.managedBean.amanahFlag 
+            		? lbl['lbl.pp.amanah.code'] : lbl['lbl.pp.gosodo.code']}"/></th>
 				<td>
-					<p:inputText id="itVerifiedAlloc" 
-						value="#{budgetAllocBackingBean.managedBean.selectedBudgetAllocation.verifyAlloc==true ? 'Verified' : 
-						(budgetAllocBackingBean.managedBean.selectedBudgetAllocation.verifyAlloc==false ? 'Invalid' : 'None')}"  
+					<p:inputText
+						value="#{budgetAllocBackingBean.managedBean.selectedBudgetAllocDtl.pmDo.doCode}"  
+						styleClass="ppDisplayTextL" disabled="true"/>
+				</td>
+				<th>&nbsp;</th>
+				<td>&nbsp;</td>
+			</tr>
+			<tr>
+				<th><p:outputLabel value="#{budgetAllocBackingBean.managedBean.amanahFlag 
+            		? lbl['lbl.pp.amanah.balance.amount'] : lbl['lbl.pp.gosodo.balance.amount']}"/></th>
+				<td>
+					<p:inputText
+						value="#{budgetAllocBackingBean.balanceAmount(
+						budgetAllocBackingBean.managedBean.selectedBudgetAllocDtl.allocAmt,
+						budgetAllocBackingBean.managedBean.selectedBudgetAllocDtl.usedAmt,
+						budgetAllocBackingBean.managedBean.selectedBudgetAllocDtl.floatingAllocAmt)}"  
 						styleClass="ppDisplayTextL" disabled="true"/>
 				</td>
 				<th>&nbsp;</th>
@@ -27,18 +42,14 @@ xmlns:fn="http://java.sun.com/jsp/jstl/functions"
 			</tr>
 		</table>
 		<br/>
-		<p:dataTable id="dtPtjAlloc" rowIndexVar="rowIndex" var="budgetAllocOrg"
+		<p:dataTable id="dtOrgAlloc" rowIndexVar="rowIndex" var="budgetAllocOrg"
 			value="#{budgetAllocBackingBean.managedBean.selectedBudgetAllocDtl.ppBudgetAllocOrgs}">
-			
             <p:column headerText="#{lbl['lbl.pp.ptj.code.name']}">  
                 #{budgetAllocOrg.pmOrgProfile.orgCode}
             </p:column>      
-            <p:column headerText="#{budgetAllocBackingBean.managedBean.amanahFlag 
-            		? lbl['lbl.pp.amanah.balance.amount'] : lbl['lbl.pp.gosodo.balance.amount']}">  
-           	 	
-            </p:column> 
             <p:column headerText="#{lbl['lbl.pp.ptj.used.amount']}"
             		rendered="#{budgetAllocBackingBean.managedBean.viewMode!=PPConst.modeNew}"> 
+       			#{budgetAllocOrg.usedAmt}
             </p:column> 
             <p:column headerText="#{lbl['lbl.pp.alloc.amount']}">  
              	#{budgetAllocOrg.allocAmt}
@@ -48,8 +59,8 @@ xmlns:fn="http://java.sun.com/jsp/jstl/functions"
           	</p:column>                
            	<p:column headerText="#{lbl['lbl.pp.action']}">  
           		<p:commandLink
-                	action="#{budgetAllocBackingBean.showBudgetAllocationItem(budgetAllocationDet)}" 
-                	oncomplete="dlItemDetailsBudgetModal.show();">
+                	action="#{budgetAllocBackingBean.showBudgetAllocOrg(budgetAllocOrg)}" 
+                	oncomplete="dlItemOrgAllocModal.show();" update="@([id$=opItemOrgAlloc])">
                 	<p:graphicImage value="#{(!budgetAllocationDet.brandNew &amp;&amp; 
                 		budgetAllocBackingBean.managedBean.viewMode==PPConst.modeView)
                 		? '/resources/ep/images/design/document.png'
@@ -57,8 +68,8 @@ xmlns:fn="http://java.sun.com/jsp/jstl/functions"
                	</p:commandLink>
                 &nbsp;
                 <p:commandLink
-                	update="dtBudgetAllocDet" disabled="#{budgetAllocBackingBean.managedBean.viewMode==PPConst.modeView}"
-                	action="#{budgetAllocBackingBean.deleteBudgetAllocationOrg(budgetAllocOrg)}">
+                	update="@([id$=pBudgetAllocOrg])" disabled="#{budgetAllocBackingBean.managedBean.viewMode==PPConst.modeView}"
+                	action="#{budgetAllocBackingBean.deleteBudgetAllocOrg(budgetAllocOrg)}">
                 	<p:graphicImage value="/resources/ep/images/design/trash.png"/>
                	</p:commandLink>
            	</p:column>  
@@ -70,21 +81,25 @@ xmlns:fn="http://java.sun.com/jsp/jstl/functions"
 			<c:if test="#{budgetAllocBackingBean.managedBean.selectedBudgetAllocation.editable}">
 				<p:commandButton value="#{lbl['lbl.pp.add']}" icon="ui-icon-add"
 					disabled="#{budgetAllocBackingBean.managedBean.selectedBudgetAllocDtl.pmDo.doId==null}"
-					oncomplete="dlItemPtjAllocModal.show()" 
-					action="#{budgetAllocBackingBean.showBudgetAllocationOrg(null)}" update="opItemBudgetDis"/>  
-				<p:commandButton value="#{lbl['lbl.pp.verify.confirm']}" icon="ui-icon-accept"
-					disabled="#{!(budgetAllocBackingBean.managedBean.selectedBudgetAllocation.ppBudget.budgetId!=null
-						&amp;&amp; budgetAllocBackingBean.managedBean.selectedBudgetAllocation.verifyAllocRequired)}"
-					/> 
-			
+					oncomplete="dlItemOrgAllocModal.show()" update="opItemOrgAlloc"
+					action="#{budgetAllocBackingBean.showBudgetAllocOrg(null)}" />  
+				
 			</c:if>
 		</div>
 	</p:panel>
 	<!-- Item PTJ Alloc Form -->
-      	<p:dialog id="dlItemPtjAlloc" header="#{lbl['lbl.pp.budget.ptj.alloc.form']}" widgetVar="dlItemPtjAllocModal"
+   	<p:dialog id="dlItemOrgAlloc" header="#{lbl['lbl.pp.budget.ptj.alloc.form']}" widgetVar="dlItemOrgAllocModal"
    		 resizable="false" styleClass="ppDiaglogSmallBg" dynamic="true">  
-    	<p:outputPanel id="opItemPtjAlloc">
+   		<p:messages showDetail="true" autoUpdate="true" closable="true" severity="error, info" />
+    	<p:outputPanel id="opItemOrgAlloc">
 	    	<table class="ppOneTable">
+	    		<tr>
+	    			<th><p:outputLabel value="#{lbl['lbl.pp.ministry.code.name']}"/></th>
+					<td>
+						<p:inputText value="#{budgetAllocBackingBean.managedBean.selectedBudgetAllocation.ppBudget.pmOrgProfile.orgCode} / #{budgetAllocBackingBean.managedBean.selectedBudgetAllocation.ppBudget.pmOrgProfile.orgName}" 
+							disabled="true" styleClass="ppDisplayTextM"/>
+					</td>
+				</tr>
 	    		<tr>
 	    			<th><p:outputLabel value="#{lbl['lbl.pp.jabatan.code.name']}"/></th>
 					<td>
@@ -121,8 +136,9 @@ xmlns:fn="http://java.sun.com/jsp/jstl/functions"
 	    			</th>
 					<td>
 						<p:inputText value="#{budgetAllocBackingBean.balanceAmount(
-							budgetAllocBackingBean.managedBean.selectedBudgetAllocDtl.ppBudgetDtl.allocAmt,
-							budgetAllocBackingBean.managedBean.selectedBudgetAllocDtl.ppBudgetDtl.usedAmt)}" 
+							budgetAllocBackingBean.managedBean.selectedBudgetAllocDtl.allocAmt,
+							budgetAllocBackingBean.managedBean.selectedBudgetAllocDtl.usedAmt,
+							budgetAllocBackingBean.managedBean.selectedBudgetAllocDtl.floatingAllocAmt)}" 
 							disabled="true" styleClass="ppDisplayTextM"/>
 					</td>
 				</tr>
@@ -153,11 +169,10 @@ xmlns:fn="http://java.sun.com/jsp/jstl/functions"
 	    			<td colspan="2">
 	    				<div class="ppRightBtn">
 							<p:commandButton value="#{lbl['lbl.pp.ok']}" update="pBudgetAllocOrg" 
-								action="#{budgetAllocBackingBean.addBudgetAllocationOrgList()}"
-								onclick="dlItemPtjAllocModal.hide()" oncomplete="dlItemPtjAllocModal.hide()" 
-								process="opItemPtjAlloc" icon="ui-icon-accept"/>
+								action="#{budgetAllocBackingBean.addBudgetAllocOrgList()}"
+								process="opItemOrgAlloc" icon="ui-icon-accept"/>
 							<p:commandButton value="#{lbl['lbl.pp.cancel']}" icon="ui-icon-cancel"
-								onclick="dlItemPtjAllocModal.hide()" immediate="true"/>
+								onclick="dlItemOrgAllocModal.hide()" immediate="true"/>
 						</div>
 					</td>
 	    		</tr>

@@ -10,41 +10,55 @@ xmlns:c="http://java.sun.com/jsp/jstl/core"
 xmlns:fn="http://java.sun.com/jsp/jstl/functions" 
 >
 	<!-- Amanah Disbursement -->
-	<p:panel id="pGosodoDisburse" toggleable="true" header="#{lbl['lbl.pp.budget.amanah.disbursement']}">
-		<p:dataTable id="dtGosodoDisburse" rowIndexVar="rowIndex"
+	<p:panel id="pAmanahDisburse" toggleable="true" header="#{lbl['lbl.pp.budget.amanah.disbursement']}">
+		<br/>
+		<table class="ppTwoTable">
+			<tr>
+				<th><p:outputLabel value="#{lbl['lbl.pp.verify.status']}"/></th>
+				<td>
+					<p:inputText id="itVerifiedDisburse" 
+						value="#{budgetAllocBackingBean.managedBean.selectedBudgetAllocation.verifyDisburse==true ? 'Verified' : 
+						(budgetAllocBackingBean.managedBean.selectedBudgetAllocation.verifyDisburse==false ? 'Invalid' : 'None')}"  
+						styleClass="ppDisplayTextL" disabled="true"/>
+				</td>
+				<th>&nbsp;</th>
+				<td>&nbsp;</td>
+			</tr>
+		</table>
+		<br/>
+		<p:dataTable id="dtAmanahDisburse" rowIndexVar="rowIndex"
 			value="">
 			<p:column headerText="#{lbl['lbl.pp.amanah.code']}">  
-				
-               </p:column>  
-               <p:column headerText="#{lbl['lbl.pp.amanah.description']}">  
-              		
-               </p:column>
-               <p:column headerText="#{lbl['lbl.pp.amanah.balance.amount']}">  
-              	
-               </p:column>
-               <p:column headerText="#{lbl['lbl.pp.alloc.amount']}">  
-                 
-               </p:column>  
-               <p:column headerText="#{lbl['lbl.pp.status']}">  
-                   
-              	</p:column>     
-              	<p:column headerText="#{lbl['lbl.pp.action']}">  
-             		<p:commandLink
-                   	action="#{budgetAllocBackingBean.showBudgetAllocationItem(budgetAllocationDet)}" 
-                   	oncomplete="dlItemDetailsBudgetModal.show();">
-                   	<p:graphicImage value="#{!(budgetAllocationDet.brandNew || 
-                   		(budgetAllocBackingBean.managedBean.viewMode==PPConst.modeRevision 
-                   		&amp;&amp; budgetAllocationDet.revisionRequired )) ? '/resources/ep/images/design/document.png' 
-                   		:'/resources/ep/images/design/edit.png'}" />
-                  	</p:commandLink>
-                   &nbsp;
-                   <p:commandLink
-                   	update="dtBudgetAllocDet" disabled="#{!(budgetAllocationDet.brandNew || 
-                   	(budgetAllocBackingBean.managedBean.viewMode==PPConst.modeRevision &amp;&amp; budgetAllocationDet.revisionRequired ))}"
-                   	action="#{budgetAllocBackingBean.deleteBudgetAllocItem(budgetAllocationDet)}">
-                   	<p:graphicImage value="/resources/ep/images/design/trash.png"/>
-                  	</p:commandLink>
-              	</p:column>  
+				#{budgetAllocDtl.pmMaksud.maksudCode}
+            </p:column>  
+            <p:column headerText="#{lbl['lbl.pp.amanah.description']}">  
+           		#{budgetAllocDtl.pmMaksud.maksudDesc}
+            </p:column>
+            <p:column headerText="#{lbl['lbl.pp.amanah.balance.amount']}">  
+           		TODO
+            </p:column>
+            <p:column headerText="#{lbl['lbl.pp.alloc.amount']}">  
+              	#{budgetAllocDtl.allocAmt}
+            </p:column>  
+            <p:column headerText="#{lbl['lbl.pp.status']}">  
+                #{budgetAllocDtl.ppWorkflowStatus.statusId}
+           	</p:column>     
+           	<p:column headerText="#{lbl['lbl.pp.action']}">  
+          		<p:commandLink update="@([id$=opItemAmanahDis])"
+                	action="#{budgetAllocBackingBean.showBudgetAllocAmanah(budgetAllocDtl)}" 
+                	oncomplete="dlItemAmanahDisModal.show();">
+                	<p:graphicImage value="#{(!budgetAllocDtl.brandNew &amp;&amp;
+                		budgetAllocBackingBean.managedBean.viewMode==PPConst.modeView)
+                		? '/resources/ep/images/design/document.png' 
+                		:'/resources/ep/images/design/edit.png'}" />
+               	</p:commandLink>
+                &nbsp;
+                <p:commandLink
+                	update="@([id$=pAmanahDisburse])" disabled="#{budgetAllocBackingBean.managedBean.viewMode==PPConst.modeView}"
+                	action="#{budgetAllocBackingBean.deleteBudgetAllocDtl(budgetAllocDtl)}">
+                	<p:graphicImage value="/resources/ep/images/design/trash.png"/>
+               	</p:commandLink>
+           	</p:column>  
 		</p:dataTable>
 		<!-- Button -->
 	  	<div class="ppRightBtn">
@@ -52,72 +66,77 @@ xmlns:fn="http://java.sun.com/jsp/jstl/functions"
 				<p:commandButton value="#{lbl['lbl.pp.verify.confirm']}" icon="ui-icon-accept"
 					/> 
 				<p:commandButton value="#{lbl['lbl.pp.add']}" icon="ui-icon-add"
-					action="dlItemBudgetDisModal.show()" oncomplete="dlItemBudgetDisModal.show()" /> 
+					action="dlItemAmanahDisModal.show()" oncomplete="dlItemAmanahDisModal.show()" /> 
 			</c:if>
 		</div>
 	</p:panel>
 	
 	<!-- Item Budget Disburse Form -->
-       <p:dialog id="dlItemBudgetDis" header="#{lbl['lbl.pp.budget.amanah.disbursement']}" widgetVar="dlItemBudgetDisModal"
+    <p:dialog id="dlItemAmanahDis" header="#{lbl['lbl.pp.budget.amanah.disbursement']}" widgetVar="dlItemAmanahDisModal"
     		 resizable="false" styleClass="ppDiaglogSmallBg" dynamic="true">  
-    	<p:outputPanel id="opItemBudgetDis">
-    	<table class="ppOneTable">
-    	 	<tr>
-    			<th><p:outputLabel value="#{lbl['lbl.pp.status']}"/></th>
-				<td>
-					<p:inputText value="-" disabled="true" styleClass="ppDisplayTextM"/>
-				</td>
-			</tr>
-    		<tr>
-    			<th><p:outputLabel value="#{lbl['lbl.pp.gosodo.code']}"/></th>
-				<td>
-					<p:selectOneMenu>
-						<f:selectItem itemLabel="#{lbl['lbl.select']}" itemValue="#{null}" />
-					</p:selectOneMenu>
-					<p:selectOneMenu>
-						<f:selectItem itemLabel="#{lbl['lbl.select']}" itemValue="#{null}" />
-					</p:selectOneMenu>
-				</td>
-			</tr>
-			<tr>
-    			<th><p:outputLabel value="#{lbl['lbl.pp.gosodo.name']}"/></th>
-				<td>
-					<p:inputText value="-" disabled="true" styleClass="ppDisplayTextM"/>
-				</td>
-			</tr>
-			<tr>
-    			<th><p:outputLabel value="#{lbl['lbl.pp.goso.balance.amount']}"/></th>
-				<td>
-					<p:inputText value="-" disabled="true" styleClass="ppDisplayTextM"/>
-				</td>
-			</tr>
-			<p:outputPanel rendered="#{budgetAllocBackingBean.managedBean.viewMode!=PPConst.modeNew}">
-				<tr>
-	    			<th><p:outputLabel value="#{lbl['lbl.pp.gosodo.used.amount']}"/></th>
+    	<p:outputPanel id="opItemAmanahDis">
+	    	<table class="ppOneTable">
+	    	 	<tr>
+	    			<th><p:outputLabel value="#{lbl['lbl.pp.amanah.code']}"/></th>
 					<td>
-						<p:inputText value="-" disabled="true" styleClass="ppDisplayTextM"/>
+						<p:selectOneMenu styleClass="ppDropDownWidthS"
+						 	disabled="#{!budgetAllocBackingBean.managedBean.selectedBudgetAllocDtl.editable}" 
+							value="#{budgetAllocBackingBean.managedBean.selectedBudgetAllocDtl.pmMaksud.maksudId}">
+							<f:selectItem itemLabel="#{lbl['lbl.select']}" itemValue="#{null}" />
+						</p:selectOneMenu>
 					</td>
 				</tr>
-			</p:outputPanel>
-               <tr>
-    			<th><p:outputLabel value="#{lbl['lbl.pp.alloc.amount']}"/></th>
-				<td>
-					<p:inputText value="-" styleClass="ppDisplayTextM"/>
-				</td>
-			</tr>
-			<tr>
-    			<td colspan="2">
-    				<div class="ppRightBtn">
-						<p:commandButton value="#{lbl['lbl.pp.ok']}" update="dtGosodoDisburse" 
-							action="#{budgetAllocBackingBean.addBudgetAllocationItemList()}"
-							onclick="dlItemBudgetDisModal.hide()" oncomplete="dlItemBudgetDisModal.hide()" 
-							process="opItemBudgetDis" icon="ui-icon-accept"/>
-						<p:commandButton value="#{lbl['lbl.pp.cancel']}" icon="ui-icon-cancel"
-							onclick="dlItemBudgetDisModal.hide()" immediate="true"/>
-					</div>
-				</td>
-    		</tr>
-    	</table>
+				<tr>
+	    			<th><p:outputLabel value="#{lbl['lbl.pp.amanah.desc']}"/></th>
+					<td>
+						<p:inputText id="itDoName" value="#{budgetAllocBackingBean.managedBean.selectedBudgetAllocDtl.pmMaksud.maksudDesc}" 
+							disabled="true" styleClass="ppDisplayTextL"/>
+					</td>
+				</tr>
+				<tr>
+	    			<th><p:outputLabel value="#{lbl['lbl.pp.amanah.balance.amount']}"/></th>
+					<td>
+						<p:inputText id="itAmanahBalance" value="-"
+							disabled="true" styleClass="ppDisplayTextL"/>
+					</td>
+				</tr>
+				<p:outputPanel rendered="#{budgetAllocBackingBean.managedBean.viewMode!=PPConst.modeNew}">
+					<tr>
+		    			<th><p:outputLabel value="#{lbl['lbl.pp.amanah.used.amount']}"/></th>
+						<td>
+							<p:inputText value="#{budgetAllocBackingBean.managedBean.selectedBudgetAllocDtl.usedAmt}"
+								 disabled="true" styleClass="ppDisplayTextL"/>
+						</td>
+					</tr>
+				</p:outputPanel>
+	               <tr>
+	    			<th><p:outputLabel value="#{lbl['lbl.pp.alloc.amount']}"/></th>
+					<td>
+						<p:inputText disabled="#{!budgetAllocBackingBean.managedBean.selectedBudgetAllocDtl.editable}" 
+							value="#{budgetAllocBackingBean.managedBean.selectedBudgetAllocDtl.allocAmt}" 
+							styleClass="ppDisplayTextL"/>
+					</td>
+				</tr>
+				<tr>
+	    			<th><p:outputLabel value="#{lbl['lbl.pp.status']}"/></th>
+					<td>
+						<p:inputText value="#{budgetAllocBackingBean.managedBean.selectedBudgetAllocDtl.ppWorkflowStatus.statusId}" 
+							disabled="true" styleClass="ppDisplayTextL"/>
+					</td>
+				</tr>
+				<tr>
+	    			<td colspan="2">
+	    				<div class="ppRightBtn">
+							<p:commandButton value="#{lbl['lbl.pp.ok']}" update="pAmanahDisburse" 
+								action="#{budgetAllocBackingBean.addBudgetAllocDtlList()}"
+								onclick="dlItemAmanahModal.hide()" oncomplete="dlItemAmanahDisModal.hide()" 
+								process="opItemAmanahDis" icon="ui-icon-accept"/>
+							<p:commandButton value="#{lbl['lbl.pp.cancel']}" icon="ui-icon-cancel"
+								onclick="dlItemAmanahDisModal.hide()" immediate="true"/>
+						</div>
+					</td>
+	    		</tr>
+	    	</table>
    		</p:outputPanel>
    	</p:dialog>
 

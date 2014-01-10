@@ -10,6 +10,7 @@ import java.util.Map;
 
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
+import javax.persistence.Transient;
 
 import my.ep.persistence.entity.pm.authorization.PmOrgProfile;
 import my.ep.persistence.entity.pp.budgetallocation.PpBudget;
@@ -31,7 +32,7 @@ public class BudgetDisbursementManagedBean extends BaseManagedBean{
 
 	private List <PpBudget> budgetList; 
 
-	private PmOrgProfile currentUser;
+//	private PmOrgProfile currentUser;
 	
 	private PpBudget selectedPpBudget;
 
@@ -45,6 +46,30 @@ public class BudgetDisbursementManagedBean extends BaseManagedBean{
 	
 //	private boolean enableChildDetail;
 	
+
+
+	private boolean verify;
+	
+	private boolean verifyRequired;
+	
+	private boolean isConfirm;
+	
+
+	
+	/**
+	 * @return the isConfirm
+	 */
+	public boolean isConfirm() {
+		return isConfirm;
+	}
+
+	/**
+	 * @param isConfirm the isConfirm to set
+	 */
+	public void setConfirm(boolean isConfirm) {
+		this.isConfirm = isConfirm;
+	}
+
 	/**
 	 * @return the budgetList
 	 */
@@ -59,19 +84,19 @@ public class BudgetDisbursementManagedBean extends BaseManagedBean{
 		this.budgetList = budgetList;
 	}
 
-	/**
-	 * @return the currentUser
-	 */
-	public PmOrgProfile getCurrentUser() {
-		return currentUser;
-	}
-
-	/**
-	 * @param currentUser the currentUser to set
-	 */
-	public void setCurrentUser(PmOrgProfile currentUser) {
-		this.currentUser = currentUser;
-	}
+//	/**
+//	 * @return the currentUser
+//	 */
+//	public PmOrgProfile getCurrentUser() {
+//		return currentUser;
+//	}
+//
+//	/**
+//	 * @param currentUser the currentUser to set
+//	 */
+//	public void setCurrentUser(PmOrgProfile currentUser) {
+//		this.currentUser = currentUser;
+//	}
 	
 	/**
 	 * @return the selectedPpBudget
@@ -132,37 +157,35 @@ public class BudgetDisbursementManagedBean extends BaseManagedBean{
 	public void setSelectedPpBudgetDtl(PpBudgetDtl selectedPpBudgetDtl) {
 		this.selectedPpBudgetDtl = selectedPpBudgetDtl;
 	}
-//
-//	/**
-//	 * @return the selectedPpBudgetTran
-//	 */
-//	public PpBudgetTran getSelectedPpBudgetTran() {
-//		return selectedPpBudgetTran;
-//	}
-//
-//	/**
-//	 * @param selectedPpBudgetTran the selectedPpBudgetTran to set
-//	 */
-//	public void setSelectedPpBudgetTran(PpBudgetTran selectedPpBudgetTran) {
-//		this.selectedPpBudgetTran = selectedPpBudgetTran;
-//	}
-//	
-//	
 
-//	/**
-//	 * @return the enableChildDetail
-//	 */
-//	public boolean isEnableChildDetail() {
-//		return enableChildDetail;
-//	}
-//
-//	/**
-//	 * @param enableChildDetail the enableChildDetail to set
-//	 */
-//	public void setEnableChildDetail(boolean enableChildDetail) {
-//		this.enableChildDetail = enableChildDetail;
-//	}
-//	
+	/**
+	 * @return the verify
+	 */
+	public boolean isVerify() {
+		return verify;
+	}
+
+	/**
+	 * @param verify the verify to set
+	 */
+	public void setVerify(boolean verify) {
+		this.verify = verify;
+	}
+
+	/**
+	 * @return the verifyRequired
+	 */
+	public boolean isVerifyRequired() {
+		return verifyRequired;
+	}
+
+	/**
+	 * @param verifyRequired the verifyRequired to set
+	 */
+	public void setVerifyRequired(boolean verifyRequired) {
+		this.verifyRequired = verifyRequired;
+	}
+
 	
 	
 	

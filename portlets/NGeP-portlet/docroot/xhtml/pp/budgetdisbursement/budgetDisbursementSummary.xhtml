@@ -16,7 +16,8 @@ xmlns:ac="http://ac.my/jsf/composite/cc">
 			<p:ajax event="rowSelect" update="@([id$=pTransaction])" />
 			
 	        <p:column headerText="#{lbl['lbl.pp.so.code']}">  
-		    	<p:selectOneMenu value="#{ppBudgetDtl.soId}" styleClass="ppDropDownWidthS" disabled="#{!ppBudgetDtl.brandNew}"> 
+		    	<p:selectOneMenu value="#{ppBudgetDtl.soId}" styleClass="ppDropDownWidthS" disabled="#{!ppBudgetDtl.brandNew}"
+		    		 label="#{lbl['lbl.pp.so.code']}"> 
 					<f:selectItem itemLabel="#{lbl['lbl.select']}" itemValue="#{null}"/>
 					<f:selectItems value="#{budgetDisburseBackingBean.soOptions(budgetDisburseBackingBean.managedBean.selectedPpBudget.pmGo.goId)}" 
 						var="obj" itemLabel="#{obj.soCode}" itemValue="#{obj.soId}" />
@@ -35,7 +36,7 @@ xmlns:ac="http://ac.my/jsf/composite/cc">
 	        <p:column headerText="#{lbl['lbl.pp.action']}"> 
                 <p:commandLink 
                   	update="dtSumBudget, @([id$=pTransaction])" disabled="#{!ppBudgetDtl.brandNew}" 	 
-                  	action="#{budgetDisburseBackingBean.deleteBudgetDtl(ppBudgetDtl)}">
+                  	action="#{budgetDisburseBackingBean.deleteBudgetDtl(ppBudgetDtl)}" immediate="true">
                   	<p:graphicImage value="/resources/ep/images/design/trash.png"/>
                	</p:commandLink>
             </p:column> 

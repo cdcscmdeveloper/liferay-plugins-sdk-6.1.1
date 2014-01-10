@@ -12,21 +12,6 @@ xmlns:fn="http://java.sun.com/jsp/jstl/functions"
 
 	<!-- GOSODO Disbursement -->
 	<p:panel id="pGosodoDisburse" toggleable="true" header="#{lbl['lbl.pp.budget.gosodo.disbursement']}">
-		<br/>
-		<table class="ppTwoTable">
-			<tr>
-				<th><p:outputLabel value="#{lbl['lbl.pp.verify.status']}"/></th>
-				<td>
-					<p:inputText id="itVerifiedDisburse" 
-						value="#{budgetAllocBackingBean.managedBean.selectedBudgetAllocation.verifyDisburse==true ? 'Verified' : 
-						(budgetAllocBackingBean.managedBean.selectedBudgetAllocation.verifyDisburse==false ? 'Invalid' : 'None')}"  
-						styleClass="ppDisplayTextL" disabled="true"/>
-				</td>
-				<th>&nbsp;</th>
-				<td>&nbsp;</td>
-			</tr>
-		</table>
-		<br/>
 		<p:dataTable id="dtGosodoDisburse" rowIndexVar="rowIndex" var="budgetAllocDtl"
 			selection="#{budgetAllocBackingBean.managedBean.selectedBudgetAllocDtl}" selectionMode="single"
 			rowKey="#{budgetAllocDtl}" emptyMessage="#{lbl['lbl.pp.no.record.found']}"
@@ -42,8 +27,9 @@ xmlns:fn="http://java.sun.com/jsp/jstl/functions"
            	</p:column>
            	<p:column headerText="#{lbl['lbl.pp.goso.balance.amount']}">  
           		#{budgetAllocBackingBean.balanceAmount(
-						budgetAllocBackingBean.managedBean.selectedBudgetAllocDtl.ppBudgetDtl.allocAmt,
-						budgetAllocBackingBean.managedBean.selectedBudgetAllocDtl.ppBudgetDtl.usedAmt)}
+						budgetAllocDtl.ppBudgetDtl.allocAmt,
+						budgetAllocDtl.ppBudgetDtl.usedAmt,
+						budgetAllocDtl.ppBudgetDtl.floatingAllocAmt)}
            	</p:column>
             <p:column headerText="#{lbl['lbl.pp.gosodo.used.amount']}" 
             		rendered="#{budgetAllocBackingBean.managedBean.viewMode!=PPConst.modeNew}">  
@@ -56,18 +42,19 @@ xmlns:fn="http://java.sun.com/jsp/jstl/functions"
                	#{budgetAllocDtl.ppWorkflowStatus.statusId}
            	</p:column>     
            	<p:column headerText="#{lbl['lbl.pp.action']}">  
-          		<p:commandLink update="@([id$=opItemBudgetDis])"
-                	action="#{budgetAllocBackingBean.showBudgetAllocationDtl(budgetAllocDtl)}" 
+          		<p:commandLink update=":form:tvBudgetAlloc:opItemBudgetDis"
+                	action="#{budgetAllocBackingBean.showBudgetAllocDtl(budgetAllocDtl)}" 
                 	oncomplete="dlItemBudgetDisModal.show();">
-                	<p:graphicImage value="#{(!budgetAllocationDet.brandNew &amp;&amp;
+                	<p:graphicImage value="#{(!budgetAllocDtl.brandNew &amp;&amp;
                 		budgetAllocBackingBean.managedBean.viewMode==PPConst.modeView)
                 		? '/resources/ep/images/design/document.png' 
                 		:'/resources/ep/images/design/edit.png'}" />
                	</p:commandLink>
                 &nbsp;
                 <p:commandLink
-                	update="dtGosodoDisburse" disabled="#{budgetAllocBackingBean.managedBean.viewMode==PPConst.modeView}"
-                	action="#{budgetAllocBackingBean.deleteBudgetAllocationDtl(budgetAllocDtl)}">
+                	update="@([id$=pGosodoDisburse],[id$=pBudgetAllocOrg])" 
+                	disabled="#{budgetAllocBackingBean.managedBean.viewMode==PPConst.modeView}"
+                	action="#{budgetAllocBackingBean.deleteBudgetAllocDtl(budgetAllocDtl)}">
                 	<p:graphicImage value="/resources/ep/images/design/trash.png"/>
                	</p:commandLink>
            	</p:column>  
@@ -77,11 +64,8 @@ xmlns:fn="http://java.sun.com/jsp/jstl/functions"
 			<c:if test="#{budgetAllocBackingBean.managedBean.selectedBudgetAllocation.editable}">
 				<p:commandButton value="#{lbl['lbl.pp.add']}" icon="ui-icon-add" oncomplete="dlItemBudgetDisModal.show()" 
 					disabled="#{budgetAllocBackingBean.managedBean.selectedBudgetAllocation.ppBudget.budgetId==null}"
-					action="#{budgetAllocBackingBean.showBudgetAllocationDtl(null)}" update="opItemBudgetDis"
+					action="#{budgetAllocBackingBean.showBudgetAllocDtl(null)}" update="dlItemBudgetDis"
 					/> 
-				<p:commandButton value="#{lbl['lbl.pp.verify.confirm']}" icon="ui-icon-accept"
-					disabled="#{!(budgetAllocBackingBean.managedBean.selectedBudgetAllocation.ppBudget.budgetId!=null
-						&amp;&amp; budgetAllocBackingBean.managedBean.selectedBudgetAllocation.verifyDisburseRequired)}"/> 
 			</c:if>
 		</div>
 	</p:panel>
@@ -90,87 +74,88 @@ xmlns:fn="http://java.sun.com/jsp/jstl/functions"
     <p:dialog id="dlItemBudgetDis" header="#{lbl['lbl.pp.budget.gosodo.disbursement']}" widgetVar="dlItemBudgetDisModal"
     		 resizable="false" styleClass="ppDiaglogSmallBg" dynamic="true">  
     	<p:outputPanel id="opItemBudgetDis">
-    	<table class="ppOneTable">
-    		<tr>
-    			<th><p:outputLabel value="#{lbl['lbl.pp.gosodo.code']}"/></th>
-				<td>
-					<p:selectOneMenu styleClass="ppDropDownWidthS"
-					 	disabled="#{!budgetAllocBackingBean.managedBean.selectedBudgetAllocDtl.editable}" 
-						value="#{budgetAllocBackingBean.managedBean.selectedBudgetAllocDtl.ppBudgetDtl.budgetDtlId}">
-						<f:selectItem itemLabel="#{lbl['lbl.select']}" itemValue="#{null}" />
+    		<p:messages showDetail="true" autoUpdate="true" closable="true" severity="error, info" />
+	    	<table class="ppOneTable">
+	    		<tr>
+	    			<th><p:outputLabel value="#{lbl['lbl.pp.gosodo.code']}"/></th>
+					<td>
+						<p:selectOneMenu styleClass="ppDropDownWidthS"
+						 	disabled="#{!budgetAllocBackingBean.managedBean.selectedBudgetAllocDtl.editable}" 
+							value="#{budgetAllocBackingBean.managedBean.selectedBudgetAllocDtl.ppBudgetDtl.budgetDtlId}">
+							<f:selectItem itemLabel="#{lbl['lbl.select']}" itemValue="#{null}" />
 							<f:selectItems value="#{budgetAllocBackingBean.populateSo(
 								budgetAllocBackingBean.managedBean.selectedBudgetAllocation.ppBudget.budgetId)}" 
 								var="obj" itemLabel="#{obj.pmSo.soCode}" itemValue="#{obj.budgetDtlId}" />
-								<p:ajax event="change" listener="#{budgetAllocBackingBean.selectedBudgetDtl(
-									budgetAllocBackingBean.managedBean.selectedBudgetAllocDtl.ppBudgetDtl.budgetDtlId)}" 
-									update="somDo, itGosoBalance"/>
-					</p:selectOneMenu>
-					<p:selectOneMenu styleClass="ppDropDownWidthS" id="somDo" 
-						disabled="#{!budgetAllocBackingBean.managedBean.selectedBudgetAllocDtl.editable}" 
-						value="#{budgetAllocBackingBean.managedBean.selectedBudgetAllocDtl.pmDo.doId}">
-						<f:selectItem itemLabel="#{lbl['lbl.select']}" itemValue="#{null}" />
-						<f:selectItems value="#{budgetAllocBackingBean.populateDo(
-								budgetAllocBackingBean.managedBean.selectedBudgetAllocDtl.ppBudgetDtl.pmSo.soId)}" 
-								var="obj" itemLabel="#{obj.doCode}" itemValue="#{obj.doId}" />
-						<p:ajax event="change" update="itDoName"
-							listener="#{budgetAllocBackingBean.selectedDo(budgetAllocBackingBean.managedBean.selectedBudgetAllocDtl.pmDo.doId)}"/>
-					</p:selectOneMenu>
-				</td>
-			</tr>
-			<tr>
-    			<th><p:outputLabel value="#{lbl['lbl.pp.gosodo.name']}"/></th>
-				<td>
-					<p:inputText id="itDoName" value="#{budgetAllocBackingBean.managedBean.selectedBudgetAllocDtl.pmDo.doName}" 
-						disabled="true" styleClass="ppDisplayTextL"/>
-				</td>
-			</tr>
-			<tr>
-    			<th><p:outputLabel value="#{lbl['lbl.pp.goso.balance.amount']}"/></th>
-				<td>
-					<p:inputText id="itGosoBalance" value="#{budgetAllocBackingBean.balanceAmount(
-						budgetAllocBackingBean.managedBean.selectedBudgetAllocDtl.ppBudgetDtl.allocAmt,
-						budgetAllocBackingBean.managedBean.selectedBudgetAllocDtl.ppBudgetDtl.usedAmt)}" 
-						disabled="true" styleClass="ppDisplayTextL"/>
-				</td>
-			</tr>
-			<p:outputPanel rendered="#{budgetAllocBackingBean.managedBean.viewMode!=PPConst.modeNew}">
-				<tr>
-	    			<th><p:outputLabel value="#{lbl['lbl.pp.gosodo.used.amount']}"/></th>
-					<td>
-						<p:inputText value="#{budgetAllocBackingBean.managedBean.selectedBudgetAllocDtl.usedAmt}"
-							 disabled="true" styleClass="ppDisplayTextL"/>
+							<p:ajax event="change" listener="#{budgetAllocBackingBean.selectedBudgetDtl(
+								budgetAllocBackingBean.managedBean.selectedBudgetAllocDtl.ppBudgetDtl.budgetDtlId)}" 
+								update="somDo, itGosoBalance"/>
+						</p:selectOneMenu>
+						<p:selectOneMenu styleClass="ppDropDownWidthS" id="somDo" 
+							disabled="#{!budgetAllocBackingBean.managedBean.selectedBudgetAllocDtl.editable}" 
+							value="#{budgetAllocBackingBean.managedBean.selectedBudgetAllocDtl.pmDo.doId}">
+							<f:selectItem itemLabel="#{lbl['lbl.select']}" itemValue="#{null}" />
+							<f:selectItems value="#{budgetAllocBackingBean.populateDo(
+									budgetAllocBackingBean.managedBean.selectedBudgetAllocDtl.ppBudgetDtl.pmSo.soId)}" 
+									var="obj" itemLabel="#{obj.doCode}" itemValue="#{obj.doId}" />
+							<p:ajax event="change" update="itDoName"
+								listener="#{budgetAllocBackingBean.selectedDo(budgetAllocBackingBean.managedBean.selectedBudgetAllocDtl.pmDo.doId)}"/>
+						</p:selectOneMenu>
 					</td>
 				</tr>
-			</p:outputPanel>
-               <tr>
-    			<th><p:outputLabel value="#{lbl['lbl.pp.alloc.amount']}"/></th>
-				<td>
-					<p:inputText disabled="#{!budgetAllocBackingBean.managedBean.selectedBudgetAllocDtl.editable}" 
-						value="#{budgetAllocBackingBean.managedBean.selectedBudgetAllocDtl.allocAmt}" 
-						styleClass="ppDisplayTextL"/>
-				</td>
-			</tr>
-			<tr>
-    			<th><p:outputLabel value="#{lbl['lbl.pp.status']}"/></th>
-				<td>
-					<p:inputText value="#{budgetAllocBackingBean.managedBean.selectedBudgetAllocDtl.ppWorkflowStatus.statusId}" 
-						disabled="true" styleClass="ppDisplayTextL"/>
-				</td>
-			</tr>
-			<tr>
-    			<td colspan="2">
-    				<div class="ppRightBtn">
-						<p:commandButton value="#{lbl['lbl.pp.ok']}" update="pGosodoDisburse" 
-							action="#{budgetAllocBackingBean.addBudgetAllocationDtlList()}"
-							onclick="dlItemBudgetDisModal.hide()" oncomplete="dlItemBudgetDisModal.hide()" 
-							process="opItemBudgetDis" icon="ui-icon-accept"/>
-						<p:commandButton value="#{lbl['lbl.pp.cancel']}" icon="ui-icon-cancel"
-							onclick="dlItemBudgetDisModal.hide()" immediate="true"/>
-					</div>
-				</td>
-    		</tr>
-    	</table>
-   		</p:outputPanel>
+				<tr>
+	    			<th><p:outputLabel value="#{lbl['lbl.pp.gosodo.name']}"/></th>
+					<td>
+						<p:inputText id="itDoName" value="#{budgetAllocBackingBean.managedBean.selectedBudgetAllocDtl.pmDo.doName}" 
+							disabled="true" styleClass="ppDisplayTextL"/>
+					</td>
+				</tr>
+				<tr>
+	    			<th><p:outputLabel value="#{lbl['lbl.pp.goso.balance.amount']}"/></th>
+					<td>
+						<p:inputText id="itGosoBalance" value="#{budgetAllocBackingBean.balanceAmount(
+							budgetAllocBackingBean.managedBean.selectedBudgetAllocDtl.ppBudgetDtl.allocAmt,
+							budgetAllocBackingBean.managedBean.selectedBudgetAllocDtl.ppBudgetDtl.usedAmt,
+							budgetAllocBackingBean.managedBean.selectedBudgetAllocDtl.ppBudgetDtl.floatingAllocAmt)}" 
+							disabled="true" styleClass="ppDisplayTextL"/>
+					</td>
+				</tr>
+				<p:outputPanel rendered="#{budgetAllocBackingBean.managedBean.viewMode!=PPConst.modeNew}">
+					<tr>
+		    			<th><p:outputLabel value="#{lbl['lbl.pp.gosodo.used.amount']}"/></th>
+						<td>
+							<p:inputText value="#{budgetAllocBackingBean.managedBean.selectedBudgetAllocDtl.usedAmt}"
+								 disabled="true" styleClass="ppDisplayTextL"/>
+						</td>
+					</tr>
+				</p:outputPanel>
+	               <tr>
+	    			<th><p:outputLabel value="#{lbl['lbl.pp.alloc.amount']}"/></th>
+					<td>
+						<p:inputText disabled="#{!budgetAllocBackingBean.managedBean.selectedBudgetAllocDtl.editable}" 
+							value="#{budgetAllocBackingBean.managedBean.selectedBudgetAllocDtl.allocAmt}" 
+							styleClass="ppDisplayTextL"/>
+					</td>
+				</tr>
+				<tr>
+	    			<th><p:outputLabel value="#{lbl['lbl.pp.status']}"/></th>
+					<td>
+						<p:inputText value="#{budgetAllocBackingBean.managedBean.selectedBudgetAllocDtl.ppWorkflowStatus.statusId}" 
+							disabled="true" styleClass="ppDisplayTextL"/>
+					</td>
+				</tr>
+				<tr>
+	    			<td colspan="2">
+	    				<div class="ppRightBtn">
+							<p:commandButton value="#{lbl['lbl.pp.ok']}" update="pGosodoDisburse, opItemBudgetDis" 
+								action="#{budgetAllocBackingBean.addBudgetAllocDtlList()}"
+								process="dlItemBudgetDis" icon="ui-icon-accept"/>
+							<p:commandButton value="#{lbl['lbl.pp.cancel']}" icon="ui-icon-cancel" update="pGosodoDisburse, opItemBudgetDis" 
+								onclick="dlItemBudgetDisModal.hide()" immediate="true"/>
+						</div>
+					</td>
+	    		</tr>
+	    	</table>
+		</p:outputPanel>
    	</p:dialog>
    	
    	

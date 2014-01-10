@@ -15,32 +15,80 @@ import java.util.Map;
 
 import javax.faces.model.SelectItem;
 
+import my.ep.biz.service.pm.authorization.orgprofile.IOrgProfileSO;
+import my.ep.dto.pm.authorization.orgprofile.OrgProfileReqDTO;
+import my.ep.dto.pm.authorization.orgprofile.OrgProfileResDTO;
 import my.ep.persistence.entity.pm.authorization.PmOrgProfile;
 import my.ep.persistence.entity.pm.common.PmStatus;
 import my.ep.persistence.entity.pp.PpWorkflowStatus;
 import my.ep.web.constant.pp.ProcurementPlanConst;
 import my.ep.web.util.FacesScopes;
 import my.ep.web.util.ResourceBundleUtils;
+import my.ep.web.util.lookupservice.BusinessDelegate;
 
 import org.apache.log4j.Logger;
 
 public class CommonMethod {
 	private static Logger log = Logger.getLogger(CommonMethod.class);
+
 	
-	public static PmStatus currentStatus(Long statusId, String docType){
-		//call api to get pm status
-		return new PmStatus();
+	/**
+	 * retrieve org profile by orgProfileId
+	 * @param orgProfileId
+	 * @returnPmOrgProfile
+	 */
+	public static PmOrgProfile retrieveOrgProfile(Long orgProfileId){
+		log.info("retrieveOrgProfile - Start");
+		PmOrgProfile profile =  new PmOrgProfile();
+		try{
+			if(orgProfileId!=null){
+				OrgProfileReqDTO reqDTO = new OrgProfileReqDTO();
+				reqDTO.setOrgProfileId(orgProfileId);
+				IOrgProfileSO orgProfileSO = BusinessDelegate.getInstance().getServiceObject("pm", IOrgProfileSO.class);
+				OrgProfileResDTO resDTO = orgProfileSO.retrieveOrgProfileByProfileId(reqDTO);
+//				if(resDTO.isSuccessful()){
+					profile = resDTO.getPmOrgProfile();
+//				}
+			}
+		}catch (Exception e){
+			e.printStackTrace();
+			
+		}
+		log.info("retrieveOrgProfile - End");
+		return profile;
 	}
 	
-	//temp
-	public static final Map<Long, String> approverMap;
-    static
-    {
-    	approverMap = new HashMap<Long, String>();
-    	approverMap.put(1L, "lailah");
-    	approverMap.put(2L, "khai");
-    }
-
+	/**
+	 * retrieve org profile by login user and type
+	 * @param userId
+	 * @param type
+	 * @return org profile
+	 */
+	public static List <PmOrgProfile> getOrgProfiles(Long userId, String orgType){
+		log.info("getOrgProfiles - Start");
+		log.info("userId " + userId);
+		List <PmOrgProfile> profileList =  new ArrayList<PmOrgProfile>();
+		try{
+			if(CommonMethod.isSelected(userId) && CommonMethod.isSelected(orgType)){
+				OrgProfileReqDTO reqDTO = new OrgProfileReqDTO();
+				reqDTO.setUserId(userId);
+				reqDTO.setOrgType(orgType);
+				
+				IOrgProfileSO orgProfileSO = BusinessDelegate.getInstance().getServiceObject("pm", IOrgProfileSO.class);
+				OrgProfileResDTO resDTO = orgProfileSO.retrieveOrgProfileListByOrgType(reqDTO);
+//				if(resDTO.isSuccessful()){
+					profileList = resDTO.getOrgProfileList();
+		
+//				}
+			}
+		}catch (Exception e){
+			e.printStackTrace();
+			
+		}
+		log.info("getOrgProfiles - End");
+		return profileList;
+	}
+	
 	public static BigDecimal addBigDecimalNullable(BigDecimal amountOne, BigDecimal amountTwo){
 		BigDecimal amtOne = amountOne!=null ? amountOne : new BigDecimal(0);
 		BigDecimal amtTwo =  amountTwo!=null ? amountTwo : new BigDecimal(0);

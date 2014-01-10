@@ -14,20 +14,6 @@ xmlns:c="http://java.sun.com/jsp/jstl/core"
 	<ui:define name="contentSection">
 		<br/>
 		<p:panelGrid styleClass="ppPanelGrid">  
-			<p:row>  
-            	<p:column>
-            		<table class="ppHalf">
-						<tr>
-							<td><p:outputLabel value="#{lbl['lbl.pp.ministry.code.name']}" /></td>
-							<td>
-								<p:inputText disabled="true" styleClass="ppDisplayTextL"
-									value="#{budgetDisburseBackingBean.managedBean.currentUser.orgCode} / #{budgetDisburseBackingBean.managedBean.currentUser.orgName}" />
-								
-							</td>
-						</tr>
-					</table>
-            	</p:column>
-           	</p:row>
            	<p:row>  
             	<p:column>
             		<ui:include src="listBudgetContent.xhtml"/>

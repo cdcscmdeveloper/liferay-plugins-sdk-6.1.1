@@ -11,20 +11,7 @@ xmlns:ac="http://ac.my/jsf/composite/cc">
 
 	<p:outputPanel id="opBudgetDisburseTrans">
 		<br/>
-		<table class="ppTwoTable">
-			<tr>
-				<th><p:outputLabel value="#{lbl['lbl.pp.verify.status']}"/></th>
-				<td>
-					<p:inputText id="itVerified" 
-						value="#{budgetDisburseBackingBean.managedBean.selectedPpBudgetDtl.verify==true ? 'Verified' : 
-						(budgetDisburseBackingBean.managedBean.selectedPpBudgetDtl.verify==false ? 'Invalid' : 'None')}"  
-						styleClass="ppDisplayTextL" disabled="true"/>
-				</td>
-				<th>&nbsp;</th>
-				<td>&nbsp;</td>
-			</tr>
-		</table>
-		<br/>
+		
 		<p:dataTable id="dtTransBudget" styleClass="ppTableFull" rowIndexVar="rowIndex" 
 			value="#{budgetDisburseBackingBean.managedBean.selectedPpBudgetDtl.ppBudgetTrans}"
 		 	var="ppBudgetTran" emptyMessage="#{lbl['lbl.pp.no.record.found']}">
@@ -35,7 +22,12 @@ xmlns:ac="http://ac.my/jsf/composite/cc">
 	            #{budgetDisburseBackingBean.managedBean.selectedPpBudgetDtl.pmSo.soName}
 	        </p:column> 
 	        <p:column headerText="#{lbl['lbl.pp.alloc.amount']}" styleClass="ppNumericAlign">  
-	            <p:inputText value="#{ppBudgetTran.allocAmt}"  styleClass="ppDisplayTextM" disabled="#{!ppBudgetTran.brandNew}"/>
+	            <p:inputText value="#{ppBudgetTran.allocAmt}" styleClass="ppDisplayTextM"  
+	            	valueChangeListener="#{budgetDisburseBackingBean.budgetChangeListener}"
+	            	disabled="#{!ppBudgetTran.brandNew}" required="true" label="#{lbl['lbl.pp.alloc.amount']}">  
+	            	<f:validateDoubleRange minimum="1"  />
+	            	<p:ajax event="change" update=":form:itBudgetBalanceAmt"/>
+				</p:inputText>
 	        </p:column>  
 	        <p:column headerText="#{lbl['lbl.pp.accum.amount']}" styleClass="ppNumericAlign">  
 	            #{ppBudgetTran.accumAmt}
@@ -55,12 +47,9 @@ xmlns:ac="http://ac.my/jsf/composite/cc">
 	   	<!-- Button -->
 	  	<div class="ppRightBtn">
 			<p:commandButton value="#{lbl['lbl.pp.add']}" icon="ui-icon-add" 
-				disabled="#{budgetDisburseBackingBean.managedBean.selectedPpBudgetDtl==null}"
+				disabled="#{budgetDisburseBackingBean.managedBean.selectedPpBudgetDtl.pmSo.soId==null}"
 				action="#{budgetDisburseBackingBean.addBudgetTrans}" update="pTransaction"/> &nbsp;
-			<p:commandButton value="#{lbl['lbl.pp.verify.confirm']}" icon="ui-icon-accept" 
-				disabled="#{!(budgetDisburseBackingBean.managedBean.selectedPpBudgetDtl!=null &amp;&amp; 
-				budgetDisburseBackingBean.managedBean.selectedPpBudgetDtl.verifyRequired)}"
-				action="#{budgetDisburseBackingBean.confirmBudgetTrans}" update="dtTransBudget, pSummary, itVerified, itBudgetBalanceAmt"/>&nbsp;
+			
 		</div>
    	</p:outputPanel>
 </ui:composition>
