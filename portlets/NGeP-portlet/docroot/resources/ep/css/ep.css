@@ -707,7 +707,7 @@ a:visited.menuItemLink-selected {
 }
 
 .comparePanel {
-	height: 25px;
+	height: 30px;
 	width: 210px;
 	border: 0;
 	padding: 0px;
@@ -2162,7 +2162,7 @@ td {
 
 
 .comparePanelLabel{
-	height: 25px;
+	height: 30px;
 	width: 100%;
 	border: 0;
 	padding: 0px;
