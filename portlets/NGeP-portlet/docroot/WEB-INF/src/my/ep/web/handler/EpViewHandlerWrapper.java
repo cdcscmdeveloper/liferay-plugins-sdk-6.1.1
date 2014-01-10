@@ -24,6 +24,8 @@ public class EpViewHandlerWrapper extends ViewHandlerWrapper {
         if(log.isDebugEnabled()) {
             log.debug(message);
         }
+        //TODO Remove this after bug fixing
+        log.info(message);
     }
 	
 	public EpViewHandlerWrapper(ViewHandler wrapped) {
