@@ -176,7 +176,7 @@ $theme.include($body_top_include)
 	<header>
 	
 	<div class="sticky">
-		<img src="$images_folder/general/QRep.png" /><p class="pqrcode">Please scan QR Code for mobile devices.</p>
+		<img src="$images_folder/general/QRep.png" /><p class="pqrcode">SILA IMBAS CODE QR BAGI PAPARAN MUDAH ALIH.</p>
 		<div id="close"><img src="$images_folder/general/close.png" /></div>
 	</div>
 	
