@@ -3,6 +3,7 @@
 	xmlns:h="http://java.sun.com/jsf/html"
 	xmlns:ui="http://java.sun.com/jsf/facelets"
 	xmlns:p="http://primefaces.org/ui"
+	xmlns:ac="http://ac.my/jsf/composite/cc"	
 	xmlns:c="http://java.sun.com/jsp/jstl/core">
 
 	<p:panel header="Committee Details" toggleable="true">
@@ -11,7 +12,7 @@
 			<p:dataTable id="committeSecretary"
 				value="#{CommitteBackingBean.managedBean.committemembers}"
 				var="committesecretary" resizableColumns="true" editable="true">
-
+ 		        <ac:paginator for="committeSecretary" /> 
 				<p:ajax event="rowEdit" />
 				<p:ajax event="rowEditCancel" />
 

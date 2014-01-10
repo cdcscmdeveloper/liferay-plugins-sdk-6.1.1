@@ -28,7 +28,7 @@
 
 
 
-			<p:panel id="newProfile" style="width:100%">
+			<p:panel id="newProfile" style="width:100%;margin-top:10px;">
 
 				<c:if
 					test="#{committeBackingBean.managedBean.committeMember.userSelection eq 'P' }">
@@ -41,6 +41,7 @@
 								value="#{committeBackingBean.managedBean.userTypes}"></f:selectItems>
 						</p:selectOneRadio>
 					</h:panelGrid>
+					<br/>
 					<h:panelGrid columns="2" styleClass="noBorders tr,noBorders td">
 						<h:outputLabel value="#{lbl['lbl.sc.committe.addscreen.name']}&#160;&#160;&#160;&#160;&#160;&#160;&#160;
 						&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;" />
@@ -174,7 +175,7 @@
 					<h:panelGrid columns="2" styleClass="noBorders tr,noBorders td">
 						<h:outputLabel value="#{lbl['lbl.sc.committe.addscreen.name']}&#160;&#160;&#160;&#160;&#160;&#160;&#160;
 						&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;" />
-						<p:selectOneMenu value="#{committeBackingBean.managedBean.userId}">
+						<p:selectOneMenu style="width:150px" value="#{committeBackingBean.managedBean.userId}">
 							<f:selectItem itemLabel="Select One" itemValue="#{null}" />
 							<f:selectItems
 								value="#{committeBackingBean.managedBean.externalUsers}" var="user"

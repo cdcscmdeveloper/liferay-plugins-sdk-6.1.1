@@ -9,7 +9,8 @@
 		<h:panelGrid columns="4" style="width:100%;" styleClass="noBorders tr,noBorders td">
 
 		<h:outputLabel value="#{lbl['lbl.sc.committe.header.comtype']}"  />
-		 <p:selectOneMenu value="#{committeBackingBean.managedBean.scCommittee.committeeType}" style="width:150px">
+		 <p:selectOneMenu value="#{committeBackingBean.managedBean.scCommittee.committeeType}" disabled="#{!committeBackingBean.managedBean.editable}" 
+		    style="width:150px">
             <f:selectItem itemLabel="Select One" itemValue="-1" />  
             <f:selectItem itemLabel="DOAA" itemValue="1" />  
             <f:selectItem itemLabel="OC" itemValue="2" />  
@@ -28,28 +29,28 @@
          </p:selectOneMenu>
 
             <h:outputLabel value="#{lbl['lbl.sc.committe.header.ministrycodename']}" />  
-            <p:inputText readonly="true"/> 
+            <p:inputText readonly="true"  disabled="#{!committeBackingBean.managedBean.editable}"/> 
                      			
 			<h:outputLabel value="#{lbl['lbl.sc.committe.header.qtntenderno']}" />  
-            <p:inputText value="#{committeBackingBean.managedBean.qtCommittee.scQt.qtNo}"/>            
+            <p:inputText value="#{committeBackingBean.managedBean.qtCommittee.scQt.qtNo}"  disabled="#{!committeBackingBean.managedBean.editable}"/>            
             
             <h:outputLabel value="#{lbl['lbl.sc.committe.header.status']}" />  
-            <p:inputText  readonly="true" />  
+            <p:inputText  readonly="true" disabled="#{!committeBackingBean.managedBean.editable}" />  
             
             <h:outputLabel value="#{lbl['lbl.sc.committe.header.departcode']}" />  
-            <p:inputText readonly="true"/>  
+            <p:inputText readonly="true" disabled="#{!committeBackingBean.managedBean.editable}"/>  
            
            <h:outputLabel value="#{lbl['lbl.sc.committe.header.createddate']}"  /> 
-   		   <p:inputText readonly="true"/>  
+   		   <p:inputText readonly="true" disabled="#{!committeBackingBean.managedBean.editable}"/>  
  
            <h:outputLabel value="#{lbl['lbl.sc.committe.header.divcode']}" />  
-           <p:inputText readonly="true"/>  
+           <p:inputText readonly="true" disabled="#{!committeBackingBean.managedBean.editable}"/>  
                           
            <h:outputLabel value="#{lbl['lbl.sc.committe.header.comstatus']}" /> 
-   		   <p:inputText readonly="true"/> 
+   		   <p:inputText readonly="true" disabled="#{!committeBackingBean.managedBean.editable}"/> 
    		   
            <h:outputLabel value="#{lbl['lbl.sc.committe.header.recstatus']}" /> 
-   		   <p:inputText readonly="true"/>     		     		                                                                          
+   		   <p:inputText readonly="true" disabled="#{!committeBackingBean.managedBean.editable}"/>     		     		                                                                          
                       
       </h:panelGrid>
   	</p:panel>   

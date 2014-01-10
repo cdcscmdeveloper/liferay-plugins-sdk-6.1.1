@@ -32,6 +32,10 @@
 							<ui:param name="iconVar" value="ui-icon-approve" />
 
 						</c:if>
+						<c:if test="${action == 'SAVE'}">
+							<ui:param name="iconVar" value="ui-icon-save" />
+
+						</c:if>						
 			<p:commandButton value="#{action}" icon="#{iconVar}"  process="@all" styleClass="ui-button" actionListener="#{committeBackingBean.invokeCommitteAction(action)}"  />
 	   </c:forEach>	
     </div>
