@@ -174,6 +174,9 @@ public class FacesScopes {
 				if (user == null) {
 					user = new PmUser();
 				}
+				
+				System.out.println("id "+ user.getUserId());
+				facesScopes.setSessionScope(SESS_USER_SESSION_BEAN, user);
 			} catch (Exception e) {
 				e.printStackTrace();
 
