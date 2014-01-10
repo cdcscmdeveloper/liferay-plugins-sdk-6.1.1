@@ -14,6 +14,7 @@ import javax.faces.model.SelectItem;
 import javax.servlet.http.HttpServletRequest;
 
 import my.ep.biz.bean.search.ISearchBean;
+import my.ep.biz.bean.search.ISearchResultBean;
 import my.ep.biz.bean.search.SearchBean;
 import my.ep.biz.bean.search.SearchFilterBean;
 import my.ep.biz.service.pm.authorization.orgprofile.IOrgProfileSO;
@@ -46,6 +47,8 @@ import my.ep.type.pm.OrganizationType;
 import my.ep.util.lookupservice.EpBpmBusinessDelegate;
 import my.ep.util.lookupservice.EpEjbBusinessDelegate;
 import my.ep.web.backingbean.ss.quatationtender.SourcingBaseBackingBean;
+import my.ep.web.bean.paginator.IPagingDataModel;
+import my.ep.web.bean.paginator.PagingDataModel;
 import my.ep.web.constant.BpmOutcomeConst;
 import my.ep.web.constant.SourcingConst;
 import my.ep.web.managedbean.ss.committee.CommitteManagedBean;
@@ -57,6 +60,7 @@ import my.ep.web.type.ss.quationtender.MemberRole;
 import my.ep.web.type.ss.quationtender.MemberType;
 import my.ep.web.type.ss.quationtender.SelectionType;
 import my.ep.web.util.FacesScopes;
+import my.ep.web.util.lookupservice.BusinessDelegate;
 
 import org.apache.log4j.Logger;
 import org.primefaces.event.RowEditEvent;
@@ -74,6 +78,11 @@ public class CommitteBackingBean extends
 
 	private static final Logger logger = EpLogger
 			.getLogger(CommitteBackingBean.class);
+	
+	private IPagingDataModel<ScCommittee> committeeDataModel = new CommitteePagingDataModel();
+	private IPagingDataModel<ScCommitteeMember> committeeSCDataModel = new CommitteeSCPagingDataModel();
+	private IPagingDataModel<ScCommitteeMember> committeeQCDataModel = new CommitteeQCPagingDataModel();
+	private IPagingDataModel<ScCommitteeMember> committeeFCDataModel = new CommitteeFCPagingDataModel();	
 
 	public CommitteBackingBean() {
 		retriveCommitteTypes();
@@ -847,4 +856,113 @@ public class CommitteBackingBean extends
 				.handleNavigation(fc, null,
 						"committeemaintanancepage" + "?faces-redirect=true");
 	}
+	
+	private class CommitteePagingDataModel extends PagingDataModel<ScCommittee> {
+		private static final long serialVersionUID = 1L;
+
+		public CommitteePagingDataModel() {
+			super("searchCommitte");
+		}
+
+		@Override
+		protected ISearchResultBean<ScCommittee> pageChangeListener(
+				ISearchBean<ScCommittee> searchBean) {
+			// TODO Auto-generated method stub
+			return null;
+		}
+
+
+	}
+	
+	private class CommitteeSCPagingDataModel extends PagingDataModel<ScCommitteeMember> {
+		private static final long serialVersionUID = 1L;
+
+		public CommitteeSCPagingDataModel() {
+			super("committeMember");
+		}
+
+		@Override
+		protected ISearchResultBean<ScCommitteeMember> pageChangeListener(
+				ISearchBean<ScCommitteeMember> searchBean) {
+			// TODO Auto-generated method stub
+			return null;
+		}
+
+
+	}
+	
+	private class CommitteeQCPagingDataModel extends PagingDataModel<ScCommitteeMember> {
+		private static final long serialVersionUID = 1L;
+
+		public CommitteeQCPagingDataModel() {
+			super("committeQc");
+		}
+
+		@Override
+		protected ISearchResultBean<ScCommitteeMember> pageChangeListener(
+				ISearchBean<ScCommitteeMember> searchBean) {
+			// TODO Auto-generated method stub
+			return null;
+		}
+
+
+	}
+	
+	private class CommitteeFCPagingDataModel extends PagingDataModel<ScCommitteeMember> {
+		private static final long serialVersionUID = 1L;
+
+		public CommitteeFCPagingDataModel() {
+			super("committeQc");
+		}
+
+		@Override
+		protected ISearchResultBean<ScCommitteeMember> pageChangeListener(
+				ISearchBean<ScCommitteeMember> searchBean) {
+			// TODO Auto-generated method stub
+			return null;
+		}
+
+
+	}		
+	
+	public IPagingDataModel<ScCommittee> getCommitteeDataModel() {
+		return committeeDataModel;
+	}
+	/**
+	 * @param committeeDataModel set
+	 */
+	public void setCommitteeDataModel(IPagingDataModel<ScCommittee> committeeDataModel) {
+		this.committeeDataModel = committeeDataModel;
+	}
+	
+	public IPagingDataModel<ScCommitteeMember> getCommitteeSCDataModel() {
+		return committeeSCDataModel;
+	}
+	/**
+	 * @param planDataModel the planDataModel to set
+	 */
+	public void setCommitteeSCDataModel(IPagingDataModel<ScCommitteeMember> committeeSCDataModel) {
+		this.committeeSCDataModel = committeeSCDataModel;
+	}
+	
+	public IPagingDataModel<ScCommitteeMember> getCommitteeQCDataModel() {
+		return committeeQCDataModel;
+	}
+	/**
+	 * @param planDataModel the planDataModel to set
+	 */
+	public void setCommitteeQCDataModel(IPagingDataModel<ScCommitteeMember> committeeQCDataModel) {
+		this.committeeQCDataModel = committeeQCDataModel;
+	}
+	
+	public IPagingDataModel<ScCommitteeMember> getCommitteeFCDataModel() {
+		return committeeFCDataModel;
+	}
+	/**
+	 * @param planDataModel the planDataModel to set
+	 */
+	public void setCommitteeFCDataModel(IPagingDataModel<ScCommitteeMember> committeeFCDataModel) {
+		this.committeeFCDataModel = committeeFCDataModel;
+	}		
+	
 }

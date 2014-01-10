@@ -109,6 +109,8 @@ public class CommitteManagedBean extends BaseManagedBean {
 	
 	private String status;
 	
+	private boolean isEditable = true;
+	
 	public CommitteManagedBean(){
 		log.info("inside ");		
 	}
@@ -486,6 +488,15 @@ public class CommitteManagedBean extends BaseManagedBean {
 
 	public void setTaskId(String taskId) {
 		this.taskId = taskId;
+	}
+	
+	public boolean isEditable() {
+		return isEditable;
+	}
+
+
+	public void setEditable(boolean isEditable) {
+		this.isEditable = isEditable;
 	}
 
 
