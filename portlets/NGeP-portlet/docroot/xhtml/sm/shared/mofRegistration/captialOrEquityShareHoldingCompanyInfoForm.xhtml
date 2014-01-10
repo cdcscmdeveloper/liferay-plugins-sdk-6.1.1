@@ -26,7 +26,13 @@
 			</p:outputPanel>
 			<p:outputPanel rendered="#{backingBean.managedBean.approverUser}">
 				<tr>
-					<td width="10px"><p:selectBooleanCheckbox /></td>
+					<td width="10px" style="padding-right: 2px;"><p:selectBooleanCheckbox
+							value="#{backingBean.managedBean.apprvrSecReview.equityCompVerifed}"
+							id="apprEquiVer">
+							<p:ajax update=":form:tt:equiInfPan,:form:revPanHdr"
+								event="change"
+								listener="#{backingBean.changeVerifySection(backingBean.managedBean.apprvrSecReview.equityCompVerifed)}" />
+						</p:selectBooleanCheckbox></td>
 					<td valign="top"><h:outputText
 							value=" Section Verified By Approver: "
 							title="For Approver to highlight the verified section " /></td>
@@ -37,7 +43,7 @@
 		<p:panel id="equiInfPan">
 			<p:blockUI block=":form:tt:equiInfPan" widgetVar="buiPoEqui"
 				id="poBasEqui"
-				blocked="#{backingBean.managedBean.poSecReview.equityCompVerifed and backingBean.managedBean.poUser}" />
+				blocked="#{backingBean.managedBean.poUser ? backingBean.managedBean.poSecReview.equityCompVerifed : (backingBean.managedBean.approverUser ? backingBean.managedBean.apprvrSecReview.equityCompVerifed : false)}" />
 			<p:dataTable var="equiBean"
 				value="#{backingBean.managedBean.smAppl.smEquityCompanies}"
 				selection="#{backingBean.managedBean.selectedEquityCompanies}"

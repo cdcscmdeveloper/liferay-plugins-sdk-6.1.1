@@ -23,7 +23,12 @@
 			</p:outputPanel>
 			<p:outputPanel rendered="#{backingBean.managedBean.approverUser}">
 				<tr>
-					<td width="10px"><p:selectBooleanCheckbox /></td>
+					<td width="10px" style="padding-right: 2px;"><p:selectBooleanCheckbox
+							value="#{backingBean.managedBean.apprvrSecReview.basicVerified}"
+							id="apprBasVer">
+							<p:ajax update=":form:tt:bsInfPan,:form:revPanHdr" event="change"
+								listener="#{backingBean.changeVerifySection(backingBean.managedBean.apprvrSecReview.basicVerified)}" />
+						</p:selectBooleanCheckbox></td>
 					<td valign="top"><h:outputText
 							value=" Section Verified By Approver: "
 							title="For Approver to highlight the verified section " /></td>
@@ -35,7 +40,10 @@
 		<p:panel id="bsInfPan">
 			<p:blockUI block=":form:tt:bsInfPan" widgetVar="buiPoBas"
 				id="poBasBlc"
-				blocked="#{backingBean.managedBean.poSecReview.basicVerified and backingBean.managedBean.poUser}" />
+				blocked="#{backingBean.managedBean.poUser ? backingBean.managedBean.poSecReview.basicVerified : (backingBean.managedBean.approverUser ? backingBean.managedBean.apprvrSecReview.basicVerified : false)}" />
+
+
+
 			<table style="width: 100%">
 				<tr>
 

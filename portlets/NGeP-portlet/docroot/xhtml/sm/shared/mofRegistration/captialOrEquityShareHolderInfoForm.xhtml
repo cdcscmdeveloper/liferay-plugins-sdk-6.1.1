@@ -26,7 +26,13 @@
 			</p:outputPanel>
 			<p:outputPanel rendered="#{backingBean.managedBean.approverUser}">
 				<tr>
-					<td width="10px"><p:selectBooleanCheckbox /></td>
+					<td width="10px" style="padding-right: 2px;"><p:selectBooleanCheckbox
+							value="#{backingBean.managedBean.apprvrSecReview.shareholderVerifed}"
+							id="apprShrVer">
+							<p:ajax update=":form:tt:shrInfPan,:form:revPanHdr"
+								event="change"
+								listener="#{backingBean.changeVerifySection(backingBean.managedBean.apprvrSecReview.shareholderVerifed)}" />
+						</p:selectBooleanCheckbox></td>
 					<td valign="top"><h:outputText
 							value=" Section Verified By Approver: "
 							title="For Approver to highlight the verified section " /></td>
@@ -37,7 +43,7 @@
 		<p:panel id="shrInfPan">
 			<p:blockUI block=":form:tt:shrInfPan" widgetVar="buiPoShr"
 				id="poShrBlc"
-				blocked="#{backingBean.managedBean.poSecReview.shareholderVerifed and backingBean.managedBean.poUser}" />
+				blocked="#{backingBean.managedBean.poUser ? backingBean.managedBean.poSecReview.shareholderVerifed : (backingBean.managedBean.approverUser ? backingBean.managedBean.apprvrSecReview.shareholderVerifed : false)}" />
 			<p:dataTable var="shareBean"
 				value="#{backingBean.managedBean.smapplShareHolders}"
 				selection="#{backingBean.managedBean.selectedShareHolders}"

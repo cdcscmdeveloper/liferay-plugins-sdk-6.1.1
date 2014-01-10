@@ -25,7 +25,13 @@
 			</p:outputPanel>
 			<p:outputPanel rendered="#{backingBean.managedBean.approverUser}">
 				<tr>
-					<td width="10px"><p:selectBooleanCheckbox /></td>
+					<td width="10px" style="padding-right: 2px;"><p:selectBooleanCheckbox
+							value="#{backingBean.managedBean.apprvrSecReview.categoryVerified}"
+							id="apprCatCodeVer">
+							<p:ajax update=":form:tt:catCodeInfPan,:form:revPanHdr"
+								event="change"
+								listener="#{backingBean.changeVerifySection(backingBean.managedBean.apprvrSecReview.categoryVerified)}" />
+						</p:selectBooleanCheckbox></td>
 					<td valign="top"><h:outputText
 							value=" Section Verified By Approver: "
 							title="For Approver to highlight the verified section " /></td>
@@ -36,7 +42,7 @@
 		<p:panel id="catCodeInfPan">
 			<p:blockUI block=":form:tt:catCodeInfPan" widgetVar="buiPoCatCode"
 				id="poCatCodeBlc"
-				blocked="#{backingBean.managedBean.poSecReview.categoryVerified and backingBean.managedBean.poUser}" />
+				blocked="#{backingBean.managedBean.poUser ? backingBean.managedBean.poSecReview.categoryVerified : (backingBean.managedBean.approverUser ? backingBean.managedBean.apprvrSecReview.categoryVerified : false)}" />
 			<p:dataTable var="catBean"
 				value="#{backingBean.managedBean.smAppl.smSupplierCategories}"
 				rowKey="#{catBean.supplierCategoryId}" rowIndexVar="index"

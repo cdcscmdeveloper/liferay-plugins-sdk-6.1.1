@@ -25,7 +25,13 @@
 			</p:outputPanel>
 			<p:outputPanel rendered="#{backingBean.managedBean.approverUser}">
 				<tr>
-					<td width="10px"><p:selectBooleanCheckbox /></td>
+					<td width="10px" style="padding-right: 2px;"><p:selectBooleanCheckbox
+							value="#{backingBean.managedBean.apprvrSecReview.branchVerified}"
+							id="apprBrcVer">
+							<p:ajax update=":form:tt:brnInfPan,:form:revPanHdr"
+								event="change"
+								listener="#{backingBean.changeVerifySection(backingBean.managedBean.apprvrSecReview.branchVerified)}" />
+						</p:selectBooleanCheckbox></td>
 					<td valign="top"><h:outputText
 							value=" Section Verified By Approver: "
 							title="For Approver to highlight the verified section " /></td>
@@ -37,7 +43,7 @@
 		<p:panel id="brnInfPan">
 			<p:blockUI block=":form:tt:brnInfPan" widgetVar="buiPoBrn"
 				id="poBrnBlc"
-				blocked="#{backingBean.managedBean.poSecReview.branchVerified and backingBean.managedBean.poUser}" />
+				blocked="#{backingBean.managedBean.poUser ? backingBean.managedBean.poSecReview.branchVerified : (backingBean.managedBean.approverUser ? backingBean.managedBean.apprvrSecReview.branchVerified : false)}" />
 			<p:dataTable var="branchBean" id="dt"
 				value="#{backingBean.managedBean.smAppl.smSupplierBranches}"
 				selection="#{backingBean.managedBean.selectedBranches}"

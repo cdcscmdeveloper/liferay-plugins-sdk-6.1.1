@@ -24,7 +24,13 @@
 			</p:outputPanel>
 			<p:outputPanel rendered="#{backingBean.managedBean.approverUser}">
 				<tr>
-					<td width="10px"><p:selectBooleanCheckbox /></td>
+					<td width="10px" style="padding-right: 2px;"><p:selectBooleanCheckbox
+							value="#{backingBean.managedBean.apprvrSecReview.staffVerified}"
+							id="apprStfVer">
+							<p:ajax update=":form:tt:stfInfPan,:form:revPanHdr"
+								event="change"
+								listener="#{backingBean.changeVerifySection(backingBean.managedBean.apprvrSecReview.staffVerified)}" />
+						</p:selectBooleanCheckbox></td>
 					<td valign="top"><h:outputText
 							value=" Section Verified By Approver: "
 							title="For Approver to highlight the verified section " /></td>
@@ -33,8 +39,9 @@
 		</table>
 		<br />
 		<p:panel id="stfInfPan">
-			<p:blockUI block=":form:tt:stfInfPan" widgetVar="buiPoStf" id="poStfBlc"
-				blocked="#{backingBean.managedBean.poSecReview.staffVerified and backingBean.managedBean.poUser}" />
+			<p:blockUI block=":form:tt:stfInfPan" widgetVar="buiPoStf"
+				id="poStfBlc"
+				blocked="#{backingBean.managedBean.poUser ? backingBean.managedBean.poSecReview.staffVerified : (backingBean.managedBean.approverUser ? backingBean.managedBean.apprvrSecReview.staffVerified : false)}" />
 			<p:dataGrid value="#{backingBean.managedBean.smAppl.smStaffTotals}"
 				var="staff" columns="1">
 

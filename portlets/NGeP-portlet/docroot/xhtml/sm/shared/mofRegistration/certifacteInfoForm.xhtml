@@ -25,7 +25,13 @@
 			</p:outputPanel>
 			<p:outputPanel rendered="#{backingBean.managedBean.approverUser}">
 				<tr>
-					<td width="10px"><p:selectBooleanCheckbox /></td>
+					<td width="10px" style="padding-right: 2px;"><p:selectBooleanCheckbox
+							value="#{backingBean.managedBean.apprvrSecReview.certVerified}"
+							id="apprCertVer">
+							<p:ajax update=":form:tt:certInfPan,:form:revPanHdr"
+								event="change"
+								listener="#{backingBean.changeVerifySection(backingBean.managedBean.apprvrSecReview.certVerified)}" />
+						</p:selectBooleanCheckbox></td>
 					<td valign="top"><h:outputText
 							value=" Section Verified By Approver: "
 							title="For Approver to highlight the verified section " /></td>
@@ -36,7 +42,7 @@
 		<p:panel id="certInfPan">
 			<p:blockUI block=":form:tt:certInfPan" widgetVar="buiPoCert"
 				id="poCertBlc"
-				blocked="#{backingBean.managedBean.poSecReview.certVerified and backingBean.managedBean.poUser}" />
+				blocked="#{backingBean.managedBean.poUser ? backingBean.managedBean.poSecReview.certVerified : (backingBean.managedBean.approverUser ? backingBean.managedBean.apprvrSecReview.certVerified : false)}" />
 
 			<p:dataTable var="certBean"
 				value="#{backingBean.managedBean.smAppl.smSupplierCerts}"

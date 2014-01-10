@@ -17,7 +17,8 @@
 		<p:outputPanel
 			rendered="#{backingBean.managedBean.approverUser or backingBean.managedBean.poUser}"
 			id="revPanHdr">
-			<ui:include src="applyBumiReviewHeaderPage.xhtml" />
+			<ui:include
+				src="/xhtml/sm/shared/mofRegistration/applicationReviewHeaderPage.xhtml" />
 		</p:outputPanel>
 		<p:remoteCommand name="updateBlockUI" update="@(.ui-panel)" />
 		<p:tabView id="tt" orientation="left" widgetVar="tt"

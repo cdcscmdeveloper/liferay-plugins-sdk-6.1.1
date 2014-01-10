@@ -24,7 +24,13 @@
 			</p:outputPanel>
 			<p:outputPanel rendered="#{backingBean.managedBean.approverUser}">
 				<tr>
-					<td width="10px"><p:selectBooleanCheckbox /></td>
+					<td width="10px" style="padding-right: 2px;"><p:selectBooleanCheckbox
+							value="#{backingBean.managedBean.apprvrSecReview.trnsNetworkVerified}"
+							id="apprTrxVer">
+							<p:ajax update=":form:tt:trxInfPan,:form:revPanHdr"
+								event="change"
+								listener="#{backingBean.changeVerifySection(backingBean.managedBean.apprvrSecReview.trnsNetworkVerified)}" />
+						</p:selectBooleanCheckbox></td>
 					<td valign="top"><h:outputText
 							value=" Section Verified By Approver: "
 							title="For Approver to highlight the verified section " /></td>
@@ -35,7 +41,7 @@
 		<p:panel id="trxInfPan">
 			<p:blockUI block=":form:tt:trxInfPan" widgetVar="buiPoTrx"
 				id="poTrxBlc"
-				blocked="#{backingBean.managedBean.poSecReview.trnsNetworkVerified and backingBean.managedBean.poUser}" />
+				blocked="#{backingBean.managedBean.poUser ? backingBean.managedBean.poSecReview.trnsNetworkVerified : (backingBean.managedBean.approverUser ? backingBean.managedBean.apprvrSecReview.trnsNetworkVerified : false)}" />
 
 			<table style="width: 100%">
 

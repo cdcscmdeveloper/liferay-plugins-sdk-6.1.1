@@ -92,7 +92,13 @@
 			</p:outputPanel>
 			<p:outputPanel rendered="#{backingBean.managedBean.approverUser}">
 				<tr>
-					<td width="10px"><p:selectBooleanCheckbox /></td>
+					<td width="10px" style="padding-right: 2px;"><p:selectBooleanCheckbox
+							value="#{backingBean.managedBean.apprvrSecReview.personnelVerified}"
+							id="apprPersVer">
+							<p:ajax update=":form:tt:persInfPan,:form:revPanHdr"
+								event="change"
+								listener="#{backingBean.changeVerifySection(backingBean.managedBean.apprvrSecReview.personnelVerified)}" />
+						</p:selectBooleanCheckbox></td>
 					<td valign="top"><h:outputText
 							value=" Section Verified By Approver: "
 							title="For Approver to highlight the verified section " /></td>
@@ -103,7 +109,7 @@
 		<p:panel id="persInfPan">
 			<p:blockUI block=":form:tt:persInfPan" widgetVar="buiPoPers"
 				id="poPersBlc"
-				blocked="#{backingBean.managedBean.poSecReview.personnelVerified and backingBean.managedBean.poUser}" />
+				blocked="#{backingBean.managedBean.poUser ? backingBean.managedBean.poSecReview.personnelVerified : (backingBean.managedBean.approverUser ? backingBean.managedBean.apprvrSecReview.personnelVerified : false)}" />
 			<p:dataTable var="person"
 				value="#{backingBean.managedBean.smAppl.smPersonnels}"
 				selection="#{backingBean.managedBean.selectedPersonnels}"

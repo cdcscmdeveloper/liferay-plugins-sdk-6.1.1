@@ -25,7 +25,13 @@
 			</p:outputPanel>
 			<p:outputPanel rendered="#{backingBean.managedBean.approverUser}">
 				<tr>
-					<td width="10px"><p:selectBooleanCheckbox /></td>
+					<td width="10px" style="padding-right: 2px;"><p:selectBooleanCheckbox
+							value="#{backingBean.managedBean.apprvrSecReview.experienceVerified}"
+							id="apprConsVer">
+							<p:ajax update=":form:tt:consInfPan,:form:revPanHdr"
+								event="change"
+								listener="#{backingBean.changeVerifySection(backingBean.managedBean.apprvrSecReview.experienceVerified)}" />
+						</p:selectBooleanCheckbox></td>
 					<td valign="top"><h:outputText
 							value=" Section Verified By Approver: "
 							title="For Approver to highlight the verified section " /></td>
@@ -36,7 +42,7 @@
 		<p:panel id="consInfPan">
 			<p:blockUI block=":form:tt:consInfPan" widgetVar="buiPoCons"
 				id="poConsBlc"
-				blocked="#{backingBean.managedBean.poSecReview.experienceVerified and backingBean.managedBean.poUser}" />
+				blocked="#{backingBean.managedBean.poUser ? backingBean.managedBean.poSecReview.experienceVerified : (backingBean.managedBean.approverUser ? backingBean.managedBean.apprvrSecReview.experienceVerified : false)}" />
 			<p:dataTable var="consBean"
 				value="#{backingBean.managedBean.smAppl.smProjectExperiences}"
 				selection="#{backingBean.managedBean.selectedConstProjs}"
@@ -186,8 +192,8 @@
 						<tr>
 							<td><p:outputLabel value="* Sub Category" /></td>
 							<td><p:selectOneMenu
-									value="#{backingBean.managedBean.selectedChildCat}" id="conslChild"
-									style="width: 207px;margin-bottom: 5px;">
+									value="#{backingBean.managedBean.selectedChildCat}"
+									id="conslChild" style="width: 207px;margin-bottom: 5px;">
 									<f:selectItem itemLabel=" -- Select  -- " itemValue="" />
 									<f:selectItems
 										value="#{backingBean.managedBean.selectedCategory.pmCategoryL1.pmCategoryL2s}"

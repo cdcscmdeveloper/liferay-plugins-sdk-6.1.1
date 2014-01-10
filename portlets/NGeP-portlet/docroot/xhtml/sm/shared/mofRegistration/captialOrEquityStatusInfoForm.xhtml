@@ -24,7 +24,13 @@
 			</p:outputPanel>
 			<p:outputPanel rendered="#{backingBean.managedBean.approverUser}">
 				<tr>
-					<td width="10px"><p:selectBooleanCheckbox /></td>
+					<td width="10px" style="padding-right: 2px;"><p:selectBooleanCheckbox
+							value="#{backingBean.managedBean.apprvrSecReview.captialVerified}"
+							id="apprCapVer">
+							<p:ajax update=":form:tt:capInfPan,:form:revPanHdr"
+								event="change"
+								listener="#{backingBean.changeVerifySection(backingBean.managedBean.apprvrSecReview.captialVerified)}" />
+						</p:selectBooleanCheckbox></td>
 					<td valign="top"><h:outputText
 							value=" Section Verified By Approver: "
 							title="For Approver to highlight the verified section " /></td>
@@ -35,7 +41,7 @@
 		<p:panel id="capInfPan">
 			<p:blockUI block=":form:tt:capInfPan" widgetVar="buiPoCap"
 				id="poCapBlc"
-				blocked="#{backingBean.managedBean.poSecReview.captialVerified and backingBean.managedBean.poUser}" />
+				blocked="#{backingBean.managedBean.poUser ? backingBean.managedBean.poSecReview.captialVerified : (backingBean.managedBean.approverUser ? backingBean.managedBean.apprvrSecReview.captialVerified : false)}" />
 			<table style="width: 100%">
 				<tr>
 					<td><p:outputLabel value="* Authorized Capital (RM.)" /></td>

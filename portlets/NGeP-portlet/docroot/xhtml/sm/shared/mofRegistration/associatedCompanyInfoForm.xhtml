@@ -26,7 +26,13 @@
 			</p:outputPanel>
 			<p:outputPanel rendered="#{backingBean.managedBean.approverUser}">
 				<tr>
-					<td width="10px"><p:selectBooleanCheckbox /></td>
+					<td width="10px" style="padding-right: 2px;"><p:selectBooleanCheckbox
+							value="#{backingBean.managedBean.apprvrSecReview.associateVerified}"
+							id="apprAssocVer">
+							<p:ajax update=":form:tt:assocInfPan,:form:revPanHdr"
+								event="change"
+								listener="#{backingBean.changeVerifySection(backingBean.managedBean.apprvrSecReview.associateVerified)}" />
+						</p:selectBooleanCheckbox></td>
 					<td valign="top"><h:outputText
 							value=" Section Verified By Approver: "
 							title="For Approver to highlight the verified section " /></td>
@@ -37,7 +43,7 @@
 		<p:panel id="assocInfPan">
 			<p:blockUI block=":form:tt:assocInfPan" widgetVar="buiPoAssoc"
 				id="poAssocBlc"
-				blocked="#{backingBean.managedBean.poSecReview.associateVerified and backingBean.managedBean.poUser}" />
+				blocked="#{backingBean.managedBean.poUser ? backingBean.managedBean.poSecReview.associateVerified : (backingBean.managedBean.approverUser ? backingBean.managedBean.apprvrSecReview.associateVerified : false)}" />
 
 			<p:dataTable var="assocBean"
 				value="#{backingBean.managedBean.smAppl.smAssociateCompanies}"

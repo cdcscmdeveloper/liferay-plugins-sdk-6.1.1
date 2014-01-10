@@ -12,7 +12,16 @@
 				</h6></td>
 			<td>
 				<h6>
-					<h:outputText value="Apply Bumiputera Status" />
+					<h:outputText value="#{lbl['lbl.sm.newMofAppln']}"
+						rendered="#{backingBean.managedBean.smAppl.applType eq 'N'}" />
+					<h:outputText value="Apply Bumiputera Status"
+						rendered="#{backingBean.managedBean.smAppl.applType eq 'B'}" />
+					<h:outputText value="Apply Additional Categories"
+						rendered="#{backingBean.managedBean.smAppl.applType eq 'A'}" />
+					<h:outputText value="Renew MOF Account"
+						rendered="#{backingBean.managedBean.smAppl.applType eq 'R'}" />
+					<h:outputText value="Update MOF Account Details"
+						rendered="#{backingBean.managedBean.smAppl.applType eq 'U'}" />
 
 				</h6>
 			</td>
@@ -53,6 +62,24 @@
 
 			</td>
 		</tr>
+		<c:if test="#{backingBean.managedBean.approverUser}">
+			<tr>
+
+				<td>
+					<h6 style="color: blue;">
+						<h:outputText value="PO Recommendation" />
+					</h6>
+				</td>
+				<td>
+					<h6>
+						<h:outputText
+							value="#{backingBean.managedBean.poSecReview.recommendation}" />
+					</h6>
+
+				</td>
+
+			</tr>
+		</c:if>
 	</table>
 	<br />
 	<table style="width: 250px;">
@@ -71,8 +98,10 @@
 		</p:outputPanel>
 		<p:outputPanel rendered="#{backingBean.managedBean.approverUser}">
 			<tr>
-				<td width="10px" style="padding-right: 2px;"><p:selectBooleanCheckbox>
-						<p:ajax update=":form" event="change" />
+				<td width="10px" style="padding-right: 2px;"><p:selectBooleanCheckbox
+						value="#{backingBean.managedBean.apprvrSecReview.verifiedAll}">
+						<p:ajax update=":form" event="change"
+							listener="#{backingBean.changeVerifyAll(backingBean.managedBean.apprvrSecReview.verifiedAll)}" />
 					</p:selectBooleanCheckbox></td>
 				<td valign="top"><h:outputText
 						value=" Application Verified By Approver"
