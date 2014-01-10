@@ -3357,7 +3357,7 @@
 	 </portlet>
 	 <portlet>
 		<portlet-name>pmUserprofiles</portlet-name>
-		<display-name>Userprofiles</display-name>
+		<display-name>User Profile</display-name>
 		<portlet-class>org.portletfaces.bridge.GenericFacesPortlet</portlet-class>
 		<init-param>
 			<name>javax.portlet.faces.defaultViewId.view</name>
@@ -3369,8 +3369,8 @@
 			<portlet-mode>view</portlet-mode>
 		</supports>
 		<portlet-info>
-			<title>Userprofile</title>
-			<short-title>Userprofile</short-title>
+			<title>User Profile</title>
+			<short-title>User Profile</short-title>
 			<keywords></keywords>
 		</portlet-info>
 		<security-role-ref>
@@ -3493,8 +3493,8 @@
 	  </portlet>
 	  
 	  <portlet>
-	 	<portlet-name>Current BiddingList</portlet-name>
-	 	<display-name>Current BiddingList</display-name>
+	 	<portlet-name>Current Bidding List</portlet-name>
+	 	<display-name>Current Bidding List</display-name>
 	 	<portlet-class>
 	 		org.portletfaces.bridge.GenericFacesPortlet
 	 	</portlet-class>
@@ -3510,8 +3510,8 @@
 	 		<portlet-mode>view</portlet-mode>
 	 	</supports>
 	 	<portlet-info>
-	 		<title>Current BiddingList</title>
-	 		<short-title>Current BiddingList</short-title>
+	 		<title>Current Bidding List</title>
+	 		<short-title>Current Bidding List</short-title>
 	 		<keywords></keywords>
 	 	</portlet-info>
 	 	<security-role-ref>
@@ -3530,8 +3530,8 @@
 	 
 	 
 	 <portlet>
-	 	<portlet-name>Future BiddingList</portlet-name>
-	 	<display-name>Future BiddingList</display-name>
+	 	<portlet-name>Future Bidding List</portlet-name>
+	 	<display-name>Future Bidding List</display-name>
 	 	<portlet-class>
 	 		org.portletfaces.bridge.GenericFacesPortlet
 	 	</portlet-class>
@@ -3547,8 +3547,8 @@
 	 		<portlet-mode>view</portlet-mode>
 	 	</supports>
 	 	<portlet-info>
-	 		<title>Future BiddingList</title>
-	 		<short-title>Future BiddingList</short-title>
+	 		<title>Future Bidding List</title>
+	 		<short-title>Future Bidding List</short-title>
 	 		<keywords></keywords>
 	 	</portlet-info>
 	 	<security-role-ref>

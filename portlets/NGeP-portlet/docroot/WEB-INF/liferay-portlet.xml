@@ -1028,7 +1028,7 @@
 		<css-class-wrapper>welcome-portlet</css-class-wrapper>
 	</portlet>
 	<portlet>
-		<portlet-name>Current BiddingList</portlet-name>
+		<portlet-name>Current Bidding List</portlet-name>
 		<icon>/icon.png</icon>
 		<instanceable>false</instanceable>
 		<header-portlet-css>/css/main.css</header-portlet-css>
@@ -1036,11 +1036,11 @@
 			/js/main.js
 		</footer-portlet-javascript>
 		<css-class-wrapper>
-			Current BiddingList-portlet
+			Current Bidding List-portlet
 		</css-class-wrapper>
 	</portlet>
 	<portlet>
-		<portlet-name>Future BiddingList</portlet-name>
+		<portlet-name>Future Bidding List</portlet-name>
 		<icon>/icon.png</icon>
 		<instanceable>false</instanceable>
 		<header-portlet-css>/css/main.css</header-portlet-css>
@@ -1048,7 +1048,7 @@
 			/js/main.js
 		</footer-portlet-javascript>
 		<css-class-wrapper>
-			Future BiddingList-portlet
+			Future Bidding List-portlet
 		</css-class-wrapper>
 	</portlet>
 	<role-mapper>
