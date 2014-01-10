@@ -75,6 +75,9 @@
            <portlet id="scUserprofiles" />
             <portlet id="Supplier Finalization"></portlet>
            <portlet id="Pre-Supplier Finalization"></portlet>
+            <portlet id="Current BiddingList"></portlet>
+             <portlet id="Future BiddingList"></portlet>
+           
 		</category>
 
 		<!-- Fulfilment Start Added by Giri -->

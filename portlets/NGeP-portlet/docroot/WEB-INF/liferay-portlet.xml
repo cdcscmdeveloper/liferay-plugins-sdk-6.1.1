@@ -1027,6 +1027,30 @@
 		</footer-portlet-javascript>
 		<css-class-wrapper>welcome-portlet</css-class-wrapper>
 	</portlet>
+	<portlet>
+		<portlet-name>Current BiddingList</portlet-name>
+		<icon>/icon.png</icon>
+		<instanceable>false</instanceable>
+		<header-portlet-css>/css/main.css</header-portlet-css>
+		<footer-portlet-javascript>
+			/js/main.js
+		</footer-portlet-javascript>
+		<css-class-wrapper>
+			Current BiddingList-portlet
+		</css-class-wrapper>
+	</portlet>
+	<portlet>
+		<portlet-name>Future BiddingList</portlet-name>
+		<icon>/icon.png</icon>
+		<instanceable>false</instanceable>
+		<header-portlet-css>/css/main.css</header-portlet-css>
+		<footer-portlet-javascript>
+			/js/main.js
+		</footer-portlet-javascript>
+		<css-class-wrapper>
+			Future BiddingList-portlet
+		</css-class-wrapper>
+	</portlet>
 	<role-mapper>
 		<role-name>administrator</role-name>
 		<role-link>Administrator</role-link>
