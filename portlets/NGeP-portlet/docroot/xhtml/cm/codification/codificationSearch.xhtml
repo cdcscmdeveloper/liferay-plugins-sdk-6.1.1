@@ -9,25 +9,23 @@
 
 
 	<h:panelGroup id="cmUNSPSCsearchID">
+		<h:panelGroup rendered="#{unspscCodeBackingBean.supplierUser}">
 			<table style="width: 100%">
 				<tr>
 					<td><div class="navDiv" id="menuDiv" align="center">
 							<ul class="menu-text" style="margin: 5px 0 0 -50px;">
-								<li style="width:210px;">
-									<h:outputText value="Choose UNSPSC" />
-								</li>
+								<li style="width: 210px;"><h:outputText
+										value="Choose UNSPSC" /></li>
 
-								<li style="width:210px;">
-									<h:outputText value="Choose Product" />
-								</li>
-				
-								<li style="width:210px;">
-									<h:outputText value="Complete Product Details" />
-								</li>
+								<li style="width: 210px;"><h:outputText
+										value="Choose Product" /></li>
+
+								<li style="width: 210px;"><h:outputText
+										value="Complete Product Details" /></li>
 							</ul>
 							<ul id="tripMeter" class="menu-line">
 								<li class="red-dot" style="margin-right: 200px;" />
-								<li class="black-dot" style="margin-right: 200px;"  />
+								<li class="black-dot" style="margin-right: 200px;" />
 								<li class="black-dot" />
 
 							</ul>
@@ -35,7 +33,8 @@
 					<td></td>
 				</tr>
 			</table>
-			<br />
+		</h:panelGroup>
+		<br />
 		<p:panel header="SEARCH" toggleable="true">
 			<table style="width: 100%;">
 				<tr>
@@ -54,7 +53,7 @@
 
 		<div style="text-align: right;">
 			<p:commandButton icon="ui-icon-search" value="Search"
-				action="#{codificationBackingBean.unspscSearch}" 
+				action="#{codificationBackingBean.unspscSearch}"
 				update="cmUNSPSCsearchID" />
 
 		</div>
@@ -65,8 +64,8 @@
 		<p:panel header="SEARCH RESULTS" toggleable="true">
 
 			<p:dataTable id="unspscTableID" lazy="true"
-				value="#{codificationBackingBean.searchDataModel}" var="unspscObj"	
-				width="100%" >
+				value="#{codificationBackingBean.searchDataModel}" var="unspscObj"
+				width="100%">
 
 
 
@@ -84,7 +83,9 @@
 							#{unspscObj.unspscCode}
 							</p:commandLink>
 
-					<p:commandLink action="#{codificationBackingBean.unspscPopUpSearch(unspscObj)}" onclick="unspscPopUp.show()" update=":form:codificationPopUpId"
+					<p:commandLink
+						action="#{codificationBackingBean.unspscPopUpSearch(unspscObj)}"
+						onclick="unspscPopUp.show()" update=":form:codificationPopUpId"
 						rendered="#{unspscObj.unspscLevel ne 3}">
 							#{unspscObj.unspscCode}
 							</p:commandLink>
@@ -104,7 +105,7 @@
 
 		<p:dialog id="unspscPopUp" widgetVar="unspscPopUp" modal="true"
 			header="Codification Search" width="800" height="500">
-	
+
 			<ui:include src="codificationSearchPopUp.xhtml"></ui:include>
 
 		</p:dialog>
