@@ -176,7 +176,7 @@ $theme.include($body_top_include)
 	<header>
 	
 	<div class="sticky">
-		<img src="$images_folder/general/QRep.png" /><p class="pqrcode">Please scan QR Code for mobile devices.</p>
+		<img src="$images_folder/general/QRep.png" /><p class="pqrcode">SILA IMBAS KOD QR BAGI PAPARAN MUDAH ALIH.</p>
 		<div id="close"><img src="$images_folder/general/close.png" /></div>
 	</div>
 	
@@ -216,7 +216,7 @@ $theme.include($body_top_include)
                         </li>
                     	
                     	<li class="btn-login-register divider-no-padding-right">
-                    		<a class="btn-login-register" href="http://ngepdevwps01.ngep.com:8080/web/dashboard/dashboard" id="sign-in" rel="nofollow" target="_blank">Login or Register</a>	
+                    		<a class="btn-login-register" href="$sign_in_url" id="sign-in" rel="nofollow" target="_blank">Login or Register</a>	
                     	</li>
                     
                     </ul>
