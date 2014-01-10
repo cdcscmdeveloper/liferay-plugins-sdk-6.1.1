@@ -53,28 +53,7 @@
 		<br />
 		<br />
 	</p:panel>
-	
-	<p:panel header="Search Results" toggleable="true">
-		<p:dataTable value="#{searchQtnTenderBB.managedBean.qtnTenders}"
-			var="tenders" resizableColumns="true">
-
-			<p:column headerText="Document No." >              
-				<p:commandLink  action="viewbiddingscreen.xhtml?faces-redirect=true">
-					<h:outputText value="QT00001"  style="width:100%"/>  
-				</p:commandLink> 
-			</p:column>
-			<p:column headerText="Bid No">
-				<h:outputText value="B00005" />
-			</p:column>
-			<p:column headerText="Bid Title">
-				<h:outputText value="Purchase Computer Server" />
-			</p:column>
-			<p:column headerText="#{lbl['lbl.so.crtdt']}">
-				<h:outputText value="#{biddingBB.managedBean.createdDate}" />
-			</p:column>
-			<p:column headerText="Created By">
-				<h:outputText value="#{biddingBB.managedBean.createdBy}" />
-			</p:column>
-		</p:dataTable>
-     </p:panel>
+	<p:panel header="SearchResults">
+	<ui:include src="/xhtml/ss/bidding/bidResults.xhtml"></ui:include>
+	</p:panel>
 </ui:composition>   
