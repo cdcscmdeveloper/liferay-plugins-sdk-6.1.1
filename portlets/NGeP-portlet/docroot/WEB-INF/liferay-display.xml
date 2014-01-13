@@ -72,11 +72,11 @@
             <portlet id="scTemplateDocument" />
            <portlet id="scBriefingSiteVisitAttendance" />
             <portlet id="scCommitteMaintance" />
-           <portlet id="scUserprofiles" />
+          
             <portlet id="Supplier Finalization"></portlet>
            <portlet id="Pre-Supplier Finalization"></portlet>
-            <portlet id="Current Bidding List"></portlet>
-            <portlet id="Future Bidding List"></portlet>
+            <portlet id="Bidding List"></portlet>
+          
            
 		</category>
 
