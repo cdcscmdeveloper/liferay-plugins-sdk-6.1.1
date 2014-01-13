@@ -12,6 +12,27 @@ xmlns:c="http://java.sun.com/jsp/jstl/core"
 xmlns:tp="http://java.sun.com/jsf/composite/ep"
 >
 	<ui:define name="contentSection">
+		<!-- Allocated Budget -->
+		<p:panel id="pGosodoDisburse" toggleable="true" header="#{lbl['lbl.pp.budget.title.allocated.gosodo']}">
+			<p:dataTable id="dtGosodoDisburse" rowIndexVar="rowIndex" var=""
+				emptyMessage="#{lbl['lbl.pp.no.record.found']}"
+				value="">
 
+				<p:column headerText="#{lbl['lbl.pp.gosodo.code']}">  
+					
+	           	</p:column>  
+	           	<p:column headerText="#{lbl['lbl.pp.gosodo.name']}">  
+	          		
+	           	</p:column>
+	           	<p:column headerText="#{lbl['lbl.pp.goso.balance.amount']}">  
+	          		
+	           	</p:column>
+	            <p:column headerText="#{lbl['lbl.pp.gosodo.used.amount']}">  
+	           		
+	            </p:column>
+			</p:dataTable>
+		</p:panel>
+		
+		
 	</ui:define>
 </ui:composition>
