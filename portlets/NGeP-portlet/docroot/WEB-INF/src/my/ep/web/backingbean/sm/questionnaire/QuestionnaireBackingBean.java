@@ -62,7 +62,7 @@ public class QuestionnaireBackingBean extends
 		List<SmSupplierAnswer> smSuppAnswerLs = new ArrayList<SmSupplierAnswer>();
 		for (SmQuestion smQues : resDTO.getSmQuestionList()) {
 			SmSupplierAnswer smSuppAns = new SmSupplierAnswer();
-			smSuppAns.setSmSupplier(this.getManagedBean().getSmSupp());
+			//smSuppAns.setSmSupplier(this.getManagedBean().getSmSupp());
 			smSuppAns.setSmQuestion(smQues);
 			smSuppAns.setSmAnswer(new SmAnswer());
 			smSuppAnswerLs.add(smSuppAns);
