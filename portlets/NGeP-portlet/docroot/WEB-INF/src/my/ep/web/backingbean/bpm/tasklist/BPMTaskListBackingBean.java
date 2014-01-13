@@ -28,6 +28,11 @@ import my.ep.web.util.lookupservice.BusinessDelegate;
 
 import org.apache.log4j.Logger;
 
+import com.liferay.portal.kernel.exception.PortalException;
+import com.liferay.portal.kernel.exception.SystemException;
+import com.liferay.portal.kernel.util.WebKeys;
+import com.liferay.portal.theme.ThemeDisplay;
+
 @ManagedBean(name = "bpmTasklistBackingBean")
 @RequestScoped
 public class BPMTaskListBackingBean extends
@@ -166,7 +171,7 @@ public class BPMTaskListBackingBean extends
 		return responseDTO;
 	}
 
-	public void navigateToURL() {
+	public void navigateToURL() throws PortalException, SystemException {
 
 		IBpmSO bpmSO = (IBpmSO) EpBpmBusinessDelegate.getInstance()
 				.getServiceObject(IBpmSO.class);
@@ -237,10 +242,19 @@ public class BPMTaskListBackingBean extends
 				url = "procurement-board";
 			}
 			
+			FacesScopes facesScope = new FacesScopes();
+			ThemeDisplay themeDisplay = (ThemeDisplay)facesScope.getRequestScope(WebKeys.THEME_DISPLAY);
+			
+			System.out.println("getURLCurrent"+themeDisplay.getURLCurrent());
+			
+			String commonUrl = themeDisplay.getURLCurrent().substring(0, themeDisplay.getURLCurrent().indexOf(themeDisplay.getLayout().getGroup().getFriendlyURL())+themeDisplay.getLayout().getGroup().getFriendlyURL().length());
+			System.out.println("commonUrl"+commonUrl);
+			
+			
 			ExternalContext externalContext = FacesContext.getCurrentInstance().getExternalContext();
 
 			//externalContext.redirect("/web/guest/" +url +"?taskId="+taskId);
-			externalContext.redirect("/web/dashboard/"+url+"?taskId="+taskId);
+			externalContext.redirect(commonUrl+"/" + url+"?taskId="+taskId);
 			//externalContext.redirect("http://localhost:8080/web/guest/" +url +"?taskId="+taskId);
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
