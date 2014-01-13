@@ -80,11 +80,14 @@
 
 				<tr style="height: 30px;">
 
-					<td><p:outputLabel value="#{lbl['lbl.cm.payment.term']}" /></td>
-					<td><p:inputText
-							value="#{catalogueBackingBean.managedBean.selectedMaintainItem.paymentTerms}"
-							size="26" /> <p:inputText style="margin-left: 2px;" size="3"
-							value="days" /></td>
+					<td><p:outputLabel
+							value="#{lbl['lbl.cm.unit.of.measurement']}" /></td>
+					<td><ac:lov id="uomLovId" lovId="PM_UOM" size="26"
+							headerText="UOM Lov" update=":form:addCatDet"
+							saveObject="catalogueBackingBean.managedBean.selectedMaintainItem.pmUom"
+							value="#{catalogueBackingBean.managedBean.selectedMaintainItem.pmUom.uomName}"
+							conditionField="recordStatus^1">
+						</ac:lov> <ac:lovPopup /></td>
 					<td><p:outputLabel value="#{lbl['lbl.cm.sku']}" /></td>
 					<td><p:inputText size="35"
 							value="#{catalogueBackingBean.managedBean.selectedMaintainItem.skuNumber}"></p:inputText></td>
@@ -103,18 +106,12 @@
 
 				<tr style="height: 30px;">
 
-					<td><p:outputLabel
-							value="#{lbl['lbl.cm.unit.of.measurement']}" /></td>
-					<td><ac:lov id="uomLovId" lovId="PM_UOM" size="26"
-							headerText="UOM Lov" update=":form:addCatDet"
-							saveObject="catalogueBackingBean.managedBean.selectedMaintainItem.pmUom"
-							value="#{catalogueBackingBean.managedBean.selectedMaintainItem.pmUom.uomName}"
-							conditionField="recordStatus^1">
-						</ac:lov> <ac:lovPopup /></td>
 					<td><p:outputLabel value="#{lbl['lbl.cm.lead.time']}" /></td>
 					<td><p:inputText size="26"
 							value="#{catalogueBackingBean.managedBean.selectedMaintainItem.leadTime}" />
 						<p:inputText style="margin-left: 2px;" size="3" value="days" /></td>
+					<td></td>
+					<td></td>
 					<td></td>
 				</tr>
 
@@ -169,7 +166,7 @@
 						<ui:include src="zonalPromotionPricingTab.xhtml"></ui:include>
 
 					</p:tab>
-					
+
 					<p:tab title="Zonal Tier">
 						<ui:include src="zonalTierPricingTab.xhtml"></ui:include>
 
@@ -186,7 +183,7 @@
 
 			<p:tab id="remarkId" title="Reject Reason"
 				rendered="#{unspscCodeBackingBean.catalogueAdmin or unspscCodeBackingBean.supplierUser or unspscCodeBackingBean.supplierAdmin}">
-				
+
 				<ui:include src="remark.xhtml"></ui:include>
 
 			</p:tab>
