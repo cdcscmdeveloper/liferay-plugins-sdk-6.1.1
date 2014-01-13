@@ -12,7 +12,7 @@
 
 	<p:outputPanel id="cmZonalPromotionPricings">
 		<p:dataTable id="cmZonalPromotionPricingsId"
-			value="#{supplierItem.cmZonalPromotionPricings}"
+			value="#{catalogueBackingBean.managedBean.supplierItemObj.cmZonalPromotionPricings}"
 			var="zPromotion" rowKey="#{zPromotion}"  rowIndexVar="rowIndex"
 			width="100%" >
 

@@ -13,7 +13,7 @@
 
 	<p:outputPanel id="priceTierPageID">
 		<p:dataTable id="pricingTierID"
-			value="#{supplierItem.cmTierPricings}" width="100%"
+			value="#{catalogueBackingBean.managedBean.supplierItemObj.cmTierPricings}" width="100%"
 			var="price">
 
 			<ac:paginator for="pricingTierID"></ac:paginator>

@@ -13,7 +13,7 @@
 
 	<p:outputPanel id="cmZonalPromotionTierPricings">
 		<p:dataTable id="cmZonalPromotionTierPricingsId"
-			value="#{supplierItem.cmZonalPromotionTierPricings}"
+			value="#{catalogueBackingBean.managedBean.supplierItemObj.cmZonalPromotionTierPricings}"
 			var="tier" rowKey="#{tier}" rowIndexVar="rowIndex" width="100%">
 
 			<ac:paginator for="cmZonalPromotionTierPricingsId"></ac:paginator>
