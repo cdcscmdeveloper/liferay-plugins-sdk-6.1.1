@@ -4,10 +4,30 @@
 	xmlns:ui="http://java.sun.com/jsf/facelets"
 	xmlns:p="http://primefaces.org/ui"
 	xmlns:c="http://java.sun.com/jsp/jstl/core">
+	<h:panelGroup>
 
-	<p:panel toggleable="true">
+
+		<div style="text-align: left; float: right;">
+			<p:selectOneMenu value="#{bpmTasklistBackingBean.managedBean.viewBy}">
+				<f:selectItem itemLabel="Current Bidding List" itemValue="CB"></f:selectItem>
+				<f:selectItem itemLabel="Upcoming Bidding List" itemValue="UB"></f:selectItem>
+
+			</p:selectOneMenu>
+		</div>
+		
+		<div style="text-align: left; float: left;">
+			<p:commandButton action="#{bpmTasklistBackingBean.refreshTaskList}"
+				value="#{lbl['lbl.bpm.refresh']}" icon="ui-icon-reset" ></p:commandButton>
+		</div>
+		
+		<div class="clear"></div>
+		
 		<p:dataTable value="#{searchQtnTenderBB.managedBean.qtnTenders}"
-			var="tenders" resizableColumns="true">
+			var="tenders" resizableColumns="true" style="width:100%;" paginator="true"
+			rows="10" paginatorPosition="bottom"
+			paginatorTemplate="{LastPageLink} {NextPageLink} {PreviousPageLink} {FirstPageLink} Page {JumpToPageDropdown} {CurrentPageReport}"
+			currentPageReportTemplate="/ {totalPages}"
+			rowsPerPageTemplate="5,10,15">>
 
 			<p:column headerText="Document No.">
 				<p:commandLink action="viewbiddingscreen.xhtml?faces-redirect=true">
@@ -32,6 +52,6 @@
 				<h:outputText value="001" />
 			</p:column>
 		</p:dataTable>
-	</p:panel>
 
+	</h:panelGroup>
 </ui:composition>
