@@ -45,7 +45,7 @@
 
 
 		<navigation-case>
-			<from-outcome>navigation</from-outcome>
+			<from-outcome>reviewUnspscCode</from-outcome>
 			<to-view-id>/xhtml/cm/codification/reviewUnspscCode.xhtml</to-view-id>
 		</navigation-case>
 		

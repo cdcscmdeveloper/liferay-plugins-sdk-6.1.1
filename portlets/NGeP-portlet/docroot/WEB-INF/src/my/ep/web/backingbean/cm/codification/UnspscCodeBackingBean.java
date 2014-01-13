@@ -1445,7 +1445,7 @@ public class UnspscCodeBackingBean extends BaseBackingBean<UnspscCodeManagedBean
 			fc.getApplication().getNavigationHandler().handleNavigation(fc, null, "selectRecommendUnspscCode.xhtml");
 		}else{
 			FacesContext fc = FacesContext.getCurrentInstance();
-			fc.getApplication().getNavigationHandler().handleNavigation(fc, null, "navigation");
+			fc.getApplication().getNavigationHandler().handleNavigation(fc, null, "reviewUnspscCode");
 
 		}
 
