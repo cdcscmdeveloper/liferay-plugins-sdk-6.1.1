@@ -9,6 +9,7 @@ import javax.faces.bean.SessionScoped;
 import my.ep.persistence.entity.cm.catalog.CmBrand;
 import my.ep.persistence.entity.cm.catalog.CmColor;
 import my.ep.persistence.entity.cm.catalog.CmMeasurement;
+import my.ep.persistence.entity.cm.catalog.CmRecommendCode;
 import my.ep.persistence.entity.cm.catalog.CmRequestCode;
 import my.ep.persistence.entity.cm.catalog.CmType;
 import my.ep.persistence.entity.cm.catalog.CmUnspsc;
@@ -83,6 +84,15 @@ public class UnspscCodeManagedBean extends BaseManagedBean {
 	private CmUnspsc selectedLovUnspscfamily;
 	private CmUnspsc selectedLovUnspscClass;
 	
+	private CmRecommendCode selectedRecommendCode;
+	
+	private boolean newSegment = false;
+	private boolean newFamily = false;
+	private boolean newClass = false;
+	private boolean newCommodity = false;
+	
+	private CmUnspsc commodityObj;
+	private Long unspscId;
 	
 	
 	
@@ -90,6 +100,35 @@ public class UnspscCodeManagedBean extends BaseManagedBean {
 	
 	
 	
+	
+	public Long getUnspscId() {
+		return unspscId;
+	}
+
+	public void setUnspscId(Long unspscId) {
+		this.unspscId = unspscId;
+	}
+
+	public CmUnspsc getCommodityObj() {
+		if(commodityObj==null)
+			commodityObj = new CmUnspsc();
+		return commodityObj;
+	}
+
+	public void setCommodityObj(CmUnspsc commodityObj) {
+		this.commodityObj = commodityObj;
+	}
+
+	public CmRecommendCode getSelectedRecommendCode() {
+		if(selectedRecommendCode==null)
+			selectedRecommendCode = new CmRecommendCode();
+		return selectedRecommendCode;
+	}
+
+	public void setSelectedRecommendCode(CmRecommendCode selectedRecommendCode) {
+		this.selectedRecommendCode = selectedRecommendCode;
+	}
+
 	public CmUnspsc getSelectedLovUnspscfamily() {
 		if(selectedLovUnspscfamily==null)
 			selectedLovUnspscfamily = new CmUnspsc();
@@ -506,6 +545,38 @@ public class UnspscCodeManagedBean extends BaseManagedBean {
 
 	public void setCommodityKey(Long commodityKey) {
 		this.commodityKey = commodityKey;
+	}
+
+	public boolean isNewSegment() {
+		return newSegment;
+	}
+
+	public void setNewSegment(boolean newSegment) {
+		this.newSegment = newSegment;
+	}
+
+	public boolean isNewFamily() {
+		return newFamily;
+	}
+
+	public void setNewFamily(boolean newFamily) {
+		this.newFamily = newFamily;
+	}
+
+	public boolean isNewClass() {
+		return newClass;
+	}
+
+	public void setNewClass(boolean newClass) {
+		this.newClass = newClass;
+	}
+
+	public boolean isNewCommodity() {
+		return newCommodity;
+	}
+
+	public void setNewCommodity(boolean newCommodity) {
+		this.newCommodity = newCommodity;
 	}
 
 	

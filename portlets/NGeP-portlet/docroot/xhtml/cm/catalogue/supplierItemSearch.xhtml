@@ -18,30 +18,37 @@
 				<td><p:tabView style="width: 100%;" id="searchTabId">
 
 						<p:tab id="tab2" title="Search">
-							<table style="margin-top: 10px;">
+							<table style="margin-top: 10px; width: 100%;">
 								<tr>
-									<td style="padding-left: 56px;"><p:outputLabel
-											value="#{lbl['lbl.cm.item.name']}" /></td>
+									<td><p:outputLabel value="#{lbl['lbl.cm.item.name']}" /></td>
 									<td><p:inputText size="50"
-											value="#{catalogueBackingBean.managedBean.itemName}"></p:inputText></td>
+											value="#{catalogueBackingBean.managedBean.itemNameFilterBean.searchValue}"></p:inputText></td>
+									<td><p:outputLabel value="#{lbl['lbl.cm.item.code']}" /></td>
+									<td><p:inputText size="50"
+											value="#{catalogueBackingBean.managedBean.itemCodeFilterBean.searchValue}"></p:inputText></td>
+								</tr>
+
+								<tr>
+									<td><p:outputLabel value="Supplier Name" /></td>
+									<td><p:inputText size="50"
+											value="#{catalogueBackingBean.managedBean.supplierNameFilterBean.searchValue}"></p:inputText></td>
+									<td><p:outputLabel value="Contract No" /></td>
+									<td><p:inputText size="50"
+											value="#{catalogueBackingBean.managedBean.contractNoFilterBean.searchValue}"></p:inputText></td>
+								</tr>
+
+								<tr>
+									<td><p:outputLabel value="Nature Of Business" /></td>
+									<td><p:inputText size="50" value="#{catalogueBackingBean.managedBean.natureOfBusinessFilterBean.searchValue}"></p:inputText></td>
+									<td><p:outputLabel value="Circular No" /></td>
+									<td><p:inputText size="50" value="#{catalogueBackingBean.managedBean.circularNoFilterBean.searchValue}" ></p:inputText></td>
 								</tr>
 							</table>
-							<ui:repeat var="search"
-								value="#{catalogueBackingBean.managedBean.advanceSearchList}">
-
-								<h:panelGrid columns="2" columnClasses="cmPadding5">
-									<p:selectOneMenu value="#{search.name}">
-										<f:selectItems
-											value="#{catalogueBackingBean.managedBean.searchCriteria}" />
-									</p:selectOneMenu>
-									<p:inputText size="50" value="#{search.value}" />
-								</h:panelGrid>
 
 
-							</ui:repeat>
 							<div style="text-align: right;">
 								<p:commandButton value="Search" icon="ui-icon-search"
-									action="#{catalogueBackingBean.searchCatalogue}"
+									action="#{catalogueMB.searchCatalogue}"
 									update="@(.ui-datatable[id$=supplierItemID])">
 
 									<f:param name="unspscCode" value="#{unspscCode}" />
@@ -64,20 +71,20 @@
 						<div style="text-align: right;">
 							<p:commandButton id="compareButton"
 								action="#{catalogueBackingBean.compareSupplierItem}"
-								value="#{lbl['lbl.cm.compare']} ( #{fn:length(catalogueBackingBean.managedBean.selectedSupplierItemList)} )"
-								disabled="#{2 > fn:length(catalogueBackingBean.managedBean.selectedSupplierItemList)}" />
+								value="#{lbl['lbl.cm.compare']} ( #{fn:length(catalogueBackingBean.managedBean.selectViewItems)} )"
+								disabled="#{2 > fn:length(catalogueBackingBean.managedBean.selectViewItems)}" />
 						</div>
-						<p:dataTable
-							value="#{catalogueBackingBean.managedBean.supplierItemList}"
+						<p:dataTable value="#{catalogueBackingBean.managedBean.searchDataModel}" rowKey="#{supplierItem}"
+							selection="#{catalogueBackingBean.managedBean.selectViewItems}"
 							id="supplierItemID" var="supplierItem" rowIndexVar="rowIndex">
 
 							<ac:paginator for="supplierItemID"></ac:paginator>
-
-							<p:ajax event="rowToggle"
-								update="@(.ui-datatable[id$=supplierItemID])" />
-							<p:column style="width:2%">
-								<p:rowToggler />
-							</p:column>
+							
+							<p:ajax event="rowSelectCheckbox" update="@(.ui-button[id$=compareButton])" ></p:ajax>
+							<p:ajax event="rowUnselectCheckbox" update="@(.ui-button[id$=compareButton])" ></p:ajax>
+							<p:ajax event="rowUnselect" update="@(.ui-button[id$=compareButton])" ></p:ajax>
+							<p:ajax event="rowSelect" update="@(.ui-button[id$=compareButton])" ></p:ajax>
+							<p:ajax event="toggleSelect" update="@(.ui-button[id$=compareButton])" />
 
 							<p:column headerText="Image" width="80px;">
 								<p:graphicImage
@@ -86,49 +93,34 @@
 							</p:column>
 
 							<p:column headerText="Item Name">
-
-								<table>
-									<tr>
-										<td>#{supplierItem.cmItem.itemName}</td>
-									</tr>
-									<tr>
-										<td><cc:renderFacet name="simpleQuoteButton" /></td>
-									</tr>
-								</table>
+								#{supplierItem.itemName}
+								
 
 							</p:column>
 
+							<p:column headerText="contract no./pkp no.">
+								#{supplierItem.contractNo},#{supplierItem.circularNo}
+							</p:column>
+
 							<p:column headerText="Supplier Name">
-								<p:commandLink value="ANDREW PAT SDN BHD"
+								<p:commandLink value="#{supplierItem.companyName}"
 									action="#{catalogueBackingBean.navigateToSupplierItemDet(rowIndex)}" />
 							</p:column>
 
 							<p:column headerText="UOM">
-							#{supplierItem.pmUom.uomName}
+							#{supplierItem.uomName}
 							</p:column>
 
-							<p:column headerText="Pricing Type">
 
-								<p:selectOneMenu>
-									<f:selectItem itemLabel="Normal" itemValue="Normal"></f:selectItem>
-									<f:selectItem itemLabel="Promotion" itemValue="Promotion"></f:selectItem>
-									<f:selectItem itemLabel="Tier" itemValue="Tier"></f:selectItem>
-									<f:selectItem itemLabel="PromotionTier" itemValue="PromotionTier"></f:selectItem>
-								</p:selectOneMenu>
-
-							</p:column>
-
-							<p:column width="2%">
+							<p:column selectionMode="multiple" style="width:2%" disabledSelection="#{supplierItem.contractNo != 'N/A'}" />
+							
+							<p:column headerText="Action" width="2%">
 								<table>
 									<tr>
-										<td><cc:renderFacet name="recentPrice" /></td>
+										<td><cc:renderFacet name="cartButton" /></td>
+
 									</tr>
-									<tr>
-										<td><cc:renderFacet name="purchaseInquiry" /></td>
-									</tr>
-									<tr>
-										<td><cc:renderFacet name="purchaseInDefault" /></td>
-									</tr>
+
 								</table>
 
 
@@ -137,62 +129,6 @@
 
 
 
-							<p:column width="2%">
-								<p:selectBooleanCheckbox value="#{supplierItem.selected}">
-									<p:ajax update="@(.ui-button[id$=compareButton])"
-										listener="#{catalogueBackingBean.triggerCompare(rowIndex)}" />
-								</p:selectBooleanCheckbox>
-							</p:column>
-
-							<p:column width="2%">
-								<cc:renderFacet name="cartButton" />
-							</p:column>
-
-							<p:rowExpansion>
-
-
-
-
-								<p:tabView id="catalogueViewPricingId">
-									<p:tab title="Normal">
-										<ui:include src="/xhtml/cm/pricing/pricingTab.xhtml" />
-									</p:tab>
-									<p:tab title="#{lbl['lbl.cm.tier']}"
-										rendered="#{fn:length(supplierItem.cmTierPricings) > 0}">
-										<ui:include src="/xhtml/cm/pricing/pricingTierTab.xhtml" />
-									</p:tab>
-									<p:tab title="#{lbl['lbl.cm.promotion.tier']}"
-										rendered="#{fn:length(supplierItem.cmPromotionTierPricings) > 0}">
-										<ui:include
-											src="/xhtml/cm/pricing/pricingPromotionTierTab.xhtml" />
-									</p:tab>
-									<p:tab title="Zonal Standard"
-										rendered="#{fn:length(supplierItem.cmZonalStandardPricings) > 0}">
-										<ui:include
-											src="/xhtml/cm/pricing/zonalStandardPricingTab.xhtml"></ui:include>
-
-									</p:tab>
-									<p:tab title="Zonal Promotion"
-										rendered="#{fn:length(supplierItem.cmZonalPromotionPricings) > 0}">
-										<ui:include
-											src="/xhtml/cm/pricing/zonalPromotionPricingTab.xhtml"></ui:include>
-
-									</p:tab>
-
-									<p:tab title="Zonal Tier"
-										rendered="#{fn:length(supplierItem.cmZonalTierPricings) > 0}">
-										<ui:include src="/xhtml/cm/pricing/zonalTierPricingTab.xhtml"></ui:include>
-
-									</p:tab>
-									<p:tab title="Zonal Promotion Tier"
-										rendered="#{fn:length(supplierItem.cmZonalPromotionTierPricings) > 0}">
-										<ui:include
-											src="/xhtml/cm/pricing/zonalPromotionTierPricingTab.xhtml"></ui:include>
-
-									</p:tab>
-								</p:tabView>
-
-							</p:rowExpansion>
 
 
 

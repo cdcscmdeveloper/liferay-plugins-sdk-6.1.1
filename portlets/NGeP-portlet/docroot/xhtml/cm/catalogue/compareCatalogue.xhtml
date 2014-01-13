@@ -5,7 +5,8 @@
 	xmlns:h="http://java.sun.com/jsf/html"
 	xmlns:ui="http://java.sun.com/jsf/facelets"
 	xmlns:p="http://primefaces.org/ui"
-	xmlns:c="http://java.sun.com/jsp/jstl/core">
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:fn="http://java.sun.com/jsp/jstl/functions">
 
 	<ui:define name="contentSection">
 
@@ -17,14 +18,11 @@
 			</div>
 
 
-			<h:panelGrid columns="2" style="width:100%;" columnClasses="comparelabelCss compareValueCss">
+			<h:panelGrid columns="2" style="width:100%;"
+				columnClasses="comparelabelCss compareValueCss">
 
 				<h:panelGroup>
-					<table>
-						<tr>
-							<td height="70px"></td>
-						</tr>
-					</table>
+
 					<ui:repeat var="label"
 						value="#{catalogueBackingBean.managedBean.compareLabel}">
 						<p:panel styleClass="comparePanelLabel">
@@ -34,54 +32,93 @@
 
 				</h:panelGroup>
 
-
-
 				<p:dataGrid id="compareDataList" rowIndexVar="compareKey"
-					paginator="true"
+					paginator="true" 
 					value="#{catalogueBackingBean.managedBean.selectedSupplierItemList}"
-					var="compare" columns="4" rows="4" paginatorPosition="bottom">
-					<h:panelGroup >
+					var="supplierItem" columns="4" rows="4" paginatorPosition="bottom">
+					<h:panelGroup>
 						<table>
 							<tr>
-								<td rowspan="3"><p:graphicImage
-										value="/resources/ep/images/product/computer/879949914_125.jpg"
-										height="100px" width="100px" /></td>
-								<td></td>
-								<td colspan="1"><p:commandLink
-										action="#{catalogueBackingBean.deleteComparedItem(compareKey)}"
-										update=":form:compareDataList">
-										<p:graphicImage value="/resources/ep/images/design/trash.png"></p:graphicImage>
-									</p:commandLink></td>
+								<td height="40px"></td>
 							</tr>
 						</table>
 
+						<h:panelGroup styleClass="comparePanel">
 
+							<table>
+								<tr>
+									<td><p:commandLink>
+											<p:graphicImage
+												value="/resources/ep/images/design/icon_txt.png"
+												height="15px"></p:graphicImage>
+										</p:commandLink></td>
+									<td><p:commandLink>
+											<p:graphicImage
+												value="/resources/ep/images/design/icon_txt.png"
+												height="15px"></p:graphicImage>
+										</p:commandLink></td>
+									<td><p:commandLink>
+											<p:graphicImage
+												value="/resources/ep/images/design/icon_txt.png"
+												height="15px"></p:graphicImage>
+										</p:commandLink></td>
+									<td><p:commandLink>
+											<p:graphicImage
+												value="/resources/ep/images/design/icon_txt.png"
+												height="15px"></p:graphicImage>
+										</p:commandLink></td>
+									<td><p:commandLink>
+											<p:graphicImage library="ep/images/design"
+												name="cart_add.png" />
+										</p:commandLink></td>
+									<td><p:commandLink
+											action="#{catalogueBackingBean.deleteComparedItem(compareKey)}"
+											update=":form:compareDataList">
+											<p:graphicImage value="/resources/ep/images/design/trash.png"></p:graphicImage>
+										</p:commandLink></td>
+								</tr>
+							</table>
+						</h:panelGroup>
 
-						<h:panelGrid
-							styleClass="comparePanel">
-					#{compare.cmItem.itemName}
-				</h:panelGrid>
 						<h:panelGrid styleClass="comparePanel">
-					#{compare.cmItem.itemDesc}
+					#{supplierItem.cmItem.itemName}
 				</h:panelGrid>
-
-						<h:panelGrid
-							styleClass="comparePanel">
-					#{compare.smSupplier.supplierName}
+					<h:panelGrid styleClass="comparePanel">
+					#{supplierItem.cmItem.itemCode}
 				</h:panelGrid>
+				
+						<h:panelGrid columns="2" styleClass="comparePanel">
 						
-						<h:panelGrid
-							styleClass="comparePanel">
-					#{compare.skuNumber}
-				</h:panelGrid>
-						<h:panelGrid
-							styleClass="comparePanel">
-					#{compare.paymentTerms}
+					#{supplierItem.cmStandardPricing.price} 
+					<p:commandLink value="More.." action="#{catalogueBackingBean.popUpPricing(supplierItem)}" oncomplete="morePrice.show()" update=":form:catalogueViewPricingId"></p:commandLink>
+						</h:panelGrid>
+
+						<h:panelGrid styleClass="comparePanel">
+
+						</h:panelGrid>
+
+						<h:panelGrid styleClass="comparePanel">
+					#{supplierItem.skuNumber}
 				</h:panelGrid>
 
-						<h:panelGrid
-							styleClass="comparePanel">
-					#{compare.itemDesc}
+
+						<h:panelGrid styleClass="comparePanel">
+					#{supplierItem.minOrder}
+				</h:panelGrid>
+
+						<h:panelGrid styleClass="comparePanel">
+					#{supplierItem.maxOrder}
+				</h:panelGrid>
+				
+					<h:panelGrid styleClass="comparePanel">
+					#{supplierItem.leadTime}
+				</h:panelGrid>
+
+
+
+
+						<h:panelGrid styleClass="comparePanel">
+					#{supplierItem.itemDesc}
 				</h:panelGrid>
 
 					</h:panelGroup>
@@ -90,6 +127,47 @@
 
 
 			</h:panelGrid>
+
+			<p:dialog id="morePrice" widgetVar="morePrice" modal="true"
+				header="More Price" width="800" height="250">
+
+				<p:tabView id="catalogueViewPricingId">
+					<p:tab title="Normal">
+						<ui:include src="/xhtml/cm/pricing/pricingTab.xhtml" />
+					</p:tab>
+					<p:tab title="#{lbl['lbl.cm.tier']}"
+						rendered="#{fn:length(supplierItem.cmTierPricings) > 0}">
+						<ui:include src="/xhtml/cm/pricing/pricingTierTab.xhtml" />
+					</p:tab>
+					<p:tab title="#{lbl['lbl.cm.promotion.tier']}"
+						rendered="#{fn:length(supplierItem.cmPromotionTierPricings) > 0}">
+						<ui:include src="/xhtml/cm/pricing/pricingPromotionTierTab.xhtml" />
+					</p:tab>
+					<p:tab title="Zonal Standard"
+						rendered="#{fn:length(supplierItem.cmZonalStandardPricings) > 0}">
+						<ui:include src="/xhtml/cm/pricing/zonalStandardPricingTab.xhtml"></ui:include>
+
+					</p:tab>
+					<p:tab title="Zonal Promotion"
+						rendered="#{fn:length(supplierItem.cmZonalPromotionPricings) > 0}">
+						<ui:include src="/xhtml/cm/pricing/zonalPromotionPricingTab.xhtml"></ui:include>
+
+					</p:tab>
+
+					<p:tab title="Zonal Tier"
+						rendered="#{fn:length(supplierItem.cmZonalTierPricings) > 0}">
+						<ui:include src="/xhtml/cm/pricing/zonalTierPricingTab.xhtml"></ui:include>
+
+					</p:tab>
+					<p:tab title="Zonal Promotion Tier"
+						rendered="#{fn:length(supplierItem.cmZonalPromotionTierPricings) > 0}">
+						<ui:include
+							src="/xhtml/cm/pricing/zonalPromotionTierPricingTab.xhtml"></ui:include>
+
+					</p:tab>
+				</p:tabView>
+
+			</p:dialog>
 
 
 

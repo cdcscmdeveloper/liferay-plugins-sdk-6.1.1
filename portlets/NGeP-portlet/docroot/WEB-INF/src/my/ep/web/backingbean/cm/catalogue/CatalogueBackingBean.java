@@ -19,15 +19,19 @@ import java.util.Vector;
 import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.RequestScoped;
+import javax.faces.bean.ViewScoped;
 import javax.faces.context.FacesContext;
 import javax.portlet.PortletRequest;
 import javax.portlet.PortletResponse;
 import javax.servlet.http.HttpServletResponse;
 
 import my.ep.biz.bean.search.ISearchBean;
+import my.ep.biz.bean.search.ISearchResultBean;
 import my.ep.biz.bean.search.SearchBean;
 import my.ep.biz.bean.search.SearchFilterBean;
+import my.ep.biz.bean.search.SearchResultBean;
 import my.ep.biz.service.cm.catalogue.ICatalogueSO;
+import my.ep.biz.service.cm.catalogue.IViewSupplierItemSO;
 import my.ep.biz.service.cm.catalogue.IWishListSO;
 import my.ep.biz.service.pm.common.district.IDistrictSO;
 import my.ep.biz.service.pm.common.state.IStateSO;
@@ -54,16 +58,19 @@ import my.ep.persistence.entity.cm.catalog.CmZonalPromotionPricing;
 import my.ep.persistence.entity.cm.catalog.CmZonalPromotionTierPricing;
 import my.ep.persistence.entity.cm.catalog.CmZonalStandardPricing;
 import my.ep.persistence.entity.cm.catalog.CmZonalTierPricing;
+import my.ep.persistence.entity.cm.catalog.VCmSupplierItem;
 import my.ep.persistence.logging.LogKey;
 import my.ep.type.aut.SearchOperator;
 import my.ep.web.backingbean.BaseBackingBean;
 import my.ep.web.backingbean.cm.codification.CodificationBackingBean;
+import my.ep.web.bean.paginator.IPagingDataModel;
+import my.ep.web.bean.paginator.PagingDataModel;
 import my.ep.web.managedbean.cm.catalogue.CatalogueManagedBean;
-import my.ep.web.util.FacesScopes;
 import my.ep.web.util.lookupservice.BusinessDelegate;
 import my.ep.web.vo.AdvanceSearchVO;
 import my.ep.web.vo.PricingVO;
 
+import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.apache.log4j.MDC;
 import org.apache.poi.ss.usermodel.Cell;
@@ -80,7 +87,7 @@ import org.primefaces.model.UploadedFile;
 import com.liferay.portal.util.PortalUtil;
 
 @ManagedBean(name="catalogueBackingBean")
-@RequestScoped
+@ViewScoped
 public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean>{
 
 	private static Logger log = Logger.getLogger(CatalogueBackingBean.class);
@@ -90,7 +97,7 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean>{
 	private TreeNode root2; 
 
 	private SearchFilterBean statusFilterBean = new SearchFilterBean(SearchOperator.OPERATOR_EQUALS.value());
-
+	
 
 	public CatalogueBackingBean(){
 
@@ -124,7 +131,12 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean>{
 		this.getManagedBean().setStateList(resStateDTO.getStateList());
 
 
+		
 	}
+	
+	
+	
+	
 
 
 
@@ -883,7 +895,7 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean>{
 	}
 
 
-	public void searchCatalogue(){
+	/*public void searchCatalogue(){
 		log.info("*******searchCatalogue************");  
 
 		FacesScopes facesScopes = new FacesScopes();
@@ -915,7 +927,7 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean>{
 
 		this.getManagedBean().setSupplierItemList(resDTO.getSupplierItemList());
 
-	}
+	}*/
 
 
 
@@ -931,7 +943,7 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean>{
 
 		CmSupplierItem catalog = this.getManagedBean().getSelectedSupplierItemList().get(index);
 
-		this.getManagedBean().setCatalogueObj(catalog);
+		//this.getManagedBean().setCatalogueObj(catalog);
 		this.getManagedBean().setCompareIndex(index);
 
 
@@ -1102,14 +1114,31 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean>{
 	public String compareSupplierItem(){
 
 		log.info("==============compareSupplierItem========================");
+		this.getManagedBean().setSelectedSupplierItemList(null);
+		for(VCmSupplierItem view : this.getManagedBean().getSelectViewItems()){
+			
+			ICatalogueSO catalogueSO = (ICatalogueSO) BusinessDelegate.getInstance().getServiceObject("cm",ICatalogueSO.class);
 
+			SearchBean<CmSupplierItem> searchBean = new SearchBean<CmSupplierItem>();
+			statusFilterBean.setSearchField("supplierItemId");
+			statusFilterBean.setSearchValue(view.getDocId());
+			searchBean.getDataFilterBeans().add(statusFilterBean);
 
+			searchBean.setNavigatable(false);
 
-		log.info("size:"+this.getManagedBean().getSelectedSupplierItemList().size());
-		this.getManagedBean().setCompareIndex(0);
-		CmSupplierItem catalog = this.getManagedBean().getSelectedSupplierItemList().get(0);
+			CatalogueReqDTO reqDTO = new CatalogueReqDTO();
 
-		this.getManagedBean().setCatalogueObj(catalog);
+			reqDTO.setSearchBean(searchBean);
+			log.info("catalogueSO:"+catalogueSO);
+
+			CatalogueResDTO resDTO = catalogueSO.searchSupplierItemByStatus(reqDTO);
+
+			System.out.println("*****************end********************");
+			
+			this.getManagedBean().getSelectedSupplierItemList().add(resDTO.getSupplierItemList().get(0));
+		}
+
+		
 
 
 		return "compareCatalogue";
@@ -1367,6 +1396,21 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean>{
 	}
 
 
+
+	
+
+	
+	public void compareViewItem(){
+		
+		System.out.println("this.getManagedBean().getSelectViewItems().length():"+this.getManagedBean().getSelectViewItems());
+	}
+
+	
+	public void popUpPricing(CmSupplierItem item){
+		
+		System.out.println("***************item*********************");
+		this.getManagedBean().setSupplierItemObj(item);
+	}
 
 	
 
