@@ -41,6 +41,8 @@
 			<portlet id="reviewBudgetAllocation"></portlet>
 			<portlet id="revisePlanPreparation"></portlet>
 			<portlet id="reviewPlanPreparation"></portlet>
+			<portlet id="ppDisburseBudgetList"></portlet>
+			<portlet id="ppAllocatedBudgetList"></portlet>			
 		</category>
 		<!-- Procurement Plan - END -->
 
