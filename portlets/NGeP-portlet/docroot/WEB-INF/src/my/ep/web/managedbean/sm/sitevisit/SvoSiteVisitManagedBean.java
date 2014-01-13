@@ -7,6 +7,7 @@ import java.util.List;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
 
+import my.ep.jaxb.sm.sitevisitdata.SMSiteVisitDataType;
 import my.ep.persistence.entity.sm.SmApplSiteVisit;
 import my.ep.web.managedbean.BaseManagedBean;
 
@@ -18,14 +19,14 @@ public class SvoSiteVisitManagedBean extends BaseManagedBean {
 	private long appId;
 	private String[] bpmAction;
 	private String taskId;
-	private String appType;
+	private SMSiteVisitDataType bpmPojo;
 	
-	public String getAppType() {
-		return appType;
+	public SMSiteVisitDataType getBpmPojo() {
+		return bpmPojo;
 	}
 
-	public void setAppType(String appType) {
-		this.appType = appType;
+	public void setBpmPojo(SMSiteVisitDataType bpmPojo) {
+		this.bpmPojo = bpmPojo;
 	}
 
 	public long getAppId() {
@@ -151,7 +152,7 @@ public class SvoSiteVisitManagedBean extends BaseManagedBean {
 		svCheckList.add(new SiteVisitCheckList(10,
 				"Serahan Kepada Pegawai Pelulus"));
 		svCheckList.add(new SiteVisitCheckList(11, "Surat Pemberitahuan"));
-		svCheckList.add(new SiteVisitCheckList(12, "Tandatangan Surat"));
+		//svCheckList.add(new SiteVisitCheckList(12, "Tandatangan Surat"));
 
 		manuFactList = new ArrayList<ManufacturingFinancialList>();
 		manuFactList.add(new ManufacturingFinancialList(1, "Lesen Pembuat"));

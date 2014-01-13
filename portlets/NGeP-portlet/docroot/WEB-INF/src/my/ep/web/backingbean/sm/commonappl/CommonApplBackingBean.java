@@ -65,6 +65,7 @@ public class CommonApplBackingBean extends
 			sdoBB.getManagedBean().setAppId(smMofObj.getDocumentId());
 			sdoBB.getManagedBean().setBpmAction(resDTO.getAction());
 			sdoBB.getManagedBean().setTaskId(taskId);
+			sdoBB.getManagedBean().setBpmPojo(smMofObj);
 			sdoBB.viewSupportingDocument();
 
 			FacesContext fc = FacesContext.getCurrentInstance();

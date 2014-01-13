@@ -3,6 +3,7 @@ package my.ep.web.managedbean.sm.sitevisit;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
 
+import my.ep.jaxb.sm.sitevisitdata.SMSiteVisitDataType;
 import my.ep.persistence.entity.sm.SmApplSiteVisit;
 import my.ep.web.managedbean.BaseManagedBean;
 
@@ -15,15 +16,8 @@ public class SvcSiteAssignManagedBean extends BaseManagedBean {
 	private long appId;
 	private String[] bpmAction;
 	private String taskId;
-	private String appType;
-
-	public String getAppType() {
-		return appType;
-	}
-
-	public void setAppType(String appType) {
-		this.appType = appType;
-	}
+	private SMSiteVisitDataType bpmPojo;
+	
 
 	public SmApplSiteVisit getSmApplSv() {
 		return smApplSv;
@@ -55,6 +49,14 @@ public class SvcSiteAssignManagedBean extends BaseManagedBean {
 
 	public void setTaskId(String taskId) {
 		this.taskId = taskId;
+	}
+
+	public SMSiteVisitDataType getBpmPojo() {
+		return bpmPojo;
+	}
+
+	public void setBpmPojo(SMSiteVisitDataType bpmPojo) {
+		this.bpmPojo = bpmPojo;
 	}
 
 }
