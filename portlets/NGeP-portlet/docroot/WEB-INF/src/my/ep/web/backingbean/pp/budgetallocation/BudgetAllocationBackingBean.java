@@ -16,6 +16,8 @@ import javax.faces.event.ValueChangeEvent;
 
 import my.ep.biz.bean.search.ISearchBean;
 import my.ep.biz.bean.search.ISearchResultBean;
+import my.ep.biz.bean.search.SearchBean;
+import my.ep.biz.bean.search.SearchFilterBean;
 import my.ep.biz.service.pm.authorization.orgprofile.IOrgProfileSO;
 import my.ep.biz.service.pm.authorization.user.IUserSO;
 import my.ep.biz.service.pm.common.object.IObjectSO;
@@ -36,9 +38,11 @@ import my.ep.persistence.entity.pm.authorization.PmUser;
 import my.ep.persistence.entity.pm.common.PmDo;
 import my.ep.persistence.entity.pp.PpRemark;
 import my.ep.persistence.entity.pp.budgetallocation.PpBudget;
+import my.ep.persistence.entity.pp.budgetallocation.PpBudgetAlloc;
 import my.ep.persistence.entity.pp.budgetallocation.PpBudgetAllocDtl;
 import my.ep.persistence.entity.pp.budgetallocation.PpBudgetAllocOrg;
 import my.ep.persistence.entity.pp.budgetallocation.PpBudgetDtl;
+import my.ep.type.aut.SearchOperator;
 import my.ep.type.pm.OrganizationType;
 import my.ep.type.pm.RoleCode;
 import my.ep.web.backingbean.BaseBackingBean;
@@ -166,25 +170,49 @@ public class BudgetAllocationBackingBean extends BaseBackingBean<BudgetAllocatio
 	 */
 	public void showBudgetAllocDtl(PpBudgetAllocDtl ppBudgetAllocDtl){
 		log.info("showBudgetAllocDtl - Start");
-		if(ppBudgetAllocDtl==null){
-			this.getManagedBean().setSelectedBudgetAllocDtl(new PpBudgetAllocDtl());
-			this.getManagedBean().getSelectedBudgetAllocDtl().setEditable(true);
-			this.getManagedBean().getSelectedBudgetAllocOrg().setUsedAmt(new BigDecimal(0));
-			this.getManagedBean().getSelectedBudgetAllocDtl().setPpWorkflowStatus(
-					CommonMethod.getDefaultStatus(ProcurementPlanConst.DOCTYPE_BUDGET_ALLOC_DTL));//TODO	
-		}else{
-			
-			
-			if(ProcurementPlanConst.MODE_REVISION.equals(this.getManagedBean().getViewMode())
-					|| ppBudgetAllocDtl.isBrandNew()){
-				ppBudgetAllocDtl.setEditable(true);
-			}else{
-				ppBudgetAllocDtl.setEditable(false);
+		boolean isValid = true;
+		String invalidMsg = "";
+		
+		//ensure the previous entry is not null
+		if(!this.getManagedBean().getSelectedBudgetAllocation().getPpBudgetAllocDtls().isEmpty()){
+			PpBudgetAllocDtl tempPpBudgetAllocDtl = new PpBudgetAllocDtl();
+			tempPpBudgetAllocDtl = this.getManagedBean().getSelectedBudgetAllocation().getPpBudgetAllocDtls().get(
+					this.getManagedBean().getSelectedBudgetAllocation().getPpBudgetAllocDtls().size()-1);
+			//all transaction must not be empty or invalid 
+			if(tempPpBudgetAllocDtl.getPpBudgetAllocOrgs()==null 
+					|| (tempPpBudgetAllocDtl.getPpBudgetAllocOrgs()!=null && tempPpBudgetAllocDtl.getPpBudgetAllocOrgs().isEmpty())){
+				isValid = false;
+				invalidMsg = "PTJ Allocation is empty";
 			}
-			ppBudgetAllocDtl.setSelected(true);
-			this.getManagedBean().setSelectedBudgetAllocDtl(ppBudgetAllocDtl);
-//			selectedGo();
 		}
+		//only allowed new entry if valid
+		if(isValid){
+			if(ppBudgetAllocDtl==null){
+				this.getManagedBean().setSelectedBudgetAllocDtl(new PpBudgetAllocDtl());
+				this.getManagedBean().getSelectedBudgetAllocDtl().setEditable(true);
+				this.getManagedBean().getSelectedBudgetAllocOrg().setUsedAmt(new BigDecimal(0));
+				this.getManagedBean().getSelectedBudgetAllocDtl().setPpWorkflowStatus(
+						CommonMethod.getDefaultStatus(ProcurementPlanConst.DOCTYPE_BUDGET_ALLOC_DTL));//TODO	
+				
+				RequestContext.getCurrentInstance().execute("dlItemBudgetDisModal.show()");
+			}else{
+				
+				System.out.println("do ID "  + this.getManagedBean().getSelectedBudgetAllocDtl().getPmDo().getDoId());
+				System.out.println("do Name "  + this.getManagedBean().getSelectedBudgetAllocDtl().getPmDo().getDoName());
+				if(ProcurementPlanConst.MODE_REVISION.equals(this.getManagedBean().getViewMode())
+						|| ppBudgetAllocDtl.isBrandNew()){
+					ppBudgetAllocDtl.setEditable(true);
+				}else{
+					ppBudgetAllocDtl.setEditable(false);
+				}
+				ppBudgetAllocDtl.setSelected(true);
+				this.getManagedBean().setSelectedBudgetAllocDtl(ppBudgetAllocDtl);
+			}
+		}else{
+			FacesContext.getCurrentInstance().addMessage(null,new FacesMessage(
+					FacesMessage.SEVERITY_ERROR,"GOSODO Disbursement.", invalidMsg));
+		}
+		
 		log.info("showBudgetAllocDtl - End");
 	}
 	
@@ -215,11 +243,12 @@ public class BudgetAllocationBackingBean extends BaseBackingBean<BudgetAllocatio
 				}
 			}else{
 				if(isValid){
-					if(this.getManagedBean().getSelectedBudgetAllocDtl().getPpBudgetDtl().getBudgetDtlId()
-							== this.getManagedBean().getSelectedBudgetAllocDtl().getOriBudgetDtlId()){
+					if(this.getManagedBean().getSelectedBudgetAllocDtl().getPpBudgetDtl().getBudgetDtlId().equals(
+							this.getManagedBean().getSelectedBudgetAllocDtl().getOriBudgetDtlId())){
 						//update amount
 						updateBudgetAllocDtl(this.getManagedBean().getSelectedBudgetAllocDtl(), ProcurementPlanConst.UPDATE);
 					}else{
+						//not allow change if having childs
 						//rollback amount
 						updateBudgetAllocDtl(this.getManagedBean().getSelectedBudgetAllocDtl(), ProcurementPlanConst.CHANGE);
 					}
@@ -601,6 +630,11 @@ public class BudgetAllocationBackingBean extends BaseBackingBean<BudgetAllocatio
 		}else{
 			isValid = true;
 		}
+		if(isRemove){
+			if(ppBudgetAllocDtl.getPpBudgetAllocOrgs()!=null && !ppBudgetAllocDtl.getPpBudgetAllocOrgs().isEmpty()){
+				isValid = false;
+			}
+		}
 		
 		log.info("isValid " + isValid);
 		log.info("verifyBudgetAllocDtls - End");
@@ -664,6 +698,11 @@ public class BudgetAllocationBackingBean extends BaseBackingBean<BudgetAllocatio
 			isValid = true;
 		}
 
+		if(isRemove){
+			if(ppBudgetAllocOrg.getPpPlanDtls()!=null && !ppBudgetAllocOrg.getPpPlanDtls().isEmpty()){
+				isValid = false;
+			}
+		}
 		log.info("isValid " + isValid);
 		log.info("verifyBudgetAllocOrg - Start");
 		return isValid;
@@ -917,13 +956,15 @@ public class BudgetAllocationBackingBean extends BaseBackingBean<BudgetAllocatio
 		
 		try{
 			if(budgetDtlId!=null){
-				BudgetDisbursementReqDTO reqDTO = new BudgetDisbursementReqDTO();
-				reqDTO.setBudgetDtlId(budgetDtlId);
-				IBudgetDisbursementSO reqSO = (IBudgetDisbursementSO) BusinessDelegate.getInstance().getServiceObject(ProcurementPlanConst.SO_PP, IBudgetDisbursementSO.class);
-				BudgetDisbursementResDTO resDTO = reqSO.retrieveBudgetDtlById(reqDTO);
-				if(resDTO.isSuccessful()){
-					budgetDtl = resDTO.getBudgetDtl();
-				}
+				if(uniqueGOSODO(budgetDtlId)){
+					BudgetDisbursementReqDTO reqDTO = new BudgetDisbursementReqDTO();
+					reqDTO.setBudgetDtlId(budgetDtlId);
+					IBudgetDisbursementSO reqSO = (IBudgetDisbursementSO) BusinessDelegate.getInstance().getServiceObject(ProcurementPlanConst.SO_PP, IBudgetDisbursementSO.class);
+					BudgetDisbursementResDTO resDTO = reqSO.retrieveBudgetDtlById(reqDTO);
+					if(resDTO.isSuccessful()){
+						budgetDtl = resDTO.getBudgetDtl();
+					}
+				}	
 			}
 			this.getManagedBean().getSelectedBudgetAllocDtl().setPpBudgetDtl(budgetDtl);
 		}catch(Exception e){
@@ -931,6 +972,53 @@ public class BudgetAllocationBackingBean extends BaseBackingBean<BudgetAllocatio
 		}
 
 		log.info("selectedBudgetDtl - End");
+	}
+	
+	private boolean uniqueGOSODO(Long budgetDtlId){
+		log.info("uniqueGOSODO - Start");
+		boolean isValid = true;
+		int size = this.getManagedBean().getSelectedBudgetAllocation().getPpBudgetAllocDtls().size();
+		int index = 0;
+		//validate the last record with previous entered records
+		if(budgetDtlId!=null && size>1){
+			for(PpBudgetAllocDtl ppBudgetAllocDtl:this.getManagedBean().getSelectedBudgetAllocation().getPpBudgetAllocDtls()){	
+				index++;
+				if(budgetDtlId.equals(ppBudgetAllocDtl.getPpBudgetDtl().getBudgetDtlId()) && (index!=size)){
+					isValid = false;
+					FacesContext.getCurrentInstance().addMessage(null,new FacesMessage(
+							FacesMessage.SEVERITY_ERROR, "GOSODO Disbursement." ,"Duplicate SODO Code is selected."));
+					break;
+				}
+				
+			}
+		}
+	
+		log.info("isValid " + isValid);
+		log.info("uniqueGOSODO - End ");
+		return isValid;
+	}
+	
+	private boolean uniquePTJ(Long orgProfileId){
+		log.info("uniquePTJ - Start");
+		boolean isValid = true;
+		int size = this.getManagedBean().getSelectedBudgetAllocDtl().getPpBudgetAllocOrgs().size();
+		int index = 0;
+		//validate the last record with previous entered records
+		if(orgProfileId!=null && size>1){
+			for(PpBudgetAllocOrg ppBudgetAllocOrg:this.getManagedBean().getSelectedBudgetAllocDtl().getPpBudgetAllocOrgs()){	
+				index++;
+				if(orgProfileId.equals(ppBudgetAllocOrg.getPmOrgProfile().getOrgProfileId()) && (index!=size)){
+					isValid = false;
+					FacesContext.getCurrentInstance().addMessage(null,new FacesMessage(
+							FacesMessage.SEVERITY_ERROR, "PTJ Allocation." ,"Duplicate PTJ Code is selected."));
+					break;
+				}
+			}
+		}
+	
+		log.info("isValid " + isValid);
+		log.info("uniquePTJ - End ");
+		return isValid;
 	}
 	
 	
@@ -1017,8 +1105,13 @@ public class BudgetAllocationBackingBean extends BaseBackingBean<BudgetAllocatio
 	 * @param ptjId
 	 */
 	public void selectedOrgProfile(Long ptjId){
-		log.info("selectedOrgProfile");
-		this.getManagedBean().getSelectedBudgetAllocOrg().setPmOrgProfile(CommonMethod.retrieveOrgProfile(ptjId));
+		log.info("selectedOrgProfile - Start");
+		if(ptjId!=null){
+			if(uniquePTJ(ptjId)){
+				this.getManagedBean().getSelectedBudgetAllocOrg().setPmOrgProfile(CommonMethod.retrieveOrgProfile(ptjId));
+			}
+		}
+		log.info("selectedOrgProfile - End");
 	}
 	
 	/**
@@ -1167,7 +1260,64 @@ public class BudgetAllocationBackingBean extends BaseBackingBean<BudgetAllocatio
 		return CommonMethod.substractBigDecimalNullable(budgetAmount,usedFloatAmt);
 	}
 
-	
+	private boolean verifyDuplicateBudgetAndOrg(){
+		log.info("verifyDuplicateBudgetAndOrg - Start");
+		boolean result = true;
+		List<PpBudgetDtl> ppBudgetDtls = new ArrayList<PpBudgetDtl>();
+		List<PmDo> pmDos = new ArrayList<PmDo>();;
+		List<PmOrgProfile> pmOrgProfiles = new ArrayList<PmOrgProfile>();
+		
+		for(PpBudgetAllocDtl ppBudgetAllocDtl:this.getManagedBean().getSelectedBudgetAllocation().getPpBudgetAllocDtls()){
+			pmDos.add(ppBudgetAllocDtl.getPmDo());
+			ppBudgetDtls.add(ppBudgetAllocDtl.getPpBudgetDtl());
+			for(PpBudgetAllocOrg ppBudgetAllocOrg:ppBudgetAllocDtl.getPpBudgetAllocOrgs()){
+				pmOrgProfiles.add(ppBudgetAllocOrg.getPmOrgProfile());
+			}
+		}
+		ISearchBean<PpBudgetAlloc> searchBean = new SearchBean<PpBudgetAlloc>();
+		if(!ppBudgetDtls.isEmpty()){
+			SearchFilterBean searchFilterBean = new SearchFilterBean(SearchOperator.OPERATOR_IN.value());
+			searchFilterBean.setSearchField("ppBudgetAllocDtls.ppBudgetDtl");
+			searchFilterBean.setSearchValue(ppBudgetDtls);
+			searchBean.getDataFilterBeans().add(searchFilterBean);
+		}
+		
+		if(!pmDos.isEmpty()){
+			SearchFilterBean searchFilterBean = new SearchFilterBean(SearchOperator.OPERATOR_IN.value());
+			searchFilterBean.setSearchField("ppBudgetAllocDtls.pmDo");
+			searchFilterBean.setSearchValue(pmDos);
+			searchBean.getDataFilterBeans().add(searchFilterBean);
+		}
+		
+		if(!pmOrgProfiles.isEmpty()){
+			SearchFilterBean searchFilterBean = new SearchFilterBean(SearchOperator.OPERATOR_IN.value());
+			searchFilterBean.setSearchField("ppBudgetAllocDtls.ppBudgetAllocOrgs.pmOrgProfile");
+			searchFilterBean.setSearchValue(pmOrgProfiles);
+			searchBean.getDataFilterBeans().add(searchFilterBean);
+		}
+		BudgetAllocationReqDTO reqDTO = new BudgetAllocationReqDTO();
+		reqDTO.setBudgetAllocSearchBean(searchBean);
+		
+		IBudgetAllocationSO reqSO = (IBudgetAllocationSO) BusinessDelegate.getInstance().getServiceObject(ProcurementPlanConst.SO_PP, IBudgetAllocationSO.class);
+		BudgetAllocationResDTO resDTO = reqSO.verifyDuplicateBudgetAndOrg(reqDTO);
+		if(resDTO.isSuccessful()){
+			result = resDTO.isDuplicate();
+			if(result){
+				List <PpBudgetAlloc> ppBudgetAllocs = resDTO.getBudgetAllocResultBean().getResultList();
+				for(PpBudgetAlloc a:ppBudgetAllocs){
+					System.out.println("a " + a.getBudgetAllocId());
+				}
+				FacesContext.getCurrentInstance().addMessage(null,new FacesMessage(
+						FacesMessage.SEVERITY_ERROR, "Budget Allocation having duplicate GOSODO and PTJ." ,""));
+			}else{
+				FacesContext.getCurrentInstance().addMessage(null,new FacesMessage(
+						FacesMessage.SEVERITY_ERROR, "Budget Allocation not having duplicate GOSODO and PTJ." ,""));
+			}
+			System.out.println("result... " + result);
+		}
+		log.info("verifyDuplicateBudgetAndOrg - End");
+		return result;
+	}
 	/**
 	 * submit budget allocation when button is clicked
 	 * @param action
@@ -1187,15 +1337,15 @@ public class BudgetAllocationBackingBean extends BaseBackingBean<BudgetAllocatio
 				if(this.getManagedBean().isConfirm()){
 					confirmUpdateBudgetAlloc();
 				}
-				isSuccess = addBudgetAllocation(action);
+				if(verifyDuplicateBudgetAndOrg()){
+//					isSuccess = addBudgetAllocation(action);
+				}
+			
 		}
 		log.info("completed: " + isSuccess);
 		if(isSuccess){
 			returnPage = ProcurementPlanConst.NAV_TO_TASK_LIST;
 		}
-
-		
-
 		log.info("submitBudgetAllocation - End");
 		return returnPage;
 	}

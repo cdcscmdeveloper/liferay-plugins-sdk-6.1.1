@@ -62,9 +62,9 @@ xmlns:fn="http://java.sun.com/jsp/jstl/functions"
 		<!-- Button -->
 	  	<div class="ppRightBtn">
 			<c:if test="#{budgetAllocBackingBean.managedBean.selectedBudgetAllocation.editable}">
-				<p:commandButton value="#{lbl['lbl.pp.add']}" icon="ui-icon-add" oncomplete="dlItemBudgetDisModal.show()" 
+				<p:commandButton value="#{lbl['lbl.pp.add']}" icon="ui-icon-add"
 					disabled="#{budgetAllocBackingBean.managedBean.selectedBudgetAllocation.ppBudget.budgetId==null}"
-					action="#{budgetAllocBackingBean.showBudgetAllocDtl(null)}" update="dlItemBudgetDis"
+					action="#{budgetAllocBackingBean.showBudgetAllocDtl(null)}" update="opItemBudgetDis"
 					/> 
 			</c:if>
 		</div>
@@ -90,6 +90,7 @@ xmlns:fn="http://java.sun.com/jsp/jstl/functions"
 								budgetAllocBackingBean.managedBean.selectedBudgetAllocDtl.ppBudgetDtl.budgetDtlId)}" 
 								update="somDo, itGosoBalance"/>
 						</p:selectOneMenu>
+						
 						<p:selectOneMenu styleClass="ppDropDownWidthS" id="somDo" 
 							disabled="#{!budgetAllocBackingBean.managedBean.selectedBudgetAllocDtl.editable}" 
 							value="#{budgetAllocBackingBean.managedBean.selectedBudgetAllocDtl.pmDo.doId}">
