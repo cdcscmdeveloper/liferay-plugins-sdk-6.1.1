@@ -11,7 +11,6 @@
 	<ui:define name="resourceSection">
 	</ui:define>
 	<ui:define name="contentSection">
-		<p:panel header="DELIVERY ORDER DETAILS" toggleable="true" style="width:965px">
 			<br />
 			<p:dataTable value="#{flOrderBB.managedBean.pendingDoList}"
 				var="pending" id="pendingTable" rowIndexVar="rowIndex" width="100%">
@@ -39,8 +38,6 @@
 			</p:dataTable>
 			<p:remoteCommand action="#{flOrderBB.stopDelivery}"
 				name="goToDetail" update="pendingTable" process="@this"/>
-
-		</p:panel>
 	</ui:define>
 
 </ui:composition>
