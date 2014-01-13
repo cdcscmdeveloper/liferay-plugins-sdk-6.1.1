@@ -161,9 +161,9 @@ public class MofRegistrationBackingBean extends
 			sublvl1.setCategoryName("Sub - Child" + (i + 1));
 			SmSupplierCategory cat = new SmSupplierCategory();
 			if (i % 3 == 0) {
-				cat.setCategoryType("S");
+				cat.setSpecialCategory(true);
 			} else {
-				cat.setCategoryType("N");
+				cat.setSpecialCategory(false);
 			}
 
 			cat.setPmCategoryL1(parent);

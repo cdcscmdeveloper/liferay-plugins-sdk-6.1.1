@@ -6,7 +6,6 @@ import java.util.List;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
 
-import my.ep.persistence.entity.pm.common.PmBank;
 import my.ep.persistence.entity.pm.common.PmCategoryL1;
 import my.ep.persistence.entity.pm.common.PmCategoryL2;
 import my.ep.persistence.entity.pm.common.PmCategoryL3;
@@ -19,14 +18,12 @@ import my.ep.persistence.entity.sm.SmAppl;
 import my.ep.persistence.entity.sm.SmApplSectionReview;
 import my.ep.persistence.entity.sm.SmAssociateCompany;
 import my.ep.persistence.entity.sm.SmChequeSignatory;
-import my.ep.persistence.entity.sm.SmContractExperience;
 import my.ep.persistence.entity.sm.SmEquityCompany;
 import my.ep.persistence.entity.sm.SmFacility;
 import my.ep.persistence.entity.sm.SmMachineDtl;
 import my.ep.persistence.entity.sm.SmManufacturingDtl;
 import my.ep.persistence.entity.sm.SmPersonnel;
 import my.ep.persistence.entity.sm.SmPersonnelAddress;
-import my.ep.persistence.entity.sm.SmProjectExperience;
 import my.ep.persistence.entity.sm.SmStaffAcademic;
 import my.ep.persistence.entity.sm.SmSupplier;
 import my.ep.persistence.entity.sm.SmSupplierBank;
@@ -66,13 +63,13 @@ public class SmApplicationManagedBean extends BaseManagedBean {
 
 	private SmSupplierCert selectedCert;
 
-	private List<SmContractExperience> selectedContractProjs;
-
-	private SmContractExperience selectedContractProj;
-
-	private List<SmProjectExperience> selectedConstProjs;
-
-	private SmProjectExperience selectedConstProj;
+//	private List<SmContractExperience> selectedContractProjs;
+//
+//	private SmContractExperience selectedContractProj;
+//
+//	private List<SmProjectExperience> selectedConstProjs;
+//
+//	private SmProjectExperience selectedConstProj;
 
 	private String selectedParentCat;
 
@@ -231,10 +228,10 @@ public class SmApplicationManagedBean extends BaseManagedBean {
 		selectedEquityCompanies = new ArrayList<SmEquityCompany>();
 		selectedCertList = new ArrayList<SmSupplierCert>();
 		selectedCert = new SmSupplierCert();
-		selectedContractProjs = new ArrayList<SmContractExperience>();
-		selectedContractProj = new SmContractExperience();
-		selectedConstProjs = new ArrayList<SmProjectExperience>();
-		selectedConstProj = new SmProjectExperience();
+		// selectedContractProjs = new ArrayList<SmContractExperience>();
+		// selectedContractProj = new SmContractExperience();
+		// selectedConstProjs = new ArrayList<SmProjectExperience>();
+		// selectedConstProj = new SmProjectExperience();
 		// For share holder personell
 		selectedShareHolder = new SmPersonnel();
 		smapplShareHolders = new ArrayList<SmPersonnel>();
@@ -283,7 +280,7 @@ public class SmApplicationManagedBean extends BaseManagedBean {
 		smAppl.setSmPersonnels(new ArrayList<SmPersonnel>());
 		chequeSingNames = new ArrayList<String>();
 		selectedBank = new SmSupplierBank();
-		selectedBank.setPmbank(new PmBank());
+		//selectedBank.setPmbank(new PmBank());
 		selectedBank.setSmAddress(defaultAddr);
 		selectedBank.setSmChequeSignatories(new ArrayList<SmChequeSignatory>());
 		selectedBanks = new ArrayList<SmSupplierBank>();
@@ -392,40 +389,40 @@ public class SmApplicationManagedBean extends BaseManagedBean {
 		this.selectedCategory = selectedCategory;
 	}
 
-	public List<SmProjectExperience> getSelectedConstProjs() {
-		return selectedConstProjs;
-	}
+	// public List<SmProjectExperience> getSelectedConstProjs() {
+	// return selectedConstProjs;
+	// }
+	//
+	// public void setSelectedConstProjs(
+	// List<SmProjectExperience> selectedConstProjs) {
+	// this.selectedConstProjs = selectedConstProjs;
+	// }
+	//
+	// public SmProjectExperience getSelectedConstProj() {
+	// return selectedConstProj;
+	// }
+	//
+	// public void setSelectedConstProj(SmProjectExperience selectedConstProj) {
+	// this.selectedConstProj = selectedConstProj;
+	// }
+	//
+	// public List<SmContractExperience> getSelectedContractProjs() {
+	// return selectedContractProjs;
+	// }
 
-	public void setSelectedConstProjs(
-			List<SmProjectExperience> selectedConstProjs) {
-		this.selectedConstProjs = selectedConstProjs;
-	}
-
-	public SmProjectExperience getSelectedConstProj() {
-		return selectedConstProj;
-	}
-
-	public void setSelectedConstProj(SmProjectExperience selectedConstProj) {
-		this.selectedConstProj = selectedConstProj;
-	}
-
-	public List<SmContractExperience> getSelectedContractProjs() {
-		return selectedContractProjs;
-	}
-
-	public void setSelectedContractProjs(
-			List<SmContractExperience> selectedContractProjs) {
-		this.selectedContractProjs = selectedContractProjs;
-	}
-
-	public SmContractExperience getSelectedContractProj() {
-		return selectedContractProj;
-	}
-
-	public void setSelectedContractProj(
-			SmContractExperience selectedContractProj) {
-		this.selectedContractProj = selectedContractProj;
-	}
+//	public void setSelectedContractProjs(
+//			List<SmContractExperience> selectedContractProjs) {
+//		this.selectedContractProjs = selectedContractProjs;
+//	}
+//
+//	public SmContractExperience getSelectedContractProj() {
+//		return selectedContractProj;
+//	}
+//
+//	public void setSelectedContractProj(
+//			SmContractExperience selectedContractProj) {
+//		this.selectedContractProj = selectedContractProj;
+//	}
 
 	public List<SmSupplierCert> getSelectedCertList() {
 		return selectedCertList;

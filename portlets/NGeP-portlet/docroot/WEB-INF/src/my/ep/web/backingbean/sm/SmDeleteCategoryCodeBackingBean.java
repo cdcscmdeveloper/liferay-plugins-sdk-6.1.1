@@ -26,6 +26,7 @@ import my.ep.web.util.lookupservice.BusinessDelegate;
 
 import org.apache.log4j.Logger;
 import org.primefaces.event.SelectEvent;
+import org.primefaces.event.ToggleSelectEvent;
 import org.primefaces.event.UnselectEvent;
 
 @ManagedBean(name = "deleteCategoryCodeBB")
@@ -52,14 +53,14 @@ public class SmDeleteCategoryCodeBackingBean extends
 					.getSmSupplier();
 			if (smApplSupplier == null) {
 				smApplSupplier = new SmSupplier();
-				smApplSupplier.setSupplierName("My Sample Supplier");
+				// smApplSupplier.setSupplierName("My Sample Supplier");
 				smApplSupplier.setBusinessType("1");
 				smApplSupplier.setRegNo("12345");
 				smApplSupplier.setEstablishDate(new Date());
 				smApplSupplier.setWebSite("www.samplecompany.com");
 			}
 			System.out.println("Retrieved Value ==="
-					+ smApplSupplier.getSupplierName() + " ==== tax num == "
+					// + smApplSupplier.getSupplierName() + " ==== tax num == "
 					+ smApplSupplier.getIncomeTaxNo() + " === EST DATE ==== "
 					+ smApplSupplier.getEstablishDate());
 			System.out.println("******** SIZE ********** "
@@ -81,9 +82,9 @@ public class SmDeleteCategoryCodeBackingBean extends
 				SmSupplierCategory cat = new SmSupplierCategory();
 				cat.setSupplierCategoryId((i + 1));
 				if (i % 3 == 0) {
-					cat.setCategoryType("S");
+					cat.setSpecialCategory(true);
 				} else {
-					cat.setCategoryType("N");
+					cat.setSpecialCategory(false);
 				}
 
 				cat.setPmCategoryL1(parent);
@@ -137,6 +138,13 @@ public class SmDeleteCategoryCodeBackingBean extends
 
 	}
 
+	public void onToggleSelect(ToggleSelectEvent event) {
+		System.out.println("*********** On Select or Unslect all ***********"
+				+ getManagedBean().getSelectedCategories().size());
+		manageSelectedRecords();
+
+	}
+
 	public void onRowUnSelect(UnselectEvent event) {
 		System.out
 				.println("*********** Enterd THE RoW UN SELECT METHOD ***********"
@@ -158,7 +166,7 @@ public class SmDeleteCategoryCodeBackingBean extends
 						System.out.println("*** ENTER *****");
 						break;
 					} else {
-						sdbTemp.setRemarks("");
+						// sdbTemp.setRemarks("");
 						sdbTemp.setSelected(Boolean.FALSE);
 					}
 				}
@@ -176,7 +184,7 @@ public class SmDeleteCategoryCodeBackingBean extends
 					.getSmSupplierCategories().size(); i++) {
 				SmSupplierCategory sdbTemp = getManagedBean().getSmAppl()
 						.getSmSupplierCategories().get(i);
-				sdbTemp.setRemarks("");
+				// sdbTemp.setRemarks("");
 				sdbTemp.setSelected(Boolean.FALSE);
 				getManagedBean().getSmAppl().getSmSupplierCategories()
 						.set(i, sdbTemp);

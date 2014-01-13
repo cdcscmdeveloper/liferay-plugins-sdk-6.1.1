@@ -28,6 +28,8 @@ public class SmDeleteCategoryCodeManagedBean extends BaseManagedBean {
 
 	private String deleteConfirmMsg;
 
+	private boolean termsAccepted;
+
 	public SmDeleteCategoryCodeManagedBean() {
 		smSupplier = new SmSupplier();
 		smAppl = new SmAppl();
@@ -107,6 +109,14 @@ public class SmDeleteCategoryCodeManagedBean extends BaseManagedBean {
 
 	public void setDeleteConfirmMsg(String deleteConfirmMsg) {
 		this.deleteConfirmMsg = deleteConfirmMsg;
+	}
+
+	public boolean isTermsAccepted() {
+		return termsAccepted;
+	}
+
+	public void setTermsAccepted(boolean termsAccepted) {
+		this.termsAccepted = termsAccepted;
 	}
 
 }
