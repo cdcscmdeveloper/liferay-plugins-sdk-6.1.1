@@ -21,7 +21,7 @@
 
 	<p:panel header="Final XXX Evaluation Report" toggleable="true">
 
-		<h:panelGrid border="0" cellpadding="0" cellspacing="0" width="100%"
+		<!-- <h:panelGrid border="0" cellpadding="0" cellspacing="0" width="100%"
 			columns="2">
 			<h:column>
 				<h:outputLabel value="Attachement" />
@@ -34,9 +34,18 @@
 			</p:fileUpload>
 			</h:column>
 		
-		</h:panelGrid>
+		</h:panelGrid> -->
 		<p:spacer height="20px"/>
-
+		
+		<h:panelGrid columns="2">
+			<p:outputLabel value="#{lbl['lbl.sc.eva.report.attachment']}"></p:outputLabel>
+			<h:panelGroup>
+				<p:inputText></p:inputText>
+				<p:commandButton value="UPLOAD"></p:commandButton>
+				<p:commandLink value="view"></p:commandLink>
+			</h:panelGroup>
+		</h:panelGrid>
+		
 	</p:panel>
 	
 </ui:composition>

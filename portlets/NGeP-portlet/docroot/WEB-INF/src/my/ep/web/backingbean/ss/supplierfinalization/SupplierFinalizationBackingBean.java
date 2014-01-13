@@ -17,9 +17,9 @@ import my.ep.dto.ss.quationtender.SuppFinalizationResDTO;
 import my.ep.factory.EpLogger;
 import my.ep.persistence.entity.ss.quationtender.ScQt;
 import my.ep.persistence.entity.ss.quationtender.ScQtCommitteeActivity;
+import my.ep.persistence.entity.ss.quationtender.ScQtEvaluationResult;
 import my.ep.persistence.entity.ss.quationtender.ScQtItem;
 import my.ep.persistence.entity.ss.quationtender.ScQtMeeting;
-import my.ep.persistence.entity.ss.quationtender.ScQtProposalRanking;
 import my.ep.persistence.entity.ss.quationtender.ScQtZoneCriteria;
 import my.ep.web.backingbean.ss.quatationtender.SourcingBaseBackingBean;
 import my.ep.web.managedbean.ss.supplierfinalization.SupplierFinalizationManagedBean;
@@ -27,6 +27,7 @@ import my.ep.web.ss.quationtender.common.QTConstants;
 import my.ep.web.util.lookupservice.BusinessDelegate;
 
 import org.apache.log4j.Logger;
+import org.primefaces.event.SelectEvent;
 
 /**
  * @author sri Supplier Finalization Backing Bean
@@ -41,8 +42,8 @@ public class SupplierFinalizationBackingBean extends
 	public SupplierFinalizationBackingBean() {
 		optionsEvent();
 		awardTypeEvent();
-		retrieveMeetingCommitteeMemberDtl();
-		retrieveSummaryDetsils();
+		retrieveMeetingCommitteeMemberDtl(); //Supplier Finalization
+		retrieveSummaryDetails(); //Pre- Supplier Finalization
 	}
 	
 	/**
@@ -80,7 +81,7 @@ public class SupplierFinalizationBackingBean extends
 			this.getManagedBean().setZonelist(zonelist);
 			
 			List<ScQtItem> itemlist = resDTO.getItemResultBean().getResultList();
-			this.getManagedBean().setItemSummarylist(itemlist);
+			this.getManagedBean().setItemSuppFinalizationlist(itemlist);
 			
 			// populate Header Details
 			ScQt scQt = resDTO.getScQt();
@@ -91,11 +92,11 @@ public class SupplierFinalizationBackingBean extends
 		    if (!scQt.getScQtCriterias().isMultiLocality()){ 
 		    	
 				// Recommended Supplier Listing
-				List<ScQtProposalRanking> recommendedSuppList = resDTO.getQualifiedSuppResultBean().getResultList();
+				List<ScQtEvaluationResult> recommendedSuppList = resDTO.getQualifiedSuppResultBean().getResultList();
 				this.getManagedBean().setRecommendedSuppList(recommendedSuppList);
 				
 				//  Shortlisted Supplier Listing
-				List<ScQtProposalRanking> shortlistedSuppList = resDTO.getQualifiedSuppResultBean().getResultList();
+				List<ScQtEvaluationResult> shortlistedSuppList = resDTO.getQualifiedSuppResultBean().getResultList();
 				this.getManagedBean().setShortlistedSuppList(shortlistedSuppList);
 				this.getManagedBean().setTotalSelectedSupplier(shortlistedSuppList.size());
 		    }
@@ -126,11 +127,11 @@ public class SupplierFinalizationBackingBean extends
 				SuppFinalizationResDTO resDTO = suppFinalizationSO.retrieveItemSupplierDtlByZone(reqDTO);
 		
 				// Recommended Supplier Listing
-				List<ScQtProposalRanking> recommendedSuppList = resDTO.getQualifiedSuppResultBean().getResultList();
+				List<ScQtEvaluationResult> recommendedSuppList = resDTO.getQualifiedSuppResultBean().getResultList();
 				this.getManagedBean().setRecommendedSuppList(recommendedSuppList);
 				
 				//  Shortlisted Supplier Listing
-				List<ScQtProposalRanking> shortlistedSuppList = resDTO.getQualifiedSuppResultBean().getResultList();
+				List<ScQtEvaluationResult> shortlistedSuppList = resDTO.getQualifiedSuppResultBean().getResultList();
 				this.getManagedBean().setShortlistedSuppList(shortlistedSuppList);
 				this.getManagedBean().setTotalSelectedSupplier(shortlistedSuppList.size());
 				this.getManagedBean().setScQtZoneCriteria(scQtZoneCriteria);
@@ -152,10 +153,11 @@ public class SupplierFinalizationBackingBean extends
 		debugLogger("Save Supplier Finalization");
 		IQTSuppFinalizationSO suppFinalizationSO = null;
 	   try {
-			suppFinalizationSO = BusinessDelegate.getInstance().getServiceObject(
+		   	suppFinalizationSO = BusinessDelegate.getInstance().getServiceObject(
 					QTConstants.SS_MODULE, IQTSuppFinalizationSO.class);
 			SuppFinalizationReqDTO reqDTO = new SuppFinalizationReqDTO();
-			List<ScQtProposalRanking> proposalRaningList=new ArrayList<ScQtProposalRanking>();
+			/*List<ScQtProposalRanking> proposalRaningList=new ArrayList<ScQtProposalRanking>();*/
+			List<ScQtEvaluationResult> evaluationResultList = new ArrayList<ScQtEvaluationResult>();
 	        
 			if(getManagedBean().getMeetingDetails() != null){
 				reqDTO.setMeetingDtls(getManagedBean().getMeetingDetails());
@@ -166,25 +168,25 @@ public class SupplierFinalizationBackingBean extends
 			}
 			
 			// Shortlisted Supplier listing
-			List<ScQtProposalRanking> list = getManagedBean().getShortlistedSuppList();
+			List<ScQtEvaluationResult> list = getManagedBean().getShortlistedSuppList();
 					
 			if (list != null){
-			    proposalRaningList.addAll(list);
+				evaluationResultList.addAll(list);
 			}
 			
 			// Recommended Supplier listing
 			list = getManagedBean().getRecommendedSuppList();
 	        if (list != null){
-			     proposalRaningList.addAll(list);
+	        	evaluationResultList.addAll(list);
 			}
 			
-	        if (proposalRaningList.size() > 0) {
-	        	reqDTO.setQualifiedSuppliers(proposalRaningList);
+	        if (evaluationResultList.size() > 0) {
+	        	reqDTO.setQualifiedSuppliers(evaluationResultList);
 	        	
-	        }	
-	           reqDTO.setScQt(this.getManagedBean().getScQt());
-	           suppFinalizationSO.saveQTDtl(reqDTO);
-	           FacesContext.getCurrentInstance().addMessage(null,new FacesMessage(FacesMessage.SEVERITY_INFO,"Record saved successfully.","Supplier Finalization "));
+	        }
+	        reqDTO.setScQt(this.getManagedBean().getScQt());
+	        suppFinalizationSO.saveQTDtl(reqDTO);
+	        FacesContext.getCurrentInstance().addMessage(null,new FacesMessage(FacesMessage.SEVERITY_INFO,"Record saved successfully.","Supplier Finalization "));
 	    
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -256,50 +258,85 @@ public class SupplierFinalizationBackingBean extends
 	/**
 	 * retrieving  Meeting and Committee Member Listing
 	 */
-	public void retrieveSummaryDetsils() {
-		debugLogger("Summery Details");
+	public void retrieveSummaryDetails() {
+		debugLogger("retrieveSummaryDetails");
 		IQTEvaluationReportSO evaluationReportSO = null;
-	   try {
-		   evaluationReportSO = BusinessDelegate.getInstance().getServiceObject(
+		try {
+			evaluationReportSO = BusinessDelegate.getInstance().getServiceObject(
 					QTConstants.SS_MODULE, IQTEvaluationReportSO.class);
-			
 			EvaluationReportReqDTO reqDTO = new EvaluationReportReqDTO();
 			reqDTO.setQtId(146L);
 			EvaluationReportResDTO resDTO = evaluationReportSO.retrieveSummaryDtl(reqDTO);
-						
-			List<ScQtZoneCriteria> list = resDTO.getScQt().getScQtCriterias().getScQtZoneCriterias();
-			this.getManagedBean().setZonelist(list);
+			
+			List<ScQtZoneCriteria> zoneList = resDTO.getScQt().getScQtCriterias().getScQtZoneCriterias();
+			System.out.println("Zone list : " + zoneList.size());
+			this.getManagedBean().setZonelist(zoneList);
+			getManagedBean().setZoneItemList(zoneList);
 			
 			List<ScQtItem> itemlist = resDTO.getItemResultBean().getResultList();
-			this.getManagedBean().setItemSuppFinalizationlist(itemlist);
+			System.out.println("itemlist: " + itemlist.size());
+			this.getManagedBean().setItemPreSummarylist(itemlist);
 			
 			// populate Header Details
 			ScQt scQt = resDTO.getScQt();
 			populateParentOrgProfile(scQt);
-		    this.getManagedBean().setScQt(scQt);
-		    
-		    if (!scQt.getScQtCriterias().isMultiLocality()){
-		       if (resDTO.getQualifiedSuppResultBean() != null) {
-					List<ScQtProposalRanking> qualifiedSupplist = resDTO.getQualifiedSuppResultBean().getResultList();
-				       this.getManagedBean().setQualifiedSupplist(qualifiedSupplist);
-				       this.getManagedBean().setTotalQulifiedSupplier(qualifiedSupplist.size());
-				  }
-					
-			   if (resDTO.getDisqualifiedSuppResultBean() != null) {
-					List<ScQtProposalRanking> disqualifiedSupplist = resDTO.getDisqualifiedSuppResultBean().getResultList();
+			this.getManagedBean().setScQt(scQt);
+			
+			if (!scQt.getScQtCriterias().isMultiLocality()){
+		    	if (resDTO.getQualifiedSuppResultBean() != null) {
+					List<ScQtEvaluationResult> qualifiedSupplist = resDTO.getQualifiedSuppResultBean().getResultList();
+					System.out.println("qualifiedSupplist: " + qualifiedSupplist.size());
+					this.getManagedBean().setQualifiedSupplist(qualifiedSupplist);
+					this.getManagedBean().setTotalQulifiedSupplier(qualifiedSupplist.size());
+				}
+		    	if (resDTO.getDisqualifiedSuppResultBean() != null) {
+					List<ScQtEvaluationResult> disqualifiedSupplist = resDTO.getDisqualifiedSuppResultBean().getResultList();
+					System.out.println("disqualifiedSupplist: " + disqualifiedSupplist.size());
 					this.getManagedBean().setDisQualifiedSupplist(disqualifiedSupplist);
 					this.getManagedBean().setTotalDisQualifiedSupplier(disqualifiedSupplist.size());
-				 }
+				}
 		    }
-			} catch (Exception ex) {
-				ex.printStackTrace();
-				FacesContext.getCurrentInstance().addMessage(null,
+		} catch (Exception ex) {
+			ex.printStackTrace();
+			FacesContext.getCurrentInstance().addMessage(null,
 						new FacesMessage(FacesMessage.SEVERITY_ERROR,ex.toString(), ex.getMessage()));
-			} finally {
-				evaluationReportSO = null;
-			}
-	   }
+		} finally {
+			evaluationReportSO = null;
+		}
+	}
 	
+	public void onRowZoneSelect(SelectEvent selectEvent) {
+		debugLogger("onRowZoneSelect");
+		ScQtZoneCriteria criteria = (ScQtZoneCriteria) selectEvent.getObject();
+		getManagedBean().setSelectZoneByItem(criteria);
+		System.out.println("Zone Id : " + getManagedBean().getSelectZoneByItem().getQtZoneCriteriaId() + "Zone Name : " + getManagedBean().getSelectZoneByItem().getZoneName());
+	}
+	
+	
+	public void getZoneByItemDtl(SelectEvent selectEvent) {
+		debugLogger("getZoneByItemDtl");
+		ScQtItem item = (ScQtItem) selectEvent.getObject();
+		System.out.println("Item Id : " + item.getQtItemId() + "Item Name : " + item.getItemName());
+		IQTSuppFinalizationSO suppFinalizationSO = null;
+		try {
+			suppFinalizationSO = BusinessDelegate.getInstance()
+					.getServiceObject(QTConstants.SS_MODULE,
+							IQTSuppFinalizationSO.class);
+			SuppFinalizationReqDTO reqDTO = new SuppFinalizationReqDTO();
+			System.out.println("Zone Id : " + getManagedBean().getSelectZoneByItem().getQtZoneCriteriaId());
+			reqDTO.setQtZoneCriteriaId(getManagedBean().getSelectZoneByItem().getQtZoneCriteriaId());
+			SuppFinalizationResDTO resDTO = suppFinalizationSO.retrieveItemSupplierDtlByZone(reqDTO);
+		} catch (Exception ex) {
+			ex.printStackTrace();
+			FacesContext.getCurrentInstance().addMessage(
+					null,
+					new FacesMessage(FacesMessage.SEVERITY_ERROR,
+							ex.toString(), ex.getMessage()));
+		} finally {
+			suppFinalizationSO = null;
+		}
+
+	}
 	
 	/**
 	 * retrieving  Qualified and Disqualified Supplier Listing By Zone in Summary
@@ -318,18 +355,20 @@ public class SupplierFinalizationBackingBean extends
 				SuppFinalizationResDTO resDTO = suppFinalizationSO.retrieveItemSupplierDtlByZone(reqDTO);
 		
 			   if (resDTO.getQualifiedSuppResultBean() != null) {
-					List<ScQtProposalRanking> qualifiedSupplist = resDTO.getQualifiedSuppResultBean().getResultList();
+					List<ScQtEvaluationResult> qualifiedSupplist = resDTO.getQualifiedSuppResultBean().getResultList();
+					System.out.println("list: " + qualifiedSupplist.size());
 			        this.getManagedBean().setQualifiedSupplist(qualifiedSupplist);
 			        this.getManagedBean().setTotalQulifiedSupplier(qualifiedSupplist.size());
 			   }
 				
 			  if (resDTO.getDisqualifiedSuppResultBean() != null) {
-					List<ScQtProposalRanking> disqualifiedSupplist = resDTO.getDisqualifiedSuppResultBean().getResultList();
+					List<ScQtEvaluationResult> disqualifiedSupplist = resDTO.getDisqualifiedSuppResultBean().getResultList();
 					this.getManagedBean().setDisQualifiedSupplist(disqualifiedSupplist);
 					this.getManagedBean().setTotalDisQualifiedSupplier(disqualifiedSupplist.size());
 			   }
 			  
 			  this.getManagedBean().setScQtZoneCriteria(scQtZoneCriteria);
+			  System.out.println("Zone Name(Package) : " + getManagedBean().getScQtZoneCriteria().getZoneName());
 			}
 			} catch (Exception ex) {
 				ex.printStackTrace();
@@ -355,6 +394,22 @@ public class SupplierFinalizationBackingBean extends
 		}
 
 	}
+	
+	/**
+	 *  Event for By Item and  By Package in Supplier Finalization
+	 */
+	public void viewByEvent() {
+		debugLogger("viewByEvent");
+
+		if (getManagedBean().isAwardType()) {
+			this.getManagedBean().setSummaryByItemStatus(false);
+			this.getManagedBean().setSummaryByPackageStatus(true);
+		} else {
+			this.getManagedBean().setSummaryByItemStatus(true);
+			this.getManagedBean().setSummaryByPackageStatus(false);
+		}
+
+	}
 
 	/**
 	 *  Event for selecting Option for Forward Higher Authority and  
@@ -371,30 +426,35 @@ public class SupplierFinalizationBackingBean extends
 					this.getManagedBean().setReEvaluation(false);
 					this.getManagedBean().setShortlistedSuppVisible(false);
 					this.getManagedBean().setRecommendedSuppVisible(false);
+					this.getManagedBean().setAward(false);
 
 				} else if (decisionArray[i].equalsIgnoreCase(QTConstants.SF_RE_EVALUATION)) {
 					this.getManagedBean().setReEvaluation(true);
 					this.getManagedBean().setFhAuthority(false);
 					this.getManagedBean().setShortlistedSuppVisible(false);
 					this.getManagedBean().setRecommendedSuppVisible(false);
+					this.getManagedBean().setAward(false);
 
 				}else if (decisionArray[i].equalsIgnoreCase(QTConstants.SF_ONLINE_BIDDING) || (decisionArray[i].equalsIgnoreCase(QTConstants.SF_MULTIPLE_LOI))) {
 					this.getManagedBean().setShortlistedSuppVisible(true);
 					this.getManagedBean().setRecommendedSuppVisible(false);
 					this.getManagedBean().setFhAuthority(false);
 					this.getManagedBean().setReEvaluation(false);
+					this.getManagedBean().setAward(false);
 
 			    } else if (decisionArray[i].equalsIgnoreCase(QTConstants.SF_AWARD)) {
 			    	this.getManagedBean().setShortlistedSuppVisible(false);
 					this.getManagedBean().setRecommendedSuppVisible(true);
 					this.getManagedBean().setFhAuthority(false);
 					this.getManagedBean().setReEvaluation(false);
+					this.getManagedBean().setAward(true);
 
 			    }else {
 					this.getManagedBean().setFhAuthority(false);
 					this.getManagedBean().setReEvaluation(false);
 					this.getManagedBean().setShortlistedSuppVisible(false);
 					this.getManagedBean().setRecommendedSuppVisible(false);
+					this.getManagedBean().setAward(false);
 				}
 
 			}

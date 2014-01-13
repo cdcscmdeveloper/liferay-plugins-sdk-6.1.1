@@ -7,6 +7,7 @@ import javax.faces.bean.SessionScoped;
 
 import my.ep.persistence.entity.ss.quationtender.ScQt;
 import my.ep.persistence.entity.ss.quationtender.ScQtCommitteeActivity;
+import my.ep.persistence.entity.ss.quationtender.ScQtEvaluationResult;
 import my.ep.persistence.entity.ss.quationtender.ScQtItem;
 import my.ep.persistence.entity.ss.quationtender.ScQtMeeting;
 import my.ep.persistence.entity.ss.quationtender.ScQtProposalRanking;
@@ -47,21 +48,155 @@ public class SupplierFinalizationManagedBean extends BaseManagedBean {
 	private ScQtZoneCriteria scQtZoneCriteria; // for selected zone to get Shortlisted Supplier listing and Recommended supplier Listing
 	private ScQtMeeting scQtMeeting;
 	
-	private List<ScQtProposalRanking> qualifiedSupplist;
-	private List<ScQtProposalRanking> disQualifiedSupplist;
+	private List<ScQtEvaluationResult> qualifiedSupplist;
+	private List<ScQtEvaluationResult> disQualifiedSupplist;
 	private List<ScQtCommitteeActivity> committeeSignOffMemberlist;
 	private List<ScQtZoneCriteria> zonelist;
-	private List<ScQtItem> itemSummarylist; // for Item List in Summary
+	private List<ScQtZoneCriteria> zoneItemList;
+	private List<ScQtItem> itemPreSummarylist; // for Item List in Summary
 	private List<ScQtItem> itemSuppFinalizationlist; // for Item List in Supplier Finalization
-	private List<ScQtProposalRanking> recommendedSuppList ; // for Recommended Supplier Listing
+	private List<ScQtEvaluationResult> recommendedSuppList ; // for Recommended Supplier Listing
 	private List<ScQtItem> selectedItemsSummary; // for Selected Items  in Summary
 	private List<ScQtItem> selectedItemsSuppFinalization; // for  Selected Items in Supplier Finalization
-	private List<ScQtProposalRanking> shortlistedSuppList ; // for ShortlistedSupplier Listing
+	private List<ScQtEvaluationResult> shortlistedSuppList ; // for ShortlistedSupplier Listing
 	private Integer totalSelectedSupplier; // Total for selected suppliers
 	private Integer totalQulifiedSupplier; // Total for Qualified Suppliers
 	private Integer totalDisQualifiedSupplier; // Total for DisQualified Suppliers
 	
+	private boolean summaryByItemStatus;
+	private boolean summaryByPackageStatus = true;
+	private String zoneName1;
 	
+	private List<ScQtEvaluationResult> qualifiedSuppByItemList;
+	private List<ScQtEvaluationResult> disQualifiedSuppByItemList;
+	private Integer totalQulifiedSupplierByItem; // Total for Qualified Suppliers By Item
+	private Integer totalDisQualifiedSupplierByItem; // Total for DisQualified Suppliers By Item
+	private ScQtZoneCriteria selectZoneByItem;
+	private boolean award = false;
+	
+	/**
+	 * @return the award
+	 */
+	public boolean isAward() {
+		return award;
+	}
+	/**
+	 * @param award the award to set
+	 */
+	public void setAward(boolean award) {
+		this.award = award;
+	}
+	/**
+	 * @return the selectZoneByItem
+	 */
+	public ScQtZoneCriteria getSelectZoneByItem() {
+		return selectZoneByItem;
+	}
+	/**
+	 * @param selectZoneByItem the selectZoneByItem to set
+	 */
+	public void setSelectZoneByItem(ScQtZoneCriteria selectZoneByItem) {
+		this.selectZoneByItem = selectZoneByItem;
+	}
+	/**
+	 * @return the totalQulifiedSupplierByItem
+	 */
+	public Integer getTotalQulifiedSupplierByItem() {
+		return totalQulifiedSupplierByItem;
+	}
+	/**
+	 * @param totalQulifiedSupplierByItem the totalQulifiedSupplierByItem to set
+	 */
+	public void setTotalQulifiedSupplierByItem(Integer totalQulifiedSupplierByItem) {
+		this.totalQulifiedSupplierByItem = totalQulifiedSupplierByItem;
+	}
+	/**
+	 * @return the totalDisQualifiedSupplierByItem
+	 */
+	public Integer getTotalDisQualifiedSupplierByItem() {
+		return totalDisQualifiedSupplierByItem;
+	}
+	/**
+	 * @param totalDisQualifiedSupplierByItem the totalDisQualifiedSupplierByItem to set
+	 */
+	public void setTotalDisQualifiedSupplierByItem(
+			Integer totalDisQualifiedSupplierByItem) {
+		this.totalDisQualifiedSupplierByItem = totalDisQualifiedSupplierByItem;
+	}
+	/**
+	 * @return the qualifiedSuppByItemList
+	 */
+	public List<ScQtEvaluationResult> getQualifiedSuppByItemList() {
+		return qualifiedSuppByItemList;
+	}
+	/**
+	 * @param qualifiedSuppByItemList the qualifiedSuppByItemList to set
+	 */
+	public void setQualifiedSuppByItemList(
+			List<ScQtEvaluationResult> qualifiedSuppByItemList) {
+		this.qualifiedSuppByItemList = qualifiedSuppByItemList;
+	}
+	/**
+	 * @return the disQualifiedSuppByItemList
+	 */
+	public List<ScQtEvaluationResult> getDisQualifiedSuppByItemList() {
+		return disQualifiedSuppByItemList;
+	}
+	/**
+	 * @param disQualifiedSuppByItemList the disQualifiedSuppByItemList to set
+	 */
+	public void setDisQualifiedSuppByItemList(
+			List<ScQtEvaluationResult> disQualifiedSuppByItemList) {
+		this.disQualifiedSuppByItemList = disQualifiedSuppByItemList;
+	}
+	/**
+	 * @return the zoneName1
+	 */
+	public String getZoneName1() {
+		return zoneName1;
+	}
+	/**
+	 * @param zoneName1 the zoneName1 to set
+	 */
+	public void setZoneName1(String zoneName1) {
+		this.zoneName1 = zoneName1;
+	}
+	/**
+	 * @return the zoneItemList
+	 */
+	public List<ScQtZoneCriteria> getZoneItemList() {
+		return zoneItemList;
+	}
+	/**
+	 * @param zoneItemList the zoneItemList to set
+	 */
+	public void setZoneItemList(List<ScQtZoneCriteria> zoneItemList) {
+		this.zoneItemList = zoneItemList;
+	}
+	/**
+	 * @return the summaryByItemStatus
+	 */
+	public boolean isSummaryByItemStatus() {
+		return summaryByItemStatus;
+	}
+	/**
+	 * @param summaryByItemStatus the summaryByItemStatus to set
+	 */
+	public void setSummaryByItemStatus(boolean summaryByItemStatus) {
+		this.summaryByItemStatus = summaryByItemStatus;
+	}
+	/**
+	 * @return the summaryByPackageStatus
+	 */
+	public boolean isSummaryByPackageStatus() {
+		return summaryByPackageStatus;
+	}
+	/**
+	 * @param summaryByPackageStatus the summaryByPackageStatus to set
+	 */
+	public void setSummaryByPackageStatus(boolean summaryByPackageStatus) {
+		this.summaryByPackageStatus = summaryByPackageStatus;
+	}
 	/**
 	 * @return the byItemStatus
 	 */
@@ -256,32 +391,28 @@ public class SupplierFinalizationManagedBean extends BaseManagedBean {
 	/**
 	 * @return the qualifiedSupplist
 	 */
-	public List<ScQtProposalRanking> getQualifiedSupplist() {
+	public List<ScQtEvaluationResult> getQualifiedSupplist() {
 		return qualifiedSupplist;
 	}
-
 	/**
 	 * @param qualifiedSupplist the qualifiedSupplist to set
 	 */
-	public void setQualifiedSupplist(List<ScQtProposalRanking> qualifiedSupplist) {
+	public void setQualifiedSupplist(List<ScQtEvaluationResult> qualifiedSupplist) {
 		this.qualifiedSupplist = qualifiedSupplist;
 	}
-
 	/**
 	 * @return the disQualifiedSupplist
 	 */
-	public List<ScQtProposalRanking> getDisQualifiedSupplist() {
+	public List<ScQtEvaluationResult> getDisQualifiedSupplist() {
 		return disQualifiedSupplist;
 	}
-
 	/**
 	 * @param disQualifiedSupplist the disQualifiedSupplist to set
 	 */
 	public void setDisQualifiedSupplist(
-			List<ScQtProposalRanking> disQualifiedSupplist) {
+			List<ScQtEvaluationResult> disQualifiedSupplist) {
 		this.disQualifiedSupplist = disQualifiedSupplist;
 	}
-
 	/**
 	 * @return the committeeSignOffMemberlist
 	 */
@@ -371,31 +502,31 @@ public class SupplierFinalizationManagedBean extends BaseManagedBean {
 	/**
 	 * @return the recommendedSuppList
 	 */
-	public List<ScQtProposalRanking> getRecommendedSuppList() {
+	public List<ScQtEvaluationResult> getRecommendedSuppList() {
 		return recommendedSuppList;
 	}
-
 	/**
 	 * @param recommendedSuppList the recommendedSuppList to set
 	 */
-	public void setRecommendedSuppList(List<ScQtProposalRanking> recommendedSuppList) {
+	public void setRecommendedSuppList(
+			List<ScQtEvaluationResult> recommendedSuppList) {
 		this.recommendedSuppList = recommendedSuppList;
 	}
 
 	/**
 	 * @return the shortlistedSuppList
 	 */
-	public List<ScQtProposalRanking> getShortlistedSuppList() {
+	public List<ScQtEvaluationResult> getShortlistedSuppList() {
 		return shortlistedSuppList;
 	}
-
+	
 	/**
 	 * @param shortlistedSuppList the shortlistedSuppList to set
 	 */
-	public void setShortlistedSuppList(List<ScQtProposalRanking> shortlistedSuppList) {
+	public void setShortlistedSuppList(
+			List<ScQtEvaluationResult> shortlistedSuppList) {
 		this.shortlistedSuppList = shortlistedSuppList;
 	}
-
 	/**
 	 * @return the totalSelectedSupplier
 	 */
@@ -438,21 +569,18 @@ public class SupplierFinalizationManagedBean extends BaseManagedBean {
 		this.totalDisQualifiedSupplier = totalDisQualifiedSupplier;
 	}
 
-
 	/**
-	 * @return the itemSummarylist
+	 * @return the itemPreSummarylist
 	 */
-	public List<ScQtItem> getItemSummarylist() {
-		return itemSummarylist;
+	public List<ScQtItem> getItemPreSummarylist() {
+		return itemPreSummarylist;
 	}
-
 	/**
-	 * @param itemSummarylist the itemSummarylist to set
+	 * @param itemPreSummarylist the itemPreSummarylist to set
 	 */
-	public void setItemSummarylist(List<ScQtItem> itemSummarylist) {
-		this.itemSummarylist = itemSummarylist;
+	public void setItemPreSummarylist(List<ScQtItem> itemPreSummarylist) {
+		this.itemPreSummarylist = itemPreSummarylist;
 	}
-
 	/**
 	 * @return the itemSuppFinalizationlist
 	 */

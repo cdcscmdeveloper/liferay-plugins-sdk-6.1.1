@@ -5,45 +5,35 @@
 	xmlns:p="http://primefaces.org/ui"
 	xmlns:c="http://java.sun.com/jsp/jstl/core"
 	xmlns:ac="http://ac.my/jsf/composite/cc">
-	<ui:param name="scQt" value="#{sfBackingBean.managedBean.scQt}" />
-	<ui:include src="/xhtml/ss/common/commonHeader.xhtml" />
+	<!-- <ui:param name="scQt" value="#{sfBackingBean.managedBean.scQt}" />
+	<ui:include src="/xhtml/ss/common/commonHeader.xhtml" /> -->
 	<p:panel header="Supplier Finalization " toggleable="true">
-	<h4><u>View Kertas Taklimat:</u></h4>
+		<h4>
+			<u>View Kertas Taklimat:</u>
+		</h4>
 		<p:spacer height="5px" />
-		<h:panelGrid border="0" cellpadding="0" cellspacing="4" width="100%"
-			columns="4"
-			columnClasses="columnWidth20,columnWidth30,columnWidth20,columnWidth30">
-
-			<h:column>
-				<p:outputLabel value="#{lbl['lbl.sc.sf.award.type']}" />
-			</h:column>
-			<h:column>
-				<p:selectOneRadio value="#{sfBackingBean.managedBean.awardType}"
-					rendered="true">
-					<f:selectItem itemLabel="#{lbl['lbl.sc.sf.by.item']}"
-						itemValue="true" />
-					<f:selectItem itemLabel="#{lbl['lbl.sc.sf.by.package']}"
-						itemValue="false" />
-					<p:ajax event="change" update="byItemPackage"
-						listener="#{sfBackingBean.awardTypeEvent}" process="@this" />
-				</p:selectOneRadio>
-			</h:column>
-			<h:column>
-				<p:outputLabel value="" />
-			</h:column>
-			<h:column>
-				<p:outputLabel value="" />
-			</h:column>
-
-		</h:panelGrid>
+		<table style="width: 100%">
+			<tr>
+				<td style="width: 80px"><p:outputLabel
+						value="#{lbl['lbl.sc.sf.award.type']}" /></td>
+				<td><p:selectOneRadio
+						value="#{sfBackingBean.managedBean.awardType}" rendered="true">
+						<f:selectItem itemLabel="#{lbl['lbl.sc.sf.by.item']}"
+							itemValue="true" />
+						<f:selectItem itemLabel="#{lbl['lbl.sc.sf.by.package']}"
+							itemValue="false" />
+						<p:ajax event="change" update="byItemPackage"
+							listener="#{sfBackingBean.awardTypeEvent}" process="@this" />
+					</p:selectOneRadio></td>
+			</tr>
+		</table>
 
 		<p:spacer height="20px" />
-		<table style="border: 0px; width: 1000 px; align: center">
-			<tr align="center">
-				<td valign="top"><p:spacer width="100px" /></td>
-				<td valign="top"><h:outputText
+		<table style="width: 100%;">
+			<tr>
+				<td align="right" valign="top" style="width: 50px;"><h:outputText
 						value="#{lbl['lbl.sc.sf.decision']}" /></td>
-				<td align="left" valign="top"><p:selectManyMenu id="basic"
+				<td valign="top"><p:selectManyMenu id="basic"
 						value="#{sfBackingBean.managedBean.decisionArray}">
 						<f:selectItem itemLabel="#{lbl['lbl.sc.sf.award']}"
 							itemValue="Award" />
@@ -65,19 +55,37 @@
 							listener="#{sfBackingBean.decisionEvent}" process="@this" />
 					</p:selectManyMenu></td>
 
-				<td valign="top"><p:spacer width="100px" /> <p:spacer
-						width="100px" /></td>
-
-				<td valign="top"><h:outputText
+				<td valign="top" style="width: 50px;"><h:outputText
 						value="#{lbl['lbl.sc.sf.remarks']}" /></td>
 
-				<td align="left" valign="top"><p:inputTextarea rows="10"
-						cols="28" /></td>
+				<td valign="top"><p:inputTextarea rows="5"
+						cols="30" /></td>
 			</tr>
 		</table>
 
 		<p:spacer height="25px" />
 		<h:panelGroup id="evalfha">
+
+			<h:panelGrid border="0" cellpadding="0" cellspacing="0" columns="4"
+				columnClasses="columnWidth30,columnWidth50,columnWidth10,columnWidth10"
+				rendered="#{sfBackingBean.managedBean.award}">
+				<h:column>
+					<p:outputLabel value="#{lbl['lbl.sc.sf.loi.loa']}" />
+				</h:column>
+				<h:column>
+					<p:selectOneRadio
+						value="#{sfBackingBean.managedBean.scQt.loiLoaBy}">
+						<f:selectItem itemLabel="#{lbl['lbl.sc.sf.deskoff']}"
+							itemValue="D" />
+						<f:selectItem itemLabel="#{lbl['lbl.sc.sf.secreatary']}"
+							itemValue="S" />
+					</p:selectOneRadio>
+				</h:column>
+				<h:column />
+				<h:column />
+			</h:panelGrid>
+
+			<p:spacer height="15px" />
 			<h:panelGrid border="0" cellpadding="0" cellspacing="4" width="100%"
 				columns="4"
 				columnClasses="columnWidth20,columnWidth30,columnWidth20,columnWidth30"
@@ -138,37 +146,43 @@
 		</h:panelGroup>
 
 		<p:spacer height="20px" />
-			<h4><u>Location List:</u></h4>
-			<h:panelGrid border="0" cellpadding="0" cellspacing="0" width="50%"
-				columns="2" columnClasses="columnWidth20,columnWidth30">
-				<h:outputLabel value="#{lbl['lbl.sc.sf.multiple.locality']}" />
-				<p:inputText
-					value="#{sfBackingBean.managedBean.scQt.scQtCriterias.multiLocality ? 'Yes' : 'No' }"
-					readonly="true" />
-			</h:panelGrid>
-          
-			<p:dataTable id="zoneinfo" var="zone" rendered="#{sfBackingBean.managedBean.scQt.scQtCriterias.multiLocality}"
-				value="#{sfBackingBean.managedBean.zonelist}" rows="10"
-				rowKey="#{zone}" rowIndexVar="rowIndex">
-				<ac:paginator for="zoneinfo" />
+		<h4>
+			<u>Location List:</u>
+		</h4>
+		<h:panelGrid border="0" cellpadding="0" cellspacing="0" width="50%"
+			columns="2" columnClasses="columnWidth20,columnWidth30">
+			<h:outputLabel value="#{lbl['lbl.sc.sf.multiple.locality']}" />
+			<p:inputText
+				value="#{sfBackingBean.managedBean.scQt.scQtCriterias.multiLocality ? 'Yes' : 'No' }"
+				readonly="true" />
+		</h:panelGrid>
 
-				<p:column headerText="#{lbl['lbl.sc.sf.location']}">
-					<p:commandLink update="zoneinfo, :form:popZone, @([id$=byItemPackage])" oncomplete="popZone.show();"
-						action="#{sfBackingBean.shortlistedRecommendedSuppDtl(zone)}">
-						<h:outputText value="#{zone.zoneName}" />
-					</p:commandLink>
-					
-						<p:commandLink update=":form:popupSuppDtl"
-							action="#{sfBackingBean.showSupplierDetails}"
-							oncomplete="suppDetails.show();">
-							<f:setPropertyActionListener value="#{shortlistedSupp}"
-								target="#{sfBackingBean.managedBean.scQtProposalRanking}" />
-							<h:outputText value="#{shortlistedSupp.scQtProposalEvaluate.scQtProposal.supplierNo}" />
-						</p:commandLink>
-					
-					
-				</p:column>
-			</p:dataTable>
+		<p:dataTable id="zoneinfo" var="zone"
+			rendered="#{sfBackingBean.managedBean.scQt.scQtCriterias.multiLocality}"
+			value="#{sfBackingBean.managedBean.zonelist}" rows="10"
+			rowKey="#{zone}" rowIndexVar="rowIndex">
+			<ac:paginator for="zoneinfo" />
+
+			<p:column headerText="#{lbl['lbl.sc.sf.location']}">
+				<p:commandLink
+					update="zoneinfo, :form:popZone, @([id$=byItemPackage])"
+					oncomplete="popZone.show();"
+					action="#{sfBackingBean.shortlistedRecommendedSuppDtl(zone)}">
+					<h:outputText value="#{zone.zoneName}" />
+				</p:commandLink>
+
+				<p:commandLink update=":form:popupSuppDtl"
+					action="#{sfBackingBean.showSupplierDetails}"
+					oncomplete="suppDetails.show();">
+					<f:setPropertyActionListener value="#{shortlistedSupp}"
+						target="#{sfBackingBean.managedBean.scQtProposalRanking}" />
+					<h:outputText
+						value="#{shortlistedSupp.scQtProposalEvaluate.scQtProposal.supplierNo}" />
+				</p:commandLink>
+
+
+			</p:column>
+		</p:dataTable>
 		<p:spacer height="20px" />
 
 		<h:panelGroup id="byItemPackage">
