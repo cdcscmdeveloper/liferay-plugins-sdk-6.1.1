@@ -48,8 +48,6 @@ public class SdoReviewBackingBean extends BaseBackingBean<SdoReviewManagedBean> 
 		SdoReviewResDTO resDTO = reqSO.retrieveApplById(reqDTO);
 
 		this.getManagedBean().setSmAppl(resDTO.getSmAppl());
-		log.info("----------------------supportingDocMode-------------------------"
-				+ resDTO.getSmAppl().getSupportingDocMode());
 
 	}
 
@@ -66,15 +64,15 @@ public class SdoReviewBackingBean extends BaseBackingBean<SdoReviewManagedBean> 
 		SdoReviewReqDTO reqDTO = new SdoReviewReqDTO();
 		ISdoReviewSO reqSO = (ISdoReviewSO) BusinessDelegate.getInstance()
 				.getServiceObject("sm", ISdoReviewSO.class);
-//		reqDTO.setApplId(this.getManagedBean().getAppId());
+		reqDTO.setApplId(this.getManagedBean().getAppId());
 		reqDTO.setOutcome(res);
 //		reqDTO.setSuppId(this.getManagedBean().getSmAppl().getSmSupplier()
 //				.getSupplierId());
 		//reqDTO.setAppType(this.getManagedBean().getSmAppl().getApplType());
 		reqDTO.setTaskId(this.getManagedBean().getTaskId());
 		
-		System.out.println("-----------SDO----------" + reqDTO.getOutcome());
-		System.out.println("-----------SDO Review----------" + reqDTO.getTaskId());
+		log.info("-----------SDO----------" + reqDTO.getOutcome());
+		log.info("-----------SDO Review----------" + reqDTO.getTaskId());
 
 		reqDTO.setBpmUserName(bpmUsrName);
 		reqDTO.setBpmPojo(this.getManagedBean().getBpmPojo());

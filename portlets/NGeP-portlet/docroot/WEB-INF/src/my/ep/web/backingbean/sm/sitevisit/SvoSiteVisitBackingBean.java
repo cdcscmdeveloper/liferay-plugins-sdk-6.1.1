@@ -60,7 +60,7 @@ public class SvoSiteVisitBackingBean extends
 	}
 
 	public void retrieveSiteVisitInfo(){
-		//this.getManagedBean().setAppId(22);
+		this.getManagedBean().setAppId(22);
 		SiteVisitReqDTO reqDTO = new SiteVisitReqDTO();
 		reqDTO.setAppId(this.getManagedBean().getAppId());
 		//reqDTO.setAppId(2);
@@ -68,7 +68,7 @@ public class SvoSiteVisitBackingBean extends
 				.getServiceObject("sm", ISiteVisitSO.class);
 		SiteVisitResDTO resDTO = reqSO.retrieveSiteVisitInfoByAppId(reqDTO);
 		this.getManagedBean().setSmApplSv(resDTO.getSmApplSv());
-		log.info("----------retrieveSiteVisitInfo---------" + this.getManagedBean().getSmApplSv().getSmAppl().getSmSupplier().getSupplierName());
+		//log.info("----------retrieveSiteVisitInfo---------" + this.getManagedBean().getSmApplSv().getSmAppl().getSmSupplier().getSupplierName());
 		
 	}
 	
@@ -92,7 +92,8 @@ public class SvoSiteVisitBackingBean extends
 		reqDTO.setOutcome(action);
 		reqDTO.setTaskId(this.getManagedBean().getTaskId());
 		reqDTO.setBpmUserName(bpmUsrName);
-		reqDTO.setAppType(this.getManagedBean().getAppType());
+		//reqDTO.setAppType(this.getManagedBean().getAppType());
+		reqDTO.setBpmPojo(this.getManagedBean().getBpmPojo());
 		SiteVisitResDTO resDTO = reqSO.submitSiteVisitReport(reqDTO);
 		
 		if (resDTO.isSuccessful()) {

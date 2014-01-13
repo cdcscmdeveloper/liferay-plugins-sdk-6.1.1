@@ -46,6 +46,7 @@ public class CommonSiteVisitBackingBean extends BaseBackingBean<CommonSiteVisitM
 		SMSiteVisitDataType svObj = (SMSiteVisitDataType) resDTO.getPojo();
 		this.getManagedBean().setTaskName(resDTO.getTaskName());
 		
+		log.info("----------Common SIte Visit--------" + resDTO.getTaskName());
 		if(resDTO.getTaskName().equalsIgnoreCase("Assign Site Visit")){
 			SvcSiteAssignBackingBean svcBB = new SvcSiteAssignBackingBean();
 			
@@ -54,6 +55,7 @@ public class CommonSiteVisitBackingBean extends BaseBackingBean<CommonSiteVisitM
 			svcBB.getManagedBean().setBpmAction(resDTO.getAction());
 			svcBB.getManagedBean().setTaskId(taskId);
 			//svcBB.getManagedBean().setAppType(svObj.getAppType());
+			svcBB.getManagedBean().setBpmPojo(svObj);
 			svcBB.retrieveSiteAssignInfo();
 			
 			FacesContext fc = FacesContext.getCurrentInstance();
@@ -65,6 +67,7 @@ public class CommonSiteVisitBackingBean extends BaseBackingBean<CommonSiteVisitM
 			svoBB.getManagedBean().setBpmAction(resDTO.getAction());
 			svoBB.getManagedBean().setTaskId(taskId);
 			//svoBB.getManagedBean().setAppType(svObj.getAppType());
+			svoBB.getManagedBean().setBpmPojo(svObj);
 			svoBB.retrieveSiteVisitInfo();
 			
 			FacesContext fc = FacesContext.getCurrentInstance();

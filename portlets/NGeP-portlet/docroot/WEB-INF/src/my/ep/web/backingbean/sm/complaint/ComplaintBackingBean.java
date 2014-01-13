@@ -3,6 +3,8 @@ package my.ep.web.backingbean.sm.complaint;
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
 
 import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
@@ -30,15 +32,19 @@ public class ComplaintBackingBean extends BaseBackingBean<ComplaintManagedBean> 
 	public static Logger log = Logger.getLogger(ComplaintManagedBean.class);
 
 	public ComplaintBackingBean() {
-		log.info("--------------" + this.getManagedBean().getTaskName()
-				+ "------------");
+		
 		if (this.getManagedBean().getSmComplaint() == null) {
 			log.info("--------------BackingBean is Null--------------------");
 
 			this.getManagedBean().setSmComplaint(new SmComplaint());
-			this.getManagedBean().getSmComplaint()
-					.setSmComplainant(new SmComplainant());
-
+//			this.getManagedBean().getSmComplaint()
+//					.setSmComplainant(new SmComplainant());
+			this.getManagedBean().setComplType(new HashMap<String, String>());
+			this.getManagedBean().getComplType().put("R","Breach the obligation of registration");
+			this.getManagedBean().getComplType().put("T","Breach the obligation of Tender/ Contract");
+			this.getManagedBean().getComplType().put("C","Criminal or Civil Offenses");
+			this.getManagedBean().getComplType().put("O","Others");
+			//log.info("-----------Complaint Type----------------" + this.getManagedBean().getComplType().size());
 			// this.getManagedBean().setPmCity(new PmCity());
 			// this.getManagedBean().setPmCountry(new PmCountry());
 			// this.getManagedBean().setPmState(new PmState());
@@ -54,19 +60,19 @@ public class ComplaintBackingBean extends BaseBackingBean<ComplaintManagedBean> 
 
 	public String lodgeComplaint() {
 
-		this.getManagedBean().getSmComplaint().getSmComplainant()
-				.setPmCity(new PmCity());
-		this.getManagedBean().getSmComplaint().getSmComplainant()
-				.setPmCountry(new PmCountry());
-		this.getManagedBean().getSmComplaint().getSmComplainant()
-				.setPmState(new PmState());
-
-		this.getManagedBean().getSmComplaint().getSmComplainant().getPmCity()
-				.setCityId(1L);
-		this.getManagedBean().getSmComplaint().getSmComplainant().getPmState()
-				.setStateId(1L);
-		this.getManagedBean().getSmComplaint().getSmComplainant()
-				.getPmCountry().setCountryId(1);
+//		this.getManagedBean().getSmComplaint().getSmComplainant()
+//				.setPmCity(new PmCity());
+//		this.getManagedBean().getSmComplaint().getSmComplainant()
+//				.setPmCountry(new PmCountry());
+//		this.getManagedBean().getSmComplaint().getSmComplainant()
+//				.setPmState(new PmState());
+//
+//		this.getManagedBean().getSmComplaint().getSmComplainant().getPmCity()
+//				.setCityId(1L);
+//		this.getManagedBean().getSmComplaint().getSmComplainant().getPmState()
+//				.setStateId(1L);
+//		this.getManagedBean().getSmComplaint().getSmComplainant()
+//				.getPmCountry().setCountryId(1);
 
 		// String complNo = RandomStringUtils.random(20, false, true);
 		String complNo = String.valueOf((new Date()).getTime());
@@ -75,10 +81,11 @@ public class ComplaintBackingBean extends BaseBackingBean<ComplaintManagedBean> 
 
 		this.getManagedBean().getSmComplaint().setComplaintDate(currDate);
 		this.getManagedBean().getSmComplaint().setComplaintNo(complNo);
-		this.getManagedBean().getSmComplaint().setStatusId(1);
+//		this.getManagedBean().getSmComplaint().setStatusId(1);
+		this.getManagedBean().getSmComplaint().setComplaintCategory("O");
 
-		this.getManagedBean().getSmComplaint().getSmComplainant()
-				.setSmComplaint(this.getManagedBean().getSmComplaint());
+//		this.getManagedBean().getSmComplaint().getSmComplainant()
+//				.setSmComplaint(this.getManagedBean().getSmComplaint());
 
 		ComplaintReqDTO reqDTO = new ComplaintReqDTO();
 		IComplaintSO reqSO = (IComplaintSO) BusinessDelegate.getInstance()
@@ -134,18 +141,18 @@ public class ComplaintBackingBean extends BaseBackingBean<ComplaintManagedBean> 
 		this.getManagedBean().setSmSupplierLs(resDTO.getSmSuppLs());
 	}
 
-	public void onSupplierRowSelect() {
-		this.getManagedBean().getSmComplaint()
-				.setSmSupplier(this.getManagedBean().getSelectedSupplier());
-
-	}
-
+//	public void onSupplierRowSelect() {
+//		this.getManagedBean().getSmComplaint()
+//				.setSmSupplier(this.getManagedBean().getSelectedSupplier());
+//
+//	}
+//
 	public String onComplaintRowSelect() {
 		log.info("---------------onComplaintRowSelect------------------");
 		this.getManagedBean().setComplaintId(
 				this.getManagedBean().getSelectedComplaint().getComplaintId());
 		this.retrieveComplaintInfo();
-		return "complaintNewMain";
+		return "complaintMain";
 	}
 
 	public String outputMsg(boolean succ, String msg) {
@@ -159,6 +166,7 @@ public class ComplaintBackingBean extends BaseBackingBean<ComplaintManagedBean> 
 			return "";
 		}
 	}
+	
 
 	public void retrieveAllActiveComplaint() {
 		// SmComplaintReview bBean = this.getManagedBean().getSmComplReview();
@@ -175,18 +183,20 @@ public class ComplaintBackingBean extends BaseBackingBean<ComplaintManagedBean> 
 		IComplaintSO reqSO = (IComplaintSO) BusinessDelegate.getInstance()
 				.getServiceObject("sm", IComplaintSO.class);
 		//long count = this.getManagedBean().getSmComplaint().getStatusId() + 1;
-		long curStatus = this.getManagedBean().getSmComplaint().getStatusId();
-		if(curStatus == 29001){
-			this.getManagedBean().getSmComplaint().setStatusId(29002);
-			this.getManagedBean().getSmComplReview().setReviewCommittee("P1");
-			this.getManagedBean().getSmComplReview().setSmComplaint(this.getManagedBean().getSmComplaint());
-			this.getManagedBean().getSmComplaint().getSmComplaintReviews().add(this.getManagedBean().getSmComplReview());
-		}else if(curStatus == 29002){
-			this.getManagedBean().getSmComplaint().setStatusId(29003);
-			this.getManagedBean().getSmComplReview().setReviewCommittee("P1");
-			this.getManagedBean().getSmComplReview().setSmComplaint(this.getManagedBean().getSmComplaint());
-			this.getManagedBean().getSmComplaint().getSmComplaintReviews().add(this.getManagedBean().getSmComplReview());
-		}
+		
+//		this.getManagedBean().getSmComplaint().setStatusId(this.getManagedBean().getSmComplaint().getStatusId() + 1);
+//		long curStatus = this.getManagedBean().getSmComplaint().getStatusId();
+//		if(curStatus == 29001){
+//			this.getManagedBean().getSmComplaint().setStatusId(29002);
+//			this.getManagedBean().getSmComplReview().setReviewCommittee("P1");
+//			this.getManagedBean().getSmComplReview().setSmComplaint(this.getManagedBean().getSmComplaint());
+//			this.getManagedBean().getSmComplaint().getSmComplaintReviews().add(this.getManagedBean().getSmComplReview());
+//		}else if(curStatus == 29002){
+//			this.getManagedBean().getSmComplaint().setStatusId(29003);
+//			this.getManagedBean().getSmComplReview().setReviewCommittee("P1");
+//			this.getManagedBean().getSmComplReview().setSmComplaint(this.getManagedBean().getSmComplaint());
+//			this.getManagedBean().getSmComplaint().getSmComplaintReviews().add(this.getManagedBean().getSmComplReview());
+//		}
 
 		reqDTO.setSmComplaint(this.getManagedBean().getSmComplaint());
 		ComplaintResDTO resDTO = reqSO.updateComplaint(reqDTO);
