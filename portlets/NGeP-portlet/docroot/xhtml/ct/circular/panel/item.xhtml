@@ -111,7 +111,7 @@
 					<ac:lov id="supplier" lovId="SM_SUPPLIER"
 						headerText="Supplier Lov" 
 						saveObject="panelBackingBean.managedBean.selectedPanelItem.ctPanelSuppliers[#{index}].supplier"
-						value="#{data.supplier.supplierName}"
+						value="#{data.supplier.smAppl.smCompanyBasic.companyName}"
 						conditionField="recordStatus^1" /> 						
 				</p:column>
 				<p:column>
