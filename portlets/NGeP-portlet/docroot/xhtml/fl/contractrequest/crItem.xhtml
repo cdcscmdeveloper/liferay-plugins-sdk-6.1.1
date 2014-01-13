@@ -120,8 +120,8 @@
 
 		<p:dataTable id="delAddr" var="delAddr"
 			value="#{contractRequestBackingBean.managedBean.addressTypesList}"
-			rowKey="#{delAddr.addressTypeId}"
-			selection="#{contractRequestBackingBean.managedBean.selectedPmAddrTypeList}">
+			rowKey="#{delAddr.agencyAddressId}"
+			selection="#{contractRequestBackingBean.managedBean.selectedCtAddrTypeList}">
 			<p:ajax event="rowSelect" update=":form:cotabs:delAddr" />
 			<ac:paginator for="delAddr" />
 			<p:columnGroup type="header">
@@ -133,7 +133,7 @@
 			<p:column selectionMode="multiple" />
 			<p:column>
 				<h:outputText
-					value="#{delAddr.pmAddress.address1}, #{delAddr.pmAddress.address2}, #{delAddr.pmAddress.address3}, #{delAddr.pmAddress.address4}"
+					value="#{delAddr.addressType.pmAddress.address1}, #{delAddr.addressType.pmAddress.address2}, #{delAddr.addressType.pmAddress.address3}, #{delAddr.addressType.pmAddress.address4}"
 					escape="false" />
 			</p:column>
 		</p:dataTable>

@@ -11,6 +11,7 @@ import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
 
 import my.ep.persistence.entity.ct.CtContract;
+import my.ep.persistence.entity.ct.dtl.CtAgencyAddress;
 import my.ep.persistence.entity.ct.dtl.item.CtContractItem;
 import my.ep.persistence.entity.fl.request.FlDeliveryAddress;
 import my.ep.persistence.entity.fl.request.FlFulfilmentItem;
@@ -44,8 +45,10 @@ public class ContractRequestManagedBean extends BaseManagedBean {
 	private FlDeliveryAddress selectedDelAddr;
 	private List<PmMaksud> maksudCodeList;
 	private boolean checkPtjFlg = true;
-	private List<PmAddressType> addressTypesList; 
+//	private List<PmAddressType> addressTypesList; 
+	private List<CtAgencyAddress> addressTypesList; 
 	private List<PmAddressType> selectedPmAddrTypeList;
+	private List<CtAgencyAddress> selectedCtAddrTypeList;
 	private List<CtContractItem> contractedItemList;
 	private List<CtContractItem> selectedContractedItemList;
 	private DualListModel<String> approverModel;
@@ -61,8 +64,8 @@ public class ContractRequestManagedBean extends BaseManagedBean {
 	private PmUserOrg pmUserOrg = new PmUserOrg();
 	
 	private String ministryName;
-	private Long issuedJabatanId;
-	private Long receivedJabatanId;
+	private String requisitioner;
+	private String approver;
 	
 	//getcontract
 	private CtContract ctContract = new CtContract();
@@ -330,22 +333,6 @@ public class ContractRequestManagedBean extends BaseManagedBean {
 
 
 	/**
-	 * @return the addressTypesList
-	 */
-	public List<PmAddressType> getAddressTypesList() {
-		return addressTypesList;
-	}
-
-
-	/**
-	 * @param addressTypesList the addressTypesList to set
-	 */
-	public void setAddressTypesList(List<PmAddressType> addressTypesList) {
-		this.addressTypesList = addressTypesList;
-	}
-
-
-	/**
 	 * @return the selectedPmAddrTypeList
 	 */
 	public List<PmAddressType> getSelectedPmAddrTypeList() {
@@ -607,37 +594,6 @@ public class ContractRequestManagedBean extends BaseManagedBean {
 		this.pmOrgProfile = pmOrgProfile;
 	}
 
-	/**
-	 * @return the issuedJabatanId
-	 */
-	public Long getIssuedJabatanId() {
-		return issuedJabatanId;
-	}
-
-
-	/**
-	 * @param issuedJabatanId the issuedJabatanId to set
-	 */
-	public void setIssuedJabatanId(Long issuedJabatanId) {
-		this.issuedJabatanId = issuedJabatanId;
-	}
-
-
-	/**
-	 * @return the receivedJabatanId
-	 */
-	public Long getReceivedJabatanId() {
-		return receivedJabatanId;
-	}
-
-
-	/**
-	 * @param receivedJabatanId the receivedJabatanId to set
-	 */
-	public void setReceivedJabatanId(Long receivedJabatanId) {
-		this.receivedJabatanId = receivedJabatanId;
-	}
-
 
 	/**
 	 * @return the ministryName
@@ -667,6 +623,71 @@ public class ContractRequestManagedBean extends BaseManagedBean {
 	 */
 	public void setPmUserOrg(PmUserOrg pmUserOrg) {
 		this.pmUserOrg = pmUserOrg;
+	}
+
+
+	/**
+	 * @return the addressTypesList
+	 */
+	public List<CtAgencyAddress> getAddressTypesList() {
+		return addressTypesList;
+	}
+
+
+	/**
+	 * @param addressTypesList the addressTypesList to set
+	 */
+	public void setAddressTypesList(List<CtAgencyAddress> addressTypesList) {
+		this.addressTypesList = addressTypesList;
+	}
+
+
+	/**
+	 * @return the selectedCtAddrTypeList
+	 */
+	public List<CtAgencyAddress> getSelectedCtAddrTypeList() {
+		return selectedCtAddrTypeList;
+	}
+
+
+	/**
+	 * @param selectedCtAddrTypeList the selectedCtAddrTypeList to set
+	 */
+	public void setSelectedCtAddrTypeList(
+			List<CtAgencyAddress> selectedCtAddrTypeList) {
+		this.selectedCtAddrTypeList = selectedCtAddrTypeList;
+	}
+
+
+	/**
+	 * @return the requisitioner
+	 */
+	public String getRequisitioner() {
+		return requisitioner;
+	}
+
+
+	/**
+	 * @param requisitioner the requisitioner to set
+	 */
+	public void setRequisitioner(String requisitioner) {
+		this.requisitioner = requisitioner;
+	}
+
+
+	/**
+	 * @return the approver
+	 */
+	public String getApprover() {
+		return approver;
+	}
+
+
+	/**
+	 * @param approver the approver to set
+	 */
+	public void setApprover(String approver) {
+		this.approver = approver;
 	}
 
 }
