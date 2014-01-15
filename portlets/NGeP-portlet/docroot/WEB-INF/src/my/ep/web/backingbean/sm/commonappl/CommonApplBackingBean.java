@@ -111,7 +111,7 @@ public class CommonApplBackingBean extends
 
 				smApplBB.proceedToApplication(applicationType, Boolean.TRUE);
 				smApplBB.getManagedBean().getSmAppl()
-						.setApplId(smObj.getDocumentId());
+						.setApplId(new Long(smObj.getDocumentId()));
 				smApplBB.getManagedBean().setBpmActions(resDTO.getAction());
 				smApplBB.getManagedBean().setTaskId(taskId);
 				setNavigationForSmDecision(applicationType, smApplBB);
@@ -119,6 +119,13 @@ public class CommonApplBackingBean extends
 					"MOF Supplier Registration")) {
 				SMMOFRegDataType smObj = (SMMOFRegDataType) resDTO.getPojo();
 				// TODO Remove this code and get the applicationType From DB
+				System.out
+						.println(" *** DOCUMENT NUMBER  FROM THE BPM IS ******"
+								+ resDTO.getDocNumber());
+				System.out.println("**** APPLICATION TYPE ******"
+						+ resDTO.getDocNumber().charAt(1));
+				System.out.println(" *** DOCUMENT ID FROM THE BPM IS ******"
+						+ smObj.getDocumentId());
 				applicationType = retriveApplicationById(smObj.getDocumentId());
 				System.out
 						.println("********Review Application Escalted for new mof********");
@@ -131,7 +138,7 @@ public class CommonApplBackingBean extends
 
 				smApplBB.proceedToApplication(applicationType, Boolean.TRUE);
 				smApplBB.getManagedBean().getSmAppl()
-						.setApplId(smObj.getDocumentId());
+						.setApplId(new Long(smObj.getDocumentId()));
 				smApplBB.getManagedBean().setBpmActions(resDTO.getAction());
 				smApplBB.getManagedBean().setTaskId(taskId);
 				setNavigationForSmDecision(applicationType, smApplBB);
@@ -152,7 +159,7 @@ public class CommonApplBackingBean extends
 			smApplBB.proceedToApplication("C", Boolean.TRUE);
 
 			smApplBB.getManagedBean().getSmAppl()
-					.setApplId(srcObj.getDocumentId());
+					.setApplId(new Long(srcObj.getDocumentId()));
 			smApplBB.getManagedBean().setBpmActions(resDTO.getAction());
 			smApplBB.getManagedBean().setTaskId(taskId);
 			FacesContext fc = FacesContext.getCurrentInstance();
