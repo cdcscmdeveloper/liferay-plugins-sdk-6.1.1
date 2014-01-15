@@ -76,9 +76,10 @@
            <portlet id="scBriefingSiteVisitAttendance" />
             <portlet id="scCommitteMaintance" />
           
-            <portlet id="Supplier Finalization"></portlet>
-           <portlet id="Pre-Supplier Finalization"></portlet>
-            <portlet id="Bidding List"></portlet>
+            <portlet id="Supplier Finalization"/>
+           <portlet id="Pre-Supplier Finalization"/>
+            <portlet id="Bidding List" />
+            <portlet id="PurchaseInquiry"/>
           
            
 		</category>
@@ -125,7 +126,7 @@
 		<portlet id="reviewExtensionRequest"></portlet>
 		<portlet id="reviewExtensionMaintenance"></portlet>
 		<portlet id="Welcome"></portlet>
-	</category>
+		</category>
 
 	<category name="Template">
 		<portlet id="templateDoc"></portlet>
