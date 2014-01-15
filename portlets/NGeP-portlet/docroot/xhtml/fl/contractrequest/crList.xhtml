@@ -13,7 +13,6 @@
 	<ui:define name="contentSection">
 		<p:tabView id="tabView">
 			<p:tab id="tab1" title="Contract List">
-				<p:panel header="CONTRACT LIST" toggleable="true">
 					<p:dataTable id="contractListTable" var="data" lazy="true"
 						value="#{contractRequestBackingBean.activeContractPagingDataModel}" >
 						<ac:paginator for="contractListTable" />
@@ -66,10 +65,6 @@
 					</p:dataTable>
 					<p:remoteCommand name="procure"
 						action="#{contractRequestBackingBean.procureContract}" />
-				</p:panel>
-			</p:tab>
-			<p:tab id="tab2" title="Catalogue">
-				<ui:include src="crCatalogue.xhtml" />
 			</p:tab>
 		</p:tabView>
 	</ui:define>
