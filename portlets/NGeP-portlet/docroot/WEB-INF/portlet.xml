@@ -3542,7 +3542,7 @@
 	 		<portlet-mode>view</portlet-mode>
 	 	</supports>
 	 	<portlet-info>
-	 		<title>View Bidding List</title>
+	 		<title>Bidding List</title>
 	 		<short-title>Bidding List</short-title>
 	 		<keywords></keywords>
 	 	</portlet-info>

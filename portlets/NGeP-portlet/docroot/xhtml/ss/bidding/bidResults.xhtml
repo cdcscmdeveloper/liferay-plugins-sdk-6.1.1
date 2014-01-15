@@ -8,26 +8,22 @@
 
 
 		<div style="text-align: left; float: right;">
-			<p:selectOneMenu value="#{bpmTasklistBackingBean.managedBean.viewBy}">
-				<f:selectItem itemLabel="Current Biddings" itemValue="CB"></f:selectItem>
-				<f:selectItem itemLabel="Upcoming Biddings" itemValue="UB"></f:selectItem>
+			<p:selectOneMenu>
+				<f:selectItem itemLabel="Current Bidding" itemValue="CB"></f:selectItem>
+				<f:selectItem itemLabel="Upcoming Bidding" itemValue="UB"></f:selectItem>
 
 			</p:selectOneMenu>
 		</div>
 		
 		<div style="text-align: left; float: left;">
-			<p:commandButton
-				value="#{lbl['lbl.bpm.refresh']}" icon="ui-icon-reset" ></p:commandButton>
+			<p:commandButton 
+				value="#{lbl['lbl.bpm.refresh']}" icon="ui-icon-reset" />
 		</div>
 		
 		<div class="clear"></div>
 		
 		<p:dataTable value="#{searchQtnTenderBB.managedBean.qtnTenders}"
-			var="tenders" resizableColumns="true" style="width:100%;" paginator="true"
-			rows="10" paginatorPosition="bottom"
-			paginatorTemplate="{LastPageLink} {NextPageLink} {PreviousPageLink} {FirstPageLink} Page {JumpToPageDropdown} {CurrentPageReport}"
-			currentPageReportTemplate="/ {totalPages}"
-			rowsPerPageTemplate="5,10,15">>
+			var="tenders" resizableColumns="true" style="width:100%;">
 
 			<p:column headerText="Document No.">
 				<p:commandLink action="viewbiddingscreen.xhtml?faces-redirect=true">

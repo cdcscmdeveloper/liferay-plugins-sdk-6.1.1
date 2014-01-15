@@ -13,9 +13,7 @@
 		<h:outputStylesheet library="ep/css" name="ep.css" />
 	</h:head>
 <ui:define name="contentSection">
-		<h:panelGrid width="100%" style="margin-top:20px">
-		<p:dataTable lazy="false" dynamic="true" paginator="true" paginatorPosition="bottom"
-		   paginatorAlwaysVisible="true" emptyMessage="No Records!" width="100%" cellpadding="1"
+		<p:dataTable lazy="false" dynamic="true" width="100%" cellpadding="1"
 			value="#{ssProcurementListBackingBean.managedBean.procurementPlanList}"
 			var="procurementObj" id="procureList">
 			<ac:paginator for="procureList"/>
@@ -48,6 +46,5 @@
 			</p:column>
 
 		</p:dataTable>
-		</h:panelGrid>
 </ui:define>
 </ui:composition>
