@@ -42,7 +42,9 @@
 				</h:outputText>
 			</p:column>
 			<p:column headerText="Action" style="width:6%">
+				<p:commandLink action="#{ssProcurementListBackingBean.initiateBPMTask(procurementObj)}" rendered="true" update="procureList" process="@this">
 				<p:graphicImage url="/resources/ep/images/design/add.png"></p:graphicImage>
+			</p:commandLink>
 			</p:column>
 
 		</p:dataTable>
