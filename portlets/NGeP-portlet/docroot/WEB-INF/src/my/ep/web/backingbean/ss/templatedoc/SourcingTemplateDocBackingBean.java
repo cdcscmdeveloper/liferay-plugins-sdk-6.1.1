@@ -8,8 +8,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 import javax.annotation.PostConstruct;
+import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
+import javax.faces.context.FacesContext;
 import javax.faces.event.AjaxBehaviorEvent;
 
 import my.ep.biz.bean.search.ISearchBean;
@@ -284,7 +286,14 @@ public class SourcingTemplateDocBackingBean extends
 			templateReqDTO.setQtDoc(qtDoc);
 			QTTemplateDocResDTO resDto = qtTemplateSO
 					.saveOrUpdateTemplateDoc(templateReqDTO);
-			System.out.println("====successfully saved data in db====");
+			if (resDTO.isSuccessful()) {
+				FacesContext.getCurrentInstance().addMessage(
+						null,
+						new FacesMessage(FacesMessage.SEVERITY_INFO,
+								"Record saved successfully.", ""
+
+						));
+			}
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
