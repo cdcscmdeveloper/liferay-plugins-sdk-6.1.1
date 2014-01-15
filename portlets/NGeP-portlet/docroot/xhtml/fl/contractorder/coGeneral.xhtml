@@ -33,7 +33,7 @@
 						value="#{flOrderBB.managedBean.flRequest.issuedOrgProfile.parentOrgProfile.parentOrgProfile.orgName}"
 						disabled="true" /></td>
 				<td><p:outputLabel value="#{lbl['lbl.fl.contract.request.no']}" /></td>
-				<td><p:inputText disabled="true" size="20" /></td>
+				<td><p:inputText disabled="true" size="20" value="#{flOrderBB.managedBean.flRequest.docNo}"/></td>
 			</tr>
 			<tr>
 				<td><p:outputLabel
@@ -55,7 +55,7 @@
 						disabled="true"></p:inputText></td>
 				<td><p:outputLabel value="#{lbl['lbl.fl.contract.no']}" /></td>
 				<td><p:inputText size="20"
-						value="#{flOrderBB.managedBean.flRequest.ctContract.contractName}"
+						value="#{flOrderBB.managedBean.flRequest.ctContract.latestContractVer.ctContractValue.contractPhysicalNo}"
 						disabled="true" /></td>
 			</tr>
 			<tr>
@@ -90,7 +90,7 @@
 			</tr>
 			<tr>
 				<td><p:outputLabel value="#{lbl['lbl.fl.fs.no']}" /></td>
-				<td><p:inputText disabled="true" size="20" /></td>
+				<td><p:inputText disabled="true" size="20" value="#{flOrderBB.managedBean.flRequest.scheduleNo}"/></td>
 			</tr>
 			<tr>
 				<td><p:outputLabel value=" * #{lbl['lbl.fl.maksud.code']}" /></td>

@@ -61,6 +61,26 @@
 			<p:tab id="tab2" title="#{lbl['lbl.tab.fl.item']}">
 					<ui:include src="crItem.xhtml" /> 
 			</p:tab>
+			<p:tab id="tab3" title="Approver Settings">
+				<p:panel id="settingId" header="Approver Setting" toggleable="true"
+					rendered="#{contractRequestBackingBean.isRequisitioner()}"
+					toggleSpeed="500">
+					<h:panelGrid columns="1">
+						<h:panelGrid style="width:500px">
+							<p:pickList id="approverpickList"
+								value="#{contractRequestBackingBean.managedBean.approverModel}"
+								var="data" itemValue="#{data}" itemLabel="#{data}"
+								showTargetControls="true" filterMatchMode="contains">
+								<f:facet name="sourceCaption">Available</f:facet>
+								<f:facet name="targetCaption">Selected</f:facet>
+								<p:column style="width:75%;">
+									<h:outputText value="#{data}" />
+								</p:column>
+							</p:pickList>
+						</h:panelGrid>
+					</h:panelGrid>
+				</p:panel>
+			</p:tab>
 		</p:tabView>
 	</ui:define>
 </ui:composition>

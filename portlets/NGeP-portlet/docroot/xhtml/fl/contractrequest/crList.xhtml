@@ -55,7 +55,7 @@
 						</p:column>
 						<p:column headerText="Action">
 							<p:commandLink id="crBasepageLink"
-								onclick="procure([{name:'contractId',value:'#{data.contract.contractId}'}])" >
+								onclick="procure([{name:'contractId',value:'#{data.contract.contractId}'},{name:'scheduleNo',value:'#{not empty data.scheduleNo ? data.scheduleNo : data.phase}'}])" >
 							<p:graphicImage library="ep/images/design" name="revise.png"
 								value="/resources/ep/images/design/revise.png"
 								title="Contract Request" />

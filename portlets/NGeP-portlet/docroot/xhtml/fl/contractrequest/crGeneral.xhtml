@@ -94,7 +94,7 @@
 							value="#{contractRequestBackingBean.maksudCodeList}" />
 					</p:selectOneMenu></td>
 				<td><p:outputLabel value="* #{lbl['lbl.fl.charged.ptj']}" /></td>
-				<td><p:inputText id="chargedPtj" size="35" disabled="true" value="#{contractRequestBackingBean.managedBean.flRequest.chargeOrgProfile eq null ? '' : contractRequestBackingBean.managedBean.flRequest.chargeOrgProfile.parentOrgProfile.orgName}"></p:inputText></td>
+				<td><p:inputText id="chargedPtj" size="35" disabled="true" value="#{contractRequestBackingBean.managedBean.flRequest.chargeOrgProfile eq null ? '' : contractRequestBackingBean.managedBean.flRequest.chargeOrgProfile.orgName}"></p:inputText></td>
 			</tr>
 			<tr>
 				<td><p:outputLabel value="* #{lbl['lbl.fl.financial.year']}" /></td>
@@ -161,23 +161,7 @@
 			</tr>
 		</table>
 	</p:panel>
-	<p:panel id="settingId" header="Approver Setting" toggleable="true" rendered="#{contractRequestBackingBean.isRequisitioner()}"
-		toggleSpeed="500">
-		<h:panelGrid columns="1">
-			<h:panelGrid style="width:500px">
-				<p:pickList id="approverpickList" 
-					value="#{contractRequestBackingBean.managedBean.approverModel}"
-					var="data" itemValue="#{data}" itemLabel="#{data}"
-					showTargetControls="true" filterMatchMode="contains">
-					<f:facet name="sourceCaption">Available</f:facet>
-					<f:facet name="targetCaption">Selected</f:facet>
-					<p:column style="width:75%;">
-						<h:outputText value="#{data}" />
-					</p:column>
-				</p:pickList>
-			</h:panelGrid>
-		</h:panelGrid>
-	</p:panel>
+	
 	<p:panel header="#{lbl['lbl.fl.remark.attachment']}" toggleable="true">
 		<table style="width: 100%">
 			<tr>
