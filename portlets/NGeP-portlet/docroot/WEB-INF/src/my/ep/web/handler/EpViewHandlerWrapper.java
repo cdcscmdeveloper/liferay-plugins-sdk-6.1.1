@@ -47,7 +47,7 @@ public class EpViewHandlerWrapper extends ViewHandlerWrapper {
 //				EpPortletUtil.getDisplayPortletId());
         
 		PmUser pmUser = new FacesScopes().getUserSessionBean();
-		if (pmUser != null) {
+		if (pmUser != null && pmUser.getUserId() != null) {
 			debugLogger("userId: " + pmUser.getUserId());
 			
 			new LogKey(pmUser.getUserId());	
