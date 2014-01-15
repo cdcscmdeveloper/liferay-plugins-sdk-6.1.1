@@ -157,7 +157,7 @@ public class UnspscCodeBackingBean extends BaseBackingBean<UnspscCodeManagedBean
 			FacesContext facesContext = FacesContext.getCurrentInstance();
 			facesContext.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR,"BPM  ERROR", ex.getMessage()));
 
-			return "reviewUnspscCode";
+			return "unspscRequestForm";
 		}
 
 		return "taskListView";
