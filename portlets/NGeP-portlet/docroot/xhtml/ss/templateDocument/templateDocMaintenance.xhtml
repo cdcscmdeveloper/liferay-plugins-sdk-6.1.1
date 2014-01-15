@@ -14,7 +14,7 @@
 
 		<div align="right">
 			<p:commandButton value="#{lbl['lbl.sc.tpl.doc.btn.save']}"
-				style="margin-right:30px;" action="#{sourcingTemplateDBB.saveAction}" icon="ui-icon-save"/>
+				 action="#{sourcingTemplateDBB.saveAction}" icon="ui-icon-save"/>
 			<p:commandButton value="#{lbl['lbl.sc.tpl.doc.btn.submit']}"
 				style="margin-right:30px;" icon="ui-icon-submit"/>
 
@@ -29,17 +29,44 @@
 					<td><p:inputText value="#{sourcingTemplateDBB.managedBean.scQtDoc.scQt.qtNo}"  readonly="true" disabled="true" /></td>
 
 				</tr>
-
-
+                 <tr>
+					<td>
+                <h:outputLabel value="Document Type"></h:outputLabel></td>
+			<td><p:selectOneRadio style="margin-bottom:5px;" value="#{sourcingTemplateDBB.managedBean.docType}">
+				<f:selectItem itemLabel="Quotation/Tender" itemValue="0" />
+				<f:selectItem itemLabel="LOA" itemValue="6" />
+               <p:ajax event="change" process="@this" partialSubmit="true"  update="checklist" listener="#{sourcingTemplateDBB.retriveChecklist}"  ></p:ajax>
+			</p:selectOneRadio></td></tr>
+			
+			<tr>
+					<td><h:outputLabel value="#{lbl['lbl.sc.tpl.check.list']}"></h:outputLabel>
+					</td>
+					<td><p:selectOneMenu id="checklist" style="margin-bottom:5px;"
+							value="#{sourcingTemplateDBB.managedBean.scQtDoc.scQtCheckList.qtChecklistId}">
+							<f:selectItem itemLabel="-Select One -" itemValue="#{null}" />
+								<f:selectItems value="#{sourcingTemplateDBB.managedBean.checkListItem}" var="checklist" itemLabel="#{checklist.title}" itemValue="#{checklist.qtChecklistId}"/>
+							<p:ajax event="change"  process="@this" partialSubmit="true" update="title" listener="#{sourcingTemplateDBB.handleCheckListChanged(sourcingTemplateDBB.managedBean.scQtDoc)}"
+							></p:ajax>
+						</p:selectOneMenu></td>
+				</tr>
 				<tr>
 					<td><h:outputLabel value="#{lbl['lbl.sc.tpl.doc.title']}"></h:outputLabel>
 					</td>
-					<td><p:inputText size="50" value="#{sourcingTemplateDBB.managedBean.scQtDoc.tplDocMaster.docTitle}" /></td>
+					<td>
+					<h:panelGroup  id="title">
+					<ui:fragment rendered="#{sourcingTemplateDBB.managedBean.checklistTitle !=null}">
+						<p:inputText size="50" disabled="true" value="#{sourcingTemplateDBB.managedBean.scQtDoc.scQtCheckList.title}" />
+					</ui:fragment>
+					<ui:fragment rendered="#{sourcingTemplateDBB.managedBean.checklistTitle==null}">
+					<p:inputText size="50" value="#{sourcingTemplateDBB.managedBean.scQtDoc.scQtCheckList.title}" />
+					</ui:fragment>
+					</h:panelGroup>
+					</td>
 				</tr>
 				<tr>
 					<td><h:outputLabel value="#{lbl['lbl.sc.tpl.doc.desc']}"></h:outputLabel>
 					</td>
-					<td><p:inputTextarea rows="3" cols="50" autoResize="false" value="#{sourcingTemplateDBB.managedBean.scQtDoc.tplDocMaster.docDesc}" style="margin-bottom:5px;"/>
+					<td><p:inputTextarea rows="3" cols="50" autoResize="false" value="#{sourcingTemplateDBB.managedBean.docDescription}" style="margin-bottom:5px;"/>
 					</td>
 				</tr>
 
@@ -54,7 +81,7 @@
 							value="#{lbl['lbl.sc.tpl.doc.record.status']}"></h:outputLabel>
 
 					</td>
-					<td class="TableFieldRight"><p:selectOneMenu>
+					<td class="TableFieldRight"><p:selectOneMenu value="#{sourcingTemplateDBB.managedBean.scQtDoc.recordStatus}">
 
 							<f:selectItem itemLabel="Active" itemValue="1" />
 							<f:selectItem itemLabel="Inactive" itemValue="0" />
