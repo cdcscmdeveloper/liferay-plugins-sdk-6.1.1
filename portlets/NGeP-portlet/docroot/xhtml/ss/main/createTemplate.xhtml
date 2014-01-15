@@ -3,7 +3,8 @@
 	xmlns:h="http://java.sun.com/jsf/html"
 	xmlns:ui="http://java.sun.com/jsf/facelets"
 	xmlns:p="http://primefaces.org/ui"
-	xmlns:c="http://java.sun.com/jsp/jstl/core">
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:ac="http://ac.my/jsf/composite/cc">
 
 	<p:dialog header="Create" widgetVar="create" modal="true" width="1000"
 		height="500">
@@ -14,7 +15,7 @@
 					<td><h:outputLabel value="#{lbl['lbl.sc.tpl.search.spec']}"></h:outputLabel>
 
 					</td>
-					<td><p:selectOneMenu
+					<td><p:selectOneMenu style="margin-bottom:5px;"
 							value="#{TemplateMBB.managedBean.searchSpecTypeId}">
 							<f:selectItems
 								value="#{TemplateMBB.getDropdownValues(PmCodeCatConst.specificationType)}" />
@@ -23,14 +24,14 @@
 				<tr>
 					<td style="width: 50%"><h:outputLabel value="#{lbl['lbl.sc.tpl.search.title']}"></h:outputLabel>
 					</td>
-					<td><h:inputText size="70"
-							value="#{TemplateMBB.managedBean.scqtDoc.tplSpecMaster.specName}" />
+					<td><h:inputText size="70" style="margin-bottom:5px;"
+							value="#{TemplateMBB.managedBean.specName}" />
 					</td>
 				</tr>
 				<tr>
 					<td><h:outputLabel value="#{lbl['lbl.sc.tpl.search.qtn.no']}"></h:outputLabel></td>
-					<td><p:inputText
-							value="#{TemplateMBB.managedBean.scqtDoc.scQt.qtNo}" /></td>
+					<td><p:inputText style="margin-bottom:5px;"
+							value="#{TemplateMBB.managedBean.qtNum}" /></td>
 				</tr>
 				<tr>
 					<td style="width: 30%"><h:outputLabel value="#{lbl['lbl.sc.tpl.search.item']}"></h:outputLabel>
@@ -61,10 +62,10 @@
 		<p:commandLink value="#{lbl['lbl.sc.tpl.list']}"></p:commandLink>
 			<h:panelGrid style="width:950px;">
 				<p:dataTable id="createList" var="scQtDoc"
-					value="#{TemplateMBB.managedBean.docSearchlist}" editable="true"
-					rowKey="#{scQtDoc.qtDocId}" rowIndexVar="index">
+					value="#{TemplateMBB.templateSpecCreate}" 
+					rowKey="#{scQtDoc.qtDocId}" rowIndexVar="index" lazy="true">
 					<!--   <p:column selectionMode="multiple"  style="text-align:center;"/> -->
-
+                    <ac:paginator for="createList"></ac:paginator>
 					<p:column headerText="#{lbl['lbl.sc.tpl.search.qtn.no']}">
 						<h:outputText value="#{scQtDoc.scQt.qtNo}" />
 					</p:column>

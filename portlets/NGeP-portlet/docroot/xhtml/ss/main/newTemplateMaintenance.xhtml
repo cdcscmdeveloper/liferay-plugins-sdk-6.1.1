@@ -64,10 +64,10 @@
 					<td><h:outputLabel value="#{lbl['lbl.sc.tpl.check.list']}"></h:outputLabel>
 					</td>
 					<td><p:selectOneMenu style="margin-bottom:5px;"
-							value="#{TemplateMBB.managedBean.specificationType}">
+							value="#{TemplateMBB.managedBean.scqtDoc.scQtCheckList.qtChecklistId}">
 							<f:selectItem itemLabel="Select One" itemValue="" />
-							<f:selectItems value="#{TemplateMBB.managedBean.checkListItem}" />
-							<p:ajax event="change" listener="#{TemplateMBB.selectChecklist}"
+							<f:selectItems value="#{TemplateMBB.managedBean.checkListItem}" var="checklist" itemLabel="#{checklist.title}" itemValue="#{checklist.qtChecklistId}"/>
+							<p:ajax event="change" process="@this" partialSubmit="true" listener="#{TemplateMBB.handleCheckList(TemplateMBB.managedBean.scqtDoc)}"
 								update="checkList"></p:ajax>
 						</p:selectOneMenu></td>
 				</tr>
@@ -79,12 +79,12 @@
 					<ui:fragment rendered="#{TemplateMBB.managedBean.specificationType !=null}">
 						<p:inputText size="50" 
 							disabled="true"
-							value="#{TemplateMBB.managedBean.scqtDoc.tplSpecMaster.specName}" />
+							value="#{TemplateMBB.managedBean.scqtDoc.scQtCheckList.title}" />
 					</ui:fragment>
 					<ui:fragment rendered="#{TemplateMBB.managedBean.specificationType ==null}">
 					<p:inputText size="50" 
 							
-							value="#{TemplateMBB.managedBean.scqtDoc.tplSpecMaster.specName}" />
+							value="#{TemplateMBB.managedBean.scqtDoc.scQtCheckList.title}" />
 					</ui:fragment>
 					</h:panelGroup>
 					</td>
