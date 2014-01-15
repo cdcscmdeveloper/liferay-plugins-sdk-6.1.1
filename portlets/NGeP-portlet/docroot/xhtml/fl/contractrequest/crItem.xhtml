@@ -108,6 +108,7 @@
 				update="contractedItemDt" process="@this,contractedItemDt"
 				oncomplete="addItems.show();" />
 			<p:commandButton value="Delete" icon="ui-icon-delete"
+				rendered="#{not empty contractRequestBackingBean.managedBean.selectedDelAddr}"
 				action="#{contractRequestBackingBean.removeItemRow}"
 				update="itemDataTable" partialSubmit="true" />	
 

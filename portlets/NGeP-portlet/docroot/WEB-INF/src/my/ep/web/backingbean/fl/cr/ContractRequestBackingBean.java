@@ -362,15 +362,17 @@ public class ContractRequestBackingBean extends BaseBackingBean<ContractRequestM
 
 	public String procureContract() {
 		FulfilmentBackingBean flBB = new FulfilmentBackingBean();
-		Long contractId = Long.parseLong(FacesContext.getCurrentInstance()
-				.getExternalContext().getRequestParameterMap()
+		Long contractId = Long.parseLong(FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap()
 				.get("contractId"));
+		String scheduleNo = FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap()
+				.get("scheduleNo");
+		System.out.println("scheduleNo: "+scheduleNo);
 		IContractSO contractSO = BusinessDelegate.getInstance()
 				.getServiceObject("ct", IContractSO.class);
 		ContractReqDTO ctDTO = new ContractReqDTO();
 		ctDTO.setContractId(contractId);
-		getManagedBean().getFlRequest().setCtContract(
-				contractSO.retrieveContract(ctDTO).getContract());
+		getManagedBean().getFlRequest().setCtContract(contractSO.retrieveContract(ctDTO).getContract());
+		getManagedBean().getFlRequest().setScheduleNo(scheduleNo);
 		getLoginUserOrg();
 		// getManagedBean().setMinistryName(getManagedBean().getPmUserOrg().getPmOrgProfile().getParentOrgProfile().getParentOrgProfile().getOrgName());
 

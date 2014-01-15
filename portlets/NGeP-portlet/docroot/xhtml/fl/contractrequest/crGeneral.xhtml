@@ -48,7 +48,7 @@
 				</p:selectOneMenu></td>
 				<td><p:outputLabel value="#{lbl['lbl.fl.contract.no']}" /></td>
 				<td><p:inputText size="20"
-						value="#{contractRequestBackingBean.managedBean.flRequest.ctContract.contractName}"
+						value="#{contractRequestBackingBean.managedBean.flRequest.ctContract.latestContractVer.ctContractValue.contractPhysicalNo}"
 						disabled="true" /></td>
 			</tr>
 			<tr>
@@ -83,7 +83,7 @@
 			</tr>
 			<tr>
 				<td><p:outputLabel value="#{lbl['lbl.fl.fs.no']}" /></td>
-				<td><p:inputText size="20" disabled="true" /></td>
+				<td><p:inputText size="20" disabled="true" value="#{contractRequestBackingBean.managedBean.flRequest.scheduleNo}"/></td>
 			</tr>
 			<tr>
 				<td><p:outputLabel value=" * #{lbl['lbl.fl.maksud.code']}" /></td>
