@@ -9,14 +9,14 @@
 
 		<div style="text-align: left; float: right;">
 			<p:selectOneMenu value="#{bpmTasklistBackingBean.managedBean.viewBy}">
-				<f:selectItem itemLabel="Current Bidding List" itemValue="CB"></f:selectItem>
-				<f:selectItem itemLabel="Upcoming Bidding List" itemValue="UB"></f:selectItem>
+				<f:selectItem itemLabel="Current Biddings" itemValue="CB"></f:selectItem>
+				<f:selectItem itemLabel="Upcoming Biddings" itemValue="UB"></f:selectItem>
 
 			</p:selectOneMenu>
 		</div>
 		
 		<div style="text-align: left; float: left;">
-			<p:commandButton action="#{bpmTasklistBackingBean.refreshTaskList}"
+			<p:commandButton
 				value="#{lbl['lbl.bpm.refresh']}" icon="ui-icon-reset" ></p:commandButton>
 		</div>
 		
