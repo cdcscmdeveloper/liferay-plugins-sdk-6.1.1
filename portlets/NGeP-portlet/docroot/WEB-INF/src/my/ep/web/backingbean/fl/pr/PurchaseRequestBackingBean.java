@@ -11,7 +11,7 @@ import java.util.List;
 import javax.annotation.PostConstruct;
 import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
-import javax.faces.bean.RequestScoped;
+import javax.faces.bean.ViewScoped;
 import javax.faces.context.FacesContext;
 import javax.faces.model.SelectItem;
 import javax.servlet.http.HttpServletRequest;
@@ -22,6 +22,7 @@ import my.ep.biz.service.pm.authorization.orgprofile.IOrgProfileSO;
 import my.ep.biz.service.pm.authorization.user.IUserSO;
 import my.ep.biz.service.pm.common.maksud.IMaksudSO;
 import my.ep.biz.service.pm.common.object.IObjectSO;
+import my.ep.biz.service.pm.common.parameter.IParameterSO;
 import my.ep.biz.service.ss.directpurchase.IRequestNoteSO;
 import my.ep.bpm.dto.BpmRequestDTO;
 import my.ep.bpm.dto.BpmResponseDTO;
@@ -38,18 +39,24 @@ import my.ep.dto.pm.common.maksud.MaksudReqDTO;
 import my.ep.dto.pm.common.maksud.MaksudResDTO;
 import my.ep.dto.pm.common.object.ObjectReqDTO;
 import my.ep.dto.pm.common.object.ObjectResDTO;
+import my.ep.dto.pm.common.parameter.ParameterReqDTO;
+import my.ep.dto.pm.common.parameter.ParameterResDTO;
 import my.ep.dto.ss.directpurchase.RequestNoteReqDTO;
 import my.ep.dto.ss.directpurchase.RequestNoteResDTO;
 import my.ep.exception.EpException;
 import my.ep.jaxb.fl.podata.FLPurchaseOrderDataType;
 import my.ep.persistence.entity.ct.CtContract;
+import my.ep.persistence.entity.ct.CtContractVer;
+import my.ep.persistence.entity.ct.dtl.CtAgency;
 import my.ep.persistence.entity.fl.request.FlDeliveryAddress;
 import my.ep.persistence.entity.fl.request.FlFulfilmentItem;
 import my.ep.persistence.entity.fl.request.FlFulfilmentItemAddr;
 import my.ep.persistence.entity.fl.request.FlFulfilmentRequest;
 import my.ep.persistence.entity.pm.authorization.PmOrgProfile;
+import my.ep.persistence.entity.pm.authorization.PmUser;
 import my.ep.persistence.entity.pm.authorization.PmUserGroup;
 import my.ep.persistence.entity.pm.authorization.PmUserGroupUser;
+import my.ep.persistence.entity.pm.authorization.PmUserOrg;
 import my.ep.persistence.entity.pm.common.PmAddressType;
 import my.ep.persistence.entity.pm.common.PmDo;
 import my.ep.persistence.entity.pm.common.PmGo;
@@ -81,32 +88,27 @@ import com.liferay.portal.util.PortalUtil;
  * @since 7/10/2013
  */
 @ManagedBean(name = "purchaseRequestBackingBean")
-@RequestScoped
+@ViewScoped
 public class PurchaseRequestBackingBean extends BaseBackingBean<PurchaseRequestManagedBean> {
 	private static Logger log = Logger.getLogger(PurchaseRequestBackingBean.class);
 	public static final String NAV_TO_CREATE_PURCHASE_REQUEST = "/xhtml/fl/purchaserequest/prBasePage.xhtml";
-
+	private boolean checkFlg = false;
+	private  List<SelectItem> issuedPTJList;
+	//private  List<SelectItem> receivedPTJList;
+	
 	/**
 	 * get faces scopes
 	 * 
 	 * @return FacesScopes
 	 */
+	
 	private FacesScopes getFacesScopes() {
 		FacesScopes facesScopes = new FacesScopes();
 		return facesScopes;
 	}
 
 	public PurchaseRequestBackingBean() {
-		
-		if(isFlFulfilmentRequisitioner()) {
-			FacesScopes facesScopes = new FacesScopes();
-			getManagedBean().setFulfilmentRequisitioner(facesScopes.getUserSessionBean().getLoginId());
-		}
-		if(getManagedBean().getUserGroupMap()==null && isFlFulfilmentRequisitioner()) {
-			initializeApproverGroup();
-		}
 	}
-	
 
 	@PostConstruct
 	public void init() {
@@ -126,13 +128,24 @@ public class PurchaseRequestBackingBean extends BaseBackingBean<PurchaseRequestM
 			getManagedBean().getFulfilmentRequest().getCtContract().setContractType(new PmParameter());
 			getManagedBean().getFulfilmentRequest().getCtContract().setFulfillmentType(new PmParameter());
 		}
+		
 		if (getManagedBean().getApproverModel() == null) {
 			System.out.println("--renew--");
 			List<String> source = getAvailableApproverList();
+			//List<String> source = new ArrayList<String>();
 			List<String> target = new ArrayList<String>();
 			getManagedBean().setApproverModel(new DualListModel<String>(source, target));
+			
 		}
-		retrieveRequestNoteList();
+		if(isFlFulfilmentRequisitioner()) {
+			FacesScopes facesScopes = new FacesScopes();
+			getManagedBean().setFulfilmentRequisitioner(facesScopes.getUserSessionBean().getLoginId());
+		}
+		if(getManagedBean().getUserGroupMap()==null && isFlFulfilmentRequisitioner()) {
+			initializeApproverGroup();
+		}
+	
+		//retrieveRequestNoteList();
 	}
 
 	public String fulfillmentRequestAction(String action) {
@@ -199,7 +212,7 @@ public class PurchaseRequestBackingBean extends BaseBackingBean<PurchaseRequestM
 		IContractAmendmentSO ctAmendmentSO = (IContractAmendmentSO) BusinessDelegate.getInstance().getServiceObject("ct",IContractAmendmentSO.class);
 		ContractAmendmentResDTO resDTO = ctAmendmentSO.getActiveLocation(ctReqDTO);
 		//System.out.println("Size Of List ::: "	+ resDTO.getAddressTypeList().size());
-		getManagedBean().setAddressTypesList(resDTO.getAddressTypeList());
+		//getManagedBean().setAddressTypesList(resDTO.getAddressTypeList());
 	}
 
 	public void selectedAddrRow() {
@@ -228,9 +241,9 @@ public class PurchaseRequestBackingBean extends BaseBackingBean<PurchaseRequestM
 		reqDTO.setRequestNoteId(getManagedBean().getSelectedRequestNote().getRequestNoteId());
 		RequestNoteResDTO resDTO = requestNoteSO.retrievRequestNoteWithDtls(reqDTO);
 		resDTO.getRequestNoteList().get(0).getRequestNoteId();
-		System.out.println("Purchase item list size::: "+resDTO.getRequestNoteList().size());
-		System.out.println("PurchaseList getScRequestList ::: "+resDTO.getRequestNoteList().get(0).getScRequestList());
-		System.out.println("Purchase item Req note ID size::: "+resDTO.getRequestNoteList().get(0).getScRequestList().getRequestListId());
+		//System.out.println("Purchase item list size::: "+resDTO.getRequestNoteList().size());
+		//System.out.println("PurchaseList getScRequestList ::: "+resDTO.getRequestNoteList().get(0)...getScRequestList());
+		//System.out.println("Purchase item Req note ID size::: "+resDTO.getRequestNoteList().get(0).getScRequestList().getRequestListId());
 		getManagedBean().setRequestNoteWithDtlsList(resDTO.getRequestNoteList());
 	}
 
@@ -246,7 +259,7 @@ public class PurchaseRequestBackingBean extends BaseBackingBean<PurchaseRequestM
 		}*/
 		
 		FlFulfilmentItem flItem = null;
-		for (ScRequestNoteDtl rnDtl : requestnote.getScRequestNoteDtls()) {
+		for (ScRequestNoteDtl rnDtl : requestnote.getRequestNoteDtls()) {
 			if(getManagedBean().getFlItemMap().get(rnDtl.getRequestNoteDtlId()) == null){
 				flItem = new FlFulfilmentItem();
 				flItem.setFlFulfilmentRequest(getManagedBean().getFulfilmentRequest());
@@ -377,9 +390,68 @@ public class PurchaseRequestBackingBean extends BaseBackingBean<PurchaseRequestM
 		return retrieveDivisionList;
 	}
 
-	public void checkPtjFlg() {
+	/*public void checkPtjFlg() {
 		getManagedBean().setCheckPtjFlg(false);
+	}*/
+	public void checkPtjFlg(){
+		getManagedBean().setCheckPtjFlg(false);
+		if(getManagedBean().getIssuedJabatanId() != null){
+			setCheckFlg(true);
+			List<SelectItem> retrievePTJList = new ArrayList<SelectItem>();
+			OrgProfileResDTO resDTO = new OrgProfileResDTO();
+			IOrgProfileSO orgProfileSO = (IOrgProfileSO)BusinessDelegate.getInstance().getServiceObject("pm",IOrgProfileSO.class);
+			OrgProfileReqDTO reqDTO = new OrgProfileReqDTO();
+			retrievePTJList.add(new SelectItem("", "- Select One -"));
+			if(isCheckFlg()){
+				System.out.println("-method getIssuedPTJList- getIssuedJabatanId(): "+getManagedBean().getIssuedJabatanId());
+				reqDTO.setParentOrgProfileId(getManagedBean().getIssuedJabatanId());
+				reqDTO.setOrgType(OrganizationType.DIVISION.value());
+				resDTO = orgProfileSO.retrieveOrgProfileListByOrgType(reqDTO);
+			}
+			
+			if(resDTO.getOrgProfileList() != null && !resDTO.getOrgProfileList().isEmpty()){
+				
+				List<PmOrgProfile> listDB = resDTO.getOrgProfileList();
+				for(PmOrgProfile obj : listDB){
+					retrievePTJList.add(new SelectItem(obj.getOrgProfileId(),obj.getOrgName()));
+				}
+			}		
+	        this.issuedPTJList=retrievePTJList;
+		}else{
+			setCheckFlg(false);
+		}
+		
 	}
+	public void checkRecievedFlg(){
+		getManagedBean().setCheckPtjFlg(false);
+		if(getManagedBean().getReceivedJabatanId() != null){
+			setCheckFlg(true);
+			List<SelectItem> retrievePTJList = new ArrayList<SelectItem>();
+			OrgProfileResDTO resDTO = new OrgProfileResDTO();
+			IOrgProfileSO orgProfileSO = (IOrgProfileSO)BusinessDelegate.getInstance().getServiceObject("pm",IOrgProfileSO.class);
+			OrgProfileReqDTO orgProfileReqDTO = new OrgProfileReqDTO();
+			retrievePTJList.add(new SelectItem("", "- Select One -"));
+			if(isCheckFlg()){
+				orgProfileReqDTO.setParentOrgProfileId(getManagedBean().getReceivedJabatanId());
+				orgProfileReqDTO.setOrgType(OrganizationType.DIVISION.value());
+				resDTO = orgProfileSO.retrieveOrgProfileListByOrgType(orgProfileReqDTO);
+			}
+			
+			if(resDTO.getOrgProfileList() != null && !resDTO.getOrgProfileList().isEmpty()){
+				
+				List<PmOrgProfile> listDB = resDTO.getOrgProfileList();
+				for(PmOrgProfile obj : listDB){
+					retrievePTJList.add(new SelectItem(obj.getOrgProfileId(),obj.getOrgName()));
+				}
+			}		
+	        //this.receivedPTJList=retrievePTJList;
+		}else{
+			setCheckFlg(false);
+		}
+		
+	}
+	
+	
 
 	public List<SelectItem> getPTJList() {
 		List<SelectItem> retrievePTJList = new ArrayList<SelectItem>();
@@ -426,9 +498,12 @@ public class PurchaseRequestBackingBean extends BaseBackingBean<PurchaseRequestM
 		HttpServletRequest servletRequest = PortalUtil.getHttpServletRequest(new FacesScopes().getRequest());
 		HttpServletRequest originalServletRequest = PortalUtil.getOriginalServletRequest(servletRequest);
 		String taskId = originalServletRequest.getParameter("taskId");
+		String docStatus = originalServletRequest.getParameter("docStatus");
 		System.out.println("taskId:" + taskId);
+		System.out.println("docStatus:" + docStatus);
+		getLoginUserOrg();
+		
 		if (taskId != null) {
-
 			IBpmSO bpmSO = (IBpmSO) EpBpmBusinessDelegate.getInstance().getServiceObject(IBpmSO.class);
 			String ctx = getFacesScopes().getBPMAuthenticationCtxToken();
 			BpmRequestDTO reqDTO = new BpmRequestDTO();
@@ -437,24 +512,30 @@ public class PurchaseRequestBackingBean extends BaseBackingBean<PurchaseRequestM
 			reqDTO.setTaskId(taskId);
 			BpmResponseDTO res = bpmSO.getTaskDetails(reqDTO);
 			Object obj = res.getPojo();
+			//System.out.println("Out come is:: "+res.getAction());
 
 			FulfilmentReqDTO flReqDTO = new FulfilmentReqDTO();
 			FulfilmentResDTO resDTO = new FulfilmentResDTO();
 			IFulfilmentRequestSO fulfilmentSO = (IFulfilmentRequestSO) BusinessDelegate.getInstance().getServiceObject("fl",IFulfilmentRequestSO.class);
 			FLPurchaseOrderDataType flPurchaseOrd = (FLPurchaseOrderDataType) obj;
-
+			//System.out.println("req id "+flPurchaseOrd.getPurchaseRequestId());
 			flReqDTO.setFlRequestId(flPurchaseOrd.getPurchaseRequestId());
 			flReqDTO.setSelectedApprovers(flPurchaseOrd.getApproverList());
 			resDTO = fulfilmentSO.retrieveFulfilmentRequest(flReqDTO);
 			
+			//getManagedBean().getFulfilmentRequest().setIssuedOrgProfile(resDTO.getFlFulfilmentRequest().getIssuedOrgProfile());
+			System.out.println("org id In Pre render 11111 "+resDTO.getFlFulfilmentRequest().getPreparedOrgProfile().getParentOrgProfile().getParentOrgProfile().getOrgProfileId());
+			System.out.println("org id In Pre render 22222 "+resDTO.getFlFulfilmentRequest().getPreparedOrgProfile().getOrgProfileId());
+			System.out.println("org id In Pre render 3333 "+resDTO.getFlFulfilmentRequest().getPreparedOrgProfile().getParentOrgProfile().getOrgProfileId());
 			flReqDTO.setFlFulfilmentRequest(resDTO.getFlFulfilmentRequest());
-
+			combineSupAddress(resDTO.getFlFulfilmentRequest());
 			FulfilmentBackingBean flBB = new FulfilmentBackingBean();
 			flBB.initializeRemarkAndAttachement(resDTO.getRemarkList(), resDTO.getAttachmentList());
 			getManagedBean().setFulfilmentRequest(resDTO.getFlFulfilmentRequest());
 			getManagedBean().setTaskId(taskId);
 			getManagedBean().setOutComes(res.getAction());
 			getManagedBean().setTaskName(res.getTaskName());
+			getManagedBean().setDocStatusId(Long.parseLong(docStatus));
 			
 			/*List<String> source = new ArrayList<String>();
 			List<String> target = new ArrayList<String>();
@@ -571,6 +652,7 @@ public class PurchaseRequestBackingBean extends BaseBackingBean<PurchaseRequestM
 	
 	public SelectItem[] getUserGroupDropdown() {
 		SelectItem[] items = null;
+		getManagedBean().getFulfilmentRequest().setPmUserGroup(new PmUserGroup());
 		try {
 			items = new SelectItem[getManagedBean().getUserGroupMap().values().size()];
 			int i = 0;
@@ -598,6 +680,230 @@ public class PurchaseRequestBackingBean extends BaseBackingBean<PurchaseRequestM
 		FacesScopes facesScopes = new FacesScopes();
 		return facesScopes.hasRoleUser(RoleCode.REQUISITIONER.value());
 	}
+	public List<SelectItem> getIssuedDivisionProfileList(){
+		List<SelectItem> retrieveDivisionList = new ArrayList<SelectItem>();
+		IOrgProfileSO orgProfileSO = BusinessDelegate.getInstance().getServiceObject("pm",IOrgProfileSO.class);
+		retrieveDivisionList.add(new SelectItem("", "- Select One -"));
+		//FulfilmentReqDTO flReqDTO = new FulfilmentReqDTO();
+		
+		if(null!=getManagedBean().getFulfilmentRequest().getIssuedOrgProfile()){
+			getManagedBean().getFulfilmentRequest().setIssuedOrgProfile(getManagedBean().getFulfilmentRequest().getIssuedOrgProfile());
+		}
+		else{
+			getManagedBean().getFulfilmentRequest().setIssuedOrgProfile(getManagedBean().getPmUserOrg().getPmOrgProfile());
+			getManagedBean().setIssuedJabatanId(getManagedBean().getFulfilmentRequest().getIssuedOrgProfile().getParentOrgProfile().getParentOrgProfile().getOrgProfileId());
+		}
+		OrgProfileReqDTO reqDTO = new OrgProfileReqDTO();
+//		reqDTO.setParentOrgProfileId(getManagedBean().getFlRequest().getIssuedOrgProfile().getParentOrgProfile().getParentOrgProfile().getOrgProfileId());
+		System.out.println("-medthod getIssuedDivisionProfileList- getIssuedJabatanId: "+getManagedBean().getIssuedJabatanId());
+		reqDTO.setParentOrgProfileId(getManagedBean().getIssuedJabatanId());
+		reqDTO.setOrgType(OrganizationType.DEPARTMENT.value());
+		OrgProfileResDTO resDTO = orgProfileSO.retrieveOrgProfileListByOrgType(reqDTO);
+		
+		if(resDTO.getOrgProfileList() != null && !resDTO.getOrgProfileList().isEmpty()){
+			
+			List<PmOrgProfile> listDB = resDTO.getOrgProfileList();
+			for(PmOrgProfile obj : listDB){
+				retrieveDivisionList.add(new SelectItem(obj.getOrgProfileId(),obj.getOrgName()));
+			}
+		}		
+		return retrieveDivisionList;
+	}
+	
+	public List<SelectItem> getReceivedDivisionProfileList(){
+		List<SelectItem> retrieveDivisionList = new ArrayList<SelectItem>();
+		IOrgProfileSO orgProfileSO = BusinessDelegate.getInstance().getServiceObject("pm",IOrgProfileSO.class);
+		retrieveDivisionList.add(new SelectItem("", "- Select One -"));
+		
+		getManagedBean().getFulfilmentRequest().setReceivedOrgProfile(getManagedBean().getPmUserOrg().getPmOrgProfile());
+		getManagedBean().setReceivedJabatanId(getManagedBean().getFulfilmentRequest().getReceivedOrgProfile().getParentOrgProfile().getParentOrgProfile().getOrgProfileId());
+		
+		OrgProfileReqDTO orgProfileReqDTO = new OrgProfileReqDTO();
+//		reqDTO.setParentOrgProfileId(getManagedBean().getFlRequest().getIssuedOrgProfile().getParentOrgProfile().getParentOrgProfile().getOrgProfileId());
+		orgProfileReqDTO.setParentOrgProfileId(getManagedBean().getReceivedJabatanId());
+		orgProfileReqDTO.setOrgType(OrganizationType.DEPARTMENT.value());
+		OrgProfileResDTO orgProfileResDTO = orgProfileSO.retrieveOrgProfileListByOrgType(orgProfileReqDTO);
+		
+		if(!orgProfileResDTO.getOrgProfileList().isEmpty()){
+			
+			List<PmOrgProfile> listDB = orgProfileResDTO.getOrgProfileList();
+			for(PmOrgProfile obj : listDB){
+				retrieveDivisionList.add(new SelectItem(obj.getOrgProfileId(),obj.getOrgName()));
+			}
+		}		
+		return retrieveDivisionList;
+	}
+	/*public List<SelectItem> getReceivedPTJList(){
+		
+
+		return retrievePTJList;
+	}*/
+	public void getLoginUserOrg(){
+		PmUser user = getFacesScopes().getUserSessionBean();
+		UserReqDTO reqDTO = new UserReqDTO();
+		reqDTO.setUserId(user.getUserId());
+		IUserSO userSO = (IUserSO ) BusinessDelegate.getInstance().getServiceObject("pm", IUserSO .class);
+		UserResDTO resDTO = userSO.retrieveUserOrgListByUserId(reqDTO);
+		PmUserOrg userOrg = resDTO.getUserOrgList().get(0);
+		getManagedBean().setPmUserOrg(userOrg);
+		System.out.println("user Name:::: "+getManagedBean().getPmUserOrg().getPmUser().getUserName());
+	}
+	
+	/**
+	 * @return the issuedPTJList
+	 */
+	public List<SelectItem> getIssuedPTJList() {
+		return issuedPTJList;
+	}
+
+	/**
+	 * @param issuedPTJList the issuedPTJList to set
+	 */
+	public void setIssuedPTJList(List<SelectItem> issuedPTJList) {
+		this.issuedPTJList = issuedPTJList;
+	}
+	
+	
+
+	/**
+	 * @return the checkFlg
+	 */
+	public boolean isCheckFlg() {
+		return checkFlg;
+	}
+	
+	/**
+	 * @param checkFlg the checkFlg to set
+	 */
+	public void setCheckFlg(boolean checkFlg) {
+		this.checkFlg = checkFlg;
+	}
+// get Doc type Description	
+	public String getParameterDesc(String parameterType, String parameterCode){
+		IParameterSO parameterSO = (IParameterSO) BusinessDelegate.getInstance().getServiceObject("pm", IParameterSO.class);
+		String desc="";
+		//System.out.println("parameterType::: "+parameterType);
+		//System.out.println("parameterCode::: "+parameterCode);
+		ParameterReqDTO reqDTO=new ParameterReqDTO();
+		reqDTO.setParameterCode(parameterCode);
+		reqDTO.setParameterType(parameterType);
+		ParameterResDTO resDTO=parameterSO.retrieveParameterByTypeAndCode(reqDTO);
+		//System.out.println("parameter id:::::: "+resDTO.getPmParameter().getParameterId());
+		reqDTO.setParameterId(resDTO.getPmParameter().getParameterId());
+		if(null!=resDTO.getPmParameter().getPmParameterDescs()){
+			//System.out.println(resDTO.getPmParameter().getPmParameterDescs().size());
+			desc=resDTO.getPmParameter().getPmParameterDescs().get(0).getCodeName();
+		} else{
+			System.out.println("Parameters Description is Empty");
+		}
+		return desc;
+	}
+	
+	public void updateIssuedJabatan() {
+		System.out.println("-updateIssuedJabatan- "
+				+ getManagedBean().getFulfilmentRequest().getIssuedOrgProfile()
+						.getOrgProfileId());
+
+		IOrgProfileSO orgProfileSO = (IOrgProfileSO) BusinessDelegate
+				.getInstance().getServiceObject("pm", IOrgProfileSO.class);
+		OrgProfileReqDTO reqDTO = new OrgProfileReqDTO();
+		if (getManagedBean().getFulfilmentRequest().getIssuedOrgProfile()
+				.getOrgProfileId() != null) {
+
+			reqDTO.setOrgProfileId(getManagedBean().getFulfilmentRequest()
+					.getIssuedOrgProfile().getOrgProfileId());
+			OrgProfileResDTO resDTO = orgProfileSO
+					.retrieveOrgProfileByProfileId(reqDTO);
+			getManagedBean().getFulfilmentRequest().setIssuedOrgProfile(
+					resDTO.getPmOrgProfile());
+			getManagedBean().getFulfilmentRequest().setChargeOrgProfile(
+					resDTO.getPmOrgProfile());
+		} else {
+			getManagedBean().getFulfilmentRequest().setIssuedOrgProfile(null);
+			getManagedBean().getFulfilmentRequest().setChargeOrgProfile(null);
+		}
+	}
+	public void updateReceivedJabatan() {
+		System.out.println("-updateReceivedJabatan- "
+				+ getManagedBean().getFulfilmentRequest().getReceivedOrgProfile()
+						.getOrgProfileId());
+
+		IOrgProfileSO orgProfileSO = (IOrgProfileSO) BusinessDelegate
+				.getInstance().getServiceObject("pm", IOrgProfileSO.class);
+		OrgProfileReqDTO reqDTO = new OrgProfileReqDTO();
+		if (getManagedBean().getFulfilmentRequest().getReceivedOrgProfile()
+				.getOrgProfileId() != null) {
+
+			reqDTO.setOrgProfileId(getManagedBean().getFulfilmentRequest()
+					.getReceivedOrgProfile().getOrgProfileId());
+			OrgProfileResDTO resDTO = orgProfileSO
+					.retrieveOrgProfileByProfileId(reqDTO);
+			getManagedBean().getFulfilmentRequest().setReceivedOrgProfile(
+					resDTO.getPmOrgProfile());
+		} else {
+			getManagedBean().getFulfilmentRequest().setReceivedOrgProfile(null);
+		}
+	}
+	public List<SelectItem> getReceivedPTJList() {
+		List<SelectItem> retrievePTJList = new ArrayList<SelectItem>();
+		OrgProfileResDTO resDTO = new OrgProfileResDTO();
+		IOrgProfileSO orgProfileSO = (IOrgProfileSO)BusinessDelegate.getInstance().getServiceObject("pm",IOrgProfileSO.class);
+		OrgProfileReqDTO orgProfileReqDTO = new OrgProfileReqDTO();
+		retrievePTJList.add(new SelectItem("", "- Select One -"));
+		System.out.println("profile is for list::: "+getManagedBean().getFulfilmentRequest().getReceivedOrgProfile().getParentOrgProfile().getOrgProfileId());
+		orgProfileReqDTO.setParentOrgProfileId(getManagedBean().getFulfilmentRequest().getReceivedOrgProfile().getParentOrgProfile().getOrgProfileId());
+		orgProfileReqDTO.setOrgType(OrganizationType.DIVISION.value());
+		resDTO = orgProfileSO.retrieveOrgProfileListByOrgType(orgProfileReqDTO);
+		if(resDTO.getOrgProfileList() != null && !resDTO.getOrgProfileList().isEmpty()){
+			
+			List<PmOrgProfile> listDB = resDTO.getOrgProfileList();
+			for(PmOrgProfile obj : listDB){
+				retrievePTJList.add(new SelectItem(obj.getOrgProfileId(),obj.getOrgName()));
+			}
+		}		
+		
+		return retrievePTJList;
+		
+	}
+	 public void combineSupAddress(FlFulfilmentRequest fulfilmentRequest){
+	    	
+	    	StringBuilder address = new StringBuilder();
+	    	String strSpace = " ";
+	    	if(fulfilmentRequest.getSupplierBranch().getSmAddress().getAddress1() != null){
+	    		address.append(fulfilmentRequest.getSupplierBranch().getSmAddress().getAddress1());
+	    		address.append(strSpace);
+	    	
+	    	}if(fulfilmentRequest.getSupplierBranch().getSmAddress().getAddress2() != null){
+	    		address.append(fulfilmentRequest.getSupplierBranch().getSmAddress().getAddress2());
+	    		address.append(strSpace);
+	    	
+	    	}if(fulfilmentRequest.getSupplierBranch().getSmAddress().getAddress3() != null){
+	    		address.append(fulfilmentRequest.getSupplierBranch().getSmAddress().getAddress3());
+	    		address.append(strSpace);
+	    	
+	    	}if(fulfilmentRequest.getSupplierBranch().getSmAddress().getAddress4() != null){
+	    		address.append(fulfilmentRequest.getSupplierBranch().getSmAddress().getAddress4());
+	    		address.append(strSpace);
+	    		
+	    	}if(fulfilmentRequest.getSupplierBranch().getSmAddress().getPmDistrict().getDistrictName() != null){
+	    		address.append(fulfilmentRequest.getSupplierBranch().getSmAddress().getPmDistrict().getDistrictName());
+	    		address.append(strSpace);
+	    	
+	    	}if(fulfilmentRequest.getSupplierBranch().getSmAddress().getPmState().getStateName() != null){
+	    		address.append(fulfilmentRequest.getSupplierBranch().getSmAddress().getPmState().getStateName());
+	    		address.append(strSpace);
+	    	
+	    	}if(fulfilmentRequest.getSupplierBranch().getSmAddress().getPmCountry().getCountryName() != null){
+	    		address.append(fulfilmentRequest.getSupplierBranch().getSmAddress().getPmCountry().getCountryName());
+	    		address.append("\n");
+	    	}if(fulfilmentRequest.getSupplierBranch().getSmAddress().getPostcode() != null){
+	    		address.append(fulfilmentRequest.getSupplierBranch().getSmAddress().getPostcode());
+	    	}
+	    	if(null != address.toString()){
+	    		System.out.println("addresss     "+address.toString());
+	    	}
+	    	this.getManagedBean().setSupplierAddress(address.toString());
+	    }
 	
 
 

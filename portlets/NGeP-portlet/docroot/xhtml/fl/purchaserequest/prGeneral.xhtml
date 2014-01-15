@@ -3,28 +3,24 @@
 	xmlns:h="http://java.sun.com/jsf/html"
 	xmlns:ui="http://java.sun.com/jsf/facelets"
 	xmlns:p="http://primefaces.org/ui"
-	xmlns:c="http://java.sun.com/jsp/jstl/core">
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:ac="http://ac.my/jsf/composite/cc">
 
 	<p:panel header="FULFILMENT DETAIL" toggleable="true" id="flDetails">
 		<table style="width: 100%">
 			<tr>
 				<td><p:outputLabel value="#{lbl['lbl.fl.ministry']}" /></td>
-				<td><p:inputText size="35"
-						value="#{purchaseRequestBackingBean.managedBean.fulfilmentRequest.createdOrgProfile.parentOrgProfile.parentOrgProfile.orgName}"
+				<td><p:inputText size="35" id="ministry"
+						value="#{purchaseRequestBackingBean.managedBean.fulfilmentRequest.issuedOrgProfile.parentOrgProfile.parentOrgProfile.orgName}"
 						disabled="true" /></td>
 				<td><p:outputLabel value="#{lbl['lbl.fl.purchase.request.no']}" /></td>
-				<td><p:inputText size="20" disabled="true" /></td>
+				<td><p:inputText size="20" disabled="true" value="#{purchaseRequestBackingBean.managedBean.fulfilmentRequest.docNo}"/></td>
 			</tr>
 			<tr>
 				<td><p:outputLabel value="* #{lbl['lbl.fl.issued.jabatan']}" /></td>
-				<td><p:selectOneMenu
-						value="#{purchaseRequestBackingBean.managedBean.fulfilmentRequest.issuedOrgProfile.orgProfileId}"
-						style="width: 207px;">
-						<f:selectItems
-							value="#{purchaseRequestBackingBean.divisionProfileList}" />
-						<p:ajax event="change" update="issuePtjDD,chargePtjDD" process="@this"
-							listener="#{purchaseRequestBackingBean.checkPtjFlg}" />
-					</p:selectOneMenu></td>
+				<td><p:inputText size="35" id="issuedJabatan"
+						value="#{purchaseRequestBackingBean.managedBean.fulfilmentRequest.issuedOrgProfile.parentOrgProfile.orgName}"
+						disabled="true" /></td>
 				<td><p:outputLabel value="#{lbl['lbl.fl.req.note.no']}" /></td>
 				<td><p:inputText
 						value="#{purchaseRequestBackingBean.managedBean.selectedRequestNote.requestNoteNo}"
@@ -32,27 +28,20 @@
 			</tr>
 			<tr>
 				<td><p:outputLabel value="* #{lbl['lbl.fl.issued.ptj']}" /></td>
-				<td><p:selectOneMenu id="issuePtjDD"
-						disabled="#{purchaseRequestBackingBean.managedBean.checkPtjFlg}"
-						value="#{purchaseRequestBackingBean.managedBean.fulfilmentRequest.issuedOrgProfile.orgProfileId}"
-						style="width: 207px;">
-						<f:selectItems value="#{purchaseRequestBackingBean.PTJList}" />
-					</p:selectOneMenu></td>
+				<td><ac:lov id="issuePtj" lovId="PM_ORG_PROFILE"
+						headerText="IssuePtj Lov"
+						saveObject="purchaseRequestBackingBean.managedBean.fulfilmentRequest.issuedOrgProfile"
+						value="#{purchaseRequestBackingBean.managedBean.fulfilmentRequest.issuedOrgProfile.orgName}"
+						conditionField="orgProfileId^#{purchaseRequestBackingBean.managedBean.fulfilmentRequest.preparedOrgProfile.parentOrgProfile.orgProfileId}">
+					</ac:lov> <ac:lovPopup /></td>
 				<td><p:outputLabel value="#{lbl['lbl.fl.plan.no']}" /></td>
 				<td><p:inputText size="20"
-						value="#{purchaseRequestBackingBean.managedBean.fulfilmentRequest.planId}"
+						value="#{purchaseRequestBackingBean.managedBean.fulfilmentRequest.planId.planNo}"
 						disabled="true" /></td>
 			</tr>
 			<tr>
 				<td><p:outputLabel value="* #{lbl['lbl.fl.received.jabatan']}" /></td>
-				<td><p:selectOneMenu
-						value="#{purchaseRequestBackingBean.managedBean.fulfilmentRequest.receivedOrgProfile.orgProfileId}"
-						style="width: 207px;">
-						<f:selectItems
-							value="#{purchaseRequestBackingBean.divisionProfileList}" />
-						<p:ajax event="change" update="receivePtjDD" process="@this"
-							listener="#{purchaseRequestBackingBean.checkPtjFlg}" />	
-					</p:selectOneMenu></td>
+				<td><p:inputText size="35" disabled="true" id="receivedJabatan" value="#{purchaseRequestBackingBean.managedBean.fulfilmentRequest.receivedOrgProfile.parentOrgProfile.orgName}"/></td>
 				<td><p:outputLabel value="#{lbl['lbl.fl.procurement.type']}" /></td>
 				<td><p:inputText size="35"
 						value="#{purchaseRequestBackingBean.managedBean.selectedRequestNote.fulfillmentType}"
@@ -60,12 +49,10 @@
 			</tr>
 			<tr>
 				<td><p:outputLabel value="* #{lbl['lbl.fl.received.ptj']}" /></td>
-				<td><p:selectOneMenu id="receivePtjDD"
-						disabled="#{purchaseRequestBackingBean.managedBean.checkPtjFlg}"
-						value="#{purchaseRequestBackingBean.managedBean.fulfilmentRequest.receivedOrgProfile.orgProfileId}"
-						style="width: 207px; margin-bottom:5px;">
-						<f:selectItems value="#{purchaseRequestBackingBean.PTJList}" />
-					</p:selectOneMenu></td>
+				<td><p:selectOneMenu value="#{purchaseRequestBackingBean.managedBean.fulfilmentRequest.receivedOrgProfile.orgProfileId}" style="width: 207px;">
+					<f:selectItems value="#{purchaseRequestBackingBean.receivedPTJList}"></f:selectItems>
+					<p:ajax event="change" update="receivedJabatan" listener="#{purchaseRequestBackingBean.updateReceivedJabatan}"></p:ajax>
+				</p:selectOneMenu></td>
 				<td><p:outputLabel value="* #{lbl['lbl.fl.financial.year']}" /></td>
 				<td><p:inputText size="20"
 						value="#{purchaseRequestBackingBean.managedBean.fulfilmentRequest.financialYear}" />
@@ -74,22 +61,22 @@
 			<tr>
 				<td rowspan="2" valign="top"><p:outputLabel
 						value="* #{lbl['lbl.fl.title']}" /></td>
-				<td rowspan="2"><p:inputTextarea  cols="36"
+				<td rowspan="2"><p:inputTextarea cols="36"
 						style=" margin-bottom:5px;"
 						value="#{purchaseRequestBackingBean.managedBean.fulfilmentRequest.title}" />
 				</td>
 
 				<td><p:outputLabel value="* #{lbl['lbl.fl.maksud.code']}" /></td>
 				<td><p:selectOneMenu style="width: 207px; margin-bottom:5px;"
-						value="#{purchaseRequestBackingBean.managedBean.fulfilmentRequest.maksudId}">
+						value="#{purchaseRequestBackingBean.managedBean.fulfilmentRequest.pmVotFund}">
+
 						<f:selectItems
 							value="#{purchaseRequestBackingBean.maksudCodeList}" />
 					</p:selectOneMenu></td>
 			</tr>
 			<tr>
 				<td><p:outputLabel value="* #{lbl['lbl.fl.ag.office']}" /></td>
-				<td><p:selectOneMenu style="width: 207px; margin-bottom:5px;"
-						value="#{purchaseRequestBackingBean.managedBean.fulfilmentRequest.orgProfileAgoId}">
+				<td><p:selectOneMenu style="width: 207px; margin-bottom:5px;">
 						<f:selectItem itemLabel="002 KAWANGAN KL" itemValue="1" />
 					</p:selectOneMenu></td>
 			</tr>
@@ -100,10 +87,9 @@
 						<f:selectItem itemLabel="Yes" itemValue="true" />
 						<f:selectItem itemLabel="No" itemValue="false" />
 					</p:selectOneRadio></td>
-					<td><p:outputLabel value="* #{lbl['lbl.fl.charged.ptj']}" /></td>
-				<td><p:selectOneMenu id="chargePtjDD" disabled="#{purchaseRequestBackingBean.managedBean.checkPtjFlg}" style="width: 207px;margin-bottom:5px;" >
-						<f:selectItems value="#{purchaseRequestBackingBean.PTJList}" />
-					</p:selectOneMenu></td>
+				<td><p:outputLabel value="* #{lbl['lbl.fl.charged.ptj']}" /></td>
+				<td><p:inputText id="chargedPtj" size="35" disabled="true"
+						value="#{purchaseRequestBackingBean.managedBean.fulfilmentRequest.chargeOrgProfile.parentOrgProfile.orgName}"></p:inputText></td>
 			</tr>
 			<tr>
 				<td><p:outputLabel value="#{lbl['lbl.fl.creation.date']}" /></td>
@@ -120,42 +106,51 @@
 				<td><table style="width: 100%">
 						<tr>
 							<td style="width: 25px;"><p:inputText size="5"
-									disabled="true" /></td>
+									disabled="true"
+									value="#{purchaseRequestBackingBean.managedBean.fulfilmentRequest.smSupplier.epNo}" /></td>
 							<td style="width: 65px;"><p:outputLabel value="MOF No." /></td>
-							<td><p:inputText size="10" disabled="true" /></td>
+							<td><p:inputText size="10" disabled="true"
+									value="#{purchaseRequestBackingBean.managedBean.fulfilmentRequest.smSupplier.supplierId}" /></td>
 						</tr>
 					</table></td>
 			</tr>
 			<tr>
 				<td><p:outputLabel value="#{lbl['lbl.fl.supp.name']}" /></td>
-				<td><p:inputText disabled="true" size="35" /></td>
+				<td><p:inputText disabled="true" size="35" value="#{purchaseRequestBackingBean.managedBean.fulfilmentRequest.supplierBranch.branchName}"/></td>
 			</tr>
 			<tr>
 				<td valign="top"><p:outputLabel
 						value="#{lbl['lbl.fl.supp.address']}" /></td>
-				<td><p:inputTextarea  cols="36"
-						style="margin-bottom:5px;" disabled="true" /></td>
+				<td><p:inputTextarea cols="36" style="margin-bottom:5px;"
+						disabled="true"  value="#{purchaseRequestBackingBean.managedBean.supplierAddress}" /></td>
 			</tr>
 			<tr>
 				<td><p:outputLabel value="#{lbl['lbl.fl.supp.email']}" /></td>
-				<td><p:inputText disabled="true" size="35" /></td>
+				<td><p:inputText disabled="true" size="35" value="#{purchaseRequestBackingBean.managedBean.fulfilmentRequest.supplierBranch.phoneNo}"/></td>
 			</tr>
 			<tr>
 				<td><p:outputLabel value="#{lbl['lbl.fl.supp.telno']}" /></td>
-				<td><p:inputText disabled="true" size="20" /></td>
+				<td><p:inputText disabled="true" size="20" value="#{purchaseRequestBackingBean.managedBean.fulfilmentRequest.supplierBranch.phoneNo}"/></td>
 			</tr>
 		</table>
 	</p:panel>
 
-	<p:panel id="settingId" header="Approver Setting" toggleable="true" rendered="#{purchaseRequestBackingBean.isFlFulfilmentRequisitioner()}"
+	<p:panel id="settingId" header="Approver Setting" toggleable="true"
+		rendered="#{purchaseRequestBackingBean.isFlFulfilmentRequisitioner()}"
 		toggleSpeed="500">
 		<h:panelGrid columns="1">
-			<h:panelGrid columns="2" >
-				<h:outputLabel value="Approver Group"/>
-				<p:selectOneMenu value="#{purchaseRequestBackingBean.managedBean.fulfilmentRequest.pmUserGroup.userGroupId}" style="width:80px; margin-bottom:5px;">
-					<p:ajax event="change" listener="#{purchaseRequestBackingBean.userGroupChangeListener()}" process="@this" update="approverpickList" />
-					<f:selectItems value="#{purchaseRequestBackingBean.getUserGroupDropdown()}" />
-				</p:selectOneMenu>		
+			<h:panelGrid columns="2">
+				<h:outputLabel value="Approver Group" />
+				<p:selectOneMenu
+					value="#{purchaseRequestBackingBean.managedBean.fulfilmentRequest.pmUserGroup.userGroupId}"
+					style="width:80px; margin-bottom:5px;">
+					<p:ajax event="change"
+						listener="#{purchaseRequestBackingBean.userGroupChangeListener()}"
+						process="@this" update="approverpickList" />
+					<f:selectItems
+						value="#{purchaseRequestBackingBean.getUserGroupDropdown()}" />
+				</p:selectOneMenu>
+
 			</h:panelGrid>
 			<h:panelGrid style="width:500px">
 				<p:pickList id="approverpickList"

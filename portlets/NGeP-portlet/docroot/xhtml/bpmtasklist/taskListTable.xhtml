@@ -48,6 +48,7 @@
 				<p:commandLink value="#{tasks.docNumber}"
 					action="#{bpmTasklistBackingBean.navigateToURL}">
 					<f:param name="taskId" value="#{tasks.taskId}" />
+					<f:param name="docStatus" value="#{tasks.docStatus}" />
 				</p:commandLink>
 			</p:column>
 			<p:column width="5%;">

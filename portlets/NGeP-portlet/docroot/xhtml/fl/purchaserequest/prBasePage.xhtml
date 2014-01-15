@@ -14,15 +14,10 @@
 	<ui:define name="contentSection">
 		<f:event listener="#{purchaseRequestBackingBean.preRenderView}"
 			type="preRenderView" />
-		<p:messages id="messages" showDetail="true" autoUpdate="true"
-			closable="true" severity="error, info" />
+		<p:messages id="messages" showDetail="true" autoUpdate="true" closable="true" severity="error, info" />
+		<ui:include src="/xhtml/fl/shared/flReviewHeaderPage.xhtml" />
 		<table style="width: 100%;">
 			<tr>
-				<td style="text-align: left; width: 66px;"><p:outputLabel
-						value="DOC NO:" rendered="#{not empty purchaseRequestBackingBean.managedBean.fulfilmentRequest.docNo}"/></td>
-				<td style="width: 70px"><p:outputLabel
-						value="#{purchaseRequestBackingBean.managedBean.fulfilmentRequest.docNo}" />
-				</td>
 				<td colspan="4" style="text-align: right"><ui:repeat
 						var="bpmAction"
 						value="#{purchaseRequestBackingBean.managedBean.outComes}">

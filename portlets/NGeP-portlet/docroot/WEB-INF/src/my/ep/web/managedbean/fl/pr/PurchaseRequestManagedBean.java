@@ -21,6 +21,7 @@ import my.ep.persistence.entity.fl.request.FlFulfilmentRequest;
 import my.ep.persistence.entity.pm.authorization.PmOrgAddress;
 import my.ep.persistence.entity.pm.authorization.PmUserGroup;
 import my.ep.persistence.entity.pm.authorization.PmUserGroupUser;
+import my.ep.persistence.entity.pm.authorization.PmUserOrg;
 import my.ep.persistence.entity.pm.common.PmAddressType;
 import my.ep.persistence.entity.pm.common.PmMaksud;
 import my.ep.persistence.entity.ss.directpurchase.ScRequestNote;
@@ -70,6 +71,16 @@ public class PurchaseRequestManagedBean extends BaseManagedBean {
 	private String flDocId;
 	private String buttonVal;
 	private Boolean submitButtonStatus =true;
+	private Long docStatusId;
+	
+	private String ministryName;
+	private Long issuedJabatanId;
+	private Long receivedJabatanId;
+	private Long issuedPtjId;
+	private Long receivedPtjId;
+	private Long chargedPtjId;
+	
+	private PmUserOrg pmUserOrg = new PmUserOrg();
 	
 	private DualListModel<String> approverModel;
 	private HashMap<String, PmUserGroupUser> approverMap;
@@ -96,6 +107,10 @@ public class PurchaseRequestManagedBean extends BaseManagedBean {
 	// getUserGroup
 	private Map<Long, PmUserGroup> userGroupMap;
 	private String fulfilmentRequisitioner;
+	
+	//getSuplier address details
+	private String supplierAddress;
+	
 	
 	
 	/**
@@ -643,6 +658,134 @@ public class PurchaseRequestManagedBean extends BaseManagedBean {
 	public void setFulfilmentRequisitioner(String fulfilmentRequisitioner) {
 		this.fulfilmentRequisitioner = fulfilmentRequisitioner;
 	}
+
+	/**
+	 * @return the supplierAddress
+	 */
+	public String getSupplierAddress() {
+		return supplierAddress;
+	}
+
+	/**
+	 * @param supplierAddress the supplierAddress to set
+	 */
+	public void setSupplierAddress(String supplierAddress) {
+		this.supplierAddress = supplierAddress;
+	}
+
+	/**
+	 * @return the ministryName
+	 */
+	public String getMinistryName() {
+		return ministryName;
+	}
+
+	/**
+	 * @param ministryName the ministryName to set
+	 */
+	public void setMinistryName(String ministryName) {
+		this.ministryName = ministryName;
+	}
+
+	/**
+	 * @return the issuedJabatanId
+	 */
+	public Long getIssuedJabatanId() {
+		return issuedJabatanId;
+	}
+
+	/**
+	 * @param issuedJabatanId the issuedJabatanId to set
+	 */
+	public void setIssuedJabatanId(Long issuedJabatanId) {
+		this.issuedJabatanId = issuedJabatanId;
+	}
+
+	/**
+	 * @return the receivedJabatanId
+	 */
+	public Long getReceivedJabatanId() {
+		return receivedJabatanId;
+	}
+
+	/**
+	 * @param receivedJabatanId the receivedJabatanId to set
+	 */
+	public void setReceivedJabatanId(Long receivedJabatanId) {
+		this.receivedJabatanId = receivedJabatanId;
+	}
+
+	/**
+	 * @return the issuedPtjId
+	 */
+	public Long getIssuedPtjId() {
+		return issuedPtjId;
+	}
+
+	/**
+	 * @param issuedPtjId the issuedPtjId to set
+	 */
+	public void setIssuedPtjId(Long issuedPtjId) {
+		this.issuedPtjId = issuedPtjId;
+	}
+
+	/**
+	 * @return the receivedPtjId
+	 */
+	public Long getReceivedPtjId() {
+		return receivedPtjId;
+	}
+
+	/**
+	 * @param receivedPtjId the receivedPtjId to set
+	 */
+	public void setReceivedPtjId(Long receivedPtjId) {
+		this.receivedPtjId = receivedPtjId;
+	}
+
+	/**
+	 * @return the pmUserOrg
+	 */
+	public PmUserOrg getPmUserOrg() {
+		return pmUserOrg;
+	}
+
+	/**
+	 * @param pmUserOrg the pmUserOrg to set
+	 */
+	public void setPmUserOrg(PmUserOrg pmUserOrg) {
+		this.pmUserOrg = pmUserOrg;
+	}
+
+	/**
+	 * @return the chargedPtjId
+	 */
+	public Long getChargedPtjId() {
+		return chargedPtjId;
+	}
+
+	/**
+	 * @param chargedPtjId the chargedPtjId to set
+	 */
+	public void setChargedPtjId(Long chargedPtjId) {
+		this.chargedPtjId = chargedPtjId;
+	}
+
+	/**
+	 * @return the docStatusId
+	 */
+	public Long getDocStatusId() {
+		return docStatusId;
+	}
+
+	/**
+	 * @param docStatusId the docStatusId to set
+	 */
+	public void setDocStatusId(Long docStatusId) {
+		this.docStatusId = docStatusId;
+	}
+
+	
 
 	
 
