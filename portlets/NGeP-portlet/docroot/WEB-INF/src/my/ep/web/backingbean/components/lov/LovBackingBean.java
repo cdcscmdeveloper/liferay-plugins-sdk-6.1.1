@@ -134,8 +134,19 @@ public class LovBackingBean implements Serializable {
 	
 	public static void main(String[] args) {
 //		mergeRuleSO = (IMergeRulesSO)BusinessDelegate.getInstance().getServiceObject(IMergeRulesSO.class);
-		System.out.println(BusinessDelegate.getInstance().getServiceObject(ILovSO.class));
+//		System.out.println(BusinessDelegate.getInstance().getServiceObject(ILovSO.class));
+		
+		String columnName = "supplier.name";
+		
+		if(columnName.indexOf(".") > 0) {
+			
+		}
 	}
+
+	
+//	public static String parseColumnName() {
+//		
+//	}
 	
 /*	public void searchAction() {
 		System.out.println("===============================search action");
@@ -188,6 +199,13 @@ public class LovBackingBean implements Serializable {
 			columnsToDisplay.clear();
 			for(LovColumnBean column : lovBean.getColumns()) {
 				if(column.isViewable()) {
+
+					ValueExpression valueExpression = FacesContext.getCurrentInstance().getApplication().getExpressionFactory()
+							.createValueExpression(FacesContext.getCurrentInstance().getELContext(),
+									"#{entity." + column.getColumnName() + "}", Object.class);
+					
+					column.setColumnNameve(valueExpression);
+					
 					columnsToDisplay.add(column);
 				}
 			}

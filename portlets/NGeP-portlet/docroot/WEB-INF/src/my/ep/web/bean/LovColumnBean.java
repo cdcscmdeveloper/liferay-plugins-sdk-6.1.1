@@ -3,6 +3,8 @@
  */
 package my.ep.web.bean;
 
+import javax.el.ValueExpression;
+
 /**
  * @author Kian Seng
  *
@@ -21,6 +23,8 @@ public class LovColumnBean {
 	private boolean searchable;
 	private boolean viewable;
 	private Integer columnWidth;
+	
+	private ValueExpression columnNameve;
 	
 	
 	public LovColumnBean() {
@@ -89,5 +93,15 @@ public class LovColumnBean {
 	}
 	public void setViewable(boolean viewable) {
 		this.viewable = viewable;
-	}	
+	}
+
+	public ValueExpression getColumnNameve() {
+		return columnNameve;
+	}
+
+	public void setColumnNameve(ValueExpression columnNameve) {
+		this.columnNameve = columnNameve;
+	}
+	
+	
 }
