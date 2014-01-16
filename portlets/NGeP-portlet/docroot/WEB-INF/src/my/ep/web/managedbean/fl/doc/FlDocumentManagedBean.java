@@ -3,7 +3,6 @@
  */
 package my.ep.web.managedbean.fl.doc;
 
-import java.util.Date;
 import java.util.List;
 
 import javax.faces.bean.ManagedBean;
@@ -34,8 +33,6 @@ public class FlDocumentManagedBean extends BaseManagedBean {
 	private String searchContractNo;
 	private String searchCircularNo;
 	private String searchLoaNo;
-	private Date searchStartDate;
-	private Date searchEndDate;
 	private String searchProcurementType;
 	private Long searchStatusId; 
 	private FlFulfilmentRequest fulfilmentRequest;
@@ -123,22 +120,6 @@ public class FlDocumentManagedBean extends BaseManagedBean {
 
 	public void setSearchLoaNo(String searchLoaNo) {
 		this.searchLoaNo = searchLoaNo;
-	}
-
-	public Date getSearchStartDate() {
-		return searchStartDate;
-	}
-
-	public void setSearchStartDate(Date searchStartDate) {
-		this.searchStartDate = searchStartDate;
-	}
-
-	public Date getSearchEndDate() {
-		return searchEndDate;
-	}
-
-	public void setSearchEndDate(Date searchEndDate) {
-		this.searchEndDate = searchEndDate;
 	}
 
 	public Long getSearchStatusId() {

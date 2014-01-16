@@ -3,16 +3,18 @@
  */
 package my.ep.web.backingbean.fl.doc;
 
-import java.util.Date;
+import java.util.ArrayList;
+import java.util.List;
 
+import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.RequestScoped;
 import javax.faces.context.FacesContext;
 import javax.faces.event.AjaxBehaviorEvent;
+import javax.faces.model.SelectItem;
 
 import my.ep.biz.bean.search.ISearchBean;
 import my.ep.biz.bean.search.ISearchResultBean;
-import my.ep.biz.bean.search.SearchBetweenValue;
 import my.ep.biz.bean.search.SearchFilterBean;
 import my.ep.biz.service.fl.IFulfilmentDocumentSO;
 import my.ep.biz.service.fl.frn.IReceivedNoteSO;
@@ -20,13 +22,12 @@ import my.ep.biz.service.fl.invoice.IInvoiceSO;
 import my.ep.biz.service.fl.order.IDeliveryOrderSO;
 import my.ep.biz.service.fl.order.IFulfilmentOrderSO;
 import my.ep.biz.service.fl.request.IFulfilmentRequestSO;
-import my.ep.biz.service.pm.common.parameter.IParameterSO;
+import my.ep.constant.pm.ParameterConst;
+import my.ep.constant.pm.ParameterTypeConst;
 import my.ep.dto.fl.FlDocumentReqDTO;
 import my.ep.dto.fl.FlDocumentResDTO;
 import my.ep.dto.fl.FulfilmentReqDTO;
 import my.ep.dto.fl.FulfilmentResDTO;
-import my.ep.dto.pm.common.parameter.ParameterReqDTO;
-import my.ep.dto.pm.common.parameter.ParameterResDTO;
 import my.ep.persistence.entity.fl.VFlDocument;
 import my.ep.type.aut.SearchOperator;
 import my.ep.web.backingbean.BaseBackingBean;
@@ -74,7 +75,46 @@ public class FlDocumentBackingBean extends BaseBackingBean<FlDocumentManagedBean
 		flDocumentDataModel.reloadData();
 	}
 	
-	//public S
+	public SelectItem[] getDocumentTypeDropDown() {
+		List<SelectItem> selectedItemList = new ArrayList<SelectItem>();
+		try {
+			SelectItem[] items = getDropdownCodeValues(ParameterTypeConst.FULFILMENT_DOCUMENT_TYPE);
+			selectedItemList.add(items[0]);
+			List<SelectItem> itemList = new ArrayList<SelectItem>();
+		    for(SelectItem selectItem : items) {
+		    	itemList.add(selectItem);
+		    }
+		    
+			List<String> flDocTypes = new ArrayList<String>();
+			if(getManagedBean().getSearchOrderType()!=null) {
+				// TODO Should filter by user role
+				if(getManagedBean().getSearchOrderType().equalsIgnoreCase(ParameterConst.DOCTYPE_CONTRACT_ORDER)) {
+					flDocTypes.add(ParameterConst.DOCTYPE_CONTRACT_REQUEST);
+					flDocTypes.add(ParameterConst.DOCTYPE_CONTRACT_ORDER);
+					flDocTypes.add(ParameterConst.DOCTYPE_SHIPPING_INSTRUCTION);
+				} else if(getManagedBean().getSearchOrderType().equalsIgnoreCase(ParameterConst.DOCTYPE_PURCHASE_ORDER)) {
+					flDocTypes.add(ParameterConst.DOCTYPE_PURCHASE_REQUEST);
+					flDocTypes.add(ParameterConst.DOCTYPE_PURCHASE_ORDER);
+				}
+				flDocTypes.add(ParameterConst.DOCTYPE_DELIVERY_ORDER);
+				flDocTypes.add(ParameterConst.DOCTYPE_FULFILMENT_NOTE);
+				flDocTypes.add(ParameterConst.DOCTYPE_INVOICE);
+				flDocTypes.add(ParameterConst.DOCTYPE_PAYMENT_ADVICE);
+				flDocTypes.add(ParameterConst.DOCTYPE_STOP_DELIVERY);
+				flDocTypes.add(ParameterConst.DOCTYPE_ADJUSTMENT_NOTE);
+			}
+			
+		    for(SelectItem selectItem : itemList) {
+		    	if(flDocTypes.contains(selectItem.getValue())) {
+		    		selectedItemList.add(selectItem);
+		    	}
+		    }
+		} catch (Exception e) {
+			e.printStackTrace();
+			FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR,e.toString(),e.getMessage()));
+		}
+	    return selectedItemList.toArray(new SelectItem[selectedItemList.size()]);
+	}
 	
 	public String navigateToPage(){
 		IFulfilmentRequestSO fulfilmentRequestSO = null;
@@ -174,25 +214,6 @@ public class FlDocumentBackingBean extends BaseBackingBean<FlDocumentManagedBean
 		}
 		return NavgPage;
 	}
-	public String getParameterDesc(String parameterType, String parameterCode){
-		IParameterSO parameterSO = (IParameterSO) BusinessDelegate.getInstance().getServiceObject("pm", IParameterSO.class);
-		String desc="";
-		//System.out.println("parameterType::: "+parameterType);
-		//System.out.println("parameterCode::: "+parameterCode);
-		ParameterReqDTO reqDTO=new ParameterReqDTO();
-		reqDTO.setParameterCode(parameterCode);
-		reqDTO.setParameterType(parameterType);
-		ParameterResDTO resDTO=parameterSO.retrieveParameterByTypeAndCode(reqDTO);
-		//System.out.println("parameter id:::::: "+resDTO.getPmParameter().getParameterId());
-		reqDTO.setParameterId(resDTO.getPmParameter().getParameterId());
-		if(null!=resDTO.getPmParameter().getPmParameterDescs()){
-			//System.out.println(resDTO.getPmParameter().getPmParameterDescs().size());
-			desc=resDTO.getPmParameter().getPmParameterDescs().get(0).getCodeName();
-		} else{
-			System.out.println("Parameters Description is Empty");
-		}
-		return desc;
-	}
 	
 	public void selectedUser(AjaxBehaviorEvent e) {
 		// doing some stuff here
@@ -208,17 +229,25 @@ public class FlDocumentBackingBean extends BaseBackingBean<FlDocumentManagedBean
 		// String dueDate = (String) ((UIOutput)e.getSource()).getValue();
 		String id = (String) e.getComponent().getAttributes().get("value");
 		System.out.println("=======get id value=====" + id);
-		if(id.equals("CO")){
-			this.getManagedBean().setCheckDocType(true);
-			this.getManagedBean().setCheckPoDocType(false);
-		}else if(id.equals("PO")){
-			this.getManagedBean().setCheckPoDocType(true);
-			this.getManagedBean().setCheckDocType(false);
-		}else{
-			this.getManagedBean().setCheckDocType(false);
-			this.getManagedBean().setCheckPoDocType(false);
+		if(id!=null) {
+			if(id.equals("CO")){
+				this.getManagedBean().setCheckDocType(true);
+				this.getManagedBean().setCheckPoDocType(false);
+			}else if(id.equals("PO")){
+				this.getManagedBean().setCheckPoDocType(true);
+				this.getManagedBean().setCheckDocType(false);
+			}else{
+				this.getManagedBean().setCheckDocType(false);
+				this.getManagedBean().setCheckPoDocType(false);
+			}
 		}
 		getManagedBean().setSearchDocType(id);
+	}
+	
+	public void selectedOrderType(AjaxBehaviorEvent e) {
+		getManagedBean().setSearchDocType(null);
+		getManagedBean().setCheckDocType(false);
+		getManagedBean().setCheckPoDocType(false);
 	}
 
 	public IPagingDataModel<VFlDocument> getFlDocumentDataModel() {
@@ -257,11 +286,6 @@ public class FlDocumentBackingBean extends BaseBackingBean<FlDocumentManagedBean
 				}
 				if(getManagedBean().getSearchLoaNo()!=null && getManagedBean().getSearchLoaNo()!="") {
 					searchBean.getDataFilterBeans().add(new SearchFilterBean("loaNo",SearchOperator.OPERATOR_LIKE.value(),getManagedBean().getSearchLoaNo()));
-				}		
-				if(getManagedBean().getSearchStartDate()!=null && getManagedBean().getSearchEndDate()!=null) {
-					SearchBetweenValue<Date> betweenValue = new SearchBetweenValue<Date>(getManagedBean().getSearchStartDate(), getManagedBean().getSearchEndDate());
-					searchBean.getDataFilterBeans().add(new SearchFilterBean("startDate",SearchOperator.OPERATOR_BETWEEN.value(),betweenValue));
-					searchBean.getDataFilterBeans().add(new SearchFilterBean("endDate",SearchOperator.OPERATOR_BETWEEN.value(),betweenValue));
 				}		
 				if(getManagedBean().getSearchProcurementType()!=null && getManagedBean().getSearchProcurementType()!="") {
 					searchBean.getDataFilterBeans().add(new SearchFilterBean("procurementType",SearchOperator.OPERATOR_EQUALS.value(),getManagedBean().getSearchProcurementType()));

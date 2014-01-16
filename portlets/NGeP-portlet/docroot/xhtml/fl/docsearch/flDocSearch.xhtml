@@ -20,18 +20,17 @@
 			<h:panelGroup id="defineSearchTbl">
 				<h:panelGrid columns="4" columnClasses="cmWidth1">
 					<p:outputLabel value="#{lbl['lbl.fl.doc.search.fl.order.type']}" />
-					<p:selectOneMenu
-						value="#{flDocumentBackingBean.managedBean.searchOrderType}" style="width: 207px;">
-						<f:selectItems
-							value="#{flDocumentBackingBean.getDropdownCodeValues(ParameterTypeConst.fulfilmentOrderType)}"/>
+					<p:selectOneMenu value="#{flDocumentBackingBean.managedBean.searchOrderType}" style="width: 207px;">
+						<f:selectItems value="#{flDocumentBackingBean.getDropdownCodeValues(ParameterTypeConst.fulfilmentOrderType)}"/>
+						<p:ajax event="change" update="searchDocTypeDD,docTypeSearch" listener="#{flDocumentBackingBean.selectedOrderType}" />
 					</p:selectOneMenu>
 				</h:panelGrid>
 				<h:panelGrid columns="4" columnClasses="cmWidth1">
 					<p:outputLabel value="#{lbl['lbl.fl.doc.search.doc.type']}" />
-					<p:selectOneMenu
-						value="#{flDocumentBackingBean.managedBean.searchDocType}" style="width: 207px;">
+					<p:selectOneMenu id="searchDocTypeDD" style="width: 207px;"
+						value="#{flDocumentBackingBean.managedBean.searchDocType}" >
 						<f:selectItems
-							value="#{flDocumentBackingBean.getDropdownCodeValues(ParameterTypeConst.fulfilmentDocumentType)}" />
+							value="#{flDocumentBackingBean.getDocumentTypeDropDown()}" />
 						<p:ajax event="change" update="docTypeSearch"
 							listener="#{flDocumentBackingBean.selectedDoctype}" />
 					</p:selectOneMenu>
@@ -100,7 +99,7 @@
 					<h:outputText value="#{flDocument.circularNo}" />
 				</p:column>
 				<p:column headerText="Status">
-				<h:outputText value="#{flDocument.workflowStatus}" />
+				<h:outputText value="#{flDocumentBackingBean.getStatusDescById(flDocument.status.statusId)}" />
 				</p:column>
 
 				<p:column headerText="Action" style="text-align: center">
