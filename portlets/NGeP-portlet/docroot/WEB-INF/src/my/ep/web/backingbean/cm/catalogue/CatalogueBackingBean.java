@@ -1,11 +1,15 @@
 package my.ep.web.backingbean.cm.catalogue;
 
+import java.awt.image.BufferedImage;
 import java.io.BufferedOutputStream;
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.math.BigDecimal;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -21,6 +25,7 @@ import javax.faces.bean.ManagedBean;
 import javax.faces.bean.RequestScoped;
 import javax.faces.bean.ViewScoped;
 import javax.faces.context.FacesContext;
+import javax.imageio.ImageIO;
 import javax.portlet.PortletRequest;
 import javax.portlet.PortletResponse;
 import javax.servlet.http.HttpServletResponse;
@@ -59,6 +64,7 @@ import my.ep.persistence.entity.cm.catalog.CmZonalPromotionTierPricing;
 import my.ep.persistence.entity.cm.catalog.CmZonalStandardPricing;
 import my.ep.persistence.entity.cm.catalog.CmZonalTierPricing;
 import my.ep.persistence.entity.cm.catalog.VCmSupplierItem;
+import my.ep.persistence.entity.pm.common.PmDistrict;
 import my.ep.persistence.logging.LogKey;
 import my.ep.type.aut.SearchOperator;
 import my.ep.web.backingbean.BaseBackingBean;
@@ -80,6 +86,7 @@ import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.primefaces.event.FileUploadEvent;
 import org.primefaces.event.TabChangeEvent;
+import org.primefaces.model.DualListModel;
 import org.primefaces.model.StreamedContent;
 import org.primefaces.model.TreeNode;
 import org.primefaces.model.UploadedFile;
@@ -97,7 +104,7 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean>{
 	private TreeNode root2; 
 
 	private SearchFilterBean statusFilterBean = new SearchFilterBean(SearchOperator.OPERATOR_EQUALS.value());
-	
+
 
 	public CatalogueBackingBean(){
 
@@ -131,12 +138,12 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean>{
 		this.getManagedBean().setStateList(resStateDTO.getStateList());
 
 
-		
+
 	}
-	
-	
-	
-	
+
+
+
+
 
 
 
@@ -186,20 +193,9 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean>{
 
 		ICatalogueSO catalogueSO = (ICatalogueSO) BusinessDelegate.getInstance().getServiceObject("cm",ICatalogueSO.class);
 
-		SearchBean<CmSupplierItem> searchBean = new SearchBean<CmSupplierItem>();
-		
-		searchBean.setNavigatable(false);
-		statusFilterBean.setSearchField("itemStatus");
-		statusFilterBean.setSearchValue("D");
-		searchBean.getDataFilterBeans().add(statusFilterBean);
-
-
-
 		CatalogueReqDTO reqDTO = new CatalogueReqDTO();
 
-		reqDTO.setSearchBean(searchBean);
-		log.info("catalogueSO:"+catalogueSO);
-
+		reqDTO.setItemStatus("D");
 		CatalogueResDTO resDTO = catalogueSO.searchSupplierItemByStatus(reqDTO);
 		System.out.println("resDTO.getSupplierItemList():"+resDTO.getSupplierItemList().size());
 		this.getManagedBean().setMaintainItemList(resDTO.getSupplierItemList());
@@ -212,47 +208,47 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean>{
 
 
 	public void deleteDraftItem(int index){
-		
+
 		ICatalogueSO catalogueSO = (ICatalogueSO) BusinessDelegate.getInstance().getServiceObject("cm",ICatalogueSO.class);
-		
+
 		CatalogueReqDTO reqDTO = new CatalogueReqDTO();
-		
+
 		reqDTO.setCmSupplierItemObj(this.getManagedBean().getMaintainItemList().get(index));
-		
+
 		CatalogueResDTO resDTO = catalogueSO.deleteDraftItem(reqDTO);
-		
+
 		if(resDTO.isSuccessful()){
-			
+
 			this.getManagedBean().getMaintainItemList().remove(index);
-			
+
 			FacesContext facesContext = FacesContext.getCurrentInstance();
 			facesContext.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO," Deleted Successfully", ""));
 		}
-		
+
 	}
-	
+
 
 	public String navigateToCatalogDet(int index){
 
 		log.info("*****this.getManagedBean().getMaintainItemList().get(index).getCmImages().size()*****:"+this.getManagedBean().getMaintainItemList().get(index).getCmImages().size());
 
 		IStatusSO statusSO = (IStatusSO) BusinessDelegate.getInstance().getServiceObject("pm",IStatusSO.class);
-		
+
 		StatusReqDTO statusReqDTO = new StatusReqDTO();
-		
+
 		statusReqDTO.setDocType("CMR");
 		statusReqDTO.setModuleCode("CM");
 		statusReqDTO.setLanguageCode("en");
-		
+
 		StatusResDTO resDTO = statusSO.retrieveStatusDescList(statusReqDTO);
-		
-		
+
+
 		this.getManagedBean().setStatusDescList(resDTO.getStatusDescList());
 		this.getManagedBean().setSelectedMaintainItem(this.getManagedBean().getMaintainItemList().get(index));
-		
-		
-		
-		
+
+
+
+
 
 		return "addCatalogItem";
 
@@ -379,7 +375,7 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean>{
 	}
 
 
-	
+
 	public void addNewZonalStandardPricing(){
 
 
@@ -695,7 +691,7 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean>{
 
 	public void imageUpload(FileUploadEvent event) throws Exception {
 
-
+		String tempDir = "C:\\image\\";
 
 		UploadedFile item = event.getFile();
 		//	this.getManagedBean().setImageObj(new CatImage());
@@ -707,13 +703,18 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean>{
 		catImage.setImageName(item.getFileName());
 		catImage.setImageDesc(item.getFileName());
 		catImage.setImageType("jpg");
+		catImage.setImagePath(tempDir+item.getFileName());
 
 		log.info("item.getFileName()"+item.getFileName());
+
+
+
+
 
 		//render for display
 		this.getManagedBean().getSelectedMaintainItem().getCmImages().add(catImage);// getCatalogImages().add(this.getManagedBean().getImageObj());
 
-		genMultipleImage(this.getManagedBean().getSelectedMaintainItem().getCmImages());
+		genMultipleImage1(this.getManagedBean().getSelectedMaintainItem().getCmImages());
 
 
 
@@ -724,7 +725,35 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean>{
 	}
 
 
-	public void genMultipleImage(List<CmImage> imageList){
+	public void genMultipleImage1(List<CmImage> imageList){
+		
+		
+		try {	
+
+			for(int i=0; i<imageList.size(); i++){
+				CmImage image1 = (CmImage)imageList.get(i);
+				
+				
+				BufferedOutputStream bufferedOutputStream =new BufferedOutputStream(new FileOutputStream(image1.getImagePath()));
+				
+				bufferedOutputStream.write(image1.getImage());
+
+				if (bufferedOutputStream != null) {
+					bufferedOutputStream.flush();
+					bufferedOutputStream.close();
+				}
+				
+			}
+
+		}catch(Exception e) {
+			log.error(e);
+		}
+
+
+	}
+
+
+/*	public void genMultipleImage(List<CmImage> imageList){
 		try {	
 			String tempDir = System.getProperty("java.io.tmpdir");
 
@@ -742,7 +771,7 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean>{
 
 				//if(!catImage.exists()) {
 				BufferedOutputStream bufferedOutputStream =new BufferedOutputStream(new FileOutputStream(tempDir + filename));
-				bufferedOutputStream.write(image.getImage());
+				//bufferedOutputStream.write(image.getImage());
 
 				if (bufferedOutputStream != null) {
 					bufferedOutputStream.flush();
@@ -758,7 +787,7 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean>{
 		}
 
 
-	}
+	}*/
 
 
 	public String saveCatalogItem() {
@@ -794,7 +823,7 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean>{
 					promotion.setPmDistrict(null);
 				}
 			}
-			
+
 			for(CmZonalPromotionPricing promotion: this.getManagedBean().getSelectedMaintainItem().getCmZonalPromotionPricings()){
 
 				promotion.setCmSupplierItem(this.getManagedBean().getSelectedMaintainItem());
@@ -819,10 +848,10 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean>{
 					promotion.setPmDistrict(null);
 				}
 			}
-			
-			
+
+
 			for(CmItemRejectReason reason : this.getManagedBean().getSelectedMaintainItem().getCmItemRejectReasons()){
-				
+
 				reason.setCmSupplierItem(this.getManagedBean().getSelectedMaintainItem());
 			}
 
@@ -876,12 +905,10 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean>{
 		}
 		System.out.println("resDTO.isSuccessful():"+resDTO.isSuccessful());
 		if(resDTO.isSuccessful()){
-			ISearchBean<CmSupplierItem> searchBean = new SearchBean<CmSupplierItem>();
-			statusFilterBean.setSearchField("itemStatus");
-			statusFilterBean.setSearchValue("D");
-			searchBean.getDataFilterBeans().add(statusFilterBean);
+		
 
-			reqDTO.setSearchBean(searchBean);
+			
+			reqDTO.setItemStatus("D");
 			resDTO = catalogueSO.searchSupplierItemByStatus(reqDTO);
 
 			this.getManagedBean().setMaintainItemList(resDTO.getSupplierItemList());
@@ -901,16 +928,16 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean>{
 		FacesScopes facesScopes = new FacesScopes();
 		String unspscCode = facesScopes.getParameter("unspscCode");
 		System.out.println("unspscCode: " + unspscCode + ">>>>>>>>>>>>>>>>>>>>>>>>>>>>");
-		
+
 		ICatalogueSO catalogueSO = (ICatalogueSO) BusinessDelegate.getInstance().getServiceObject("cm",ICatalogueSO.class);
 
 		SearchBean<CmSupplierItem> searchBean = new SearchBean<CmSupplierItem>();
 		statusFilterBean.setSearchField("itemStatus");
 		statusFilterBean.setSearchValue("D");
 		searchBean.getDataFilterBeans().add(statusFilterBean);
-		
+
 		searchBean.setNavigatable(false);
-		
+
 		if(unspscCode != null && !unspscCode.equals("null") && unspscCode.length() > 0) {
 			SearchFilterBean unspscFilterBean = new SearchFilterBean(SearchOperator.OPERATOR_EQUALS.value());
 			unspscFilterBean.setSearchField("cmItem.cmUnspsc.unspscCode");
@@ -965,53 +992,36 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean>{
 
 		if(event.getTab().getTitle().equalsIgnoreCase("Draft")){
 
-			statusFilterBean.setSearchField("itemStatus");
-			statusFilterBean.setSearchValue("D");
-			searchBean.getDataFilterBeans().add(statusFilterBean);
-
-			reqDTO.setSearchBean(searchBean);
+		
+			reqDTO.setItemStatus("D");
 			CatalogueResDTO resDTO = catalogueSO.searchSupplierItemByStatus(reqDTO);
 
 			this.getManagedBean().setMaintainItemList(resDTO.getSupplierItemList());
 
 		}else if(event.getTab().getTitle().equalsIgnoreCase("Published")){
-			statusFilterBean.setSearchField("itemStatus");
-			statusFilterBean.setSearchValue("U");
-			searchBean.getDataFilterBeans().add(statusFilterBean);
-
-			reqDTO.setSearchBean(searchBean);
+			
+			reqDTO.setItemStatus("U");
 			CatalogueResDTO resDTO = catalogueSO.searchSupplierItemByStatus(reqDTO);
 
 			this.getManagedBean().setPublishedItemList(resDTO.getSupplierItemList());
 
 		}else if(event.getTab().getTitle().equalsIgnoreCase("Pending Approval")){
 
-			statusFilterBean.setSearchField("itemStatus");
-			statusFilterBean.setSearchValue("P");
-			searchBean.getDataFilterBeans().add(statusFilterBean);
-
-			reqDTO.setSearchBean(searchBean);
+			reqDTO.setItemStatus("P");
 			CatalogueResDTO resDTO = catalogueSO.searchSupplierItemByStatus(reqDTO);
 
 			this.getManagedBean().setApprovalItemList(resDTO.getSupplierItemList());
 
 		}else if(event.getTab().getTitle().equalsIgnoreCase("Approved")){
 
-			statusFilterBean.setSearchField("itemStatus");
-			statusFilterBean.setSearchValue("A");
-			searchBean.getDataFilterBeans().add(statusFilterBean);
-
-			reqDTO.setSearchBean(searchBean);
+			reqDTO.setItemStatus("A");
 			CatalogueResDTO resDTO = catalogueSO.searchSupplierItemByStatus(reqDTO);
 
 			this.getManagedBean().setApprovedItemList(resDTO.getSupplierItemList());
 
 		}else if(event.getTab().getTitle().equalsIgnoreCase("Rejected")){
-			statusFilterBean.setSearchField("itemStatus");
-			statusFilterBean.setSearchValue("R");
-			searchBean.getDataFilterBeans().add(statusFilterBean);
 
-			reqDTO.setSearchBean(searchBean);
+			reqDTO.setItemStatus("R");
 			CatalogueResDTO resDTO = catalogueSO.searchSupplierItemByStatus(reqDTO);
 
 			this.getManagedBean().setRejectedItemList(resDTO.getSupplierItemList());
@@ -1091,12 +1101,8 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean>{
 
 		System.out.println("resDTO.isSuccessful():"+resDTO.isSuccessful());
 		if(resDTO.isSuccessful()){
-			ISearchBean<CmSupplierItem> searchBean = new SearchBean<CmSupplierItem>();
-			statusFilterBean.setSearchField("itemStatus");
-			statusFilterBean.setSearchValue("A");
-			searchBean.getDataFilterBeans().add(statusFilterBean);
 
-			reqDTO.setSearchBean(searchBean);
+			reqDTO.setItemStatus("A");
 			resDTO = catalogueSO.searchSupplierItemByStatus(reqDTO);
 
 			this.getManagedBean().setApprovedItemList(resDTO.getSupplierItemList());
@@ -1115,30 +1121,34 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean>{
 
 		log.info("==============compareSupplierItem========================");
 		this.getManagedBean().setSelectedSupplierItemList(null);
+		this.getManagedBean().setContractedExist(false);
+
+
 		for(VCmSupplierItem view : this.getManagedBean().getSelectViewItems()){
-			
+
 			ICatalogueSO catalogueSO = (ICatalogueSO) BusinessDelegate.getInstance().getServiceObject("cm",ICatalogueSO.class);
-
-			SearchBean<CmSupplierItem> searchBean = new SearchBean<CmSupplierItem>();
-			statusFilterBean.setSearchField("supplierItemId");
-			statusFilterBean.setSearchValue(view.getDocId());
-			searchBean.getDataFilterBeans().add(statusFilterBean);
-
-			searchBean.setNavigatable(false);
 
 			CatalogueReqDTO reqDTO = new CatalogueReqDTO();
 
-			reqDTO.setSearchBean(searchBean);
-			log.info("catalogueSO:"+catalogueSO);
-
+			reqDTO.setDocId(view.getDocId());
+			
 			CatalogueResDTO resDTO = catalogueSO.searchSupplierItemByStatus(reqDTO);
 
 			System.out.println("*****************end********************");
-			
+
 			this.getManagedBean().getSelectedSupplierItemList().add(resDTO.getSupplierItemList().get(0));
 		}
 
-		
+
+		for(VCmSupplierItem view :this.getManagedBean().getViewSupplierItemList()){
+
+			if(!view.getContractNo().equalsIgnoreCase("N/A") || !view.getCircularNo().equalsIgnoreCase("N/A")){
+				this.getManagedBean().setContractedExist(true);
+			}
+
+		}
+
+
 
 
 		return "compareCatalogue";
@@ -1221,18 +1231,13 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean>{
 
 		ICatalogueSO catalogueSO = (ICatalogueSO) BusinessDelegate.getInstance().getServiceObject("cm",ICatalogueSO.class);
 
-		SearchBean<CmSupplierItem> searchBean = new SearchBean<CmSupplierItem>();
-		statusFilterBean.setSearchField("itemStatus");
-		statusFilterBean.setSearchValue("D");
-		searchBean.getDataFilterBeans().add(statusFilterBean);
 
-		searchBean.setNavigatable(false);
 
+	
 		CatalogueReqDTO reqDTO = new CatalogueReqDTO();
 
-		reqDTO.setSearchBean(searchBean);
-		log.info("catalogueSO:"+catalogueSO);
-
+		
+		reqDTO.setItemStatus("D");
 		CatalogueResDTO resDTO = catalogueSO.searchSupplierItemByStatus(reqDTO);
 
 		System.out.println("*****************end********************");
@@ -1269,7 +1274,7 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean>{
 				.retriveDistrictListByStateID(reqDTO);
 		System.out.println("resDTO.getDistrictList()"+resDTO.getDistrictList().size());
 		this.getManagedBean().getSelectedMaintainItem().getCmZonalStandardPricings().get(index).setPmDistricts(resDTO.getDistrictList());
-		
+
 		if(resDTO.getDistrictList()!=null && resDTO.getDistrictList().size()>0){
 			this.getManagedBean().getSelectedMaintainItem().getCmZonalStandardPricings().get(index).setDistrictDisabled(false);
 		}else{
@@ -1315,7 +1320,7 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean>{
 				.retriveDistrictListByStateID(reqDTO);
 		System.out.println("resDTO.getDistrictList()"+resDTO.getDistrictList().size());
 		this.getManagedBean().getSelectedMaintainItem().getCmZonalPromotionPricings().get(index).setPmDistricts(resDTO.getDistrictList());
-		
+
 		if(resDTO.getDistrictList()!=null && resDTO.getDistrictList().size()>0){
 			this.getManagedBean().getSelectedMaintainItem().getCmZonalPromotionPricings().get(index).setDistrictDisabled(false);
 		}else{
@@ -1362,28 +1367,28 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean>{
 
 	}
 
-	
+
 	public void addCatalogueRemarks(){
-		
+
 		CmItemRejectReason reason = new CmItemRejectReason();
-		
+
 		this.getManagedBean().getSelectedMaintainItem().getCmItemRejectReasons().add(reason);
-		
+
 	}
-	
+
 	public String navigateToSearchCode(){
-		
-		
+
+
 		return "codificationView";
 	}
 
-	
+
 	public String cancelToSupplierItemSearch(){
-		
-		
+
+
 		return "supplierItemView";
 	}
-	
+
 	public void enableRemark(CmItemRejectReason reason){
 		System.out.println("getPmStatus().getStatusId()"+reason.getPmStatus().getStatusId());
 		if(reason.getPmStatus().getStatusId().longValue()  == 10010){
@@ -1397,21 +1402,59 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean>{
 
 
 
-	
 
-	
+
+
 	public void compareViewItem(){
-		
+
 		System.out.println("this.getManagedBean().getSelectViewItems().length():"+this.getManagedBean().getSelectViewItems());
 	}
 
-	
+
 	public void popUpPricing(CmSupplierItem item){
-		
+
 		System.out.println("***************item*********************");
 		this.getManagedBean().setSupplierItemObj(item);
 	}
 
-	
+
+	public void findDistrict(){
+
+		System.out.println("*****************findDistrict***************");
+		System.out.println("Id:"+this.getManagedBean().getStateId());
+
+		this.getManagedBean().setDistrictList(null);
+		DistrictReqDTO reqDTO = new DistrictReqDTO();
+
+
+
+		IDistrictSO districtSO = (IDistrictSO) BusinessDelegate.getInstance().getServiceObject("pm",IDistrictSO.class);
+
+
+		System.out.println("*********************************");
+		for(Long stateId : this.getManagedBean().getStateId()){
+			System.out.println("stateId:"+stateId);
+			reqDTO.setStateId(stateId);
+			DistrictResDTO resDTO = districtSO.retriveDistrictListByStateID(reqDTO);
+
+			for(PmDistrict district : resDTO.getDistrictList()){
+
+				this.getManagedBean().getDistrictList().add(district);
+
+			}
+
+		}
+
+		System.out.println("this.getManagedBean().getDistrictList().size():"+this.getManagedBean().getDistrictList().size());
+
+	}
+
+
+
+
+
+
+
+
 
 }

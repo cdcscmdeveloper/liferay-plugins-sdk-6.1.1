@@ -26,18 +26,10 @@ public class ReviewCatalogueBackingBean extends BaseBackingBean<ReviewCatalogueM
 
 		ICatalogueSO catalogueSO = (ICatalogueSO) BusinessDelegate.getInstance().getServiceObject("cm",ICatalogueSO.class);
 
-		ISearchBean<CmSupplierItem> searchBean = new SearchBean<CmSupplierItem>();
-		statusFilterBean.setSearchField("itemStatus");
-		statusFilterBean.setSearchValue("P");
-		searchBean.getDataFilterBeans().add(statusFilterBean);
-
-
-
 		CatalogueReqDTO reqDTO = new CatalogueReqDTO();
 
-		reqDTO.setSearchBean(searchBean);
 
-
+		reqDTO.setItemStatus("P");
 		CatalogueResDTO resDTO = catalogueSO.searchSupplierItemByStatus(reqDTO);
 
 		this.getManagedBean().setReviewSupplierItems(resDTO.getSupplierItemList());
