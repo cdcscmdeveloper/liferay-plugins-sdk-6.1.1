@@ -12,19 +12,25 @@ xmlns:ac="http://ac.my/jsf/composite/cc">
 	<p:outputPanel id="opListBudgetAllocContent">
 		<br/>
 		<p:dataTable id="dtBudgetAllocResult" styleClass="ppTableFull" rowIndexVar="rowIndex"
-			value=""
+			value="#{budgetAllocBackingBean.budgetAllocDataModel}" var="budgetAlloc"  lazy="true"
 		 	emptyMessage="#{lbl['lbl.pp.no.record.found']}">
+		 	<ac:paginator for="dtBudgetAllocResult" />
 	        <p:column headerText="#{lbl['lbl.pp.budget.alloc.no']}">  
-	            
+	            #{budgetAlloc.budgetAllocNo}
 	        </p:column>  
-	        <p:column headerText="#{lbl['lbl.pp.go.code']} / #{lbl['lbl.pp.amanah.code']}">  
-	            
-	        </p:column> 
+	         <p:column headerText="#{lbl['lbl.pp.budget.alloc.desc']}">  
+	            #{budgetAlloc.budgetAllocDesc}
+	        </p:column>  
 	        <p:column headerText="#{lbl['lbl.pp.status']}">  
-	            
+	            #{budgetAllocBackingBean.getStatusDescById(budgetAlloc.pmStatus.statusId
+	            	)}
 	        </p:column>  
           	<p:column headerText="#{lbl['lbl.pp.action']}">  
-	            
+	            <p:commandLink action="#{budgetAllocBackingBean.redirectToBudgetAllocation(budgetAlloc.budgetAllocId)}" >
+					<p:graphicImage value="#{(planBackingBean.managedBean.viewMode==PPConst.modeList)
+               			? '/resources/ep/images/design/edit.png' 
+                  		: '/resources/ep/images/design/document.png'}"/>
+				</p:commandLink>
 	        </p:column>  
     	</p:dataTable> 
 		<br/> 

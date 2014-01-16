@@ -13,7 +13,7 @@ xmlns:fn="http://java.sun.com/jsp/jstl/functions"
 	<!-- PTJ Allocation -->
 	<p:panel id="pBudgetAllocOrg" toggleable="true" header="#{lbl['lbl.pp.budget.ptj.alloc']}">
 		<br/>
-		<table class="ppTwoTable">
+		<table class="ppOneTable">
 		
 			<tr>
 				<th><p:outputLabel value="#{budgetAllocBackingBean.managedBean.amanahFlag 
@@ -55,20 +55,21 @@ xmlns:fn="http://java.sun.com/jsp/jstl/functions"
              	#{budgetAllocOrg.allocAmt}
             </p:column>
        		<p:column headerText="#{lbl['lbl.pp.status']}">  
-              	#{budgetAllocOrg.ppWorkflowStatus.statusId}
+       			#{budgetAllocBackingBean.getStatusDescById(
+              		budgetAllocOrg.pmStatus.statusId)}
           	</p:column>                
            	<p:column headerText="#{lbl['lbl.pp.action']}">  
-          		<p:commandLink
+          		<p:commandLink immediate="true"
                 	action="#{budgetAllocBackingBean.showBudgetAllocOrg(budgetAllocOrg)}" 
-                	oncomplete="dlItemOrgAllocModal.show();" update="@([id$=opItemOrgAlloc])">
+                	oncomplete="dlItemOrgAllocModal.show();" update=":form:tvBudgetAlloc:opItemOrgAlloc">
                 	<p:graphicImage value="#{(!budgetAllocationDet.brandNew &amp;&amp; 
                 		budgetAllocBackingBean.managedBean.viewMode==PPConst.modeView)
                 		? '/resources/ep/images/design/document.png'
                 		: '/resources/ep/images/design/edit.png'}" />
                	</p:commandLink>
                 &nbsp;
-                <p:commandLink
-                	update="@([id$=pBudgetAllocOrg])" disabled="#{budgetAllocBackingBean.managedBean.viewMode==PPConst.modeView}"
+                <p:commandLink immediate="true"
+                	update=":form:tvBudgetAlloc:pBudgetAllocOrg" disabled="#{budgetAllocBackingBean.managedBean.viewMode==PPConst.modeView}"
                 	action="#{budgetAllocBackingBean.deleteBudgetAllocOrg(budgetAllocOrg)}">
                 	<p:graphicImage value="/resources/ep/images/design/trash.png"/>
                	</p:commandLink>
@@ -79,9 +80,9 @@ xmlns:fn="http://java.sun.com/jsp/jstl/functions"
 	   	<!-- Button(s) -->
 	  	<div class="ppRightBtn">
 			<c:if test="#{budgetAllocBackingBean.managedBean.selectedBudgetAllocation.editable}">
-				<p:commandButton value="#{lbl['lbl.pp.add']}" icon="ui-icon-add"
+				<p:commandButton value="#{lbl['lbl.pp.add']}" icon="ui-icon-add" immediate="true"
 					disabled="#{budgetAllocBackingBean.managedBean.selectedBudgetAllocDtl.pmDo.doId==null}"
-					oncomplete="dlItemOrgAllocModal.show()" update="opItemOrgAlloc"
+					oncomplete="dlItemOrgAllocModal.show()" update="dlItemOrgAlloc"
 					action="#{budgetAllocBackingBean.showBudgetAllocOrg(null)}" />  
 				
 			</c:if>
@@ -101,9 +102,9 @@ xmlns:fn="http://java.sun.com/jsp/jstl/functions"
 					</td>
 				</tr>
 	    		<tr>
-	    			<th><p:outputLabel value="#{lbl['lbl.pp.jabatan.code.name']}"/></th>
+	    			<th><p:outputLabel value="* #{lbl['lbl.pp.jabatan.code.name']}"/></th>
 					<td>
-						<p:selectOneMenu styleClass="ppDropDownWidthM"
+						<p:selectOneMenu styleClass="ppDropDownWidthM" required="true" label="#{lbl['lbl.pp.jabatan.code.name']}"
 							disabled="#{!budgetAllocBackingBean.managedBean.selectedBudgetAllocOrg.editable}" 
 							value="#{budgetAllocBackingBean.managedBean.selectedBudgetAllocOrg.pmOrgProfile.parentOrgProfile.orgProfileId}">
 							<f:selectItem itemLabel="#{lbl['lbl.select']}" itemValue="#{null}"/>
@@ -114,9 +115,9 @@ xmlns:fn="http://java.sun.com/jsp/jstl/functions"
 					</td>
 				</tr>
 				<tr>
-	    			<th><p:outputLabel value="#{lbl['lbl.pp.ptj.code.name']}"/></th>
+	    			<th><p:outputLabel value="* #{lbl['lbl.pp.ptj.code.name']}"/></th>
 					<td>
-						<p:selectOneMenu styleClass="ppDropDownWidthM" id="somPtj" 
+						<p:selectOneMenu styleClass="ppDropDownWidthM" id="somPtj" required="true" label="#{lbl['lbl.pp.ptj.code.name']}"
 							disabled="#{!budgetAllocBackingBean.managedBean.selectedBudgetAllocOrg.editable ||
 							budgetAllocBackingBean.managedBean.selectedBudgetAllocOrg.pmOrgProfile.parentOrgProfile.orgProfileId == null}" 
 							value="#{budgetAllocBackingBean.managedBean.selectedBudgetAllocOrg.pmOrgProfile.orgProfileId}">
@@ -151,28 +152,31 @@ xmlns:fn="http://java.sun.com/jsp/jstl/functions"
 					</tr>
 				</c:if>
 				<tr>
-	    			<th><p:outputLabel value="#{lbl['lbl.pp.alloc.amount']}"/></th>
+	    			<th><p:outputLabel value="* #{lbl['lbl.pp.alloc.amount']}"/></th>
 					<td>
 						<p:inputText value="#{budgetAllocBackingBean.managedBean.selectedBudgetAllocOrg.allocAmt}" 
 							disabled="#{!budgetAllocBackingBean.managedBean.selectedBudgetAllocOrg.editable}" 
-							styleClass="ppDisplayTextM" />
+							styleClass="ppDisplayTextM" required="true" label="#{lbl['lbl.pp.alloc.amount']}">
+							<f:validateDoubleRange minimum="1"  />
+						</p:inputText>
 					</td>
 				</tr>
 				<tr>
 	    			<th><p:outputLabel value="#{lbl['lbl.pp.status']}"/></th>
 					<td>
-						<p:inputText value="#{budgetAllocBackingBean.managedBean.selectedBudgetAllocOrg.ppWorkflowStatus.statusId}" 
-						disabled="true" styleClass="ppDisplayTextM"/>
+						<p:inputText value="#{budgetAllocBackingBean.getStatusDescById(
+							budgetAllocBackingBean.managedBean.selectedBudgetAllocOrg.pmStatus.statusId)}" 
+							disabled="true" styleClass="ppDisplayTextM"/>
 					</td>
 				</tr>
 				<tr>
 	    			<td colspan="2">
 	    				<div class="ppRightBtn">
-							<p:commandButton value="#{lbl['lbl.pp.ok']}" update="pBudgetAllocOrg" 
+							<p:commandButton value="#{lbl['lbl.pp.ok']}" update="pBudgetAllocOrg, opItemOrgAlloc" 
 								action="#{budgetAllocBackingBean.addBudgetAllocOrgList()}"
-								process="opItemOrgAlloc" icon="ui-icon-accept"/>
+								process="dlItemOrgAlloc" icon="ui-icon-accept"/>
 							<p:commandButton value="#{lbl['lbl.pp.cancel']}" icon="ui-icon-cancel"
-								onclick="dlItemOrgAllocModal.hide()" immediate="true"/>
+								onclick="dlItemOrgAllocModal.hide()" immediate="true"  update="pBudgetAllocOrg, opItemOrgAlloc" />
 						</div>
 					</td>
 	    		</tr>

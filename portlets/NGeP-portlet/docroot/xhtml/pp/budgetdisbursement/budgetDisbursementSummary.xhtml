@@ -15,7 +15,7 @@ xmlns:ac="http://ac.my/jsf/composite/cc">
 			
 			<p:ajax event="rowSelect" update="@([id$=pTransaction])" />
 			
-	        <p:column headerText="#{lbl['lbl.pp.so.code']}">  
+	        <p:column headerText="* #{lbl['lbl.pp.so.code']}">  
 		    	<p:selectOneMenu value="#{ppBudgetDtl.soId}" styleClass="ppDropDownWidthS" disabled="#{!ppBudgetDtl.brandNew}"
 		    		 label="#{lbl['lbl.pp.so.code']}"> 
 					<f:selectItem itemLabel="#{lbl['lbl.select']}" itemValue="#{null}"/>
@@ -35,7 +35,7 @@ xmlns:ac="http://ac.my/jsf/composite/cc">
 	        </p:column>  
 	        <p:column headerText="#{lbl['lbl.pp.action']}"> 
                 <p:commandLink 
-                  	update="dtSumBudget, @([id$=pTransaction])" disabled="#{!ppBudgetDtl.brandNew}" 	 
+                  	update="dtSumBudget, :form:pTransaction" disabled="#{!ppBudgetDtl.brandNew}" 	 
                   	action="#{budgetDisburseBackingBean.deleteBudgetDtl(ppBudgetDtl)}" immediate="true">
                   	<p:graphicImage value="/resources/ep/images/design/trash.png"/>
                	</p:commandLink>
@@ -46,7 +46,7 @@ xmlns:ac="http://ac.my/jsf/composite/cc">
 	   	<!-- Button -->
 	  	<div class="ppRightBtn">
 			<p:commandButton value="#{lbl['lbl.pp.add']}" icon="ui-icon-add" 
-				action="#{budgetDisburseBackingBean.addBudgetDtls}" update="dtSumBudget, @([id$=pTransaction])"/>
+				action="#{budgetDisburseBackingBean.addBudgetDtls}" update="dtSumBudget, :form:pTransaction"/>
 		</div>
 		<br/>
    	</p:outputPanel>

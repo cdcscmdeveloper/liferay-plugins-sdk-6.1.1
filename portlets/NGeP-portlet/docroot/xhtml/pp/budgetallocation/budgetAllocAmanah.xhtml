@@ -10,28 +10,17 @@ xmlns:c="http://java.sun.com/jsp/jstl/core"
 xmlns:fn="http://java.sun.com/jsp/jstl/functions" 
 >
 	<!-- Amanah Disbursement -->
-	<p:panel id="pAmanahDisburse" toggleable="true" header="#{lbl['lbl.pp.budget.amanah.disbursement']}">
-		<br/>
-		<table class="ppTwoTable">
-			<tr>
-				<th><p:outputLabel value="#{lbl['lbl.pp.verify.status']}"/></th>
-				<td>
-					<p:inputText id="itVerifiedDisburse" 
-						value="#{budgetAllocBackingBean.managedBean.selectedBudgetAllocation.verifyDisburse==true ? 'Verified' : 
-						(budgetAllocBackingBean.managedBean.selectedBudgetAllocation.verifyDisburse==false ? 'Invalid' : 'None')}"  
-						styleClass="ppDisplayTextL" disabled="true"/>
-				</td>
-				<th>&nbsp;</th>
-				<td>&nbsp;</td>
-			</tr>
-		</table>
-		<br/>
-		<p:dataTable id="dtAmanahDisburse" rowIndexVar="rowIndex"
-			value="">
+	<p:panel id="pDisburse" toggleable="true" header="#{lbl['lbl.pp.budget.amanah.disbursement']}">
+		<p:dataTable id="dtAmanahDisburse" rowIndexVar="rowIndex" var="budgetAllocDtl" style="width:780px;"
+			selection="#{budgetAllocBackingBean.managedBean.selectedBudgetAllocDtl}" selectionMode="single"
+			rowKey="#{budgetAllocDtl}" emptyMessage="#{lbl['lbl.pp.no.record.found']}"
+			value="#{budgetAllocBackingBean.managedBean.selectedBudgetAllocation.ppBudgetAllocDtls}">
+			
+			<p:ajax event="rowSelect" update=":form:tvBudgetAlloc:pDisbursepBudgetAllocOrg"/>
 			<p:column headerText="#{lbl['lbl.pp.amanah.code']}">  
 				#{budgetAllocDtl.pmMaksud.maksudCode}
             </p:column>  
-            <p:column headerText="#{lbl['lbl.pp.amanah.description']}">  
+            <p:column headerText="#{lbl['lbl.pp.amanah.desc']}">  
            		#{budgetAllocDtl.pmMaksud.maksudDesc}
             </p:column>
             <p:column headerText="#{lbl['lbl.pp.amanah.balance.amount']}">  
@@ -44,9 +33,9 @@ xmlns:fn="http://java.sun.com/jsp/jstl/functions"
                 #{budgetAllocDtl.ppWorkflowStatus.statusId}
            	</p:column>     
            	<p:column headerText="#{lbl['lbl.pp.action']}">  
-          		<p:commandLink update="@([id$=opItemAmanahDis])"
-                	action="#{budgetAllocBackingBean.showBudgetAllocAmanah(budgetAllocDtl)}" 
-                	oncomplete="dlItemAmanahDisModal.show();">
+          		<p:commandLink update=":form:tvBudgetAlloc:opItemAmanahDis" 
+                	action="#{budgetAllocBackingBean.showBudgetAllocDtl(budgetAllocDtl)}" 
+                	oncomplete="dlItemAmanahDisModal.show();" immediate="true">
                 	<p:graphicImage value="#{(!budgetAllocDtl.brandNew &amp;&amp;
                 		budgetAllocBackingBean.managedBean.viewMode==PPConst.modeView)
                 		? '/resources/ep/images/design/document.png' 
@@ -54,8 +43,8 @@ xmlns:fn="http://java.sun.com/jsp/jstl/functions"
                	</p:commandLink>
                 &nbsp;
                 <p:commandLink
-                	update="@([id$=pAmanahDisburse])" disabled="#{budgetAllocBackingBean.managedBean.viewMode==PPConst.modeView}"
-                	action="#{budgetAllocBackingBean.deleteBudgetAllocDtl(budgetAllocDtl)}">
+                	update=":form:tvBudgetAlloc:pDisburse" disabled="#{budgetAllocBackingBean.managedBean.viewMode==PPConst.modeView}"
+                	action="#{budgetAllocBackingBean.deleteBudgetAllocDtl(budgetAllocDtl)}" immediate="true">
                 	<p:graphicImage value="/resources/ep/images/design/trash.png"/>
                	</p:commandLink>
            	</p:column>  
@@ -63,10 +52,8 @@ xmlns:fn="http://java.sun.com/jsp/jstl/functions"
 		<!-- Button -->
 	  	<div class="ppRightBtn">
 			<c:if test="#{budgetAllocBackingBean.managedBean.selectedBudgetAllocation.editable}">
-				<p:commandButton value="#{lbl['lbl.pp.verify.confirm']}" icon="ui-icon-accept"
-					/> 
-				<p:commandButton value="#{lbl['lbl.pp.add']}" icon="ui-icon-add"
-					action="dlItemAmanahDisModal.show()" oncomplete="dlItemAmanahDisModal.show()" /> 
+				<p:commandButton value="#{lbl['lbl.pp.add']}" icon="ui-icon-add" immediate="true"
+					action="#{budgetAllocBackingBean.showBudgetAllocDtl(null)}" oncomplete="dlItemAmanahDisModal.show()" /> 
 			</c:if>
 		</div>
 	</p:panel>
@@ -120,15 +107,16 @@ xmlns:fn="http://java.sun.com/jsp/jstl/functions"
 				<tr>
 	    			<th><p:outputLabel value="#{lbl['lbl.pp.status']}"/></th>
 					<td>
-						<p:inputText value="#{budgetAllocBackingBean.managedBean.selectedBudgetAllocDtl.ppWorkflowStatus.statusId}" 
+						<p:inputText value="{budgetAllocBackingBean.getStatusDescById(
+							budgetAllocBackingBean.managedBean.selectedBudgetAllocDtl.pmStatus.statusId)}" 
 							disabled="true" styleClass="ppDisplayTextL"/>
 					</td>
 				</tr>
 				<tr>
 	    			<td colspan="2">
 	    				<div class="ppRightBtn">
-							<p:commandButton value="#{lbl['lbl.pp.ok']}" update="pAmanahDisburse" 
-								action="#{budgetAllocBackingBean.addBudgetAllocDtlList()}"
+							<p:commandButton value="#{lbl['lbl.pp.ok']}" update="pDisburse" 
+								action="#{budgetAllocBackingBean.addAmanahDtlList()}"
 								onclick="dlItemAmanahModal.hide()" oncomplete="dlItemAmanahDisModal.hide()" 
 								process="opItemAmanahDis" icon="ui-icon-accept"/>
 							<p:commandButton value="#{lbl['lbl.pp.cancel']}" icon="ui-icon-cancel"

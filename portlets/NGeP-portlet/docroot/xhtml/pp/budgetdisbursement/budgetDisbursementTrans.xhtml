@@ -21,7 +21,7 @@ xmlns:ac="http://ac.my/jsf/composite/cc">
 	        <p:column headerText="#{lbl['lbl.pp.so.name']}">  
 	            #{budgetDisburseBackingBean.managedBean.selectedPpBudgetDtl.pmSo.soName}
 	        </p:column> 
-	        <p:column headerText="#{lbl['lbl.pp.alloc.amount']}" styleClass="ppNumericAlign">  
+	        <p:column headerText="* #{lbl['lbl.pp.alloc.amount']}" styleClass="ppNumericAlign">  
 	            <p:inputText value="#{ppBudgetTran.allocAmt}" styleClass="ppDisplayTextM"  
 	            	valueChangeListener="#{budgetDisburseBackingBean.budgetChangeListener}"
 	            	disabled="#{!ppBudgetTran.brandNew}" required="true" label="#{lbl['lbl.pp.alloc.amount']}">  
@@ -37,7 +37,7 @@ xmlns:ac="http://ac.my/jsf/composite/cc">
 	        </p:column>  
           	<p:column headerText="#{lbl['lbl.pp.action']}"> 
                 <p:commandLink 
-                  	update="@([id$=pTransaction])" disabled="#{!ppBudgetTran.brandNew}" 	 
+                  	update=":form:pTransaction" disabled="#{!ppBudgetTran.brandNew}" 	 
                   	action="#{budgetDisburseBackingBean.deleteBudgetTran(ppBudgetTran)}">
                   	<p:graphicImage value="/resources/ep/images/design/trash.png"/>
                  	</p:commandLink>

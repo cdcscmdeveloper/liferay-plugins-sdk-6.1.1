@@ -16,10 +16,10 @@ xmlns:fn="http://java.sun.com/jsp/jstl/functions"
 			<table class="ppTwoTable">
 				<!-- Hide for new -->
 				<tr>
-					<th><p:outputLabel value="#{lbl['lbl.pp.ministry.code.name']}"/></th>
+					<th><p:outputLabel value="* #{lbl['lbl.pp.budget.alloc.desc']}"/></th>
 					<td>
-						<p:inputText value="#{budgetAllocBackingBean.managedBean.selectedBudgetAllocation.ministryOrgProfile.orgCode} / #{budgetAllocBackingBean.managedBean.selectedBudgetAllocation.ministryOrgProfile.orgName}"  
-							styleClass="ppDisplayTextM" disabled="true"/>
+						<p:inputText value="#{budgetAllocBackingBean.managedBean.selectedBudgetAllocation.budgetAllocDesc}"  
+							styleClass="ppDisplayTextM" disabled="#{!budgetAllocBackingBean.managedBean.selectedBudgetAllocation.editable}"/>
 					</td>
 					<th><p:outputLabel value="#{lbl['lbl.pp.budget.alloc.no']}"/></th>
 					<td>
@@ -28,29 +28,29 @@ xmlns:fn="http://java.sun.com/jsp/jstl/functions"
 					</td>
 				</tr>
 				<tr>
-					<th><p:outputLabel value="#{lbl['lbl.pp.go.code']}"/></th>
+					<th><p:outputLabel value="* #{lbl['lbl.pp.go.code']}"/></th>
 					<td>
-						<p:selectOneMenu styleClass="ppDropDownWidthM" 
+						<p:selectOneMenu styleClass="ppDropDownWidthM" required="true" label="#{lbl['lbl.pp.go.code']}"
 							value="#{budgetAllocBackingBean.managedBean.selectedBudgetAllocation.ppBudget.budgetId}"
-							disabled="#{!budgetAllocBackingBean.managedBean.selectedBudgetAllocation.brandNew &amp;&amp; 
-								!budgetAllocBackingBean.managedBean.selectedBudgetAllocation.editable}">
+							disabled="#{!budgetAllocBackingBean.managedBean.selectedBudgetAllocation.brandNew}">
 							<f:selectItem itemLabel="#{lbl['lbl.select']}" itemValue="#{null}" />
 							<f:selectItems value="#{budgetAllocBackingBean.populateGo()}" 
 									var="obj" itemLabel="#{obj.pmGo.goCode}" itemValue="#{obj.budgetId}" />
-							<p:ajax event="change" update="pTabBudgetAllocHeader, pGosodoDisburse"
+							<p:ajax event="change" update="itGoName, itGoYear, pDisburse"
 								listener="#{budgetAllocBackingBean.selectedGo(budgetAllocBackingBean.managedBean.selectedBudgetAllocation.ppBudget.budgetId)}" />
 						</p:selectOneMenu>
 					</td>
 					<th><p:outputLabel value="#{lbl['lbl.pp.status']}"/></th>
 					<td>
-						<p:inputText value="#{budgetAllocBackingBean.managedBean.selectedBudgetAllocation.ppWorkflowStatus.statusId}"  
+						<p:inputText value="#{budgetAllocBackingBean.getStatusDescById(
+							budgetAllocBackingBean.managedBean.selectedBudgetAllocation.pmStatus.statusId)}"  
 							styleClass="ppDisplayTextM" disabled="true"/>
 					</td>
 				</tr>
 				<tr>
 					<th><p:outputLabel value="#{lbl['lbl.pp.go.name']}"/></th>
 					<td>
-						<p:inputText value="#{budgetAllocBackingBean.managedBean.selectedBudgetAllocation.ppBudget.pmGo.goName}"  
+						<p:inputText id="itGoName" value="#{budgetAllocBackingBean.managedBean.selectedBudgetAllocation.ppBudget.pmGo.goName}"  
 							styleClass="ppDisplayTextM" disabled="true"/>
 					</td>
 					<th></th>
@@ -59,7 +59,7 @@ xmlns:fn="http://java.sun.com/jsp/jstl/functions"
 				<tr>
 					<th><p:outputLabel value="#{lbl['lbl.pp.financial.year']}"/></th>
 					<td>
-						<p:inputText value="#{budgetAllocBackingBean.managedBean.selectedBudgetAllocation.ppBudget.financialYear}"  
+						<p:inputText id="itGoYear" value="#{budgetAllocBackingBean.managedBean.selectedBudgetAllocation.ppBudget.financialYear}"  
 							styleClass="ppDisplayTextM" disabled="true"/>
 					</td>
 					<th></th>
@@ -69,7 +69,8 @@ xmlns:fn="http://java.sun.com/jsp/jstl/functions"
 					<th><p:outputLabel value="* #{lbl['lbl.pp.plan.approver']}"/></th>
 					<td>
 						<p:selectOneMenu value="#{budgetAllocBackingBean.managedBean.selectedBudgetAllocation.approverUser.userId}" 
-							styleClass="ppDropDownWidthM" disabled="#{!budgetAllocBackingBean.managedBean.selectedBudgetAllocation.editable}">
+							styleClass="ppDropDownWidthM" disabled="#{!budgetAllocBackingBean.managedBean.selectedBudgetAllocation.editable}"
+							required="true" label="#{lbl['lbl.pp.plan.approver']}">
 							<f:selectItem itemLabel="#{lbl['lbl.select']}" itemValue="#{null}"/>
 							<f:selectItems value="#{budgetAllocBackingBean.userWithRoleOptions()}" var="user"
 								itemLabel="#{user.loginId}" itemValue="#{user.userId}"/>

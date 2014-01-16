@@ -11,7 +11,9 @@ xmlns:c="http://java.sun.com/jsp/jstl/core"
     <ui:define name="contentSection">
        	<p:messages id="messages" showDetail="true" autoUpdate="true" closable="true" severity="error, info" />
     	<!-- Top Button -->
-    	<ui:include src="headerSection.xhtml"/>
+    	<c:if test="#{budgetAllocBackingBean.managedBean.viewMode!=PPConst.modeView}">
+    		<ui:include src="headerSection.xhtml"/>
+    	</c:if>
     	
     	<!-- Content -->
     	<p:tabView id="tvBudgetAlloc" dynamic="true" cache="false" orientation="left">

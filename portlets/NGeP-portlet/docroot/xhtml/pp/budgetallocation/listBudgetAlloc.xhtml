@@ -19,24 +19,37 @@ xmlns:c="http://java.sun.com/jsp/jstl/core"
 				<tr>
 					<th><p:outputLabel value="#{lbl['lbl.pp.budget.alloc.no']}" /></th>
 					<td><p:inputText styleClass="ppDisplayTextM"
-							value="-" /></td>
+							value="#{budgetAllocBackingBean.managedBean.budgetAllocSearchBean.budgetAllocNo}" /></td>
 					<th><p:outputLabel value="#{lbl['lbl.pp.ptj.code']}" /></th>
 					<td><p:inputText styleClass="ppDisplayTextM"
-							value="-" /></td>
+							value="#{budgetAllocBackingBean.managedBean.budgetAllocSearchBean.ptjCode}" /></td>
+				</tr>
+				<tr>
+					<th><p:outputLabel value="#{lbl['lbl.pp.budget.alloc.desc']}" /></th>
+					<td><p:inputText styleClass="ppDisplayTextM"
+							value="#{budgetAllocBackingBean.managedBean.budgetAllocSearchBean.budgetAllocDesc}" /></td>
+					<th><p:outputLabel value="#{lbl['lbl.pp.status']}" /></th>
+					<td>
+						<p:selectOneMenu styleClass="ppDropDownWidthM" 
+							value="#{budgetAllocBackingBean.managedBean.budgetAllocSearchBean.statusId}">
+							<f:selectItems value="#{budgetAllocBackingBean.statusDropdownValues()}"/>
+						</p:selectOneMenu>
+					</td>
 				</tr>
 				<tr>
 					<th><p:outputLabel value="#{lbl['lbl.pp.gosodo.code']}" /></th>
 					<td><p:inputText styleClass="ppDisplayTextM"
-							value="-" /></td>
+							value="#{budgetAllocBackingBean.managedBean.budgetAllocSearchBean.gosodoCode}" /></td>
 					<th><p:outputLabel value="#{lbl['lbl.pp.amanah.code']}" /></th>
 					<td><p:inputText styleClass="ppDisplayTextM"
-							value="-" /></td>
+							value="#{budgetAllocBackingBean.managedBean.budgetAllocSearchBean.amanahCode}" /></td>
 				</tr>
 				<tr>
 					<td colspan="4">
 						<div class="ppRightBtn">
 							<p:commandButton value="#{lbl['lbl.pp.search']}"
 								icon="ui-icon-search" update="dtBudgetAllocResult"
+								action="#{budgetAllocBackingBean.searchBudgetAlloc()}"
 								/>
 						</div>
 					</td>
@@ -57,12 +70,12 @@ xmlns:c="http://java.sun.com/jsp/jstl/core"
 			<p:selectOneMenu styleClass="ppDropDownWidthM" 
 				value="#{budgetAllocBackingBean.managedBean.amanahFlag}">  <!-- disable if not brandNew -->
 				<f:selectItem itemLabel="#{lbl['lbl.select']}" itemValue="#{null}"/>
-				<f:selectItem itemLabel="Without Vot (Amanah)" itemValue="true"/>
-				<f:selectItem itemLabel="With Vot" itemValue="false"/>
+				<f:selectItems value="#{budgetAllocBackingBean.amanahTypeOptions()}"/>
 				<p:ajax event="change" update="cbNewBudgetAlloc" />
 			</p:selectOneMenu>
-			<p:commandButton id="cbNewBudgetAlloc" value="#{lbl['lbl.pp.new.budget.allocation']}" disabled="#{budgetAllocBackingBean.managedBean.amanahFlag==null}"
-		 		action="#{budgetAllocBackingBean.redirectToBudgetAllocation}" />&nbsp;
+			<p:commandButton id="cbNewBudgetAlloc" value="#{lbl['lbl.pp.new.budget.allocation']}" 
+				disabled="#{budgetAllocBackingBean.managedBean.amanahFlag==null}"
+		 		action="#{budgetAllocBackingBean.redirectToBudgetAllocation(null)}" />&nbsp;
 		</div>
 		<br/>
 
