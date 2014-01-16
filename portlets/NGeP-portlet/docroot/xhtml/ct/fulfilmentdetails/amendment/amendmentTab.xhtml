@@ -12,13 +12,11 @@
       .column-align-right { text-align: right !important;}
     </style> 
 	 <p:panel>
-	  <c:if test='#{contractDetailsBackingBean.managedBean.chkRenderPage eq  "BPM"}'>
-     <f:event listener="#{contractDetailsBackingBean.preRenderView}" type="preRenderView" />
-	</c:if>
-	  <p:messages id="messages" showDetail="true" autoUpdate="true" closable="true" severity="error, info" />
+	   <f:event listener="#{amendmentBackingBean.preRenderView}" type="preRenderView" />
+     <p:messages id="messages" showDetail="true" autoUpdate="true" closable="true" severity="error, info" />
 	 <div class="ppRightBtn"> 
-	     <ui:repeat var="outcome" value="#{contractDetailsBackingBean.managedBean.action}">
-			<p:commandButton value="#{outcome}" process="@this"  action="#{contractDetailsBackingBean.saveContract(outcome)}" />
+	     <ui:repeat var="outcome" value="#{amendmentBackingBean.managedBean.action}">
+			<p:commandButton value="#{outcome}" process="@form"  action="#{amendmentBackingBean.saveContractAmendment(outcome)}" />
 		 </ui:repeat>		
     </div>
 	</p:panel>
@@ -31,7 +29,7 @@
 	   <p:tab title="#{lbl['lbl.ct.menu.item']}">
          <ui:include src="item.xhtml"/>
        </p:tab>  
-        <p:tab title="Approval Letter" rendered="#{contractDetailsBackingBean.managedBean.approvrLetter}">
+        <p:tab title="Approval Letter" rendered="#{amendmentBackingBean.managedBean.approvrLetter}">
          <ui:include src="approvalLetter.xhtml"/>
        </p:tab>  
 	</p:tabView>

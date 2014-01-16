@@ -71,10 +71,12 @@
 		   </p:row>							
 		   </p:columnGroup>
 		     <p:column> <h:outputText value="#{data.contractName}" /></p:column>
-			 <p:column><h:outputText value="CR-2013-0001" /></p:column>	
-			 <p:column><h:outputText value="Khai Sdn Bhd" /></p:column>					
-			 <p:column><h:outputText value="04/11/2013" /> </p:column>	
-			 <p:column><h:outputText value="03/11/2014" /></p:column>	
+			 <p:column><h:outputText value="#{data.circular.latestCircularVer.circularNo}" /></p:column>	
+			 <p:column><h:outputText value="#{data.smSupplier.supplierName}" /></p:column>					
+			 <p:column><h:outputText value="#{data.latestContractVer.ctContractValue.effDate}">
+			           <f:convertDateTime pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}" /></h:outputText> </p:column>	
+			 <p:column><h:outputText value="#{data.latestContractVer.ctContractValue.expDate}">
+			           <f:convertDateTime pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}" /></h:outputText></p:column>	
 		     <p:column><h:outputText value="#{data.loaNo}" /></p:column>	
 			 <p:column> <h:outputText value="Active"/> </p:column>	
 			 <p:column styleClass="column-align-center">

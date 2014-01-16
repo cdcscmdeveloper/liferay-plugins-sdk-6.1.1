@@ -40,6 +40,7 @@ import my.ep.biz.bean.search.SearchBean;
 import my.ep.biz.bean.search.SearchFilterBean;
 import my.ep.biz.service.ct.IContractSO;
 import my.ep.biz.service.ct.maintain.IContractAssociationSO;
+import my.ep.biz.service.pm.authorization.orgprofile.IOrgProfileSO;
 import my.ep.biz.service.pm.authorization.user.IUserSO;
 import my.ep.bpm.dto.BpmRequestDTO;
 import my.ep.bpm.dto.BpmResponseDTO;
@@ -50,6 +51,8 @@ import my.ep.dto.ct.ContractReqDTO;
 import my.ep.dto.ct.ContractResDTO;
 import my.ep.dto.ct.maintain.ContractAssociationReqDTO;
 import my.ep.dto.ct.maintain.ContractAssociationResDTO;
+import my.ep.dto.pm.authorization.orgprofile.OrgProfileReqDTO;
+import my.ep.dto.pm.authorization.orgprofile.OrgProfileResDTO;
 import my.ep.dto.pm.authorization.user.UserReqDTO;
 import my.ep.dto.pm.authorization.user.UserResDTO;
 import my.ep.exception.EpException;
@@ -61,6 +64,7 @@ import my.ep.persistence.entity.ct.CtContract;
 import my.ep.persistence.entity.ct.CtContractVer;
 import my.ep.persistence.entity.ct.amend.CtAmendment;
 import my.ep.persistence.entity.ct.assoc.CtAssocContract;
+import my.ep.persistence.entity.ct.circular.panel.CtPanelZone;
 import my.ep.persistence.entity.ct.dtl.CtPerformanceBond;
 import my.ep.persistence.entity.ct.dtl.CtProgressivePayment;
 import my.ep.persistence.entity.ct.dtl.CtSchedule;
@@ -68,13 +72,16 @@ import my.ep.persistence.entity.ct.dtl.deduction.CtDeduction;
 import my.ep.persistence.entity.ct.dtl.deduction.CtDeductionClause;
 import my.ep.persistence.entity.ct.terminate.CtTermination;
 import my.ep.persistence.entity.ct.terminate.CtTerminationReason;
+import my.ep.persistence.entity.pm.authorization.PmOrgProfile;
 import my.ep.persistence.entity.pm.authorization.PmUserGroup;
 import my.ep.persistence.entity.pm.authorization.PmUserGroupUser;
 import my.ep.persistence.entity.pm.common.PmParameter;
 import my.ep.type.aut.SearchOperator;
+import my.ep.type.pm.OrganizationType;
 import my.ep.util.lookupservice.EpBpmBusinessDelegate;
 import my.ep.web.backingbean.BaseBackingBean;
 import my.ep.web.backingbean.ct.agreement.AgreementBackingBean;
+import my.ep.web.backingbean.ct.amendment.AmendmentBackingBean;
 import my.ep.web.constant.ct.ContractManagementConst;
 import my.ep.web.managedbean.ct.ContractDetailsManagedBean;
 import my.ep.web.util.FacesScopes;
@@ -460,28 +467,6 @@ public class ContractDetailsBackingBean extends BaseBackingBean<ContractDetailsM
     	this.getManagedBean().setItemCeilingQuantity(false);
     }
   
-   public void ChkAmendmentAction(){
-    	
-    	try {
-			if(this.getManagedBean().getContractVer().getCtAmendment().isContractExtend())
-				this.getManagedBean().getContractVer().getCtAmendment().setContractExtend(true);
-			
-			else if(this.getManagedBean().getContractVer().getCtAmendment().isPriceChange())
-				this.getManagedBean().getContractVer().getCtAmendment().setPriceChange(true);
-		  
-			else if(this.getManagedBean().getContractVer().getCtAmendment().isQuantityChange())
-				this.getManagedBean().getContractVer().getCtAmendment().setQuantityChange(true);
-		  
-			else if(this.getManagedBean().getContractVer().getCtAmendment().isClauseChange())
-				this.getManagedBean().getContractVer().getCtAmendment().setClauseChange(true);
-			
-			else if(this.getManagedBean().getContractVer().getCtAmendment().isValueChange())
-				this.getManagedBean().getContractVer().getCtAmendment().setValueChange(true);
-			
-    	} catch (Exception e) {
-			System.out.println(e);
-		}
-    }
    public void selectedItemList(){
     	  this.getManagedBean().setServiceItem(false);
     	  this.getManagedBean().setProductItem(true);
@@ -637,11 +622,11 @@ public class ContractDetailsBackingBean extends BaseBackingBean<ContractDetailsM
 			getManagedBean().getCtCircularName()));	
 		}	
 		if(getManagedBean().getCtSupplierId()!=null && getManagedBean().getCtSupplierId().length()>0) {
-			searchBean.getDataFilterBeans().add(new SearchFilterBean("SmSupplier.supplierId",SearchOperator.OPERATOR_LIKE.value(),
+			searchBean.getDataFilterBeans().add(new SearchFilterBean("smSupplier.supplierId",SearchOperator.OPERATOR_LIKE.value(),
 			getManagedBean().getCtSupplierId()));	
 		}		
 		if(getManagedBean().getCtSupplierName()!=null && getManagedBean().getCtSupplierName().length()>0) {
-			searchBean.getDataFilterBeans().add(new SearchFilterBean("SmSupplier.supplierName",SearchOperator.OPERATOR_EQUALS.value(),
+			searchBean.getDataFilterBeans().add(new SearchFilterBean("smSupplier.supplierName",SearchOperator.OPERATOR_EQUALS.value(),
 			getManagedBean().getCtSupplierName()));	
 		}	
 		if(this.getManagedBean().getCtDateStart()!=null && this.getManagedBean().getCtDateStart().length()>0) {
@@ -944,6 +929,56 @@ public class ContractDetailsBackingBean extends BaseBackingBean<ContractDetailsM
 		out.close(); 
 		FacesContext.getCurrentInstance().responseComplete();
 	}	
+	
+	public SelectItem[] getMinistryDropdown() {
+		
+		SelectItem[] items = null;     
+		try {
+		        int i = 1;
+		        IOrgProfileSO orgProfileSO = (IOrgProfileSO) BusinessDelegate.getInstance().getServiceObject("pm", IOrgProfileSO.class);
+		        OrgProfileReqDTO reqDTO = new OrgProfileReqDTO();
+		        reqDTO.setOrgType(OrganizationType.MINISTRY.value());
+		
+		        OrgProfileResDTO resDTO = orgProfileSO.retrieveOrgProfileListByOrgType(reqDTO);
+		        List<PmOrgProfile> list = resDTO.getOrgProfileList();
+		        items = new SelectItem[list.size()+1];
+				items[0] = new SelectItem(null, "- Select One -");
+		      
+				for(PmOrgProfile orgProfile : list) 
+			      items[i++] = new SelectItem( orgProfile.getOrgCode(), orgProfile.getOrgName());       
+				
+		} catch (Exception e) {
+			e.printStackTrace();
+			FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR,e.toString(), e.getMessage()));
+		}
+	    return items;
+	}
+	
+	public SelectItem[] getDepartmentDropdown() {
+	
+		SelectItem[] items = null;     
+		try {
+		        int i = 1;
+		        IOrgProfileSO orgProfileSO = (IOrgProfileSO) BusinessDelegate.getInstance().getServiceObject("pm", IOrgProfileSO.class);
+		        OrgProfileReqDTO reqDTO = new OrgProfileReqDTO();
+		        reqDTO.setOrgType(OrganizationType.DEPARTMENT.value());
+		        OrgProfileResDTO resDTO = orgProfileSO.retrieveOrgProfileListByOrgType(reqDTO);
+		        List<PmOrgProfile> list = resDTO.getOrgProfileList();
+		        items = new SelectItem[list.size()+1];
+				items[0] = new SelectItem(null, "- Select One -");
+	            for (PmOrgProfile orgProfile : list) {
+		              System.out.println(orgProfile.getOrgProfileId() + "|"
+				     + orgProfile.getOrgCode() + "|" + orgProfile.getOrgName());
+		              items[i++] = new SelectItem(orgProfile.getOrgCode(), orgProfile.getOrgName());
+	           }
+		}
+		catch (Exception e) {
+	    	   e.printStackTrace();
+	    	   FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR,e.toString(), e.getMessage()));
+	      }
+	   return items;
+	}
+	
 	public String gotoTerminatePage() {
 
 		IContractSO contractSO = null;
@@ -1003,17 +1038,19 @@ public class ContractDetailsBackingBean extends BaseBackingBean<ContractDetailsM
 		IContractSO contractSO = null;
 		ContractResDTO resDTO  = null;
 		ContractReqDTO reqDTO  = null;
+		AmendmentBackingBean amendBB = null;
 		
 		try {
 
 				reqDTO = new ContractReqDTO();
 				contractSO = (IContractSO) BusinessDelegate.getInstance().getServiceObject("ct", IContractSO.class);
 				reqDTO.setContractVerId(this.getManagedBean().getCtContract().getContractId());
+				reqDTO.setUpdateAction(true);
 				resDTO = contractSO.retrieveContractVer(reqDTO);
-				this.getManagedBean().setChkRenderPage(ContractConst.DOC_TYPE_CONTRACT_AMENDMENT);
-				this.getManagedBean().setContractVer(resDTO.getCtContractVer());	
-				if(this.getManagedBean().getContractVer().getCtAmendment() ==null) {
-					this.getManagedBean().getContractVer().setCtAmendment(new CtAmendment());
+				amendBB = new AmendmentBackingBean();
+				amendBB.getManagedBean().setContractVer(resDTO.getCtContractVer());	
+				if(amendBB.getManagedBean().getContractVer().getCtAmendment() ==null) {
+					amendBB.getManagedBean().getContractVer().setCtAmendment(new CtAmendment());
 				}
 			} catch (Exception e) {
 				e.printStackTrace();
@@ -1021,6 +1058,7 @@ public class ContractDetailsBackingBean extends BaseBackingBean<ContractDetailsM
 				contractSO = null;
 				resDTO = null;
 				reqDTO = null;
+				amendBB =null;
 			}
 		return PROCESS_AMEND_PAGE;
 	}

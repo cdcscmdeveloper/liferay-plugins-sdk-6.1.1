@@ -8,7 +8,7 @@
 	xmlns:ac="http://ac.my/jsf/composite/cc" >
     <p:panel id="deductionId" header="#{lbl['lbl.ct.ded.panel.name']}"   toggleable="true"  toggleSpeed="500">
 	<p:dataTable id="tableDeduction" var="datas" value="#{contractDetailsBackingBean.managedBean.contractVer.ctDeductions}" 
-	   rowKey="#{datas}" selection="#{contractDetailsBackingBean.managedBean.selectedDeductionList}"  editable="true"
+	   rowKey="#{datas}" selection="#{contractDetailsBackingBean.managedBean.selectedDeductionList}" 
 	   paginator="true" paginatorPosition="bottom" paginatorAlwaysVisible="true" emptyMessage="No Records!">
 	   <ac:paginator for="tableDeduction" />
 	    <p:columnGroup type="header"> 
