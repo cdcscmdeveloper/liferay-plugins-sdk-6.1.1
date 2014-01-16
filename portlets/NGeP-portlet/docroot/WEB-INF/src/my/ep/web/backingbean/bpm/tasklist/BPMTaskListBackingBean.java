@@ -178,8 +178,6 @@ public class BPMTaskListBackingBean extends
 
 		String taskId = FacesContext.getCurrentInstance().getExternalContext()
 				.getRequestParameterMap().get("taskId");
-		String docStatus = FacesContext.getCurrentInstance().getExternalContext()
-				.getRequestParameterMap().get("docStatus");
 		FacesScopes face = new FacesScopes();
 		String token = face.getBPMAuthenticationCtxToken();
 		BpmRequestDTO reqDTO = new BpmRequestDTO();
@@ -188,7 +186,6 @@ public class BPMTaskListBackingBean extends
 			log.info("taskId:" + taskId);
 			reqDTO.setCtxToken(token);
 			reqDTO.setTaskId(taskId);
-			reqDTO.setDocStatus(docStatus);
 			BpmResponseDTO res = bpmSO.getTaskDetails(reqDTO);
 			System.out.println("********getProcessName********"
 					+ res.getProcessName());
@@ -257,7 +254,7 @@ public class BPMTaskListBackingBean extends
 			ExternalContext externalContext = FacesContext.getCurrentInstance().getExternalContext();
 
 			//externalContext.redirect("/web/guest/" +url +"?taskId="+taskId);
-			externalContext.redirect(commonUrl+"/" + url+"?taskId="+taskId+"&docStatus="+docStatus);
+			externalContext.redirect(commonUrl+"/" + url+"?taskId="+taskId);
 			//externalContext.redirect("http://localhost:8080/web/guest/" +url +"?taskId="+taskId);
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
