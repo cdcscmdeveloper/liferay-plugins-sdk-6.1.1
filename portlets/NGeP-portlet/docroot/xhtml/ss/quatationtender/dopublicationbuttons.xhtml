@@ -11,7 +11,7 @@
 			<c:if test="#{qTDetailBB.managedBean.taskId eq null}">
 				<c:if test="#{qTDetailBB.managedBean.qt.brandNew}">
 					<p:commandButton action="#{qTDetailBB.clonePopupAction}"
-						value="Clone" oncomplete="clonedlg.show();" icon="ui-icon-clone" />
+						value="Clone" oncomplete="clonedlg.show();" icon="ui-icon-clone" update="cloneQTPopup" />
 					<ui:include
 						src="/xhtml/ss/quatationtender/cloneqtntenderscreen.xhtml" />
 				</c:if>

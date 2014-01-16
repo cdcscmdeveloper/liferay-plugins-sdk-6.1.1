@@ -7,7 +7,7 @@
 	xmlns:ac="http://ac.my/jsf/composite/cc">
 
 
-	<p:dialog widgetVar="clonedlg" modal="true" appendToBody="true" header="Qtn/Tender Search" 
+	<p:dialog id="cloneQTPopup" widgetVar="clonedlg" modal="true" appendToBody="true" header="Qtn/Tender Search" 
 		width="800" height="400">
 
 
@@ -65,11 +65,11 @@
 
 		<p:panel header="Search Qtn/Tender Result" toggleable="true">
 			<h:panelGroup style="width:100%;">
-				<p:dataTable value="#{qTDetailBB.managedBean.cloneTenderList}"
-					id="cloneQtsearch" var="tenders" 
+				<p:dataTable value="#{qTDetailBB.managedBean.cloneSearchQTDataModel}"
+					id="cloneQtsearch" var="tenders"
+					rowKey="#{tenders}" rowIndexVar="rowIndex" 
 					selection="#{qTDetailBB.managedBean.selectedCloneTenderList}"
-				rowKey="#{tenders}" rowIndexVar="rowIndex"
-				rows="10">
+					lazy="true">
 				<p:column selectionMode="single" style="width:2%" />
 				<ac:paginator for="cloneQtsearch" />
 

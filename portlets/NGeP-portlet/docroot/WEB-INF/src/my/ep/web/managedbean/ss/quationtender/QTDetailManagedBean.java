@@ -39,6 +39,7 @@ import my.ep.persistence.entity.ss.quationtender.ScQtRemark;
 import my.ep.persistence.entity.ss.quationtender.ScQtSupplier;
 import my.ep.persistence.entity.ss.quationtender.ScRemark;
 import my.ep.web.backingbean.ss.quatationtender.CloneAllDataModel;
+import my.ep.web.bean.paginator.IPagingDataModel;
 import my.ep.web.bean.ss.quatationtender.QtnTenderSearchBean;
 import my.ep.web.bean.ss.quatationtender.TabBean;
 import my.ep.web.managedbean.BaseManagedBean;
@@ -145,7 +146,6 @@ public class QTDetailManagedBean extends BaseManagedBean {
 	private TreeNode root3;
 	private TreeNode[] selectedNodes;
 
-	private List<ScQt> cloneTenderList = new ArrayList<ScQt>();
 	private ScQt tenderCriteria = new ScQt();
 
 	private List<TabBean> tabList ;	
@@ -169,10 +169,6 @@ public class QTDetailManagedBean extends BaseManagedBean {
 		private SCQuotationTenderDataType quotationTenderDataType;
 	private boolean isEditable=true;
 	
-	
-	
-	private List<ScQt> qtList = new ArrayList<ScQt>();
-
 	private List<SmSupplier> panelSuppliers; 
 	
 	// For Circular Panel Search Criteria
@@ -194,6 +190,9 @@ public class QTDetailManagedBean extends BaseManagedBean {
 	private List<ScQtSupplier> qtSupplierList;
 	private List<ScQtCategory> selectedCategoryList;
 	private List<ScQtCategory> qtCategoryList;
+	
+	private IPagingDataModel<ScQt> searchQTDataModel;
+	private IPagingDataModel<ScQt> cloneSearchQTDataModel;
 
 	public void setPanelSuppliers(List<SmSupplier> panelSuppliers) {
 		this.panelSuppliers = panelSuppliers;
@@ -245,14 +244,6 @@ public class QTDetailManagedBean extends BaseManagedBean {
 	public void setCloneQtnTenderSearchBean(
 			QtnTenderSearchBean cloneQtnTenderSearchBean) {
 		this.cloneQtnTenderSearchBean = cloneQtnTenderSearchBean;
-	}
-
-	public List<ScQt> getCloneTenderList() {
-		return cloneTenderList;
-	}
-
-	public void setCloneTenderList(List<ScQt> cloneTenderList) {
-		this.cloneTenderList = cloneTenderList;
 	}
 
 	public TreeNode getRoot2() {
@@ -435,17 +426,6 @@ public class QTDetailManagedBean extends BaseManagedBean {
 	public void setTenderCriteria(ScQt tenderCriteria) {
 		this.tenderCriteria = tenderCriteria;
 	}
-
-	
-	public List<ScQt> getQtList() {
-		return qtList;
-	}
-
-	public void setQtList(List<ScQt> qtList) {
-		this.qtList = qtList;
-	}
-
-	
 	
 	public String getMultiLoc() {
 		return multiLoc;
@@ -1322,6 +1302,37 @@ public class QTDetailManagedBean extends BaseManagedBean {
 	public void setSelectedScQtDeduction(ScQtDeduction selectedScQtDeduction) {
 		this.selectedScQtDeduction = selectedScQtDeduction;
 	}
-	
-    	 
+
+
+	/**
+	 * @return the searchQTDataModel
+	 */
+	public IPagingDataModel<ScQt> getSearchQTDataModel() {
+		return searchQTDataModel;
+	}
+
+
+	/**
+	 * @param searchQTDataModel the searchQTDataModel to set
+	 */
+	public void setSearchQTDataModel(IPagingDataModel<ScQt> searchQTDataModel) {
+		this.searchQTDataModel = searchQTDataModel;
+	}
+
+
+	/**
+	 * @return the cloneSearchQTDataModel
+	 */
+	public IPagingDataModel<ScQt> getCloneSearchQTDataModel() {
+		return cloneSearchQTDataModel;
+	}
+
+
+	/**
+	 * @param cloneSearchQTDataModel the cloneSearchQTDataModel to set
+	 */
+	public void setCloneSearchQTDataModel(
+			IPagingDataModel<ScQt> cloneSearchQTDataModel) {
+		this.cloneSearchQTDataModel = cloneSearchQTDataModel;
+	}
 }

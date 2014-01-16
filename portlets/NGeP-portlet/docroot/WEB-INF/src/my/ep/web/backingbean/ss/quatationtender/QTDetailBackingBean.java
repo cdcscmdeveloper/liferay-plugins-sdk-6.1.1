@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import javax.annotation.PostConstruct;
 import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.RequestScoped;
@@ -12,7 +13,8 @@ import javax.faces.context.FacesContext;
 import javax.faces.event.ValueChangeEvent;
 import javax.servlet.http.HttpServletRequest;
 
-import my.ep.biz.bean.search.SearchBean;
+import my.ep.biz.bean.search.ISearchBean;
+import my.ep.biz.bean.search.ISearchResultBean;
 import my.ep.biz.bean.search.SearchBetweenValue;
 import my.ep.biz.bean.search.SearchFilterBean;
 import my.ep.biz.service.pm.authorization.orgprofile.IOrgProfileSO;
@@ -60,6 +62,8 @@ import my.ep.type.ss.ApprovalCategory;
 import my.ep.util.lookupservice.EpBpmBusinessDelegate;
 import my.ep.util.lookupservice.EpEjbBusinessDelegate;
 import my.ep.web.backingbean.ss.approval.ApprovalBackingBean;
+import my.ep.web.bean.paginator.IPagingDataModel;
+import my.ep.web.bean.paginator.PagingDataModel;
 import my.ep.web.bean.ss.quatationtender.QtnTenderSearchBean;
 import my.ep.web.bean.ss.quatationtender.TabBean;
 import my.ep.web.managedbean.ss.quationtender.QTDetailManagedBean;
@@ -97,6 +101,16 @@ public class QTDetailBackingBean extends
 			log.debug(message);
 		}
 		log.info(message);
+	}
+	
+	@PostConstruct
+	private void init() {
+		IPagingDataModel<ScQt> searchQTDataModel = getManagedBean().getSearchQTDataModel();
+		
+		if (searchQTDataModel == null) {
+			getManagedBean().setSearchQTDataModel(new QTPagingDataModel(
+					"searchQTs", getManagedBean().getQtnTenderSearchBean()));
+		}
 	}
 
 	/**
@@ -298,16 +312,7 @@ public class QTDetailBackingBean extends
 	 * Method to search the quationtenders based on serach date
 	 */
 	public void searchQTAction() {
-
-		try {
-			QtnTenderSearchBean qtnTenderSearchBean = this.getManagedBean()
-					.getQtnTenderSearchBean();
-			List<ScQt> searchQt = getSearchQTs(qtnTenderSearchBean);
-
-			this.getManagedBean().setQtList(searchQt);
-		} catch (Exception ex) {
-			ex.printStackTrace();
-		}
+		getManagedBean().getSearchQTDataModel().reloadData();
 	}
 
 	/**
@@ -315,30 +320,21 @@ public class QTDetailBackingBean extends
 	 */
 
 	public void cloneSearchQtAction() {
-		try {
-			QtnTenderSearchBean qtnTenderSearchBean = this.getManagedBean()
-					.getCloneQtnTenderSearchBean();
-			List<ScQt> cloneSearchQt = getSearchQTs(qtnTenderSearchBean);
-
-			this.getManagedBean().setCloneTenderList(cloneSearchQt);
-		} catch (Exception ex) {
-			ex.printStackTrace();
-		}
+		getManagedBean().getCloneSearchQTDataModel().reloadData();
 	}
 
 	/**
 	 * Clone Popup Action - To clear the clone search result for next time
 	 */
 	public void clonePopupAction() {
-		this.getManagedBean().setCloneQtnTenderSearchBean(
-				new QtnTenderSearchBean());
-
-		System.out.println("inside clear cloneQT-------------------");
-		List<ScQt> cloneQtList = this.getManagedBean().getCloneTenderList();
-		if (!cloneQtList.isEmpty()) {
-			this.getManagedBean().getCloneTenderList().clear();
-		}
-
+		debugLogger("clonePopupAction");
+		
+		QtnTenderSearchBean cloneQtnTenderSearchBean = new QtnTenderSearchBean();
+		IPagingDataModel<ScQt> cloneSearchQTDataModel = new QTPagingDataModel(
+				"cloneQtsearch", cloneQtnTenderSearchBean);
+		
+		getManagedBean().setCloneSearchQTDataModel(cloneSearchQTDataModel);		
+		getManagedBean().setCloneQtnTenderSearchBean(cloneQtnTenderSearchBean);
 	}
 
 	/**
@@ -626,19 +622,17 @@ public class QTDetailBackingBean extends
 		return quationTenderReqDTO;
 
 	}
-
+	
 	/**
 	 * Method to prepare qt search criteria.
 	 * 
-	 * @return quatationTenderReq object
+	 * @param qtnTenderSearchBean
+	 * 			the qt search criteria bean
+	 * @param qtSearchBean
+	 * 			the qt search filter bean
 	 */
-	private List<ScQt> getSearchQTs(QtnTenderSearchBean qtnTenderSearchBean) {
-
-		QuationTenderReqDTO reqDTO = new QuationTenderReqDTO();
-
+	private void populateQTSearchCriteria(QtnTenderSearchBean qtnTenderSearchBean, ISearchBean<ScQt> qtSearchBean) {
 		if (qtnTenderSearchBean != null) {
-
-			SearchBean<ScQt> qtSearchBean = new SearchBean<ScQt>();
 			List<SearchFilterBean> searchFilterBean = new ArrayList<SearchFilterBean>();
 			String qtTitle = qtnTenderSearchBean.getQtTitle();
 			if (!StringUtils.isBlank(qtTitle)) {
@@ -714,29 +708,7 @@ public class QTDetailBackingBean extends
 
 			// Adding search filterbeans to searchbean.
 			qtSearchBean.getDataFilterBeans().addAll(searchFilterBean);
-
-			reqDTO.setQtSearchBean(qtSearchBean);
 		}
-		QuationTenderResDTO dto = null;
-		IQTDetailSO detailSO;
-		try {
-			detailSO = BusinessDelegate.getInstance().getServiceObject(
-					MODULE_NAME, IQTDetailSO.class);
-			
-			dto = detailSO.getQuationTenders(reqDTO);
-		} catch (Exception ex) {
-			ex.printStackTrace();
-			FacesContext.getCurrentInstance().addMessage(
-					null,
-					new FacesMessage(FacesMessage.SEVERITY_ERROR,
-							ex.toString(), ex.getMessage()));
-
-		} finally {
-			detailSO = null;
-		}
-
-		return null != dto.getQtResultBean().getResultList() ? dto
-				.getQtResultBean().getResultList() : new ArrayList<ScQt>();
 	}
 
 	public void onChangeAction() {
@@ -1198,4 +1170,53 @@ public class QTDetailBackingBean extends
 	 * 
 	 * }
 	 */
+	
+	private class QTPagingDataModel extends PagingDataModel<ScQt> {
+		private static final long serialVersionUID = 1L;
+		
+		private QtnTenderSearchBean qtnTenderSearchBean;
+
+		public QTPagingDataModel(String componentId, QtnTenderSearchBean qtnTenderSearchBean) {
+			super(componentId);
+			this.qtnTenderSearchBean = qtnTenderSearchBean;
+		}
+		
+		/**
+		 * retrieve list of ScQt by params
+		 * 
+		 * @see my.ep.web.bean.paginator.PagingDataModel#pageChangeListener(my.ep.biz.bean.search.ISearchBean)
+		 */
+		@Override
+		public ISearchResultBean<ScQt> pageChangeListener(ISearchBean<ScQt> searchBean) {
+			if (log.isDebugEnabled()) {
+				log.debug("pageChangeListener");
+			}
+
+			IQTDetailSO detailSO;
+			try {				
+				detailSO = BusinessDelegate.getInstance().getServiceObject(
+						MODULE_NAME, IQTDetailSO.class);
+				
+				QuationTenderReqDTO reqDTO = new QuationTenderReqDTO();
+				
+				populateQTSearchCriteria(qtnTenderSearchBean, searchBean);
+				reqDTO.setQtSearchBean(searchBean);
+				
+				QuationTenderResDTO resDTO = detailSO.getQuationTenders(reqDTO);
+
+				return resDTO.getQtResultBean();
+			} catch (Exception e) {
+				FacesContext.getCurrentInstance().addMessage(
+						null,
+						new FacesMessage(FacesMessage.SEVERITY_ERROR,
+								e.toString(),
+								"Sorry we are Unable to Save the Details"));
+			} finally {
+				detailSO = null;
+			}
+
+			return null;
+		}
+	}
+	
 }
