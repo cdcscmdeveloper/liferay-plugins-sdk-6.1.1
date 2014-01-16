@@ -75,6 +75,7 @@
             <portlet id="scTemplateDocument" />
            <portlet id="scBriefingSiteVisitAttendance" />
             <portlet id="scCommitteMaintance" />
+             <portlet id="scPresentation Demo" />
           
             <portlet id="Supplier Finalization"/>
            <portlet id="Pre-Supplier Finalization"/>
