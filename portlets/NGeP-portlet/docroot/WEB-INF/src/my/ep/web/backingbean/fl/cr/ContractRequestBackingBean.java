@@ -243,11 +243,11 @@ public class ContractRequestBackingBean extends BaseBackingBean<ContractRequestM
 	public List<SelectItem> getIssuedPTJList() {
 		List<SelectItem> retrievePTJList = new ArrayList<SelectItem>();
 		retrievePTJList.add(new SelectItem("", "- Select One -"));
-		for (CtAgency ctAgent : getManagedBean().getFlRequest().getCtContract()
-				.getLatestContractVer().getCtAgencies()) {
+		System.out.println(":getTitle: "+getManagedBean().getFlRequest().getTitle());
+		System.out.println("getContractId: "+getManagedBean().getFlRequest().getCtContract().getContractId());
+		for (CtAgency ctAgent : getManagedBean().getFlRequest().getCtContract().getLatestContractVer().getCtAgencies()) {
 
-			retrievePTJList.add(new SelectItem(ctAgent.getOrgProfile()
-					.getOrgProfileId(), ctAgent.getOrgProfile().getOrgName()));
+			retrievePTJList.add(new SelectItem(ctAgent.getOrgProfile().getOrgProfileId(), ctAgent.getOrgProfile().getOrgName()));
 		}
 		return retrievePTJList;
 	}
@@ -335,14 +335,11 @@ public class ContractRequestBackingBean extends BaseBackingBean<ContractRequestM
 	}
 
 	public void updateDeliveryAddrDt() {
-		for (CtAgencyAddress addrType : getManagedBean()
-				.getSelectedCtAddrTypeList()) {
+		for (CtAgencyAddress addrType : getManagedBean().getSelectedCtAddrTypeList()) {
 			FlDeliveryAddress deliveryAddr = new FlDeliveryAddress();
-			deliveryAddr
-					.setFlFulfilmentRequest(getManagedBean().getFlRequest());
+			deliveryAddr.setFlFulfilmentRequest(getManagedBean().getFlRequest());
 			deliveryAddr.setAddressType(addrType.getAddressType());
-			getManagedBean().getFlRequest().getFlDeliveryAddresses()
-					.add(deliveryAddr);
+			getManagedBean().getFlRequest().getFlDeliveryAddresses().add(deliveryAddr);
 		}
 	}
 
@@ -351,11 +348,8 @@ public class ContractRequestBackingBean extends BaseBackingBean<ContractRequestM
 		// TODO
 		ctReqDTO.setOrgProfileId(4L);
 		ctReqDTO.setCtContract(getManagedBean().getFlRequest().getCtContract());
-		IContractAmendmentSO ctAmendmentSO = (IContractAmendmentSO) BusinessDelegate
-				.getInstance().getServiceObject("ct",
-						IContractAmendmentSO.class);
-		ContractAmendmentResDTO resDTO = ctAmendmentSO
-				.getActiveLocation(ctReqDTO);
+		IContractAmendmentSO ctAmendmentSO = (IContractAmendmentSO) BusinessDelegate.getInstance().getServiceObject("ct",IContractAmendmentSO.class);
+		ContractAmendmentResDTO resDTO = ctAmendmentSO.getActiveLocation(ctReqDTO);
 		// getManagedBean().setAddressTypesList(resDTO.getAddressTypeList());
 		getManagedBean().setAddressTypesList(resDTO.getAgencyAddressList());
 	}
@@ -606,17 +600,27 @@ public class ContractRequestBackingBean extends BaseBackingBean<ContractRequestM
 			orgProfileReqDTO.setOrgProfileId(4L);
 			OrgProfileResDTO pmResDTO = orgProfileSO.retrieveOrgProfileByProfileId(orgProfileReqDTO);
 
-			if (coObj.getContractRequestId().intValue() == 0) {
+			if (coObj.getContractRequestId().intValue() == 0) {//TODO
 				FlFulfilmentRequest flRequest = new FlFulfilmentRequest();
 				IContractSO contractSO = (IContractSO) BusinessDelegate.getInstance().getServiceObject("ct", IContractSO.class);
 				ContractReqDTO contractReqDTO = new ContractReqDTO();
 				contractReqDTO.setContractId(resDTO.getFlFulfilmentRequest().getCtContract().getContractId());
-
-				flRequest.setCtContract(contractSO.retrieveNormalContractByMtoContract(contractReqDTO).getContract());
+			
+				resDTO.getFlFulfilmentRequest().setCtContract(contractSO.retrieveContract(contractReqDTO).getContract());//TODO
+				
+				contractReqDTO.setLoaId(resDTO.getFlFulfilmentRequest().getCtContract().getLatestContractVer().getCtMtoLoas().get(0).getLoa().getLoaId());
+				ContractResDTO ctResDTO = contractSO.retrieveContractByLoaId(contractReqDTO);
+				
+				flRequest.setCtContract(ctResDTO.getContract());
+//				flRequest.setCtContract(contractSO.retrieveNormalContractByMtoContract(contractReqDTO).getContract());
 				getManagedBean().setFlRequest(flRequest);
-				getManagedBean().getFlRequest().setIssuedOrgProfile(new PmOrgProfile());
-				getManagedBean().getFlRequest().setChargeOrgProfile(new PmOrgProfile());
-				getManagedBean().getFlRequest().setReceivedOrgProfile(new PmOrgProfile());
+				getManagedBean().getFlRequest().setIssuedOrgProfile(resDTO.getFlFulfilmentRequest().getIssuedOrgProfile());
+				getManagedBean().getFlRequest().setChargeOrgProfile(resDTO.getFlFulfilmentRequest().getChargeOrgProfile());
+				getManagedBean().getFlRequest().setReceivedOrgProfile(resDTO.getFlFulfilmentRequest().getReceivedOrgProfile());
+				getManagedBean().getFlRequest().setPreparedOrgProfile(resDTO.getFlFulfilmentRequest().getIssuedOrgProfile());
+//				getManagedBean().getFlRequest().setIssuedOrgProfile(new PmOrgProfile());
+//				getManagedBean().getFlRequest().setChargeOrgProfile(new PmOrgProfile());
+//				getManagedBean().getFlRequest().setReceivedOrgProfile(new PmOrgProfile());
 				getManagedBean().getFlRequest().setFlDeliveryAddresses(new ArrayList<FlDeliveryAddress>());
 
 			} else {

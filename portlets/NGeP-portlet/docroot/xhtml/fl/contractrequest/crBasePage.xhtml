@@ -61,9 +61,8 @@
 			<p:tab id="tab2" title="#{lbl['lbl.tab.fl.item']}">
 					<ui:include src="crItem.xhtml" /> 
 			</p:tab>
-			<p:tab id="tab3" title="Approver Settings">
+			<p:tab id="tab3" title="Approver Settings" rendered="#{contractRequestBackingBean.isRequisitioner()}">
 				<p:panel id="settingId" header="Approver Setting" toggleable="true"
-					rendered="#{contractRequestBackingBean.isRequisitioner()}"
 					toggleSpeed="500">
 					<h:panelGrid columns="1">
 						<h:panelGrid style="width:500px">
