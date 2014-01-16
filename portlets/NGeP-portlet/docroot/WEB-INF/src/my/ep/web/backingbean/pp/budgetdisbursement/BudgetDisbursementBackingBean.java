@@ -126,7 +126,7 @@ public class BudgetDisbursementBackingBean extends BaseBackingBean<BudgetDisburs
 		this.getManagedBean().setSelectedPpBudgetDtl(null);
 		this.getManagedBean().setVerify(false);
 		this.getManagedBean().setVerifyRequired(false);
-		this.getManagedBean().setConfirm(true);
+		this.getManagedBean().setConfirm(false);
 		log.info("cleanBudgetDisburse - End");
 	}
 	
@@ -299,6 +299,9 @@ public class BudgetDisbursementBackingBean extends BaseBackingBean<BudgetDisburs
 	public boolean verifyBudgetTran(BigDecimal newTranAllocAmt, BigDecimal oldTranAllocAmt,
 			BigDecimal budgetDtlUsedAmt, boolean isRemove){
 		log.info("verifyBudgetTran - Start");
+		if(this.getManagedBean().isConfirm()){
+			confirmUpdateBudgetDisburse();
+		}
 		PpBudget ppBudget = this.getManagedBean().getSelectedPpBudget();
 		BigDecimal bMapperFloatAmt = new BigDecimal(0);
 		BigDecimal btAllocAmt = new BigDecimal(0);
@@ -634,7 +637,7 @@ public class BudgetDisbursementBackingBean extends BaseBackingBean<BudgetDisburs
 					|| (this.getManagedBean().getSelectedPpBudget().getPpBudgetDtls()!=null && this.getManagedBean().getSelectedPpBudget().getPpBudgetDtls().isEmpty()) ){
 				
 				isValid = false;
-				invalidMsg = "GOSODO Disbursement Summary is empty.";
+				invalidMsg = "GOSO Disbursement Summary is empty.";
 				
 			}else{
 				//transaction is empty
@@ -642,7 +645,7 @@ public class BudgetDisbursementBackingBean extends BaseBackingBean<BudgetDisburs
 					if(ppBudgetDtl.getPpBudgetTrans()==null || (ppBudgetDtl.getPpBudgetTrans()!=null && ppBudgetDtl.getPpBudgetTrans().isEmpty())){
 						isValid = false;
 						System.out.println("2");
-						invalidMsg = "GOSODO Disbursement Transaction for SO: " + ppBudgetDtl.getPmSo().getSoCode() + " is empty.";
+						invalidMsg = "GOSO Disbursement Transaction for SO: " + ppBudgetDtl.getPmSo().getSoCode() + " is empty.";
 						break;
 						
 					}
@@ -651,7 +654,7 @@ public class BudgetDisbursementBackingBean extends BaseBackingBean<BudgetDisburs
 					//verify is required and invalid
 					if(this.getManagedBean().isVerifyRequired() && !this.getManagedBean().isVerify()){
 						isValid = false;
-						invalidMsg = "GOSODO Disbursement Transaction is invalid or yet to verify.";
+						invalidMsg = "GOSO Disbursement Transaction is invalid or yet to verify.";
 						System.out.println("3");
 						
 					}
@@ -659,7 +662,7 @@ public class BudgetDisbursementBackingBean extends BaseBackingBean<BudgetDisburs
 			}
 
 			if(isValid){
-				if(this.getManagedBean().isConfirm()){
+				if(!this.getManagedBean().isConfirm()){
 					confirmUpdateBudgetDisburse();
 				}
 				isSuccess = saveBudgetDisbursement();
@@ -684,14 +687,22 @@ public class BudgetDisbursementBackingBean extends BaseBackingBean<BudgetDisburs
 	 */
 	private void confirmUpdateBudgetDisburse(){
 		log.info("confirmUpdateBudgetAlloc - Start");
-		
-		this.getManagedBean().getSelectedPpBudget().setUsedAmt(
+		if(this.getManagedBean().isConfirm()){
+			this.getManagedBean().getSelectedPpBudget().setUsedAmt(
+					CommonMethod.substractBigDecimalNullable(
+							this.getManagedBean().getSelectedPpBudget().getUsedAmt(), 
+							this.getManagedBean().getSelectedPpBudget().getFloatingAllocAmt())
+							);
+			this.getManagedBean().setConfirm(false);
+		}else{
+			this.getManagedBean().getSelectedPpBudget().setUsedAmt(
 					CommonMethod.addBigDecimalNullable(
 							this.getManagedBean().getSelectedPpBudget().getUsedAmt(), 
 							this.getManagedBean().getSelectedPpBudget().getFloatingAllocAmt())
 							);
+			this.getManagedBean().setConfirm(true);
+		}
 		
-		this.getManagedBean().setConfirm(true);
 		log.info("confirmUpdateBudgetAlloc - End");
 	}
 	

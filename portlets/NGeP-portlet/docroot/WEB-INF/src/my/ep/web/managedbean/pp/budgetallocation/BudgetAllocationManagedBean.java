@@ -16,6 +16,8 @@ import my.ep.persistence.entity.pp.budgetallocation.PpBudget;
 import my.ep.persistence.entity.pp.budgetallocation.PpBudgetAlloc;
 import my.ep.persistence.entity.pp.budgetallocation.PpBudgetAllocDtl;
 import my.ep.persistence.entity.pp.budgetallocation.PpBudgetAllocOrg;
+import my.ep.web.bean.pp.BudgetAllocSearchBean;
+import my.ep.web.bean.pp.ProcurementPlanSearchBean;
 import my.ep.web.managedbean.BaseManagedBean;
 
 @ManagedBean(name = "budgetAllocManagedBean")
@@ -48,6 +50,8 @@ public class BudgetAllocationManagedBean extends BaseManagedBean{
 	private String loginUser;
 	
 	private boolean confirm;
+	
+	private BudgetAllocSearchBean budgetAllocSearchBean;
 	
 	/**
 	 * @return the amanahFlag
@@ -226,6 +230,24 @@ public class BudgetAllocationManagedBean extends BaseManagedBean{
 	public void setCurrentProfiles(List<PmOrgProfile> currentProfiles) {
 		this.currentProfiles = currentProfiles;
 	}
+
+	/**
+	 * @return the budgetAllocSearchBean
+	 */
+	public BudgetAllocSearchBean getBudgetAllocSearchBean() {
+		if(budgetAllocSearchBean==null)
+			budgetAllocSearchBean = new BudgetAllocSearchBean();
+		return budgetAllocSearchBean;
+	}
+
+	/**
+	 * @param budgetAllocSearchBean the budgetAllocSearchBean to set
+	 */
+	public void setBudgetAllocSearchBean(BudgetAllocSearchBean budgetAllocSearchBean) {
+		this.budgetAllocSearchBean = budgetAllocSearchBean;
+	}
+
+
 
 	
 }

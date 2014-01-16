@@ -151,6 +151,11 @@ public class ProcurementPlanConst {
 	public static final String PROG_PLAN = "plan";
 	public static final String PROG_BUDGET = "budget";
 	
+	
+	//Amanah type
+	public static final boolean WITH_VOT = false;
+	public static final boolean WITHOUT_VOT = true;
+	
 	//VOT type
 	public static final String VOT_P = "P";
 	public static final String VOT_B = "B";

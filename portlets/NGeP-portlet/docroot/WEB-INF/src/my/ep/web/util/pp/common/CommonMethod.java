@@ -206,11 +206,11 @@ public class CommonMethod {
 	/**
 	 * return default workflow status
 	 * @param docType
-	 * @return PpWorkflowStatus
+	 * @return PmStatus
 	 */
-	public static PpWorkflowStatus getDefaultStatus(String docType){
+	public static PmStatus getDefaultStatus(String docType){
 		log.info("getDefaultStatus");
-		PpWorkflowStatus ppWorkflowStatus = new PpWorkflowStatus();
+		PmStatus ppWorkflowStatus = new PmStatus();
 		if(ProcurementPlanConst.DOCTYPE_BUDGET_ALLOC.equals(docType)){
 			ppWorkflowStatus.setStatusId(ProcurementPlanConst.STATUS_PBA_PENDING_SUBMIT);
 		}else if(ProcurementPlanConst.DOCTYPE_BUDGET_ALLOC_DTL.equals(docType)){
@@ -265,28 +265,36 @@ public class CommonMethod {
 //	}
 //	
 	
+
 	/**
-	 * temp generate plan number 
+	 * auto generate doc number 
+	 * @param isPlan
+	 * @param isPlanned
 	 * @param planType
 	 * @param issueOrgProf
 	 * @return String
 	 */
-	public static String generatePlanNumber(boolean isPlanned, String planType, PmOrgProfile issueOrgProf){
+	public static String generateDocNumber(Boolean isPlan, Boolean isPlanned, String planType, PmOrgProfile issueOrgProf){
 		StringBuilder sb = new StringBuilder();
-		//plan prefix
-		if(isPlanned){
-			if(ProcurementPlanConst.PLAN_TYPE_EXPENDITURE.equals(planType)){
-				sb.append("pe");
+		if(isPlan){
+			//plan prefix
+			if(isPlanned){
+				if(ProcurementPlanConst.PLAN_TYPE_EXPENDITURE.equals(planType)){
+					sb.append("pe");
+				}else{
+					sb.append("pp");
+				}
 			}else{
-				sb.append("pp");
+				if(ProcurementPlanConst.PLAN_TYPE_EXPENDITURE.equals(planType)){
+					sb.append("ue");
+				}else{
+					sb.append("up");
+				}
 			}
 		}else{
-			if(ProcurementPlanConst.PLAN_TYPE_EXPENDITURE.equals(planType)){
-				sb.append("ue");
-			}else{
-				sb.append("up");
-			}
+			sb.append("ba");
 		}
+		
 		Calendar cal = Calendar.getInstance();
 		sb.append(cal.get(Calendar.YEAR));
 		sb.append(cal.get(Calendar.MONTH));
@@ -295,7 +303,7 @@ public class CommonMethod {
 		sb.append(cal.get(Calendar.MINUTE));
 		sb.append(cal.get(Calendar.SECOND));
 		sb.append(cal.get(Calendar.MILLISECOND));
-		System.out.println("plan number: " + sb.toString());
+		System.out.println("doc number: " + sb.toString());
 		return sb.toString();
 	}
 	
