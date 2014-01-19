@@ -76,97 +76,53 @@ public class SmApplicationBackingBean extends
 				.println("**** ENTER Create Application Type Of  *************"
 						+ applicationType + "Application type = >>"
 						+ getManagedBean().getSmAppl().getSupplierType());
-		IMofRegistrationSO mofRegistrationSO = null;
 
 		try {
-			mofRegistrationSO = (IMofRegistrationSO) BusinessDelegate
-					.getInstance().getServiceObject("sm",
-							IMofRegistrationSO.class);
 			MofRegistrationReqDTO reqDto = new MofRegistrationReqDTO();
+			cloneSmApplicationDraft((long) 27, applicationType);
 			MofRegistrationResDTO resDto = retriveSupplierById((long) 27);
 			SmSupplier smApplSupplier = resDto.getSmSupplier();
 
-			if (smApplSupplier == null) {
-				System.out.println(" ******* NO RECORD FOUND IN DB *****");
-				smApplSupplier = new SmSupplier();
-				// smApplSupplier.setSupplierName("My Sample Supplier");
-				smApplSupplier.setBusinessType("1");
-				smApplSupplier.setRegNo("12345");
-				smApplSupplier.setEstablishDate(new Date());
-				smApplSupplier.setWebSite("www.samplecompany.com");
-			}
 			System.out.println("Retrieved Value ==="
-					// + smApplSupplier.getSupplierName() + " ==== tax num == "
 					+ smApplSupplier.getIncomeTaxNo() + " === EST DATE ==== "
 					+ smApplSupplier.getEstablishDate());
-			System.out.println("******** SIZE ********** "
-					+ smApplSupplier.getSmAppls().size());
-			System.out.println("latest sm appl before save  ===== >>"
-					+ smApplSupplier.getSmAppls().get(0).getApplId());
-			SmAppl smAppl = resDto.getSmAppl();
-			// TO Use the private generate application num
-			if (applicationType.equalsIgnoreCase("N")) {
-				smAppl.setApplNo("KN-20102013-1111");
-			} else if (applicationType.equalsIgnoreCase("B")) {
-				smAppl.setApplNo("KB-25102013-2222");
-			} else if (applicationType.equalsIgnoreCase("U")) {
-				smAppl.setApplNo(" KU-28102013-3333");
-			} else if (applicationType.equalsIgnoreCase("A")) {
-				smAppl.setApplNo(" KA-28102013-4444");
-			} else if (applicationType.equalsIgnoreCase("R")) {
-				smAppl.setApplNo(" KR-31102013-5555");
-			} else if (applicationType.equalsIgnoreCase("C")) {
-				smAppl.setApplNo(" KC-01112013-6666");
-			} else {
-				smAppl.setApplNo("UNKNOWNAPPL");
+			SmAppl smAppl = new SmAppl();
+			if (!smApplSupplier.getSmAppls().isEmpty()) {
+				smAppl = smApplSupplier.getSmAppls().get(0);
+				System.out
+						.println("******** Latest Cloned Draft Copy is ******"
+								+ smAppl.getApplId());
 			}
-			smApplSupplier.setEstablishDate(new Date());
-			Calendar c = new GregorianCalendar();
-			c.add(Calendar.DATE, 60);
-			Date d = c.getTime();
-			smAppl.setDraftExpiryDate(d);
-			System.out.println("******* EXPIRY DATE ********" + d);
 
-			smAppl.setSmSupplier(smApplSupplier);
-			if (!applicationType.equalsIgnoreCase("N")) {
-				// mofRegAppl.setSmAddress(smAddress);
-				// 1- For Contractor, 2 - For Consultant
-				smAppl.setSupplierType("2");
-			} else {
-				smAppl.setSupplierType(getManagedBean().getSmAppl()
-						.getSupplierType());
-			}
-			smAppl.setApplType(applicationType);
+			
 			// TODO Set default not null values -- Start insert appl ---
 			// smAppl.getPmStatus().setStatusId(20001l);
 			// sm.setSmAddress(new SmAddress());
 			// SmAddress smAddress = setDefaultAddr();
 			// getManagedBean().getSmSupplier().setSmAppl(mofRegAppl);
 			// smAppl.setCreatedBy(1l);
-			if (smApplSupplier.getSmAppls().contains(smAppl)) {
-				System.out
-						.println(" *** Already existing record its a duplicate only update **** ");
-				smApplSupplier.getSmAppls().set(
-						smApplSupplier.getSmAppls().indexOf(smAppl), smAppl);
-			} else {
-				System.out
-						.println("****** INSERT A FRESH RECORD OF APPL TO SUUPPLIER ******** ");
-				smApplSupplier.getSmAppls().add(smAppl);
-			}
-			smAppl = defaultSmAppl(smAppl);
-			if (applicationType.equals("N") && !fromBpm) {
-				System.out
-						.println(" **** START INSERTING THE NEW APPLN FOR MOF REG ****");
-				reqDto.setSmSupplier(smApplSupplier);
-				MofRegistrationResDTO smResDTO = new MofRegistrationResDTO();
-				smResDTO = mofRegistrationSO.updateSupplierProfile(reqDto);
-				smApplSupplier = smResDTO.getSmSupplier();
-			}
+			// if (smApplSupplier.getSmAppls().contains(smAppl)) {
+			// System.out
+			// .println(" *** Already existing record its a duplicate only update **** ");
+			// smApplSupplier.getSmAppls().set(
+			// smApplSupplier.getSmAppls().indexOf(smAppl), smAppl);
+			// } else {
+			// System.out
+			// .println("****** INSERT A FRESH RECORD OF APPL TO SUUPPLIER ******** ");
+			// smApplSupplier.getSmAppls().add(smAppl);
+			// }
+			// smAppl = defaultSmAppl(smAppl);
 
-			System.out.println("****** AFTER SAVE NEW APPL ****"
-					+ smApplSupplier.getSmAppls().size());
-			System.out.println("latest sm appl after save  ===== >>"
-					+ smApplSupplier.getSmAppls().get(0).getApplId());
+			// if (applicationType.equals("N") && !fromBpm) {
+			// System.out
+			// .println(" **** START INSERTING THE NEW APPLN FOR MOF REG ****");
+			// reqDto.setSmSupplier(smApplSupplier);
+			// MofRegistrationResDTO smResDTO = new MofRegistrationResDTO();
+			// smResDTO = mofRegistrationSO.updateSupplierProfile(reqDto);
+			// smApplSupplier = smResDTO.getSmSupplier();
+			// }
+
+			
 			getManagedBean().setSmSupplier(smApplSupplier);
 			// TODO Set default not null values -- End insert appl ---
 			// TODo Remove hard code later
@@ -180,7 +136,7 @@ public class SmApplicationBackingBean extends
 			}
 
 			smAppl.setSmStaffTotals(getStaffList(smAppl.getSupplierType()));
-			smAppl.setCurrentActiveTab(0);
+			
 			getManagedBean().setSmAppl(smAppl);
 			getManagedBean().setTabActiveIndex(0);
 			getManagedBean().setOfficeFacility(new SmFacility());
@@ -232,7 +188,7 @@ public class SmApplicationBackingBean extends
 			}
 
 		} finally {
-			mofRegistrationSO = null;
+			// mofRegistrationSO = null;
 		}
 	}
 
@@ -1525,6 +1481,28 @@ public class SmApplicationBackingBean extends
 		}
 
 		return appl;
+	}
+
+	private MofRegistrationResDTO cloneSmApplicationDraft(long id,
+			String applicationType) {
+		IMofRegistrationSO mofRegistrationSO = null;
+
+		try {
+			mofRegistrationSO = (IMofRegistrationSO) BusinessDelegate
+					.getInstance().getServiceObject("sm",
+							IMofRegistrationSO.class);
+			MofRegistrationReqDTO reqDto = new MofRegistrationReqDTO();
+			reqDto.setSupplierId(id);
+			reqDto.setAppType(applicationType);
+			MofRegistrationResDTO resDTO = mofRegistrationSO
+					.cloneSmApplicationDraft(reqDto);
+			return resDTO;
+
+		} catch (Exception e) {
+			return new MofRegistrationResDTO();
+		} finally {
+
+		}
 	}
 
 	private MofRegistrationResDTO retriveSupplierById(long id) {
