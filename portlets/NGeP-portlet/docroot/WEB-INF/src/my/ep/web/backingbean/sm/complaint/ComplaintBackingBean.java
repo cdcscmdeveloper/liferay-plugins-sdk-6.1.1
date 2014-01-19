@@ -39,11 +39,11 @@ public class ComplaintBackingBean extends BaseBackingBean<ComplaintManagedBean> 
 			this.getManagedBean().setSmComplaint(new SmComplaint());
 //			this.getManagedBean().getSmComplaint()
 //					.setSmComplainant(new SmComplainant());
-			this.getManagedBean().setComplType(new HashMap<String, String>());
+/*			this.getManagedBean().setComplType(new HashMap<String, String>());
 			this.getManagedBean().getComplType().put("R","Breach the obligation of registration");
 			this.getManagedBean().getComplType().put("T","Breach the obligation of Tender/ Contract");
 			this.getManagedBean().getComplType().put("C","Criminal or Civil Offenses");
-			this.getManagedBean().getComplType().put("O","Others");
+			this.getManagedBean().getComplType().put("O","Others");*/
 			//log.info("-----------Complaint Type----------------" + this.getManagedBean().getComplType().size());
 			// this.getManagedBean().setPmCity(new PmCity());
 			// this.getManagedBean().setPmCountry(new PmCountry());
