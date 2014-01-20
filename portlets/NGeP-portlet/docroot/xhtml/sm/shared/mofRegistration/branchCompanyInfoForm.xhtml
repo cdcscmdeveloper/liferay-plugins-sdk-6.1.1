@@ -47,7 +47,7 @@
 			<p:dataTable var="branchBean" id="dt"
 				value="#{backingBean.managedBean.smAppl.smSupplierBranches}"
 				selection="#{backingBean.managedBean.selectedBranches}"
-				rowKey="#{branchBean.supplierBranchId}" rowIndexVar="index">
+				rowKey="#{branchBean}" rowIndexVar="index">
 				<ac:paginator for="dt" />
 
 				<p:column selectionMode="multiple" width="5%" />

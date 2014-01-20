@@ -48,8 +48,7 @@
 			<p:dataTable var="assocBean"
 				value="#{backingBean.managedBean.smAppl.smAssociateCompanies}"
 				selection="#{backingBean.managedBean.selectedAssocCompanies}"
-				rowKey="#{assocBean.associateCompanyId}" rowIndexVar="index"
-				id="asoc">
+				rowKey="#{assocBean}" rowIndexVar="index" id="asoc">
 				<ac:paginator for="asoc" />
 
 				<p:column selectionMode="multiple" width="5%" />
