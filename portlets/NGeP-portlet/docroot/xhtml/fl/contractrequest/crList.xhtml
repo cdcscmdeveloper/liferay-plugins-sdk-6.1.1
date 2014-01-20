@@ -11,8 +11,6 @@
 	<ui:define name="resourceSection">
 	</ui:define>
 	<ui:define name="contentSection">
-		<p:tabView id="tabView">
-			<p:tab id="tab1" title="Contract List">
 					<p:dataTable id="contractListTable" var="data" lazy="true"
 						value="#{contractRequestBackingBean.activeContractPagingDataModel}" >
 						<ac:paginator for="contractListTable" />
@@ -65,7 +63,5 @@
 					</p:dataTable>
 					<p:remoteCommand name="procure"
 						action="#{contractRequestBackingBean.procureContract}" />
-			</p:tab>
-		</p:tabView>
 	</ui:define>
 </ui:composition>
