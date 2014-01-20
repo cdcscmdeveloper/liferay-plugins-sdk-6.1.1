@@ -14,7 +14,8 @@
 						value="#{purchaseRequestBackingBean.managedBean.fulfilmentRequest.issuedOrgProfile.parentOrgProfile.parentOrgProfile.orgName}"
 						disabled="true" /></td>
 				<td><p:outputLabel value="#{lbl['lbl.fl.purchase.request.no']}" /></td>
-				<td><p:inputText size="20" disabled="true" value="#{purchaseRequestBackingBean.managedBean.fulfilmentRequest.docNo}"/></td>
+				<td><p:inputText size="20" disabled="true"
+						value="#{purchaseRequestBackingBean.managedBean.fulfilmentRequest.docNo}" /></td>
 			</tr>
 			<tr>
 				<td><p:outputLabel value="* #{lbl['lbl.fl.issued.jabatan']}" /></td>
@@ -41,7 +42,8 @@
 			</tr>
 			<tr>
 				<td><p:outputLabel value="* #{lbl['lbl.fl.received.jabatan']}" /></td>
-				<td><p:inputText size="35" disabled="true" id="receivedJabatan" value="#{purchaseRequestBackingBean.managedBean.fulfilmentRequest.receivedOrgProfile.parentOrgProfile.orgName}"/></td>
+				<td><p:inputText size="35" disabled="true" id="receivedJabatan"
+						value="#{purchaseRequestBackingBean.managedBean.fulfilmentRequest.receivedOrgProfile.parentOrgProfile.orgName}" /></td>
 				<td><p:outputLabel value="#{lbl['lbl.fl.procurement.type']}" /></td>
 				<td><p:inputText size="35"
 						value="#{purchaseRequestBackingBean.managedBean.fulfilmentRequest.procurementType.codeId}"
@@ -49,10 +51,14 @@
 			</tr>
 			<tr>
 				<td><p:outputLabel value="* #{lbl['lbl.fl.received.ptj']}" /></td>
-				<td><p:selectOneMenu value="#{purchaseRequestBackingBean.managedBean.fulfilmentRequest.receivedOrgProfile.orgProfileId}" style="width: 207px;">
-					<f:selectItems value="#{purchaseRequestBackingBean.receivedPTJList}"></f:selectItems>
-					<p:ajax event="change" update="receivedJabatan" listener="#{purchaseRequestBackingBean.updateReceivedJabatan}"></p:ajax>
-				</p:selectOneMenu></td>
+				<td><p:selectOneMenu
+						value="#{purchaseRequestBackingBean.managedBean.fulfilmentRequest.receivedOrgProfile.orgProfileId}"
+						style="width: 207px;">
+						<f:selectItems
+							value="#{purchaseRequestBackingBean.receivedPTJList}"></f:selectItems>
+						<p:ajax event="change" update="receivedJabatan"
+							listener="#{purchaseRequestBackingBean.updateReceivedJabatan}"></p:ajax>
+					</p:selectOneMenu></td>
 				<td><p:outputLabel value="* #{lbl['lbl.fl.financial.year']}" /></td>
 				<td><p:inputText size="20"
 						value="#{purchaseRequestBackingBean.managedBean.fulfilmentRequest.financialYear}" />
@@ -93,10 +99,11 @@
 			</tr>
 			<tr>
 				<td><p:outputLabel value="#{lbl['lbl.fl.creation.date']}" /></td>
-				<td><p:inputText size="20" disabled="true" value="#{purchaseRequestBackingBean.managedBean.fulfilmentRequest.createdDate}"/></td>
+				<td><p:inputText size="20" disabled="true"
+						value="#{purchaseRequestBackingBean.managedBean.fulfilmentRequest.createdDate}" /></td>
 				<td><p:outputLabel value="#{lbl['lbl.fl.status']}" /></td>
-				<td><p:inputText size="20" disabled="true"  value="#{purchaseRequestBackingBean.managedBean.fulfilmentRequest.status}"/>
-				<p:inputText size="20" disabled="true" value="#{purchaseRequestBackingBean.getStatusDescById(purchaseRequestBackingBean.managedBean.fulfilmentRequest.status.statusId)}"/>
+				<td><p:inputText size="20" disabled="true"
+						value="#{purchaseRequestBackingBean.getStatusDescById(purchaseRequestBackingBean.managedBean.fulfilmentRequest.status.statusId)}" />
 				</td>
 			</tr>
 		</table>
@@ -118,21 +125,25 @@
 			</tr>
 			<tr>
 				<td><p:outputLabel value="#{lbl['lbl.fl.supp.name']}" /></td>
-				<td><p:inputText disabled="true" size="35" value="#{purchaseRequestBackingBean.managedBean.fulfilmentRequest.supplierBranch.branchName}"/></td>
+				<td><p:inputText disabled="true" size="35"
+						value="#{purchaseRequestBackingBean.managedBean.fulfilmentRequest.supplierBranch.branchName}" /></td>
 			</tr>
 			<tr>
 				<td valign="top"><p:outputLabel
 						value="#{lbl['lbl.fl.supp.address']}" /></td>
 				<td><p:inputTextarea cols="36" style="margin-bottom:5px;"
-						disabled="true"  value="#{purchaseRequestBackingBean.managedBean.supplierAddress}" /></td>
+						disabled="true"
+						value="#{purchaseRequestBackingBean.managedBean.supplierAddress}" /></td>
 			</tr>
 			<tr>
 				<td><p:outputLabel value="#{lbl['lbl.fl.supp.email']}" /></td>
-				<td><p:inputText disabled="true" size="35" value="#{purchaseRequestBackingBean.managedBean.fulfilmentRequest.supplierBranch.phoneNo}"/></td>
+				<td><p:inputText disabled="true" size="35"
+						value="#{purchaseRequestBackingBean.managedBean.fulfilmentRequest.supplierBranch.phoneNo}" /></td>
 			</tr>
 			<tr>
 				<td><p:outputLabel value="#{lbl['lbl.fl.supp.telno']}" /></td>
-				<td><p:inputText disabled="true" size="20" value="#{purchaseRequestBackingBean.managedBean.fulfilmentRequest.supplierBranch.phoneNo}"/></td>
+				<td><p:inputText disabled="true" size="20"
+						value="#{purchaseRequestBackingBean.managedBean.fulfilmentRequest.supplierBranch.phoneNo}" /></td>
 			</tr>
 		</table>
 	</p:panel>
