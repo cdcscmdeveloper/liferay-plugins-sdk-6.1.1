@@ -48,7 +48,7 @@
 				<tr>
 					<td width="127px;"><p:outputLabel value="Ownership Type" /></td>
 					<td colspan="3" style="padding-bottom: 2px;"><p:selectOneRadio
-							value="#{backingBean.managedBean.officeFacility.ownershipType}">
+							value="#{backingBean.managedBean.smAppl.smFacilities[0].ownershipType}">
 							<f:selectItem itemLabel="Owned" itemValue="O" />
 							<f:selectItem itemLabel="Rented" itemValue="R" />
 							<p:ajax update="ofp" event="change"
@@ -58,12 +58,12 @@
 				</tr>
 			</table>
 			<ui:fragment
-				rendered="#{backingBean.managedBean.officeFacility.ownershipType eq 'R'}">
+				rendered="#{backingBean.managedBean.smAppl.smFacilities[0].ownershipType eq 'R'}">
 				<table style="width: 100%">
 					<tr>
 						<td width="127px;"><p:outputLabel value="Facility Type" /></td>
 						<td colspan="3" style="padding-bottom: 4px;"><p:selectOneRadio
-								value="#{backingBean.managedBean.officeFacility.facilityType}">
+								value="#{backingBean.managedBean.smAppl.smFacilities[0].facilityType}">
 								<f:selectItem itemLabel="Home Office" itemValue="H" />
 								<f:selectItem itemLabel="Business Office" itemValue="B" />
 
@@ -73,28 +73,32 @@
 					<tr>
 						<td><p:outputLabel value="* Landlord's Name" /></td>
 						<td><p:inputText
-								value="#{backingBean.managedBean.officeFacility.ownerName}"
+								value="#{backingBean.managedBean.smAppl.smFacilities[0].ownerName}"
 								size="35" /></td>
 						<td><p:outputLabel value="* Monthly Rental (RM.)" /></td>
 						<td><p:inputText
-								value="#{backingBean.managedBean.officeFacility.rentalRate}"
+								value="#{backingBean.managedBean.smAppl.smFacilities[0].rentalRate}"
 								size="35" /></td>
 					</tr>
 					<tr>
 						<td><p:outputLabel value="#{lbl['lbl.sm.companyaddress']}" /></td>
-						<td><p:inputText size="35" colspan="3" /></td>
+						<td><p:inputText size="35" colspan="3"
+								value="#{backingBean.managedBean.smAppl.smFacilities[0].smAddress.address1}" /></td>
 					</tr>
 					<tr>
 						<td></td>
-						<td><p:inputText size="35" colspan="3" /></td>
+						<td><p:inputText size="35" colspan="3"
+								value="#{backingBean.managedBean.smAppl.smFacilities[0].smAddress.address2}" /></td>
 					</tr>
 					<tr>
 						<td></td>
-						<td><p:inputText size="35" colspan="3" /></td>
+						<td><p:inputText size="35" colspan="3"
+								value="#{backingBean.managedBean.smAppl.smFacilities[0].smAddress.address3}" /></td>
 					</tr>
 					<tr>
 						<td><p:outputLabel value="#{lbl['lbl.sm.postcode']}" /></td>
-						<td><p:inputText size="35" /></td>
+						<td><p:inputText size="35"
+								value="#{backingBean.managedBean.smAppl.smFacilities[0].smAddress.postCode}" /></td>
 						<td><p:outputLabel value="#{lbl['lbl.sm.state']}" /></td>
 						<td><p:inputText size="35" readonly="true" disabled="true" /></td>
 					</tr>
@@ -128,12 +132,12 @@
 				</table>
 			</ui:fragment>
 			<ui:fragment
-				rendered="#{backingBean.managedBean.officeFacility.ownershipType eq 'O'}">
+				rendered="#{backingBean.managedBean.smAppl.smFacilities[0].ownershipType eq 'O'}">
 				<table style="width: 100%">
 					<tr>
 						<td width="127px;"><p:outputLabel value="Facility Type" /></td>
 						<td colspan="3" style="padding-bottom: 4px;"><p:selectOneRadio
-								value="#{backingBean.managedBean.officeFacility.facilityType}">
+								value="#{backingBean.managedBean.smAppl.smFacilities[0].facilityType}">
 								<f:selectItem itemLabel="Home Office" itemValue="H" />
 								<f:selectItem itemLabel="Business Office" itemValue="B" />
 
@@ -143,20 +147,20 @@
 					<tr>
 						<td width="127px;"><p:outputLabel value="* Owner Name" /></td>
 						<td colspan="3"><p:inputText
-								value="#{backingBean.managedBean.officeFacility.ownerName}"
+								value="#{backingBean.managedBean.smAppl.smFacilities[0].ownerName}"
 								size="35" /></td>
 					</tr>
 					<tr>
 						<td width="127px;"><p:outputLabel value="* Purchase Date" /></td>
 						<td colspan="3"><p:calendar showOn="button"
-								value="#{backingBean.managedBean.officeFacility.purchaseDate}"
+								value="#{backingBean.managedBean.smAppl.smFacilities[0].purchaseDate}"
 								style="margin-bottom:5px;" /></td>
 					</tr>
 					<tr>
 						<td width="127px;"><p:outputLabel
 								value="* Purchase Price (RM.)" /></td>
 						<td colspan="3"><p:inputText size="35"
-								value="#{backingBean.managedBean.officeFacility.purchasePrice}" />
+								value="#{backingBean.managedBean.smAppl.smFacilities[0].purchasePrice}" />
 						</td>
 
 					</tr>

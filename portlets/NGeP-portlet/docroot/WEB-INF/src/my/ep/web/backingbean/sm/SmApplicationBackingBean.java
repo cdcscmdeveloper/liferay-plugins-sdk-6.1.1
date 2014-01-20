@@ -79,8 +79,18 @@ public class SmApplicationBackingBean extends
 
 		try {
 			MofRegistrationReqDTO reqDto = new MofRegistrationReqDTO();
-			cloneSmApplicationDraft((long) 27, applicationType);
-			MofRegistrationResDTO resDto = retriveSupplierById((long) 27);
+			MofRegistrationResDTO resDto = new MofRegistrationResDTO();
+			if (!fromBpm) {
+				resDto = cloneSmApplicationDraft((long) 27, applicationType);
+				if (resDto.isErrorCaued()) {
+					return setExceptionNavigationForAppl(applicationType);
+
+				}
+			}
+			resDto = retriveSupplierById((long) 27);
+			if (resDto.isErrorCaued()) {
+				return setExceptionNavigationForAppl(applicationType);
+			}
 			SmSupplier smApplSupplier = resDto.getSmSupplier();
 
 			System.out.println("Retrieved Value ==="
@@ -94,7 +104,6 @@ public class SmApplicationBackingBean extends
 								+ smAppl.getApplId());
 			}
 
-			
 			// TODO Set default not null values -- Start insert appl ---
 			// smAppl.getPmStatus().setStatusId(20001l);
 			// sm.setSmAddress(new SmAddress());
@@ -122,7 +131,6 @@ public class SmApplicationBackingBean extends
 			// smApplSupplier = smResDTO.getSmSupplier();
 			// }
 
-			
 			getManagedBean().setSmSupplier(smApplSupplier);
 			// TODO Set default not null values -- End insert appl ---
 			// TODo Remove hard code later
@@ -136,7 +144,15 @@ public class SmApplicationBackingBean extends
 			}
 
 			smAppl.setSmStaffTotals(getStaffList(smAppl.getSupplierType()));
-			
+			if (smAppl.getSmFacilities().isEmpty()) {
+				SmFacility fac = new SmFacility();
+				SmAddress addr = new SmAddress();
+				fac.setSmAppl(smAppl);
+				// fac.setSmAddress(addr);
+				smAppl.getSmFacilities().add(fac);
+			} else {
+				// TODO
+			}
 			getManagedBean().setSmAppl(smAppl);
 			getManagedBean().setTabActiveIndex(0);
 			getManagedBean().setOfficeFacility(new SmFacility());
@@ -171,22 +187,7 @@ public class SmApplicationBackingBean extends
 		} catch (Exception e) {
 			System.out.println(" **** Unknown Expection ******* ");
 			e.printStackTrace();
-			if (applicationType.equalsIgnoreCase("B")) {
-				return SupplierManagementConst.DEFAULT_BUMI_APPLN;
-			} else if (applicationType.equalsIgnoreCase("N")) {
-				return SupplierManagementConst.DEFAULT_MOF_REG;
-			} else if (applicationType.equalsIgnoreCase("U")) {
-				return SupplierManagementConst.DEFAULT_UPDATE_MOF_APPLN;
-			} else if (applicationType.equalsIgnoreCase("A")) {
-				return SupplierManagementConst.DEFAULT_ADDTNLCAT_MOF_APPLN;
-			} else if (applicationType.equalsIgnoreCase("R")) {
-				return SupplierManagementConst.DEFAULT_RENEW_MOF_APPLN;
-			} else if (applicationType.equalsIgnoreCase("C")) {
-				return SupplierManagementConst.DEFAULT_CANCEL_MOF_APPLN;
-			} else {
-				return null;
-			}
-
+			return setExceptionNavigationForAppl(applicationType);
 		} finally {
 			// mofRegistrationSO = null;
 		}
@@ -1499,9 +1500,12 @@ public class SmApplicationBackingBean extends
 			return resDTO;
 
 		} catch (Exception e) {
-			return new MofRegistrationResDTO();
+			System.out.println("**** THIS IS THE EXCEPTION IN CLONE APPL ****");
+			MofRegistrationResDTO resDTO = new MofRegistrationResDTO();
+			resDTO.setErrorCaued(Boolean.TRUE);
+			return resDTO;
 		} finally {
-
+			mofRegistrationSO = null;
 		}
 	}
 
@@ -1519,9 +1523,13 @@ public class SmApplicationBackingBean extends
 			return resDTO;
 
 		} catch (Exception e) {
-			return new MofRegistrationResDTO();
+			System.out
+					.println("**** THIS IS THE EXCEPTION IN RETRIVE LIST ****");
+			MofRegistrationResDTO resDTO = new MofRegistrationResDTO();
+			resDTO.setErrorCaued(Boolean.TRUE);
+			return resDTO;
 		} finally {
-
+			mofRegistrationSO = null;
 		}
 	}
 
@@ -1577,6 +1585,34 @@ public class SmApplicationBackingBean extends
 			break;
 		case "C":
 			s = SupplierManagementConst.PROCEED_CANCEL_MOF_APPLN;
+			break;
+		default:
+			break;
+
+		}
+		return s;
+	}
+
+	private String setExceptionNavigationForAppl(String appType) {
+		String s = null;
+		switch (appType) {
+		case "N":
+			s = SupplierManagementConst.DEFAULT_MOF_REG;
+			break;
+		case "A":
+			s = SupplierManagementConst.DEFAULT_ADDTNLCAT_MOF_APPLN;
+			break;
+		case "B":
+			s = SupplierManagementConst.DEFAULT_BUMI_APPLN;
+			break;
+		case "U":
+			s = SupplierManagementConst.DEFAULT_UPDATE_MOF_APPLN;
+			break;
+		case "R":
+			s = SupplierManagementConst.DEFAULT_RENEW_MOF_APPLN;
+			break;
+		case "C":
+			s = SupplierManagementConst.DEFAULT_CANCEL_MOF_APPLN;
 			break;
 		default:
 			break;
