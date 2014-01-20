@@ -50,6 +50,7 @@ public class AmendmentManagedBean extends BaseManagedBean {
 	
 	private List<CtRemark> remarkList;
 	private List<CtAttachment> attachmentList;
+	private double secondValue =0.0;
 	
 	public CtContractVer getContractVer() {
 		return contractVer;
@@ -116,6 +117,8 @@ public class AmendmentManagedBean extends BaseManagedBean {
 	}
 
 	public List<CtRemark> getRemarkList() {
+		if(remarkList == null)
+			remarkList = new ArrayList<CtRemark>();
 		return remarkList;
 	}
 
@@ -124,6 +127,9 @@ public class AmendmentManagedBean extends BaseManagedBean {
 	}
 
 	public List<CtAttachment> getAttachmentList() {
+		if(attachmentList == null){
+			attachmentList = new ArrayList<CtAttachment>();		
+		}
 		return attachmentList;
 	}
 
@@ -196,5 +202,13 @@ public class AmendmentManagedBean extends BaseManagedBean {
 	public void setItemPriceList(List<CtItemPrice> itemPriceList) {
 		this.itemPriceList = itemPriceList;
 	}
-	
+
+	public double getSecondValue() {
+		return secondValue;
+	}
+
+	public void setSecondValue(double secondValue) {
+		this.secondValue = secondValue;
+	}
+
 }

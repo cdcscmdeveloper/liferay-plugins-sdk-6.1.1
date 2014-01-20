@@ -10,40 +10,33 @@
 	  <style>
       .column-align-center { text-align: center !important;}
     </style> 
-	
-	<c:if test='#{contractDetailsBackingBean.managedBean.chkRenderPage eq  "BPM"}'>
-     <f:event listener="#{contractDetailsBackingBean.preRenderView}" type="preRenderView" />
-	</c:if>
-	 <p:panel rendered="#{contractDetailsBackingBean.managedBean.amendAckw}">
+     <f:event listener="#{amendmentBackingBean.preRenderView}" type="preRenderView" />
+	 <p:panel rendered="#{amendmentBackingBean.managedBean.amendAckw}">
 	  <p:messages id="messages" showDetail="true" autoUpdate="true" closable="true" severity="error,info" />
 	 <div class="ppRightBtn"> 
-	     <ui:repeat var="outcome" value="#{contractDetailsBackingBean.managedBean.action}">
-			<p:commandButton value="#{outcome}" process="@this"  action="#{contractDetailsBackingBean.saveContract(outcome)}" />
+	     <ui:repeat var="outcome" value="#{amendmentBackingBean.managedBean.action}">
+			<p:commandButton value="#{outcome}" process="@form"  action="#{amendmentBackingBean.saveContractAmendment(outcome)}" />
 		 </ui:repeat>		
     </div>
 	</p:panel>
 	<p:tabView id="tabview" value="Termination" dynamic="true" orientation="left" >
 	   <p:tab title="#{lbl['lbl.ct.menu.fd']}" >
-	     <ui:include src="/xhtml/ct/fulfilmentdetails/shared/fulfilment.xhtml"/>
-	     <ui:include src="/xhtml/ct/fulfilmentdetails/shared/quotationTender.xhtml" />
-         <ui:include src="/xhtml/ct/fulfilmentdetails/amendment/amendment.xhtml"/>
-         <ui:include src="/xhtml/ct/fulfilmentdetails/shared/supplier.xhtml"/>                                     
+	     <ui:include src="contractDetails.xhtml"/>
+	     <ui:include src="amendment.xhtml"/>
+         <ui:include src="/xhtml/ct/shared/remarkAndAttachment.xhtml"/>                                     
       </p:tab>
-       <p:tab title="Meeting Details" rendered="#{contractDetailsBackingBean.managedBean.amendDisable}">
+       <p:tab title="Meeting Details" rendered="#{amendmentBackingBean.managedBean.amendDisable}">
          <ui:include src="meeting.xhtml"/>
        </p:tab>  
-        <p:tab title="Approval Letter" rendered="#{contractDetailsBackingBean.managedBean.approvrLetter}">
+        <p:tab title="Approval Letter" rendered="#{amendmentBackingBean.managedBean.approvrLetter}">
          <ui:include src="approvalLetter.xhtml"/>
        </p:tab>  
        <p:tab title="#{lbl['lbl.ct.menu.agency']}" >
-         <ui:include src="/xhtml/ct/fulfilmentdetails/shared/agency.xhtml"/>
+         <ui:include src="agency.xhtml"/>
        </p:tab> 
 	   <p:tab title="#{lbl['lbl.ct.menu.item']}">
-         <ui:include src="/xhtml/ct/fulfilmentdetails/amendment/item.xhtml"/>
+         <ui:include src="item.xhtml"/>
        </p:tab>  
-     <p:tab title="#{lbl['lbl.ct.menu.remark']}">
-         <ui:include src="/xhtml/ct/shared/remarkAndAttachment.xhtml" />   
-     </p:tab> 
 	</p:tabView>
    </ui:define>  
 </ui:composition>

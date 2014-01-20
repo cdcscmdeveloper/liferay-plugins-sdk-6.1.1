@@ -102,12 +102,17 @@
 
 		 <p:outputLabel value="#{lbl['lbl.ct.amend.txt.avalue']}" 
 		   rendered="#{amendmentBackingBean.managedBean.contractVer.ctAmendment.valueChange}" />
-		 <p:inputText style="width:150px;" 
-		     rendered="#{amendmentBackingBean.managedBean.contractVer.ctAmendment.valueChange}" />
+		 <p:inputText style="width:150px;" value="#{amendmentBackingBean.managedBean.contractVer.ctContractValue.additionalAmount}"
+		     rendered="#{amendmentBackingBean.managedBean.contractVer.ctAmendment.valueChange}" styleClass="ppRightBtn">    
+		       <f:convertNumber pattern="#,###.00" />
+		         <p:ajax event="blur" update="addValue" process="@this" listener="#{amendmentBackingBean.addContractValue}" /> 
+		  
+		  </p:inputText>
 		 <p:outputLabel value="New Contract Value"
 		    rendered="#{amendmentBackingBean.managedBean.contractVer.ctAmendment.valueChange}" />
-		 <p:inputText style="width:150px;" disabled="true" 
-		   rendered="#{amendmentBackingBean.managedBean.contractVer.ctAmendment.valueChange}" />
+		 <p:inputText id="addValue" value="#{amendmentBackingBean.managedBean.contractVer.ctContractValue.contractAmount}" styleClass="ppRightBtn"
+		   rendered="#{amendmentBackingBean.managedBean.contractVer.ctAmendment.valueChange}" style="width:150px;" disabled="true">
+		   <f:convertNumber pattern="#,###.00" /></p:inputText>
 		 
 	   </h:panelGrid>
 	   <h:panelGrid columns="2" style="width:100%"

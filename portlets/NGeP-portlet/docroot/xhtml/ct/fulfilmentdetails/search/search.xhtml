@@ -72,7 +72,7 @@
 		   </p:columnGroup>
 		     <p:column> <h:outputText value="#{data.contractName}" /></p:column>
 			 <p:column><h:outputText value="#{data.circular.latestCircularVer.circularNo}" /></p:column>	
-			 <p:column><h:outputText value="#{data.smSupplier.supplierName}" /></p:column>					
+			 <p:column><h:outputText value="#{data.smSupplier.smAppl.smCompanyBasic.companyName}" /></p:column>					
 			 <p:column><h:outputText value="#{data.latestContractVer.ctContractValue.effDate}">
 			           <f:convertDateTime pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}" /></h:outputText> </p:column>	
 			 <p:column><h:outputText value="#{data.latestContractVer.ctContractValue.expDate}">
