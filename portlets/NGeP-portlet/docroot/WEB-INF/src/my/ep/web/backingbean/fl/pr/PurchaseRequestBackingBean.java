@@ -20,9 +20,11 @@ import my.ep.biz.service.ct.maintain.IContractAmendmentSO;
 import my.ep.biz.service.fl.request.IFulfilmentRequestSO;
 import my.ep.biz.service.pm.authorization.orgprofile.IOrgProfileSO;
 import my.ep.biz.service.pm.authorization.user.IUserSO;
+import my.ep.biz.service.pm.common.address.IAddressSO;
 import my.ep.biz.service.pm.common.maksud.IMaksudSO;
 import my.ep.biz.service.pm.common.object.IObjectSO;
 import my.ep.biz.service.pm.common.parameter.IParameterSO;
+import my.ep.biz.service.ss.directpurchase.IPurchaseRequestSO;
 import my.ep.biz.service.ss.directpurchase.IRequestNoteSO;
 import my.ep.bpm.dto.BpmRequestDTO;
 import my.ep.bpm.dto.BpmResponseDTO;
@@ -35,23 +37,27 @@ import my.ep.dto.pm.authorization.orgprofile.OrgProfileReqDTO;
 import my.ep.dto.pm.authorization.orgprofile.OrgProfileResDTO;
 import my.ep.dto.pm.authorization.user.UserReqDTO;
 import my.ep.dto.pm.authorization.user.UserResDTO;
+import my.ep.dto.pm.common.address.AddressReqDTO;
+import my.ep.dto.pm.common.address.AddressResDTO;
 import my.ep.dto.pm.common.maksud.MaksudReqDTO;
 import my.ep.dto.pm.common.maksud.MaksudResDTO;
 import my.ep.dto.pm.common.object.ObjectReqDTO;
 import my.ep.dto.pm.common.object.ObjectResDTO;
 import my.ep.dto.pm.common.parameter.ParameterReqDTO;
 import my.ep.dto.pm.common.parameter.ParameterResDTO;
+import my.ep.dto.ss.directpurchase.PurchaseRequestReqDTO;
+import my.ep.dto.ss.directpurchase.PurchaseRequestResDTO;
 import my.ep.dto.ss.directpurchase.RequestNoteReqDTO;
 import my.ep.dto.ss.directpurchase.RequestNoteResDTO;
 import my.ep.exception.EpException;
 import my.ep.jaxb.fl.podata.FLPurchaseOrderDataType;
 import my.ep.persistence.entity.ct.CtContract;
-import my.ep.persistence.entity.ct.CtContractVer;
-import my.ep.persistence.entity.ct.dtl.CtAgency;
+import my.ep.persistence.entity.ct.dtl.CtAgencyAddress;
 import my.ep.persistence.entity.fl.request.FlDeliveryAddress;
 import my.ep.persistence.entity.fl.request.FlFulfilmentItem;
 import my.ep.persistence.entity.fl.request.FlFulfilmentItemAddr;
 import my.ep.persistence.entity.fl.request.FlFulfilmentRequest;
+import my.ep.persistence.entity.pm.authorization.PmOrgAddress;
 import my.ep.persistence.entity.pm.authorization.PmOrgProfile;
 import my.ep.persistence.entity.pm.authorization.PmUser;
 import my.ep.persistence.entity.pm.authorization.PmUserGroup;
@@ -195,24 +201,27 @@ public class PurchaseRequestBackingBean extends BaseBackingBean<PurchaseRequestM
 	}
 
 	public void updateDeliveryAddrDt() {
-		for (PmAddressType addrType : getManagedBean().getSelectedPmAddrTypeList()) {
+		for (PmOrgAddress addrType : getManagedBean().getSelectedPmDelAddrList()	) {
 			FlDeliveryAddress deliveryAddr = new FlDeliveryAddress();
 			deliveryAddr.setFlFulfilmentRequest(getManagedBean().getFulfilmentRequest());
-			deliveryAddr.setAddressType(addrType);
-			// deliveryAddr.setDeliveryAddressId(addrType.getAddressTypeId());
+			PmAddressType addressType=new PmAddressType();
+			addressType.setAddressType(addrType.getAddressType());
+			addressType.setPmAddress(addrType.getPmAddress());
+			deliveryAddr.setAddressType(addressType);
 			getManagedBean().getFulfilmentRequest().getFlDeliveryAddresses().add(deliveryAddr);
-
 		}
 	}
 
 	public void flDeliveryAddrList() {
-		ContractAmendmentReqDTO ctReqDTO = new ContractAmendmentReqDTO();
-		ctReqDTO.setOrgProfileId(4L);
-		ctReqDTO.setCtContract(getManagedBean().getCtContract());
-		IContractAmendmentSO ctAmendmentSO = (IContractAmendmentSO) BusinessDelegate.getInstance().getServiceObject("ct",IContractAmendmentSO.class);
-		ContractAmendmentResDTO resDTO = ctAmendmentSO.getActiveLocation(ctReqDTO);
-		//System.out.println("Size Of List ::: "	+ resDTO.getAddressTypeList().size());
-		//getManagedBean().setAddressTypesList(resDTO.getAddressTypeList());
+		AddressReqDTO reqDTO = new AddressReqDTO();
+		// TODO
+		reqDTO.setOrgProfileId(1L);
+		reqDTO.setAddressType("D");
+		IAddressSO addressSO = (IAddressSO) BusinessDelegate.getInstance().getServiceObject("pm",IAddressSO.class);
+		AddressResDTO resDTO = addressSO.retrieveAddressByOrgProfileAndType(reqDTO);
+		// getManagedBean().setAddressTypesList(resDTO.getAddressTypeList());
+		System.out.println("Address list "+resDTO.getRetriveaddressList().size());
+		getManagedBean().setAddressTypesList(resDTO.getRetriveaddressList());
 	}
 
 	public void selectedAddrRow() {
@@ -235,16 +244,32 @@ public class PurchaseRequestBackingBean extends BaseBackingBean<PurchaseRequestM
 		getManagedBean().getFulfilmentRequest().getFlDeliveryAddresses().remove(getManagedBean().getSelectedAddrRow());
 	}
 
-	public void addPurchsedItems() {
+	/*public void addPurchsedItems() {
 		IRequestNoteSO requestNoteSO = (IRequestNoteSO) BusinessDelegate.getInstance().getServiceObject("ss", IRequestNoteSO.class);
 		RequestNoteReqDTO reqDTO = new RequestNoteReqDTO();
-		reqDTO.setRequestNoteId(getManagedBean().getSelectedRequestNote().getRequestNoteId());
+		reqDTO.setRequestNoteId(1L);
 		RequestNoteResDTO resDTO = requestNoteSO.retrievRequestNoteWithDtls(reqDTO);
 		resDTO.getRequestNoteList().get(0).getRequestNoteId();
-		//System.out.println("Purchase item list size::: "+resDTO.getRequestNoteList().size());
-		//System.out.println("PurchaseList getScRequestList ::: "+resDTO.getRequestNoteList().get(0)...getScRequestList());
-		//System.out.println("Purchase item Req note ID size::: "+resDTO.getRequestNoteList().get(0).getScRequestList().getRequestListId());
+		System.out.println("Purchase item list size::: "+resDTO.getRequestNoteList().size());
+		System.out.println("PurchaseList getScRequestList ::: "+resDTO.getRequestNoteList().get(0).getRequestNoteId());
+		//System.out.println("Purchase item Req note ID size::: "+resDTO.getRequestNoteList().get(0).getRequestListId());
 		getManagedBean().setRequestNoteWithDtlsList(resDTO.getRequestNoteList());
+	}*/
+	public void addPurchsedItems() {
+		
+		
+		IPurchaseRequestSO purchaseRequestSO = (IPurchaseRequestSO) BusinessDelegate.getInstance().getServiceObject("ss", IPurchaseRequestSO.class);
+		PurchaseRequestReqDTO reqDTO = new PurchaseRequestReqDTO();
+		reqDTO.setAssignedTo(13L);
+		PurchaseRequestResDTO resDTO = purchaseRequestSO.retrievePurchaseRequests(reqDTO);
+		//System.out.println("@@@@@@@@@@@@@@@@@@@@@@2 "+resDTO.getListPurchaseRequest().size());
+		//System.out.println("SIZE 111111111111111    "+resDTO.getListPurchaseRequest().get(0).getRequestNoteDtls().size());
+		
+		//resDTO.getRequestNoteList().get(0).getRequestNoteId();
+		//System.out.println("Purchase item list size::: "+resDTO.getRequestNoteList().size());
+		//System.out.println("PurchaseList getScRequestList ::: "+resDTO.getRequestNoteList().get(0).getRequestNoteItems());
+		///System.out.println("Purchase item Req note ID size::: "+resDTO.getRequestNoteList().get(0).getScRequestList().getRequestListId());
+		//getManagedBean().setRequestNoteWithDtlsList(resDTO.getRequestNoteList());
 	}
 
 	public void updatePurchasedItemDt() {
@@ -498,9 +523,7 @@ public class PurchaseRequestBackingBean extends BaseBackingBean<PurchaseRequestM
 		HttpServletRequest servletRequest = PortalUtil.getHttpServletRequest(new FacesScopes().getRequest());
 		HttpServletRequest originalServletRequest = PortalUtil.getOriginalServletRequest(servletRequest);
 		String taskId = originalServletRequest.getParameter("taskId");
-		String docStatus = originalServletRequest.getParameter("docStatus");
 		System.out.println("taskId:" + taskId);
-		System.out.println("docStatus:" + docStatus);
 		getLoginUserOrg();
 		
 		if (taskId != null) {
@@ -535,7 +558,6 @@ public class PurchaseRequestBackingBean extends BaseBackingBean<PurchaseRequestM
 			getManagedBean().setTaskId(taskId);
 			getManagedBean().setOutComes(res.getAction());
 			getManagedBean().setTaskName(res.getTaskName());
-			getManagedBean().setDocStatusId(Long.parseLong(docStatus));
 			
 			/*List<String> source = new ArrayList<String>();
 			List<String> target = new ArrayList<String>();

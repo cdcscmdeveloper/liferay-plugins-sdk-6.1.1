@@ -44,7 +44,7 @@
 				<td><p:inputText size="35" disabled="true" id="receivedJabatan" value="#{purchaseRequestBackingBean.managedBean.fulfilmentRequest.receivedOrgProfile.parentOrgProfile.orgName}"/></td>
 				<td><p:outputLabel value="#{lbl['lbl.fl.procurement.type']}" /></td>
 				<td><p:inputText size="35"
-						value="#{purchaseRequestBackingBean.managedBean.selectedRequestNote.fulfillmentType}"
+						value="#{purchaseRequestBackingBean.managedBean.fulfilmentRequest.procurementType.codeId}"
 						disabled="true" /></td>
 			</tr>
 			<tr>
@@ -93,9 +93,11 @@
 			</tr>
 			<tr>
 				<td><p:outputLabel value="#{lbl['lbl.fl.creation.date']}" /></td>
-				<td><p:inputText size="20" disabled="true" /></td>
+				<td><p:inputText size="20" disabled="true" value="#{purchaseRequestBackingBean.managedBean.fulfilmentRequest.createdDate}"/></td>
 				<td><p:outputLabel value="#{lbl['lbl.fl.status']}" /></td>
-				<td><p:inputText size="20" disabled="true" /></td>
+				<td><p:inputText size="20" disabled="true"  value="#{purchaseRequestBackingBean.managedBean.fulfilmentRequest.status}"/>
+				<p:inputText size="20" disabled="true" value="#{purchaseRequestBackingBean.getStatusDescById(purchaseRequestBackingBean.managedBean.fulfilmentRequest.status.statusId)}"/>
+				</td>
 			</tr>
 		</table>
 	</p:panel>

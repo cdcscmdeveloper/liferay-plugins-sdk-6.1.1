@@ -12,6 +12,7 @@ import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
 
 import my.ep.persistence.entity.ct.CtContract;
+import my.ep.persistence.entity.ct.dtl.CtAgencyAddress;
 import my.ep.persistence.entity.fl.FlAttachment;
 import my.ep.persistence.entity.fl.FlRemark;
 import my.ep.persistence.entity.fl.request.FlDeliveryAddress;
@@ -58,8 +59,12 @@ public class PurchaseRequestManagedBean extends BaseManagedBean {
 	private List<PmOrgAddress> selectedPmDelAddrList;
 	private List<PmOrgAddress> delAddrList;
 	
-	private List<PmAddressType> addressTypesList; 
-	private List<PmAddressType> selectedPmAddrTypeList;
+	//private List<PmAddressType> addressTypesList; 
+	//private List<CtAgencyAddress> addressTypesList;
+	private List<PmOrgAddress> addressTypesList;
+	
+	//private List<PmAddressType> selectedPmAddrTypeList;FFFF
+	private List<PmOrgAddress> selectedAddrTypeList;
 	private List<PmMaksud> maksudCodeList;
 	private List<ScRequestNote> requestNoteList;
 	private boolean checkPtjFlg = true;
@@ -356,37 +361,68 @@ public class PurchaseRequestManagedBean extends BaseManagedBean {
 
 	/**
 	 * @return the addressTypesList
-	 */
-	public List<PmAddressType> getAddressTypesList() {
+	 *//*
+	public List<CtAgencyAddress> getAddressTypesList() {
 		return addressTypesList;
 	}
 
-	/**
+	*//**
 	 * @param addressTypesList the addressTypesList to set
-	 */
-	public void setAddressTypesList(List<PmAddressType> addressTypesList) {
+	 *//*
+	public void setAddressTypesList(List<CtAgencyAddress> addressTypesList) {
 		this.addressTypesList = addressTypesList;
-	}
+	}*/
+
+	
 
 	/**
-	 * @return the selectedPmAddrTypeList
-	 */
-	public List<PmAddressType> getSelectedPmAddrTypeList() {
-		return selectedPmAddrTypeList;
+	 * @return the selectedCtAddrTypeList
+	 *//*
+	public List<CtAgencyAddress> getSelectedCtAddrTypeList() {
+		return selectedCtAddrTypeList;
 	}
 
-	/**
-	 * @param selectedPmAddrTypeList the selectedPmAddrTypeList to set
-	 */
-	public void setSelectedPmAddrTypeList(List<PmAddressType> selectedPmAddrTypeList) {
-		this.selectedPmAddrTypeList = selectedPmAddrTypeList;
-	}
+	*//**
+	 * @param selectedCtAddrTypeList the selectedCtAddrTypeList to set
+	 *//*
+	public void setSelectedCtAddrTypeList(
+			List<CtAgencyAddress> selectedCtAddrTypeList) {
+		this.selectedCtAddrTypeList = selectedCtAddrTypeList;
+	}*/
 
 	/**
 	 * @return the ctContract
 	 */
 	public CtContract getCtContract() {
 		return ctContract;
+	}
+
+	/**
+	 * @return the addressTypesList
+	 */
+	public List<PmOrgAddress> getAddressTypesList() {
+		return addressTypesList;
+	}
+
+	/**
+	 * @param addressTypesList the addressTypesList to set
+	 */
+	public void setAddressTypesList(List<PmOrgAddress> addressTypesList) {
+		this.addressTypesList = addressTypesList;
+	}
+
+	/**
+	 * @return the selectedAddrTypeList
+	 */
+	public List<PmOrgAddress> getSelectedAddrTypeList() {
+		return selectedAddrTypeList;
+	}
+
+	/**
+	 * @param selectedAddrTypeList the selectedAddrTypeList to set
+	 */
+	public void setSelectedAddrTypeList(List<PmOrgAddress> selectedAddrTypeList) {
+		this.selectedAddrTypeList = selectedAddrTypeList;
 	}
 
 	/**

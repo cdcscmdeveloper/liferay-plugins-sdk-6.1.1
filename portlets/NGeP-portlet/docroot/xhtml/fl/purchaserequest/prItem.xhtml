@@ -10,6 +10,7 @@
 
 		<p:dataTable id="addressDataTable" var="address"
 			value="#{purchaseRequestBackingBean.managedBean.fulfilmentRequest.flDeliveryAddresses}"
+			rowIndexVar="index"
 			selection="#{purchaseRequestBackingBean.managedBean.selectedDelAddr}"
 			rowKey="#{address}" lazy="true">
 			<ac:paginator for="addressDataTable" />
@@ -119,11 +120,9 @@
 
 		<p:dataTable id="delAddr" var="delAddr"
 			value="#{purchaseRequestBackingBean.managedBean.addressTypesList}"
-			rowKey="#{delAddr.addressTypeId}"
-			selection="#{purchaseRequestBackingBean.managedBean.selectedPmAddrTypeList}">
-			<p:ajax event="rowSelect" update=":form:prtabs:delAddr"
-				process="@this"
-				listener="#{purchaseRequestBackingBean.selectedAddrRow()}" />
+			rowKey="#{delAddr.orgAddressId}"
+			selection="#{purchaseRequestBackingBean.managedBean.selectedPmDelAddrList}">
+			<p:ajax event="rowSelect" update=":form:prtabs:delAddr" />
 			<ac:paginator for="delAddr" />
 			<p:columnGroup type="header">
 				<p:row>
@@ -142,7 +141,7 @@
 		<div style="width: 100%; text-align: right">
 			<p:commandButton value="ADD" icon="ui-icon-add"
 				action="#{purchaseRequestBackingBean.updateDeliveryAddrDt}"
-				oncomplete="addDeliveryAddr.hide();" process="@this,delAddr"
+				oncomplete="addDeliveryAddr.hide();" 
 				update="addressDataTable">
 			</p:commandButton>
 		</div>
