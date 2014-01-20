@@ -19,6 +19,7 @@ import my.ep.persistence.entity.pm.common.PmCountry;
 import my.ep.persistence.entity.pm.common.PmDistrict;
 import my.ep.persistence.entity.pm.common.PmDo;
 import my.ep.persistence.entity.pm.common.PmGo;
+import my.ep.persistence.entity.pm.common.PmReportSection;
 import my.ep.persistence.entity.pm.common.PmSo;
 import my.ep.persistence.entity.pm.common.PmState;
 import my.ep.persistence.entity.pp.procurementplan.PpPlan;
@@ -109,7 +110,7 @@ public class QTDetailManagedBean extends BaseManagedBean {
     private List<CtCircular> ctCirculars;
     private List<ScQtRemark> scQtRemarks;
     private List<ScQtCheckList> scQtChecklists;
-    private List<ScQtDeduction> scQtDeductions;
+    private List<ScQtDeduction> scQtDeductionList;
     private List<ScQtDeductionClause> scQtDeductionClauses;
     private List<CtPanelSupplier> panelSupplierList;
     
@@ -145,6 +146,8 @@ public class QTDetailManagedBean extends BaseManagedBean {
 	private TreeNode root2;
 	private TreeNode root3;
 	private TreeNode[] selectedNodes;
+	private TreeNode[] selectedLocNodes;
+	private TreeNode[] selectedAddrNodes;
 
 	private ScQt tenderCriteria = new ScQt();
 
@@ -194,6 +197,20 @@ public class QTDetailManagedBean extends BaseManagedBean {
 	private IPagingDataModel<ScQt> searchQTDataModel;
 	private IPagingDataModel<ScQt> cloneSearchQTDataModel;
 
+	private List<TreeNode>	zoneTrees = new ArrayList<TreeNode>();
+	private List<TreeNode>	zoneTreeList = new ArrayList<TreeNode>();
+	private	TreeNode rootLocationTree;
+	private	String	zoneName;
+	private	String	zoneName1;
+	private	String	zoneAddrName;
+	private List<PmReportSection> pmReportSectionList;
+	private List<PmReportSection> selectedPmReportSectionList;
+	private	TreeNode rootLocationTreeList;
+	private TreeNode rootAddressLocationTreeList;
+	private String deductionPaymentArray;
+	private boolean percentageField = true;
+	private boolean amountField = true;
+	
 	public void setPanelSuppliers(List<SmSupplier> panelSuppliers) {
 		this.panelSuppliers = panelSuppliers;
 	}
@@ -216,6 +233,215 @@ public class QTDetailManagedBean extends BaseManagedBean {
 
 
 	}
+
+	/**
+	 * @return the zoneTrees
+	 */
+	public List<TreeNode> getZoneTrees() {
+		return zoneTrees;
+	}
+
+
+	/**
+	 * @param zoneTrees the zoneTrees to set
+	 */
+	public void setZoneTrees(List<TreeNode> zoneTrees) {
+		this.zoneTrees = zoneTrees;
+	}
+
+
+	/**
+	 * @return the zoneTreeList
+	 */
+	public List<TreeNode> getZoneTreeList() {
+		return zoneTreeList;
+	}
+
+
+	/**
+	 * @param zoneTreeList the zoneTreeList to set
+	 */
+	public void setZoneTreeList(List<TreeNode> zoneTreeList) {
+		this.zoneTreeList = zoneTreeList;
+	}
+
+
+	/**
+	 * @return the rootLocationTree
+	 */
+	public TreeNode getRootLocationTree() {
+		return rootLocationTree;
+	}
+
+
+	/**
+	 * @param rootLocationTree the rootLocationTree to set
+	 */
+	public void setRootLocationTree(TreeNode rootLocationTree) {
+		this.rootLocationTree = rootLocationTree;
+	}
+
+
+	/**
+	 * @return the zoneName
+	 */
+	public String getZoneName() {
+		return zoneName;
+	}
+
+
+	/**
+	 * @param zoneName the zoneName to set
+	 */
+	public void setZoneName(String zoneName) {
+		this.zoneName = zoneName;
+	}
+
+
+	/**
+	 * @return the zoneName1
+	 */
+	public String getZoneName1() {
+		return zoneName1;
+	}
+
+
+	/**
+	 * @param zoneName1 the zoneName1 to set
+	 */
+	public void setZoneName1(String zoneName1) {
+		this.zoneName1 = zoneName1;
+	}
+
+
+	/**
+	 * @return the zoneAddrName
+	 */
+	public String getZoneAddrName() {
+		return zoneAddrName;
+	}
+
+
+	/**
+	 * @param zoneAddrName the zoneAddrName to set
+	 */
+	public void setZoneAddrName(String zoneAddrName) {
+		this.zoneAddrName = zoneAddrName;
+	}
+
+
+	/**
+	 * @return the pmReportSectionList
+	 */
+	public List<PmReportSection> getPmReportSectionList() {
+		return pmReportSectionList;
+	}
+
+
+	/**
+	 * @param pmReportSectionList the pmReportSectionList to set
+	 */
+	public void setPmReportSectionList(List<PmReportSection> pmReportSectionList) {
+		this.pmReportSectionList = pmReportSectionList;
+	}
+
+
+	/**
+	 * @return the selectedPmReportSectionList
+	 */
+	public List<PmReportSection> getSelectedPmReportSectionList() {
+		return selectedPmReportSectionList;
+	}
+
+
+	/**
+	 * @param selectedPmReportSectionList the selectedPmReportSectionList to set
+	 */
+	public void setSelectedPmReportSectionList(
+			List<PmReportSection> selectedPmReportSectionList) {
+		this.selectedPmReportSectionList = selectedPmReportSectionList;
+	}
+
+
+	/**
+	 * @return the rootLocationTreeList
+	 */
+	public TreeNode getRootLocationTreeList() {
+		return rootLocationTreeList;
+	}
+
+
+	/**
+	 * @param rootLocationTreeList the rootLocationTreeList to set
+	 */
+	public void setRootLocationTreeList(TreeNode rootLocationTreeList) {
+		this.rootLocationTreeList = rootLocationTreeList;
+	}
+
+
+	/**
+	 * @return the rootAddressLocationTreeList
+	 */
+	public TreeNode getRootAddressLocationTreeList() {
+		return rootAddressLocationTreeList;
+	}
+
+
+	/**
+	 * @param rootAddressLocationTreeList the rootAddressLocationTreeList to set
+	 */
+	public void setRootAddressLocationTreeList(TreeNode rootAddressLocationTreeList) {
+		this.rootAddressLocationTreeList = rootAddressLocationTreeList;
+	}
+
+
+	/**
+	 * @return the deductionPaymentArray
+	 */
+	public String getDeductionPaymentArray() {
+		return deductionPaymentArray;
+	}
+
+
+	/**
+	 * @param deductionPaymentArray the deductionPaymentArray to set
+	 */
+	public void setDeductionPaymentArray(String deductionPaymentArray) {
+		this.deductionPaymentArray = deductionPaymentArray;
+	}
+
+
+	/**
+	 * @return the percentageField
+	 */
+	public boolean isPercentageField() {
+		return percentageField;
+	}
+
+
+	/**
+	 * @param percentageField the percentageField to set
+	 */
+	public void setPercentageField(boolean percentageField) {
+		this.percentageField = percentageField;
+	}
+
+
+	/**
+	 * @return the amountField
+	 */
+	public boolean isAmountField() {
+		return amountField;
+	}
+
+
+	/**
+	 * @param amountField the amountField to set
+	 */
+	public void setAmountField(boolean amountField) {
+		this.amountField = amountField;
+	}
+
 
 	/**
 	 * @return the qtnTenderSearchBean
@@ -991,14 +1217,19 @@ public class QTDetailManagedBean extends BaseManagedBean {
 		this.isEditable = isEditable;
 	}
 
-
-	public List<ScQtDeduction> getScQtDeductions() {
-		return scQtDeductions;
+	/**
+	 * @return the scQtDeductionList
+	 */
+	public List<ScQtDeduction> getScQtDeductionList() {
+		return scQtDeductionList;
 	}
 
 
-	public void setScQtDeductions(List<ScQtDeduction> scQtDeductions) {
-		this.scQtDeductions = scQtDeductions;
+	/**
+	 * @param scQtDeductionList the scQtDeductionList to set
+	 */
+	public void setScQtDeductionList(List<ScQtDeduction> scQtDeductionList) {
+		this.scQtDeductionList = scQtDeductionList;
 	}
 
 
@@ -1335,4 +1566,37 @@ public class QTDetailManagedBean extends BaseManagedBean {
 			IPagingDataModel<ScQt> cloneSearchQTDataModel) {
 		this.cloneSearchQTDataModel = cloneSearchQTDataModel;
 	}
+
+
+	/**
+	 * @return the selectedLocNodes
+	 */
+	public TreeNode[] getSelectedLocNodes() {
+		return selectedLocNodes;
+	}
+
+
+	/**
+	 * @param selectedLocNodes the selectedLocNodes to set
+	 */
+	public void setSelectedLocNodes(TreeNode[] selectedLocNodes) {
+		this.selectedLocNodes = selectedLocNodes;
+	}
+
+
+	/**
+	 * @return the selectedAddrNodes
+	 */
+	public TreeNode[] getSelectedAddrNodes() {
+		return selectedAddrNodes;
+	}
+
+
+	/**
+	 * @param selectedAddrNodes the selectedAddrNodes to set
+	 */
+	public void setSelectedAddrNodes(TreeNode[] selectedAddrNodes) {
+		this.selectedAddrNodes = selectedAddrNodes;
+	}
+	
 }
