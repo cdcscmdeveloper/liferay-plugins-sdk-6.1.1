@@ -48,10 +48,8 @@
 			</td>
 			<td>
 				<h6>
-					<h:outputText value="Pending Submission"
-						rendered="#{purchaseRequestBackingBean.managedBean.docStatusId ==0}" />
 					<h:outputText
-						value="#{purchaseRequestBackingBean.getStatusDescById(purchaseRequestBackingBean.managedBean.docStatusId)}" />
+						value="#{purchaseRequestBackingBean.getStatusDescById(purchaseRequestBackingBean.managedBean.fulfilmentRequest.status.statusId)}" />
 				</h6>
 			</td>
 		</tr>
