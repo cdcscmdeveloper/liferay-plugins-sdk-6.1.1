@@ -167,6 +167,8 @@ public class SmApplicationManagedBean extends BaseManagedBean {
 	private SmApplSectionReview apprvrSecReview;
 
 	private boolean termsAccepted;
+	
+	private String newSupplierType;
 
 	public SmApplicationManagedBean() {
 		// TODO Checking the user role
@@ -878,6 +880,14 @@ public class SmApplicationManagedBean extends BaseManagedBean {
 
 	public void setTermsAccepted(boolean termsAccepted) {
 		this.termsAccepted = termsAccepted;
+	}
+
+	public String getNewSupplierType() {
+		return newSupplierType;
+	}
+
+	public void setNewSupplierType(String newSupplierType) {
+		this.newSupplierType = newSupplierType;
 	}
 
 }

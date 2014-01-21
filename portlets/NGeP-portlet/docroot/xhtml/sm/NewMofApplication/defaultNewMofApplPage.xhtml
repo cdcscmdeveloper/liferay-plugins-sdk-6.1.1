@@ -28,7 +28,7 @@
 									<td><p:outputLabel
 											value="* #{lbl['lbl.sm.mofsuppliertype']}" /></td>
 									<td><p:selectOneMenu
-											value="#{backingBean.managedBean.smAppl.supplierType}">
+											value="#{backingBean.managedBean.newSupplierType}">
 											<f:selectItem itemLabel="Contractor " itemValue="1" />
 											<f:selectItem itemLabel="Consultant" itemValue="2" />
 										</p:selectOneMenu></td>
@@ -45,8 +45,7 @@
 							value="#{backingBean.managedBean.termsAccepted}">
 							<p:ajax event="change" update=":form:basCmdBtn" />
 						</p:selectBooleanCheckbox></td>
-					<td><p:outputLabel
-							value="#{lbl['lbl.sm.termsConditions']}" /></td>
+					<td><p:outputLabel value="#{lbl['lbl.sm.termsConditions']}" /></td>
 				</tr>
 
 			</table>

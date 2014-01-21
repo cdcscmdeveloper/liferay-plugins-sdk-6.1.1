@@ -143,7 +143,6 @@ public class SmApplicationBackingBean extends
 				getManagedBean().setApprvrSecReview(new SmApplSectionReview());
 			}
 
-			smAppl.setSmStaffTotals(getStaffList(smAppl.getSupplierType()));
 			if (smAppl.getSmFacilities().isEmpty()) {
 				SmFacility fac = new SmFacility();
 				SmAddress addr = new SmAddress();
@@ -153,6 +152,10 @@ public class SmApplicationBackingBean extends
 			} else {
 				// TODO
 			}
+			if (applicationType.equalsIgnoreCase("N")) {
+				smAppl.setSupplierType(getManagedBean().getNewSupplierType());
+			}
+			smAppl.setSmStaffTotals(getStaffList(smAppl.getSupplierType()));
 			getManagedBean().setSmAppl(smAppl);
 			getManagedBean().setTabActiveIndex(0);
 			getManagedBean().setOfficeFacility(new SmFacility());
