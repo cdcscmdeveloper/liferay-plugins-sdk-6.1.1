@@ -1152,7 +1152,10 @@ public class QTDetailBackingBean extends
 
 				QuationTenderReqDTO reqDTO = new QuationTenderReqDTO();
 				reqDTO.setQtId(getManagedBean().getQt().getQtId());
-				// reqDTO.setQtId(328L);
+				List<String> type = new ArrayList<String>();
+				type.add("UP");
+				type.add("TD");
+				reqDTO.setCheckListType(type);
 
 				QuationTenderResDTO resDTO = detailSO
 						.retriveQTDocDetails(reqDTO);
