@@ -4,55 +4,138 @@
 	xmlns:h="http://java.sun.com/jsf/html"
 	xmlns:p="http://primefaces.org/ui"
 	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
 	xmlns:ac="http://ac.my/jsf/composite/cc">
 <h:head>
 	<title>Include demo</title>
 </h:head>
 <h:body>
-	
-	<ui:include src="/xhtml/ss/quatationtender/qtntenderheader.xhtml" />
+	<!-- <ui:include src="/xhtml/ss/quatationtender/qtntenderheader.xhtml" /> -->
+
 	<p:panel header="Documents" toggleable="true">
-	
-	<p:panelGrid columns="4" style="width:100%;"
-			styleClass="noBorders tr,noBorders td">
-			<p:dataTable  var="document" id="doclist"
-				value="#{qTDocumentsBB.managedBean.scQtChecklists}"  editable="false" styleClass="documentslist"
-			    rowKey="#{document}" rowIndexVar="rowIndex"
-				rows="10">
-				
-				<ac:paginator for="doclist" />
-			
+		<!-- <p:panelGrid columns="4" style="width:100%;"
+			styleClass="noBorders tr,noBorders td"> -->
+		<p:dataTable var="document" id="doctbl"
+			value="#{qTDocumentsBackingBean.managedBean.scQtChecklists}"
+			editable="true"
+			selection="#{qTDocumentsBackingBean.managedBean.selectedCheckLists}"
+			styleClass="documentslist" rowKey="#{document}"
+			rowIndexVar="rowIndex" rows="10">
 
-         <p:column headerText="#{lbl['lbl.so.title']}">  
-                    <h:outputText value="#{document.title}"></h:outputText>
-                     	</p:column>
-         
-          
-					
+			<ac:paginator for="doctbl" />
 
-    <p:column headerText="#{lbl['lbl.so.type']}" style="width:25%">
-				<h:outputText value="#{document.checklistType}"></h:outputText>
-					
-</p:column>
-     <p:column headerText="#{lbl['lbl.so.order']}" style="width:10%">
-				<h:outputText value="#{document.checklistSeq}" size="2"/>
-					
-</p:column>
- 
- <!-- <p:column headerText="#{lbl['lbl.so.action']}" style="width:35%"> 
-				
-		<p:commandLink>
-					<p:graphicImage library="ep/images/design" name="delete.png"
-						value="/resources/ep/images/design/delete.png" />
-				</p:commandLink>			
-</p:column> -->
-  
+			<p:column selectionMode="multiple" style="width:2%" />
+
+			<p:column headerText="#{lbl['lbl.so.title']}">
+				<p:commandLink action="#{qTDocumentsBackingBean.showDocument()}"
+					style="margin-right:20px;">
+					<h:outputText value="#{document.title}"
+						rendered="#{document.brandNew eq false}" />
+				</p:commandLink>
+
+				<p:inputText value="#{document.title}"
+					rendered="#{document.brandNew eq true}" />
+			</p:column>
+
+			<p:column headerText="#{lbl['lbl.so.type']}" style="width:10%">
+				<h:outputText value="#{document.checklistType}"
+					rendered="#{document.brandNew eq false}" />
+				<p:selectOneMenu value="#{document.checklistType}"
+					rendered="#{document.brandNew eq true}">
+					<f:selectItem itemLabel="Select One" itemValue="#{null}" />
+					<f:selectItem itemLabel="UP" itemValue="UP" />
+					<f:selectItem itemLabel="TD" itemValue="TD" />
+				</p:selectOneMenu>
+			</p:column>
+
+			<p:column headerText="#{lbl['lbl.so.document']}" style="width:25%">
+				<h:outputText value="#{document.scQtCheckListAttachment.fileName}"
+					rendered="#{!empty document.scQtCheckListAttachment}" />
+				<p:commandLink oncomplete="attachDlg.show();return false;"
+					update="doctbl">
+					<p:graphicImage library="ep/images/design" name="upload.png"
+						value="/resources/ep/images/design/upload.png" />
+					<f:setPropertyActionListener value="#{document}"
+						target="#{qTDocumentsBackingBean.managedBean.qtCheckList}" />
+				</p:commandLink>
+			</p:column>
+
+			<p:column headerText="#{lbl['lbl.so.order']}" style="width:10%">
+				<h:outputText value="#{document.checklistSeq}" size="3" />
+				<p:inputText value="#{document.checklistSeq}" size="3"
+					rendered="#{document.brandNew eq true}" />
+			</p:column>
+
+			<p:column headerText="#{lbl['lbl.so.temp.status']}" style="width:20%">
+				<h:outputText value="" size="2"
+					rendered="#{document.checklistType eq 'UP'}" />
+				<h:outputText
+					value="#{document.scQtDoc.tplDocMaster.templateStatus}" size="2"
+					rendered="#{document.checklistType eq 'TD'}" />
+			</p:column>
+
+			<p:column headerText="#{lbl['lbl.so.action']}" style="width:10%">
+				<p:commandLink>
+					<p:graphicImage library="ep/images/design" name="edit.png"
+						value="/resources/ep/images/design/edit.png" />
+				</p:commandLink>
+			</p:column>
+
+		</p:dataTable>
+		<!-- </p:panelGrid> -->
+		<p:spacer height="20px" />
+		<div align="right">
+			<p:commandButton value="#{lbl['lbl.so.populate.predefined']}"
+				process="@this"
+				action="#{qTDocumentsBackingBean.populatePreDefinedDetails}"
+				partialSubmit="true"
+				oncomplete="predefinedTerms.show();return false;" />
+
+			<p:commandButton value="#{lbl['lbl.so.addbtn']}"
+				process="@this,doctbl" partialSubmit="true"
+				action="#{qTDocumentsBackingBean.addDocumentList}" update="doctbl"
+				icon="ui-icon-add" />
+
+			<p:commandButton value="#{lbl['lbl.so.delete']}" process="@this"
+				partialSubmit="true" icon="ui-icon-delete" />
+		</div>
+
+		<p:dialog id="predefinedTerms" widgetVar="predefinedTerms"
+			modal="true" dynamic="true" hideEffect="explode" resizable="false"
+			width="400px" height="450" styleClass="pop_up_top"
+			header="Document List">
+
+			<p:dataTable id="predefinedtermsid" var="predefinedList"
+				value="#{qTDocumentsBackingBean.managedBean.pmReportSectionList}"
+				selection="#{qTDocumentsBackingBean.managedBean.selectedPmReportSectionList}"
+				rowKey="#{predefinedList}" editable="true" rowIndexVar="index">
+				<ac:paginator for="pretermId" />
+
+				<p:column selectionMode="multiple" style="width:2%" />
+				<p:column headerText="Title">
+					<h:outputText value="#{predefinedList.pmCheckList.checkListName}" />
+				</p:column>
 			</p:dataTable>
-			
-			
-	</p:panelGrid>
-	
+
+			<p:spacer height="20px" />
+			<p:commandButton value="OK" style="float:right;" process="@all"
+				partialSubmit="true" oncomplete="predefinedTerms.hide();"
+				icon="ui-icon-accept" update="doctbl" />
+		</p:dialog>
+
+		<p:dialog id="attachDlg" widgetVar="attachDlg" modal="true"
+			dynamic="true" hideEffect="explode" resizable="false" width="700px"
+			height="200" styleClass="pop_up_top"
+			header="#{lbl['lbl.bpm.choose.file']}">
+			<p:ajax event="close" />
+			<p:fileUpload style="display:inline;"
+				fileUploadListener="#{qTDocumentsBackingBean.handleFileAttachment}"
+				mode="advanced" id="upload"
+				allowTypes="/(\.|\/)(gif|jpe?g|png|bmp|txt|xls|xlsx|pdf|doc|docx|csv)$/"
+				invalidFileMessage="Only JPG, GIF, PNG, BMP, TXT, XLS, PDF, DOC, CSV files are accepted"
+				update="doctbl" oncomplete="attachDlg.hide()">
+			</p:fileUpload>
+		</p:dialog>
 	</p:panel>
-	</h:body>
-	</html>
-	
+</h:body>
+</html>
