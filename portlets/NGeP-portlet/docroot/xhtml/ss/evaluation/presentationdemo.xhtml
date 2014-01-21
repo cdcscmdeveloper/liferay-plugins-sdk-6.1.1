@@ -20,10 +20,15 @@
 
 				<h:outputLabel value="#{lbl['lbl.sc.eva.present.document']}" />
 
-
-				<p:commandButton value="Upload" 
+              <h:panelGroup>
+				<p:commandButton value="Upload" onclick="uploadDlg.show();
+					return false;"
+				
 							partialSubmit="true" process="@this" icon="ui-icon-upload" />
-							
+						<p:spacer width="10" height="5" />
+				<h:outputText id="requestDocument"
+					value="#{evaluationBackingBean.managedBean.fileName}"></h:outputText>	
+					</h:panelGroup>
 					<h:outputLabel value="#{lbl['lbl.sc.eva.s1.manual.remarks']}" />
                    <p:inputTextarea rows="3" cols="30" autoResize="false"></p:inputTextarea>
 
@@ -46,8 +51,22 @@
 
 
 		</div>
+		
+		
+		
 	</p:dialog>
 	
 	
-	
+	 <p:dialog  widgetVar="uploadDlg" modal="true"
+		 hideEffect="explode" resizable="false" width="700px"
+		height="200" styleClass="pop_up_top"
+		header="#{lbl['lbl.bpm.choose.file']}">
+		<p:fileUpload style="display:inline;" 
+			 mode="advanced" id="requestDocument1"	fileUploadListener="#{evaluationBackingBean.handleFileUpload}"
+			
+			allowTypes="/(\.|\/)(gif|jpe?g|png|bmp|txt|xls|xlsx|pdf|doc|docx|csv)$/"
+			invalidFileMessage="Only JPG, GIF, PNG, BMP, TXT, XLS, PDF, DOC, CSV files are accepted"
+			update="requestDocument" oncomplete="uploadDlg.hide()">
+		</p:fileUpload>
+	</p:dialog>
 </ui:composition>
