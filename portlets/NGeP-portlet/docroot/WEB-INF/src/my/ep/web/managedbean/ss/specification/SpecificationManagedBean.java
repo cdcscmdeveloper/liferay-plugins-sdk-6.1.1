@@ -15,6 +15,7 @@ import my.ep.persistence.entity.pm.common.PmCheckListCategory;
 import my.ep.persistence.entity.ss.quationtender.ScCommitteeMember;
 import my.ep.persistence.entity.ss.quationtender.ScQt;
 import my.ep.persistence.entity.ss.quationtender.ScQtCheckList;
+import my.ep.persistence.entity.ss.quationtender.ScQtCheckListScore;
 import my.ep.persistence.entity.ss.quationtender.ScQtDeduction;
 import my.ep.persistence.entity.ss.quationtender.ScQtRemark;
 import my.ep.persistence.entity.ss.quationtender.ScQtSpec;
@@ -96,6 +97,9 @@ public class SpecificationManagedBean extends BaseManagedBean {
 	private List<ScQtCheckList> s2TechAddSelect;
 	private List<ScQtCheckList> s2FinSelect;
 	private List<ScQtCheckList> s2FinAddSelect;
+	private List<ScQtCheckListScore> scoringList;
+	private List<ScQtCheckListScore> selectscoring;
+	private List<ScQtCheckListScore> collectionScoring;
 	public SpecificationManagedBean(){
 		
 	}
@@ -752,6 +756,48 @@ public class SpecificationManagedBean extends BaseManagedBean {
 	 */
 	public void setS2FinAddSelect(List<ScQtCheckList> s2FinAddSelect) {
 		this.s2FinAddSelect = s2FinAddSelect;
+	}
+
+	/**
+	 * @return the scoringList
+	 */
+	public List<ScQtCheckListScore> getScoringList() {
+		return scoringList;
+	}
+
+	/**
+	 * @param scoringList the scoringList to set
+	 */
+	public void setScoringList(List<ScQtCheckListScore> scoringList) {
+		this.scoringList = scoringList;
+	}
+
+	/**
+	 * @return the selectscoring
+	 */
+	public List<ScQtCheckListScore> getSelectscoring() {
+		return selectscoring;
+	}
+
+	/**
+	 * @param selectscoring the selectscoring to set
+	 */
+	public void setSelectscoring(List<ScQtCheckListScore> selectscoring) {
+		this.selectscoring = selectscoring;
+	}
+
+	/**
+	 * @return the collectionScoring
+	 */
+	public List<ScQtCheckListScore> getCollectionScoring() {
+		return collectionScoring;
+	}
+
+	/**
+	 * @param collectionScoring the collectionScoring to set
+	 */
+	public void setCollectionScoring(List<ScQtCheckListScore> collectionScoring) {
+		this.collectionScoring = collectionScoring;
 	}
 
 	
