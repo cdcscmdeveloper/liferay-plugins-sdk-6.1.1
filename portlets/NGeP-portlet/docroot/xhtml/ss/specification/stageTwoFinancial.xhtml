@@ -8,7 +8,7 @@
 
 
 	<p:dialog header="Compilance" widgetVar="stageTwoFinance" modal="true"
-		width="400" height="200">
+		width="800" height="400">
 		<p:panel header="#{lbl['lbl.sc.spec.stage.compilence']}" toggleable="true">
 
 			<p:dataTable id="stageTwoFinPopup" var="compilance"
@@ -16,7 +16,7 @@
 				editable="true"
 				selection="#{specificationBackingBean.managedBean.stageTwoFinComplianceSelect}"
 				rowKey="#{compilance.checkListCategoryId}" rowIndexVar="index">
-
+                <ac:paginator for="stageTwoFinPopup"></ac:paginator>
 				<p:column selectionMode="multiple" style="width:2%;text-align:center;" />
 				<p:column headerText="#{lbl['lbl.sc.spec.stage.title']}">
 					<h:outputText value="#{compilance.pmCheckList.checkListName}"></h:outputText>
