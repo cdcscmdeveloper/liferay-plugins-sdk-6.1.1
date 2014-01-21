@@ -7,39 +7,50 @@
 	xmlns:ac="http://ac.my/jsf/composite/cc">
 
 
-	<p:dialog header="#{lbl['lbl.sc.eva.present.request.head']}" widgetVar="requestPresentation" modal="true"
-		width="400" height="300">
-		<p:panel id="requestpresentationdemo" header="#{lbl['lbl.sc.eva.present.request.head']}"
-			toggleable="true">
+	<p:dialog header="#{lbl['lbl.sc.eva.present.request.head']}"
+		widgetVar="requestPresentation" modal="true" width="400" height="300">
+		<p:panel id="requestpresentationdemo"
+			header="#{lbl['lbl.sc.eva.present.request.head']}" toggleable="true">
 
-	     <p:commandLink  value="#{lbl['lbl.sc.eva.present.request.tech.list']}"></p:commandLink>
+			<p:commandLink value="#{lbl['lbl.sc.eva.present.request.tech.list']}"></p:commandLink>
 			<p:dataTable id="requestDemo" var="reminderpopup"
-				 editable="true">
-               <ac:paginator for="requestDemo" />
-				<p:column headerText="#{lbl['lbl.sc.eva.s1.manual.supplier']}" style="width:100%">
-					<h:outputText value="readOnly"></h:outputText>
+				value="#{evaluationBackingBean.managedBean.s2TechSupplier}"
+				selection="#{evaluationBackingBean.managedBean.requestDemoSelect}"
+				rowKey="#{reminderpopup.evaluationResultId}">
+				<ac:paginator for="requestDemo" />
+				<p:columnGroup type="header">
+					<p:row>
+						<p:column headerText="" style="width:2%" />
+						<p:column headerText="#{lbl['lbl.sc.eva.s1.manual.supplier']}"
+							style="width:98%" />
+					</p:row>
+				</p:columnGroup>
+				<p:column selectionMode="multiple">
 				</p:column>
-
+				<p:column>
+					<h:outputText value="#{reminderpopup.scQtProposal.supplierNo}"></h:outputText>
+				</p:column>
 			</p:dataTable>
-	<p:spacer height="15"></p:spacer>
-<h:panelGrid columns="2">
-			<h:outputLabel value="#{lbl['lbl.sc.eva.s1.manual.remarks']}" />
-                   <p:inputTextarea rows="3" cols="50" autoResize="false"></p:inputTextarea>
-</h:panelGrid>
+			<p:spacer height="15"></p:spacer>
+			<h:panelGrid columns="2">
+				<h:outputLabel value="#{lbl['lbl.sc.eva.s1.manual.remarks']}" />
+				<p:inputTextarea rows="3" cols="50" autoResize="false"></p:inputTextarea>
+			</h:panelGrid>
 		</p:panel>
 
 		<div align="left">
 			<p:commandButton value="#{lbl['lbl.sc.eva.btn.close']}"
-				style="float:right;"  icon="ui-icon-cancel" oncomplete="requestPresentation.hide();"></p:commandButton>
+				style="float:right;" icon="ui-icon-cancel"
+				oncomplete="requestPresentation.hide();"></p:commandButton>
 
 			<p:commandButton value="#{lbl['lbl.sc.eva.btn.submit']}"
 				style="float:right;" oncomplete="requestPresentation.hide();"
-				 icon="ui-icon-submit"></p:commandButton>
+				icon="ui-icon-submit"></p:commandButton>
 
 
 		</div>
 	</p:dialog>
-	
-	
-	
+
+
+
 </ui:composition>

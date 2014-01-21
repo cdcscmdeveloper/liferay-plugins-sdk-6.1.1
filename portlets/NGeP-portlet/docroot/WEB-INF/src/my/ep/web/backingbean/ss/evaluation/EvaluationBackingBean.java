@@ -39,6 +39,7 @@ import my.ep.dto.ss.quationtender.QuationTenderResDTO;
 import my.ep.dto.ss.specification.SpecificationReqDTO;
 import my.ep.dto.ss.specification.SpecificationResDTO;
 import my.ep.persistence.entity.ss.quationtender.ScQtCheckList;
+import my.ep.persistence.entity.ss.quationtender.ScQtCheckListAttachment;
 import my.ep.persistence.entity.ss.quationtender.ScQtDoc;
 import my.ep.persistence.entity.ss.quationtender.ScQtEvaluationResult;
 import my.ep.persistence.entity.ss.quationtender.ScQtManualEvaluation;
@@ -56,6 +57,7 @@ import my.ep.web.ss.quationtender.common.QTConstants;
 import my.ep.web.util.lookupservice.BusinessDelegate;
 
 import org.apache.commons.lang.StringUtils;
+import org.primefaces.event.FileUploadEvent;
 import org.primefaces.event.FlowEvent;
 import org.primefaces.event.SelectEvent;
 import org.primefaces.event.UnselectEvent;
@@ -1065,6 +1067,28 @@ public void onManualRowUnSelect(UnselectEvent selectEvent) {
 		}
 
 	}
+
+public void handleFileUpload(FileUploadEvent event) {
+	
+	System.out.println("=======uploaded file name===="+event.getFile().getFileName());
+	this.getManagedBean().setFileName(event.getFile().getFileName());
+System.out.println("=========get file name======="+this.getManagedBean().getFileName());
+	/*ScQtCheckList scQtChecklist = this.getManagedBean().getScQtChecklist();
+
+	FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_INFO,
+			"The file was uploaded successfully.", null);
+	FacesContext.getCurrentInstance().addMessage(null, message);
+
+	ScQtCheckListAttachment attachment = scQtChecklist
+			.getScQtCheckListAttachment();
+	if (null == attachment) {
+		attachment = new ScQtCheckListAttachment();
+		attachment.setScQtCheckList(scQtChecklist);
+	}
+	uploadAttachment(event.getFile(), attachment);
+
+	scQtChecklist.setScQtCheckListAttachment(attachment);*/
+}
 	/**
 	 * @return the skip
 	 */
