@@ -47,7 +47,7 @@
 				process="@this,evaluationmeetingDetails" partialSubmit="true"
 				action="#{evaluationBackingBean.addMeetingAction}"
 				update="evaluationmeetingDetails" icon="ui-icon-add"/>
-			<p:commandButton value="#{lbl['lbl.sc.eva.btn.delete']}" icon="ui-icon-delete" />
+			<p:commandButton value="#{lbl['lbl.sc.eva.btn.delete']}" icon="ui-icon-delete" action="#{evaluationBackingBean.deleteMeetingDetails}" update="evaluationmeetingDetails"/>
 
 		</div>
 

@@ -10,6 +10,14 @@
  <!-- <ui:include src="/xhtml/ss/quatationtender/qtntenderheader.xhtml" />  -->
 
 	<p:panel header="#{lbl['lbl.sc.eva.summary.head']}" toggleable="true">
+		<h:panelGrid columns="2" columnClasses="columnWidth50,columnWidth50">
+			<h:outputLabel value="#{lbl['lbl.sc.eva.summary.view.by']}"></h:outputLabel>
+			<p:selectOneRadio style="padding-right: 20px;" value="#{evaluationBackingBean.managedBean.viewBy}">
+				<f:selectItem itemLabel="Package" itemValue="P" />
+				<f:selectItem itemLabel="Item" itemValue="I" />
+               <p:ajax event="change" process="@this" partialSubmit="true" update="evaluationsummarystage2supplier" listener="#{evaluationBackingBean.changedView}" ></p:ajax>
+			</p:selectOneRadio>
+		</h:panelGrid>
 		<p:commandLink value="#{lbl['lbl.sc.eva.summary.list']}"></p:commandLink>
 		<h:panelGrid columns="2" columnClasses="columnWidth50,columnWidth20">
 			<h:outputLabel value="#{lbl['lbl.sc.eva.summary.multile']}"></h:outputLabel>
@@ -43,6 +51,7 @@
 		</p:dataTable>
 		<p:spacer height="20" />
 		<p:commandLink value="#{lbl['lbl.sc.eva.summary.qualified']}"></p:commandLink>
+	
 		<p:dataTable id="evaluationsummarystage2supplier" var="qualified"
 		value="#{evaluationBackingBean.managedBean.qualifiedList}"
 			rowKey="#{qualified}" rowIndexVar="index">
@@ -65,12 +74,13 @@
 			</p:column>
 
 
-
-			<p:column headerText="#{lbl['lbl.sc.eva.s1.manual.remarks']}"
-				style="width:25%">
-				<p:inputTextarea rows="2" ></p:inputTextarea>
+              <p:column headerText="#{lbl['lbl.sc.eva.s1.manual.remarks']}" 
+				style="width:25%" >
+				
+				<p:inputTextarea rows="2" rendered="#{evaluationBackingBean.managedBean.viewBy eq 'I'}"></p:inputTextarea>
+				
 			</p:column>
-
+        
 		</p:dataTable>
 
 		<h:panelGrid columns="2" columnClasses="columnWidth50,columnWidth20">
@@ -104,9 +114,16 @@
 				style="width:35%">
 		<h:outputText value="#{disqualified.evaluationResultDtls.get(0).totalScore}"></h:outputText>
 			</p:column>
+			
+			
 
-
-
+<!--  <p:panel styleClass="mystyleClass111"  rendered="#{evaluationBackingBean.managedBean.viewBy eq 'I'}">
+			<p:column headerText="#{lbl['lbl.sc.eva.s1.manual.remarks']}" 
+				style="width:25%" >
+				<p:inputTextarea rows="2" ></p:inputTextarea>
+			</p:column>
+</p:panel>
+ -->
 		</p:dataTable>
 
 		<h:panelGrid columns="2" columnClasses="columnWidth50,columnWidth20">

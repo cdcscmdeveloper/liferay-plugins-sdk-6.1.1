@@ -8,21 +8,21 @@
 
 	<!-- <ui:include src="/xhtml/ss/quatationtender/qtntenderheader.xhtml" /> -->
 	
-	<!-- <c:if
-							test="#{evaluationBackingBean.managedBean.committeeType eq'EC' or evaluationBackingBean.managedBean.committeeType eq'TEC' }"> -->
+	 <c:if
+							test="#{evaluationBackingBean.managedBean.committeeType eq'EC' or evaluationBackingBean.managedBean.committeeType eq'TEC' }"> 
 
 	<p:panel header="#{lbl['lbl.sc.eva.s2.tech.head']}" toggleable="true">
-<!-- <h:panelGrid columns="3">
+ <h:panelGrid columns="3">
 
-				<h:outputLabel value="Presentation/DemoStatus"></h:outputLabel>
+				<h:outputLabel value="#{lbl['lbl.sc.eva.present.request.status']}"></h:outputLabel>
 
 				<p:inputText value="" readonly="true" disabled="true"></p:inputText>
 
-				<p:commandButton value="RequestPresentation/Demo" 
-								oncomplete="evaluationPresentation.show();"  />
+				<p:commandButton value="#{lbl['lbl.sc.eva.present.btn.request.demo']}" 
+								oncomplete="requestPresentation.show();"  />
 
 			</h:panelGrid>
- -->
+
 		<p:dataTable id="technicalst2supplierList" var="s2techSupplier"
 			value="#{evaluationBackingBean.managedBean.s2TechSupplier}"
 			selection="#{evaluationBackingBean.managedBean.s2techSingleSelect}"
@@ -101,10 +101,10 @@
 		</p:dataTable>
 
 	</p:panel>
-	<!-- </c:if> -->
+	 
 	
 	
-	<!-- 	<p:panel header="StageTwo(Presentation/Demo)"
+	 	<p:panel header="#{lbl['lbl.sc.eva.present.demo.s2.head']}"
 		toggleable="true">
 
 		<p:dataTable id="stageTwoPresentation" var="s2techlist"
@@ -113,7 +113,7 @@
 
 			<ac:paginator for="stageTwoPresentation" />
 
-			<p:column headerText="Result"
+			<p:column headerText="#{lbl['lbl.sc.eva.present.result']}"
 				style="width:20%">
 				<h:outputText value="#{s2techlist.scQtCheckList.title}"></h:outputText>
 			</p:column>
@@ -133,10 +133,11 @@
 
 
 		</p:dataTable>
-
-	</p:panel> -->
+		</p:panel> 
+ </c:if>
 	
-	<!-- <c:if
+	
+	 <c:if
 	test="#{evaluationBackingBean.managedBean.committeeType eq'EC' or evaluationBackingBean.managedBean.committeeType eq'FEC' }"> -->
 	<p:panel header="#{lbl['lbl.sc.eva.s2.fin.head']}" toggleable="true">
 
@@ -206,7 +207,7 @@
 		</p:dataTable>
 
 	</p:panel>
-	<!-- </c:if> -->
+	 </c:if> 
 	<table style="width: 100%">
 		<tr>
 			<td><div align="left" style="width: 99%">

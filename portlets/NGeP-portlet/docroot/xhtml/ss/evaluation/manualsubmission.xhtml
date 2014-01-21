@@ -33,6 +33,8 @@
 				  	selection="#{evaluationBackingBean.managedBean.manualMultiSelect}">
               
 				<ac:paginator for="manualpopupresults" />
+					<p:ajax event="rowSelectCheckbox" listener="#{evaluationBackingBean.onManualRowSelect}"></p:ajax>
+						<p:ajax event="rowUnselectCheckbox" listener="#{evaluationBackingBean.onManualRowUnSelect}"></p:ajax>
                  <p:column selectionMode="multiple" style="width:2%;text-align:center;" />
 				<p:column headerText="#{lbl['lbl.sc.eva.s1.manual.label']}"
 					style="width:35%">
@@ -71,7 +73,8 @@
 				process="@this,manualpopupresults" partialSubmit="true"
 				action="#{evaluationBackingBean.adds1ManualAction}"
 				update="manualpopupresults" icon="ui-icon-add"/>
-			<p:commandButton value="#{lbl['lbl.sc.eva.btn.delete']}"   icon="ui-icon-delete"/>
+			<p:commandButton value="#{lbl['lbl.sc.eva.btn.delete']}"   icon="ui-icon-delete"
+			action="#{evaluationBackingBean.deleteManualSubmission}" update="manualpopupresults"/>
             
 		</div>
 			<p:spacer height="15"></p:spacer>

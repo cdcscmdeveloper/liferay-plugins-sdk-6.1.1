@@ -4,7 +4,8 @@
 	xmlns:ui="http://java.sun.com/jsf/facelets"
 	xmlns:p="http://primefaces.org/ui"
 	xmlns:c="http://java.sun.com/jsp/jstl/core"
-	xmlns:ac="http://ac.my/jsf/composite/cc">
+	xmlns:ac="http://ac.my/jsf/composite/cc"
+	xmlns:fn="http://java.sun.com/jsp/jstl/functions">
 
 
  <!-- <ui:include src="/xhtml/ss/quatationtender/qtntenderheader.xhtml" /> --> 
@@ -14,7 +15,7 @@
 		
 	</div>
 
-
+<c:if test="#{evaluationBackingBean.managedBean.manualList gt 0 and evaluationBackingBean.managedBean.committeeType eq'OC'}">
 	<p:panel header="#{lbl['lbl.sc.eva.s1.manual.head']}" toggleable="true">
 		<p:dataTable id="evManual" var="manuals1Evaluation"
 			value="#{evaluationBackingBean.managedBean.manuals1SupplierList}"
@@ -47,9 +48,9 @@
 
 	</p:dataTable>
 	</p:panel>
-
-<!-- 	<c:if
-							test="#{evaluationBackingBean.managedBean.committeeType eq'EC' or evaluationBackingBean.managedBean.committeeType eq'TEC' }"> -->
+</c:if>
+ 	<c:if
+							test="#{evaluationBackingBean.managedBean.committeeType eq'EC' or evaluationBackingBean.managedBean.committeeType eq'TEC' }"> 
 
 	<p:panel header="#{lbl['lbl.sc.eva.s1.tech.head']}" toggleable="true">
 
@@ -81,17 +82,19 @@
 			</p:column>
 			<p:column headerText="#{lbl['lbl.sc.eva.prepare.meeting.action']}"
 				style="width:20%">
+				<c:if test="#{evaluationBackingBean.managedBean.committeeType eq 'OC'}">
 				<p:commandButton value="#{lbl['lbl.sc.eva.btn.evaluate']}"
 					oncomplete="evaluation.show();" action="#{evaluationBackingBean.evaluations1TechAction(evaluations1Tech)}" icon="ui-icon-evaluate" update=":form:s1popup"></p:commandButton>
+					</c:if>
 			</p:column>
 
 
 		</p:dataTable>
 
 	</p:panel>
-<!-- </c:if> -->
+ </c:if> 
 
-<!-- <c:if
+ <c:if
 							test="#{evaluationBackingBean.managedBean.committeeType eq'EC' or evaluationBackingBean.managedBean.committeeType eq'FEC' }"> -->
 	<p:panel header="#{lbl['lbl.sc.eva.s1.fin.head']}" toggleable="true">
 
@@ -124,15 +127,18 @@
 			</p:column>
 			<p:column headerText="#{lbl['lbl.sc.eva.prepare.meeting.action']}"
 				style="width:20%">
+					<c:if
+							test="#{evaluationBackingBean.managedBean.committeeType eq'OC'}">
 				<p:commandButton value="#{lbl['lbl.sc.eva.btn.evaluate']}"
 					oncomplete="evaluation.show();"  action="#{evaluationBackingBean.evaluations1FinAction(s1evalFin)}" icon="ui-icon-evaluate"  update=":form:s1popup"></p:commandButton>
+					</c:if>
 			</p:column>
 
 
 		</p:dataTable>
 
 	</p:panel>
-	<!-- </c:if> -->
+	 </c:if> 
 	<table style="width: 100%">
 		<tr>
 			<td><div align="left" style="width: 99%">

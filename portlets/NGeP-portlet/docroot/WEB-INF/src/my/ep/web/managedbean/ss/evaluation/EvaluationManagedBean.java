@@ -67,6 +67,8 @@ public class EvaluationManagedBean extends BaseManagedBean {
 	private String overAllResult;
 	private String stageOneoverAllResult;
 	private int result=1;
+	private int manualList;
+	private String viewBy="P";
 	//private String stage1committeeType="OC";
 	public EvaluationManagedBean() {
 		super();
@@ -856,6 +858,42 @@ public class EvaluationManagedBean extends BaseManagedBean {
 	 */
 	public void setResult(int result) {
 		this.result = result;
+	}
+
+
+
+	/**
+	 * @return the manualList
+	 */
+	public int getManualList() {
+		return manualList;
+	}
+
+
+
+	/**
+	 * @param manualList the manualList to set
+	 */
+	public void setManualList(int manualList) {
+		this.manualList = manualList;
+	}
+
+
+
+	/**
+	 * @return the viewBy
+	 */
+	public String getViewBy() {
+		return viewBy;
+	}
+
+
+
+	/**
+	 * @param viewBy the viewBy to set
+	 */
+	public void setViewBy(String viewBy) {
+		this.viewBy = viewBy;
 	}
 
 

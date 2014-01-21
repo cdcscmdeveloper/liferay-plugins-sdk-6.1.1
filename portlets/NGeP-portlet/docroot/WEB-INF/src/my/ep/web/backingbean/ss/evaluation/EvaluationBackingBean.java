@@ -19,33 +19,26 @@ import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.RequestScoped;
 import javax.faces.context.FacesContext;
+import javax.faces.event.AjaxBehaviorEvent;
 import javax.portlet.PortletResponse;
 import javax.servlet.http.HttpServletResponse;
 
-import my.ep.biz.bean.search.ISearchBean;
-import my.ep.biz.bean.search.ISearchResultBean;
-import my.ep.biz.bean.search.SearchBean;
 import my.ep.biz.service.sm.registration.IRegistrationSO;
 import my.ep.biz.service.ss.quationtender.IQTDetailSO;
 import my.ep.biz.service.ss.quationtender.IQTEvaluationSO;
 import my.ep.biz.service.ss.quationtender.IQTMeetingSO;
 import my.ep.biz.service.ss.quationtender.IQTSpecSO;
-import my.ep.biz.service.ss.quationtender.IQTTemplateSO;
 import my.ep.constant.tpl.TemplateSpecConst;
 import my.ep.dto.sm.registration.RegistrationReqDTO;
 import my.ep.dto.sm.registration.RegistrationResDTO;
 import my.ep.dto.ss.quationtender.EvaluationReqDTO;
 import my.ep.dto.ss.quationtender.EvaluationResDTO;
 import my.ep.dto.ss.quationtender.MeetingReqDTO;
-import my.ep.dto.ss.quationtender.QTTemplateDocReqDTO;
-import my.ep.dto.ss.quationtender.QTTemplateDocResDTO;
 import my.ep.dto.ss.quationtender.QuationTenderReqDTO;
 import my.ep.dto.ss.quationtender.QuationTenderResDTO;
 import my.ep.dto.ss.specification.SpecificationReqDTO;
 import my.ep.dto.ss.specification.SpecificationResDTO;
-import my.ep.persistence.entity.ss.quationtender.ScEvaluationResult;
 import my.ep.persistence.entity.ss.quationtender.ScQtCheckList;
-import my.ep.persistence.entity.ss.quationtender.ScQtChecklistEvaluation;
 import my.ep.persistence.entity.ss.quationtender.ScQtDoc;
 import my.ep.persistence.entity.ss.quationtender.ScQtEvaluationResult;
 import my.ep.persistence.entity.ss.quationtender.ScQtManualEvaluation;
@@ -58,8 +51,6 @@ import my.ep.util.lookupservice.EpEjbBusinessDelegate;
 import my.ep.web.backingbean.ss.quatationtender.QTDetailBackingBean;
 import my.ep.web.backingbean.ss.quatationtender.SourcingBaseBackingBean;
 import my.ep.web.backingbean.tpl.spec.TemplateSpecBackingBean;
-import my.ep.web.bean.paginator.IPagingDataModel;
-import my.ep.web.bean.paginator.PagingDataModel;
 import my.ep.web.managedbean.ss.evaluation.EvaluationManagedBean;
 import my.ep.web.ss.quationtender.common.QTConstants;
 import my.ep.web.util.lookupservice.BusinessDelegate;
@@ -67,6 +58,7 @@ import my.ep.web.util.lookupservice.BusinessDelegate;
 import org.apache.commons.lang.StringUtils;
 import org.primefaces.event.FlowEvent;
 import org.primefaces.event.SelectEvent;
+import org.primefaces.event.UnselectEvent;
 
 @ManagedBean(name = "evaluationBackingBean")
 @RequestScoped
@@ -75,8 +67,7 @@ public class EvaluationBackingBean extends
 	private boolean skip;
 	private int currentTab;
 	private int outputTab;
-	private IPagingDataModel<ScQtChecklistEvaluation> checkListEvaluationtDataModel = new CheckListEvaluationPagingDataModel();
-	private IPagingDataModel<ScEvaluationResult> evaluationResultDataModel = new EvaluationResultPagingDataModel();
+	
 	private Map<Long, Boolean> checked = new HashMap<Long, Boolean>();
 	public static final String NAV_TO_STAGE2 = "/xhtml/ss/evaluation/peringkat2.xhtml";
 
@@ -87,28 +78,7 @@ public class EvaluationBackingBean extends
 	@PostConstruct
 	public void init() throws IOException {
 		try {
-			/*
-			 * if (this.getManagedBean().getScQtEvaluationResult() == null) {
-			 * getManagedBean().setScQtEvaluationResult(new
-			 * ScQtEvaluationResult());
-			 * 
-			 * } if (this.getManagedBean().getScQtEvaluationResult()
-			 * .getScQtCheckList() == null) {
-			 * 
-			 * getManagedBean().getChecklistEvaluation().setScQtCheckList( new
-			 * ScQtCheckList()); }
-			 * 
-			 * if (this.getManagedBean().getScQtEvaluationResult()
-			 * .getScQtProposal() == null) {
-			 * getManagedBean().getScQtEvaluationResult().setScQtProposal( new
-			 * ScQtProposal());
-			 * 
-			 * }
-			 * 
-			 * if (this.getManagedBean().getMeeting() == null) {
-			 * getManagedBean().setMeeting(new ScQtMeeting()); }
-			 */
-			// downLoadAction();
+			
 			retriveDetails();
 
 		} catch (Exception e) {
@@ -181,6 +151,7 @@ public class EvaluationBackingBean extends
 					resDTO1.getTechinicalEvaluationResults().getResultList());
 			this.getManagedBean().setManuals1SupplierList(
 					resDTO1.getManualSubEvaluations().getResultList());
+			this.getManagedBean().setManualList(resDTO1.getManualSubEvaluations().getResultList().size());
 		} catch (Exception e) {
 			e.printStackTrace();
 		} finally {
@@ -537,6 +508,12 @@ public class EvaluationBackingBean extends
 			evaluationSo = null;
 		}
 	}
+	
+	public void changedView(AjaxBehaviorEvent event) {
+		String type = (String) event.getComponent().getAttributes()
+				.get("value");
+		this.getManagedBean().setViewBy(type);
+	}
 
 	public void downLoadAction() throws IOException {
 
@@ -618,13 +595,7 @@ public class EvaluationBackingBean extends
 		FacesContext.getCurrentInstance().responseComplete();
 	}
 
-	public void evaluationSearchAction() {
-		checkListEvaluationtDataModel.reloadData();
-	}
 
-	public void evaluationResultSearchAction() {
-		evaluationResultDataModel.reloadData();
-	}
 
 	public void setTabValue(int currentTab, int outputTab) {
 		try {
@@ -1017,7 +988,83 @@ public class EvaluationBackingBean extends
 		}
 
 	}
+	
+	public void deleteMeetingDetails(){
+		try{
+		List<ScQtMeeting> meetingList =  getManagedBean()
+				.getScQtMeetings();
+		List<ScQtMeeting> selectMeeting = getManagedBean()
+				.getMeetingMultiSelect();
+		if (meetingList.size() == selectMeeting.size()) {
+			meetingList.clear();
+		} else {
+			for (ScQtMeeting meeting : selectMeeting)
+				meetingList.remove(meeting);
+		}
+		}catch(Exception e){
+			
+		}
+	}
+	
+	
+	public void deleteManualSubmission(){
+		try{
+		List<ScQtManualEvaluation> manualList =  getManagedBean()
+				.getManualEvaluateList();
+		List<ScQtManualEvaluation> selectManual = getManagedBean()
+				.getManualMultiSelect();
+		if (manualList.size() == selectManual.size()) {
+			manualList.clear();
+		} else {
+			for (ScQtManualEvaluation manualEvaluation : selectManual)
+				manualList.remove(manualEvaluation);
+		}
+		}catch(Exception e){
+			
+		}
+	}
+	
+	public void onManualRowSelect(SelectEvent selectEvent) {
+		
+		try {
+		
+			ScQtManualEvaluation score = (ScQtManualEvaluation) selectEvent
+					.getObject();
+			List<ScQtManualEvaluation> selectManual = getManagedBean()
+					.getManualMultiSelect();
+			if (selectManual == null) {
+				selectManual = new ArrayList<ScQtManualEvaluation>();
+			}
+			selectManual.add(score);
+			this.getManagedBean().setManualMultiSelect(selectManual);
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			
+		}
 
+	}
+
+public void onManualRowUnSelect(UnselectEvent selectEvent) {
+		
+		try {
+		
+			ScQtManualEvaluation score = (ScQtManualEvaluation) selectEvent
+					.getObject();
+			List<ScQtManualEvaluation> selectManual = getManagedBean()
+					.getManualMultiSelect();
+			if (selectManual == null) {
+				selectManual = new ArrayList<ScQtManualEvaluation>();
+			}
+			selectManual.add(score);
+			this.getManagedBean().setManualMultiSelect(selectManual);
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			
+		}
+
+	}
 	/**
 	 * @return the skip
 	 */
@@ -1063,102 +1110,9 @@ public class EvaluationBackingBean extends
 		this.outputTab = outputTab;
 	}
 
-	/**
-	 * @return the checkListEvaluationtDataModel
-	 */
-	public IPagingDataModel<ScQtChecklistEvaluation> getCheckListEvaluationtDataModel() {
-		return checkListEvaluationtDataModel;
-	}
+	
 
-	/**
-	 * @param checkListEvaluationtDataModel
-	 *            the checkListEvaluationtDataModel to set
-	 */
-	public void setCheckListEvaluationtDataModel(
-			IPagingDataModel<ScQtChecklistEvaluation> checkListEvaluationtDataModel) {
-		this.checkListEvaluationtDataModel = checkListEvaluationtDataModel;
-	}
 
-	private class CheckListEvaluationPagingDataModel extends
-			PagingDataModel<ScQtChecklistEvaluation> {
-		private static final long serialVersionUID = 1L;
 
-		public CheckListEvaluationPagingDataModel() {
-			super("searchDocument");
-		}
-
-		@Override
-		public ISearchResultBean<ScQtChecklistEvaluation> pageChangeListener(
-				ISearchBean<ScQtChecklistEvaluation> searchBean) {
-
-			try {
-				QTTemplateDocReqDTO qtTemplateReqDTO = new QTTemplateDocReqDTO();
-				searchBean = new SearchBean<ScQtChecklistEvaluation>();
-				QTTemplateDocResDTO resDto = null;
-				// qtTemplateReqDTO.setDocSearchBean(searchBean);
-				IQTTemplateSO qtTemplateSO = EpEjbBusinessDelegate
-						.getInstance().getServiceObject(QTConstants.SS_MODULE,
-								IQTTemplateSO.class);
-
-				resDto = qtTemplateSO.fetchTemplates(qtTemplateReqDTO);
-
-				if (resDto.isSuccessful()) {
-					// return resDto.getSearchResultBean();
-				}
-			} catch (Exception e) {
-				e.printStackTrace();
-			}
-			return null;
-		}
-	}
-
-	private class EvaluationResultPagingDataModel extends
-			PagingDataModel<ScEvaluationResult> {
-		private static final long serialVersionUID = 1L;
-
-		public EvaluationResultPagingDataModel() {
-			super("searchDocument");
-		}
-
-		@Override
-		public ISearchResultBean<ScEvaluationResult> pageChangeListener(
-				ISearchBean<ScEvaluationResult> searchBean) {
-
-			try {
-				QTTemplateDocReqDTO qtTemplateReqDTO = new QTTemplateDocReqDTO();
-				searchBean = new SearchBean<ScEvaluationResult>();
-				QTTemplateDocResDTO resDto = null;
-				// qtTemplateReqDTO.setDocSearchBean(searchBean);
-				IQTTemplateSO qtTemplateSO = EpEjbBusinessDelegate
-						.getInstance().getServiceObject(QTConstants.SS_MODULE,
-								IQTTemplateSO.class);
-				resDto = qtTemplateSO.fetchTemplates(qtTemplateReqDTO);
-				System.out.println("========scQTDOC List size===="
-						+ resDto.getSearchResultBean().getResultList().size());
-				if (resDto.isSuccessful()) {
-					// return resDto.getSearchResultBean();
-				}
-			} catch (Exception e) {
-				e.printStackTrace();
-			}
-			return null;
-		}
-	}
-
-	/**
-	 * @return the evaluationResultDataModel
-	 */
-	public IPagingDataModel<ScEvaluationResult> getEvaluationResultDataModel() {
-		return evaluationResultDataModel;
-	}
-
-	/**
-	 * @param evaluationResultDataModel
-	 *            the evaluationResultDataModel to set
-	 */
-	public void setEvaluationResultDataModel(
-			IPagingDataModel<ScEvaluationResult> evaluationResultDataModel) {
-		this.evaluationResultDataModel = evaluationResultDataModel;
-	}
 
 }
