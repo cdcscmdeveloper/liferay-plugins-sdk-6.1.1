@@ -47,7 +47,7 @@
 			<p:dataTable var="shareBean"
 				value="#{backingBean.managedBean.smapplShareHolders}"
 				selection="#{backingBean.managedBean.selectedShareHolders}"
-				rowKey="#{shareBean.personnelId}" rowIndexVar="index" id="shrPerDt">
+				rowKey="#{shareBean}" rowIndexVar="index" id="shrPerDt">
 				<ac:paginator for="shrPerDt" />
 				<p:column selectionMode="multiple" width="5%" />
 
@@ -62,7 +62,7 @@
 					<h:outputText value="#{shareBean.sharePercentage}" />
 				</p:column>
 				<p:column headerText="Value (RM.)">
-					<h:outputText value="#{shareBean.shareAmount}" />
+					<h:outputText value="#{shareBean.shareAmt}" />
 				</p:column>
 				<p:column headerText="Equity Owner?">
 					<h:outputText value="Yes" />

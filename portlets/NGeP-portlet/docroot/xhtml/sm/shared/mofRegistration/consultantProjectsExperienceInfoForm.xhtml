@@ -44,33 +44,32 @@
 				id="poConsBlc"
 				blocked="#{backingBean.managedBean.poUser ? backingBean.managedBean.poSecReview.experienceVerified : (backingBean.managedBean.approverUser ? backingBean.managedBean.apprvrSecReview.experienceVerified : false)}" />
 			<p:dataTable var="consBean"
-				value="#{backingBean.managedBean.smAppl.smProjectExperiences}"
-				selection="#{backingBean.managedBean.selectedConstProjs}"
-				rowKey="#{consBean.projectExperienceId}" rowIndexVar="index"
-				id="consDt">
+				value="#{backingBean.managedBean.smAppl.smCompanyExperiences}"
+				selection="#{backingBean.managedBean.selectedCompanyExperiences}"
+				rowKey="#{consBean}" rowIndexVar="index" id="consDt">
 				<ac:paginator for="consDt" />
 				<p:column selectionMode="multiple" width="5%" />
 
 				<p:column headerText="Project Title">
-					<h:outputText value="#{consBean.projectName}" />
+					<h:outputText value="#{consBean.title}" />
 				</p:column>
 
 				<p:column headerText="Project Value">
-					<h:outputText value="#{consBean.projectCost}" />
+					<h:outputText value="#{consBean.contractValue}" />
 				</p:column>
 
 				<p:column headerText="Procurement Date">
-					<h:outputText value="#{consBean.appointmentDate}">
+					<h:outputText value="#{consBean.procurementDate}">
 						<f:convertDateTime type="date" pattern="dd-MMM-yyyy" />
 					</h:outputText>
 				</p:column>
 
 				<p:column headerText=" Work Progress">
-					<h:outputText value="#{consBean.workStatus} %" />
+					<h:outputText value="#{consBean.progressStatus} %" />
 				</p:column>
 				<p:column headerText="Action">
 					<p:commandLink
-						action="#{backingBean.assignSelConsultantProj(consBean)}"
+						action="#{backingBean.assignSelCompanyExperience(consBean)}"
 						oncomplete="consDialog.show();" update=":form:tt:consDialog">
 						<p:graphicImage library="ep/images/design" name="edit.png"
 							value="/resources/ep/images/design/edit.png" />
@@ -81,7 +80,7 @@
 			<p:spacer height="2px;" />
 			<div align="right">
 				<p:commandButton value="Add"
-					action="#{backingBean.assignNewConsultantProj}"
+					action="#{backingBean.assignNewCompanyEcperience}"
 					oncomplete="consDialog.show();" update=":form:tt:consDialog" />
 				<p:commandButton value="Delete" />
 
@@ -123,55 +122,55 @@
 						<tr>
 							<td><p:outputLabel value="* Project Name" /></td>
 							<td><p:inputText
-									value="#{backingBean.managedBean.selectedConstProj.projectName}"
+									value="#{backingBean.managedBean.selectedCompanyExperience.title}"
 									size="35" /></td>
 						</tr>
 						<tr>
 							<td><p:outputLabel value="* Project Ref NO." /></td>
 							<td><p:inputText
-									value="#{backingBean.managedBean.selectedConstProj.projectRefNo}"
+									value="#{backingBean.managedBean.selectedCompanyExperience.refNo}"
 									size="35" /></td>
 						</tr>
 						<tr>
 							<td><p:outputLabel value="* Project Location" /></td>
 							<td><p:inputText
-									value="#{backingBean.managedBean.selectedConstProj.projectLocation}"
+									value="#{backingBean.managedBean.selectedCompanyExperience.projectLocation}"
 									size="35" /></td>
 						</tr>
 						<tr>
 							<td><p:outputLabel value="* Client's Name" /></td>
 							<td><p:inputText
-									value="#{backingBean.managedBean.selectedConstProj.clientName}"
+									value="#{backingBean.managedBean.selectedCompanyExperience.clientName}"
 									size="35" /></td>
 						</tr>
 						<tr>
 							<td><p:outputLabel value="* Project Cost (RM.)" /></td>
 							<td><p:inputText
-									value="#{backingBean.managedBean.selectedConstProj.projectCost}"
+									value="#{backingBean.managedBean.selectedCompanyExperience.contractValue}"
 									size="35" /></td>
 						</tr>
 						<tr>
 							<td><p:outputLabel value="* Service Provided" /></td>
 							<td><p:inputTextarea
-									value="#{backingBean.managedBean.selectedConstProj.serviceDesc}"
+									value="#{backingBean.managedBean.selectedCompanyExperience.workServiceDesc}"
 									cols="36" style="margin-bottom:5px;" /></td>
 						</tr>
 						<tr>
 							<td><p:outputLabel value="* Work Progress(%)" /></td>
 							<td><p:inputText
-									value="#{backingBean.managedBean.selectedConstProj.workStatus}"
+									value="#{backingBean.managedBean.selectedCompanyExperience.progressStatus}"
 									size="35" /></td>
 						</tr>
 						<tr>
 							<td><p:outputLabel value="* Consultant Fee (RM.)" /></td>
 							<td><p:inputText
-									value="#{backingBean.managedBean.selectedConstProj.consultantFee}"
+									value="#{backingBean.managedBean.selectedCompanyExperience.consultantFee}"
 									size="35" /></td>
 						</tr>
 						<tr>
 							<td><p:outputLabel value="* Appointment Date" /></td>
 							<td><p:calendar showOn="button"
-									value="#{backingBean.managedBean.selectedConstProj.appointmentDate}" /></td>
+									value="#{backingBean.managedBean.selectedCompanyExperience.procurementDate}" /></td>
 						</tr>
 						<tr>
 							<td><p:outputLabel value="
@@ -179,7 +178,7 @@
 							<td><p:selectOneMenu
 									value="#{backingBean.managedBean.selectedParentCat}"
 									style="width: 207px;margin-bottom: 5px;">
-									<f:selectItem itemLabel="-- Select One -- " itemValue="" />
+									<f:selectItem itemLabel="-- Select -- " itemValue="" />
 									<f:selectItems
 										value="#{backingBean.managedBean.defaultParentCatList}"
 										var="parent" itemLabel="#{parent.categoryName}"
@@ -228,7 +227,7 @@
 
 		<div align="right">
 			<p:commandButton value="Save"
-				action="#{backingBean.addOrUpdateConsultantProjsToSmAppl}"
+				action="#{backingBean.addOrUpdateCompanyExperienceToSmAppl}"
 				oncomplete="consDialog.hide();" update=":form:tt:consDt" />
 			<p:commandButton value="Cancel" onclick="consDialog.hide();" />
 		</div>

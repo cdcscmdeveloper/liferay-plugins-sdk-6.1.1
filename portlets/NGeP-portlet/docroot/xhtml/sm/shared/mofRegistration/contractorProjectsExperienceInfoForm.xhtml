@@ -44,10 +44,9 @@
 				id="poContrBlc"
 				blocked="#{backingBean.managedBean.poUser ? backingBean.managedBean.poSecReview.experienceVerified : (backingBean.managedBean.approverUser ? backingBean.managedBean.apprvrSecReview.experienceVerified : false)}" />
 			<p:dataTable var="contrBean"
-				value="#{backingBean.managedBean.smAppl.smContractExperiences}"
-				selection="#{backingBean.managedBean.selectedContractProjs}"
-				rowKey="#{contrBean.contractExperienceId}" rowIndexVar="index"
-				id="contDt">
+				value="#{backingBean.managedBean.smAppl.smCompanyExperiences}"
+				selection="#{backingBean.managedBean.selectedCompanyExperiences}"
+				rowKey="#{contrBean}" rowIndexVar="index" id="contDt">
 				<ac:paginator for="contDt" />
 				<p:column selectionMode="multiple" width="5%" />
 
@@ -60,21 +59,22 @@
 				</p:column>
 
 				<p:column headerText="Procurement Date">
-					<h:outputText value="#{contrBean.procureDate}">
+					<h:outputText value="#{contrBean.procurementDate}">
 						<f:convertDateTime type="date" pattern="dd-MMM-yyyy" />
 					</h:outputText>
 				</p:column>
 
 				<p:column headerText="Result / Progress">
 					<h:outputText value="In Progress"
-						rendered="#{contrBean.endResult eq '1'}" />
+						rendered="#{contrBean.progressStatus eq '1'}" />
 					<h:outputText value="Complete"
-						rendered="#{contrBean.endResult eq '2'}" />
-					<h:outputText value="Fail" rendered="#{contrBean.endResult eq '3'}" />
+						rendered="#{contrBean.progressStatus eq '2'}" />
+					<h:outputText value="Fail"
+						rendered="#{contrBean.progressStatus eq '3'}" />
 				</p:column>
 				<p:column headerText="Action">
 					<p:commandLink
-						action="#{backingBean.assignSelContractProj(contrBean)}"
+						action="#{backingBean.assignSelCompanyExperience(contrBean)}"
 						oncomplete="contDialog.show();" update=":form:tt:contDialog">
 						<p:graphicImage library="ep/images/design" name="edit.png"
 							value="/resources/ep/images/design/edit.png" />
@@ -84,7 +84,7 @@
 			<p:spacer height="2px;" />
 			<div align="right">
 				<p:commandButton value="Add "
-					action="#{backingBean.assignNewContractProj}"
+					action="#{backingBean.assignNewCompanyEcperience}"
 					oncomplete="contDialog.show();" update=":form:tt:contDialog" />
 				<p:commandButton value="Delete " />
 
@@ -126,7 +126,7 @@
 						<tr>
 							<td><p:outputLabel value="* Title" /></td>
 							<td><p:inputText
-									value="#{backingBean.managedBean.selectedContractProj.title}"
+									value="#{backingBean.managedBean.selectedCompanyExperience.title}"
 									size="35" /></td>
 						</tr>
 
@@ -134,31 +134,31 @@
 							<td><p:outputLabel value="* Contract Value (RM.)" /></td>
 
 							<td><p:inputText
-									value="#{backingBean.managedBean.selectedContractProj.contractValue}"
+									value="#{backingBean.managedBean.selectedCompanyExperience.contractValue}"
 									size="35" /></td>
 						</tr>
 						<tr>
 							<td><p:outputLabel value="* Procurement Mode" /></td>
 							<td><p:selectOneMenu
-									value="#{backingBean.managedBean.selectedContractProj.procureMode}"
+									value="#{backingBean.managedBean.selectedCompanyExperience.procurementModeId}"
 									style="width: 207px;margin-bottom: 5px;">
-									<f:selectItem itemLabel="-- Select One--" itemValue="1" />
-									<f:selectItem itemLabel="Tender" itemValue="T" />
-									<f:selectItem itemLabel="eBidding" itemValue="E" />
-									<f:selectItem itemLabel="SebutHarga" itemValue="S" />
+									<f:selectItem itemLabel="-- Select One--" itemValue="0" />
+									<f:selectItem itemLabel="Tender" itemValue="1" />
+									<f:selectItem itemLabel="eBidding" itemValue="2" />
+									<f:selectItem itemLabel="SebutHarga" itemValue="3" />
 								</p:selectOneMenu></td>
 						</tr>
 
 						<tr>
 							<td><p:outputLabel value="* Ministry/Statutory Body/Private" /></td>
 							<td><p:inputTextarea
-									value="#{backingBean.managedBean.selectedContractProj.orgName}"
+									value="#{backingBean.managedBean.selectedCompanyExperience.clientName}"
 									cols="36" /></td>
 						</tr>
 						<tr>
 							<td><p:outputLabel value="* Project Status" /></td>
 							<td><p:selectOneRadio
-									value="#{backingBean.managedBean.selectedContractProj.endResult}">
+									value="#{backingBean.managedBean.selectedCompanyExperience.progressStatus}">
 									<f:selectItem itemLabel="In Progress" itemValue="1" />
 									<f:selectItem itemLabel="Complete" itemValue="2" />
 									<f:selectItem itemLabel="Fail" itemValue="3" />
@@ -167,7 +167,7 @@
 						<tr>
 							<td><p:outputLabel value="* Procurement Date" /></td>
 							<td><p:calendar showOn="button"
-									value="#{backingBean.managedBean.selectedContractProj.procureDate}" /></td>
+									value="#{backingBean.managedBean.selectedCompanyExperience.procurementDate}" /></td>
 						</tr>
 						<tr>
 							<td><p:outputLabel value="
@@ -175,7 +175,7 @@
 							<td><p:selectOneMenu
 									value="#{backingBean.managedBean.selectedParentCat}"
 									style="width: 207px;margin-bottom: 5px;">
-									<f:selectItem itemLabel="-- Select  One-- " itemValue="" />
+									<f:selectItem itemLabel="-- Select  -- " itemValue="" />
 									<f:selectItems
 										value="#{backingBean.managedBean.defaultParentCatList}"
 										var="parent" itemLabel="#{parent.categoryName}"
@@ -222,7 +222,7 @@
 
 		<div align="right">
 			<p:commandButton value="Save"
-				action="#{backingBean.addOrUpdateContractProjsToSmAppl}"
+				action="#{backingBean.addOrUpdateCompanyExperienceToSmAppl}"
 				oncomplete="contDialog.hide();" update=":form:tt:contDt" />
 			<p:commandButton value="Cancel" onclick="contDialog.hide();" />
 		</div>

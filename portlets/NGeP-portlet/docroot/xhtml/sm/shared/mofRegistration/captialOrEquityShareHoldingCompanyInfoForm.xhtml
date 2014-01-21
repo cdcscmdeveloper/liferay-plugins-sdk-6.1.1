@@ -47,8 +47,8 @@
 			<p:dataTable var="equiBean"
 				value="#{backingBean.managedBean.smAppl.smEquityCompanies}"
 				selection="#{backingBean.managedBean.selectedEquityCompanies}"
-				selectionMode="multiple" rowKey="#{equiBean.equityCompanyId}"
-				rowIndexVar="index" id="eqiComDt">
+				selectionMode="multiple" rowKey="#{equiBean}" rowIndexVar="index"
+				id="eqiComDt">
 				<ac:paginator for="eqiComDt" />
 
 				<p:column headerText="Company Name">
@@ -62,7 +62,7 @@
 				</p:column>
 
 				<p:column headerText="Share Amt (RM.)">
-					<h:outputText value="#{equiBean.shareAmount}" />
+					<h:outputText value="#{equiBean.shareAmt}" />
 				</p:column>
 				<p:column headerText="Share holding(%)">
 					<h:outputText value="#{equiBean.sharePercentage}" />
@@ -131,7 +131,7 @@
 			<tr>
 				<td><p:outputLabel value="* Share Amount (RM.)" /></td>
 				<td><p:inputText
-						value="#{backingBean.managedBean.selectedEquityCompany.shareAmount}"
+						value="#{backingBean.managedBean.selectedEquityCompany.shareAmt}"
 						size="35" /></td>
 			</tr>
 			<tr>
@@ -195,13 +195,13 @@
 			<tr>
 				<td><p:outputLabel value="Phone NO." /></td>
 				<td><p:inputText
-						value="#{backingBean.managedBean.selectedEquityCompany.smAddress.phoneNo}"
+						value="#{backingBean.managedBean.selectedEquityCompany.phoneNo}"
 						size="35" /></td>
 			</tr>
 			<tr>
 				<td><p:outputLabel value="Fax NO." /></td>
 				<td><p:inputText
-						value="#{backingBean.managedBean.selectedEquityCompany.smAddress.faxNo}"
+						value="#{backingBean.managedBean.selectedEquityCompany.faxNo}"
 						size="35" /></td>
 			</tr>
 

@@ -113,7 +113,7 @@
 			<p:dataTable var="person"
 				value="#{backingBean.managedBean.smAppl.smPersonnels}"
 				selection="#{backingBean.managedBean.selectedPersonnels}"
-				rowKey="#{person.personnelId}" rowIndexVar="index" id="personDt">
+				rowKey="#{person}" rowIndexVar="index" id="personDt">
 				<ac:paginator for="personDt" />
 				<p:column selectionMode="multiple" width="5%" />
 

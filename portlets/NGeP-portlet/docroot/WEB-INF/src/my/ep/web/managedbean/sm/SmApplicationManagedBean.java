@@ -18,6 +18,7 @@ import my.ep.persistence.entity.sm.SmAppl;
 import my.ep.persistence.entity.sm.SmApplSectionReview;
 import my.ep.persistence.entity.sm.SmAssociateCompany;
 import my.ep.persistence.entity.sm.SmChequeSignatory;
+import my.ep.persistence.entity.sm.SmCompanyExperience;
 import my.ep.persistence.entity.sm.SmEquityCompany;
 import my.ep.persistence.entity.sm.SmFacility;
 import my.ep.persistence.entity.sm.SmMachineDtl;
@@ -63,13 +64,17 @@ public class SmApplicationManagedBean extends BaseManagedBean {
 
 	private SmSupplierCert selectedCert;
 
-//	private List<SmContractExperience> selectedContractProjs;
-//
-//	private SmContractExperience selectedContractProj;
-//
-//	private List<SmProjectExperience> selectedConstProjs;
-//
-//	private SmProjectExperience selectedConstProj;
+	// private List<SmContractExperience> selectedContractProjs;
+	//
+	// private SmContractExperience selectedContractProj;
+	//
+	// private List<SmProjectExperience> selectedConstProjs;
+	//
+	// private SmProjectExperience selectedConstProj;
+
+	private List<SmCompanyExperience> selectedCompanyExperiences;
+
+	private SmCompanyExperience selectedCompanyExperience;
 
 	private String selectedParentCat;
 
@@ -167,7 +172,7 @@ public class SmApplicationManagedBean extends BaseManagedBean {
 	private SmApplSectionReview apprvrSecReview;
 
 	private boolean termsAccepted;
-	
+
 	private String newSupplierType;
 
 	public SmApplicationManagedBean() {
@@ -230,8 +235,8 @@ public class SmApplicationManagedBean extends BaseManagedBean {
 		selectedEquityCompanies = new ArrayList<SmEquityCompany>();
 		selectedCertList = new ArrayList<SmSupplierCert>();
 		selectedCert = new SmSupplierCert();
-		// selectedContractProjs = new ArrayList<SmContractExperience>();
-		// selectedContractProj = new SmContractExperience();
+		selectedCompanyExperiences = new ArrayList<SmCompanyExperience>();
+		selectedCompanyExperience = new SmCompanyExperience();
 		// selectedConstProjs = new ArrayList<SmProjectExperience>();
 		// selectedConstProj = new SmProjectExperience();
 		// For share holder personell
@@ -282,7 +287,7 @@ public class SmApplicationManagedBean extends BaseManagedBean {
 		smAppl.setSmPersonnels(new ArrayList<SmPersonnel>());
 		chequeSingNames = new ArrayList<String>();
 		selectedBank = new SmSupplierBank();
-		//selectedBank.setPmbank(new PmBank());
+		// selectedBank.setPmbank(new PmBank());
 		selectedBank.setSmAddress(defaultAddr);
 		selectedBank.setSmChequeSignatories(new ArrayList<SmChequeSignatory>());
 		selectedBanks = new ArrayList<SmSupplierBank>();
@@ -412,19 +417,19 @@ public class SmApplicationManagedBean extends BaseManagedBean {
 	// return selectedContractProjs;
 	// }
 
-//	public void setSelectedContractProjs(
-//			List<SmContractExperience> selectedContractProjs) {
-//		this.selectedContractProjs = selectedContractProjs;
-//	}
-//
-//	public SmContractExperience getSelectedContractProj() {
-//		return selectedContractProj;
-//	}
-//
-//	public void setSelectedContractProj(
-//			SmContractExperience selectedContractProj) {
-//		this.selectedContractProj = selectedContractProj;
-//	}
+	// public void setSelectedContractProjs(
+	// List<SmContractExperience> selectedContractProjs) {
+	// this.selectedContractProjs = selectedContractProjs;
+	// }
+	//
+	// public SmContractExperience getSelectedContractProj() {
+	// return selectedContractProj;
+	// }
+	//
+	// public void setSelectedContractProj(
+	// SmContractExperience selectedContractProj) {
+	// this.selectedContractProj = selectedContractProj;
+	// }
 
 	public List<SmSupplierCert> getSelectedCertList() {
 		return selectedCertList;
@@ -888,6 +893,24 @@ public class SmApplicationManagedBean extends BaseManagedBean {
 
 	public void setNewSupplierType(String newSupplierType) {
 		this.newSupplierType = newSupplierType;
+	}
+
+	public List<SmCompanyExperience> getSelectedCompanyExperiences() {
+		return selectedCompanyExperiences;
+	}
+
+	public void setSelectedCompanyExperiences(
+			List<SmCompanyExperience> selectedCompanyExperiences) {
+		this.selectedCompanyExperiences = selectedCompanyExperiences;
+	}
+
+	public SmCompanyExperience getSelectedCompanyExperience() {
+		return selectedCompanyExperience;
+	}
+
+	public void setSelectedCompanyExperience(
+			SmCompanyExperience selectedCompanyExperience) {
+		this.selectedCompanyExperience = selectedCompanyExperience;
 	}
 
 }

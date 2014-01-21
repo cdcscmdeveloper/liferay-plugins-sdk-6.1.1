@@ -122,11 +122,12 @@
 		<table style="width: 100%">
 			<tr>
 				<td><p:outputLabel value="Certificate Type *" /></td>
-				<td><p:selectOneMenu style="width: 207px;margin-bottom: 5px;">
-						<f:selectItem itemLabel="-- Select -- " itemValue="N" />
-						<f:selectItem itemLabel="MOF" itemValue="M" />
-						<f:selectItem itemLabel="BumiPutera" itemValue="B" />
-						<f:selectItem itemLabel="Type3" itemValue="T" />
+				<td><p:selectOneMenu style="width: 207px;margin-bottom: 5px;"
+						value="#{backingBean.managedBean.selectedCert.certTypeId}">
+						<f:selectItem itemLabel="-- Select -- " itemValue="0" />
+						<f:selectItem itemLabel="MOF" itemValue="1" />
+						<f:selectItem itemLabel="BumiPutera" itemValue="2" />
+						<f:selectItem itemLabel="Type3" itemValue="3" />
 					</p:selectOneMenu></td>
 			</tr>
 			<tr>
@@ -134,13 +135,7 @@
 				<td><p:inputText
 						value="#{backingBean.managedBean.selectedCert.certName}" size="35" /></td>
 			</tr>
-			<!-- <tr>
-					<td><p:outputLabel value="Certificate Body *" /></td>
-					<td><p:inputTextarea readonly="true"
-							title="Auto populated based on the Certificate Type , 
-							can key the body for type - Others only "
-							value="#{backingBean.managedBean.selectedCert.certBody}" /></td>
-				</tr> -->
+
 			<tr>
 				<td><p:outputLabel value="Certificate Body *" /></td>
 				<td><p:selectOneMenu style="width: 207px;margin-bottom: 5px;">
@@ -162,7 +157,8 @@
 			</tr>
 			<tr>
 				<td><p:outputLabel value="Rating" /></td>
-				<td><p:inputText size="35" /></td>
+				<td><p:inputText size="35"
+						value="#{backingBean.managedBean.selectedCert.certScore}" /></td>
 			</tr>
 
 		</table>

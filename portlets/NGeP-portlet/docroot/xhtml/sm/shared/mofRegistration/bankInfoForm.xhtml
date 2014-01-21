@@ -56,7 +56,7 @@
 					<h:outputText value="#{bankBean.accountNo}" />
 				</p:column>
 				<p:column headerText="Bank Name">
-					<h:outputText value="#{bankBean.pmbank.bankCode}" />
+					<h:outputText value="#{bankBean.pmFinancialOrg.finOrgCode}" />
 				</p:column>
 
 				<p:column headerText="Registration Account"
@@ -92,8 +92,9 @@
 			</p:dataTable>
 			<p:spacer height="2px;" />
 			<div align="right">
-				<p:commandButton value="Add" oncomplete="bankDialog.show();"
-					action="#{backingBean.assignNewBank}" update=":form:tt:bankDialog" />
+				<p:commandButton value="Add" onsuccess="bankDialog.show();"
+					actionListener="#{backingBean.assignNewBank}"
+					update=":form:tt:bankDialog" />
 				<p:commandButton value="Delete" />
 			</div>
 			<p:panel id="sfieldset"
@@ -155,7 +156,7 @@
 			<tr>
 				<td><p:outputLabel value="* Bank Name" /></td>
 				<td><p:selectOneMenu
-						value="#{backingBean.managedBean.selectedBank.pmbank.bankCode}"
+						value="#{backingBean.managedBean.selectedBank.pmFinancialOrg.finOrgCode}"
 						style="width: 207px;margin-bottom: 5px;">
 						<f:selectItem itemLabel="-- Select One -- " itemValue="" />
 						<f:selectItem itemLabel="Maybank" itemValue="MY" />
@@ -247,9 +248,7 @@
 			</tr>
 			<tr>
 				<td><p:outputLabel value="Fax NO." /></td>
-				<td><p:inputText
-						value="#{backingBean.managedBean.selectedBank.smAddress.faxNo}"
-						size="35" /></td>
+				<td><p:inputText size="35" /></td>
 			</tr>
 			<tr>
 				<td><p:outputLabel value="* Cheque Signatories" /></td>

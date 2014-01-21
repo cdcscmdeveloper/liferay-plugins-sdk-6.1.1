@@ -25,6 +25,7 @@ import my.ep.persistence.entity.pm.common.PmCategoryL3;
 import my.ep.persistence.entity.pm.common.PmCity;
 import my.ep.persistence.entity.pm.common.PmCountry;
 import my.ep.persistence.entity.pm.common.PmDistrict;
+import my.ep.persistence.entity.pm.common.PmFinancialOrg;
 import my.ep.persistence.entity.pm.common.PmState;
 import my.ep.persistence.entity.sm.SmAddress;
 import my.ep.persistence.entity.sm.SmAppl;
@@ -32,6 +33,7 @@ import my.ep.persistence.entity.sm.SmApplRejectReason;
 import my.ep.persistence.entity.sm.SmApplSectionReview;
 import my.ep.persistence.entity.sm.SmAssociateCompany;
 import my.ep.persistence.entity.sm.SmChequeSignatory;
+import my.ep.persistence.entity.sm.SmCompanyExperience;
 import my.ep.persistence.entity.sm.SmEquityCompany;
 import my.ep.persistence.entity.sm.SmFacility;
 import my.ep.persistence.entity.sm.SmMachineDtl;
@@ -547,28 +549,29 @@ public class SmApplicationBackingBean extends
 
 	// -- Process Contract Projs End
 
-	// -- Process Consultant Projs Start
-	public void addOrUpdateConsultantProjsToSmAppl() {
-		// if (getManagedBean().getSmAppl().getSmProjectExperiences()
-		// .contains(getManagedBean().getSelectedConstProj())) {
-		//
-		// System.out
-		// .println(" **** THIS IS AN UPDATE FOR Consultant Prjs******");
-		// } else {
-		// getManagedBean().getSmAppl().getSmProjectExperiences()
-		// .add(getManagedBean().getSelectedConstProj());
-		// }
+	// -- Process Consultant or Contractor Company Experience Start
+	public void addOrUpdateCompanyExperienceToSmAppl() {
+		if (getManagedBean().getSmAppl().getSmCompanyExperiences()
+				.contains(getManagedBean().getSelectedCompanyExperience())) {
+
+			System.out
+					.println(" **** THIS IS AN UPDATE FOR Consultant Prjs******");
+		} else {
+			getManagedBean().getSmAppl().getSmCompanyExperiences()
+					.add(getManagedBean().getSelectedCompanyExperience());
+		}
 	}
 
-	// public void assignSelConsultantProj(SmProjectExperience consultantBean) {
-	// getManagedBean().setSelectedConstProj(consultantBean);
-	// }
-	//
-	// public void assignNewConsultantProj() {
-	// getManagedBean().setSelectedConstProj(new SmProjectExperience());
-	// }
+	public void assignSelCompanyExperience(SmCompanyExperience consultantBean) {
+		getManagedBean().setSelectedCompanyExperience(consultantBean);
+	}
 
-	// -- Process Consultant Projs End
+	public void assignNewCompanyEcperience() {
+		getManagedBean()
+				.setSelectedCompanyExperience(new SmCompanyExperience());
+	}
+
+	// ---- Process Consultant or Contractor Company Experience End
 
 	// -- Process Equity Companies Start
 	public void addOrUpdateEquityCompanyToSmAppl() {
@@ -1040,6 +1043,7 @@ public class SmApplicationBackingBean extends
 		getManagedBean().setChequeSingNames(new ArrayList<String>());
 		SmSupplierBank bank = new SmSupplierBank();
 		bank.setSmAddress(setDefaultAddr());
+		bank.setPmFinancialOrg(new PmFinancialOrg());
 		// bank.setPmbank(new PmBank());
 		bank.setSmChequeSignatories(new ArrayList<SmChequeSignatory>());
 		getManagedBean().setSelectedBank(bank);
