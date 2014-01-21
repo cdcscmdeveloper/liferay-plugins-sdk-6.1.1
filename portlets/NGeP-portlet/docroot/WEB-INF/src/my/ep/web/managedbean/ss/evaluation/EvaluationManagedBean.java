@@ -69,6 +69,8 @@ public class EvaluationManagedBean extends BaseManagedBean {
 	private int result=1;
 	private int manualList;
 	private String viewBy="P";
+	private List<ScQtEvaluationResult> requestDemoSelect;
+	private String fileName;
 	//private String stage1committeeType="OC";
 	public EvaluationManagedBean() {
 		super();
@@ -894,6 +896,42 @@ public class EvaluationManagedBean extends BaseManagedBean {
 	 */
 	public void setViewBy(String viewBy) {
 		this.viewBy = viewBy;
+	}
+
+
+
+	/**
+	 * @return the requestDemoSelect
+	 */
+	public List<ScQtEvaluationResult> getRequestDemoSelect() {
+		return requestDemoSelect;
+	}
+
+
+
+	/**
+	 * @param requestDemoSelect the requestDemoSelect to set
+	 */
+	public void setRequestDemoSelect(List<ScQtEvaluationResult> requestDemoSelect) {
+		this.requestDemoSelect = requestDemoSelect;
+	}
+
+
+
+	/**
+	 * @return the fileName
+	 */
+	public String getFileName() {
+		return fileName;
+	}
+
+
+
+	/**
+	 * @param fileName the fileName to set
+	 */
+	public void setFileName(String fileName) {
+		this.fileName = fileName;
 	}
 
 
