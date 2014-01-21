@@ -38,12 +38,49 @@
 								</tr>
 
 								<tr>
-									<td><p:outputLabel value="Nature Of Business" /></td>
-									<td><p:inputText size="50" value="#{catalogueBackingBean.managedBean.natureOfBusinessFilterBean.searchValue}"></p:inputText></td>
-									<td><p:outputLabel value="Circular No" /></td>
-									<td><p:inputText size="50" value="#{catalogueBackingBean.managedBean.circularNoFilterBean.searchValue}" ></p:inputText></td>
+									<td><p:outputLabel value="EP No" /></td>
+									<td><p:inputText size="50"
+											value="#{catalogueBackingBean.managedBean.epNoFilterBean.searchValue}"></p:inputText></td>
+									<td><p:outputLabel value="MOF No" /></td>
+									<td><p:inputText size="50"
+											value="#{catalogueBackingBean.managedBean.mofNoFilterBean.searchValue}"></p:inputText></td>
+								</tr>
+
+								<tr>
+
+									<td><p:outputLabel value="Business Reg No" /></td>
+									<td><p:inputText size="50"
+											value="#{catalogueBackingBean.managedBean.bizRegNoFilterBean.searchValue}"></p:inputText></td>
+									<td><p:outputLabel value="Cicular No" /></td>
+									<td><p:inputText size="50"
+											value="#{catalogueBackingBean.managedBean.circularNoFilterBean.searchValue}"></p:inputText></td>
+								</tr>
+								<tr>
+									<td><p:outputLabel value="State" /></td>
+									<td><p:selectManyMenu id="stateIdDD" showCheckbox="true"
+											style="height:200px;width: 200px;"
+											value="#{catalogueBackingBean.managedBean.stateId}">
+											<f:selectItems
+												value="#{catalogueBackingBean.managedBean.stateList}"
+												var="state" itemLabel="#{state.stateName}"
+												itemValue="#{state.stateId}"></f:selectItems>
+										</p:selectManyMenu> <p:commandButton value="Find District"
+											action="#{catalogueBackingBean.findDistrict}"
+											update="@(.ui-selectmanymenu[id$=districtDD])" /></td>
+									<td><p:outputLabel value="District" /></td>
+									<td><p:selectManyMenu id="districtDD" showCheckbox="true"
+											style="height:200px;width: 200px;"
+											value="#{catalogueBackingBean.managedBean.districtId}">
+											<f:selectItems
+												value="#{catalogueBackingBean.managedBean.districtList}"
+												var="district" itemLabel="#{district.districtName}"
+												itemValue="#{district.districtId}"></f:selectItems>
+										</p:selectManyMenu></td>
+
 								</tr>
 							</table>
+
+
 
 
 							<div style="text-align: right;">
@@ -74,17 +111,24 @@
 								value="#{lbl['lbl.cm.compare']} ( #{fn:length(catalogueBackingBean.managedBean.selectViewItems)} )"
 								disabled="#{2 > fn:length(catalogueBackingBean.managedBean.selectViewItems)}" />
 						</div>
-						<p:dataTable value="#{catalogueBackingBean.managedBean.searchDataModel}" rowKey="#{supplierItem}"
+						<p:dataTable lazy="true"
+							value="#{catalogueBackingBean.managedBean.searchDataModel}"
+							rowKey="#{supplierItem}"
 							selection="#{catalogueBackingBean.managedBean.selectViewItems}"
 							id="supplierItemID" var="supplierItem" rowIndexVar="rowIndex">
 
 							<ac:paginator for="supplierItemID"></ac:paginator>
-							
-							<p:ajax event="rowSelectCheckbox" update="@(.ui-button[id$=compareButton])" ></p:ajax>
-							<p:ajax event="rowUnselectCheckbox" update="@(.ui-button[id$=compareButton])" ></p:ajax>
-							<p:ajax event="rowUnselect" update="@(.ui-button[id$=compareButton])" ></p:ajax>
-							<p:ajax event="rowSelect" update="@(.ui-button[id$=compareButton])" ></p:ajax>
-							<p:ajax event="toggleSelect" update="@(.ui-button[id$=compareButton])" />
+
+							<p:ajax event="rowSelectCheckbox"
+								update="@(.ui-button[id$=compareButton])"></p:ajax>
+							<p:ajax event="rowUnselectCheckbox"
+								update="@(.ui-button[id$=compareButton])"></p:ajax>
+							<p:ajax event="rowUnselect"
+								update="@(.ui-button[id$=compareButton])"></p:ajax>
+							<p:ajax event="rowSelect"
+								update="@(.ui-button[id$=compareButton])"></p:ajax>
+							<p:ajax event="toggleSelect"
+								update="@(.ui-button[id$=compareButton])" />
 
 							<p:column headerText="Image" width="80px;">
 								<p:graphicImage
@@ -112,12 +156,18 @@
 							</p:column>
 
 
-							<p:column selectionMode="multiple" style="width:2%" disabledSelection="#{supplierItem.contractNo != 'N/A'}" />
-							
+							<p:column selectionMode="multiple" style="width:2%"
+								disabledSelection="#{supplierItem.contractNo != 'N/A' or supplierItem.circularNo != 'N/A'}" />
+
 							<p:column headerText="Action" width="2%">
 								<table>
 									<tr>
 										<td><cc:renderFacet name="cartButton" /></td>
+										<td><p:commandLink>
+												<p:graphicImage
+													value="/resources/ep/images/design/icon_txt.png"
+													height="15px"></p:graphicImage>
+											</p:commandLink></td>
 
 									</tr>
 

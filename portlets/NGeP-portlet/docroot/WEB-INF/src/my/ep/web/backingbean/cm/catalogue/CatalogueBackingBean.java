@@ -1,15 +1,11 @@
 package my.ep.web.backingbean.cm.catalogue;
 
-import java.awt.image.BufferedImage;
 import java.io.BufferedOutputStream;
-import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.InputStream;
 import java.math.BigDecimal;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -22,21 +18,17 @@ import java.util.Vector;
 
 import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
-import javax.faces.bean.RequestScoped;
 import javax.faces.bean.ViewScoped;
+import javax.faces.context.ExternalContext;
 import javax.faces.context.FacesContext;
-import javax.imageio.ImageIO;
 import javax.portlet.PortletRequest;
 import javax.portlet.PortletResponse;
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import my.ep.biz.bean.search.ISearchBean;
-import my.ep.biz.bean.search.ISearchResultBean;
 import my.ep.biz.bean.search.SearchBean;
 import my.ep.biz.bean.search.SearchFilterBean;
-import my.ep.biz.bean.search.SearchResultBean;
 import my.ep.biz.service.cm.catalogue.ICatalogueSO;
-import my.ep.biz.service.cm.catalogue.IViewSupplierItemSO;
 import my.ep.biz.service.cm.catalogue.IWishListSO;
 import my.ep.biz.service.pm.common.district.IDistrictSO;
 import my.ep.biz.service.pm.common.state.IStateSO;
@@ -69,14 +61,11 @@ import my.ep.persistence.logging.LogKey;
 import my.ep.type.aut.SearchOperator;
 import my.ep.web.backingbean.BaseBackingBean;
 import my.ep.web.backingbean.cm.codification.CodificationBackingBean;
-import my.ep.web.bean.paginator.IPagingDataModel;
-import my.ep.web.bean.paginator.PagingDataModel;
 import my.ep.web.managedbean.cm.catalogue.CatalogueManagedBean;
 import my.ep.web.util.lookupservice.BusinessDelegate;
 import my.ep.web.vo.AdvanceSearchVO;
 import my.ep.web.vo.PricingVO;
 
-import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.apache.log4j.MDC;
 import org.apache.poi.ss.usermodel.Cell;
@@ -86,7 +75,6 @@ import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.primefaces.event.FileUploadEvent;
 import org.primefaces.event.TabChangeEvent;
-import org.primefaces.model.DualListModel;
 import org.primefaces.model.StreamedContent;
 import org.primefaces.model.TreeNode;
 import org.primefaces.model.UploadedFile;
@@ -691,59 +679,57 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean>{
 
 	public void imageUpload(FileUploadEvent event) throws Exception {
 
-		String tempDir = "C:\\image\\";
+		//String tempDir = System.getenv("windir");
+		
+		String tempDir = FacesContext.getCurrentInstance().getExternalContext().getRealPath("/images");
+				
+		
+//		String tempDir = "C://image//";
 
 		UploadedFile item = event.getFile();
-		//	this.getManagedBean().setImageObj(new CatImage());
-		//	this.getManagedBean().getImageObj().setImage(item.getContents());
-		//	this.getManagedBean().getImageObj().setDescription(item.getFileName());
 
 		CmImage catImage = new CmImage();
 		catImage.setImage(item.getContents());
 		catImage.setImageName(item.getFileName());
 		catImage.setImageDesc(item.getFileName());
 		catImage.setImageType("jpg");
-		catImage.setImagePath(tempDir+item.getFileName());
+		catImage.setImagePath(tempDir + "/" + item.getFileName());
 
-		log.info("item.getFileName()"+item.getFileName());
-
-
-
-
+		log.info("catImage.getImagePath()"+catImage.getImagePath());
 
 		//render for display
 		this.getManagedBean().getSelectedMaintainItem().getCmImages().add(catImage);// getCatalogImages().add(this.getManagedBean().getImageObj());
+		
+		
 
-		genMultipleImage1(this.getManagedBean().getSelectedMaintainItem().getCmImages());
+		genImage(catImage);
 
 
 
 		log.info("size:"+this.getManagedBean().getSelectedMaintainItem().getCmImages().size());
-
-
-
+		FacesContext fc = FacesContext.getCurrentInstance();
+		fc.getApplication().getNavigationHandler().handleNavigation(fc, null, "addCatalogView.xhtml?faces-redirect=true");
 	}
 
 
-	public void genMultipleImage1(List<CmImage> imageList){
+	public void genImage(CmImage imageObj){
 		
 		
 		try {	
 
-			for(int i=0; i<imageList.size(); i++){
-				CmImage image1 = (CmImage)imageList.get(i);
+			
 				
 				
-				BufferedOutputStream bufferedOutputStream =new BufferedOutputStream(new FileOutputStream(image1.getImagePath()));
+				BufferedOutputStream bufferedOutputStream =new BufferedOutputStream(new FileOutputStream(imageObj.getImagePath()));
 				
-				bufferedOutputStream.write(image1.getImage());
+				bufferedOutputStream.write(imageObj.getImage());
 
 				if (bufferedOutputStream != null) {
 					bufferedOutputStream.flush();
 					bufferedOutputStream.close();
 				}
 				
-			}
+			
 
 		}catch(Exception e) {
 			log.error(e);

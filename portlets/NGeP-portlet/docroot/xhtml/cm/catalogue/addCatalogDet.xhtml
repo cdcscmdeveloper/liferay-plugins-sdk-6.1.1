@@ -53,16 +53,17 @@
 					</tr>
 				</table>
 			</h:panelGroup>
-
+		
 			<table style="width: 100%; margin-top: 10px;">
 				<tr style="height: 30px;">
 					<td rowspan="10" style="width: 250px;"><h:panelGrid
 							styleClass="imageFrame">
+							
 							<p:galleria id="imageUploadID"
 								value="#{catalogueBackingBean.managedBean.selectedMaintainItem.cmImages}"
 								var="imageObj" panelWidth="200" panelHeight="150">
-								<p:graphicImage height="150" width="150"
-									value="/resources/ep/images/product/computer/879949914_125.jpg" />
+								<p:graphicImage id="imageId" height="150" width="150"
+									value="/images/#{imageObj.imageName}" />
 							</p:galleria>
 						</h:panelGrid> <p:commandButton value="#{lbl['lbl.cm.upload']}"
 							icon="ui-icon-upload" onclick="imageDialog.show()" /></td>
@@ -127,20 +128,19 @@
 			</table>
 		</p:panel>
 
-		<p:dialog id="imageDialog" widgetVar="imageDialog" modal="true"
+		<p:dialog id="imageDialog" widgetVar="imageDialog" modal="true"  
 			resizable="false" styleClass="pop_up_top">
 
 
-			<p:fileUpload
+			<p:fileUpload 
 				fileUploadListener="#{catalogueBackingBean.imageUpload}"
-				mode="advanced" id="upload"
+				mode="advanced" id="upload" 
 				allowTypes="/(\.|\/)(gif|jpe?g|png|bmp|txt|xls|xlsx|pdf|doc|docx|csv)$/"
 				invalidFileMessage="Only JPG, GIF, PNG, BMP, TXT, XLS, PDF, DOC, CSV files are accepted"
-				update="imageUploadID">
+				update="imageUploadID"  >
 			</p:fileUpload>
 
 		</p:dialog>
-
 
 
 

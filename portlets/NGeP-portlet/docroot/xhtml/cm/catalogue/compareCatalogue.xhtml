@@ -52,26 +52,21 @@
 												value="/resources/ep/images/design/icon_txt.png"
 												height="15px"></p:graphicImage>
 										</p:commandLink></td>
-									<td><p:commandLink>
+									<td><p:commandLink disabled="#{catalogueBackingBean.managedBean.contractedExist}">
 											<p:graphicImage
 												value="/resources/ep/images/design/icon_txt.png"
 												height="15px"></p:graphicImage>
 										</p:commandLink></td>
-									<td><p:commandLink>
+									<td><p:commandLink disabled="#{catalogueBackingBean.managedBean.contractedExist}">
 											<p:graphicImage
 												value="/resources/ep/images/design/icon_txt.png"
 												height="15px"></p:graphicImage>
 										</p:commandLink></td>
-									<td><p:commandLink>
-											<p:graphicImage
-												value="/resources/ep/images/design/icon_txt.png"
-												height="15px"></p:graphicImage>
-										</p:commandLink></td>
-									<td><p:commandLink>
+									<td><p:commandLink disabled="#{catalogueBackingBean.managedBean.contractedExist}">
 											<p:graphicImage library="ep/images/design"
 												name="cart_add.png" />
 										</p:commandLink></td>
-									<td><p:commandLink
+									<td><p:commandLink 
 											action="#{catalogueBackingBean.deleteComparedItem(compareKey)}"
 											update=":form:compareDataList">
 											<p:graphicImage value="/resources/ep/images/design/trash.png"></p:graphicImage>
