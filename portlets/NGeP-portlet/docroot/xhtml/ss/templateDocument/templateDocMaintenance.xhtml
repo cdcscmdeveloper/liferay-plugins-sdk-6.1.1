@@ -9,9 +9,10 @@
 	<ui:define name="resourceSection">
 	</ui:define>
 
-
+  <p:messages id="templateDocmessages" showDetail="true" autoUpdate="true"
+				closable="true" />
 	<ui:define name="contentSection">
-
+ 
 		<div align="right">
 			<p:commandButton value="#{lbl['lbl.sc.tpl.doc.btn.save']}"
 				 action="#{sourcingTemplateDBB.saveAction}" icon="ui-icon-save"/>
