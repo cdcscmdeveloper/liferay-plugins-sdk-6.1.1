@@ -48,6 +48,7 @@ public class SupplierFinalizationManagedBean extends BaseManagedBean {
 	private ScQtZoneCriteria scQtZoneCriteria; // for selected zone to get Shortlisted Supplier listing and Recommended supplier Listing
 	private ScQtMeeting scQtMeeting;
 	
+	private ScQtEvaluationResult scQtEvaluationResult;
 	private List<ScQtEvaluationResult> qualifiedSupplist;
 	private List<ScQtEvaluationResult> disQualifiedSupplist;
 	private List<ScQtCommitteeActivity> committeeSignOffMemberlist;
@@ -74,6 +75,18 @@ public class SupplierFinalizationManagedBean extends BaseManagedBean {
 	private ScQtZoneCriteria selectZoneByItem;
 	private boolean award = false;
 	
+	/**
+	 * @return the scQtEvaluationResult
+	 */
+	public ScQtEvaluationResult getScQtEvaluationResult() {
+		return scQtEvaluationResult;
+	}
+	/**
+	 * @param scQtEvaluationResult the scQtEvaluationResult to set
+	 */
+	public void setScQtEvaluationResult(ScQtEvaluationResult scQtEvaluationResult) {
+		this.scQtEvaluationResult = scQtEvaluationResult;
+	}
 	/**
 	 * @return the award
 	 */

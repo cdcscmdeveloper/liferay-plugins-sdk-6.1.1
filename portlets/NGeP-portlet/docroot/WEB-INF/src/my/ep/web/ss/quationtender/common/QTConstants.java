@@ -27,6 +27,7 @@ public interface QTConstants {
 	public static final String QT_SUPPLIERQULIFICATION_TAB="Supplier Qualification Criteria";
 	public static final String QT_APPROVAL_TAB="Approval Workflow";
 	public static final String QT_SCHDULE_TAB="Schedule";
+	public static final String QT_DEDUCTION_TAB="Deduction Payment";
 	public static final String QT_DOCUMENTS_TAB="Documents";
 	public static final String QT_REMARKS_TAB="Remarks";
 	
@@ -67,6 +68,11 @@ public interface QTConstants {
 	public static final String SF_SINGLE = "single";
 	public static final String SF_MULTIPLE = "multiple";
 	
-	
+	// Deduction Payment
+	public static final String DP_PENALTY = "PF";
+	public static final String DP_ROYALTY = "RF";
+	public static final String DP_FIXED = "FD";
+	public static final String DP_NON_FIXED = "NF";
+	public static final String DP_OTHERS = "OT";
 
 }

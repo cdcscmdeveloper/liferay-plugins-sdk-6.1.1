@@ -42,8 +42,8 @@ public class SupplierFinalizationBackingBean extends
 	public SupplierFinalizationBackingBean() {
 		optionsEvent();
 		awardTypeEvent();
-		retrieveMeetingCommitteeMemberDtl(); //Supplier Finalization
-		retrieveSummaryDetails(); //Pre- Supplier Finalization
+		retrieveMeetingCommitteeMemberDtl(); //Finalization
+		retrieveSummaryDetails(); //Pre - Finalization
 	}
 	
 	/**
@@ -116,34 +116,34 @@ public class SupplierFinalizationBackingBean extends
 	public void shortlistedRecommendedSuppDtl(ScQtZoneCriteria scQtZoneCriteria) {
 		debugLogger("Shortlisted and Recommended Supplier");
 		IQTSuppFinalizationSO suppFinalizationSO = null;
-	   try {
-			suppFinalizationSO = BusinessDelegate.getInstance().getServiceObject(
-					QTConstants.SS_MODULE, IQTSuppFinalizationSO.class);
+		try {
+			suppFinalizationSO = BusinessDelegate.getInstance()
+					.getServiceObject(QTConstants.SS_MODULE, IQTSuppFinalizationSO.class);
 			SuppFinalizationReqDTO reqDTO = new SuppFinalizationReqDTO();
-			
-		   if (scQtZoneCriteria != null ) {
-				reqDTO.setQtId(146L);
+
+			if (scQtZoneCriteria != null) {
+				reqDTO.setQtId(getManagedBean().getScQt().getQtId());
 				reqDTO.setQtZoneCriteriaId(scQtZoneCriteria.getQtZoneCriteriaId());
 				SuppFinalizationResDTO resDTO = suppFinalizationSO.retrieveItemSupplierDtlByZone(reqDTO);
-		
-				// Recommended Supplier Listing
-				List<ScQtEvaluationResult> recommendedSuppList = resDTO.getQualifiedSuppResultBean().getResultList();
-				this.getManagedBean().setRecommendedSuppList(recommendedSuppList);
-				
-				//  Shortlisted Supplier Listing
+
+				// Shortlisted Supplier Listing
 				List<ScQtEvaluationResult> shortlistedSuppList = resDTO.getQualifiedSuppResultBean().getResultList();
 				this.getManagedBean().setShortlistedSuppList(shortlistedSuppList);
 				this.getManagedBean().setTotalSelectedSupplier(shortlistedSuppList.size());
 				this.getManagedBean().setScQtZoneCriteria(scQtZoneCriteria);
-				
+
+				// Recommended Supplier Listing
+				List<ScQtEvaluationResult> recommendedSuppList = resDTO.getQualifiedSuppResultBean().getResultList();
+				this.getManagedBean().setRecommendedSuppList(recommendedSuppList);
+				this.getManagedBean().setTotalSelectedSupplier(recommendedSuppList.size());
 			}
-			} catch (Exception ex) {
-				ex.printStackTrace();
-				FacesContext.getCurrentInstance().addMessage(null,
-						new FacesMessage(FacesMessage.SEVERITY_ERROR,ex.toString(), ex.getMessage()));
-			} finally {
-				suppFinalizationSO = null;
-			}
+		} catch (Exception ex) {
+			ex.printStackTrace();
+			FacesContext.getCurrentInstance().addMessage(
+					null, new FacesMessage(FacesMessage.SEVERITY_ERROR, ex.toString(), ex.getMessage()));
+		} finally {
+			suppFinalizationSO = null;
+		}
 	}
 	
 	/**
@@ -213,7 +213,7 @@ public class SupplierFinalizationBackingBean extends
 				EvaluationReportReqDTO reqDTO = new EvaluationReportReqDTO();
 	        	reqDTO.setQualifiedSuppliers(getManagedBean().getQualifiedSupplist());
 	        	evaluationReportSO.saveQTDtl(reqDTO);
-	        	FacesContext.getCurrentInstance().addMessage(null,new FacesMessage(FacesMessage.SEVERITY_INFO,"Record saved successfully.","Summary Details "));
+	        	FacesContext.getCurrentInstance().addMessage(null,new FacesMessage(FacesMessage.SEVERITY_INFO, "Record saved successfully.", "Summary Details "));
 		         
 	         }
 	        
@@ -243,7 +243,7 @@ public class SupplierFinalizationBackingBean extends
 				meetingDtllist = new ArrayList<ScQtMeeting>();
 			}
 		
-			reqDTO.setQtId(146L);
+			reqDTO.setQtId(getManagedBean().getScQt().getQtId());
 			SuppFinalizationResDTO resDTO = suppFinalizationSO.retrieveSuppFinalizationDtl(reqDTO);
 			meetingDetails.setScQt(resDTO.getScQt());
 			meetingDetails.setMeetingType("QC");
@@ -325,7 +325,7 @@ public class SupplierFinalizationBackingBean extends
 			SuppFinalizationReqDTO reqDTO = new SuppFinalizationReqDTO();
 			System.out.println("Zone Id : " + getManagedBean().getSelectZoneByItem().getQtZoneCriteriaId());
 			reqDTO.setQtZoneCriteriaId(getManagedBean().getSelectZoneByItem().getQtZoneCriteriaId());
-			SuppFinalizationResDTO resDTO = suppFinalizationSO.retrieveItemSupplierDtlByZone(reqDTO);
+			//SuppFinalizationResDTO resDTO = suppFinalizationSO.retrieveItemSupplierDtlByZone(reqDTO);
 		} catch (Exception ex) {
 			ex.printStackTrace();
 			FacesContext.getCurrentInstance().addMessage(
@@ -350,7 +350,8 @@ public class SupplierFinalizationBackingBean extends
 			SuppFinalizationReqDTO reqDTO = new SuppFinalizationReqDTO();
 			
 		   if (scQtZoneCriteria != null ) {
-				reqDTO.setQtId(146L);
+				//reqDTO.setQtId(146L);
+			   reqDTO.setQtId(getManagedBean().getScQt().getQtId());
 				reqDTO.setQtZoneCriteriaId(scQtZoneCriteria.getQtZoneCriteriaId());
 				SuppFinalizationResDTO resDTO = suppFinalizationSO.retrieveItemSupplierDtlByZone(reqDTO);
 		
@@ -493,8 +494,9 @@ public class SupplierFinalizationBackingBean extends
 	 */
 	public void showSupplierDetails() {
 		debugLogger("showSuppDetails");
-		if (getManagedBean().getScQtProposalRanking() != null) {
-			this.getManagedBean().setScQtProposalRanking(getManagedBean().getScQtProposalRanking());
+		if (getManagedBean().getScQtEvaluationResult() != null) {
+			this.getManagedBean().setScQtEvaluationResult(getManagedBean().getScQtEvaluationResult());
+			//System.out.println("MOF NO : " + getManagedBean().getScQtEvaluationResult().getScQtProposal().getScQtSupplier().getSmSupplier().getSmMofAccounts().get(0).getMofNo());
 	    }
      }
 	
