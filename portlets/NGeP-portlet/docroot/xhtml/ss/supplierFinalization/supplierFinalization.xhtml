@@ -171,16 +171,6 @@
 					<h:outputText value="#{zone.zoneName}" />
 				</p:commandLink>
 
-				<p:commandLink update=":form:popupSuppDtl"
-					action="#{sfBackingBean.showSupplierDetails}"
-					oncomplete="suppDetails.show();">
-					<f:setPropertyActionListener value="#{shortlistedSupp}"
-						target="#{sfBackingBean.managedBean.scQtProposalRanking}" />
-					<h:outputText
-						value="#{shortlistedSupp.scQtProposalEvaluate.scQtProposal.supplierNo}" />
-				</p:commandLink>
-
-
 			</p:column>
 		</p:dataTable>
 		<p:spacer height="20px" />
