@@ -9,6 +9,7 @@
 <!--  <p:messages id="evaluateMessages" showDetail="true" autoUpdate="true"
 				closable="true" />  -->
 	<ui:include src="/xhtml/ss/evaluation/evaluationButtons.xhtml" />
+	
 
 	<table style="width: 100%">
 		<tr>
@@ -95,6 +96,8 @@
 	</table>
  <ui:param name="scQt" value="#{specificationBackingBean.managedBean.qt}" />
             <ui:include src="/xhtml/ss/common/commonHeader.xhtml" />
+              <ui:include src="/xhtml/ss/evaluation/uploadEvaluation.xhtml" />
+              
 
 	<c:if test="#{evaluationBackingBean.managedBean.tabActiveIndex eq 0}">
 		<ui:include src="/xhtml/ss/evaluation/prepare.xhtml" />
@@ -104,14 +107,16 @@
 		<ui:include src="/xhtml/ss/evaluation/stage1.xhtml" />
 		<ui:include src="/xhtml/ss/evaluation/manualsubmission.xhtml" />
 		<ui:include src="/xhtml/ss/evaluation/evaluationpopup.xhtml" />
+		
 	</c:if>
 	
 		<c:if test="#{evaluationBackingBean.managedBean.tabActiveIndex eq 2}">
 			<ui:include src="/xhtml/ss/evaluation/stage2.xhtml" />
 			<ui:include src="/xhtml/ss/evaluation/peringkat2.xhtml" />
-			 <ui:include src="/xhtml/ss/evaluation/presentationdemo.xhtml" /> 
-			  <ui:include src="/xhtml/ss/evaluation/requestpresentationdemo.xhtml" /> 
-			<!--    <ui:include src="/xhtml/ss/specification/scoring.xhtml" />  -->
+			 <ui:include src="/xhtml/ss/evaluation/presentationdemo.xhtml" />  
+			  <ui:include src="/xhtml/ss/evaluation/requestpresentationdemo.xhtml" />  
+			
+			
 		</c:if>
 	
 	

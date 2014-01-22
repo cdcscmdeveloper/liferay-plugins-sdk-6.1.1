@@ -21,11 +21,9 @@
 						style="text-align:left; vertical-align:top;"
 						headerText="#{lbl['lbl.sc.eva.report.content']}">
 					</p:column>
-					<p:column colspan="1"  rendered="true"
-						style="text-align:left; vertical-align:top;"
-						headerText="#{lbl['lbl.sc.eva.prepare.meeting.action']}">
-					</p:column>
-
+					 <p:column colspan="1"  rendered="true" 
+						style="text-align:left; vertical-align:top;" headerText="#{lbl['lbl.sc.eva.prepare.meeting.action']}"> 
+					 </p:column>
 				</p:row>
 			</p:columnGroup>
 			<p:subTable id="supplierItemTable1#{rowIndex}" var="supplierItem1"
@@ -38,12 +36,17 @@
 				                #{supplierItem1.remarks}  
 				            </p:column>
 				<p:column>
-					<p:commandLink value="Download"></p:commandLink>
+					<p:commandLink ajax="false" value="Download" actionListener="#{evaluationBackingBean.reportDownLoad}">
+					
+					</p:commandLink>
 				</p:column>
 
 			</p:subTable>
 		</p:dataTable>
-
+<div align="right" style="width: 80%">
+	<p:commandButton ajax="false" value="Download All" actionListener="#{evaluationBackingBean.reportDownLoadZipFile}"/>
+					
+</div>
 
 
 	</p:panel>
@@ -54,10 +57,20 @@
 			<p:outputLabel value="#{lbl['lbl.sc.eva.report.attachment']}"></p:outputLabel>
 
 			<h:panelGroup>
-				<p:inputText></p:inputText>
-				<p:commandButton value="UPLOAD"></p:commandButton>
-				<p:commandLink value="view"></p:commandLink>
+				
+			
+				<p:commandButton oncomplete="reportDlg.show();"
+                    icon="iconAttachment" 
+                              update="report" value="Attach file(s)" />
+				
 			</h:panelGroup>
+		</h:panelGrid>
+		
+		<h:panelGrid columns="2" id="report">
+
+			<p:spacer width="40"></p:spacer>
+           <p:outputLabel value="#{evaluationBackingBean.managedBean.fileName}"></p:outputLabel>
+			
 		</h:panelGrid>
 
 	</p:panel>
@@ -84,5 +97,6 @@
 				</div></td>
 		</tr>
 	</table>
+	
 	
 </ui:composition>

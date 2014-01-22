@@ -8,7 +8,7 @@
 
 
 	<p:dialog header="#{lbl['lbl.sc.eva.present.demo.head']}" widgetVar="evaluationPresentation" modal="true"
-		width="400" height="300">
+	dynamic="true"	width="400" height="300">
 		<p:panel id="presentationDemo" header="#{lbl['lbl.sc.eva.present.demo.head']}"
 			toggleable="true">
 
@@ -16,15 +16,15 @@
 
 				<h:outputLabel value="#{lbl['lbl.sc.eva.s1.manual.supplier']}"></h:outputLabel>
 
-				<p:inputText value="#{evaluationBackingBean.managedBean.scQtEvaluationResult.scQtProposal.supplierNo}" readonly="true"></p:inputText>
+				<p:inputText value="#{evaluationBackingBean.managedBean.scQtEvaluationResult.scQtProposal.supplierNo}" readonly="true" disabled="true"></p:inputText>
 
 				<h:outputLabel value="#{lbl['lbl.sc.eva.present.document']}" />
 
               <h:panelGroup>
-				<p:commandButton value="Upload" onclick="uploadDlg.show();
-					return false;"
-				
-							partialSubmit="true" process="@this" icon="ui-icon-upload" />
+			
+							<p:commandButton oncomplete="uploadDlg.show();"
+                    icon="iconAttachment" 
+                             value="Attach file(s)" partialSubmit="true" process="@this"/>
 						<p:spacer width="10" height="5" />
 				<h:outputText id="requestDocument"
 					value="#{evaluationBackingBean.managedBean.fileName}"></h:outputText>	
@@ -57,16 +57,5 @@
 	</p:dialog>
 	
 	
-	 <p:dialog  widgetVar="uploadDlg" modal="true"
-		 hideEffect="explode" resizable="false" width="700px"
-		height="200" styleClass="pop_up_top"
-		header="#{lbl['lbl.bpm.choose.file']}">
-		<p:fileUpload style="display:inline;" 
-			 mode="advanced" id="requestDocument1"	fileUploadListener="#{evaluationBackingBean.handleFileUpload}"
-			
-			allowTypes="/(\.|\/)(gif|jpe?g|png|bmp|txt|xls|xlsx|pdf|doc|docx|csv)$/"
-			invalidFileMessage="Only JPG, GIF, PNG, BMP, TXT, XLS, PDF, DOC, CSV files are accepted"
-			update="requestDocument" oncomplete="uploadDlg.hide()">
-		</p:fileUpload>
-	</p:dialog>
+	
 </ui:composition>
