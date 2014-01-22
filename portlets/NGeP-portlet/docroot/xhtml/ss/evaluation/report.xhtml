@@ -51,7 +51,7 @@
 
 	</p:panel>
 
-	<p:panel header="#{lbl['lbl.sc.eva.report.final.head']}">
+	<p:panel header="#{lbl['lbl.sc.eva.report.final.head']}" >
 		<h:panelGrid columns="2">
 
 			<p:outputLabel value="#{lbl['lbl.sc.eva.report.attachment']}"></p:outputLabel>
@@ -66,10 +66,15 @@
 			</h:panelGroup>
 		</h:panelGrid>
 		
-		<h:panelGrid columns="2" id="report">
+		<h:panelGrid columns="3" id="report">
 
 			<p:spacer width="40"></p:spacer>
-           <p:outputLabel value="#{evaluationBackingBean.managedBean.fileName}"></p:outputLabel>
+           <p:outputLabel id="reportfile" value="#{evaluationBackingBean.managedBean.fileName}"></p:outputLabel>
+           	<p:commandLink actionListener="#{evaluationBackingBean.removeFile}" process="@this,report" update="reportfile" partialSubmit="true" style="width:40%;">
+					<p:graphicImage library="ep/images/design" name="delete.png"
+						value="/resources/ep/images/design/delete.png" />
+
+				</p:commandLink>
 			
 		</h:panelGrid>
 

@@ -74,7 +74,7 @@ public class EvaluationBackingBean extends
 	private boolean skip;
 	private int currentTab;
 	private int outputTab;
-	
+
 	private Map<Long, Boolean> checked = new HashMap<Long, Boolean>();
 	public static final String NAV_TO_STAGE2 = "/xhtml/ss/evaluation/peringkat2.xhtml";
 
@@ -85,7 +85,7 @@ public class EvaluationBackingBean extends
 	@PostConstruct
 	public void init() throws IOException {
 		try {
-			
+
 			retriveDetails();
 
 		} catch (Exception e) {
@@ -158,7 +158,8 @@ public class EvaluationBackingBean extends
 					resDTO1.getTechinicalEvaluationResults().getResultList());
 			this.getManagedBean().setManuals1SupplierList(
 					resDTO1.getManualSubEvaluations().getResultList());
-			this.getManagedBean().setManualList(resDTO1.getManualSubEvaluations().getResultList().size());
+			this.getManagedBean().setManualList(
+					resDTO1.getManualSubEvaluations().getResultList().size());
 		} catch (Exception e) {
 			e.printStackTrace();
 		} finally {
@@ -515,94 +516,91 @@ public class EvaluationBackingBean extends
 			evaluationSo = null;
 		}
 	}
-	
+
 	public void changedView(AjaxBehaviorEvent event) {
 		String type = (String) event.getComponent().getAttributes()
 				.get("value");
 		this.getManagedBean().setViewBy(type);
 	}
 
-	
-	
-	
-	public void reportDownLoadZipFile() throws IOException{
-		    List<File> files = new ArrayList<File>();
-			files.add(new File("C:\\upload\\clone.jpg"));
-			files.add(new File("C:\\upload\\scan.docx"));
-			files.add(new File("C:\\upload\\console.txt"));
+	public void reportDownLoadZipFile() throws IOException {
+		List<File> files = new ArrayList<File>();
+		files.add(new File("C:\\upload\\clone.jpg"));
+		files.add(new File("C:\\upload\\scan.docx"));
+		files.add(new File("C:\\upload\\console.txt"));
 
-			PortletResponse portalresponse = (PortletResponse) FacesContext
-					.getCurrentInstance().getExternalContext().getResponse();
-			HttpServletResponse response = PortalUtil
-					.getHttpServletResponse(portalresponse);
-			response.setContentType("Content-type: text/zip");
-			response.setHeader("Content-Disposition",
-					"attachment; filename=Ngep.zip");
+		PortletResponse portalresponse = (PortletResponse) FacesContext
+				.getCurrentInstance().getExternalContext().getResponse();
+		HttpServletResponse response = PortalUtil
+				.getHttpServletResponse(portalresponse);
+		response.setContentType("Content-type: text/zip");
+		response.setHeader("Content-Disposition",
+				"attachment; filename=Ngep.zip");
 
-			// ServletOutputStream out = response.getOutputStream();
-			ZipOutputStream zos = new ZipOutputStream(new BufferedOutputStream(
-					response.getOutputStream()));
+		// ServletOutputStream out = response.getOutputStream();
+		ZipOutputStream zos = new ZipOutputStream(new BufferedOutputStream(
+				response.getOutputStream()));
 
-			for (File file : files) {
+		for (File file : files) {
 
-				System.out.println("Adding file " + file.getName());
-				zos.putNextEntry(new ZipEntry(file.getName()));
+			System.out.println("Adding file " + file.getName());
+			zos.putNextEntry(new ZipEntry(file.getName()));
 
-				// Get the file
-				FileInputStream fis = null;
-				try {
+			// Get the file
+			FileInputStream fis = null;
+			try {
 
-					fis = new FileInputStream(file);
+				fis = new FileInputStream(file);
 
-				} catch (FileNotFoundException fnfe) {
-					// If the file does not exists, write an error entry instead of
-					// file
-					// contents
-					zos.write(("ERROR: Could not find file " + file.getName())
-							.getBytes());
-					zos.closeEntry();
-					System.out.println("Could not find file "
-							+ file.getAbsolutePath());
-					continue;
-				}
-
-				BufferedInputStream fif = new BufferedInputStream(fis);
-
-				// Write the contents of the file
-				int data = 0;
-				while ((data = fif.read()) != -1) {
-					
-					zos.write(data);
-				}
-				fif.close();
+			} catch (FileNotFoundException fnfe) {
+				// If the file does not exists, write an error entry instead of
+				// file
+				// contents
+				zos.write(("ERROR: Could not find file " + file.getName())
+						.getBytes());
 				zos.closeEntry();
-				System.out.println("Finished adding file " + file.getName());
+				System.out.println("Could not find file "
+						+ file.getAbsolutePath());
+				continue;
 			}
-			zos.close();
-			response.flushBuffer();
-			 FacesContext.getCurrentInstance().responseComplete();
-	}
-	
 
-	public void reportDownLoad() throws IOException{
-		
+			BufferedInputStream fif = new BufferedInputStream(fis);
+
+			// Write the contents of the file
+			int data = 0;
+			while ((data = fif.read()) != -1) {
+
+				zos.write(data);
+			}
+			fif.close();
+			zos.closeEntry();
+			System.out.println("Finished adding file " + file.getName());
+		}
+		zos.close();
+		response.flushBuffer();
+		FacesContext.getCurrentInstance().responseComplete();
+	}
+
+	public void reportDownLoad() throws IOException {
+
 		File file = new File("C:\\upload\\console.txt");
-		
+
 		InputStream input = new FileInputStream(file);
 		PortletResponse portletResponse = (PortletResponse) FacesContext
 				.getCurrentInstance().getExternalContext().getResponse();
 		HttpServletResponse res = com.liferay.portal.util.PortalUtil
 				.getHttpServletResponse(portletResponse);
-		res.setHeader("Content-Disposition", "attachment; filename=\""
-				+ file.getName() + "\"");
+		res.setHeader("Content-Disposition",
+				"attachment; filename=\"" + file.getName() + "\"");
 		res.setHeader("Content-Transfer-Encoding", "binary");
 		res.setContentType("application/octet-stream");
 		res.flushBuffer();
 		OutputStream out = res.getOutputStream();
-		
+
 		try {
-			URLConnection uc = new URL("C:\\upload\\scan.docx").openConnection();
-			
+			URLConnection uc = new URL("C:\\upload\\scan.docx")
+					.openConnection();
+
 			input = new BufferedInputStream(uc.getInputStream());
 		} catch (Exception e) {
 			// Cannot open connection, maybe local file
@@ -615,13 +613,12 @@ public class EvaluationBackingBean extends
 			out.write(buffer, 0, bytesRead);
 			buffer = new byte[4096];
 		}
-		
+
 		input.close();
 		out.flush();
 		out.close();
 		FacesContext.getCurrentInstance().responseComplete();
 	}
-
 
 	public void setTabValue(int currentTab, int outputTab) {
 		try {
@@ -1014,46 +1011,44 @@ public class EvaluationBackingBean extends
 		}
 
 	}
-	
-	public void deleteMeetingDetails(){
-		try{
-		List<ScQtMeeting> meetingList =  getManagedBean()
-				.getScQtMeetings();
-		List<ScQtMeeting> selectMeeting = getManagedBean()
-				.getMeetingMultiSelect();
-		if (meetingList.size() == selectMeeting.size()) {
-			meetingList.clear();
-		} else {
-			for (ScQtMeeting meeting : selectMeeting)
-				meetingList.remove(meeting);
-		}
-		}catch(Exception e){
-			
-		}
-	}
-	
-	
-	public void deleteManualSubmission(){
-		try{
-		List<ScQtManualEvaluation> manualList =  getManagedBean()
-				.getManualEvaluateList();
-		List<ScQtManualEvaluation> selectManual = getManagedBean()
-				.getManualMultiSelect();
-		if (manualList.size() == selectManual.size()) {
-			manualList.clear();
-		} else {
-			for (ScQtManualEvaluation manualEvaluation : selectManual)
-				manualList.remove(manualEvaluation);
-		}
-		}catch(Exception e){
-			
+
+	public void deleteMeetingDetails() {
+		try {
+			List<ScQtMeeting> meetingList = getManagedBean().getScQtMeetings();
+			List<ScQtMeeting> selectMeeting = getManagedBean()
+					.getMeetingMultiSelect();
+			if (meetingList.size() == selectMeeting.size()) {
+				meetingList.clear();
+			} else {
+				for (ScQtMeeting meeting : selectMeeting)
+					meetingList.remove(meeting);
+			}
+		} catch (Exception e) {
+
 		}
 	}
-	
+
+	public void deleteManualSubmission() {
+		try {
+			List<ScQtManualEvaluation> manualList = getManagedBean()
+					.getManualEvaluateList();
+			List<ScQtManualEvaluation> selectManual = getManagedBean()
+					.getManualMultiSelect();
+			if (manualList.size() == selectManual.size()) {
+				manualList.clear();
+			} else {
+				for (ScQtManualEvaluation manualEvaluation : selectManual)
+					manualList.remove(manualEvaluation);
+			}
+		} catch (Exception e) {
+
+		}
+	}
+
 	public void onManualRowSelect(SelectEvent selectEvent) {
-		
+
 		try {
-		
+
 			ScQtManualEvaluation score = (ScQtManualEvaluation) selectEvent
 					.getObject();
 			List<ScQtManualEvaluation> selectManual = getManagedBean()
@@ -1066,15 +1061,15 @@ public class EvaluationBackingBean extends
 		} catch (Exception e) {
 			e.printStackTrace();
 		} finally {
-			
+
 		}
 
 	}
 
-public void onManualRowUnSelect(UnselectEvent selectEvent) {
-		
+	public void onManualRowUnSelect(UnselectEvent selectEvent) {
+
 		try {
-		
+
 			ScQtManualEvaluation score = (ScQtManualEvaluation) selectEvent
 					.getObject();
 			List<ScQtManualEvaluation> selectManual = getManagedBean()
@@ -1087,32 +1082,40 @@ public void onManualRowUnSelect(UnselectEvent selectEvent) {
 		} catch (Exception e) {
 			e.printStackTrace();
 		} finally {
-			
+
 		}
 
 	}
 
-public void handleFileUpload(FileUploadEvent event) {
-	
-	System.out.println("=======uploaded file name===="+event.getFile().getFileName());
-	this.getManagedBean().setFileName(event.getFile().getFileName());
-System.out.println("=========get file name======="+this.getManagedBean().getFileName());
-	/*ScQtCheckList scQtChecklist = this.getManagedBean().getScQtChecklist();
+	public void handleFileUpload(FileUploadEvent event) {
 
-	FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_INFO,
-			"The file was uploaded successfully.", null);
-	FacesContext.getCurrentInstance().addMessage(null, message);
-
-	ScQtCheckListAttachment attachment = scQtChecklist
-			.getScQtCheckListAttachment();
-	if (null == attachment) {
-		attachment = new ScQtCheckListAttachment();
-		attachment.setScQtCheckList(scQtChecklist);
+		System.out.println("=======uploaded file name===="
+				+ event.getFile().getFileName());
+		this.getManagedBean().setFileName(event.getFile().getFileName());
+		System.out.println("=========get file name======="
+				+ this.getManagedBean().getFileName());
+		/*
+		 * ScQtCheckList scQtChecklist =
+		 * this.getManagedBean().getScQtChecklist();
+		 * 
+		 * FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_INFO,
+		 * "The file was uploaded successfully.", null);
+		 * FacesContext.getCurrentInstance().addMessage(null, message);
+		 * 
+		 * ScQtCheckListAttachment attachment = scQtChecklist
+		 * .getScQtCheckListAttachment(); if (null == attachment) { attachment =
+		 * new ScQtCheckListAttachment();
+		 * attachment.setScQtCheckList(scQtChecklist); }
+		 * uploadAttachment(event.getFile(), attachment);
+		 * 
+		 * scQtChecklist.setScQtCheckListAttachment(attachment);
+		 */
 	}
-	uploadAttachment(event.getFile(), attachment);
 
-	scQtChecklist.setScQtCheckListAttachment(attachment);*/
-}
+	public void removeFile() {
+		this.getManagedBean().setFileName(new String());
+	}
+
 	/**
 	 * @return the skip
 	 */
@@ -1157,10 +1160,5 @@ System.out.println("=========get file name======="+this.getManagedBean().getFile
 	public void setOutputTab(int outputTab) {
 		this.outputTab = outputTab;
 	}
-
-	
-
-
-
 
 }
