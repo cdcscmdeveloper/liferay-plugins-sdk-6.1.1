@@ -112,7 +112,7 @@
 	<property name="columns">
 		<list>
 			<bean class="my.ep.web.bean.LovColumnBean">
-		        <property name="columnName" 	value="supplierName" />
+		        <property name="columnName" 	value="companyName" />
       			<property name="bundleFile" 	value="messageprovider-config.bundles.labels.labels" />
       			<property name="bundleKey" 		value="lbl.sm.companyname" />
       			<!-- <property name="columnWidth" 	value="150" /> -->
