@@ -225,7 +225,7 @@ public class CatalogueManagedBean extends BaseManagedBean {
 				}
 
 				System.out.println("districtLs.size():"+districtLs.size());
-				if(districtLs != null){
+				if(districtLs != null && districtLs.size()>0){
 					districtFilterBean.setSearchField("districtId");
 					districtFilterBean.setSearchValue(districtLs);
 					searchBean.getDataFilterBeans().add(districtFilterBean);
