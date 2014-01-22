@@ -46,7 +46,7 @@
 				<ui:include	src="/xhtml/ct/fulfilmentdetails/shared/approverSetting.xhtml" />
 				<ui:include	src="/xhtml/ct/fulfilmentdetails/shared/fulfilmentSetting.xhtml" />
 			</p:tab>
-			<p:tab id="tabFactoring" title="Factoring">
+			<p:tab id="tabFactoring" title="Factoring" rendered="#{contractDetailsBackingBean.managedBean.ctContract.factored}" >
 				<ui:include src="/xhtml/ct/fulfilmentdetails/shared/factoring.xhtml" />
 			</p:tab>
 			<p:tab id="tabRemarks" title="#{lbl['lbl.ct.menu.remark']}">
