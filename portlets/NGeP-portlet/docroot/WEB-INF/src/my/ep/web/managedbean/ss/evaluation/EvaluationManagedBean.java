@@ -56,6 +56,7 @@ public class EvaluationManagedBean extends BaseManagedBean {
 	private List<ScQtZoneCriteria> locationList;
 	private ScQtCommitteeActivity commiteeActivity;
 	private ScQt scqt;
+	//OC,EC,TEC,FEC
 	private String committeeType="TEC";
 	private List<ScQtEvaluationResult> manuals1SupplierList;
 	private List<ScQtProposalLabel> manualProposalLabel;

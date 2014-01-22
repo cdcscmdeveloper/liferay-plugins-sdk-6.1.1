@@ -1,8 +1,10 @@
 package my.ep.web.backingbean.ss.evaluation;
 
 import java.io.BufferedInputStream;
+import java.io.BufferedOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
@@ -13,6 +15,8 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.zip.ZipEntry;
+import java.util.zip.ZipOutputStream;
 
 import javax.annotation.PostConstruct;
 import javax.faces.application.FacesMessage;
@@ -39,7 +43,6 @@ import my.ep.dto.ss.quationtender.QuationTenderResDTO;
 import my.ep.dto.ss.specification.SpecificationReqDTO;
 import my.ep.dto.ss.specification.SpecificationResDTO;
 import my.ep.persistence.entity.ss.quationtender.ScQtCheckList;
-import my.ep.persistence.entity.ss.quationtender.ScQtCheckListAttachment;
 import my.ep.persistence.entity.ss.quationtender.ScQtDoc;
 import my.ep.persistence.entity.ss.quationtender.ScQtEvaluationResult;
 import my.ep.persistence.entity.ss.quationtender.ScQtManualEvaluation;
@@ -61,6 +64,8 @@ import org.primefaces.event.FileUploadEvent;
 import org.primefaces.event.FlowEvent;
 import org.primefaces.event.SelectEvent;
 import org.primefaces.event.UnselectEvent;
+
+import com.liferay.portal.util.PortalUtil;
 
 @ManagedBean(name = "evaluationBackingBean")
 @RequestScoped
@@ -517,72 +522,92 @@ public class EvaluationBackingBean extends
 		this.getManagedBean().setViewBy(type);
 	}
 
-	public void downLoadAction() throws IOException {
+	
+	
+	
+	public void reportDownLoadZipFile() throws IOException{
+		    List<File> files = new ArrayList<File>();
+			files.add(new File("C:\\upload\\clone.jpg"));
+			files.add(new File("C:\\upload\\scan.docx"));
+			files.add(new File("C:\\upload\\console.txt"));
 
-		List<File> files = new ArrayList<File>();
-		files.add(new File("C:\\upload\\clone.jpg"));
-		files.add(new File("C:\\upload\\scan.docx"));
-		files.add(new File("C:\\upload\\console.txt"));
+			PortletResponse portalresponse = (PortletResponse) FacesContext
+					.getCurrentInstance().getExternalContext().getResponse();
+			HttpServletResponse response = PortalUtil
+					.getHttpServletResponse(portalresponse);
+			response.setContentType("Content-type: text/zip");
+			response.setHeader("Content-Disposition",
+					"attachment; filename=Ngep.zip");
 
-		/*
-		 * PortletResponse response1 = (PortletResponse) FacesContext
-		 * .getCurrentInstance().getExternalContext().getResponse();
-		 * HttpServletResponse response = PortalUtil
-		 * .getHttpServletResponse(response1);
-		 * response.setContentType("Content-type: text/zip");
-		 * response.setHeader("Content-Disposition",
-		 * "attachment; filename=mytest.zip");
-		 * 
-		 * // ServletOutputStream out = response.getOutputStream();
-		 * ZipOutputStream zos = new ZipOutputStream(new BufferedOutputStream(
-		 * response.getOutputStream()));
-		 * 
-		 * for (File file : files) {
-		 * 
-		 * System.out.println("Adding file " + file.getName());
-		 * zos.putNextEntry(new ZipEntry(file.getName()));
-		 * 
-		 * // Get the file FileInputStream fis = null; try {
-		 * 
-		 * fis = new FileInputStream(file);
-		 * 
-		 * } catch (FileNotFoundException fnfe) { // If the file does not
-		 * exists, write an error entry instead of // file // contents
-		 * zos.write(("ERROR: Could not find file " + file.getName())
-		 * .getBytes()); zos.closeEntry();
-		 * System.out.println("Could not find file " + file.getAbsolutePath());
-		 * continue; }
-		 * 
-		 * BufferedInputStream fif = new BufferedInputStream(fis);
-		 * 
-		 * // Write the contents of the file int data = 0; while ((data =
-		 * fif.read()) != -1) { //System.out.println("======data===" +
-		 * fif.read()); zos.write(data); } fif.close(); zos.closeEntry();
-		 * System.out.println("Finished adding file " + file.getName());
-		 * FacesContext.getCurrentInstance().responseComplete(); } zos.close();
-		 * response.flushBuffer();
-		 */
+			// ServletOutputStream out = response.getOutputStream();
+			ZipOutputStream zos = new ZipOutputStream(new BufferedOutputStream(
+					response.getOutputStream()));
 
-		InputStream input = new FileInputStream(new File(
-				"C:\\upload\\clone.jpg"));
+			for (File file : files) {
 
+				System.out.println("Adding file " + file.getName());
+				zos.putNextEntry(new ZipEntry(file.getName()));
+
+				// Get the file
+				FileInputStream fis = null;
+				try {
+
+					fis = new FileInputStream(file);
+
+				} catch (FileNotFoundException fnfe) {
+					// If the file does not exists, write an error entry instead of
+					// file
+					// contents
+					zos.write(("ERROR: Could not find file " + file.getName())
+							.getBytes());
+					zos.closeEntry();
+					System.out.println("Could not find file "
+							+ file.getAbsolutePath());
+					continue;
+				}
+
+				BufferedInputStream fif = new BufferedInputStream(fis);
+
+				// Write the contents of the file
+				int data = 0;
+				while ((data = fif.read()) != -1) {
+					
+					zos.write(data);
+				}
+				fif.close();
+				zos.closeEntry();
+				System.out.println("Finished adding file " + file.getName());
+			}
+			zos.close();
+			response.flushBuffer();
+			 FacesContext.getCurrentInstance().responseComplete();
+	}
+	
+
+	public void reportDownLoad() throws IOException{
+		
+		File file = new File("C:\\upload\\console.txt");
+		
+		InputStream input = new FileInputStream(file);
 		PortletResponse portletResponse = (PortletResponse) FacesContext
 				.getCurrentInstance().getExternalContext().getResponse();
 		HttpServletResponse res = com.liferay.portal.util.PortalUtil
 				.getHttpServletResponse(portletResponse);
-		res.setHeader("Content-Disposition", "attachment; filename=mytest.zip");
-		// res.setHeader("Content-Transfer-Encoding", "binary");
-		res.setContentType("Content-type: text/zip");
+		res.setHeader("Content-Disposition", "attachment; filename=\""
+				+ file.getName() + "\"");
+		res.setHeader("Content-Transfer-Encoding", "binary");
+		res.setContentType("application/octet-stream");
 		res.flushBuffer();
 		OutputStream out = res.getOutputStream();
-
+		
 		try {
-			URLConnection uc = new URL("C:\\upload\\clone.jpg")
-					.openConnection();
+			URLConnection uc = new URL("C:\\upload\\scan.docx").openConnection();
+			
 			input = new BufferedInputStream(uc.getInputStream());
 		} catch (Exception e) {
 			// Cannot open connection, maybe local file
-			input = new FileInputStream("C:\\upload\\clone.jpg");
+			e.printStackTrace();
+			input = new FileInputStream(file.getPath());
 		}
 		byte[] buffer = new byte[4096];
 		int bytesRead;
@@ -590,13 +615,12 @@ public class EvaluationBackingBean extends
 			out.write(buffer, 0, bytesRead);
 			buffer = new byte[4096];
 		}
+		
 		input.close();
-
 		out.flush();
 		out.close();
 		FacesContext.getCurrentInstance().responseComplete();
 	}
-
 
 
 	public void setTabValue(int currentTab, int outputTab) {
