@@ -11,30 +11,16 @@
 			<p:inputText value="#{agreementBackingBean.managedBean.ctContract.latestContractVer.ctContractValue.contractPhysicalNo}" style="width:170px;" />
 			<p:outputLabel value="#{lbl['lbl.ct.physicalNo']}" />
 			<p:inputText value="#{agreementBackingBean.managedBean.ctContract.latestContractVer.ctContractValue.contractPhysicalNo}" style="width:170px;" />				
-			<p:outputLabel value="#{lbl['lbl.ct.contractType']}" />
-			<p:inputText value="#{agreementBackingBean.managedBean.ctContract.contractType.codeId}" style="width:170px;" />					
-			<p:outputLabel value="Created Date" />
-			<p:inputText style="width:170px;" disabled="true" value="#{agreementBackingBean.managedBean.ctContract.publishDate}" >
-				<f:convertDateTime pattern="MM/dd/yyyy" />
-			</p:inputText>				
 			<p:outputLabel value="#{lbl['lbl.ct.effectiveDate']}" />
-			<p:calendar style="width:170px;"
-				value="#{agreementBackingBean.managedBean.ctContract.latestContractVer.ctContractValue.effDate}"
-				id="popupCal1" showOn="button" />
+			<p:calendar style="width:170px;" id="popupCal1" showOn="button" disabled="true"
+				value="#{agreementBackingBean.managedBean.ctContract.latestContractVer.ctContractValue.effDate}"  />
 			<h:outputLabel value="#{lbl['lbl.ct.edate']}" />
-			<p:calendar style="width:170px;"
-				value="#{agreementBackingBean.managedBean.ctContract.latestContractVer.ctContractValue.expDate}"
-				id="popupCal" showOn="button" />			
-			<p:outputLabel value="#{lbl['lbl.ct.cur']}" />
-			<p:inputText value="#{agreementBackingBean.managedBean.ctContract.currency.currencyName}" style="width:70px;" />				
+			<p:calendar style="width:170px;" id="popupCal" showOn="button" disabled="true"
+				value="#{agreementBackingBean.managedBean.ctContract.latestContractVer.ctContractValue.expDate}"  />				
 			<p:outputLabel value="#{lbl['lbl.ct.contractAmount']}" />
 			<p:inputText
 				value="#{agreementBackingBean.managedBean.ctContract.latestContractVer.ctContractValue.contractAmount}"
 				size="8" disabled="true" />			
-			<h:outputLabel value="#{lbl['lbl.ct.liquidated']}" />
-			<p:inputText
-				value="#{agreementBackingBean.managedBean.ctContract.latestContractVer.ctContractValue.liquidatedDamage}"
-				size="8" disabled="true" />
 			<h:outputLabel value="#{lbl['lbl.ct.dperiod']}" />
 			<h:panelGrid columns="2">
 				<p:inputText size="8" value="#{agreementBackingBean.managedBean.ctContract.latestContractVer.ctContractValue.deliveryTerm}" />
@@ -65,7 +51,7 @@
 			</p:commandLink>
 		</h:panelGrid>
 	</p:panel>
-	<p:panel id="qtnTenderPnl" header="Quotation / Tender Details" toggleable="true" toggleSpeed="500">
+	<p:panel id="qtnTenderPnl" header="Procurement Details" toggleable="true" toggleSpeed="500">
 		<h:panelGrid columns="4" style="width:100%" columnClasses="columnWidth15">
 			<p:outputLabel value="Procurement Mode" />
 		    <p:inputText  style="width:170px;" disabled="true"/>
