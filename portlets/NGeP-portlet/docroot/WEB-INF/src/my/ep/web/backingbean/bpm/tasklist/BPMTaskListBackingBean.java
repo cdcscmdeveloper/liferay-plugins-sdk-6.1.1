@@ -13,6 +13,7 @@ import my.ep.biz.service.pm.common.status.IStatusSO;
 import my.ep.bpm.dto.BpmRequestDTO;
 import my.ep.bpm.dto.BpmResponseDTO;
 import my.ep.bpm.service.IBpmSO;
+import my.ep.constant.ct.ContractConst;
 import my.ep.constants.CTProcessNameConst;
 import my.ep.constants.FlProcessNameConst;
 import my.ep.dto.pm.common.status.StatusReqDTO;
@@ -76,18 +77,14 @@ public class BPMTaskListBackingBean extends
 		temp.put("Site Visit", "sitevisit");
 		temp.put("Proposal Preparation","supplierproposal");
 
-		temp.put("Circular Contract Maintenance","central-contract-circular");
-		temp.put("Circular Contract Maintenance", "panel-circular");
-//		temp.put("Circular Contract Maintenance","central-contract-circular-maintenance");
-//		temp.put("Circular Contract Maintenance", "panel-circular-maintenance");
-		temp.put("Circular Contract Cancellation", "cancel-circular");
+		temp.put(CTProcessNameConst.CIRCULAR_CANCELLATION_PROCESS_NAME, "cancel-circular");
 		temp.put(CTProcessNameConst.FACTORING_REQUEST_PROCESS_NAME+CTProcessNameConst.ACK_FACTORING_REQUEST_HT_NAME, "review-factoring-request");
 		temp.put(CTProcessNameConst.FACTORING_REQUEST_PROCESS_NAME+CTProcessNameConst.ENDORSE_FACTORING_REQUEST_HT_NAME, "review-factoring-request");
 		temp.put("Contract Creation", "fulfilment-details");
 		temp.put("Contract Activation Suspension Request", "contract-suspension");
 		temp.put("Contract Amendment Request", "contract-amendment");
 		temp.put("Contract Termination", "contract-termination");
-		temp.put("Agreement Creation", "contract-agreement");
+		temp.put(CTProcessNameConst.AGREEMENT_CREATION_PROCESS_NAME, "contract-agreement");
 		temp.put(CTProcessNameConst.BANK_ACCOUNT_CHANGE_PROCESS_NAME+CTProcessNameConst.REVIEW_CB_REQUEST_HT_NAME, "change-bank-account");
 
 		//Fulfilment Management - Start
@@ -211,11 +208,10 @@ public class BPMTaskListBackingBean extends
 
 			}
 			log.info("url:" + url);
-
-			// TODO
-			if(res.getProcessName().equalsIgnoreCase("Circular Contract Maintenance")) {
+			
+			if(res.getProcessName().equalsIgnoreCase(CTProcessNameConst.CIRCULAR_MAINTENANCE_PROCESS_NAME)) {
 				CTCircularContractDataType dataType = (CTCircularContractDataType) obj;
-				if(dataType.getType().equalsIgnoreCase("Central")) {
+				if(dataType.getType().equalsIgnoreCase(ContractConst.CIRCULAR_DOC_TYPE_CENTRAL_CONTRACT)) {
 					url = "central-contract-circular";
 				} else {
 					url = "panel-circular";
@@ -223,15 +219,14 @@ public class BPMTaskListBackingBean extends
 				
 			}
 			
-			if(res.getProcessName().equalsIgnoreCase("Agreement Creation")) {
+			if(res.getProcessName().equalsIgnoreCase(CTProcessNameConst.AGREEMENT_CREATION_PROCESS_NAME)) {
 				CTAgreementDataType dataType = (CTAgreementDataType) obj;
 				if(dataType.getAgreementType().equalsIgnoreCase("supplemental")) {
 					url = "supplemental-agreement";
 				} 
-				
 			}
 			
-			
+			// TODO
 			if(res.getTaskName().equalsIgnoreCase(CTProcessNameConst.CONFIRM_FA_MEETING_HT_NAME) ||
 			   res.getTaskName().equalsIgnoreCase(CTProcessNameConst.UPDATE_FA_RESULT_HT_NAME) ||
 			   res.getTaskName().equalsIgnoreCase(CTProcessNameConst.SIGN_OFF_HT_NAME) || 
