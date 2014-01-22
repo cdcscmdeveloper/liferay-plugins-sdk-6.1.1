@@ -12,16 +12,9 @@
 		<h:outputStylesheet library="ep/css" name="ep.css" />
 	</h:head>
 	<ui:define name="contentSection">
-		<p:tabView id="dpwidget" dynamic="true" orientation="top" widgetVar="dpwidget" activeIndex="#{directPurchaseBackingBean.managedBean.activeTabIndex}">
-			<!-- p:tab id="planInfo" title="#{lbl['lbl.sc.tab.title.plan.info']}" rendered="#{directPurchaseBackingBean.managedBean.requestNote.ppPlan ne null}">
-				<ui:include src="/xhtml/ss/directpurchase/planInfo.xhtml"></ui:include>
-			</p:tab --> 
-			<p:tab id="catalogue" title="#{lbl['lbl.ss.tab.search.catalogue']}">
-				<ui:include src="/xhtml/cm/catalogue/supplierItemSearch.xhtml"></ui:include>
-			</p:tab>
-			<p:tab id="marketResearchTab" title="#{lbl['lbl.sc.tab.request.note']}">
-				<ui:include src="/xhtml/ss/directpurchase/requestList.xhtml"></ui:include>
-			</p:tab>
-		</p:tabView>
+		<div align="left">
+			<h:outputText styleClass="cart_menu_price" value="#{lbl['lbl.ss.tab.search.catalogue']}"></h:outputText>
+		</div>
+		<ui:include src="/xhtml/cm/catalogue/supplierItemSearch.xhtml"></ui:include>
 	</ui:define>
 </ui:composition>

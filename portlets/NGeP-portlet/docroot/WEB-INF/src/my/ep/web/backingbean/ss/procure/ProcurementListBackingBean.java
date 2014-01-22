@@ -55,12 +55,10 @@ public class ProcurementListBackingBean extends BaseBackingBean<ProcureCodeManag
 	}
 
 	public String initiateBPMTask(PpPlan ppPlan) {
-		if (ProcurementPlanConst.PROCUREMENT_DIRECT_PURCHASE.equalsIgnoreCase(ppPlan.getPpPlanMaster().getProcurementMode())) {
+		if (ProcurementPlanConst.PROCUREMENT_DIRECT_PURCHASE.equalsIgnoreCase(ppPlan.getProcurementModeParam().getParameterCode())) {
 			IDirectPurchaseSO directPurchaseSO = (IDirectPurchaseSO) BusinessDelegate.getInstance().getServiceObject(SourcingConst.SOURCING_MODULE, IDirectPurchaseSO.class);
 			// direct purchase, create empty request list and initial BPM task
 			//set status to new
-			PmStatus	status	=	new	PmStatus();
-			status.setStatusId(SourcingConstants.REQUEST_LIST_NEW);
 			
 			//TODO hard code org profile first
 			PmOrgProfile	orgProfile	=	new PmOrgProfile();
@@ -92,8 +90,8 @@ public class ProcurementListBackingBean extends BaseBackingBean<ProcureCodeManag
 			scQt.setFinancialYear(2014);
 			scQt.setQtNo("planned"+ppPlan.getPlanId());
 			scQt.setQtTitle("sourcing");
-			scQt.setProcurementMode(ppPlan.getPpPlanMaster().getProcurementMode());
-			scQt.setQtType(ppPlan.getPpPlanMaster().getQtType());
+			scQt.setProcurementMode(ppPlan.getProcurementModeParam().getParameterCode());
+			scQt.setQtType(ppPlan.getQtTypeParam().getParameterCode());
 			scQt.setQtType("o");
 			scQt.setQtAmount(new BigDecimal(10000));
 			scQt.setResponseRule("A");
@@ -101,7 +99,7 @@ public class ProcurementListBackingBean extends BaseBackingBean<ProcureCodeManag
 			scQt.setSameBsv(false);
 			
 					
-			scQt.setPmOrgProfile(ppPlan.getPpPlanMaster().getOrgProfile());
+			scQt.setPmOrgProfile(ppPlan.getPtjOrgProfile());
 			StatusReqDTO reqDTO = new StatusReqDTO();
 			reqDTO.setStatusId(1l);
 			IStatusSO iStatusSO=EpEjbBusinessDelegate.getInstance().getServiceObject(QTConstants.PM_MODULE, IStatusSO.class);
