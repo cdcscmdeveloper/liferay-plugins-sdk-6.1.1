@@ -21,20 +21,17 @@
 		 </ui:repeat>		
     </div>
 	</p:panel>
-	<p:tabView id="tabview" value="Termination" dynamic="true" orientation="left" >
+	<p:tabView id="tabview" value="Termination" orientation="left" dynamic="true" cache="false" >
 	   <p:tab title="#{lbl['lbl.ct.menu.fd']}" >
          <ui:include src="termination.xhtml"/>
          <ui:include src="/xhtml/ct/shared/remarkAndAttachment.xhtml" /> 
        </p:tab> 
-	   <p:tab title="#{lbl['lbl.ct.menu.wletter']}" rendered="#{contractDetailsBackingBean.managedBean.terminateWarningLetter}" >
-         <ui:include src="/xhtml/ct/fulfilmentdetails/termination/warningLetter.xhtml"/>
+	   <p:tab title="#{lbl['lbl.ct.menu.remedy.notice']}" rendered="#{contractDetailsBackingBean.managedBean.terminateWarningLetter}" >
+         <ui:include src="/xhtml/ct/fulfilmentdetails/termination/remedyNotice.xhtml"/>
        </p:tab>  
 	   <p:tab title="#{lbl['lbl.ct.menu.tnotice']}" rendered="#{contractDetailsBackingBean.managedBean.terminateNotice}" >
          <ui:include src="/xhtml/ct/fulfilmentdetails/termination/terminationNotice.xhtml" />  
        </p:tab>   
-	   <p:tab title="#{lbl['lbl.ct.menu.rletter']}" rendered="#{contractDetailsBackingBean.managedBean.terminateRejectLetter}">
-         <ui:include src="/xhtml/ct/fulfilmentdetails/termination/rejectionLetter.xhtml" />    
-       </p:tab>  
 	</p:tabView>
    </ui:define>  
 </ui:composition>

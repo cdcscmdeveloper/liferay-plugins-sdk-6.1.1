@@ -90,22 +90,31 @@
 	</p:panel>
     <p:panel id="terCont" header="#{lbl['lbl.ct.tr.panel.header']}" toggleable="true"  toggleSpeed="500">
         <table style="width: 100%">
-            <tr>
-               <td style="width:115px;"> <p:outputLabel  value="#{lbl['lbl.ct.tr.recom']}"/>  </td>
-               <td> <p:selectOneMenu value="#{contractDetailsBackingBean.managedBean.termination.caRecommendation.code}" style="width:180px;">
-                  <f:selectItems value="#{contractDetailsBackingBean.getDropdownValues(PmCodeCatConst.ctTerminationRecommendType)}" />
-            	   <p:ajax event="change" update=":form:tabview" listener="#{contractDetailsBackingBean.changeField}" process="@this"/>  
-               </p:selectOneMenu>   </td>
-               </tr> 
-                 <tr><td><p:spacer height="2"/></td></tr>
-               <tr>
-                    <td style="width:115px;"><p:outputLabel value="Disciplinary Action"/>  </td>
-                    <td><p:selectBooleanCheckbox value="#{contractDetailsBackingBean.managedBean.disciplinaryAction}">
-                         <p:ajax event="change" update=":form:tabview" listener="#{contractDetailsBackingBean.ChkDisciplinaryAction}" process="@this"/> 
-                        </p:selectBooleanCheckbox>
-               </td> 
-            </tr>
-            </table>
+			<tr>
+				<td style="width: 115px;"><p:outputLabel value="#{lbl['lbl.ct.tr.recom']}" /></td>
+				<td>
+					<p:selectOneMenu style="width:180px;"
+						value="#{contractDetailsBackingBean.managedBean.termination.decisionType.parameterCode}" >
+						<f:selectItems value="#{contractDetailsBackingBean.getDropdownCodeValues(ParameterTypeConst.terminationDecisionType)}" />
+						<p:ajax event="change" update=":form:tabview" process="@this"
+							listener="#{contractDetailsBackingBean.changeField}" />
+					</p:selectOneMenu>
+				</td>
+			</tr>
+			<tr>
+				<td><p:spacer height="2" /></td>
+			</tr>
+			<tr>
+				<td style="width: 115px;"><p:outputLabel value="Disciplinary Action" /></td>
+				<td>
+					<p:selectBooleanCheckbox value="#{contractDetailsBackingBean.managedBean.disciplinaryAction}">
+						<p:ajax event="change" update=":form:tabview"
+							listenerd="#{contractDetailsBackingBean.ChkDisciplinaryAction}"
+							process="@this" />
+					</p:selectBooleanCheckbox>
+				</td>
+			</tr>
+		</table>
              <p:spacer height="2"/>
              <p:outputPanel rendered="#{contractDetailsBackingBean.managedBean.disciplinaryValue}">
                <table style="width: 100%">

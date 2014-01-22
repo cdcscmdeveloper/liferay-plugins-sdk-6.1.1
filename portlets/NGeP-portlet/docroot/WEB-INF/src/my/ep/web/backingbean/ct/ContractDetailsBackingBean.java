@@ -12,8 +12,9 @@ import java.io.OutputStream;
 import java.net.URL;
 import java.net.URLConnection;
 import java.util.ArrayList;
-import java.util.List;
 import java.util.HashMap;
+import java.util.List;
+
 import javax.annotation.PostConstruct;
 import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
@@ -23,17 +24,6 @@ import javax.faces.model.SelectItem;
 import javax.portlet.PortletResponse;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-
-import org.apache.log4j.Logger;
-import org.primefaces.event.RowEditEvent;
-import org.primefaces.event.SelectEvent;
-import org.primefaces.model.DefaultTreeNode;
-import org.primefaces.model.DualListModel;
-import org.primefaces.model.TreeNode;
-
-
-import com.liferay.portal.kernel.search.ParseException;
-import com.liferay.portal.util.PortalUtil;
 
 import my.ep.biz.bean.search.ISearchBean;
 import my.ep.biz.bean.search.SearchBean;
@@ -47,6 +37,7 @@ import my.ep.bpm.dto.BpmResponseDTO;
 import my.ep.bpm.service.IBpmSO;
 import my.ep.constant.BpmOutcomeConst;
 import my.ep.constant.ct.ContractConst;
+import my.ep.constant.pm.ParameterConst;
 import my.ep.dto.ct.ContractReqDTO;
 import my.ep.dto.ct.ContractResDTO;
 import my.ep.dto.ct.maintain.ContractAssociationReqDTO;
@@ -64,7 +55,6 @@ import my.ep.persistence.entity.ct.CtContract;
 import my.ep.persistence.entity.ct.CtContractVer;
 import my.ep.persistence.entity.ct.amend.CtAmendment;
 import my.ep.persistence.entity.ct.assoc.CtAssocContract;
-import my.ep.persistence.entity.ct.circular.panel.CtPanelZone;
 import my.ep.persistence.entity.ct.dtl.CtPerformanceBond;
 import my.ep.persistence.entity.ct.dtl.CtProgressivePayment;
 import my.ep.persistence.entity.ct.dtl.CtSchedule;
@@ -86,6 +76,16 @@ import my.ep.web.constant.ct.ContractManagementConst;
 import my.ep.web.managedbean.ct.ContractDetailsManagedBean;
 import my.ep.web.util.FacesScopes;
 import my.ep.web.util.lookupservice.BusinessDelegate;
+
+import org.apache.log4j.Logger;
+import org.primefaces.event.RowEditEvent;
+import org.primefaces.event.SelectEvent;
+import org.primefaces.model.DefaultTreeNode;
+import org.primefaces.model.DualListModel;
+import org.primefaces.model.TreeNode;
+
+import com.liferay.portal.kernel.search.ParseException;
+import com.liferay.portal.util.PortalUtil;
 
 /**
  * Backing Bean For Contract Details
@@ -418,27 +418,20 @@ public class ContractDetailsBackingBean extends BaseBackingBean<ContractDetailsM
 			System.out.println(e);
 		}
     }
+    
     public void changeField() {
-
 		try {
 			flush();
 			if (this.getManagedBean().getShowItem().equalsIgnoreCase("Item Pricing")) {
 				this.getManagedBean().setItemPricing(true);
-
 			} else if (this.getManagedBean().getShowItem().equalsIgnoreCase("Item Ceiling Quantity")) {
 				this.getManagedBean().setItemCeilingQuantity(true);
-
-			}else if (this.getManagedBean().getTermination().getDecisionType().getParameterCode().equalsIgnoreCase("155")) {
-				this.getManagedBean().setTerminateWarningLetter(true);
-
-			} else if (this.getManagedBean().getTermination().getDecisionType().getParameterCode().equalsIgnoreCase("154")) {
+			}else if (this.getManagedBean().getTermination().getDecisionType().getParameterCode().equalsIgnoreCase(ParameterConst.TERMINATE_DECISION_TERMINATE) || 
+					this.getManagedBean().getTermination().getDecisionType().getParameterCode().equalsIgnoreCase(ParameterConst.TERMINATE_DECISION_MUTUAL_TERMINATE) ) {
 				this.getManagedBean().setTerminateNotice(true);
-
-			} else if (this.getManagedBean().getTermination().getDecisionType().getParameterCode().equalsIgnoreCase("156")) {
-				this.getManagedBean().setTerminateRejectLetter(true);
-
-			}
-			
+			} else if (this.getManagedBean().getTermination().getDecisionType().getParameterCode().equalsIgnoreCase(ParameterConst.TERMINATE_DECISION_REMEDY_NOTICE)) {
+				this.getManagedBean().setTerminateWarningLetter(true);
+			} 
 		} catch (Exception e) {
 			System.out.println(e);
 		}
