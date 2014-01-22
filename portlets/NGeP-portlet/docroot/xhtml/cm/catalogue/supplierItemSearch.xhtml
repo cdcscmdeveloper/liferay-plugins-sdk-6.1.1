@@ -57,16 +57,21 @@
 								</tr>
 								<tr>
 									<td><p:outputLabel value="State" /></td>
-									<td><p:selectManyMenu id="stateIdDD" showCheckbox="true"
-											style="height:200px;width: 200px;"
-											value="#{catalogueBackingBean.managedBean.stateId}">
-											<f:selectItems
-												value="#{catalogueBackingBean.managedBean.stateList}"
-												var="state" itemLabel="#{state.stateName}"
-												itemValue="#{state.stateId}"></f:selectItems>
-										</p:selectManyMenu> <p:commandButton value="Find District"
-											action="#{catalogueBackingBean.findDistrict}"
-											update="@(.ui-selectmanymenu[id$=districtDD])" /></td>
+									<td><table>
+											<tr>
+												<td><p:selectManyMenu id="stateIdDD"
+														showCheckbox="true" style="height:200px;width: 200px;"
+														value="#{catalogueBackingBean.managedBean.stateId}">
+														<f:selectItems
+															value="#{catalogueBackingBean.managedBean.stateList}"
+															var="state" itemLabel="#{state.stateName}"
+															itemValue="#{state.stateId}"></f:selectItems>
+													</p:selectManyMenu></td>
+												<td><p:commandButton value="Find District"
+														action="#{catalogueBackingBean.findDistrict}"
+														update="@(.ui-selectmanymenu[id$=districtDD])" /></td>
+											</tr>
+										</table></td>
 									<td><p:outputLabel value="District" /></td>
 									<td><p:selectManyMenu id="districtDD" showCheckbox="true"
 											style="height:200px;width: 200px;"

@@ -35,6 +35,7 @@ import my.ep.web.vo.AdvanceSearchVO;
 import my.ep.web.vo.PricingVO;
 
 import org.apache.commons.lang.StringUtils;
+import org.primefaces.model.DualListModel;
 
 @ManagedBean(name = "catalogueMB")
 @SessionScoped
@@ -115,6 +116,16 @@ public class CatalogueManagedBean extends BaseManagedBean {
 
 	private VCmSupplierItem[] selectViewItems;
 
+	private List<VCmSupplierItem> viewSupplierItemList;
+	private boolean contractedExist = false;
+
+	private long[] stateId;
+
+	private long[] districtId;
+
+	private List<Long> districtLs;
+
+
 
 	private SearchFilterBean itemNameFilterBean = new SearchFilterBean(SearchOperator.OPERATOR_LIKE.value());
 	private SearchFilterBean itemCodeFilterBean = new SearchFilterBean(SearchOperator.OPERATOR_EQUALS.value());
@@ -122,6 +133,12 @@ public class CatalogueManagedBean extends BaseManagedBean {
 	private SearchFilterBean contractNoFilterBean = new SearchFilterBean(SearchOperator.OPERATOR_EQUALS.value());
 	private SearchFilterBean circularNoFilterBean = new SearchFilterBean(SearchOperator.OPERATOR_EQUALS.value());
 	private SearchFilterBean natureOfBusinessFilterBean = new SearchFilterBean(SearchOperator.OPERATOR_EQUALS.value());
+
+	private SearchFilterBean epNoFilterBean = new SearchFilterBean(SearchOperator.OPERATOR_EQUALS.value());
+	private SearchFilterBean mofNoFilterBean = new SearchFilterBean(SearchOperator.OPERATOR_EQUALS.value());
+	private SearchFilterBean bizRegNoFilterBean = new SearchFilterBean(SearchOperator.OPERATOR_EQUALS.value());
+
+	private SearchFilterBean districtFilterBean = new SearchFilterBean(SearchOperator.OPERATOR_IN.value());
 
 	private IPagingDataModel<VCmSupplierItem> searchDataModel = new SearchPagingDataModel();
 
@@ -139,57 +156,92 @@ public class CatalogueManagedBean extends BaseManagedBean {
 		@Override
 		protected ISearchResultBean<VCmSupplierItem> pageChangeListener(
 				ISearchBean<VCmSupplierItem> searchBean) {
+			
 			if(StringUtils.isBlank((String)itemNameFilterBean.getSearchValue())
 					&&StringUtils.isBlank((String)itemCodeFilterBean.getSearchValue())
 					&&StringUtils.isBlank((String)supplierNameFilterBean.getSearchValue())
 					&&StringUtils.isBlank((String)contractNoFilterBean.getSearchValue())
-					&&StringUtils.isBlank((String)circularNoFilterBean.getSearchValue())) {
+					&&StringUtils.isBlank((String)circularNoFilterBean.getSearchValue())
+					&&StringUtils.isBlank((String)mofNoFilterBean.getSearchValue())
+					&&StringUtils.isBlank((String)epNoFilterBean.getSearchValue())
+					&&StringUtils.isBlank((String)bizRegNoFilterBean.getSearchValue())
+					&&districtId == null) {
+				System.out.println("******SearchResultBean******");
 				return new SearchResultBean();
 			}
-			
+
 			IViewSupplierItemSO viewSO = null;
-			
+
 			try {	
 
 				viewSO = (IViewSupplierItemSO) BusinessDelegate.getInstance().getServiceObject("cm",IViewSupplierItemSO.class);
 
 
 				if (StringUtils.isNotBlank((String)itemNameFilterBean.getSearchValue())) {
-					System.out.println("*********codeFilterBean***********");
 					itemNameFilterBean.setSearchField("itemName");
 					searchBean.getDataFilterBeans().add(itemNameFilterBean);
 				}
-				
+
 				if (StringUtils.isNotBlank((String)itemCodeFilterBean.getSearchValue())) {
-					System.out.println("*********itemCodeFilterBean***********");
 					itemCodeFilterBean.setSearchField("itemCode");
 					searchBean.getDataFilterBeans().add(itemCodeFilterBean);
 				}
-				
+
 				if (StringUtils.isNotBlank((String)supplierNameFilterBean.getSearchValue())) {
-					System.out.println("*********supplierNameFilterBean***********");
 					supplierNameFilterBean.setSearchField("companyName");
 					searchBean.getDataFilterBeans().add(supplierNameFilterBean);
 				}
-				
+
 				if (StringUtils.isNotBlank((String)contractNoFilterBean.getSearchValue())) {
-					System.out.println("*********contractNoFilterBean***********");
 					contractNoFilterBean.setSearchField("contractNo");
 					searchBean.getDataFilterBeans().add(contractNoFilterBean);
 				}
-				
+
 				if (StringUtils.isNotBlank((String)circularNoFilterBean.getSearchValue())) {
-					System.out.println("*********circularNoFilterBean***********");
 					circularNoFilterBean.setSearchField("circularNo");
 					searchBean.getDataFilterBeans().add(circularNoFilterBean);
 				}
-				
+
+				if (StringUtils.isNotBlank((String)epNoFilterBean.getSearchValue())) {
+					epNoFilterBean.setSearchField("epNo");
+					searchBean.getDataFilterBeans().add(epNoFilterBean);
+				}
+
+				if (StringUtils.isNotBlank((String)mofNoFilterBean.getSearchValue())) {
+					mofNoFilterBean.setSearchField("mofNo");
+					searchBean.getDataFilterBeans().add(mofNoFilterBean);
+				}
+
+				if (StringUtils.isNotBlank((String)bizRegNoFilterBean.getSearchValue())) {
+					bizRegNoFilterBean.setSearchField("bizRegNo");
+					searchBean.getDataFilterBeans().add(bizRegNoFilterBean);
+				}
+
+				setDistrictLs(new ArrayList<Long>());
+				System.out.println("districtId:"+districtId);
+				for(Long district : districtId){
+					System.out.println("district:"+district);
+					districtLs.add(district);
+				}
+
+				System.out.println("districtLs.size():"+districtLs.size());
+				if(districtLs != null){
+					districtFilterBean.setSearchField("districtId");
+					districtFilterBean.setSearchValue(districtLs);
+					searchBean.getDataFilterBeans().add(districtFilterBean);
+				}
+
+
+
+
+
 
 
 				CatalogueReqDTO reqDTO = new CatalogueReqDTO();
 				reqDTO.setViewSearchBean(searchBean);
 				System.out.println("*********b4***********");
 				CatalogueResDTO resDTO = viewSO.searchViewSupplierItems(reqDTO);
+				setViewSupplierItemList(resDTO.getViewSupplierItemList());
 				System.out.println("*********after***********");
 				return resDTO.getViewSuppItemResultBean();
 
@@ -199,13 +251,13 @@ public class CatalogueManagedBean extends BaseManagedBean {
 		}
 
 	}
-	
+
 
 	public void searchCatalogue(){
 		searchDataModel.reloadData();
 	}
-	
-	
+
+
 	public SearchFilterBean getItemNameFilterBean() {
 		return itemNameFilterBean;
 	}
@@ -462,7 +514,7 @@ public class CatalogueManagedBean extends BaseManagedBean {
 		this.publishedItemList = publishedItemList;
 	}
 
-	
+
 
 	public CmSupplierItem getSupplierItemObj() {
 		return supplierItemObj;
@@ -776,7 +828,103 @@ public class CatalogueManagedBean extends BaseManagedBean {
 		this.natureOfBusinessFilterBean = natureOfBusinessFilterBean;
 	}
 
-	
+
+	public SearchFilterBean getEpNoFilterBean() {
+		return epNoFilterBean;
+	}
+
+
+	public void setEpNoFilterBean(SearchFilterBean epNoFilterBean) {
+		this.epNoFilterBean = epNoFilterBean;
+	}
+
+
+	public SearchFilterBean getMofNoFilterBean() {
+		return mofNoFilterBean;
+	}
+
+
+	public void setMofNoFilterBean(SearchFilterBean mofNoFilterBean) {
+		this.mofNoFilterBean = mofNoFilterBean;
+	}
+
+
+	public SearchFilterBean getBizRegNoFilterBean() {
+		return bizRegNoFilterBean;
+	}
+
+
+	public void setBizRegNoFilterBean(SearchFilterBean bizRegNoFilterBean) {
+		this.bizRegNoFilterBean = bizRegNoFilterBean;
+	}
+
+
+	public List<VCmSupplierItem> getViewSupplierItemList() {
+		if(viewSupplierItemList==null)
+			viewSupplierItemList = new ArrayList<VCmSupplierItem>();
+		return viewSupplierItemList;
+	}
+
+
+	public void setViewSupplierItemList(List<VCmSupplierItem> viewSupplierItemList) {
+		this.viewSupplierItemList = viewSupplierItemList;
+	}
+
+
+	public boolean isContractedExist() {
+		return contractedExist;
+	}
+
+
+	public void setContractedExist(boolean contractedExist) {
+		this.contractedExist = contractedExist;
+	}
+
+
+	public long[] getStateId() {
+		return stateId;
+	}
+
+
+	public void setStateId(long[] stateId) {
+		this.stateId = stateId;
+	}
+
+
+	public long[] getDistrictId() {
+		return districtId;
+	}
+
+
+	public void setDistrictId(long[] districtId) {
+		this.districtId = districtId;
+	}
+
+
+	public SearchFilterBean getDistrictFilterBean() {
+		return districtFilterBean;
+	}
+
+
+	public void setDistrictFilterBean(SearchFilterBean districtFilterBean) {
+		this.districtFilterBean = districtFilterBean;
+	}
+
+
+	public List<Long> getDistrictLs() {
+		if(districtLs==null)
+			districtLs = new ArrayList<Long>();
+		return districtLs;
+	}
+
+
+	public void setDistrictLs(List<Long> districtLs) {
+		this.districtLs = districtLs;
+	}
+
+
+
+
 
 
 
