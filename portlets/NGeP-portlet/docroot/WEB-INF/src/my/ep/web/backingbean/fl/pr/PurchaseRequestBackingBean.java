@@ -16,7 +16,6 @@ import javax.faces.context.FacesContext;
 import javax.faces.model.SelectItem;
 import javax.servlet.http.HttpServletRequest;
 
-import my.ep.biz.service.ct.maintain.IContractAmendmentSO;
 import my.ep.biz.service.fl.request.IFulfilmentRequestSO;
 import my.ep.biz.service.pm.authorization.orgprofile.IOrgProfileSO;
 import my.ep.biz.service.pm.authorization.user.IUserSO;
@@ -29,8 +28,6 @@ import my.ep.biz.service.ss.directpurchase.IRequestNoteSO;
 import my.ep.bpm.dto.BpmRequestDTO;
 import my.ep.bpm.dto.BpmResponseDTO;
 import my.ep.bpm.service.IBpmSO;
-import my.ep.dto.ct.maintain.ContractAmendmentReqDTO;
-import my.ep.dto.ct.maintain.ContractAmendmentResDTO;
 import my.ep.dto.fl.FulfilmentReqDTO;
 import my.ep.dto.fl.FulfilmentResDTO;
 import my.ep.dto.pm.authorization.orgprofile.OrgProfileReqDTO;
@@ -52,7 +49,6 @@ import my.ep.dto.ss.directpurchase.RequestNoteResDTO;
 import my.ep.exception.EpException;
 import my.ep.jaxb.fl.podata.FLPurchaseOrderDataType;
 import my.ep.persistence.entity.ct.CtContract;
-import my.ep.persistence.entity.ct.dtl.CtAgencyAddress;
 import my.ep.persistence.entity.fl.request.FlDeliveryAddress;
 import my.ep.persistence.entity.fl.request.FlFulfilmentItem;
 import my.ep.persistence.entity.fl.request.FlFulfilmentItemAddr;
@@ -63,14 +59,12 @@ import my.ep.persistence.entity.pm.authorization.PmUser;
 import my.ep.persistence.entity.pm.authorization.PmUserGroup;
 import my.ep.persistence.entity.pm.authorization.PmUserGroupUser;
 import my.ep.persistence.entity.pm.authorization.PmUserOrg;
-import my.ep.persistence.entity.pm.common.PmAddressType;
 import my.ep.persistence.entity.pm.common.PmDo;
 import my.ep.persistence.entity.pm.common.PmGo;
 import my.ep.persistence.entity.pm.common.PmMaksud;
 import my.ep.persistence.entity.pm.common.PmParameter;
 import my.ep.persistence.entity.pm.common.PmSo;
 import my.ep.persistence.entity.sm.SmSupplier;
-import my.ep.persistence.entity.ss.directpurchase.ScRequestNote;
 import my.ep.persistence.entity.ss.directpurchase.ScRequestNoteDtl;
 import my.ep.type.pm.OrganizationType;
 import my.ep.type.pm.RoleCode;
@@ -202,21 +196,23 @@ public class PurchaseRequestBackingBean extends BaseBackingBean<PurchaseRequestM
 
 	public void updateDeliveryAddrDt() {
 		for (PmOrgAddress addrType : getManagedBean().getSelectedPmDelAddrList()	) {
+			System.out.println("addresss 1 "+addrType.getPmAddress().getAddress1());
 			FlDeliveryAddress deliveryAddr = new FlDeliveryAddress();
 			deliveryAddr.setFlFulfilmentRequest(getManagedBean().getFulfilmentRequest());
-			PmAddressType addressType=new PmAddressType();
-			addressType.setAddressType(addrType.getAddressType());
-			addressType.setPmAddress(addrType.getPmAddress());
-			deliveryAddr.setAddressType(addressType);
+			//PmAddressType addressType=new PmAddressType();
+			//addressType.setAddressType(addrType.getAddressType());
+			//addressType.setPmAddress(addrType.getPmAddress());
+			deliveryAddr.setPmAddress(addrType.getPmAddress());
+			//deliveryAddr.setAddressType(addressType);
 			getManagedBean().getFulfilmentRequest().getFlDeliveryAddresses().add(deliveryAddr);
 		}
 	}
-
+	
 	public void flDeliveryAddrList() {
 		AddressReqDTO reqDTO = new AddressReqDTO();
 		// TODO
 		reqDTO.setOrgProfileId(1L);
-		reqDTO.setAddressType("D");
+		reqDTO.setAddressType("P");
 		IAddressSO addressSO = (IAddressSO) BusinessDelegate.getInstance().getServiceObject("pm",IAddressSO.class);
 		AddressResDTO resDTO = addressSO.retrieveAddressByOrgProfileAndType(reqDTO);
 		// getManagedBean().setAddressTypesList(resDTO.getAddressTypeList());
@@ -261,48 +257,40 @@ public class PurchaseRequestBackingBean extends BaseBackingBean<PurchaseRequestM
 		IPurchaseRequestSO purchaseRequestSO = (IPurchaseRequestSO) BusinessDelegate.getInstance().getServiceObject("ss", IPurchaseRequestSO.class);
 		PurchaseRequestReqDTO reqDTO = new PurchaseRequestReqDTO();
 		reqDTO.setAssignedTo(13L);
+		reqDTO.setIncludeDetail(true);
 		PurchaseRequestResDTO resDTO = purchaseRequestSO.retrievePurchaseRequests(reqDTO);
 		//System.out.println("@@@@@@@@@@@@@@@@@@@@@@2 "+resDTO.getListPurchaseRequest().size());
 		//System.out.println("SIZE 111111111111111    "+resDTO.getListPurchaseRequest().get(0).getRequestNoteDtls().size());
-		
-		//resDTO.getRequestNoteList().get(0).getRequestNoteId();
-		//System.out.println("Purchase item list size::: "+resDTO.getRequestNoteList().size());
-		//System.out.println("PurchaseList getScRequestList ::: "+resDTO.getRequestNoteList().get(0).getRequestNoteItems());
-		///System.out.println("Purchase item Req note ID size::: "+resDTO.getRequestNoteList().get(0).getScRequestList().getRequestListId());
-		//getManagedBean().setRequestNoteWithDtlsList(resDTO.getRequestNoteList());
+		//System.out.println("SIZE 2222222222222    "+resDTO.getListPurchaseRequest().get(0).getRequestNoteDtls().get(0).getScRequestNote().getRequestNoteItems().get(0).getItemName());
+		getManagedBean().setRequestNoteWithDtlsList(resDTO.getListPurchaseRequest().get(0).getRequestNoteDtls());
 	}
 
 	public void updatePurchasedItemDt() {
 		System.out.println("we are in update method:::: ");
-		ScRequestNote requestnote = getManagedBean().getSelectedPurchasedItemList().get(0);
-		/*getManagedBean().getFulfilmentRequest().setFlFulfilmentItems(new ArrayList<FlFulfilmentItem>());
-		for (ScRequestNoteDtl rnDtl : requestnote.getScRequestNoteDtls()) {
-			FlFulfilmentItem flItem = new FlFulfilmentItem();
-			flItem.setFlFulfilmentRequest(getManagedBean().getFulfilmentRequest());
-			flItem.setScRequestNoteDtl(rnDtl);
-			getManagedBean().getFulfilmentRequest().getFlFulfilmentItems().add(flItem);
-		}*/
-		
+		ScRequestNoteDtl requestNoteDtl = getManagedBean().getSelectedPurchasedItemList().get(0);
+				
 		FlFulfilmentItem flItem = null;
-		for (ScRequestNoteDtl rnDtl : requestnote.getRequestNoteDtls()) {
-			if(getManagedBean().getFlItemMap().get(rnDtl.getRequestNoteDtlId()) == null){
+		//for (ScRequestNoteDtl rnDtl : requestnote.getRequestNoteDtls()) {
+			//if(getManagedBean().getFlItemMap().get(rnDtl.getRequestNoteDtlId()) == null){
 				flItem = new FlFulfilmentItem();
+				
+				
 				flItem.setFlFulfilmentRequest(getManagedBean().getFulfilmentRequest());
-				flItem.setScRequestNoteDtl(rnDtl);
+				flItem.setScRequestNoteDtl(requestNoteDtl);
 				getManagedBean().getFulfilmentRequest().setFlFulfilmentItems(new ArrayList<FlFulfilmentItem>());
 				getManagedBean().getFulfilmentRequest().getFlFulfilmentItems().add(flItem);
-			}else{
-				flItem = getManagedBean().getFlItemMap().get(rnDtl.getRequestNoteDtlId());
+			//}else{
+				//flItem = getManagedBean().getFlItemMap().get(rnDtl.getRequestNoteDtlId());
 
-			}
+			//}
 			FlFulfilmentItemAddr flItemAddr = new FlFulfilmentItemAddr();
 			flItemAddr.setFlFulfilmentItem(flItem);
 			flItemAddr.setFlDeliveryAddress(getManagedBean().getSelectedDelAddr());
 			getManagedBean().getSelectedDelAddr().setFlFulfilmentItemAddr(new ArrayList<FlFulfilmentItemAddr>());
 			getManagedBean().getSelectedDelAddr().getFlFulfilmentItemAddr().add(flItemAddr);
 
-			getManagedBean().getFlItemMap().put(rnDtl.getRequestNoteDtlId(), flItem);
-		}
+			getManagedBean().getFlItemMap().put(requestNoteDtl.getRequestNoteDtlId(), flItem);
+		//}
 	}
 
 	public void selectedItemRow() {

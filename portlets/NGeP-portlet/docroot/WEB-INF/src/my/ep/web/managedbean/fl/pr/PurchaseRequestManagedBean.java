@@ -25,7 +25,9 @@ import my.ep.persistence.entity.pm.authorization.PmUserGroupUser;
 import my.ep.persistence.entity.pm.authorization.PmUserOrg;
 import my.ep.persistence.entity.pm.common.PmAddressType;
 import my.ep.persistence.entity.pm.common.PmMaksud;
+import my.ep.persistence.entity.ss.directpurchase.ScRequestItem;
 import my.ep.persistence.entity.ss.directpurchase.ScRequestNote;
+import my.ep.persistence.entity.ss.directpurchase.ScRequestNoteDtl;
 import my.ep.web.managedbean.BaseManagedBean;
 
 import org.apache.log4j.Logger;
@@ -96,9 +98,12 @@ public class PurchaseRequestManagedBean extends BaseManagedBean {
 	private boolean selectedRowFlg;
 	
 	//getItems
-	private List<ScRequestNote> requestNoteWithDtlsList;
-	private List<ScRequestNote> selectedPurchasedItemList;
+	private List<ScRequestNoteDtl> requestNoteWithDtlsList;
+	private List<ScRequestNoteDtl> selectedPurchasedItemList;
 	private FlFulfilmentItem  selectedItemRow;
+	
+	public List<ScRequestItem> requestNoteItems;
+	//ScRequestNoteDtl
 	
 	//get GOSODO
 	private Long goId;
@@ -465,7 +470,7 @@ public class PurchaseRequestManagedBean extends BaseManagedBean {
 	/**
 	 * @return the requestNoteWithDtlsList
 	 */
-	public List<ScRequestNote> getRequestNoteWithDtlsList() {
+	public List<ScRequestNoteDtl> getRequestNoteWithDtlsList() {
 		return requestNoteWithDtlsList;
 	}
 
@@ -473,14 +478,14 @@ public class PurchaseRequestManagedBean extends BaseManagedBean {
 	 * @param requestNoteWithDtlsList the requestNoteWithDtlsList to set
 	 */
 	public void setRequestNoteWithDtlsList(
-			List<ScRequestNote> requestNoteWithDtlsList) {
+			List<ScRequestNoteDtl> requestNoteWithDtlsList) {
 		this.requestNoteWithDtlsList = requestNoteWithDtlsList;
 	}
 
 	/**
 	 * @return the selectedPurchasedItemList
 	 */
-	public List<ScRequestNote> getSelectedPurchasedItemList() {
+	public List<ScRequestNoteDtl> getSelectedPurchasedItemList() {
 		return selectedPurchasedItemList;
 	}
 
@@ -488,7 +493,7 @@ public class PurchaseRequestManagedBean extends BaseManagedBean {
 	 * @param selectedPurchasedItemList the selectedPurchasedItemList to set
 	 */
 	public void setSelectedPurchasedItemList(
-			List<ScRequestNote> selectedPurchasedItemList) {
+			List<ScRequestNoteDtl> selectedPurchasedItemList) {
 		this.selectedPurchasedItemList = selectedPurchasedItemList;
 	}
 
@@ -819,6 +824,20 @@ public class PurchaseRequestManagedBean extends BaseManagedBean {
 	 */
 	public void setDocStatusId(Long docStatusId) {
 		this.docStatusId = docStatusId;
+	}
+
+	/**
+	 * @return the requestNoteItems
+	 */
+	public List<ScRequestItem> getRequestNoteItems() {
+		return requestNoteItems;
+	}
+
+	/**
+	 * @param requestNoteItems the requestNoteItems to set
+	 */
+	public void setRequestNoteItems(List<ScRequestItem> requestNoteItems) {
+		this.requestNoteItems = requestNoteItems;
 	}
 
 	

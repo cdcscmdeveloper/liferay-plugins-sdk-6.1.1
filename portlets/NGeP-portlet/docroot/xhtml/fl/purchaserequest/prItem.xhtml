@@ -20,7 +20,7 @@
 
 			<p:column headerText="Delivery Address">
 				<h:outputText
-					value="#{address.addressType.pmAddress.address1}, #{address.addressType.pmAddress.address2}, #{address.addressType.pmAddress.address3}, #{address.addressType.pmAddress.address4}" />
+					value="#{address.pmAddress.address1}, #{address.pmAddress.address2}, #{address.pmAddress.address3}, #{address.pmAddress.address4}" />
 			</p:column>
 
 			<p:column headerText="Exp. Delivery (Start)">
@@ -58,12 +58,11 @@
 			<p:column selectionMode="multiple" width="5%" />
 			<p:column headerText="Product Code">
 				<h:outputText
-					value="#{flItem.flFulfilmentItem.scRequestNoteDtl.scRequestNote.scRequestList.requestItems[0].requestListItemId}" />
+					value="#{flItem.flFulfilmentItem.scRequestNoteDtl.scRequestNote.requestNoteItems[0].requestNoteItemId}" />
 			</p:column>
-
 			<p:column headerText="Item Name">
 				<h:outputText
-					value="#{flItem.flFulfilmentItem.scRequestNoteDtl.scRequestNote.scRequestList.requestItems[0].itemName}" />
+					value="#{flItem.flFulfilmentItem.scRequestNoteDtl.scRequestNote.requestNoteItems[0].itemName}" />
 			</p:column>
 
 			<p:column headerText="GOSODO">
@@ -112,6 +111,16 @@
 				update="itemDataTable" partialSubmit="true" />
 
 		</div>
+	</p:panel>
+	<p:panel header="#{lbl['lbl.fl.remark.attachment']}" toggleable="true">
+		<table style="width: 100%">
+			<tr>
+				<td width="50%" valign="top"><ui:include
+						src="/xhtml/fl/shared/remark.xhtml" /></td>
+				<td width="50%" valign="top"><ui:include
+						src="/xhtml/fl/shared/attachment.xhtml" /></td>
+			</tr>
+		</table>
 	</p:panel>
 
 	<p:dialog id="addDelAddrDialog" header="Add Delivery Address"
@@ -168,7 +177,7 @@
 			<p:column selectionMode="multiple" />
 			<p:column>
 				<h:outputText
-					value="#{purchasedItem.scRequestList.requestItems[0].itemName}" />
+					value="#{purchasedItem.scRequestNote.requestNoteItems[0].itemName}" />
 			</p:column>
 		</p:dataTable>
 		<p:spacer height="2px"></p:spacer>

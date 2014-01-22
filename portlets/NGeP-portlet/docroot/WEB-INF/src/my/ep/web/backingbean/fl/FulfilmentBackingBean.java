@@ -198,7 +198,8 @@ public class FulfilmentBackingBean extends BaseBackingBean<FulfilmentManagedBean
 			remark.setCreatedDate(new Timestamp(System.currentTimeMillis()));
 			remark.setChangedBy(remark.getCreatedBy());
 			remark.setChangedDate(remark.getCreatedDate());
-			remark.setCreatedUsername(facesScopes.getUserSessionBean().getLoginId());
+			remark.setCreatedUsername(facesScopes.getUserSessionBean().getUserName());
+			remark.setUserId(facesScopes.getUserSessionBean().getLoginId());
 
 			getManagedBean().setRemarkList(remarkList);
 			getManagedBean().getRemarkList().add(0, remark);

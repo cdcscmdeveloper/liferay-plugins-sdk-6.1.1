@@ -208,5 +208,27 @@
 		</list>
 	</property>
 </bean>
+<bean id="PM_ORG_PROFILE" class="my.ep.web.bean.LovBean">
+	<property name="pk" value="orgProfileId" />
+
+	<property name="daoClass" value="my.ep.persistence.dao.pm.authorization.orgprofile.OrgProfileDAO" />
+	<!-- <property name="searchMethod" value="findColor" /> -->
+	<property name="columns">
+		<list>
+			<bean class="my.ep.web.bean.LovColumnBean">
+		        <property name="columnName" 	value="orgProfileId" />
+      			<property name="bundleFile" 	value="messageprovider-config.bundles.labels.labels" />
+      			<property name="bundleKey" 		value="lbl.fl.pm.org.code" />
+      			<!-- <property name="columnWidth" 	value="150" /> -->
+			</bean>
+			<bean class="my.ep.web.bean.LovColumnBean">
+		        <property name="columnName" 	value="orgName" />
+      			<property name="bundleFile" 	value="messageprovider-config.bundles.labels.labels" />
+      			<property name="bundleKey" 		value="lbl.fl.pm.org.name" />
+      			<!-- <property name="columnWidth" 	value="150" /> -->
+			</bean>
+		</list>
+	</property>
+</bean>
 
 </beans>

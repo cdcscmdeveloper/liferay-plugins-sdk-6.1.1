@@ -7,49 +7,52 @@
 
 	<table style="width: 99%; margin-left: 25px;">
 		<tr style="margin-button: 10px;">
+
+			<td>
+				<h6 style="color: blue;">
+					<p:outputLabel value="#{lbl['lbl.fl.rev.hed.request.no']} ." />
+				</h6>
+			</td>
+			<td>
+				<h6>
+					<p:inputText size="20"
+						value="#{purchaseRequestBackingBean.managedBean.fulfilmentRequest.docNo}"
+						disabled="true" />
+				</h6>
+
+			</td>
 			<td><h6 style="color: blue;">
-					<h:outputText value="#{lbl['lbl.fl.rev.hed.document.type']} :" />
+					<p:outputLabel value="#{lbl['lbl.fl.rev.hed.request.note.no']} ." />
 				</h6></td>
 			<td>
 				<h6>
-					<h:outputText
-						value="#{purchaseRequestBackingBean.getParameterDesc(ParameterTypeConst.fulfilmentDocumentType, purchaseRequestBackingBean.managedBean.fulfilmentRequest.docType)}" />
-				</h6>
-			</td>
-			<td>
-				<h6 style="color: blue;">
-					<h:outputText value="#{lbl['lbl.fl.rev.hed.document.no']} :" />
-				</h6>
-			</td>
-			<td>
-				<h6>
-					<h:outputText
-						value="#{purchaseRequestBackingBean.managedBean.fulfilmentRequest.docNo}" />
-				</h6>
-
-			</td>
-		</tr>
-		<tr>
-			<td>
-				<h6 style="color: blue;">
-					<h:outputText value="#{lbl['lbl.fl.rev.hed.prepared.by']} :" />
-				</h6>
-			</td>
-			<td>
-				<h6>
-					<h:outputText value="#{purchaseRequestBackingBean.managedBean.pmUserOrg.pmUser.userName}" />
+					<p:inputText value="RNPTJ00142020200" disabled="true" size="20" />
 				</h6>
 			</td>
 
 			<td>
 				<h6 style="color: blue;">
-					<h:outputText value="#{lbl['lbl.fl.rev.hed.current.status']} :" />
+					<p:outputLabel value="#{lbl['lbl.fl.rev.hed.ptj.name']} " />
 				</h6>
 			</td>
 			<td>
 				<h6>
-					<h:outputText
-						value="#{purchaseRequestBackingBean.getStatusDescById(purchaseRequestBackingBean.managedBean.fulfilmentRequest.status.statusId)}" />
+					<p:inputText
+						value="#{purchaseRequestBackingBean.managedBean.fulfilmentRequest.receivedOrgProfile.parentOrgProfile.orgName}"
+						size="35" disabled="true" />
+				</h6>
+			</td>
+
+			<td>
+				<h6 style="color: blue;">
+					<p:outputLabel value="#{lbl['lbl.fl.rev.hed.status']} " />
+				</h6>
+			</td>
+			<td>
+				<h6>
+					<p:inputText size="20"
+						value="#{purchaseRequestBackingBean.getStatusDescById(purchaseRequestBackingBean.managedBean.fulfilmentRequest.status.statusId)}"
+						disabled="true" />
 				</h6>
 			</td>
 		</tr>
