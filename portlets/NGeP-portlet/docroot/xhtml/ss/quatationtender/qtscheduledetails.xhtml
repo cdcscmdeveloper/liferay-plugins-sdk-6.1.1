@@ -5,267 +5,298 @@
 	xmlns:p="http://primefaces.org/ui"
 	xmlns:ui="http://java.sun.com/jsf/facelets"
 	xmlns:ac="http://ac.my/jsf/composite/cc">
-<h:head>
-	<title>Include demo</title>
-</h:head>
 <h:body>
-	
-	<ui:include src="/xhtml/ss/quatationtender/qtntenderheader.xhtml" />
+
+	<!-- <ui:include src="/xhtml/ss/quatationtender/qtntenderheader.xhtml" /> -->
 	<p:panel header="Schedule" toggleable="true">
-		<h:panelGrid border="0" cellpadding="0" cellspacing="0" width="100%" columns="2" columnClasses="columnWidth30,columnWidth80">
+		<h:panelGrid border="0" cellpadding="0" cellspacing="0" width="100%"
+			columns="2" columnClasses="columnWidth30,columnWidth80">
 
 			<h:outputLabel value="#{lbl['lbl.so.noticepublish']}" />
-			<p:calendar value="#{qTScheduleDetailBB.managedBean.qt.publishDate}"
-				id="noticePublish" showOn="button" pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}" disabled="#{!qTDetailBB.managedBean.editable}"/>
-	
-	        <h:outputLabel value="#{lbl['lbl.so.propredate']}" />
-	
-			 <p:calendar value="#{qTScheduleDetailBB.managedBean.qt.proposalStartDate}"  id="proposalPreparation" pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}" disabled="#{!qTDetailBB.managedBean.editable}" showOn="button"/> 
-			
-			
-			<h:outputLabel value="#{lbl['lbl.so.closingdate']}"/>
-			
-			 <p:calendar value="#{qTScheduleDetailBB.managedBean.qt.closingDate}" id="closingDate" pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}" disabled="#{!qTDetailBB.managedBean.editable}" showOn="button"/>
-			
-			<h:outputLabel  value="#{lbl['lbl.so.publsihperiod']}" escape="false" />
-					
-			<p:inputText value="#{qTScheduleDetailBB.managedBean.qt.qtValidityPeriod}"  readonly="true" id="publishingperiod" disabled="true" style="margin-top:5px;"/>
-			
-			<h:outputLabel value="#{lbl['lbl.so.expectloadate']}"/>
-			
-			<p:calendar value="#{qTScheduleDetailBB.managedBean.qt.expectedLoaDate}"  id="loaDate" pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}" disabled="#{!qTDetailBB.managedBean.editable}" showOn="button"/>
-			
-			<h:outputLabel value="#{lbl['lbl.so.expectdeldate']}"/>
-			
-			<p:calendar value="#{qTScheduleDetailBB.managedBean.qt.expectedDeliveryDate}"  id="deliveryDate" pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}" disabled="#{!qTDetailBB.managedBean.editable}" showOn="button"/>
-		
-	</h:panelGrid>
-	</p:panel>
-	
-	<p:panel header="Briefing/Site Visit Schedule" toggleable="true">
-		<h:panelGrid border="0" cellpadding="0" cellspacing="0" width="100%" columns="2" 
-			 columnClasses="columnWidth30,columnWidth70">
+			<p:calendar
+				value="#{qTScheduleDetailBackingBean.managedBean.qt.publishDate}"
+				id="noticePublish" showOn="button"
+				pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}"
+				disabled="#{!qTDetailBB.managedBean.editable}" />
 
-		 	<h:outputLabel value="#{lbl['lbl.so.briefsitereq']}" />
-		 <p:selectOneRadio
-				value="#{qTScheduleDetailBB.managedBean.qt.bsvRequired}" disabled="#{!qTDetailBB.managedBean.editable}" >
-				<f:selectItem itemLabel="Yes" itemValue="true" />
-				<f:selectItem itemLabel="No" itemValue="false" />
-				<p:ajax update="bsvrequire" listener="#{qTSupplierQulCriteriaBackingBean.processChecked}"/>
-			</p:selectOneRadio>
-			<h:outputLabel value="#{lbl['lbl.so.briefsamevisit']}" />
-			<p:selectOneRadio
-				value="#{qTScheduleDetailBB.managedBean.qt.sameBsv}"  disabled="#{!qTDetailBB.managedBean.editable}">
-				<f:selectItem itemLabel="Yes" itemValue="true" />
-				<f:selectItem itemLabel="No" itemValue="false" />
-				<p:ajax update="samebsv" listener="#{qTSupplierQulCriteriaBackingBean.processChecked}"/>
+			<h:outputLabel value="#{lbl['lbl.so.propredate']}" />
 
-			</p:selectOneRadio>
+			<p:calendar
+				value="#{qTScheduleDetailBackingBean.managedBean.qt.proposalStartDate}"
+				id="proposalPreparation"
+				pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}"
+				disabled="#{!qTDetailBB.managedBean.editable}" showOn="button" />
 
+
+			<h:outputLabel value="#{lbl['lbl.so.closingdate']}" />
+
+			<p:calendar
+				value="#{qTScheduleDetailBackingBean.managedBean.qt.closingDate}"
+				id="closingDate" pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}"
+				disabled="#{!qTDetailBB.managedBean.editable}" showOn="button" />
+
+			<h:outputLabel value="#{lbl['lbl.so.publsihperiod']}" escape="false" />
+
+			<p:inputText
+				value="#{qTScheduleDetailBackingBean.managedBean.qt.qtValidityPeriod}"
+				readonly="true" id="publishingperiod" disabled="true"
+				style="margin-top:5px;" />
+
+			<h:outputLabel value="#{lbl['lbl.so.expectloadate']}" />
+
+			<p:calendar
+				value="#{qTScheduleDetailBackingBean.managedBean.qt.expectedLoaDate}"
+				id="loaDate" pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}"
+				disabled="#{!qTDetailBB.managedBean.editable}" showOn="button" />
+
+			<h:outputLabel value="#{lbl['lbl.so.expectdeldate']}" />
+
+			<p:calendar
+				value="#{qTScheduleDetailBackingBean.managedBean.qt.expectedDeliveryDate}"
+				id="deliveryDate" pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}"
+				disabled="#{!qTDetailBB.managedBean.editable}" showOn="button" />
 
 		</h:panelGrid>
 	</p:panel>
-    <h:panelGroup id="bsvrequire">
-	<h:panelGroup
-		rendered="#{qTScheduleDetailBB.managedBean.qt.bsvRequired eq 'true'}" >
-		<p:panel header="Briefing Details" toggleable="true">
-			<p:panelGrid columns="2" style="width:100%;"
-				styleClass="noBorders tr,noBorders td">
 
-				
-					
-			<p:dataTable value="#{qTScheduleDetailBB.managedBean.briefings}" scrollable="true" scrollWidth="796" 
-			 id="briefdetaillist" var="briefdetails" 
-			 selection="#{qTScheduleDetailBB.managedBean.selectedBriefingDetails}"
-				rowKey="#{briefdetails}" rowIndexVar="rowIndex"
-				rows="10">
-				<p:column selectionMode="multiple" style="width:5%" />
-				<ac:paginator for="briefdetaillist"/>
-				
-					<p:column headerText="#{lbl['lbl.so.desc']}">
-						<p:commandLink >
-								<h:outputText value="#{briefdetails.briefingDesc}"></h:outputText>
-								</p:commandLink>
-							
+	<p:panel header="Briefing/Site Visit Schedule" toggleable="true">
+		<h:panelGrid border="0" cellpadding="0" cellspacing="0" width="100%"
+			columns="2" columnClasses="columnWidth30,columnWidth70">
+
+			<h:outputLabel value="#{lbl['lbl.so.briefsitereq']}" />
+			<p:selectOneRadio
+				value="#{qTScheduleDetailBackingBean.managedBean.qt.bsvRequired}"
+				disabled="#{!qTDetailBB.managedBean.editable}">
+				<f:selectItem itemLabel="Yes" itemValue="true" />
+				<f:selectItem itemLabel="No" itemValue="false" />
+				<p:ajax update="bsvrequire"
+					listener="#{qTSupplierQulCriteriaBackingBean.processChecked}" />
+			</p:selectOneRadio>
+			<h:outputLabel value="#{lbl['lbl.so.briefsamevisit']}" />
+			<p:selectOneRadio
+				value="#{qTScheduleDetailBackingBean.managedBean.qt.sameBsv}"
+				disabled="#{!qTDetailBB.managedBean.editable}">
+				<f:selectItem itemLabel="Yes" itemValue="true" />
+				<f:selectItem itemLabel="No" itemValue="false" />
+				<p:ajax update="samebsvs"
+					listener="#{qTSupplierQulCriteriaBackingBean.processChecked}" />
+
+			</p:selectOneRadio>
+		</h:panelGrid>
+	</p:panel>
+
+	<h:panelGroup id="bsvrequire">
+		<h:panelGroup
+			rendered="#{qTScheduleDetailBackingBean.managedBean.qt.bsvRequired eq 'true'}">
+			<p:panel header="Briefing Details" toggleable="true">
+				<p:dataTable
+					value="#{qTScheduleDetailBackingBean.managedBean.briefings}"
+					scrollable="true" scrollWidth="796" id="briefdetaillist"
+					var="briefdetails"
+					selection="#{qTScheduleDetailBackingBean.managedBean.selectedBriefingDetails}"
+					rowKey="#{briefdetails}" rowIndexVar="rowIndex" rows="10">
+
+					<p:column selectionMode="multiple" style="width:5%" />
+
+					<ac:paginator for="briefdetaillist" />
+
+					<p:column headerText="#{lbl['lbl.so.desc']}" style="width:24%">
+						<p:commandLink>
+							<h:outputText value="#{briefdetails.briefingDesc}" />
+						</p:commandLink>
 					</p:column>
-					<p:column headerText="#{lbl['lbl.so.date']}">
-                   <h:outputText value="#{briefdetails.briefingDate}"></h:outputText>
-								</p:column>
-								
-								<p:column headerText="#{lbl['lbl.so.location']}">
-					<h:outputText value="#{briefdetails.location}"></h:outputText>
-							</p:column>
-							
-							<p:column headerText="#{lbl['lbl.so.coordinateofficer']}">
 
-								<h:outputText value="#{briefdetails.coordinatingOfficer}"></h:outputText>
-
+					<p:column headerText="#{lbl['lbl.so.date']}" style="width:14%">
+						<h:outputText value="#{briefdetails.briefingDate}" />
 					</p:column>
 
-					<p:column headerText="#{lbl['lbl.so.attendance']}">
-
-								<h:outputText value="#{briefdetails.attendanceType}"></h:outputText>
-
+					<p:column headerText="#{lbl['lbl.so.location']}" style="width:16%">
+						<p:commandLink>
+							<h:outputText value="#{briefdetails.location}" />
+						</p:commandLink>
 					</p:column>
 
-					<p:column headerText="#{lbl['lbl.so.zone']}">
-            <h:outputText value="#{briefdetails.scQtZoneCriteria.zoneName}"></h:outputText>
-							
+					<p:column headerText="#{lbl['lbl.so.coordinateofficer']}"
+						style="width:19%">
+						<h:outputText value="#{briefdetails.coordinatingOfficer}" />
 					</p:column>
-					<p:column headerText="#{lbl['lbl.so.briefstatus']}">
-		            <h:outputText value="Pending"/>
-		<!-- <h:outputText value="#{briefdetails.pmStatus.statusId}"></h:outputText>  -->
-							</p:column>
-				<!-- <p:column headerText="#{lbl['lbl.so.action']}" style="width:6%">
-						<p:rowEditor />
-						</p:column>  -->
 
+					<p:column headerText="#{lbl['lbl.so.attendance']}"
+						style="width:12%">
+						<h:outputText value="#{briefdetails.attendanceType}" />
+					</p:column>
+
+					<p:column headerText="#{lbl['lbl.so.zone']}" style="width:12%">
+						<p:commandLink>
+							<h:outputText value="#{briefdetails.scQtZoneCriteria.zoneName}" />
+						</p:commandLink>
+					</p:column>
+
+					<p:column headerText="#{lbl['lbl.so.briefstatus']}"
+						style="width:15%">
+						<h:outputText value="Pending" />
+					</p:column>
 				</p:dataTable>
 
-			</p:panelGrid>
 				<p:panelGrid columns="2" style="width:100%;"
-				styleClass="noBorders tr,noBorders td">
-			<f:facet name="footer">
+					styleClass="noBorders tr,noBorders td">
+					<f:facet name="footer">
 						<div align="right">
-
-							<p:commandButton id="briefadd" value="#{lbl['lbl.so.addbtn']}" process="@this" action="#{qTScheduleDetailBB.addBriefingDetails}" oncomplete="dlg1.show();" update="@(.qtBriefDetails)" rendered="#{qTDetailBB.managedBean.editable}" icon="ui-icon-add"></p:commandButton>
-							<p:commandButton value="#{lbl['lbl.so.delete']}" rendered="#{qTDetailBB.managedBean.editable}" icon="ui-icon-delete"/>
+							<p:commandButton id="briefadd" value="#{lbl['lbl.so.addbtn']}"
+								process="@this"
+								action="#{qTScheduleDetailBackingBean.addBriefingDetails}"
+								oncomplete="dlg1.show();" update="@(.qtBriefDetails)"
+								rendered="#{qTDetailBB.managedBean.editable}" icon="ui-icon-add" />
+							<p:commandButton value="#{lbl['lbl.so.delete']}"
+								rendered="#{qTDetailBB.managedBean.editable}"
+								icon="ui-icon-delete" />
 						</div>
 					</f:facet>
-			</p:panelGrid>
-		</p:panel>
+				</p:panelGrid>
+			</p:panel>
 
+		</h:panelGroup>
 	</h:panelGroup>
-	</h:panelGroup>
-	<h:panelGroup id="samebsv">
-	<h:panelGroup
-		rendered="#{qTScheduleDetailBB.managedBean.qt.sameBsv eq 'true'}" >
+	<h:panelGroup id="samebsvs">
+		<h:panelGroup
+			rendered="#{qTScheduleDetailBackingBean.managedBean.qt.sameBsv eq 'true'}">
+			<p:panel header="Site/Visit Details" toggleable="true">
+				<p:dataTable
+					value="#{qTScheduleDetailBackingBean.managedBean.siteBriefings}"
+					scrollable="true" scrollWidth="796" id="sitedetails"
+					var="sitedetails"
+					selection="#{qTScheduleDetailBackingBean.managedBean.selectedSiteVisitDetails}"
+					rowKey="#{sitedetails}" rowIndexVar="rowIndex" rows="10">
 
+					<ac:paginator for="sitedetails" />
 
-		<p:panel header="Site/Visit Details" toggleable="true">
-			<p:panelGrid columns="2" style="width:100%;"
-				styleClass="noBorders tr,noBorders td">
+					<p:column selectionMode="multiple" style="width:5%" />
 
-			<p:dataTable value="#{qTScheduleDetailBB.managedBean.siteBriefings}" scrollable="true" scrollWidth="796" 
-			id="sitedetails" var="sitedetails"
-			selection="#{qTScheduleDetailBB.managedBean.selectedSiteVisitDetails}"
-				rowKey="#{sitedetails}" rowIndexVar="rowIndex"
-				rows="10">
-				<p:column selectionMode="multiple" style="width:5%" />
-				<ac:paginator for="sitedetails" />
-			
-			
-			<p:column headerText="#{lbl['lbl.so.desc']}">
-						<p:commandLink >
-								<h:outputText value="#{sitedetails.briefingDesc}"></h:outputText>
-								</p:commandLink>
-							
-					</p:column>
-					<p:column headerText="#{lbl['lbl.so.date']}">
-                   <h:outputText value="#{sitedetails.briefingDate}"></h:outputText>
-								</p:column>
-								
-								<p:column headerText="#{lbl['lbl.so.location']}">
-					<h:outputText value="#{sitedetails.location}"></h:outputText>
-							</p:column>
-							
-							<p:column headerText="#{lbl['lbl.so.coordinateofficer']}">
-
-								<h:outputText value="#{sitedetails.coordinatingOfficer}"></h:outputText>
-
+					<p:column headerText="#{lbl['lbl.so.desc']}" style="width:24%">
+						<p:commandLink>
+							<h:outputText value="#{sitedetails.briefingDesc}" />
+						</p:commandLink>
 					</p:column>
 
-					<p:column headerText="#{lbl['lbl.so.attendance']}">
-
-								<h:outputText value="#{sitedetails.attendanceType}"></h:outputText>
-
+					<p:column headerText="#{lbl['lbl.so.date']}" style="width:14%">
+						<h:outputText value="#{sitedetails.briefingDate}" />
 					</p:column>
 
-					<p:column headerText="#{lbl['lbl.so.zone']}">
-            <h:outputText value="#{sitedetails.scQtZoneCriteria.zoneName}"></h:outputText>
-							
+					<p:column headerText="#{lbl['lbl.so.location']}" style="width:16%">
+						<p:commandLink>
+							<h:outputText value="#{sitedetails.location}" />
+						</p:commandLink>
 					</p:column>
-					<p:column headerText="#{lbl['lbl.so.briefstatus']}">
-					<h:outputText value="Pending"/>
-		<!-- <h:outputText value="#{sitedetails.pmStatus.statusName}"></h:outputText>  -->
-							</p:column>
-			<!-- 	<p:column headerText="#{lbl['lbl.so.action']}" style="width:6%">
-						<p:rowEditor />
-						</p:column>  -->
+
+					<p:column headerText="#{lbl['lbl.so.coordinateofficer']}"
+						style="width:19%">
+						<h:outputText value="#{sitedetails.coordinatingOfficer}" />
+					</p:column>
+
+					<p:column headerText="#{lbl['lbl.so.attendance']}"
+						style="width:12%">
+						<h:outputText value="#{sitedetails.attendanceType}" />
+					</p:column>
+
+					<p:column headerText="#{lbl['lbl.so.zone']}" style="width:12%">
+						<p:commandLink>
+							<h:outputText value="#{sitedetails.scQtZoneCriteria.zoneName}" />
+						</p:commandLink>
+					</p:column>
+
+					<p:column headerText="#{lbl['lbl.so.briefstatus']}"
+						style="width:15%">
+						<h:outputText value="Pending" />
+					</p:column>
+
 				</p:dataTable>
-
-				
-			</p:panelGrid>
 				<p:panelGrid columns="2" style="width:100%;"
-			styleClass="noBorders tr,noBorders td">
-			<f:facet name="footer">
+					styleClass="noBorders tr,noBorders td">
+					<f:facet name="footer">
 						<div align="right">
 
-							<p:commandButton id="siteadd" value="#{lbl['lbl.so.addbtn']}" process="@this" action="#{qTScheduleDetailBB.addSiteDetails}" rendered="#{qTDetailBB.managedBean.editable}" oncomplete="dlg2.show();" update="@(.qtSiteBriefDetails)" icon="ui-icon-add"></p:commandButton>
-                            <p:commandButton value="#{lbl['lbl.so.delete']}" rendered="#{qTDetailBB.managedBean.editable}" icon="ui-icon-delete"/>
+							<p:commandButton id="siteadd" value="#{lbl['lbl.so.addbtn']}"
+								process="@this"
+								action="#{qTScheduleDetailBackingBean.addSiteDetails}"
+								rendered="#{qTDetailBB.managedBean.editable}"
+								oncomplete="dlg2.show();" update="@(.qtSiteBriefDetails)"
+								icon="ui-icon-add" />
+							<p:commandButton value="#{lbl['lbl.so.delete']}"
+								rendered="#{qTDetailBB.managedBean.editable}"
+								icon="ui-icon-delete" />
 						</div>
 					</f:facet>
-			</p:panelGrid>
-		</p:panel>
-	</h:panelGroup>
+				</p:panelGrid>
+			</p:panel>
+		</h:panelGroup>
 	</h:panelGroup>
 	<p:panel header="Contact Person Details" toggleable="true">
-		<p:panelGrid columns="2" style="width:100%;"
-			styleClass="noBorders tr,noBorders td">
-			<p:dataTable id="cpersondetails"       styleClass="contactdetails" var="contactpersondetails"
-				value= "#{qTScheduleDetailBB.managedBean.scQtContactPersons}" 
-			    selection="#{qTScheduleDetailBB.managedBean.selectedContactPersons}"
-				rowKey="#{contactpersondetails}" rowIndexVar="rowIndex"
-				rows="10">
-				<p:column selectionMode="multiple" style="width:2%" />
-				<ac:paginator for="cpersondetails" />
 
-				
+		<p:dataTable var="contactpersondetails" id="cpersondetails"
+			value="#{qTScheduleDetailBackingBean.managedBean.scQtContactPersons}"
+			editable="true"
+			selection="#{qTScheduleDetailBackingBean.managedBean.selectedContactPersons}"
+			styleClass="contactdetails" rowKey="#{contactpersondetails}"
+			rowIndexVar="rowIndex" rows="10">
 
-				
-				<p:column headerText="#{lbl['lbl.so.name']}">
-                  <!--  <h:outputText value="#{contactpersondetails.name}"></h:outputText> -->
-					<h:inputText value="#{contactpersondetails.name}" size="50" disabled="#{!qTDetailBB.managedBean.editable}"/>
-								</p:column>
-				
-				<p:column headerText="#{lbl['lbl.so.phone']}" style="width:15%">
-                  <!--  <h:outputText value="#{contactpersondetails.name}"></h:outputText> -->
-					<h:inputText value="#{contactpersondetails.phoneNo}" size="10" disabled="#{!qTDetailBB.managedBean.editable}"/>
-								</p:column>
-								
-				<p:column headerText="#{lbl['lbl.so.fax']}" style="width:15%">
-                  <!--  <h:outputText value="#{contactpersondetails.name}"></h:outputText> -->
-					<h:inputText value="#{contactpersondetails.faxNo}" size="10" disabled="#{!qTDetailBB.managedBean.editable}"/>
-								</p:column>
-				
-				<p:column headerText="#{lbl['lbl.so.mail']}" style="width:15%"> 
-                  <!--  <h:outputText value="#{contactpersondetails.name}"></h:outputText> -->
-					<h:inputText value="#{contactpersondetails.email}" disabled="#{!qTDetailBB.managedBean.editable}"/>
-								</p:column>												
-				
+			<p:column selectionMode="multiple" style="width:2%" />
+
+			<ac:paginator for="cpersondetails" />
+
+			<p:column headerText="#{lbl['lbl.so.name']}">
+				<h:outputText value="#{contactpersondetails.name}"
+					rendered="#{contactpersondetails.brandNew eq false}" />
+				<h:inputText value="#{contactpersondetails.name}" size="50"
+					disabled="#{!qTDetailBB.managedBean.editable}"
+					rendered="#{contactpersondetails.brandNew eq true}" />
+			</p:column>
+
+			<p:column headerText="#{lbl['lbl.so.phone']}" style="width:15%">
+				<h:outputText value="#{contactpersondetails.phoneNo}"
+					rendered="#{contactpersondetails.brandNew eq false}" />
+				<h:inputText value="#{contactpersondetails.phoneNo}" size="10"
+					disabled="#{!qTDetailBB.managedBean.editable}"
+					rendered="#{contactpersondetails.brandNew eq true}" />
+			</p:column>
+
+			<p:column headerText="#{lbl['lbl.so.fax']}" style="width:15%">
+				<h:outputText value="#{contactpersondetails.faxNo}"
+					rendered="#{contactpersondetails.brandNew eq false}" />
+				<h:inputText value="#{contactpersondetails.faxNo}" size="10"
+					disabled="#{!qTDetailBB.managedBean.editable}"
+					rendered="#{contactpersondetails.brandNew eq true}" />
+			</p:column>
+
+			<p:column headerText="#{lbl['lbl.so.mail']}" style="width:15%">
+				<h:outputText value="#{contactpersondetails.email}"
+					rendered="#{contactpersondetails.brandNew eq false}" />
+				<h:inputText value="#{contactpersondetails.email}"
+					disabled="#{!qTDetailBB.managedBean.editable}"
+					rendered="#{contactpersondetails.brandNew eq true}" />
+			</p:column>
 
 			<!--  	<p:column headerText="#{lbl['lbl.so.action']}" style="width:6%">
 					<p:rowEditor />
              <ui:include src="/xhtml/ss/committe/clonecommitteescreen.xhtml" />
 
 				</p:column> -->
-				
-
-			</p:dataTable>
-			</p:panelGrid>
-				<p:panelGrid columns="2" style="width:100%;"
+		</p:dataTable>
+		<p:panelGrid columns="2" style="width:100%;"
 			styleClass="noBorders tr,noBorders td">
 			<f:facet name="footer">
-						<div align="right">
-                            
-							<p:commandButton value="#{lbl['lbl.so.addbtn']}" action="#{qTScheduleDetailBB.addContactPerson}" update="@(.contactdetails)" icon="ui-icon-add" rendered="#{qTDetailBB.managedBean.editable}"></p:commandButton>
-                             <p:commandButton value="#{lbl['lbl.so.delete']}" icon="ui-icon-delete" rendered="#{qTDetailBB.managedBean.editable}"/>
-						</div>
-					</f:facet>
-		</p:panelGrid>
-			
-			
-	</p:panel>
+				<div align="right">
+					<p:commandButton value="#{lbl['lbl.so.addbtn']}"
+						process="@this,cpersondetails" partialSubmit="true"
+						action="#{qTScheduleDetailBackingBean.addContactPerson}"
+						update="cpersondetails" icon="ui-icon-add"
+						rendered="#{qTDetailBB.managedBean.editable}" />
 
+					<p:commandButton value="#{lbl['lbl.so.delete']}"
+						icon="ui-icon-delete"
+						rendered="#{qTDetailBB.managedBean.editable}" />
+				</div>
+			</f:facet>
+		</p:panelGrid>
+	</p:panel>
 </h:body>
 </html>
