@@ -22,10 +22,9 @@
 					<p:outputLabel value="Procurement Mode:"></p:outputLabel>
 				</p:column>
 				<p:column>
-					<p:selectOneMenu
-						value="#{procurementListBackingBean.managedBean.planSearchBean.procurementMode}">
-						<f:selectItems
-							value="#{procurementListBackingBean.getDropdownCodeValues(PmCodeCatConst.scProcurementMode)}" />
+					<p:selectOneMenu value="#{procurementListBackingBean.managedBean.planSearchBean.procurementMode}" style="width: auto; min-width: 150px;" required="false"
+						disabled="false">
+						<f:selectItems value="#{procurementListBackingBean.getDropdownCodeValues(ParameterTypeConst.scProcurementMode)}" var="selectItem" itemValue="#{selectItem.value}" itemLabel="#{selectItem.label}"/>
 		
 					</p:selectOneMenu>
 				</p:column>
@@ -35,12 +34,9 @@
 					<p:outputLabel value="Plan Status:"></p:outputLabel>
 				</p:column>
 				<p:column>
-					<p:selectOneMenu
-						value="#{procurementListBackingBean.managedBean.planSearchBean.status}">
-						<f:selectItem itemLabel="Select One" itemValue="" />
-						<f:selectItem itemLabel="Option 1" itemValue="" />
-						<f:selectItem itemLabel="Option 2" itemValue="" />
-						<f:selectItem itemLabel="Option 3" itemValue="" />
+					<p:selectOneMenu value="#{procurementListBackingBean.managedBean.planSearchBean.status}" style="width: auto; min-width: 150px;" required="false"
+						disabled="false">
+						<f:selectItems value="#{procurementListBackingBean.getStatusDropdownValues(PPConst.module,PPConst.doctypePlan)}" var="selectItem" itemValue="#{selectItem.value}" itemLabel="#{selectItem.label}"></f:selectItems>
 					</p:selectOneMenu>
 				</p:column>
 			</p:row>
@@ -91,11 +87,11 @@
 			</p:column>
 
 			<p:column headerText="Action" style="width:6%">
-				<p:commandLink actionListener="#{procurementListBackingBean.editPlan(procurementObj)}" update="@([id$=planInforDialog])" oncomplete="procurePlanPopup.show();">
+				<p:commandLink actionListener="#{procurementListBackingBean.editPlan(procurementObj)}" rendered="#{procurementObj.editable}" update="@([id$=planInforDialog])" oncomplete="procurePlanPopup.show();">
 					<p:graphicImage value="/resources/ep/images/design/edit.png"></p:graphicImage>
 				</p:commandLink>
 				<p:commandLink action="#{procurementListBackingBean.initiateBPMTask(procurementObj)}"
-					rendered="true" update="procurementPlanList" process="@this">
+					rendered="#{procurementObj.editable}" update="procurementPlanList" process="@this">
 					<p:graphicImage url="/resources/ep/images/design/add.png"></p:graphicImage>
 				</p:commandLink>
 			</p:column>

@@ -15,12 +15,13 @@ import my.ep.biz.service.ss.quationtender.IQTDetailSO;
 import my.ep.bpm.dto.BpmRequestDTO;
 import my.ep.bpm.dto.BpmResponseDTO;
 import my.ep.bpm.service.IBpmSO;
-import my.ep.constant.ss.SourcingConstants;
 import my.ep.constants.SCProcessNameConst;
 import my.ep.dto.pm.common.status.StatusReqDTO;
 import my.ep.dto.pm.common.status.StatusResDTO;
 import my.ep.dto.pp.procurementplan.ProcurementPlanReqDTO;
 import my.ep.dto.pp.procurementplan.ProcurementPlanResDTO;
+import my.ep.dto.ss.directpurchase.RequestNoteReqDTO;
+import my.ep.dto.ss.directpurchase.RequestNoteResDTO;
 import my.ep.dto.ss.quationtender.QuationTenderReqDTO;
 import my.ep.dto.ss.quationtender.QuationTenderResDTO;
 import my.ep.jaxb.sc.directpurchasedata.SCDirectPurchaseDataType;
@@ -147,6 +148,8 @@ public class ProcurementListBackingBean extends BaseBackingBean<ProcureCodeManag
 
 	public void retriveProcuremntPlanDtls() {
 		IProcurementPlanSO procurementSO = getProcurementSO();
+		IDirectPurchaseSO directPurchaseSO = (IDirectPurchaseSO) BusinessDelegate.getInstance().getServiceObject(SourcingConst.SOURCING_MODULE, IDirectPurchaseSO.class);
+		
 		ProcurementPlanReqDTO planReqDTO = new ProcurementPlanReqDTO();
 		//planReqDTO.setPlanId(Long.valueOf(getManagedBean().getPlanSearchBean().getPlanNo()));
 		if(StringUtils.isNotBlank(getManagedBean().getPlanSearchBean().getStatus())){
@@ -158,9 +161,15 @@ public class ProcurementListBackingBean extends BaseBackingBean<ProcureCodeManag
 		if(StringUtils.isNotBlank(getManagedBean().getPlanSearchBean().getProcurementMode())){
 			planReqDTO.setProcurementMode(getManagedBean().getPlanSearchBean().getProcurementMode());
 		}
+		//planReqDTO.setSearchBean(getManagedBean().getPlanSearchBean());
 		//ProcurementPlanResDTO planResDTO = procurementSO.retrievePlanById(planReqDTO);
 		ProcurementPlanResDTO planResDTO = procurementSO.retrievePlanByParams(planReqDTO);
 		List<PpPlan> pplans = planResDTO.getPlanList();
+		//check plan has started sourcing or not
+		RequestNoteReqDTO	reqDTO	=	new RequestNoteReqDTO();
+		reqDTO.setPlans(pplans);
+		RequestNoteResDTO resDTO	=	directPurchaseSO.checkPlanEditable(reqDTO);
+		pplans = resDTO.getPlans();
 		//List<PpPlan> pplans	=	new ArrayList<>();
 		//pplans.add(planResDTO.getPlan());
 		this.getManagedBean().setProcurementPlanList(pplans);
