@@ -1,0 +1,107 @@
+<?xml version="1.0"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<ui:composition
+template="/WEB-INF/facelets/templates/basic_template.xhtml"
+xmlns="http://www.w3.org/1999/xhtml"
+xmlns:f="http://java.sun.com/jsf/core"
+xmlns:h="http://java.sun.com/jsf/html"
+xmlns:ui="http://java.sun.com/jsf/facelets"
+xmlns:p="http://primefaces.org/ui"
+xmlns:c="http://java.sun.com/jsp/jstl/core"
+xmlns:fn="http://java.sun.com/jsp/jstl/functions">
+
+
+    <ui:define name="contentSection">
+		<p:messages id="messages" showDetail="true" autoUpdate="true" closable="true" severity="error, info" />
+		<!-- Top Button -->
+		<ui:include src="headerSection.xhtml"/>
+		
+		<!-- Agency Profile -->
+		<p:panel id="pAgencyProf" toggleable="true" header="#{lbl['lbl.pp.agency.profile']}">
+			<table class="ppTwoTable">
+				<tr>
+					<th><p:outputLabel value="#{lbl['lbl.pp.ministry']}"/></th>
+					<td>
+						<p:inputText id="itMinCode" disabled="true" styleClass="ppDisplayTextS" value="-" />&nbsp;
+						<p:inputText id="itMinName" disabled="true" styleClass="ppDisplayTextM" value="-"/>
+					</td>
+					<th><p:outputLabel value="* #{lbl['lbl.pp.plan.number']}"/></th>
+					<td>	
+						<p:inputText disabled="true" styleClass="ppDisplayTextM" value="-"/>
+					</td>
+				</tr>
+				<tr>
+					<th><p:outputLabel value="#{lbl['lbl.pp.jabatan']}"/></th>
+					<td>
+						<p:inputText id="itJbtCode" disabled="true" styleClass="ppDisplayTextS" value="-" />&nbsp;
+						<p:inputText id="itJbtName" disabled="true" styleClass="ppDisplayTextM" value="-" />
+					</td>
+					<th><p:outputLabel value="* #{lbl['lbl.pp.plan.year']}"/></th>
+					<td>	
+						<p:inputText disabled="true" styleClass="ppDisplayTextM" value="-"/>
+					</td>
+				</tr>
+				<tr>
+					<th><p:outputLabel value="#{lbl['lbl.pp.prepread.ptj']}"/></th>
+					<td>
+						<p:inputText id="itPrePtjCode" styleClass="ppDisplayTextS" value="-" />&nbsp;
+						<p:inputText id="itPrePtjName" styleClass="ppDisplayTextM" value="-" />
+					</td>
+					<th><p:outputLabel value="#{lbl['lbl.pp.status']}"/></th>
+					<td>
+						<p:inputText disabled="true" styleClass="ppDisplayTextM" value="-"/>
+					</td>
+				</tr>
+				<tr>
+					<th><p:outputLabel value="* #{lbl['lbl.pp.executing.ptj']}"/></th>
+					<td>
+						<p:inputText id="itExePtjCode" styleClass="ppDisplayTextS" value="-" />&nbsp;
+						<p:inputText id="itExePtjName" styleClass="ppDisplayTextM" value="-" />
+					</td>
+					<th></th>
+					<td></td>
+				</tr>
+			</table>
+		</p:panel>
+		
+		<!-- Budget List -->
+		<p:panel id="pBudgetLost" header="#{lbl['lbl.pp.budget.title.allocated.gosodo']}" toggleable="true">
+    		<ui:include src="../budgetallocation/listAllocatedBudget.xhtml"/>
+    	</p:panel>
+    	
+		<!-- Plan Detail -->
+		<p:panel id="pPlanDet" header="#{lbl['lbl.pp.plan.detail']}" toggleable="true">
+			<ui:include src="planDetail.xhtml"/>
+		</p:panel>
+		
+		<!-- Remark -->
+		<p:panel id="pRemark" toggleable="true" header="#{lbl['lbl.pp.remarks']}">
+			<p:dataGrid value="#{planBackingBean.managedBean.selectedPlan.ppRemarks}" var="remarkVar" 
+				rowIndexVar="remarkIndex" columns="1" >
+				<table>
+					<tr>
+						<td rowspan="2" valign="top">
+							<p:graphicImage styleClass="smallUserImage" value="#{planBackingBean.userImagePath(remarkVar.createdByObj.loginId)}" />
+						</td>
+						<td width="5"></td>
+						<td>
+							<h:outputText value="#{remarkVar.createdByObj.loginId}"></h:outputText>,
+							<h:outputText id="remarkDate" value="#{remarkVar.changedDate}">
+								<f:convertDateTime pattern="#{PPConst.datetimeDisplayPattern}" />
+							</h:outputText>
+						</td>
+					</tr>
+					<tr>
+						<td></td>
+						<td>
+							<p:inputTextarea cols="60" value="#{remarkVar.remark}" 
+								disabled="#{(fn:length(planBackingBean.managedBean.selectedPlan.ppRemarks)-1)!=remarkIndex}" /> 
+						</td>
+					</tr>
+				</table>
+			</p:dataGrid>
+		</p:panel>
+	</ui:define>
+</ui:composition>
+

@@ -19,7 +19,7 @@ xmlns:fn="http://java.sun.com/jsp/jstl/functions"
 					<th><p:outputLabel value="* #{lbl['lbl.pp.budget.alloc.desc']}"/></th>
 					<td>
 						<p:inputText value="#{budgetAllocBackingBean.managedBean.selectedBudgetAllocation.budgetAllocDesc}"  
-							styleClass="ppDisplayTextM" disabled="#{!budgetAllocBackingBean.managedBean.selectedBudgetAllocation.editable}"/>
+							styleClass="ppDisplayTextM" disabled="#{!budgetAllocBackingBean.managedBean.selectedBudgetAllocation.brandNew}"/>
 					</td>
 					<th><p:outputLabel value="#{lbl['lbl.pp.budget.alloc.no']}"/></th>
 					<td>
@@ -117,7 +117,8 @@ xmlns:fn="http://java.sun.com/jsp/jstl/functions"
 						<td></td>
 						<td>
 							<p:inputTextarea cols="60" value="#{remarkVar.remark}" 
-								disabled="#{(fn:length(budgetAllocBackingBean.managedBean.selectedBudgetAllocation.ppRemarks)-1)!=remarkIndex}" /> 
+								disabled="#{(fn:length(budgetAllocBackingBean.managedBean.selectedBudgetAllocation.ppRemarks)-1)!=remarkIndex
+									|| budgetAllocBackingBean.managedBean.viewMode==PPConst.modeView}" /> 
 						</td>
 					</tr>
 				</table>

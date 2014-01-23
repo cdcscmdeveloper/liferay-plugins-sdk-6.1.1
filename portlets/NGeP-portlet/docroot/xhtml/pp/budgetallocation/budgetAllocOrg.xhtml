@@ -105,7 +105,8 @@ xmlns:fn="http://java.sun.com/jsp/jstl/functions"
 	    			<th><p:outputLabel value="* #{lbl['lbl.pp.jabatan.code.name']}"/></th>
 					<td>
 						<p:selectOneMenu styleClass="ppDropDownWidthM" required="true" label="#{lbl['lbl.pp.jabatan.code.name']}"
-							disabled="#{!budgetAllocBackingBean.managedBean.selectedBudgetAllocOrg.editable}" 
+							disabled="#{!budgetAllocBackingBean.managedBean.selectedBudgetAllocOrg.editable ||
+								budgetAllocBackingBean.managedBean.viewMode==PPConst.modeMaintain}" 
 							value="#{budgetAllocBackingBean.managedBean.selectedBudgetAllocOrg.pmOrgProfile.parentOrgProfile.orgProfileId}">
 							<f:selectItem itemLabel="#{lbl['lbl.select']}" itemValue="#{null}"/>
 							<f:selectItems value="#{budgetAllocBackingBean.populateJabatan()}" 
@@ -119,6 +120,7 @@ xmlns:fn="http://java.sun.com/jsp/jstl/functions"
 					<td>
 						<p:selectOneMenu styleClass="ppDropDownWidthM" id="somPtj" required="true" label="#{lbl['lbl.pp.ptj.code.name']}"
 							disabled="#{!budgetAllocBackingBean.managedBean.selectedBudgetAllocOrg.editable ||
+							budgetAllocBackingBean.managedBean.viewMode==PPConst.modeMaintain ||
 							budgetAllocBackingBean.managedBean.selectedBudgetAllocOrg.pmOrgProfile.parentOrgProfile.orgProfileId == null}" 
 							value="#{budgetAllocBackingBean.managedBean.selectedBudgetAllocOrg.pmOrgProfile.orgProfileId}">
 							<f:selectItem itemLabel="#{lbl['lbl.select']}" itemValue="#{null}"/>

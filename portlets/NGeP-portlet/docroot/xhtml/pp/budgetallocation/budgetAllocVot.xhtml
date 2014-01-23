@@ -46,15 +46,15 @@ xmlns:fn="http://java.sun.com/jsp/jstl/functions"
           		<p:commandLink update=":form:tvBudgetAlloc:opItemBudgetDis" immediate="true"
                 	action="#{budgetAllocBackingBean.showBudgetAllocDtl(budgetAllocDtl)}" 
                 	oncomplete="dlItemBudgetDisModal.show();">
-                	<p:graphicImage value="#{(!budgetAllocDtl.brandNew &amp;&amp;
-                		budgetAllocBackingBean.managedBean.viewMode==PPConst.modeView)
+                	<p:graphicImage value="#{
+                		budgetAllocBackingBean.managedBean.viewMode==PPConst.modeView
                 		? '/resources/ep/images/design/document.png' 
                 		:'/resources/ep/images/design/edit.png'}" />
                	</p:commandLink>
                 &nbsp;
                 <p:commandLink
                 	update=":form:tvBudgetAlloc:pDisburse,:form:tvBudgetAlloc:pBudgetAllocOrg" immediate="true"
-                	disabled="#{budgetAllocBackingBean.managedBean.viewMode==PPConst.modeView}"
+                	disabled="#{!budgetAllocDtl.brandNew}"
                 	action="#{budgetAllocBackingBean.deleteBudgetAllocDtl(budgetAllocDtl)}">
                 	<p:graphicImage value="/resources/ep/images/design/trash.png"/>
                	</p:commandLink>
@@ -81,7 +81,8 @@ xmlns:fn="http://java.sun.com/jsp/jstl/functions"
 	    			<th><p:outputLabel value="* #{lbl['lbl.pp.gosodo.code']}"/></th>
 					<td>
 						<p:selectOneMenu styleClass="ppDropDownWidthS" required="true" label="#{lbl['lbl.pp.gosodo.code']}"
-						 	disabled="#{!budgetAllocBackingBean.managedBean.selectedBudgetAllocDtl.editable}" 
+						 	disabled="#{!budgetAllocBackingBean.managedBean.selectedBudgetAllocDtl.editable ||
+						 		budgetAllocBackingBean.managedBean.viewMode==PPConst.modeMaintain}" 
 							value="#{budgetAllocBackingBean.managedBean.selectedBudgetAllocDtl.ppBudgetDtl.budgetDtlId}">
 							<f:selectItem itemLabel="#{lbl['lbl.select']}" itemValue="#{null}" />
 							<f:selectItems value="#{budgetAllocBackingBean.populateSo(
@@ -93,7 +94,8 @@ xmlns:fn="http://java.sun.com/jsp/jstl/functions"
 						</p:selectOneMenu>
 						
 						<p:selectOneMenu styleClass="ppDropDownWidthS" id="somDo" required="true" label="#{lbl['lbl.pp.gosodo.code']}"
-							disabled="#{!budgetAllocBackingBean.managedBean.selectedBudgetAllocDtl.editable}" 
+							disabled="#{!budgetAllocBackingBean.managedBean.selectedBudgetAllocDtl.editable ||
+						 		budgetAllocBackingBean.managedBean.viewMode==PPConst.modeMaintain}" 
 							value="#{budgetAllocBackingBean.managedBean.selectedBudgetAllocDtl.pmDo.doId}">
 							<f:selectItem itemLabel="#{lbl['lbl.select']}" itemValue="#{null}" />
 							<f:selectItems value="#{budgetAllocBackingBean.populateDo(

@@ -27,7 +27,7 @@ xmlns:ac="http://ac.my/jsf/composite/cc">
 	        </p:column>  
           	<p:column headerText="#{lbl['lbl.pp.action']}">  
 	            <p:commandLink action="#{budgetAllocBackingBean.redirectToBudgetAllocation(budgetAlloc.budgetAllocId)}" >
-					<p:graphicImage value="#{(planBackingBean.managedBean.viewMode==PPConst.modeList)
+					<p:graphicImage value="#{(budgetAllocBackingBean.managedBean.viewMode==PPConst.modeList)
                			? '/resources/ep/images/design/edit.png' 
                   		: '/resources/ep/images/design/document.png'}"/>
 				</p:commandLink>
