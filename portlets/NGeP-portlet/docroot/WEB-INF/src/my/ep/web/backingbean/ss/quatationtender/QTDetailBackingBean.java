@@ -1120,23 +1120,30 @@ public class QTDetailBackingBean extends
 
 				QuationTenderResDTO resDTO = detailSO
 						.retriveQTScheduleDetails(reqDTO);
-
+				
+				// Briefing
+				List<ScQtBriefing> briefingList = resDTO.getBriefingResultBean().getResultList();
+				System.out.println("Briefing List : " + briefingList.size());
+				getManagedBean().setBriefings(briefingList);
+				
+				// Site Visit
+				List<ScQtBriefing> siteVisitList = resDTO.getSiteVisitResultBean().getResultList();
+				System.out.println("Site Visit list: " + siteVisitList.size());
+				getManagedBean().setSiteBriefings(siteVisitList);
+				
+				// Contact Person
+				List<ScQtContactPerson> contactPersonList = resDTO.getContactPersonResultBean().getResultList();
+				System.out.println("Contact Person list: " + contactPersonList.size());
+				getManagedBean().setScQtContactPersons(contactPersonList);
+				
 				getManagedBean().setCountries(resDTO.getCountries());
-				getManagedBean().setBriefings(
-						resDTO.getBriefingResultBean().getResultList());
-				getManagedBean().setSiteBriefings(
-						resDTO.getSiteVisitResultBean().getResultList());
-				getManagedBean().setScQtContactPersons(
-						resDTO.getContactPersonResultBean().getResultList());
+				
 			} catch (Exception ex) {
 				ex.printStackTrace();
 				FacesContext.getCurrentInstance()
 						.addMessage(
-								null,
-								new FacesMessage(FacesMessage.SEVERITY_ERROR,
-										ex.toString(),
-										"Sorry We are unable to process."));
-
+								null, new FacesMessage(FacesMessage.SEVERITY_ERROR,
+										ex.toString(), "Sorry We are unable to process."));
 			} finally {
 				detailSO = null;
 			}
@@ -1190,9 +1197,8 @@ public class QTDetailBackingBean extends
 				QuationTenderResDTO resDTO = detailSO.retriveQtRemarks(reqDTO);
 				List<ScQtRemark> remarkList = resDTO.getRemarkResultBean()
 						.getResultList();
-
-				getManagedBean().setScQtRemarks(
-						resDTO.getRemarkResultBean().getResultList());
+				System.out.println("Remark List : " + remarkList.size());
+				getManagedBean().setScQtRemarks(remarkList);
 				initializeRemarkAndAttachement(getManagedBean()
 						.getScQtRemarks());
 			} catch (Exception ex) {

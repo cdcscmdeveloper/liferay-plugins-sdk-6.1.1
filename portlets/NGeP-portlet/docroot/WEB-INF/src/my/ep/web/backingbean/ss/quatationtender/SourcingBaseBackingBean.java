@@ -11,6 +11,7 @@ import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.faces.application.FacesMessage;
 import javax.faces.context.FacesContext;
 import javax.faces.model.SelectItem;
 import javax.servlet.http.HttpServletRequest;
@@ -95,7 +96,7 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 		attachment.setChangedBy(1L);
 
 		attachment.setFileName(fileName);
-		attachment.setFileDesc("File uploded for Fulfilment Req Order");
+		attachment.setFileDesc("File uploded");
 		File theDir = new File("\\upload\\");
 
 		// if the directory does not exist, create it
@@ -112,6 +113,9 @@ public abstract class SourcingBaseBackingBean<T extends BaseManagedBean>
 			fos = new FileOutputStream(theDir + "\\" + fileName);
 			fos.write(fileBytes);
 			fos.close();
+			FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_INFO,
+					"The file was uploaded successfully.", null);
+			FacesContext.getCurrentInstance().addMessage(null, message);
 		} catch (FileNotFoundException e) {
 			e.printStackTrace();
 		} catch (IOException e) {

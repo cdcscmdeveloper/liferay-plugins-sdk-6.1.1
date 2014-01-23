@@ -41,8 +41,8 @@ import my.ep.persistence.entity.ss.quationtender.ScBondDtlAttachment;
 import my.ep.persistence.entity.ss.quationtender.ScLoa;
 import my.ep.persistence.entity.ss.quationtender.ScQt;
 import my.ep.persistence.entity.ss.quationtender.ScQtDeduction;
+import my.ep.persistence.entity.ss.quationtender.ScQtEvaluationResult;
 import my.ep.persistence.entity.ss.quationtender.ScQtItem;
-import my.ep.persistence.entity.ss.quationtender.ScQtProposalRanking;
 import my.ep.persistence.entity.ss.quationtender.ScQtSpec;
 import my.ep.persistence.entity.ss.quationtender.ScQtZoneCriteria;
 import my.ep.type.pm.AddressType;
@@ -232,14 +232,14 @@ public class LOADetailBackingBean extends SourcingBaseBackingBean<LOADetailManag
 		}
 	}
 
-	public String createLOAAction(ScQtProposalRanking scQtProposalRanking,
+	public String createLOAAction(ScQtEvaluationResult scQtEvaluationResult,
 			String docType) {
 		debugLogger("createLOAAction");
 		IQTAwardSO iqtAwardSO = null;
 		List<SmSupplierBranch> bList = new ArrayList<SmSupplierBranch>();
 		try {
 
-			long id = scQtProposalRanking.getQtProposalRankingId();
+			long id = scQtEvaluationResult.getEvaluationResultId();
 
 			iqtAwardSO = BusinessDelegate.getInstance().getServiceObject(
 					QTConstants.SS_MODULE, IQTAwardSO.class);
@@ -265,8 +265,8 @@ public class LOADetailBackingBean extends SourcingBaseBackingBean<LOADetailManag
 				System.out.println("LOA Id : " + scLoa.getLoaId());
 				scLoa.setLoaNo("1234");
 				getManagedBean().setScLoa(scLoa);
-
-				getManagedBean().setScQtProposalRanking(scQtProposalRanking);
+				
+				getManagedBean().setScQtEvaluationResult(scQtEvaluationResult);
 
 				getManagedBean().setSmMofAccount(new SmMofAccount());
 				getManagedBean().getSmMofAccount().setMofNo("MOF000001");
@@ -358,21 +358,21 @@ public class LOADetailBackingBean extends SourcingBaseBackingBean<LOADetailManag
 
 				getManagedBean().setScLoa(new ScLoa());
 
-				getManagedBean().setScQtProposalRanking(scQtProposalRanking);
+				getManagedBean().setScQtEvaluationResult(scQtEvaluationResult);
 
 				PmOrgProfile orgProfile = new PmOrgProfile();
 				getManagedBean().getScLoa().setContractPTJProfile(orgProfile);
 
 				getManagedBean().getScLoa().setSmSupplier(
-						getManagedBean().getScQtProposalRanking()
-								.getScQtProposalEvaluate().getScQtProposal()
+						getManagedBean().getScQtEvaluationResult()
+								.getScQtProposal()
 								.getScQtSupplier().getSmSupplier());
 
-				getManagedBean().getScLoa().setSupplierName(
+				/*getManagedBean().getScLoa().setSupplierName(
 						getManagedBean().getScQtProposalRanking()
 								.getScQtProposalEvaluate().getScQtProposal()
 								.getScQtSupplier().getSmSupplier()
-								.getSupplierName());
+								.getSupplierName());*/
 
 				getManagedBean().getScLoa().setDocType(
 						LoiLoaDocType.DOCTYPE_QUOTATION_TENDER.value());
@@ -728,9 +728,6 @@ public class LOADetailBackingBean extends SourcingBaseBackingBean<LOADetailManag
 	public void handleFileAttachment(FileUploadEvent event) {
 		debugLogger("handleFileAttachment");
 		ScBondDtl bondDtl = getManagedBean().getScBondDtl();
-		FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_INFO,
-				"The file was Attached successfully.", null);
-		FacesContext.getCurrentInstance().addMessage(null, message);
 		ScBondDtlAttachment attachment = bondDtl.getScBondDtlAttachment();
 		if (null == attachment) {
 			attachment = new ScBondDtlAttachment();

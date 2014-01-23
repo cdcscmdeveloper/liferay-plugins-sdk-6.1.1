@@ -36,9 +36,12 @@ import my.ep.persistence.entity.ct.circular.panel.CtPanelZone;
 import my.ep.persistence.entity.pm.common.PmCategoryL1;
 import my.ep.persistence.entity.pm.common.PmCategoryL2;
 import my.ep.persistence.entity.pm.common.PmCategoryL3;
+import my.ep.persistence.entity.pm.common.PmCity;
+import my.ep.persistence.entity.pm.common.PmDistrict;
+import my.ep.persistence.entity.pm.common.PmDivision;
 import my.ep.persistence.entity.pm.common.PmState;
-import my.ep.persistence.entity.sm.SmAddress;
 import my.ep.persistence.entity.sm.SmSupplier;
+import my.ep.persistence.entity.ss.directpurchase.ScQuoteZone;
 import my.ep.persistence.entity.ss.quationtender.ScQt;
 import my.ep.persistence.entity.ss.quationtender.ScQtCategory;
 import my.ep.persistence.entity.ss.quationtender.ScQtCriteria;
@@ -47,12 +50,14 @@ import my.ep.persistence.entity.ss.quationtender.ScQtSupplier;
 import my.ep.persistence.entity.ss.quationtender.ScQtSupplierZone;
 import my.ep.persistence.entity.ss.quationtender.ScQtZoneCriteria;
 import my.ep.type.aut.SearchOperator;
-import my.ep.type.ss.LocationLevel;
 import my.ep.util.lookupservice.EpEjbBusinessDelegate;
+import my.ep.web.backingbean.ss.directpurchase.LocationDTO;
 import my.ep.web.bean.tree.TreeNodeBean;
 import my.ep.web.managedbean.ss.quationtender.Node;
 import my.ep.web.managedbean.ss.quationtender.QTDetailManagedBean;
 import my.ep.web.util.lookupservice.BusinessDelegate;
+import my.ep.web.util.ss.helper.LocationSingleton;
+import my.ep.web.util.ss.helper.SourcingLocationHelper;
 
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
@@ -267,7 +272,7 @@ public class QTSupplierQulCriteriaBackingBean extends SourcingBaseBackingBean<QT
 		
 		ScQtCriteria scQtCriteria = getManagedBean().getQtCriteria();
 		
-		if (!scQtCriteria.isMultiLocality()) {
+		if (!scQtCriteria.isMultiLocality() || scQtCriteria.isMultiLocality()) {
 			// TODO Temporary get from panel supplier.
 			List<CtPanelSupplier> panelSupplierList = retriverSuppliersForPanelQT();
 			List<SmSupplier> supplierList = new ArrayList<SmSupplier>();
@@ -277,6 +282,7 @@ public class QTSupplierQulCriteriaBackingBean extends SourcingBaseBackingBean<QT
 			}
 			
 			populateQtSupplierList(supplierList);
+			//System.out.println("Supplier Name : " + supplierList.get(0).getSmAppl().getSmCompanyBasic().getCompanyName());
 		}
 	}
 	
@@ -342,7 +348,7 @@ public class QTSupplierQulCriteriaBackingBean extends SourcingBaseBackingBean<QT
 						scQtLocCriteria.setScQtCriteria(scQtCriteria);
 						scQtLocCriteria.setScQtZoneCriteria(scQtZoneCriteria);
 						scQtLocCriteria.setPmState(state.getState());
-						scQtLocCriteria.setLocationLevel(LocationLevel.STATE.value());
+						//scQtLocCriteria.setLocationLevel(LocationLevel.STATE.value());
 						scQtZoneCriteria.getScQtLocCriterias().add(scQtLocCriteria);	
 					}
 					
@@ -541,10 +547,10 @@ public class QTSupplierQulCriteriaBackingBean extends SourcingBaseBackingBean<QT
 	}
 	
 	private boolean isSupplierInLocation(SmSupplier smSupplier, ScQtLocCriteria scQtLocCriteria) {
-		String locationLevel = scQtLocCriteria.getLocationLevel();
-		SmAddress smAddress = smSupplier.getSmAppl().getSmAddress();
+		//String locationLevel = scQtLocCriteria.getLocationLevel();
+		//SmAddress smAddress = smSupplier.getSmAppl().getSmAddress();
 		
-		if (LocationLevel.STATE.value().equals(locationLevel)) {
+		/*if (LocationLevel.STATE.value().equals(locationLevel)) {
 			return scQtLocCriteria.getPmState().getStateId().longValue() == smAddress
 					.getPmState().getStateId().longValue();
 		} else if (LocationLevel.DIVISION.value().equals(locationLevel)) {
@@ -558,7 +564,7 @@ public class QTSupplierQulCriteriaBackingBean extends SourcingBaseBackingBean<QT
 					.getPmCity().getCityId().longValue();
 		} else if (LocationLevel.DELIVERY_ADDRESS.value().equals(locationLevel)) {
 			// TODO Based on delivery address.
-		}
+		}*/
 		
 		return false;
 	}
@@ -588,7 +594,7 @@ public class QTSupplierQulCriteriaBackingBean extends SourcingBaseBackingBean<QT
 	 
 	  
 		public void multiLocationChange(AjaxBehaviorEvent event) {
-			System.out.println("ADSFAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA");
+			//System.out.println("ADSFAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA");
 			/*System.out.println("PPPPPPPPPPPPPPPPPP" +event.getNewValue());
 			Boolean multipleLoc = (Boolean) event.getNewValue();
 
@@ -646,5 +652,124 @@ public class QTSupplierQulCriteriaBackingBean extends SourcingBaseBackingBean<QT
 		System.out.println("=======get id value=====" + id);
 		//getManagedBean().setSelectedBoolean(id);
 
+	}
+	
+	private	List<LocationDTO> getLocations(TreeNode zoneLocation){
+		List<LocationDTO> results = new ArrayList<LocationDTO>();
+		if(zoneLocation.isLeaf()){
+			LocationDTO	locationDTO	= (LocationDTO)zoneLocation.getData();
+			results.add(locationDTO);
+		}else{
+			for(TreeNode childrendLocationNode: zoneLocation.getChildren()){
+				results.addAll(getLocations(childrendLocationNode));
+			}
+		}
+		return results;
+	}
+	
+	private	ScQuoteZone	getZone(TreeNode zoneLocation){
+		ScQuoteZone result = null;
+		if(zoneLocation.getData() instanceof LocationDTO){
+			LocationDTO locationDTO	= (LocationDTO)zoneLocation.getData();
+			if(locationDTO.getZone() != null){
+				result = locationDTO.getZone();
+			}else{
+				if(zoneLocation.getChildren() != null && zoneLocation.getChildren().size() > 0){
+					for(TreeNode childLocationNode: zoneLocation.getChildren()){
+						result = getZone(childLocationNode);
+					}
+				}
+			}
+		}else{
+			if(zoneLocation.getChildren() != null && zoneLocation.getChildren().size() > 0){
+				for(TreeNode childLocationNode: zoneLocation.getChildren()){
+					result = getZone(childLocationNode);
+				}
+			}
+		}
+		
+		return result;
+	}
+	
+	public void	editZoneLocation(TreeNode rootZoneLocation){
+		List<LocationDTO> locationDTOs = getLocations(rootZoneLocation);
+		ScQuoteZone	zone = getZone(rootZoneLocation);
+		List<PmState> states = SourcingLocationHelper.getStateFromLocationDTOs(locationDTOs);
+		List<PmDivision> divisions = SourcingLocationHelper.getDivisionFromLocationDTOs(locationDTOs);
+		List<PmDistrict> districts = SourcingLocationHelper.getDistrictFromLocationDTOs(locationDTOs);
+		List<PmCity> cities = SourcingLocationHelper.getCityFromLocationDTOs(locationDTOs);
+		getManagedBean().setRootLocationTree(LocationSingleton.getInstance().buildLocationTree(1L, states, districts, divisions, cities));
+		if(zone != null){
+			getManagedBean().setZoneName(zone.getZoneName());
+		}
+	}
+	
+	public void showZoneLocationPopup(){
+		getManagedBean().setRootLocationTree(LocationSingleton.getInstance().buildLocationTree(1L, null, null, null, null));
+	}
+	
+	public void showZoneLocationListPopup(){
+		getManagedBean().setRootLocationTreeList(LocationSingleton.getInstance().buildLocationTree(1L, null, null, null, null));
+	}
+	
+	public void showZoneDeliveryAddressListPopup() {
+		getManagedBean().setRootAddressLocationTreeList(LocationSingleton.getInstance().buildAddressLocationTree(1L, null));
+	}
+	
+	public void updateZoneLocation() {
+		List<LocationDTO> locationDTOs = new ArrayList<LocationDTO>();
+		//TreeNode[]	listSelectedTreeNode	=	getManagedBean().getSelectedNodes().clone();
+		if (getManagedBean().getSelectedNodes() != null) {
+			for (TreeNode treeNode : getManagedBean().getSelectedNodes()) {
+				if (!treeNode.getParent().isSelected()) {
+					LocationDTO	locationDTO	= (LocationDTO)treeNode.getData();
+					locationDTOs.add(locationDTO);
+				}
+			}
+		}
+		ScQuoteZone zone = new ScQuoteZone();
+		System.out.println("zone name : "+ getManagedBean().getZoneName());
+		zone.setZoneName(getManagedBean().getZoneName());
+		getManagedBean().setZoneName(null);
+		System.out.println("Zone Name : " + zone.getZoneName());
+		
+		List<PmState> states = SourcingLocationHelper.getStateFromLocationDTOs(locationDTOs);
+		List<PmDivision> divisions = SourcingLocationHelper.getDivisionFromLocationDTOs(locationDTOs);
+		List<PmDistrict> districts = SourcingLocationHelper.getDistrictFromLocationDTOs(locationDTOs);
+		List<PmCity> cities	= SourcingLocationHelper.getCityFromLocationDTOs(locationDTOs);
+		
+		getManagedBean().getZoneTrees().add(LocationSingleton.getInstance().buildZoneTree(zone, states, districts, divisions, cities));
+		getManagedBean().setRootLocationTree(LocationSingleton.getInstance().buildLocationTree(1L, null, null, null, null));
+		
+		//System.out.println("Zone Tree : " + getManagedBean().getZoneTrees().get(0).getData());
+		//System.out.println("Zone Name : " + getManagedBean().getZoneName());
+	}
+	
+	public void updateZoneLocationList() {
+		List<LocationDTO> locationDTOs = new ArrayList<LocationDTO>();
+		//TreeNode[]	listSelectedTreeNode	=	getManagedBean().getSelectedNodes().clone();
+		if (getManagedBean().getSelectedLocNodes() != null) {
+			for (TreeNode treeNode : getManagedBean().getSelectedLocNodes()) {
+				if (!treeNode.getParent().isSelected()) {
+					LocationDTO	locationDTO	= (LocationDTO)treeNode.getData();
+					locationDTOs.add(locationDTO);
+				}
+			}
+		}
+		ScQuoteZone zone = new ScQuoteZone();
+		System.out.println("zone name : "+ getManagedBean().getZoneName1());
+		zone.setZoneName(getManagedBean().getZoneName1());
+		getManagedBean().setZoneName(null);
+		System.out.println("Zone Name : " + zone.getZoneName());
+		
+		List<PmState> states = SourcingLocationHelper.getStateFromLocationDTOs(locationDTOs);
+		List<PmDivision> divisions = SourcingLocationHelper.getDivisionFromLocationDTOs(locationDTOs);
+		List<PmDistrict> districts = SourcingLocationHelper.getDistrictFromLocationDTOs(locationDTOs);
+		List<PmCity> cities	= SourcingLocationHelper.getCityFromLocationDTOs(locationDTOs);
+		
+		getManagedBean().getZoneTreeList().add(LocationSingleton.getInstance().buildZoneTree(zone, states, districts, divisions, cities));
+		getManagedBean().setRootLocationTree(LocationSingleton.getInstance().buildLocationTree(1L, null, null, null, null));
+		System.out.println("Zone Tree : " + getManagedBean().getZoneTrees().size());
+		//System.out.println("Zone Name : " + getManagedBean().getZoneName());
 	}
 }

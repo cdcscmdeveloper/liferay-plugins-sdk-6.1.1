@@ -11,6 +11,7 @@ import my.ep.persistence.entity.sm.SmSupplier;
 import my.ep.persistence.entity.ss.quationtender.ScLoa;
 import my.ep.persistence.entity.ss.quationtender.ScLoi;
 import my.ep.persistence.entity.ss.quationtender.ScQt;
+import my.ep.persistence.entity.ss.quationtender.ScQtEvaluationResult;
 import my.ep.persistence.entity.ss.quationtender.ScQtProposal;
 import my.ep.persistence.entity.ss.quationtender.ScQtProposalRanking;
 import my.ep.persistence.entity.ss.quationtender.ScQtSpec;
@@ -38,6 +39,37 @@ public class LOILOADetailManagedBean extends BaseManagedBean {
 
 	private ScQtProposalRanking scQtProposalRanking;
 	private List<ScQtProposalRanking> scQtProposalRankingList;
+	private ScQtEvaluationResult scQtEvaluationResult;
+	private List<ScQtEvaluationResult> scQtEvaluationResultList;
+
+	/**
+	 * @return the scQtEvaluationResult
+	 */
+	public ScQtEvaluationResult getScQtEvaluationResult() {
+		return scQtEvaluationResult;
+	}
+
+	/**
+	 * @param scQtEvaluationResult the scQtEvaluationResult to set
+	 */
+	public void setScQtEvaluationResult(ScQtEvaluationResult scQtEvaluationResult) {
+		this.scQtEvaluationResult = scQtEvaluationResult;
+	}
+
+	/**
+	 * @return the scQtEvaluationResultList
+	 */
+	public List<ScQtEvaluationResult> getScQtEvaluationResultList() {
+		return scQtEvaluationResultList;
+	}
+
+	/**
+	 * @param scQtEvaluationResultList the scQtEvaluationResultList to set
+	 */
+	public void setScQtEvaluationResultList(
+			List<ScQtEvaluationResult> scQtEvaluationResultList) {
+		this.scQtEvaluationResultList = scQtEvaluationResultList;
+	}
 
 	/**
 	 * @return the scQtProposalRankingList

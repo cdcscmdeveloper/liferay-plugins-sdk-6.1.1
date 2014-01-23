@@ -12,7 +12,7 @@ import my.ep.dto.ss.quationtender.AwardSupplierReqDTO;
 import my.ep.dto.ss.quationtender.AwardSupplierResDTO;
 import my.ep.factory.EpLogger;
 import my.ep.persistence.entity.ss.quationtender.ScQt;
-import my.ep.persistence.entity.ss.quationtender.ScQtProposalRanking;
+import my.ep.persistence.entity.ss.quationtender.ScQtEvaluationResult;
 import my.ep.web.backingbean.ss.quatationtender.SourcingBaseBackingBean;
 import my.ep.web.managedbean.ss.loiloa.LOILOADetailManagedBean;
 import my.ep.web.ss.quationtender.common.QTConstants;
@@ -69,12 +69,15 @@ public class LOILOADetailsBackingBean extends
 			}
 			getManagedBean().setQt(scQt);
 
-
-			List<ScQtProposalRanking> list = resDTO
-					.getProposalRankingResultBean().getResultList();
+			List<ScQtEvaluationResult> list = resDTO.getQtEvaluationResultBean().getResultList();
 			System.out.println("list: " + list.size());
+			
+			for (ScQtEvaluationResult scQtEvaluationResult : list) {
+				System.out.println(scQtEvaluationResult.getEvaluationResultId()
+				 + "|" + scQtEvaluationResult.getScQtProposal().getScQtSupplier().getSmSupplier().getCompanyName());
+			}
 
-			getManagedBean().setScQtProposalRankingList(list);
+			getManagedBean().setScQtEvaluationResultList(list);
 			getManagedBean().setQt(resDTO.getScQt());
 			populateParentOrgProfile(resDTO.getScQt());
 

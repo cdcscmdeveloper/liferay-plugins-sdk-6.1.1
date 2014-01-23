@@ -16,6 +16,7 @@ import my.ep.persistence.entity.ss.quationtender.ScNegoLocation;
 import my.ep.persistence.entity.ss.quationtender.ScNegoTerm;
 import my.ep.persistence.entity.ss.quationtender.ScQt;
 import my.ep.persistence.entity.ss.quationtender.ScQtCriteria;
+import my.ep.persistence.entity.ss.quationtender.ScQtEvaluationResult;
 import my.ep.persistence.entity.ss.quationtender.ScQtItem;
 import my.ep.persistence.entity.ss.quationtender.ScQtProposalRanking;
 import my.ep.persistence.entity.ss.quationtender.ScQtSpec;
@@ -55,6 +56,8 @@ public class LOIDetailManagedBean extends BaseManagedBean {
 	private ScQtProposalRanking scQtProposalRanking;
 	private List<SmSupplierBranch> branchsList;
 	
+	private ScQtEvaluationResult scQtEvaluationResult;
+	
 	private String status;
 	public String reqApprove;
 	public String Address;
@@ -72,6 +75,20 @@ public class LOIDetailManagedBean extends BaseManagedBean {
 	private List<SelectItem> selectItemList;
 	private List<PmUser>  approverNames; // Drop down Listing for Approver Names
 	
+	/**
+	 * @return the scQtEvaluationResult
+	 */
+	public ScQtEvaluationResult getScQtEvaluationResult() {
+		return scQtEvaluationResult;
+	}
+
+	/**
+	 * @param scQtEvaluationResult the scQtEvaluationResult to set
+	 */
+	public void setScQtEvaluationResult(ScQtEvaluationResult scQtEvaluationResult) {
+		this.scQtEvaluationResult = scQtEvaluationResult;
+	}
+
 	/**
 	 * @return the approverNames
 	 */

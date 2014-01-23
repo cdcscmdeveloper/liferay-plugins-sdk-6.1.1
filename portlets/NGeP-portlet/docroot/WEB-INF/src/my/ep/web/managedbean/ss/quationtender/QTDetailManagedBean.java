@@ -199,6 +199,7 @@ public class QTDetailManagedBean extends BaseManagedBean {
 
 	private List<TreeNode>	zoneTrees = new ArrayList<TreeNode>();
 	private List<TreeNode>	zoneTreeList = new ArrayList<TreeNode>();
+	private List<TreeNode>	zoneTreeAddrList = new ArrayList<TreeNode>();
 	private	TreeNode rootLocationTree;
 	private	String	zoneName;
 	private	String	zoneName1;
@@ -233,6 +234,22 @@ public class QTDetailManagedBean extends BaseManagedBean {
 
 
 	}
+
+	/**
+	 * @return the zoneTreeAddrList
+	 */
+	public List<TreeNode> getZoneTreeAddrList() {
+		return zoneTreeAddrList;
+	}
+
+
+	/**
+	 * @param zoneTreeAddrList the zoneTreeAddrList to set
+	 */
+	public void setZoneTreeAddrList(List<TreeNode> zoneTreeAddrList) {
+		this.zoneTreeAddrList = zoneTreeAddrList;
+	}
+
 
 	/**
 	 * @return the zoneTrees

@@ -3,18 +3,14 @@ package my.ep.web.backingbean.ss.supplierproposal;
 import java.io.BufferedInputStream;
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.URL;
 import java.net.URLConnection;
 import java.rmi.RemoteException;
-import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.Date;
 import java.util.List;
 
 import javax.annotation.PostConstruct;
@@ -27,15 +23,12 @@ import javax.servlet.http.HttpServletResponse;
 import javax.xml.rpc.ServiceException;
 
 import my.ep.biz.service.sm.registration.IRegistrationSO;
-import my.ep.biz.service.ss.quationtender.IQTDetailSO;
 import my.ep.biz.service.ss.quationtender.IQTProposalSO;
 import my.ep.constant.tpl.TemplateSpecConst;
 import my.ep.dto.sm.registration.RegistrationReqDTO;
 import my.ep.dto.sm.registration.RegistrationResDTO;
 import my.ep.dto.ss.quationtender.ProposalReqDTO;
 import my.ep.dto.ss.quationtender.ProposalResDTO;
-import my.ep.dto.ss.quationtender.QuationTenderReqDTO;
-import my.ep.dto.ss.quationtender.QuationTenderResDTO;
 import my.ep.exception.EpException;
 import my.ep.factory.EpLogger;
 import my.ep.persistence.entity.ss.quationtender.ScQtCheckList;
@@ -58,7 +51,6 @@ import my.ep.web.util.lookupservice.BusinessDelegate;
 
 import org.apache.log4j.Logger;
 import org.primefaces.event.FileUploadEvent;
-import org.primefaces.model.UploadedFile;
 
 /**
  * @author Viswanath
@@ -80,7 +72,7 @@ public class SPDetailBackingBean extends
 		this.proposalSO = proposalSO;
 
 		if (getManagedBean().getQtProposal() == null) {
-			retrieveTechnicalProposalList(1l);
+			retrieveTechnicalProposalList(3l);
 		}
 
 		log.info("inside constructor");
@@ -199,49 +191,22 @@ public class SPDetailBackingBean extends
 		ScQtProposalChecklist scQtProposalChecklist = this.getManagedBean()
 				.getQtProposalChecklist();
 
-		UploadedFile file = event.getFile();
-		String fileName = file.getFileName();
-		byte[] fileBytes = file.getContents();
-		FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_INFO,
-				"The file was uploaded successfully.", null);
-		FacesContext.getCurrentInstance().addMessage(null, message);
-
-		Timestamp date = new Timestamp(System.currentTimeMillis());
 		ScQtProposalChecklistAttachment attachment = scQtProposalChecklist
 				.getScQtProposalChecklistAttachment();
 		if (null == attachment) {
 			attachment = new ScQtProposalChecklistAttachment();
 			attachment.setScQtProposalChecklist(scQtProposalChecklist);
-			attachment.setCreatedBy(1L);
-			attachment.setCreatedDate(date);
-			attachment.setChangedBy(1L);
 		}
-
-		attachment.setFileName(fileName);
-		attachment.setFileDesc("File uploded for Fulfilment Req Order");
-		attachment.setFilePath("E:\\upload\\" + fileName);
-
-		FileOutputStream fos;
-		try {
-			fos = new FileOutputStream("E:\\upload\\" + fileName);
-			fos.write(fileBytes);
-			fos.close();
-		} catch (FileNotFoundException e) {
-			e.printStackTrace();
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-
+		uploadAttachment(event.getFile(), attachment);
 		scQtProposalChecklist.setScQtProposalChecklistAttachment(attachment);
 
 	}
 
 	public void downloadPTJFile(ScQtProposalChecklist scQtProposalChecklist)
 			throws IOException {
-		debugLogger("downloadFile");
-		File file = new File("E:\\upload\\"
-				+ scQtProposalChecklist.getScQtCheckList()
-						.getScQtCheckListAttachment().getFileName());
+		debugLogger("downloadPTJFile");
+		File file = new File(scQtProposalChecklist.getScQtCheckList()
+				.getScQtCheckListAttachment().getFilePath());
 		InputStream input = new FileInputStream(file);
 
 		PortletResponse portletResponse = (PortletResponse) FacesContext
@@ -284,8 +249,7 @@ public class SPDetailBackingBean extends
 	}
 
 	public void onlineAction(ScQtProposalChecklist scQtProposalChecklist) {
-
-		debugLogger("newAction");
+		debugLogger("onlineAction");
 
 		ScQtCheckList scQtCheckList = scQtProposalChecklist.getScQtCheckList();
 
@@ -314,11 +278,12 @@ public class SPDetailBackingBean extends
 
 	public void downloadSPFile(ScQtProposalChecklist scQtProposalChecklist)
 			throws Exception {
-
+		debugLogger("downloadSPFile");
 		ScQtProposalChecklistAttachment checklistAttachment = scQtProposalChecklist
 				.getScQtProposalChecklistAttachment();
+		System.out.println("File Name : " + checklistAttachment.getFilePath());
 
-		File file = new File("E:\\upload\\" + checklistAttachment.getFileName());
+		File file = new File(checklistAttachment.getFilePath());
 		InputStream input = new FileInputStream(file);
 
 		PortletResponse portletResponse = (PortletResponse) FacesContext
@@ -372,7 +337,7 @@ public class SPDetailBackingBean extends
 
 			}
 			dataType.setSupplier(new FacesScopes().getUserScreenName());
-			Calendar c = Calendar.getInstance(); // gives u calendar with
+			//Calendar c = Calendar.getInstance(); // gives u calendar with
 			Calendar calendar = Calendar.getInstance();
 
 			// Set the time for the notification to occur.

@@ -2,6 +2,7 @@ package my.ep.web.backingbean.ss.directpurchase;
 
 import java.io.Serializable;
 
+import my.ep.persistence.entity.pm.common.PmAddress;
 import my.ep.persistence.entity.pm.common.PmCity;
 import my.ep.persistence.entity.pm.common.PmDistrict;
 import my.ep.persistence.entity.pm.common.PmDivision;
@@ -21,6 +22,7 @@ public class LocationDTO implements Serializable{
 	private	PmDivision division;
 	private	String	locationName;
 	private	int rowKey;
+	private PmAddress address;
 	
 	public LocationDTO() {
 		super();
@@ -48,6 +50,11 @@ public class LocationDTO implements Serializable{
 	public LocationDTO(PmDivision division) {
 		super();
 		this.division = division;
+	}
+	
+	public LocationDTO(PmAddress address) {
+		super();
+		this.address = address;
 	}
 
 	public String getLocationName() {
@@ -110,6 +117,18 @@ public class LocationDTO implements Serializable{
 		this.zone = zone;
 	}
 	
+	/**
+	 * @return the address
+	 */
+	public PmAddress getAddress() {
+		return address;
+	}
+	/**
+	 * @param address the address to set
+	 */
+	public void setAddress(PmAddress address) {
+		this.address = address;
+	}
 	public int getRowKey() {
 		final int prime = 31;
 		int result = 1;
@@ -175,6 +194,12 @@ public class LocationDTO implements Serializable{
 			if (other.city != null)
 				return false;
 		} else if (!city.equals(other.city))
+			return false;
+		
+		if (address == null) {
+			if(other.address != null)
+				return false;
+		} else if (!address.equals(other.address))
 			return false;
 		
 		return true;

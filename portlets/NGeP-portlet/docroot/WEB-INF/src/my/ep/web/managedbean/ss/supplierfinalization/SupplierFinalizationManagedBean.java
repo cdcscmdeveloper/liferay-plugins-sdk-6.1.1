@@ -5,6 +5,8 @@ import java.util.List;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
 
+import org.primefaces.model.TreeNode;
+
 import my.ep.persistence.entity.ss.quationtender.ScQt;
 import my.ep.persistence.entity.ss.quationtender.ScQtCommitteeActivity;
 import my.ep.persistence.entity.ss.quationtender.ScQtEvaluationResult;
@@ -74,7 +76,33 @@ public class SupplierFinalizationManagedBean extends BaseManagedBean {
 	private Integer totalDisQualifiedSupplierByItem; // Total for DisQualified Suppliers By Item
 	private ScQtZoneCriteria selectZoneByItem;
 	private boolean award = false;
+	private	TreeNode rootLocationTree;
+	private TreeNode[] selectedNodes;
 	
+	/**
+	 * @return the selectedNodes
+	 */
+	public TreeNode[] getSelectedNodes() {
+		return selectedNodes;
+	}
+	/**
+	 * @param selectedNodes the selectedNodes to set
+	 */
+	public void setSelectedNodes(TreeNode[] selectedNodes) {
+		this.selectedNodes = selectedNodes;
+	}
+	/**
+	 * @return the rootLocationTree
+	 */
+	public TreeNode getRootLocationTree() {
+		return rootLocationTree;
+	}
+	/**
+	 * @param rootLocationTree the rootLocationTree to set
+	 */
+	public void setRootLocationTree(TreeNode rootLocationTree) {
+		this.rootLocationTree = rootLocationTree;
+	}
 	/**
 	 * @return the scQtEvaluationResult
 	 */

@@ -19,6 +19,7 @@ import my.ep.persistence.entity.ss.quationtender.ScQt;
 import my.ep.persistence.entity.ss.quationtender.ScQtCriteria;
 import my.ep.persistence.entity.ss.quationtender.ScQtDeduction;
 import my.ep.persistence.entity.ss.quationtender.ScQtDeductionClause;
+import my.ep.persistence.entity.ss.quationtender.ScQtEvaluationResult;
 import my.ep.persistence.entity.ss.quationtender.ScQtItem;
 import my.ep.persistence.entity.ss.quationtender.ScQtProposalRanking;
 import my.ep.persistence.entity.ss.quationtender.ScQtSpec;
@@ -46,6 +47,8 @@ public class LOADetailManagedBean extends BaseManagedBean {
 	private ScQtProposalRanking scQtProposalRanking;
 	private List<SmSupplierBranch> branchsList;
 
+	private ScQtEvaluationResult scQtEvaluationResult;
+	
 	public String address;
 	private String status;
 	private ScQtCriteria scQtCriteria;
@@ -76,6 +79,20 @@ public class LOADetailManagedBean extends BaseManagedBean {
 	private List<PmUser>  approverName; // Drop down Listing for Approver Names
 	private List<PmUser> contractSignerList;
 	
+	/**
+	 * @return the scQtEvaluationResult
+	 */
+	public ScQtEvaluationResult getScQtEvaluationResult() {
+		return scQtEvaluationResult;
+	}
+
+	/**
+	 * @param scQtEvaluationResult the scQtEvaluationResult to set
+	 */
+	public void setScQtEvaluationResult(ScQtEvaluationResult scQtEvaluationResult) {
+		this.scQtEvaluationResult = scQtEvaluationResult;
+	}
+
 	/**
 	 * @return the scBondDtl
 	 */

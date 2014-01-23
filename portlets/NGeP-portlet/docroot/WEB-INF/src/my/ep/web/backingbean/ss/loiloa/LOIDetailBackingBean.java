@@ -37,8 +37,8 @@ import my.ep.persistence.entity.ss.quationtender.ScLoi;
 import my.ep.persistence.entity.ss.quationtender.ScNegoLocation;
 import my.ep.persistence.entity.ss.quationtender.ScNegoTerm;
 import my.ep.persistence.entity.ss.quationtender.ScQt;
+import my.ep.persistence.entity.ss.quationtender.ScQtEvaluationResult;
 import my.ep.persistence.entity.ss.quationtender.ScQtItem;
-import my.ep.persistence.entity.ss.quationtender.ScQtProposalRanking;
 import my.ep.persistence.entity.ss.quationtender.ScQtSpec;
 import my.ep.persistence.entity.ss.quationtender.ScQtZoneCriteria;
 import my.ep.persistence.entity.ss.quationtender.ScTerm;
@@ -324,14 +324,14 @@ public class LOIDetailBackingBean extends BaseBackingBean<LOIDetailManagedBean> 
 		}
 	}
 
-	public String createLOIAction(ScQtProposalRanking scQtProposalRanking,
+	public String createLOIAction(ScQtEvaluationResult scQtEvaluationResult,
 			String docType) {
 		debugLogger("createLOIAction");
 		IQTAwardSO iqtAwardSO = null;
 		List<SmSupplierBranch> bList = new ArrayList<SmSupplierBranch>();
 		try {
 
-			long id = scQtProposalRanking.getQtProposalRankingId();
+			long id = scQtEvaluationResult.getEvaluationResultId();
 
 			iqtAwardSO = BusinessDelegate.getInstance().getServiceObject(
 					QTConstants.SS_MODULE, IQTAwardSO.class);
@@ -432,19 +432,19 @@ public class LOIDetailBackingBean extends BaseBackingBean<LOIDetailManagedBean> 
 				populateParentOrgProfile(getManagedBean().getQt());
 
 				getManagedBean().setScLoi(new ScLoi());
-
-				getManagedBean().setScQtProposalRanking(scQtProposalRanking);
+				
+				getManagedBean().setScQtEvaluationResult(scQtEvaluationResult);
 
 				getManagedBean().getScLoi().setSmSupplier(
-						getManagedBean().getScQtProposalRanking()
-								.getScQtProposalEvaluate().getScQtProposal()
+						getManagedBean().getScQtEvaluationResult()
+								.getScQtProposal()
 								.getScQtSupplier().getSmSupplier());
 
-				getManagedBean().getScLoi().setSupplierName(
+				/*getManagedBean().getScLoi().setSupplierName(
 						getManagedBean().getScQtProposalRanking()
 								.getScQtProposalEvaluate().getScQtProposal()
 								.getScQtSupplier().getSmSupplier()
-								.getSupplierName());
+								.getSupplierName());*/
 
 				getManagedBean().getScLoi().setDocType(
 						LoiLoaDocType.DOCTYPE_QUOTATION_TENDER.value());
