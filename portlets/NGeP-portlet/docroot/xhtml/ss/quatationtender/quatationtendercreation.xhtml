@@ -7,21 +7,22 @@
 	xmlns:p="http://primefaces.org/ui"
 	xmlns:c="http://java.sun.com/jsp/jstl/core">
 
-		
+
 	<ui:define name="contentSection">
-	<table style="border: 0px;width:100%">
-	<tr>
-	<td width="100%">
-	<p:messages id="specmessages" showDetail="true" autoUpdate="true"
-    closable="true" />
-	<ui:include src="/xhtml/ss/quatationtender/dopublicationbuttons.xhtml"></ui:include></td>
-				
+		<table style="border: 0px; width: 100%">
+			<tr>
+				<td width="100%"><p:messages id="specmessages"
+						showDetail="true" autoUpdate="true" closable="true" /> <ui:include
+						src="/xhtml/ss/quatationtender/dopublicationbuttons.xhtml" /> <ui:include
+						src="/xhtml/ss/quatationtender/qtntenderheader.xhtml" /></td>
+
 			</tr>
 			<tr>
-	<td width="100%" valign="top"><ui:include src="/xhtml/ss/quatationtender/qtsubmenu.xhtml"></ui:include></td>
-				
+				<td width="100%" valign="top"><ui:include
+						src="/xhtml/ss/quatationtender/qtsubmenu.xhtml"></ui:include></td>
+
 			</tr>
 		</table>
-								
+
 	</ui:define>
 </ui:composition>
