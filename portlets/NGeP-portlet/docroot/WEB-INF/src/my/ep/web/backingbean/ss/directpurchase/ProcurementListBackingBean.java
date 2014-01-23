@@ -1,6 +1,7 @@
 package my.ep.web.backingbean.ss.directpurchase;
 
 import java.math.BigDecimal;
+import java.util.List;
 
 import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
@@ -17,12 +18,13 @@ import my.ep.biz.service.ss.quationtender.IQTDetailSO;
 import my.ep.bpm.dto.BpmRequestDTO;
 import my.ep.bpm.dto.BpmResponseDTO;
 import my.ep.bpm.service.IBpmSO;
-import my.ep.constant.ss.SourcingConstants;
 import my.ep.constants.SCProcessNameConst;
 import my.ep.dto.pm.common.status.StatusReqDTO;
 import my.ep.dto.pm.common.status.StatusResDTO;
 import my.ep.dto.pp.procurementplan.ProcurementPlanReqDTO;
 import my.ep.dto.pp.procurementplan.ProcurementPlanResDTO;
+import my.ep.dto.ss.directpurchase.RequestNoteReqDTO;
+import my.ep.dto.ss.directpurchase.RequestNoteResDTO;
 import my.ep.dto.ss.quationtender.QuationTenderReqDTO;
 import my.ep.dto.ss.quationtender.QuationTenderResDTO;
 import my.ep.jaxb.sc.directpurchasedata.SCDirectPurchaseDataType;
@@ -71,8 +73,16 @@ public class ProcurementListBackingBean extends BaseBackingBean<ProcurementListM
 		ISearchBean<PpPlan> searchBean = new SearchBean<PpPlan>();
 		reqDTO.setSearchBean(searchBean);
 		IProcurementPlanSO	procurementPlanSO	=	(IProcurementPlanSO)BusinessDelegate.getInstance().getServiceObject(SourcingConst.PROCUREMENT_MODULE, IProcurementPlanSO.class);
+		IDirectPurchaseSO directPurchaseSO = (IDirectPurchaseSO) BusinessDelegate.getInstance().getServiceObject(SourcingConst.SOURCING_MODULE, IDirectPurchaseSO.class);
 		ProcurementPlanResDTO	resDTO	=	procurementPlanSO.retrievePlanByParams(reqDTO);
-		getManagedBean().setProcurementPlanList(resDTO.getPlanList());
+		// remove the already started sourcing
+		List<PpPlan>	pplans	=	resDTO.getPlanList();
+		RequestNoteReqDTO	requestNoteReqDTO	=	new RequestNoteReqDTO();
+		requestNoteReqDTO.setPlans(pplans);
+		requestNoteReqDTO.setRemovePlanSourcingStarted(true);
+		RequestNoteResDTO requestNoteResDTO	=	directPurchaseSO.checkPlanEditable(requestNoteReqDTO);
+		pplans = requestNoteResDTO.getPlans();
+		getManagedBean().setProcurementPlanList(pplans);
 	}
 	
 	public String initiateBPMTask(PpPlan ppPlan) {
