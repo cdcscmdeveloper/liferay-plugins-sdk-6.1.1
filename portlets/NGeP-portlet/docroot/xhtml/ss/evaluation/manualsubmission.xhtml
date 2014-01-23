@@ -38,7 +38,7 @@
                  <p:column selectionMode="multiple" style="width:2%;text-align:center;" />
 				<p:column headerText="#{lbl['lbl.sc.eva.s1.manual.label']}"
 					style="width:35%">
-					<p:selectOneMenu  value="#{manuals1evaluation.proposalLabel.labelNumber}">
+					<p:selectOneMenu  value="#{manuals1evaluation.proposalLabel.proposalLabelId}">
 						<f:selectItem itemLabel="Select One" itemValue="" />
 						<f:selectItems value="#{evaluationBackingBean.managedBean.manualProposalLabel}" var="label" 
                        itemValue="#{label.proposalLabelId}" 
