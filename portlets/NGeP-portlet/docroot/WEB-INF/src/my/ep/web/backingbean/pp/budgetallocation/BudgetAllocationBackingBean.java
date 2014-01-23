@@ -91,8 +91,9 @@ public class BudgetAllocationBackingBean extends BaseBackingBean<BudgetAllocatio
 	public BudgetAllocationBackingBean(){
 	
 		if(this.getManagedBean().getViewMode()==null || ProcurementPlanConst.MODE_LIST.equals(this.getManagedBean().getViewMode())){
-			//set current user profile - TODO
-			if(getFacesScopes().getUserSessionBean()!=null){
+			//set current user profiles - TODO
+			if(this.getManagedBean().getCurrentProfiles()==null
+					&& getFacesScopes().getUserSessionBean()!=null){
 				List <PmOrgProfile> ministryProfiles =  CommonMethod.getOrgProfiles(getFacesScopes().getUserSessionBean().getUserId(), OrganizationType.MINISTRY.value());
 				this.getManagedBean().setCurrentProfiles(ministryProfiles);
 			}
@@ -110,7 +111,7 @@ public class BudgetAllocationBackingBean extends BaseBackingBean<BudgetAllocatio
 		log.info("redirectToBudgetAllocation - Start");
 		try{
 			if(budgetAllocId!=null && budgetAllocId>0){
-				loadTask(retrieveBudgetAllocById(budgetAllocId), ProcurementPlanConst.MODE_VIEW);
+				loadTask(retrieveBudgetAllocById(budgetAllocId), "APPROVED" );//ProcurementPlanConst.MODE_VIEW
 			}else{
 				cleanBudgetAllocDetails();
 			}
@@ -273,6 +274,10 @@ public class BudgetAllocationBackingBean extends BaseBackingBean<BudgetAllocatio
 			}else if(ProcurementPlanConst.BPM_TASK_BUDGET_REVISE.equals(taskName)){
 				this.getManagedBean().setViewMode(ProcurementPlanConst.MODE_REVISION);
 				this.getManagedBean().getSelectedBudgetAllocation().setEditable(true);
+			}else if("APPROVED".equals(taskName)){ //TODO after approval view
+				this.getManagedBean().setOutComes(ProcurementPlanConst.BPM_DEFAULT_ACTIONS); 
+				this.getManagedBean().setViewMode(ProcurementPlanConst.MODE_MAINTAIN);
+				this.getManagedBean().getSelectedBudgetAllocation().setEditable(true);
 			}
 		}
 		log.info("loadTask - End");
@@ -375,13 +380,11 @@ public class BudgetAllocationBackingBean extends BaseBackingBean<BudgetAllocatio
 			}
 		}else{
 			
-			System.out.println("do ID "  + this.getManagedBean().getSelectedBudgetAllocDtl().getPmDo().getDoId());
-			System.out.println("do Name "  + this.getManagedBean().getSelectedBudgetAllocDtl().getPmDo().getDoName());
-			if(ProcurementPlanConst.MODE_REVISION.equals(this.getManagedBean().getViewMode())
+			if(ProcurementPlanConst.MODE_VIEW.equals(this.getManagedBean().getViewMode())
 					|| ppBudgetAllocDtl.isBrandNew()){
-				ppBudgetAllocDtl.setEditable(true);
-			}else{
 				ppBudgetAllocDtl.setEditable(false);
+			}else{
+				ppBudgetAllocDtl.setEditable(true);
 			}
 			ppBudgetAllocDtl.setSelected(true);
 			this.getManagedBean().setSelectedBudgetAllocDtl(ppBudgetAllocDtl);
@@ -416,6 +419,10 @@ public class BudgetAllocationBackingBean extends BaseBackingBean<BudgetAllocatio
 					//update amount
 					updateBudgetAllocDtl(this.getManagedBean().getSelectedBudgetAllocDtl(), ProcurementPlanConst.ADD);
 					this.getManagedBean().getSelectedBudgetAllocation().addPpBudgetAllocDtls(this.getManagedBean().getSelectedBudgetAllocDtl());
+					
+					if(ProcurementPlanConst.MODE_MAINTAIN.equals(this.getManagedBean().getViewMode())){
+						//TODO: add this to BPM new list
+					}
 				}
 			}else{
 				if(isValid){
@@ -423,6 +430,10 @@ public class BudgetAllocationBackingBean extends BaseBackingBean<BudgetAllocatio
 							this.getManagedBean().getSelectedBudgetAllocDtl().getOriBudgetDtlId())){
 						//update amount
 						updateBudgetAllocDtl(this.getManagedBean().getSelectedBudgetAllocDtl(), ProcurementPlanConst.UPDATE);
+						
+						if(ProcurementPlanConst.MODE_MAINTAIN.equals(this.getManagedBean().getViewMode())){
+							//TODO: add this to BPM changed list
+						}
 					}else{
 						//not allow change if having childs
 						//rollback amount
@@ -608,11 +619,11 @@ public class BudgetAllocationBackingBean extends BaseBackingBean<BudgetAllocatio
 					CommonMethod.getDefaultStatus(ProcurementPlanConst.DOCTYPE_BUDGET_ALLOC_ORG));//TODO
 		}else{
 			log.info("showBudgetAllocOrg - not null");
-			if(ProcurementPlanConst.MODE_REVISION.equals(this.getManagedBean().getViewMode()) || 
+			if(ProcurementPlanConst.MODE_VIEW.equals(this.getManagedBean().getViewMode()) || 
 					ppBudgetAllocOrg.isBrandNew()){
-				ppBudgetAllocOrg.setEditable(true);
-			}else{
 				ppBudgetAllocOrg.setEditable(false);
+			}else{
+				ppBudgetAllocOrg.setEditable(true);
 			}
 			ppBudgetAllocOrg.setSelected(true);
 			this.getManagedBean().setSelectedBudgetAllocOrg(ppBudgetAllocOrg);
@@ -644,11 +655,18 @@ public class BudgetAllocationBackingBean extends BaseBackingBean<BudgetAllocatio
 				//update amount
 				updateBudgetAllocOrg(this.getManagedBean().getSelectedBudgetAllocOrg(), ProcurementPlanConst.ADD);
 				this.getManagedBean().getSelectedBudgetAllocDtl().addPpBudgetAllocOrgs(this.getManagedBean().getSelectedBudgetAllocOrg());
+				
+				if(ProcurementPlanConst.MODE_MAINTAIN.equals(this.getManagedBean().getViewMode())){
+					//TODO: add this to BPM new list
+				}
 			}
 		}else{
 			if(isValid){
 				//update amount
 				updateBudgetAllocOrg(this.getManagedBean().getSelectedBudgetAllocOrg(), ProcurementPlanConst.UPDATE);
+				if(ProcurementPlanConst.MODE_MAINTAIN.equals(this.getManagedBean().getViewMode())){
+					//TODO: add this to BPM changed list
+				}
 			}
 		}
 		if(isValid){

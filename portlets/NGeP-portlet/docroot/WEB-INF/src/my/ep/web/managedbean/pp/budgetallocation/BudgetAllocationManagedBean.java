@@ -4,6 +4,7 @@
 package my.ep.web.managedbean.pp.budgetallocation;
 
 import java.math.BigDecimal;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -17,7 +18,6 @@ import my.ep.persistence.entity.pp.budgetallocation.PpBudgetAlloc;
 import my.ep.persistence.entity.pp.budgetallocation.PpBudgetAllocDtl;
 import my.ep.persistence.entity.pp.budgetallocation.PpBudgetAllocOrg;
 import my.ep.web.bean.pp.BudgetAllocSearchBean;
-import my.ep.web.bean.pp.ProcurementPlanSearchBean;
 import my.ep.web.managedbean.BaseManagedBean;
 
 @ManagedBean(name = "budgetAllocManagedBean")
@@ -52,6 +52,14 @@ public class BudgetAllocationManagedBean extends BaseManagedBean{
 	private boolean confirm;
 	
 	private BudgetAllocSearchBean budgetAllocSearchBean;
+//	
+//	private List <Long> newBudgetAllocDtl;
+//	
+//	private List <Long> newBudgetAllocOrg;
+//	
+//	private List <Long> updatedBudgetAllocDtl;
+//	
+//	private List <Long> updatedBudgetAllocOrg;
 	
 	/**
 	 * @return the amanahFlag
@@ -246,6 +254,75 @@ public class BudgetAllocationManagedBean extends BaseManagedBean{
 	public void setBudgetAllocSearchBean(BudgetAllocSearchBean budgetAllocSearchBean) {
 		this.budgetAllocSearchBean = budgetAllocSearchBean;
 	}
+
+//	/**
+//	 * @return the newBudgetAllocDtl
+//	 */
+//	public List<Long> getNewBudgetAllocDtl() {
+//		if(newBudgetAllocDtl==null){
+//			newBudgetAllocDtl = new ArrayList<Long>();
+//		}
+//		return newBudgetAllocDtl;
+//	}
+//
+//	/**
+//	 * @param newBudgetAllocDtl the newBudgetAllocDtl to set
+//	 */
+//	public void setNewBudgetAllocDtl(List<Long> newBudgetAllocDtl) {
+//		this.newBudgetAllocDtl = newBudgetAllocDtl;
+//	}
+//
+//	/**
+//	 * @return the newBudgetAllocOrg
+//	 */
+//	public List<Long> getNewBudgetAllocOrg() {
+//		if(newBudgetAllocOrg==null){
+//			newBudgetAllocOrg = new ArrayList<Long>();
+//		}
+//		return newBudgetAllocOrg;
+//	}
+//
+//	/**
+//	 * @param newBudgetAllocOrg the newBudgetAllocOrg to set
+//	 */
+//	public void setNewBudgetAllocOrg(List<Long> newBudgetAllocOrg) {
+//		this.newBudgetAllocOrg = newBudgetAllocOrg;
+//	}
+//
+//	/**
+//	 * @return the updatedBudgetAllocDtl
+//	 */
+//	public List<Long> getUpdatedBudgetAllocDtl() {
+//		if(updatedBudgetAllocDtl==null){
+//			updatedBudgetAllocDtl = new ArrayList<Long>();
+//		}
+//		return updatedBudgetAllocDtl;
+//	}
+//
+//	/**
+//	 * @param updatedBudgetAllocDtl the updatedBudgetAllocDtl to set
+//	 */
+//	public void setUpdatedBudgetAllocDtl(List<Long> updatedBudgetAllocDtl) {
+//		this.updatedBudgetAllocDtl = updatedBudgetAllocDtl;
+//	}
+//
+//	/**
+//	 * @return the updatedBudgetAllocOrg
+//	 */
+//	public List<Long> getUpdatedBudgetAllocOrg() {
+//		if(updatedBudgetAllocOrg==null){
+//			updatedBudgetAllocOrg = new ArrayList<Long>();
+//		}
+//		return updatedBudgetAllocOrg;
+//	}
+//
+//	/**
+//	 * @param updatedBudgetAllocOrg the updatedBudgetAllocOrg to set
+//	 */
+//	public void setUpdatedBudgetAllocOrg(List<Long> updatedBudgetAllocOrg) {
+//		this.updatedBudgetAllocOrg = updatedBudgetAllocOrg;
+//	}
+
 
 
 

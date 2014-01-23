@@ -3,6 +3,8 @@
  */
 package my.ep.web.constant.pp;
 
+import my.ep.constant.pm.ParameterConst;
+
 /**
  * Constant Value for Procurement Plan Module
  * 
@@ -21,7 +23,7 @@ public class ProcurementPlanConst {
 	
 	//Prepare Plan Navigation
 	public static final String NAV_TO_LIST_PLAN = "listPlan";
-	public static final String NAV_TO_PLAN_DET = "procurementPlan";
+	public static final String NAV_TO_PLAN_DET = "plan";
 	
 	//Common Navigation
 	public static final String NAV_TO_TASK_LIST = "/xhtml/shared/acknowledge";
@@ -50,28 +52,19 @@ public class ProcurementPlanConst {
 	public static final String MODE_APPROVAL_LIST = "P";
 	
 	//Current Mode
-	public static final String CURRENT_NEW = "tabN";
-	public static final String CURRENT_MTO = "tabM";
-	public static final String CURRENT_ALLOC_BUDGET = "tabB";
-	public static final String CURRENT_PLAN = "tabL";
+	public static final int TAB_PROCUREMENT = 3;
+	public static final int TAB_DIRECT_PURCHASE = 1;
+	public static final int TAB_CONTRACT = 2;
 
 	
-	
-	//Plan Type
-	public static final String PLAN_TYPE_PROCUREMENT = "P";
-	public static final String PLAN_TYPE_EXPENDITURE = "E";
+
 	
 	//Favourite Type
 	public static final String FAVOURITE_TYPE_NONE = "N";
 	public static final String FAVOURITE_TYPE_PLAN = "P";
 	public static final String FAVOURITE_TYPE_ITEM = "I";
 	
-	//Procurement Mode
-	public static final String PROCUREMENT_QUOTATION = "Q";
-	public static final String PROCUREMENT_DIRECT_NEGO = "N";
-	public static final String PROCUREMENT_TENDER = "T";
-	public static final String PROCUREMENT_DIRECT_PURCHASE = "D";
-	public static final String PROCUREMENT_EXISTING_CONTRACT = "E";
+
 	
 	//Fulfillment Type
 	public static final String FULFILLMENT_ONE_OFF = "OF";
@@ -196,6 +189,20 @@ public class ProcurementPlanConst {
 	//Contract Type
 	public static final String CONTRACT_TYPE_MINISTRY = "168"; //refer to PM_PARAMETER
 	public static final String CONTRACT_IND_CENTRAL = "169"; //refer to PM_PARAMETER
+	
+	
+	//Plan Type
+	public static final String PLAN_TYPE_PROCUREMENT = ParameterConst.PLAN_TYPE_EXPENDITURE;
+	public static final String PLAN_TYPE_EXPENDITURE = ParameterConst.PLAN_TYPE_PROCUREMENT;
+	
+	//Procurement Mode
+	public static final String PROCUREMENT_QUOTATION = ParameterConst.PROCUREMENT_MODE_QUOTATION;
+	public static final String PROCUREMENT_DIRECT_NEGO = ParameterConst.PROCUREMENT_MODE_DIRECT_NEGO;
+	public static final String PROCUREMENT_TENDER = ParameterConst.PROCUREMENT_MODE_TENDER;
+	public static final String PROCUREMENT_DIRECT_PURCHASE = ParameterConst.PROCUREMENT_MODE_DIRECT_PURCHASE;
+	public static final String PROCUREMENT_EXISTING_CONTRACT = ParameterConst.PROCUREMENT_MODE_CONTRACT;
+
+
 	
 	
 	/**
@@ -434,43 +441,28 @@ public class ProcurementPlanConst {
 	public String getModeList() {
 		return MODE_LIST;
 	}
+
 	/**
-	 * @return the currentNew
+	 * @return the tabProcurement
 	 */
-	public String getCurrentNew() {
-		return CURRENT_NEW;
-	}
-	/**
-	 * @return the currentMto
-	 */
-	public String getCurrentMto() {
-		return CURRENT_MTO;
+	public int getTabProcurement() {
+		return TAB_PROCUREMENT;
 	}
 
 	/**
-	 * @return the currentAllocBudget
+	 * @return the tabDirectPurchase
 	 */
-	public String getCurrentAllocBudget() {
-		return CURRENT_ALLOC_BUDGET;
+	public int getTabDirectPurchase() {
+		return TAB_DIRECT_PURCHASE;
 	}
+
 	/**
-	 * @return the currentPlan
+	 * @return the tabContract
 	 */
-	public String getCurrentPlan() {
-		return CURRENT_PLAN;
+	public int getTabContract() {
+		return TAB_CONTRACT;
 	}
-	/**
-	 * @return the planTypeProcurement
-	 */
-	public String getPlanTypeProcurement() {
-		return PLAN_TYPE_PROCUREMENT;
-	}
-	/**
-	 * @return the planTypeExpenditure
-	 */
-	public String getPlanTypeExpenditure() {
-		return PLAN_TYPE_EXPENDITURE;
-	}
+
 	/**
 	 * @return the favouriteTypeNone
 	 */
@@ -491,37 +483,42 @@ public class ProcurementPlanConst {
 	}
 
 	
-	
-	/**
-	 * @return the procurementQuotation
-	 */
-	public String getProcurementQuotation() {
-		return PROCUREMENT_QUOTATION;
-	}
-	/**
-	 * @return the procurementDirectNego
-	 */
-	public String getProcurementDirectNego() {
-		return PROCUREMENT_DIRECT_NEGO;
-	}
-	/**
-	 * @return the procurementTender
-	 */
-	public String getProcurementTender() {
-		return PROCUREMENT_TENDER;
-	}
-	/**
-	 * @return the procurementDirectPurchase
-	 */
-	public String getProcurementDirectPurchase() {
-		return PROCUREMENT_DIRECT_PURCHASE;
-	}
-	/**
-	 * @return the procurementExistingContract
-	 */
-	public String getProcurementExistingContract() {
-		return PROCUREMENT_EXISTING_CONTRACT;
-	}
+
+//	/**
+//	 * @return the procurementQuotation
+//	 */
+//	public Long getProcurementQuotation() {
+//		return PROCUREMENT_QUOTATION;
+//	}
+//
+//	/**
+//	 * @return the procurementDirectNego
+//	 */
+//	public Long getProcurementDirectNego() {
+//		return PROCUREMENT_DIRECT_NEGO;
+//	}
+//
+//	/**
+//	 * @return the procurementTender
+//	 */
+//	public Long getProcurementTender() {
+//		return PROCUREMENT_TENDER;
+//	}
+//
+//	/**
+//	 * @return the procurementDirectPurchase
+//	 */
+//	public Long getProcurementDirectPurchase() {
+//		return PROCUREMENT_DIRECT_PURCHASE;
+//	}
+//
+//	/**
+//	 * @return the procurementExistingContract
+//	 */
+//	public Long getProcurementExistingContract() {
+//		return PROCUREMENT_EXISTING_CONTRACT;
+//	}
+
 	/**
 	 * @return the qtTypeBumiputera
 	 */
@@ -767,7 +764,56 @@ public class ProcurementPlanConst {
 	public String getDatetimeDisplayPattern() {
 		return DATETIME_DISPLAY_PATTERN;
 	}
-	
-	
+
+	/**
+	 * @return the planTypeProcurement
+	 */
+	public String getPlanTypeProcurement() {
+		return PLAN_TYPE_PROCUREMENT;
+	}
+
+	/**
+	 * @return the planTypeExpenditure
+	 */
+	public String getPlanTypeExpenditure() {
+		return PLAN_TYPE_EXPENDITURE;
+	}
+
+	/**
+	 * @return the procurementQuotation
+	 */
+	public String getProcurementQuotation() {
+		return PROCUREMENT_QUOTATION;
+	}
+
+	/**
+	 * @return the procurementDirectNego
+	 */
+	public String getProcurementDirectNego() {
+		return PROCUREMENT_DIRECT_NEGO;
+	}
+
+	/**
+	 * @return the procurementTender
+	 */
+	public String getProcurementTender() {
+		return PROCUREMENT_TENDER;
+	}
+
+	/**
+	 * @return the procurementDirectPurchase
+	 */
+	public String getProcurementDirectPurchase() {
+		return PROCUREMENT_DIRECT_PURCHASE;
+	}
+
+	/**
+	 * @return the procurementExistingContract
+	 */
+	public String getProcurementExistingContract() {
+		return PROCUREMENT_EXISTING_CONTRACT;
+	}
+
+
 	
 }

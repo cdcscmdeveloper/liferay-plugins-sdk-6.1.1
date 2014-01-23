@@ -9,6 +9,7 @@ import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
 
 import my.ep.persistence.entity.pm.authorization.PmOrgProfile;
+import my.ep.persistence.entity.pm.authorization.PmUser;
 import my.ep.persistence.entity.pp.PpRemark;
 import my.ep.persistence.entity.pp.budgetallocation.PpBudgetAllocDtl;
 import my.ep.persistence.entity.pp.procurementplan.PpPlan;
@@ -17,62 +18,31 @@ import my.ep.persistence.entity.pp.procurementplan.PpPlanDtl;
 import my.ep.web.bean.pp.ProcurementPlanSearchBean;
 import my.ep.web.managedbean.BaseManagedBean;
 
+import org.primefaces.model.DualListModel;
+
 @ManagedBean(name = "planManagedBean")
 @SessionScoped
 public class PlanManagedBean extends BaseManagedBean{
 
 	private static final long serialVersionUID = 1L;
-
-	private boolean searchPlan;
-
-//	private List <PpPlanMaster> planMasterList;
-//
-//	private PpPlanMaster planMaster; //for main master plan
-
-	private PpPlan plan; //for main master plan
-	
-	private PmOrgProfile currentUser;
-
-//	private PpPlanMaster selectedPlanMaster; //for ui master plan
-	
-	private PpPlan selectedPlan; //for ui plan
-	
-	private PpPlan selectedPlanItem; //for ui plan (multiple)
-
-	private PpPlanDtl selectedItem; //for ui item
-	
-	private PpRemark selectedItemRemark; //for ui item remark
 	
 	private String viewMode;
-	
-	private boolean enableDetail; //enable the details tab
-	
-	private boolean enableChildDetail; //enable to add details' child 
-	
-	private String current;
 
-	private String[] actions;
-	
-	private String bpmTaskId; 
-	
-	private List <PpPlanActivity> allTaskActivity;
-	
-	private String dynamicDetailsName;
-
-	private ProcurementPlanSearchBean ppSearchPlan;
-	
-	private List <PpBudgetAllocDtl> budgetAllocDtlList;
-	
-	private List<PpPlan> planList;
-	
-	private String selectedTab;
-	
-	private boolean reasonRejectOther;
+	private List <PmOrgProfile> currentProfiles;
 	
 	private Boolean amanahFlag;
 	
+	private PpPlan selectedPlan; 
 	
+	private PpPlanActivity selectedPlanActivity; 
+	
+	private DualListModel<PmUser> users;  
+	
+	private boolean enableTab; //enable the details tab
 
+	private int selectedTab;
+	
+	
 	/**
 	 * @return the amanahFlag
 	 */
@@ -87,20 +57,142 @@ public class PlanManagedBean extends BaseManagedBean{
 		this.amanahFlag = amanahFlag;
 	}
 
+	
+	/**
+	 * @return the users
+	 */
+	public DualListModel<PmUser> getUsers() {
+		return users;
+	}
+
+	/**
+	 * @param users the users to set
+	 */
+	public void setUsers(DualListModel<PmUser> users) {
+		this.users = users;
+	}
+	
+	
+	/**
+	 * @return the enableTab
+	 */
+	public boolean isEnableTab() {
+		return enableTab;
+	}
+
+	/**
+	 * @param enableTab the enableTab to set
+	 */
+	public void setEnableTab(boolean enableTab) {
+		this.enableTab = enableTab;
+	}
+
 	/**
 	 * @return the selectedTab
 	 */
-	public String getSelectedTab() {
+	public int getSelectedTab() {
 		return selectedTab;
 	}
 
 	/**
 	 * @param selectedTab the selectedTab to set
 	 */
-	public void setSelectedTab(String selectedTab) {
+	public void setSelectedTab(int selectedTab) {
 		this.selectedTab = selectedTab;
 	}
 
+	/**
+	 * @return the selectedPlan
+	 */
+	public PpPlan getSelectedPlan() {
+		if(selectedPlan==null)
+			selectedPlan = new PpPlan();
+		return selectedPlan;
+	}
+	/**
+	 * @param selectedPlan the selectedPlan to set
+	 */
+	public void setSelectedPlan(PpPlan selectedPlan) {
+		this.selectedPlan = selectedPlan;
+	}
+
+	/**
+	 * @return the selectedPlanActivity
+	 */
+	public PpPlanActivity getSelectedPlanActivity() {
+		if(selectedPlanActivity==null)
+			selectedPlanActivity = new PpPlanActivity();
+		return selectedPlanActivity;
+	}
+
+	/**
+	 * @param selectedPlanActivity the selectedPlanActivity to set
+	 */
+	public void setSelectedPlanActivity(PpPlanActivity selectedPlanActivity) {
+		this.selectedPlanActivity = selectedPlanActivity;
+	}
+
+	
+	
+
+
+
+
+
+
+
+
+
+	private boolean searchPlan;
+	
+	
+	
+	
+	
+//	private List <PpPlanMaster> planMasterList;
+//
+//	private PpPlanMaster planMaster; //for main master plan
+
+	
+	
+	
+
+//	private PpPlanMaster selectedPlanMaster; //for ui master plan
+	
+	
+	
+	private PpPlan selectedPlanItem; //for ui plan (multiple)
+
+	private PpPlanDtl selectedItem; //for ui item
+	
+	private PpRemark selectedItemRemark; //for ui item remark
+	
+	
+	
+	private boolean enableChildDetail; //enable to add details' child 
+	
+	private String current;
+
+	
+	private String bpmTaskId; 
+	
+	private List <PpPlanActivity> allTaskActivity;
+	
+	private String dynamicDetailsName;
+
+	private ProcurementPlanSearchBean ppSearchPlan;
+	
+	private List <PpBudgetAllocDtl> budgetAllocDtlList;
+	
+	private List<PpPlan> planList;
+	
+	
+	private boolean reasonRejectOther;
+	
+
+	
+	
+	
 
 //	/**
 //	 * @return the planMasterList
@@ -232,19 +324,7 @@ public class PlanManagedBean extends BaseManagedBean{
 		this.enableChildDetail = enableChildDetail;
 	}
 
-	/**
-	 * @return the enableDetail
-	 */
-	public boolean isEnableDetail() {
-		return enableDetail;
-	}
-	/**
-	 * @param enableDetail the enableDetail to set
-	 */
-	public void setEnableDetail(boolean enableDetail) {
-		this.enableDetail = enableDetail;
-	}
-	
+
 	/**
 	 * @return the selectedItem
 	 */
@@ -298,18 +378,7 @@ public class PlanManagedBean extends BaseManagedBean{
 		this.searchPlan = searchPlan;
 	}
 	
-	/**
-	 * @return the selectedPlan
-	 */
-	public PpPlan getSelectedPlan() {
-		return selectedPlan;
-	}
-	/**
-	 * @param selectedPlan the selectedPlan to set
-	 */
-	public void setSelectedPlan(PpPlan selectedPlan) {
-		this.selectedPlan = selectedPlan;
-	}
+	
 	/**
 	 * @return the current
 	 */
@@ -347,48 +416,6 @@ public class PlanManagedBean extends BaseManagedBean{
 //	public void setPlanMaster(PpPlanMaster planMaster) {
 //		this.planMaster = planMaster;
 //	}
-	/**
-	 * @return the plan
-	 */
-	public PpPlan getPlan() {
-		return plan;
-	}
-	/**
-	 * @param plan the plan to set
-	 */
-	public void setPlan(PpPlan plan) {
-		this.plan = plan;
-	}
-
-	/**
-	 * @return the currentUser
-	 */
-	public PmOrgProfile getCurrentUser() {
-		return currentUser;
-	}
-	/**
-	 * @param currentUser the currentUser to set
-	 */
-	public void setCurrentUser(PmOrgProfile currentUser) {
-		this.currentUser = currentUser;
-	}
-
-	/**
-	 * @return the actions
-	 */
-	public String[] getActions() {
-		return actions;
-	}
-
-	/**
-	 * @param actions the actions to set
-	 */
-	public void setActions(String[] actions) {
-		this.actions = actions;
-	}
-
-
-
 
 
 	
@@ -577,8 +604,26 @@ public class PlanManagedBean extends BaseManagedBean{
 		this.ppSearchPlan = ppSearchPlan;
 	}
 
+	/**
+	 * @return the currentProfiles
+	 */
+	public List<PmOrgProfile> getCurrentProfiles() {
+		return currentProfiles;
+	}
+
+	/**
+	 * @param currentProfiles the currentProfiles to set
+	 */
+	public void setCurrentProfiles(List<PmOrgProfile> currentProfiles) {
+		this.currentProfiles = currentProfiles;
+	}
 
 
+
+	
+	
+	
+	
 
 }
 

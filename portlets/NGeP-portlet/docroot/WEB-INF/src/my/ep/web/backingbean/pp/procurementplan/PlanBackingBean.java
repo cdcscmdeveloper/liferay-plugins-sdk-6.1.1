@@ -3,10 +3,12 @@
  */
 package my.ep.web.backingbean.pp.procurementplan;
 
+import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
 import javax.faces.context.FacesContext;
@@ -16,20 +18,38 @@ import my.ep.biz.bean.search.ISearchBean;
 import my.ep.biz.bean.search.ISearchResultBean;
 import my.ep.biz.bean.search.SearchBetweenValue;
 import my.ep.biz.bean.search.SearchFilterBean;
+import my.ep.biz.service.cm.codification.ICodificationSO;
 import my.ep.biz.service.pm.authorization.orgprofile.IOrgProfileSO;
-import my.ep.biz.service.pp.budgetallocation.IBudgetAllocationSO;
+import my.ep.biz.service.pm.authorization.user.IUserSO;
+import my.ep.biz.service.pm.common.parameter.IParameterSO;
+import my.ep.biz.service.pm.common.taskactivity.ITaskActivitySO;
 import my.ep.biz.service.pp.procurementplan.IProcurementPlanSO;
+import my.ep.constant.pm.ParameterConst;
+import my.ep.constant.pm.ParameterTypeConst;
+import my.ep.dto.cm.codification.CodificationReqDTO;
+import my.ep.dto.cm.codification.CodificationResDTO;
 import my.ep.dto.pm.authorization.orgprofile.OrgProfileReqDTO;
 import my.ep.dto.pm.authorization.orgprofile.OrgProfileResDTO;
+import my.ep.dto.pm.authorization.user.UserReqDTO;
+import my.ep.dto.pm.authorization.user.UserResDTO;
+import my.ep.dto.pm.common.parameter.ParameterReqDTO;
+import my.ep.dto.pm.common.parameter.ParameterResDTO;
+import my.ep.dto.pm.common.taskactivity.TaskResDTO;
 import my.ep.dto.pp.budgetallocation.BudgetAllocationReqDTO;
-import my.ep.dto.pp.budgetallocation.BudgetAllocationResDTO;
 import my.ep.dto.pp.procurementplan.ProcurementPlanReqDTO;
+import my.ep.persistence.entity.cm.catalog.CmUnspsc;
+import my.ep.persistence.entity.pm.authorization.PmBusinessActivity;
 import my.ep.persistence.entity.pm.authorization.PmOrgProfile;
+import my.ep.persistence.entity.pm.authorization.PmUser;
+import my.ep.persistence.entity.pm.common.PmParameter;
+import my.ep.persistence.entity.pp.PpRemark;
 import my.ep.persistence.entity.pp.budgetallocation.PpBudgetAllocDtl;
 import my.ep.persistence.entity.pp.procurementplan.PpPlan;
-import my.ep.persistence.logging.LogKey;
+import my.ep.persistence.entity.pp.procurementplan.PpPlanActivity;
+import my.ep.persistence.entity.pp.procurementplan.PpPlanItem;
 import my.ep.type.aut.SearchOperator;
 import my.ep.type.pm.OrganizationType;
+import my.ep.type.pm.RoleCode;
 import my.ep.web.backingbean.BaseBackingBean;
 import my.ep.web.bean.paginator.IPagingDataModel;
 import my.ep.web.bean.paginator.PagingDataModel;
@@ -41,7 +61,7 @@ import my.ep.web.util.lookupservice.BusinessDelegate;
 import my.ep.web.util.pp.common.CommonMethod;
 
 import org.apache.log4j.Logger;
-import org.apache.log4j.MDC;
+import org.primefaces.model.DualListModel;
 
 @ManagedBean(name="planBackingBean")
 @ViewScoped
@@ -66,15 +86,12 @@ public class PlanBackingBean extends BaseBackingBean<PlanManagedBean>{
 	 */
 	public PlanBackingBean() {
 		log.info("PlanBackingBean - Start");
-		if(this.getManagedBean().getViewMode()==null || ProcurementPlanConst.MODE_LIST.equals(this.getManagedBean().getViewMode())){			
-			//set current user profile (login user must be PTJ)
-			List <PmOrgProfile> ptjProfiles = getOrgProfiles(getFacesScopes().getUserSessionBean().getUserId(), OrganizationType.DIVISION.value());// TODO dynamic
-			this.getManagedBean().setCurrentUser(ptjProfiles!=null ? ptjProfiles.get(0) : new PmOrgProfile());
-		}
-		
-		//TODO: temp
-		if(MDC.get(LogKey.USER_ID)==null) {
-			MDC.put(LogKey.USER_ID, getFacesScopes().getUserSessionBean().getUserId());
+		if(this.getManagedBean().getViewMode()==null || ProcurementPlanConst.MODE_LIST.equals(this.getManagedBean().getViewMode())){
+			if(this.getManagedBean().getCurrentProfiles()==null
+					&& getFacesScopes().getUserSessionBean()!=null){
+				//set current user profile (login user must be PTJ)
+				this.getManagedBean().setCurrentProfiles(CommonMethod.getOrgProfiles(getFacesScopes().getUserSessionBean().getUserId(), OrganizationType.DIVISION.value()));
+			}	
 		}
 		log.info("PlanBackingBean - End");
 	}
@@ -90,9 +107,9 @@ public class PlanBackingBean extends BaseBackingBean<PlanManagedBean>{
 		
 		//filter by profile
 		SearchFilterBean defaultBean = new SearchFilterBean();
-		defaultBean.setSearchField("ppPlanMaster.orgProfileId");
-		defaultBean.setSearchOperator(SearchOperator.OPERATOR_EQUALS.value());
-		defaultBean.setSearchValue(this.getManagedBean().getCurrentUser().getOrgProfileId());
+		defaultBean.setSearchField("ppPlanMaster.pmOrgProfile");
+		defaultBean.setSearchOperator(SearchOperator.OPERATOR_IN.value());
+		defaultBean.setSearchValue(this.getManagedBean().getCurrentProfiles());
 		searchBean.getDataFilterBeans().add(defaultBean);
 		
 		
@@ -294,17 +311,17 @@ public class PlanBackingBean extends BaseBackingBean<PlanManagedBean>{
 //		log.info("loadTask - End");
 //	}
 //	
-//	/**
-//	 * redirect to plan details view from ui
-//	 * @param PpPlan
-//	 * @return xhtml
-//	 */
-//	public String redirectToPlanContent(Long planId){
-//		log.info("redirectToPlanContent - Start");
-//		boolean isComplete = false;
-//		String taskName ="";
-//		try{
-//			if(planId!=null && planId>0L){
+	/**
+	 * redirect to plan details view from ui
+	 * @param PpPlan
+	 * @return xhtml
+	 */
+	public String redirectToPlanContent(Long planId){
+		log.info("redirectToPlanContent - Start");
+		boolean isComplete = false;
+		String taskName ="";
+		try{
+			if(planId!=null && planId>0L){
 //				PpPlan ppPlan = retrievePlanById(planId);
 //				if(ProcurementPlanConst.MODE_LIST.equals(this.getManagedBean().getViewMode())){
 //					taskName = ppPlan.isDraft() ? ProcurementPlanConst.MODE_DRAFT : ProcurementPlanConst.MODE_VIEW;
@@ -313,30 +330,41 @@ public class PlanBackingBean extends BaseBackingBean<PlanManagedBean>{
 //				}
 //				loadTask(ppPlan, taskName);
 //				isComplete = true;
-//			}else{
-//				cleanPlanDetails();
-//				isComplete = true;
-//			}
-//			
-//		}catch (Exception e){
-//			FacesContext.getCurrentInstance().addMessage(null,new FacesMessage(FacesMessage.SEVERITY_ERROR, e.toString(),"Load plan failed."));
-//			e.printStackTrace();
-//			
-//		}
-//		log.info("redirectToPlanContent - End" + isComplete);
-//		return isComplete ? ProcurementPlanConst.NAV_TO_PLAN_DET : "";
-//	
-//	}
-//	
-//	/**
-//	 * initial plan details clean view
-//	 */
-//	private void cleanPlanDetails(){
-//		log.info("cleanPlanDetails - Start");
-//		
-//		PpPlanMaster planMaster = new PpPlanMaster();
-//		PpPlan plan = new PpPlan();
-//		
+			}else{
+				cleanPlanDetails();
+				isComplete = true;
+			}
+			
+		}catch (Exception e){
+			FacesContext.getCurrentInstance().addMessage(null,new FacesMessage(FacesMessage.SEVERITY_ERROR, e.toString(),"Load plan failed."));
+			e.printStackTrace();
+			
+		}
+		log.info("redirectToPlanContent - End");
+		return isComplete ? ProcurementPlanConst.NAV_TO_PLAN_DET : "";
+	}
+
+
+	
+	/**
+	 * initial plan details clean view
+	 */
+	private void cleanPlanDetails() throws Exception{
+		log.info("cleanPlanDetails - Start");
+		
+		
+		PpPlan plan = new PpPlan();
+		plan.setVotTypeParam(new PmParameter());
+		plan.setPlanTypeParam(new PmParameter());
+		plan.setProcurementModeParam(new PmParameter());
+		plan.setQtTypeParam(new PmParameter());
+		plan.setItemOriginParam(new PmParameter());
+		plan.setCmUnspscFamily(new CmUnspsc());
+		plan.setEditable(true);
+		generateVerificationOfficers();
+		
+		
+		
 //		planMaster.setPpPlans(new ArrayList<PpPlan>());
 //		planMaster.getSelectedGoMapper().clear();
 //		plan.setEditable(true);
@@ -373,12 +401,11 @@ public class PlanBackingBean extends BaseBackingBean<PlanManagedBean>{
 //		this.getManagedBean().setEnableChildDetail(false);
 //		this.getManagedBean().setSelectedPlanItem(new PpPlan()); //TODO
 //	
-//		
-//		//Set normal plan
-//		this.getManagedBean().setPlanMaster(planMaster);
-//		this.getManagedBean().setPlan(plan);
-//	
-//		
+		
+		//Set normal plan
+		
+	
+		
 //		//initialize task activities
 //		List <PmBusinessActivity>taskActivities = initialPmTaskActivities();
 //		
@@ -395,18 +422,14 @@ public class PlanBackingBean extends BaseBackingBean<PlanManagedBean>{
 //		}
 //
 //		
-//		//Default view
-//		this.getManagedBean().setSelectedPlanMaster(planMaster);
-//		this.getManagedBean().setSelectedPlan(plan);
-//		initialPlanRemark(plan);
-//	
-////		//avoid null TODO
-////		showPpItem(null);
-////		showPpPlan(null);
-//		
-//		
-//		log.info("cleanPlanDetails - End");
-//	}
+		//Default view
+		this.getManagedBean().setViewMode(ProcurementPlanConst.MODE_NEW);
+		this.getManagedBean().setOutComes(ProcurementPlanConst.BPM_DEFAULT_ACTIONS);
+		this.getManagedBean().setSelectedPlan(plan);
+		initialPlanRemark(plan);
+		
+		log.info("cleanPlanDetails - End");
+	}
 //
 //	
 //	/**
@@ -453,104 +476,116 @@ public class PlanBackingBean extends BaseBackingBean<PlanManagedBean>{
 //		log.info("changeProcurementMode - End");
 //    }
 //	
-//	
-//	/**
-//	 * determine availability of details tab
-//	 * @return result
-//	 */
-//	public boolean enableDetailTab(){
-//		log.info("enableDetailTab - Start");
-//		boolean result = false;
-//		this.getManagedBean().setDynamicDetailsName("");
-//		String procurementMode = this.getManagedBean().getSelectedPlanMaster().getProcurementMode();
-//		log.info("procurementMode: " + procurementMode);
+	
+	/**
+	 * determine availability of details tab
+	 * @return result
+	 */
+	public boolean enableDetailTab(){
+		log.info("enableDetailTab - Start");
+		boolean enableTab = false;
+		int selectedTab = 0;
+	
+		String planType = this.getManagedBean().getSelectedPlan().getPlanTypeParam().getParameterCode();
+		String procurementMode = this.getManagedBean().getSelectedPlan().getProcurementModeParam().getParameterCode();
+		log.info("planType " + planType);
+		log.info("procurementMode " + procurementMode);
+		if(ParameterConst.PLAN_TYPE_PROCUREMENT.equals(planType)){
+			selectedTab = ProcurementPlanConst.TAB_PROCUREMENT;
+			enableTab = true;
+			generateProcurementPlan();
+		}else if(ParameterConst.PLAN_TYPE_EXPENDITURE.equals(planType)){
+			if(ParameterConst.PROCUREMENT_MODE_DIRECT_PURCHASE.equals(procurementMode)){	
+				selectedTab = ProcurementPlanConst.TAB_DIRECT_PURCHASE;
+				enableTab = true;
+				generateDirectPurchase();
+			}else if(ParameterConst.PROCUREMENT_MODE_CONTRACT.equals(procurementMode)){
+				selectedTab = ProcurementPlanConst.TAB_CONTRACT;
+				enableTab = true;
+			}		
+		}
+		this.getManagedBean().setSelectedTab(selectedTab);
+		this.getManagedBean().setEnableTab(enableTab);
+		log.info("enableTab " + enableTab);
+		log.info("selectedTab " + selectedTab);
+		log.info("enableDetailTab - End");
+		return enableTab;
+	}
+	
+	private void generateDirectPurchase(){
+		log.info("generateDirectPurchase - Start");
+		if(this.getManagedBean().getSelectedPlan().isBrandNew()){	log.info("generateDirectPurchase - 11111");
+			this.getManagedBean().setSelectedPlanActivity(new PpPlanActivity());
+			this.getManagedBean().getSelectedPlanActivity().setEditable(true);
+			this.getManagedBean().getSelectedPlanActivity().setPpPlanItems(new ArrayList<PpPlanItem>());
+		}else{
+			
+		}
+		log.info("generateDirectPurchase - End");
+		
+	}
+	
+	private void generateProcurementPlan(){
+		log.info("generateProcurementPlan - Start");
+		if(this.getManagedBean().getSelectedPlan().isBrandNew()){
+			//initial QT activities list
+			if(this.getManagedBean().getSelectedPlan().getAllPpPlanActivities()==null){
+				this.getManagedBean().getSelectedPlan().setAllPpPlanActivities(new ArrayList<PpPlanActivity>());
+				initialPmTaskActivities();
+			}
+		}else{
+			
+		}
+		log.info("generateProcurementPlan - End");
+		
+	}
+	
+	public void addCommodity(){
+		//Initial item list if empty
+		PpPlanItem item = new PpPlanItem();
+		item.setEditable(true);
+		this.getManagedBean().getSelectedPlanActivity().addPpPlanItems(item);
+	}
 //
-//		if(CommonMethod.isSelected(this.getManagedBean().getSelectedPlanMaster().getPlanType())){
-//			if(ProcurementPlanConst.PROCUREMENT_QUOTATION.equals(procurementMode) || ProcurementPlanConst.PROCUREMENT_DIRECT_NEGO.equals(procurementMode)
-//					|| ProcurementPlanConst.PROCUREMENT_TENDER.equals(procurementMode)){
-//				this.getManagedBean().setDynamicDetailsName(ProcurementPlanConst.PP_DET);
-//				result = true;
-//			}else{
-//				if(this.getManagedBean().getSelectedPlanMaster().isBrandNew()){
-//					this.getManagedBean().setSelectedPlanItem(new PpPlan());
-//				}else{
-//					this.getManagedBean().setSelectedPlanItem(this.getManagedBean().getSelectedPlan());
-//				}
-//				
-//				if(ProcurementPlanConst.PROCUREMENT_EXISTING_CONTRACT.equals(procurementMode)){
-//					this.getManagedBean().setDynamicDetailsName(ProcurementPlanConst.EP_EXISTING_CONTRACT_DET);
-//					result = true;
-//				}else if(ProcurementPlanConst.PROCUREMENT_DIRECT_PURCHASE.equals(procurementMode)){
-//					this.getManagedBean().setDynamicDetailsName(ProcurementPlanConst.EP_DIRECT_PURCHASE_DET);
-////					if(this.getManagedBean().getSelectedPlanMaster().getPpPlans()==null){
-////						this.getManagedBean().getSelectedPlanMaster().setPpPlans(new ArrayList<PpPlan>());
-////					}
-//	//				this.getManagedBean().setSelectedPlanItem(new PpPlan());
-//					result = true;
-//				}	
-//			}
-//		}
-//		this.getManagedBean().setEnableDetail(result);
-//		log.info("result " + result);
-//		log.info("enableDetailTab - End");
-//		return result;
-//	}
 //
 //
-//	/**
-//	 * update current view and current objects when MTO is enabled
-//	 * @param val
-//	 */
-//	public void updateCurrentView(TabChangeEvent val){
-//		log.info("updateCurrentView - Start");
+//	public void tabChange(TabChangeEvent val){
+//		log.info("tabChange - Start");
 //		log.info("tab: " + val.getTab().getId());
-//		log.info(this.getManagedBean().getViewMode());
-//		try{
-//			this.getManagedBean().setSelectedTab(val.getTab().getId());
-//
-//			if(ProcurementPlanConst.CURRENT_PLAN.equals(val.getTab().getId())){	
-//				log.info("...tabP");
-//				//retrieve and set relevant plans
-//				ProcurementPlanSearchBean ppSearchBean = this.getManagedBean().getPpSearchPlan();
-//				ppSearchBean.clear();
-//				searchPlan();
-//			}else if(ProcurementPlanConst.CURRENT_NEW.equals(val.getTab().getId())){
-//				log.info("...tabN");
-//				this.getManagedBean().setCurrent(ProcurementPlanConst.CURRENT_NEW);
-//				this.getManagedBean().setSelectedPlanMaster(this.getManagedBean().getPlanMaster());
-//				this.getManagedBean().setSelectedPlan(this.getManagedBean().getPlan());
-//				
-//			}
-//		}catch(Exception e){
-//			FacesContext.getCurrentInstance().addMessage(null,new FacesMessage(FacesMessage.SEVERITY_ERROR, e.toString(),"Change tab failed."));
-//			e.printStackTrace();
+//		if("tPlan0".equals(val.getTab().getId())){
+//			this.getManagedBean().setSelectedTab(0);
+//		}else if("tPlan1".equals(val.getTab().getId())){
+//			this.getManagedBean().setSelectedTab(1);
+//		}else if("tPlan2".equals(val.getTab().getId())){
+//			this.getManagedBean().setSelectedTab(2);
+//		}else if("tPlan3".equals(val.getTab().getId())){
+//			this.getManagedBean().setSelectedTab(3);
 //		}
-//		
-//		log.info("updateCurrentView - End");
+//		log.info("tabChange - End");
 //	}
 //
 //
-///**
-//	 * initial remark on pp plan level
-//	 */
-//	public void initialPlanRemark(PpPlan plan){
-//		log.info("initialPlanRemark - Start");
-//		
-//		if(plan.getPpRemarks()==null){
-//			plan.setPpRemarks(new ArrayList<PpRemark>());
-//		}
-//
-//		PpRemark remark = new PpRemark();
-//		remark.setCreatedBy(getFacesScopes().getUserSessionBean().getUserId());
-//		remark.setCreatedByObj(getFacesScopes().getUserSessionBean());
-//		remark.setCreatedDate(new Timestamp(System.currentTimeMillis()));
-//		remark.setChangedBy(remark.getCreatedBy());
-//		remark.setChangedDate(remark.getCreatedDate());
-//		plan.addPpRemarks(remark);
-//
-//
-//		log.info("initialPlanRemark - End");
-//	}
+/**
+	 * initial remark on pp plan level
+	 */
+	public void initialPlanRemark(PpPlan plan){
+		log.info("initialPlanRemark - Start");
+		
+		if(plan.getPpRemarks()==null){
+			plan.setPpRemarks(new ArrayList<PpRemark>());
+		}
+
+		PpRemark remark = new PpRemark();
+		remark.setCreatedBy(getFacesScopes().getUserSessionBean().getUserId());
+		remark.setCreatedByObj(getFacesScopes().getUserSessionBean());
+		remark.setCreatedDate(new Timestamp(System.currentTimeMillis()));
+		remark.setChangedBy(remark.getCreatedBy());
+		remark.setChangedDate(remark.getCreatedDate());
+		plan.addPpRemarks(remark);
+
+
+		log.info("initialPlanRemark - End");
+	}
 //
 //	
 //	/**
@@ -781,14 +816,14 @@ public class PlanBackingBean extends BaseBackingBean<PlanManagedBean>{
 ////	
 ////
 ////	
-//	/**
-//	 * generate header for view based on the viewMode
-//	 * @param viewMode
-//	 * @return
-//	 */
-//	public String generateHeader(String viewMode){
-//		return CommonMethod.generateHeader(viewMode, ProcurementPlanConst.PROG_PLAN);
-//	}
+	/**
+	 * generate header for view based on the viewMode
+	 * @param viewMode
+	 * @return
+	 */
+	public String generateHeader(String viewMode){
+		return CommonMethod.generateHeader(viewMode, ProcurementPlanConst.PROG_PLAN);
+	}
 //	
 //	
 //	/**
@@ -850,28 +885,35 @@ public class PlanBackingBean extends BaseBackingBean<PlanManagedBean>{
 //	}
 //	
 //
-//	/**
-//	 * initial the default QT Activities
-//	 */
-//	public List <PmBusinessActivity> initialPmTaskActivities(){
-//		log.info("initialPmTaskActivities - Start");
-//		List <PmBusinessActivity> taskActivities =  new ArrayList<PmBusinessActivity>();
-//		try{
-//			ITaskActivitySO taskActSO = (ITaskActivitySO) BusinessDelegate.getInstance().getServiceObject("pm", ITaskActivitySO.class);
-//			TaskResDTO resDTO = taskActSO.retrieveActivityTaskList();
-////			if(resDTO.isSuccessful()){
-//				taskActivities = resDTO.getBusinessActivityList();
-////			}	
-//			
-//		}catch (Exception e){
-//			FacesContext.getCurrentInstance().addMessage(null,new FacesMessage(FacesMessage.SEVERITY_ERROR, e.toString(),"Load sourcing activity failed."));
-//			e.printStackTrace();
-//			
-//		}
-//		log.info("initialPmTaskActivities - End");
-//		return taskActivities;
-//	
-//	}
+	/**
+	 * initial the default QT Activities
+	 */
+	public List <PmBusinessActivity> initialPmTaskActivities(){
+		log.info("initialPmTaskActivities - Start");
+		List <PmBusinessActivity> taskActivities =  new ArrayList<PmBusinessActivity>();
+		try{
+			
+			ITaskActivitySO taskActSO = (ITaskActivitySO) BusinessDelegate.getInstance().getServiceObject("pm", ITaskActivitySO.class);
+			TaskResDTO resDTO = taskActSO.retrieveActivityTaskList();
+//			if(resDTO.isSuccessful()){
+				taskActivities = resDTO.getBusinessActivityList();
+//			}
+			for(PmBusinessActivity task: taskActivities){
+				PpPlanActivity activity = new PpPlanActivity();
+				activity.setPmBusinessActivity(task);
+				this.getManagedBean().getSelectedPlan().addAllPpPlanActivities(activity);
+			}
+	
+	
+		}catch (Exception e){
+			FacesContext.getCurrentInstance().addMessage(null,new FacesMessage(FacesMessage.SEVERITY_ERROR, e.toString(),"Fail to retrieve sourcing activity."));
+			e.printStackTrace();
+			
+		}
+		log.info("initialPmTaskActivities - End");
+		return taskActivities;
+	
+	}
 //
 //	/**
 //	 * update local budget alloc dtl while GOSODO is selected
@@ -1019,59 +1061,96 @@ public class PlanBackingBean extends BaseBackingBean<PlanManagedBean>{
 //	
 	/**
 	 * retrieve plan type options
-	 * @return List<SelectItem>
+	 * @return SelectItem[]
 	 */
-	public List<SelectItem> planTypeOptions() {
-		List<SelectItem>options = new ArrayList<SelectItem>();
-		options.add(new SelectItem(ProcurementPlanConst.PLAN_TYPE_PROCUREMENT, "Procurement"));
-		options.add(new SelectItem(ProcurementPlanConst.PLAN_TYPE_EXPENDITURE, "Expenditure"));
-		return options;
+	public SelectItem[] planTypeOptions() {
+		log.info("procurementModeOptions");
+		return getDropdownValues(ParameterTypeConst.PLAN_TYPE);
 	}
+	
+	public void selectedPlanTypeParam(Long id){
+		if(id!=null && id>0L){
+			this.getManagedBean().getSelectedPlan().setPlanTypeParam(retrieveParamObj(id));
+		}
+		enableDetailTab();
+	}
+	
+	public void selectedProcurementModeParam(Long id){
+		if(id!=null && id>0L){
+			this.getManagedBean().getSelectedPlan().setProcurementModeParam(retrieveParamObj(id));
+		}
+		enableDetailTab();
+	}
+	
 	
 	
 	/**
 	 * retrieve procurement mode options
-	 * @return List<SelectItem>
+	 * @return SelectItem[]
 	 */
-	public List<SelectItem> procurementModeOptions(String type) {
-		List<SelectItem>options = new ArrayList<SelectItem>();
-		if(type!=null){
-			if(ProcurementPlanConst.PLAN_TYPE_EXPENDITURE.equals(type)){
-				options.add(new SelectItem(ProcurementPlanConst.PROCUREMENT_EXISTING_CONTRACT, "Contract"));
-				options.add(new SelectItem(ProcurementPlanConst.PROCUREMENT_DIRECT_PURCHASE, "Direct Purchase"));
-			}else if(ProcurementPlanConst.PLAN_TYPE_PROCUREMENT.equals(type)){
-				options.add(new SelectItem(ProcurementPlanConst.PROCUREMENT_QUOTATION, "Quotation"));
-				options.add(new SelectItem(ProcurementPlanConst.PROCUREMENT_DIRECT_NEGO, "Direct Negotiation"));
-				options.add(new SelectItem(ProcurementPlanConst.PROCUREMENT_TENDER, "Tender"));
+	public SelectItem[] procurementModeOptions(String planType) {
+		log.info("procurementModeOptions");
+		SelectItem[] options = null;
+
+		if(planType!=null && !planType.isEmpty()){
+			log.info("00");
+			if(ParameterConst.PLAN_TYPE_EXPENDITURE.equals(planType)){
+				log.info("ep");
+				options = getDropdownValues(ParameterTypeConst.PROCUREMENT_MODE_EXPENDITURE);
+			}else if(ParameterConst.PLAN_TYPE_PROCUREMENT.equals(planType)){
+				log.info("pp");
+				options = getDropdownValues(ParameterTypeConst.SC_PROCUREMENT_MODE);
 			}
+			
+		}else{
+			log.info("nn");
+			options = new SelectItem[1];
+			options[0] =  new SelectItem(null, "- Select One -");
 		}
 		return options;
 	}
-//	
-//
-//	/**
-//	 * retrieve qt type options
-//	 * @return List<SelectItem>
-//	 */
-//	public List<SelectItem> qtTypeOptions() {
+
+	/**
+	 * retrieve qt type options
+	 * @return SelectItem[]
+	 */
+	public SelectItem[] qtTypeOptions() {
 //		List<SelectItem>options = new ArrayList<SelectItem>();
 //		options.add(new SelectItem(ProcurementPlanConst.QT_TYPE_OPEN, "Open"));
 //		options.add(new SelectItem(ProcurementPlanConst.QT_TYPE_RESTRICTED, "Restricted"));
 //		options.add(new SelectItem(ProcurementPlanConst.QT_TYPE_INTERNATIONAL, "International"));
-//		return options;
-//	}
+		return getDropdownValues(ParameterTypeConst.QUOTATION_TENDER_TYPE);
+	}
 //	
-//	/**
-//	 * retrieve item origin type options
-//	 * @return List<SelectItem>
-//	 */
-//	public List<SelectItem> itemOriginTypeOptions() {
+	/**
+	 * retrieve item origin type options
+	 * @return SelectItem[]
+	 */
+	public SelectItem[] itemOriginTypeOptions() {
 //		List<SelectItem>options = new ArrayList<SelectItem>();
 //		options.add(new SelectItem(ProcurementPlanConst.ITEM_ORIGIN_TYPE_IMPORTED, "Imported"));
 //		options.add(new SelectItem(ProcurementPlanConst.ITEM_ORIGIN_TYPE_LOCAL, "Local"));
 //		options.add(new SelectItem(ProcurementPlanConst.ITEM_ORIGIN_TYPE_BOTH, "Imported & Local"));
-//		return options;
-//	}
+		return getDropdownValues(ParameterTypeConst.ITEM_ORIGIN);
+	}
+	
+	
+	public PmParameter retrieveParamObj(Long paramId){
+		PmParameter paramObj = new PmParameter();
+		try{
+//			if(paramId!=null && paramId>0L){
+				ParameterReqDTO reqDTO = new ParameterReqDTO();
+				reqDTO.setParameterId(paramId);
+				IParameterSO parameterSO = BusinessDelegate.getInstance().getServiceObject("pm", IParameterSO.class);
+				ParameterResDTO resDTO = parameterSO.retrieveParameterById(reqDTO);
+				paramObj = resDTO.getPmParameter();
+//			}
+		}catch(Exception e){
+			e.printStackTrace();
+		}
+		return paramObj;
+		
+	}
 //	
 //	/**
 //	 * retrieve verification level options
@@ -1109,28 +1188,28 @@ public class PlanBackingBean extends BaseBackingBean<PlanManagedBean>{
 //		return options;
 //	}
 //	
-//	/**
-//	 * retrieve all short month e.g Jul
-//	 * @return List<SelectItem>
-//	 */
-//	public List<SelectItem> shortMonths() {
-//		return CommonMethod.calendarMonths();
-//	}
-//
-//	/**
-//	 * vot type options
-//	 * @return
-//	 */
-//	public List<SelectItem> votTypeOptions() {
-//		log.info("votTypeOptions");
+	/**
+	 * retrieve all short month e.g Jul
+	 * @return List<SelectItem>
+	 */
+	public List<SelectItem> shortMonths() {
+		return CommonMethod.calendarMonths();
+	}
+
+	/**
+	 * vot type options
+	 * @return  SelectItem[]
+	 */
+	public SelectItem[] votTypeOptions() {
+		log.info("votTypeOptions");
 //		List<SelectItem>options = new ArrayList<SelectItem>();
-//		options.add(new SelectItem(ProcurementPlanConst.VOT_B, "Mengurus"));
-//		options.add(new SelectItem(ProcurementPlanConst.VOT_T, "Tanggungan"));
-//		options.add(new SelectItem(ProcurementPlanConst.VOT_P, "Pembangunan"));
-//		options.add(new SelectItem(ProcurementPlanConst.VOT_S, "Setia"));
-//		options.add(new SelectItem(ProcurementPlanConst.VOT_AMANAH, "Amanah"));
-//		return options;
-//	}
+//		options.add(new SelectItem(1L, "Mengurus"));
+//		options.add(new SelectItem(1L, "Tanggungan"));
+//		options.add(new SelectItem(1L, "Pembangunan"));
+//		options.add(new SelectItem(1L, "Setia"));
+//		options.add(new SelectItem(1L, "Amanah"));
+		return getDropdownValues(ParameterTypeConst.VOT_TYPE);
+	}
 //	
 //	/**
 //	 * retrieve financial year options for current year & current year +1
@@ -1360,86 +1439,86 @@ public class PlanBackingBean extends BaseBackingBean<PlanManagedBean>{
 //		
 //	}
 //	
-//
-//	/**
-//	 * retrieve unspsc class list from CM
-//	 * @param family code
-//	 * @return List<CmUnspsc> 
-//	 */
-//	public List<CmUnspsc> unspscClassOptions(String code){
-//		log.info("unspscClassOptions - Start");
-////		String code = this.getManagedBean().getSelectedItem().getUnspscFamilyCode();
-//		List<CmUnspsc> options = new ArrayList<CmUnspsc>();
-//		try{
-//			if(CommonMethod.isSelected(code)){
-//				CodificationReqDTO reqDTO = new CodificationReqDTO();
-//				reqDTO.setParentCode(code);
-//				ICodificationSO reqSO = (ICodificationSO) BusinessDelegate.getInstance().getServiceObject("cm", ICodificationSO.class);
-//				CodificationResDTO resDTO = reqSO.searchClass(reqDTO);
-//				if(resDTO.isSuccessful()){
-//					options = resDTO.getClassList();
-//				}
-//				log.info("result size: " +options.size());
-//			}
-//		}catch (Exception e){
-//			e.printStackTrace();
-//			
-//		}
-//		log.info("unspscClassOptions - End");
-//		return options;
-//	}
+
+	/**
+	 * retrieve unspsc class list from CM
+	 * @param family code
+	 * @return List<CmUnspsc> 
+	 */
+	public List<CmUnspsc> unspscClassOptions(String code){
+		log.info("unspscClassOptions - Start");
+//		String code = this.getManagedBean().getSelectedItem().getUnspscFamilyCode();
+		List<CmUnspsc> options = new ArrayList<CmUnspsc>();
+		try{
+			if(CommonMethod.isSelected(code)){
+				CodificationReqDTO reqDTO = new CodificationReqDTO();
+				reqDTO.setParentCode(code);
+				ICodificationSO reqSO = (ICodificationSO) BusinessDelegate.getInstance().getServiceObject("cm", ICodificationSO.class);
+				CodificationResDTO resDTO = reqSO.searchClass(reqDTO);
+				if(resDTO.isSuccessful()){
+					options = resDTO.getClassList();
+				}
+				log.info("result size: " +options.size());
+			}
+		}catch (Exception e){
+			e.printStackTrace();
+			
+		}
+		log.info("unspscClassOptions - End");
+		return options;
+	}
 //	
-//	/**
-//	 * retrieve unspsc family list from CM
-//	 * @param segment code
-//	 * @return List<CmUnspsc> 
-//	 */
-//	public List<CmUnspsc> unspscFamilyOptions(String code){
-//		log.info("unspscFamilyOptions - Start");
-//	
-//		List<CmUnspsc> options = new ArrayList<CmUnspsc>();
-//		try{
-//			if(CommonMethod.isSelected(code)){
-//				CodificationReqDTO reqDTO = new CodificationReqDTO();
-//				reqDTO.setParentCode(code);
-//				ICodificationSO reqSO = (ICodificationSO) BusinessDelegate.getInstance().getServiceObject("cm", ICodificationSO.class);
-//				CodificationResDTO resDTO = reqSO.searchFamily(reqDTO);
-//				if(resDTO.isSuccessful()){
-//					options = resDTO.getFamilyList();
-//				}
-//				log.info("result size: " +options.size());
-//			}
-//		}catch (Exception e){
-//			e.printStackTrace();
-//			
-//		}
-//		log.info("unspscFamilyOptions - End");
-//		return options;
-//	}
-//	
-//	/**
-//	 * retrieve unspsc segment list from CM
-//	 * @return List<CmUnspsc> 
-//	 */
-//	public List<CmUnspsc> unspscSegmentOptions(){
-//		log.info("unspscSegmentOptions - Start");
-//		List<CmUnspsc> options = new ArrayList<CmUnspsc>();
-//		try{
-//			CodificationReqDTO reqDTO = new CodificationReqDTO();
-//			ICodificationSO reqSO = (ICodificationSO) BusinessDelegate.getInstance().getServiceObject("cm", ICodificationSO.class);
-//			CodificationResDTO resDTO = reqSO.searchSegment(reqDTO);
-//			if(resDTO.isSuccessful()){
-//				options = resDTO.getSegmentList();
-//			}
-//			log.info("result size: " +options.size());
-//			
-//		}catch (Exception e){
-//			e.printStackTrace();
-//			
-//		}
-//		log.info("unspscSegmentOptions - End");
-//		return options;
-//	}
+	/**
+	 * retrieve unspsc family list from CM
+	 * @param segment code
+	 * @return List<CmUnspsc> 
+	 */
+	public List<CmUnspsc> unspscFamilyOptions(String code){
+		log.info("unspscFamilyOptions - Start");
+	
+		List<CmUnspsc> options = new ArrayList<CmUnspsc>();
+		try{
+			if(CommonMethod.isSelected(code)){
+				CodificationReqDTO reqDTO = new CodificationReqDTO();
+				reqDTO.setParentCode(code);
+				ICodificationSO reqSO = (ICodificationSO) BusinessDelegate.getInstance().getServiceObject("cm", ICodificationSO.class);
+				CodificationResDTO resDTO = reqSO.searchFamily(reqDTO);
+				if(resDTO.isSuccessful()){
+					options = resDTO.getFamilyList();
+				}
+				log.info("result size: " +options.size());
+			}
+		}catch (Exception e){
+			e.printStackTrace();
+			
+		}
+		log.info("unspscFamilyOptions - End");
+		return options;
+	}
+	
+	/**
+	 * retrieve unspsc segment list from CM
+	 * @return List<CmUnspsc> 
+	 */
+	public List<CmUnspsc> unspscSegmentOptions(){
+		log.info("unspscSegmentOptions - Start");
+		List<CmUnspsc> options = new ArrayList<CmUnspsc>();
+		try{
+			CodificationReqDTO reqDTO = new CodificationReqDTO();
+			ICodificationSO reqSO = (ICodificationSO) BusinessDelegate.getInstance().getServiceObject("cm", ICodificationSO.class);
+			CodificationResDTO resDTO = reqSO.searchSegment(reqDTO);
+			if(resDTO.isSuccessful()){
+				options = resDTO.getSegmentList();
+			}
+			log.info("result size: " +options.size());
+			
+		}catch (Exception e){
+			e.printStackTrace();
+			
+		}
+		log.info("unspscSegmentOptions - End");
+		return options;
+	}
 //	
 //	/**
 //	 * retrieve rejection reason
@@ -1660,47 +1739,47 @@ public class PlanBackingBean extends BaseBackingBean<PlanManagedBean>{
 //	}
 //	
 //	
-//	public List<PmUser> userRole(String roleType) throws Exception{
-//		log.info("userWithRoleOptions - Start");
-//		log.info("roleType: " + roleType);
-//		if(roleType.equals(ProcurementPlanConst.SUBMIT_APPROVAL)){
-//			return userWithRoleOptions(RoleCode.PLAN_APPROVER.value());
-//		}else if(roleType.equals(ProcurementPlanConst.SUBMIT_VERIFICATION)){
-//			return userWithRoleOptions(RoleCode.PLAN_VERFICATION_OFFICER.value());
-//		}
-//		log.info("userWithRoleOptions - End");
-//		return null;
-//		
-//	}
-//	/**
-//	 * retrieve user list by role
-//	 * @param roleCode
-//	 * @return List<PmUser>
-//	 */
-//	public List<PmUser> userWithRoleOptions(String roleCode){
-//		log.info("userWithRoleOptions - Start");
-//		List<PmUser> options = new ArrayList<PmUser>();
-//		try{
-//			if(CommonMethod.isSelected(roleCode)){
-//				UserReqDTO reqDTO = new UserReqDTO();
-//				reqDTO.setRoleCode(roleCode);
-//				IUserSO reqSO = (IUserSO) BusinessDelegate.getInstance().getServiceObject("pm", IUserSO.class);
-//				UserResDTO resDTO = reqSO.retrieveUserListByRole(reqDTO);
-////				if(resDTO.isSuccessful()){
-//					options = resDTO.getUserList();
-////				}
-//				log.info("result size: " +options.size());
-//			}
-//		}catch (Exception e){
-//			FacesContext.getCurrentInstance().addMessage(null,new FacesMessage(
-//					FacesMessage.SEVERITY_ERROR, e.toString(),"Role "+roleCode));
-//			throw e;
-//			
-//		}
-//		log.info("userWithRoleOptions - End");
-//		return options;
-//	}
-//
+	public List<PmUser> generateApprovers() throws Exception{
+		log.info("generateApprovers ");
+		return userWithRoleOptions(RoleCode.PLAN_APPROVER.value());
+	}
+	
+	public void generateVerificationOfficers() throws Exception{
+		List<PmUser> source = new ArrayList<PmUser>(); 
+        List<PmUser> target = new ArrayList<PmUser>(); 
+        source = userWithRoleOptions(RoleCode.PLAN_VERFICATION_OFFICER.value());
+		this.getManagedBean().setUsers(new DualListModel<PmUser>(source, target));  
+	}
+	/**
+	 * retrieve user list by role
+	 * @param roleCode
+	 * @return List<PmUser>
+	 */
+	public List<PmUser> userWithRoleOptions(String roleCode){
+		log.info("userWithRoleOptions - Start");
+		List<PmUser> options = new ArrayList<PmUser>();
+		try{
+			if(CommonMethod.isSelected(roleCode)){
+				UserReqDTO reqDTO = new UserReqDTO();
+				reqDTO.setRoleCode(roleCode);
+				IUserSO reqSO = (IUserSO) BusinessDelegate.getInstance().getServiceObject("pm", IUserSO.class);
+				UserResDTO resDTO = reqSO.retrieveUserListByRole(reqDTO);
+//				if(resDTO.isSuccessful()){
+					options = resDTO.getUserList();
+//				}
+				log.info("result size: " +options.size());
+			}
+		}catch (Exception e){
+			FacesContext.getCurrentInstance().addMessage(null,new FacesMessage(
+					FacesMessage.SEVERITY_ERROR, e.toString(),"Role "+roleCode));
+			throw e;
+			
+		}
+		log.info("userWithRoleOptions - End");
+		return options;
+	}
+
+
 //	
 //	
 //	/**
@@ -1991,9 +2070,7 @@ public class PlanBackingBean extends BaseBackingBean<PlanManagedBean>{
 //		
 //	}
 	
-	private PmOrgProfile getCurrentUser(){
-		return this.getManagedBean().getCurrentUser();
-	}
+
 
 	/**
 	 * pre-render view for plan list
@@ -2162,32 +2239,28 @@ public class PlanBackingBean extends BaseBackingBean<PlanManagedBean>{
 			if (log.isDebugEnabled()) {
 				log.debug("pageChangeListener");
 			}
-			/*if (super.getWrappedData() != null) {
-				SearchResultBean<PpBudget> resultBean = new SearchResultBean<PpBudget>();
-				resultBean.setResultList((List<PpBudget>)super.getWrappedData());
-				resultBean.setTotalRecord(super.getRowCount());
-				
-				return resultBean;
-			}*/
+
 			
 			try {				
 				
 
 				BudgetAllocationReqDTO reqDTO = new BudgetAllocationReqDTO();
 				
-				searchBean.getDataFilterBeans().add(new SearchFilterBean(
-						"ppBudgetAlloc.ptjOrgProfile.orgProfileId", 
-						SearchOperator.OPERATOR_EQUALS.value(), 
-						getCurrentUser().getOrgProfileId()));
-				reqDTO.setBudgetAllocDtlSearchBean(searchBean);	
+//				searchBean.getDataFilterBeans().add(new SearchFilterBean(
+//						"ppBudgetAlloc.ptjOrgProfile.orgProfileId", 
+//						SearchOperator.OPERATOR_EQUALS.value(), 
+//						getManagedBean().getCurrentProfiles()));
+//				reqDTO.setBudgetAllocDtlSearchBean(searchBean);	
 				
-	
-				IBudgetAllocationSO reqSO = (IBudgetAllocationSO) BusinessDelegate.getInstance().getServiceObject(ProcurementPlanConst.SO_PP, IBudgetAllocationSO.class);
-				BudgetAllocationResDTO resDTO = reqSO.retrieveBudgetAllocDtlSearchBean(reqDTO);
+
+//				
+//	
+//				IBudgetAllocationSO reqSO = (IBudgetAllocationSO) BusinessDelegate.getInstance().getServiceObject(ProcurementPlanConst.SO_PP, IBudgetAllocationSO.class);
+//				BudgetAllocationResDTO resDTO = reqSO.retrieveBudgetAllocDtlSearchBean(reqDTO);
 				
-				if (resDTO.isSuccessful()) {
-					return resDTO.getBudgetAllocDtlResultBean();
-				}
+//				if (resDTO.isSuccessful()) {
+//					return resDTO.getBudgetAllocDtlResultBean();
+//				}
 			} catch (Exception e) {
 				e.printStackTrace();
 			}

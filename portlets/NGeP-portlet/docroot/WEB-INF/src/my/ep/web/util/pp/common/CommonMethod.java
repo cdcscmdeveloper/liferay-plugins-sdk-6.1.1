@@ -5,22 +5,21 @@ package my.ep.web.util.pp.common;
 
 import java.math.BigDecimal;
 import java.text.DateFormatSymbols;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Date;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import javax.faces.model.SelectItem;
 
 import my.ep.biz.service.pm.authorization.orgprofile.IOrgProfileSO;
+import my.ep.constant.pm.ParameterConst;
 import my.ep.dto.pm.authorization.orgprofile.OrgProfileReqDTO;
 import my.ep.dto.pm.authorization.orgprofile.OrgProfileResDTO;
 import my.ep.persistence.entity.pm.authorization.PmOrgProfile;
 import my.ep.persistence.entity.pm.common.PmStatus;
-import my.ep.persistence.entity.pp.PpWorkflowStatus;
 import my.ep.web.constant.pp.ProcurementPlanConst;
 import my.ep.web.util.FacesScopes;
 import my.ep.web.util.ResourceBundleUtils;
@@ -226,6 +225,43 @@ public class CommonMethod {
 		return ppWorkflowStatus;
 	}
 	
+	
+	
+
+
+	public Integer getMonthInt(Date date) {
+		if(date!=null){
+			Calendar cal = Calendar.getInstance();
+			cal.setTime(date);
+			return cal.get(Calendar.MONTH);
+		}else{
+			return null;
+		}
+	}
+	
+	public String getMonthString(Date date) {
+		if(date!=null){
+			SimpleDateFormat formatter = new SimpleDateFormat("MMM yyyy"); 
+			return formatter.format(date);
+		}else{
+			return null;
+		}
+	}
+	
+
+
+	public Date convertIntMonthToDate(Integer planStartMonth) {
+		if(planStartMonth!=null && planStartMonth<12){
+			Calendar cal = Calendar.getInstance();
+			cal.set(cal.get(Calendar.YEAR), (planStartMonth), cal.get(Calendar.DATE));
+			return cal.getTime();
+		}else{
+			return null;
+		}
+	}
+	
+	
+	
 	/**
 	 * generate plan number 
 	 * @param planType
@@ -279,13 +315,13 @@ public class CommonMethod {
 		if(isPlan){
 			//plan prefix
 			if(isPlanned){
-				if(ProcurementPlanConst.PLAN_TYPE_EXPENDITURE.equals(planType)){
+				if(ParameterConst.PLAN_TYPE_EXPENDITURE.equals(planType)){
 					sb.append("pe");
 				}else{
 					sb.append("pp");
 				}
 			}else{
-				if(ProcurementPlanConst.PLAN_TYPE_EXPENDITURE.equals(planType)){
+				if(ParameterConst.PLAN_TYPE_EXPENDITURE.equals(planType)){
 					sb.append("ue");
 				}else{
 					sb.append("up");
