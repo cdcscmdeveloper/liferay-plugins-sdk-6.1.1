@@ -13,7 +13,7 @@
 			</h:column>
 			<h:column>
 			 <c:if test="#{qTDetailBB.managedBean.qt.brandNew}">
-				<p:selectOneMenu value="#{qTDetailBB.managedBean.qt.qtType}">
+				<p:selectOneMenu value="#{qTDetailBB.managedBean.qt.qtType}" style="width: 178px;margin-bottom: 5px;">
 					<f:selectItems value="#{qTDetailBB.getDropdownCodeValues(PmCodeCatConst.quotationTenderType)}" />
 				<p:ajax event="change" partialSubmit="true" process="@this" update="approvalWorkFlow, suppQualPG" listener="#{qTDetailBB.onChangeAction}"/>
 			
@@ -22,7 +22,7 @@
 				<c:if test="#{!qTDetailBB.managedBean.qt.brandNew}">
             		<p:inputText 
             			value="#{qTDetailBB.managedBean.qt.qtType}"
-            			disabled="true"/>
+            			disabled="true" size="30" />
             			</c:if>
 			</h:column>
 			<h:column>
@@ -30,7 +30,7 @@
 			</h:column>
 			<h:column>
 			    <c:if test="#{qTDetailBB.managedBean.qt.brandNew}">
-				<p:selectOneMenu value="#{qTDetailBB.managedBean.qt.itemOrigin}" style="margin-bottom:5px;">
+				<p:selectOneMenu value="#{qTDetailBB.managedBean.qt.itemOrigin}" style="width: 178px;margin-bottom: 5px;">
 					<f:selectItems value="#{qTDetailBB.getDropdownCodeValues(PmCodeCatConst.itemOrigin)}" />
 				<p:ajax event="change" partialSubmit="true" process="@this" update="approvalWorkFlow" listener="#{qTDetailBB.onChangeAction}"/>
 			
@@ -39,7 +39,7 @@
 				<c:if test="#{!qTDetailBB.managedBean.qt.brandNew}">
             		<p:inputText 
             			value="#{qTDetailBB.managedBean.qt.itemOrigin}" 
-            			disabled="true"/>
+            			disabled="true" size="30"/>
             			</c:if>
 			</h:column>
 			<h:column>
@@ -47,7 +47,7 @@
 			</h:column>
 			<h:column>
 			     <c:if test="#{qTDetailBB.managedBean.qt.brandNew}">
-				<p:selectOneMenu value="#{qTDetailBB.managedBean.qt.itemType}">
+				<p:selectOneMenu value="#{qTDetailBB.managedBean.qt.itemType}" style="width: 178px;margin-bottom: 5px;">
 					<f:selectItems value="#{qTDetailBB.getDropdownCodeValues(PmCodeCatConst.scItemType)}" />
 				<p:ajax event="change" partialSubmit="true" process="@this" update="approvalWorkFlow" listener="#{qTDetailBB.onChangeAction}"/>
 			
@@ -56,31 +56,25 @@
 				 <c:if test="#{!qTDetailBB.managedBean.qt.brandNew}">
             		<p:inputText 
             			value="#{qTDetailBB.managedBean.qt.itemType}" 
-            			disabled="true"/>
+            			disabled="true" size="30" />
             	</c:if>
+			</h:column>
+			<h:column><h:outputLabel value="#{lbl['lbl.so.rfp']}" /></h:column>
+			<h:column><p:inputText id="rfpType"
+					value="" disabled="true" size="30" /></h:column>
+			<h:column>
+				<h:outputLabel value="#{lbl['lbl.so.mto']}" />
+			</h:column>
+			<h:column>
+				<p:inputText id="MTO" value="#{qTDetailBB.managedBean.qt.mto ? 'Yes' : 'No'}"
+					disabled="true" size="30" />
 			</h:column>
 			<h:column>
 				<h:outputLabel value="#{lbl['lbl.so.asqttype']}" />
 			</h:column>
 			<h:column>
 				<p:inputText id="AsnTenderNo"
-					value="#{qTDetailBB.managedBean.qt.qtNo}" disabled="true" />
-			</h:column>
-			<h:column>
-				<h:outputLabel value="#{lbl['lbl.so.mto']}" />
-			</h:column>
-			<h:column>
-				<p:inputText id="MTO" value="#{qTDetailBB.managedBean.qt.mto ? 'Yes' : 'No'}"
-					disabled="true" />
-			</h:column>
-			<h:column>
-				<h:outputLabel value="* #{lbl['lbl.so.rfp']}" />
-			</h:column>
-			<h:column>
-				<p:selectOneRadio id="rfpType" value="#{qTDetailBB.managedBean.qt.rfp}" disabled="#{!qTDetailBB.managedBean.editable}">
-					<f:selectItem itemLabel="Yes" itemValue="true" />
-					<f:selectItem itemLabel="No" itemValue="false" />
-				</p:selectOneRadio>
+					value="#{qTDetailBB.managedBean.qt.qtNo}" disabled="true" size="30" />
 			</h:column>
 			<h:column>
 				<h:outputLabel 
@@ -88,21 +82,21 @@
 			</h:column>
 			<h:column>
 				<p:inputText id="validityperiod"
-					value="#{qTDetailBB.managedBean.qt.qtValidityPeriod}" disabled="#{!qTDetailBB.managedBean.editable}"/>
+					value="#{qTDetailBB.managedBean.qt.qtValidityPeriod}" disabled="#{!qTDetailBB.managedBean.editable}" size="30"/>
 			</h:column>
 			<h:column>
 				<h:outputLabel value="* #{lbl['lbl.so.resrules']}"  />
 			</h:column>
 			<h:column>
 			   <c:if test="#{qTDetailBB.managedBean.qt.brandNew}">
-				<p:selectOneMenu value="#{qTDetailBB.managedBean.qt.responseRule}" style="width:220px;">
+				<p:selectOneMenu value="#{qTDetailBB.managedBean.qt.responseRule}" style="width: 178px;margin-bottom: 5px;">
 					<f:selectItems value="#{qTDetailBB.getDropdownCodeValues(PmCodeCatConst.responseRulesByItem)}" />
 				</p:selectOneMenu>
 			    </c:if>
 			     <c:if test="#{!qTDetailBB.managedBean.qt.brandNew}">
             		<p:inputText 
             			value="#{qTDetailBB.managedBean.qt.responseRule}" 
-            			disabled="true"/>
+            			disabled="true" size="30" />
             	</c:if>
 			</h:column>
 			
