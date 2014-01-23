@@ -10,16 +10,13 @@
 	<style>
       .column-align-center { text-align: center !important;}
     </style>
-    <c:if test='#{contractDetailsBackingBean.managedBean.chkRenderPage eq  "BPM"}'>
-     <f:event listener="#{contractDetailsBackingBean.preRenderView}" type="preRenderView" />
-	</c:if>
-   
+      <f:event listener="#{suspensionBackingBean.preRenderView}" type="preRenderView" />
 	<p:panel>
 	<p:messages id="messages" showDetail="true" autoUpdate="true" closable="true" severity="error, info" />
 	 <div class="ppRightBtn"> 
-	  			<ui:repeat var="outcome" value="#{contractDetailsBackingBean.managedBean.action}">
-					<p:commandButton value="#{outcome}" process="@this" styleClass="ui-button" action="#{contractDetailsBackingBean.saveContract(outcome)}" />
-				</ui:repeat>		
+	  	<ui:repeat var="outcome" value="#{suspensionBackingBean.managedBean.action}">
+		   <p:commandButton value="#{outcome}" process="@form" styleClass="ui-button" action="#{suspensionBackingBean.saveContractSuspension(outcome)}" />
+		</ui:repeat>		
     </div>
 	</p:panel>
 	 <p:tabView id="tabview" orientation="left" dynamic="true">
@@ -33,12 +30,5 @@
            <ui:include src="suspensionLetter.xhtml"/>
        </p:tab> 
 	</p:tabView>
-	<script type="text/javascript"> 
-	    function handleTabShow(tab) {
-	    if (tab.index() == 4) {
-	        editorWidgetVar.init();
-	    }
-	}
-	</script>
     </ui:define>
 </ui:composition>

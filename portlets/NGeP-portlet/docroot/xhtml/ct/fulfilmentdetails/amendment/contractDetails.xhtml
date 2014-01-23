@@ -12,7 +12,7 @@
 			<p:inputText value="#{amendmentBackingBean.managedBean.contractVer.ctContractValue.contractPhysicalNo}" style="width:170px;" disabled="true"/>				
 			<h:panelGrid columns="3">
 				<p:selectBooleanCheckbox
-					value="false" disabled="false" />
+					value="#{amendmentBackingBean.managedBean.contractVer.ctContractValue.concession}" disabled="false" />
 				<p:spacer width="2" />
 				<p:outputLabel value="Concession" />
 			</h:panelGrid>
