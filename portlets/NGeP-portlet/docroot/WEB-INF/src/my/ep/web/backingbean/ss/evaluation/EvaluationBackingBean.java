@@ -490,7 +490,7 @@ public class EvaluationBackingBean extends
 					 */
 					ScQtProposalLabel label = new ScQtProposalLabel();
 					label.setProposalLabelId(new Long(checklistEvaluation
-							.getProposalLabel().getLabelNumber()));
+							.getProposalLabel().getProposalLabelId()));
 					specreqDTO.setQtId(146L);
 					resDTO = specSO.retrieveSpecDetails(specreqDTO);
 					checklistEvaluation.setEvaluationResult(evalResult);
