@@ -26,32 +26,32 @@
 		</p:panel>
 		<p:panel header="#{lbl['lbl.sc.loiloa.recom.supp.list']}"
 			toggleable="false">
-			<p:dataTable id="list" var="proposalRankingList"
-				value="#{loiLoaDetailBackingBean.managedBean.scQtProposalRankingList}"
+			<p:dataTable id="list" var="evaluationResultList"
+				value="#{loiLoaDetailBackingBean.managedBean.scQtEvaluationResultList}"
 				rows="10" rowIndexVar="rowIndex">
 
 				<p:column headerText="#{lbl['lbl.sc.loiloa.supp.name']}"
 					style="width:40%">
 					<h:outputText
-						value="#{proposalRankingList.scQtProposalEvaluate.scQtProposal.scQtSupplier.smSupplier.supplierName}" />
+						value="#{evaluationResultList.scQtProposal.scQtSupplier.smSupplier.companyName}" />
 				</p:column>
 
 				<p:column headerText="#{lbl['lbl.sc.loiloa.loi.status']}"
 					style="width:20%">
-					<h:outputText value="#{proposalRankingList.scLoi.pmStatus.pmStatusDescs[0].statusName}" />
+					<h:outputText value="#{evaluationResultList.loi.pmStatus.pmStatusDescs[0].statusName}" />
 				</p:column>
 
 				<p:column headerText="#{lbl['lbl.sc.loiloa.loa.status']}"
 					style="width:20%">
-					<h:outputText value="#{proposalRankingList.scLoa.pmStatus.pmStatusDescs[0].statusName}" />
+					<h:outputText value="#{evaluationResultList.loa.pmStatus.pmStatusDescs[0].statusName}" />
 				</p:column>
 
 				<p:column headerText="#{lbl['lbl.sc.loiloa.action']}"
 					style="width:20%">
 					<p:commandButton value="#{lbl['lbl.sc.loiloa.loi']}"
-						action="#{lOIDetailBackingBean.createLOIAction(proposalRankingList, doctype)}" />
+						action="#{lOIDetailBackingBean.createLOIAction(evaluationResultList, doctype)}" />
 					<p:commandButton value="#{lbl['lbl.sc.loiloa.loa']}"
-						action="#{lOADetailBackingBean.createLOAAction(proposalRankingList, doctype)}" />
+						action="#{lOADetailBackingBean.createLOAAction(evaluationResultList, doctype)}" />
 				</p:column>
 
 			</p:dataTable>

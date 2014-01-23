@@ -37,7 +37,7 @@
 				<ac:paginator for="suppliersTbl" />
 	            
 				<p:column headerText="#{lbl['lbl.so.suppliername']}">
-					<h:outputText value="#{qtSupplier.smSupplier.supplierName}" />
+					<h:outputText value="#{qtSupplier.smSupplier.smAppl.smCompanyBasic.companyName}" />
 				</p:column>
 				<p:column headerText="#{lbl['lbl.so.mofno']}">
 					<h:outputText value="#{qtSupplier.smSupplier.smMofAccounts[0].mofNo}" rendered="#{false}" />

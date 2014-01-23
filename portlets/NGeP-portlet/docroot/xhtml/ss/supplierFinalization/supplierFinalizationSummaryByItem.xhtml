@@ -47,7 +47,7 @@
 		<p:dataTable id="itemId" var="item"
 			value="#{sfBackingBean.managedBean.itemPreSummarylist}"
 			selection="#{sfBackingBean.managedBean.selectedItemsSummary}"
-			rowKey="#{item.qtItemId}" rowIndexVar="rowIndex" selectionMode="single">
+			rowKey="#{item}" rowIndexVar="rowIndex" selectionMode="single">
 
 			<p:ajax event="rowSelect" listener="#{sfBackingBean.getZoneByItemDtl}" />
 

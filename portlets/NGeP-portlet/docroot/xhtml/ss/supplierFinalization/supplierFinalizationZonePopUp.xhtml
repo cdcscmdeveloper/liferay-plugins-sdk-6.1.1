@@ -7,30 +7,34 @@
 
 	<!--  Zone Details dialog -->
 	<p:dialog id="popZone" widgetVar="popZone" resizable="false"
-		styleClass="pop_up_top" header="Zone Details" width="300"
-		height="190">
+		styleClass="pop_up_top" header="" width="600" height="500">
 
-		<h:panelGrid columns="2" style="width:100%;"
-			styleClass="noBorders tr,noBorders td">
+		<p:panel id="zoneListtblId" header="Zone Details">
+			<table styleClass="noBorders tr,noBorders td">
+				<tr>
+					<td width="20%" valign="top"><p:outputLabel
+							value="#{lbl['lbl.sc.sf.zone.name']}" /></td>
+					<td width="80%"><p:inputText readonly="true"
+							value="#{sfBackingBean.managedBean.scQtZoneCriteria.zoneName}"
+							size="30" /></td>
+				</tr>
+				<tr>
+					<td width="20%" valign="top"><p:outputLabel
+							value="#{lbl['lbl.sc.sf.loc.name']}" /></td>
+					<td width="80%"><p:panel></p:panel> <p:tree id="treeZoneLocPopup"
+							value="#{sfBackingBean.managedBean.rootLocationTree}"
+							var="deliveryloc"
+							selection="#{sfBackingBean.managedBean.selectedNodes}"
+							selectionMode="checkbox">
+							<p:treeNode>
+								<h:outputText value="#{deliveryloc.locationName}" />
+							</p:treeNode>
+						</p:tree></td>
+				</tr>
+			</table>
+		</p:panel>
 
-			<h:outputLabel value="#{lbl['lbl.sc.sf.zone.name']}" />
-			<p:inputText readonly="true"
-				value="#{sfBackingBean.managedBean.scQtZoneCriteria.zoneName}"
-				size="30" />
-
-		</h:panelGrid>
-		
-		<p:spacer height="10px" />
-		
-		<h:panelGroup style="width:100%;">
-			<p:dataTable value="" var="">
-			  <p:column headerText="#{lbl['lbl.sc.sf.loc.name']}">
-			   </p:column>
-			</p:dataTable>
-
-		</h:panelGroup>
-
-        <p:spacer height="25px" />
+		<p:spacer height="25px" />
 		<p:commandButton value="#{lbl['lbl.sc.sf.cancel']}"
 			style="float:right;" icon="ui-icon-cancel" onclick="popZone.hide();">
 		</p:commandButton>

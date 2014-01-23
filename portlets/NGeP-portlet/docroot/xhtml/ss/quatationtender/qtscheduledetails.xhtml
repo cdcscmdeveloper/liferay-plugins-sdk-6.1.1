@@ -134,7 +134,7 @@
 
 					<p:column headerText="#{lbl['lbl.so.briefstatus']}"
 						style="width:15%">
-						<h:outputText value="Pending" />
+						<h:outputText value="#{qTScheduleDetailBackingBean.getStatusDescById(briefdetails.pmStatus.statusId)}" />
 					</p:column>
 				</p:dataTable>
 
@@ -206,7 +206,7 @@
 
 					<p:column headerText="#{lbl['lbl.so.briefstatus']}"
 						style="width:15%">
-						<h:outputText value="Pending" />
+						<h:outputText value="#{qTScheduleDetailBackingBean.getStatusDescById(briefdetails.pmStatus.statusId)}" />
 					</p:column>
 
 				</p:dataTable>

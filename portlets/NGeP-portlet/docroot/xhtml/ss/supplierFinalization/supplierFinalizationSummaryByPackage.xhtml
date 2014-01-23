@@ -44,15 +44,15 @@
 
 	<p:spacer height="20px" />
 	<p:panel header="Item List">
-		<p:dataTable id="itemTblId" var="item"
+		<p:dataTable id="itemTblId" var="itempack"
 			value="#{sfBackingBean.managedBean.itemPreSummarylist}"
 			selection="#{sfBackingBean.managedBean.selectedItemsSummary}"
-			rowKey="#{item.qtItemId}" rowIndexVar="rowIndex">
+			rowKey="#{itempack.qtItemId}" rowIndexVar="rowIndex">
 			<p:column selectionMode="multiple" style="width:2%" />
 			<ac:paginator for="itemTblId" />
 
 			<p:column headerText="#{lbl['lbl.sc.sf.item']}">
-				<h:outputText value="#{item.itemName}" />
+				<h:outputText value="#{itempack.itemName}" />
 			</p:column>
 		</p:dataTable>
 	</p:panel>

@@ -5,97 +5,133 @@
 	xmlns:p="http://primefaces.org/ui"
 	xmlns:c="http://java.sun.com/jsp/jstl/core">
 
-	<p:dialog widgetVar="dlg2" header="Site Details" modal="false" >
-		<p:panel  toggleable="true"  styleClass="qtSiteBriefDetails">
+	<p:dialog id="dlg2Id" widgetVar="dlg2" modal="true" dynamic="true"
+		hideEffect="explode" resizable="false" width="700px" height="450"
+		styleClass="pop_up_top" header="Site Visit Details">
+		<p:panel toggleable="true" styleClass="qtSiteBriefDetails">
+			<table style="width: 100%" border="1">
+				<tr>
+					<td valign="top"><p:outputLabel
+							value="#{lbl['lbl.so.sitevisitdesc']}" /></td>
+					<td><p:inputTextarea id="sitevisitdesc"
+							value="#{qTScheduleDetailBackingBean.managedBean.qtSiteBriefing.briefingDesc}"
+							columns="50" style="margin-bottom:5px;" /></td>
+					<td />
+					<td />
+				</tr>
+				<tr>
+					<td><p:outputLabel value="#{lbl['lbl.so.sitevisitdate']}" /></td>
+					<td><p:calendar
+							value="#{qTScheduleDetailBackingBean.managedBean.qtSiteBriefing.briefingDate}"
+							id="sitevisitDate"
+							pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}" showOn="button" /></td>
+					<td />
+					<td />
+				</tr>
+				<tr>
+					<td><p:outputLabel value="#{lbl['lbl.so.location']}" /></td>
+					<td><p:inputText
+							value="#{qTScheduleDetailBackingBean.managedBean.qtSiteBriefing.location}"
+							style="margin-top:5px;" /></td>
+					<td />
+					<td />
+				</tr>
+				<tr>
+					<td><p:outputLabel value="#{lbl['lbl.so.country']}" /></td>
+					<td><p:selectOneMenu
+							value="#{qTScheduleDetailBackingBean.managedBean.qtSiteBriefing.pmAddress.pmCountry.countryName}"
+							style="margin-bottom:5px;">
+							<f:selectItem itemLabel="Malaysia" itemValue="Malaysia" />
+							<f:selectItem itemLabel="Singapore" itemValue="Singapore" />
+						</p:selectOneMenu></td>
+					<td />
+					<td />
+				</tr>
+				<tr>
+					<td><p:outputLabel value="#{lbl['lbl.so.add1']}" /></td>
+					<td><p:inputText
+							value="#{qTScheduleDetailBackingBean.managedBean.qtSiteBriefing.pmAddress.address1}" /></td>
+					<td><p:outputLabel value="#{lbl['lbl.so.city']}" /></td>
+					<td><p:inputText
+							value="#{qTScheduleDetailBackingBean.managedBean.qtSiteBriefing.pmAddress.pmCity.cityName}" /></td>
+				</tr>
+				<tr>
+					<td><p:outputLabel value="#{lbl['lbl.so.add2']}" /></td>
+					<td><p:inputText
+							value="#{qTScheduleDetailBackingBean.managedBean.qtSiteBriefing.pmAddress.address2}" /></td>
+					<td><p:outputLabel value="#{lbl['lbl.so.district']}" /></td>
+					<td><p:inputText
+							value="#{qTScheduleDetailBackingBean.managedBean.qtSiteBriefing.pmAddress.pmDistrict.districtName}" /></td>
+				</tr>
+				<tr>
+					<td><p:outputLabel value="#{lbl['lbl.so.add3']}" /></td>
+					<td><p:inputText
+							value="#{qTScheduleDetailBackingBean.managedBean.qtSiteBriefing.pmAddress.address3}" /></td>
+					<td><p:outputLabel value="#{lbl['lbl.so.state']}" /></td>
+					<td><p:selectOneMenu
+							value="#{qTScheduleDetailBackingBean.managedBean.qtSiteBriefing.pmAddress.pmState.stateName}"
+							style="margin-bottom:5px;">
+							<f:selectItem itemLabel="Selangor" itemValue="1" />
+							<f:selectItem itemLabel="Kaula lumpur" itemValue="2" />
+						</p:selectOneMenu></td>
+				</tr>
+				<tr>
+					<td><p:outputLabel value="#{lbl['lbl.so.add4']}" /></td>
+					<td><p:inputText
+							value="#{qTScheduleDetailBackingBean.managedBean.qtSiteBriefing.pmAddress.address4}" /></td>
+					<td><p:outputLabel value="#{lbl['lbl.so.postcode']}" /></td>
+					<td><p:inputText
+							value="#{qTScheduleDetailBackingBean.managedBean.qtSiteBriefing.pmAddress.postcode}" /></td>
+				</tr>
+				<tr>
+					<td><p:outputLabel value="#{lbl['lbl.so.coordinateofficer']}" /></td>
+					<td><p:selectOneMenu
+							value="#{qTScheduleDetailBackingBean.managedBean.qtSiteBriefing.coordinatingOfficer}"
+							style="margin-bottom:5px;">
+							<f:selectItem itemLabel="Coordinate Officer" itemValue="" />
+							<f:selectItem itemLabel="Officer 1" itemValue="Officer 1" />
+							<f:selectItem itemLabel="Officer 2" itemValue="Officer 2" />
+							<f:selectItem itemLabel="Officer 3" itemValue="Officer 3" />
+						</p:selectOneMenu></td>
+					<td />
+					<td />
+				</tr>
+				<tr>
+					<td><p:outputLabel value="#{lbl['lbl.so.attendance']}" /></td>
+					<td><p:selectOneRadio
+							value="#{qTScheduleDetailBackingBean.managedBean.qtSiteBriefing.attendanceType}">
+							<f:selectItem itemLabel="All Zone" itemValue="All Zone" />
+							<f:selectItem itemLabel="Certain Zone" itemValue="Certain Zone" />
+						</p:selectOneRadio></td>
+					<td />
+					<td />
+				</tr>
+				<tr>
+					<td><p:outputLabel value="#{lbl['lbl.so.zone']}" /></td>
+					<td><p:selectOneMenu
+							value="#{qTScheduleDetailBackingBean.managedBean.qtSiteBriefing.scQtZoneCriteria.zoneName}"
+							style="margin-bottom:5px;">
+							<f:selectItem itemLabel="Zone" itemValue="" />
+							<f:selectItem itemLabel="East Zone" itemValue="East Zone" />
+							<f:selectItem itemLabel="West Zone" itemValue="West Zone" />
+							<f:selectItem itemLabel="Central Zone" itemValue="Central Zone" />
+						</p:selectOneMenu></td>
+					<td />
+					<td />
+				</tr>
+			</table>
 
-			
-			<h:panelGrid style="width:100%;" border="0" cellpadding="0" cellspacing="0" width="100%" columns="2" columnClasses="columnWidth20,columnWidth80">
-		
-		<h:outputLabel value="#{lbl['lbl.so.sitevisitdesc']}"/>
-				<p:inputTextarea id="sitedesc" value="#{qTScheduleDetailBackingBean.managedBean.qtSiteBriefing.briefingDesc}" columns="50" style="margin-bottom:5px;"></p:inputTextarea>	
-			
-		
-		<h:outputLabel value="#{lbl['lbl.so.sitevisitdate']}"/>
-			<p:calendar value="#{qTScheduleDetailBackingBean.managedBean.qtSiteBriefing.briefingDate}"
-				id="sitebriefDate" pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}" showOn="button" />	
-				
-				<h:outputLabel value="#{lbl['lbl.so.location']}" />
-               <p:inputText value="#{qTScheduleDetailBackingBean.managedBean.qtSiteBriefing.location}" style="margin-top:5px;"/> 
-               
-               <h:outputLabel value="#{lbl['lbl.so.country']}" />  
-       <p:selectOneMenu value="#{qTScheduleDetailBackingBean.managedBean.qtSiteBriefing.pmAddress.pmCountry.countryName}" style="margin-bottom:5px;"> 
-            <f:selectItem itemLabel="Malaysia" itemValue="Malaysia" />  
-            <f:selectItem itemLabel="Singapore" itemValue="Singapore" />  
-           </p:selectOneMenu>  
-               
-              </h:panelGrid>
-             <h:panelGrid style="width:100%;" border="0" cellpadding="0" cellspacing="0" width="100%" columns="4" columnClasses="columnWidth20,columnWidth30,columnWidth20,columnWidth30">
-              
-               <h:outputLabel value="#{lbl['lbl.so.add1']}"/>
-               <p:inputText value="#{qTScheduleDetailBackingBean.managedBean.qtSiteBriefing.pmAddress.address1}" />
-               
-                <h:outputLabel value="* #{lbl['lbl.so.city']}" />
-               <p:inputText value="#{qTScheduleDetailBackingBean.managedBean.qtSiteBriefing.pmAddress.pmCity.cityName}" />
-               
-               <h:outputLabel value="#{lbl['lbl.so.add2']}" />
-                <p:inputText value="#{qTScheduleDetailBackingBean.managedBean.qtSiteBriefing.pmAddress.address2}" />  
-                
-                 <h:outputLabel value="#{lbl['lbl.so.district']}" />
-               <p:inputText value="#{qTScheduleDetailBackingBean.managedBean.qtSiteBriefing.pmAddress.pmDistrict.districtName}" />
-               
-                <h:outputLabel value="#{lbl['lbl.so.add3']}" />
-               <p:inputText value="#{qTScheduleDetailBackingBean.managedBean.qtSiteBriefing.pmAddress.address3}" />  
-               
-               <h:outputLabel value="#{lbl['lbl.so.state']}" />  
-       <p:selectOneMenu value="#{qTScheduleDetailBackingBean.managedBean.qtSiteBriefing.pmAddress.pmState.stateName}" style="margin-bottom:5px;"> 
-            <f:selectItem itemLabel="Selangor" itemValue="1" />  
-            <f:selectItem itemLabel="Kaula lumpur" itemValue="2" />  
-           </p:selectOneMenu> 
-       	
-                <h:outputLabel value="#{lbl['lbl.so.add4']}" />
-               <p:inputText value="#{qTScheduleDetailBackingBean.managedBean.qtSiteBriefing.pmAddress.address4}" />  
-               
-               <h:outputLabel value="* #{lbl['lbl.so.postcode']}" />
-               <p:inputText value="#{qTScheduleDetailBackingBean.managedBean.qtSiteBriefing.pmAddress.postcode}" />     
-           
-             </h:panelGrid>  
-       	  <h:panelGrid style="width:100%;" border="0" cellpadding="0" cellspacing="0" width="100%" columns="2" columnClasses="columnWidth20,columnWidth80">
-               
-       	  <h:outputLabel value="#{lbl['lbl.so.coordinateofficer']}" />  
-       <p:selectOneMenu value="#{qTScheduleDetailBackingBean.managedBean.qtSiteBriefing.coordinatingOfficer}" style="margin-bottom:5px;"> 
-            <f:selectItem itemLabel="Coordinate Officer" itemValue="" />  
-            <f:selectItem itemLabel="Officer 1" itemValue="Officer 1" />  
-            <f:selectItem itemLabel="Officer 2" itemValue="Officer 2" />  
-            <f:selectItem itemLabel="Officer 3" itemValue="Officer 3" />  
-        </p:selectOneMenu> 
-        
-           
-           <h:outputLabel value="#{lbl['lbl.so.attendance']}"  />  
-       <p:selectOneMenu value="#{qTScheduleDetailBackingBean.managedBean.qtSiteBriefing.attendanceType}" style="margin-bottom:5px;"> 
-            <f:selectItem itemLabel="Zone" itemValue="" />  
-            <f:selectItem itemLabel="East Zone" itemValue="East Zone" />  
-            <f:selectItem itemLabel="West Zone" itemValue="West Zone" />  
-            <f:selectItem itemLabel="Central Zone" itemValue="Central Zone" />  
-        </p:selectOneMenu> 
-        
-        <h:outputLabel value="#{lbl['lbl.so.zone']}" />  
-        <p:selectOneRadio value="#{qTScheduleDetailBackingBean.managedBean.qtSiteBriefing.scQtZoneCriteria.zoneName}"> 
-            <f:selectItem itemLabel="All Zone" itemValue="All Zone" />  
-            <f:selectItem itemLabel="Certain Zone" itemValue="Certain Zone" />  
-           </p:selectOneRadio>    
-       
-         </h:panelGrid>  
-           
-		<p:commandButton  value="#{lbl['lbl.so.cancelbtn']}"
-			styleClass="apply_button" style="float:right;" oncomplete="dlg1.hide()">
-		</p:commandButton>	
-			<p:commandButton value="#{lbl['lbl.so.okbtn']}" 
-			styleClass="apply_button" update="sitedetails" process="@(.qtSiteBriefDetails)" style="float:right;" oncomplete="dlg2.hide()" action="#{qTScheduleDetailBackingBean.addToSiteBriefingList}">
+			<p:commandButton value="#{lbl['lbl.so.cancelbtn']}"
+				styleClass="apply_button" style="float:right;"
+				oncomplete="dlg1.hide()">
+			</p:commandButton>
+			<p:commandButton value="#{lbl['lbl.so.okbtn']}"
+				styleClass="apply_button" update="sitedetails"
+				process="@(.qtSiteBriefDetails)" style="float:right;"
+				oncomplete="dlg2.hide()"
+				action="#{qTScheduleDetailBackingBean.addToSiteBriefingList}">
+			</p:commandButton>
 
-		</p:commandButton>
-
-		
-		
-        </p:panel>
-        </p:dialog>
-</ui:composition>   
+		</p:panel>
+	</p:dialog>
+</ui:composition>

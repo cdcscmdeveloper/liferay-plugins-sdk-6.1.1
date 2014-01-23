@@ -9,69 +9,78 @@
 	<p:dialog id="popupSuppDtl" widgetVar="suppDetails" resizable="false"
 		styleClass="pop_up_top" header="Supplier Details" width="750"
 		height="350">
-
-		<h:panelGrid border="0" cellpadding="0" cellspacing="4" width="100%"
-			columns="4"
-			columnClasses="columnWidth20,columnWidth30,columnWidth20,columnWidth30">
-
-			<h:outputLabel value="#{lbl['lbl.sc.sf.supplier.code']}" />
-			<p:inputText
-				value="#{sfBackingBean.managedBean.scQtEvaluationResult.scQtProposal.supplierNo}"
-				readonly="true" />
-
-			<h:outputLabel value="#{lbl['lbl.sc.sf.supplier.name']}" />
-			<p:inputText
-				value="#{sfBackingBean.managedBean.scQtProposalRanking.scQtProposalEvaluate.scQtProposal.scQtSupplier.smSupplier.supplierName}"
-				readonly="true" />
-
-			<h:outputLabel value="#{lbl['lbl.sc.sf.reg.type']}" />
-			<p:inputText value="" readonly="true" />
-
-			<h:outputLabel value="#{lbl['lbl.sc.sf.reg.no']}" />
-			<p:inputText
-				value="#{sfBackingBean.managedBean.scQtProposalRanking.scQtProposalEvaluate.scQtProposal.scQtSupplier.smSupplier.regNo}"
-				readonly="true" />
-
-			<h:outputLabel value="#{lbl['lbl.sc.sf.mof.no']}" />
-			<p:inputText
-				value="#{sfBackingBean.managedBean.scQtProposalRanking.scQtProposalEvaluate.scQtProposal.scQtSupplier.smSupplier.smMofAccounts[0].mofNo}"
-				readonly="true" />
-
-			<h:outputLabel value="#{lbl['lbl.sc.sf.income.tax.ref.no']}" />
-			<p:inputText
-				value="#{sfBackingBean.managedBean.scQtEvaluationResult.scQtProposal.scQtSupplier.smSupplier.incomeTaxNo}"
-				readonly="true" />
-
-			<h:outputLabel value="#{lbl['lbl.sc.sf.est.date']}" />
-			<p:inputText
-				value="#{sfBackingBean.managedBean.scQtEvaluationResult.scQtProposal.scQtSupplier.smSupplier.establishDate}"
-				readonly="true" />
-
-			<h:outputLabel value="#{lbl['lbl.sc.sf.type.of.company']}" />
-			<p:inputText value="-" readonly="true" />
-
-			<h:outputLabel value="#{lbl['lbl.sc.sf.mof.exp.date']}" />
-			<p:inputText value="-" readonly="true" />
-
-			<h:outputLabel value="#{lbl['lbl.sc.sf.disciplinary.rating']}" />
-			<p:inputText value="-" readonly="true" />
-
-			<h:outputLabel value="#{lbl['lbl.sc.sf.branch']}" />
-			<p:inputText value="-" readonly="true" />
-
-			<h:outputLabel value="#{lbl['lbl.sc.sf.address']}" />
-			<p:inputTextarea value="-" readonly="true" />
-
-			<h:outputLabel value="#{lbl['lbl.sc.sf.contact.person']}" />
-			<p:inputText value="-" readonly="true" />
-
-			<h:outputLabel value="#{lbl['lbl.sc.sf.designation']}" />
-			<p:inputText value="-" readonly="true" />
-
-			<h:outputLabel value="#{lbl['lbl.sc.sf.email']}" />
-			<p:inputText value="-" readonly="true" />
-
-		</h:panelGrid>
+		<table style="width: 100%" border="1">
+			<tr>
+				<td style="width: 154px;"><p:outputLabel
+						value="#{lbl['lbl.sc.sf.supplier.code']}" /></td>
+				<td><p:inputText size="30"
+						value="#{sfBackingBean.managedBean.scQtEvaluationResult.scQtProposal.supplierNo}"
+						readonly="true" /></td>
+				<td><p:outputLabel value="#{lbl['lbl.sc.sf.supplier.name']}" /></td>
+				<td><p:inputText size="30" style=" margin-bottom:5px;"
+						value="#{sfBackingBean.managedBean.scQtEvaluationResult.scQtProposal.scQtSupplier.smSupplier.companyName}"
+						readonly="true" /></td>
+			</tr>
+			<tr>
+				<td><p:outputLabel value="#{lbl['lbl.sc.sf.reg.type']}" /></td>
+				<td><p:inputText size="30" value="" readonly="true" /></td>
+				<td><p:outputLabel value="#{lbl['lbl.sc.sf.reg.no']}" /></td>
+				<td><p:inputText size="30" style=" margin-bottom:5px;"
+						value="#{sfBackingBean.managedBean.scQtEvaluationResult.scQtProposal.scQtSupplier.smSupplier.regNo}"
+						readonly="true" /></td>
+			</tr>
+			<tr>
+				<td><p:outputLabel value="#{lbl['lbl.sc.sf.mof.no']}" /></td>
+				<td><p:inputText size="30"
+						value="#{sfBackingBean.managedBean.scQtEvaluationResult.scQtProposal.scQtSupplier.smSupplier.smMofAccounts[0].mofNo}"
+						readonly="true" /></td>
+				<td><p:outputLabel
+						value="#{lbl['lbl.sc.sf.income.tax.ref.no']}" /></td>
+				<td><p:inputText size="30" style=" margin-bottom:5px;"
+						value="#{sfBackingBean.managedBean.scQtEvaluationResult.scQtProposal.scQtSupplier.smSupplier.incomeTaxNo}"
+						readonly="true" /></td>
+			</tr>
+			<tr>
+				<td><p:outputLabel value="#{lbl['lbl.sc.sf.est.date']}" /></td>
+				<td><p:inputText size="30"
+						value="#{sfBackingBean.managedBean.scQtEvaluationResult.scQtProposal.scQtSupplier.smSupplier.establishDate}"
+						readonly="true" /></td>
+				<td><p:outputLabel value="#{lbl['lbl.sc.sf.type.of.company']}" /></td>
+				<td><p:inputText size="30" style=" margin-bottom:5px;"
+						value="#{sfBackingBean.managedBean.scQtEvaluationResult.scQtProposal.scQtSupplier.smSupplier.businessType}"
+						readonly="true" /></td>
+			</tr>
+			<tr>
+				<td><p:outputLabel value="#{lbl['lbl.sc.sf.mof.exp.date']}" /></td>
+				<td><p:inputText size="30"
+						value="#{sfBackingBean.managedBean.scQtEvaluationResult.scQtProposal.scQtSupplier.smSupplier.smMofAccounts[0].expDate}"
+						readonly="true" /></td>
+				<td><p:outputLabel
+						value="#{lbl['lbl.sc.sf.disciplinary.rating']}" /></td>
+				<td><p:inputText size="30" style=" margin-bottom:5px;" value=""
+						readonly="true" /></td>
+			</tr>
+			<tr>
+				<td><p:outputLabel value="#{lbl['lbl.sc.sf.branch']}" /></td>
+				<td><p:inputText size="30" value="" readonly="true" /></td>
+				<td valign="top"><p:outputLabel
+						value="#{lbl['lbl.sc.sf.address']}" /></td>
+				<td><p:inputTextarea cols="30" value="-"
+						style=" margin-bottom:5px;" readonly="true" /></td>
+			</tr>
+			<tr>
+				<td><p:outputLabel value="#{lbl['lbl.sc.sf.contact.person']}" /></td>
+				<td><p:inputText size="30" value="" readonly="true" /></td>
+				<td><p:outputLabel value="#{lbl['lbl.sc.sf.designation']}" /></td>
+				<td><p:inputText size="30" value="-" readonly="true" /></td>
+			</tr>
+			<tr>
+				<td><p:outputLabel value="#{lbl['lbl.sc.sf.email']}" /></td>
+				<td><p:inputText size="30" value="" readonly="true" /></td>
+				<td />
+				<td />
+			</tr>
+		</table>
 
 		<p:spacer height="20px" />
 		<p:panelGrid style="width:100%;"

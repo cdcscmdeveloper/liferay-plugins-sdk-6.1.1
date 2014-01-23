@@ -123,25 +123,25 @@
 							action="#{sfBackingBean.showSupplierDetails}"
 							oncomplete="suppDetails.show();">
 							<f:setPropertyActionListener value="#{shortlistedSupp}"
-								target="#{sfBackingBean.managedBean.scQtProposalRanking}" />
-							<h:outputText value="#{shortlistedSupp.scQtProposalEvaluate.scQtProposal.supplierNo}" />
+								target="#{sfBackingBean.managedBean.scQtEvaluationResult}" />
+							<h:outputText value="#{shortlistedSupp.scQtProposal.supplierNo}" />
 						</p:commandLink>
 					</p:column>
 
 					<p:column headerText="#{lbl['lbl.sc.sf.bumi.status']}">
-						<h:outputText value="#{shortlistedSupp.qtProposalRankingId}" />
+						<h:outputText value="#{shortlistedSupp.scQtProposal.scQtSupplier.smSupplier.bumi}" />
 					</p:column>
 
 					<p:column headerText="#{lbl['lbl.sc.sf.total.score']}">
-						<h:outputText value="#{shortlistedSupp.qtProposalRankingId}" />
+						<h:outputText value="#{shortlistedSupp.evaluationResultDtls[0].totalScore}" />
 					</p:column>
 
 					<p:column headerText="#{lbl['lbl.sc.sf.ranking']}">
-						<h:outputText value="#{shortlistedSupp.qtProposalRankingId}" />
+						<h:outputText value="#{shortlistedSupp.evaluationResultDtls[0].autoRank}" />
 					</p:column>
 
 					<p:column headerText="#{lbl['lbl.sc.sf.cmtee.decision']}">
-						<h:selectBooleanCheckbox value="#{shortlistedSupp.scQtProposalEvaluate.shortListed}" />
+						<h:selectBooleanCheckbox value="#{shortlistedSupp.evaluationResultDtls[0].shortListed}" />
 					</p:column>
 				</p:dataTable>
 				<p:spacer height="20px" />
@@ -204,25 +204,23 @@
 							action="#{sfBackingBean.showSupplierDetails}"
 							oncomplete="suppDetails.show();">
 							<f:setPropertyActionListener value="#{recommendedSupp}"
-								target="#{sfBackingBean.managedBean.scQtProposalRanking}" />
-							<h:outputText value="#{recommendedSupp.scQtProposalEvaluate.scQtProposal.supplierNo}" />
+								target="#{sfBackingBean.managedBean.scQtEvaluationResult}" />
+							<h:outputText value="#{recommendedSupp.scQtProposal.supplierNo}" />
 
 						</p:commandLink>
-
 					</p:column>
 
 					<p:column headerText="#{lbl['lbl.sc.sf.bumi.status']}">
-						<h:outputText value="#{recommendedSupp.qtProposalRankingId}" />
+						<h:outputText value="#{recommendedSupp.scQtProposal.scQtSupplier.smSupplier.bumi}" />
 					</p:column>
 
 					<p:column headerText="#{lbl['lbl.sc.sf.total.score']}">
-						<h:outputText value="345" />
+						<h:outputText value="#{recommendedSupp.evaluationResultDtls[0].totalScore}" />
 					</p:column>
 
 					<p:column headerText="#{lbl['lbl.sc.sf.ranking']}">
-						<h:outputText value="#{recommendedSupp.qtProposalRankingId}" />
+						<h:outputText value="#{recommendedSupp.evaluationResultDtls[0].autoRank}" />
 					</p:column>
-
 
 					<p:column headerText="#{lbl['lbl.sc.sf.bid.ranking']}">
 						<h:outputText value="323" />
@@ -233,7 +231,7 @@
 					</p:column>
 
 					<p:column headerText="#{lbl['lbl.sc.sf.cmtee.decision']}">
-						<h:selectBooleanCheckbox value="#{recommendedSupp.scQtProposalEvaluate.awarded}" />
+						<h:selectBooleanCheckbox value="#{recommendedSupp.evaluationResultDtls[0].awareded}" />
 					</p:column>
 					
 					<p:column headerText="#{lbl['lbl.sc.sf.qty.percentage']}">
