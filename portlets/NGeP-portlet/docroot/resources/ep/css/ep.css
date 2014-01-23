@@ -4462,6 +4462,10 @@ label > span.ui-button-text {
 	filter: progid:DXImageTransform.Microsoft.gradient(  startColorstr='#FCEAAE',
 		endColorstr='#FDD655', GradientType=0 ); /* IE6-8 */
 }
+
+.ui-selectmanycheckbox label, .ui-selectoneradio label {
+	margin-top: 0px !important;
+}
 /*--------------------------       End Custom CSS       --------------------------- */
 /*--------------------------       Breadcrumb Wizard    --------------------------- */
 .navDiv {
