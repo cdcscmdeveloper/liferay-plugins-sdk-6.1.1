@@ -6,6 +6,7 @@ package my.ep.web.managedbean.fl.cr;
 import java.math.BigDecimal;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
@@ -19,6 +20,7 @@ import my.ep.persistence.entity.fl.request.FlFulfilmentItemAddr;
 import my.ep.persistence.entity.fl.request.FlFulfilmentRequest;
 import my.ep.persistence.entity.fl.request.FlShippingInstr;
 import my.ep.persistence.entity.pm.authorization.PmOrgProfile;
+import my.ep.persistence.entity.pm.authorization.PmUserGroup;
 import my.ep.persistence.entity.pm.authorization.PmUserGroupUser;
 import my.ep.persistence.entity.pm.authorization.PmUserOrg;
 import my.ep.persistence.entity.pm.common.PmAddressType;
@@ -45,7 +47,6 @@ public class ContractRequestManagedBean extends BaseManagedBean {
 	private FlDeliveryAddress selectedDelAddr;
 	private List<PmMaksud> maksudCodeList;
 	private boolean checkPtjFlg = true;
-//	private List<PmAddressType> addressTypesList; 
 	private List<CtAgencyAddress> addressTypesList; 
 	private List<PmAddressType> selectedPmAddrTypeList;
 	private List<CtAgencyAddress> selectedCtAddrTypeList;
@@ -59,13 +60,17 @@ public class ContractRequestManagedBean extends BaseManagedBean {
 	private FlFulfilmentItemAddr selectedItemAddr;
 
 	private List <FlFulfilmentItemAddr>  selectedItemsRows;
-	//private List<FlFulfilmentItem> selectedItemsRows;
 	private PmOrgProfile pmOrgProfile;
 	private PmUserOrg pmUserOrg = new PmUserOrg();
+	private Map<Long, PmUserGroup> userGroupMap;
+	private List<Long> agenciesList; 
 	
 	private String ministryName;
 	private String requisitioner;
 	private String approver;
+	private Long docStatusId;
+	private Long contractId;
+	private Long testOrg;
 	
 	//getcontract
 	private CtContract ctContract = new CtContract();
@@ -688,6 +693,86 @@ public class ContractRequestManagedBean extends BaseManagedBean {
 	 */
 	public void setApprover(String approver) {
 		this.approver = approver;
+	}
+
+
+	/**
+	 * @return the docStatusId
+	 */
+	public Long getDocStatusId() {
+		return docStatusId;
+	}
+
+
+	/**
+	 * @param docStatusId the docStatusId to set
+	 */
+	public void setDocStatusId(Long docStatusId) {
+		this.docStatusId = docStatusId;
+	}
+
+
+	/**
+	 * @return the contractId
+	 */
+	public Long getContractId() {
+		return contractId;
+	}
+
+
+	/**
+	 * @param contractId the contractId to set
+	 */
+	public void setContractId(Long contractId) {
+		this.contractId = contractId;
+	}
+
+
+	/**
+	 * @return the userGroupMap
+	 */
+	public Map<Long, PmUserGroup> getUserGroupMap() {
+		return userGroupMap;
+	}
+
+
+	/**
+	 * @param userGroupMap the userGroupMap to set
+	 */
+	public void setUserGroupMap(Map<Long, PmUserGroup> userGroupMap) {
+		this.userGroupMap = userGroupMap;
+	}
+
+
+	/**
+	 * @return the agenciesList
+	 */
+	public List<Long> getAgenciesList() {
+		return agenciesList;
+	}
+
+
+	/**
+	 * @param agenciesList the agenciesList to set
+	 */
+	public void setAgenciesList(List<Long> agenciesList) {
+		this.agenciesList = agenciesList;
+	}
+
+
+	/**
+	 * @return the testOrg
+	 */
+	public Long getTestOrg() {
+		return testOrg;
+	}
+
+
+	/**
+	 * @param testOrg the testOrg to set
+	 */
+	public void setTestOrg(Long testOrg) {
+		this.testOrg = testOrg;
 	}
 
 }
