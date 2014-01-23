@@ -12,6 +12,7 @@ import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
 
 import my.ep.persistence.entity.ct.CtContract;
+import my.ep.persistence.entity.ct.VCtActiveContract;
 import my.ep.persistence.entity.ct.dtl.CtAgencyAddress;
 import my.ep.persistence.entity.ct.dtl.item.CtContractItem;
 import my.ep.persistence.entity.fl.request.FlDeliveryAddress;
@@ -52,6 +53,7 @@ public class ContractRequestManagedBean extends BaseManagedBean {
 	private List<CtAgencyAddress> selectedCtAddrTypeList;
 	private List<CtContractItem> contractedItemList;
 	private List<CtContractItem> selectedContractedItemList;
+	private List<VCtActiveContract> activeContractList; 
 	private DualListModel<String> approverModel;
 	private FlFulfilmentItem selectedItemRow;
 	private HashMap<String, PmUserGroupUser> approverMap;
@@ -773,6 +775,16 @@ public class ContractRequestManagedBean extends BaseManagedBean {
 	 */
 	public void setTestOrg(Long testOrg) {
 		this.testOrg = testOrg;
+	}
+
+
+	public List<VCtActiveContract> getActiveContractList() {
+		return activeContractList;
+	}
+
+
+	public void setActiveContractList(List<VCtActiveContract> activeContractList) {
+		this.activeContractList = activeContractList;
 	}
 
 }

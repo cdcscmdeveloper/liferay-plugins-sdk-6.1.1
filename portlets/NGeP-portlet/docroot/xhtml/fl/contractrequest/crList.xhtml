@@ -12,7 +12,7 @@
 	</ui:define>
 	<ui:define name="contentSection">
 		<p:dataTable id="contractListTable" var="data" lazy="true"
-			value="#{contractRequestBackingBean.activeContractPagingDataModel}">
+			value="#{contractRequestBackingBean.managedBean.activeContractList}">
 			<ac:paginator for="contractListTable" />
 			<p:column headerText="Contract No.">
 				<h:outputText value="#{data.contract.latestContractVer.ctContractValue.contractPhysicalNo}" />

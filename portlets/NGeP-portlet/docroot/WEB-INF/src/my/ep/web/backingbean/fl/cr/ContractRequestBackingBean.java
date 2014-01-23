@@ -17,9 +17,6 @@ import javax.faces.context.FacesContext;
 import javax.faces.model.SelectItem;
 import javax.servlet.http.HttpServletRequest;
 
-import my.ep.biz.bean.search.ISearchBean;
-import my.ep.biz.bean.search.ISearchResultBean;
-import my.ep.biz.bean.search.SearchFilterBean;
 import my.ep.biz.service.ct.IContractSO;
 import my.ep.biz.service.ct.dtl.IContractItemSO;
 import my.ep.biz.service.ct.maintain.IContractAmendmentSO;
@@ -48,7 +45,6 @@ import my.ep.dto.pm.common.object.ObjectResDTO;
 import my.ep.exception.EpException;
 import my.ep.jaxb.fl.codata.FLContractOrderDataType;
 import my.ep.persistence.entity.ct.CtContract;
-import my.ep.persistence.entity.ct.VCtActiveContract;
 import my.ep.persistence.entity.ct.dtl.CtAgency;
 import my.ep.persistence.entity.ct.dtl.CtAgencyAddress;
 import my.ep.persistence.entity.ct.dtl.item.CtContractItem;
@@ -67,14 +63,11 @@ import my.ep.persistence.entity.pm.common.PmMaksud;
 import my.ep.persistence.entity.pm.common.PmParameter;
 import my.ep.persistence.entity.pm.common.PmSo;
 import my.ep.persistence.entity.sm.SmSupplier;
-import my.ep.type.aut.SearchOperator;
 import my.ep.type.pm.OrganizationType;
 import my.ep.type.pm.RoleCode;
 import my.ep.util.lookupservice.EpBpmBusinessDelegate;
 import my.ep.web.backingbean.BaseBackingBean;
 import my.ep.web.backingbean.fl.FulfilmentBackingBean;
-import my.ep.web.bean.paginator.IPagingDataModel;
-import my.ep.web.bean.paginator.PagingDataModel;
 import my.ep.web.managedbean.fl.cr.ContractRequestManagedBean;
 import my.ep.web.util.FacesScopes;
 import my.ep.web.util.lookupservice.BusinessDelegate;
@@ -100,7 +93,6 @@ import com.liferay.portal.util.PortalUtil;
 public class ContractRequestBackingBean extends BaseBackingBean<ContractRequestManagedBean> {
 	private static Logger log = Logger.getLogger(ContractRequestBackingBean.class);
 	public static final String NAV_TO_CREATE_CONTRACT_REQUEST = "/xhtml/fl/contractrequest/crBasePage.xhtml";
-	private IPagingDataModel<VCtActiveContract> activeContractPagingDataModel = new ActiveContractPagingDataModel();
 	private boolean checkFlg = false;
 
 	/**
@@ -129,6 +121,14 @@ public class ContractRequestBackingBean extends BaseBackingBean<ContractRequestM
 			getManagedBean().getFlRequest().setFlDeliveryAddresses(new ArrayList<FlDeliveryAddress>());
 			getManagedBean().getFlRequest().setFlFulfilmentItems(new ArrayList<FlFulfilmentItem>());
 
+		}
+		
+		if(getManagedBean().getActiveContractList()==null) {
+			IContractSO contractSO = (IContractSO) BusinessDelegate.getInstance().getServiceObject("ct", IContractSO.class);
+			ContractReqDTO ctReqDTO = new ContractReqDTO();
+			ctReqDTO.setOrgProfileId(1147L);
+			ContractResDTO ctResDTO = contractSO.retrieveActiveContractList(ctReqDTO);
+			getManagedBean().setActiveContractList(ctResDTO.getActiveContractList());
 		}
 
 //		if (getManagedBean().getApproverModel() == null && isRequisitioner()) {
@@ -471,76 +471,6 @@ public class ContractRequestBackingBean extends BaseBackingBean<ContractRequestM
 			userSO = null;
 		}
 		return availableApprovers;
-	}
-
-	public IPagingDataModel<VCtActiveContract> getActiveContractPagingDataModel() {
-		return activeContractPagingDataModel;
-	}
-
-	public void setActiveContractPagingDataModel(
-			IPagingDataModel<VCtActiveContract> activeContractPagingDataModel) {
-		this.activeContractPagingDataModel = activeContractPagingDataModel;
-	}
-
-	private class ActiveContractPagingDataModel extends
-			PagingDataModel<VCtActiveContract> {
-		private static final long serialVersionUID = 1L;
-
-		public ActiveContractPagingDataModel() {
-			super("contractListTable");
-		}
-
-		@Override
-		public ISearchResultBean<VCtActiveContract> pageChangeListener(
-				ISearchBean<VCtActiveContract> searchBean) {
-			if (log.isDebugEnabled()) {
-				log.debug("pageChangeListener");
-			}
-			try {
-				// TODO Change the orgProfileId value
-				String language = new FacesScopes().getUserLocale()
-						.getLanguage();
-				// searchBean.getDataFilterBeans().add(new
-				// SearchFilterBean("contract.latestContractVer.ctAgencies.orgProfile.orgProfileId",SearchOperator.OPERATOR_IN.value(),1147L));//pass
-				// list of Long org
-				searchBean
-						.getDataFilterBeans()
-						.add(new SearchFilterBean(
-								"contract.latestContractVer.ctAgencies.orgProfile.orgProfileId",
-								SearchOperator.OPERATOR_EQUALS.value(), 1147L));
-//				searchBean
-//						.getDataFilterBeans()
-//						.add(new SearchFilterBean(
-//								"contract.fulfillmentType.pmParameterDescs.languageCode",
-//								SearchOperator.OPERATOR_EQUALS.value(),
-//								language));
-//				searchBean
-//						.getDataFilterBeans()
-//						.add(new SearchFilterBean(
-//								"contract.contractType.pmParameterDescs.languageCode",
-//								SearchOperator.OPERATOR_EQUALS.value(),
-//								language));
-
-				ContractReqDTO reqDTO = new ContractReqDTO();
-				reqDTO.setActiveContractSearchBean(searchBean);
-
-				IContractSO contractSO = (IContractSO) BusinessDelegate
-						.getInstance()
-						.getServiceObject("ct", IContractSO.class);
-				ContractResDTO resDTO = contractSO
-						.retrieveActiveContractList(reqDTO);
-				if (resDTO.isSuccessful()) {
-					return resDTO.getActiveContractResultBean();
-				}
-			} catch (Exception e) {
-				e.printStackTrace();
-				FacesContext.getCurrentInstance().addMessage(
-						null,
-						new FacesMessage(FacesMessage.SEVERITY_ERROR, e
-								.toString(), e.getMessage()));
-			}
-			return null;
-		}
 	}
 
 	public void preRenderView() {
