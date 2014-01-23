@@ -11,57 +11,53 @@
 	<ui:define name="resourceSection">
 	</ui:define>
 	<ui:define name="contentSection">
-					<p:dataTable id="contractListTable" var="data" lazy="true"
-						value="#{contractRequestBackingBean.activeContractPagingDataModel}" >
-						<ac:paginator for="contractListTable" />
-						<p:column headerText="Contract No.">
-							<h:outputText value="#{data.contract.latestContractVer.ctContractValue.contractPhysicalNo}" />
-						</p:column>
-						<p:column headerText="Plan No.">
-							<h:outputText value="#{data.planNo}" />
-						</p:column>
-						<p:column headerText="Schedule/Phase No.">
-							<h:outputText
-								value="#{not empty data.scheduleNo ? data.scheduleNo : data.phase}" />
-						</p:column>
-						<p:column headerText="Circular No.">
-							<h:outputText value="#{data.circularNo}" />
-						</p:column>
-						<p:column headerText="Period(Start)">
-							<h:outputText value="#{data.periodStart}">
-								<f:convertDateTime type="date" pattern="MMM-yyyy" />
-							</h:outputText>
-						</p:column>
-						<p:column headerText="Period(End)">
-							<h:outputText value="#{data.periodEnd}">
-								<f:convertDateTime type="date" pattern="MMM-yyyy" />
-							</h:outputText>
-						</p:column>
-						<p:column headerText="Fulfillment Type">
-						<h:outputText
-								value="#{contractRequestBackingBean.getParameterDesc(data.contract.fulfillmentType)}" />
-						</p:column>
-						<p:column headerText="Contract Type">
-						<h:outputText
-								value="#{contractRequestBackingBean.getParameterDesc(data.contract.contractType)}" />
-						</p:column>
-						<p:column headerText="EP Unique No.">
-							<h:outputText value="#{data.contract.smSupplier.epNo}" />
-						</p:column>
-						<p:column headerText="Supplier Name">
-							<h:outputText value="#{data.contract.smSupplier.smAppl.smCompanyBasic.companyName}" />
-						</p:column>
-						<p:column headerText="Action">
-							<p:commandLink id="crBasepageLink"
-								onclick="procure([{name:'contractId',value:'#{data.contract.contractId}'},{name:'scheduleNo',value:'#{not empty data.scheduleNo ? data.scheduleNo : data.phase}'}])" >
-							<p:graphicImage library="ep/images/design" name="revise.png"
-								value="/resources/ep/images/design/revise.png"
-								title="Contract Request" />
-							</p:commandLink>
-						
-						</p:column>
-					</p:dataTable>
-					<p:remoteCommand name="procure"
-						action="#{contractRequestBackingBean.procureContract}" />
+		<p:dataTable id="contractListTable" var="data" lazy="true"
+			value="#{contractRequestBackingBean.activeContractPagingDataModel}">
+			<ac:paginator for="contractListTable" />
+			<p:column headerText="Contract No.">
+				<h:outputText value="#{data.contract.latestContractVer.ctContractValue.contractPhysicalNo}" />
+			</p:column>
+			<p:column headerText="Plan No.">
+				<h:outputText value="#{data.plan.planNo}" />
+			</p:column>
+			<p:column headerText="Schedule/Phase No.">
+				<h:outputText value="#{not empty data.scheduleNo ? data.scheduleNo : data.phase}" />
+			</p:column>
+			<p:column headerText="Circular No.">
+				<h:outputText value="#{data.circularNo}" />
+			</p:column>
+			<p:column headerText="Period(Start)">
+				<h:outputText value="#{data.periodStart}">
+					<f:convertDateTime type="date" pattern="MMM-yyyy" />
+				</h:outputText>
+			</p:column>
+			<p:column headerText="Period(End)">
+				<h:outputText value="#{data.periodEnd}">
+					<f:convertDateTime type="date" pattern="MMM-yyyy" />
+				</h:outputText>
+			</p:column>
+			<p:column headerText="Fulfillment Type">
+				<h:outputText value="#{contractRequestBackingBean.getParameterDesc(data.contract.fulfillmentType)}" />
+			</p:column>
+			<p:column headerText="Contract Type">
+				<h:outputText value="#{contractRequestBackingBean.getParameterDesc(data.contract.contractType)}" />
+			</p:column>
+			<p:column headerText="EP Unique No.">
+				<h:outputText value="#{data.contract.smSupplier.epNo}" />
+			</p:column>
+			<p:column headerText="Supplier Name">
+				<h:outputText value="#{data.contract.smSupplier.smAppl.smCompanyBasic.companyName}" />
+			</p:column>
+			<p:column headerText="Action">
+				<p:commandLink id="crBasepageLink"
+					onclick="procure([{name:'contractId',value:'#{data.contract.contractId}'},{name:'scheduleNo',value:'#{not empty data.scheduleNo ? data.scheduleNo : data.phase}'}])">
+					<p:graphicImage library="ep/images/design" name="revise.png"
+						value="/resources/ep/images/design/revise.png"
+						title="Contract Request" />
+				</p:commandLink>
+
+			</p:column>
+		</p:dataTable>
+		<p:remoteCommand name="procure" action="#{contractRequestBackingBean.procureContract}" />
 	</ui:define>
 </ui:composition>
