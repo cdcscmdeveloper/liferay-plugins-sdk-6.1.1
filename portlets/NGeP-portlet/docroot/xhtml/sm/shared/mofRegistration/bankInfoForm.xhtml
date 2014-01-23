@@ -92,7 +92,7 @@
 			</p:dataTable>
 			<p:spacer height="2px;" />
 			<div align="right">
-				<p:commandButton value="Add" onsuccess="bankDialog.show();"
+				<p:commandButton value="Add" oncomplete="bankDialog.show();"
 					actionListener="#{backingBean.assignNewBank}"
 					update=":form:tt:bankDialog" />
 				<p:commandButton value="Delete" />

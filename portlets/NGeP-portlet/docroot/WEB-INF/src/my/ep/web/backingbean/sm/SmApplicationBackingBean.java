@@ -2,9 +2,7 @@ package my.ep.web.backingbean.sm;
 
 import java.text.ParseException;
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.Date;
-import java.util.GregorianCalendar;
 import java.util.List;
 
 import javax.faces.application.FacesMessage;
@@ -157,6 +155,7 @@ public class SmApplicationBackingBean extends
 			if (applicationType.equalsIgnoreCase("N")) {
 				smAppl.setSupplierType(getManagedBean().getNewSupplierType());
 			}
+			smAppl.setApplCategoryType(null);
 			smAppl.setSmStaffTotals(getStaffList(smAppl.getSupplierType()));
 			getManagedBean().setSmAppl(smAppl);
 			getManagedBean().setTabActiveIndex(0);
@@ -437,6 +436,32 @@ public class SmApplicationBackingBean extends
 				+ getManagedBean().getOfficeFacility().getRentalRate());
 	}
 
+	public void applicationCategorySelected(AjaxBehaviorEvent e) {
+		System.out.println(" ******* On Application Category ***** "
+				+ getManagedBean().getSmAppl().getApplCategoryType());
+		StringBuffer sb = new StringBuffer();
+		String desc = null;
+		if (getManagedBean().getSmAppl().getApplCategoryType().equals("N")) {
+			desc = "Normal";
+		} else {
+			desc = "Special";
+		}
+		sb.append("You have choosen the application type as : '");
+		sb.append(desc);
+		// sb.append("'.So this application allows the categories of selected Type only. \n");
+		// sb.append("Warning : This selection cannot be changed for the application later.\n");
+		sb.append("Do you want to proceed?");
+		getManagedBean().setApplCatConfirmMsg(sb.toString());
+		System.out.println("*** Msg Is ****"
+				+ getManagedBean().getApplCatConfirmMsg());
+	}
+
+	public void resetApplnCategoryType() {
+		System.out.println("********* Reset the Values ********");
+		getManagedBean().getSmAppl().setApplCategoryType(null);
+		getManagedBean().setApplCatConfirmMsg(null);
+	}
+
 	public void svcSelected(AjaxBehaviorEvent e) {
 		System.out.println(" ******* On Change Office Facility ***** "
 				+ getManagedBean().getPoSiteVisitType());
@@ -699,7 +724,13 @@ public class SmApplicationBackingBean extends
 	}
 
 	public void assignNewCategoryCode() {
-		getManagedBean().setSelectedCategory(new SmSupplierCategory());
+		SmSupplierCategory categ = new SmSupplierCategory();
+		if (getManagedBean().getSmAppl().getApplCategoryType()
+				.equalsIgnoreCase("S")) {
+			categ.setSpecialCategory(true);
+		}
+		getManagedBean().setSelectedCategory(categ);
+
 		resetSelectedCategoryParams();
 	}
 
@@ -822,19 +853,6 @@ public class SmApplicationBackingBean extends
 	// -- Process Share Holder Personnel Start
 	public void addOrUpdateShareHolderToSmAppl() throws ParseException {
 
-		if (getManagedBean().getSmapplAuthPersonnels().contains(
-				getManagedBean().getSelectedShareHolder())) {
-			System.out.println(" *** ALREADY EXIST ******");
-			if (!getManagedBean().getSelectedShareHolder().isAuthorized())
-				getManagedBean().getSmapplAuthPersonnels().remove(
-						getManagedBean().getSelectedShareHolder());
-		} else {
-			System.out.println(" *** NOT EXIST ******");
-			if (getManagedBean().getSelectedShareHolder().isAuthorized())
-				getManagedBean().getSmapplAuthPersonnels().add(
-						getManagedBean().getSelectedShareHolder());
-		}
-
 		if (getManagedBean().getSmAppl().getSmPersonnels()
 				.contains(getManagedBean().getSelectedShareHolder())) {
 
@@ -901,29 +919,6 @@ public class SmApplicationBackingBean extends
 
 	// -- Process Personnel Start
 	public void addOrUpdatePersonnelToSmAppl() throws ParseException {
-		// if (getManagedBean().getSmapplAuthPersonnels().contains(
-		// getManagedBean().getSelectedPersonnel())
-		// && !getManagedBean().getSelectedPersonnel().isAuthorized()) {
-		// getManagedBean().getSmapplAuthPersonnels().remove(
-		// getManagedBean().getSelectedPersonnel());
-		// } else if (!getManagedBean().getSmapplAuthPersonnels().contains(
-		// getManagedBean().getSelectedPersonnel())
-		// && getManagedBean().getSelectedPersonnel().isAuthorized()) {
-		// getManagedBean().getSmapplAuthPersonnels().add(
-		// getManagedBean().getSelectedPersonnel());
-		// }
-		if (getManagedBean().getSmapplAuthPersonnels().contains(
-				getManagedBean().getSelectedPersonnel())) {
-			System.out.println(" *** ALREADY EXIST ******");
-			if (!getManagedBean().getSelectedPersonnel().isAuthorized())
-				getManagedBean().getSmapplAuthPersonnels().remove(
-						getManagedBean().getSelectedPersonnel());
-		} else {
-			System.out.println(" *** NOT EXIST ******");
-			if (getManagedBean().getSelectedPersonnel().isAuthorized())
-				getManagedBean().getSmapplAuthPersonnels().add(
-						getManagedBean().getSelectedPersonnel());
-		}
 
 		if (getManagedBean().getSmAppl().getSmPersonnels()
 				.contains(getManagedBean().getSelectedPersonnel())) {

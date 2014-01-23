@@ -43,21 +43,26 @@
 			<p:blockUI block=":form:tt:catCodeInfPan" widgetVar="buiPoCatCode"
 				id="poCatCodeBlc"
 				blocked="#{backingBean.managedBean.poUser ? backingBean.managedBean.poSecReview.categoryVerified : (backingBean.managedBean.approverUser ? backingBean.managedBean.apprvrSecReview.categoryVerified : false)}" />
+			<table>
+				<tr>
+					<td align="left"><p:outputLabel value="Category Type : "
+							rendered="#{backingBean.managedBean.smAppl.applCategoryType != null}"
+							style="color: blue; font-weight: bold;" /></td>
+					<td><p:outputLabel value="Normal"
+							rendered="#{backingBean.managedBean.smAppl.applCategoryType == 'N'}"
+							style="color: blue; font-weight: bold;" /> <p:outputLabel
+							value="Special"
+							rendered="#{backingBean.managedBean.smAppl.applCategoryType == 'S'}"
+							style="color: blue; font-weight: bold;" /></td>
+				</tr>
+			</table>
+			<br />
 			<p:dataTable var="catBean"
 				value="#{backingBean.managedBean.smAppl.smSupplierCategories}"
 				rowKey="#{catBean.supplierCategoryId}" rowIndexVar="index"
 				id="catDt">
 				<ac:paginator for="catDt" />
 				<p:columnGroup type="header">
-					<!-- <p:row>
-					<p:column rowspan="2" headerText="No." />
-					<p:column rowspan="2" headerText="Code" />
-					<p:column colspan="3" headerText="Category" />
-					<p:column rowspan="2" headerText="Business Type" />
-					<p:column rowspan="2" headerText="Category Type" />
-					<p:column rowspan="2" headerText="PO Action"
-						rendered="#{backingBean.managedBean.poUser}" />
-				</p:row> -->
 
 					<p:row>
 						<p:column headerText="Main Category" />
@@ -87,11 +92,8 @@
 					<h:outputText value=" -- TBC -- " />
 				</p:column>
 				<p:column>
-					<!-- <p:outputLabel value="#{catBean.categoryType}" /> -->
-					<h:outputText value="Normal"
-						rendered="#{catBean.categoryType eq 'N'}" />
-					<h:outputText value="Special"
-						rendered="#{catBean.categoryType eq 'S'}" />
+					<h:outputText value="Normal" rendered="#{!catBean.specialCategory}" />
+					<h:outputText value="Special" rendered="#{catBean.specialCategory}" />
 				</p:column>
 				<p:column rendered="#{backingBean.managedBean.poUser}">
 					<p:selectOneRadio value="#{catBean.no}" layout="pageDirection"
@@ -105,10 +107,26 @@
 				</p:column>
 			</p:dataTable>
 			<p:spacer height="2px;" />
+			<table style="width: 250px">
+				<tr>
+					<td><p:outputLabel value="Category Type"
+							rendered="#{backingBean.managedBean.smAppl.applCategoryType == null}" /></td>
+					<td><p:selectOneRadio
+							value="#{backingBean.managedBean.smAppl.applCategoryType}"
+							rendered="#{backingBean.managedBean.smAppl.applCategoryType == null}">
+							<f:selectItem itemLabel="Normal" itemValue="N" />
+							<f:selectItem itemLabel="Special" itemValue="S" />
+							<p:ajax event="change" oncomplete="typeConfirmation.show()"
+								listener="#{backingBean.applicationCategorySelected}" />
+						</p:selectOneRadio></td>
+				</tr>
+			</table>
+
 			<div align="right">
 				<p:commandButton value="Add"
 					action="#{backingBean.assignNewCategoryCode}"
-					oncomplete="regCatDialog.show();" update=":form:tt:regCatDialog" />
+					oncomplete="regCatDialog.show();" update=":form:tt:regCatDialog"
+					disabled="#{backingBean.managedBean.smAppl.applCategoryType == null}" />
 			</div>
 
 			<br />
@@ -155,16 +173,7 @@
 
 				<ui:fragment
 					rendered="#{backingBean.managedBean.selectedCategory.entryMode eq 'E'}">
-					<tr>
-						<td><p:outputLabel value="* Category Type" /></td>
-						<td><p:selectOneMenu
-								value="#{backingBean.managedBean.selectedCategory.categoryType}"
-								style="width: 232px;margin-bottom: 5px;">
-								<f:selectItem itemLabel="-- Select  -- " itemValue="O" />
-								<f:selectItem itemLabel="Normal" itemValue="N" />
-								<f:selectItem itemLabel="Special" itemValue="S" />
-							</p:selectOneMenu></td>
-					</tr>
+
 					<tr>
 						<td><p:outputLabel value="Enter Category Code" /></td>
 						<td><p:inputText maxlength="2" size="2"
@@ -196,16 +205,7 @@
 				</ui:fragment>
 				<ui:fragment
 					rendered="#{backingBean.managedBean.selectedCategory.entryMode eq 'S'}">
-					<tr>
-						<td><p:outputLabel value="* Category Type" /></td>
-						<td><p:selectOneMenu
-								value="#{backingBean.managedBean.selectedCategory.categoryType}"
-								style="width: 207px;margin-bottom: 5px;">
-								<f:selectItem itemLabel="-- Select  -- " itemValue="O" />
-								<f:selectItem itemLabel="Normal" itemValue="N" />
-								<f:selectItem itemLabel="Special" itemValue="S" />
-							</p:selectOneMenu></td>
-					</tr>
+
 					<tr>
 						<td><p:outputLabel value="
 										* Main Category" /></td>
@@ -275,5 +275,17 @@
 		<br />
 
 	</p:dialog>
+
+	<p:confirmDialog id="typeConfirmationId"
+		message="You can add categories of the selected type and this cannot be revert back.Are you sure ?"
+		header="Select Category Type" widgetVar="typeConfirmation">
+
+		<p:commandButton id="conf" value="Yes" update=":form:tt:catCodeInfPan"
+			oncomplete="typeConfirmation.hide()" />
+		<p:commandButton id="decline" value="No"
+			update=":form:tt:catCodeInfPan" onclick="typeConfirmation.hide()"
+			action="#{backingBean.resetApplnCategoryType}" />
+
+	</p:confirmDialog>
 
 </ui:composition>

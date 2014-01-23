@@ -119,13 +119,7 @@
 
 
 				<p:column headerText="Name">
-
 					<h:outputText value="#{person.name}" />
-					<!-- <p:commandLink value="#{person.name}"
-					rendered="#{person.equityOwner == false}"
-					action="#{backingBean.assignSelPersonnel(person)}"
-					oncomplete="personnelDialog.show();"
-					update=":form:tt:personnelDialog" /> -->
 				</p:column>
 
 				<p:column headerText="Roles In Company">
@@ -162,29 +156,7 @@
 					update=":form:tt:personnelDialog" />
 				<p:commandButton value="Delete" />
 			</div>
-			<!-- <p:panel header="List of Authorized Personnel">
-			<p:dataTable var="auth"
-				value="#{backingBean.managedBean.smapplAuthPersonnels}"
-				rowKey="#{auth.personnelId}" rowIndexVar="index" id="authDt">
-
-				<p:column headerText="No.">
-					<h:outputText value="#{index+1}" />
-				</p:column>
-
-				<p:column headerText="Name">
-					<h:outputText value="#{auth.name}" />
-				</p:column>
-
-				<p:column headerText="Roles In Company">
-					<h:outputText value="#{auth.designation} " />
-				</p:column>
-				<p:column headerText="Soft Cert Issued?">
-					<h:outputText value="Yes" rendered="#{auth.softcert == true}" />
-					<h:outputText value="No" rendered="#{auth.softcert == false}" />
-				</p:column>
-			</p:dataTable>
-		</p:panel>
- -->
+			
 			<br />
 			<p:outputPanel rendered="#{backingBean.managedBean.poUser}">
 				<table style="width: 50%">

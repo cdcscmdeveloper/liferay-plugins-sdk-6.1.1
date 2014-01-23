@@ -12,6 +12,7 @@ import my.ep.persistence.entity.pm.common.PmCategoryL3;
 import my.ep.persistence.entity.pm.common.PmCity;
 import my.ep.persistence.entity.pm.common.PmCountry;
 import my.ep.persistence.entity.pm.common.PmDistrict;
+import my.ep.persistence.entity.pm.common.PmFinancialOrg;
 import my.ep.persistence.entity.pm.common.PmState;
 import my.ep.persistence.entity.sm.SmAddress;
 import my.ep.persistence.entity.sm.SmAppl;
@@ -118,7 +119,7 @@ public class SmApplicationManagedBean extends BaseManagedBean {
 
 	private SmStaffAcademic shareHolderAcademics;
 	// Personnel Info
-	private List<SmPersonnel> smapplAuthPersonnels;
+	// private List<SmPersonnel> smapplAuthPersonnels;
 
 	private List<SmPersonnel> selectedPersonnels;
 
@@ -174,6 +175,8 @@ public class SmApplicationManagedBean extends BaseManagedBean {
 	private boolean termsAccepted;
 
 	private String newSupplierType;
+
+	private String applCatConfirmMsg;
 
 	public SmApplicationManagedBean() {
 		// TODO Checking the user role
@@ -258,7 +261,7 @@ public class SmApplicationManagedBean extends BaseManagedBean {
 
 		// For share personell
 		selectedPersonnel = new SmPersonnel();
-		smapplAuthPersonnels = new ArrayList<SmPersonnel>();
+		// smapplAuthPersonnels = new ArrayList<SmPersonnel>();
 		selectedPersonnels = new ArrayList<SmPersonnel>();
 		personnelMailAddr = new SmPersonnelAddress();
 		personnelMailAddr.setSmAddress(defaultAddr);
@@ -289,6 +292,7 @@ public class SmApplicationManagedBean extends BaseManagedBean {
 		selectedBank = new SmSupplierBank();
 		// selectedBank.setPmbank(new PmBank());
 		selectedBank.setSmAddress(defaultAddr);
+		selectedBank.setPmFinancialOrg(new PmFinancialOrg());
 		selectedBank.setSmChequeSignatories(new ArrayList<SmChequeSignatory>());
 		selectedBanks = new ArrayList<SmSupplierBank>();
 
@@ -692,13 +696,14 @@ public class SmApplicationManagedBean extends BaseManagedBean {
 		this.selectedBanks = selectedBanks;
 	}
 
-	public List<SmPersonnel> getSmapplAuthPersonnels() {
-		return smapplAuthPersonnels;
-	}
-
-	public void setSmapplAuthPersonnels(List<SmPersonnel> smapplAuthPersonnels) {
-		this.smapplAuthPersonnels = smapplAuthPersonnels;
-	}
+	// public List<SmPersonnel> getSmapplAuthPersonnels() {
+	// return smapplAuthPersonnels;
+	// }
+	//
+	// public void setSmapplAuthPersonnels(List<SmPersonnel>
+	// smapplAuthPersonnels) {
+	// this.smapplAuthPersonnels = smapplAuthPersonnels;
+	// }
 
 	public List<SmPersonnel> getSelectedPersonnels() {
 		return selectedPersonnels;
@@ -911,6 +916,14 @@ public class SmApplicationManagedBean extends BaseManagedBean {
 	public void setSelectedCompanyExperience(
 			SmCompanyExperience selectedCompanyExperience) {
 		this.selectedCompanyExperience = selectedCompanyExperience;
+	}
+
+	public String getApplCatConfirmMsg() {
+		return applCatConfirmMsg;
+	}
+
+	public void setApplCatConfirmMsg(String applCatConfirmMsg) {
+		this.applCatConfirmMsg = applCatConfirmMsg;
 	}
 
 }
