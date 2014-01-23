@@ -77,10 +77,7 @@
 
 
 		<p:column headerText="Factory Name">
-			<p:commandLink value="#{fac.smAddress.address1}"
-				oncomplete="factoryDialog.show();"
-				action="#{backingBean.assignSelFactory(fac)}"
-				update=":form:tt:factoryDialog" />
+			<h:outputText value="#{fac.smAddress.address1}" />
 		</p:column>
 
 		<p:column headerText="Factory/ Workshop/Dockyard Address">

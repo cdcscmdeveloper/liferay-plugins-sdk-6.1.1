@@ -152,7 +152,7 @@ public class SmApplicationBackingBean extends
 			} else {
 				// TODO
 			}
-			if (applicationType.equalsIgnoreCase("N")) {
+			if (applicationType.equalsIgnoreCase("N") && !fromBpm) {
 				smAppl.setSupplierType(getManagedBean().getNewSupplierType());
 			}
 			smAppl.setApplCategoryType(null);
@@ -437,28 +437,57 @@ public class SmApplicationBackingBean extends
 	}
 
 	public void applicationCategorySelected(AjaxBehaviorEvent e) {
-		System.out.println(" ******* On Application Category ***** "
-				+ getManagedBean().getSmAppl().getApplCategoryType());
+		System.out
+				.println(" ******* On Application Category ***** "
+						+ getManagedBean().getSmAppl().getApplCategoryType()
+						+ "-- Size --"
+						+ getManagedBean().getSmAppl()
+								.getSmSupplierCategories().size());
 		StringBuffer sb = new StringBuffer();
 		String desc = null;
+
 		if (getManagedBean().getSmAppl().getApplCategoryType().equals("N")) {
 			desc = "Normal";
 		} else {
 			desc = "Special";
 		}
-		sb.append("You have choosen the application type as : '");
+		sb.append("NOTE : ");
 		sb.append(desc);
-		// sb.append("'.So this application allows the categories of selected Type only. \n");
-		// sb.append("Warning : This selection cannot be changed for the application later.\n");
-		sb.append("Do you want to proceed?");
+		sb.append("categories can only be added in this applicaiton'");
 		getManagedBean().setApplCatConfirmMsg(sb.toString());
 		System.out.println("*** Msg Is ****"
 				+ getManagedBean().getApplCatConfirmMsg());
 	}
 
+	public void assignApplnCategoryType() {
+		List<SmSupplierCategory> catList = new ArrayList<SmSupplierCategory>();
+		if (getManagedBean().getSmAppl().getApplCategoryType().equals("N")) {
+			for (SmSupplierCategory cat : getManagedBean().getSmAppl()
+					.getSmSupplierCategories()) {
+				if (cat.isSpecialCategory() && !cat.isApprovedByPo()) {
+					catList.add(cat);
+				}
+
+			}
+			getManagedBean().getSmAppl().getSmSupplierCategories()
+					.removeAll(catList);
+		} else {
+			for (SmSupplierCategory cat : getManagedBean().getSmAppl()
+					.getSmSupplierCategories()) {
+				if (!cat.isSpecialCategory() && !cat.isApprovedByPo()) {
+					catList.add(cat);
+				}
+
+			}
+			getManagedBean().getSmAppl().getSmSupplierCategories()
+					.removeAll(catList);
+		}
+		getManagedBean().setApplCatConfirmMsg(null);
+	}
+
 	public void resetApplnCategoryType() {
 		System.out.println("********* Reset the Values ********");
-		getManagedBean().getSmAppl().setApplCategoryType(null);
+		// getManagedBean().getSmAppl().setApplCategoryType(null);
 		getManagedBean().setApplCatConfirmMsg(null);
 	}
 

@@ -43,9 +43,21 @@
 			<p:blockUI block=":form:tt:catCodeInfPan" widgetVar="buiPoCatCode"
 				id="poCatCodeBlc"
 				blocked="#{backingBean.managedBean.poUser ? backingBean.managedBean.poSecReview.categoryVerified : (backingBean.managedBean.approverUser ? backingBean.managedBean.apprvrSecReview.categoryVerified : false)}" />
+			<table style="width: 250px">
+				<tr>
+					<td><p:outputLabel value="Category Type" /></td>
+					<td><p:selectOneRadio
+							value="#{backingBean.managedBean.smAppl.applCategoryType}">
+							<f:selectItem itemLabel="Normal" itemValue="N" />
+							<f:selectItem itemLabel="Special" itemValue="S" />
+							<p:ajax event="change" oncomplete="typeConfirmation.show()"
+								listener="#{backingBean.applicationCategorySelected}" />
+						</p:selectOneRadio></td>
+				</tr>
+			</table>
 			<table>
 				<tr>
-					<td align="left"><p:outputLabel value="Category Type : "
+					<td align="left"><p:outputLabel value="#{backingBean.managedBean.applCatConfirmMsg}"
 							rendered="#{backingBean.managedBean.smAppl.applCategoryType != null}"
 							style="color: blue; font-weight: bold;" /></td>
 					<td><p:outputLabel value="Normal"
@@ -107,20 +119,7 @@
 				</p:column>
 			</p:dataTable>
 			<p:spacer height="2px;" />
-			<table style="width: 250px">
-				<tr>
-					<td><p:outputLabel value="Category Type"
-							rendered="#{backingBean.managedBean.smAppl.applCategoryType == null}" /></td>
-					<td><p:selectOneRadio
-							value="#{backingBean.managedBean.smAppl.applCategoryType}"
-							rendered="#{backingBean.managedBean.smAppl.applCategoryType == null}">
-							<f:selectItem itemLabel="Normal" itemValue="N" />
-							<f:selectItem itemLabel="Special" itemValue="S" />
-							<p:ajax event="change" oncomplete="typeConfirmation.show()"
-								listener="#{backingBean.applicationCategorySelected}" />
-						</p:selectOneRadio></td>
-				</tr>
-			</table>
+
 
 			<div align="right">
 				<p:commandButton value="Add"
@@ -281,6 +280,7 @@
 		header="Select Category Type" widgetVar="typeConfirmation">
 
 		<p:commandButton id="conf" value="Yes" update=":form:tt:catCodeInfPan"
+			action="#{backingBean.assignApplnCategoryType}"
 			oncomplete="typeConfirmation.hide()" />
 		<p:commandButton id="decline" value="No"
 			update=":form:tt:catCodeInfPan" onclick="typeConfirmation.hide()"
