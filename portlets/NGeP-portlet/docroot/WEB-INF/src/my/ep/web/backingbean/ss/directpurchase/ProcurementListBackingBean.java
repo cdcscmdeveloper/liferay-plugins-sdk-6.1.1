@@ -15,10 +15,6 @@ import my.ep.biz.service.pm.common.status.IStatusSO;
 import my.ep.biz.service.pp.procurementplan.IProcurementPlanSO;
 import my.ep.biz.service.ss.directpurchase.IDirectPurchaseSO;
 import my.ep.biz.service.ss.quationtender.IQTDetailSO;
-import my.ep.bpm.dto.BpmRequestDTO;
-import my.ep.bpm.dto.BpmResponseDTO;
-import my.ep.bpm.service.IBpmSO;
-import my.ep.constants.SCProcessNameConst;
 import my.ep.dto.pm.common.status.StatusReqDTO;
 import my.ep.dto.pm.common.status.StatusResDTO;
 import my.ep.dto.pp.procurementplan.ProcurementPlanReqDTO;
@@ -27,13 +23,10 @@ import my.ep.dto.ss.directpurchase.RequestNoteReqDTO;
 import my.ep.dto.ss.directpurchase.RequestNoteResDTO;
 import my.ep.dto.ss.quationtender.QuationTenderReqDTO;
 import my.ep.dto.ss.quationtender.QuationTenderResDTO;
-import my.ep.jaxb.sc.directpurchasedata.SCDirectPurchaseDataType;
-import my.ep.persistence.entity.pm.authorization.PmOrgProfile;
 import my.ep.persistence.entity.pm.common.PmStatus;
 import my.ep.persistence.entity.pp.procurementplan.PpPlan;
 import my.ep.persistence.entity.ss.quationtender.ScQt;
 import my.ep.persistence.logging.LogKey;
-import my.ep.util.lookupservice.EpBpmBusinessDelegate;
 import my.ep.util.lookupservice.EpEjbBusinessDelegate;
 import my.ep.web.backingbean.BaseBackingBean;
 import my.ep.web.backingbean.ss.quatationtender.QTDetailBackingBean;
@@ -88,28 +81,12 @@ public class ProcurementListBackingBean extends BaseBackingBean<ProcurementListM
 	public String initiateBPMTask(PpPlan ppPlan) {
 		if (ProcurementPlanConst.PROCUREMENT_DIRECT_PURCHASE.equalsIgnoreCase(ppPlan.getProcurementModeParam().getParameterCode())) {
 			IDirectPurchaseSO directPurchaseSO = (IDirectPurchaseSO) BusinessDelegate.getInstance().getServiceObject(SourcingConst.SOURCING_MODULE, IDirectPurchaseSO.class);
-			// direct purchase, create empty request list and initial BPM task
-			//set status to new
-			
-			//TODO hard code org profile first
-			PmOrgProfile	orgProfile	=	new PmOrgProfile();
-			orgProfile.setOrgProfileId(1L);
-			// Initial BPM task
-			IBpmSO bpmSO = (IBpmSO) EpBpmBusinessDelegate.getInstance().getServiceObject(IBpmSO.class);
+			// direct purchase, create empty request note and initial BPM task
+			RequestNoteReqDTO	requestDTO	=	new RequestNoteReqDTO();
 			FacesScopes facesScopes = new FacesScopes();
-			String token = facesScopes.getBPMAuthenticationCtxToken();
-
-			BpmRequestDTO reqDTO = new BpmRequestDTO();
-			reqDTO.setCtxToken(token);
-			reqDTO.setProcessId(SCProcessNameConst.DIRECTPURCHASE_CREATION_PROCESS_ID);
-			SCDirectPurchaseDataType obj = new SCDirectPurchaseDataType();
-			obj.setDpId(ppPlan.getPlanId().intValue());
-			obj.setDpMode("PP");
-			obj.setPtj("Asdqwe");
-			// obj.getSuppliers().add(String.valueOf(
-			// this.getManagedBean().getSelectedItem().getSmSupplier().getSupplierId()));
-			reqDTO.setPojo(obj);
-			BpmResponseDTO res = bpmSO.initiateAndUpdateTask(reqDTO);
+			requestDTO.setToken(facesScopes.getBPMAuthenticationCtxToken());
+			requestDTO.setPlan(ppPlan);
+			RequestNoteResDTO	responseDTO = directPurchaseSO.startSourcing(requestDTO);
 			return "/xhtml/shared/acknowledge.xhtml";
 		} else {
 			ScQt scQt = new ScQt();
