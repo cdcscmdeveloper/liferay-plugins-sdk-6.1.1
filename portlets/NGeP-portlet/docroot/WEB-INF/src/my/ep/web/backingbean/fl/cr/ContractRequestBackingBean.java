@@ -460,8 +460,7 @@ public class ContractRequestBackingBean extends BaseBackingBean<ContractRequestM
 
 			resDTO = userSO.retrieveUserGroupList(reqDTO);
 			for (PmUserGroupUser userGroup : resDTO.getUserGroupList().get(0).getPmUserGroupUsers()) {
-				getManagedBean().getApproverMap().put(
-						userGroup.getPmUser().getUserName(), userGroup);
+				getManagedBean().getApproverMap().put(userGroup.getPmUser().getUserName(), userGroup);
 				availableApprovers.add(userGroup.getPmUser().getUserName());
 			}
 		} catch (Exception e) {
@@ -489,8 +488,7 @@ public class ContractRequestBackingBean extends BaseBackingBean<ContractRequestM
 		System.out.println("taskId:" + taskId);
 		if (taskId != null) {
 
-			IBpmSO bpmSO = (IBpmSO) EpBpmBusinessDelegate.getInstance()
-					.getServiceObject(IBpmSO.class);
+			IBpmSO bpmSO = (IBpmSO) EpBpmBusinessDelegate.getInstance().getServiceObject(IBpmSO.class);
 			String ctx = getFacesScopes().getBPMAuthenticationCtxToken();
 			BpmRequestDTO reqDTO = new BpmRequestDTO();
 			reqDTO.setCtxToken(ctx);
@@ -498,8 +496,7 @@ public class ContractRequestBackingBean extends BaseBackingBean<ContractRequestM
 			BpmResponseDTO res = bpmSO.getTaskDetails(reqDTO);
 			Object obj = res.getPojo();
 
-			IFulfilmentRequestSO requestSO = (IFulfilmentRequestSO) BusinessDelegate
-					.getInstance().getServiceObject("fl",
+			IFulfilmentRequestSO requestSO = (IFulfilmentRequestSO) BusinessDelegate.getInstance().getServiceObject("fl",
 							IFulfilmentRequestSO.class);
 			FulfilmentReqDTO flReqDTO = new FulfilmentReqDTO();
 			FulfilmentResDTO resDTO = new FulfilmentResDTO();
@@ -822,6 +819,7 @@ public class ContractRequestBackingBean extends BaseBackingBean<ContractRequestM
 					getManagedBean().getFlRequest().getPmUserGroup().setUserGroupId(userGroup.getUserGroupId());
 					List<String> source = new ArrayList<String>();
 					for(PmUserGroupUser user : userGroup.getPmUserGroupUsers()) {
+						getManagedBean().getApproverMap().put(user.getPmUser().getUserName(), user);
 						source.add(user.getPmUser().getUserName());
 					}
 					getManagedBean().getApproverModel().setSource(source);

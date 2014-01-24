@@ -1,0 +1,55 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:c="http://java.sun.com/jsp/jstl/core">
+
+	<table style="width: 99%; margin-left: 25px;">
+		<tr style="margin-button: 10px;">
+			<td><h6 style="color: blue;">
+					<h:outputText value="#{lbl['lbl.fl.rev.hed.request.no']} ." />
+				</h6></td>
+			<td>
+				<h6>
+					<p:inputText size="20" value="#{contractRequestBackingBean.managedBean.flRequest.docNo}" disabled="true" />
+				</h6>
+
+			</td>
+			<td>
+				<h6 style="color: blue;">
+					<h:outputText value="#{lbl['lbl.fl.contract.no']} :" />
+				</h6>
+			</td>
+			<td>
+				<h6>
+					<p:inputText size="20" disabled="true"
+						value="#{contractRequestBackingBean.managedBean.flRequest.ctContract.latestContractVer.ctContractValue.contractPhysicalNo}" />
+				</h6>
+
+			</td>
+			<td>
+				<h6 style="color: blue;">
+					<h:outputText value="#{lbl['lbl.fl.rev.hed.ptj.name']} :" />
+				</h6>
+			</td>
+			<td>
+				<h6>
+					<p:inputText size="20" disabled="true" value="#{contractRequestBackingBean.managedBean.pmUserOrg.pmUser.userName}" />
+				</h6>
+			</td>
+
+			<td>
+				<h6 style="color: blue;">
+					<h:outputText value="#{lbl['lbl.fl.status']} :" />
+				</h6>
+			</td>
+			<td>
+				<h6>
+					<p:inputText size="20" disabled="true"
+						value="#{contractRequestBackingBean.getStatusDescById(contractRequestBackingBean.managedBean.flRequest.status.statusId)}" />
+				</h6>
+			</td>
+		</tr>
+	</table>
+</ui:composition>

@@ -13,16 +13,8 @@
 	<ui:define name="contentSection">
 	<f:event listener="#{contractRequestBackingBean.preRenderView}" type="preRenderView" />	
 	<p:messages id="messages" showDetail="true" autoUpdate="true" closable="true" severity="error,info"></p:messages>
+	<ui:include src="/xhtml/fl/contractrequest/crHeaderPage.xhtml" />
 		<table style="width:100%">
-			<tr>
-				<td>
-				<h:outputText
-						value="Document Number: " />
-				<h:outputText
-						value="#{contractRequestBackingBean.managedBean.flRequest.docNo}" />
-				</td>
-			</tr>
-			
 			<tr>
 				<td colspan="4" style="text-align: right"><ui:repeat
 						var="bpmAction"
@@ -64,7 +56,21 @@
 			<p:tab id="tab3" title="Approver Settings" rendered="#{contractRequestBackingBean.isRequisitioner()}">
 				<p:panel id="settingId" header="Approver Setting" toggleable="true"
 					toggleSpeed="500">
+
 					<h:panelGrid columns="1">
+						<h:panelGrid columns="2">
+							<h:outputLabel value="Approver Group" />
+							<p:selectOneMenu
+								value="#{contractRequestBackingBean.managedBean.flRequest.pmUserGroup.userGroupId}"
+								style="width:80px;">
+								<p:ajax event="change"
+									listener="#{contractRequestBackingBean.userGroupChangeListener()}"
+									process="@this" update="approverpickList" />
+								<f:selectItems
+									value="#{contractRequestBackingBean.getUserGroupDropdown()}" />
+							</p:selectOneMenu>
+						</h:panelGrid>
+						<p:spacer height="1" />
 						<h:panelGrid style="width:500px">
 							<p:pickList id="approverpickList"
 								value="#{contractRequestBackingBean.managedBean.approverModel}"

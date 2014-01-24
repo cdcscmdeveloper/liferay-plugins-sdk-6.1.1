@@ -7,7 +7,7 @@
 	xmlns:ac="http://ac.my/jsf/composite/cc">
 
 
-	<p:panel id="delAddrPanel" header="DELIVERY ADDRESS" toggleable="true">
+	<p:panel id="delAddrPanel" header="DELIVERY ITEM DETAILS" toggleable="true">
 
 		<p:dataTable id="addressDataTable" var="address"
 			value="#{contractRequestBackingBean.managedBean.flRequest.flDeliveryAddresses}"
@@ -15,8 +15,8 @@
 			selection="#{contractRequestBackingBean.managedBean.selectedDelAddr}"
 			rowKey="#{address}" lazy="true">
 			<ac:paginator for="addressDataTable" />
-			<p:ajax event="rowSelectRadio" update=":form:cotabs:itemDetPanel"
-				process="@this" />
+			<p:ajax event="rowSelectRadio" update=":form:cotabs:itemDetPanel,:form:cotabs:deleteAddrBtn"
+			listener="#{contractRequestBackingBean.selectAddrEvent()}"/>
 			<p:column selectionMode="single" width="5%" />
 			<p:column headerText="Delivery Address">
 				<h:outputText
@@ -39,16 +39,23 @@
 				action="#{contractRequestBackingBean.flDeliveryAddrList}"
 				update="delAddr" process="@this,delAddr"
 				oncomplete="addDeliveryAddr.show();" />
-			<p:commandButton value="Delete" icon="ui-icon-delete"
-				action="#{contractRequestBackingBean.removeAddRow}"
-				update="addressDataTable" partialSubmit="true">
-				<f:setPropertyActionListener value="#{address}"
-					target="#{contractRequestBackingBean.managedBean.selectedAddrRow}" />
+			<p:commandButton id="deleteAddrBtn" value="Delete" icon="ui-icon-delete" onsuccess="delAddrDlg.show()" process="@this"
+						disabled="#{contractRequestBackingBean.managedBean.selectedDelAddr == null}" >
 			</p:commandButton>
-
+			
 		</div>
-	</p:panel>
-	<p:panel id="itemDetPanel" header="ITEM DETAIL" toggleable="true">
+		
+		<p:confirmDialog message="Do you want to delete the record?" severity="alert" widgetVar="delAddrDlg"
+			closable="true" appendToBody="true" header="Delete Confirmation" >
+			<h:panelGrid columns="2">
+				<p:commandButton value="Yes" icon="ui-icon-accept" partialSubmit="true" action="#{contractRequestBackingBean.removeAddRow()}" 
+					update=":form:cotabs:deleteAddrBtn,:form:cotabs:itemDataTable,addressDataTable" oncomplete="delAddrDlg.hide();"   /> 
+				<p:commandButton value="No" icon="ui-icon-reject" onclick="delAddrDlg.hide()" type="button" />
+			</h:panelGrid>
+		</p:confirmDialog>	
+	
+	<p:spacer height="20" />
+	<h:panelGroup id="itemDetPanel">
 
 		<p:dataTable id="itemDataTable" var="item" lazy="true"
 			rowIndexVar="index" rowKey="#{item}"
@@ -87,15 +94,15 @@
 				</p:selectOneMenu>
 			</p:column>
 			<p:column headerText="Unit Price (MYR)">
-				<p:inputText disabled="true"></p:inputText>
+				<p:inputText disabled="true" style="text-align:right"></p:inputText>
 			</p:column>
 			<p:column headerText="Ord. Qty.">
-				<p:inputText value="#{item.orderedQty}">
+				<p:inputText value="#{item.orderedQty}" style="text-align:right">
 					<p:ajax update="subTotalTxt"></p:ajax>
 				</p:inputText>
 			</p:column>
 			<p:column headerText="Sub Total">
-				<p:inputText id="subTotalTxt"
+				<p:inputText id="subTotalTxt" style="text-align:right"
 					value="#{item.orderedQty}"
 					disabled="true"></p:inputText>
 			</p:column>
@@ -113,6 +120,7 @@
 				update="itemDataTable" partialSubmit="true" />	
 
 		</div>
+	</h:panelGroup>
 	</p:panel>
 
 	<p:dialog id="addDelAddrDialog" header="Add Delivery Address"
@@ -129,13 +137,17 @@
 				<p:row>
 					<p:column rowspan="1" headerText=""></p:column>
 					<p:column rowspan="1" headerText="Address"></p:column>
+					<p:column rowspan="1" headerText="Ptj Name"></p:column>
 				</p:row>
 			</p:columnGroup>
 			<p:column selectionMode="multiple" />
 			<p:column>
-				<h:outputText
-					value="#{delAddr.addressType.pmAddress.address1}, #{delAddr.addressType.pmAddress.address2}, #{delAddr.addressType.pmAddress.address3}, #{delAddr.addressType.pmAddress.address4}"
+				<h:outputText value="#{delAddr.addressType.pmAddress.address1}, #{delAddr.addressType.pmAddress.address2}, 
+									#{delAddr.addressType.pmAddress.address3}, #{delAddr.addressType.pmAddress.address4}"
 					escape="false" />
+			</p:column>
+			<p:column>
+			 <h:outputText value="#{delAddr.ctAgency.orgProfile.orgName}"></h:outputText>
 			</p:column>
 		</p:dataTable>
 		<p:spacer height="2px"></p:spacer>
@@ -179,6 +191,16 @@
 			</p:commandButton>
 		</div>
 
-
 	</p:dialog>
+	
+	<p:panel header="#{lbl['lbl.fl.remark.attachment']}" toggleable="true">
+		<table style="width: 100%">
+			<tr>
+				<td width="50%" valign="top"><ui:include
+						src="/xhtml/fl/shared/remark.xhtml" /></td>
+				<td width="50%" valign="top"><ui:include
+						src="/xhtml/fl/shared/attachment.xhtml" /></td>
+			</tr>
+		</table>
+	</p:panel>
 </ui:composition>
