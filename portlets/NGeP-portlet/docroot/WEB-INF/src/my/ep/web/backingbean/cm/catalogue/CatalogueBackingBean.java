@@ -707,8 +707,7 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean>{
 
 
 		log.info("size:"+this.getManagedBean().getSelectedMaintainItem().getCmImages().size());
-		FacesContext fc = FacesContext.getCurrentInstance();
-		fc.getApplication().getNavigationHandler().handleNavigation(fc, null, "addCatalogView.xhtml?faces-redirect=true");
+		
 	}
 
 
@@ -790,7 +789,7 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean>{
 			CatalogueReqDTO reqDTO  = new CatalogueReqDTO();
 
 
-
+			System.out.println("price:"+this.getManagedBean().getSelectedMaintainItem().getCmPromotionPricing().getPrice());
 			this.getManagedBean().getSelectedMaintainItem().getCmPromotionPricing().setCmSupplierItem(this.getManagedBean().getSelectedMaintainItem());
 			this.getManagedBean().getSelectedMaintainItem().getCmStandardPricing().setCmSupplierItem(this.getManagedBean().getSelectedMaintainItem());
 
@@ -878,10 +877,13 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean>{
 		for(int i=0; i<this.getManagedBean().getSelectedMaintainItems().length; i++){
 			CmSupplierItem catalog = this.getManagedBean().getSelectedMaintainItems()[i];
 			catalog.setItemStatus("P");
+			catalog.getCmStandardPricing().setCmSupplierItem(catalog);
 			reqDTO.getSaveSupplierItems().add(catalog);
+			
+		
 		}
 
-
+		
 		CatalogueResDTO resDTO = new CatalogueResDTO();
 		try {
 			resDTO = catalogueSO.updateSupplierItem(reqDTO);
@@ -1433,6 +1435,15 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean>{
 
 		System.out.println("this.getManagedBean().getDistrictList().size():"+this.getManagedBean().getDistrictList().size());
 
+	}
+	
+	public void refreshImage(){
+		
+		System.out.println("********refreshImage*********");
+		FacesContext fc = FacesContext.getCurrentInstance();
+		fc.getApplication().getNavigationHandler().handleNavigation(fc, null, "addCatalogView.xhtml?faces-redirect=true");
+		
+		
 	}
 
 

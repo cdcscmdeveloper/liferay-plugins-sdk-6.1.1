@@ -11,6 +11,8 @@
 
 
 	<ui:define name="contentSection">
+	
+	<p:messages id="extensionApprovalMsgId" globalOnly="true"></p:messages>
 
 		<h:panelGroup id="extensionFlowReviewID">
 
@@ -19,7 +21,7 @@
 				<ui:repeat var="action"
 					value="#{unspscCodeBackingBean.managedBean.action}">
 					<p:commandButton value="#{action}"
-						action="#{unspscCodeBackingBean.submitToReviewExt(action)}"></p:commandButton>
+						action="#{unspscCodeBackingBean.submitToReviewExt(action)}" update="@form"></p:commandButton>
 				</ui:repeat>
 			</div>
 

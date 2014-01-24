@@ -53,16 +53,16 @@
 					</tr>
 				</table>
 			</h:panelGroup>
-		
+
 			<table style="width: 100%; margin-top: 10px;">
 				<tr style="height: 30px;">
 					<td rowspan="10" style="width: 250px;"><h:panelGrid
 							styleClass="imageFrame">
-							
+
 							<p:galleria id="imageUploadID"
-								value="#{catalogueBackingBean.managedBean.selectedMaintainItem.cmImages}"
+								value="#{catalogueBackingBean.managedBean.selectedMaintainItem.cmImages}" 
 								var="imageObj" panelWidth="200" panelHeight="150">
-								<p:graphicImage id="imageId" height="150" width="150"
+								<p:graphicImage id="imageId" height="150" width="200"
 									value="/images/#{imageObj.imageName}" />
 							</p:galleria>
 						</h:panelGrid> <p:commandButton value="#{lbl['lbl.cm.upload']}"
@@ -107,7 +107,7 @@
 
 				<tr style="height: 30px;">
 
-					<td><p:outputLabel value="#{lbl['lbl.cm.lead.time']}" /></td>
+					<td><p:outputLabel value="#{lbl['lbl.cm.delivery.term']}" /></td>
 					<td><p:inputText size="26"
 							value="#{catalogueBackingBean.managedBean.selectedMaintainItem.leadTime}" />
 						<p:inputText style="margin-left: 2px;" size="3" value="days" /></td>
@@ -128,16 +128,19 @@
 			</table>
 		</p:panel>
 
-		<p:dialog id="imageDialog" widgetVar="imageDialog" modal="true"  
+		<p:remoteCommand name="refresh" id="refresh"
+			action="#{catalogueBackingBean.refreshImage}" />
+
+		<p:dialog id="imageDialog" widgetVar="imageDialog" modal="true" width="700px"
 			resizable="false" styleClass="pop_up_top">
 
 
 			<p:fileUpload 
-				fileUploadListener="#{catalogueBackingBean.imageUpload}"
-				mode="advanced" id="upload" 
+				fileUploadListener="#{catalogueBackingBean.imageUpload}" 
+				oncomplete="refresh();" mode="advanced" id="upload" 
 				allowTypes="/(\.|\/)(gif|jpe?g|png|bmp|txt|xls|xlsx|pdf|doc|docx|csv)$/"
 				invalidFileMessage="Only JPG, GIF, PNG, BMP, TXT, XLS, PDF, DOC, CSV files are accepted"
-				update="imageUploadID"  >
+				update="imageUploadID">
 			</p:fileUpload>
 
 		</p:dialog>
