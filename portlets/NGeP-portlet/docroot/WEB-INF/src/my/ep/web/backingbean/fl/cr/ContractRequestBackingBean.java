@@ -126,7 +126,10 @@ public class ContractRequestBackingBean extends BaseBackingBean<ContractRequestM
 		if(getManagedBean().getActiveContractList()==null) {
 			IContractSO contractSO = (IContractSO) BusinessDelegate.getInstance().getServiceObject("ct", IContractSO.class);
 			ContractReqDTO ctReqDTO = new ContractReqDTO();
-			ctReqDTO.setOrgProfileId(1147L);
+			List<Long> orgProfileIdList = new ArrayList<Long>();
+			//TODO please pass the correrct ptj list 
+			orgProfileIdList.add(1147L);
+			ctReqDTO.setOrgProfileIdList(orgProfileIdList);			
 			ContractResDTO ctResDTO = contractSO.retrieveActiveContractList(ctReqDTO);
 			getManagedBean().setActiveContractList(ctResDTO.getActiveContractList());
 		}
