@@ -2194,6 +2194,7 @@ td {
 
 
 
+
 .ppPanelGrid td, .ppPanelGrid tr{
 	border: 0;
 }
@@ -2248,6 +2249,10 @@ table.ppTwoTable td {
 .ppRightBtn{
 	text-align:right;
 }
+.ppLeftBtn{
+	text-align:left;
+	float: left;
+}
 
 .ppSmallTd{
 	width:5% !important;
@@ -2269,17 +2274,17 @@ table.ppTwoTable td {
     width:100% !important;
 }
 
-.ui-dialog.ppDiaglogBg{
+.ui-dialog.ppDialogBg{
 	background: #FFFFFF;
 	width: 900px !important;
 }
 
-.ui-dialog.ppDiaglogSmallBg{
+.ui-dialog.ppDialogSmallBg{
 	background: #FFFFFF;
 	width: 600px !important;
 }
 
-.ui-dialog.ppDiaglogBigBg{
+.ui-dialog.ppDialogBigBg{
 	background: #FFFFFF;
 	height:80% !important;
 	width: 900px !important;
