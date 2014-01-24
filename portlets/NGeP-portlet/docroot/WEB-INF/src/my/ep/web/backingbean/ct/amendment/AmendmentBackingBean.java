@@ -3,6 +3,7 @@
  */
 package my.ep.web.backingbean.ct.amendment;
 
+import java.math.BigDecimal;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -113,14 +114,19 @@ public class AmendmentBackingBean extends BaseBackingBean<AmendmentManagedBean> 
 			this.getManagedBean().setTaskName(res.getTaskName());
 			
 			CTContractAmendmentDataType dataType = (CTContractAmendmentDataType)obj;
-			ctReqDTO.setUserLoginId(dataType.getContractAdmin());
 			ctReqDTO.setContractId(new Long(dataType.getContractId()));
 			ctReqDTO.setContractVerId(new Long(dataType.getAmendmentId()));
+			this.getManagedBean().setUserLoginId(dataType.getContractAdmin());
 			
 			IContractSO contractSO = (IContractSO) BusinessDelegate.getInstance().getServiceObject("ct",IContractSO.class);
 			ContractResDTO resDTO = contractSO.retrieveContractVer(ctReqDTO);
 			this.getManagedBean().setContractVer(resDTO.getCtContractVer());
 			this.getManagedBean().setCtContract(resDTO.getCtContractVer().getCtContract());
+			this.getManagedBean().setRemarkList(resDTO.getCtRemarks());
+			this.getManagedBean().setAttachmentList(resDTO.getCtAttachments());
+			
+			ContractBackingBean ctBB = new ContractBackingBean();
+			ctBB.initializeRemarkAndAttachement(getManagedBean().getRemarkList(), getManagedBean().getAttachmentList());
 			
 	        if(res.getTaskName().equalsIgnoreCase(CTProcessNameConst.CONFIRM_FA_MEETING_HT_NAME) || 
 	           res.getTaskName().equalsIgnoreCase(CTProcessNameConst.UPDATE_FA_RESULT_HT_NAME)){
@@ -180,15 +186,20 @@ public class AmendmentBackingBean extends BaseBackingBean<AmendmentManagedBean> 
 	        reqDTO.setToken(token);
 	        reqDTO.setOutcome(action);
 	        reqDTO.setTaskId(this.getManagedBean().getTaskId());
-	        reqDTO.setUserLoginId(getFacesScopes().getUserSessionBean().getLoginId());
+	        
+	        if(this.getManagedBean().getUserLoginId() == null)
+	             reqDTO.setUserLoginId(getFacesScopes().getUserSessionBean().getLoginId());
+	        else
+	        	reqDTO.setUserLoginId(this.getManagedBean().getUserLoginId());
+	       
 	        this.getManagedBean().getContractVer().setDocType(ContractConst.DOC_TYPE_CONTRACT_AMENDMENT);
 	        this.getManagedBean().getContractVer().setDocNo("FA"+new Long(System.currentTimeMillis()).toString().substring(10));
 	        this.getManagedBean().getContractVer().getCtContractValue().setContractPhysicalNo("PN"+new Long(System.currentTimeMillis()).toString().substring(10));  
 	         
-	        if(this.getManagedBean().getContractVer().getCtAmendment().isContractExtend() ||
-	           this.getManagedBean().getContractVer().getCtAmendment().isValueChange() ){
+	        if(this.getManagedBean().getContractVer().getCtAmendment().isContractExtend() || this.getManagedBean().getContractVer().getCtAmendment().isValueChange() ){
 	            ChkComplyAP201Rule();	
 	        }
+	        
 	            
 	        reqDTO.setCtContract(this.getManagedBean().getContractVer().getCtContract());
 	        reqDTO.setCtContractVer(this.getManagedBean().getContractVer());
@@ -223,12 +234,16 @@ public class AmendmentBackingBean extends BaseBackingBean<AmendmentManagedBean> 
 	 
 	 public void ChkComplyAP201Rule(){
 		
-		if(this.getManagedBean().getContractVer().getCtContractValue().getContractAmount() > ContractConst.CONTRACT_ADDITIONAL_VALUE){
+	    Long temp = this.getManagedBean().getContractVer().getCtContractValue().getContractAmount().longValue();
+		if(temp > ContractConst.CONTRACT_ADDITIONAL_VALUE){
 			this.getManagedBean().getContractVer().getCtAmendment().setComplyAP201(true);
 		
 		 }if(getYear(this.getManagedBean().getContractVer().getCtContractValue().getEffDate(),
 				 this.getManagedBean().getContractVer().getCtContractValue().getExpDate()) > 2){
 			 this.getManagedBean().getContractVer().getCtAmendment().setComplyAP201(true);
+		
+		 } if(this.getManagedBean().getContractVer().getCtContractValue().isConcession()){
+			 this.getManagedBean().getContractVer().getCtAmendment().setComplyAP201(false);
 		}
 	 }
 	 
@@ -241,13 +256,13 @@ public class AmendmentBackingBean extends BaseBackingBean<AmendmentManagedBean> 
 	 
 	 public void addContractValue(){
 		  
-		 double firstVaue = this.getManagedBean().getContractVer().getCtContractValue().getAdditionalAmount();
-		 double contractValue = this.getManagedBean().getContractVer().getCtContractValue().getContractAmount();
+		 double firstVaue = this.getManagedBean().getContractVer().getCtContractValue().getAdditionalAmount().doubleValue();
+		 double contractValue = this.getManagedBean().getContractVer().getCtContractValue().getContractAmount().doubleValue();
 		 contractValue = contractValue + firstVaue - this.getManagedBean().getSecondValue();
 		
 		 this.getManagedBean().setSecondValue(firstVaue);
 		
-		 this.getManagedBean().getContractVer().getCtContractValue().setContractAmount(contractValue);
+		 this.getManagedBean().getContractVer().getCtContractValue().setContractAmount(new BigDecimal(contractValue));
 	 }
 	 
 	 public void ChkAmendmentAction(){

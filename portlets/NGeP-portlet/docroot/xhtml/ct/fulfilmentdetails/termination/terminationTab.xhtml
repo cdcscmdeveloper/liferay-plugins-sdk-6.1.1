@@ -10,14 +10,12 @@
 	<style>
       .column-align-right { text-align: right !important;}
     </style>
-     <c:if test='#{contractDetailsBackingBean.managedBean.chkRenderPage eq  "BPM"}'>
-     <f:event listener="#{contractDetailsBackingBean.preRenderView}" type="preRenderView" />
-	</c:if>
+      <f:event listener="#{terminationBackingBean.preRenderView}" type="preRenderView" />
 	 <p:panel>
 	 <p:messages id="messages" showDetail="true" autoUpdate="true" closable="true" severity="error, info" />
 	 <div class="ppRightBtn"> 
-	     <ui:repeat var="outcome" value="#{contractDetailsBackingBean.managedBean.action}">
-			<p:commandButton value="#{outcome}" process="@this" styleClass="ui-button" action="#{contractDetailsBackingBean.saveContract(outcome)}" />
+	     <ui:repeat var="outcome" value="#{terminationBackingBean.managedBean.action}">
+			<p:commandButton value="#{outcome}" process="@form" styleClass="ui-button" action="#{terminationBackingBean.saveContractTermination(outcome)}" />
 		 </ui:repeat>		
     </div>
 	</p:panel>
@@ -26,11 +24,11 @@
          <ui:include src="termination.xhtml"/>
          <ui:include src="/xhtml/ct/shared/remarkAndAttachment.xhtml" /> 
        </p:tab> 
-	   <p:tab title="#{lbl['lbl.ct.menu.remedy.notice']}" rendered="#{contractDetailsBackingBean.managedBean.terminateWarningLetter}" >
-         <ui:include src="/xhtml/ct/fulfilmentdetails/termination/remedyNotice.xhtml"/>
+	   <p:tab title="#{lbl['lbl.ct.menu.remedy.notice']}" rendered="#{terminationBackingBean.managedBean.terminateWarningLetter}" >
+         <ui:include src="remedyNotice.xhtml"/>
        </p:tab>  
-	   <p:tab title="#{lbl['lbl.ct.menu.tnotice']}" rendered="#{contractDetailsBackingBean.managedBean.terminateNotice}" >
-         <ui:include src="/xhtml/ct/fulfilmentdetails/termination/terminationNotice.xhtml" />  
+	   <p:tab title="#{lbl['lbl.ct.menu.tnotice']}" rendered="#{terminationBackingBean.managedBean.terminateNotice}" >
+         <ui:include src="terminationNotice.xhtml" />  
        </p:tab>   
 	</p:tabView>
    </ui:define>  

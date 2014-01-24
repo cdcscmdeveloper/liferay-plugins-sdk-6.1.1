@@ -4,27 +4,28 @@
 	xmlns:h="http://java.sun.com/jsf/html"
 	xmlns:ui="http://java.sun.com/jsf/facelets"
 	xmlns:p="http://primefaces.org/ui"
-	xmlns:c="http://java.sun.com/jsp/jstl/core">
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:ac="http://ac.my/jsf/composite/cc">
 	<p:panel id="fd" header="#{lbl['lbl.ct.panel.name']}" toggleable="true"  toggleSpeed="500">
 		<h:panelGrid columns="5" style="width:100%" columnClasses="columnWidth15">
 			<p:outputLabel value="#{lbl['lbl.ct.cno']}" />
-			<p:inputText value="#{contractDetailsBackingBean.managedBean.contractVer.ctContractValue.contractPhysicalNo}" style="width:170px;" disabled="true" />
+			<p:inputText value="#{terminationBackingBean.managedBean.contractVer.docNo}" style="width:170px;" disabled="true" />
 			<p:outputLabel value="#{lbl['lbl.ct.physicalNo']}" />
-			<p:inputText value="#{contractDetailsBackingBean.managedBean.contractVer.ctContractValue.contractPhysicalNo}" style="width:170px;" disabled="true" />				
+			<p:inputText value="#{terminationBackingBean.managedBean.contractVer.ctContractValue.contractPhysicalNo}" style="width:170px;" disabled="true" />				
 			<h:panelGrid columns="3">
 				<p:selectBooleanCheckbox
-					value="false" disabled="false" />
+					value="#{terminationBackingBean.managedBean.contractVer.ctContractValue.concession}" disabled="false" />
 				<p:spacer width="2" />
 				<p:outputLabel value="Concession" />
 			</h:panelGrid>
 			<p:outputLabel value="#{lbl['lbl.ct.effectiveDate']}" />
 			<h:inputText style="width:130px;" disabled="true"
-				value="#{contractDetailsBackingBean.managedBean.contractVer.ctContractValue.effDate}" >
+				value="#{terminationBackingBean.managedBean.contractVer.ctContractValue.effDate}" >
 				<f:convertDateTime pattern="dd/MM/yyyy"></f:convertDateTime>
 				</h:inputText>
 			<p:outputLabel value="#{lbl['lbl.ct.edate']}" />
 			<h:inputText style="width:130px;" disabled="true"
-				value="#{contractDetailsBackingBean.managedBean.contractVer.ctContractValue.expDate}" >
+				value="#{terminationBackingBean.managedBean.contractVer.ctContractValue.expDate}" >
 				<f:convertDateTime pattern="dd/MM/yyyy"></f:convertDateTime>
 				</h:inputText>
 			
@@ -35,30 +36,31 @@
 			</h:panelGrid>
 			
 				<p:outputLabel value="#{lbl['lbl.ct.contractAmount']}" />
-			<p:inputText value="#{contractDetailsBackingBean.managedBean.contractVer.ctContractValue.contractAmount}"
+			<p:inputText value="#{terminationBackingBean.managedBean.contractVer.ctContractValue.contractAmount}"
 				 disabled="true" style="width:130px;"  styleClass="ppRightBtn">
 				  <f:convertNumber pattern="#,###.00" />
 				 </p:inputText>	
 				 <p:outputLabel value="#{lbl['lbl.ct.loaNo']}" />
 		    	<p:inputText style="width:130px;" disabled="true" 
-				    value="#{contractDetailsBackingBean.managedBean.contractVer.ctContract.loaNo}" />	
+				    value="#{terminationBackingBean.managedBean.ctContract.loaNo}" />	
 			<h:panelGrid columns="3">
 				<p:selectBooleanCheckbox
-					value="#{contractDetailsBackingBean.managedBean.contractVer.ctContract.agreement}" disabled="true" />
+					value="#{terminationBackingBean.managedBean.ctContract.agreement}" disabled="true" />
 				<p:spacer width="2" />	
 				<p:outputLabel value="#{lbl['lbl.ct.agreement']}" />
 			</h:panelGrid>
 			 <p:outputLabel value="Supplier Name" />  
-              <p:inputText value="KHAI SDN BHD" disabled="true" style="width:170px;"/> 	
+              <p:inputText value="KHAI SDN BHD" disabled="true" style="width:175px;"/> 	
 			
 			 <p:outputLabel value="#{lbl['lbl.ct.dperiod']}" />
-			<h:panelGrid columns="2">
-				<p:inputText size="8" value="#{contractDetailsBackingBean.managedBean.contractVer.ctContractValue.deliveryTerm}" disabled="true"/>
+			<h:panelGrid columns="3">
+				<p:inputText size="8" value="#{terminationBackingBean.managedBean.contractVer.ctContractValue.deliveryTerm}" disabled="true"/>
+				<p:spacer width="2"/>
 				<p:outputLabel value="Days" />
 			</h:panelGrid>	
 			<h:panelGrid columns="3">
 				<p:selectBooleanCheckbox
-					value="#{contractDetailsBackingBean.managedBean.contractVer.ctContract.mto}"
+					value="#{terminationBackingBean.managedBean.ctContract.mto}"
 					disabled="true" style="text-align:top;" />
 				<p:spacer width="2" />	
 				<p:outputLabel value="#{lbl['lbl.ct.mto']}" style="text-align:top;" />
@@ -70,20 +72,20 @@
 			</h:panelGroup>
 			 <h:panelGrid>
 			<h:inputTextarea id="contractName"
-				value="#{contractDetailsBackingBean.managedBean.contractVer.ctContract.contractName}"
+				value="#{terminationBackingBean.managedBean.ctContract.contractName}"
 				required="false" rows="3" cols="35" disabled="true"
 				autoResize="false" />	
 			</h:panelGrid>		
 			<f:verbatim /><f:verbatim /> <f:verbatim /><f:verbatim /><f:verbatim />
 			
 			<h:outputLabel
-				rendered="#{contractDetailsBackingBean.managedBean.contractVer.ctContract.circular.latestCircularVer.circularNo != null}"
+				rendered="#{terminationBackingBean.managedBean.ctContract.circular.latestCircularVer.circularNo != null}"
 				value="#{lbl['lbl.ct.circularNo']}" />
 			<p:commandLink
-				rendered="#{contractDetailsBackingBean.managedBean.contractVer.ctContract.circular.latestCircularVer.circularNo != null}"
+				rendered="#{terminationBackingBean.managedBean.ctContract.circular.latestCircularVer.circularNo != null}"
 				style="margin-right:20px;" ajax="false">
 				<h:outputText
-					value="#{contractDetailsBackingBean.managedBean.contractVer.ctContract.circular.latestCircularVer.circularNo}"
+					value="#{terminationBackingBean.managedBean.ctContract.circular.latestCircularVer.circularNo}"
 					styleClass="linkcommand" />
 			</p:commandLink>
 		</h:panelGrid>
@@ -91,13 +93,13 @@
     <p:panel id="terCont" header="#{lbl['lbl.ct.tr.panel.header']}" toggleable="true"  toggleSpeed="500">
         <table style="width: 100%">
 			<tr>
-				<td style="width: 115px;"><p:outputLabel value="#{lbl['lbl.ct.tr.recom']}" /></td>
+				<td style="width: 140px;"><p:outputLabel value="#{lbl['lbl.ct.tr.recom']}" /></td>
 				<td>
 					<p:selectOneMenu style="width:180px;"
-						value="#{contractDetailsBackingBean.managedBean.termination.decisionType.parameterCode}" >
-						<f:selectItems value="#{contractDetailsBackingBean.getDropdownCodeValues(ParameterTypeConst.terminationDecisionType)}" />
+						value="#{terminationBackingBean.managedBean.contractVer.ctTermination.decisionType.parameterId}">
+						<f:selectItems value="#{terminationBackingBean.getDropdownValues('TDT')}" />
 						<p:ajax event="change" update=":form:tabview" process="@this"
-							listener="#{contractDetailsBackingBean.changeField}" />
+							listener="#{terminationBackingBean.changeField}" />
 					</p:selectOneMenu>
 				</td>
 			</tr>
@@ -105,77 +107,71 @@
 				<td><p:spacer height="2" /></td>
 			</tr>
 			<tr>
-				<td style="width: 115px;"><p:outputLabel value="Disciplinary Action" /></td>
+				<td style="width: 140px;"><p:outputLabel value="Disciplinary Action" /></td>
 				<td>
-					<p:selectBooleanCheckbox value="#{contractDetailsBackingBean.managedBean.disciplinaryAction}">
-						<p:ajax event="change" update=":form:tabview"
-							listenerd="#{contractDetailsBackingBean.ChkDisciplinaryAction}"
-							process="@this" />
-					</p:selectBooleanCheckbox>
+					<p:selectBooleanCheckbox value="#{terminationBackingBean.managedBean.contractVer.ctTermination.displinaryAction}">
+                         <p:ajax event="change" update=":form:tabview" listener="#{terminationBackingBean.chkDisciplinaryAction}" process="@this"/> 
+                        </p:selectBooleanCheckbox>
 				</td>
 			</tr>
 		</table>
-             <p:spacer height="2"/>
-             <p:outputPanel rendered="#{contractDetailsBackingBean.managedBean.disciplinaryValue}">
+        <p:spacer height="2"/>
+         <p:outputPanel rendered="#{terminationBackingBean.managedBean.disciplinaryValue}">
                <table style="width: 100%">
                <tr>
-                   <td style="width:115px;"> <p:outputLabel value="Supplier Name" /></td>
-			       <td>   <p:inputText  style="width:170px;" disabled="true" /></td>
-			       <td>   <p:outputLabel value="Complaint Type" /></td>
-			       <td>   <p:inputText value="Breach The Obligation Of Tender / Contract" style="width:220px;" disabled="true"/> </td>
-                          <td style="width:110px;"><f:verbatim></f:verbatim></td>
-                  </tr>
-                  </table>
-                  <h:panelGrid columns="2">
+                   <td style="width:140px;"> <p:outputLabel value="Supplier Name"/></td>
+			       <td> <p:inputText value="#{terminationBackingBean.managedBean.ctContract.smSupplier.companyName}"
+			               style="width:170px;" disabled="true" /></td>
+			       <td> <p:outputLabel value="Complaint Type" /></td>
+			       <td> <p:inputText value="#{terminationBackingBean.managedBean.complaintCategory}" 
+			             style="width:220px;" disabled="true"/> </td>
+                   <td style="width:110px;"><f:verbatim></f:verbatim></td>
+                 </tr>
+                 </table>
+                 <h:panelGrid columns="2">
                    <h:panelGroup>
-		                <div style="height:90px;width:115px; vertical-align: top;">
+		                <div style="height:90px;width:140px; vertical-align:top;">
 			               <p:outputLabel for="complaintDesc" value="Complaint Details" />
 			            </div>
 			       </h:panelGroup>
 			       <h:panelGrid>
-			       <h:inputTextarea id="complaintDesc"
-				             value=" " rows="7" cols="110" disabled="false" autoResize="false" />	
+			       <h:inputTextarea id="complaintDesc" value="#{terminationBackingBean.managedBean.contractVer.ctTermination.displinaryActionDesc}" 
+			          rows="7" cols="110" disabled="false" autoResize="false" />	
 			</h:panelGrid>		
            </h:panelGrid>       
 		</p:outputPanel>
        <p:spacer height="10"/>
        <h:panelGrid style="width:100%">
-			<p:dataTable id="dataTable" var="data" value="#{contractDetailsBackingBean.managedBean.termination.ctTerminationReasons}" rowIndexVar="index" 
-			  widgetVar="dataTableObj" lazy="false" dynamic="true" 
-			  emptyMessage="No Records!">
-			   <p:columnGroup type="header"> 
-				<p:row> 
-				  <p:column style="width:200px;" headerText="#{lbl['lbl.ct.tr.table.reason']}"  /> 
-				  <p:column style="width:480px;" headerText="#{lbl['lbl.ct.tr.table.descp']}" /> 
-				  <p:column style="width:50px;" headerText="#{lbl['lbl.ct.tr.table.action']}" /> 
-				</p:row>							
-				</p:columnGroup>
-				<p:column>  
-				   <p:selectOneMenu   style="width:170px;">
-                    <f:selectItems value="#{contractDetailsBackingBean.getDropdownValues(PmCodeCatConst.ctTerminationReasonType)}" />
-               	  </p:selectOneMenu> 
-            	</p:column>	
-				<p:column> <p:inputText value="#{data.description}" style="width:430px;"/>
-				</p:column> 	
-				<p:column styleClass="column-align-center">
-				 <p:commandLink partialSubmit="true" process="@this"  onsuccess="confirmation.show()">
-				   <f:setPropertyActionListener value="#{data}" target="#{contractDetailsBackingBean.managedBean.terminationReason}" />
-			       <p:graphicImage library="ep/images/design" name="delete.png" value="/resources/ep/images/design/delete.png" title="Delete" />
-			</p:commandLink>
-				</p:column>						
-		    </p:dataTable>
+		  <p:dataTable id="dataTable" var="data" value="#{terminationBackingBean.managedBean.contractVer.ctTermination.ctTerminationReasons}" 
+			 lazy="false" dynamic="true" rowKey="#{data}" selection="#{terminationBackingBean.selectedTerminationReasonsList}" 
+			 paginator="true" paginatorPosition="bottom" paginatorAlwaysVisible="false" emptyMessage="No Records!">
+			 <ac:paginator for="dataTable" />
+			     <p:column selectionMode="multiple" style="width:15px;"/>  
+		         <p:column style="width:190px;" headerText="#{lbl['lbl.ct.tr.table.reason']}" >
+		             <p:selectOneMenu style="width:100%;" value="#{data.reasonType.parameterId}">
+                       <f:selectItems value="#{terminationBackingBean.getDropdownValues(PmCodeCatConst.ctTerminationReasonType)}" />
+               	     </p:selectOneMenu>
+                 </p:column>
+		        <p:column style="width:600px;" headerText="#{lbl['lbl.ct.tr.table.descp']}">
+		           <p:inputText value="#{data.description}" style="width:600px;"/>
+		        </p:column> 
+		   </p:dataTable>
 		 </h:panelGrid>
-		 <h:panelGrid style="width:100%" columnClasses="column-align-right">
-			<p:commandButton value="Add"  process="@this" partialSubmit="true" icon="ui-icon-add" 
-			   action="#{contractDetailsBackingBean.addTerminateReason()}" update="dataTable"/>
-		  </h:panelGrid>
+		 <p:spacer height="2" />
+		   <div class="ppRightBtn"> 
+		      <p:commandButton value="Add"  process="@form" partialSubmit="true"
+		         icon="ui-icon-add" action="#{terminationBackingBean.addTerminateReason()}" update="dataTable"/>
+		      <p:spacer width="2"/>
+		        <p:commandButton value="Delete" icon="ui-icon-delete" partialSubmit="true" process="@this" onsuccess="confirmation.show()">
+			  </p:commandButton> 
+	   	  </div>
 		  <p:confirmDialog message="Do you want to delete the record?"  closable="true" appendToBody="true" header="Delete Confirmation"
-			   severity="alert" widgetVar="confirmation">
-                 <h:panelGrid columns="2">
-				 <p:commandButton value="Yes" update="dataTable" partialSubmit="true" process="@this"
-				    onclick="confirmation.hide();" actionListener="#{contractDetailsBackingBean.deleteTerminateReason()}"/>
-				  <p:commandButton value="No" 	onclick="confirmation.hide()" type="button" />
-				</h:panelGrid>
-			</p:confirmDialog>
+			 severity="alert" widgetVar="confirmation">
+             <h:panelGrid columns="2">
+				<p:commandButton value="Yes" update="dataTable" partialSubmit="true" process="@form"
+				   onclick="confirmation.hide();" action="#{terminationBackingBean.deleteTerminateReason}"/>
+				<p:commandButton value="No" onclick="confirmation.hide()" type="button" />
+		     </h:panelGrid>
+		  </p:confirmDialog>
 		</p:panel>      
 </ui:composition>

@@ -91,13 +91,7 @@ public class ContractDetailsManagedBean extends BaseManagedBean{
 	private List<CtContract> contractList = new ArrayList<CtContract>();
 	private CtContract ctContract;
 	
-	private boolean disciplinaryAction;
-	private boolean disciplinaryValue;
-	private boolean terminateNotice;
-	private boolean terminateRejectLetter;
-	private boolean terminateWarningLetter;
-	private CtTermination termination;
-	private CtTerminationReason terminationReason;
+	
 
 	private boolean activeSuspension;
 	private boolean booleanSuspendValue = false;
@@ -405,46 +399,6 @@ public class ContractDetailsManagedBean extends BaseManagedBean{
 		this.ctContract = ctContract;
 	}
 
-	public boolean isTerminateNotice() {
-		return terminateNotice;
-	}
-
-	public void setTerminateNotice(boolean terminateNotice) {
-		this.terminateNotice = terminateNotice;
-	}
-
-	public boolean isTerminateRejectLetter() {
-		return terminateRejectLetter;
-	}
-
-	public void setTerminateRejectLetter(boolean terminateRejectLetter) {
-		this.terminateRejectLetter = terminateRejectLetter;
-	}
-
-	public boolean isTerminateWarningLetter() {
-		return terminateWarningLetter;
-	}
-
-	public void setTerminateWarningLetter(boolean terminateWarningLetter) {
-		this.terminateWarningLetter = terminateWarningLetter;
-	}
-
-	public CtTermination getTermination() {
-		return termination;
-	}
-
-	public void setTermination(CtTermination termination) {
-		this.termination = termination;
-	}
-
-	public CtTerminationReason getTerminationReason() {
-		return terminationReason;
-	}
-
-	public void setTerminationReason(CtTerminationReason terminationReason) {
-		this.terminationReason = terminationReason;
-	}
-
 	public boolean isActiveSuspension() {
 		return activeSuspension;
 	}
@@ -608,22 +562,6 @@ public class ContractDetailsManagedBean extends BaseManagedBean{
 
 	public void setSuspension(boolean suspension) {
 		this.suspension = suspension;
-	}
-
-	public boolean isDisciplinaryAction() {
-		return disciplinaryAction;
-	}
-
-	public void setDisciplinaryAction(boolean disciplinaryAction) {
-		this.disciplinaryAction = disciplinaryAction;
-	}
-
-	public boolean isDisciplinaryValue() {
-		return disciplinaryValue;
-	}
-
-	public void setDisciplinaryValue(boolean disciplinaryValue) {
-		this.disciplinaryValue = disciplinaryValue;
 	}
 
 	public String getItemType() {

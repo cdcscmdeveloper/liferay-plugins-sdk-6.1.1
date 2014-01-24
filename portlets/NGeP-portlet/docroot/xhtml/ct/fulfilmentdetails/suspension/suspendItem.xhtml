@@ -9,7 +9,7 @@
 	   <p:panel id="itemId" header="Item Details" toggleable="true"  toggleSpeed="500">
 	   <div style="overflow-x:auto">
        <p:dataTable id="itemTable" var="data" value="#{suspensionBackingBean.managedBean.contractVer.ctContractItems}" 
-         lazy="false" paginator="true"  paginatorPosition="bottom" paginatorAlwaysVisible="true" emptyMessage="No Records!">
+         lazy="false" paginator="true"  paginatorPosition="bottom" paginatorAlwaysVisible="false" emptyMessage="No Records!">
 		  <ac:paginator for="itemTable"/>
             <p:columnGroup type="header"> 
 			 <p:row> 
@@ -25,7 +25,7 @@
 		   <p:column><p:calendar value="#{data.suspendFrom}" id="calItem" size="15" showOn="button"/></p:column> 
 		   <p:column> <p:calendar value="#{data.suspendTo}" id="calItem1" size="15" showOn="button"/></p:column> 
 		   <p:column>  <p:selectOneMenu value="#{data.suspensionType.parameterId}" style="width:110px;">
-				<f:selectItems value="#{suspensionBackingBean.getDropdownValues(ParameterTypeConst.suspensionType)}" />
+				<f:selectItems value="#{suspensionBackingBean.getDropdownValues('SPT')}" />
 			</p:selectOneMenu>	 
 		  </p:column>
 		 </p:dataTable>	

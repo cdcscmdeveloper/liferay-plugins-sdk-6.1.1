@@ -17,7 +17,7 @@ import my.ep.persistence.entity.ct.dtl.item.CtItemPrice;
 import my.ep.web.managedbean.BaseManagedBean;
 
 /**
- * Managed Bean For Contract Details
+ * Managed Bean For Contract Amendment
  * 
  * @author Alam
  * @since 1/13/2014	 
@@ -51,6 +51,7 @@ public class AmendmentManagedBean extends BaseManagedBean {
 	private List<CtRemark> remarkList;
 	private List<CtAttachment> attachmentList;
 	private double secondValue =0.0;
+	private String userLoginId;
 	
 	public CtContractVer getContractVer() {
 		return contractVer;
@@ -210,5 +211,15 @@ public class AmendmentManagedBean extends BaseManagedBean {
 	public void setSecondValue(double secondValue) {
 		this.secondValue = secondValue;
 	}
+
+	public String getUserLoginId() {
+		return userLoginId;
+	}
+
+	public void setUserLoginId(String userLoginId) {
+		this.userLoginId = userLoginId;
+	}
+	
+	
 
 }

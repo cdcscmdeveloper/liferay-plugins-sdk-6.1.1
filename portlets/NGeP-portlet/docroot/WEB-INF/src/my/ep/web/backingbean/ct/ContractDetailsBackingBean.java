@@ -12,9 +12,8 @@ import java.io.OutputStream;
 import java.net.URL;
 import java.net.URLConnection;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-
+import java.util.HashMap;
 import javax.annotation.PostConstruct;
 import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
@@ -24,6 +23,17 @@ import javax.faces.model.SelectItem;
 import javax.portlet.PortletResponse;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+
+import org.apache.log4j.Logger;
+import org.primefaces.event.RowEditEvent;
+import org.primefaces.event.SelectEvent;
+import org.primefaces.model.DefaultTreeNode;
+import org.primefaces.model.DualListModel;
+import org.primefaces.model.TreeNode;
+
+
+import com.liferay.portal.kernel.search.ParseException;
+import com.liferay.portal.util.PortalUtil;
 
 import my.ep.biz.bean.search.ISearchBean;
 import my.ep.biz.bean.search.SearchBean;
@@ -37,7 +47,6 @@ import my.ep.bpm.dto.BpmResponseDTO;
 import my.ep.bpm.service.IBpmSO;
 import my.ep.constant.BpmOutcomeConst;
 import my.ep.constant.ct.ContractConst;
-import my.ep.constant.pm.ParameterConst;
 import my.ep.dto.ct.ContractReqDTO;
 import my.ep.dto.ct.ContractResDTO;
 import my.ep.dto.ct.maintain.ContractAssociationReqDTO;
@@ -60,7 +69,6 @@ import my.ep.persistence.entity.ct.dtl.CtProgressivePayment;
 import my.ep.persistence.entity.ct.dtl.CtSchedule;
 import my.ep.persistence.entity.ct.dtl.deduction.CtDeduction;
 import my.ep.persistence.entity.ct.dtl.deduction.CtDeductionClause;
-import my.ep.persistence.entity.ct.terminate.CtTermination;
 import my.ep.persistence.entity.ct.terminate.CtTerminationReason;
 import my.ep.persistence.entity.pm.authorization.PmOrgProfile;
 import my.ep.persistence.entity.pm.authorization.PmUserGroup;
@@ -72,20 +80,12 @@ import my.ep.util.lookupservice.EpBpmBusinessDelegate;
 import my.ep.web.backingbean.BaseBackingBean;
 import my.ep.web.backingbean.ct.agreement.AgreementBackingBean;
 import my.ep.web.backingbean.ct.amendment.AmendmentBackingBean;
+import my.ep.web.backingbean.ct.suspension.SuspensionBackingBean;
+import my.ep.web.backingbean.ct.termination.TerminationBackingBean;
 import my.ep.web.constant.ct.ContractManagementConst;
 import my.ep.web.managedbean.ct.ContractDetailsManagedBean;
 import my.ep.web.util.FacesScopes;
 import my.ep.web.util.lookupservice.BusinessDelegate;
-
-import org.apache.log4j.Logger;
-import org.primefaces.event.RowEditEvent;
-import org.primefaces.event.SelectEvent;
-import org.primefaces.model.DefaultTreeNode;
-import org.primefaces.model.DualListModel;
-import org.primefaces.model.TreeNode;
-
-import com.liferay.portal.kernel.search.ParseException;
-import com.liferay.portal.util.PortalUtil;
 
 /**
  * Backing Bean For Contract Details
@@ -115,6 +115,7 @@ public class ContractDetailsBackingBean extends BaseBackingBean<ContractDetailsM
 	private String fulfillmentNo = "01234567889";
 	private CtSchedule[] selectedSchedule;
 	private CtProgressivePayment[] selectedProgressive;
+	ContractBackingBean ctBB = null;
 	
 	private final static String[] deductions;
 	static {
@@ -166,19 +167,8 @@ public class ContractDetailsBackingBean extends BaseBackingBean<ContractDetailsM
 	@PostConstruct
 	public void initializeContractValue() throws ParseException {
 		 
-			ContractBackingBean ctBB = new ContractBackingBean();
+			ctBB = new ContractBackingBean();
 			ctBB.initializeRemarkAndAttachement(this.getManagedBean().getRemarkList(), this.getManagedBean().getAttachmentList());
-			
-			if(this.getManagedBean().getTermination() == null){
-				 System.out.println("inside constructor termination");
-				   this.getManagedBean().setTermination(new CtTermination());
-				   this.getManagedBean().getTermination().setDecisionType(new PmParameter());
-				   this.getManagedBean().getTermination().setCtContractVer(new CtContractVer());
-				
-				
-				   this.getManagedBean().getTermination().getDecisionType().setParameterId(155L);
-			 }
-			
 		}
 	
     public void preRenderView(){
@@ -418,20 +408,18 @@ public class ContractDetailsBackingBean extends BaseBackingBean<ContractDetailsM
 			System.out.println(e);
 		}
     }
-    
     public void changeField() {
+
 		try {
 			flush();
 			if (this.getManagedBean().getShowItem().equalsIgnoreCase("Item Pricing")) {
 				this.getManagedBean().setItemPricing(true);
+
 			} else if (this.getManagedBean().getShowItem().equalsIgnoreCase("Item Ceiling Quantity")) {
 				this.getManagedBean().setItemCeilingQuantity(true);
-			}else if (this.getManagedBean().getTermination().getDecisionType().getParameterCode().equalsIgnoreCase(ParameterConst.TERMINATE_DECISION_TERMINATE) || 
-					this.getManagedBean().getTermination().getDecisionType().getParameterCode().equalsIgnoreCase(ParameterConst.TERMINATE_DECISION_MUTUAL_TERMINATE) ) {
-				this.getManagedBean().setTerminateNotice(true);
-			} else if (this.getManagedBean().getTermination().getDecisionType().getParameterCode().equalsIgnoreCase(ParameterConst.TERMINATE_DECISION_REMEDY_NOTICE)) {
-				this.getManagedBean().setTerminateWarningLetter(true);
-			} 
+
+			}
+			
 		} catch (Exception e) {
 			System.out.println(e);
 		}
@@ -470,30 +458,12 @@ public class ContractDetailsBackingBean extends BaseBackingBean<ContractDetailsM
  	  this.getManagedBean().setProductItem(false);
     }
     
-    private void flushDiscip() {
-    	this.getManagedBean().setDisciplinaryValue(false);
-    }
-    public void ChkDisciplinaryAction(){
-    	
-    	try {
-    		flushDiscip();
-			if(this.getManagedBean().isDisciplinaryAction()){
-				this.getManagedBean().setDisciplinaryValue(true);
-			}
-    	} catch (Exception e) {
-			System.out.println(e);
-		}
-    }
-    
     private void flush() {
     	
 		this.getManagedBean().setItemPricing(false);
 		this.getManagedBean().setItemCeilingQuantity(false);
 		this.getManagedBean().setChkSchedule(false);
 		this.getManagedBean().setChkProgressive(false);
-		this.getManagedBean().setTerminateNotice(false);
-		this.getManagedBean().setTerminateRejectLetter(false);
-		this.getManagedBean().setTerminateWarningLetter(false);
 		this.getManagedBean().setSuspension(false);
 		this.getManagedBean().setActivation(false);
 	}
@@ -572,17 +542,6 @@ public class ContractDetailsBackingBean extends BaseBackingBean<ContractDetailsM
 		selectedProgressive = null;
 	}/*End schedule*/
 	
-	/*Termination start*/
-	public void addTerminateReason() {
-		CtTerminationReason terminateReason = new CtTerminationReason();
-		this.getManagedBean().getTermination().getCtTerminationReasons().add(terminateReason);
-	}
-
-	public void deleteTerminateReason() {
-		this.getManagedBean().getTermination().getCtTerminationReasons().remove(this.getManagedBean().getTerminationReason());
-	}
-
-	/*End*/
 	
 	/* Suspension Start */
 	 public List<SelectItem> getSuspentionTypes() {
@@ -977,26 +936,31 @@ public class ContractDetailsBackingBean extends BaseBackingBean<ContractDetailsM
 		IContractSO contractSO = null;
 		ContractResDTO resDTO  = null;
 		ContractReqDTO reqDTO  = null;
+		TerminationBackingBean trBB= null;
 		
 		try {
 
-				reqDTO = new ContractReqDTO();
-				contractSO = (IContractSO) BusinessDelegate.getInstance().getServiceObject("ct", IContractSO.class);
-				reqDTO.setContractVerId(this.getManagedBean().getCtContract().getContractId());
-				resDTO = contractSO.retrieveContractVer(reqDTO);
-				this.getManagedBean().setChkRenderPage(ContractConst.DOC_TYPE_CONTRACT_TERMINATION);
-				this.getManagedBean().setContractVer(resDTO.getCtContractVer());	
-				if(this.getManagedBean().getContractVer().getCtTermination()==null) {
-					this.getManagedBean().getContractVer().setCtTermination(new CtTermination());
-					
-				}
-			} catch (Exception e) {
+			reqDTO = new ContractReqDTO();
+			contractSO = (IContractSO) BusinessDelegate.getInstance().getServiceObject("ct", IContractSO.class);
+			reqDTO.setContractVerId(this.getManagedBean().getCtContract().getLatestContractVer().getContractVerId());
+			reqDTO.setUpdateAction(true);
+			resDTO = contractSO.retrieveContractVer(reqDTO);
+			trBB = new TerminationBackingBean();
+			
+			if(resDTO.getCtContractVer().getCtTermination().getDecisionType() == null)
+				resDTO.getCtContractVer().getCtTermination().setDecisionType(new PmParameter());
+			
+	    	trBB.getManagedBean().setContractVer(resDTO.getCtContractVer());	
+			trBB.getManagedBean().setCtContract(resDTO.getCtContractVer().getCtContract());	
+				
+    	 } catch (Exception e) {
 				e.printStackTrace();
-			} finally {
+		 } finally {
 				contractSO = null;
 				resDTO = null;
 				reqDTO = null;
-			}
+				trBB= null;
+		 }
 		
 		return PROCESS_TERMINATE_PAGE;
 	} 
@@ -1006,15 +970,17 @@ public class ContractDetailsBackingBean extends BaseBackingBean<ContractDetailsM
 		IContractSO contractSO = null;
 		ContractResDTO resDTO  = null;
 		ContractReqDTO reqDTO  = null;
+		SuspensionBackingBean suspBB = null;
 		
 		try {
 
 			reqDTO = new ContractReqDTO();
 			contractSO = (IContractSO) BusinessDelegate.getInstance().getServiceObject("ct", IContractSO.class);
 			reqDTO.setContractVerId(this.getManagedBean().getCtContract().getContractId());
+			reqDTO.setUpdateAction(true);
 			resDTO = contractSO.retrieveContractVer(reqDTO);
-			this.getManagedBean().setChkRenderPage(ContractConst.DOC_TYPE_CONTRACT_SUSPEND_ACTIVE);
-			this.getManagedBean().setContractVer(resDTO.getCtContractVer());	
+			suspBB = new SuspensionBackingBean();
+			suspBB.getManagedBean().setContractVer(resDTO.getCtContractVer());	
 		
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -1022,6 +988,8 @@ public class ContractDetailsBackingBean extends BaseBackingBean<ContractDetailsM
 			contractSO = null;
 			resDTO = null;
 			reqDTO = null;
+			suspBB = null;
+			ctBB = null;
 		}
 		return PROCESS_SUSPEND_PAGE;
 	}
@@ -1052,6 +1020,8 @@ public class ContractDetailsBackingBean extends BaseBackingBean<ContractDetailsM
 				resDTO = null;
 				reqDTO = null;
 				amendBB =null;
+				ctBB = null;
+				
 			}
 		return PROCESS_AMEND_PAGE;
 	}

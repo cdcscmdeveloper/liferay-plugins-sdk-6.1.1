@@ -23,7 +23,7 @@
 			<p:column width="100" > <p:calendar value="#{data.suspendTo}" id="calloc2" showOn="button"/>  	</p:column> 
 			<p:column>
 			<p:selectOneMenu value="#{data.suspensionType.parameterId}" style="width:110px;">
-				<f:selectItems value="#{suspensionBackingBean.getDropdownValues(ParameterTypeConst.suspensionType)}" />
+				<f:selectItems value="#{suspensionBackingBean.getDropdownValues('SPT')}" />
 			</p:selectOneMenu>		
 			</p:column> 
 	   </p:dataTable>	
