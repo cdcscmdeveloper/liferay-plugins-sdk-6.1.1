@@ -25,6 +25,7 @@ import my.ep.persistence.entity.pm.common.PmCountry;
 import my.ep.persistence.entity.pm.common.PmDistrict;
 import my.ep.persistence.entity.pm.common.PmFinancialOrg;
 import my.ep.persistence.entity.pm.common.PmState;
+import my.ep.persistence.entity.pm.common.PmUom;
 import my.ep.persistence.entity.sm.SmAddress;
 import my.ep.persistence.entity.sm.SmAppl;
 import my.ep.persistence.entity.sm.SmApplRejectReason;
@@ -144,10 +145,11 @@ public class SmApplicationBackingBean extends
 			}
 
 			if (smAppl.getSmFacilities().isEmpty()) {
+				System.out.println("*** Empty Facility******");
 				SmFacility fac = new SmFacility();
 				SmAddress addr = new SmAddress();
 				fac.setSmAppl(smAppl);
-				// fac.setSmAddress(addr);
+				fac.setSmAddress(addr);
 				smAppl.getSmFacilities().add(fac);
 			} else {
 				// TODO
@@ -451,12 +453,12 @@ public class SmApplicationBackingBean extends
 		} else {
 			desc = "Special";
 		}
-		sb.append("NOTE : ");
+		sb.append("NOTE : '");
 		sb.append(desc);
-		sb.append("categories can only be added in this applicaiton'");
-		getManagedBean().setApplCatConfirmMsg(sb.toString());
+		sb.append("' categories can only be added in this applicaiton'");
+		getManagedBean().setCatTypeConfirm(sb.toString());
 		System.out.println("*** Msg Is ****"
-				+ getManagedBean().getApplCatConfirmMsg());
+				+ getManagedBean().getCatTypeConfirm());
 	}
 
 	public void assignApplnCategoryType() {
@@ -482,13 +484,14 @@ public class SmApplicationBackingBean extends
 			getManagedBean().getSmAppl().getSmSupplierCategories()
 					.removeAll(catList);
 		}
-		getManagedBean().setApplCatConfirmMsg(null);
+		getManagedBean().setDummyCatType("");
 	}
 
 	public void resetApplnCategoryType() {
 		System.out.println("********* Reset the Values ********");
 		// getManagedBean().getSmAppl().setApplCategoryType(null);
-		getManagedBean().setApplCatConfirmMsg(null);
+		getManagedBean().setDummyCatType("");
+		getManagedBean().setCatTypeConfirm(null);
 	}
 
 	public void svcSelected(AjaxBehaviorEvent e) {
@@ -718,7 +721,23 @@ public class SmApplicationBackingBean extends
 			for (PmCategoryL3 p3 : getManagedBean().getSelectedCategory()
 					.getPmCategoryL2().getPmCategoryL3s()) {
 				if (p3.getCategoryL3Code().equalsIgnoreCase(selPmCatL3)) {
+					System.out.println("***** Selected Child is ********"
+							+ p3.getCategoryL3Code() + " --- Name ----"
+							+ p3.getCategoryName());
+					if (p3.getCategoryL3Code().equals("1")) {
+						getManagedBean().setDummyCatType("261");
+					} else if (p3.getCategoryL3Code().equals("2")) {
+						getManagedBean().setDummyCatType("264");
+						getManagedBean().getSelectedManufacturer().setPmUom(
+								new PmUom());
+					} else if (p3.getCategoryL3Code().equals("3")) {
+						getManagedBean().setDummyCatType("266");
+					} else {
+						getManagedBean().setDummyCatType("NA");
+					}
 					getManagedBean().getSelectedCategory().setPmCategoryL3(p3);
+					System.out.println("***After Setting the Ps ************"
+							+ getManagedBean().getDummyCatType());
 
 				}
 			}
@@ -759,7 +778,7 @@ public class SmApplicationBackingBean extends
 			categ.setSpecialCategory(true);
 		}
 		getManagedBean().setSelectedCategory(categ);
-
+		getManagedBean().setDummyCatType("");
 		resetSelectedCategoryParams();
 	}
 

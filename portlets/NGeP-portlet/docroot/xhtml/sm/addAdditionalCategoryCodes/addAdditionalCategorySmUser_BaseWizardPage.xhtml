@@ -66,23 +66,16 @@
 										rendered="#{backingBean.managedBean.smAppl.currentActiveTab ge 4}"
 										styleClass="#{backingBean.managedBean.tabActiveIndex eq 4 ? 'currentStep' : ''}" /></li>
 
+							
+
 								<li><h:outputText
-										value="#{lbl['lbl.sm.wizard.factoryStepLbl']}"
+										value="#{lbl['lbl.sm.wizard.supDocStepLbl']}"
 										rendered="#{backingBean.managedBean.smAppl.currentActiveTab lt 5}" />
-									<p:commandLink value="#{lbl['lbl.sm.wizard.factoryStepLbl']}"
+									<p:commandLink value="#{lbl['lbl.sm.wizard.supDocStepLbl']}"
 										actionListener="#{backingBean.setTabValue(backingBean.managedBean.tabActiveIndex,'5')}"
 										action="#{backingBean.updateSmAppl}" update=":form"
 										rendered="#{backingBean.managedBean.smAppl.currentActiveTab ge 5}"
 										styleClass="#{backingBean.managedBean.tabActiveIndex eq 5 ? 'currentStep' : ''}" /></li>
-
-								<li><h:outputText
-										value="#{lbl['lbl.sm.wizard.supDocStepLbl']}"
-										rendered="#{backingBean.managedBean.smAppl.currentActiveTab lt 6}" />
-									<p:commandLink value="#{lbl['lbl.sm.wizard.supDocStepLbl']}"
-										actionListener="#{backingBean.setTabValue(backingBean.managedBean.tabActiveIndex,'6')}"
-										action="#{backingBean.updateSmAppl}" update=":form"
-										rendered="#{backingBean.managedBean.smAppl.currentActiveTab ge 6}"
-										styleClass="#{backingBean.managedBean.tabActiveIndex eq 6 ? 'currentStep' : ''}" /></li>
 
 							</ul>
 							<ul id="tripMeter" class="menu-line">
@@ -97,9 +90,7 @@
 								<li
 									class="#{backingBean.managedBean.tabActiveIndex eq 4 ? 'space red-dot' :  (backingBean.managedBean.smAppl.currentActiveTab ge 4 ? 'space green-dot':'space black-dot')}" />
 								<li
-									class="#{backingBean.managedBean.tabActiveIndex eq 5 ? 'space red-dot' :  (backingBean.managedBean.smAppl.currentActiveTab ge 5 ? 'space green-dot':'space black-dot')}" />
-								<li
-									class="#{backingBean.managedBean.tabActiveIndex eq 6 ? 'red-dot' :  (backingBean.managedBean.smAppl.currentActiveTab ge 6 ? 'green-dot':'black-dot')}" />
+									class="#{backingBean.managedBean.tabActiveIndex eq 5 ? 'red-dot' :  (backingBean.managedBean.smAppl.currentActiveTab ge 5 ? 'green-dot':'black-dot')}" />
 
 							</ul>
 						</div></td>
@@ -139,9 +130,6 @@
 				<ui:include src="step5AddnlCatCode_RegisterCategoryCodesInfo.xhtml" />
 			</c:if>
 			<c:if test="#{backingBean.managedBean.tabActiveIndex eq 5}">
-				<ui:include src="step5.1AddnlCatCode_FactoryInfo.xhtml" />
-			</c:if>
-			<c:if test="#{backingBean.managedBean.tabActiveIndex eq 6}">
 				<ui:include src="step6AddnlCatCode_SupportingDocumentsInfo.xhtml" />
 			</c:if>
 

@@ -176,7 +176,9 @@ public class SmApplicationManagedBean extends BaseManagedBean {
 
 	private String newSupplierType;
 
-	private String applCatConfirmMsg;
+	private String catTypeConfirm;
+
+	private String dummyCatType;
 
 	public SmApplicationManagedBean() {
 		// TODO Checking the user role
@@ -399,41 +401,6 @@ public class SmApplicationManagedBean extends BaseManagedBean {
 	public void setSelectedCategory(SmSupplierCategory selectedCategory) {
 		this.selectedCategory = selectedCategory;
 	}
-
-	// public List<SmProjectExperience> getSelectedConstProjs() {
-	// return selectedConstProjs;
-	// }
-	//
-	// public void setSelectedConstProjs(
-	// List<SmProjectExperience> selectedConstProjs) {
-	// this.selectedConstProjs = selectedConstProjs;
-	// }
-	//
-	// public SmProjectExperience getSelectedConstProj() {
-	// return selectedConstProj;
-	// }
-	//
-	// public void setSelectedConstProj(SmProjectExperience selectedConstProj) {
-	// this.selectedConstProj = selectedConstProj;
-	// }
-	//
-	// public List<SmContractExperience> getSelectedContractProjs() {
-	// return selectedContractProjs;
-	// }
-
-	// public void setSelectedContractProjs(
-	// List<SmContractExperience> selectedContractProjs) {
-	// this.selectedContractProjs = selectedContractProjs;
-	// }
-	//
-	// public SmContractExperience getSelectedContractProj() {
-	// return selectedContractProj;
-	// }
-	//
-	// public void setSelectedContractProj(
-	// SmContractExperience selectedContractProj) {
-	// this.selectedContractProj = selectedContractProj;
-	// }
 
 	public List<SmSupplierCert> getSelectedCertList() {
 		return selectedCertList;
@@ -918,12 +885,20 @@ public class SmApplicationManagedBean extends BaseManagedBean {
 		this.selectedCompanyExperience = selectedCompanyExperience;
 	}
 
-	public String getApplCatConfirmMsg() {
-		return applCatConfirmMsg;
+	public String getDummyCatType() {
+		return dummyCatType;
 	}
 
-	public void setApplCatConfirmMsg(String applCatConfirmMsg) {
-		this.applCatConfirmMsg = applCatConfirmMsg;
+	public void setDummyCatType(String dummyCatType) {
+		this.dummyCatType = dummyCatType;
+	}
+
+	public String getCatTypeConfirm() {
+		return catTypeConfirm;
+	}
+
+	public void setCatTypeConfirm(String catTypeConfirm) {
+		this.catTypeConfirm = catTypeConfirm;
 	}
 
 }
