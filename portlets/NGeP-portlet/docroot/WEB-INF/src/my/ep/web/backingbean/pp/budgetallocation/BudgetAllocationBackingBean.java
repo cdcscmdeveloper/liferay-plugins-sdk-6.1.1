@@ -27,6 +27,7 @@ import my.ep.biz.service.pp.budgetallocation.IBudgetDisbursementSO;
 import my.ep.bpm.dto.BpmRequestDTO;
 import my.ep.bpm.dto.BpmResponseDTO;
 import my.ep.bpm.service.IBpmSO;
+import my.ep.constant.pm.ParameterConst;
 import my.ep.dto.pm.authorization.orgprofile.OrgProfileReqDTO;
 import my.ep.dto.pm.authorization.orgprofile.OrgProfileResDTO;
 import my.ep.dto.pm.authorization.user.UserReqDTO;
@@ -136,7 +137,7 @@ public class BudgetAllocationBackingBean extends BaseBackingBean<BudgetAllocatio
 		this.getManagedBean().getSelectedBudgetAllocation().setMinistryOrgProfile(ministryOptions().get(0));
 		this.getManagedBean().setSelectedBudgetAllocDtl(null);
 		this.getManagedBean().setSelectedBudgetAllocOrg(null);
-		this.getManagedBean().getSelectedBudgetAllocation().setPmStatus(CommonMethod.getDefaultStatus(ProcurementPlanConst.DOCTYPE_BUDGET_ALLOC));//TODO
+		this.getManagedBean().getSelectedBudgetAllocation().setPmStatus(CommonMethod.getDefaultStatus(ParameterConst.DOCTYPE_BUDGET_ALLOC));//TODO
 		this.getManagedBean().getSelectedBudgetAllocation().setEditable(true);
 		this.getManagedBean().setConfirm(true);
 		initialBudgetAllocRemark();
@@ -348,7 +349,7 @@ public class BudgetAllocationBackingBean extends BaseBackingBean<BudgetAllocatio
 			this.getManagedBean().getSelectedBudgetAllocDtl().setEditable(true);
 			this.getManagedBean().getSelectedBudgetAllocOrg().setUsedAmt(new BigDecimal(0));
 			this.getManagedBean().getSelectedBudgetAllocDtl().setPmStatus(
-					CommonMethod.getDefaultStatus(ProcurementPlanConst.DOCTYPE_BUDGET_ALLOC_DTL));//TODO	
+					CommonMethod.getDefaultStatus(ParameterConst.DOCTYPE_BUDGET_ALLOC_DTL));//TODO	
 			
 			//ensure the previous entry is not null
 			if(!this.getManagedBean().getSelectedBudgetAllocation().getPpBudgetAllocDtls().isEmpty()){
@@ -616,7 +617,7 @@ public class BudgetAllocationBackingBean extends BaseBackingBean<BudgetAllocatio
 			this.getManagedBean().getSelectedBudgetAllocOrg().setEditable(true);
 			this.getManagedBean().getSelectedBudgetAllocOrg().setUsedAmt(new BigDecimal(0));
 			this.getManagedBean().getSelectedBudgetAllocOrg().setPmStatus(
-					CommonMethod.getDefaultStatus(ProcurementPlanConst.DOCTYPE_BUDGET_ALLOC_ORG));//TODO
+					CommonMethod.getDefaultStatus(ParameterConst.DOCTYPE_BUDGET_ALLOC_ORG));//TODO
 		}else{
 			log.info("showBudgetAllocOrg - not null");
 			if(ProcurementPlanConst.MODE_VIEW.equals(this.getManagedBean().getViewMode()) || 
@@ -930,7 +931,7 @@ public class BudgetAllocationBackingBean extends BaseBackingBean<BudgetAllocatio
 		remark.setCreatedDate(new Timestamp(System.currentTimeMillis()));
 		remark.setChangedBy(remark.getCreatedBy());
 		remark.setChangedDate(remark.getCreatedDate());
-		this.getManagedBean().getSelectedBudgetAllocation().addPpRemarks(remark, ProcurementPlanConst.DOCTYPE_BUDGET_ALLOC);//TODO check this
+		this.getManagedBean().getSelectedBudgetAllocation().addPpRemarks(remark, ParameterConst.DOCTYPE_BUDGET_ALLOC);//TODO check this
 
 		log.info("initialBudgetAllocRemark - End");
 	}
@@ -1441,7 +1442,7 @@ public class BudgetAllocationBackingBean extends BaseBackingBean<BudgetAllocatio
 	 * @return SelectItem[]
 	 */
 	public SelectItem[] statusDropdownValues(){
-		return getStatusDropdownValues(ProcurementPlanConst.MODULE, ProcurementPlanConst.DOCTYPE_BUDGET_ALLOC);
+		return getStatusDropdownValues(ProcurementPlanConst.MODULE, ParameterConst.DOCTYPE_BUDGET_ALLOC);
 	}
 	
 	/**

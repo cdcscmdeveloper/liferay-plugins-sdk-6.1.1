@@ -31,12 +31,10 @@ xmlns:tp="http://java.sun.com/jsf/composite/ep"
 								value="#{planBackingBean.managedBean.ppSearchPlan.planDesc}" />
 						</td>
 						<th><p:outputLabel value="#{lbl['lbl.pp.status']}" /></th>
-						<td><p:selectOneMenu styleClass="ppDropDownWidthM"
+						<td>
+							<p:selectOneMenu styleClass="ppDropDownWidthM"
 								value="#{planBackingBean.managedBean.ppSearchPlan.status}">
-								<f:selectItem itemLabel="#{lbl['lbl.select']}"
-									itemValue="#{null}" />
-								<f:selectItem itemLabel="Draft" itemValue="30001" />
-								<f:selectItem itemLabel="Pending Approval" itemValue="30004" />
+								<f:selectItems value="#{planBackingBean.statusDropdownValues()}"/>
 							</p:selectOneMenu></td>
 						<td>&nbsp;</td>
 						

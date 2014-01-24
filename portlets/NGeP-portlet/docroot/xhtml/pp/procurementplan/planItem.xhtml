@@ -43,7 +43,7 @@ xmlns:c="http://java.sun.com/jsp/jstl/core"
 						 	value="-" />
 				</p:column>  
 		        <p:column headerText="#{lbl['lbl.pp.action']}"> 
-	                <p:commandLink 
+	                <p:commandLink action="#{planBackingBean.deleteItem(item)}"
 	                  	update="dtItem" disabled="#{!(item.brandNew ||planBackingBean.managedBean.viewMode==PPConst.modeRevision)}" 	 
 	                  	>
 	                  	<p:graphicImage value="/resources/ep/images/design/trash.png"/>
@@ -55,7 +55,7 @@ xmlns:c="http://java.sun.com/jsp/jstl/core"
 	    	<!-- Button(s) -->
 	   		<div class="ppRightBtn">
 				<p:commandButton value="#{lbl['lbl.pp.add']}" 
-					update="dtItem" icon="ui-icon-add" 
+					update="dtItem" icon="ui-icon-add" action="#{planBackingBean.addItem}"
 					disabled="#{!(planBackingBean.managedBean.viewMode==PPConst.modeNew 
 						|| planBackingBean.managedBean.viewMode==PPConst.modeRevision)}"/>  
 		 		<br/>

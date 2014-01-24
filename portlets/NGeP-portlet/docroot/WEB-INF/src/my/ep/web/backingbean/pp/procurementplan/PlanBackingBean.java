@@ -47,6 +47,7 @@ import my.ep.persistence.entity.pp.PpRemark;
 import my.ep.persistence.entity.pp.budgetallocation.PpBudgetAllocDtl;
 import my.ep.persistence.entity.pp.procurementplan.PpPlan;
 import my.ep.persistence.entity.pp.procurementplan.PpPlanActivity;
+import my.ep.persistence.entity.pp.procurementplan.PpPlanDtl;
 import my.ep.persistence.entity.pp.procurementplan.PpPlanItem;
 import my.ep.type.aut.SearchOperator;
 import my.ep.type.pm.OrganizationType;
@@ -180,6 +181,15 @@ public class PlanBackingBean extends BaseBackingBean<PlanManagedBean>{
 		log.info("planSearch - End");
 		
 	}
+	
+	/**
+	 * Statuses options type options
+	 * @return SelectItem[]
+	 */
+	public SelectItem[] statusDropdownValues(){
+		return getStatusDropdownValues(ProcurementPlanConst.MODULE, ParameterConst.DOCTYPE_PLAN);
+	}
+	
 	
 //	/**
 //	 * load task from task list
@@ -515,10 +525,10 @@ public class PlanBackingBean extends BaseBackingBean<PlanManagedBean>{
 	
 	private void generateDirectPurchase(){
 		log.info("generateDirectPurchase - Start");
-		if(this.getManagedBean().getSelectedPlan().isBrandNew()){	log.info("generateDirectPurchase - 11111");
+		if(this.getManagedBean().getSelectedPlan().isBrandNew()){
 			this.getManagedBean().setSelectedPlanActivity(new PpPlanActivity());
 			this.getManagedBean().getSelectedPlanActivity().setEditable(true);
-			this.getManagedBean().getSelectedPlanActivity().setPpPlanItems(new ArrayList<PpPlanItem>());
+
 		}else{
 			
 		}
@@ -545,8 +555,68 @@ public class PlanBackingBean extends BaseBackingBean<PlanManagedBean>{
 		//Initial item list if empty
 		PpPlanItem item = new PpPlanItem();
 		item.setEditable(true);
+		if(this.getManagedBean().getSelectedPlanActivity().getPpPlanItems()==null){
+			this.getManagedBean().getSelectedPlanActivity().setPpPlanItems(new ArrayList<PpPlanItem>());
+		}
 		this.getManagedBean().getSelectedPlanActivity().addPpPlanItems(item);
 	}
+	
+	public void deleteCommodity(PpPlanItem ppPlanItem){
+		log.info("deleteCommodity - Start");
+		if(ppPlanItem!=null){
+			if(!ppPlanItem.isBrandNew()&& !ppPlanItem.isDeleted()){
+				ppPlanItem.setDeleted(true);
+				ppPlanItem.setRecordStatus(false);
+			}else{
+				this.getManagedBean().getSelectedPlanActivity().getPpPlanItems().remove(ppPlanItem);
+			}
+			this.getManagedBean().setSelectedPlanItem(null);
+		}
+		log.info("deleteCommodity - End");
+	}
+	
+	public void addItem(){
+		//Initial item list if empty
+		PpPlanDtl detail = new PpPlanDtl();
+		detail.setEditable(true);
+		
+		if(ParameterConst.PROCUREMENT_MODE_DIRECT_PURCHASE.equals(
+				this.getManagedBean().getSelectedPlan().getProcurementModeParam().getParameterCode())){
+			
+			if(this.getManagedBean().getSelectedPlanItem().getPpPlanDtls()==null){
+				this.getManagedBean().getSelectedPlanItem().setPpPlanDtls(new ArrayList<PpPlanDtl>());
+			}
+			this.getManagedBean().getSelectedPlanItem().addPpPlanDtls(detail);
+		}else{
+
+			if(this.getManagedBean().getSelectedPlan().getPpPlanDtls()==null){
+				this.getManagedBean().getSelectedPlan().setPpPlanDtls(new ArrayList<PpPlanDtl>());
+			}
+			this.getManagedBean().getSelectedPlan().addPpPlanDtls(detail);
+		}
+		
+		
+	}
+	
+	public void deleteItem(PpPlanDtl planDtl){
+		log.info("deleteItem - Start");
+		if(planDtl!=null){
+			if(!planDtl.isBrandNew()&& !planDtl.isDeleted()){
+				planDtl.setDeleted(true);
+				planDtl.setRecordStatus(false);
+			}else{
+				if(ParameterConst.PROCUREMENT_MODE_DIRECT_PURCHASE.equals(
+						this.getManagedBean().getSelectedPlan().getProcurementModeParam().getParameterCode())){
+					this.getManagedBean().getSelectedPlanItem().getPpPlanDtls().remove(planDtl);
+				}else{
+					this.getManagedBean().getSelectedPlan().getPpPlanDtls().remove(planDtl);
+				}
+			}
+			this.getManagedBean().setSelectedPlanItem(null);
+		}
+		log.info("deleteItem - End");
+	}
+	
 //
 //
 //

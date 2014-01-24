@@ -34,8 +34,9 @@ xmlns:c="http://java.sun.com/jsp/jstl/core"
 		
 		<!-- Direct Purchase Commodity List -->
 		<p:dataTable id="dtCommodities" styleClass="ppFixTdWidth"  rowIndexVar="rowIndex" 
-			var="ppPlanItem" value="#{planBackingBean.managedBean.selectedPlanActivity.ppPlanItems}"
-			emptyMessage="#{lbl['lbl.pp.no.record.found']}">  
+			selection="#{planBackingBean.managedBean.selectedPlanItem}" selectionMode="single"
+			rowKey="#{ppPlanItem}" emptyMessage="#{lbl['lbl.pp.no.record.found']}"
+			var="ppPlanItem" value="#{planBackingBean.managedBean.selectedPlanActivity.ppPlanItems}">  
 			
         	<p:column headerText="#{lbl['lbl.pp.product.commodity.code']}">  
 				<p:selectOneMenu id="somCommodity" disabled="#{!ppPlanItem.editable}" styleClass="ppDropDownWidthM">
@@ -54,7 +55,7 @@ xmlns:c="http://java.sun.com/jsp/jstl/core"
           		</p:commandLink>
             </p:column>  
             <p:column headerText="#{lbl['lbl.pp.action']}"> 
-               	<p:commandLink 
+               	<p:commandLink  action="#{planBackingBean.deleteCommodity(ppPlanItem)}"   
                   	update="dtCommodities" disabled="#{!ppPlanItem.brandNew}">  
                   	<p:graphicImage value="/resources/ep/images/design/trash.png"/>
                	</p:commandLink> 
