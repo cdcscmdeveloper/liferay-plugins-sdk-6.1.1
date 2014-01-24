@@ -6,16 +6,16 @@
 	xmlns:p="http://primefaces.org/ui"
 	xmlns:c="http://java.sun.com/jsp/jstl/core"
 	xmlns:ac="http://ac.my/jsf/composite/cc" >
-	<p:panel id="locationId" header="Agency Details"  toggleable="true"  toggleSpeed="500" widgetVar="panellocation">
+	<p:panel id="locationId" header="#{lbl['lbl.ct.susp.panel.agency.name']}"  toggleable="true"  toggleSpeed="500" widgetVar="panellocation">
       <p:dataTable id="locationTable" var="data"  value="#{suspensionBackingBean.managedBean.contractVer.ctAgencies}"
          lazy="false" paginator="true"  paginatorPosition="bottom" paginatorAlwaysVisible="false" emptyMessage="No Records!">
 		 <ac:paginator for="locationTable"/>
 		  <p:columnGroup type="header"> 
 		  <p:row> 
-			<p:column rowspan="1" headerText="Agency"  />
-			<p:column rowspan="1" headerText="Effective Date" /> 	
-			<p:column rowspan="1" headerText="Expiry Date" /> 		
-			<p:column rowspan="1" headerText="Action" /> 			
+			<p:column headerText="#{lbl['lbl.ct.susp.tbl.agency.name']}"  />
+			<p:column headerText="#{lbl['lbl.ct.susp.tbl.agency.efdate']}" /> 	
+			<p:column headerText="#{lbl['lbl.ct.susp.tbl.agency.expdate']}" /> 		
+			<p:column headerText="#{lbl['lbl.ct.susp.tbl.agency.action']}" /> 			
 		 </p:row>							
 		 </p:columnGroup>
 		    <p:column> <h:outputText value="Zone Tengah" style="float:left;" />   </p:column> 

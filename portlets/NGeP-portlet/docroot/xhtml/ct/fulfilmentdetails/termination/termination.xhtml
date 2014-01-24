@@ -50,7 +50,8 @@
 				<p:outputLabel value="#{lbl['lbl.ct.agreement']}" />
 			</h:panelGrid>
 			 <p:outputLabel value="Supplier Name" />  
-              <p:inputText value="KHAI SDN BHD" disabled="true" style="width:175px;"/> 	
+              <p:inputText value="#{terminationBackingBean.managedBean.ctContract.smSupplier.companyName}" 
+                 disabled="true" style="width:175px;"/> 	
 			
 			 <p:outputLabel value="#{lbl['lbl.ct.dperiod']}" />
 			<h:panelGrid columns="3">
@@ -67,7 +68,7 @@
 			</h:panelGrid>		
 			 <h:panelGroup>
 		      <div style="height: 40px; vertical-align: top;">
-			  <p:outputLabel for="contractName" value="Contract Title" />
+			  <p:outputLabel for="contractName" value="#{lbl['lbl.ct.cname']}" />
 			</div>
 			</h:panelGroup>
 			 <h:panelGrid>
@@ -107,7 +108,7 @@
 				<td><p:spacer height="2" /></td>
 			</tr>
 			<tr>
-				<td style="width: 140px;"><p:outputLabel value="Disciplinary Action" /></td>
+				<td style="width: 140px;"><p:outputLabel value="#{lbl['lbl.ct.tr.discip.action']}" /></td>
 				<td>
 					<p:selectBooleanCheckbox value="#{terminationBackingBean.managedBean.contractVer.ctTermination.displinaryAction}">
                          <p:ajax event="change" update=":form:tabview" listener="#{terminationBackingBean.chkDisciplinaryAction}" process="@this"/> 
@@ -119,10 +120,10 @@
          <p:outputPanel rendered="#{terminationBackingBean.managedBean.disciplinaryValue}">
                <table style="width: 100%">
                <tr>
-                   <td style="width:140px;"> <p:outputLabel value="Supplier Name"/></td>
+                   <td style="width:140px;"> <p:outputLabel value="#{lbl['lbl.ct.su.name']}"/></td>
 			       <td> <p:inputText value="#{terminationBackingBean.managedBean.ctContract.smSupplier.companyName}"
 			               style="width:170px;" disabled="true" /></td>
-			       <td> <p:outputLabel value="Complaint Type" /></td>
+			       <td> <p:outputLabel value="#{lbl['lbl.ct.tr.complaint.type']}" /></td>
 			       <td> <p:inputText value="#{terminationBackingBean.managedBean.complaintCategory}" 
 			             style="width:220px;" disabled="true"/> </td>
                    <td style="width:110px;"><f:verbatim></f:verbatim></td>
@@ -131,7 +132,7 @@
                  <h:panelGrid columns="2">
                    <h:panelGroup>
 		                <div style="height:90px;width:140px; vertical-align:top;">
-			               <p:outputLabel for="complaintDesc" value="Complaint Details" />
+			               <p:outputLabel for="complaintDesc" value="#{lbl['lbl.ct.tr.complaint.details']}" />
 			            </div>
 			       </h:panelGroup>
 			       <h:panelGrid>
