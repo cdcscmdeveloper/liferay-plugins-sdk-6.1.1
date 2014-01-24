@@ -192,8 +192,8 @@ public class ProcurementPlanConst {
 	
 	
 	//Plan Type
-	public static final String PLAN_TYPE_PROCUREMENT = ParameterConst.PLAN_TYPE_EXPENDITURE;
-	public static final String PLAN_TYPE_EXPENDITURE = ParameterConst.PLAN_TYPE_PROCUREMENT;
+	public static final String PLAN_TYPE_PROCUREMENT = ParameterConst.PLAN_TYPE_PROCUREMENT;
+	public static final String PLAN_TYPE_EXPENDITURE = ParameterConst.PLAN_TYPE_EXPENDITURE;
 	
 	//Procurement Mode
 	public static final String PROCUREMENT_QUOTATION = ParameterConst.PROCUREMENT_MODE_QUOTATION;

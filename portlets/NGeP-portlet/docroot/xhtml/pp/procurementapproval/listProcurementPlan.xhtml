@@ -13,6 +13,7 @@ xmlns:c="http://java.sun.com/jsp/jstl/core"
 	<ui:define name="contentSection">
 		<p:panel id="pRightPanel" header="#{procurementApprovalBackingBean.generateHeader(PPConst.modeApprovalList)}">
 			<!-- Top Button -->
+		 
 			<div class="ppRightBtn">
 				<p:commandButton value="#{lbl['lbl.pp.approve']}"  
 					disabled="#{procurementApprovalBackingBean.managedBean.pendingApprovalPlans==null}"

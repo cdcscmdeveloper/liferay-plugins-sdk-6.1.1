@@ -15,6 +15,7 @@ import my.ep.persistence.entity.pp.budgetallocation.PpBudgetAllocDtl;
 import my.ep.persistence.entity.pp.procurementplan.PpPlan;
 import my.ep.persistence.entity.pp.procurementplan.PpPlanActivity;
 import my.ep.persistence.entity.pp.procurementplan.PpPlanDtl;
+import my.ep.persistence.entity.pp.procurementplan.PpPlanItem;
 import my.ep.web.bean.pp.ProcurementPlanSearchBean;
 import my.ep.web.managedbean.BaseManagedBean;
 
@@ -32,7 +33,9 @@ public class PlanManagedBean extends BaseManagedBean{
 	
 	private Boolean amanahFlag;
 	
-	private PpPlan selectedPlan; 
+	private PpPlan selectedPlan;
+	
+	private PpPlanItem selectedPlanItem; 
 	
 	private PpPlanActivity selectedPlanActivity; 
 	
@@ -132,10 +135,56 @@ public class PlanManagedBean extends BaseManagedBean{
 		this.selectedPlanActivity = selectedPlanActivity;
 	}
 
-	
-	
+
+	/**
+	 * @return the selectedPlanItem
+	 */
+	public PpPlanItem getSelectedPlanItem() {
+		return selectedPlanItem;
+	}
+
+	/**
+	 * @param selectedPlanItem the selectedPlanItem to set
+	 */
+	public void setSelectedPlanItem(PpPlanItem selectedPlanItem) {
+		this.selectedPlanItem = selectedPlanItem;
+	}
+
+	/**
+	 * @return the viewMode
+	 */
+	public String getViewMode() {
+		return viewMode;
+	}
+	/**
+	 * @param selectedPlan the selectedPlan to set
+	 */
+	public void setViewMode(String viewMode) {
+		this.viewMode = viewMode;
+	}
+
+	/**
+	 * @return the currentProfiles
+	 */
+	public List<PmOrgProfile> getCurrentProfiles() {
+		return currentProfiles;
+	}
+
+	/**
+	 * @param currentProfiles the currentProfiles to set
+	 */
+	public void setCurrentProfiles(List<PmOrgProfile> currentProfiles) {
+		this.currentProfiles = currentProfiles;
+	}
 
 
+	
+	
+	
+	
+	
+	
+	
 
 
 
@@ -148,20 +197,7 @@ public class PlanManagedBean extends BaseManagedBean{
 	
 	
 	
-	
-//	private List <PpPlanMaster> planMasterList;
-//
-//	private PpPlanMaster planMaster; //for main master plan
-
-	
-	
-	
-
 //	private PpPlanMaster selectedPlanMaster; //for ui master plan
-	
-	
-	
-	private PpPlan selectedPlanItem; //for ui plan (multiple)
 
 	private PpPlanDtl selectedItem; //for ui item
 	
@@ -193,21 +229,7 @@ public class PlanManagedBean extends BaseManagedBean{
 	
 	
 	
-
-//	/**
-//	 * @return the planMasterList
-//	 */
-//	public List<PpPlanMaster> getPlanMasterList() {
-//		return planMasterList;
-//	}
-//
-//	/**
-//	 * @param planMasterList the planMasterList to set
-//	 */
-//	public void setPlanMasterList(List<PpPlanMaster> planMasterList) {
-//		this.planMasterList = planMasterList;
-//	}
-
+	
 	/**
 	 * @return the planList
 	 */
@@ -251,34 +273,7 @@ public class PlanManagedBean extends BaseManagedBean{
 			List<PpBudgetAllocDtl> budgetAllocDtlList) {
 		this.budgetAllocDtlList = budgetAllocDtlList;
 	}
-	
-//	/**
-//	 * @return the votType
-//	 */
-//	public String getVotType() {
-//		return votType;
-//	}
-//
-//	/**
-//	 * @param votType the votType to set
-//	 */
-//	public void setVotType(String votType) {
-//		this.votType = votType;
-//	}
 
-	/**
-	 * @return the selectedPlanItem
-	 */
-	public PpPlan getSelectedPlanItem() {
-		return selectedPlanItem;
-	}
-
-	/**
-	 * @param selectedPlanItem the selectedPlanItem to set
-	 */
-	public void setSelectedPlanItem(PpPlan selectedPlanItem) {
-		this.selectedPlanItem = selectedPlanItem;
-	}
 
 
 	/**
@@ -391,186 +386,8 @@ public class PlanManagedBean extends BaseManagedBean{
 	public void setCurrent(String current) {
 		this.current = current;
 	}
-	/**
-	 * @return the viewMode
-	 */
-	public String getViewMode() {
-		return viewMode;
-	}
-	/**
-	 * @param selectedPlan the selectedPlan to set
-	 */
-	public void setViewMode(String viewMode) {
-		this.viewMode = viewMode;
-	}
-
-//	/**
-//	 * @return the planMaster
-//	 */
-//	public PpPlanMaster getPlanMaster() {
-//		return planMaster;
-//	}
-//	/**
-//	 * @param planMaster the planMaster to set
-//	 */
-//	public void setPlanMaster(PpPlanMaster planMaster) {
-//		this.planMaster = planMaster;
-//	}
-
 
 	
-	
-	
-	
-	
-	private boolean brandNew;
-	private String procurementMode;
-	
-	private boolean popup = false;
-	private String planType;
-
-
-
-	//temp
-	private String fulfillmentType;
-	//temp
-	private String periodicType;
-	//temp
-	private String documentType;
-	//temp
-	private Boolean verification  = false;
-
-	//temp
-	private String favouriteOption = "N";
-	//temp
-	private String quotationTenderType;
-	//temp
-	private String typeOfGoodsServices;
-
-	//temp
-	private String contractType;
-	//temp
-	private Integer recurringFreq;
-	//temp
-	private String maksudCode;
-	
-	private List ppItemList = null;
-	//temp
-	private List remarkList = null;
-
-
-	public List getPpItemList() {
-		return ppItemList;
-	}
-	public List getRemarkList() {
-		return remarkList;
-	}
-	public void setRemarkList(List remarkList) {
-		this.remarkList = remarkList;
-	}
-	public void setPpItemList(List ppItemList) {
-		this.ppItemList = ppItemList;
-	}
-	public String getPlanType() {
-		return planType;
-	}
-	public void setPlanType(String planType) {
-		this.planType = planType;
-	}
-	
-	public String getMaksudCode() {
-		return maksudCode;
-	}
-	public void setMaksudCode(String maksudCode) {
-		this.maksudCode = maksudCode;
-	}
-	public Integer getRecurringFreq() {
-		return recurringFreq;
-	}
-	public void setRecurringFreq(Integer recurringFreq) {
-		this.recurringFreq = recurringFreq;
-	}
-	public String getContractType() {
-		return contractType;
-	}
-	public void setContractType(String contractType) {
-		this.contractType = contractType;
-	}
-	
-//	public List<String> getSourcingAct() {
-//		return sourcingAct;
-//	}
-//	public void setSourcingAct(List<String> sourcingAct) {
-//		this.sourcingAct = sourcingAct;
-//	}
-	public boolean isBrandNew() {
-		return brandNew;
-	}
-	public void setBrandNew(boolean brandNew) {
-		this.brandNew = brandNew;
-	}
-
-	
-	public String getTypeOfGoodsServices() {
-		return typeOfGoodsServices;
-	}
-	public void setTypeOfGoodsServices(String typeOfGoodsServices) {
-		this.typeOfGoodsServices = typeOfGoodsServices;
-	}
-	public String getFavouriteOption() {
-		return favouriteOption;
-	}
-	public void setFavouriteOption(String favouriteOption) {
-		this.favouriteOption = favouriteOption;
-	}
-	public String getQuotationTenderType() {
-		return quotationTenderType;
-	}
-	public void setQuotationTenderType(String quotationTenderType) {
-		this.quotationTenderType = quotationTenderType;
-	}
-
-	public String getDocumentType() {
-		return documentType;
-	}
-	public void setDocumentType(String documentType) {
-		this.documentType = documentType;
-	}
-	public String getPeriodicType() {
-		return periodicType;
-	}
-	public void setPeriodicType(String periodicType) {
-		this.periodicType = periodicType;
-	}
-	public String getFulfillmentType() {
-		return fulfillmentType;
-	}
-	public void setFulfillmentType(String fulfillmentType) {
-		this.fulfillmentType = fulfillmentType;
-	}
-
-	public String getProcurementMode() {
-		return procurementMode;
-	}
-	public void setProcurementMode(String procurementMode) {
-		this.procurementMode = procurementMode;
-	}
-
-	
-	
-	public boolean isPopup() {
-		return popup;
-	}
-	public void setPopup(boolean popup) {
-		this.popup = popup;
-	}
-
-	public Boolean getVerification() {
-		return verification;
-	}
-	public void setVerification(Boolean verification) {
-		this.verification = verification;
-	}
 
 	
 
@@ -603,21 +420,6 @@ public class PlanManagedBean extends BaseManagedBean{
 	public void setPpSearchPlan(ProcurementPlanSearchBean ppSearchPlan) {
 		this.ppSearchPlan = ppSearchPlan;
 	}
-
-	/**
-	 * @return the currentProfiles
-	 */
-	public List<PmOrgProfile> getCurrentProfiles() {
-		return currentProfiles;
-	}
-
-	/**
-	 * @param currentProfiles the currentProfiles to set
-	 */
-	public void setCurrentProfiles(List<PmOrgProfile> currentProfiles) {
-		this.currentProfiles = currentProfiles;
-	}
-
 
 
 	

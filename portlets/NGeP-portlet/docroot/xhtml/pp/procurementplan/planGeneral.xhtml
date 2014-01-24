@@ -8,7 +8,6 @@ xmlns:h="http://java.sun.com/jsf/html"
 xmlns:ui="http://java.sun.com/jsf/facelets"
 xmlns:p="http://primefaces.org/ui"
 xmlns:c="http://java.sun.com/jsp/jstl/core"
-xmlns:fn="http://java.sun.com/jsp/jstl/functions"
 >
 
 	 
@@ -46,11 +45,15 @@ xmlns:fn="http://java.sun.com/jsp/jstl/functions"
 							oncomplete="return updateDetailTab()"/> 
 					</p:selectOneMenu>
 				</td>
-				<th rowspan="2"><p:outputLabel value="* #{lbl['lbl.pp.plan.description']}"/></th>
-				<td rowspan="2">
-					<p:inputTextarea cols="35" value="#{planBackingBean.managedBean.selectedPlan.planDesc}" 
-						disabled="#{!planBackingBean.managedBean.selectedPlan.editable}"/>
-				</td>	
+				<th><p:outputLabel value="* #{lbl['lbl.pp.plan.approver']}"/></th>
+				<td>
+					<p:selectOneMenu styleClass="ppDropDownWidthM"
+						disabled="#{!planBackingBean.managedBean.selectedPlan.editable}" >
+						<f:selectItem itemLabel="#{lbl['lbl.select']}" />
+						<f:selectItems value="#{planBackingBean.generateApprovers()}" var="user"
+							itemLabel="#{user.loginId}" itemValue="#{user.userId}"/>
+					</p:selectOneMenu>
+				</td>
 			</tr>
 			<tr>
 				<th><p:outputLabel value="* #{lbl['lbl.pp.procurement.mode']}"/></th>
@@ -63,34 +66,6 @@ xmlns:fn="http://java.sun.com/jsp/jstl/functions"
 							oncomplete="return updateDetailTab()"/> 
 					</p:selectOneMenu>
 				</td>
-	        </tr>				
-			<tr>
-				<th><p:outputLabel value="* #{lbl['lbl.pp.vot.amanah.type']}"/></th>
-				<td>	
-					<p:selectOneMenu value="#{planBackingBean.managedBean.selectedPlan.votTypeParam.parameterId}" styleClass="ppDropDownWidthM"
-						disabled="#{!planBackingBean.managedBean.selectedPlan.brandNew}">
-						<f:selectItems value="#{planBackingBean.votTypeOptions()}"/>
-					</p:selectOneMenu>
-					<br/>
-				</td>
-				<th><p:outputLabel value="* #{lbl['lbl.pp.plan.approver']}"/></th>
-				<td>
-					<p:selectOneMenu styleClass="ppDropDownWidthM"
-						disabled="#{!planBackingBean.managedBean.selectedPlan.editable}" >
-						<f:selectItem itemLabel="#{lbl['lbl.select']}" />
-						<f:selectItems value="#{planBackingBean.generateApprovers()}" var="user"
-							itemLabel="#{user.loginId}" itemValue="#{user.userId}"/>
-					</p:selectOneMenu>
-				</td>
-			</tr>
-			<tr>
-				<th><p:outputLabel value="* #{lbl['lbl.pp.product.segment']}"/></th>
-				<td>
-					<p:selectOneMenu disabled="#{!planBackingBean.managedBean.selectedPlan.editable}"
-						styleClass="ppDropDownWidthM">
-						<f:selectItem itemLabel="#{lbl['lbl.select']}" />	
-					</p:selectOneMenu>
-				</td>
 				<th><p:outputLabel value="* #{lbl['lbl.pp.require.verification']}"/></th>
 				<td>
 					<p:selectOneRadio  id="sorPvo" required="false" value="#{planBackingBean.managedBean.selectedPlan.verifyReq}"
@@ -100,16 +75,17 @@ xmlns:fn="http://java.sun.com/jsp/jstl/functions"
 						<p:ajax event="change" update="sorPvoLevel, plPvo"/>
 					</p:selectOneRadio> 
 		        </td>
-			</tr>
+	        </tr>				
 			<tr>
-				<th><p:outputLabel value="* #{lbl['lbl.pp.product.family']}"/></th>
-				<td>
-					<p:selectOneMenu disabled="#{!planBackingBean.managedBean.selectedPlan.editable}"
-						styleClass="ppDropDownWidthM">
-						<f:selectItem itemLabel="#{lbl['lbl.select']}" />	
+				<th><p:outputLabel value="#{lbl['lbl.pp.vot.amanah.type']}"/></th>
+				<td>	
+					<p:selectOneMenu value="#{planBackingBean.managedBean.selectedPlan.votTypeParam.parameterId}" styleClass="ppDropDownWidthM"
+						disabled="#{!planBackingBean.managedBean.selectedPlan.brandNew}">
+						<f:selectItems value="#{planBackingBean.votTypeOptions()}"/>
 					</p:selectOneMenu>
+					<br/>
 				</td>
-				<th><p:outputLabel value="* #{lbl['lbl.pp.verification.level']}"/></th>
+				<th><p:outputLabel value="#{planBackingBean.managedBean.selectedPlan.verifyReq ? '*' : ''} #{lbl['lbl.pp.verification.level']}"/></th>
 				<td>
 					<p:selectOneRadio id="sorPvoLevel" required="false" value="#{planBackingBean.managedBean.selectedPlan.multiLevel}"
 						disabled="#{!planBackingBean.managedBean.selectedPlan.editable || !planBackingBean.managedBean.selectedPlan.verifyReq}">
@@ -119,10 +95,9 @@ xmlns:fn="http://java.sun.com/jsp/jstl/functions"
 				</td>
 			</tr>
 			<tr>
-				<th><p:outputLabel value="* #{lbl['lbl.pp.product.commodity']}"/></th>
+				<th><p:outputLabel value="* #{lbl['lbl.pp.product.segment']}"/></th>
 				<td>
-					<p:selectOneMenu id="somCommodity" disabled="#{!planBackingBean.managedBean.selectedPlan.editable
-						|| planBackingBean.managedBean.selectedPlan.procurementModeParam.parameterId!=PPConst.procurementExistingContract}"
+					<p:selectOneMenu disabled="#{!planBackingBean.managedBean.selectedPlan.editable}"
 						styleClass="ppDropDownWidthM">
 						<f:selectItem itemLabel="#{lbl['lbl.select']}" />	
 					</p:selectOneMenu>
@@ -140,36 +115,60 @@ xmlns:fn="http://java.sun.com/jsp/jstl/functions"
 				</td>
 			</tr>
 			<tr>
+				<th><p:outputLabel value="* #{lbl['lbl.pp.product.family']}"/></th>
+				<td>
+					<p:selectOneMenu disabled="#{!planBackingBean.managedBean.selectedPlan.editable}"
+						styleClass="ppDropDownWidthM">
+						<f:selectItem itemLabel="#{lbl['lbl.select']}" />	
+					</p:selectOneMenu>
+				</td>
+			</tr>
+			<tr>
+				<th><p:outputLabel value="* #{lbl['lbl.pp.product.commodity']}"/></th>
+				<td>
+					<p:selectOneMenu id="somCommodity" disabled="#{!planBackingBean.managedBean.selectedPlan.editable
+						|| planBackingBean.managedBean.selectedPlan.procurementModeParam.parameterCode!=PPConst.procurementExistingContract}"
+						styleClass="ppDropDownWidthM">
+						<f:selectItem itemLabel="#{lbl['lbl.select']}" />	
+					</p:selectOneMenu>
+				</td>
+			</tr>
+			<tr>
 				<th><p:outputLabel value="* #{lbl['lbl.pp.quotation.tender.type']}"/></th>
 				<td>
 					<p:selectOneMenu value="#{planBackingBean.managedBean.selectedPlan.qtTypeParam.parameterId}"  
 						styleClass="ppDropDownWidthM"
 						disabled="#{!planBackingBean.managedBean.selectedPlan.editable ||
-							 planBackingBean.managedBean.selectedPlan.planTypeParam.parameterId!=PPConst.planTypeProcurement}" >
+							 planBackingBean.managedBean.selectedPlan.planTypeParam.parameterCode!=PPConst.planTypeProcurement}" >
 						<f:selectItems value="#{planBackingBean.qtTypeOptions()}" />
 					</p:selectOneMenu>
 				</td>
 			</tr>
 			<tr>
-				<th><p:outputLabel value="#{lbl['lbl.pp.item.origin.type']}"/></th>
+				<th><p:outputLabel value="* #{lbl['lbl.pp.item.origin.type']}"/></th>
 				<td>
 					<p:selectOneMenu id="somItemOrigin" 
 						styleClass="ppDropDownWidthM" value="#{planBackingBean.managedBean.selectedPlan.itemOriginParam.parameterId}" 
 						disabled="#{!planBackingBean.managedBean.selectedPlan.editable ||
-						planBackingBean.managedBean.selectedPlan.planTypeParam.parameterId!=PPConst.planTypeProcurement}" >
+						planBackingBean.managedBean.selectedPlan.planTypeParam.parameterCode!=PPConst.planTypeProcurement}" >
 						<f:selectItems value="#{planBackingBean.itemOriginTypeOptions()}" />
 					</p:selectOneMenu>
 				</td>
 			</tr>
 			<tr>
-				<th rowspan="9"><p:outputLabel value="#{lbl['lbl.pp.item']}"/></th>
+				<th><p:outputLabel value="* #{lbl['lbl.pp.plan.description']}"/></th>
+				<td>
+					<p:inputTextarea cols="35" value="#{planBackingBean.managedBean.selectedPlan.planDesc}" 
+						disabled="#{!planBackingBean.managedBean.selectedPlan.editable}"/>
+				</td>	
+			</tr>
+			<tr>
+				<th rowspan="9"><p:outputLabel value="* #{lbl['lbl.pp.item']}"/></th>
 				<td rowspan="9">
-					<p:commandLink id="clItem" immediate="true"
- 						disabled="#{planBackingBean.managedBean.selectedPlan.planTypeParam.parameterId==null
- 						|| (planBackingBean.managedBean.selectedPlan.planTypeParam.parameterId==PPConst.planTypeExpenditure
- 							&amp;&amp; planBackingBean.managedBean.selectedPlan.procurementModeParam.parameterId == null)
- 						|| planBackingBean.managedBean.selectedPlan.procurementModeParam.parameterId==PPConst.procurementDirectPurchase}"
-						>
+					<p:commandLink id="clItem" immediate="true" oncomplete="dlItemModal.show()"
+ 						disabled="#{planBackingBean.managedBean.selectedPlan.planTypeParam.parameterCode==null or
+ 						(planBackingBean.managedBean.selectedPlan.planTypeParam.parameterCode==PPConst.planTypeExpenditure and
+						planBackingBean.managedBean.selectedPlan.procurementModeParam.parameterCode!=PPConst.procurementExistingContract)}">
 	                	<p:graphicImage value="#{
 	                		planBackingBean.managedBean.viewMode==PPConst.modeView
 	                		? '/resources/ep/images/design/document.png' 
@@ -181,7 +180,9 @@ xmlns:fn="http://java.sun.com/jsp/jstl/functions"
 				<th>&nbsp;</th>
 				<td>&nbsp;</td>
 			</tr>
-			
 		</table>
 	</p:outputPanel>
+	<!-- Item Dialog -->
+	<ui:include src="planItem.xhtml"/>
+	
 </ui:composition>

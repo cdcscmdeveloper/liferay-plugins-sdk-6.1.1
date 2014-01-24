@@ -935,16 +935,16 @@ public class BudgetAllocationBackingBean extends BaseBackingBean<BudgetAllocatio
 		log.info("initialBudgetAllocRemark - End");
 	}
 
-//	/**
-//	 * redirect to budget allocation listing page
-//	 * @return xhtml
-//	 */
-//	public String redirectToListBudgetAllocation(){
-//		log.info("redirectToListBudgetAllocation");
-//		this.getManagedBean().setViewMode(ProcurementPlanConst.MODE_LIST);
-//		return ProcurementPlanConst.NAV_TO_LIST_BUDGET_ALLOCATION;
-//	}
-//	
+	/**
+	 * redirect to budget allocation listing page
+	 * @return xhtml
+	 */
+	public String redirectToListBudgetAllocation(){
+		log.info("redirectToListBudgetAllocation");
+		this.getManagedBean().setViewMode(ProcurementPlanConst.MODE_LIST);
+		return ProcurementPlanConst.NAV_TO_LIST_BUDGET_ALLOCATION;
+	}
+	
 
 	/**
 	 * generate header for view based on the viewMode

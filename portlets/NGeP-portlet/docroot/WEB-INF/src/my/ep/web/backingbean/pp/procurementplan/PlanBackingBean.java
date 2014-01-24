@@ -37,6 +37,7 @@ import my.ep.dto.pm.common.parameter.ParameterResDTO;
 import my.ep.dto.pm.common.taskactivity.TaskResDTO;
 import my.ep.dto.pp.budgetallocation.BudgetAllocationReqDTO;
 import my.ep.dto.pp.procurementplan.ProcurementPlanReqDTO;
+import my.ep.dto.pp.procurementplan.ProcurementPlanResDTO;
 import my.ep.persistence.entity.cm.catalog.CmUnspsc;
 import my.ep.persistence.entity.pm.authorization.PmBusinessActivity;
 import my.ep.persistence.entity.pm.authorization.PmOrgProfile;
@@ -106,21 +107,21 @@ public class PlanBackingBean extends BaseBackingBean<PlanManagedBean>{
 		ProcurementPlanSearchBean ppSearchBean = this.getManagedBean().getPpSearchPlan();
 		
 		//filter by profile
-		SearchFilterBean defaultBean = new SearchFilterBean();
-		defaultBean.setSearchField("ppPlanMaster.pmOrgProfile");
-		defaultBean.setSearchOperator(SearchOperator.OPERATOR_IN.value());
-		defaultBean.setSearchValue(this.getManagedBean().getCurrentProfiles());
-		searchBean.getDataFilterBeans().add(defaultBean);
+//		SearchFilterBean defaultBean = new SearchFilterBean();
+//		defaultBean.setSearchField("ptjOrgProfile");
+//		defaultBean.setSearchOperator(SearchOperator.OPERATOR_IN.value());
+//		defaultBean.setSearchValue(this.getManagedBean().getCurrentProfiles());
+//		searchBean.getDataFilterBeans().add(defaultBean);
 		
-		
-			if(ppSearchBean.getStatus()!=null && CommonMethod.isSelected(ppSearchBean.getStatus())){
-				log.info("+ status " + ppSearchBean.getStatus());
-				SearchFilterBean bean = new SearchFilterBean();
-				bean.setSearchField("pmStatus.statusId");
-				bean.setSearchOperator(SearchOperator.OPERATOR_EQUALS.value());
-				bean.setSearchValue(ppSearchBean.getStatus());
-				searchBean.getDataFilterBeans().add(bean);
-			}
+//		
+//			if(ppSearchBean.getStatus()!=null && CommonMethod.isSelected(ppSearchBean.getStatus())){
+//				log.info("+ status " + ppSearchBean.getStatus());
+//				SearchFilterBean bean = new SearchFilterBean();
+//				bean.setSearchField("pmStatus.statusId");
+//				bean.setSearchOperator(SearchOperator.OPERATOR_EQUALS.value());
+//				bean.setSearchValue(ppSearchBean.getStatus());
+//				searchBean.getDataFilterBeans().add(bean);
+//			}
 			if(ppSearchBean.getPlanNo()!=null && CommonMethod.isSelected(ppSearchBean.getPlanNo())){
 				log.info("+ planNo " + ppSearchBean.getPlanNo());
 				SearchFilterBean bean = new SearchFilterBean();
@@ -140,7 +141,7 @@ public class PlanBackingBean extends BaseBackingBean<PlanManagedBean>{
 			if(ppSearchBean.getPlanType()!=null && CommonMethod.isSelected(ppSearchBean.getPlanType())){
 				log.info("+ getPlanType " + ppSearchBean.getPlanType());
 				SearchFilterBean bean = new SearchFilterBean();
-				bean.setSearchField("ppPlanMaster.planType");
+				bean.setSearchField("planTypeParam.parameterCode");
 				bean.setSearchOperator(SearchOperator.OPERATOR_EQUALS.value());
 				bean.setSearchValue(ppSearchBean.getPlanType());
 				searchBean.getDataFilterBeans().add(bean);
@@ -149,7 +150,7 @@ public class PlanBackingBean extends BaseBackingBean<PlanManagedBean>{
 				if(ppSearchBean.getProcurementMode()!=null && CommonMethod.isSelected(ppSearchBean.getProcurementMode())){
 					log.info("+ getProcurementMode " + ppSearchBean.getProcurementMode());
 					SearchFilterBean bean = new SearchFilterBean();
-					bean.setSearchField("ppPlanMaster.procurementMode");
+					bean.setSearchField("procurementModeParam.parameterCode");
 					bean.setSearchOperator(SearchOperator.OPERATOR_EQUALS.value());
 					bean.setSearchValue(ppSearchBean.getProcurementMode());
 					searchBean.getDataFilterBeans().add(bean);
@@ -824,17 +825,17 @@ public class PlanBackingBean extends BaseBackingBean<PlanManagedBean>{
 	public String generateHeader(String viewMode){
 		return CommonMethod.generateHeader(viewMode, ProcurementPlanConst.PROG_PLAN);
 	}
-//	
-//	
-//	/**
-//	 * redirect to plan listing page
-//	 * @return xhtml
-//	 */
-//	public String redirectToListPlan(){
-//		log.info("redirectToListPlan");
-//		this.getManagedBean().setViewMode(ProcurementPlanConst.MODE_LIST);
-//		return ProcurementPlanConst.NAV_TO_LIST_PLAN;
-//	}
+	
+	
+	/**
+	 * redirect to plan listing page
+	 * @return xhtml
+	 */
+	public String redirectToListPlan(){
+		log.info("redirectToListPlan");
+		this.getManagedBean().setViewMode(ProcurementPlanConst.MODE_LIST);
+		return ProcurementPlanConst.NAV_TO_LIST_PLAN;
+	}
 //
 //	
 //	public void customReason(AjaxBehaviorEvent event){
@@ -2188,10 +2189,10 @@ public class PlanBackingBean extends BaseBackingBean<PlanManagedBean>{
 				IProcurementPlanSO procurementPlanSO = (IProcurementPlanSO) BusinessDelegate.getInstance().getServiceObject(ProcurementPlanConst.SO_PP, IProcurementPlanSO.class);
 				ProcurementPlanReqDTO reqDTO = new ProcurementPlanReqDTO();
 				reqDTO.setSearchBean(searchBeanData);
-//				ProcurementPlanResDTO resDTO = procurementPlanSO.retrievePlanListByParams(reqDTO);
-//				if(resDTO.isSuccessful()){
-//					return resDTO.getPpPlanResultBean();
-//				}
+				ProcurementPlanResDTO resDTO = procurementPlanSO.retrievePlanListByParams(reqDTO);
+				if(resDTO.isSuccessful()){
+					return resDTO.getPpPlanResultBean();
+				}
 
 			} catch (Exception e) {
 				e.printStackTrace();

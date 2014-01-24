@@ -66,7 +66,7 @@ public class ProcurementApprovalBackingBean extends BaseBackingBean<ProcurementA
 		return facesScopes;
 	}
 	
-	
+
 	/**
 	 * retrieve list of pending approval plans
 	 * @param loginUser

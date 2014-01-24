@@ -9,43 +9,38 @@ xmlns:p="http://primefaces.org/ui"
 xmlns:c="http://java.sun.com/jsp/jstl/core"
 xmlns:tp="http://java.sun.com/jsf/composite/ppComponents/procurementPlan"
 >
-	<p:outputPanel id="opPendingPlanApprovalList">
-	
-			<p:dataTable id="dtPendingApproval" var="ppPlan" 
-				value="#{procurementApprovalBackingBean.managedBean.pendingApprovalPlans}" 
-				emptyMessage="#{lbl['lbl.pp.no.record.found']}">
-			    	<p:column styleClass="ppSmallTd" headerText="#{lbl['lbl.pp.approve']}">  
-		                <p:selectBooleanCheckbox value="#{ppPlan.approved}"/>  
-		            </p:column>   
-	               	<p:column headerText="#{lbl['lbl.pp.plan.number']}">  
-		           		#{ppPlan.planNo}
-	               	</p:column>   
-	               	<p:column headerText="#{lbl['lbl.pp.procurement.mode']}">  
-		           		#{ppPlan.ppPlanMaster.procurementMode}
-	               	</p:column>  
-	               	<p:column headerText="#{lbl['lbl.pp.plan.description']}">  
-	                   	#{ppPlan.planDesc}
-		            </p:column> 
-	               	<p:column headerText="#{lbl['lbl.pp.total.estimated.amount']}" styleClass="ppNumericAlign">  
-	                   	#{ppPlan.estimatedAmount}
-	               	</p:column> 
-	               	<p:column headerText="#{lbl['lbl.pp.status']}">  
-	                   	#{ppPlan.statusId}
-	               	</p:column> 
-	              	<p:column headerText="#{lbl['lbl.pp.created.by']}">  
-	                   	#{ppPlan.createdBy}
-	               	</p:column>  
-	               	<p:column headerText="#{lbl['lbl.pp.created.date']}">  
-	                   	#{ppPlan.createdDate}
-	               	</p:column>  
-               	 	<p:column headerText="#{lbl['lbl.pp.action']}">  
-                  		<p:commandButton value="#{lbl['lbl.pp.details']}" />
-                   	</p:column>  
-	         </p:dataTable>
-	         <!-- 
-	    <p:panel header="#{lbl['lbl.pp.pending.approval.list']}">
-	  	</p:panel>    
-	  	    -->
-	 
-	</p:outputPanel>
+
+	<p:panel header="#{lbl['lbl.pp.pending.approval.list']}" toggleable="true" >
+		<p:dataTable id="dtPendingApproval" 
+			value=""
+			emptyMessage="#{lbl['lbl.pp.no.record.found']}">
+		    	<p:column styleClass="ppSmallTd" headerText="#{lbl['lbl.pp.approve']}">  
+	                <p:selectBooleanCheckbox />  
+	            </p:column>   
+               	<p:column headerText="#{lbl['lbl.pp.plan.number']}">  
+	        
+               	</p:column>   
+               	<p:column headerText="#{lbl['lbl.pp.procurement.mode']}">  
+	           		
+               	</p:column>  
+               	<p:column headerText="#{lbl['lbl.pp.plan.description']}">  
+                   
+	            </p:column> 
+               	<p:column headerText="#{lbl['lbl.pp.total.estimated.amount']}" styleClass="ppNumericAlign">  
+                   	
+               	</p:column> 
+               	<p:column headerText="#{lbl['lbl.pp.status']}">  
+                   
+               	</p:column> 
+              	<p:column headerText="#{lbl['lbl.pp.created.by']}">  
+                  
+               	</p:column>  
+               	<p:column headerText="#{lbl['lbl.pp.created.date']}">  
+                   	
+               	</p:column>                 	 
+         </p:dataTable>
+	</p:panel>
+	<p:panel header="#{lbl['lbl.pp.plan.detail']}" toggleable="true" >
+	 ...
+	</p:panel>
 </ui:composition>
