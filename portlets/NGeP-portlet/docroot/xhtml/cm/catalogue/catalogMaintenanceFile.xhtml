@@ -14,7 +14,7 @@
 	<p:messages id="catalogFileMsg" globalOnly="true"></p:messages>
 
 		<h:panelGroup>
-			<p:tabView id="maintenanceTabId" dynamic="true" cache="false">
+			<p:tabView id="maintenanceTabId" activeIndex="#{catalogueBackingBean.managedBean.tabActiveIndex}" dynamic="true" cache="false">
 
 				<p:ajax event="tabChange" listener="#{catalogueBackingBean.onTabChange}" update=":form:maintenanceTabId :form:catalogFileMsg"/>
 					

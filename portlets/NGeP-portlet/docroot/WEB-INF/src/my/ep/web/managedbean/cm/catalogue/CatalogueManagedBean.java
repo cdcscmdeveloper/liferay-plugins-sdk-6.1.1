@@ -127,6 +127,7 @@ public class CatalogueManagedBean extends BaseManagedBean {
 
 	private List<Long> stateLs;
 
+	private Integer tabActiveIndex = 0;
 
 
 	private SearchFilterBean itemNameFilterBean = new SearchFilterBean(SearchOperator.OPERATOR_LIKE.value());
@@ -963,6 +964,16 @@ public class CatalogueManagedBean extends BaseManagedBean {
 	}
 
 
+	public Integer getTabActiveIndex() {
+		return tabActiveIndex;
+	}
+
+
+	public void setTabActiveIndex(Integer tabActiveIndex) {
+		this.tabActiveIndex = tabActiveIndex;
+	}
+
+	
 
 
 
