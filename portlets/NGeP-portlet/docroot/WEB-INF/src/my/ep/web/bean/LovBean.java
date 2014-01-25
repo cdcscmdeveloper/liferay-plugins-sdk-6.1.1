@@ -15,6 +15,7 @@ public class LovBean {
 	private String conditionField;
 	private String clientId;
 	private String update;
+	private String postUpdateListener;
 	
 
 	public String getLovId() {
@@ -82,6 +83,12 @@ public class LovBean {
 	}
 	public void setUpdate(String update) {
 		this.update = update;
+	}
+	public String getPostUpdateListener() {
+		return postUpdateListener;
+	}
+	public void setPostUpdateListener(String postUpdateListener) {
+		this.postUpdateListener = postUpdateListener;
 	}
 	
 	

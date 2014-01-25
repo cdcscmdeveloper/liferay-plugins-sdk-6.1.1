@@ -15,6 +15,7 @@
 	<cc:attribute name="conditionField" default="" />
 	<cc:attribute name="update" default="" />
 	<cc:attribute name="size" />
+	<cc:attribute name="postUpdateListener" />
 </cc:interface>
 
 <cc:implementation>
@@ -40,6 +41,7 @@
 		<f:param name="conditionField" value="#{cc.attrs.conditionField}" />
 		<f:param name="clientId" value="#{p:component(cc.attrs.id)}" />
 		<f:param name="update" value="#{cc.attrs.update}" />
+		<f:param name="postUpdateListener" value="#{cc.attrs.postUpdateListener}" />
 		
 	</p:commandButton>
 	

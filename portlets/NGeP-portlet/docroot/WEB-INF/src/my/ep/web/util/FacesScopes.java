@@ -4,6 +4,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
 
+import javax.el.MethodExpression;
 import javax.faces.application.Application;
 import javax.faces.application.FacesMessage;
 import javax.faces.component.UIComponent;
@@ -315,6 +316,18 @@ public class FacesScopes {
 			}
 		}
 		return (String) ctxToken;
+	}
+
+	public static MethodExpression createMethodExpression(FacesContext context, String methodExpression,
+			Class<?> expectedReturnType, Class<?>[] expectedParamTypes) {
+		if (!isValueReference(methodExpression)) {
+			methodExpression = "#{" + methodExpression + "}";
+		}
+
+		return context.getApplication().getExpressionFactory()
+				.createMethodExpression(context.getELContext(),
+						methodExpression, expectedReturnType,
+						expectedParamTypes);
 	}
 
 }

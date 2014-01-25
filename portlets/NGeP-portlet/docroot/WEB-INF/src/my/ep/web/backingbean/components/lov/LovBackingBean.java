@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.ResourceBundle;
 
+import javax.el.MethodExpression;
 import javax.el.ValueExpression;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
@@ -168,6 +169,7 @@ public class LovBackingBean implements Serializable {
 		String conditionField = facesScopes.getParameter("conditionField");
 		String clientId = facesScopes.getParameter("clientId");
 		String update = facesScopes.getParameter("update");
+		String postUpdateListener = facesScopes.getParameter("postUpdateListener");
 		
 		debugLogger("headerText: " + headerText);
 		debugLogger("saveObject: " + saveObject);
@@ -175,6 +177,7 @@ public class LovBackingBean implements Serializable {
 		debugLogger("conditionField: " + conditionField);
 		debugLogger("clientId: " + clientId);
 		debugLogger("update: " + update);
+		debugLogger("postUpdateListener: " + postUpdateListener);
 
 //		if(lovId != null && lovId.equals(facesScopes.getParameter("lovId"))) {
 //			
@@ -187,6 +190,7 @@ public class LovBackingBean implements Serializable {
 			lovBean.setComponentId(componentId);
 			lovBean.setConditionField(conditionField);
 			lovBean.setUpdate(update);
+			lovBean.setPostUpdateListener(postUpdateListener);
 			
 //			lovBean.setClientId(clientId.substring(clientId.indexOf(":")).concat(":").concat(componentId));
 			lovBean.setClientId("@(:input[id*=" + StringUtils.replace(clientId.substring(clientId.indexOf(":") + 1).concat(":").concat(componentId), ":", "\\\\:") + "])");
@@ -338,32 +342,38 @@ public class LovBackingBean implements Serializable {
 	}
 	
 	public void populateToSaveObject() {
+		debugLogger("In populateToSaveObject");
 		
 		if(selectedEntity != null) {
 			FacesContext context = FacesContext.getCurrentInstance();
-			
-			
-			ValueExpression valueExpression2 = context.getApplication().getExpressionFactory()
-					.createValueExpression(context.getELContext(),
-							"#{codificationBackingBean.managedBean}", Object.class);
-			
 			String expressionString = this.getLovBean().getSaveObject();
+			
+			debugLogger("Save Object: " + expressionString);
+			
 			if(!FacesScopes.isValueReference(expressionString)) {
 				expressionString = "#{" + expressionString + "}";
 			}
-			
 			ValueExpression valueExpression = context.getApplication().getExpressionFactory()
 												.createValueExpression(context.getELContext(),
 														expressionString, BaseEntity.class);
+
+			valueExpression.setValue(context.getELContext(), selectedEntity);
+
+			debugLogger("postUpdateListener" + this.getLovBean().getPostUpdateListener());
 			
-			if(selectedEntity != null) {
-				valueExpression.setValue(context.getELContext(), selectedEntity);
+			if(StringUtils.isNotEmpty(this.getLovBean().getPostUpdateListener())) {
+
+                MethodExpression postUpdateListenerMethodExpr = FacesScopes
+                        .createMethodExpression(context,
+                        		this.getLovBean().getPostUpdateListener(), null,
+                                new Class[] { BaseEntity.class });
+                postUpdateListenerMethodExpr.invoke(context.getELContext(),
+                        new Object[] { selectedEntity });
 			}
-			
+
 			this.resetAction();
 			this.setLovBean(new LovBean());
-			
-//			TODO: postUpdateListener(entity)
+
 		}
 		
 	}
