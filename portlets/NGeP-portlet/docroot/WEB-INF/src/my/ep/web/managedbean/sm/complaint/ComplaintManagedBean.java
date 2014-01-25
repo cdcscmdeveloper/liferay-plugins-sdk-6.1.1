@@ -1,6 +1,7 @@
 package my.ep.web.managedbean.sm.complaint;
 
 import java.util.List;
+import java.util.Map;
 
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
@@ -8,6 +9,7 @@ import javax.faces.bean.SessionScoped;
 import my.ep.persistence.entity.pm.common.PmCity;
 import my.ep.persistence.entity.pm.common.PmCountry;
 import my.ep.persistence.entity.pm.common.PmState;
+import my.ep.persistence.entity.sm.SmComplainant;
 import my.ep.persistence.entity.sm.SmComplaint;
 import my.ep.persistence.entity.sm.SmComplaintReview;
 import my.ep.persistence.entity.sm.SmSupplier;
@@ -29,9 +31,14 @@ public class ComplaintManagedBean extends BaseManagedBean {
 	private List<SmComplaint> smComplLs;
 	private SmComplaint selectedComplaint;
 	
-	private PmCountry pmCountry;
-	private PmState pmState;
-	private PmCity pmCity;
+	private SmComplainant smComplainant;
+	private List<PmCountry> countryLs;
+	private List<PmState> stateLs;
+	private List<PmCity> cityLs;
+	
+	/*********Dummy Complaint type**********/
+	private Map<String, String> complType;
+
 
 	public SmComplaint getSmComplaint() {
 		return smComplaint;
@@ -114,28 +121,45 @@ public class ComplaintManagedBean extends BaseManagedBean {
 		this.selectedComplaint = selectedComplaint;
 	}
 
-	public PmCountry getPmCountry() {
-		return pmCountry;
+	public SmComplainant getSmComplainant() {
+		return smComplainant;
 	}
 
-	public void setPmCountry(PmCountry pmCountry) {
-		this.pmCountry = pmCountry;
+	public void setSmComplainant(SmComplainant smComplainant) {
+		this.smComplainant = smComplainant;
 	}
 
-	public PmState getPmState() {
-		return pmState;
+	public List<PmCountry> getCountryLs() {
+		return countryLs;
 	}
 
-	public void setPmState(PmState pmState) {
-		this.pmState = pmState;
+	public void setCountryLs(List<PmCountry> countryLs) {
+		this.countryLs = countryLs;
 	}
 
-	public PmCity getPmCity() {
-		return pmCity;
+	public List<PmState> getStateLs() {
+		return stateLs;
 	}
 
-	public void setPmCity(PmCity pmCity) {
-		this.pmCity = pmCity;
+	public void setStateLs(List<PmState> stateLs) {
+		this.stateLs = stateLs;
+	}
+
+	public List<PmCity> getCityLs() {
+		return cityLs;
+	}
+
+	public void setCityLs(List<PmCity> cityLs) {
+		this.cityLs = cityLs;
+	}
+
+	public Map<String, String> getComplType() {
+		return complType;
+	}
+
+	public void setComplType(Map<String, String> complType) {
+
+		this.complType = complType;
 	}
 	
 }

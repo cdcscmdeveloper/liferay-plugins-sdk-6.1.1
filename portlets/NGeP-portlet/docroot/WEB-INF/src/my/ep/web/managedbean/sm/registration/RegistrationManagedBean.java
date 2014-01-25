@@ -5,7 +5,9 @@ import java.util.List;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
 
+import my.ep.persistence.entity.pm.common.PmCity;
 import my.ep.persistence.entity.pm.common.PmCountry;
+import my.ep.persistence.entity.pm.common.PmDistrict;
 import my.ep.persistence.entity.pm.common.PmState;
 import my.ep.persistence.entity.sm.SmAddress;
 import my.ep.persistence.entity.sm.SmAppl;
@@ -28,9 +30,20 @@ public class RegistrationManagedBean extends BaseManagedBean {
 	private List<PmCountry> countryLs;
 	private List<PmState> businessStateLs;
 	private List<PmState> residentialStateLs;
-	private List<PmState> identityStateLs;
+	private List<PmState> permenantStateLs;
 	
-	private SmSupplierBank smSuppBank;
+	private List<PmDistrict> businessDistrictLs;
+	private List<PmDistrict> residentialDistrictLs;
+	private List<PmDistrict> permenantDistrictLs;
+	
+	private List<PmCity> businessCityLs;
+	private List<PmCity> residentialCityLs;
+	private List<PmCity> permenantCityLs;
+	
+	private boolean sameAddress;
+	private SmSupplierBank[] selectedSuppBanks;
+	private List<SmSupplierBank> smSuppBanks;
+	
 	private SmPersonnel smPersonnel;
 	private SmSupplierOwner smSuppOwner;
 	private SmPersonnelAddress smPersonnelAdd;
@@ -38,16 +51,12 @@ public class RegistrationManagedBean extends BaseManagedBean {
 	private List<SmSupplierCert> smSuppCerts;
 
 	private SmAddress smBusinessAdd;
-	private SmAddress smIdenAdd;
+	private SmAddress smPermenantAdd;
 	private SmAddress smResAdd;
 	
 	private String applType;
-	private boolean sameAddress;
-	
 	private String suppOwnerIdMask;
 	
-	
-
 	public SmSupplier getSmSupp() {
 		return smSupp;
 	}
@@ -81,20 +90,60 @@ public class RegistrationManagedBean extends BaseManagedBean {
 		this.residentialStateLs = residentialStateLs;
 	}
 
-	public List<PmState> getIdentityStateLs() {
-		return identityStateLs;
+	public List<PmState> getPermenantStateLs() {
+		return permenantStateLs;
 	}
 
-	public void setIdentityStateLs(List<PmState> identityStateLs) {
-		this.identityStateLs = identityStateLs;
+	public List<PmDistrict> getBusinessDistrictLs() {
+		return businessDistrictLs;
 	}
 
-	public SmSupplierBank getSmSuppBank() {
-		return smSuppBank;
+	public void setBusinessDistrictLs(List<PmDistrict> businessDistrictLs) {
+		this.businessDistrictLs = businessDistrictLs;
 	}
 
-	public void setSmSuppBank(SmSupplierBank smSuppBank) {
-		this.smSuppBank = smSuppBank;
+	public List<PmDistrict> getResidentialDistrictLs() {
+		return residentialDistrictLs;
+	}
+
+	public void setResidentialDistrictLs(List<PmDistrict> residentialDistrictLs) {
+		this.residentialDistrictLs = residentialDistrictLs;
+	}
+
+	public List<PmDistrict> getPermenantDistrictLs() {
+		return permenantDistrictLs;
+	}
+
+	public void setPermenantDistrictLs(List<PmDistrict> permenantDistrictLs) {
+		this.permenantDistrictLs = permenantDistrictLs;
+	}
+
+	public void setPermenantStateLs(List<PmState> permenantStateLs) {
+		this.permenantStateLs = permenantStateLs;
+	}
+
+	public List<PmCity> getBusinessCityLs() {
+		return businessCityLs;
+	}
+
+	public void setBusinessCityLs(List<PmCity> businessCityLs) {
+		this.businessCityLs = businessCityLs;
+	}
+
+	public List<PmCity> getResidentialCityLs() {
+		return residentialCityLs;
+	}
+
+	public void setResidentialCityLs(List<PmCity> residentialCityLs) {
+		this.residentialCityLs = residentialCityLs;
+	}
+
+	public List<PmCity> getPermenantCityLs() {
+		return permenantCityLs;
+	}
+
+	public void setPermenantCityLs(List<PmCity> permenantCityLs) {
+		this.permenantCityLs = permenantCityLs;
 	}
 
 	public SmPersonnel getSmPersonnel() {
@@ -137,12 +186,12 @@ public class RegistrationManagedBean extends BaseManagedBean {
 		this.smBusinessAdd = smBusinessAdd;
 	}
 
-	public SmAddress getSmIdenAdd() {
-		return smIdenAdd;
+	public SmAddress getSmPermenantAdd() {
+		return smPermenantAdd;
 	}
 
-	public void setSmIdenAdd(SmAddress smIdenAdd) {
-		this.smIdenAdd = smIdenAdd;
+	public void setSmPermenantAdd(SmAddress smPermenantAdd) {
+		this.smPermenantAdd = smPermenantAdd;
 	}
 
 	public SmAddress getSmResAdd() {
@@ -160,6 +209,14 @@ public class RegistrationManagedBean extends BaseManagedBean {
 	public void setSmAppl(SmAppl smAppl) {
 		this.smAppl = smAppl;
 	}
+	
+	public List<SmSupplierBank> getSmSuppBanks() {
+		return smSuppBanks;
+	}
+
+	public void setSmSuppBanks(List<SmSupplierBank> smSuppBanks) {
+		this.smSuppBanks = smSuppBanks;
+	}
 
 	public String getApplType() {
 		return applType;
@@ -175,6 +232,14 @@ public class RegistrationManagedBean extends BaseManagedBean {
 
 	public void setSameAddress(boolean sameAddress) {
 		this.sameAddress = sameAddress;
+	}
+
+	public SmSupplierBank[] getSelectedSuppBanks() {
+		return selectedSuppBanks;
+	}
+
+	public void setSelectedSuppBanks(SmSupplierBank[] selectedSuppBanks) {
+		this.selectedSuppBanks = selectedSuppBanks;
 	}
 
 	public String getSuppOwnerIdMask() {
