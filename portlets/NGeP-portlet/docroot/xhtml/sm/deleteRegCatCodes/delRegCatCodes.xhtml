@@ -74,11 +74,8 @@
 					<h:outputText value=" -- TBC -- " />
 				</p:column>
 				<p:column>
-					<!-- <p:outputLabel value="#{catBean.categoryType}" /> -->
-					<h:outputText value="Normal"
-						rendered="#{catBean.categoryType eq 'N'}" />
-					<h:outputText value="Special"
-						rendered="#{catBean.categoryType eq 'S'}" />
+					<h:outputText value="Normal" rendered="#{!catBean.specialCategory}" />
+					<h:outputText value="Special" rendered="#{catBean.specialCategory}" />
 				</p:column>
 				<p:column>
 					<p:inputText rendered="#{catBean.selected}"

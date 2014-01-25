@@ -25,6 +25,7 @@ import my.ep.persistence.entity.pm.common.PmCountry;
 import my.ep.persistence.entity.pm.common.PmDistrict;
 import my.ep.persistence.entity.pm.common.PmFinancialOrg;
 import my.ep.persistence.entity.pm.common.PmState;
+import my.ep.persistence.entity.pm.common.PmStatus;
 import my.ep.persistence.entity.pm.common.PmUom;
 import my.ep.persistence.entity.sm.SmAddress;
 import my.ep.persistence.entity.sm.SmAppl;
@@ -32,6 +33,7 @@ import my.ep.persistence.entity.sm.SmApplRejectReason;
 import my.ep.persistence.entity.sm.SmApplSectionReview;
 import my.ep.persistence.entity.sm.SmAssociateCompany;
 import my.ep.persistence.entity.sm.SmChequeSignatory;
+import my.ep.persistence.entity.sm.SmCompanyBasic;
 import my.ep.persistence.entity.sm.SmCompanyExperience;
 import my.ep.persistence.entity.sm.SmEquityCompany;
 import my.ep.persistence.entity.sm.SmFacility;
@@ -69,15 +71,17 @@ public class SmApplicationBackingBean extends
 	}
 
 	public String proceedToApplication(String applicationType) {
-		return proceedToApplication(applicationType, Boolean.FALSE);
+		return proceedToApplication(applicationType, Boolean.FALSE, null, null);
 	}
 
-	public String proceedToApplication(String applicationType, boolean fromBpm) {
+	public String proceedToApplication(String applicationType, boolean fromBpm,
+			SmAppl appl, SmSupplier supp) {
 		System.out
 				.println("**** ENTER Create Application Type Of  *************"
 						+ applicationType + "Application type = >>"
 						+ getManagedBean().getSmAppl().getSupplierType());
-
+		SmAppl smAppl = new SmAppl();
+		SmSupplier smApplSupplier = new SmSupplier();
 		try {
 			MofRegistrationReqDTO reqDto = new MofRegistrationReqDTO();
 			MofRegistrationResDTO resDto = new MofRegistrationResDTO();
@@ -87,50 +91,28 @@ public class SmApplicationBackingBean extends
 					return setExceptionNavigationForAppl(applicationType);
 
 				}
-			}
-			resDto = retriveSupplierById((long) 27);
-			if (resDto.isErrorCaued()) {
-				return setExceptionNavigationForAppl(applicationType);
-			}
-			SmSupplier smApplSupplier = resDto.getSmSupplier();
+				smApplSupplier = resDto.getSmSupplier();
 
-			System.out.println("Retrieved Value ==="
-					+ smApplSupplier.getIncomeTaxNo() + " === EST DATE ==== "
-					+ smApplSupplier.getEstablishDate());
-			SmAppl smAppl = new SmAppl();
-			if (!smApplSupplier.getSmAppls().isEmpty()) {
-				smAppl = smApplSupplier.getSmAppls().get(0);
+				resDto = retriveLatestDraftApplication(smApplSupplier,
+						applicationType);
+				if (resDto.isErrorCaued()) {
+					return setExceptionNavigationForAppl(applicationType);
+				}
+				System.out.println("Retrieved Value ==="
+						+ smApplSupplier.getIncomeTaxNo()
+						+ " === EST DATE ==== "
+						+ smApplSupplier.getEstablishDate());
+				smAppl = resDto.getSmAppl();
+
 				System.out
 						.println("******** Latest Cloned Draft Copy is ******"
 								+ smAppl.getApplId());
+			} else {
+				System.out
+						.println("******* This is PO or Approver from BPM ************");
+				smApplSupplier = supp;
+				smAppl = appl;
 			}
-
-			// TODO Set default not null values -- Start insert appl ---
-			// smAppl.getPmStatus().setStatusId(20001l);
-			// sm.setSmAddress(new SmAddress());
-			// SmAddress smAddress = setDefaultAddr();
-			// getManagedBean().getSmSupplier().setSmAppl(mofRegAppl);
-			// smAppl.setCreatedBy(1l);
-			// if (smApplSupplier.getSmAppls().contains(smAppl)) {
-			// System.out
-			// .println(" *** Already existing record its a duplicate only update **** ");
-			// smApplSupplier.getSmAppls().set(
-			// smApplSupplier.getSmAppls().indexOf(smAppl), smAppl);
-			// } else {
-			// System.out
-			// .println("****** INSERT A FRESH RECORD OF APPL TO SUUPPLIER ******** ");
-			// smApplSupplier.getSmAppls().add(smAppl);
-			// }
-			// smAppl = defaultSmAppl(smAppl);
-
-			// if (applicationType.equals("N") && !fromBpm) {
-			// System.out
-			// .println(" **** START INSERTING THE NEW APPLN FOR MOF REG ****");
-			// reqDto.setSmSupplier(smApplSupplier);
-			// MofRegistrationResDTO smResDTO = new MofRegistrationResDTO();
-			// smResDTO = mofRegistrationSO.updateSupplierProfile(reqDto);
-			// smApplSupplier = smResDTO.getSmSupplier();
-			// }
 
 			getManagedBean().setSmSupplier(smApplSupplier);
 			// TODO Set default not null values -- End insert appl ---
@@ -142,6 +124,10 @@ public class SmApplicationBackingBean extends
 				smAppl.setSupplierType("2");
 				getManagedBean().setPoSecReview(new SmApplSectionReview());
 				getManagedBean().setApprvrSecReview(new SmApplSectionReview());
+				if (smAppl.getSmCompanyBasic() == null) {
+					System.out.println(" **** COMPANY BAsic cannot be null");
+					smAppl.setSmCompanyBasic(new SmCompanyBasic());
+				}
 			}
 
 			if (smAppl.getSmFacilities().isEmpty()) {
@@ -309,7 +295,8 @@ public class SmApplicationBackingBean extends
 			// sm supplier
 			SmAppl smAppl = new SmAppl();
 			smAppl.setApplNo("KB-25102013-1234");
-			// smAppl.getPmStatus().setStatusId(2l);
+			smAppl.setPmStatus(new PmStatus());
+			smAppl.getPmStatus().setStatusId(2l);
 			smAppl.setApplType("B");
 
 			getManagedBean().setSmSupplier(smSupplier);
@@ -1570,6 +1557,32 @@ public class SmApplicationBackingBean extends
 			reqDto.setSupplierId(id);
 			MofRegistrationResDTO resDTO = mofRegistrationSO
 					.retrieveSupplierProfile(reqDto);
+			return resDTO;
+
+		} catch (Exception e) {
+			System.out
+					.println("**** THIS IS THE EXCEPTION IN RETRIVE LIST ****");
+			MofRegistrationResDTO resDTO = new MofRegistrationResDTO();
+			resDTO.setErrorCaued(Boolean.TRUE);
+			return resDTO;
+		} finally {
+			mofRegistrationSO = null;
+		}
+	}
+
+	private MofRegistrationResDTO retriveLatestDraftApplication(
+			SmSupplier supplier, String applType) {
+		IMofRegistrationSO mofRegistrationSO = null;
+
+		try {
+			mofRegistrationSO = (IMofRegistrationSO) BusinessDelegate
+					.getInstance().getServiceObject("sm",
+							IMofRegistrationSO.class);
+			MofRegistrationReqDTO reqDto = new MofRegistrationReqDTO();
+			reqDto.setSmSupplier(supplier);
+			reqDto.setAppType(applType);
+			MofRegistrationResDTO resDTO = mofRegistrationSO
+					.retrieveLatestSmApplicationDraft(reqDto);
 			return resDTO;
 
 		} catch (Exception e) {

@@ -9,7 +9,8 @@
 
 
 	<ui:define name="contentSection">
-		<p:panel header="Delete Pending MOF Application - #{backingBean.managedBean.smAppl.applNo}">
+		<p:panel
+			header="Delete Pending MOF Application - #{backingBean.managedBean.smAppl.applNo}">
 
 			<!-- <div>
 
@@ -44,16 +45,12 @@
 				</tr>
 				<tr>
 					<td><p:outputLabel value="Current Status" /></td>
-					<td><p:inputText value="Pending Supporting Docs"
-							readonly="true" disabled="true"
-							rendered="#{backingBean.managedBean.smAppl.statusId == 1}" /> <p:inputText
-							value="Pending Site Visit Report" readonly="true" disabled="true"
-							rendered="#{backingBean.managedBean.smAppl.statusId == 2}" /></td>
+					<td>-- TBC Based on the status --</td>
 
 				</tr>
 				<tr>
 					<td><p:outputLabel value="Reason for delete MOF-Registered" /></td>
-					<td><p:inputTextarea cols="45" style="margin-bottom : 5px;"/></td>
+					<td><p:inputTextarea cols="45" style="margin-bottom : 5px;" /></td>
 
 				</tr>
 				<tr>

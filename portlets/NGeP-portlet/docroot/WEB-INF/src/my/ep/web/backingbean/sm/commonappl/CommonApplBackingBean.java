@@ -6,14 +6,18 @@ import javax.faces.context.FacesContext;
 import javax.servlet.http.HttpServletRequest;
 
 import my.ep.biz.service.sm.complaint.IComplaintSO;
+import my.ep.biz.service.sm.mofRegistration.IMofRegistrationSO;
 import my.ep.biz.service.sm.sdoreview.ISdoReviewSO;
 import my.ep.bpm.dto.BpmResponseDTO;
 import my.ep.constants.SMProcessNameConst;
 import my.ep.dto.sm.complaint.ComplaintReqDTO;
+import my.ep.dto.sm.mofRegistration.MofRegistrationReqDTO;
+import my.ep.dto.sm.mofRegistration.MofRegistrationResDTO;
 import my.ep.dto.sm.sdoreview.SdoReviewReqDTO;
 import my.ep.jaxb.sm.mofaccmaindata.SMMOFAccMainDataType;
 import my.ep.jaxb.sm.mofregcandata.SMMOFRegCanDataType;
 import my.ep.jaxb.sm.mofregdata.SMMOFRegDataType;
+import my.ep.persistence.entity.sm.SmAppl;
 import my.ep.web.backingbean.BaseBackingBean;
 import my.ep.web.backingbean.sm.SmApplicationBackingBean;
 import my.ep.web.backingbean.sm.sdoreview.SdoReviewBackingBean;
@@ -98,7 +102,12 @@ public class CommonApplBackingBean extends
 				SMMOFAccMainDataType smObj = (SMMOFAccMainDataType) resDTO
 						.getPojo();
 				// TODO Remove this code and get the applicationType From DB
-				applicationType = retriveApplicationById(smObj.getDocumentId());
+				MofRegistrationResDTO mofResDto = new MofRegistrationResDTO();
+				mofResDto = retriveApplicationById(smObj.getDocumentId());
+				SmAppl appl = mofResDto.getSmAppl();
+
+				// applicationType =
+				// retriveApplicationById(smObj.getDocumentId());
 				System.out
 						.println("********Review Application Escalted for account maintain********"
 								+ applicationType);
@@ -109,12 +118,14 @@ public class CommonApplBackingBean extends
 				// TODO Change this impl to get values from DB and set
 				// smSupplier , smAppl of the managedBean
 
-				smApplBB.proceedToApplication(applicationType, Boolean.TRUE);
-				smApplBB.getManagedBean().getSmAppl()
-						.setApplId(new Long(smObj.getDocumentId()));
+				smApplBB.proceedToApplication(appl.getApplType(), Boolean.TRUE,
+						appl, mofResDto.getSmSupplier());
+				// smApplBB.getManagedBean().getSmAppl()
+				// .setApplId(new Long(smObj.getDocumentId()));
+				// smApplBB.getManagedBean().setSmAppl(appl);
 				smApplBB.getManagedBean().setBpmActions(resDTO.getAction());
 				smApplBB.getManagedBean().setTaskId(taskId);
-				setNavigationForSmDecision(applicationType, smApplBB);
+				setNavigationForSmDecision(appl.getApplType(), smApplBB);
 			} else if (resDTO.getProcessName().equalsIgnoreCase(
 					"MOF Supplier Registration")) {
 				SMMOFRegDataType smObj = (SMMOFRegDataType) resDTO.getPojo();
@@ -126,7 +137,12 @@ public class CommonApplBackingBean extends
 						+ resDTO.getDocNumber().charAt(1));
 				System.out.println(" *** DOCUMENT ID FROM THE BPM IS ******"
 						+ smObj.getDocumentId());
-				applicationType = retriveApplicationById(smObj.getDocumentId());
+				MofRegistrationResDTO mofResDto = new MofRegistrationResDTO();
+				mofResDto = retriveApplicationById(smObj.getDocumentId());
+				SmAppl appl = mofResDto.getSmAppl();
+
+				// applicationType =
+				// retriveApplicationById(smObj.getDocumentId());
 				System.out
 						.println("********Review Application Escalted for new mof********");
 				System.out.println("********getTaskId********" + taskId);
@@ -136,12 +152,14 @@ public class CommonApplBackingBean extends
 				// TODO Change this impl to get values from DB and set
 				// smSupplier , smAppl of the managedBean
 
-				smApplBB.proceedToApplication(applicationType, Boolean.TRUE);
-				smApplBB.getManagedBean().getSmAppl()
-						.setApplId(new Long(smObj.getDocumentId()));
+				smApplBB.proceedToApplication(appl.getApplType(), Boolean.TRUE,
+						appl, mofResDto.getSmSupplier());
+				// smApplBB.getManagedBean().getSmAppl()
+				// .setApplId(new Long(smObj.getDocumentId()));
+				//smApplBB.getManagedBean().setSmAppl(appl);
 				smApplBB.getManagedBean().setBpmActions(resDTO.getAction());
 				smApplBB.getManagedBean().setTaskId(taskId);
-				setNavigationForSmDecision(applicationType, smApplBB);
+				setNavigationForSmDecision(appl.getApplType(), smApplBB);
 			}
 
 		} else if (resDTO.getTaskName().equalsIgnoreCase("Review Cancellation")) {
@@ -153,13 +171,17 @@ public class CommonApplBackingBean extends
 			System.out.println("********Review Cancellation********");
 			System.out.println("********Assign Site Visit APPID********"
 					+ srcObj.getDocumentId());
+			MofRegistrationResDTO mofResDto = new MofRegistrationResDTO();
+			mofResDto = retriveApplicationById(srcObj.getDocumentId());
+			SmAppl appl = mofResDto.getSmAppl();
 			SmApplicationBackingBean smApplBB = new SmApplicationBackingBean();
 			// TODO Change this impl to get values from DB and set
 			// smSupplier , smAppl of the managedBean
-			smApplBB.proceedToApplication("C", Boolean.TRUE);
-
-			smApplBB.getManagedBean().getSmAppl()
-					.setApplId(new Long(srcObj.getDocumentId()));
+			smApplBB.proceedToApplication(appl.getApplType(), Boolean.TRUE,
+					appl, mofResDto.getSmSupplier());
+			// smApplBB.getManagedBean().getSmAppl()
+			// .setApplId(new Long(smObj.getDocumentId()));
+			//smApplBB.getManagedBean().setSmAppl(appl);
 			smApplBB.getManagedBean().setBpmActions(resDTO.getAction());
 			smApplBB.getManagedBean().setTaskId(taskId);
 			FacesContext fc = FacesContext.getCurrentInstance();
@@ -219,39 +241,35 @@ public class CommonApplBackingBean extends
 		default:
 			System.out
 					.println("***** THIS IS DEFAULT PAGE --- i.e. no matching type ---"
-							+ smApplBB.getManagedBean().getSmAppl()
-									.getApplType());
+							+ applType);
 			break;
 		}
 	}
 
-	private String retriveApplicationById(int applId) {
-		String appType = "";
-		switch (applId) {
-		case 111:
-			appType = "N";
-			break;
-		case 222:
-			appType = "B";
-			break;
-		case 333:
-			appType = "U";
-			break;
-		case 444:
-			appType = "A";
-			break;
-		case 555:
-			appType = "R";
-			break;
-		case 666:
-			appType = "C";
-			break;
-		default:
-			appType = "N";
-			break;
+	private MofRegistrationResDTO retriveApplicationById(int applId) {
 
+		IMofRegistrationSO mofRegistrationSO = null;
+
+		try {
+			mofRegistrationSO = (IMofRegistrationSO) BusinessDelegate
+					.getInstance().getServiceObject("sm",
+							IMofRegistrationSO.class);
+			MofRegistrationReqDTO reqDto = new MofRegistrationReqDTO();
+			reqDto.setApplId(applId);
+			MofRegistrationResDTO resDTO = mofRegistrationSO
+					.retrievePendingApplicationDetails(reqDto);
+			return resDTO;
+
+		} catch (Exception e) {
+			System.out
+					.println("**** THIS IS THE EXCEPTION IN RETRIVE LIST ****");
+			MofRegistrationResDTO resDTO = new MofRegistrationResDTO();
+			resDTO.setErrorCaued(Boolean.TRUE);
+			return resDTO;
+		} finally {
+			mofRegistrationSO = null;
 		}
-		return appType;
+
 	}
 
 	// public void preRender(){
