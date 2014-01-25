@@ -58,6 +58,11 @@
 				<ui:include
 					src="/xhtml/sm/poDecisionPages/poReviewSupportingDocuments.xhtml" />
 			</p:tab>
+			<p:tab title="Review Site Visit"
+				rendered="#{backingBean.managedBean.poUser}">
+				<ui:include
+					src="/xhtml/sm/reviewSiteVisitReport/reviewSiteVisitReportDocuments.xhtml" />
+			</p:tab>
 			<p:tab title="#{lbl['lbl.sm.poDecisionLbl']}"
 				rendered="#{backingBean.managedBean.poUser}">
 				<ui:include
