@@ -5,34 +5,24 @@
 	xmlns:p="http://primefaces.org/ui"
 	xmlns:c="http://java.sun.com/jsp/jstl/core">
 
-	<f:event listener="#{complaintBackingBean.retrieveComplaintInfo}"
-		type="preRenderView"></f:event>
-	<div align="right">
-		<p:commandButton value="Update"
-			action="#{complaintBackingBean.updateComplaint}" />
-	</div>
-	<p:panel header="Complaint Details">
-		<ui:include
-			src="/xhtml/sm/shared/complaintRegistration/complaintBasicInfo.xhtml" />
-	</p:panel>
 	<p:panel header="Second Review Response" toggleable="true">
 		<table style="width: 100%">
 			<tr>
-				<td id="tdTitle"><p:outputLabel value="* Actual Meeting Date" /></td>
-				<td id="tdContent"><p:calendar showOn="button"
+				<td class="tdTitle"><p:outputLabel value="* Actual Meeting Date" /></td>
+				<td class="tdContent"><p:calendar showOn="button"
 						value="#{complaintBackingBean.managedBean.smComplReview.actualConveneDate}" /></td>
-				<td id="tdTitle"><p:outputLabel
+				<td class="tdTitle"><p:outputLabel
 						value="* Meeting Minutes Ref No." /></td>
-				<td id="tdContent"><p:inputText
+				<td class="tdContent"><p:inputText
 						value="#{complaintBackingBean.managedBean.smComplReview.minutesRefNo}" /></td>
 			</tr>
 
 			<tr>
-				<td id="tdTitle"><p:outputLabel
-						value="* Date Round 2 Report Received" /></td>
-				<td id="tdContent"><p:calendar showOn="button" /></td>
-				<td id="tdTitle"><p:outputLabel value="* Decesion" /></td>
-				<td id="tdContent"><p:selectOneMenu
+				<td class="tdTitle"><p:outputLabel
+						value="* Report Received" /></td>
+				<td class="tdContent"><p:calendar showOn="button" /></td>
+				<td class="tdTitle"><p:outputLabel value="* Decesion" /></td>
+				<td class="tdContent"><p:selectOneMenu
 						value="#{complaintBackingBean.managedBean.smComplReview.decisionTaken}">
 						<f:selectItem itemLabel="-- Select --" itemValue="" />
 						<f:selectItem itemLabel="Valid" itemValue="1" />
@@ -41,8 +31,8 @@
 			</tr>
 
 			<tr>
-				<td id="tdTitle"><p:outputLabel value="* Remarks" /></td>
-				<td id="tdContent" colspan="3"><p:inputTextarea
+				<td class="tdTitle"><p:outputLabel value="* Remarks" /></td>
+				<td class="tdContent" colspan="3"><p:inputTextarea
 						value="#{complaintBackingBean.managedBean.smComplReview.decisionRemark}"
 						rows="8" cols="100" /></td>
 			</tr>
@@ -58,15 +48,10 @@
 				</tr>
 				-->
 			<tr>
-				<td id="tdTitle"><p:outputLabel
-						value="* Upload Decision Signed By PTPK"></p:outputLabel></td>
-				<td id="tdContent"><p:fileUpload mode="simple" /></td>
+				<td class="tdTitle"><p:outputLabel
+						value="* Upload Decision Report"></p:outputLabel></td>
+				<td class="tdContent"><p:fileUpload mode="simple" /></td>
 			</tr>
 		</table>
 	</p:panel>
-
-
-	<ui:include
-		src="/xhtml/sm/shared/complaintRegistration/complaintTracking.xhtml" />
-
 </ui:composition>

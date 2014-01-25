@@ -62,7 +62,7 @@ public class CommonApplBackingBean extends
 
 			log.info("------Verify Supporting Documents-----------"
 					+ smMofObj.getDocumentId());
-			sdoBB.getManagedBean().setAppId(smMofObj.getDocumentId());
+			sdoBB.getManagedBean().setAppId((long)smMofObj.getDocumentId());
 			sdoBB.getManagedBean().setBpmAction(resDTO.getAction());
 			sdoBB.getManagedBean().setTaskId(taskId);
 			sdoBB.getManagedBean().setBpmPojo(smMofObj);

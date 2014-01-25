@@ -8,8 +8,9 @@
 	<p:panel header="Individual Registration Information" toggleable="true">
 		<table class="customTbl">
 			<tr>
-				<td id="tdTitle">* Type of service category</td>
-				<td colspan="3"><p:selectOneRadio
+				<td class="tdTitle"><p:outputLabel
+						value="* Type of service category" /></td>
+				<td class="tdContent" colspan="3"><p:selectOneRadio
 						value="#{registrationBackingBean.managedBean.smSupp.serviceCategory}">
 						<f:selectItem itemLabel="Professional Service" itemValue="P" />
 						<f:selectItem itemLabel="Special Service" itemValue="S" />
@@ -17,8 +18,8 @@
 			</tr>
 
 			<tr>
-				<td id="tdTitle">* Service</td>
-				<td id="tdContent"><p:selectOneMenu
+				<td class="tdTitle"><p:outputLabel value="* Service" /></td>
+				<td class="tdContent"><p:selectOneMenu
 						value="#{registrationBackingBean.managedBean.smSupp.serviceType}">
 						<f:selectItem itemLabel="Select" itemValue="0" />
 						<f:selectItem itemLabel="Bomoh hujan" itemValue="1" />
@@ -28,49 +29,79 @@
 					</p:selectOneMenu></td>
 			</tr>
 			<tr>
-				<td id="tdTitle">* Identification No</td>
-				<td id="tdContent"><p:inputText
+				<td class="tdTitle"><p:outputLabel value="* Identification No" /></td>
+				<td class="tdContent"><p:inputMask
 						value="#{registrationBackingBean.managedBean.smSupp.regNo}"
-						size="40"
+						size="40" mask="999999999999"
 						disabled="#{!registrationBackingBean.managedBean.smSupp.brandNew}" /></td>
 			</tr>
 			<tr>
-				<td id="tdTitle">* Full Name(As Per/IC)</td>
-				<td id="tdContent"><p:inputText
-						value="#{registrationBackingBean.managedBean.smSupp.supplierName}"
-						size="40" /></td>
-
+				<td class="tdTitle"><p:outputLabel value="* Full Name" /></td>
+				<td class="tdContent"><p:inputText size="40" value="#{registrationBackingBean.managedBean.smAppl.smCompanyBasic.companyName}"/></td>
 			</tr>
 
 			<tr>
-				<td id="tdTitle">* Permanent Address(As Per/IC)</td>
-				<td id="tdContent"><p:inputText size="40" colspan="3" /></td>
+				<td class="tdTitle"><p:outputLabel value="* Permanent Address" /></td>
+				<td class="tdContent"><p:inputText size="40" colspan="3"
+						id="txtPermAdd1"
+						value="#{registrationBackingBean.managedBean.smPermenantAdd.address1}" /></td>
 			</tr>
 
 			<tr>
 				<td></td>
-				<td id="tdContent"><p:inputText size="40" colspan="3" /></td>
+				<td class="tdContent"><p:inputText size="40" colspan="3"
+						id="txtPermAdd2"
+						value="#{registrationBackingBean.managedBean.smPermenantAdd.address2}" /></td>
 			</tr>
 			<tr>
 				<td></td>
-				<td id="tdContent"><p:inputText size="40" colspan="3" /></td>
+				<td class="tdContent"><p:inputText size="40" colspan="3"
+						id="txtPermAdd3"
+						value="#{registrationBackingBean.managedBean.smPermenantAdd.address3}" /></td>
 			</tr>
 			<tr>
 				<td></td>
-				<td id="tdContent"><p:inputText size="40" colspan="3" /></td>
+				<td class="tdContent"><p:inputText size="40" colspan="3"
+						id="txtPermAdd4"
+						value="#{registrationBackingBean.managedBean.smPermenantAdd.address4}" /></td>
 			</tr>
 			<tr>
-				<td id="tdTitle">* Post Code</td>
-				<td id="tdContent"><p:inputText size="40" /></td>
-				<td id="tdTitle">* State</td>
-				<td id="tdContent"><p:inputText size="40" /></td>
+				<td class="tdTitle"><p:outputLabel value="* Post Code" /></td>
+				<td class="tdContent"><p:inputText size="40"
+						id="txtPermPostcode"
+						value="#{registrationBackingBean.managedBean.smPermenantAdd.postcode}" /></td>
+				<td class="tdTitle"><p:outputLabel value="* State" /></td>
+				<td class="tdContent"><p:selectOneMenu id="cmbPermState"
+						value="#{registrationBackingBean.managedBean.smPermenantAdd.pmState.stateId}">
+
+						<f:selectItems var="state"
+							value="#{registrationBackingBean.managedBean.permenantStateLs}"
+							itemValue="#{state.stateId}" itemLabel="#{state.stateName}" />
+						<p:ajax event="change"
+							listener="#{registrationBackingBean.populateDistrictByAddType('permenant')}"
+							update="cmbPermDistrict" />
+					</p:selectOneMenu></td>
 			</tr>
 
 			<tr>
-				<td id="tdTitle">* District</td>
-				<td id="tdContent"><p:inputText size="40" /></td>
-				<td id="tdTitle">* Town/ City</td>
-				<td id="tdContent"><p:inputText size="40" /></td>
+				<td class="tdTitle"><p:outputLabel value="* District" /></td>
+				<td class="tdContent"><p:selectOneMenu id="cmbPermDistrict"
+						value="#{registrationBackingBean.managedBean.smPermenantAdd.pmDistrict.districtId}">
+						<f:selectItems var="dist"
+							value="#{registrationBackingBean.managedBean.permenantDistrictLs}"
+							itemValue="#{dist.districtId}" itemLabel="#{dist.districtName}" />
+						<p:ajax event="change"
+							listener="#{registrationBackingBean.populateCityByAddType('permenant')}"
+							update="cmbPermCity" />
+					</p:selectOneMenu></td>
+
+				<td class="tdTitle"><p:outputLabel value="* Town/ City" /></td>
+				<td class="tdContent"><p:selectOneMenu id="cmbPermCity"
+						value="#{registrationBackingBean.managedBean.smPermenantAdd.pmCity.cityId}">
+						<f:selectItems var="pcity"
+							value="#{registrationBackingBean.managedBean.permenantCityLs}"
+							itemValue="#{pcity.cityId}" itemLabel="#{pcity.cityName}" />
+					</p:selectOneMenu></td>
 			</tr>
 			<!-- <tr>
 				<td id="tdTitle">Phone No.</td>
@@ -95,13 +126,10 @@
 	</p:panel>
 
 	<ui:include src="/xhtml/sm/shared/onlinereg/bankInfo.xhtml" />
+	<ui:include src="/xhtml/sm/shared/onlinereg/contactInfo.xhtml" />
 
-	<c:if test="#{registrationBackingBean.managedBean.smSupp.brandNew}">
-		<ui:include src="/xhtml/sm/shared/onlinereg/contactInfo.xhtml" />
-	</c:if>
-	
 	<div align="right">
-		<p:commandButton value="Submit\"
-			action="#{registrationBackingBean.submitRegisteration}" />
+		<p:commandButton value="Submit"
+			action="#{registrationBackingBean.submitRegistration}" />
 	</div>
 </ui:composition>

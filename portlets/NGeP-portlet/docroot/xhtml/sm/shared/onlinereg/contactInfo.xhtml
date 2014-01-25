@@ -7,86 +7,122 @@
 
 	<p:panel header="Contact Information" toggleable="true"
 		id="pnlContactInfo">
-			<table class="customTbl">
+		<table class="customTbl">
 			<tr>
-				<td id="tdTitle"><p:outputLabel
+				<td class="tdTitle"><p:outputLabel
 						value="* #{lbl['lbl.sm.correspondenceadd']}" /></td>
-				<td id="tdContent"><p:selectBooleanCheckbox id="chkAddMode"
+				<td class="tdContent"><p:selectBooleanCheckbox id="chkAddMode"
 						value="#{registrationBackingBean.managedBean.sameAddress}">
-						<p:ajax event="change" update="pnlContactInfo" listener="#{registrationBackingBean.sameAsPermenantAddress}"/>
+						<p:ajax event="change" update="pnlContactInfo"
+							listener="#{registrationBackingBean.checkSameAddress}"
+							process="@this,txtPermAdd1,txtPermAdd2,txtPermAdd3,txtPermAdd4,txtPermPostcode,cmbPermState,cmbPermDistrict,cmbPermCity" />
 					</p:selectBooleanCheckbox>Same as Permenant Address</td>
 			</tr>
 
 			<tr>
-				<td id="tdTitle"></td>
-				<td id="tdContent" colspan="2"><p:inputText size="40" id="conAddress1"/></td>
+				<td class="tdTitle"></td>
+				<td class="tdContent" colspan="2"><p:inputText size="40"
+						id="conAddress1"
+						value="#{registrationBackingBean.managedBean.smResAdd.address1}"
+						disabled="#{registrationBackingBean.managedBean.sameAddress}" /></td>
 			</tr>
 
 			<tr>
-				<td id="tdTitle"></td>
-				<td id="tdContent" colspan="2"><p:inputText size="40" id="conAddress2"/></td>
+				<td class="tdTitle"></td>
+				<td class="tdContent" colspan="2"><p:inputText size="40"
+						id="conAddress2"
+						value="#{registrationBackingBean.managedBean.smResAdd.address2}"
+						disabled="#{registrationBackingBean.managedBean.sameAddress}" /></td>
 			</tr>
 
 			<tr>
-				<td id="tdTitle"></td>
-				<td id="tdContent" colspan="2"><p:inputText size="40" /></td>
+				<td class="tdTitle"></td>
+				<td class="tdContent" colspan="2"><p:inputText size="40"
+						id="conAddress3"
+						value="#{registrationBackingBean.managedBean.smResAdd.address3}"
+						disabled="#{registrationBackingBean.managedBean.sameAddress}" /></td>
 			</tr>
 
 			<tr>
-				<td id="tdTitle"></td>
-				<td id="tdContent" colspan="2"><p:inputText size="40" /></td>
+				<td class="tdTitle"></td>
+				<td class="tdContent" colspan="2"><p:inputText size="40"
+						id="conAddress4"
+						value="#{registrationBackingBean.managedBean.smResAdd.address4}"
+						disabled="#{registrationBackingBean.managedBean.sameAddress}" /></td>
 			</tr>
 
 			<tr>
-				<td id="tdTitle"><p:outputLabel
+				<td class="tdTitle"><p:outputLabel
 						value="* #{lbl['lbl.sm.postcode']}" /></td>
-				<td id="tdContent"><p:inputText size="40" /></td>
-				<td id="tdTitle"><p:outputLabel
+				<td class="tdContent"><p:inputText size="40"
+						value="#{registrationBackingBean.managedBean.smResAdd.postcode}"
+						disabled="#{registrationBackingBean.managedBean.sameAddress}" /></td>
+				<td class="tdTitle"><p:outputLabel
 						value="* #{lbl['lbl.sm.state']}" /></td>
-				<td id="tdContent"><p:inputText size="40" /></td>
+				<td class="tdContent"><p:selectOneMenu id="cmbResState"
+						value="#{registrationBackingBean.managedBean.smResAdd.pmState.stateId}"
+						disabled="#{registrationBackingBean.managedBean.sameAddress}">
+						<f:selectItems var="resState"
+							value="#{registrationBackingBean.managedBean.residentialStateLs}"
+							itemValue="#{resState.stateId}" itemLabel="#{resState.stateName}" />
+						<p:ajax event="change"
+							listener="#{registrationBackingBean.populateDistrictByAddType('residential')}"
+							update="cmbPermDistrict" />
+					</p:selectOneMenu></td>
 			</tr>
 
 			<tr>
-				<td id="tdTitle"><p:outputLabel
+				<td class="tdTitle"><p:outputLabel
 						value="* #{lbl['lbl.sm.district']}" /></td>
-				<td id="tdContent"><p:inputText size="40" /></td>
-				<td id="tdTitle"><p:outputLabel
+				<td class="tdContent"><p:selectOneMenu id="cmbResDistrict"
+						disabled="#{registrationBackingBean.managedBean.sameAddress}"
+						value="#{registrationBackingBean.managedBean.smResAdd.pmDistrict.districtId}">
+						<f:selectItems var="dist"
+							value="#{registrationBackingBean.managedBean.residentialDistrictLs}"
+							itemValue="#{dist.districtId}" itemLabel="#{dist.districtName}" />
+					</p:selectOneMenu></td>
+				<td class="tdTitle"><p:outputLabel
 						value="* #{lbl['lbl.sm.towncity']}" /></td>
-				<td id="tdContent"><p:inputText size="40" /></td>
+				<td class="tdContent"><p:selectOneMenu id="cmbResCity"
+						disabled="#{registrationBackingBean.managedBean.sameAddress}"
+						value="#{registrationBackingBean.managedBean.smResAdd.pmCity.cityId}">
+						<f:selectItems var="city"
+							value="#{registrationBackingBean.managedBean.residentialCityLs}"
+							itemValue="#{city.cityId}" itemLabel="#{city.cityName}" />
+					</p:selectOneMenu></td>
 			</tr>
 
 			<tr>
-				<td id="tdTitle"><p:outputLabel value="Phone No" /></td>
-				<td id="tdContent"><p:inputText size="40" /></td>
+				<td class="tdTitle"><p:outputLabel value="Phone No" /></td>
+				<td class="tdContent"><p:inputText size="40" value="#{registrationBackingBean.managedBean.smPersonnel.phoneNo}"/></td>
 
-				<td id="tdTitle"><p:outputLabel value="Fax No" /></td>
-				<td id="tdContent"><p:inputText size="40" id="txtFaxNo" /></td>
+				<td class="tdTitle"><p:outputLabel value="Fax No" /></td>
+				<td class="tdContent"><p:inputText size="40" id="txtFaxNo" /></td>
 			</tr>
 
 			<tr>
-				<td id="tdTitle"><p:outputLabel
+				<td class="tdTitle"><p:outputLabel
 						value="* #{lbl['lbl.sm.mobilenumber']}" /></td>
-				<td id="tdContent"><p:inputText size="40"
-						value="#{registrationBackingBean.managedBean.smResAdd.mobileNo}" /></td>
+				<td class="tdContent"><p:inputText size="40" value="#{registrationBackingBean.managedBean.smPersonnel.mobileNo}" /></td>
 			</tr>
 
 			<tr>
-				<td id="tdTitle"><p:outputLabel
+				<td class="tdTitle"><p:outputLabel
 						value="* #{lbl['lbl.sm.email']}" /></td>
-				<td id="tdContent"><p:inputText size="40" id="usrEmail"
-						value="#{registrationBackingBean.managedBean.smPersonnel.email}" /></td>
+				<td class="tdContent"><p:inputText size="40" id="usrEmail" value="#{registrationBackingBean.managedBean.smPersonnel.email}" /></td>
 			</tr>
 
 			<tr>
-				<td id="tdTitle"><p:outputLabel
+				<td class="tdTitle"><p:outputLabel
 						value="* #{lbl['lbl.sm.confirmemail']}" /></td>
-				<td id="tdContent"><p:inputText size="40" id="conEmail" /></td>
+				<td class="tdContent"><p:inputText size="40" id="conEmail" /></td>
 			</tr>
 
 			<tr>
-				<td id="tdTitle"><p:outputLabel
+				<td class="tdTitle"><p:outputLabel
 						value="#{lbl['lbl.sm.notificationmode']}" /></td>
-				<td id="tdContent"><p:selectManyCheckbox id="notificationMode">
+				<td class="tdContent"><p:selectManyCheckbox
+						id="notificationMode">
 						<f:selectItem itemLabel="Email" itemValue="0" />
 						<f:selectItem itemLabel="SMS" itemValue="1" />
 					</p:selectManyCheckbox></td>

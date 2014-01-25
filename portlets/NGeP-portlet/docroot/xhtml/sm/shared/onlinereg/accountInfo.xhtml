@@ -10,11 +10,11 @@
 		<table class="customTbl">
 			<tr>
 				<c:if
-					test="#{registrationBackingBean.managedBean.smAppl.applType == 'N'}">
+					test="#{registrationBackingBean.managedBean.smAppl.applType == 'M'}">
 
-					<td id="tdTitle"><p:outputLabel
+					<td class="tdTitle"><p:outputLabel
 							value="* #{lbl['lbl.sm.mofsuppliertype']}" /></td>
-					<td id="tdContent"><p:selectOneMenu
+					<td class="tdContent"><p:selectOneMenu
 							value="#{registrationBackingBean.managedBean.smAppl.supplierType}">
 							<f:selectItem itemLabel="Select" itemValue="" />
 							<f:selectItem itemLabel="Contractor" itemValue="K" />
@@ -22,10 +22,10 @@
 						</p:selectOneMenu></td>
 				</c:if>
 
-				<td id="tdTitle"><p:outputLabel
+				<td class="tdTitle"><p:outputLabel
 						value="* #{lbl['lbl.sm.businesscomptype']}" /></td>
-				<td id="tdContent"><p:selectOneMenu id="somId"
-						value="#{registrationBackingBean.managedBean.smSupp.businessType}" disabled="#{!registrationBackingBean.managedBean.smSupp.brandNew}">
+				<td class="tdContent"><p:selectOneMenu id="somId"
+						value="#{registrationBackingBean.managedBean.smSupp.businessType}" disabled="#{!registrationBackingBean.managedBean.smAppl.brandNew}">
 						<f:selectItem itemLabel="Select" itemValue="" />
 						<f:selectItem itemLabel="ROB-Semenanjung" itemValue="G" />
 						<f:selectItem itemLabel="ROB-Sabah" itemValue="H" />
@@ -35,12 +35,12 @@
 						<f:selectItem itemLabel="Individual" itemValue="I" />
 						<f:selectItem itemLabel="Society(ROS)" itemValue="S" />
 						<f:selectItem itemLabel="Professional Body" itemValue="P" />
-						<p:ajax event="change" update="@form" />
+						<p:ajax event="change" update="@form" listener="#{registrationBackingBean.businessTypeOnChange}"/>
 					</p:selectOneMenu></td>
 			<c:if
-					test="#{registrationBackingBean.managedBean.smAppl.applType != 'N'}">
-					<td id="tdTitle"></td>
-					<td id="tdContent"></td>
+					test="#{registrationBackingBean.managedBean.smAppl.applType != 'M'}">
+					<td class="tdTitle"></td>
+					<td class="tdContent"></td>
 			</c:if>
 			</tr>
 		</table>

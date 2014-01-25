@@ -13,8 +13,12 @@
 			src="/xhtml/sm/shared/complaintRegistration/complainantDetails.xhtml" />
 		<ui:include
 			src="/xhtml/sm/shared/complaintRegistration/complaintDetails.xhtml" />
-			
+
 		<ac:lovPopup />
-		
+
+		<div align="right">
+			<p:commandButton value="Submit"
+				action="#{complaintBackingBean.lodgeComplaint}"></p:commandButton>
+		</div>
 	</ui:define>
 </ui:composition>

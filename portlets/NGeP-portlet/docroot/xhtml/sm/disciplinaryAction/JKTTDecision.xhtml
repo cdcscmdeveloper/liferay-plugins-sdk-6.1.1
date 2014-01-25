@@ -11,10 +11,10 @@
 		<p:commandButton value="Update"
 			action="#{complaintBackingBean.updateComplaint}" />
 	</div>
-	<p:panel header="Complaint Details">
-		<ui:include
-			src="/xhtml/sm/shared/complaintRegistration/complaintBasicInfo.xhtml" />
-	</p:panel>
+<!-- 	<p:panel header="Complaint Details"> -->
+<!-- 		<ui:include -->
+<!-- 			src="/xhtml/sm/shared/complaintRegistration/complaintBasicInfo.xhtml" /> -->
+<!-- 	</p:panel> -->
 	<p:panel header="Final Decision From JKTT" toggleable="true">
 		<table style="width: 100%">
 			<tr>
@@ -53,7 +53,4 @@
 			</tr>
 		</table>
 	</p:panel>
-	<ui:include
-		src="/xhtml/sm/shared/complaintRegistration/complaintTracking.xhtml" />
-
 </ui:composition>

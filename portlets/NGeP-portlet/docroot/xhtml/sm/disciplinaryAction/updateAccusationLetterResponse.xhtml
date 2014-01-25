@@ -5,39 +5,22 @@
 	xmlns:p="http://primefaces.org/ui"
 	xmlns:c="http://java.sun.com/jsp/jstl/core">
 
-	<f:event listener="#{complaintBackingBean.retrieveComplaintInfo}"
-		type="preRenderView"></f:event>
-
-	<div align="right">
-		<p:commandButton value="Update"
-			action="#{complaintBackingBean.updateComplaint}" />
-	</div>
-	
-	<p:panel header="Complaint Details" toggleable="true">
-		<ui:include
-			src="/xhtml/sm/shared/complaintRegistration/complaintBasicInfo.xhtml" />
-	</p:panel>
-
-	<p:panel header="Accusation Letter" toggleable="true">
-		<table style="width: 100%">
+	<p:panel header="Response of Accusation Letter" toggleable="true">
+		<table  class="customTbl">
 			<tr>
-				<td id="tdTitle"><h:outputText
-						value="* Date of Supplier Received" /></td>
-				<td id="tdContent"><p:calendar showOn="button" /></td>
-				<td id="tdTitle"><h:outputText
-						value="* Date of Response Received" /></td>
-				<td id="tdContent"><p:calendar showOn="button" /></td>
-
+				<td class="tdTitle"><h:outputText
+						value="* Response Received" /></td>
+				<td class="tdContent"><p:calendar showOn="button" /></td>
 			</tr>
 			<tr>
-				<td id="tdTitle"><h:outputText value="* Expected Next Convene" /></td>
-				<td id="tdContent"><p:calendar showOn="button" /></td>
-				<td id="tdTitle"><h:outputText
+				<td class="tdTitle"><h:outputText value="* Expected Next Convene" /></td>
+				<td class="tdContent"><p:calendar showOn="button" /></td>
+			</tr>
+			<tr>
+				<td class="tdTitle"><h:outputText
 						value="* Upload Accusation Letter Response" /></td>
-				<td id="tdContent"><p:fileUpload mode="simple" /></td>
+				<td class="tdContent"><p:fileUpload mode="simple" /></td>
 			</tr>
 		</table>
 	</p:panel>
-	<ui:include
-		src="/xhtml/sm/shared/complaintRegistration/complaintTracking.xhtml" />
 </ui:composition>

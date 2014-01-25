@@ -5,35 +5,18 @@
 	xmlns:p="http://primefaces.org/ui"
 	xmlns:c="http://java.sun.com/jsp/jstl/core">
 
-	<f:event listener="#{complaintBackingBean.retrieveComplaintInfo}"
-		type="preRenderView"></f:event>
-	<div align="right">
-		<p:commandButton value="Update"
-			action="#{complaintBackingBean.updateComplaint}" />
-	</div>
-	<p:panel header="Complaint Details" toggleable="true">
-		<ui:include
-			src="/xhtml/sm/shared/complaintRegistration/complaintBasicInfo.xhtml" />
-	</p:panel>
-
 	<p:panel header="Response of Show Cause Letter" toggleable="true">
 		<table class="customTbl">
 			<tr>
-				<td id="tdTitle"><p:outputLabel value="* Received By Supplier" /></td>
-				<td id="tdContent"><p:calendar showOn="button" /></td>
-				<td id="tdTitle"><p:outputLabel value="* Response Received" /></td>
-				<td id="tdContent"><p:calendar showOn="button" /></td>
-
+				<td class="tdTitle"><p:outputLabel value="* Response Received" /></td>
+				<td class="tdContent"><p:calendar showOn="button" /></td>
 			</tr>
 			<tr>
-				<td id="tdTitle"><p:outputLabel value="* Expected Convene Date" /></td>
-				<td id="tdContent"><p:calendar showOn="button" /></td>
-				<td id="tdTitle"><p:outputLabel value="* Upload Response" /></td>
-				<td id="tdContent"><p:fileUpload mode="simple" /></td>
+<!-- 				<td id="tdTitle"><p:outputLabel value="* Expected Convene Date" /></td> -->
+<!-- 				<td id="tdContent"><p:calendar showOn="button" /></td> -->
+				<td class="tdTitle"><p:outputLabel value="* Upload Response" /></td>
+				<td class="tdContent"><p:fileUpload mode="simple" /></td>
 			</tr>
 		</table>
 	</p:panel>
-	<ui:include
-		src="/xhtml/sm/shared/complaintRegistration/complaintTracking.xhtml" />
-
 </ui:composition>

@@ -10,52 +10,54 @@
 		<table class="customTbl">
 			<tr>
 				<td><p:outputLabel value="Complaint Against Supplier* " /></td>
-				<td><!-- <p:inputText readonly="true"
-						value="#{complaintBackingBean.managedBean.smComplaint.smSupplier.supplierName}"
-						size="50" /> -->
-					<ac:lov id="supplier" lovId="SM_SUPPLIER"
-						headerText="Supplier Lov" 
+				<td><ac:lov id="supplier" lovId="SM_SUPPLIER"
+						headerText="Supplier Lov"
 						saveObject="complaintBackingBean.managedBean.smComplaint.smSupplier"
-						value="#{complaintBackingBean.managedBean.smComplaint.smSupplier.supplierName}"
+						value="#{complaintBackingBean.managedBean.smComplaint.smSupplier.companyName}"
 						conditionField="recordStatus^1">
-				</ac:lov>
-				</td>
-
-				<td><p:outputLabel value="Complaint Type* " /></td>
-				<td><p:selectOneMenu
-						value="#{complaintBackingBean.managedBean.smComplaint.complaintCategory}">
-						<f:selectItem itemLabel="-- Select One -- " itemValue="" />
-						<f:selectItem itemLabel="Breach the obligation of registration"
-							itemValue="R" />
-						<f:selectItem
-							itemLabel="Breach the obligation of Tender/ Contract"
-							itemValue="T" />
-						<f:selectItem itemLabel="Criminal or Civil Offenses" itemValue="O" />
-					</p:selectOneMenu></td>
+					</ac:lov></td>
 			</tr>
 
+			<c:if
+				test="#{!complaintBackingBean.managedBean.smComplaint.brandNew}">
+				<tr>
+					<td><p:outputLabel value="Complaint Type* " /></td>
+					<td><p:selectManyCheckbox id="grid" layout="grid" columns="2">
+							<f:selectItems
+								value="#{complaintBackingBean.managedBean.complType.entrySet()}"
+								var="ctype" itemVlue="#{ctype.key}" itemLabel="#{ctype.value}" />
+						</p:selectManyCheckbox></td>
+				</tr>
+			</c:if>
+
 			<tr>
-				<td><p:outputLabel value="Complaint Details* " /></td>
+				<td valign="top"><p:outputLabel value="Complaint Details* " /></td>
 				<td colspan="3"><p:inputTextarea
 						value="#{complaintBackingBean.managedBean.smComplaint.complaintDesc}"
 						rows="8" cols="100" /></td>
 			</tr>
 
 			<tr>
-				<td><br /></td>
-			</tr>
-			<tr>
-				<td><p:outputLabel
-						value="Upload Complaint / Proof Doc (If Any) " /></td>
-				<td><p:fileUpload mode="simple" /></td>
+				<c:choose>
+					<c:when
+						test="#{complaintBackingBean.managedBean.smComplaint.brandNew}">
+						<td><p:outputLabel
+								value="Upload Complaint / Proof Doc (If Any) " /></td>
+						<td colspan="3"><p:fileUpload mode="simple" /></td>
+					</c:when>
+
+					<c:otherwise>
+						<td><p:outputLabel
+								value="Document" /></td>
+						<td colspan="3"><p:commandLink>sampleUploadedDoc
+							</p:commandLink></td>
+					</c:otherwise>
+				</c:choose>
+				
+<!-- 				<td class="tdTitle"></td> -->
+<!-- 				<td class="tdContent"></td> -->
 			</tr>
 		</table>
 	</p:panel>
-
-	<div align="right">
-		<p:commandButton value="Submit"
-			action="#{complaintBackingBean.lodgeComplaint}"></p:commandButton>
-	</div>
-
 
 </ui:composition>

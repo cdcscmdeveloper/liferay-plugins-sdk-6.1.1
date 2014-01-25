@@ -11,6 +11,7 @@ import javax.faces.context.FacesContext;
 import my.ep.biz.service.sm.siteVisit.ISiteAssignSO;
 import my.ep.dto.sm.siteVisit.SiteAssignReqDTO;
 import my.ep.dto.sm.siteVisit.SiteAssignResDTO;
+import my.ep.persistence.entity.sm.SmApplSiteVisit;
 import my.ep.web.backingbean.BaseBackingBean;
 import my.ep.web.managedbean.sm.sitevisit.SvcSiteAssignManagedBean;
 import my.ep.web.util.FacesScopes;
@@ -53,7 +54,10 @@ public class SvcSiteAssignBackingBean extends
 
 	public void retrieveSiteAssignInfo() {
 		//this.getManagedBean().setAppId(22);
+		//this.getManagedBean().setSmApplSv(new SmApplSiteVisit());
+		//this.getManagedBean().getSmApplSv().get
 		
+		//Old Version - Working set
 		log.info("----------------------retrieveSiteAssignInfo start----------------");
 		SiteAssignReqDTO reqDTO = new SiteAssignReqDTO();
 		ISiteAssignSO reqSO = (ISiteAssignSO) BusinessDelegate.getInstance()

@@ -8,69 +8,61 @@
 	xmlns:c="http://java.sun.com/jsp/jstl/core">
 
 	<ui:define name="contentSection">
+		<f:event listener="#{complaintBackingBean.retrieveComplaintInfo}"
+			type="preRenderView"></f:event>
+
+		<!--  <p:commandButton value="Download Investigation Report"></p:commandButton>-->
 		<p:tabView id="tabComplaint" dynamic="true" orientation="left">
 			<c:if
 				test="#{complaintBackingBean.managedBean.smComplaint.statusId >= 1 }">
-				<p:tab title="First Review Info">
-					<ui:include src="complaintFirstReviewInfo.xhtml" />
+				<p:tab title="Initial Review">
+					<ui:include src="initialReview.xhtml" />
 				</p:tab>
 			</c:if>
 
 			<c:if
-				test="#{complaintBackingBean.managedBean.smComplaint.statusId >= 2 }">
-				<p:tab title="First Review Update">
+				test="#{complaintBackingBean.managedBean.smComplaint.statusId >= 1 }">
+				<p:tab title="First Review">
+					<ui:include src="complaintFirstReviewInfo.xhtml" />
 					<ui:include src="updateComplaintFirstReview.xhtml" />
 				</p:tab>
 			</c:if>
 
 			<c:if
-				test="#{complaintBackingBean.managedBean.smComplaint.statusId >= 3 }">
-				<p:tab title="Issue Show Cause Letter">
+				test="#{complaintBackingBean.managedBean.smComplaint.statusId >= 2 }">
+				<p:tab title="Show Cause Letter">
 					<ui:include src="updateShowCauseLetterInfo.xhtml" />
-				</p:tab>
-			</c:if>
-
-			<c:if
-				test="#{complaintBackingBean.managedBean.smComplaint.statusId >= 4 }">
-				<p:tab title="Response of Show Cause Letter">
 					<ui:include src="updateShowCauseLetterResponse.xhtml" />
 				</p:tab>
 			</c:if>
 
 			<c:if
-				test="#{complaintBackingBean.managedBean.smComplaint.statusId >= 5 }">
-				<p:tab title="Second Review Info">
-					<ui:include src="complaintSecondReviewInfo.xhtml" />
-				</p:tab>
-			</c:if>
+				test="#{complaintBackingBean.managedBean.smComplaint.statusId >= 3 }">
 
-			<c:if
-				test="#{complaintBackingBean.managedBean.smComplaint.statusId >= 6 }">
-				<p:tab title="Second Review Update">
+				<p:tab title="Second Review">
+					<ui:include src="complaintSecondReviewInfo.xhtml" />
 					<ui:include src="updateComplaintSecondReview.xhtml" />
 				</p:tab>
 			</c:if>
 
 			<c:if
-				test="#{complaintBackingBean.managedBean.smComplaint.statusId >= 7 }">
+				test="#{complaintBackingBean.managedBean.smComplaint.statusId >= 4 }">
 				<p:tab title="Accusation Letter Info">
 					<ui:include src="updateAccusationLetterInfo.xhtml" />
-				</p:tab>
-			</c:if>
-
-			<c:if
-				test="#{complaintBackingBean.managedBean.smComplaint.statusId >= 8 }">
-				<p:tab title="Response of Accusation Letter">
 					<ui:include src="updateAccusationLetterResponse.xhtml" />
 				</p:tab>
 			</c:if>
 
 			<c:if
-				test="#{complaintBackingBean.managedBean.smComplaint.statusId >= 9 }">
+				test="#{complaintBackingBean.managedBean.smComplaint.statusId >= 5 }">
 				<p:tab title="JKTT Decision">
 					<ui:include src="JKTTDecision.xhtml" />
 				</p:tab>
 			</c:if>
+			<p:tab title="Complaint Tracking">
+				<ui:include
+					src="/xhtml/sm/shared/complaintRegistration/complaintTracking.xhtml" />
+			</p:tab>
 		</p:tabView>
 	</ui:define>
 </ui:composition>

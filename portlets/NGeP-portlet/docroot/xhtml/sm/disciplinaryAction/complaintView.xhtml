@@ -13,16 +13,31 @@
 			type="preRenderView" />
 
 		<p:panel header="Search" toggleable="true" id="pnlSearch">
-			<table class="rptTbl">
-				<tr>
-					<td><p:outputLabel value="Complaint No" /></td>
-					<td><p:inputText /></td>
-					<td><p:outputLabel value="MOF No" /></td>
-					<td><p:inputText /></td>
-				</tr>
-			</table>
-			<div align="right">
-				<p:commandButton value="Search" />
+			<div align="center">
+				<table style="width: 80%;">
+					<tr>
+						<td><p:outputLabel value="Search by" /></td>
+						<td><p:selectOneMenu>
+								<f:selectItem itemLabel="---Select---" itemValue="" />
+								<f:selectItem itemLabel="EP-No" itemValue="E" />
+								<f:selectItem itemLabel="Company Name" itemValue="CA" />
+								<f:selectItem itemLabel="Complaint No." itemValue="CO" />
+								<f:selectItem itemLabel="MOF No." itemValue="M" />
+								<f:selectItem itemLabel="Registration No." itemValue="R" />
+							</p:selectOneMenu></td>
+						<td><p:outputLabel value="Keyword" /></td>
+						<td><p:inputText /></td>
+
+						<td><p:outputLabel value="Status" /></td>
+						<td><p:selectOneMenu>
+								<f:selectItem itemLabel="---Select---" itemValue="" />
+								<f:selectItem itemLabel="Open" itemValue="O" />
+								<f:selectItem itemLabel="In Progress" itemValue="P" />
+								<f:selectItem itemLabel="Closed" itemValue="C" />
+							</p:selectOneMenu></td>
+						<td><p:commandButton value="Search" /></td>
+					</tr>
+				</table>
 			</div>
 		</p:panel>
 		<p:remoteCommand name="viewComplaint"
@@ -33,7 +48,7 @@
 				selection="#{complaintBackingBean.managedBean.selectedComplaint}"
 				rowKey="#{compl.complaintId}" selectionMode="single">
 				<ac:paginator for="complaintDt" />
-				
+
 				<p:ajax event="rowSelect" oncomplete="viewComplaint();" />
 				<p:column headerText="Complaint No">
 					#{compl.complaintNo}
@@ -43,12 +58,22 @@
 					#{compl.createdDate}
 				</p:column>
 
-				<p:column headerText="Complaint Type">
-					#{compl.complaintCategory}
+				<!-- 				<p:column headerText="Complaint Type"> -->
+				<!-- 					#{compl.complaintCategory} -->
+				<!-- 				</p:column> -->
+
+				<!-- 				<p:column headerText="MOF No"> -->
+				<!-- 					#{compl.supplierMofNo} -->
+				<!-- 				</p:column> -->
+				<p:column headerText="Supplier Name">
+					#{compl.smSupplier.companyName}
 				</p:column>
 
-				<p:column headerText="MOF No">
-					#{compl.supplierMofNo}
+				<p:column headerText="Registration No.">
+					#{compl.smSupplier.regNo}
+				</p:column>
+
+				<p:column headerText="Status">
 				</p:column>
 			</p:dataTable>
 		</p:panel>

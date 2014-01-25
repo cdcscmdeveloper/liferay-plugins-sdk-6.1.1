@@ -8,26 +8,24 @@
 	<f:event listener="#{complaintBackingBean.retrieveComplaintInfo}"
 		type="preRenderView"></f:event>
 	<div align="right">
-		<p:commandButton value="Update"
+		<p:commandButton value="Update" />
+		<p:commandButton value="Submit"
 			action="#{complaintBackingBean.updateComplaint}" />
 	</div>
-	<p:panel header="Complaint Details" toggleable="true">
-		<ui:include
-			src="/xhtml/sm/shared/complaintRegistration/complaintBasicInfo.xhtml" />
-	</p:panel>
+
 	<p:panel header="Second Review Info" toggleable="true">
 		<table style="width: 100%">
 			<tr>
-				<td id="tdTitle"><p:outputLabel value="Report Sent to PTPK *" /></td>
-				<td id="tdContent"><p:calendar showOn="button" /></td>
-				<td id="tdTitle"><p:outputLabel value="Expected Convene Date *" /></td>
-				<td id="tdContent"><p:calendar showOn="button"
+				<td class="tdTitle"><p:outputLabel
+						value="Report Sent to PTPK *" /></td>
+				<td class="tdContent"><p:calendar showOn="button" /></td>
+			</tr>
+			<tr>
+				<td class="tdTitle"><p:outputLabel
+						value="Expected Convene Date *" /></td>
+				<td class="tdContent"><p:calendar showOn="button"
 						value="#{complaintBackingBean.managedBean.smComplReview.conveneDate}" /></td>
 			</tr>
 		</table>
 	</p:panel>
-	<ui:include
-		src="/xhtml/sm/shared/complaintRegistration/complaintTracking.xhtml" />
-
-
 </ui:composition>
