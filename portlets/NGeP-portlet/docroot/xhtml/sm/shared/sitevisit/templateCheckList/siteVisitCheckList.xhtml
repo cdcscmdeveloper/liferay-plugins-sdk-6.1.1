@@ -74,10 +74,6 @@
 	<p:panel header="Site Visit Check List" toggleable="true">
 		<p:dataTable var="clist"
 			value="#{svoSiteVisitBackingBean.managedBean.svCheckList}">
-			<p:column headerText="No.">
-				<p:outputLabel value="#{clist.checkNo}" />
-			</p:column>
-
 			<p:column headerText="Description">
 				<p:outputLabel value="#{clist.checkDesc}" />
 			</p:column>
