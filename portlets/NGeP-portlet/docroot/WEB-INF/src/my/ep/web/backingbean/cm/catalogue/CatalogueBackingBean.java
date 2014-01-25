@@ -19,11 +19,9 @@ import java.util.Vector;
 import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
-import javax.faces.context.ExternalContext;
 import javax.faces.context.FacesContext;
 import javax.portlet.PortletRequest;
 import javax.portlet.PortletResponse;
-import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import my.ep.biz.bean.search.SearchBean;
@@ -313,11 +311,10 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean>{
 	}
 
 
-	public String navigateToSupplierItemDet(int index){
+	public String navigateToSupplierItemDet(VCmSupplierItem supplierItem){
 
-		log.info("*****this.getManagedBean().getMaintainItemList().get(index).getCmImages().size()*****:"+this.getManagedBean().getSupplierItemList().get(index).getCmImages().size());
-
-		this.getManagedBean().setSelectedMaintainItem(this.getManagedBean().getSupplierItemList().get(index));
+		System.out.println("getDocId"+supplierItem.getDocId());
+		//this.getManagedBean().setSelectedMaintainItem(this.getManagedBean().getSupplierItemList().get(index));
 
 		return "supplierItemDetView?faces-redirect=true";
 	}

@@ -155,8 +155,9 @@
 							</p:column>
 
 							<p:column headerText="Supplier Name">
-								<p:commandLink value="#{supplierItem.companyName}"
-									action="#{catalogueBackingBean.navigateToSupplierItemDet(rowIndex)}" />
+								<h:outputText value="#{supplierItem.companyName}" rendered="#{supplierItem.contractNo != null or supplierItem.circularNo != null }"></h:outputText>
+								<p:commandLink value="#{supplierItem.companyName}" rendered="#{supplierItem.contractNo == null and supplierItem.circularNo == null }"
+									action="#{catalogueBackingBean.navigateToSupplierItemDet(supplierItem)}" />
 							</p:column>
 
 							<p:column headerText="UOM">
