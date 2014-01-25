@@ -8,20 +8,20 @@
 	<p:panel header="Site(s)" toggleable="true">
 		<table class="customTbl">
 			<tr>
-				<td id="tdTitle"><p:outputLabel value="Site" /></td>
-				<td id="tdContent"><p:selectOneMenu>
+				<td class="tdTitle"><p:outputLabel value="Site" /></td>
+				<td class="tdContent"><p:selectOneMenu>
 						<f:selectItems
 							value="#{svoSiteVisitBackingBean.managedBean.smApplSv.smSiteVisitAddresses}"
 							var="c" itemLabel="#{c.smAddress.address1}"
 							itemValue="#{c.smAddress.address1}" />
 					</p:selectOneMenu></td>
-				<td id="tdTitle"></td>
-				<td id="tdContent"></td>
+				<td class="tdTitle"></td>
+				<td class="tdContent"></td>
 			</tr>
 		</table>
 	</p:panel>
 
-	<p:panel header="Report Submission">
+	<p:panel header="Report Submission" toggleable="true">
 		<table class="customTbl">
 			<tr>
 				<td id="tdTitle"><p:outputLabel value="Report Submit" /></td>
@@ -39,14 +39,18 @@
 		</table>
 	</p:panel>
 
-	<p:outputPanel id="svRptPanel">
+	<p:outputPanel id="svRptPanel" toggleable="true">
 
 		<c:if
 			test="#{svoSiteVisitBackingBean.managedBean.rptSubsMethod == 'Upload'}">
 			<p:panel header="Report">
-				<p:fileUpload mode="simple" />
-				<p:commandButton value="Upload"
-					action="#{svoSiteVisitBackingBean.uploadSiteVisitReport}" />
+				<table class="customTbl">
+					<tr>
+						<td class="tdTitle"><p:fileUpload mode="simple" /></td>
+						<td class="tdContent"><p:commandButton value="Upload"
+								action="#{svoSiteVisitBackingBean.uploadSiteVisitReport}" /></td>
+					</tr>
+				</table>
 			</p:panel>
 		</c:if>
 
@@ -58,40 +62,7 @@
 				<div align="right">
 					<p:commandButton value="Save" />
 				</div>
-				<p:tabView id="tabView">
-
-					<p:tab title="Check List">
-						<ui:include src="submitOnlineRptCheckList.xhtml" />
-					</p:tab>
-
-					<p:tab title="Preparation Details">
-						<ui:include src="submitOnlineRptPreDetails.xhtml" />
-					</p:tab>
-
-					<p:tab title="Company Info">
-						<ui:include src="submitOnlineRptCompInfo.xhtml" />
-					</p:tab>
-
-					<p:tab title="Sec A">
-						<ui:include src="submitOnlineRptSectionA.xhtml" />
-					</p:tab>
-
-					<p:tab title="Sec B">
-						<ui:include src="submitOnlineRptSectionB.xhtml" />
-					</p:tab>
-
-					<p:tab title="Sec C">
-						<ui:include src="submitOnlineRptSectionC.xhtml" />
-					</p:tab>
-
-					<p:tab title="Sec D">
-						<ui:include src="submitOnlineRptSectionD.xhtml" />
-					</p:tab>
-
-					<p:tab title="Sec E">
-						<ui:include src="submitOnlineRptSectionE.xhtml" />
-					</p:tab>
-				</p:tabView>
+				<ui:include src="/xhtml/sm/svositevisit/siteVisitReportTab.xhtml"></ui:include>
 			</p:panel>
 		</c:if>
 	</p:outputPanel>
