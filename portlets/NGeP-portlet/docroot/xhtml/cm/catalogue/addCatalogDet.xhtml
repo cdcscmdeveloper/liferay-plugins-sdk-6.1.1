@@ -59,7 +59,7 @@
 					<td rowspan="10" style="width: 250px;"><h:panelGrid
 							styleClass="imageFrame">
 
-							<p:galleria id="imageUploadID"
+							<p:galleria id="imageUploadID" autoPlay="false"
 								value="#{catalogueBackingBean.managedBean.selectedMaintainItem.cmImages}" 
 								var="imageObj" panelWidth="200" panelHeight="150">
 								<p:graphicImage id="imageId" height="150" width="200"
@@ -110,7 +110,7 @@
 					<td><p:outputLabel value="#{lbl['lbl.cm.delivery.term']}" /></td>
 					<td><p:inputText size="26"
 							value="#{catalogueBackingBean.managedBean.selectedMaintainItem.leadTime}" />
-						<p:inputText style="margin-left: 2px;" size="3" value="days" /></td>
+						<p:inputText style="margin-left: 2px;" size="3" value="days" disabled="true"/></td>
 					<td></td>
 					<td></td>
 					<td></td>

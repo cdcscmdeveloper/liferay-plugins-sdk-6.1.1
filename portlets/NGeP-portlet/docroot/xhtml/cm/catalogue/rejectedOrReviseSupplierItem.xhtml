@@ -11,12 +11,11 @@
 	<p:dataTable id="rejectedSupplierItemID"
 		value="#{catalogueBackingBean.managedBean.rejectedItemList}"
 		rowIndexVar="rowIndex" var="rejected"
-		rowKey="#{rejected.supplierItemId}"
-		selection="#{catalogueBackingBean.managedBean.selectedRejectedItems}">
+		rowKey="#{rejected.supplierItemId}">
 
-		<p:column selectionMode="multiple" style="width:2%" />
+		
 		<ac:paginator for="rejectedSupplierItemID"></ac:paginator>
-		<p:column>
+		<p:column width="30%">
 			<f:facet name="header">
 				#{lbl['lbl.cm.item.name']}
 			</f:facet>
@@ -24,21 +23,21 @@
 			#{rejected.cmItem.itemName}
 
 		</p:column>
-		<p:column>
+		<p:column width="5%">
 			<f:facet name="header">
 				#{lbl['lbl.cm.price']}
 			</f:facet>
-			<p:inputText value="#{rejected.cmStandardPricing.price}"
+			<p:inputText value="#{rejected.cmStandardPricing.price}" size="10"
 				disabled="true"></p:inputText>
 		</p:column>
-		<p:column>
+		<p:column width="5%">
 			<f:facet name="header">
 				#{lbl['lbl.cm.uom']}
 			</f:facet>
 			<p:inputText value="#{rejected.pmUom.uomName}" disabled="true"></p:inputText>
 
 		</p:column>
-		<p:column>
+		<p:column width="5%">
 			<f:facet name="header">
 				#{lbl['lbl.cm.start.date']}
 			</f:facet>
@@ -47,7 +46,7 @@
 				pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}" disabled="true"></p:calendar>
 
 		</p:column>
-		<p:column>
+		<p:column width="5%">
 			<f:facet name="header">
 				#{lbl['lbl.cm.end.date']}
 			</f:facet>
@@ -56,7 +55,7 @@
 				pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}" disabled="true"></p:calendar>
 
 		</p:column>
-		<p:column>
+		<p:column width="2%">
 			<f:facet name="header">
 				#{lbl['lbl.cm.action']}
 			</f:facet>

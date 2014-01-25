@@ -11,13 +11,12 @@
 	<p:dataTable id="approvalSupplierItemID"
 		value="#{catalogueBackingBean.managedBean.approvalItemList}"
 		rowIndexVar="rowIndex" var="approval"
-		rowKey="#{approval.supplierItemId}"
-		selection="#{catalogueBackingBean.managedBean.selectedApprovalItems}">
+		rowKey="#{approval.supplierItemId}">
 
-		<p:column selectionMode="multiple" style="width:2%" />
+		
 		
 		<ac:paginator for="approvalSupplierItemID"></ac:paginator>
-		<p:column>
+		<p:column width="30%">
 			<f:facet name="header">
 				#{lbl['lbl.cm.item.name']}
 			</f:facet>
@@ -25,14 +24,14 @@
 			#{approval.cmItem.itemName}
 
 		</p:column>
-		<p:column>
+		<p:column width="5%">
 			<f:facet name="header">
 				#{lbl['lbl.cm.price']}
 			</f:facet>
-			<p:inputText value="#{approval.cmStandardPricing.price}" disabled="true"></p:inputText>
+			<p:inputText value="#{approval.cmStandardPricing.price}" disabled="true" size="10"></p:inputText>
 
 		</p:column>
-		<p:column>
+		<p:column width="5%">
 			<f:facet name="header">
 				#{lbl['lbl.cm.uom']}
 			</f:facet>
@@ -41,21 +40,21 @@
 			
 
 		</p:column>
-		<p:column>
+		<p:column width="5%">
 			<f:facet name="header">
 				#{lbl['lbl.cm.start.date']}
 			</f:facet>
 			<p:calendar value="#{approval.cmStandardPricing.startDate}" showOn="button" size="10" pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}" disabled="true"></p:calendar>
 
 		</p:column>
-		<p:column>
+		<p:column width="5%">
 			<f:facet name="header">
 				#{lbl['lbl.cm.end.date']}
 			</f:facet>
 			<p:calendar value="#{approval.cmStandardPricing.endDate}" showOn="button" size="10" pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}" disabled="true"></p:calendar>
 
 		</p:column>
-		<p:column>
+		<p:column width="2%">
 			<f:facet name="header">
 				#{lbl['lbl.cm.action']}
 			</f:facet>

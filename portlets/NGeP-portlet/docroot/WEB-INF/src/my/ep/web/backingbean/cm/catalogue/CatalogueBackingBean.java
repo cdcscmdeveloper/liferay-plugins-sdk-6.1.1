@@ -287,7 +287,7 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean>{
 
 
 
-		CmSupplierItem catalog = this.getManagedBean().getRejectedItemList().get(index);
+		/*CmSupplierItem catalog = this.getManagedBean().getRejectedItemList().get(index);
 		catalog.setItemStatus("D");
 		reqDTO.getSaveSupplierItems().add(catalog);
 
@@ -296,7 +296,7 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean>{
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
-		}
+		}*/
 
 		return "addCatalogItem";
 
@@ -790,6 +790,9 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean>{
 
 
 			System.out.println("price:"+this.getManagedBean().getSelectedMaintainItem().getCmPromotionPricing().getPrice());
+			System.out.println("price standard:"+this.getManagedBean().getSelectedMaintainItem().getCmStandardPricing().getPrice());
+			this.getManagedBean().getSelectedMaintainItem().setItemStatus("D");
+			
 			this.getManagedBean().getSelectedMaintainItem().getCmPromotionPricing().setCmSupplierItem(this.getManagedBean().getSelectedMaintainItem());
 			this.getManagedBean().getSelectedMaintainItem().getCmStandardPricing().setCmSupplierItem(this.getManagedBean().getSelectedMaintainItem());
 
@@ -834,7 +837,6 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean>{
 				}
 			}
 
-
 			for(CmItemRejectReason reason : this.getManagedBean().getSelectedMaintainItem().getCmItemRejectReasons()){
 
 				reason.setCmSupplierItem(this.getManagedBean().getSelectedMaintainItem());
@@ -878,6 +880,44 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean>{
 			CmSupplierItem catalog = this.getManagedBean().getSelectedMaintainItems()[i];
 			catalog.setItemStatus("P");
 			catalog.getCmStandardPricing().setCmSupplierItem(catalog);
+			
+			
+			for(CmZonalStandardPricing promotion: catalog.getCmZonalStandardPricings()){
+
+				promotion.setCmSupplierItem(catalog);
+				if(promotion.getPmDistrict().getDistrictId() == null) {
+					promotion.setPmDistrict(null);
+				}
+			}
+
+			for(CmZonalPromotionPricing promotion: catalog.getCmZonalPromotionPricings()){
+
+				promotion.setCmSupplierItem(catalog);
+				if(promotion.getPmDistrict().getDistrictId() == null) {
+					promotion.setPmDistrict(null);
+				}
+			}
+
+
+			for(CmZonalTierPricing promotion: catalog.getCmZonalTierPricings()){
+
+				promotion.setCmSupplierItem(catalog);
+				if(promotion.getPmDistrict().getDistrictId() == null) {
+					promotion.setPmDistrict(null);
+				}
+			}
+
+			for(CmZonalPromotionTierPricing promotion: catalog.getCmZonalPromotionTierPricings()){
+
+				promotion.setCmSupplierItem(catalog);
+				if(promotion.getPmDistrict().getDistrictId() == null) {
+					promotion.setPmDistrict(null);
+				}
+			}
+			
+			
+			
+			
 			reqDTO.getSaveSupplierItems().add(catalog);
 			
 		
@@ -1074,6 +1114,45 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean>{
 		System.out.println("this.getManagedBean().getSelectedApprovedItems().length:"+this.getManagedBean().getSelectedApprovedItems().length);
 		for(int i=0; i<this.getManagedBean().getSelectedApprovedItems().length; i++){
 			CmSupplierItem catalog = this.getManagedBean().getSelectedApprovedItems()[i];
+			
+			
+			for(CmZonalStandardPricing promotion: catalog.getCmZonalStandardPricings()){
+
+				promotion.setCmSupplierItem(catalog);
+				if(promotion.getPmDistrict().getDistrictId() == null) {
+					promotion.setPmDistrict(null);
+				}
+			}
+
+			for(CmZonalPromotionPricing promotion: catalog.getCmZonalPromotionPricings()){
+
+				promotion.setCmSupplierItem(catalog);
+				if(promotion.getPmDistrict().getDistrictId() == null) {
+					promotion.setPmDistrict(null);
+				}
+			}
+
+
+			for(CmZonalTierPricing promotion: catalog.getCmZonalTierPricings()){
+
+				promotion.setCmSupplierItem(catalog);
+				if(promotion.getPmDistrict().getDistrictId() == null) {
+					promotion.setPmDistrict(null);
+				}
+			}
+
+			for(CmZonalPromotionTierPricing promotion: catalog.getCmZonalPromotionTierPricings()){
+
+				promotion.setCmSupplierItem(catalog);
+				if(promotion.getPmDistrict().getDistrictId() == null) {
+					promotion.setPmDistrict(null);
+				}
+			}
+			
+			
+			
+			
+			
 			catalog.setItemStatus("U");
 			reqDTO.getSaveSupplierItems().add(catalog);
 		}

@@ -22,9 +22,9 @@
 					</tr>
 					<tr>
 						<td><p:outputLabel value="#{lbl['lbl.cm.family.code']}"></p:outputLabel></td>
-						<td colspan="1"><p:inputText
+						<td colspan="1"><p:inputText id="familyCode"
 								value="#{codificationBackingBean.managedBean.familyCode}"
-								size="50" disabled="true" /></td>
+								size="50" disabled="true" /><p:watermark for="familyCode" value="Please Select Family Code"></p:watermark></td>
 						<td><p:outputLabel value="#{lbl['lbl.cm.family.title']}"></p:outputLabel></td>
 						<td colspan="1"><p:inputText
 								value="#{codificationBackingBean.managedBean.familyTitle}"
@@ -32,11 +32,11 @@
 					</tr>
 					<tr>
 						<td><p:outputLabel value="#{lbl['lbl.cm.class.code']}"></p:outputLabel></td>
-						<td colspan="1"><p:inputText
+						<td colspan="1"><p:inputText id="classCode"
 								value="#{codificationBackingBean.managedBean.classCode}"
-								size="50" disabled="true" /></td>
+								size="50" disabled="true" /><p:watermark for="classCode" value="Please Select Class Code"></p:watermark> </td>
 						<td><p:outputLabel value="#{lbl['lbl.cm.class.title']}"></p:outputLabel></td>
-						<td colspan="1"><p:inputText
+						<td colspan="1"><p:inputText 
 								value="#{codificationBackingBean.managedBean.classTitle}"
 								size="50" disabled="true" /></td>
 					</tr>

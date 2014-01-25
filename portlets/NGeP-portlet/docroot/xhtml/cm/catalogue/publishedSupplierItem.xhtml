@@ -11,12 +11,11 @@
 	<p:dataTable id="publishSupplierItemID"
 		value="#{catalogueBackingBean.managedBean.publishedItemList}"
 		rowIndexVar="rowIndex" var="publish"
-		rowKey="#{publish.supplierItemId}"
-		selection="#{catalogueBackingBean.managedBean.selectedPublishedItems}">
+		rowKey="#{publish.supplierItemId}">
 
-		<p:column selectionMode="multiple" style="width:2%" />
+		
 		<ac:paginator for="publishSupplierItemID"></ac:paginator>
-		<p:column>
+		<p:column width="30%">
 			<f:facet name="header">
 				#{lbl['lbl.cm.item.name']}
 			</f:facet>
@@ -24,21 +23,21 @@
 			#{publish.cmItem.itemName}
 
 		</p:column>
-		<p:column>
+		<p:column width="5%">
 			<f:facet name="header">
 				#{lbl['lbl.cm.price']}
 			</f:facet>
-			<p:inputText value="#{publish.cmStandardPricing.price}"
+			<p:inputText value="#{publish.cmStandardPricing.price}" size="10"
 				disabled="true"></p:inputText>
 		</p:column>
-		<p:column>
+		<p:column width="5%">
 			<f:facet name="header">
 				#{lbl['lbl.cm.uom']}
 			</f:facet>
 			<p:inputText value="#{publish.pmUom.uomName}" disabled="true"></p:inputText>
 
 		</p:column>
-		<p:column>
+		<p:column width="5%">
 			<f:facet name="header">
 				#{lbl['lbl.cm.start.date']}
 			</f:facet>
@@ -47,7 +46,7 @@
 				pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}" disabled="true"></p:calendar>
 
 		</p:column>
-		<p:column>
+		<p:column width="5%">
 			<f:facet name="header">
 				#{lbl['lbl.cm.end.date']}
 			</f:facet>
@@ -56,7 +55,7 @@
 				pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}" disabled="true"></p:calendar>
 
 		</p:column>
-		<p:column>
+		<p:column width="2%">
 			<f:facet name="header">
 				#{lbl['lbl.cm.action']}
 			</f:facet>

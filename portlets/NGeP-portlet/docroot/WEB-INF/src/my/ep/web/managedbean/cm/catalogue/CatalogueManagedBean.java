@@ -125,6 +125,8 @@ public class CatalogueManagedBean extends BaseManagedBean {
 
 	private List<Long> districtLs;
 
+	private List<Long> stateLs;
+
 
 
 	private SearchFilterBean itemNameFilterBean = new SearchFilterBean(SearchOperator.OPERATOR_LIKE.value());
@@ -139,6 +141,7 @@ public class CatalogueManagedBean extends BaseManagedBean {
 	private SearchFilterBean bizRegNoFilterBean = new SearchFilterBean(SearchOperator.OPERATOR_EQUALS.value());
 
 	private SearchFilterBean districtFilterBean = new SearchFilterBean(SearchOperator.OPERATOR_IN.value());
+	private SearchFilterBean stateFilterBean = new SearchFilterBean(SearchOperator.OPERATOR_IN.value());
 
 	private IPagingDataModel<VCmSupplierItem> searchDataModel = new SearchPagingDataModel();
 
@@ -156,7 +159,7 @@ public class CatalogueManagedBean extends BaseManagedBean {
 		@Override
 		protected ISearchResultBean<VCmSupplierItem> pageChangeListener(
 				ISearchBean<VCmSupplierItem> searchBean) {
-			
+
 			if(StringUtils.isBlank((String)itemNameFilterBean.getSearchValue())
 					&&StringUtils.isBlank((String)itemCodeFilterBean.getSearchValue())
 					&&StringUtils.isBlank((String)supplierNameFilterBean.getSearchValue())
@@ -231,7 +234,22 @@ public class CatalogueManagedBean extends BaseManagedBean {
 					searchBean.getDataFilterBeans().add(districtFilterBean);
 				}
 
+				setStateLs(new ArrayList<Long>());
+				for(Long state : stateId){
+					System.out.println("state:"+state);
+					stateLs.add(state);
+				}
+				System.out.println("districtLs"+districtLs);
+				if(districtLs.isEmpty()){
+					if(stateLs!=null && stateLs.size()>0){
+						stateFilterBean.setSearchField("stateId");
+						stateFilterBean.setSearchValue(stateLs);
+						searchBean.getDataFilterBeans().add(stateFilterBean);
 
+					}
+
+				}
+				System.out.println("stateLs"+stateLs);
 
 
 
@@ -378,7 +396,7 @@ public class CatalogueManagedBean extends BaseManagedBean {
 		compareLabel.add("SKU No");
 		compareLabel.add("Min Order");
 		compareLabel.add("Max Order");
-		compareLabel.add("Lead Time");
+		compareLabel.add("Delivery Term");
 		compareLabel.add("Additional Desc");
 
 
@@ -920,6 +938,28 @@ public class CatalogueManagedBean extends BaseManagedBean {
 
 	public void setDistrictLs(List<Long> districtLs) {
 		this.districtLs = districtLs;
+	}
+
+
+	public List<Long> getStateLs() {
+		if(stateLs==null)
+			stateLs = new ArrayList<Long>();
+		return stateLs;
+	}
+
+
+	public void setStateLs(List<Long> stateLs) {
+		this.stateLs = stateLs;
+	}
+
+
+	public SearchFilterBean getStateFilterBean() {
+		return stateFilterBean;
+	}
+
+
+	public void setStateFilterBean(SearchFilterBean stateFilterBean) {
+		this.stateFilterBean = stateFilterBean;
 	}
 
 

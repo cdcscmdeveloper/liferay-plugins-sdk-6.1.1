@@ -35,7 +35,7 @@
 
 		<p:column selectionMode="multiple" style="width:2%" />
 
-		<p:column>
+		<p:column width="30%">
 			<f:facet name="header">
 				#{lbl['lbl.cm.item.name']}
 			</f:facet>
@@ -43,14 +43,14 @@
 			#{selectedSuppCat.cmItem.itemName}
 
 		</p:column>
-		<p:column>
+		<p:column width="5%">
 			<f:facet name="header">
 				#{lbl['lbl.cm.price']}
 			</f:facet>
-			<p:inputText value="#{selectedSuppCat.cmStandardPricing.price}"></p:inputText>
+			<p:inputText value="#{selectedSuppCat.cmStandardPricing.price}" size="10"></p:inputText>
 
 		</p:column>
-		<p:column>
+		<p:column width="5%">
 			<f:facet name="header">
 				#{lbl['lbl.cm.uom']}
 			</f:facet>
@@ -61,7 +61,7 @@
 				conditionField="recordStatus^1">
 			</ac:lov>
 		</p:column>
-		<p:column>
+		<p:column width="5%">
 			<f:facet name="header">
 				#{lbl['lbl.cm.start.date']}
 			</f:facet>
@@ -70,7 +70,7 @@
 				pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}"></p:calendar>
 
 		</p:column>
-		<p:column>
+		<p:column width="5%">
 			<f:facet name="header">
 				#{lbl['lbl.cm.end.date']}
 			</f:facet>
@@ -79,7 +79,7 @@
 				pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}"></p:calendar>
 
 		</p:column>
-		<p:column>
+		<p:column width="2%">
 			<f:facet name="header">
 				#{lbl['lbl.cm.action']}
 			</f:facet>

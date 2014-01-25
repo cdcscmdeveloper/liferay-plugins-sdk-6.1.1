@@ -22,7 +22,7 @@
 		
 		<ac:paginator for="approvedSupplierItemID"></ac:paginator>
 
-		<p:column>
+		<p:column width="30%">
 			<f:facet name="header">
 				#{lbl['lbl.cm.item.name']}
 			</f:facet>
@@ -30,21 +30,21 @@
 			#{approved.cmItem.itemName}
 
 		</p:column>
-		<p:column>
+		<p:column width="5%">
 			<f:facet name="header">
 				#{lbl['lbl.cm.price']}
 			</f:facet>
-			<p:inputText value="#{approved.cmStandardPricing.price}"
+			<p:inputText value="#{approved.cmStandardPricing.price}" size="10"
 				disabled="true"></p:inputText>
 		</p:column>
-		<p:column>
+		<p:column width="5%">
 			<f:facet name="header">
 				#{lbl['lbl.cm.uom']}
 			</f:facet>
 			<p:inputText value="#{approved.pmUom.uomName}" disabled="true"></p:inputText>
 
 		</p:column>
-		<p:column>
+		<p:column width="5%">
 			<f:facet name="header">
 				#{lbl['lbl.cm.start.date']}
 			</f:facet>
@@ -54,7 +54,7 @@
 
 
 		</p:column>
-		<p:column>
+		<p:column width="5%">
 			<f:facet name="header">
 				#{lbl['lbl.cm.end.date']}
 			</f:facet>
@@ -64,7 +64,7 @@
 
 
 		</p:column>
-		<p:column>
+		<p:column width="2%">
 			<f:facet name="header">
 				#{lbl['lbl.cm.action']}
 			</f:facet>

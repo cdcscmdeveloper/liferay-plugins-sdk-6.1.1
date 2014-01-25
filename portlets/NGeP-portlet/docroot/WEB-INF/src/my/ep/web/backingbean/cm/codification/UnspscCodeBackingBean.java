@@ -1173,7 +1173,7 @@ public class UnspscCodeBackingBean extends BaseBackingBean<UnspscCodeManagedBean
 					code.setRequestMeasurement(false);
 				}
 
-				/////// checking remark required 1
+				/////// checking remark reSystem.out.println(""+);
 				if(!code.isAddedRemark()){
 					if(code.getReviewedMeasurementName()!=null && code.getReviewedMeasurementName().trim().length()>0){
 
@@ -1184,6 +1184,8 @@ public class UnspscCodeBackingBean extends BaseBackingBean<UnspscCodeManagedBean
 
 							code.setRemarkRequired(true);
 
+						}else{
+							code.setRemarkRequired(false);
 						}
 					}
 				}
@@ -1205,6 +1207,8 @@ public class UnspscCodeBackingBean extends BaseBackingBean<UnspscCodeManagedBean
 						}
 
 
+					}else{
+						code.setRemarkRequiredII(false);
 					}
 				}
 

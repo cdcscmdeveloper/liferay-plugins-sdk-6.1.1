@@ -131,31 +131,31 @@
 						<ui:include src="/xhtml/cm/pricing/pricingTab.xhtml" />
 					</p:tab>
 					<p:tab title="#{lbl['lbl.cm.tier']}"
-						rendered="#{fn:length(supplierItem.cmTierPricings) > 0}">
+						rendered="#{fn:length(catalogueBackingBean.managedBean.supplierItemObj.cmTierPricings) > 0}">
 						<ui:include src="/xhtml/cm/pricing/pricingTierTab.xhtml" />
 					</p:tab>
 					<p:tab title="#{lbl['lbl.cm.promotion.tier']}"
-						rendered="#{fn:length(supplierItem.cmPromotionTierPricings) > 0}">
+						rendered="#{fn:length(catalogueBackingBean.managedBean.supplierItemObj.cmPromotionTierPricings) > 0}">
 						<ui:include src="/xhtml/cm/pricing/pricingPromotionTierTab.xhtml" />
 					</p:tab>
 					<p:tab title="Zonal Standard"
-						rendered="#{fn:length(supplierItem.cmZonalStandardPricings) > 0}">
+						rendered="#{fn:length(catalogueBackingBean.managedBean.supplierItemObj.cmZonalStandardPricings) > 0}">
 						<ui:include src="/xhtml/cm/pricing/zonalStandardPricingTab.xhtml"></ui:include>
 
 					</p:tab>
 					<p:tab title="Zonal Promotion"
-						rendered="#{fn:length(supplierItem.cmZonalPromotionPricings) > 0}">
+						rendered="#{fn:length(catalogueBackingBean.managedBean.supplierItemObj.cmZonalPromotionPricings) > 0}">
 						<ui:include src="/xhtml/cm/pricing/zonalPromotionPricingTab.xhtml"></ui:include>
 
 					</p:tab>
 
 					<p:tab title="Zonal Tier"
-						rendered="#{fn:length(supplierItem.cmZonalTierPricings) > 0}">
+						rendered="#{fn:length(catalogueBackingBean.managedBean.supplierItemObj.cmZonalTierPricings) > 0}">
 						<ui:include src="/xhtml/cm/pricing/zonalTierPricingTab.xhtml"></ui:include>
 
 					</p:tab>
 					<p:tab title="Zonal Promotion Tier"
-						rendered="#{fn:length(supplierItem.cmZonalPromotionTierPricings) > 0}">
+						rendered="#{fn:length(catalogueBackingBean.managedBean.supplierItemObj.cmZonalPromotionTierPricings) > 0}">
 						<ui:include
 							src="/xhtml/cm/pricing/zonalPromotionTierPricingTab.xhtml"></ui:include>
 
