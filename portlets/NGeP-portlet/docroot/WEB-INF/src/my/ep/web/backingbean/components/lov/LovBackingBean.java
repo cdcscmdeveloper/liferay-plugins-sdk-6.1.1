@@ -268,8 +268,27 @@ public class LovBackingBean implements Serializable {
 				SearchFilterBean filterBean = new SearchFilterBean();
 				
 				filterBean.setSearchField(fieldMapping[0]);
-				filterBean.setSearchOperator(SearchOperator.OPERATOR_EQUALS.value());
-				filterBean.setSearchValue(fieldMapping[1]);
+				
+				if(fieldMapping.length >= 3) {
+					filterBean.setSearchOperator(Integer.parseInt(fieldMapping[2]));
+					
+					if (Integer.parseInt(fieldMapping[2]) == SearchOperator.OPERATOR_IN.value()
+							|| Integer.parseInt(fieldMapping[2]) == SearchOperator.OPERATOR_NOT_IN.value()) {
+						String[] listArray = fieldMapping[1].split("\\,");
+						List<String> list = new ArrayList<String>();
+						for(String obj : listArray) {
+							list.add(obj);
+						}
+						filterBean.setSearchValue(list);
+					} else {
+						filterBean.setSearchValue(fieldMapping[1]);
+					}
+					
+				} else {
+					filterBean.setSearchOperator(SearchOperator.OPERATOR_EQUALS.value());					
+					filterBean.setSearchValue(fieldMapping[1]);
+				}				
+				
 				lovSearchBean.getDataFilterBeans().add(filterBean);
 			}
 		}
