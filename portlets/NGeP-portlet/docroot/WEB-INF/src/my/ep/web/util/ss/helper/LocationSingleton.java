@@ -9,6 +9,7 @@ import java.util.Set;
 
 import my.ep.biz.service.pm.common.state.IStateSO;
 import my.ep.dto.pm.common.state.StateReqDTO;
+import my.ep.persistence.entity.pm.common.PmAddress;
 import my.ep.persistence.entity.pm.common.PmCity;
 import my.ep.persistence.entity.pm.common.PmDistrict;
 import my.ep.persistence.entity.pm.common.PmDivision;
@@ -76,20 +77,20 @@ public class LocationSingleton {
 					//district.setPmState(pmState);
 					if(district.getPmCities() != null && !district.getPmCities().isEmpty()){
 						for(PmCity city: district.getPmCities()){
-							city.setPmDistrict(district);
+							//city.setPmDistrict(district);
 						}
 					}
 				}
 			}
 			if(pmState.getPmDivisions() != null && !pmState.getPmDivisions().isEmpty()){
 				for(PmDivision division: pmState.getPmDivisions()){
-					division.setPmState(pmState);
+					//division.setPmState(pmState);
 					if(division.getPmDistricts() != null && !division.getPmDistricts().isEmpty()){
 						for(PmDistrict district: division.getPmDistricts()){
 							//district.setPmState(pmState);
 							if(district.getPmCities() != null && !district.getPmCities().isEmpty()){
 								for(PmCity city: district.getPmCities()){
-									city.setPmDistrict(district);
+									//city.setPmDistrict(district);
 								}
 							}
 						}
@@ -101,6 +102,38 @@ public class LocationSingleton {
 		return listStates;
 	}
 
+	public TreeNode buildAddressLocationTree(Long countryId, List<PmAddress> listAddress) {
+		List<PmState> allStates = mapStates.get(countryId);
+		Set<Long> addressIds = new HashSet<Long>();
+		if (listAddress != null && listAddress.size() > 0) {
+			for (PmAddress pmAddress : listAddress) {
+				addressIds.add(pmAddress.getAddressId());
+			}
+		}
+		
+		if (allStates == null) {
+			allStates = initialStatesForCountry(countryId);
+		}
+		
+		TreeNode rootAddressLocationTree = new DefaultTreeNode("root", null);
+		for (PmState state : allStates) {
+			LocationDTO stateLocation = new LocationDTO(state);
+			TreeNode stateNode = new DefaultTreeNode(stateLocation, rootAddressLocationTree);
+			
+			for (PmAddress address : state.getPmAddresses()) {
+				if(address.getPmDivision() == null){
+					LocationDTO addressLocation = new LocationDTO(address);
+					TreeNode addressNode = new DefaultTreeNode(addressLocation, stateNode);
+					if (addressIds.contains(address.getAddressId())) {
+						addressNode.setSelected(Boolean.TRUE);
+					}
+				}
+			}
+		}
+		return rootAddressLocationTree;
+		
+	}
+	
 	public TreeNode buildLocationTree(Long countryId, List<PmState> listStates, List<PmDistrict> listDistricts, List<PmDivision> listDivisions, List<PmCity> listCities) {
 		List<PmState> allStates = mapStates.get(countryId);
 		Set<Long> stateIds = new HashSet<Long>();
