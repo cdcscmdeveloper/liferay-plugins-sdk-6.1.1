@@ -65,10 +65,9 @@ public class SupplierBackingBean extends BaseBackingBean<SupplierManagedBean> {
 	private static Logger log = Logger.getLogger(SupplierBackingBean.class);
 	private List<SelectItem> populateContractList;
 	private List<CtContract> dbContractList;
+	
 	public SupplierBackingBean(){
-		
-		
-		
+			
 	}
 	
 	private FacesScopes getFacesScopes(){

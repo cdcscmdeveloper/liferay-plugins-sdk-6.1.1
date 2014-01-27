@@ -25,8 +25,6 @@ import my.ep.persistence.entity.ct.dtl.deduction.CtDeductionClause;
 import my.ep.persistence.entity.ct.dtl.item.CtContractItem;
 import my.ep.persistence.entity.ct.dtl.zone.CtContractZone;
 import my.ep.persistence.entity.ct.dtl.zone.CtContractZoneDtl;
-import my.ep.persistence.entity.ct.terminate.CtTermination;
-import my.ep.persistence.entity.ct.terminate.CtTerminationReason;
 import my.ep.persistence.entity.pm.authorization.PmUserGroup;
 import my.ep.persistence.entity.pm.authorization.PmUserGroupUser;
 import my.ep.web.managedbean.BaseManagedBean;
@@ -50,7 +48,6 @@ public class ContractDetailsManagedBean extends BaseManagedBean{
 	private String[] action;
 	private String processName;
 	private int selectedIndex;
-	private String chkRenderPage ="BPM";
 	
 	private String showItem ="Item  Pricing";
 	private boolean itemPricing = true;
@@ -66,7 +63,6 @@ public class ContractDetailsManagedBean extends BaseManagedBean{
 	private CtContractItem selectedItem;
 	private CtContractItem SelectedServiceItem;
 	private boolean amendmentAction;
-	
 	
 	private CtContractVer contractVer;
 	private CtDeduction ctDeductionDel = new CtDeduction();
@@ -91,8 +87,6 @@ public class ContractDetailsManagedBean extends BaseManagedBean{
 	private List<CtContract> contractList = new ArrayList<CtContract>();
 	private CtContract ctContract;
 	
-	
-
 	private boolean activeSuspension;
 	private boolean booleanSuspendValue = false;
 	
@@ -115,7 +109,6 @@ public class ContractDetailsManagedBean extends BaseManagedBean{
 	private String ctProductCode;
 	private String ctContractStatus;
 	
-	
 	private String projectName;
 	private String projectDescription;
 	private String suspensionType;
@@ -129,10 +122,10 @@ public class ContractDetailsManagedBean extends BaseManagedBean{
 	private List<CtContractZoneDtl> ctContractZoneDtls;
 	private boolean showZoneDetails;
 	
-	
 	private boolean disableScheduleRadio;
 	private boolean disableProgessiveRadio;
 	private boolean chkButton;
+	
 	public String[] getAction() {
 		return action;
 	}
@@ -491,15 +484,7 @@ public class ContractDetailsManagedBean extends BaseManagedBean{
 	public void setUserGroupMap(Map<Long, PmUserGroup> userGroupMap) {
 		this.userGroupMap = userGroupMap;
 	}
-
-	public String getChkRenderPage() {
-		return chkRenderPage;
-	}
-
-	public void setChkRenderPage(String chkRenderPage) {
-		this.chkRenderPage = chkRenderPage;
-	}
-
+	
 	public boolean isAmendDisable() {
 		return amendDisable;
 	}

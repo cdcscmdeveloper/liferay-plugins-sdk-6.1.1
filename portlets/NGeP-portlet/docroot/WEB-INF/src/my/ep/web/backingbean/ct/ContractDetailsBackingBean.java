@@ -57,9 +57,6 @@ import my.ep.dto.pm.authorization.user.UserReqDTO;
 import my.ep.dto.pm.authorization.user.UserResDTO;
 import my.ep.exception.EpException;
 import my.ep.jaxb.ct.contract.CTContractDataType;
-import my.ep.jaxb.ct.contract.amendment.CTContractAmendmentDataType;
-import my.ep.jaxb.ct.suspension.CTContractSuspensionDataType;
-import my.ep.jaxb.ct.termination.CTContractTerminationDataType;
 import my.ep.persistence.entity.ct.CtContract;
 import my.ep.persistence.entity.ct.CtContractVer;
 import my.ep.persistence.entity.ct.amend.CtAmendment;
@@ -69,7 +66,6 @@ import my.ep.persistence.entity.ct.dtl.CtProgressivePayment;
 import my.ep.persistence.entity.ct.dtl.CtSchedule;
 import my.ep.persistence.entity.ct.dtl.deduction.CtDeduction;
 import my.ep.persistence.entity.ct.dtl.deduction.CtDeductionClause;
-import my.ep.persistence.entity.ct.terminate.CtTerminationReason;
 import my.ep.persistence.entity.pm.authorization.PmOrgProfile;
 import my.ep.persistence.entity.pm.authorization.PmUserGroup;
 import my.ep.persistence.entity.pm.authorization.PmUserGroupUser;
@@ -167,164 +163,55 @@ public class ContractDetailsBackingBean extends BaseBackingBean<ContractDetailsM
 	@PostConstruct
 	public void initializeContractValue() throws ParseException {
 		 
-			ctBB = new ContractBackingBean();
-			ctBB.initializeRemarkAndAttachement(this.getManagedBean().getRemarkList(), this.getManagedBean().getAttachmentList());
-		}
+		 ctBB = new ContractBackingBean();
+		 ctBB.initializeRemarkAndAttachement(this.getManagedBean().getRemarkList(), this.getManagedBean().getAttachmentList());
+	}
 	
     public void preRenderView(){
 	
-	try{	
-		System.out.println("**********preRenderView**************");
-	//	BPMTaskListBackingBean bb = new BPMTaskListBackingBean();
-		HttpServletRequest servletRequest = PortalUtil.getHttpServletRequest(new FacesScopes().getRequest());
-		HttpServletRequest originalServletRequest = PortalUtil.getOriginalServletRequest(servletRequest);
-		String taskId = originalServletRequest.getParameter("taskId");
-		System.out.println("taskId:"+taskId);
-		if(taskId==null) {
-			return;
-		}
-		FacesScopes face = new FacesScopes();
-		String token =face.getBPMAuthenticationCtxToken();
-		IBpmSO bpmSO = (IBpmSO) EpBpmBusinessDelegate.getInstance().getServiceObject(IBpmSO.class);
+	     try{	
+		      System.out.println("**********preRenderView**************");
+		      HttpServletRequest servletRequest = PortalUtil.getHttpServletRequest(new FacesScopes().getRequest());
+		      HttpServletRequest originalServletRequest = PortalUtil.getOriginalServletRequest(servletRequest);
+		      String taskId = originalServletRequest.getParameter("taskId");
+		      if(taskId==null) 
+			    return;
+		      
+		      FacesScopes face = new FacesScopes();
+		      String token =face.getBPMAuthenticationCtxToken();
+		      IBpmSO bpmSO = (IBpmSO) EpBpmBusinessDelegate.getInstance().getServiceObject(IBpmSO.class);
 
-		BpmRequestDTO reqDTO = new BpmRequestDTO();
-
-
-		reqDTO.setCtxToken(token);
-		reqDTO.setTaskId(taskId);
-		BpmResponseDTO res = bpmSO.getTaskDetails(reqDTO);
-		Object obj = res.getPojo();
-		ContractReqDTO ctReqDTO = new ContractReqDTO();
-		
-		if(res.getProcessName().equalsIgnoreCase("Contract Creation")){
-			CTContractDataType dataType = (CTContractDataType)obj;
-			ctReqDTO.setContractVerId(new Long(dataType.getContractId()));
-			ctReqDTO.setContractId(new Long(dataType.getContractId()));
-		}
-		
-		else if(res.getProcessName().equalsIgnoreCase("Contract Activation Suspension Request")){
-			CTContractSuspensionDataType dataType = (CTContractSuspensionDataType)obj;
-			System.out.println("dataType.getContractId()>>"+dataType.getContractId());
-			ctReqDTO.setContractVerId(new Long(dataType.getContractId()));
-			ctReqDTO.setContractId(new Long(dataType.getContractId()));
-			this.getManagedBean().setChkRenderPage(ContractConst.DOC_TYPE_CONTRACT_SUSPEND_ACTIVE);
-			
-		
-		} else if(res.getProcessName().equalsIgnoreCase("Contract Termination")){
-			CTContractTerminationDataType dataType = (CTContractTerminationDataType)obj;
-			System.out.println("dataType.getContractId()>>"+dataType.getContractId());
-			ctReqDTO.setContractVerId(new Long(dataType.getContractId()));
-			ctReqDTO.setContractId(new Long(dataType.getContractId()));
-			this.getManagedBean().setChkRenderPage(ContractConst.DOC_TYPE_CONTRACT_TERMINATION);
-		
-		} else if(res.getProcessName().equalsIgnoreCase("Contract Amendment Request")){
-			CTContractAmendmentDataType dataType = (CTContractAmendmentDataType)obj;
-			System.out.println("dataType.getContractId()>>"+dataType.getContractId());
-			ctReqDTO.setContractVerId(new Long(dataType.getContractId()));
-			ctReqDTO.setContractId(new Long(dataType.getContractId()));
-		}
-
-		IContractSO contractSO = (IContractSO) BusinessDelegate.getInstance().getServiceObject("ct",IContractSO.class);
-		ContractResDTO resDTO = contractSO.retrieveContractVer(ctReqDTO);
-		this.getManagedBean().setContractVer(resDTO.getCtContractVer());
-	    //CombineSupAddress(resDTO.getCtContractVer());
-		
-		this.getManagedBean().setTaskName(res.getTaskName());
-		this.getManagedBean().setCtContract(resDTO.getCtContractVer().getCtContract());
-		
-		this.getManagedBean().setTaskId(taskId);
-		this.getManagedBean().setAction(res.getAction());
-		
-		if(res.getProcessName().equalsIgnoreCase("Contract Creation")){
-		/*	for(CtSchedule ctSchedule :this.getManagedBean().getContractVer().getCtSchedules()){
-			if(ctSchedule.getScheduleId() !=null){
-				this.getManagedBean().setDisableScheduleRadio(true);
-				this.getManagedBean().setScheduleOption("1");
-				this.getManagedBean().setChkScheduleNulValue(true);
-				this.getManagedBean().setChkSchedule(false);
-			}
-			}
-        for(CtProgressivePayment ctProgressivePayment :this.getManagedBean().getContractVer().getCtProgressivePayments()){
-        	if(ctProgressivePayment.getProgressivePaymentId() !=null){
-        	    this.getManagedBean().setDisableScheduleRadio(true);
-				this.getManagedBean().setScheduleOption("2");
-				this.getManagedBean().setChkProgressiveNulValue(true);
-				this.getManagedBean().setChkSchedule(false);
-				
-			}
-        }*/
-			FacesContext fc = FacesContext.getCurrentInstance();
-			fc.getApplication().getNavigationHandler().handleNavigation(fc, null,  ContractManagementConst.NAV_TO_CONTRACT_DETAILS);
+		      BpmRequestDTO reqDTO = new BpmRequestDTO();
+		      reqDTO.setCtxToken(token);
+		      reqDTO.setTaskId(taskId);
+		      
+		      BpmResponseDTO res = bpmSO.getTaskDetails(reqDTO);
+		      Object obj = res.getPojo();
+		      this.getManagedBean().setTaskName(res.getTaskName());
+		      this.getManagedBean().setAction(res.getAction());
+		      this.getManagedBean().setTaskId(taskId);
+		      
+		      ContractReqDTO ctReqDTO = new ContractReqDTO();
+		      CTContractDataType dataType = (CTContractDataType)obj;
+			  ctReqDTO.setContractVerId(new Long(dataType.getLatestVersionId()));
+			  ctReqDTO.setContractId(new Long(dataType.getContractId()));
 	
-		}else if(res.getProcessName().equalsIgnoreCase("Contract Activation Suspension Request")){
-			
-			FacesContext fc = FacesContext.getCurrentInstance();
-			this.getManagedBean().setChkRenderPage(ContractConst.DOC_TYPE_CONTRACT_SUSPEND_ACTIVE);
-			fc.getApplication().getNavigationHandler().handleNavigation(fc, null, ContractManagementConst.NAV_TO_CONTRACT_SUSPENSION);
+		      IContractSO contractSO = (IContractSO) BusinessDelegate.getInstance().getServiceObject("ct",IContractSO.class);
+		      ContractResDTO resDTO = contractSO.retrieveContractVer(ctReqDTO);
+		      this.getManagedBean().setContractVer(resDTO.getCtContractVer());
+		      this.getManagedBean().setCtContract(resDTO.getCtContractVer().getCtContract());
+	          //CombineSupAddress(resDTO.getCtContractVer());
+	
+			  FacesContext fc = FacesContext.getCurrentInstance();
+			  fc.getApplication().getNavigationHandler().handleNavigation(fc, null,  ContractManagementConst.NAV_TO_CONTRACT_DETAILS);
 		
-		}else if(res.getProcessName().equalsIgnoreCase("Contract Termination")){
-			
-			FacesContext fc = FacesContext.getCurrentInstance();
-			this.getManagedBean().setChkRenderPage(ContractConst.DOC_TYPE_CONTRACT_TERMINATION);
-			fc.getApplication().getNavigationHandler().handleNavigation(fc, null, ContractManagementConst.NAV_TO_CONTRACT_TERMINATION);
-		
-		}else if(res.getProcessName().equalsIgnoreCase("Contract Amendment Request")){
-			  this.getManagedBean().setChkRenderPage(ContractConst.DOC_TYPE_CONTRACT_AMENDMENT);
-			  
-			  if(res.getTaskName().equalsIgnoreCase("Confirm Amendment Meeting") || res.getTaskName().equalsIgnoreCase("Update Amendment Result")){
-				   FacesContext fc = FacesContext.getCurrentInstance();
-				   this.getManagedBean().setAmendAckw(true);
-				   this.getManagedBean().setAmendDisable(true);  
-			       fc.getApplication().getNavigationHandler().handleNavigation(fc, null, ContractManagementConst.NAV_TO_CONTRACT_AMENDMENT_PBQCC);
-		
-			  }if(res.getTaskName().equalsIgnoreCase("Prepare LOA")){
-				  
-				  FacesContext fc = FacesContext.getCurrentInstance();
-				   this.getManagedBean().setAmendDisable(false);  
-				   this.getManagedBean().setApprovrLetter(true);
-				   this.getManagedBean().setAmendAckw(true);
-			       fc.getApplication().getNavigationHandler().handleNavigation(fc, null, ContractManagementConst.NAV_TO_CONTRACT_AMENDMENT_PBQCC);
-				 
-			  } if(res.getTaskName().equalsIgnoreCase("View Amendment Details")){
-				  
-				  FacesContext fc = FacesContext.getCurrentInstance();
-			      fc.getApplication().getNavigationHandler().handleNavigation(fc, null, ContractManagementConst.NAV_TO_CONTRACT_AMENDMENT_PBQCC);
-			
-			  }if(res.getTaskName().equalsIgnoreCase("Sign Off")){
-				  
-				  FacesContext fc = FacesContext.getCurrentInstance();
-				  this.getManagedBean().setAmendAckw(true);
-				  this.getManagedBean().setAmendDisable(false);  
-			      fc.getApplication().getNavigationHandler().handleNavigation(fc, null, ContractManagementConst.NAV_TO_CONTRACT_AMENDMENT_PBQCC);
-				  
-			  }if(res.getTaskName().equalsIgnoreCase("Update Amendment Details")){
-				  FacesContext fc = FacesContext.getCurrentInstance();
-				  this.getManagedBean().setApprovrLetter(true);
-			      fc.getApplication().getNavigationHandler().handleNavigation(fc, null, ContractManagementConst.NAV_TO_CONTRACT_AMENDMENT);
-				  
-			  }  if(res.getTaskName().equalsIgnoreCase("Review Breached Amendment Request")){
-				  FacesContext fc = FacesContext.getCurrentInstance();
-				  this.getManagedBean().setAmendAckw(true);
-				  fc.getApplication().getNavigationHandler().handleNavigation(fc, null, ContractManagementConst.NAV_TO_CONTRACT_AMENDMENT_PBQCC);
-			  } else{
-			
-			       FacesContext fc = FacesContext.getCurrentInstance();
-			       fc.getApplication().getNavigationHandler().handleNavigation(fc, null, ContractManagementConst.NAV_TO_CONTRACT_AMENDMENT);
-			}
-		}else{
-		
-			FacesContext fc = FacesContext.getCurrentInstance();
-			fc.getApplication().getNavigationHandler().handleNavigation(fc, null, "navigation");
-		}
-      } catch(Exception e){
+         } catch(Exception e){
 			e.printStackTrace();
-		}
-
+	 	 }
 	}
     
     public void selectedZoneValue(){
     	this.getManagedBean().setShowZoneDetails(true);
-    	log.info("============111================"+this.getManagedBean().getSelectedCtZone().getContractZoneId());
     	this.getManagedBean().setCtContractZoneDtls(this.getManagedBean().getSelectedCtZone().getCtContractZoneDtls());
     }
     
