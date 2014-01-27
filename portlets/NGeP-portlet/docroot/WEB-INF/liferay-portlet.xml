@@ -1123,8 +1123,23 @@
 		<header-portlet-css>/css/ep/wp/if/main.css</header-portlet-css>
 		<footer-portlet-javascript>/js/wp/if/main.js</footer-portlet-javascript>
 		<css-class-wrapper>event-portlet-portlet</css-class-wrapper>
+	</portlet>	
+	<portlet>
+		<portlet-name>alert-display-portlet</portlet-name>
+		<icon>/icon.png</icon>
+		<instanceable>true</instanceable>
+		<header-portlet-css>/css/ep/wp/al/main.css</header-portlet-css>
+		<footer-portlet-javascript>/js/wp/al/main.js</footer-portlet-javascript>
+		<css-class-wrapper>alert-display-portlet-portlet</css-class-wrapper>
 	</portlet>
-	
+	<portlet>
+		<portlet-name>online-help-display-portlet</portlet-name>
+		<icon>/icon.png</icon>
+		<instanceable>true</instanceable>
+		<header-portlet-css>/css/ep/wp/oh/main.css</header-portlet-css>
+		<footer-portlet-javascript>/js/wp/oh/main.js</footer-portlet-javascript>
+		<css-class-wrapper>online-help-display-portlet-portlet</css-class-wrapper>
+	</portlet>
 	<role-mapper>
 		<role-name>administrator</role-name>
 		<role-link>Administrator</role-link>
