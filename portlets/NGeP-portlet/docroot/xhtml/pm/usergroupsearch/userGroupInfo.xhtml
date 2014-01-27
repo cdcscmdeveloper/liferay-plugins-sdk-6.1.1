@@ -1,0 +1,62 @@
+<ui:composition	
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:ac="http://ac.my/jsf/composite/cc"
+	xmlns:c="http://java.sun.com/jsp/jstl/core">
+	
+	
+   <p:panel>
+	<h:panelGrid styleClass="noBorders tr,noBorders td" ></h:panelGrid>
+   </p:panel>
+	
+   <p:panel header="GROUP INFORMATION" toggleable="true">
+		
+	<h:panelGrid  columns="2" >
+	
+	<h:outputLabel value="* Group Code :"></h:outputLabel>
+	<p:inputText size="30"></p:inputText>
+	
+	<h:outputLabel value="* Group Name :"></h:outputLabel>
+	<p:inputText size="50"></p:inputText>
+	
+	<h:outputLabel value="* Role :"></h:outputLabel>
+	<p:inputText size="50"></p:inputText>
+	
+	<h:outputLabel value="* Org.Unit :"></h:outputLabel>
+	<p:inputText size="50"></p:inputText>
+	
+	<h:outputLabel value="Status :" ></h:outputLabel>
+     <p:selectOneMenu style="width:178px">  
+            <f:selectItem itemLabel="Select One" itemValue="" />  
+            <f:selectItem itemLabel="Active" itemValue="1" /> 
+            <f:selectItem itemLabel="Non-Active" itemValue="2" />  
+     </p:selectOneMenu>					
+	
+	</h:panelGrid>
+   </p:panel>
+	
+	<p:panel header="GROUP USER" toggleable="true">
+	<p:dataTable id="groupUser"  value="" var="groupuser" editable="true">
+ 	  <ac:paginator /> 
+       <p:column />	       
+       <p:column headerText="Salutation" > 
+          <h:outputText value="abc"/>
+       </p:column>  
+       
+       <p:column headerText="User Name" > 
+          <h:outputText value="Pusat Tanggungjawab KDN"/>
+       </p:column>             
+       
+     </p:dataTable>
+
+  <br/>
+    <div align="right">
+	<p:commandButton value="Add" oncomplete="groupuserpopup.show();" icon="ui-icon-add"></p:commandButton>
+    <p:commandButton value="Delete" icon="ui-icon-delete"></p:commandButton>
+    </div>
+   </p:panel>	
+
+</ui:composition>

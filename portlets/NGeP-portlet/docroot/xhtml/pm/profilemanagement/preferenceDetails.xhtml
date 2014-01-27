@@ -1,0 +1,48 @@
+<ui:composition	
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:ac="http://ac.my/jsf/composite/cc"
+	xmlns:c="http://java.sun.com/jsp/jstl/core">
+
+	<p:panel header="USER PREFERENCE">
+	 <br/>
+		<h:panelGrid columns="2">
+
+		        <h:outputLabel value="Preferred Language"></h:outputLabel>
+		          <p:selectOneMenu style="width:178px">  
+            		<f:selectItem itemLabel="English" itemValue="1" />  
+            		<f:selectItem itemLabel="Bahasa Malaysia" itemValue="2" />  
+                  </p:selectOneMenu>
+                  
+		        <h:outputLabel value="Date"></h:outputLabel>
+		          <p:selectOneMenu style="width:120px">  
+            		<f:selectItem itemLabel="dd/MM/yyyy" itemValue="1" />  
+            		<f:selectItem itemLabel="dd/MM/yy" itemValue="2" /> 
+            		<f:selectItem itemLabel="dd-MM-yyyy" itemValue="3" />
+            		<f:selectItem itemLabel="dd-MM-yy" itemValue="4" />   
+            		<f:selectItem itemLabel="dd-MMMM-yyyy" itemValue="5" />             		         		            		 
+                  </p:selectOneMenu>
+                  
+		        <h:outputLabel value="Time"></h:outputLabel>
+               <p:columnGroup> 		        
+		          <p:selectOneMenu style="width:120px">  
+            		<f:selectItem itemLabel="12H" itemValue="1" />  
+            		<f:selectItem itemLabel="24H" itemValue="2" />  
+                  </p:selectOneMenu> 
+                 <p:graphicImage library="ep/images/design" name="tooltips.png"
+                   value="/resources/ep/images/design/tooltips.png" />              
+               </p:columnGroup>
+                 
+                <h:outputLabel value="Notification Removal" />
+                <p:columnGroup>                
+                 <p:inputText value="0" size="5" /> 
+                 <h:commandButton value="Days"  size="10" />  
+                 <p:graphicImage library="ep/images/design" name="tooltips.png"
+                   value="/resources/ep/images/design/tooltips.png" />                                                                 
+			    </p:columnGroup>    	        
+	     </h:panelGrid>  		
+	</p:panel>
+</ui:composition>	

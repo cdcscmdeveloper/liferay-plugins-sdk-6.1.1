@@ -1,0 +1,68 @@
+<ui:composition	
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:ac="http://ac.my/jsf/composite/cc"
+	xmlns:c="http://java.sun.com/jsp/jstl/core">
+
+	<p:panel header="ROLE ASSIGNMENT" toggleable="true">
+    <br/>	
+    <h:panelGrid  columns="2" columnClasses="columnWidth50" >	
+	 <h:outputLabel value="Org.Unit"></h:outputLabel>
+	   <p:selectOneMenu style="width:300px">  
+         <f:selectItem itemLabel="Select One" itemValue="" />  
+         <f:selectItem itemLabel="Kementerian Kewangan" itemValue="1" /> 
+         <f:selectItem itemLabel="Kementetian Kesukanan" itemValue="2" />  
+       </p:selectOneMenu>
+     </h:panelGrid>
+	 <br/>
+	    <p:dataTable id="roleAssignTable" value="" var="roleassign"  >
+		<ac:paginator />
+		<p:column />
+	    <p:column headerText="Role" > 
+          <h:outputText value="Approver"/>
+        </p:column>
+        <p:column headerText="Approval/PLan/Supplier Type" > 
+          <h:outputText value="Fulfilment"/>   
+        </p:column>
+        <p:column headerText="Appr.Limit(RM)" > 
+          <h:outputText value="300,333.00"/>  
+        </p:column>
+        <p:column headerText="Status" > 
+          <h:outputText value="Active"/>  
+        </p:column>
+
+		</p:dataTable>
+       <p:spacer height="15"></p:spacer>
+		
+		<div align="right">
+		 <p:commandButton value="Add" oncomplete="rolescreen.show();"  icon="ui-icon-add" />
+        <p:commandButton value="Delete" icon="ui-icon-delete" />
+       
+		</div>
+		<br/>
+		<br/>
+	<p:tabView>	
+	  <p:tab title="RECEIVING ADDRESS">	
+	    <p:dataTable id="recAddTable" value="" var="receiveaddress"  >
+		<ac:paginator />
+		<p:column />
+	    <p:column headerText="Address Name" > 
+          <h:outputText value="Address 1"/>
+        </p:column>
+        <p:column headerText="Status" > 
+          <h:outputText value="Active"/>   
+        </p:column>
+		</p:dataTable>
+       <p:spacer height="15"></p:spacer>
+		
+		<div align="right">
+		 <p:commandButton value="Add" oncomplete="receivingaddress.show();" icon="ui-icon-add" />
+        <p:commandButton value="Delete" icon="ui-icon-delete" />
+       </div>
+     </p:tab>  
+    </p:tabView>      		
+	</p:panel>
+</ui:composition>	

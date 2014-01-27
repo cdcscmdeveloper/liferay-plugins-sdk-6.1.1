@@ -1,0 +1,145 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:ac="http://ac.my/jsf/composite/cc"	
+	xmlns:c="http://java.sun.com/jsp/jstl/core">
+
+
+	<p:dialog id="groupUserSearch" header="SELECT USER" widgetVar="groupuserpopup" modal="true">
+	<p:panel header="SEARCH" toggleable="true">
+
+		<h:panelGrid columns="4" >
+		
+		      <p:selectOneMenu style="width:160px">  
+            	<f:selectItem itemLabel="Select One" itemValue="" />  
+            	<f:selectItem itemLabel="USERNAME" itemValue="1" /> 
+            	<f:selectItem itemLabel="APPROVAL LIMIT" itemValue="2" />              	
+            	<f:selectItem itemLabel="SALUTATION" itemValue="3" />               	            	
+              </p:selectOneMenu> 
+              
+		      <p:selectOneMenu style="width:160px">  
+            	<f:selectItem itemLabel="Select One" itemValue="" />  
+            	<f:selectItem itemLabel="Contains" itemValue="1" /> 
+            	<f:selectItem itemLabel="Equal" itemValue="2" /> 
+            	<f:selectItem itemLabel="Greate than" itemValue="3" />             	            	            	 
+              </p:selectOneMenu> 
+              
+			 <p:inputText size="50" /> 
+              
+		      <p:selectOneMenu style="width:40px">  
+            	<f:selectItem itemLabel="AND" itemValue="1" />  
+            	<f:selectItem itemLabel="OR" itemValue="2" /> 
+              </p:selectOneMenu>   
+              
+		      <p:selectOneMenu style="width:160px">  
+            	<f:selectItem itemLabel="Select One" itemValue="" />  
+            	<f:selectItem itemLabel="USERNAME" itemValue="1" /> 
+            	<f:selectItem itemLabel="APPROVAL LIMIT" itemValue="2" />              	
+            	<f:selectItem itemLabel="SALUTATION" itemValue="3" />                	            	
+              </p:selectOneMenu> 
+              
+		      <p:selectOneMenu style="width:160px">  
+            	<f:selectItem itemLabel="Select One" itemValue="" />  
+            	<f:selectItem itemLabel="Contains" itemValue="1" /> 
+            	<f:selectItem itemLabel="Equal" itemValue="2" /> 
+            	<f:selectItem itemLabel="Greate than" itemValue="3" />             	            	            	 
+              </p:selectOneMenu> 
+              
+			 <p:inputText size="50" /> 
+              
+		      <p:selectOneMenu style="width:40px">  
+            	<f:selectItem itemLabel="AND" itemValue="1" />  
+            	<f:selectItem itemLabel="OR" itemValue="2" /> 
+              </p:selectOneMenu> 
+              
+		      <p:selectOneMenu style="width:160px">  
+            	<f:selectItem itemLabel="Select One" itemValue="" />  
+            	<f:selectItem itemLabel="USERNAME" itemValue="1" /> 
+            	<f:selectItem itemLabel="APPROVAL LIMIT" itemValue="2" />              	
+            	<f:selectItem itemLabel="SALUTATION" itemValue="3" />                	            	
+              </p:selectOneMenu> 
+              
+		      <p:selectOneMenu style="width:160px">  
+            	<f:selectItem itemLabel="Select One" itemValue="" />  
+            	<f:selectItem itemLabel="Contains" itemValue="1" /> 
+            	<f:selectItem itemLabel="Equal" itemValue="2" /> 
+            	<f:selectItem itemLabel="Greate than" itemValue="3" />            	            	            	 
+              </p:selectOneMenu> 
+              
+			 <p:inputText size="50" /> 
+              
+		      <p:selectOneMenu style="width:40px">  
+            	<f:selectItem itemLabel="AND" itemValue="1" />  
+            	<f:selectItem itemLabel="OR" itemValue="2" /> 
+              </p:selectOneMenu> 
+              
+		      <p:selectOneMenu style="width:160px">  
+            	<f:selectItem itemLabel="Select One" itemValue="" />  
+            	<f:selectItem itemLabel="USERNAME" itemValue="1" /> 
+            	<f:selectItem itemLabel="APPROVAL LIMIT" itemValue="2" />              	
+            	<f:selectItem itemLabel="SALUTATION" itemValue="3" />               	            	
+              </p:selectOneMenu>   
+              
+		      <p:selectOneMenu style="width:160px">  
+            	<f:selectItem itemLabel="Select One" itemValue="" />  
+            	<f:selectItem itemLabel="Contains" itemValue="1" /> 
+            	<f:selectItem itemLabel="Equal" itemValue="2" /> 
+            	<f:selectItem itemLabel="Greate than" itemValue="3" />            	            	            	 
+              </p:selectOneMenu> 
+              
+			 <p:inputText size="50" /> 
+              
+		      <p:selectOneMenu style="width:40px">  
+            	<f:selectItem itemLabel="AND" itemValue="1" />  
+            	<f:selectItem itemLabel="OR" itemValue="2" /> 
+              </p:selectOneMenu> 
+              
+		      <p:selectOneMenu style="width:160px">  
+            	<f:selectItem itemLabel="Select One" itemValue="" />  
+            	<f:selectItem itemLabel="USERNAME" itemValue="1" /> 
+            	<f:selectItem itemLabel="APPROVAL LIMIT" itemValue="2" />              	
+            	<f:selectItem itemLabel="SALUTATION" itemValue="3" />              	            	
+              </p:selectOneMenu> 
+              
+		      <p:selectOneMenu style="width:160px">  
+            	<f:selectItem itemLabel="Select One" itemValue="" />  
+            	<f:selectItem itemLabel="Contains" itemValue="1" /> 
+            	<f:selectItem itemLabel="Equal" itemValue="2" /> 
+            	<f:selectItem itemLabel="Greate than" itemValue="3" />            	            	            	 
+              </p:selectOneMenu> 
+              
+			 <p:inputText size="50" />                                                                                                		
+			
+		</h:panelGrid>
+		<div align="right">
+		  <p:commandButton value="Search" icon="ui-icon-search"/>		
+		  <p:commandButton value="Reset" icon="ui-icon-reset" />		
+		</div>
+       </p:panel>	
+       <br/>	
+		<p:panel header="RESULT" toggleable="true">
+	    <p:dataTable id="userGroupResult" value="" var="usergroupresult">
+		<ac:paginator />
+		<p:column />
+	    <p:column headerText="Salutation" > 
+          <h:outputText value="MISS"/>
+        </p:column> 
+ 	    <p:column headerText="User Name" > 
+          <h:outputText value="SHIRLEY"/>
+        </p:column>  
+ 	    <p:column headerText="Approval Limit" > 
+          <h:outputText value="5000"/>
+        </p:column>                  
+                             
+		</p:dataTable>
+       <p:spacer height="15"></p:spacer>
+
+		<div align="right">
+		  <p:commandButton value="Ok" icon="ui-icon-check"/>		
+		  <p:commandButton value="Cancel" icon="ui-icon-cancel" />		
+		</div>
+		</p:panel>
+	</p:dialog>
+</ui:composition>
