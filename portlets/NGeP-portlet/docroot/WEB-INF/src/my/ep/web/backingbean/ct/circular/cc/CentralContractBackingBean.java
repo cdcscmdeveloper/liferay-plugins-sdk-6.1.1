@@ -63,6 +63,7 @@ import my.ep.persistence.entity.pm.authorization.PmUser;
 import my.ep.persistence.entity.pm.authorization.PmUserGroup;
 import my.ep.persistence.entity.pm.authorization.PmUserGroupUser;
 import my.ep.persistence.entity.pm.common.PmParameter;
+import my.ep.persistence.entity.pm.common.PmStatus;
 import my.ep.persistence.entity.pm.common.PmStatusDesc;
 import my.ep.persistence.logging.LogKey;
 import my.ep.type.aut.SearchOperator;
@@ -103,6 +104,9 @@ public class CentralContractBackingBean extends BaseBackingBean<CentralContractM
 		if(getManagedBean().getOutComes()==null) {
 			getManagedBean().setOutComes(new String[]{"Save","Submit"});
 			getManagedBean().setCircularVer(new CtCircularVer());
+			PmStatus status = new PmStatus();
+			status.setStatusId(ContractStatusConst.PENDING_SUBMISSION);
+			getManagedBean().getCircularVer().setStatus(status);
 			ContractBackingBean ctBB = new ContractBackingBean();
 			ctBB.initializeRemarkAndAttachement(getManagedBean().getRemarkList(), getManagedBean().getAttachmentList());
 		}
@@ -609,6 +613,7 @@ public class CentralContractBackingBean extends BaseBackingBean<CentralContractM
 				}
 				getManagedBean().setCircular(resDTO.getCircularVer().getCtCircular());
 				getManagedBean().setCircularVer(resDTO.getCircularVer());
+				getManagedBean().setUpdateAction(false);
 				getManagedBean().setOutComes(new String[]{});
 			} else if(action.equalsIgnoreCase("update")) {
 				reqDTO.setUpdateAction(true);
@@ -621,7 +626,7 @@ public class CentralContractBackingBean extends BaseBackingBean<CentralContractM
 				getManagedBean().setCircular(resDTO.getCircular());
 				getManagedBean().setCircularVer(resDTO.getCircularVer());
 				getManagedBean().setUpdateAction(true);
-				getManagedBean().setOutComes(new String[]{"SAVE","SUBMIT"});
+				getManagedBean().setOutComes(new String[]{"Save","Submit"});
 			} else if(action.equalsIgnoreCase("cancel")) {
 				
 			}

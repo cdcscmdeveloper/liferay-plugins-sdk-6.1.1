@@ -5,20 +5,65 @@
 	xmlns:h="http://java.sun.com/jsf/html"
 	xmlns:ui="http://java.sun.com/jsf/facelets"
 	xmlns:p="http://primefaces.org/ui"
+	xmlns:fn="http://java.sun.com/jsp/jstl/functions"
 	xmlns:c="http://java.sun.com/jsp/jstl/core">
     <ui:define name="contentSection">
     	<f:event listener="#{panelBackingBean.preRenderView}" type="preRenderView" />	
 		<p:panel>
 			<p:messages id="messages" showDetail="true" autoUpdate="true" closable="true" severity="error, info" />
-			<p:panel styleClass="ppRightBtn" rendered="#{panelBackingBean.managedBean.circularVer.status != null}">
-				<h:outputText value="Status : " />
-				<h:outputText value="#{panelBackingBean.getStatusDescById(panelBackingBean.managedBean.circularVer.status.statusId)}" /> 
-			</p:panel>			
-			<div class="ppRightBtn"> 
-	  			<ui:repeat var="action"	value="#{panelBackingBean.managedBean.outComes}">
-					<p:commandButton value="#{action}" ajax="false" styleClass="ui-button" action="#{panelBackingBean.saveCircularPanel(action)}" />
-				</ui:repeat>		
-	    	</div>
+	    	<table style="width: 100%;">
+	    		<tr>
+	    			<td><p:commandButton value="Back" immediate="true" icon="ui-icon-back" oncomplete="window.history.back();" /></td>
+	    			<td class="ppRightBtn">
+			  			<ui:repeat var="action"	value="#{panelBackingBean.managedBean.outComes}">
+							<p:commandButton value="#{action}" ajax="false" styleClass="ui-button" icon="ui-icon-#{fn:toLowerCase(action)}" 
+								action="#{panelBackingBean.saveCircular(action)}" />
+						</ui:repeat>	    			
+	    			</td>
+	    		</tr>
+	    	</table>
+			<table style="width: 99%; margin-left: 25px;">
+				<tr style="margin-button: 10px;">
+					<td>
+						<h6 style="color: blue;">
+							<p:outputLabel value="#{lbl['lbl.ct.pc.cno']}" />
+						</h6>
+					</td>
+					<td>
+						<h6>
+							<p:inputText size="20"
+								value="#{panelBackingBean.managedBean.circularVer.circularNo == null ? '-- User input --':panelBackingBean.managedBean.circularVer.circularNo}"
+								disabled="true" />
+						</h6>
+					</td>
+					<c:if test="#{panelBackingBean.managedBean.updateAction || (panelBackingBean.managedBean.circularVer.updateNo != null)}">
+					<td>
+						<h6 style="color: blue;">
+							<p:outputLabel value="#{lbl['lbl.ct.pc.update.no']}" />
+						</h6>
+					</td>
+					<td>
+						<h6>
+							<p:inputText size="20"
+								value="#{panelBackingBean.managedBean.circularVer.updateNo == null ? '-- User input --':panelBackingBean.managedBean.circularVer.updateNo}"
+								disabled="true" />
+						</h6>
+					</td>					
+					</c:if>
+					<td>
+						<h6 style="color: blue;">
+							<p:outputLabel value="#{lbl['lbl.ct.cc.status']}" />
+						</h6>
+					</td>
+					<td>
+						<h6>
+							<p:inputText size="20"
+								value="#{panelBackingBean.getStatusDescById(panelBackingBean.managedBean.circularVer.status.statusId)}"
+								disabled="true" />
+						</h6>
+					</td>
+				</tr>
+			</table>	    	
 		</p:panel>
 		<p:tabView id="tabview" orientation="left" >
 			<p:tab id="tabcd" title="Circular Details" >

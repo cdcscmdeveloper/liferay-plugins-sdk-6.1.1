@@ -23,13 +23,13 @@
 				action="#{centralContractBackingBean.downloadFile(1)}" />
 			<h:outputLabel value="#{lbl['lbl.ct.cc.frno']}" />
 			<p:inputText disabled="true" value="#{centralContractBackingBean.managedBean.circularVer.circularFileRefNo}" />			
-			<p:outputLabel value="Circular Type" />
+			<p:outputLabel value="#{lbl['lbl.ct.pc.update.type']}" />
 			<p:selectOneMenu value="#{centralContractBackingBean.managedBean.circularVer.updateType.parameterId}">
 				<f:selectItems value="#{centralContractBackingBean.getDropdownValues(ParameterTypeConst.circularUpdateType)}" />
 			</p:selectOneMenu>
-			<h:outputLabel value="Update No." />
+			<h:outputLabel value="#{lbl['lbl.ct.pc.update.no']}" />
 			<p:inputText value="#{centralContractBackingBean.managedBean.circularVer.updateNo}" />
-			<h:outputLabel value="Update Name" />
+			<h:outputLabel value="#{lbl['lbl.ct.pc.update.name']}" />
 			<p:inputText value="#{centralContractBackingBean.managedBean.circularVer.updateName}" />		
 			<h:outputLabel value="Update Description" />
 			<p:inputText value="#{centralContractBackingBean.managedBean.circularVer.updateDescription}" />								
