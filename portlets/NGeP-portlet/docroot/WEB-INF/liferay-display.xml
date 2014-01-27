@@ -29,6 +29,9 @@
 		<!-- Profile Management - START -->
 		<category name="category.ep.pm">
 			<portlet id="pmUserprofiles"></portlet>
+			<portlet id="pmProfileManagement"></portlet>
+			<portlet id="pmUserGroupSearch"></portlet>
+			<portlet id="pmAuthrisationRole"></portlet>				
 		</category>
 		<!-- Profile Management - END -->		
 
