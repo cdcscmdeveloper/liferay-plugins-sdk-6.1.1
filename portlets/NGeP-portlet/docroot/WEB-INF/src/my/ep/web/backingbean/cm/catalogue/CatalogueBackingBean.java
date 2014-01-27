@@ -231,7 +231,7 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean>{
 
 		this.getManagedBean().setStatusDescList(resDTO.getStatusDescList());
 
-		
+
 		this.getManagedBean().setSelectedMaintainItem(this.getManagedBean().getMaintainItemList().get(index));
 		this.getManagedBean().getSelectedMaintainItem().setCompareDesc(this.getManagedBean().getMaintainItemList().get(index).getItemDesc());
 
@@ -588,7 +588,7 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean>{
 
 
 		//Read Excel document first
-		FileInputStream input_document = new FileInputStream(new File("C:\\excel1\\Catalogue-offline-template.xlsx"));
+		FileInputStream input_document = new FileInputStream(new File("C:\\excel\\Catalogue-offline-template.xlsx"));
 		// convert it into a POI object
 		XSSFWorkbook my_xlsx_workbook = new XSSFWorkbook(input_document); 
 		// Read excel sheet that needs to be updated
@@ -599,21 +599,30 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean>{
 		CellStyle catalogCellStyle = my_xlsx_workbook.createCellStyle();
 
 		//add the 1st title row
-		List labelList = new Vector();
-
-		labelList.add("Extension Code");
-		labelList.add("Extension Name");
-		labelList.add("Frequency");
-		labelList.add("Item Description");
-		labelList.add("SKU Number");
-		labelList.add("UOM");
-		labelList.add("Lead Time");
-		labelList.add("Payment Term");
-		labelList.add("Model Number");
-		labelList.add("Manufacturer ID");
+		List dataLs = new Vector();
 
 
-		addCellToRow(sheet, 10, labelList, catalogCellStyle);
+
+		for(int i=0; i<this.getManagedBean().getSelectedMaintainItems().length; i++){
+			CmSupplierItem catalog = this.getManagedBean().getSelectedMaintainItems()[i];
+
+			dataLs.add(catalog.getCmItem().getCmUnspsc().getUnspscCode());
+			dataLs.add(catalog.getCmItem().getCmUnspsc().getUnspscTitle());
+			dataLs.add(catalog.getCmItem().getExtensionCode());
+			dataLs.add(catalog.getCmItem().getCmType().getTypeName());
+			dataLs.add(catalog.getCmItem().getCmBrand().getBrandName());
+			dataLs.add(catalog.getCmItem().getCmMeasurement().getMeasurementName());
+			dataLs.add(catalog.getCmItem().getCmColor().getColorName());
+			dataLs.add(catalog.getItemDesc());
+			dataLs.add(catalog.getFrequency());
+			dataLs.add(catalog.getPmUom().getUomName());
+			dataLs.add(catalog.getModelNumber());
+			dataLs.add(catalog.getSkuNumber());
+			dataLs.add(catalog.getManufacturer());
+
+			addCellToRow(sheet, 10, dataLs, catalogCellStyle);
+
+		}
 
 		List rowLs = new Vector();
 		int no = 11;
@@ -1232,7 +1241,7 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean>{
 			ICatalogueSO catalogueSO = (ICatalogueSO) BusinessDelegate.getInstance().getServiceObject("cm",ICatalogueSO.class);
 
 			CatalogueReqDTO reqDTO = new CatalogueReqDTO();
-
+			System.out.println("view.getDocId()"+view.getDocId());
 			reqDTO.setDocId(view.getDocId());
 
 			CatalogueResDTO resDTO = catalogueSO.searchSupplierItemByStatus(reqDTO);
@@ -1245,7 +1254,7 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean>{
 
 		for(VCmSupplierItem view :this.getManagedBean().getViewSupplierItemList()){
 
-			if(!view.getContractNo().equalsIgnoreCase("N/A") || !view.getCircularNo().equalsIgnoreCase("N/A")){
+			if(view.getContractNo()!=null || view.getCircularNo()!=null){
 				this.getManagedBean().setContractedExist(true);
 			}
 
