@@ -1092,6 +1092,39 @@
 	</portlet>
 	
 	
+	<portlet>
+		<portlet-name>information-display-portlet</portlet-name>
+		<icon>/icon.png</icon>
+		<instanceable>true</instanceable>
+		<header-portlet-css>/css/ep/wp/if/main.css</header-portlet-css>
+		<footer-portlet-javascript>/js/ep/wp/if/main.js</footer-portlet-javascript>
+		<css-class-wrapper>information-display-portlet-portlet</css-class-wrapper>
+	</portlet>
+	<portlet>
+		<portlet-name>announcement-portlet</portlet-name>
+		<icon>/icon.png</icon>
+		<instanceable>true</instanceable>
+		<header-portlet-css>/css/ep/wp/if/main.css</header-portlet-css>
+		<footer-portlet-javascript>/js/wp/if/main.js</footer-portlet-javascript>
+		<css-class-wrapper>announcement-portlet-portlet</css-class-wrapper>
+	</portlet>	
+	<portlet>
+		<portlet-name>news-portlet</portlet-name>
+		<icon>/icon.png</icon>
+		<instanceable>true</instanceable>
+		<header-portlet-css>/css/ep/wp/if/main.css</header-portlet-css>
+		<footer-portlet-javascript>/js/wp/if/main.js</footer-portlet-javascript>
+		<css-class-wrapper>news-portlet-portlet</css-class-wrapper>
+	</portlet>
+	<portlet>
+		<portlet-name>event-portlet</portlet-name>
+		<icon>/icon.png</icon>
+		<instanceable>true</instanceable>
+		<header-portlet-css>/css/ep/wp/if/main.css</header-portlet-css>
+		<footer-portlet-javascript>/js/wp/if/main.js</footer-portlet-javascript>
+		<css-class-wrapper>event-portlet-portlet</css-class-wrapper>
+	</portlet>
+	
 	<role-mapper>
 		<role-name>administrator</role-name>
 		<role-link>Administrator</role-link>

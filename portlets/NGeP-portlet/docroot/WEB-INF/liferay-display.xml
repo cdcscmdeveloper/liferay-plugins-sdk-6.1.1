@@ -127,7 +127,7 @@
 		<portlet id="reviewExtensionRequest"></portlet>
 		<portlet id="reviewExtensionMaintenance"></portlet>
 		<portlet id="Welcome"></portlet>
-		</category>
+	</category>
 
 	<category name="Template">
 		<portlet id="templateDoc"></portlet>
@@ -153,5 +153,20 @@
 		<portlet id="smUpdateMofDetails"></portlet>
 		<portlet id="SiteVisit"></portlet>
 		<portlet id="MOFApplication"></portlet>
+	</category>
+	
+	<category name="category.ep.wp">
+		<category name="category.ep.if">
+			<portlet id="information-display-portlet"></portlet>			
+			<portlet id="announcement-portlet"></portlet>
+			<portlet id="news-portlet"></portlet>
+			<portlet id="event-portlet"></portlet>
+		</category>
+		<category name="category.ep.al">
+			<portlet id="alert-display-portlet"></portlet>
+		</category>
+		<category name="category.ep.oh">
+			<portlet id="online-help-display-portlet"></portlet>
+		</category>
 	</category>
 </display>
