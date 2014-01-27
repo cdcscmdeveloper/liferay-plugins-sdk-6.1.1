@@ -3689,6 +3689,129 @@
 		</security-role-ref>
 	</portlet>
 	
-	
-	    
+		    
+	<portlet>
+		<portlet-name>information-display-portlet</portlet-name>
+		<display-name>Information Display</display-name>
+		<portlet-class>org.portletfaces.bridge.GenericFacesPortlet</portlet-class>
+		<init-param>
+			<name>javax.portlet.faces.defaultViewId.view</name>
+			<value>/xhtml/wp/informationdisplay/displayAll.xhtml</value>
+		</init-param>
+		<expiration-cache>0</expiration-cache>
+		<supports>
+			<mime-type>text/html</mime-type>
+			<portlet-mode>view</portlet-mode>
+		</supports>
+		<portlet-info>
+			<title>Information Display</title>
+			<short-title>Information Display</short-title>
+			<keywords></keywords>
+		</portlet-info>
+		<security-role-ref>
+			<role-name>administrator</role-name>
+		</security-role-ref>
+		<security-role-ref>
+			<role-name>guest</role-name>
+		</security-role-ref>
+		<security-role-ref>
+			<role-name>power-user</role-name>
+		</security-role-ref>
+		<security-role-ref>
+			<role-name>user</role-name>
+		</security-role-ref>
+	</portlet>
+	<portlet>
+		<portlet-name>announcement-portlet</portlet-name>
+		<display-name>Announcement Portlet</display-name>
+		<portlet-class>org.portletfaces.bridge.GenericFacesPortlet</portlet-class>
+		<init-param>
+			<name>javax.portlet.faces.defaultViewId.view</name>
+			<value>/xhtml/wp/announcementdisplay/displayAnnouncement.xhtml</value>
+		</init-param>
+		<expiration-cache>0</expiration-cache>
+		<supports>
+			<mime-type>text/html</mime-type>
+			<portlet-mode>view</portlet-mode>
+		</supports>
+		<portlet-info>
+			<title>Announcement Portlet</title>
+			<short-title>Announcement Portlet</short-title>
+			<keywords></keywords>
+		</portlet-info>
+		<security-role-ref>
+			<role-name>administrator</role-name>
+		</security-role-ref>
+		<security-role-ref>
+			<role-name>guest</role-name>
+		</security-role-ref>
+		<security-role-ref>
+			<role-name>power-user</role-name>
+		</security-role-ref>
+		<security-role-ref>
+			<role-name>user</role-name>
+		</security-role-ref>
+	</portlet>
+	<portlet>
+		<portlet-name>news-portlet</portlet-name>
+		<display-name>News Portlet</display-name>
+		<portlet-class>org.portletfaces.bridge.GenericFacesPortlet</portlet-class>
+		<init-param>
+			<name>javax.portlet.faces.defaultViewId.view</name>
+			<value>/xhtml/wp/newsdisplay/displayNews.xhtml</value>
+		</init-param>
+		<expiration-cache>0</expiration-cache>
+		<supports>
+			<mime-type>text/html</mime-type>
+			<portlet-mode>view</portlet-mode>
+		</supports>
+		<portlet-info>
+			<title>News Portlet</title>
+			<short-title>News Portlet</short-title>
+			<keywords></keywords>
+		</portlet-info>
+		<security-role-ref>
+			<role-name>administrator</role-name>
+		</security-role-ref>
+		<security-role-ref>
+			<role-name>guest</role-name>
+		</security-role-ref>
+		<security-role-ref>
+			<role-name>power-user</role-name>
+		</security-role-ref>
+		<security-role-ref>
+			<role-name>user</role-name>
+		</security-role-ref>
+	</portlet>
+	<portlet>
+		<portlet-name>event-portlet</portlet-name>
+		<display-name>Event Portlet</display-name>
+		<portlet-class>org.portletfaces.bridge.GenericFacesPortlet</portlet-class>
+		<init-param>
+			<name>javax.portlet.faces.defaultViewId.view</name>
+			<value>/xhtml/wp/eventdisplay/displayEvent.xhtml</value>
+		</init-param>
+		<expiration-cache>0</expiration-cache>
+		<supports>
+			<mime-type>text/html</mime-type>
+			<portlet-mode>view</portlet-mode>
+		</supports>
+		<portlet-info>
+			<title>Event Portlet</title>
+			<short-title>Event Portlet</short-title>
+			<keywords></keywords>
+		</portlet-info>
+		<security-role-ref>
+			<role-name>administrator</role-name>
+		</security-role-ref>
+		<security-role-ref>
+			<role-name>guest</role-name>
+		</security-role-ref>
+		<security-role-ref>
+			<role-name>power-user</role-name>
+		</security-role-ref>
+		<security-role-ref>
+			<role-name>user</role-name>
+		</security-role-ref>
+	</portlet>
 </portlet-app>
