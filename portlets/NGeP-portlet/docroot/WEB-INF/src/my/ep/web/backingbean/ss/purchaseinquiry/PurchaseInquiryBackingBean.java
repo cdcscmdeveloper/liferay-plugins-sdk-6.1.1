@@ -85,7 +85,7 @@ public class PurchaseInquiryBackingBean extends BaseBackingBean<PurchaseInquiryM
 		   CatalogueResDTO catResDTO = catalogueSO.searchSupplierItemByStatus(catReqDTO);
 		   System.out.println("supplerItem List "+catResDTO.getSupplierItemList().size());
 			
-		    if(catResDTO.getSupplierItemList() != null) {
+		   if(catResDTO.getSupplierItemList() != null) {
 			  ScRequestSupplierItem requestSupplierItem = new ScRequestSupplierItem();
 			  CmSupplierItem cmSupplierItem= catResDTO.getSupplierItemList().get(0);
 			  this.getManagedBean().setSupplierItem(cmSupplierItem);
@@ -104,7 +104,7 @@ public class PurchaseInquiryBackingBean extends BaseBackingBean<PurchaseInquiryM
 			  scPrInquiry.setRequestSupplierItem(requestSupplierItem);
 		      getManagedBean().setScPrInquiry(scPrInquiry);
 
-			  if (cmSupplierItem.getCmPricings() != null
+			 if (cmSupplierItem.getCmPricings() != null
 					&& cmSupplierItem.getCmPricings().size() > 0) {
 				List<CmPricing> cmPricings = new ArrayList<CmPricing>();
 				for (CmPricing princing : cmSupplierItem.getCmPricings()) {
@@ -266,12 +266,14 @@ public class PurchaseInquiryBackingBean extends BaseBackingBean<PurchaseInquiryM
 		}
 		
 		public String getCurrentStatus(){
-			String result = null;
+			String result = "";
+			if (getManagedBean().getScPrInquiry().getWorkflowStatuses() != null) {
 			for(ScPRIWorkFlowStatus status : getManagedBean().getScPrInquiry().getWorkflowStatuses()){
 				if(status.isCurrent()){
 					result = getStatusDescById(status.getPmStatus().getStatusId());
 					break;
 				}
+			}
 			}
 			return result;
 		}

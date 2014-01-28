@@ -208,12 +208,16 @@ public class PurchaseInDefaultBackingBean extends BaseBackingBean<PurchaseInDefa
 			return results;
 		}
 	  
-	  public String  getCurrentStatus() {
-			String result = null;
-			for(ScPIDWorkFlowStatus status : getManagedBean().getPurchaseInDefault().getWorkFlowStatuses()){
-				if(status.isCurrent()){
-					result = getStatusDescById(status.getPmStatus().getStatusId());
-					break;
+	    public String  getCurrentStatus() {
+			String result = "";
+			if (getManagedBean().getPurchaseInDefault().getWorkFlowStatuses() != null) {
+				for (ScPIDWorkFlowStatus status : getManagedBean()
+						.getPurchaseInDefault().getWorkFlowStatuses()) {
+					if (status.isCurrent()) {
+						result = getStatusDescById(status.getPmStatus()
+								.getStatusId());
+						break;
+					}
 				}
 			}
 			return result;
