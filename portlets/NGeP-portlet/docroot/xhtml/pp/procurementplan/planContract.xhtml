@@ -14,9 +14,13 @@ xmlns:c="http://java.sun.com/jsp/jstl/core"
 			<tr>
 				<th><p:outputLabel value="* #{lbl['lbl.pp.doc.type']}"/></th>
 				<td>
-					<p:selectOneMenu styleClass="ppDropDownWidthM"
+					<p:selectOneMenu value="#{planBackingBean.managedBean.selectedPlan.docTypeParam.parameterId}"
+						styleClass="ppDropDownWidthM"
 						disabled="#{!planBackingBean.managedBean.selectedPlan.editable}">
-						<f:selectItem itemLabel="#{lbl['lbl.select']}" itemValue="#{null}" />
+						<f:selectItems value="#{planBackingBean.epContractTypeOptions()}"/>
+						<p:ajax event="change" listener="#{planBackingBean.selectedDocTypeParam
+							(planBackingBean.managedBean.selectedPlan.docTypeParam.parameterId)}" 
+							update="opTabContract"/> 
 					</p:selectOneMenu>
 				</td>
 				<th></th>
@@ -24,56 +28,79 @@ xmlns:c="http://java.sun.com/jsp/jstl/core"
 			</tr>
 			<tr>
 				<th>
-					<p:outputLabel value="#{lbl['lbl.pp.pkp.number']}"/>
+					<p:outputLabel 
+						value="#{planBackingBean.managedBean.selectedPlan.docTypeParam.parameterCode==PPConst.contractTypePkp ? '*' : ''}
+							#{lbl['lbl.pp.pkp.number']}"/>
 				</th>
 				<td>
-					<p:selectOneMenu styleClass="ppDropDownWidthM"
-						disabled="#{!planBackingBean.managedBean.selectedPlan.editable}">
+					<p:selectOneMenu styleClass="ppDropDownWidthM" 
+						value="#{planBackingBean.managedBean.selectedPlan.ctCircular.circularId}"
+						disabled="#{!planBackingBean.managedBean.selectedPlan.editable
+							or planBackingBean.managedBean.selectedPlan.docTypeParam.parameterCode != PPConst.contractTypePkp}">
 						<f:selectItem itemLabel="#{lbl['lbl.select']}" itemValue="#{null}"/>
+						<f:selectItems value="#{planBackingBean.circularOptions()}"/>
+						<p:ajax event="change" listener="#{planBackingBean.selectedCircular
+							(planBackingBean.managedBean.selectedPlan.ctCircular.contractId)}" 
+							update="itCircularTitle"/> 
 					</p:selectOneMenu>
 				</td>
 				<th>
-					<p:outputLabel value="* #{lbl['lbl.pp.pkp.title']}"/>
+					<p:outputLabel value="#{lbl['lbl.pp.pkp.title']}"/>
 				</th>
 				<td>
-					<p:inputText disabled="true" styleClass="ppDisplayTextL"
-							value="-" />
+					<p:inputText id="itCircularTitle" disabled="true" styleClass="ppDisplayTextL"
+							value="#{planBackingBean.managedBean.selectedPlan.ctCircular.latestCircularVer!=null ?
+							planBackingBean.managedBean.selectedPlan.ctCircular.latestCircularVer.name : ''}" />
 				</td>
 			</tr>
 			<tr>
 				<th>
-					<p:outputLabel value="#{lbl['lbl.pp.contract.number']}"/>
+					<p:outputLabel value="#{(planBackingBean.managedBean.selectedPlan.docTypeParam.parameterCode==null || 
+						planBackingBean.managedBean.selectedPlan.docTypeParam.parameterCode==PPConst.contractTypeLoa) ? '' : '*'}
+						#{lbl['lbl.pp.contract.number']}"/>
 				</th>
 				<td>
-					<p:selectOneMenu styleClass="ppDropDownWidthM"
-						disabled="#{!planBackingBean.managedBean.selectedPlan.editable}">
-						<f:selectItem itemLabel="#{lbl['lbl.select']}" itemValue="#{null}"/>
+					<p:selectOneMenu 
+						value="#{planBackingBean.managedBean.selectedPlan.ctContract.contractId}"
+						styleClass="ppDropDownWidthM"
+						disabled="#{!planBackingBean.managedBean.selectedPlan.editable
+							or planBackingBean.managedBean.selectedPlan.docTypeParam.parameterCode==contractTypeLoa
+							or planBackingBean.managedBean.selectedPlan.docTypeParam.parameterCode==null}">
+						<f:selectItems value="#{planBackingBean.contractOptions()}"/>
+						<p:ajax event="change" listener="#{planBackingBean.selectedContract
+							(planBackingBean.managedBean.selectedPlan.ctContract.contractId)}" 
+							update="itContractTitle, itSupName"/> 
 					</p:selectOneMenu>
 				</td>
 					<th>
-					<p:outputLabel value="* #{lbl['lbl.pp.contract.title']}"/>
+					<p:outputLabel value="#{lbl['lbl.pp.contract.title']}"/>
 				</th>
 				<td>
-					<p:inputText disabled="true" styleClass="ppDisplayTextL"
-							value="-" />
+					<p:inputText id="itContractTitle" disabled="true" styleClass="ppDisplayTextL"
+							value="#{planBackingBean.managedBean.selectedPlan.ctContract.contractName}" />
 				</td>
 			</tr>
 			<tr>
 				<th>
-					<p:outputLabel value="#{lbl['lbl.pp.loa.number']}"/>
+					<p:outputLabel value="#{planBackingBean.managedBean.selectedPlan.docTypeParam.parameterCode==PPConst.contractTypeLoa ? '*' : ''}
+						#{lbl['lbl.pp.loa.number']}"/>
 				</th>
 				<td>
 					<p:selectOneMenu styleClass="ppDropDownWidthM"
-						disabled="#{!planBackingBean.managedBean.selectedPlan.editable}">
+						value="#{planBackingBean.managedBean.selectedPlan.scLoa.loaId}"
+						disabled="#{!planBackingBean.managedBean.selectedPlan.editable
+							or planBackingBean.managedBean.selectedPlan.docTypeParam.parameterCode!=PPConst.contractTypeLoa}">
 						<f:selectItem itemLabel="#{lbl['lbl.select']}" itemValue="#{null}"/>
+						<p:ajax event="change" 
+							update="itLoaTitle"/> 
 					</p:selectOneMenu>
 				</td>
 					<th>
-					<p:outputLabel value="* #{lbl['lbl.pp.loa.title']}"/>
+					<p:outputLabel value="#{lbl['lbl.pp.loa.title']}"/>
 				</th>
 				<td>
-					<p:inputText disabled="true" styleClass="ppDisplayTextL"
-							value="-" />
+					<p:inputText id="itLoaTitle" disabled="true" styleClass="ppDisplayTextL"
+							value="#{planBackingBean.managedBean.selectedPlan.scLoa.loaId}" />
 				</td>
 			</tr>
 			<tr>
@@ -86,15 +113,17 @@ xmlns:c="http://java.sun.com/jsp/jstl/core"
 				</td>
 				<th><p:outputLabel value="#{lbl['lbl.pp.supplier.name']}"/></th>
 				<td>
-					<p:inputText disabled="true" styleClass="ppDisplayTextL"
-							value="-" />
+					<p:inputText id="itSupName" disabled="true" styleClass="ppDisplayTextL"
+						value="#{planBackingBean.managedBean.selectedPlan.ctContract.smSupplier!=null ?
+							planBackingBean.managedBean.selectedPlan.ctContract.smSupplier.supplierName : ''}" />
 				</td>
 			</tr>
 			<tr>
 				<th><p:outputLabel value="#{lbl['lbl.pp.duration.month']}"/></th>
 				<td>
 					<p:inputText disabled="true" styleClass="ppDisplayTextM"
-							value="-" />
+							value="#{planBackingBean.managedBean.selectedPlanItem.ctContract.latestContractVer!=null ?
+								planBackingBean.managedBean.selectedPlanItem.ctContract.latestContractVer.ctContractValue.contractPeriod : ''}" />
 					
 				</td>
 				<th></th>
