@@ -2254,7 +2254,9 @@ table.ppTwoTable td {
 	vertical-align: top;
 	padding: 2px;
 }
-
+.verticalAlignNone{
+	vertical-align: middle !important;
+}
 .ppRight{
     float:left;
     width:800px;

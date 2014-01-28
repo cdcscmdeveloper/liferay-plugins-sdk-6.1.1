@@ -8,6 +8,7 @@ xmlns:h="http://java.sun.com/jsf/html"
 xmlns:ui="http://java.sun.com/jsf/facelets"
 xmlns:p="http://primefaces.org/ui"
 xmlns:c="http://java.sun.com/jsp/jstl/core"
+xmlns:ac="http://ac.my/jsf/composite/cc"
 >
 
 	 
@@ -32,6 +33,7 @@ xmlns:c="http://java.sun.com/jsp/jstl/core"
 		</script>
 
 	<p:outputPanel id="opTabPlanGeneral">
+		<ac:lovPopup />
 		<h:inputHidden id="enableTabFlag" value="#{planBackingBean.managedBean.selectedTab}" />
 		<table class="ppTwoTable">
 			<tr>
@@ -62,7 +64,8 @@ xmlns:c="http://java.sun.com/jsp/jstl/core"
 						disabled="#{!planBackingBean.managedBean.selectedPlan.brandNew}" styleClass="ppDropDownWidthM">
 						<f:selectItems value="#{planBackingBean.procurementModeOptions(planBackingBean.managedBean.selectedPlan.planTypeParam.parameterCode)}"/>
 						<p:ajax event="change" listener="#{planBackingBean.selectedProcurementModeParam(planBackingBean.managedBean.selectedPlan.procurementModeParam.parameterId)}" 
-							update="enableTabFlag, clItem, opTabDirectPurchase, opTabContract, somProdClass" 
+							update="enableTabFlag, clItem, opTabDirectPurchase, opTabContract, :form:tvPlanContent:lovClass:lovClass,
+									:form:tvPlanContent:lovFamily:lovFamily, :form:tvPlanContent:lovSegment:lovSegment" 
 							oncomplete="return updateDetailTab()"/> 
 					</p:selectOneMenu>
 				</td>
@@ -95,20 +98,20 @@ xmlns:c="http://java.sun.com/jsp/jstl/core"
 				</td>
 			</tr>
 			<tr>
-				<th><p:outputLabel value="* #{lbl['lbl.pp.product.segment']}"/></th>
+				<th class="verticalAlignNone"><p:outputLabel value="* #{lbl['lbl.pp.product.segment']}"/></th>
 				<td>
-					<p:selectOneMenu value="#{planBackingBean.managedBean.selectedPlan.cmUnspscFamily.cmUnspsc.unspscCode}"
+					<ac:lov id="lovSegment" lovId="CM_UNSPSC" size="26" update=":form:tvPlanContent:lovFamily:lovFamily"
 						disabled="#{!planBackingBean.managedBean.selectedPlan.editable 
-							|| planBackingBean.managedBean.selectedPlan.procurementModeParam.parameterCode==PPConst.procurementExistingContract}"
-						styleClass="ppDropDownWidthM">
-						<f:selectItem itemLabel="#{lbl['lbl.select']}" />	
-						<f:selectItems value="#{planBackingBean.unspscSegmentOptions()}" 
-							var="obj" itemLabel="#{obj.unspscTitle}" itemValue="#{obj.unspscCode}"/>
-						<p:ajax event="change" update="somProdFamily" />
-					</p:selectOneMenu>
+							|| planBackingBean.managedBean.selectedPlan.planTypeParam.parameterCode==null
+							|| planBackingBean.managedBean.selectedPlan.procurementModeParam.parameterCode!=PPConst.procurementExistingContract}"
+						headerText="#{lbl['lbl.pp.product.segment']}" 
+						saveObject="planBackingBean.managedBean.selectedPlan.cmUnspscFamily.cmUnspsc"
+						value="#{planBackingBean.managedBean.selectedPlan.cmUnspscFamily.cmUnspsc.unspscTitle}"
+						conditionField="recordStatus^1|unspscLevel^0">
+					</ac:lov>
 				</td>
 				<td rowspan="10" colspan="2">
-					<p:pickList id="plPvo" value="#{planBackingBean.managedBean.users}" 
+					<p:pickList id="plPvo" value="#{planBackingBean.generateVerificationOfficers()}"
 						disabled="#{!planBackingBean.managedBean.selectedPlan.editable || !planBackingBean.managedBean.selectedPlan.verifyReq}"
 						var="user" itemLabel="#{user.loginId}" itemValue="#{user}">
 						<f:facet name="sourceCaption">Available</f:facet>  
@@ -120,35 +123,32 @@ xmlns:c="http://java.sun.com/jsp/jstl/core"
 				</td>
 			</tr>
 			<tr>
-				<th><p:outputLabel value="* #{lbl['lbl.pp.product.family']}"/></th>
+				<th class="verticalAlignNone"><p:outputLabel value="* #{lbl['lbl.pp.product.family']}"/></th>
 				<td>
-					<p:selectOneMenu id="somProdFamily" 
-						value="#{planBackingBean.managedBean.selectedPlan.cmUnspscFamily.unspscCode}"
+					<ac:lov id="lovFamily" lovId="CM_UNSPSC" size="26"
+						headerText="#{lbl['lbl.pp.product.family']}"  update=":form:tvPlanContent:lovFamily:lovClass"
 						disabled="#{!planBackingBean.managedBean.selectedPlan.editable
-						|| planBackingBean.managedBean.selectedPlan.procurementModeParam.parameterCode==PPConst.procurementExistingContract}"
-						styleClass="ppDropDownWidthM">
-						<f:selectItem itemLabel="#{lbl['lbl.select']}" />	
-						<f:selectItems value="#{planBackingBean.unspscFamilyOptions(
-							planBackingBean.managedBean.selectedPlan.cmUnspscFamily.cmUnspsc.unspscCode)}" 
-							var="obj" itemLabel="#{obj.unspscTitle}" itemValue="#{obj.unspscCode}"/>
-						<p:ajax event="change" update="somProdClass" />
-					</p:selectOneMenu>
+							|| planBackingBean.managedBean.selectedPlan.planTypeParam.parameterCode==null
+							|| planBackingBean.managedBean.selectedPlan.procurementModeParam.parameterCode!=PPConst.procurementExistingContract}"
+						saveObject="planBackingBean.managedBean.selectedPlan.cmUnspscFamily"
+						value="#{planBackingBean.managedBean.selectedPlan.cmUnspscFamily.unspscTitle}"
+						conditionField="recordStatus^1|unspscLevel^1|unspscParentCode^#{planBackingBean.managedBean.selectedPlan.cmUnspscFamily.cmUnspsc.unspscCode}">
+					</ac:lov>
+		
 				</td>
 			</tr>
 			<tr>
-				<th><p:outputLabel value="* #{lbl['lbl.pp.product.class']}"/></th>
+				<th class="verticalAlignNone"><p:outputLabel value="* #{lbl['lbl.pp.product.class']}"/></th>
 				<td>
-					<p:selectOneMenu id="somProdClass" 
-						value="#{planBackingBean.managedBean.selectedPlan.cmUnspscClass.unspscCode}"
+				
+					<ac:lov id="lovClass" lovId="CM_UNSPSC" size="26"
+						headerText="#{lbl['lbl.pp.product.class']}" update=":form:tvPlanContent:opTabDirectPurchase"
 						disabled="#{!planBackingBean.managedBean.selectedPlan.editable
 							|| planBackingBean.managedBean.selectedPlan.procurementModeParam.parameterCode!=PPConst.procurementDirectPurchase}"
-						styleClass="ppDropDownWidthM">
-						<f:selectItem itemLabel="#{lbl['lbl.select']}" />	
-						<f:selectItems value="#{planBackingBean.unspscClassOptions(
-							planBackingBean.managedBean.selectedPlan.cmUnspscFamily.unspscCode)}" 
-							var="obj" itemLabel="#{obj.unspscTitle}" itemValue="#{obj.unspscCode}"/>
-						<p:ajax event="change" update="opTabDirectPurchase" />
-					</p:selectOneMenu>
+						saveObject="planBackingBean.managedBean.selectedPlan.cmUnspscClass"
+						value="#{planBackingBean.managedBean.selectedPlan.cmUnspscClass.unspscTitle}"
+						conditionField="recordStatus^1|unspscLevel^2|unspscParentCode^#{planBackingBean.managedBean.selectedPlan.cmUnspscFamily.unspscCode}">
+					</ac:lov>
 				</td>
 			</tr>
 			<tr>

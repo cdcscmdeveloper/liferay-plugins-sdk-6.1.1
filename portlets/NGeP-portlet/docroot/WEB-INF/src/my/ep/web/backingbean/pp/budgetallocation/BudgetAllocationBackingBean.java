@@ -1553,11 +1553,6 @@ public class BudgetAllocationBackingBean extends BaseBackingBean<BudgetAllocatio
 							CommonMethod.generateDocNumber(
 									false, null, null, this.getManagedBean().getSelectedBudgetAllocation().getMinistryOrgProfile()));
 				}
-				System.out.println("child 1 " + this.getManagedBean().getSelectedBudgetAllocation().getPpBudgetAllocDtls().size());
-				for(PpBudgetAllocDtl a:this.getManagedBean().getSelectedBudgetAllocation().getPpBudgetAllocDtls()){
-					System.out.println("child 2 " + a.getPpBudgetAllocOrgs().size());
-				}
-			
 				isSuccess = addBudgetAllocation(action);
 			}
 			

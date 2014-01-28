@@ -3,13 +3,16 @@
  */
 package my.ep.web.managedbean.pp.procurementplan;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
 
+import my.ep.persistence.entity.ct.circular.CtCircular;
 import my.ep.persistence.entity.pm.authorization.PmOrgProfile;
 import my.ep.persistence.entity.pm.authorization.PmUser;
+import my.ep.persistence.entity.pm.common.PmParameter;
 import my.ep.persistence.entity.pp.PpRemark;
 import my.ep.persistence.entity.pp.budgetallocation.PpBudgetAllocDtl;
 import my.ep.persistence.entity.pp.procurementplan.PpPlan;
@@ -43,7 +46,14 @@ public class PlanManagedBean extends BaseManagedBean{
 	
 	private boolean enableTab; //enable the details tab
 
-	private int selectedTab;
+	private int selectedTab;	
+
+	private List<CtCircular> ctCircularOpts;
+//	
+//	private List<PmParameter> planTypeOpts;
+//	
+//	private List<PmParameter> procurementModeOpts;
+//	
 	
 	
 	/**
@@ -176,15 +186,68 @@ public class PlanManagedBean extends BaseManagedBean{
 	public void setCurrentProfiles(List<PmOrgProfile> currentProfiles) {
 		this.currentProfiles = currentProfiles;
 	}
+	
+	/**
+	 * @return the ctCircularOpts
+	 */
+	public List<CtCircular> getCtCircularOpts() {
+		if(ctCircularOpts==null)
+			ctCircularOpts = new ArrayList<CtCircular>();
+		return ctCircularOpts;
+	}
+
+	/**
+	 * @param ctCircularOpts the ctCircularOpts to set
+	 */
+	public void setCtCircularOpts(List<CtCircular> ctCircularOpts) {
+		this.ctCircularOpts = ctCircularOpts;
+	}
+
+//	/**
+//	 * @return the planTypeOpts
+//	 */
+//	public List<PmParameter> getPlanTypeOpts() {
+//		if(planTypeOpts==null)
+//			planTypeOpts = new ArrayList<PmParameter>();
+//		return planTypeOpts;
+//	}
+//
+//	/**
+//	 * @param planTypeOpts the planTypeOpts to set
+//	 */
+//	public void setPlanTypeOpts(List<PmParameter> planTypeOpts) {
+//		this.planTypeOpts = planTypeOpts;
+//	}
+//
+//	/**
+//	 * @return the procurementModeOpts
+//	 */
+//	public List<PmParameter> getProcurementModeOpts() {
+//		if(procurementModeOpts==null)
+//			procurementModeOpts = new ArrayList<PmParameter>();
+//		return procurementModeOpts;
+//	}
+//
+//	/**
+//	 * @param procurementModeOpts the procurementModeOpts to set
+//	 */
+//	public void setProcurementModeOpts(List<PmParameter> procurementModeOpts) {
+//		this.procurementModeOpts = procurementModeOpts;
+//	}
 
 
-	
-	
-	
-	
-	
-	
-	
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -193,9 +256,6 @@ public class PlanManagedBean extends BaseManagedBean{
 
 
 	private boolean searchPlan;
-	
-	
-	
 	
 //	private PpPlanMaster selectedPlanMaster; //for ui master plan
 

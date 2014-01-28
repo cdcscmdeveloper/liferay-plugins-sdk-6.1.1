@@ -8,6 +8,7 @@ xmlns:h="http://java.sun.com/jsf/html"
 xmlns:ui="http://java.sun.com/jsf/facelets"
 xmlns:p="http://primefaces.org/ui"
 xmlns:c="http://java.sun.com/jsp/jstl/core"
+xmlns:ac="http://ac.my/jsf/composite/cc"
 >
 	<p:outputPanel id="opTabDirectPurchase">
 		<!-- Direct Purchase Sub Header -->
@@ -39,16 +40,13 @@ xmlns:c="http://java.sun.com/jsp/jstl/core"
 			var="ppPlanItem" value="#{planBackingBean.managedBean.selectedPlanActivity.ppPlanItems}">  
 			
         	<p:column headerText="#{lbl['lbl.pp.product.commodity.code']}">  
-				<p:selectOneMenu id="somCommodity" value="#{ppPlanItem.cmUnspsc.unspscCode}"
-					disabled="#{!ppPlanItem.editable}" 
-					styleClass="ppDropDownWidthM">
-					<f:selectItem itemLabel="#{lbl['lbl.select']}" />	
-					<f:selectItems value="#{planBackingBean.unspscCommodityOptions(
-						planBackingBean.managedBean.selectedPlan.cmUnspscClass.unspscCode)}" 
-						var="obj" itemLabel="#{obj.unspscCode}" itemValue="#{obj.unspscCode}"/>
-					<p:ajax event="change" listener="#{planBackingBean.selectedCommodity(rowIndex, ppPlanItem.cmUnspsc.unspscCode)}" 
-						update="dtCommodities" />
-				</p:selectOneMenu>
+       			<ac:lov id="lovCommodity" lovId="CM_UNSPSC" size="26"
+					headerText="#{lbl['lbl.pp.product.commodity']}" update="dtCommodities"
+					disabled="#{!ppPlanItem.editable}"
+					saveObject="ppPlanItem.cmUnspsc"
+					value="#{ppPlanItem.cmUnspsc.unspscCode}"
+					conditionField="recordStatus^1|unspscLevel^3|unspscParentCode^#{planBackingBean.managedBean.selectedPlan.cmUnspscClass.unspscCode}">
+				</ac:lov>
 	        </p:column>  
 	        <p:column headerText="#{lbl['lbl.pp.product.commodity.desc']}">  
 				<p:inputText id="itCommodityDesc" disabled="true" styleClass="ppDisplayTextL" 

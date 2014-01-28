@@ -33,15 +33,16 @@ xmlns:c="http://java.sun.com/jsp/jstl/core"
 							#{lbl['lbl.pp.pkp.number']}"/>
 				</th>
 				<td>
-					<p:selectOneMenu styleClass="ppDropDownWidthM" 
+					<p:selectOneMenu styleClass="ppDropDownWidthM"
 						value="#{planBackingBean.managedBean.selectedPlan.ctCircular.circularId}"
 						disabled="#{!planBackingBean.managedBean.selectedPlan.editable
 							or planBackingBean.managedBean.selectedPlan.docTypeParam.parameterCode != PPConst.contractTypePkp}">
 						<f:selectItem itemLabel="#{lbl['lbl.select']}" itemValue="#{null}"/>
-						<f:selectItems value="#{planBackingBean.circularOptions()}"/>
-						<p:ajax event="change" listener="#{planBackingBean.selectedCircular
-							(planBackingBean.managedBean.selectedPlan.ctCircular.contractId)}" 
-							update="itCircularTitle"/> 
+						<f:selectItems value="#{planBackingBean.circularOptions()}"  var="obj" 
+							itemLabel="#{obj.latestCircularVer.circularNo}" itemValue="#{obj.circularId}"/>
+						<p:ajax event="change" listener="#{planBackingBean.selectedCircular(
+							planBackingBean.managedBean.selectedPlan.ctCircular.circularId)}"
+							update="itCircularTitle, somContract"/> 
 					</p:selectOneMenu>
 				</td>
 				<th>
@@ -60,7 +61,7 @@ xmlns:c="http://java.sun.com/jsp/jstl/core"
 						#{lbl['lbl.pp.contract.number']}"/>
 				</th>
 				<td>
-					<p:selectOneMenu 
+					<p:selectOneMenu id="somContract"
 						value="#{planBackingBean.managedBean.selectedPlan.ctContract.contractId}"
 						styleClass="ppDropDownWidthM"
 						disabled="#{!planBackingBean.managedBean.selectedPlan.editable
@@ -69,7 +70,7 @@ xmlns:c="http://java.sun.com/jsp/jstl/core"
 						<f:selectItems value="#{planBackingBean.contractOptions()}"/>
 						<p:ajax event="change" listener="#{planBackingBean.selectedContract
 							(planBackingBean.managedBean.selectedPlan.ctContract.contractId)}" 
-							update="itContractTitle, itSupName"/> 
+							update="itContractTitle, itSupName, itConDuration"/> 
 					</p:selectOneMenu>
 				</td>
 					<th>
@@ -115,15 +116,15 @@ xmlns:c="http://java.sun.com/jsp/jstl/core"
 				<td>
 					<p:inputText id="itSupName" disabled="true" styleClass="ppDisplayTextL"
 						value="#{planBackingBean.managedBean.selectedPlan.ctContract.smSupplier!=null ?
-							planBackingBean.managedBean.selectedPlan.ctContract.smSupplier.supplierName : ''}" />
+							planBackingBean.managedBean.selectedPlan.ctContract.smSupplier.companyName : ''}" />
 				</td>
 			</tr>
 			<tr>
 				<th><p:outputLabel value="#{lbl['lbl.pp.duration.month']}"/></th>
 				<td>
-					<p:inputText disabled="true" styleClass="ppDisplayTextM"
-							value="#{planBackingBean.managedBean.selectedPlanItem.ctContract.latestContractVer!=null ?
-								planBackingBean.managedBean.selectedPlanItem.ctContract.latestContractVer.ctContractValue.contractPeriod : ''}" />
+					<p:inputText id="itConDuration" disabled="true" styleClass="ppDisplayTextM"
+							value="#{planBackingBean.managedBean.selectedPlan.ctContract.latestContractVer!=null ?
+								planBackingBean.managedBean.selectedPlan.ctContract.latestContractVer.ctContractValue.contractPeriod : ''}" />
 					
 				</td>
 				<th></th>

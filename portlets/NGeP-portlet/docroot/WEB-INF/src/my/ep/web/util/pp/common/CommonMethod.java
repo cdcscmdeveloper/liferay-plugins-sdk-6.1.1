@@ -210,15 +210,15 @@ public class CommonMethod {
 	public static PmStatus getDefaultStatus(String docType){
 		log.info("getDefaultStatus");
 		PmStatus ppWorkflowStatus = new PmStatus();
-		if(ProcurementPlanConst.DOCTYPE_BUDGET_ALLOC.equals(docType)){
+		if(ParameterConst.DOCTYPE_BUDGET_ALLOC.equals(docType)){
 			ppWorkflowStatus.setStatusId(ProcurementPlanConst.STATUS_PBA_PENDING_SUBMIT);
-		}else if(ProcurementPlanConst.DOCTYPE_BUDGET_ALLOC_DTL.equals(docType)){
+		}else if(ParameterConst.DOCTYPE_BUDGET_ALLOC_DTL.equals(docType)){
 			ppWorkflowStatus.setStatusId(ProcurementPlanConst.STATUS_PBD_PENDING_SUBMIT);
-		}else if(ProcurementPlanConst.DOCTYPE_BUDGET_ALLOC_ORG.equals(docType)){
+		}else if(ParameterConst.DOCTYPE_BUDGET_ALLOC_ORG.equals(docType)){
 			ppWorkflowStatus.setStatusId(ProcurementPlanConst.STATUS_PBO_PENDING_SUBMIT);
-		}else if(ProcurementPlanConst.DOCTYPE_PLAN.equals(docType)){
+		}else if(ParameterConst.DOCTYPE_PLAN.equals(docType)){
 			ppWorkflowStatus.setStatusId(ProcurementPlanConst.STATUS_PPL_PENDING_SUBMIT);
-		}else if(ProcurementPlanConst.DOCTYPE_PLAN_ITEM.equals(docType)){
+		}else if(ParameterConst.DOCTYPE_PLAN_ITEM.equals(docType)){
 			ppWorkflowStatus.setStatusId(ProcurementPlanConst.STATUS_PPI_PENDING_SUBMIT);
 		}
 		log.info("status id "  + ppWorkflowStatus.getStatusId());
