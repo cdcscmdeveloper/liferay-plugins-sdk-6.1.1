@@ -69,6 +69,11 @@ public abstract class PagingDataModel<T> extends LazyDataModel<T> implements IPa
 	public final Object getRowKey(T key) {
 		return key.toString();
 	}
+	
+	@SuppressWarnings("unchecked")
+	public List<T> getList() {
+		return (List<T>)super.getWrappedData();
+	}
 
 	/*
 	 * Load the data from database.

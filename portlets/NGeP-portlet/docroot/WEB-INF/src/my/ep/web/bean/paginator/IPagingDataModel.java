@@ -30,7 +30,14 @@ public interface IPagingDataModel<T> {
 	 * 			the data model.
 	 * @param resultBean
 	 * 			the search result bean.
-	 * @return
+	 * @return the list of T instance
 	 */
 	public List<T> updatePagingResults(ISearchResultBean<T> resultBean);
+	
+	/**
+	 * Get list of object from data model.
+	 * 
+	 * @return the list of T instance
+	 */
+	public List<T> getList();
 }
