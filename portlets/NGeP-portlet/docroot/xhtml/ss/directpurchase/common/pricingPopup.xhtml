@@ -7,83 +7,81 @@
      <p:dialog  widgetVar="pricingPopup" modal="true"
 		width="650" height="400" resizable="false">
       <p:panel header="Pricing">
-      
 		<p:panelGrid styleClass="noBorders tr,noBorders td" style="width:100%">
 			<p:row>
 				<p:column width="25%">
-					<p:outputLabel value="#{lbl['lbl.ss.price.inquiry.supp.name']}" />
+					<p:outputLabel value="#{lbl['lbl.ss.supp.name']}" />
 				</p:column>
 				<p:column width="25%">
-					<p:inputText readonly="true"
-						value="#{directPurchaseBackingBean.managedBean.inquirySupplierItem.cmSupplierItem.smSupplier.supplierName}" />
+					<p:inputText disabled="true"
+						value="#{directPurchaseBackingBean.managedBean.requestSupplierItem.smSupplier.companyName}"/>
 				</p:column>
 			</p:row>
 
 			<p:row>
 				<p:column width="25%">
-					<p:outputLabel value="#{lbl['lbl.ss.price.inquiry.item.name']}" />
+					<p:outputLabel value="#{lbl['lbl.ss.item.name']}" />
 				</p:column>
 				<p:column width="25%">
-					<p:inputText readonly="true"
-						value="#{directPurchaseBackingBean.managedBean.inquirySupplierItem.cmSupplierItem.cmItem.itemName}" />
+					<p:inputText disabled="true"
+						value="#{directPurchaseBackingBean.managedBean.requestSupplierItem.pricing.cmSupplierItem.cmItem.itemName}" />
 				</p:column>
 			</p:row>
 
 			<p:row>
 				<p:column>
-					<p:outputLabel value="#{lbl['lbl.ss.price.inquiry.desc']}" />
+					<p:outputLabel value="#{lbl['lbl.ss.desc']}" />
 				</p:column>
 				<p:column colspan="3">
-					<p:inputTextarea readonly="true" rows="2" cols="80" value="" />
+					<p:inputTextarea disabled="true" rows="2" cols="80" value="#{directPurchaseBackingBean.managedBean.requestSupplierItem.pricing.cmSupplierItem.itemDesc}" />
 				</p:column>
 			</p:row>
 
 			<p:row>
 				<p:column>
-					<p:outputLabel value="#{lbl['lbl.ss.price.inquiry.uom']}" />
+					<p:outputLabel value="#{lbl['lbl.ss.uom']}" />
 				</p:column>
 				<p:column width="25%">
-					<p:inputText readonly="true"
-						value="#{directPurchaseBackingBean.managedBean.inquirySupplierItem.cmSupplierItem.uom}">
+					<p:inputText disabled="true"
+						value="#{directPurchaseBackingBean.managedBean.requestSupplierItem.pricing.cmSupplierItem.pmUom.uomName}">
 					</p:inputText>
 				</p:column>
 			</p:row>
 
 			<p:row>
 				<p:column>
-					<p:outputLabel value="#{lbl['lbl.ss.price.inquiry.price.type']}" />
+					<p:outputLabel value="#{lbl['lbl.ss.price.type']}" />
 				</p:column>
 				<p:column width="25%">
-					<p:inputText readonly="true" value="" />
+					<p:inputText disabled="true" value="#{directPurchaseBackingBean.managedBean.priceType}" />
 				</p:column>
 			</p:row>
-
 		</p:panelGrid>
         <p:spacer height="10px"/>
 
-		<p:dataTable id="zoneDtl" var="">
+			<p:dataTable id="priceDtl" var="pricing"
+				value="#{directPurchaseBackingBean.managedBean.requestSupplierItem.pricing.cmSupplierItem.cmPricings}"
+				rowKey="#{pricing}" rowIndexVar="index">
 
-			<p:column headerText="#{lbl['lbl.ss.pricing.zone']}">
-				<h:outputText value="kl" />
-			</p:column>
+				<p:column headerText="#{lbl['lbl.ss.zone']}">
+					<h:outputText value="zone" />
+				</p:column>
 
-			<p:column headerText="#{lbl['lbl.ss.price.inquiry.district']}">
-				<h:outputText value="-" />
-			</p:column>
+				<p:column headerText="#{lbl['lbl.ss.from.qty']}">
+					<h:outputText value="#{pricing.fromQty}" />
+				</p:column>
 
-			<p:column headerText="#{lbl['lbl.ss.price.inquiry.from.qty']}">
-				<h:outputText value="" />
-			</p:column>
+				<p:column headerText="#{lbl['lbl.ss.to.qty']}">
+					<h:outputText value="#{pricing.toQty}" />
+				</p:column>
 
-			<p:column headerText="#{lbl['lbl.ss.price.inquiry.to.qty']}">
-				<h:outputText value="" />
-			</p:column>
-			
-			<p:column headerText="#{lbl['lbl.ss.pricing.price.per.uom']}">
-				<h:outputText value="" />
-			</p:column>
+				<p:column headerText="#{lbl['lbl.ss.price.per.uom']}">
+					<h:outputText value="#{pricing.price}" />
+				</p:column>
 
-		</p:dataTable>
-      </p:panel>
+			</p:dataTable>
+
+
+		</p:panel>
 	</p:dialog>
 </ui:composition>
