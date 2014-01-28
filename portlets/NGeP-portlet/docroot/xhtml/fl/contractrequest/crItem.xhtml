@@ -94,16 +94,16 @@
 				</p:selectOneMenu>
 			</p:column>
 			<p:column headerText="Unit Price (MYR)">
-				<p:inputText disabled="true" style="text-align:right"></p:inputText>
+				<p:inputText value="#{item.unitPrice}" disabled="true" style="text-align:right"></p:inputText>
 			</p:column>
 			<p:column headerText="Ord. Qty.">
 				<p:inputText value="#{item.orderedQty}" style="text-align:right">
-					<p:ajax update="subTotalTxt"></p:ajax>
+					<p:ajax update="subTotalTxt" listener="#{contractRequestBackingBean.retrieveZonalPrice()}"></p:ajax>
 				</p:inputText>
 			</p:column>
 			<p:column headerText="Sub Total">
 				<p:inputText id="subTotalTxt" style="text-align:right"
-					value="#{item.orderedQty}"
+					value="#{item.orderedQty * item.unitPrice}"
 					disabled="true"></p:inputText>
 			</p:column>
 		</p:dataTable>

@@ -161,13 +161,16 @@ public class ContractRequestBackingBean extends BaseBackingBean<ContractRequestM
 		IFulfilmentRequestSO iFulfilmentRequestSO = null;
 		FulfilmentBackingBean flBB = new FulfilmentBackingBean();
 		try {
+			PmUser user = getFacesScopes().getUserSessionBean();
 			String token = getFacesScopes().getBPMAuthenticationCtxToken();
 			FulfilmentReqDTO reqDTO = new FulfilmentReqDTO();
 			FlFulfilmentRequest flRequest = getManagedBean().getFlRequest();
 			//TODO waiting for sm api to check the current date against the suppleir exp date.
 //			flRequest.getCtContract().getSmSupplier().getSmMofAccounts();
+			
 			checkCeilingAmount(flRequest);
 			checkCeilingQty(flRequest);
+			
 			
 			reqDTO.setFlFulfilmentRequest(flRequest);
 			reqDTO.setContractRequest(Boolean.TRUE);
@@ -184,6 +187,7 @@ public class ContractRequestBackingBean extends BaseBackingBean<ContractRequestM
 				System.out.println("getManagedBean().getApproverModel().getTarget(): "+getManagedBean().getApproverModel().getTarget());
 				reqDTO.setSelectedApprovers(getManagedBean().getApproverModel().getTarget());
 				reqDTO.setAvailableApprovers(getManagedBean().getApproverModel().getSource());
+				reqDTO.setLoginId(user.getLoginId());
 			}
 
 			iFulfilmentRequestSO = (IFulfilmentRequestSO) BusinessDelegate.getInstance().getServiceObject("fl",IFulfilmentRequestSO.class);
@@ -400,47 +404,54 @@ public class ContractRequestBackingBean extends BaseBackingBean<ContractRequestM
 	}
 
 	public void addContractedItems() {
-		IContractSO contractSO = (IContractSO) BusinessDelegate.getInstance()
-				.getServiceObject("ct", IContractSO.class);
-		ContractReqDTO ctReqDTO = new ContractReqDTO();
-		ctReqDTO.setContractId(getManagedBean().getFlRequest().getCtContract()
-				.getContractId());
-		ContractResDTO ctResDTO = contractSO.retrieveContract(ctReqDTO);
-		getManagedBean().setContractedItemList(
-				ctResDTO.getContract().getLatestContractVer()
-						.getCtContractItems());
+//		IContractSO contractSO = (IContractSO) BusinessDelegate.getInstance().getServiceObject("ct", IContractSO.class);
+//		ContractReqDTO ctReqDTO = new ContractReqDTO();
+//		ctReqDTO.setContractId(getManagedBean().getFlRequest().getCtContract().getContractId());
+//		ContractResDTO ctResDTO = contractSO.retrieveContract(ctReqDTO);
+//		getManagedBean().setContractedItemList(ctResDTO.getContract().getLatestContractVer().getCtContractItems());
+		getManagedBean().setContractedItemList(getManagedBean().getFlRequest().getCtContract().getLatestContractVer().getCtContractItems());
 	}
 
 	public void updateContractedItemDt() {
 		FlFulfilmentItem flItem = null;
-		for (CtContractItem contractedItems : getManagedBean().getSelectedContractedItemList()) {
-			if (getManagedBean().getFlItemMap().get(contractedItems.getContractItemId()) == null) {
+		for (CtContractItem contractedItem : getManagedBean().getSelectedContractedItemList()) {
+			if (getManagedBean().getFlItemMap().get(contractedItem.getQtItem().getQtItemId()) == null) {
 				flItem = new FlFulfilmentItem();
 				flItem.setFlFulfilmentRequest(getManagedBean().getFlRequest());
-				flItem.setQtItem(contractedItems.getQtItem());
-				getManagedBean().getFlRequest().setFlFulfilmentItems(
-						new ArrayList<FlFulfilmentItem>());
-				getManagedBean().getFlRequest().getFlFulfilmentItems()
-						.add(flItem);
+				flItem.setQtItem(contractedItem.getQtItem());
+				if(getManagedBean().getFlRequest().getFlFulfilmentItems() == null){
+					getManagedBean().getFlRequest().setFlFulfilmentItems(new ArrayList<FlFulfilmentItem>());
+				}
+				getManagedBean().getFlRequest().getFlFulfilmentItems().add(flItem);
 			} else {
-				flItem = getManagedBean().getFlItemMap().get(
-						contractedItems.getContractItemId());
-
+				flItem = getManagedBean().getFlItemMap().get(contractedItem.getQtItem().getQtItemId());
 			}
+			IContractItemSO ctItemSO = (IContractItemSO) BusinessDelegate.getInstance().getServiceObject("ct", IContractItemSO.class);
+			ContractReqDTO reqDTO = new ContractReqDTO();
+			reqDTO.setItemId(contractedItem.getQtItem().getQtItemId());
+			reqDTO.setPmAddress(getManagedBean().getSelectedDelAddr().getPmAddress());
+			reqDTO.setContractId(getManagedBean().getFlRequest().getCtContract().getContractId());
+			reqDTO.setOrderedQty(new BigDecimal(1));
+			ContractResDTO resDTO = ctItemSO.getItemPrice(reqDTO);
+
 			FlFulfilmentItemAddr flItemAddr = new FlFulfilmentItemAddr();
 			flItemAddr.setFlFulfilmentItem(flItem);
-			flItemAddr.setFlDeliveryAddress(getManagedBean()
-					.getSelectedDelAddr());
-			getManagedBean().getSelectedDelAddr().setFlFulfilmentItemAddr(
-					new ArrayList<FlFulfilmentItemAddr>());
-			getManagedBean().getSelectedDelAddr().getFlFulfilmentItemAddr()
-					.add(flItemAddr);
-
-			getManagedBean().getFlItemMap().put(
-					contractedItems.getContractItemId(), flItem);
+			flItemAddr.setFlDeliveryAddress(getManagedBean().getSelectedDelAddr());
+			flItemAddr.setUnitPrice(resDTO.getItemPrice());
+			
+			if(getManagedBean().getSelectedDelAddr().getFlFulfilmentItemAddr() == null){
+				getManagedBean().getSelectedDelAddr().setFlFulfilmentItemAddr(new ArrayList<FlFulfilmentItemAddr>());
+			}
+			getManagedBean().getSelectedDelAddr().getFlFulfilmentItemAddr().add(flItemAddr);
+			
+//			getManagedBean().getFlItemMap().put(contractedItem.getContractItemId(), flItem);
+			getManagedBean().getFlItemMap().put(contractedItem.getQtItem().getQtItemId(), flItem);
+			if(flItem.getFlFulfilmentItemAddr() == null){
+				flItem.setFlFulfilmentItemAddr(new ArrayList<FlFulfilmentItemAddr>());
+			}
+			flItem.getFlFulfilmentItemAddr().add(flItemAddr);
 		}
 		getManagedBean().setContractedItemList(new ArrayList<CtContractItem>());
-
 	}
 
 	private List<String> getAvailableApproverList() {
@@ -502,7 +513,6 @@ public class ContractRequestBackingBean extends BaseBackingBean<ContractRequestM
 			FulfilmentResDTO resDTO = new FulfilmentResDTO();
 			FLContractOrderDataType coObj = (FLContractOrderDataType) obj;
 			if (coObj.getContractRequestId().intValue() == 0) {
-				// flReqDTO.setFlRequestId(coObj.getParentContractRequestId());
 				flReqDTO.setFlRequestId(coObj.getAssociatedContractRequestId());
 
 			} else {
@@ -516,12 +526,6 @@ public class ContractRequestBackingBean extends BaseBackingBean<ContractRequestM
 			flBB.getManagedBean().setRemarkList(resDTO.getRemarkList());
 			flBB.getManagedBean().setAttachmentList(resDTO.getAttachmentList());
 			flBB.initializeRemarkAndAttachement(flBB.getManagedBean().getRemarkList(), flBB.getManagedBean().getAttachmentList());
-
-//			IOrgProfileSO orgProfileSO = (IOrgProfileSO) BusinessDelegate.getInstance().getServiceObject("pm", IOrgProfileSO.class);
-//			OrgProfileReqDTO orgProfileReqDTO = new OrgProfileReqDTO();
-			// TODO
-//			orgProfileReqDTO.setOrgProfileId(4L);
-//			OrgProfileResDTO pmResDTO = orgProfileSO.retrieveOrgProfileByProfileId(orgProfileReqDTO);
 
 			if (coObj.getContractRequestId().intValue() == 0) {//TODO
 				FlFulfilmentRequest flRequest = new FlFulfilmentRequest();
@@ -578,9 +582,8 @@ public class ContractRequestBackingBean extends BaseBackingBean<ContractRequestM
 //				getManagedBean().getAgenciesList().add(ctAgent.getOrgProfile().getOrgProfileId());
 //				
 //			}
-			getManagedBean().setTestOrg(getManagedBean().getFlRequest().getCtContract().getLatestContractVer().getCtAgencies().get(0).getOrgProfile().getOrgProfileId());
 		}
-
+		getManagedBean().setTestOrg(getManagedBean().getFlRequest().getCtContract().getLatestContractVer().getCtAgencies().get(0).getOrgProfile().getOrgProfileId());
 	}
 
 	public List<SelectItem> getGoList() {
@@ -735,7 +738,7 @@ public class ContractRequestBackingBean extends BaseBackingBean<ContractRequestM
 		for(FlDeliveryAddress delAddr: flRequest.getFlDeliveryAddresses()){
 			for(FlFulfilmentItemAddr itemAddr : delAddr.getFlFulfilmentItemAddr()){
 				
-				sumOrderedAmt = sumOrderedAmt.add(itemAddr.getOrderedQty());
+				sumOrderedAmt = sumOrderedAmt.add(itemAddr.getOrderedQty());//TODO change back to getOrderedAmount
 				System.out.println("sumOrderedAmt: "+sumOrderedAmt);
 			}
 		}
@@ -758,21 +761,19 @@ public class ContractRequestBackingBean extends BaseBackingBean<ContractRequestM
 		ContractReqDTO ctReqDTO = new ContractReqDTO();
 		ctReqDTO.setContractId(flRequest.getCtContract().getContractId());
 		ctReqDTO.setOrgProfileId(flRequest.getIssuedOrgProfile().getOrgProfileId());
-		
+
 		ContractResDTO ctResDTO = new ContractResDTO();
 		
-		for(FlFulfilmentItemAddr flItemAddr : getManagedBean().getSelectedDelAddr().getFlFulfilmentItemAddr()){
-			ctReqDTO.setItemId(flItemAddr.getFlFulfilmentItem().getQtItem().getQtItemId());
-			ctResDTO = contractItemSO.getItemCeilingQuantity(ctReqDTO);
-			ctResDTO.getItemCeilingQty();//TODO loop flrequest.flitems loop again itemAddr and sum ordered qty AND create SO get the ptj previous ordered qty,check contracID and issuePTJ same then sum it and check with ceiling Qty
+		for(FlFulfilmentItem item : getManagedBean().getFlRequest().getFlFulfilmentItems()){
 			BigDecimal sumOrderedQty = new BigDecimal("0");
 			BigDecimal checkCeilingQty = new BigDecimal("0");
-			for(FlDeliveryAddress delAddr: flRequest.getFlDeliveryAddresses()){
-				for(FlFulfilmentItemAddr itemAddr : delAddr.getFlFulfilmentItemAddr()){
-					
-					sumOrderedQty = sumOrderedQty.add(itemAddr.getOrderedQty());
-					System.out.println("sumOrderedQty: "+sumOrderedQty);
-				}
+			ctReqDTO.setItemId(item.getQtItem().getQtItemId());
+			ctResDTO = contractItemSO.getItemCeilingQuantity(ctReqDTO);
+			ctResDTO.getItemCeilingQty();//TODO loop flrequest.flitems loop again itemAddr and sum ordered qty AND create SO get the ptj previous ordered qty,check contracID and issuePTJ same then sum it and check with ceiling Qty
+
+			for(FlFulfilmentItemAddr itemAddr : item.getFlFulfilmentItemAddr()){
+				sumOrderedQty = sumOrderedQty.add(itemAddr.getOrderedQty());
+				System.out.println("sumOrderedQty: "+sumOrderedQty);
 			}
 			IFulfilmentRequestSO iFulfilmentRequestSO = (IFulfilmentRequestSO) BusinessDelegate.getInstance().getServiceObject("fl",IFulfilmentRequestSO.class);
 			FulfilmentReqDTO reqDTO = new FulfilmentReqDTO();
@@ -780,14 +781,16 @@ public class ContractRequestBackingBean extends BaseBackingBean<ContractRequestM
 			reqDTO.setContractId(getManagedBean().getFlRequest().getCtContract().getContractId());
 			FulfilmentResDTO resDTO = iFulfilmentRequestSO.retrievePreviousSumOrderedQtyByPtj(reqDTO);
 			checkCeilingQty = resDTO.getPrevSumQty().add(sumOrderedQty);
-			
+
 			System.out.println("checkCeilingQty total: "+checkCeilingQty);
 			System.out.println("getAgencyCeilingAmount: "+ctResDTO.getItemCeilingQty());
 			if(checkCeilingQty.intValue() >  ctResDTO.getItemCeilingQty().intValue()){
-				throw new EpException("Item has been exceeded the quantity limit.");
+				throw new EpException("Item "+ item.getQtItem().getItemName() +"  has been exceeded the quantity limit.");
 			}
 		}
+		
 	}
+	
 	
 	private void initializeApproverGroup() {
 		IUserSO userSO = null;
@@ -862,6 +865,10 @@ public class ContractRequestBackingBean extends BaseBackingBean<ContractRequestM
 	
 	public void selectAddrEvent() {
 		getManagedBean().setSelectedItemsRows(null);
+	}
+	
+	public void retrieveZonalPrice() {
+		
 	}
 
 }
