@@ -153,6 +153,28 @@ public class ProcurementListBackingBean extends BaseBackingBean<ProcureCodeManag
 		System.out.println(this.getManagedBean().getPlanSearchBean());
 
 	}
+	
+	public String updatePlannedInfo() {
+		  IProcurementPlanSO procurementPlanSO = null;
+		  try {
+			   procurementPlanSO	=	(IProcurementPlanSO)BusinessDelegate.getInstance().getServiceObject(SourcingConst.PROCUREMENT_MODULE, IProcurementPlanSO.class);
+			   ProcurementPlanReqDTO reqDTO = new ProcurementPlanReqDTO();
+			   if(getManagedBean().getCurrentPlan() !=null){
+				  reqDTO.setPlan(getManagedBean().getCurrentPlan());
+				  procurementPlanSO.updateProcurementPlanPartially(reqDTO);
+			   }
+			   FacesContext.getCurrentInstance().addMessage(null,new FacesMessage(FacesMessage.SEVERITY_INFO,"Record saved successfully.", ""));
+			} catch (Exception ex) {
+				FacesContext.getCurrentInstance().addMessage(
+						null,
+						new FacesMessage(FacesMessage.SEVERITY_ERROR,
+								"Sorry We are unable to process.", ""));
+				ex.printStackTrace();
+			} finally {
+				procurementPlanSO = null;
+			}
+			return null;
+		}
 
 	private IProcurementPlanSO getProcurementSO() {
 		return EpEjbBusinessDelegate.getInstance().getServiceObject("pp", IProcurementPlanSO.class);
