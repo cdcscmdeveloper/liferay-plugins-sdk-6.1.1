@@ -33,9 +33,9 @@
 				</h:panelGroup>
 
 				<p:dataGrid id="compareDataList" rowIndexVar="compareKey"
-					paginator="true" 
+					paginator="true" styleClass="datagridfloat"
 					value="#{catalogueBackingBean.managedBean.selectedSupplierItemList}"
-					var="supplierItem" columns="4" rows="4" paginatorPosition="bottom">
+					var="supplierItem" columns="4" rows="4" paginatorPosition="bottom" paginatorTemplate="{PageLinks} ">
 					<h:panelGroup>
 						<table>
 							<tr>
