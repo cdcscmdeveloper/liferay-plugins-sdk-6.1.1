@@ -17,6 +17,7 @@ xmlns:fn="http://java.sun.com/jsp/jstl/functions"
 			<p:column headerText="#{lbl['lbl.pp.activity.name']}">  
 	            #{qtActivity.pmBusinessActivity.mandatory ? '*' : ''} 
 	            #{qtActivity.pmBusinessActivity.activityName}
+	            
 	            #{qtActivity.pmBusinessActivity.multiple ? 'add' : ''}
 	        </p:column>
 			<p:column headerText="#{lbl['lbl.pp.kpi.sla']}">  

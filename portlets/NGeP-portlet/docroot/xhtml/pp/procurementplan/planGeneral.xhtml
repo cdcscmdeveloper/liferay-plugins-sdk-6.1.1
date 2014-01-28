@@ -103,7 +103,7 @@ xmlns:ac="http://ac.my/jsf/composite/cc"
 					<ac:lov id="lovSegment" lovId="CM_UNSPSC" size="26" update=":form:tvPlanContent:lovFamily:lovFamily"
 						disabled="#{!planBackingBean.managedBean.selectedPlan.editable 
 							|| planBackingBean.managedBean.selectedPlan.planTypeParam.parameterCode==null
-							|| planBackingBean.managedBean.selectedPlan.procurementModeParam.parameterCode!=PPConst.procurementExistingContract}"
+							|| planBackingBean.managedBean.selectedPlan.procurementModeParam.parameterCode==PPConst.procurementExistingContract}"
 						headerText="#{lbl['lbl.pp.product.segment']}" 
 						saveObject="planBackingBean.managedBean.selectedPlan.cmUnspscFamily.cmUnspsc"
 						value="#{planBackingBean.managedBean.selectedPlan.cmUnspscFamily.cmUnspsc.unspscTitle}"
@@ -129,7 +129,7 @@ xmlns:ac="http://ac.my/jsf/composite/cc"
 						headerText="#{lbl['lbl.pp.product.family']}"  update=":form:tvPlanContent:lovFamily:lovClass"
 						disabled="#{!planBackingBean.managedBean.selectedPlan.editable
 							|| planBackingBean.managedBean.selectedPlan.planTypeParam.parameterCode==null
-							|| planBackingBean.managedBean.selectedPlan.procurementModeParam.parameterCode!=PPConst.procurementExistingContract}"
+							|| planBackingBean.managedBean.selectedPlan.procurementModeParam.parameterCode==PPConst.procurementExistingContract}"
 						saveObject="planBackingBean.managedBean.selectedPlan.cmUnspscFamily"
 						value="#{planBackingBean.managedBean.selectedPlan.cmUnspscFamily.unspscTitle}"
 						conditionField="recordStatus^1|unspscLevel^1|unspscParentCode^#{planBackingBean.managedBean.selectedPlan.cmUnspscFamily.cmUnspsc.unspscCode}">
