@@ -6,5 +6,46 @@
     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
     xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-facesconfig_2_0.xsd">
 	
-
+	<managed-bean>
+        <managed-bean-name>AllHelpDisplay</managed-bean-name>
+        <managed-bean-class>my.ep.web.portal.help.AllHelpDisplay</managed-bean-class>
+        <managed-bean-scope>request</managed-bean-scope>
+        <managed-property>
+            <property-name>helpCount</property-name>
+            <value>#{param.helpcount}</value>
+        </managed-property>
+    </managed-bean>
+    
+	<navigation-rule>
+   		<from-view-id>/xhtml/wp/onlinehelpdisplay/displayOnlineHelp.xhtml</from-view-id>
+   		<navigation-case>
+	      	<from-action>#{AllHelpDisplay.processPage}</from-action>
+	      	<from-outcome>page</from-outcome>
+	      	<to-view-id>/xhtml/wp/onlinehelpdisplay/displayContent.xhtml</to-view-id>
+	   	</navigation-case>
+	</navigation-rule>
+	<navigation-rule>
+	   	<from-view-id>/xhtml/wp/onlinehelpdisplay/displayOnlineHelp.xhtml</from-view-id>
+	   	<navigation-case>
+	      	<from-action>#{SearchHelp.searchcontent}</from-action>
+	      	<from-outcome>search</from-outcome>
+	      	<to-view-id>/xhtml/wp/onlinehelpdisplay/displayResult.xhtml</to-view-id>
+	   	</navigation-case>
+	</navigation-rule>
+	<navigation-rule>
+	   	<from-view-id>/xhtml/wp/onlinehelpdisplay/displayResult.xhtml</from-view-id>
+	   	<navigation-case>
+	      	<from-action>#{SearchHelp.searchcontent}</from-action>
+	      	<from-outcome>search</from-outcome>
+	      	<to-view-id>/xhtml/wp/onlinehelpdisplay/displayResult.xhtml</to-view-id>
+	   	</navigation-case>
+	</navigation-rule>	
+	<navigation-rule>
+	   	<from-view-id>/xhtml/wp/onlinehelpdisplay/displayContent.xhtml</from-view-id>
+	   	<navigation-case>
+	      	<from-action>#{SearchHelp.searchcontent}</from-action>
+	      	<from-outcome>search</from-outcome>
+	      	<to-view-id>/xhtml/wp/onlinehelpdisplay/displayResult.xhtml</to-view-id>
+	   	</navigation-case>
+	</navigation-rule>
 </faces-config>
