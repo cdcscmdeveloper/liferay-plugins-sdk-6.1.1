@@ -714,6 +714,10 @@ a:visited.menuItemLink-selected {
 	background-color: #f5f5f5;
 }
 
+.datagridfloat {
+	float:left;	
+}
+
 .labelCss {
 	font-weight: bold;
 }
@@ -4590,5 +4594,5 @@ table.rptTbl {
 
 
 .comparelabelCss{
-	width: 15%;
+	width: 10%;
 }
