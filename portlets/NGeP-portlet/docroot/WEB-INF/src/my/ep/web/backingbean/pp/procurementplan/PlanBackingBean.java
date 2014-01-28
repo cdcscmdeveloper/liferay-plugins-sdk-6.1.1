@@ -19,15 +19,22 @@ import my.ep.biz.bean.search.ISearchResultBean;
 import my.ep.biz.bean.search.SearchBetweenValue;
 import my.ep.biz.bean.search.SearchFilterBean;
 import my.ep.biz.service.cm.codification.ICodificationSO;
+import my.ep.biz.service.ct.IContractSO;
+import my.ep.biz.service.ct.circular.ICircularSO;
 import my.ep.biz.service.pm.authorization.orgprofile.IOrgProfileSO;
 import my.ep.biz.service.pm.authorization.user.IUserSO;
 import my.ep.biz.service.pm.common.parameter.IParameterSO;
 import my.ep.biz.service.pm.common.taskactivity.ITaskActivitySO;
 import my.ep.biz.service.pp.procurementplan.IProcurementPlanSO;
+import my.ep.constant.ct.ContractConst;
 import my.ep.constant.pm.ParameterConst;
 import my.ep.constant.pm.ParameterTypeConst;
 import my.ep.dto.cm.codification.CodificationReqDTO;
 import my.ep.dto.cm.codification.CodificationResDTO;
+import my.ep.dto.ct.ContractReqDTO;
+import my.ep.dto.ct.ContractResDTO;
+import my.ep.dto.ct.circular.CircularReqDTO;
+import my.ep.dto.ct.circular.CircularResDTO;
 import my.ep.dto.pm.authorization.orgprofile.OrgProfileReqDTO;
 import my.ep.dto.pm.authorization.orgprofile.OrgProfileResDTO;
 import my.ep.dto.pm.authorization.user.UserReqDTO;
@@ -39,6 +46,9 @@ import my.ep.dto.pp.budgetallocation.BudgetAllocationReqDTO;
 import my.ep.dto.pp.procurementplan.ProcurementPlanReqDTO;
 import my.ep.dto.pp.procurementplan.ProcurementPlanResDTO;
 import my.ep.persistence.entity.cm.catalog.CmUnspsc;
+import my.ep.persistence.entity.ct.CtContract;
+import my.ep.persistence.entity.ct.circular.CtCircular;
+import my.ep.persistence.entity.ct.circular.cc.CtCircularContract;
 import my.ep.persistence.entity.pm.authorization.PmBusinessActivity;
 import my.ep.persistence.entity.pm.authorization.PmOrgProfile;
 import my.ep.persistence.entity.pm.authorization.PmUser;
@@ -365,12 +375,13 @@ public class PlanBackingBean extends BaseBackingBean<PlanManagedBean>{
 		
 		
 		PpPlan plan = new PpPlan();
-		plan.setVotTypeParam(new PmParameter());
-		plan.setPlanTypeParam(new PmParameter());
-		plan.setProcurementModeParam(new PmParameter());
-		plan.setQtTypeParam(new PmParameter());
-		plan.setItemOriginParam(new PmParameter());
-		plan.setCmUnspscFamily(new CmUnspsc());
+//		plan.setVotTypeParam(new PmParameter());
+//		plan.setPlanTypeParam(new PmParameter());
+//		plan.setProcurementModeParam(new PmParameter());
+//		plan.setQtTypeParam(new PmParameter());
+//		plan.setItemOriginParam(new PmParameter());
+//		plan.setCmUnspscFamily(new CmUnspsc());
+		plan.getCmUnspscFamily().setCmUnspsc(new CmUnspsc());//parent segment
 		plan.setEditable(true);
 		generateVerificationOfficers();
 		
@@ -513,6 +524,7 @@ public class PlanBackingBean extends BaseBackingBean<PlanManagedBean>{
 			}else if(ParameterConst.PROCUREMENT_MODE_CONTRACT.equals(procurementMode)){
 				selectedTab = ProcurementPlanConst.TAB_CONTRACT;
 				enableTab = true;
+				generateContract();
 			}		
 		}
 		this.getManagedBean().setSelectedTab(selectedTab);
@@ -526,6 +538,7 @@ public class PlanBackingBean extends BaseBackingBean<PlanManagedBean>{
 	private void generateDirectPurchase(){
 		log.info("generateDirectPurchase - Start");
 		if(this.getManagedBean().getSelectedPlan().isBrandNew()){
+//			this.getManagedBean().getSelectedPlan().setCmUnspscClass(new CmUnspsc());
 			this.getManagedBean().setSelectedPlanActivity(new PpPlanActivity());
 			this.getManagedBean().getSelectedPlanActivity().setEditable(true);
 
@@ -550,11 +563,23 @@ public class PlanBackingBean extends BaseBackingBean<PlanManagedBean>{
 		log.info("generateProcurementPlan - End");
 		
 	}
+	private void generateContract(){
+		log.info("generateContract - Start");
+		if(this.getManagedBean().getSelectedPlan().isBrandNew()){
+//			this.getManagedBean().getSelectedPlan().setDocTypeParam(new PmParameter());
+//			this.getManagedBean().getSelectedPlan().setCtCircular(new CtCircular());
+//			this.getManagedBean().getSelectedPlan().setCtContract(new CtContract());
+//			this.getManagedBean().getSelectedPlan().setScLoa(new ScLoa());
+		}
+		log.info("generateContract - End");
+	}
+	
 	
 	public void addCommodity(){
 		//Initial item list if empty
 		PpPlanItem item = new PpPlanItem();
 		item.setEditable(true);
+		item.setCmUnspsc(new CmUnspsc());
 		if(this.getManagedBean().getSelectedPlanActivity().getPpPlanItems()==null){
 			this.getManagedBean().getSelectedPlanActivity().setPpPlanItems(new ArrayList<PpPlanItem>());
 		}
@@ -1140,17 +1165,23 @@ public class PlanBackingBean extends BaseBackingBean<PlanManagedBean>{
 	}
 	
 	public void selectedPlanTypeParam(Long id){
-		if(id!=null && id>0L){
+//		if(id!=null && id>0L){
 			this.getManagedBean().getSelectedPlan().setPlanTypeParam(retrieveParamObj(id));
-		}
+//		}
 		enableDetailTab();
 	}
 	
 	public void selectedProcurementModeParam(Long id){
-		if(id!=null && id>0L){
+//		if(id!=null && id>0L){
 			this.getManagedBean().getSelectedPlan().setProcurementModeParam(retrieveParamObj(id));
-		}
+//		}
 		enableDetailTab();
+	}
+	
+	public void selectedDocTypeParam(Long id){
+//		if(id!=null && id>0L){
+			this.getManagedBean().getSelectedPlan().setDocTypeParam(retrieveParamObj(id));
+//		}
 	}
 	
 	
@@ -1164,17 +1195,13 @@ public class PlanBackingBean extends BaseBackingBean<PlanManagedBean>{
 		SelectItem[] options = null;
 
 		if(planType!=null && !planType.isEmpty()){
-			log.info("00");
 			if(ParameterConst.PLAN_TYPE_EXPENDITURE.equals(planType)){
-				log.info("ep");
 				options = getDropdownValues(ParameterTypeConst.PROCUREMENT_MODE_EXPENDITURE);
 			}else if(ParameterConst.PLAN_TYPE_PROCUREMENT.equals(planType)){
-				log.info("pp");
 				options = getDropdownValues(ParameterTypeConst.SC_PROCUREMENT_MODE);
 			}
 			
 		}else{
-			log.info("nn");
 			options = new SelectItem[1];
 			options[0] =  new SelectItem(null, "- Select One -");
 		}
@@ -1186,39 +1213,49 @@ public class PlanBackingBean extends BaseBackingBean<PlanManagedBean>{
 	 * @return SelectItem[]
 	 */
 	public SelectItem[] qtTypeOptions() {
-//		List<SelectItem>options = new ArrayList<SelectItem>();
-//		options.add(new SelectItem(ProcurementPlanConst.QT_TYPE_OPEN, "Open"));
-//		options.add(new SelectItem(ProcurementPlanConst.QT_TYPE_RESTRICTED, "Restricted"));
-//		options.add(new SelectItem(ProcurementPlanConst.QT_TYPE_INTERNATIONAL, "International"));
+		log.info("qtTypeOptions");
 		return getDropdownValues(ParameterTypeConst.QUOTATION_TENDER_TYPE);
-	}
-//	
+	}	
+	
 	/**
 	 * retrieve item origin type options
 	 * @return SelectItem[]
 	 */
 	public SelectItem[] itemOriginTypeOptions() {
-//		List<SelectItem>options = new ArrayList<SelectItem>();
-//		options.add(new SelectItem(ProcurementPlanConst.ITEM_ORIGIN_TYPE_IMPORTED, "Imported"));
-//		options.add(new SelectItem(ProcurementPlanConst.ITEM_ORIGIN_TYPE_LOCAL, "Local"));
-//		options.add(new SelectItem(ProcurementPlanConst.ITEM_ORIGIN_TYPE_BOTH, "Imported & Local"));
+		log.info("itemOriginTypeOptions");
 		return getDropdownValues(ParameterTypeConst.ITEM_ORIGIN);
 	}
 	
+	/**
+	 * retrieve expenditure contract type
+	 * @return SelectItem[]
+	 */
+	public SelectItem[] epContractTypeOptions() {
+		log.info("epContractTypeOptions");
+		return getDropdownValues(ParameterTypeConst.EXPENDITURE_CONTRACT_TYPE);
+	}
 	
+	/**
+	 * retrieve parameter obj by param id
+	 * @param paramId
+	 * @return PmParameter
+	 */
+	 
 	public PmParameter retrieveParamObj(Long paramId){
+		log.info("retrieveParamObj - Start");
 		PmParameter paramObj = new PmParameter();
 		try{
-//			if(paramId!=null && paramId>0L){
+			if(paramId!=null && paramId>0L){
 				ParameterReqDTO reqDTO = new ParameterReqDTO();
 				reqDTO.setParameterId(paramId);
 				IParameterSO parameterSO = BusinessDelegate.getInstance().getServiceObject("pm", IParameterSO.class);
 				ParameterResDTO resDTO = parameterSO.retrieveParameterById(reqDTO);
 				paramObj = resDTO.getPmParameter();
-//			}
+			}
 		}catch(Exception e){
 			e.printStackTrace();
 		}
+		log.info("retrieveParamObj - End");
 		return paramObj;
 		
 	}
@@ -1305,34 +1342,8 @@ public class PlanBackingBean extends BaseBackingBean<PlanManagedBean>{
 //	}
 //
 //	
-//	/**
-//	 * retrieve and set unspsc object
-//	 * @param unspscCode
-//	 */
-//	public void selectedUnspsc(String code){
-//		log.info("selectedUnspsc - Start");
-////		String code = this.getManagedBean().getSelectedItem().getUnspscClassCode();
-//		try{
-//			if(CommonMethod.isSelected(code)){
-//				CodificationReqDTO reqDTO = new CodificationReqDTO();
-//				reqDTO.setUnspscCode(code);
-//				ICodificationSO reqSO = (ICodificationSO) BusinessDelegate.getInstance().getServiceObject("cm", ICodificationSO.class);
-//				CodificationResDTO resDTO = reqSO.searchUnspscObj(reqDTO);
-//				if(resDTO.isSuccessful()){
-//					if(ProcurementPlanConst.PLAN_TYPE_EXPENDITURE.equals(this.getManagedBean().getPlanMaster().getPlanType())){
-//						this.getManagedBean().getSelectedItem().setCmUnspscClass(resDTO.getUnspscObj());
-//					}else{
-//						this.getManagedBean().getSelectedPlan().setCmUnspscFamily(resDTO.getUnspscObj());
-//					}
-//					
-//				}
-//			}
-//		}catch (Exception e){
-//			e.printStackTrace();
-//			
-//		}
-//		log.info("selectedUnspsc - End");		
-//	}
+	
+
 //	
 //	/**
 //	 * select parent unspsc object
@@ -1511,85 +1522,124 @@ public class PlanBackingBean extends BaseBackingBean<PlanManagedBean>{
 //	}
 //	
 
+	public List<CmUnspsc> unspscClassOptions(String code){
+		log.info("unspscClassOptions");
+		return retrieveUnspscList(3, code);
+	}
+	
+	public List<CmUnspsc> unspscCommodityOptions(String code){
+		log.info("unspscCommodityOptions");
+		return retrieveUnspscList(2, code);
+	}
+	
+	public List<CmUnspsc> unspscFamilyOptions(String code){
+		log.info("unspscFamilyOptions");
+		return retrieveUnspscList(1, code);
+	}
+	
+	public List<CmUnspsc> unspscSegmentOptions(){
+		log.info("unspscSegmentOptions");
+		return retrieveUnspscList(0, null);
+	}
+	
+	/**
+	 * retrieve unspsc list from CM
+	 * @param unspscLevel
+	 * @param code
+	 * @return List<CmUnspsc> 
+	 */
+	private List<CmUnspsc> retrieveUnspscList(int unspscLevel, String code){
+		log.info("retrieveUnspscList - Start");
+		CodificationReqDTO reqDTO = null;
+		CodificationResDTO resDTO = null;
+		List<CmUnspsc> options = null;
+		
+		try{
+//			if(code!=null && !code.isEmpty()){
+				options = new ArrayList<CmUnspsc>();
+				reqDTO = new CodificationReqDTO();
+				resDTO = new CodificationResDTO();
+				
+				if(code!=null && !code.isEmpty()){
+					reqDTO.setParentCode(code);
+				}
+				ICodificationSO reqSO = (ICodificationSO) BusinessDelegate.getInstance().getServiceObject("cm", ICodificationSO.class);
+				switch (unspscLevel) {
+		            case 0: resDTO = reqSO.searchSegment(reqDTO);
+		                    break;
+		            case 1: resDTO = reqSO.searchFamily(reqDTO);
+		                    break;
+		            case 2: resDTO = reqSO.searchCommodity(reqDTO);
+                    		break;
+		            case 3: resDTO = reqSO.searchClass(reqDTO);
+            				break;
+		        }
+				
+				if(resDTO.isSuccessful()){
+					switch (unspscLevel) {
+			            case 0: options = resDTO.getSegmentList();
+			                    break;
+			            case 1: options = resDTO.getFamilyList();
+			                    break;
+			            case 2: options = resDTO.getCommodityList();
+	                    		break;
+			            case 3: options = resDTO.getClassList();
+	            				break;
+			        }
+				}
+				log.info("result size: " +options.size());
+//			}
+		}catch (Exception e){
+			e.printStackTrace();
+			
+		}
+		log.info("retrieveUnspscList - End");
+		return options;
+	}
+	
+	
+	public void selectedCommodity(int index, String code){
+		this.getManagedBean().getSelectedPlanActivity().getPpPlanItems().get(index).setCmUnspsc(retrieveUnspscObj(code));
+		
+	}
 	/**
 	 * retrieve unspsc class list from CM
 	 * @param family code
 	 * @return List<CmUnspsc> 
 	 */
-	public List<CmUnspsc> unspscClassOptions(String code){
-		log.info("unspscClassOptions - Start");
-//		String code = this.getManagedBean().getSelectedItem().getUnspscFamilyCode();
-		List<CmUnspsc> options = new ArrayList<CmUnspsc>();
+	private CmUnspsc retrieveUnspscObj(String code){
+		log.info("retrieveUnspscObj - Start");
+		System.out.println("code " + code);
+		CodificationReqDTO reqDTO = null;
+		CodificationResDTO resDTO = null;
+		CmUnspsc cmUnspsc = null;
+		
 		try{
-			if(CommonMethod.isSelected(code)){
-				CodificationReqDTO reqDTO = new CodificationReqDTO();
-				reqDTO.setParentCode(code);
+			cmUnspsc = new CmUnspsc();
+			if(code!=null && !code.isEmpty()){
+				
+				reqDTO = new CodificationReqDTO();
+				resDTO = new CodificationResDTO();
+				reqDTO.setUnspscCode(code);
 				ICodificationSO reqSO = (ICodificationSO) BusinessDelegate.getInstance().getServiceObject("cm", ICodificationSO.class);
-				CodificationResDTO resDTO = reqSO.searchClass(reqDTO);
+				resDTO = reqSO.searchUnspscObj(reqDTO);
+				
 				if(resDTO.isSuccessful()){
-					options = resDTO.getClassList();
+					cmUnspsc = resDTO.getUnspscObj();
 				}
-				log.info("result size: " +options.size());
 			}
 		}catch (Exception e){
 			e.printStackTrace();
 			
 		}
-		log.info("unspscClassOptions - End");
-		return options;
+		log.info("retrieveUnspscObj - End");
+		return cmUnspsc;
 	}
-//	
-	/**
-	 * retrieve unspsc family list from CM
-	 * @param segment code
-	 * @return List<CmUnspsc> 
-	 */
-	public List<CmUnspsc> unspscFamilyOptions(String code){
-		log.info("unspscFamilyOptions - Start");
+
 	
-		List<CmUnspsc> options = new ArrayList<CmUnspsc>();
-		try{
-			if(CommonMethod.isSelected(code)){
-				CodificationReqDTO reqDTO = new CodificationReqDTO();
-				reqDTO.setParentCode(code);
-				ICodificationSO reqSO = (ICodificationSO) BusinessDelegate.getInstance().getServiceObject("cm", ICodificationSO.class);
-				CodificationResDTO resDTO = reqSO.searchFamily(reqDTO);
-				if(resDTO.isSuccessful()){
-					options = resDTO.getFamilyList();
-				}
-				log.info("result size: " +options.size());
-			}
-		}catch (Exception e){
-			e.printStackTrace();
-			
-		}
-		log.info("unspscFamilyOptions - End");
-		return options;
-	}
 	
-	/**
-	 * retrieve unspsc segment list from CM
-	 * @return List<CmUnspsc> 
-	 */
-	public List<CmUnspsc> unspscSegmentOptions(){
-		log.info("unspscSegmentOptions - Start");
-		List<CmUnspsc> options = new ArrayList<CmUnspsc>();
-		try{
-			CodificationReqDTO reqDTO = new CodificationReqDTO();
-			ICodificationSO reqSO = (ICodificationSO) BusinessDelegate.getInstance().getServiceObject("cm", ICodificationSO.class);
-			CodificationResDTO resDTO = reqSO.searchSegment(reqDTO);
-			if(resDTO.isSuccessful()){
-				options = resDTO.getSegmentList();
-			}
-			log.info("result size: " +options.size());
-			
-		}catch (Exception e){
-			e.printStackTrace();
-			
-		}
-		log.info("unspscSegmentOptions - End");
-		return options;
-	}
+	
+	
 //	
 //	/**
 //	 * retrieve rejection reason
@@ -1656,118 +1706,139 @@ public class PlanBackingBean extends BaseBackingBean<PlanManagedBean>{
 		log.info("getOrgProfiles - End");
 		return profileList;
 	}
-//	
-//	/**
-//	 * retrieve contract list by type
-//	 * @return List<CtContract> 
-//	 */
-//	public List<CtContract> contractOptions(Long contractType){
-//		log.info("contractOptions - Start");
-//		log.info("contractType id: "+contractType);
-//		List<CtContract> options = new ArrayList<CtContract>();
-//		try{
-//			if(CommonMethod.isSelected(contractType)){
-//				ContractReqDTO reqDTO = new ContractReqDTO();
+	
+	public List<SelectItem> contractOptions(){
+		String contractType = this.getManagedBean().getSelectedPlan().getDocTypeParam().getParameterCode();
+		List<SelectItem> options = new ArrayList<SelectItem>();
+		options.add(new SelectItem(null, "- Select One -"));
+		
+		if(contractType!=null && !contractType.isEmpty()){
+			if(ProcurementPlanConst.CONTRACT_TYPE_PKP.equals(contractType)){
+				Long circularId = this.getManagedBean().getSelectedPlan().getCtCircular().getCircularId();
+				List<CtCircularContract> circularContracts = cicularContractOptions(circularId);
+				for(CtCircularContract circularContract: circularContracts){
+					options.add(new SelectItem(circularContract.getCtContract().getContractId(),
+							circularContract.getCtContract().getLatestContractVer().getCtContractValue().getContractPhysicalNo()
+							));
+				}
+			}else if(ProcurementPlanConst.CONTRACT_TYPE_MINISTRY_CONTRACT.equals(contractType) 
+					|| ProcurementPlanConst.CONTRACT_TYPE_CENTRAL_CONTRACT.equals(contractType) ){
+				List<CtContract> contracts = contractOptions(contractType);
+				for(CtContract contract: contracts){
+					options.add(new SelectItem(contract.getContractId(),
+							contract.getLatestContractVer().getCtContractValue().getContractPhysicalNo()
+							));
+				}
+			}
+		}
+		return options;
+	}
+	
+	/**
+	 * retrieve contract list by type
+	 * @return List<CtContract> 
+	 */
+	public List<CtContract> contractOptions(String contractType){
+		log.info("contractOptions - Start");
+		log.info("contractType id: "+contractType);
+		List<CtContract> options = new ArrayList<CtContract>();
+		try{
+			if(CommonMethod.isSelected(contractType)){
+				ContractReqDTO reqDTO = new ContractReqDTO();
 //				reqDTO.setContractTypeCodeId(contractType);//TODO
-//				IContractSO reqSO = (IContractSO) BusinessDelegate.getInstance().getServiceObject("ct", IContractSO.class);
-//				ContractResDTO resDTO = reqSO.retrieveContractByContractType(reqDTO);
-//				if(resDTO.isSuccessful()){
-//					options = resDTO.getCtContracts();
-//					
-//				}
-//				log.info("result size: " +options.size());
-//			}
-//			
-//			
-//		}catch (Exception e){
-//			e.printStackTrace();
-//			
-//		}
-//		log.info("contractOptions - End");
-//		return options;
-//	}
-//
-//	/**
-//	 * retrieve circular contract list circular id
-//	 * @param circularId
-//	 * @return  List<CtCircularContract>
-//	 */
-//	public List<CtCircularContract> cicularContractOptions(Long circularId){
-//		log.info("cicularContractOptions - Start");
-//		log.info("circular id: "+circularId);
-//		List<CtCircularContract> options = new ArrayList<CtCircularContract>();
-//		try{
-//			if(CommonMethod.isSelected(circularId)){
-//				CircularReqDTO reqDTO = new CircularReqDTO();
-//				reqDTO.setCircularId(circularId);
-//				ICircularSO circularSO = (ICircularSO) BusinessDelegate.getInstance().getServiceObject("ct", ICircularSO.class);
-//				CircularResDTO resDTO = circularSO.retrieveCircularContractByCircularId(reqDTO);
-//				if(resDTO.isSuccessful()){
-//					options = resDTO.getCircularContractList();
-//				}
-//				log.info("result size: " +options.size());
-//			}
-//			
-//		}catch (Exception e){
-//			e.printStackTrace();
-//			
-//		}
-//		log.info("cicularContractOptions - End");
-//		return options;
-//	}
-//	
-//	/**
-//	 * retrieve circular list
-//	 * @return List<CtCircular> 
-//	 */
-//	public List<CtCircular> circularOptions(){
-//		log.info("circularOptions - Start");
-//		List<CtCircular> options = new ArrayList<CtCircular>();
-//		try{
-//			CircularReqDTO reqDTO = new CircularReqDTO();
-//			reqDTO.setDocType(ContractConst.CIRCULAR_DOC_TYPE_CENTRAL_CONTRACT);
-//			ICircularSO circularSO = (ICircularSO) BusinessDelegate.getInstance().getServiceObject("ct", ICircularSO.class);
-//			CircularResDTO resDTO = circularSO.retrieveCircularListByType(reqDTO);
-//			if(resDTO.isSuccessful()){
-//				options = resDTO.getCircularList();
-//			}
-//			log.info("result size: " +options.size());
-//		}catch (Exception e){
-//			e.printStackTrace();
-//			
-//		}
-//		log.info("circularOptions - End");
-//		return options;
-//	}
-//	
-//	/**
-//	 * retrieve and set contract by id
-//	 * @param contractId
-//	 * @return CtContract
-//	 */
-//	public void selectedContract(Long id){
-//		log.info("selectedContract - Start");
-////		Long id = this.getManagedBean().getSelectedPlanItem().getCtContract()!=null ? this.getManagedBean().getSelectedPlanItem().getCtContract().getContractId() : 0L;
-//		log.info("id: " + id);
-//		CtContract contract = new CtContract();
-//		try{
-//			if(CommonMethod.isSelected(id)){
-//				ContractReqDTO reqDTO = new ContractReqDTO();
-//				reqDTO.setContractId(id);
-//				IContractSO reqSO = (IContractSO) BusinessDelegate.getInstance().getServiceObject("ct", IContractSO.class);
-//				ContractResDTO resDTO = reqSO.retrieveContract(reqDTO);
-//				if(resDTO.isSuccessful()){
-//					
-//					contract = resDTO.getContract();
-//					this.getManagedBean().getSelectedPlanItem().setCtContract(contract);
-//				}
-//			}
-//		}catch (Exception e){
-//			e.printStackTrace();
-//			
-//		}
-//		log.info("selectedContract - End");
-//	}
+				IContractSO reqSO = (IContractSO) BusinessDelegate.getInstance().getServiceObject("ct", IContractSO.class);
+				ContractResDTO resDTO = reqSO.retrieveContractByContractType(reqDTO);
+				if(resDTO.isSuccessful()){
+					options = resDTO.getCtContracts();
+				}
+				log.info("result size: " +options.size());
+			}
+		}catch (Exception e){
+			e.printStackTrace();
+			
+		}
+		log.info("contractOptions - End");
+		return options;
+	}
+
+	/**
+	 * retrieve circular contract list circular id
+	 * @param circularId
+	 * @return  List<CtCircularContract>
+	 */
+	public List<CtCircularContract> cicularContractOptions(Long circularId){
+		log.info("cicularContractOptions - Start");
+		log.info("circular id: "+circularId);
+		List<CtCircularContract> options = new ArrayList<CtCircularContract>();
+		try{
+			if(CommonMethod.isSelected(circularId)){
+				CircularReqDTO reqDTO = new CircularReqDTO();
+				reqDTO.setCircularId(circularId);
+				ICircularSO circularSO = (ICircularSO) BusinessDelegate.getInstance().getServiceObject("ct", ICircularSO.class);
+				CircularResDTO resDTO = circularSO.retrieveCircularContractByCircularId(reqDTO);
+				if(resDTO.isSuccessful()){
+					options = resDTO.getCircularContractList();
+				}
+				log.info("result size: " +options.size());
+			}
+		}catch (Exception e){
+			e.printStackTrace();
+			
+		}
+		log.info("cicularContractOptions - End");
+		return options;
+	}
+	
+	/**
+	 * retrieve circular list
+	 * @return List<CtCircular> 
+	 */
+	public List<CtCircular> circularOptions(){
+		log.info("circularOptions - Start");
+		List<CtCircular> options = new ArrayList<CtCircular>();
+		try{
+			CircularReqDTO reqDTO = new CircularReqDTO();
+			reqDTO.setDocType(ContractConst.CIRCULAR_DOC_TYPE_CENTRAL_CONTRACT);
+			ICircularSO circularSO = (ICircularSO) BusinessDelegate.getInstance().getServiceObject("ct", ICircularSO.class);
+			CircularResDTO resDTO = circularSO.retrieveCircularListByType(reqDTO);
+			if(resDTO.isSuccessful()){
+				options = resDTO.getCircularList();
+			}
+			log.info("result size: " +options.size());
+		}catch (Exception e){
+			e.printStackTrace();
+			
+		}
+		log.info("circularOptions - End");
+		return options;
+	}
+	
+	/**
+	 * retrieve and set contract by id
+	 * @param contractId
+	 * @return CtContract
+	 */
+	public void selectedContract(Long id){
+		log.info("selectedContract - Start");
+		log.info("id: " + id);
+		CtContract contract = new CtContract();
+		try{
+			if(id!=null && id>0L){
+				ContractReqDTO reqDTO = new ContractReqDTO();
+				reqDTO.setContractId(id);
+				IContractSO reqSO = (IContractSO) BusinessDelegate.getInstance().getServiceObject("ct", IContractSO.class);
+				ContractResDTO resDTO = reqSO.retrieveContract(reqDTO);
+				if(resDTO.isSuccessful()){
+					contract = resDTO.getContract();
+				}
+			}
+			this.getManagedBean().getSelectedPlan().setCtContract(contract);
+		}catch (Exception e){
+			e.printStackTrace();
+			
+		}
+		log.info("selectedContract - End");
+	}
 //	
 //	public void resetContract(){
 //		this.getManagedBean().getSelectedPlanItem().setCtContract(null);
@@ -1816,6 +1887,7 @@ public class PlanBackingBean extends BaseBackingBean<PlanManagedBean>{
 	}
 	
 	public void generateVerificationOfficers() throws Exception{
+		log.info("generateVerificationOfficers ");
 		List<PmUser> source = new ArrayList<PmUser>(); 
         List<PmUser> target = new ArrayList<PmUser>(); 
         source = userWithRoleOptions(RoleCode.PLAN_VERFICATION_OFFICER.value());

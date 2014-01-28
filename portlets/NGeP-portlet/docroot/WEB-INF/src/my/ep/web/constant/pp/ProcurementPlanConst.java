@@ -115,12 +115,7 @@ public class ProcurementPlanConst {
 	public static final String DATE_DISPLAY_PATTERN = "MM/dd/yyyy";
 	public static final String DATETIME_DISPLAY_PATTERN = "dd/MM/yyyy hh:mm aaa";
 	
-	
-	
-	//Contract Ind
-	public static final String CONTRACT_IND_PKP = "P";
-	public static final String CONTRACT_IND_LOA = "S";
-	public static final String CONTRACT_IND_CONTRACT = "C";
+
 	
 	
 	//Product Level
@@ -133,11 +128,11 @@ public class ProcurementPlanConst {
 	public static final String MODULE = "PP";
 	
 	//Doc Type
-	public static final String DOCTYPE_PLAN = "PPL";
-	public static final String DOCTYPE_PLAN_ITEM = "PPI";
-	public static final String DOCTYPE_BUDGET_ALLOC = "PBA";
-	public static final String DOCTYPE_BUDGET_ALLOC_DTL = "PBD";
-	public static final String DOCTYPE_BUDGET_ALLOC_ORG = "PBO";
+//	public static final String DOCTYPE_PLAN = "PPL";
+//	public static final String DOCTYPE_PLAN_ITEM = "PPI";
+//	public static final String DOCTYPE_BUDGET_ALLOC = "PBA";
+//	public static final String DOCTYPE_BUDGET_ALLOC_DTL = "PBD";
+//	public static final String DOCTYPE_BUDGET_ALLOC_ORG = "PBO";
 
 	
 	//PP Programs
@@ -187,9 +182,9 @@ public class ProcurementPlanConst {
 
 	
 	//Contract Type
-	public static final String CONTRACT_TYPE_MINISTRY = "168"; //refer to PM_PARAMETER
-	public static final String CONTRACT_IND_CENTRAL = "169"; //refer to PM_PARAMETER
-	
+//	public static final String CONTRACT_TYPE_MINISTRY = "168"; //refer to PM_PARAMETER
+//	public static final String CONTRACT_IND_CENTRAL = "169"; //refer to PM_PARAMETER
+//	
 	
 	//Plan Type
 	public static final String PLAN_TYPE_PROCUREMENT = ParameterConst.PLAN_TYPE_PROCUREMENT;
@@ -201,7 +196,12 @@ public class ProcurementPlanConst {
 	public static final String PROCUREMENT_TENDER = ParameterConst.PROCUREMENT_MODE_TENDER;
 	public static final String PROCUREMENT_DIRECT_PURCHASE = ParameterConst.PROCUREMENT_MODE_DIRECT_PURCHASE;
 	public static final String PROCUREMENT_EXISTING_CONTRACT = ParameterConst.PROCUREMENT_MODE_CONTRACT;
-
+	
+	//Contract Ind
+	public static final String CONTRACT_TYPE_PKP = ParameterConst.EP_DOC_PKP;
+	public static final String CONTRACT_TYPE_LOA = ParameterConst.EP_DOC_LOA;
+	public static final String CONTRACT_TYPE_CENTRAL_CONTRACT = ParameterConst.EP_DOC_CENTRAL_CONTRACT;
+	public static final String CONTRACT_TYPE_MINISTRY_CONTRACT = ParameterConst.EP_DOC_MINISTRY_CONTRACT;
 
 	
 	
@@ -240,19 +240,19 @@ public class ProcurementPlanConst {
 		return VOT_T;
 	}
 
-	/**
-	 * @return the contractTypeMinistry
-	 */
-	public String getContractTypeMinistry() {
-		return CONTRACT_TYPE_MINISTRY;
-	}
-	/**
-	 * @return the contractIndCentral
-	 */
-	public String getContractIndCentral() {
-		return CONTRACT_IND_CENTRAL;
-	}
-	
+//	/**
+//	 * @return the contractTypeMinistry
+//	 */
+//	public String getContractTypeMinistry() {
+//		return CONTRACT_TYPE_MINISTRY;
+//	}
+//	/**
+//	 * @return the contractIndCentral
+//	 */
+//	public String getContractIndCentral() {
+//		return CONTRACT_IND_CENTRAL;
+//	}
+//	
 	
 	
 	/**
@@ -281,38 +281,38 @@ public class ProcurementPlanConst {
 		return PROG_BUDGET;
 	}
 	
-	/**
-	 * @return the doctypePlan
-	 */
-	public String getDoctypePlan() {
-		return DOCTYPE_PLAN;
-	}
-	/**
-	 * @return the doctypePlanItem
-	 */
-	public String getDoctypePlanItem() {
-		return DOCTYPE_PLAN_ITEM;
-	}
-	/**
-	 * @return the doctypeBudgetAlloc
-	 */
-	public String getDoctypeBudgetAlloc() {
-		return DOCTYPE_BUDGET_ALLOC;
-	}
-
-	/**
-	 * @return the doctypeBudgetAllocDtl
-	 */
-	public String getDoctypeBudgetAllocDtl() {
-		return DOCTYPE_BUDGET_ALLOC_DTL;
-	}
-
-	/**
-	 * @return the doctypeBudgetAllocOrg
-	 */
-	public String getDoctypeBudgetAllocOrg() {
-		return DOCTYPE_BUDGET_ALLOC_ORG;
-	}
+//	/**
+//	 * @return the doctypePlan
+//	 */
+//	public String getDoctypePlan() {
+//		return DOCTYPE_PLAN;
+//	}
+//	/**
+//	 * @return the doctypePlanItem
+//	 */
+//	public String getDoctypePlanItem() {
+//		return DOCTYPE_PLAN_ITEM;
+//	}
+//	/**
+//	 * @return the doctypeBudgetAlloc
+//	 */
+//	public String getDoctypeBudgetAlloc() {
+//		return DOCTYPE_BUDGET_ALLOC;
+//	}
+//
+//	/**
+//	 * @return the doctypeBudgetAllocDtl
+//	 */
+//	public String getDoctypeBudgetAllocDtl() {
+//		return DOCTYPE_BUDGET_ALLOC_DTL;
+//	}
+//
+//	/**
+//	 * @return the doctypeBudgetAllocOrg
+//	 */
+//	public String getDoctypeBudgetAllocOrg() {
+//		return DOCTYPE_BUDGET_ALLOC_ORG;
+//	}
 
 	/**
 	 * @return the statusPboPendingSubmit
@@ -612,25 +612,35 @@ public class ProcurementPlanConst {
 		return NO_INT;
 	}
 	
+
 	/**
-	 * @return the contractIndPkp
+	 * @return the contractTypePkp
 	 */
-	public String getContractIndPkp() {
-		return CONTRACT_IND_PKP;
+	public String getContractTypePkp() {
+		return CONTRACT_TYPE_PKP;
 	}
+
 	/**
-	 * @return the contractIndLoa
+	 * @return the contractTypeLoa
 	 */
-	public String getContractIndLoa() {
-		return CONTRACT_IND_LOA;
+	public String getContractTypeLoa() {
+		return CONTRACT_TYPE_LOA;
 	}
+
 	/**
-	 * @return the contractIndContract
+	 * @return the contractTypeCentralContract
 	 */
-	public String getContractIndContract() {
-		return CONTRACT_IND_CONTRACT;
+	public String getContractTypeCentralContract() {
+		return CONTRACT_TYPE_CENTRAL_CONTRACT;
 	}
-	
+
+	/**
+	 * @return the contractTypeMinistryContract
+	 */
+	public String getContractTypeMinistryContract() {
+		return CONTRACT_TYPE_MINISTRY_CONTRACT;
+	}
+
 	/**
 	 * @return the levelSingle
 	 */
