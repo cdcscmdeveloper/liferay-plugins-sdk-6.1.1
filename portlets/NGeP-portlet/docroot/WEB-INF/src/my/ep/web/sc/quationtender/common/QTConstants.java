@@ -41,6 +41,9 @@ public interface QTConstants {
 	public static final Integer NB_CLOSED_STATUS = 2;
 	public static final Integer NB_PRICE_SCHEDULE_STATUS = 3;
 	public static final Integer NB_AWARDED_STATUS = 4;
+	public static final String CATEGORY_L1_CODE="categoryL1";
+	public static final String CATEGORY_L2_CODE="categoryL2";
+	public static final String CATEGORY_L3_CODE="categoryL3";
 	
 	public static final String PP_MODULE="pp";
 
