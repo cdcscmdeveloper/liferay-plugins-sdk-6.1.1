@@ -33,6 +33,10 @@
 	  <param-name>contextConfigLocation</param-name>
 	  <param-value>META-INF/search/searchDisplay-*.xml</param-value>
 	 </context-param>
+	 <context-param>
+  		<param-name>javax.portlet.faces.RENDER_POLICY</param-name>
+  		<param-value>ALWAYS_DELEGATE</param-value>
+	</context-param>
 	 <listener>
 	  <listener-class>org.springframework.web.context.ContextLoaderListener</listener-class>
 	 </listener>
