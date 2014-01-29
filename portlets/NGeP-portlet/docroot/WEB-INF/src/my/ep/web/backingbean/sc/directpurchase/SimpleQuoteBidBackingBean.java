@@ -1,42 +1,38 @@
 package my.ep.web.backingbean.sc.directpurchase;
 
 import java.util.ArrayList;
-import java.util.Collection;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.RequestScoped;
 import javax.faces.context.FacesContext;
 
-import my.ep.biz.service.ss.directpurchase.IQuoteSO;
+import my.ep.biz.service.sc.directpurchase.IQuoteSO;
 import my.ep.bpm.dto.BpmRequestDTO;
 import my.ep.bpm.dto.BpmResponseDTO;
 import my.ep.bpm.service.IBpmSO;
-import my.ep.constant.ss.SourcingConstants;
+import my.ep.constant.sc.SourcingConstants;
 import my.ep.constants.SCProcessNameConst;
-import my.ep.dto.ss.directpurchase.QuoteReqDTO;
-import my.ep.dto.ss.directpurchase.QuoteResDTO;
+import my.ep.dto.sc.directpurchase.QuoteReqDTO;
+import my.ep.dto.sc.directpurchase.QuoteResDTO;
 import my.ep.jaxb.sc.directpurchasedata.SCDirectPurchaseDataType;
 import my.ep.persistence.entity.pm.common.PmCity;
 import my.ep.persistence.entity.pm.common.PmDistrict;
 import my.ep.persistence.entity.pm.common.PmDivision;
 import my.ep.persistence.entity.pm.common.PmState;
-import my.ep.persistence.entity.ss.directpurchase.ScBusinessNatureQuoteCriteria;
-import my.ep.persistence.entity.ss.directpurchase.ScQuoteZone;
-import my.ep.persistence.entity.ss.directpurchase.ScRequestItem;
+import my.ep.persistence.entity.sc.directpurchase.ScBusinessNatureQuoteCriteria;
+import my.ep.persistence.entity.sc.directpurchase.ScQuoteZone;
+import my.ep.persistence.entity.sc.directpurchase.ScRequestItem;
 import my.ep.util.lookupservice.EpBpmBusinessDelegate;
 import my.ep.web.backingbean.BaseBackingBean;
 import my.ep.web.constant.SourcingConst;
 import my.ep.web.managedbean.sc.directpurchase.SimpleQuoteBidManagedBean;
 import my.ep.web.util.FacesScopes;
 import my.ep.web.util.lookupservice.BusinessDelegate;
-import my.ep.web.util.ss.helper.LocationSingleton;
-import my.ep.web.util.ss.helper.SourcingLocationHelper;
+import my.ep.web.util.sc.helper.LocationSingleton;
+import my.ep.web.util.sc.helper.SourcingLocationHelper;
 
 import org.apache.log4j.Logger;
-import org.primefaces.model.DefaultTreeNode;
 import org.primefaces.model.TreeNode;
 
 @ManagedBean(name = "simpleQuoteBidBackingBean")

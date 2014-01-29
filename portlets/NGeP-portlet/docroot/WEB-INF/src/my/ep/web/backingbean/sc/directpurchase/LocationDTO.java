@@ -7,7 +7,7 @@ import my.ep.persistence.entity.pm.common.PmCity;
 import my.ep.persistence.entity.pm.common.PmDistrict;
 import my.ep.persistence.entity.pm.common.PmDivision;
 import my.ep.persistence.entity.pm.common.PmState;
-import my.ep.persistence.entity.ss.directpurchase.ScQuoteZone;
+import my.ep.persistence.entity.sc.directpurchase.ScQuoteZone;
 
 public class LocationDTO implements Serializable{
 

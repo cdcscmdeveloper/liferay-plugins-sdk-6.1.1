@@ -12,25 +12,25 @@ import javax.portlet.PortletRequest;
 
 import my.ep.biz.service.cm.catalogue.ICatalogueSO;
 import my.ep.biz.service.pm.authorization.orgprofile.IOrgProfileSO;
-import my.ep.biz.service.ss.directpurchase.IPrInquirySO;
+import my.ep.biz.service.sc.directpurchase.IPrInquirySO;
 import my.ep.constant.sc.SourcingConstants;
 import my.ep.dto.cm.catalogue.CatalogueReqDTO;
 import my.ep.dto.cm.catalogue.CatalogueResDTO;
 import my.ep.dto.pm.authorization.orgprofile.OrgProfileReqDTO;
 import my.ep.dto.pm.authorization.orgprofile.OrgProfileResDTO;
-import my.ep.dto.ss.directpurchase.PrInquiryReqDTO;
-import my.ep.dto.ss.directpurchase.PrInquiryResDTO;
+import my.ep.dto.sc.directpurchase.PrInquiryReqDTO;
+import my.ep.dto.sc.directpurchase.PrInquiryResDTO;
 import my.ep.persistence.entity.cm.catalog.CmPricing;
 import my.ep.persistence.entity.cm.catalog.CmSupplierItem;
 import my.ep.persistence.entity.cm.catalog.VCmSupplierItem;
 import my.ep.persistence.entity.pm.authorization.PmOrgProfile;
 import my.ep.persistence.entity.pm.authorization.PmUser;
 import my.ep.persistence.entity.pm.common.PmStatus;
-import my.ep.persistence.entity.ss.directpurchase.ScPRIRemark;
-import my.ep.persistence.entity.ss.directpurchase.ScPRIWorkFlowStatus;
-import my.ep.persistence.entity.ss.directpurchase.ScPrInquiry;
-import my.ep.persistence.entity.ss.directpurchase.ScRequestItem;
-import my.ep.persistence.entity.ss.directpurchase.ScRequestSupplierItem;
+import my.ep.persistence.entity.sc.directpurchase.ScPRIRemark;
+import my.ep.persistence.entity.sc.directpurchase.ScPRIWorkFlowStatus;
+import my.ep.persistence.entity.sc.directpurchase.ScPrInquiry;
+import my.ep.persistence.entity.sc.directpurchase.ScRequestItem;
+import my.ep.persistence.entity.sc.directpurchase.ScRequestSupplierItem;
 import my.ep.persistence.logging.LogKey;
 import my.ep.type.pm.OrganizationType;
 import my.ep.util.lookupservice.EpEjbBusinessDelegate;
@@ -201,7 +201,7 @@ public class PurchaseInquiryBackingBean extends BaseBackingBean<PurchaseInquiryM
 	   *  initializeRemarks  method for initializing remarks  in Purchase inquiry
       */	
 		private List<ScPRIRemark> initializeRemarks(ScPrInquiry prInquiry) {
-			List<ScPRIRemark> results = prInquiry.getRemarks();
+			List<ScPRIRemark> results = new ArrayList<ScPRIRemark>();
 			FacesScopes facesScopes = new FacesScopes();
 			if (results.size() == 0
 					|| !compareUserName(results.get(0).getUser().getLoginId())) {

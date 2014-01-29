@@ -10,9 +10,9 @@ import my.ep.persistence.entity.cm.catalog.CmPricing;
 import my.ep.persistence.entity.cm.catalog.CmSupplierItem;
 import my.ep.persistence.entity.pm.authorization.PmOrgProfile;
 import my.ep.persistence.entity.pm.authorization.PmUser;
-import my.ep.persistence.entity.ss.directpurchase.ScPRIRemark;
-import my.ep.persistence.entity.ss.directpurchase.ScPrInquiry;
-import my.ep.persistence.entity.ss.directpurchase.ScRequestSupplierItem;
+import my.ep.persistence.entity.sc.directpurchase.ScPRIRemark;
+import my.ep.persistence.entity.sc.directpurchase.ScPrInquiry;
+import my.ep.persistence.entity.sc.directpurchase.ScRequestSupplierItem;
 import my.ep.web.managedbean.BaseManagedBean;
 
 import org.primefaces.model.DualListModel;

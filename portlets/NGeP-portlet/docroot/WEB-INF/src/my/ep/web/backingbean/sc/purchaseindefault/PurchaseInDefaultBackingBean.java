@@ -13,27 +13,27 @@ import javax.portlet.PortletRequest;
 import my.ep.biz.service.cm.catalogue.ICatalogueSO;
 import my.ep.biz.service.ct.IContractSO;
 import my.ep.biz.service.ct.dtl.IContractItemSO;
-import my.ep.biz.service.ss.directpurchase.IPurchaseInDefaultSO;
+import my.ep.biz.service.sc.directpurchase.IPurchaseInDefaultSO;
 import my.ep.constant.sc.SourcingConstants;
 import my.ep.dto.cm.catalogue.CatalogueReqDTO;
 import my.ep.dto.cm.catalogue.CatalogueResDTO;
 import my.ep.dto.ct.ContractReqDTO;
 import my.ep.dto.ct.ContractResDTO;
-import my.ep.dto.ss.directpurchase.PurchaseInDefaultReqDTO;
-import my.ep.dto.ss.directpurchase.PurchaseInDefaultResDTO;
+import my.ep.dto.sc.directpurchase.PurchaseInDefaultReqDTO;
+import my.ep.dto.sc.directpurchase.PurchaseInDefaultResDTO;
 import my.ep.persistence.entity.cm.catalog.CmPricing;
 import my.ep.persistence.entity.cm.catalog.VCmSupplierItem;
 import my.ep.persistence.entity.pm.authorization.PmUser;
 import my.ep.persistence.entity.pm.common.PmStatus;
-import my.ep.persistence.entity.ss.directpurchase.ScPIDApprovalUser;
-import my.ep.persistence.entity.ss.directpurchase.ScPIDRemark;
-import my.ep.persistence.entity.ss.directpurchase.ScPIDWorkFlowStatus;
-import my.ep.persistence.entity.ss.directpurchase.ScPurchaseInDefault;
-import my.ep.persistence.entity.ss.directpurchase.ScRequestSupplierItem;
+import my.ep.persistence.entity.sc.directpurchase.ScPIDApprovalUser;
+import my.ep.persistence.entity.sc.directpurchase.ScPIDRemark;
+import my.ep.persistence.entity.sc.directpurchase.ScPIDWorkFlowStatus;
+import my.ep.persistence.entity.sc.directpurchase.ScPurchaseInDefault;
+import my.ep.persistence.entity.sc.directpurchase.ScRequestSupplierItem;
 import my.ep.persistence.logging.LogKey;
 import my.ep.web.backingbean.BaseBackingBean;
 import my.ep.web.constant.SourcingConst;
-import my.ep.web.managedbean.ss.directpurchase.PurchaseInDefaultManagedBean;
+import my.ep.web.managedbean.sc.directpurchase.PurchaseInDefaultManagedBean;
 import my.ep.web.util.DateUtils;
 import my.ep.web.util.FacesScopes;
 import my.ep.web.util.lookupservice.BusinessDelegate;
@@ -171,7 +171,6 @@ public class PurchaseInDefaultBackingBean extends BaseBackingBean<PurchaseInDefa
 		  * initializing remarks in Purchase In Default
 		 */
 		private List<ScPIDRemark> initializeRemarks(ScPurchaseInDefault scPurchaseInDefault) {
-			//List<ScPIDRemark> results = scPurchaseInDefault.getRemarks();
 			List<ScPIDRemark> results = new ArrayList<ScPIDRemark>();
 			FacesScopes facesScopes = new FacesScopes();
 			if (results.size() == 0
