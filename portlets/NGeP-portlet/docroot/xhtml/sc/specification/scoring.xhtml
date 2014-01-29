@@ -1,0 +1,59 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:ac="http://ac.my/jsf/composite/cc">
+
+
+	<p:dialog header="#{lbl['lbl.sc.spec.stage2.score.head']}"
+		widgetVar="specScoring" modal="true" width="800" height="400">
+		<p:panel header="#{lbl['lbl.sc.spec.stage2.score.head']}"
+			toggleable="true">
+
+			<p:dataTable id="scoringSpec" rowIndexVar="index"
+			value="#{specificationBackingBean.managedBean.scoringList}"
+			selection="#{specificationBackingBean.managedBean.selectscoring}"
+			var="checkListScoring" rowKey="#{checkListScoring}" >
+				<ac:paginator for="scoringSpec"></ac:paginator>
+					<p:ajax event="rowSelectCheckbox"></p:ajax>
+				
+				<p:column selectionMode="multiple" style="width:2%;"></p:column>
+				<p:column headerText="#{lbl['lbl.sc.spec.stage2.score.from']}">
+				<p:inputText value="#{checkListScoring.rangeFrom}"></p:inputText>
+				</p:column>
+				<p:column headerText="#{lbl['lbl.sc.spec.stage2.score.to']}">
+				<p:inputText value="#{checkListScoring.rangeTo}"></p:inputText>
+				</p:column>
+				<p:column headerText="#{lbl['lbl.sc.spec.stage2.score']}">
+				<p:inputText value="#{checkListScoring.score}"></p:inputText>
+				</p:column>
+				<p:column headerText="#{lbl['lbl.sc.spec.stage.action']}">
+					<p:commandLink>
+						<p:graphicImage library="ep/images/design" name="edit.png"
+							value="/resources/ep/images/design/edit.png" />
+					</p:commandLink>
+				</p:column>
+			</p:dataTable>
+			<p:spacer height="10"></p:spacer>
+
+			<div align="right">
+				<p:commandButton value="#{lbl['lbl.sc.spec.stage.btn.add']}"
+					process="@this,scoringSpec" partialSubmit="true" actionListener="#{specificationBackingBean.addScoring}" update="scoringSpec" icon="ui-icon-add" />
+				<p:commandButton value="#{lbl['lbl.sc.spec.stage.btn.delete']}"
+					icon="ui-icon-delete" action="#{specificationBackingBean.deleteScoring}" update="scoringSpec"/>
+
+			</div>
+		</p:panel>
+		<p:spacer height="10"></p:spacer>
+		<p:commandButton value="#{lbl['lbl.sc.spec.stage.btn.cancel']}"
+			style="float:right;" oncomplete="specScoring.hide();"
+			icon="ui-icon-cancel"></p:commandButton>
+		<p:commandButton value="#{lbl['lbl.sc.spec.stage.btn.ok']}"
+			style="float:right;" process="@all" actionListener="#{specificationBackingBean.acceptScoring}" partialSubmit="true"
+			oncomplete="specScoring.hide();" icon="ui-icon-accept"></p:commandButton>
+
+
+	</p:dialog>
+</ui:composition>

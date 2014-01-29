@@ -1,0 +1,57 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:fn="http://java.sun.com/jsp/jstl/functions">
+	<p:panel header="PLANNED INFO" toggleable="true">
+		<p:panelGrid style="width:50%;" styleClass="noBorders tr,noBorders td">
+			<p:row>
+				<p:column><p:outputLabel value="Plan Number"></p:outputLabel></p:column>
+				<p:column colspan="3">
+					<p:inputText readonly="true" value="#{directPurchaseBackingBean.managedBean.requestNote.ppPlan.planNo}"></p:inputText>
+				</p:column>
+			</p:row>
+			<p:row>
+				<p:column><p:outputLabel value="VOT Type"></p:outputLabel></p:column>
+				<!-- TODO map to VOT in the PP Plan in new schema -->
+				<p:column colspan="3"><p:inputText readonly="true" value="#{directPurchaseBackingBean.managedBean.requestNote.ppPlan.planNo}"></p:inputText></p:column>
+			</p:row>
+			<p:row>
+				<p:column><p:outputLabel value="Tot. Est. Amount (RM)"></p:outputLabel></p:column>
+				<p:column colspan="3">
+					<p:inputText readonly="true" value="#{directPurchaseBackingBean.managedBean.requestNote.ppPlan.estimatedAmt}"/>
+				</p:column>
+			</p:row>
+			<p:row>
+				<p:column><p:outputLabel value="Product Family"></p:outputLabel></p:column>
+				<p:column colspan="3">
+					<c:if test="#{directPurchaseBackingBean.managedBean.requestNote.ppPlan.cmUnspscFamily ne null}">
+					<p:inputText readonly="true" value="#{directPurchaseBackingBean.managedBean.requestNote.ppPlan.cmUnspscFamily.unspscCode}"/>
+					</c:if>
+				</p:column>
+			</p:row>
+			<p:row>
+				<p:column><p:outputLabel value="Activity Start Date"></p:outputLabel></p:column>
+				<p:column>
+					<p:inputText readonly="true" value="#{directPurchaseBackingBean.managedBean.requestNote.ppPlan.actualStartDate}"/>
+				</p:column>
+				<p:column>
+					<p:outputLabel value="Activity End Date"></p:outputLabel>
+				</p:column>
+				<p:column>
+					<p:inputText readonly="true" value="#{directPurchaseBackingBean.managedBean.requestNote.ppPlan.actualEndDate}"/>
+				</p:column>
+			</p:row>
+			<p:row>
+				<p:column>
+					<p:outputLabel value="Notification Date"></p:outputLabel>
+				</p:column>
+				<p:column colspan="3">
+					<p:inputText readonly="true" />
+				</p:column>
+			</p:row>
+			</p:panelGrid>
+	</p:panel>
+</ui:composition>

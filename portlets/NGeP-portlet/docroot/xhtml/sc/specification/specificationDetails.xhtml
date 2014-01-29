@@ -1,0 +1,113 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:c="http://java.sun.com/jsp/jstl/core">
+
+	<p:panel header="#{lbl['lbl.sc.spec.details']}" toggleable="true">
+
+		<h:panelGrid columns="4" style="width:100%;"
+			columnClasses="columnWidth20,columnWidth30,columnWidth20,columnWidth30"
+			styleClass="noBorders tr,noBorders td">
+			<h:outputLabel value="*#{lbl['lbl.sc.spec.peocure.category']}" />
+			<p:selectOneMenu
+				value="#{specificationBackingBean.managedBean.procurementId}">
+					<f:selectItems
+							value="#{specificationBackingBean.getDropdownValues(PmCodeCatConst.procurementCategory)}" />
+
+			</p:selectOneMenu>
+			<h:outputLabel value="#{lbl['lbl.sc.spec.max.proposal']}" />
+			<p:inputText
+				value="#{specificationBackingBean.managedBean.scQtSpec.maxProposal}"></p:inputText>
+
+
+			<h:outputLabel value="* #{lbl['lbl.sc.spec.evaluation.type']}" />
+			<p:selectOneRadio
+				value="#{specificationBackingBean.managedBean.scQtSpec.evaluationType}">
+				<f:selectItem itemLabel="One Tier" itemValue="1" />
+				<f:selectItem itemLabel="Two Tier" itemValue="2" />
+               <p:ajax event="change" process="@this" partialSubmit="true" update="weightage" listener="#{specificationBackingBean.tierEvent}"></p:ajax>
+			</p:selectOneRadio>
+
+
+			<h:outputLabel value="* #{lbl['lbl.sc.spec.ful.type']}" />
+			<p:selectOneMenu
+				value="#{specificationBackingBean.managedBean.scQtSpec.fulfilmentType}" style="margin-bottom:5px;">
+				<f:selectItem itemLabel="One-Off" itemValue="1" />
+				<f:selectItem itemLabel="Periodic" itemValue="2" />
+				<f:selectItem itemLabel="Periodic(Schedule)" itemValue="3" />
+			</p:selectOneMenu>
+
+			<h:outputLabel value="#{lbl['lbl.sc.spec.currency']}" />
+			<p:selectOneMenu
+				value="#{specificationBackingBean.managedBean.scQtSpec.pmCurrency.currencyCode}">
+				<f:selectItems value="#{specificationBackingBean.currencyDetails}" />
+			</p:selectOneMenu>
+			<h:outputLabel value="*#{lbl['lbl.sc.spec.amount']}" />
+			<p:inputText 	value="#{specificationBackingBean.managedBean.scQtSpec.scQt.qtAmount}"
+				></p:inputText>
+
+			<h:outputLabel value="*#{lbl['lbl.sc.spec.schedule']}" />
+			<p:inputText readonly="true"></p:inputText>
+			<h:outputLabel value=" #{lbl['lbl.sc.spec.justification']}" />
+			<p:inputText
+				value="#{specificationBackingBean.managedBean.scQtSpec.justificationRemark}"></p:inputText>
+
+
+
+			<h:outputLabel value="*#{lbl['lbl.sc.spec.contrat.type']}" />
+			<h:panelGroup>
+				<table style="width:50%">
+					<tr>
+						<td><h:inputText size="4"
+								value="#{specificationBackingBean.managedBean.scQtSpec.contractDuration}" /></td>
+						<td><h:outputLabel
+								value="(#{lbl['lbl.sc.spec.contrat.year']})" /></td>
+						<td><h:inputText size="2"
+								value="#{specificationBackingBean.managedBean.scQtSpec.contractDuration}" /></td>
+						<td><h:outputLabel
+								value="(#{lbl['lbl.sc.spec.contrat.month']})" /></td>
+					</tr>
+				</table>
+
+			</h:panelGroup>
+
+
+		</h:panelGrid>
+
+	</p:panel>
+
+	<p:panel header="#{lbl['lbl.sc.spec.approve.details.section']}"
+		toggleable="true">
+
+		<h:panelGrid style="width:100%;" columns="4"
+			columnClasses="columnWidth20,columnWidth30,columnWidth20,columnWidth30">
+
+
+			<h:outputLabel value="#{lbl['lbl.sc.spec.appove.name']}" />
+
+			<p:selectOneMenu
+				value="#{specificationBackingBean.managedBean.scQtSpec.approverName}">
+				<f:selectItems value="#{specificationBackingBean.managedBean.approvalList}" />
+
+			</p:selectOneMenu>
+
+			<h:outputLabel value="#{lbl['lbl.sc.spec.approve.date']}" />
+
+			<p:inputText readonly="true" disabled="true"
+				value="#{specificationBackingBean.managedBean.approvalDate}"></p:inputText>
+
+
+		</h:panelGrid>
+		<h:panelGrid style="width:100%;" columns="2"
+			columnClasses="columnWidth20,columnWidth80">
+
+			<h:outputLabel value="#{lbl['lbl.sc.spec.approve.remarks']}" />
+			<p:inputTextarea rows="3" cols="117"
+				autoResize="false"></p:inputTextarea>
+
+		</h:panelGrid>
+	</p:panel>
+
+</ui:composition>

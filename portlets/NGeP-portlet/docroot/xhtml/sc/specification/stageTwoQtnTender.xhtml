@@ -1,0 +1,81 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:c="http://java.sun.com/jsp/jstl/core">
+
+
+	<p:dialog  header="Qtn/Tender" widgetVar="qtnTndr" modal="true" width="600" height="250">
+		<p:panel header="Search" toggleable="true">
+      
+   <p:panelGrid   styleClass="noBorders tr,noBorders td">
+				
+				<p:row>
+                <p:column>
+				<h:outputLabel  value="Template Title " />
+				</p:column>
+				 <p:column>
+				<p:inputText size="50"></p:inputText>
+	          </p:column>
+	        
+	          
+    </p:row>
+    </p:panelGrid>
+     
+				  
+	</p:panel>	
+	
+	
+			<p:panelGrid style="width:100%;"
+    styleClass="noBorders tr,noBorders td">
+    <p:row>
+     <p:column width="100%" style="text-align:right">
+       <p:commandButton  
+					value="SEARCH"/>
+     </p:column>
+
+    </p:row>
+   </p:panelGrid>	
+   
+	
+	<p:panel header="Qtn/Tender Template List" toggleable="true">
+<p:dataTable var="qtnTenderpopup" value="#{searchQtnTenderBB.managedBean.qtnTenders}" editable="true">
+
+ 
+<p:column headerText="" >
+ <p:selectBooleanCheckbox value="1"></p:selectBooleanCheckbox>
+  
+</p:column>
+<p:column headerText="No" >
+<h:outputText value="1"></h:outputText> 
+  
+</p:column>
+
+<p:column headerText="Template Title" style="width:100%">
+						<h:outputText value="qtn/Tender Template Title"></h:outputText> 
+					
+				</p:column>
+				  
+				   <p:column headerText="Specification Type">              
+                
+                 <h:outputText value="Technical/Financial/Other" />   
+               
+                
+        </p:column>
+         
+         
+		
+
+</p:dataTable>
+       
+</p:panel>
+	
+			       				
+				<p:commandButton value="OK"  style="float:right;" action="#{specificationBackingBean.stageTwoTechProposal}" oncomplete="qtnTndr.hide();"  process="@this"></p:commandButton>
+				&#160;&#160;
+				<p:commandButton value="CANCEL"  style="float:right;" onclick="qtnTndr.hide();"></p:commandButton>
+			
+				
+	</p:dialog>
+</ui:composition>

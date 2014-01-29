@@ -1,0 +1,26 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:c="http://java.sun.com/jsp/jstl/core">
+	<p:panel label="HEADER" header="HEADER">
+		
+	</p:panel>
+	<ui:include src="/xhtml/sc/directpurchase/itemList.xhtml"></ui:include>
+	<p:panel label="#{lbl['lbl.ss.panel.title.approve.list']}"
+		header="#{lbl['lbl.ss.panel.title.approve.list']}" toggleable="true"
+		toggleSpeed="500">
+		<div style="width: 100%">
+			<p:pickList value="#{directPurchaseBackingBean.managedBean.approvalUsers}" var="approverUser"
+				showTargetControls="true" itemLabel="#{approverUser.userName}"
+				itemValue="#{approverUser}" converter="approverConverter">
+				<f:facet name="sourceCaption">Available</f:facet>
+				<f:facet name="targetCaption">Selected</f:facet>
+			</p:pickList>
+		</div>
+	</p:panel>
+	<p:panel label="REMARK" header="REMARK" toggleable="true" toggleSpeed="500">
+		<ui:include src="/xhtml/sc/directpurchase/directPurchaseRemarks.xhtml"></ui:include>
+	</p:panel>
+</ui:composition>

@@ -1,0 +1,61 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:ac="http://ac.my/jsf/composite/cc">
+
+
+	<p:dialog header="#{lbl['lbl.sc.eva.present.demo.head']}" widgetVar="evaluationPresentation" modal="true"
+	dynamic="true"	width="400" height="300" >
+		<p:panel id="presentationDemo" header="#{lbl['lbl.sc.eva.present.demo.head']}"
+			toggleable="true" >
+
+			<h:panelGrid columns="2" >
+
+				<h:outputLabel value="#{lbl['lbl.sc.eva.s1.manual.supplier']}"></h:outputLabel>
+
+				<p:inputText value="#{evaluationBackingBean.managedBean.scQtEvaluationResult.scQtProposal.supplierNo}" readonly="true" disabled="true"></p:inputText>
+
+				<h:outputLabel value="#{lbl['lbl.sc.eva.present.document']}" />
+
+              <h:panelGroup>
+			
+							<p:commandButton oncomplete="uploadDlg.show();"
+                    icon="iconAttachment" 
+                             value="Attach file(s)" partialSubmit="true" process="@this"/>
+						<p:spacer width="10" height="5" />
+				<h:outputText id="requestDocument"
+					value="#{evaluationBackingBean.managedBean.fileName}"></h:outputText>	
+					</h:panelGroup>
+					<h:outputLabel value="#{lbl['lbl.sc.eva.s1.manual.remarks']}" />
+                   <p:inputTextarea rows="3" cols="30" autoResize="false"></p:inputTextarea>
+
+			</h:panelGrid>
+
+
+			
+
+		
+
+		</p:panel>
+
+		<div align="left">
+			<p:commandButton value="#{lbl['lbl.sc.eva.btn.close']}"
+				style="float:right;"  icon="ui-icon-cancel" oncomplete="evaluationPresentation.hide();"></p:commandButton>
+
+			<p:commandButton value="#{lbl['lbl.sc.eva.btn.save']}"
+				style="float:right;" oncomplete="evaluationPresentation.hide();"
+			action="#{evaluationBackingBean.presentationDemoSaveAction}"	 icon="ui-icon-save"></p:commandButton>
+
+
+		</div>
+		
+		
+		
+	</p:dialog>
+	
+	
+	
+</ui:composition>

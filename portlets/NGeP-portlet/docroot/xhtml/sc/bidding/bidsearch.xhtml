@@ -1,0 +1,59 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:c="http://java.sun.com/jsp/jstl/core">
+
+
+	<p:panel header="Search Criteria" toggleable="true">
+		<h:panelGrid border="0" cellpadding="0" cellspacing="0" width="100%"
+			columns="2" columnClasses="columnWidth20">
+			<h:column>
+				<h:outputText value="Document No." />
+			</h:column>
+			<h:column>
+				<p:inputText id="DocNo" value="#{biddingBB.managedBean.docNo}" />
+			</h:column>
+			<h:column>
+				<h:outputText value="Bid No." />
+			</h:column>
+			<h:column>
+				<p:inputText id="BidNo" value="#{biddingBB.managedBean.bidNo}"/>
+			</h:column>
+		</h:panelGrid>
+		<h:panelGrid border="0" cellpadding="0" cellspacing="0" width="100%"
+			columns="2" columnClasses="columnWidth20">
+			<h:column>
+				<h:outputText value="Bid Title" />
+			</h:column>
+			<h:column>
+				<p:inputText id="BidTitle" value="#{biddingBB.managedBean.bidTitle}" size="125" />
+			</h:column>
+		</h:panelGrid>
+		<h:panelGrid border="0" cellpadding="0" cellspacing="0" width="100%"
+			columns="4" columnClasses="columnWidth20,columnWidth30,columnWidth20,columnWidth30">
+			<h:column>
+				<h:outputText value="Bidding Date (From) " />
+			</h:column>
+			<h:column>
+				<p:calendar value="#{biddingBB.managedBean.createdDate}" pattern="MM/dd/yyyy" id="bidFromDate" showOn="button"/>
+			</h:column>
+			<h:column>
+				<h:outputText value="Bidding Date (To)" />
+			</h:column>
+			<h:column>
+				<p:calendar value="#{biddingBB.managedBean.createdDate}" pattern="MM/dd/yyyy" id="bidToDate" showOn="button"/>
+			</h:column>
+	    </h:panelGrid>
+	    
+	    <p:commandButton value="#{lbl['lbl.so.searchbtn']}"
+			style="float:right;" />
+			
+		<br />
+		<br />
+	</p:panel>
+	<p:panel header="SearchResults">
+	<ui:include src="/xhtml/sc/bidding/bidResults.xhtml"></ui:include>
+	</p:panel>
+</ui:composition>   

@@ -1,0 +1,173 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:ac="http://ac.my/jsf/composite/cc">
+
+	<p:panel header="Qtn/Tender Title" toggleable="true">
+		<h:panelGrid border="0" cellpadding="0" cellspacing="0" width="100%"
+			columns="2" columnClasses="columnWidth20">
+
+			<h:column>
+				<h:outputLabel value="* #{lbl['lbl.so.title']}" />
+			</h:column>
+			<h:column>
+				<p:inputText value="#{qTDetailBB.managedBean.qt.qtTitle}" size="107" disabled="#{!qTDetailBB.managedBean.editable}"/>
+			</h:column>
+		</h:panelGrid>
+		<h:panelGrid border="0" cellpadding="0" cellspacing="0" width="100%"
+			columns="4"
+			columnClasses="columnWidth20,columnWidth30,columnWidth20,columnWidth30">
+
+			<h:column>
+				<h:outputLabel value="* #{lbl['lbl.so.fileno']}"/>
+			</h:column>
+			<h:column>
+				<p:inputText id="fileno" value="#{qTDetailBB.managedBean.qt.fileNo}" disabled="#{!qTDetailBB.managedBean.editable}" size="30"/>
+			</h:column>
+			<h:column>
+           		<h:outputLabel value="Created Date" /> 
+           	</h:column>
+           	<h:column>
+           		<p:inputText value="#{qTDetailBB.managedBean.qt.createdDate}"  disabled="true" size="30"/>  
+ 			</h:column>
+			<h:column>
+				<h:outputLabel value="#{lbl['lbl.so.planno']}" rendered="#{qTDetailBB.managedBean.qt.planned}"/>
+			</h:column>
+			<h:column>
+				<p:inputText id="planno" 
+					value="#{qTDetailBB.managedBean.qt.ppPlan.planId}" rendered="#{qTDetailBB.managedBean.qt.planned}"/>
+			</h:column>
+			<h:column>
+				<h:outputLabel value="* #{lbl['lbl.so.planamount']}" 
+					rendered="#{qTDetailBB.managedBean.qt.planned}" />
+				<h:outputLabel value="* #{lbl['lbl.so.estimated']}"
+					rendered="#{!qTDetailBB.managedBean.qt.planned}" />
+			</h:column>
+			<h:column>
+				<p:inputText id="estprice"
+					value="#{qTDetailBB.managedBean.qt.qtAmount}" disabled="#{!qTDetailBB.managedBean.editable}" size="30"/>
+					<h:inputText value="MYR" disabled="true" size="1"></h:inputText>
+			</h:column>
+			<h:column>
+				<h:outputLabel value="* #{lbl['lbl.so.procmode']}" />
+			</h:column>
+			<h:column>
+			   <c:if test="#{qTDetailBB.managedBean.qt.brandNew}">
+				<p:selectOneMenu
+					value="#{qTDetailBB.managedBean.qt.procurementMode}" style="width: 178px;margin-bottom: 5px;" >
+					<f:selectItems value="#{qTDetailBB.getDropdownCodeValues(PmCodeCatConst.scProcurementMode)}" />
+				<p:ajax event="change" partialSubmit="true" process="@this" update="approvalWorkFlow" listener="#{qTDetailBB.onChangeAction}"/>
+				</p:selectOneMenu>
+				</c:if>
+				<c:if test="#{!qTDetailBB.managedBean.qt.brandNew}">
+            		<p:inputText 
+            			value="#{qTDetailBB.managedBean.qt.procurementMode}" 
+            			disabled="true" />
+            	</c:if>
+			</h:column>
+			<h:column>
+				<h:outputLabel value="* #{lbl['lbl.so.financialyr']}" />
+			</h:column>
+			<h:column>
+				<p:selectOneRadio id="optionradio"
+					value="#{qTDetailBB.managedBean.qt.financialYear}" disabled="#{!qTDetailBB.managedBean.editable}">
+					<f:selectItem itemLabel="Current Year" itemValue="1" />
+					<f:selectItem itemLabel="Next Year" itemValue="2" />
+				</p:selectOneRadio>
+			</h:column>
+		</h:panelGrid>
+	</p:panel>
+
+	<p:panel header="GOSODO List" toggleable="true"
+		rendered="#{!qTDetailBB.managedBean.qt.planned}">
+		<p:dataTable id="gosodoList"
+			value="#{qTDetailBB.managedBean.qt.scQtGosodoBudgets}" var="gosodo"
+			selection="#{qTDetailBB.managedBean.selectedGosodoBudgets}"
+				rowKey="#{gosodo}" rowIndexVar="rowIndex"
+				rows="10">
+				<p:column selectionMode="multiple" style="width:2%" />
+				<ac:paginator for="gosodoList" />
+			
+			<p:column headerText="GO Code">
+				<h:outputText value="#{gosodo.pmGo.goCode}"
+					rendered="#{rowIndex lt qTDetailBB.managedBean.qt.scQtGosodoBudgets.size()-1}" />
+				 <c:if test="#{qTDetailBB.managedBean.qt.brandNew}">
+				<p:selectOneMenu value="#{gosodo.pmGo.goId}"
+					rendered="#{rowIndex eq qTDetailBB.managedBean.qt.scQtGosodoBudgets.size()-1}">
+					<f:selectItem itemLabel="Select One" itemValue="#{null}" />
+					<f:selectItems value="#{qTDetailBB.goList}" var="go"
+						itemLabel="#{go.goCode}" itemValue="#{go.goId}" />
+					<p:ajax event="change"
+						listener="#{qTDetailBB.handleGoChanged(gosodo)}"
+					partialSubmit="true" process="@this" update="solist, dolist" />
+				</p:selectOneMenu>
+				</c:if>
+				<c:if test="#{!qTDetailBB.managedBean.qt.brandNew}">
+            		<p:inputText 
+            			value="#{gosodo.pmGo.goId}"
+            			disabled="true" />
+            	</c:if>
+			</p:column>
+			<p:column headerText="SO Code">
+				<h:outputText value="#{gosodo.pmSo.soCode}"
+					rendered="#{rowIndex lt qTDetailBB.managedBean.qt.scQtGosodoBudgets.size()-1}" />
+				 <c:if test="#{qTDetailBB.managedBean.qt.brandNew}">
+				<p:selectOneMenu id="solist" value="#{gosodo.pmSo.soId}"
+					rendered="#{rowIndex eq qTDetailBB.managedBean.qt.scQtGosodoBudgets.size()-1}">
+					<f:selectItem itemLabel="Select One" itemValue="#{null}" />
+					<f:selectItems value="#{qTDetailBB.managedBean.soList}" var="so"
+						itemLabel="#{so.soCode}" itemValue="#{so.soId}" />
+					<p:ajax event="change"
+					listener="#{qTDetailBB.handleSoChanged(gosodo)}"
+						partialSubmit="true" process="@this" update="dolist" />
+				</p:selectOneMenu>
+				</c:if>
+				<c:if test="#{!qTDetailBB.managedBean.qt.brandNew}">
+            		<p:inputText 
+            			value="#{gosodo.pmSo.soCode}"
+            			disabled="true" />
+            	</c:if>
+			</p:column>
+			<p:column headerText="DO Code">
+				<h:outputText value="#{gosodo.pmDo.doCode}"
+					rendered="#{rowIndex lt qTDetailBB.managedBean.qt.scQtGosodoBudgets.size()-1}" />
+				<c:if test="#{qTDetailBB.managedBean.qt.brandNew}">
+				<p:selectOneMenu id="dolist" value="#{gosodo.pmDo.doId}"
+					rendered="#{rowIndex eq qTDetailBB.managedBean.qt.scQtGosodoBudgets.size()-1}">
+					<f:selectItem itemLabel="Select One" itemValue="#{null}" />
+					<f:selectItems value="#{qTDetailBB.managedBean.doList}" var="do"
+						itemLabel="#{do.doCode}" itemValue="#{do.doId}" />
+						<p:ajax event="change"
+					listener="#{qTDetailBB.handleDoChange(gosodo)}"
+						partialSubmit="true" process="@this" />
+						
+				</p:selectOneMenu>
+				</c:if>
+				<c:if test="#{!qTDetailBB.managedBean.qt.brandNew}">
+            		<p:inputText 
+            			value="#{gosodo.pmDo.doCode}"
+            			disabled="true" />
+            	</c:if>
+			</p:column>
+			<p:column headerText="Budget Availability"> 
+       		#{empty gosodo.budgetAvailable ? (gosodo.budgetAvailable ? 'Yes' : 'No') : ''}
+       	</p:column>
+		<!-- 	<p:column headerText="Action ">
+				<p:commandLink style="margin-right:20px;" ajax="false">
+					<h:outputText value="CheckAvailability" />
+				</p:commandLink>
+			</p:column>  -->
+		</p:dataTable>
+       <p:spacer height="15"></p:spacer>
+						<div align="right">
+		 <p:commandButton value="#{lbl['lbl.so.addbtn']}" 
+			actionListener="#{qTDetailBB.addGoSoDoAction}" update="gosodoList" icon="ui-icon-add" rendered="#{qTDetailBB.managedBean.editable}">
+		</p:commandButton>
+        <p:commandButton value="#{lbl['lbl.so.delete']}" icon="ui-icon-delete" rendered="#{qTDetailBB.managedBean.editable}"/>
+       
+		</div>
+	</p:panel>
+</ui:composition>

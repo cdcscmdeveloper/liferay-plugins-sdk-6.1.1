@@ -1,0 +1,64 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:c="http://java.sun.com/jsp/jstl/core">
+
+	<p:panel header="Approval Details Section" toggleable="true">
+
+		<h:panelGrid columns="4"
+			columnClasses="columnWidth25,columnWidth25,columnWidth20,columnWidth30">
+
+
+			<h:outputLabel value="#{lbl['lbl.sc.qt.appname']}"></h:outputLabel>
+
+			<h:panelGroup id="sample2">
+				<p:selectOneMenu
+					value="#{approvalCategory.scQtApproval.approverId}"
+					rendered="#{approvalCategory.scQtApproval.verifyOption eq 'O'}" style="width: 100px;">
+					<f:selectItems value="#{qTDetailBB.managedBean.approvers}" var="approver"   itemLabel="#{approver.userName}" itemValue="#{approver.userId}"></f:selectItems>
+				</p:selectOneMenu>
+
+				<p:inputText
+					value="#{approvalCategory.scQtApproval.approverId}"
+					rendered="#{approvalCategory.scQtApproval.verifyOption eq 'F'}"></p:inputText>
+			</h:panelGroup>
+
+			<h:outputLabel value="#{lbl['lbl.sc.qt.appdate']}"></h:outputLabel>
+
+			<p:calendar
+				value="#{approvalCategory.scQtApproval.approverActionDate}" disabled="#{!qTDetailBB.managedBean.editable}" 
+				showOn="button"></p:calendar>
+
+
+
+
+
+
+
+
+
+
+			<h:outputLabel value="#{lbl['lbl.sc.qt.action']}"></h:outputLabel>
+
+			<p:selectOneMenu
+				value="#{approvalCategory.scQtApproval.approverAction}" style="width: 100px;">
+					<f:selectItem itemLabel="Select One" itemValue="" />
+				<f:selectItem itemLabel="APPROVER" itemValue="a" />
+				<f:selectItem itemLabel="REJECT" itemValue="r" />
+
+			</p:selectOneMenu>
+
+			<h:outputLabel value="#{lbl['lbl.sc.qt.remarks']}"></h:outputLabel>
+
+			<p:inputTextarea rows="3" cols="50"
+				value="#{approvalCategory.scQtApproval.approverRemark}"
+				autoResize="false"></p:inputTextarea>
+
+
+		</h:panelGrid>
+
+	</p:panel>
+
+</ui:composition>

@@ -1,0 +1,165 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	template="/WEB-INF/facelets/templates/basic_template.xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:c="http://java.sun.com/jsp/jstl/core">
+
+	<ui:define name="resourceSection">
+	</ui:define>
+
+<p:messages id="templateMaintenancemessages" showDetail="true" autoUpdate="true"
+				closable="true" />
+	<ui:define name="contentSection">
+
+		<div align="right">
+			<p:commandButton value="#{lbl['lbl.sc.tpl.btn.save']}"
+				style="margin-right:30px;" action="#{TemplateMBB.save}" icon="ui-icon-save"/>
+			<p:commandButton value="#{lbl['lbl.sc.tpl.btn.submit']}"
+				style="margin-right:30px;" icon="ui-icon-submit"/>
+
+		</div>
+		<p:panel header="#{lbl['lbl.sc.tpl.head.section']}" toggleable="true">
+
+			<!-- <h:panelGrid columns="4"
+				columnClasses="columnWidth20,columnWidth30,columnWidth20,columnWidth30"
+				styleClass="noBorders tr,noBorders td"> -->
+			<table>
+				<tr>
+					<td><h:outputLabel value="#{lbl['lbl.sc.tpl.search.qtn.no']}"></h:outputLabel>
+					</td>
+					<td><p:inputText
+							value="#{TemplateMBB.managedBean.scqtDoc.scQt.qtNo}"
+							readonly="true" disabled="true" /></td>
+					<td><h:outputLabel value="#{lbl['lbl.sc.tpl.search.spec']}"></h:outputLabel>
+					</td>
+					<td>
+						<!-- <p:selectOneMenu
+					value="#{TemplateMBB.managedBean.specificationType}">
+					<f:selectItem itemLabel="Select One" itemValue=" " />
+					<f:selectItem itemLabel="Technical" itemValue="1" />
+					<f:selectItem itemLabel="Financial" itemValue="2" />
+					<p:ajax update="estimated,price"></p:ajax>
+				</p:selectOneMenu> --> <p:inputText
+							value="#{TemplateMBB.managedBean.scqtDoc.tplSpecMaster.specTypeCode.parameterId}"
+							readonly="true" disabled="true"></p:inputText>
+					</td>
+				</tr>
+				<tr>
+					<td><h:outputLabel
+							value="#{lbl['lbl.sc.tpl.search.procure.category']}"></h:outputLabel>
+					</td>
+					<td><p:inputText
+							value="#{TemplateMBB.managedBean.scqtDoc.tplSpecMaster.procurementCategory.parameterId}"
+							readonly="true" disabled="true" /></td>
+					<td><h:outputLabel value="#{lbl['lbl.sc.tpl.search.item']}"></h:outputLabel>
+					</td>
+					<td><p:inputText
+							value="#{TemplateMBB.managedBean.scqtDoc.tplSpecMaster.itemTypeCode.parameterId}"
+							readonly="true" disabled="true" /></td>
+				</tr>
+				<!-- </h:panelGrid>
+			<h:panelGrid columns="2"> -->
+				<tr>
+					<td><h:outputLabel value="#{lbl['lbl.sc.tpl.check.list']}"></h:outputLabel>
+					</td>
+					<td><p:selectOneMenu style="margin-bottom:5px;"
+							value="#{TemplateMBB.managedBean.scqtDoc.scQtCheckList.qtChecklistId}">
+							<f:selectItem itemLabel="Select One" itemValue="" />
+							<f:selectItems value="#{TemplateMBB.managedBean.checkListItem}" var="checklist" itemLabel="#{checklist.title}" itemValue="#{checklist.qtChecklistId}"/>
+							<p:ajax event="change" process="@this" partialSubmit="true" listener="#{TemplateMBB.handleCheckList(TemplateMBB.managedBean.scqtDoc)}"
+								update="checkList"></p:ajax>
+						</p:selectOneMenu></td>
+				</tr>
+				<tr>
+					<td><h:outputLabel value="#{lbl['lbl.sc.tpl.main.title']}"></h:outputLabel>
+					</td>
+					<td>
+					<h:panelGroup  id="checkList">
+					<ui:fragment rendered="#{TemplateMBB.managedBean.specificationType !=null}">
+						<p:inputText size="50" 
+							disabled="true"
+							value="#{TemplateMBB.managedBean.scqtDoc.scQtCheckList.title}" />
+					</ui:fragment>
+					<ui:fragment rendered="#{TemplateMBB.managedBean.specificationType ==null}">
+					<p:inputText size="50" 
+							
+							value="#{TemplateMBB.managedBean.scqtDoc.scQtCheckList.title}" />
+					</ui:fragment>
+					</h:panelGroup>
+					</td>
+				</tr>
+				<tr>
+					<td><h:outputLabel value="#{lbl['lbl.sc.tpl.desc']}"></h:outputLabel>
+					</td>
+					<td><p:inputTextarea rows="3" cols="50" autoResize="false" style="margin-bottom:5px;"
+							value="#{TemplateMBB.managedBean.scqtDoc.tplSpecMaster.specDesc}" />
+					</td>
+				</tr>
+				<!-- </h:panelGrid>
+
+			<p:panelGrid styleClass="noBorders tr,noBorders td" style="width:70%">
+				<p:row>
+					<p:column> -->
+				<tr>
+					<td><h:outputLabel value="#{lbl['lbl.sc.tpl.zone']}" /></td>
+					<td><p:selectOneMenu id="zone" style="margin-bottom:5px;"
+							value="#{TemplateMBB.managedBean.scqtDoc.scQtZoneCriteria.qtZoneCriteriaId}">
+							<f:selectItem itemLabel="Select One" itemValue="0" />
+							<f:selectItems value="#{TemplateMBB.managedBean.zoneList}" />
+						</p:selectOneMenu></td>
+					<td><h:outputLabel value="#{lbl['lbl.sc.tpl.cost']}" /></td>
+					<td><p:selectOneRadio id="estimated"
+							value="#{TemplateMBB.managedBean.scqtDoc.tplSpecMaster.estCostReq}">
+							<f:selectItem itemLabel="Yes" itemValue="true" />
+							<f:selectItem itemLabel="No" itemValue="false" />
+
+						</p:selectOneRadio></td>
+				</tr>
+				<tr>
+					<td><h:outputLabel value="#{lbl['lbl.sc.tpl.search.status']}" />
+					</td>
+					<td><p:inputText
+							value="#{TemplateMBB.managedBean.scqtDoc.tplSpecMaster.status.statusId}"
+							readonly="true" disabled="true"></p:inputText></td>
+					<td><h:outputLabel value="#{lbl['lbl.sc.tpl.tier']}" /></td>
+					<td><p:selectOneRadio id="price"
+							value="#{TemplateMBB.managedBean.scqtDoc.tplSpecMaster.tierPrice}">
+							<f:selectItem itemLabel="Yes" itemValue="true" />
+							<f:selectItem itemLabel="No" itemValue="false" />
+
+						</p:selectOneRadio></td>
+				</tr>
+				<tr>
+					<td class="TableFieldLeft"><h:outputLabel
+							value="#{lbl['lbl.sc.tpl.search.record.status']}"></h:outputLabel>
+
+					</td>
+					<td class="TableFieldRight"><p:selectOneMenu
+							value="#{TemplateMBB.managedBean.scqtDoc.recordStatus}">
+
+							<f:selectItem itemLabel="Active" itemValue="1" />
+							<f:selectItem itemLabel="Inactive" itemValue="0" />
+						</p:selectOneMenu></td>
+				</tr>
+			</table>
+
+
+
+		</p:panel>
+
+
+		<ui:include src="/xhtml/tpl/spec/specContent.xhtml" />
+		<h:panelGrid columns="2">
+			<h:outputLabel value="#{lbl['lbl.sc.tpl.total']}"></h:outputLabel>
+			<p:inputText
+				value="#{TemplateMBB.managedBean.scqtDoc.tplSpecMaster.specTotal}"></p:inputText>
+		</h:panelGrid>
+
+
+
+	</ui:define>
+
+
+</ui:composition>

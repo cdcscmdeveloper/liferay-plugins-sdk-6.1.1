@@ -1,0 +1,99 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:c="http://java.sun.com/jsp/jstl/core">
+
+	<p:panel header="Approval Details Section" toggleable="true">
+
+
+
+		<h:panelGrid columns="4"
+			columnClasses="columnWidth25,columnWidth25,columnWidth20,columnWidth30">
+
+			<h:outputLabel value="#{lbl['lbl.sc.qt.appname']}"></h:outputLabel>
+   
+             <h:panelGroup id="sample1">
+				<ui:fragment 
+					rendered="#{approvalCategory.scQtApproval.verifyOption eq 'O'}">
+					<p:selectOneMenu
+						value="#{approvalCategory.scQtApproval.approverId}" style="width: 100px;">
+							<f:selectItem itemLabel="Select One" itemValue="" />
+						
+						<f:selectItem itemLabel="ROSLAN" itemValue="2" />
+						<f:selectItem itemLabel="KHAIR" itemValue="3" />
+					</p:selectOneMenu>
+				</ui:fragment>
+				<ui:fragment 
+					rendered="#{approvalCategory.scQtApproval.verifyOption eq 'F'}">
+					<p:inputText
+						value="#{approvalCategory.scQtApproval.approverId}"
+						></p:inputText>
+				</ui:fragment>
+			</h:panelGroup>
+
+			<h:outputLabel value="#{lbl['lbl.sc.qt.appdate']}"></h:outputLabel>
+
+			<p:calendar
+				value="#{approvalCategory.scQtApproval.approverActionDate}" disabled="#{!qTDetailBB.managedBean.editable}" 
+				showOn="button"></p:calendar>
+
+
+
+
+
+
+
+			<h:outputLabel value="#{lbl['lbl.sc.qt.action']}"></h:outputLabel>
+
+			<h:panelGroup id="checkboxBPK">
+				<c:choose>
+
+					<c:when
+						test="#{approvalBackingBean.managedBean.checkBoxBPK eq 'Restricted'}">
+						<p:selectOneMenu
+							value="#{approvalCategory.scQtApproval.approverAction}" style="width: 100px;">
+								<f:selectItem itemLabel="Select One" itemValue="" />
+							<f:selectItem itemLabel="APPROVE" itemValue="a" />
+							<f:selectItem itemLabel="REJECT" itemValue="r" />
+							<p:ajax event="change" partialSubmit="true" process="@this" listener="#{qTDetailBB.setOutComeAction}"/>
+			
+						</p:selectOneMenu>
+					</c:when>
+					<c:when
+						test="#{approvalBackingBean.managedBean.checkBoxBPK eq 'Direct'}">
+						<p:selectOneMenu
+							value="#{approvalCategory.scQtApproval.approverAction}" style="width: 100px;">
+								<f:selectItem itemLabel="Select One" itemValue="" />
+							<f:selectItem itemLabel="APPROVE" itemValue="a" />
+							<f:selectItem itemLabel="REJECT" itemValue="r" />
+							<p:ajax event="change" partialSubmit="true" process="@this" listener="#{qTDetailBB.setOutComeAction}"/>
+						</p:selectOneMenu>
+					</c:when>
+
+					<c:otherwise>
+						<p:selectOneMenu
+							value="#{approvalCategory.scQtApproval.approverAction}" style="width: 100px;">
+								<f:selectItem itemLabel="Select One" itemValue="" />
+							<f:selectItem itemLabel="APPROVE" itemValue="a" />
+							<f:selectItem itemLabel="REJECT" itemValue="r" />
+							<p:ajax event="change" partialSubmit="true" process="@this" listener="#{qTDetailBB.setOutComeAction(approvalCategory.scQtApproval.approverAction)}"/>
+						
+						</p:selectOneMenu>
+					</c:otherwise>
+				</c:choose>
+			</h:panelGroup>
+
+			<h:outputLabel value="#{lbl['lbl.sc.qt.remarks']}"></h:outputLabel>
+
+			<p:inputTextarea
+				value="#{approvalCategory.scQtApproval.approverRemark}" disabled="#{!qTDetailBB.managedBean.editable}" 
+				rows="3" cols="50" autoResize="false"></p:inputTextarea>
+
+
+		</h:panelGrid>
+
+	</p:panel>
+
+</ui:composition>

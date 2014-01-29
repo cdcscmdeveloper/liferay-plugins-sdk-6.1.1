@@ -1,0 +1,35 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:c="http://java.sun.com/jsp/jstl/core">
+	<p:panel>
+		<ui:include
+			src="/xhtml/sc/supplierFinalization/supplierFinalizationZonePopUp.xhtml" />
+		<ui:include
+			src="/xhtml/sc/supplierFinalization/suppFinalizationSuppDtlPopUp.xhtml" />
+		<ui:include
+			src="/xhtml/sc/supplierFinalization/supplierFinalizationbuttons.xhtml" />
+		<ui:include
+					src="/xhtml/sc/supplierFinalization/suppFinalizationHeader.xhtml" />
+		<p:tabView dynamic="true" cache="true" orientation="left">
+
+			<p:tab title="#{lbl['lbl.sc.sf.preparation.tab']}">
+				<ui:include
+					src="/xhtml/sc/supplierFinalization/supplierFinalizationPreparation.xhtml"></ui:include>
+			</p:tab>
+
+			<p:tab title="#{lbl['lbl.sc.sf.supplier.finalization.tab']}">
+				<ui:include
+					src="/xhtml/sc/supplierFinalization/supplierFinalization.xhtml"></ui:include>
+			</p:tab>
+
+			<p:tab title="#{lbl['lbl.sc.sf.sign.off.tab']}">
+				<ui:include
+					src="/xhtml/sc/supplierFinalization/supplierFinalizationSignOff.xhtml"></ui:include>
+			</p:tab>
+
+		</p:tabView>
+	</p:panel>
+</ui:composition>

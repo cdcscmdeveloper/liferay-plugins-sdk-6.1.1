@@ -1,0 +1,157 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:ac="http://ac.my/jsf/composite/cc">
+
+
+
+
+
+	<p:panel header="#{lbl['lbl.sc.spec.weight.tech']}" toggleable="true">
+
+
+		<h:panelGrid columns="4" id="weightage">
+
+			<h:outputText value="#{lbl['lbl.sc.spec.weight.pass.score']}"
+				rendered="#{specificationBackingBean.managedBean.evaluationType eq'2'}" />
+			<p:spacer width="10"
+				rendered="#{specificationBackingBean.managedBean.evaluationType eq'2'}"></p:spacer>
+			<p:inputText
+				rendered="#{specificationBackingBean.managedBean.evaluationType eq'2'}"
+				value="#{specificationBackingBean.managedBean.scQtSpec.techinicalPassScore}"></p:inputText>
+			<h:outputText value="/100 "
+				rendered="#{specificationBackingBean.managedBean.evaluationType eq'2'}" />
+		</h:panelGrid>
+
+		<p:dataTable id="technicalWeigtage" var="tech"
+			value="#{specificationBackingBean.managedBean.weightageTechnical}"
+			rowKey="#{tech}"
+			selection="#{specificationBackingBean.managedBean.weightageTechnicalSelect}"
+			editable="true" style="width:100%" rowIndexVar="index">
+			<ac:paginator for="technicalWeigtage" />
+			<p:column selectionMode="multiple" style="text-align:center;" />
+
+			<p:column headerText="#{lbl['lbl.sc.spec.weight.weight']}"
+				style="width:70%;">
+				<p:inputText value="#{tech.weightageTitle}" size="50" />
+			</p:column>
+			<p:column headerText="#{lbl['lbl.sc.spec.weight.percent']}"
+				style="width:30%;">
+				<p:inputText value="#{tech.weightagePercentage}" />
+			</p:column>
+
+		</p:dataTable>
+
+		<p:spacer height="15"></p:spacer>
+		<div align="right">
+			<p:commandButton value="#{lbl['lbl.sc.spec.stage.btn.add']}"
+				process="@this,technicalWeigtage" partialSubmit="true"
+				action="#{specificationBackingBean.weightageTechnical}"
+				icon="ui-icon-add" update="technicalWeigtage" />
+			<p:commandButton value="#{lbl['lbl.sc.spec.stage.btn.delete']}"
+				icon="ui-icon-delete"
+				action="#{specificationBackingBean.deleteTechnicalWeightage}"
+				update="technicalWeigtage" />
+
+		</div>
+	</p:panel>
+
+
+
+
+
+
+
+	<h:panelGrid columns="4">
+
+
+		<h:outputText value="#{lbl['lbl.sc.spec.weight.total']} " />
+		<p:spacer width="10"></p:spacer>
+		<p:inputText readonly="true" disabled="true"></p:inputText>
+		<h:outputText value="/100 " />
+
+
+	</h:panelGrid>
+
+
+
+
+
+
+	<p:panel header="#{lbl['lbl.sc.spec.weight.finnance']}"
+		toggleable="true">
+		<p:dataTable id="financialweightage" var="finance" rowKey="#{finance}"
+			value="#{specificationBackingBean.managedBean.weightageFinancial}"
+			selection="#{specificationBackingBean.managedBean.weightageFinancialSelect}"
+			style="width:100%" rowIndexVar="index">
+			<ac:paginator for="financialweightage" />
+			<p:column selectionMode="multiple" style="text-align:center;" />
+
+			<p:column headerText="#{lbl['lbl.sc.spec.weight.weight']}"
+				style="width:70%;">
+				<p:inputText value="#{finance.weightageTitle}" size="50" />
+			</p:column>
+			<p:column headerText="#{lbl['lbl.sc.spec.weight.percent']}"
+				style="width:30%;">
+				<p:inputText value="#{finance.weightagePercentage}" />
+			</p:column>
+
+		</p:dataTable>
+
+		<p:spacer height="15"></p:spacer>
+		<div align="right">
+			<p:commandButton value="#{lbl['lbl.sc.spec.stage.btn.add']}"
+				process="@this,financialweightage" partialSubmit="true"
+				action="#{specificationBackingBean.weightageFinancial}"
+				icon="ui-icon-add" update="financialweightage" />
+			<p:commandButton value="#{lbl['lbl.sc.spec.stage.btn.delete']}"
+				icon="ui-icon-delete"
+				action="#{specificationBackingBean.deleteFinancialWeightage}"
+				update="financialweightage" />
+
+		</div>
+	</p:panel>
+
+
+
+
+
+	<p:panel>
+
+		<h:panelGrid columns="4">
+				
+
+			<h:outputText value="#{lbl['lbl.sc.spec.weight.total']} " />
+			<p:spacer width="10"></p:spacer>
+			<p:inputText readonly="true" disabled="true"></p:inputText>
+
+			<h:outputText value="/100 " />
+
+
+
+
+		</h:panelGrid>
+
+	</p:panel>
+
+
+	<p:panel header="#{lbl['lbl.sc.spec.weight.supplier.finalization']}"
+		toggleable="true">
+
+
+		<h:panelGrid columns="4">
+
+			<h:outputText value="#{lbl['lbl.sc.spec.weight.pass.score']}" />
+			<p:spacer width="10"></p:spacer>
+			<p:inputText
+				value="#{specificationBackingBean.managedBean.scQtSpec.finalizationPassScore}"></p:inputText>
+			<h:outputText value="/100 " />
+		</h:panelGrid>
+	</p:panel>
+
+
+
+</ui:composition>

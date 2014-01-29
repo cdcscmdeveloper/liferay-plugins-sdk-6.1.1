@@ -1,0 +1,18 @@
+<ui:composition
+	template="/WEB-INF/facelets/templates/basic_template.xhtml"
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui" xmlns:dp="http://openam.com/ui"
+	xmlns:c="http://java.sun.com/jsp/jstl/core">
+	<ui:define name="resourceSection">
+	</ui:define>
+	<ui:define name="contentSection">
+		<div align="right" id="div_globe_11">
+			<p:button value="#{lbl['lbl.ss.simple.quote.purchase.btn.cancel']}" outcome="/xhtml/sc/directpurchase/directPurchase.xhtml"></p:button>
+			<p:commandButton value="#{lbl['lbl.ss.simple.quote.purchase.btn.ok']}" action="#{directPurchaseBackingBean.updateCatalogueSupplierItem}"></p:commandButton>
+		</div>
+		<ui:include src="/xhtml/cm/catalogue/supplierItemSearch.xhtml"></ui:include>
+	</ui:define>
+</ui:composition>

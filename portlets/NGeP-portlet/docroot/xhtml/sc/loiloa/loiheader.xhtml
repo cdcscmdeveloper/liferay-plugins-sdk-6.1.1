@@ -1,0 +1,115 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:c="http://java.sun.com/jsp/jstl/core">
+	<p:panel header="Header" toggleable="true">
+		<h:panelGrid border="0" cellpadding="0" cellspacing="0" width="100%"
+			columns="4"
+			columnClasses="columnWidth20,columnWidth30,columnWidth20,columnWidth30">
+			<h:column>
+				<h:outputLabel value="Qtn/Tender No." />
+			</h:column>
+			<h:column>
+				<p:inputText value="#{lOIDetailBackingBean.managedBean.qt.qtNo}"
+					disabled="true" size="30"/>
+			</h:column>
+			<h:column>
+				<h:outputLabel value="Ministry Code/Name" />
+			</h:column>
+			<h:column>
+				<c:if test="#{lOIDetailBackingBean.managedBean.qt.brandNew}">
+            		<p:selectOneMenu 
+            			value="#{lOIDetailBackingBean.managedBean.qt.ministryOrgProfile.orgProfileId}"
+	            		styleClass="minstryclass"
+    	        		style="width: 220px;">
+        	    		<f:selectItem itemLabel="Select One" itemValue="#{null}" />
+            			<f:selectItems value="#{lOIDetailBackingBean.managedBean.userMinistryList}"
+            				var="pmOrgProfile" itemLabel="#{pmOrgProfile.orgCode} - #{pmOrgProfile.orgName}" itemValue="#{pmOrgProfile.orgProfileId}" />
+            			<p:ajax event="change" listener="#{lOIDetailBackingBean.handleMinistryProfileChanged}"
+            				partialSubmit="true" process="@this" update="@(.minstryclass)" />
+	            	</p:selectOneMenu>
+	            </c:if>
+				 <c:if test="#{!lOIDetailBackingBean.managedBean.qt.brandNew}">
+            		<p:inputText 
+            			value="#{lOIDetailBackingBean.managedBean.qt.ministryOrgProfile.orgCode} - #{lOIDetailBackingBean.managedBean.qt.ministryOrgProfile.orgName}" 
+            			disabled="true" 
+            			size="30" />
+            	</c:if>
+			</h:column>
+			<h:column>
+				<h:outputLabel value="Status" />
+			</h:column>
+			<h:column>
+				<p:inputText value="#{lOIDetailBackingBean.managedBean.qt.pmStatus.statusId}"
+					disabled="true" size="30"/>
+			</h:column>
+			<h:column>
+				<h:outputLabel value="Department Code/Name" />
+			</h:column>
+			<h:column>
+				<c:if test="#{lOIDetailBackingBean.managedBean.qt.brandNew}">
+            		<p:selectOneMenu
+            			value="#{lOIDetailBackingBean.managedBean.qt.departmentOrgProfile.orgProfileId}"
+	            		styleClass="deptclass"
+    	        		style="width: 220px;">
+        	    		<f:selectItem itemLabel="Select One" itemValue="#{null}" />
+            			<f:selectItems value="#{lOIDetailBackingBean.managedBean.userDepartmentList}"
+            				var="pmOrgProfile" itemLabel="#{pmOrgProfile.orgCode} - #{pmOrgProfile.orgName}" itemValue="#{pmOrgProfile.orgProfileId}" />
+            			<p:ajax event="change" listener="#{lOIDetailBackingBean.handleDepartmentProfileChanged}"
+            				partialSubmit="true" process="@this" update="@(.deptclass, .divisionclass)" />
+	            	</p:selectOneMenu>
+	            </c:if>
+	            <c:if test="#{!lOIDetailBackingBean.managedBean.qt.brandNew}">
+            		<p:inputText 
+            			value="#{lOIDetailBackingBean.managedBean.qt.departmentOrgProfile.orgCode} - #{lOIDetailBackingBean.managedBean.qt.departmentOrgProfile.orgName}" 
+            			disabled="true"
+            			size="30" />
+            	</c:if>
+			</h:column>
+			<h:column>
+				<h:outputLabel value="Created Date" />
+			</h:column>
+			<h:column>
+				<p:inputText
+					value="#{lOIDetailBackingBean.managedBean.qt.createdDate}"
+					disabled="true" size="30"/>
+			</h:column>
+			<h:column>
+				<h:outputLabel value="Divison Code/Name" />
+			</h:column>
+			<h:column>
+				<c:if test="#{lOIDetailBackingBean.managedBean.qt.brandNew}">
+            		<p:selectOneMenu 
+           				value="#{lOIDetailBackingBean.managedBean.qt.pmOrgProfile.orgProfileId}"
+	           			styleClass="divisionclass"
+    	        		style="width: 220px;">
+        	   			<f:selectItem itemLabel="Select One" itemValue="#{null}" />
+           				<f:selectItems value="#{lOIDetailBackingBean.managedBean.userDivisionList}"
+           					var="pmOrgProfile" itemLabel="#{pmOrgProfile.orgCode} - #{pmOrgProfile.orgName}" itemValue="#{pmOrgProfile.orgProfileId}" />
+           				<p:ajax event="change" 
+            				partialSubmit="true" process="@this" update="@(.divisionclass)" />
+	           		</p:selectOneMenu>
+	           	</c:if>
+	           	<c:if test="#{!lOIDetailBackingBean.managedBean.qt.brandNew}">
+            		<p:inputText 
+            			value="#{lOIDetailBackingBean.managedBean.qt.pmOrgProfile.orgCode} - #{lOIDetailBackingBean.managedBean.qt.pmOrgProfile.orgName}" 
+            			disabled="true"
+            			size="30" />
+            	</c:if>
+			</h:column>
+			<h:column>
+				<h:outputLabel value="LOI Status" />
+			</h:column>
+			<h:column>
+				<p:inputText
+					value="#{lOIDetailBackingBean.managedBean.scLoi.pmStatus.pmStatusDescs[0].statusName}"
+					disabled="true" size="30"/>
+			</h:column>
+			<h:column />
+			<h:column />
+		</h:panelGrid>
+	</p:panel>
+
+</ui:composition>

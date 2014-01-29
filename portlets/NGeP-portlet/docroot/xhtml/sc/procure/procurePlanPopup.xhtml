@@ -1,0 +1,57 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:c="http://java.sun.com/jsp/jstl/core">
+	<p:dialog id="planInforDialog" header="PLANNED INFO" widgetVar="procurePlanPopup" modal="true" width="800" height="500">
+		<p:panel header="PLANNED INFO" toggleable="true">
+			<p:panelGrid style="width:50%;" styleClass="noBorders tr,noBorders td">
+			<p:row>
+				<p:column><p:outputLabel value="Plan Number"></p:outputLabel></p:column>
+				<p:column colspan="3">
+					<p:inputText readonly="true" value="#{procurementListBackingBean.managedBean.currentPlan.planNo}"></p:inputText>
+				</p:column>
+			</p:row>
+			<p:row>
+				<p:column><p:outputLabel value="VOT Type"></p:outputLabel></p:column>
+				<p:column colspan="3"><p:inputText readonly="true" value="#{procurementListBackingBean.managedBean.currentPlan.planNo}"></p:inputText></p:column>
+			</p:row>
+			<p:row>
+				<p:column><p:outputLabel value="Tot. Est. Amount (RM)"></p:outputLabel></p:column>
+				<p:column colspan="3">
+					<p:inputText readonly="true" value="#{procurementListBackingBean.managedBean.currentPlan.estimatedAmt}"/>
+				</p:column>
+			</p:row>
+			<p:row>
+				<p:column><p:outputLabel value="Product Family"></p:outputLabel></p:column>
+				<p:column colspan="3">
+					<c:if test="#{procurementListBackingBean.managedBean.currentPlan.cmUnspscFamily ne null}">
+					<p:inputText readonly="true" value="#{procurementListBackingBean.managedBean.currentPlan.cmUnspscFamily.unspscCode}"/>
+					</c:if>
+				</p:column>
+			</p:row>
+			<p:row>
+				<p:column><p:outputLabel value="Activity Start Date"></p:outputLabel></p:column>
+				<p:column>
+					<p:inputText readonly="true" value="#{procurementListBackingBean.managedBean.currentPlan.cmUnspscFamily.actualStartDate}"/>
+				</p:column>
+				<p:column>
+					<p:outputLabel value="Activity End Date"></p:outputLabel>
+				</p:column>
+				<p:column>
+					<p:inputText readonly="true" value="#{procurementListBackingBean.managedBean.currentPlan.cmUnspscFamily.actualEndDate}"/>
+				</p:column>
+			</p:row>
+			<p:row>
+				<p:column>
+					<p:outputLabel value="Notification Date"></p:outputLabel>
+				</p:column>
+				<p:column colspan="3">
+					<p:inputText readonly="true" />
+				</p:column>
+			</p:row>
+			</p:panelGrid>
+		</p:panel>
+	</p:dialog>
+</ui:composition>

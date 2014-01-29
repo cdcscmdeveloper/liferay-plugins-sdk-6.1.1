@@ -1,0 +1,127 @@
+<ui:composition
+	template="/WEB-INF/facelets/templates/basic_template.xhtml"
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:c="http://java.sun.com/jsp/jstl/core">
+	<ui:define name="resourceSection">
+	</ui:define>
+	<ui:define name="contentSection">
+		<div align="right" id="div_globe_11">
+			<p:commandButton value="#{lbl['lbl.ss.submit']}" action="#{simpleQuoteBidBackingBean.supplierSubmit}">
+			</p:commandButton>
+		</div>
+		<p:tabView id="dp_supplier" orientation="left" widgetVar="dp_supplier">
+			<p:tab id="simpleQuoteTab" title="Simple Quote - Supplier">
+				<p:panel id="globe_panel_1" label="Header" header="Header"
+					toggleable="true" toggleSpeed="500">
+					<p:spacer height="10" />
+					<table style="width: 100%">
+						<tr>
+							<td width="20%" align="left"><p:outputLabel
+									value="#{lbl['lbl.ss.simple.quote.ministry.code']}" /></td>
+							<td><p:inputText readonly="true" /></td>
+							<td><p:outputLabel
+									value="#{lbl['lbl.ss.simple.quote.department']}" /></td>
+							<td><p:inputText readonly="true" /></td>
+						</tr>
+						<tr>
+							<td width="20%" align="left"><p:outputLabel
+									value="#{lbl['lbl.ss.simple.quote.devision']}" /></td>
+							<td><p:inputText readonly="true" /></td>
+							<td><p:outputLabel
+									value="#{lbl['lbl.ss.simple.quote.requisitioner']}" /></td>
+							<td><p:inputText readonly="true" /></td>
+						</tr>
+					</table>
+				</p:panel>
+				<p:panel label="Item Specs" header="Item Specs" toggleable="true"
+					toggleSpeed="500">
+					<p:spacer height="10" />
+					<table style="width: 100%">
+						<tr>
+							<td width="20%" align="left"><p:outputLabel
+									value="Simple Quote No" /></td>
+							<td><p:inputText readonly="true" /></td>
+							<td><p:outputLabel value="Date Created" /></td>
+							<td><p:inputText readonly="true" /></td>
+						</tr>
+						<tr>
+							<td width="20%" align="left"><p:outputLabel value="Title" /></td>
+							<td colspan="3"><p:inputText readonly="true"
+									style="width:350px" /></td>
+						</tr>
+						<tr>
+							<td width="20%" align="left"><p:outputLabel
+									value="Description" /></td>
+							<td colspan="3"><p:inputTextarea readonly="true"
+									style="width:350px" /></td>
+						</tr>
+					</table>
+					<p:dataTable id="quoteBidItemDataTable"
+						value="#{simpleQuoteBidBackingBean.managedBean.quoteBidItems}"
+						var="item" rowIndexVar="index" editable="true" editMode="cell">
+						<p:column
+							headerText="#{lbl['lbl.ss.simple.quote.purchase.group.seq.no']}"
+							style="width:4%">
+							<h:outputText value="#{index+1}"></h:outputText>
+						</p:column>
+						<p:column headerText="Item Name" style="width:10%">
+								<h:outputText value="#{item.itemName}" />
+						</p:column>
+						<p:column headerText="Qty. Order" style="width:25%">
+								<h:outputText value="#{item.quantity}" />
+						</p:column>
+						<p:column headerText="#{lbl['lbl.ss.simple.quote.item.uom']}"
+							style="width:5%">
+								<h:outputText value="#{item.uom}" />
+						</p:column>
+						<p:column headerText="Spec. Offered"
+							style="width:25%">
+							<p:cellEditor>
+								<f:facet name="output">
+									<h:outputText value="#{item.specOffered}" />
+								</f:facet>
+								<f:facet name="input">
+									<p:inputText value="#{item.specOffered}" style="width:96%" />
+								</f:facet>
+							</p:cellEditor>
+						</p:column>
+						<p:column headerText="Qty. Offered"
+							style="width:10%">
+							<p:cellEditor>
+								<f:facet name="output">
+									<h:outputText value="#{item.qtyOffered}" />
+								</f:facet>
+								<f:facet name="input">
+									<p:inputText value="#{item.qtyOffered}" style="width:96%" />
+								</f:facet>
+							</p:cellEditor>
+						</p:column>
+						<p:column headerText="Price Per Unit"
+							style="width:10%">
+							<p:cellEditor>
+								<f:facet name="output">
+									<h:outputText value="#{item.pricePerUnit}" />
+								</f:facet>
+								<f:facet name="input">
+									<p:inputText value="#{item.pricePerUnit}" style="width:96%" />
+								</f:facet>
+							</p:cellEditor>
+						</p:column>
+						<p:column headerText="Amount"
+							style="width:10%">
+						</p:column>
+						<p:column headerText="Action" style="width:10%">
+							<p:graphicImage library="ep/images/design" name="edit.png"
+							value="/resources/ep/images/design/edit.png" />
+						</p:column>
+					</p:dataTable>
+				</p:panel>
+			</p:tab>
+		</p:tabView>
+	</ui:define>
+
+</ui:composition>

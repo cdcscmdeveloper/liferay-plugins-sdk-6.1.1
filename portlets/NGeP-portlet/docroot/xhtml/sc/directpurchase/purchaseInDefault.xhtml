@@ -1,0 +1,199 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:c="http://java.sun.com/jsp/jstl/core">
+	<p:spacer height="15px" />
+	<h:panelGrid border="0" cellpadding="0" cellspacing="4" width="100%"
+		columns="8" style="background-color: #F2F2F2;">
+
+		<h:outputLabel value="#{lbl['lbl.ss.purchase.in.default.pid.no']}" />
+		<p:inputText value="" readonly="true"
+			style="background-color: #F2F2F2;" />
+
+		<h:outputLabel value="#{lbl['lbl.ss.purchase.in.default.pkp.no']}" />
+		<p:inputText value="#{purchaseInDefaultBackingBean.managedBean.contract.contractId}" readonly="true" 
+			style="background-color: #F2F2F2;" />
+
+		<h:outputLabel value="#{lbl['lbl.ss.purchase.in.default.cat.type']}" />
+		<p:inputText value="#{purchaseInDefaultBackingBean.managedBean.contract.contractType.pmParameterType.parameterType}" readonly="true"
+			style="background-color: #F2F2F2;" />
+
+		<h:outputLabel value="#{lbl['lbl.ss.purchase.in.default.status']}" />
+		<p:inputText  readonly="true"
+			style="background-color: #F2F2F2;"  value="#{purchaseInDefaultBackingBean.currentStatus}"/>
+
+	</h:panelGrid>
+
+	<p:spacer height="10px" />
+	<p:panel header=" Contract Detail" toggleable="true">
+		<p:panelGrid styleClass="noBorders tr,noBorders td">
+			<p:row>
+				<p:column width="25%">
+					<p:outputLabel
+						value="#{lbl['lbl.ss.purchase.in.default.supp.name']}" />
+				</p:column>
+				<p:column width="25%">
+					<p:inputText readonly="true" value="#{purchaseInDefaultBackingBean.managedBean.scRequestSupplierItem.pricing.cmSupplierItem.smSupplier}" size="35" />
+				</p:column>
+			</p:row>
+
+			<p:row>
+				<p:column width="20%">
+					<p:outputLabel
+						value="#{lbl['lbl.ss.purchase.in.default.prod.code']}" />
+				</p:column>
+				<p:column width="25%">
+					<p:inputText readonly="true"  value="#{purchaseInDefaultBackingBean.managedBean.scRequestSupplierItem.pricing.cmSupplierItem.cmItem.extensionCode}"/>
+				</p:column>
+
+				<p:column width="25%">
+					<p:outputLabel
+						value="#{lbl['lbl.ss.purchase.in.default.item.name']}" />
+				</p:column>
+				<p:column width="25%">
+					<p:inputText readonly="true"  value="#{purchaseInDefaultBackingBean.managedBean.scRequestSupplierItem.pricing.cmSupplierItem.cmItem.itemName}"/>
+				</p:column>
+			</p:row>
+
+			<p:row>
+				<p:column>
+					<p:outputLabel
+						value="#{lbl['lbl.ss.purchase.in.default.min.qty.no']}" />
+				</p:column>
+				<p:column width="25%">
+					<p:inputText readonly="true" value="#{purchaseInDefaultBackingBean.managedBean.scRequestSupplierItem.pricing.cmSupplierItem.minOrder}"/>
+				</p:column>
+			</p:row>
+
+			<p:row>
+				<p:column>
+					<p:outputLabel
+						value="#{lbl['lbl.ss.purchase.in.default.price.per.uom']}" />
+				</p:column>
+				<p:column width="25%">
+					<p:inputText readonly="true"  value="#{purchaseInDefaultBackingBean.managedBean.scRequestSupplierItem.pricing.cmSupplierItem.pmUom.uomName}"/>
+				</p:column>
+			</p:row>
+
+			<p:row>
+				<p:column>
+					<p:outputLabel
+						value="#{lbl['lbl.ss.purchase.in.default.val.period']}" />
+				</p:column>
+				<p:column width="25%" colspan="2">
+					<p:inputText value="" readonly="true" />
+					<p:inputText readonly="true" />
+				</p:column>
+			</p:row>
+
+			<p:row>
+				<p:column>
+					<p:outputLabel
+						value="#{lbl['lbl.ss.purchase.in.default.max.proc.amt']}" />
+				</p:column>
+				<p:column width="25%">
+					<p:inputText readonly="true" value="#{purchaseInDefaultBackingBean.managedBean.scRequestSupplierItem.pricing.cmSupplierItem.price}"/>
+				</p:column>
+			</p:row>
+
+		</p:panelGrid>
+	</p:panel>
+
+	<p:panel header="Justification" toggleable="true" >
+         <p:panelGrid styleClass="noBorders tr,noBorders td" style="width:50%">
+			<p:row>
+				<p:column>
+					<p:outputLabel
+						value="#{lbl['lbl.ss.purchase.in.default.just']}" />
+				</p:column>
+				<p:column style="width:25%">
+                  <p:selectOneMenu
+						value="#{purchaseInDefaultBackingBean.managedBean.stockAvailability}">
+						<f:selectItem itemLabel="Cheaper Price"  itemValue="01"/>
+						<f:selectItem itemLabel="Suppler Unable to supply" itemValue="02" />
+						<f:selectItem itemLabel="Request Quantity other than stipulated in" itemValue="03"  />
+						<f:selectItem itemLabel="Specifiacation in contract not meet agency's" itemValue="04" />
+						<f:selectItem itemLabel="Exceeded allowable quantity" itemValue="05"/>
+						<f:selectItem itemLabel="Other"  itemValue="06"/>
+					</p:selectOneMenu>					
+				</p:column>
+			</p:row>
+
+            </p:panelGrid>
+			
+			 <table style="width: 90%">
+				<tr>
+					<td class="TableFieldLeft" width="28%"><h:outputLabel value="Remark" /></td>
+					 <td width="14"></td>
+					<td class="TableFieldRight">
+						<p:dataGrid id="catatan" value="#{purchaseInDefaultBackingBean.managedBean.purchaseInDefault.remarks}" var="remarkVar" rowIndexVar="remarkIndex" columns="1" >
+							<table>
+								<tr>
+									<td rowspan="2" style="vertical-align: top;" align="left">
+										<h:graphicImage value="#{ctBackingBean.userImagePath(remarkVar.user.loginId)}" height="30" width="30" />
+									</td>
+									<td width="5"></td>
+									<td>
+										<h:outputText value="#{remarkVar.user.userName}"></h:outputText>,
+										<h:outputText id="remarkDate" value="#{remarkVar.changedDate}">
+											<f:convertDateTime pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}" />
+										</h:outputText>
+									</td>
+								</tr>
+								<tr>
+									<td></td>
+									<td>
+										<p:inputTextarea style="width:350px;" value="#{remarkVar.remark}" rendered="#{remarkIndex==0}" id="remark"	required="true"/>
+										<h:outputText value="#{remarkVar.remark}" rendered="#{remarkIndex>0}" style="display: inline-block; width:220px;word-wrap: break-word;" />
+									</td>
+									<!-- <td> <p:message for="remark" display="Remark is Required !"/></td> -->
+								</tr>
+							</table>
+						</p:dataGrid>
+					</td>
+				</tr>
+			</table>
+         <p:panelGrid styleClass="noBorders tr,noBorders td" style="width:70%">
+			<p:row>
+				<p:column>
+					<p:outputLabel
+						value="#{lbl['lbl.ss.purchase.in.default.attachment']}" />
+				</p:column>
+
+				<p:column width="25%">
+					<p:commandButton oncomplete="uploadDlg.show();return false;"
+						icon="iconAttachment" value="Attach file(s)" />
+				</p:column>
+			</p:row>
+
+		</p:panelGrid>
+	</p:panel>
+
+	<p:panel label="#{lbl['lbl.ss.panel.title.approve.list']}"
+		header="#{lbl['lbl.ss.panel.title.approve.list']}" toggleable="true"
+		toggleSpeed="500">
+
+		<div style="width: 100%">
+			<p:pickList required="true" id="approver"
+				value="#{purchaseInDefaultBackingBean.managedBean.approvalUsers}"
+				var="approverUser" showTargetControls="true"
+				itemLabel="#{approverUser.userName}" itemValue="#{approverUser}"
+				converter="approverConverter">
+				<f:facet name="sourceCaption">Available Approver </f:facet>
+				<f:facet name="targetCaption">Approver List Name</f:facet>
+			</p:pickList>
+		</div>
+	</p:panel>
+	<p:dialog id="uploadDlg" widgetVar="uploadDlg" modal="false"
+		resizable="false" width="700px" height="350" styleClass="pop_up_top"
+		header="#{lbl['lbl.bpm.choose.file']}">
+		<p:ajax event="close" />
+		<p:fileUpload style="display:inline;" mode="advanced" id="upload"
+			allowTypes="/(\.|\/)(gif|jpe?g|png|bmp|txt|xls|xlsx|pdf|doc|docx|csv)$/"
+			invalidFileMessage="Only JPG, GIF, PNG, BMP, TXT, XLS, PDF, DOC, CSV files are accepted">
+		</p:fileUpload>
+	</p:dialog>
+
+</ui:composition>

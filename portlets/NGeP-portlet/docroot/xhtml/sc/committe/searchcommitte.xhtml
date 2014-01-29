@@ -1,0 +1,94 @@
+<ui:composition	
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:ac="http://ac.my/jsf/composite/cc"
+	xmlns:c="http://java.sun.com/jsp/jstl/core">
+	
+	
+	
+	<p:panel>
+		<h:panelGrid styleClass="noBorders tr,noBorders td" ></h:panelGrid>
+    </p:panel>
+	
+	<p:panel header="SEARCH" toggleable="true">
+		
+	<h:panelGrid id="search" columns="4" style="width:100%;" styleClass="noBorders tr,noBorders td">
+
+
+	<h:outputLabel value="#{lbl['lbl.sc.committe.comnno']}"></h:outputLabel>
+	<p:inputText value="#{committeBackingBean.managedBean.committeNo}" size="22"></p:inputText>
+		
+	<h:outputLabel value="#{lbl['lbl.sc.committe.qtntenderno']}"></h:outputLabel>
+	<p:inputText value="#{committeBackingBean.managedBean.qtNo}" size="22"></p:inputText>
+	
+	<h:outputLabel value="#{lbl['lbl.sc.committe.comtype']}" ></h:outputLabel>
+
+	 <p:selectOneMenu value="#{committeBackingBean.managedBean.selectedCommitte}" style="width:160px">  
+            <f:selectItems value="#{committeBackingBean.managedBean.committeType}"></f:selectItems>
+      </p:selectOneMenu> 
+         
+	<h:outputLabel value="#{lbl['lbl.sc.committe.datecreated']}"></h:outputLabel>
+	<p:calendar value="#{committeBackingBean.managedBean.createdDt}"
+				 showOn="button" size="22" />
+	
+	<h:outputLabel value="#{lbl['lbl.sc.committe.recordstatus']}" ></h:outputLabel>
+
+	 <p:selectOneMenu value="#{committeBackingBean.managedBean.status}" style="width:160px">  
+            <f:selectItem itemLabel="Select One" itemValue="" />  
+            <f:selectItem itemLabel="Active" itemValue="1" /> 
+            <f:selectItem itemLabel="Non-Active" itemValue="2" />  
+     </p:selectOneMenu> 
+     	 
+    </h:panelGrid>
+	<p:commandButton value="Search" style="float:right;" action="#{committeBackingBean.sarchQtCommitte}"
+			update="searchCommitte" icon="ui-icon-search" />
+    <br/>
+	<br/>
+	</p:panel>
+	
+	<p:panel header="Results" toggleable="true">
+	<p:dataTable id="searchCommitte" value="#{committeBackingBean.managedBean.qtcommittees}" var="committe" editable="true">
+ 			<ac:paginator for="searchCommitte" />
+    <p:ajax event="rowEdit" listener="#{committeBackingBean.goToMaintainceAction}" />  
+    <p:ajax event="rowEditCancel"/> 
+				
+ 
+        <p:column headerText="#{lbl['lbl.sc.committe.resulttable.comtype']}" > 
+        <h:outputText value="#{committe.scCommittee.committeeType}"/>
+        </p:column>
+         <p:column headerText="#{lbl['lbl.sc.committe.resulttable.qtntenderno']}" > 
+         <p:commandLink action="#{committeBackingBean.showQtDetailAction(committe.scQt.qtId)}"
+						style="margin-right:20px;" ajax1="false" oncomplete="screen5.show()" update="@(.qtCount)">
+        <h:outputText value="#{committe.scQt.qtNo}"/>   
+        </p:commandLink>
+    </p:column>
+     <p:column headerText="#{lbl['lbl.sc.committe.resulttable.datecreated']}" > 
+        <h:outputText value="#{committe.scCommittee.createdDate}"/>  
+    </p:column>
+     <p:column headerText="#{lbl['lbl.sc.committe.resulttable.comstatus']}" > 
+         <h:outputText value="#{committe.scCommittee.approvalStatus}"/>  
+    </p:column>
+     <p:column headerText="#{lbl['lbl.sc.committe.resulttable.recstatus']}"> 
+        <h:outputText value="#{committe.scCommittee.recordStatus}"/>
+    </p:column>
+    <p:column headerText="#{lbl['lbl.sc.committe.resulttable.action']}">
+    <p:commandLink action="#{committeBackingBean.goToMaintainceAction(committe)}">
+     <p:graphicImage library="ep/images/design" name="edit.png"
+      value="/resources/ep/images/design/edit.png" />
+    </p:commandLink>
+    </p:column>
+     </p:dataTable>
+	</p:panel>
+	
+	<p:panel>
+	<h:panelGrid columns="2" style="width:100%;" styleClass="noBorders tr,noBorders td">
+
+      <p:commandButton value="Add" style="float:right;" action="#{committeBackingBean.newCommitteeAction}" ajax="false"
+       	 icon="ui-icon-add" />
+	 </h:panelGrid>
+	</p:panel>
+
+</ui:composition>

@@ -1,0 +1,48 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:c="http://java.sun.com/jsp/jstl/core">
+
+	<p:tabView dynamic="true"  cache="true" orientation="left" activeIndex="#{qTDetailBB.managedBean.activeIndex}" id="qtsubId">
+
+  <p:ajax event="tabChange" listener="#{qTDetailBB.onTabChangeAction}"/>  
+
+		<p:tab title="Quotation Details" >
+			 <ui:include
+				src="/xhtml/sc/quatationtender/qtdetails.xhtml"></ui:include>
+		</p:tab>
+
+		<p:tab title="Supplier Qualification Criteria">
+			 <ui:include
+				src="/xhtml/sc/quatationtender/qtsupplierqualfcriteria.xhtml"></ui:include> 
+		</p:tab>
+
+		<p:tab title="Approval Workflow" >
+		<ui:include src="/xhtml/sc/quatationtender/approvalWorkFlowMain.xhtml"></ui:include>
+		</p:tab>
+
+		<p:tab title="Schedule">
+			<ui:include src="/xhtml/sc/quatationtender/qtschedule.xhtml"></ui:include>
+ 	</p:tab>
+
+         <p:tab title="Deduction Payment">
+			<ui:include src="/xhtml/sc/quatationtender/deduction.xhtml"></ui:include>
+ 	</p:tab>
+
+
+		<p:tab title="Documents">
+              <ui:include src="/xhtml/sc/quatationtender/documents.xhtml"></ui:include>
+		</p:tab>
+
+		<p:tab title="Remarks">
+			 <ui:include src="/xhtml/sc/quatationtender/qtremarks.xhtml"></ui:include> 
+		</p:tab>
+		
+
+	</p:tabView>
+
+
+
+</ui:composition>

@@ -1,0 +1,181 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui" xmlns:dp="http://openam.com/ui"
+	xmlns:c="http://java.sun.com/jsp/jstl/core">
+	<p:panel style="width:100%">
+		<div align="right">
+			<p:menuButton value="#{lbl['lbl.sc.bsv.attendance.submit']}">
+				<p:menuitem value="Request Note" actionListener="#{directPurchaseBackingBean.requestNote}">
+				</p:menuitem>
+				<p:menuitem value="Simple Quote" onclick="simpleQuoteBid.show()">
+				</p:menuitem>
+				<p:menuitem value="Simple Bid">
+				</p:menuitem>
+			</p:menuButton>
+		</div>
+	</p:panel>
+	<p:panel id="globe_panel_1"
+		label="#{lbl['lbl.ss.panel.title.general']}"
+		header="#{lbl['lbl.ss.panel.title.general']}" toggleable="true"
+		toggleSpeed="500">
+		<p:spacer height="10" />
+		<table style="width: 100%">
+			<tr>
+				<td width="20%" align="left"><p:outputLabel
+						value="#{lbl['lbl.ss.simple.quote.devision']}" /></td>
+				<td><c:if
+						test="#{directPurchaseBackingBean.managedBean.requestNote.pmOrgProfile.orgProfileId ne null}">
+						<p:inputText readonly="true"
+							value="#{directPurchaseBackingBean.managedBean.requestNote.pmOrgProfile.orgCode} - #{directPurchaseBackingBean.managedBean.requestNote.pmOrgProfile.orgName}" />
+					</c:if> <c:if
+						test="#{directPurchaseBackingBean.managedBean.requestNote.pmOrgProfile.orgProfileId eq null}">
+						<p:selectOneMenu
+							value="#{directPurchaseBackingBean.managedBean.requestNote.pmOrgProfile.orgProfileId}"
+							styleClass="divisionclass" converter="longConverter"
+							style="width: 220px;">
+							<f:selectItems
+								value="#{directPurchaseBackingBean.managedBean.userDivisionList}"
+								var="pmOrgProfile"
+								itemLabel="#{pmOrgProfile.orgCode} - #{pmOrgProfile.orgName}"
+								itemValue="#{pmOrgProfile.orgProfileId}" />
+						</p:selectOneMenu>
+					</c:if></td>
+				<td><p:outputLabel
+						value="#{lbl['lbl.ss.simple.quote.requisitioner']}" /></td>
+				<td><p:inputText readonly="true" /></td>
+			</tr>
+			<tr>
+				<td width="20%" align="left"><p:outputLabel
+						value="#{lbl['lbl.sc.purchase.procurement.type']}" id="lbl_11" />
+				</td>
+				<TD><p:selectOneMenu
+						value="#{directPurchaseBackingBean.managedBean.requestNote.procurementType}"
+						converter="procurementTypeConverter"
+						style="width: auto; min-width: 200px;" required="true">
+						<f:selectItems
+							value="#{directPurchaseBackingBean.managedBean.procumentList}"
+							var="type" itemValue="#{type.optionValue}"
+							itemLabel="#{type.optionName}"></f:selectItems>
+					</p:selectOneMenu></TD>
+			</tr>
+			<TR>
+				<TD width="20%" align="left"><p:outputLabel
+						value="#{lbl['lbl.sc.purchase.justification']}" id="lbl_22" /></TD>
+				<TD colspan="3"><p:selectOneMenu
+						id="justificationTypeSelectMenu"
+						value="#{directPurchaseBackingBean.managedBean.requestNote.justificationType}"
+						converter="justificationTypeConverter"
+						style="width: auto; min-width: 100px;" required="false">
+						<f:selectItems
+							value="#{directPurchaseBackingBean.managedBean.justificationTypes}"
+							var="justificationType"
+							itemValue="#{justificationType.optionValue}"
+							itemLabel="#{justificationType.optionName}"></f:selectItems>
+					</p:selectOneMenu> <p:spacer width="2px;"></p:spacer> <h:inputText
+						value="#{directPurchaseBackingBean.managedBean.requestNote.justification}"
+						style="width:450px;" required="false" /></TD>
+			</TR>
+		</table>
+	</p:panel>
+	<p:panel label="#{lbl['lbl.sc.panel.title.item.list']}"
+		header="#{lbl['lbl.sc.panel.title.item.list']}" toggleable="true"
+		toggleSpeed="500">
+		<h:panelGrid width="100%" style="margin-top:20px">
+			<p:dataTable id="requestItemDataTable" width="100%" cellpadding="1"
+				rowIndexVar="rowIndex" editable="true" editMode="cell"
+				value="#{directPurchaseBackingBean.managedBean.requestNote.requestNoteItems}"
+				selection="#{directPurchaseBackingBean.managedBean.selectedRequestListItem}"
+				var="item" rowKey="#{item.cmItem.itemId}" selectionMode="single">
+				<p:ajax event="rowSelect" partialSubmit="true"
+					process="requestItemDataTable"
+					listener="#{directPurchaseBackingBean.requestListItemSelection}"
+					update="@([id$=recommendSupplierItemTable])" />
+				<p:column width="4%">
+					<p:selectBooleanCheckbox value="#{item.selectedCheckBox}" />
+				</p:column>
+				<p:column headerText="#{lbl['lbl.ss.item.detail.item.name']}"
+					style="width:30%" width="35%">
+					<h:outputText value="#{item.itemName}"></h:outputText>
+				</p:column>
+				<p:column headerText="#{lbl['lbl.ss.item.detail.uom']}" width="20%">
+					<h:outputText value="#{item.uom}"></h:outputText>
+				</p:column>
+				<p:column headerText="#{lbl['lbl.sc.item.detail.minqty']}" width="20%">
+					<p:inputText value="#{item.minqty}" style="width:90%"></p:inputText>
+				</p:column>
+				<p:column headerText="#{lbl['lbl.ss.item.detail.quantity']}" width="20%">
+					<p:inputText value="#{item.quantity}" style="width:90%"></p:inputText>
+				</p:column>
+			</p:dataTable>
+		</h:panelGrid>
+		<div align="right" id="divGroupBtnAction">
+			<p:commandButton
+				disabled="#{directPurchaseBackingBean.managedBean.requestNote.pmStatus.statusId ge SourcingConstants.requestListPendingApproval}"
+				value="#{lbl['lbl.sc.action.delete']}" icon="ui-icon-delete" />
+			<!-- p:button value="#{lbl['lbl.ss.action.recommend']}" onclick="dpwidget.select(1);">
+			</p:button -->
+		</div>
+	</p:panel>
+	<p:panel id="recommend_supplier_panel_1"
+		label="#{lbl['lbl.sc.panel.title.recommend.supplier']}"
+		header="#{lbl['lbl.sc.panel.title.recommend.supplier']}"
+		toggleable="true" toggleSpeed="500">
+		<h:panelGrid width="100%" style="margin-top:20px"
+			rendered="#{!directPurchaseBackingBean.managedBean.multipleRecommend}">
+			<p:dataTable id="recommendSupplierItemTable" width="100%"
+				cellpadding="1" rowIndexVar="rowIndex"
+				value="#{directPurchaseBackingBean.managedBean.requestSupplierItems}"
+				rowKey="#{supplierItem.cmSupplierItem.supplierItemId}"
+				var="supplierItem"
+				selection="#{directPurchaseBackingBean.managedBean.recommededRequestSupplierItem}"
+				rendered="#{!directPurchaseBackingBean.managedBean.multipleRecommend}">
+				<p:columnGroup type="header">
+					<p:row>
+						<p:column colspan="1" width="20%" rendered="true"
+							style="text-align:center; vertical-align:top;"
+							headerText="#{lbl['lbl.sc.item.detail.supplier.name']}">
+						</p:column>
+						<p:column colspan="1" width="10%" rendered="true"
+							style="text-align:center;vertical-align:top;"
+							headerText="#{lbl['lbl.sc.item.detail.minqty']}">
+						</p:column>
+						<p:column colspan="1" width="10%" rendered="true"
+							style="text-align:center;vertical-align:top;"
+							headerText="#{lbl['lbl.sc.item.detail.unitPerPrice']}">
+						</p:column>
+						<p:column colspan="1" width="10%" rendered="true"
+							style="text-align:center;vertical-align:top;"
+							headerText="#{lbl['lbl.sc.item.detail.amount']}">
+						</p:column>
+						<p:column colspan="1" width="10%" rendered="true"
+							style="text-align:center;vertical-align:top;"
+							headerText="#{lbl['lbl.sc.item.detail.recent.price']}">
+						</p:column>
+					</p:row>
+				</p:columnGroup>
+				<p:column>
+					<h:outputText value="#{supplierItem.smSupplier.supplierName}"></h:outputText>
+				</p:column>
+				<p:column>
+					<h:outputText value="#{supplierItem.cmSupplierItem.minOrder}"></h:outputText>
+				</p:column>
+				<p:column>
+					<h:outputText value="#{supplierItem.cmSupplierItem.minOrder}"></h:outputText>
+				</p:column>
+				<p:column>
+				</p:column>
+				<p:column>
+					<p:commandLink update="@all" oncomplete="prInquiry.show();"
+						actionListener="#{directPurchaseBackingBean.prInquiryListener(supplierItem)}">
+						<h:outputText value="Inquiry"></h:outputText>
+					</p:commandLink>
+				</p:column>
+			</p:dataTable>
+		</h:panelGrid>
+	</p:panel>
+	<ui:include src="/xhtml/sc/directpurchase/simpleQuoteBid.xhtml" />
+	<ui:include src="/xhtml/sc/directpurchase/prInquiry.xhtml" />
+	<!--  ui:include src="/xhtml/sc/directpurchase/groupItem.xhtml" / -->
+</ui:composition>

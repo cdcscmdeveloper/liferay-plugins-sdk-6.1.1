@@ -1,0 +1,64 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:c="http://java.sun.com/jsp/jstl/core">
+	<p:dialog  id="itemdtl" widgetVar="itemDtlPopup" 
+		resizable="false" styleClass="pop_up_top"
+		width="650" height="250">
+          
+			<p:panel header=" Inquiry Details" toggleable="true">
+				<p:panelGrid styleClass="noBorders tr,noBorders td"  style="width:100%">
+			<p:row >
+				<p:column width="20%">
+					<p:outputLabel value="#{lbl['lbl.ss.price.inquiry.product.code']}" />
+				</p:column>
+				<p:column width="25%">
+					<p:inputText readonly="true"
+						value="#{directPurchaseBackingBean.managedBean.inquirySupplierItem.cmSupplierItem.cmItem.extensionCode}" />
+				</p:column>
+			</p:row>
+
+			<p:row>
+				<p:column width="25%">
+					<p:outputLabel value="#{lbl['lbl.ss.price.inquiry.item.name']}" />
+				</p:column>
+				<p:column width="25%">
+					<p:inputText readonly="true"
+						value="#{directPurchaseBackingBean.managedBean.inquirySupplierItem.cmSupplierItem.cmItem.itemName}" />
+				</p:column>
+
+			</p:row>
+			<p:row>
+				<p:column>
+					<p:outputLabel value="#{lbl['lbl.ss.price.inquiry.desc']}" />
+				</p:column>
+				<p:column colspan="3">
+					<p:inputTextarea readonly="true" rows="2" cols="80" value="" />
+				</p:column>
+			</p:row>
+
+			<p:row>
+				<p:column>
+					<p:outputLabel value="#{lbl['lbl.ss.price.inquiry.uom']}" />
+				</p:column>
+				<p:column width="25%">
+					<p:inputText readonly="true"
+						value="#{directPurchaseBackingBean.managedBean.inquirySupplierItem.cmSupplierItem.uom}">
+					</p:inputText>
+				</p:column>
+			</p:row>
+
+			<p:row>
+				<p:column>
+					<p:outputLabel value="#{lbl['lbl.ss.price.inquiry.price.type']}" />
+				</p:column>
+				<p:column width="25%">
+					<p:inputText readonly="true" value="" />
+				</p:column>
+			</p:row>
+				</p:panelGrid>
+			</p:panel>
+	</p:dialog>
+</ui:composition>

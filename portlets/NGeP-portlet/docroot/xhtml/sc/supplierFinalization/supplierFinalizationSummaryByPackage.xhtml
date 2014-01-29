@@ -1,0 +1,173 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:ac="http://ac.my/jsf/composite/cc">
+
+	<p:spacer height="5px" />
+
+	<h4>
+		<u>Location List:</u>
+	</h4>
+	<p:spacer height="10px" />
+	<h:panelGrid border="0" cellpadding="0" cellspacing="0" columns="4"
+		columnClasses="columnWidth20,columnWidth30,columnWidth20,columnWidth30">
+		<p:column>
+			<p:outputLabel value="#{lbl['lbl.sc.sf.multiple.locality']}" />
+		</p:column>
+
+		<p:column>
+			<p:inputText
+				value="#{sfBackingBean.managedBean.scQt.scQtCriterias.multiLocality ? 'Yes' : 'No' }"
+				readonly="true" disabled="true" />
+		</p:column>
+		<p:column />
+		<p:column />
+	</h:panelGrid>
+
+	<p:dataTable id="zoneId" var="zone"
+		rendered="#{sfBackingBean.managedBean.scQt.scQtCriterias.multiLocality}"
+		value="#{sfBackingBean.managedBean.zonelist}" rowKey="#{zone}"
+		rowIndexVar="rowIndex">
+		<ac:paginator for="zoneId" />
+
+		<p:column headerText="#{lbl['lbl.sc.sf.location']}">
+			<p:commandLink oncomplete="popZone.show();"
+				update="zoneId, :form:popZone, @([id$=qdisqdtl])"
+				action="#{sfBackingBean.qualifiedDisQualifiedSuppDtl(zone)}">
+				<h:outputText value="#{zone.zoneName}" />
+			</p:commandLink>
+		</p:column>
+	</p:dataTable>
+
+	<p:spacer height="20px" />
+	<p:panel header="Item List">
+		<p:dataTable id="itemTblId" var="itempack"
+			value="#{sfBackingBean.managedBean.itemPreSummarylist}"
+			selection="#{sfBackingBean.managedBean.selectedItemsSummary}"
+			rowKey="#{itempack.qtItemId}" rowIndexVar="rowIndex">
+			<p:column selectionMode="multiple" style="width:2%" />
+			<ac:paginator for="itemTblId" />
+
+			<p:column headerText="#{lbl['lbl.sc.sf.item']}">
+				<h:outputText value="#{itempack.itemName}" />
+			</p:column>
+		</p:dataTable>
+	</p:panel>
+
+	<p:outputPanel id="qdisqdtl">
+		<p:spacer height="25px" />
+		<p:panel header="Qualified Supplier List">
+			<p:dataTable id="qsupplierId" var="qsupplier"
+				value="#{sfBackingBean.managedBean.qualifiedSupplist}"
+				rowKey="#{qsupplier.qtProposalRankingId}" rowIndexVar="rowIndex">
+				<ac:paginator for="qsupplierId" />
+
+				<p:column headerText="#{lbl['lbl.sc.sf.ranking']}"
+					style="width:120px;">
+					<h:outputText
+						value="#{qsupplier.evaluationResultDtls.get(0).autoRank}" />
+				</p:column>
+
+				<p:column headerText="#{lbl['lbl.sc.sf.supplier.code']}"
+					style="width:120px;">
+					<h:outputText value="#{qsupplier.scQtProposal.supplierNo}" />
+				</p:column>
+
+				<p:column headerText="#{lbl['lbl.sc.sf.total.score']}"
+					style="width:120px;">
+					<h:outputText
+						value="#{qsupplier.evaluationResultDtls.get(0).totalScore}" />
+				</p:column>
+
+				<!-- <p:column headerText="#{lbl['lbl.sc.eva.s1.manual.remarks']}"
+						style="width:25%">
+						<p:inputTextarea rows="2"></p:inputTextarea>
+					</p:column> -->
+
+
+				<!-- 				<p:column headerText="#{lbl['lbl.sc.sf.tec.remarks']}"
+					rendered="#{sfBackingBean.managedBean.scQt.scQtSpec.evaluationType eq 2}"
+					style="width:100px;">
+					<h:outputText value="#{qsupplier.scQtProposalEvaluate.scQtProposal.supplierNo}" />
+				</p:column>
+
+				<p:column headerText="#{lbl['lbl.sc.sf.fec.remarks']}"
+					rendered="#{sfBackingBean.managedBean.scQt.scQtSpec.evaluationType eq 2}"
+					style="width:100px;">
+					<h:outputText value="#{qsupplier.scQtProposalEvaluate.scQtProposal.supplierNo}" />
+				</p:column>
+
+				<p:column headerText="#{lbl['lbl.sc.sf.ec.remarks']}"
+					rendered="#{sfBackingBean.managedBean.scQt.scQtSpec.evaluationType eq 1}"
+					style="width:100px;">
+					<h:outputText value="1 tier - Ec Remarks " />
+				</p:column>
+
+				<p:column headerText="#{lbl['lbl.sc.sf.finalization.remarks']}"
+					style="width:100px;">
+					<p:inputTextarea value="#{qsupplier.scQtProposalEvaluate.disQualifiedStage}" cols="60" rows="1" />
+				</p:column> -->
+
+			</p:dataTable>
+			<p:spacer height="15px" />
+			<h:panelGrid border="0" cellpadding="0" cellspacing="0" width="50%"
+				columns="4"
+				columnClasses="columnWidth20,columnWidth30,columnWidth20,columnWidth30">
+				<p:column>
+					<p:outputLabel value="#{lbl['lbl.sc.sf.total']}" />
+				</p:column>
+
+				<p:column>
+					<p:inputText
+						value="#{sfBackingBean.managedBean.totalQulifiedSupplier}"
+						readonly="true" size="10" />
+				</p:column>
+				<p:column />
+				<p:column />
+			</h:panelGrid>
+		</p:panel>
+		<p:spacer height="20px" />
+
+		<p:panel header="Disqualified Supplier List">
+			<p:dataTable id="dqsupplierId" var="dqsupplier"
+				value="#{sfBackingBean.managedBean.disQualifiedSupplist}"
+				rowKey="#{qsupplier.qtProposalRankingId}" rowIndexVar="rowIndex">
+				<ac:paginator for="dqsupplierId" />
+
+				<p:column headerText="#{lbl['lbl.sc.sf.ranking']}">
+					<h:outputText
+						value="#{dqsupplier.evaluationResultDtls.get(0).autoRank}" />
+				</p:column>
+
+				<p:column headerText="#{lbl['lbl.sc.sf.supplier.code']}">
+					<h:outputText value="#{dqsupplier.scQtProposal.supplierNo}" />
+				</p:column>
+
+				<p:column headerText="#{lbl['lbl.sc.sf.total.score']}">
+					<h:outputText
+						value="#{dqsupplier.evaluationResultDtls.get(0).totalScore}"></h:outputText>
+				</p:column>
+			</p:dataTable>
+			<p:spacer height="15px" />
+
+			<h:panelGrid border="0" cellpadding="0" cellspacing="0" width="50%"
+				columns="4"
+				columnClasses="columnWidth20,columnWidth30,columnWidth20,columnWidth30">
+				<p:column>
+					<p:outputLabel value="#{lbl['lbl.sc.sf.total']}"></p:outputLabel>
+				</p:column>
+
+				<p:column>
+					<p:inputText
+						value="#{sfBackingBean.managedBean.totalDisQualifiedSupplier}"
+						readonly="true" size="10" />
+				</p:column>
+				<p:column />
+				<p:column />
+			</h:panelGrid>
+		</p:panel>
+	</p:outputPanel>
+</ui:composition>

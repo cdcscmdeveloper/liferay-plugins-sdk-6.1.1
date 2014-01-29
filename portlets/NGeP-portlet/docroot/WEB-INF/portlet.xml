@@ -857,7 +857,7 @@
 		<portlet-class>org.portletfaces.bridge.GenericFacesPortlet</portlet-class>
 		<init-param>
 			<name>javax.portlet.faces.defaultViewId.view</name>
-			<value>/xhtml/ss/quatationtender/qtntendermain.xhtml</value>
+			<value>/xhtml/sc/quatationtender/qtntendermain.xhtml</value>
 		</init-param>
 		<expiration-cache>0</expiration-cache>
 		<supports>
@@ -888,7 +888,7 @@
 		<portlet-class>org.portletfaces.bridge.GenericFacesPortlet</portlet-class>
 		<init-param>
 			<name>javax.portlet.faces.defaultViewId.view</name>
-			<value>/xhtml/ss/committe/committemain.xhtml</value>
+			<value>/xhtml/sc/committe/committemain.xhtml</value>
 		</init-param>
 		<expiration-cache>0</expiration-cache>
 		<supports>
@@ -919,7 +919,7 @@
 		<portlet-class>org.portletfaces.bridge.GenericFacesPortlet</portlet-class>
 		<init-param>
 			<name>javax.portlet.faces.defaultViewId.view</name>
-			<value>/xhtml/ss/bidding/biddingmain.xhtml</value>
+			<value>/xhtml/sc/bidding/biddingmain.xhtml</value>
 		</init-param>
 		<expiration-cache>0</expiration-cache>
 		<supports>
@@ -1481,7 +1481,7 @@
 		<portlet-class>org.portletfaces.bridge.GenericFacesPortlet</portlet-class>
 		<init-param>
 			<name>javax.portlet.faces.defaultViewId.view</name>
-			<value>/xhtml/ss/notice/noticeboardmain.xhtml</value>
+			<value>/xhtml/sc/notice/noticeboardmain.xhtml</value>
 		</init-param>
 		<expiration-cache>0</expiration-cache>
 		<supports>
@@ -1513,7 +1513,7 @@
 		<portlet-class>org.portletfaces.bridge.GenericFacesPortlet</portlet-class>
 		<init-param>
 			<name>javax.portlet.faces.defaultViewId.view</name>
-			<value>/xhtml/ss/supplierreview/spreview.xhtml</value>
+			<value>/xhtml/sc/supplierreview/spreview.xhtml</value>
 		</init-param>
 		<expiration-cache>0</expiration-cache>
 		<supports>
@@ -1548,7 +1548,7 @@
 		<portlet-class>org.portletfaces.bridge.GenericFacesPortlet</portlet-class>
 		<init-param>
 			<name>javax.portlet.faces.defaultViewId.view</name>
-			<value>/xhtml/ss/specification/specificationview.xhtml</value>
+			<value>/xhtml/sc/specification/specificationview.xhtml</value>
 		</init-param>
 		<expiration-cache>0</expiration-cache>
 		<supports>
@@ -1581,7 +1581,7 @@
 		<portlet-class>org.portletfaces.bridge.GenericFacesPortlet</portlet-class>
 		<init-param>
 			<name>javax.portlet.faces.defaultViewId.view</name>
-			<value>/xhtml/ss/main/maintenancemain.xhtml</value>
+			<value>/xhtml/sc/main/maintenancemain.xhtml</value>
 		</init-param>
 		<expiration-cache>0</expiration-cache>
 		<supports>
@@ -1613,7 +1613,7 @@
 		<portlet-class>org.portletfaces.bridge.GenericFacesPortlet</portlet-class>
 		<init-param>
 			<name>javax.portlet.faces.defaultViewId.view</name>
-			<value>/xhtml/ss/procure/procuremain.xhtml</value>
+			<value>/xhtml/sc/procure/procuremain.xhtml</value>
 		</init-param>
 		<expiration-cache>0</expiration-cache>
 		<supports>
@@ -1644,7 +1644,7 @@
 		<portlet-class>org.portletfaces.bridge.GenericFacesPortlet</portlet-class>
 		<init-param>
 			<name>javax.portlet.faces.defaultViewId.view</name>
-			<value>/xhtml/ss/directpurchase/directPurchase.xhtml</value>
+			<value>/xhtml/sc/directpurchase/directPurchase.xhtml</value>
 		</init-param>
 		<expiration-cache>0</expiration-cache>
 		<supports>
@@ -1675,7 +1675,7 @@
 		<portlet-class>org.portletfaces.bridge.GenericFacesPortlet</portlet-class>
 		<init-param>
 			<name>javax.portlet.faces.defaultViewId.view</name>
-			<value>/xhtml/ss/directpurchase/simpleQuoteBidSupplier.xhtml</value>
+			<value>/xhtml/sc/directpurchase/simpleQuoteBidSupplier.xhtml</value>
 		</init-param>
 		<expiration-cache>0</expiration-cache>
 		<supports>
@@ -1708,7 +1708,7 @@
 		</portlet-class>
 		<init-param>
 			<name>javax.portlet.faces.defaultViewId.view</name>
-			<value>/xhtml/ss/directpurchase/preRenderDirectPurchase.xhtml</value>
+			<value>/xhtml/sc/directpurchase/preRenderDirectPurchase.xhtml</value>
 		</init-param>
 		<expiration-cache>0</expiration-cache>
 		<supports>
@@ -1740,7 +1740,7 @@
 		<portlet-class>org.portletfaces.bridge.GenericFacesPortlet</portlet-class>
 		<init-param>
 			<name>javax.portlet.faces.defaultViewId.view</name>
-			<value>/xhtml/ss/directpurchase/purchaseInDefaultMain.xhtml</value>
+			<value>/xhtml/sc/directpurchase/purchaseInDefaultMain.xhtml</value>
 		</init-param>
 		<expiration-cache>0</expiration-cache>
 		<supports>
@@ -1836,7 +1836,7 @@
 		<portlet-class>org.portletfaces.bridge.GenericFacesPortlet</portlet-class>
 		<init-param>
 			<name>javax.portlet.faces.defaultViewId.view</name>
-			<value>/xhtml/ss/supplierproposal/supplierProposalMain.xhtml</value>
+			<value>/xhtml/sc/supplierproposal/supplierProposalMain.xhtml</value>
 		</init-param>
 		<expiration-cache>0</expiration-cache>
 		<supports>
@@ -1868,7 +1868,7 @@
 		<portlet-class>org.portletfaces.bridge.GenericFacesPortlet</portlet-class>
 		<init-param>
 			<name>javax.portlet.faces.defaultViewId.view</name>
-			<value>/xhtml/ss/loiloa/loiloalistdetails.xhtml</value>
+			<value>/xhtml/sc/loiloa/loiloalistdetails.xhtml</value>
 		</init-param>
 		<expiration-cache>0</expiration-cache>
 		<supports>
@@ -1900,7 +1900,7 @@
 		<portlet-class>org.portletfaces.bridge.GenericFacesPortlet</portlet-class>
 		<init-param>
 			<name>javax.portlet.faces.defaultViewId.view</name>
-			<value>/xhtml/ss/evaluation/evaluationview.xhtml</value>
+			<value>/xhtml/sc/evaluation/evaluationview.xhtml</value>
 		</init-param>
 		<expiration-cache>0</expiration-cache>
 		<supports>
@@ -1933,7 +1933,7 @@
 		<portlet-class>org.portletfaces.bridge.GenericFacesPortlet</portlet-class>
 		<init-param>
 			<name>javax.portlet.faces.defaultViewId.view</name>
-			<value>/xhtml/ss/evaluation/evaluationstage1view.xhtml</value>
+			<value>/xhtml/sc/evaluation/evaluationstage1view.xhtml</value>
 		</init-param>
 		<expiration-cache>0</expiration-cache>
 		<supports>
@@ -2965,7 +2965,7 @@
 		<init-param>
 			<name>javax.portlet.faces.defaultViewId.view</name>
 			<value>
-				/xhtml/ss/bsvattendance/bsvAttendanceRegisterMain.xhtml
+				/xhtml/sc/bsvattendance/bsvAttendanceRegisterMain.xhtml
 			</value>
 		</init-param>
 		<expiration-cache>0</expiration-cache>
@@ -3065,7 +3065,7 @@
 	 	</portlet-class>
 	 	<init-param>
 	 		<name>javax.portlet.faces.defaultViewId.view</name>
-	 		<value>/xhtml/ss/quatationtender/prerenderQtMaintance.xhtml</value>
+	 		<value>/xhtml/sc/quatationtender/prerenderQtMaintance.xhtml</value>
 	 	</init-param>
 	 	<expiration-cache>0</expiration-cache>
 	 	<supports>
@@ -3098,7 +3098,7 @@
 	 	</portlet-class>
 	 	<init-param>
 	 		<name>javax.portlet.faces.defaultViewId.view</name>
-	 		<value>/xhtml/ss/quatationtender/prerenderQtReview.xhtml</value>
+	 		<value>/xhtml/sc/quatationtender/prerenderQtReview.xhtml</value>
 	 	</init-param>
 	 	<expiration-cache>0</expiration-cache>
 	 	<supports>
@@ -3131,7 +3131,7 @@
 	 	</portlet-class>
 	 	<init-param>
 	 		<name>javax.portlet.faces.defaultViewId.view</name>
-	 		<value>/xhtml/ss/specification/prerenderQtSpecPreparation.xhtml</value>
+	 		<value>/xhtml/sc/specification/prerenderQtSpecPreparation.xhtml</value>
 	 	</init-param>
 	 	<expiration-cache>0</expiration-cache>
 	 	<supports>
@@ -3164,7 +3164,7 @@
 	 	</portlet-class>
 	 	<init-param>
 	 		<name>javax.portlet.faces.defaultViewId.view</name>
-	 		<value>/xhtml/ss/bsvattendance/prerenderQtSiteVisit.xhtml</value>
+	 		<value>/xhtml/sc/bsvattendance/prerenderQtSiteVisit.xhtml</value>
 	 	</init-param>
 	 	<expiration-cache>0</expiration-cache>
 	 	<supports>
@@ -3197,7 +3197,7 @@
 	 	</portlet-class>
 	 	<init-param>
 	 		<name>javax.portlet.faces.defaultViewId.view</name>
-	 		<value>/xhtml/ss/supplierproposal/prerenderSupplierPropsal.xhtml</value>
+	 		<value>/xhtml/sc/supplierproposal/prerenderSupplierPropsal.xhtml</value>
 	 	</init-param>
 	 	<expiration-cache>0</expiration-cache>
 	 	<supports>
@@ -3230,7 +3230,7 @@
 	 	</portlet-class>
 	 	<init-param>
 	 		<name>javax.portlet.faces.defaultViewId.view</name>
-	 		<value>/xhtml/ss/supplierproposal/proposalCration.xhtml</value>
+	 		<value>/xhtml/sc/supplierproposal/proposalCration.xhtml</value>
 	 	</init-param>
 	 	<expiration-cache>0</expiration-cache>
 	 	<supports>
@@ -3261,7 +3261,7 @@
 		<portlet-class>org.portletfaces.bridge.GenericFacesPortlet</portlet-class>
 		<init-param>
 			<name>javax.portlet.faces.defaultViewId.view</name>
-			<value>/xhtml/ss/templateDocument/searchTemplateDocView.xhtml</value>
+			<value>/xhtml/sc/templateDocument/searchTemplateDocView.xhtml</value>
 		</init-param>
 		<expiration-cache>0</expiration-cache>
 		<supports>
@@ -3330,7 +3330,7 @@
 	 	</portlet-class>
 	 	<init-param>
 	 		<name>javax.portlet.faces.defaultViewId.view</name>
-	 		<value>/xhtml/ss/committe/prerenderCommitteMaintance.xhtml</value>
+	 		<value>/xhtml/sc/committe/prerenderCommitteMaintance.xhtml</value>
 	 	</init-param>
 	 	<expiration-cache>0</expiration-cache>
 	 	<supports>
@@ -3395,7 +3395,7 @@
 	 	<init-param>
 	 		<name>javax.portlet.faces.defaultViewId.view</name>
 	 		<value>
-	 			/xhtml/ss/supplierFinalization/supplierFinalizationMain.xhtml
+	 			/xhtml/sc/supplierFinalization/supplierFinalizationMain.xhtml
 	 		</value>
 	 	</init-param>
 	 	<expiration-cache>0</expiration-cache>
@@ -3431,7 +3431,7 @@
 	 	<init-param>
 	 		<name>javax.portlet.faces.defaultViewId.view</name>
 	 		<value>
-	 			/xhtml/ss/supplierFinalization/presupplierFinalizationMain.xhtml
+	 			/xhtml/sc/supplierFinalization/presupplierFinalizationMain.xhtml
 	 		</value>
 	 	</init-param>
 	 	<expiration-cache>0</expiration-cache>
@@ -3501,7 +3501,7 @@
 	 	<init-param>
 	 		<name>javax.portlet.faces.defaultViewId.view</name>
 	 		<value>
-	 			/xhtml/ss/bidding/bidInfo.xhtml
+	 			/xhtml/sc/bidding/bidInfo.xhtml
 	 		</value>
 	 	</init-param>
 	 	<expiration-cache>0</expiration-cache>
@@ -3534,7 +3534,7 @@
 		<portlet-class>org.portletfaces.bridge.GenericFacesPortlet</portlet-class>
 		<init-param>
 			<name>javax.portlet.faces.defaultViewId.view</name>
-			<value>/xhtml/ss/directpurchase/prInquiryMain.xhtml</value>
+			<value>/xhtml/sc/directpurchase/prInquiryMain.xhtml</value>
 		</init-param>
 		<expiration-cache>0</expiration-cache>
 		<supports>
@@ -3630,7 +3630,7 @@
 		<portlet-class>org.portletfaces.bridge.GenericFacesPortlet</portlet-class>
 		<init-param>
 			<name>javax.portlet.faces.defaultViewId.view</name>
-			<value>/xhtml/ss/procure/procurementList.xhtml</value>
+			<value>/xhtml/sc/procure/procurementList.xhtml</value>
 		</init-param>
 		<expiration-cache>0</expiration-cache>
 		<supports>
@@ -3663,7 +3663,7 @@
 		<portlet-class>org.portletfaces.bridge.GenericFacesPortlet</portlet-class>
 		<init-param>
 			<name>javax.portlet.faces.defaultViewId.view</name>
-			<value>/xhtml/ss/presentationDemo/presentationDemoView.xhtml</value>
+			<value>/xhtml/sc/presentationDemo/presentationDemoView.xhtml</value>
 		</init-param>
 		<expiration-cache>0</expiration-cache>
 		<supports>
