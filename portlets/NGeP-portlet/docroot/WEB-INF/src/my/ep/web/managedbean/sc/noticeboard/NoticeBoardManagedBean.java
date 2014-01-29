@@ -21,32 +21,30 @@ import my.ep.persistence.entity.sc.quationtender.ScQtZoneCriteria;
 import my.ep.web.managedbean.BaseManagedBean;
 
 import org.primefaces.component.tabview.Tab;
+import org.primefaces.model.TreeNode;
 
 /**
- * @author sri
- * NoticeBoard Managed Bean
+ * @author sri NoticeBoard Managed Bean
  */
 @ManagedBean(name = "noticeBoardManagedBean")
 @SessionScoped
 public class NoticeBoardManagedBean extends BaseManagedBean {
 	private static final long serialVersionUID = 1L;
-	
-  // search filter parameters
+
+	// search filter parameters
 	private Long minstryId;
 	private Long jabatanId;
-	private Long ptjId;	
+	private Long ptjId;
 	private Long categoryId;
 	private Long stateId;
-	private Long districtId;	
-	private Long categoryL1Id; 
-	private Long categoryL2Id; 
-	private Long categoryL3Id; 
+	private Long districtId;
+	private Long categoryL1Id;
+	private Long categoryL2Id;
+	private Long categoryL3Id;
 
-	
-	
-	private List<ScQt> scQtSearchlist; // notice board search listing
+	// notice board search listing
 	private ScQt scQt;
-	private ScQt selectedScQt ;
+	private ScQt selectedScQt;
 	private PmOrgProfile ministryOrgProfile;
 	private PmOrgProfile deportmentOrgProfile;
 	private PmOrgProfile pmOrgProfile;
@@ -55,9 +53,8 @@ public class NoticeBoardManagedBean extends BaseManagedBean {
 	private PmCategoryL1 pmCategoryL1;
 	private PmCategoryL2 pmCategoryL2;
 	private PmCategoryL3 pmCategoryL3;
-	private PmStatus pmStatus; 
-	
-	
+	private PmStatus pmStatus;
+
 	// Qtn/Tender Details Listings
 	private List<ScQtCategory> categoryList; // listing for Category
 	private List<ScQtLocCriteria> locationList; // listing for Location
@@ -65,9 +62,9 @@ public class NoticeBoardManagedBean extends BaseManagedBean {
 	private ScQtCriteria scQtCriteria;
 	private String multipleLocality;
 	private String allStates;
-	private boolean locVisible ;
-	
-    // Drop down lists for notice board
+	private boolean locVisible;
+
+	// Drop down lists for notice board
 	private List<PmOrgProfile> ministryList;
 	private List<PmOrgProfile> departmentList;
 	private List<PmOrgProfile> divisionList;
@@ -76,24 +73,75 @@ public class NoticeBoardManagedBean extends BaseManagedBean {
 	private List<PmCategoryL3> categoryL3s;
 	private List<PmState> states;
 	private List<PmDistrict> districts;
-	
-	
-     // dynamic tabs
-	private List<Tab> tabList ;	
+
+	// dynamic tabs
+	private List<Tab> tabList;
 	private Integer activeTabIndex = 0;
 	private Integer tabIndex = 0;
-	
-	public ISearchBean<ScQt> searchBean ;
-	
-	
-	
 
-  public NoticeBoardManagedBean(){
-	 // scQt = new ScQt();
-	  //selectedScQt = new ScQt();
-	 
-  }
+	public ISearchBean<ScQt> searchBean;
+
+	// TODO: need to remove above fields...
+
+	// Properties Added by vidyasagar for new noticeboard...
+
+	private String title;
+
+
+
+	private List<ScQt> scQtSearchlist;
+
+	// Fields for hide and show in noticeboard screen
+	private boolean isPubToday = false;
+
+	private boolean isPubYesterday = false;
+
+	private boolean isPubShow = false;
+
+	private boolean isBreifToday = false;
+
+	private boolean isBreifYesterday = false;
+
+	private boolean isBreifShow = false;
+	private boolean isSvToday = false;
+
+	private boolean isSvYesterday = false;
+
+	private boolean isSvShow = false;
 	
+	private TreeNode minstryRootNode;
+	
+	private TreeNode categoryRootNode;
+	
+	private TreeNode locationRootNode;
+	
+	 private TreeNode ministrySelectedNode; 
+	 
+	 private TreeNode categorySelectedNode;
+	 
+	 private TreeNode locationSelectedNode;
+	 
+	 private ISearchBean<PmOrgProfile> mistrySearchBean;
+	 
+	 private ISearchBean<Object> categorySearchBean;
+	 
+	 private ISearchBean<Object> locationSearchBean;
+	 
+	   private TreeNode tempMinstryRootNode;
+		
+		private TreeNode tempCategoryRootNode;
+		
+		private TreeNode tempLocationRootNode;
+	 
+	 private List<String> tabs;
+	 
+	 private String resetData;
+
+	public NoticeBoardManagedBean() {
+		// scQt = new ScQt();
+		// selectedScQt = new ScQt();
+
+	}
 
 	/**
 	 * @return the selectedScQt
@@ -103,7 +151,8 @@ public class NoticeBoardManagedBean extends BaseManagedBean {
 	}
 
 	/**
-	 * @param selectedScQt the selectedScQt to set
+	 * @param selectedScQt
+	 *            the selectedScQt to set
 	 */
 	public void setSelectedScQt(ScQt selectedScQt) {
 		this.selectedScQt = selectedScQt;
@@ -117,10 +166,11 @@ public class NoticeBoardManagedBean extends BaseManagedBean {
 	}
 
 	/**
-	 * @param scQt the scQt to set
+	 * @param scQt
+	 *            the scQt to set
 	 */
 	public void setScQt(ScQt scQt) {
-		
+
 		this.scQt = scQt;
 	}
 
@@ -132,7 +182,8 @@ public class NoticeBoardManagedBean extends BaseManagedBean {
 	}
 
 	/**
-	 * @param scQtSearchlist the scQtSearchlist to set
+	 * @param scQtSearchlist
+	 *            the scQtSearchlist to set
 	 */
 	public void setScQtSearchlist(List<ScQt> scQtSearchlist) {
 		this.scQtSearchlist = scQtSearchlist;
@@ -146,7 +197,8 @@ public class NoticeBoardManagedBean extends BaseManagedBean {
 	}
 
 	/**
-	 * @param minstryId the minstryId to set
+	 * @param minstryId
+	 *            the minstryId to set
 	 */
 	public void setMinstryId(Long minstryId) {
 		this.minstryId = minstryId;
@@ -160,7 +212,8 @@ public class NoticeBoardManagedBean extends BaseManagedBean {
 	}
 
 	/**
-	 * @param jabatanId the jabatanId to set
+	 * @param jabatanId
+	 *            the jabatanId to set
 	 */
 	public void setJabatanId(Long jabatanId) {
 		this.jabatanId = jabatanId;
@@ -174,7 +227,8 @@ public class NoticeBoardManagedBean extends BaseManagedBean {
 	}
 
 	/**
-	 * @param ptjId the ptjId to set
+	 * @param ptjId
+	 *            the ptjId to set
 	 */
 	public void setPtjId(Long ptjId) {
 		this.ptjId = ptjId;
@@ -188,7 +242,8 @@ public class NoticeBoardManagedBean extends BaseManagedBean {
 	}
 
 	/**
-	 * @param categoryId the categoryId to set
+	 * @param categoryId
+	 *            the categoryId to set
 	 */
 	public void setCategoryId(Long categoryId) {
 		this.categoryId = categoryId;
@@ -202,7 +257,8 @@ public class NoticeBoardManagedBean extends BaseManagedBean {
 	}
 
 	/**
-	 * @param stateId the stateId to set
+	 * @param stateId
+	 *            the stateId to set
 	 */
 	public void setStateId(Long stateId) {
 		this.stateId = stateId;
@@ -216,7 +272,8 @@ public class NoticeBoardManagedBean extends BaseManagedBean {
 	}
 
 	/**
-	 * @param districtId the districtId to set
+	 * @param districtId
+	 *            the districtId to set
 	 */
 	public void setDistrictId(Long districtId) {
 		this.districtId = districtId;
@@ -230,7 +287,8 @@ public class NoticeBoardManagedBean extends BaseManagedBean {
 	}
 
 	/**
-	 * @param categoryList the categoryList to set
+	 * @param categoryList
+	 *            the categoryList to set
 	 */
 	public void setCategoryList(List<ScQtCategory> categoryList) {
 		this.categoryList = categoryList;
@@ -244,7 +302,8 @@ public class NoticeBoardManagedBean extends BaseManagedBean {
 	}
 
 	/**
-	 * @param locationList the locationList to set
+	 * @param locationList
+	 *            the locationList to set
 	 */
 	public void setLocationList(List<ScQtLocCriteria> locationList) {
 		this.locationList = locationList;
@@ -258,7 +317,8 @@ public class NoticeBoardManagedBean extends BaseManagedBean {
 	}
 
 	/**
-	 * @param zoneList the zoneList to set
+	 * @param zoneList
+	 *            the zoneList to set
 	 */
 	public void setZoneList(List<ScQtZoneCriteria> zoneList) {
 		this.zoneList = zoneList;
@@ -272,7 +332,8 @@ public class NoticeBoardManagedBean extends BaseManagedBean {
 	}
 
 	/**
-	 * @param scQtCriteria the scQtCriteria to set
+	 * @param scQtCriteria
+	 *            the scQtCriteria to set
 	 */
 	public void setScQtCriteria(ScQtCriteria scQtCriteria) {
 		this.scQtCriteria = scQtCriteria;
@@ -286,7 +347,8 @@ public class NoticeBoardManagedBean extends BaseManagedBean {
 	}
 
 	/**
-	 * @param multipleLocality the multipleLocality to set
+	 * @param multipleLocality
+	 *            the multipleLocality to set
 	 */
 	public void setMultipleLocality(String multipleLocality) {
 		this.multipleLocality = multipleLocality;
@@ -300,7 +362,8 @@ public class NoticeBoardManagedBean extends BaseManagedBean {
 	}
 
 	/**
-	 * @param allStates the allStates to set
+	 * @param allStates
+	 *            the allStates to set
 	 */
 	public void setAllStates(String allStates) {
 		this.allStates = allStates;
@@ -314,7 +377,8 @@ public class NoticeBoardManagedBean extends BaseManagedBean {
 	}
 
 	/**
-	 * @param locVisible the locVisible to set
+	 * @param locVisible
+	 *            the locVisible to set
 	 */
 	public void setLocVisible(boolean locVisible) {
 		this.locVisible = locVisible;
@@ -327,9 +391,9 @@ public class NoticeBoardManagedBean extends BaseManagedBean {
 		return ministryList;
 	}
 
-
 	/**
-	 * @param ministryList the ministryList to set
+	 * @param ministryList
+	 *            the ministryList to set
 	 */
 	public void setMinistryList(List<PmOrgProfile> ministryList) {
 		this.ministryList = ministryList;
@@ -343,7 +407,8 @@ public class NoticeBoardManagedBean extends BaseManagedBean {
 	}
 
 	/**
-	 * @param departmentList the departmentList to set
+	 * @param departmentList
+	 *            the departmentList to set
 	 */
 	public void setDepartmentList(List<PmOrgProfile> departmentList) {
 		this.departmentList = departmentList;
@@ -357,7 +422,8 @@ public class NoticeBoardManagedBean extends BaseManagedBean {
 	}
 
 	/**
-	 * @param divisionList the divisionList to set
+	 * @param divisionList
+	 *            the divisionList to set
 	 */
 	public void setDivisionList(List<PmOrgProfile> divisionList) {
 		this.divisionList = divisionList;
@@ -371,7 +437,8 @@ public class NoticeBoardManagedBean extends BaseManagedBean {
 	}
 
 	/**
-	 * @param ministryOrgProfile the ministryOrgProfile to set
+	 * @param ministryOrgProfile
+	 *            the ministryOrgProfile to set
 	 */
 	public void setMinistryOrgProfile(PmOrgProfile ministryOrgProfile) {
 		this.ministryOrgProfile = ministryOrgProfile;
@@ -385,7 +452,8 @@ public class NoticeBoardManagedBean extends BaseManagedBean {
 	}
 
 	/**
-	 * @param tabList the tabList to set
+	 * @param tabList
+	 *            the tabList to set
 	 */
 	public void setTabList(List<Tab> tabList) {
 		this.tabList = tabList;
@@ -399,7 +467,8 @@ public class NoticeBoardManagedBean extends BaseManagedBean {
 	}
 
 	/**
-	 * @param deportmentOrgProfile the deportmentOrgProfile to set
+	 * @param deportmentOrgProfile
+	 *            the deportmentOrgProfile to set
 	 */
 	public void setDeportmentOrgProfile(PmOrgProfile deportmentOrgProfile) {
 		this.deportmentOrgProfile = deportmentOrgProfile;
@@ -413,7 +482,8 @@ public class NoticeBoardManagedBean extends BaseManagedBean {
 	}
 
 	/**
-	 * @param pmOrgProfile the pmOrgProfile to set
+	 * @param pmOrgProfile
+	 *            the pmOrgProfile to set
 	 */
 	public void setPmOrgProfile(PmOrgProfile pmOrgProfile) {
 		this.pmOrgProfile = pmOrgProfile;
@@ -427,7 +497,8 @@ public class NoticeBoardManagedBean extends BaseManagedBean {
 	}
 
 	/**
-	 * @param activeTabIndex the activeTabIndex to set
+	 * @param activeTabIndex
+	 *            the activeTabIndex to set
 	 */
 	public void setActiveTabIndex(Integer activeTabIndex) {
 		this.activeTabIndex = activeTabIndex;
@@ -441,12 +512,12 @@ public class NoticeBoardManagedBean extends BaseManagedBean {
 	}
 
 	/**
-	 * @param tabIndex the tabIndex to set
+	 * @param tabIndex
+	 *            the tabIndex to set
 	 */
 	public void setTabIndex(Integer tabIndex) {
 		this.tabIndex = tabIndex;
 	}
-
 
 	/**
 	 * @return the categoryL1s
@@ -455,14 +526,13 @@ public class NoticeBoardManagedBean extends BaseManagedBean {
 		return categoryL1s;
 	}
 
-
 	/**
-	 * @param categoryL1s the categoryL1s to set
+	 * @param categoryL1s
+	 *            the categoryL1s to set
 	 */
 	public void setCategoryL1s(List<PmCategoryL1> categoryL1s) {
 		this.categoryL1s = categoryL1s;
 	}
-
 
 	/**
 	 * @return the categoryL2s
@@ -471,14 +541,13 @@ public class NoticeBoardManagedBean extends BaseManagedBean {
 		return categoryL2s;
 	}
 
-
 	/**
-	 * @param categoryL2s the categoryL2s to set
+	 * @param categoryL2s
+	 *            the categoryL2s to set
 	 */
 	public void setCategoryL2s(List<PmCategoryL2> categoryL2s) {
 		this.categoryL2s = categoryL2s;
 	}
-
 
 	/**
 	 * @return the categoryL3s
@@ -487,14 +556,13 @@ public class NoticeBoardManagedBean extends BaseManagedBean {
 		return categoryL3s;
 	}
 
-
 	/**
-	 * @param categoryL3s the categoryL3s to set
+	 * @param categoryL3s
+	 *            the categoryL3s to set
 	 */
 	public void setCategoryL3s(List<PmCategoryL3> categoryL3s) {
 		this.categoryL3s = categoryL3s;
 	}
-
 
 	/**
 	 * @return the states
@@ -503,14 +571,13 @@ public class NoticeBoardManagedBean extends BaseManagedBean {
 		return states;
 	}
 
-
 	/**
-	 * @param states the states to set
+	 * @param states
+	 *            the states to set
 	 */
 	public void setStates(List<PmState> states) {
 		this.states = states;
 	}
-
 
 	/**
 	 * @return the districts
@@ -519,14 +586,13 @@ public class NoticeBoardManagedBean extends BaseManagedBean {
 		return districts;
 	}
 
-
 	/**
-	 * @param districts the districts to set
+	 * @param districts
+	 *            the districts to set
 	 */
 	public void setDistricts(List<PmDistrict> districts) {
 		this.districts = districts;
 	}
-
 
 	/**
 	 * @return the categoryL1Id
@@ -535,14 +601,13 @@ public class NoticeBoardManagedBean extends BaseManagedBean {
 		return categoryL1Id;
 	}
 
-
 	/**
-	 * @param categoryL1Id the categoryL1Id to set
+	 * @param categoryL1Id
+	 *            the categoryL1Id to set
 	 */
 	public void setCategoryL1Id(Long categoryL1Id) {
 		this.categoryL1Id = categoryL1Id;
 	}
-
 
 	/**
 	 * @return the categoryL2Id
@@ -551,14 +616,13 @@ public class NoticeBoardManagedBean extends BaseManagedBean {
 		return categoryL2Id;
 	}
 
-
 	/**
-	 * @param categoryL2Id the categoryL2Id to set
+	 * @param categoryL2Id
+	 *            the categoryL2Id to set
 	 */
 	public void setCategoryL2Id(Long categoryL2Id) {
 		this.categoryL2Id = categoryL2Id;
 	}
-
 
 	/**
 	 * @return the categoryL3Id
@@ -567,14 +631,13 @@ public class NoticeBoardManagedBean extends BaseManagedBean {
 		return categoryL3Id;
 	}
 
-
 	/**
-	 * @param categoryL3Id the categoryL3Id to set
+	 * @param categoryL3Id
+	 *            the categoryL3Id to set
 	 */
 	public void setCategoryL3Id(Long categoryL3Id) {
 		this.categoryL3Id = categoryL3Id;
 	}
-
 
 	/**
 	 * @return the pmState
@@ -583,14 +646,13 @@ public class NoticeBoardManagedBean extends BaseManagedBean {
 		return pmState;
 	}
 
-
 	/**
-	 * @param pmState the pmState to set
+	 * @param pmState
+	 *            the pmState to set
 	 */
 	public void setPmState(PmState pmState) {
 		this.pmState = pmState;
 	}
-
 
 	/**
 	 * @return the pmDistrict
@@ -599,14 +661,13 @@ public class NoticeBoardManagedBean extends BaseManagedBean {
 		return pmDistrict;
 	}
 
-
 	/**
-	 * @param pmDistrict the pmDistrict to set
+	 * @param pmDistrict
+	 *            the pmDistrict to set
 	 */
 	public void setPmDistrict(PmDistrict pmDistrict) {
 		this.pmDistrict = pmDistrict;
 	}
-
 
 	/**
 	 * @return the pmCategoryL1
@@ -615,14 +676,13 @@ public class NoticeBoardManagedBean extends BaseManagedBean {
 		return pmCategoryL1;
 	}
 
-
 	/**
-	 * @param pmCategoryL1 the pmCategoryL1 to set
+	 * @param pmCategoryL1
+	 *            the pmCategoryL1 to set
 	 */
 	public void setPmCategoryL1(PmCategoryL1 pmCategoryL1) {
 		this.pmCategoryL1 = pmCategoryL1;
 	}
-
 
 	/**
 	 * @return the pmCategoryL2
@@ -631,14 +691,13 @@ public class NoticeBoardManagedBean extends BaseManagedBean {
 		return pmCategoryL2;
 	}
 
-
 	/**
-	 * @param pmCategoryL2 the pmCategoryL2 to set
+	 * @param pmCategoryL2
+	 *            the pmCategoryL2 to set
 	 */
 	public void setPmCategoryL2(PmCategoryL2 pmCategoryL2) {
 		this.pmCategoryL2 = pmCategoryL2;
 	}
-
 
 	/**
 	 * @return the pmCategoryL3
@@ -647,14 +706,13 @@ public class NoticeBoardManagedBean extends BaseManagedBean {
 		return pmCategoryL3;
 	}
 
-
 	/**
-	 * @param pmCategoryL3 the pmCategoryL3 to set
+	 * @param pmCategoryL3
+	 *            the pmCategoryL3 to set
 	 */
 	public void setPmCategoryL3(PmCategoryL3 pmCategoryL3) {
 		this.pmCategoryL3 = pmCategoryL3;
 	}
-
 
 	/**
 	 * @return the pmStatus
@@ -663,9 +721,9 @@ public class NoticeBoardManagedBean extends BaseManagedBean {
 		return pmStatus;
 	}
 
-
 	/**
-	 * @param pmStatus the pmStatus to set
+	 * @param pmStatus
+	 *            the pmStatus to set
 	 */
 	public void setPmStatus(PmStatus pmStatus) {
 		this.pmStatus = pmStatus;
@@ -679,14 +737,207 @@ public class NoticeBoardManagedBean extends BaseManagedBean {
 	}
 
 	/**
-	 * @param searchBean the searchBean to set
+	 * @param searchBean
+	 *            the searchBean to set
 	 */
 	public void setSearchBean(ISearchBean<ScQt> searchBean) {
 		this.searchBean = searchBean;
 	}
 
+	public String getTitle() {
+		return title;
+	}
+
+	public void setTitle(String title) {
+		this.title = title;
+	}
+
+
+
+	public boolean isPubToday() {
+		return isPubToday;
+	}
+
+	public void setPubToday(boolean isPubToday) {
+		this.isPubToday = isPubToday;
+	}
+
+	public boolean isPubYesterday() {
+		return isPubYesterday;
+	}
+
+	public void setPubYesterday(boolean isPubYesterday) {
+		this.isPubYesterday = isPubYesterday;
+	}
+
+	public boolean isPubShow() {
+		return isPubShow;
+	}
+
+	public void setPubShow(boolean isPubShow) {
+		this.isPubShow = isPubShow;
+	}
+
+	public boolean isBreifToday() {
+		return isBreifToday;
+	}
+
+	public void setBreifToday(boolean isBreifToday) {
+		this.isBreifToday = isBreifToday;
+	}
+
+	public boolean isBreifYesterday() {
+		return isBreifYesterday;
+	}
+
+	public void setBreifYesterday(boolean isBreifYesterday) {
+		this.isBreifYesterday = isBreifYesterday;
+	}
+
+	public boolean isBreifShow() {
+		return isBreifShow;
+	}
+
+	public void setBreifShow(boolean isBreifShow) {
+		this.isBreifShow = isBreifShow;
+	}
+
+	public boolean isSvToday() {
+		return isSvToday;
+	}
+
+	public void setSvToday(boolean isSvToday) {
+		this.isSvToday = isSvToday;
+	}
+
+	public boolean isSvYesterday() {
+		return isSvYesterday;
+	}
+
+	public void setSvYesterday(boolean isSvYesterday) {
+		this.isSvYesterday = isSvYesterday;
+	}
+
+	public boolean isSvShow() {
+		return isSvShow;
+	}
+
+	public void setSvShow(boolean isSvShow) {
+		this.isSvShow = isSvShow;
+	}
+
+	public TreeNode getMinstryRootNode() {
+		return minstryRootNode;
+	}
+
+	public void setMinstryRootNode(TreeNode minstryRootNode) {
+		this.minstryRootNode = minstryRootNode;
+	}
+
+	public TreeNode getCategoryRootNode() {
+		return categoryRootNode;
+	}
+
+	public void setCategoryRootNode(TreeNode categoryRootNode) {
+		this.categoryRootNode = categoryRootNode;
+	}
+
+	public TreeNode getLocationRootNode() {
+		return locationRootNode;
+	}
+
+	public void setLocationRootNode(TreeNode locationRootNode) {
+		this.locationRootNode = locationRootNode;
+	}
+
+	public TreeNode getMinistrySelectedNode() {
+		return ministrySelectedNode;
+	}
+
+	public void setMinistrySelectedNode(TreeNode ministrySelectedNode) {
+		this.ministrySelectedNode = ministrySelectedNode;
+	}
+
+	public TreeNode getCategorySelectedNode() {
+		return categorySelectedNode;
+	}
+
+	public void setCategorySelectedNode(TreeNode categorySelectedNode) {
+		this.categorySelectedNode = categorySelectedNode;
+	}
+
+	public TreeNode getLocationSelectedNode() {
+		return locationSelectedNode;
+	}
+
+	public void setLocationSelectedNode(TreeNode locationSelectedNode) {
+		this.locationSelectedNode = locationSelectedNode;
+	}
+
+	public ISearchBean<PmOrgProfile> getMistrySearchBean() {
+		return mistrySearchBean;
+	}
+
+	public void setMistrySearchBean(ISearchBean<PmOrgProfile> mistrySearchBean) {
+		this.mistrySearchBean = mistrySearchBean;
+	}
+
+	public ISearchBean<Object> getCategorySearchBean() {
+		return categorySearchBean;
+	}
+
+	public void setCategorySearchBean(ISearchBean<Object> categorySearchBean) {
+		this.categorySearchBean = categorySearchBean;
+	}
+
+	public ISearchBean<Object> getLocationSearchBean() {
+		return locationSearchBean;
+	}
+
+	public void setLocationSearchBean(ISearchBean<Object> locationSearchBean) {
+		this.locationSearchBean = locationSearchBean;
+	}
+
+	public List<String> getTabs() {
+		return tabs;
+	}
+
+	public void setTabs(List<String> tabs) {
+		this.tabs = tabs;
+	}
+
+	public TreeNode getTempMinstryRootNode() {
+		return tempMinstryRootNode;
+	}
+
+	public void setTempMinstryRootNode(TreeNode tempMinstryRootNode) {
+		this.tempMinstryRootNode = tempMinstryRootNode;
+	}
+
+	public TreeNode getTempCategoryRootNode() {
+		return tempCategoryRootNode;
+	}
+
+	public void setTempCategoryRootNode(TreeNode tempCategoryRootNode) {
+		this.tempCategoryRootNode = tempCategoryRootNode;
+	}
+
+	public TreeNode getTempLocationRootNode() {
+		return tempLocationRootNode;
+	}
+
+	public void setTempLocationRootNode(TreeNode tempLocationRootNode) {
+		this.tempLocationRootNode = tempLocationRootNode;
+	}
+
+	public String getResetData() {
+		return resetData;
+	}
+
+	public void setResetData(String resetData) {
+		this.resetData = resetData;
+	}
 
 	
-	
-	
+
 }
