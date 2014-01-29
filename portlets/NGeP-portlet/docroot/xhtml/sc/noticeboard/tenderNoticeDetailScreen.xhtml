@@ -1,0 +1,49 @@
+
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition
+	template="/WEB-INF/facelets/templates/basic_template.xhtml"
+	xmlns:p="http://primefaces.org/ui" xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:fn="http://java.sun.com/jsp/jstl/functions"
+	xmlns:c="http://java.sun.com/jsp/jstl/core">
+	<ui:define name="contentSection">
+
+		<p:panel>
+			<p:panelGrid style="width:100%;"
+				styleClass="noBorders tr,noBorders td">
+				<p:row>
+					<p:column width="100%" style="text-align:right">
+						<p:commandButton value="#{lbl['lbl.sc.notice.board.backbtn']}"
+							action="#{noticeBoardBackingBean.backBtn}"
+							onclick="history.go(-1)" icon="ui-icon-back" style="float:right;" />
+
+					</p:column>
+				</p:row>
+			</p:panelGrid>
+
+			<p:tabView id="NoticeBoardDet" dynamic="true" cache="false"
+				activeIndex="#{noticeBoardBackingBean.managedBean.tabIndex}">
+
+				<p:ajax event="tabChange"
+					listener="#{noticeBoardBackingBean.onTabChangeAction}" />
+				<p:tab id="tab1" title="Qtn / Tender Details">
+					<ui:include src="noticeboardQtnTenderTab.xhtml" />
+				</p:tab>
+				<p:tab id="tab2" title="Schedule">
+					<ui:include src="noticeboardScheduleTab.xhtml" />
+				</p:tab>
+				<p:tab id="tab3" title="Documents">
+					<ui:include src="noticeboardDocumentTab.xhtml" />
+				</p:tab>
+
+			</p:tabView>
+
+			<ui:include src="/xhtml/sc/notice/noticeboardZonePopUp.xhtml" />
+			<ui:include src="/xhtml/sc/notice/noticeboardLocationPopUp.xhtml" />
+
+		</p:panel>
+	</ui:define>
+</ui:composition>

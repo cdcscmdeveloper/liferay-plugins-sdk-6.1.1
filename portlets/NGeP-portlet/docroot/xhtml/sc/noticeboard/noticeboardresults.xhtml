@@ -1,0 +1,24 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:c="http://java.sun.com/jsp/jstl/core">
+
+	<p:tabView var="noticeboardresulttype" orientation="top"
+		value="#{noticeBoardBackingBean.retrieveParameterDescByType('NBT')}">
+
+		<p:tab title="#{noticeboardresulttype.codeName}">
+			<ui:fragment
+				rendered="#{noticeboardresulttype.codeName eq 'Price Schedule'}">
+				<ui:include src="/xhtml/sc/notice/noticeboardPriceSchedule.xhtml"></ui:include>
+			</ui:fragment>
+			<ui:fragment
+				rendered="#{noticeboardresulttype.codeName ne 'Price Schedule'}">
+				<ui:include src="/xhtml/sc/noticeboard/resultdetails.xhtml"></ui:include>
+			</ui:fragment>
+		</p:tab>
+	</p:tabView>
+
+
+</ui:composition>
