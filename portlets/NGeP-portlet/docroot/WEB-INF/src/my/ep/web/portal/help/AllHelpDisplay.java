@@ -98,7 +98,7 @@ public class AllHelpDisplay implements Serializable {
 					
 		DynamicQuery query = DynamicQueryFactoryUtil.forClass(JournalArticle.class, "articleParent", PortalClassLoaderUtil.getClassLoader())
 		.add(PropertyFactoryUtil.forName("id").eq(subQuery))
-		.add(PropertyFactoryUtil.forName("type").in(new String[] {"help"}))
+		.add(PropertyFactoryUtil.forName("type").in(new String[] {"user-guide"}))
 		.addOrder(OrderFactoryUtil.asc("urlTitle"));
 				
 		List<JournalArticle> jaHelps = null;	
