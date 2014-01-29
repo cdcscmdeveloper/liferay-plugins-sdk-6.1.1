@@ -12,6 +12,7 @@ import my.ep.persistence.entity.pm.authorization.PmUser;
 import my.ep.persistence.entity.pm.common.PmAddressType;
 import my.ep.web.backingbean.BaseBackingBean;
 import my.ep.web.managedbean.pm.userprofile.UserprofileManagedBean;
+
 import my.ep.web.util.FacesScopes;
 
 import org.apache.log4j.Logger;
@@ -27,12 +28,13 @@ public class UserprofileBackingBean extends
 
 	private static final Logger logger = EpLogger
 			.getLogger(UserprofileBackingBean.class);
+		
 
 	public UserprofileBackingBean() {
 		retriveUserDtls();
 
 	}
-
+	
 	private void retriveUserDtls() {
 		FacesScopes facesScopes = new FacesScopes();
 		PmUser user = facesScopes.getUserSessionBean();
@@ -59,5 +61,7 @@ public class UserprofileBackingBean extends
 							"Unable to Retrive User Details", ""));
 		}
 	}
+	
+
 
 }
