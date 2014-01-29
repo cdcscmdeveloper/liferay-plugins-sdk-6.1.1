@@ -28,7 +28,8 @@
 			</p:tabView>
 				
       <div align="right">
-			<p:commandButton value="Search" icon="ui-icon-search"></p:commandButton>
+			<p:commandButton value="Search" icon="ui-icon-search" 
+			 update="searchGroupProfile" action="#{userprofileBackingBean.retriveUserProfile}" />
             <p:commandButton value="Reset" icon="ui-icon-reset"></p:commandButton>
 	  </div>
     <br/>
@@ -36,73 +37,42 @@
 	</p:panel>
 	
 	<p:panel header="Results" toggleable="true">
-	<p:dataTable id="searchGroupProfile"  value="" var="usergroupprofile" editable="true">
- 			<ac:paginator />
+	<p:dataTable id="searchGroupProfile" value="#{userprofileBackingBean.managedBean.users}" var="usergroupprofile" editable="true">
+ 	<ac:paginator />
     <p:ajax event="rowEdit" />  
     <p:ajax event="rowEditCancel"/> 
 				
  
        <p:column headerText="Login ID" > 
-        <p:cellEditor>
-         <f:facet name="output"> 
-          <h:outputText value="10101010"/>
-         </f:facet> 
-         <f:facet name="input"> 
-          <h:outputText value="10101010"/>
-         </f:facet>
-        </p:cellEditor>
+        <h:outputText value="#{usergroupprofile.loginId}" />
        </p:column>
        
        <p:column headerText="Salutation" > 
-        <p:cellEditor>
-         <f:facet name="output"> 
-          <h:outputText value="abc"/>
-         </f:facet> 
-         <f:facet name="input"> 
-          <h:outputText value="abc"/>
-         </f:facet>
-        </p:cellEditor>
+        <h:outputText />
        </p:column>       
-       
+     
        <p:column headerText="User Name" >
-        <p:cellEditor>
-         <f:facet name="output">  
-          <h:outputText value="PTJ 002"/>
-         </f:facet> 
-		 <f:facet name="input"> 
-          <h:outputText value="PTJ 002"/>
-         </f:facet>         
-        </p:cellEditor>   
+        <h:outputText value="#{usergroupprofile.userName}" />   
        </p:column>
-       
+    
        <p:column headerText="City Name" >
-        <p:cellEditor> 
-         <f:facet name="output"> 
-          <h:outputText value="Kuala Lumpur"/> 
-         </f:facet>
-         <f:facet name="input"> 
-          <h:outputText value="Kuala Lumpur"/>
-         </f:facet>  
-        </p:cellEditor> 
+        <h:outputText />
        </p:column>
        
-     <p:column headerText="State Name" >
-      <p:cellEditor> 
-       <f:facet name="output"> 
-         <h:outputText value="WP"/> 
-       </f:facet> 
-       <f:facet name="input"> 
-          <h:outputText value="WP"/>
-         </f:facet> 
-      </p:cellEditor>    
+      <p:column headerText="State Name" >
+        <h:outputText />    
+      </p:column>
+   
+     <p:column headerText="Status"> 
+      <h:outputText />
     </p:column>
     
-     <p:column headerText="Status"> 
-        <h:outputText value="Active"/>
-    </p:column>
-    <p:column headerText="#{lbl['lbl.sc.committe.resulttable.action']}">
-	<p:rowEditor />
-    </p:column>
+    <p:column headerText="Action">
+    <p:commandLink>
+     <p:graphicImage library="ep/images/design" name="edit.png"
+      value="/resources/ep/images/design/edit.png" />
+    </p:commandLink>
+    </p:column>    
      </p:dataTable>
 	</p:panel>
 	

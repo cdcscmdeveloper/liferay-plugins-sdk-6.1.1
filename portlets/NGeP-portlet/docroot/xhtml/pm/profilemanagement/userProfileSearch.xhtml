@@ -7,7 +7,7 @@
 	xmlns:ac="http://ac.my/jsf/composite/cc"
 	xmlns:c="http://java.sun.com/jsp/jstl/core">
 	
-	
+<h:form id="f">	
 	
 	<p:panel>
 		<h:panelGrid styleClass="noBorders tr,noBorders td" ></h:panelGrid>
@@ -28,69 +28,47 @@
 			</p:tabView>
 				
       <div align="right">
-			<p:commandButton value="Search" icon="ui-icon-search"></p:commandButton>
-            <p:commandButton value="Reset" icon="ui-icon-reset"></p:commandButton>
+			<p:commandButton value="Search" icon="ui-icon-search" action="#{userprofilesBackingBean.retriveUserProfile}"
+			update="searchProfile" />
+            <p:commandButton value="Reset" type="reset" icon="ui-icon-reset" update="searchProfile" process="@this" 
+            actionListener="#{userprofilesBackingBean.reset}">
+            </p:commandButton>
 	  </div>
     <br/>
 	<br/>
 	</p:panel>
 	
 	<p:panel header="Results" toggleable="true">
-	<p:dataTable id="searchProfile"  value="" var="userprofile" editable="true">
- 			<ac:paginator />
-    <p:ajax event="rowEdit" />  
+	<p:dataTable id="searchProfile" value="#{userprofilesBackingBean.managedBean.users}" var="userprofile" editable="true">
+ 	<ac:paginator for="searchProfile" />
+    <p:ajax event="rowEdit" listener="#{userprofilesBackingBean.goToMaintainceAction}" />  
     <p:ajax event="rowEditCancel"/> 
 				
  
        <p:column headerText="Login ID" > 
-        <p:cellEditor>
-         <f:facet name="output"> 
-          <h:outputText value="10101010"/>
-         </f:facet> 
-         <f:facet name="input"> 
-          <h:outputText value="10101010"/>
-         </f:facet>
-        </p:cellEditor>
+        <h:outputText value="#{userprofile.loginId}" />
        </p:column>
        
        <p:column headerText="User Name" >
-        <p:cellEditor>
-         <f:facet name="output">  
-          <h:outputText value="PTJ 002"/>
-         </f:facet> 
-		 <f:facet name="input"> 
-          <h:outputText value="PTJ 002"/>
-         </f:facet>         
-        </p:cellEditor>   
+        <h:outputText value="#{userprofile.userName}" />  
        </p:column>
        
        <p:column headerText="City Name" >
-        <p:cellEditor> 
-         <f:facet name="output"> 
-          <h:outputText value="Kuala Lumpur"/> 
-         </f:facet>
-         <f:facet name="input"> 
-          <h:outputText value="Kuala Lumpur"/>
-         </f:facet>  
-        </p:cellEditor> 
+        <h:outputText /> 
        </p:column>
        
-     <p:column headerText="State Name" >
-      <p:cellEditor> 
-       <f:facet name="output"> 
-         <h:outputText value="WP"/> 
-       </f:facet> 
-       <f:facet name="input"> 
-          <h:outputText value="WP"/>
-         </f:facet> 
-      </p:cellEditor>    
-    </p:column>
+       <p:column headerText="State Name" >
+        <h:outputText />    
+       </p:column>
     
-     <p:column headerText="Status"> 
-        <h:outputText value="Active"/>
-    </p:column>
-    <p:column headerText="#{lbl['lbl.sc.committe.resulttable.action']}">
-	<p:rowEditor />
+       <p:column headerText="Status"> 
+        <h:outputText />
+       </p:column>
+    <p:column headerText="Action">
+    <p:commandLink action="#{userprofilesBackingBean.goToMaintainceAction(profile)}">
+     <p:graphicImage library="ep/images/design" name="edit.png"
+      value="/resources/ep/images/design/edit.png" />
+    </p:commandLink>
     </p:column>
      </p:dataTable>
 	</p:panel>
@@ -102,5 +80,5 @@
        	 icon="ui-icon-add" />
 	 </h:panelGrid>	
 	</p:panel>
-
+</h:form>
 </ui:composition>
