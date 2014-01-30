@@ -3,6 +3,7 @@
  */
 package my.ep.web.managedbean.fl.creatdo;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.faces.bean.ManagedBean;
@@ -39,7 +40,6 @@ public class DeliveryOrderManagedBean extends BaseManagedBean {
 	private FlDeliveryAddress deliveryAddress;
 	private FlFulfilmentOrder fulfilmentOrder;
     private FlFulfilmentRequest fulfilmentRequest;
-    private FlDelOrderItem delOrderItem = new FlDelOrderItem();
 	//private List<DeliveryAddressPopup> daPopupList;
 	//private List<DeliveryAddressPopup> selectedPopupAddress;
 	
@@ -133,20 +133,6 @@ public class DeliveryOrderManagedBean extends BaseManagedBean {
 	 */
 	public void setDelAddrList(List<PmOrgAddress> delAddrList) {
 		this.delAddrList = delAddrList;
-	}
-
-	/**
-	 * @return the selectedDelAddr
-	 */
-	public FlDeliveryAddress getSelectedDelAddr() {
-		return selectedDelAddr;
-	}
-
-	/**
-	 * @param selectedDelAddr the selectedDelAddr to set
-	 */
-	public void setSelectedDelAddr(FlDeliveryAddress selectedDelAddr) {
-		this.selectedDelAddr = selectedDelAddr;
 	}
 
 	/**
@@ -346,20 +332,6 @@ public class DeliveryOrderManagedBean extends BaseManagedBean {
 	}
 
 	/**
-	 * @return the delOrderItem
-	 */
-	public FlDelOrderItem getDelOrderItem() {
-		return delOrderItem;
-	}
-
-	/**
-	 * @param delOrderItem the delOrderItem to set
-	 */
-	public void setDelOrderItem(FlDelOrderItem delOrderItem) {
-		this.delOrderItem = delOrderItem;
-	}
-
-	/**
 	 * @return the docType
 	 */
 	public String getDocType() {
@@ -371,6 +343,20 @@ public class DeliveryOrderManagedBean extends BaseManagedBean {
 	 */
 	public void setDocType(String docType) {
 		this.docType = docType;
+	}
+
+	/**
+	 * @return the selectedDelAddr
+	 */
+	public FlDeliveryAddress getSelectedDelAddr() {
+		return selectedDelAddr;
+	}
+
+	/**
+	 * @param selectedDelAddr the selectedDelAddr to set
+	 */
+	public void setSelectedDelAddr(FlDeliveryAddress selectedDelAddr) {
+		this.selectedDelAddr = selectedDelAddr;
 	}
 
 }

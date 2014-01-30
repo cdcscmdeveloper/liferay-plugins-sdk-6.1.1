@@ -20,6 +20,7 @@ import my.ep.persistence.entity.fl.order.FlDelOrderItem;
 import my.ep.persistence.entity.fl.order.FlDeliveryOrder;
 import my.ep.persistence.entity.fl.order.FlFulfilmentOrder;
 import my.ep.persistence.entity.fl.request.FlDeliveryAddress;
+import my.ep.persistence.entity.fl.request.FlFulfilmentItem;
 import my.ep.persistence.entity.fl.request.FlFulfilmentItemAddr;
 import my.ep.persistence.entity.fl.request.FlFulfilmentRequest;
 import my.ep.web.backingbean.BaseBackingBean;
@@ -51,19 +52,13 @@ public class DeliveryOrderBackingBean extends BaseBackingBean<DeliveryOrderManag
 	}
 	
 	public DeliveryOrderBackingBean(){
-		
-	}
-	@PostConstruct
-	public void init() {
 		if (getManagedBean().getFlDeliveryOrder() == null) {
 			getManagedBean().setFlDeliveryOrder(new FlDeliveryOrder());
 			getManagedBean().getFlDeliveryOrder().setFlDelOrderItem(new ArrayList<FlDelOrderItem>());
 		}
 		if (getManagedBean().getFulfilmentOrder() == null) {
 			getManagedBean().setFulfilmentRequest(new FlFulfilmentRequest());
-			//getManagedBean().getFulfilmentRequest()
 			getManagedBean().setFulfilmentOrder(new FlFulfilmentOrder() );
-			//getManagedBean().setFlDeliveryOrder(new FlDeliveryOrder());
 			getManagedBean().setDeliveryAddress(new FlDeliveryAddress());
 		}
 	}
@@ -140,22 +135,28 @@ public class DeliveryOrderBackingBean extends BaseBackingBean<DeliveryOrderManag
 				+" "+getManagedBean().getSelectedDelAddr().getAddressType().getPmAddress().getAddress3()
 				+" "+getManagedBean().getSelectedDelAddr().getAddressType().getPmAddress().getAddress4());
 		
-		System.out.println("getDeliveryAddressId: "+getManagedBean().getSelectedDelAddr().getDeliveryAddressId());
+		
+		
+
+		if(!getManagedBean().getFlDeliveryOrder().getFlDelOrderItem().isEmpty()){
+			getManagedBean().getFlDeliveryOrder().getFlDelOrderItem().clear();
+		}
 		getManagedBean().getFlDeliveryOrder().setFlDeliveryAddress(getManagedBean().getSelectedDelAddr());
 		
-		for(FlFulfilmentItemAddr flFulfilmentItemAddr : getManagedBean().getSelectedDelAddr().getFlFulfilmentItemAddr()){
-			getManagedBean().getDelOrderItem().setFlFulfilmentItemAddr(flFulfilmentItemAddr);
-			getManagedBean().getDelOrderItem().setFlDeliveryOrder(getManagedBean().getFlDeliveryOrder());
+		for(FlFulfilmentItemAddr itemAddr : getManagedBean().getSelectedDelAddr().getFlFulfilmentItemAddr()){
+			FlDelOrderItem orderItem = new FlDelOrderItem();
+			orderItem.setFlDeliveryOrder(getManagedBean().getFlDeliveryOrder());
+			orderItem.setFlFulfilmentItemAddr(itemAddr);
+			getManagedBean().getFlDeliveryOrder().getFlDelOrderItem().add(orderItem);
 		}
-		getManagedBean().getFlDeliveryOrder().getFlDelOrderItem().add(getManagedBean().getDelOrderItem());
-
+		
 	}
 	
 	public void delAddrList(){
-		IFulfilmentOrderSO filmentOrderSO = (IFulfilmentOrderSO) BusinessDelegate.getInstance().getServiceObject("fl", IFulfilmentOrderSO.class);
+		IFulfilmentOrderSO flOrderSO = (IFulfilmentOrderSO) BusinessDelegate.getInstance().getServiceObject("fl", IFulfilmentOrderSO.class);
 		FulfilmentReqDTO reqDTO = new FulfilmentReqDTO();
 		reqDTO.setFlRequestId(getManagedBean().getFulfilmentOrder().getFlFulfilmentRequest().getFulfilmentReqId());
-		FulfilmentResDTO resDTO = filmentOrderSO.getDeliveryAddressListById(reqDTO);
+		FulfilmentResDTO resDTO = flOrderSO.getDeliveryAddressListById(reqDTO);
 		this.getManagedBean().setDeliveryAddressList(resDTO.getDelAddrList());
 	}
 	

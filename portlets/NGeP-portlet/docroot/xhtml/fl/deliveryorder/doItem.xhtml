@@ -8,7 +8,7 @@
 
 	<p:panel header="ITEM DETAIL" toggleable="true">
 		<br />
-		<p:dataTable id="itemDataTable" var="item" width="100%" value="#{createDOBackingBean.managedBean.delOrderItem}">
+		<p:dataTable id="itemDataTable" var="item" width="100%" value="#{createDOBackingBean.managedBean.flDeliveryOrder.flDelOrderItem}">
 			<ac:paginator for="itemDataTable" />
 			<p:columnGroup type="header">
 				<p:row>

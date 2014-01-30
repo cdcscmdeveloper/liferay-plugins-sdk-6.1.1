@@ -41,14 +41,14 @@
 						saveObject="contractRequestBackingBean.managedBean.flRequest.preparedOrgProfile"
 						value="#{contractRequestBackingBean.managedBean.flRequest.preparedOrgProfile.orgName}"
 						conditionField="orgProfileId^#{contractRequestBackingBean.managedBean.testOrg}">
-					</ac:lov> <ac:lovPopup /></td>
+					</ac:lov> </td>
 				<td><p:outputLabel value="* #{lbl['lbl.fl.issued.ptj']}" /></td>
 				<td><ac:lov id="issuePtj" lovId="PM_ORG_PROFILE"
 						headerText="IssuePtj Lov"
 						saveObject="contractRequestBackingBean.managedBean.flRequest.issuedOrgProfile"
 						value="#{contractRequestBackingBean.managedBean.flRequest.issuedOrgProfile.orgName}"
 						conditionField="orgProfileId^#{contractRequestBackingBean.managedBean.testOrg}">
-					</ac:lov> <ac:lovPopup /></td>
+					</ac:lov> </td>
 			</tr>
 			<tr>
 				<td><p:outputLabel value="* #{lbl['lbl.fl.received.ptj']}" /></td>
@@ -57,7 +57,7 @@
 						saveObject="contractRequestBackingBean.managedBean.flRequest.receivedOrgProfile"
 						value="#{contractRequestBackingBean.managedBean.flRequest.receivedOrgProfile.orgName}"
 						conditionField="orgProfileId^#{contractRequestBackingBean.managedBean.testOrg}">
-					</ac:lov> <ac:lovPopup /></td>
+					</ac:lov> </td>
 				<td><p:outputLabel value="* #{lbl['lbl.fl.charge.ptj']}" /></td>
 				<td><p:inputText id="chargedPtj" size="35" disabled="true"></p:inputText></td>
 			</tr>
