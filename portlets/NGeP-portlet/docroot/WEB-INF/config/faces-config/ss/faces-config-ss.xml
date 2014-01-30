@@ -8,7 +8,7 @@
 
 		<navigation-case>
 			<from-outcome>createSimpleQuoteBid</from-outcome>
-			<to-view-id>/xhtml/ss/directpurchase/common/simpleQuoteGroupTab.xhtml</to-view-id>
+			<to-view-id>/xhtml/sc/directpurchase/common/simpleQuoteGroupTab.xhtml</to-view-id>
 			<redirect />
 		</navigation-case>
 	</navigation-rule>
@@ -16,7 +16,7 @@
 		<from-view-id>*</from-view-id>
 		<navigation-case>
 			<from-outcome>directPurchase</from-outcome>
-			<to-view-id>/xhtml/ss/directpurchase/directPurchase.xhtml</to-view-id>
+			<to-view-id>/xhtml/sc/directpurchase/directPurchase.xhtml</to-view-id>
 			<redirect />
 		</navigation-case>
 	</navigation-rule>
@@ -31,21 +31,21 @@
 		<from-view-id>*</from-view-id>
 		<navigation-case>
 			<from-outcome>quoteBidSupplier</from-outcome>
-			<to-view-id>/xhtml/ss/directpurchase/simpleQuoteBidSupplier.xhtml</to-view-id>
+			<to-view-id>/xhtml/sc/directpurchase/simpleQuoteBidSupplier.xhtml</to-view-id>
 		</navigation-case>
 	</navigation-rule>
 	<navigation-rule>
 		<from-view-id>*</from-view-id>
 		<navigation-case>
 			<from-outcome>requestNote</from-outcome>
-			<to-view-id>/xhtml/ss/directpurchase/requestList.xhtml</to-view-id>
+			<to-view-id>/xhtml/sc/directpurchase/requestList.xhtml</to-view-id>
 		</navigation-case>
 	</navigation-rule>
 	<navigation-rule>
 		<from-view-id>*</from-view-id>
 		<navigation-case>
 			<from-outcome>commonRequestNote</from-outcome>
-			<to-view-id>/xhtml/ss/directpurchase/common/commonRequestNote.xhtml</to-view-id>
+			<to-view-id>/xhtml/sc/directpurchase/common/commonRequestNote.xhtml</to-view-id>
 		</navigation-case>
 	</navigation-rule>
 	
