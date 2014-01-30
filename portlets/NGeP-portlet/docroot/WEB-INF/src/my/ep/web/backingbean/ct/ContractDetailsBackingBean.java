@@ -12,8 +12,9 @@ import java.io.OutputStream;
 import java.net.URL;
 import java.net.URLConnection;
 import java.util.ArrayList;
-import java.util.List;
 import java.util.HashMap;
+import java.util.List;
+
 import javax.annotation.PostConstruct;
 import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
@@ -23,17 +24,6 @@ import javax.faces.model.SelectItem;
 import javax.portlet.PortletResponse;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-
-import org.apache.log4j.Logger;
-import org.primefaces.event.RowEditEvent;
-import org.primefaces.event.SelectEvent;
-import org.primefaces.model.DefaultTreeNode;
-import org.primefaces.model.DualListModel;
-import org.primefaces.model.TreeNode;
-
-
-import com.liferay.portal.kernel.search.ParseException;
-import com.liferay.portal.util.PortalUtil;
 
 import my.ep.biz.bean.search.ISearchBean;
 import my.ep.biz.bean.search.SearchBean;
@@ -83,6 +73,16 @@ import my.ep.web.managedbean.ct.ContractDetailsManagedBean;
 import my.ep.web.util.FacesScopes;
 import my.ep.web.util.lookupservice.BusinessDelegate;
 
+import org.apache.log4j.Logger;
+import org.primefaces.event.RowEditEvent;
+import org.primefaces.event.SelectEvent;
+import org.primefaces.model.DefaultTreeNode;
+import org.primefaces.model.DualListModel;
+import org.primefaces.model.TreeNode;
+
+import com.liferay.portal.kernel.search.ParseException;
+import com.liferay.portal.util.PortalUtil;
+
 /**
  * Backing Bean For Contract Details
  * 
@@ -112,7 +112,7 @@ public class ContractDetailsBackingBean extends BaseBackingBean<ContractDetailsM
 	private CtSchedule[] selectedSchedule;
 	private CtProgressivePayment[] selectedProgressive;
 	ContractBackingBean ctBB = null;
-	
+	private List<SelectItem> populateDepartmentList = new ArrayList<SelectItem>();
 	private final static String[] deductions;
 	static {
 
@@ -200,7 +200,7 @@ public class ContractDetailsBackingBean extends BaseBackingBean<ContractDetailsM
 		      ContractResDTO resDTO = contractSO.retrieveContractVer(ctReqDTO);
 		      this.getManagedBean().setContractVer(resDTO.getCtContractVer());
 		      this.getManagedBean().setCtContract(resDTO.getCtContractVer().getCtContract());
-	          //CombineSupAddress(resDTO.getCtContractVer());
+	          CombineSupAddress(resDTO.getCtContractVer());
 	
 			  FacesContext fc = FacesContext.getCurrentInstance();
 			  fc.getApplication().getNavigationHandler().handleNavigation(fc, null,  ContractManagementConst.NAV_TO_CONTRACT_DETAILS);
@@ -218,7 +218,7 @@ public class ContractDetailsBackingBean extends BaseBackingBean<ContractDetailsM
     public void CombineSupAddress(CtContractVer ctContractVer){
     	
     	StringBuilder address = new StringBuilder();
-    	String strSpace = " ";
+    	String strSpace =", ";
     	if(ctContractVer.getCtContractValue().getSupplierAddress().getAddress1() != null){
     		address.append(ctContractVer.getCtContractValue().getSupplierAddress().getAddress1());
     		address.append(strSpace);
@@ -638,21 +638,10 @@ public class ContractDetailsBackingBean extends BaseBackingBean<ContractDetailsM
 			
 			contractSO = (IContractSO) BusinessDelegate.getInstance().getServiceObject("ct", IContractSO.class);
       
-            if(this.getManagedBean().getChkRenderPage().equalsIgnoreCase(ContractConst.DOC_TYPE_CONTRACT_SUSPEND_ACTIVE)){      
-			    this.getManagedBean().getContractVer().setDocType(ContractConst.DOC_TYPE_CONTRACT_SUSPEND_ACTIVE);
-			    this.getManagedBean().getContractVer().getCtContract().setContractId(this.getManagedBean().getCtContract().getContractId());
-          
-            }else if(this.getManagedBean().getChkRenderPage().equalsIgnoreCase(ContractConst.DOC_TYPE_CONTRACT_TERMINATION)){
-            	 this.getManagedBean().getContractVer().setDocType(ContractConst.DOC_TYPE_CONTRACT_TERMINATION);
-            	 this.getManagedBean().getContractVer().getCtContract().setContractId(this.getManagedBean().getCtContract().getContractId());
-          
-            }else if(this.getManagedBean().getChkRenderPage().equalsIgnoreCase(ContractConst.DOC_TYPE_CONTRACT_AMENDMENT)){
-		         this.getManagedBean().getContractVer().setDocType(ContractConst.DOC_TYPE_CONTRACT_AMENDMENT);
-                
-            }else {
+       
             	 this.getManagedBean().getContractVer().setDocType(ContractConst.DOC_TYPE_CONTRACT_CREATION);	
             	 this.getManagedBean().getContractVer().getCtContract().setAgreement(true);
-            }
+           
             
             reqDTO.setToken(token);
             reqDTO.setOutcome(action);
@@ -784,7 +773,7 @@ public class ContractDetailsBackingBean extends BaseBackingBean<ContractDetailsM
 				items[0] = new SelectItem(null, "- Select One -");
 		      
 				for(PmOrgProfile orgProfile : list) 
-			      items[i++] = new SelectItem( orgProfile.getOrgCode(), orgProfile.getOrgName());       
+			      items[i++] = new SelectItem( orgProfile.getOrgProfileId(), orgProfile.getOrgName());       
 				
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -792,6 +781,19 @@ public class ContractDetailsBackingBean extends BaseBackingBean<ContractDetailsM
 		}
 	    return items;
 	}
+	
+    public void changeDepartmentActionListener(){
+    	
+    	    IOrgProfileSO orgProfileSO = (IOrgProfileSO) BusinessDelegate.getInstance().getServiceObject("pm", IOrgProfileSO.class);
+	        OrgProfileReqDTO reqDTO = new OrgProfileReqDTO();
+	        reqDTO.setOrgType(OrganizationType.DEPARTMENT.value());
+	        reqDTO.setParentOrgProfileId(this.getManagedBean().getMinistryProfileId());
+	        OrgProfileResDTO resDTO = orgProfileSO.retrieveOrgProfileListByOrgType(reqDTO);
+	        List<PmOrgProfile> list = resDTO.getOrgProfileList();
+	        for (PmOrgProfile orgProfile : list) {
+	        	populateDepartmentList.add(new SelectItem(orgProfile.getOrgProfileId(), orgProfile.getOrgName()));
+	        }
+    }
 	
 	public SelectItem[] getDepartmentDropdown() {
 	
@@ -801,6 +803,7 @@ public class ContractDetailsBackingBean extends BaseBackingBean<ContractDetailsM
 		        IOrgProfileSO orgProfileSO = (IOrgProfileSO) BusinessDelegate.getInstance().getServiceObject("pm", IOrgProfileSO.class);
 		        OrgProfileReqDTO reqDTO = new OrgProfileReqDTO();
 		        reqDTO.setOrgType(OrganizationType.DEPARTMENT.value());
+		        reqDTO.setParentOrgProfileId(this.getManagedBean().getMinistryProfileId());
 		        OrgProfileResDTO resDTO = orgProfileSO.retrieveOrgProfileListByOrgType(reqDTO);
 		        List<PmOrgProfile> list = resDTO.getOrgProfileList();
 		        items = new SelectItem[list.size()+1];
@@ -1028,4 +1031,13 @@ public class ContractDetailsBackingBean extends BaseBackingBean<ContractDetailsM
 	public void setSelectedProgressive(CtProgressivePayment[] selectedProgressive) {
 		this.selectedProgressive = selectedProgressive;
 	}
+
+	public List<SelectItem> getPopulateDepartmentList() {
+		return populateDepartmentList;
+	}
+
+	public void setPopulateDepartmentList(List<SelectItem> populateDepartmentList) {
+		this.populateDepartmentList = populateDepartmentList;
+	}
+
 }

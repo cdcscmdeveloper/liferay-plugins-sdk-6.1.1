@@ -3,6 +3,10 @@
  */
 package my.ep.web.backingbean.ct.termination;
 
+import java.text.Format;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+
 import javax.annotation.PostConstruct;
 import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
@@ -11,11 +15,6 @@ import javax.faces.context.FacesContext;
 import javax.naming.NamingException;
 import javax.servlet.http.HttpServletRequest;
 
-import org.apache.log4j.Logger;
-
-import com.liferay.portal.kernel.search.ParseException;
-import com.liferay.portal.util.PortalUtil;
-
 import my.ep.biz.service.ct.IContractSO;
 import my.ep.biz.service.pm.common.parameter.IParameterSO;
 import my.ep.bpm.dto.BpmRequestDTO;
@@ -23,12 +22,14 @@ import my.ep.bpm.dto.BpmResponseDTO;
 import my.ep.bpm.service.IBpmSO;
 import my.ep.constant.BpmOutcomeConst;
 import my.ep.constant.ct.ContractConst;
+import my.ep.constants.CommonConstants;
 import my.ep.dto.ct.ContractReqDTO;
 import my.ep.dto.ct.ContractResDTO;
 import my.ep.dto.pm.common.parameter.ParameterReqDTO;
 import my.ep.dto.pm.common.parameter.ParameterResDTO;
 import my.ep.exception.EpException;
 import my.ep.jaxb.ct.termination.CTContractTerminationDataType;
+import my.ep.persistence.entity.ct.terminate.CtTermination;
 import my.ep.persistence.entity.ct.terminate.CtTerminationReason;
 import my.ep.persistence.entity.pm.common.PmParameter;
 import my.ep.util.lookupservice.EpBpmBusinessDelegate;
@@ -38,6 +39,11 @@ import my.ep.web.constant.ct.ContractManagementConst;
 import my.ep.web.managedbean.ct.termination.TerminationManagedBean;
 import my.ep.web.util.FacesScopes;
 import my.ep.web.util.lookupservice.BusinessDelegate;
+
+import org.apache.log4j.Logger;
+
+import com.liferay.portal.kernel.search.ParseException;
+import com.liferay.portal.util.PortalUtil;
 
 /**
  * Backing Bean For Contract Termination 
@@ -112,6 +118,18 @@ public class TerminationBackingBean extends BaseBackingBean<TerminationManagedBe
 			this.getManagedBean().setContractVer(resDTO.getCtContractVer());
 			this.getManagedBean().setCtContract(resDTO.getCtContractVer().getCtContract());
 			
+			if(this.getManagedBean().getContractVer().getCtTermination() == null){
+				this.getManagedBean().getContractVer().setCtTermination(new CtTermination());
+				this.getManagedBean().setTerminateNotice(true);
+			    if(this.getManagedBean().getContractVer().getCtTermination().getDecisionType() == null){
+			    	this.getManagedBean().getContractVer().getCtTermination().setDecisionType(new PmParameter());
+			    	this.getManagedBean().getContractVer().getCtTermination().getDecisionType().setParameterId(new Long(retrieveParameterByTypeAndCode(ContractConst.TR_LETTER_MUTUAL)));
+				//if(resDTO.getCtContractVer().getCtTermination().getCtTerminationReasons().size() == 0)
+				//	resDTO.getCtContractVer().getCtTermination().setCtTerminationReasons(new ArrayList<CtTerminationReason>());
+			   }
+			}
+			
+			
 			this.getManagedBean().setRemarkList(resDTO.getCtRemarks());
 			this.getManagedBean().setAttachmentList(resDTO.getCtAttachments());
 			ContractBackingBean ctBB = new ContractBackingBean();
@@ -127,8 +145,11 @@ public class TerminationBackingBean extends BaseBackingBean<TerminationManagedBe
 			
 			}if(parameterCode.equalsIgnoreCase(ContractConst.TR_LETTER_TERMINATE) || parameterCode.equalsIgnoreCase(ContractConst.TR_LETTER_MUTUAL)){
 				this.getManagedBean().setTerminateNotice(true);
-				decoded = new String(this.getManagedBean().getContractVer().getCtTermination().getTerminationNotice(), "UTF-8");
-			}
+				if(this.getManagedBean().getContractVer().getCtTermination().getTerminationNotice() == null)
+					decoded =" ";
+				else
+				  decoded = new String(this.getManagedBean().getContractVer().getCtTermination().getTerminationNotice(), "UTF-8"); 
+				}
 			
 			this.getManagedBean().setEditorValue(decoded);
 			
@@ -160,15 +181,19 @@ public class TerminationBackingBean extends BaseBackingBean<TerminationManagedBe
 		        reqDTO.setUserLoginId(getFacesScopes().getUserSessionBean().getLoginId());
 		    else
 		        reqDTO.setUserLoginId(this.getManagedBean().getUserLoginId());
-		       
-		    this.getManagedBean().getContractVer().setDocType(ContractConst.DOC_TYPE_CONTRACT_TERMINATION);
+		    
+		    if(this.getManagedBean().getContractVer().getDocType() == null)
+		      this.getManagedBean().getContractVer().setDocType(ContractConst.DOC_TYPE_CONTRACT_TERMINATION);
+		    
 		    this.getManagedBean().getContractVer().getCtTermination().setComplaintCategory(new Long(22222111));
 		    
 		    if(this.getManagedBean().isTerminateWarningLetter()){
 		    	  this.getManagedBean().getContractVer().getCtTermination().setRemedyNotice(this.getManagedBean().getEditorValue().getBytes());	 
+		    	  reqDTO.setTerminationAction(ContractConst.TR_LETTER_REMEDY);
 		   
 		    }if(this.getManagedBean().isTerminateNotice()){
-		     this.getManagedBean().getContractVer().getCtTermination().setTerminationNotice(this.getManagedBean().getEditorValue().getBytes());
+		      this.getManagedBean().getContractVer().getCtTermination().setTerminationNotice(this.getManagedBean().getEditorValue().getBytes());
+		      reqDTO.setTerminationAction(ContractConst.TR_LETTER_TERMINATE);
 		    } 
 		    
 		    reqDTO.setCtRemark(this.getManagedBean().getRemarkList().get(0));
@@ -200,6 +225,28 @@ public class TerminationBackingBean extends BaseBackingBean<TerminationManagedBe
 		 }
 		   return null;
 	 }
+	 
+	 public int retrieveParameterByTypeAndCode(String parameterCode) throws NamingException {
+			
+		 IParameterSO parameterSO = null;
+		 ParameterReqDTO reqDTO = null;
+		 try{
+			
+			reqDTO = new ParameterReqDTO();
+			reqDTO.setParameterCode(parameterCode);
+			reqDTO.setParameterType("TDT");
+			parameterSO = (IParameterSO) BusinessDelegate.getInstance().getServiceObject("pm", IParameterSO.class);
+			ParameterResDTO resDTO = parameterSO.retrieveParameterByTypeAndCode(reqDTO);
+			return resDTO.getPmParameter().getParameterId().intValue();
+		}catch(Exception e) {
+			 log.error("Exception>>", e);
+			 e.printStackTrace();
+			 FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR,e.toString(), e.getMessage()));
+		 } finally {
+			 parameterSO = null;
+		 }
+		 return 0;
+	 } 
 	 
 	 public String retrieveParameterById(Long parameterId) throws NamingException {
 		
@@ -293,6 +340,12 @@ public class TerminationBackingBean extends BaseBackingBean<TerminationManagedBe
 		this.selectedTerminationReasonsList = selectedTerminationReasonsList;
 	}
 	 
-	 
+	public String convertTime(Date time){ 
+        String str ="";
+    	Format format = new SimpleDateFormat(CommonConstants.DEFAULT_DATE_FORMAT); 
+        if(time == null)
+        	return str;
+        return format.format(time); 
+    } 
 
 }

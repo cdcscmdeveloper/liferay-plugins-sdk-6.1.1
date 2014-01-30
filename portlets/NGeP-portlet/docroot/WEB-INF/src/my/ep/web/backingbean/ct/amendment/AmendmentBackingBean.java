@@ -4,6 +4,7 @@
 package my.ep.web.backingbean.ct.amendment;
 
 import java.math.BigDecimal;
+import java.text.Format;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -17,14 +18,6 @@ import javax.faces.context.FacesContext;
 import javax.faces.model.SelectItem;
 import javax.servlet.http.HttpServletRequest;
 
-import org.apache.log4j.Logger;
-import org.primefaces.event.RowEditEvent;
-import org.primefaces.model.DefaultTreeNode;
-import org.primefaces.model.TreeNode;
-
-import com.liferay.portal.kernel.search.ParseException;
-import com.liferay.portal.util.PortalUtil;
-
 import my.ep.biz.service.ct.IContractSO;
 import my.ep.biz.service.pm.authorization.orgprofile.IOrgProfileSO;
 import my.ep.bpm.dto.BpmRequestDTO;
@@ -33,6 +26,7 @@ import my.ep.bpm.service.IBpmSO;
 import my.ep.constant.BpmOutcomeConst;
 import my.ep.constant.ct.ContractConst;
 import my.ep.constants.CTProcessNameConst;
+import my.ep.constants.CommonConstants;
 import my.ep.dto.ct.ContractReqDTO;
 import my.ep.dto.ct.ContractResDTO;
 import my.ep.dto.pm.authorization.orgprofile.OrgProfileReqDTO;
@@ -47,6 +41,14 @@ import my.ep.web.backingbean.ct.ContractBackingBean;
 import my.ep.web.managedbean.ct.amendment.AmendmentManagedBean;
 import my.ep.web.util.FacesScopes;
 import my.ep.web.util.lookupservice.BusinessDelegate;
+
+import org.apache.log4j.Logger;
+import org.primefaces.event.RowEditEvent;
+import org.primefaces.model.DefaultTreeNode;
+import org.primefaces.model.TreeNode;
+
+import com.liferay.portal.kernel.search.ParseException;
+import com.liferay.portal.util.PortalUtil;
 
 /**
  * Backing Bean For Contract Amendment Details
@@ -412,5 +414,13 @@ public class AmendmentBackingBean extends BaseBackingBean<AmendmentManagedBean> 
 		public void setRootNodeAgency(TreeNode rootNodeAgency) {
 			this.rootNodeAgency = rootNodeAgency;
 		} 
+		
+		public String convertTime(Date time){ 
+	        String str ="";
+	    	Format format = new SimpleDateFormat(CommonConstants.DEFAULT_DATE_FORMAT); 
+	        if(time == null)
+	        	return str;
+	        return format.format(time); 
+	    } 
 	 	 
 }

@@ -3,6 +3,10 @@
  */
 package my.ep.web.backingbean.ct.suspension;
 
+import java.text.Format;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+
 import javax.annotation.PostConstruct;
 import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
@@ -10,17 +14,13 @@ import javax.faces.bean.RequestScoped;
 import javax.faces.context.FacesContext;
 import javax.servlet.http.HttpServletRequest;
 
-import org.apache.log4j.Logger;
-
-import com.liferay.portal.kernel.search.ParseException;
-import com.liferay.portal.util.PortalUtil;
-
 import my.ep.biz.service.ct.IContractSO;
 import my.ep.bpm.dto.BpmRequestDTO;
 import my.ep.bpm.dto.BpmResponseDTO;
 import my.ep.bpm.service.IBpmSO;
 import my.ep.constant.BpmOutcomeConst;
 import my.ep.constant.ct.ContractConst;
+import my.ep.constants.CommonConstants;
 import my.ep.dto.ct.ContractReqDTO;
 import my.ep.dto.ct.ContractResDTO;
 import my.ep.exception.EpException;
@@ -32,6 +32,11 @@ import my.ep.web.constant.ct.ContractManagementConst;
 import my.ep.web.managedbean.ct.suspension.SuspensionManagedBean;
 import my.ep.web.util.FacesScopes;
 import my.ep.web.util.lookupservice.BusinessDelegate;
+
+import org.apache.log4j.Logger;
+
+import com.liferay.portal.kernel.search.ParseException;
+import com.liferay.portal.util.PortalUtil;
 
 /**
  * Backing Bean For Contract Suspension Details
@@ -175,4 +180,12 @@ public class SuspensionBackingBean extends BaseBackingBean<SuspensionManagedBean
 			 }
 		   return null;
 	 } 
+	 
+	 public String convertTime(Date time){ 
+	        String str ="";
+	    	Format format = new SimpleDateFormat(CommonConstants.DEFAULT_DATE_FORMAT); 
+	        if(time == null)
+	        	return str;
+	        return format.format(time); 
+	    } 
 }

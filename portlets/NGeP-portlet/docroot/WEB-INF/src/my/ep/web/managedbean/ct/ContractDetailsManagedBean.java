@@ -125,6 +125,8 @@ public class ContractDetailsManagedBean extends BaseManagedBean{
 	private boolean disableScheduleRadio;
 	private boolean disableProgessiveRadio;
 	private boolean chkButton;
+	private Long ministryProfileId;
+	private Long departmentProfileId;
 	
 	public String[] getAction() {
 		return action;
@@ -699,6 +701,22 @@ public class ContractDetailsManagedBean extends BaseManagedBean{
 
 	public void setChkProgressiveNulValue(boolean chkProgressiveNulValue) {
 		this.chkProgressiveNulValue = chkProgressiveNulValue;
+	}
+
+	public Long getMinistryProfileId() {
+		return ministryProfileId;
+	}
+
+	public void setMinistryProfileId(Long ministryProfileId) {
+		this.ministryProfileId = ministryProfileId;
+	}
+
+	public Long getDepartmentProfileId() {
+		return departmentProfileId;
+	}
+
+	public void setDepartmentProfileId(Long departmentProfileId) {
+		this.departmentProfileId = departmentProfileId;
 	}
 	
 }
