@@ -118,6 +118,7 @@ public class TerminationBackingBean extends BaseBackingBean<TerminationManagedBe
 			this.getManagedBean().setContractVer(resDTO.getCtContractVer());
 			this.getManagedBean().setCtContract(resDTO.getCtContractVer().getCtContract());
 			
+			
 			if(this.getManagedBean().getContractVer().getCtTermination() == null){
 				this.getManagedBean().getContractVer().setCtTermination(new CtTermination());
 				this.getManagedBean().setTerminateNotice(true);
@@ -129,6 +130,8 @@ public class TerminationBackingBean extends BaseBackingBean<TerminationManagedBe
 			   }
 			}
 			
+			if(this.getManagedBean().getContractVer().getCtTermination().isDisplinaryAction())
+				this.getManagedBean().setDisciplinaryValue(true);
 			
 			this.getManagedBean().setRemarkList(resDTO.getCtRemarks());
 			this.getManagedBean().setAttachmentList(resDTO.getCtAttachments());

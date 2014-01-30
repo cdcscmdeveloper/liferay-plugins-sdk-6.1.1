@@ -14,20 +14,19 @@
     	<p:panel>
     	 	<p:messages id="messages" showDetail="true" autoUpdate="true" closable="true" severity="error, info" />
 			<div class="ppRightBtn">
-				<p:commandButton value="Save" icon="ui-icon-save"  action="#{contractDetailsBackingBean.createAssociation}"/>
-                <p:commandButton value="Cancel" icon="ui-icon-cancel"  action="#{contractDetailsBackingBean.gotoCancelPage}"/>
+				<p:commandButton value="Save" icon="ui-icon-save"  action="#{associationBackingBean.createAssociation}"/>
+                <p:commandButton value="Cancel" icon="ui-icon-cancel"  action="#{associationBackingBean.gotoCancelPage}"/>
 			</div>
 		</p:panel>
      <p:panel id="projectId" header="Project Associate Creation"   toggleable="true"  toggleSpeed="500">
        <h:panelGrid columns="2">
 	     <h:outputLabel value="#{lbl['lbl.ct.asearch.model.pname']}" />
-         <p:inputText  value="#{contractDetailsBackingBean.managedBean.ctAssociation.projectName}" style="width:200px;"></p:inputText>
+         <p:inputText  value="#{associationBackingBean.managedBean.ctAssociation.projectName}" style="width:200px;"></p:inputText>
 		 <h:outputLabel  value="#{lbl['lbl.ct.asearch.model.pdes']}" />
-         <p:inputText  value="#{contractDetailsBackingBean.managedBean.ctAssociation.description}"  style="width:400px;"></p:inputText>
+         <p:inputText  value="#{associationBackingBean.managedBean.ctAssociation.description}"  style="width:400px;"></p:inputText>
 	  </h:panelGrid>
-          <p:dataTable id="associateCreation" var="data" value="#{contractDetailsBackingBean.managedBean.associateSearchList}" rowIndexVar="index"
-             widgetVar="dataTableObj" paginator="true" paginatorPosition="bottom" paginatorAlwaysVisible="true"  
-             emptyMessage="No Records!">
+          <p:dataTable id="associateCreation" var="data" value="#{associationBackingBean.managedBean.associateSearchList}" 
+            paginator="true" paginatorPosition="bottom" paginatorAlwaysVisible="false"   emptyMessage="No Records!">
              <ac:paginator for="associateCreation"/>
              <p:columnGroup type="header"> 
 		       <p:row> 
@@ -42,7 +41,7 @@
 			   </p:row>							
 			   </p:columnGroup>
 			     <p:column><h:outputText  value="#{data.latestContractVer.docNo}"/></p:column> 							
-				 <p:column><h:outputText  value="#{data.smSupplier.supplierName}"/></p:column>
+				 <p:column><h:outputText  value="#{data.smSupplier.companyName}"/></p:column>
 				 <p:column><h:outputText value="#{data.latestContractVer.ctContractValue.effDate}">
                       <f:convertDateTime pattern="MM/dd/yyyy" /></h:outputText>
                  </p:column>	
@@ -54,7 +53,7 @@
 				 <p:column><h:outputText /></p:column>	
 				 <p:column styleClass="column-align-center">
 				   <p:commandLink partialSubmit="true" process="@this" onsuccess="confirmation.show()" >
-		              <f:setPropertyActionListener value="#{data}" target="#{contractDetailsBackingBean.managedBean.assocoiateCtContract}" />
+		              <f:setPropertyActionListener value="#{data}" target="#{associationBackingBean.managedBean.assocoiateCtContract}" />
 			          <p:graphicImage library="ep/images/design" name="delete.png" value="/resources/ep/images/design/delete.png" title="Delete" />
 		           </p:commandLink>
 				</p:column>
@@ -69,7 +68,7 @@
 	     <p:confirmDialog message="#{lbl['lbl.ct.dialong.cofirm.message']}" closable="true" appendToBody="true"
 		    header="#{lbl['lbl.ct.dialong.cofirm.header']}" severity="alert" widgetVar="confirmation">
             <h:panelGrid columns="2">
-		      <p:commandButton value="#{lbl['lbl.ct.dialong.cofirm.yes']}" actionListener="#{contractDetailsBackingBean.deleteAdvanceContract()}"
+		      <p:commandButton value="#{lbl['lbl.ct.dialong.cofirm.yes']}" actionListener="#{associationBackingBean.deleteAdvanceContract()}"
 		         update="associateCreation" process="@this" onclick="confirmation.hide();"/>
 			  <p:commandButton value="#{lbl['lbl.ct.dialong.cofirm.no']}" onclick="confirmation.hide()" type="button" />
 			</h:panelGrid>
@@ -79,14 +78,14 @@
 		   <p:panel id="advancePanel">
                <h:panelGrid columns="3">
                   <h:outputLabel value="#{lbl['lbl.ct.asearch.model.table2.cno']}" />
-                  <p:inputText value="#{contractDetailsBackingBean.managedBean.ctNumber}" style="width:150px;"/>
+                  <p:inputText value="#{associationBackingBean.managedBean.ctNumber}" style="width:150px;"/>
                   <p:commandButton value="Search" process="modelDialog" icon="ui-icon-search"
-                    action="#{contractDetailsBackingBean.searchContract}" update="advanceCtSearch"/>
+                    action="#{associationBackingBean.searchContract}" update="advanceCtSearch"/>
               </h:panelGrid>
 		     <p:spacer height="2"/>
-                   <p:dataTable id="advanceCtSearch" var="data" value="#{contractDetailsBackingBean.managedBean.contractList}" rowIndexVar="index"
-                    widgetVar="dataTableObj"  lazy="false" dynamic="true" selection="#{contractDetailsBackingBean.selectedContractList}" rowKey="#{data.contractId}"
-                    paginator="true" paginatorPosition="bottom" paginatorAlwaysVisible="true"  emptyMessage="No Records!">
+                   <p:dataTable id="advanceCtSearch" var="data" value="#{associationBackingBean.managedBean.contractList}" rowIndexVar="index"
+                    widgetVar="dataTableObj"  lazy="false" dynamic="true" selection="#{associationBackingBean.selectedContractList}" rowKey="#{data.contractId}"
+                    paginator="true" paginatorPosition="bottom" paginatorAlwaysVisible="false"  emptyMessage="No Records!">
                     <ac:paginator for="advanceCtSearch"/>
                 	<p:column selectionMode="multiple" style="width:18px" />
 			        <p:column headerText="#{lbl['lbl.ct.asearch.model.table2.cno']}">
@@ -96,7 +95,7 @@
                     <h:outputText value="#{data.contractName}" />
 					</p:column> 
                     <p:column headerText="#{lbl['lbl.ct.asearch.model.table2.sname']}">
-                    <h:outputText value="#{data.smSupplier.supplierName}" />
+                    <h:outputText value="#{data.smSupplier.companyName}" />
 					</p:column>
                     <p:column headerText="#{lbl['lbl.ct.asearch.model.table2.cstart']}" >
                     <h:outputText value="#{data.latestContractVer.ctContractValue.effDate}">
@@ -112,7 +111,7 @@
 			  	 </p:dataTable>
 			 <f:facet name="footer">
 			   <h:panelGrid columns="2"  style="float:right;height:50px;vertical-align: middle;">
-				  <p:commandButton value="Ok" process="modelDialog" action="#{contractDetailsBackingBean.addAdvanceContract}" 
+				  <p:commandButton value="Ok" process="modelDialog" action="#{associationBackingBean.addAdvanceContract}" 
 				     update="associateCreation,modelDialog" icon="ui-icon-select" onclick="dlg2.hide();"/>
                     <p:commandButton value="Cancel" type="button"  icon="ui-icon-cancel" ajax="false" onclick="dlg2.hide();" />
 			    </h:panelGrid>

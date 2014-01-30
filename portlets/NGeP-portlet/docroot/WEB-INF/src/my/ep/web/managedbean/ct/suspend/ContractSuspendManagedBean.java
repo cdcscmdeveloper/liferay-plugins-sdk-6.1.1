@@ -11,14 +11,14 @@ import java.util.Map;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
 
-import org.apache.log4j.Logger;
-import org.primefaces.model.TreeNode;
-
-import my.ep.web.managedbean.BaseManagedBean;
 import my.ep.persistence.entity.ct.CtAttachment;
 import my.ep.persistence.entity.ct.CtContract;
 import my.ep.persistence.entity.ct.CtRemark;
 import my.ep.persistence.entity.pm.common.PmCountry;
+import my.ep.web.managedbean.BaseManagedBean;
+
+import org.apache.log4j.Logger;
+import org.primefaces.model.TreeNode;
 /**
  * Managed Bean For Contract Suspension
  * 

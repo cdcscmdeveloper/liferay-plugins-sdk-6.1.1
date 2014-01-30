@@ -15,32 +15,31 @@
           <p:panel id="associatePanelId" header="Project Association"   toggleable="true"  toggleSpeed="500">
               <h:panelGrid columns="4" style="width:100%;">
                <h:outputLabel value="#{lbl['lbl.ct.asearch.pname']}"  />
-               <p:inputText value="#{contractDetailsBackingBean.managedBean.projectName}"  style="width:170px;"/>
+               <p:inputText value="#{associationBackingBean.managedBean.projectName}"  style="width:170px;"/>
                <h:outputLabel value="#{lbl['lbl.ct.asearch.cname']}"  />
-               <p:inputText  value="#{contractDetailsBackingBean.managedBean.ctName}" style="width:170px;" />
+               <p:inputText  value="#{associationBackingBean.managedBean.ctName}" style="width:170px;" />
                <h:outputLabel value="#{lbl['lbl.ct.asearch.pdes']}" />
-                <p:inputText value="#{contractDetailsBackingBean.managedBean.projectDescription}"  style="width:170px;"/>
+                <p:inputText value="#{associationBackingBean.managedBean.projectDescription}"  style="width:170px;"/>
                <h:outputLabel  value="#{lbl['lbl.ct.asearch.sname']}"  />
-               <p:inputText value="#{contractDetailsBackingBean.managedBean.ctSupplierName}" style="width:170px;"/>
+               <p:inputText value="#{associationBackingBean.managedBean.ctSupplierName}" style="width:170px;"/>
                <h:outputLabel value="#{lbl['lbl.ct.asearch.cstart']}"  />
-               <p:calendar style="width:130px;" value="#{contractDetailsBackingBean.managedBean.ctDateStart}" id="calefdate" showOn="button" />
+               <p:calendar style="width:130px;" value="#{associationBackingBean.managedBean.ctDateStart}" id="calefdate" showOn="button" />
                <h:outputLabel value="#{lbl['lbl.ct.asearch.cend']}" />
-               <p:calendar style="width:130px;" value="#{contractDetailsBackingBean.managedBean.ctDateEnd}" id="calepdate" showOn="button" />
+               <p:calendar style="width:130px;" value="#{associationBackingBean.managedBean.ctDateEnd}" id="calepdate" showOn="button" />
                <h:outputLabel value="#{lbl['lbl.ct.asearch.pcno']}"/>
-               <p:inputText  value="#{contractDetailsBackingBean.managedBean.ctProductCode}"  style="width:170px;"/>
+               <p:inputText  value="#{associationBackingBean.managedBean.ctProductCode}"  style="width:170px;"/>
                <f:verbatim></f:verbatim>
                 </h:panelGrid>
               <div class="ppRightBtn"> 
                  <p:commandButton value="#{lbl['lbl.ct.asearch.btn.search']}" icon="ui-icon-search" 
-                    action="#{contractDetailsBackingBean.searchAssociation}"  update="associateSearch"/>
-                 <p:commandButton value="#{lbl['lbl.ct.asearch.btn.reset']}"  icon="ui-icon-reset" />
+                    action="#{associationBackingBean.searchAssociation}"  update="associateSearch"/>
               </div>
 		 </p:panel>
 		 <p:panel id="associateResultId" header="#{lbl['lbl.ct.asearch.panel.result']}"   toggleable="true"  toggleSpeed="500">
             <div style="overflow-x:auto">
 			    <h:panelGrid  style="width:100%;">          
-			        <p:dataTable id="associateSearch" var="data" value="#{contractDetailsBackingBean.managedBean.associationList}" rowIndexVar="index"
-			         widgetVar="dataTableObj" lazy="false" dynamic="true" paginator="true" paginatorPosition="bottom" paginatorAlwaysVisible="true" 
+			        <p:dataTable id="associateSearch" var="data" value="#{associationBackingBean.managedBean.associationList}" rowIndexVar="index"
+			         widgetVar="dataTableObj" lazy="false" dynamic="true" paginator="true" paginatorPosition="bottom" paginatorAlwaysVisible="false" 
 			         emptyMessage="No Records!">
 			         <ac:paginator for="associateSearch"/>
 						<p:columnGroup type="header"> 
@@ -53,30 +52,30 @@
 							</p:columnGroup>					
 							    <p:column> <h:outputText value="#{data.ctAssociation.projectName}"  /></p:column>
 							    <p:column><h:outputText value="#{data.ctAssociation.description}" /></p:column>	
-							    <p:column><h:outputText value="1" /></p:column>	
+							    <p:column><h:outputText value="1"/></p:column>	
 							    <p:column width="85">
-							       <p:commandLink action="#{contractDetailsBackingBean.gotoAssociatePage}">
-			                       <f:setPropertyActionListener value="#{data}" target="#{contractDetailsBackingBean.managedBean.association}" />
+							       <p:commandLink action="#{associationBackingBean.gotoAssociatePage}">
+			                       <f:setPropertyActionListener value="#{data}" target="#{associationBackingBean.managedBean.association}" />
 			                       <p:graphicImage library="ep/images/design" name="edit.png" value="/resources/ep/images/design/edit.png" title="Edit" />
 		                           </p:commandLink>
 							       <p:spacer width="3" />
-							       <p:commandLink partialSubmit="true" process="@this" onsuccess="confirmation1.show()" >
-		                            <f:setPropertyActionListener value="#{data}" target="#{contractDetailsBackingBean.managedBean.ctDelAssocContract}" />
+							       <p:commandLink partialSubmit="true" process="@this" onsuccess="confirmation.show()" >
+		                            <f:setPropertyActionListener value="#{data}" target="#{associationBackingBean.managedBean.ctDelAssocContract}" />
 			                       <p:graphicImage library="ep/images/design" name="delete.png" value="/resources/ep/images/design/delete.png" title="Delete" />
 		                           </p:commandLink>
 								</p:column>
 					      </p:dataTable>
 						    <h:panelGrid style="width:100%;">
-							  <p:commandButton value="Create"  style="float:right;" icon="ui-icon-add" action="#{contractDetailsBackingBean.gotoAssociatePage}"/>
+							  <p:commandButton value="Create"  style="float:right;" icon="ui-icon-add" action="#{associationBackingBean.gotoAssociatePage}"/>
 						    </h:panelGrid>
 						    <p:confirmDialog message="#{lbl['lbl.ct.dialong.cofirm.message']}" closable="true" appendToBody="true"
-		                         header="#{lbl['lbl.ct.dialong.cofirm.header']}" severity="alert" widgetVar="confirmation1">
+		                         header="#{lbl['lbl.ct.dialong.cofirm.header']}" severity="alert" widgetVar="confirmation">
                              <h:panelGrid columns="2">
-		                      <p:commandButton value="#{lbl['lbl.ct.dialong.cofirm.yes']}" actionListener="#{contractDetailsBackingBean.deleteAssociation()}"
-		                               process="@this" update="associateSearch"  onclick="confirmation1.hide();"/>
-			  <p:commandButton value="#{lbl['lbl.ct.dialong.cofirm.no']}" onclick="confirmation1.hide()" type="button" />
-			</h:panelGrid>
-		 </p:confirmDialog>
+		                      <p:commandButton value="#{lbl['lbl.ct.dialong.cofirm.yes']}" actionListener="#{associationBackingBean.deleteAssociation()}"
+		                               process="@this" update="associateSearch"  onclick="confirmation.hide();"/>
+			                    <p:commandButton value="#{lbl['lbl.ct.dialong.cofirm.no']}" onclick="confirmation.hide()" type="button" />
+		                 	</h:panelGrid>
+		                </p:confirmDialog>
 				    </h:panelGrid>
 		   	   </div>
 		   </p:panel>
