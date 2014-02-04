@@ -15,62 +15,65 @@
     	 	<p:messages id="messages" showDetail="true" autoUpdate="true" closable="true" severity="error, info" />
 			<div class="ppRightBtn">
 				<p:commandButton value="Save" icon="ui-icon-save"  action="#{associationBackingBean.createAssociation}"/>
-                <p:commandButton value="Back" icon="ui-icon-back"  action="#{associationBackingBean.gotoCancelPage}"/>
+                <p:commandButton value="Cancel" icon="ui-icon-cancel"  action="#{associationBackingBean.gotoCancelPage}"/>
 			</div>
 		</p:panel>
      <p:panel id="projectId" header="Project Associate Creation"   toggleable="true"  toggleSpeed="500">
        <h:panelGrid columns="2">
 	     <h:outputLabel value="#{lbl['lbl.ct.asearch.model.pname']}" />
-         <p:inputText  value="#{associationBackingBean.managedBean.ctAssociation.projectName}" style="width:200px;"></p:inputText>
+         <p:inputText  value="#{associationBackingBean.managedBean.ctAssocContract.ctAssociation.projectName}" style="width:200px;"></p:inputText>
 		 <h:outputLabel  value="#{lbl['lbl.ct.asearch.model.pdes']}" />
-         <p:inputText  value="#{associationBackingBean.managedBean.ctAssociation.description}"  style="width:400px;"></p:inputText>
+         <p:inputText  value="#{associationBackingBean.managedBean.ctAssocContract.ctAssociation.description}"  style="width:400px;"></p:inputText>
 	  </h:panelGrid>
-	  <p:spacer height="10"/>
           <p:dataTable id="associateCreation" var="data" value="#{associationBackingBean.managedBean.associateSearchList}" 
-            selection="#{associationBackingBean.deleteSelectedContractList}" rowKey="#{data}" paginator="true" 
-            paginatorPosition="bottom" paginatorAlwaysVisible="false" emptyMessage="No Records!">
+            paginator="true" paginatorPosition="bottom" paginatorAlwaysVisible="false"   emptyMessage="No Records!">
              <ac:paginator for="associateCreation"/>
-             <p:column selectionMode="multiple" style="width:18px" />
-             <p:column headerText="#{lbl['lbl.ct.asearch.model.table1.cno']}">
-				<h:outputText  value="#{data.latestContractVer.docNo}"/>
-			 </p:column>
-			  <p:column headerText="#{lbl['lbl.ct.asearch.model.table1.sname']}">
-				<h:outputText  value="#{data.smSupplier.companyName}"/>
-			 </p:column>
-			 <p:column headerText="#{lbl['lbl.ct.asearch.model.table1.cstart']}">
-				<h:outputText value="#{data.latestContractVer.ctContractValue.effDate}">
-				   <f:convertDateTime pattern="MM/dd/yyyy" /></h:outputText>
-		   	 </p:column>
-			 <p:column headerText="#{lbl['lbl.ct.asearch.model.table1.cend']}">
-				<h:outputText value="#{data.latestContractVer.ctContractValue.expDate}">
+             <p:columnGroup type="header"> 
+		       <p:row> 
+		        <p:column headerText="#{lbl['lbl.ct.asearch.model.table1.cno']}"  />
+			    <p:column headerText="#{lbl['lbl.ct.asearch.model.table1.sname']}"  /> 
+			    <p:column headerText="#{lbl['lbl.ct.asearch.model.table1.cstart']}" /> 
+			    <p:column headerText="#{lbl['lbl.ct.asearch.model.table1.cend']}"  /> 	
+			    <p:column headerText="#{lbl['lbl.ct.asearch.model.table1.pcode']}" />
+			    <p:column headerText="#{lbl['lbl.ct.asearch.model.table1.pname']}"  /> 
+			    <p:column headerText="#{lbl['lbl.ct.asearch.model.table1.status']}" /> 	
+			    <p:column headerText="#{lbl['lbl.ct.asearch.model.table1.action']}" />
+			   </p:row>							
+			   </p:columnGroup>
+			     <p:column><h:outputText  value="#{data.latestContractVer.docNo}"/></p:column> 							
+				 <p:column><h:outputText  value="#{data.smSupplier.companyName}"/></p:column>
+				 <p:column><h:outputText value="#{data.latestContractVer.ctContractValue.effDate}">
+                      <f:convertDateTime pattern="MM/dd/yyyy" /></h:outputText>
+                 </p:column>	
+				 <p:column><h:outputText value="#{data.latestContractVer.ctContractValue.expDate}">
                     <f:convertDateTime pattern="MM/dd/yyyy" /></h:outputText>
-			 </p:column>
-			 <p:column headerText="#{lbl['lbl.ct.asearch.model.table1.pcode']}">
-				<h:outputText  value="03"/>
-			 </p:column>
-			  <p:column headerText="#{lbl['lbl.ct.asearch.model.table1.pname']}">
-				<h:outputText  value="Pejabat OIC"/>
-			 </p:column>
-			 <p:column headerText="#{lbl['lbl.ct.asearch.model.table1.status']}">
-				<h:outputText />
-			 </p:column>
-			</p:dataTable> 
-			  <p:confirmDialog message="#{lbl['lbl.ct.dialong.cofirm.message']}" closable="true" appendToBody="true"
-		    header="#{lbl['lbl.ct.dialong.cofirm.header']}" severity="alert" widgetVar="confirmation">
-            <h:panelGrid columns="2">
-		      <p:commandButton value="#{lbl['lbl.ct.dialong.cofirm.yes']}" update="associateCreation"
-		         process="@form" onclick="confirmation.hide();" actionListener="#{associationBackingBean.deleteAdvanceContract()}"/>
-			  <p:commandButton value="#{lbl['lbl.ct.dialong.cofirm.no']}" onclick="confirmation.hide()" type="button" />
-			</h:panelGrid>
-		 </p:confirmDialog>
-          	<p:spacer height="5"/>
+                 </p:column>	
+				 <p:column><h:outputText  value="03"/></p:column>
+				 <p:column><h:outputText  value="Pejabat OIC"/></p:column>	
+				 <p:column><h:outputText /></p:column>	
+				 <p:column styleClass="column-align-center">
+				   <p:commandLink partialSubmit="true" process="@this" onsuccess="confirmation.show()" >
+		              <f:setPropertyActionListener value="#{data}" target="#{associationBackingBean.managedBean.assocoiateCtContract}" />
+			          <p:graphicImage library="ep/images/design" name="delete.png" value="/resources/ep/images/design/delete.png" title="Delete" />
+		           </p:commandLink>
+				</p:column>
+			</p:dataTable>
+			<p:spacer height="5"/>
 			 <div class="ppRightBtn">
-			   <p:commandButton value="Delete" process="@form" onsuccess="confirmation.show()" icon="ui-icon-delete" />  
 			   <p:commandButton value="Add" process="@this" icon="ui-icon-add" onclick="dlg2.show();">
 			      <p:ajax event="change" update="associateCreation" process="@this" />
 			   </p:commandButton>
 			</div>
           </p:panel>
+	     <p:confirmDialog message="#{lbl['lbl.ct.dialong.cofirm.message']}" closable="true" appendToBody="true"
+		    header="#{lbl['lbl.ct.dialong.cofirm.header']}" severity="alert" widgetVar="confirmation">
+            <h:panelGrid columns="2">
+		      <p:commandButton value="#{lbl['lbl.ct.dialong.cofirm.yes']}" actionListener="#{associationBackingBean.deleteAdvanceContract()}"
+		         update="associateCreation" process="@this" onclick="confirmation.hide();"/>
+			  <p:commandButton value="#{lbl['lbl.ct.dialong.cofirm.no']}" onclick="confirmation.hide()" type="button" />
+			</h:panelGrid>
+		 </p:confirmDialog>
+		 
 		<p:dialog id="modelDialog" header="#{lbl['lbl.ct.asearch.model1.header']}" widgetVar="dlg2" modal="true" width="750" height="450">
 		   <p:panel id="advancePanel">
                <h:panelGrid columns="3">
@@ -110,7 +113,7 @@
 			   <h:panelGrid columns="2"  style="float:right;height:50px;vertical-align: middle;">
 				  <p:commandButton value="Ok" process="modelDialog" action="#{associationBackingBean.addAdvanceContract}" 
 				     update="associateCreation,modelDialog" icon="ui-icon-select" onclick="dlg2.hide();"/>
-                    <p:commandButton value="Back" type="button"  icon="ui-icon-back" ajax="false" onclick="dlg2.hide();" />
+                    <p:commandButton value="Cancel" type="button"  icon="ui-icon-cancel" ajax="false" onclick="dlg2.hide();" />
 			    </h:panelGrid>
 		    </f:facet>
          </p:panel>
