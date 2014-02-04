@@ -37,11 +37,13 @@ public class AssociationManagedBean extends BaseManagedBean{
 	private int selectedIndex;
 	private List<CtContract> contractList; 
 	private List<CtContract> associateSearchList;
-	private List<CtAssocContract> associationList;
+	private List<CtAssociation> associationList;
 	
 	private CtAssociation ctAssociation;
+	private CtAssociation ctUpdateAssociation;
 	private CtContract assocoiateCtContract;
 	private CtAssocContract ctDelAssocContract;
+	private CtAssocContract ctAssocContract;
 	
 	public String getCtName() {
 		return ctName;
@@ -102,13 +104,13 @@ public class AssociationManagedBean extends BaseManagedBean{
 		this.ctAssociation = ctAssociation;
 	}
 
-	public List<CtAssocContract> getAssociationList() {
+	public List<CtAssociation> getAssociationList() {
 		if(associationList == null)
-			associationList = new ArrayList<CtAssocContract>();
+			associationList = new ArrayList<CtAssociation>();
 		return associationList;
 	}
 
-	public void setAssociationList(List<CtAssocContract> associationList) {
+	public void setAssociationList(List<CtAssociation> associationList) {
 		this.associationList = associationList;
 	}
 
@@ -152,6 +154,18 @@ public class AssociationManagedBean extends BaseManagedBean{
 	}
 	public void setContractList(List<CtContract> contractList) {
 		this.contractList = contractList;
+	}
+	public CtAssocContract getCtAssocContract() {
+		return ctAssocContract;
+	}
+	public void setCtAssocContract(CtAssocContract ctAssocContract) {
+		this.ctAssocContract = ctAssocContract;
+	}
+	public CtAssociation getCtUpdateAssociation() {
+		return ctUpdateAssociation;
+	}
+	public void setCtUpdateAssociation(CtAssociation ctUpdateAssociation) {
+		this.ctUpdateAssociation = ctUpdateAssociation;
 	}
 
 	

@@ -11,7 +11,6 @@
     <style>
       .column-align-center { text-align: center !important;}
     </style>
-       
           <p:panel id="associatePanelId" header="Project Association"   toggleable="true"  toggleSpeed="500">
               <h:panelGrid columns="4" style="width:100%;">
                <h:outputLabel value="#{lbl['lbl.ct.asearch.pname']}"  />
@@ -38,45 +37,38 @@
 		 <p:panel id="associateResultId" header="#{lbl['lbl.ct.asearch.panel.result']}"   toggleable="true"  toggleSpeed="500">
             <div style="overflow-x:auto">
 			    <h:panelGrid  style="width:100%;">          
-			        <p:dataTable id="associateSearch" var="data" value="#{associationBackingBean.managedBean.associationList}" rowIndexVar="index"
-			         widgetVar="dataTableObj" lazy="false" dynamic="true" paginator="true" paginatorPosition="bottom" paginatorAlwaysVisible="false" 
-			         emptyMessage="No Records!">
-			         <ac:paginator for="associateSearch"/>
-						<p:columnGroup type="header"> 
-							<p:row> 
-								<p:column  style="width:200px" headerText="#{lbl['lbl.ct.asearch.table1.pname']}"   /> 
-								<p:column  style="width:400px" headerText="#{lbl['lbl.ct.asearch.table1.pdes']}" /> 
-							    <p:column  style="width:100px" headerText="#{lbl['lbl.ct.asearch.table1.noc']}" /> 	
-							    <p:column  style="width:100px" headerText="#{lbl['lbl.ct.asearch.table1.action']}" />
-					        </p:row>							
-							</p:columnGroup>					
-							    <p:column> <h:outputText value="#{data.ctAssociation.projectName}"  /></p:column>
-							    <p:column><h:outputText value="#{data.ctAssociation.description}" /></p:column>	
-							    <p:column><h:outputText value="1"/></p:column>	
-							    <p:column width="85">
-							       <p:commandLink action="#{associationBackingBean.gotoAssociatePage}">
-			                       <f:setPropertyActionListener value="#{data}" target="#{associationBackingBean.managedBean.association}" />
-			                       <p:graphicImage library="ep/images/design" name="edit.png" value="/resources/ep/images/design/edit.png" title="Edit" />
-		                           </p:commandLink>
-							       <p:spacer width="3" />
-							       <p:commandLink partialSubmit="true" process="@this" onsuccess="confirmation.show()" >
-		                            <f:setPropertyActionListener value="#{data}" target="#{associationBackingBean.managedBean.ctDelAssocContract}" />
-			                       <p:graphicImage library="ep/images/design" name="delete.png" value="/resources/ep/images/design/delete.png" title="Delete" />
-		                           </p:commandLink>
-								</p:column>
-					      </p:dataTable>
-						    <h:panelGrid style="width:100%;">
-							  <p:commandButton value="Create"  style="float:right;" icon="ui-icon-add" action="#{associationBackingBean.gotoAssociatePage}"/>
-						    </h:panelGrid>
-						    <p:confirmDialog message="#{lbl['lbl.ct.dialong.cofirm.message']}" closable="true" appendToBody="true"
-		                         header="#{lbl['lbl.ct.dialong.cofirm.header']}" severity="alert" widgetVar="confirmation">
-                             <h:panelGrid columns="2">
-		                      <p:commandButton value="#{lbl['lbl.ct.dialong.cofirm.yes']}" actionListener="#{associationBackingBean.deleteAssociation()}"
-		                               process="@this" update="associateSearch"  onclick="confirmation.hide();"/>
-			                    <p:commandButton value="#{lbl['lbl.ct.dialong.cofirm.no']}" onclick="confirmation.hide()" type="button" />
-		                 	</h:panelGrid>
-		                </p:confirmDialog>
-				    </h:panelGrid>
+			        <p:dataTable id="associateSearch" var="data" value="#{associationBackingBean.managedBean.associationList}" 
+			             widgetVar="dataTableObj" lazy="false" dynamic="true"  selection="#{associationBackingBean.ctSelectAssociation}" 
+			             rowKey="#{data}" paginator="true" paginatorPosition="bottom" paginatorAlwaysVisible="false" emptyMessage="No Records!">
+			            <ac:paginator for="associateSearch"/>
+		                <p:column selectionMode="multiple" style="width:18px;"/>  
+		                 <p:column style="width:200px;" headerText="#{lbl['lbl.ct.asearch.table1.pname']}">
+		                        <p:outputLabel value="#{data.projectName}" style="float:left;"  /> </p:column> 
+		                 <p:column style="width:440px;" headerText="#{lbl['lbl.ct.asearch.table1.pdes']}">
+		                        <p:outputLabel value="#{data.description}" style="float:left;"/> </p:column> 
+		                  <p:column style="width:60px;" headerText="#{lbl['lbl.ct.asearch.table1.noc']}">
+		                 	 <p:outputLabel value="1" /> 
+								</p:column> 
+		                  <p:column style="width:100px;" headerText="#{lbl['lbl.ct.asearch.table1.action']}" styleClass="column-align-center">
+		                       <p:commandLink action="#{associationBackingBean.gotoUpdateAssociatePage}" styleClass="column-align-center">
+			                      <f:setPropertyActionListener value="#{data}" target="#{associationBackingBean.managedBean.ctUpdateAssociation}" />
+			                      <p:graphicImage library="ep/images/design" name="edit.png" value="/resources/ep/images/design/edit.png" title="Edit" />
+		                       </p:commandLink> </p:column> 
+		             </p:dataTable>
+		            </h:panelGrid>
+		            <p:spacer height="4"/>
+		             <p:confirmDialog message="#{lbl['lbl.ct.dialong.cofirm.message']}" closable="true" appendToBody="true"
+		                 header="#{lbl['lbl.ct.dialong.cofirm.header']}" severity="alert" widgetVar="confirmation">
+                         <h:panelGrid columns="2">
+		                   <p:commandButton value="#{lbl['lbl.ct.dialong.cofirm.yes']}" actionListener="#{associationBackingBean.deleteAssociation()}"
+		                    process="@form" update="associateSearch"  onclick="confirmation.hide();"/>
+			               <p:commandButton value="#{lbl['lbl.ct.dialong.cofirm.no']}" onclick="confirmation.hide()" type="button" />
+		                 </h:panelGrid>
+		              </p:confirmDialog>
+		             <div class="ppRightBtn">
+				         <p:commandButton value="Delete" process="@form" onsuccess="confirmation.show()" icon="ui-icon-delete"/>
+                         <p:commandButton value="Create"  icon="ui-icon-add" action="#{associationBackingBean.gotoAssociatePage}"/>
+			          </div>
 		   	   </div>
 		   </p:panel>
 	 </ui:define>

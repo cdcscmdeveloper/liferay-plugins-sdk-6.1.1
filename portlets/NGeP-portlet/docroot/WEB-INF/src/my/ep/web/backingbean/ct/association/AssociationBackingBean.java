@@ -47,6 +47,8 @@ public class AssociationBackingBean extends BaseBackingBean<AssociationManagedBe
    private static final String PROCESS_ASSOCIATE_CANCEL_PAGE = "/xhtml/ct/fulfilmentdetails/association/projectAssociation.xhtml";
 
    private CtContract[] selectedContractList;
+   private CtContract[] deleteSelectedContractList;
+   private CtAssociation[] ctSelectAssociation;
    
    public AssociationBackingBean(){
 	   
@@ -62,42 +64,42 @@ public class AssociationBackingBean extends BaseBackingBean<AssociationManagedBe
    public void searchAssociation() {
 		
 		IContractAssociationSO contractAssociationSO = null;
-		ISearchBean<CtAssocContract> searchBean = new SearchBean<CtAssocContract>();
+		ISearchBean<CtAssociation> searchBean = new SearchBean<CtAssociation>();
 
 		try {
 			
 			if(this.getManagedBean().getProjectName()!=null && this.getManagedBean().getProjectName().length()>0) {
-				searchBean.getDataFilterBeans().add(new SearchFilterBean("ctAssociation.projectName",	SearchOperator.OPERATOR_EQUALS.value(),
+				searchBean.getDataFilterBeans().add(new SearchFilterBean("projectName",	SearchOperator.OPERATOR_EQUALS.value(),
 				getManagedBean().getProjectName()));	
 			}
 			if(this.getManagedBean().getCtName()!=null && this.getManagedBean().getCtName().length()>0) {
-				searchBean.getDataFilterBeans().add(new SearchFilterBean("ctContract.contractName",SearchOperator.OPERATOR_LIKE.value(),
+				searchBean.getDataFilterBeans().add(new SearchFilterBean("ctAssocContracts.ctContract.contractName",SearchOperator.OPERATOR_LIKE.value(),
 				this.getManagedBean().getCtName()));	
 			}
 			if(this.getManagedBean().getProjectDescription()!=null && this.getManagedBean().getProjectDescription().length()>0) {
-				searchBean.getDataFilterBeans().add(new SearchFilterBean("ctAssociation.description",SearchOperator.OPERATOR_LIKE.value(),
+				searchBean.getDataFilterBeans().add(new SearchFilterBean("description",SearchOperator.OPERATOR_LIKE.value(),
 				getManagedBean().getProjectDescription()));	
 			}			
 			if(getManagedBean().getCtSupplierName()!=null && getManagedBean().getCtSupplierName().length()>0) {
-				searchBean.getDataFilterBeans().add(new SearchFilterBean("ctContract.SmSupplier.supplierName",SearchOperator.OPERATOR_EQUALS.value(),
+				searchBean.getDataFilterBeans().add(new SearchFilterBean("ctAssocContracts.ctContract.SmSupplier.supplierName",SearchOperator.OPERATOR_EQUALS.value(),
 				getManagedBean().getCtSupplierName()));	
 			}
 			if(this.getManagedBean().getCtDateStart()!=null && this.getManagedBean().getCtDateStart().length()>0) {
-				searchBean.getDataFilterBeans().add(new SearchFilterBean("ctContract.latestContractVer.ctContractValue.effDate",
+				searchBean.getDataFilterBeans().add(new SearchFilterBean("ctAssocContracts.ctContract.latestContractVer.ctContractValue.effDate",
 				SearchOperator.OPERATOR_LIKE.value(),getManagedBean().getCtDateStart()));	
 			}			
 			if(getManagedBean().getCtDateEnd()!=null && getManagedBean().getCtDateEnd().length()>0) {
-				searchBean.getDataFilterBeans().add(new SearchFilterBean("ctContract.latestContractVer.ctContractValue.expDate",
+				searchBean.getDataFilterBeans().add(new SearchFilterBean("ctAssocContracts.ctContract.latestContractVer.ctContractValue.expDate",
 				SearchOperator.OPERATOR_EQUALS.value(),getManagedBean().getCtDateEnd()));	
 			}	
 			if(getManagedBean().getCtProductCode()!=null && getManagedBean().getCtProductCode().length()>0) {
-				searchBean.getDataFilterBeans().add(new SearchFilterBean("ctContract.latestContractVer.ctContractValue.contractPhysicalNo",
+				searchBean.getDataFilterBeans().add(new SearchFilterBean("ctAssocContracts.ctContract.latestContractVer.ctContractValue.contractPhysicalNo",
 				SearchOperator.OPERATOR_LIKE.value(),getManagedBean().getCtProductCode()));	
 			}	
 
 			ContractAssociationReqDTO reqDTO = new ContractAssociationReqDTO();
 			contractAssociationSO = (IContractAssociationSO) BusinessDelegate.getInstance().getServiceObject("ct",IContractAssociationSO.class);
-			reqDTO.setSearchBean(super.createSearchBean(CtAssocContract.class,"associateSearch"));
+			reqDTO.setSearchBean(super.createSearchBean(CtAssociation.class,"associateSearch"));
 			reqDTO.setSearchBean(searchBean);
 			ContractAssociationResDTO ResDTO = contractAssociationSO.searchAssociation(reqDTO);
 			this.getManagedBean().setAssociationList(ResDTO.getResultBean().getResultList());
@@ -115,15 +117,23 @@ public class AssociationBackingBean extends BaseBackingBean<AssociationManagedBe
      public void deleteAssociation() {
 
 		IContractAssociationSO contractAssociationSO = null;
-
+		ContractAssociationReqDTO reqDTO = null;
+		
 		try {
-
-			ContractAssociationReqDTO reqDTO = new ContractAssociationReqDTO();
-			contractAssociationSO = (IContractAssociationSO) BusinessDelegate.getInstance().getServiceObject("ct",IContractAssociationSO.class);
-			reqDTO.setCtDelAssocContract(this.getManagedBean().getCtDelAssocContract());
-			contractAssociationSO.deleteAssociation(reqDTO);
-		} catch (Exception ex) {
-			log.error("Exception>>", ex);
+            
+			 reqDTO = new ContractAssociationReqDTO();
+			 contractAssociationSO = (IContractAssociationSO) BusinessDelegate.getInstance().getServiceObject("ct",IContractAssociationSO.class);
+				
+			 for(int i = 0; i < ctSelectAssociation.length; i++) {
+				 CtAssociation ctAssociation  = ctSelectAssociation[i];   
+				 reqDTO.setCtDelAssociation(ctAssociation);
+				 ContractAssociationResDTO resDTO= contractAssociationSO.deleteAssociation(reqDTO);
+				 if(resDTO.isSuccessful()){
+					 searchAssociation();
+				 }
+			 }
+	 	 } catch (Exception ex) {
+			log.error("Exception>>", ex); 
 		} finally {
 			contractAssociationSO = null;
 		} 
@@ -139,7 +149,11 @@ public class AssociationBackingBean extends BaseBackingBean<AssociationManagedBe
  	}
 
  	public void deleteAdvanceContract() {
- 		this.getManagedBean().getAssociateSearchList().remove(this.getManagedBean().getAssocoiateCtContract());
+ 		for (int i = 0; i < deleteSelectedContractList.length; i++) {
+			CtContract ctContract = deleteSelectedContractList[i];
+			this.getManagedBean().getAssociateSearchList().remove(ctContract);
+		}
+ 		deleteSelectedContractList = null;
  	}
  	
  	public String createAssociation() {
@@ -209,8 +223,17 @@ public class AssociationBackingBean extends BaseBackingBean<AssociationManagedBe
 		}
 	}
 	
- 	
- 	public CtContract[] getSelectedContractList() {
+	
+
+	public CtAssociation[] getCtSelectAssociation() {
+		return ctSelectAssociation;
+	}
+
+	public void setCtSelectAssociation(CtAssociation[] ctSelectAssociation) {
+		this.ctSelectAssociation = ctSelectAssociation;
+	}
+
+	public CtContract[] getSelectedContractList() {
 		return selectedContractList;
 	}
 
@@ -219,11 +242,48 @@ public class AssociationBackingBean extends BaseBackingBean<AssociationManagedBe
 	}
     
     public String gotoAssociatePage() {
+    	if(this.getManagedBean().getCtAssociation() != null)
+        	this.getManagedBean().setCtAssociation(null);
+    	if(this.getManagedBean().getAssociateSearchList().size() != 0)
+    		this.getManagedBean().setAssociateSearchList(null);
 		return PROCESS_ASSOCIATE_PAGE;
 	}
    
     public String gotoCancelPage() {
 		return PROCESS_ASSOCIATE_CANCEL_PAGE;
 	}	
+    
+    public String gotoUpdateAssociatePage(){
+    	
+    	IContractAssociationSO contractAssociationSO = null;
+		ContractAssociationReqDTO reqDTO = null;
+		this.getManagedBean().setAssociateSearchList(null);
+		try {
+            
+			 reqDTO = new ContractAssociationReqDTO();
+			 contractAssociationSO = (IContractAssociationSO) BusinessDelegate.getInstance().getServiceObject("ct",IContractAssociationSO.class);
+			 reqDTO.setAssociationId(this.getManagedBean().getCtUpdateAssociation().getAssociationId());
+			 ContractAssociationResDTO resDTO = contractAssociationSO.retrieveAssociation(reqDTO);
+			 this.getManagedBean().setCtAssociation(resDTO.getCtAssociation());
+			 for(CtAssocContract ctAssocContract : this.getManagedBean().getCtAssociation().getCtAssocContracts()){
+				 this.getManagedBean().getAssociateSearchList().add(ctAssocContract.getCtContract());
+			 }
+	} catch (Exception ex) {
+		log.error("Exception>>", ex);
+	} finally {
+		contractAssociationSO = null;
+		
+	}
+    	return PROCESS_ASSOCIATE_PAGE;
+    }
+
+	public CtContract[] getDeleteSelectedContractList() {
+		return deleteSelectedContractList;
+	}
+
+	public void setDeleteSelectedContractList(
+			CtContract[] deleteSelectedContractList) {
+		this.deleteSelectedContractList = deleteSelectedContractList;
+	}
 	
 }
