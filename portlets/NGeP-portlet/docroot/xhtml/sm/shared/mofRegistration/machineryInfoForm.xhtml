@@ -49,7 +49,7 @@
 				<h:outputText value="#{macBean.qty}" />
 			</p:column>
 
-			<p:column headerText="Value(MYR.)">
+			<p:column headerText="Value(RM.)">
 				<h:outputText value="#{macBean.value}" />
 			</p:column>
 			<p:column headerText="Action">
@@ -150,6 +150,16 @@
 			<tr>
 				<td><p:outputLabel value="Guarantor Name" /></td>
 				<td><p:inputText value=" -- TBC --" size="35" /></td>
+			</tr>
+			<tr>
+				<td><p:outputLabel value="*Associated Facility" /></td>
+
+				<td><p:selectManyMenu showCheckbox="true">
+						<f:selectItems
+							value="#{backingBean.managedBean.smAppl.smFacilities}" var="fac"
+							itemLabel="#{fac.ownerName}" itemValue="#{fac.ownerName}" />
+					</p:selectManyMenu></td>
+
 			</tr>
 
 		</table>

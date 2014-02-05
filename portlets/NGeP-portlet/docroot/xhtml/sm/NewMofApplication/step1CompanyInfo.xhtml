@@ -12,6 +12,13 @@
 	<ui:include
 		src="/xhtml/sm/shared/mofRegistration/officeFacilityTypeForm.xhtml" />
 	<ui:include
+		src="/xhtml/sm/shared/mofRegistration/certifacteInfoForm.xhtml" />
+	<ui:fragment
+		rendered="#{backingBean.managedBean.smAppl.supplierType eq '2'}">
+		<ui:include
+			src="/xhtml/sm/shared/mofRegistration/proffesionalBodyInfoForm.xhtml" />
+	</ui:fragment>
+	<ui:include
 		src="/xhtml/sm/shared/mofRegistration/transactionNetworksForm.xhtml" />
 	<table style="width: 100%">
 		<tr>

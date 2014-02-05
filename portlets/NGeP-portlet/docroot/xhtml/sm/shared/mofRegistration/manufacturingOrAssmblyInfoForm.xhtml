@@ -47,7 +47,7 @@
 			</p:column>
 
 			<p:column headerText="Measurement Unit">
-				<h:outputText value="#{manBean.uom}" />
+				<h:outputText value="-- TBC--" />
 			</p:column>
 			<p:column headerText="Action">
 				<p:commandLink oncomplete="manufactorDialog.show();"
@@ -125,7 +125,7 @@
 			<tr>
 				<td><p:outputLabel value="* Measurement" /></td>
 				<td valign="top"><p:selectOneMenu
-						value="#{backingBean.managedBean.selectedManufacturer.uom}"
+						value="#{backingBean.managedBean.selectedManufacturer.goodsType}"
 						style="width: 207px;margin-bottom: 5px;">
 						<f:selectItem itemLabel="-- Select --" itemValue="" />
 						<f:selectItem itemLabel="Unit " itemValue="Unit" />

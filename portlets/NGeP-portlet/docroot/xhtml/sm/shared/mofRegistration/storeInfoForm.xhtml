@@ -1,0 +1,191 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:ac="http://ac.my/jsf/composite/cc">
+
+	<p:panel header="store Details" toggleable="true">
+
+		<p:dataTable var="stor"
+			value="#{backingBean.managedBean.applStoreFacilities}"
+			selection="#{backingBean.managedBean.selectedStoreFacilities}"
+			rowKey="#{stor}" rowIndexVar="index" id="storeDt">
+			<ac:paginator for="storeDt" />
+			<p:column selectionMode="multiple" width="5%" />
+
+			<p:column headerText="Store Name">
+				<h:outputText value="#{stor.smAddress.address1}" />
+			</p:column>
+
+			<p:column headerText="Store Address">
+				<h:outputText
+					value="#{stor.smAddress.address2},#{stor.smAddress.address3},#{stor.smAddress.address4}" />
+			</p:column>
+			<p:column headerText="Action">
+				<p:commandLink oncomplete="storeDialog.show();"
+					action="#{backingBean.assignSelFactory(stor)}"
+					update=":form:tt:storeDialog" style="padding-right:5px">
+					<p:graphicImage library="ep/images/design" name="edit.png"
+						value="/resources/ep/images/design/edit.png" />
+				</p:commandLink>
+			</p:column>
+
+		</p:dataTable>
+		<p:spacer height="2px;" />
+		<div align="right">
+			<p:commandButton value="Add " oncomplete="storeDialog.show();"
+				action="#{backingBean.assignNewFactoryBean}"
+				update=":form:tt:storeDialog" />
+			<p:commandButton value="Delete " />
+		</div>
+		<br />
+	</p:panel>
+	<p:dialog width="500px" height="480px" header="Store Page"
+		widgetVar="storeDialog" resizable="false" showEffect="fade"
+		hideEffect="fade" modal="true" id="storeDialog">
+		<!-- 	<p:panel header="Factory / store / Store / Shipyard Details"> -->
+
+		<table style="width: 100%">
+			<tr>
+				<td><p:outputLabel value="* Facility Type" /></td>
+				<td><p:inputText value="Store" readonly="true" disabled="true" /></td>
+			</tr>
+			<tr>
+				<td><p:outputLabel value="* Name" /></td>
+				<td><p:inputText
+						value="#{backingBean.managedBean.selectedFactoryFacility.smAddress.address1}"
+						size="35" /></td>
+			</tr>
+			<tr>
+				<td><p:outputLabel value="* Address" /></td>
+				<td><p:inputText
+						value="#{backingBean.managedBean.selectedFactoryFacility.smAddress.address2}"
+						size="35" /></td>
+			</tr>
+
+			<tr>
+				<td></td>
+				<td><p:inputText
+						value="#{backingBean.managedBean.selectedFactoryFacility.smAddress.address3}"
+						size="35" /></td>
+			</tr>
+			<tr>
+				<td></td>
+				<td><p:inputText
+						value="#{backingBean.managedBean.selectedFactoryFacility.smAddress.address4}"
+						size="35" /></td>
+			</tr>
+			<tr>
+				<td><p:outputLabel value="* Country" /></td>
+				<td><p:selectOneMenu
+						value="#{backingBean.managedBean.selectedFactoryFacility.smAddress.pmCountry.countryCode}"
+						style="width: 207px;margin-bottom: 5px;">
+						<f:selectItem itemLabel="-- Select One -- " itemValue="" />
+						<f:selectItem itemLabel="Malaysia" itemValue="MY" />
+					</p:selectOneMenu></td>
+			</tr>
+			<tr>
+				<td><p:outputLabel value="#{lbl['lbl.sm.postcode']}" /></td>
+				<td><p:inputText
+						value="#{backingBean.managedBean.selectedFactoryFacility.smAddress.postcode}"
+						size="35" /></td>
+			</tr>
+			<tr>
+				<td><p:outputLabel value="#{lbl['lbl.sm.state']}" /></td>
+				<td><p:inputText
+						value="#{backingBean.managedBean.selectedFactoryFacility.smAddress.pmState.stateCode}"
+						size="35" /></td>
+			</tr>
+
+			<tr>
+				<td><p:outputLabel value="#{lbl['lbl.sm.district']}" /></td>
+				<td><p:inputText
+						value="#{backingBean.managedBean.selectedFactoryFacility.smAddress.pmDistrict.districtCode}"
+						size="35" /></td>
+			</tr>
+			<tr>
+				<td><p:outputLabel value="#{lbl['lbl.sm.towncity']}" /></td>
+				<td><p:inputText
+						value="#{backingBean.managedBean.selectedFactoryFacility.smAddress.pmCity.cityCode}"
+						size="35" /></td>
+			</tr>
+			<tr>
+				<td><p:outputLabel value="Phone NO." /></td>
+				<td><p:inputText value="-- TBC--" size="35" /></td>
+			</tr>
+			<tr>
+				<td><p:outputLabel value="Fax NO." /></td>
+				<td><p:inputText value="-- TBC--" size="35" /></td>
+			</tr>
+			<tr>
+				<td><p:outputLabel value="*Area(Sq Ft) *" /></td>
+				<td><p:inputText
+						value="#{backingBean.managedBean.selectedFactoryFacility.areaSquareFeet}"
+						size="35" /></td>
+			</tr>
+			<tr>
+				<td><p:outputLabel value="Ownership Type" /></td>
+				<td><p:selectOneRadio
+						value="#{backingBean.managedBean.selectedFactoryFacility.ownershipType}">
+						<f:selectItem itemLabel="Rented " itemValue="R" />
+						<f:selectItem itemLabel="Owned" itemValue="O" />
+						<p:ajax event="change"
+							listener="#{backingBean.factoryOwnerTypeSel}"
+							update="storPan,storPanLbl" />
+					</p:selectOneRadio></td>
+			</tr>
+			<tr>
+				<td><p:outputPanel id="storPanLbl">
+						<p:outputLabel value="* Price (RM.)"
+							rendered="#{backingBean.managedBean.selectedFactoryFacility.ownershipType eq 'O'}" />
+						<p:outputLabel value="* Rent (RM.)"
+							rendered="#{backingBean.managedBean.selectedFactoryFacility.ownershipType eq 'R'}" />
+					</p:outputPanel></td>
+				<td><p:outputPanel id="storPan">
+						<ui:fragment
+							rendered="#{backingBean.managedBean.selectedFactoryFacility.ownershipType eq 'O'}">
+							<p:inputText
+								value="#{backingBean.managedBean.selectedFactoryFacility.purchasePrice}"
+								size="20" />
+						</ui:fragment>
+						<ui:fragment
+							rendered="#{backingBean.managedBean.selectedFactoryFacility.ownershipType eq 'R'}">
+							<p:inputText
+								value="#{backingBean.managedBean.selectedFactoryFacility.rentalRate}"
+								size="20" />
+						</ui:fragment>
+					</p:outputPanel></td>
+			</tr>
+
+			<tr>
+				<td><p:outputLabel value="
+								Owner Name *" /></td>
+				<td><p:inputText
+						value="#{backingBean.managedBean.selectedFactoryFacility.ownerName}"
+						size="35" /></td>
+			</tr>
+			<tr>
+				<td><p:outputLabel value="*Associated Category" /></td>
+
+				<td><p:selectManyMenu showCheckbox="true">
+						<f:selectItems
+							value="#{backingBean.managedBean.smAppl.smSupplierCategories}"
+							var="catBean"
+							itemLabel="#{catBean.pmCategoryL3.categoryL3Code} -  #{catBean.pmCategoryL3.categoryName}"
+							itemValue="#{catBean.supplierCategoryId}" />
+					</p:selectManyMenu></td>
+
+			</tr>
+		</table>
+		<!-- </p:panel> -->
+		<br />
+		<div align="right">
+			<p:commandButton value="Save"
+				action="#{backingBean.addOrUpdateFactoryToSmAppl}"
+				oncomplete="storeDialog.hide();" update=":form:tt:storeDt" />
+			<p:commandButton value="Cancel" onclick="storeDialog.hide();" />
+		</div>
+	</p:dialog>
+</ui:composition>

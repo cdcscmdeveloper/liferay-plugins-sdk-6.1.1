@@ -65,17 +65,46 @@
 										action="#{backingBean.updateSmAppl}" update=":form"
 										rendered="#{backingBean.managedBean.smAppl.currentActiveTab ge 4}"
 										styleClass="#{backingBean.managedBean.tabActiveIndex eq 4 ? 'currentStep' : ''}" /></li>
+								<c:choose>
+									<c:when
+										test="#{backingBean.managedBean.smAppl.applCategoryType == 'S'}">
+										<li><h:outputText value="Facilities"
+												rendered="#{backingBean.managedBean.smAppl.currentActiveTab lt 5}" />
+											<p:commandLink value="Facilities"
+												actionListener="#{backingBean.setTabValue(backingBean.managedBean.tabActiveIndex,'5')}"
+												action="#{backingBean.updateSmAppl}" update=":form"
+												rendered="#{backingBean.managedBean.smAppl.currentActiveTab ge 5}"
+												styleClass="#{backingBean.managedBean.tabActiveIndex eq 5? 'currentStep' : ''}" /></li>
+										<li><h:outputText value="Equipment"
+												rendered="#{backingBean.managedBean.smAppl.currentActiveTab lt 6}" />
+											<p:commandLink value="Equipment"
+												actionListener="#{backingBean.setTabValue(backingBean.managedBean.tabActiveIndex,'6')}"
+												action="#{backingBean.updateSmAppl}" update=":form"
+												rendered="#{backingBean.managedBean.smAppl.currentActiveTab ge 6}"
+												styleClass="#{backingBean.managedBean.tabActiveIndex eq 6 ? 'currentStep' : ''}" /></li>
+										<li><h:outputText
+												value="#{lbl['lbl.sm.wizard.supDocStepLbl']}"
+												rendered="#{backingBean.managedBean.smAppl.currentActiveTab lt 7}" />
+											<p:commandLink value="#{lbl['lbl.sm.wizard.supDocStepLbl']}"
+												actionListener="#{backingBean.setTabValue(backingBean.managedBean.tabActiveIndex,'7')}"
+												action="#{backingBean.updateSmAppl}" update=":form"
+												rendered="#{backingBean.managedBean.smAppl.currentActiveTab ge 7}"
+												styleClass="#{backingBean.managedBean.tabActiveIndex eq 7 ? 'currentStep' : ''}" /></li>
+									</c:when>
+									<c:otherwise>
+										<li><h:outputText
+												value="#{lbl['lbl.sm.wizard.supDocStepLbl']}"
+												rendered="#{backingBean.managedBean.smAppl.currentActiveTab lt 5}" />
+											<p:commandLink value="#{lbl['lbl.sm.wizard.supDocStepLbl']}"
+												actionListener="#{backingBean.setTabValue(backingBean.managedBean.tabActiveIndex,'5')}"
+												action="#{backingBean.updateSmAppl}" update=":form"
+												rendered="#{backingBean.managedBean.smAppl.currentActiveTab ge 5}"
+												styleClass="#{backingBean.managedBean.tabActiveIndex eq 5 ? 'currentStep' : ''}" /></li>
+									</c:otherwise>
+								</c:choose>
 
-							
 
-								<li><h:outputText
-										value="#{lbl['lbl.sm.wizard.supDocStepLbl']}"
-										rendered="#{backingBean.managedBean.smAppl.currentActiveTab lt 5}" />
-									<p:commandLink value="#{lbl['lbl.sm.wizard.supDocStepLbl']}"
-										actionListener="#{backingBean.setTabValue(backingBean.managedBean.tabActiveIndex,'5')}"
-										action="#{backingBean.updateSmAppl}" update=":form"
-										rendered="#{backingBean.managedBean.smAppl.currentActiveTab ge 5}"
-										styleClass="#{backingBean.managedBean.tabActiveIndex eq 5 ? 'currentStep' : ''}" /></li>
+
 
 							</ul>
 							<ul id="tripMeter" class="menu-line">
@@ -89,26 +118,43 @@
 									class="#{backingBean.managedBean.tabActiveIndex eq 3 ? 'space red-dot' :  (backingBean.managedBean.smAppl.currentActiveTab ge 3 ? 'space green-dot':'space black-dot')}" />
 								<li
 									class="#{backingBean.managedBean.tabActiveIndex eq 4 ? 'space red-dot' :  (backingBean.managedBean.smAppl.currentActiveTab ge 4 ? 'space green-dot':'space black-dot')}" />
-								<li
-									class="#{backingBean.managedBean.tabActiveIndex eq 5 ? 'red-dot' :  (backingBean.managedBean.smAppl.currentActiveTab ge 5 ? 'green-dot':'black-dot')}" />
+								<c:choose>
+									<c:when
+										test="#{backingBean.managedBean.smAppl.applCategoryType == 'S'}">
+										<li
+											class="#{backingBean.managedBean.tabActiveIndex eq 5 ? 'space red-dot' :  (backingBean.managedBean.smAppl.currentActiveTab ge 5 ? 'space green-dot':'space black-dot')}" />
+										<li
+											class="#{backingBean.managedBean.tabActiveIndex eq 6 ? 'space red-dot' :  (backingBean.managedBean.smAppl.currentActiveTab ge 6 ? 'space green-dot':'space black-dot')}" />
+										<li
+											class="#{backingBean.managedBean.tabActiveIndex eq 7 ? 'red-dot' :  (backingBean.managedBean.smAppl.currentActiveTab ge 7 ? 'green-dot':'black-dot')}" />
+
+
+									</c:when>
+									<c:otherwise>
+										<li
+											class="#{backingBean.managedBean.tabActiveIndex eq 5 ? 'red-dot' :  (backingBean.managedBean.smAppl.currentActiveTab ge 5 ? 'green-dot':'black-dot')}" />
+									</c:otherwise>
+								</c:choose>
+
 
 							</ul>
 						</div></td>
-					<td><table style="width: 99%">
-							<tr>
-								<td
-									style="color: red; font-weight: bolder; padding-right: 10px; text-align: right;"><h:outputText
-										value="Expiry Date : " /></td>
-								<td
-									style="color: red; font-weight: bolder; padding-right: 10px; width: 85px;"><h:outputText
-										value="#{backingBean.managedBean.smAppl.draftExpiryDate}">
-										<f:convertDateTime type="date" pattern="dd-MMM-yyyy" />
-									</h:outputText></td>
-								<td style="width: 50px;"><p:commandButton
-										value="#{lbl['lbl.sm.saveAsDraft']}" icon="ui-icon-save"
-										style="margin-bottom:5px;" /></td>
-							</tr>
-						</table></td>
+
+				</tr>
+			</table>
+			<table style="width: 99%">
+				<tr>
+					<td
+						style="color: red; font-weight: bolder; padding-right: 10px; text-align: right;"><h:outputText
+							value="Expiry Date : " /></td>
+					<td
+						style="color: red; font-weight: bolder; padding-right: 10px; width: 85px;"><h:outputText
+							value="#{backingBean.managedBean.smAppl.draftExpiryDate}">
+							<f:convertDateTime type="date" pattern="dd-MMM-yyyy" />
+						</h:outputText></td>
+					<td style="width: 50px;"><p:commandButton
+							value="#{lbl['lbl.sm.saveAsDraft']}" icon="ui-icon-save"
+							style="margin-bottom:5px;" /></td>
 				</tr>
 			</table>
 			<p:messages id="messages" showDetail="true" autoUpdate="true"
@@ -129,9 +175,28 @@
 			<c:if test="#{backingBean.managedBean.tabActiveIndex eq 4}">
 				<ui:include src="step5AddnlCatCode_RegisterCategoryCodesInfo.xhtml" />
 			</c:if>
-			<c:if test="#{backingBean.managedBean.tabActiveIndex eq 5}">
-				<ui:include src="step6AddnlCatCode_SupportingDocumentsInfo.xhtml" />
-			</c:if>
+			<c:choose>
+				<c:when
+					test="#{backingBean.managedBean.smAppl.applCategoryType == 'S'}">
+
+					<c:if test="#{backingBean.managedBean.tabActiveIndex eq 5}">
+						<ui:include src="step5.1AddnlCatCode_FactoryInfo.xhtml" />
+					</c:if>
+					<c:if test="#{backingBean.managedBean.tabActiveIndex eq 6}">
+						<ui:include src="step5.2AddnlCatCode_EquipmentInfo.xhtml" />
+					</c:if>
+					<c:if test="#{backingBean.managedBean.tabActiveIndex eq 7}">
+						<ui:include src="step6AddnlCatCode_SupportingDocumentsInfo.xhtml" />
+					</c:if>
+
+				</c:when>
+				<c:otherwise>
+					<c:if test="#{backingBean.managedBean.tabActiveIndex eq 5}">
+						<ui:include src="step6AddnlCatCode_SupportingDocumentsInfo.xhtml" />
+					</c:if>
+				</c:otherwise>
+			</c:choose>
+
 
 		</ac:smPanel>
 	</ui:define>

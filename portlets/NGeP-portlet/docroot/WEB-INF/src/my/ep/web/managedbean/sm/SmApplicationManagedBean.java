@@ -65,14 +65,6 @@ public class SmApplicationManagedBean extends BaseManagedBean {
 
 	private SmSupplierCert selectedCert;
 
-	// private List<SmContractExperience> selectedContractProjs;
-	//
-	// private SmContractExperience selectedContractProj;
-	//
-	// private List<SmProjectExperience> selectedConstProjs;
-	//
-	// private SmProjectExperience selectedConstProj;
-
 	private List<SmCompanyExperience> selectedCompanyExperiences;
 
 	private SmCompanyExperience selectedCompanyExperience;
@@ -94,6 +86,26 @@ public class SmApplicationManagedBean extends BaseManagedBean {
 	private SmFacility selectedFactoryFacility;
 
 	private List<SmFacility> selectedFactoryFacilities;
+
+	private List<SmFacility> applFactoryFacilities;
+
+	private SmFacility selectedWorkShopFacility;
+
+	private List<SmFacility> selectedWorkShopFacilities;
+
+	private List<SmFacility> applWorkShopFacilities;
+
+	private SmFacility selectedDockyardFacility;
+
+	private List<SmFacility> selectedDockyardFacilities;
+
+	private List<SmFacility> applDockyardFacilities;
+
+	private SmFacility selectedStoreFacility;
+
+	private List<SmFacility> selectedStoreFacilities;
+
+	private List<SmFacility> applStoreFacilities;
 
 	private List<SmManufacturingDtl> selectedManufacturingList;
 
@@ -281,6 +293,19 @@ public class SmApplicationManagedBean extends BaseManagedBean {
 		selectedFactoryFacility = new SmFacility();
 		selectedFactoryFacility.setSmAddress(defaultAddr);
 		selectedFactoryFacilities = new ArrayList<SmFacility>();
+		applFactoryFacilities = new ArrayList<SmFacility>();
+		selectedWorkShopFacility = new SmFacility();
+		selectedWorkShopFacility.setSmAddress(defaultAddr);
+		selectedWorkShopFacilities = new ArrayList<SmFacility>();
+		applWorkShopFacilities = new ArrayList<SmFacility>();
+		selectedDockyardFacility = new SmFacility();
+		selectedDockyardFacility.setSmAddress(defaultAddr);
+		selectedDockyardFacilities = new ArrayList<SmFacility>();
+		applDockyardFacilities = new ArrayList<SmFacility>();
+		selectedStoreFacility = new SmFacility();
+		selectedStoreFacility.setSmAddress(defaultAddr);
+		selectedStoreFacilities = new ArrayList<SmFacility>();
+		applStoreFacilities = new ArrayList<SmFacility>();
 		selectedManufacturingList = new ArrayList<SmManufacturingDtl>();
 		selectedManufacturer = new SmManufacturingDtl();
 		selectedMachine = new SmMachineDtl();
@@ -899,6 +924,91 @@ public class SmApplicationManagedBean extends BaseManagedBean {
 
 	public void setCatTypeConfirm(String catTypeConfirm) {
 		this.catTypeConfirm = catTypeConfirm;
+	}
+
+	public SmFacility getSelectedWorkShopFacility() {
+		return selectedWorkShopFacility;
+	}
+
+	public void setSelectedWorkShopFacility(SmFacility selectedWorkShopFacility) {
+		this.selectedWorkShopFacility = selectedWorkShopFacility;
+	}
+
+	public List<SmFacility> getSelectedWorkShopFacilities() {
+		return selectedWorkShopFacilities;
+	}
+
+	public void setSelectedWorkShopFacilities(
+			List<SmFacility> selectedWorkShopFacilities) {
+		this.selectedWorkShopFacilities = selectedWorkShopFacilities;
+	}
+
+	public SmFacility getSelectedDockyardFacility() {
+		return selectedDockyardFacility;
+	}
+
+	public void setSelectedDockyardFacility(SmFacility selectedDockyardFacility) {
+		this.selectedDockyardFacility = selectedDockyardFacility;
+	}
+
+	public List<SmFacility> getSelectedDockyardFacilities() {
+		return selectedDockyardFacilities;
+	}
+
+	public void setSelectedDockyardFacilities(
+			List<SmFacility> selectedDockyardFacilities) {
+		this.selectedDockyardFacilities = selectedDockyardFacilities;
+	}
+
+	public SmFacility getSelectedStoreFacility() {
+		return selectedStoreFacility;
+	}
+
+	public void setSelectedStoreFacility(SmFacility selectedStoreFacility) {
+		this.selectedStoreFacility = selectedStoreFacility;
+	}
+
+	public List<SmFacility> getSelectedStoreFacilities() {
+		return selectedStoreFacilities;
+	}
+
+	public void setSelectedStoreFacilities(
+			List<SmFacility> selectedStoreFacilities) {
+		this.selectedStoreFacilities = selectedStoreFacilities;
+	}
+
+	public List<SmFacility> getApplFactoryFacilities() {
+		return applFactoryFacilities;
+	}
+
+	public void setApplFactoryFacilities(List<SmFacility> applFactoryFacilities) {
+		this.applFactoryFacilities = applFactoryFacilities;
+	}
+
+	public List<SmFacility> getApplWorkShopFacilities() {
+		return applWorkShopFacilities;
+	}
+
+	public void setApplWorkShopFacilities(
+			List<SmFacility> applWorkShopFacilities) {
+		this.applWorkShopFacilities = applWorkShopFacilities;
+	}
+
+	public List<SmFacility> getApplDockyardFacilities() {
+		return applDockyardFacilities;
+	}
+
+	public void setApplDockyardFacilities(
+			List<SmFacility> applDockyardFacilities) {
+		this.applDockyardFacilities = applDockyardFacilities;
+	}
+
+	public List<SmFacility> getApplStoreFacilities() {
+		return applStoreFacilities;
+	}
+
+	public void setApplStoreFacilities(List<SmFacility> applStoreFacilities) {
+		this.applStoreFacilities = applStoreFacilities;
 	}
 
 }

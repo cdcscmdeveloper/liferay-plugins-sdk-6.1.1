@@ -145,6 +145,7 @@
 						<p:graphicImage library="ep/images/design" name="edit.png"
 							value="/resources/ep/images/design/edit.png" />
 					</p:commandLink>
+					
 				</p:column>
 
 			</p:dataTable>
@@ -156,7 +157,7 @@
 					update=":form:tt:personnelDialog" />
 				<p:commandButton value="Delete" />
 			</div>
-			
+
 			<br />
 			<p:outputPanel rendered="#{backingBean.managedBean.poUser}">
 				<table style="width: 50%">
@@ -196,4 +197,5 @@
 			<p:commandButton value="Cancel" onclick="personnelDialog.hide();" />
 		</div>
 	</p:dialog>
+	
 </ui:composition>

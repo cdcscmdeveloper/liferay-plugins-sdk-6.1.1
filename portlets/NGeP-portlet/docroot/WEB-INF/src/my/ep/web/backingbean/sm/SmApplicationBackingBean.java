@@ -117,6 +117,7 @@ public class SmApplicationBackingBean extends
 			getManagedBean().setSmSupplier(smApplSupplier);
 			// TODO Set default not null values -- End insert appl ---
 			// TODo Remove hard code later
+			smAppl.setApplCategoryType(null);
 			if (getManagedBean().isApproverUser()
 					|| getManagedBean().isPoUser()) {
 				System.out.println("**** LOGIN IS PO or APPROVER *******");
@@ -128,12 +129,15 @@ public class SmApplicationBackingBean extends
 					System.out.println(" **** COMPANY BAsic cannot be null");
 					smAppl.setSmCompanyBasic(new SmCompanyBasic());
 				}
+				smAppl.setApplCategoryType("S");
 			}
 
 			if (smAppl.getSmFacilities().isEmpty()) {
 				System.out.println("*** Empty Facility******");
 				SmFacility fac = new SmFacility();
+				fac.setOwnerName("Sample");
 				SmAddress addr = new SmAddress();
+				addr.setAddress1("Sample");
 				fac.setSmAppl(smAppl);
 				fac.setSmAddress(addr);
 				smAppl.getSmFacilities().add(fac);
@@ -143,7 +147,7 @@ public class SmApplicationBackingBean extends
 			if (applicationType.equalsIgnoreCase("N") && !fromBpm) {
 				smAppl.setSupplierType(getManagedBean().getNewSupplierType());
 			}
-			smAppl.setApplCategoryType(null);
+
 			smAppl.setSmStaffTotals(getStaffList(smAppl.getSupplierType()));
 			getManagedBean().setSmAppl(smAppl);
 			getManagedBean().setTabActiveIndex(0);
@@ -361,6 +365,23 @@ public class SmApplicationBackingBean extends
 
 	}
 
+	public void updateSmAppl(String navTo, String pageType) {
+
+		try {
+
+		} catch (Exception e) {
+			System.out.println("this is error");
+			e.printStackTrace();
+			FacesContext.getCurrentInstance().addMessage(
+					null,
+					new FacesMessage(FacesMessage.SEVERITY_ERROR,
+							"Sample error message",
+							"PrimeFaces makes no mistakes"));
+			getManagedBean().setTabActiveIndex(currentTab);
+			// return SupplierManagementConst.PROCEED_MOF_REG;
+		}
+	}
+
 	public void createNewApplication() throws Exception {
 		try {
 			System.out.println("**** New BEAN  *************"
@@ -434,7 +455,12 @@ public class SmApplicationBackingBean extends
 								.getSmSupplierCategories().size());
 		StringBuffer sb = new StringBuffer();
 		String desc = null;
-
+		System.out.println("---- Current Active Tab ---- "
+				+ getManagedBean().getSmAppl().getCurrentActiveTab());
+		System.out.println("---- Active Tab Index ---- "
+				+ getManagedBean().getTabActiveIndex());
+		getManagedBean().getSmAppl().setCurrentActiveTab(
+				getManagedBean().getTabActiveIndex());
 		if (getManagedBean().getSmAppl().getApplCategoryType().equals("N")) {
 			desc = "Normal";
 		} else {
@@ -802,19 +828,17 @@ public class SmApplicationBackingBean extends
 	// factory start
 	public void addOrUpdateFactoryToSmAppl() {
 
-		// if (getManagedBean().getSmAppl().getSmFacilities()
-		// .contains(getManagedBean().getSelectedFactoryFacility())) {
-		//
-		// System.out.println(" **** THIS IS AN UPDATE For Factoy******"
-		// + getManagedBean().getSelectedFactoryFacility()
-		// .getPhoneNo());
-		// } else {
-		// System.out.println("-- Before Save --"
-		// + getManagedBean().getSelectedFactoryFacility()
-		// .getSmAddress().getAddress1());
-		// getManagedBean().getSmAppl().getSmFacilities()
-		// .add(getManagedBean().getSelectedFactoryFacility());
-		// }
+		if (getManagedBean().getSmAppl().getSmFacilities()
+				.contains(getManagedBean().getSelectedFactoryFacility())) {
+
+			System.out.println(" **** THIS IS AN UPDATE For Factoy******");
+		} else {
+			System.out.println("-- Before Save --"
+					+ getManagedBean().getSelectedFactoryFacility()
+							.getSmAddress().getAddress1());
+			getManagedBean().getSmAppl().getSmFacilities()
+					.add(getManagedBean().getSelectedFactoryFacility());
+		}
 	}
 
 	public void assignSelFactory(SmFacility facilityBean) {

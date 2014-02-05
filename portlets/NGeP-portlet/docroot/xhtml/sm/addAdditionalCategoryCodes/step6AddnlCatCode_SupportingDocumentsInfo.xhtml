@@ -22,39 +22,51 @@
 			rendered="#{backingBean.managedBean.smAppl.supportingDocMode eq 'F'}">
 			<ui:include
 				src="/xhtml/sm/shared/mofRegistration/offlineSupportingDocsForm.xhtml" />
-			<table>
-				<tr>
-					<td><p:commandButton value="#{lbl['lbl.sm.prev']}"
-							actionListener="#{backingBean.setTabValue('5','4')}"
-							action="#{backingBean.updateSmAppl}" update=":form"
-							icon="ui-icon-prev" /></td>
-					<td><p:commandButton value="Print List">
-							<p:printer target="supDocPan" />
-						</p:commandButton></td>
-					<td><p:commandButton value="Submit Application"
-							action="#{backingBean.submitAddnlCategoryApplToBpm}" /></td>
-				</tr>
-			</table>
+
 		</ui:fragment>
 		<ui:fragment
 			rendered="#{backingBean.managedBean.smAppl.supportingDocMode eq 'O'}">
 			<ui:include
 				src="/xhtml/sm/shared/mofRegistration/onlineSupportingDocsForm.xhtml" />
-			<table>
-				<tr>
-					<td><p:commandButton value="#{lbl['lbl.sm.prev']}"
-							actionListener="#{backingBean.setTabValue('5','4')}"
-							action="#{backingBean.updateSmAppl}" update=":form"
-							icon="ui-icon-prev" /></td>
-					<td><p:commandButton value="Print List">
-							<p:printer target="supDocPan" />
-						</p:commandButton></td>
-					<td><p:commandButton value="Submit Application"
-							action="#{backingBean.submitAddnlCategoryApplToBpm}" /></td>
-				</tr>
-			</table>
-		</ui:fragment>
 
+		</ui:fragment>
+		<ui:fragment
+			rendered="#{backingBean.managedBean.smAppl.supportingDocMode eq 'O' or backingBean.managedBean.smAppl.supportingDocMode eq 'F'}">
+			<c:choose>
+				<c:when
+					test="#{backingBean.managedBean.smAppl.applCategoryType == 'S'}">
+
+					<table>
+						<tr>
+							<td><p:commandButton value="#{lbl['lbl.sm.prev']}"
+									actionListener="#{backingBean.setTabValue('7','6')}"
+									action="#{backingBean.updateSmAppl}" update=":form"
+									icon="ui-icon-prev" /></td>
+							<td><p:commandButton value="Print List">
+									<p:printer target="supDocPan" />
+								</p:commandButton></td>
+							<td><p:commandButton value="Submit Application"
+									action="#{backingBean.submitAddnlCategoryApplToBpm}" /></td>
+						</tr>
+					</table>
+				</c:when>
+				<c:otherwise>
+					<table>
+						<tr>
+							<td><p:commandButton value="#{lbl['lbl.sm.prev']}"
+									actionListener="#{backingBean.setTabValue('5','4')}"
+									action="#{backingBean.updateSmAppl}" update=":form"
+									icon="ui-icon-prev" /></td>
+							<td><p:commandButton value="Print List">
+									<p:printer target="supDocPan" />
+								</p:commandButton></td>
+							<td><p:commandButton value="Submit Application"
+									action="#{backingBean.submitAddnlCategoryApplToBpm}" /></td>
+						</tr>
+					</table>
+				</c:otherwise>
+			</c:choose>
+		</ui:fragment>
 	</p:outputPanel>
 
 </ui:composition>

@@ -109,13 +109,8 @@
 	<p:dialog width="450px" header="Branch Details" widgetVar="banchDialog"
 		id="display" resizable="false" showEffect="fade" hideEffect="fade"
 		modal="true">
-		<p:panel
-			rendered="#{backingBean.managedBean.smAppl.supplierType eq '1'}">
-			<ui:include src="branchDetailsTablePage.xhtml" />
-		</p:panel>
-		<p:panel header="Branch Details"
-			rendered="#{backingBean.managedBean.smAppl.supplierType eq '2'}"
-			toggleable="true">
+
+		<p:panel header="Branch Details" toggleable="true">
 			<ui:include src="branchDetailsTablePage.xhtml" />
 		</p:panel>
 		<p:panel header="Point Of Contact"
