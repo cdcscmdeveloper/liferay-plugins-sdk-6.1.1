@@ -15,8 +15,6 @@ import my.ep.persistence.entity.ct.CtAttachment;
 import my.ep.persistence.entity.ct.CtContract;
 import my.ep.persistence.entity.ct.CtContractVer;
 import my.ep.persistence.entity.ct.CtRemark;
-import my.ep.persistence.entity.ct.assoc.CtAssocContract;
-import my.ep.persistence.entity.ct.assoc.CtAssociation;
 import my.ep.persistence.entity.ct.dtl.CtPerformanceBond;
 import my.ep.persistence.entity.ct.dtl.CtProgressivePayment;
 import my.ep.persistence.entity.ct.dtl.CtSchedule;
@@ -41,92 +39,75 @@ import org.primefaces.model.DualListModel;
 @SessionScoped
 public class ContractDetailsManagedBean extends BaseManagedBean{
 
-	private static Logger log = Logger.getLogger(ContractDetailsManagedBean.class);
 	private static final long serialVersionUID = 1L;
+	private static Logger log = Logger.getLogger(ContractDetailsManagedBean.class);
+	
 	
 	private String taskName;
 	private String[] action;
-	private String processName;
 	private int selectedIndex;
-	
-	private String showItem ="Item  Pricing";
-	private boolean itemPricing = true;
-	private boolean itemCeilingQuantity;
-	private boolean amendDisable;
-	private boolean approvrLetter;
-	private boolean amendAckw;
+	private String processName;
 	private boolean bpkApprover=true;
 	
 	private String itemType;
 	private boolean serviceItem;
 	private boolean productItem = true;
+	private boolean itemPricing = true;
 	private CtContractItem selectedItem;
+	private boolean itemCeilingQuantity;
+	private String showItem ="Item  Pricing";
 	private CtContractItem SelectedServiceItem;
-	private boolean amendmentAction;
+	private List<CtContractItem> ctContractItem;
 	
 	private CtContractVer contractVer;
-	private CtDeduction ctDeductionDel = new CtDeduction();
+	private CtDeduction ctDeductionDel;
+	private CtDeductionClause ctDeductionClauseDel;
 	private List<CtDeductionClause> ctDeductionClauseList;
-	private CtDeductionClause ctDeductionClauseDel = new CtDeductionClause();
-	private CtDeduction[] selectedDeductionList;
 	
-	private String scheduleOption="1";
-	private boolean chkSchedule = true;
 	private boolean chkProgressive;
+	private boolean chkSchedule = true;
 	private boolean chkScheduleNulValue;
 	private boolean chkProgressiveNulValue;
-	private CtSchedule ctSchedulesDel = new CtSchedule();
-	private CtProgressivePayment ctProgressivePaymentDel = new CtProgressivePayment();
+	
+	private String scheduleOption="1";
+	private CtSchedule ctSchedulesDel;
+	private CtProgressivePayment ctProgressivePaymentDel;
 	
 	private DualListModel<String> approverModel;
-	private HashMap<String, PmUserGroupUser> approverMap;
 	private Map<Long, PmUserGroup> userGroupMap;
+	private HashMap<String, PmUserGroupUser> approverMap;
 	
 	private List<CtRemark> remarkList;
 	private List<CtAttachment> attachmentList;
-	private List<CtContract> contractList = new ArrayList<CtContract>();
+	
 	private CtContract ctContract;
+	private List<CtContract> contractList;
 	
-	private boolean activeSuspension;
-	private boolean booleanSuspendValue = false;
-	
-	private CtAssociation ctAssociation = new CtAssociation();
-	private CtAssocContract ctDelAssocContract = new CtAssocContract();
-	private List<CtAssocContract> associationList;
-	private List<CtContract> associateSearchList;
-	private CtContract assocoiateCtContract;
-	private List<CtContractItem> ctContractItem;
-
-	private String ctNumber;
 	private String ctName;
-	private String ctCircularNo;
-	private String ctCircularName;
-	private String ctSupplierId;
-	private String ctSupplierName;
-	private String ctDateStart;
-	private String ctDateEnd;
 	private String ctLOANo;
+	private String ctNumber;
+	private String ctDateEnd;
+	private String ctDateStart;
+	private String ctCircularNo;
+	private String ctSupplierId;
 	private String ctProductCode;
+	private String ctCircularName;
+	private String ctSupplierName;
 	private String ctContractStatus;
-	
-	private String projectName;
-	private String projectDescription;
-	private String suspensionType;
-	private boolean activation = true;
-	private boolean suspension;
 	
 	private String supplierAddress;
 	private CtPerformanceBond ctPerformanceBond;
-	private CtPerformanceBond[] selectedBondList;
+	
 	private CtContractZone selectedCtZone;
 	private List<CtContractZoneDtl> ctContractZoneDtls;
-	private boolean showZoneDetails;
 	
-	private boolean disableScheduleRadio;
-	private boolean disableProgessiveRadio;
-	private boolean chkButton;
 	private Long ministryProfileId;
 	private Long departmentProfileId;
+	
+	private boolean chkButton;
+	private boolean showZoneDetails;
+	private boolean disableScheduleRadio;
+	private boolean disableProgessiveRadio;
 	
 	public String[] getAction() {
 		return action;
@@ -280,8 +261,6 @@ public class ContractDetailsManagedBean extends BaseManagedBean{
 		this.attachmentList = attachmentList;
 	}
 
-	
-
 	public String getCtNumber() {
 		return ctNumber;
 	}
@@ -371,6 +350,8 @@ public class ContractDetailsManagedBean extends BaseManagedBean{
 	}
 
 	public List<CtContract> getContractList() {
+		 if(contractList == null)
+			 contractList = new ArrayList<CtContract>();
 		return contractList;
 	}
 
@@ -393,78 +374,7 @@ public class ContractDetailsManagedBean extends BaseManagedBean{
 	public void setCtContract(CtContract ctContract) {
 		this.ctContract = ctContract;
 	}
-
-	public boolean isActiveSuspension() {
-		return activeSuspension;
-	}
-
-	public void setActiveSuspension(boolean activeSuspension) {
-		this.activeSuspension = activeSuspension;
-	}
-
-	public boolean isBooleanSuspendValue() {
-		return booleanSuspendValue;
-	}
-
-	public void setBooleanSuspendValue(boolean booleanSuspendValue) {
-		this.booleanSuspendValue = booleanSuspendValue;
-	}
-
-	public CtAssociation getCtAssociation() {
-		return ctAssociation;
-	}
-
-	public void setCtAssociation(CtAssociation ctAssociation) {
-		this.ctAssociation = ctAssociation;
-	}
-
-	public String getProjectName() {
-		return projectName;
-	}
-
-	public void setProjectName(String projectName) {
-		this.projectName = projectName;
-	}
-
-	public String getProjectDescription() {
-		return projectDescription;
-	}
-
-	public void setProjectDescription(String projectDescription) {
-		this.projectDescription = projectDescription;
-	}
-
-	public List<CtAssocContract> getAssociationList() {
-		if(associationList == null)
-			associationList = new ArrayList<CtAssocContract>();
-		return associationList;
-	}
-
-	public void setAssociationList(List<CtAssocContract> associationList) {
-		this.associationList = associationList;
-	}
-
-	public List<CtContract> getAssociateSearchList() {
-		if(associateSearchList == null)
-			associateSearchList = new ArrayList<CtContract>();
-		return associateSearchList;
-	}
-
-	public void setAssociateSearchList(List<CtContract> associateSearchList) {
-		this.associateSearchList = associateSearchList;
-	}
-
-	public CtContract getAssocoiateCtContract() {
-		return assocoiateCtContract;
-	}
-
-	public void setAssocoiateCtContract(CtContract assocoiateCtContract) {
-		this.assocoiateCtContract = assocoiateCtContract;
-	}
 	
-	/**
-	 * @return the approverMap
-	 */
 	public HashMap<String, PmUserGroupUser> getApproverMap() {
 		if(approverMap == null){
 			setApproverMap(new HashMap<String,PmUserGroupUser>());
@@ -472,14 +382,13 @@ public class ContractDetailsManagedBean extends BaseManagedBean{
 		return approverMap;
 	}
 
-	/**
-	 * @param approverMap the approverMap to set
-	 */
 	public void setApproverMap(HashMap<String, PmUserGroupUser> approverMap) {
 		this.approverMap = approverMap;
 	}
 
 	public Map<Long, PmUserGroup> getUserGroupMap() {
+		if(userGroupMap == null)
+			userGroupMap = new HashMap<Long, PmUserGroup>();
 		return userGroupMap;
 	}
 
@@ -487,22 +396,6 @@ public class ContractDetailsManagedBean extends BaseManagedBean{
 		this.userGroupMap = userGroupMap;
 	}
 	
-	public boolean isAmendDisable() {
-		return amendDisable;
-	}
-
-	public void setAmendDisable(boolean amendDisable) {
-		this.amendDisable = amendDisable;
-	}
-
-	public boolean isAmendAckw() {
-		return amendAckw;
-	}
-
-	public void setAmendAckw(boolean amendAckw) {
-		this.amendAckw = amendAckw;
-	}
-
 	public List<CtContractItem> getCtContractItem() {
 		return ctContractItem;
 	}
@@ -517,38 +410,6 @@ public class ContractDetailsManagedBean extends BaseManagedBean{
 
 	public void setBpkApprover(boolean bpkApprover) {
 		this.bpkApprover = bpkApprover;
-	}
-
-	public boolean isApprovrLetter() {
-		return approvrLetter;
-	}
-
-	public void setApprovrLetter(boolean approvrLetter) {
-		this.approvrLetter = approvrLetter;
-	}
-
-	public String getSuspensionType() {
-		return suspensionType;
-	}
-
-	public void setSuspensionType(String suspensionType) {
-		this.suspensionType = suspensionType;
-	}
-
-	public boolean isActivation() {
-		return activation;
-	}
-
-	public void setActivation(boolean activation) {
-		this.activation = activation;
-	}
-
-	public boolean isSuspension() {
-		return suspension;
-	}
-
-	public void setSuspension(boolean suspension) {
-		this.suspension = suspension;
 	}
 
 	public String getItemType() {
@@ -591,30 +452,6 @@ public class ContractDetailsManagedBean extends BaseManagedBean{
 		SelectedServiceItem = selectedServiceItem;
 	}
 
-	public boolean isAmendmentAction() {
-		return amendmentAction;
-	}
-
-	public void setAmendmentAction(boolean amendmentAction) {
-		this.amendmentAction = amendmentAction;
-	}
-
-	public CtDeduction[] getSelectedDeductionList() {
-		return selectedDeductionList;
-	}
-
-	public void setSelectedDeductionList(CtDeduction[] selectedDeductionList) {
-		this.selectedDeductionList = selectedDeductionList;
-	}
-
-	public CtAssocContract getCtDelAssocContract() {
-		return ctDelAssocContract;
-	}
-
-	public void setCtDelAssocContract(CtAssocContract ctDelAssocContract) {
-		this.ctDelAssocContract = ctDelAssocContract;
-	}
-
 	public String getSupplierAddress() {
 		return supplierAddress;
 	}
@@ -629,14 +466,6 @@ public class ContractDetailsManagedBean extends BaseManagedBean{
 
 	public void setCtPerformanceBond(CtPerformanceBond ctPerformanceBond) {
 		this.ctPerformanceBond = ctPerformanceBond;
-	}
-
-	public CtPerformanceBond[] getSelectedBondList() {
-		return selectedBondList;
-	}
-
-	public void setSelectedBondList(CtPerformanceBond[] selectedBondList) {
-		this.selectedBondList = selectedBondList;
 	}
 
 	public CtContractZone getSelectedCtZone() {

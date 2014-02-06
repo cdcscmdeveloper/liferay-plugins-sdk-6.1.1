@@ -53,6 +53,8 @@ public class AmendmentManagedBean extends BaseManagedBean {
 	private double secondValue =0.0;
 	private String userLoginId;
 	
+	private List<CtContractVer> amendHistoryList;
+	
 	public CtContractVer getContractVer() {
 		return contractVer;
 	}
@@ -218,6 +220,14 @@ public class AmendmentManagedBean extends BaseManagedBean {
 
 	public void setUserLoginId(String userLoginId) {
 		this.userLoginId = userLoginId;
+	}
+
+	public List<CtContractVer> getAmendHistoryList() {
+		return amendHistoryList;
+	}
+
+	public void setAmendHistoryList(List<CtContractVer> amendHistoryList) {
+		this.amendHistoryList = amendHistoryList;
 	}
 	
 	

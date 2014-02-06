@@ -4,7 +4,11 @@
 package my.ep.web.managedbean.association;
 
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Comparator;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
@@ -116,7 +120,20 @@ public class AssociationManagedBean extends BaseManagedBean{
 
 	public List<CtContract> getAssociateSearchList() {
 		if(associateSearchList == null)
-			associateSearchList = new ArrayList<CtContract>();
+			  associateSearchList = new ArrayList<CtContract>();
+		else{
+			Set set = new HashSet<CtContract>();
+			List newList = new ArrayList<CtContract>();
+			 java.util.Iterator<CtContract> iter = associateSearchList.iterator();
+			  while(iter.hasNext()){
+				  Object element = iter.next();
+				  if(set.add(element))
+					  newList.add(element);
+			      }
+		  
+		       associateSearchList.clear();
+		       associateSearchList.addAll(newList);
+		}
 		return associateSearchList;
 	}
 

@@ -147,6 +147,7 @@ public class AssociationBackingBean extends BaseBackingBean<AssociationManagedBe
  		}
  		selectedContractList = null;
  	}
+     
 
  	public void deleteAdvanceContract() {
  		for (int i = 0; i < deleteSelectedContractList.length; i++) {
@@ -172,7 +173,7 @@ public class AssociationBackingBean extends BaseBackingBean<AssociationManagedBe
  			ContractAssociationReqDTO reqDTO = new ContractAssociationReqDTO();
  			contractAssociationSO = (IContractAssociationSO) BusinessDelegate.getInstance().getServiceObject("ct",IContractAssociationSO.class);
  			reqDTO.setAssociation(this.getManagedBean().getCtAssociation());
- 			ContractAssociationResDTO resDTO = contractAssociationSO.createAssociation(reqDTO);
+ 			ContractAssociationResDTO resDTO = new ContractAssociationResDTO(); //contractAssociationSO.createAssociation(reqDTO);
  			if (resDTO.isSuccessful()) {
  				
  				  log.info("Record saved successfully");
