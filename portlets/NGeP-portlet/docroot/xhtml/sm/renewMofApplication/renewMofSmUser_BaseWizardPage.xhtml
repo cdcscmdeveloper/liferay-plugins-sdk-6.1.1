@@ -77,22 +77,59 @@
 										styleClass="#{backingBean.managedBean.tabActiveIndex eq 5 ? 'currentStep' : ''}" /></li>
 
 
-								<li><h:outputText
-										value="#{lbl['lbl.sm.wizard.supDocStepLbl']}"
-										rendered="#{backingBean.managedBean.smAppl.currentActiveTab lt 6}" />
-									<p:commandLink value="#{lbl['lbl.sm.wizard.supDocStepLbl']}"
-										actionListener="#{backingBean.setTabValue(backingBean.managedBean.tabActiveIndex,'6')}"
-										action="#{backingBean.updateSmAppl}" update=":form"
-										rendered="#{backingBean.managedBean.smAppl.currentActiveTab ge 6}"
-										styleClass="#{backingBean.managedBean.tabActiveIndex eq 6 ? 'currentStep' : ''}" /></li>
-								<li><h:outputText
-										value="#{lbl['lbl.sm.wizard.paymentLbl']}"
-										rendered="#{backingBean.managedBean.smAppl.currentActiveTab lt 7}" />
-									<p:commandLink value="#{lbl['lbl.sm.wizard.paymentLbl']}"
-										actionListener="#{backingBean.setTabValue(backingBean.managedBean.tabActiveIndex,'7')}"
-										action="#{backingBean.updateSmAppl}" update=":form"
-										rendered="#{backingBean.managedBean.smAppl.currentActiveTab ge 7}"
-										styleClass="#{backingBean.managedBean.tabActiveIndex eq 7 ? 'currentStep' : ''}" /></li>
+								<c:choose>
+									<c:when
+										test="#{backingBean.managedBean.smAppl.applCategoryType == 'S'}">
+										<li><h:outputText value="Facilities"
+												rendered="#{backingBean.managedBean.smAppl.currentActiveTab lt 6}" />
+											<p:commandLink value="Facilities"
+												actionListener="#{backingBean.setTabValue(backingBean.managedBean.tabActiveIndex,'6')}"
+												action="#{backingBean.updateSmAppl}" update=":form"
+												rendered="#{backingBean.managedBean.smAppl.currentActiveTab ge 6}"
+												styleClass="#{backingBean.managedBean.tabActiveIndex eq 6 ? 'currentStep' : ''}" /></li>
+										<li><h:outputText value="Equipment"
+												rendered="#{backingBean.managedBean.smAppl.currentActiveTab lt 7}" />
+											<p:commandLink value="Equipment"
+												actionListener="#{backingBean.setTabValue(backingBean.managedBean.tabActiveIndex,'7')}"
+												action="#{backingBean.updateSmAppl}" update=":form"
+												rendered="#{backingBean.managedBean.smAppl.currentActiveTab ge 7}"
+												styleClass="#{backingBean.managedBean.tabActiveIndex eq 7 ? 'currentStep' : ''}" /></li>
+										<li><h:outputText
+												value="#{lbl['lbl.sm.wizard.supDocStepLbl']}"
+												rendered="#{backingBean.managedBean.smAppl.currentActiveTab lt 8}" />
+											<p:commandLink value="#{lbl['lbl.sm.wizard.supDocStepLbl']}"
+												actionListener="#{backingBean.setTabValue(backingBean.managedBean.tabActiveIndex,'8')}"
+												action="#{backingBean.updateSmAppl}" update=":form"
+												rendered="#{backingBean.managedBean.smAppl.currentActiveTab ge 8}"
+												styleClass="#{backingBean.managedBean.tabActiveIndex eq 8 ? 'currentStep' : ''}" /></li>
+										<li><h:outputText
+												value="#{lbl['lbl.sm.wizard.paymentLbl']}"
+												rendered="#{backingBean.managedBean.smAppl.currentActiveTab lt 9}" />
+											<p:commandLink value="#{lbl['lbl.sm.wizard.paymentLbl']}"
+												actionListener="#{backingBean.setTabValue(backingBean.managedBean.tabActiveIndex,'9')}"
+												action="#{backingBean.updateSmAppl}" update=":form"
+												rendered="#{backingBean.managedBean.smAppl.currentActiveTab ge 9}"
+												styleClass="#{backingBean.managedBean.tabActiveIndex eq 9 ? 'currentStep' : ''}" /></li>
+									</c:when>
+									<c:otherwise>
+										<li><h:outputText
+												value="#{lbl['lbl.sm.wizard.supDocStepLbl']}"
+												rendered="#{backingBean.managedBean.smAppl.currentActiveTab lt 6}" />
+											<p:commandLink value="#{lbl['lbl.sm.wizard.supDocStepLbl']}"
+												actionListener="#{backingBean.setTabValue(backingBean.managedBean.tabActiveIndex,'6')}"
+												action="#{backingBean.updateSmAppl}" update=":form"
+												rendered="#{backingBean.managedBean.smAppl.currentActiveTab ge 6}"
+												styleClass="#{backingBean.managedBean.tabActiveIndex eq 6 ? 'currentStep' : ''}" /></li>
+										<li><h:outputText
+												value="#{lbl['lbl.sm.wizard.paymentLbl']}"
+												rendered="#{backingBean.managedBean.smAppl.currentActiveTab lt 7}" />
+											<p:commandLink value="#{lbl['lbl.sm.wizard.paymentLbl']}"
+												actionListener="#{backingBean.setTabValue(backingBean.managedBean.tabActiveIndex,'7')}"
+												action="#{backingBean.updateSmAppl}" update=":form"
+												rendered="#{backingBean.managedBean.smAppl.currentActiveTab ge 7}"
+												styleClass="#{backingBean.managedBean.tabActiveIndex eq 7 ? 'currentStep' : ''}" /></li>
+									</c:otherwise>
+								</c:choose>
 
 							</ul>
 							<ul id="tripMeter" class="menu-line">
@@ -108,11 +145,28 @@
 									class="#{backingBean.managedBean.tabActiveIndex eq 4 ? 'space red-dot' :  (backingBean.managedBean.smAppl.currentActiveTab ge 4 ? 'space green-dot':'space black-dot')}" />
 								<li
 									class="#{backingBean.managedBean.tabActiveIndex eq 5 ? 'space red-dot' :  (backingBean.managedBean.smAppl.currentActiveTab ge 5 ? 'space green-dot':'space black-dot')}" />
-								<li
-									class="#{backingBean.managedBean.tabActiveIndex eq 6 ? 'space red-dot' :  (backingBean.managedBean.smAppl.currentActiveTab ge 6 ? 'space green-dot':'space black-dot')}" />
-								<li
-									class="#{backingBean.managedBean.tabActiveIndex eq 7 ? 'red-dot' :  (backingBean.managedBean.smAppl.currentActiveTab ge 7 ? 'green-dot':'black-dot')}" />
+								<c:choose>
+									<c:when
+										test="#{backingBean.managedBean.smAppl.applCategoryType == 'S'}">
+										<li
+											class="#{backingBean.managedBean.tabActiveIndex eq 6 ? 'space red-dot' :  (backingBean.managedBean.smAppl.currentActiveTab ge 6 ? 'space green-dot':'space black-dot')}" />
+										<li
+											class="#{backingBean.managedBean.tabActiveIndex eq 7 ? 'space red-dot' :  (backingBean.managedBean.smAppl.currentActiveTab ge 7 ? 'space green-dot':'space black-dot')}" />
+										<li
+											class="#{backingBean.managedBean.tabActiveIndex eq 8 ? 'space red-dot' :  (backingBean.managedBean.smAppl.currentActiveTab ge 8 ? 'space green-dot':'space black-dot')}" />
+										<li
+											class="#{backingBean.managedBean.tabActiveIndex eq 9 ? 'red-dot' :  (backingBean.managedBean.smAppl.currentActiveTab ge 9 ? 'green-dot':'black-dot')}" />
 
+
+									</c:when>
+									<c:otherwise>
+										<li
+											class="#{backingBean.managedBean.tabActiveIndex eq 6 ? 'space red-dot' :  (backingBean.managedBean.smAppl.currentActiveTab ge 6 ? 'space green-dot':'space black-dot')}" />
+										<li
+											class="#{backingBean.managedBean.tabActiveIndex eq 7 ? 'red-dot' :  (backingBean.managedBean.smAppl.currentActiveTab ge 7 ? 'green-dot':'black-dot')}" />
+
+									</c:otherwise>
+								</c:choose>
 							</ul>
 						</div></td>
 					<td></td>
@@ -155,13 +209,34 @@
 			<c:if test="#{backingBean.managedBean.tabActiveIndex eq 5}">
 				<ui:include src="step6RenewAppln_RegisterCategoryCodesInfo.xhtml" />
 			</c:if>
+			<c:choose>
+				<c:when
+					test="#{backingBean.managedBean.smAppl.applCategoryType == 'S'}">
 
-			<c:if test="#{backingBean.managedBean.tabActiveIndex eq 6}">
-				<ui:include src="step7RenewAppln_SupportingDocumentsInfo.xhtml" />
-			</c:if>
-			<c:if test="#{backingBean.managedBean.tabActiveIndex eq 7}">
-				<ui:include src="step8RenewAppln_ProcessingFeePaymentInfo.xhtml" />
-			</c:if>
+					<c:if test="#{backingBean.managedBean.tabActiveIndex eq 6}">
+						<ui:include src="step6.1RenewAppln_FactoryInfo.xhtml" />
+					</c:if>
+					<c:if test="#{backingBean.managedBean.tabActiveIndex eq 7}">
+						<ui:include src="step6.2RenewAppln_EquipmentInfo.xhtml" />
+					</c:if>
+					<c:if test="#{backingBean.managedBean.tabActiveIndex eq 8}">
+						<ui:include src="step7RenewAppln_SupportingDocumentsInfo.xhtml" />
+					</c:if>
+					<c:if test="#{backingBean.managedBean.tabActiveIndex eq 9}">
+						<ui:include src="step8RenewAppln_ProcessingFeePaymentInfo.xhtml" />
+					</c:if>
+				</c:when>
+				<c:otherwise>
+					<c:if test="#{backingBean.managedBean.tabActiveIndex eq 6}">
+						<ui:include src="step7RenewAppln_SupportingDocumentsInfo.xhtml" />
+					</c:if>
+					<c:if test="#{backingBean.managedBean.tabActiveIndex eq 7}">
+						<ui:include src="step8RenewAppln_ProcessingFeePaymentInfo.xhtml" />
+					</c:if>
+				</c:otherwise>
+			</c:choose>
+
+
 		</ac:smPanel>
 	</ui:define>
 </ui:composition>

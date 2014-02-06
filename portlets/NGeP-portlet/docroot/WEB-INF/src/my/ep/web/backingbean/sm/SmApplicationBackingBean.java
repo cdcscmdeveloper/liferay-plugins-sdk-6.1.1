@@ -627,6 +627,8 @@ public class SmApplicationBackingBean extends
 			System.out
 					.println(" **** THIS IS AN UPDATE FOR Consultant Prjs******");
 		} else {
+			System.out
+					.println(" **** THIS IS AN ADD FOR Consultant Prjs******");
 			getManagedBean().getSmAppl().getSmCompanyExperiences()
 					.add(getManagedBean().getSelectedCompanyExperience());
 		}
