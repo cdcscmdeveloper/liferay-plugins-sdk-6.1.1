@@ -126,6 +126,13 @@
 									size="35" /></td>
 						</tr>
 						<tr>
+							<td><p:outputLabel value="* Project Done For" /></td>
+							<td><p:selectOneRadio>
+									<f:selectItem itemLabel="Fedral Govt" itemValue="F" />
+									<f:selectItem itemLabel="Non-Fedral Govt" itemValue="N" />
+								</p:selectOneRadio></td>
+						</tr>
+						<tr>
 							<td><p:outputLabel value="* Project Ref NO." /></td>
 							<td><p:inputText
 									value="#{backingBean.managedBean.selectedCompanyExperience.refNo}"
@@ -227,8 +234,8 @@
 
 		<div align="right">
 			<p:commandButton value="Save"
-				action="#{backingBean.addOrUpdateCompanyExperienceToSmAppl}"
-				oncomplete="consDialog.hide();" update=":form:tt:consDt" />
+				actionListener="#{backingBean.addOrUpdateCompanyExperienceToSmAppl}"
+				ajax="true" onclick="consDialog.hide();" update=":form:tt:consDt" />
 			<p:commandButton value="Cancel" onclick="consDialog.hide();" />
 		</div>
 

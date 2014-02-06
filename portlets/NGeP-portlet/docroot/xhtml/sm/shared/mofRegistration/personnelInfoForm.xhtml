@@ -14,18 +14,18 @@
 		<table style="width: 100%">
 			<tr>
 				<td colspan="4"><div align="center" style="width: 98%">
-						<p:panelGrid>
+						<p:panelGrid
+							rendered="#{backingBean.managedBean.smAppl.smSupplier.businessType eq '1' or backingBean.managedBean.smAppl.smSupplier
+							.businessType eq '3' }">
 							<f:facet name="header">
-								<!-- <p:row>
-									<p:column rowspan="2"></p:column>
-									<p:column rowspan="2">Management</p:column>
-									<p:column colspan="2">Personnel</p:column>
-								</p:row> -->
+
 								<p:row>
 									<p:column />
+									<p:column>Board Of Director</p:column>
+									<p:column>Header Management (CEO,CBO,CTO,CFO,etc)</p:column>
 									<p:column>Management</p:column>
-									<p:column>No. Of Actual Personnel</p:column>
-									<p:column colspan="2">No. Of Personnel Entered</p:column>
+									<p:column>Actual Staff Total</p:column>
+									<p:column>Entered Staff Total</p:column>
 								</p:row>
 							</f:facet>
 							<p:row>
@@ -39,12 +39,6 @@
 								<p:column>
 									<p:outputLabel />
 								</p:column>
-							</p:row>
-							<p:row>
-								<p:column>Non Bumiputera</p:column>
-								<p:column>
-									<p:outputLabel />
-								</p:column>
 								<p:column>
 									<p:outputLabel />
 								</p:column>
@@ -53,7 +47,81 @@
 								</p:column>
 							</p:row>
 							<p:row>
-								<p:column>Non - Malaysian</p:column>
+								<p:column>Non-Bumiputera</p:column>
+								<p:column>
+									<p:outputLabel />
+								</p:column>
+								<p:column>
+									<p:outputLabel />
+								</p:column>
+								<p:column>
+									<p:outputLabel />
+								</p:column>
+								<p:column>
+									<p:outputLabel />
+								</p:column>
+								<p:column>
+									<p:outputLabel />
+								</p:column>
+							</p:row>
+							<p:row>
+								<p:column>Non-Malaysian</p:column>
+								<p:column>
+									<p:outputLabel />
+								</p:column>
+								<p:column>
+									<p:outputLabel />
+								</p:column>
+								<p:column>
+									<p:outputLabel />
+								</p:column>
+								<p:column>
+									<p:outputLabel />
+								</p:column>
+								<p:column>
+									<p:outputLabel />
+								</p:column>
+							</p:row>
+						</p:panelGrid>
+						<p:panelGrid
+							rendered="#{backingBean.managedBean.smAppl.smSupplier.businessType eq '2' }">
+							<f:facet name="header">
+
+								<p:row>
+									<p:column />
+									<p:column>Management</p:column>
+									<p:column>Actual Staff Total</p:column>
+									<p:column>Entered Staff Total</p:column>
+								</p:row>
+							</f:facet>
+							<p:row>
+								<p:column>Bumiputera</p:column>
+								<p:column>
+									<p:outputLabel />
+								</p:column>
+								<p:column>
+									<p:outputLabel />
+								</p:column>
+								<p:column>
+									<p:outputLabel />
+								</p:column>
+
+							</p:row>
+							<p:row>
+								<p:column>Non-Bumiputera</p:column>
+								<p:column>
+									<p:outputLabel />
+								</p:column>
+								<p:column>
+									<p:outputLabel />
+								</p:column>
+								<p:column>
+									<p:outputLabel />
+								</p:column>
+
+							</p:row>
+							<p:row>
+								<p:column>Non-Malaysian</p:column>
 								<p:column>
 									<p:outputLabel />
 								</p:column>
@@ -145,7 +213,7 @@
 						<p:graphicImage library="ep/images/design" name="edit.png"
 							value="/resources/ep/images/design/edit.png" />
 					</p:commandLink>
-					
+
 				</p:column>
 
 			</p:dataTable>
@@ -197,5 +265,5 @@
 			<p:commandButton value="Cancel" onclick="personnelDialog.hide();" />
 		</div>
 	</p:dialog>
-	
+
 </ui:composition>

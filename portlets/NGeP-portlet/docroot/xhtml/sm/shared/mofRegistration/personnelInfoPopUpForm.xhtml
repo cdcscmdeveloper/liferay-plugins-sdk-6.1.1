@@ -103,33 +103,44 @@
 					</p:selectOneRadio></td>
 
 			</tr>
+		</table>
+	</p:panel>
+	<p:panel header="Personnel Priviliges" toggleable="true"
+		id="perPrivPanel">
+		<table>
 			<tr>
-				<td style="float: right; padding-right: 10px;"><p:selectBooleanCheckbox
-						value="#{backingBean.managedBean.selectedPersonnel.authorized}">
-						<p:ajax event="change" update="perCertBox,perSignBox" />
-					</p:selectBooleanCheckbox></td>
-				<td><h:outputText value="Authorized User" /></td>
-
-				<td style="float: right; padding-right: 10px;"><p:selectBooleanCheckbox
-						id="perCertBox"
-						value="#{backingBean.managedBean.selectedPersonnel.softcert}"
-						disabled="#{!(backingBean.managedBean.selectedPersonnel.authorized)}"
-						rendered="#{backingBean.managedBean.smAppl.applType eq 'R' or backingBean.managedBean.smAppl.applType eq 'N'}">
-						<p:ajax event="change" update="perSignBox" />
-					</p:selectBooleanCheckbox></td>
-				<td><h:outputText value="Issue Soft Cert"
-						rendered="#{backingBean.managedBean.smAppl.applType eq 'R' or backingBean.managedBean.smAppl.applType eq 'N'}" />
-				</td>
+				<td><p:outputLabel value="Is this an authorized personnel ? " /></td>
+				<td><p:selectOneRadio
+						value="#{backingBean.managedBean.selectedPersonnel.authorizedFlg}">
+						<f:selectItem itemLabel="Yes" itemValue="1" />
+						<f:selectItem itemLabel="No" itemValue="0" />
+						<p:ajax event="change" update="perPrivPanel"
+							listener="#{backingBean.assignPersonnelPrivilege}" />
+					</p:selectOneRadio></td>
 			</tr>
 			<tr>
-				<td style="float: right; padding-right: 10px;"><p:selectBooleanCheckbox
-						id="perSignBox"
-						disabled="#{!(backingBean.managedBean.selectedPersonnel.authorized and backingBean.managedBean.selectedPersonnel.softcert)}"
-						rendered="#{backingBean.managedBean.smAppl.applType eq 'R' or backingBean.managedBean.smAppl.applType eq 'N'}">
-					</p:selectBooleanCheckbox></td>
-				<td colspan="3"><h:outputText value="Contract Singer"
-						rendered="#{backingBean.managedBean.smAppl.applType eq 'R' or backingBean.managedBean.smAppl.applType eq 'N'}" />
-				</td>
+				<td><p:outputLabel value="Issue soft cert to this personnel ? "
+						rendered="#{backingBean.managedBean.selectedPersonnel.authorizedFlg eq '1' and (backingBean.managedBean.smAppl.applType eq 'R' or backingBean.managedBean.smAppl.applType eq 'N')}" /></td>
+				<td><p:selectOneRadio
+						value="#{backingBean.managedBean.selectedPersonnel.softcertFlg}"
+						rendered="#{backingBean.managedBean.selectedPersonnel.authorizedFlg eq '1' and (backingBean.managedBean.smAppl.applType eq 'R' or backingBean.managedBean.smAppl.applType eq 'N')}">
+						<f:selectItem itemLabel="Yes" itemValue="1" />
+						<f:selectItem itemLabel="No" itemValue="0" />
+						<p:ajax event="change" update="perPrivPanel"
+							listener="#{backingBean.assignPersonnelPrivilege}" />
+					</p:selectOneRadio></td>
+			</tr>
+			<tr>
+				<td><p:outputLabel
+						value="Is this personnel a contract signer ? "
+						rendered="#{backingBean.managedBean.selectedPersonnel.softcertFlg eq '1' and (backingBean.managedBean.smAppl.applType eq 'R' or backingBean.managedBean.smAppl.applType eq 'N')}" /></td>
+				<td><p:selectOneRadio
+						value="#{backingBean.managedBean.selectedPersonnel.contractSignerFlg}"
+						rendered="#{backingBean.managedBean.selectedPersonnel.softcertFlg eq '1' and (backingBean.managedBean.smAppl.applType eq 'R' or backingBean.managedBean.smAppl.applType eq 'N')}">
+						<f:selectItem itemLabel="Yes" itemValue="1" />
+						<f:selectItem itemLabel="No" itemValue="0" />
+						<p:ajax event="change" update="perPrivPanel" />
+					</p:selectOneRadio></td>
 			</tr>
 		</table>
 

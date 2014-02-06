@@ -39,6 +39,39 @@
 					<f:selectItem itemLabel="Malaysia" itemValue="MY" />
 				</p:selectOneMenu></td>
 		</tr>
+
+		<tr>
+			<td><p:outputLabel value="#{lbl['lbl.sm.state']}" /></td>
+			<td><p:selectOneMenu style="width: 207px;margin-bottom: 5px;"
+					value="#{backingBean.managedBean.selectedBranch.smAddress.pmState.stateCode}">
+					<f:selectItem itemLabel="-- Select One --" itemValue="N/A" />
+					<f:selectItem itemLabel="SELANGOR" itemValue="SEL" />
+					<f:selectItem itemLabel="WILAYAH PERSEKUTUAN (K.L)" itemValue="KL" />
+					<f:selectItem itemLabel="PULAU PINANG" itemValue="PG" />
+				</p:selectOneMenu></td>
+		</tr>
+
+		<tr>
+			<td><p:outputLabel value="#{lbl['lbl.sm.district']}" /></td>
+			<td><p:selectOneMenu style="width: 207px;margin-bottom: 5px;"
+					value="#{backingBean.managedBean.selectedBranch.smAddress.pmDistrict.districtCode}">
+					<f:selectItem itemLabel="-- Select One --" itemValue="" />
+					<f:selectItem itemLabel="NABAWAN" itemValue="SEL" />
+					<f:selectItem itemLabel="PADANG TERAP" itemValue="KL" />
+					<f:selectItem itemLabel="PAKAN" itemValue="PG" />
+				</p:selectOneMenu></td>
+		</tr>
+		<tr>
+			<td><p:outputLabel value="#{lbl['lbl.sm.towncity']}" /></td>
+			<td><p:selectOneMenu style="width: 207px;margin-bottom: 5px;"
+					value="#{backingBean.managedBean.selectedBranch.smAddress.pmCity.cityCode}">
+					<f:selectItem itemLabel="-- Select One --" itemValue="N/A" />
+					<f:selectItem itemLabel="CYBERJAYA" itemValue="SEL" />
+					<f:selectItem itemLabel="SEPANG" itemValue="KL" />
+					<f:selectItem itemLabel="NILAI" itemValue="PG" />
+					<f:selectItem itemLabel="KUALA KUBU BARU" itemValue="PG" />
+				</p:selectOneMenu></td>
+		</tr>
 		<tr>
 			<td><p:outputLabel value="#{lbl['lbl.sm.postcode']}" /></td>
 			<td><p:inputText
@@ -46,35 +79,14 @@
 					size="35" /></td>
 		</tr>
 		<tr>
-			<td><p:outputLabel value="#{lbl['lbl.sm.state']}" /></td>
-			<td><p:inputText
-					value="#{backingBean.managedBean.selectedBranch.smAddress.pmState.stateCode}"
-					size="35" readonly="true" disabled="true" /></td>
-		</tr>
-
-		<tr>
-			<td><p:outputLabel value="#{lbl['lbl.sm.district']}" /></td>
-			<td><p:inputText
-					value="#{backingBean.managedBean.selectedBranch.smAddress.pmDistrict.districtCode}"
-					size="35" /></td>
-		</tr>
-		<tr>
-			<td><p:outputLabel value="#{lbl['lbl.sm.towncity']}" /></td>
-			<td><p:inputText
-					value="#{backingBean.managedBean.selectedBranch.smAddress.pmCity.cityCode}"
-					size="35" /></td>
-		</tr>
-		<tr>
 			<td><p:outputLabel value="Phone NO." /></td>
 			<td><p:inputText
-					value="#{backingBean.managedBean.selectedBranch.phoneNo}"
-					size="35" /></td>
+					value="#{backingBean.managedBean.selectedBranch.phoneNo}" size="35" /></td>
 		</tr>
 		<tr>
 			<td><p:outputLabel value="Fax NO." /></td>
 			<td><p:inputText
-					value="#{backingBean.managedBean.selectedBranch.faxNo}"
-					size="35" /></td>
+					value="#{backingBean.managedBean.selectedBranch.faxNo}" size="35" /></td>
 		</tr>
 
 	</table>

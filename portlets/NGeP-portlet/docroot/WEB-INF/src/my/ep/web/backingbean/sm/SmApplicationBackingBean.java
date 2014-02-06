@@ -150,6 +150,29 @@ public class SmApplicationBackingBean extends
 
 			smAppl.setSmStaffTotals(getStaffList(smAppl.getSupplierType()));
 			getManagedBean().setSmAppl(smAppl);
+			// TODO remove this hard coded data and make dynamic later
+			System.out.println(" ---- Business  Type ----"
+					+ getManagedBean().getSmAppl().getSmSupplier()
+							.getSupplierId()
+					+ " -- For this id ---"
+					+ getManagedBean().getSmAppl().getSmSupplier()
+							.getBusinessType());
+			// 1-ROB,2-ROC,3-ROS
+			if (applicationType.equalsIgnoreCase("N")) {
+				getManagedBean().getSmAppl().getSmSupplier()
+						.setBusinessType("1");
+			}
+			if (applicationType.equalsIgnoreCase("A")) {
+				getManagedBean().getSmAppl().getSmSupplier()
+						.setBusinessType("2");
+			}
+			if (applicationType.equalsIgnoreCase("R")) {
+				getManagedBean().getSmAppl().getSmSupplier()
+						.setBusinessType("3");
+			}
+			System.out.println(" ---- Business  Type After hard code ----"
+					+ getManagedBean().getSmAppl().getSmSupplier()
+							.getBusinessType());
 			getManagedBean().setTabActiveIndex(0);
 			getManagedBean().setOfficeFacility(new SmFacility());
 
@@ -444,6 +467,36 @@ public class SmApplicationBackingBean extends
 				+ getManagedBean().getOfficeFacility().getOwnershipType());
 		System.out.println(" **** Values In loop *********"
 				+ getManagedBean().getOfficeFacility().getRentalRate());
+	}
+
+	public void assignPersonnelPrivilege(AjaxBehaviorEvent e) {
+		System.out.println("**** Enter peronnel privilege ******");
+		if (getManagedBean().getSelectedPersonnel().getAuthorizedFlg() == null
+				|| getManagedBean().getSelectedPersonnel().getAuthorizedFlg() == 0) {
+			getManagedBean().getSelectedPersonnel().setSoftcertFlg(null);
+			getManagedBean().getSelectedPersonnel().setContractSignerFlg(null);
+		}
+
+		if (getManagedBean().getSelectedPersonnel().getSoftcertFlg() == null
+				|| getManagedBean().getSelectedPersonnel().getSoftcertFlg() == 0) {
+			getManagedBean().getSelectedPersonnel().setContractSignerFlg(null);
+		}
+	}
+
+	public void assignShareHolderPrivilege(AjaxBehaviorEvent e) {
+		System.out.println("**** Enter Share Holder privilege ******");
+		if (getManagedBean().getSelectedShareHolder().getAuthorizedFlg() == null
+				|| getManagedBean().getSelectedShareHolder().getAuthorizedFlg() == 0) {
+			getManagedBean().getSelectedShareHolder().setSoftcertFlg(null);
+			getManagedBean().getSelectedShareHolder()
+					.setContractSignerFlg(null);
+		}
+
+		if (getManagedBean().getSelectedShareHolder().getSoftcertFlg() == null
+				|| getManagedBean().getSelectedShareHolder().getSoftcertFlg() == 0) {
+			getManagedBean().getSelectedShareHolder()
+					.setContractSignerFlg(null);
+		}
 	}
 
 	public void applicationCategorySelected(AjaxBehaviorEvent e) {
