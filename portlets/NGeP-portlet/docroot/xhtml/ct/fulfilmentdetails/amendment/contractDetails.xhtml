@@ -17,15 +17,12 @@
 				<p:outputLabel value="Concession" />
 			</h:panelGrid>
 			<p:outputLabel value="#{lbl['lbl.ct.effectiveDate']}" />
-			<h:inputText style="width:130px;" disabled="true"
-				value="#{amendmentBackingBean.managedBean.contractVer.ctContractValue.effDate}">
-				<f:convertDateTime pattern="dd/MM/yyyy"></f:convertDateTime>
-				</h:inputText>
-			<h:outputLabel value="#{lbl['lbl.ct.edate']}" />
-			<h:inputText style="width:130px;" disabled="true"
-				value="#{amendmentBackingBean.managedBean.contractVer.ctContractValue.expDate}">
-				<f:convertDateTime pattern="dd/MM/yyyy"></f:convertDateTime>
-				</h:inputText>
+			<p:inputText style="width:130px;" disabled="true"
+				value="#{amendmentBackingBean.convertTime(amendmentBackingBean.managedBean.contractVer.ctContractValue.effDate)}"/>
+			<p:outputLabel value="#{lbl['lbl.ct.edate']}" />
+			<p:inputText style="width:130px;" disabled="true"
+				value="#{amendmentBackingBean.convertTime(amendmentBackingBean.managedBean.contractVer.ctContractValue.expDate)}">
+				</p:inputText>
 			
 			<h:panelGrid columns="3">
 				<p:selectBooleanCheckbox value="true" disabled="true" />
@@ -49,9 +46,10 @@
 			</h:panelGrid>	
 			<p:outputLabel value="#{lbl['lbl.ct.amend.txt.rno']}" />
 			<p:inputText disabled="true" style="width:170px;" value="#{amendmentBackingBean.managedBean.contractVer.docNo}" />
-			 <h:outputLabel value="#{lbl['lbl.ct.dperiod']}" />
-			<h:panelGrid columns="2">
+			 <p:outputLabel value="#{lbl['lbl.ct.dperiod']}" />
+			<h:panelGrid columns="3">
 				<p:inputText size="8" value="#{amendmentBackingBean.managedBean.contractVer.ctContractValue.deliveryTerm}" disabled="true" />
+				<p:spacer width="2"/>
 				<p:outputLabel value="Days" />
 			</h:panelGrid>	
 			<h:panelGrid columns="3">
@@ -67,9 +65,9 @@
 			</div>
 			</h:panelGroup>
 			 <h:panelGrid>
-			<h:inputTextarea id="contractName"
+			<p:inputTextarea id="contractName"
 				value="#{amendmentBackingBean.managedBean.contractVer.ctContract.contractName}"
-				required="false" rows="3" cols="35" disabled="true"
+				required="false" rows="3" cols="31" disabled="true"
 				autoResize="false" />	
 			</h:panelGrid>		
 			<f:verbatim /><f:verbatim /> <f:verbatim /><f:verbatim /><f:verbatim />

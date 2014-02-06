@@ -12,7 +12,7 @@
 	 <p:messages id="messages" showDetail="true" autoUpdate="true" closable="true" severity="error, info" />
 	  <div class="ppRightBtn">
 				<ui:repeat var="outcome"	value="#{supplierBackingBean.managedBean.action}">
-					<p:commandButton value="#{outcome}" process="@this" styleClass="ui-button" action="#{supplierBackingBean.saveFactoringRequest(outcome)}" />
+					<p:commandButton value="#{outcome}" process="@form" styleClass="ui-button" action="#{supplierBackingBean.saveFactoringRequest(outcome)}" />
 				</ui:repeat>		
     </div>
 	</p:panel>
@@ -20,7 +20,7 @@
 	  <table style="width: 100%">
 			<tr>
 			    <td style="width:200px;">  <p:outputLabel value="LOA No." /></td>
-			    <td> <p:selectOneMenu style="width:180px;" value="#{supplierBackingBean.managedBean.factoring.loa.loaId}"
+			    <td>  <p:selectOneMenu style="width:180px;" value="#{supplierBackingBean.managedBean.factoring.loa.loaId}"
 			         rendered="#{supplierBackingBean.managedBean.chkMenuOrTxtBox == null}" >
 				     <f:selectItem itemLabel="-Please Select--" itemValue="" />
 				     <f:selectItem itemLabel="LOA-123" itemValue="1" />

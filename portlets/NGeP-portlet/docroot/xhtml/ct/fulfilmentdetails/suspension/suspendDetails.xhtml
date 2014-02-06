@@ -18,15 +18,11 @@
 				<p:outputLabel value="Concession" />
 			</h:panelGrid>
 			<p:outputLabel value="#{lbl['lbl.ct.effectiveDate']}" />
-			<h:inputText style="width:130px;" disabled="true"
-				value="#{suspensionBackingBean.managedBean.contractVer.ctContractValue.effDate}" >
-				<f:convertDateTime pattern="dd/MM/yyyy"></f:convertDateTime>
-				</h:inputText>
+			<p:inputText style="width:130px;" disabled="true"
+				value="#{suspensionBackingBean.convertTime(suspensionBackingBean.managedBean.contractVer.ctContractValue.effDate)}" />
 			<h:outputLabel value="#{lbl['lbl.ct.edate']}" />
-			<h:inputText style="width:130px;" disabled="true"
-				value="#{suspensionBackingBean.managedBean.contractVer.ctContractValue.expDate}" >
-				<f:convertDateTime pattern="dd/MM/yyyy"></f:convertDateTime>
-				</h:inputText>
+			<p:inputText style="width:130px;" disabled="true"
+				value="#{suspensionBackingBean.convertTime(suspensionBackingBean.managedBean.contractVer.ctContractValue.expDate)}" />
 			
 			<h:panelGrid columns="3">
 				<p:selectBooleanCheckbox value="false" disabled="true" />
@@ -68,7 +64,7 @@
 			</div>
 			</h:panelGroup>
 			 <h:panelGrid>
-			<h:inputTextarea id="contractName"
+			<p:inputTextarea id="contractName"
 				value="#{suspensionBackingBean.managedBean.contractVer.ctContract.contractName}"
 				required="false" rows="3" cols="35" disabled="true"
 				autoResize="false" />	

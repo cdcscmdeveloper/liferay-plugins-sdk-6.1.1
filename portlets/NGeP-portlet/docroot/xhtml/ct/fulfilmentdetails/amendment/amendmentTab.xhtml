@@ -14,11 +14,57 @@
 	 <p:panel>
 	   <f:event listener="#{amendmentBackingBean.preRenderView}" type="preRenderView" />
      <p:messages id="messages" showDetail="true" autoUpdate="true" closable="true" severity="error, info" />
-	 <div class="ppRightBtn"> 
-	     <ui:repeat var="outcome" value="#{amendmentBackingBean.managedBean.action}">
-			<p:commandButton value="#{outcome}" process="@form"  action="#{amendmentBackingBean.saveContractAmendment(outcome)}" />
-		 </ui:repeat>		
-    </div>
+     <table style="width: 100%;">
+	    		<tr>
+	    			<td><p:commandButton value="Back" immediate="true" icon="ui-icon-back" oncomplete="window.history.back();" /></td>
+	    			<td class="ppRightBtn">
+			  			  <ui:repeat var="outcome" value="#{amendmentBackingBean.managedBean.action}">
+			                <p:commandButton value="#{outcome}" process="@form"  action="#{amendmentBackingBean.saveContractAmendment(outcome)}" />
+		                  </ui:repeat>	    			
+	    			</td>
+	    		</tr>
+	  </table>
+	 <table style="width: 99%; margin-left: 25px;">
+				<tr style="margin-button: 10px;">
+				<td>
+						<h6 style="color: blue;">
+							<p:outputLabel value="Doc Type" />
+						</h6>
+					</td>
+					<td>
+						<h6>
+							<p:inputText size="25"
+								value="Fulfilment Amendment (FA)"
+								disabled="true" />
+						</h6>
+					</td>		
+					<td>
+						<h6 style="color: blue;">
+							<p:outputLabel value="Contract No" />
+						</h6>
+					</td>
+					<td>
+						<h6>
+							<p:inputText size="20"
+								value="#{amendmentBackingBean.managedBean.contractVer.ctContractValue.contractPhysicalNo}"
+								disabled="true" />
+						</h6>
+					</td>
+								
+					<td>
+						<h6 style="color: blue;">
+							<p:outputLabel value="Status" />
+						</h6>
+					</td>
+					<td>
+						<h6>
+							<p:inputText size="20"
+								value="#{amendmentBackingBean.getStatusDescById(terminationBackingBean.managedBean.contractVer.status.statusId)}"
+								disabled="true" />
+						</h6>
+					</td>
+				</tr>
+			</table>	 
 	</p:panel>
 	<p:tabView id="tabview" value="Termination" dynamic="true" orientation="left" >
 	   <p:tab title="#{lbl['lbl.ct.menu.fd']}" >

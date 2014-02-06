@@ -3,7 +3,8 @@
 	xmlns:h="http://java.sun.com/jsf/html"
 	xmlns:ui="http://java.sun.com/jsf/facelets"
 	xmlns:p="http://primefaces.org/ui"
-	xmlns:c="http://java.sun.com/jsp/jstl/core">
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:ac="http://ac.my/jsf/composite/cc">
 	
 	<p:panel id="amend" header="#{lbl['lbl.ct.amend.panel.header']}" toggleable="true" toggleSpeed="500">	
 	<h:panelGrid columns="2" style="width:100%" columnClasses="columnWidth15">
@@ -70,7 +71,7 @@
 					<p:outputLabel for="txtdesc" value="#{lbl['lbl.ct.amend.txt.desc']}"  /></div>
 			  </h:panelGroup>
 		   <h:panelGrid>
-				<h:inputTextarea id="txtdesc" rows="5" cols="100"
+				<p:inputTextarea id="txtdesc" rows="5" cols="85"
 					value="#{amendmentBackingBean.managedBean.contractVer.ctAmendment.description}"  />
 			  </h:panelGrid>
 			  
@@ -116,16 +117,19 @@
 		 
 	   </h:panelGrid>
 	   <h:panelGrid columns="2" style="width:100%"
-			columnClasses="columnWidth15">
+			columnClasses="columnWidth15" rendered="#{amendmentBackingBean.managedBean.amendHistoryList != null and 
+			!empty amendmentBackingBean.managedBean.amendHistoryList}">
 			<h:panelGroup>
-				<div style="height: 35px; vertical-align: top">
+				<div style="height: 35px; vertical-align: top;">
 					<p:outputLabel for="contractHistory"
 						value="#{lbl['lbl.ct.amend.txt.history']}" style="text-align:right;" />
 				</div>
 			</h:panelGroup>
 			<h:panelGrid id="contractHistory" columns="1">
-				<p:dataTable id="dataTableHistory" var="data" value=" "
-					rowIndexVar="index">
+				<p:dataTable id="dataTableHistory" var="data" value="#{amendmentBackingBean.managedBean.amendHistoryList}"
+					lazy="false" widgetVar="dataTableObj" dynamic="true" paginator="true" paginatorPosition="bottom" 
+	                paginatorAlwaysVisible="false" emptyMessage="No Records!">
+	                <ac:paginator for="dataTableHistory" />
 					<p:columnGroup type="header">
 						<p:row>
 							<p:column headerText="#{lbl['lbl.ct.amend.tbl.rno']}" />
@@ -134,18 +138,10 @@
 							<p:column headerText="#{lbl['lbl.ct.amend.tbl.edate']}" />
 						</p:row>
 					</p:columnGroup>
-					<p:column>
-						<h:outputText />
-					</p:column>
-					<p:column>
-						<h:outputText />
-					</p:column>
-					<p:column>
-						<h:outputText />
-					</p:column>
-					<p:column>
-						<h:outputText />
-					</p:column>
+						<p:column> <p:outputLabel value="#{data.ctAmendment.fileRefNo}"/></p:column>
+						<p:column> <p:outputLabel value="#{data.ctContractValue.extendPeriod}"/></p:column>
+						<p:column> <p:outputLabel value="#{amendmentBackingBean.convertTime(data.ctContractValue.effDate)}"/></p:column>
+						<p:column> <p:outputLabel value="#{amendmentBackingBean.convertTime(data.ctContractValue.expDate)}"/></p:column>
 				</p:dataTable>
 			</h:panelGrid>
 		</h:panelGrid>

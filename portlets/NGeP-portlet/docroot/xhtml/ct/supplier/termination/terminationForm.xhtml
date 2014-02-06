@@ -12,7 +12,7 @@
 	 <p:messages id="messages" showDetail="true" autoUpdate="true" closable="true" severity="error, info" />
 	   <div class="ppRightBtn">
 				<ui:repeat var="outcome"	value="#{supplierBackingBean.managedBean.action}">
-					<p:commandButton value="#{outcome}" process="@this" styleClass="ui-button" 
+					<p:commandButton value="#{outcome}" process="@form" styleClass="ui-button" 
 					   action="#{supplierBackingBean.saveTerminationRequest(outcome)}" />
 				</ui:repeat>		
     </div>
@@ -30,15 +30,18 @@
 			         </p:selectOneMenu></td>
 		         <td style="width:200px;">	<p:outputLabel value="#{lbl['lbl.ct.physicalNo']}" /></td>
 		         <td>	<p:inputText disabled="true" style="width:170px;"
-			               value="#{supplierBackingBean.managedBean.ctContract.latestContractVer.ctContractValue.contractPhysicalNo}"/>	</td>
+			               value="#{supplierBackingBean.managedBean.contractVer.ctContractValue.contractPhysicalNo}"/>	</td>
 		   </tr>
 		   <tr>		
 			     <td><p:outputLabel value="#{lbl['lbl.ct.effectiveDate']}" /></td>
 			     <td> <p:inputText disabled="true" style="width:110px;" 
-			          value="#{supplierBackingBean.managedBean.ctContract.latestContractVer.ctContractValue.effDate}"/> </td>
+			            value="#{supplierBackingBean.convertTime(supplierBackingBean.managedBean.contractVer.ctContractValue.effDate)}"/> 
+			          
+			          </td>
 			     <td><h:outputLabel value="#{lbl['lbl.ct.edate']}" /></td>
 			     <td><p:inputText disabled="true" style="width:110px;" 
-			          value="#{supplierBackingBean.managedBean.ctContract.latestContractVer.ctContractValue.expDate}"/>	</td>
+			          value="#{supplierBackingBean.convertTime(supplierBackingBean.managedBean.contractVer.ctContractValue.expDate)}" >
+			         </p:inputText>	</td>
 		   </tr>
 		   <tr>
 			    <td>		
@@ -49,8 +52,8 @@
 		    
 			   </td>
 		   	   <td>
-			           <h:inputTextarea id="contractName" value="#{supplierBackingBean.managedBean.ctContract.contractName}" 
-			           rows="3" cols="34" disabled="true" autoResize="false" />	
+			           <p:inputTextarea id="contractName" value="#{supplierBackingBean.managedBean.contractVer.ctContract.contractName}" 
+			           rows="3" cols="31" disabled="true" autoResize="false" />	
 			      
 			 </td>
 			 <td></td>
@@ -59,49 +62,35 @@
 		  </table>
 		</p:outputPanel>
 		 </p:panel>
-         <p:panel id="sTermination" header="Termination Request Details" toggleable="true"  toggleSpeed="500">
-            <table style="width: 100%">
-            <tr>
-                <td style="width:200px;"> 
-                          <h:panelGroup>
-				          <div style="height:40px; vertical-align:top;">
-                             <p:outputLabel for="rftermination" value="Termination Reason" />
-			              </div>
-			 </h:panelGroup></td>
-			  <td>
-			  <h:panelGrid>
-				  <h:inputTextarea id="rftermination"  rows="3" cols="34" autoResize="false" />
-			   </h:panelGrid>
-			</td>
-			<td></td>
-			<td></td>
-			</tr>
-	      </table>
-		</p:panel>
           <p:panel id="sbd" header="#{lbl['lbl.ct.su.panel.name']}"  toggleable="true"  toggleSpeed="500">
            <table style="width: 100%">
                   <tr>
                       <td style="width:200px;">   <p:outputLabel value="EP No." />  </td>
-                      <td>   <h:panelGrid columns="4">
-                             <p:inputText value="SU-234-56789" disabled="true" size="12"/>
-                             <p:spacer width="3"/>
-                             <p:outputLabel value="MOF No." />  
-                             <p:inputText value="SU-234-56789" disabled="true" size="12"/></h:panelGrid> </td>
-                     <td style="width:130px;"> <p:outputLabel  value="#{lbl['lbl.ct.su.email']}"/>  </td>
-                     <td>  <p:inputText value="abc@yahoo.com"  disabled="true"   style="width:170px;" /></td>
+                      <td> <h:panelGrid columns="4">
+                                <p:inputText value="#{supplierBackingBean.managedBean.contractVer.ctContract.smSupplier.epNo}" 
+                                    disabled="true" size="12"/>
+                                <p:spacer width="3"/>
+                                <p:outputLabel value="MOF No." />  
+                                <p:inputText value="123"
+                                   disabled="true" size="12"/>
+                             </h:panelGrid> 
+                       </td>
+                       <td style="width:130px;">  <p:outputLabel  value="Contact Person"/>  </td>
+                       <td>  <p:inputText   disabled="true"   style="width:170px;" /></td>
                 </tr> 
                 <tr>       
                      <td>  <p:outputLabel value="Supplier Name" />  </td>
-                     <td>  <p:inputText value="KHAI SDN BHD" disabled="true" style="width:215px;"/> </td>
+                     <td>  <p:inputText value="#{supplierBackingBean.managedBean.contractVer.ctContract.smSupplier.companyName}"
+                               disabled="true" style="width:215px;"/> </td>
                      <td> <p:outputLabel  value="#{lbl['lbl.ct.su.tel.office']}" />  </td>       
-                     <td> <p:inputText value="60172487465" disabled="true"  style="width:110px;" /></td>
+                     <td> <p:inputText value="123" disabled="true"  style="width:110px;" /></td>
                     
                 </tr>  
                  <tr>  
                       <td>  <p:outputLabel   value="#{lbl['lbl.ct.su.tel.hp']}"/> </td>
                       <td>  <p:inputText value="60172487465" disabled="true" style="width:110px;" /></td>       
                       <td> <p:outputLabel  value="#{lbl['lbl.ct.su.fax']}"/></td>       
-                      <td> <p:inputText value="60172487465"  disabled="true" style="width:110px;" /> </td>   
+                      <td> <p:inputText value="123"  disabled="true" style="width:110px;" /> </td>   
                  </tr>
                       <tr>
                          <td>       
@@ -112,10 +101,10 @@
 			                 </h:panelGroup></td>
 			              <td>
 			                   <h:panelGrid>
-				                  <h:inputTextarea id="supplierAddress"  disabled="true" value="25, Belatuk Block, CyberView Garden, CyberJaya, Selangor Malaysia"  rows="3" cols="34"   />
+				                  <p:inputTextarea id="supplierAddress"  disabled="true" value="25, Belatuk Block, CyberView Garden, CyberJaya, Selangor Malaysia"  rows="3" cols="34"   />
 			                   </h:panelGrid></td>
-			                <td></td>
-			                <td></td>
+			                 <td style="width:130px;" valign="top">  <p:outputLabel  value="#{lbl['lbl.ct.su.email']}"/>  </td>
+                             <td valign="top">  <p:inputText value="1234"  disabled="true"   style="width:170px;" /></td>
 			           </tr>
 			       </table>
 			   </p:panel>

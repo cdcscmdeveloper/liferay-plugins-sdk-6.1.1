@@ -13,11 +13,57 @@
       <f:event listener="#{suspensionBackingBean.preRenderView}" type="preRenderView" />
 	<p:panel>
 	<p:messages id="messages" showDetail="true" autoUpdate="true" closable="true" severity="error, info" />
-	 <div class="ppRightBtn"> 
-	  	<ui:repeat var="outcome" value="#{suspensionBackingBean.managedBean.action}">
-		   <p:commandButton value="#{outcome}" process="@form" styleClass="ui-button" action="#{suspensionBackingBean.saveContractSuspension(outcome)}" />
-		</ui:repeat>		
-    </div>
+	 <table style="width: 100%;">
+	    		<tr>
+	    			<td><p:commandButton value="Back" immediate="true" icon="ui-icon-back" oncomplete="window.history.back();" /></td>
+	    			<td class="ppRightBtn">
+			  			 <ui:repeat var="outcome" value="#{suspensionBackingBean.managedBean.action}">
+		                   <p:commandButton value="#{outcome}" process="@form" styleClass="ui-button" action="#{suspensionBackingBean.saveContractSuspension(outcome)}" />
+		                </ui:repeat>	   			
+	    			</td>
+	    		</tr>
+	  </table>
+	  <table style="width: 99%; margin-left: 25px;">
+				<tr style="margin-button: 10px;">
+				<td>
+						<h6 style="color: blue;">
+							<p:outputLabel value="Doc Type" />
+						</h6>
+					</td>
+					<td>
+						<h6>
+							<p:inputText size="25"
+								value="Fulfilment Suspension (FS)"
+								disabled="true" />
+						</h6>
+					</td>		
+					<td>
+						<h6 style="color: blue;">
+							<p:outputLabel value="Contract No" />
+						</h6>
+					</td>
+					<td>
+						<h6>
+							<p:inputText size="20"
+								value="#{suspensionBackingBean.managedBean.contractVer.ctContractValue.contractPhysicalNo}"
+								disabled="true" />
+						</h6>
+					</td>
+								
+					<td>
+						<h6 style="color: blue;">
+							<p:outputLabel value="Status" />
+						</h6>
+					</td>
+					<td>
+						<h6>
+							<p:inputText size="20"
+								value="#{suspensionBackingBean.getStatusDescById(suspensionBackingBean.managedBean.contractVer.status.statusId)}"
+								disabled="true" />
+						</h6>
+					</td>
+				</tr>
+			</table>	  
 	</p:panel>
 	 <p:tabView id="tabview" orientation="left" dynamic="true">
      <p:tab title="#{lbl['lbl.ct.menu.fd']}" >

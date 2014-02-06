@@ -9,33 +9,23 @@
    <p:panel id="agencyId" header="#{lbl['lbl.ct.agn.panel.name']}"   toggleable="true"  toggleSpeed="500">
      <div style="overflow-x:auto">
     <p:treeTable id="treetableAgency" value="#{contractDetailsBackingBean.rootNodeAgency}" var="data">
-          <p:column>  
+          <p:column style="width:30%">  
             <f:facet name="header"> #{lbl['lbl.ct.agn.tree.name']} </f:facet>  
-             <h:outputText />  
+             <h:outputText/>  
           </p:column>  
-          <p:column>  
+          <p:column style="width:15%">  
            <f:facet name="header"> #{lbl['lbl.ct.agn.tree.ptj.code']} </f:facet>  
            <h:outputText />  
           </p:column>  
-          <p:column >  
+          <p:column style="width:30%">  
             <f:facet name="header"> #{lbl['lbl.ct.agn.tree.ptj.name']}  </f:facet>  
             <h:outputText />  
           </p:column>  
-          <p:column>  
+          <p:column style="width:15%">  
             <f:facet name="header"> #{lbl['lbl.ct.agn.tree.ptj.amount']}  </f:facet>  
             <p:inputText style="width:40; float:right;"></p:inputText>  
-          </p:column>  
-          <p:column>  
-            <f:facet name="header"> #{lbl['lbl.ct.agn.tree.ptj.efdate']}  </f:facet>  
-            <p:calendar value="#{contractDetailsBackingBean.managedBean.contractVer.ctContractValue.effDate}" 
-              id="popupButtonCal" showOn="button" /> 
-          </p:column>  
-          <p:column>  
-            <f:facet name="header"> #{lbl['lbl.ct.agn.tree.ptj.exdate']}  </f:facet>  
-              <p:calendar value="#{contractDetailsBackingBean.managedBean.contractVer.ctContractValue.expDate}" 
-              id="popupButtonCal1" showOn="button" />
-          </p:column>  
-          <p:column style="width:50"  styleClass="column-align-center">  
+          </p:column >  
+          <p:column style="width:10%"  styleClass="column-align-center">  
             <f:facet name="header"> #{lbl['lbl.ct.agn.tree.ptj.action']} </f:facet>  
              <p:commandLink partialSubmit="true" process="@this" onsuccess="confirmation.show()">
 			    <p:graphicImage library="ep/images/design" name="delete.png" value="/resources/ep/images/design/delete.png" title="Delete" />
@@ -57,21 +47,23 @@
 				<p:commandButton value="No" icon="ui-icon-reject" onclick="confirmation.hide()" type="button" />
 			</h:panelGrid>
 		</p:confirmDialog>
-		<p:dialog id="dialogAgency"  header="#{lbl['lbl.ct.agn.btn.add']}" widgetVar="dlgAgency" modal="true" width="600" height="400">
+		<p:dialog id="dialogAgency"  header="Add Agencies" widgetVar="dlgAgency" modal="true" width="600" height="400">
 		   <p:panel  id="agencyies">
               <h:panelGrid columns="2">
-						
-							<h:outputLabel for="ministry" value="Ministry" />
-            				<p:selectOneMenu id="ministry"  style="width:230px">
-            				    <f:selectItems value="#{contractDetailsBackingBean.getMinistryDropdown()}" />
+				            <h:outputLabel for="ministry" value="Ministry" />
+            				<p:selectOneMenu id="ministry" value="#{contractDetailsBackingBean.managedBean.ministryProfileId}" style="width:230px">
+            				    <f:selectItems value="#{contractDetailsBackingBean.getMinistryDropdown()}"/>
+            				     <p:ajax event="change" process="@this" update="department" listener="#{contractDetailsBackingBean.changeDepartmentActionListener}"/>
                         	</p:selectOneMenu>
 							<h:outputLabel for="department" value="Department" />
-            				<p:selectOneMenu id="department"  style="width:230px" >
-            					<f:selectItem itemLabel="--Please Select--" itemValue="" /> 
+            				<p:selectOneMenu id="department" value="#{contractDetailsBackingBean.managedBean.departmentProfileId}" style="width:230px" >
+            					 <f:selectItem itemLabel="- Select One -" itemValue="" />
+            					 <f:selectItems value="#{contractDetailsBackingBean.populateDepartmentList}"/>
                 				</p:selectOneMenu>
 						</h:panelGrid>
              <p:dataTable id="tableAgency" var="data" value=" " rowIndexVar="index" widgetVar="dataTableObj"
-                lazy="false" dynamic="true" paginator="true" paginatorPosition="bottom" paginatorAlwaysVisible="true"  emptyMessage="No Records!">
+                lazy="false" dynamic="true" paginator="true" paginatorPosition="bottom" paginatorAlwaysVisible="false"  emptyMessage="No Records!">
+                  <ac:paginator for="tableAgency"/> 
                     <p:column headerText="#{lbl['lbl.ct.agn.model.table.code']}">
                     <h:outputText />
 					</p:column>
@@ -81,7 +73,7 @@
 			 </p:dataTable>
              <f:facet name="footer">
 			  <h:panelGrid columns="2"  style="float:right;height:100px;vertical-align: middle;">
-				<p:commandButton value="#{lbl['lbl.ct.agn.btn.select']}"   process="dialogAgency" update="treetableAgency,dialogAgency" icon="ui-icon-select" onclick="dlgAgency.hide();"/>
+				<p:commandButton value="#{lbl['lbl.ct.agn.btn.ok']}"   process="dialogAgency" update="treetableAgency,dialogAgency" icon="ui-icon-select" onclick="dlgAgency.hide();"/>
                 <p:commandButton value="#{lbl['lbl.ct.agn.btn.cancel']}" icon="ui-icon-cancel" type="button" ajax="false" onclick="dlgAgency.hide();" />
 			  </h:panelGrid>
 			</f:facet>

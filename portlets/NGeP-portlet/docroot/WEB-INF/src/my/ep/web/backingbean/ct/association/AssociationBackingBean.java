@@ -29,7 +29,7 @@ import my.ep.persistence.entity.ct.assoc.CtAssocContract;
 import my.ep.persistence.entity.ct.assoc.CtAssociation;
 import my.ep.type.aut.SearchOperator;
 import my.ep.web.backingbean.BaseBackingBean;
-import my.ep.web.managedbean.association.AssociationManagedBean;
+import my.ep.web.managedbean.ct.association.AssociationManagedBean;
 import my.ep.web.util.lookupservice.BusinessDelegate;
 
 /**
@@ -163,17 +163,17 @@ public class AssociationBackingBean extends BaseBackingBean<AssociationManagedBe
          List<CtAssocContract> contractAssociationList = new ArrayList<CtAssocContract>();
          CtAssocContract ctAssocContract = new CtAssocContract();
  		try {
+ 			 contractAssociationSO = (IContractAssociationSO) BusinessDelegate.getInstance().getServiceObject("ct",IContractAssociationSO.class);
                for(CtContract contract : this.getManagedBean().getAssociateSearchList()){
              	  ctAssocContract.setCtContract(contract);
              	  ctAssocContract.setCtAssociation(this.getManagedBean().getCtAssociation());
              	  contractAssociationList.add(ctAssocContract);  
                }
                
-             this.getManagedBean().getCtAssociation().setCtAssocContracts(contractAssociationList);
+            this.getManagedBean().getCtAssociation().setCtAssocContracts(contractAssociationList);
  			ContractAssociationReqDTO reqDTO = new ContractAssociationReqDTO();
- 			contractAssociationSO = (IContractAssociationSO) BusinessDelegate.getInstance().getServiceObject("ct",IContractAssociationSO.class);
  			reqDTO.setAssociation(this.getManagedBean().getCtAssociation());
- 			ContractAssociationResDTO resDTO = new ContractAssociationResDTO(); //contractAssociationSO.createAssociation(reqDTO);
+ 			ContractAssociationResDTO resDTO = contractAssociationSO.createAssociation(reqDTO);
  			if (resDTO.isSuccessful()) {
  				
  				  log.info("Record saved successfully");
