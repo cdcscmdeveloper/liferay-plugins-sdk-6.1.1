@@ -12,7 +12,6 @@ import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
 
 import my.ep.persistence.entity.ct.CtContract;
-import my.ep.persistence.entity.ct.dtl.CtAgencyAddress;
 import my.ep.persistence.entity.fl.FlAttachment;
 import my.ep.persistence.entity.fl.FlRemark;
 import my.ep.persistence.entity.fl.request.FlDeliveryAddress;
@@ -25,9 +24,9 @@ import my.ep.persistence.entity.pm.authorization.PmUserGroupUser;
 import my.ep.persistence.entity.pm.authorization.PmUserOrg;
 import my.ep.persistence.entity.pm.common.PmAddressType;
 import my.ep.persistence.entity.pm.common.PmMaksud;
-import my.ep.persistence.entity.ss.directpurchase.ScRequestItem;
-import my.ep.persistence.entity.ss.directpurchase.ScRequestNote;
-import my.ep.persistence.entity.ss.directpurchase.ScRequestNoteDtl;
+import my.ep.persistence.entity.sc.directpurchase.ScRequestItem;
+import my.ep.persistence.entity.sc.directpurchase.ScRequestNote;
+import my.ep.persistence.entity.sc.directpurchase.ScRequestNoteDtl;
 import my.ep.web.managedbean.BaseManagedBean;
 
 import org.apache.log4j.Logger;
@@ -51,19 +50,21 @@ public class PurchaseRequestManagedBean extends BaseManagedBean {
 
 	//remove multiple selection from data table
 	private List<FlDeliveryAddress> selectedAddressRows;
-	private List<FlFulfilmentItem> selectedItemsRows;
+	//private List<FlFulfilmentItem> selectedItemsRows;
+	//private List<FlDeliveryAddress> selectedAddressRows;
+	private List <FlFulfilmentItemAddr>  selectedItemsRows;
 	
 	private FlDeliveryAddress selectedAddrRow;
 	private FlDeliveryAddress selectedDelAddr;
 	
 	private List<FlDeliveryAddress> selectedAddrList;
 	
-	private List<PmOrgAddress> selectedPmDelAddrList;
+	private List<PmAddressType> selectedPmDelAddrList;
 	private List<PmOrgAddress> delAddrList;
 	
 	//private List<PmAddressType> addressTypesList; 
 	//private List<CtAgencyAddress> addressTypesList;
-	private List<PmOrgAddress> addressTypesList;
+	private List<PmAddressType> addressTypesList;
 	
 	//private List<PmAddressType> selectedPmAddrTypeList;FFFF
 	private List<PmOrgAddress> selectedAddrTypeList;
@@ -113,6 +114,7 @@ public class PurchaseRequestManagedBean extends BaseManagedBean {
 	private FlFulfilmentItemAddr selectedItemAddr;
 	
 	private HashMap<Long, FlFulfilmentItem> flItemMap;
+	private HashMap<Long, ScRequestNoteDtl> flReqNoteMap;
 	
 	// getUserGroup
 	private Map<Long, PmUserGroup> userGroupMap;
@@ -184,14 +186,14 @@ public class PurchaseRequestManagedBean extends BaseManagedBean {
 	/**
 	 * @return the selectedPmDelAddrList
 	 */
-	public List<PmOrgAddress> getSelectedPmDelAddrList() {
+	public List<PmAddressType> getSelectedPmDelAddrList() {
 		return selectedPmDelAddrList;
 	}
 
 	/**
 	 * @param selectedPmDelAddrList the selectedPmDelAddrList to set
 	 */
-	public void setSelectedPmDelAddrList(List<PmOrgAddress> selectedPmDelAddrList) {
+	public void setSelectedPmDelAddrList(List<PmAddressType> selectedPmDelAddrList) {
 		this.selectedPmDelAddrList = selectedPmDelAddrList;
 	}
 
@@ -405,14 +407,14 @@ public class PurchaseRequestManagedBean extends BaseManagedBean {
 	/**
 	 * @return the addressTypesList
 	 */
-	public List<PmOrgAddress> getAddressTypesList() {
+	public List<PmAddressType> getAddressTypesList() {
 		return addressTypesList;
 	}
 
 	/**
 	 * @param addressTypesList the addressTypesList to set
 	 */
-	public void setAddressTypesList(List<PmOrgAddress> addressTypesList) {
+	public void setAddressTypesList(List<PmAddressType> addressTypesList) {
 		this.addressTypesList = addressTypesList;
 	}
 
@@ -570,17 +572,19 @@ public class PurchaseRequestManagedBean extends BaseManagedBean {
 		this.selectedAddressRows = selectedAddressRows;
 	}
 
+	
+
 	/**
 	 * @return the selectedItemsRows
 	 */
-	public List<FlFulfilmentItem> getSelectedItemsRows() {
+	public List<FlFulfilmentItemAddr> getSelectedItemsRows() {
 		return selectedItemsRows;
 	}
 
 	/**
 	 * @param selectedItemsRows the selectedItemsRows to set
 	 */
-	public void setSelectedItemsRows(List<FlFulfilmentItem> selectedItemsRows) {
+	public void setSelectedItemsRows(List<FlFulfilmentItemAddr> selectedItemsRows) {
 		this.selectedItemsRows = selectedItemsRows;
 	}
 
@@ -839,6 +843,25 @@ public class PurchaseRequestManagedBean extends BaseManagedBean {
 	public void setRequestNoteItems(List<ScRequestItem> requestNoteItems) {
 		this.requestNoteItems = requestNoteItems;
 	}
+
+	/**
+	 * @return the flReqNoteMap
+	 */
+	public HashMap<Long, ScRequestNoteDtl> getFlReqNoteMap() {
+		if(flReqNoteMap == null){
+			setFlReqNoteMap(new HashMap<Long, ScRequestNoteDtl>());
+		}
+		return flReqNoteMap;
+	}
+
+	/**
+	 * @param flReqNoteMap the flReqNoteMap to set
+	 */
+	public void setFlReqNoteMap(HashMap<Long, ScRequestNoteDtl> flReqNoteMap) {
+		this.flReqNoteMap = flReqNoteMap;
+	}
+
+	
 
 	
 
