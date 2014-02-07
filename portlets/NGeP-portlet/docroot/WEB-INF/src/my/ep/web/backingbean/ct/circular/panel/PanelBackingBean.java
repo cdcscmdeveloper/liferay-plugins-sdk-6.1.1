@@ -666,7 +666,7 @@ public class PanelBackingBean extends BaseBackingBean<PanelManagedBean>{
 	public void deleteCancelReqCircular() {
 		log.info("PanelBackingBean.deleteCancelReqCircular()");
 		try {
-			getManagedBean().getCancelCircularReq().getCtCancelCircularList().remove(getManagedBean().getSelectedCancelCircular());
+			getManagedBean().getCancelCircularReq().getCtCancelCircularList().removeAll(getManagedBean().getSelectedCancelledCircularList());
 		} catch (Exception e) {
 			e.printStackTrace();
 			FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR,e.toString(), e.getMessage()));

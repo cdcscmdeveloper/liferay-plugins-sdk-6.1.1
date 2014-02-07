@@ -15,59 +15,40 @@
 			<f:selectItems value="#{panelBackingBean.getCircularDocTypeValues()}" />
 		</p:selectOneMenu>		
 		<p:spacer height="10" />
-		<p:dataTable id="cancelCcrDt" var="data" lazy="true" paginator="true"
-			value="#{panelBackingBean.managedBean.cancelCircularReq.ctCancelCircularList}" >
+		<p:dataTable id="cancelCcrDt" var="data" lazy="true" rowKey="#{data}"
+			value="#{panelBackingBean.managedBean.cancelCircularReq.ctCancelCircularList}"
+			selection="#{panelBackingBean.managedBean.selectedCancelledCircularList}" >
 			<ac:paginator for="cancelCcrDt" />
-			<p:columnGroup type="header">
-				<p:row>
-					<p:column style="width:140px" headerText="#{lbl['lbl.ct.pc.cno']}" />
-					<p:column style="width:200px" headerText="#{lbl['lbl.ct.pc.cname']}" />
-					<p:column style="width:100px" headerText="Update Type" />
-					<p:column style="width:100px" headerText="Update No." />
-					<p:column style="width:80px" headerText="#{lbl['lbl.ct.pc.action']}" />
-				</p:row>
-			</p:columnGroup>
-			<p:column>
+			<p:column selectionMode="multiple" style="width:3%" />
+			<p:column headerText="#{lbl['lbl.ct.pc.cno']}" >
 				<h:outputText value="#{data.ctCancelCircularVer.circularNo}" />
 			</p:column>
-			<p:column>
+			<p:column headerText="#{lbl['lbl.ct.pc.cname']}" >
 				<h:outputText value="#{data.ctCancelCircularVer.name}" />
 			</p:column>
-			<p:column>
-				<h:outputText value="#{data.ctCancelCircularVer.updateType.pmCodeDescs[0].codeName}" />
+			<p:column headerText="Update Type" >
+				<h:outputText value="#{panelBackingBean.getParameterDesc(ParameterTypeConst.circularUpdateType, data.ctCancelCircularVer.updateType.parameterCode)}" />
 			</p:column>
-			<p:column>
+			<p:column headerText="Update No." >
 				<h:outputText value="#{data.ctCancelCircularVer.updateNo}" />
 			</p:column>
-			<p:column styleClass="column-align-center">
-			 <p:commandLink oncomplete="delCancelCcrDlg.show()" partialSubmit="true" process="@form">
-			       <f:setPropertyActionListener value="#{data}" target="#{panelBackingBean.managedBean.selectedCancelCircular}" />
-			        <p:graphicImage library="ep/images/design" name="delete.png" value="/resources/ep/images/design/delete.png" title="Delete" />
-			  </p:commandLink>			
-			</p:column>
 		</p:dataTable>
-		<p:confirmDialog message="#{lbl['lbl.ct.dialong.cofirm.message']}" closable="true" appendToBody="true"
-			header="#{lbl['lbl.ct.dialong.cofirm.header']}" severity="alert" widgetVar="delCancelCcrDlg">
-			<h:panelGrid columns="2"
-				columnClasses="column-align-right-50,column-align-left">
-				<p:commandButton value="#{lbl['lbl.ct.dialong.cofirm.yes']}" action="#{panelBackingBean.deleteCancelReqCircular()}"
-					update="cancelCcrDt cancelCcrPnl" partialSubmit="true" process="@this" onclick="delCancelCcrDlg.hide();" />
-				<p:commandButton value="#{lbl['lbl.ct.dialong.cofirm.no']}" onclick="delCancelCcrDlg.hide()" type="button" />
-			</h:panelGrid>
-		</p:confirmDialog>	
 		<p:spacer height="2" />
 		<div class="ppRightBtn"> 
 			<p:commandButton value="Add" icon="ui-icon-add" actionListener="#{panelBackingBean.searchActiveCircularVer}" update="circularVerDt" oncomplete="activeCircularDlg.show();" >
 				<f:setPropertyActionListener value="#{CtStatusConst.approved}" target="#{panelBackingBean.managedBean.searchStatusId}" />
 			</p:commandButton>
-		</div>					
+			<p:commandButton value="Delete" process="@form" partialSubmit="true" icon="ui-icon-delete"
+				action="#{panelBackingBean.deleteCancelReqCircular()}" update="cancelCcrDt,cancelCcrPnl" />				
+		</div>				
+			
 		<p:dialog id="activeCircularDlg" header="Active Circulars" widgetVar="activeCircularDlg" modal="true" width="650" height="350">
 			<p:panel id="circular">
 				<p:dataTable id="circularVerDt" var="data" lazy="true" rowKey="#{data.circularVerId}" 
 					selection="#{panelBackingBean.managedBean.selectedCircularVerList}"
 					value="#{panelBackingBean.managedBean.circularVerList}" >
 					<ac:paginator for="circularVerDt" />
-					<p:column selectionMode="multiple" style="width:18px" />
+					<p:column selectionMode="multiple" style="width:3%" />
 					<p:column headerText="Circular No.">
 						<h:outputText value="#{data.circularNo}" />
 					</p:column>
