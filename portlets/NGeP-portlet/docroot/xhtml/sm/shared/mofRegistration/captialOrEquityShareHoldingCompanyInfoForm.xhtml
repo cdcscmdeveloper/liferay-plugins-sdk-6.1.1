@@ -7,7 +7,8 @@
 	xmlns:ac="http://ac.my/jsf/composite/cc">
 
 	<p:panel header="Capital/Equity Shareholding Companies"
-		toggleable="true">
+		toggleable="true"
+		rendered="#{backingBean.managedBean.smAppl.smSupplier.businessType eq '2'}">
 		<table style="width: 250px">
 			<p:outputPanel rendered="#{backingBean.managedBean.poUser}">
 				<tr>

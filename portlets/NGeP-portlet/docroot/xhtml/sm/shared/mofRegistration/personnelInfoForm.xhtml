@@ -194,22 +194,29 @@
 					<h:outputText value="#{person.designation}" />
 				</p:column>
 				<p:column headerText="Is Equity Owner">
-					<h:outputText value="Yes" rendered="#{person.equityOwner == true}" />
-					<h:outputText value="No" rendered="#{person.equityOwner == false}" />
+					<h:outputText value="Yes" rendered="#{person.equityOwner}" />
+					<h:outputText value="No" rendered="#{!person.equityOwner}" />
 				</p:column>
 				<p:column headerText="Is Authorized">
-					<h:outputText value="Yes" rendered="#{person.authorized == true}" />
-					<h:outputText value="No" rendered="#{person.authorized == false}" />
+					<h:outputText value="Yes" rendered="#{person.authorized}" />
+					<h:outputText value="No" rendered="#{!person.authorized}" />
 				</p:column>
 				<p:column headerText="Is Cert Issued">
-					<h:outputText value="Yes" rendered="#{person.softcert == true}" />
-					<h:outputText value="No" rendered="#{person.softcert == false}" />
+					<h:outputText value="Yes" rendered="#{person.softcert}" />
+					<h:outputText value="No" rendered="#{!person.softcert}" />
 				</p:column>
 				<p:column headerText="Action">
-					<p:commandLink rendered="#{person.equityOwner == false}"
+					<p:commandLink rendered="#{!person.equityOwner}"
 						action="#{backingBean.assignSelPersonnel(person)}"
 						oncomplete="personnelDialog.show();"
 						update=":form:tt:personnelDialog">
+						<p:graphicImage library="ep/images/design" name="edit.png"
+							value="/resources/ep/images/design/edit.png" />
+					</p:commandLink>
+					<p:commandLink oncomplete="perShareHolderDialog.show();"
+						rendered="#{person.equityOwner}"
+						action="#{backingBean.assignSelShareHolder(person)}"
+						update=":form:tt:perShareHolderDialog">
 						<p:graphicImage library="ep/images/design" name="edit.png"
 							value="/resources/ep/images/design/edit.png" />
 					</p:commandLink>
@@ -219,10 +226,17 @@
 			</p:dataTable>
 			<p:spacer height="2px;" />
 			<div align="right">
-				<p:commandButton value="Add"
+				<p:commandButton value="Add Management Personnel/Staff"
 					action="#{backingBean.assignNewPersonnel}"
 					oncomplete="personnelDialog.show();"
 					update=":form:tt:personnelDialog" />
+				<ui:fragment
+					rendered="#{backingBean.managedBean.smAppl.smSupplier.businessType eq '1' or backingBean.managedBean.smAppl.smSupplier.businessType eq '3'}">
+					<p:commandButton value="Add Director/Higher Management"
+						action="#{backingBean.assignNewPersonnel}"
+						oncomplete="directorDialog.show();"
+						update=":form:tt:directorDialog" />
+				</ui:fragment>
 				<p:commandButton value="Delete" />
 			</div>
 
@@ -263,6 +277,35 @@
 				action="#{backingBean.addOrUpdatePersonnelToSmAppl}"
 				oncomplete="personnelDialog.hide();" update=":form:tt:personDt" />
 			<p:commandButton value="Cancel" onclick="personnelDialog.hide();" />
+		</div>
+	</p:dialog>
+	<p:dialog width="850px" height="500px"
+		header="Higher Management/Director Details" widgetVar="directorDialog"
+		resizable="false" showEffect="fade" hideEffect="fade" modal="true"
+		id="directorDialog">
+
+		<ui:include
+			src="/xhtml/sm/shared/mofRegistration/personnelHigherMngmtInfoPopUpForm.xhtml" />
+		<div align="right">
+			<p:commandButton value="Save" oncomplete="directorDialog.hide();"
+				action="#{backingBean.addOrUpdatePersonnelToSmAppl}"
+				update=":form:tt:personDt" />
+			<p:commandButton value="Cancel" onclick="directorDialog.hide();" />
+		</div>
+	</p:dialog>
+	<p:dialog width="850px" height="500px" header="Share Holder Details"
+		widgetVar="perShareHolderDialog" resizable="false" showEffect="fade"
+		hideEffect="fade" modal="true" id="perShareHolderDialog">
+
+		<ui:include
+			src="/xhtml/sm/shared/mofRegistration/shareHolderInfoPopUpForm.xhtml" />
+		<div align="right">
+			<p:commandButton value="Save"
+				oncomplete="perShareHolderDialog.hide();"
+				action="#{backingBean.addOrUpdateShareHolderToSmAppl}"
+				update=":form:tt:personDt" />
+			<p:commandButton value="Cancel"
+				onclick="perShareHolderDialog.hide();" />
 		</div>
 	</p:dialog>
 
