@@ -42,13 +42,14 @@ public class CentralContractManagedBean extends BaseManagedBean {
 	
 	private CtCircular circular;
 	private CtCircularVer circularVer;
-	private CtContactPerson selectedContactPerson;
-	private CtCircularContract selectedCircularContract;
-	private CtCancelCircular selectedCancelCircular;
 	
-	private CtCancelCircular[] selectedCancelledCircularList;
-	private CtContract[] selectedContractList;
 	private List<CtContract> contractList;
+	private List<CtContract> selectedContractList;
+	private List<CtContactPerson> selectedContactPersons;
+	private List<CtCircularContract> selectedCircularContracts;
+	private List<CtCancelCircular> selectedCancelCirculars;
+	private List<CtCancelCircular> cancelledCircularList;
+	private List<CtCancelCircular> selectedCancelledCircularList;	
 	private DualListModel<String> approverModel;
 	private Map<Long, PmUserGroup> userGroupMap;	
 	
@@ -77,24 +78,6 @@ public class CentralContractManagedBean extends BaseManagedBean {
 	}
 	public void setCircularVer(CtCircularVer circularVer) {
 		this.circularVer = circularVer;
-	}
-	public CtContactPerson getSelectedContactPerson() {
-		return selectedContactPerson;
-	}
-	public void setSelectedContactPerson(CtContactPerson selectedContactPerson) {
-		this.selectedContactPerson = selectedContactPerson;
-	}
-	public CtCircularContract getSelectedCircularContract() {
-		return selectedCircularContract;
-	}
-	public void setSelectedCircularContract(CtCircularContract selectedCircularContract) {
-		this.selectedCircularContract = selectedCircularContract;
-	}
-	public CtCancelCircular getSelectedCancelCircular() {
-		return selectedCancelCircular;
-	}
-	public void setSelectedCancelCircular(CtCancelCircular selectedCancelCircular) {
-		this.selectedCancelCircular = selectedCancelCircular;
 	}
 	public DualListModel<String> getApproverModel() {
 		return approverModel;
@@ -156,19 +139,6 @@ public class CentralContractManagedBean extends BaseManagedBean {
 	public void setCircular(CtCircular circular) {
 		this.circular = circular;
 	}
-	public CtCancelCircular[] getSelectedCancelledCircularList() {
-		return selectedCancelledCircularList;
-	}
-	public void setSelectedCancelledCircularList(
-			CtCancelCircular[] selectedCancelledCircularList) {
-		this.selectedCancelledCircularList = selectedCancelledCircularList;
-	}
-	public CtContract[] getSelectedContractList() {
-		return selectedContractList;
-	}
-	public void setSelectedContractList(CtContract[] selectedContractList) {
-		this.selectedContractList = selectedContractList;
-	}
 	public List<CtContract> getContractList() {
 		if(contractList==null) {
 			contractList = new ArrayList<CtContract>();
@@ -215,6 +185,44 @@ public class CentralContractManagedBean extends BaseManagedBean {
 	}
 	public void setSearchUpdateType(Long searchUpdateType) {
 		this.searchUpdateType = searchUpdateType;
+	}
+	public List<CtContactPerson> getSelectedContactPersons() {
+		return selectedContactPersons;
+	}
+	public void setSelectedContactPersons(List<CtContactPerson> selectedContactPersons) {
+		this.selectedContactPersons = selectedContactPersons;
+	}
+	public List<CtCircularContract> getSelectedCircularContracts() {
+		return selectedCircularContracts;
+	}
+	public void setSelectedCircularContracts(
+			List<CtCircularContract> selectedCircularContracts) {
+		this.selectedCircularContracts = selectedCircularContracts;
+	}
+	public List<CtCancelCircular> getSelectedCancelCirculars() {
+		return selectedCancelCirculars;
+	}
+	public void setSelectedCancelCirculars(List<CtCancelCircular> selectedCancelCirculars) {
+		this.selectedCancelCirculars = selectedCancelCirculars;
+	}
+	public List<CtContract> getSelectedContractList() {
+		return selectedContractList;
+	}
+	public void setSelectedContractList(List<CtContract> selectedContractList) {
+		this.selectedContractList = selectedContractList;
+	}
+	public List<CtCancelCircular> getSelectedCancelledCircularList() {
+		return selectedCancelledCircularList;
+	}
+	public void setSelectedCancelledCircularList(
+			List<CtCancelCircular> selectedCancelledCircularList) {
+		this.selectedCancelledCircularList = selectedCancelledCircularList;
+	}
+	public List<CtCancelCircular> getCancelledCircularList() {
+		return cancelledCircularList;
+	}
+	public void setCancelledCircularList(List<CtCancelCircular> cancelledCircularList) {
+		this.cancelledCircularList = cancelledCircularList;
 	}
 	
 }

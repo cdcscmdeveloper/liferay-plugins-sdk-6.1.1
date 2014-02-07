@@ -97,7 +97,6 @@ public class CentralContractBackingBean extends BaseBackingBean<CentralContractM
 	
 	private static Logger log = Logger.getLogger(CentralContractBackingBean.class);
 	
-	private IPagingDataModel<CtCancelCircular> cancelledCircularDataModel = new CancelledCircularPagingDataModel();
 	private IPagingDataModel<CtCircularVer> circularVerPagingDataModel = new CircularVerPagingDataModel();
 	
 	public CentralContractBackingBean(){
@@ -246,6 +245,13 @@ public class CentralContractBackingBean extends BaseBackingBean<CentralContractM
 			if(getManagedBean().getSearchContractName()!=null && getManagedBean().getSearchContractName().length()>0) {
 				searchBean.getDataFilterBeans().add(new SearchFilterBean("contractName",SearchOperator.OPERATOR_LIKE.value(),getManagedBean().getSearchContractName()));	
 			}
+			if(getManagedBean().getCircularVer().getCtCircularContracts().size()>0) {
+				List<Long> circularContractIdList = new ArrayList<Long>();
+				for(CtCircularContract circularContract : getManagedBean().getCircularVer().getCtCircularContracts()) {
+					circularContractIdList.add(circularContract.getCtContract().getContractId());
+				}
+				searchBean.getDataFilterBeans().add(new SearchFilterBean("contractId",SearchOperator.OPERATOR_NOT_IN.value(),circularContractIdList));
+			}
 			
 			ContractReqDTO reqDTO = new ContractReqDTO();
 			reqDTO.setContractSearchBean(searchBean);
@@ -286,29 +292,65 @@ public class CentralContractBackingBean extends BaseBackingBean<CentralContractM
 	public void deleteContactPerson(){
 		log.info("CentralContractBackingBean.deleteContactPerson()");
 		try {
-			getManagedBean().getCircularVer().getCtContactPersons().remove(getManagedBean().getSelectedContactPerson());
+			getManagedBean().getCircularVer().getCtContactPersons().removeAll(getManagedBean().getSelectedContactPersons());
 		} catch (Exception e) {
 			e.printStackTrace();
 			FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR,e.toString(), e.getMessage()));
 		}
 	}	
+	
+	public void addCircularContractListener() {
+		log.info("CentralContractBackingBean.addCircularContractListener()");
+		try {
+			getManagedBean().setSearchContractNo(null);
+			getManagedBean().setSearchContractName(null);
+			getManagedBean().setContractList(new ArrayList<CtContract>());
+			getManagedBean().setSelectedContractList(new ArrayList<CtContract>());
+		} catch (Exception e) {
+			e.printStackTrace();
+			FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR,e.toString(), e.getMessage()));
+		}
+	}
 	
 	public void deleteCircularContract(){
 		log.info("CentralContractBackingBean.deleteCircularContract()");
 		try {
-			getManagedBean().getCircularVer().getCtCircularContracts().remove(getManagedBean().getSelectedCircularContract());
+			getManagedBean().getCircularVer().getCtCircularContracts().removeAll(getManagedBean().getSelectedCircularContracts());
 		} catch (Exception e) {
 			e.printStackTrace();
 			FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR,e.toString(), e.getMessage()));
 		}
 	}	
 	
-	public void addCancelledCircular(){
+	public void addCancelCircularListener() {
+		log.info("CentralContractBackingBean.addCancelCircularListener()");
+		try {
+			if(getManagedBean().getCancelledCircularList()==null) {
+				CircularReqDTO reqDTO = new CircularReqDTO();
+				ISearchBean<CtCancelCircular> searchBean = new SearchBean<CtCancelCircular>();
+				searchBean.getDataFilterBeans().add(new SearchFilterBean(
+						"ctCancelCircularVer.ctCircular.circularType", 
+						SearchOperator.OPERATOR_EQUALS.value(), 
+						ContractConst.CIRCULAR_DOC_TYPE_CENTRAL_CONTRACT));
+				reqDTO.setCancelCircularSearchBean(searchBean);
+				
+				ICircularSO circularSO = (ICircularSO) BusinessDelegate.getInstance().getServiceObject("ct",ICircularSO.class);
+				CircularResDTO resDTO = circularSO.searchCancelledCircular(reqDTO);
+				if(resDTO.isSuccessful()) {
+					getManagedBean().setCancelledCircularList(resDTO.getCancelCircularResultBean().getResultList());
+				}
+			}
+			getManagedBean().setSelectedCancelledCircularList(new ArrayList<CtCancelCircular>());
+		} catch (Exception e) {
+			e.printStackTrace();
+			FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR,e.toString(), e.getMessage()));
+		}
+	}
+	
+	public void addCancelledCircular() {
 		log.info("CentralContractBackingBean.addCancelledCircular()");
         try {	
-        	for(CtCancelCircular cancelCircular : getManagedBean().getSelectedCancelledCircularList()) {
-        		getManagedBean().getCircularVer().getCtCancelCircularList().add(cancelCircular);
-        	}
+        	getManagedBean().getCircularVer().getCtCancelCircularList().addAll(getManagedBean().getSelectedCancelledCircularList());
 		} catch (Exception e) {
 			e.printStackTrace();
 			FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR,e.toString(), e.getMessage()));
@@ -318,7 +360,7 @@ public class CentralContractBackingBean extends BaseBackingBean<CentralContractM
 	public void deleteCancelCircular(){
 		log.info("CentralContractBackingBean.deleteCancelCircular()");
 		try {
-			getManagedBean().getCircularVer().getCtCancelCircularList().remove(getManagedBean().getSelectedCancelCircular());
+			getManagedBean().getCircularVer().getCtCancelCircularList().removeAll(getManagedBean().getSelectedCancelCirculars());
 		} catch (Exception e) {
 			e.printStackTrace();
 			FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR,e.toString(), e.getMessage()));
@@ -339,38 +381,6 @@ public class CentralContractBackingBean extends BaseBackingBean<CentralContractM
 			FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR,e.toString(), e.getMessage()));
 		}
 	}
-	
-	private class CancelledCircularPagingDataModel extends PagingDataModel<CtCancelCircular> {
-		private static final long serialVersionUID = 1L;
-
-		public CancelledCircularPagingDataModel() {
-			super("cancelledCclDt");
-		}
-		
-		@Override
-		public ISearchResultBean<CtCancelCircular> pageChangeListener(ISearchBean<CtCancelCircular> searchBean) {
-			if (log.isDebugEnabled()) {
-				log.debug("pageChangeListener");
-			}
-			try {				
-				searchBean.getDataFilterBeans().add(new SearchFilterBean("ctCancelCircularReq.status.statusId",SearchOperator.OPERATOR_EQUALS.value(),ContractStatusConst.APPROVED));
-				searchBean.getDataFilterBeans().add(new SearchFilterBean("ctCircularVer.circularVerId",SearchOperator.OPERATOR_IS_NULL.value(),null));
-				
-				CircularReqDTO reqDTO = new CircularReqDTO();
-				reqDTO.setCancelCircularSearchBean(searchBean);
-				
-				ICircularSO circularSO = (ICircularSO) BusinessDelegate.getInstance().getServiceObject("ct",ICircularSO.class);
-				CircularResDTO resDTO = circularSO.searchCancelledCircular(reqDTO);
-				if(resDTO.isSuccessful()) {
-					return resDTO.getCancelCircularResultBean();
-				}
-			} catch (Exception e) {
-				e.printStackTrace();
-				FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR,e.toString(), e.getMessage()));
-			}
-			return null;
-		}
-	}	
 	
 	private class CircularVerPagingDataModel extends PagingDataModel<CtCircularVer> {
 		private static final long serialVersionUID = 1L;
@@ -729,14 +739,6 @@ public class CentralContractBackingBean extends BaseBackingBean<CentralContractM
 		} finally {
 			circularSO = null;
 		}
-	}
-	
-	public IPagingDataModel<CtCancelCircular> getCancelledCircularDataModel() {
-		return cancelledCircularDataModel;
-	}
-
-	public void setCancelledCircularDataModel(IPagingDataModel<CtCancelCircular> cancelledCircularDataModel) {
-		this.cancelledCircularDataModel = cancelledCircularDataModel;
 	}
 
 	public IPagingDataModel<CtCircularVer> getCircularVerPagingDataModel() {
