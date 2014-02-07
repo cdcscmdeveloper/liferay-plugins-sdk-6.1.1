@@ -16,8 +16,7 @@
 		<div style="text-align: right;">
 
 
-			<p:commandButton value="#{lbl['lbl.cm.back']}"
-				icon="ui-icon-cancel"
+			<p:commandButton value="#{lbl['lbl.cm.back']}" icon="ui-icon-cancel"
 				action="#{catalogueBackingBean.cancelToSupplierItemSearch()}"
 				immediate="true"></p:commandButton>
 		</div>
@@ -29,13 +28,14 @@
 				<tr style="height: 30px;">
 					<td rowspan="10" style="width: 250px;"><h:panelGrid
 							styleClass="imageFrame">
-							<p:galleria id="imageUploadID"
+							
+							<p:galleria id="imageUploadID" autoPlay="false"
 								value="#{catalogueBackingBean.managedBean.selectedMaintainItem.cmImages}"
 								var="imageObj" panelWidth="200" panelHeight="150">
-								<p:graphicImage height="150" width="150"
-									value="/resources/ep/images/product/computer/879949914_125.jpg" />
+								<p:graphicImage id="imageId" height="150" width="200"
+									value="/images/#{imageObj.imageName}" />
 							</p:galleria>
-						</h:panelGrid> </td>
+						</h:panelGrid></td>
 					<td><p:outputLabel value="#{lbl['lbl.cm.item.code']}" /></td>
 					<td><p:inputText disabled="true" size="35"
 							value="#{catalogueBackingBean.managedBean.selectedMaintainItem.cmItem.extensionCode}"></p:inputText></td>
@@ -107,6 +107,8 @@
 		<p:tabView id="pricingTabID" orientation="left">
 
 			<p:tab id="supplierInfoId" title="Supplier Info">
+
+				<ui:include src="supplierInfoTab.xhtml"></ui:include>
 
 			</p:tab>
 

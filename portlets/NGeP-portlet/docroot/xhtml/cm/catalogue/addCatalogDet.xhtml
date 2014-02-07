@@ -60,7 +60,7 @@
 							styleClass="imageFrame">
 
 							<p:galleria id="imageUploadID" autoPlay="false"
-								value="#{catalogueBackingBean.managedBean.selectedMaintainItem.cmImages}" 
+								value="#{catalogueBackingBean.managedBean.selectedMaintainItem.cmImages}"
 								var="imageObj" panelWidth="200" panelHeight="150">
 								<p:graphicImage id="imageId" height="150" width="200"
 									value="/images/#{imageObj.imageName}" />
@@ -106,22 +106,22 @@
 				</tr>
 				<tr style="height: 30px;">
 
-					<td><p:outputLabel
-							value="#{lbl['lbl.cm.min.order']}" /></td>
+					<td><p:outputLabel value="#{lbl['lbl.cm.min.order']}" /></td>
 					<td><p:inputText size="35"
 							value="#{catalogueBackingBean.managedBean.selectedMaintainItem.minOrder}"></p:inputText></td>
 					<td><p:outputLabel value="#{lbl['lbl.cm.max.order']}" /></td>
 					<td colspan="1"><p:inputText size="35"
 							value="#{catalogueBackingBean.managedBean.selectedMaintainItem.maxOrder}"></p:inputText></td>
 				</tr>
-				
+
 
 				<tr style="height: 30px;">
 
 					<td><p:outputLabel value="#{lbl['lbl.cm.delivery.term']}" /></td>
 					<td><p:inputText size="26"
 							value="#{catalogueBackingBean.managedBean.selectedMaintainItem.leadTime}" />
-						<p:inputText style="margin-left: 2px;" size="3" value="days" disabled="true"/></td>
+						<p:inputText style="margin-left: 2px;" size="3" value="days"
+							disabled="true" /></td>
 					<td></td>
 					<td></td>
 					<td></td>
@@ -142,13 +142,13 @@
 		<p:remoteCommand name="refresh" id="refresh"
 			action="#{catalogueBackingBean.refreshImage}" />
 
-		<p:dialog id="imageDialog" widgetVar="imageDialog" modal="true" width="700px"
-			resizable="false" styleClass="pop_up_top">
+		<p:dialog id="imageDialog" widgetVar="imageDialog" modal="true"
+			width="700px" resizable="false" styleClass="pop_up_top">
 
 
-			<p:fileUpload 
-				fileUploadListener="#{catalogueBackingBean.imageUpload}" 
-				oncomplete="refresh();" mode="advanced" id="upload" 
+			<p:fileUpload
+				fileUploadListener="#{catalogueBackingBean.imageUpload}"
+				oncomplete="refresh();" mode="advanced" id="upload"
 				allowTypes="/(\.|\/)(gif|jpe?g|png|bmp|txt|xls|xlsx|pdf|doc|docx|csv)$/"
 				invalidFileMessage="Only JPG, GIF, PNG, BMP, TXT, XLS, PDF, DOC, CSV files are accepted"
 				update="imageUploadID">
@@ -192,7 +192,7 @@
 				</p:tabView>
 			</p:tab>
 			<p:tab id="supplierInfoId" title="Supplier Info">
-
+				<ui:include src="supplierInfoTab.xhtml"></ui:include>
 			</p:tab>
 
 			<p:tab id="remarkId" title="Reject Reason"

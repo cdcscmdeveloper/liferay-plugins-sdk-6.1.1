@@ -504,17 +504,16 @@ public class CodificationBackingBean extends BaseBackingBean<CodificationManaged
 
 	public String editExtension(int index){
 
-		System.out.println("*********"+this.getManagedBean().getItemList().get(index).getItemName());
-
-		this.getManagedBean().setEditItem(this.getManagedBean().getItemList().get(index));
+		
+		
+		this.getManagedBean().setEditItem(this.getSearchItemDataModel().getList().get(index));
 
 		return NAV_TO_EDIT_EXTENSION;
 	}
 
 	public String deleteExtension(int index){
-		System.out.println("*********"+this.getManagedBean().getItemList().get(index).getItemName());
-
-		this.getManagedBean().setDeleteItem(this.getManagedBean().getItemList().get(index));
+		
+		this.getManagedBean().setDeleteItem(this.getSearchItemDataModel().getList().get(index));
 
 		return NAV_TO_DELETE_EXTENSION;
 	}

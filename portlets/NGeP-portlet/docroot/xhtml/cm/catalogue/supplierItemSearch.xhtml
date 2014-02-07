@@ -155,8 +155,8 @@
 							</p:column>
 
 							<p:column headerText="Supplier Name">
-								<h:outputText value="#{supplierItem.companyName}" rendered="#{supplierItem.contractNo != null or supplierItem.circularNo != null }"></h:outputText>
-								<p:commandLink value="#{supplierItem.companyName}" rendered="#{supplierItem.contractNo == null and supplierItem.circularNo == null }"
+								<h:outputText value="#{supplierItem.companyName}" rendered="#{supplierItem.contractNo != null or supplierItem.circularNo != null}"></h:outputText>
+								<p:commandLink value="#{supplierItem.companyName}" rendered="#{supplierItem.contractNo == null and supplierItem.circularNo == null}"
 									action="#{catalogueBackingBean.navigateToSupplierItemDet(supplierItem)}" />
 							</p:column>
 
@@ -168,7 +168,7 @@
 							<p:column selectionMode="multiple" style="width:2%"
 								disabledSelection="#{supplierItem.contractNo != null or supplierItem.circularNo != null}" />
 
-							<p:column headerText="Action" width="2%">
+							<p:column headerText="Action" width="2%" rendered="#{unspscCodeBackingBean.requisitioner}">
 								<table>
 									<tr>
 										<td><cc:renderFacet name="cartButton" /></td>

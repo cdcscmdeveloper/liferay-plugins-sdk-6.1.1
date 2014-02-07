@@ -35,7 +35,8 @@
 				<p:dataGrid id="compareDataList" rowIndexVar="compareKey"
 					paginator="true" styleClass="datagridfloat"
 					value="#{catalogueBackingBean.managedBean.selectedSupplierItemList}"
-					var="supplierItem" columns="4" rows="4" paginatorPosition="bottom" paginatorTemplate="{PageLinks} ">
+					var="supplierItem" columns="4" rows="4" paginatorPosition="bottom"
+					paginatorTemplate="{PageLinks} ">
 					<h:panelGroup>
 						<table>
 							<tr>
@@ -47,26 +48,29 @@
 
 							<table>
 								<tr>
-									<td><p:commandLink>
+									<td><p:commandLink rendered="#{unspscCodeBackingBean.requisitioner}">
 											<p:graphicImage
 												value="/resources/ep/images/design/icon_txt.png"
 												height="15px"></p:graphicImage>
 										</p:commandLink></td>
-									<td><p:commandLink disabled="#{catalogueBackingBean.managedBean.contractedExist}">
+									<td><p:commandLink rendered="#{unspscCodeBackingBean.requisitioner}"
+											disabled="#{catalogueBackingBean.managedBean.contractedExist}">
 											<p:graphicImage
 												value="/resources/ep/images/design/icon_txt.png"
 												height="15px"></p:graphicImage>
 										</p:commandLink></td>
-									<td><p:commandLink disabled="#{catalogueBackingBean.managedBean.contractedExist}">
+									<td><p:commandLink rendered="#{unspscCodeBackingBean.requisitioner}"
+											disabled="#{catalogueBackingBean.managedBean.contractedExist}">
 											<p:graphicImage
 												value="/resources/ep/images/design/icon_txt.png"
 												height="15px"></p:graphicImage>
 										</p:commandLink></td>
-									<td><p:commandLink disabled="#{catalogueBackingBean.managedBean.contractedExist}">
+									<td><p:commandLink rendered="#{unspscCodeBackingBean.requisitioner}"
+											disabled="#{catalogueBackingBean.managedBean.contractedExist}">
 											<p:graphicImage library="ep/images/design"
 												name="cart_add.png" />
 										</p:commandLink></td>
-									<td><p:commandLink 
+									<td><p:commandLink
 											action="#{catalogueBackingBean.deleteComparedItem(compareKey)}"
 											update=":form:compareDataList">
 											<p:graphicImage value="/resources/ep/images/design/trash.png"></p:graphicImage>
@@ -78,14 +82,17 @@
 						<h:panelGrid styleClass="comparePanel">
 					#{supplierItem.cmItem.itemName}
 				</h:panelGrid>
-					<h:panelGrid styleClass="comparePanel">
+						<h:panelGrid styleClass="comparePanel">
 					#{supplierItem.cmItem.extensionCode}
 				</h:panelGrid>
-				
+
 						<h:panelGrid columns="2" styleClass="comparePanel">
 						
 					#{supplierItem.cmStandardPricing.price} 
-					<p:commandLink value="More.." action="#{catalogueBackingBean.popUpPricing(supplierItem)}" oncomplete="morePrice.show()" update=":form:catalogueViewPricingId"></p:commandLink>
+					<p:commandLink value="More.."
+								action="#{catalogueBackingBean.popUpPricing(supplierItem)}"
+								oncomplete="morePrice.show()" rendered="#{unspscCodeBackingBean.requisitioner}"
+								update=":form:catalogueViewPricingId"></p:commandLink>
 						</h:panelGrid>
 
 						<h:panelGrid styleClass="comparePanel">
@@ -104,8 +111,8 @@
 						<h:panelGrid styleClass="comparePanel">
 					#{supplierItem.maxOrder}
 				</h:panelGrid>
-				
-					<h:panelGrid styleClass="comparePanel">
+
+						<h:panelGrid styleClass="comparePanel">
 					#{supplierItem.leadTime}
 				</h:panelGrid>
 
