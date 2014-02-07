@@ -16,11 +16,7 @@
 			closable="true" severity="error, info" />
 		<table style="width: 100%;">
 			<tr>
-				<td style="text-align: left; width: 66px;"><p:outputLabel
-						value="DOC NO:" /></td>
-				<td style="width: 70px"><p:outputLabel
-						value="#{flOrderBB.managedBean.flRequest.docNo}" />
-				</td>
+				<td><p:commandButton value="Back" immediate="true" icon="ui-icon-back" oncomplete="window.history.back();" /></td>
 				<td colspan="4" style="text-align: right"><ui:repeat
 						var="bpmAction" value="#{flOrderBB.managedBean.outComes}">
 						<p:commandButton value="#{bpmAction}" ajax='false'
@@ -47,12 +43,13 @@
 				</c:if>
 			</tr>
 		</table>
-
+		<ui:include src="poReviewHeaderPage.xhtml" />
+		<p:spacer height="20px"/>
 		<p:tabView id="poTabs" orientation="left" widgetVar="tt">
 			<p:tab title="General">
 				<ui:include src="poGeneral.xhtml" />
 			</p:tab>
-			<p:tab title="Item">
+			<p:tab title="Item and Remarks">
 				<ui:include src="poItem.xhtml" />
 			</p:tab>
 		</p:tabView>

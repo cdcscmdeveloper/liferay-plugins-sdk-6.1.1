@@ -40,6 +40,7 @@ public class DeliveryOrderManagedBean extends BaseManagedBean {
 	private FlDeliveryAddress deliveryAddress;
 	private FlFulfilmentOrder fulfilmentOrder;
     private FlFulfilmentRequest fulfilmentRequest;
+    private FlDelOrderItem delOrderItem = new FlDelOrderItem();
 	//private List<DeliveryAddressPopup> daPopupList;
 	//private List<DeliveryAddressPopup> selectedPopupAddress;
 	
@@ -60,6 +61,7 @@ public class DeliveryOrderManagedBean extends BaseManagedBean {
 	private String selectedLovDelAddr;
 	
 	private String docType;
+	private String statusDesc;
 
 	/**
 	 * @return the flRemark
@@ -357,6 +359,34 @@ public class DeliveryOrderManagedBean extends BaseManagedBean {
 	 */
 	public void setSelectedDelAddr(FlDeliveryAddress selectedDelAddr) {
 		this.selectedDelAddr = selectedDelAddr;
+	}
+
+	/**
+	 * @return the delOrderItem
+	 */
+	public FlDelOrderItem getDelOrderItem() {
+		return delOrderItem;
+	}
+
+	/**
+	 * @param delOrderItem the delOrderItem to set
+	 */
+	public void setDelOrderItem(FlDelOrderItem delOrderItem) {
+		this.delOrderItem = delOrderItem;
+	}
+
+	/**
+	 * @return the statusDesc
+	 */
+	public String getStatusDesc() {
+		return statusDesc;
+	}
+
+	/**
+	 * @param statusDesc the statusDesc to set
+	 */
+	public void setStatusDesc(String statusDesc) {
+		this.statusDesc = statusDesc;
 	}
 
 }

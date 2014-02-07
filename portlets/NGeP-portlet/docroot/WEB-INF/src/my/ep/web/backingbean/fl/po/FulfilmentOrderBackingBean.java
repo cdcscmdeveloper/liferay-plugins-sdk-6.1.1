@@ -1,5 +1,6 @@
 package my.ep.web.backingbean.fl.po;
 
+import java.math.BigDecimal;
 import java.text.SimpleDateFormat;
 import java.util.List;
 
@@ -158,19 +159,23 @@ public class FulfilmentOrderBackingBean extends BaseBackingBean<FulfilmentOrderM
 	public String navigateToFlOrder(int index) {
 		System.out.println("getSelectedFlOrder: "+getManagedBean().getSelectedFlOrder().getFulfilmentOrderId());
 		//		this.getManagedBean().setFulfilmentOrder(this.getManagedBean().getPendingDoList().get(index));
+		String statusDesc = FacesContext.getCurrentInstance().getExternalContext()
+				.getRequestParameterMap().get("status");
+		System.out.println("Status:::: "+statusDesc);
 		FulfilmentReqDTO flReqDTO = new FulfilmentReqDTO();
 		FulfilmentResDTO resDTO = new FulfilmentResDTO();
 		flReqDTO.setFlRequestId(getManagedBean().getSelectedFlOrder().getFlFulfilmentRequest().getFulfilmentReqId());
 		IFulfilmentRequestSO fulfilmentSO = (IFulfilmentRequestSO) BusinessDelegate.getInstance().getServiceObject("fl",IFulfilmentRequestSO.class);
 		resDTO = fulfilmentSO.retrieveFulfilmentRequest(flReqDTO);
 		FulfilmentBackingBean flBB = new FulfilmentBackingBean();
-		flBB.initializeRemarkAndAttachement(resDTO.getRemarkList(), resDTO.getAttachmentList());
+		//flBB.initializeRemarkAndAttachement(resDTO.getRemarkList(), resDTO.getAttachmentList());
 		getManagedBean().setFulfilmentOrder(getManagedBean().getSelectedFlOrder());
 
 		DeliveryOrderBackingBean doMB = new DeliveryOrderBackingBean();
 		doMB.getManagedBean().setFulfilmentOrder(getManagedBean().getFulfilmentOrder());
 		doMB.getManagedBean().setFulfilmentRequest(resDTO.getFlFulfilmentRequest());
 		doMB.getManagedBean().setDocType(resDTO.getFlFulfilmentRequest().getDocType());
+		doMB.getManagedBean().setStatusDesc(statusDesc);
 
 		return NAV_TO_CREATE_DO;
 
@@ -216,6 +221,7 @@ public class FulfilmentOrderBackingBean extends BaseBackingBean<FulfilmentOrderM
 			Object obj = res.getPojo();
 			System.out.println("res.getProcessName(): "+res.getProcessName());
 			if (res.getProcessName().equalsIgnoreCase(FlProcessNameConst.STOP_FULFILMENT_REQUEST_PROCESS_NAME)){
+				System.out.println("ifffffffffffffffffff");
 				IFulfilmentOrderSO orderSO = (IFulfilmentOrderSO) BusinessDelegate.getInstance().getServiceObject("fl",IFulfilmentOrderSO.class);
 				FLStopFullfillmentDataType stopFlData = (FLStopFullfillmentDataType)obj;
 				FulfilmentReqDTO flReqDTO = new FulfilmentReqDTO();
@@ -231,6 +237,7 @@ public class FulfilmentOrderBackingBean extends BaseBackingBean<FulfilmentOrderM
 				getManagedBean().setContractRequest(Boolean.TRUE);
 
 			}else {
+				System.out.println("elseeeeeeeeeeeeeeeeeeee");
 				IFulfilmentRequestSO requestSO = (IFulfilmentRequestSO) BusinessDelegate.getInstance().getServiceObject("fl",IFulfilmentRequestSO.class);
 				FulfilmentReqDTO flReqDTO = new FulfilmentReqDTO();
 				FulfilmentResDTO resDTO = new FulfilmentResDTO();
@@ -301,31 +308,32 @@ public class FulfilmentOrderBackingBean extends BaseBackingBean<FulfilmentOrderM
 			getManagedBean().setFlRequest(resDTO.getFlFulfilmentRequest());
 			//			flOrderBB.getManagedBean().setFlRequest(resDTO.getFlOrder().getFlFulfilmentRequest());
 			getManagedBean().setContractRequest(Boolean.TRUE);
-			
+			//combineSupAddress(resDTO.getFlFulfilmentRequest());
 		}else {
 			FulfilmentReqDTO flReqDTO = new FulfilmentReqDTO();
 			FulfilmentResDTO resDTO = new FulfilmentResDTO();
 			IFulfilmentRequestSO fulfilmentSO = (IFulfilmentRequestSO) BusinessDelegate.getInstance().getServiceObject("fl",IFulfilmentRequestSO.class);
 			FLPurchaseOrderDataType flPurchaseOrd = (FLPurchaseOrderDataType)obj;
-			
+			System.out.println("req id from BPM::::::: "+flPurchaseOrd.getPurchaseRequestId());
+			System.out.println("doc type from BPM::::::: "+flPurchaseOrd.getDocType());
 			flReqDTO.setFlRequestId(flPurchaseOrd.getPurchaseRequestId());
 			flReqDTO.setSelectedApprovers(flPurchaseOrd.getApproverList());
 			resDTO = fulfilmentSO.retrieveFulfilmentRequest(flReqDTO);
 			flReqDTO.setFlFulfilmentRequest(resDTO.getFlFulfilmentRequest());
-
+			//combineSupAddress(resDTO.getFlFulfilmentRequest());
 			FulfilmentBackingBean flBB = new FulfilmentBackingBean();
-			System.out.println("attachement list size:::: "+resDTO.getAttachmentList().size());
-			if(resDTO.getFlFulfilmentRequest().getDocType().equalsIgnoreCase("PR")){
+			//System.out.println("attachement list size:::: "+resDTO.getAttachmentList().size());
+			/*if(resDTO.getFlFulfilmentRequest().getDocType().equalsIgnoreCase("PR")){
 				flBB.initializeRemarkAndAttachement(flBB.getManagedBean().getRemarkList(), resDTO.getAttachmentList());
 			}else{
 				flBB.initializeRemarkAndAttachement(resDTO.getRemarkList(),resDTO.getAttachmentList());
-			}
+			}*/
 			
 			//		FulfilmentOrderBackingBean florderBB = new FulfilmentOrderBackingBean();
 			getManagedBean().setFlRequest(resDTO.getFlFulfilmentRequest());
 			getManagedBean().setTaskId(taskId);
 			getManagedBean().setOutComes(res.getAction());
-			System.out.println("doc type::::: "+resDTO.getFlFulfilmentRequest().getDocType());
+			//System.out.println("doc type::::: "+resDTO.getFlFulfilmentRequest().getDocType());
 			getManagedBean().setDocType(resDTO.getFlFulfilmentRequest().getDocType());
 			
 			//			florderBB.getManagedBean().setTempLoginId(this.getManagedBean().getTempLoginId());
@@ -344,5 +352,57 @@ public class FulfilmentOrderBackingBean extends BaseBackingBean<FulfilmentOrderM
 		getManagedBean().setFactoringCheck(id);
 
 	}
+	 public void combineSupAddress(FlFulfilmentRequest fulfilmentRequest){
+	    	
+	    	StringBuilder address = new StringBuilder();
+	    	String strSpace = " ";
+	    	if(fulfilmentRequest.getSupplierBranch().getSmAddress().getAddress1() != null){
+	    		address.append(fulfilmentRequest.getSupplierBranch().getSmAddress().getAddress1());
+	    		address.append(strSpace);
+	    	
+	    	}if(fulfilmentRequest.getSupplierBranch().getSmAddress().getAddress2() != null){
+	    		address.append(fulfilmentRequest.getSupplierBranch().getSmAddress().getAddress2());
+	    		address.append(strSpace);
+	    	
+	    	}if(fulfilmentRequest.getSupplierBranch().getSmAddress().getAddress3() != null){
+	    		address.append(fulfilmentRequest.getSupplierBranch().getSmAddress().getAddress3());
+	    		address.append(strSpace);
+	    	
+	    	}if(fulfilmentRequest.getSupplierBranch().getSmAddress().getAddress4() != null){
+	    		address.append(fulfilmentRequest.getSupplierBranch().getSmAddress().getAddress4());
+	    		address.append(strSpace);
+	    		
+	    	}if(fulfilmentRequest.getSupplierBranch().getSmAddress().getPmDistrict().getDistrictName() != null){
+	    		address.append(fulfilmentRequest.getSupplierBranch().getSmAddress().getPmDistrict().getDistrictName());
+	    		address.append(strSpace);
+	    	
+	    	}if(fulfilmentRequest.getSupplierBranch().getSmAddress().getPmState().getStateName() != null){
+	    		address.append(fulfilmentRequest.getSupplierBranch().getSmAddress().getPmState().getStateName());
+	    		address.append(strSpace);
+	    	
+	    	}if(fulfilmentRequest.getSupplierBranch().getSmAddress().getPmCountry().getCountryName() != null){
+	    		address.append(fulfilmentRequest.getSupplierBranch().getSmAddress().getPmCountry().getCountryName());
+	    		address.append("\n");
+	    	}if(fulfilmentRequest.getSupplierBranch().getSmAddress().getPostcode() != null){
+	    		address.append(fulfilmentRequest.getSupplierBranch().getSmAddress().getPostcode());
+	    	}
+	    	if(null != address.toString()){
+	    		System.out.println("addresss     "+address.toString());
+	    	}
+	    	this.getManagedBean().setSupplierAddress(address.toString());
+	    }
+	 public void retrieveOrderAmount(){
+			int unitPrice = 0;
+			int ordQnty = 0;
+			int ordAmoun = 0;
+			if(null != getManagedBean().getSelectedDelAddr().getFlFulfilmentItemAddr().get(0).getUnitPrice())
+				unitPrice= getManagedBean().getSelectedDelAddr().getFlFulfilmentItemAddr().get(0).getUnitPrice().intValue();
+			if(null != getManagedBean().getSelectedDelAddr().getFlFulfilmentItemAddr().get(0).getOrderedQty())
+				ordQnty = getManagedBean().getSelectedDelAddr().getFlFulfilmentItemAddr().get(0).getOrderedQty().intValue();
+			ordAmoun =((unitPrice) * (ordQnty));
+			BigDecimal ordAmount = new BigDecimal("0");
+			ordAmount=new BigDecimal(ordAmoun);
+			getManagedBean().getSelectedDelAddr().getFlFulfilmentItemAddr().get(0).setOrderedAmt(ordAmount);
+		}
 
 }

@@ -18,6 +18,7 @@
 			closable="true" severity="error, info" />
 		<table style="width: 100%;">
 			<tr>
+				<td><p:commandButton value="Back" immediate="true" icon="ui-icon-back" oncomplete="window.history.back();" /></td>
 				<td colspan="4" style="text-align: right"><ui:repeat
 						var="bpmAction"
 						value="#{purchaseRequestBackingBean.managedBean.outComes}">
@@ -48,7 +49,7 @@
 				</c:if>
 			</tr>
 		</table>
-		<ui:include src="/xhtml/fl/shared/flReviewHeaderPage.xhtml" />
+		<ui:include src="prReviewHeaderPage.xhtml" />
 		<p:spacer height="20px"/>
 		<p:tabView id="prtabs" orientation="left" dynamic="true" cache="true">
 			<p:tab id="tab1" title="General">

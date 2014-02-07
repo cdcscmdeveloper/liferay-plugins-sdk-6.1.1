@@ -60,6 +60,9 @@ public class FulfilmentOrderManagedBean extends BaseManagedBean {
 	private String factoringCheck="false";
 	private String docType;
 	
+	//getSuplier address details
+	private String supplierAddress;
+	
 
 	public String getTaskName() {
 		return taskName;
@@ -412,6 +415,20 @@ public class FulfilmentOrderManagedBean extends BaseManagedBean {
 	 */
 	public void setDocType(String docType) {
 		this.docType = docType;
+	}
+
+	/**
+	 * @return the supplierAddress
+	 */
+	public String getSupplierAddress() {
+		return supplierAddress;
+	}
+
+	/**
+	 * @param supplierAddress the supplierAddress to set
+	 */
+	public void setSupplierAddress(String supplierAddress) {
+		this.supplierAddress = supplierAddress;
 	}
 
 }

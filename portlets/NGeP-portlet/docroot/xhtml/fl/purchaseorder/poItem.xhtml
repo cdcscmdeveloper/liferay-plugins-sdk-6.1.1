@@ -12,7 +12,7 @@
 			selection="#{flOrderBB.managedBean.selectedDelAddr}"
 			rowKey="#{address}" lazy="true" selectionMode="single">
 			<ac:paginator for="addressDataTable" />
-			<p:ajax event="rowSelect" update=":form:poTabs:itemDetPanel"/>
+			<p:ajax event="rowSelect" update=":form:poTabs:itemDetPanel" />
 			<p:column headerText="Delivery Address">
 				<h:outputText
 					value="#{address.addressType.pmAddress.address1}, #{address.addressType.pmAddress.address2}, #{address.addressType.pmAddress.address3}, #{address.addressType.pmAddress.address4}" />
@@ -37,24 +37,40 @@
 			<ac:paginator for="itemDataTable" />
 			<p:column headerText="Item Name">
 				<h:outputText
-					value="#{flItem.flFulfilmentItem.scRequestNoteDtl.scRequestNote.scRequestList.requestItems[0].itemName}" />
+					value="#{flItem.flFulfilmentItem.scRequestNoteDtl.scRequestSupplierItem.requestNoteItem.itemName}" />
 			</p:column>
-			<p:column headerText="GOSODO">
+			<p:column headerText="VOT/fund">
+				<h:outputText />
 			</p:column>
-			<p:column headerText="Activity Code">
+			<p:column headerText="Charge Code">
+				<p:inputText value="#{flItem.pmDo.doId}" style="text-align:right" disabled="true">
+				</p:inputText>
 			</p:column>
 			<p:column headerText="Unit Price (MYR)">
-				<p:inputText disabled="true"></p:inputText>
+				<p:inputText disabled="true" value="#{flItem.unitPrice}"
+					style="text-align:right"><f:convertNumber pattern="#,###.00" /></p:inputText>
 			</p:column>
 			<p:column headerText="Ord. Qty.">
-				<p:inputText value="#{flItem.orderedQty}">
+				<p:inputText value="#{flItem.orderedQty}" style="text-align:right">
+					<p:ajax event="blur" update="subTotalTxt" process="@this"
+							listener="#{flOrderBB.retrieveOrderAmount()}" />
 				</p:inputText>
 			</p:column>
 			<p:column headerText="Sub Total">
-				<p:inputText id="subTotalTxt" value="#{flItem.subTotal}"
-					disabled="true"></p:inputText>
+				<p:inputText id="subTotalTxt" value="#{flItem.orderedAmt}"
+					style="text-align:right" disabled="true"><f:convertNumber pattern="#,###.00" /></p:inputText>
 			</p:column>
 		</p:dataTable>
 
+	</p:panel>
+	<p:panel header="#{lbl['lbl.fl.remark.attachment']}" toggleable="true" >
+		<table style="width: 100%">
+			<tr>
+				<td width="50%" valign="top"><ui:include
+						src="/xhtml/fl/shared/remark.xhtml" /></td>
+				<td width="50%" valign="top"><ui:include
+						src="/xhtml/fl/shared/attachment.xhtml" /></td>
+			</tr>
+		</table>
 	</p:panel>
 </ui:composition>

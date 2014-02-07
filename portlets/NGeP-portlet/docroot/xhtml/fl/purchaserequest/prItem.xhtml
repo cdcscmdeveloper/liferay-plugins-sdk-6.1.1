@@ -14,15 +14,14 @@
 			selection="#{purchaseRequestBackingBean.managedBean.selectedDelAddr}"
 			rowKey="#{address}" lazy="true">
 			<ac:paginator for="addressDataTable" />
-			<p:ajax event="rowSelectRadio" update=":form:prtabs:itemDetPanel"
-				process="@this" />
+			<p:ajax event="rowSelectRadio"
+				update=":form:prtabs:itemDetPanelGroup,:form:prtabs:deleteAddrBtn"
+				listener="#{purchaseRequestBackingBean.selectAddrEvent()}" />
 			<p:column selectionMode="single" width="5%" />
-
 			<p:column headerText="Delivery Address">
 				<h:outputText
-					value="#{address.pmAddress.address1}, #{address.pmAddress.address2}, #{address.pmAddress.address3}, #{address.pmAddress.address4}" />
+					value="#{address.addressType.pmAddress.address1}, #{address.addressType.pmAddress.address2}, #{address.addressType.pmAddress.address3}, #{address.addressType.pmAddress.address4}" />
 			</p:column>
-
 			<p:column headerText="Exp. Delivery (Start)">
 				<p:calendar value="#{address.startDate}" id="calStartDate"
 					pattern="dd/MM/yyyy" showOn="button" />
@@ -39,79 +38,82 @@
 				action="#{purchaseRequestBackingBean.flDeliveryAddrList}"
 				update="delAddr" process="@this,delAddr"
 				oncomplete="addDeliveryAddr.show();" />
-			<p:commandButton value="Delete" icon="ui-icon-delete"
-				action="#{purchaseRequestBackingBean.removeAddRow}"
-				update="addressDataTable" partialSubmit="true">
-				<f:setPropertyActionListener value="#{address}"
-					target="#{purchaseRequestBackingBean.managedBean.selectedAddrRow}" />
+			<p:commandButton id="deleteAddrBtn" value="Delete"
+				icon="ui-icon-delete" onclick="delAddrDlg.show()" process="@this"
+				disabled="#{purchaseRequestBackingBean.managedBean.selectedDelAddr == null}">
 			</p:commandButton>
 		</div>
+		<p:confirmDialog message="Do you want to delete the record?"
+			severity="alert" widgetVar="delAddrDlg" closable="true"
+			appendToBody="true" header="Delete Confirmation">
+			<h:panelGrid columns="2">
+				<p:commandButton value="Yes" icon="ui-icon-accept"
+					partialSubmit="true"
+					action="#{purchaseRequestBackingBean.removeAddRow()}"
+					update=":form:prtabs:deleteAddrBtn,:form:prtabs:itemDetPanelGroup,addressDataTable"
+					oncomplete="delAddrDlg.hide();" />
+				<p:commandButton value="No" icon="ui-icon-reject"
+					onclick="delAddrDlg.hide()" type="button" />
+			</h:panelGrid>
+		</p:confirmDialog>
 	</p:panel>
-	<p:panel id="itemDetPanel" header="ITEM DETAIL" toggleable="true">
-
-		<p:dataTable id="itemDataTable" var="flItem" lazy="true" rowIndexVar="index"
-			value="#{purchaseRequestBackingBean.managedBean.selectedDelAddr.flFulfilmentItemAddr}"
-			selection="#{purchaseRequestBackingBean.managedBean.selectedItemsRows}"
-			rendered="#{not empty purchaseRequestBackingBean.managedBean.selectedDelAddr}"
-			rowKey="#{flItem}">
-			<ac:paginator for="itemDataTable" />
-			<p:column selectionMode="multiple" width="5%" />
-			<p:column headerText="Product Code">
-				<h:outputText
-					value="#{flItem.flFulfilmentItem.scRequestNoteDtl.scRequestNote.requestNoteItems[0].requestNoteItemId}" />
-			</p:column>
-			<p:column headerText="Item Name">
-				<h:outputText
-					value="#{flItem.flFulfilmentItem.scRequestNoteDtl.scRequestNote.requestNoteItems[0].itemName}" />
-			</p:column>
-
-			<p:column headerText="GOSODO">
-				<p:selectOneMenu id="goId" value="#{purchaseRequestBackingBean.managedBean.goId}">
-				<f:selectItems value="#{purchaseRequestBackingBean.goList}" />
-				<p:ajax event="change" update="soId,doId"></p:ajax>
-				</p:selectOneMenu><br />
-				<p:selectOneMenu id="soId" value="#{purchaseRequestBackingBean.managedBean.soId}">
-				<f:selectItems value="#{purchaseRequestBackingBean.soList}" />
-				<p:ajax event="change" update="doId"></p:ajax>
-				</p:selectOneMenu><br />
-				<p:selectOneMenu id="doId" value="#{purchaseRequestBackingBean.managedBean.doId}">
-				<f:selectItems value="#{purchaseRequestBackingBean.doList}" />
-				</p:selectOneMenu>
-			</p:column>
-
-			<p:column headerText="Activity Code">
-				<p:selectOneMenu id="actCode" value="#{purchaseRequestBackingBean.managedBean.goId}">
-				<f:selectItems value="#{purchaseRequestBackingBean.goList}" />
-				</p:selectOneMenu>
-			</p:column>
-			<p:column headerText="Unit Price (MYR)">
-				<p:inputText disabled="true"></p:inputText>
-			</p:column>
-			<p:column headerText="Ord. Qty.">
-				<p:inputText value="#{flItem.orderedQty}">
-									  
-				<p:ajax update="subTotalTxt"
-						listener="#{contractRequestBackingBean.calculateSubTotal(flItem.orderedQty)}"></p:ajax>
-				</p:inputText>
-			</p:column>
-			<p:column headerText="Sub Total">
-				<p:inputText id="subTotalTxt" value="#{purchaseRequestBackingBean.managedBean.selectedItemAddr.subTotal}" disabled="true"></p:inputText>
-			</p:column>
-
-		</p:dataTable>
-		<p:spacer height="2px"></p:spacer>
-		<div style="width: 100%; text-align: right">
-			<p:commandButton id="addItems" value="ADD" icon="ui-icon-add"
-				action="#{purchaseRequestBackingBean.addPurchsedItems}"
-				rendered="#{not empty purchaseRequestBackingBean.managedBean.fulfilmentRequest.flDeliveryAddresses}"
-				update="purchasedItemDt" process="@this,purchasedItemDt"
-				oncomplete="addItems.show();" />
-			<p:commandButton value="Delete" icon="ui-icon-delete"
-				action="#{purchaseRequestBackingBean.removeItemRow}"
-				update="itemDataTable" partialSubmit="true" />
-
-		</div>
-	</p:panel>
+	<h:panelGroup id="itemDetPanelGroup">
+		<p:panel id="itemDetPanel" header="ITEM DETAIL" toggleable="true"
+			rendered="#{null != purchaseRequestBackingBean.managedBean.selectedDelAddr}">
+			<p:dataTable id="itemDataTable" var="flItem" lazy="true"
+				rowIndexVar="index"
+				value="#{purchaseRequestBackingBean.managedBean.selectedDelAddr.flFulfilmentItemAddr}"
+				selection="#{purchaseRequestBackingBean.managedBean.selectedItemsRows}"
+				rowKey="#{flItem}">
+				<ac:paginator for="itemDataTable" />
+				<p:column selectionMode="multiple" width="5%" />
+				<p:column headerText="Type">
+					<h:outputText />
+				</p:column>
+				<p:column headerText="Item Name">
+					<h:outputText
+						value="#{flItem.flFulfilmentItem.scRequestNoteDtl.scRequestSupplierItem.requestNoteItem.itemName}" />
+				</p:column>
+				<p:column headerText="VOT/fund">
+					<h:outputText />
+				</p:column>
+				<p:column headerText="Charge Code">
+					<p:inputText value="#{flItem.pmDo.doId}" style="text-align:right">
+					</p:inputText>
+				</p:column>
+				<p:column headerText="Unit Price (MYR)">
+					<p:inputText disabled="true" value="#{flItem.unitPrice}"
+						style="text-align:right">
+						<f:convertNumber pattern="#,###.00" />
+					</p:inputText>
+				</p:column>
+				<p:column headerText="Ord. Qty.">
+					<p:inputText value="#{flItem.orderedQty}" style="text-align:right">
+						<p:ajax event="blur" update="subTotalTxt" process="@this"
+							listener="#{purchaseRequestBackingBean.retrieveOrderAmount(flItem)}" />
+					</p:inputText>
+				</p:column>
+				<p:column headerText="Sub Total">
+					<p:inputText id="subTotalTxt" value="#{flItem.orderedAmt}"
+						disabled="true" style="text-align:right">
+						<f:convertNumber pattern="#,###.00" />
+					</p:inputText>
+				</p:column>
+			</p:dataTable>
+			<p:spacer height="2px"></p:spacer>
+			<div style="width: 100%; text-align: right">
+				<p:commandButton id="addItems" value="ADD" icon="ui-icon-add"
+					action="#{purchaseRequestBackingBean.addPurchsedItems}"
+					rendered="#{not empty purchaseRequestBackingBean.managedBean.fulfilmentRequest.flDeliveryAddresses}"
+					update="purchasedItemDt" process="@this,purchasedItemDt"
+					oncomplete="addItems.show();" />
+				<p:commandButton value="Delete" icon="ui-icon-delete"
+					rendered="#{not empty purchaseRequestBackingBean.managedBean.selectedDelAddr}"
+					action="#{purchaseRequestBackingBean.removeItemRow}"
+					update="itemDataTable" partialSubmit="true" />
+			</div>
+		</p:panel>
+	</h:panelGroup>
 	<p:panel header="#{lbl['lbl.fl.remark.attachment']}" toggleable="true">
 		<table style="width: 100%">
 			<tr>
@@ -126,10 +128,9 @@
 	<p:dialog id="addDelAddrDialog" header="Add Delivery Address"
 		widgetVar="addDeliveryAddr" showEffect="fade" hideEffect="fade"
 		modal="true" height="450" width="600" resizable="false">
-
 		<p:dataTable id="delAddr" var="delAddr"
 			value="#{purchaseRequestBackingBean.managedBean.addressTypesList}"
-			rowKey="#{delAddr.orgAddressId}"
+			rowKey="#{delAddr.addressTypeId}"
 			selection="#{purchaseRequestBackingBean.managedBean.selectedPmDelAddrList}">
 			<p:ajax event="rowSelect" update=":form:prtabs:delAddr" />
 			<ac:paginator for="delAddr" />
@@ -137,6 +138,7 @@
 				<p:row>
 					<p:column rowspan="1" headerText=""></p:column>
 					<p:column rowspan="1" headerText="Address"></p:column>
+					<p:column rowspan="1" headerText="Ptj Name"></p:column>
 				</p:row>
 			</p:columnGroup>
 			<p:column selectionMode="multiple" />
@@ -150,17 +152,13 @@
 		<div style="width: 100%; text-align: right">
 			<p:commandButton value="ADD" icon="ui-icon-add"
 				action="#{purchaseRequestBackingBean.updateDeliveryAddrDt}"
-				oncomplete="addDeliveryAddr.hide();" 
-				update="addressDataTable">
+				oncomplete="addDeliveryAddr.hide();" update="addressDataTable">
 			</p:commandButton>
 		</div>
-
-
 	</p:dialog>
-	<p:dialog id="addPurchasedItemDialog" header="Add Items"
+	<p:dialog id="addPurchasedItemDialog" header="Add Contract Items"
 		widgetVar="addItems" showEffect="fade" hideEffect="fade" modal="true"
 		height="450" width="600" resizable="false">
-
 		<p:dataTable id="purchasedItemDt" var="purchasedItem"
 			value="#{purchaseRequestBackingBean.managedBean.requestNoteWithDtlsList}"
 			rowKey="#{purchasedItem}"
@@ -177,7 +175,7 @@
 			<p:column selectionMode="multiple" />
 			<p:column>
 				<h:outputText
-					value="#{purchasedItem.scRequestNote.requestNoteItems[0].itemName}" />
+					value="#{purchasedItem.scRequestSupplierItem.requestNoteItem.itemName}" />
 			</p:column>
 		</p:dataTable>
 		<p:spacer height="2px"></p:spacer>
@@ -188,6 +186,5 @@
 				process="@this,purchasedItemDt">
 			</p:commandButton>
 		</div>
-
 	</p:dialog>
 </ui:composition>

@@ -26,7 +26,7 @@
 			</p:columnGroup>
 				<p:column>
 			<p:outputLabel
-					value="#{item.flFulfilmentItemAddr.flFulfilmentItem.scRequestNoteDtl.scRequestNote.scRequestList.requestItems[0].itemName}"
+					value="#{item.flFulfilmentItemAddr.flFulfilmentItem.scRequestNoteDtl.scRequestSupplierItem.requestNoteItem.itemName}"
 					rendered="#{createDOBackingBean.managedBean.docType eq 'PR'}" />
 				<p:outputLabel
 					value="#{item.flFulfilmentItemAddr.flFulfilmentItem.qtItem.itemName}"
@@ -43,14 +43,32 @@
 				<p:outputLabel value="#{item.deliveredQty}" />
 			</p:column>
 			<p:column>
-				<p:outputLabel value="#{item.flFulfilmentItemAddr.unitPrice}"/>
+				<p:outputLabel value="#{item.flFulfilmentItemAddr.unitPrice}">
+					<f:convertNumber pattern="#,###.00" />
+				</p:outputLabel>
 			</p:column>
 			<p:column>
-				<p:inputText value="#{item.deliveredQty}" />
+				<p:inputText value="#{item.deliveredQty}">
+					<p:ajax event="blur" update="subTotalTxt" process="@this"
+						listener="#{createDOBackingBean.retrievedDelAmount()}" />
+				</p:inputText>
 			</p:column>
 			<p:column>
-				<p:inputText value="#{item.deliveredAmt}" />
+				<p:inputText id="subTotalTxt" value="#{item.deliveredAmt}"
+					disabled="true">
+					<f:convertNumber pattern="#,###.00" />
+				</p:inputText>
 			</p:column>
 		</p:dataTable>
+	</p:panel>
+	<p:panel header="#{lbl['lbl.fl.remark.attachment']}" toggleable="true">
+		<table style="width: 100%">
+			<tr>
+				<td width="50%" valign="top"><ui:include
+						src="/xhtml/fl/shared/remark.xhtml" /></td>
+				<td width="50%" valign="top"><ui:include
+						src="/xhtml/fl/shared/attachment.xhtml" /></td>
+			</tr>
+		</table>
 	</p:panel>
 </ui:composition>

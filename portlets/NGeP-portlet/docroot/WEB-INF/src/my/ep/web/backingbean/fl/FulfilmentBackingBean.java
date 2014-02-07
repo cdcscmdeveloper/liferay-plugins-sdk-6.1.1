@@ -14,7 +14,6 @@ import java.io.OutputStream;
 import java.net.URL;
 import java.net.URLConnection;
 import java.sql.Timestamp;
-import java.util.ArrayList;
 import java.util.List;
 
 import javax.faces.application.FacesMessage;
@@ -22,44 +21,17 @@ import javax.faces.bean.ManagedBean;
 import javax.faces.bean.RequestScoped;
 import javax.faces.context.FacesContext;
 import javax.portlet.PortletResponse;
-import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import my.ep.biz.service.fl.request.IFulfilmentRequestSO;
-import my.ep.biz.service.fl.request.IShippingInstructionSO;
-import my.ep.biz.service.pm.authorization.orgprofile.IOrgProfileSO;
-import my.ep.bpm.dto.BpmRequestDTO;
-import my.ep.bpm.dto.BpmResponseDTO;
-import my.ep.bpm.service.IBpmSO;
-import my.ep.constants.FlProcessNameConst;
-import my.ep.dto.fl.FulfilmentReqDTO;
-import my.ep.dto.fl.FulfilmentResDTO;
-import my.ep.dto.pm.authorization.orgprofile.OrgProfileReqDTO;
-import my.ep.dto.pm.authorization.orgprofile.OrgProfileResDTO;
-import my.ep.jaxb.fl.codata.FLContractOrderDataType;
 import my.ep.persistence.entity.fl.FlAttachment;
 import my.ep.persistence.entity.fl.FlRemark;
-import my.ep.persistence.entity.fl.request.FlDeliveryAddress;
-import my.ep.persistence.entity.fl.request.FlFulfilmentRequest;
-import my.ep.persistence.entity.fl.request.FlShippingInstr;
-import my.ep.persistence.entity.pm.authorization.PmOrgProfile;
-import my.ep.persistence.entity.pm.common.PmStatus;
-import my.ep.persistence.entity.ss.quationtender.ScQtCheckList;
-import my.ep.persistence.entity.ss.quationtender.ScQtCheckListAttachment;
-import my.ep.util.lookupservice.EpBpmBusinessDelegate;
 import my.ep.web.backingbean.BaseBackingBean;
-import my.ep.web.backingbean.fl.cr.ContractRequestBackingBean;
-import my.ep.web.backingbean.fl.po.FulfilmentOrderBackingBean;
-import my.ep.web.backingbean.fl.shippingInstr.ShippingInstrBackingBean;
 import my.ep.web.managedbean.fl.FulfilmentManagedBean;
 import my.ep.web.util.FacesScopes;
-import my.ep.web.util.lookupservice.BusinessDelegate;
 
 import org.apache.log4j.Logger;
 import org.primefaces.event.FileUploadEvent;
 import org.primefaces.model.UploadedFile;
-
-import com.liferay.portal.util.PortalUtil;
 
 /**
  * Backing Bean for Fulfilment

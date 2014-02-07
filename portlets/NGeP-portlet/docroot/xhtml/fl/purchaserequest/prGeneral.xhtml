@@ -10,13 +10,13 @@
 		<table style="width: 100%">
 			<tr>
 				<td><p:outputLabel value="#{lbl['lbl.fl.ministry']}" /></td>
-				<td><p:inputText size="35" id="ministry"
+				<td><p:inputText size="50" id="ministry"
 						value="#{purchaseRequestBackingBean.managedBean.fulfilmentRequest.issuedOrgProfile.parentOrgProfile.parentOrgProfile.orgName}"
 						disabled="true" /></td>
 			</tr>
 			<tr>
 				<td><p:outputLabel value="#{lbl['lbl.fl.jabatan']}" /></td>
-				<td><p:inputText size="35" id="issuedJabatan"
+				<td><p:inputText size="50" id="issuedJabatan"
 						value="#{purchaseRequestBackingBean.managedBean.fulfilmentRequest.issuedOrgProfile.parentOrgProfile.orgName}"
 						disabled="true" /></td>
 			</tr>
@@ -33,7 +33,7 @@
 						headerText="IssuePtj Lov"
 						saveObject="purchaseRequestBackingBean.managedBean.fulfilmentRequest.issuedOrgProfile"
 						value="#{purchaseRequestBackingBean.managedBean.fulfilmentRequest.issuedOrgProfile.orgName}"
-						conditionField="orgProfileId^#{purchaseRequestBackingBean.managedBean.fulfilmentRequest.preparedOrgProfile.parentOrgProfile.orgProfileId}">
+						conditionField="orgProfileId^#{purchaseRequestBackingBean.managedBean.fulfilmentRequest.issuedOrgProfile.parentOrgProfile.orgProfileId}">
 					</ac:lov> <ac:lovPopup /></td>
 			</tr>
 			<tr>
@@ -42,72 +42,72 @@
 						headerText="ReceivedPtj Lov"
 						saveObject="purchaseRequestBackingBean.managedBean.fulfilmentRequest.receivedOrgProfile"
 						value="#{purchaseRequestBackingBean.managedBean.fulfilmentRequest.receivedOrgProfile.orgName}"
-						conditionField="orgProfileId^#{purchaseRequestBackingBean.managedBean.fulfilmentRequest.preparedOrgProfile.parentOrgProfile.orgProfileId}">
+						conditionField="orgProfileId^#{purchaseRequestBackingBean.managedBean.fulfilmentRequest.preparedOrgProfile.orgProfileId}">
 					</ac:lov> <ac:lovPopup /></td>
 				<td><p:outputLabel value="* #{lbl['lbl.fl.charge.ptj']}" /></td>
-				<td><p:inputText id="chargedPtj" size="35" disabled="true"
-						value="#{purchaseRequestBackingBean.managedBean.fulfilmentRequest.chargeOrgProfile.parentOrgProfile.orgName}"></p:inputText></td>
+				<td><p:inputText id="chargedPtj" size="50" disabled="true"
+						value="#{purchaseRequestBackingBean.managedBean.fulfilmentRequest.chargeOrgProfile.orgName}"></p:inputText></td>
 			</tr>
 		</table>
 	</p:panel>
 	<p:panel header="REQUEST DETAIL" toggleable="true">
 		<table style="width: 100%">
 			<tr>
-				<td rowspan="4" valign="top" style="width:137px;"><p:outputLabel
+				<td rowspan="4" valign="top" style="width: 96px;"><p:outputLabel
 						value="* #{lbl['lbl.fl.title']}" /></td>
-				<td rowspan="4"><p:inputTextarea cols="36" rows="8"
+				<td rowspan="4"><p:inputTextarea cols="50" rows="8"
 						style=" margin-bottom:5px;"
 						value="#{purchaseRequestBackingBean.managedBean.fulfilmentRequest.title}" />
 				</td>
-				<td style="width:133px;"><p:outputLabel value="#{lbl['lbl.fl.procurement.type']}" /></td>
-				<td><p:inputText size="20"
+				<td style="width: 99px;"><p:outputLabel
+						value="#{lbl['lbl.fl.procurement.type']}" /></td>
+				<td><p:inputText size="25"
 						value="#{purchaseRequestBackingBean.managedBean.fulfilmentRequest.procurementType.codeId}"
 						disabled="true" /></td>
 			</tr>
 			<tr>
 				<td><p:outputLabel value="#{lbl['lbl.fl.plan.no']}" /></td>
-				<td><p:inputText size="20"
+				<td><p:inputText size="25"
 						value="#{purchaseRequestBackingBean.managedBean.fulfilmentRequest.planId.planNo}"
 						disabled="true" /></td>
 			</tr>
 			<tr>
 				<td><p:outputLabel value="#{lbl['lbl.fl.financial.year']}" /></td>
-				<td><p:inputText size="20"
+				<td><p:inputText size="25"
 						value="#{purchaseRequestBackingBean.managedBean.fulfilmentRequest.financialYear}"
 						disabled="true" /></td>
 			</tr>
 			<tr>
 				<td><p:outputLabel value="#{lbl['lbl.fl.accounting.ofc']}" /></td>
-				<td><p:inputText size="35" disabled="true" /></td>
+				<td><p:inputText size="50" disabled="true" /></td>
 			</tr>
 		</table>
 	</p:panel>
 	<p:panel header="SUPPLIER DETAIL" toggleable="true">
 		<table style="width: 100%">
 			<tr>
-				<td><p:outputLabel value="EP No." /></td>
-				<td><p:inputText size="20" disabled="true"
+				<td style="width: 95px;"><p:outputLabel value="#{lbl['lbl.fl.supp.ep.no']}" /></td>
+				<td><p:inputText size="25" disabled="true"
 						value="#{purchaseRequestBackingBean.managedBean.fulfilmentRequest.smSupplier.epNo}" /></td>
-				<td><p:outputLabel value="MOF No." /></td>
-				<td><p:inputText size="20" disabled="true"
+				<td style="width: 375px;"><p:outputLabel value="#{lbl['lbl.fl.supp.mof.no']}" /></td>
+				<td><p:inputText size="25" disabled="true"
 						value="#{purchaseRequestBackingBean.managedBean.fulfilmentRequest.smSupplier.smMofAccounts[0].mofNo}" /></td>
 			</tr>
 			<tr>
 				<td><p:outputLabel value="#{lbl['lbl.fl.supp.name']}" /></td>
-				<td><p:inputText disabled="true" size="35"
-						value="#{purchaseRequestBackingBean.managedBean.fulfilmentRequest.supplierBranch.branchName}" /></td>
+				<td><p:inputText disabled="true" size="50"
+						value="#{purchaseRequestBackingBean.managedBean.fulfilmentRequest.smSupplier.companyName}" /></td>
 			</tr>
 			<tr>
 				<td><p:outputLabel value="#{lbl['lbl.fl.supp.branch']}" /></td>
-				<td><p:selectOneMenu style="width: 207px; margin-bottom:5px;">
+				<td><p:selectOneMenu style="width: 325px; margin-bottom:5px;">
 						
 					</p:selectOneMenu></td>
 			</tr>
 			<tr>
 				<td valign="top"><p:outputLabel
 						value="#{lbl['lbl.fl.supp.address']}" /></td>
-				<td><p:inputTextarea cols="36" rows="8"
-						 disabled="true"
+				<td><p:inputTextarea cols="50" rows="8" disabled="true"
 						value="#{purchaseRequestBackingBean.managedBean.supplierAddress}" /></td>
 			</tr>
 		</table>

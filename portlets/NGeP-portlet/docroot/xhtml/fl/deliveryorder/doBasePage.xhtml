@@ -11,22 +11,18 @@
 	</ui:define>
 
 	<ui:define name="contentSection">
-		<p:messages id="messages" showDetail="true" autoUpdate="true"
+		<p:messages id="messages" showDetail="true" autoUpdate="true" 
 			closable="true" severity="error, info" />
 		<table style="width: 100%;">
 
 			<tr>
-				<td style="text-align: left; width: 66px;"><p:outputLabel
-						value="DOC NO:" /></td>
-				<td style="width: 70px"><p:outputLabel
-						value="#{createDOBackingBean.managedBean.fulfilmentRequest.docNo}" />
-				</td>
+				<td><p:commandButton value="Back" immediate="true" icon="ui-icon-back" oncomplete="window.history.back();" /></td>
 				<c:if test="#{empty createDOBackingBean.managedBean.buttonVal}">
 
-					<td colspan="4" style="text-align: right"><p:commandButton
+					<td colspan="4" style="text-align: right" ><p:commandButton
 							value="SUBMIT" ajax='false'
 							action="#{createDOBackingBean.createDeliveryOrder('Submit')}" />
-						<p:commandButton value="STOP DELIVERY" icon="ui-icon-cancel"
+						<p:commandButton value="STOP DELIVERY" icon="ui-icon-cancel" rendered="#{createDOBackingBean.managedBean.statusDesc eq 'Pending Partial Fulfilment'}"
 							action="#{createDOBackingBean.stopDelivery}" immediate="true" />
 					</td>
 				</c:if>
@@ -54,11 +50,13 @@
 				</c:if>
 			</tr>
 		</table>
+		<ui:include src="doReviewHeaderPage.xhtml" />
+		<p:spacer height="20px"/>
 		<p:tabView id="dotabs" orientation="left" widgetVar="tt">
 			<p:tab title="General">
 				<ui:include src="doGeneral.xhtml" />
 			</p:tab>
-			<p:tab title="Item">
+			<p:tab title="Item and Remarks">
 				<ui:include src="doItem.xhtml" />
 			</p:tab>
 		</p:tabView>

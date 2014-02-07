@@ -3,6 +3,7 @@
  */
 package my.ep.web.backingbean.fl.deliveryorder;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 
 import javax.annotation.PostConstruct;
@@ -158,6 +159,19 @@ public class DeliveryOrderBackingBean extends BaseBackingBean<DeliveryOrderManag
 		reqDTO.setFlRequestId(getManagedBean().getFulfilmentOrder().getFlFulfilmentRequest().getFulfilmentReqId());
 		FulfilmentResDTO resDTO = flOrderSO.getDeliveryAddressListById(reqDTO);
 		this.getManagedBean().setDeliveryAddressList(resDTO.getDelAddrList());
+	}
+	public void retrievedDelAmount(){
+		int unitPrice = 0;
+		int delQnty = 0;
+		int delAmoun = 0;
+		if(null != getManagedBean().getDelOrderItem().getFlFulfilmentItemAddr().getUnitPrice())
+			unitPrice= getManagedBean().getDelOrderItem().getFlFulfilmentItemAddr().getUnitPrice().intValue();
+		if(null != getManagedBean().getDelOrderItem().getDeliveredQty())
+			delQnty = getManagedBean().getDelOrderItem().getDeliveredQty().intValue();
+		delAmoun =((unitPrice) * (delQnty));
+		BigDecimal ordAmount = new BigDecimal("0");
+		ordAmount=new BigDecimal(delAmoun);
+		getManagedBean().getDelOrderItem().setDeliveredAmt(ordAmount);
 	}
 	
 	
