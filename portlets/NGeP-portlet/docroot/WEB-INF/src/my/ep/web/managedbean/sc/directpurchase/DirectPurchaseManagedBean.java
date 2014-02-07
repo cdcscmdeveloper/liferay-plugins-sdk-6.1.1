@@ -10,17 +10,17 @@ import javax.faces.bean.SessionScoped;
 import my.ep.biz.service.pm.authorization.user.IUserSO;
 import my.ep.dto.pm.authorization.user.UserReqDTO;
 import my.ep.dto.pm.authorization.user.UserResDTO;
-import my.ep.dto.ss.directpurchase.SelectOptionDTO;
+import my.ep.dto.sc.directpurchase.SelectOptionDTO;
 import my.ep.persistence.entity.cm.catalog.CmPricing;
 import my.ep.persistence.entity.pm.authorization.PmOrgProfile;
 import my.ep.persistence.entity.pm.authorization.PmUser;
+import my.ep.persistence.entity.sc.directpurchase.ScPrInquiry;
+import my.ep.persistence.entity.sc.directpurchase.ScRequestItem;
+import my.ep.persistence.entity.sc.directpurchase.ScRequestNote;
+import my.ep.persistence.entity.sc.directpurchase.ScRequestNoteDtl;
+import my.ep.persistence.entity.sc.directpurchase.ScRequestNoteRemark;
+import my.ep.persistence.entity.sc.directpurchase.ScRequestSupplierItem;
 import my.ep.persistence.entity.sm.SmSupplier;
-import my.ep.persistence.entity.ss.directpurchase.ScPrInquiry;
-import my.ep.persistence.entity.ss.directpurchase.ScRequestItem;
-import my.ep.persistence.entity.ss.directpurchase.ScRequestNote;
-import my.ep.persistence.entity.ss.directpurchase.ScRequestNoteDtl;
-import my.ep.persistence.entity.ss.directpurchase.ScRequestNoteRemark;
-import my.ep.persistence.entity.ss.directpurchase.ScRequestSupplierItem;
 import my.ep.type.pm.RoleCode;
 import my.ep.web.constant.SourcingConst;
 import my.ep.web.managedbean.BaseManagedBean;
@@ -77,7 +77,8 @@ public class DirectPurchaseManagedBean extends BaseManagedBean{
     private ScRequestNoteDtl requestNoteDtl = new ScRequestNoteDtl();
     
     private String priceType;
-    
+    private boolean justTypeOption = true;
+    private boolean procTypeOption = true;
 	
 	private	int	activeTabIndex = 0;
 	
@@ -371,6 +372,17 @@ public class DirectPurchaseManagedBean extends BaseManagedBean{
 		this.requestNoteDtl = requestNoteDtl;
 	}
 	
-	
+	public boolean isProcTypeOption() {
+		return procTypeOption;
+	}
+	public void setProcTypeOption(boolean procTypeOption) {
+		this.procTypeOption = procTypeOption;
+	}
+	public boolean isJustTypeOption() {
+		return justTypeOption;
+	}
+	public void setJustTypeOption(boolean justTypeOption) {
+		this.justTypeOption = justTypeOption;
+	}
 	
 }

@@ -14,10 +14,10 @@ import my.ep.persistence.entity.cm.catalog.CmSupplierItem;
 import my.ep.persistence.entity.ct.CtContract;
 import my.ep.persistence.entity.ct.dtl.item.CtContractItem;
 import my.ep.persistence.entity.pm.authorization.PmUser;
-import my.ep.persistence.entity.ss.directpurchase.ScPIDRemark;
-import my.ep.persistence.entity.ss.directpurchase.ScPurchaseInDefault;
-import my.ep.persistence.entity.ss.directpurchase.ScRequestItem;
-import my.ep.persistence.entity.ss.directpurchase.ScRequestSupplierItem;
+import my.ep.persistence.entity.sc.directpurchase.ScPIDRemark;
+import my.ep.persistence.entity.sc.directpurchase.ScPurchaseInDefault;
+import my.ep.persistence.entity.sc.directpurchase.ScRequestItem;
+import my.ep.persistence.entity.sc.directpurchase.ScRequestSupplierItem;
 import my.ep.type.pm.RoleCode;
 import my.ep.web.managedbean.BaseManagedBean;
 import my.ep.web.util.lookupservice.BusinessDelegate;
@@ -32,7 +32,9 @@ public class PurchaseInDefaultManagedBean extends BaseManagedBean{
 	private	List<ScRequestItem>	selectedPidItems	=	new ArrayList<ScRequestItem>();
 	private	List<ScRequestSupplierItem>	supplierItems	=	new ArrayList<ScRequestSupplierItem>();
 	
-    private String stockAvailability;
+    private String justificationType;
+    private boolean visibleRemarkAttach = true;
+    private boolean visibleOrderQty = true;
     
     
 	private ScRequestSupplierItem scRequestSupplierItem;
@@ -51,7 +53,7 @@ public class PurchaseInDefaultManagedBean extends BaseManagedBean{
 	public void initialInformation(){
 		IUserSO iUserSO	=	(IUserSO)BusinessDelegate.getInstance().getServiceObject("pm", IUserSO.class);
 		UserReqDTO userReqDto = new UserReqDTO();
-		userReqDto.setRoleCode(RoleCode.APPROVER.value());
+		userReqDto.setRoleCode(RoleCode.BPK_APPROVER.value());
 		UserResDTO userResDTO = iUserSO.retrieveUserListByRole(userReqDto);
 		List<PmUser> availableApprover	=	userResDTO.getUserList();
 		List<PmUser> selectedApprover	=	new ArrayList<PmUser>();
@@ -76,18 +78,7 @@ public class PurchaseInDefaultManagedBean extends BaseManagedBean{
 	public void setSupplierItems(List<ScRequestSupplierItem> supplierItems) {
 		this.supplierItems = supplierItems;
 	}
-	/**
-	 * @return the stockAvailability
-	 */
-	public String getStockAvailability() {
-		return stockAvailability;
-	}
-	/**
-	 * @param stockAvailability the stockAvailability to set
-	 */
-	public void setStockAvailability(String stockAvailability) {
-		this.stockAvailability = stockAvailability;
-	}
+	
 	/**
 	 * @return the scRequestSupplierItem
 	 */
@@ -161,6 +152,25 @@ public class PurchaseInDefaultManagedBean extends BaseManagedBean{
 	public void setSupplierItem(CmSupplierItem supplierItem) {
 		this.supplierItem = supplierItem;
 	}
+	public String getJustificationType() {
+		return justificationType;
+	}
+	public void setJustificationType(String justificationType) {
+		this.justificationType = justificationType;
+	}
+	public boolean isVisibleRemarkAttach() {
+		return visibleRemarkAttach;
+	}
+	public void setVisibleRemarkAttach(boolean visibleRemarkAttach) {
+		this.visibleRemarkAttach = visibleRemarkAttach;
+	}
+	public boolean isVisibleOrderQty() {
+		return visibleOrderQty;
+	}
+	public void setVisibleOrderQty(boolean visibleOrderQty) {
+		this.visibleOrderQty = visibleOrderQty;
+	}
+
 	
 	
 }

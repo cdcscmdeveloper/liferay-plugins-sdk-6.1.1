@@ -6,13 +6,13 @@ import java.util.List;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
 
-import my.ep.persistence.entity.ss.directpurchase.ScBusinessNatureQuoteCriteria;
-import my.ep.persistence.entity.ss.directpurchase.ScQuote;
-import my.ep.persistence.entity.ss.directpurchase.ScQuoteSupplier;
-import my.ep.persistence.entity.ss.directpurchase.ScRequestNote;
-import my.ep.persistence.entity.ss.directpurchase.ScRequestItem;
+import my.ep.persistence.entity.sc.directpurchase.ScBusinessNatureQuoteCriteria;
+import my.ep.persistence.entity.sc.directpurchase.ScQuote;
+import my.ep.persistence.entity.sc.directpurchase.ScQuoteSupplier;
+import my.ep.persistence.entity.sc.directpurchase.ScRequestItem;
+import my.ep.persistence.entity.sc.directpurchase.ScRequestNote;
 import my.ep.web.managedbean.BaseManagedBean;
-import my.ep.web.util.ss.helper.LocationSingleton;
+import my.ep.web.util.sc.helper.LocationSingleton;
 
 import org.primefaces.model.TreeNode;
 @ManagedBean
