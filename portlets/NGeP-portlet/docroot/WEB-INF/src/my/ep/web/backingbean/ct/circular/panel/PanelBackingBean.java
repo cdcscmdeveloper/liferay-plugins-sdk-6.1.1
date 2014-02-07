@@ -30,6 +30,7 @@ import javax.servlet.http.HttpServletResponse;
 
 import my.ep.biz.bean.search.ISearchBean;
 import my.ep.biz.bean.search.ISearchResultBean;
+import my.ep.biz.bean.search.SearchBean;
 import my.ep.biz.bean.search.SearchBetweenValue;
 import my.ep.biz.bean.search.SearchFilterBean;
 import my.ep.biz.service.ct.circular.ICircularSO;
@@ -104,7 +105,6 @@ public class PanelBackingBean extends BaseBackingBean<PanelManagedBean>{
 	
 	private static Logger log = Logger.getLogger(PanelBackingBean.class);
 	
-	private IPagingDataModel<CtCancelCircular> cancelledCircularDataModel = new CancelledCircularPagingDataModel();
 	private IPagingDataModel<CtCircularVer> circularVerPagingDataModel = new CircularVerPagingDataModel();
 	
 	public PanelBackingBean(){
@@ -477,7 +477,7 @@ public class PanelBackingBean extends BaseBackingBean<PanelManagedBean>{
 	public void deleteContactPerson(){
 		log.info("PanelBackingBean.deleteContactPerson()");
 		try {
-			getManagedBean().getCircularVer().getCtContactPersons().remove(getManagedBean().getSelectedContactPerson());
+			getManagedBean().getCircularVer().getCtContactPersons().removeAll(getManagedBean().getSelectedContactPersons());
 		} catch (Exception e) {
 			e.printStackTrace();
 			FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR,e.toString(), e.getMessage()));
@@ -508,6 +508,31 @@ public class PanelBackingBean extends BaseBackingBean<PanelManagedBean>{
 		}
 	}
 	
+	public void addCancelCircularListener() {
+		log.info("PanelBackingBean.addCancelCircularListener()");
+		try {
+			if(getManagedBean().getCancelledCircularList()==null) {
+				CircularReqDTO reqDTO = new CircularReqDTO();
+				ISearchBean<CtCancelCircular> searchBean = new SearchBean<CtCancelCircular>();
+				searchBean.getDataFilterBeans().add(new SearchFilterBean(
+						"ctCancelCircularVer.ctCircular.circularType", 
+						SearchOperator.OPERATOR_EQUALS.value(), 
+						ContractConst.CIRCULAR_DOC_TYPE_PANEL));
+				reqDTO.setCancelCircularSearchBean(searchBean);
+				
+				ICircularSO circularSO = (ICircularSO) BusinessDelegate.getInstance().getServiceObject("ct",ICircularSO.class);
+				CircularResDTO resDTO = circularSO.searchCancelledCircular(reqDTO);
+				if(resDTO.isSuccessful()) {
+					getManagedBean().setCancelledCircularList(resDTO.getCancelCircularResultBean().getResultList());
+				}
+			}
+			getManagedBean().setSelectedCancelledCircularList(new ArrayList<CtCancelCircular>());
+		} catch (Exception e) {
+			e.printStackTrace();
+			FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR,e.toString(), e.getMessage()));
+		}
+	}
+	
 	public void addCancelledCircular(){
 		log.info("PanelBackingBean.addCancelledCircular()");
         try {	
@@ -521,7 +546,7 @@ public class PanelBackingBean extends BaseBackingBean<PanelManagedBean>{
 	public void deleteCancelCircular(){
 		log.info("PanelBackingBean.deleteCancelCircular()");
 		try {
-			getManagedBean().getCircularVer().getCtCancelCircularList().remove(getManagedBean().getSelectedCancelCircular());
+			getManagedBean().getCircularVer().getCtCancelCircularList().removeAll(getManagedBean().getSelectedCancelCirculars());
 		} catch (Exception e) {
 			e.printStackTrace();
 			FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR,e.toString(), e.getMessage()));
@@ -1046,38 +1071,6 @@ public class PanelBackingBean extends BaseBackingBean<PanelManagedBean>{
 		FacesContext.getCurrentInstance().responseComplete();
 	}	
 	
-	private class CancelledCircularPagingDataModel extends PagingDataModel<CtCancelCircular> {
-		private static final long serialVersionUID = 1L;
-
-		public CancelledCircularPagingDataModel() {
-			super("cancelledCclDt");
-		}
-		
-		@Override
-		public ISearchResultBean<CtCancelCircular> pageChangeListener(ISearchBean<CtCancelCircular> searchBean) {
-			if (log.isDebugEnabled()) {
-				log.debug("pageChangeListener");
-			}
-			try {				
-				searchBean.getDataFilterBeans().add(new SearchFilterBean("ctCancelCircularReq.status.statusId",SearchOperator.OPERATOR_EQUALS.value(),ContractStatusConst.APPROVED));
-				searchBean.getDataFilterBeans().add(new SearchFilterBean("ctCircularVer.circularVerId",SearchOperator.OPERATOR_IS_NULL.value(),null));
-				
-				CircularReqDTO reqDTO = new CircularReqDTO();
-				reqDTO.setCancelCircularSearchBean(searchBean);
-				
-				ICircularSO circularSO = (ICircularSO) BusinessDelegate.getInstance().getServiceObject("ct",ICircularSO.class);
-				CircularResDTO resDTO = circularSO.searchCancelledCircular(reqDTO);
-				if(resDTO.isSuccessful()) {
-					return resDTO.getCancelCircularResultBean();
-				}
-			} catch (Exception e) {
-				e.printStackTrace();
-				FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR,e.toString(), e.getMessage()));
-			}
-			return null;
-		}
-	}	
-	
 	private class CircularVerPagingDataModel extends PagingDataModel<CtCircularVer> {
 		private static final long serialVersionUID = 1L;
 
@@ -1131,15 +1124,6 @@ public class PanelBackingBean extends BaseBackingBean<PanelManagedBean>{
 			}
 			return null;
 		}
-	}
-
-	public IPagingDataModel<CtCancelCircular> getCancelledCircularDataModel() {
-		return cancelledCircularDataModel;
-	}
-
-	public void setCancelledCircularDataModel(
-			IPagingDataModel<CtCancelCircular> cancelledCircularDataModel) {
-		this.cancelledCircularDataModel = cancelledCircularDataModel;
 	}
 
 	public IPagingDataModel<CtCircularVer> getCircularVerPagingDataModel() {

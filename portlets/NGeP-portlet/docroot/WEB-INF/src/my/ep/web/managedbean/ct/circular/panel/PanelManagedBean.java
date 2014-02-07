@@ -46,7 +46,6 @@ public class PanelManagedBean extends BaseManagedBean {
 	
 	private CtCircular circular;
 	private CtCircularVer circularVer;
-	private CtContactPerson selectedContactPerson;
 	private CtPanelSupplier selectedPanelSupplier;
 	private CtCancelCircular selectedCancelCircular;
 	private CtPanelZone selectedPanelZone;
@@ -54,6 +53,9 @@ public class PanelManagedBean extends BaseManagedBean {
 	private CtPanelItem selectedPanelItem;
 	private CtCancelCircularReq cancelCircularReq;
 	
+	private List<CtContactPerson> selectedContactPersons;
+	private List<CtCancelCircular> selectedCancelCirculars;
+	private List<CtCancelCircular> cancelledCircularList;
 	private CtCircularVer[] selectedCircularVerList;
 	private List<CtCircularVer> circularVerList;
 	private List<CtCancelCircular> selectedCancelledCircularList;
@@ -87,14 +89,6 @@ public class PanelManagedBean extends BaseManagedBean {
 
 	public void setCircularVer(CtCircularVer circularVer) {
 		this.circularVer = circularVer;
-	}
-
-	public CtContactPerson getSelectedContactPerson() {
-		return selectedContactPerson;
-	}
-
-	public void setSelectedContactPerson(CtContactPerson selectedContactPerson) {
-		this.selectedContactPerson = selectedContactPerson;
 	}
 
 	public CtPanelSupplier getSelectedPanelSupplier() {
@@ -302,6 +296,30 @@ public class PanelManagedBean extends BaseManagedBean {
 
 	public void setSearchUpdateType(Long searchUpdateType) {
 		this.searchUpdateType = searchUpdateType;
+	}
+
+	public List<CtContactPerson> getSelectedContactPersons() {
+		return selectedContactPersons;
+	}
+
+	public void setSelectedContactPersons(List<CtContactPerson> selectedContactPersons) {
+		this.selectedContactPersons = selectedContactPersons;
+	}
+
+	public List<CtCancelCircular> getSelectedCancelCirculars() {
+		return selectedCancelCirculars;
+	}
+
+	public void setSelectedCancelCirculars(List<CtCancelCircular> selectedCancelCirculars) {
+		this.selectedCancelCirculars = selectedCancelCirculars;
+	}
+
+	public List<CtCancelCircular> getCancelledCircularList() {
+		return cancelledCircularList;
+	}
+
+	public void setCancelledCircularList(List<CtCancelCircular> cancelledCircularList) {
+		this.cancelledCircularList = cancelledCircularList;
 	}
 
 }
