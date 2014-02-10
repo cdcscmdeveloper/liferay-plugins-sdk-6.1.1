@@ -10,7 +10,8 @@
 	
 }
 .ticker {
-	width: 710px;
+	/* width: 710px; */
+	width: 625px;
 	height: 23px;
 	display: block;
 	position: relative;
@@ -61,7 +62,7 @@
 	background-color: #FFFFFF;
 	border-bottom: 1px solid #1F527B;
 	height: 12px;
-	width: 7px;
+	width: 0px;
 	display: block;
 }
 .ticker-controls {
@@ -130,9 +131,11 @@
 }
 .left .ticker-controls, .left .ticker-content, .left .ticker-title, .left .ticker {
     float: left;
+    height:25px;
 }
 .left .ticker-controls {
     padding-left: 6px;
+    padding-top: 7px;
 }
 .right .ticker-swipe {
 	/*right: 80px;*/
