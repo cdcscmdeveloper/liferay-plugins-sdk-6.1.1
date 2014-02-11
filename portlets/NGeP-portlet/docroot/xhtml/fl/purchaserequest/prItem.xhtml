@@ -30,14 +30,26 @@
 				<p:calendar value="#{address.endDate}" id="calEndDate"
 					pattern="dd/MM/yyyy" showOn="button" />
 			</p:column>
+			<p:column rendered="#{address.checkManualAddress}">
+				<p:commandLink oncomplete="addManualDeliveryAddr.show();"
+					action="#{purchaseRequestBackingBean.editManualAddress(address)}"
+					update=":form:prtabs:addManualDelAddrDialog" style="padding-right:5px">
+					<p:graphicImage library="ep/images/design" name="edit.png"
+						value="/resources/ep/images/design/edit.png" />
+				</p:commandLink>
+				</p:column>
 
 		</p:dataTable>
 		<p:spacer height="2px"></p:spacer>
 		<div style="width: 100%; text-align: right">
-			<p:commandButton value="ADD" icon="ui-icon-add"
+			<p:commandButton value="PTJ Address" icon="ui-icon-add"
 				action="#{purchaseRequestBackingBean.flDeliveryAddrList}"
 				update="delAddr" process="@this,delAddr"
 				oncomplete="addDeliveryAddr.show();" />
+			<p:commandButton value="Manual Address" icon="ui-icon-add"
+				action="#{purchaseRequestBackingBean.flManualDeliveryAddr}"
+				update="delAddr" process="@this,delAddr"
+				oncomplete="addManualDeliveryAddr.show();" />
 			<p:commandButton id="deleteAddrBtn" value="Delete"
 				icon="ui-icon-delete" onclick="delAddrDlg.show()" process="@this"
 				disabled="#{purchaseRequestBackingBean.managedBean.selectedDelAddr == null}">
@@ -153,6 +165,119 @@
 			<p:commandButton value="ADD" icon="ui-icon-add"
 				action="#{purchaseRequestBackingBean.updateDeliveryAddrDt}"
 				oncomplete="addDeliveryAddr.hide();" update="addressDataTable">
+			</p:commandButton>
+		</div>
+	</p:dialog>
+
+	<p:dialog id="addManualDelAddrDialog" header="Add Delivery Address"
+		widgetVar="addManualDeliveryAddr" showEffect="fade" hideEffect="fade"
+		modal="true" width="800px" height="450px" resizable="false">
+		<table style="width: 100%">
+			<tr>
+				<td><p:outputLabel value="Country" /></td>
+				<td><p:selectOneMenu
+						value="#{purchaseRequestBackingBean.managedBean.pmAddressType.pmAddress.pmCountry.countryId}"
+						style="width: 207px;margin-bottom: 5px;">
+						<f:selectItem itemLabel="-- Select One -- " itemValue="" />
+						<f:selectItem itemLabel="MALAYSIA" itemValue="1" />
+					</p:selectOneMenu></td>
+			</tr>
+			<tr>
+				<td><p:outputLabel value="Address" /></td>
+				<td><p:inputText
+						value="#{purchaseRequestBackingBean.managedBean.pmAddressType.pmAddress.address1}"
+						size="35" /></td>
+				<td><p:outputLabel value="City/Town" /></td>
+				<td><p:selectOneMenu
+						value="#{purchaseRequestBackingBean.managedBean.pmAddressType.pmAddress.pmCity.cityCode}"
+						style="width: 207px;margin-bottom: 5px;">
+						<f:selectItem itemLabel="-- Select One -- " itemValue="" />
+						<f:selectItem itemLabel="KUALA SELANGOR" itemValue="124" />
+					</p:selectOneMenu></td>
+			</tr>
+			<tr>
+				<td><p:outputLabel /></td>
+				<td><p:inputText
+						value="#{purchaseRequestBackingBean.managedBean.pmAddressType.pmAddress.address2}"
+						size="35" /></td>
+				<td><p:outputLabel value="Distict" /></td>
+				<td><p:selectOneMenu
+						value="#{purchaseRequestBackingBean.managedBean.pmAddressType.pmAddress.pmDistrict.districtId}"
+						style="width: 207px;margin-bottom: 5px;">
+						<f:selectItem itemLabel="-- Select One -- " itemValue="" />
+						<f:selectItem itemLabel="TAMAN MEDAN" itemValue="1" />
+					</p:selectOneMenu></td>
+			</tr>
+			<tr>
+				<td><p:outputLabel /></td>
+				<td><p:inputText
+						value="#{purchaseRequestBackingBean.managedBean.pmAddressType.pmAddress.address3}"
+						size="35" /></td>
+				<td><p:outputLabel value="Divison" /></td>
+				<td><p:inputText size="35" /></td>
+			</tr>
+			<tr>
+				<td><p:outputLabel /></td>
+				<td><p:inputText
+						value="#{purchaseRequestBackingBean.managedBean.pmAddressType.pmAddress.address4}"
+						size="35" /></td>
+				<td><p:outputLabel value="State" /></td>
+				<td><p:selectOneMenu
+						value="#{purchaseRequestBackingBean.managedBean.pmAddressType.pmAddress.pmState.stateCode}"
+						style="width: 207px;margin-bottom: 5px;">
+						<f:selectItem itemLabel="-- Select One -- " itemValue="" />
+						<f:selectItem itemLabel="SELANGOR" itemValue="1" />
+					</p:selectOneMenu></td>
+			</tr>
+			<tr>
+				<td><p:outputLabel value="Postal Code" /></td>
+				<td><p:inputText
+						value="#{purchaseRequestBackingBean.managedBean.pmAddressType.pmAddress.postcode}"
+						size="35" /></td>
+
+			</tr>
+			<tr>
+				<td><p:outputLabel value="Contact Person" /></td>
+				<td><p:inputText
+						value="#{purchaseRequestBackingBean.managedBean.pmAddressType.pmAddress.contactName}"
+						size="35" /></td>
+
+			</tr>
+			<tr>
+				<td><p:outputLabel value="Tel.No." /></td>
+				<td><p:inputText
+						value="#{purchaseRequestBackingBean.managedBean.pmAddressType.pmAddress.phoneNo}"
+						size="35" /></td>
+
+			</tr>
+			<tr>
+				<td><p:outputLabel value="Fax.No." /></td>
+				<td><p:inputText
+						value="#{purchaseRequestBackingBean.managedBean.pmAddressType.pmAddress.faxNo}"
+						size="35" /></td>
+
+			</tr>
+			<tr>
+				<td><p:outputLabel value="Mobile.No." /></td>
+				<td><p:inputText
+						value="#{purchaseRequestBackingBean.managedBean.pmAddressType.pmAddress.mobileNo}"
+						size="35" /></td>
+
+			</tr>
+			<tr>
+				<td><p:outputLabel value="Email" /></td>
+				<td><p:inputText size="35" /></td>
+
+			</tr>
+		</table>
+		<p:spacer height="2px"></p:spacer>
+		<div style="width: 100%; text-align: right">
+			<p:commandButton value="Ok" icon="ui-icon-add"
+				action="#{purchaseRequestBackingBean.updateManualDeliveryAddrDt}"
+				oncomplete="addManualDeliveryAddr.hide();" update="addressDataTable">
+			</p:commandButton>
+			<p:commandButton value="Cancel" icon="ui-icon-add"
+				oncomplete="addManualDeliveryAddr.hide();">
 			</p:commandButton>
 		</div>
 	</p:dialog>

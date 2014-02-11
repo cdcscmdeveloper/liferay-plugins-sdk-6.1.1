@@ -92,7 +92,7 @@ public class FulfilmentOrderBackingBean extends BaseBackingBean<FulfilmentOrderM
 			reqDTO.setToken(token);
 			if(getManagedBean().isContractRequest() == Boolean.FALSE){
 				reqDTO.setFlAttachmentList(flBB.getManagedBean().getAttachmentList());
-				reqDTO.setFlRemark(flBB.getManagedBean().getRemarkList().get(0));
+				//reqDTO.setFlRemark(flBB.getManagedBean().getRemarkList().get(0));
 			}
 			reqDTO.setStopRequestId(getManagedBean().getStopRequestId());
 			reqDTO.setContractOrder(getManagedBean().isContractRequest());
@@ -172,7 +172,6 @@ public class FulfilmentOrderBackingBean extends BaseBackingBean<FulfilmentOrderM
 		getManagedBean().setFulfilmentOrder(getManagedBean().getSelectedFlOrder());
 
 		DeliveryOrderBackingBean doMB = new DeliveryOrderBackingBean();
-		doMB.getManagedBean().setFulfilmentOrder(getManagedBean().getFulfilmentOrder());
 		doMB.getManagedBean().setFulfilmentRequest(resDTO.getFlFulfilmentRequest());
 		doMB.getManagedBean().setDocType(resDTO.getFlFulfilmentRequest().getDocType());
 		doMB.getManagedBean().setStatusDesc(statusDesc);

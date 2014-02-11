@@ -53,13 +53,11 @@
 						value="#{createDOBackingBean.managedBean.fulfilmentRequest.receivedOrgProfile.orgName}"
 						disabled="true" /></td>
 			</tr>
-
 		</table>
 	</p:panel>
 
 	<p:panel header="DELIVERY ADDRESS" toggleable="true">
 		<table style="width: 100%">
-
 			<tr>
 				<td rowspan="3" valign="top"><p:outputLabel
 						value="#{lbl['lbl.fl.supp.address']}" /></td>
@@ -91,29 +89,23 @@
 						value="#{lbl['lbl.fl.del.ord.contact.person']}" /></td>
 				<td><p:inputText size="50" style=" margin-bottom:5px;"
 						disabled="true" /></td>
-
 			</tr>
 			<tr>
 				<td><p:outputLabel
 						value="#{lbl['lbl.fl.del.ord.contact.email']}" /></td>
 				<td><p:inputText size="50" style=" margin-bottom:5px;"
 						disabled="true" /></td>
-
 			</tr>
 			<tr>
 				<td><p:outputLabel value="#{lbl['lbl.fl.del.ord.contact.no']}" /></td>
 				<td><p:inputText size="50" style=" margin-bottom:5px;"
 						disabled="true" /></td>
-
 			</tr>
 			<tr>
 				<td><p:outputLabel value="" /></td>
 				<td><p:commandButton value="Select Delivery Address"
 						action="#{createDOBackingBean.delAddrList}" update="delAddr"
 						oncomplete="delAddrList.show();" process="@this,delAddr" /></td>
-				<td><p:outputLabel value="#{lbl['lbl.fl.supp.status']}" /></td>
-				<td><p:inputText size="35" disabled="true" /></td>
-
 			</tr>
 		</table>
 	</p:panel>
@@ -141,8 +133,7 @@
 			<tr>
 				<td valign="top"><p:outputLabel
 						value="#{lbl['lbl.fl.supp.address']}" /></td>
-				<td><p:inputTextarea cols="50" rows="8" disabled="true"
-						value="#{createDOBackingBean.managedBean.supplierAddress}" /></td>
+				<td><p:inputTextarea cols="50" rows="8" disabled="true" style=" margin-bottom:5px;" /></td>
 			</tr>
 			<tr>
 				<td><p:outputLabel value="#{lbl['lbl.fl.supp.email']}" /></td>
@@ -152,57 +143,6 @@
 				<td valign="top"><p:outputLabel
 						value="#{lbl['lbl.fl.supp.telno']}" /></td>
 				<td><p:inputText disabled="true" size="25" /></td>
-			</tr>
-		</table>
-	</p:panel>
-
-	<p:panel header=" FULFILMENT DETAIL (TO)" toggleable="true">
-
-		<br />
-		<table style="width: 100%">
-			<tr>
-				<td style="width: 104px;"><p:outputLabel
-						value="#{lbl['lbl.fl.ministry']}" /></td>
-				<td style="width: 100px;"><p:inputText size="35"
-						value="KEMENTERIAN KEWANGAN" disabled="true" /></td>
-				<td style="width: 225px;"><p:outputLabel
-						value="* #{lbl['lbl.fl.delivery.start']}" /></td>
-				<td><p:calendar mode="popup" showOn="button"
-						pattern="dd/mm/yyyy"
-						value="#{createDOBackingBean.managedBean.flDeliveryOrder.estStartDate}"
-						requiredMessage="Start date is Required" required="true" /></td>
-			</tr>
-			<tr>
-				<td><p:outputLabel value="#{lbl['lbl.fl.issued.jabatan']}" /></td>
-				<td><p:inputText size="35"
-						value="JABATAN KASTAM DAN EKSAIS DIRAJA" disabled="true" /></td>
-				<td><p:outputLabel value="* #{lbl['lbl.fl.delivery.end']}" /></td>
-				<td><p:calendar mode="popup" showOn="button"
-						pattern="dd/mm/yyyy"
-						value="#{createDOBackingBean.managedBean.flDeliveryOrder.estEndDate}"
-						requiredMessage="End date is Required" required="true" /></td>
-			</tr>
-			<tr>
-				<td><p:outputLabel value="#{lbl['lbl.fl.received.ptj']}" /></td>
-				<td><p:inputText size="35"
-						value="IBU PEJABAT KASTAM (RECEIVING PTJ) " disabled="true" /></td>
-				<td colspan="3"></td>
-				<td colspan="4"></td>
-			</tr>
-			<tr>
-				<td valign="top"><p:outputLabel
-						value="#{lbl['lbl.fl.delivery.address']}" /></td>
-				<td><p:inputTextarea cols="36" style="margin-bottom:5px;"
-						disabled="true"
-						value="#{createDOBackingBean.managedBean.deliveryAddress.addressType.pmAddress.address1}" /></td>
-				<td colspan="3"></td>
-				<td colspan="4"></td>
-			</tr>
-			<tr>
-				<td><p:outputLabel value="#{lbl['lbl.fl.charge.account']}" /></td>
-				<td><p:inputText size="20" value="0001010" disabled="true" /></td>
-				<td colspan="3"></td>
-				<td colspan="4"></td>
 			</tr>
 		</table>
 	</p:panel>
@@ -220,9 +160,9 @@
 			<p:columnGroup type="header">
 				<p:row>
 					<p:column rowspan="1" headerText=""></p:column>
-					<p:column rowspan="1" headerText="Del. Address"></p:column>
-					<p:column rowspan="1" headerText="Start Date"></p:column>
-					<p:column rowspan="1" headerText="End Date"></p:column>
+					<p:column rowspan="1" headerText="ADDRESS"></p:column>
+					<p:column rowspan="1" headerText="Exp.Delivery Start"></p:column>
+					<p:column rowspan="1" headerText="Exp.Delivery End"></p:column>
 				</p:row>
 			</p:columnGroup>
 			<p:column selectionMode="single" />
@@ -248,7 +188,5 @@
 				update="delAddrText,:form:dotabs:itemDataTable">
 			</p:commandButton>
 		</div>
-
-
 	</p:dialog>
 </ui:composition>

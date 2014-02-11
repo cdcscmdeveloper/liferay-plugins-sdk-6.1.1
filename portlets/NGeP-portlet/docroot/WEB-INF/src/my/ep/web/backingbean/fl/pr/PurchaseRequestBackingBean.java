@@ -58,12 +58,17 @@ import my.ep.persistence.entity.pm.authorization.PmUser;
 import my.ep.persistence.entity.pm.authorization.PmUserGroup;
 import my.ep.persistence.entity.pm.authorization.PmUserGroupUser;
 import my.ep.persistence.entity.pm.authorization.PmUserOrg;
+import my.ep.persistence.entity.pm.common.PmAddress;
 import my.ep.persistence.entity.pm.common.PmAddressType;
+import my.ep.persistence.entity.pm.common.PmCity;
+import my.ep.persistence.entity.pm.common.PmCountry;
+import my.ep.persistence.entity.pm.common.PmDistrict;
 import my.ep.persistence.entity.pm.common.PmDo;
 import my.ep.persistence.entity.pm.common.PmGo;
 import my.ep.persistence.entity.pm.common.PmMaksud;
 import my.ep.persistence.entity.pm.common.PmParameter;
 import my.ep.persistence.entity.pm.common.PmSo;
+import my.ep.persistence.entity.pm.common.PmState;
 import my.ep.persistence.entity.sc.directpurchase.ScPurchaseRequest;
 import my.ep.persistence.entity.sc.directpurchase.ScRequestNoteDtl;
 import my.ep.persistence.entity.sm.SmSupplier;
@@ -127,7 +132,23 @@ public class PurchaseRequestBackingBean extends BaseBackingBean<PurchaseRequestM
 			getManagedBean().getFulfilmentRequest().setCtContract(new CtContract());
 			getManagedBean().getFulfilmentRequest().getCtContract().setContractType(new PmParameter());
 			getManagedBean().getFulfilmentRequest().getCtContract().setFulfillmentType(new PmParameter());
+			
 		}
+		if(null == getManagedBean().getPmAddressType()){
+			getManagedBean().setPmAddressType(new PmAddressType());
+			getManagedBean().getPmAddressType().setPmAddress(new PmAddress());
+			getManagedBean().getPmAddressType().getPmAddress().setAddressId(1L);
+			getManagedBean().getPmAddressType().getPmAddress().setPmCountry(new PmCountry());
+			getManagedBean().getPmAddressType().getPmAddress().getPmCountry().setCountryId(1L);
+			getManagedBean().getPmAddressType().getPmAddress().setPmState(new PmState());
+			getManagedBean().getPmAddressType().getPmAddress().getPmState().setStateId(1L);
+			getManagedBean().getPmAddressType().getPmAddress().setPmDistrict(new PmDistrict());
+			getManagedBean().getPmAddressType().getPmAddress().getPmDistrict().setDistrictId(1L);
+			getManagedBean().getPmAddressType().getPmAddress().setPmCity(new PmCity());
+			getManagedBean().getPmAddressType().getPmAddress().getPmCity().setCityId(1L);
+			
+		}
+		
 		
 		if (getManagedBean().getApproverModel() == null) {
 			System.out.println("--renew--");
@@ -178,8 +199,8 @@ public class PurchaseRequestBackingBean extends BaseBackingBean<PurchaseRequestM
 				accumulativeProcurementValue();
 			}
 			
-			FulfilmentResDTO resDTO=null;
-			//FulfilmentResDTO resDTO = fulfilmentRequestSO.saveFulfillmentRequest(reqDTO);
+			//FulfilmentResDTO resDTO=null;
+			FulfilmentResDTO resDTO = fulfilmentRequestSO.saveFulfillmentRequest(reqDTO);
 			if (resDTO.isSuccessful()) {
 				log.info("Record saved successfully");
 				String message = "Fulfilment Request No. : "+ flFulfilmentRequest.getFulfilmentReqId();
@@ -214,6 +235,20 @@ public class PurchaseRequestBackingBean extends BaseBackingBean<PurchaseRequestM
 		System.out.println("Address list "+resDTO.getAddressTypeList().size());
 		getManagedBean().setAddressTypesList(resDTO.getAddressTypeList());
 	}
+	public void flManualDeliveryAddr() {
+		getManagedBean().setPmAddressType(new PmAddressType());
+		getManagedBean().getPmAddressType().setPmAddress(new PmAddress());
+		getManagedBean().getPmAddressType().getPmAddress().setAddressId(1L);
+		getManagedBean().getPmAddressType().getPmAddress().setPmCountry(new PmCountry());
+		getManagedBean().getPmAddressType().getPmAddress().getPmCountry().setCountryId(1L);
+		getManagedBean().getPmAddressType().getPmAddress().setPmState(new PmState());
+		getManagedBean().getPmAddressType().getPmAddress().getPmState().setStateId(1L);
+		getManagedBean().getPmAddressType().getPmAddress().setPmDistrict(new PmDistrict());
+		getManagedBean().getPmAddressType().getPmAddress().getPmDistrict().setDistrictId(1L);
+		getManagedBean().getPmAddressType().getPmAddress().setPmCity(new PmCity());
+		getManagedBean().getPmAddressType().getPmAddress().getPmCity().setCityId(1L);
+		
+	}
 	
 	public void updateDeliveryAddrDt() {
 		if (null == getManagedBean().getSelectedPmDelAddrList()
@@ -238,6 +273,22 @@ public class PurchaseRequestBackingBean extends BaseBackingBean<PurchaseRequestM
 				getManagedBean().getFulfilmentRequest().getFlDeliveryAddresses().add(deliveryAddr);
 			}
 		}
+		
+				
+		
+	}
+	public void updateManualDeliveryAddrDt() {
+		if(null== getManagedBean().getPmAddressType() ||  getManagedBean().getPmAddressType().isEditable()){
+			return;
+		}
+		FlDeliveryAddress deliveryAddr = null;
+		PmAddressType manualAddrType=new PmAddressType();
+		manualAddrType=getManagedBean().getPmAddressType();
+		deliveryAddr = new FlDeliveryAddress();
+		deliveryAddr.setFlFulfilmentRequest(getManagedBean().getFulfilmentRequest());
+		deliveryAddr.setAddressType(manualAddrType);
+		deliveryAddr.setCheckManualAddress(true);
+		getManagedBean().getFulfilmentRequest().getFlDeliveryAddresses().add(deliveryAddr);
 	}
 	
 	/**
@@ -826,7 +877,7 @@ public class PurchaseRequestBackingBean extends BaseBackingBean<PurchaseRequestM
 			 FulfilmentReqDTO reqDTO = new FulfilmentReqDTO();
 			 reqDTO.setSupplierId(27L);
 			 reqDTO.setIssuedOrgId(getManagedBean().getFulfilmentRequest().getIssuedOrgProfile().getOrgProfileId());
-			 reqDTO.setYear(2015);
+			 reqDTO.setYear(2014);
 			 getManagedBean().getFlReqNoteMap().put(item.getScRequestNoteDtl().getRequestNoteDtlId(),dtl);
 			 //System.out.println("map Size::: "+getManagedBean().getFlReqNoteMap().size());
 			 //System.out.println("Map Value;;; "+ getManagedBean().getFlReqNoteMap().get(dtl).getRequestNoteDtlId());
@@ -834,7 +885,7 @@ public class PurchaseRequestBackingBean extends BaseBackingBean<PurchaseRequestM
 			 reqDTO.setItemId(item.getScRequestNoteDtl().getRequestNoteDtlId());
 			 FulfilmentResDTO resDTO = fulfilmentRequestSO.accumulativeProcurementValue(reqDTO);
 			 accumulativeProcuValue = resDTO.getAccumulativeProcuValue().intValue();
-			 	if(accumulativeProcuValue > 5000){
+			 	if(accumulativeProcuValue > 50000){
 						throw new EpException("Item --- "+ item.getScRequestNoteDtl().getScRequestSupplierItem().getRequestNoteItem().getItemName()+" Accumulative Procu Value  has been exceeded the RM 50K .");
 					}
 		 }	
@@ -851,7 +902,7 @@ public class PurchaseRequestBackingBean extends BaseBackingBean<PurchaseRequestM
 				}
 					System.out.println("validationOrdAmt: "+validationOrdAmt);
 		}
-		if(validationOrdAmt>5000){
+		if(validationOrdAmt>50000){
 			throw new EpException(" Order Amount  has been exceeded the RM 50K .");
 				
 				
@@ -871,6 +922,12 @@ public class PurchaseRequestBackingBean extends BaseBackingBean<PurchaseRequestM
 	 */
 	public void setDisplayItemPnl(boolean displayItemPnl) {
 		this.displayItemPnl = displayItemPnl;
+	}
+	public void editManualAddress(FlDeliveryAddress flDelAddress){
+		
+		getManagedBean().setPmAddressType(flDelAddress.getAddressType());
+		flDelAddress.getAddressType().setEditable(true);
+		
 	}
 	 
 }

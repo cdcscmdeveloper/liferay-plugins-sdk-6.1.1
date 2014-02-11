@@ -22,8 +22,13 @@ import my.ep.persistence.entity.pm.authorization.PmOrgAddress;
 import my.ep.persistence.entity.pm.authorization.PmUserGroup;
 import my.ep.persistence.entity.pm.authorization.PmUserGroupUser;
 import my.ep.persistence.entity.pm.authorization.PmUserOrg;
+import my.ep.persistence.entity.pm.common.PmAddress;
 import my.ep.persistence.entity.pm.common.PmAddressType;
+import my.ep.persistence.entity.pm.common.PmCity;
+import my.ep.persistence.entity.pm.common.PmCountry;
+import my.ep.persistence.entity.pm.common.PmDistrict;
 import my.ep.persistence.entity.pm.common.PmMaksud;
+import my.ep.persistence.entity.pm.common.PmState;
 import my.ep.persistence.entity.sc.directpurchase.ScRequestItem;
 import my.ep.persistence.entity.sc.directpurchase.ScRequestNote;
 import my.ep.persistence.entity.sc.directpurchase.ScRequestNoteDtl;
@@ -122,8 +127,12 @@ public class PurchaseRequestManagedBean extends BaseManagedBean {
 	
 	//getSuplier address details
 	private String supplierAddress;
-	
-	
+	private PmAddressType pmAddressType;
+	private PmAddress pmAddress;
+	private PmCountry pmCountry ;
+	private PmState pmState;
+	private PmDistrict pmDistrict ;
+	private PmCity pmCity ;
 	
 	/**
 	 * @return the flRemark
@@ -861,10 +870,87 @@ public class PurchaseRequestManagedBean extends BaseManagedBean {
 		this.flReqNoteMap = flReqNoteMap;
 	}
 
-	
+	/**
+	 * @return the pmAddress
+	 */
+	public PmAddress getPmAddress() {
+		return pmAddress;
+	}
 
-	
+	/**
+	 * @param pmAddress the pmAddress to set
+	 */
+	public void setPmAddress(PmAddress pmAddress) {
+		this.pmAddress = pmAddress;
+	}
 
-	
+	/**
+	 * @return the pmCountry
+	 */
+	public PmCountry getPmCountry() {
+		return pmCountry;
+	}
 
+	/**
+	 * @param pmCountry the pmCountry to set
+	 */
+	public void setPmCountry(PmCountry pmCountry) {
+		this.pmCountry = pmCountry;
+	}
+
+	/**
+	 * @return the pmState
+	 */
+	public PmState getPmState() {
+		return pmState;
+	}
+
+	/**
+	 * @param pmState the pmState to set
+	 */
+	public void setPmState(PmState pmState) {
+		this.pmState = pmState;
+	}
+
+	/**
+	 * @return the pmDistrict
+	 */
+	public PmDistrict getPmDistrict() {
+		return pmDistrict;
+	}
+
+	/**
+	 * @param pmDistrict the pmDistrict to set
+	 */
+	public void setPmDistrict(PmDistrict pmDistrict) {
+		this.pmDistrict = pmDistrict;
+	}
+
+	/**
+	 * @return the pmCity
+	 */
+	public PmCity getPmCity() {
+		return pmCity;
+	}
+
+	/**
+	 * @param pmCity the pmCity to set
+	 */
+	public void setPmCity(PmCity pmCity) {
+		this.pmCity = pmCity;
+	}
+
+	/**
+	 * @return the pmAddressType
+	 */
+	public PmAddressType getPmAddressType() {
+		return pmAddressType;
+	}
+
+	/**
+	 * @param pmAddressType the pmAddressType to set
+	 */
+	public void setPmAddressType(PmAddressType pmAddressType) {
+		this.pmAddressType = pmAddressType;
+	}
 }
