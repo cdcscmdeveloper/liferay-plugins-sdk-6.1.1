@@ -68,15 +68,17 @@ public class CommonMethod {
 		log.info("userId " + userId);
 		List <PmOrgProfile> profileList =  new ArrayList<PmOrgProfile>();
 		try{
-			if(CommonMethod.isSelected(userId) && CommonMethod.isSelected(orgType)){
+			if(CommonMethod.isSelected(userId)){
 				OrgProfileReqDTO reqDTO = new OrgProfileReqDTO();
 				reqDTO.setUserId(userId);
-				reqDTO.setOrgType(orgType);
-				
+				if(CommonMethod.isSelected(orgType)){
+					reqDTO.setOrgType(orgType);
+				}
 				IOrgProfileSO orgProfileSO = BusinessDelegate.getInstance().getServiceObject("pm", IOrgProfileSO.class);
 				OrgProfileResDTO resDTO = orgProfileSO.retrieveOrgProfileListByOrgType(reqDTO);
 //				if(resDTO.isSuccessful()){
 					profileList = resDTO.getOrgProfileList();
+					System.out.println("size.. " + profileList.size());
 		
 //				}
 			}
@@ -224,8 +226,6 @@ public class CommonMethod {
 		log.info("status id "  + ppWorkflowStatus.getStatusId());
 		return ppWorkflowStatus;
 	}
-	
-	
 	
 
 

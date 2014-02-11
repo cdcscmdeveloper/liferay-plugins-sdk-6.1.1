@@ -34,6 +34,8 @@ public class PlanManagedBean extends BaseManagedBean{
 
 	private List <PmOrgProfile> currentProfiles;
 	
+	private String currentProfileIds;
+	
 	private Boolean amanahFlag;
 	
 	private PpPlan selectedPlan;
@@ -42,18 +44,24 @@ public class PlanManagedBean extends BaseManagedBean{
 	
 	private PpPlanActivity selectedPlanActivity; 
 	
-	private DualListModel<PmUser> users;  
+	private DualListModel<PmUser> verifier;
+	
+	private PmUser approver;  
 	
 	private boolean enableTab; //enable the details tab
 
 	private int selectedTab;	
 
 	private List<CtCircular> ctCircularOpts;
-//	
-//	private List<PmParameter> planTypeOpts;
-//	
-//	private List<PmParameter> procurementModeOpts;
-//	
+	
+	private Long userId;
+	
+	private List<PmParameter> planTypeOpts;
+	
+	private List<PmParameter> procurementModeOpts;
+	
+	private List<PmParameter> docTypeOpts;
+	
 	
 	
 	/**
@@ -70,22 +78,39 @@ public class PlanManagedBean extends BaseManagedBean{
 		this.amanahFlag = amanahFlag;
 	}
 
-	
 	/**
-	 * @return the users
+	 * @return the verifier
 	 */
-	public DualListModel<PmUser> getUsers() {
-		return users;
+	public DualListModel<PmUser> getVerifier() {
+		if(verifier==null)
+			verifier = new DualListModel<PmUser>();
+		return verifier;
 	}
 
 	/**
-	 * @param users the users to set
+	 * @param verifier the verifier to set
 	 */
-	public void setUsers(DualListModel<PmUser> users) {
-		this.users = users;
+	public void setVerifier(DualListModel<PmUser> verifier) {
+		this.verifier = verifier;
 	}
 	
-	
+
+	/**
+	 * @return the approver
+	 */
+	public PmUser getApprover() {
+		if(approver==null)
+			approver = new PmUser();
+		return approver;
+	}
+
+	/**
+	 * @param approver the approver to set
+	 */
+	public void setApprover(PmUser approver) {
+		this.approver = approver;
+	}
+
 	/**
 	 * @return the enableTab
 	 */
@@ -202,57 +227,91 @@ public class PlanManagedBean extends BaseManagedBean{
 	public void setCtCircularOpts(List<CtCircular> ctCircularOpts) {
 		this.ctCircularOpts = ctCircularOpts;
 	}
+	
+	/**
+	 * @return the planTypeOpts
+	 */
+	public List<PmParameter> getPlanTypeOpts() {
+		if(planTypeOpts==null)
+			planTypeOpts = new ArrayList<PmParameter>();
+		return planTypeOpts;
+	}
 
-//	/**
-//	 * @return the planTypeOpts
-//	 */
-//	public List<PmParameter> getPlanTypeOpts() {
-//		if(planTypeOpts==null)
-//			planTypeOpts = new ArrayList<PmParameter>();
-//		return planTypeOpts;
-//	}
-//
-//	/**
-//	 * @param planTypeOpts the planTypeOpts to set
-//	 */
-//	public void setPlanTypeOpts(List<PmParameter> planTypeOpts) {
-//		this.planTypeOpts = planTypeOpts;
-//	}
-//
-//	/**
-//	 * @return the procurementModeOpts
-//	 */
-//	public List<PmParameter> getProcurementModeOpts() {
-//		if(procurementModeOpts==null)
-//			procurementModeOpts = new ArrayList<PmParameter>();
-//		return procurementModeOpts;
-//	}
-//
-//	/**
-//	 * @param procurementModeOpts the procurementModeOpts to set
-//	 */
-//	public void setProcurementModeOpts(List<PmParameter> procurementModeOpts) {
-//		this.procurementModeOpts = procurementModeOpts;
-//	}
+	/**
+	 * @param planTypeOpts the planTypeOpts to set
+	 */
+	public void setPlanTypeOpts(List<PmParameter> planTypeOpts) {
+		this.planTypeOpts = planTypeOpts;
+	}
+
+	/**
+	 * @return the procurementModeOpts
+	 */
+	public List<PmParameter> getProcurementModeOpts() {
+		if(procurementModeOpts==null)
+			procurementModeOpts = new ArrayList<PmParameter>();
+		return procurementModeOpts;
+	}
+
+	/**
+	 * @param procurementModeOpts the procurementModeOpts to set
+	 */
+	public void setProcurementModeOpts(List<PmParameter> procurementModeOpts) {
+		this.procurementModeOpts = procurementModeOpts;
+	}
+
+	/**
+	 * @return the docTypeOpts
+	 */
+	public List<PmParameter> getDocTypeOpts() {
+		return docTypeOpts;
+	}
+
+	/**
+	 * @param docTypeOpts the docTypeOpts to set
+	 */
+	public void setDocTypeOpts(List<PmParameter> docTypeOpts) {
+		this.docTypeOpts = docTypeOpts;
+	}
+
+	/**
+	 * @return the userId
+	 */
+	public Long getUserId() {
+		return userId;
+	}
+
+	/**
+	 * @return the currentProfileIds
+	 */
+	public String getCurrentProfileIds() {
+		return currentProfileIds;
+	}
+
+	/**
+	 * @param currentProfileIds the currentProfileIds to set
+	 */
+	public void setCurrentProfileIds(String currentProfileIds) {
+		this.currentProfileIds = currentProfileIds;
+	}
+
+	/**
+	 * @param userId the userId to set
+	 */
+	public void setUserId(Long userId) {
+		this.userId = userId;
+	}
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+	
+	
+	
+	
+	
+	
+	
+	
+	
 
 
 	private boolean searchPlan;

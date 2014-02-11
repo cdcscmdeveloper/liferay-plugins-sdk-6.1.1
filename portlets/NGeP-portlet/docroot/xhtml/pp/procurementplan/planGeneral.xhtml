@@ -49,7 +49,7 @@ xmlns:ac="http://ac.my/jsf/composite/cc"
 				</td>
 				<th><p:outputLabel value="* #{lbl['lbl.pp.plan.approver']}"/></th>
 				<td>
-					<p:selectOneMenu styleClass="ppDropDownWidthM"
+					<p:selectOneMenu styleClass="ppDropDownWidthM" value="#{planBackingBean.managedBean.approver}"
 						disabled="#{!planBackingBean.managedBean.selectedPlan.editable}" >
 						<f:selectItem itemLabel="#{lbl['lbl.select']}" />
 						<f:selectItems value="#{planBackingBean.generateApprovers()}" var="user"
@@ -85,6 +85,7 @@ xmlns:ac="http://ac.my/jsf/composite/cc"
 					<p:selectOneMenu value="#{planBackingBean.managedBean.selectedPlan.votTypeParam.parameterId}" styleClass="ppDropDownWidthM"
 						disabled="#{!planBackingBean.managedBean.selectedPlan.brandNew}">
 						<f:selectItems value="#{planBackingBean.votTypeOptions()}"/>
+						<p:ajax event="change" listener="#{planBackingBean.selectedVotTypeParam(planBackingBean.managedBean.selectedPlan.votTypeParam.parameterId)}" />
 					</p:selectOneMenu>
 					<br/>
 				</td>
@@ -105,13 +106,13 @@ xmlns:ac="http://ac.my/jsf/composite/cc"
 							|| planBackingBean.managedBean.selectedPlan.planTypeParam.parameterCode==null
 							|| planBackingBean.managedBean.selectedPlan.procurementModeParam.parameterCode==PPConst.procurementExistingContract}"
 						headerText="#{lbl['lbl.pp.product.segment']}" 
-						saveObject="planBackingBean.managedBean.selectedPlan.cmUnspscFamily.cmUnspsc"
-						value="#{planBackingBean.managedBean.selectedPlan.cmUnspscFamily.cmUnspsc.unspscTitle}"
+						saveObject="planBackingBean.managedBean.selectedPlan.cmUnspscSegment"
+						value="#{planBackingBean.managedBean.selectedPlan.cmUnspscSegment.unspscTitle}"
 						conditionField="recordStatus^1|unspscLevel^0">
 					</ac:lov>
 				</td>
 				<td rowspan="10" colspan="2">
-					<p:pickList id="plPvo" value="#{planBackingBean.generateVerificationOfficers()}"
+					<p:pickList id="plPvo" value="#{planBackingBean.managedBean.verifier}"
 						disabled="#{!planBackingBean.managedBean.selectedPlan.editable || !planBackingBean.managedBean.selectedPlan.verifyReq}"
 						var="user" itemLabel="#{user.loginId}" itemValue="#{user}">
 						<f:facet name="sourceCaption">Available</f:facet>  
@@ -126,13 +127,13 @@ xmlns:ac="http://ac.my/jsf/composite/cc"
 				<th class="verticalAlignNone"><p:outputLabel value="* #{lbl['lbl.pp.product.family']}"/></th>
 				<td>
 					<ac:lov id="lovFamily" lovId="CM_UNSPSC" size="26"
-						headerText="#{lbl['lbl.pp.product.family']}"  update=":form:tvPlanContent:lovFamily:lovClass"
+						headerText="#{lbl['lbl.pp.product.family']}"  update=":form:tvPlanContent:lovSegment:lovSegment,:form:tvPlanContent:lovClass:lovClass"
 						disabled="#{!planBackingBean.managedBean.selectedPlan.editable
 							|| planBackingBean.managedBean.selectedPlan.planTypeParam.parameterCode==null
 							|| planBackingBean.managedBean.selectedPlan.procurementModeParam.parameterCode==PPConst.procurementExistingContract}"
 						saveObject="planBackingBean.managedBean.selectedPlan.cmUnspscFamily"
 						value="#{planBackingBean.managedBean.selectedPlan.cmUnspscFamily.unspscTitle}"
-						conditionField="recordStatus^1|unspscLevel^1|unspscParentCode^#{planBackingBean.managedBean.selectedPlan.cmUnspscFamily.cmUnspsc.unspscCode}">
+						conditionField="recordStatus^1|unspscLevel^1|unspscParentCode^#{planBackingBean.managedBean.selectedPlan.cmUnspscSegment.unspscCode}">
 					</ac:lov>
 		
 				</td>
@@ -147,7 +148,7 @@ xmlns:ac="http://ac.my/jsf/composite/cc"
 							|| planBackingBean.managedBean.selectedPlan.procurementModeParam.parameterCode!=PPConst.procurementDirectPurchase}"
 						saveObject="planBackingBean.managedBean.selectedPlan.cmUnspscClass"
 						value="#{planBackingBean.managedBean.selectedPlan.cmUnspscClass.unspscTitle}"
-						conditionField="recordStatus^1|unspscLevel^2|unspscParentCode^#{planBackingBean.managedBean.selectedPlan.cmUnspscFamily.unspscCode}">
+						conditionField="recordStatus^1|unspscLevel^2|cmUnspsc.unspscCode^#{planBackingBean.managedBean.selectedPlan.cmUnspscFamily.unspscCode}">
 					</ac:lov>
 				</td>
 			</tr>

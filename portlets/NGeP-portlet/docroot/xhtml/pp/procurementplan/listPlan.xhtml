@@ -89,12 +89,6 @@ xmlns:tp="http://java.sun.com/jsf/composite/ep"
    			
    			<!-- Bottom Button(s) -->
    			<div class="ppRightBtn">
-   				<p:selectOneMenu styleClass="ppDropDownWidthM" 
-					value="#{planBackingBean.managedBean.amanahFlag}"> 
-					<f:selectItem itemLabel="#{lbl['lbl.select']}" itemValue="#{null}"/>
-					<f:selectItem itemLabel="Without Vot (Amanah)" itemValue="true"/>
-					<f:selectItem itemLabel="With Vot" itemValue="false"/>
-				</p:selectOneMenu>
 				<!-- Enable for Org Profile PTJ -->
 				<p:commandButton value="#{lbl['lbl.pp.create.new.plan']}" 
 					id="cbNewPlan" icon="ui-icon-add"

@@ -17,15 +17,19 @@ xmlns:fn="http://java.sun.com/jsp/jstl/functions"
 			<p:column headerText="#{lbl['lbl.pp.activity.name']}">  
 	            #{qtActivity.pmBusinessActivity.mandatory ? '*' : ''} 
 	            #{qtActivity.pmBusinessActivity.activityName}
-	            
-	            #{qtActivity.pmBusinessActivity.multiple ? 'add' : ''}
+	            <p:outputPanel rendered="#{qtActivity.pmBusinessActivity.multiple}">
+	               <p:commandLink action="#{planBackingBean.addBusinessActivity(qtActivity)}" update="dtSrcAct"
+		             	disabled="#{!planBackingBean.managedBean.selectedPlan.brandNew and planBackingBean.managedBean.viewMode!=PPConst.modeRevision}">
+	             	 	<p:graphicImage value="/resources/ep/images/design/add.png"/>
+		            </p:commandLink>
+	            </p:outputPanel>
 	        </p:column>
 			<p:column headerText="#{lbl['lbl.pp.kpi.sla']}">  
 				#{qtActivity.pmBusinessActivity.slaDay}
 	        </p:column>
 			<p:column headerText="#{lbl['lbl.pp.planned.activity.startdate']}">
 				<p:calendar showOn="button" value="#{qtActivity.planStartDate}" pattern="MM/dd/yyyy" 
-					disabled="#{!planBackingBean.managedBean.selectedPlan.brandNew &amp;&amp; planBackingBean.managedBean.viewMode!=PPConst.modeRevision}">
+					disabled="#{!planBackingBean.managedBean.selectedPlan.brandNew and planBackingBean.managedBean.viewMode!=PPConst.modeRevision}">
 					<p:ajax event="dateSelect" update="ipEndDate"
 						 />
 					<p:ajax event="change" update="ipEndDate" value="#{qtActivity.planEndDate}" pattern="MM/dd/yyyy" 

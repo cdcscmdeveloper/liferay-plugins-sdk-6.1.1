@@ -18,24 +18,30 @@ xmlns:c="http://java.sun.com/jsp/jstl/core"
 				value="#{planBackingBean.managedBean.selectedPlan.ppPlanDtls}"  rowIndexVar="rowIndex"
 				emptyMessage="#{lbl['lbl.pp.no.record.found']}">  
 		        <p:column headerText="#{lbl['lbl.pp.gosodo.code']}"> 
-                   <p:selectOneMenu 
+                   <p:selectOneMenu value="#{item.goId}"
 						disabled="#{!item.editable}">
 						<f:selectItem itemLabel="#{lbl['lbl.select']}" itemValue="#{null}" />
+						<f:selectItems value="#{planBackingBean.goOptions()}" 
+							var="obj" itemLabel="#{obj.goCode}" itemValue="#{obj.goId}" />
 						<p:ajax event="change" update="somSo"/>
 					</p:selectOneMenu>
-					<p:selectOneMenu id="somSo"
+					<p:selectOneMenu id="somSo"  value="#{item.pmDo.pmSo.soId}"
 						disabled="#{!item.editable}">
 						<f:selectItem itemLabel="#{lbl['lbl.select']}" itemValue="#{null}" />
+						<f:selectItems value="#{planBackingBean.soOptions(item.goId)}" 
+							var="obj" itemLabel="#{obj.soCode}" itemValue="#{obj.soId}" />
 						<p:ajax event="change" update="somDo"/>
 					</p:selectOneMenu>
-					<p:selectOneMenu  id="somDo" 
+					<p:selectOneMenu  id="somDo" value="#{item.pmDo.doId}"
 						disabled="#{!item.editable}">
 						<f:selectItem itemLabel="#{lbl['lbl.select']}" itemValue="#{null}" />
-						<p:ajax event="change" update="itAvailbleBud"/>
+						<f:selectItems value="#{planBackingBean.doOptions(item.pmDo.pmSo.soId)}" 
+							var="obj" itemLabel="#{obj.doCode}" itemValue="#{obj.doId}" />
+						<p:ajax event="change" update="somDo" listener="#{planBackingBean.selectedItemDo(item.pmDo.doId, rowIndex)}"/>
 					</p:selectOneMenu> 
 		        </p:column>   
 		        <p:column headerText="#{lbl['lbl.pp.estimated.amount']}">    
-	                   <p:inputText value="-" styleClass="ppDisplayTextS"
+	                   <p:inputText value="#{item.estimatedAmt}" styleClass="ppDisplayTextS"
 	                   		disabled="#{!item.editable}"/>&nbsp;
 		        </p:column>
 	        	<p:column headerText="#{lbl['lbl.pp.balance.amount']}"> 
