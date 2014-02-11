@@ -76,6 +76,7 @@ import my.ep.persistence.entity.sm.SmSupplier;
 import my.ep.persistence.logging.LogKey;
 import my.ep.type.aut.SearchOperator;
 import my.ep.type.pm.RoleCode;
+import my.ep.util.MessageUtils;
 import my.ep.util.lookupservice.EpBpmBusinessDelegate;
 import my.ep.web.backingbean.BaseBackingBean;
 import my.ep.web.backingbean.ct.ContractBackingBean;
@@ -111,9 +112,11 @@ public class PanelBackingBean extends BaseBackingBean<PanelManagedBean>{
 		if(getManagedBean().getOutComes()==null) {
 			getManagedBean().setOutComes(new String[]{"Save","Submit"});
 			getManagedBean().setCircularVer(new CtCircularVer());
+			getManagedBean().setCancelCircularReq(new CtCancelCircularReq());
 			PmStatus status = new PmStatus();
 			status.setStatusId(ContractStatusConst.PENDING_SUBMISSION);
-			getManagedBean().getCircularVer().setStatus(status);			
+			getManagedBean().getCircularVer().setStatus(status);
+			getManagedBean().getCancelCircularReq().setStatus(status);
 			initializeRemarks();
 			
 			ContractBackingBean ctBB = new ContractBackingBean();
@@ -375,6 +378,17 @@ public class PanelBackingBean extends BaseBackingBean<PanelManagedBean>{
 		try {
 			circularSO = (ICircularSO)BusinessDelegate.getInstance().getServiceObject("ct",ICircularSO.class);
 			
+			if(isBPKApprover()) {
+				if(getManagedBean().getRemarkList().get(0).getRemark().length()==0) {
+					throw new EpException("100022", new String[]{"Remark"});
+				}
+			}
+			if(action.equalsIgnoreCase(BpmOutcomeConst.BPM_SUBMIT)) {
+				if(getManagedBean().getApproverModel().getTarget().size()==0) {
+					throw new EpException("100022", new String[]{"Selected approver(s)"});
+				}
+			}
+			
 			CircularReqDTO reqDTO = new CircularReqDTO();
 			reqDTO.setCancelCircularReq(getManagedBean().getCancelCircularReq());
 			reqDTO.setSelectedApprovers(getManagedBean().getApproverModel().getTarget());
@@ -426,7 +440,12 @@ public class PanelBackingBean extends BaseBackingBean<PanelManagedBean>{
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
-			FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR,e.toString(), "Cancel circular request save failed."));
+			if(e instanceof EpException) {
+				EpException ep = (EpException) e;
+				FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR,e.toString(), MessageUtils.getMessage(ep.getMessage(), ep.getParameters(), MessageUtils.BUNDLE_COMMON_MESSAGES, getFacesScopes().getUserLocale())));
+			} else {
+				FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR,e.toString(), MessageUtils.getMessage("000001", null, MessageUtils.BUNDLE_COMMON_MESSAGES, getFacesScopes().getUserLocale())));
+			}
 		} finally {
 			circularSO = null;
 		}
@@ -995,7 +1014,7 @@ public class PanelBackingBean extends BaseBackingBean<PanelManagedBean>{
 			getManagedBean().setOutComes(outcome);	
 			
 			CircularReqDTO cancelReqDTO = new CircularReqDTO();
-			cancelReqDTO.setCancelCircularReqId(dataType.getCircularIds().get(0).longValue());
+			cancelReqDTO.setCancelCircularReqId(dataType.getDocId().longValue());
 			
 			CircularResDTO resDTO = circularSO.retrieveCancelCircularReqById(cancelReqDTO);
 			getManagedBean().getApproverModel().setTarget(resDTO.getApproverList());
