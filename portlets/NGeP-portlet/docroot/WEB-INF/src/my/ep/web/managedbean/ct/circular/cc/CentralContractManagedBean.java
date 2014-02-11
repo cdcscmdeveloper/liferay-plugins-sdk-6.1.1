@@ -39,6 +39,7 @@ public class CentralContractManagedBean extends BaseManagedBean {
 	private String circularAdmin;
 	
 	private boolean updateAction;
+	private boolean updateTypeDisable;
 	
 	private CtCircular circular;
 	private CtCircularVer circularVer;
@@ -223,6 +224,12 @@ public class CentralContractManagedBean extends BaseManagedBean {
 	}
 	public void setCancelledCircularList(List<CtCancelCircular> cancelledCircularList) {
 		this.cancelledCircularList = cancelledCircularList;
+	}
+	public boolean isUpdateTypeDisable() {
+		return updateTypeDisable;
+	}
+	public void setUpdateTypeDisable(boolean updateTypeDisable) {
+		this.updateTypeDisable = updateTypeDisable;
 	}
 	
 }

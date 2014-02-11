@@ -11,7 +11,7 @@
     <ui:define name="contentSection">
     	<f:event listener="#{centralContractBackingBean.preRenderView}" type="preRenderView" />	
 		<p:panel>
-			<p:messages id="messages" showDetail="true" autoUpdate="true" closable="true" severity="error, info" />
+			<p:messages id="messages" showSummary="false" escape="false" showDetail="true" autoUpdate="true" closable="true" severity="error, info" />
 	    	<table style="width: 100%;">
 	    		<tr>
 	    			<td><p:commandButton value="Back" immediate="true" icon="ui-icon-back" oncomplete="window.history.back();" /></td>

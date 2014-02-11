@@ -49,7 +49,8 @@
 			<ac:paginator for="centralContractDt" />
 			<p:column selectionMode="multiple" style="width:3%" />
 			<p:column headerText="#{lbl['lbl.ct.cc.ctno']}" >
-				<h:outputText value="#{data.ctContract.latestContractVer.ctContractValue.contractPhysicalNo}" />
+				<h:commandLink value="#{data.ctContract.latestContractVer.ctContractValue.contractPhysicalNo}" styleClass="blue_font" 
+					onclick="alert('Development in progress');" immediate="true" /> 
 			</p:column>
 			<p:column headerText="#{lbl['lbl.ct.cc.ctname']}" >
 				<h:outputText value="#{data.ctContract.contractName}" />
@@ -76,7 +77,7 @@
 			<p:commandButton value="Add" process="@form" partialSubmit="true" icon="ui-icon-add" oncomplete="contractDlg.show();" 
 				actionListener="#{centralContractBackingBean.addCircularContractListener()}" update="contractDlg" />
 			<p:commandButton value="Delete" process="@form" partialSubmit="true" icon="ui-icon-delete"
-				action="#{centralContractBackingBean.deleteCircularContract()}" update="centralContractDt" />				
+				action="#{centralContractBackingBean.deleteCircularContract()}" update="centralContractDt,popupButtonCal,popupButtonCal1" />				
 		</div>
 	</p:panel>
 	
@@ -121,7 +122,7 @@
 			<div class="ppRightBtn"> 
 				<p:commandButton value="Select" process="contractDlg" icon="ui-icon-accept"
 					action="#{centralContractBackingBean.addSelectedContract}"
-					update="centralContractDt" onclick="contractDlg.hide();" />
+					update="centralContractDt,popupButtonCal,popupButtonCal1" onclick="contractDlg.hide();" />
 				<p:commandButton value="Cancel" icon="ui-icon-cancel" type="button" ajax="false" onclick="contractDlg.hide();" />
 			</div>	
 		</p:panel>

@@ -24,7 +24,8 @@
 			<h:outputLabel value="#{lbl['lbl.ct.cc.frno']}" />
 			<p:inputText disabled="true" value="#{centralContractBackingBean.managedBean.circularVer.circularFileRefNo}" />			
 			<p:outputLabel value="#{lbl['lbl.ct.pc.update.type']}" />
-			<p:selectOneMenu value="#{centralContractBackingBean.managedBean.circularVer.updateType.parameterId}">
+			<p:selectOneMenu value="#{centralContractBackingBean.managedBean.circularVer.updateType.parameterId}"
+				disabled="#{centralContractBackingBean.managedBean.updateTypeDisable}" >
 				<f:selectItems value="#{centralContractBackingBean.getDropdownValues(ParameterTypeConst.circularUpdateType)}" />
 			</p:selectOneMenu>
 			<h:outputLabel value="#{lbl['lbl.ct.pc.update.no']}" />
@@ -33,7 +34,7 @@
 			<p:inputText value="#{centralContractBackingBean.managedBean.circularVer.updateName}" />		
 			<h:outputLabel value="Update Description" />
 			<p:inputText value="#{centralContractBackingBean.managedBean.circularVer.updateDescription}" />								
-			<h:outputLabel value="Update Letter" />
+			<h:outputLabel value="* Update Letter" />
 			<h:panelGroup id="uploadUpdCcrPg">
 				<p:commandButton oncomplete="uploadUpdCcrDlg.show();return false;" icon="iconAttachment" 
 					update="uploadUpdCcrPg" value="Choose file" 

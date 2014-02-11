@@ -14,11 +14,11 @@
 			<p:inputText value="#{centralContractBackingBean.managedBean.circularVer.name}" />
 			<h:outputLabel value="#{lbl['lbl.ct.cc.csdate']}" />
 			<p:calendar value="#{centralContractBackingBean.managedBean.circularVer.startDate}" 
-				pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}" id="popupButtonCal" showOn="button" />
+				pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}" id="popupButtonCal" disabled="true" />
 			<h:outputLabel value="#{lbl['lbl.ct.cc.cedate']}" />
 			<p:calendar value="#{centralContractBackingBean.managedBean.circularVer.endDate}" 
-				pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}" id="popupButtonCal1" showOn="button" />
-			<h:outputLabel value="#{lbl['lbl.ct.cc.upload']}" />
+				pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}" id="popupButtonCal1" disabled="true" />
+			<h:outputLabel value="* #{lbl['lbl.ct.cc.upload']}" />
 			<h:panelGroup id="uploadCircularPg">
 				<p:commandButton oncomplete="uploadCircularDlg.show();return false;" icon="iconAttachment" 
 					update="uploadCircularPg" value="Choose file" 

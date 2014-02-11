@@ -32,8 +32,10 @@ import my.ep.biz.bean.search.SearchBean;
 import my.ep.biz.bean.search.SearchBetweenValue;
 import my.ep.biz.bean.search.SearchFilterBean;
 import my.ep.biz.service.ct.IContractSO;
+import my.ep.biz.service.ct.circular.ICircularDetailSO;
 import my.ep.biz.service.ct.circular.ICircularSO;
 import my.ep.biz.service.pm.authorization.user.IUserSO;
+import my.ep.biz.service.pm.common.parameter.IParameterSO;
 import my.ep.biz.service.pm.common.status.IStatusSO;
 import my.ep.bpm.dto.BpmRequestDTO;
 import my.ep.bpm.dto.BpmResponseDTO;
@@ -45,10 +47,12 @@ import my.ep.constant.pm.ParameterConst;
 import my.ep.constant.pm.ParameterTypeConst;
 import my.ep.dto.ct.ContractReqDTO;
 import my.ep.dto.ct.ContractResDTO;
+import my.ep.dto.ct.circular.CircularDetailReqDTO;
 import my.ep.dto.ct.circular.CircularReqDTO;
 import my.ep.dto.ct.circular.CircularResDTO;
 import my.ep.dto.pm.authorization.user.UserReqDTO;
 import my.ep.dto.pm.authorization.user.UserResDTO;
+import my.ep.dto.pm.common.parameter.ParameterReqDTO;
 import my.ep.dto.pm.common.status.StatusReqDTO;
 import my.ep.dto.pm.common.status.StatusResDTO;
 import my.ep.exception.EpException;
@@ -68,6 +72,7 @@ import my.ep.persistence.entity.pm.common.PmStatusDesc;
 import my.ep.persistence.logging.LogKey;
 import my.ep.type.aut.SearchOperator;
 import my.ep.type.pm.RoleCode;
+import my.ep.util.MessageUtils;
 import my.ep.util.lookupservice.EpBpmBusinessDelegate;
 import my.ep.web.backingbean.BaseBackingBean;
 import my.ep.web.backingbean.ct.ContractBackingBean;
@@ -106,6 +111,15 @@ public class CentralContractBackingBean extends BaseBackingBean<CentralContractM
 			PmStatus status = new PmStatus();
 			status.setStatusId(ContractStatusConst.PENDING_SUBMISSION);
 			getManagedBean().getCircularVer().setStatus(status);
+			if(getFacesScopes().hasRoleUser(RoleCode.BPK_CCA_HQ.value())) {
+				getManagedBean().getCircularVer().setPeninsular(true);
+				getManagedBean().getCircularVer().setSabah(true);
+				getManagedBean().getCircularVer().setSarawak(true);
+			} else if(getFacesScopes().hasRoleUser(RoleCode.BPK_CCA_SA.value())) {
+				getManagedBean().getCircularVer().setSabah(true);
+			} else if(getFacesScopes().hasRoleUser(RoleCode.BPK_CCA_SK.value())) {
+				getManagedBean().getCircularVer().setSarawak(true);
+			}
 			ContractBackingBean ctBB = new ContractBackingBean();
 			ctBB.initializeRemarkAndAttachement(getManagedBean().getRemarkList(), getManagedBean().getAttachmentList());
 		}
@@ -316,6 +330,10 @@ public class CentralContractBackingBean extends BaseBackingBean<CentralContractM
 		log.info("CentralContractBackingBean.deleteCircularContract()");
 		try {
 			getManagedBean().getCircularVer().getCtCircularContracts().removeAll(getManagedBean().getSelectedCircularContracts());
+			if(getManagedBean().getCircularVer().getCtCircularContracts().size()==0) {
+    			getManagedBean().getCircularVer().setStartDate(null);
+    			getManagedBean().getCircularVer().setEndDate(null);
+			}
 		} catch (Exception e) {
 			e.printStackTrace();
 			FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR,e.toString(), e.getMessage()));
@@ -372,6 +390,10 @@ public class CentralContractBackingBean extends BaseBackingBean<CentralContractM
         try {	
         	CtCircularContract circularContract = null;
         	for(CtContract contract : getManagedBean().getSelectedContractList()) {
+        		if(getManagedBean().getCircularVer().getStartDate()==null) {
+        			getManagedBean().getCircularVer().setStartDate(contract.getLatestContractVer().getCtContractValue().getEffDate());
+        			getManagedBean().getCircularVer().setEndDate(contract.getLatestContractVer().getCtContractValue().getExpDate());
+        		}
         		circularContract = new CtCircularContract();
         		circularContract.setCtContract(contract);
         		getManagedBean().getCircularVer().getCtCircularContracts().add(circularContract);
@@ -465,6 +487,7 @@ public class CentralContractBackingBean extends BaseBackingBean<CentralContractM
 		ICircularSO circularSO = null;
 		try {
 			circularSO = (ICircularSO)BusinessDelegate.getInstance().getServiceObject("ct",ICircularSO.class);
+			validateCircular(outcome);
 			
 			if(MDC.get(LogKey.USER_ID)==null) {
 				new LogKey(getFacesScopes().getUserSessionBean().getUserId());
@@ -478,11 +501,6 @@ public class CentralContractBackingBean extends BaseBackingBean<CentralContractM
 			CtCircularVer circularVer = getManagedBean().getCircularVer();
 			if(circularVer.getDocType()==null) {
 				circularVer.setDocType(ContractConst.DOC_TYPE_CC_CIRCULAR_CREATION);
-			}
-			// TODO
-			if(circularVer.getCircularFileName()==null) {
-				circularVer.setCircularFileName("temp");
-				circularVer.setCircularFilePath("tempPath");
 			}
 			
 			CircularReqDTO reqDTO = new CircularReqDTO();
@@ -536,15 +554,45 @@ public class CentralContractBackingBean extends BaseBackingBean<CentralContractM
 				ContractBackingBean ctBB = new ContractBackingBean();
 				ctBB.initializeRemarkAndAttachement(getManagedBean().getRemarkList(), getManagedBean().getAttachmentList());				
 			} else {
-				throw new EpException("Failed.");
+				throw new EpException("000001");
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
-			FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR,e.toString(), "Circular save failed."));
+			if(e instanceof EpException) {
+				EpException ep = (EpException) e;
+				FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR,e.toString(), MessageUtils.getMessage(ep.getMessage(), ep.getParameters(), MessageUtils.BUNDLE_COMMON_MESSAGES, getFacesScopes().getUserLocale())));
+			} else {
+				FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR,e.toString(), MessageUtils.getMessage("000001", null, MessageUtils.BUNDLE_COMMON_MESSAGES, getFacesScopes().getUserLocale())));
+			}
 		} finally {
 			circularSO = null;
 		}
 		return null;
+	}
+	
+	private void validateCircular(String outcome) {
+		ICircularDetailSO circularDetailSO = null;
+		circularDetailSO = (ICircularDetailSO)BusinessDelegate.getInstance().getServiceObject("ct",ICircularDetailSO.class);
+		
+		if(getManagedBean().getCircularVer().getCircularFileName()==null) {
+			throw new EpException("100022", new String[]{"Circular Letter"});
+		}
+
+		if(getManagedBean().isUpdateAction() && getManagedBean().getCircularVer().getUpdateFileName()==null) {
+			throw new EpException("100022", new String[]{"Update Letter"});
+		}
+		
+		if(outcome.equalsIgnoreCase(BpmOutcomeConst.BPM_REVISE)) {
+			if(getManagedBean().getRemarkList().get(0).getRemark().length()==0) {
+				throw new EpException("100022", new String[]{"Remark"});
+			}
+		}
+		
+		CircularDetailReqDTO cdReqDTO = new CircularDetailReqDTO();
+		cdReqDTO.setCtCircularContractList(getManagedBean().getCircularVer().getCtCircularContracts());
+		circularDetailSO.validateSourcingLOA(cdReqDTO);
+		
+		circularDetailSO = null;
 	}
 
 	public void fileUpload(FileUploadEvent event) throws Exception {
@@ -607,6 +655,7 @@ public class CentralContractBackingBean extends BaseBackingBean<CentralContractM
 		Long circularVerId = Long.parseLong(FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap().get("circularVerId"));
 		log.info("Action :"+action+" Id :"+circularVerId);
 		ICircularSO circularSO = null;
+		IParameterSO parameterSO = null;
 		try {
 			circularSO = (ICircularSO)BusinessDelegate.getInstance().getServiceObject("ct",ICircularSO.class);
 			
@@ -633,6 +682,28 @@ public class CentralContractBackingBean extends BaseBackingBean<CentralContractM
 					parameter.setParameterId(-1L);
 					resDTO.getCircularVer().setUpdateType(parameter);
 				}				
+				resDTO.getCircularVer().setUpdateNo("");
+				resDTO.getCircularVer().setUpdateName("");
+				resDTO.getCircularVer().setUpdateDescription("");
+				resDTO.getCircularVer().setUpdateFileName(null);
+				resDTO.getCircularVer().setUpdateFileRefNo("");
+				if(resDTO.getCircularVer().getParentCircularVer().getUpdateType()!=null) {
+					ParameterReqDTO pReqDTO = new ParameterReqDTO();
+					pReqDTO.setParameterType(ParameterTypeConst.CIRCULAR_UPDATE_TYPE);
+
+					if(resDTO.getCircularVer().getParentCircularVer().getUpdateType().getParameterCode().equalsIgnoreCase(ParameterConst.UPDATE_TYPE_TAMBAHAN)) {
+						pReqDTO.setParameterCode(ParameterConst.UPDATE_TYPE_PINDAAN);
+						resDTO.getCircularVer().setUpdateName("Pindaan kepada "+resDTO.getCircularVer().getName());
+					} else if(resDTO.getCircularVer().getParentCircularVer().getUpdateType().getParameterCode().equalsIgnoreCase(ParameterConst.UPDATE_TYPE_PINDAAN)) {
+						pReqDTO.setParameterCode(ParameterConst.UPDATE_TYPE_TAMBAHAN);
+						resDTO.getCircularVer().setUpdateName("Tambahan kepada "+resDTO.getCircularVer().getName());
+					}
+					parameterSO = BusinessDelegate.getInstance().getServiceObject("pm", IParameterSO.class);
+					PmParameter parameter = parameterSO.retrieveParameterByTypeAndCode(pReqDTO).getPmParameter();
+					resDTO.getCircularVer().setUpdateType(parameter);
+					resDTO.getCircularVer().setUpdateNo(resDTO.getCircularVer().getCircularNo()+"-"+parameter.getParameterCode());
+					getManagedBean().setUpdateTypeDisable(true);
+				}
 				getManagedBean().setCircular(resDTO.getCircular());
 				getManagedBean().setCircularVer(resDTO.getCircularVer());
 				getManagedBean().setUpdateAction(true);
@@ -664,12 +735,14 @@ public class CentralContractBackingBean extends BaseBackingBean<CentralContractM
 			FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR,e.toString(), e.getMessage()));
 		} finally {
 			circularSO = null;
+			parameterSO = null;
 		}
 		return null;
 	}
 
 	public void preRenderView() {
 		ICircularSO circularSO = null;
+		IParameterSO parameterSO = null;
 		try {
 			System.out.println("**********preRenderView**************");
 			HttpServletRequest servletRequest = PortalUtil.getHttpServletRequest(getFacesScopes().getRequest());
@@ -714,6 +787,20 @@ public class CentralContractBackingBean extends BaseBackingBean<CentralContractM
 				getManagedBean().setUpdateAction(true);
 			}
 			
+			if(resDTO.getCircularVer().getParentCircularVer()!=null && resDTO.getCircularVer().getParentCircularVer().getUpdateType()!=null) {
+				ParameterReqDTO pReqDTO = new ParameterReqDTO();
+				pReqDTO.setParameterType(ParameterTypeConst.CIRCULAR_UPDATE_TYPE);
+
+				if(resDTO.getCircularVer().getParentCircularVer().getUpdateType().getParameterCode().equalsIgnoreCase(ParameterConst.UPDATE_TYPE_TAMBAHAN)) {
+					pReqDTO.setParameterCode(ParameterConst.UPDATE_TYPE_PINDAAN);
+				} else if(resDTO.getCircularVer().getParentCircularVer().getUpdateType().getParameterCode().equalsIgnoreCase(ParameterConst.UPDATE_TYPE_PINDAAN)) {
+					pReqDTO.setParameterCode(ParameterConst.UPDATE_TYPE_TAMBAHAN);
+				}
+				parameterSO = BusinessDelegate.getInstance().getServiceObject("pm", IParameterSO.class);
+				resDTO.getCircularVer().setUpdateType(parameterSO.retrieveParameterByTypeAndCode(pReqDTO).getPmParameter());
+				getManagedBean().setUpdateTypeDisable(true);
+			}			
+			
 			getManagedBean().getApproverModel().getSource().clear();
 			if(resDTO.getCircularVer().getPmUserGroup()!=null) {
 				for(PmUserGroupUser user : resDTO.getCircularVer().getPmUserGroup().getPmUserGroupUsers()) {
@@ -738,6 +825,7 @@ public class CentralContractBackingBean extends BaseBackingBean<CentralContractM
 			FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR,e.toString(), e.getMessage()));
 		} finally {
 			circularSO = null;
+			parameterSO = null;
 		}
 	}
 
