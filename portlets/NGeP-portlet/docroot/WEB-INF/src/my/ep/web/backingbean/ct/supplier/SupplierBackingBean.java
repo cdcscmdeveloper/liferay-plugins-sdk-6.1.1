@@ -19,6 +19,7 @@ import javax.servlet.http.HttpServletRequest;
 
 import my.ep.biz.service.ct.IContractSO;
 import my.ep.biz.service.ct.supplier.IContractSupplierSO;
+import my.ep.biz.service.pm.authorization.orgprofile.IOrgProfileSO;
 import my.ep.biz.service.pm.common.parameter.IParameterSO;
 import my.ep.biz.service.sm.mofRegistration.IMofRegistrationSO;
 import my.ep.bpm.dto.BpmRequestDTO;
@@ -30,6 +31,8 @@ import my.ep.dto.ct.ContractReqDTO;
 import my.ep.dto.ct.ContractResDTO;
 import my.ep.dto.ct.supplier.ContractSupplierReqDTO;
 import my.ep.dto.ct.supplier.ContractSupplierResDTO;
+import my.ep.dto.pm.authorization.orgprofile.OrgProfileReqDTO;
+import my.ep.dto.pm.authorization.orgprofile.OrgProfileResDTO;
 import my.ep.dto.pm.common.parameter.ParameterReqDTO;
 import my.ep.dto.pm.common.parameter.ParameterResDTO;
 import my.ep.dto.sm.mofRegistration.MofRegistrationReqDTO;
@@ -42,11 +45,13 @@ import my.ep.persistence.entity.ct.CtContract;
 import my.ep.persistence.entity.ct.CtContractVer;
 import my.ep.persistence.entity.ct.factoring.CtFactoring;
 import my.ep.persistence.entity.ct.terminate.CtTerminationReason;
+import my.ep.persistence.entity.pm.authorization.PmOrgProfile;
 import my.ep.persistence.entity.pm.authorization.PmUser;
 import my.ep.persistence.entity.pm.common.PmFinancialOrg;
 import my.ep.persistence.entity.pm.common.PmStatus;
 import my.ep.persistence.entity.sm.SmSupplier;
 import my.ep.persistence.entity.sm.SmSupplierBank;
+import my.ep.type.pm.OrganizationType;
 import my.ep.util.lookupservice.EpBpmBusinessDelegate;
 import my.ep.web.backingbean.BaseBackingBean;
 import my.ep.web.backingbean.ct.ContractBackingBean;
@@ -234,7 +239,7 @@ public class SupplierBackingBean extends BaseBackingBean<SupplierManagedBean> {
 	}
 	
 	/* Function to populate list of country */
-	public List<SelectItem> getPopulateLoaList () {
+	public List<SelectItem> getPopulateLoaList() {
 
 		IContractSupplierSO supplierSO = null;
 		ContractSupplierReqDTO reqDTO = null;	
@@ -274,6 +279,7 @@ public class SupplierBackingBean extends BaseBackingBean<SupplierManagedBean> {
 			 if(resDTO.isSuccessful()){
 			     this.getManagedBean().setContractVer(resDTO.getCtContractVer()); 
 			     this.getManagedBean().setCtContract(resDTO.getCtContractVer().getCtContract());
+			     changeAccountActionListener();
 			 }
 		} catch (Exception ex) {
 			log.error("Exception", ex);
@@ -284,31 +290,50 @@ public class SupplierBackingBean extends BaseBackingBean<SupplierManagedBean> {
     
 	public void changeAccountActionListener(){
 		
-		IContractSO contractSO = null;
-        ContractReqDTO reqDTO = null;	
+		IMofRegistrationSO iMofRegistrationSO = null;
+    	MofRegistrationReqDTO reqDTO = null;	
 		try {
 		
-			 reqDTO = new ContractReqDTO();
-			 contractSO = (IContractSO) BusinessDelegate.getInstance().getServiceObject("ct", IContractSO.class);
-			 reqDTO.setContractVerId(this.getManagedBean().getContractNo());
-			 ContractResDTO resDTO = contractSO.retrieveContractVer(reqDTO);
-			 if(resDTO.isSuccessful()){
-			     this.getManagedBean().setContractVer(resDTO.getCtContractVer()); 
-			     this.getManagedBean().setCtContract(resDTO.getCtContractVer().getCtContract());
-			     if (this.getManagedBean().getCtContract().getSmSupplier().getSmAppl().getSmSupplierBanks() != null && 
-			    	 !this.getManagedBean().getCtContract().getSmSupplier().getSmAppl().getSmSupplierBanks().isEmpty()) {
+			 reqDTO = new MofRegistrationReqDTO();
+	    	 reqDTO.setSupplierId(this.getManagedBean().getContractVer().getCtContract().getSmSupplier().getSupplierId());
+	    	 iMofRegistrationSO = (IMofRegistrationSO)BusinessDelegate.getInstance().getServiceObject("sm", IMofRegistrationSO.class);
+	    	 MofRegistrationResDTO resDTO = iMofRegistrationSO.retrieveSupplierProfile(reqDTO);
+	    	 List<SmSupplierBank> smSupplierBanks = resDTO.getSmSupplier().getSmAppl().getSmSupplierBanks();
+	        if (smSupplierBanks != null && !smSupplierBanks.isEmpty()) {
 		    			populateBankAccountList = new ArrayList<SelectItem>();
-		    			smSupplierBank = this.getManagedBean().getCtContract().getSmSupplier().getSmAppl().getSmSupplierBanks();
-						for (SmSupplierBank obj : smSupplierBank) {
+		    			for (SmSupplierBank obj : smSupplierBanks) {
 							populateBankAccountList.add(new SelectItem(obj.getSupplierBankId(), obj.getAccountNo()));
 					    }      
 		    		}
-			 }
 		} catch (Exception ex) {
 			log.error("Exception", ex);
 		} finally {
 			// resetObjectConditions();
 		}
+	}
+	
+	public SelectItem[] getBankAccountList(){
+		
+		SelectItem[] items = null;   
+		IMofRegistrationSO iMofRegistrationSO = null;
+    	MofRegistrationReqDTO reqDTO = null;
+	    try{
+	    	    int i = 1;
+	    		reqDTO = new MofRegistrationReqDTO();
+	    		reqDTO.setSupplierId(this.getManagedBean().getCtContract().getSmSupplier().getSupplierId());
+	    		iMofRegistrationSO = (IMofRegistrationSO)BusinessDelegate.getInstance().getServiceObject("sm", IMofRegistrationSO.class);
+	    		MofRegistrationResDTO resDTO = iMofRegistrationSO.retrieveSupplierProfile(reqDTO);
+	    		List<SmSupplierBank> smSupplierBanks = resDTO.getSmSupplier().getSmAppl().getSmSupplierBanks();
+	    		items = new SelectItem[smSupplierBanks.size()+1];
+			    items[0] = new SelectItem(null, "- Select One -");
+			    for(SmSupplierBank bankList : smSupplierBanks) {
+				       items[i++] = new SelectItem(bankList.getSupplierBankId(), bankList.getAccountNo());
+			       }
+			 }catch (Exception e) {
+		    	   e.printStackTrace();
+		    	   FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR,e.toString(), e.getMessage()));
+		     }
+		return items;
 	}
      public String saveChangeBankRequest(String action){
 		
@@ -455,8 +480,7 @@ public class SupplierBackingBean extends BaseBackingBean<SupplierManagedBean> {
 			reqDTO.setParameterCode("FC");
 			ParameterResDTO resDTO = parameterSO.retrieveParameterByTypeAndCode(reqDTO);
 			Long value = resDTO.getPmParameter().getParameterId();
-		   
-		    
+		
 		} catch (Exception e) {
 			e.printStackTrace();
 			FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR,e.toString(), e.getMessage()));

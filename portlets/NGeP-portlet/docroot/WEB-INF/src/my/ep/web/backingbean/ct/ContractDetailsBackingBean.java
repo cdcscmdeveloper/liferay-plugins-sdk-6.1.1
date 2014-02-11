@@ -13,7 +13,11 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.URL;
 import java.net.URLConnection;
+import java.text.Format;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 
 import javax.annotation.PostConstruct;
@@ -22,6 +26,7 @@ import javax.faces.bean.ManagedBean;
 import javax.faces.bean.RequestScoped;
 import javax.faces.context.FacesContext;
 import javax.faces.model.SelectItem;
+import javax.naming.NamingException;
 import javax.portlet.PortletResponse;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -32,22 +37,27 @@ import my.ep.biz.bean.search.SearchFilterBean;
 import my.ep.biz.service.ct.IContractSO;
 import my.ep.biz.service.pm.authorization.orgprofile.IOrgProfileSO;
 import my.ep.biz.service.pm.authorization.user.IUserSO;
+import my.ep.biz.service.pm.common.parameter.IParameterSO;
 import my.ep.bpm.dto.BpmRequestDTO;
 import my.ep.bpm.dto.BpmResponseDTO;
 import my.ep.bpm.service.IBpmSO;
 import my.ep.constant.BpmOutcomeConst;
 import my.ep.constant.ct.ContractConst;
+import my.ep.constants.CommonConstants;
 import my.ep.dto.ct.ContractReqDTO;
 import my.ep.dto.ct.ContractResDTO;
 import my.ep.dto.pm.authorization.orgprofile.OrgProfileReqDTO;
 import my.ep.dto.pm.authorization.orgprofile.OrgProfileResDTO;
 import my.ep.dto.pm.authorization.user.UserReqDTO;
 import my.ep.dto.pm.authorization.user.UserResDTO;
+import my.ep.dto.pm.common.parameter.ParameterReqDTO;
+import my.ep.dto.pm.common.parameter.ParameterResDTO;
 import my.ep.exception.EpException;
 import my.ep.jaxb.ct.contract.CTContractDataType;
 import my.ep.persistence.entity.ct.CtContract;
 import my.ep.persistence.entity.ct.CtContractVer;
 import my.ep.persistence.entity.ct.amend.CtAmendment;
+import my.ep.persistence.entity.ct.dtl.CtAgency;
 import my.ep.persistence.entity.ct.dtl.CtPerformanceBond;
 import my.ep.persistence.entity.ct.dtl.CtProgressivePayment;
 import my.ep.persistence.entity.ct.dtl.CtSchedule;
@@ -59,6 +69,7 @@ import my.ep.persistence.entity.pm.authorization.PmUserGroupUser;
 import my.ep.persistence.entity.pm.common.PmParameter;
 import my.ep.type.aut.SearchOperator;
 import my.ep.type.pm.OrganizationType;
+import my.ep.type.pm.RoleCode;
 import my.ep.util.lookupservice.EpBpmBusinessDelegate;
 import my.ep.web.backingbean.BaseBackingBean;
 import my.ep.web.backingbean.ct.agreement.AgreementBackingBean;
@@ -74,7 +85,6 @@ import org.apache.log4j.Logger;
 import org.primefaces.event.FileUploadEvent;
 import org.primefaces.event.RowEditEvent;
 import org.primefaces.event.SelectEvent;
-import org.primefaces.model.DefaultTreeNode;
 import org.primefaces.model.DualListModel;
 import org.primefaces.model.TreeNode;
 import org.primefaces.model.UploadedFile;
@@ -107,14 +117,15 @@ public class ContractDetailsBackingBean extends BaseBackingBean<ContractDetailsM
 	private String fulfillmentNo = "01234567889";
 	
 	private CtSchedule[] selectedSchedule;
+	private PmOrgProfile[] selectedPmOrgProfile;
 	private CtDeduction[] selectedDeductionList;
 	private CtPerformanceBond[] selectedBondList;
 	private CtDeductionClause[] chkDeductionClause;
 	private CtProgressivePayment[] selectedProgressive;
+	private CtAgency[] selectedListOfAgency;
 	
 	
 	ContractBackingBean ctBB = null;
-	private List<SelectItem> populateDepartmentList = new ArrayList<SelectItem>();
 	
 	private final static String[] deductions;
 	static {
@@ -130,6 +141,16 @@ public class ContractDetailsBackingBean extends BaseBackingBean<ContractDetailsM
 	
 	public ContractDetailsBackingBean(){
 		
+		 if (this.getManagedBean().getAction() == null) {
+			  this.getManagedBean().setAction(new String[] {BpmOutcomeConst.BPM_SAVE,BpmOutcomeConst.BPM_SUBMIT});
+			  this.getManagedBean().setContractVer(new CtContractVer());
+		 }
+		
+		if(getManagedBean().getUserGroupMap()==null) {
+			initializeApproverGroup();
+		}
+		
+		
 	}
 	
 	private FacesScopes getFacesScopes(){
@@ -143,20 +164,52 @@ public class ContractDetailsBackingBean extends BaseBackingBean<ContractDetailsM
 		 
 		 ctBB = new ContractBackingBean();
 		 ctBB.initializeRemarkAndAttachement(this.getManagedBean().getRemarkList(), this.getManagedBean().getAttachmentList());
-		 
-		 rootNode = new DefaultTreeNode("root", null);
-		 rootNodeAgency = new DefaultTreeNode("root", null);
-			
-		 if (this.getManagedBean().getAction() == null) {
-			  this.getManagedBean().setAction(new String[] {BpmOutcomeConst.BPM_SAVE,BpmOutcomeConst.BPM_SUBMIT});
-		 }
-		
-		 if (this.getManagedBean().getApproverModel() == null) {
-			  List<String> source = getAvailableApproverList();
-			  List<String> target = new ArrayList<String>();
-			  this.getManagedBean().setApproverModel(new DualListModel<String>(source, target));
-		}		
 	 }
+	
+	private void initializeApproverGroup() {
+		IUserSO userSO = null;
+		try {
+			userSO = (IUserSO)BusinessDelegate.getInstance().getServiceObject("pm",IUserSO.class);
+			
+			UserReqDTO reqDTO = new UserReqDTO();
+			reqDTO.setUserId(getFacesScopes().getUserSessionBean().getUserId());
+			UserResDTO resDTO = userSO.retrieveUserOrgListByUserId(reqDTO);
+			
+			//reqDTO.setOrgProfileId(resDTO.getUserOrgList().get(0).getPmOrgProfile().getOrgProfileId());
+			reqDTO.setOrgProfileId(1250L);
+			resDTO = userSO.retrieveUserGroupList(reqDTO);
+			
+			if(getManagedBean().getContractVer().getPmUserGroup()==null) {
+				PmUserGroup pmUserGroup = new PmUserGroup();
+				getManagedBean().getContractVer().setPmUserGroup(pmUserGroup);
+			}
+			if(getManagedBean().getApproverModel()==null) {
+				List<String> source = new ArrayList<String>(); 
+		        List<String> target = new ArrayList<String>();  
+		        getManagedBean().setApproverModel(new DualListModel<String>(source, target));
+			}			
+			
+			getManagedBean().setUserGroupMap(new HashMap<Long, PmUserGroup>());
+			int i = 0;
+			for(PmUserGroup userGroup : resDTO.getUserGroupList()) {
+				getManagedBean().getUserGroupMap().put(userGroup.getUserGroupId(), userGroup);
+				if(i==0) {
+					getManagedBean().getContractVer().getPmUserGroup().setUserGroupId(userGroup.getUserGroupId());
+					List<String> source = new ArrayList<String>();
+					for(PmUserGroupUser user : userGroup.getPmUserGroupUsers()) {
+						source.add(user.getPmUser().getUserName());
+					}
+					getManagedBean().getApproverModel().setSource(source);
+				}
+				i++;
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+			FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR,e.toString(), e.getMessage()));
+		} finally {
+			userSO = null;
+		}
+	}
 	
      public void preRenderView(){
 	
@@ -189,9 +242,27 @@ public class ContractDetailsBackingBean extends BaseBackingBean<ContractDetailsM
 	
 		      IContractSO contractSO = (IContractSO) BusinessDelegate.getInstance().getServiceObject("ct",IContractSO.class);
 		      ContractResDTO resDTO = contractSO.retrieveContractVer(ctReqDTO);
+		      this.getManagedBean().getApproverModel().getSource().clear();
+			  if(resDTO.getCtContractVer().getPmUserGroup()!=null) {
+					for(PmUserGroupUser user : resDTO.getCtContractVer().getPmUserGroup().getPmUserGroupUsers()) {
+						getManagedBean().getApproverModel().getSource().add(user.getPmUser().getUserName());
+					}
+				} else {
+					resDTO.getCtContractVer().setPmUserGroup(new PmUserGroup());
+				}
+			  if(resDTO.getApproverList() != null && resDTO.getApproverList().size() != 0){
+			    this.getManagedBean().getApproverModel().setTarget(resDTO.getApproverList());
+			    this.getManagedBean().getApproverModel().getSource().removeAll(resDTO.getApproverList());
+			  } 
+			 
 		      this.getManagedBean().setContractVer(resDTO.getCtContractVer());
 		      this.getManagedBean().setCtContract(resDTO.getCtContractVer().getCtContract());
 	          CombineSupAddress(resDTO.getCtContractVer());
+	          
+	          this.getManagedBean().setRemarkList(resDTO.getCtRemarks());
+			  this.getManagedBean().setAttachmentList(resDTO.getCtAttachments());
+			  ContractBackingBean ctBB = new ContractBackingBean();
+			  ctBB.initializeRemarkAndAttachement(getManagedBean().getRemarkList(), getManagedBean().getAttachmentList()); 
 	
 			  FacesContext fc = FacesContext.getCurrentInstance();
 			  fc.getApplication().getNavigationHandler().handleNavigation(fc, null,  ContractManagementConst.NAV_TO_CONTRACT_DETAILS);
@@ -307,7 +378,7 @@ public class ContractDetailsBackingBean extends BaseBackingBean<ContractDetailsM
 		 
 		String fileName = null;
 		File file = new File(filePath);
-		fileName = file.getName();
+		fileName = file.getName().substring(0, file.getName().lastIndexOf('.'));
 	    return fileName;
 	}/*End Bond Details*/
 	
@@ -395,11 +466,16 @@ public class ContractDetailsBackingBean extends BaseBackingBean<ContractDetailsM
     /*Deduction Start*/
     public void addDeductionDetails() {
 		CtDeduction ctDeductions = new CtDeduction();
+		ctDeductions.setDeductionType(new PmParameter());
 		this.getManagedBean().getContractVer().getCtDeductions().add(ctDeductions);
 	}
 
 	public void deleteDeductionDetails() {
-		this.getManagedBean().getContractVer().getCtDeductions().remove(this.getManagedBean().getCtDeductionDel());
+		for (int i = 0; i < selectedDeductionList.length; i++) {
+			CtDeduction ctDeduction = selectedDeductionList[i];
+			this.getManagedBean().getContractVer().getCtDeductions().remove(ctDeduction);
+		}
+		selectedDeductionList = null;	
 	}
 	
 	public void addDeductionClause(ActionEvent event) {
@@ -432,6 +508,11 @@ public class ContractDetailsBackingBean extends BaseBackingBean<ContractDetailsM
     
     public void addScheduleDetails(){
 		CtSchedule ctSchedules = new CtSchedule();
+		int count = 1;
+		for(CtSchedule ctSched : this.getManagedBean().getContractVer().getCtSchedules()){
+			count++;
+		}
+		ctSchedules.setScheduleNo("S"+count);
 		this.getManagedBean().getContractVer().getCtSchedules().add(ctSchedules);	
 	}
 	
@@ -535,7 +616,10 @@ public class ContractDetailsBackingBean extends BaseBackingBean<ContractDetailsM
             reqDTO.setOutcome(action);
             reqDTO.setTaskId(this.getManagedBean().getTaskId());
             reqDTO.setUserLoginId(getFacesScopes().getUserSessionBean().getLoginId());
-			
+            if(isApprover()) {
+            	this.getManagedBean().getContractVer().setApprover(getFacesScopes().getUserSessionBean());
+            	this.getManagedBean().getContractVer().setApprovedDate(new Date());
+			}
             reqDTO.setCtContract(this.getManagedBean().getCtContract());
             reqDTO.setCtContractVer(this.getManagedBean().getContractVer());
 			
@@ -560,8 +644,12 @@ public class ContractDetailsBackingBean extends BaseBackingBean<ContractDetailsM
 		  }
 		return null;	
 	}
+    
+    public boolean isApprover() {
+		return getFacesScopes().hasRoleUser(RoleCode.APPROVER.value());
+	}
 	
-    /*Approver details start*/
+   /* Approver details start
     private List<String> getAvailableApproverList() {
 		
     	List<String> availableApprovers = new ArrayList<String>(); 
@@ -583,7 +671,7 @@ public class ContractDetailsBackingBean extends BaseBackingBean<ContractDetailsM
 		}
 		return availableApprovers;
 	}
-
+*/
 	public void userGroupChangeListener() {
 		
 		PmUserGroup selectedUserGroup = getManagedBean().getUserGroupMap().get(getManagedBean().getContractVer().getPmUserGroup().getUserGroupId());
@@ -602,7 +690,7 @@ public class ContractDetailsBackingBean extends BaseBackingBean<ContractDetailsM
 		try {
 			items = new SelectItem[getManagedBean().getUserGroupMap().values().size()];
 			int i = 0;
-			for(PmUserGroup userGroup : getManagedBean().getUserGroupMap().values()) 
+			for(PmUserGroup userGroup : this.getManagedBean().getUserGroupMap().values()) 
 				items[i++] = new SelectItem(userGroup.getUserGroupId(), userGroup.getGroupName());
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -619,14 +707,13 @@ public class ContractDetailsBackingBean extends BaseBackingBean<ContractDetailsM
 		    IOrgProfileSO orgProfileSO = (IOrgProfileSO) BusinessDelegate.getInstance().getServiceObject("pm", IOrgProfileSO.class);
 		    OrgProfileReqDTO reqDTO = new OrgProfileReqDTO();
 		    reqDTO.setOrgType(OrganizationType.MINISTRY.value());
-		
 		    OrgProfileResDTO resDTO = orgProfileSO.retrieveOrgProfileListByOrgType(reqDTO);
 		    List<PmOrgProfile> list = resDTO.getOrgProfileList();
 		    items = new SelectItem[list.size()+1];
 		    items[0] = new SelectItem(null, "- Select One -");
 		      
 			for(PmOrgProfile orgProfile : list) 
-			  items[i++] = new SelectItem( orgProfile.getOrgProfileId(), orgProfile.getOrgName());       			
+			  items[i++] = new SelectItem(orgProfile.getOrgProfileId(), orgProfile.getOrgName());   
 		 }catch (Exception e) {
 			e.printStackTrace();
 			FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR,e.toString(), e.getMessage()));
@@ -634,17 +721,15 @@ public class ContractDetailsBackingBean extends BaseBackingBean<ContractDetailsM
 	    return items;
 	}
 	
-    public void changeDepartmentActionListener(){
-    	
-    	  IOrgProfileSO orgProfileSO = (IOrgProfileSO) BusinessDelegate.getInstance().getServiceObject("pm", IOrgProfileSO.class);
-	      OrgProfileReqDTO reqDTO = new OrgProfileReqDTO();
-	      reqDTO.setOrgType(OrganizationType.DEPARTMENT.value());
-	      reqDTO.setParentOrgProfileId(this.getManagedBean().getMinistryProfileId());
-	      OrgProfileResDTO resDTO = orgProfileSO.retrieveOrgProfileListByOrgType(reqDTO);
-	      List<PmOrgProfile> list = resDTO.getOrgProfileList();
-	      for(PmOrgProfile orgProfile : list) {
-	         populateDepartmentList.add(new SelectItem(orgProfile.getOrgProfileId(), orgProfile.getOrgName()));
-	      }
+    public void reset(){
+    	this.getManagedBean().setPmOrgProfileList(null);
+    	 
+     }
+    
+    public void resetDepartment(){
+    	this.getManagedBean().setPmOrgProfileList(null);
+    	 getPtjCodeName();
+    	 
      }
 	
 	 public SelectItem[] getDepartmentDropdown() {
@@ -661,9 +746,7 @@ public class ContractDetailsBackingBean extends BaseBackingBean<ContractDetailsM
 		   items = new SelectItem[list.size()+1];
 	       items[0] = new SelectItem(null, "- Select One -");
 	       for(PmOrgProfile orgProfile : list) {
-		      System.out.println(orgProfile.getOrgProfileId() + "|"
-			   + orgProfile.getOrgCode() + "|" + orgProfile.getOrgName());
-		       items[i++] = new SelectItem(orgProfile.getOrgCode(), orgProfile.getOrgName());
+		       items[i++] = new SelectItem(orgProfile.getOrgProfileId(), orgProfile.getOrgName());
 	       }
 		 }catch (Exception e) {
 	    	   e.printStackTrace();
@@ -671,8 +754,106 @@ public class ContractDetailsBackingBean extends BaseBackingBean<ContractDetailsM
 	     }
 	   return items;
 	}
+	 
+	 public List<PmOrgProfile> getPtjCodeName(){
+			
+		   try{
+		      IOrgProfileSO orgProfileSO = (IOrgProfileSO) BusinessDelegate.getInstance().getServiceObject("pm", IOrgProfileSO.class);
+			  OrgProfileReqDTO reqDTO = new OrgProfileReqDTO();
+			  reqDTO.setOrgType(OrganizationType.DIVISION.value());
+			 
+			  if(this.getManagedBean().getDepartmentProfileId() == null)
+				  this.getManagedBean().setDepartmentProfileId(1L);
+			  
+			  reqDTO.setParentOrgProfileId(this.getManagedBean().getDepartmentProfileId());
+			  OrgProfileResDTO resDTO = orgProfileSO.retrieveOrgProfileListByOrgType(reqDTO);
+			  this.getManagedBean().setPmOrgProfileList(resDTO.getOrgProfileList());
+			}catch (Exception e) {
+				e.printStackTrace();
+				FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR,e.toString(), e.getMessage()));
+			 }
+			return this.getManagedBean().getPmOrgProfileList();
+		}
+	 
 	
+	 public void addAgencyDetails(){
+		
+		 CtAgency ctAgency = new CtAgency();
+		 for(int i=0; i<selectedPmOrgProfile.length; i++){
+			 PmOrgProfile pmOrgProfile = selectedPmOrgProfile[i];
+			 ctAgency.setOrgProfile(pmOrgProfile);
+			 this.getManagedBean().getContractVer().getCtAgencies().add(ctAgency);
+		  }
+		  selectedPmOrgProfile = null;
+	 }
+	 
+	 public void deleteAgencyDetails(){
+			for (int i = 0; i < selectedListOfAgency.length; i++) {
+				 CtAgency ctAgency = selectedListOfAgency[i];
+				 this.getManagedBean().getContractVer().getCtAgencies().remove(ctAgency);
+			}
+			selectedListOfAgency = null;	
+		}
 	
+	 public double validateServiceFee(double serviceFee){
+		 try{
+			  String parameterCode = retrieveParameterById(this.getManagedBean().getContractVer().getCtContract().getFulfillmentType().getParameterId());
+			  if(parameterCode.equalsIgnoreCase(ContractConst.PARAMER_TYPE_ONOFF)){
+				this.getManagedBean().getContractVer().getCtContract().setServiceFee(ContractConst.ONOFF_SERVICE_FEE);	
+				return ContractConst.ONOFF_SERVICE_FEE;
+			  }else{
+				this.getManagedBean().getContractVer().getCtContract().setServiceFee(ContractConst.SCHEDULE_PERODIC_SERVICE_FEE);
+				return ContractConst.SCHEDULE_PERODIC_SERVICE_FEE;
+			 }
+		 } catch (NamingException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}	
+		 return 0.0;
+	 }
+	 
+	 public String retrieveParameterById(Long parameterId) throws NamingException {
+			
+		 IParameterSO parameterSO = null;
+		 ParameterReqDTO reqDTO = null;
+		 try{
+			
+			reqDTO = new ParameterReqDTO();
+			reqDTO.setParameterId(parameterId);
+			parameterSO = (IParameterSO) BusinessDelegate.getInstance().getServiceObject("pm", IParameterSO.class);
+			ParameterResDTO resDTO = parameterSO.retrieveParameterById(reqDTO);
+			return resDTO.getPmParameter().getParameterCode();
+		}catch(Exception e) {
+			 log.error("Exception>>", e);
+			 e.printStackTrace();
+			 FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR,e.toString(), e.getMessage()));
+		 } finally {
+			 parameterSO = null;
+		 }
+		 return null;
+	 } 
+	 
+	 public String getDeductionType(Long parameterId){
+		 IParameterSO parameterSO = null;
+		 ParameterReqDTO reqDTO = null;
+		 try{
+			
+			reqDTO = new ParameterReqDTO();
+			reqDTO.setParameterId(parameterId);
+			reqDTO.setParameterType("DDT");
+			parameterSO = (IParameterSO) BusinessDelegate.getInstance().getServiceObject("pm", IParameterSO.class);
+			ParameterResDTO resDTO = parameterSO.retrieveParameterDescListByType(reqDTO);
+			return resDTO.getParameterDescList().get(0).getCodeName();
+		}catch(Exception e) {
+			 log.error("Exception>>", e);
+			 e.printStackTrace();
+			 FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR,e.toString(), e.getMessage()));
+		 } finally {
+			 parameterSO = null;
+		 }
+		 return null;
+	 }
+	 
 	public String gotoTerminatePage() {
 
 		IContractSO contractSO = null;
@@ -788,6 +969,14 @@ public class ContractDetailsBackingBean extends BaseBackingBean<ContractDetailsM
 		return PROCESS_VIEW_PAGE;
 	}
 	
+	public String convertTime(Date time){ 
+        String str ="";
+    	Format format = new SimpleDateFormat(CommonConstants.DEFAULT_DATE_FORMAT); 
+        if(time == null)
+        	return str;
+        return format.format(time); 
+    } 
+	
 	public TreeNode getSelectedNode() {
 		return selectedNode;
 	}
@@ -860,14 +1049,6 @@ public class ContractDetailsBackingBean extends BaseBackingBean<ContractDetailsM
 		this.selectedProgressive = selectedProgressive;
 	}
 
-	public List<SelectItem> getPopulateDepartmentList() {
-		return populateDepartmentList;
-	}
-
-	public void setPopulateDepartmentList(List<SelectItem> populateDepartmentList) {
-		this.populateDepartmentList = populateDepartmentList;
-	}
-
 	public CtPerformanceBond[] getSelectedBondList() {
 		return selectedBondList;
 	}
@@ -884,4 +1065,19 @@ public class ContractDetailsBackingBean extends BaseBackingBean<ContractDetailsM
 		this.selectedDeductionList = selectedDeductionList;
 	}
 
+	public PmOrgProfile[] getSelectedPmOrgProfile() {
+		return selectedPmOrgProfile;
+	}
+
+	public void setSelectedPmOrgProfile(PmOrgProfile[] selectedPmOrgProfile) {
+		this.selectedPmOrgProfile = selectedPmOrgProfile;
+	}
+
+	public CtAgency[] getSelectedListOfAgency() {
+		return selectedListOfAgency;
+	}
+
+	public void setSelectedListOfAgency(CtAgency[] selectedListOfAgency) {
+		this.selectedListOfAgency = selectedListOfAgency;
+	}
 }

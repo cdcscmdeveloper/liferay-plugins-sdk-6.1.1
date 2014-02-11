@@ -18,13 +18,13 @@
          </h:panelGrid>  
           <p:outputPanel id="paymentSchedule">   
               <h:panelGroup rendered="#{contractDetailsBackingBean.managedBean.chkSchedule}" style="width:100%;" >    
-	                  <p:dataTable id="tableSchedule" var="schedVar" value="#{contractDetailsBackingBean.managedBean.contractVer.ctSchedules}" rowIndexVar="index" 
-	                         widgetVar="dataTableObj" lazy="false" dynamic="true" selection="#{contractDetailsBackingBean.selectedSchedule}" rowKey="#{schedVar}"
-	                         paginator="true" paginatorPosition="bottom" paginatorAlwaysVisible="true" emptyMessage="No Records!">
+	             <p:dataTable id="tableSchedule" var="schedVar" value="#{contractDetailsBackingBean.managedBean.contractVer.ctSchedules}" rowIndexVar="index" 
+	                 widgetVar="dataTableObj" lazy="false" dynamic="true" selection="#{contractDetailsBackingBean.selectedSchedule}" rowKey="#{schedVar}"
+	                 paginator="true" paginatorPosition="bottom" paginatorAlwaysVisible="true" emptyMessage="No Records!">
 	                         <ac:paginator for="tableSchedule" />
 		                     <p:column selectionMode="multiple" style="width:18px;"/>  
 		                     <p:column style="width:250px;" headerText="#{lbl['lbl.ct.sched.table.schedno']}" >
-		                         <p:outputLabel value="Schedule #{index+1}" style="float:left;"/>
+		                         <p:outputLabel value="#{schedVar.scheduleNo}" style="float:left;"/>
 		                     </p:column> 
 		                     <p:column style="width:250px;" headerText="#{lbl['lbl.ct.sched.table.sdate']}" >
 		                         <p:calendar value="#{schedVar.fromDate}" id="popupButtonSch" showOn="button" />
@@ -35,8 +35,8 @@
 		              </p:dataTable>  
 	                <p:spacer height="2" />
 		            <div class="ppRightBtn"> 
-		                 <p:commandButton value="#{lbl['lbl.ct.ded.btn.add']}" process="@form" partialSubmit="true" icon="ui-icon-add"
-		                    action="#{contractDetailsBackingBean.addScheduleDetails()}" update="tableSchedule"/>
+		                 <p:commandButton value="#{lbl['lbl.ct.ded.btn.add']}" icon="ui-icon-add"
+		                    action="#{contractDetailsBackingBean.addScheduleDetails}" update="tableSchedule"/>
 	                    <p:spacer width="2"/>
 			             <p:commandButton value="Delete" process="@form" onsuccess="schedule.show()" icon="ui-icon-delete" />  
 			        </div>
@@ -94,12 +94,12 @@
 		                    <ac:paginator for="tableProgressNulValue" />
 		                    <p:columnGroup type="header"> 
 			                   <p:row>
-                                        <p:column style="width:100px;" headerText="#{lbl['lbl.ct.sched.table1.phase']}"  />
-		                              <p:column style="width:400px;" headerText="#{lbl['lbl.ct.sched.table1.desc']}"  />
-                                      <p:column style="width:100px;" headerText="#{lbl['lbl.ct.sched.table1.from']}" /> 
-                                      <p:column style="width:100px;" headerText="#{lbl['lbl.ct.sched.table1.to']}" /> 	
-                                      <p:column style="width:100px;" headerText="#{lbl['lbl.ct.sched.table1.per']}"  /> 
-                                </p:row>	
+                                   <p:column style="width:100px;" headerText="#{lbl['lbl.ct.sched.table1.phase']}"/>
+		                           <p:column style="width:400px;" headerText="#{lbl['lbl.ct.sched.table1.desc']}"/>
+                                   <p:column style="width:100px;" headerText="#{lbl['lbl.ct.sched.table1.from']}"/> 
+                                   <p:column style="width:100px;" headerText="#{lbl['lbl.ct.sched.table1.to']}"/> 	
+                                   <p:column style="width:100px;" headerText="#{lbl['lbl.ct.sched.table1.per']}"/> 
+                               </p:row>	
 			                </p:columnGroup>
 			                 <p:column><p:outputLabel value="#{data.phase}" style="width:40px;" /> </p:column>  
 			                <p:column> <p:outputLabel style="width:400px;"/> </p:column>         
@@ -125,7 +125,7 @@
 		                     </p:columnGroup>
 		                     <p:column style="width:250px;"><p:outputLabel value="Schedule #{index+1}" style="float:left;" /></p:column>
 	                         <p:column style="width:250px;"> <h:outputText value="#{schedVar.fromDate}" style="float:left;">
-                                <f:convertDateTime pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}" /> </h:outputText></p:column>
+                                <f:convertDateTime pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}"/> </h:outputText></p:column>
                              <p:column style="width:250px;"> <h:outputText value="#{schedVar.toDate}" style="float:left;">
                                 <f:convertDateTime pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}" /> </h:outputText></p:column>
 		              </p:dataTable>  

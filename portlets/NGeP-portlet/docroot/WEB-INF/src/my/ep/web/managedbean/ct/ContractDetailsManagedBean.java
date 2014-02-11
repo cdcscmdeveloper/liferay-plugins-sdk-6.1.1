@@ -15,6 +15,7 @@ import my.ep.persistence.entity.ct.CtAttachment;
 import my.ep.persistence.entity.ct.CtContract;
 import my.ep.persistence.entity.ct.CtContractVer;
 import my.ep.persistence.entity.ct.CtRemark;
+import my.ep.persistence.entity.ct.dtl.CtAgency;
 import my.ep.persistence.entity.ct.dtl.CtPerformanceBond;
 import my.ep.persistence.entity.ct.dtl.CtProgressivePayment;
 import my.ep.persistence.entity.ct.dtl.CtSchedule;
@@ -23,12 +24,14 @@ import my.ep.persistence.entity.ct.dtl.deduction.CtDeductionClause;
 import my.ep.persistence.entity.ct.dtl.item.CtContractItem;
 import my.ep.persistence.entity.ct.dtl.zone.CtContractZone;
 import my.ep.persistence.entity.ct.dtl.zone.CtContractZoneDtl;
+import my.ep.persistence.entity.pm.authorization.PmOrgProfile;
 import my.ep.persistence.entity.pm.authorization.PmUserGroup;
 import my.ep.persistence.entity.pm.authorization.PmUserGroupUser;
 import my.ep.web.managedbean.BaseManagedBean;
 
 import org.apache.log4j.Logger;
 import org.primefaces.model.DualListModel;
+import org.primefaces.model.TreeNode;
 /**
  * Managed Bean For Contract Details
  * 
@@ -83,6 +86,8 @@ public class ContractDetailsManagedBean extends BaseManagedBean{
 	private CtContract ctContract;
 	private List<CtContract> contractList;
 	
+	 List<PmOrgProfile> pmOrgProfileList;
+	
 	private String ctName;
 	private String ctLOANo;
 	private String ctNumber;
@@ -108,6 +113,9 @@ public class ContractDetailsManagedBean extends BaseManagedBean{
 	private boolean showZoneDetails;
 	private boolean disableScheduleRadio;
 	private boolean disableProgessiveRadio;
+	
+	private List<CtAgency> listOfAgency;
+	
 	
 	public String[] getAction() {
 		return action;
@@ -387,8 +395,6 @@ public class ContractDetailsManagedBean extends BaseManagedBean{
 	}
 
 	public Map<Long, PmUserGroup> getUserGroupMap() {
-		if(userGroupMap == null)
-			userGroupMap = new HashMap<Long, PmUserGroup>();
 		return userGroupMap;
 	}
 
@@ -547,5 +553,25 @@ public class ContractDetailsManagedBean extends BaseManagedBean{
 	public void setDepartmentProfileId(Long departmentProfileId) {
 		this.departmentProfileId = departmentProfileId;
 	}
-	
+
+	public List<PmOrgProfile> getPmOrgProfileList() {
+		   if(pmOrgProfileList == null)
+			   pmOrgProfileList = new ArrayList<PmOrgProfile>();
+			return pmOrgProfileList;
+	}
+
+	public void setPmOrgProfileList(List<PmOrgProfile> pmOrgProfileList) {
+		this.pmOrgProfileList = pmOrgProfileList;
+	}
+
+	public List<CtAgency> getListOfAgency() {
+		if(listOfAgency == null)
+			listOfAgency = new ArrayList<CtAgency>();
+		return listOfAgency;
+	}
+
+	public void setListOfAgency(List<CtAgency> listOfAgency) {
+		this.listOfAgency = listOfAgency;
+	}
+
 }

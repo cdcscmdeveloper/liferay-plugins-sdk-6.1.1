@@ -27,7 +27,7 @@
 			<p:inputText style="width:170px;" disabled="true"  value="#{contractDetailsBackingBean.getParameterDesc(contractDetailsBackingBean.managedBean.contractVer.ctContract.fulfillmentType)}" />			
 			<p:outputLabel value="#{lbl['lbl.ct.sfee']}" />
 			<h:panelGrid columns="2">
-			<p:inputText value="#{contractDetailsBackingBean.managedBean.contractVer.ctContract.serviceFee}"
+			<p:inputText value="#{contractDetailsBackingBean.validateServiceFee(contractDetailsBackingBean.managedBean.contractVer.ctContract.serviceFee)}"
 				style="width:55px;" disabled="true" />	
 				<p:outputLabel value="%" />
 		</h:panelGrid>		

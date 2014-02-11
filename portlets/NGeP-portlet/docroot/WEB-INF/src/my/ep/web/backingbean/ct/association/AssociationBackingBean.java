@@ -203,8 +203,7 @@ public class AssociationBackingBean extends BaseBackingBean<AssociationManagedBe
 		if(this.getManagedBean().getCtNumber()!=null && this.getManagedBean().getCtNumber().length()>0) {
 			searchBean.getDataFilterBeans().add(new SearchFilterBean("latestContractVer.docNo",SearchOperator.OPERATOR_EQUALS.value(),
 			getManagedBean().getCtNumber()));	
-		}
-				
+		}		
 		IContractSO contractSO = null;
 		try {
 

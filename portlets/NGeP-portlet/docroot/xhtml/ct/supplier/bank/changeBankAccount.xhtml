@@ -26,7 +26,7 @@
 			          style="width:180px;" rendered="#{supplierBackingBean.managedBean.chkMenuOrTxtBox == null}">
 			           <f:selectItem itemLabel="-Select One-" itemValue="" />
 				       <f:selectItems value="#{supplierBackingBean.populateContractList}"/>
-				      <p:ajax event="change" process="@this" update=":form" listener="#{supplierBackingBean.changeAccountActionListener}"/>
+				      <p:ajax event="change" process="@this" update=":form" listener="#{supplierBackingBean.changeContractActionListener}"/>
 			         </p:selectOneMenu>
 			         <p:inputText value="#{supplierBackingBean.managedBean.ctContract.latestContractVer.docNo}" style="width:170px;" disabled="true"
 			           rendered="#{supplierBackingBean.managedBean.chkMenuOrTxtBox == 'BPM'}"></p:inputText>
@@ -68,7 +68,6 @@
 		              <td style="width:200px;"> <p:outputLabel  value="Bank A/C" />  </td>
                       <td> <p:selectOneMenu id="accountId" value="#{supplierBackingBean.managedBean.contractNo}" 
 			                  style="width:180px;" rendered="#{supplierBackingBean.managedBean.chkMenuOrTxtBox == null}">
-			                  <f:selectItem itemLabel="-Select One-" itemValue="" />
 				             <f:selectItems value="#{supplierBackingBean.populateBankAccountList}"/>
 				            <p:ajax event="change" process="@this" update=":form" listener="#{supplierBackingBean.changeAccountActionListener}"/>
 			                </p:selectOneMenu>

@@ -6,36 +6,31 @@
 	xmlns:c="http://java.sun.com/jsp/jstl/core">
 	<p:panel id="fd" header="#{lbl['lbl.ct.panel.name']}" toggleable="true" collapsed="false" toggleSpeed="500">
 		<h:panelGrid columns="5" style="width:100%" columnClasses="columnWidth15">
-			<p:outputLabel value="#{lbl['lbl.ct.cno']}" />
-			<p:inputText value="#{contractDetailsBackingBean.managedBean.contractVer.ctContractValue.contractPhysicalNo}" 
+			<p:outputLabel id="cno" value="#{lbl['lbl.ct.cno']}" />
+			<p:inputText for="cno" value="#{contractDetailsBackingBean.managedBean.contractVer.ctContractValue.contractPhysicalNo}" 
 			   disabled="true" style="width:170px;" />
-			<p:outputLabel value="#{lbl['lbl.ct.physicalNo']}" />
-			<p:inputText value="#{contractDetailsBackingBean.managedBean.contractVer.ctContractValue.contractPhysicalNo}" style="width:170px;" />				
+			<p:outputLabel id="physicalNo" value="#{lbl['lbl.ct.physicalNo']}" />
+			<p:inputText for="physicalNo" value="#{contractDetailsBackingBean.managedBean.contractVer.ctContractValue.contractPhysicalNo}" style="width:170px;" />				
 			<h:panelGrid columns="3">
 				<p:selectBooleanCheckbox
 					value="false" disabled="false" />
 				<p:spacer width="2" />
 				<p:outputLabel value="Concession" />
 			</h:panelGrid>
-			<p:outputLabel value="#{lbl['lbl.ct.effectiveDate']}" />
-			<h:inputText style="width:130px;" disabled="true"
-				value="#{contractDetailsBackingBean.managedBean.contractVer.ctContractValue.effDate}" >
-				<f:convertDateTime pattern="dd/MM/yyyy"></f:convertDateTime>
-				</h:inputText>
-			<h:outputLabel value="#{lbl['lbl.ct.edate']}" />
-			<h:inputText style="width:130px;" disabled="true"
-				value="#{contractDetailsBackingBean.managedBean.contractVer.ctContractValue.expDate}" >
-				<f:convertDateTime pattern="dd/MM/yyyy"></f:convertDateTime>
-				</h:inputText>
-			
+			<p:outputLabel id="effectiveDate" value="#{lbl['lbl.ct.effectiveDate']}" />
+			<p:inputText for="effectiveDate" style="width:130px;" disabled="true"
+				value="#{contractDetailsBackingBean.convertTime(contractDetailsBackingBean.managedBean.contractVer.ctContractValue.effDate)}" />
+			<p:outputLabel id="edate" value="#{lbl['lbl.ct.edate']}" />
+			<p:inputText for="edate" style="width:130px;" disabled="true"
+				value="#{contractDetailsBackingBean.convertTime(contractDetailsBackingBean.managedBean.contractVer.ctContractValue.expDate)}" />
 			<h:panelGrid columns="3">
 				<p:selectBooleanCheckbox value="true" disabled="true" />
 				<p:spacer width="2" />	
 				<p:outputLabel value="Exempted" />
 			</h:panelGrid>
 			
-				<p:outputLabel value="#{lbl['lbl.ct.contractAmount']}" />
-			<p:inputText styleClass="ppRightBtn" value="#{contractDetailsBackingBean.managedBean.contractVer.ctContractValue.contractAmount}"
+				<p:outputLabel id="contractAmount" value="#{lbl['lbl.ct.contractAmount']}" />
+			<p:inputText for="contractAmount" styleClass="ppRightBtn" value="#{contractDetailsBackingBean.managedBean.contractVer.ctContractValue.contractAmount}"
 				 disabled="true" style="width:130px;">
 				   <f:convertNumber pattern="#,###.00" />
 			</p:inputText>		
@@ -46,9 +41,10 @@
 				<p:spacer width="2" />	
 				<p:outputLabel value="#{lbl['lbl.ct.agreement']}" />
 			</h:panelGrid>	
-			 <h:outputLabel value="#{lbl['lbl.ct.dperiod']}" />
-			<h:panelGrid columns="2">
-				<p:inputText size="8" value="#{contractDetailsBackingBean.managedBean.contractVer.ctContractValue.deliveryTerm}" />
+			 <h:outputLabel id="dperiod" value="#{lbl['lbl.ct.dperiod']}" />
+			<h:panelGrid columns="3">
+				<p:inputText for="dperiod" size="8" value="#{contractDetailsBackingBean.managedBean.contractVer.ctContractValue.deliveryTerm}" />
+				<p:spacer width="2"/>
 				<p:outputLabel value="Days" />
 			</h:panelGrid>	
 			<f:verbatim></f:verbatim><f:verbatim></f:verbatim>
@@ -65,9 +61,9 @@
 			</div>
 			</h:panelGroup>
 			 <h:panelGrid>
-			<h:inputTextarea id="contractName"
+			<p:inputTextarea id="contractName"
 				value="#{contractDetailsBackingBean.managedBean.contractVer.ctContract.contractName}"
-				required="false" rows="3" cols="35" disabled="true"
+				required="false" rows="3" cols="31" disabled="true"
 				autoResize="false" />	
 			</h:panelGrid>		
 			<f:verbatim /><f:verbatim /> <f:verbatim /><f:verbatim /><f:verbatim />
