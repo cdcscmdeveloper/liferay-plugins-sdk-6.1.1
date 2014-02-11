@@ -2165,6 +2165,7 @@ important
 .cmColumnWidth {
 	border: 0px !important;
 	width:20px;
+	padding: 0 0 0 0 !important;
 }
 
 td {
