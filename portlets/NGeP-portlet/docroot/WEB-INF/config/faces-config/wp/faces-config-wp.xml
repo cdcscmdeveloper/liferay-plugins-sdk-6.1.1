@@ -7,6 +7,25 @@
     xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-facesconfig_2_0.xsd">
 	
 	<managed-bean>
+        <managed-bean-name>DisplayInformation</managed-bean-name>
+        <managed-bean-class>my.ep.web.portal.information.DisplayInformation</managed-bean-class>
+        <managed-bean-scope>request</managed-bean-scope>
+    </managed-bean>
+    <managed-bean>
+        <managed-bean-name>HelpDisplay</managed-bean-name>
+        <managed-bean-class>my.ep.web.portal.help.HelpDisplay</managed-bean-class>
+        <managed-bean-scope>request</managed-bean-scope>
+    </managed-bean>
+    <managed-bean>
+        <managed-bean-name>SearchHelp</managed-bean-name>
+        <managed-bean-class>my.ep.web.portal.help.SearchHelp</managed-bean-class>
+        <managed-bean-scope>request</managed-bean-scope>
+        <managed-property>
+            <property-name>helpSearch</property-name>
+            <value>#{param.helpSearch}</value>
+        </managed-property>
+    </managed-bean>
+    <managed-bean>
         <managed-bean-name>AllHelpDisplay</managed-bean-name>
         <managed-bean-class>my.ep.web.portal.help.AllHelpDisplay</managed-bean-class>
         <managed-bean-scope>request</managed-bean-scope>
@@ -15,7 +34,6 @@
             <value>#{param.helpcount}</value>
         </managed-property>
     </managed-bean>
-    
 	<navigation-rule>
    		<from-view-id>/xhtml/wp/onlinehelpdisplay/displayOnlineHelp.xhtml</from-view-id>
    		<navigation-case>
