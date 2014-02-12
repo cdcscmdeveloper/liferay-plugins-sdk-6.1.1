@@ -4,6 +4,7 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 import java.util.logging.Logger;
 
 import javax.faces.bean.ManagedBean;
@@ -50,6 +51,9 @@ public class HelpDisplay implements Serializable {
 		final ThemeDisplay themeDisplay = (ThemeDisplay) context.getExternalContext().getRequestMap().get(WebKeys.THEME_DISPLAY);
 		final long groupId = themeDisplay.getScopeGroupId();
 		final String languageKey = context.getExternalContext().getRequestLocale().toString();
+		final long companyId = themeDisplay.getCompanyId();
+		final long companyGroupId = themeDisplay.getCompanyGroupId();
+		final Locale localeKey = context.getExternalContext().getRequestLocale();
 		
 		/***********************************************************************
 		 ** Start Query All Online Help
@@ -98,7 +102,7 @@ public class HelpDisplay implements Serializable {
 			long jaClassNameId = ClassNameLocalServiceUtil.getClassNameId(JournalArticle.class.getName()); 
 			ExpandoTable table = null;
 			try {
-				table = ExpandoTableLocalServiceUtil.getDefaultTable(themeDisplay.getCompanyId(), jaClassNameId );
+				table = ExpandoTableLocalServiceUtil.getDefaultTable(companyId, jaClassNameId );
 			} catch (PortalException e1) {
 				// TODO Auto-generated catch block
 				e1.printStackTrace();
@@ -106,16 +110,18 @@ public class HelpDisplay implements Serializable {
 				// TODO Auto-generated catch block
 				e1.printStackTrace();
 			} 
+			long tableID = table.getTableId();
 			ExpandoColumn column = null;
 			try {
-				column = ExpandoColumnLocalServiceUtil.getColumn(table.getTableId(), "listcat");
+				column = ExpandoColumnLocalServiceUtil.getColumn(tableID, "listcat");
 			} catch (SystemException e1) {
 				// TODO Auto-generated catch block
 				e1.printStackTrace();
 			} 
+			long columnId = column.getColumnId();
 			ExpandoValue expandoValue;
 			try {
-				expandoValue = ExpandoValueLocalServiceUtil.getValue(table.getTableId(), column.getColumnId(), allHelpsId);
+				expandoValue = ExpandoValueLocalServiceUtil.getValue(tableID, columnId, allHelpsId);
 
 				catlistdata = expandoValue.getData();
 			} catch (SystemException e1) {
@@ -126,10 +132,15 @@ public class HelpDisplay implements Serializable {
 			JournalArticle article;
 			try {
 				article = JournalArticleLocalServiceUtil.getArticle(groupId, allHelpsArticleId, allHelpsVersion);
+				String articleId = article.getArticleId();
+				String structureId = article.getStructureId();
+				String templateId = article.getTemplateId();
 				String helptitle = article.getTitle(languageKey);
+				
 				JournalArticleDisplay articleDisplay = JournalContentUtil.getDisplay(groupId, article.getArticleId(), article.getTemplateId(), languageKey, themeDisplay);
-
-				helpcontents.add(new OnlineContent(allHelpsCount, allHelpsCountString, helptitle, allHelpsDisplayDate, articleDisplay.getContent(), catlistdata));
+				String articleContent = articleDisplay.getContent();
+								
+				helpcontents.add(new OnlineContent(allHelpsCount, allHelpsCountString, helptitle, allHelpsDisplayDate, articleContent, catlistdata));
 			} catch (PortalException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
