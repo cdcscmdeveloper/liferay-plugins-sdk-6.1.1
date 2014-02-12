@@ -1,7 +1,11 @@
 package my.ep.web.backingbean.pm.userprofile;
 
+import java.util.List;
+
+import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.RequestScoped;
+import javax.faces.context.FacesContext;
 
 import my.ep.biz.bean.search.ISearchBean;
 import my.ep.biz.bean.search.ISearchResultBean;
@@ -13,16 +17,21 @@ import my.ep.dto.pm.authorization.user.UserResDTO;
 import my.ep.factory.EpLogger;
 import my.ep.persistence.entity.pm.authorization.PmUser;
 import my.ep.persistence.entity.pm.authorization.PmUserGroup;
+import my.ep.persistence.entity.pm.common.PmAddressType;
+import my.ep.persistence.entity.pm.common.PmCountry;
 import my.ep.type.aut.SearchOperator;
 import my.ep.util.lookupservice.EpEjbBusinessDelegate;
 import my.ep.web.backingbean.BaseBackingBean;
 import my.ep.web.managedbean.pm.userprofile.UserprofilesManagedBean;
 import my.ep.web.ss.quationtender.common.QTConstants;
+import my.ep.web.util.FacesScopes;
 
 import org.apache.log4j.Logger;
 import org.primefaces.context.RequestContext;
 import my.ep.web.bean.paginator.IPagingDataModel;
 import my.ep.web.bean.paginator.PagingDataModel;
+
+import org.primefaces.event.FileUploadEvent;  
 
 /**
  * @author DK
@@ -43,7 +52,7 @@ public class UserprofilesBackingBean extends
     }  
 		
 	/**
-	 * retrive qtcommittees
+	 * retrive pmuser
 	 * 
 	 * @return
 	 */
@@ -111,7 +120,7 @@ public class UserprofilesBackingBean extends
 	}
 	
 	/**
-	 * retrive qtcommittees
+	 * retrive pmusergroup
 	 * 
 	 * @return
 	 */
@@ -131,36 +140,6 @@ public class UserprofilesBackingBean extends
 
 		}
 		
-		
-
-		/*if (getManagedBean().getUserRole() != null) {
-			SearchFilterBean userRoleSearchBean = new SearchFilterBean(
-					SearchOperator.OPERATOR_EQUALS.value());
-			userRoleSearchBean.setSearchField("scCommittee.createdDate");
-			userRoleSearchBean.setSearchValue(getManagedBean().getUserRole());
-			searchBean.getDataFilterBeans().add(userRoleSearchBean);
-		}
-
-		if (getManagedBean().getUserorganizationNames() != null
-				&& !"".equalsIgnoreCase(getManagedBean().getUserorganizationNames())) {
-			SearchFilterBean UserOrgNamesSearchBean = new SearchFilterBean(
-					SearchOperator.OPERATOR_EQUALS.value());
-			UserOrgNamesSearchBean.setSearchField("scQt.qtNo");
-			UserOrgNamesSearchBean.setSearchValue(getManagedBean().getUserorganizationNames());
-
-			searchBean.getDataFilterBeans().add(UserOrgNamesSearchBean);
-		}
-		if (getManagedBean().getUserStatus() != null
-				&& !"".equalsIgnoreCase(getManagedBean().getUserStatus())) {
-			
-			 * SearchFilterBean statusSearchBean = new SearchFilterBean(
-			 * SearchOperator.OPERATOR_EQUALS.value());
-			 * statusSearchBean.setSearchField("scQt.qtNo");
-			 * statusSearchBean.setSearchValue(getManagedBean().getQtNo());
-			 * 
-			 * searchBean.getDataFilterBeans().add(statusSearchBean);
-			 
-		}*/
 		userReqDTO.setUserGroupSearchBean(searchBean);
 
 		try {
@@ -176,6 +155,38 @@ public class UserprofilesBackingBean extends
 		}
 
 		
+	}
+	
+	public UserprofilesBackingBean() {
+		retriveUserDtls();
+
+	}	
+	
+	private void retriveUserDtls() {
+		FacesScopes facesScopes = new FacesScopes();
+		PmUser user = facesScopes.getUserSessionBean();
+		if (user != null && null != user.getUserId()) {
+			this.getManagedBean().setPmUser(user);
+			List<PmAddressType> addressType = user.getPmAddressTypes();
+			
+			if (addressType != null) {
+				for (PmAddressType addressType2 : addressType) {
+					if (addressType2.getAddressType().equalsIgnoreCase("C")) {
+						this.getManagedBean().setPmAddress(
+								addressType2.getPmAddress());
+						logger.info(addressType2.getPmAddress());
+
+						break;
+					}
+				}
+			}
+		} else {
+			logger.debug("Unable to get the userDetails");
+			FacesContext.getCurrentInstance().addMessage(
+					null,
+					new FacesMessage(FacesMessage.SEVERITY_ERROR,
+							"Unable to Retrive User Details", ""));
+		}
 	}	
 	
 
@@ -208,7 +219,12 @@ public class UserprofilesBackingBean extends
 	public String goToMaintainceAction(PmUser user) {
 		this.getManagedBean().setPmUser(user);
 		return "/xhtml/pm/profilemanagement/userProfileCreation.xhtml";
-	}	
+	}
+	
+    public void handleFileUpload(FileUploadEvent event) {  
+        FacesMessage msg = new FacesMessage("Succesful", event.getFile().getFileName() + " is uploaded.");  
+        FacesContext.getCurrentInstance().addMessage(null, msg);  
+    }  	
 	
 
 }
