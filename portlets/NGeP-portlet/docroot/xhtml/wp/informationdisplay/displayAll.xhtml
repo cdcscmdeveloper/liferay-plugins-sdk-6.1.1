@@ -9,6 +9,7 @@
 		
 	<ui:define name="contentSection">
 		<h:form id="infoForm">  
+			<div id="infoTab">
     		<p:tabView id="tabView" dynamic="true" cache="true">  
   				<p:tab id="tba1" title="#{lbl['lbl.portal.information.tab.title.announcement']}">  
            			<p:dataList value="#{DisplayInformation.informationcontents}" var="content" type="definition" id="announcementList">  
@@ -38,6 +39,7 @@
             		<div style="text-align:right"><a href="./event"><h:outputText value="#{lbl['lbl.portal.information.more.title.event']}" escape="false"/></a></div>
   				</p:tab>  
   			</p:tabView>  
+  			</div>
 		</h:form> 				
 	</ui:define>
 </ui:composition>	
