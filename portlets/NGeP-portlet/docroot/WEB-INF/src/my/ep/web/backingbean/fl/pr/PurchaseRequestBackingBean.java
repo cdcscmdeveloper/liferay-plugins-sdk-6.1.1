@@ -278,7 +278,7 @@ public class PurchaseRequestBackingBean extends BaseBackingBean<PurchaseRequestM
 		
 	}
 	public void updateManualDeliveryAddrDt() {
-		if(null== getManagedBean().getPmAddressType() ||  getManagedBean().getPmAddressType().isEditable()){
+		if(null== getManagedBean().getPmAddressType()){
 			return;
 		}
 		FlDeliveryAddress deliveryAddr = null;
@@ -924,9 +924,7 @@ public class PurchaseRequestBackingBean extends BaseBackingBean<PurchaseRequestM
 		this.displayItemPnl = displayItemPnl;
 	}
 	public void editManualAddress(FlDeliveryAddress flDelAddress){
-		
 		getManagedBean().setPmAddressType(flDelAddress.getAddressType());
-		flDelAddress.getAddressType().setEditable(true);
 		
 	}
 	 
