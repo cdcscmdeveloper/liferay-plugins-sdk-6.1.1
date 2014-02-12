@@ -1,14 +1,17 @@
 package my.ep.web.managedbean.pm.userprofile;
 
 
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
+import javax.faces.model.SelectItem;
 
 import my.ep.factory.EpLogger;
 import my.ep.persistence.entity.pm.authorization.PmUser;
 import my.ep.persistence.entity.pm.common.PmAddress;
+import my.ep.persistence.entity.pm.common.PmCountry;
 import my.ep.persistence.entity.pm.authorization.PmUserGroup;
 import my.ep.web.managedbean.BaseManagedBean;
 
@@ -34,10 +37,12 @@ public class UserprofilesManagedBean extends BaseManagedBean {
 	
 	private PmAddress pmAddress;
 	
+	private PmCountry pmCountry;
+	
 	private String loginId;
 	
     // user profile	
-	private String userNames;	
+	private String userName;	
 	
 	private String userRole;	
 	
@@ -57,9 +62,17 @@ public class UserprofilesManagedBean extends BaseManagedBean {
 	private boolean isEditable = true;	
 	
 	private List<PmUser> users;
+	
+	private List<PmAddress> userAddress;
 
 	private List<PmUserGroup> usersGroup;
 	
+	private String selectedCountry;
+
+	private List<SelectItem> countryName;
+	
+	private List<PreferenceList> preferencelists;		
+		
 	public UserprofilesManagedBean(){
 		log.info("inside ");		
 	}	
@@ -72,6 +85,14 @@ public class UserprofilesManagedBean extends BaseManagedBean {
 		this.users = users;
 	}
 	
+	public List<PmAddress> getUserAddress() {
+		return userAddress;
+	}
+
+	public void setUserAddress(List<PmAddress> userAddress) {
+		this.userAddress = userAddress;
+	}	
+	
 	public List<PmUserGroup> getUsersGroup() {
 		return usersGroup;
 	}
@@ -81,13 +102,13 @@ public class UserprofilesManagedBean extends BaseManagedBean {
 	}	
 
 	public String getUserNames() {
-		return userNames;
+		return userName;
 	}
 
 
 
-	public void setUserNames(String userNames) {
-		this.userNames = userNames;
+	public void setUserNames(String userName) {
+		this.userName = userName;
 	}
 
 
@@ -201,7 +222,68 @@ public class UserprofilesManagedBean extends BaseManagedBean {
 	public void setUserGroupStatus(String userGroupStatus) {
 		this.userGroupStatus = userGroupStatus;
 	}	
+
+	public PmCountry getPmCountry() {
+		return pmCountry;
+	}
+
+	public void setPmCountry(PmCountry pmCountry) {
+		this.pmCountry = pmCountry;
+	}
 	
+	public String getSelectedCountry() {
+		return selectedCountry;
+	}
+
+	public void setSelectedCountry(String selectedCountry) {
+		this.selectedCountry = selectedCountry;
+	}
+
+	public List<SelectItem> getCountryName() {
+		return countryName;
+	}
+
+	public void setCountryName(List<SelectItem> countryName) {
+		this.countryName = countryName;
+	}
+	
+	public List<PreferenceList> getPreferencelists() {
+		
+		if(preferencelists==null){
+			preferencelists = new ArrayList<PreferenceList>();
+		
+		PreferenceList aa = new PreferenceList();
+		PreferenceList bb = new PreferenceList();
+		PreferenceList cc = new PreferenceList();
+		
+		aa.setNoticeMode("DASHBOARD");
+		aa.setPrefered("YES");
+		aa.setMobileNo("DISABLE");
+		aa.setEmailAddress("DISABLE");
+	
+		bb.setNoticeMode("EMAIL");
+		bb.setPrefered("YES");		
+		bb.setMobileNo("DISABLE");
+		bb.setEmailAddress("DISABLE TO USER EMAIL ADDRESS");
+
+		cc.setNoticeMode("SMS");
+		cc.setPrefered("YES");		
+		cc.setMobileNo("DISABLE");
+		cc.setEmailAddress("DISABLE");
+		
+		preferencelists.add(aa);
+		preferencelists.add(bb);
+		preferencelists.add(cc);
+
+		
+		}
+		return preferencelists;
+	}	
+	
+	public void setPreferencelists(List<PreferenceList> preferencelists) {
+		this.preferencelists = preferencelists;
+	}	
+	
+}	
 	
 
-}
