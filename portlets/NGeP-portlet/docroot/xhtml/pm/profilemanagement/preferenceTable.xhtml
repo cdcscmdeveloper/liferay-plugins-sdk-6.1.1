@@ -4,26 +4,26 @@
 	xmlns:h="http://java.sun.com/jsf/html"
 	xmlns:ui="http://java.sun.com/jsf/facelets"
 	xmlns:p="http://primefaces.org/ui"
-	xmlns:ac="http://ac.my/jsf/composite/cc"
 	xmlns:c="http://java.sun.com/jsp/jstl/core">
 
 	<p:panel>
 	 <br/>
-	    <p:dataTable id="userPref" value="" var="preftable" >
-		<ac:paginator />
+	    <p:dataTable value="#{userprofilesManagedBean.preferencelists}" var="PreferenceList" >
+		
 	    <p:column headerText="Notification Mode" > 
-          <h:outputText value="SMS"/>
+          <h:outputText value="#{PreferenceList.noticeMode}" />
         </p:column>
 	    <p:column headerText="Preferred" > 
+	      <p:selectBooleanCheckbox/> 
         </p:column>        
         <p:column headerText="Mobile Phone NO." > 
-          <h:outputText value="6019000001"/>   
+          <h:outputText value="#{PreferenceList.mobileNo}" />   
         </p:column>
         <p:column headerText="Email Address" > 
-          <h:outputText value="Disable"/>   
+          <h:outputText value="#{PreferenceList.emailAddress}" />   
         </p:column>        
 	</p:dataTable>
-       <p:spacer height="15"></p:spacer>
+     
        		
 	</p:panel>
 </ui:composition>	

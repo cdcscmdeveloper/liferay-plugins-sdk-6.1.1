@@ -11,7 +11,7 @@
 		<p:panel toggleable="true">
 	    <p:dataTable id="roleAssign" value="" var="roleassigns"  >
 		<ac:paginator />
-		<p:column />
+		<p:column selectionMode="multiple"></p:column>
 	    <p:column headerText="Role Name" > 
           <h:outputText value="Approver"/>
         </p:column>
@@ -20,6 +20,11 @@
         </p:column>
 		</p:dataTable>
        <p:spacer height="15"></p:spacer>
+       
+ 		<div align="right">
+		  <p:commandButton value="Ok" icon="ui-icon-check"/>		
+		  <p:commandButton value="Cancel" icon="ui-icon-cancel" />		
+		</div>      
 
 		</p:panel>
 	</p:dialog>

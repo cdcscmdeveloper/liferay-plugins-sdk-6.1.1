@@ -8,7 +8,7 @@
 
 
 	<p:dialog id="ResOrg" header="SELECT ORGANIZATION" widgetVar="resorg" modal="true">
-	<p:panel header="SEARCH" toggleable="true">
+	<p:panel id="ResOrgSearch" header="SEARCH" toggleable="true">
 
 		<h:panelGrid columns="4" >
 		
@@ -124,7 +124,7 @@
 			
 		</h:panelGrid>
 		<div align="right">
-		  <p:commandButton value="Search" icon="ui-icon-search"/>		
+		  <p:commandButton value="Search" icon="ui-icon-search" />		
 		  <p:commandButton value="Reset" icon="ui-icon-reset" />		
 		</div>
        </p:panel>	
@@ -146,7 +146,7 @@
 
 		<div align="right">
 		  <p:commandButton value="Ok" icon="ui-icon-check"/>		
-		  <p:commandButton value="Cancel" icon="ui-icon-cancel" />		
+		  <p:commandButton value="Cancel" icon="ui-icon-cancel" onclick="resorg.hide()" />		
 		</div>
 		</p:panel>
 	</p:dialog>

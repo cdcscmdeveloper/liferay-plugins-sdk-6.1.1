@@ -11,7 +11,10 @@
     <h:panelGrid columns="2" >	
     
     <h:outputLabel value="Attachment"></h:outputLabel>
-	<p:commandButton value="Attach Files" icon="ui-icon-folder-open"/>  
+    <p:fileUpload fileUploadListener="#{userprofilesBackingBean.handleFileUpload}" mode="advanced"  
+            update="messages" auto="true" sizeLimit="500000" allowTypes="/(\.|\/)(gif|jpe?g|png)$/"/>  
+  
+    <p:growl id="messages" showDetail="true"/>
     
     
     </h:panelGrid>    

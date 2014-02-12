@@ -9,10 +9,10 @@
 		<h:panelGrid border="0" cellpadding="0" cellspacing="0" width="100%" columns="4" columnClasses="columnWidth20">
 			
 				<h:outputLabel value="User ID" />  
-			    <p:inputText  value="30000" disabled="true" size="30" />
+			    <p:inputText  value="#{userprofilesBackingBean.managedBean.pmUser.userId}" disabled="true" size="30" />
 		
                 <h:outputLabel value="Login ID" />
-                <p:inputText value="Based on original NO." disabled="true" size="30" />
+                <p:inputText value="#{userprofilesBackingBean.managedBean.pmUser.loginId}" disabled="true" size="30" />
                 
 	    </h:panelGrid>	
 	    
@@ -67,11 +67,11 @@
 			    <p:inputText size="30" /> 			    
 			    
                 <h:outputLabel value="* Country"/>
-		           <p:selectOneMenu style="width:178px">  
-            		<f:selectItem itemLabel="Malaysia" itemValue="null" />  
-            		<f:selectItem itemLabel="Singapore" itemValue="1" /> 
-            		<f:selectItem itemLabel="Vietnam" itemValue="2" />  
-                   </p:selectOneMenu>	
+				<p:selectOneMenu size="178px"
+					value="#{userProfilesBackingBean.managedBean.selectedCountry}">
+					<f:selectItems
+						value="#{userProfilesBackingBean.managedBean.countryName}"></f:selectItems>
+				</p:selectOneMenu>
                    
                <h:outputLabel value="* City/Town"/> 
                <p:columnGroup>    
