@@ -588,6 +588,12 @@ public class CentralContractBackingBean extends BaseBackingBean<CentralContractM
 			}
 		}
 		
+		if(outcome.equalsIgnoreCase(BpmOutcomeConst.BPM_SUBMIT)) {
+			if(getManagedBean().getApproverModel().getTarget().size()==0) {
+				throw new EpException("100022", new String[]{"Selected approver(s)"});
+			}
+		}
+		
 		CircularDetailReqDTO cdReqDTO = new CircularDetailReqDTO();
 		cdReqDTO.setCtCircularContractList(getManagedBean().getCircularVer().getCtCircularContracts());
 		circularDetailSO.validateSourcingLOA(cdReqDTO);

@@ -22,7 +22,43 @@
 			<h:commandLink value="#{panelBackingBean.managedBean.circularVer.circularFileName}" styleClass="blue_font" 
 				action="#{panelBackingBean.downloadFile(1)}" />			
 			<h:outputLabel value="#{lbl['lbl.ct.cc.frno']}" />
-			<p:inputText disabled="true" value="#{panelBackingBean.managedBean.circularVer.circularFileRefNo}" />			
+			<p:inputText disabled="true" value="#{panelBackingBean.managedBean.circularVer.circularFileRefNo}" />	
+			<h:outputLabel value="Panel Type" />
+			<p:selectOneMenu value="#{panelBackingBean.managedBean.circularVer.panelType.parameterId}">
+				<f:selectItems value="#{panelBackingBean.getDropdownValues(ParameterTypeConst.panelType)}" />
+			</p:selectOneMenu>			
+			<p:spacer />
+			<p:spacer />				
+			<h:outputLabel value="Complaint Deadline" />
+			<h:panelGroup>
+				<p:inputText value="#{panelBackingBean.managedBean.circularVer.complaintDeadline}" style="text-align:right; width:50px;" />
+				<h:outputText value=" months" />
+			</h:panelGroup>	
+			<h:outputLabel value="Payment Day" />
+			<h:panelGroup>
+				<p:inputText value="#{panelBackingBean.managedBean.circularVer.paymentDay}" style="text-align:right; width:50px;" />
+				<h:outputText value=" days" />
+			</h:panelGroup>
+			<h:outputLabel value="Delivery Term" />
+			<h:panelGroup>
+				<p:inputText value="#{panelBackingBean.managedBean.circularVer.deliveryTerm}" style="text-align:right; width:50px;" />
+				<h:outputText value=" days" />
+			</h:panelGroup>	
+			<h:outputLabel value="Last Request Day" />
+			<h:panelGroup>
+				<p:inputText value="#{panelBackingBean.managedBean.circularVer.lastRequestDay}" style="text-align:right; width:50px;" />
+				<h:outputText value=" days" />
+			</h:panelGroup>
+			<h:outputLabel value="Replacement Day" />
+			<h:panelGroup>
+				<p:inputText value="#{panelBackingBean.managedBean.circularVer.replacementDay}" style="text-align:right; width:50px;" />
+				<h:outputText value=" days" />
+			</h:panelGroup>	
+			<h:outputLabel value="Warranty Period" />
+			<h:panelGroup>
+				<p:inputText value="#{panelBackingBean.managedBean.circularVer.warrantyPeriod}" style="text-align:right; width:50px;" />
+				<h:outputText value=" months" />
+			</h:panelGroup>											
 			<p:outputLabel value="#{lbl['lbl.ct.pc.update.type']}" />
 			<p:selectOneMenu value="#{panelBackingBean.managedBean.circularVer.updateType.parameterId}">
 				<f:selectItems value="#{panelBackingBean.getDropdownValues(ParameterTypeConst.circularUpdateType)}" />
@@ -33,7 +69,7 @@
 			<p:inputText value="#{panelBackingBean.managedBean.circularVer.updateName}" />		
 			<h:outputLabel value="Update Description" />
 			<p:inputText value="#{panelBackingBean.managedBean.circularVer.updateDescription}" />								
-			<h:outputLabel value="Update Letter" />
+			<h:outputLabel value="* Update Letter" />
 			<h:panelGroup id="uploadUpdCcrPg">
 				<p:commandButton oncomplete="uploadUpdCcrDlg.show();return false;" icon="iconAttachment" 
 					update="uploadUpdCcrPg" value="Choose file" 

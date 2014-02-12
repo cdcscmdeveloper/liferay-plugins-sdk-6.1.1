@@ -10,14 +10,14 @@
     <ui:define name="contentSection">
     	<f:event listener="#{panelBackingBean.preRenderView}" type="preRenderView" />	
 		<p:panel>
-			<p:messages id="messages" showDetail="true" autoUpdate="true" closable="true" severity="error, info" />
+			<p:messages id="messages" showSummary="false" showDetail="true" autoUpdate="true" closable="true" severity="error, info" />
 	    	<table style="width: 100%;">
 	    		<tr>
 	    			<td><p:commandButton value="Back" immediate="true" icon="ui-icon-back" oncomplete="window.history.back();" /></td>
 	    			<td class="ppRightBtn">
 			  			<ui:repeat var="action"	value="#{panelBackingBean.managedBean.outComes}">
 							<p:commandButton value="#{action}" ajax="false" styleClass="ui-button" icon="ui-icon-#{fn:toLowerCase(action)}" 
-								action="#{panelBackingBean.saveCircular(action)}" />
+								action="#{panelBackingBean.saveCircularPanel(action)}" />
 						</ui:repeat>	    			
 	    			</td>
 	    		</tr>
