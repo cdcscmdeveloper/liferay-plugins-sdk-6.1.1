@@ -11,8 +11,8 @@
 
 
 	<ui:define name="contentSection">
-	
-	<p:messages id="extensionApprovalMsgId" globalOnly="true"></p:messages>
+
+		<p:messages id="extensionApprovalMsgId" globalOnly="true"></p:messages>
 
 		<h:panelGroup id="extensionFlowReviewID">
 
@@ -21,11 +21,12 @@
 				<ui:repeat var="action"
 					value="#{unspscCodeBackingBean.managedBean.action}">
 					<p:commandButton value="#{action}"
-						action="#{unspscCodeBackingBean.submitToReviewExt(action)}" update="@form"></p:commandButton>
+						action="#{unspscCodeBackingBean.submitToReviewExt(action)}"
+						update="@form"></p:commandButton>
 				</ui:repeat>
 			</div>
 
-			<p:panel header="Extension Code Review" toggleable="true">
+			<p:panel header="Extension Code Request" toggleable="true">
 
 				<table style="width: 100%;">
 					<tr>
@@ -44,20 +45,41 @@
 					value="#{unspscCodeBackingBean.managedBean.reviewExtCodeList}"
 					var="review">
 
+				
+					
 					<p:column>
 						<f:facet name="header">
-							#{lbl['lbl.cm.item.description']}
-						</f:facet>
-					#{review.itemDetail}
-				</p:column>
+						Extension
+					</f:facet>
+
+						<table style="height:140px;">
+							<tr>
+								<td>#{lbl['lbl.cm.type']}</td>
+							</tr>
+							<tr>
+								<td>#{lbl['lbl.cm.brand']}</td>
+							</tr>
+							<tr>
+								<td>#{lbl['lbl.cm.measurement']}</td>
+							</tr>
+							<tr>
+								<td>#{lbl['lbl.cm.color']}</td>
+							</tr>
+						</table>
+
+
+
+					</p:column>
+
+
 					<p:column>
 						<f:facet name="header">
-							Extension
+							Supplier
 						</f:facet>
 
 						<table>
 							<tr>
-								<td>#{lbl['lbl.cm.type']}</td>
+								
 								<td><h:panelGrid columns="2"
 										columnClasses="cmColumnWidth, border0">
 										<p:inputText value="#{review.typeName}" disabled="true"></p:inputText>
@@ -68,7 +90,7 @@
 									</h:panelGrid></td>
 							</tr>
 							<tr>
-								<td>#{lbl['lbl.cm.brand']}</td>
+								
 								<td><h:panelGrid columns="2"
 										columnClasses="cmColumnWidth, border0">
 										<p:inputText value="#{review.brandName}" disabled="true"></p:inputText>
@@ -79,7 +101,7 @@
 									</h:panelGrid></td>
 							</tr>
 							<tr>
-								<td>#{lbl['lbl.cm.measurement']}</td>
+								
 								<td><h:panelGrid columns="2"
 										columnClasses="cmColumnWidth, border0">
 										<p:inputText value="#{review.measurementName}" disabled="true"></p:inputText>
@@ -90,7 +112,7 @@
 									</h:panelGrid></td>
 							</tr>
 							<tr>
-								<td>#{lbl['lbl.cm.color']}</td>
+								
 								<td><h:panelGrid columns="2"
 										columnClasses="cmColumnWidth, border0">
 										<p:inputText value="#{review.colorName}" disabled="true"></p:inputText>
@@ -102,6 +124,8 @@
 						</table>
 
 					</p:column>
+
+
 					<p:column>
 						<f:facet name="header">
 						Committe Review
@@ -158,14 +182,15 @@
 							</tr>
 							<tr>
 								<td><h:outputText value="#{bpmRemark.createdDate}">
-									<f:convertDateTime pattern="dd/MM/yyyy hh:mm aaa" />
-								</h:outputText></td>
+										<f:convertDateTime pattern="dd/MM/yyyy hh:mm aaa" />
+									</h:outputText></td>
 							</tr>
 						</table>
 					</p:column>
 
 					<p:column headerText="Remark">
-						<p:inputTextarea value="#{bpmRemark.remark}" style="width:75%;" disabled="#{!bpmRemark.brandNew}"></p:inputTextarea>
+						<p:inputTextarea value="#{bpmRemark.remark}" style="width:75%;"
+							disabled="#{!bpmRemark.brandNew}"></p:inputTextarea>
 
 					</p:column>
 

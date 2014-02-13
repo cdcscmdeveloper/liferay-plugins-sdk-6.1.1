@@ -17,6 +17,10 @@
 
 			<h:panelGroup
 				rendered="#{unspscCodeBackingBean.supplierUser or unspscCodeBackingBean.supplierAdmin}">
+				<p:commandButton value="#{lbl['lbl.cm.submit']}"
+					icon="ui-icon-submit"
+					action="#{catalogueBackingBean.singleSubmitToReviewItems}"
+					update="@form"></p:commandButton>
 				<p:commandButton value="#{lbl['lbl.cm.save']}" icon="ui-icon-save"
 					action="#{catalogueBackingBean.saveCatalogItem}" update="@form"></p:commandButton>
 				<p:commandButton value="#{lbl['lbl.cm.cancel']}"
@@ -32,7 +36,14 @@
 				<p:commandButton value="Approve" icon="ui-icon-approve"
 					action="#{reviewCatBackingBean.approveCatalogueItem}"></p:commandButton>
 				<p:commandButton value="Reject" icon="ui-icon-reject"
+					update=":form:catalogDetMsgId :form:pricingTabID"
 					action="#{reviewCatBackingBean.rejectCatalogueItem}"></p:commandButton>
+
+				<p:commandButton value="#{lbl['lbl.cm.cancel']}"
+					icon="ui-icon-cancel"
+					action="#{reviewCatBackingBean.cancelToPendingApprovalItem()}"
+					immediate="true"></p:commandButton>
+
 			</h:panelGroup>
 		</div>
 
@@ -40,7 +51,8 @@
 		<p:panel header="#{lbl['lbl.cm.item.details']}" toggleable="true">
 
 			<h:panelGroup
-				rendered="#{unspscCodeBackingBean.supplierUser or unspscCodeBackingBean.supplierAdmin}">
+				rendered="#{(unspscCodeBackingBean.supplierUser or unspscCodeBackingBean.supplierAdmin) 
+				and catalogueBackingBean.managedBean.selectedMaintainItem.itemStatus == 'U'}">
 				<table width="100%;">
 					<tr>
 						<td style="width: 90px;"></td>
@@ -84,7 +96,7 @@
 					<td><p:outputLabel
 							value="#{lbl['lbl.cm.unit.of.measurement']}" /></td>
 					<td><ac:lov id="uomLovId" lovId="PM_UOM" size="26"
-							headerText="UOM Lov" update=":form:addCatDet"
+							headerText="UOM Lov"
 							saveObject="catalogueBackingBean.managedBean.selectedMaintainItem.pmUom"
 							value="#{catalogueBackingBean.managedBean.selectedMaintainItem.pmUom.uomName}"
 							conditionField="recordStatus^1">
@@ -109,23 +121,13 @@
 					<td><p:outputLabel value="#{lbl['lbl.cm.min.order']}" /></td>
 					<td><p:inputText size="35"
 							value="#{catalogueBackingBean.managedBean.selectedMaintainItem.minOrder}"></p:inputText></td>
-					<td><p:outputLabel value="#{lbl['lbl.cm.max.order']}" /></td>
-					<td colspan="1"><p:inputText size="35"
-							value="#{catalogueBackingBean.managedBean.selectedMaintainItem.maxOrder}"></p:inputText></td>
-				</tr>
-
-
-				<tr style="height: 30px;">
-
 					<td><p:outputLabel value="#{lbl['lbl.cm.delivery.term']}" /></td>
-					<td><p:inputText size="26"
+					<td colspan="1"><p:inputText size="26"
 							value="#{catalogueBackingBean.managedBean.selectedMaintainItem.leadTime}" />
 						<p:inputText style="margin-left: 2px;" size="3" value="days"
 							disabled="true" /></td>
-					<td></td>
-					<td></td>
-					<td></td>
 				</tr>
+
 
 				<tr style="height: 30px;">
 					<td><p:outputLabel
@@ -158,7 +160,8 @@
 
 
 
-		<p:tabView id="pricingTabID" orientation="left">
+		<p:tabView id="pricingTabID" orientation="left"
+			activeIndex="#{reviewCatBackingBean.managedBean.catDetTabActiveIndex}">
 
 			<p:tab id="pricing1" title="#{lbl['lbl.cm.pricing']}">
 

@@ -4,39 +4,32 @@
 	xmlns:ui="http://java.sun.com/jsf/facelets"
 	xmlns:p="http://primefaces.org/ui">
 
-	<p:dataGrid id="catalogueRemarkId"
-		value="#{catalogueBackingBean.managedBean.selectedMaintainItem.cmItemRejectReasons}"
-		var="remarkVar" rowIndexVar="remarkIndex" columns="1">
 
 
 
-		<table style="width: 100%">
-			<tr>
-				<td width="30%"><p:selectOneMenu disabled="#{!remarkVar.brandNew}"
-						value="#{remarkVar.pmStatus.statusId}">
-						<f:selectItem itemLabel="Select One" itemValue="" />
-						<f:selectItems
-							value="#{catalogueBackingBean.managedBean.statusDescList}"
-							var="remark" itemLabel="#{remark.statusName}"
-							itemValue="#{remark.statusDescId}"></f:selectItems>
-						<p:ajax event="change"
-							listener="#{catalogueBackingBean.enableRemark(remarkVar)}"
-							update=":form:pricingTabID:catalogueRemarkId:remarkInputId" />
-
-					</p:selectOneMenu></td>
-				<td><p:inputTextarea id="remarkInputId" value="#{remarkVar.remark}" disabled="#{remarkVar.remarkDisabled}"
-						style="width: 95%;"></p:inputTextarea></td>
-			</tr>
-		</table>
 
 
-	</p:dataGrid>
-
-	<div align="right">
-		<p:commandButton value="#{lbl['lbl.cm.add']}"
-			action="#{catalogueBackingBean.addCatalogueRemarks()}"
-			update="catalogueRemarkId" process="@this"></p:commandButton>
-	</div>
+	<table style="width: 100%">
+		<tr>
+			<td width="30%"><p:selectManyCheckbox layout="pageDirection"
+					value="#{catalogueBackingBean.managedBean.rejectReasonIds}">
+					<f:selectItems
+						value="#{catalogueBackingBean.managedBean.statusDescList}"
+						var="remark" itemLabel="#{remark.statusName}"
+						itemValue="#{remark.statusDescId}" ></f:selectItems>
+					<p:ajax listener="#{catalogueBackingBean.enableRemark()}"
+						update=":form:pricingTabID:remarkpg" />
+				</p:selectManyCheckbox></td>
+			<td>
+				<h:panelGroup id="remarkpg">
+				<p:inputTextarea id="remarkInputId"
+					value="#{catalogueBackingBean.managedBean.rejectReason}"
+					rendered="#{catalogueBackingBean.remarkRendered}"
+					style="width: 95%;"></p:inputTextarea>
+				</h:panelGroup>
+			</td>
+		</tr>
+	</table>
 
 
 </ui:composition>

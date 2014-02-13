@@ -24,6 +24,10 @@ public class ReviewCatalogueManagedBean extends BaseManagedBean {
 	
 	private CmSupplierItem selectedReviewCat;
 	
+	private boolean rejectReason = false;
+	
+	private Integer catDetTabActiveIndex = 0;
+	
 	
 	
 	
@@ -46,6 +50,25 @@ public class ReviewCatalogueManagedBean extends BaseManagedBean {
 	public void setReviewSupplierItems(List<CmSupplierItem> reviewSupplierItems) {
 		this.reviewSupplierItems = reviewSupplierItems;
 	}
+
+	public boolean isRejectReason() {
+		return rejectReason;
+	}
+
+	public void setRejectReason(boolean rejectReason) {
+		this.rejectReason = rejectReason;
+	}
+
+	public Integer getCatDetTabActiveIndex() {
+		return catDetTabActiveIndex;
+	}
+
+	public void setCatDetTabActiveIndex(Integer catDetTabActiveIndex) {
+		this.catDetTabActiveIndex = catDetTabActiveIndex;
+	}
+	
+	
+	
 
 	
 }

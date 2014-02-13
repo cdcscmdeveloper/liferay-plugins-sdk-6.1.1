@@ -13,9 +13,7 @@
 	<ui:define name="contentSection">
 
 		<h:panelGroup id="extensionFlowReviewID">
-			<p:outputLabel styleClass="screen-title"
-				value="Extension Code Review"></p:outputLabel>
-
+		
 			<div style="text-align: right;">
 				<ui:repeat var="action"
 					value="#{unspscCodeBackingBean.managedBean.action}">
@@ -40,23 +38,41 @@
 			<p:dataTable style="width:100%;"
 				value="#{unspscCodeBackingBean.managedBean.reviewExtCodeList}"
 				var="review">
+				
+				<p:column>
+						<f:facet name="header">
+						Extension
+					</f:facet>
 
+						<table style="height:140px;">
+							<tr>
+								<td>#{lbl['lbl.cm.type']}</td>
+							</tr>
+							<tr>
+								<td>#{lbl['lbl.cm.brand']}</td>
+							</tr>
+							<tr>
+								<td>#{lbl['lbl.cm.measurement']}</td>
+							</tr>
+							<tr>
+								<td>#{lbl['lbl.cm.color']}</td>
+							</tr>
+						</table>
+
+
+
+					</p:column>
+
+			
 				<p:column>
 					<f:facet name="header">
-							#{lbl['lbl.cm.item.description']}
-						</f:facet>
-					#{review.itemDetail}
-				</p:column>
-				<p:column>
-					<f:facet name="header">
-							Extension
+							Supplier
 						</f:facet>
 
 					<table>
 						<tr>
-							<td>#{lbl['lbl.cm.type']}</td>
 							<td><h:panelGrid columns="2"
-									columnClasses="border0, border0">
+									columnClasses="cmColumnWidth, border0">
 									<p:inputText value="#{review.typeName}"
 										disabled="#{!review.requestType}"></p:inputText>
 									<p:selectOneMenu rendered="#{review.requestType}"
@@ -70,9 +86,8 @@
 								</h:panelGrid></td>
 						</tr>
 						<tr>
-							<td>#{lbl['lbl.cm.brand']}</td>
 							<td><h:panelGrid columns="2"
-									columnClasses="border0, border0">
+									columnClasses="cmColumnWidth, border0">
 									<p:inputText value="#{review.brandName}"
 										disabled="#{!review.requestBrand}"></p:inputText>
 									<p:selectOneMenu rendered="#{review.requestBrand}"
@@ -86,9 +101,9 @@
 								</h:panelGrid></td>
 						</tr>
 						<tr>
-							<td>#{lbl['lbl.cm.measurement']}</td>
+							
 							<td><h:panelGrid columns="2"
-									columnClasses="border0, border0">
+									columnClasses="cmColumnWidth, border0">
 									<p:inputText value="#{review.measurementName}"
 										disabled="#{!review.requestMeasurement}"></p:inputText>
 									<p:selectOneMenu rendered="#{review.requestMeasurement}"
@@ -102,9 +117,9 @@
 								</h:panelGrid></td>
 						</tr>
 						<tr>
-							<td>#{lbl['lbl.cm.color']}</td>
+							
 							<td><h:panelGrid columns="2"
-									columnClasses="border0, border0">
+									columnClasses="cmColumnWidth, border0">
 									<p:inputText value="#{review.colorName}"
 										disabled="#{!review.requestColor}"></p:inputText>
 									<p:selectOneMenu rendered="#{review.requestColor}"

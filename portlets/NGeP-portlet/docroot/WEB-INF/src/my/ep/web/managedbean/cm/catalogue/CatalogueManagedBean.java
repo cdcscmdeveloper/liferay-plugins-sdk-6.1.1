@@ -27,6 +27,7 @@ import my.ep.persistence.entity.pm.common.PmState;
 import my.ep.persistence.entity.pm.common.PmStatusDesc;
 import my.ep.persistence.entity.pm.common.PmUom;
 import my.ep.type.aut.SearchOperator;
+import my.ep.web.backingbean.cm.codification.UnspscCodeBackingBean;
 import my.ep.web.bean.paginator.IPagingDataModel;
 import my.ep.web.bean.paginator.PagingDataModel;
 import my.ep.web.managedbean.BaseManagedBean;
@@ -35,7 +36,6 @@ import my.ep.web.vo.AdvanceSearchVO;
 import my.ep.web.vo.PricingVO;
 
 import org.apache.commons.lang.StringUtils;
-import org.primefaces.model.DualListModel;
 
 @ManagedBean(name = "catalogueMB")
 @SessionScoped
@@ -128,6 +128,9 @@ public class CatalogueManagedBean extends BaseManagedBean {
 	private List<Long> stateLs;
 
 	private Integer tabActiveIndex = 0;
+	
+	private String rejectReason;
+
 
 
 	private SearchFilterBean itemNameFilterBean = new SearchFilterBean(SearchOperator.OPERATOR_LIKE.value());
@@ -143,6 +146,7 @@ public class CatalogueManagedBean extends BaseManagedBean {
 
 	private SearchFilterBean districtFilterBean = new SearchFilterBean(SearchOperator.OPERATOR_IN.value());
 	private SearchFilterBean stateFilterBean = new SearchFilterBean(SearchOperator.OPERATOR_IN.value());
+	private SearchFilterBean catTypeFilterBean = new SearchFilterBean(SearchOperator.OPERATOR_EQUALS.value());
 
 	private IPagingDataModel<VCmSupplierItem> searchDataModel = new SearchPagingDataModel();
 
@@ -220,6 +224,15 @@ public class CatalogueManagedBean extends BaseManagedBean {
 					bizRegNoFilterBean.setSearchField("bizRegNo");
 					searchBean.getDataFilterBeans().add(bizRegNoFilterBean);
 				}
+				
+				UnspscCodeBackingBean bb = new UnspscCodeBackingBean();
+				System.out.println("bb.isRequisitioner()"+bb.isRequisitioner());
+				if(!bb.isRequisitioner()){
+					catTypeFilterBean.setSearchField("catType");
+					catTypeFilterBean.setSearchValue("XC");
+					searchBean.getDataFilterBeans().add(catTypeFilterBean);
+				}
+				
 
 				setDistrictLs(new ArrayList<Long>());
 				System.out.println("districtId:"+districtId);
@@ -973,9 +986,41 @@ public class CatalogueManagedBean extends BaseManagedBean {
 		this.tabActiveIndex = tabActiveIndex;
 	}
 
+
+	private ArrayList<Long> rejectReasonIds = new ArrayList<Long>();
+
+
+	public ArrayList<Long> getRejectReasonIds() {
+		return rejectReasonIds;
+	}
+
+
+	public void setRejectReasonIds(ArrayList<Long> rejectReasonIds) {
+		this.rejectReasonIds = rejectReasonIds;
+	}
+
+
+	public String getRejectReason() {
+		return rejectReason;
+	}
+
+
+	public void setRejectReason(String rejectReason) {
+		this.rejectReason = rejectReason;
+	}
+
+
+	public SearchFilterBean getCatTypeFilterBean() {
+		return catTypeFilterBean;
+	}
+
+
+	public void setCatTypeFilterBean(SearchFilterBean catTypeFilterBean) {
+		this.catTypeFilterBean = catTypeFilterBean;
+	}
 	
 
-
+	
 
 
 

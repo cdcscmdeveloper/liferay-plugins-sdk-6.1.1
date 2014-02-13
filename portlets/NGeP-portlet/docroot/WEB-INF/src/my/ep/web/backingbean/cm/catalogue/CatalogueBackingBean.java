@@ -55,6 +55,8 @@ import my.ep.persistence.entity.cm.catalog.CmZonalStandardPricing;
 import my.ep.persistence.entity.cm.catalog.CmZonalTierPricing;
 import my.ep.persistence.entity.cm.catalog.VCmSupplierItem;
 import my.ep.persistence.entity.pm.common.PmDistrict;
+import my.ep.persistence.entity.pm.common.PmStatus;
+import my.ep.persistence.entity.pm.common.PmStatusDesc;
 import my.ep.persistence.logging.LogKey;
 import my.ep.type.aut.SearchOperator;
 import my.ep.web.backingbean.BaseBackingBean;
@@ -232,6 +234,13 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean>{
 		this.getManagedBean().setStatusDescList(resDTO.getStatusDescList());
 
 
+		this.getManagedBean().setRejectReasonIds(new ArrayList<Long>());
+		for(CmItemRejectReason reason : this.getManagedBean().getMaintainItemList().get(index).getCmItemRejectReasons()){
+			this.getManagedBean().getRejectReasonIds().add(reason.getPmStatus().getStatusId());
+			this.getManagedBean().setRejectReason(reason.getRemark());
+		}
+
+
 		this.getManagedBean().setSelectedMaintainItem(this.getManagedBean().getMaintainItemList().get(index));
 		this.getManagedBean().getSelectedMaintainItem().setCompareDesc(this.getManagedBean().getMaintainItemList().get(index).getItemDesc());
 
@@ -267,6 +276,27 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean>{
 	public String navigateToApprovalItemDet(int index){
 
 
+
+		IStatusSO statusSO = (IStatusSO) BusinessDelegate.getInstance().getServiceObject("pm",IStatusSO.class);
+
+		StatusReqDTO statusReqDTO = new StatusReqDTO();
+
+		statusReqDTO.setDocType("CMR");
+		statusReqDTO.setModuleCode("CM");
+		statusReqDTO.setLanguageCode("en");
+
+		StatusResDTO resDTO = statusSO.retrieveStatusDescList(statusReqDTO);
+
+
+		this.getManagedBean().setStatusDescList(resDTO.getStatusDescList());
+
+		this.getManagedBean().setRejectReasonIds(new ArrayList<Long>());
+		for(CmItemRejectReason reason : this.getManagedBean().getApprovalItemList().get(index).getCmItemRejectReasons()){
+			this.getManagedBean().getRejectReasonIds().add(reason.getPmStatus().getStatusId());
+			this.getManagedBean().setRejectReason(reason.getRemark());
+		}
+
+
 		this.getManagedBean().setSelectedMaintainItem(this.getManagedBean().getApprovalItemList().get(index));
 		this.getManagedBean().getSelectedMaintainItem().setCompareDesc(this.getManagedBean().getApprovalItemList().get(index).getItemDesc());
 		this.getManagedBean().setTabActiveIndex(1);
@@ -290,21 +320,32 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean>{
 
 		ICatalogueSO catalogueSO = (ICatalogueSO) BusinessDelegate.getInstance().getServiceObject("cm",ICatalogueSO.class);
 
+		IStatusSO statusSO = (IStatusSO) BusinessDelegate.getInstance().getServiceObject("pm",IStatusSO.class);
+
+		StatusReqDTO statusReqDTO = new StatusReqDTO();
+
+		statusReqDTO.setDocType("CMR");
+		statusReqDTO.setModuleCode("CM");
+		statusReqDTO.setLanguageCode("en");
+
+		StatusResDTO resDTO = statusSO.retrieveStatusDescList(statusReqDTO);
+
+
+		this.getManagedBean().setStatusDescList(resDTO.getStatusDescList());
+		this.getManagedBean().setRejectReasonIds(new ArrayList<Long>());
+		for(CmItemRejectReason reason : this.getManagedBean().getRejectedItemList().get(index).getCmItemRejectReasons()){
+			this.getManagedBean().getRejectReasonIds().add(reason.getPmStatus().getStatusId());
+			this.getManagedBean().setRejectReason(reason.getRemark());
+		}
+
+
+
 		CatalogueReqDTO reqDTO = new CatalogueReqDTO();
 		this.getManagedBean().setSelectedMaintainItem(this.getManagedBean().getRejectedItemList().get(index));
 		this.getManagedBean().getSelectedMaintainItem().setCompareDesc(this.getManagedBean().getRejectedItemList().get(index).getItemDesc());
 
 		this.getManagedBean().setTabActiveIndex(3);
-		/*CmSupplierItem catalog = this.getManagedBean().getRejectedItemList().get(index);
-		catalog.setItemStatus("D");
-		reqDTO.getSaveSupplierItems().add(catalog);
 
-		try {
-			CatalogueResDTO resDTO =  catalogueSO.updateSupplierItem(reqDTO);
-		} catch (Exception e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}*/
 
 		return "addCatalogItem";
 
@@ -314,11 +355,11 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean>{
 	public String navigateToSupplierItemDet(VCmSupplierItem supplierItem){
 
 		System.out.println("getDocId"+supplierItem.getDocId());
-		
+
 		ICatalogueSO catalogueSO = (ICatalogueSO) BusinessDelegate.getInstance().getServiceObject("cm",ICatalogueSO.class);
 
 		CatalogueReqDTO reqDTO = new CatalogueReqDTO();
-		
+
 		reqDTO.setDocId(supplierItem.getDocId());
 
 		CatalogueResDTO resDTO = catalogueSO.searchSupplierItemByStatus(reqDTO);
@@ -659,21 +700,21 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean>{
 					dataLs.add(price.getCmSupplierItem().getCmItem().getExtensionCode());
 
 					if(price.getPricingType().equalsIgnoreCase("01") ){
-						
+
 						dataLs.add("Standard");
 					}else if(price.getPricingType().equalsIgnoreCase("02")){
-						
+
 						dataLs.add("Promotion");
 					}else if(price.getPricingType().equalsIgnoreCase("03")){
-						
+
 						dataLs.add("Tier");
 					}else if(price.getPricingType().equalsIgnoreCase("04")){
-					
+
 						dataLs.add("Promotion Tier");
 					}
 
 					dataLs.add(price.getPrice());
-					
+
 					dataLs.add(formater.format(price.getStartDate()));
 					dataLs.add(formater.format(price.getEndDate()));
 					dataLs.add(price.getFromQty());
@@ -708,18 +749,18 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean>{
 						}else{
 							dataLs.add("Zonal State Standard");
 						}
-						
+
 					}else if(price.getPricingType().equalsIgnoreCase("06")){
-						
+
 						if(price.getPmDistrict()!=null && price.getPmDistrict().getDistrictId()!=null){
 							dataLs.add("Zonal District Promotion");
 						}else{
 							dataLs.add("Zonal State Promotion");
 						}
 
-						
+
 					}else if(price.getPricingType().equalsIgnoreCase("07")){
-						
+
 						if(price.getPmDistrict()!=null && price.getPmDistrict().getDistrictId()!=null){
 							dataLs.add("Zonal Distict Tier");
 						}else{
@@ -727,14 +768,14 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean>{
 						}
 
 					}else if(price.getPricingType().equalsIgnoreCase("08")){
-						
+
 						if(price.getPmDistrict()!=null && price.getPmDistrict().getDistrictId()!=null){
 							dataLs.add("Zonal District Promotion Tier");
 						}else{
 							dataLs.add("Zonal State Promotion Tier");
 						}
 					}
-					
+
 					dataLs.add(price.getPmState().getStateName());
 					dataLs.add(price.getPmDistrict().getDistrictName()!=null?price.getPmDistrict().getDistrictName():"");
 					dataLs.add(price.getPrice());
@@ -943,25 +984,36 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean>{
 				if(image.isBrandNew()){
 					this.getManagedBean().getSelectedMaintainItem().setReviewRequired(true);
 					break;
-				}else{
-					this.getManagedBean().getSelectedMaintainItem().setReviewRequired(false);
 				}
 			}
 			System.out.println("compareDesc:"+this.getManagedBean().getSelectedMaintainItem().getCompareDesc());
 			System.out.println("getItemDesc:"+this.getManagedBean().getSelectedMaintainItem().getItemDesc());
+		
+
+			
+
 			if(this.getManagedBean().getSelectedMaintainItem().getCompareDesc()!=null && this.getManagedBean().getSelectedMaintainItem().getCompareDesc().trim().length()>0){
-				if(this.getManagedBean().getSelectedMaintainItem().getCompareDesc().equalsIgnoreCase(this.getManagedBean().getSelectedMaintainItem().getItemDesc())){
-					this.getManagedBean().getSelectedMaintainItem().setReviewRequired(false);
-				}else{
+				if(!(this.getManagedBean().getSelectedMaintainItem().getCompareDesc().equalsIgnoreCase(this.getManagedBean().getSelectedMaintainItem().getItemDesc()))){
 					this.getManagedBean().getSelectedMaintainItem().setReviewRequired(true);
+					this.getManagedBean().getSelectedMaintainItem().setItemStatus("P");
 				}
+			}else{
+				if(this.getManagedBean().getSelectedMaintainItem().getItemDesc()!=null && this.getManagedBean().getSelectedMaintainItem().getItemDesc().trim().length()>0){
+					this.getManagedBean().getSelectedMaintainItem().setReviewRequired(true);
+					this.getManagedBean().getSelectedMaintainItem().setItemStatus("P");
+				}
+			}
+			System.out.println("isReviewRequired:"+this.getManagedBean().getSelectedMaintainItem().isReviewRequired());
+
+			if(this.getManagedBean().getSelectedMaintainItem().isReviewRequired()){
+				this.getManagedBean().getSelectedMaintainItem().setItemStatus("P");
+			}else{
+				this.getManagedBean().getSelectedMaintainItem().setItemStatus("D");
 			}
 
 
-
-			System.out.println("isReviewRequired:"+this.getManagedBean().getSelectedMaintainItem().isReviewRequired());
-
 			this.getManagedBean().getSelectedMaintainItem().setItemStatus("D");
+			
 			this.getManagedBean().getSelectedMaintainItem().getCmPromotionPricing().setCmSupplierItem(this.getManagedBean().getSelectedMaintainItem());
 			this.getManagedBean().getSelectedMaintainItem().getCmStandardPricing().setCmSupplierItem(this.getManagedBean().getSelectedMaintainItem());
 
@@ -1006,10 +1058,7 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean>{
 				}
 			}
 
-			for(CmItemRejectReason reason : this.getManagedBean().getSelectedMaintainItem().getCmItemRejectReasons()){
 
-				reason.setCmSupplierItem(this.getManagedBean().getSelectedMaintainItem());
-			}
 
 
 
@@ -1020,8 +1069,8 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean>{
 
 			FacesContext facesContext = FacesContext.getCurrentInstance();
 			facesContext.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO," Saved Successfully", ""));
-			
-			
+
+
 			if(this.getManagedBean().getTabActiveIndex()==0){
 
 
@@ -1059,7 +1108,7 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean>{
 				this.getManagedBean().setRejectedItemList(resDTO.getSupplierItemList());
 
 			}
-			
+
 
 		}catch(Exception ex){
 			System.out.println("***********error********");
@@ -1079,6 +1128,174 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean>{
 
 
 
+	public String singleSubmitToReviewItems() {
+		log.info("In saveCatalogItem");
+		PortletRequest request = (PortletRequest)FacesContext.getCurrentInstance().getExternalContext().getRequest();
+
+		System.out.println("******getTabActiveIndex:"+this.getManagedBean().getTabActiveIndex());
+
+		ICatalogueSO catalogueSO = null;
+
+		try {
+
+			catalogueSO = (ICatalogueSO)BusinessDelegate.getInstance().getServiceObject("cm",ICatalogueSO.class);
+			CatalogueReqDTO reqDTO  = new CatalogueReqDTO();
+
+
+			System.out.println("price:"+this.getManagedBean().getSelectedMaintainItem().getCmPromotionPricing().getPrice());
+			System.out.println("price standard:"+this.getManagedBean().getSelectedMaintainItem().getCmStandardPricing().getPrice());
+
+			for(CmImage image: this.getManagedBean().getSelectedMaintainItem().getCmImages()){
+				if(image.isBrandNew()){
+					this.getManagedBean().getSelectedMaintainItem().setReviewRequired(true);
+					this.getManagedBean().getSelectedMaintainItem().setItemStatus("P");
+					break;
+				}
+			}
+			System.out.println("compareDesc:"+this.getManagedBean().getSelectedMaintainItem().getCompareDesc());
+			System.out.println("getItemDesc:"+this.getManagedBean().getSelectedMaintainItem().getItemDesc());
+
+
+
+			if(this.getManagedBean().getSelectedMaintainItem().getCompareDesc()!=null && this.getManagedBean().getSelectedMaintainItem().getCompareDesc().trim().length()>0){
+				if(!(this.getManagedBean().getSelectedMaintainItem().getCompareDesc().equalsIgnoreCase(this.getManagedBean().getSelectedMaintainItem().getItemDesc()))){
+					this.getManagedBean().getSelectedMaintainItem().setReviewRequired(true);
+					this.getManagedBean().getSelectedMaintainItem().setItemStatus("P");
+				}
+			}else{
+				if(this.getManagedBean().getSelectedMaintainItem().getItemDesc()!=null && this.getManagedBean().getSelectedMaintainItem().getItemDesc().trim().length()>0){
+					this.getManagedBean().getSelectedMaintainItem().setReviewRequired(true);
+					this.getManagedBean().getSelectedMaintainItem().setItemStatus("P");
+				}
+			}
+			System.out.println("isReviewRequired:"+this.getManagedBean().getSelectedMaintainItem().isReviewRequired());
+
+			if(this.getManagedBean().getSelectedMaintainItem().isReviewRequired()){
+				this.getManagedBean().getSelectedMaintainItem().setItemStatus("P");
+			}else{
+				this.getManagedBean().getSelectedMaintainItem().setItemStatus("U");
+			}
+			
+
+
+
+
+
+			this.getManagedBean().getSelectedMaintainItem().getCmPromotionPricing().setCmSupplierItem(this.getManagedBean().getSelectedMaintainItem());
+			this.getManagedBean().getSelectedMaintainItem().getCmStandardPricing().setCmSupplierItem(this.getManagedBean().getSelectedMaintainItem());
+
+			for(CmPromotionTierPricing promotion: this.getManagedBean().getSelectedMaintainItem().getCmPromotionTierPricings()){
+				promotion.setCmSupplierItem(this.getManagedBean().getSelectedMaintainItem());
+			}
+			for(CmTierPricing promotion: this.getManagedBean().getSelectedMaintainItem().getCmTierPricings()){
+				promotion.setCmSupplierItem(this.getManagedBean().getSelectedMaintainItem());
+			}
+
+
+			for(CmZonalStandardPricing promotion: this.getManagedBean().getSelectedMaintainItem().getCmZonalStandardPricings()){
+
+				promotion.setCmSupplierItem(this.getManagedBean().getSelectedMaintainItem());
+				if(promotion.getPmDistrict().getDistrictId() == null) {
+					promotion.setPmDistrict(null);
+				}
+			}
+
+			for(CmZonalPromotionPricing promotion: this.getManagedBean().getSelectedMaintainItem().getCmZonalPromotionPricings()){
+
+				promotion.setCmSupplierItem(this.getManagedBean().getSelectedMaintainItem());
+				if(promotion.getPmDistrict().getDistrictId() == null) {
+					promotion.setPmDistrict(null);
+				}
+			}
+
+
+			for(CmZonalTierPricing promotion: this.getManagedBean().getSelectedMaintainItem().getCmZonalTierPricings()){
+
+				promotion.setCmSupplierItem(this.getManagedBean().getSelectedMaintainItem());
+				if(promotion.getPmDistrict().getDistrictId() == null) {
+					promotion.setPmDistrict(null);
+				}
+			}
+
+			for(CmZonalPromotionTierPricing promotion: this.getManagedBean().getSelectedMaintainItem().getCmZonalPromotionTierPricings()){
+
+				promotion.setCmSupplierItem(this.getManagedBean().getSelectedMaintainItem());
+				if(promotion.getPmDistrict().getDistrictId() == null) {
+					promotion.setPmDistrict(null);
+				}
+			}
+
+
+
+
+
+
+
+			reqDTO.getSaveSupplierItems().add(this.getManagedBean().getSelectedMaintainItem());
+			catalogueSO.updateSupplierItem(reqDTO);
+
+			FacesContext facesContext = FacesContext.getCurrentInstance();
+			facesContext.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO," Saved Successfully", ""));
+
+
+			if(this.getManagedBean().getTabActiveIndex()==0){
+
+
+				reqDTO.setItemStatus("D");
+				CatalogueResDTO resDTO = catalogueSO.searchSupplierItemByStatus(reqDTO);
+
+				this.getManagedBean().setMaintainItemList(resDTO.getSupplierItemList());
+
+			}else if(this.getManagedBean().getTabActiveIndex()==4){
+
+				reqDTO.setItemStatus("U");
+				CatalogueResDTO resDTO = catalogueSO.searchSupplierItemByStatus(reqDTO);
+
+				this.getManagedBean().setPublishedItemList(resDTO.getSupplierItemList());
+
+			}else if(this.getManagedBean().getTabActiveIndex()==1){
+
+				reqDTO.setItemStatus("P");
+				CatalogueResDTO resDTO = catalogueSO.searchSupplierItemByStatus(reqDTO);
+
+				this.getManagedBean().setApprovalItemList(resDTO.getSupplierItemList());
+
+			}else if(this.getManagedBean().getTabActiveIndex()==2){
+
+				reqDTO.setItemStatus("A");
+				CatalogueResDTO resDTO = catalogueSO.searchSupplierItemByStatus(reqDTO);
+
+				this.getManagedBean().setApprovedItemList(resDTO.getSupplierItemList());
+
+			}else if(this.getManagedBean().getTabActiveIndex()==3){
+
+				reqDTO.setItemStatus("R");
+				CatalogueResDTO resDTO = catalogueSO.searchSupplierItemByStatus(reqDTO);
+
+				this.getManagedBean().setRejectedItemList(resDTO.getSupplierItemList());
+
+			}
+
+
+		}catch(Exception ex){
+			System.out.println("***********error********");
+			FacesContext facesContext = FacesContext.getCurrentInstance();
+			facesContext.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR," Error", ""));
+
+			return "addCatalogView";
+		}finally {
+			catalogueSO = null;
+		}
+
+		log.info("Exit saveCatalogItem");
+
+		//return "catalogMaintenanceFile?faces-redirect=true";
+		return "preRenderCatalogueMaintenanceFile";
+	}
+
+
+
+
 	public void submitToReviewItems(){
 		ICatalogueSO catalogueSO = (ICatalogueSO) BusinessDelegate.getInstance().getServiceObject("cm",ICatalogueSO.class);
 
@@ -1087,6 +1304,14 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean>{
 		System.out.println("this.getManagedBean().getSelectedMaintainItems().length:"+this.getManagedBean().getSelectedMaintainItems().length);
 		for(int i=0; i<this.getManagedBean().getSelectedMaintainItems().length; i++){
 			CmSupplierItem catalog = this.getManagedBean().getSelectedMaintainItems()[i];
+
+			System.out.println("size b4:"+catalog.getCmItemRejectReasons().size());
+
+			catalog.getCmItemRejectReasons().clear();
+
+
+			System.out.println("size after:"+catalog.getCmItemRejectReasons().size());
+
 
 			if(catalog.isReviewRequired()){
 				catalog.setItemStatus("P");
@@ -1672,15 +1897,12 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean>{
 		return "supplierItemView";
 	}
 
-	public void enableRemark(CmItemRejectReason reason){
-		System.out.println("getPmStatus().getStatusId()"+reason.getPmStatus().getStatusId());
-		if(reason.getPmStatus().getStatusId().longValue()  == 10010){
-			System.out.println("*********false*********");
-			reason.setRemarkDisabled(false);
-		}else{
-			System.out.println("**********true*************");
-			reason.setRemarkDisabled(true);
-		}
+	public void enableRemark(){
+
+		ReviewCatalogueBackingBean bb = new ReviewCatalogueBackingBean();
+		bb.getManagedBean().setCatDetTabActiveIndex(2);
+
+
 	}
 
 
@@ -1742,7 +1964,17 @@ public class CatalogueBackingBean extends BaseBackingBean<CatalogueManagedBean>{
 	}
 
 
+	public boolean isRemarkRendered() {
 
+		for(int i = 0; i < this.getManagedBean().getRejectReasonIds().size(); i++) {
+			String id = String.valueOf(this.getManagedBean().getRejectReasonIds().get(i));
+			if(id.equals("10010")) {
+				return true;
+			}		
+		}
+
+		return false;
+	}
 
 
 

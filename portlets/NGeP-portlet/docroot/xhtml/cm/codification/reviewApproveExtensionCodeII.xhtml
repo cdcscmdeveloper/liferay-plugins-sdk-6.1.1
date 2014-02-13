@@ -25,7 +25,7 @@
 				</ui:repeat>
 			</div>
 
-			<p:panel header="Extension Code Review" toggleable="true">
+			<p:panel header="Extension Code Request" toggleable="true">
 
 				<table style="width: 100%;">
 					<tr>
@@ -43,21 +43,40 @@
 				<p:dataTable style="width:100%;"
 					value="#{unspscCodeBackingBean.managedBean.reviewExtCodeList}"
 					var="review">
+					
+					<p:column>
+						<f:facet name="header">
+						Extension
+					</f:facet>
 
+						<table style="height:140px;">
+							<tr>
+								<td>#{lbl['lbl.cm.type']}</td>
+							</tr>
+							<tr>
+								<td>#{lbl['lbl.cm.brand']}</td>
+							</tr>
+							<tr>
+								<td>#{lbl['lbl.cm.measurement']}</td>
+							</tr>
+							<tr>
+								<td>#{lbl['lbl.cm.color']}</td>
+							</tr>
+						</table>
+
+
+
+					</p:column>
+					
+
+					
 					<p:column>
 						<f:facet name="header">
-							#{lbl['lbl.cm.item.description']}
-						</f:facet>
-					#{review.itemDetail}
-				</p:column>
-					<p:column>
-						<f:facet name="header">
-							Extension
+							Supplier
 						</f:facet>
 
 						<table>
 							<tr>
-								<td>#{lbl['lbl.cm.type']}</td>
 								<td><h:panelGrid columns="2"
 										columnClasses="cmColumnWidth, border0">
 										<p:inputText value="#{review.typeName}" disabled="true"></p:inputText>
@@ -68,7 +87,6 @@
 									</h:panelGrid></td>
 							</tr>
 							<tr>
-								<td>#{lbl['lbl.cm.brand']}</td>
 								<td><h:panelGrid columns="2"
 										columnClasses="cmColumnWidth, border0">
 										<p:inputText value="#{review.brandName}" disabled="true"></p:inputText>
@@ -79,7 +97,6 @@
 									</h:panelGrid></td>
 							</tr>
 							<tr>
-								<td>#{lbl['lbl.cm.measurement']}</td>
 								<td><h:panelGrid columns="2"
 										columnClasses="cmColumnWidth, border0">
 										<p:inputText value="#{review.measurementName}" disabled="true"></p:inputText>
@@ -90,7 +107,6 @@
 									</h:panelGrid></td>
 							</tr>
 							<tr>
-								<td>#{lbl['lbl.cm.color']}</td>
 								<td><h:panelGrid columns="2"
 										columnClasses="cmColumnWidth, border0">
 										<p:inputText value="#{review.colorName}" disabled="true"></p:inputText>

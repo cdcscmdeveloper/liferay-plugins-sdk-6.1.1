@@ -1,16 +1,25 @@
 package my.ep.web.backingbean.cm.catalogue;
 
+import java.util.ArrayList;
+
+import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.RequestScoped;
+import javax.faces.context.FacesContext;
 
 import my.ep.biz.bean.search.SearchFilterBean;
 import my.ep.biz.service.cm.catalogue.ICatalogueSO;
+import my.ep.biz.service.pm.common.status.IStatusSO;
 import my.ep.dto.cm.catalogue.CatalogueReqDTO;
 import my.ep.dto.cm.catalogue.CatalogueResDTO;
+import my.ep.dto.pm.common.status.StatusReqDTO;
+import my.ep.dto.pm.common.status.StatusResDTO;
+import my.ep.persistence.entity.cm.catalog.CmItemRejectReason;
 import my.ep.persistence.entity.cm.catalog.CmZonalPromotionPricing;
 import my.ep.persistence.entity.cm.catalog.CmZonalPromotionTierPricing;
 import my.ep.persistence.entity.cm.catalog.CmZonalStandardPricing;
 import my.ep.persistence.entity.cm.catalog.CmZonalTierPricing;
+import my.ep.persistence.entity.pm.common.PmStatus;
 import my.ep.type.aut.SearchOperator;
 import my.ep.web.backingbean.BaseBackingBean;
 import my.ep.web.managedbean.cm.catalogue.ReviewCatalogueManagedBean;
@@ -42,10 +51,23 @@ public class ReviewCatalogueBackingBean extends BaseBackingBean<ReviewCatalogueM
 	public String navigateToCatalogDet(){
 
 		System.out.println("************navigateToCatalogDet*************");
+		
+		
+		IStatusSO statusSO = (IStatusSO) BusinessDelegate.getInstance().getServiceObject("pm",IStatusSO.class);
+
+		StatusReqDTO statusReqDTO = new StatusReqDTO();
+
+		statusReqDTO.setDocType("CMR");
+		statusReqDTO.setModuleCode("CM");
+		statusReqDTO.setLanguageCode("en");
+
+		StatusResDTO resDTO = statusSO.retrieveStatusDescList(statusReqDTO);
+
 		CatalogueBackingBean bb = new CatalogueBackingBean();
-
+		bb.getManagedBean().setStatusDescList(resDTO.getStatusDescList());
+		
 		bb.getManagedBean().setSelectedMaintainItem(this.getManagedBean().getSelectedReviewCat());
-
+		bb.getManagedBean().setRejectReasonIds(new ArrayList<Long>());
 		return "addCatalogItem";
 
 	}
@@ -117,7 +139,10 @@ public class ReviewCatalogueBackingBean extends BaseBackingBean<ReviewCatalogueM
 		CatalogueReqDTO reqDTO = new CatalogueReqDTO();
 
 		bb.getManagedBean().getSelectedMaintainItem().setItemStatus("R");
+		this.getManagedBean().setRejectReason(false);
 		
+		bb.getManagedBean().getSelectedMaintainItem().setReviewRequired(false);
+		System.out.println("bb.getManagedBean().getRejectReasonIds(): " + bb.getManagedBean().getRejectReasonIds());
 		
 		for(CmZonalStandardPricing promotion: bb.getManagedBean().getSelectedMaintainItem().getCmZonalStandardPricings()){
 
@@ -152,11 +177,61 @@ public class ReviewCatalogueBackingBean extends BaseBackingBean<ReviewCatalogueM
 			}
 		}
 		
+/*		System.out.println("*****size*******"+bb.getManagedBean().getSelectedMaintainItem().getCmItemRejectReasons().size());
+		for(CmItemRejectReason reason : bb.getManagedBean().getSelectedMaintainItem().getCmItemRejectReasons()){
+			System.out.println("*******getItemRejectReasonId******"+reason.getItemRejectReasonId());
+			reason.setCmSupplierItem(bb.getManagedBean().getSelectedMaintainItem());
+		}*/
 		
+	
+		for(int i = 0; i < bb.getManagedBean().getRejectReasonIds().size(); i++) {
+			Long id = Long.valueOf(String.valueOf(bb.getManagedBean().getRejectReasonIds().get(i)));
+			
+//			Long id = new Long(bb.getManagedBean().getRejectReasonIds().get(i));
+			CmItemRejectReason reason = new CmItemRejectReason();
+			PmStatus reasonStatus = new PmStatus();
+			reasonStatus.setStatusId(id);
+			reasonStatus.setBrandNew(false);
+			
+			reason.setRemark(bb.getManagedBean().getRejectReason());
+			reason.setCmSupplierItem(bb.getManagedBean().getSelectedMaintainItem());
+			reason.setPmStatus(reasonStatus);
+			bb.getManagedBean().getSelectedMaintainItem().getCmItemRejectReasons().add(reason);			
+		}
+		
+/*		for(Long reasonStatusId : bb.getManagedBean().getRejectReasonIds()) {
+			CmItemRejectReason reason = new CmItemRejectReason();
+			PmStatus reasonStatus = new PmStatus();
+			reasonStatus.setStatusId(reasonStatusId);
+			reasonStatus.setBrandNew(false);
+
+			reason.setCmSupplierItem(bb.getManagedBean().getSelectedMaintainItem());
+			reason.setPmStatus(reasonStatus);
+			bb.getManagedBean().getSelectedMaintainItem().getCmItemRejectReasons().add(reason);
+		}*/
 		
 		
 		reqDTO.getSaveSupplierItems().add(bb.getManagedBean().getSelectedMaintainItem());
 
+	/*	for(CmItemRejectReason reason : bb.getManagedBean().getSelectedMaintainItem().getCmItemRejectReasons()){
+			if(reason.isBrandNew()){
+				this.getManagedBean().setRejectReason(true);
+			}
+		}*/
+		
+	//	System.out.println("isRejectReason:"+this.getManagedBean().isRejectReason());
+		
+		/*if(!this.getManagedBean().isRejectReason()){
+			
+			this.getManagedBean().setCatDetTabActiveIndex(2);
+			
+			FacesContext facesContext = FacesContext.getCurrentInstance();
+			facesContext.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR," Item Reject Reason Required!", ""));
+			
+			return "addCatalogView";
+		}*/
+		
+		
 		try {
 			catalogueSO.updateSupplierItem(reqDTO);
 		} catch (Exception e) {
@@ -166,6 +241,13 @@ public class ReviewCatalogueBackingBean extends BaseBackingBean<ReviewCatalogueM
 		
 		return "catalogueTaskList?faces-redirect=true";
 
+	}
+	
+	
+	public String cancelToPendingApprovalItem(){
+		
+		
+		return "catalogueTaskList";
 	}
 
 
