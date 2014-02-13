@@ -88,8 +88,8 @@ public class DeliveryOrderBackingBean extends BaseBackingBean<DeliveryOrderManag
 			reqDTO.setFlDeliveryOrder(flDeliveryOrder);
 			reqDTO.setFulfilmentOrder(getManagedBean().getFulfilmentOrder());
 			reqDTO.setOutcome(action);
-			reqDTO.setFlAttachmentList(flBB.getManagedBean().getAttachmentList());
-			reqDTO.setFlRemark(flBB.getManagedBean().getRemarkList().get(0));
+			//reqDTO.setFlAttachmentList(flBB.getManagedBean().getAttachmentList());
+			//reqDTO.setFlRemark(flBB.getManagedBean().getRemarkList().get(0));
 			reqDTO.setToken(token);
 			FulfilmentResDTO resDTO = deliveryOrderSO.saveDeliveryOrder(reqDTO);
 			if(resDTO.isSuccessful()) {

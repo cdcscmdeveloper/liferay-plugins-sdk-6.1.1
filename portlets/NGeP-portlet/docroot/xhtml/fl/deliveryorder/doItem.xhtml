@@ -46,23 +46,27 @@
 				<h:outputText value="#{item.flFulfilmentItemAddr.receivedQty}" />
 			</p:column>
 			<p:column headerText="Delivered Qty.">
-				<p:inputText value="#{item.deliveredQty}" rendered="#{item.flFulfilmentItemAddr.flFulfilmentItem.scRequestNoteDtl.scRequestSupplierItem.requestNoteItem.itemType eq 'P'}">
+				<p:inputText value="#{item.deliveredQty}"
+					rendered="#{item.flFulfilmentItemAddr.flFulfilmentItem.scRequestNoteDtl.scRequestSupplierItem.requestNoteItem.itemType eq 'P'}">
 					<p:ajax event="blur" update="delAmountTxt" process="@this"
 						listener="#{createDOBackingBean.retrievedDelAmount(item)}" />
 				</p:inputText>
-				<p:inputText value="#{item.deliveredQty}" 
-					rendered="#{item.flFulfilmentItemAddr.flFulfilmentItem.scRequestNoteDtl.scRequestSupplierItem.requestNoteItem.itemType eq 'S' and item.flFulfilmentItemAddr.orderedQty > 1}" />
+				<p:inputText value="#{item.deliveredQty}"
+					rendered="#{item.flFulfilmentItemAddr.flFulfilmentItem.scRequestNoteDtl.scRequestSupplierItem.requestNoteItem.itemType eq 'S' and item.flFulfilmentItemAddr.orderedQty > 1}">
+					<p:ajax event="blur" update="delAmountTxt" process="@this"
+						listener="#{createDOBackingBean.retrievedDelAmount(item)}" />
+				</p:inputText>
 				<p:inputText value="#{item.deliveredQty}" disabled="true"
-					rendered="#{item.flFulfilmentItemAddr.flFulfilmentItem.scRequestNoteDtl.scRequestSupplierItem.requestNoteItem.itemType eq 'S' and item.flFulfilmentItemAddr.orderedQty == 1}" />	
+					rendered="#{item.flFulfilmentItemAddr.flFulfilmentItem.scRequestNoteDtl.scRequestSupplierItem.requestNoteItem.itemType eq 'S' and item.flFulfilmentItemAddr.orderedQty == 1}" />
 			</p:column>
 			<p:column headerText="Ordered Amt.(RM)">
-				<h:outputText value="#{item.flFulfilmentItemAddr.orderedAmt}" >
-				<f:convertNumber pattern="#,###.00" />
+				<h:outputText value="#{item.flFulfilmentItemAddr.orderedAmt}">
+					<f:convertNumber pattern="#,###.00" />
 				</h:outputText>
 			</p:column>
 			<p:column headerText="Received Amt.(RM)">
-				<h:outputText value="" >
-				<f:convertNumber pattern="#,###.00" />
+				<h:outputText value="">
+					<f:convertNumber pattern="#,###.00" />
 				</h:outputText>
 			</p:column>
 			<p:column headerText="Delivered Amt.(RM)">

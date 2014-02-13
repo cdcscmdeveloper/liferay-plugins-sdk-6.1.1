@@ -26,6 +26,7 @@ import my.ep.jaxb.fl.stopfullfillmentdata.FLStopFullfillmentDataType;
 import my.ep.persistence.entity.fl.order.FlDeliveryOrder;
 import my.ep.persistence.entity.fl.order.FlFulfilmentOrder;
 import my.ep.persistence.entity.fl.request.FlDeliveryAddress;
+import my.ep.persistence.entity.fl.request.FlFulfilmentItemAddr;
 import my.ep.persistence.entity.fl.request.FlFulfilmentRequest;
 import my.ep.persistence.entity.sm.SmSupplier;
 import my.ep.util.lookupservice.EpBpmBusinessDelegate;
@@ -175,6 +176,7 @@ public class FulfilmentOrderBackingBean extends BaseBackingBean<FulfilmentOrderM
 		doMB.getManagedBean().setFulfilmentRequest(resDTO.getFlFulfilmentRequest());
 		doMB.getManagedBean().setDocType(resDTO.getFlFulfilmentRequest().getDocType());
 		doMB.getManagedBean().setStatusDesc(statusDesc);
+		doMB.getManagedBean().setFulfilmentOrder(getManagedBean().getSelectedFlOrder());
 
 		return NAV_TO_CREATE_DO;
 
@@ -220,7 +222,6 @@ public class FulfilmentOrderBackingBean extends BaseBackingBean<FulfilmentOrderM
 			Object obj = res.getPojo();
 			System.out.println("res.getProcessName(): "+res.getProcessName());
 			if (res.getProcessName().equalsIgnoreCase(FlProcessNameConst.STOP_FULFILMENT_REQUEST_PROCESS_NAME)){
-				System.out.println("ifffffffffffffffffff");
 				IFulfilmentOrderSO orderSO = (IFulfilmentOrderSO) BusinessDelegate.getInstance().getServiceObject("fl",IFulfilmentOrderSO.class);
 				FLStopFullfillmentDataType stopFlData = (FLStopFullfillmentDataType)obj;
 				FulfilmentReqDTO flReqDTO = new FulfilmentReqDTO();
@@ -236,7 +237,6 @@ public class FulfilmentOrderBackingBean extends BaseBackingBean<FulfilmentOrderM
 				getManagedBean().setContractRequest(Boolean.TRUE);
 
 			}else {
-				System.out.println("elseeeeeeeeeeeeeeeeeeee");
 				IFulfilmentRequestSO requestSO = (IFulfilmentRequestSO) BusinessDelegate.getInstance().getServiceObject("fl",IFulfilmentRequestSO.class);
 				FulfilmentReqDTO flReqDTO = new FulfilmentReqDTO();
 				FulfilmentResDTO resDTO = new FulfilmentResDTO();
@@ -319,7 +319,7 @@ public class FulfilmentOrderBackingBean extends BaseBackingBean<FulfilmentOrderM
 			flReqDTO.setSelectedApprovers(flPurchaseOrd.getApproverList());
 			resDTO = fulfilmentSO.retrieveFulfilmentRequest(flReqDTO);
 			flReqDTO.setFlFulfilmentRequest(resDTO.getFlFulfilmentRequest());
-			//combineSupAddress(resDTO.getFlFulfilmentRequest());
+			combineSupAddress(resDTO.getFlFulfilmentRequest());
 			FulfilmentBackingBean flBB = new FulfilmentBackingBean();
 			//System.out.println("attachement list size:::: "+resDTO.getAttachmentList().size());
 			/*if(resDTO.getFlFulfilmentRequest().getDocType().equalsIgnoreCase("PR")){
@@ -355,34 +355,34 @@ public class FulfilmentOrderBackingBean extends BaseBackingBean<FulfilmentOrderM
 	    	
 	    	StringBuilder address = new StringBuilder();
 	    	String strSpace = " ";
-	    	if(fulfilmentRequest.getSupplierBranch().getSmAddress().getAddress1() != null){
+	    	if(null != fulfilmentRequest.getSupplierBranch().getSmAddress().getAddress1() ){
 	    		address.append(fulfilmentRequest.getSupplierBranch().getSmAddress().getAddress1());
 	    		address.append(strSpace);
 	    	
-	    	}if(fulfilmentRequest.getSupplierBranch().getSmAddress().getAddress2() != null){
+	    	}if(null != fulfilmentRequest.getSupplierBranch().getSmAddress().getAddress2()){
 	    		address.append(fulfilmentRequest.getSupplierBranch().getSmAddress().getAddress2());
 	    		address.append(strSpace);
 	    	
-	    	}if(fulfilmentRequest.getSupplierBranch().getSmAddress().getAddress3() != null){
+	    	}if(null != fulfilmentRequest.getSupplierBranch().getSmAddress().getAddress3() ){
 	    		address.append(fulfilmentRequest.getSupplierBranch().getSmAddress().getAddress3());
 	    		address.append(strSpace);
 	    	
-	    	}if(fulfilmentRequest.getSupplierBranch().getSmAddress().getAddress4() != null){
+	    	}if(null != fulfilmentRequest.getSupplierBranch().getSmAddress().getAddress4()){
 	    		address.append(fulfilmentRequest.getSupplierBranch().getSmAddress().getAddress4());
 	    		address.append(strSpace);
 	    		
-	    	}if(fulfilmentRequest.getSupplierBranch().getSmAddress().getPmDistrict().getDistrictName() != null){
+	    	}if(null != fulfilmentRequest.getSupplierBranch().getSmAddress().getPmDistrict().getDistrictName()){
 	    		address.append(fulfilmentRequest.getSupplierBranch().getSmAddress().getPmDistrict().getDistrictName());
 	    		address.append(strSpace);
 	    	
-	    	}if(fulfilmentRequest.getSupplierBranch().getSmAddress().getPmState().getStateName() != null){
+	    	}if(null != fulfilmentRequest.getSupplierBranch().getSmAddress().getPmState().getStateName()){
 	    		address.append(fulfilmentRequest.getSupplierBranch().getSmAddress().getPmState().getStateName());
 	    		address.append(strSpace);
 	    	
-	    	}if(fulfilmentRequest.getSupplierBranch().getSmAddress().getPmCountry().getCountryName() != null){
+	    	}if(null != fulfilmentRequest.getSupplierBranch().getSmAddress().getPmCountry().getCountryName()){
 	    		address.append(fulfilmentRequest.getSupplierBranch().getSmAddress().getPmCountry().getCountryName());
 	    		address.append("\n");
-	    	}if(fulfilmentRequest.getSupplierBranch().getSmAddress().getPostcode() != null){
+	    	}if(null != fulfilmentRequest.getSupplierBranch().getSmAddress().getPostcode()){
 	    		address.append(fulfilmentRequest.getSupplierBranch().getSmAddress().getPostcode());
 	    	}
 	    	if(null != address.toString()){
@@ -390,18 +390,19 @@ public class FulfilmentOrderBackingBean extends BaseBackingBean<FulfilmentOrderM
 	    	}
 	    	this.getManagedBean().setSupplierAddress(address.toString());
 	    }
-	 public void retrieveOrderAmount(){
+	 public void retrieveOrderAmount(FlFulfilmentItemAddr fulfilmentItemAddr){
 			int unitPrice = 0;
 			int ordQnty = 0;
 			int ordAmoun = 0;
-			if(null != getManagedBean().getSelectedDelAddr().getFlFulfilmentItemAddr().get(0).getUnitPrice())
-				unitPrice= getManagedBean().getSelectedDelAddr().getFlFulfilmentItemAddr().get(0).getUnitPrice().intValue();
-			if(null != getManagedBean().getSelectedDelAddr().getFlFulfilmentItemAddr().get(0).getOrderedQty())
+			if(null != fulfilmentItemAddr.getUnitPrice())
+				unitPrice= fulfilmentItemAddr.getUnitPrice().intValue();
+			if(null != fulfilmentItemAddr.getOrderedQty())
 				ordQnty = getManagedBean().getSelectedDelAddr().getFlFulfilmentItemAddr().get(0).getOrderedQty().intValue();
 			ordAmoun =((unitPrice) * (ordQnty));
 			BigDecimal ordAmount = new BigDecimal("0");
 			ordAmount=new BigDecimal(ordAmoun);
 			getManagedBean().getSelectedDelAddr().getFlFulfilmentItemAddr().get(0).setOrderedAmt(ordAmount);
+			
 		}
 
 }
