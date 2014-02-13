@@ -9,16 +9,17 @@ xmlns:ui="http://java.sun.com/jsf/facelets"
 xmlns:p="http://primefaces.org/ui"
 xmlns:c="http://java.sun.com/jsp/jstl/core"
 >
-
-	<!-- Item List for Direct Purchase -->
-	<p:dialog id="dlItemDp" header="#{lbl['lbl.pp.item.details']}" widgetVar="dlItemDpModal"
-   		resizable="false" styleClass="ppDialogBg" dynamic="true">  
+	
+	<!-- Item List for Quotation, Tender, Direct Nego, Contract -->
+	<p:dialog id="dlItemDp" header="#{lbl['lbl.pp.item.details']}" widgetVar="dlItemModal"
+    		 resizable="false" styleClass="ppDialogBg" dynamic="true">  
 		<p:outputPanel id="opItemDp">
 			<p:dataTable id="dtItemDp" styleClass="ppFixTdWidth" var="item" 
 				value="#{planBackingBean.managedBean.selectedPlanItem.ppPlanDtls}"  rowIndexVar="rowIndex"
 				emptyMessage="#{lbl['lbl.pp.no.record.found']}">  
 		        <p:column headerText="#{lbl['lbl.pp.gosodo.code']}"> 
-                  	<p:selectOneMenu value="#{item.goId}"
+
+                   <p:selectOneMenu value="#{item.goId}"
 						disabled="#{!item.editable}">
 						<f:selectItem itemLabel="#{lbl['lbl.select']}" itemValue="#{null}" />
 						<f:selectItems value="#{planBackingBean.goOptions()}" 
@@ -37,7 +38,7 @@ xmlns:c="http://java.sun.com/jsp/jstl/core"
 						<f:selectItem itemLabel="#{lbl['lbl.select']}" itemValue="#{null}" />
 						<f:selectItems value="#{planBackingBean.doOptions(item.pmDo.pmSo.soId)}" 
 							var="obj" itemLabel="#{obj.doCode}" itemValue="#{obj.doId}" />
-						<p:ajax event="change" update="somDo" listener="#{planBackingBean.selectedDpItemDo(item.pmDo.doId, rowIndex)}"/>
+						<p:ajax event="change" update="somDo" listener="#{planBackingBean.selectedItemDo(item.pmDo.doId, rowIndex)}"/>
 					</p:selectOneMenu> 
 		        </p:column>   
 		        <p:column headerText="#{lbl['lbl.pp.estimated.amount']}">    
@@ -50,30 +51,31 @@ xmlns:c="http://java.sun.com/jsp/jstl/core"
 				</p:column>  
 		        <p:column headerText="#{lbl['lbl.pp.action']}"> 
 	                <p:commandLink action="#{planBackingBean.deleteItem(item)}"
-	                  	update="dtItemDp" disabled="#{!(item.brandNew ||planBackingBean.managedBean.viewMode==PPConst.modeRevision)}" 	 
+	                  	update="dtItem" disabled="#{!(item.brandNew ||planBackingBean.managedBean.viewMode==PPConst.modeRevision)}" 	 
 	                  	>
 	                  	<p:graphicImage value="/resources/ep/images/design/trash.png"/>
                  	</p:commandLink>
 	            </p:column>  
 	    	</p:dataTable>  
 	    	<br/>
-	    	
+		    	
 	    	<!-- Button(s) -->
 	   		<div class="ppRightBtn">
 				<p:commandButton value="#{lbl['lbl.pp.add']}" 
-					update="dtItemDp" icon="ui-icon-add" action="#{planBackingBean.addItem}"
+					update=":form:tvPlanContent:dtItemDp" icon="ui-icon-add" action="#{planBackingBean.addItem}"
 					disabled="#{!(planBackingBean.managedBean.viewMode==PPConst.modeNew 
 						|| planBackingBean.managedBean.viewMode==PPConst.modeRevision)}"/>  
 		 		<br/>
 		 		<br/>
 	 		</div>
-	 		
-			<hr/>
+	 		<hr/>
 			<div class="ppRightBtn">
 				<p:commandButton value="#{lbl['lbl.pp.ok']}" update="opItemDp" oncomplete="dlItemDpModal.hide()"
+					action="#{planBackingBean.confirmItem}"
 					process="dlItemDp" icon="ui-icon-accept"/>
 				<p:commandButton value="#{lbl['lbl.pp.cancel']}" icon="ui-icon-cancel" update="opItemDp" 
-					onclick="dlItemDpModal.hide()" immediate="true"/>
+					action="#{planBackingBean.cancelChangeItem}"
+					oncomplete="dlItemDpModal.hide()" immediate="true"/>
 			</div>
 		</p:outputPanel>
 	</p:dialog>

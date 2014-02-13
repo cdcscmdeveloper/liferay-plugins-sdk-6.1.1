@@ -28,16 +28,19 @@ xmlns:fn="http://java.sun.com/jsp/jstl/functions"
 				#{qtActivity.pmBusinessActivity.slaDay}
 	        </p:column>
 			<p:column headerText="#{lbl['lbl.pp.planned.activity.startdate']}">
-				<p:calendar showOn="button" value="#{qtActivity.planStartDate}" pattern="MM/dd/yyyy" 
+				<p:calendar showOn="button" value="#{qtActivity.planStartDate}" pattern="#{PPConst.dateDisplayPattern}" 
 					disabled="#{!planBackingBean.managedBean.selectedPlan.brandNew and planBackingBean.managedBean.viewMode!=PPConst.modeRevision}">
-					<p:ajax event="dateSelect" update="ipEndDate"
+					<p:ajax event="dateSelect" update="ipEndDate" listener="#{planBackingBean.calculateActEndDate(qtActivity)}" 
 						 />
-					<p:ajax event="change" update="ipEndDate" value="#{qtActivity.planEndDate}" pattern="MM/dd/yyyy" 
+					<p:ajax event="change" update="ipEndDate" value="#{qtActivity.planEndDate}" 
+						listener="#{planBackingBean.calculateActEndDate(qtActivity)}" 
 						 />
 				</p:calendar>
+				
+				
 			</p:column>
 			<p:column headerText="#{lbl['lbl.pp.planned.activity.enddate']}">
-				<p:calendar showOn="button" id="ipEndDate"
+				<p:calendar showOn="button" id="ipEndDate" value="#{qtActivity.planEndDate}" pattern="#{PPConst.dateDisplayPattern}"
 					disabled="true" />
 			</p:column>
 		</p:dataTable>

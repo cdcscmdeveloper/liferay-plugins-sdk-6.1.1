@@ -53,7 +53,7 @@ xmlns:ac="http://ac.my/jsf/composite/cc"
 					value="#{ppPlanItem.cmUnspsc.unspscTitle}" />
 	        </p:column>  
 	        <p:column headerText="#{lbl['lbl.pp.item']}"> 
-              	<p:commandLink id="clItem" immediate="true" oncomplete="dlItemDpModal.show()">
+              	<p:commandLink id="clItem" immediate="true" oncomplete="dlItemDpModal.show()" action="#{planBackingBean.showItem}">
                 	<p:graphicImage value="#{
                 		planBackingBean.managedBean.viewMode==PPConst.modeView
                 		? '/resources/ep/images/design/document.png' 
@@ -79,5 +79,5 @@ xmlns:ac="http://ac.my/jsf/composite/cc"
 	 		<br/>
  		</div> 
 	</p:outputPanel>
-	<ui:include src="planItemDp.xhtml"/>
+
 </ui:composition>

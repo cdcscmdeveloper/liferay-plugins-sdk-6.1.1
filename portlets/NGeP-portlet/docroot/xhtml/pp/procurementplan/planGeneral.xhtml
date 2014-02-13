@@ -33,7 +33,7 @@ xmlns:ac="http://ac.my/jsf/composite/cc"
 		</script>
 
 	<p:outputPanel id="opTabPlanGeneral">
-		<ac:lovPopup />
+
 		<h:inputHidden id="enableTabFlag" value="#{planBackingBean.managedBean.selectedTab}" />
 		<table class="ppTwoTable">
 			<tr>
@@ -71,7 +71,8 @@ xmlns:ac="http://ac.my/jsf/composite/cc"
 				</td>
 				<th><p:outputLabel value="* #{lbl['lbl.pp.require.verification']}"/></th>
 				<td>
-					<p:selectOneRadio  id="sorPvo" required="false" value="#{planBackingBean.managedBean.selectedPlan.verifyReq}"
+					<p:selectOneRadio  id="sorPvo" required="false" 
+						value="#{planBackingBean.managedBean.selectedPlan.verifyReq}"
 						disabled="#{!planBackingBean.managedBean.selectedPlan.editable}">
 						<f:selectItem itemLabel="Yes" itemValue="true" />
 						<f:selectItem itemLabel="No" itemValue="false" />
@@ -112,13 +113,13 @@ xmlns:ac="http://ac.my/jsf/composite/cc"
 					</ac:lov>
 				</td>
 				<td rowspan="10" colspan="2">
-					<p:pickList id="plPvo" value="#{planBackingBean.managedBean.verifier}"
+					<p:pickList id="plPvo" value="#{planBackingBean.managedBean.verifiers}"
 						disabled="#{!planBackingBean.managedBean.selectedPlan.editable || !planBackingBean.managedBean.selectedPlan.verifyReq}"
-						var="user" itemLabel="#{user.loginId}" itemValue="#{user}">
+						var="user" itemLabel="#{user}" itemValue="#{user}">
 						<f:facet name="sourceCaption">Available</f:facet>  
 	        			<f:facet name="targetCaption">Selected</f:facet> 
 						<p:column>
-							<h:outputText value="#{user.loginId}" />
+							<h:outputText value="#{user}" />
 						</p:column>
 					</p:pickList>
 				</td>
@@ -160,6 +161,7 @@ xmlns:ac="http://ac.my/jsf/composite/cc"
 						disabled="#{!planBackingBean.managedBean.selectedPlan.editable ||
 							 planBackingBean.managedBean.selectedPlan.planTypeParam.parameterCode!=PPConst.planTypeProcurement}" >
 						<f:selectItems value="#{planBackingBean.qtTypeOptions()}" />
+						<p:ajax event="change" listener="#{planBackingBean.selectedQtTypeParam(planBackingBean.managedBean.selectedPlan.qtTypeParam.parameterId)}" />
 					</p:selectOneMenu>
 				</td>
 			</tr>
@@ -171,6 +173,7 @@ xmlns:ac="http://ac.my/jsf/composite/cc"
 						disabled="#{!planBackingBean.managedBean.selectedPlan.editable ||
 						planBackingBean.managedBean.selectedPlan.planTypeParam.parameterCode!=PPConst.planTypeProcurement}" >
 						<f:selectItems value="#{planBackingBean.itemOriginTypeOptions()}" />
+						<p:ajax event="change" listener="#{planBackingBean.selectedItemOriginTypeParam(planBackingBean.managedBean.selectedPlan.itemOriginParam.parameterId)}" />
 					</p:selectOneMenu>
 				</td>
 			</tr>
@@ -184,7 +187,8 @@ xmlns:ac="http://ac.my/jsf/composite/cc"
 			<tr>
 				<th rowspan="9"><p:outputLabel value="* #{lbl['lbl.pp.item']}"/></th>
 				<td rowspan="9">
-					<p:commandLink id="clItem" immediate="true" oncomplete="dlItemModal.show()"
+					<p:commandLink id="clItem" immediate="true" oncomplete="dlItemModal.show()" 
+						action="#{planBackingBean.showItem}" update=":form:tvPlanContent:opItem"
  						disabled="#{planBackingBean.managedBean.selectedPlan.planTypeParam.parameterCode==null or
  						(planBackingBean.managedBean.selectedPlan.planTypeParam.parameterCode==PPConst.planTypeExpenditure and
 						planBackingBean.managedBean.selectedPlan.procurementModeParam.parameterCode!=PPConst.procurementExistingContract)}">
