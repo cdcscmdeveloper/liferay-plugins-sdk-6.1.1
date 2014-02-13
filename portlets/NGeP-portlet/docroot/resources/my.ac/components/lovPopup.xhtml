@@ -31,13 +31,15 @@
 
 		<table style="width:100%;"><tr><TD style="text-align:right;">
 			<p:commandButton
-				value="Reset"
+				icon="ui-icon-reset"
+				value="#{lbl['lbl.reset']}"
 				action="#{lovBackingBean.resetAction}"
 				partialSubmit="true"
 				update="searchPanel resultPanel">
 			</p:commandButton>
 			<p:commandButton 
-				value="Search"
+				icon="ui-icon-search"
+				value="#{lbl['lbl.search']}"
 				action="#{lovBackingBean.searchAction}"
 				partialSubmit="true"
 				process="searchPanel"
