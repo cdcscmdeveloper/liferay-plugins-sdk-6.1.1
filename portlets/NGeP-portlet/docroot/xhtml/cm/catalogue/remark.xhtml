@@ -6,17 +6,14 @@
 
 
 
-
-
-
 	<table style="width: 100%">
 		<tr>
-			<td width="30%"><p:selectManyCheckbox layout="pageDirection"
+			<td width="30%"><p:selectManyCheckbox layout="pageDirection" disabled="#{unspscCodeBackingBean.supplierUser or unspscCodeBackingBean.supplierAdmin}"
 					value="#{catalogueBackingBean.managedBean.rejectReasonIds}">
 					<f:selectItems
 						value="#{catalogueBackingBean.managedBean.statusDescList}"
 						var="remark" itemLabel="#{remark.statusName}"
-						itemValue="#{remark.statusDescId}" ></f:selectItems>
+						itemValue="#{remark.statusDescId}"  ></f:selectItems>
 					<p:ajax listener="#{catalogueBackingBean.enableRemark()}"
 						update=":form:pricingTabID:remarkpg" />
 				</p:selectManyCheckbox></td>
