@@ -8,6 +8,7 @@ import javax.faces.bean.SessionScoped;
 
 import my.ep.persistence.entity.pm.common.PmCity;
 import my.ep.persistence.entity.pm.common.PmCountry;
+import my.ep.persistence.entity.pm.common.PmDistrict;
 import my.ep.persistence.entity.pm.common.PmState;
 import my.ep.persistence.entity.sm.SmComplainant;
 import my.ep.persistence.entity.sm.SmComplaint;
@@ -35,6 +36,7 @@ public class ComplaintManagedBean extends BaseManagedBean {
 	private List<PmCountry> countryLs;
 	private List<PmState> stateLs;
 	private List<PmCity> cityLs;
+	private List<PmDistrict> districtLs;
 	
 	/*********Dummy Complaint type**********/
 	private Map<String, String> complType;
@@ -160,6 +162,14 @@ public class ComplaintManagedBean extends BaseManagedBean {
 	public void setComplType(Map<String, String> complType) {
 
 		this.complType = complType;
+	}
+
+	public List<PmDistrict> getDistrictLs() {
+		return districtLs;
+	}
+
+	public void setDistrictLs(List<PmDistrict> districtLs) {
+		this.districtLs = districtLs;
 	}
 	
 }
