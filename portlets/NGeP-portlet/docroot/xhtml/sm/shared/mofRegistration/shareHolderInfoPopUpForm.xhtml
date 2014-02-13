@@ -92,10 +92,10 @@
 						<td><p:inputText
 								value="#{backingBean.managedBean.selectedShareHolder.email}"
 								size="35" /></td>
-						<td><p:outputLabel value=" Job Function" /></td>
-						<td><p:inputTextarea
+						<td><!-- <p:outputLabel value=" Job Function" /> --></td>
+						<td><!-- <p:inputTextarea
 								value="#{backingBean.managedBean.selectedShareHolder.jobFunction}"
-								cols="36" /></td>
+								cols="36" /> --></td>
 
 					</tr>
 					<tr>
@@ -155,38 +155,110 @@
 				</table>
 
 			</p:panel>
+			<p:panel header="Job Function" toggleable="true">
+			
+				<p:dataTable id="jfdt" 
+					value="#{backingBean.managedBean.jobFunctions}"
+					var="jf"
+					selection="#{backingBean.managedBean.selectedJobFunctions}"
+					selectionMode="multiple"
+					rowIndexVar="rowIndex"
+					rowKey="#{jf}">
+					<p:column selectionMode="multiple" style="width:2%" />
+					<p:column>
+						<f:facet name="header">
+							<h:outputText value="Year From" />
+						</f:facet>
+						<p:inputText />
+					</p:column>
+					<p:column>
+						<f:facet name="header">
+							<h:outputText value="Year To" />
+						</f:facet>
+						<p:inputText />
+					</p:column>
+					<p:column>
+						<f:facet name="header">
+							<h:outputText value="Company" />
+						</f:facet>
+						<p:inputText />
+					</p:column>
+					<p:column>
+						<f:facet name="header">
+							<h:outputText value="Designation" />
+						</f:facet>
+						<p:inputText />
+					</p:column>
+				</p:dataTable>
+				<div align="right">
+					<p:commandButton value="Add" action="#{backingBean.managedBean.addJobFunction}" update="jfdt">
+					</p:commandButton>
+					<p:commandButton value="Delete">
+					</p:commandButton>
+				</div>
+			</p:panel>
 			<p:panel header="Academic Qualification" toggleable="true">
-				<table style="width: 100%">
-					<tr>
-						<td width="85px;"><p:outputLabel value="* Institution" /></td>
-						<td style="padding-right: 42px;"><p:inputText size="35" /></td>
-						<td><p:outputLabel value="* Year" /></td>
-						<td><p:selectOneMenu style="width: 207px;margin-bottom: 5px;">
-								<f:selectItem itemLabel="-- Select One--" itemValue="1" />
-								<f:selectItem itemLabel="2013" itemValue="2013" />
-								<f:selectItem itemLabel="2012" itemValue="2012" />
-								<f:selectItem itemLabel="2011" itemValue="2011" />
-							</p:selectOneMenu></td>
-
-					</tr>
-					<tr>
-						<td><p:outputLabel value="* Field" /></td>
-						<td><p:selectOneMenu style="width: 207px;margin-bottom: 5px;">
-								<f:selectItem itemLabel="-- Select One--" itemValue="1" />
-								<f:selectItem itemLabel="Computers" itemValue="1" />
-								<f:selectItem itemLabel="Mechanical" itemValue="1" />
-								<f:selectItem itemLabel="Civil" itemValue="1" />
-							</p:selectOneMenu></td>
-						<td><p:outputLabel value="Qualification"
-								title="For Malaysian Only" /></td>
-						<td><p:selectOneMenu style="width: 207px;margin-bottom: 5px;">
-								<f:selectItem itemLabel="-- Others--" itemValue="1" />
-								<f:selectItem itemLabel="Graduate" itemValue="1" />
-								<f:selectItem itemLabel="Post Graduate" itemValue="1" />
-							</p:selectOneMenu></td>
-					</tr>
-
-				</table>
+			
+				<p:dataTable id="aqdt" 
+					value="#{backingBean.managedBean.academicQualifications}"
+					var="aq"
+					selection="#{backingBean.managedBean.selectedAcademicQualifications}"
+					selectionMode="multiple"
+					rowIndexVar="rowIndex"
+					rowKey="#{jf}">
+					
+					<p:column selectionMode="multiple" style="width:2%" />
+					<p:column>
+						<f:facet name="header">
+							<h:outputText value="Year" />
+						</f:facet>
+						<p:selectOneMenu style="margin-bottom: 5px;">
+							<f:selectItem itemLabel="Select One" itemValue="1" />
+							<f:selectItem itemLabel="2013" itemValue="2013" />
+							<f:selectItem itemLabel="2012" itemValue="2012" />
+							<f:selectItem itemLabel="2011" itemValue="2011" />
+						</p:selectOneMenu>
+					</p:column>
+					<p:column>
+						<f:facet name="header">
+							<h:outputText value="Institute" />
+						</f:facet>
+						<p:inputText />
+					</p:column>
+					<p:column>
+						<f:facet name="header">
+							<h:outputText value="Qualification Level" />
+						</f:facet>
+						<p:selectOneMenu style="margin-bottom: 5px;">
+							<f:selectItem itemLabel="-- Others--" itemValue="1" />
+							<f:selectItem itemLabel="Graduate" itemValue="1" />
+							<f:selectItem itemLabel="Post Graduate" itemValue="1" />
+						</p:selectOneMenu>
+					</p:column>
+					<p:column>
+						<f:facet name="header">
+							<h:outputText value="Education Field" />
+						</f:facet>
+						<p:selectOneMenu style="margin-bottom: 5px;">
+							<f:selectItem itemLabel="-- Select One--" itemValue="1" />
+							<f:selectItem itemLabel="Computers" itemValue="1" />
+							<f:selectItem itemLabel="Mechanical" itemValue="1" />
+							<f:selectItem itemLabel="Civil" itemValue="1" />
+						</p:selectOneMenu>
+					</p:column>
+					<p:column>
+						<f:facet name="header">
+							<h:outputText value="Major In" />
+						</f:facet>
+						<p:inputText />
+					</p:column>
+				</p:dataTable>
+				<div align="right">
+					<p:commandButton value="Add" action="#{backingBean.managedBean.addAcademicQualification}" update="aqdt">
+					</p:commandButton>
+					<p:commandButton value="Delete">
+					</p:commandButton>
+				</div>			
 			</p:panel>
 			<p:panel header="Share Details" toggleable="true">
 				<table style="width: 100%">
