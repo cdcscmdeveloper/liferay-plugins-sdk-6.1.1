@@ -1011,4 +1011,57 @@ public class SmApplicationManagedBean extends BaseManagedBean {
 		this.applStoreFacilities = applStoreFacilities;
 	}
 
+
+/**
+ * dummy record for datatable
+ */
+	private List jobFunctions = new ArrayList();
+	private List selectedJobFunctions = new ArrayList();
+
+	public List getJobFunctions() {
+		return jobFunctions;
+	}
+
+	public void setJobFunctions(List jobFunctions) {
+		this.jobFunctions = jobFunctions;
+	}
+	
+	public void addJobFunction() {
+		System.out.println(">>>>>>>>>>>>>>>>>>>>> Add Job Function");
+		jobFunctions.add(new Object());
+	}
+
+	private List academicQualifications = new ArrayList();
+	private List selectedAcademicQualifications = new ArrayList();
+	
+	public List getAcademicQualifications() {
+		return academicQualifications;
+	}
+
+	public void setAcademicQualifications(List academicQualifications) {
+		this.academicQualifications = academicQualifications;
+	}
+
+	public void addAcademicQualification() {
+		System.out.println(">>>>>>>>>>>>>>>>>>>>> Add Academic Qualification");
+		academicQualifications.add(new Object());
+	}
+
+	public List getSelectedJobFunctions() {
+		return selectedJobFunctions;
+	}
+
+	public void setSelectedJobFunctions(List selectedJobFunctions) {
+		this.selectedJobFunctions = selectedJobFunctions;
+	}
+
+	public List getSelectedAcademicQualifications() {
+		return selectedAcademicQualifications;
+	}
+
+	public void setSelectedAcademicQualifications(
+			List selectedAcademicQualifications) {
+		this.selectedAcademicQualifications = selectedAcademicQualifications;
+	}
+	
 }
