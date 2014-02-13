@@ -29,9 +29,7 @@ import my.ep.persistence.entity.pm.authorization.PmUserGroup;
 import my.ep.persistence.entity.pm.authorization.PmUserGroupUser;
 import my.ep.web.managedbean.BaseManagedBean;
 
-import org.apache.log4j.Logger;
 import org.primefaces.model.DualListModel;
-import org.primefaces.model.TreeNode;
 /**
  * Managed Bean For Contract Details
  * 
@@ -43,9 +41,13 @@ import org.primefaces.model.TreeNode;
 public class ContractDetailsManagedBean extends BaseManagedBean{
 
 	private static final long serialVersionUID = 1L;
-	private static Logger log = Logger.getLogger(ContractDetailsManagedBean.class);
 	
+	private CtContractItem selectedItem;
+	private CtDeduction selectedDeduction;
 	
+	private List<CtDeductionClause> ctDeductionClauseList;
+	private List<CtDeductionClause> selectedDeductionClauses;
+	 
 	private String taskName;
 	private String[] action;
 	private int selectedIndex;
@@ -56,16 +58,14 @@ public class ContractDetailsManagedBean extends BaseManagedBean{
 	private boolean serviceItem;
 	private boolean productItem = true;
 	private boolean itemPricing = true;
-	private CtContractItem selectedItem;
 	private boolean itemCeilingQuantity;
-	private String showItem ="Item  Pricing";
+	private String showItem;
 	private CtContractItem SelectedServiceItem;
 	private List<CtContractItem> ctContractItem;
 	
 	private CtContractVer contractVer;
 	private CtDeduction ctDeductionDel;
 	private CtDeductionClause ctDeductionClauseDel;
-	private List<CtDeductionClause> ctDeductionClauseList;
 	
 	private boolean chkProgressive;
 	private boolean chkSchedule = true;
@@ -155,17 +155,6 @@ public class ContractDetailsManagedBean extends BaseManagedBean{
 	
 	public void setCtDeductionDel(CtDeduction ctDeductionDel) {
 		this.ctDeductionDel = ctDeductionDel;
-	}
-	
-	public List<CtDeductionClause> getCtDeductionClauseList() {
-		if(ctDeductionClauseList == null)
-			ctDeductionClauseList = new ArrayList<CtDeductionClause>();
-		return ctDeductionClauseList;
-	}
-	
-	public void setCtDeductionClauseList(
-			List<CtDeductionClause> ctDeductionClauseList) {
-		this.ctDeductionClauseList = ctDeductionClauseList;
 	}
 	
 	public CtDeductionClause getCtDeductionClauseDel() {
@@ -572,6 +561,36 @@ public class ContractDetailsManagedBean extends BaseManagedBean{
 
 	public void setListOfAgency(List<CtAgency> listOfAgency) {
 		this.listOfAgency = listOfAgency;
+	}
+
+	public CtDeduction getSelectedDeduction() {
+		return selectedDeduction;
+	}
+
+	public void setSelectedDeduction(CtDeduction selectedDeduction) {
+		this.selectedDeduction = selectedDeduction;
+	}
+
+	public List<CtDeductionClause> getSelectedDeductionClauses() {
+		if(selectedDeductionClauses==null) {
+			selectedDeductionClauses = new ArrayList<CtDeductionClause>();
+		}
+		return selectedDeductionClauses;
+	}
+
+	public void setSelectedDeductionClauses(List<CtDeductionClause> selectedDeductionClauses) {
+		this.selectedDeductionClauses = selectedDeductionClauses;
+	}
+
+	public List<CtDeductionClause> getCtDeductionClauseList() {
+		if(ctDeductionClauseList==null) {
+			ctDeductionClauseList = new ArrayList<CtDeductionClause>();
+		}
+		return ctDeductionClauseList;
+	}
+
+	public void setCtDeductionClauseList(List<CtDeductionClause> ctDeductionClauseList) {
+		this.ctDeductionClauseList = ctDeductionClauseList;
 	}
 
 }

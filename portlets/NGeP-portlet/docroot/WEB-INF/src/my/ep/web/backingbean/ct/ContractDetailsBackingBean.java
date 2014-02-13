@@ -43,6 +43,8 @@ import my.ep.bpm.dto.BpmResponseDTO;
 import my.ep.bpm.service.IBpmSO;
 import my.ep.constant.BpmOutcomeConst;
 import my.ep.constant.ct.ContractConst;
+import my.ep.constant.pm.ParameterConst;
+import my.ep.constant.pm.ParameterTypeConst;
 import my.ep.constants.CommonConstants;
 import my.ep.dto.ct.ContractReqDTO;
 import my.ep.dto.ct.ContractResDTO;
@@ -63,6 +65,7 @@ import my.ep.persistence.entity.ct.dtl.CtProgressivePayment;
 import my.ep.persistence.entity.ct.dtl.CtSchedule;
 import my.ep.persistence.entity.ct.dtl.deduction.CtDeduction;
 import my.ep.persistence.entity.ct.dtl.deduction.CtDeductionClause;
+import my.ep.persistence.entity.ct.dtl.item.CtContractItem;
 import my.ep.persistence.entity.pm.authorization.PmOrgProfile;
 import my.ep.persistence.entity.pm.authorization.PmUserGroup;
 import my.ep.persistence.entity.pm.authorization.PmUserGroupUser;
@@ -118,7 +121,6 @@ public class ContractDetailsBackingBean extends BaseBackingBean<ContractDetailsM
 	
 	private CtSchedule[] selectedSchedule;
 	private PmOrgProfile[] selectedPmOrgProfile;
-	private CtDeduction[] selectedDeductionList;
 	private CtPerformanceBond[] selectedBondList;
 	private CtDeductionClause[] chkDeductionClause;
 	private CtProgressivePayment[] selectedProgressive;
@@ -139,18 +141,17 @@ public class ContractDetailsBackingBean extends BaseBackingBean<ContractDetailsM
 		return deductions;
 	}
 	
-	public ContractDetailsBackingBean(){
-		
-		 if (this.getManagedBean().getAction() == null) {
-			  this.getManagedBean().setAction(new String[] {BpmOutcomeConst.BPM_SAVE,BpmOutcomeConst.BPM_SUBMIT});
-			  this.getManagedBean().setContractVer(new CtContractVer());
-		 }
-		
-		if(getManagedBean().getUserGroupMap()==null) {
+	public ContractDetailsBackingBean() {
+		if(this.getManagedBean().getAction() == null) {
+			this.getManagedBean().setAction(new String[] { BpmOutcomeConst.BPM_SAVE, BpmOutcomeConst.BPM_SUBMIT });
+			this.getManagedBean().setContractVer(new CtContractVer());
+		}
+		if(getManagedBean().getUserGroupMap() == null) {
 			initializeApproverGroup();
 		}
-		
-		
+		if(getManagedBean().getItemType()==null) {
+			getManagedBean().setItemType(ParameterConst.ITEM_TYPE_PRODUCT);
+		}
 	}
 	
 	private FacesScopes getFacesScopes(){
@@ -386,21 +387,17 @@ public class ContractDetailsBackingBean extends BaseBackingBean<ContractDetailsM
 	    	this.getManagedBean().setShowZoneDetails(true);
 	    	this.getManagedBean().setCtContractZoneDtls(this.getManagedBean().getSelectedCtZone().getCtContractZoneDtls());
 	    }
-	
-    /*Implementation Item Details*/
-    public List<SelectItem> getItemDetailsMethod() {
-
-		List<SelectItem> list = new ArrayList<SelectItem>();
-		list.add(new SelectItem("Item Pricing", "Item  Pricing"));
-		list.add(new SelectItem("Item Ceiling Quantity", "Item Ceiling Quantity"));
-		return list;
-	}
     
-    public List<SelectItem> getItemTypeMethode(){
-    	
+    public List<SelectItem> getItemTypeDropDown(){
     	List<SelectItem> list = new ArrayList<SelectItem>();
-		list.add(new SelectItem("Item", "Item"));
-		list.add(new SelectItem("Service", "Service"));
+		SelectItem[] items = getDropdownCodeValues(ParameterTypeConst.SC_ITEM_TYPE);
+		for(SelectItem item : items) {
+			if(item.getValue()!=null) {
+				if(item.getValue().toString().equalsIgnoreCase(ParameterConst.ITEM_TYPE_PRODUCT) || item.getValue().toString().equalsIgnoreCase(ParameterConst.ITEM_TYPE_SERVICE)) {
+					list.add(item);
+				}
+			}
+		}
 		return list;
     }
     
@@ -420,13 +417,11 @@ public class ContractDetailsBackingBean extends BaseBackingBean<ContractDetailsM
 	}
     
     public void changeItemTypes(){
-    	
     	try{
     		flushItem();
-    		if (this.getManagedBean().getItemType().equalsIgnoreCase("Service")) {
+    		if (this.getManagedBean().getItemType().equalsIgnoreCase(ParameterConst.ITEM_TYPE_SERVICE)) {
 				this.getManagedBean().setServiceItem(true);
-
-			} else if (this.getManagedBean().getItemType().equalsIgnoreCase("Item")) {
+			} else if (this.getManagedBean().getItemType().equalsIgnoreCase(ParameterConst.ITEM_TYPE_PRODUCT)) {
 				this.getManagedBean().setProductItem(true);
 			}
     	} catch (Exception e) {
@@ -439,16 +434,13 @@ public class ContractDetailsBackingBean extends BaseBackingBean<ContractDetailsM
     	this.getManagedBean().setProductItem(false);
     	this.getManagedBean().setItemPricing(false);
     	this.getManagedBean().setItemCeilingQuantity(false);
+    	this.getManagedBean().setSelectedItem(null);
+    	this.getManagedBean().setShowItem(null);
     }
   
-   public void selectedItemList(){
+    public void selectedItemList(){
     	this.getManagedBean().setServiceItem(false);
     	this.getManagedBean().setProductItem(true);
-    }
-    
-   public void  selectedServiceList(){
-	    this.getManagedBean().setServiceItem(true);
- 	    this.getManagedBean().setProductItem(false);
     }
    
     public void onRowSelect(SelectEvent event) {
@@ -465,17 +457,24 @@ public class ContractDetailsBackingBean extends BaseBackingBean<ContractDetailsM
     
     /*Deduction Start*/
     public void addDeductionDetails() {
-		CtDeduction ctDeductions = new CtDeduction();
-		ctDeductions.setDeductionType(new PmParameter());
-		this.getManagedBean().getContractVer().getCtDeductions().add(ctDeductions);
+		IParameterSO parameterSO;
+		try {
+			parameterSO = BusinessDelegate.getInstance().getServiceObject("pm", IParameterSO.class);
+			ParameterReqDTO reqDTO = new ParameterReqDTO();
+			reqDTO.setParameterType(ParameterTypeConst.DEDUCTION_TYPE);
+			reqDTO.setParameterCode(ParameterConst.DEDUCTION_TYPE_ADVANCE_PAYMENT);
+			
+			CtDeduction ctDeductions = new CtDeduction();
+			ctDeductions.setDeductionType(parameterSO.retrieveParameterByTypeAndCode(reqDTO).getPmParameter());
+			this.getManagedBean().getContractVer().getCtDeductions().add(ctDeductions);
+		} finally {
+			parameterSO = null;	
+		}
 	}
 
 	public void deleteDeductionDetails() {
-		for (int i = 0; i < selectedDeductionList.length; i++) {
-			CtDeduction ctDeduction = selectedDeductionList[i];
-			this.getManagedBean().getContractVer().getCtDeductions().remove(ctDeduction);
-		}
-		selectedDeductionList = null;	
+		this.getManagedBean().getContractVer().getCtDeductions().remove(getManagedBean().getSelectedDeduction());
+		getManagedBean().setSelectedDeduction(null);
 	}
 	
 	public void addDeductionClause(ActionEvent event) {
@@ -1057,14 +1056,6 @@ public class ContractDetailsBackingBean extends BaseBackingBean<ContractDetailsM
 		this.selectedBondList = selectedBondList;
 	}
 
-	public CtDeduction[] getSelectedDeductionList() {
-		return selectedDeductionList;
-	}
-
-	public void setSelectedDeductionList(CtDeduction[] selectedDeductionList) {
-		this.selectedDeductionList = selectedDeductionList;
-	}
-
 	public PmOrgProfile[] getSelectedPmOrgProfile() {
 		return selectedPmOrgProfile;
 	}
@@ -1079,5 +1070,15 @@ public class ContractDetailsBackingBean extends BaseBackingBean<ContractDetailsM
 
 	public void setSelectedListOfAgency(CtAgency[] selectedListOfAgency) {
 		this.selectedListOfAgency = selectedListOfAgency;
+	}
+	
+	public List<CtContractItem> getContractItemList() {
+		List<CtContractItem> contractItemList = new ArrayList<CtContractItem>();
+		for(CtContractItem item : getManagedBean().getContractVer().getCtContractItems()) {
+			if(item.getItemType().getParameterCode().equalsIgnoreCase(getManagedBean().getItemType())) {
+				contractItemList.add(item);
+			}
+		}
+		return contractItemList;
 	}
 }

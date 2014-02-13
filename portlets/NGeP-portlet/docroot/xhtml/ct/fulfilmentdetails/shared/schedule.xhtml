@@ -19,25 +19,23 @@
           <p:outputPanel id="paymentSchedule">   
               <h:panelGroup rendered="#{contractDetailsBackingBean.managedBean.chkSchedule}" style="width:100%;" >    
 	             <p:dataTable id="tableSchedule" var="schedVar" value="#{contractDetailsBackingBean.managedBean.contractVer.ctSchedules}" rowIndexVar="index" 
-	                 widgetVar="dataTableObj" lazy="false" dynamic="true" selection="#{contractDetailsBackingBean.selectedSchedule}" rowKey="#{schedVar}"
-	                 paginator="true" paginatorPosition="bottom" paginatorAlwaysVisible="true" emptyMessage="No Records!">
+	                 widgetVar="dataTableObj" lazy="true" selection="#{contractDetailsBackingBean.selectedSchedule}" rowKey="#{schedVar}" >
 	                         <ac:paginator for="tableSchedule" />
 		                     <p:column selectionMode="multiple" style="width:18px;"/>  
 		                     <p:column style="width:250px;" headerText="#{lbl['lbl.ct.sched.table.schedno']}" >
 		                         <p:outputLabel value="#{schedVar.scheduleNo}" style="float:left;"/>
 		                     </p:column> 
-		                     <p:column style="width:250px;" headerText="#{lbl['lbl.ct.sched.table.sdate']}" >
-		                         <p:calendar value="#{schedVar.fromDate}" id="popupButtonSch" showOn="button" />
+		                     <p:column style="width:250px;" headerText="Start Period" >
+		                         <p:calendar value="#{schedVar.fromDate}" pattern="MMM yyyy" id="popupButtonSch" navigator="true" showOn="button" />
 		                     </p:column> 	
-		                     <p:column style="width:250px;" headerText="#{lbl['lbl.ct.sched.table.edate']}">
-		                       <p:calendar value="#{schedVar.toDate}" id="popupButtonSch1" showOn="button"/>
+		                     <p:column style="width:250px;" headerText="End Period">
+		                       	<p:calendar value="#{schedVar.toDate}" pattern="MMM yyyy" id="popupButtonSch1" navigator="true" showOn="button"/>
 		                     </p:column>       
 		              </p:dataTable>  
 	                <p:spacer height="2" />
 		            <div class="ppRightBtn"> 
 		                 <p:commandButton value="#{lbl['lbl.ct.ded.btn.add']}" icon="ui-icon-add"
 		                    action="#{contractDetailsBackingBean.addScheduleDetails}" update="tableSchedule"/>
-	                    <p:spacer width="2"/>
 			             <p:commandButton value="Delete" process="@form" onsuccess="schedule.show()" icon="ui-icon-delete" />  
 			        </div>
 			        <p:confirmDialog message="Do you want to delete the record?"  closable="true" appendToBody="true" header="Delete Confirmation"
@@ -51,8 +49,7 @@
 			      </h:panelGroup>
 			         <h:panelGroup rendered="#{contractDetailsBackingBean.managedBean.chkProgressive}" style="width:100%">
 	                     <p:dataTable id="tableProgress" var="ProgVar" value="#{contractDetailsBackingBean.managedBean.contractVer.ctProgressivePayments}" 
-	                        widgetVar="dataTableObj"  selection="#{contractDetailsBackingBean.selectedProgressive}" rowKey="#{ProgVar}"
-	                        paginator="true" paginatorPosition="bottom" paginatorAlwaysVisible="true" emptyMessage="No Records!">
+	                         selection="#{contractDetailsBackingBean.selectedProgressive}" rowKey="#{ProgVar}" >
 		                    <ac:paginator for="tableProgress" />
 		                     <p:column selectionMode="multiple" style="width:18px;"/> 
                              <p:column style="width:100px;" headerText="#{lbl['lbl.ct.sched.table1.phase']}">
@@ -61,11 +58,11 @@
 		                     <p:column style="width:350px;" headerText="#{lbl['lbl.ct.sched.table1.desc']}">
 		                        <p:inputText style="width:350px;"/>
 		                     </p:column>
-                             <p:column style="width:100px;" headerText="#{lbl['lbl.ct.sched.table1.from']}">
-                                <p:calendar size="12" value="#{ProgVar.fromDate}" id="popupButtonCal" showOn="button" />
+                             <p:column style="width:100px;" headerText="Start Period">
+                                <p:calendar size="12" value="#{ProgVar.fromDate}" pattern="MMM yyyy" navigator="true" id="popupButtonCal" showOn="button" />
                              </p:column> 
-                             <p:column style="width:100px;" headerText="#{lbl['lbl.ct.sched.table1.to']}">
-                                <p:calendar size="12" value="#{ProgVar.toDate}" id="popupButtonCal1" showOn="button" />
+                             <p:column style="width:100px;" headerText="End Period">
+                                <p:calendar size="12" value="#{ProgVar.toDate}" pattern="MMM yyyy" navigator="true" id="popupButtonCal1" showOn="button" />
                              </p:column> 	
                              <p:column style="width:100px;" headerText="#{lbl['lbl.ct.sched.table1.per']}">
                                 <p:inputText value="#{ProgVar.percentage}" style="width:100px;" styleClass="ppRightBtn">
@@ -90,44 +87,43 @@
 		</h:panelGroup> 
 		 <h:panelGroup rendered="#{contractDetailsBackingBean.managedBean.chkProgressiveNulValue}" style="width:100%">
 	        <p:dataTable id="tableProgressNulValue" var="data" value="#{contractDetailsBackingBean.managedBean.contractVer.ctProgressivePayments}" 
-	           widgetVar="dataTableObj" paginator="true" paginatorPosition="bottom" paginatorAlwaysVisible="true" emptyMessage="No Records!">
+	           widgetVar="dataTableObj" >
 		                    <ac:paginator for="tableProgressNulValue" />
 		                    <p:columnGroup type="header"> 
 			                   <p:row>
                                    <p:column style="width:100px;" headerText="#{lbl['lbl.ct.sched.table1.phase']}"/>
 		                           <p:column style="width:400px;" headerText="#{lbl['lbl.ct.sched.table1.desc']}"/>
-                                   <p:column style="width:100px;" headerText="#{lbl['lbl.ct.sched.table1.from']}"/> 
-                                   <p:column style="width:100px;" headerText="#{lbl['lbl.ct.sched.table1.to']}"/> 	
+                                   <p:column style="width:100px;" headerText="Start Period"/> 
+                                   <p:column style="width:100px;" headerText="End Period"/> 	
                                    <p:column style="width:100px;" headerText="#{lbl['lbl.ct.sched.table1.per']}"/> 
                                </p:row>	
 			                </p:columnGroup>
 			                 <p:column><p:outputLabel value="#{data.phase}" style="width:40px;" /> </p:column>  
 			                <p:column> <p:outputLabel style="width:400px;"/> </p:column>         
 			                <p:column><h:outputText value="#{data.fromDate}" style="float:left;">
-                                 <f:convertDateTime pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}" /></h:outputText></p:column>      
+                                 <f:convertDateTime pattern="MMM yyyy" /></h:outputText></p:column>      
 			                <p:column><h:outputText value="#{data.toDate}" style="float:left;">
-                                 <f:convertDateTime pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}" /></h:outputText></p:column>     
+                                 <f:convertDateTime pattern="MMM yyyy" /></h:outputText></p:column>     
 			                <p:column><h:outputLabel value="#{data.percentage}" style="width:50px;">
 			                          <f:convertNumber pattern="#,###.00" /></h:outputLabel></p:column>
 		               </p:dataTable>   
 	        	</h:panelGroup> 
 	        	 <h:panelGroup rendered="#{contractDetailsBackingBean.managedBean.chkScheduleNulValue}" style="width:100%;" >    
 	                  <p:dataTable id="tableScheduleValue" var="schedVar" value="#{contractDetailsBackingBean.managedBean.contractVer.ctSchedules}" 
-	                         widgetVar="dataTableObj" rowIndexVar="index" paginator="true" paginatorPosition="bottom" paginatorAlwaysVisible="true" 
-	                         emptyMessage="No Records!">
+	                         rowIndexVar="index" >
 	                         <ac:paginator for="tableScheduleValue" />
 		                     <p:columnGroup type="header"> 
 		                        <p:row> 
 		                               <p:column style="width:250px;" headerText="#{lbl['lbl.ct.sched.table.schedno']}" /> 
-		                               <p:column style="width:250px;" headerText="#{lbl['lbl.ct.sched.table.sdate']}" /> 	
-		                               <p:column style="width:250px;" headerText="#{lbl['lbl.ct.sched.table.edate']}"  />       
+		                               <p:column style="width:250px;" headerText="Start Period" /> 	
+		                               <p:column style="width:250px;" headerText="End Period"  />       
 		                        </p:row>	
 		                     </p:columnGroup>
 		                     <p:column style="width:250px;"><p:outputLabel value="Schedule #{index+1}" style="float:left;" /></p:column>
 	                         <p:column style="width:250px;"> <h:outputText value="#{schedVar.fromDate}" style="float:left;">
-                                <f:convertDateTime pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}"/> </h:outputText></p:column>
+                                <f:convertDateTime pattern="MMM yyyy"/> </h:outputText></p:column>
                              <p:column style="width:250px;"> <h:outputText value="#{schedVar.toDate}" style="float:left;">
-                                <f:convertDateTime pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}" /> </h:outputText></p:column>
+                                <f:convertDateTime pattern="MMM yyyy" /> </h:outputText></p:column>
 		              </p:dataTable>  
 			      </h:panelGroup>    
 		 </p:outputPanel>

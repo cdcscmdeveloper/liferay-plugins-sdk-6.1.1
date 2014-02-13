@@ -10,145 +10,89 @@
       <h:panelGrid columns="2" style="height:50px;text-align:bottom;">
 		   <h:outputLabel for="itemTypes" value="Item Type" style="width:50px;"/>  
            <p:selectOneMenu id="itemTypes" disabled="false"  value="#{contractDetailsBackingBean.managedBean.itemType}"  style="width:200px;">
-              <f:selectItems value="#{contractDetailsBackingBean.itemTypeMethode}" />
+              <f:selectItems value="#{contractDetailsBackingBean.itemTypeDropDown}" />
             	 <p:ajax event="change" update="changeItemType" listener="#{contractDetailsBackingBean.changeItemTypes}" process="@this"/>  
 	       </p:selectOneMenu>         
-	       <p:message for="show"/>  
         </h:panelGrid>
         <p:outputPanel id="changeItemType">
-           <h:panelGrid columns="1" style="width:100%;" 
-              rendered="#{contractDetailsBackingBean.managedBean.productItem}">
-               <p:dataTable id="productTable" var="data" value=" " widgetVar="dataTableObj"  rowKey="#{data}" 
-                selectionMode="single" selection=" " 
-                 lazy="true" dynamic="true"  paginator="true" paginatorPosition="bottom" paginatorAlwaysVisible="true" emptyMessage="No Records!">
-                 <ac:paginator for="productTable"/>
-                 <p:ajax event="rowSelect" update=":form:tabview:changeField" listener="#{contractDetailsBackingBean.selectedItemList()}"/>
-			     <p:columnGroup type="header"> 
-			        <p:row> 
-		               <p:column style="width:320px" headerText="Item Name" /> 	
-		               <p:column style="width:100px" headerText="UOM"  /> 
-		               <p:column style="width:80px" headerText="Minimum Order" /> 	
-		               <p:column style="width:80px" headerText="Maximum Quantity"  /> 
-		                <p:column style="width:100px" headerText="Type Of Goods"  /> 
-		               <p:column style="width:50px" headerText="Action"  /> 
-                   </p:row>							
-		   	     </p:columnGroup>
-			     <p:column><p:outputLabel value="DESKTOP" style="float:left;"/></p:column>       
-			     <p:column><p:outputLabel value="Malaysia" style="float:left;"/></p:column>        
-			     <p:column><p:outputLabel value="10"/></p:column>   
-			     <p:column><p:outputLabel value="100"/></p:column>     
-			     <p:column><p:outputLabel value="Malaysia" style="float:left;"/></p:column>              
-			     <p:column styleClass="column-align-center">
-			     <p:commandLink>
-			        <p:graphicImage library="ep/images/design" name="edit.png" value="/resources/ep/images/design/edit.png" title="Edit" />
-			     </p:commandLink>
-			   </p:column>  
-		    </p:dataTable>
-		   </h:panelGrid>
-		   <h:panelGrid columns="1" style="width:100%"
-		      rendered="#{contractDetailsBackingBean.managedBean.serviceItem}">
-             <p:dataTable id="serviceTable" var="data" value=" " widgetVar="dataTableObj" rowKey="#{data}" 
-                selectionMode="single" selection=" " 
-                lazy="true" dynamic="true" paginator="true"  paginatorPosition="bottom" paginatorAlwaysVisible="true" emptyMessage="No Records!">
-                 <ac:paginator for="serviceTable"/>
-                  <p:ajax event="rowSelect" update=":form:tabview:changeField" 
-                    listener="#{contractDetailsBackingBean.selectedServiceList()}" />
-			     <p:columnGroup type="header"> 
-			        <p:row> 
-		               <p:column style="width:320px" headerText="Item Name" /> 	
-		               <p:column style="width:100px" headerText=" Maximum Quantity"  /> 
-		               <p:column style="width:70px" headerText="UOM" /> 	
-		               <p:column style="width:50px" headerText="UOM Per Month"  /> 
-		               <p:column style="width:70px" headerText="Action" /> 
-                   </p:row>							
-		   	     </p:columnGroup>
-			      <p:column><p:outputLabel value="DESKTOP" style="float:left;"/></p:column>            
-			      <p:column><p:outputLabel value="100"/></p:column>        
-			      <p:column><p:outputLabel value="30000.00"/></p:column>   
-			      <p:column><p:outputLabel value="5"/></p:column>    
-			      <p:column styleClass="column-align-center">
-			     <p:commandLink>
-			        <p:graphicImage library="ep/images/design" name="edit.png" value="/resources/ep/images/design/edit.png" title="Edit" />
-			     </p:commandLink>
-			   </p:column>  
-		    </p:dataTable>
-	     </h:panelGrid>
-	     <p:spacer height="20"/>
-		<h:panelGrid columns="2" style="height:50px;text-align:bottom;" rendered="#{contractDetailsBackingBean.managedBean.productItem}">
-		   <h:outputLabel for="show" value="Show" style="width:50px;"/>  
-           <p:selectOneMenu id="show" disabled="false"  value="#{contractDetailsBackingBean.managedBean.showItem}"  style="width:200px;">
-              <f:selectItems value="#{contractDetailsBackingBean.itemDetailsMethod}" />
-            	 <p:ajax event="change" update="changeField" listener="#{contractDetailsBackingBean.changeField}" process="@this"/>  
-	       </p:selectOneMenu>         
-	       <p:message for="show"/>  
-        </h:panelGrid>
-           <p:spacer height="10"/>
-        <p:outputPanel id="changeField"> 
-	   <h:panelGrid columns="1" style="width:100%"
-		  rendered="#{contractDetailsBackingBean.managedBean.itemPricing or contractDetailsBackingBean.managedBean.serviceItem}">
-		  <p:panel id="itemZoneId"  header="ITEM PRICING"  toggleable="true"  toggleSpeed="500">
-		  <p:dataTable id="itemTable"  var="data" value=" " widgetVar="dataTableObj" lazy="false" dynamic="true" emptyMessage="No Records!">
-			 <p:columnGroup type="header">
-				<p:row>
-                   <p:column style="width:100px" headerText="Zone" />
-				   <p:column style="width:50px" headerText="From Qty" rendered="#{contractDetailsBackingBean.managedBean.productItem}" />
-				   <p:column style="width:50px" headerText="To Qty" rendered="#{contractDetailsBackingBean.managedBean.productItem}"/>
-				   <p:column style="width:100px" headerText="Price (MYR)" />
-				   <p:column style="width:150px" headerText="Effective Date" />
-				   <p:column style="width:150px" headerText="Expiry Date" />
-				   <p:column style="width:100px" headerText="Action" />
-		       </p:row>					
-			</p:columnGroup>
-			<p:column></p:column>       
-			<p:column rendered="#{contractDetailsBackingBean.managedBean.productItem}"></p:column>       
-			<p:column rendered="#{contractDetailsBackingBean.managedBean.productItem}"></p:column>              
-			<p:column></p:column>            
-			<p:column>
-			  <p:calendar style="width:130px;" value="#{contractDetailsBackingBean.managedBean.contractVer.ctContractValue.effDate}" id="popupButtonCal" showOn="button" />
-			</p:column>       
-			<p:column>
-			  <p:calendar style="width:130px;" value="#{contractDetailsBackingBean.managedBean.contractVer.ctContractValue.expDate}" id="popupButtonCal1" showOn="button" />
-			</p:column>       
-			<p:column styleClass="column-align-center">
-			<p:commandLink>
-			        <p:graphicImage library="ep/images/design" name="edit.png" value="/resources/ep/images/design/edit.png" title="Edit" />
-			  </p:commandLink>
-			</p:column>          
-		</p:dataTable>
-		<p:spacer height="2" />
-		   <div class="ppRightBtn"> 
-		       <p:commandButton value="#{lbl['lbl.ct.ded.btn.add']}" process="@this" partialSubmit="true"  icon="ui-icon-add" update="itemTable"/>
-		  </div>
-	   </p:panel>
-	  </h:panelGrid>  
-	   <h:panelGrid columns="1" style="width:100%"
-		  rendered="#{contractDetailsBackingBean.managedBean.itemCeilingQuantity and contractDetailsBackingBean.managedBean.productItem}">
-		  <p:panel id="itemCeilingId"  header="ITEM CEILING QUANTITY"  toggleable="true"  toggleSpeed="500">
-		  <p:dataTable id="ceilingTable"  var="data" value=" " widgetVar="dataTableObj" lazy="false" dynamic="true" emptyMessage="No Records!">
-			  <p:columnGroup type="header">
-               <p:row> 
-				  <p:column style="width:100px" headerText="Ministry Name"   /> 
-				  <p:column style="width:100px" headerText="Jabatan Name" /> 
-				  <p:column style="width:100px" headerText="PTJ Name" /> 
-			      <p:column style="width:100px" headerText="Ceiling Quantity" /> 
-			      <p:column style="width:150px" headerText="Effective Date" />
-				  <p:column style="width:150px" headerText="Expiry Date" />
-			   </p:row>								
-			</p:columnGroup>
-			<p:column></p:column>       
-			<p:column></p:column>       
-			<p:column></p:column>              
-			<p:column><p:inputText style="width:70px;"/></p:column>            
-			<p:column>
-			  <p:calendar style="width:130px;" value="#{contractDetailsBackingBean.managedBean.contractVer.ctContractValue.effDate}" id="popupButtonCal2" showOn="button" />
-			</p:column>       
-			<p:column>
-			  <p:calendar style="width:130px;" value="#{contractDetailsBackingBean.managedBean.contractVer.ctContractValue.expDate}" id="popupButtonCal3" showOn="button" />
-			</p:column>           
-		</p:dataTable>
-	   </p:panel>
-	  </h:panelGrid>  
-	</p:outputPanel>
-   </p:outputPanel>        
-  </p:panel>
+        	<p:dataTable id="itemTable" var="data" value="#{contractDetailsBackingBean.contractItemList}" rowKey="#{data}" 
+              	selectionMode="single" selection="#{contractDetailsBackingBean.managedBean.selectedItem}" lazy="true" >
+               	<ac:paginator for="itemTable"/>
+               	<p:ajax event="rowSelect" update=":form:tabview:changeField" listener="#{contractDetailsBackingBean.selectedItemList()}"/>
+		     	<p:column headerText="Item Name"><p:outputLabel value="#{data.itemName}" style="float:left;"/></p:column>       
+		     	<p:column headerText="UOM"><p:outputLabel value="#{data.uom.uomName}" style="float:left;"/></p:column>        
+		     	<p:column headerText="Minimum Order Qty." style="text-align: right;"><p:outputLabel value="#{data.minimumOrderQty}"/></p:column>   
+		     	<p:column headerText="Maximum Qty." style="text-align: right;" rendered="#{contractDetailsBackingBean.managedBean.productItem}">
+		     		<p:outputLabel value="#{data.maxProcureAmount}"/>
+		     	</p:column>     
+		     	<p:column headerText="Type Of Goods" rendered="#{contractDetailsBackingBean.managedBean.productItem}">
+		     		<p:outputLabel value="#{contractDetailsBackingBean.getParameterDesc(data.itemOrigin)}" style="float:left;" />
+		     	</p:column>              
+		     	<p:column headerText="UOM Per Month" rendered="#{contractDetailsBackingBean.managedBean.serviceItem}">
+		     		<p:outputLabel value="#{data.uomPerMonth}"/>
+		     	</p:column>  
+    		</p:dataTable> 
+    		<p:outputPanel id="changeField">
+		    	<p:spacer height="20"/>
+				<h:panelGrid columns="2" style="height:50px;text-align:bottom;" 
+					rendered="#{contractDetailsBackingBean.managedBean.productItem and contractDetailsBackingBean.managedBean.selectedItem!=null}">
+				   	<h:outputLabel for="show" value="Show" style="width:50px;"/>  
+		           	<p:selectOneMenu id="show" value="#{contractDetailsBackingBean.managedBean.showItem}" style="width:200px;">
+		            	<f:selectItems value="#{contractDetailsBackingBean.getDropdownCodeValues(ParameterTypeConst.itemDisplayType)}" />
+		            	<p:ajax event="change" update="changeField" listener="#{contractDetailsBackingBean.changeField}" process="@this"/>  
+			       	</p:selectOneMenu>         
+		        </h:panelGrid>
+				<p:outputPanel columns="1" style="width:100%"
+				  	rendered="#{((contractDetailsBackingBean.managedBean.showItem == ParameterConst.itemDisplayTypePrice) or contractDetailsBackingBean.managedBean.serviceItem) and contractDetailsBackingBean.managedBean.selectedItem!=null}">
+				  	<p:dataTable id="itemPriceTable" var="data" value="#{contractDetailsBackingBean.managedBean.selectedItem.ctItemPrices}"
+				  		rowKey="#{data}" lazy="true" >
+				  		<ac:paginator for="itemPriceTable"/>
+						<p:column headerText="Zone"><p:outputLabel value="#{data.ctContractZone.zoneName}" style="float:left;" /></p:column>       
+						<p:column headerText="From Qty." style="text-align: right;" rendered="#{contractDetailsBackingBean.managedBean.productItem}">
+							<p:outputLabel value="#{data.tierFrom}"/>
+						</p:column>       
+						<p:column headerText="To Qty." style="text-align: right;" rendered="#{contractDetailsBackingBean.managedBean.productItem}">
+							<p:outputLabel value="#{data.tierTo}"/>
+						</p:column>              
+						<p:column headerText="Price (MYR)" style="text-align: right;"><p:outputLabel value="#{data.unitPrice}"/></p:column>            
+						<p:column headerText="Effective Date">
+						  	<p:calendar style="width:130px;" value="#{data.effDate}" pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}" disabled="true" />
+						</p:column>       
+						<p:column headerText="Expiry Date">
+						  	<p:calendar style="width:130px;" value="#{data.expDate}" pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}" disabled="true"  />
+						</p:column>       
+					</p:dataTable>
+					<p:spacer height="2" />
+				   	<div class="ppRightBtn"> 
+				       	<p:commandButton value="#{lbl['lbl.ct.ded.btn.add']}" process="@this" partialSubmit="true"  icon="ui-icon-add" update="itemPriceTable"/>
+				  	</div>
+			  	</p:outputPanel>  
+		   		<h:panelGrid columns="1" style="width:100%"
+			  		rendered="#{(contractDetailsBackingBean.managedBean.showItem == ParameterConst.itemDisplayTypeCeilQty) and contractDetailsBackingBean.managedBean.productItem}">
+			  		<p:dataTable id="ceilingTable" var="data" value="#{contractDetailsBackingBean.managedBean.selectedItem.ctItemCeilingQties}"
+				  		rowKey="#{data}" lazy="true" >
+				  		<ac:paginator for="ceilingTable"/>
+						<p:column headerText="Ministry Name">
+							<p:outputLabel value="#{data.ctAgency.orgProfile.parentOrgProfile.parentOrgProfile.orgName}" style="float:left;" />
+						</p:column>       
+						<p:column headerText="Jabatan Name">
+							<p:outputLabel value="#{data.ctAgency.orgProfile.parentOrgProfile.orgName}" style="float:left;" />
+						</p:column>       
+						<p:column headerText="PTJ Name">
+							<p:outputLabel value="#{data.ctAgency.orgProfile.orgName}" style="float:left;" />
+						</p:column>              
+						<p:column headerText="Ceiling Quantity" style="text-align: right;">
+							<p:inputText style="width:70px;" value="#{data.ceilingQuantity}" />
+						</p:column>            
+						<p:column headerText="Effective Date">
+						  <p:calendar style="width:130px;" value="#{data.effDate}" pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}" disabled="true" />
+						</p:column>       
+						<p:column headerText="Expiry Date">
+						  <p:calendar style="width:130px;" value="#{data.expDate}" pattern="#{CommonConstants.DEFAULT_DATE_FORMAT}" disabled="true" />
+						</p:column>           
+					</p:dataTable>
+		  		</h:panelGrid>  
+			</p:outputPanel>
+   		</p:outputPanel>        
+  	</p:panel>
  </ui:composition>
