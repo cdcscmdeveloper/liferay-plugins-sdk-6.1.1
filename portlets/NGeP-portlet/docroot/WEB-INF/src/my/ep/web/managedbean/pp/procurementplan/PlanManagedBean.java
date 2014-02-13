@@ -8,6 +8,7 @@ import java.util.List;
 
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
+import javax.persistence.Transient;
 
 import my.ep.persistence.entity.ct.circular.CtCircular;
 import my.ep.persistence.entity.pm.authorization.PmOrgProfile;
@@ -44,9 +45,9 @@ public class PlanManagedBean extends BaseManagedBean{
 	
 	private PpPlanActivity selectedPlanActivity; 
 	
-	private DualListModel<PmUser> verifier;
+	private DualListModel<String> verifiers;
 	
-	private PmUser approver;  
+	private String approver;  
 	
 	private boolean enableTab; //enable the details tab
 
@@ -62,8 +63,27 @@ public class PlanManagedBean extends BaseManagedBean{
 	
 	private List<PmParameter> docTypeOpts;
 	
+//	private List<PpPlanDtl> tempPlanDtls;
 	
+	private List<PpPlanDtl> oriPpPlanDtls;
+
+
 	
+//	
+//	/**
+//	 * @return the tempPlanDtls
+//	 */
+//	public List<PpPlanDtl> getTempPlanDtls() {
+//		return tempPlanDtls;
+//	}
+//
+//	/**
+//	 * @param tempPlanDtls the tempPlanDtls to set
+//	 */
+//	public void setTempPlanDtls(List<PpPlanDtl> tempPlanDtls) {
+//		this.tempPlanDtls = tempPlanDtls;
+//	}
+
 	/**
 	 * @return the amanahFlag
 	 */
@@ -79,35 +99,33 @@ public class PlanManagedBean extends BaseManagedBean{
 	}
 
 	/**
-	 * @return the verifier
+	 * @return the verifiers
 	 */
-	public DualListModel<PmUser> getVerifier() {
-		if(verifier==null)
-			verifier = new DualListModel<PmUser>();
-		return verifier;
+	public DualListModel<String> getVerifiers() {
+//		if(verifier==null)
+//			verifier = new DualListModel<PmUser>();
+		return verifiers;
 	}
 
 	/**
-	 * @param verifier the verifier to set
+	 * @param verifiers the verifiers to set
 	 */
-	public void setVerifier(DualListModel<PmUser> verifier) {
-		this.verifier = verifier;
+	public void setVerifiers(DualListModel<String> verifiers) {
+		this.verifiers = verifiers;
 	}
 	
 
 	/**
 	 * @return the approver
 	 */
-	public PmUser getApprover() {
-		if(approver==null)
-			approver = new PmUser();
+	public String getApprover() {
 		return approver;
 	}
 
 	/**
 	 * @param approver the approver to set
 	 */
-	public void setApprover(PmUser approver) {
+	public void setApprover(String approver) {
 		this.approver = approver;
 	}
 
@@ -302,16 +320,34 @@ public class PlanManagedBean extends BaseManagedBean{
 		this.userId = userId;
 	}
 
+	/**
+	 * @return the oriPpPlanDtls
+	 */
+	public List<PpPlanDtl> getOriPpPlanDtls() {
+		return oriPpPlanDtls;
+	}
+
+	/**
+	 * @param oriPpPlanDtls the oriPpPlanDtls to set
+	 */
+	public void setOriPpPlanDtls(List<PpPlanDtl> oriPpPlanDtls) {
+		this.oriPpPlanDtls = oriPpPlanDtls;
+	}
+
+
+
 
 	
 	
 	
 	
-	
-	
-	
-	
-	
+
+
+
+
+
+
+
 
 
 	private boolean searchPlan;
