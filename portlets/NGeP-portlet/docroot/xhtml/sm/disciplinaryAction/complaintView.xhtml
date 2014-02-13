@@ -11,7 +11,9 @@
 	<ui:define name="contentSection">
 		<f:event listener="#{complaintBackingBean.retrieveAllActiveComplaint}"
 			type="preRenderView" />
-
+		<div align="right">
+			<p:commandLink value="Pending Show Cause/ Accusation Response" style="color:blue;" action="#{complaintBackingBean.pendingResponseLetterView}"></p:commandLink>
+		</div>
 		<p:panel header="Search" toggleable="true" id="pnlSearch">
 			<div align="center">
 				<table style="width: 80%;">
@@ -75,8 +77,13 @@
 
 				<p:column headerText="Status">
 				</p:column>
+
+				<p:column selectionMode="multiple" style="width:2%" />
 			</p:dataTable>
 		</p:panel>
 
+		<div align="right">
+			<p:commandButton value="Generate Excel"></p:commandButton>
+		</div>
 	</ui:define>
 </ui:composition>

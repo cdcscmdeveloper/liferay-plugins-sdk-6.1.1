@@ -13,6 +13,12 @@
 		<p:commandButton value="Submit"
 			action="#{complaintBackingBean.updateComplaint}" />
 	</div>
+	
+	<ac:smPanel id="p2">
+		<ui:include
+			src="/xhtml/sm/shared/complaintRegistration/complaintBasicInfo.xhtml" />
+	</ac:smPanel>
+	
 	<p:dialog id="modalDialog" header="Site Visit Report Review"
 		widgetVar="dlg2" modal="true" height="500" width="1000">
 		<p:media value="/xhtml/sm/disciplinaryAction/sampleShowCause.pdf"
@@ -30,7 +36,7 @@
 			</tr>
 
 			<tr>
-				<td class="tdTitle"><p:outputLabel value="* Ref No" /></td>
+				<td class="tdTitle"><p:outputLabel value="* Courier Tracking No" /></td>
 				<td class="tdContent"><p:inputText /></td>
 			</tr>
 

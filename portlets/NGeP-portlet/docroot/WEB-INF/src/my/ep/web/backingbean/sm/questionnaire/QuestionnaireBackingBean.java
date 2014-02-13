@@ -38,7 +38,7 @@ public class QuestionnaireBackingBean extends
 	public void retrieveSupplierInfo() {
 		log.info("***********retrieveSupplierInfo**************");
 		RegistrationReqDTO reqDTO = new RegistrationReqDTO();
-		reqDTO.setSupplierId(3);
+		reqDTO.setSupplierId(27);
 		IRegistrationSO reqSO = (IRegistrationSO) BusinessDelegate
 				.getInstance().getServiceObject("sm", IRegistrationSO.class);
 		RegistrationResDTO resDTO = reqSO.retrieveSuppOnlineAcc(reqDTO);

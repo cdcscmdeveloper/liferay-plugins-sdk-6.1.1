@@ -84,6 +84,7 @@
 				<td class="tdTitle"><p:outputLabel value="* District" /></td>
 				<td class="tdContent"><p:selectOneMenu id="districtId">
 						<f:selectItem itemLabel="-- Select -- " itemValue="" />
+						<f:selectItems var="district" value="#{complaintBackingBean.managedBean.districtLs}" itemValue="#{district.districtId}" itemLabel="#{district.districtName}"></f:selectItems>
 					</p:selectOneMenu></td>
 
 				<td class="tdTitle"><p:outputLabel value="* City" /></td>

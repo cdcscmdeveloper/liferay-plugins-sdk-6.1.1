@@ -19,23 +19,17 @@
 							<f:selectItem itemLabel="Select" itemValue="" />
 							<f:selectItem itemLabel="Contractor" itemValue="K" />
 							<f:selectItem itemLabel="Consultant" itemValue="P" />
+							<p:ajax event="change" update="busTypeId" listener="#{registrationBackingBean.suppTypeOnChange}"/>
 						</p:selectOneMenu></td>
 				</c:if>
 
 				<td class="tdTitle"><p:outputLabel
 						value="* #{lbl['lbl.sm.businesscomptype']}" /></td>
-				<td class="tdContent"><p:selectOneMenu id="somId"
+				<td class="tdContent"><p:selectOneMenu id="busTypeId"
 						value="#{registrationBackingBean.managedBean.smSupp.businessType}" disabled="#{!registrationBackingBean.managedBean.smAppl.brandNew}">
-						<f:selectItem itemLabel="Select" itemValue="" />
-						<f:selectItem itemLabel="ROB-Semenanjung" itemValue="G" />
-						<f:selectItem itemLabel="ROB-Sabah" itemValue="H" />
-						<f:selectItem itemLabel="ROB-Sarawak" itemValue="K" />
-						<f:selectItem itemLabel="ROC" itemValue="C" />
-						<f:selectItem itemLabel="LLP" itemValue="L" />
-						<f:selectItem itemLabel="Individual" itemValue="I" />
-						<f:selectItem itemLabel="Society(ROS)" itemValue="S" />
-						<f:selectItem itemLabel="Professional Body" itemValue="P" />
+						<f:selectItems value="#{registrationBackingBean.managedBean.businessTypeLs}" var="busTypeLs" itemValue="#{busTypeLs.pmParameter.parameterCode}" itemLabel="#{busTypeLs.codeName}"></f:selectItems>
 						<p:ajax event="change" update="@form" listener="#{registrationBackingBean.businessTypeOnChange}"/>
+					
 					</p:selectOneMenu></td>
 			<c:if
 					test="#{registrationBackingBean.managedBean.smAppl.applType != 'M'}">

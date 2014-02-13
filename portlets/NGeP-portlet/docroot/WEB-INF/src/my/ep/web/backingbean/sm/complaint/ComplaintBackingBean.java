@@ -235,4 +235,8 @@ public class ComplaintBackingBean extends BaseBackingBean<ComplaintManagedBean> 
 	public String issueShowCauseLetter(){
 		return "issueShowCauseLetter";
 	}
+	
+	public String pendingResponseLetterView(){
+		return "pendingLetterResponse";
+	}
 }

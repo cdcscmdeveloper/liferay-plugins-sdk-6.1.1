@@ -29,9 +29,8 @@
 			
 			<p:column selectionMode="multiple" style="width:2%" />
 			<p:column headerText="Bank Name">
-				<p:selectOneMenu>
-					<f:selectItem itemLabel="Select" itemValue="" />
-					<f:selectItem itemLabel="CIMB" itemValue="1" />
+				<p:selectOneMenu value="#{bankInfo.pmFinancialOrg.financialOrgId}">
+					<f:selectItems value="#{registrationBackingBean.managedBean.financialOrgLs}" var="finOrg" itemValue="#{finOrg.financialOrgId}" itemLabel="#{finOrg.finOrgName}" />
 				</p:selectOneMenu>
 			</p:column>
 			<p:column headerText="Account Number">
@@ -42,10 +41,10 @@
 		<div align="right">
 			<p:commandButton value="Add"
 				action="#{registrationBackingBean.addSupplierBank}"
-				update="pnlBankInfo" />
+				update="bankInfoId" />
 			<p:commandButton value="Remove"
 				action="#{registrationBackingBean.removeSupplierBank}"
-				update="pnlBankInfo" />
+				update="bankInfoId" />
 		</div>
 	</p:panel>
 	<br />

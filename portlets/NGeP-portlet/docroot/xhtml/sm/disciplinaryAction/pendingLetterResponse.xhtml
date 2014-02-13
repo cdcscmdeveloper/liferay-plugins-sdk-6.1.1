@@ -1,0 +1,57 @@
+<ui:composition
+	template="/WEB-INF/facelets/templates/basic_template.xhtml"
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:c="http://java.sun.com/jsp/jstl/core">
+
+	<ui:define name="contentSection">
+		<p:panel header="Search" toggleable="true" id="pnlSearch">
+			<div align="center">
+				<table style="width: 80%;">
+					<tr>
+						<td><p:outputLabel value="Search by" /></td>
+						<td><p:selectOneMenu>
+								<f:selectItem itemLabel="---Select---" itemValue="" />
+								<f:selectItem itemLabel="Show Cause" itemValue="S" />
+								<f:selectItem itemLabel="Accusation" itemValue="A" />
+							</p:selectOneMenu></td>
+
+						<td><p:outputLabel value="Ref No." /></td>
+						<td><p:inputText /></td>
+
+						<td><p:outputLabel value="Status" /></td>
+						<td><p:selectOneMenu>
+								<f:selectItem itemLabel="---Select---" itemValue="" />
+								<f:selectItem itemLabel="Pending" itemValue="P" />
+								<f:selectItem itemLabel="Expired" itemValue="E" />
+							</p:selectOneMenu></td>
+						<td><p:commandButton value="Search" /></td>
+					</tr>
+				</table>
+			</div>
+		</p:panel>
+
+		<p:panel  toggleable="true" id="pnlCompList">
+			<p:dataTable var="pendingRes" id="complaintDt">
+				<p:column headerText="Complaint No">
+					#{pendingRes.complaintNo}
+				</p:column>
+
+				<p:column headerText="Complaint Date">
+					#{pendingRes.createdDate}
+				</p:column>
+
+				<p:column headerText="Date of Issuance">
+					#{pendingRes.smSupplier.companyName}
+				</p:column>
+
+				<p:column headerText="Ref No">
+					#{pendingRes.smSupplier.regNo}
+				</p:column>
+			</p:dataTable>
+		</p:panel>
+	</ui:define>
+</ui:composition>

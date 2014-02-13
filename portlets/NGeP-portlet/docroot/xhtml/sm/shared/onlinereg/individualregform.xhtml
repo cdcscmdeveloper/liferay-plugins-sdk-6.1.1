@@ -14,6 +14,7 @@
 						value="#{registrationBackingBean.managedBean.smSupp.serviceCategory}">
 						<f:selectItem itemLabel="Professional Service" itemValue="P" />
 						<f:selectItem itemLabel="Special Service" itemValue="S" />
+						<p:ajax event="change" update="outPnl" />
 					</p:selectOneRadio></td>
 			</tr>
 
@@ -37,7 +38,8 @@
 			</tr>
 			<tr>
 				<td class="tdTitle"><p:outputLabel value="* Full Name" /></td>
-				<td class="tdContent"><p:inputText size="40" value="#{registrationBackingBean.managedBean.smAppl.smCompanyBasic.companyName}"/></td>
+				<td class="tdContent"><p:inputText size="40"
+						value="#{registrationBackingBean.managedBean.smAppl.smCompanyBasic.companyName}" /></td>
 			</tr>
 
 			<tr>
@@ -125,11 +127,20 @@
 		</table>
 	</p:panel>
 
-	<ui:include src="/xhtml/sm/shared/onlinereg/bankInfo.xhtml" />
-	<ui:include src="/xhtml/sm/shared/onlinereg/contactInfo.xhtml" />
+	<p:outputPanel id="outPnl">
+		<c:if
+			test="#{registrationBackingBean.managedBean.smSupp.serviceCategory == 'P'}">
+			<ui:include src="/xhtml/sm/shared/onlinereg/profCert.xhtml" />
+		</c:if>
+	</p:outputPanel>
 
-	<div align="right">
-		<p:commandButton value="Submit"
-			action="#{registrationBackingBean.submitRegistration}" />
-	</div>
+	<ui:include src="/xhtml/sm/shared/onlinereg/bankInfo.xhtml" />
+
+	<c:if test="#{registrationBackingBean.managedBean.smSupp.brandNew}">
+		<ui:include src="/xhtml/sm/shared/onlinereg/contactInfo.xhtml" />
+		<div align="right">
+			<p:commandButton value="Submit"
+				action="#{registrationBackingBean.submitRegistration}" />
+		</div>
+	</c:if>
 </ui:composition>

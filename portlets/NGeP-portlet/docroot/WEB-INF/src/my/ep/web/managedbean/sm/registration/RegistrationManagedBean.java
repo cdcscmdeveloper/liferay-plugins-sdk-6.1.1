@@ -5,9 +5,12 @@ import java.util.List;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
 
+import my.ep.persistence.entity.pm.common.PmCertBody;
 import my.ep.persistence.entity.pm.common.PmCity;
 import my.ep.persistence.entity.pm.common.PmCountry;
 import my.ep.persistence.entity.pm.common.PmDistrict;
+import my.ep.persistence.entity.pm.common.PmFinancialOrg;
+import my.ep.persistence.entity.pm.common.PmParameterDesc;
 import my.ep.persistence.entity.pm.common.PmState;
 import my.ep.persistence.entity.sm.SmAddress;
 import my.ep.persistence.entity.sm.SmAppl;
@@ -44,11 +47,10 @@ public class RegistrationManagedBean extends BaseManagedBean {
 	private SmSupplierBank[] selectedSuppBanks;
 	private List<SmSupplierBank> smSuppBanks;
 	
+	
 	private SmPersonnel smPersonnel;
 	private SmSupplierOwner smSuppOwner;
 	private SmPersonnelAddress smPersonnelAdd;
-	
-	private List<SmSupplierCert> smSuppCerts;
 
 	private SmAddress smBusinessAdd;
 	private SmAddress smPermenantAdd;
@@ -56,6 +58,12 @@ public class RegistrationManagedBean extends BaseManagedBean {
 	
 	private String applType;
 	private String suppOwnerIdMask;
+	private List<PmParameterDesc> businessTypeLs;
+	private List<PmFinancialOrg> financialOrgLs;
+	private List<PmCertBody> profCertBodyLs;
+	
+	private SmSupplierCert[] selectedSuppCerts;
+	private List<SmSupplierCert> smSuppCerts;
 	
 	public SmSupplier getSmSupp() {
 		return smSupp;
@@ -248,6 +256,38 @@ public class RegistrationManagedBean extends BaseManagedBean {
 
 	public void setSuppOwnerIdMask(String suppOwnerIdMask) {
 		this.suppOwnerIdMask = suppOwnerIdMask;
+	}
+
+	public List<PmParameterDesc> getBusinessTypeLs() {
+		return businessTypeLs;
+	}
+
+	public void setBusinessTypeLs(List<PmParameterDesc> businessTypeLs) {
+		this.businessTypeLs = businessTypeLs;
+	}
+
+	public List<PmFinancialOrg> getFinancialOrgLs() {
+		return financialOrgLs;
+	}
+
+	public void setFinancialOrgLs(List<PmFinancialOrg> financialOrgLs) {
+		this.financialOrgLs = financialOrgLs;
+	}
+
+	public SmSupplierCert[] getSelectedSuppCerts() {
+		return selectedSuppCerts;
+	}
+
+	public void setSelectedSuppCerts(SmSupplierCert[] selectedSuppCerts) {
+		this.selectedSuppCerts = selectedSuppCerts;
+	}
+
+	public List<PmCertBody> getProfCertBodyLs() {
+		return profCertBodyLs;
+	}
+
+	public void setProfCertBodyLs(List<PmCertBody> profCertBodyLs) {
+		this.profCertBodyLs = profCertBodyLs;
 	}
 
 }

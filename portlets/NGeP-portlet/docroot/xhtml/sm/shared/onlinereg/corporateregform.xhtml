@@ -15,7 +15,7 @@
 			toggleable="true">
 			<p:dataTable var="suppCert" id="profCertDt"
 				value="#{registrationBackingBean.managedBean.smSuppCerts}">
-				<ac:paginator for="dt" />
+				<!-- 				<ac:paginator for="dt" /> -->
 				<p:column headerText="Certificate Name">
 					<p:inputText value="#{suppCert.certName}" />
 				</p:column>
@@ -34,7 +34,6 @@
 						showOn="button" />
 				</p:column>
 			</p:dataTable>
-			<p:spacer height="2px;" />
 
 			<div align="right">
 				<p:commandButton value="Add"
@@ -47,8 +46,10 @@
 		</p:panel>
 	</c:if>
 
-	<div align="right">
-		<p:commandButton value="Next"
-			action="#{registrationBackingBean.proceedToFirstUserRegistration}" />
-	</div>
+	<c:if test="#{registrationBackingBean.managedBean.smSupp.brandNew}">
+		<div align="right">
+			<p:commandButton value="Next"
+				action="#{registrationBackingBean.proceedToFirstUserRegistration}" />
+		</div>
+	</c:if>
 </ui:composition>

@@ -12,7 +12,7 @@
 			<tr>
 				<td id="tdTitle"><p:outputLabel value="* #{lbl['lbl.sm.businessregno']}" /></td>
 				<td id="tdContent"><p:inputText
-						value="#{registrationBackingBean.managedBean.smSupp.regNo}" /></td>
+						value="#{registrationBackingBean.managedBean.smSupp.regNo}" disabled="#{!registrationBackingBean.managedBean.smSupp.brandNew}"/></td>
 
 				<td id="tdTitle"><p:outputLabel value="* Owner Name" /></td>
 				<td id="tdContent"><p:inputText
@@ -26,7 +26,7 @@
 						<f:selectItem itemLabel="Select" itemValue="" />
 						<f:selectItem itemLabel="New NRIC" itemValue="I" />
 						<f:selectItem itemLabel="Passport" itemValue="P" />
-						<p:ajax event="change" update="@form" listener="#{registrationBackingBean.suppOwnerIdTypeOnChange}" />
+						<p:ajax event="change" update="txtIdNumber" listener="#{registrationBackingBean.suppOwnerIdTypeOnChange}" />
 					</p:selectOneMenu></td>
 
 				<td id="tdTitle"><p:outputLabel value="* #{lbl['lbl.sm.identificationno']}" /></td>

@@ -56,7 +56,7 @@
 						value="* #{lbl['lbl.sm.postcode']}" /></td>
 				<td class="tdContent"><p:inputText size="40"
 						value="#{registrationBackingBean.managedBean.smResAdd.postcode}"
-						disabled="#{registrationBackingBean.managedBean.sameAddress}" /></td>
+						disabled="#{registrationBackingBean.managedBean.sameAddress}" id="conPostCode"/></td>
 				<td class="tdTitle"><p:outputLabel
 						value="* #{lbl['lbl.sm.state']}" /></td>
 				<td class="tdContent"><p:selectOneMenu id="cmbResState"
@@ -67,7 +67,7 @@
 							itemValue="#{resState.stateId}" itemLabel="#{resState.stateName}" />
 						<p:ajax event="change"
 							listener="#{registrationBackingBean.populateDistrictByAddType('residential')}"
-							update="cmbPermDistrict" />
+							update="cmbResDistrict" />
 					</p:selectOneMenu></td>
 			</tr>
 
