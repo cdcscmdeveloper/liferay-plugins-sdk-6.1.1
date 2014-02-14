@@ -13,6 +13,7 @@
 	<ui:define name="contentSection">
 	<f:event listener="#{invoiceBackingBean.preRenderView}" type="preRenderView" />	
 	<p:messages id="messages" showDetail="true" autoUpdate="true" closable="true" severity="error, info" />
+	<ui:include src="/xhtml/fl/invoice/invHeaderPage.xhtml" />
 	<table style="width: 100%">
 			<tr>
 				<td style="text-align: left; width: 66px;"><p:outputLabel

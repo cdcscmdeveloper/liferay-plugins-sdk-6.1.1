@@ -67,7 +67,7 @@
 						style=" margin-bottom:5px;" disabled="true" /></td>
 				<td style="width:105px; height:6%"><p:outputLabel
 						value="* #{lbl['lbl.fl.del.ord.supp.ref.no']}" /></td>
-				<td><p:inputText size="25" value="#{createDOBackingBean.managedBean.flDeliveryOrder.supplierDoRef}"/></td>
+				<td><p:inputText size="25" value="#{createDOBackingBean.managedBean.flDeliveryOrder.supplierDoRef}" requiredMessage="Please input the supplier reference number." required="true"/></td>
 			</tr>
 			<tr>
 				<td ><p:outputLabel

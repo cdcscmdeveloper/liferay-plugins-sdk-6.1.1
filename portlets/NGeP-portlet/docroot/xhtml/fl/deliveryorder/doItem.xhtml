@@ -47,17 +47,20 @@
 			</p:column>
 			<p:column headerText="Delivered Qty.">
 				<p:inputText value="#{item.deliveredQty}"
-					rendered="#{item.flFulfilmentItemAddr.flFulfilmentItem.scRequestNoteDtl.scRequestSupplierItem.requestNoteItem.itemType eq 'P'}">
+					rendered="#{item.flFulfilmentItemAddr.flFulfilmentItem.scRequestNoteDtl.scRequestSupplierItem.requestNoteItem.itemType eq 'P' and createDOBackingBean.managedBean.docType eq 'PR'}">
 					<p:ajax event="blur" update="delAmountTxt" process="@this"
 						listener="#{createDOBackingBean.retrievedDelAmount(item)}" />
 				</p:inputText>
 				<p:inputText value="#{item.deliveredQty}"
-					rendered="#{item.flFulfilmentItemAddr.flFulfilmentItem.scRequestNoteDtl.scRequestSupplierItem.requestNoteItem.itemType eq 'S' and item.flFulfilmentItemAddr.orderedQty > 1}">
+					rendered="#{item.flFulfilmentItemAddr.flFulfilmentItem.scRequestNoteDtl.scRequestSupplierItem.requestNoteItem.itemType eq 'S' and item.flFulfilmentItemAddr.orderedQty > 1 and createDOBackingBean.managedBean.docType eq 'PR'}">
 					<p:ajax event="blur" update="delAmountTxt" process="@this"
 						listener="#{createDOBackingBean.retrievedDelAmount(item)}" />
 				</p:inputText>
 				<p:inputText value="#{item.deliveredQty}" disabled="true"
-					rendered="#{item.flFulfilmentItemAddr.flFulfilmentItem.scRequestNoteDtl.scRequestSupplierItem.requestNoteItem.itemType eq 'S' and item.flFulfilmentItemAddr.orderedQty == 1}" />
+					rendered="#{item.flFulfilmentItemAddr.flFulfilmentItem.scRequestNoteDtl.scRequestSupplierItem.requestNoteItem.itemType eq 'S' and item.flFulfilmentItemAddr.orderedQty == 1 and createDOBackingBean.managedBean.docType eq 'PR'}" />
+				<p:inputText value="#{item.deliveredQty}" rendered="#{createDOBackingBean.managedBean.docType eq 'CR'}">
+					<p:ajax event="blur" update="subTotalTxt" process="@this" />
+				</p:inputText>
 			</p:column>
 			<p:column headerText="Ordered Amt.(RM)">
 				<h:outputText value="#{item.flFulfilmentItemAddr.orderedAmt}">
@@ -79,6 +82,10 @@
 					<p:inputText value="#{item.deliveredAmt}"
 						rendered="#{item.flFulfilmentItemAddr.flFulfilmentItem.scRequestNoteDtl.scRequestSupplierItem.requestNoteItem.itemType eq 'S'}">
 						<f:convertNumber pattern="#,###.00" />
+					</p:inputText>
+					<p:inputText id="subTotalTxt" value="#{item.deliveredQty * item.flFulfilmentItemAddr.unitPrice}" rendered="#{createDOBackingBean.managedBean.docType eq 'CR'}"
+					disabled="true" >
+					<f:convertNumber pattern="#,###.00" />
 					</p:inputText>
 				</h:panelGroup>
 			</p:column>

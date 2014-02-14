@@ -8,40 +8,34 @@
 	xmlns:ac="http://ac.my/jsf/composite/cc">
 
 		<p:panel header="ITEM DETAIL" toggleable="true">
-
-			<p:dataTable id="invItemDt" var="item" value="#{invoiceBackingBean.managedBean.invItem}" >
+		<p:dataGrid id="addresses" value="#{invoiceBackingBean.managedBean.invoice.flFulfilmentOrder.flFulfilmentRequest.flDeliveryAddresses}" var="address" rowIndexVar="addrIndex" columns="1" >
+			<h:outputText value="#{address.addressType.pmAddress.address1}, #{address.addressType.pmAddress.address2}, #{address.addressType.pmAddress.address3}, #{address.addressType.pmAddress.address4}"/>
+			<p:spacer height="5px"></p:spacer>
+			<p:dataTable id="invItemDt" var="item" value="#{invoiceBackingBean.managedBean.invItem}">
 			<ac:paginator for="invItemDt"/>
 			<p:columnGroup type="header">
 				<p:row>
 					<p:column rowspan="2" headerText="Item Name" />
-					<p:column rowspan="2" headerText="Ord. Qty" />
-					<p:column rowspan="2" headerText="Recv. Qty" />
-					<p:column rowspan="2" headerText="Del. Qty" />
-					<p:column colspan="4" headerText="Amount (MYR)" />
-				</p:row>
-				<p:row>
-					<p:column headerText="Ordered" />
-					<p:column headerText="Delivered" />
-					<p:column headerText="Ori. Sub Total" />
-					<p:column headerText="New Sub Total" />
+					<p:column rowspan="2" headerText="Unit Price" />
+					<p:column rowspan="2" headerText="Ordered Qty." />
+					<p:column rowspan="2" headerText="Delivered Qty." />
+					<p:column rowspan="2" headerText="Recalled Qty." />
+					<p:column rowspan="2" headerText="Ordered Amt. (RM)" />
+					<p:column rowspan="2" headerText="Delivered Amt. (RM)" />
+					<p:column rowspan="2" headerText="Recalled Amt. (RM)" />
+					<p:column rowspan="2" headerText="Invoice Amt. (RM)" />
 				</p:row>
 			</p:columnGroup>
 			<p:column>
 				<p:outputLabel
 					value="#{item.flFulfilmentItem.scRequestNoteDtl.scRequestNote.scRequestList.requestItems[0].itemName}"
 					rendered="#{invoiceBackingBean.managedBean.docType eq 'PR'}" />
-				<p:outputLabel
+				<h:outputText style="text-align:right"
 					value="#{item.flFulfilmentItem.qtItem.itemName}"
 					rendered="#{invoiceBackingBean.managedBean.docType eq 'CR'}" />
 			</p:column>
 			<p:column>
-				<p:outputLabel value="#{item.flFulfilmentItem.sumOrderedQty}" />
-			</p:column>
-			<p:column>
-				<p:outputLabel value="#{item.flFulfilmentItem.sumReceivedQty}" />
-			</p:column>
-			<p:column>
-				<p:outputLabel value="#{item.flFulfilmentItem.sumDeliveredQty}" />
+				<p:outputLabel value="#{item.flFulfilmentItem.unitPrice}" />
 			</p:column>
 			<p:column>
 				<p:outputLabel value="#{item.flFulfilmentItem.sumOrderedQty}" />
@@ -50,14 +44,27 @@
 				<p:outputLabel value="#{item.flFulfilmentItem.sumDeliveredQty}" />
 			</p:column>
 			<p:column>
-				<p:inputText value="#{item.itemAmtOri}" />
+				<p:outputLabel value="#{item.flFulfilmentItem.sumRecalledQty}" />
 			</p:column>
 			<p:column>
-				<p:inputText value="#{item.itemAmtNew}" />
+				<p:outputLabel value="#{item.flFulfilmentItem.sumOrderedAmt}" />
+			</p:column>
+			<p:column>
+				<p:outputLabel value="#{item.flFulfilmentItem.sumDeliveredQty}" />
+			</p:column>
+			<p:column>
+				<p:outputLabel value="#{item.flFulfilmentItem.sumRecalledAmt}" />
+			</p:column>
+			<p:column>
+				<p:inputText value="#{item.itemAmtNew}" style="text-align:right">
+				<p:ajax event="blur" listener="#{invoiceBackingBean.updateNewInvoiceAmt(item)}" process="@this">
+				</p:ajax>
+				</p:inputText>
 			</p:column>
 		</p:dataTable>
 		<br />
 		<br />
-		
+		</p:dataGrid>
 		</p:panel>
+		
 </ui:composition>
